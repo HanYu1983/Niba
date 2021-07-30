@@ -238,9 +238,24 @@ public class Model : MonoBehaviour, IModel
 
 
     #region earn
-    public Dictionary<int, Earn> earns = new Dictionary<int, Earn>();
+    private Dictionary<int, Earn> earns = new Dictionary<int, Earn>();
     private int seqId = 0;
     private Earn lastInputEarn;
+
+    public int NextSeqId()
+    {
+        return seqId++;
+    }
+
+    public int GetSeqId()
+    {
+        return seqId;
+    }
+
+    public void SetSeqId(int id)
+    {
+        seqId = id;
+    }
 
     public static Item Earn2Item(Earn earn)
     {
@@ -256,8 +271,12 @@ public class Model : MonoBehaviour, IModel
     {
         try
         {
+            if (IsArchiving())
+            {
+                throw new Exception("打包中請勿操作");
+            }
             var earn = Earn.empty;
-            earn.id = seqId++;
+            earn.id = NextSeqId();
             earn.money = money;
             if (memo == null)
             {
@@ -296,6 +315,10 @@ public class Model : MonoBehaviour, IModel
     {
         try
         {
+            if (IsArchiving())
+            {
+                throw new Exception("打包中請勿操作");
+            }
             if (earns.ContainsKey(id) == false)
             {
                 throw new Exception(id + " not found");
@@ -320,6 +343,10 @@ public class Model : MonoBehaviour, IModel
     {
         try
         {
+            if (IsArchiving())
+            {
+                throw new Exception("打包中請勿操作");
+            }
             if (earns.ContainsKey(id) == false)
             {
                 throw new Exception(id + " not found");
@@ -341,6 +368,10 @@ public class Model : MonoBehaviour, IModel
     {
         try
         {
+            if (IsArchiving())
+            {
+                throw new Exception("打包中請勿操作");
+            }
             if (earns.ContainsKey(id) == false)
             {
                 throw new Exception(id + " not found");
@@ -361,6 +392,10 @@ public class Model : MonoBehaviour, IModel
     {
         try
         {
+            if (IsArchiving())
+            {
+                throw new Exception("打包中請勿操作");
+            }
             if (earns.ContainsKey(id) == false)
             {
                 throw new Exception(id + " not found. can not delete");
@@ -585,7 +620,7 @@ public class Model : MonoBehaviour, IModel
     {
         try
         {
-            var id = seqId++;
+            var id = NextSeqId();
             car[id] = new Item(id, money, memo, 0);
             callback(null, GetCarItemListCache());
         }
@@ -720,6 +755,10 @@ public class Model : MonoBehaviour, IModel
     {
         try
         {
+            if (IsArchiving())
+            {
+                throw new Exception("打包中請勿操作");
+            }
             var memos = StringToMemoList(memo);
             foreach (var m in memos)
             {
@@ -765,6 +804,10 @@ public class Model : MonoBehaviour, IModel
     {
         try
         {
+            if (IsArchiving())
+            {
+                throw new Exception("打包中請勿操作");
+            }
             var selectedMemoList = GetSelectedMemoListKeys();
             foreach (var selected in selectedMemoList)
             {
@@ -783,6 +826,10 @@ public class Model : MonoBehaviour, IModel
     {
         try
         {
+            if (IsArchiving())
+            {
+                throw new Exception("打包中請勿操作");
+            }
             if (memo.Split(SplitTag).Length > 1)
             {
                 throw new Exception(memo + " should not have " + SplitTag);
@@ -832,7 +879,7 @@ public class Model : MonoBehaviour, IModel
 
     private void SetMemonto(Memonto temp)
     {
-        seqId = temp.seqId;
+        SetSeqId(temp.seqId);
         earns.Clear();
         foreach (var earn in temp.earns)
         {
@@ -848,7 +895,7 @@ public class Model : MonoBehaviour, IModel
     public Memonto GetMemonto()
     {
         var temp = new Memonto();
-        temp.seqId = this.seqId;
+        temp.seqId = GetSeqId();
         temp.earns = new List<Earn>(earns.Values);
         temp.memo = new List<string>(memoItems.Values.Select(d => d.Memo));
         return temp;
@@ -1014,22 +1061,92 @@ public class Model : MonoBehaviour, IModel
     void Log(string t)
     {
         Debug.Log(t);
-        stringToEdit = "["+DateTime.Now.ToLongTimeString()+"]"+"\n"+ t + "\n" + stringToEdit;
+        stringToEdit = "[" + DateTime.Now.ToLongTimeString() + "]" + "\n" + t + "\n" + stringToEdit;
     }
     private string stringToEdit = "";
     // private Vector2 scrollPosition = Vector2.zero;
     private void OnGUI()
     {
-        //if(GUI.Button(new Rect(0, 0, 100, 20), "log"))
-        //{
-        //    SetDebug(!IsDebug());
-        //}
+        if (GUI.Button(new Rect(0, 0, 100, 20), "log"))
+        {
+            SetDebug(!IsDebug());
+        }
         if (IsDebug())
         {
+            if (GUI.Button(new Rect(0, 20, 100, 20), "archive"))
+            {
+                InvokeArchive(delegate (object error, List<Item> list) { });
+            }
             //scrollPosition = GUI.BeginScrollView(new Rect(0, 20, 400, 800), scrollPosition, new Rect(0, 0, 400, 800));
-            stringToEdit = GUI.TextArea(new Rect(0, 20, 400, 800), stringToEdit);
+            stringToEdit = GUI.TextArea(new Rect(0, 40, 400, 800), stringToEdit);
             //GUI.EndScrollView();
         }
     }
+    #endregion
+
+
+    #region archive
+
+    private static int CompareEarnByTime(Earn x, Earn y)
+    {
+        return x.createUTC.CompareTo(y.createUTC);
+    }
+
+    private bool isArchiving = false;
+    public bool IsArchiving()
+    {
+        return isArchiving;
+    }
+    public void InvokeArchive(UnityAction<object, List<Item>> callback)
+    {
+        StartCoroutine(Archive(5000, callback));
+    }
+
+    IEnumerator Archive(int count, UnityAction<object, List<Item>> callback)
+    {
+        if (isArchiving)
+        {
+            InvokeErrorAction(new Exception("archiving"));
+            yield break;
+        }
+        Log(string.Format("Archive Start"));
+        isArchiving = true;
+        var memonto = GetMemonto();
+        // add seqId for version control
+        memonto.seqId++;
+        var s = 0;
+        var e = Math.Min(count, memonto.earns.Count);
+        memonto.earns.Sort(CompareEarnByTime);
+        var removedEarns = memonto.earns.GetRange(s, e);
+        if(removedEarns.Count == 0)
+        {
+            InvokeErrorAction(new Exception("no need archive"));
+            isArchiving = false;
+            yield break;
+        }
+        // archive
+        var archiveMemonto = memonto.SimpleCopy();
+        archiveMemonto.earns = removedEarns;
+        // save
+        var archiveString = JsonUtility.ToJson(archiveMemonto, true);
+        var archivePath = cloudSave.GetPath(cloudSave.GetId(), archiveMemonto.seqId + "");
+        Debug.Log("Archive:" + archivePath);
+        yield return cloudSave.SaveToCloud(archivePath, archiveString);
+        if (cloudSave.GetError() != null)
+        {
+            InvokeErrorAction(cloudSave.GetError());
+            isArchiving = false;
+            yield break;
+        }
+        // if no error, apply
+        memonto.earns.RemoveRange(s, e);
+        // set memonto with new version
+        SetMemonto(memonto);
+        RequestSave(memonto);
+        isArchiving = false;
+        callback(null, GenItemList());
+        Log(string.Format("Archive End"));
+    }
+
     #endregion
 }

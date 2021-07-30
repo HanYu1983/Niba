@@ -48,4 +48,7 @@ public interface IModel
     // Debug Model
     void SetDebug(bool v);
     bool IsDebug();
+    // 打包5000筆
+    void InvokeArchive(UnityAction<object, List<Item>> callback);
+    bool IsArchiving();
 }

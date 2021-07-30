@@ -19,8 +19,8 @@ public class CloudSave : MonoBehaviour {
     private string metaFileName = "cloudSave.json";
 
     private const string cloudHost = "https://particle-979.appspot.com/nightmarketssistentdbfile2";
-    public string cloudPath = "/root/xiaogenban/{id}/save.json";
-    public string id;
+    private string cloudPath = "/root/xiaogenban/{0}/save{1}.json";
+    private string id;
     private string persistentDataPath;
 
     private void SetPersistentDataPath(string path)
@@ -38,6 +38,11 @@ public class CloudSave : MonoBehaviour {
         return id;
     }
 
+    public string GetPath(string id, string postfix)
+    {
+        return cloudHost + string.Format(cloudPath, id, postfix);
+    }
+
     private struct OnlyError
     {
         public string Error;
@@ -47,8 +52,13 @@ public class CloudSave : MonoBehaviour {
     {
         if (error != null)
         {
-            throw new Exception(error);
+            throw error;
         }
+    }
+
+    public Exception GetError()
+    {
+        return error;
     }
 
     public IEnumerator SaveToCloud()
@@ -64,15 +74,24 @@ public class CloudSave : MonoBehaviour {
         var filePath = persistentDataPath + "/" + fileNameToSave;
         Debug.LogFormat("use file {0}", filePath);
 
-        if(File.Exists(filePath) == false)
+        //var fileInfo = new FileInfo(filePath);
+        //Debug.Log(fileInfo.Length);
+
+        if (File.Exists(filePath) == false)
         {
-            error = "file "+filePath+" not found. ignore save to cloud";
+            error = new Exception("file "+filePath+" not found. ignore save to cloud");
             Debug.Log(error);
             yield break;
         }
 
         var content = File.ReadAllText(filePath);
-        string path = cloudHost + cloudPath.Replace("{id}", id);
+        string path = GetPath(id, "");
+        yield return SaveToCloud(path, content);
+    }
+
+    public IEnumerator SaveToCloud(string path, string content)
+    {
+        error = null;
         Debug.LogFormat("save to {0}", path);
 
         WWWForm form = new WWWForm();
@@ -89,16 +108,16 @@ public class CloudSave : MonoBehaviour {
 
         if (request.isNetworkError || request.isHttpError)
         {
-            error = request.error;
+            error = new Exception(request.error);
             Debug.Log(error);
             yield break;
         }
 
         var content2 = request.downloadHandler.text;
         var errRes = JsonUtility.FromJson<OnlyError>(content2);
-        if (string.IsNullOrEmpty(errRes.Error)==false)
+        if (string.IsNullOrEmpty(errRes.Error) == false)
         {
-            error = errRes.Error;
+            error = new Exception(errRes.Error);
             Debug.Log(error);
             yield break;
         }
@@ -137,7 +156,7 @@ public class CloudSave : MonoBehaviour {
             yield break;
         }
 
-        string path = cloudHost + cloudPath.Replace("{id}", targetId);
+        string path = GetPath(targetId, "");
         Debug.LogFormat("load from {0}", path);
 
         UnityWebRequest www = UnityWebRequest.Get(path);
@@ -145,7 +164,7 @@ public class CloudSave : MonoBehaviour {
 
         if (www.isNetworkError || www.isHttpError)
         {
-            error = www.error;
+            error = new Exception(www.error);
             Debug.Log(error);
             yield break;
         }
@@ -153,7 +172,7 @@ public class CloudSave : MonoBehaviour {
         var content = www.downloadHandler.text;
         if (content == "file not found")
         {
-            error = path+" file not found";
+            error = new Exception(path +" file not found");
             Debug.Log(error);
             yield break;
         }
@@ -230,13 +249,13 @@ public class CloudSave : MonoBehaviour {
     }
 
     private Memonto modelMemonto;
-    private string error = null;
+    private Exception error = null;
 
     public Memonto GetModelMemonto()
     {
         if (error != null)
         {
-            throw new Exception(error);
+            throw error;
         }
         return modelMemonto;
     }
@@ -265,7 +284,7 @@ public class CloudSave : MonoBehaviour {
 
         if (www.isNetworkError || www.isHttpError)
         {
-            error = www.error;
+            error = new Exception(www.error);
             Debug.Log(www.error);
             yield break;
         }
@@ -273,14 +292,14 @@ public class CloudSave : MonoBehaviour {
         var content = www.downloadHandler.text;
         if (content == "file not found")
         {
-            error = "file not found";
+            error = new Exception("file not found");
             yield break;
         }
 
         var res = JsonUtility.FromJson<DB2Response>(content);
         if (string.IsNullOrEmpty(res.Error) == false)
         {
-            error = res.Error;
+            error = new Exception(res.Error);
             Debug.Log(error);
             yield break;
         }
@@ -296,7 +315,7 @@ public class CloudSave : MonoBehaviour {
 
             if (getEarn.isNetworkError || getEarn.isHttpError)
             {
-                error = getEarn.error;
+                error = new Exception(getEarn.error);
                 Debug.Log(error);
                 yield break;
             }

@@ -244,4 +244,12 @@ public class DebugModel : MonoBehaviour, IModel
     {
         return true;
     }
+    public void InvokeArchive(UnityAction<object, List<Item>> callback)
+    {
+
+    }
+    public bool IsArchiving()
+    {
+        return false;
+    }
 }

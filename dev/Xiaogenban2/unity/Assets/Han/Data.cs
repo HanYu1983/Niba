@@ -18,6 +18,14 @@ public class Memonto
     public int seqId;
     public List<Earn> earns;
     public List<string> memo;
+    public Memonto SimpleCopy()
+    {
+        var ret = new Memonto();
+        ret.seqId = seqId;
+        ret.earns = new List<Earn>(earns);
+        ret.memo = new List<string>(memo);
+        return ret;
+    }
 }
 
 public enum SaveWorkerState
