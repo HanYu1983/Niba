@@ -883,7 +883,7 @@ public class Model : MonoBehaviour, IModel{
             // 離線使用不中斷程式
             // 前端必須要顯示isCloudSaveDirty狀態來讓使用者判斷有沒有成功同步網路資料
             Debug.Log(e.Message);
-            InvokeErrorAction(e)
+            InvokeErrorAction(e);
         }
         isCloudSaveLock = false;
     }
