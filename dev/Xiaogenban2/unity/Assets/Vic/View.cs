@@ -536,8 +536,84 @@ public class View : MonoBehaviour {
         InitPages();
 	}
 
+    int ErrorOccurType = 0;
+
     private void Update()
     {
-        GetMainPage().SetSaveState(ModelInst.IsPendingDirty(), ModelInst.GetSaveWorkerState());
+        //if(ErrorOccurType == 0)
+        //{
+        //    ErrorOccurType = GetMainPage().SetSaveState(ModelInst.GetSaveWorkerState(), ModelInst.IsPendingDirty(), ModelInst.IsDiskSaveDirty(), ModelInst.IsCloudSaveDirty());
+        //}
+        //else
+        //{
+        //    OpenPopPage("儲存失敗，請洽工程師",
+        //    delegate ()
+        //    {
+        //        ClosePopPage();
+        //    },
+        //    delegate ()
+        //    {
+        //        ClosePopPage();
+        //    });
+        //}
+
+        if (ErrorOccurType == 0)
+        {
+            bool isPending = ModelInst.IsPendingDirty();
+            if (isPending)
+            {
+                GetMainPage().StateColor.color = Color.red;
+                GetMainPage().State.text = "等待儲存";
+            }
+            else
+            {
+                SaveWorkerState state = ModelInst.GetSaveWorkerState();
+                GetMainPage().StateColor.color = Color.green;
+                switch (state)
+                {
+                    case SaveWorkerState.Saved:
+                        bool isDiskSave = ModelInst.IsDiskSaveDirty();
+                        bool isCloudSave = ModelInst.IsCloudSaveDirty();
+                        if (!isPending && !isDiskSave && !isCloudSave)
+                        {
+                            GetMainPage().State.text = "儲存完畢";
+                        }
+                        else
+                        {
+                            GetMainPage().State.text = "狀況不對";
+                            ErrorOccurType = 1;
+                        }
+                        break;
+                    case SaveWorkerState.Starting:
+                        GetMainPage().State.text = "初使化";
+                        break;
+                    case SaveWorkerState.Checking:
+                        GetMainPage().State.text = "小跟班";
+                        break;
+                    case SaveWorkerState.Pending:
+                        GetMainPage().State.text = "等待中";
+                        break;
+                    case SaveWorkerState.Saving:
+                        GetMainPage().State.text = "儲存中";
+                        GetMainPage().StateColor.color = Color.yellow;
+                        break;
+                    default:
+                        ErrorOccurType = 2;
+                        break;
+                }
+            }
+        }
+        else
+        {
+            OpenPopPage("儲存失敗，請洽工程師。不再顯示儲存狀態",
+            delegate ()
+            {
+                ClosePopPage();
+            },
+            delegate ()
+            {
+                ClosePopPage();
+            });
+        }
     }
 }

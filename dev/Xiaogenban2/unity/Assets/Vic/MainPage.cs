@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections;
 using System.Collections.Generic;
+using UnityEditor.PackageManager;
 using UnityEngine;
 using UnityEngine.Events;
 using UnityEngine.UI;
@@ -70,40 +71,49 @@ public class MainPage : Page, IHasMoneyCar
         ItemListToTop();
     }
 
-    public void SetSaveState(bool isPending, SaveWorkerState state)
-    {
-        if (isPending)
-        {
-            StateColor.color = Color.red;
-            this.State.text = "等待儲存";
-        }
-        else
-        {
-            StateColor.color = Color.green;
-            switch (state)
-            {
-                case SaveWorkerState.Saved:
-                    this.State.text = "儲存完畢";
-                    break;
-                case SaveWorkerState.Starting:
-                    this.State.text = "初使化";
-                    break;
-                case SaveWorkerState.Checking:
-                    this.State.text = "小跟班";
-                    break;
-                case SaveWorkerState.Pending:
-                    this.State.text = "等待中";
-                    break;
-                case SaveWorkerState.Saving:
-                    this.State.text = "儲存中";
-                    StateColor.color = Color.yellow;
-                    break;
-                default:
-                    break;
-            }
-        }
+    //public int SetSaveState(SaveWorkerState state, bool isPending, bool isDiskSave, bool isCloudSave)
+    //{
+    //    if (isPending)
+    //    {
+    //        StateColor.color = Color.red;
+    //        this.State.text = "等待儲存";
+    //        return 0;
+    //    }
+    //    else
+    //    {
+    //        StateColor.color = Color.green;
+    //        switch (state)
+    //        {
+    //            case SaveWorkerState.Saved:
+    //                if(!isPending && !isDiskSave && !isCloudSave)
+    //                {
+    //                    this.State.text = "儲存完畢";
+    //                    return 0;
+    //                }
+    //                else
+    //                {
+    //                    this.State.text = "狀況不對";
+    //                    return 1;
+    //                }
+    //            case SaveWorkerState.Starting:
+    //                this.State.text = "初使化";
+    //                return 0;
+    //            case SaveWorkerState.Checking:
+    //                this.State.text = "小跟班";
+    //                return 0;
+    //            case SaveWorkerState.Pending:
+    //                this.State.text = "等待中";
+    //                return 0;
+    //            case SaveWorkerState.Saving:
+    //                this.State.text = "儲存中";
+    //                StateColor.color = Color.yellow;
+    //                return 0;
+    //            default:
+    //                return 2;
+    //        }
+    //    }
         
-    }
+    //}
 
     public void Buy()
     {
