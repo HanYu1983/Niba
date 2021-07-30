@@ -988,7 +988,7 @@ public class Model : MonoBehaviour, IModel
 
 
     #region debug
-    private bool isDebug = true;
+    private bool isDebug = false;
     public void SetDebug(bool v)
     {
         isDebug = v;
@@ -1002,7 +1002,7 @@ public class Model : MonoBehaviour, IModel
         stringToEdit = "["+DateTime.Now.ToLongTimeString()+"]"+"\n"+ t + "\n" + stringToEdit;
     }
     private string stringToEdit = "";
-    private Vector2 scrollPosition = Vector2.zero;
+    // private Vector2 scrollPosition = Vector2.zero;
     private void OnGUI()
     {
         if(GUI.Button(new Rect(0, 0, 100, 20), "log"))
