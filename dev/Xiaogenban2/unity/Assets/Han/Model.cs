@@ -18,7 +18,7 @@ public class Model : MonoBehaviour, IModel
 
     void OnApplicationQuit()
     {
-        Debug.Log("OnApplicationQuit");
+        Log("OnApplicationQuit");
         CloseSaveWorker();
     }
 
@@ -658,12 +658,12 @@ public class Model : MonoBehaviour, IModel
             {
                 if (memoItems.ContainsKey(m) == false)
                 {
-                    Debug.LogFormat("{0} not found.", m);
+                    Log(string.Format("{0} not found.", m));
                     continue;
                 }
                 if (memoItems[m].isSelect)
                 {
-                    Debug.LogFormat("{0} already selected.", m);
+                    Log(string.Format("{0} already selected.", m));
                     continue;
                 }
                 memoItems[m].isSelect = true;
@@ -685,12 +685,12 @@ public class Model : MonoBehaviour, IModel
             {
                 if (memoItems.ContainsKey(m) == false)
                 {
-                    Debug.LogFormat("{0} not found.", m);
+                    Log(string.Format("{0} not found.", m));
                     continue;
                 }
                 if (memoItems[m].isSelect == false)
                 {
-                    Debug.LogFormat("{0} already unselected.", m);
+                    Log(string.Format("{0} already unselected.", m));
                     continue;
                 }
                 memoItems[m].isSelect = false;
@@ -846,17 +846,17 @@ public class Model : MonoBehaviour, IModel
     {
         string json = JsonUtility.ToJson(temp, true);
         var filePath = persistentDataPath + "/" + fileName;
-        Debug.LogFormat("save to {0}", filePath);
+        Log(string.Format("save to {0}", filePath));
         File.WriteAllText(filePath, json);
     }
 
     private void Load()
     {
         var filePath = persistentDataPath + "/" + fileName;
-        Debug.LogFormat("load from {0}", filePath);
+        Log(string.Format("load from {0}", filePath));
         if (File.Exists(filePath) == false)
         {
-            Debug.LogFormat("{0} not found", filePath);
+            Log(string.Format("{0} not found", filePath));
             return;
         }
         string json = File.ReadAllText(filePath);
@@ -896,9 +896,9 @@ public class Model : MonoBehaviour, IModel
         catch (Exception e)
         {
             // 離線使用時不跳alert
-            InvokeErrorAction(e);
+            // InvokeErrorAction(e);
             // 前端必須要顯示isCloudSaveDirty狀態來讓使用者判斷有沒有成功同步網路資料
-            Debug.Log(e.Message);
+            Log(e.Message);
         }
         isCloudSaveLock = false;
     }
@@ -956,8 +956,8 @@ public class Model : MonoBehaviour, IModel
 
     public void InvokeErrorAction(Exception e)
     {
-        Debug.Log(e.StackTrace);
-        Debug.Log(e.Message);
+        Log(e.StackTrace);
+        Log(e.Message);
         if (errorAction != null)
         {
             errorAction(e.Message);
@@ -978,11 +978,43 @@ public class Model : MonoBehaviour, IModel
         }
         catch (Exception e)
         {
-            Debug.Log(e.Message);
+            Log(e.Message);
             InvokeErrorAction(e);
             callback(false);
         }
     }
 
+    #endregion
+
+
+    #region debug
+    private bool isDebug = true;
+    public void SetDebug(bool v)
+    {
+        isDebug = v;
+    }
+    public bool IsDebug()
+    {
+        return isDebug;
+    }
+    void Log(string t)
+    {
+        stringToEdit = "["+DateTime.Now.ToLongTimeString()+"]"+"\n"+ t + "\n" + stringToEdit;
+    }
+    private string stringToEdit = "";
+    private Vector2 scrollPosition = Vector2.zero;
+    private void OnGUI()
+    {
+        if(GUI.Button(new Rect(0, 0, 100, 20), "log"))
+        {
+            SetDebug(!IsDebug());
+        }
+        if (IsDebug())
+        {
+            //scrollPosition = GUI.BeginScrollView(new Rect(0, 20, 400, 800), scrollPosition, new Rect(0, 0, 400, 800));
+            stringToEdit = GUI.TextArea(new Rect(0, 20, 400, 800), stringToEdit);
+            //GUI.EndScrollView();
+        }
+    }
     #endregion
 }

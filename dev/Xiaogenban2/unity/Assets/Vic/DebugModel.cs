@@ -236,4 +236,12 @@ public class DebugModel : MonoBehaviour, IModel
     {
         return true;
     }
+    public void SetDebug(bool v)
+    {
+        
+    }
+    public bool IsDebug()
+    {
+        return true;
+    }
 }

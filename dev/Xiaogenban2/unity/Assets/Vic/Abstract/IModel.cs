@@ -45,4 +45,7 @@ public interface IModel
     SaveWorkerState GetSaveWorkerState();
     // 手動同步
     void ManuallySave();
+    // Debug Model
+    void SetDebug(bool v);
+    bool IsDebug();
 }
