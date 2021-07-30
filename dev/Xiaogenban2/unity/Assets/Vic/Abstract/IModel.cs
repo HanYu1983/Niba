@@ -38,6 +38,8 @@ public interface IModel
     // 以下三個方法可以同時使用. IsPendingDirty, GetSaveWorkerState可以優先使用
     // 是否存在還沒同步(cloud only)的內容
     bool IsCloudSaveDirty();
+    // 是否存在還沒同步(disk only)的內容
+    bool IsDiskSaveDirty();
     // 是否存在還沒同步(disk, cloud)的內容
     bool IsPendingDirty();
     // 取得工作狀態

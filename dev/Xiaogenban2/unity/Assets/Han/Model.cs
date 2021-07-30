@@ -143,16 +143,26 @@ public class Model : MonoBehaviour, IModel{
         saveWorkDone = true;
     }
 
+    private bool isDiskSaveDirty = false;
+
+    public bool IsDiskSaveDirty()
+    {
+        return isDiskSaveDirty;
+    }
+
     private IEnumerator SaveDisk(Memonto memonto)
     {
         yield return null;
         var isDone = false;
         Exception err = null;
+        isDiskSaveDirty = true;
         var saveWroker = new Thread(()=>
         {
             try{
-                Save(memonto);                
-            }catch(Exception e){
+                Save(memonto);
+                isDiskSaveDirty = false;
+            }
+            catch(Exception e){
                 err = e;
             }finally{
                 isDone = true;
@@ -351,8 +361,8 @@ public class Model : MonoBehaviour, IModel{
         catch(Exception e)
         {
             InvokeErrorAction(e);
-            throw e;
         }
+        return new Item(0, 0, "", 0);
     }
 
     public static Func<Earn, bool> MemoContains(string memo)
@@ -647,13 +657,12 @@ public class Model : MonoBehaviour, IModel{
                 }
                 memoItems[m].isSelect = true;
             }
-            return GetMemoList();
         }
         catch (Exception e)
         {
             InvokeErrorAction(e);
-            throw e;
         }
+        return GetMemoList();
     }
 
     public List<MemoItem> UnSelectMemo(string memo)
@@ -675,13 +684,12 @@ public class Model : MonoBehaviour, IModel{
                 }
                 memoItems[m].isSelect = false;
             }
-            return GetMemoList();
         }
         catch (Exception e)
         {
             InvokeErrorAction(e);
-            throw e;
         }
+        return GetMemoList();
     }
 
     
@@ -699,13 +707,12 @@ public class Model : MonoBehaviour, IModel{
                 memoItems.Add(m.Memo, m);
             }
             OnAddMemo();
-            return GetMemoList();
         }
         catch (Exception e)
         {
             InvokeErrorAction(e);
-            throw e;
         }
+        return GetMemoList();
     }
 
     public string MemoListToString(List<MemoItem> list)
@@ -741,13 +748,12 @@ public class Model : MonoBehaviour, IModel{
                 memoItems.Remove(selected);
             }
             OnDeleteMemo(selectedMemoList);
-            return GetMemoList();
         }
         catch (Exception e)
         {
             InvokeErrorAction(e);
-            throw e;
         }
+        return GetMemoList();
     }
 
     public List<MemoItem> EditMemo(string memo, bool removeOld)
@@ -768,14 +774,12 @@ public class Model : MonoBehaviour, IModel{
             }
             memoItems.Add(memo, new MemoItem(memo, false));
             OnEditMemo(selectedMemoList, memo);
-            return GetMemoList();
         }
         catch (Exception e)
         {
             InvokeErrorAction(e);
-            throw e;
         }
-        
+        return GetMemoList();
     }
 
     private void UpdateMemoLastUTC(string memo)
@@ -947,7 +951,6 @@ public class Model : MonoBehaviour, IModel{
         {
             errorAction(e.Message);
         }
-        throw e;
     }
 
     public void SetErrorAction(UnityAction<string> callback)

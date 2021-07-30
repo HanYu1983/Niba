@@ -232,4 +232,8 @@ public class DebugModel : MonoBehaviour, IModel
     {
 
     }
+    public bool IsDiskSaveDirty()
+    {
+        return true;
+    }
 }
