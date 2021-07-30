@@ -7,7 +7,8 @@ using System;
 using System.IO;
 using System.Threading;
 
-public class Model : MonoBehaviour, IModel{
+public class Model : MonoBehaviour, IModel
+{
 
     void Start()
     {
@@ -55,9 +56,9 @@ public class Model : MonoBehaviour, IModel{
 
     void OnDeleteMemo(List<string> selectedMomoList)
     {
-        foreach(var deleteMemo in selectedMomoList)
+        foreach (var deleteMemo in selectedMomoList)
         {
-            var selectedEarns = GetEarns().Values.Where(d=>
+            var selectedEarns = GetEarns().Values.Where(d =>
             {
                 if (d.memo == null)
                 {
@@ -66,7 +67,7 @@ public class Model : MonoBehaviour, IModel{
                 return d.memo.Contains(deleteMemo);
             }).ToList();
 
-            foreach(var earn in selectedEarns)
+            foreach (var earn in selectedEarns)
             {
                 var willDelete = StringToMemoList(earn.memo).Select(d => d.Memo).Where(d => d == deleteMemo).ToList();
                 if (willDelete.Count == 0)
@@ -75,7 +76,7 @@ public class Model : MonoBehaviour, IModel{
                 }
                 var newMemos = StringToMemoList(earn.memo).Where(d => d.Memo != deleteMemo);
                 // MemoListToString 只會選擇isSelect為真的. 所以先設為真
-                var memoStr = MemoListToString(newMemos.Select(d=>new MemoItem(d.Memo, true)).ToList());
+                var memoStr = MemoListToString(newMemos.Select(d => new MemoItem(d.Memo, true)).ToList());
                 ChangeItemMemo(earn.id, memoStr, (err, items) => { });
             }
         }
@@ -98,7 +99,7 @@ public class Model : MonoBehaviour, IModel{
             foreach (var earn in selectedEarns)
             {
                 var willDelete = StringToMemoList(earn.memo).Select(d => d.Memo).Where(d => d == deleteMemo).ToList();
-                if(willDelete.Count == 0)
+                if (willDelete.Count == 0)
                 {
                     continue;
                 }
@@ -108,7 +109,7 @@ public class Model : MonoBehaviour, IModel{
                 newMemos = newMemos.Distinct().ToList();
 
                 // MemoListToString 只會選擇isSelect為真的. 所以先設為真
-                var memoStr = MemoListToString(newMemos.Select(d=>new MemoItem(d, true)).ToList());
+                var memoStr = MemoListToString(newMemos.Select(d => new MemoItem(d, true)).ToList());
                 ChangeItemMemo(earn.id, memoStr, (err, items) => { });
             }
         }
@@ -129,7 +130,8 @@ public class Model : MonoBehaviour, IModel{
 
     private Memonto isDirty;
     private bool saveWorkDone;
-    public bool IsPendingDirty(){
+    public bool IsPendingDirty()
+    {
         return isDirty != null;
     }
 
@@ -156,28 +158,37 @@ public class Model : MonoBehaviour, IModel{
         var isDone = false;
         Exception err = null;
         isDiskSaveDirty = true;
-        var saveWroker = new Thread(()=>
+        var saveWroker = new Thread(() =>
         {
-            try{
+            try
+            {
                 Save(memonto);
-                isDiskSaveDirty = false;
             }
-            catch(Exception e){
+            catch (Exception e)
+            {
                 err = e;
-            }finally{
+            }
+            finally
+            {
                 isDone = true;
             }
         });
         saveWroker.Start();
         yield return new WaitUntil(() => isDone);
-        if( err != null ){
+        if (err != null)
+        {
             InvokeErrorAction(err);
             err = null;
+        }
+        else
+        {
+            isDiskSaveDirty = false;
         }
     }
 
     private SaveWorkerState saveState;
-    public SaveWorkerState GetSaveWorkerState(){
+    public SaveWorkerState GetSaveWorkerState()
+    {
         return saveState;
     }
 
@@ -189,7 +200,7 @@ public class Model : MonoBehaviour, IModel{
         {
             saveState = SaveWorkerState.Checking;
             yield return new WaitForSeconds(1);
-            if(isDirty == null)
+            if (isDirty == null)
             {
                 continue;
             }
@@ -257,7 +268,7 @@ public class Model : MonoBehaviour, IModel{
             callback(null, GenItemList());
             OnAddEarn(earn);
         }
-        catch(Exception e)
+        catch (Exception e)
         {
             InvokeErrorAction(e);
         }
@@ -358,7 +369,7 @@ public class Model : MonoBehaviour, IModel{
         {
             return _GetItemCacheById(id);
         }
-        catch(Exception e)
+        catch (Exception e)
         {
             InvokeErrorAction(e);
         }
@@ -512,7 +523,7 @@ public class Model : MonoBehaviour, IModel{
         itemListCache = list;
 
         itemMapCache.Clear();
-        foreach(var item in itemListCache)
+        foreach (var item in itemListCache)
         {
             itemMapCache.Add(item.Id, item);
         }
@@ -533,7 +544,7 @@ public class Model : MonoBehaviour, IModel{
 
     public List<Item> GetItemListCache()
     {
-        if(itemListCache == null)
+        if (itemListCache == null)
         {
             return GenItemList();
         }
@@ -599,7 +610,7 @@ public class Model : MonoBehaviour, IModel{
 
     #region memo
     private Dictionary<string, MemoItem> memoItems = new Dictionary<string, MemoItem>();
-    private static char[] SplitTag = new char[] {';'};
+    private static char[] SplitTag = new char[] { ';' };
     private string memoFilter;
 
     public void SetFilterMemo(string filter)
@@ -619,7 +630,7 @@ public class Model : MonoBehaviour, IModel{
         return memoItems.Values
             .Where(d => d.Memo != null && d.Memo.Contains(memoFilter))
             //.OrderByDescending(d => d.LastSelectUTC)
-            .OrderBy(d=>d.Memo)
+            .OrderBy(d => d.Memo)
             .ToList();
     }
 
@@ -692,7 +703,7 @@ public class Model : MonoBehaviour, IModel{
         return GetMemoList();
     }
 
-    
+
     public List<MemoItem> AddMemo(string memo)
     {
         try
@@ -717,7 +728,7 @@ public class Model : MonoBehaviour, IModel{
 
     public string MemoListToString(List<MemoItem> list)
     {
-        return string.Join(";", list.Where(d=>d.isSelect).Select(d => d.Memo).ToArray());
+        return string.Join(";", list.Where(d => d.isSelect).Select(d => d.Memo).ToArray());
     }
 
     private List<MemoItem> StringToMemoList(string memo)
@@ -785,9 +796,9 @@ public class Model : MonoBehaviour, IModel{
     private void UpdateMemoLastUTC(string memo)
     {
         var datas = memo.Split(SplitTag);
-        foreach(var d in datas)
+        foreach (var d in datas)
         {
-            if(memoItems.ContainsKey(d) == false)
+            if (memoItems.ContainsKey(d) == false)
             {
                 continue;
             }
@@ -900,9 +911,9 @@ public class Model : MonoBehaviour, IModel{
     public string GetShowID(string id)
     {
         var buf = new List<string>();
-        for(var i=0; i<id.Length; i += 4)
+        for (var i = 0; i < id.Length; i += 4)
         {
-            buf.Add(id.Substring(i, Math.Min(id.Length, i+4) - i));
+            buf.Add(id.Substring(i, Math.Min(id.Length, i + 4) - i));
         }
         return string.Join("-", buf);
     }
@@ -927,7 +938,7 @@ public class Model : MonoBehaviour, IModel{
             InvokeErrorAction(e);
             callback(false);
         }
-        
+
     }
 
     public bool IsValidID(string id)
