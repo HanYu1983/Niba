@@ -1,9 +1,4 @@
-﻿using System.Collections;
-using System.Collections.Generic;
-using UnityEngine;
-using UnityEngine.Events;
-using UnityEngine.UI;
-using UnityScript.Steps;
+﻿using UnityEngine.UI;
 
 public class DataPage : Page
 {
