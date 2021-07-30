@@ -12,6 +12,7 @@ public class Model : MonoBehaviour, IModel
 
     void Start()
     {
+        Log("Start");
         SetPersistentDataPath(Application.persistentDataPath);
         StartCoroutine(SaveWorker());
     }
@@ -24,38 +25,45 @@ public class Model : MonoBehaviour, IModel
 
     void OnAddEarn(Earn earn)
     {
+        Log("OnAddEarn");
         ClearCar();
         OnDataChange();
     }
 
     void OnDeleteEarn()
     {
+        Log("OnDeleteEarn");
         OnDataChange();
     }
 
     void OnAddMemo()
     {
+        Log("OnAddMemo");
         OnDataChange();
     }
 
     void OnDataChange()
     {
+        Log("OnDataChange");
         RequestSave(GetMemonto());
     }
 
     void OnEarnMoneyChange()
     {
+        Log("OnEarnMoneyChange");
         OnDataChange();
     }
 
     void OnEarnMemoChange(string memo)
     {
+        Log("OnEarnMemoChange");
         UpdateMemoLastUTC(memo);
         OnDataChange();
     }
 
     void OnDeleteMemo(List<string> selectedMomoList)
     {
+        Log("OnDeleteMemo");
         foreach (var deleteMemo in selectedMomoList)
         {
             var selectedEarns = GetEarns().Values.Where(d =>
@@ -85,6 +93,7 @@ public class Model : MonoBehaviour, IModel
 
     void OnEditMemo(List<string> selectedMomoList, string memo)
     {
+        Log("OnEditMemo");
         foreach (var deleteMemo in selectedMomoList)
         {
             var selectedEarns = GetEarns().Values.Where(d =>
@@ -118,6 +127,7 @@ public class Model : MonoBehaviour, IModel
 
     void OnEarnChange(Earn earn)
     {
+        Log("OnEarnChange");
         OnDataChange();
     }
 
@@ -155,6 +165,7 @@ public class Model : MonoBehaviour, IModel
     private IEnumerator SaveDisk(Memonto memonto)
     {
         yield return null;
+        Log("SaveDisk Start");
         var isDone = false;
         Exception err = null;
         isDiskSaveDirty = true;
@@ -184,6 +195,7 @@ public class Model : MonoBehaviour, IModel
         {
             isDiskSaveDirty = false;
         }
+        Log("SaveDisk End");
     }
 
     private SaveWorkerState saveState;
@@ -879,6 +891,7 @@ public class Model : MonoBehaviour, IModel
     // 注意, 這個方法不能在執行完畢前同時呼叫多次
     private IEnumerator InvokeSaveToCloud()
     {
+        Log("InvokeSaveToCloud Start");
         if (isCloudSaveLock)
         {
             InvokeErrorAction(new Exception("isCloudSaveLock"));
@@ -901,6 +914,7 @@ public class Model : MonoBehaviour, IModel
             Log(e.Message);
         }
         isCloudSaveLock = false;
+        Log("InvokeSaveToCloud End");
     }
 
     public string GetUserID()
@@ -999,16 +1013,17 @@ public class Model : MonoBehaviour, IModel
     }
     void Log(string t)
     {
+        Debug.Log(t);
         stringToEdit = "["+DateTime.Now.ToLongTimeString()+"]"+"\n"+ t + "\n" + stringToEdit;
     }
     private string stringToEdit = "";
     // private Vector2 scrollPosition = Vector2.zero;
     private void OnGUI()
     {
-        if(GUI.Button(new Rect(0, 0, 100, 20), "log"))
-        {
-            SetDebug(!IsDebug());
-        }
+        //if(GUI.Button(new Rect(0, 0, 100, 20), "log"))
+        //{
+        //    SetDebug(!IsDebug());
+        //}
         if (IsDebug())
         {
             //scrollPosition = GUI.BeginScrollView(new Rect(0, 20, 400, 800), scrollPosition, new Rect(0, 0, 400, 800));
