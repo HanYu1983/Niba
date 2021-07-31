@@ -573,7 +573,7 @@ public class View : MonoBehaviour {
     }
 
     void Start () {
-        
+        Application.runInBackground = true;
         InitPages();
 	}
 
