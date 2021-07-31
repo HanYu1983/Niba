@@ -192,7 +192,7 @@ public class CloudSave : MonoBehaviour {
         
         var content = "";
         // load others
-        var otherCloudPath = cloudHost + string.Format(cloudFolder, id) + "other.json";
+        var otherCloudPath = cloudHost + string.Format(cloudFolder, targetId) + "other.json";
         Debug.Log("load:"+ otherCloudPath);
         yield return HttpGet(otherCloudPath, (err, str) =>
         {
@@ -207,7 +207,7 @@ public class CloudSave : MonoBehaviour {
         }
         var memonto = JsonUtility.FromJson<Memonto>(content);
         // load earns
-        var earnFolderPath = cloudHost + string.Format(cloudFolder, id);
+        var earnFolderPath = cloudHost + string.Format(cloudFolder, targetId);
         Debug.Log("load:" + earnFolderPath);
         yield return HttpGet(earnFolderPath, (err, str) =>
         {
