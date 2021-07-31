@@ -36,6 +36,42 @@ public class View : MonoBehaviour {
     {
         ModelInst.ManuallySave();
     }
+
+    public void OnDataPageArchiveClick()
+    {
+        List<Item> items = ModelInst.GetItemListCache();
+        OpenPopPage("目前資料筆數為:" + items.Count + "，打包后剩餘" + Math.Max(items.Count - 1000, 0) + "筆，確定打包嗎？", delegate ()
+        {
+            ClosePopPage();
+            ModelInst.InvokeArchive(delegate (object obj, List<Item> newItems) {
+                GetMainPage().RefreshList(true);
+                GetDataPage().Close();
+                //OpenPopPage("打包完畢，目前資料筆數為" + newItems.Count, delegate ()
+                //{
+                //    ClosePopPage();
+                //}, delegate ()
+                //{
+                //    ClosePopPage();
+                //});
+            });
+        }, delegate ()
+        {
+            ClosePopPage();
+        });
+    }
+
+    public void OnDataPageDebugClick()
+    {
+        ModelInst.SetDebug(!ModelInst.IsDebug());
+        //string text = ModelInst.IsDebug() ? "開啓除錯模式" : "關閉除錯模式";
+        //OpenPopPage(text, delegate ()
+        //{
+        //    ClosePopPage();
+        //}, delegate ()
+        //{
+        //    ClosePopPage();
+        //});
+    }
     
     public void OnDataPageConfirmClick()
     {
@@ -547,53 +583,75 @@ public class View : MonoBehaviour {
     {
         if (ErrorOccurType == 0)
         {
-            bool isDiskSave = ModelInst.IsDiskSaveDirty();
-            bool isCloudSave = ModelInst.IsCloudSaveDirty();
-            bool isPending = ModelInst.IsPendingDirty();
-            var text = "pending";
-            if (isPending)
+            bool isArchiving = ModelInst.IsArchiving();
+            if (isArchiving)
             {
                 GetMainPage().StateColor.color = Color.red;
+                GetMainPage().State.text = "打包中...";
                 GetDataPage().SetSaveEnable(false);
-                text = "等待儲存";
+                GetDataPage().SetArchiveEnable(false);
+                GetLoadingPage().Open();
             }
             else
             {
-                SaveWorkerState state = ModelInst.GetSaveWorkerState();
-                GetMainPage().StateColor.color = Color.green;
-                switch (state)
+                GetLoadingPage().Close();
+                
+                bool isDiskSave = ModelInst.IsDiskSaveDirty();
+                bool isCloudSave = ModelInst.IsCloudSaveDirty();
+                bool isPending = ModelInst.IsPendingDirty();
+                var text = "pending";
+                if (isPending)
                 {
-                    case SaveWorkerState.Saved:
-                        text = "儲存完畢";
-                        GetDataPage().SetSaveEnable(true);
-                        break;
-                    case SaveWorkerState.Starting:
-                        text = "初使化";
-                        GetDataPage().SetSaveEnable(false);
-                        break;
-                    case SaveWorkerState.Checking:
-                        text = "小跟班";
-                        GetDataPage().SetSaveEnable(true);
-                        break;
-                    case SaveWorkerState.Pending:
-                        GetDataPage().SetSaveEnable(false);
-                        text = "等待中";
-                        break;
-                    case SaveWorkerState.Saving:
-                        text = "儲存中";
-                        GetMainPage().StateColor.color = Color.yellow;
-                        GetDataPage().SetSaveEnable(false);
-                        break;
-                    default:
-                        break;
+                    GetMainPage().StateColor.color = Color.red;
+                    GetDataPage().SetSaveEnable(false);
+                    GetDataPage().SetArchiveEnable(false);
+                    text = "等待儲存";
                 }
+                else
+                {
+                    GetMainPage().StateColor.color = Color.green;
+                    SaveWorkerState state = ModelInst.GetSaveWorkerState();
+                    switch (state)
+                    {
+                        case SaveWorkerState.Saved:
+                            text = "儲存完畢";
+                            GetDataPage().SetSaveEnable(true);
+                            GetDataPage().SetArchiveEnable(true);
+                            break;
+                        case SaveWorkerState.Starting:
+                            text = "初使化";
+                            GetDataPage().SetSaveEnable(false);
+                            GetDataPage().SetArchiveEnable(false);
+                            break;
+                        case SaveWorkerState.Checking:
+                            text = "小跟班";
+                            GetDataPage().SetSaveEnable(true);
+                            GetDataPage().SetArchiveEnable(true);
+                            break;
+                        case SaveWorkerState.Pending:
+                            GetDataPage().SetSaveEnable(false);
+                            GetDataPage().SetArchiveEnable(false);
+                            text = "等待中";
+                            break;
+                        case SaveWorkerState.Saving:
+                            text = "儲存中";
+                            GetMainPage().StateColor.color = Color.yellow;
+                            GetDataPage().SetSaveEnable(false);
+                            GetDataPage().SetArchiveEnable(false);
+                            break;
+                        default:
+                            break;
+                    }
+                }
+                text = text + (isDiskSave == false ? "O" : "X") + (isCloudSave == false ? "O" : "X");
+                GetMainPage().State.text = text;
             }
-            text = text + (isDiskSave == false ? "O" : "X") + (isCloudSave == false ? "O" : "X");
-            GetMainPage().State.text = text;
+            
         }
         else
         {
             GetDataPage().SetSaveEnable(false);
+            GetDataPage().SetArchiveEnable(false);
             OpenPopPage("儲存失敗，請洽工程師。不再顯示儲存狀態",
             delegate ()
             {

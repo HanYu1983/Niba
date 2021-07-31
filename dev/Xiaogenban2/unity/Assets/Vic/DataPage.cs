@@ -6,6 +6,7 @@ public class DataPage : Page
     public Text TxtShowID;
     public InputField TxtInput;
     public Button BtnSave;
+    public Button BtnArchive;
 
     public string ID
     {
@@ -49,5 +50,10 @@ public class DataPage : Page
     public void SetSaveEnable(bool enable)
     {
         BtnSave.interactable = enable;
+    }
+
+    public void SetArchiveEnable(bool enable)
+    {
+        BtnArchive.interactable = enable;
     }
 }

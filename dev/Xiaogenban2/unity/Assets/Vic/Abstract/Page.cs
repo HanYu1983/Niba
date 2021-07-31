@@ -8,7 +8,10 @@ public class Page : MonoBehaviour, IPage
 
     public virtual void Close()
     {
-        this.gameObject.SetActive(false);
+        if (gameObject.activeSelf)
+        {
+            this.gameObject.SetActive(false);
+        }
     }
 
     public virtual void Init()
@@ -18,7 +21,10 @@ public class Page : MonoBehaviour, IPage
 
     public virtual void Open()
     {
-        this.gameObject.SetActive(true);
+        if (!gameObject.activeSelf)
+        {
+            gameObject.SetActive(true);
+        }
     }
     
     public IModel Model
