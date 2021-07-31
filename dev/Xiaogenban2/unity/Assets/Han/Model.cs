@@ -1105,7 +1105,7 @@ public class Model : MonoBehaviour, IModel
     }
     public void InvokeArchive(UnityAction<object, List<Item>> callback)
     {
-        if(GetSaveWorkerState() == SaveWorkerState.Checking)
+        if(GetSaveWorkerState() != SaveWorkerState.Checking)
         {
             InvokeErrorAction(new Exception("平常狀態下才能打包"));
             callback(null, GetItemListCache());
