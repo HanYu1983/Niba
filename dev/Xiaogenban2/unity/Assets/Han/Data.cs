@@ -15,6 +15,7 @@ public struct Earn
 
 public class Memonto
 {
+    public int triggerId;
     public int seqId;
     public List<Earn> earns;
     public List<string> memo;

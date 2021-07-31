@@ -45,7 +45,7 @@ public class Model : MonoBehaviour, IModel
     void OnDataChange()
     {
         Log("OnDataChange");
-        RequestSave(GetMemonto());
+        RequestSave(GetMemonto(GetLastInputEarn().id));
     }
 
     void OnEarnMoneyChange()
@@ -135,7 +135,7 @@ public class Model : MonoBehaviour, IModel
 
     public void ManuallySave()
     {
-        RequestSave(GetMemonto());
+        RequestSave(GetMemonto(0));
     }
 
     private Memonto isDirty;
@@ -220,7 +220,7 @@ public class Model : MonoBehaviour, IModel
             var temp = isDirty;
             isDirty = null;
             yield return SaveDisk(temp);
-            yield return InvokeSaveToCloud();
+            yield return InvokeSaveToCloud(temp.triggerId);
             saveState = SaveWorkerState.Saved;
         }
         saveState = SaveWorkerState.Checking;
@@ -230,7 +230,7 @@ public class Model : MonoBehaviour, IModel
         }
         saveState = SaveWorkerState.Saving;
         yield return SaveDisk(isDirty);
-        yield return InvokeSaveToCloud();
+        yield return InvokeSaveToCloud(isDirty.triggerId);
         saveState = SaveWorkerState.Saved;
     }
     #endregion
@@ -241,6 +241,11 @@ public class Model : MonoBehaviour, IModel
     private Dictionary<int, Earn> earns = new Dictionary<int, Earn>();
     private int seqId = 0;
     private Earn lastInputEarn;
+
+    public Earn GetLastInputEarn()
+    {
+        return lastInputEarn;
+    }
 
     public int NextSeqId()
     {
@@ -379,6 +384,7 @@ public class Model : MonoBehaviour, IModel
             var earn = earns[id];
             earn.money = money;
             earns[id] = earn;
+            lastInputEarn = earn;
             callback(null, GenItemList());
             OnEarnMoneyChange();
         }
@@ -400,6 +406,7 @@ public class Model : MonoBehaviour, IModel
             {
                 throw new Exception(id + " not found. can not delete");
             }
+            lastInputEarn = earns[id];
             earns.Remove(id);
             callback(null, GenItemList());
             OnDeleteEarn();
@@ -869,7 +876,6 @@ public class Model : MonoBehaviour, IModel
 
 
     #region save
-    public string fileName = "save.json";
     private string persistentDataPath;
 
     private void SetPersistentDataPath(string path)
@@ -892,35 +898,79 @@ public class Model : MonoBehaviour, IModel
         }
     }
 
-    public Memonto GetMemonto()
+    private static int CompareEarnByID(Earn x, Earn y)
+    {
+        return x.id.CompareTo(y.id);
+    }
+
+    public Memonto GetMemonto(int triggerId)
     {
         var temp = new Memonto();
+        temp.triggerId = triggerId;
         temp.seqId = GetSeqId();
         temp.earns = new List<Earn>(earns.Values);
+        temp.earns.Sort(CompareEarnByID);
         temp.memo = new List<string>(memoItems.Values.Select(d => d.Memo));
         return temp;
     }
 
     private void Save(Memonto temp)
     {
-        string json = JsonUtility.ToJson(temp, true);
-        var filePath = persistentDataPath + "/" + fileName;
-        Log(string.Format("save to {0}", filePath));
-        File.WriteAllText(filePath, json);
+        // save earns
+        var bucketSize = 3;
+        var triggerBucketId = temp.triggerId / bucketSize;
+        for (var bucketId = 0; bucketId * bucketSize < temp.seqId; bucketId++)
+        {
+            if (triggerBucketId > 0 && triggerBucketId != bucketId)
+            {
+                continue;
+            }
+            var bucketEarns = temp.earns.Where(e =>
+            {
+                var earnBucketId = e.id / bucketSize;
+                return earnBucketId == bucketId;
+            });
+            var earnsMemonto = new Memonto();
+            earnsMemonto.earns = bucketEarns.ToList();
+            var earnsJson = JsonUtility.ToJson(earnsMemonto, true);
+            var earnsFilePath = $"{persistentDataPath}/earns{bucketId}.json";
+            Log(string.Format("save to {0}", earnsFilePath));
+            File.WriteAllText(earnsFilePath, earnsJson);
+        }
+        // save other
+        temp.earns.Clear();
+        var otherJson = JsonUtility.ToJson(temp, true);
+        var otherFilePath = $"{persistentDataPath}/other.json";
+        Log(string.Format("save to {0}", otherFilePath));
+        File.WriteAllText(otherFilePath, otherJson);
     }
 
     private void Load()
     {
-        var filePath = persistentDataPath + "/" + fileName;
+        // load others
+        var filePath = $"{persistentDataPath}/other.json";
         Log(string.Format("load from {0}", filePath));
         if (File.Exists(filePath) == false)
         {
-            Log(string.Format("{0} not found", filePath));
-            return;
+            throw new Exception(string.Format("{0} not found", filePath));
         }
-        string json = File.ReadAllText(filePath);
-        var temp = JsonUtility.FromJson<Memonto>(json);
-        SetMemonto(temp);
+        var memontoJson = File.ReadAllText(filePath);
+        var memonto = JsonUtility.FromJson<Memonto>(memontoJson);
+        // load earns
+        var info = new DirectoryInfo(persistentDataPath);
+        foreach (var file in info.GetFiles())
+        {
+            Log($"Detect File: {file.Name}");
+            if (file.Name.StartsWith("earns"))
+            {
+                Log($"Load Earns: {file.Name}");
+                var earnsFilePath = $"{persistentDataPath}/{file.Name}";
+                var earnsJson = File.ReadAllText(earnsFilePath);
+                var earnsMemonto = JsonUtility.FromJson<Memonto>(earnsJson);
+                memonto.earns.AddRange(earnsMemonto.earns);
+            }
+        }
+        SetMemonto(memonto);
     }
     #endregion
 
@@ -936,7 +986,7 @@ public class Model : MonoBehaviour, IModel
 
     private bool isCloudSaveLock = false;
     // 注意, 這個方法不能在執行完畢前同時呼叫多次
-    private IEnumerator InvokeSaveToCloud()
+    private IEnumerator InvokeSaveToCloud(int triggerId)
     {
         Log("InvokeSaveToCloud Start");
         if (isCloudSaveLock)
@@ -947,7 +997,7 @@ public class Model : MonoBehaviour, IModel
         isCloudSaveLock = true;
 
         isCloudSaveDirty = true;
-        yield return cloudSave.SaveToCloud();
+        yield return cloudSave.SaveToCloud(triggerId);
         try
         {
             cloudSave.CheckError();
@@ -1063,9 +1113,9 @@ public class Model : MonoBehaviour, IModel
     {
         Debug.Log(t);
         msgs.Insert(0, string.Format("[{0}] {1}", DateTime.Now.ToLocalTime(), t));
-        while(msgs.Count > 50)
+        while (msgs.Count > 50)
         {
-            msgs.RemoveAt(msgs.Count-1);
+            msgs.RemoveAt(msgs.Count - 1);
         }
         stringToEdit = string.Join("\n", msgs);
     }
@@ -1105,7 +1155,7 @@ public class Model : MonoBehaviour, IModel
     }
     public void InvokeArchive(UnityAction<object, List<Item>> callback)
     {
-        if(GetSaveWorkerState() != SaveWorkerState.Checking)
+        if (GetSaveWorkerState() != SaveWorkerState.Checking)
         {
             InvokeErrorAction(new Exception("平常狀態下才能打包"));
             callback(null, GetItemListCache());
@@ -1124,14 +1174,14 @@ public class Model : MonoBehaviour, IModel
         }
         Log(string.Format("Archive Start"));
         isArchiving = true;
-        var memonto = GetMemonto();
+        var memonto = GetMemonto(0);
         // add seqId for version control
         memonto.seqId++;
         var s = 0;
         var e = Math.Min(count, memonto.earns.Count);
         memonto.earns.Sort(CompareEarnByTime);
         var removedEarns = memonto.earns.GetRange(s, e);
-        if(removedEarns.Count == 0)
+        if (removedEarns.Count == 0)
         {
             InvokeErrorAction(new Exception("no need archive"));
             isArchiving = false;
