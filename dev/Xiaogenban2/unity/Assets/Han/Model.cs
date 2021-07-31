@@ -1099,6 +1099,11 @@ public class Model : MonoBehaviour, IModel
     }
     public void InvokeArchive(UnityAction<object, List<Item>> callback)
     {
+        if(GetSaveWorkerState() == SaveWorkerState.Checking)
+        {
+            InvokeErrorAction(new Exception("平常狀態下才能打包"));
+            callback(null, GenItemList());
+        }
         StartCoroutine(Archive(1000, callback));
     }
 
@@ -1107,6 +1112,7 @@ public class Model : MonoBehaviour, IModel
         if (isArchiving)
         {
             InvokeErrorAction(new Exception("archiving"));
+            callback(null, GenItemList());
             yield break;
         }
         Log(string.Format("Archive Start"));
@@ -1122,6 +1128,7 @@ public class Model : MonoBehaviour, IModel
         {
             InvokeErrorAction(new Exception("no need archive"));
             isArchiving = false;
+            callback(null, GenItemList());
             yield break;
         }
         // archive
@@ -1136,6 +1143,7 @@ public class Model : MonoBehaviour, IModel
         {
             InvokeErrorAction(cloudSave.GetError());
             isArchiving = false;
+            callback(null, GenItemList());
             yield break;
         }
         // if no error, apply
