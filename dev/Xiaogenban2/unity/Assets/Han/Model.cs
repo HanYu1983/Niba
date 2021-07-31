@@ -1103,6 +1103,7 @@ public class Model : MonoBehaviour, IModel
         {
             InvokeErrorAction(new Exception("平常狀態下才能打包"));
             callback(null, GenItemList());
+            return;
         }
         StartCoroutine(Archive(1000, callback));
     }
