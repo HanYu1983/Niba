@@ -1079,10 +1079,10 @@ public class Model : MonoBehaviour, IModel
         //}
         if (IsDebug())
         {
-            if (GUI.Button(new Rect(0, 20, 100, 20), "archive"))
-            {
-                InvokeArchive(delegate (object error, List<Item> list) { });
-            }
+            //if (GUI.Button(new Rect(0, 20, 100, 20), "archive"))
+            //{
+            //    InvokeArchive(delegate (object error, List<Item> list) { });
+            //}
             //scrollPosition = GUI.BeginScrollView(new Rect(0, 20, 400, 800), scrollPosition, new Rect(0, 0, 400, 800));
             stringToEdit = GUI.TextArea(new Rect(0, 40, 400, 800), stringToEdit);
             //GUI.EndScrollView();
