@@ -589,7 +589,7 @@ public class View : MonoBehaviour {
                 GetMainPage().StateColor.color = Color.red;
                 GetMainPage().State.text = "打包中...";
                 GetDataPage().SetSaveEnable(false);
-                GetDataPage().SetArchiveEnable(false);
+                //GetDataPage().SetArchiveEnable(false);
                 GetLoadingPage().Open();
             }
             else
@@ -604,7 +604,7 @@ public class View : MonoBehaviour {
                 {
                     GetMainPage().StateColor.color = Color.red;
                     GetDataPage().SetSaveEnable(false);
-                    GetDataPage().SetArchiveEnable(false);
+                    //GetDataPage().SetArchiveEnable(false);
                     text = "等待儲存";
                 }
                 else
@@ -616,28 +616,28 @@ public class View : MonoBehaviour {
                         case SaveWorkerState.Saved:
                             text = "儲存完畢";
                             GetDataPage().SetSaveEnable(true);
-                            GetDataPage().SetArchiveEnable(true);
+                            //GetDataPage().SetArchiveEnable(true);
                             break;
                         case SaveWorkerState.Starting:
                             text = "初使化";
                             GetDataPage().SetSaveEnable(false);
-                            GetDataPage().SetArchiveEnable(false);
+                            //GetDataPage().SetArchiveEnable(false);
                             break;
                         case SaveWorkerState.Checking:
                             text = "小跟班";
                             GetDataPage().SetSaveEnable(true);
-                            GetDataPage().SetArchiveEnable(true);
+                            //GetDataPage().SetArchiveEnable(true);
                             break;
                         case SaveWorkerState.Pending:
                             GetDataPage().SetSaveEnable(false);
-                            GetDataPage().SetArchiveEnable(false);
+                            //GetDataPage().SetArchiveEnable(false);
                             text = "等待中";
                             break;
                         case SaveWorkerState.Saving:
                             text = "儲存中";
                             GetMainPage().StateColor.color = Color.yellow;
                             GetDataPage().SetSaveEnable(false);
-                            GetDataPage().SetArchiveEnable(false);
+                            //GetDataPage().SetArchiveEnable(false);
                             break;
                         default:
                             break;
@@ -651,7 +651,7 @@ public class View : MonoBehaviour {
         else
         {
             GetDataPage().SetSaveEnable(false);
-            GetDataPage().SetArchiveEnable(false);
+            //GetDataPage().SetArchiveEnable(false);
             OpenPopPage("儲存失敗，請洽工程師。不再顯示儲存狀態",
             delegate ()
             {
