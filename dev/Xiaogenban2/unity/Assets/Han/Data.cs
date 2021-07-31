@@ -5,7 +5,7 @@ using System.Text;
 
 public class Config
 {
-    public static int BucketSize = 2000;
+    public static int BucketSize = 1000;
 }
 
 [Serializable]
