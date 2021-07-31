@@ -1049,7 +1049,7 @@ public class Model : MonoBehaviour, IModel
         {
             var memonto = cloudSave.GetModelMemonto();
             SetMemonto(memonto);
-            Save(memonto);
+            ManuallySave();
             callback(true);
         }
         catch (Exception e)

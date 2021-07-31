@@ -206,6 +206,8 @@ public class CloudSave : MonoBehaviour {
             yield break;
         }
         var memonto = JsonUtility.FromJson<Memonto>(content);
+        // 
+        memonto.triggerId = 0;
         // load earns
         var earnFolderPath = cloudHost + string.Format(cloudFolder, targetId);
         Debug.Log("load:" + earnFolderPath);
