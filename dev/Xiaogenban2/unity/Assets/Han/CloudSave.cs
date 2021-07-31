@@ -81,7 +81,7 @@ public class CloudSave : MonoBehaviour {
         yield return SaveToCloud(otherCloudPath, otherContent);
 
         // save earns.json
-        var bucketSize = 3;
+        var bucketSize = Config.BucketSize;
         var triggerBucketId = triggerId / bucketSize;
         var info = new DirectoryInfo(persistentDataPath);
         foreach (var file in info.GetFiles())

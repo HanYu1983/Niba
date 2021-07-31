@@ -923,7 +923,7 @@ public class Model : MonoBehaviour, IModel
     private void Save(Memonto temp)
     {
         // save earns
-        var bucketSize = 3;
+        var bucketSize = Config.BucketSize;
         var triggerBucketId = temp.triggerId / bucketSize;
         for (var bucketId = 0; bucketId * bucketSize < temp.seqId; bucketId++)
         {
