@@ -45,7 +45,7 @@ public class Model : MonoBehaviour, IModel
     void OnDataChange()
     {
         Log("OnDataChange");
-        RequestSave(GetMemonto(GetLastInputEarn().id));
+        RequestSave(GetLastInputEarn().id);
     }
 
     void OnEarnMoneyChange()
@@ -135,19 +135,19 @@ public class Model : MonoBehaviour, IModel
 
     public void ManuallySave()
     {
-        RequestSave(GetMemonto(0));
+        RequestSave(0);
     }
 
-    private Memonto isDirty;
+    private readonly List<int> isDirty = new List<int>();
     private bool saveWorkDone;
     public bool IsPendingDirty()
     {
-        return isDirty != null;
+        return isDirty.Count > 0;
     }
 
-    private void RequestSave(Memonto memonto)
+    private void RequestSave(int triggerId)
     {
-        isDirty = memonto;
+        isDirty.Add(triggerId);
     }
 
     private void CloseSaveWorker()
@@ -212,25 +212,31 @@ public class Model : MonoBehaviour, IModel
         {
             saveState = SaveWorkerState.Checking;
             yield return new WaitForSeconds(1);
-            if (isDirty == null)
+            if (isDirty.Count == 0)
             {
                 continue;
             }
             saveState = SaveWorkerState.Saving;
-            var temp = isDirty;
-            isDirty = null;
-            yield return SaveDisk(temp);
-            yield return InvokeSaveToCloud(temp.triggerId);
+            // save only triggerId
+            var tempTriggerId = isDirty[0];
+            isDirty.RemoveAt(0);
+            var tempMemonto = GetMemonto(tempTriggerId);
+            yield return SaveDisk(tempMemonto);
+            yield return InvokeSaveToCloud(tempTriggerId);
             saveState = SaveWorkerState.Saved;
         }
         saveState = SaveWorkerState.Checking;
-        if (isDirty == null)
+        if (isDirty.Count == 0)
         {
             yield break;
         }
         saveState = SaveWorkerState.Saving;
-        yield return SaveDisk(isDirty);
-        yield return InvokeSaveToCloud(isDirty.triggerId);
+        // save all (triggerId 0)
+        isDirty.Clear();
+        var triggerId = 0;
+        var temp = GetMemonto(triggerId);
+        yield return SaveDisk(temp);
+        yield return InvokeSaveToCloud(0);
         saveState = SaveWorkerState.Saved;
     }
     #endregion
@@ -238,7 +244,7 @@ public class Model : MonoBehaviour, IModel
 
 
     #region earn
-    private Dictionary<int, Earn> earns = new Dictionary<int, Earn>();
+    private readonly Dictionary<int, Earn> earns = new Dictionary<int, Earn>();
     private int seqId = 0;
     private Earn lastInputEarn;
 
@@ -952,7 +958,9 @@ public class Model : MonoBehaviour, IModel
         Log(string.Format("load from {0}", filePath));
         if (File.Exists(filePath) == false)
         {
-            throw new Exception(string.Format("{0} not found", filePath));
+            // no need alert
+            Log(string.Format("{0} not found", filePath));
+            return;
         }
         var memontoJson = File.ReadAllText(filePath);
         var memonto = JsonUtility.FromJson<Memonto>(memontoJson);
@@ -1207,7 +1215,7 @@ public class Model : MonoBehaviour, IModel
         memonto.earns.RemoveRange(s, e);
         // set memonto with new version
         SetMemonto(memonto);
-        RequestSave(memonto);
+        RequestSave(0);
         isArchiving = false;
         callback(null, GenItemList());
         Log(string.Format("Archive End"));
