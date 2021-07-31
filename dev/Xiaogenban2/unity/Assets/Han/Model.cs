@@ -1099,7 +1099,7 @@ public class Model : MonoBehaviour, IModel
     }
     public void InvokeArchive(UnityAction<object, List<Item>> callback)
     {
-        StartCoroutine(Archive(5000, callback));
+        StartCoroutine(Archive(1000, callback));
     }
 
     IEnumerator Archive(int count, UnityAction<object, List<Item>> callback)
