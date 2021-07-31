@@ -1050,6 +1050,7 @@ public class Model : MonoBehaviour, IModel
 
     #region debug
     private bool isDebug = false;
+    private List<string> msgs = new List<string>();
     public void SetDebug(bool v)
     {
         isDebug = v;
@@ -1061,16 +1062,21 @@ public class Model : MonoBehaviour, IModel
     void Log(string t)
     {
         Debug.Log(t);
-        stringToEdit = "[" + DateTime.Now.ToLongTimeString() + "]" + "\n" + t + "\n" + stringToEdit;
+        msgs.Insert(0, string.Format("[{0}] {1}", DateTime.Now.ToLocalTime(), t));
+        while(msgs.Count > 50)
+        {
+            msgs.RemoveAt(msgs.Count-1);
+        }
+        stringToEdit = string.Join("\n", msgs);
     }
     private string stringToEdit = "";
     // private Vector2 scrollPosition = Vector2.zero;
     private void OnGUI()
     {
-        if (GUI.Button(new Rect(0, 0, 100, 20), "log"))
-        {
-            SetDebug(!IsDebug());
-        }
+        //if (GUI.Button(new Rect(0, 0, 100, 20), "log"))
+        //{
+        //    SetDebug(!IsDebug());
+        //}
         if (IsDebug())
         {
             if (GUI.Button(new Rect(0, 20, 100, 20), "archive"))
