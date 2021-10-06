@@ -1,4 +1,5 @@
 import { Table, Card, mapCard, moveCard } from "./table";
+import { datas } from "../data";
 
 type Color = "blue" | "black" | "red";
 
