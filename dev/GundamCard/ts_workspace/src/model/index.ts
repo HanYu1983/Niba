@@ -117,15 +117,13 @@ function onEffectCompleted(ctx: Context, effect: Effect): Context {
   if (effect.action.id != "PlayCardAction") {
     return ctx;
   }
-  // const cardScript = require(`./script/${effect.action.cardID}`);
-  // console.log(cardScript);
-  // if (cardScript.onEffectCompleted == null) {
-  //   throw new Error(
-  //     `onEffectCompleted not found in script:${effect.action.cardID}`
-  //   );
-  // }
-  // return cardScript.onEffectCompleted(ctx, effect);
-  return ctx;
+  const cardScript = require(`../script/102425.ts`);
+  if (cardScript.onEffectCompleted == null) {
+    throw new Error(
+      `onEffectCompleted not found in script:${effect.action.cardID}`
+    );
+  }
+  return cardScript.onEffectCompleted(ctx, effect);
 }
 
 function queryAction(ctx: Context, playerID: string): Action[] {
@@ -459,7 +457,7 @@ function testPlayCard() {
 }
 
 function testScript() {
-  onEffectCompleted(DefaultContext, {
+  const ctx = onEffectCompleted(DefaultContext, {
     action: {
       id: "PlayCardAction",
       playerID: "",
@@ -468,6 +466,7 @@ function testScript() {
     },
     currents: [],
   });
+  console.log(ctx);
 }
 
 export function start() {
