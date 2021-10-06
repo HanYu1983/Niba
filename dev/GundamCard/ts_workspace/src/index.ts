@@ -1,3 +1,5 @@
+import { Table, Card, mapCard } from './table';
+
 type Color = 'blue' | 'black' | 'red';
 
 type ColorPayment = {
@@ -23,7 +25,6 @@ type Payment = (ColorPayment | TapPayment | GCountPayment) & {
 type PlayCardAction = {
   id: 'PlayCardAction';
   cardID: string;
-  position: string;
 };
 
 type PlayCardAbilityAction = {
@@ -63,18 +64,65 @@ type PaymentTable = {
 };
 
 type Context = {
+  table: Table;
   paymentTable: PaymentTable;
 };
 
+const DefaultContext: Context = {
+  table: {
+    cardStack: {},
+    tokens: [],
+  },
+  paymentTable: {
+    action: null,
+    requires: [],
+    currents: [],
+    snapshot: null,
+  },
+};
+
+function handCardStackID(playerID: string) {
+  return `${playerID}/hand`;
+}
+
+function GCardStackID(playerID: string) {
+  return `${playerID}/G`;
+}
+
 function queryAction(ctx: Context, playerID: string): Action[] {
-  return [
-    {
-      id: 'PlayCardAction',
-      cardID: '',
+  const ret: Action[] = [];
+  if (ctx.paymentTable.action?.playerID == playerID) {
+    // 支付狀態
+    const gs = askPlayerG(ctx, playerID);
+    const actions = gs
+      .filter((card) => card.tap == false)
+      .flatMap((card): Action => {
+        return {
+          id: 'TapCardToGenG',
+          cardID: card.id,
+          playerID: playerID,
+        };
+      });
+    ret.push(...actions);
+    // cancel
+    ret.push({
+      id: 'CancelPayment',
+      cardID: ctx.paymentTable.action.cardID,
       playerID: playerID,
-      position: '',
-    },
-  ];
+    });
+  } else {
+    // 正常狀態
+    const hands = ctx.table.cardStack[handCardStackID(playerID)] || [];
+    const actions = hands.flatMap((card): Action => {
+      return {
+        id: 'PlayCardAction',
+        cardID: card.id,
+        playerID: playerID,
+      };
+    });
+    ret.push(...actions);
+  }
+  return ret;
 }
 
 function onCardStage(ctx: Context, cardID: string): Context {
@@ -153,9 +201,17 @@ function applyAction(ctx: Context, playerID: string, action: Action): Context {
       break;
     case 'TapCardToGenG':
       {
-        // TODO: tap card
         ctx = {
           ...ctx,
+          table: mapCard(ctx.table, (card) => {
+            if (card.id != action.cardID) {
+              return card;
+            }
+            if (card.tap) {
+              throw new Error(`G已經橫置，不能使用: ${card}`);
+            }
+            return { ...card, tap: true };
+          }),
           paymentTable: {
             ...ctx.paymentTable,
             currents: [
@@ -196,36 +252,88 @@ function queryPlayCardPayment(
   return payments;
 }
 
-function checkPayment(ctx: Context): [boolean, string[]] {
-  const passed: { [key: number]: boolean } = [];
-  const consumed: { [key: number]: boolean } = [];
+function askPlayerG(ctx: Context, playerID: string): Card[] {
+  return ctx.table.cardStack[GCardStackID(playerID)];
+}
+
+function checkPayment(ctx: Context): [boolean, Payment[]] {
+  if (ctx.paymentTable.action == null) {
+    throw new Error('要確認支付，但找不到action。請確定有呼叫');
+  }
+  const passed: { [key: number]: boolean } = {};
+  const consumed: { [key: number]: boolean } = {};
   for (const requireID in ctx.paymentTable.requires) {
     const require = ctx.paymentTable.requires[requireID];
+    if (require.id == 'GCountPayment') {
+      if (
+        askPlayerG(ctx, ctx.paymentTable.action.playerID).length <
+        require.gCount
+      ) {
+        break;
+      }
+      passed[requireID] = true;
+      break;
+    }
     for (const currentID in ctx.paymentTable.currents) {
       if (consumed[currentID]) {
         continue;
       }
       const current = ctx.paymentTable.currents[currentID];
-      if (require.id == 'GCountPayment') {
-        // TODO: check G
-        consumed[currentID] = true;
-        passed[requireID] = true;
-        break;
-      }
+      console.log(require, current);
       if (
         require.id == 'ColorPayment' &&
         current.id == 'ColorPayment' &&
         require.color == current.color
       ) {
-        passed[requireID] == true;
-        consumed[currentID] == true;
+        passed[requireID] = true;
+        consumed[currentID] = true;
         break;
       }
     }
   }
-  const isPass = Object.keys(passed).length == 0;
-  const reasons = Object.keys(passed).map(
-    (id) => ctx.paymentTable.requires[parseInt(id)].id
-  );
+  const isPass = Object.keys(passed).length == ctx.paymentTable.requires.length;
+  const reasons = ctx.paymentTable.requires.filter((_, i) => passed[i] != true);
   return [isPass, reasons];
 }
+
+function test1() {
+  const playerID = 'a';
+  let ctx: Context = {
+    ...DefaultContext,
+    table: {
+      ...DefaultContext.table,
+      cardStack: {
+        ...DefaultContext.table.cardStack,
+        [handCardStackID(playerID)]: [
+          { id: '1', faceDown: true, protoId: '', tap: false },
+        ],
+        [GCardStackID(playerID)]: [
+          { id: '2', faceDown: true, protoId: '', tap: false },
+          { id: '3', faceDown: true, protoId: '', tap: false },
+        ],
+      },
+    },
+  };
+  let actions = queryAction(ctx, playerID);
+  const unitAction = actions[0];
+  console.log(actions);
+  ctx = applyAction(ctx, playerID, unitAction);
+  console.log(ctx);
+  actions = queryAction(ctx, playerID);
+  console.log(actions);
+  const tapGAction = actions[0];
+  if (tapGAction.id != 'TapCardToGenG') {
+    throw new Error('must TapCardToGenG');
+  }
+  ctx = applyAction(ctx, playerID, tapGAction);
+  console.log(ctx);
+  const [passed, reason] = checkPayment(ctx);
+  console.log(passed, reason);
+
+  if (ctx.paymentTable.action == null) {
+    throw new Error('must have payment action');
+  }
+  console.log(ctx);
+}
+
+test1();
