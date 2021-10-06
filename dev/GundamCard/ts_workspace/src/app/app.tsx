@@ -9,9 +9,9 @@ const App = (props: any) => {
   });
   return (
     <div>
-      {Object.keys(datas).map((k: any) => {
+      {/* {Object.keys(datas).map((k: any) => {
         return <img key={k} src={getImgSrc(datas[k].img)}></img>;
-      })}
+      })} */}
     </div>
   );
 };
