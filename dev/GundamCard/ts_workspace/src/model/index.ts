@@ -1,4 +1,4 @@
-import { Table, Card, mapCard } from "./table";
+import { Table, Card, mapCard, moveCard } from "./table";
 
 type Color = "blue" | "black" | "red";
 
@@ -40,12 +40,10 @@ type TapCardToGenG = {
 
 type CancelPayment = {
   id: "CancelPayment";
-  cardID: string;
 };
 
 type ApplyPayment = {
   id: "ApplyPayment";
-  cardID: string;
 };
 
 type Action = (
@@ -89,6 +87,10 @@ function GCardStackID(playerID: string) {
   return `${playerID}/G`;
 }
 
+function groundCardStackID(playerID: string) {
+  return `${playerID}/ground`;
+}
+
 function queryAction(ctx: Context, playerID: string): Action[] {
   const ret: Action[] = [];
   if (ctx.paymentTable.action?.playerID == playerID) {
@@ -107,7 +109,6 @@ function queryAction(ctx: Context, playerID: string): Action[] {
     // cancel
     ret.push({
       id: "CancelPayment",
-      cardID: ctx.paymentTable.action.cardID,
       playerID: playerID,
     });
   } else {
@@ -138,13 +139,27 @@ function applyAction(ctx: Context, playerID: string, action: Action): Context {
       if (ctx.paymentTable.action.playerID != playerID) {
         throw new Error("your are not owner");
       }
-      // TODO: play card
+      const [passed, reasons] = checkPayment(ctx, playerID);
+      if (passed == false) {
+        throw new Error(reasons.join(","));
+      }
       switch (ctx.paymentTable.action.id) {
         case "PlayCardAction":
           {
-            // TODO: move card to position
-            // TODO: 觸發卡牌進場事件
-            ctx = onCardStage(ctx, ctx.paymentTable.action.cardID);
+            // move card
+            const nextTable = moveCard(
+              ctx.table,
+              handCardStackID(playerID),
+              groundCardStackID(playerID),
+              ctx.paymentTable.action.cardID
+            );
+            ctx = onCardStage(
+              {
+                ...ctx,
+                table: nextTable,
+              },
+              ctx.paymentTable.action.cardID
+            );
           }
           break;
         case "PlayCardAbilityAction":
@@ -256,7 +271,7 @@ function askPlayerG(ctx: Context, playerID: string): Card[] {
   return ctx.table.cardStack[GCardStackID(playerID)];
 }
 
-function checkPayment(ctx: Context): [boolean, Payment[]] {
+function checkPayment(ctx: Context, playerID: string): [boolean, Payment[]] {
   if (ctx.paymentTable.action == null) {
     throw new Error("要確認支付，但找不到action。請確定有呼叫");
   }
@@ -279,7 +294,6 @@ function checkPayment(ctx: Context): [boolean, Payment[]] {
         continue;
       }
       const current = ctx.paymentTable.currents[currentID];
-      console.log(require, current);
       if (
         require.id == "ColorPayment" &&
         current.id == "ColorPayment" &&
@@ -326,13 +340,12 @@ function test1() {
     throw new Error("must TapCardToGenG");
   }
   ctx = applyAction(ctx, playerID, tapGAction);
+  console.log("tab G");
   console.log(ctx);
-  const [passed, reason] = checkPayment(ctx);
+  const [passed, reason] = checkPayment(ctx, playerID);
   console.log(passed, reason);
-
-  if (ctx.paymentTable.action == null) {
-    throw new Error("must have payment action");
-  }
+  ctx = applyAction(ctx, playerID, { id: "ApplyPayment", playerID: playerID });
+  console.log("apply");
   console.log(ctx);
 }
 
