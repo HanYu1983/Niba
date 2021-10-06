@@ -59,7 +59,7 @@ type PaymentTable = {
   action: Action | null;
   requires: Payment[];
   currents: Payment[];
-  snapshot: any;
+  snapshot: Context | null;
 };
 
 type Context = {
