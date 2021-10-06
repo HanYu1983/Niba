@@ -1,109 +1,6 @@
-import { Table, Card, mapCard, moveCard } from "./table";
-import { datas } from "../data";
-
-type Color = "blue" | "black" | "red";
-
-type ColorPayment = {
-  id: "ColorPayment";
-  color: Color;
-  cardID: string | null;
-};
-
-type TapPayment = {
-  id: "TapPayment";
-  cardID: string | null;
-  condition: Condition[] | null;
-};
-
-type GCountPayment = {
-  id: "GCountPayment";
-  gCount: number;
-};
-
-type Target1Payment = {
-  id: "Target1Payment";
-  cardID: string | null;
-  condition: Condition[] | null;
-};
-
-type Payment = (ColorPayment | TapPayment | GCountPayment | Target1Payment) & {
-  playerID: string;
-};
-
-type PlayCardAction = {
-  id: "PlayCardAction";
-  cardID: string | null;
-  position: CardPosition | null;
-};
-
-type PlayCardAbilityAction = {
-  id: "PlayCardAbilityAction";
-  cardID: string | null;
-  abilityID: string;
-};
-
-type TapCardToGenG = {
-  id: "TapCardToGenG";
-  cardID: string | null;
-  color: Color | null;
-};
-
-type AddPaymentAction = {
-  id: "AddPaymentAction";
-  payment: Payment;
-};
-
-type CancelPaymentAction = {
-  id: "CancelPaymentAction";
-};
-
-type ApplyPaymentAction = {
-  id: "ApplyPaymentAction";
-};
-
-type GiveUpCutAction = {
-  id: "GiveUpCutAction";
-};
-
-type EndStepAction = {
-  id: "EndStepAction";
-};
-
-type Action = (
-  | PlayCardAction
-  | PlayCardAbilityAction
-  | TapCardToGenG
-  | AddPaymentAction
-  | CancelPaymentAction
-  | ApplyPaymentAction
-  | GiveUpCutAction
-  | EndStepAction
-) & { playerID: string };
-
-type PaymentTable = {
-  action: Action | null;
-  requires: Payment[];
-  currents: Payment[];
-  snapshot: Context | null;
-  isLock: boolean;
-};
-
-type Effect = {
-  action: Action;
-  currents: Payment[];
-};
-
-type EffectStack = {
-  effects: Effect[];
-};
-
-type Context = {
-  table: Table;
-  paymentTable: PaymentTable;
-  effectStack: EffectStack;
-};
-
-type Condition = "手牌" | "特徴：装弾";
+import { mapCard, moveCard } from "./table";
+import { Context, Action, Payment, Effect } from "./types";
+import { askPlayerG, cardPositionID } from "./alg";
 
 const DefaultContext: Context = {
   table: {
@@ -122,13 +19,113 @@ const DefaultContext: Context = {
   },
 };
 
-type CardPosition = {
-  playerID: string;
-  where: "home" | "gravyard" | "ground" | "hand" | "G";
-};
+function queryPlayCardPayment(
+  ctx: Context,
+  playerID: string,
+  cardID: string
+): Payment[] {
+  const payments: Payment[] = [];
+  payments.push(
+    ...[
+      {
+        id: "ColorPayment",
+        color: "blue",
+        cardID: "",
+        playerID: playerID,
+      } as Payment,
+      {
+        id: "GCountPayment",
+        gCount: 2,
+        playerID: playerID,
+      } as Payment,
+    ]
+  );
+  if (false) {
+    // 私情による裏切り
+    // （常時）：敵軍キャラ１枚、または敵軍オペ１枚を破壊する。その場合、敵軍は、自分の本国を５回復できる。
+    payments.push(
+      ...[
+        {
+          id: "Target1Payment",
+          cardID: null,
+          playerID: playerID,
+        } as Payment,
+        {
+          id: "ColorPayment",
+          color: "black",
+          cardID: null,
+          playerID: playerID,
+        } as Payment,
+        {
+          id: "GCountPayment",
+          gCount: 1,
+          playerID: playerID,
+        } as Payment,
+      ]
+    );
+  }
+  return payments;
+}
 
-function cardPositionID(position: CardPosition) {
-  return JSON.stringify(position);
+function checkPayment(ctx: Context, playerID: string): [boolean, Payment[]] {
+  if (ctx.paymentTable.action == null) {
+    throw new Error("要確認支付，但找不到action。請確定有呼叫");
+  }
+  const passed: { [key: number]: boolean } = {};
+  const consumed: { [key: number]: boolean } = {};
+  for (const requireID in ctx.paymentTable.requires) {
+    const require = ctx.paymentTable.requires[requireID];
+    if (require.id == "GCountPayment") {
+      if (
+        askPlayerG(ctx, ctx.paymentTable.action.playerID).length <
+        require.gCount
+      ) {
+        break;
+      }
+      passed[requireID] = true;
+      break;
+    }
+    for (const currentID in ctx.paymentTable.currents) {
+      if (consumed[currentID]) {
+        continue;
+      }
+      const current = ctx.paymentTable.currents[currentID];
+      if (require.playerID != current.playerID) {
+        continue;
+      }
+      if (
+        require.id == "ColorPayment" &&
+        current.id == "ColorPayment" &&
+        require.color == current.color
+      ) {
+        passed[requireID] = true;
+        consumed[currentID] = true;
+        break;
+      }
+    }
+  }
+  const isPass = Object.keys(passed).length == ctx.paymentTable.requires.length;
+  const reasons = ctx.paymentTable.requires.filter((_, i) => passed[i] != true);
+  return [isPass, reasons];
+}
+
+function onCardEntered(ctx: Context, cardID: string): Context {
+  return ctx;
+}
+
+function onEffectCompleted(ctx: Context, effect: Effect): Context {
+  if (effect.action.id != "PlayCardAction") {
+    return ctx;
+  }
+  // const cardScript = require(`./script/${effect.action.cardID}`);
+  // console.log(cardScript);
+  // if (cardScript.onEffectCompleted == null) {
+  //   throw new Error(
+  //     `onEffectCompleted not found in script:${effect.action.cardID}`
+  //   );
+  // }
+  // return cardScript.onEffectCompleted(ctx, effect);
+  return ctx;
 }
 
 function queryAction(ctx: Context, playerID: string): Action[] {
@@ -162,55 +159,6 @@ function queryAction(ctx: Context, playerID: string): Action[] {
     ret.push(...actions);
   }
   return ret;
-}
-
-function onCardStage(ctx: Context, cardID: string): Context {
-  return ctx;
-}
-
-function opponent(ctx: Context, playerID: string): string {
-  return playerID;
-}
-
-function onEffectCompleted(ctx: Context, effect: Effect): Context {
-  if (true) {
-    // 狂乱の女戦士【コレクタブルレア】
-    //（自軍戦闘階段）：敵軍手札を全部見て、那個中に存在的卡１枚を選んで廃棄執行。
-    //『恒常』：このカードの解決直後に、本来の記述に｢特徴：装弾｣を持つ自軍G１枚をロールできる。その場合、敵軍は、自分の手札１枚を選んで廃棄する。
-    //（自軍戦闘フェイズ）：敵軍手札を全て見て、その中にあるカード１枚を選んで廃棄する。
-    if (effect.action.id != "PlayCardAction") {
-      return ctx;
-    }
-    return {
-      ...ctx,
-      paymentTable: {
-        action: {
-          id: "PlayCardAbilityAction",
-          cardID: effect.action.cardID,
-          playerID: effect.action.playerID,
-          abilityID: "",
-        },
-        requires: [
-          {
-            id: "TapPayment",
-            cardID: null,
-            playerID: effect.action.playerID,
-            condition: ["特徴：装弾"],
-          },
-          {
-            id: "Target1Payment",
-            cardID: null,
-            playerID: opponent(ctx, effect.action.playerID),
-            condition: ["手牌"],
-          },
-        ],
-        currents: [],
-        snapshot: null,
-        isLock: true,
-      },
-    };
-  }
-  return ctx;
 }
 
 function applyAction(ctx: Context, playerID: string, action: Action): Context {
@@ -285,7 +233,7 @@ function applyAction(ctx: Context, playerID: string, action: Action): Context {
               cardPositionID({ playerID: playerID, where: "ground" }),
               topEffect.action.cardID
             );
-            ctx = onCardStage(
+            ctx = onCardEntered(
               {
                 ...ctx,
                 table: nextTable,
@@ -433,102 +381,6 @@ function applyAction(ctx: Context, playerID: string, action: Action): Context {
   return ctx;
 }
 
-function queryPlayCardPayment(
-  ctx: Context,
-  playerID: string,
-  cardID: string
-): Payment[] {
-  const payments: Payment[] = [];
-  payments.push(
-    ...[
-      {
-        id: "ColorPayment",
-        color: "blue",
-        cardID: "",
-        playerID: playerID,
-      } as Payment,
-      {
-        id: "GCountPayment",
-        gCount: 2,
-        playerID: playerID,
-      } as Payment,
-    ]
-  );
-  if (false) {
-    // 私情による裏切り
-    // （常時）：敵軍キャラ１枚、または敵軍オペ１枚を破壊する。その場合、敵軍は、自分の本国を５回復できる。
-    payments.push(
-      ...[
-        {
-          id: "Target1Payment",
-          cardID: null,
-          playerID: playerID,
-        } as Payment,
-        {
-          id: "ColorPayment",
-          color: "black",
-          cardID: null,
-          playerID: playerID,
-        } as Payment,
-        {
-          id: "GCountPayment",
-          gCount: 1,
-          playerID: playerID,
-        } as Payment,
-      ]
-    );
-  }
-  return payments;
-}
-
-function askPlayerG(ctx: Context, playerID: string): Card[] {
-  return ctx.table.cardStack[
-    cardPositionID({ playerID: playerID, where: "G" })
-  ];
-}
-
-function checkPayment(ctx: Context, playerID: string): [boolean, Payment[]] {
-  if (ctx.paymentTable.action == null) {
-    throw new Error("要確認支付，但找不到action。請確定有呼叫");
-  }
-  const passed: { [key: number]: boolean } = {};
-  const consumed: { [key: number]: boolean } = {};
-  for (const requireID in ctx.paymentTable.requires) {
-    const require = ctx.paymentTable.requires[requireID];
-    if (require.id == "GCountPayment") {
-      if (
-        askPlayerG(ctx, ctx.paymentTable.action.playerID).length <
-        require.gCount
-      ) {
-        break;
-      }
-      passed[requireID] = true;
-      break;
-    }
-    for (const currentID in ctx.paymentTable.currents) {
-      if (consumed[currentID]) {
-        continue;
-      }
-      const current = ctx.paymentTable.currents[currentID];
-      if (require.playerID != current.playerID) {
-        continue;
-      }
-      if (
-        require.id == "ColorPayment" &&
-        current.id == "ColorPayment" &&
-        require.color == current.color
-      ) {
-        passed[requireID] = true;
-        consumed[currentID] = true;
-        break;
-      }
-    }
-  }
-  const isPass = Object.keys(passed).length == ctx.paymentTable.requires.length;
-  const reasons = ctx.paymentTable.requires.filter((_, i) => passed[i] != true);
-  return [isPass, reasons];
-}
-
 function testPlayCard() {
   const playerID = "a";
   let ctx: Context = {
@@ -606,6 +458,19 @@ function testPlayCard() {
   console.log(ctx);
 }
 
+function testScript() {
+  onEffectCompleted(DefaultContext, {
+    action: {
+      id: "PlayCardAction",
+      playerID: "",
+      cardID: null,
+      position: null,
+    },
+    currents: [],
+  });
+}
+
 export function start() {
   testPlayCard();
+  testScript();
 }
