@@ -193,10 +193,10 @@ function checkPayment(ctx) {
 function test1() {
     const playerID = 'a';
     let ctx = Object.assign(Object.assign({}, DefaultContext), { table: Object.assign(Object.assign({}, DefaultContext.table), { cardStack: Object.assign(Object.assign({}, DefaultContext.table.cardStack), { [handCardStackID(playerID)]: [
-                    { id: '1', faceDown: true, protoId: '', tap: false },
+                    { id: '1', faceDown: true, protoID: '', tap: false },
                 ], [GCardStackID(playerID)]: [
-                    { id: '2', faceDown: true, protoId: '', tap: false },
-                    { id: '3', faceDown: true, protoId: '', tap: false },
+                    { id: '2', faceDown: true, protoID: '', tap: false },
+                    { id: '3', faceDown: true, protoID: '', tap: false },
                 ] }) }) });
     let actions = queryAction(ctx, playerID);
     const unitAction = actions[0];

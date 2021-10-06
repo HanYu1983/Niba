@@ -305,11 +305,11 @@ function test1() {
       cardStack: {
         ...DefaultContext.table.cardStack,
         [handCardStackID(playerID)]: [
-          { id: '1', faceDown: true, protoId: '', tap: false },
+          { id: '1', faceDown: true, protoID: '', tap: false },
         ],
         [GCardStackID(playerID)]: [
-          { id: '2', faceDown: true, protoId: '', tap: false },
-          { id: '3', faceDown: true, protoId: '', tap: false },
+          { id: '2', faceDown: true, protoID: '', tap: false },
+          { id: '3', faceDown: true, protoID: '', tap: false },
         ],
       },
     },

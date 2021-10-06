@@ -1,6 +1,6 @@
 export type Card = {
   id: string;
-  protoId: string;
+  protoID: string;
   faceDown: boolean;
   tap: boolean;
 };
