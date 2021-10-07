@@ -9,34 +9,37 @@ import data179008 from "./179008.json";
 import data179009 from "./179009.json";
 import data179010 from "./179010.json";
 
-export type Data = {
-  img: string;
-};
-
-export const datas: { [key: string]: Data } = [
-  data179001,
-  data179002,
-  data179003,
-  data179004,
-  data179005,
-  data179006,
-  data179007,
-  data179008,
-  data179009,
-  data179010,
-]
-  .flatMap((d) => d.data as any)
-  .map((data) => {
-    return { ...data, img: data.prodid + "_" + data.info_25 };
+const allData = [
+  ...data179001.data,
+  ...data179002.data,
+  ...data179003.data,
+  ...data179004.data,
+  ...data179005.data,
+  ...data179006.data,
+  ...data179007.data,
+  ...data179008.data,
+  ...data179009.data,
+  ...data179010.data,
+];
+const indexByImgID = allData
+  .map((data, i): [string, number] => {
+    return [data.prodid + "_" + data.info_25, i];
   })
-  .reduce((acc, c) => {
-    // 用img當id支援卡牌風雲
+  .reduce((acc, [k, v]) => {
     return {
       ...acc,
-      [c.img]: c,
+      [k]: v,
     };
-  }, {});
+  }, {} as { [key: string]: number });
 
-export function getImgSrc(img: string) {
-  return `https://storage.googleapis.com/particle-resources/cardPackage/gundamWarN/${img}.jpg`;
+export function askRowData(imgID: string) {
+  const i = indexByImgID[imgID];
+  if (i == null) {
+    throw new Error(`${imgID} not found`);
+  }
+  return allData[i];
+}
+
+export function askImgSrc(imgID: string) {
+  return `https://storage.googleapis.com/particle-resources/cardPackage/gundamWarN/${imgID}.jpg`;
 }

@@ -1,6 +1,13 @@
 import { Table } from "../table";
 
-export type Color = "blue" | "black" | "red";
+export type Color = "緑" | "茶" | "青" | "白" | "紫" | "黒";
+
+export type CardType =
+  | "GRAPHIC"
+  | "UNIT"
+  | "CHARACTER"
+  | "OPERATION"
+  | "COMMAND";
 
 export type ColorPayment = {
   id: "ColorPayment";
@@ -117,6 +124,11 @@ export type AnimationState = {
   productID: number;
   animations: Animation[];
   consumeID: { [key: string]: number };
+};
+
+export type PlayerState = {
+  turn: number;
+  playGCount: number;
 };
 
 export type Context = {

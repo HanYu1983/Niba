@@ -12,7 +12,7 @@ export function queryPlayCardPayment(
     ...[
       {
         id: "ColorPayment",
-        color: "blue",
+        color: "青",
         cardID: "",
         playerID: playerID,
       } as Payment,
@@ -35,7 +35,7 @@ export function queryPlayCardPayment(
         } as Payment,
         {
           id: "ColorPayment",
-          color: "black",
+          color: "黒",
           cardID: null,
           playerID: playerID,
         } as Payment,

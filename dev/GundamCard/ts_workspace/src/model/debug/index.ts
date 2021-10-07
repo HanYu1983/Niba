@@ -68,7 +68,7 @@ export function testPlayCard() {
   console.log("轉G支付國力");
   const tapGAction: Action = {
     id: "TapCardToGenG",
-    color: "blue",
+    color: "青",
     cardID: "2",
     playerID: playerID,
   };

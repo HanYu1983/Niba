@@ -1,7 +1,7 @@
 import React, { useEffect } from "react";
 import ReactDOM from "react-dom";
 import { start } from "../model";
-import { datas, getImgSrc } from "../tool/data";
+import { askImgSrc } from "../tool/data";
 
 const App = (props: any) => {
   useEffect(() => {
@@ -10,7 +10,7 @@ const App = (props: any) => {
   return (
     <div>
       {/* {Object.keys(datas).map((k: any) => {
-        return <img key={k} src={getImgSrc(datas[k].img)}></img>;
+        return <img key={k} src={askImgSrc(datas[k].img)}></img>;
       })} */}
     </div>
   );
