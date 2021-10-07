@@ -1,5 +1,5 @@
 import { Context, CardPosition, Action, Payment, Effect } from "../model/types";
-import { opponent, askPlayerG, cardPositionID } from "../model/alg";
+import { opponent, askPlayerG, cardPositionID } from "../model/alg/alg";
 
 function onEffectCompleted(ctx: Context, effect: Effect): Context {
   // 狂乱の女戦士【コレクタブルレア】
