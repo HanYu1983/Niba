@@ -1,7 +1,7 @@
 import React, { useEffect } from "react";
 import ReactDOM from "react-dom";
 import { start } from "../model";
-import { datas, getImgSrc } from "../data";
+import { datas, getImgSrc } from "../tool/data";
 
 const App = (props: any) => {
   useEffect(() => {

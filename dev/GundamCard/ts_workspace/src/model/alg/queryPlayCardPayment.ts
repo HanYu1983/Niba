@@ -1,6 +1,6 @@
-import { mapCard, moveCard } from "../table";
-import { Context, Action, Payment, Effect } from "../types";
-import { askPlayerG, cardPositionID } from "./alg";
+import { mapCard, moveCard } from "../../tool/table";
+import { Context, Action, Payment, Effect } from "../../tool/types";
+import { askPlayerG, cardPositionID } from ".";
 
 export function queryPlayCardPayment(
   ctx: Context,

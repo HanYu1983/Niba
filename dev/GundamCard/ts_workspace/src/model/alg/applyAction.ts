@@ -1,12 +1,12 @@
-import { mapCard, moveCard } from "../table";
-import { Context, Action, Payment, Effect } from "../types";
+import { mapCard, moveCard } from "../../tool/table";
+import { Context, Action, Payment, Effect } from "../../tool/types";
 import {
   askPlayerG,
   cardPositionID,
   onEffectCompleted,
   onCardEntered,
   opponent,
-} from "./alg";
+} from ".";
 import { checkPayment } from "./checkPayment";
 import { queryPlayCardPayment } from "./queryPlayCardPayment";
 

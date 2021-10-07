@@ -1,5 +1,11 @@
-import { Context, CardPosition, Action, Payment, Effect } from "../types";
-import { Card } from "../table";
+import {
+  Context,
+  CardPosition,
+  Action,
+  Payment,
+  Effect,
+} from "../../tool/types";
+import { Card } from "../../tool/table";
 
 export function askPlayerG(ctx: Context, playerID: string): Card[] {
   return ctx.table.cardStack[

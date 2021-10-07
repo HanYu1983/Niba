@@ -1,13 +1,13 @@
-import data179001 from "../data/179001.json";
-import data179002 from "../data/179002.json";
-import data179003 from "../data/179003.json";
-import data179004 from "../data/179004.json";
-import data179005 from "../data/179005.json";
-import data179006 from "../data/179006.json";
-import data179007 from "../data/179007.json";
-import data179008 from "../data/179008.json";
-import data179009 from "../data/179009.json";
-import data179010 from "../data/179010.json";
+import data179001 from "./179001.json";
+import data179002 from "./179002.json";
+import data179003 from "./179003.json";
+import data179004 from "./179004.json";
+import data179005 from "./179005.json";
+import data179006 from "./179006.json";
+import data179007 from "./179007.json";
+import data179008 from "./179008.json";
+import data179009 from "./179009.json";
+import data179010 from "./179010.json";
 
 export type Data = {
   img: string;
