@@ -6,16 +6,16 @@ export function checkPayment(
   ctx: Context,
   playerID: string
 ): [boolean, Payment[]] {
-  if (ctx.paymentTable.action == null) {
+  if (ctx.gameState.paymentTable.action == null) {
     throw new Error("要確認支付，但找不到action。請確定有呼叫");
   }
   const passed: { [key: number]: boolean } = {};
   const consumed: { [key: number]: boolean } = {};
-  for (const requireID in ctx.paymentTable.requires) {
-    const require = ctx.paymentTable.requires[requireID];
+  for (const requireID in ctx.gameState.paymentTable.requires) {
+    const require = ctx.gameState.paymentTable.requires[requireID];
     if (require.id == "GCountPayment") {
       if (
-        askPlayerG(ctx, ctx.paymentTable.action.playerID).length <
+        askPlayerG(ctx, ctx.gameState.paymentTable.action.playerID).length <
         require.gCount
       ) {
         break;
@@ -23,11 +23,11 @@ export function checkPayment(
       passed[requireID] = true;
       break;
     }
-    for (const currentID in ctx.paymentTable.currents) {
+    for (const currentID in ctx.gameState.paymentTable.currents) {
       if (consumed[currentID]) {
         continue;
       }
-      const current = ctx.paymentTable.currents[currentID];
+      const current = ctx.gameState.paymentTable.currents[currentID];
       if (require.playerID != current.playerID) {
         continue;
       }
@@ -42,7 +42,10 @@ export function checkPayment(
       }
     }
   }
-  const isPass = Object.keys(passed).length == ctx.paymentTable.requires.length;
-  const reasons = ctx.paymentTable.requires.filter((_, i) => passed[i] != true);
+  const isPass =
+    Object.keys(passed).length == ctx.gameState.paymentTable.requires.length;
+  const reasons = ctx.gameState.paymentTable.requires.filter(
+    (_, i) => passed[i] != true
+  );
   return [isPass, reasons];
 }

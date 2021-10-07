@@ -24,7 +24,7 @@ export function applyAction(
         const activePlayerID = playerID;
         const num = 1;
         const homeStack =
-          ctx.table.cardStack[
+          ctx.gameState.table.cardStack[
             cardPositionID({ playerID: activePlayerID, where: "home" })
           ];
         const topCards = homeStack.slice(
@@ -38,7 +38,7 @@ export function applyAction(
             cardPositionID({ playerID: activePlayerID, where: "hand" }),
             card.id
           );
-        }, ctx.table);
+        }, ctx.gameState.table);
         if (
           nextTable.cardStack[
             cardPositionID({ playerID: activePlayerID, where: "home" })
@@ -48,29 +48,35 @@ export function applyAction(
         }
         return {
           ...ctx,
-          table: nextTable,
+          gameState: {
+            ...ctx.gameState,
+            table: nextTable,
+          },
         };
       }
     }
     case "AddPaymentAction": {
-      if (ctx.paymentTable.action == null) {
+      if (ctx.gameState.paymentTable.action == null) {
         throw new Error("no payment");
       }
       return {
         ...ctx,
-        paymentTable: {
-          ...ctx.paymentTable,
-          currents: [...ctx.paymentTable.currents, action.payment],
+        gameState: {
+          ...ctx.gameState,
+          paymentTable: {
+            ...ctx.gameState.paymentTable,
+            currents: [...ctx.gameState.paymentTable.currents, action.payment],
+          },
         },
       };
     }
     case "GiveUpCutAction": {
-      if (ctx.effectStack.effects.length == 0) {
+      if (ctx.gameState.effectStack.effects.length == 0) {
         console.log("現在沒有堆疊，切入沒有效果");
         return ctx;
       }
       // 如果雙方都放棄切入
-      const topEffect = ctx.effectStack.effects[0];
+      const topEffect = ctx.gameState.effectStack.effects[0];
       switch (topEffect.action.id) {
         case "PlayCardAction":
           {
@@ -81,7 +87,7 @@ export function applyAction(
               throw new Error(`position不存在，請檢查程式`);
             }
             const nextTable = moveCard(
-              ctx.table,
+              ctx.gameState.table,
               cardPositionID({ playerID: playerID, where: "hand" }),
               cardPositionID({ playerID: playerID, where: "ground" }),
               topEffect.action.cardID
@@ -89,7 +95,10 @@ export function applyAction(
             ctx = onCardEntered(
               {
                 ...ctx,
-                table: nextTable,
+                gameState: {
+                  ...ctx.gameState,
+                  table: nextTable,
+                },
               },
               topEffect.action.cardID
             );
@@ -103,17 +112,20 @@ export function applyAction(
       }
       return {
         ...ctx,
-        effectStack: {
-          ...ctx.effectStack,
-          effects: ctx.effectStack.effects.slice(1),
+        gameState: {
+          ...ctx.gameState,
+          effectStack: {
+            ...ctx.gameState.effectStack,
+            effects: ctx.gameState.effectStack.effects.slice(1),
+          },
         },
       };
     }
     case "ApplyPaymentAction":
-      if (ctx.paymentTable.action == null) {
+      if (ctx.gameState.paymentTable.action == null) {
         throw new Error("no payment");
       }
-      if (ctx.paymentTable.action.playerID != playerID) {
+      if (ctx.gameState.paymentTable.action.playerID != playerID) {
         throw new Error("your are not owner");
       }
       const [passed, reasons] = checkPayment(ctx, playerID);
@@ -121,40 +133,45 @@ export function applyAction(
         throw new Error(reasons.join(","));
       }
       const effect = {
-        action: ctx.paymentTable.action,
-        currents: ctx.paymentTable.currents,
+        action: ctx.gameState.paymentTable.action,
+        currents: ctx.gameState.paymentTable.currents,
       };
       return {
         ...ctx,
-        // clear payment table
-        paymentTable: {
-          ...ctx.paymentTable,
-          action: null,
-          snapshot: null,
-        },
-        // add effect to stack
-        effectStack: {
-          effects: [effect, ...ctx.effectStack.effects],
+        gameState: {
+          ...ctx.gameState,
+          // clear payment table
+          paymentTable: {
+            ...ctx.gameState.paymentTable,
+            action: null,
+            snapshot: null,
+          },
+          // add effect to stack
+          effectStack: {
+            effects: [effect, ...ctx.gameState.effectStack.effects],
+          },
         },
       };
     case "CancelPaymentAction":
-      if (ctx.paymentTable.action == null) {
+      if (ctx.gameState.paymentTable.action == null) {
         return ctx;
       }
-      if (ctx.paymentTable.isLock) {
+      if (ctx.gameState.paymentTable.isLock) {
         throw new Error("必須完成這個支付");
       }
-      if (ctx.paymentTable.snapshot == null) {
+      if (ctx.gameState.paymentTable.snapshot == null) {
         throw new Error("snapshot not found");
       }
-      if (ctx.paymentTable.action.playerID != playerID) {
+      if (ctx.gameState.paymentTable.action.playerID != playerID) {
         throw new Error("your are not owner");
       }
-      return ctx.paymentTable.snapshot;
+      return ctx.gameState.paymentTable.snapshot;
     case "PlayCardAction":
       {
-        if (ctx.paymentTable.action != null) {
-          throw new Error(`${ctx.paymentTable.action.playerID}還在支付中`);
+        if (ctx.gameState.paymentTable.action != null) {
+          throw new Error(
+            `${ctx.gameState.paymentTable.action.playerID}還在支付中`
+          );
         }
         if (action.cardID == null) {
           throw new Error("你必須指定cardID");
@@ -164,30 +181,38 @@ export function applyAction(
         }
         ctx = {
           ...ctx,
-          paymentTable: {
-            action: action,
-            requires: queryPlayCardPayment(ctx, playerID, action.cardID),
-            currents: [],
-            snapshot: ctx,
-            isLock: false,
+          gameState: {
+            ...ctx.gameState,
+            paymentTable: {
+              action: action,
+              requires: queryPlayCardPayment(ctx, playerID, action.cardID),
+              currents: [],
+              snapshot: ctx,
+              isLock: false,
+            },
           },
         };
       }
       break;
     case "PlayCardAbilityAction":
       {
-        if (ctx.paymentTable.action != null) {
-          throw new Error(`${ctx.paymentTable.action.playerID}還在支付中`);
+        if (ctx.gameState.paymentTable.action != null) {
+          throw new Error(
+            `${ctx.gameState.paymentTable.action.playerID}還在支付中`
+          );
         }
         // TODO: change to payment mode
         ctx = {
           ...ctx,
-          paymentTable: {
-            action: action,
-            requires: [],
-            currents: [],
-            snapshot: ctx,
-            isLock: false,
+          gameState: {
+            ...ctx.gameState,
+            paymentTable: {
+              action: action,
+              requires: [],
+              currents: [],
+              snapshot: ctx,
+              isLock: false,
+            },
           },
         };
       }
@@ -200,7 +225,7 @@ export function applyAction(
         if (action.cardID == null) {
           throw new Error("你必須指定cardID");
         }
-        const nextTable = mapCard(ctx.table, (card) => {
+        const nextTable = mapCard(ctx.gameState.table, (card) => {
           if (card.id != action.cardID) {
             return card;
           }
@@ -209,23 +234,26 @@ export function applyAction(
           }
           return { ...card, tap: true };
         });
-        if (JSON.stringify(ctx.table) == JSON.stringify(nextTable)) {
+        if (JSON.stringify(ctx.gameState.table) == JSON.stringify(nextTable)) {
           throw new Error(`找不到你要橫置的卡:${action.cardID}`);
         }
         ctx = {
           ...ctx,
-          table: nextTable,
-          paymentTable: {
-            ...ctx.paymentTable,
-            currents: [
-              ...ctx.paymentTable.currents,
-              {
-                id: "ColorPayment",
-                color: action.color,
-                cardID: action.cardID,
-                playerID: action.playerID,
-              },
-            ],
+          gameState: {
+            ...ctx.gameState,
+            table: nextTable,
+            paymentTable: {
+              ...ctx.gameState.paymentTable,
+              currents: [
+                ...ctx.gameState.paymentTable.currents,
+                {
+                  id: "ColorPayment",
+                  color: action.color,
+                  cardID: action.cardID,
+                  playerID: action.playerID,
+                },
+              ],
+            },
           },
         };
       }

@@ -8,7 +8,7 @@ import {
 import { Card } from "../../tool/table";
 
 export function askPlayerG(ctx: Context, playerID: string): Card[] {
-  return ctx.table.cardStack[
+  return ctx.gameState.table.cardStack[
     cardPositionID({ playerID: playerID, where: "G" })
   ];
 }

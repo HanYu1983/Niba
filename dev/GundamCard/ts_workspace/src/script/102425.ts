@@ -11,30 +11,33 @@ function onEffectCompleted(ctx: Context, effect: Effect): Context {
   }
   return {
     ...ctx,
-    paymentTable: {
-      action: {
-        id: "PlayCardAbilityAction",
-        cardID: effect.action.cardID,
-        playerID: effect.action.playerID,
-        abilityID: "",
-      },
-      requires: [
-        {
-          id: "TapPayment",
-          cardID: null,
+    gameState: {
+      ...ctx.gameState,
+      paymentTable: {
+        action: {
+          id: "PlayCardAbilityAction",
+          cardID: effect.action.cardID,
           playerID: effect.action.playerID,
-          condition: ["特徴：装弾"],
+          abilityID: "",
         },
-        {
-          id: "Target1Payment",
-          cardID: null,
-          playerID: opponent(ctx, effect.action.playerID),
-          condition: ["手牌"],
-        },
-      ],
-      currents: [],
-      snapshot: null,
-      isLock: true,
+        requires: [
+          {
+            id: "TapPayment",
+            cardID: null,
+            playerID: effect.action.playerID,
+            condition: ["特徴：装弾"],
+          },
+          {
+            id: "Target1Payment",
+            cardID: null,
+            playerID: opponent(ctx, effect.action.playerID),
+            condition: ["手牌"],
+          },
+        ],
+        currents: [],
+        snapshot: null,
+        isLock: true,
+      },
     },
   };
 }

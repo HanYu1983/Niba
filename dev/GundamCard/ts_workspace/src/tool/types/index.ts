@@ -101,10 +101,27 @@ export type EffectStack = {
   effects: Effect[];
 };
 
-export type Context = {
+export type GameState = {
   table: Table;
   paymentTable: PaymentTable;
   effectStack: EffectStack;
+};
+
+export type Animation = {
+  id: number;
+  description: string;
+  gameState: GameState;
+};
+
+export type AnimationState = {
+  productID: number;
+  animations: Animation[];
+  consumeID: { [key: string]: number };
+};
+
+export type Context = {
+  gameState: GameState;
+  animationState: AnimationState;
 };
 
 export type Condition = "手牌" | "特徴：装弾";

@@ -6,19 +6,26 @@ import { applyAction } from "../alg/applyAction";
 import { checkPayment } from "../alg/checkPayment";
 
 const DefaultContext: Context = {
-  table: {
-    cardStack: {},
-    tokens: [],
+  gameState: {
+    table: {
+      cardStack: {},
+      tokens: [],
+    },
+    paymentTable: {
+      action: null,
+      requires: [],
+      currents: [],
+      snapshot: null,
+      isLock: false,
+    },
+    effectStack: {
+      effects: [],
+    },
   },
-  paymentTable: {
-    action: null,
-    requires: [],
-    currents: [],
-    snapshot: null,
-    isLock: false,
-  },
-  effectStack: {
-    effects: [],
+  animationState: {
+    productID: 0,
+    animations: [],
+    consumeID: {},
   },
 };
 
@@ -26,17 +33,20 @@ export function testPlayCard() {
   const playerID = "a";
   let ctx: Context = {
     ...DefaultContext,
-    table: {
-      ...DefaultContext.table,
-      cardStack: {
-        ...DefaultContext.table.cardStack,
-        [cardPositionID({ playerID: playerID, where: "hand" })]: [
-          { id: "1", faceDown: true, protoID: "", tap: false },
-        ],
-        [cardPositionID({ playerID: playerID, where: "G" })]: [
-          { id: "2", faceDown: true, protoID: "", tap: false },
-          { id: "3", faceDown: true, protoID: "", tap: false },
-        ],
+    gameState: {
+      ...DefaultContext.gameState,
+      table: {
+        ...DefaultContext.gameState.table,
+        cardStack: {
+          ...DefaultContext.gameState.table.cardStack,
+          [cardPositionID({ playerID: playerID, where: "hand" })]: [
+            { id: "1", faceDown: true, protoID: "", tap: false },
+          ],
+          [cardPositionID({ playerID: playerID, where: "G" })]: [
+            { id: "2", faceDown: true, protoID: "", tap: false },
+            { id: "3", faceDown: true, protoID: "", tap: false },
+          ],
+        },
       },
     },
   };
@@ -63,7 +73,7 @@ export function testPlayCard() {
     playerID: playerID,
   };
   ctx = applyAction(ctx, playerID, tapGAction);
-  const findTapCard = ctx.table.cardStack[
+  const findTapCard = ctx.gameState.table.cardStack[
     cardPositionID({ playerID: playerID, where: "G" })
   ].find((card) => {
     return card.id == tapGAction.cardID;
@@ -90,7 +100,7 @@ export function testPlayCard() {
     playerID: playerID,
   });
   if (
-    ctx.table.cardStack[
+    ctx.gameState.table.cardStack[
       cardPositionID({ playerID: playerID, where: "ground" })
     ][0].id != unitAction.cardID
   ) {

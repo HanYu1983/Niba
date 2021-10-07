@@ -4,7 +4,7 @@ import { askPlayerG, cardPositionID } from ".";
 
 export function queryAction(ctx: Context, playerID: string): Action[] {
   const ret: Action[] = [];
-  if (ctx.paymentTable.action?.playerID == playerID) {
+  if (ctx.gameState.paymentTable.action?.playerID == playerID) {
     // 支付狀態
     ret.push({
       id: "CancelPaymentAction",
@@ -19,7 +19,7 @@ export function queryAction(ctx: Context, playerID: string): Action[] {
   {
     // 正常狀態
     const hands =
-      ctx.table.cardStack[
+      ctx.gameState.table.cardStack[
         cardPositionID({ playerID: playerID, where: "hand" })
       ] || [];
     const actions = hands.flatMap((card): Action => {
