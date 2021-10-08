@@ -13,23 +13,25 @@ export type ColorPayment = {
   id: "ColorPayment";
   color: Color;
   cardID: string | null;
+  tipCardID: string[];
 };
 
 export type TapPayment = {
   id: "TapPayment";
   cardID: string | null;
-  condition: Condition[] | null;
+  tipCardID: string[];
 };
 
 export type GCountPayment = {
   id: "GCountPayment";
   gCount: number;
+  tipCardID: string[];
 };
 
 export type Target1Payment = {
   id: "Target1Payment";
   cardID: string | null;
-  condition: Condition[] | null;
+  tipCardID: string[];
 };
 
 export type Payment = (
@@ -140,8 +142,6 @@ export type Context = {
   gameState: GameState;
   animationState: AnimationState;
 };
-
-export type Condition = "手牌" | "特徴：装弾";
 
 export type CardPosition = {
   playerID: string;

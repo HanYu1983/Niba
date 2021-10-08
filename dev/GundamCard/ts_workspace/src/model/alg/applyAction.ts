@@ -295,6 +295,7 @@ export function applyAction(
                   color: action.color,
                   cardID: action.cardID,
                   playerID: action.playerID,
+                  tipCardID: [],
                 },
               ],
             },
