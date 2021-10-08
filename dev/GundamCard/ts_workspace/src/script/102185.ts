@@ -1,3 +1,5 @@
+// 赤黒グラフィック（V）
+// GRAPHIC
 import { Context, CardPosition, Action, Payment, Effect } from "../tool/types";
 import {
   opponent,
