@@ -1,10 +1,11 @@
-import React, { useCallback } from "react";
+import React, { useCallback, useEffect } from "react";
 import Resct, { useState, createContext, PropsWithChildren } from "react";
 import { Context, defaultContext } from "../../tool/types";
 import { createCard } from "../../tool/table";
 import { askCardColor, cardPositionID } from "../../model/alg";
 import { queryAction } from "../../model/alg/queryAction";
 import { applyAction } from "../../model/alg/applyAction";
+import * as firebase from "../../tool/firebase";
 // @ts-ignore
 import { Subject } from "rxjs";
 
@@ -13,6 +14,7 @@ export type AppContext = {
   playerA: string;
   playerB: string;
   onDebug: () => void;
+  onClickNewGame: () => void;
 };
 
 export const AppContext = createContext<AppContext | null>(null);
@@ -35,6 +37,21 @@ export const AppContextProvider = (props: PropsWithChildren<any>) => {
     };
     return value;
   });
+
+  const onClickNewGame = useCallback(() => {
+    firebase.sendData(model);
+  }, []);
+
+  useEffect(() => {
+    return firebase.addListener((err, data) => {
+      if (err) {
+        console.error(err);
+        return;
+      }
+      setModel(data);
+    });
+  }, []);
+
   const onDebug = useCallback(() => {
     let ctx = model;
     const actions = queryAction(ctx, playerA);
@@ -86,10 +103,12 @@ export const AppContextProvider = (props: PropsWithChildren<any>) => {
       id: "GiveUpCutAction",
       playerID: playerA,
     });
-    setModel(ctx);
+    firebase.sendData(ctx);
   }, [model]);
   return (
-    <AppContext.Provider value={{ model: model, playerA, playerB, onDebug }}>
+    <AppContext.Provider
+      value={{ model: model, playerA, playerB, onDebug, onClickNewGame }}
+    >
       {props.children}
     </AppContext.Provider>
   );

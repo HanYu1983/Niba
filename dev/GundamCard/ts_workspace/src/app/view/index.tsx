@@ -1,8 +1,9 @@
-import React, { useContext, useMemo, useCallback } from "react";
+import React, { useContext, useMemo, useCallback, useState } from "react";
 import { AppContext } from "../context";
 import { cardPositionID } from "../../model/alg";
 import { CardPosition } from "../../tool/types";
 import { askImgSrc } from "../../tool/data";
+import { Card } from "../../tool/table";
 
 export function View() {
   const ctx = useContext(AppContext);
@@ -18,22 +19,36 @@ export function View() {
       alert(e);
     }
   }, [ctx.onDebug]);
-
+  const onClickCard = useCallback((card: Card) => {
+    setSelected((origin) => {
+      return {
+        ...origin,
+        [card.id]: !!!origin[card.id],
+      };
+    });
+  }, []);
+  const onClickNewGame = useCallback(() => {
+    ctx.onClickNewGame();
+  }, [ctx.onClickNewGame]);
+  // ============= selection =============== //
+  const [selected, setSelected] = useState<{ [key: string]: boolean }>({});
   // ============== control panel ============= //
   const renderControlPanel = useMemo(() => {
     return (
       <div>
-        <button onClick={onClickTest}>test</button>
+        <button onClick={onClickTest}>onClickTest</button>
+        <button onClick={onClickNewGame}>onClickNewGame</button>
       </div>
     );
-  }, [onClickTest]);
+  }, [onClickTest, onClickNewGame]);
   // ============== game ============== //
+  const CARD_SIZE = 100;
   const renderCards = useCallback(
     (pos: CardPosition) => {
       const cards =
         ctx.model.gameState.table.cardStack[cardPositionID(pos)] || [];
       return (
-        <div style={{ border: "1px solid", height: 70 }}>
+        <div style={{ border: "1px solid", height: CARD_SIZE }}>
           {cards.map((card) => {
             return (
               <div
@@ -43,8 +58,12 @@ export function View() {
                 <img
                   src={askImgSrc(card.protoID)}
                   style={{
-                    height: 70,
+                    height: CARD_SIZE,
                     ...(card.tap ? { transform: "rotate(90deg)" } : null),
+                    ...(selected[card.id] ? { border: "2px solid red" } : null),
+                  }}
+                  onClick={() => {
+                    onClickCard(card);
                   }}
                 ></img>
               </div>
@@ -53,17 +72,17 @@ export function View() {
         </div>
       );
     },
-    [ctx.model]
+    [ctx.model.gameState.table.cardStack, selected]
   );
   const renderGame = useMemo(() => {
     return (
       <>
-        {renderCards({ playerID: ctx.playerA, where: "hand" })}
-        {renderCards({ playerID: ctx.playerA, where: "ground" })}
         {renderCards({ playerID: ctx.playerA, where: "G" })}
+        {renderCards({ playerID: ctx.playerA, where: "ground" })}
+        {renderCards({ playerID: ctx.playerA, where: "hand" })}
       </>
     );
-  }, [ctx.model]);
+  }, [renderCards]);
   return (
     <div>
       {renderControlPanel}

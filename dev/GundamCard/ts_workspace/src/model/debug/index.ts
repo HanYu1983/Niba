@@ -10,6 +10,7 @@ import { askPlayerG, cardPositionID, onEffectCompleted } from "../alg";
 import { queryAction } from "../alg/queryAction";
 import { applyAction } from "../alg/applyAction";
 import { checkPayment } from "../alg/checkPayment";
+import { rootApp } from "../../tool/firebase";
 
 function testPlayCard() {
   const playerID = "a";
@@ -153,6 +154,10 @@ function testPlayG() {
   console.log(ctx);
 }
 
+function testFirebase() {
+  console.log(rootApp);
+}
+
 export function test() {
-  testPlayG();
+  testFirebase();
 }
