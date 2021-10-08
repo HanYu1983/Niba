@@ -133,16 +133,13 @@ function testRealCard() {
         DefaultContext.gameState.table,
         playerID,
         cardPositionID({ playerID: playerID, where: "hand" }),
-        [
-          "179030_11E_G_RD021N_red",
-          "179030_11E_U_BL209R_blue",
-          "179030_11E_U_BL210N_blue",
-        ]
+        ["179030_11E_G_RD021N_red"]
       ),
     },
   };
   console.log(ctx);
-  queryAction(ctx, playerID);
+  const actions = queryAction(ctx, playerID);
+  console.log(actions);
 }
 
 export function test() {
