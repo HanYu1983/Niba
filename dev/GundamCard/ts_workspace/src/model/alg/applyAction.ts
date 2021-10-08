@@ -97,7 +97,7 @@ export function applyAction(
             const nextTable = moveCard(
               ctx.gameState.table,
               cardPositionID({ playerID: playerID, where: "hand" }),
-              cardPositionID({ playerID: playerID, where: "ground" }),
+              cardPositionID(topEffect.action.position),
               topEffect.action.cardID
             );
             ctx = onCardEntered(
@@ -138,7 +138,7 @@ export function applyAction(
       }
       const [passed, reasons] = checkPayment(ctx, playerID);
       if (passed == false) {
-        throw new Error(reasons.join(","));
+        throw new Error(reasons.map((reason) => reason.id).join(","));
       }
       const effect = {
         action: ctx.gameState.paymentTable.action,
@@ -186,6 +186,22 @@ export function applyAction(
         }
         if (action.position == null) {
           throw new Error(`沒有指定出場位置`);
+        }
+        // 放G的話直接進堆疊
+        if (action.position.where == "G") {
+          const effect = {
+            action: action,
+            currents: [],
+          };
+          return {
+            ...ctx,
+            gameState: {
+              ...ctx.gameState,
+              effectStack: {
+                effects: [effect, ...ctx.gameState.effectStack.effects],
+              },
+            },
+          };
         }
         const payments = queryPlayCardPayment(ctx, playerID, action.cardID);
         // 沒有cost就直接放入堆疊
@@ -249,6 +265,9 @@ export function applyAction(
         }
         if (action.cardID == null) {
           throw new Error("你必須指定cardID");
+        }
+        if (ctx.gameState.paymentTable.action == null) {
+          throw new Error("現在沒有支付的必要");
         }
         const nextTable = mapCard(ctx.gameState.table, (card) => {
           if (card.id != action.cardID) {

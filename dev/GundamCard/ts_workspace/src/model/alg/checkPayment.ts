@@ -18,10 +18,10 @@ export function checkPayment(
         askPlayerG(ctx, ctx.gameState.paymentTable.action.playerID).length <
         require.gCount
       ) {
-        break;
+        continue;
       }
       passed[requireID] = true;
-      break;
+      continue;
     }
     for (const currentID in ctx.gameState.paymentTable.currents) {
       if (consumed[currentID]) {

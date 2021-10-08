@@ -135,7 +135,7 @@ function testPlayG() {
   if (
     (
       ctx.gameState.table.cardStack[
-        cardPositionID({ playerID: playerID, where: "ground" })
+        cardPositionID({ playerID: playerID, where: "G" })
       ] || []
     ).length != 1
   ) {
