@@ -1,5 +1,11 @@
 import { mapCard, moveCard } from "../../tool/table";
-import { Context, Action, Payment, Effect } from "../../tool/types";
+import {
+  Context,
+  Action,
+  Payment,
+  Effect,
+  ApplyPaymentAction,
+} from "../../tool/types";
 import {
   askPlayerG,
   cardPositionID,
@@ -179,13 +185,30 @@ export function applyAction(
         if (action.position == null) {
           throw new Error(`沒有指定出場位置`);
         }
+        const payments = queryPlayCardPayment(ctx, playerID, action.cardID);
+        // 沒有cost就直接放入堆疊
+        if (payments.length == 0) {
+          const effect = {
+            action: action,
+            currents: [],
+          };
+          return {
+            ...ctx,
+            gameState: {
+              ...ctx.gameState,
+              effectStack: {
+                effects: [effect, ...ctx.gameState.effectStack.effects],
+              },
+            },
+          };
+        }
         ctx = {
           ...ctx,
           gameState: {
             ...ctx.gameState,
             paymentTable: {
               action: action,
-              requires: queryPlayCardPayment(ctx, playerID, action.cardID),
+              requires: payments,
               currents: [],
               snapshot: ctx,
               isLock: false,

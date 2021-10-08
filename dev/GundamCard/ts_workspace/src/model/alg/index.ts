@@ -70,6 +70,16 @@ export function askCardAction(ctx: Context, card: Card): Action[] {
   return script.askAction(ctx, card);
 }
 
+export function askCardPlayPayment(ctx: Context, card: Card): Payment[] {
+  const rowData = askRowData(card.protoID);
+  const script = askCardScript(rowData.id);
+  if (script.askPlayPayment == null) {
+    console.warn(`askPlayPayment not found:${rowData.id}.ts`);
+    return [];
+  }
+  return script.askPlayPayment(ctx, card);
+}
+
 export function askCardState(ctx: Context, cardID: string): CardState | null {
   return ctx.gameState.cardState[cardID];
 }

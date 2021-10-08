@@ -5,4 +5,5 @@ import { Card } from "../tool/table";
 export type Script = {
   onEffectCompleted?: (ctx: Context, card: Card, effect: Effect) => Context;
   askAction?: (ctx: Context, card: Card) => Action[];
+  askPlayPayment?: (ctx: Context, card: Card) => Payment[];
 };

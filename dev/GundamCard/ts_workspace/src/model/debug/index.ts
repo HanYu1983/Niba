@@ -123,9 +123,9 @@ function testScript() {
   console.log(ctx);
 }
 
-function testRealCard() {
+function testPlayG() {
   const playerID = "A";
-  const ctx: Context = {
+  let ctx: Context = {
     ...DefaultContext,
     gameState: {
       ...DefaultContext.gameState,
@@ -137,11 +137,37 @@ function testRealCard() {
       ),
     },
   };
-  console.log(ctx);
   const actions = queryAction(ctx, playerID);
-  console.log(actions);
+  if (actions.length == 0) {
+    throw new Error("必須有出牌動作");
+  }
+  if (actions[0].id != "PlayCardAction") {
+    throw new Error("動作必須是PlayCardAction");
+  }
+  console.log("出G");
+  ctx = applyAction(ctx, playerID, actions[0]);
+  console.log("放棄切入");
+  ctx = applyAction(ctx, playerID, {
+    id: "GiveUpCutAction",
+    playerID: playerID,
+  });
+  if (
+    ctx.gameState.table.cardStack[
+      cardPositionID({ playerID: playerID, where: "ground" })
+    ].length != 1
+  ) {
+    throw new Error("G必須在場上");
+  }
+  if (
+    ctx.gameState.table.cardStack[
+      cardPositionID({ playerID: playerID, where: "hand" })
+    ].length != 0
+  ) {
+    throw new Error("手牌必須為0");
+  }
+  console.log(ctx);
 }
 
 export function test() {
-  testRealCard();
+  testPlayG();
 }
