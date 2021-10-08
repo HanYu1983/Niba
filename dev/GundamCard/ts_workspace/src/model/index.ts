@@ -1,6 +1,5 @@
-import { testPlayCard, testScript } from "./debug";
+import { test } from "./debug";
 
 export function start() {
-  testPlayCard();
-  testScript();
+  test();
 }

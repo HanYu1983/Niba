@@ -1,4 +1,4 @@
-import { Table } from "../table";
+import { CardStack, Table } from "../table";
 
 export type Color = "緑" | "茶" | "青" | "白" | "紫" | "黒";
 
@@ -108,10 +108,15 @@ export type EffectStack = {
   effects: Effect[];
 };
 
+export type CardState = {
+  playerID: string;
+};
+
 export type GameState = {
   table: Table;
   paymentTable: PaymentTable;
   effectStack: EffectStack;
+  cardState: { [key: string]: CardState };
 };
 
 export type Animation = {

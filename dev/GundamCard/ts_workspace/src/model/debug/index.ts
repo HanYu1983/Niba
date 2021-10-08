@@ -1,4 +1,4 @@
-import { mapCard, moveCard } from "../../tool/table";
+import { mapCard, moveCard, createCard } from "../../tool/table";
 import { Context, Action, Payment, Effect } from "../../tool/types";
 import { askPlayerG, cardPositionID, onEffectCompleted } from "../alg";
 import { queryAction } from "../alg/queryAction";
@@ -21,6 +21,7 @@ const DefaultContext: Context = {
     effectStack: {
       effects: [],
     },
+    cardState: {},
   },
   animationState: {
     productID: 0,
@@ -29,7 +30,7 @@ const DefaultContext: Context = {
   },
 };
 
-export function testPlayCard() {
+function testPlayCard() {
   const playerID = "a";
   let ctx: Context = {
     ...DefaultContext,
@@ -40,11 +41,11 @@ export function testPlayCard() {
         cardStack: {
           ...DefaultContext.gameState.table.cardStack,
           [cardPositionID({ playerID: playerID, where: "hand" })]: [
-            { id: "1", faceDown: true, protoID: "", tap: false },
+            { id: "1", faceDown: true, protoID: "", tap: false, ownerID: null },
           ],
           [cardPositionID({ playerID: playerID, where: "G" })]: [
-            { id: "2", faceDown: true, protoID: "", tap: false },
-            { id: "3", faceDown: true, protoID: "", tap: false },
+            { id: "2", faceDown: true, protoID: "", tap: false, ownerID: null },
+            { id: "3", faceDown: true, protoID: "", tap: false, ownerID: null },
           ],
         },
       },
@@ -109,7 +110,7 @@ export function testPlayCard() {
   console.log(ctx);
 }
 
-export function testScript() {
+function testScript() {
   const ctx = onEffectCompleted(DefaultContext, {
     action: {
       id: "PlayCardAction",
@@ -120,4 +121,30 @@ export function testScript() {
     currents: [],
   });
   console.log(ctx);
+}
+
+function testRealCard() {
+  const playerID = "A";
+  const ctx: Context = {
+    ...DefaultContext,
+    gameState: {
+      ...DefaultContext.gameState,
+      table: createCard(
+        DefaultContext.gameState.table,
+        playerID,
+        cardPositionID({ playerID: playerID, where: "hand" }),
+        [
+          "179030_11E_G_RD021N_red",
+          "179030_11E_U_BL209R_blue",
+          "179030_11E_U_BL210N_blue",
+        ]
+      ),
+    },
+  };
+  console.log(ctx);
+  queryAction(ctx, playerID);
+}
+
+export function test() {
+  testRealCard();
 }

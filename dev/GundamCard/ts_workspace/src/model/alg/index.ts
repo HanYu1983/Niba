@@ -6,12 +6,15 @@ import {
   Effect,
   CardType,
   Color,
+  GameState,
+  CardState,
 } from "../../tool/types";
-import { Card } from "../../tool/table";
+import { Card, getCard, Table } from "../../tool/table";
 import { askRowData } from "../../tool/data";
+import { Script } from "../../script/types";
 
-export function askCardType(imgID: string): CardType {
-  const rowData = askRowData(imgID);
+export function askCardType(ctx: Context, card: Card): CardType {
+  const rowData = askRowData(card.protoID);
   switch (rowData.info_3) {
     case "UNIT":
       return "UNIT";
@@ -28,8 +31,8 @@ export function askCardType(imgID: string): CardType {
   }
 }
 
-export function askCardColor(imgID: string): Color {
-  const rowData = askRowData(imgID);
+export function askCardColor(ctx: Context, card: Card): Color {
+  const rowData = askRowData(card.protoID);
   switch (rowData.info_18) {
     case "白":
       return "白";
@@ -46,6 +49,29 @@ export function askCardColor(imgID: string): Color {
     default:
       throw new Error(`card type not found: ${rowData}`);
   }
+}
+
+function askCardScript(cardRowDataID: string): Script {
+  try {
+    return require(`../../script/${cardRowDataID}.ts`);
+  } catch (e) {
+    console.error(`script/${cardRowDataID}.ts not found`);
+  }
+  return {};
+}
+
+export function askCardAction(ctx: Context, card: Card): Action[] {
+  const rowData = askRowData(card.protoID);
+  const script = askCardScript(rowData.id);
+  if (script.askAction == null) {
+    console.warn(`askAction not found:${rowData.id}.ts`);
+    return [];
+  }
+  return script.askAction(ctx, card);
+}
+
+export function askCardState(ctx: Context, cardID: string): CardState | null {
+  return ctx.gameState.cardState[cardID];
 }
 
 export function askPlayerG(ctx: Context, playerID: string): Card[] {
@@ -67,14 +93,36 @@ export function onCardEntered(ctx: Context, cardID: string): Context {
 }
 
 export function onEffectCompleted(ctx: Context, effect: Effect): Context {
-  if (effect.action.id != "PlayCardAction") {
-    return ctx;
+  switch (effect.action.id) {
+    case "PlayCardAction":
+    case "PlayCardAbilityAction":
+      {
+        if (effect.action.cardID == null) {
+          return ctx;
+        }
+        const card = getCard(ctx.gameState.table, effect.action.cardID);
+        if (card == null) {
+          throw new Error(`card(${effect.action.cardID}) not found`);
+        }
+        const rowData = askRowData(card.protoID);
+        const script = askCardScript(rowData.id);
+        if (script.onEffectCompleted == null) {
+          console.warn(
+            `onEffectCompleted not found in script:${rowData.id}.ts`
+          );
+          return ctx;
+        }
+        return script.onEffectCompleted(ctx, card, effect);
+        // const cardScript = require(`../../script/102425.ts`);
+        // if (cardScript.onEffectCompleted == null) {
+        //   throw new Error(
+        //     `onEffectCompleted not found in script:${effect.action.cardID}`
+        //   );
+        // }
+        // return cardScript.onEffectCompleted(ctx, effect);
+      }
+      break;
+    default:
+      return ctx;
   }
-  const cardScript = require(`../../script/102425.ts`);
-  if (cardScript.onEffectCompleted == null) {
-    throw new Error(
-      `onEffectCompleted not found in script:${effect.action.cardID}`
-    );
-  }
-  return cardScript.onEffectCompleted(ctx, effect);
 }
