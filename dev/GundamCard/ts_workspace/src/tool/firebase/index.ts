@@ -26,6 +26,6 @@ export function addListener(f: (err: any, data: any) => void) {
   });
 }
 
-export function sendData(data: any) {
+export function sync(data: any) {
   return Firestore.setDoc(Firestore.doc(firestore, PATH), data);
 }

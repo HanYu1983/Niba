@@ -11,35 +11,44 @@ import { Subject } from "rxjs";
 
 export type AppContext = {
   model: Context;
-  playerA: string;
-  playerB: string;
   onDebug: () => void;
   onClickNewGame: () => void;
+  playerID: string;
+  onClickChangePlayer: (playerID: string) => void;
 };
 
 export const AppContext = createContext<AppContext | null>(null);
+export const PlayerA = "PlayerA";
+export const PlayerB = "PlayerB";
 
 export const AppContextProvider = (props: PropsWithChildren<any>) => {
-  const playerA = "playerA";
-  const playerB = "playerB";
+  const [playerID, setPlayerID] = useState(PlayerA);
   const [model, setModel] = useState<Context>(() => {
+    let table = defaultContext.gameState.table;
+    table = createCard(
+      table,
+      PlayerA,
+      cardPositionID({ playerID: PlayerA, where: "hand" }),
+      ["179030_11E_U_BK187N_black", "179030_11E_U_BK187N_black"]
+    );
+    table = createCard(
+      table,
+      PlayerB,
+      cardPositionID({ playerID: PlayerB, where: "hand" }),
+      ["179030_11E_U_BK187N_black", "179030_11E_U_BK187N_black"]
+    );
     let value: Context = {
       ...defaultContext,
       gameState: {
         ...defaultContext.gameState,
-        table: createCard(
-          defaultContext.gameState.table,
-          playerA,
-          cardPositionID({ playerID: playerA, where: "hand" }),
-          ["179030_11E_U_BK187N_black", "179030_11E_U_BK187N_black"]
-        ),
+        table: table,
       },
     };
     return value;
   });
 
   const onClickNewGame = useCallback(() => {
-    firebase.sendData(model);
+    firebase.sync(model);
   }, []);
 
   useEffect(() => {
@@ -52,62 +61,72 @@ export const AppContextProvider = (props: PropsWithChildren<any>) => {
     });
   }, []);
 
+  const onClickChangePlayer = useCallback((id: string) => {
+    setPlayerID(id);
+  }, []);
+
   const onDebug = useCallback(() => {
     let ctx = model;
-    const actions = queryAction(ctx, playerA);
+    const actions = queryAction(ctx, playerID);
     console.log(actions);
     const unit1 =
       ctx.gameState.table.cardStack[
-        cardPositionID({ playerID: playerA, where: "hand" })
+        cardPositionID({ playerID: playerID, where: "hand" })
       ]?.[0] || null;
     if (unit1 == null) {
       throw new Error("unit1必須存在");
     }
     const unit2 =
       ctx.gameState.table.cardStack[
-        cardPositionID({ playerID: playerA, where: "hand" })
+        cardPositionID({ playerID: playerID, where: "hand" })
       ]?.[1] || null;
     if (unit2 == null) {
       throw new Error("unit2必須存在");
     }
-    ctx = applyAction(ctx, playerA, {
+    ctx = applyAction(ctx, playerID, {
       id: "PlayCardAction",
-      playerID: playerA,
+      playerID: playerID,
       cardID: unit1.id,
-      position: { playerID: playerA, where: "G" },
+      position: { playerID: playerID, where: "G" },
     });
     console.log("放棄切入");
-    ctx = applyAction(ctx, playerA, {
+    ctx = applyAction(ctx, playerID, {
       id: "GiveUpCutAction",
-      playerID: playerA,
+      playerID: playerID,
     });
-    ctx = applyAction(ctx, playerA, {
+    ctx = applyAction(ctx, playerID, {
       id: "PlayCardAction",
-      playerID: playerA,
+      playerID: playerID,
       cardID: unit2.id,
-      position: { playerID: playerA, where: "ground" },
+      position: { playerID: playerID, where: "ground" },
     });
-    ctx = applyAction(ctx, playerA, {
+    ctx = applyAction(ctx, playerID, {
       id: "TapCardToGenG",
-      playerID: playerA,
+      playerID: playerID,
       cardID: unit1.id,
       color: askCardColor(ctx, unit1),
     });
     console.log(ctx);
-    ctx = applyAction(ctx, playerA, {
+    ctx = applyAction(ctx, playerID, {
       id: "ApplyPaymentAction",
-      playerID: playerA,
+      playerID: playerID,
     });
     console.log("放棄切入");
-    ctx = applyAction(ctx, playerA, {
+    ctx = applyAction(ctx, playerID, {
       id: "GiveUpCutAction",
-      playerID: playerA,
+      playerID: playerID,
     });
-    firebase.sendData(ctx);
-  }, [model]);
+    firebase.sync(ctx);
+  }, [model, playerID]);
   return (
     <AppContext.Provider
-      value={{ model: model, playerA, playerB, onDebug, onClickNewGame }}
+      value={{
+        model: model,
+        onDebug,
+        onClickNewGame,
+        onClickChangePlayer,
+        playerID,
+      }}
     >
       {props.children}
     </AppContext.Provider>

@@ -1,5 +1,5 @@
 import React, { useContext, useMemo, useCallback, useState } from "react";
-import { AppContext } from "../context";
+import { AppContext, PlayerA, PlayerB } from "../context";
 import { cardPositionID } from "../../model/alg";
 import { CardPosition } from "../../tool/types";
 import { askImgSrc } from "../../tool/data";
@@ -30,14 +30,18 @@ export function View() {
   const onClickNewGame = useCallback(() => {
     ctx.onClickNewGame();
   }, [ctx.onClickNewGame]);
+  const onClickChangePlayer = useCallback(() => {
+    ctx.onClickChangePlayer(ctx.playerID == PlayerA ? PlayerB : PlayerA);
+  }, [ctx.onClickChangePlayer, ctx.playerID]);
   // ============= selection =============== //
   const [selected, setSelected] = useState<{ [key: string]: boolean }>({});
   // ============== control panel ============= //
   const renderControlPanel = useMemo(() => {
     return (
       <div>
-        <button onClick={onClickTest}>onClickTest</button>
         <button onClick={onClickNewGame}>onClickNewGame</button>
+        <button onClick={onClickChangePlayer}>onClickChangePlayer</button>
+        <button onClick={onClickTest}>onClickTest</button>
       </div>
     );
   }, [onClickTest, onClickNewGame]);
@@ -77,12 +81,29 @@ export function View() {
   const renderGame = useMemo(() => {
     return (
       <>
-        {renderCards({ playerID: ctx.playerA, where: "G" })}
-        {renderCards({ playerID: ctx.playerA, where: "ground" })}
-        {renderCards({ playerID: ctx.playerA, where: "hand" })}
+        <div
+          style={{
+            ...(ctx.playerID == PlayerA ? { background: "lightyellow" } : null),
+          }}
+        >
+          <h1>PlayerA</h1>
+          {renderCards({ playerID: PlayerA, where: "hand" })}
+          {renderCards({ playerID: PlayerA, where: "ground" })}
+          {renderCards({ playerID: PlayerA, where: "G" })}
+        </div>
+        <div
+          style={{
+            ...(ctx.playerID == PlayerB ? { background: "lightyellow" } : null),
+          }}
+        >
+          <h1>playerB</h1>
+          {renderCards({ playerID: PlayerB, where: "G" })}
+          {renderCards({ playerID: PlayerB, where: "ground" })}
+          {renderCards({ playerID: PlayerB, where: "hand" })}
+        </div>
       </>
     );
-  }, [renderCards]);
+  }, [renderCards, ctx.playerID]);
   return (
     <div>
       {renderControlPanel}
