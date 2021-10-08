@@ -1,6 +1,6 @@
 import { CardStack, Table } from "../table";
 
-export type Color = "緑" | "茶" | "青" | "白" | "紫" | "黒";
+export type Color = "緑" | "茶" | "青" | "白" | "紫" | "黒" | "赤";
 
 export type CardType =
   | "GRAPHIC"
@@ -146,4 +146,29 @@ export type Condition = "手牌" | "特徴：装弾";
 export type CardPosition = {
   playerID: string;
   where: "home" | "gravyard" | "ground" | "hand" | "G";
+};
+
+export const defaultContext: Context = {
+  gameState: {
+    table: {
+      cardStack: {},
+      tokens: [],
+    },
+    paymentTable: {
+      action: null,
+      requires: [],
+      currents: [],
+      snapshot: null,
+      isLock: false,
+    },
+    effectStack: {
+      effects: [],
+    },
+    cardState: {},
+  },
+  animationState: {
+    productID: 0,
+    animations: [],
+    consumeID: {},
+  },
 };

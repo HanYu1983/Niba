@@ -46,8 +46,10 @@ export function askCardColor(ctx: Context, card: Card): Color {
       return "紫";
     case "黒":
       return "黒";
+    case "赤":
+      return "赤";
     default:
-      throw new Error(`card type not found: ${rowData}`);
+      throw new Error(`card color not found: ${JSON.stringify(rowData)}`);
   }
 }
 
@@ -85,9 +87,11 @@ export function askCardState(ctx: Context, cardID: string): CardState | null {
 }
 
 export function askPlayerG(ctx: Context, playerID: string): Card[] {
-  return ctx.gameState.table.cardStack[
-    cardPositionID({ playerID: playerID, where: "G" })
-  ];
+  return (
+    ctx.gameState.table.cardStack[
+      cardPositionID({ playerID: playerID, where: "G" })
+    ] || []
+  );
 }
 
 export function cardPositionID(position: CardPosition) {

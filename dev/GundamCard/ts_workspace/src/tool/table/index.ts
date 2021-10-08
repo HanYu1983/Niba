@@ -6,7 +6,7 @@ export type Card = {
   ownerID: string | null;
 };
 
-export type CardStack = { [key: string]: Card[] };
+export type CardStack = { [key: string]: Card[] | undefined };
 
 export type TokenPosition =
   | { id: "TokenPositionCard"; cardID: string }
@@ -28,15 +28,17 @@ export function moveCard(
   to: string,
   cardID: string
 ): Table {
-  const findCard = table.cardStack[from].filter((card) => card.id == cardID);
+  const findCard = (table.cardStack[from] || []).filter(
+    (card) => card.id == cardID
+  );
   if (findCard.length == 0) {
-    throw new Error("xxx");
+    throw new Error(`找不到要移動的卡:${cardID}`);
   }
   return {
     ...table,
     cardStack: {
       ...table.cardStack,
-      [from]: table.cardStack[from].filter((card) => card.id != cardID),
+      [from]: (table.cardStack[from] || []).filter((card) => card.id != cardID),
       [to]: [...(table.cardStack[to] || []), findCard[0]],
     },
   };

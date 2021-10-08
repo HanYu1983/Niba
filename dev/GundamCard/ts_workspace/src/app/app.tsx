@@ -1,18 +1,17 @@
-import React, { useEffect } from "react";
+import React, { useEffect, useContext } from "react";
 import ReactDOM from "react-dom";
 import { start } from "../model";
 import { askImgSrc } from "../tool/data";
-
+import { AppContextProvider } from "./context";
+import { View } from "./view";
 const App = (props: any) => {
   useEffect(() => {
     start();
   });
   return (
-    <div>
-      {/* {Object.keys(datas).map((k: any) => {
-        return <img key={k} src={askImgSrc(datas[k].img)}></img>;
-      })} */}
-    </div>
+    <AppContextProvider>
+      <View></View>
+    </AppContextProvider>
   );
 };
 

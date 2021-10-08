@@ -32,7 +32,7 @@ export function applyAction(
         const homeStack =
           ctx.gameState.table.cardStack[
             cardPositionID({ playerID: activePlayerID, where: "home" })
-          ];
+          ] || [];
         const topCards = homeStack.slice(
           Math.max(0, homeStack.length - num),
           homeStack.length
@@ -46,9 +46,11 @@ export function applyAction(
           );
         }, ctx.gameState.table);
         if (
-          nextTable.cardStack[
-            cardPositionID({ playerID: activePlayerID, where: "home" })
-          ].length == 0
+          (
+            nextTable.cardStack[
+              cardPositionID({ playerID: activePlayerID, where: "home" })
+            ] || []
+          ).length == 0
         ) {
           // 牌庫抽完了，遊戲結束
         }

@@ -1,45 +1,26 @@
 import { mapCard, moveCard, createCard } from "../../tool/table";
-import { Context, Action, Payment, Effect } from "../../tool/types";
+import {
+  Context,
+  Action,
+  Payment,
+  Effect,
+  defaultContext,
+} from "../../tool/types";
 import { askPlayerG, cardPositionID, onEffectCompleted } from "../alg";
 import { queryAction } from "../alg/queryAction";
 import { applyAction } from "../alg/applyAction";
 import { checkPayment } from "../alg/checkPayment";
 
-const DefaultContext: Context = {
-  gameState: {
-    table: {
-      cardStack: {},
-      tokens: [],
-    },
-    paymentTable: {
-      action: null,
-      requires: [],
-      currents: [],
-      snapshot: null,
-      isLock: false,
-    },
-    effectStack: {
-      effects: [],
-    },
-    cardState: {},
-  },
-  animationState: {
-    productID: 0,
-    animations: [],
-    consumeID: {},
-  },
-};
-
 function testPlayCard() {
   const playerID = "a";
   let ctx: Context = {
-    ...DefaultContext,
+    ...defaultContext,
     gameState: {
-      ...DefaultContext.gameState,
+      ...defaultContext.gameState,
       table: {
-        ...DefaultContext.gameState.table,
+        ...defaultContext.gameState.table,
         cardStack: {
-          ...DefaultContext.gameState.table.cardStack,
+          ...defaultContext.gameState.table.cardStack,
           [cardPositionID({ playerID: playerID, where: "hand" })]: [
             { id: "1", faceDown: true, protoID: "", tap: false, ownerID: null },
           ],
@@ -76,7 +57,7 @@ function testPlayCard() {
   ctx = applyAction(ctx, playerID, tapGAction);
   const findTapCard = ctx.gameState.table.cardStack[
     cardPositionID({ playerID: playerID, where: "G" })
-  ].find((card) => {
+  ]?.find((card) => {
     return card.id == tapGAction.cardID;
   });
   if (findTapCard == null) {
@@ -103,7 +84,7 @@ function testPlayCard() {
   if (
     ctx.gameState.table.cardStack[
       cardPositionID({ playerID: playerID, where: "ground" })
-    ][0].id != unitAction.cardID
+    ]?.[0].id != unitAction.cardID
   ) {
     throw new Error(`${unitAction.cardID}必須在場上`);
   }
@@ -111,7 +92,7 @@ function testPlayCard() {
 }
 
 function testScript() {
-  const ctx = onEffectCompleted(DefaultContext, {
+  const ctx = onEffectCompleted(defaultContext, {
     action: {
       id: "PlayCardAction",
       playerID: "",
@@ -126,11 +107,11 @@ function testScript() {
 function testPlayG() {
   const playerID = "A";
   let ctx: Context = {
-    ...DefaultContext,
+    ...defaultContext,
     gameState: {
-      ...DefaultContext.gameState,
+      ...defaultContext.gameState,
       table: createCard(
-        DefaultContext.gameState.table,
+        defaultContext.gameState.table,
         playerID,
         cardPositionID({ playerID: playerID, where: "hand" }),
         ["179030_11E_G_RD021N_red"]
@@ -152,16 +133,20 @@ function testPlayG() {
     playerID: playerID,
   });
   if (
-    ctx.gameState.table.cardStack[
-      cardPositionID({ playerID: playerID, where: "ground" })
-    ].length != 1
+    (
+      ctx.gameState.table.cardStack[
+        cardPositionID({ playerID: playerID, where: "ground" })
+      ] || []
+    ).length != 1
   ) {
     throw new Error("G必須在場上");
   }
   if (
-    ctx.gameState.table.cardStack[
-      cardPositionID({ playerID: playerID, where: "hand" })
-    ].length != 0
+    (
+      ctx.gameState.table.cardStack[
+        cardPositionID({ playerID: playerID, where: "hand" })
+      ] || []
+    ).length != 0
   ) {
     throw new Error("手牌必須為0");
   }
