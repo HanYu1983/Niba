@@ -57,6 +57,9 @@ export const AppContextProvider = (props: PropsWithChildren<any>) => {
         console.error(err);
         return;
       }
+      if (data == null) {
+        return;
+      }
       setModel(data);
     });
   }, []);

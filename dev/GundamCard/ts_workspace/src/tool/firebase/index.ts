@@ -14,7 +14,7 @@ export const rootApp = App.initializeApp(firebaseConfig, "rootApp");
 
 const firestore = Firestore.initializeFirestore(rootApp, {});
 
-const PATH = "context/default";
+const PATH = "app/GundamCard/context/default";
 export function addListener(f: (err: any, data: any) => void) {
   return Firestore.onSnapshot(Firestore.doc(firestore, PATH), {
     next: (snapshot) => {
