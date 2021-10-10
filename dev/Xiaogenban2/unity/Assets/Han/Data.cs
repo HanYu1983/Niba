@@ -3,6 +3,11 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 
+public class Config
+{
+    public static int BucketSize = 1000;
+}
+
 [Serializable]
 public struct Earn
 {
@@ -15,6 +20,7 @@ public struct Earn
 
 public class Memonto
 {
+    public int triggerId;
     public int seqId;
     public List<Earn> earns;
     public List<string> memo;
