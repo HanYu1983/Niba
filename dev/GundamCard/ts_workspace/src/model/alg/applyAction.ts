@@ -5,6 +5,8 @@ import {
   Payment,
   Effect,
   ApplyPaymentAction,
+  mapPlayerState,
+  isEveryConfirmPhase,
 } from "../../tool/types";
 import {
   askPlayerG,
@@ -12,9 +14,11 @@ import {
   onEffectCompleted,
   onCardEntered,
   opponent,
+  askNextPhase,
 } from ".";
 import { checkPayment } from "./checkPayment";
 import { queryPlayCardPayment } from "./queryPlayCardPayment";
+import { PlayerA, PlayerB } from "../../app/context";
 
 export function applyAction(
   ctx: Context,
@@ -78,56 +82,94 @@ export function applyAction(
         },
       };
     }
-    case "GiveUpCutAction": {
-      if (ctx.gameState.effectStack.effects.length == 0) {
-        console.log("現在沒有堆疊，切入沒有效果");
+    case "ConfirmPhaseAction": {
+      // 玩家宣告沒事
+      ctx = mapPlayerState(ctx, [playerID], (playerState) => {
+        return {
+          ...playerState,
+          confirmPhase: true,
+        };
+      });
+      // 如果還有玩家有事要做，就回傳
+      if (isEveryConfirmPhase(ctx, [PlayerA, PlayerB]) == false) {
         return ctx;
       }
-      // 如果雙方都放棄切入
-      const topEffect = ctx.gameState.effectStack.effects[0];
-      switch (topEffect.action.id) {
-        case "PlayCardAction":
-          {
-            if (topEffect.action.cardID == null) {
-              throw new Error("cardID不存在，請檢查程式");
-            }
-            if (topEffect.action.position == null) {
-              throw new Error(`position不存在，請檢查程式`);
-            }
-            const nextTable = moveCard(
-              ctx.gameState.table,
-              cardPositionID({ playerID: playerID, where: "hand" }),
-              cardPositionID(topEffect.action.position),
-              topEffect.action.cardID
-            );
-            ctx = onCardEntered(
+      // 所有玩家都宣告沒事
+      // 如果堆疊存在，先解決效果，回傳
+      if (ctx.gameState.effectStack.effects.length) {
+        // 解決所有效果
+        while (ctx.gameState.effectStack.effects.length) {
+          const topEffect = ctx.gameState.effectStack.effects[0];
+          switch (topEffect.action.id) {
+            case "PlayCardAction":
               {
-                ...ctx,
-                gameState: {
-                  ...ctx.gameState,
-                  table: nextTable,
-                },
-              },
-              topEffect.action.cardID
-            );
-            ctx = onEffectCompleted(ctx, topEffect);
+                if (topEffect.action.cardID == null) {
+                  throw new Error("cardID不存在，請檢查程式");
+                }
+                if (topEffect.action.position == null) {
+                  throw new Error(`position不存在，請檢查程式`);
+                }
+                const nextTable = moveCard(
+                  ctx.gameState.table,
+                  cardPositionID({ playerID: playerID, where: "hand" }),
+                  cardPositionID(topEffect.action.position),
+                  topEffect.action.cardID
+                );
+                ctx = onCardEntered(
+                  {
+                    ...ctx,
+                    gameState: {
+                      ...ctx.gameState,
+                      table: nextTable,
+                    },
+                  },
+                  topEffect.action.cardID
+                );
+                ctx = onEffectCompleted(ctx, topEffect);
+              }
+              break;
+            case "PlayCardAbilityAction":
+              break;
+            default:
+              throw new Error("unknown action");
           }
-          break;
-        case "PlayCardAbilityAction":
-          break;
-        default:
-          throw new Error("unknown action");
+          ctx = {
+            ...ctx,
+            gameState: {
+              ...ctx.gameState,
+              effectStack: {
+                ...ctx.gameState.effectStack,
+                effects: ctx.gameState.effectStack.effects.slice(1),
+              },
+            },
+          };
+        }
+        // 重設為非確認狀態
+        ctx = mapPlayerState(ctx, [PlayerA, PlayerB], (playerState) => {
+          return {
+            ...playerState,
+            confirmPhase: false,
+          };
+        });
+        // 回傳，回到自由時間
+        return ctx;
       }
-      return {
+      // 移到下個階段
+      ctx = {
         ...ctx,
         gameState: {
           ...ctx.gameState,
-          effectStack: {
-            ...ctx.gameState.effectStack,
-            effects: ctx.gameState.effectStack.effects.slice(1),
-          },
+          phase: askNextPhase(ctx, ctx.gameState.phase),
         },
       };
+      // 重設為非確認狀態
+      ctx = mapPlayerState(ctx, [PlayerA, PlayerB], (playerState) => {
+        return {
+          ...playerState,
+          confirmPhase: false,
+        };
+      });
+      return ctx;
     }
     case "ApplyPaymentAction":
       if (ctx.gameState.paymentTable.action == null) {

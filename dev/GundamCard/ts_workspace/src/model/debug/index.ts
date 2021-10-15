@@ -79,7 +79,7 @@ function testPlayCard() {
     playerID: playerID,
   });
   ctx = applyAction(ctx, playerID, {
-    id: "GiveUpCutAction",
+    id: "ConfirmPhaseAction",
     playerID: playerID,
   });
   if (
@@ -130,7 +130,7 @@ function testPlayG() {
   ctx = applyAction(ctx, playerID, actions[0]);
   console.log("放棄切入");
   ctx = applyAction(ctx, playerID, {
-    id: "GiveUpCutAction",
+    id: "ConfirmPhaseAction",
     playerID: playerID,
   });
   if (

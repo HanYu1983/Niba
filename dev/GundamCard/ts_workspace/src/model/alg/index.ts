@@ -8,6 +8,7 @@ import {
   Color,
   GameState,
   CardState,
+  Phase,
 } from "../../tool/types";
 import { Card, getCard, Table } from "../../tool/table";
 import { askRowData } from "../../tool/data";
@@ -139,4 +140,8 @@ export function onEffectCompleted(ctx: Context, effect: Effect): Context {
     default:
       return ctx;
   }
+}
+
+export function askNextPhase(ctx: Context, phase: Phase): Phase {
+  return ctx.gameState.phase;
 }

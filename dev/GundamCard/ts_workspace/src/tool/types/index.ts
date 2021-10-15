@@ -74,8 +74,8 @@ export type ApplyPaymentAction = {
   id: "ApplyPaymentAction";
 };
 
-export type GiveUpCutAction = {
-  id: "GiveUpCutAction";
+export type ConfirmPhaseAction = {
+  id: "ConfirmPhaseAction";
 };
 
 export type EndStepAction = {
@@ -89,7 +89,7 @@ export type Action = (
   | AddPaymentAction
   | CancelPaymentAction
   | ApplyPaymentAction
-  | GiveUpCutAction
+  | ConfirmPhaseAction
   | EndStepAction
 ) & { playerID: string };
 
@@ -114,11 +114,34 @@ export type CardState = {
   playerID: string;
 };
 
+export type PhaseMain =
+  | "draw"
+  | "set"
+  | "attack"
+  | "guard"
+  | "damage"
+  | "return";
+
+export type PhaseSub = "before" | "effect" | "after";
+
+export type Phase = {
+  main: PhaseMain;
+  sub: PhaseSub;
+};
+
+export type PlayerState = {
+  turn: number;
+  playGCount: number;
+  confirmPhase: boolean;
+};
+
 export type GameState = {
   table: Table;
   paymentTable: PaymentTable;
   effectStack: EffectStack;
   cardState: { [key: string]: CardState };
+  phase: Phase;
+  playerState: { [key: string]: PlayerState };
 };
 
 export type Animation = {
@@ -131,11 +154,6 @@ export type AnimationState = {
   productID: number;
   animations: Animation[];
   consumeID: { [key: string]: number };
-};
-
-export type PlayerState = {
-  turn: number;
-  playGCount: number;
 };
 
 export type Context = {
@@ -165,6 +183,11 @@ export const defaultContext: Context = {
       effects: [],
     },
     cardState: {},
+    phase: {
+      main: "draw",
+      sub: "before",
+    },
+    playerState: {},
   },
   animationState: {
     productID: 0,
@@ -172,3 +195,34 @@ export const defaultContext: Context = {
     consumeID: {},
   },
 };
+
+export function mapPlayerState(
+  ctx: Context,
+  players: string[],
+  mapF: (s: PlayerState) => PlayerState
+): Context {
+  return {
+    ...ctx,
+    gameState: {
+      ...ctx.gameState,
+      playerState: players.reduce((playerState, playerID) => {
+        return {
+          ...playerState,
+          [playerID]: mapF(
+            playerState[playerID] || {
+              turn: 0,
+              playGCount: 0,
+              confirmPhase: false,
+            }
+          ),
+        };
+      }, ctx.gameState.playerState),
+    },
+  };
+}
+
+export function isEveryConfirmPhase(ctx: Context, players: string[]) {
+  return players
+    .map((playerID) => ctx.gameState.playerState[playerID]?.confirmPhase)
+    .reduce((acc, c) => acc && c, true);
+}
