@@ -46,7 +46,8 @@ export type Payment = (
 export type PlayCardAction = {
   id: "PlayCardAction";
   cardID: string | null;
-  position: CardPosition | null;
+  from: CardPosition | null;
+  to: CardPosition | null;
 };
 
 export type PlayCardAbilityAction = {
@@ -124,10 +125,7 @@ export type PhaseMain =
 
 export type PhaseSub = "before" | "effect" | "after";
 
-export type Phase = {
-  main: PhaseMain;
-  sub: PhaseSub;
-};
+export type Phase = [PhaseMain, PhaseSub];
 
 export type PlayerState = {
   turn: number;
@@ -141,7 +139,8 @@ export type GameState = {
   effectStack: EffectStack;
   cardState: { [key: string]: CardState };
   phase: Phase;
-  playerState: { [key: string]: PlayerState };
+  playerState: { [key: string]: PlayerState | undefined };
+  activePlayerID: string | null;
 };
 
 export type Animation = {
@@ -183,11 +182,9 @@ export const defaultContext: Context = {
       effects: [],
     },
     cardState: {},
-    phase: {
-      main: "draw",
-      sub: "before",
-    },
+    phase: ["draw", "before"],
     playerState: {},
+    activePlayerID: null,
   },
   animationState: {
     productID: 0,
@@ -223,6 +220,6 @@ export function mapPlayerState(
 
 export function isEveryConfirmPhase(ctx: Context, players: string[]) {
   return players
-    .map((playerID) => ctx.gameState.playerState[playerID]?.confirmPhase)
+    .map((playerID) => !!ctx.gameState.playerState[playerID]?.confirmPhase)
     .reduce((acc, c) => acc && c, true);
 }

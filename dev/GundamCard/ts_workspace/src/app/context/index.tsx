@@ -90,18 +90,20 @@ export const AppContextProvider = (props: PropsWithChildren<any>) => {
       id: "PlayCardAction",
       playerID: playerID,
       cardID: unit1.id,
-      position: { playerID: playerID, where: "G" },
+      from: { playerID: playerID, where: "hand" },
+      to: { playerID: playerID, where: "G" },
     });
     console.log("放棄切入");
     ctx = applyAction(ctx, playerID, {
-      id: "GiveUpCutAction",
+      id: "ConfirmPhaseAction",
       playerID: playerID,
     });
     ctx = applyAction(ctx, playerID, {
       id: "PlayCardAction",
       playerID: playerID,
       cardID: unit2.id,
-      position: { playerID: playerID, where: "ground" },
+      from: { playerID: playerID, where: "hand" },
+      to: { playerID: playerID, where: "ground" },
     });
     ctx = applyAction(ctx, playerID, {
       id: "TapCardToGenG",
@@ -116,7 +118,7 @@ export const AppContextProvider = (props: PropsWithChildren<any>) => {
     });
     console.log("放棄切入");
     ctx = applyAction(ctx, playerID, {
-      id: "GiveUpCutAction",
+      id: "ConfirmPhaseAction",
       playerID: playerID,
     });
     firebase.sync(ctx);

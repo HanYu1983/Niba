@@ -83,6 +83,21 @@ export function applyAction(
       };
     }
     case "ConfirmPhaseAction": {
+      // 如果是主動玩家的規定效果，移到規定效果的下一步
+      if (
+        ctx.gameState.activePlayerID == playerID &&
+        ctx.gameState.phase[1] == "effect"
+      ) {
+        // 移到下個階段
+        ctx = {
+          ...ctx,
+          gameState: {
+            ...ctx.gameState,
+            phase: askNextPhase(ctx, ctx.gameState.phase),
+          },
+        };
+        return ctx;
+      }
       // 玩家宣告沒事
       ctx = mapPlayerState(ctx, [playerID], (playerState) => {
         return {
@@ -100,19 +115,23 @@ export function applyAction(
         // 解決所有效果
         while (ctx.gameState.effectStack.effects.length) {
           const topEffect = ctx.gameState.effectStack.effects[0];
+          console.log("處理效果...", topEffect);
           switch (topEffect.action.id) {
             case "PlayCardAction":
               {
                 if (topEffect.action.cardID == null) {
                   throw new Error("cardID不存在，請檢查程式");
                 }
-                if (topEffect.action.position == null) {
-                  throw new Error(`position不存在，請檢查程式`);
+                if (topEffect.action.to == null) {
+                  throw new Error(`to不存在，請檢查程式`);
+                }
+                if (topEffect.action.from == null) {
+                  throw new Error(`from不存在，請檢查程式`);
                 }
                 const nextTable = moveCard(
                   ctx.gameState.table,
-                  cardPositionID({ playerID: playerID, where: "hand" }),
-                  cardPositionID(topEffect.action.position),
+                  cardPositionID(topEffect.action.from),
+                  cardPositionID(topEffect.action.to),
                   topEffect.action.cardID
                 );
                 ctx = onCardEntered(
@@ -226,11 +245,11 @@ export function applyAction(
         if (action.cardID == null) {
           throw new Error("你必須指定cardID");
         }
-        if (action.position == null) {
+        if (action.to == null) {
           throw new Error(`沒有指定出場位置`);
         }
         // 放G的話直接進堆疊
-        if (action.position.where == "G") {
+        if (action.to.where == "G") {
           const effect = {
             action: action,
             currents: [],

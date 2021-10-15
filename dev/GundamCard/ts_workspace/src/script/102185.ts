@@ -22,7 +22,8 @@ const askAction = (ctx: Context, card: Card): Action[] => {
       id: "PlayCardAction",
       playerID: card.ownerID,
       cardID: card.id,
-      position: { playerID: card.ownerID, where: "G" },
+      from: { playerID: card.ownerID, where: "hand" },
+      to: { playerID: card.ownerID, where: "G" },
     });
   }
   return actions;

@@ -32,6 +32,8 @@ export function moveCard(
     (card) => card.id == cardID
   );
   if (findCard.length == 0) {
+    console.log(table);
+    console.log(table.cardStack[from]);
     throw new Error(`找不到要移動的卡:${cardID}`);
   }
   return {

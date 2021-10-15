@@ -67,7 +67,7 @@ const allData = [
   ...d179029.data,
   ...d179030.data,
 
-  ...d179901.data,
+  // ...d179901.data,
 ];
 const indexByImgID = allData
   .map((data, i): [string, number] => {
