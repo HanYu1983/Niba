@@ -11,3 +11,30 @@ EditorBuildSettings:
   - enabled: 1
     path: Assets/Demo/Niba/Main2.unity
     guid: 174e3eee710f94163a8c0f6d6662db12
+  - enabled: 1
+    path: Assets/Demo/RobotWar/RobotWar-Buy.unity
+    guid: 90a529c0a44ca3544b8b5358efd7c81d
+  - enabled: 1
+    path: Assets/Demo/RobotWar/RobotWar-Item.unity
+    guid: b3d53c6f76aa44e499e68d949aba5510
+  - enabled: 1
+    path: Assets/Demo/RobotWar/RobotWar-Menu.unity
+    guid: b2dd1d7d9be654b4a8ea093ab9cc08cf
+  - enabled: 1
+    path: Assets/Demo/RobotWar/RobotWar-Network.unity
+    guid: d59af54c6c9e1de4287861e262cd6aa9
+  - enabled: 1
+    path: Assets/Demo/RobotWar/RobotWar-Pilot.unity
+    guid: c3511fac5af36dd429b5d6317945a780
+  - enabled: 1
+    path: Assets/Demo/RobotWar/RobotWar-Title.unity
+    guid: 5476f0eeb32ab0947bdc1e62efd3166a
+  - enabled: 1
+    path: Assets/Demo/RobotWar/RobotWar-Training.unity
+    guid: 2e8603cd4da64f342bfa3bf6b3a0d07d
+  - enabled: 1
+    path: Assets/Demo/RobotWar/RobotWar-Unit.unity
+    guid: 18b5879d1299e7744ac4d3eb9ec50d61
+  - enabled: 1
+    path: Assets/Demo/RobotWar/RobotWar-Weapon.unity
+    guid: bd46559581068894db225c87927e067f
