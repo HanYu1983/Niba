@@ -37,14 +37,14 @@ export function testPlayCard() {
   };
   const unit1 =
     ctx.gameState.table.cardStack[
-      cardPositionID({ playerID: PlayerA, where: "hand" })
+    cardPositionID({ playerID: PlayerA, where: "hand" })
     ]?.[0] || null;
   if (unit1 == null) {
     throw new Error("unit1必須存在");
   }
   const unit2 =
     ctx.gameState.table.cardStack[
-      cardPositionID({ playerID: PlayerA, where: "hand" })
+    cardPositionID({ playerID: PlayerA, where: "hand" })
     ]?.[1] || null;
   if (unit2 == null) {
     throw new Error("unit2必須存在");
@@ -66,10 +66,14 @@ export function testPlayCard() {
     playerID: PlayerA,
   });
   console.log("B放棄切入");
-  console.log("處理出卡效果");
   ctx = applyAction(ctx, PlayerB, {
     id: "ConfirmPhaseAction",
     playerID: PlayerB,
+  });
+  console.log("處理出卡效果");
+  ctx = applyAction(ctx, PlayerA, {
+    id: "SystemHandleEffectAction",
+    playerID: PlayerA,
   });
   if (ctx.gameState.effectStack.effects.length != 0) {
     throw new Error("堆疊中必須有0個效果");
@@ -119,10 +123,14 @@ export function testPlayCard() {
     playerID: PlayerA,
   });
   console.log("B放棄切入");
-  console.log("處理出卡效果");
   ctx = applyAction(ctx, PlayerB, {
     id: "ConfirmPhaseAction",
     playerID: PlayerB,
+  });
+  console.log("處理出卡效果");
+  ctx = applyAction(ctx, PlayerA, {
+    id: "SystemHandleEffectAction",
+    playerID: PlayerA,
   });
   if (
     (ctx.gameState.table.cardStack[

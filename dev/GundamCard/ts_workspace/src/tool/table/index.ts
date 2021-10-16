@@ -26,7 +26,8 @@ export function moveCard(
   table: Table,
   from: string,
   to: string,
-  cardID: string
+  cardID: string,
+  beforeCardID: string | null
 ): Table {
   const findCard = (table.cardStack[from] || []).filter(
     (card) => card.id == cardID
@@ -36,12 +37,25 @@ export function moveCard(
     console.log(table.cardStack[from]);
     throw new Error(`找不到要移動的卡:${cardID}`);
   }
+  let nextTo = (table.cardStack[to] || [])
+  if (beforeCardID != null) {
+    const beforeCardIndex = nextTo.findIndex(card => card.id = beforeCardID)
+    if (beforeCardIndex != -1) {
+      if (beforeCardIndex == 0) {
+        nextTo = [findCard[0], ...nextTo]
+      } else {
+        nextTo = [...nextTo.slice(0, beforeCardIndex), findCard[0], ...nextTo.slice(beforeCardIndex)]
+      }
+    }
+  } else {
+    nextTo = [...nextTo, findCard[0]]
+  }
   return {
     ...table,
     cardStack: {
       ...table.cardStack,
       [from]: (table.cardStack[from] || []).filter((card) => card.id != cardID),
-      [to]: [...(table.cardStack[to] || []), findCard[0]],
+      [to]: nextTo
     },
   };
 }

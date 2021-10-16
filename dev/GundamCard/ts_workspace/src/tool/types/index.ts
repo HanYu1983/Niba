@@ -83,6 +83,34 @@ export type EndStepAction = {
   id: "EndStepAction";
 };
 
+export type AttackAction = {
+  id: "AttackAction";
+  cardID: string | null;
+  from: CardPosition | null;
+  to: CardPosition | null;
+  beforeCardID: string | null;
+};
+
+export type GuardAction = {
+  id: "GuardAction";
+  cardID: string | null;
+  from: CardPosition | null;
+  to: CardPosition | null;
+  beforeCardID: string | null;
+};
+
+export type SystemHandleEffectAction = {
+  id: "SystemHandleEffectAction";
+};
+
+export type SystemHandlePhaseEffectAction = {
+  id: "SystemHandlePhaseEffectAction";
+};
+
+export type SystemAddDestroyEffectAction = {
+  id: "SystemAddDestroyEffectAction";
+};
+
 export type Action = (
   | PlayCardAction
   | PlayCardAbilityAction
@@ -92,6 +120,11 @@ export type Action = (
   | ApplyPaymentAction
   | ConfirmPhaseAction
   | EndStepAction
+  | AttackAction
+  | GuardAction
+  | SystemHandleEffectAction
+  | SystemHandlePhaseEffectAction
+  | SystemAddDestroyEffectAction
 ) & { playerID: string };
 
 export type PaymentTable = {
@@ -141,6 +174,7 @@ export type GameState = {
   phase: Phase;
   playerState: { [key: string]: PlayerState | undefined };
   activePlayerID: string | null;
+  destroyCardID: string[];
 };
 
 export type Animation = {
@@ -162,7 +196,7 @@ export type Context = {
 
 export type CardPosition = {
   playerID: string;
-  where: "home" | "gravyard" | "ground" | "hand" | "G";
+  where: "home" | "gravyard" | "ground" | "hand" | "G" | "universe" | "earth";
 };
 
 export const defaultContext: Context = {
@@ -185,6 +219,7 @@ export const defaultContext: Context = {
     phase: ["draw", "before"],
     playerState: {},
     activePlayerID: null,
+    destroyCardID: []
   },
   animationState: {
     productID: 0,
@@ -218,7 +253,7 @@ export function mapPlayerState(
   };
 }
 
-export function isEveryConfirmPhase(ctx: Context, players: string[]):boolean {
+export function isEveryConfirmPhase(ctx: Context, players: string[]): boolean {
   return players
     .map((playerID) => !!ctx.gameState.playerState[playerID]?.confirmPhase)
     .reduce((acc, c) => acc && c, true);

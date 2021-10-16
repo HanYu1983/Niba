@@ -46,10 +46,15 @@ export function testPlayG() {
     id: "ConfirmPhaseAction",
     playerID: PlayerB,
   });
+  ctx = applyAction(ctx, PlayerA, {
+    id: "SystemHandleEffectAction",
+    playerID: PlayerA,
+  });
+  console.log(ctx)
   if (
     (
       ctx.gameState.table.cardStack[
-        cardPositionID({ playerID: PlayerA, where: "G" })
+      cardPositionID({ playerID: PlayerA, where: "G" })
       ] || []
     ).length != 1
   ) {
@@ -58,7 +63,7 @@ export function testPlayG() {
   if (
     (
       ctx.gameState.table.cardStack[
-        cardPositionID({ playerID: PlayerA, where: "hand" })
+      cardPositionID({ playerID: PlayerA, where: "hand" })
       ] || []
     ).length != 0
   ) {

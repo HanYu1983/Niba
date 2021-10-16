@@ -53,7 +53,7 @@ export function testPhase() {
   }
   console.log("A完成規定效果");
   ctx = applyAction(ctx, PlayerA, {
-    id: "ConfirmPhaseAction",
+    id: "SystemHandlePhaseEffectAction",
     playerID: PlayerA,
   });
   if (ctx.gameState.phase[1] != "after") {
