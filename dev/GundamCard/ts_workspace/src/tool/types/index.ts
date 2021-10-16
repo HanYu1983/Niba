@@ -218,7 +218,7 @@ export function mapPlayerState(
   };
 }
 
-export function isEveryConfirmPhase(ctx: Context, players: string[]) {
+export function isEveryConfirmPhase(ctx: Context, players: string[]):boolean {
   return players
     .map((playerID) => !!ctx.gameState.playerState[playerID]?.confirmPhase)
     .reduce((acc, c) => acc && c, true);
