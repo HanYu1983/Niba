@@ -53,6 +53,12 @@ dev/Xiaogenban2/unity/Temp/
 dev/Xiaogenban2/unity/UnityPackageManager/
 dev/Xiaogenban2/unity/Build/
 
+dev/Project3/unity_workspace/Library/
+dev/Project3/unity_workspace/obj/
+dev/Project3/unity_workspace/Temp/
+dev/Project3/unity_workspace/UnityPackageManager/
+dev/Project3/unity_workspace/Build/
+
 dev/Robot/.clj-kondo/
 dev/Robot2/.clj-kondo/
 
