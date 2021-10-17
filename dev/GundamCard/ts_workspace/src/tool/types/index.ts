@@ -79,6 +79,10 @@ export type ConfirmPhaseAction = {
   id: "ConfirmPhaseAction";
 };
 
+export type CancelConfirmPhaseAction = {
+  id: "CancelConfirmPhaseAction";
+};
+
 export type EndStepAction = {
   id: "EndStepAction";
 };
@@ -119,6 +123,7 @@ export type Action = (
   | CancelPaymentAction
   | ApplyPaymentAction
   | ConfirmPhaseAction
+  | CancelConfirmPhaseAction
   | EndStepAction
   | AttackAction
   | GuardAction
@@ -135,10 +140,19 @@ export type PaymentTable = {
   isLock: boolean;
 };
 
-export type Effect = {
+export type ActionEffect = {
+  id: "ActionEffect",
   action: Action;
   currents: Payment[];
-};
+}
+
+export type DestroyEffect = {
+  id: "DestroyEffect",
+  cardID: string
+  reason: string
+}
+
+export type Effect = ActionEffect | DestroyEffect
 
 export type EffectStack = {
   effects: Effect[];
@@ -174,7 +188,7 @@ export type GameState = {
   phase: Phase;
   playerState: { [key: string]: PlayerState | undefined };
   activePlayerID: string | null;
-  destroyCardID: string[];
+  destroyEffect: DestroyEffect[];
 };
 
 export type Animation = {
@@ -219,7 +233,7 @@ export const defaultContext: Context = {
     phase: ["draw", "before"],
     playerState: {},
     activePlayerID: null,
-    destroyCardID: []
+    destroyEffect: []
   },
   animationState: {
     productID: 0,

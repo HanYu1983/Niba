@@ -3,7 +3,7 @@ import {
   CardPosition,
   Action,
   Payment,
-  Effect,
+  ActionEffect,
   CardType,
   Color,
   GameState,
@@ -90,7 +90,7 @@ export function askCardState(ctx: Context, cardID: string): CardState | null {
 export function askPlayerG(ctx: Context, playerID: string): Card[] {
   return (
     ctx.gameState.table.cardStack[
-      cardPositionID({ playerID: playerID, where: "G" })
+    cardPositionID({ playerID: playerID, where: "G" })
     ] || []
   );
 }
@@ -107,7 +107,7 @@ export function onCardEntered(ctx: Context, cardID: string): Context {
   return ctx;
 }
 
-export function onEffectCompleted(ctx: Context, effect: Effect): Context {
+export function onEffectCompleted(ctx: Context, effect: ActionEffect): Context {
   switch (effect.action.id) {
     case "PlayCardAction":
     case "PlayCardAbilityAction":
@@ -128,13 +128,6 @@ export function onEffectCompleted(ctx: Context, effect: Effect): Context {
           return ctx;
         }
         return script.onEffectCompleted(ctx, card, effect);
-        // const cardScript = require(`../../script/102425.ts`);
-        // if (cardScript.onEffectCompleted == null) {
-        //   throw new Error(
-        //     `onEffectCompleted not found in script:${effect.action.cardID}`
-        //   );
-        // }
-        // return cardScript.onEffectCompleted(ctx, effect);
       }
       break;
     default:

@@ -149,11 +149,21 @@ export function applyAction(
     }
     case "SystemAddDestroyEffectAction":
       {
-        if (ctx.gameState.destroyCardID.length == 0) {
+        if (ctx.gameState.destroyEffect.length == 0) {
           throw new Error("沒有破壞卡要處理")
         }
-        // TODO: 加入破壞效果
-        return ctx
+        const topDestryEffect = ctx.gameState.destroyEffect[0]
+        return {
+          ...ctx,
+          gameState: {
+            ...ctx.gameState,
+            destroyEffect: ctx.gameState.destroyEffect.slice(1),
+            effectStack: {
+              ...ctx.gameState.effectStack,
+              effects: [topDestryEffect, ...ctx.gameState.effectStack.effects]
+            }
+          }
+        }
       }
     case "SystemHandleEffectAction":
       {
@@ -163,44 +173,58 @@ export function applyAction(
         if (playerID != PlayerA) {
           throw new Error("只有先攻玩家能操作")
         }
+        if (isEveryConfirmPhase(ctx, [PlayerA, PlayerB]) == false) {
+          throw new Error("雙方都要確認沒事才能操作SystemHandleEffectAction")
+        }
         const topEffect = ctx.gameState.effectStack.effects[0];
         console.log("處理效果...", topEffect);
-        switch (topEffect.action.id) {
-          case "PlayCardAction":
-            {
-              if (topEffect.action.cardID == null) {
-                throw new Error("cardID不存在，請檢查程式");
-              }
-              if (topEffect.action.to == null) {
-                throw new Error(`to不存在，請檢查程式`);
-              }
-              if (topEffect.action.from == null) {
-                throw new Error(`from不存在，請檢查程式`);
-              }
-              const nextTable = moveCard(
-                ctx.gameState.table,
-                cardPositionID(topEffect.action.from),
-                cardPositionID(topEffect.action.to),
-                topEffect.action.cardID,
-                null
-              );
-              ctx = onCardEntered(
+        switch (topEffect.id) {
+          case "ActionEffect":
+            switch (topEffect.action.id) {
+              case "PlayCardAction":
                 {
-                  ...ctx,
-                  gameState: {
-                    ...ctx.gameState,
-                    table: nextTable,
-                  },
-                },
-                topEffect.action.cardID
-              );
-              ctx = onEffectCompleted(ctx, topEffect);
+                  if (topEffect.action.cardID == null) {
+                    throw new Error("cardID不存在，請檢查程式");
+                  }
+                  if (topEffect.action.to == null) {
+                    throw new Error(`to不存在，請檢查程式`);
+                  }
+                  if (topEffect.action.from == null) {
+                    throw new Error(`from不存在，請檢查程式`);
+                  }
+                  const nextTable = moveCard(
+                    ctx.gameState.table,
+                    cardPositionID(topEffect.action.from),
+                    cardPositionID(topEffect.action.to),
+                    topEffect.action.cardID,
+                    null
+                  );
+                  ctx = onCardEntered(
+                    {
+                      ...ctx,
+                      gameState: {
+                        ...ctx.gameState,
+                        table: nextTable,
+                      },
+                    },
+                    topEffect.action.cardID
+                  );
+                  ctx = onEffectCompleted(ctx, topEffect);
+                }
+                break;
+              case "PlayCardAbilityAction":
+                break;
+              default:
+                throw new Error("unknown action");
             }
-            break;
-          case "PlayCardAbilityAction":
-            break;
+            break
+          case "DestroyEffect":
+            {
+
+            }
+            break
           default:
-            throw new Error("unknown action");
+            throw new Error(`unknown effect: ${topEffect}`)
         }
         ctx = {
           ...ctx,
@@ -256,6 +280,20 @@ export function applyAction(
           },
         };
         return ctx;
+      }
+    case "CancelConfirmPhaseAction":
+      {
+        if (ctx.gameState.phase[1] == "effect") {
+          throw new Error("請先處理規定效果")
+        }
+        // 取消宣告沒事
+        ctx = mapPlayerState(ctx, [playerID], (playerState) => {
+          return {
+            ...playerState,
+            confirmPhase: false,
+          };
+        });
+        return ctx
       }
     case "ConfirmPhaseAction": {
       if (ctx.gameState.phase[1] == "effect") {
@@ -367,7 +405,8 @@ export function applyAction(
       if (passed == false) {
         throw new Error(reasons.map((reason) => reason.id).join(","));
       }
-      const effect = {
+      const effect: Effect = {
+        id: "ActionEffect",
         action: ctx.gameState.paymentTable.action,
         currents: ctx.gameState.paymentTable.currents,
       };
@@ -416,7 +455,8 @@ export function applyAction(
         }
         // 放G的話直接進堆疊
         if (action.to.where == "G") {
-          const effect = {
+          const effect: Effect = {
+            id: "ActionEffect",
             action: action,
             currents: [],
           };
@@ -433,7 +473,8 @@ export function applyAction(
         const payments = queryPlayCardPayment(ctx, playerID, action.cardID);
         // 沒有cost就直接放入堆疊
         if (payments.length == 0) {
-          const effect = {
+          const effect: Effect = {
+            id: "ActionEffect",
             action: action,
             currents: [],
           };

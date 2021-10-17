@@ -13,6 +13,7 @@ import { testPhase } from "./testPhase";
 
 function testScript() {
   const ctx = onEffectCompleted(defaultContext, {
+    id: "ActionEffect",
     action: {
       id: "PlayCardAction",
       playerID: "",

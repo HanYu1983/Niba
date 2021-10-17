@@ -31,6 +31,7 @@ export function testPlayG() {
   if (actions.length == 0) {
     throw new Error("必須有出牌動作");
   }
+  console.log(actions)
   if (actions[0].id != "PlayCardAction") {
     throw new Error("動作必須是PlayCardAction");
   }
