@@ -153,6 +153,8 @@ export function askNextPhase(ctx: Context, phase: Phase): Phase {
         case "attack":
           return ["guard", "before"];
         case "guard":
+          return ["damage", "before"];
+        case "damage":
           return ["return", "before"];
         case "return":
           return ["draw", "before"];

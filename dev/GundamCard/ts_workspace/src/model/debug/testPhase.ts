@@ -23,7 +23,7 @@ export function testPhase() {
       activePlayerID: PlayerA,
     },
   };
-  console.log("A宣告到下一步");
+  console.log("A宣告沒事");
   ctx = applyAction(ctx, PlayerA, {
     id: "ConfirmPhaseAction",
     playerID: PlayerA,
@@ -34,11 +34,16 @@ export function testPhase() {
   if ((ctx.gameState.playerState[PlayerB]?.confirmPhase || false) != false) {
     throw new Error("PlayerB必須沒有結束");
   }
-  console.log("B宣告到下一步");
+  console.log("B宣告沒事");
   ctx = applyAction(ctx, PlayerB, {
     id: "ConfirmPhaseAction",
     playerID: PlayerB,
   });
+  console.log("SystemNextStepAction")
+  ctx = applyAction(ctx, PlayerA, {
+    id: "SystemNextStepAction",
+    playerID: PlayerA
+  })
   if (ctx.gameState.phase[1] != "effect") {
     throw new Error("必須到規定效果");
   }
@@ -70,6 +75,11 @@ export function testPhase() {
     id: "ConfirmPhaseAction",
     playerID: PlayerB,
   });
+  console.log("SystemNextStepAction")
+  ctx = applyAction(ctx, PlayerA, {
+    id: "SystemNextStepAction",
+    playerID: PlayerA
+  })
   if (ctx.gameState.phase[0] != "set") {
     throw new Error("必須到設置階段");
   }

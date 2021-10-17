@@ -13,6 +13,20 @@ export function queryAction(ctx: Context, playerID: string): Action[] {
     //if (ctx.gameState.effectStack.effects[0].id == "DestroyEffect") {
     // 將破壞的卡廢棄的指令可以使用
     //}
+
+    if (ctx.gameState.phase[0] == "attack" || ctx.gameState.phase[1] == "effect") {
+      if (ctx.gameState.activePlayerID == playerID) {
+        // AttackAction
+      }
+
+    }
+
+    if (ctx.gameState.phase[0] == "guard" || ctx.gameState.phase[1] == "effect") {
+      if (ctx.gameState.activePlayerID != playerID) {
+        // GuardAction
+      }
+    }
+
     // 我所有的卡
     const myCards: Card[] = [];
     mapCard(ctx.gameState.table, (card) => {
@@ -76,6 +90,12 @@ export function queryAction(ctx: Context, playerID: string): Action[] {
         id: "CancelConfirmPhaseAction",
         playerID: playerID
       })
+      if (playerID == PlayerA) {
+        ret.push({
+          id: "SystemNextStepAction",
+          playerID: playerID
+        })
+      }
     }
   }
   return ret;

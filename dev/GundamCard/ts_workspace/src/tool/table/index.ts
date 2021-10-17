@@ -40,12 +40,13 @@ export function moveCard(
   let nextTo = (table.cardStack[to] || [])
   if (beforeCardID != null) {
     const beforeCardIndex = nextTo.findIndex(card => card.id = beforeCardID)
-    if (beforeCardIndex != -1) {
-      if (beforeCardIndex == 0) {
-        nextTo = [findCard[0], ...nextTo]
-      } else {
-        nextTo = [...nextTo.slice(0, beforeCardIndex), findCard[0], ...nextTo.slice(beforeCardIndex)]
-      }
+    if (beforeCardIndex == -1) {
+      throw new Error(`beforeCardID not found:${beforeCardID}`)
+    }
+    if (beforeCardIndex == 0) {
+      nextTo = [findCard[0], ...nextTo]
+    } else {
+      nextTo = [...nextTo.slice(0, beforeCardIndex), findCard[0], ...nextTo.slice(beforeCardIndex)]
     }
   } else {
     nextTo = [...nextTo, findCard[0]]

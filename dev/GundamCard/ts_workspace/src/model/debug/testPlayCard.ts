@@ -33,6 +33,7 @@ export function testPlayCard() {
     gameState: {
       ...defaultContext.gameState,
       table: table,
+      activePlayerID: PlayerA
     },
   };
   const unit1 =

@@ -25,6 +25,7 @@ export function testPlayG() {
         cardPositionID({ playerID: PlayerA, where: "hand" }),
         ["179030_11E_G_RD021N_red"]
       ),
+      activePlayerID: PlayerA
     },
   };
   const actions = queryAction(ctx, PlayerA);

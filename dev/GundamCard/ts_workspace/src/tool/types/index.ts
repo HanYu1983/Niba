@@ -115,6 +115,10 @@ export type SystemAddDestroyEffectAction = {
   id: "SystemAddDestroyEffectAction";
 };
 
+export type SystemNextStepAction = {
+  id: "SystemNextStepAction";
+};
+
 export type Action = (
   | PlayCardAction
   | PlayCardAbilityAction
@@ -130,6 +134,7 @@ export type Action = (
   | SystemHandleEffectAction
   | SystemHandlePhaseEffectAction
   | SystemAddDestroyEffectAction
+  | SystemNextStepAction
 ) & { playerID: string };
 
 export type PaymentTable = {
