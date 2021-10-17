@@ -13,6 +13,7 @@ import {
 import { Card, getCard, Table } from "../../tool/table";
 import { askRowData } from "../../tool/data";
 import { Script } from "../../script/types";
+import { PlayerA, PlayerB } from "../../app/context";
 
 export function askCardType(ctx: Context, card: Card): CardType {
   const rowData = askRowData(card.protoID);
@@ -83,8 +84,18 @@ export function askCardPlayPayment(ctx: Context, card: Card): Payment[] {
   return script.askPlayPayment(ctx, card);
 }
 
+export function askCardPower(ctx: Context, card: Card): [number | null, number | null, number | null] {
+  const rowData = askRowData(card.protoID);
+  const script = askCardScript(rowData.id);
+  if (script.askPower == null) {
+    console.warn(`askPower not found:${rowData.id}.ts`);
+    return [null, null, null];
+  }
+  return script.askPower(ctx, card);
+}
+
 export function askCardState(ctx: Context, cardID: string): CardState | null {
-  return ctx.gameState.cardState[cardID];
+  return ctx.gameState.cardState[cardID] || null;
 }
 
 export function askPlayerG(ctx: Context, playerID: string): Card[] {
@@ -100,7 +111,7 @@ export function cardPositionID(position: CardPosition) {
 }
 
 export function opponent(ctx: Context, playerID: string): string {
-  return playerID;
+  return playerID == PlayerA ? PlayerB : PlayerA;
 }
 
 export function onCardEntered(ctx: Context, cardID: string): Context {
@@ -166,4 +177,36 @@ export function askNextPhase(ctx: Context, phase: Phase): Phase {
     default:
       throw new Error(`未知的狀態:${phase}`);
   }
+}
+
+export function mapCardState(
+  ctx: Context,
+  cardIDs: string[],
+  mapF: (s: CardState) => CardState
+): Context {
+  return {
+    ...ctx,
+    gameState: {
+      ...ctx.gameState,
+      cardState: cardIDs.reduce((cardState, cardID) => {
+        const card = getCard(ctx.gameState.table, cardID)
+        if (card == null) {
+          throw new Error(`card not found: cardID:${cardID}`)
+        }
+        if (card.ownerID == null) {
+          throw new Error(`card.ownerID not found: cardID:${cardID}`)
+        }
+        const [melee, range, live] = askCardPower(ctx, card)
+        return {
+          ...cardState,
+          [cardID]: mapF(
+            cardState[cardID] || {
+              playerID: card.ownerID,
+              live: live || 0
+            }
+          ),
+        };
+      }, ctx.gameState.cardState),
+    },
+  };
 }

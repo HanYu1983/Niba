@@ -164,4 +164,28 @@ export function testAttack() {
   if (ctx.gameState.phase[0] != "damage") {
     throw new Error("現在必須是傷判階段")
   }
+  console.log("PlayerA宣告沒事")
+  ctx = applyAction(ctx, PlayerA, {
+    id: "ConfirmPhaseAction",
+    playerID: PlayerA
+  })
+  console.log("PlayerB宣告沒事")
+  ctx = applyAction(ctx, PlayerB, {
+    id: "ConfirmPhaseAction",
+    playerID: PlayerB
+  })
+  console.log("SystemNextStepAction")
+  ctx = applyAction(ctx, PlayerA, {
+    id: "SystemNextStepAction",
+    playerID: PlayerA
+  })
+  if (ctx.gameState.phase[1] != "effect") {
+    throw new Error("現在必須是傷判階段的規定效果")
+  }
+  console.log("SystemHandlePhaseEffectAction")
+  ctx = applyAction(ctx, PlayerB, {
+    id: "SystemHandlePhaseEffectAction",
+    playerID: PlayerB
+  })
+  console.log(ctx)
 }

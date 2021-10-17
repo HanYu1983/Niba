@@ -165,6 +165,7 @@ export type EffectStack = {
 
 export type CardState = {
   playerID: string;
+  live: number;
 };
 
 export type PhaseMain =
@@ -189,7 +190,7 @@ export type GameState = {
   table: Table;
   paymentTable: PaymentTable;
   effectStack: EffectStack;
-  cardState: { [key: string]: CardState };
+  cardState: { [key: string]: CardState | undefined };
   phase: Phase;
   playerState: { [key: string]: PlayerState | undefined };
   activePlayerID: string | null;
@@ -213,10 +214,16 @@ export type Context = {
   animationState: AnimationState;
 };
 
+export type CardBattleWhere = "universe" | "earth"
+
+export type CardWhere = "home" | "gravyard" | "ground" | "hand" | "G" | CardBattleWhere
+
 export type CardPosition = {
   playerID: string;
-  where: "home" | "gravyard" | "ground" | "hand" | "G" | "universe" | "earth";
+  where: CardWhere;
 };
+
+export type AttackSpeed = 1 | 2 | 3
 
 export const defaultContext: Context = {
   gameState: {
@@ -271,6 +278,8 @@ export function mapPlayerState(
     },
   };
 }
+
+
 
 export function isEveryConfirmPhase(ctx: Context, players: string[]): boolean {
   return players

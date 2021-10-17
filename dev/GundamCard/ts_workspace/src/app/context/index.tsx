@@ -18,6 +18,7 @@ export type AppContext = {
 };
 
 export const AppContext = createContext<AppContext | null>(null);
+// TODO: refactor to types
 export const PlayerA = "PlayerA";
 export const PlayerB = "PlayerB";
 
@@ -74,14 +75,14 @@ export const AppContextProvider = (props: PropsWithChildren<any>) => {
     console.log(actions);
     const unit1 =
       ctx.gameState.table.cardStack[
-        cardPositionID({ playerID: playerID, where: "hand" })
+      cardPositionID({ playerID: playerID, where: "hand" })
       ]?.[0] || null;
     if (unit1 == null) {
       throw new Error("unit1必須存在");
     }
     const unit2 =
       ctx.gameState.table.cardStack[
-        cardPositionID({ playerID: playerID, where: "hand" })
+      cardPositionID({ playerID: playerID, where: "hand" })
       ]?.[1] || null;
     if (unit2 == null) {
       throw new Error("unit2必須存在");

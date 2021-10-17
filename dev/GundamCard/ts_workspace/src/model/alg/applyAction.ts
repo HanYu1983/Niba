@@ -15,10 +15,13 @@ import {
   onCardEntered,
   opponent,
   askNextPhase,
+  askCardPower,
+  mapCardState,
 } from ".";
 import { checkPayment } from "./checkPayment";
 import { queryPlayCardPayment } from "./queryPlayCardPayment";
 import { PlayerA, PlayerB } from "../../app/context";
+import { handleAttackDamage } from "./handleAttackDamage";
 
 export function applyAction(
   ctx: Context,
@@ -151,6 +154,9 @@ export function applyAction(
       {
         if (isEveryConfirmPhase(ctx, [PlayerA, PlayerB]) == false) {
           throw new Error("雙方都要確認沒事才能操作SystemNextStepAction")
+        }
+        if (ctx.gameState.phase[1] == "effect") {
+          throw new Error("請先處理規定效果")
         }
         // 移到下個階段
         ctx = {
@@ -287,11 +293,25 @@ export function applyAction(
         switch (ctx.gameState.phase[0]) {
           case "damage":
             {
-              // TODO:傷害計算並造成傷害
+              if (ctx.gameState.activePlayerID == null) {
+                throw new Error("現在要計算傷判卻沒有主動玩家: activePlayerID == null")
+              }
+              // 傷害計算並造成傷害
+              const attackPlayerID = ctx.gameState.activePlayerID
+              const guardPlayerID = opponent(ctx, ctx.gameState.activePlayerID)
+              // 速度1
+              ctx = handleAttackDamage(ctx, attackPlayerID, guardPlayerID, "earth", 1)
+              ctx = handleAttackDamage(ctx, attackPlayerID, guardPlayerID, "universe", 1)
+              // 速度2
+              ctx = handleAttackDamage(ctx, attackPlayerID, guardPlayerID, "earth", 2)
+              ctx = handleAttackDamage(ctx, attackPlayerID, guardPlayerID, "universe", 2)
+              // 速度3
+              ctx = handleAttackDamage(ctx, attackPlayerID, guardPlayerID, "earth", 3)
+              ctx = handleAttackDamage(ctx, attackPlayerID, guardPlayerID, "universe", 3)
+              // TODO: 將破壞效果加入列表
               // 每個被破壞的卡必須存到列表, 一個一個將破壞效果放入堆疊中
               // 但每次只能放一個, 等到堆疊解決完, 再放入下一個
               // 所以必須要再多一個列表
-              // TODO: 將破壞效果加入列表
               return ctx
             }
           case "return":
