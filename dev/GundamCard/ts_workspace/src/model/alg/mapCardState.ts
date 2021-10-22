@@ -5,7 +5,7 @@ import { askCardPower } from "./askCardPower";
 export function mapCardState(
   ctx: Context,
   cardIDs: string[],
-  mapF: (s: CardState) => CardState
+  mapF: (cardID: string, card: Card, cardState: CardState) => CardState
 ): Context {
   return {
     ...ctx,
@@ -23,6 +23,8 @@ export function mapCardState(
         return {
           ...cardState,
           [cardID]: mapF(
+            cardID,
+            card,
             cardState[cardID] || {
               playerID: card.ownerID,
               live: live || 0,

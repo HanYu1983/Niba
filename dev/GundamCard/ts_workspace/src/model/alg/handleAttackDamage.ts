@@ -27,7 +27,7 @@ export function handleAttackDamage(
       .map((card, i): number => {
         // 破壞的單位沒有攻擊力
         let live = 0;
-        mapCardState(ctx, [card.id], (cardState) => {
+        mapCardState(ctx, [card.id], (cardID, card, cardState) => {
           live = cardState.live;
           return cardState;
         });
@@ -54,7 +54,7 @@ export function handleAttackDamage(
       .map((card, i): number => {
         // 破壞的單位沒有攻擊力
         let live = 0;
-        mapCardState(ctx, [card.id], (cardState) => {
+        mapCardState(ctx, [card.id], (cardID, card, cardState) => {
           live = cardState.live;
           return cardState;
         });
@@ -77,7 +77,7 @@ export function handleAttackDamage(
     ctx = mapCardState(
       ctx,
       guardUnits.map((unit) => unit.id),
-      (cardState) => {
+      (cardID, card, cardState) => {
         if (currentAttackPower <= 0) {
           return cardState;
         }
@@ -103,7 +103,7 @@ export function handleAttackDamage(
     ctx = mapCardState(
       ctx,
       attackUnits.map((unit) => unit.id),
-      (cardState) => {
+      (cardID, card, cardState) => {
         if (currentGuardPower <= 0) {
           return cardState;
         }
