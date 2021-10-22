@@ -11,7 +11,7 @@ import {
 import { cardPositionID, opponent } from "./tool";
 import { checkPayment } from "./checkPayment";
 import { queryPlayCardPayment } from "./queryPlayCardPayment";
-import { PlayerA, PlayerB } from "../../app/context";
+import { PlayerA, PlayerB } from "../../tool/types";
 import { handleAttackDamage } from "./handleAttackDamage";
 import { askNextPhase } from "./askNextPhase";
 import { onEffectCompleted } from "./onEffectCompleted";

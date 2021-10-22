@@ -1,5 +1,8 @@
 import { CardStack, Table } from "../table";
 
+export const PlayerA = "PlayerA";
+export const PlayerB = "PlayerB";
+
 export type Color = "緑" | "茶" | "青" | "白" | "紫" | "黒" | "赤";
 
 export type CardType =
@@ -146,18 +149,18 @@ export type PaymentTable = {
 };
 
 export type ActionEffect = {
-  id: "ActionEffect",
+  id: "ActionEffect";
   action: Action;
   currents: Payment[];
-}
+};
 
 export type DestroyEffect = {
-  id: "DestroyEffect",
-  cardID: string
-  reason: string
-}
+  id: "DestroyEffect";
+  cardID: string;
+  reason: string;
+};
 
-export type Effect = ActionEffect | DestroyEffect
+export type Effect = ActionEffect | DestroyEffect;
 
 export type EffectStack = {
   effects: Effect[];
@@ -214,16 +217,22 @@ export type Context = {
   animationState: AnimationState;
 };
 
-export type CardBattleWhere = "universe" | "earth"
+export type CardBattleWhere = "universe" | "earth";
 
-export type CardWhere = "home" | "gravyard" | "ground" | "hand" | "G" | CardBattleWhere
+export type CardWhere =
+  | "home"
+  | "gravyard"
+  | "ground"
+  | "hand"
+  | "G"
+  | CardBattleWhere;
 
 export type CardPosition = {
   playerID: string;
   where: CardWhere;
 };
 
-export type AttackSpeed = 1 | 2 | 3
+export type AttackSpeed = 1 | 2 | 3;
 
 export const defaultContext: Context = {
   gameState: {
@@ -245,7 +254,7 @@ export const defaultContext: Context = {
     phase: ["draw", "before"],
     playerState: {},
     activePlayerID: null,
-    destroyEffect: []
+    destroyEffect: [],
   },
   animationState: {
     productID: 0,
@@ -278,8 +287,6 @@ export function mapPlayerState(
     },
   };
 }
-
-
 
 export function isEveryConfirmPhase(ctx: Context, players: string[]): boolean {
   return players

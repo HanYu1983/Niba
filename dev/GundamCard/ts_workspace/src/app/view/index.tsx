@@ -1,9 +1,10 @@
 import React, { useContext, useMemo, useCallback, useState } from "react";
-import { AppContext, PlayerA, PlayerB } from "../context";
+import { AppContext } from "../context";
 import { cardPositionID } from "../../model/alg/tool";
 import { CardPosition } from "../../tool/types";
 import { askImgSrc } from "../../tool/data";
 import { Card } from "../../tool/table";
+import { PlayerA, PlayerB } from "../../tool/types";
 
 export function View() {
   const ctx = useContext(AppContext);

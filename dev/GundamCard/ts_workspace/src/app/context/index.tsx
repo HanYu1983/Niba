@@ -7,6 +7,7 @@ import { queryAction } from "../../model/alg/queryAction";
 import { applyAction } from "../../model/alg/applyAction";
 import * as firebase from "../../tool/firebase";
 import { askCardColor } from "../../model/alg/askCardColor";
+import { PlayerA, PlayerB } from "../../tool/types";
 // @ts-ignore
 import { Subject } from "rxjs";
 
@@ -19,9 +20,6 @@ export type AppContext = {
 };
 
 export const AppContext = createContext<AppContext | null>(null);
-// TODO: refactor to types
-export const PlayerA = "PlayerA";
-export const PlayerB = "PlayerB";
 
 export const AppContextProvider = (props: PropsWithChildren<any>) => {
   const [playerID, setPlayerID] = useState(PlayerA);

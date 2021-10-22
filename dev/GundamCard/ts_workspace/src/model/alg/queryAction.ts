@@ -6,7 +6,7 @@ import {
   askCardState,
   askCardAction,
 } from "./tool";
-import { PlayerA, PlayerB } from "../../app/context";
+import { PlayerA, PlayerB } from "../../tool/types";
 import { isEveryConfirmPhase } from "../../tool/types";
 
 export function queryAction(ctx: Context, playerID: string): Action[] {

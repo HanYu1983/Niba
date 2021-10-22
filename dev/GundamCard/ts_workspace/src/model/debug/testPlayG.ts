@@ -9,7 +9,7 @@ import {
 import { askPlayerG, cardPositionID } from "../alg/tool";
 import { queryAction } from "../alg/queryAction";
 import { applyAction } from "../alg/applyAction";
-import { PlayerA, PlayerB } from "../../app/context";
+import { PlayerA, PlayerB } from "../../tool/types";
 import { onEffectCompleted } from "../alg/onEffectCompleted";
 
 export function testPlayG() {

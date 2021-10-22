@@ -10,10 +10,6 @@ import {
   CardState,
   Phase,
 } from "../../tool/types";
-import { Card, getCard, Table } from "../../tool/table";
-import { askRowData } from "../../tool/data";
-import { Script } from "../../script/types";
-import { PlayerA, PlayerB } from "../../app/context";
 
 export function askNextPhase(ctx: Context, phase: Phase): Phase {
   const [main, sub] = phase;

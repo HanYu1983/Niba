@@ -8,7 +8,7 @@ import {
 } from "../../tool/types";
 import { askPlayerG, cardPositionID } from "../alg/tool";
 import { applyAction } from "../alg/applyAction";
-import { PlayerA, PlayerB } from "../../app/context";
+import { PlayerA, PlayerB } from "../../tool/types";
 import { onEffectCompleted } from "../alg/onEffectCompleted";
 
 export function testAttack() {

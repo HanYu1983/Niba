@@ -11,7 +11,7 @@ import { queryAction } from "../alg/queryAction";
 import { applyAction } from "../alg/applyAction";
 import { checkPayment } from "../alg/checkPayment";
 import { rootApp } from "../../tool/firebase";
-import { PlayerA, PlayerB } from "../../app/context";
+import { PlayerA, PlayerB } from "../../tool/types";
 import { askCardColor } from "../alg/askCardColor";
 import { onEffectCompleted } from "../alg/onEffectCompleted";
 
