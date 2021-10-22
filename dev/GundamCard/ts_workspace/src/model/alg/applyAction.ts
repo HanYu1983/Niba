@@ -1,20 +1,4 @@
-import { mapCard, moveCard } from "../../tool/table";
-import {
-  Context,
-  Action,
-  Payment,
-  Effect,
-  mapPlayerState,
-  isEveryConfirmPhase,
-} from "../../tool/types";
-import { cardPositionID, opponent } from "./tool";
-import { checkPayment } from "./checkPayment";
-import { queryPlayCardPayment } from "./queryPlayCardPayment";
-import { PlayerA, PlayerB } from "../../tool/types";
-import { handleAttackDamage } from "./handleAttackDamage";
-import { askNextPhase } from "./askNextPhase";
-import { onEffectCompleted } from "./onEffectCompleted";
-import { onCardEntered } from "./onCardEntered";
+import { Context, Action } from "../../tool/types";
 import { AttackAction } from "./applyAction.AttackAction";
 import { GuardAction } from "./applyAction.GuardAction";
 import { EndStepAction } from "./applyAction.EndStepAction";
