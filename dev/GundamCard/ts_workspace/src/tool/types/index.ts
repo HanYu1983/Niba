@@ -12,37 +12,42 @@ export type CardType =
   | "OPERATION"
   | "COMMAND";
 
+type BasePayment = {
+  playerID: string;
+};
+
 export type ColorPayment = {
   id: "ColorPayment";
   color: Color;
   cardID: string | null;
   tipCardID: string[];
-};
+} & BasePayment;
 
 export type TapPayment = {
   id: "TapPayment";
   cardID: string | null;
   tipCardID: string[];
-};
+} & BasePayment;
 
 export type GCountPayment = {
   id: "GCountPayment";
   gCount: number;
   tipCardID: string[];
-};
+} & BasePayment;
 
 export type Target1Payment = {
   id: "Target1Payment";
   cardID: string | null;
   tipCardID: string[];
-};
+} & BasePayment;
 
-export type Payment = (
+export type Payment =
   | ColorPayment
   | TapPayment
   | GCountPayment
-  | Target1Payment
-) & {
+  | Target1Payment;
+
+type BaseAction = {
   playerID: string;
 };
 
@@ -51,44 +56,44 @@ export type PlayCardAction = {
   cardID: string | null;
   from: CardPosition | null;
   to: CardPosition | null;
-};
+} & BaseAction;
 
 export type PlayCardAbilityAction = {
   id: "PlayCardAbilityAction";
   cardID: string | null;
   abilityID: string;
-};
+} & BaseAction;
 
 export type TapCardToGenG = {
   id: "TapCardToGenG";
   cardID: string | null;
   color: Color | null;
-};
+} & BaseAction;
 
 export type AddPaymentAction = {
   id: "AddPaymentAction";
   payment: Payment;
-};
+} & BaseAction;
 
 export type CancelPaymentAction = {
   id: "CancelPaymentAction";
-};
+} & BaseAction;
 
 export type ApplyPaymentAction = {
   id: "ApplyPaymentAction";
-};
+} & BaseAction;
 
 export type ConfirmPhaseAction = {
   id: "ConfirmPhaseAction";
-};
+} & BaseAction;
 
 export type CancelConfirmPhaseAction = {
   id: "CancelConfirmPhaseAction";
-};
+} & BaseAction;
 
 export type EndStepAction = {
   id: "EndStepAction";
-};
+} & BaseAction;
 
 export type AttackAction = {
   id: "AttackAction";
@@ -96,7 +101,7 @@ export type AttackAction = {
   from: CardPosition | null;
   to: CardPosition | null;
   beforeCardID: string | null;
-};
+} & BaseAction;
 
 export type GuardAction = {
   id: "GuardAction";
@@ -104,25 +109,25 @@ export type GuardAction = {
   from: CardPosition | null;
   to: CardPosition | null;
   beforeCardID: string | null;
-};
+} & BaseAction;
 
 export type SystemHandleEffectAction = {
   id: "SystemHandleEffectAction";
-};
+} & BaseAction;
 
 export type SystemHandlePhaseEffectAction = {
   id: "SystemHandlePhaseEffectAction";
-};
+} & BaseAction;
 
 export type SystemAddDestroyEffectAction = {
   id: "SystemAddDestroyEffectAction";
-};
+} & BaseAction;
 
 export type SystemNextStepAction = {
   id: "SystemNextStepAction";
-};
+} & BaseAction;
 
-export type Action = (
+export type Action =
   | PlayCardAction
   | PlayCardAbilityAction
   | TapCardToGenG
@@ -137,8 +142,7 @@ export type Action = (
   | SystemHandleEffectAction
   | SystemHandlePhaseEffectAction
   | SystemAddDestroyEffectAction
-  | SystemNextStepAction
-) & { playerID: string };
+  | SystemNextStepAction;
 
 export type PaymentTable = {
   action: Action | null;

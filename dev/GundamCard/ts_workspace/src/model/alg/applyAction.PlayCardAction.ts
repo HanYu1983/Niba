@@ -4,7 +4,7 @@ import { queryPlayCardPayment } from "./queryPlayCardPayment";
 export function PlayCardAction(
   ctx: Context,
   playerID: string,
-  action: PlayCardAction & { playerID: string }
+  action: PlayCardAction
 ): Context {
   if (ctx.gameState.paymentTable.action != null) {
     throw new Error(`${ctx.gameState.paymentTable.action.playerID}還在支付中`);

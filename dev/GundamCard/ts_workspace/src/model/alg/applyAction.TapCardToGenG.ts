@@ -4,7 +4,7 @@ import { Context, TapCardToGenG } from "../../tool/types";
 export function TapCardToGenG(
   ctx: Context,
   playerID: string,
-  action: TapCardToGenG & { playerID: string }
+  action: TapCardToGenG
 ): Context {
   if (action.color == null) {
     throw new Error("你必須指定color");

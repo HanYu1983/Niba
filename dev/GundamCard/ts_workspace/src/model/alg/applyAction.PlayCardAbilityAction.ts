@@ -3,7 +3,7 @@ import { Context, PlayCardAbilityAction } from "../../tool/types";
 export function PlayCardAbilityAction(
   ctx: Context,
   playerID: string,
-  action: PlayCardAbilityAction & { playerID: string }
+  action: PlayCardAbilityAction
 ): Context {
   if (ctx.gameState.paymentTable.action != null) {
     throw new Error(`${ctx.gameState.paymentTable.action.playerID}還在支付中`);
