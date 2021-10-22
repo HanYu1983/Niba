@@ -12,7 +12,7 @@ import {
 } from "../../tool/types";
 import { Card, getCard, Table } from "../../tool/table";
 import { askRowData } from "../../tool/data";
-import { askCardScript } from ".";
+import { askCardScript } from "./tool";
 
 export function onEffectCompleted(ctx: Context, effect: ActionEffect): Context {
   switch (effect.action.id) {

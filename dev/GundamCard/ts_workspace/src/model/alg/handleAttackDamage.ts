@@ -1,7 +1,8 @@
 import { mapCard, moveCard, Card } from "../../tool/table";
 import { Context, CardBattleWhere, AttackSpeed } from "../../tool/types";
-import { cardPositionID, mapCardState } from ".";
+import { cardPositionID } from "./tool";
 import { askCardPower } from "./askCardPower";
+import { mapCardState } from "./mapCardState";
 
 function askAttackSpeedEnable(cards: Card[], speed: AttackSpeed) {
   if (speed == 1) {

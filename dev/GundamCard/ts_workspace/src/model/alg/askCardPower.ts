@@ -14,7 +14,7 @@ import { Card, getCard, Table } from "../../tool/table";
 import { askRowData } from "../../tool/data";
 import { Script } from "../../script/types";
 import { PlayerA, PlayerB } from "../../app/context";
-import { askCardScript } from ".";
+import { askCardScript } from "./tool";
 
 export function askCardPower(
   ctx: Context,

@@ -1,7 +1,7 @@
 // 赤黒グラフィック（V）
 // GRAPHIC
 import { Context, CardPosition, Action, Payment, Effect } from "../tool/types";
-import { opponent, askPlayerG, cardPositionID } from "../model/alg";
+import { opponent, askPlayerG, cardPositionID } from "../model/alg/tool";
 import { Card } from "../tool/table";
 import { askRowData } from "../tool/data";
 import { askCardType } from "../model/alg/askCardType";

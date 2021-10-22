@@ -8,14 +8,14 @@ import {
   mapPlayerState,
   isEveryConfirmPhase,
 } from "../../tool/types";
-import { cardPositionID, onCardEntered, opponent } from ".";
+import { cardPositionID, opponent } from "./tool";
 import { checkPayment } from "./checkPayment";
 import { queryPlayCardPayment } from "./queryPlayCardPayment";
 import { PlayerA, PlayerB } from "../../app/context";
 import { handleAttackDamage } from "./handleAttackDamage";
 import { askNextPhase } from "./askNextPhase";
-import { askCardPower } from "./askCardPower";
 import { onEffectCompleted } from "./onEffectCompleted";
+import { onCardEntered } from "./onCardEntered";
 
 export function applyAction(
   ctx: Context,

@@ -1,6 +1,11 @@
 import { mapCard, moveCard, Card } from "../../tool/table";
 import { Context, Action, Payment, Effect } from "../../tool/types";
-import { askPlayerG, cardPositionID, askCardState, askCardAction } from ".";
+import {
+  askPlayerG,
+  cardPositionID,
+  askCardState,
+  askCardAction,
+} from "./tool";
 import { PlayerA, PlayerB } from "../../app/context";
 import { isEveryConfirmPhase } from "../../tool/types";
 
@@ -14,14 +19,19 @@ export function queryAction(ctx: Context, playerID: string): Action[] {
     // 將破壞的卡廢棄的指令可以使用
     //}
 
-    if (ctx.gameState.phase[0] == "attack" || ctx.gameState.phase[1] == "effect") {
+    if (
+      ctx.gameState.phase[0] == "attack" ||
+      ctx.gameState.phase[1] == "effect"
+    ) {
       if (ctx.gameState.activePlayerID == playerID) {
         // AttackAction
       }
-
     }
 
-    if (ctx.gameState.phase[0] == "guard" || ctx.gameState.phase[1] == "effect") {
+    if (
+      ctx.gameState.phase[0] == "guard" ||
+      ctx.gameState.phase[1] == "effect"
+    ) {
       if (ctx.gameState.activePlayerID != playerID) {
         // GuardAction
       }
@@ -48,22 +58,22 @@ export function queryAction(ctx: Context, playerID: string): Action[] {
       // SystemHandleEffectAction一次只處理一個效果
       ret.push({
         id: "SystemHandleEffectAction",
-        playerID: PlayerA
-      })
+        playerID: PlayerA,
+      });
     }
   } else if (ctx.gameState.destroyEffect.length) {
-    // 如果破壞效果列表中有卡牌，回傳SystemAddDestroyEffectAction 
+    // 如果破壞效果列表中有卡牌，回傳SystemAddDestroyEffectAction
     // SystemAddDestroyEffectAction會將其中一張卡的破壞效果放入堆疊
     // 這個時候就可以使用將破壞的卡廢棄獲得能力的指令卡(切入效果)
     ret.push({
       id: "SystemAddDestroyEffectAction",
-      playerID: PlayerA
-    })
+      playerID: PlayerA,
+    });
   } else if (ctx.gameState.phase[1] == "effect") {
     ret.push({
       id: "SystemHandlePhaseEffectAction",
-      playerID: PlayerA
-    })
+      playerID: PlayerA,
+    });
   } else if (ctx.gameState.paymentTable.action?.playerID == playerID) {
     // 支付狀態
     ret.push({
@@ -82,19 +92,19 @@ export function queryAction(ctx: Context, playerID: string): Action[] {
       // 如果是自己, 回傳ConfirmPhaseAction
       ret.push({
         id: "ConfirmPhaseAction",
-        playerID: playerID
-      })
+        playerID: playerID,
+      });
     } else {
       // 取消確認
       ret.push({
         id: "CancelConfirmPhaseAction",
-        playerID: playerID
-      })
+        playerID: playerID,
+      });
       if (playerID == PlayerA) {
         ret.push({
           id: "SystemNextStepAction",
-          playerID: playerID
-        })
+          playerID: playerID,
+        });
       }
     }
   }

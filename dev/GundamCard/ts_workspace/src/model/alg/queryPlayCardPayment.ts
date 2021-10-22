@@ -1,6 +1,6 @@
 import { mapCard, moveCard, getCard } from "../../tool/table";
 import { Context, Action, Payment, Effect } from "../../tool/types";
-import { askCardPlayPayment } from ".";
+import { askCardPlayPayment } from "./tool";
 
 export function queryPlayCardPayment(
   ctx: Context,

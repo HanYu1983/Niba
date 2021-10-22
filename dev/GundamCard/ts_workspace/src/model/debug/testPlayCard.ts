@@ -6,7 +6,7 @@ import {
   Effect,
   defaultContext,
 } from "../../tool/types";
-import { askPlayerG, cardPositionID } from "../alg";
+import { askPlayerG, cardPositionID } from "../alg/tool";
 import { queryAction } from "../alg/queryAction";
 import { applyAction } from "../alg/applyAction";
 import { checkPayment } from "../alg/checkPayment";

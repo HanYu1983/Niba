@@ -2,7 +2,7 @@ import React, { useCallback, useEffect } from "react";
 import Resct, { useState, createContext, PropsWithChildren } from "react";
 import { Context, defaultContext } from "../../tool/types";
 import { createCard } from "../../tool/table";
-import { cardPositionID } from "../../model/alg";
+import { cardPositionID } from "../../model/alg/tool";
 import { queryAction } from "../../model/alg/queryAction";
 import { applyAction } from "../../model/alg/applyAction";
 import * as firebase from "../../tool/firebase";
