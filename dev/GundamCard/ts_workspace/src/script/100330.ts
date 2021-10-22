@@ -1,17 +1,13 @@
 // ゾロ
 import { Context, CardPosition, Action, Payment, Effect } from "../tool/types";
-import {
-  opponent,
-  askPlayerG,
-  cardPositionID,
-  askCardType,
-} from "../model/alg";
 import { Card } from "../tool/table";
-import { askRowData } from "../tool/data";
 
-const askPower = (ctx: Context, card: Card): [number | null, number | null, number | null] => {
-  return [1, 1, 1]
-}
+const askPower = (
+  ctx: Context,
+  card: Card
+): [number | null, number | null, number | null] => {
+  return [1, 1, 1];
+};
 
 const askAction = (ctx: Context, card: Card): Action[] => {
   if (card.ownerID == null) {

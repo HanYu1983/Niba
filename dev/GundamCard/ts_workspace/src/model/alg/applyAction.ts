@@ -8,20 +8,14 @@ import {
   mapPlayerState,
   isEveryConfirmPhase,
 } from "../../tool/types";
-import {
-  askPlayerG,
-  cardPositionID,
-  onEffectCompleted,
-  onCardEntered,
-  opponent,
-  askNextPhase,
-  askCardPower,
-  mapCardState,
-} from ".";
+import { cardPositionID, onCardEntered, opponent } from ".";
 import { checkPayment } from "./checkPayment";
 import { queryPlayCardPayment } from "./queryPlayCardPayment";
 import { PlayerA, PlayerB } from "../../app/context";
 import { handleAttackDamage } from "./handleAttackDamage";
+import { askNextPhase } from "./askNextPhase";
+import { askCardPower } from "./askCardPower";
+import { onEffectCompleted } from "./onEffectCompleted";
 
 export function applyAction(
   ctx: Context,
@@ -29,70 +23,80 @@ export function applyAction(
   action: Action
 ): Context {
   switch (action.id) {
-    case "AttackAction":
-      {
-        if (ctx.gameState.phase[0] != "attack") {
-          throw new Error("現在不是攻擊階段")
-        }
-        if (ctx.gameState.phase[1] != "effect") {
-          throw new Error("現在不是規定效果")
-        }
-        if (ctx.gameState.activePlayerID != playerID) {
-          throw new Error("主動玩家才能攻擊")
-        }
-        if (action.from == null) {
-          throw new Error("你沒有指定from")
-        }
-        if (action.to == null) {
-          throw new Error("你沒有指定to")
-        }
-        if (action.cardID == null) {
-          throw new Error("你沒有指定cardID")
-        }
-        if (action.to.where != "universe" && action.to.where != "earth") {
-          throw new Error("你必須指定戰鬥區域")
-        }
-        // 直接將卡移到戰場, 沒有切入時間
-        return {
-          ...ctx,
-          gameState: {
-            ...ctx.gameState,
-            table: moveCard(ctx.gameState.table, cardPositionID(action.from), cardPositionID(action.to), action.cardID, action.beforeCardID)
-          }
-        }
+    case "AttackAction": {
+      if (ctx.gameState.phase[0] != "attack") {
+        throw new Error("現在不是攻擊階段");
       }
-    case "GuardAction":
-      {
-        if (ctx.gameState.phase[0] != "guard") {
-          throw new Error("現在不是防禦階段")
-        }
-        if (ctx.gameState.phase[1] != "effect") {
-          throw new Error("現在不是規定效果")
-        }
-        if (ctx.gameState.activePlayerID == playerID) {
-          throw new Error("被動玩家才能防禦")
-        }
-        if (action.from == null) {
-          throw new Error("你沒有指定from")
-        }
-        if (action.to == null) {
-          throw new Error("你沒有指定to")
-        }
-        if (action.cardID == null) {
-          throw new Error("你沒有指定cardID")
-        }
-        if (action.to.where != "universe" && action.to.where != "earth") {
-          throw new Error("你必須指定戰鬥區域")
-        }
-        // 直接將卡移到戰場, 沒有切入時間
-        return {
-          ...ctx,
-          gameState: {
-            ...ctx.gameState,
-            table: moveCard(ctx.gameState.table, cardPositionID(action.from), cardPositionID(action.to), action.cardID, action.beforeCardID)
-          }
-        }
+      if (ctx.gameState.phase[1] != "effect") {
+        throw new Error("現在不是規定效果");
       }
+      if (ctx.gameState.activePlayerID != playerID) {
+        throw new Error("主動玩家才能攻擊");
+      }
+      if (action.from == null) {
+        throw new Error("你沒有指定from");
+      }
+      if (action.to == null) {
+        throw new Error("你沒有指定to");
+      }
+      if (action.cardID == null) {
+        throw new Error("你沒有指定cardID");
+      }
+      if (action.to.where != "universe" && action.to.where != "earth") {
+        throw new Error("你必須指定戰鬥區域");
+      }
+      // 直接將卡移到戰場, 沒有切入時間
+      return {
+        ...ctx,
+        gameState: {
+          ...ctx.gameState,
+          table: moveCard(
+            ctx.gameState.table,
+            cardPositionID(action.from),
+            cardPositionID(action.to),
+            action.cardID,
+            action.beforeCardID
+          ),
+        },
+      };
+    }
+    case "GuardAction": {
+      if (ctx.gameState.phase[0] != "guard") {
+        throw new Error("現在不是防禦階段");
+      }
+      if (ctx.gameState.phase[1] != "effect") {
+        throw new Error("現在不是規定效果");
+      }
+      if (ctx.gameState.activePlayerID == playerID) {
+        throw new Error("被動玩家才能防禦");
+      }
+      if (action.from == null) {
+        throw new Error("你沒有指定from");
+      }
+      if (action.to == null) {
+        throw new Error("你沒有指定to");
+      }
+      if (action.cardID == null) {
+        throw new Error("你沒有指定cardID");
+      }
+      if (action.to.where != "universe" && action.to.where != "earth") {
+        throw new Error("你必須指定戰鬥區域");
+      }
+      // 直接將卡移到戰場, 沒有切入時間
+      return {
+        ...ctx,
+        gameState: {
+          ...ctx.gameState,
+          table: moveCard(
+            ctx.gameState.table,
+            cardPositionID(action.from),
+            cardPositionID(action.to),
+            action.cardID,
+            action.beforeCardID
+          ),
+        },
+      };
+    }
     case "EndStepAction": {
       if (true) {
         // 如果雙方都endStep
@@ -102,7 +106,7 @@ export function applyAction(
         const num = 1;
         const homeStack =
           ctx.gameState.table.cardStack[
-          cardPositionID({ playerID: activePlayerID, where: "home" })
+            cardPositionID({ playerID: activePlayerID, where: "home" })
           ] || [];
         const topCards = homeStack.slice(
           Math.max(0, homeStack.length - num),
@@ -114,13 +118,13 @@ export function applyAction(
             cardPositionID({ playerID: activePlayerID, where: "home" }),
             cardPositionID({ playerID: activePlayerID, where: "hand" }),
             card.id,
-            null,
+            null
           );
         }, ctx.gameState.table);
         if (
           (
             nextTable.cardStack[
-            cardPositionID({ playerID: activePlayerID, where: "home" })
+              cardPositionID({ playerID: activePlayerID, where: "home" })
             ] || []
           ).length == 0
         ) {
@@ -150,22 +154,117 @@ export function applyAction(
         },
       };
     }
-    case "SystemNextStepAction":
-      {
-        if (isEveryConfirmPhase(ctx, [PlayerA, PlayerB]) == false) {
-          throw new Error("雙方都要確認沒事才能操作SystemNextStepAction")
-        }
-        if (ctx.gameState.phase[1] == "effect") {
-          throw new Error("請先處理規定效果")
-        }
-        // 移到下個階段
-        ctx = {
-          ...ctx,
-          gameState: {
-            ...ctx.gameState,
-            phase: askNextPhase(ctx, ctx.gameState.phase),
-          },
+    case "SystemNextStepAction": {
+      if (isEveryConfirmPhase(ctx, [PlayerA, PlayerB]) == false) {
+        throw new Error("雙方都要確認沒事才能操作SystemNextStepAction");
+      }
+      if (ctx.gameState.phase[1] == "effect") {
+        throw new Error("請先處理規定效果");
+      }
+      // 移到下個階段
+      ctx = {
+        ...ctx,
+        gameState: {
+          ...ctx.gameState,
+          phase: askNextPhase(ctx, ctx.gameState.phase),
+        },
+      };
+      // 重設為非確認狀態
+      ctx = mapPlayerState(ctx, [PlayerA, PlayerB], (playerState) => {
+        return {
+          ...playerState,
+          confirmPhase: false,
         };
+      });
+      return ctx;
+    }
+    case "SystemAddDestroyEffectAction": {
+      if (ctx.gameState.destroyEffect.length == 0) {
+        throw new Error("沒有破壞卡要處理");
+      }
+      const topDestryEffect = ctx.gameState.destroyEffect[0];
+      return {
+        ...ctx,
+        gameState: {
+          ...ctx.gameState,
+          destroyEffect: ctx.gameState.destroyEffect.slice(1),
+          effectStack: {
+            ...ctx.gameState.effectStack,
+            effects: [topDestryEffect, ...ctx.gameState.effectStack.effects],
+          },
+        },
+      };
+    }
+    case "SystemHandleEffectAction": {
+      if (ctx.gameState.effectStack.effects.length == 0) {
+        throw new Error("沒有效果要處理");
+      }
+      if (ctx.gameState.activePlayerID != playerID) {
+        throw new Error("只有主動玩家能操作");
+      }
+      if (isEveryConfirmPhase(ctx, [PlayerA, PlayerB]) == false) {
+        throw new Error("雙方都要確認沒事才能操作SystemHandleEffectAction");
+      }
+      const topEffect = ctx.gameState.effectStack.effects[0];
+      console.log("處理效果...", topEffect);
+      switch (topEffect.id) {
+        case "ActionEffect":
+          switch (topEffect.action.id) {
+            case "PlayCardAction":
+              {
+                if (topEffect.action.cardID == null) {
+                  throw new Error("cardID不存在，請檢查程式");
+                }
+                if (topEffect.action.to == null) {
+                  throw new Error(`to不存在，請檢查程式`);
+                }
+                if (topEffect.action.from == null) {
+                  throw new Error(`from不存在，請檢查程式`);
+                }
+                const nextTable = moveCard(
+                  ctx.gameState.table,
+                  cardPositionID(topEffect.action.from),
+                  cardPositionID(topEffect.action.to),
+                  topEffect.action.cardID,
+                  null
+                );
+                ctx = onCardEntered(
+                  {
+                    ...ctx,
+                    gameState: {
+                      ...ctx.gameState,
+                      table: nextTable,
+                    },
+                  },
+                  topEffect.action.cardID
+                );
+                ctx = onEffectCompleted(ctx, topEffect);
+              }
+              break;
+            case "PlayCardAbilityAction":
+              break;
+            default:
+              throw new Error("unknown action");
+          }
+          break;
+        case "DestroyEffect":
+          {
+          }
+          break;
+        default:
+          throw new Error(`unknown effect: ${topEffect}`);
+      }
+      ctx = {
+        ...ctx,
+        gameState: {
+          ...ctx.gameState,
+          effectStack: {
+            ...ctx.gameState.effectStack,
+            effects: ctx.gameState.effectStack.effects.slice(1),
+          },
+        },
+      };
+      if (ctx.gameState.effectStack.effects.length == 0) {
         // 重設為非確認狀態
         ctx = mapPlayerState(ctx, [PlayerA, PlayerB], (playerState) => {
           return {
@@ -173,180 +272,115 @@ export function applyAction(
             confirmPhase: false,
           };
         });
-        return ctx
       }
-    case "SystemAddDestroyEffectAction":
-      {
-        if (ctx.gameState.destroyEffect.length == 0) {
-          throw new Error("沒有破壞卡要處理")
-        }
-        const topDestryEffect = ctx.gameState.destroyEffect[0]
-        return {
-          ...ctx,
-          gameState: {
-            ...ctx.gameState,
-            destroyEffect: ctx.gameState.destroyEffect.slice(1),
-            effectStack: {
-              ...ctx.gameState.effectStack,
-              effects: [topDestryEffect, ...ctx.gameState.effectStack.effects]
-            }
-          }
-        }
+      return ctx;
+    }
+    case "SystemHandlePhaseEffectAction": {
+      if (ctx.gameState.phase[1] != "effect") {
+        throw new Error("現在不是規定效果");
       }
-    case "SystemHandleEffectAction":
-      {
-        if (ctx.gameState.effectStack.effects.length == 0) {
-          throw new Error("沒有效果要處理")
-        }
+      if (ctx.gameState.phase[0] == "attack") {
         if (ctx.gameState.activePlayerID != playerID) {
-          throw new Error("只有主動玩家能操作")
+          throw new Error("攻擊階段的規定效果只有主動玩家能操作");
         }
-        if (isEveryConfirmPhase(ctx, [PlayerA, PlayerB]) == false) {
-          throw new Error("雙方都要確認沒事才能操作SystemHandleEffectAction")
-        }
-        const topEffect = ctx.gameState.effectStack.effects[0];
-        console.log("處理效果...", topEffect);
-        switch (topEffect.id) {
-          case "ActionEffect":
-            switch (topEffect.action.id) {
-              case "PlayCardAction":
-                {
-                  if (topEffect.action.cardID == null) {
-                    throw new Error("cardID不存在，請檢查程式");
-                  }
-                  if (topEffect.action.to == null) {
-                    throw new Error(`to不存在，請檢查程式`);
-                  }
-                  if (topEffect.action.from == null) {
-                    throw new Error(`from不存在，請檢查程式`);
-                  }
-                  const nextTable = moveCard(
-                    ctx.gameState.table,
-                    cardPositionID(topEffect.action.from),
-                    cardPositionID(topEffect.action.to),
-                    topEffect.action.cardID,
-                    null
-                  );
-                  ctx = onCardEntered(
-                    {
-                      ...ctx,
-                      gameState: {
-                        ...ctx.gameState,
-                        table: nextTable,
-                      },
-                    },
-                    topEffect.action.cardID
-                  );
-                  ctx = onEffectCompleted(ctx, topEffect);
-                }
-                break;
-              case "PlayCardAbilityAction":
-                break;
-              default:
-                throw new Error("unknown action");
-            }
-            break
-          case "DestroyEffect":
-            {
-
-            }
-            break
-          default:
-            throw new Error(`unknown effect: ${topEffect}`)
-        }
-        ctx = {
-          ...ctx,
-          gameState: {
-            ...ctx.gameState,
-            effectStack: {
-              ...ctx.gameState.effectStack,
-              effects: ctx.gameState.effectStack.effects.slice(1),
-            },
-          },
-        };
-        if (ctx.gameState.effectStack.effects.length == 0) {
-          // 重設為非確認狀態
-          ctx = mapPlayerState(ctx, [PlayerA, PlayerB], (playerState) => {
-            return {
-              ...playerState,
-              confirmPhase: false,
-            };
-          });
-        }
-        return ctx
       }
-    case "SystemHandlePhaseEffectAction":
-      {
-        if (ctx.gameState.phase[1] != "effect") {
-          throw new Error("現在不是規定效果")
+      if (ctx.gameState.phase[0] == "guard") {
+        if (ctx.gameState.activePlayerID == playerID) {
+          throw new Error("防禦階段的規定效果只有被動玩家能操作");
         }
-        if (ctx.gameState.phase[0] == "attack") {
-          if (ctx.gameState.activePlayerID != playerID) {
-            throw new Error("攻擊階段的規定效果只有主動玩家能操作")
+      }
+      switch (ctx.gameState.phase[0]) {
+        case "damage": {
+          if (ctx.gameState.activePlayerID == null) {
+            throw new Error(
+              "現在要計算傷判卻沒有主動玩家: activePlayerID == null"
+            );
           }
+          // 傷害計算並造成傷害
+          const attackPlayerID = ctx.gameState.activePlayerID;
+          const guardPlayerID = opponent(ctx, ctx.gameState.activePlayerID);
+          // 速度1
+          ctx = handleAttackDamage(
+            ctx,
+            attackPlayerID,
+            guardPlayerID,
+            "earth",
+            1
+          );
+          ctx = handleAttackDamage(
+            ctx,
+            attackPlayerID,
+            guardPlayerID,
+            "universe",
+            1
+          );
+          // 速度2
+          ctx = handleAttackDamage(
+            ctx,
+            attackPlayerID,
+            guardPlayerID,
+            "earth",
+            2
+          );
+          ctx = handleAttackDamage(
+            ctx,
+            attackPlayerID,
+            guardPlayerID,
+            "universe",
+            2
+          );
+          // 速度3
+          ctx = handleAttackDamage(
+            ctx,
+            attackPlayerID,
+            guardPlayerID,
+            "earth",
+            3
+          );
+          ctx = handleAttackDamage(
+            ctx,
+            attackPlayerID,
+            guardPlayerID,
+            "universe",
+            3
+          );
+          // TODO: 將破壞效果加入列表
+          // 每個被破壞的卡必須存到列表, 一個一個將破壞效果放入堆疊中
+          // 但每次只能放一個, 等到堆疊解決完, 再放入下一個
+          // 所以必須要再多一個列表
+          return ctx;
         }
-        if (ctx.gameState.phase[0] == "guard") {
-          if (ctx.gameState.activePlayerID == playerID) {
-            throw new Error("防禦階段的規定效果只有被動玩家能操作")
-          }
+        case "return": {
+          // TODO: 回到配置區
+          return ctx;
         }
-        switch (ctx.gameState.phase[0]) {
-          case "damage":
-            {
-              if (ctx.gameState.activePlayerID == null) {
-                throw new Error("現在要計算傷判卻沒有主動玩家: activePlayerID == null")
-              }
-              // 傷害計算並造成傷害
-              const attackPlayerID = ctx.gameState.activePlayerID
-              const guardPlayerID = opponent(ctx, ctx.gameState.activePlayerID)
-              // 速度1
-              ctx = handleAttackDamage(ctx, attackPlayerID, guardPlayerID, "earth", 1)
-              ctx = handleAttackDamage(ctx, attackPlayerID, guardPlayerID, "universe", 1)
-              // 速度2
-              ctx = handleAttackDamage(ctx, attackPlayerID, guardPlayerID, "earth", 2)
-              ctx = handleAttackDamage(ctx, attackPlayerID, guardPlayerID, "universe", 2)
-              // 速度3
-              ctx = handleAttackDamage(ctx, attackPlayerID, guardPlayerID, "earth", 3)
-              ctx = handleAttackDamage(ctx, attackPlayerID, guardPlayerID, "universe", 3)
-              // TODO: 將破壞效果加入列表
-              // 每個被破壞的卡必須存到列表, 一個一個將破壞效果放入堆疊中
-              // 但每次只能放一個, 等到堆疊解決完, 再放入下一個
-              // 所以必須要再多一個列表
-              return ctx
-            }
-          case "return":
-            {
-              // TODO: 回到配置區
-              return ctx
-            }
-        }
-        // 移到下個階段
-        ctx = {
-          ...ctx,
-          gameState: {
-            ...ctx.gameState,
-            phase: askNextPhase(ctx, ctx.gameState.phase),
-          },
+      }
+      // 移到下個階段
+      ctx = {
+        ...ctx,
+        gameState: {
+          ...ctx.gameState,
+          phase: askNextPhase(ctx, ctx.gameState.phase),
+        },
+      };
+      return ctx;
+    }
+    case "CancelConfirmPhaseAction": {
+      if (ctx.gameState.phase[1] == "effect") {
+        throw new Error("請先處理規定效果");
+      }
+      // 取消宣告沒事
+      ctx = mapPlayerState(ctx, [playerID], (playerState) => {
+        return {
+          ...playerState,
+          confirmPhase: false,
         };
-        return ctx;
-      }
-    case "CancelConfirmPhaseAction":
-      {
-        if (ctx.gameState.phase[1] == "effect") {
-          throw new Error("請先處理規定效果")
-        }
-        // 取消宣告沒事
-        ctx = mapPlayerState(ctx, [playerID], (playerState) => {
-          return {
-            ...playerState,
-            confirmPhase: false,
-          };
-        });
-        return ctx
-      }
+      });
+      return ctx;
+    }
     case "ConfirmPhaseAction": {
       if (ctx.gameState.phase[1] == "effect") {
-        throw new Error("請先處理規定效果")
+        throw new Error("請先處理規定效果");
       }
       // 玩家宣告沒事
       ctx = mapPlayerState(ctx, [playerID], (playerState) => {
@@ -362,8 +396,8 @@ export function applyAction(
       // 所有玩家都宣告沒事
       // 如果堆疊存在，先解決效果，回傳
       if (ctx.gameState.effectStack.effects.length) {
-        console.log("先攻玩家準備呼叫SystemHandleEffectAction")
-        return ctx
+        console.log("先攻玩家準備呼叫SystemHandleEffectAction");
+        return ctx;
       }
       return ctx;
     }

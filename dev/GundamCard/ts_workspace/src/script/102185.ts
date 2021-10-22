@@ -1,14 +1,10 @@
 // 赤黒グラフィック（V）
 // GRAPHIC
 import { Context, CardPosition, Action, Payment, Effect } from "../tool/types";
-import {
-  opponent,
-  askPlayerG,
-  cardPositionID,
-  askCardType,
-} from "../model/alg";
+import { opponent, askPlayerG, cardPositionID } from "../model/alg";
 import { Card } from "../tool/table";
 import { askRowData } from "../tool/data";
+import { askCardType } from "../model/alg/askCardType";
 
 const askAction = (ctx: Context, card: Card): Action[] => {
   if (card.ownerID == null) {

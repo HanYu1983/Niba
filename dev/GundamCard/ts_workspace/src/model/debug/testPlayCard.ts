@@ -6,13 +6,14 @@ import {
   Effect,
   defaultContext,
 } from "../../tool/types";
-import { askPlayerG, cardPositionID, onEffectCompleted } from "../alg";
+import { askPlayerG, cardPositionID } from "../alg";
 import { queryAction } from "../alg/queryAction";
 import { applyAction } from "../alg/applyAction";
 import { checkPayment } from "../alg/checkPayment";
 import { rootApp } from "../../tool/firebase";
 import { PlayerA, PlayerB } from "../../app/context";
-import { askCardColor } from "../alg";
+import { askCardColor } from "../alg/askCardColor";
+import { onEffectCompleted } from "../alg/onEffectCompleted";
 
 export function testPlayCard() {
   let table = defaultContext.gameState.table;
@@ -33,19 +34,19 @@ export function testPlayCard() {
     gameState: {
       ...defaultContext.gameState,
       table: table,
-      activePlayerID: PlayerA
+      activePlayerID: PlayerA,
     },
   };
   const unit1 =
     ctx.gameState.table.cardStack[
-    cardPositionID({ playerID: PlayerA, where: "hand" })
+      cardPositionID({ playerID: PlayerA, where: "hand" })
     ]?.[0] || null;
   if (unit1 == null) {
     throw new Error("unit1必須存在");
   }
   const unit2 =
     ctx.gameState.table.cardStack[
-    cardPositionID({ playerID: PlayerA, where: "hand" })
+      cardPositionID({ playerID: PlayerA, where: "hand" })
     ]?.[1] || null;
   if (unit2 == null) {
     throw new Error("unit2必須存在");

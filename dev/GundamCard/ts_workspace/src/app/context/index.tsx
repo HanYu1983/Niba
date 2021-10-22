@@ -2,10 +2,11 @@ import React, { useCallback, useEffect } from "react";
 import Resct, { useState, createContext, PropsWithChildren } from "react";
 import { Context, defaultContext } from "../../tool/types";
 import { createCard } from "../../tool/table";
-import { askCardColor, cardPositionID } from "../../model/alg";
+import { cardPositionID } from "../../model/alg";
 import { queryAction } from "../../model/alg/queryAction";
 import { applyAction } from "../../model/alg/applyAction";
 import * as firebase from "../../tool/firebase";
+import { askCardColor } from "../../model/alg/askCardColor";
 // @ts-ignore
 import { Subject } from "rxjs";
 
@@ -75,14 +76,14 @@ export const AppContextProvider = (props: PropsWithChildren<any>) => {
     console.log(actions);
     const unit1 =
       ctx.gameState.table.cardStack[
-      cardPositionID({ playerID: playerID, where: "hand" })
+        cardPositionID({ playerID: playerID, where: "hand" })
       ]?.[0] || null;
     if (unit1 == null) {
       throw new Error("unit1必須存在");
     }
     const unit2 =
       ctx.gameState.table.cardStack[
-      cardPositionID({ playerID: playerID, where: "hand" })
+        cardPositionID({ playerID: playerID, where: "hand" })
       ]?.[1] || null;
     if (unit2 == null) {
       throw new Error("unit2必須存在");

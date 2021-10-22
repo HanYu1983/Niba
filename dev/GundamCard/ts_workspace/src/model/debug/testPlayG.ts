@@ -6,13 +6,11 @@ import {
   Effect,
   defaultContext,
 } from "../../tool/types";
-import { askPlayerG, cardPositionID, onEffectCompleted } from "../alg";
+import { askPlayerG, cardPositionID } from "../alg";
 import { queryAction } from "../alg/queryAction";
 import { applyAction } from "../alg/applyAction";
-import { checkPayment } from "../alg/checkPayment";
-import { rootApp } from "../../tool/firebase";
 import { PlayerA, PlayerB } from "../../app/context";
-import { askCardColor } from "../alg";
+import { onEffectCompleted } from "../alg/onEffectCompleted";
 
 export function testPlayG() {
   let ctx: Context = {
@@ -25,14 +23,14 @@ export function testPlayG() {
         cardPositionID({ playerID: PlayerA, where: "hand" }),
         ["179030_11E_G_RD021N_red"]
       ),
-      activePlayerID: PlayerA
+      activePlayerID: PlayerA,
     },
   };
   const actions = queryAction(ctx, PlayerA);
   if (actions.length == 0) {
     throw new Error("必須有出牌動作");
   }
-  console.log(actions)
+  console.log(actions);
   if (actions[0].id != "PlayCardAction") {
     throw new Error("動作必須是PlayCardAction");
   }
@@ -52,11 +50,11 @@ export function testPlayG() {
     id: "SystemHandleEffectAction",
     playerID: PlayerA,
   });
-  console.log(ctx)
+  console.log(ctx);
   if (
     (
       ctx.gameState.table.cardStack[
-      cardPositionID({ playerID: PlayerA, where: "G" })
+        cardPositionID({ playerID: PlayerA, where: "G" })
       ] || []
     ).length != 1
   ) {
@@ -65,7 +63,7 @@ export function testPlayG() {
   if (
     (
       ctx.gameState.table.cardStack[
-      cardPositionID({ playerID: PlayerA, where: "hand" })
+        cardPositionID({ playerID: PlayerA, where: "hand" })
       ] || []
     ).length != 0
   ) {

@@ -1,16 +1,9 @@
-import { mapCard, moveCard, createCard } from "../../tool/table";
-import {
-  Context,
-  Action,
-  Payment,
-  Effect,
-  defaultContext,
-} from "../../tool/types";
-import { askPlayerG, cardPositionID, onEffectCompleted } from "../alg";
+import { defaultContext } from "../../tool/types";
 import { testPlayCard } from "./testPlayCard";
 import { testPlayG } from "./testPlayG";
 import { testPhase } from "./testPhase";
 import { testAttack } from "./testAttack";
+import { onEffectCompleted } from "../alg/onEffectCompleted";
 
 function testScript() {
   const ctx = onEffectCompleted(defaultContext, {

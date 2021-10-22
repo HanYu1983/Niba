@@ -6,13 +6,13 @@ import {
   Effect,
   defaultContext,
 } from "../../tool/types";
-import { askPlayerG, cardPositionID, onEffectCompleted } from "../alg";
+import { askPlayerG, cardPositionID } from "../alg";
 import { queryAction } from "../alg/queryAction";
 import { applyAction } from "../alg/applyAction";
 import { checkPayment } from "../alg/checkPayment";
 import { rootApp } from "../../tool/firebase";
 import { PlayerA, PlayerB } from "../../app/context";
-import { askCardColor } from "../alg";
+import { onEffectCompleted } from "../alg/onEffectCompleted";
 
 export function testPhase() {
   let ctx: Context = {
@@ -39,11 +39,11 @@ export function testPhase() {
     id: "ConfirmPhaseAction",
     playerID: PlayerB,
   });
-  console.log("SystemNextStepAction")
+  console.log("SystemNextStepAction");
   ctx = applyAction(ctx, PlayerA, {
     id: "SystemNextStepAction",
-    playerID: PlayerA
-  })
+    playerID: PlayerA,
+  });
   if (ctx.gameState.phase[1] != "effect") {
     throw new Error("必須到規定效果");
   }
@@ -75,11 +75,11 @@ export function testPhase() {
     id: "ConfirmPhaseAction",
     playerID: PlayerB,
   });
-  console.log("SystemNextStepAction")
+  console.log("SystemNextStepAction");
   ctx = applyAction(ctx, PlayerA, {
     id: "SystemNextStepAction",
-    playerID: PlayerA
-  })
+    playerID: PlayerA,
+  });
   if (ctx.gameState.phase[0] != "set") {
     throw new Error("必須到設置階段");
   }
