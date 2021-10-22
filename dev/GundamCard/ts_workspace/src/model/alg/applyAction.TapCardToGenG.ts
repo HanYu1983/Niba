@@ -1,7 +1,7 @@
 import { mapCard, moveCard } from "../../tool/table";
 import { Context, TapCardToGenG } from "../../tool/types";
 
-export function TapCardToGenG(
+export function applyAction_TapCardToGenG(
   ctx: Context,
   playerID: string,
   action: TapCardToGenG

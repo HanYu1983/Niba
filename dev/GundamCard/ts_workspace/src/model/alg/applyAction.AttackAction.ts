@@ -2,7 +2,7 @@ import { mapCard, moveCard } from "../../tool/table";
 import { Context, AttackAction } from "../../tool/types";
 import { cardPositionID, opponent } from "./tool";
 
-export function AttackAction(
+export function applyAction_AttackAction(
   ctx: Context,
   playerID: string,
   action: AttackAction

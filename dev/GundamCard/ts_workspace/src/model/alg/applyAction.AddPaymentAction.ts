@@ -1,6 +1,6 @@
 import { Context, AddPaymentAction } from "../../tool/types";
 
-export function AddPaymentAction(
+export function applyAction_AddPaymentAction(
   ctx: Context,
   playerID: string,
   action: AddPaymentAction

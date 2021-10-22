@@ -1,7 +1,7 @@
 import { Context, PlayCardAction, Effect } from "../../tool/types";
 import { queryPlayCardPayment } from "./queryPlayCardPayment";
 
-export function PlayCardAction(
+export function applyAction_PlayCardAction(
   ctx: Context,
   playerID: string,
   action: PlayCardAction

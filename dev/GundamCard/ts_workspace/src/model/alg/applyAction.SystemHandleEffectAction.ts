@@ -13,7 +13,7 @@ import { PlayerA, PlayerB } from "../../tool/types";
 import { onEffectCompleted } from "./onEffectCompleted";
 import { onCardEntered } from "./onCardEntered";
 
-export function SystemHandleEffectAction(
+export function applyAction_SystemHandleEffectAction(
   ctx: Context,
   playerID: string,
   action: SystemHandleEffectAction

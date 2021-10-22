@@ -1,6 +1,6 @@
 import { Context, CancelPaymentAction } from "../../tool/types";
 
-export function CancelPaymentAction(
+export function applyAction_CancelPaymentAction(
   ctx: Context,
   playerID: string,
   action: CancelPaymentAction

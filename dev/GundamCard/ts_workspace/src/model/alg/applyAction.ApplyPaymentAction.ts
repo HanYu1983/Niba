@@ -9,7 +9,7 @@ import {
 } from "../../tool/types";
 import { checkPayment } from "./checkPayment";
 
-export function ApplyPaymentAction(
+export function applyAction_ApplyPaymentAction(
   ctx: Context,
   playerID: string,
   action: ApplyPaymentAction

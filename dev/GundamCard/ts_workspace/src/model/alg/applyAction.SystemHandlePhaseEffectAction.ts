@@ -11,7 +11,7 @@ import { askNextPhase } from "./askNextPhase";
 import { mapCardState } from "./mapCardState";
 import { getCardState } from "./getCardState";
 
-export function SystemHandlePhaseEffectAction(
+export function applyAction_SystemHandlePhaseEffectAction(
   ctx: Context,
   playerID: string,
   action: SystemHandlePhaseEffectAction

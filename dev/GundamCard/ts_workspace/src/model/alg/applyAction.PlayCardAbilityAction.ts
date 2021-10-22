@@ -1,6 +1,6 @@
 import { Context, PlayCardAbilityAction } from "../../tool/types";
 
-export function PlayCardAbilityAction(
+export function applyAction_PlayCardAbilityAction(
   ctx: Context,
   playerID: string,
   action: PlayCardAbilityAction

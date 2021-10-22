@@ -1,19 +1,19 @@
 import { Context, Action } from "../../tool/types";
-import { AttackAction } from "./applyAction.AttackAction";
-import { GuardAction } from "./applyAction.GuardAction";
-import { EndStepAction } from "./applyAction.EndStepAction";
-import { AddPaymentAction } from "./applyAction.AddPaymentAction";
-import { SystemNextStepAction } from "./applyAction.SystemNextStepAction";
-import { SystemAddDestroyEffectAction } from "./applyAction.SystemAddDestroyEffectAction";
-import { SystemHandleEffectAction } from "./applyAction.SystemHandleEffectAction";
-import { SystemHandlePhaseEffectAction } from "./applyAction.SystemHandlePhaseEffectAction";
-import { CancelConfirmPhaseAction } from "./applyAction.CancelConfirmPhaseAction";
-import { ConfirmPhaseAction } from "./applyAction.ConfirmPhaseAction";
-import { ApplyPaymentAction } from "./applyAction.ApplyPaymentAction";
-import { CancelPaymentAction } from "./applyAction.CancelPaymentAction";
-import { PlayCardAction } from "./applyAction.PlayCardAction";
-import { PlayCardAbilityAction } from "./applyAction.PlayCardAbilityAction";
-import { TapCardToGenG } from "./applyAction.TapCardToGenG";
+import { applyAction_AttackAction } from "./applyAction.AttackAction";
+import { applyAction_GuardAction } from "./applyAction.GuardAction";
+import { applyAction_EndStepAction } from "./applyAction.EndStepAction";
+import { applyAction_AddPaymentAction } from "./applyAction.AddPaymentAction";
+import { applyAction_SystemNextStepAction } from "./applyAction.SystemNextStepAction";
+import { applyAction_SystemAddDestroyEffectAction } from "./applyAction.SystemAddDestroyEffectAction";
+import { applyAction_SystemHandleEffectAction } from "./applyAction.SystemHandleEffectAction";
+import { applyAction_SystemHandlePhaseEffectAction } from "./applyAction.SystemHandlePhaseEffectAction";
+import { applyAction_CancelConfirmPhaseAction } from "./applyAction.CancelConfirmPhaseAction";
+import { applyAction_ConfirmPhaseAction } from "./applyAction.ConfirmPhaseAction";
+import { applyAction_ApplyPaymentAction } from "./applyAction.ApplyPaymentAction";
+import { applyAction_CancelPaymentAction } from "./applyAction.CancelPaymentAction";
+import { applyAction_PlayCardAction } from "./applyAction.PlayCardAction";
+import { applyAction_PlayCardAbilityAction } from "./applyAction.PlayCardAbilityAction";
+import { applyAction_TapCardToGenG } from "./applyAction.TapCardToGenG";
 
 export function applyAction(
   ctx: Context,
@@ -22,35 +22,35 @@ export function applyAction(
 ): Context {
   switch (action.id) {
     case "AttackAction":
-      return AttackAction(ctx, playerID, action);
+      return applyAction_AttackAction(ctx, playerID, action);
     case "GuardAction":
-      return GuardAction(ctx, playerID, action);
+      return applyAction_GuardAction(ctx, playerID, action);
     case "EndStepAction":
-      return EndStepAction(ctx, playerID, action);
+      return applyAction_EndStepAction(ctx, playerID, action);
     case "AddPaymentAction":
-      return AddPaymentAction(ctx, playerID, action);
+      return applyAction_AddPaymentAction(ctx, playerID, action);
     case "SystemNextStepAction":
-      return SystemNextStepAction(ctx, playerID, action);
+      return applyAction_SystemNextStepAction(ctx, playerID, action);
     case "SystemAddDestroyEffectAction":
-      return SystemAddDestroyEffectAction(ctx, playerID, action);
+      return applyAction_SystemAddDestroyEffectAction(ctx, playerID, action);
     case "SystemHandleEffectAction":
-      return SystemHandleEffectAction(ctx, playerID, action);
+      return applyAction_SystemHandleEffectAction(ctx, playerID, action);
     case "SystemHandlePhaseEffectAction":
-      return SystemHandlePhaseEffectAction(ctx, playerID, action);
+      return applyAction_SystemHandlePhaseEffectAction(ctx, playerID, action);
     case "CancelConfirmPhaseAction":
-      return CancelConfirmPhaseAction(ctx, playerID, action);
+      return applyAction_CancelConfirmPhaseAction(ctx, playerID, action);
     case "ConfirmPhaseAction":
-      return ConfirmPhaseAction(ctx, playerID, action);
+      return applyAction_ConfirmPhaseAction(ctx, playerID, action);
     case "ApplyPaymentAction":
-      return ApplyPaymentAction(ctx, playerID, action);
+      return applyAction_ApplyPaymentAction(ctx, playerID, action);
     case "CancelPaymentAction":
-      return CancelPaymentAction(ctx, playerID, action);
+      return applyAction_CancelPaymentAction(ctx, playerID, action);
     case "PlayCardAction":
-      return PlayCardAction(ctx, playerID, action);
+      return applyAction_PlayCardAction(ctx, playerID, action);
     case "PlayCardAbilityAction":
-      return PlayCardAbilityAction(ctx, playerID, action);
+      return applyAction_PlayCardAbilityAction(ctx, playerID, action);
     case "TapCardToGenG":
-      return TapCardToGenG(ctx, playerID, action);
+      return applyAction_TapCardToGenG(ctx, playerID, action);
   }
   return ctx;
 }

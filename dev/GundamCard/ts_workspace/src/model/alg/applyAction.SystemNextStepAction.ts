@@ -11,7 +11,7 @@ import {
 import { PlayerA, PlayerB } from "../../tool/types";
 import { askNextPhase } from "./askNextPhase";
 
-export function SystemNextStepAction(
+export function applyAction_SystemNextStepAction(
   ctx: Context,
   playerID: string,
   action: SystemNextStepAction

@@ -2,7 +2,7 @@ import { mapCard, moveCard } from "../../tool/table";
 import { Context, EndStepAction } from "../../tool/types";
 import { cardPositionID, opponent } from "./tool";
 
-export function EndStepAction(
+export function applyAction_EndStepAction(
   ctx: Context,
   playerID: string,
   action: EndStepAction

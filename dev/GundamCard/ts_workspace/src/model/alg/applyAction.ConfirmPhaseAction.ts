@@ -10,7 +10,7 @@ import {
 } from "../../tool/types";
 import { PlayerA, PlayerB } from "../../tool/types";
 
-export function ConfirmPhaseAction(
+export function applyAction_ConfirmPhaseAction(
   ctx: Context,
   playerID: string,
   action: ConfirmPhaseAction

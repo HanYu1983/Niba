@@ -1,6 +1,6 @@
 import { Context, SystemAddDestroyEffectAction } from "../../tool/types";
 
-export function SystemAddDestroyEffectAction(
+export function applyAction_SystemAddDestroyEffectAction(
   ctx: Context,
   playerID: string,
   action: SystemAddDestroyEffectAction

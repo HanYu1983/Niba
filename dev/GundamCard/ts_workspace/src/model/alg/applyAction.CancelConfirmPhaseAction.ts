@@ -9,7 +9,7 @@ import {
   isEveryConfirmPhase,
 } from "../../tool/types";
 
-export function CancelConfirmPhaseAction(
+export function applyAction_CancelConfirmPhaseAction(
   ctx: Context,
   playerID: string,
   action: CancelConfirmPhaseAction

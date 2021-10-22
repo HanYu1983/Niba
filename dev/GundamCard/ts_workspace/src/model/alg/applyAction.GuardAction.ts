@@ -2,7 +2,7 @@ import { mapCard, moveCard } from "../../tool/table";
 import { Context, GuardAction } from "../../tool/types";
 import { cardPositionID, opponent } from "./tool";
 
-export function GuardAction(
+export function applyAction_GuardAction(
   ctx: Context,
   playerID: string,
   action: GuardAction
