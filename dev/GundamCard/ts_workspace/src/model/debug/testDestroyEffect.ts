@@ -64,6 +64,22 @@ export function testDestroyEffect() {
             colorCard2,
             colorCard3,
           ],
+          [cardPositionID({ playerID: PlayerA, where: "home" })]: [
+            {
+              id: "_a",
+              protoID: "179030_11E_U_BK187N_black",
+              ownerID: PlayerA,
+              faceDown: false,
+              tap: false,
+            },
+            {
+              id: "_b",
+              protoID: "179030_11E_U_BK187N_black",
+              ownerID: PlayerA,
+              faceDown: false,
+              tap: false,
+            },
+          ],
         },
       },
       activePlayerID: PlayerA,
@@ -172,4 +188,13 @@ export function testDestroyEffect() {
     throw new Error("堆疊中必須有0個效果");
   }
   console.log(ctx);
+  if (
+    (
+      ctx.gameState.table.cardStack[
+        cardPositionID({ playerID: PlayerA, where: "hand" })
+      ] || []
+    ).length != 2
+  ) {
+    throw new Error("現在手牌必須要有2張");
+  }
 }

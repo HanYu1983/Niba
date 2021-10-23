@@ -8,10 +8,11 @@ import {
   mapPlayerState,
   isEveryConfirmPhase,
 } from "../../tool/types";
-import { cardPositionID, opponent } from "./tool";
+import { askCardPosition, cardPositionID, opponent } from "./tool";
 import { PlayerA, PlayerB } from "../../tool/types";
 import { onEffectCompleted } from "./onEffectCompleted";
 import { onCardEntered } from "./onCardEntered";
+import { onEffect } from "./onEffect";
 
 export function applyAction_SystemHandleEffectAction(
   ctx: Context,
@@ -46,6 +47,14 @@ export function applyAction_SystemHandleEffectAction(
             if (topEffect.action.from == null) {
               throw new Error(`from不存在，請檢查程式`);
             }
+            const fromPosition = askCardPosition(ctx, topEffect.action.cardID);
+            if (
+              cardPositionID(fromPosition) ==
+              cardPositionID(topEffect.action.to)
+            ) {
+              console.log("目標位置與現在位置一樣，沒有效果");
+              break;
+            }
             const nextTable = moveCard(
               ctx.gameState.table,
               cardPositionID(topEffect.action.from),
@@ -53,6 +62,7 @@ export function applyAction_SystemHandleEffectAction(
               topEffect.action.cardID,
               null
             );
+            // if unit
             ctx = onCardEntered(
               {
                 ...ctx,
@@ -63,6 +73,7 @@ export function applyAction_SystemHandleEffectAction(
               },
               topEffect.action.cardID
             );
+            ctx = onEffect(ctx, topEffect);
             ctx = onEffectCompleted(ctx, topEffect);
           }
           break;
@@ -82,6 +93,14 @@ export function applyAction_SystemHandleEffectAction(
           `正要處理破壞卡的效果，但找不到卡的擁有者:${destroyCard.ownerID}`
         );
       }
+      const fromPosition = askCardPosition(ctx, topEffect.cardID);
+      if (
+        cardPositionID(fromPosition) ==
+        cardPositionID({ playerID: destroyCard.ownerID, where: "gravyard" })
+      ) {
+        console.log("目標位置與現在位置一樣，沒有效果");
+        break;
+      }
       const nextTable = moveCard(
         ctx.gameState.table,
         cardPositionID(topEffect.from),
@@ -96,17 +115,7 @@ export function applyAction_SystemHandleEffectAction(
           table: nextTable,
         },
       };
-      ctx = {
-        ...ctx,
-        gameState: {
-          ...ctx.gameState,
-          effectStack: {
-            ...ctx.gameState.effectStack,
-            effects: ctx.gameState.effectStack.effects.slice(1),
-          },
-        },
-      };
-      return ctx;
+      break;
     }
     default:
       throw new Error(`unknown effect: ${topEffect}`);

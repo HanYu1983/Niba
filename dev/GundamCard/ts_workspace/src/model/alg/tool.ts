@@ -63,3 +63,20 @@ export function cardPositionID(position: CardPosition) {
 export function opponent(ctx: Context, playerID: string): string {
   return playerID == PlayerA ? PlayerB : PlayerA;
 }
+
+export function askCardPosition(ctx: Context, cardID: string): CardPosition {
+  const find = Object.entries(ctx.gameState.table.cardStack)
+    .filter(([key, cards]) => {
+      return (cards || []).filter((card) => card.id == cardID).length > 0;
+    })
+    .map(([key, cards]) => key);
+  if (find.length == 0) {
+    throw new Error(`找不到卡的位置:${cardID}`);
+  }
+  try {
+    const pos = JSON.parse(find[0]) as CardPosition;
+    return pos;
+  } catch (e) {
+    throw new Error(`未知的位置: ${find[0]}`);
+  }
+}

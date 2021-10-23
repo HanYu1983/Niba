@@ -4,11 +4,13 @@ import {
   Action,
   Payment,
   ActionEffect,
+  Effect,
 } from "../tool/types";
 import { opponent, askPlayerG, cardPositionID } from "../model/alg/tool";
 import { Card } from "../tool/table";
 
 export type Script = {
+  onEffect?: (ctx: Context, card: Card, effect: ActionEffect) => Context;
   onEffectCompleted?: (
     ctx: Context,
     card: Card,
