@@ -3,6 +3,9 @@ import {
   CardPosition,
   Context,
   DestroyEffect,
+  mapPlayerState,
+  PlayerA,
+  PlayerB,
   SystemHandlePhaseEffectAction,
 } from "../../tool/types";
 import { cardPositionID, opponent } from "./tool";

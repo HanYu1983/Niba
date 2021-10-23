@@ -111,6 +111,11 @@ export type GuardAction = {
   beforeCardID: string | null;
 } & BaseAction;
 
+export type AddDestroyEffectAction = {
+  id: "AddDestroyEffectAction";
+  cardID: string;
+} & BaseAction;
+
 export type SystemHandleEffectAction = {
   id: "SystemHandleEffectAction";
 } & BaseAction;
@@ -139,6 +144,7 @@ export type Action =
   | EndStepAction
   | AttackAction
   | GuardAction
+  | AddDestroyEffectAction
   | SystemHandleEffectAction
   | SystemHandlePhaseEffectAction
   | SystemAddDestroyEffectAction

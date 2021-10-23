@@ -7,7 +7,11 @@ import {
   askCardAction,
 } from "./tool";
 import { PlayerA, PlayerB } from "../../tool/types";
-import { isEveryConfirmPhase } from "../../tool/types";
+import {
+  isEveryConfirmPhase,
+  SystemAddDestroyEffectAction,
+  AddDestroyEffectAction,
+} from "../../tool/types";
 
 export function queryAction(ctx: Context, playerID: string): Action[] {
   const ret: Action[] = [];
@@ -65,6 +69,15 @@ export function queryAction(ctx: Context, playerID: string): Action[] {
     // 如果破壞效果列表中有卡牌，回傳SystemAddDestroyEffectAction
     // SystemAddDestroyEffectAction會將其中一張卡的破壞效果放入堆疊
     // 這個時候就可以使用將破壞的卡廢棄獲得能力的指令卡(切入效果)
+    ret.push(
+      ...ctx.gameState.destroyEffect.map((e): AddDestroyEffectAction => {
+        return {
+          id: "AddDestroyEffectAction",
+          playerID: playerID,
+          cardID: e.cardID,
+        };
+      })
+    );
     ret.push({
       id: "SystemAddDestroyEffectAction",
       playerID: PlayerA,

@@ -14,6 +14,7 @@ import { applyAction_CancelPaymentAction } from "./applyAction.CancelPaymentActi
 import { applyAction_PlayCardAction } from "./applyAction.PlayCardAction";
 import { applyAction_PlayCardAbilityAction } from "./applyAction.PlayCardAbilityAction";
 import { applyAction_TapCardToGenG } from "./applyAction.TapCardToGenG";
+import { applyAction_AddDestroyEffectAction } from "./applyAction.AddDestroyEffectAction";
 
 export function applyAction(
   ctx: Context,
@@ -51,6 +52,8 @@ export function applyAction(
       return applyAction_PlayCardAbilityAction(ctx, playerID, action);
     case "TapCardToGenG":
       return applyAction_TapCardToGenG(ctx, playerID, action);
+    case "AddDestroyEffectAction":
+      throw new Error("not support yet");
   }
   return ctx;
 }
