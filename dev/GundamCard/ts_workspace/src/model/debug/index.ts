@@ -22,10 +22,16 @@ function testScript() {
 }
 
 export function test() {
-  testDestroyEffect();
-  // const testFns = [testScript, testPlayG, testPhase, testPlayCard, testAttack];
-  // testFns.forEach((f) => {
-  //   console.log(`=========${f.name}=========`);
-  //   f();
-  // });
+  const testFns = [
+    testScript,
+    testPlayG,
+    testPhase,
+    testPlayCard,
+    testAttack,
+    testDestroyEffect,
+  ];
+  testFns.forEach((f) => {
+    console.log(`=========${f.name}=========`);
+    f();
+  });
 }
