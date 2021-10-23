@@ -8,6 +8,23 @@ export function applyAction_SystemAddDestroyEffectAction(
   if (ctx.gameState.destroyEffect.length == 0) {
     throw new Error("沒有破壞卡要處理");
   }
+  // if (ctx.gameState.destroyEffect.length) {
+  //   // 將所有破壞效果塞入堆疊
+  //   ctx = {
+  //     ...ctx,
+  //     gameState: {
+  //       ...ctx.gameState,
+  //       destroyEffect: [],
+  //       effectStack: {
+  //         ...ctx.gameState.effectStack,
+  //         effects: [
+  //           ...ctx.gameState.destroyEffect,
+  //           ...ctx.gameState.effectStack.effects,
+  //         ],
+  //       },
+  //     },
+  //   };
+  // }
   const topDestryEffect = ctx.gameState.destroyEffect[0];
   return {
     ...ctx,
