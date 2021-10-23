@@ -18,6 +18,9 @@ export function applyAction_ConfirmPhaseAction(
   if (ctx.gameState.phase[1] == "effect") {
     throw new Error("請先處理規定效果");
   }
+  if (ctx.gameState.paymentTable.action != null) {
+    throw new Error("請先處理支付");
+  }
   // 玩家宣告沒事
   ctx = mapPlayerState(ctx, [playerID], (playerState) => {
     return {

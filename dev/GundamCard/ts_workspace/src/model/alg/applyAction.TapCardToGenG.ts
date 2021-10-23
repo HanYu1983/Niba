@@ -6,14 +6,14 @@ export function applyAction_TapCardToGenG(
   playerID: string,
   action: TapCardToGenG
 ): Context {
+  if (ctx.gameState.paymentTable.action == null) {
+    throw new Error("現在沒有支付的必要");
+  }
   if (action.color == null) {
     throw new Error("你必須指定color");
   }
   if (action.cardID == null) {
     throw new Error("你必須指定cardID");
-  }
-  if (ctx.gameState.paymentTable.action == null) {
-    throw new Error("現在沒有支付的必要");
   }
   const nextTable = mapCard(ctx.gameState.table, (card) => {
     if (card.id != action.cardID) {

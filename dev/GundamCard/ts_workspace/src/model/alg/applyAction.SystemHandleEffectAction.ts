@@ -1,4 +1,4 @@
-import { mapCard, moveCard } from "../../tool/table";
+import { getCard, mapCard, moveCard } from "../../tool/table";
 import {
   Context,
   Action,
@@ -18,11 +18,14 @@ export function applyAction_SystemHandleEffectAction(
   playerID: string,
   action: SystemHandleEffectAction
 ): Context {
-  if (ctx.gameState.effectStack.effects.length == 0) {
-    throw new Error("沒有效果要處理");
+  if (ctx.gameState.paymentTable.action != null) {
+    throw new Error("請先處理支付");
   }
   if (ctx.gameState.activePlayerID != playerID) {
     throw new Error("只有主動玩家能操作");
+  }
+  if (ctx.gameState.effectStack.effects.length == 0) {
+    throw new Error("沒有效果要處理");
   }
   if (isEveryConfirmPhase(ctx, [PlayerA, PlayerB]) == false) {
     throw new Error("雙方都要確認沒事才能操作SystemHandleEffectAction");
@@ -69,10 +72,42 @@ export function applyAction_SystemHandleEffectAction(
           throw new Error("unknown action");
       }
       break;
-    case "DestroyEffect":
-      {
+    case "DestroyEffect": {
+      const destroyCard = getCard(ctx.gameState.table, topEffect.cardID);
+      if (destroyCard == null) {
+        throw new Error(`正要處理破壞卡的效果，但找不到卡:${topEffect.cardID}`);
       }
-      break;
+      if (destroyCard.ownerID == null) {
+        throw new Error(
+          `正要處理破壞卡的效果，但找不到卡的擁有者:${destroyCard.ownerID}`
+        );
+      }
+      const nextTable = moveCard(
+        ctx.gameState.table,
+        cardPositionID(topEffect.from),
+        cardPositionID({ playerID: destroyCard.ownerID, where: "gravyard" }),
+        topEffect.cardID,
+        null
+      );
+      ctx = {
+        ...ctx,
+        gameState: {
+          ...ctx.gameState,
+          table: nextTable,
+        },
+      };
+      ctx = {
+        ...ctx,
+        gameState: {
+          ...ctx.gameState,
+          effectStack: {
+            ...ctx.gameState.effectStack,
+            effects: ctx.gameState.effectStack.effects.slice(1),
+          },
+        },
+      };
+      return ctx;
+    }
     default:
       throw new Error(`unknown effect: ${topEffect}`);
   }

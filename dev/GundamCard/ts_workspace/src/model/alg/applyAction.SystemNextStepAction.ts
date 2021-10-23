@@ -16,6 +16,9 @@ export function applyAction_SystemNextStepAction(
   playerID: string,
   action: SystemNextStepAction
 ): Context {
+  if (ctx.gameState.activePlayerID != playerID) {
+    throw new Error("只有主動玩家能操作");
+  }
   if (isEveryConfirmPhase(ctx, [PlayerA, PlayerB]) == false) {
     throw new Error("雙方都要確認沒事才能操作SystemNextStepAction");
   }

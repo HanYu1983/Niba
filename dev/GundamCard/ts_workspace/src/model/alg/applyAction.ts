@@ -15,6 +15,7 @@ import { applyAction_PlayCardAction } from "./applyAction.PlayCardAction";
 import { applyAction_PlayCardAbilityAction } from "./applyAction.PlayCardAbilityAction";
 import { applyAction_TapCardToGenG } from "./applyAction.TapCardToGenG";
 import { applyAction_AddDestroyEffectAction } from "./applyAction.AddDestroyEffectAction";
+import { applyAction_TargetCardToGenTarget1 } from "./applyAction.TargetCardToGenTarget1";
 
 export function applyAction(
   ctx: Context,
@@ -54,6 +55,8 @@ export function applyAction(
       return applyAction_TapCardToGenG(ctx, playerID, action);
     case "AddDestroyEffectAction":
       throw new Error("not support yet");
+    case "TargetCardToGenTarget1":
+      return applyAction_TargetCardToGenTarget1(ctx, playerID, action);
   }
   return ctx;
 }

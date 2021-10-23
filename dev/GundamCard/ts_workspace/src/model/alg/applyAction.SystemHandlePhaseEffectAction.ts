@@ -67,32 +67,35 @@ export function applyAction_SystemHandlePhaseEffectAction(
         "universe",
         3
       );
-      const battleCards = [
+      // 取得破壞效果
+      const destroyEffects = [
         { playerID: attackPlayerID, where: "earth" } as CardPosition,
         { playerID: attackPlayerID, where: "universe" } as CardPosition,
         { playerID: guardPlayerID, where: "earth" } as CardPosition,
         { playerID: guardPlayerID, where: "universe" } as CardPosition,
       ].flatMap((pos) => {
-        return ctx.gameState.table.cardStack[cardPositionID(pos)] || [];
+        const cards = ctx.gameState.table.cardStack[cardPositionID(pos)] || [];
+        const effects: DestroyEffect[] = getCardState(
+          ctx,
+          cards.map((card) => card.id)
+        )
+          .filter(([cardID, card, cardState]) => {
+            return cardState.live == 0;
+          })
+          .map(([cardID, card, cardState]): DestroyEffect => {
+            return {
+              id: "DestroyEffect",
+              cardID: cardID,
+              reason: "battle",
+              from: pos,
+            };
+          });
+        return effects;
       });
       // 將破壞效果加入列表
       // 每個被破壞的卡必須存到列表, 一個一個將破壞效果放入堆疊中
       // 但每次只能放一個, 等到堆疊解決完, 再放入下一個
       // 所以必須要再多一個列表
-      const destroyEffects: DestroyEffect[] = getCardState(
-        ctx,
-        battleCards.map((card) => card.id)
-      )
-        .filter(([cardID, card, cardState]) => {
-          return cardState.live == 0;
-        })
-        .map(([cardID, card, cardState]): DestroyEffect => {
-          return {
-            id: "DestroyEffect",
-            cardID: cardID,
-            reason: "battle",
-          };
-        });
       return {
         ...ctx,
         gameState: {

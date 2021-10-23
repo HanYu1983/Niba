@@ -40,6 +40,11 @@ export function checkPayment(
         consumed[currentID] = true;
         break;
       }
+      if (require.id == "Target1Payment" && current.id == "Target1Payment") {
+        passed[requireID] = true;
+        consumed[currentID] = true;
+        break;
+      }
     }
   }
   const isPass =

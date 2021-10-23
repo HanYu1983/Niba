@@ -70,6 +70,11 @@ export type TapCardToGenG = {
   color: Color | null;
 } & BaseAction;
 
+export type TargetCardToGenTarget1 = {
+  id: "TargetCardToGenTarget1";
+  cardID: string | null;
+} & BaseAction;
+
 export type AddPaymentAction = {
   id: "AddPaymentAction";
   payment: Payment;
@@ -136,6 +141,7 @@ export type Action =
   | PlayCardAction
   | PlayCardAbilityAction
   | TapCardToGenG
+  | TargetCardToGenTarget1
   | AddPaymentAction
   | CancelPaymentAction
   | ApplyPaymentAction
@@ -167,6 +173,7 @@ export type ActionEffect = {
 export type DestroyEffect = {
   id: "DestroyEffect";
   cardID: string;
+  from: CardPosition;
   reason: string;
 };
 

@@ -5,6 +5,9 @@ export function applyAction_SystemAddDestroyEffectAction(
   playerID: string,
   action: SystemAddDestroyEffectAction
 ): Context {
+  if (ctx.gameState.activePlayerID != playerID) {
+    throw new Error("只有主動玩家能操作");
+  }
   if (ctx.gameState.destroyEffect.length == 0) {
     throw new Error("沒有破壞卡要處理");
   }
