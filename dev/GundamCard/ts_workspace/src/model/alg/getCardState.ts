@@ -1,4 +1,4 @@
-import { Context, CardState } from "../../tool/types";
+import { Context, CardState, defaultCardState } from "../../tool/types";
 import { Card, getCard, Table } from "../../tool/table";
 import { askCardPower } from "./askCardPower";
 
@@ -16,6 +16,7 @@ export function getCardState(
     }
     const [melee, range, live] = askCardPower(ctx, card);
     const cardState = ctx.gameState.cardState[cardID] || {
+      ...defaultCardState,
       playerID: card.ownerID,
       live: live || 0,
     };

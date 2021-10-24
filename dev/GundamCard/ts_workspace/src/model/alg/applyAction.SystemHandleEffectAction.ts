@@ -13,6 +13,7 @@ import { PlayerA, PlayerB } from "../../tool/types";
 import { onEffectCompleted } from "./onEffectCompleted";
 import { onCardEntered } from "./onCardEntered";
 import { onEffect } from "./onEffect";
+import { getCardState } from "./getCardState";
 
 export function applyAction_SystemHandleEffectAction(
   ctx: Context,
@@ -93,17 +94,17 @@ export function applyAction_SystemHandleEffectAction(
           `正要處理破壞卡的效果，但找不到卡的擁有者:${destroyCard.ownerID}`
         );
       }
-      const fromPosition = askCardPosition(ctx, topEffect.cardID);
-      if (
-        cardPositionID(fromPosition) ==
-        cardPositionID({ playerID: destroyCard.ownerID, where: "gravyard" })
-      ) {
-        console.log("目標位置與現在位置一樣，沒有效果");
+      const [[_cardID, _card, destroyCardState]] = getCardState(ctx, [
+        destroyCard.id,
+      ]);
+      if (destroyCardState.destroy == false) {
+        console.log("沒有在破壞狀態，無法解決效果");
         break;
       }
+      const fromPosition = askCardPosition(ctx, topEffect.cardID);
       const nextTable = moveCard(
         ctx.gameState.table,
-        cardPositionID(topEffect.from),
+        cardPositionID(fromPosition),
         cardPositionID({ playerID: destroyCard.ownerID, where: "gravyard" }),
         topEffect.cardID,
         null

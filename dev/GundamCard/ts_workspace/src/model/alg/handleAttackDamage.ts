@@ -86,6 +86,7 @@ export function handleAttackDamage(
           return {
             ...cardState,
             live: 0,
+            destroy: true,
           };
         }
         // 剩餘血量
@@ -112,6 +113,7 @@ export function handleAttackDamage(
           return {
             ...cardState,
             live: 0,
+            destroy: true,
           };
         }
         // 剩餘血量

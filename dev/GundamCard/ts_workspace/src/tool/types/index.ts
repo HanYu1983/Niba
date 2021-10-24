@@ -186,6 +186,13 @@ export type EffectStack = {
 export type CardState = {
   playerID: string;
   live: number;
+  destroy: boolean;
+};
+
+export const defaultCardState: CardState = {
+  playerID: "pending",
+  live: 0,
+  destroy: false,
 };
 
 export type PhaseMain =

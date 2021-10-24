@@ -1,5 +1,11 @@
 import { Card, createCard } from "../../tool/table";
-import { Context, defaultContext, PlayerA, PlayerB } from "../../tool/types";
+import {
+  Context,
+  defaultCardState,
+  defaultContext,
+  PlayerA,
+  PlayerB,
+} from "../../tool/types";
 import { applyAction } from "../alg/applyAction";
 import { askCardColor } from "../alg/askCardColor";
 import { cardPositionID } from "../alg/tool";
@@ -52,6 +58,12 @@ export function testDestroyEffect() {
           from: { playerID: PlayerA, where: "earth" },
         },
       ],
+      cardState: {
+        [destroyCard.id]: {
+          ...defaultCardState,
+          destroy: true,
+        },
+      },
       table: {
         ...defaultContext.gameState.table,
         cardStack: {

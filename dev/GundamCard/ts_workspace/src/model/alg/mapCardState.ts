@@ -1,4 +1,4 @@
-import { Context, CardState } from "../../tool/types";
+import { Context, CardState, defaultCardState } from "../../tool/types";
 import { Card, getCard, Table } from "../../tool/table";
 import { askCardPower } from "./askCardPower";
 
@@ -26,6 +26,7 @@ export function mapCardState(
             cardID,
             card,
             cardState[cardID] || {
+              ...defaultCardState,
               playerID: card.ownerID,
               live: live || 0,
             }

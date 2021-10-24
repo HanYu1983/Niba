@@ -10,6 +10,7 @@ import {
 } from "../tool/types";
 import { Card, getCard, mapCard, moveCard } from "../tool/table";
 import { askCardPosition, cardPositionID } from "../model/alg/tool";
+import { getCardState } from "../model/alg/getCardState";
 
 const askAction = (ctx: Context, card: Card): Action[] => {
   return [];
@@ -65,6 +66,13 @@ const onEffect = (ctx: Context, card: Card, effect: ActionEffect): Context => {
   }
   if (targetCard.ownerID == null) {
     throw new Error(`目標1沒有擁有者:${target.cardID}`);
+  }
+  const [[_cardID, _card, targetCardState]] = getCardState(ctx, [
+    targetCard.id,
+  ]);
+  if (targetCardState.destroy == false) {
+    console.log("目標1沒有在破壞狀態，無法解決效果");
+    return ctx;
   }
   console.log(`目標1移到墓地:${targetCard.id}`);
   let nextTable = moveCard(

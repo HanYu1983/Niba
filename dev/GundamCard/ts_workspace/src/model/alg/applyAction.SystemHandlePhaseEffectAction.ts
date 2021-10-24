@@ -80,7 +80,7 @@ export function applyAction_SystemHandlePhaseEffectAction(
           cards.map((card) => card.id)
         )
           .filter(([cardID, card, cardState]) => {
-            return cardState.live == 0;
+            return cardState.destroy == true;
           })
           .map(([cardID, card, cardState]): DestroyEffect => {
             return {
