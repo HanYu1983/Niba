@@ -14,6 +14,7 @@ const serveHttp = shell.task("http-server -c-1 build");
 const build = async () => {
     // 回傳promise讓build可以結束
     src("app/index.js")
+        // use on error to catch error
         .pipe(browserify().on("error", console.log))
         .pipe(dest("build"))
         .pipe(
