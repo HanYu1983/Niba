@@ -12,6 +12,7 @@
     "gulp": "^4.0.2",
     "gulp-browserify": "^0.5.1",
     "gulp-livescript": "^3.0.1",
+    "gulp-plumber": "^1.2.1",
     "gulp-shell": "^0.8.0",
     "gulp-wisp": "^0.0.1",
     "livescript": "^1.6.0",

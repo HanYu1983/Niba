@@ -1,5 +1,17 @@
-for i from 1 to 10 by 3
-  i
+require! {
+    ramda: {map, head, partial, _, filter}
+}
 
-export func = ->
-    1 + 1
+const double = (x) ->
+    x * 2;
+
+const x = do
+    [1 2 3] 
+    |> map double _
+    |> filter do
+        (x)->
+            x % 2 == 0
+        _
+    |> head
+
+console.log x

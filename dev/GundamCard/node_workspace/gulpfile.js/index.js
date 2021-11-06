@@ -3,7 +3,9 @@ const { series, watch, parallel, dest, src } = require("gulp");
 const shell = require("gulp-shell");
 const browserify = require("gulp-browserify");
 const wisp = require('gulp-wisp')
+const gulpPlumber = require('gulp-plumber');
 const gulpLiveScript = require('gulp-livescript');
+
 
 const through = require("through2");
 const tap = (callbackWrap) => {
@@ -15,9 +17,16 @@ const tap = (callbackWrap) => {
 // kill <pid>: kill use port
 const serveHttp = shell.task("http-server -c-1 build");
 
+// can not use
 const buildWisp = async () => {
     src('app/**/*.wisp')
-        .pipe(wisp().on("error", console.log))
+        .pipe(gulpPlumber({
+            errorHandler: function (err) {
+                console.log(err)
+                this.emit('end');
+            }
+        }))
+        .pipe(wisp().on('error', console.log))
         .pipe(dest(function (file) {
             return file.base;
         }))
