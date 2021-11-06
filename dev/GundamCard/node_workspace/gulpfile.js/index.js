@@ -8,6 +8,8 @@ const tap = (callbackWrap) => {
         callbackWrap(vinylFile, encoding, callback);
     });
 };
+// ps: show use port
+// kill <pid>: kill use port
 const serveHttp = shell.task("http-server -c-1 build");
 const build = async () => {
     // 回傳promise讓build可以結束
