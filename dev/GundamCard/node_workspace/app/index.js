@@ -1,5 +1,7 @@
 const { spec, valid, explain, conform, assert } = require("js.spec")
-const { } = require("./lib/tool")
+const tool4 = require("./lib/tool4")
+
+console.log(tool4)
 
 const point = spec.map("point", {
     x: spec.int,

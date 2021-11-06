@@ -2,6 +2,9 @@
 const { series, watch, parallel, dest, src } = require("gulp");
 const shell = require("gulp-shell");
 const browserify = require("gulp-browserify");
+const wisp = require('gulp-wisp')
+const gulpLiveScript = require('gulp-livescript');
+
 const through = require("through2");
 const tap = (callbackWrap) => {
     return through.obj(function (vinylFile, encoding, callback) {
@@ -11,7 +14,33 @@ const tap = (callbackWrap) => {
 // ps: show use port
 // kill <pid>: kill use port
 const serveHttp = shell.task("http-server -c-1 build");
-const build = async () => {
+
+const buildWisp = async () => {
+    src('app/**/*.wisp')
+        .pipe(wisp().on("error", console.log))
+        .pipe(dest(function (file) {
+            return file.base;
+        }))
+}
+const watchBuildWisp = async () => {
+    // 回傳promise讓這個watchBuild可以結束
+    watch("app/**/*.wisp", { delay: 500 }, buildWisp);
+};
+
+const buildLiveScript = async () => {
+    src('app/**/*.ls')
+        .pipe(gulpLiveScript({ bare: true }).on('error', console.log))
+        .pipe(dest(function (file) {
+            return file.base;
+        }))
+}
+const watchLiveScript = async () => {
+    // 回傳promise讓這個watchBuild可以結束
+    watch("app/**/*.ls", { delay: 500 }, buildLiveScript);
+};
+
+
+const buildNode = async () => {
     // 回傳promise讓build可以結束
     src("app/index.js")
         // use on error to catch error
@@ -24,8 +53,8 @@ const build = async () => {
             })
         );
 }
-const watchBuild = async () => {
+const watchBuildNode = async () => {
     // 回傳promise讓這個watchBuild可以結束
-    watch("app/**/*.js", { delay: 500 }, build);
+    watch("app/**/*.js", { delay: 500 }, buildNode);
 };
-exports.default = parallel(watchBuild, serveHttp);
+exports.default = parallel(watchBuildNode, watchLiveScript, serveHttp);
