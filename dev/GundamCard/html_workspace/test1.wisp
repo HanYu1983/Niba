@@ -1,4 +1,4 @@
-(let [{:strs [always zip reduce repeat pipe __ assoc]} R
+(let [{:strs [always zip repeat pipe __ assoc]} R
       spec (get window "js.spec")
 
       _ (spec.assert types.point {:x 0 :y 0})
