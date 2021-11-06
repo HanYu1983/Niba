@@ -1,5 +1,5 @@
 require! {
-    ramda:{map, head, partial, _, filter}
+    ramda:{map, head, partial, filter}
     "js.spec": {assert}
     "./types": types
 }
