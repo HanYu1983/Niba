@@ -1,5 +1,5 @@
-import { spec, valid, explain, conform, assert } from "js.spec";
-import { mergeAll } from "ramda";
+const { spec, valid, explain, conform, assert } = require("js.spec")
+const { } = require("./lib/tool")
 
 const point = spec.map("point", {
     x: spec.int,
@@ -17,5 +17,7 @@ const point_or_line = spec.or("point or line", {
 const p = {
     x: 0
 };
+explain(point_or_line, p)
+// assert(point_or_line, p)
 
-assert(point_or_line, p)
+
