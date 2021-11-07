@@ -1,3 +1,13 @@
+(defmacro define-fn
+  [name & body]
+  `(def ~name (fn ~@body)))
+
+(define-fn print
+  [message]
+  (.log console message))
+
+(print "XX GEN")
+
 (let [{:strs [always zip repeat pipe __ assoc]} R
       spec (get window "js.spec")
 
@@ -43,4 +53,5 @@
       _ (set! window.test1 {:doA doA :doB doB})])
 
 
-(let [_ (console.log map filter some sort repeat)])
+(let [set1 #{:a :b}
+      _ (console.log (set1 :c))])
