@@ -1,55 +1,27 @@
 import React, { useCallback, useEffect } from "react";
 import Resct, { useState, createContext, PropsWithChildren } from "react";
-import { Context, defaultContext } from "../../tool/types";
-import { createCard } from "../../tool/table";
-import { cardPositionID } from "../../model/alg/tool";
-import { queryAction } from "../../model/alg/queryAction";
-import { applyAction } from "../../model/alg/applyAction";
 import * as firebase from "../../tool/firebase";
-import { askCardColor } from "../../model/alg/askCardColor";
-import { PlayerA, PlayerB } from "../../tool/types";
-// @ts-ignore
-import { Subject } from "rxjs";
+import { DEFAULT_VIEW_MODEL, OnViewModel, ViewModel } from "./OnViewModel";
+import { OnEvent } from "../../tool/eventCenter";
 
 export type AppContext = {
-  model: Context;
-  onDebug: () => void;
-  onClickNewGame: () => void;
-  playerID: string;
-  onClickChangePlayer: (playerID: string) => void;
+  viewModel: ViewModel;
 };
 
 export const AppContext = createContext<AppContext | null>(null);
 
 export const AppContextProvider = (props: PropsWithChildren<any>) => {
-  const [playerID, setPlayerID] = useState(PlayerA);
-  const [model, setModel] = useState<Context>(() => {
-    let table = defaultContext.gameState.table;
-    table = createCard(
-      table,
-      PlayerA,
-      cardPositionID({ playerID: PlayerA, where: "hand" }),
-      ["179030_11E_U_BK187N_black", "179030_11E_U_BK187N_black"]
-    );
-    table = createCard(
-      table,
-      PlayerB,
-      cardPositionID({ playerID: PlayerB, where: "hand" }),
-      ["179030_11E_U_BK187N_black", "179030_11E_U_BK187N_black"]
-    );
-    let value: Context = {
-      ...defaultContext,
-      gameState: {
-        ...defaultContext.gameState,
-        table: table,
-      },
+  const [viewModel, setViewModel] = useState<ViewModel>(DEFAULT_VIEW_MODEL);
+  useEffect(() => {
+    const subscriber = OnViewModel.subscribe(setViewModel);
+    return () => {
+      subscriber.unsubscribe();
     };
-    return value;
-  });
-
-  const onClickNewGame = useCallback(() => {
-    firebase.sync(model);
   }, []);
+
+  useEffect(() => {
+    firebase.sync(viewModel.model);
+  }, [viewModel.model]);
 
   useEffect(() => {
     return firebase.addListener((err, data) => {
@@ -60,77 +32,14 @@ export const AppContextProvider = (props: PropsWithChildren<any>) => {
       if (data == null) {
         return;
       }
-      setModel(data);
+      OnEvent.next({ id: "OnModelFromFirebase", model: data });
     });
   }, []);
 
-  const onClickChangePlayer = useCallback((id: string) => {
-    setPlayerID(id);
-  }, []);
-
-  const onDebug = useCallback(() => {
-    let ctx = model;
-    const actions = queryAction(ctx, playerID);
-    console.log(actions);
-    const unit1 =
-      ctx.gameState.table.cardStack[
-        cardPositionID({ playerID: playerID, where: "hand" })
-      ]?.[0] || null;
-    if (unit1 == null) {
-      throw new Error("unit1必須存在");
-    }
-    const unit2 =
-      ctx.gameState.table.cardStack[
-        cardPositionID({ playerID: playerID, where: "hand" })
-      ]?.[1] || null;
-    if (unit2 == null) {
-      throw new Error("unit2必須存在");
-    }
-    ctx = applyAction(ctx, playerID, {
-      id: "PlayCardAction",
-      playerID: playerID,
-      cardID: unit1.id,
-      from: { playerID: playerID, where: "hand" },
-      to: { playerID: playerID, where: "G" },
-    });
-    console.log("放棄切入");
-    ctx = applyAction(ctx, playerID, {
-      id: "ConfirmPhaseAction",
-      playerID: playerID,
-    });
-    ctx = applyAction(ctx, playerID, {
-      id: "PlayCardAction",
-      playerID: playerID,
-      cardID: unit2.id,
-      from: { playerID: playerID, where: "hand" },
-      to: { playerID: playerID, where: "ground" },
-    });
-    ctx = applyAction(ctx, playerID, {
-      id: "TapCardToGenG",
-      playerID: playerID,
-      cardID: unit1.id,
-      color: askCardColor(ctx, unit1),
-    });
-    console.log(ctx);
-    ctx = applyAction(ctx, playerID, {
-      id: "ApplyPaymentAction",
-      playerID: playerID,
-    });
-    console.log("放棄切入");
-    ctx = applyAction(ctx, playerID, {
-      id: "ConfirmPhaseAction",
-      playerID: playerID,
-    });
-    firebase.sync(ctx);
-  }, [model, playerID]);
   return (
     <AppContext.Provider
       value={{
-        model: model,
-        onDebug,
-        onClickNewGame,
-        onClickChangePlayer,
-        playerID,
+        viewModel,
       }}
     >
       {props.children}

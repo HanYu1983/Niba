@@ -1,41 +1,93 @@
-import React, { useContext, useMemo, useCallback, useState } from "react";
+import React, {
+  useContext,
+  useMemo,
+  useCallback,
+  useState,
+  HTMLAttributes,
+  useEffect,
+} from "react";
 import { AppContext } from "../context";
 import { cardPositionID } from "../../model/alg/tool";
 import { CardPosition } from "../../tool/types";
 import { askImgSrc } from "../../tool/data";
 import { Card } from "../../tool/table";
 import { PlayerA, PlayerB } from "../../tool/types";
+import { getCard } from "../../tool/table";
+import { OnEvent } from "../../tool/eventCenter";
+
+const CARD_SIZE = 100;
+
+export const CardView = (props: { cardID: string }) => {
+  const appContext = useContext(AppContext);
+  if (appContext == null) {
+    return <div>AppContext not found</div>;
+  }
+  const card = useMemo(() => {
+    return getCard(appContext.viewModel.model.gameState.table, props.cardID);
+  }, [props.cardID, appContext.viewModel.model.gameState.table]);
+  if (card == null) {
+    return <div>card({props.cardID}) not found</div>;
+  }
+  const render = useMemo(() => {
+    return (
+      <div
+        style={{
+          ...(card.tap ? { transform: "rotate(90deg)" } : null),
+          border: "2px solid black",
+          ...(appContext.viewModel.cardSelection[card.id]
+            ? { border: "2px solid red" }
+            : null),
+        }}
+        onClick={() => {
+          OnEvent.next({ id: "OnClickCardEvent", card: card });
+        }}
+      >
+        <img src={askImgSrc(card.protoID)} style={{ height: CARD_SIZE }}></img>
+      </div>
+    );
+  }, [card, appContext.viewModel.cardSelection]);
+  return <>{render}</>;
+};
+
+export const CardStackView = (
+  props: { cardPosition: CardPosition } & HTMLAttributes<unknown>
+) => {
+  const appContext = useContext(AppContext);
+  if (appContext == null) {
+    return <div>AppContext not found</div>;
+  }
+  const cards = useMemo(() => {
+    return (
+      appContext.viewModel.model.gameState.table.cardStack[
+        cardPositionID(props.cardPosition)
+      ] || []
+    );
+  }, [
+    props.cardPosition,
+    appContext.viewModel.model.gameState.table.cardStack,
+  ]);
+  return (
+    <div style={{ border: "1px solid", height: CARD_SIZE, display: "flex" }}>
+      <div style={{ width: 100 }}></div>
+      {cards.map((card) => {
+        return <CardView key={card.id} cardID={card.id}></CardView>;
+      })}
+    </div>
+  );
+};
 
 export function View() {
-  const ctx = useContext(AppContext);
-  if (ctx == null) {
-    return <div>ctx not found</div>;
+  const appContext = useContext(AppContext);
+  if (appContext == null) {
+    return <div>AppContext not found</div>;
   }
-  // ============== bind ================ //
-  const onClickTest = useCallback(() => {
-    try {
-      ctx.onDebug();
-    } catch (e) {
-      console.log(e);
-      alert(e);
-    }
-  }, [ctx.onDebug]);
-  const onClickCard = useCallback((card: Card) => {
-    setSelected((origin) => {
-      return {
-        ...origin,
-        [card.id]: !!!origin[card.id],
-      };
-    });
-  }, []);
+  const onClickTest = useCallback(() => {}, []);
   const onClickNewGame = useCallback(() => {
-    ctx.onClickNewGame();
-  }, [ctx.onClickNewGame]);
+    OnEvent.next({ id: "OnClickNewGame" });
+  }, []);
   const onClickChangePlayer = useCallback(() => {
-    ctx.onClickChangePlayer(ctx.playerID == PlayerA ? PlayerB : PlayerA);
-  }, [ctx.onClickChangePlayer, ctx.playerID]);
-  // ============= selection =============== //
-  const [selected, setSelected] = useState<{ [key: string]: boolean }>({});
+    OnEvent.next({ id: "OnClickChangeClient" });
+  }, []);
   // ============== control panel ============= //
   const renderControlPanel = useMemo(() => {
     return (
@@ -47,64 +99,48 @@ export function View() {
     );
   }, [onClickTest, onClickNewGame]);
   // ============== game ============== //
-  const CARD_SIZE = 100;
-  const renderCards = useCallback(
-    (pos: CardPosition) => {
-      const cards =
-        ctx.model.gameState.table.cardStack[cardPositionID(pos)] || [];
-      return (
-        <div style={{ border: "1px solid", height: CARD_SIZE }}>
-          {cards.map((card) => {
-            return (
-              <div
-                key={card.id}
-                style={{ display: "inline", overflow: "scroll" }}
-              >
-                <img
-                  src={askImgSrc(card.protoID)}
-                  style={{
-                    height: CARD_SIZE,
-                    ...(card.tap ? { transform: "rotate(90deg)" } : null),
-                    ...(selected[card.id] ? { border: "2px solid red" } : null),
-                  }}
-                  onClick={() => {
-                    onClickCard(card);
-                  }}
-                ></img>
-              </div>
-            );
-          })}
-        </div>
-      );
-    },
-    [ctx.model.gameState.table.cardStack, selected]
-  );
   const renderGame = useMemo(() => {
     return (
       <>
         <div
           style={{
-            ...(ctx.playerID == PlayerA ? { background: "lightyellow" } : null),
+            ...(appContext.viewModel.clientID == PlayerA
+              ? { background: "lightyellow" }
+              : null),
           }}
         >
           <h1>PlayerA</h1>
-          {renderCards({ playerID: PlayerA, where: "hand" })}
-          {renderCards({ playerID: PlayerA, where: "ground" })}
-          {renderCards({ playerID: PlayerA, where: "G" })}
+          <CardStackView
+            cardPosition={{ playerID: PlayerA, where: "hand" }}
+          ></CardStackView>
+          <CardStackView
+            cardPosition={{ playerID: PlayerA, where: "ground" }}
+          ></CardStackView>
+          <CardStackView
+            cardPosition={{ playerID: PlayerA, where: "G" }}
+          ></CardStackView>
         </div>
         <div
           style={{
-            ...(ctx.playerID == PlayerB ? { background: "lightyellow" } : null),
+            ...(appContext.viewModel.clientID == PlayerB
+              ? { background: "lightyellow" }
+              : null),
           }}
         >
           <h1>playerB</h1>
-          {renderCards({ playerID: PlayerB, where: "G" })}
-          {renderCards({ playerID: PlayerB, where: "ground" })}
-          {renderCards({ playerID: PlayerB, where: "hand" })}
+          <CardStackView
+            cardPosition={{ playerID: PlayerB, where: "hand" }}
+          ></CardStackView>
+          <CardStackView
+            cardPosition={{ playerID: PlayerB, where: "ground" }}
+          ></CardStackView>
+          <CardStackView
+            cardPosition={{ playerID: PlayerB, where: "G" }}
+          ></CardStackView>
         </div>
       </>
     );
-  }, [renderCards, ctx.playerID]);
+  }, [appContext.viewModel.clientID]);
   return (
     <div>
       {renderControlPanel}

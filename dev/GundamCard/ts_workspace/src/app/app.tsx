@@ -6,7 +6,7 @@ import { AppContextProvider } from "./context";
 import { View } from "./view";
 const App = (props: any) => {
   useEffect(() => {
-    start();
+    //start();
   });
   return (
     <AppContextProvider>
