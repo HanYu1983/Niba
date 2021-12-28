@@ -22,10 +22,6 @@ export const AppContextProvider = (props: PropsWithChildren<any>) => {
   }, []);
 
   useEffect(() => {
-    firebase.sync(viewModel.model);
-  }, [viewModel.model]);
-
-  useEffect(() => {
     return firebase.addListener((err, data) => {
       if (err) {
         console.error(err);

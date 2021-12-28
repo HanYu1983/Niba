@@ -39,17 +39,15 @@ export const OnViewModel = OnEvent.pipe(
           cardPositionID({ playerID: types.PlayerB, where: "hand" }),
           ["179030_11E_U_BK187N_black", "179030_11E_U_BK187N_black"]
         );
-        let value: types.Context = {
+        let newModel: types.Context = {
           ...types.defaultContext,
           gameState: {
             ...types.defaultContext.gameState,
             table: table,
           },
         };
-        return {
-          ...viewModel,
-          model: value,
-        };
+        firebase.sync(newModel);
+        return viewModel;
       }
       case "OnClickChangeClient": {
         const nextClient =
