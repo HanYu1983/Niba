@@ -8,9 +8,6 @@ const CARD_SIZE = 100;
 
 export const CardStackView = (props: { cardPosition: CardPosition }) => {
   const appContext = useContext(AppContext);
-  if (appContext == null) {
-    return <div>AppContext not found</div>;
-  }
   const cards = useMemo(() => {
     return (
       appContext.viewModel.model.gameState.table.cardStack[

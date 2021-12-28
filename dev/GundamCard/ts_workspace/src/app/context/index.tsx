@@ -4,11 +4,13 @@ import * as firebase from "../../tool/firebase";
 import { DEFAULT_VIEW_MODEL, OnViewModel, ViewModel } from "./OnViewModel";
 import { OnEvent } from "../../tool/eventCenter";
 
-export type AppContext = {
+export type AppContextType = {
   viewModel: ViewModel;
 };
 
-export const AppContext = createContext<AppContext | null>(null);
+export const AppContext = createContext<AppContextType>({
+  viewModel: DEFAULT_VIEW_MODEL,
+});
 
 export const AppContextProvider = (props: PropsWithChildren<any>) => {
   const [viewModel, setViewModel] = useState<ViewModel>(DEFAULT_VIEW_MODEL);

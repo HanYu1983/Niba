@@ -13,9 +13,6 @@ import { CardStackView } from "./CardStackView";
 
 export function View() {
   const appContext = useContext(AppContext);
-  if (appContext == null) {
-    return <div>AppContext not found</div>;
-  }
   const onClickTest = useCallback(() => {}, []);
   const onClickNewGame = useCallback(() => {
     OnEvent.next({ id: "OnClickNewGame" });
