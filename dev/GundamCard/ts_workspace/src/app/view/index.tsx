@@ -8,10 +8,22 @@ import React, {
 } from "react";
 import { AppContext } from "../context";
 import { PlayerA, PlayerB } from "../../tool/types";
-import { OnEvent } from "../../tool/eventCenter";
+import { OnEvent, OnError } from "../../tool/eventCenter";
 import { CardStackView } from "./CardStackView";
+import { ActionListView } from "./ActionListView";
+import { DebugView } from "./DebugView";
+import { PaymentTableView } from "./PaymentTableView";
 
 export function View() {
+  useEffect(() => {
+    const subscriber = OnError.subscribe((e) => {
+      alert(e);
+    });
+    return () => {
+      subscriber.unsubscribe();
+    };
+  }, []);
+
   const appContext = useContext(AppContext);
   const onClickTest = useCallback(() => {}, []);
   const onClickNewGame = useCallback(() => {
@@ -75,8 +87,11 @@ export function View() {
   }, [appContext.viewModel.clientID]);
   return (
     <div>
+      <ActionListView></ActionListView>
+      <PaymentTableView></PaymentTableView>
       {renderControlPanel}
       {renderGame}
+      <DebugView></DebugView>
     </div>
   );
 }

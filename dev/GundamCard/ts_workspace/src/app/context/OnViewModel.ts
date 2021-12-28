@@ -1,9 +1,10 @@
 import * as rxjs from "rxjs";
 import { cardPositionID } from "../../model/alg/tool";
-import { OnEvent } from "../../tool/eventCenter";
+import { OnEvent, OnError } from "../../tool/eventCenter";
 import { createCard } from "../../tool/table";
 import * as types from "../../tool/types";
 import * as firebase from "../../tool/firebase";
+import { applyAction } from "../../model/alg/applyAction";
 
 export type Selection = { [key: string]: boolean };
 
@@ -74,11 +75,27 @@ export const OnViewModel = OnEvent.pipe(
         const key = cardPositionID(evt.where);
         return {
           ...viewModel,
-          cardSelection: {
-            ...viewModel.cardSelection,
+          cardPositionSelection: {
+            ...viewModel.cardPositionSelection,
             [key]: !!!viewModel.cardPositionSelection[key],
           },
         };
+      }
+      case "OnClickActionConfirm": {
+        try {
+          const newModel = applyAction(
+            viewModel.model,
+            viewModel.clientID,
+            evt.action
+          );
+          return {
+            ...viewModel,
+            model: newModel,
+          };
+        } catch (e: any) {
+          OnError.next(e);
+        }
+        return viewModel;
       }
       default:
         console.log(`unknown evt ${evt}`);

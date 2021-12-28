@@ -60,6 +60,10 @@ export function cardPositionID(position: CardPosition) {
   return JSON.stringify(position);
 }
 
+export function cardPosition(positionID: string): CardPosition {
+  return JSON.parse(positionID);
+}
+
 export function opponent(ctx: Context, playerID: string): string {
   return playerID == PlayerA ? PlayerB : PlayerA;
 }

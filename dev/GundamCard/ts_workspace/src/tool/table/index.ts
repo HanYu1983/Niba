@@ -1,3 +1,5 @@
+import { CardPosition } from "../types";
+
 export type Card = {
   id: string;
   protoID: string;
@@ -82,6 +84,24 @@ export function mapCard(table: Table, f: (card: Card) => Card) {
     ...table,
     cardStack: nextStack,
   };
+}
+
+export function getCardPosition(
+  table: Table,
+  cardID: string
+): [Card | null, string | null] {
+  let pos: string | null = null;
+  let card: Card | null = null;
+  Object.entries(table.cardStack).forEach(([_pos, cards]) => {
+    const find = cards?.filter((card) => card.id == cardID) || [];
+    if (find.length == 0) {
+      return;
+    }
+    pos = _pos;
+    card = find[0];
+    return;
+  });
+  return [card, pos];
 }
 
 export function getCard(table: Table, cardID: string): Card | null {
