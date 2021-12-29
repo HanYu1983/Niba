@@ -13,7 +13,7 @@ import { CardStackView } from "./CardStackView";
 import { ActionListView } from "./ActionListView";
 import { DebugView } from "./DebugView";
 import { PaymentTableView } from "./PaymentTableView";
-
+import { EffectStackView } from "./EffectStackView";
 export function View() {
   useEffect(() => {
     const subscriber = OnError.subscribe((e) => {
@@ -89,6 +89,7 @@ export function View() {
     <div>
       <ActionListView></ActionListView>
       <PaymentTableView></PaymentTableView>
+      <EffectStackView></EffectStackView>
       {renderControlPanel}
       {renderGame}
       <DebugView></DebugView>

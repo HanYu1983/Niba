@@ -1,3 +1,4 @@
+import { log } from "../../tool/logger";
 import { mapCard, moveCard } from "../../tool/table";
 import {
   Context,
@@ -30,6 +31,7 @@ export function applyAction_ConfirmPhaseAction(
   });
   // 如果還有玩家有事要做，就回傳
   if (isEveryConfirmPhase(ctx, [PlayerA, PlayerB]) == false) {
+    log("applyAction_ConfirmPhaseAction", "如果還有玩家有事要做，就回傳");
     return ctx;
   }
   // 所有玩家都宣告沒事

@@ -9,17 +9,13 @@ export const ActionListView = (props: {}) => {
   const appContext = useContext(AppContext);
   const actionList = useMemo(() => {
     const list: types.Action[] = [];
-    if (appContext.viewModel.model.gameState.paymentTable.action) {
-      list.push({
-        id: "CancelPaymentAction",
-        playerID: appContext.viewModel.clientID,
-      });
-      list.push({
-        id: "ApplyPaymentAction",
-        playerID: appContext.viewModel.clientID,
-      });
-      return list;
-    }
+
+    const hasPayment =
+      appContext.viewModel.model.gameState.paymentTable.action != null;
+
+    const hasEffect =
+      appContext.viewModel.model.gameState.effectStack.effects.length > 0;
+
     const selectedCardIds = Object.entries(appContext.viewModel.cardSelection)
       .filter(([k, v]) => {
         return v;
@@ -27,6 +23,8 @@ export const ActionListView = (props: {}) => {
       .map(([k, v]) => {
         return k;
       });
+    const hasSelectedCard = selectedCardIds.length > 0;
+
     const selectedCardPositionIds = Object.entries(
       appContext.viewModel.cardPositionSelection
     )
@@ -36,7 +34,50 @@ export const ActionListView = (props: {}) => {
       .map(([k, v]) => {
         return k;
       });
-    if (selectedCardIds.length && selectedCardPositionIds.length) {
+    const hasSelectedCardPosition = selectedCardPositionIds.length > 0;
+    const isActivePlayer =
+      appContext.viewModel.model.gameState.activePlayerID ==
+      appContext.viewModel.clientID;
+
+    const enableCancelPaymentAction = hasPayment;
+    const enableApplyPaymentAction = hasPayment;
+    const enablePlayCardAction =
+      hasPayment == false && hasSelectedCard && hasSelectedCardPosition;
+    const enableConfirmPhaseAction = hasEffect;
+    const enableCancelConfirmPhaseAction = hasEffect;
+    const enableSystemHandleEffectAction = hasEffect && isActivePlayer;
+
+    if (enableCancelPaymentAction) {
+      list.push({
+        id: "CancelPaymentAction",
+        playerID: appContext.viewModel.clientID,
+      });
+    }
+    if (enableApplyPaymentAction) {
+      list.push({
+        id: "ApplyPaymentAction",
+        playerID: appContext.viewModel.clientID,
+      });
+    }
+    if (enableConfirmPhaseAction) {
+      list.push({
+        id: "ConfirmPhaseAction",
+        playerID: appContext.viewModel.clientID,
+      });
+    }
+    if (enableCancelConfirmPhaseAction) {
+      list.push({
+        id: "CancelConfirmPhaseAction",
+        playerID: appContext.viewModel.clientID,
+      });
+    }
+    if (enableSystemHandleEffectAction) {
+      list.push({
+        id: "SystemHandleEffectAction",
+        playerID: appContext.viewModel.clientID,
+      });
+    }
+    if (enablePlayCardAction) {
       const toPos: types.CardPosition = cardPosition(
         selectedCardPositionIds[0]
       );
@@ -65,6 +106,7 @@ export const ActionListView = (props: {}) => {
     appContext.viewModel.clientID,
     appContext.viewModel.model.gameState.paymentTable,
     appContext.viewModel.model.gameState.table,
+    appContext.viewModel.model.gameState.activePlayerID,
   ]);
   const render = useMemo(() => {
     return (

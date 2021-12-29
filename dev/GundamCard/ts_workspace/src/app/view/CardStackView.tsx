@@ -31,7 +31,7 @@ export const CardStackView = (props: { cardPosition: CardPosition }) => {
             : null),
         }}
       >
-        <div style={{ width: 100 }}>
+        <div>
           <button
             onClick={() => {
               OnEvent.next({
@@ -40,7 +40,7 @@ export const CardStackView = (props: { cardPosition: CardPosition }) => {
               });
             }}
           >
-            select
+            select {_cardPositionID}
           </button>
         </div>
         {cards.map((card) => {

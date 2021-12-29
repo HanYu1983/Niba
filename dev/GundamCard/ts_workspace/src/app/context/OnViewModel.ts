@@ -45,6 +45,7 @@ export const OnViewModel = OnEvent.pipe(
           gameState: {
             ...types.defaultContext.gameState,
             table: table,
+            activePlayerID: types.PlayerA,
           },
         };
         firebase.sync(newModel);
@@ -88,10 +89,7 @@ export const OnViewModel = OnEvent.pipe(
             viewModel.clientID,
             evt.action
           );
-          return {
-            ...viewModel,
-            model: newModel,
-          };
+          firebase.sync(newModel);
         } catch (e: any) {
           OnError.next(e);
         }
