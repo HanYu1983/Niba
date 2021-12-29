@@ -68,8 +68,15 @@ module.exports.askPlayAbilityPayment = (
 module.exports.askPlayPayment = (ctx: Context, card: Card): Payment[] => {
   return [
     {
-      id: "Target1Payment",
+      id: "ColorPayment",
+      color: "白",
       cardID: null,
+      playerID: card.ownerID || "",
+      tipCardID: [],
+    },
+    {
+      id: "GCountPayment",
+      gCount: 4,
       playerID: card.ownerID || "",
       tipCardID: [],
     },
