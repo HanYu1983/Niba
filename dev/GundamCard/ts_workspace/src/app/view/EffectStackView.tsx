@@ -75,6 +75,9 @@ export const EffectStackView = (props: {}) => {
         })}
       </div>
     );
-  }, [appContext.viewModel.model.gameState.effectStack.effects]);
+  }, [
+    appContext.viewModel.model.gameState.playerState,
+    appContext.viewModel.model.gameState.effectStack.effects,
+  ]);
   return <>{render}</>;
 };
