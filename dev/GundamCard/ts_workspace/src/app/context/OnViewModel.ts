@@ -32,7 +32,11 @@ export const OnViewModel = OnEvent.pipe(
           table,
           types.PlayerA,
           cardPositionID({ playerID: types.PlayerA, where: "hand" }),
-          ["179030_11E_U_BK187N_black", "179030_11E_U_BK187N_black"]
+          [
+            "179030_11E_U_BK187N_black",
+            "179030_11E_U_BK187N_black",
+            "179001_01A_CH_WT007R_white",
+          ]
         );
         table = createCard(
           table,

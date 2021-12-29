@@ -1,4 +1,6 @@
-import { Context, PlayCardAbilityAction } from "../../tool/types";
+import { log } from "../../tool/logger";
+import { Context, PlayCardAbilityAction, Effect } from "../../tool/types";
+import { queryPlayCardAbilityPayment } from "./queryPlayCardAbilityPayment";
 
 export function applyAction_PlayCardAbilityAction(
   ctx: Context,
@@ -8,14 +10,40 @@ export function applyAction_PlayCardAbilityAction(
   if (ctx.gameState.paymentTable.action != null) {
     throw new Error(`${ctx.gameState.paymentTable.action.playerID}還在支付中`);
   }
-  // TODO: change to payment mode
+  if (action.cardID == null) {
+    throw new Error("你必須指定cardID");
+  }
+  const payments = queryPlayCardAbilityPayment(
+    ctx,
+    playerID,
+    action.cardID,
+    action.abilityID
+  );
+  // 沒有cost就直接放入堆疊
+  if (payments.length == 0) {
+    log("applyAction_PlayCardAbilityAction", "沒有cost就直接放入堆疊");
+    const effect: Effect = {
+      id: "ActionEffect",
+      action: action,
+      currents: [],
+    };
+    return {
+      ...ctx,
+      gameState: {
+        ...ctx.gameState,
+        effectStack: {
+          effects: [effect, ...ctx.gameState.effectStack.effects],
+        },
+      },
+    };
+  }
   ctx = {
     ...ctx,
     gameState: {
       ...ctx.gameState,
       paymentTable: {
         action: action,
-        requires: [],
+        requires: payments,
         currents: [],
         snapshot: ctx,
         isLock: false,

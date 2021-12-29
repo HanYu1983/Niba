@@ -30,7 +30,9 @@ export function View() {
   }, []);
   const renderPlayerView = useMemo(() => {
     return [PlayerA, PlayerB].map((playerID) => {
-      return <PlayerStateView playerID={playerID}></PlayerStateView>;
+      return (
+        <PlayerStateView key={playerID} playerID={playerID}></PlayerStateView>
+      );
     });
   }, []);
   return (

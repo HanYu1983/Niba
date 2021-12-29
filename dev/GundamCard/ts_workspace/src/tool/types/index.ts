@@ -3,7 +3,7 @@ import { CardStack, Table } from "../table";
 export const PlayerA = "PlayerA";
 export const PlayerB = "PlayerB";
 
-export type Color = "緑" | "茶" | "青" | "白" | "紫" | "黒" | "赤";
+export type Color = "緑" | "茶" | "青" | "白" | "紫" | "黒" | "赤" | "任意";
 
 export type CardType =
   | "GRAPHIC"
@@ -183,16 +183,26 @@ export type EffectStack = {
   effects: Effect[];
 };
 
+export type CardGroupTypeGroup = { id: "group" };
+// 設置卡
+// OP, 角色卡等
+export type CardGroupTypeMember = { id: "member"; link: string };
+export type CardGroupType = CardGroupTypeGroup | CardGroupTypeMember;
+
 export type CardState = {
   playerID: string;
   live: number;
   destroy: boolean;
+  groupType: CardGroupType;
+  memory: any;
 };
 
 export const defaultCardState: CardState = {
   playerID: "pending",
   live: 0,
   destroy: false,
+  groupType: { id: "group" },
+  memory: null,
 };
 
 export type PhaseMain =

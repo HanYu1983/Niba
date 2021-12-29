@@ -29,7 +29,12 @@ export const EffectStackView = (props: {}) => {
           ? "效果存在中，雙方呼叫ConfirmPhaseAction確定沒有要切入"
           : null}
         {[PlayerA, PlayerB].map((playerID) => {
-          return <PlayerStateView playerID={playerID}></PlayerStateView>;
+          return (
+            <PlayerStateView
+              key={playerID}
+              playerID={playerID}
+            ></PlayerStateView>
+          );
         })}
         {effects.map((effect, i) => {
           const elem = (() => {

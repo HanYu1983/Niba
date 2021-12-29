@@ -40,19 +40,22 @@ const askPlayPayment = (ctx: Context, card: Card): Payment[] => {
     {
       id: "Target1Payment",
       cardID: null,
-      playerID: card.ownerID,
-    } as Payment,
+      playerID: card.ownerID || "",
+      tipCardID: [],
+    },
     {
       id: "ColorPayment",
       color: "黒",
       cardID: null,
-      playerID: card.ownerID,
-    } as Payment,
+      playerID: card.ownerID || "",
+      tipCardID: [],
+    },
     {
       id: "GCountPayment",
       gCount: 1,
-      playerID: card.ownerID,
-    } as Payment,
+      playerID: card.ownerID || "",
+      tipCardID: [],
+    },
   ];
 };
 

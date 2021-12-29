@@ -44,6 +44,20 @@ export function askCardPlayPayment(ctx: Context, card: Card): Payment[] {
   return script.askPlayPayment(ctx, card);
 }
 
+export function askCardPlayAbilityPayment(
+  ctx: Context,
+  card: Card,
+  abilityID: string
+): Payment[] {
+  const rowData = askRowData(card.protoID);
+  const script = askCardScript(rowData.id);
+  if (script.askPlayAbilityPayment == null) {
+    console.warn(`askPlayAbilityPayment not found:${rowData.id}.ts`);
+    return [];
+  }
+  return script.askPlayAbilityPayment(ctx, card, abilityID);
+}
+
 export function askCardState(ctx: Context, cardID: string): CardState | null {
   return ctx.gameState.cardState[cardID] || null;
 }

@@ -27,7 +27,7 @@ export const PlayerStateView = (props: { playerID: string }) => {
           </tr>
         </thead>
         <tbody>
-          <tr key={props.playerID}>
+          <tr>
             <td>{props.playerID}</td>
             <td>{player?.playGCount || 0}</td>
             <td>{player?.turn || 0}</td>

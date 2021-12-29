@@ -18,6 +18,11 @@ export type Script = {
   ) => Context;
   askAction?: (ctx: Context, card: Card) => Action[];
   askPlayPayment?: (ctx: Context, card: Card) => Payment[];
+  askPlayAbilityPayment?: (
+    ctx: Context,
+    card: Card,
+    abilityID: string
+  ) => Payment[];
   askPower?: (
     ctx: Context,
     card: Card
