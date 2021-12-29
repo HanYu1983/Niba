@@ -28,6 +28,7 @@ export const CardView = (props: { cardID: string }) => {
           OnEvent.next({ id: "OnClickCardEvent", card: card });
         }}
       >
+        <div>{card.id}</div>
         <img src={askImgSrc(card.protoID)} style={{ height: CARD_SIZE }}></img>
       </div>
     );

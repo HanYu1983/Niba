@@ -49,7 +49,7 @@ export const OnViewModel = OnEvent.pipe(
           },
         };
         firebase.sync(newModel);
-        return viewModel;
+        return DEFAULT_VIEW_MODEL;
       }
       case "OnClickChangeClient": {
         const nextClient =
@@ -57,6 +57,8 @@ export const OnViewModel = OnEvent.pipe(
         return {
           ...viewModel,
           clientID: nextClient,
+          cardSelection: {},
+          cardPositionSelection: {},
         };
       }
       case "OnModelFromFirebase":

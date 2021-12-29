@@ -38,6 +38,15 @@ export const ActionListView = (props: {}) => {
     const isActivePlayer =
       appContext.viewModel.model.gameState.activePlayerID ==
       appContext.viewModel.clientID;
+    const lastEffect = hasEffect
+      ? appContext.viewModel.model.gameState.effectStack.effects[
+          appContext.viewModel.model.gameState.effectStack.effects.length - 1
+        ]
+      : null;
+    const isLastEffectOwner =
+      lastEffect &&
+      lastEffect.id == "ActionEffect" &&
+      lastEffect.action.playerID == appContext.viewModel.clientID;
 
     const enableCancelPaymentAction = hasPayment;
     const enableApplyPaymentAction = hasPayment;
