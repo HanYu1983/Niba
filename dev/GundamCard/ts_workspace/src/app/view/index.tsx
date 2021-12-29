@@ -16,6 +16,7 @@ import { PaymentTableView } from "./PaymentTableView";
 import { EffectStackView } from "./EffectStackView";
 import { ControlView } from "./ControlView";
 import { TableView } from "./TableView";
+import { PlayerStateView } from "./PlayerStateView";
 
 export function View() {
   // error handle
@@ -27,10 +28,16 @@ export function View() {
       subscriber.unsubscribe();
     };
   }, []);
+  const renderPlayerView = useMemo(() => {
+    return [PlayerA, PlayerB].map((playerID) => {
+      return <PlayerStateView playerID={playerID}></PlayerStateView>;
+    });
+  }, []);
   return (
     <div>
       <ActionListView></ActionListView>
       <PaymentTableView></PaymentTableView>
+      {renderPlayerView}
       <EffectStackView></EffectStackView>
       <ControlView></ControlView>
       <TableView></TableView>

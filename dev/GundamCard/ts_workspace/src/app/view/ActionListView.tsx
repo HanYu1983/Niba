@@ -52,9 +52,11 @@ export const ActionListView = (props: {}) => {
     const enableApplyPaymentAction = hasPayment;
     const enablePlayCardAction =
       hasPayment == false && hasSelectedCard && hasSelectedCardPosition;
-    const enableConfirmPhaseAction = hasEffect;
+    const enableConfirmPhaseAction = true;
     const enableCancelConfirmPhaseAction = hasEffect;
     const enableSystemHandleEffectAction = hasEffect && isActivePlayer;
+    const enableSystemNextStepAction = true;
+    const enableSystemHandlePhaseEffectAction = true;
 
     if (enableCancelPaymentAction) {
       list.push({
@@ -83,6 +85,18 @@ export const ActionListView = (props: {}) => {
     if (enableSystemHandleEffectAction) {
       list.push({
         id: "SystemHandleEffectAction",
+        playerID: appContext.viewModel.clientID,
+      });
+    }
+    if (enableSystemNextStepAction) {
+      list.push({
+        id: "SystemNextStepAction",
+        playerID: appContext.viewModel.clientID,
+      });
+    }
+    if (enableSystemHandlePhaseEffectAction) {
+      list.push({
+        id: "SystemHandlePhaseEffectAction",
         playerID: appContext.viewModel.clientID,
       });
     }

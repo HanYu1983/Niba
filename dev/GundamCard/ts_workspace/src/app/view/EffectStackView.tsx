@@ -1,9 +1,7 @@
 import React, { useContext, useMemo, HTMLAttributes } from "react";
 import { AppContext } from "../context";
-import { cardPositionID } from "../../model/alg/tool";
 import { CardPosition, PlayerA, PlayerB, PlayerState } from "../../tool/types";
-import { CardView } from "./CardView";
-import { OnEvent } from "../../tool/eventCenter";
+import { PlayerStateView } from "./PlayerStateView";
 
 export const EffectStackView = (props: {}) => {
   const appContext = useContext(AppContext);
@@ -30,28 +28,9 @@ export const EffectStackView = (props: {}) => {
         {isAllPlayerConfirm == false
           ? "效果存在中，雙方呼叫ConfirmPhaseAction確定沒有要切入"
           : null}
-        <table>
-          <thead>
-            <tr>
-              <td>clientID</td>
-              <td>playGCount</td>
-              <td>turn</td>
-              <td>confirmPhase</td>
-            </tr>
-          </thead>
-          <tbody>
-            {players.map(([clientID, player]) => {
-              return (
-                <tr key={clientID}>
-                  <td>{clientID}</td>
-                  <td>{player?.playGCount || 0}</td>
-                  <td>{player?.turn || 0}</td>
-                  <td>{player?.confirmPhase ? "true" : "false"}</td>
-                </tr>
-              );
-            })}
-          </tbody>
-        </table>
+        {[PlayerA, PlayerB].map((playerID) => {
+          return <PlayerStateView playerID={playerID}></PlayerStateView>;
+        })}
         {effects.map((effect, i) => {
           const elem = (() => {
             switch (effect.id) {
