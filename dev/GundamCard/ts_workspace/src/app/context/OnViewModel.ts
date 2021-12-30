@@ -1,6 +1,6 @@
 import * as rxjs from "rxjs";
 import { cardPositionID } from "../model/alg/tool";
-import { OnEvent, OnError } from "../eventCenter";
+import { OnEvent, OnError } from "../tool/eventCenter";
 import { createCard } from "../../tool/table";
 import * as types from "../types";
 import * as firebase from "../../tool/firebase";

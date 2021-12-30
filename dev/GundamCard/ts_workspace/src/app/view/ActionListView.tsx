@@ -1,7 +1,7 @@
 import React, { useContext, useMemo } from "react";
 import { AppContext } from "../context";
 import * as types from "../types";
-import { OnEvent } from "../eventCenter";
+import { OnEvent } from "../tool/eventCenter";
 import { cardPosition } from "../model/alg/tool";
 import { getCardPosition } from "../../tool/table";
 

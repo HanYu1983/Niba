@@ -7,7 +7,7 @@ import React, {
   useEffect,
 } from "react";
 import { AppContext } from "../context";
-import { OnEvent, OnError } from "../eventCenter";
+import { OnEvent, OnError } from "../tool/eventCenter";
 
 export const ControlView = () => {
   const appContext = useContext(AppContext);

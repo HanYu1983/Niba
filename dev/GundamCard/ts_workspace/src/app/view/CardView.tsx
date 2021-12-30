@@ -2,7 +2,7 @@ import React, { useContext, useMemo } from "react";
 import { AppContext } from "../context";
 import { askImgSrc } from "../../tool/data";
 import { getCard } from "../../tool/table";
-import { OnEvent } from "../eventCenter";
+import { OnEvent } from "../tool/eventCenter";
 
 const CARD_SIZE = 100;
 

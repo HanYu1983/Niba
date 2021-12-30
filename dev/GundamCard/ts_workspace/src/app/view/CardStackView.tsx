@@ -3,7 +3,7 @@ import { AppContext } from "../context";
 import { cardPositionID } from "../model/alg/tool";
 import { CardPosition } from "../types";
 import { CardView } from "./CardView";
-import { OnEvent } from "../eventCenter";
+import { OnEvent } from "../tool/eventCenter";
 const CARD_SIZE = 100;
 
 export const CardStackView = (props: { cardPosition: CardPosition }) => {

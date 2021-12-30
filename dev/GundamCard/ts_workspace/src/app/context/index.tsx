@@ -2,7 +2,7 @@ import React, { useCallback, useEffect } from "react";
 import Resct, { useState, createContext, PropsWithChildren } from "react";
 import * as firebase from "../../tool/firebase";
 import { DEFAULT_VIEW_MODEL, OnViewModel, ViewModel } from "./OnViewModel";
-import { OnEvent } from "../eventCenter";
+import { OnEvent } from "../tool/eventCenter";
 
 export type AppContextType = {
   viewModel: ViewModel;

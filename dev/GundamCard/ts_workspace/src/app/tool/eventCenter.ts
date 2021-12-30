@@ -1,6 +1,6 @@
 import * as rxjs from "rxjs";
-import { Card, CardStack } from "../tool/table";
-import { CardPosition, Context, Action } from "./types";
+import { Card, CardStack } from "../../tool/table";
+import { CardPosition, Context, Action } from "../types";
 
 export type OnClickCardEvent = {
   id: "OnClickCardEvent";
