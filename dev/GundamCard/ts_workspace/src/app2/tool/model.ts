@@ -8,7 +8,56 @@ export type Model = {
 
 type RequireCardID = (string | null)[];
 
-type Condition = any;
+type ConditionCardPosition = {
+  id: "ConditionCardPosition";
+  position: any;
+  topCount: number | null;
+};
+
+type ConditionCardColor = {
+  id: "ConditionCardColor";
+  include: any[];
+};
+
+type ConditionCardType = {
+  id: "ConditionCardType";
+  include: any[];
+};
+
+type ConditionOr = {
+  id: "ConditionOr";
+  or: Condition[];
+};
+
+type ConditionAnd = {
+  id: "ConditionAnd";
+  and: Condition[];
+};
+
+type ConditionNot = {
+  id: "ConditionNot";
+  not: Condition;
+};
+
+type ConditionIsSetCard = {
+  id: "ConditionIsSetCard";
+  is: boolean;
+};
+
+type ConditionIsOpponentCard = {
+  id: "ConditionIsOpponentCard";
+  is: boolean;
+};
+
+type Condition =
+  | ConditionCardPosition
+  | ConditionCardColor
+  | ConditionCardType
+  | ConditionIsSetCard
+  | ConditionIsOpponentCard
+  | ConditionNot
+  | ConditionOr
+  | ConditionAnd;
 
 type RequireBase = {
   playerID: string;
@@ -145,7 +194,11 @@ type BlockPayload = {
                   {
                     id: "RequireTarget",
                     playerID: "",
-                    condition: ["自軍ジャンクヤードにあるユニット１枚を"],
+                    condition: {
+                      id: "ConditionCardPosition",
+                      position: { playerID: "", position: "ジャンクヤード" },
+                      topCount: null,
+                    },
                     targetID: "target1",
                     requireCardID: [null],
                   },
@@ -192,9 +245,20 @@ type BlockPayload = {
                   {
                     id: "RequireTarget",
                     playerID: "",
-                    condition: [
-                      "自軍本国のカードを全て見て、その中にあるグラフィック１枚を",
-                    ],
+                    condition: {
+                      id: "ConditionAnd",
+                      and: [
+                        {
+                          id: "ConditionCardPosition",
+                          position: { playerID: "", position: "本国" },
+                          topCount: null,
+                        },
+                        {
+                          id: "ConditionCardType",
+                          include: ["グラフィック"],
+                        },
+                      ],
+                    },
                     targetID: "target1",
                     requireCardID: [null],
                   },
@@ -220,7 +284,19 @@ type BlockPayload = {
             {
               id: "RequireTarget",
               playerID: "",
-              condition: ["セットカード以外の敵軍オペ１枚を破壊する"],
+              condition: {
+                id: "ConditionAnd",
+                and: [
+                  {
+                    id: "ConditionIsSetCard",
+                    is: false,
+                  },
+                  {
+                    id: "ConditionIsOpponentCard",
+                    is: true,
+                  },
+                ],
+              },
               targetID: "target1",
               requireCardID: [null],
             },
@@ -274,7 +350,7 @@ type BlockPayload = {
             {
               id: "RequireTarget",
               playerID: "",
-              condition: ["自軍ユニット１枚"],
+              condition: null, // ["自軍ユニット１枚"],
               targetID: "target1",
               requireCardID: [null],
             },
