@@ -1,6 +1,6 @@
 import React, { useContext, useMemo, HTMLAttributes } from "react";
 import { AppContext } from "../context";
-import { CardPosition, PlayerA, PlayerB, PlayerState } from "../../tool/types";
+import { CardPosition, PlayerA, PlayerB, PlayerState } from "../types";
 import { PlayerStateView } from "./PlayerStateView";
 
 export const EffectStackView = (props: {}) => {

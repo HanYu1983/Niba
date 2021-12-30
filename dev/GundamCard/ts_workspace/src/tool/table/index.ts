@@ -1,4 +1,4 @@
-import { CardPosition } from "../types";
+import { CardPosition } from "../../app/types";
 
 export type Card = {
   id: string;

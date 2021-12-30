@@ -7,8 +7,8 @@ import React, {
   useEffect,
 } from "react";
 import { AppContext } from "../context";
-import { PlayerA, PlayerB } from "../../tool/types";
-import { OnEvent, OnError } from "../../tool/eventCenter";
+import { PlayerA, PlayerB } from "../types";
+import { OnEvent, OnError } from "../eventCenter";
 import { CardStackView } from "./CardStackView";
 import { ActionListView } from "./ActionListView";
 import { DebugView } from "./DebugView";

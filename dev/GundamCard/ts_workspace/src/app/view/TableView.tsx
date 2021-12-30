@@ -7,7 +7,7 @@ import React, {
   useEffect,
 } from "react";
 import { AppContext } from "../context";
-import { PlayerA, PlayerB } from "../../tool/types";
+import { PlayerA, PlayerB } from "../types";
 import { CardStackView } from "./CardStackView";
 
 export const TableView = () => {
