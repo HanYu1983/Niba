@@ -43,7 +43,27 @@ type RequireMoveCard = {
   requireCardID: RequireCardID;
 };
 
-type Require = RequireTap | RequireDrop | RequireConsumeG | RequireTarget;
+type RequireYesNo = {
+  id: "RequireYesNo";
+  answer: boolean | null;
+} & RequireBase;
+
+type RequireOr = {
+  or: Require[];
+};
+
+type RequireAnd = {
+  and: Require[];
+};
+
+type Require =
+  | RequireTap
+  | RequireDrop
+  | RequireConsumeG
+  | RequireTarget
+  | RequireYesNo
+  | RequireOr
+  | RequireAnd;
 
 type FeedbackGenG = {
   id: "FeedbackGenG";
@@ -215,7 +235,7 @@ type BlockPayload = {
 }
 {
   // 『起動』：場、または手札から、敵軍ジャンクヤードにユニットが移動した場合、セットカードがセットされていない、G以外の敵軍カード１枚を破壊する。
-  const useAbility: BlockPayload = {
+  const ability: BlockPayload = {
     require: [],
     feedback: [
       {
@@ -240,4 +260,52 @@ type BlockPayload = {
       },
     ],
   };
+}
+
+{
+  // 『起動』：このカードが場に出た場合、自軍ユニット１枚の上に±０／±０／－１コイン２個を乗せる事ができる。その場合、カード１枚を引く。
+  const ability: BlockPayload = {
+    require: [],
+    feedback: [
+      {
+        id: "FeedbackAddBlock",
+        block: {
+          require: [
+            {
+              id: "RequireTarget",
+              playerID: "",
+              condition: ["自軍ユニット１枚"],
+              targetID: "target1",
+              requireCardID: [null],
+            },
+          ],
+          feedback: [
+            {
+              id: "FeedbackAddBlock",
+              block: {
+                require: [
+                  {
+                    id: "RequireYesNo",
+                    playerID: "",
+                    condition: null,
+                    answer: null,
+                  },
+                ],
+                feedback: [
+                  // add token
+                  // draw 1 card
+                ],
+              },
+            },
+          ],
+        },
+      },
+    ],
+  };
+}
+
+{
+  // （常時）〔R〕：配備エリアにいる、「特徴：T3部隊」を持つ自軍ユニット１枚を持ち主のハンガーに移す。
+  // 『起動』：このカードが場に出た場合、敵軍ユニット１枚は、ターン終了時まで－X／－X／－Xを得る。Xの値は、「特徴：T3部隊」を持つ自軍ユニットの枚数＋１とする。（注：このカードも枚数に含める）
+  // 『起動』：このカードが場に出た場合、自軍本国の上のカード１～４枚を見て、その中にある、「特徴：ヘイズル系」を持つユニット１枚を、自軍ハンガーに移す事ができる。
 }
