@@ -295,6 +295,10 @@ type BlockPayload = {
                     id: "ConditionIsOpponentCard",
                     is: true,
                   },
+                  {
+                    id: "ConditionCardType",
+                    include: ["オペ"],
+                  },
                 ],
               },
               targetID: "target1",
