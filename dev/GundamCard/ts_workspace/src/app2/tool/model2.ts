@@ -2,7 +2,7 @@ import { Card } from "../../tool/table";
 
 type PlayerID = string;
 
-type CardStackName = "ジャンクヤード" | "ハンガー" | "本国";
+type CardStackName = "ジャンクヤード" | "ハンガー" | "本国" | "配備エリア";
 
 type RelatedCardPositionKeyword = "自軍" | "持ち主";
 
@@ -231,6 +231,53 @@ type CardText = {
   type: CardTextType;
   block: BlockPayload;
 };
+
+{
+  // play card
+  const ability: CardText = {
+    text: "play card",
+    type: "ability",
+    block: {
+      require: {
+        id: "RequireAnd",
+        and: [
+          {
+            id: "RequireTarget",
+            targets: [],
+            condition: null,
+            action: {
+              id: "ActionConsumeG",
+              color: "",
+              count: 2,
+            },
+          },
+          {
+            id: "RequireTarget",
+            targets: [],
+            condition: null,
+            action: {
+              id: "ActionConsumeG", // TODO total G
+              color: "",
+              count: 2,
+            },
+          },
+        ],
+      },
+      feedback: [
+        {
+          id: "FeedbackAction",
+          action: {
+            id: "ActionMoveCardToPosition",
+            toPosition: {
+              id: "AbsoluteCardPosition",
+              value: ["", "ハンガー"], // TODO
+            },
+          },
+        },
+      ],
+    },
+  };
+}
 
 {
   // 『常駐』：このカードは、＋X／＋X／＋Xを得る。Xの値は、自軍手札の枚数とする。
