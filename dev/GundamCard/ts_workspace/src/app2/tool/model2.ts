@@ -195,9 +195,7 @@ export type TokuSyuKouKa =
   | ["クイック"]
   | ["戦闘配備"]
   | ["ステイ"]
-  | ["1枚制限"]
-  | ["[]"]
-  | ["<>"];
+  | ["1枚制限"];
 
 type RelatedCardPositionKeyword = "自軍" | "持ち主";
 
@@ -218,7 +216,7 @@ type CardPosition = AbsoluteCardPosition | RelatedCardPosition;
 type ConditionCardPosition = {
   id: "ConditionCardPosition";
   position: CardPosition;
-  topCount: number | null;
+  topCount?: number;
 };
 
 type ConditionCardColor = {
@@ -347,6 +345,7 @@ type ActionMoveCardToPosition = {
 type ActionSetFlag = {
   id: "ActionSetFlag";
   flag: FlagKeyword;
+  value: boolean;
 };
 
 type ActionSetFace = {
@@ -363,18 +362,18 @@ type Action =
   | ActionSetFace
   | ActionSetFlag;
 
-type RequireTarget = {
-  id: "RequireTarget";
-  targets: (TargetType | null)[];
-  condition: Condition | null;
-  action: Action[];
-};
-
 type GameEventOnCardEnterStage = {
   id: "GameEventOnCardEnterStage";
   cardID: string;
   from: AbsoluteCardPosition;
   to: AbsoluteCardPosition;
+};
+
+type RequireTarget = {
+  id: "RequireTarget";
+  targets: (TargetType | null)[];
+  condition?: Condition;
+  action?: Action[];
 };
 
 type RequireEvent = {
@@ -440,8 +439,8 @@ type Feedback =
   | FeedbackAction;
 
 type BlockPayload = {
-  require: Require | null;
-  feedback: Feedback[];
+  require?: Require;
+  feedback?: Feedback[];
 };
 
 type CardText = {
@@ -465,11 +464,11 @@ const KouKaHaKai: CardText = {
           id: "TargetTypeMySelf",
         },
       ],
-      condition: null,
       action: [
         {
           id: "ActionSetFlag",
           flag: "破壊",
+          value: true,
         },
       ],
     },
@@ -491,7 +490,6 @@ const KouKaHaiKi: CardText = {
           id: "TargetTypeMySelf",
         },
       ],
-      condition: null,
       action: [
         {
           id: "ActionMoveCardToPosition",
@@ -508,11 +506,15 @@ const KouKaHaiKi: CardText = {
 
 export type FlagKeyword = "破壊" | "プレイされたカード" | "once";
 
-export function createCardPlayBlock(cardID: string): BlockPayload {
+export function createPlayUnitCardBlock(cardID: string): BlockPayload {
   return {
     require: {
       id: "RequireAnd",
       and: [
+        {
+          id: "RequireSiYouTiming",
+          siYouTiming: ["自軍", ["配備フェイズ", "フリータイミング"]],
+        },
         // プレイの宣告
         {
           id: "RequireTarget",
@@ -522,23 +524,14 @@ export function createCardPlayBlock(cardID: string): BlockPayload {
               cardID: cardID,
             },
           ],
-          condition: {
-            id: "ConditionAnd",
-            and: [
-              { id: "ConditionTargetType", target: "カード" },
-              {
-                id: "ConditionCardInCardPosition",
-                cardPosition: {
-                  id: "RelatedCardPosition",
-                  value: ["自軍", "手札"],
-                },
-              },
-            ],
-          },
           action: [
             {
               id: "ActionSetFace",
               faceDown: false,
+            },
+            {
+              id: "ActionSetTarget",
+              targetID: "playCard",
             },
           ],
         },
@@ -546,7 +539,6 @@ export function createCardPlayBlock(cardID: string): BlockPayload {
         {
           id: "RequireTarget",
           targets: [],
-          condition: null,
           action: [
             {
               id: "ActionConsumeG",
@@ -565,15 +557,42 @@ export function createCardPlayBlock(cardID: string): BlockPayload {
           {
             id: "ActionSetFlag",
             flag: "プレイされたカード",
+            value: true,
           },
         ],
+      },
+      {
+        // 場に出る効果
+        id: "FeedbackAddBlock",
+        block: {
+          feedback: [
+            {
+              id: "FeedbackTargetAction",
+              targetID: "playCard",
+              action: [
+                {
+                  id: "ActionMoveCardToPosition",
+                  toPosition: {
+                    id: "RelatedCardPosition",
+                    value: ["自軍", "配備エリア"],
+                  },
+                },
+                {
+                  id: "ActionSetFlag",
+                  flag: "プレイされたカード",
+                  value: false,
+                },
+              ],
+            },
+          ],
+        },
       },
     ],
   };
 }
 
-const XX: CardText = {
-  text: "カードのプレイ",
+const playCard: CardText = {
+  text: "カードのプレイ(ユニット)",
   category: {
     id: "使用型",
     timing: ["自軍", ["配備フェイズ", "フリータイミング"]],
@@ -618,7 +637,6 @@ const XX: CardText = {
         {
           id: "RequireTarget",
           targets: [],
-          condition: null,
           action: [
             {
               id: "ActionConsumeG",
@@ -637,6 +655,7 @@ const XX: CardText = {
           {
             id: "ActionSetFlag",
             flag: "プレイされたカード",
+            value: true,
           },
         ],
       },
@@ -644,7 +663,6 @@ const XX: CardText = {
         // 場に出る効果
         id: "FeedbackAddBlock",
         block: {
-          require: null,
           feedback: [
             {
               id: "FeedbackTargetAction",
@@ -687,7 +705,7 @@ const Play: CardText = {
         {
           id: "RequireTarget",
           targets: [null],
-          condition: null,
+
           action: [
             {
               id: "ActionSetTarget",
@@ -702,7 +720,6 @@ const Play: CardText = {
       {
         id: "FeedbackAddBlock",
         block: {
-          require: null,
           feedback: [],
         },
       },
@@ -723,7 +740,7 @@ const PlayCard: CardText = {
         {
           id: "RequireTarget",
           targets: [],
-          condition: null,
+
           action: [
             {
               id: "ActionConsumeG",
@@ -765,7 +782,6 @@ const PlayCard: CardText = {
       subCategory: "常駐",
     },
     block: {
-      require: null,
       feedback: [],
     },
   };
@@ -811,6 +827,7 @@ const PlayCard: CardText = {
             {
               id: "ActionSetFlag",
               flag: "once",
+              value: true,
             },
           ],
         },
@@ -829,7 +846,7 @@ const PlayCard: CardText = {
       require: {
         id: "RequireTarget",
         targets: [],
-        condition: null,
+
         action: [
           {
             id: "ActionConsumeG",
@@ -849,7 +866,7 @@ const PlayCard: CardText = {
                   id: "TargetTypeMySelf",
                 },
               ],
-              condition: null,
+
               action: [
                 {
                   id: "ActionDrop",
@@ -876,7 +893,6 @@ const PlayCard: CardText = {
                             id: "RelatedCardPosition",
                             value: ["自軍", "ジャンクヤード"],
                           },
-                          topCount: null,
                         },
                       ],
                     },
@@ -932,7 +948,7 @@ const PlayCard: CardText = {
               wherePosition: [
                 {
                   id: "RelatedCardPosition",
-                  value: ["自軍", "ジャンクヤード"], // TODO
+                  value: ["自軍", "Gゾーン"],
                 },
               ],
             },
@@ -946,7 +962,6 @@ const PlayCard: CardText = {
             require: {
               id: "RequireTarget",
               targets: [],
-              condition: null,
               action: [
                 {
                   id: "ActionConsumeG",
@@ -969,12 +984,15 @@ const PlayCard: CardText = {
                           id: "ConditionAnd",
                           and: [
                             {
-                              id: "ConditionCardPosition",
-                              position: {
+                              id: "ConditionTargetType",
+                              target: "カード",
+                            },
+                            {
+                              id: "ConditionCardInCardPosition",
+                              cardPosition: {
                                 id: "RelatedCardPosition",
                                 value: ["自軍", "本国"],
                               },
-                              topCount: null,
                             },
                             {
                               id: "ConditionCardType",
