@@ -269,7 +269,12 @@ type ConditionGameEventOnEnterStage = {
 
 type ConditionTargetType = {
   id: "ConditionTargetType";
-  target: "プレーヤー" | "カード";
+  target: "プレーヤー" | "カード" | "場所";
+};
+
+type ConditionCardInCardPosition = {
+  id: "ConditionCardInCardPosition";
+  cardPosition: CardPosition;
 };
 
 type Condition =
@@ -281,30 +286,35 @@ type Condition =
   | ConditionIsOpponentCard
   | ConditionContainFlag
   | ConditionTargetType
+  | ConditionCardInCardPosition
   | ConditionNot
   | ConditionOr
   | ConditionAnd;
 
-type TargetPlayer = {
-  id: "TargetPlayer";
-  value: "";
+type TargetTypePlayer = {
+  id: "プレーヤー";
+  playerID: string;
 };
 
-type TargetCard = {
-  id: "TargetCard";
-  value: "";
+type TargetTypeCard = {
+  id: "カード";
+  cardID: string;
 };
 
-type TargetCardPosition = {
+type TargetTypeCardPosition = {
   id: "TargetCardPosition";
   value: CardPosition;
 };
 
-type TargetMySelf = {
-  id: "TargetMySelf";
+type TargetTypeMySelf = {
+  id: "TargetTypeMySelf";
 };
 
-type Target = TargetPlayer | TargetCard | TargetCardPosition | TargetMySelf;
+type TargetType =
+  | TargetTypePlayer
+  | TargetTypeCard
+  | TargetTypeCardPosition
+  | TargetTypeMySelf;
 
 type ActionTap = {};
 
@@ -336,7 +346,12 @@ type ActionMoveCardToPosition = {
 
 type ActionSetFlag = {
   id: "ActionSetFlag";
-  flag: string;
+  flag: FlagKeyword;
+};
+
+type ActionSetFace = {
+  id: "ActionSetFace";
+  faceDown: boolean;
 };
 
 type Action =
@@ -345,13 +360,14 @@ type Action =
   | ActionDrop
   | ActionMoveCardToPosition
   | ActionDraw
+  | ActionSetFace
   | ActionSetFlag;
 
 type RequireTarget = {
   id: "RequireTarget";
-  targets: (Target | null)[];
+  targets: (TargetType | null)[];
   condition: Condition | null;
-  action: Action;
+  action: Action[];
 };
 
 type GameEventOnCardEnterStage = {
@@ -381,9 +397,9 @@ type RequireAnd = {
   and: Require[];
 };
 
-type RequireCost = {
-  id: "RequireCost";
-  cost: Cost;
+type RequireSiYouTiming = {
+  id: "RequireSiYouTiming";
+  siYouTiming: SiYouTiming;
 };
 
 type Require =
@@ -391,18 +407,18 @@ type Require =
   | RequireAnd
   | RequireYesNo
   | RequireTarget
-  | RequireCost
+  | RequireSiYouTiming
   | RequireEvent;
 
 type FeedbackTargetAction = {
   id: "FeedbackTargetAction";
   targetID: string;
-  action: Action;
+  action: Action[];
 };
 
 type FeedbackAction = {
   id: "FeedbackAction";
-  action: Action;
+  action: Action[];
 };
 
 type FeedbackCustomAction = {
@@ -446,14 +462,16 @@ const KouKaHaKai: CardText = {
       id: "RequireTarget",
       targets: [
         {
-          id: "TargetMySelf",
+          id: "TargetTypeMySelf",
         },
       ],
       condition: null,
-      action: {
-        id: "ActionSetFlag",
-        flag: "HaKai",
-      },
+      action: [
+        {
+          id: "ActionSetFlag",
+          flag: "破壊",
+        },
+      ],
     },
     feedback: [],
   },
@@ -470,71 +488,273 @@ const KouKaHaiKi: CardText = {
       id: "RequireTarget",
       targets: [
         {
-          id: "TargetMySelf",
+          id: "TargetTypeMySelf",
         },
       ],
       condition: null,
-      action: {
-        id: "ActionMoveCardToPosition",
-        toPosition: {
-          id: "RelatedCardPosition",
-          value: ["持ち主", "ジャンクヤード"],
+      action: [
+        {
+          id: "ActionMoveCardToPosition",
+          toPosition: {
+            id: "RelatedCardPosition",
+            value: ["持ち主", "ジャンクヤード"],
+          },
         },
-      },
+      ],
     },
     feedback: [],
   },
 };
 
-{
-  // play card
-  const ability: CardText = {
-    text: "play card",
-    category: {
-      id: "使用型",
-      timing: ["自軍", ["配備フェイズ", "フリータイミング"]],
+export type FlagKeyword = "破壊" | "プレイされたカード" | "once";
+
+export function createCardPlayBlock(cardID: string): BlockPayload {
+  return {
+    require: {
+      id: "RequireAnd",
+      and: [
+        // プレイの宣告
+        {
+          id: "RequireTarget",
+          targets: [
+            {
+              id: "カード",
+              cardID: cardID,
+            },
+          ],
+          condition: {
+            id: "ConditionAnd",
+            and: [
+              { id: "ConditionTargetType", target: "カード" },
+              {
+                id: "ConditionCardInCardPosition",
+                cardPosition: {
+                  id: "RelatedCardPosition",
+                  value: ["自軍", "手札"],
+                },
+              },
+            ],
+          },
+          action: [
+            {
+              id: "ActionSetFace",
+              faceDown: false,
+            },
+          ],
+        },
+        //「対象」の指定、コストの支払い
+        {
+          id: "RequireTarget",
+          targets: [],
+          condition: null,
+          action: [
+            {
+              id: "ActionConsumeG",
+              color: null,
+              count: 3,
+            },
+          ],
+        },
+      ],
     },
-    block: {
-      require: {
-        id: "RequireAnd",
-        and: [
+    feedback: [
+      {
+        id: "FeedbackTargetAction",
+        targetID: "playCard",
+        action: [
           {
-            id: "RequireTarget",
-            targets: [],
-            condition: null,
-            action: {
+            id: "ActionSetFlag",
+            flag: "プレイされたカード",
+          },
+        ],
+      },
+    ],
+  };
+}
+
+const XX: CardText = {
+  text: "カードのプレイ",
+  category: {
+    id: "使用型",
+    timing: ["自軍", ["配備フェイズ", "フリータイミング"]],
+  },
+  block: {
+    require: {
+      id: "RequireAnd",
+      and: [
+        {
+          id: "RequireSiYouTiming",
+          siYouTiming: ["自軍", ["配備フェイズ", "フリータイミング"]],
+        },
+        // プレイの宣告
+        {
+          id: "RequireTarget",
+          targets: [null],
+          condition: {
+            id: "ConditionAnd",
+            and: [
+              { id: "ConditionTargetType", target: "カード" },
+              {
+                id: "ConditionCardInCardPosition",
+                cardPosition: {
+                  id: "RelatedCardPosition",
+                  value: ["自軍", "手札"],
+                },
+              },
+            ],
+          },
+          action: [
+            {
+              id: "ActionSetFace",
+              faceDown: false,
+            },
+            {
+              id: "ActionSetTarget",
+              targetID: "playCard",
+            },
+          ],
+        },
+        //「対象」の指定、コストの支払い
+        {
+          id: "RequireTarget",
+          targets: [],
+          condition: null,
+          action: [
+            {
+              id: "ActionConsumeG",
+              color: null,
+              count: 3,
+            },
+          ],
+        },
+      ],
+    },
+    feedback: [
+      {
+        id: "FeedbackTargetAction",
+        targetID: "playCard",
+        action: [
+          {
+            id: "ActionSetFlag",
+            flag: "プレイされたカード",
+          },
+        ],
+      },
+      {
+        // 場に出る効果
+        id: "FeedbackAddBlock",
+        block: {
+          require: null,
+          feedback: [
+            {
+              id: "FeedbackTargetAction",
+              targetID: "playCard",
+              action: [
+                {
+                  id: "ActionMoveCardToPosition",
+                  toPosition: {
+                    id: "RelatedCardPosition",
+                    value: ["自軍", "配備エリア"],
+                  },
+                },
+              ],
+            },
+          ],
+        },
+      },
+    ],
+  },
+};
+
+const Play: CardText = {
+  text: "ユニットのプレイ",
+  category: {
+    id: "使用型",
+    timing: ["自軍", ["配備フェイズ", "フリータイミング"]],
+  },
+  block: {
+    // p20
+    require: {
+      id: "RequireAnd",
+      and: [
+        {
+          id: "RequireSiYouTiming",
+          siYouTiming: ["自軍", ["配備フェイズ", "フリータイミング"]],
+        },
+        // プレイの宣告
+
+        //「対象」の指定、コストの支払い
+        {
+          id: "RequireTarget",
+          targets: [null],
+          condition: null,
+          action: [
+            {
+              id: "ActionSetTarget",
+              targetID: "name",
+            },
+          ],
+        },
+        // other require
+      ],
+    },
+    feedback: [
+      {
+        id: "FeedbackAddBlock",
+        block: {
+          require: null,
+          feedback: [],
+        },
+      },
+    ],
+  },
+};
+
+const PlayCard: CardText = {
+  text: "play card",
+  category: {
+    id: "使用型",
+    timing: ["自軍", ["配備フェイズ", "フリータイミング"]],
+  },
+  block: {
+    require: {
+      id: "RequireAnd",
+      and: [
+        {
+          id: "RequireTarget",
+          targets: [],
+          condition: null,
+          action: [
+            {
               id: "ActionConsumeG",
               color: "白",
               count: 2,
             },
-          },
-          {
-            id: "RequireTarget",
-            targets: [],
-            condition: null,
-            action: {
+            {
               id: "ActionConsumeG", // TODO total G
               color: "紫",
               count: 2,
             },
-          },
-        ],
-      },
-      feedback: [
-        {
-          id: "FeedbackAction",
-          action: {
+          ],
+        },
+      ],
+    },
+    feedback: [
+      {
+        id: "FeedbackAction",
+        action: [
+          {
             id: "ActionMoveCardToPosition",
             toPosition: {
               id: "AbsoluteCardPosition",
               value: ["", "ハンガー"], // TODO
             },
           },
-        },
-      ],
-    },
-  };
-}
+        ],
+      },
+    ],
+  },
+};
 
 {
   // 『常駐』：このカードは、＋X／＋X／＋Xを得る。Xの値は、自軍手札の枚数とする。
@@ -578,17 +798,21 @@ const KouKaHaiKi: CardText = {
       feedback: [
         {
           id: "FeedbackAction",
-          action: {
-            id: "ActionDraw",
-            count: 3,
-          },
+          action: [
+            {
+              id: "ActionDraw",
+              count: 3,
+            },
+          ],
         },
         {
           id: "FeedbackAction",
-          action: {
-            id: "ActionSetFlag",
-            flag: "once",
-          },
+          action: [
+            {
+              id: "ActionSetFlag",
+              flag: "once",
+            },
+          ],
         },
       ],
     },
@@ -606,11 +830,13 @@ const KouKaHaiKi: CardText = {
         id: "RequireTarget",
         targets: [],
         condition: null,
-        action: {
-          id: "ActionConsumeG",
-          color: null,
-          count: 1,
-        },
+        action: [
+          {
+            id: "ActionConsumeG",
+            color: null,
+            count: 1,
+          },
+        ],
       },
       feedback: [
         {
@@ -620,13 +846,15 @@ const KouKaHaiKi: CardText = {
               id: "RequireTarget",
               targets: [
                 {
-                  id: "TargetMySelf",
+                  id: "TargetTypeMySelf",
                 },
               ],
               condition: null,
-              action: {
-                id: "ActionDrop",
-              },
+              action: [
+                {
+                  id: "ActionDrop",
+                },
+              ],
             },
             feedback: [
               {
@@ -652,22 +880,26 @@ const KouKaHaiKi: CardText = {
                         },
                       ],
                     },
-                    action: {
-                      id: "ActionSetTarget",
-                      targetID: "cardMoveToHanger",
-                    },
+                    action: [
+                      {
+                        id: "ActionSetTarget",
+                        targetID: "cardMoveToHanger",
+                      },
+                    ],
                   },
                   feedback: [
                     {
                       id: "FeedbackTargetAction",
                       targetID: "cardMoveToHanger",
-                      action: {
-                        id: "ActionMoveCardToPosition",
-                        toPosition: {
-                          id: "RelatedCardPosition",
-                          value: ["持ち主", "ハンガー"],
+                      action: [
+                        {
+                          id: "ActionMoveCardToPosition",
+                          toPosition: {
+                            id: "RelatedCardPosition",
+                            value: ["持ち主", "ハンガー"],
+                          },
                         },
-                      },
+                      ],
                     },
                   ],
                 },
@@ -715,11 +947,13 @@ const KouKaHaiKi: CardText = {
               id: "RequireTarget",
               targets: [],
               condition: null,
-              action: {
-                id: "ActionConsumeG",
-                color: "黒",
-                count: 2,
-              },
+              action: [
+                {
+                  id: "ActionConsumeG",
+                  color: "黒",
+                  count: 2,
+                },
+              ],
             },
             feedback: [
               {
@@ -748,10 +982,12 @@ const KouKaHaiKi: CardText = {
                             },
                           ],
                         },
-                        action: {
-                          id: "ActionSetTarget",
-                          targetID: "cardToMoveHanger",
-                        },
+                        action: [
+                          {
+                            id: "ActionSetTarget",
+                            targetID: "cardToMoveHanger",
+                          },
+                        ],
                       },
                     ],
                   },
@@ -759,13 +995,15 @@ const KouKaHaiKi: CardText = {
                     {
                       id: "FeedbackTargetAction",
                       targetID: "cardToMoveHanger",
-                      action: {
-                        id: "ActionMoveCardToPosition",
-                        toPosition: {
-                          id: "RelatedCardPosition",
-                          value: ["自軍", "ハンガー"],
+                      action: [
+                        {
+                          id: "ActionMoveCardToPosition",
+                          toPosition: {
+                            id: "RelatedCardPosition",
+                            value: ["自軍", "ハンガー"],
+                          },
                         },
-                      },
+                      ],
                     },
                   ],
                 },
