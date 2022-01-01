@@ -4,16 +4,20 @@ export type PlayerID = string;
 export const PlayerA = "PlayerA";
 export const PlayerB = "PlayerB";
 
-type Field =
+// 場
+type Ba = "戦闘エリア" | "配備エリア";
+
+// 場所
+type BaSyou =
+  | null // プレイされたカード
   | "本国"
   | "捨て山"
-  | "戦闘エリア"
-  | "配備エリア"
   | "Gゾーン"
   | "ジャンクヤード"
   | "手札"
   | "ハンガー"
-  | "取り除かれたカード";
+  | "取り除かれたカード"
+  | Ba;
 
 export type CardType =
   | "ユニット"
@@ -68,7 +72,7 @@ export type Phase =
 
 export type Timing = [number, Phase];
 
-export const TIMEING_SEQUENCE: Timing[] = (() => {
+export const TIMEING_CHART: Timing[] = (() => {
   const phaseSeq: Phase[] = [
     ["リロールフェイズ", "フェイズ開始"],
     ["リロールフェイズ", "規定の効果"],
@@ -113,8 +117,8 @@ export const TIMEING_SEQUENCE: Timing[] = (() => {
 })();
 
 export function nextTiming(timing: Timing): Timing {
-  const nextId = timing[0] + (1 % TIMEING_SEQUENCE.length);
-  return TIMEING_SEQUENCE[nextId];
+  const nextId = timing[0] + (1 % TIMEING_CHART.length);
+  return TIMEING_CHART[nextId];
 }
 
 export function isCanPlayCardInPhase(phase: Phase): boolean {
@@ -129,19 +133,82 @@ export function isCanPlayCardInPhase(phase: Phase): boolean {
   }
 }
 
-export type xx2 = "自軍" | "敵軍";
-export type xx3 = "規定の効果" | "フリータイミング";
+// ロール
+export type CostRoll = {
+  id: "CostRoll";
+};
+
+export type CostNumber = {
+  id: "CostNumber";
+  count: number;
+  cardColor: CardColor | null;
+  // P45
+  unlimited: boolean;
+};
+
+export type CostAnd = {
+  id: "CostAnd";
+  and: Cost[];
+};
+
+export type CostOr = {
+  id: "CostOr";
+  and: Cost[];
+};
+
+export type Cost = CostAnd | CostOr | CostNumber | CostRoll;
+
+export type SiYouTiming = ["常時"] | ["自軍" | "敵軍", "ターン" | Phase];
+
+export type TextCategoryZiDouKaTa = {
+  id: "自動型";
+  subCategory: "常駐" | "恆常" | "起動";
+};
+
+export type TextCategorySiYouKaTa = {
+  id: "使用型";
+  timing: SiYouTiming;
+};
+
+export type TextCategoryTokuSyuKouKa = {
+  id: "特殊効果";
+  tokuSyuKouKa: TokuSyuKouKa;
+};
+
+export type TextCategory =
+  | TextCategoryZiDouKaTa
+  | TextCategorySiYouKaTa
+  | TextCategoryTokuSyuKouKa;
+
+export type TokuSyuKouKa =
+  | ["高機動"]
+  | ["速攻"]
+  | ["サイコミュ", number]
+  | ["強襲"]
+  | ["範囲兵器", number]
+  | ["ゲイン"]
+  | ["改装", string]
+  | ["共有", string]
+  | ["供給", string]
+  | ["クロスウェポン", string]
+  | ["PS装甲"]
+  | ["クイック"]
+  | ["戦闘配備"]
+  | ["ステイ"]
+  | ["1枚制限"]
+  | ["[]"]
+  | ["<>"];
 
 type RelatedCardPositionKeyword = "自軍" | "持ち主";
 
 type AbsoluteCardPosition = {
   id: "AbsoluteCardPosition";
-  value: [PlayerID, Field];
+  value: [PlayerID, BaSyou];
 };
 
 type RelatedCardPosition = {
   id: "RelatedCardPosition";
-  value: [RelatedCardPositionKeyword, Field];
+  value: [RelatedCardPositionKeyword, BaSyou];
 };
 
 type CardPosition = AbsoluteCardPosition | RelatedCardPosition;
@@ -200,6 +267,11 @@ type ConditionGameEventOnEnterStage = {
   wherePosition: CardPosition[];
 };
 
+type ConditionTargetType = {
+  id: "ConditionTargetType";
+  target: "プレーヤー" | "カード";
+};
+
 type Condition =
   | ConditionGameEventOnEnterStage
   | ConditionCardPosition
@@ -208,6 +280,7 @@ type Condition =
   | ConditionIsSetCard
   | ConditionIsOpponentCard
   | ConditionContainFlag
+  | ConditionTargetType
   | ConditionNot
   | ConditionOr
   | ConditionAnd;
@@ -308,11 +381,17 @@ type RequireAnd = {
   and: Require[];
 };
 
+type RequireCost = {
+  id: "RequireCost";
+  cost: Cost;
+};
+
 type Require =
   | RequireOr
   | RequireAnd
   | RequireYesNo
   | RequireTarget
+  | RequireCost
   | RequireEvent;
 
 type FeedbackTargetAction = {
@@ -349,20 +428,72 @@ type BlockPayload = {
   feedback: Feedback[];
 };
 
-type CardTextType = "常駐" | "起動" | "ability";
-
 type CardText = {
   absolute?: boolean;
   text: string;
-  type: CardTextType;
+  category: TextCategory;
   block: BlockPayload;
+};
+
+const KouKaHaKai: CardText = {
+  text: "破壊",
+  category: {
+    id: "使用型",
+    timing: ["常時"],
+  },
+  block: {
+    require: {
+      id: "RequireTarget",
+      targets: [
+        {
+          id: "TargetMySelf",
+        },
+      ],
+      condition: null,
+      action: {
+        id: "ActionSetFlag",
+        flag: "HaKai",
+      },
+    },
+    feedback: [],
+  },
+};
+
+const KouKaHaiKi: CardText = {
+  text: "廃棄",
+  category: {
+    id: "使用型",
+    timing: ["常時"],
+  },
+  block: {
+    require: {
+      id: "RequireTarget",
+      targets: [
+        {
+          id: "TargetMySelf",
+        },
+      ],
+      condition: null,
+      action: {
+        id: "ActionMoveCardToPosition",
+        toPosition: {
+          id: "RelatedCardPosition",
+          value: ["持ち主", "ジャンクヤード"],
+        },
+      },
+    },
+    feedback: [],
+  },
 };
 
 {
   // play card
   const ability: CardText = {
     text: "play card",
-    type: "ability",
+    category: {
+      id: "使用型",
+      timing: ["自軍", ["配備フェイズ", "フリータイミング"]],
+    },
     block: {
       require: {
         id: "RequireAnd",
@@ -373,7 +504,7 @@ type CardText = {
             condition: null,
             action: {
               id: "ActionConsumeG",
-              color: "",
+              color: "白",
               count: 2,
             },
           },
@@ -383,7 +514,7 @@ type CardText = {
             condition: null,
             action: {
               id: "ActionConsumeG", // TODO total G
-              color: "",
+              color: "紫",
               count: 2,
             },
           },
@@ -409,7 +540,10 @@ type CardText = {
   // 『常駐』：このカードは、＋X／＋X／＋Xを得る。Xの値は、自軍手札の枚数とする。
   const ability: CardText = {
     text: "『常駐』：このカードは、＋X／＋X／＋Xを得る。Xの値は、自軍手札の枚数とする。",
-    type: "常駐",
+    category: {
+      id: "自動型",
+      subCategory: "常駐",
+    },
     block: {
       require: null,
       feedback: [],
@@ -419,7 +553,10 @@ type CardText = {
 {
   const ability: CardText = {
     text: "『起動』：このカードが場に出た場合、カード３枚を引く。この記述の効果は、プレイヤー毎に１ターンに１回しか起動しない。",
-    type: "起動",
+    category: {
+      id: "自動型",
+      subCategory: "起動",
+    },
     block: {
       require: {
         id: "RequireEvent",
@@ -460,7 +597,10 @@ type CardText = {
 {
   const ability: CardText = {
     text: "（常時）〔１〕：このカードを廃棄する。その場合、自軍ジャンクヤードにあるユニット１枚を、持ち主のハンガーに移す。",
-    type: "ability",
+    category: {
+      id: "使用型",
+      timing: ["常時"],
+    },
     block: {
       require: {
         id: "RequireTarget",
@@ -468,7 +608,7 @@ type CardText = {
         condition: null,
         action: {
           id: "ActionConsumeG",
-          color: "白",
+          color: null,
           count: 1,
         },
       },
@@ -496,12 +636,21 @@ type CardText = {
                     id: "RequireTarget",
                     targets: [null],
                     condition: {
-                      id: "ConditionCardPosition",
-                      position: {
-                        id: "RelatedCardPosition",
-                        value: ["自軍", "ジャンクヤード"],
-                      },
-                      topCount: null,
+                      id: "ConditionAnd",
+                      and: [
+                        {
+                          id: "ConditionTargetType",
+                          target: "カード",
+                        },
+                        {
+                          id: "ConditionCardPosition",
+                          position: {
+                            id: "RelatedCardPosition",
+                            value: ["自軍", "ジャンクヤード"],
+                          },
+                          topCount: null,
+                        },
+                      ],
                     },
                     action: {
                       id: "ActionSetTarget",
@@ -535,7 +684,10 @@ type CardText = {
   // <『起動』：このカードがGとして場に出た場合、〔黒２〕を支払う事ができる。その場合、自軍本国のカードを全て見て、その中にあるグラフィック１枚を、自軍ハンガーに移す事ができる。その後、自軍本国をシャッフルする>
   const ability: CardText = {
     text: "<『起動』：このカードがGとして場に出た場合、〔黒２〕を支払う事ができる。その場合、自軍本国のカードを全て見て、その中にあるグラフィック１枚を、自軍ハンガーに移す事ができる。その後、自軍本国をシャッフルする>",
-    type: "起動",
+    category: {
+      id: "自動型",
+      subCategory: "起動",
+    },
     absolute: true,
     block: {
       require: {
