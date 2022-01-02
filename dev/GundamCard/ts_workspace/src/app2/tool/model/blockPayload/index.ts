@@ -3,37 +3,41 @@ import type { SiYouTiming } from "../basic";
 import type { Condition } from "./condition";
 import type { TargetType } from "../basic";
 
+export type RequireBase = {
+  key?: string;
+};
+
 export type RequireTarget = {
   id: "RequireTarget";
   targets: (TargetType | null)[];
   condition?: Condition;
   action?: Action[];
-};
+} & RequireBase;
 
-type RequireEvent = {
+export type RequireEvent = {
   id: "RequireEvent";
   condition?: Condition;
-};
+} & RequireBase;
 
-type RequireYesNo = {
+export type RequireYesNo = {
   id: "RequireYesNo";
   answer: boolean | null;
-};
+} & RequireBase;
 
-type RequireOr = {
+export type RequireOr = {
   id: "RequireOr";
   or: Require[];
-};
+} & RequireBase;
 
-type RequireAnd = {
+export type RequireAnd = {
   id: "RequireAnd";
   and: Require[];
-};
+} & RequireBase;
 
-type RequireSiYouTiming = {
+export type RequireSiYouTiming = {
   id: "RequireSiYouTiming";
   siYouTiming: SiYouTiming;
-};
+} & RequireBase;
 
 export type Require =
   | RequireOr

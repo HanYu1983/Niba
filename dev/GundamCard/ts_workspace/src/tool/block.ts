@@ -42,13 +42,9 @@ export function getTopBlocks(ctx: BlockContext): Block[] {
 
 export function mapBlock(
   ctx: BlockContext,
-  blockID: string,
   mapF: (block: Block) => Block
 ): BlockContext {
   const nextBlocks = ctx.blocks.map((block) => {
-    if (block.id != blockID) {
-      return block;
-    }
     return mapF(block);
   });
   return {
