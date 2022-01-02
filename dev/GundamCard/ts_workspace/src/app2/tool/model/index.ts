@@ -1,14 +1,12 @@
-import { Card } from "../../tool/table";
-
 export type PlayerID = string;
 export const PlayerA = "PlayerA";
 export const PlayerB = "PlayerB";
 
 // 場
-type Ba = "戦闘エリア" | "配備エリア";
+export type BaKeyword = "戦闘エリア" | "配備エリア";
 
 // 場所
-type BaSyou =
+export type BaSyouKeyword =
   | null // プレイされたカード
   | "本国"
   | "捨て山"
@@ -17,9 +15,21 @@ type BaSyou =
   | "手札"
   | "ハンガー"
   | "取り除かれたカード"
-  | Ba;
+  | BaKeyword;
 
-export type CardType =
+export type AbsoluteBaSyou = {
+  id: "AbsoluteBaSyou";
+  value: [PlayerID, BaSyouKeyword];
+};
+
+export type RelatedBaSyou = {
+  id: "RelatedBaSyou";
+  value: ["自軍" | "持ち主", BaSyouKeyword];
+};
+
+export type BaSyou = AbsoluteBaSyou | RelatedBaSyou;
+
+export type CardCategory =
   | "ユニット"
   | "キャラクター"
   | "コマンド"
@@ -160,17 +170,17 @@ export type Cost = CostAnd | CostOr | CostNumber | CostRoll;
 
 export type SiYouTiming = ["常時"] | ["自軍" | "敵軍", "ターン" | Phase];
 
-export type TextCategoryZiDouKaTa = {
+type TextCategoryZiDouKaTa = {
   id: "自動型";
-  subCategory: "常駐" | "恆常" | "起動";
+  category: "常駐" | "恆常" | "起動";
 };
 
-export type TextCategorySiYouKaTa = {
+type TextCategorySiYouKaTa = {
   id: "使用型";
   timing: SiYouTiming;
 };
 
-export type TextCategoryTokuSyuKouKa = {
+type TextCategoryTokuSyuKouKa = {
   id: "特殊効果";
   tokuSyuKouKa: TokuSyuKouKa;
 };
@@ -197,37 +207,7 @@ export type TokuSyuKouKa =
   | ["ステイ"]
   | ["1枚制限"];
 
-type RelatedCardPositionKeyword = "自軍" | "持ち主";
-
-type AbsoluteCardPosition = {
-  id: "AbsoluteCardPosition";
-  value: [PlayerID, BaSyou];
-};
-
-type RelatedCardPosition = {
-  id: "RelatedCardPosition";
-  value: [RelatedCardPositionKeyword, BaSyou];
-};
-
-type CardPosition = AbsoluteCardPosition | RelatedCardPosition;
-
 // ==========
-
-type ConditionCardPosition = {
-  id: "ConditionCardPosition";
-  position: CardPosition;
-  topCount?: number;
-};
-
-type ConditionCardColor = {
-  id: "ConditionCardColor";
-  include: any[];
-};
-
-type ConditionCardType = {
-  id: "ConditionCardType";
-  include: any[];
-};
 
 type ConditionOr = {
   id: "ConditionOr";
@@ -244,25 +224,40 @@ type ConditionNot = {
   not: Condition;
 };
 
-type ConditionIsSetCard = {
-  id: "ConditionIsSetCard";
+type ConditionCardOnBaSyou = {
+  id: "ConditionCardOnBaSyou";
+  baSyou: BaSyou;
+};
+
+type ConditionCardOnColor = {
+  id: "ConditionCardOnColor";
+  color: CardColor;
+};
+
+type ConditionCardOnCategory = {
+  id: "ConditionCardOnCategory";
+  category: CardCategory;
+};
+
+type ConditionCardIsSetCard = {
+  id: "ConditionCardIsSetCard";
   is: boolean;
 };
 
-type ConditionIsOpponentCard = {
-  id: "ConditionIsOpponentCard";
+type ConditionCardIsOpponentCard = {
+  id: "ConditionCardIsOpponentCard";
   is: boolean;
 };
 
-type ConditionContainFlag = {
-  id: "ConditionContainFlag";
+type ConditionCardContainFlag = {
+  id: "ConditionCardContainFlag";
   flag: string;
   is: boolean;
 };
 
 type ConditionGameEventOnEnterStage = {
   id: "ConditionGameEventOnEnterStage";
-  wherePosition: CardPosition[];
+  wherePosition: BaSyou[];
 };
 
 type ConditionTargetType = {
@@ -270,21 +265,15 @@ type ConditionTargetType = {
   target: "プレーヤー" | "カード" | "場所";
 };
 
-type ConditionCardInCardPosition = {
-  id: "ConditionCardInCardPosition";
-  cardPosition: CardPosition;
-};
-
-type Condition =
+export type Condition =
   | ConditionGameEventOnEnterStage
-  | ConditionCardPosition
-  | ConditionCardColor
-  | ConditionCardType
-  | ConditionIsSetCard
-  | ConditionIsOpponentCard
-  | ConditionContainFlag
+  | ConditionCardOnBaSyou
+  | ConditionCardOnColor
+  | ConditionCardOnCategory
+  | ConditionCardIsSetCard
+  | ConditionCardIsOpponentCard
+  | ConditionCardContainFlag
   | ConditionTargetType
-  | ConditionCardInCardPosition
   | ConditionNot
   | ConditionOr
   | ConditionAnd;
@@ -301,20 +290,22 @@ type TargetTypeCard = {
 
 type TargetTypeCardPosition = {
   id: "TargetCardPosition";
-  value: CardPosition;
+  value: BaSyou;
 };
 
-type TargetTypeMySelf = {
-  id: "TargetTypeMySelf";
+type TargetTypeThisCard = {
+  id: "このカード";
 };
 
 type TargetType =
   | TargetTypePlayer
   | TargetTypeCard
   | TargetTypeCardPosition
-  | TargetTypeMySelf;
+  | TargetTypeThisCard;
 
-type ActionTap = {};
+type ActionRoll = {
+  id: "ActionRoll";
+};
 
 type ActionSetTarget = {
   id: "ActionSetTarget";
@@ -339,7 +330,7 @@ type ActionDraw = {
 
 type ActionMoveCardToPosition = {
   id: "ActionMoveCardToPosition";
-  toPosition: CardPosition;
+  toPosition: BaSyou;
 };
 
 type ActionSetFlag = {
@@ -353,7 +344,8 @@ type ActionSetFace = {
   faceDown: boolean;
 };
 
-type Action =
+export type Action =
+  | ActionRoll
   | ActionConsumeG
   | ActionSetTarget
   | ActionDrop
@@ -361,13 +353,6 @@ type Action =
   | ActionDraw
   | ActionSetFace
   | ActionSetFlag;
-
-type GameEventOnCardEnterStage = {
-  id: "GameEventOnCardEnterStage";
-  cardID: string;
-  from: AbsoluteCardPosition;
-  to: AbsoluteCardPosition;
-};
 
 type RequireTarget = {
   id: "RequireTarget";
@@ -378,7 +363,7 @@ type RequireTarget = {
 
 type RequireEvent = {
   id: "RequireEvent";
-  condition: Condition | null;
+  condition?: Condition;
 };
 
 type RequireYesNo = {
@@ -401,7 +386,7 @@ type RequireSiYouTiming = {
   siYouTiming: SiYouTiming;
 };
 
-type Require =
+export type Require =
   | RequireOr
   | RequireAnd
   | RequireYesNo
@@ -432,18 +417,18 @@ type FeedbackAddBlock = {
   block: BlockPayload;
 };
 
-type Feedback =
+export type Feedback =
   | FeedbackTargetAction
   | FeedbackAddBlock
   | FeedbackCustomAction
   | FeedbackAction;
 
-type BlockPayload = {
+export type BlockPayload = {
   require?: Require;
   feedback?: Feedback[];
 };
 
-type CardText = {
+export type CardText = {
   absolute?: boolean;
   text: string;
   category: TextCategory;
@@ -461,7 +446,7 @@ const KouKaHaKai: CardText = {
       id: "RequireTarget",
       targets: [
         {
-          id: "TargetTypeMySelf",
+          id: "このカード",
         },
       ],
       action: [
@@ -487,14 +472,14 @@ const KouKaHaiKi: CardText = {
       id: "RequireTarget",
       targets: [
         {
-          id: "TargetTypeMySelf",
+          id: "このカード",
         },
       ],
       action: [
         {
           id: "ActionMoveCardToPosition",
           toPosition: {
-            id: "RelatedCardPosition",
+            id: "RelatedBaSyou",
             value: ["持ち主", "ジャンクヤード"],
           },
         },
@@ -573,14 +558,9 @@ export function createPlayUnitCardBlock(cardID: string): BlockPayload {
                 {
                   id: "ActionMoveCardToPosition",
                   toPosition: {
-                    id: "RelatedCardPosition",
+                    id: "RelatedBaSyou",
                     value: ["自軍", "配備エリア"],
                   },
-                },
-                {
-                  id: "ActionSetFlag",
-                  flag: "プレイされたカード",
-                  value: false,
                 },
               ],
             },
@@ -614,9 +594,9 @@ const playCard: CardText = {
             and: [
               { id: "ConditionTargetType", target: "カード" },
               {
-                id: "ConditionCardInCardPosition",
-                cardPosition: {
-                  id: "RelatedCardPosition",
+                id: "ConditionCardOnBaSyou",
+                baSyou: {
+                  id: "RelatedBaSyou",
                   value: ["自軍", "手札"],
                 },
               },
@@ -671,7 +651,7 @@ const playCard: CardText = {
                 {
                   id: "ActionMoveCardToPosition",
                   toPosition: {
-                    id: "RelatedCardPosition",
+                    id: "RelatedBaSyou",
                     value: ["自軍", "配備エリア"],
                   },
                 },
@@ -763,7 +743,7 @@ const PlayCard: CardText = {
           {
             id: "ActionMoveCardToPosition",
             toPosition: {
-              id: "AbsoluteCardPosition",
+              id: "AbsoluteBaSyou",
               value: ["", "ハンガー"], // TODO
             },
           },
@@ -779,7 +759,7 @@ const PlayCard: CardText = {
     text: "『常駐』：このカードは、＋X／＋X／＋Xを得る。Xの値は、自軍手札の枚数とする。",
     category: {
       id: "自動型",
-      subCategory: "常駐",
+      category: "常駐",
     },
     block: {
       feedback: [],
@@ -791,7 +771,7 @@ const PlayCard: CardText = {
     text: "『起動』：このカードが場に出た場合、カード３枚を引く。この記述の効果は、プレイヤー毎に１ターンに１回しか起動しない。",
     category: {
       id: "自動型",
-      subCategory: "起動",
+      category: "起動",
     },
     block: {
       require: {
@@ -804,7 +784,7 @@ const PlayCard: CardText = {
               wherePosition: [],
             },
             {
-              id: "ConditionContainFlag",
+              id: "ConditionCardContainFlag",
               flag: "once",
               is: false,
             },
@@ -863,7 +843,7 @@ const PlayCard: CardText = {
               id: "RequireTarget",
               targets: [
                 {
-                  id: "TargetTypeMySelf",
+                  id: "このカード",
                 },
               ],
 
@@ -888,9 +868,9 @@ const PlayCard: CardText = {
                           target: "カード",
                         },
                         {
-                          id: "ConditionCardPosition",
-                          position: {
-                            id: "RelatedCardPosition",
+                          id: "ConditionCardOnBaSyou",
+                          baSyou: {
+                            id: "RelatedBaSyou",
                             value: ["自軍", "ジャンクヤード"],
                           },
                         },
@@ -911,7 +891,7 @@ const PlayCard: CardText = {
                         {
                           id: "ActionMoveCardToPosition",
                           toPosition: {
-                            id: "RelatedCardPosition",
+                            id: "RelatedBaSyou",
                             value: ["持ち主", "ハンガー"],
                           },
                         },
@@ -934,7 +914,7 @@ const PlayCard: CardText = {
     text: "<『起動』：このカードがGとして場に出た場合、〔黒２〕を支払う事ができる。その場合、自軍本国のカードを全て見て、その中にあるグラフィック１枚を、自軍ハンガーに移す事ができる。その後、自軍本国をシャッフルする>",
     category: {
       id: "自動型",
-      subCategory: "起動",
+      category: "起動",
     },
     absolute: true,
     block: {
@@ -947,7 +927,7 @@ const PlayCard: CardText = {
               id: "ConditionGameEventOnEnterStage",
               wherePosition: [
                 {
-                  id: "RelatedCardPosition",
+                  id: "RelatedBaSyou",
                   value: ["自軍", "Gゾーン"],
                 },
               ],
@@ -988,15 +968,15 @@ const PlayCard: CardText = {
                               target: "カード",
                             },
                             {
-                              id: "ConditionCardInCardPosition",
-                              cardPosition: {
-                                id: "RelatedCardPosition",
+                              id: "ConditionCardOnBaSyou",
+                              baSyou: {
+                                id: "RelatedBaSyou",
                                 value: ["自軍", "本国"],
                               },
                             },
                             {
-                              id: "ConditionCardType",
-                              include: ["グラフィック"],
+                              id: "ConditionCardOnCategory",
+                              category: "グラフィック",
                             },
                           ],
                         },
@@ -1017,7 +997,7 @@ const PlayCard: CardText = {
                         {
                           id: "ActionMoveCardToPosition",
                           toPosition: {
-                            id: "RelatedCardPosition",
+                            id: "RelatedBaSyou",
                             value: ["自軍", "ハンガー"],
                           },
                         },
