@@ -6,8 +6,14 @@ import type {
   SiYouTiming,
   TargetType,
 } from "./basic";
-import { BlockPayload, Require, RequireTarget } from "./blockPayload";
-import { BlockContext, mapBlock, next, Block } from "../../../tool/block";
+import { BlockPayload, Feedback, Require, RequireTarget } from "./blockPayload";
+import {
+  BlockContext,
+  mapBlock,
+  next,
+  Block,
+  addBlock,
+} from "../../../tool/block";
 import { Condition } from "./blockPayload/condition";
 import { Action } from "./blockPayload/action";
 import { ScriptContext, mapVarContext } from "./scriptContext";
@@ -112,14 +118,17 @@ export function doActionTarget(
   gameCtx: GameContext,
   block: Block,
   blockPayload: BlockPayload,
-  target: TargetType,
+  targets: (TargetType | null)[] | null,
   action: Action,
   varCtxID: string
 ): GameContext {
   switch (action.id) {
     case "ActionRoll":
       {
-        // roll card  varContext.cardID
+        const thisCardID = blockPayload.cause?.cardID;
+        if (thisCardID == null) {
+          throw new Error(`${thisCardID} not found`);
+        }
       }
       break;
     case "ActionDraw":
@@ -158,19 +167,14 @@ export function doAction(
       };
     }
     default:
-      return require.targets.reduce((originGameCtx, target) => {
-        if (target == null) {
-          throw new Error("未完成的選擇");
-        }
-        return doActionTarget(
-          originGameCtx,
-          block,
-          blockPayload,
-          target,
-          action,
-          varCtxID
-        );
-      }, gameCtx);
+      return doActionTarget(
+        gameCtx,
+        block,
+        blockPayload,
+        require.targets,
+        action,
+        varCtxID
+      );
   }
 }
 
@@ -272,6 +276,109 @@ export function doBlockRequire(
     }
   );
 
+  gameCtx = {
+    ...gameCtx,
+    scriptContext: {
+      ...gameCtx.scriptContext,
+      blockContext: nextBlockContext,
+    },
+  };
+
+  return gameCtx;
+}
+
+export function doFeedback(
+  gameCtx: GameContext,
+  block: Block,
+  blockPayload: BlockPayload,
+  feedback: Feedback,
+  varCtxID: string
+): GameContext {
+  switch (feedback.id) {
+    case "FeedbackAddBlock": {
+      return {
+        ...gameCtx,
+        scriptContext: {
+          ...gameCtx.scriptContext,
+          blockContext: addBlock(
+            gameCtx.scriptContext.blockContext,
+            feedback.block
+          ),
+        },
+      };
+    }
+    case "FeedbackAction": {
+      const actions = feedback.action;
+      if (actions.length) {
+        return actions.reduce((originGameCtx, action) => {
+          return doActionTarget(
+            originGameCtx,
+            block,
+            blockPayload,
+            null,
+            action,
+            varCtxID
+          );
+        }, gameCtx);
+      }
+      return gameCtx;
+    }
+    case "FeedbackTargetAction": {
+      const actions = feedback.action;
+      const targets: (TargetType | null)[] =
+        gameCtx.scriptContext.varContextPool[varCtxID]?.vars[
+          feedback.targetID
+        ] || null;
+      if (targets == null) {
+        throw new Error(`targetID ${feedback.targetID} is null`);
+      }
+      if (actions.length) {
+        return actions.reduce((originGameCtx, action) => {
+          return doActionTarget(
+            originGameCtx,
+            block,
+            blockPayload,
+            targets,
+            action,
+            varCtxID
+          );
+        }, gameCtx);
+      }
+      return gameCtx;
+    }
+  }
+  return gameCtx;
+}
+
+export function doBlockFeedback(
+  gameCtx: GameContext,
+  blockID: string
+): GameContext {
+  const block = gameCtx.scriptContext.blockContext.blocks[0];
+  const payload: BlockPayload = block.payload;
+  if (payload.feedbackPassed) {
+    throw new Error("已經處理了feedback");
+  }
+  const varCtxID = payload.contextID || block.id;
+  if (payload.feedback?.length) {
+    gameCtx = payload.feedback.reduce((originGameCtx, feedback) => {
+      return doFeedback(originGameCtx, block, payload, feedback, varCtxID);
+    }, gameCtx);
+  }
+  const nextBlockContext = mapBlock(
+    gameCtx.scriptContext.blockContext,
+    blockID,
+    (block) => {
+      const nextPayload: BlockPayload = {
+        ...block.payload,
+        feedbackPassed: true,
+      };
+      return {
+        ...block,
+        payload: nextPayload,
+      };
+    }
+  );
   gameCtx = {
     ...gameCtx,
     scriptContext: {

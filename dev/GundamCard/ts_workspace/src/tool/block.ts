@@ -5,16 +5,19 @@ export type Block = {
 };
 
 export type BlockContext = {
+  idSeq: number;
   blocks: Block[];
   time: number;
 };
 
-export function addBlock(ctx: BlockContext, block: Block): BlockContext {
+export function addBlock(ctx: BlockContext, payload: any): BlockContext {
   return {
     ...ctx,
+    idSeq: ctx.idSeq + 1,
     blocks: [
       {
-        ...block,
+        id: `addBlock_${ctx.idSeq}`,
+        payload: payload,
         createdTime: ctx.time,
       },
       ...ctx.blocks,

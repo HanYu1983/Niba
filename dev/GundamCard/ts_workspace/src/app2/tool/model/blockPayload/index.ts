@@ -72,7 +72,12 @@ export type Feedback =
   | FeedbackCustomAction
   | FeedbackAction;
 
+export type BlockPayloadCause = {
+  cardID: string;
+};
+
 export type BlockPayload = {
+  cause?: BlockPayloadCause;
   require?: Require;
   feedback?: Feedback[];
   contextID?: string;
