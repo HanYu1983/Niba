@@ -20,10 +20,15 @@ import {
   ScriptContext,
   mapVarContext,
   mapBlockPayloadRequire,
+  DEFAULT_SCRIPT_CONTEXT,
 } from "./scriptContext";
 
 export type GameContext = {
   scriptContext: ScriptContext;
+};
+
+export const DEFAULT_GAME_CONTEXT: GameContext = {
+  scriptContext: DEFAULT_SCRIPT_CONTEXT,
 };
 
 export function doConditionTarget(
@@ -404,6 +409,9 @@ export function setRequireAnswer(
   const nextScriptCtx = mapBlockPayloadRequire(
     gameCtx.scriptContext,
     (require) => {
+      if (require.key == null) {
+        return require;
+      }
       if (require.key != requireID) {
         return require;
       }
@@ -428,6 +436,9 @@ export function setRequireTarget(
   const nextScriptCtx = mapBlockPayloadRequire(
     gameCtx.scriptContext,
     (require) => {
+      if (require.key == null) {
+        return require;
+      }
       if (require.key != requireID) {
         return require;
       }

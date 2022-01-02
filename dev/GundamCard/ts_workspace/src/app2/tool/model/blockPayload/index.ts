@@ -88,3 +88,5 @@ export type BlockPayload = {
   requirePassed?: boolean;
   feedbackPassed?: boolean;
 };
+
+export const DEFAULT_BLOCK_PAYLOAD: BlockPayload = {};

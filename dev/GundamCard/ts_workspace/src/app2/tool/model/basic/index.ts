@@ -82,7 +82,7 @@ export type Phase =
 
 export type Timing = [number, Phase];
 
-export const TIMEING_CHART: Timing[] = (() => {
+export const TIMEING_CHART = ((): Timing[] => {
   const phaseSeq: Phase[] = [
     ["リロールフェイズ", "フェイズ開始"],
     ["リロールフェイズ", "規定の効果"],
@@ -121,7 +121,7 @@ export const TIMEING_CHART: Timing[] = (() => {
     ["戦闘フェイズ", "ターン終了時", "手札調整"],
     ["戦闘フェイズ", "ターン終了時", "効果終了。ターン終了"],
   ];
-  return phaseSeq.map((phase, i) => {
+  return phaseSeq.map((phase, i): Timing => {
     return [i, phase];
   });
 })();

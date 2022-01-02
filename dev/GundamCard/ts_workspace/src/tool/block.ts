@@ -10,6 +10,12 @@ export type BlockContext = {
   time: number;
 };
 
+export const DEFAULT_BLOCK_CONTEXT: BlockContext = {
+  idSeq: 0,
+  blocks: [],
+  time: 0,
+};
+
 export function addBlock(ctx: BlockContext, payload: any): BlockContext {
   return {
     ...ctx,

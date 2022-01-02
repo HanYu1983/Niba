@@ -1,4 +1,10 @@
-import { BlockContext, mapBlock, next, Block } from "../../../tool/block";
+import {
+  BlockContext,
+  mapBlock,
+  next,
+  Block,
+  DEFAULT_BLOCK_CONTEXT,
+} from "../../../tool/block";
 import { Require, BlockPayload, RequireOr, RequireAnd } from "./blockPayload";
 
 export type VarContextType = {
@@ -12,6 +18,11 @@ const DEFAULT_VAR_CONTEXT: VarContextType = {
 export type ScriptContext = {
   blockContext: BlockContext;
   varContextPool: { [key: string]: VarContextType };
+};
+
+export const DEFAULT_SCRIPT_CONTEXT: ScriptContext = {
+  blockContext: DEFAULT_BLOCK_CONTEXT,
+  varContextPool: {},
 };
 
 export function mapVarContext(
