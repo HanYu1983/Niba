@@ -195,7 +195,7 @@ type TargetTypeCard = {
 };
 
 type TargetTypeCardPosition = {
-  id: "TargetCardPosition";
+  id: "場所";
   value: BaSyou;
 };
 

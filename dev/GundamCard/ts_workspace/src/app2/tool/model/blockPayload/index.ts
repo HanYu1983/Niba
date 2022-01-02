@@ -3,7 +3,7 @@ import type { SiYouTiming } from "../basic";
 import type { Condition } from "./condition";
 import type { TargetType } from "../basic";
 
-type RequireTarget = {
+export type RequireTarget = {
   id: "RequireTarget";
   targets: (TargetType | null)[];
   condition?: Condition;
@@ -75,4 +75,7 @@ export type Feedback =
 export type BlockPayload = {
   require?: Require;
   feedback?: Feedback[];
+  contextID?: string;
+  requirePassed?: boolean;
+  feedbackPassed?: boolean;
 };
