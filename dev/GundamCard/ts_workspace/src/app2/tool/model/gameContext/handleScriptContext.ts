@@ -9,68 +9,36 @@ import {
   TIMEING_CHART,
   PlayerA,
   getBaShouID,
-} from "./basic";
-import { BlockPayload, Feedback, Require, RequireTarget } from "./blockPayload";
+} from "../basic";
+import {
+  BlockPayload,
+  Feedback,
+  Require,
+  RequireTarget,
+} from "../blockPayload";
 import {
   BlockContext,
   mapBlock,
   next,
   Block,
   addBlock,
-} from "./scriptContext/blockContext";
-import { Condition } from "./blockPayload/condition";
-import { Action } from "./blockPayload/action";
+} from "../scriptContext/blockContext";
+import { Condition } from "../blockPayload/condition";
+import { Action } from "../blockPayload/action";
 import {
   ScriptContext,
   mapVarContext,
   mapBlockPayloadRequire,
   DEFAULT_SCRIPT_CONTEXT,
-} from "./scriptContext";
+} from "../scriptContext";
 import {
   DEFAULT_TABLE,
   getTopCards,
   mapCard,
   moveCard,
   Table,
-} from "../../../tool/table";
-
-export type PlayerState = {
-  turn: number;
-  playGCount: number;
-  confirmPhase: boolean;
-};
-
-export type CardState = {
-  playerID: string;
-  live: number;
-  destroy: boolean;
-  setGroupID: string;
-  memory: any;
-};
-
-export type GameState = {
-  table: Table;
-  cardState: { [key: string]: CardState | undefined };
-  timing: Timing;
-  playerState: { [key: string]: PlayerState | undefined };
-  activePlayerID: string | null;
-};
-
-export type GameContext = {
-  gameState: GameState;
-  scriptContext: ScriptContext;
-};
-
-export const DEFAULT_GAME_CONTEXT: GameContext = {
-  gameState: {
-    table: DEFAULT_TABLE,
-    cardState: {},
-    timing: TIMEING_CHART[0],
-    playerState: {},
-    activePlayerID: null,
-  },
-  scriptContext: DEFAULT_SCRIPT_CONTEXT,
-};
+} from "../../../../tool/table";
+import { GameContext } from "./gameContext";
 
 export function doConditionTarget(
   gameCtx: GameContext,
