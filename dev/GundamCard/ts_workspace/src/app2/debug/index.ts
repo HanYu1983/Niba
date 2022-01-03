@@ -24,6 +24,7 @@ import {
 } from "../tool/model/scriptContext";
 import { TextCategory } from "../tool/model/basic";
 import { createTokuSyuKouKaText } from "../tool/script/createTokuSyuKouKaText";
+import { Script } from "../tool/script";
 
 export function testSetAnswer() {
   const require1: RequireYesNo = {
@@ -281,6 +282,11 @@ function testTmp() {
   console.log(effect2);
   const effect3 = createTokuSyuKouKaText(["改装", "ABC"], { cost: 2 });
   console.log(effect3);
+  const effect4 = createTokuSyuKouKaText(["供給"], { cost: 2 });
+  console.log(effect4);
+
+  const script: Script = require("../tool/script/73423");
+  console.log(script.texts);
 
   let ctx: GameContext = {
     ...DEFAULT_GAME_CONTEXT,
@@ -304,11 +310,16 @@ function testTmp() {
             payload: effect3.block,
             createdTime: 0,
           },
+          {
+            id: "3",
+            payload: effect4.block,
+            createdTime: 0,
+          },
         ],
       },
     },
   };
-  ctx = doBlockRequire(ctx, "0");
+  ctx = doBlockRequire(ctx, "1");
 }
 
 export function test() {

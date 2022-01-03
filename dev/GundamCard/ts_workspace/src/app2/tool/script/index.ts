@@ -17,6 +17,6 @@ export type QueryText = {
 export type Query = QueryText;
 
 export type Script = {
-  text: Text[];
+  texts: Text[];
   query: (ctx: GameContext, q: Query) => void;
 };

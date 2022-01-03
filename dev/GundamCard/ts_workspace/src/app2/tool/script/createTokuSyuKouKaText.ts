@@ -11,6 +11,54 @@ export function createTokuSyuKouKaText(
   options: { cost?: number }
 ): Text {
   switch (toku[0]) {
+    case "供給":
+      const [title] = toku;
+      return {
+        text: `[${options.cost || 0}]:${title}`,
+        category: {
+          id: "使用型",
+        },
+        block: {
+          require: wrapRequireKey({
+            id: "RequireAnd",
+            and: [
+              {
+                id: "RequireSiYouTiming",
+                siYouTiming: ["自軍", "攻撃ステップ"],
+              },
+              {
+                id: "RequireTarget",
+                targets: [null],
+                condition: {
+                  id: "ConditionAnd",
+                  and: [
+                    {
+                      id: "ConditionCardIsPlayerSide",
+                      playerSide: "自軍",
+                    },
+                    {
+                      id: "ConditionCardIsRole",
+                      role: "ユニット",
+                    },
+                    //TODO: not this card
+                  ],
+                },
+              },
+            ],
+          }),
+          feedback: [
+            {
+              id: "FeedbackTargetAction",
+              targetID: "cardA",
+              action: [
+                {
+                  id: "ActionReroll",
+                },
+              ],
+            },
+          ],
+        },
+      };
     case "サイコミュ": {
       const [title, damage] = toku;
       return {

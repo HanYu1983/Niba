@@ -214,7 +214,7 @@ export type TokuSyuKouKa =
   | ["ゲイン"]
   | ["改装", string]
   | ["共有", string]
-  | ["供給", string]
+  | ["供給"]
   | ["クロスウェポン", string]
   | ["PS装甲"]
   | ["クイック"]

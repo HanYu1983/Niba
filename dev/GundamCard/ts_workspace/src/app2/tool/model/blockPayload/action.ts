@@ -4,6 +4,10 @@ type ActionRoll = {
   id: "ActionRoll";
 };
 
+type ActionReroll = {
+  id: "ActionReroll";
+};
+
 type ActionSetTarget = {
   id: "ActionSetTarget";
   targetID: string;
@@ -64,6 +68,7 @@ type ActionUnitDamage = {
 
 export type Action =
   | ActionRoll
+  | ActionReroll
   | ActionConsumeG
   | ActionSetTarget
   | ActionDrop
