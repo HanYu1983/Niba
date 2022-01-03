@@ -1,6 +1,8 @@
+import { BlockPayload } from "../blockPayload";
+
 export type Block = {
   id: string;
-  payload: any;
+  payload: BlockPayload;
   createdTime: number;
 };
 
@@ -16,7 +18,10 @@ export const DEFAULT_BLOCK_CONTEXT: BlockContext = {
   time: 0,
 };
 
-export function addBlock(ctx: BlockContext, payload: any): BlockContext {
+export function addBlock(
+  ctx: BlockContext,
+  payload: BlockPayload
+): BlockContext {
   return {
     ...ctx,
     idSeq: ctx.idSeq + 1,

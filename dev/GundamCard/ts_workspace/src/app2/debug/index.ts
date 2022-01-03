@@ -3,7 +3,7 @@ import {
   BlockContext,
   DEFAULT_BLOCK_CONTEXT,
   mapBlock,
-} from "../../tool/block";
+} from "../tool/model/scriptContext/blockContext";
 import {
   BlockPayload,
   DEFAULT_BLOCK_PAYLOAD,

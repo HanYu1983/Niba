@@ -16,7 +16,7 @@ import {
   next,
   Block,
   addBlock,
-} from "../../../tool/block";
+} from "./scriptContext/blockContext";
 import { Condition } from "./blockPayload/condition";
 import { Action } from "./blockPayload/action";
 import {
@@ -313,7 +313,7 @@ export function doBlockRequire(
   if (block == null) {
     throw new Error(`block(${blockID}) not found`);
   }
-  const payload: BlockPayload = block.payload;
+  const payload = block.payload;
   if (payload.requirePassed) {
     throw new Error("已經處理了require");
   }

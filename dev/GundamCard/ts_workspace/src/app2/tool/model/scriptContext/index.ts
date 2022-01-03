@@ -4,8 +4,8 @@ import {
   next,
   Block,
   DEFAULT_BLOCK_CONTEXT,
-} from "../../../tool/block";
-import { Require, BlockPayload, RequireOr, RequireAnd } from "./blockPayload";
+} from "./blockContext";
+import { Require, BlockPayload, RequireOr, RequireAnd } from "../blockPayload";
 
 export type VarContextType = {
   vars: { [key: string]: any };
