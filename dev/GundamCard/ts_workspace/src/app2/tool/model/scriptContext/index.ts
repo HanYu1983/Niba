@@ -95,3 +95,13 @@ export function mapBlockPayloadRequire(
     },
   };
 }
+
+let _reqKey = 0;
+export function wrapRequireKey(r: Require): Require {
+  return recurRequire(r, (r) => {
+    return {
+      ...r,
+      key: `wrapRequireKey_${_reqKey++}`,
+    };
+  });
+}

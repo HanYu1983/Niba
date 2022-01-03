@@ -55,6 +55,13 @@ type ActionOKiKaeRu = {
   id: "ActionOKiKaeRu";
 };
 
+type Value = any;
+
+type ActionUnitDamage = {
+  id: "ActionUnitDamage";
+  value: Value;
+};
+
 export type Action =
   | ActionRoll
   | ActionConsumeG
@@ -66,4 +73,5 @@ export type Action =
   | ActionSetFace
   | ActionSetFlag
   | ActionCreateArrayFromSourceTargetID
-  | ActionOKiKaeRu;
+  | ActionOKiKaeRu
+  | ActionUnitDamage;

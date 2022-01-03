@@ -3,6 +3,7 @@ import type {
   BaSyou,
   CardCategory,
   RelatedPlayerSideKeyword,
+  UnitPropertyKeyword,
 } from "../basic";
 
 type ConditionOr = {
@@ -73,6 +74,15 @@ type ConditionCardHasTokuTyou = {
   value: string;
 };
 
+type ConditionCardIsBattle = {
+  id: "ConditionCardIsBattle";
+};
+
+type ConditionCardPropertyCompare = {
+  id: "ConditionCardPropertyCompare";
+  value: [UnitPropertyKeyword, any, any];
+};
+
 export type Condition =
   | ConditionGameEventOnEnterStage
   | ConditionCardOnBaSyou
@@ -85,6 +95,8 @@ export type Condition =
   | ConditionCardIsRole
   | ConditionTargetType
   | ConditionCardHasTokuTyou
+  | ConditionCardIsBattle
+  | ConditionCardPropertyCompare
   | ConditionNot
   | ConditionOr
   | ConditionAnd;

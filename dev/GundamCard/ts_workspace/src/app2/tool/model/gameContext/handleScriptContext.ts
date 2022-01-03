@@ -54,7 +54,9 @@ export function doCondition(
   try {
     const results = require.targets.map((target, i) => {
       if (target == null) {
-        throw new Error(`你必須完成第${i}個target`);
+        throw new Error(
+          `block(${block.id}) require(${require.key}) 你必須完成第${i}個target`
+        );
       }
       return doConditionTarget(gameCtx, block, blockPayload, target, condition);
     });

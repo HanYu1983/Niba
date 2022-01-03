@@ -2,6 +2,8 @@ export type PlayerID = string;
 export const PlayerA = "PlayerA";
 export const PlayerB = "PlayerB";
 
+export type UnitPropertyKeyword = "攻撃力" | "防御力";
+
 // 場
 export type BaKeyword = "戦闘エリア" | "配備エリア";
 

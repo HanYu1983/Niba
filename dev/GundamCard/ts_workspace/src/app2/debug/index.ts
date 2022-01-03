@@ -23,6 +23,7 @@ import {
   mapBlockPayloadRequire,
 } from "../tool/model/scriptContext";
 import { TextCategory } from "../tool/model/basic";
+import { createTokuSyuKouKaText } from "../tool/script/createTokuSyuKouKaText";
 
 export function testSetAnswer() {
   const require1: RequireYesNo = {
@@ -273,8 +274,45 @@ function testPlayCardPayload() {
   ctx = doBlockFeedback(ctx, "addBlock_0");
 }
 
+function testTmp() {
+  const effect1 = createTokuSyuKouKaText(["範囲兵器", 3], { cost: 0 });
+  console.log(effect1);
+  const effect2 = createTokuSyuKouKaText(["サイコミュ", 2], { cost: 1 });
+  console.log(effect2);
+  const effect3 = createTokuSyuKouKaText(["改装", "ABC"], { cost: 2 });
+  console.log(effect3);
+
+  let ctx: GameContext = {
+    ...DEFAULT_GAME_CONTEXT,
+    scriptContext: {
+      ...DEFAULT_SCRIPT_CONTEXT,
+      blockContext: {
+        ...DEFAULT_BLOCK_CONTEXT,
+        blocks: [
+          {
+            id: "0",
+            payload: effect1.block,
+            createdTime: 0,
+          },
+          {
+            id: "1",
+            payload: effect2.block,
+            createdTime: 0,
+          },
+          {
+            id: "2",
+            payload: effect3.block,
+            createdTime: 0,
+          },
+        ],
+      },
+    },
+  };
+  ctx = doBlockRequire(ctx, "0");
+}
+
 export function test() {
-  [testSetAnswer, testPlayCardPayload].forEach((testF) => {
+  [testSetAnswer, testPlayCardPayload, testTmp].forEach((testF) => {
     console.log(`============${testF.name}===========`);
     testF();
   });
