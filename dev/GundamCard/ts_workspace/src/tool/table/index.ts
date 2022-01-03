@@ -29,6 +29,17 @@ export const DEFAULT_TABLE: Table = {
   tokens: [],
 };
 
+export function getTopCards(table: Table, from: string, count: number): Card[] {
+  const cards = table.cardStack[from];
+  if (cards == null) {
+    throw new Error(`cardStack(${from}) not found`);
+  }
+  if (count) {
+    return cards.slice(0, count);
+  }
+  return cards;
+}
+
 export function moveCard(
   table: Table,
   from: string,

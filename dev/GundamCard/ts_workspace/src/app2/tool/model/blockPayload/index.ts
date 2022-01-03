@@ -77,7 +77,8 @@ export type Feedback =
   | FeedbackAction;
 
 export type BlockPayloadCause = {
-  cardID: string;
+  playerID?: string;
+  cardID?: string;
 };
 
 export type BlockPayload = {
