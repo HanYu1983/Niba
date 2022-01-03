@@ -3,8 +3,6 @@ import { RequireCustomID } from "../model/gameContext/doRequireCustom";
 import { Text } from ".";
 import { wrapRequireKey } from "../model/scriptContext";
 
-export function wrapBlockID() {}
-
 let _seqID = 0;
 export function createTokuSyuKouKaText(
   toku: TokuSyuKouKa,
