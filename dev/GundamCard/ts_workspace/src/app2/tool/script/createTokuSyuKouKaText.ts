@@ -17,15 +17,12 @@ export function createTokuSyuKouKaText(
         text: `[${options.cost || 0}]:${title}`,
         category: {
           id: "使用型",
+          timing: ["自軍", "攻撃ステップ"],
         },
         block: {
           require: wrapRequireKey({
             id: "RequireAnd",
             and: [
-              {
-                id: "RequireSiYouTiming",
-                siYouTiming: ["自軍", "攻撃ステップ"],
-              },
               {
                 id: "RequireTarget",
                 targets: [null],
@@ -65,15 +62,12 @@ export function createTokuSyuKouKaText(
         text: `[${options.cost || 0}]:${title}(${damage})`,
         category: {
           id: "使用型",
+          timing: ["防御ステップ"],
         },
         block: {
           require: wrapRequireKey({
             id: "RequireAnd",
             and: [
-              {
-                id: "RequireSiYouTiming",
-                siYouTiming: ["防御ステップ"],
-              },
               {
                 id: "RequireTarget",
                 targets: [],
@@ -133,16 +127,13 @@ export function createTokuSyuKouKaText(
         text: `[${options.cost || 0}]:${title}(${damage})`,
         category: {
           id: "使用型",
+          timing: ["ダメージ判定ステップ"],
         },
         block: {
           contextID: `createTokuSyuKouKaText_${_seqID++}`, // TODO uuid
           require: wrapRequireKey({
             id: "RequireAnd",
             and: [
-              {
-                id: "RequireSiYouTiming",
-                siYouTiming: ["ダメージ判定ステップ"],
-              },
               {
                 id: "RequireTarget",
                 targets: [],
@@ -201,17 +192,13 @@ export function createTokuSyuKouKaText(
       return {
         text: `[${options.cost || 0}]:${title}(${tokuTyou})`,
         category: {
-          id: "特殊効果",
-          tokuSyuKouKa: toku,
+          id: "使用型",
+          timing: ["戦闘フェイズ"],
         },
         block: {
           require: wrapRequireKey({
             id: "RequireAnd",
             and: [
-              {
-                id: "RequireSiYouTiming",
-                siYouTiming: ["戦闘フェイズ"],
-              },
               {
                 id: "RequireTarget",
                 targets: [],
@@ -299,6 +286,7 @@ export function createTokuSyuKouKaText(
         text: "",
         category: {
           id: "使用型",
+          timing: ["攻撃ステップ"],
         },
         block: {},
       };

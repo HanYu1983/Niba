@@ -576,7 +576,7 @@ const PlayCard: CardText = {
     text: "『起動』：このカードが場に出た場合、カード３枚を引く。この記述の効果は、プレイヤー毎に１ターンに１回しか起動しない。",
     category: {
       id: "自動型",
-      category: "起動",
+      category: ["起動", 0],
     },
     block: {
       require: {
@@ -719,7 +719,7 @@ const PlayCard: CardText = {
     text: "<『起動』：このカードがGとして場に出た場合、〔黒２〕を支払う事ができる。その場合、自軍本国のカードを全て見て、その中にあるグラフィック１枚を、自軍ハンガーに移す事ができる。その後、自軍本国をシャッフルする>",
     category: {
       id: "自動型",
-      category: "起動",
+      category: ["起動", 0],
     },
     absolute: true,
     block: {

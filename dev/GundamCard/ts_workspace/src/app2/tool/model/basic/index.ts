@@ -185,25 +185,20 @@ export function isCanPlayCardInPhase(phase: Phase): boolean {
   }
 }
 
+// 常駐技能在每次尋問中重新計算，卡片必須在場中
+// 恆常技能在每次尋問中重新計算，無論卡片在哪
+// 一發生GameEvent時，就將符合的起動技能加入block
 type TextCategoryZiDouKaTa = {
   id: "自動型";
-  category: "常駐" | "恆常" | "起動";
+  category: "常駐" | "恆常" | ["起動", GameEvent];
 };
 
 type TextCategorySiYouKaTa = {
   id: "使用型";
-  timing?: SiYouTiming;
+  timing: SiYouTiming;
 };
 
-type TextCategoryTokuSyuKouKa = {
-  id: "特殊効果";
-  tokuSyuKouKa: TokuSyuKouKa;
-};
-
-export type TextCategory =
-  | TextCategoryZiDouKaTa
-  | TextCategorySiYouKaTa
-  | TextCategoryTokuSyuKouKa;
+export type TextCategory = TextCategoryZiDouKaTa | TextCategorySiYouKaTa;
 
 export type TokuSyuKouKa =
   | ["高機動"]
