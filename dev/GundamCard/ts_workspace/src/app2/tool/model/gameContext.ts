@@ -1,10 +1,13 @@
-import type {
+import {
   CardColor,
   BaSyou,
   CardCategory,
   TextCategory,
   SiYouTiming,
   TargetType,
+  Timing,
+  TIMEING_CHART,
+  PlayerA,
 } from "./basic";
 import { BlockPayload, Feedback, Require, RequireTarget } from "./blockPayload";
 import {
@@ -22,12 +25,43 @@ import {
   mapBlockPayloadRequire,
   DEFAULT_SCRIPT_CONTEXT,
 } from "./scriptContext";
+import { DEFAULT_TABLE, Table } from "../../../tool/table";
+
+export type PlayerState = {
+  turn: number;
+  playGCount: number;
+  confirmPhase: boolean;
+};
+
+export type CardState = {
+  playerID: string;
+  live: number;
+  destroy: boolean;
+  setGroupID: string;
+  memory: any;
+};
+
+export type GameState = {
+  table: Table;
+  cardState: { [key: string]: CardState | undefined };
+  phase: Timing;
+  playerState: { [key: string]: PlayerState | undefined };
+  activePlayerID: string | null;
+};
 
 export type GameContext = {
+  gameState: GameState;
   scriptContext: ScriptContext;
 };
 
 export const DEFAULT_GAME_CONTEXT: GameContext = {
+  gameState: {
+    table: DEFAULT_TABLE,
+    cardState: {},
+    phase: TIMEING_CHART[0],
+    playerState: {},
+    activePlayerID: null,
+  },
   scriptContext: DEFAULT_SCRIPT_CONTEXT,
 };
 
@@ -39,6 +73,18 @@ export function doConditionTarget(
   condition: Condition
 ): string | null {
   switch (condition.id) {
+    case "ConditionNot": {
+      const result = doConditionTarget(
+        gameCtx,
+        block,
+        blockPayload,
+        target,
+        condition.not
+      );
+      const isOk = result == null;
+      const notResult = isOk == false;
+      return notResult ? null : `子項目必須為否`;
+    }
     case "ConditionAnd": {
       const results = condition.and.map((cond) =>
         doConditionTarget(gameCtx, block, blockPayload, target, cond)

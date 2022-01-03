@@ -143,7 +143,11 @@ export function isCanPlayCardInPhase(phase: Phase): boolean {
   }
 }
 
-export type SiYouTiming = ["常時"] | ["自軍" | "敵軍", "ターン" | Phase];
+export type RelatedPlayerSideKeyword = "自軍" | "敵軍";
+
+export type SiYouTiming =
+  | ["常時"]
+  | [RelatedPlayerSideKeyword, "ターン" | Phase];
 
 type TextCategoryZiDouKaTa = {
   id: "自動型";

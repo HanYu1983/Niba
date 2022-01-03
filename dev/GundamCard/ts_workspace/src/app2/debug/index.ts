@@ -542,9 +542,11 @@ const PlayCard: CardText = {
               wherePosition: [],
             },
             {
-              id: "ConditionCardContainFlag",
-              flag: "once",
-              is: false,
+              id: "ConditionNot",
+              not: {
+                id: "ConditionCardContainFlag",
+                flag: "once",
+              },
             },
           ],
         },
@@ -770,4 +772,160 @@ const PlayCard: CardText = {
       ],
     },
   };
+  //（自軍ターン）：セットカード以外の敵軍オペ１枚を破壊する。
+  const ability2: CardText = {
+    text: "（自軍ターン）：セットカード以外の敵軍オペ１枚を破壊する。",
+    category: {
+      id: "使用型",
+      timing: ["自軍", "ターン"],
+    },
+    block: {
+      feedback: [
+        {
+          id: "FeedbackAddBlock",
+          block: {
+            require: {
+              id: "RequireTarget",
+              targets: [null],
+              condition: {
+                id: "ConditionAnd",
+                and: [
+                  {
+                    id: "ConditionTargetType",
+                    target: "カード",
+                  },
+                  {
+                    id: "ConditionNot",
+                    not: {
+                      id: "ConditionCardIsSetCard",
+                    },
+                  },
+                  {
+                    id: "ConditionCardOnCategory",
+                    category: "オペレーション",
+                  },
+                  {
+                    id: "ConditionCardIsPlayerSide",
+                    playerSide: "敵軍",
+                  },
+                ],
+              },
+              action: [
+                {
+                  id: "ActionDestroy",
+                },
+              ],
+            },
+          },
+        },
+      ],
+    },
+  };
+}
+
+{
+  // 『起動』：場、または手札から、敵軍ジャンクヤードにユニットが移動した場合、セットカードがセットされていない、G以外の敵軍カード１枚を破壊する。
+  const ability: BlockPayload = {
+    require: {
+      id: "RequireTarget",
+      targets: [null],
+      condition: {
+        id: "ConditionAnd",
+        and: [
+          {
+            id: "ConditionTargetType",
+            target: "カード",
+          },
+          {
+            id: "ConditionNot",
+            not: {
+              id: "ConditionCardHasSetCard",
+            },
+          },
+          {
+            id: "ConditionNot",
+            not: {
+              id: "ConditionCardIsRole",
+              role: "グラフィック",
+            },
+          },
+          {
+            id: "ConditionCardIsPlayerSide",
+            playerSide: "敵軍",
+          },
+        ],
+      },
+      action: [
+        {
+          id: "ActionDestroy",
+        },
+      ],
+    },
+  };
+}
+
+{
+  // 『起動』：このカードが場に出た場合、自軍ユニット１枚の上に±０／±０／－１コイン２個を乗せる事ができる。その場合、カード１枚を引く。
+  const ability: BlockPayload = {
+    feedback: [
+      {
+        id: "FeedbackAddBlock",
+        block: {
+          require: {
+            id: "RequireTarget",
+            targets: [null],
+            condition: {
+              id: "ConditionAnd",
+              and: [
+                {
+                  id: "ConditionTargetType",
+                  target: "カード",
+                },
+                {
+                  id: "ConditionCardIsPlayerSide",
+                  playerSide: "自軍",
+                },
+                {
+                  id: "ConditionCardIsRole",
+                  role: "ユニット",
+                },
+              ],
+            },
+            action: [
+              // put token
+            ],
+          },
+          feedback: [
+            {
+              id: "FeedbackAddBlock",
+              block: {
+                require: {
+                  id: "RequireYesNo",
+                  answer: null,
+                },
+                feedback: [
+                  {
+                    id: "FeedbackAction",
+                    action: [
+                      {
+                        id: "ActionDraw",
+                        count: 1,
+                      },
+                      // add token
+                    ],
+                  },
+                ],
+              },
+            },
+          ],
+        },
+      },
+    ],
+  };
+}
+
+{
+  // （常時）〔R〕：配備エリアにいる、「特徴：T3部隊」を持つ自軍ユニット１枚を持ち主のハンガーに移す。
+  // 『起動』：このカードが場に出た場合、敵軍ユニット１枚は、ターン終了時まで－X／－X／－Xを得る。Xの値は、「特徴：T3部隊」を持つ自軍ユニットの枚数＋１とする。（注：このカードも枚数に含める）
+  // 『起動』：このカードが場に出た場合、自軍本国の上のカード１～４枚を見て、その中にある、「特徴：ヘイズル系」を持つユニット１枚を、自軍ハンガーに移す事ができる。
 }

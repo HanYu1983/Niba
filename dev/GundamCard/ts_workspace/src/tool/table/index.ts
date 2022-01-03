@@ -24,6 +24,11 @@ export type Table = {
   tokens: Token[];
 };
 
+export const DEFAULT_TABLE: Table = {
+  cardStack: {},
+  tokens: [],
+};
+
 export function moveCard(
   table: Table,
   from: string,

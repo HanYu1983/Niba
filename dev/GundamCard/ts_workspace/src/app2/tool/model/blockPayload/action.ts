@@ -25,6 +25,10 @@ type ActionDraw = {
   count: number;
 };
 
+type ActionDestroy = {
+  id: "ActionDestroy";
+};
+
 type ActionMoveCardToPosition = {
   id: "ActionMoveCardToPosition";
   toPosition: BaSyou;
@@ -48,5 +52,6 @@ export type Action =
   | ActionDrop
   | ActionMoveCardToPosition
   | ActionDraw
+  | ActionDestroy
   | ActionSetFace
   | ActionSetFlag;

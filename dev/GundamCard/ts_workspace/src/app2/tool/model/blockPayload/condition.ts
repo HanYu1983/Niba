@@ -1,4 +1,9 @@
-import type { CardColor, BaSyou, CardCategory } from "../basic";
+import type {
+  CardColor,
+  BaSyou,
+  CardCategory,
+  RelatedPlayerSideKeyword,
+} from "../basic";
 
 type ConditionOr = {
   id: "ConditionOr";
@@ -32,18 +37,20 @@ type ConditionCardOnCategory = {
 
 type ConditionCardIsSetCard = {
   id: "ConditionCardIsSetCard";
-  is: boolean;
 };
 
-type ConditionCardIsOpponentCard = {
-  id: "ConditionCardIsOpponentCard";
-  is: boolean;
+type ConditionCardHasSetCard = {
+  id: "ConditionCardHasSetCard";
+};
+
+type ConditionCardIsPlayerSide = {
+  id: "ConditionCardIsPlayerSide";
+  playerSide: RelatedPlayerSideKeyword;
 };
 
 type ConditionCardContainFlag = {
   id: "ConditionCardContainFlag";
   flag: string;
-  is: boolean;
 };
 
 type ConditionGameEventOnEnterStage = {
@@ -56,14 +63,21 @@ type ConditionTargetType = {
   target: "プレーヤー" | "カード" | "場所";
 };
 
+type ConditionCardIsRole = {
+  id: "ConditionCardIsRole";
+  role: CardCategory;
+};
+
 export type Condition =
   | ConditionGameEventOnEnterStage
   | ConditionCardOnBaSyou
   | ConditionCardOnColor
   | ConditionCardOnCategory
   | ConditionCardIsSetCard
-  | ConditionCardIsOpponentCard
+  | ConditionCardHasSetCard
+  | ConditionCardIsPlayerSide
   | ConditionCardContainFlag
+  | ConditionCardIsRole
   | ConditionTargetType
   | ConditionNot
   | ConditionOr
