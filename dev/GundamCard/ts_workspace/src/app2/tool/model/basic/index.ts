@@ -93,6 +93,35 @@ export type Phase =
 
 export type Timing = [number, Phase];
 
+export type RelatedPlayerSideKeyword = "自軍" | "敵軍";
+
+export type SiYouTiming =
+  | [
+      | "常時"
+      | "ドローフェイズ"
+      | "リロールフェイズ"
+      | "配備フェイズ"
+      | "戦闘フェイズ"
+      | "攻撃ステップ"
+      | "防御ステップ"
+      | "ダメージ判定ステップ"
+      | "帰還ステップ"
+    ]
+  | [
+      RelatedPlayerSideKeyword,
+      (
+        | "ターン"
+        | "ドローフェイズ"
+        | "リロールフェイズ"
+        | "配備フェイズ"
+        | "戦闘フェイズ"
+        | "攻撃ステップ"
+        | "防御ステップ"
+        | "ダメージ判定ステップ"
+        | "帰還ステップ"
+      )
+    ];
+
 export const TIMEING_CHART = ((): Timing[] => {
   const phaseSeq: Phase[] = [
     ["リロールフェイズ", "フェイズ開始"],
@@ -154,12 +183,6 @@ export function isCanPlayCardInPhase(phase: Phase): boolean {
   }
 }
 
-export type RelatedPlayerSideKeyword = "自軍" | "敵軍";
-
-export type SiYouTiming =
-  | ["常時"]
-  | [RelatedPlayerSideKeyword, "ターン" | Phase];
-
 type TextCategoryZiDouKaTa = {
   id: "自動型";
   category: "常駐" | "恆常" | "起動";
@@ -167,7 +190,7 @@ type TextCategoryZiDouKaTa = {
 
 type TextCategorySiYouKaTa = {
   id: "使用型";
-  timing: SiYouTiming;
+  timing?: SiYouTiming;
 };
 
 type TextCategoryTokuSyuKouKa = {
@@ -209,9 +232,9 @@ type TargetTypeCard = {
   cardID: string;
 };
 
-type TargetTypeCardPosition = {
+type TargetTypeBaSyou = {
   id: "場所";
-  value: BaSyou;
+  baSyou: BaSyou;
 };
 
 type TargetTypeThisCard = {
@@ -221,5 +244,7 @@ type TargetTypeThisCard = {
 export type TargetType =
   | TargetTypePlayer
   | TargetTypeCard
-  | TargetTypeCardPosition
+  | TargetTypeBaSyou
   | TargetTypeThisCard;
+
+export type GameEvent = any;

@@ -14,6 +14,7 @@ import {
   BlockPayload,
   Feedback,
   Require,
+  RequireCustom,
   RequireTarget,
 } from "../blockPayload";
 import {
@@ -41,6 +42,7 @@ import {
 import { GameContext } from "./gameContext";
 import { doConditionTarget } from "./doConditionTarget";
 import { doActionTarget } from "./doActionTarget";
+import { doRequireCustom } from "./doRequireCustom";
 
 export function doCondition(
   gameCtx: GameContext,
@@ -183,6 +185,16 @@ export function doRequire(
         }, gameCtx);
       }
       return gameCtx;
+    }
+    case "RequireCustom": {
+      return doRequireCustom(
+        gameCtx,
+        block,
+        blockPayload,
+        require,
+        require.customID,
+        varCtxID
+      );
     }
     default:
       console.log(`not support yet: ${require.id}`);

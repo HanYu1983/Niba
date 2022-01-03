@@ -131,7 +131,7 @@ function testPlayCardPayload() {
       and: [
         {
           id: "RequireSiYouTiming",
-          siYouTiming: ["自軍", ["配備フェイズ", "フリータイミング"]],
+          siYouTiming: ["自軍", "配備フェイズ"],
         },
         // プレイの宣告
         {
@@ -169,7 +169,6 @@ function testPlayCardPayload() {
           action: [
             {
               id: "ActionConsumeG",
-              color: null,
               count: 3,
             },
           ],
@@ -349,7 +348,7 @@ export function createPlayUnitCardBlock(cardID: string): BlockPayload {
       and: [
         {
           id: "RequireSiYouTiming",
-          siYouTiming: ["自軍", ["配備フェイズ", "フリータイミング"]],
+          siYouTiming: ["自軍", "配備フェイズ"],
         },
         // プレイの宣告
         {
@@ -378,7 +377,6 @@ export function createPlayUnitCardBlock(cardID: string): BlockPayload {
           action: [
             {
               id: "ActionConsumeG",
-              color: null,
               count: 3,
             },
           ],
@@ -426,7 +424,7 @@ const Play: CardText = {
   text: "ユニットのプレイ",
   category: {
     id: "使用型",
-    timing: ["自軍", ["配備フェイズ", "フリータイミング"]],
+    timing: ["自軍", "配備フェイズ"],
   },
   block: {
     // p20
@@ -435,7 +433,7 @@ const Play: CardText = {
       and: [
         {
           id: "RequireSiYouTiming",
-          siYouTiming: ["自軍", ["配備フェイズ", "フリータイミング"]],
+          siYouTiming: ["自軍", "配備フェイズ"],
         },
         // プレイの宣告
 
@@ -469,7 +467,7 @@ const PlayCard: CardText = {
   text: "play card",
   category: {
     id: "使用型",
-    timing: ["自軍", ["配備フェイズ", "フリータイミング"]],
+    timing: ["自軍", "配備フェイズ"],
   },
   block: {
     require: {
@@ -586,11 +584,9 @@ const PlayCard: CardText = {
       require: {
         id: "RequireTarget",
         targets: [],
-
         action: [
           {
             id: "ActionConsumeG",
-            color: null,
             count: 1,
           },
         ],

@@ -39,13 +39,19 @@ export type RequireSiYouTiming = {
   siYouTiming: SiYouTiming;
 } & RequireBase;
 
+export type RequireCustom = {
+  id: "RequireCustom";
+  customID: any;
+} & RequireBase;
+
 export type Require =
   | RequireOr
   | RequireAnd
   | RequireYesNo
   | RequireTarget
   | RequireSiYouTiming
-  | RequireEvent;
+  | RequireEvent
+  | RequireCustom;
 
 type FeedbackTargetAction = {
   id: "FeedbackTargetAction";

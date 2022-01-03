@@ -68,6 +68,11 @@ type ConditionCardIsRole = {
   role: CardCategory;
 };
 
+type ConditionCardHasTokuTyou = {
+  id: "ConditionCardHasTokuTyou";
+  value: string;
+};
+
 export type Condition =
   | ConditionGameEventOnEnterStage
   | ConditionCardOnBaSyou
@@ -79,6 +84,7 @@ export type Condition =
   | ConditionCardContainFlag
   | ConditionCardIsRole
   | ConditionTargetType
+  | ConditionCardHasTokuTyou
   | ConditionNot
   | ConditionOr
   | ConditionAnd;

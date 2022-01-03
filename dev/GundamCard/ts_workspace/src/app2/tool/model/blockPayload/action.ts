@@ -11,7 +11,7 @@ type ActionSetTarget = {
 
 type ActionConsumeG = {
   id: "ActionConsumeG";
-  color: CardColor | null;
+  color?: CardColor;
   count: number;
 };
 
@@ -45,6 +45,16 @@ type ActionSetFace = {
   faceDown: boolean;
 };
 
+type ActionCreateArrayFromSourceTargetID = {
+  id: "ActionCreateArrayFromSourceTargetID";
+  sourceTargetID: string[];
+  targetID: string;
+};
+
+type ActionOKiKaeRu = {
+  id: "ActionOKiKaeRu";
+};
+
 export type Action =
   | ActionRoll
   | ActionConsumeG
@@ -54,4 +64,6 @@ export type Action =
   | ActionDraw
   | ActionDestroy
   | ActionSetFace
-  | ActionSetFlag;
+  | ActionSetFlag
+  | ActionCreateArrayFromSourceTargetID
+  | ActionOKiKaeRu;
