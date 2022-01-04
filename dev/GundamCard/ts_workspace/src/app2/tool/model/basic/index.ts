@@ -185,12 +185,14 @@ export function isCanPlayCardInPhase(phase: Phase): boolean {
   }
 }
 
+export type GameEvent = any;
+
 // 常駐技能在每次尋問中重新計算，卡片必須在場中
 // 恆常技能在每次尋問中重新計算，無論卡片在哪
-// 一發生GameEvent時，就將符合的起動技能加入block
+// 起動技能在每次事件發生時，就將符合的起動技能加入block
 type TextCategoryZiDouKaTa = {
   id: "自動型";
-  category: "常駐" | "恆常" | ["起動", GameEvent];
+  category: "常駐" | "恒常" | ["起動", GameEvent];
 };
 
 type TextCategorySiYouKaTa = {
@@ -243,5 +245,3 @@ export type TargetType =
   | TargetTypeCard
   | TargetTypeBaSyou
   | TargetTypeThisCard;
-
-export type GameEvent = any;

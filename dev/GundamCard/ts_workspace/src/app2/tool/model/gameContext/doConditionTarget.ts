@@ -3,6 +3,9 @@ import { BlockPayload } from "../blockPayload";
 import { Block } from "../scriptContext/blockContext";
 import { Condition } from "../blockPayload/condition";
 import { GameContext } from "./gameContext";
+import { getCard } from "../../../../tool/table";
+import { getCardScript } from "../../script";
+import { askRowData } from "../../../../tool/data";
 
 export function doConditionTarget(
   gameCtx: GameContext,
@@ -62,8 +65,36 @@ export function doConditionTarget(
       }
       break;
     case "ConditionCardOnCategory": {
+      if (target.id != "カード") {
+        return "必須是カード";
+      }
+      const card = getCard(gameCtx.gameState.table, target.cardID);
+      if (card == null) {
+        return `target cardID(${target.cardID}) not found`;
+      }
+
+      const rowData = askRowData(card.protoID);
       switch (condition.category) {
         case "ユニット":
+          if (rowData.category != "UNIT") {
+            return `卡片類型必須是${condition.category}`;
+          }
+        case "コマンド":
+          if (rowData.category != "COMMAND") {
+            return `卡片類型必須是${condition.category}`;
+          }
+        case "キャラクター":
+          if (rowData.category != "CHARACTER") {
+            return `卡片類型必須是${condition.category}`;
+          }
+        case "オペレーション":
+          if (rowData.category != "OPERATION") {
+            return `卡片類型必須是${condition.category}`;
+          }
+        case "グラフィック":
+          if (rowData.category != "GRAPHIC") {
+            return `卡片類型必須是${condition.category}`;
+          }
       }
       return null;
     }
