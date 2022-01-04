@@ -269,15 +269,22 @@ export function createTokuSyuKouKaText(
                     // 遊戲一開始就將所有能力加入block到時間0的位置
                     // 每次事件來時，就重設cause中的事件並且doBlockRequire在所有時間為0的block
                     // doBlockRequire成功的就立刻執行doBlockFeedback
+                    // 每次事件只問1次
 
                     // 處理常駐
                     // 遊戲一開始就將所有恒常能力加入block到時間0的位置
-                    // 不必等事件。可以隨時doBlockRequire
+                    // 不代入事件。可以隨時doBlockRequire
                     // doBlockRequire成功的就立刻執行doBlockFeedback
                     // 但要注意：feedback的效果是重覆執行多次也沒關係的。比如，加入全場效果時要帶入唯一的ID
 
                     // 事件
                     // 出場時（哪張卡、哪個場）、進入區域時（戰鬥區或配置區）、play卡時（哪張卡、特徵有什麼)
+
+                    // playCard當成使用型技能
+                    // require為 有快速 或 沒快速並在配置階段
+                    // require為 有stay並選擇配置區或setgroup 或 沒有stay並選擇setgroup
+                    // feedback為 出場並横置。觸發出場事件
+                    // 這張卡的戰配（起動型技能）會成立並且將卡片直立
 
                     // 處理使用型 （未完成）
                     // 和處理恒常、起動一樣
