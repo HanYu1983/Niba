@@ -124,7 +124,7 @@ export type SiYouTiming =
       )
     ];
 
-export const TIMEING_CHART = ((): Timing[] => {
+export const TIMING_CHART = ((): Timing[] => {
   const phaseSeq: Phase[] = [
     ["リロールフェイズ", "フェイズ開始"],
     ["リロールフェイズ", "規定の効果"],
@@ -169,8 +169,8 @@ export const TIMEING_CHART = ((): Timing[] => {
 })();
 
 export function nextTiming(timing: Timing): Timing {
-  const nextId = timing[0] + (1 % TIMEING_CHART.length);
-  return TIMEING_CHART[nextId];
+  const nextId = timing[0] + (1 % TIMING_CHART.length);
+  return TIMING_CHART[nextId];
 }
 
 export function isCanPlayCardInPhase(phase: Phase): boolean {

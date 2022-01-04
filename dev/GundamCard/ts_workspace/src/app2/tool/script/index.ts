@@ -16,15 +16,19 @@ export type QueryText = {
 export type Query = QueryText;
 
 export type Script = {
-  texts?: Text[];
-  query?: (ctx: any, q: Query) => void;
+  query: <T>(ctx: any, q: T) => T;
 };
 
 export function getCardScript(cardRowDataID: string): Script {
   try {
-    return require(`./script/${cardRowDataID}.ts`);
+    return require(`./${cardRowDataID}.ts`);
   } catch (e) {
     console.error(`script/${cardRowDataID}.ts not found`);
   }
-  return {};
+  return {
+    query: <T>(ctx: any, q: T) => {
+      console.log(`script/${cardRowDataID}.ts query not impl`);
+      return q;
+    },
+  };
 }

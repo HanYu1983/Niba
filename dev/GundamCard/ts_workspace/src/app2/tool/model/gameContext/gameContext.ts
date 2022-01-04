@@ -1,4 +1,4 @@
-import { Timing, TIMEING_CHART } from "../basic";
+import { Timing, TIMING_CHART } from "../basic";
 import { ScriptContext, DEFAULT_SCRIPT_CONTEXT } from "../scriptContext";
 import { DEFAULT_TABLE, Table } from "../../../../tool/table";
 
@@ -33,7 +33,7 @@ export const DEFAULT_GAME_CONTEXT: GameContext = {
   gameState: {
     table: DEFAULT_TABLE,
     cardState: {},
-    timing: TIMEING_CHART[0],
+    timing: TIMING_CHART[0],
     playerState: {},
     activePlayerID: null,
   },

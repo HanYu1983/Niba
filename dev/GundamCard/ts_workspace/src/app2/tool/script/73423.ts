@@ -1,5 +1,6 @@
 import { Query, Text } from ".";
 import { TextCategory } from "../model/basic";
+import { GameContext } from "../model/gameContext";
 import { wrapRequireKey } from "../model/scriptContext";
 import { createTokuSyuKouKaText } from "./createTokuSyuKouKaText";
 
@@ -82,10 +83,12 @@ const texts: Text[] = [
   },
 ];
 
-module.exports.texts = texts;
-module.exports.query = (q: Query): void => {
+module.exports.query = (ctx: GameContext, q: Query): Query => {
   switch (q.id) {
     case "QueryText": {
+      q.texts = texts;
+      break;
     }
   }
+  return q;
 };

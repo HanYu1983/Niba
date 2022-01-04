@@ -24,7 +24,8 @@ import {
 } from "../tool/model/scriptContext";
 import { TextCategory } from "../tool/model/basic";
 import { createTokuSyuKouKaText } from "../tool/script/createTokuSyuKouKaText";
-import { Script } from "../tool/script";
+import { getCardScript, QueryText, Script } from "../tool/script";
+import { askRowData } from "../../tool/data";
 
 export function testSetAnswer() {
   const require1: RequireYesNo = {
@@ -285,8 +286,12 @@ function testTmp() {
   const effect4 = createTokuSyuKouKaText(["供給"], { cost: 2 });
   console.log(effect4);
 
-  const script: Script = require("../tool/script/73423");
-  console.log(script.texts);
+  const imgID = "179016_04B_U_WT075C_white";
+  const rowData = askRowData(imgID);
+  const script: Script = getCardScript(rowData.id);
+  console.log(
+    script.query<QueryText>(null, { id: "QueryText", texts: [] }).texts
+  );
 
   let ctx: GameContext = {
     ...DEFAULT_GAME_CONTEXT,

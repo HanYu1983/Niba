@@ -6,7 +6,7 @@ import {
   SiYouTiming,
   TargetType,
   Timing,
-  TIMEING_CHART,
+  TIMING_CHART,
   PlayerA,
   getBaShouID,
 } from "../basic";
