@@ -302,7 +302,7 @@ function testTmp() {
         blocks: [
           {
             id: "0",
-            payload: effect1.block,
+            payload: { ...effect1.block, cause: { cardID: "" } },
             createdTime: 0,
           },
           {
