@@ -32,7 +32,7 @@ export function doActionTarget(
             if (blockPayload.cause?.cardID == null) {
               throw new Error("blockPayload.cause?.cardID not found");
             }
-            return [blockPayload.cause?.cardID || ""];
+            return [blockPayload.cause.cardID];
         }
       })();
       const table = cardID.reduce((table, cardID) => {
