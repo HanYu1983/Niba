@@ -197,7 +197,7 @@ type TextCategoryZiDouKaTa = {
 
 type TextCategorySiYouKaTa = {
   id: "使用型";
-  timing: SiYouTiming;
+  timing?: SiYouTiming;
 };
 
 export type TextCategory = TextCategoryZiDouKaTa | TextCategorySiYouKaTa;
@@ -223,25 +223,45 @@ export type FlagKeyword = "破壊" | "プレイされたカード" | "once";
 
 type TargetTypePlayer = {
   id: "プレーヤー";
-  playerID: string;
+  playerID: (string | null)[];
 };
 
 type TargetTypeCard = {
   id: "カード";
-  cardID: string;
+  cardID: (string | null)[];
 };
 
 type TargetTypeBaSyou = {
   id: "場所";
-  baSyou: BaSyou;
+  baSyou: BaSyou | null;
+};
+
+type TargetTypeCardColor = {
+  id: "カードの色";
+  color: CardColor | null;
 };
 
 type TargetTypeThisCard = {
   id: "このカード";
 };
 
+type TargetTypeYesNo = {
+  id: "TargetTypeYesNo";
+  boolean: boolean | null;
+};
+
+type Damage = any;
+
+type TargetTypeDamage = {
+  id: "TargetTypeDamage";
+  damage: Damage | null;
+};
+
 export type TargetType =
   | TargetTypePlayer
   | TargetTypeCard
+  | TargetTypeCardColor
   | TargetTypeBaSyou
-  | TargetTypeThisCard;
+  | TargetTypeThisCard
+  | TargetTypeYesNo
+  | TargetTypeDamage;

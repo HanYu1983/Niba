@@ -16,52 +16,56 @@ const texts: Text[] = [
     text: "play card",
     category: {
       id: "使用型",
-      timing: ["攻撃ステップ"],
     },
     block: {
       require: {
-        id: "RequireAnd",
-        and: [
+        id: "RequireTarget",
+        targets: {
+          cards: { id: "このカード" },
+          faceDown: { id: "TargetTypeYesNo", boolean: false },
+          baSyou: {
+            id: "場所",
+            baSyou: { id: "RelatedBaSyou", value: ["自軍", "配備エリア"] },
+          },
+        },
+        condition: {
+          id: "ConditionOr",
+          or: [
+            // has quick
+            // or
+            // no quick && timing == "配置階段"
+          ],
+        },
+        action: [
           {
-            id: "RequireTarget",
-            targets: [{ id: "このカード" }],
-            action: [
-              {
-                id: "ActionSetFace",
-                faceDown: false,
-              },
-              {
-                id: "ActionSetTarget",
-                targetID: "a",
-              },
-            ],
+            id: "ActionSetFace",
+            cards: "cards",
+            faceDown: "faceDown",
           },
           {
-            id: "RequireTarget",
-            targets: [null],
-            condition: {
-              id: "ConditionOr",
-              or: [
-                // in spec basyou
-                // has quick
-                {
-                  id: "ConditionAnd",
-                  and: [
-                    // no has quick
-                    // timing in A
-                  ],
-                },
-              ],
-            },
-            action: [
-              {
-                id: "ActionSetTarget",
-                targetID: "b",
-              },
-            ],
+            id: "ActionSetTarget",
+            source: "cards",
+            target: "cards",
+          },
+          {
+            id: "ActionSetTarget",
+            source: "baSyou",
+            target: "baSyou",
           },
         ],
       },
+      feedback: [
+        {
+          id: "FeedbackAction",
+          action: [
+            {
+              id: "ActionMoveCardToPosition",
+              cards: "cards",
+              baSyou: "baSyou",
+            },
+          ],
+        },
+      ],
     },
   },
   {
@@ -81,29 +85,46 @@ const texts: Text[] = [
             require: wrapRequireKey({
               id: "RequireAnd",
               and: [
+                // 〔白２〕を支払う事ができる
                 {
                   id: "RequireTarget",
-                  targets: [],
+                  targets: {
+                    cards: {
+                      id: "カード",
+                      cardID: [null, null],
+                    },
+                    color: {
+                      id: "カードの色",
+                      color: "白",
+                    },
+                  },
                   action: [
                     {
                       id: "ActionConsumeG",
-                      color: "白",
-                      count: 2,
+                      cards: "cards",
+                      color: "color",
                     },
                   ],
                 },
                 {
                   id: "RequireTarget",
-                  targets: [null],
+                  targets: {
+                    "５以下の防御力を持つ敵軍ユニット１枚": {
+                      id: "カード",
+                      cardID: [null],
+                    },
+                  },
                   condition: {
                     id: "ConditionAnd",
                     and: [
                       {
                         id: "ConditionCardIsPlayerSide",
+                        source: "５以下の防御力を持つ敵軍ユニット１枚",
                         playerSide: "敵軍",
                       },
                       {
                         id: "ConditionCardPropertyCompare",
+                        source: "５以下の防御力を持つ敵軍ユニット１枚",
                         value: ["防御力", "<=", 5],
                       },
                     ],
@@ -111,7 +132,8 @@ const texts: Text[] = [
                   action: [
                     {
                       id: "ActionSetTarget",
-                      targetID: "cardA",
+                      source: "５以下の防御力を持つ敵軍ユニット１枚",
+                      target: "５以下の防御力を持つ敵軍ユニット１枚",
                     },
                   ],
                 },
@@ -119,11 +141,11 @@ const texts: Text[] = [
             }),
             feedback: [
               {
-                id: "FeedbackTargetAction",
-                targetID: "cardA",
+                id: "FeedbackAction",
                 action: [
                   {
                     id: "ActionDestroy",
+                    cards: "５以下の防御力を持つ敵軍ユニット１枚",
                   },
                 ],
               },

@@ -51,35 +51,92 @@ export function doCondition(
   require: RequireTarget,
   condition: Condition
 ): string | null {
-  try {
-    const results = require.targets.map((target, i) => {
-      if (target == null) {
-        throw new Error(
-          `block(${block.id}) require(${require.key}) 你必須完成第${i}個target`
-        );
+  switch (condition.id) {
+    case "ConditionNot": {
+      const result = doCondition(
+        gameCtx,
+        block,
+        blockPayload,
+        require,
+        condition.not
+      );
+      const isOk = result == null;
+      const notResult = isOk == false;
+      return notResult ? null : `子項目必須為否`;
+    }
+    case "ConditionAnd": {
+      const results = condition.and.map((cond) =>
+        doCondition(gameCtx, block, blockPayload, require, cond)
+      );
+      const reasons = results.filter((reason) => reason);
+      const hasFalse = reasons.length > 0;
+      if (hasFalse) {
+        return reasons.join(".");
       }
-      return doConditionTarget(gameCtx, block, blockPayload, target, condition);
-    });
-
-    const reasons = results
-      .map((reason, i) => {
-        if (reason == null) {
-          return reason;
-        }
-        return `第${i}選擇錯誤:${reason}`;
-      })
-      .filter((reason) => reason);
-
-    if (reasons.length) {
-      return reasons.join(".");
+      return null;
     }
-    return null;
-  } catch (e: any) {
-    if (e instanceof Error) {
-      return e.message;
+    case "ConditionOr": {
+      const results = condition.or.map((cond) =>
+        doCondition(gameCtx, block, blockPayload, require, cond)
+      );
+      const reasons = results.filter((reason) => reason);
+      const hasTrue = reasons.length != condition.or.length;
+      if (hasTrue) {
+        return null;
+      }
+      return `不符合其中1項: ${reasons.join(".")}`;
     }
-    return JSON.stringify(e);
+    case "ConditionTargetType":
+      {
+        // switch (condition.target) {
+        //   case "カード": {
+        //     if (target.id != "カード" && target.id != "このカード") {
+        //       return "必須是カード";
+        //     }
+        //   }
+        //   default:
+        //     if (target.id != condition.target) {
+        //       return `必須是${condition.target}`;
+        //     }
+        // }
+      }
+      break;
+    case "ConditionCardOnCategory": {
+      // if (target.id != "カード") {
+      //   return "必須是カード";
+      // }
+      // const card = getCard(gameCtx.gameState.table, target.cardID);
+      // if (card == null) {
+      //   return `target cardID(${target.cardID}) not found`;
+      // }
+
+      // const rowData = askRowData(card.protoID);
+      // switch (condition.category) {
+      //   case "ユニット":
+      //     if (rowData.category != "UNIT") {
+      //       return `卡片類型必須是${condition.category}`;
+      //     }
+      //   case "コマンド":
+      //     if (rowData.category != "COMMAND") {
+      //       return `卡片類型必須是${condition.category}`;
+      //     }
+      //   case "キャラクター":
+      //     if (rowData.category != "CHARACTER") {
+      //       return `卡片類型必須是${condition.category}`;
+      //     }
+      //   case "オペレーション":
+      //     if (rowData.category != "OPERATION") {
+      //       return `卡片類型必須是${condition.category}`;
+      //     }
+      //   case "グラフィック":
+      //     if (rowData.category != "GRAPHIC") {
+      //       return `卡片類型必須是${condition.category}`;
+      //     }
+      // }
+      return null;
+    }
   }
+  return null;
 }
 
 export function doAction(
@@ -90,10 +147,32 @@ export function doAction(
   action: Action,
   varCtxID: string
 ): GameContext {
+  Object.entries(require.targets).forEach(([key, target]) => {
+    switch (target.id) {
+      case "カード":
+        {
+          target.cardID.forEach((v, i) => {
+            if (v == null) {
+              throw new Error(`target(${key})[${i}] must not null`);
+            }
+          });
+        }
+        break;
+      case "プレーヤー": {
+        target.playerID.forEach((v, i) => {
+          if (v == null) {
+            throw new Error(`target(${key})[${i}] must not null`);
+          }
+        });
+        break;
+      }
+    }
+  });
+
   switch (action.id) {
     case "ActionSetTarget": {
-      const targetID = action.targetID;
-      const targets = require.targets;
+      const { target } = action;
+      const source = require.targets[action.source];
       return {
         ...gameCtx,
         scriptContext: mapVarContext(
@@ -104,7 +183,7 @@ export function doAction(
               ...varCtx,
               vars: {
                 ...varCtx.vars,
-                [targetID]: targets,
+                [target]: source,
               },
             };
           }
@@ -274,12 +353,14 @@ export function doFeedback(
     case "FeedbackAction": {
       const actions = feedback.action;
       if (actions.length) {
+        const targets =
+          gameCtx.scriptContext.varContextPool[varCtxID]?.vars || {};
         return actions.reduce((originGameCtx, action) => {
           return doActionTarget(
             originGameCtx,
             block,
             blockPayload,
-            null,
+            targets,
             action,
             varCtxID
           );
@@ -289,13 +370,7 @@ export function doFeedback(
     }
     case "FeedbackTargetAction": {
       const actions = feedback.action;
-      const targets: (TargetType | null)[] =
-        gameCtx.scriptContext.varContextPool[varCtxID]?.vars[
-          feedback.targetID
-        ] || null;
-      if (targets == null) {
-        throw new Error(`targetID ${feedback.targetID} is null`);
-      }
+      const targets = feedback.targets;
       if (actions.length) {
         return actions.reduce((originGameCtx, action) => {
           return doActionTarget(
@@ -390,7 +465,7 @@ export function setRequireAnswer(
 export function setRequireTarget(
   gameCtx: GameContext,
   requireID: string,
-  i: number,
+  varID: string,
   value: TargetType
 ): GameContext {
   const nextScriptCtx = mapBlockPayloadRequire(
@@ -405,12 +480,10 @@ export function setRequireTarget(
       if (require.id != "RequireTarget") {
         return require;
       }
-      const nextTargets = require.targets.map((target, _i) => {
-        if (i != _i) {
-          return target;
-        }
-        return value;
-      });
+      const nextTargets = {
+        ...require.targets,
+        [varID]: value,
+      };
       return { ...require, targets: nextTargets };
     }
   );

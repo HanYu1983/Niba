@@ -9,7 +9,7 @@ export type RequireBase = {
 
 export type RequireTarget = {
   id: "RequireTarget";
-  targets: (TargetType | null)[];
+  targets: { [key: string]: TargetType };
   condition?: Condition;
   action?: Action[];
 } & RequireBase;
@@ -55,7 +55,7 @@ export type Require =
 
 type FeedbackTargetAction = {
   id: "FeedbackTargetAction";
-  targetID: string;
+  targets: { [key: string]: TargetType };
   action: Action[];
 };
 

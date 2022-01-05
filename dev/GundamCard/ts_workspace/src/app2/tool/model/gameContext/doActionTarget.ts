@@ -9,24 +9,53 @@ export function doActionTarget(
   gameCtx: GameContext,
   block: Block,
   blockPayload: BlockPayload,
-  targets: (TargetType | null)[] | null,
+  targets: { [key: string]: TargetType },
   action: Action,
   varCtxID: string
 ): GameContext {
   switch (action.id) {
     case "ActionRoll": {
-      if (targets == null) {
-        throw new Error(`targets not found`);
+      const cards = targets[action.cards];
+      if (cards?.id != "カード") {
+        throw new Error("must カード");
       }
-      const table = targets.reduce((table, target) => {
-        if (target == null) {
+      const table = cards.cardID.reduce((table, cardID) => {
+        if (cardID == null) {
           throw new Error("target must not null");
         }
-        if (target.id != "カード") {
-          throw new Error("target must be カード");
+        return mapCard(table, (card) => {
+          if (card.id != cardID) {
+            return card;
+          }
+          return {
+            ...card,
+            tap: true,
+          };
+        });
+      }, gameCtx.gameState.table);
+      return {
+        ...gameCtx,
+        gameState: {
+          ...gameCtx.gameState,
+          table: table,
+        },
+      };
+    }
+    case "ActionConsumeG": {
+      const cards = targets[action.cards];
+      const color = targets[action.color || ""];
+      if (cards?.id != "カード") {
+        throw new Error("must カード");
+      }
+      if (color?.id != "カードの色") {
+        throw new Error("must カードの色");
+      }
+      const table = cards.cardID.reduce((table, cardID) => {
+        if (cardID == null) {
+          throw new Error("target must not null");
         }
         return mapCard(table, (card) => {
-          if (card.id != target.id) {
+          if (card.id != cardID) {
             return card;
           }
           return {

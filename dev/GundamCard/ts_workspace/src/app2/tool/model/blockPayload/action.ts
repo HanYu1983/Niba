@@ -2,26 +2,30 @@ import type { CardColor, BaSyou, FlagKeyword } from "../basic";
 
 type ActionRoll = {
   id: "ActionRoll";
+  cards: string;
 };
 
 type ActionReroll = {
   id: "ActionReroll";
+  cards: string;
 };
 
 type ActionSetTarget = {
   id: "ActionSetTarget";
-  targetID: string;
+  source: string;
+  target: string;
 };
 
 type ActionConsumeG = {
   id: "ActionConsumeG";
-  color?: CardColor;
-  count: number;
+  cards: string;
+  color?: string;
 };
 
 // 廃棄
 type ActionDrop = {
   id: "ActionDrop";
+  cards: string;
 };
 
 type ActionDraw = {
@@ -31,39 +35,38 @@ type ActionDraw = {
 
 type ActionDestroy = {
   id: "ActionDestroy";
+  cards: string;
 };
 
 type ActionMoveCardToPosition = {
   id: "ActionMoveCardToPosition";
-  toPosition: BaSyou;
+  cards: string;
+  baSyou: string;
 };
 
 type ActionSetFlag = {
   id: "ActionSetFlag";
-  flag: FlagKeyword;
+  cards: string;
+  flag: string;
   value: boolean;
 };
 
 type ActionSetFace = {
   id: "ActionSetFace";
-  faceDown: boolean;
-};
-
-type ActionCreateArrayFromSourceTargetID = {
-  id: "ActionCreateArrayFromSourceTargetID";
-  sourceTargetID: string[];
-  targetID: string;
+  cards: string;
+  faceDown: string;
 };
 
 type ActionOKiKaeRu = {
   id: "ActionOKiKaeRu";
+  cardA: string;
+  cardB: string;
 };
-
-type Value = any;
 
 type ActionUnitDamage = {
   id: "ActionUnitDamage";
-  value: Value;
+  cards: string;
+  value: string;
 };
 
 export type Action =
@@ -77,6 +80,5 @@ export type Action =
   | ActionDestroy
   | ActionSetFace
   | ActionSetFlag
-  | ActionCreateArrayFromSourceTargetID
   | ActionOKiKaeRu
   | ActionUnitDamage;

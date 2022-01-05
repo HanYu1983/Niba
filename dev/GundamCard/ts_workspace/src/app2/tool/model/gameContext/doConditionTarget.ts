@@ -11,7 +11,7 @@ export function doConditionTarget(
   gameCtx: GameContext,
   block: Block,
   blockPayload: BlockPayload,
-  target: TargetType,
+  targets: { [key: string]: TargetType },
   condition: Condition
 ): string | null {
   switch (condition.id) {
@@ -20,7 +20,7 @@ export function doConditionTarget(
         gameCtx,
         block,
         blockPayload,
-        target,
+        targets,
         condition.not
       );
       const isOk = result == null;
@@ -29,7 +29,7 @@ export function doConditionTarget(
     }
     case "ConditionAnd": {
       const results = condition.and.map((cond) =>
-        doConditionTarget(gameCtx, block, blockPayload, target, cond)
+        doConditionTarget(gameCtx, block, blockPayload, targets, cond)
       );
       const reasons = results.filter((reason) => reason);
       const hasFalse = reasons.length > 0;
@@ -40,7 +40,7 @@ export function doConditionTarget(
     }
     case "ConditionOr": {
       const results = condition.or.map((cond) =>
-        doConditionTarget(gameCtx, block, blockPayload, target, cond)
+        doConditionTarget(gameCtx, block, blockPayload, targets, cond)
       );
       const reasons = results.filter((reason) => reason);
       const hasTrue = reasons.length != condition.or.length;
@@ -51,51 +51,51 @@ export function doConditionTarget(
     }
     case "ConditionTargetType":
       {
-        switch (condition.target) {
-          case "カード": {
-            if (target.id != "カード" && target.id != "このカード") {
-              return "必須是カード";
-            }
-          }
-          default:
-            if (target.id != condition.target) {
-              return `必須是${condition.target}`;
-            }
-        }
+        // switch (condition.target) {
+        //   case "カード": {
+        //     if (target.id != "カード" && target.id != "このカード") {
+        //       return "必須是カード";
+        //     }
+        //   }
+        //   default:
+        //     if (target.id != condition.target) {
+        //       return `必須是${condition.target}`;
+        //     }
+        // }
       }
       break;
     case "ConditionCardOnCategory": {
-      if (target.id != "カード") {
-        return "必須是カード";
-      }
-      const card = getCard(gameCtx.gameState.table, target.cardID);
-      if (card == null) {
-        return `target cardID(${target.cardID}) not found`;
-      }
+      // if (target.id != "カード") {
+      //   return "必須是カード";
+      // }
+      // const card = getCard(gameCtx.gameState.table, target.cardID);
+      // if (card == null) {
+      //   return `target cardID(${target.cardID}) not found`;
+      // }
 
-      const rowData = askRowData(card.protoID);
-      switch (condition.category) {
-        case "ユニット":
-          if (rowData.category != "UNIT") {
-            return `卡片類型必須是${condition.category}`;
-          }
-        case "コマンド":
-          if (rowData.category != "COMMAND") {
-            return `卡片類型必須是${condition.category}`;
-          }
-        case "キャラクター":
-          if (rowData.category != "CHARACTER") {
-            return `卡片類型必須是${condition.category}`;
-          }
-        case "オペレーション":
-          if (rowData.category != "OPERATION") {
-            return `卡片類型必須是${condition.category}`;
-          }
-        case "グラフィック":
-          if (rowData.category != "GRAPHIC") {
-            return `卡片類型必須是${condition.category}`;
-          }
-      }
+      // const rowData = askRowData(card.protoID);
+      // switch (condition.category) {
+      //   case "ユニット":
+      //     if (rowData.category != "UNIT") {
+      //       return `卡片類型必須是${condition.category}`;
+      //     }
+      //   case "コマンド":
+      //     if (rowData.category != "COMMAND") {
+      //       return `卡片類型必須是${condition.category}`;
+      //     }
+      //   case "キャラクター":
+      //     if (rowData.category != "CHARACTER") {
+      //       return `卡片類型必須是${condition.category}`;
+      //     }
+      //   case "オペレーション":
+      //     if (rowData.category != "OPERATION") {
+      //       return `卡片類型必須是${condition.category}`;
+      //     }
+      //   case "グラフィック":
+      //     if (rowData.category != "GRAPHIC") {
+      //       return `卡片類型必須是${condition.category}`;
+      //     }
+      // }
       return null;
     }
   }

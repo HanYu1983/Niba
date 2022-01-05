@@ -6,9 +6,10 @@ import {
   DEFAULT_BLOCK_CONTEXT,
 } from "./blockContext";
 import { Require, BlockPayload, RequireOr, RequireAnd } from "../blockPayload";
+import { TargetType } from "../basic";
 
 export type VarContextType = {
-  vars: { [key: string]: any };
+  vars: { [key: string]: TargetType };
 };
 
 const DEFAULT_VAR_CONTEXT: VarContextType = {

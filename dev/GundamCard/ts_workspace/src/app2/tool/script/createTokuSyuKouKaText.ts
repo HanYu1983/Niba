@@ -23,16 +23,38 @@ export function createTokuSyuKouKaText(
             and: [
               {
                 id: "RequireTarget",
-                targets: [null],
+                targets: {
+                  cards: {
+                    id: "カード",
+                    cardID: new Array(options.cost || 0).fill(null),
+                  },
+                },
+                action: [
+                  {
+                    id: "ActionConsumeG",
+                    cards: "cards",
+                  },
+                ],
+              },
+              {
+                id: "RequireTarget",
+                targets: {
+                  cards: {
+                    id: "カード",
+                    cardID: [null],
+                  },
+                },
                 condition: {
                   id: "ConditionAnd",
                   and: [
                     {
                       id: "ConditionCardIsPlayerSide",
+                      source: "cards",
                       playerSide: "自軍",
                     },
                     {
                       id: "ConditionCardIsRole",
+                      source: "cards",
                       role: "ユニット",
                     },
                     //TODO: not this card
@@ -43,11 +65,11 @@ export function createTokuSyuKouKaText(
           }),
           feedback: [
             {
-              id: "FeedbackTargetAction",
-              targetID: "cardA",
+              id: "FeedbackAction",
               action: [
                 {
                   id: "ActionReroll",
+                  cards: "cards",
                 },
               ],
             },
@@ -63,13 +85,24 @@ export function createTokuSyuKouKaText(
           timing: ["防御ステップ"],
         },
         block: {
+          contextID: `createTokuSyuKouKaText_${_seqID++}`,
           require: wrapRequireKey({
             id: "RequireAnd",
             and: [
               {
                 id: "RequireTarget",
-                targets: [],
-                action: [{ id: "ActionConsumeG", count: options.cost || 0 }],
+                targets: {
+                  cards: {
+                    id: "カード",
+                    cardID: new Array(options.cost || 0).fill(null),
+                  },
+                },
+                action: [
+                  {
+                    id: "ActionConsumeG",
+                    cards: "cards",
+                  },
+                ],
               },
               {
                 id: "RequireCustom",
@@ -80,25 +113,55 @@ export function createTokuSyuKouKaText(
               },
               {
                 id: "RequireTarget",
-                targets: [null],
+                targets: {
+                  targetCard: {
+                    id: "カード",
+                    cardID: [null],
+                  },
+                },
                 condition: {
                   id: "ConditionAnd",
                   and: [
                     {
                       id: "ConditionCardIsPlayerSide",
+                      source: "targetCard",
                       playerSide: "敵軍",
                     },
                     {
                       id: "ConditionCardIsRole",
+                      source: "targetCard",
                       role: "ユニット",
                     },
                     // 交戦中
                     {
                       id: "ConditionCardIsBattle",
+                      source: "targetCard",
                     },
                   ],
                 },
-                action: [{ id: "ActionSetTarget", targetID: "cardA" }],
+                action: [
+                  {
+                    id: "ActionSetTarget",
+                    source: "targetCard",
+                    target: "targetCard",
+                  },
+                ],
+              },
+              {
+                id: "RequireTarget",
+                targets: {
+                  damage: {
+                    id: "TargetTypeDamage",
+                    damage: damage,
+                  },
+                },
+                action: [
+                  {
+                    id: "ActionSetTarget",
+                    source: "damage",
+                    target: "damage",
+                  },
+                ],
               },
             ],
           }),
@@ -108,9 +171,14 @@ export function createTokuSyuKouKaText(
               block: {
                 feedback: [
                   {
-                    id: "FeedbackTargetAction",
-                    targetID: "cardA",
-                    action: [{ id: "ActionUnitDamage", value: damage }],
+                    id: "FeedbackAction",
+                    action: [
+                      {
+                        id: "ActionUnitDamage",
+                        cards: "targetCard",
+                        value: "damage",
+                      },
+                    ],
                   },
                 ],
               },
@@ -128,39 +196,64 @@ export function createTokuSyuKouKaText(
           timing: ["ダメージ判定ステップ"],
         },
         block: {
-          contextID: `createTokuSyuKouKaText_${_seqID++}`, // TODO uuid
+          contextID: `createTokuSyuKouKaText_${_seqID++}`,
           require: wrapRequireKey({
             id: "RequireAnd",
             and: [
               {
                 id: "RequireTarget",
-                targets: [],
-                action: [{ id: "ActionConsumeG", count: options.cost || 0 }],
+                targets: {
+                  cards: {
+                    id: "カード",
+                    cardID: new Array(options.cost || 0).fill(null),
+                  },
+                },
+                action: [
+                  {
+                    id: "ActionConsumeG",
+                    cards: "cards",
+                  },
+                ],
               },
               {
                 id: "RequireTarget",
-                targets: [null],
+                targets: {
+                  targetCard: {
+                    id: "カード",
+                    cardID: [null],
+                  },
+                },
                 condition: {
                   id: "ConditionAnd",
                   and: [
                     {
                       id: "ConditionCardIsPlayerSide",
+                      source: "targetCard",
                       playerSide: "敵軍",
                     },
                     {
                       id: "ConditionCardIsRole",
+                      source: "targetCard",
                       role: "ユニット",
                     },
                     {
                       id: "ConditionCardIsBattle",
+                      source: "targetCard",
                     },
                     {
                       id: "ConditionCardPropertyCompare",
+                      source: "targetCard",
                       value: ["防御力", "<=", damage],
                     },
                   ],
                 },
-                action: [{ id: "ActionSetTarget", targetID: "cardA" }],
+                action: [
+                  {
+                    id: "ActionSetTarget",
+                    source: "targetCard",
+                    target: "targetCard",
+                  },
+                ],
               },
             ],
           }),
@@ -170,11 +263,11 @@ export function createTokuSyuKouKaText(
               block: {
                 feedback: [
                   {
-                    id: "FeedbackTargetAction",
-                    targetID: "cardA",
+                    id: "FeedbackAction",
                     action: [
                       {
                         id: "ActionDestroy",
+                        cards: "targetCard",
                       },
                     ],
                   },
@@ -199,22 +292,38 @@ export function createTokuSyuKouKaText(
             and: [
               {
                 id: "RequireTarget",
-                targets: [],
-                action: [{ id: "ActionConsumeG", count: options.cost || 0 }],
-              },
-              {
-                id: "RequireTarget",
-                targets: [{ id: "このカード" }],
+                targets: {
+                  cards: {
+                    id: "カード",
+                    cardID: new Array(options.cost || 0).fill(null),
+                  },
+                },
                 action: [
                   {
-                    id: "ActionSetTarget",
-                    targetID: "cardA",
+                    id: "ActionConsumeG",
+                    cards: "cards",
                   },
                 ],
               },
               {
                 id: "RequireTarget",
-                targets: [null],
+                targets: {
+                  cardA: { id: "このカード" },
+                },
+                action: [
+                  {
+                    id: "ActionSetTarget",
+                    source: "cardA",
+                    target: "cardA",
+                  },
+                ],
+              },
+              {
+                id: "RequireTarget",
+                targets: {
+                  cardB: { id: "カード", cardID: [null] },
+                  faceDown: { id: "TargetTypeYesNo", boolean: false },
+                },
                 condition: {
                   id: "ConditionAnd",
                   and: [
@@ -223,6 +332,7 @@ export function createTokuSyuKouKaText(
                       or: [
                         {
                           id: "ConditionCardOnBaSyou",
+                          source: "cardB",
                           baSyou: {
                             id: "RelatedBaSyou",
                             value: ["自軍", "手札"],
@@ -230,6 +340,7 @@ export function createTokuSyuKouKaText(
                         },
                         {
                           id: "ConditionCardOnBaSyou",
+                          source: "cardB",
                           baSyou: {
                             id: "RelatedBaSyou",
                             value: ["自軍", "ハンガー"],
@@ -239,10 +350,12 @@ export function createTokuSyuKouKaText(
                     },
                     {
                       id: "ConditionCardOnCategory",
+                      source: "cardB",
                       category: "ユニット",
                     },
                     {
                       id: "ConditionCardHasTokuTyou",
+                      source: "cardB",
                       value: tokuTyou,
                     },
                     // TODO: 合計國力 <= 自軍G的數量
@@ -292,30 +405,20 @@ export function createTokuSyuKouKaText(
                   ],
                 },
                 action: [
-                  { id: "ActionSetFace", faceDown: false },
-                  { id: "ActionSetTarget", targetID: "cardB" },
-                ],
-              },
-              {
-                id: "RequireTarget",
-                targets: [],
-                action: [
-                  {
-                    id: "ActionCreateArrayFromSourceTargetID",
-                    sourceTargetID: ["cardA", "cardB"],
-                    targetID: "cardAB",
-                  },
+                  { id: "ActionSetFace", cards: "cardB", faceDown: "faceDown" },
+                  { id: "ActionSetTarget", source: "cardB", target: "cardB" },
                 ],
               },
             ],
           }),
           feedback: [
             {
-              id: "FeedbackTargetAction",
-              targetID: "cardAB",
+              id: "FeedbackAction",
               action: [
                 {
                   id: "ActionOKiKaeRu",
+                  cardA: "cardA",
+                  cardB: "cardB",
                 },
               ],
             },
