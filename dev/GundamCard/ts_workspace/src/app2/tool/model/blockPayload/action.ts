@@ -1,13 +1,22 @@
-import type { CardColor, BaSyou, FlagKeyword } from "../basic";
+import type {
+  CardColor,
+  BaSyou,
+  FlagKeyword,
+  TargetTypeCard,
+  TargetTypeCardColor,
+  TargetTypeBaSyou,
+  TargetTypeYesNo,
+  TargetTypeThisCard,
+} from "../basic";
 
 type ActionRoll = {
   id: "ActionRoll";
-  cards: string;
+  cards: string | TargetTypeCard | TargetTypeThisCard;
 };
 
 type ActionReroll = {
   id: "ActionReroll";
-  cards: string;
+  cards: string | TargetTypeCard | TargetTypeThisCard;
 };
 
 type ActionSetTarget = {
@@ -18,14 +27,14 @@ type ActionSetTarget = {
 
 type ActionConsumeG = {
   id: "ActionConsumeG";
-  cards: string;
-  color?: string;
+  cards: string | TargetTypeCard;
+  color?: string | TargetTypeCardColor;
 };
 
 // 廃棄
 type ActionDrop = {
   id: "ActionDrop";
-  cards: string;
+  cards: string | TargetTypeCard | TargetTypeThisCard;
 };
 
 type ActionDraw = {
@@ -35,37 +44,37 @@ type ActionDraw = {
 
 type ActionDestroy = {
   id: "ActionDestroy";
-  cards: string;
+  cards: string | TargetTypeCard | TargetTypeThisCard;
 };
 
 type ActionMoveCardToPosition = {
   id: "ActionMoveCardToPosition";
-  cards: string;
-  baSyou: string;
+  cards: string | TargetTypeCard | TargetTypeThisCard;
+  baSyou: string | TargetTypeBaSyou;
 };
 
 type ActionSetFlag = {
   id: "ActionSetFlag";
-  cards: string;
+  cards: string | TargetTypeCard | TargetTypeThisCard;
   flag: string;
   value: boolean;
 };
 
 type ActionSetFace = {
   id: "ActionSetFace";
-  cards: string;
-  faceDown: string;
+  cards: string | TargetTypeCard | TargetTypeThisCard;
+  faceDown: string | TargetTypeYesNo;
 };
 
 type ActionOKiKaeRu = {
   id: "ActionOKiKaeRu";
-  cardA: string;
-  cardB: string;
+  cardA: string | TargetTypeCard | TargetTypeThisCard;
+  cardB: string | TargetTypeCard | TargetTypeThisCard;
 };
 
 type ActionUnitDamage = {
   id: "ActionUnitDamage";
-  cards: string;
+  cards: string | TargetTypeCard | TargetTypeThisCard;
   value: string;
 };
 

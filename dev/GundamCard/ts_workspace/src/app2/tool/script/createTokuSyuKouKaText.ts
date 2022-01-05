@@ -236,6 +236,7 @@ export function createTokuSyuKouKaText(
                       source: "targetCard",
                       role: "ユニット",
                     },
+                    // TODO: 和這張卡交戰中的
                     {
                       id: "ConditionCardIsBattle",
                       source: "targetCard",
@@ -413,14 +414,21 @@ export function createTokuSyuKouKaText(
           }),
           feedback: [
             {
-              id: "FeedbackAction",
-              action: [
-                {
-                  id: "ActionOKiKaeRu",
-                  cardA: "cardA",
-                  cardB: "cardB",
-                },
-              ],
+              id: "FeedbackAddBlock",
+              block: {
+                feedback: [
+                  {
+                    id: "FeedbackAction",
+                    action: [
+                      {
+                        id: "ActionOKiKaeRu",
+                        cardA: "cardA",
+                        cardB: "cardB",
+                      },
+                    ],
+                  },
+                ],
+              },
             },
           ],
         },

@@ -15,11 +15,27 @@ export function doActionTarget(
 ): GameContext {
   switch (action.id) {
     case "ActionRoll": {
-      const cards = targets[action.cards];
-      if (cards?.id != "カード") {
+      const cards = (() => {
+        if (typeof action.cards == "string") {
+          return targets[action.cards];
+        }
+        return action.cards;
+      })();
+      if (cards?.id != "カード" && cards?.id != "このカード") {
         throw new Error("must カード");
       }
-      const table = cards.cardID.reduce((table, cardID) => {
+      const cardID: (string | null)[] = (() => {
+        switch (cards.id) {
+          case "カード":
+            return cards.cardID;
+          case "このカード":
+            if (blockPayload.cause?.cardID == null) {
+              throw new Error("blockPayload.cause?.cardID not found");
+            }
+            return [blockPayload.cause?.cardID || ""];
+        }
+      })();
+      const table = cardID.reduce((table, cardID) => {
         if (cardID == null) {
           throw new Error("target must not null");
         }
@@ -42,11 +58,21 @@ export function doActionTarget(
       };
     }
     case "ActionConsumeG": {
-      const cards = targets[action.cards];
-      const color = targets[action.color || ""];
+      const cards = (() => {
+        if (typeof action.cards == "string") {
+          return targets[action.cards];
+        }
+        return action.cards;
+      })();
       if (cards?.id != "カード") {
         throw new Error("must カード");
       }
+      const color = (() => {
+        if (typeof action.color == "string") {
+          return targets[action.color || ""] || null;
+        }
+        return action.color || null;
+      })();
       if (color?.id != "カードの色") {
         throw new Error("must カードの色");
       }

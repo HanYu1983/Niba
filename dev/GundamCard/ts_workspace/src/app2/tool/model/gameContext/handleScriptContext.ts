@@ -153,7 +153,9 @@ export function doAction(
         {
           target.cardID.forEach((v, i) => {
             if (v == null) {
-              throw new Error(`target(${key})[${i}] must not null`);
+              throw new Error(
+                `target(${block.id})(${key})[${i}] must not null`
+              );
             }
           });
         }
@@ -161,7 +163,7 @@ export function doAction(
       case "プレーヤー": {
         target.playerID.forEach((v, i) => {
           if (v == null) {
-            throw new Error(`target(${key})[${i}] must not null`);
+            throw new Error(`target(${block.id})(${key})[${i}] must not null`);
           }
         });
         break;
@@ -173,6 +175,9 @@ export function doAction(
     case "ActionSetTarget": {
       const { target } = action;
       const source = require.targets[action.source];
+      if (source == null) {
+        throw new Error(`require.targets[${action.source}] not found`);
+      }
       return {
         ...gameCtx,
         scriptContext: mapVarContext(
@@ -340,6 +345,7 @@ export function doFeedback(
     case "FeedbackAddBlock": {
       const payload: BlockPayload = {
         ...feedback.block,
+        cause: blockPayload.cause,
         contextID: blockPayload.contextID,
       };
       return {

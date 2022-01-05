@@ -449,25 +449,6 @@ export function createPlayUnitCardBlock(cardID: string): BlockPayload {
           ],
         },
         //「対象」の指定、コストの支払い
-        {
-          id: "RequireTarget",
-          targets: {
-            baSyou: {
-              id: "場所",
-              baSyou: {
-                id: "RelatedBaSyou",
-                value: ["自軍", "ジャンクヤード"],
-              },
-            },
-          },
-          action: [
-            {
-              id: "ActionSetTarget",
-              source: "baSyou",
-              target: "baSyou",
-            },
-          ],
-        },
       ],
     },
     feedback: [
@@ -482,7 +463,13 @@ export function createPlayUnitCardBlock(cardID: string): BlockPayload {
                 {
                   id: "ActionMoveCardToPosition",
                   cards: "playCard",
-                  baSyou: "baSyou",
+                  baSyou: {
+                    id: "場所",
+                    baSyou: {
+                      id: "RelatedBaSyou",
+                      value: ["自軍", "配備エリア"],
+                    },
+                  },
                 },
               ],
             },
@@ -493,416 +480,452 @@ export function createPlayUnitCardBlock(cardID: string): BlockPayload {
   };
 }
 
-// {
-//   // 『常駐』：このカードは、＋X／＋X／＋Xを得る。Xの値は、自軍手札の枚数とする。
-//   const ability: CardText = {
-//     text: "『常駐』：このカードは、＋X／＋X／＋Xを得る。Xの値は、自軍手札の枚数とする。",
-//     category: {
-//       id: "自動型",
-//       category: "常駐",
-//     },
-//     block: {
-//       feedback: [],
-//     },
-//   };
-// }
-// {
-//   const ability: CardText = {
-//     text: "『起動』：このカードが場に出た場合、カード３枚を引く。この記述の効果は、プレイヤー毎に１ターンに１回しか起動しない。",
-//     category: {
-//       id: "自動型",
-//       category: ["起動", 0],
-//     },
-//     block: {
-//       require: {
-//         id: "RequireEvent",
-//         condition: {
-//           id: "ConditionAnd",
-//           and: [
-//             {
-//               id: "ConditionGameEventOnEnterStage",
-//               wherePosition: [],
-//             },
-//             {
-//               id: "ConditionNot",
-//               not: {
-//                 id: "ConditionCardContainFlag",
-//                 flag: "once",
-//               },
-//             },
-//           ],
-//         },
-//       },
-//       feedback: [
-//         {
-//           id: "FeedbackAction",
-//           action: [
-//             {
-//               id: "ActionDraw",
-//               count: 3,
-//             },
-//           ],
-//         },
-//         {
-//           id: "FeedbackAction",
-//           action: [
-//             {
-//               id: "ActionSetFlag",
-//               flag: "once",
-//               value: true,
-//             },
-//           ],
-//         },
-//       ],
-//     },
-//   };
-// }
-// {
-//   const ability: CardText = {
-//     text: "（常時）〔１〕：このカードを廃棄する。その場合、自軍ジャンクヤードにあるユニット１枚を、持ち主のハンガーに移す。",
-//     category: {
-//       id: "使用型",
-//       timing: ["常時"],
-//     },
-//     block: {
-//       require: {
-//         id: "RequireTarget",
-//         targets: [],
-//         action: [
-//           {
-//             id: "ActionConsumeG",
-//             count: 1,
-//           },
-//         ],
-//       },
-//       feedback: [
-//         {
-//           id: "FeedbackAddBlock",
-//           block: {
-//             require: {
-//               id: "RequireTarget",
-//               targets: [
-//                 {
-//                   id: "このカード",
-//                 },
-//               ],
+{
+  // 『常駐』：このカードは、＋X／＋X／＋Xを得る。Xの値は、自軍手札の枚数とする。
+  const ability: CardText = {
+    text: "『常駐』：このカードは、＋X／＋X／＋Xを得る。Xの値は、自軍手札の枚数とする。",
+    category: {
+      id: "自動型",
+      category: "常駐",
+    },
+    block: {
+      require: {
+        id: "RequireTarget",
+        targets: {
+          myHandCount: {
+            id: "場所",
+            baSyou: {
+              id: "RelatedBaSyou",
+              value: ["自軍", "手札"],
+            },
+          },
+        },
+        action: [
+          // store count to var
+        ],
+      },
+      feedback: [
+        {
+          id: "FeedbackAction",
+          action: [
+            // add effect
+          ],
+        },
+      ],
+    },
+  };
+}
+{
+  const ability: CardText = {
+    text: "『起動』：このカードが場に出た場合、カード３枚を引く。この記述の効果は、プレイヤー毎に１ターンに１回しか起動しない。",
+    category: {
+      id: "自動型",
+      category: ["起動", 0],
+    },
+    block: {
+      require: {
+        id: "RequireTarget",
+        targets: {
+          cardA: {
+            id: "このカード",
+          },
+        },
+        condition: {
+          id: "ConditionAnd",
+          and: [
+            {
+              id: "ConditionGameEventOnEnterStage",
+              wherePosition: [],
+            },
+            {
+              id: "ConditionNot",
+              not: {
+                id: "ConditionCardContainFlag",
+                source: "cardA",
+                flag: "once",
+              },
+            },
+          ],
+        },
+      },
+      feedback: [
+        {
+          id: "FeedbackAction",
+          action: [
+            {
+              id: "ActionDraw",
+              count: 3,
+            },
+          ],
+        },
+        {
+          id: "FeedbackAction",
+          action: [
+            {
+              id: "ActionSetFlag",
+              cards: "cardA",
+              flag: "once",
+              value: true,
+            },
+          ],
+        },
+      ],
+    },
+  };
+}
+{
+  const ability: CardText = {
+    text: "（常時）〔１〕：このカードを廃棄する。その場合、自軍ジャンクヤードにあるユニット１枚を、持ち主のハンガーに移す。",
+    category: {
+      id: "使用型",
+      timing: ["常時"],
+    },
+    block: {
+      contextID: "uuid",
+      require: {
+        id: "RequireAnd",
+        and: [
+          {
+            id: "RequireTarget",
+            targets: {
+              cards: {
+                id: "カード",
+                cardID: [null],
+              },
+            },
+            action: [
+              {
+                id: "ActionConsumeG",
+                cards: "cards",
+              },
+            ],
+          },
+          {
+            id: "RequireTarget",
+            targets: {},
+            action: [
+              {
+                id: "ActionDrop",
+                cards: {
+                  id: "このカード",
+                },
+              },
+            ],
+          },
+        ],
+      },
+      feedback: [
+        {
+          id: "FeedbackAddBlock",
+          block: {
+            require: {
+              id: "RequireTarget",
+              targets: {
+                自軍ジャンクヤードにあるユニット１枚: {
+                  id: "カード",
+                  cardID: [null],
+                },
+              },
+              condition: {
+                id: "ConditionCardOnBaSyou",
+                source: "自軍ジャンクヤードにあるユニット１枚",
+                baSyou: {
+                  id: "RelatedBaSyou",
+                  value: ["自軍", "ジャンクヤード"],
+                },
+              },
+              action: [
+                {
+                  id: "ActionMoveCardToPosition",
+                  cards: "自軍ジャンクヤードにあるユニット１枚",
+                  baSyou: {
+                    id: "場所",
+                    baSyou: {
+                      id: "RelatedBaSyou",
+                      value: ["持ち主", "ハンガー"],
+                    },
+                  },
+                },
+              ],
+            },
+            feedback: [],
+          },
+        },
+      ],
+    },
+  };
+}
 
-//               action: [
-//                 {
-//                   id: "ActionDrop",
-//                 },
-//               ],
-//             },
-//             feedback: [
-//               {
-//                 id: "FeedbackAddBlock",
-//                 block: {
-//                   require: {
-//                     id: "RequireTarget",
-//                     targets: [null],
-//                     condition: {
-//                       id: "ConditionAnd",
-//                       and: [
-//                         {
-//                           id: "ConditionTargetType",
-//                           target: "カード",
-//                         },
-//                         {
-//                           id: "ConditionCardOnBaSyou",
-//                           baSyou: {
-//                             id: "RelatedBaSyou",
-//                             value: ["自軍", "ジャンクヤード"],
-//                           },
-//                         },
-//                       ],
-//                     },
-//                     action: [
-//                       {
-//                         id: "ActionSetTarget",
-//                         targetID: "cardMoveToHanger",
-//                       },
-//                     ],
-//                   },
-//                   feedback: [
-//                     {
-//                       id: "FeedbackTargetAction",
-//                       targetID: "cardMoveToHanger",
-//                       action: [
-//                         {
-//                           id: "ActionMoveCardToPosition",
-//                           toPosition: {
-//                             id: "RelatedBaSyou",
-//                             value: ["持ち主", "ハンガー"],
-//                           },
-//                         },
-//                       ],
-//                     },
-//                   ],
-//                 },
-//               },
-//             ],
-//           },
-//         },
-//       ],
-//     },
-//   };
-// }
+{
+  // <『起動』：このカードがGとして場に出た場合、〔黒２〕を支払う事ができる。その場合、自軍本国のカードを全て見て、その中にあるグラフィック１枚を、自軍ハンガーに移す事ができる。その後、自軍本国をシャッフルする>
+  const ability: CardText = {
+    text: "<『起動』：このカードがGとして場に出た場合、〔黒２〕を支払う事ができる。その場合、自軍本国のカードを全て見て、その中にあるグラフィック１枚を、自軍ハンガーに移す事ができる。その後、自軍本国をシャッフルする>",
+    category: {
+      id: "自動型",
+      category: ["起動", 0],
+    },
+    absolute: true,
+    block: {
+      contextID: "uuid",
+      require: {
+        id: "RequireEvent",
+        condition: {
+          id: "ConditionAnd",
+          and: [
+            {
+              id: "ConditionGameEventOnEnterStage",
+              wherePosition: [
+                {
+                  id: "RelatedBaSyou",
+                  value: ["自軍", "Gゾーン"],
+                },
+              ],
+            },
+          ],
+        },
+      },
+      feedback: [
+        {
+          id: "FeedbackAddBlock",
+          block: {
+            require: {
+              id: "RequireTarget",
+              targets: {
+                cards: {
+                  id: "カード",
+                  cardID: [null, null],
+                },
+              },
+              action: [
+                {
+                  id: "ActionConsumeG",
+                  cards: "cards",
+                  color: {
+                    id: "カードの色",
+                    color: "黒",
+                  },
+                },
+              ],
+            },
+            feedback: [
+              {
+                id: "FeedbackAddBlock",
+                block: {
+                  require: {
+                    id: "RequireAnd",
+                    and: [
+                      {
+                        id: "RequireTarget",
+                        targets: {
+                          "自軍本国のカードを全て見て、その中にあるグラフィック１枚を":
+                            {
+                              id: "カード",
+                              cardID: [null],
+                            },
+                        },
+                        condition: {
+                          id: "ConditionAnd",
+                          and: [
+                            {
+                              id: "ConditionCardOnBaSyou",
+                              source:
+                                "自軍本国のカードを全て見て、その中にあるグラフィック１枚を",
+                              baSyou: {
+                                id: "RelatedBaSyou",
+                                value: ["自軍", "本国"],
+                              },
+                            },
+                            {
+                              id: "ConditionCardOnCategory",
+                              source:
+                                "自軍本国のカードを全て見て、その中にあるグラフィック１枚を",
+                              category: "グラフィック",
+                            },
+                          ],
+                        },
+                        action: [
+                          {
+                            id: "ActionMoveCardToPosition",
+                            cards:
+                              "自軍本国のカードを全て見て、その中にあるグラフィック１枚を",
+                            baSyou: {
+                              id: "場所",
+                              baSyou: {
+                                id: "RelatedBaSyou",
+                                value: ["自軍", "ハンガー"],
+                              },
+                            },
+                          },
+                        ],
+                      },
+                    ],
+                  },
+                  feedback: [
+                    // 自軍本国をシャッフルする
+                  ],
+                },
+              },
+            ],
+          },
+        },
+      ],
+    },
+  };
+}
+{
+  //（自軍ターン）：セットカード以外の敵軍オペ１枚を破壊する。
+  const ability2: CardText = {
+    text: "（自軍ターン）：セットカード以外の敵軍オペ１枚を破壊する。",
+    category: {
+      id: "使用型",
+      timing: ["自軍", "ターン"],
+    },
+    block: {
+      feedback: [
+        {
+          id: "FeedbackAddBlock",
+          block: {
+            require: {
+              id: "RequireTarget",
+              targets: {
+                セットカード以外の敵軍オペ１枚: {
+                  id: "カード",
+                  cardID: [null],
+                },
+              },
+              condition: {
+                id: "ConditionAnd",
+                and: [
+                  {
+                    id: "ConditionNot",
+                    not: {
+                      id: "ConditionCardIsSetCard",
+                      source: "セットカード以外の敵軍オペ１枚",
+                    },
+                  },
+                  {
+                    id: "ConditionCardOnCategory",
+                    source: "セットカード以外の敵軍オペ１枚",
+                    category: "オペレーション",
+                  },
+                  {
+                    id: "ConditionCardIsPlayerSide",
+                    source: "セットカード以外の敵軍オペ１枚",
+                    playerSide: "敵軍",
+                  },
+                ],
+              },
+              action: [
+                {
+                  id: "ActionDestroy",
+                  cards: "セットカード以外の敵軍オペ１枚",
+                },
+              ],
+            },
+          },
+        },
+      ],
+    },
+  };
+}
 
-// {
-//   // <『起動』：このカードがGとして場に出た場合、〔黒２〕を支払う事ができる。その場合、自軍本国のカードを全て見て、その中にあるグラフィック１枚を、自軍ハンガーに移す事ができる。その後、自軍本国をシャッフルする>
-//   const ability: CardText = {
-//     text: "<『起動』：このカードがGとして場に出た場合、〔黒２〕を支払う事ができる。その場合、自軍本国のカードを全て見て、その中にあるグラフィック１枚を、自軍ハンガーに移す事ができる。その後、自軍本国をシャッフルする>",
-//     category: {
-//       id: "自動型",
-//       category: ["起動", 0],
-//     },
-//     absolute: true,
-//     block: {
-//       require: {
-//         id: "RequireEvent",
-//         condition: {
-//           id: "ConditionAnd",
-//           and: [
-//             {
-//               id: "ConditionGameEventOnEnterStage",
-//               wherePosition: [
-//                 {
-//                   id: "RelatedBaSyou",
-//                   value: ["自軍", "Gゾーン"],
-//                 },
-//               ],
-//             },
-//           ],
-//         },
-//       },
-//       feedback: [
-//         {
-//           id: "FeedbackAddBlock",
-//           block: {
-//             require: {
-//               id: "RequireTarget",
-//               targets: [],
-//               action: [
-//                 {
-//                   id: "ActionConsumeG",
-//                   color: "黒",
-//                   count: 2,
-//                 },
-//               ],
-//             },
-//             feedback: [
-//               {
-//                 id: "FeedbackAddBlock",
-//                 block: {
-//                   require: {
-//                     id: "RequireAnd",
-//                     and: [
-//                       {
-//                         id: "RequireTarget",
-//                         targets: [null],
-//                         condition: {
-//                           id: "ConditionAnd",
-//                           and: [
-//                             {
-//                               id: "ConditionTargetType",
-//                               target: "カード",
-//                             },
-//                             {
-//                               id: "ConditionCardOnBaSyou",
-//                               baSyou: {
-//                                 id: "RelatedBaSyou",
-//                                 value: ["自軍", "本国"],
-//                               },
-//                             },
-//                             {
-//                               id: "ConditionCardOnCategory",
-//                               category: "グラフィック",
-//                             },
-//                           ],
-//                         },
-//                         action: [
-//                           {
-//                             id: "ActionSetTarget",
-//                             targetID: "cardToMoveHanger",
-//                           },
-//                         ],
-//                       },
-//                     ],
-//                   },
-//                   feedback: [
-//                     {
-//                       id: "FeedbackTargetAction",
-//                       targetID: "cardToMoveHanger",
-//                       action: [
-//                         {
-//                           id: "ActionMoveCardToPosition",
-//                           toPosition: {
-//                             id: "RelatedBaSyou",
-//                             value: ["自軍", "ハンガー"],
-//                           },
-//                         },
-//                       ],
-//                     },
-//                   ],
-//                 },
-//               },
-//             ],
-//           },
-//         },
-//       ],
-//     },
-//   };
-//   //（自軍ターン）：セットカード以外の敵軍オペ１枚を破壊する。
-//   const ability2: CardText = {
-//     text: "（自軍ターン）：セットカード以外の敵軍オペ１枚を破壊する。",
-//     category: {
-//       id: "使用型",
-//       timing: ["自軍", "ターン"],
-//     },
-//     block: {
-//       feedback: [
-//         {
-//           id: "FeedbackAddBlock",
-//           block: {
-//             require: {
-//               id: "RequireTarget",
-//               targets: [null],
-//               condition: {
-//                 id: "ConditionAnd",
-//                 and: [
-//                   {
-//                     id: "ConditionTargetType",
-//                     target: "カード",
-//                   },
-//                   {
-//                     id: "ConditionNot",
-//                     not: {
-//                       id: "ConditionCardIsSetCard",
-//                     },
-//                   },
-//                   {
-//                     id: "ConditionCardOnCategory",
-//                     category: "オペレーション",
-//                   },
-//                   {
-//                     id: "ConditionCardIsPlayerSide",
-//                     playerSide: "敵軍",
-//                   },
-//                 ],
-//               },
-//               action: [
-//                 {
-//                   id: "ActionDestroy",
-//                 },
-//               ],
-//             },
-//           },
-//         },
-//       ],
-//     },
-//   };
-// }
+{
+  // 『起動』：場、または手札から、敵軍ジャンクヤードにユニットが移動した場合、セットカードがセットされていない、G以外の敵軍カード１枚を破壊する。
+  const ability: BlockPayload = {
+    require: {
+      id: "RequireTarget",
+      targets: {
+        "セットカードがセットされていない、G以外の敵軍カード１枚": {
+          id: "カード",
+          cardID: [null],
+        },
+      },
+      condition: {
+        id: "ConditionAnd",
+        and: [
+          {
+            id: "ConditionNot",
+            not: {
+              id: "ConditionCardHasSetCard",
+              source: "セットカードがセットされていない、G以外の敵軍カード１枚",
+            },
+          },
+          {
+            id: "ConditionNot",
+            not: {
+              id: "ConditionCardIsRole",
+              source: "セットカードがセットされていない、G以外の敵軍カード１枚",
+              role: "グラフィック",
+            },
+          },
+          {
+            id: "ConditionCardIsPlayerSide",
+            source: "セットカードがセットされていない、G以外の敵軍カード１枚",
+            playerSide: "敵軍",
+          },
+        ],
+      },
+      action: [
+        {
+          id: "ActionDestroy",
+          cards: "セットカードがセットされていない、G以外の敵軍カード１枚",
+        },
+      ],
+    },
+  };
+}
 
-// {
-//   // 『起動』：場、または手札から、敵軍ジャンクヤードにユニットが移動した場合、セットカードがセットされていない、G以外の敵軍カード１枚を破壊する。
-//   const ability: BlockPayload = {
-//     require: {
-//       id: "RequireTarget",
-//       targets: [null],
-//       condition: {
-//         id: "ConditionAnd",
-//         and: [
-//           {
-//             id: "ConditionTargetType",
-//             target: "カード",
-//           },
-//           {
-//             id: "ConditionNot",
-//             not: {
-//               id: "ConditionCardHasSetCard",
-//             },
-//           },
-//           {
-//             id: "ConditionNot",
-//             not: {
-//               id: "ConditionCardIsRole",
-//               role: "グラフィック",
-//             },
-//           },
-//           {
-//             id: "ConditionCardIsPlayerSide",
-//             playerSide: "敵軍",
-//           },
-//         ],
-//       },
-//       action: [
-//         {
-//           id: "ActionDestroy",
-//         },
-//       ],
-//     },
-//   };
-// }
-
-// {
-//   // 『起動』：このカードが場に出た場合、自軍ユニット１枚の上に±０／±０／－１コイン２個を乗せる事ができる。その場合、カード１枚を引く。
-//   const ability: BlockPayload = {
-//     feedback: [
-//       {
-//         id: "FeedbackAddBlock",
-//         block: {
-//           require: {
-//             id: "RequireTarget",
-//             targets: [null],
-//             condition: {
-//               id: "ConditionAnd",
-//               and: [
-//                 {
-//                   id: "ConditionTargetType",
-//                   target: "カード",
-//                 },
-//                 {
-//                   id: "ConditionCardIsPlayerSide",
-//                   playerSide: "自軍",
-//                 },
-//                 {
-//                   id: "ConditionCardIsRole",
-//                   role: "ユニット",
-//                 },
-//               ],
-//             },
-//             action: [
-//               // put token
-//             ],
-//           },
-//           feedback: [
-//             {
-//               id: "FeedbackAddBlock",
-//               block: {
-//                 require: {
-//                   id: "RequireYesNo",
-//                   answer: null,
-//                 },
-//                 feedback: [
-//                   {
-//                     id: "FeedbackAction",
-//                     action: [
-//                       {
-//                         id: "ActionDraw",
-//                         count: 1,
-//                       },
-//                       // add token
-//                     ],
-//                   },
-//                 ],
-//               },
-//             },
-//           ],
-//         },
-//       },
-//     ],
-//   };
-// }
+{
+  // 『起動』：このカードが場に出た場合、自軍ユニット１枚の上に±０／±０／－１コイン２個を乗せる事ができる。その場合、カード１枚を引く。
+  const ability: BlockPayload = {
+    feedback: [
+      {
+        id: "FeedbackAddBlock",
+        block: {
+          contextID: "uuid",
+          require: {
+            id: "RequireTarget",
+            targets: {
+              自軍ユニット１枚: {
+                id: "カード",
+                cardID: [null],
+              },
+            },
+            condition: {
+              id: "ConditionAnd",
+              and: [
+                {
+                  id: "ConditionCardIsPlayerSide",
+                  source: "自軍ユニット１枚",
+                  playerSide: "自軍",
+                },
+                {
+                  id: "ConditionCardIsRole",
+                  source: "自軍ユニット１枚",
+                  role: "ユニット",
+                },
+              ],
+            },
+            action: [
+              // put token
+            ],
+          },
+          feedback: [
+            {
+              id: "FeedbackAction",
+              action: [
+                {
+                  id: "ActionDraw",
+                  count: 1,
+                },
+              ],
+            },
+          ],
+        },
+      },
+    ],
+  };
+}
 
 // {
 //   // （常時）〔R〕：配備エリアにいる、「特徴：T3部隊」を持つ自軍ユニット１枚を持ち主のハンガーに移す。

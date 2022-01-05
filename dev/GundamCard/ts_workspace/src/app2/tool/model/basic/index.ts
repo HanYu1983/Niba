@@ -221,31 +221,31 @@ export type TokuSyuKouKa =
 
 export type FlagKeyword = "破壊" | "プレイされたカード" | "once";
 
-type TargetTypePlayer = {
+export type TargetTypePlayer = {
   id: "プレーヤー";
   playerID: (string | null)[];
 };
 
-type TargetTypeCard = {
+export type TargetTypeCard = {
   id: "カード";
   cardID: (string | null)[];
 };
 
-type TargetTypeBaSyou = {
+export type TargetTypeBaSyou = {
   id: "場所";
   baSyou: BaSyou | null;
 };
 
-type TargetTypeCardColor = {
+export type TargetTypeCardColor = {
   id: "カードの色";
   color: CardColor | null;
 };
 
-type TargetTypeThisCard = {
+export type TargetTypeThisCard = {
   id: "このカード";
 };
 
-type TargetTypeYesNo = {
+export type TargetTypeYesNo = {
   id: "TargetTypeYesNo";
   boolean: boolean | null;
 };
