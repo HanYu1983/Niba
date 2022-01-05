@@ -13,6 +13,58 @@ import { createTokuSyuKouKaText } from "./createTokuSyuKouKaText";
 const texts: Text[] = [
   createTokuSyuKouKaText(["改装", "ブルーフレーム系"], { cost: 0 }),
   {
+    text: "play card",
+    category: {
+      id: "使用型",
+      timing: ["攻撃ステップ"],
+    },
+    block: {
+      require: {
+        id: "RequireAnd",
+        and: [
+          {
+            id: "RequireTarget",
+            targets: [{ id: "このカード" }],
+            action: [
+              {
+                id: "ActionSetFace",
+                faceDown: false,
+              },
+              {
+                id: "ActionSetTarget",
+                targetID: "a",
+              },
+            ],
+          },
+          {
+            id: "RequireTarget",
+            targets: [null],
+            condition: {
+              id: "ConditionOr",
+              or: [
+                // in spec basyou
+                // has quick
+                {
+                  id: "ConditionAnd",
+                  and: [
+                    // no has quick
+                    // timing in A
+                  ],
+                },
+              ],
+            },
+            action: [
+              {
+                id: "ActionSetTarget",
+                targetID: "b",
+              },
+            ],
+          },
+        ],
+      },
+    },
+  },
+  {
     text: "『起動』：「特徴：アストレイ系」を持つ自軍ユニットが、「改装」の効果で場に出た場合、〔白２〕を支払う事ができる。その場合、５以下の防御力を持つ敵軍ユニット１枚を破壊する。",
     category: {
       id: "自動型",
