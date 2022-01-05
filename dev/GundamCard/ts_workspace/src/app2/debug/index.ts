@@ -612,43 +612,54 @@ export function createPlayUnitCardBlock(cardID: string): BlockPayload {
               },
             ],
           },
+          {
+            id: "RequireTarget",
+            targets: {
+              自軍ジャンクヤードにあるユニット１枚: {
+                id: "カード",
+                cardID: [null],
+              },
+            },
+            condition: {
+              id: "ConditionCardOnBaSyou",
+              source: "自軍ジャンクヤードにあるユニット１枚",
+              baSyou: {
+                id: "RelatedBaSyou",
+                value: ["自軍", "ジャンクヤード"],
+              },
+            },
+            action: [
+              {
+                id: "ActionSetTarget",
+                source: "自軍ジャンクヤードにあるユニット１枚",
+                target: "自軍ジャンクヤードにあるユニット１枚",
+              },
+            ],
+          },
         ],
       },
       feedback: [
         {
           id: "FeedbackAddBlock",
           block: {
-            require: {
-              id: "RequireTarget",
-              targets: {
-                自軍ジャンクヤードにあるユニット１枚: {
-                  id: "カード",
-                  cardID: [null],
-                },
-              },
-              condition: {
-                id: "ConditionCardOnBaSyou",
-                source: "自軍ジャンクヤードにあるユニット１枚",
-                baSyou: {
-                  id: "RelatedBaSyou",
-                  value: ["自軍", "ジャンクヤード"],
-                },
-              },
-              action: [
-                {
-                  id: "ActionMoveCardToPosition",
-                  cards: "自軍ジャンクヤードにあるユニット１枚",
-                  baSyou: {
-                    id: "場所",
+            feedback: [
+              {
+                id: "FeedbackAction",
+                action: [
+                  {
+                    id: "ActionMoveCardToPosition",
+                    cards: "自軍ジャンクヤードにあるユニット１枚",
                     baSyou: {
-                      id: "RelatedBaSyou",
-                      value: ["持ち主", "ハンガー"],
+                      id: "場所",
+                      baSyou: {
+                        id: "RelatedBaSyou",
+                        value: ["持ち主", "ハンガー"],
+                      },
                     },
                   },
-                },
-              ],
-            },
-            feedback: [],
+                ],
+              },
+            ],
           },
         },
       ],
@@ -689,82 +700,75 @@ export function createPlayUnitCardBlock(cardID: string): BlockPayload {
           id: "FeedbackAddBlock",
           block: {
             require: {
-              id: "RequireTarget",
-              targets: {
-                cards: {
-                  id: "カード",
-                  cardID: [null, null],
-                },
-              },
-              action: [
+              id: "RequireAnd",
+              and: [
                 {
-                  id: "ActionConsumeG",
-                  cards: "cards",
-                  color: {
-                    id: "カードの色",
-                    color: "黒",
+                  id: "RequireTarget",
+                  targets: {
+                    cards: {
+                      id: "カード",
+                      cardID: [null, null],
+                    },
                   },
+                  action: [
+                    {
+                      id: "ActionConsumeG",
+                      cards: "cards",
+                      color: {
+                        id: "カードの色",
+                        color: "黒",
+                      },
+                    },
+                  ],
+                },
+                {
+                  id: "RequireTarget",
+                  targets: {
+                    "自軍本国のカードを全て見て、その中にあるグラフィック１枚を":
+                      {
+                        id: "カード",
+                        cardID: [null],
+                      },
+                  },
+                  condition: {
+                    id: "ConditionAnd",
+                    and: [
+                      {
+                        id: "ConditionCardOnBaSyou",
+                        source:
+                          "自軍本国のカードを全て見て、その中にあるグラフィック１枚を",
+                        baSyou: {
+                          id: "RelatedBaSyou",
+                          value: ["自軍", "本国"],
+                        },
+                      },
+                      {
+                        id: "ConditionCardOnCategory",
+                        source:
+                          "自軍本国のカードを全て見て、その中にあるグラフィック１枚を",
+                        category: "グラフィック",
+                      },
+                    ],
+                  },
+                  action: [
+                    {
+                      id: "ActionMoveCardToPosition",
+                      cards:
+                        "自軍本国のカードを全て見て、その中にあるグラフィック１枚を",
+                      baSyou: {
+                        id: "場所",
+                        baSyou: {
+                          id: "RelatedBaSyou",
+                          value: ["自軍", "ハンガー"],
+                        },
+                      },
+                    },
+                  ],
                 },
               ],
             },
             feedback: [
-              {
-                id: "FeedbackAddBlock",
-                block: {
-                  require: {
-                    id: "RequireAnd",
-                    and: [
-                      {
-                        id: "RequireTarget",
-                        targets: {
-                          "自軍本国のカードを全て見て、その中にあるグラフィック１枚を":
-                            {
-                              id: "カード",
-                              cardID: [null],
-                            },
-                        },
-                        condition: {
-                          id: "ConditionAnd",
-                          and: [
-                            {
-                              id: "ConditionCardOnBaSyou",
-                              source:
-                                "自軍本国のカードを全て見て、その中にあるグラフィック１枚を",
-                              baSyou: {
-                                id: "RelatedBaSyou",
-                                value: ["自軍", "本国"],
-                              },
-                            },
-                            {
-                              id: "ConditionCardOnCategory",
-                              source:
-                                "自軍本国のカードを全て見て、その中にあるグラフィック１枚を",
-                              category: "グラフィック",
-                            },
-                          ],
-                        },
-                        action: [
-                          {
-                            id: "ActionMoveCardToPosition",
-                            cards:
-                              "自軍本国のカードを全て見て、その中にあるグラフィック１枚を",
-                            baSyou: {
-                              id: "場所",
-                              baSyou: {
-                                id: "RelatedBaSyou",
-                                value: ["自軍", "ハンガー"],
-                              },
-                            },
-                          },
-                        ],
-                      },
-                    ],
-                  },
-                  feedback: [
-                    // 自軍本国をシャッフルする
-                  ],
-                },
-              },
+              // 自軍本国をシャッフルする
             ],
           },
         },
