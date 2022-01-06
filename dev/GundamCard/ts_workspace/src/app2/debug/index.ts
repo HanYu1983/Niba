@@ -763,13 +763,11 @@ export function createPlayUnitCardBlock(cardID: string): BlockPayload {
                         },
                       },
                     },
+                    // shuffle
                   ],
                 },
               ],
             },
-            feedback: [
-              // 自軍本国をシャッフルする
-            ],
           },
         },
       ],

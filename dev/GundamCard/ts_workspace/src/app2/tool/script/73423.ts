@@ -13,62 +13,6 @@ import { createTokuSyuKouKaText } from "./createTokuSyuKouKaText";
 const texts: Text[] = [
   createTokuSyuKouKaText(["改装", "ブルーフレーム系"], { cost: 0 }),
   {
-    text: "play card",
-    category: {
-      id: "使用型",
-    },
-    block: {
-      require: {
-        id: "RequireTarget",
-        targets: {
-          cards: { id: "このカード" },
-          faceDown: { id: "TargetTypeYesNo", boolean: false },
-          baSyou: {
-            id: "場所",
-            baSyou: { id: "RelatedBaSyou", value: ["自軍", "配備エリア"] },
-          },
-        },
-        condition: {
-          id: "ConditionOr",
-          or: [
-            // has quick
-            // or
-            // no quick && timing == "配置階段"
-          ],
-        },
-        action: [
-          {
-            id: "ActionSetFace",
-            cards: "cards",
-            faceDown: "faceDown",
-          },
-          {
-            id: "ActionSetTarget",
-            source: "cards",
-            target: "cards",
-          },
-          {
-            id: "ActionSetTarget",
-            source: "baSyou",
-            target: "baSyou",
-          },
-        ],
-      },
-      feedback: [
-        {
-          id: "FeedbackAction",
-          action: [
-            {
-              id: "ActionMoveCardToPosition",
-              cards: "cards",
-              baSyou: "baSyou",
-            },
-          ],
-        },
-      ],
-    },
-  },
-  {
     text: "『起動』：「特徴：アストレイ系」を持つ自軍ユニットが、「改装」の効果で場に出た場合、〔白２〕を支払う事ができる。その場合、５以下の防御力を持つ敵軍ユニット１枚を破壊する。",
     category: {
       id: "自動型",
@@ -83,8 +27,8 @@ const texts: Text[] = [
           id: "FeedbackAddBlock",
           block: {
             require: wrapRequireKey({
-              id: "RequireAnd",
-              and: [
+              id: "RequireOr",
+              or: [
                 // 〔白２〕を支払う事ができる
                 {
                   id: "RequireTarget",
@@ -131,25 +75,14 @@ const texts: Text[] = [
                   },
                   action: [
                     {
-                      id: "ActionSetTarget",
-                      source: "５以下の防御力を持つ敵軍ユニット１枚",
-                      target: "５以下の防御力を持つ敵軍ユニット１枚",
+                      id: "ActionDestroy",
+                      cards: "５以下の防御力を持つ敵軍ユニット１枚",
                     },
                   ],
                 },
+                // delete this block action
               ],
             }),
-            feedback: [
-              {
-                id: "FeedbackAction",
-                action: [
-                  {
-                    id: "ActionDestroy",
-                    cards: "５以下の防御力を持つ敵軍ユニット１枚",
-                  },
-                ],
-              },
-            ],
           },
         },
       ],

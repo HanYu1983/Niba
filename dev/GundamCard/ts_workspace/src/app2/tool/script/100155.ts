@@ -1,4 +1,5 @@
 import { Query, Text } from ".";
+import { cardPosition } from "../../../app/model/alg/tool";
 import { TextCategory } from "../model/basic";
 import { GameContext } from "../model/gameContext";
 import { wrapRequireKey } from "../model/scriptContext";
@@ -27,7 +28,57 @@ const texts: Text[] = [
       id: "自動型",
       category: "常駐",
     },
-    block: {},
+    block: {
+      require: {
+        id: "RequireAnd",
+        and: [
+          {
+            id: "RequireTarget",
+            targets: {
+              青のGサインを持つ自軍G: {
+                id: "collect",
+                filter: {
+                  id: "filterAnd",
+                  and: [
+                    {
+                      id: "filterTypeIsG",
+                    },
+                    {
+                      id: "filterMySide",
+                    },
+                  ],
+                },
+              },
+            },
+            condition: {
+              id: "compare",
+              value: [
+                "青のGサインを持つ自軍G",
+                { id: "operator", value: ">=" },
+                { id: "number", value: 5 },
+              ],
+            },
+          },
+          {
+            id: "RequireTarget",
+            targets: {
+              全ての敵軍ユニット: {
+                id: "collect",
+                filter: {
+                  id: "filterUnit",
+                },
+              },
+            },
+            action: [
+              {
+                id: "－３／ー３／±０を得る",
+                cardID: "全ての敵軍ユニット",
+              },
+            ],
+          },
+        ],
+      },
+    },
   },
 ];
 
