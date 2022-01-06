@@ -408,8 +408,9 @@ export function createTokuSyuKouKaText(
                     // 每個text都是獨立的運算元，內容分為使用型區塊和事件型區塊
                     // 使用型區塊代表play card或play text的使用型技能
                     // 事件型區塊代表3個種類的自動型技能
-                    // 在每次事件發生時，事件型區塊的所有block都要跑一次require, 看哪些require成功，成功後立刻加入堆疊。所以事件型區塊的block的第一層require只能判斷事件是否成立
-                    // 使用型區塊在每個回合時問有那些卡可以play，第1層require就是play效果（展示一張卡、支付cost），feedback將「出場效果」加入堆疊。這個require的狀態直接在text中處理就行(ex. doTextBlock)
+                    // 在每次事件發生時，事件型區塊的所有block都要跑一次require, 看哪些require成功，成功後立刻加入效果堆疊。所以事件型區塊的block的第一層require只能判斷事件是否成立
+                    // 使用型區塊在每個回合時問有那些卡可以play，第1層require就是play效果（展示一張卡、支付cost），feedback將「出場效果」加入效果堆疊。這個require的狀態直接在text中處理就行(ex. doTextBlock)
+                    // 不管是哪一個區塊的block, 它的feedback也可以將新增匿名的text到text列表中，因為每個text都是一個運算元，所以可以處理像是回合結束時移除之類的效果
                     //
                   ],
                 },
