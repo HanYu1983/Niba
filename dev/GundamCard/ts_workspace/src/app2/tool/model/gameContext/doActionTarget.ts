@@ -7,7 +7,6 @@ import { GameContext } from "./gameContext";
 
 export function doActionTarget(
   gameCtx: GameContext,
-  block: Block,
   blockPayload: BlockPayload,
   targets: { [key: string]: TargetType },
   action: Action,

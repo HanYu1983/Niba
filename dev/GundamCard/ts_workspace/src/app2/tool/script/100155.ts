@@ -22,64 +22,64 @@ const texts: Text[] = [
   createTokuSyuKouKaText(["高機動"], {}),
   createTokuSyuKouKaText(["サイコミュ", 3], { cost: 1 }),
   createTokuSyuKouKaText(["改装", "νガンダム系"], { cost: 1 }),
-  {
-    text: "『常駐』：青のGサインを持つ自軍Gが５枚以上ある場合、全ての敵軍ユニットは、－３／ー３／±０を得る。",
-    category: {
-      id: "自動型",
-      category: "常駐",
-    },
-    block: {
-      require: {
-        id: "RequireAnd",
-        and: [
-          {
-            id: "RequireTarget",
-            targets: {
-              青のGサインを持つ自軍G: {
-                id: "collect",
-                filter: {
-                  id: "filterAnd",
-                  and: [
-                    {
-                      id: "filterTypeIsG",
-                    },
-                    {
-                      id: "filterMySide",
-                    },
-                  ],
-                },
-              },
-            },
-            condition: {
-              id: "compare",
-              value: [
-                "青のGサインを持つ自軍G",
-                { id: "operator", value: ">=" },
-                { id: "number", value: 5 },
-              ],
-            },
-          },
-          {
-            id: "RequireTarget",
-            targets: {
-              全ての敵軍ユニット: {
-                id: "collect",
-                filter: {
-                  id: "filterUnit",
-                },
-              },
-            },
-            action: [
-              {
-                id: "－３／ー３／±０を得る",
-                cardID: "全ての敵軍ユニット",
-              },
-            ],
-          },
-        ],
-      },
-    },
-  },
+  // {
+  //   text: "『常駐』：青のGサインを持つ自軍Gが５枚以上ある場合、全ての敵軍ユニットは、－３／ー３／±０を得る。",
+  //   category: {
+  //     id: "自動型",
+  //     category: "常駐",
+  //   },
+  //   block: {
+  //     require: {
+  //       id: "RequireAnd",
+  //       and: [
+  //         {
+  //           id: "RequireTarget",
+  //           targets: {
+  //             青のGサインを持つ自軍G: {
+  //               id: "collect",
+  //               filter: {
+  //                 id: "filterAnd",
+  //                 and: [
+  //                   {
+  //                     id: "filterTypeIsG",
+  //                   },
+  //                   {
+  //                     id: "filterMySide",
+  //                   },
+  //                 ],
+  //               },
+  //             },
+  //           },
+  //           condition: {
+  //             id: "compare",
+  //             value: [
+  //               "青のGサインを持つ自軍G",
+  //               { id: "operator", value: ">=" },
+  //               { id: "number", value: 5 },
+  //             ],
+  //           },
+  //         },
+  //         {
+  //           id: "RequireTarget",
+  //           targets: {
+  //             全ての敵軍ユニット: {
+  //               id: "collect",
+  //               filter: {
+  //                 id: "filterUnit",
+  //               },
+  //             },
+  //           },
+  //           action: [
+  //             {
+  //               id: "－３／ー３／±０を得る",
+  //               cardID: "全ての敵軍ユニット",
+  //             },
+  //           ],
+  //         },
+  //       ],
+  //     },
+  //   },
+  // },
 ];
 
 module.exports.query = (ctx: GameContext, q: Query): Query => {

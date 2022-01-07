@@ -9,6 +9,7 @@ import {
   TIMING_CHART,
   PlayerA,
   getBaShouID,
+  GameEvent,
 } from "../basic";
 import {
   BlockPayload,
@@ -46,27 +47,20 @@ import { doRequireCustom } from "./doRequireCustom";
 
 export function doCondition(
   gameCtx: GameContext,
-  block: Block,
   blockPayload: BlockPayload,
   require: RequireTarget,
   condition: Condition
 ): string | null {
   switch (condition.id) {
     case "ConditionNot": {
-      const result = doCondition(
-        gameCtx,
-        block,
-        blockPayload,
-        require,
-        condition.not
-      );
+      const result = doCondition(gameCtx, blockPayload, require, condition.not);
       const isOk = result == null;
       const notResult = isOk == false;
       return notResult ? null : `子項目必須為否`;
     }
     case "ConditionAnd": {
       const results = condition.and.map((cond) =>
-        doCondition(gameCtx, block, blockPayload, require, cond)
+        doCondition(gameCtx, blockPayload, require, cond)
       );
       const reasons = results.filter((reason) => reason);
       const hasFalse = reasons.length > 0;
@@ -77,7 +71,7 @@ export function doCondition(
     }
     case "ConditionOr": {
       const results = condition.or.map((cond) =>
-        doCondition(gameCtx, block, blockPayload, require, cond)
+        doCondition(gameCtx, blockPayload, require, cond)
       );
       const reasons = results.filter((reason) => reason);
       const hasTrue = reasons.length != condition.or.length;
@@ -141,7 +135,6 @@ export function doCondition(
 
 export function doAction(
   gameCtx: GameContext,
-  block: Block,
   blockPayload: BlockPayload,
   require: RequireTarget,
   action: Action,
@@ -153,9 +146,7 @@ export function doAction(
         {
           target.cardID.forEach((v, i) => {
             if (v == null) {
-              throw new Error(
-                `target(${block.id})(${key})[${i}] must not null`
-              );
+              throw new Error(`target(${key})[${i}] must not null`);
             }
           });
         }
@@ -163,7 +154,7 @@ export function doAction(
       case "プレーヤー": {
         target.playerID.forEach((v, i) => {
           if (v == null) {
-            throw new Error(`target(${block.id})(${key})[${i}] must not null`);
+            throw new Error(`target(${key})[${i}] must not null`);
           }
         });
         break;
@@ -180,25 +171,21 @@ export function doAction(
       }
       return {
         ...gameCtx,
-        scriptContext: mapVarContext(
-          gameCtx.scriptContext,
-          varCtxID,
-          (varCtx) => {
-            return {
-              ...varCtx,
-              vars: {
-                ...varCtx.vars,
-                [target]: source,
-              },
-            };
-          }
-        ),
+        varsPool: {
+          ...gameCtx.varsPool,
+          [varCtxID]: {
+            ...gameCtx.varsPool[varCtxID],
+            targets: {
+              ...gameCtx.varsPool[varCtxID]?.targets,
+              [target]: source,
+            },
+          },
+        },
       };
     }
     default:
       return doActionTarget(
         gameCtx,
-        block,
         blockPayload,
         require.targets,
         action,
@@ -209,7 +196,6 @@ export function doAction(
 
 export function doRequire(
   gameCtx: GameContext,
-  block: Block,
   blockPayload: BlockPayload,
   require: Require,
   varCtxID: string
@@ -217,13 +203,13 @@ export function doRequire(
   switch (require.id) {
     case "RequireAnd": {
       return require.and.reduce((originGameCtx, r) => {
-        return doRequire(originGameCtx, block, blockPayload, r, varCtxID);
+        return doRequire(originGameCtx, blockPayload, r, varCtxID);
       }, gameCtx);
     }
     case "RequireOr": {
       const results = require.or.map((r): [string | null, GameContext] => {
         try {
-          return [null, doRequire(gameCtx, block, blockPayload, r, varCtxID)];
+          return [null, doRequire(gameCtx, blockPayload, r, varCtxID)];
         } catch (e) {
           return [JSON.stringify(e), gameCtx];
         }
@@ -249,7 +235,6 @@ export function doRequire(
       if (require.condition) {
         const reason = doCondition(
           gameCtx,
-          block,
           blockPayload,
           require,
           require.condition
@@ -262,7 +247,6 @@ export function doRequire(
         return require.action.reduce((originGameCtx, action) => {
           return doAction(
             originGameCtx,
-            block,
             blockPayload,
             require,
             action,
@@ -275,7 +259,6 @@ export function doRequire(
     case "RequireCustom": {
       return doRequireCustom(
         gameCtx,
-        block,
         blockPayload,
         require,
         require.customID,
@@ -288,83 +271,80 @@ export function doRequire(
   }
 }
 
-export function doBlockRequire(
-  gameCtx: GameContext,
-  blockID: string
-): GameContext {
-  const block = gameCtx.scriptContext.blockContext.blocks.find(
-    (block) => block.id == blockID
-  );
-  if (block == null) {
-    throw new Error(`block(${blockID}) not found`);
-  }
-  const payload = block.payload;
-  if (payload.requirePassed) {
-    throw new Error("已經處理了require");
-  }
-  const varCtxID = payload.contextID || block.id;
-  if (payload.require) {
-    gameCtx = doRequire(gameCtx, block, payload, payload.require, varCtxID);
-  }
-  const nextBlockContext = mapBlock(
-    gameCtx.scriptContext.blockContext,
-    (block) => {
-      if (block.id != blockID) {
-        return block;
-      }
-      const nextPayload: BlockPayload = {
-        ...payload,
-        requirePassed: true,
-      };
-      return {
-        ...block,
-        payload: nextPayload,
-      };
-    }
-  );
+// export function doBlockRequire(
+//   gameCtx: GameContext,
+//   blockID: string
+// ): GameContext {
+//   const block = gameCtx.scriptContext.blockContext.blocks.find(
+//     (block) => block.id == blockID
+//   );
+//   if (block == null) {
+//     throw new Error(`block(${blockID}) not found`);
+//   }
+//   const payload = block.payload;
+//   if (payload.requirePassed) {
+//     throw new Error("已經處理了require");
+//   }
+//   const varCtxID = payload.contextID || block.id;
+//   if (payload.require) {
+//     gameCtx = doRequire(gameCtx, payload, payload.require, varCtxID);
+//   }
+//   const nextBlockContext = mapBlock(
+//     gameCtx.scriptContext.blockContext,
+//     (block) => {
+//       if (block.id != blockID) {
+//         return block;
+//       }
+//       const nextPayload: BlockPayload = {
+//         ...payload,
+//         requirePassed: true,
+//       };
+//       return {
+//         ...block,
+//         payload: nextPayload,
+//       };
+//     }
+//   );
 
-  gameCtx = {
-    ...gameCtx,
-    scriptContext: {
-      ...gameCtx.scriptContext,
-      blockContext: nextBlockContext,
-    },
-  };
+//   gameCtx = {
+//     ...gameCtx,
+//     scriptContext: {
+//       ...gameCtx.scriptContext,
+//       blockContext: nextBlockContext,
+//     },
+//   };
 
-  return gameCtx;
-}
+//   return gameCtx;
+// }
 
 export function doFeedback(
   gameCtx: GameContext,
-  block: Block,
   blockPayload: BlockPayload,
   feedback: Feedback,
   varCtxID: string
 ): GameContext {
   switch (feedback.id) {
-    case "FeedbackAddBlock": {
-      const payload: BlockPayload = {
-        ...feedback.block,
-        cause: blockPayload.cause,
-        contextID: blockPayload.contextID,
-      };
-      return {
-        ...gameCtx,
-        scriptContext: {
-          ...gameCtx.scriptContext,
-          blockContext: addBlock(gameCtx.scriptContext.blockContext, payload),
-        },
-      };
-    }
+    // case "FeedbackAddBlock": {
+    //   const payload: BlockPayload = {
+    //     ...feedback.block,
+    //     cause: blockPayload.cause,
+    //     contextID: blockPayload.contextID,
+    //   };
+    //   return {
+    //     ...gameCtx,
+    //     scriptContext: {
+    //       ...gameCtx.scriptContext,
+    //       blockContext: addBlock(gameCtx.scriptContext.blockContext, payload),
+    //     },
+    //   };
+    // }
     case "FeedbackAction": {
       const actions = feedback.action;
       if (actions.length) {
-        const targets =
-          gameCtx.scriptContext.varContextPool[varCtxID]?.vars || {};
+        const targets = gameCtx.varsPool[varCtxID]?.targets || {};
         return actions.reduce((originGameCtx, action) => {
           return doActionTarget(
             originGameCtx,
-            block,
             blockPayload,
             targets,
             action,
@@ -381,7 +361,6 @@ export function doFeedback(
         return actions.reduce((originGameCtx, action) => {
           return doActionTarget(
             originGameCtx,
-            block,
             blockPayload,
             targets,
             action,
@@ -395,106 +374,163 @@ export function doFeedback(
   return gameCtx;
 }
 
-export function doBlockFeedback(
+// export function doBlockFeedback(
+//   gameCtx: GameContext,
+//   blockID: string
+// ): GameContext {
+//   const block = gameCtx.scriptContext.blockContext.blocks.find(
+//     (block) => block.id == blockID
+//   );
+//   if (block == null) {
+//     throw new Error(`block(${blockID}) not found`);
+//   }
+//   const payload: BlockPayload = block.payload;
+//   if (payload.feedbackPassed) {
+//     throw new Error("已經處理了feedback");
+//   }
+//   const varCtxID = payload.contextID || block.id;
+//   if (payload.feedback?.length) {
+//     gameCtx = payload.feedback.reduce((originGameCtx, feedback) => {
+//       return doFeedback(originGameCtx, payload, feedback, varCtxID);
+//     }, gameCtx);
+//   }
+//   const nextBlockContext = mapBlock(
+//     gameCtx.scriptContext.blockContext,
+//     (block) => {
+//       if (block.id != blockID) {
+//         return block;
+//       }
+//       const nextPayload: BlockPayload = {
+//         ...payload,
+//         feedbackPassed: true,
+//       };
+//       return {
+//         ...block,
+//         payload: nextPayload,
+//       };
+//     }
+//   );
+//   gameCtx = {
+//     ...gameCtx,
+//     scriptContext: {
+//       ...gameCtx.scriptContext,
+//       blockContext: nextBlockContext,
+//     },
+//   };
+
+//   return gameCtx;
+// }
+
+// export function setRequireAnswer(
+//   gameCtx: GameContext,
+//   requireID: string,
+//   answer: boolean
+// ): GameContext {
+//   const nextScriptCtx = mapBlockPayloadRequire(
+//     gameCtx.scriptContext,
+//     (require) => {
+//       if (require.key == null) {
+//         return require;
+//       }
+//       if (require.key != requireID) {
+//         return require;
+//       }
+//       if (require.id != "RequireYesNo") {
+//         return require;
+//       }
+//       return { ...require, answer: answer };
+//     }
+//   );
+//   return {
+//     ...gameCtx,
+//     scriptContext: nextScriptCtx,
+//   };
+// }
+
+// export function setRequireTarget(
+//   gameCtx: GameContext,
+//   requireID: string,
+//   varID: string,
+//   value: TargetType
+// ): GameContext {
+//   const nextScriptCtx = mapBlockPayloadRequire(
+//     gameCtx.scriptContext,
+//     (require) => {
+//       if (require.key == null) {
+//         return require;
+//       }
+//       if (require.key != requireID) {
+//         return require;
+//       }
+//       if (require.id != "RequireTarget") {
+//         return require;
+//       }
+//       const nextTargets = {
+//         ...require.targets,
+//         [varID]: value,
+//       };
+//       return { ...require, targets: nextTargets };
+//     }
+//   );
+//   return {
+//     ...gameCtx,
+//     scriptContext: nextScriptCtx,
+//   };
+// }
+
+export function triggerTextEvent(
   gameCtx: GameContext,
-  blockID: string
+  evt: GameEvent
 ): GameContext {
-  const block = gameCtx.scriptContext.blockContext.blocks.find(
-    (block) => block.id == blockID
-  );
-  if (block == null) {
-    throw new Error(`block(${blockID}) not found`);
-  }
-  const payload: BlockPayload = block.payload;
-  if (payload.feedbackPassed) {
-    throw new Error("已經處理了feedback");
-  }
-  const varCtxID = payload.contextID || block.id;
-  if (payload.feedback?.length) {
-    gameCtx = payload.feedback.reduce((originGameCtx, feedback) => {
-      return doFeedback(originGameCtx, block, payload, feedback, varCtxID);
+  // TODO: 取得合法的text. 因為text可以被洗掉
+  return gameCtx.gameState.cardState
+    .flatMap((cardState) => cardState?.abilityList)
+    .filter((a) => {
+      if (a.textCategory.id != "自動型") {
+        return false;
+      }
+      switch (a.textCategory.category) {
+        case "常駐":
+        case "恒常":
+          return true;
+        default:
+          return true;
+      }
+    })
+    .map((a) => {
+      switch (a.textCategory.id) {
+        case "自動型":
+        case "使用型":
+          return a.textCategory.block;
+        case "特殊型":
+          return a.textCategory.texts?.map((t) => t.block);
+      }
+    })
+    .reduce((ctx, block) => {
+      const wrapEvent: BlockPayload = { ...block, cause: {} };
+      if (wrapEvent.require != null) {
+        const varCtxID = "triggerTextEvent";
+        // clear vars
+        ctx = {
+          ...ctx,
+          varsPool: {
+            ...ctx.varsPool,
+            [varCtxID]: {
+              targets: {},
+            },
+          },
+        };
+        try {
+          ctx = doRequire(ctx, wrapEvent, wrapEvent.require, varCtxID);
+          if (wrapEvent.feedback) {
+            ctx = wrapEvent.feedback.reduce((ctx, feedback) => {
+              return doFeedback(ctx, wrapEvent, feedback, varCtxID);
+            }, gameCtx);
+          }
+        } catch (e) {
+          console.log(e);
+        }
+      }
+      return ctx;
     }, gameCtx);
-  }
-  const nextBlockContext = mapBlock(
-    gameCtx.scriptContext.blockContext,
-    (block) => {
-      if (block.id != blockID) {
-        return block;
-      }
-      const nextPayload: BlockPayload = {
-        ...payload,
-        feedbackPassed: true,
-      };
-      return {
-        ...block,
-        payload: nextPayload,
-      };
-    }
-  );
-  gameCtx = {
-    ...gameCtx,
-    scriptContext: {
-      ...gameCtx.scriptContext,
-      blockContext: nextBlockContext,
-    },
-  };
-
-  return gameCtx;
-}
-
-export function setRequireAnswer(
-  gameCtx: GameContext,
-  requireID: string,
-  answer: boolean
-): GameContext {
-  const nextScriptCtx = mapBlockPayloadRequire(
-    gameCtx.scriptContext,
-    (require) => {
-      if (require.key == null) {
-        return require;
-      }
-      if (require.key != requireID) {
-        return require;
-      }
-      if (require.id != "RequireYesNo") {
-        return require;
-      }
-      return { ...require, answer: answer };
-    }
-  );
-  return {
-    ...gameCtx,
-    scriptContext: nextScriptCtx,
-  };
-}
-
-export function setRequireTarget(
-  gameCtx: GameContext,
-  requireID: string,
-  varID: string,
-  value: TargetType
-): GameContext {
-  const nextScriptCtx = mapBlockPayloadRequire(
-    gameCtx.scriptContext,
-    (require) => {
-      if (require.key == null) {
-        return require;
-      }
-      if (require.key != requireID) {
-        return require;
-      }
-      if (require.id != "RequireTarget") {
-        return require;
-      }
-      const nextTargets = {
-        ...require.targets,
-        [varID]: value,
-      };
-      return { ...require, targets: nextTargets };
-    }
-  );
-  return {
-    ...gameCtx,
-    scriptContext: nextScriptCtx,
-  };
 }

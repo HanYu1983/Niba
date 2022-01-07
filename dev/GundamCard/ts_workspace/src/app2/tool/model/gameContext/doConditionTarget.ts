@@ -9,7 +9,6 @@ import { askRowData } from "../../../../tool/data";
 
 export function doConditionTarget(
   gameCtx: GameContext,
-  block: Block,
   blockPayload: BlockPayload,
   targets: { [key: string]: TargetType },
   condition: Condition
@@ -18,7 +17,6 @@ export function doConditionTarget(
     case "ConditionNot": {
       const result = doConditionTarget(
         gameCtx,
-        block,
         blockPayload,
         targets,
         condition.not
@@ -29,7 +27,7 @@ export function doConditionTarget(
     }
     case "ConditionAnd": {
       const results = condition.and.map((cond) =>
-        doConditionTarget(gameCtx, block, blockPayload, targets, cond)
+        doConditionTarget(gameCtx, blockPayload, targets, cond)
       );
       const reasons = results.filter((reason) => reason);
       const hasFalse = reasons.length > 0;
@@ -40,7 +38,7 @@ export function doConditionTarget(
     }
     case "ConditionOr": {
       const results = condition.or.map((cond) =>
-        doConditionTarget(gameCtx, block, blockPayload, targets, cond)
+        doConditionTarget(gameCtx, blockPayload, targets, cond)
       );
       const reasons = results.filter((reason) => reason);
       const hasTrue = reasons.length != condition.or.length;

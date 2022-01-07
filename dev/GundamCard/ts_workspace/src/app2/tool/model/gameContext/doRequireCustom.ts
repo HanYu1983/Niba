@@ -17,7 +17,6 @@ export type RequireCustomID = RequireCustomID1;
 
 export function doRequireCustom(
   gameCtx: GameContext,
-  block: Block,
   blockPayload: BlockPayload,
   require: RequireCustom,
   requireCustomID: RequireCustomID,

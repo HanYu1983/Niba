@@ -1,3 +1,5 @@
+import { BlockPayload } from "../blockPayload";
+
 export type PlayerID = string;
 export const PlayerA = "PlayerA";
 export const PlayerB = "PlayerB";
@@ -187,21 +189,6 @@ export function isCanPlayCardInPhase(phase: Phase): boolean {
 
 export type GameEvent = any;
 
-// 常駐技能在每次尋問中重新計算，卡片必須在場中
-// 恆常技能在每次尋問中重新計算，無論卡片在哪
-// 起動技能在每次事件發生時，就將符合的起動技能加入block
-type TextCategoryZiDouKaTa = {
-  id: "自動型";
-  category: "常駐" | "恒常" | ["起動", GameEvent];
-};
-
-type TextCategorySiYouKaTa = {
-  id: "使用型";
-  timing?: SiYouTiming;
-};
-
-export type TextCategory = TextCategoryZiDouKaTa | TextCategorySiYouKaTa;
-
 export type TokuSyuKouKa =
   | ["高機動"]
   | ["速攻"]
@@ -218,6 +205,34 @@ export type TokuSyuKouKa =
   | ["戦闘配備"]
   | ["ステイ"]
   | ["1枚制限"];
+
+// 常駐技能在每次尋問中重新計算，卡片必須在場中
+// 恆常技能在每次尋問中重新計算，無論卡片在哪
+// 起動技能在每次事件發生時，就將符合的起動技能加入block
+type TextCategoryZiDouKaTa = {
+  id: "自動型";
+  text?: string;
+  category: "常駐" | "恒常" | ["起動", GameEvent];
+  block?: BlockPayload;
+};
+
+type TextCategorySiYouKaTa = {
+  id: "使用型";
+  text?: string;
+  timing?: SiYouTiming;
+  block?: BlockPayload;
+};
+
+type TextCategoryToKuSyuKata = {
+  id: "特殊型";
+  text: TokuSyuKouKa;
+  texts?: (TextCategoryZiDouKaTa | TextCategorySiYouKaTa)[];
+};
+
+export type TextCategory =
+  | TextCategoryZiDouKaTa
+  | TextCategorySiYouKaTa
+  | TextCategoryToKuSyuKata;
 
 export type FlagKeyword = "破壊" | "プレイされたカード" | "once";
 
