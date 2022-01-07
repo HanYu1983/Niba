@@ -81,7 +81,7 @@ type ActionUnitDamage = {
 
 type ActionAddBlock = {
   id: "ActionAddBlock";
-  immediateEffect?: boolean;
+  type: "指令" | "立即" | "堆疊";
   block: BlockPayload;
 };
 

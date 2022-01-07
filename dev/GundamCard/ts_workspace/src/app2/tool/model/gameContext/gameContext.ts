@@ -53,6 +53,8 @@ export type Block = {
 
 export type GameContext = {
   varsPool: { [key: string]: Vars };
+  // 指令效果。從這裡取得玩家可用的指令
+  commandEffect: Block[];
   // 立即效果。玩家必須立即一個一個進行處理
   immediateEffect: Block[];
   // 堆疊效果。每次只處理第一個代表top的block
@@ -79,7 +81,7 @@ export const DEFAULT_GAME_CONTEXT: GameContext = {
             cardText: {
               id: "使用型",
               timing: ["常時"],
-              description: "play card",
+              description: "play unit",
               block: {
                 contextID: `createPlayUnitCardBlock_0`,
                 require: {
@@ -90,32 +92,6 @@ export const DEFAULT_GAME_CONTEXT: GameContext = {
                       id: "RequireSiYouTiming",
                       timing: ["自軍", "配備フェイズ"],
                     },
-                    // プレイの宣告
-                    {
-                      id: "RequireTarget",
-                      targets: {
-                        playCard: {
-                          id: "カード",
-                          cardID: [null],
-                        },
-                      },
-                      action: [
-                        {
-                          id: "ActionSetFace",
-                          cards: "playCard",
-                          faceDown: {
-                            id: "TargetTypeYesNo",
-                            boolean: false,
-                          },
-                        },
-                        {
-                          id: "ActionSetTarget",
-                          source: "playCard",
-                          target: "playCard",
-                        },
-                      ],
-                    },
-                    //「対象」の指定、コストの支払い
                   ],
                 },
                 feedback: [
@@ -124,21 +100,66 @@ export const DEFAULT_GAME_CONTEXT: GameContext = {
                     action: [
                       {
                         id: "ActionAddBlock",
-                        // 場に出る効果。如果使用的是指令，則不出場並廢棄，若有效果就加到require
+                        type: "指令",
                         block: {
+                          require: {
+                            id: "RequireAnd",
+                            and: [
+                              // プレイの宣告
+                              {
+                                id: "RequireTarget",
+                                targets: {
+                                  playCard: {
+                                    id: "カード",
+                                    cardID: [null],
+                                  },
+                                },
+                                action: [
+                                  {
+                                    id: "ActionSetFace",
+                                    cards: "playCard",
+                                    faceDown: {
+                                      id: "TargetTypeYesNo",
+                                      boolean: false,
+                                    },
+                                  },
+                                  {
+                                    id: "ActionSetTarget",
+                                    source: "playCard",
+                                    target: "playCard",
+                                  },
+                                ],
+                              },
+                              //「対象」の指定、コストの支払い
+                            ],
+                          },
                           feedback: [
                             {
                               id: "FeedbackAction",
                               action: [
                                 {
-                                  id: "ActionMoveCardToPosition",
-                                  cards: "playCard",
-                                  baSyou: {
-                                    id: "場所",
-                                    baSyou: {
-                                      id: "RelatedBaSyou",
-                                      value: ["自軍", "配備エリア"],
-                                    },
+                                  id: "ActionAddBlock",
+                                  type: "堆疊",
+                                  // 場に出る効果。如果使用的是指令，則不出場並廢棄，若有效果就加到require
+                                  block: {
+                                    feedback: [
+                                      {
+                                        id: "FeedbackAction",
+                                        action: [
+                                          {
+                                            id: "ActionMoveCardToPosition",
+                                            cards: "playCard",
+                                            baSyou: {
+                                              id: "場所",
+                                              baSyou: {
+                                                id: "RelatedBaSyou",
+                                                value: ["自軍", "配備エリア"],
+                                              },
+                                            },
+                                          },
+                                        ],
+                                      },
+                                    ],
                                   },
                                 },
                               ],
@@ -170,7 +191,7 @@ export const DEFAULT_GAME_CONTEXT: GameContext = {
                     action: [
                       {
                         id: "ActionAddBlock",
-                        immediateEffect: true,
+                        type: "立即",
                         block: {
                           require: {
                             id: "RequireAnd",
@@ -273,6 +294,7 @@ export const DEFAULT_GAME_CONTEXT: GameContext = {
     playerState: [],
     activePlayerID: null,
   },
+  commandEffect: [],
   immediateEffect: [],
   stackEffect: [],
 };
