@@ -36,7 +36,7 @@ export type RequireAnd = {
 
 export type RequireSiYouTiming = {
   id: "RequireSiYouTiming";
-  siYouTiming: SiYouTiming;
+  timing: SiYouTiming;
 } & RequireBase;
 
 export type RequireCustom = {

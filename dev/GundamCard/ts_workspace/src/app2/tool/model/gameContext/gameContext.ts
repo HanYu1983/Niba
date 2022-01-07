@@ -88,7 +88,7 @@ export const DEFAULT_GAME_CONTEXT: GameContext = {
                     // 判斷有沒有快速
                     {
                       id: "RequireSiYouTiming",
-                      siYouTiming: ["自軍", "配備フェイズ"],
+                      timing: ["自軍", "配備フェイズ"],
                     },
                     // プレイの宣告
                     {
@@ -157,12 +157,12 @@ export const DEFAULT_GAME_CONTEXT: GameContext = {
             enabled: true,
             cardText: {
               id: "自動型",
-              description:
-                "『起動』：「特徴：アストレイ系」を持つ自軍ユニットが、「改装」の効果で場に出た場合、〔白２〕を支払う事ができる。その場合、５以下の防御力を持つ敵軍ユニット１枚を破壊する。",
               category: [
                 "起動",
                 "「特徴：アストレイ系」を持つ自軍ユニットが、「改装」の効果で場に出た場合",
               ],
+              description:
+                "『起動』：「特徴：アストレイ系」を持つ自軍ユニットが、「改装」の効果で場に出た場合、〔白２〕を支払う事ができる。その場合、５以下の防御力を持つ敵軍ユニット１枚を破壊する。",
               block: {
                 feedback: [
                   {
