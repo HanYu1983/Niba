@@ -1,10 +1,10 @@
-import { TextCategory } from "../model/basic";
+import { CardText } from "../model/basic";
 import { BlockPayload } from "../model/blockPayload";
 
 export type Text = {
   absolute?: boolean;
   text: string;
-  category: TextCategory;
+  category: CardText;
   block: BlockPayload;
 };
 

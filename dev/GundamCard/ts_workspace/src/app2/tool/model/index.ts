@@ -2,7 +2,7 @@ import type {
   CardColor,
   BaSyou,
   CardCategory,
-  TextCategory,
+  CardText,
   SiYouTiming,
   TargetType,
 } from "./basic";

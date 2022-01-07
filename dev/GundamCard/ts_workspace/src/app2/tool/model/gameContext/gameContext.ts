@@ -1,7 +1,7 @@
 import {
   GameEvent,
   TargetType,
-  TextCategory,
+  CardText,
   Timing,
   TIMING_CHART,
 } from "../basic";
@@ -17,11 +17,10 @@ export type PlayerState = {
   confirmPhase: boolean;
 };
 
-export type CardAbility = {
+export type CardTextState = {
   id: string;
-  text?: string;
-  texts?: Text[];
-  textCategory: TextCategory;
+  enabled: boolean;
+  cardText: CardText;
 };
 
 export type CardState = {
@@ -31,7 +30,7 @@ export type CardState = {
   destroy: boolean;
   setGroupID: string;
   memory: any;
-  abilityList: CardAbility[];
+  cardTextStates: CardTextState[];
 };
 
 export type GameState = {
@@ -72,51 +71,33 @@ export const DEFAULT_GAME_CONTEXT: GameContext = {
         destroy: false,
         setGroupID: "aa",
         memory: {},
-        abilityList: [
+        cardTextStates: [
           {
             id: "",
-            textCategory: {
+            enabled: true,
+            cardText: {
               id: "特殊型",
-              text: ["PS装甲"],
+              description: ["PS装甲"],
               texts: [
                 // play出場時重置. add block到起動列表讓玩家知道效果, 起動列表一有值就要讓玩一個一個進行處理
                 {
                   id: "自動型",
-                  text: "play出場時重置",
+                  description: "play出場時重置",
                   category: ["起動", ""],
+                  block: {},
                 },
                 // 出現在戰鬥區時，若部隊中沒有供給或補給時將flag設為true
                 {
                   id: "自動型",
-                  text: "出現在戰鬥區時，若部隊中沒有供給或補給時將flag設為true",
+                  description:
+                    "出現在戰鬥區時，若部隊中沒有供給或補給時將flag設為true",
                   category: ["起動", ""],
+                  block: {},
                 },
                 // 當重整部隊時，部隊中有供給或補給時，將FLAG設為FLASE
                 // 回合開始時，若FLAG為true時回手札
               ],
             },
-            texts: [
-              // play出場時重置. add block到起動列表讓玩家知道效果, 起動列表一有值就要讓玩一個一個進行處理
-              // 出現在戰鬥區時，若部隊中沒有供給或補給時將flag設為true
-              // 當重整部隊時，部隊中有供給或補給時，將FLAG設為FLASE
-              // 回合開始時，若FLAG為true時回手札
-              {
-                text: "play出場時重置",
-                category: {
-                  id: "自動型",
-                  category: ["起動", ""],
-                },
-                block: {},
-              },
-              {
-                text: "出現在戰鬥區時，若部隊中沒有供給或補給時將flag設為true",
-                category: {
-                  id: "自動型",
-                  category: ["起動", ""],
-                },
-                block: {},
-              },
-            ],
           },
         ],
       },

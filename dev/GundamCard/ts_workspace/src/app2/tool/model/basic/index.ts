@@ -209,30 +209,30 @@ export type TokuSyuKouKa =
 // 常駐技能在每次尋問中重新計算，卡片必須在場中
 // 恆常技能在每次尋問中重新計算，無論卡片在哪
 // 起動技能在每次事件發生時，就將符合的起動技能加入block
-type TextCategoryZiDouKaTa = {
+type CardTextZiDouKaTa = {
   id: "自動型";
-  text?: string;
+  description: string;
   category: "常駐" | "恒常" | ["起動", GameEvent];
-  block?: BlockPayload;
+  block: BlockPayload;
 };
 
-type TextCategorySiYouKaTa = {
+type CardTextSiYouKaTa = {
   id: "使用型";
-  text?: string;
-  timing?: SiYouTiming;
-  block?: BlockPayload;
+  description: string;
+  timing: SiYouTiming;
+  block: BlockPayload;
 };
 
-type TextCategoryToKuSyuKata = {
+type CardTextToKuSyuKata = {
   id: "特殊型";
-  text: TokuSyuKouKa;
-  texts?: (TextCategoryZiDouKaTa | TextCategorySiYouKaTa)[];
+  description: TokuSyuKouKa;
+  texts: (CardTextZiDouKaTa | CardTextSiYouKaTa)[];
 };
 
-export type TextCategory =
-  | TextCategoryZiDouKaTa
-  | TextCategorySiYouKaTa
-  | TextCategoryToKuSyuKata;
+export type CardText =
+  | CardTextZiDouKaTa
+  | CardTextSiYouKaTa
+  | CardTextToKuSyuKata;
 
 export type FlagKeyword = "破壊" | "プレイされたカード" | "once";
 

@@ -2,7 +2,7 @@ import {
   CardColor,
   BaSyou,
   CardCategory,
-  TextCategory,
+  CardText,
   SiYouTiming,
   TargetType,
   Timing,
@@ -483,54 +483,56 @@ export function triggerTextEvent(
   evt: GameEvent
 ): GameContext {
   // TODO: 取得合法的text. 因為text可以被洗掉
-  return gameCtx.gameState.cardState
-    .flatMap((cardState) => cardState?.abilityList)
-    .filter((a) => {
-      if (a.textCategory.id != "自動型") {
-        return false;
-      }
-      switch (a.textCategory.category) {
-        case "常駐":
-        case "恒常":
-          return true;
-        default:
-          return true;
-      }
-    })
-    .map((a) => {
-      switch (a.textCategory.id) {
-        case "自動型":
-        case "使用型":
-          return a.textCategory.block;
-        case "特殊型":
-          return a.textCategory.texts?.map((t) => t.block);
-      }
-    })
-    .reduce((ctx, block) => {
-      const wrapEvent: BlockPayload = { ...block, cause: {} };
-      if (wrapEvent.require != null) {
-        const varCtxID = "triggerTextEvent";
-        // clear vars
-        ctx = {
-          ...ctx,
-          varsPool: {
-            ...ctx.varsPool,
-            [varCtxID]: {
-              targets: {},
-            },
-          },
-        };
-        try {
-          ctx = doRequire(ctx, wrapEvent, wrapEvent.require, varCtxID);
-          if (wrapEvent.feedback) {
-            ctx = wrapEvent.feedback.reduce((ctx, feedback) => {
-              return doFeedback(ctx, wrapEvent, feedback, varCtxID);
-            }, gameCtx);
-          }
-        } catch (e) {
-          console.log(e);
+  return (
+    gameCtx.gameState.cardState
+      .flatMap((cardState) => cardState.cardTextStates)
+      // .filter((a) => {
+      //   if (a.cardText.id != "自動型") {
+      //     return false;
+      //   }
+      //   switch (a.cardText.category) {
+      //     case "常駐":
+      //     case "恒常":
+      //       return true;
+      //     default:
+      //       return true;
+      //   }
+      // })
+      .map((a): BlockPayload[] => {
+        switch (a.cardText.id) {
+          case "自動型":
+          case "使用型":
+            return [a.cardText.block];
+          case "特殊型":
+            return a.cardText.texts.map((t) => t.block);
         }
-      }
-      return ctx;
-    }, gameCtx);
+      })
+      .reduce((ctx, block) => {
+        const wrapEvent: BlockPayload = { ...block, cause: {} };
+        if (wrapEvent.require != null) {
+          const varCtxID = "triggerTextEvent";
+          // clear vars
+          ctx = {
+            ...ctx,
+            varsPool: {
+              ...ctx.varsPool,
+              [varCtxID]: {
+                targets: {},
+              },
+            },
+          };
+          try {
+            ctx = doRequire(ctx, wrapEvent, wrapEvent.require, varCtxID);
+            if (wrapEvent.feedback) {
+              ctx = wrapEvent.feedback.reduce((ctx, feedback) => {
+                return doFeedback(ctx, wrapEvent, feedback, varCtxID);
+              }, gameCtx);
+            }
+          } catch (e) {
+            console.log(e);
+          }
+        }
+        return ctx;
+      }, gameCtx)
+  );
 }

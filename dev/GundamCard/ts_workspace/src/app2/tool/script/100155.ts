@@ -1,9 +1,9 @@
 import { Query, Text } from ".";
 import { cardPosition } from "../../../app/model/alg/tool";
-import { TextCategory } from "../model/basic";
+import { CardText } from "../model/basic";
 import { GameContext } from "../model/gameContext";
 import { wrapRequireKey } from "../model/scriptContext";
-import { createTokuSyuKouKaText } from "./createTokuSyuKouKaText";
+//import { createTokuSyuKouKaText } from "./createTokuSyuKouKaText";
 
 // 179030_11E_U_BL208S_blue
 // 11E/U BL208S Hi-νガンダム［†］ νガンダム系　MS　専用「アムロ・レイ」
@@ -19,9 +19,9 @@ import { createTokuSyuKouKaText } from "./createTokuSyuKouKaText";
 // 179901_00_U_BL006P_blue
 // 『常駐』：このセットグループの、「特徴：NT」を持つ全ての自軍キャラは、「〔１〕：共有［バンシィ系］」を得る。
 const texts: Text[] = [
-  createTokuSyuKouKaText(["高機動"], {}),
-  createTokuSyuKouKaText(["サイコミュ", 3], { cost: 1 }),
-  createTokuSyuKouKaText(["改装", "νガンダム系"], { cost: 1 }),
+  //createTokuSyuKouKaText(["高機動"], {}),
+  //createTokuSyuKouKaText(["サイコミュ", 3], { cost: 1 }),
+  //createTokuSyuKouKaText(["改装", "νガンダム系"], { cost: 1 }),
   // {
   //   text: "『常駐』：青のGサインを持つ自軍Gが５枚以上ある場合、全ての敵軍ユニットは、－３／ー３／±０を得る。",
   //   category: {

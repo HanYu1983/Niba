@@ -15,8 +15,7 @@ import {
   DEFAULT_SCRIPT_CONTEXT,
   mapBlockPayloadRequire,
 } from "../tool/model/scriptContext";
-import { TextCategory } from "../tool/model/basic";
-import { createTokuSyuKouKaText } from "../tool/script/createTokuSyuKouKaText";
+
 import { getCardScript, QueryText, Script } from "../tool/script";
 import { askRowData } from "../../tool/data";
 
@@ -341,7 +340,7 @@ export function test() {
 // export type CardText = {
 //   absolute?: boolean;
 //   text: string;
-//   category: TextCategory;
+//   category: CardText;
 //   block: BlockPayload;
 // };
 
