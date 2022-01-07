@@ -9,6 +9,7 @@ import { ScriptContext, DEFAULT_SCRIPT_CONTEXT } from "../scriptContext";
 import { DEFAULT_TABLE, Table } from "../../../../tool/table";
 import { BlockPayload } from "../blockPayload";
 import { Text } from "../../script";
+import { wrapRequireKey } from "../scriptContext";
 
 export type PlayerState = {
   id: string;
@@ -72,6 +73,172 @@ export const DEFAULT_GAME_CONTEXT: GameContext = {
         setGroupID: "aa",
         memory: {},
         cardTextStates: [
+          {
+            id: "",
+            enabled: true,
+            cardText: {
+              id: "使用型",
+              timing: ["常時"],
+              description: "play card",
+              block: {
+                contextID: `createPlayUnitCardBlock_0`,
+                require: {
+                  id: "RequireAnd",
+                  and: [
+                    // 判斷有沒有快速
+                    {
+                      id: "RequireSiYouTiming",
+                      siYouTiming: ["自軍", "配備フェイズ"],
+                    },
+                    // プレイの宣告
+                    {
+                      id: "RequireTarget",
+                      targets: {
+                        playCard: {
+                          id: "カード",
+                          cardID: [null],
+                        },
+                      },
+                      action: [
+                        {
+                          id: "ActionSetFace",
+                          cards: "playCard",
+                          faceDown: {
+                            id: "TargetTypeYesNo",
+                            boolean: false,
+                          },
+                        },
+                        {
+                          id: "ActionSetTarget",
+                          source: "playCard",
+                          target: "playCard",
+                        },
+                      ],
+                    },
+                    //「対象」の指定、コストの支払い
+                  ],
+                },
+                feedback: [
+                  {
+                    id: "FeedbackAction",
+                    action: [
+                      {
+                        id: "ActionAddBlock",
+                        // 場に出る効果。如果使用的是指令，則不出場並廢棄，若有效果就加到require
+                        block: {
+                          feedback: [
+                            {
+                              id: "FeedbackAction",
+                              action: [
+                                {
+                                  id: "ActionMoveCardToPosition",
+                                  cards: "playCard",
+                                  baSyou: {
+                                    id: "場所",
+                                    baSyou: {
+                                      id: "RelatedBaSyou",
+                                      value: ["自軍", "配備エリア"],
+                                    },
+                                  },
+                                },
+                              ],
+                            },
+                          ],
+                        },
+                      },
+                    ],
+                  },
+                ],
+              },
+            },
+          },
+          {
+            id: "",
+            enabled: true,
+            cardText: {
+              id: "自動型",
+              description:
+                "『起動』：「特徴：アストレイ系」を持つ自軍ユニットが、「改装」の効果で場に出た場合、〔白２〕を支払う事ができる。その場合、５以下の防御力を持つ敵軍ユニット１枚を破壊する。",
+              category: [
+                "起動",
+                "「特徴：アストレイ系」を持つ自軍ユニットが、「改装」の効果で場に出た場合",
+              ],
+              block: {
+                feedback: [
+                  {
+                    id: "FeedbackAction",
+                    action: [
+                      {
+                        id: "ActionAddBlock",
+                        immediateEffect: true,
+                        block: {
+                          require: {
+                            id: "RequireAnd",
+                            and: [
+                              // 〔白２〕を支払う事ができる
+                              {
+                                id: "RequireTarget",
+                                targets: {
+                                  cards: {
+                                    id: "カード",
+                                    cardID: [null, null],
+                                  },
+                                  color: {
+                                    id: "カードの色",
+                                    color: "白",
+                                  },
+                                },
+                                action: [
+                                  {
+                                    id: "ActionConsumeG",
+                                    cards: "cards",
+                                    color: "color",
+                                  },
+                                ],
+                              },
+                              {
+                                id: "RequireTarget",
+                                targets: {
+                                  "５以下の防御力を持つ敵軍ユニット１枚": {
+                                    id: "カード",
+                                    cardID: [null],
+                                  },
+                                },
+                                condition: {
+                                  id: "ConditionAnd",
+                                  and: [
+                                    {
+                                      id: "ConditionCardIsPlayerSide",
+                                      source:
+                                        "５以下の防御力を持つ敵軍ユニット１枚",
+                                      playerSide: "敵軍",
+                                    },
+                                    {
+                                      id: "ConditionCardPropertyCompare",
+                                      source:
+                                        "５以下の防御力を持つ敵軍ユニット１枚",
+                                      value: ["防御力", "<=", 5],
+                                    },
+                                  ],
+                                },
+                                action: [
+                                  {
+                                    id: "ActionDestroy",
+                                    cards:
+                                      "５以下の防御力を持つ敵軍ユニット１枚",
+                                  },
+                                ],
+                              },
+                            ],
+                          },
+                        },
+                      },
+                    ],
+                  },
+                ],
+              },
+            },
+          },
           {
             id: "",
             enabled: true,

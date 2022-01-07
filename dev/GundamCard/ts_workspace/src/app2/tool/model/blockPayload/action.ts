@@ -1,3 +1,4 @@
+import { BlockPayload } from ".";
 import type {
   CardColor,
   BaSyou,
@@ -78,6 +79,12 @@ type ActionUnitDamage = {
   value: string;
 };
 
+type ActionAddBlock = {
+  id: "ActionAddBlock";
+  immediateEffect?: boolean;
+  block: BlockPayload;
+};
+
 export type Action =
   | ActionRoll
   | ActionReroll
@@ -90,4 +97,5 @@ export type Action =
   | ActionSetFace
   | ActionSetFlag
   | ActionOKiKaeRu
-  | ActionUnitDamage;
+  | ActionUnitDamage
+  | ActionAddBlock;

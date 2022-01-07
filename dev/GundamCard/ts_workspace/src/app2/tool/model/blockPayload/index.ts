@@ -78,8 +78,8 @@ type FeedbackAddBlock = {
 
 export type Feedback =
   | FeedbackTargetAction
-  | FeedbackAddBlock
-  | FeedbackCustomAction
+  //| FeedbackAddBlock
+  //| FeedbackCustomAction
   | FeedbackAction;
 
 export type BlockPayloadCause = {

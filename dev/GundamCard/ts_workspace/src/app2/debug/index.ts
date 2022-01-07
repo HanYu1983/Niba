@@ -15,7 +15,6 @@ import {
   DEFAULT_SCRIPT_CONTEXT,
   mapBlockPayloadRequire,
 } from "../tool/model/scriptContext";
-
 import { getCardScript, QueryText, Script } from "../tool/script";
 import { askRowData } from "../../tool/data";
 
