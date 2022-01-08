@@ -5,6 +5,7 @@ import { Action } from "../blockPayload/action";
 import { getTopCards, mapCard, moveCard } from "../../../../tool/table";
 import { GameContext } from "./gameContext";
 
+let idSeq = 0;
 export function doActionTarget(
   gameCtx: GameContext,
   blockPayload: BlockPayload,
@@ -132,7 +133,7 @@ export function doActionTarget(
       }
       break;
     case "ActionAddBlock": {
-      const blockUuid = `ActionAddBlock_${new Date().getTime()}`;
+      const blockUuid = `ActionAddBlock_${new Date().getTime()}_${idSeq++}`;
       switch (action.type) {
         case "堆疊": {
           const wrappedBlock: BlockPayload = {
@@ -197,7 +198,7 @@ export function doActionTarget(
           ...gameCtx.gameState,
           effects: [
             {
-              id: `ActionAddEffect_${new Date().getTime()}`,
+              id: `ActionAddEffect_${new Date().getTime()}_${idSeq++}`,
               effect: action.effect,
             },
             ...gameCtx.gameState.effects,
