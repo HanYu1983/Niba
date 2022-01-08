@@ -15,6 +15,7 @@ import {
   initState,
   updateEffect,
   updateCommand,
+  triggerTextEvent,
 } from "../tool/model/gameContext";
 import { createCard } from "../../tool/table";
 import { getBaShouID, PlayerA } from "../tool/model/basic";
@@ -43,6 +44,7 @@ export function testInit() {
   ctx = initState(ctx);
   ctx = updateEffect(ctx);
   ctx = updateCommand(ctx);
+  ctx = triggerTextEvent(ctx, {});
   console.log(ctx);
 }
 
