@@ -132,10 +132,12 @@ export function doActionTarget(
       }
       break;
     case "ActionAddBlock": {
+      const blockUuid = `ActionAddBlock_${new Date().getTime()}`;
       switch (action.type) {
         case "堆疊": {
           const wrappedBlock: BlockPayload = {
             ...action.block,
+            id: blockUuid,
             contextID: action.block.contextID,
             cause: action.block.cause,
           };
@@ -147,6 +149,7 @@ export function doActionTarget(
         case "指令": {
           const wrappedBlock: BlockPayload = {
             ...action.block,
+            id: blockUuid,
             contextID: action.block.contextID,
             cause: action.block.cause,
           };
@@ -158,6 +161,7 @@ export function doActionTarget(
         case "立即": {
           const wrappedBlock: BlockPayload = {
             ...action.block,
+            id: blockUuid,
             contextID: action.block.contextID,
             cause: action.block.cause,
           };

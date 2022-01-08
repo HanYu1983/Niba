@@ -2,7 +2,7 @@ import { Query } from ".";
 import { CardText } from "../model/basic";
 import { CardPrototype, GameContext } from "../model/gameContext";
 import { wrapRequireKey } from "../model/scriptContext";
-//import { createTokuSyuKouKaText } from "./createTokuSyuKouKaText";
+import { createTokuSyuKouKaText } from "./createTokuSyuKouKaText";
 
 // 179016_04B_U_WT075C_white
 // アストレイ ブルーフレーム セカンドL（ローエングリンランチャー）
@@ -12,13 +12,14 @@ import { wrapRequireKey } from "../model/scriptContext";
 // （注：このカードが場に出た時にも起動する）
 
 const prototype: CardPrototype = {
-  title: "アストレイ",
+  title: "アストレイ ブルーフレーム セカンドL（ローエングリンランチャー）",
   characteristic: "アストレイ系　ブルーフレーム系　MS　専用「叢雲劾」".split(
     "　"
   ),
   category: "ユニット",
   color: "白",
   texts: [
+    createTokuSyuKouKaText(["改装", "ブルーフレーム系"], { cost: 0 }),
     {
       id: "自動型",
       category: "起動",

@@ -41,7 +41,7 @@ export type RequireSiYouTiming = {
 
 export type RequireCustom = {
   id: "RequireCustom";
-  customID: any;
+  customID: string;
 } & RequireBase;
 
 export type Require =
@@ -64,23 +64,7 @@ type FeedbackAction = {
   action: Action[];
 };
 
-type FeedbackCustomAction = {
-  id: "FeedbackCustomAction";
-  targetID: string;
-  cardID: string;
-  actionID: string;
-};
-
-type FeedbackAddBlock = {
-  id: "FeedbackAddBlock";
-  block: BlockPayload;
-};
-
-export type Feedback =
-  | FeedbackTargetAction
-  //| FeedbackAddBlock
-  //| FeedbackCustomAction
-  | FeedbackAction;
+export type Feedback = FeedbackTargetAction | FeedbackAction;
 
 export type BlockPayloadCauseGameEvent = {
   id: "BlockPayloadCauseGameEvent";
@@ -88,15 +72,20 @@ export type BlockPayloadCauseGameEvent = {
   gameEvent: GameEvent;
 };
 
-export type BlockPayloadCauseAskCommand = {
-  id: "BlockPayloadCauseAskCommand";
+export type BlockPayloadCauseUpdateCommand = {
+  id: "BlockPayloadCauseUpdateCommand";
   cardID: string;
-  playerID: string;
+};
+
+export type BlockPayloadCauseUpdateEffect = {
+  id: "BlockPayloadCauseUpdateEffect";
+  cardID: string;
 };
 
 export type BlockPayloadCause =
   | BlockPayloadCauseGameEvent
-  | BlockPayloadCauseAskCommand;
+  | BlockPayloadCauseUpdateCommand
+  | BlockPayloadCauseUpdateEffect;
 
 export type BlockPayload = {
   id?: string;

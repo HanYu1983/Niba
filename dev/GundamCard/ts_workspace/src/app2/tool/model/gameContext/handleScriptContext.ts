@@ -461,12 +461,8 @@ export function triggerTextEvent(
         }
       })
       .reduce((ctx, block) => {
-        const uuidKey = `triggerTextEvent_${JSON.stringify(
-          evt
-        )}_${new Date().getTime()}`;
         const wrapEvent: BlockPayload = {
           ...block,
-          id: uuidKey,
           cause: {
             id: "BlockPayloadCauseGameEvent",
             cardID: cardState.id,
@@ -511,50 +507,120 @@ export function updateCommand(ctx: GameContext, playerID: string): GameContext {
     commandEffect: [],
   };
   return ctx.gameState.cardState.reduce((ctx, cardState) => {
-    return cardState.cardTextStates.reduce((ctx, cardTextState) => {
-      if (cardTextState.enabled == false) {
-        return ctx;
-      }
-      // 只找出使用型技能
-      if (cardTextState.cardText.id != "使用型") {
-        return ctx;
-      }
-      const block = cardTextState.cardText.block;
-      const uuidKey = `updateCommand_${playerID}_${new Date().getTime()}`;
-      const wrapEvent: BlockPayload = {
-        ...block,
-        id: uuidKey,
-        cause: {
-          id: "BlockPayloadCauseAskCommand",
-          cardID: cardState.id,
-          playerID: playerID,
-        },
-      };
-      if (wrapEvent.require != null) {
-        const varCtxID = "updateCommand";
-        // 清空變量，因為是臨時性的訪問，所以可以這麼做
-        ctx = {
-          ...ctx,
-          varsPool: {
-            ...ctx.varsPool,
-            [varCtxID]: {
-              targets: {},
-            },
+    return cardState.cardTextStates
+      .filter((cardState) => {
+        return cardState.enabled;
+      })
+      .flatMap((cardTextState): BlockPayload[] => {
+        // 只找出使用型技能
+        switch (cardTextState.cardText.id) {
+          case "自動型":
+            return [];
+          case "使用型":
+            return [cardTextState.cardText.block];
+          case "特殊型":
+            return cardTextState.cardText.texts
+              .filter((t) => t.id == "使用型")
+              .map((t) => t.block);
+        }
+      })
+      .reduce((ctx, block) => {
+        const wrapEvent: BlockPayload = {
+          ...block,
+          cause: {
+            id: "BlockPayloadCauseUpdateCommand",
+            cardID: cardState.id,
           },
         };
-        try {
-          ctx = doRequire(ctx, wrapEvent, wrapEvent.require, varCtxID);
-          if (wrapEvent.feedback) {
-            ctx = wrapEvent.feedback.reduce((ctx, feedback) => {
-              return doFeedback(ctx, wrapEvent, feedback, varCtxID);
-            }, ctx);
+        if (wrapEvent.require != null) {
+          const varCtxID = "updateCommand";
+          // 清空變量，因為是臨時性的訪問，所以可以這麼做
+          ctx = {
+            ...ctx,
+            varsPool: {
+              ...ctx.varsPool,
+              [varCtxID]: {
+                targets: {},
+              },
+            },
+          };
+          try {
+            ctx = doRequire(ctx, wrapEvent, wrapEvent.require, varCtxID);
+            if (wrapEvent.feedback) {
+              ctx = wrapEvent.feedback.reduce((ctx, feedback) => {
+                return doFeedback(ctx, wrapEvent, feedback, varCtxID);
+              }, ctx);
+            }
+          } catch (e) {
+            console.log(e);
           }
-        } catch (e) {
-          console.log(e);
         }
-      }
-      return ctx;
-    }, ctx);
+        return ctx;
+      }, ctx);
+  }, ctx);
+}
+
+export function updateEffect(ctx: GameContext): GameContext {
+  // 清空命令列表
+  ctx = {
+    ...ctx,
+  };
+  return ctx.gameState.cardState.reduce((ctx, cardState) => {
+    return cardState.cardTextStates
+      .filter((cardState) => {
+        return cardState.enabled;
+      })
+      .flatMap((cardTextState): BlockPayload[] => {
+        // 只找出常駐型技能
+        switch (cardTextState.cardText.id) {
+          case "自動型":
+            switch (cardTextState.cardText.category) {
+              case "常駐":
+                return [cardTextState.cardText.block];
+              default:
+                return [];
+            }
+          case "使用型":
+            return [];
+          case "特殊型":
+            return cardTextState.cardText.texts
+              .filter((t) => t.id == "自動型" && t.category == "常駐")
+              .map((t) => t.block);
+        }
+      })
+      .reduce((ctx, block) => {
+        const wrapEvent: BlockPayload = {
+          ...block,
+          cause: {
+            id: "BlockPayloadCauseUpdateEffect",
+            cardID: cardState.id,
+          },
+        };
+        if (wrapEvent.require != null) {
+          const varCtxID = "updateEffect";
+          // 清空變量，因為是臨時性的訪問，所以可以這麼做
+          ctx = {
+            ...ctx,
+            varsPool: {
+              ...ctx.varsPool,
+              [varCtxID]: {
+                targets: {},
+              },
+            },
+          };
+          try {
+            ctx = doRequire(ctx, wrapEvent, wrapEvent.require, varCtxID);
+            if (wrapEvent.feedback) {
+              ctx = wrapEvent.feedback.reduce((ctx, feedback) => {
+                return doFeedback(ctx, wrapEvent, feedback, varCtxID);
+              }, ctx);
+            }
+          } catch (e) {
+            console.log(e);
+          }
+        }
+        return ctx;
+      }, ctx);
   }, ctx);
 }
 
@@ -566,16 +632,17 @@ export function initState(ctx: GameContext): GameContext {
     const uuidKey = `initState_${idSeq++}`;
     const cardState: CardState = {
       ...DEFAULT_CARD_STATE,
-      id: uuidKey,
+      id: card.id,
       live: 0,
       destroy: false,
       setGroupID: uuidKey,
       cardTextStates: proto.texts.map((text): CardTextState => {
-        const uuidCardStateKey = `initState_${idSeq++}`;
         return {
-          id: uuidCardStateKey,
+          id: card.id,
           enabled: true,
-          cardText: text,
+          cardText: {
+            ...text,
+          },
         };
       }),
       prototype: proto,
