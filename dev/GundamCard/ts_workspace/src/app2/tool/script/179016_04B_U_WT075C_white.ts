@@ -99,4 +99,4 @@ const prototype: CardPrototype = {
   ],
 };
 
-module.exports.prototype;
+module.exports = prototype;

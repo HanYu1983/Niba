@@ -578,6 +578,7 @@ export function initState(ctx: GameContext): GameContext {
           cardText: text,
         };
       }),
+      prototype: proto,
     };
     nextCardState.push(cardState);
     return card;

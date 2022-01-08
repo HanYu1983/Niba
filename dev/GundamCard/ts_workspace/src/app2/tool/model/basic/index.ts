@@ -1,3 +1,4 @@
+import { getCard } from "../../../../tool/table";
 import { BlockPayload } from "../blockPayload";
 import { GameContext } from "../gameContext";
 
@@ -47,13 +48,14 @@ export function toBaSyou(
   const _playerID = (() => {
     switch (baSyou.value[0]) {
       case "持ち主": {
-        const card = ctx.gameState.cardState.find((cardState) => {
-          return cardState.id == cardID;
-        });
+        const card = getCard(ctx.gameState.table, cardID);
         if (card == null) {
           throw new Error("getAbsoluteBaSyou card not found");
         }
-        return card.playerID;
+        if (card.ownerID == null) {
+          throw new Error("getAbsoluteBaSyou ownerID must not null");
+        }
+        return card.ownerID;
       }
       case "自軍":
         return playerID;

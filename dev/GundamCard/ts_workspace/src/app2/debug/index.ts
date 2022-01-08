@@ -10,13 +10,47 @@ import {
   RequireTarget,
   RequireYesNo,
 } from "../tool/model/blockPayload";
-import { GameContext, DEFAULT_GAME_CONTEXT } from "../tool/model/gameContext";
+import {
+  GameContext,
+  DEFAULT_GAME_CONTEXT,
+  initState,
+} from "../tool/model/gameContext";
 import {
   DEFAULT_SCRIPT_CONTEXT,
   mapBlockPayloadRequire,
 } from "../tool/model/scriptContext";
 import { getCardScript, QueryText, Script } from "../tool/script";
 import { askRowData } from "../../tool/data";
+import { createCard } from "../../tool/table";
+import { getBaShouID, PlayerA } from "../tool/model/basic";
+
+export function testInit() {
+  let ctx = DEFAULT_GAME_CONTEXT;
+  ctx = {
+    ...ctx,
+    gameState: {
+      ...ctx.gameState,
+      table: createCard(
+        ctx.gameState.table,
+        PlayerA,
+        getBaShouID({
+          id: "AbsoluteBaSyou",
+          value: [PlayerA, "手札"],
+        }),
+        ["179016_04B_U_WT075C_white", "179016_04B_U_WT075C_white"]
+      ),
+    },
+  };
+  ctx = initState(ctx);
+  console.log(ctx);
+}
+
+export function test() {
+  [testInit].forEach((testF: Function) => {
+    console.log(`============${testF.name}===========`);
+    testF();
+  });
+}
 
 // function testSetAnswer() {
 //   const require1: RequireYesNo = {
@@ -328,13 +362,6 @@ import { askRowData } from "../../tool/data";
 //   };
 //   ctx = doBlockRequire(ctx, "1");
 // }
-
-export function test() {
-  [].forEach((testF: Function) => {
-    console.log(`============${testF.name}===========`);
-    testF();
-  });
-}
 
 // export type CardText = {
 //   absolute?: boolean;

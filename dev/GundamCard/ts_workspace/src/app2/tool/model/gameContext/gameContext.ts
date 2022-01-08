@@ -45,7 +45,6 @@ export const DEFAULT_CARD_PROTOTYPE: CardPrototype = {
 
 export type CardState = {
   id: string;
-  playerID: string; // 持ち主. 這張卡的卡組的擁有者
   live: number;
   destroy: boolean;
   setGroupID: string;
@@ -56,7 +55,6 @@ export type CardState = {
 
 export const DEFAULT_CARD_STATE: CardState = {
   id: "",
-  playerID: "",
   live: 0,
   destroy: false,
   setGroupID: "",
