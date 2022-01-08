@@ -483,10 +483,18 @@ export function triggerTextEvent(
       .flatMap((cardTextState): BlockPayload[] => {
         switch (cardTextState.cardText.id) {
           case "自動型":
+            switch (cardTextState.cardText.category) {
+              case "常駐":
+                return [];
+              default:
+                return [cardTextState.cardText.block];
+            }
           case "使用型":
-            return [cardTextState.cardText.block];
+            return [];
           case "特殊型":
-            return cardTextState.cardText.texts.map((t) => t.block);
+            return cardTextState.cardText.texts
+              .filter((t) => t.id == "自動型" && t.category != "常駐")
+              .map((t) => t.block);
         }
       })
       .reduce((ctx, block) => {
@@ -498,28 +506,28 @@ export function triggerTextEvent(
             gameEvent: evt,
           },
         };
-        if (wrapEvent.require != null) {
-          const varCtxID = "triggerTextEvent";
-          // 清空變量，因為是臨時性的訪問，所以可以這麼做
-          ctx = {
-            ...ctx,
-            varsPool: {
-              ...ctx.varsPool,
-              [varCtxID]: {
-                targets: {},
+        try {
+          if (wrapEvent.require != null) {
+            const varCtxID = "triggerTextEvent";
+            // 清空變量，因為是臨時性的訪問，所以可以這麼做
+            ctx = {
+              ...ctx,
+              varsPool: {
+                ...ctx.varsPool,
+                [varCtxID]: {
+                  targets: {},
+                },
               },
-            },
-          };
-          try {
+            };
             ctx = doRequire(ctx, wrapEvent, wrapEvent.require, varCtxID);
             if (wrapEvent.feedback) {
               ctx = wrapEvent.feedback.reduce((ctx, feedback) => {
                 return doFeedback(ctx, wrapEvent, feedback, varCtxID);
               }, ctx);
             }
-          } catch (e) {
-            console.log(e);
           }
+        } catch (e) {
+          console.log(e);
         }
         return ctx;
       }, ctx);
@@ -562,28 +570,28 @@ export function updateCommand(ctx: GameContext): GameContext {
           },
         };
         const varCtxID = "updateCommand";
-        if (wrapEvent.require != null) {
-          // 清空變量，因為是臨時性的訪問，所以可以這麼做
-          ctx = {
-            ...ctx,
-            varsPool: {
-              ...ctx.varsPool,
-              [varCtxID]: {
-                targets: {},
+        try {
+          if (wrapEvent.require != null) {
+            // 清空變量，因為是臨時性的訪問，所以可以這麼做
+            ctx = {
+              ...ctx,
+              varsPool: {
+                ...ctx.varsPool,
+                [varCtxID]: {
+                  targets: {},
+                },
               },
-            },
-          };
-          try {
+            };
             ctx = doRequire(ctx, wrapEvent, wrapEvent.require, varCtxID);
-          } catch (e) {
-            console.log(`updateCommand ${cardState.id}`);
-            console.log(e);
           }
-        }
-        if (wrapEvent.feedback) {
-          ctx = wrapEvent.feedback.reduce((ctx, feedback) => {
-            return doFeedback(ctx, wrapEvent, feedback, varCtxID);
-          }, ctx);
+          if (wrapEvent.feedback) {
+            ctx = wrapEvent.feedback.reduce((ctx, feedback) => {
+              return doFeedback(ctx, wrapEvent, feedback, varCtxID);
+            }, ctx);
+          }
+        } catch (e) {
+          console.log(`updateCommand ${cardState.id}`);
+          console.log(e);
         }
         return ctx;
       }, ctx);
@@ -591,9 +599,13 @@ export function updateCommand(ctx: GameContext): GameContext {
 }
 
 export function updateEffect(ctx: GameContext): GameContext {
-  // 清空命令列表
+  // 清空效果列表
   ctx = {
     ...ctx,
+    gameState: {
+      ...ctx.gameState,
+      effects: [],
+    },
   };
   return ctx.gameState.cardState.reduce((ctx, cardState) => {
     return cardState.cardTextStates
@@ -627,27 +639,27 @@ export function updateEffect(ctx: GameContext): GameContext {
           },
         };
         const varCtxID = "updateEffect";
-        if (wrapEvent.require != null) {
-          // 清空變量，因為是臨時性的訪問，所以可以這麼做
-          ctx = {
-            ...ctx,
-            varsPool: {
-              ...ctx.varsPool,
-              [varCtxID]: {
-                targets: {},
+        try {
+          if (wrapEvent.require != null) {
+            // 清空變量，因為是臨時性的訪問，所以可以這麼做
+            ctx = {
+              ...ctx,
+              varsPool: {
+                ...ctx.varsPool,
+                [varCtxID]: {
+                  targets: {},
+                },
               },
-            },
-          };
-          try {
+            };
             ctx = doRequire(ctx, wrapEvent, wrapEvent.require, varCtxID);
-          } catch (e) {
-            console.log(e);
           }
-        }
-        if (wrapEvent.feedback) {
-          ctx = wrapEvent.feedback.reduce((ctx, feedback) => {
-            return doFeedback(ctx, wrapEvent, feedback, varCtxID);
-          }, ctx);
+          if (wrapEvent.feedback) {
+            ctx = wrapEvent.feedback.reduce((ctx, feedback) => {
+              return doFeedback(ctx, wrapEvent, feedback, varCtxID);
+            }, ctx);
+          }
+        } catch (e) {
+          console.log(e);
         }
         return ctx;
       }, ctx);

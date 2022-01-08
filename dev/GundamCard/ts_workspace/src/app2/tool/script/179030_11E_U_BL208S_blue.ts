@@ -36,7 +36,7 @@ const prototype: CardPrototype = {
             action: [
               {
                 id: "ActionAddEffect",
-                effectID: "",
+                effectID: "全ての敵軍ユニットは、－３／ー３／±０を得る。",
                 effect: {
                   id: "GameEffectCustom",
                   customID: {
