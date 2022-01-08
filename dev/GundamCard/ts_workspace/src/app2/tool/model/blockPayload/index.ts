@@ -1,5 +1,5 @@
 import type { Action } from "./action";
-import type { SiYouTiming } from "../basic";
+import type { GameEvent, SiYouTiming } from "../basic";
 import type { Condition } from "./condition";
 import type { TargetType } from "../basic";
 
@@ -82,12 +82,24 @@ export type Feedback =
   //| FeedbackCustomAction
   | FeedbackAction;
 
-export type BlockPayloadCause = {
-  playerID?: string;
-  cardID?: string;
+export type BlockPayloadCauseGameEvent = {
+  id: "BlockPayloadCauseGameEvent";
+  cardID: string;
+  gameEvent: GameEvent;
 };
 
+export type BlockPayloadCauseAskCommand = {
+  id: "BlockPayloadCauseAskCommand";
+  cardID: string;
+  playerID: string;
+};
+
+export type BlockPayloadCause =
+  | BlockPayloadCauseGameEvent
+  | BlockPayloadCauseAskCommand;
+
 export type BlockPayload = {
+  id?: string;
   cause?: BlockPayloadCause;
   require?: Require;
   feedback?: Feedback[];
@@ -97,3 +109,33 @@ export type BlockPayload = {
 };
 
 export const DEFAULT_BLOCK_PAYLOAD: BlockPayload = {};
+
+export function recurRequire(
+  require: Require,
+  mapF: (require: Require) => Require
+): Require {
+  switch (require.id) {
+    case "RequireAnd": {
+      const nextRequires = require.and.map((require) => {
+        return recurRequire(require, mapF);
+      });
+      const nextAnd: RequireAnd = {
+        ...require,
+        and: nextRequires,
+      };
+      return nextAnd;
+    }
+    case "RequireOr": {
+      const nextRequires = require.or.map((require) => {
+        return recurRequire(require, mapF);
+      });
+      const nextOr: RequireOr = {
+        ...require,
+        or: nextRequires,
+      };
+      return nextOr;
+    }
+    default:
+      return mapF(require);
+  }
+}

@@ -98,36 +98,75 @@ export function doActionTarget(
       };
     }
     case "ActionDraw": {
-      const playerID = blockPayload.cause?.playerID;
-      if (playerID == null) {
-        throw new Error(`${playerID} not found`);
-      }
-      const fromBaSyouID = getBaShouID({
-        id: "AbsoluteBaSyou",
-        value: [playerID, "本国"],
-      });
-      const toBaSyouID = getBaShouID({
-        id: "AbsoluteBaSyou",
-        value: [playerID, "手札"],
-      });
-      const drawCount = action.count;
-      const topCards = getTopCards(
-        gameCtx.gameState.table,
-        fromBaSyouID,
-        drawCount
-      );
-      const table = topCards.reduce((table, card) => {
-        return moveCard(table, fromBaSyouID, toBaSyouID, card.id, null);
-      }, gameCtx.gameState.table);
-      return {
-        ...gameCtx,
-        gameState: {
-          ...gameCtx.gameState,
-          table: table,
-        },
-      };
+      // const playerID = blockPayload.cause?.playerID;
+      // if (playerID == null) {
+      //   throw new Error(`${playerID} not found`);
+      // }
+      // const fromBaSyouID = getBaShouID({
+      //   id: "AbsoluteBaSyou",
+      //   value: [playerID, "本国"],
+      // });
+      // const toBaSyouID = getBaShouID({
+      //   id: "AbsoluteBaSyou",
+      //   value: [playerID, "手札"],
+      // });
+      // const drawCount = action.count;
+      // const topCards = getTopCards(
+      //   gameCtx.gameState.table,
+      //   fromBaSyouID,
+      //   drawCount
+      // );
+      // const table = topCards.reduce((table, card) => {
+      //   return moveCard(table, fromBaSyouID, toBaSyouID, card.id, null);
+      // }, gameCtx.gameState.table);
+      // return {
+      //   ...gameCtx,
+      //   gameState: {
+      //     ...gameCtx.gameState,
+      //     table: table,
+      //   },
+      // };
     }
-    case "ActionDrop": {
+    case "ActionDrop":
+      {
+      }
+      break;
+    case "ActionAddBlock": {
+      switch (action.type) {
+        case "堆疊": {
+          const wrappedBlock: BlockPayload = {
+            ...action.block,
+            contextID: action.block.contextID,
+            cause: action.block.cause,
+          };
+          return {
+            ...gameCtx,
+            stackEffect: [wrappedBlock, ...gameCtx.stackEffect],
+          };
+        }
+        case "指令": {
+          const wrappedBlock: BlockPayload = {
+            ...action.block,
+            contextID: action.block.contextID,
+            cause: action.block.cause,
+          };
+          return {
+            ...gameCtx,
+            commandEffect: [wrappedBlock, ...gameCtx.commandEffect],
+          };
+        }
+        case "立即": {
+          const wrappedBlock: BlockPayload = {
+            ...action.block,
+            contextID: action.block.contextID,
+            cause: action.block.cause,
+          };
+          return {
+            ...gameCtx,
+            immediateEffect: [wrappedBlock, ...gameCtx.immediateEffect],
+          };
+        }
+      }
     }
   }
   return gameCtx;

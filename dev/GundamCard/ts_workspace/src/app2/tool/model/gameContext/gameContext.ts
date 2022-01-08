@@ -4,10 +4,11 @@ import {
   CardText,
   Timing,
   TIMING_CHART,
+  TokuSyuKouKa,
 } from "../basic";
 import { ScriptContext, DEFAULT_SCRIPT_CONTEXT } from "../scriptContext";
 import { DEFAULT_TABLE, Table } from "../../../../tool/table";
-import { BlockPayload } from "../blockPayload";
+import { BlockPayload, Require } from "../blockPayload";
 import { Text } from "../../script";
 import { wrapRequireKey } from "../scriptContext";
 
@@ -54,11 +55,11 @@ export type Block = {
 export type GameContext = {
   varsPool: { [key: string]: Vars };
   // 指令效果。從這裡取得玩家可用的指令
-  commandEffect: Block[];
+  commandEffect: BlockPayload[];
   // 立即效果。玩家必須立即一個一個進行處理
-  immediateEffect: Block[];
+  immediateEffect: BlockPayload[];
   // 堆疊效果。每次只處理第一個代表top的block
-  stackEffect: Block[];
+  stackEffect: BlockPayload[];
   gameState: GameState;
 };
 
@@ -298,3 +299,31 @@ export const DEFAULT_GAME_CONTEXT: GameContext = {
   immediateEffect: [],
   stackEffect: [],
 };
+
+export function mapEffect(
+  ctx: GameContext,
+  doF: (effect: BlockPayload) => BlockPayload
+): GameContext {
+  return {
+    ...ctx,
+    immediateEffect: ctx.immediateEffect.map(doF),
+    commandEffect: ctx.commandEffect.map(doF),
+    stackEffect: ctx.stackEffect.map(doF),
+  };
+}
+
+export function reduceEffect<T>(
+  ctx: GameContext,
+  doF: (init: T, effect: BlockPayload) => T,
+  init: T
+): T {
+  return [
+    ...ctx.immediateEffect,
+    ...ctx.commandEffect,
+    ...ctx.stackEffect,
+  ].reduce(doF, init);
+}
+
+export function askImgSrc(imgID: string) {
+  return `https://storage.googleapis.com/particle-resources/cardPackage/gundamWarN/${imgID}.jpg`;
+}
