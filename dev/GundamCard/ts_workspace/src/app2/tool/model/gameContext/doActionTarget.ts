@@ -72,9 +72,9 @@ export function doActionTarget(
         }
         return action.color || null;
       })();
-      if (color?.id != "カードの色") {
-        throw new Error("must カードの色");
-      }
+      // if (color?.id != "カードの色") {
+      //   throw new Error("must カードの色");
+      // }
       const table = cards.cardID.reduce((table, cardID) => {
         if (cardID == null) {
           throw new Error("target must not null");
@@ -138,8 +138,8 @@ export function doActionTarget(
           const wrappedBlock: BlockPayload = {
             ...action.block,
             id: blockUuid,
-            contextID: action.block.contextID,
-            cause: action.block.cause,
+            contextID: blockPayload.contextID,
+            cause: blockPayload.cause,
           };
           return {
             ...gameCtx,
@@ -150,8 +150,8 @@ export function doActionTarget(
           const wrappedBlock: BlockPayload = {
             ...action.block,
             id: blockUuid,
-            contextID: action.block.contextID,
-            cause: action.block.cause,
+            contextID: blockPayload.contextID,
+            cause: blockPayload.cause,
           };
           return {
             ...gameCtx,
@@ -162,8 +162,8 @@ export function doActionTarget(
           const wrappedBlock: BlockPayload = {
             ...action.block,
             id: blockUuid,
-            contextID: action.block.contextID,
-            cause: action.block.cause,
+            contextID: blockPayload.contextID,
+            cause: blockPayload.cause,
           };
           return {
             ...gameCtx,
@@ -171,6 +171,39 @@ export function doActionTarget(
           };
         }
       }
+    }
+    case "ActionAddEffect": {
+      if (action.effectID) {
+        const originEffect = gameCtx.gameState.effects.find((effect) => {
+          return effect.id == action.effectID;
+        });
+        if (originEffect != null) {
+          return gameCtx;
+        }
+        return {
+          ...gameCtx,
+          gameState: {
+            ...gameCtx.gameState,
+            effects: [
+              { id: action.effectID, effect: action.effect },
+              ...gameCtx.gameState.effects,
+            ],
+          },
+        };
+      }
+      return {
+        ...gameCtx,
+        gameState: {
+          ...gameCtx.gameState,
+          effects: [
+            {
+              id: `ActionAddEffect_${new Date().getTime()}`,
+              effect: action.effect,
+            },
+            ...gameCtx.gameState.effects,
+          ],
+        },
+      };
     }
   }
   return gameCtx;

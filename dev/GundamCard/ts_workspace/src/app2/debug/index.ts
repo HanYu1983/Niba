@@ -15,6 +15,7 @@ import {
   DEFAULT_GAME_CONTEXT,
   initState,
   updateEffect,
+  updateCommand,
 } from "../tool/model/gameContext";
 import {
   DEFAULT_SCRIPT_CONTEXT,
@@ -38,13 +39,17 @@ export function testInit() {
           id: "AbsoluteBaSyou",
           value: [PlayerA, "手札"],
         }),
-        ["179016_04B_U_WT075C_white", "179030_11E_U_BL208S_blue"]
+        [
+          "179016_04B_U_WT075C_white",
+          "179030_11E_U_BL208S_blue",
+          "179030_11E_U_BL215R_blue",
+        ]
       ),
     },
   };
   ctx = initState(ctx);
   ctx = updateEffect(ctx);
-
+  ctx = updateCommand(ctx);
   console.log(ctx);
 }
 

@@ -9,6 +9,7 @@ import type {
   TargetTypeYesNo,
   TargetTypeThisCard,
 } from "../basic";
+import { GameEffect } from "../gameContext";
 
 type ActionRoll = {
   id: "ActionRoll";
@@ -85,6 +86,12 @@ type ActionAddBlock = {
   block: BlockPayload;
 };
 
+type ActionAddEffect = {
+  id: "ActionAddEffect";
+  effectID?: string;
+  effect: GameEffect;
+};
+
 export type Action =
   | ActionRoll
   | ActionReroll
@@ -98,4 +105,5 @@ export type Action =
   | ActionSetFlag
   | ActionOKiKaeRu
   | ActionUnitDamage
-  | ActionAddBlock;
+  | ActionAddBlock
+  | ActionAddEffect;

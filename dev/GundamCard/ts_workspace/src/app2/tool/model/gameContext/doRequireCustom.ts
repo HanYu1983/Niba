@@ -1,3 +1,5 @@
+import { getCardPosition } from "../../../../tool/table";
+import { CardColor, getBaShou } from "../basic";
 import {
   BlockPayload,
   Feedback,
@@ -8,35 +10,53 @@ import {
 import { Block } from "../scriptContext/blockContext";
 import { GameContext } from "./gameContext";
 
-export type RequireCustomFunction = (
-  gameCtx: GameContext,
-  blockPayload: BlockPayload,
-  varCtxID: string
-) => GameContext;
+export type RequireCustomID1 = {
+  id: "{color}のGサインを持つ自軍Gが{number}枚以上ある場合";
+  color: CardColor;
+  number: number;
+};
 
-export function getRequireCustomFunctionString(
-  fn: RequireCustomFunction
-): string {
-  // 手動加入匿名方法的function name
-  // 無法按下列這樣做，因為編譯器會把匿名方法的function name拿掉
-  // (function main(){}).toString()
-  return fn.toString().replace("function", "function main");
-}
+export type RequireCustomID2 = {
+  id: "このカードと同じエリアに、「特徴:{x}」を持つ自軍キャラがいる";
+  x: string;
+};
 
-function getRequestCustomFunction(script: string): RequireCustomFunction {
-  console.log(script);
-  eval.apply(null, [script]);
-  // 避免混淆器
-  return eval.apply(null, ["main"]);
-}
+export type RequireCustomID3 = {
+  id: "このカードが自軍手札にある状態";
+  x: string;
+};
+
+export type RequireCustomID =
+  | RequireCustomID1
+  | RequireCustomID2
+  | RequireCustomID3;
 
 export function doRequireCustom(
-  gameCtx: GameContext,
+  ctx: GameContext,
   blockPayload: BlockPayload,
   require: RequireCustom,
-  requireCustomID: string,
+  requireCustomID: RequireCustomID,
   varCtxID: string
 ): GameContext {
-  getRequestCustomFunction(requireCustomID)(gameCtx, blockPayload, varCtxID);
-  return gameCtx;
+  switch (requireCustomID.id) {
+    case "{color}のGサインを持つ自軍Gが{number}枚以上ある場合": {
+      const cardID = blockPayload.cause?.cardID;
+      if (cardID == null) {
+        throw new Error("card id not found");
+      }
+      const [_, cardPosition] = getCardPosition(ctx.gameState.table, cardID);
+      if (cardPosition == null) {
+        throw new Error("cardPosition not found");
+      }
+      const {
+        value: [playerID],
+      } = getBaShou(cardPosition);
+      console.log(playerID);
+      return ctx;
+    }
+    case "このカードと同じエリアに、「特徴:{x}」を持つ自軍キャラがいる": {
+      return ctx;
+    }
+  }
+  return ctx;
 }

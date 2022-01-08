@@ -41,7 +41,12 @@ export type RequireSiYouTiming = {
 
 export type RequireCustom = {
   id: "RequireCustom";
-  customID: string;
+  customID: any;
+} & RequireBase;
+
+export type RequireScript = {
+  id: "RequireScript";
+  string: string;
 } & RequireBase;
 
 export type Require =
@@ -51,7 +56,8 @@ export type Require =
   | RequireTarget
   | RequireSiYouTiming
   | RequireEvent
-  | RequireCustom;
+  | RequireCustom
+  | RequireScript;
 
 type FeedbackTargetAction = {
   id: "FeedbackTargetAction";

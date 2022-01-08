@@ -41,6 +41,28 @@ import {
 import { mapCard } from "../../../../tool/table";
 import { getPrototype } from "../../script";
 
+export type RequireCustomFunction = (
+  gameCtx: GameContext,
+  blockPayload: BlockPayload,
+  varCtxID: string
+) => GameContext;
+
+export function getRequireCustomFunctionString(
+  fn: RequireCustomFunction
+): string {
+  // 手動加入匿名方法的function name
+  // 無法按下列這樣做，因為編譯器會把匿名方法的function name拿掉
+  // (function main(){}).toString()
+  return fn.toString().replace("function", "function main");
+}
+
+function getRequestCustomFunction(script: string): RequireCustomFunction {
+  console.log(script);
+  eval.apply(null, [script]);
+  // 避免混淆器
+  return eval.apply(null, ["main"]);
+}
+
 function doCondition(
   ctx: GameContext,
   blockPayload: BlockPayload,
@@ -251,6 +273,13 @@ function doRequire(
         }, ctx);
       }
       return ctx;
+    }
+    case "RequireScript": {
+      return getRequestCustomFunction(require.string)(
+        ctx,
+        blockPayload,
+        varCtxID
+      );
     }
     case "RequireCustom": {
       return doRequireCustom(
@@ -500,7 +529,7 @@ export function triggerTextEvent(
 // 更新命令列表
 // 腳本中必須加入ActionAddBlock到"命令"列表中
 // 因為會重新設置命令列表，所以只有使用型技能中的加入到命令列表才能正確運作
-export function updateCommand(ctx: GameContext, playerID: string): GameContext {
+export function updateCommand(ctx: GameContext): GameContext {
   // 清空命令列表
   ctx = {
     ...ctx,
@@ -532,8 +561,8 @@ export function updateCommand(ctx: GameContext, playerID: string): GameContext {
             cardID: cardState.id,
           },
         };
+        const varCtxID = "updateCommand";
         if (wrapEvent.require != null) {
-          const varCtxID = "updateCommand";
           // 清空變量，因為是臨時性的訪問，所以可以這麼做
           ctx = {
             ...ctx,
@@ -546,14 +575,15 @@ export function updateCommand(ctx: GameContext, playerID: string): GameContext {
           };
           try {
             ctx = doRequire(ctx, wrapEvent, wrapEvent.require, varCtxID);
-            if (wrapEvent.feedback) {
-              ctx = wrapEvent.feedback.reduce((ctx, feedback) => {
-                return doFeedback(ctx, wrapEvent, feedback, varCtxID);
-              }, ctx);
-            }
           } catch (e) {
+            console.log(`updateCommand ${cardState.id}`);
             console.log(e);
           }
+        }
+        if (wrapEvent.feedback) {
+          ctx = wrapEvent.feedback.reduce((ctx, feedback) => {
+            return doFeedback(ctx, wrapEvent, feedback, varCtxID);
+          }, ctx);
         }
         return ctx;
       }, ctx);
@@ -596,8 +626,8 @@ export function updateEffect(ctx: GameContext): GameContext {
             cardID: cardState.id,
           },
         };
+        const varCtxID = "updateEffect";
         if (wrapEvent.require != null) {
-          const varCtxID = "updateEffect";
           // 清空變量，因為是臨時性的訪問，所以可以這麼做
           ctx = {
             ...ctx,
@@ -610,14 +640,14 @@ export function updateEffect(ctx: GameContext): GameContext {
           };
           try {
             ctx = doRequire(ctx, wrapEvent, wrapEvent.require, varCtxID);
-            if (wrapEvent.feedback) {
-              ctx = wrapEvent.feedback.reduce((ctx, feedback) => {
-                return doFeedback(ctx, wrapEvent, feedback, varCtxID);
-              }, ctx);
-            }
           } catch (e) {
             console.log(e);
           }
+        }
+        if (wrapEvent.feedback) {
+          ctx = wrapEvent.feedback.reduce((ctx, feedback) => {
+            return doFeedback(ctx, wrapEvent, feedback, varCtxID);
+          }, ctx);
         }
         return ctx;
       }, ctx);
@@ -636,9 +666,9 @@ export function initState(ctx: GameContext): GameContext {
       live: 0,
       destroy: false,
       setGroupID: uuidKey,
-      cardTextStates: proto.texts.map((text): CardTextState => {
+      cardTextStates: proto.texts.map((text, i): CardTextState => {
         return {
-          id: card.id,
+          id: `${card.id}_${i}`,
           enabled: true,
           cardText: {
             ...text,

@@ -63,21 +63,29 @@ export const DEFAULT_CARD_STATE: CardState = {
   prototype: DEFAULT_CARD_PROTOTYPE,
 };
 
+export type Vars = {
+  targets: { [key: string]: TargetType };
+};
+
+export type GameEffectCustom = {
+  id: "GameEffectCustom";
+  customID: any;
+};
+
+export type GameEffect = GameEffectCustom;
+
+export type GameEffectState = {
+  id: string;
+  effect: GameEffect;
+};
+
 export type GameState = {
   table: Table;
   cardState: CardState[];
   timing: Timing;
   playerState: PlayerState[];
   activePlayerID: string | null;
-};
-
-export type Vars = {
-  targets: { [key: string]: TargetType };
-};
-
-export type Block = {
-  id: string;
-  payload: BlockPayload;
+  effects: GameEffectState[];
 };
 
 export type GameContext = {
@@ -94,6 +102,7 @@ export type GameContext = {
 export const DEFAULT_GAME_CONTEXT: GameContext = {
   varsPool: {},
   gameState: {
+    effects: [],
     table: DEFAULT_TABLE,
     cardState: [
       {
