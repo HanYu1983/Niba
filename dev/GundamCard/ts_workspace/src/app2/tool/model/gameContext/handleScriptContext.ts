@@ -28,24 +28,18 @@ import {
 } from "../scriptContext/blockContext";
 import { Condition } from "../blockPayload/condition";
 import { Action } from "../blockPayload/action";
-import {
-  ScriptContext,
-  mapVarContext,
-  mapBlockPayloadRequire,
-  DEFAULT_SCRIPT_CONTEXT,
-} from "../scriptContext";
-import {
-  DEFAULT_TABLE,
-  getTopCards,
-  mapCard,
-  moveCard,
-  Table,
-} from "../../../../tool/table";
 import { GameContext } from "./gameContext";
-import { doConditionTarget } from "./doConditionTarget";
 import { doActionTarget } from "./doActionTarget";
 import { doRequireCustom } from "./doRequireCustom";
-import { mapEffect, reduceEffect } from ".";
+import {
+  CardState,
+  mapEffect,
+  reduceEffect,
+  DEFAULT_CARD_STATE,
+  CardTextState,
+} from ".";
+import { mapCard } from "../../../../tool/table";
+import { getPrototype } from "../../script";
 
 function doCondition(
   ctx: GameContext,
@@ -562,4 +556,37 @@ export function updateCommand(ctx: GameContext, playerID: string): GameContext {
       return ctx;
     }, ctx);
   }, ctx);
+}
+
+export function initState(ctx: GameContext): GameContext {
+  const nextCardState: CardState[] = [];
+  let idSeq = 0;
+  mapCard(ctx.gameState.table, (card) => {
+    const proto = getPrototype(card.protoID);
+    const uuidKey = `initState_${idSeq++}`;
+    const cardState: CardState = {
+      ...DEFAULT_CARD_STATE,
+      id: uuidKey,
+      live: 0,
+      destroy: false,
+      setGroupID: uuidKey,
+      cardTextStates: proto.texts.map((text): CardTextState => {
+        const uuidCardStateKey = `initState_${idSeq++}`;
+        return {
+          id: uuidCardStateKey,
+          enabled: true,
+          cardText: text,
+        };
+      }),
+    };
+    nextCardState.push(cardState);
+    return card;
+  });
+  return {
+    ...ctx,
+    gameState: {
+      ...ctx.gameState,
+      cardState: nextCardState,
+    },
+  };
 }

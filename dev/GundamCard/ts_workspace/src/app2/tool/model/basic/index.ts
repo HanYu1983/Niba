@@ -1,4 +1,5 @@
 import { BlockPayload } from "../blockPayload";
+import { GameContext } from "../gameContext";
 
 export type PlayerID = string;
 export const PlayerA = "PlayerA";
@@ -35,6 +36,33 @@ export type BaSyou = AbsoluteBaSyou | RelatedBaSyou;
 
 export function getBaShouID(baSyou: AbsoluteBaSyou) {
   return JSON.stringify(baSyou.value);
+}
+
+export function toBaSyou(
+  baSyou: RelatedBaSyou,
+  ctx: GameContext,
+  playerID: string,
+  cardID: string
+): AbsoluteBaSyou {
+  const _playerID = (() => {
+    switch (baSyou.value[0]) {
+      case "持ち主": {
+        const card = ctx.gameState.cardState.find((cardState) => {
+          return cardState.id == cardID;
+        });
+        if (card == null) {
+          throw new Error("getAbsoluteBaSyou card not found");
+        }
+        return card.playerID;
+      }
+      case "自軍":
+        return playerID;
+    }
+  })();
+  return {
+    id: "AbsoluteBaSyou",
+    value: [_playerID, baSyou.value[1]],
+  };
 }
 
 export function getBaShou(id: string): AbsoluteBaSyou {
@@ -212,7 +240,7 @@ export type TokuSyuKouKa =
 type CardTextZiDouKaTa = {
   id: "自動型";
   description: string;
-  category: "常駐" | "恒常" | ["起動", GameEvent];
+  category: "常駐" | "恒常" | "起動";
   block: BlockPayload;
 };
 

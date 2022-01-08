@@ -5,6 +5,8 @@ import {
   Timing,
   TIMING_CHART,
   TokuSyuKouKa,
+  CardCategory,
+  CardColor,
 } from "../basic";
 import { ScriptContext, DEFAULT_SCRIPT_CONTEXT } from "../scriptContext";
 import { DEFAULT_TABLE, Table } from "../../../../tool/table";
@@ -25,14 +27,42 @@ export type CardTextState = {
   cardText: CardText;
 };
 
+export type CardPrototype = {
+  title: string;
+  characteristic: string[];
+  color: CardColor;
+  category: CardCategory;
+  texts: CardText[];
+};
+
+export const DEFAULT_CARD_PROTOTYPE: CardPrototype = {
+  title: "",
+  characteristic: [],
+  color: "白",
+  category: "ユニット",
+  texts: [],
+};
+
 export type CardState = {
   id: string;
-  playerID: string;
+  playerID: string; // 持ち主. 這張卡的卡組的擁有者
   live: number;
   destroy: boolean;
   setGroupID: string;
   memory: any;
   cardTextStates: CardTextState[];
+  prototype: CardPrototype;
+};
+
+export const DEFAULT_CARD_STATE: CardState = {
+  id: "",
+  playerID: "",
+  live: 0,
+  destroy: false,
+  setGroupID: "",
+  memory: {},
+  cardTextStates: [],
+  prototype: DEFAULT_CARD_PROTOTYPE,
 };
 
 export type GameState = {
@@ -69,12 +99,7 @@ export const DEFAULT_GAME_CONTEXT: GameContext = {
     table: DEFAULT_TABLE,
     cardState: [
       {
-        id: "0",
-        playerID: "",
-        live: 0,
-        destroy: false,
-        setGroupID: "aa",
-        memory: {},
+        ...DEFAULT_CARD_STATE,
         cardTextStates: [
           {
             id: "",
@@ -179,10 +204,7 @@ export const DEFAULT_GAME_CONTEXT: GameContext = {
             enabled: true,
             cardText: {
               id: "自動型",
-              category: [
-                "起動",
-                "「特徴：アストレイ系」を持つ自軍ユニットが、「改装」の効果で場に出た場合",
-              ],
+              category: "起動",
               description:
                 "『起動』：「特徴：アストレイ系」を持つ自軍ユニットが、「改装」の効果で場に出た場合、〔白２〕を支払う事ができる。その場合、５以下の防御力を持つ敵軍ユニット１枚を破壊する。",
               block: {
@@ -272,7 +294,7 @@ export const DEFAULT_GAME_CONTEXT: GameContext = {
                 {
                   id: "自動型",
                   description: "play出場時重置",
-                  category: ["起動", ""],
+                  category: "起動",
                   block: {},
                 },
                 // 出現在戰鬥區時，若部隊中沒有供給或補給時將flag設為true
@@ -280,7 +302,7 @@ export const DEFAULT_GAME_CONTEXT: GameContext = {
                   id: "自動型",
                   description:
                     "出現在戰鬥區時，若部隊中沒有供給或補給時將flag設為true",
-                  category: ["起動", ""],
+                  category: "起動",
                   block: {},
                 },
                 // 當重整部隊時，部隊中有供給或補給時，將FLAG設為FLASE
@@ -322,8 +344,4 @@ export function reduceEffect<T>(
     ...ctx.commandEffect,
     ...ctx.stackEffect,
   ].reduce(doF, init);
-}
-
-export function askImgSrc(imgID: string) {
-  return `https://storage.googleapis.com/particle-resources/cardPackage/gundamWarN/${imgID}.jpg`;
 }
