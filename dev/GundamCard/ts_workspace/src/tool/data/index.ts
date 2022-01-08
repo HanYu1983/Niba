@@ -67,7 +67,7 @@ const allData: any[] = [
   // ...d179901.data,
 ];
 
-export type RowData = {
+type RowData = {
   id: string;
   title: string;
   category: "CHARACTER" | "UNIT" | "COMMAND" | "OPERATION" | "GRAPHIC";
@@ -90,7 +90,7 @@ const rowDataMapping: { [key: string]: RowData } = allData
     };
   }, {} as { [key: string]: RowData });
 
-export function askRowData(imgID: string): RowData {
+function askRowData(imgID: string): RowData {
   const i = rowDataMapping[imgID];
   if (i == null) {
     throw new Error(`imgID(${imgID}) not found`);
@@ -98,6 +98,6 @@ export function askRowData(imgID: string): RowData {
   return i;
 }
 
-export function askImgSrc(imgID: string) {
+function askImgSrc(imgID: string) {
   return `https://storage.googleapis.com/particle-resources/cardPackage/gundamWarN/${imgID}.jpg`;
 }

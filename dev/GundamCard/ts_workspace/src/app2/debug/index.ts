@@ -11,18 +11,11 @@ import {
   RequireYesNo,
 } from "../tool/model/blockPayload";
 import {
-  GameContext,
   DEFAULT_GAME_CONTEXT,
   initState,
   updateEffect,
   updateCommand,
 } from "../tool/model/gameContext";
-import {
-  DEFAULT_SCRIPT_CONTEXT,
-  mapBlockPayloadRequire,
-} from "../tool/model/scriptContext";
-import { getCardScript, QueryText, Script } from "../tool/script";
-import { askRowData } from "../../tool/data";
 import { createCard } from "../../tool/table";
 import { getBaShouID, PlayerA } from "../tool/model/basic";
 

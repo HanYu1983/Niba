@@ -1,5 +1,3 @@
-import { Query } from ".";
-import { CardText } from "../model/basic";
 import { CardPrototype, GameContext } from "../model/gameContext";
 import { wrapRequireKey } from "../model/scriptContext";
 import { createTokuSyuKouKaText } from "./createTokuSyuKouKaText";

@@ -61,11 +61,6 @@ type ConditionCardContainFlag = {
   flag: string;
 };
 
-type ConditionGameEventOnEnterStage = {
-  id: "ConditionGameEventOnEnterStage";
-  wherePosition: BaSyou[];
-};
-
 type ConditionTargetType = {
   id: "ConditionTargetType";
   target: "プレーヤー" | "カード" | "場所";
@@ -95,7 +90,6 @@ type ConditionCardPropertyCompare = {
 };
 
 export type Condition =
-  | ConditionGameEventOnEnterStage
   | ConditionCardOnBaSyou
   | ConditionCardOnColor
   | ConditionCardOnCategory

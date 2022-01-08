@@ -8,11 +8,8 @@ import {
   CardCategory,
   CardColor,
 } from "../basic";
-import { ScriptContext, DEFAULT_SCRIPT_CONTEXT } from "../scriptContext";
 import { DEFAULT_TABLE, Table } from "../../../../tool/table";
 import { BlockPayload, Require } from "../blockPayload";
-import { Text } from "../../script";
-import { wrapRequireKey } from "../scriptContext";
 
 export type PlayerState = {
   id: string;
