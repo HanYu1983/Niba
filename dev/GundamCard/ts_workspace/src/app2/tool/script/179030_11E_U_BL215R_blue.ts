@@ -1,3 +1,4 @@
+import { createRollCostRequire } from ".";
 import { CardPrototype, GameContext } from "../model/gameContext";
 import { RequireCustomID } from "../model/gameContext/doRequireCustom";
 import { createTokuSyuKouKaText } from "./createTokuSyuKouKaText";
@@ -37,30 +38,27 @@ const prototype: CardPrototype = {
                 type: "立即",
                 block: {
                   require: {
-                    id: "RequireTarget",
-                    targets: {
-                      cards: {
-                        id: "カード",
-                        cardID: [null],
-                      },
-                    },
-                    action: [
+                    id: "RequireAnd",
+                    and: [
+                      createRollCostRequire(1, null),
                       {
-                        id: "ActionRoll",
-                        cards: "cards",
-                      },
-                      {
-                        id: "ActionMoveCardToPosition",
-                        cards: {
-                          id: "このカード",
-                        },
-                        baSyou: {
-                          id: "場所",
-                          baSyou: {
-                            id: "RelatedBaSyou",
-                            value: ["自軍", "配備エリア"],
+                        id: "RequireTarget",
+                        targets: {},
+                        action: [
+                          {
+                            id: "ActionMoveCardToPosition",
+                            cards: {
+                              id: "このカード",
+                            },
+                            baSyou: {
+                              id: "場所",
+                              baSyou: {
+                                id: "RelatedBaSyou",
+                                value: ["自軍", "配備エリア"],
+                              },
+                            },
                           },
-                        },
+                        ],
                       },
                     ],
                   },

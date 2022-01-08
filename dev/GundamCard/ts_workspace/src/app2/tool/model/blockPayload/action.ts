@@ -82,7 +82,7 @@ type ActionUnitDamage = {
 
 type ActionAddBlock = {
   id: "ActionAddBlock";
-  type: "指令" | "立即" | "堆疊";
+  type: "立即" | "堆疊";
   block: BlockPayload;
 };
 

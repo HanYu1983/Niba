@@ -4,6 +4,7 @@ import { Block } from "../scriptContext/blockContext";
 import { Action } from "../blockPayload/action";
 import { getTopCards, mapCard, moveCard } from "../../../../tool/table";
 import { GameContext } from "./gameContext";
+import { wrapRequireKey } from "../scriptContext";
 
 let idSeq = 0;
 export function doActionTarget(
@@ -141,30 +142,36 @@ export function doActionTarget(
             id: blockUuid,
             contextID: blockPayload.contextID,
             cause: blockPayload.cause,
+            ...(action.block.require
+              ? { require: wrapRequireKey(action.block.require) }
+              : null),
           };
           return {
             ...gameCtx,
             stackEffect: [wrappedBlock, ...gameCtx.stackEffect],
           };
         }
-        case "指令": {
-          const wrappedBlock: BlockPayload = {
-            ...action.block,
-            id: blockUuid,
-            contextID: blockPayload.contextID,
-            cause: blockPayload.cause,
-          };
-          return {
-            ...gameCtx,
-            commandEffect: [wrappedBlock, ...gameCtx.commandEffect],
-          };
-        }
+        // case "指令": {
+        //   const wrappedBlock: BlockPayload = {
+        //     ...action.block,
+        //     id: blockUuid,
+        //     contextID: blockPayload.contextID,
+        //     cause: blockPayload.cause,
+        //   };
+        //   return {
+        //     ...gameCtx,
+        //     commandEffect: [wrappedBlock, ...gameCtx.commandEffect],
+        //   };
+        // }
         case "立即": {
           const wrappedBlock: BlockPayload = {
             ...action.block,
             id: blockUuid,
             contextID: blockPayload.contextID,
             cause: blockPayload.cause,
+            ...(action.block.require
+              ? { require: wrapRequireKey(action.block.require) }
+              : null),
           };
           return {
             ...gameCtx,
@@ -172,6 +179,7 @@ export function doActionTarget(
           };
         }
       }
+      return gameCtx;
     }
     case "ActionAddEffect": {
       if (action.effectID) {

@@ -1,5 +1,4 @@
 import { CardPrototype, GameContext } from "../model/gameContext";
-import { wrapRequireKey } from "../model/scriptContext";
 import { createTokuSyuKouKaText } from "./createTokuSyuKouKaText";
 
 // 179016_04B_U_WT075C_white
@@ -33,7 +32,7 @@ const prototype: CardPrototype = {
                 id: "ActionAddBlock",
                 type: "立即",
                 block: {
-                  require: wrapRequireKey({
+                  require: {
                     id: "RequireAnd",
                     and: [
                       // 〔白２〕を支払う事ができる
@@ -87,7 +86,7 @@ const prototype: CardPrototype = {
                         ],
                       },
                     ],
-                  }),
+                  },
                 },
               },
             ],

@@ -1,6 +1,6 @@
+import { createRollCostRequire } from ".";
 import { CardText, TokuSyuKouKa } from "../model/basic";
 import { RequireCustomID } from "../model/gameContext/doRequireCustom";
-import { wrapRequireKey } from "../model/scriptContext";
 
 let _seqID = 0;
 export function createTokuSyuKouKaText(
@@ -16,26 +16,13 @@ export function createTokuSyuKouKaText(
           {
             id: "使用型",
             timing: ["自軍", "攻撃ステップ"],
-            description: "",
+            description: JSON.stringify(toku),
             block: {
-              require: wrapRequireKey({
+              contextID: `createTokuSyuKouKaText_${_seqID++}`,
+              require: {
                 id: "RequireAnd",
                 and: [
-                  {
-                    id: "RequireTarget",
-                    targets: {
-                      cards: {
-                        id: "カード",
-                        cardID: new Array(options.cost || 0).fill(null),
-                      },
-                    },
-                    action: [
-                      {
-                        id: "ActionConsumeG",
-                        cards: "cards",
-                      },
-                    ],
-                  },
+                  createRollCostRequire(options.cost || 0, null),
                   {
                     id: "RequireTarget",
                     targets: {
@@ -62,14 +49,27 @@ export function createTokuSyuKouKaText(
                     },
                   },
                 ],
-              }),
+              },
               feedback: [
                 {
                   id: "FeedbackAction",
                   action: [
                     {
-                      id: "ActionReroll",
-                      cards: "cards",
+                      id: "ActionAddBlock",
+                      type: "堆疊",
+                      block: {
+                        feedback: [
+                          {
+                            id: "FeedbackAction",
+                            action: [
+                              {
+                                id: "ActionReroll",
+                                cards: "cards",
+                              },
+                            ],
+                          },
+                        ],
+                      },
                     },
                   ],
                 },
@@ -87,119 +87,90 @@ export function createTokuSyuKouKaText(
           {
             id: "使用型",
             timing: ["防御ステップ"],
-            description: "",
+            description: JSON.stringify(toku),
             block: {
+              contextID: `createTokuSyuKouKaText_${_seqID++}`,
+              require: {
+                id: "RequireAnd",
+                and: [
+                  createRollCostRequire(options.cost || 0, null),
+                  {
+                    id: "RequireCustom",
+                    customID: {
+                      id: "このカードと同じエリアに、「特徴:{x}」を持つ自軍キャラがいる",
+                      x: "NT",
+                    } as RequireCustomID,
+                  },
+                  {
+                    id: "RequireTarget",
+                    targets: {
+                      targetCard: {
+                        id: "カード",
+                        cardID: [null],
+                      },
+                    },
+                    condition: {
+                      id: "ConditionAnd",
+                      and: [
+                        {
+                          id: "ConditionCardIsPlayerSide",
+                          source: "targetCard",
+                          playerSide: "敵軍",
+                        },
+                        {
+                          id: "ConditionCardIsRole",
+                          source: "targetCard",
+                          role: "ユニット",
+                        },
+                        // 交戦中
+                        {
+                          id: "ConditionCardIsBattle",
+                          source: "targetCard",
+                        },
+                      ],
+                    },
+                    action: [
+                      {
+                        id: "ActionSetTarget",
+                        source: "targetCard",
+                        target: "targetCard",
+                      },
+                    ],
+                  },
+                  {
+                    id: "RequireTarget",
+                    targets: {
+                      damage: {
+                        id: "TargetTypeDamage",
+                        damage: damage,
+                      },
+                    },
+                    action: [
+                      {
+                        id: "ActionSetTarget",
+                        source: "damage",
+                        target: "damage",
+                      },
+                    ],
+                  },
+                ],
+              },
               feedback: [
                 {
                   id: "FeedbackAction",
                   action: [
                     {
                       id: "ActionAddBlock",
-                      type: "指令",
+                      type: "堆疊",
                       block: {
-                        contextID: `createTokuSyuKouKaText_${_seqID++}`,
-                        require: wrapRequireKey({
-                          id: "RequireAnd",
-                          and: [
-                            {
-                              id: "RequireTarget",
-                              targets: {
-                                cards: {
-                                  id: "カード",
-                                  cardID: new Array(options.cost || 0).fill(
-                                    null
-                                  ),
-                                },
-                              },
-                              action: [
-                                {
-                                  id: "ActionConsumeG",
-                                  cards: "cards",
-                                },
-                              ],
-                            },
-                            {
-                              id: "RequireCustom",
-                              customID: {
-                                id: "このカードと同じエリアに、「特徴:{x}」を持つ自軍キャラがいる",
-                                x: "NT",
-                              } as RequireCustomID,
-                            },
-                            {
-                              id: "RequireTarget",
-                              targets: {
-                                targetCard: {
-                                  id: "カード",
-                                  cardID: [null],
-                                },
-                              },
-                              condition: {
-                                id: "ConditionAnd",
-                                and: [
-                                  {
-                                    id: "ConditionCardIsPlayerSide",
-                                    source: "targetCard",
-                                    playerSide: "敵軍",
-                                  },
-                                  {
-                                    id: "ConditionCardIsRole",
-                                    source: "targetCard",
-                                    role: "ユニット",
-                                  },
-                                  // 交戦中
-                                  {
-                                    id: "ConditionCardIsBattle",
-                                    source: "targetCard",
-                                  },
-                                ],
-                              },
-                              action: [
-                                {
-                                  id: "ActionSetTarget",
-                                  source: "targetCard",
-                                  target: "targetCard",
-                                },
-                              ],
-                            },
-                            {
-                              id: "RequireTarget",
-                              targets: {
-                                damage: {
-                                  id: "TargetTypeDamage",
-                                  damage: damage,
-                                },
-                              },
-                              action: [
-                                {
-                                  id: "ActionSetTarget",
-                                  source: "damage",
-                                  target: "damage",
-                                },
-                              ],
-                            },
-                          ],
-                        }),
                         feedback: [
                           {
                             id: "FeedbackAction",
                             action: [
                               {
-                                id: "ActionAddBlock",
-                                type: "指令",
-                                block: {
-                                  feedback: [
-                                    {
-                                      id: "FeedbackAction",
-                                      action: [
-                                        {
-                                          id: "ActionUnitDamage",
-                                          cards: "targetCard",
-                                          value: "damage",
-                                        },
-                                      ],
-                                    },
-                                  ],
-                                },
+                                id: "ActionUnitDamage",
+                                cards: "targetCard",
+                                value: "damage",
                               },
                             ],
                           },
@@ -223,27 +194,13 @@ export function createTokuSyuKouKaText(
           {
             id: "使用型",
             timing: ["ダメージ判定ステップ"],
-            description: "",
+            description: JSON.stringify(toku),
             block: {
               contextID: `createTokuSyuKouKaText_${_seqID++}`,
-              require: wrapRequireKey({
+              require: {
                 id: "RequireAnd",
                 and: [
-                  {
-                    id: "RequireTarget",
-                    targets: {
-                      cards: {
-                        id: "カード",
-                        cardID: new Array(options.cost || 0).fill(null),
-                      },
-                    },
-                    action: [
-                      {
-                        id: "ActionConsumeG",
-                        cards: "cards",
-                      },
-                    ],
-                  },
+                  createRollCostRequire(options.cost || 0, null),
                   {
                     id: "RequireTarget",
                     targets: {
@@ -286,7 +243,7 @@ export function createTokuSyuKouKaText(
                     ],
                   },
                 ],
-              }),
+              },
               feedback: [
                 {
                   id: "FeedbackAction",
@@ -325,130 +282,102 @@ export function createTokuSyuKouKaText(
           {
             id: "使用型",
             timing: ["戦闘フェイズ"],
-            description: "",
+            description: JSON.stringify(toku),
             block: {
+              contextID: `createTokuSyuKouKaText_${_seqID++}`,
+              require: {
+                id: "RequireAnd",
+                and: [
+                  createRollCostRequire(options.cost || 0, null),
+                  {
+                    id: "RequireTarget",
+                    targets: {
+                      cardA: { id: "このカード" },
+                    },
+                    action: [
+                      {
+                        id: "ActionSetTarget",
+                        source: "cardA",
+                        target: "cardA",
+                      },
+                    ],
+                  },
+                  {
+                    id: "RequireTarget",
+                    targets: {
+                      cardB: { id: "カード", cardID: [null] },
+                      faceDown: {
+                        id: "TargetTypeYesNo",
+                        boolean: false,
+                      },
+                    },
+                    condition: {
+                      id: "ConditionAnd",
+                      and: [
+                        {
+                          id: "ConditionOr",
+                          or: [
+                            {
+                              id: "ConditionCardOnBaSyou",
+                              source: "cardB",
+                              baSyou: {
+                                id: "RelatedBaSyou",
+                                value: ["自軍", "手札"],
+                              },
+                            },
+                            {
+                              id: "ConditionCardOnBaSyou",
+                              source: "cardB",
+                              baSyou: {
+                                id: "RelatedBaSyou",
+                                value: ["自軍", "ハンガー"],
+                              },
+                            },
+                          ],
+                        },
+                        {
+                          id: "ConditionCardOnCategory",
+                          source: "cardB",
+                          category: "ユニット",
+                        },
+                        {
+                          id: "ConditionCardHasTokuTyou",
+                          source: "cardB",
+                          value: tokuTyou,
+                        },
+                      ],
+                    },
+                    action: [
+                      {
+                        id: "ActionSetFace",
+                        cards: "cardB",
+                        faceDown: "faceDown",
+                      },
+                      {
+                        id: "ActionSetTarget",
+                        source: "cardB",
+                        target: "cardB",
+                      },
+                    ],
+                  },
+                ],
+              },
               feedback: [
                 {
                   id: "FeedbackAction",
                   action: [
                     {
                       id: "ActionAddBlock",
-                      type: "指令",
+                      type: "堆疊",
                       block: {
-                        require: wrapRequireKey({
-                          id: "RequireAnd",
-                          and: [
-                            {
-                              id: "RequireTarget",
-                              targets: {
-                                cards: {
-                                  id: "カード",
-                                  cardID: new Array(options.cost || 0).fill(
-                                    null
-                                  ),
-                                },
-                              },
-                              action: [
-                                {
-                                  id: "ActionConsumeG",
-                                  cards: "cards",
-                                },
-                              ],
-                            },
-                            {
-                              id: "RequireTarget",
-                              targets: {
-                                cardA: { id: "このカード" },
-                              },
-                              action: [
-                                {
-                                  id: "ActionSetTarget",
-                                  source: "cardA",
-                                  target: "cardA",
-                                },
-                              ],
-                            },
-                            {
-                              id: "RequireTarget",
-                              targets: {
-                                cardB: { id: "カード", cardID: [null] },
-                                faceDown: {
-                                  id: "TargetTypeYesNo",
-                                  boolean: false,
-                                },
-                              },
-                              condition: {
-                                id: "ConditionAnd",
-                                and: [
-                                  {
-                                    id: "ConditionOr",
-                                    or: [
-                                      {
-                                        id: "ConditionCardOnBaSyou",
-                                        source: "cardB",
-                                        baSyou: {
-                                          id: "RelatedBaSyou",
-                                          value: ["自軍", "手札"],
-                                        },
-                                      },
-                                      {
-                                        id: "ConditionCardOnBaSyou",
-                                        source: "cardB",
-                                        baSyou: {
-                                          id: "RelatedBaSyou",
-                                          value: ["自軍", "ハンガー"],
-                                        },
-                                      },
-                                    ],
-                                  },
-                                  {
-                                    id: "ConditionCardOnCategory",
-                                    source: "cardB",
-                                    category: "ユニット",
-                                  },
-                                  {
-                                    id: "ConditionCardHasTokuTyou",
-                                    source: "cardB",
-                                    value: tokuTyou,
-                                  },
-                                ],
-                              },
-                              action: [
-                                {
-                                  id: "ActionSetFace",
-                                  cards: "cardB",
-                                  faceDown: "faceDown",
-                                },
-                                {
-                                  id: "ActionSetTarget",
-                                  source: "cardB",
-                                  target: "cardB",
-                                },
-                              ],
-                            },
-                          ],
-                        }),
                         feedback: [
                           {
                             id: "FeedbackAction",
                             action: [
                               {
-                                id: "ActionAddBlock",
-                                type: "堆疊",
-                                block: {
-                                  feedback: [
-                                    {
-                                      id: "FeedbackAction",
-                                      action: [
-                                        {
-                                          id: "ActionOKiKaeRu",
-                                          cardA: "cardA",
-                                          cardB: "cardB",
-                                        },
-                                      ],
-                                    },
-                                  ],
-                                },
+                                id: "ActionOKiKaeRu",
+                                cardA: "cardA",
+                                cardB: "cardB",
                               },
                             ],
                           },

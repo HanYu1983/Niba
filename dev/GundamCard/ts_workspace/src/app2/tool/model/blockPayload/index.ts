@@ -76,16 +76,19 @@ export type BlockPayloadCauseGameEvent = {
   id: "BlockPayloadCauseGameEvent";
   cardID: string;
   gameEvent: GameEvent;
+  description: string;
 };
 
 export type BlockPayloadCauseUpdateCommand = {
   id: "BlockPayloadCauseUpdateCommand";
   cardID: string;
+  description: string;
 };
 
 export type BlockPayloadCauseUpdateEffect = {
   id: "BlockPayloadCauseUpdateEffect";
   cardID: string;
+  description: string;
 };
 
 export type BlockPayloadCause =
