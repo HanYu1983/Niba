@@ -203,6 +203,12 @@ export function getCardOwner(ctx: GameContext, cardID: string): PlayerID {
   return card.ownerID;
 }
 
+export type RequireScriptFunction = (
+  gameCtx: GameContext,
+  blockPayload: BlockPayload,
+  varCtxID: string
+) => GameContext;
+
 export type TargetTypeCustomFunctionType = (
   ctx: GameContext,
   blockPayload: BlockPayload

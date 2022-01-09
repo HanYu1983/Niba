@@ -3,7 +3,7 @@ import { BlockPayload } from "../../tool/basic/blockPayload";
 import { Condition } from "../../tool/basic/condition";
 import { GameContext } from "../../tool/basic/gameContext";
 import { getTargetType } from "../../tool/basic/gameContext";
-import { getCardState, getCardIterator } from "./handleScriptContext";
+import { getCardState, getCardIterator } from "./helper";
 
 export function doConditionTarget(
   ctx: GameContext,
