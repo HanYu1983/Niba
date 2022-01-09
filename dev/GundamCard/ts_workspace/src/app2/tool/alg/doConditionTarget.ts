@@ -3,6 +3,7 @@ import { Condition } from "../tool/basic/condition";
 import { GameContext } from "../tool/basic/gameContext";
 import { getCardState, getCardIterator } from "./helper";
 import { TargetType, getTargetType } from "../tool/basic/targetType";
+import { getCardController } from "../tool/basic/handleCard";
 
 export function doConditionTarget(
   ctx: GameContext,
@@ -132,6 +133,44 @@ export function doConditionTarget(
     }
     case "ConditionCardHasTokuTyou":
       break;
+    case "ConditionCardIsPlayerSide": {
+      if (blockPayload.cause?.cardID == null) {
+        return "[doCondition][ConditionCardHasSetCard] blockPayload.cause?.cardID not found";
+      }
+      const playerA = getCardController(ctx, blockPayload.cause.cardID);
+      const target = getTargetType(
+        ctx,
+        blockPayload,
+        targets,
+        condition.source
+      );
+      if (target.id != "カード") {
+        return "必須是カード";
+      }
+      const msgs = target.cardID
+        .map((cardID): string | null => {
+          if (cardID == null) {
+            return "[doCondition][ConditionCardContainFlag] cardID is null";
+          }
+          const playerB = getCardController(ctx, cardID);
+          switch (condition.playerSide) {
+            case "自軍":
+              if (playerA != playerB) {
+                return "[doCondition][ConditionCardContainFlag] 必須是自軍卡";
+              }
+            case "敵軍":
+              if (playerA == playerB) {
+                return "[doCondition][ConditionCardContainFlag] 必須是敵軍卡";
+              }
+          }
+          return null;
+        })
+        .filter((v) => v);
+      if (msgs.length) {
+        return msgs.join(",");
+      }
+      return null;
+    }
   }
   return null;
 }

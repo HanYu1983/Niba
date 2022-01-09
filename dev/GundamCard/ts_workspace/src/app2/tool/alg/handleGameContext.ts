@@ -11,9 +11,11 @@ import {
 import { GameContext } from "../tool/basic/gameContext";
 import { getCard, mapCard, Card } from "../../../tool/table";
 import { mapEffect } from "../tool/basic/gameContext";
-import { TargetType } from "../tool/basic/targetType";
+import { TargetType, TargetTypeCard } from "../tool/basic/targetType";
 import { doRequire, doFeedback } from "./handleBlockPayload";
 import { getCardState } from "./helper";
+import { doConditionTarget } from "./doConditionTarget";
+import { log } from "../../../tool/logger";
 
 export function setRequireAnswer(
   ctx: GameContext,
@@ -96,6 +98,7 @@ export function triggerTextEvent(
 ): GameContext {
   return ctx.gameState.cardState.reduce((ctx, cardState) => {
     return cardState.cardTextStates.reduce((ctx, cardTextState) => {
+      log("triggerTextEvent", cardTextState.cardText.description);
       const blocks: BlockPayload[] = (() => {
         switch (cardTextState.cardText.id) {
           case "自動型":
@@ -114,6 +117,7 @@ export function triggerTextEvent(
         }
       })();
       return blocks.reduce((ctx, block) => {
+        log("triggerTextEvent", block);
         const wrapEvent: BlockPayload = {
           ...block,
           cause: {
@@ -123,9 +127,9 @@ export function triggerTextEvent(
             description: JSON.stringify(cardTextState.cardText.description),
           },
         };
+        const varCtxID = "triggerTextEvent";
         try {
           if (wrapEvent.require != null) {
-            const varCtxID = "triggerTextEvent";
             // 清空變量，因為是臨時性的訪問，所以可以這麼做
             ctx = {
               ...ctx,
@@ -137,11 +141,11 @@ export function triggerTextEvent(
               },
             };
             ctx = doRequire(ctx, wrapEvent, wrapEvent.require, varCtxID);
-            if (wrapEvent.feedback) {
-              ctx = wrapEvent.feedback.reduce((ctx, feedback) => {
-                return doFeedback(ctx, wrapEvent, feedback, varCtxID);
-              }, ctx);
-            }
+          }
+          if (wrapEvent.feedback) {
+            ctx = wrapEvent.feedback.reduce((ctx, feedback) => {
+              return doFeedback(ctx, wrapEvent, feedback, varCtxID);
+            }, ctx);
           }
         } catch (e) {
           console.log(e);
@@ -273,4 +277,76 @@ export function initState(ctx: GameContext): GameContext {
     return card;
   });
   return ctx;
+}
+
+export function getTip(
+  ctx: GameContext,
+  blockID: string,
+  requireID: string,
+  targetID: string
+): TargetType | null {
+  let ret: TargetType | null = null;
+  mapEffect(ctx, (effect) => {
+    if (effect.id == null) {
+      return effect;
+    }
+    if (effect.id != blockID) {
+      return effect;
+    }
+    if (effect.require == null) {
+      return effect;
+    }
+    recurRequire(effect.require, (require) => {
+      if (require.key != requireID) {
+        return require;
+      }
+      if (require?.id != "RequireTarget") {
+        return require;
+      }
+      if (require.condition == null) {
+        return require;
+      }
+      if (require.targets == null) {
+        return require;
+      }
+      const { condition, targets } = require;
+      const target = targets[targetID];
+      if (target == null) {
+        throw new Error("[getTip] target not found");
+      }
+      switch (target.id) {
+        case "カード": {
+          const validCardID: string[] = [];
+          mapCard(ctx.gameState.table, (card) => {
+            const tmp: TargetTypeCard = {
+              id: "カード",
+              cardID: [card.id],
+            };
+            const msg = doConditionTarget(
+              ctx,
+              effect,
+              {
+                ...targets,
+                [targetID]: tmp,
+              },
+              condition
+            );
+            log("getTip", msg);
+            if (msg == null) {
+              validCardID.push(card.id);
+            }
+            return card;
+          });
+          ret = {
+            id: "カード",
+            cardID: validCardID,
+          };
+          break;
+        }
+      }
+      return require;
+    });
+    return effect;
+  });
+  return ret;
 }

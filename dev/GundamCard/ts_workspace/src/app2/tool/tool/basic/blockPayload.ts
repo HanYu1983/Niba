@@ -2,6 +2,7 @@ import type { GameEvent, SiYouTiming, CardColor } from "./basic";
 import type { Condition } from "./condition";
 import type { Action } from "./action";
 import { TargetType } from "./targetType";
+import { log } from "../../../../tool/logger";
 
 export type RequireBase = {
   key?: string;
@@ -112,6 +113,7 @@ export function recurRequire(
   require: Require,
   mapF: (require: Require) => Require
 ): Require {
+  log("recurRequire", require);
   switch (require.id) {
     case "RequireAnd": {
       const nextRequires = require.and.map((require) => {

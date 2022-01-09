@@ -4,36 +4,82 @@ import {
   updateEffect,
   updateCommand,
   triggerTextEvent,
+  getTip,
 } from "../tool/alg/handleGameContext";
 import { createCard } from "../../tool/table";
-import { getBaShouID, PlayerA } from "../tool/tool/basic/basic";
+import { getBaShouID, PlayerA, PlayerB } from "../tool/tool/basic/basic";
+import { recurRequire } from "../tool/tool/basic/blockPayload";
 
 export function testInit() {
   let ctx = DEFAULT_GAME_CONTEXT;
-  ctx = {
-    ...ctx,
-    gameState: {
-      ...ctx.gameState,
-      table: createCard(
-        ctx.gameState.table,
-        PlayerA,
-        getBaShouID({
-          id: "AbsoluteBaSyou",
-          value: [PlayerA, "手札"],
-        }),
-        [
-          "179016_04B_U_WT075C_white",
-          "179030_11E_U_BL208S_blue",
-          "179030_11E_U_BL215R_blue",
-          "179001_01A_CH_WT007R_white",
-        ]
-      ),
-    },
-  };
+  let table = ctx.gameState.table;
+  (table = createCard(
+    table,
+    PlayerA,
+    getBaShouID({
+      id: "AbsoluteBaSyou",
+      value: [PlayerA, "手札"],
+    }),
+    [
+      "179016_04B_U_WT075C_white",
+      "179030_11E_U_BL208S_blue",
+      "179030_11E_U_BL215R_blue",
+      "179001_01A_CH_WT007R_white",
+    ]
+  )),
+    (table = createCard(
+      table,
+      PlayerA,
+      getBaShouID({
+        id: "AbsoluteBaSyou",
+        value: [PlayerB, "手札"],
+      }),
+      [
+        "179016_04B_U_WT075C_white",
+        "179030_11E_U_BL208S_blue",
+        "179030_11E_U_BL215R_blue",
+        "179001_01A_CH_WT007R_white",
+      ]
+    )),
+    (ctx = {
+      ...ctx,
+      gameState: {
+        ...ctx.gameState,
+        table: table,
+      },
+    });
   ctx = initState(ctx);
   ctx = updateEffect(ctx);
   ctx = updateCommand(ctx);
   ctx = triggerTextEvent(ctx, {});
+
+  ctx.immediateEffect.forEach((effect) => {
+    if (effect.require == null) {
+      return;
+    }
+    const key = ((): string | null => {
+      let _key: string | null = null;
+      recurRequire(effect.require, (r) => {
+        if (r.id != "RequireTarget") {
+          return r;
+        }
+        if (r.targets["５以下の防御力を持つ敵軍ユニット１枚"] != null) {
+          _key = r.key || null;
+        }
+        return r;
+      });
+      return _key;
+    })();
+    console.log(key);
+    const tip = getTip(
+      ctx,
+      effect.id || "",
+      key || "",
+      "５以下の防御力を持つ敵軍ユニット１枚"
+    );
+    console.log(tip);
+  });
+
   console.log(ctx);
 }
 
