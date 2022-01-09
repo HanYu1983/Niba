@@ -2,7 +2,7 @@ import { CardPrototype, GameContext } from "../model/gameContext";
 import { createRollCostRequire } from ".";
 import { getCustomFunctionString } from "../../../tool/helper";
 import { TargetTypeCustomFunctionType } from "../model/gameContext";
-import { BlockPayload } from "../model/blockPayload";
+import { BlockPayload } from "../model/basic/blockPayload";
 import { TargetType } from "../model/basic";
 
 const _main: TargetTypeCustomFunctionType = (

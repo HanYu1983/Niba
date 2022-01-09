@@ -1,15 +1,12 @@
-import { BlockPayload } from ".";
 import type {
-  CardColor,
-  BaSyou,
-  FlagKeyword,
   TargetTypeCard,
   TargetTypeCardColor,
   TargetTypeBaSyou,
   TargetTypeYesNo,
   TargetTypeThisCard,
-} from "../basic";
-import { GameEffect } from "../gameContext";
+} from ".";
+import type { BlockPayload } from "./blockPayload";
+import type { GameEffect } from "../gameContext";
 
 type ActionRoll = {
   id: "ActionRoll";

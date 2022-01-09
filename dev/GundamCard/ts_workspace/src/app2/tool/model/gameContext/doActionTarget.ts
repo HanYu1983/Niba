@@ -7,9 +7,8 @@ import {
   BaSyou,
   AbsoluteBaSyou,
 } from "../basic";
-import { BlockPayload } from "../blockPayload";
-import { Block } from "../scriptContext/blockContext";
-import { Action } from "../blockPayload/action";
+import { BlockPayload } from "../basic/blockPayload";
+import { Action } from "../basic/action";
 import {
   getCard,
   getCardPosition,
@@ -18,7 +17,7 @@ import {
   moveCard,
 } from "../../../../tool/table";
 import { GameContext } from "./gameContext";
-import { wrapRequireKey } from "../scriptContext";
+import { wrapRequireKey } from "./gameContext";
 import {
   getCardBaSyou,
   getCardColor,

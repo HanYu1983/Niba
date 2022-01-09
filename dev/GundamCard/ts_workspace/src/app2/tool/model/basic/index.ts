@@ -1,6 +1,4 @@
-import { getCard } from "../../../../tool/table";
-import { BlockPayload } from "../blockPayload";
-import { GameContext } from "../gameContext";
+import { BlockPayload } from "./blockPayload";
 
 export type PlayerID = string;
 export const PlayerA = "PlayerA";
@@ -37,34 +35,6 @@ export type BaSyou = AbsoluteBaSyou | RelatedBaSyou;
 
 export function getBaShouID(baSyou: AbsoluteBaSyou) {
   return JSON.stringify(baSyou.value);
-}
-
-export function toBaSyou(
-  baSyou: RelatedBaSyou,
-  ctx: GameContext,
-  playerID: string,
-  cardID: string
-): AbsoluteBaSyou {
-  const _playerID = (() => {
-    switch (baSyou.value[0]) {
-      case "持ち主": {
-        const card = getCard(ctx.gameState.table, cardID);
-        if (card == null) {
-          throw new Error("getAbsoluteBaSyou card not found");
-        }
-        if (card.ownerID == null) {
-          throw new Error("getAbsoluteBaSyou ownerID must not null");
-        }
-        return card.ownerID;
-      }
-      case "自軍":
-        return playerID;
-    }
-  })();
-  return {
-    id: "AbsoluteBaSyou",
-    value: [_playerID, baSyou.value[1]],
-  };
 }
 
 export function getBaShou(id: string): AbsoluteBaSyou {

@@ -1,6 +1,6 @@
 import { TargetType } from "../basic";
-import { BlockPayload } from "../blockPayload";
-import { Condition } from "../blockPayload/condition";
+import { BlockPayload } from "../basic/blockPayload";
+import { Condition } from "../basic/condition";
 import { GameContext } from "./gameContext";
 import { getTargetType, getCardState, getCardIterator } from ".";
 

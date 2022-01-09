@@ -1,7 +1,6 @@
-import type { Action } from "./action";
-import type { GameEvent, SiYouTiming } from "../basic";
+import type { GameEvent, SiYouTiming, TargetType } from ".";
 import type { Condition } from "./condition";
-import type { TargetType } from "../basic";
+import type { Action } from "./action";
 
 export type RequireBase = {
   key?: string;

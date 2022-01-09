@@ -4,7 +4,7 @@ import type {
   CardCategory,
   RelatedPlayerSideKeyword,
   UnitPropertyKeyword,
-} from "../basic";
+} from ".";
 
 type ConditionOr = {
   id: "ConditionOr";

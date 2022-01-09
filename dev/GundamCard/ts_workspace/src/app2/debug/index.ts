@@ -1,16 +1,4 @@
 import {
-  addBlock,
-  BlockContext,
-  DEFAULT_BLOCK_CONTEXT,
-  mapBlock,
-} from "../tool/model/scriptContext/blockContext";
-import {
-  BlockPayload,
-  DEFAULT_BLOCK_PAYLOAD,
-  RequireTarget,
-  RequireYesNo,
-} from "../tool/model/blockPayload";
-import {
   DEFAULT_GAME_CONTEXT,
   initState,
   updateEffect,

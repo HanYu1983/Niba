@@ -6,7 +6,12 @@ import type {
   SiYouTiming,
   TargetType,
 } from "./basic";
-import { BlockPayload, Feedback, Require, RequireTarget } from "./blockPayload";
+import {
+  BlockPayload,
+  Feedback,
+  Require,
+  RequireTarget,
+} from "./basic/blockPayload";
 
 // ロール
 export type CostRoll = {

@@ -1,17 +1,17 @@
-import {
+import type {
   GameEvent,
   TargetType,
   CardText,
   Timing,
-  TIMING_CHART,
   TokuSyuKouKa,
   CardCategory,
   CardColor,
-  getBaShou,
   AbsoluteBaSyou,
   PlayerID,
   BaSyou,
+  RelatedBaSyou,
 } from "../basic";
+import { getBaShou, TIMING_CHART } from "../basic";
 import {
   Card,
   DEFAULT_TABLE,
@@ -20,10 +20,11 @@ import {
   mapCard,
   Table,
 } from "../../../../tool/table";
-import { BlockPayload, Require } from "../blockPayload";
+import { BlockPayload, Require } from "../basic/blockPayload";
 import { getPrototype } from "../../script";
 import { getCustomFunction } from "../../../../tool/helper";
 import { log } from "../../../../tool/logger";
+import { RequireAnd, RequireOr } from "../basic/blockPayload";
 
 export type PlayerState = {
   id: string;
@@ -147,6 +148,34 @@ export function reduceEffect<T>(
     ...ctx.commandEffect,
     ...ctx.stackEffect,
   ].reduce(doF, init);
+}
+
+export function toBaSyou(
+  baSyou: RelatedBaSyou,
+  ctx: GameContext,
+  playerID: string,
+  cardID: string
+): AbsoluteBaSyou {
+  const _playerID = (() => {
+    switch (baSyou.value[0]) {
+      case "持ち主": {
+        const card = getCard(ctx.gameState.table, cardID);
+        if (card == null) {
+          throw new Error("getAbsoluteBaSyou card not found");
+        }
+        if (card.ownerID == null) {
+          throw new Error("getAbsoluteBaSyou ownerID must not null");
+        }
+        return card.ownerID;
+      }
+      case "自軍":
+        return playerID;
+    }
+  })();
+  return {
+    id: "AbsoluteBaSyou",
+    value: [_playerID, baSyou.value[1]],
+  };
 }
 
 export function getCardBaSyou(
@@ -297,4 +326,44 @@ export function getCardIterator(
       };
     }),
   ];
+}
+
+function recurRequire(
+  require: Require,
+  mapF: (require: Require) => Require
+): Require {
+  switch (require.id) {
+    case "RequireAnd": {
+      const nextRequires = require.and.map((require) => {
+        return recurRequire(require, mapF);
+      });
+      const nextAnd: RequireAnd = {
+        ...require,
+        and: nextRequires,
+      };
+      return nextAnd;
+    }
+    case "RequireOr": {
+      const nextRequires = require.or.map((require) => {
+        return recurRequire(require, mapF);
+      });
+      const nextOr: RequireOr = {
+        ...require,
+        or: nextRequires,
+      };
+      return nextOr;
+    }
+    default:
+      return mapF(require);
+  }
+}
+
+let _reqKey = 0;
+export function wrapRequireKey(r: Require): Require {
+  return recurRequire(r, (r) => {
+    return {
+      ...r,
+      key: `wrapRequireKey_${_reqKey++}`,
+    };
+  });
 }

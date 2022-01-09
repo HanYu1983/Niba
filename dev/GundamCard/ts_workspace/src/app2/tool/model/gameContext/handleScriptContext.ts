@@ -18,16 +18,9 @@ import {
   Require,
   RequireCustom,
   RequireTarget,
-} from "../blockPayload";
-import {
-  BlockContext,
-  mapBlock,
-  next,
-  Block,
-  addBlock,
-} from "../scriptContext/blockContext";
-import { Condition } from "../blockPayload/condition";
-import { Action } from "../blockPayload/action";
+} from "../basic/blockPayload";
+import { Condition } from "../basic/condition";
+import { Action } from "../basic/action";
 import { GameContext } from "./gameContext";
 import { doActionTarget } from "./doActionTarget";
 import { doRequireCustom } from "./doRequireCustom";
@@ -42,8 +35,8 @@ import {
 } from ".";
 import { mapCard } from "../../../../tool/table";
 import { getPrototype } from "../../script";
-import { wrapRequireKey } from "../scriptContext";
 import { doConditionTarget } from "./doConditionTarget";
+import { wrapRequireKey } from "./gameContext";
 
 export type RequireCustomFunction = (
   gameCtx: GameContext,

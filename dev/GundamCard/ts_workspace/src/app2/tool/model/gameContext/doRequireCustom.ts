@@ -6,8 +6,7 @@ import {
   Require,
   RequireCustom,
   RequireTarget,
-} from "../blockPayload";
-import { Block } from "../scriptContext/blockContext";
+} from "../basic/blockPayload";
 import { GameContext } from "./gameContext";
 
 export type RequireCustomID1 = {
