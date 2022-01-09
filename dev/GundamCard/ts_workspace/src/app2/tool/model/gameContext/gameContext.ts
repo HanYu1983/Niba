@@ -10,6 +10,7 @@ import {
   getBaShou,
   AbsoluteBaSyou,
   PlayerID,
+  BaSyou,
 } from "../basic";
 import {
   Card,
@@ -56,7 +57,7 @@ export type CardState = {
   live: number;
   destroy: boolean;
   setGroupID: string;
-  memory: any;
+  flags: { [key: string]: boolean };
   cardTextStates: CardTextState[];
   prototype: CardPrototype;
 };
@@ -66,7 +67,7 @@ export const DEFAULT_CARD_STATE: CardState = {
   live: 0,
   destroy: false,
   setGroupID: "",
-  memory: {},
+  flags: {},
   cardTextStates: [],
   prototype: DEFAULT_CARD_PROTOTYPE,
 };
@@ -249,16 +250,34 @@ export function getCardState(
   ];
 }
 
-// export function getCardIterator(ctx: GameContext) {
-//   const cards: Card[] = [];
-//   mapCard(ctx.gameState.table, (card) => {
-//     cards.push(card);
-//     return card;
-//   });
-//   const cardBaSyous = cards.map((card) => {
-//     return getCardBaSyou(ctx, card.id);
-//   });
-//   const cardState = cards.map((card)=>{
-
-//   })
-// }
+export function getCardIterator(
+  ctx: GameContext
+): [
+  GameContext,
+  { id: string; card: Card; baSyou: BaSyou; state: CardState }[]
+] {
+  const cards: Card[] = [];
+  mapCard(ctx.gameState.table, (card) => {
+    cards.push(card);
+    return card;
+  });
+  const cardBaSyous = cards.map((card) => {
+    return getCardBaSyou(ctx, card.id);
+  });
+  const cardStates = cards.map((card) => {
+    const [nextCtx, cardState] = getCardState(ctx, card.id);
+    ctx = nextCtx;
+    return cardState;
+  });
+  return [
+    ctx,
+    cards.map((card, i) => {
+      return {
+        id: card.id,
+        card: card,
+        baSyou: cardBaSyous[i],
+        state: cardStates[i],
+      };
+    }),
+  ];
+}

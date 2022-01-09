@@ -43,6 +43,7 @@ import {
 import { mapCard } from "../../../../tool/table";
 import { getPrototype } from "../../script";
 import { wrapRequireKey } from "../scriptContext";
+import { doConditionTarget } from "./doConditionTarget";
 
 export type RequireCustomFunction = (
   gameCtx: GameContext,
@@ -72,66 +73,7 @@ function doCondition(
   require: RequireTarget,
   condition: Condition
 ): string | null {
-  switch (condition.id) {
-    case "ConditionNot": {
-      const result = doCondition(ctx, blockPayload, require, condition.not);
-      const isOk = result == null;
-      const notResult = isOk == false;
-      return notResult ? null : `子項目必須為否`;
-    }
-    case "ConditionAnd": {
-      const results = condition.and.map((cond) =>
-        doCondition(ctx, blockPayload, require, cond)
-      );
-      const reasons = results.filter((reason) => reason);
-      const hasFalse = reasons.length > 0;
-      if (hasFalse) {
-        return reasons.join(".");
-      }
-      return null;
-    }
-    case "ConditionOr": {
-      const results = condition.or.map((cond) =>
-        doCondition(ctx, blockPayload, require, cond)
-      );
-      const reasons = results.filter((reason) => reason);
-      const hasTrue = reasons.length != condition.or.length;
-      if (hasTrue) {
-        return null;
-      }
-      return `不符合其中1項: ${reasons.join(".")}`;
-    }
-    case "ConditionCardOnCategory": {
-      const target = getTargetType(
-        ctx,
-        blockPayload,
-        require.targets,
-        condition.source
-      );
-      if (target.id != "カード") {
-        return "必須是カード";
-      }
-      const msgs = target.cardID
-        .map((cardID) => {
-          if (cardID == null) {
-            throw new Error(
-              "[doCondition][ConditionCardOnCategory] cardID is null"
-            );
-          }
-          const [_, cardState] = getCardState(ctx, cardID);
-          if (condition.category != cardState.prototype.category) {
-            return `卡片類型必須是${condition.category}`;
-          }
-          return null;
-        })
-        .filter((v) => v);
-      if (msgs.length) {
-        return msgs.join(",");
-      }
-      return null;
-    }
-  }
-  return null;
+  return doConditionTarget(ctx, blockPayload, require.targets, condition);
 }
 
 function doAction(
