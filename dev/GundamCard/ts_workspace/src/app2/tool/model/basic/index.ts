@@ -264,7 +264,7 @@ export type CardText =
   | CardTextSiYouKaTa
   | CardTextToKuSyuKata;
 
-export type FlagKeyword = "破壊" | "プレイされたカード" | "once";
+export type FlagKeyword = "破壊" | "プレイされたカード";
 
 export type TargetTypePlayer = {
   id: "プレーヤー";
