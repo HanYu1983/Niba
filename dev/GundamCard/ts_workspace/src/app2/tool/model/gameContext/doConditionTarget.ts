@@ -1,7 +1,7 @@
 import { TargetType } from "../basic";
 import { BlockPayload } from "../basic/blockPayload";
 import { Condition } from "../basic/condition";
-import { GameContext } from "./gameContext";
+import { GameContext } from "../basic/gameContext";
 import { getTargetType, getCardState, getCardIterator } from ".";
 
 export function doConditionTarget(

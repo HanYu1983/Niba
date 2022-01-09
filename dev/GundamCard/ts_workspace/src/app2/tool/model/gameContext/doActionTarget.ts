@@ -16,8 +16,8 @@ import {
   mapCard,
   moveCard,
 } from "../../../../tool/table";
-import { GameContext } from "./gameContext";
-import { wrapRequireKey } from "./gameContext";
+import { GameContext } from "../basic/gameContext";
+import { wrapRequireKey } from "../basic/gameContext";
 import {
   getCardBaSyou,
   getCardColor,

@@ -7,7 +7,7 @@ import {
   RequireCustom,
   RequireTarget,
 } from "../basic/blockPayload";
-import { GameContext } from "./gameContext";
+import { GameContext } from "../basic/gameContext";
 
 export type RequireCustomID1 = {
   id: "{color}のGサインを持つ自軍Gが{number}枚以上ある場合";

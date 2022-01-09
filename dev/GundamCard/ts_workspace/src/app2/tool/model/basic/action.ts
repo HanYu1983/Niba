@@ -6,7 +6,7 @@ import type {
   TargetTypeThisCard,
 } from ".";
 import type { BlockPayload } from "./blockPayload";
-import type { GameEffect } from "../gameContext";
+import type { GameEffect } from "./gameContext";
 
 type ActionRoll = {
   id: "ActionRoll";

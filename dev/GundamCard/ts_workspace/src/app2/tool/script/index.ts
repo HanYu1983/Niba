@@ -1,5 +1,6 @@
-import { CardPrototype, DEFAULT_CARD_PROTOTYPE } from "../model/gameContext";
-import { CardColor } from "../model/basic";
+import type { CardColor } from "../model/basic";
+import type { CardPrototype } from "../model/gameContext";
+import { DEFAULT_CARD_PROTOTYPE } from "../model/gameContext";
 import { RequireTarget } from "../model/basic/blockPayload";
 
 export function getPrototype(imgID: string): CardPrototype {

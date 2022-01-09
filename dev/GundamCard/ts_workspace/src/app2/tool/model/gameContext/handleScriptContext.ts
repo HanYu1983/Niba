@@ -21,7 +21,7 @@ import {
 } from "../basic/blockPayload";
 import { Condition } from "../basic/condition";
 import { Action } from "../basic/action";
-import { GameContext } from "./gameContext";
+import { GameContext } from "../basic/gameContext";
 import { doActionTarget } from "./doActionTarget";
 import { doRequireCustom } from "./doRequireCustom";
 import {
@@ -34,9 +34,8 @@ import {
   getCardState,
 } from ".";
 import { mapCard } from "../../../../tool/table";
-import { getPrototype } from "../../script";
 import { doConditionTarget } from "./doConditionTarget";
-import { wrapRequireKey } from "./gameContext";
+import { wrapRequireKey } from "../basic/gameContext";
 
 export type RequireCustomFunction = (
   gameCtx: GameContext,

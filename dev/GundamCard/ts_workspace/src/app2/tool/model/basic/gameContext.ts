@@ -1,3 +1,13 @@
+import {
+  Card,
+  DEFAULT_TABLE,
+  getCard,
+  getCardPosition,
+  mapCard,
+  Table,
+} from "../../../../tool/table";
+import { getCustomFunction } from "../../../../tool/helper";
+import { log } from "../../../../tool/logger";
 import type {
   GameEvent,
   TargetType,
@@ -10,21 +20,11 @@ import type {
   PlayerID,
   BaSyou,
   RelatedBaSyou,
-} from "../basic";
-import { getBaShou, TIMING_CHART } from "../basic";
-import {
-  Card,
-  DEFAULT_TABLE,
-  getCard,
-  getCardPosition,
-  mapCard,
-  Table,
-} from "../../../../tool/table";
-import { BlockPayload, Require } from "../basic/blockPayload";
+} from ".";
+import { getBaShou, TIMING_CHART } from ".";
+import { BlockPayload, Require } from "./blockPayload";
+import { RequireAnd, RequireOr } from "./blockPayload";
 import { getPrototype } from "../../script";
-import { getCustomFunction } from "../../../../tool/helper";
-import { log } from "../../../../tool/logger";
-import { RequireAnd, RequireOr } from "../basic/blockPayload";
 
 export type PlayerState = {
   id: string;
