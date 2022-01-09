@@ -1,7 +1,7 @@
-import type { CardColor } from "../model/basic";
-import type { CardPrototype } from "../model/gameContext";
-import { DEFAULT_CARD_PROTOTYPE } from "../model/gameContext";
-import { RequireTarget } from "../model/basic/blockPayload";
+import {
+  CardPrototype,
+  DEFAULT_CARD_PROTOTYPE,
+} from "../model/basic/gameContext";
 
 export function getPrototype(imgID: string): CardPrototype {
   try {
@@ -14,33 +14,4 @@ export function getPrototype(imgID: string): CardPrototype {
 
 export function getImgSrc(imgID: string) {
   return `https://storage.googleapis.com/particle-resources/cardPackage/gundamWarN/${imgID}.jpg`;
-}
-
-export function createRollCostRequire(
-  costNum: number,
-  color: CardColor | null
-): RequireTarget {
-  return {
-    id: "RequireTarget",
-    targets: {
-      cards: {
-        id: "カード",
-        cardID: new Array(costNum).fill(null),
-      },
-    },
-    action: [
-      {
-        id: "ActionConsumeG",
-        cards: "cards",
-        ...(color
-          ? {
-              color: {
-                id: "カードの色",
-                color: color,
-              },
-            }
-          : null),
-      },
-    ],
-  };
 }

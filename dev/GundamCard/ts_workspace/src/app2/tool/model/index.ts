@@ -5,7 +5,7 @@ import type {
   CardText,
   SiYouTiming,
   TargetType,
-} from "./basic";
+} from "./basic/basic";
 import {
   BlockPayload,
   Feedback,

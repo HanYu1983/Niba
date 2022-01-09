@@ -1,5 +1,5 @@
-import { createRollCostRequire } from ".";
-import { CardText, TokuSyuKouKa } from "../model/basic";
+import { createRollCostRequire } from "../model/basic/blockPayload";
+import { CardText, TokuSyuKouKa } from "../model/basic/basic";
 import { RequireCustomID } from "../model/gameContext/doRequireCustom";
 
 let _seqID = 0;

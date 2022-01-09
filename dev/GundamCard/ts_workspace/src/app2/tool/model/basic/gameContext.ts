@@ -20,8 +20,8 @@ import type {
   PlayerID,
   BaSyou,
   RelatedBaSyou,
-} from ".";
-import { getBaShou, TIMING_CHART } from ".";
+} from "./basic";
+import { getBaShou, TIMING_CHART } from "./basic";
 import { BlockPayload, Require } from "./blockPayload";
 import { RequireAnd, RequireOr } from "./blockPayload";
 import { getPrototype } from "../../script";

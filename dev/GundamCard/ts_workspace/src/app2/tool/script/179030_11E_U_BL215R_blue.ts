@@ -1,5 +1,5 @@
-import { createRollCostRequire } from ".";
-import { CardPrototype, GameContext } from "../model/gameContext";
+import { createRollCostRequire } from "../model/basic/blockPayload";
+import { CardPrototype, GameContext } from "../model/basic/gameContext";
 import { RequireCustomID } from "../model/gameContext/doRequireCustom";
 import { createTokuSyuKouKaText } from "./createTokuSyuKouKaText";
 

@@ -1,4 +1,4 @@
-import type { GameEvent, SiYouTiming, TargetType } from ".";
+import type { GameEvent, SiYouTiming, TargetType, CardColor } from "./basic";
 import type { Condition } from "./condition";
 import type { Action } from "./action";
 
@@ -135,4 +135,33 @@ export function recurRequire(
     default:
       return mapF(require);
   }
+}
+
+export function createRollCostRequire(
+  costNum: number,
+  color: CardColor | null
+): RequireTarget {
+  return {
+    id: "RequireTarget",
+    targets: {
+      cards: {
+        id: "カード",
+        cardID: new Array(costNum).fill(null),
+      },
+    },
+    action: [
+      {
+        id: "ActionConsumeG",
+        cards: "cards",
+        ...(color
+          ? {
+              color: {
+                id: "カードの色",
+                color: color,
+              },
+            }
+          : null),
+      },
+    ],
+  };
 }

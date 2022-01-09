@@ -1,5 +1,5 @@
 import { getCardPosition } from "../../../../tool/table";
-import { CardColor, getBaShou } from "../basic";
+import { CardColor, getBaShou } from "../basic/basic";
 import {
   BlockPayload,
   Feedback,

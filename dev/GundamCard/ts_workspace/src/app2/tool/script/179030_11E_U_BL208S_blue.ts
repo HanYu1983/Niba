@@ -1,4 +1,4 @@
-import { CardPrototype, GameContext } from "../model/gameContext";
+import { CardPrototype, GameContext } from "../model/basic/gameContext";
 import { RequireCustomID } from "../model/gameContext/doRequireCustom";
 import { createTokuSyuKouKaText } from "./createTokuSyuKouKaText";
 // 179030_11E_U_BL208S_blue

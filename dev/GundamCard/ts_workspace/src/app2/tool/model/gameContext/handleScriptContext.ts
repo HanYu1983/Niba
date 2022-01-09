@@ -10,7 +10,7 @@ import {
   PlayerA,
   getBaShouID,
   GameEvent,
-} from "../basic";
+} from "../basic/basic";
 import {
   BlockPayload,
   Feedback,
@@ -32,7 +32,7 @@ import {
   CardTextState,
   getTargetType,
   getCardState,
-} from ".";
+} from "../basic/gameContext";
 import { mapCard } from "../../../../tool/table";
 import { doConditionTarget } from "./doConditionTarget";
 import { wrapRequireKey } from "../basic/gameContext";

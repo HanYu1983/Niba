@@ -6,7 +6,7 @@ import {
   getBaShou,
   BaSyou,
   AbsoluteBaSyou,
-} from "../basic";
+} from "../basic/basic";
 import { BlockPayload } from "../basic/blockPayload";
 import { Action } from "../basic/action";
 import {
@@ -24,7 +24,7 @@ import {
   getCardController,
   getCardOwner,
   getTargetType,
-} from ".";
+} from "../basic/gameContext";
 import { log } from "../../../../tool/logger";
 
 let idSeq = 0;
