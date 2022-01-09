@@ -37,6 +37,8 @@ import {
   reduceEffect,
   DEFAULT_CARD_STATE,
   CardTextState,
+  getTargetType,
+  getCardState,
 } from ".";
 import { mapCard } from "../../../../tool/table";
 import { getPrototype } from "../../script";
@@ -99,53 +101,33 @@ function doCondition(
       }
       return `不符合其中1項: ${reasons.join(".")}`;
     }
-    case "ConditionTargetType":
-      {
-        // switch (condition.target) {
-        //   case "カード": {
-        //     if (target.id != "カード" && target.id != "このカード") {
-        //       return "必須是カード";
-        //     }
-        //   }
-        //   default:
-        //     if (target.id != condition.target) {
-        //       return `必須是${condition.target}`;
-        //     }
-        // }
-      }
-      break;
     case "ConditionCardOnCategory": {
-      // if (target.id != "カード") {
-      //   return "必須是カード";
-      // }
-      // const card = getCard(ctx.gameState.table, target.cardID);
-      // if (card == null) {
-      //   return `target cardID(${target.cardID}) not found`;
-      // }
-
-      // const rowData = askRowData(card.protoID);
-      // switch (condition.category) {
-      //   case "ユニット":
-      //     if (rowData.category != "UNIT") {
-      //       return `卡片類型必須是${condition.category}`;
-      //     }
-      //   case "コマンド":
-      //     if (rowData.category != "COMMAND") {
-      //       return `卡片類型必須是${condition.category}`;
-      //     }
-      //   case "キャラクター":
-      //     if (rowData.category != "CHARACTER") {
-      //       return `卡片類型必須是${condition.category}`;
-      //     }
-      //   case "オペレーション":
-      //     if (rowData.category != "OPERATION") {
-      //       return `卡片類型必須是${condition.category}`;
-      //     }
-      //   case "グラフィック":
-      //     if (rowData.category != "GRAPHIC") {
-      //       return `卡片類型必須是${condition.category}`;
-      //     }
-      // }
+      const target = getTargetType(
+        ctx,
+        blockPayload,
+        require.targets,
+        condition.source
+      );
+      if (target.id != "カード") {
+        return "必須是カード";
+      }
+      const msgs = target.cardID
+        .map((cardID) => {
+          if (cardID == null) {
+            throw new Error(
+              "[doCondition][ConditionCardOnCategory] cardID is null"
+            );
+          }
+          const [_, cardState] = getCardState(ctx, cardID);
+          if (condition.category != cardState.prototype.category) {
+            return `卡片類型必須是${condition.category}`;
+          }
+          return null;
+        })
+        .filter((v) => v);
+      if (msgs.length) {
+        return msgs.join(",");
+      }
       return null;
     }
   }
@@ -767,36 +749,10 @@ export function updateEffect(ctx: GameContext): GameContext {
 }
 
 export function initState(ctx: GameContext): GameContext {
-  const nextCardState: CardState[] = [];
-  let idSeq = 0;
   mapCard(ctx.gameState.table, (card) => {
-    const proto = getPrototype(card.protoID);
-    const uuidKey = `initState_${idSeq++}`;
-    const cardState: CardState = {
-      ...DEFAULT_CARD_STATE,
-      id: card.id,
-      live: 0,
-      destroy: false,
-      setGroupID: uuidKey,
-      cardTextStates: proto.texts.map((text, i): CardTextState => {
-        return {
-          id: `${card.id}_${i}`,
-          enabled: true,
-          cardText: {
-            ...text,
-          },
-        };
-      }),
-      prototype: proto,
-    };
-    nextCardState.push(cardState);
+    const [nextCtx] = getCardState(ctx, card.id);
+    ctx = nextCtx;
     return card;
   });
-  return {
-    ...ctx,
-    gameState: {
-      ...ctx.gameState,
-      cardState: nextCardState,
-    },
-  };
+  return ctx;
 }

@@ -7,9 +7,20 @@ import {
   TokuSyuKouKa,
   CardCategory,
   CardColor,
+  getBaShou,
+  AbsoluteBaSyou,
+  PlayerID,
 } from "../basic";
-import { DEFAULT_TABLE, Table } from "../../../../tool/table";
+import {
+  Card,
+  DEFAULT_TABLE,
+  getCard,
+  getCardPosition,
+  mapCard,
+  Table,
+} from "../../../../tool/table";
 import { BlockPayload, Require } from "../blockPayload";
+import { getPrototype } from "../../script";
 
 export type PlayerState = {
   id: string;
@@ -101,222 +112,7 @@ export const DEFAULT_GAME_CONTEXT: GameContext = {
   gameState: {
     effects: [],
     table: DEFAULT_TABLE,
-    cardState: [
-      {
-        ...DEFAULT_CARD_STATE,
-        cardTextStates: [
-          {
-            id: "",
-            enabled: true,
-            cardText: {
-              id: "使用型",
-              timing: ["常時"],
-              description: "play unit",
-              block: {
-                contextID: `createPlayUnitCardBlock_0`,
-                require: {
-                  id: "RequireAnd",
-                  and: [
-                    // 判斷有沒有快速
-                    {
-                      id: "RequireSiYouTiming",
-                      timing: ["自軍", "配備フェイズ"],
-                    },
-                  ],
-                },
-                feedback: [
-                  {
-                    id: "FeedbackAction",
-                    action: [
-                      {
-                        id: "ActionAddBlock",
-                        type: "指令",
-                        block: {
-                          require: {
-                            id: "RequireAnd",
-                            and: [
-                              // プレイの宣告
-                              {
-                                id: "RequireTarget",
-                                targets: {
-                                  playCard: {
-                                    id: "カード",
-                                    cardID: [null],
-                                  },
-                                },
-                                action: [
-                                  {
-                                    id: "ActionSetFace",
-                                    cards: "playCard",
-                                    faceDown: {
-                                      id: "TargetTypeYesNo",
-                                      boolean: false,
-                                    },
-                                  },
-                                  {
-                                    id: "ActionSetTarget",
-                                    source: "playCard",
-                                    target: "playCard",
-                                  },
-                                ],
-                              },
-                              //「対象」の指定、コストの支払い
-                            ],
-                          },
-                          feedback: [
-                            {
-                              id: "FeedbackAction",
-                              action: [
-                                {
-                                  id: "ActionAddBlock",
-                                  type: "堆疊",
-                                  // 場に出る効果。如果使用的是指令，則不出場並廢棄，若有效果就加到require
-                                  block: {
-                                    feedback: [
-                                      {
-                                        id: "FeedbackAction",
-                                        action: [
-                                          {
-                                            id: "ActionMoveCardToPosition",
-                                            cards: "playCard",
-                                            baSyou: {
-                                              id: "場所",
-                                              baSyou: {
-                                                id: "RelatedBaSyou",
-                                                value: ["自軍", "配備エリア"],
-                                              },
-                                            },
-                                          },
-                                        ],
-                                      },
-                                    ],
-                                  },
-                                },
-                              ],
-                            },
-                          ],
-                        },
-                      },
-                    ],
-                  },
-                ],
-              },
-            },
-          },
-          {
-            id: "",
-            enabled: true,
-            cardText: {
-              id: "自動型",
-              category: "起動",
-              description:
-                "『起動』：「特徴：アストレイ系」を持つ自軍ユニットが、「改装」の効果で場に出た場合、〔白２〕を支払う事ができる。その場合、５以下の防御力を持つ敵軍ユニット１枚を破壊する。",
-              block: {
-                feedback: [
-                  {
-                    id: "FeedbackAction",
-                    action: [
-                      {
-                        id: "ActionAddBlock",
-                        type: "立即",
-                        block: {
-                          require: {
-                            id: "RequireAnd",
-                            and: [
-                              // 〔白２〕を支払う事ができる
-                              {
-                                id: "RequireTarget",
-                                targets: {
-                                  cards: {
-                                    id: "カード",
-                                    cardID: [null, null],
-                                  },
-                                  color: {
-                                    id: "カードの色",
-                                    color: "白",
-                                  },
-                                },
-                                action: [
-                                  {
-                                    id: "ActionConsumeG",
-                                    cards: "cards",
-                                    color: "color",
-                                  },
-                                ],
-                              },
-                              {
-                                id: "RequireTarget",
-                                targets: {
-                                  "５以下の防御力を持つ敵軍ユニット１枚": {
-                                    id: "カード",
-                                    cardID: [null],
-                                  },
-                                },
-                                condition: {
-                                  id: "ConditionAnd",
-                                  and: [
-                                    {
-                                      id: "ConditionCardIsPlayerSide",
-                                      source:
-                                        "５以下の防御力を持つ敵軍ユニット１枚",
-                                      playerSide: "敵軍",
-                                    },
-                                    {
-                                      id: "ConditionCardPropertyCompare",
-                                      source:
-                                        "５以下の防御力を持つ敵軍ユニット１枚",
-                                      value: ["防御力", "<=", 5],
-                                    },
-                                  ],
-                                },
-                                action: [
-                                  {
-                                    id: "ActionDestroy",
-                                    cards:
-                                      "５以下の防御力を持つ敵軍ユニット１枚",
-                                  },
-                                ],
-                              },
-                            ],
-                          },
-                        },
-                      },
-                    ],
-                  },
-                ],
-              },
-            },
-          },
-          {
-            id: "",
-            enabled: true,
-            cardText: {
-              id: "特殊型",
-              description: ["PS装甲"],
-              texts: [
-                // play出場時重置. add block到起動列表讓玩家知道效果, 起動列表一有值就要讓玩一個一個進行處理
-                {
-                  id: "自動型",
-                  description: "play出場時重置",
-                  category: "起動",
-                  block: {},
-                },
-                // 出現在戰鬥區時，若部隊中沒有供給或補給時將flag設為true
-                {
-                  id: "自動型",
-                  description:
-                    "出現在戰鬥區時，若部隊中沒有供給或補給時將flag設為true",
-                  category: "起動",
-                  block: {},
-                },
-                // 當重整部隊時，部隊中有供給或補給時，將FLAG設為FLASE
-                // 回合開始時，若FLAG為true時回手札
-              ],
-            },
-          },
-        ],
-      },
-    ],
+    cardState: [],
     timing: TIMING_CHART[0],
     playerState: [],
     activePlayerID: null,
@@ -349,3 +145,120 @@ export function reduceEffect<T>(
     ...ctx.stackEffect,
   ].reduce(doF, init);
 }
+
+export function getCardBaSyou(
+  ctx: GameContext,
+  cardID: string
+): AbsoluteBaSyou {
+  const [_, cardPosition] = getCardPosition(ctx.gameState.table, cardID);
+  if (cardPosition == null) {
+    throw new Error("[getController] cardPosition not found");
+  }
+  return getBaShou(cardPosition);
+}
+
+export function getCardController(ctx: GameContext, cardID: string): PlayerID {
+  const baSyou = getCardBaSyou(ctx, cardID);
+  return baSyou.value[0];
+}
+
+export function getCardOwner(ctx: GameContext, cardID: string): PlayerID {
+  const card = getCard(ctx.gameState.table, cardID);
+  if (card == null) {
+    throw new Error("[getCardOwner] card not found");
+  }
+  if (card.ownerID == null) {
+    throw new Error("[getCardOwner] card.ownerID not found");
+  }
+  return card.ownerID;
+}
+
+export function getTargetType(
+  ctx: GameContext,
+  blockPayload: BlockPayload,
+  targets: { [key: string]: TargetType },
+  target: string | TargetType
+): TargetType {
+  if (typeof target == "string") {
+    return targets[target];
+  }
+  switch (target.id) {
+    case "このカード":
+      if (blockPayload.cause?.cardID == null) {
+        throw new Error("[getTarget] このカード not found");
+      }
+      return { id: "カード", cardID: [blockPayload.cause.cardID] };
+    default:
+      return target;
+  }
+}
+
+export function getCardColor(ctx: GameContext, cardID: string): CardColor {
+  const cardState = ctx.gameState.cardState.find((cs) => {
+    return cs.id == cardID;
+  });
+  if (cardState == null) {
+    throw new Error("[getCardColor] cardState not found");
+  }
+  return cardState.prototype.color;
+}
+
+let idSeq = 0;
+export function getCardState(
+  ctx: GameContext,
+  cardID: string
+): [GameContext, CardState] {
+  const cardState = ctx.gameState.cardState.find((cs) => {
+    return cs.id == cardID;
+  });
+  if (cardState != null) {
+    return [ctx, cardState];
+  }
+  const card = getCard(ctx.gameState.table, cardID);
+  if (card == null) {
+    throw new Error("[getCardOwner] card not found");
+  }
+  const proto = getPrototype(card.protoID);
+  const uuidKey = `getCardState_${idSeq++}`;
+  const newCardState: CardState = {
+    ...DEFAULT_CARD_STATE,
+    id: card.id,
+    live: 0,
+    destroy: false,
+    setGroupID: uuidKey,
+    cardTextStates: proto.texts.map((text, i): CardTextState => {
+      return {
+        id: `${card.id}_${i}`,
+        enabled: true,
+        cardText: {
+          ...text,
+        },
+      };
+    }),
+    prototype: proto,
+  };
+  return [
+    {
+      ...ctx,
+      gameState: {
+        ...ctx.gameState,
+        cardState: [...ctx.gameState.cardState, newCardState],
+      },
+    },
+    newCardState,
+  ];
+}
+
+// export function getCardIterator(ctx: GameContext) {
+//   const cards: Card[] = [];
+//   mapCard(ctx.gameState.table, (card) => {
+//     cards.push(card);
+//     return card;
+//   });
+//   const cardBaSyous = cards.map((card) => {
+//     return getCardBaSyou(ctx, card.id);
+//   });
+//   const cardState = cards.map((card)=>{
+
+//   })
+// }
