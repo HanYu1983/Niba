@@ -10,7 +10,7 @@ import {
   PlayerA,
   getBaShouID,
   GameEvent,
-} from "../basic/basic";
+} from "../../tool/basic/basic";
 import {
   BlockPayload,
   Feedback,
@@ -18,12 +18,11 @@ import {
   Require,
   RequireCustom,
   RequireTarget,
-} from "../basic/blockPayload";
-import { Condition } from "../basic/condition";
-import { Action } from "../basic/action";
-import { GameContext } from "../basic/gameContext";
-import { doActionTarget } from "./doActionTarget";
-import { doRequireCustom } from "./doRequireCustom";
+} from "../../tool/basic/blockPayload";
+import { Condition } from "../../tool/basic/condition";
+import { Action } from "../../tool/basic/action";
+import { GameContext, getCardBaSyou } from "../../tool/basic/gameContext";
+import { getCard, mapCard, Card } from "../../../../tool/table";
 import {
   CardState,
   mapEffect,
@@ -31,11 +30,12 @@ import {
   DEFAULT_CARD_STATE,
   CardTextState,
   getTargetType,
-  getCardState,
-} from "../basic/gameContext";
-import { mapCard } from "../../../../tool/table";
+} from "../../tool/basic/gameContext";
+import { wrapRequireKey } from "../../tool/basic/gameContext";
+import { doActionTarget } from "./doActionTarget";
+import { doRequireCustom } from "./doRequireCustom";
 import { doConditionTarget } from "./doConditionTarget";
-import { wrapRequireKey } from "../basic/gameContext";
+import { getPrototype } from "../../script";
 
 export type RequireCustomFunction = (
   gameCtx: GameContext,
@@ -55,6 +55,84 @@ function getRequestCustomFunction(script: string): RequireCustomFunction {
   eval.apply(null, [script]);
   // 避免混淆器
   return eval.apply(null, ["main"]);
+}
+
+let idSeq = 0;
+export function getCardState(
+  ctx: GameContext,
+  cardID: string
+): [GameContext, CardState] {
+  const cardState = ctx.gameState.cardState.find((cs) => {
+    return cs.id == cardID;
+  });
+  if (cardState != null) {
+    return [ctx, cardState];
+  }
+  const card = getCard(ctx.gameState.table, cardID);
+  if (card == null) {
+    throw new Error("[getCardOwner] card not found");
+  }
+  const proto = getPrototype(card.protoID);
+  const uuidKey = `getCardState_${idSeq++}`;
+  const newCardState: CardState = {
+    ...DEFAULT_CARD_STATE,
+    id: card.id,
+    live: 0,
+    destroy: false,
+    setGroupID: uuidKey,
+    cardTextStates: proto.texts.map((text, i): CardTextState => {
+      return {
+        id: `${card.id}_${i}`,
+        enabled: true,
+        cardText: {
+          ...text,
+        },
+      };
+    }),
+    prototype: proto,
+  };
+  return [
+    {
+      ...ctx,
+      gameState: {
+        ...ctx.gameState,
+        cardState: [...ctx.gameState.cardState, newCardState],
+      },
+    },
+    newCardState,
+  ];
+}
+
+export function getCardIterator(
+  ctx: GameContext
+): [
+  GameContext,
+  { id: string; card: Card; baSyou: BaSyou; state: CardState }[]
+] {
+  const cards: Card[] = [];
+  mapCard(ctx.gameState.table, (card) => {
+    cards.push(card);
+    return card;
+  });
+  const cardBaSyous = cards.map((card) => {
+    return getCardBaSyou(ctx, card.id);
+  });
+  const cardStates = cards.map((card) => {
+    const [nextCtx, cardState] = getCardState(ctx, card.id);
+    ctx = nextCtx;
+    return cardState;
+  });
+  return [
+    ctx,
+    cards.map((card, i) => {
+      return {
+        id: card.id,
+        card: card,
+        baSyou: cardBaSyous[i],
+        state: cardStates[i],
+      };
+    }),
+  ];
 }
 
 function doCondition(

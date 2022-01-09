@@ -1,9 +1,9 @@
 import { getCustomFunctionString } from "../../../tool/helper";
-import { CardPrototype, GameContext } from "../model/basic/gameContext";
-import { TargetTypeCustomFunctionType } from "../model/basic/gameContext";
-import { createRollCostRequire } from "../model/basic/blockPayload";
-import { BlockPayload } from "../model/basic/blockPayload";
-import { TargetType } from "../model/basic/basic";
+import { CardPrototype, GameContext } from "../tool/basic/gameContext";
+import { TargetTypeCustomFunctionType } from "../tool/basic/gameContext";
+import { createRollCostRequire } from "../tool/basic/blockPayload";
+import { BlockPayload } from "../tool/basic/blockPayload";
+import { TargetType } from "../tool/basic/basic";
 
 const _main: TargetTypeCustomFunctionType = (
   ctx: GameContext,

@@ -6,9 +6,9 @@ import {
   getBaShou,
   BaSyou,
   AbsoluteBaSyou,
-} from "../basic/basic";
-import { BlockPayload } from "../basic/blockPayload";
-import { Action } from "../basic/action";
+} from "../../tool/basic/basic";
+import { BlockPayload } from "../../tool/basic/blockPayload";
+import { Action } from "../../tool/basic/action";
 import {
   getCard,
   getCardPosition,
@@ -16,15 +16,15 @@ import {
   mapCard,
   moveCard,
 } from "../../../../tool/table";
-import { GameContext } from "../basic/gameContext";
-import { wrapRequireKey } from "../basic/gameContext";
+import { GameContext } from "../../tool/basic/gameContext";
+import { wrapRequireKey } from "../../tool/basic/gameContext";
 import {
   getCardBaSyou,
   getCardColor,
   getCardController,
   getCardOwner,
   getTargetType,
-} from "../basic/gameContext";
+} from "../../tool/basic/gameContext";
 import { log } from "../../../../tool/logger";
 
 let idSeq = 0;

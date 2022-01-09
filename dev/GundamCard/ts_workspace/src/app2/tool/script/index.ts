@@ -1,7 +1,7 @@
 import {
   CardPrototype,
   DEFAULT_CARD_PROTOTYPE,
-} from "../model/basic/gameContext";
+} from "../tool/basic/gameContext";
 
 export function getPrototype(imgID: string): CardPrototype {
   try {

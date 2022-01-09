@@ -1,12 +1,9 @@
-import { TargetType } from "../basic/basic";
-import { BlockPayload } from "../basic/blockPayload";
-import { Condition } from "../basic/condition";
-import { GameContext } from "../basic/gameContext";
-import {
-  getTargetType,
-  getCardState,
-  getCardIterator,
-} from "../basic/gameContext";
+import { TargetType } from "../../tool/basic/basic";
+import { BlockPayload } from "../../tool/basic/blockPayload";
+import { Condition } from "../../tool/basic/condition";
+import { GameContext } from "../../tool/basic/gameContext";
+import { getTargetType } from "../../tool/basic/gameContext";
+import { getCardState, getCardIterator } from "./handleScriptContext";
 
 export function doConditionTarget(
   ctx: GameContext,

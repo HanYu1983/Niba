@@ -1,4 +1,4 @@
-import { DEFAULT_GAME_CONTEXT } from "../tool/model/basic/gameContext";
+import { DEFAULT_GAME_CONTEXT } from "../tool/tool/basic/gameContext";
 import {
   initState,
   updateEffect,
@@ -6,7 +6,7 @@ import {
   triggerTextEvent,
 } from "../tool/model/gameContext/handleScriptContext";
 import { createCard } from "../../tool/table";
-import { getBaShouID, PlayerA } from "../tool/model/basic/basic";
+import { getBaShouID, PlayerA } from "../tool/tool/basic/basic";
 
 export function testInit() {
   let ctx = DEFAULT_GAME_CONTEXT;
