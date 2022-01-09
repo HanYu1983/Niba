@@ -3,13 +3,13 @@ import {
   Feedback,
   Require,
   RequireTarget,
-} from "../../tool/basic/blockPayload";
-import { Condition } from "../../tool/basic/condition";
-import { Action } from "../../tool/basic/action";
-import { GameContext, getCardBaSyou } from "../../tool/basic/gameContext";
-import { mapEffect, reduceEffect } from "../../tool/basic/gameContext";
-import { getCustomFunction } from "../../../../tool/helper";
-import { RequireScriptFunction } from "../../tool/basic/gameContext";
+} from "../tool/basic/blockPayload";
+import { Condition } from "../tool/basic/condition";
+import { Action } from "../tool/basic/action";
+import { GameContext } from "../tool/basic/gameContext";
+import { mapEffect, reduceEffect } from "../tool/basic/gameContext";
+import { getCustomFunction } from "../../../tool/helper";
+import { RequireScriptFunction } from "../tool/basic/gameContext";
 import { doActionTarget } from "./doActionTarget";
 import { doRequireCustom } from "./doRequireCustom";
 import { doConditionTarget } from "./doConditionTarget";

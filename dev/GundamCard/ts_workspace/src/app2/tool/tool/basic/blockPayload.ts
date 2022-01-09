@@ -1,6 +1,7 @@
-import type { GameEvent, SiYouTiming, TargetType, CardColor } from "./basic";
+import type { GameEvent, SiYouTiming, CardColor } from "./basic";
 import type { Condition } from "./condition";
 import type { Action } from "./action";
+import { TargetType } from "./targetType";
 
 export type RequireBase = {
   key?: string;
@@ -164,4 +165,14 @@ export function createRollCostRequire(
       },
     ],
   };
+}
+
+let _reqKey = 0;
+export function wrapRequireKey(r: Require): Require {
+  return recurRequire(r, (r) => {
+    return {
+      ...r,
+      key: `wrapRequireKey_${_reqKey++}`,
+    };
+  });
 }

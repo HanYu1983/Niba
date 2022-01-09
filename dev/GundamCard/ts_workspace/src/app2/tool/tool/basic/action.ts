@@ -4,7 +4,7 @@ import type {
   TargetTypeBaSyou,
   TargetTypeYesNo,
   TargetTypeThisCard,
-} from "./basic";
+} from "./targetType";
 import type { BlockPayload } from "./blockPayload";
 import type { GameEffect } from "./gameContext";
 

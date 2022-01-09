@@ -1,16 +1,4 @@
-import {
-  CardColor,
-  BaSyou,
-  CardCategory,
-  CardText,
-  SiYouTiming,
-  TargetType,
-  Timing,
-  TIMING_CHART,
-  PlayerA,
-  getBaShouID,
-  GameEvent,
-} from "../../tool/basic/basic";
+import { GameEvent } from "../tool/basic/basic";
 import {
   BlockPayload,
   Feedback,
@@ -18,13 +6,12 @@ import {
   Require,
   RequireCustom,
   RequireTarget,
-} from "../../tool/basic/blockPayload";
-import { Condition } from "../../tool/basic/condition";
-import { Action } from "../../tool/basic/action";
-import { GameContext, getCardBaSyou } from "../../tool/basic/gameContext";
-import { getCard, mapCard, Card } from "../../../../tool/table";
-import { mapEffect } from "../../tool/basic/gameContext";
-import { wrapRequireKey } from "../../tool/basic/gameContext";
+  wrapRequireKey,
+} from "../tool/basic/blockPayload";
+import { GameContext } from "../tool/basic/gameContext";
+import { getCard, mapCard, Card } from "../../../tool/table";
+import { mapEffect } from "../tool/basic/gameContext";
+import { TargetType } from "../tool/basic/targetType";
 import { doRequire, doFeedback } from "./handleBlockPayload";
 import { getCardState } from "./helper";
 

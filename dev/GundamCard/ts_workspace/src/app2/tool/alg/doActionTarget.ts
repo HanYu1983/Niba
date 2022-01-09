@@ -1,31 +1,22 @@
-import {
-  TargetType,
-  getBaShouID,
-  CardColor,
-  PlayerID,
-  getBaShou,
-  BaSyou,
-  AbsoluteBaSyou,
-} from "../../tool/basic/basic";
-import { BlockPayload } from "../../tool/basic/blockPayload";
-import { Action } from "../../tool/basic/action";
+import { getBaShouID, CardColor } from "../tool/basic/basic";
+import { BlockPayload, wrapRequireKey } from "../tool/basic/blockPayload";
+import { Action } from "../tool/basic/action";
 import {
   getCard,
   getCardPosition,
   getTopCards,
   mapCard,
   moveCard,
-} from "../../../../tool/table";
-import { GameContext } from "../../tool/basic/gameContext";
-import { wrapRequireKey } from "../../tool/basic/gameContext";
+} from "../../../tool/table";
+import { GameContext } from "../tool/basic/gameContext";
 import {
   getCardBaSyou,
   getCardColor,
   getCardController,
   getCardOwner,
-  getTargetType,
-} from "../../tool/basic/gameContext";
-import { log } from "../../../../tool/logger";
+} from "../tool/basic/handleCard";
+import { log } from "../../../tool/logger";
+import { TargetType, getTargetType } from "../tool/basic/targetType";
 
 let idSeq = 0;
 export function doActionTarget(

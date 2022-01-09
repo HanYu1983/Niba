@@ -1,14 +1,14 @@
-import { getCardPosition } from "../../../../tool/table";
-import { CardColor, getBaShou } from "../../tool/basic/basic";
+import { getCardPosition } from "../../../tool/table";
+import { CardColor, getBaShou } from "../tool/basic/basic";
 import {
   BlockPayload,
   Feedback,
   Require,
   RequireCustom,
   RequireTarget,
-} from "../../tool/basic/blockPayload";
-import { GameContext } from "../../tool/basic/gameContext";
-import { RequireCustomID } from "../../tool/basic/requireCustom";
+} from "../tool/basic/blockPayload";
+import { GameContext } from "../tool/basic/gameContext";
+import { RequireCustomID } from "../tool/basic/requireCustom";
 
 export function doRequireCustom(
   ctx: GameContext,

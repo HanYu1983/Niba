@@ -4,7 +4,7 @@ import {
   updateEffect,
   updateCommand,
   triggerTextEvent,
-} from "../tool/alg/gameContext/handleGameContext";
+} from "../tool/alg/handleGameContext";
 import { createCard } from "../../tool/table";
 import { getBaShouID, PlayerA } from "../tool/tool/basic/basic";
 

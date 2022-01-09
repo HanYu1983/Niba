@@ -1,15 +1,15 @@
-import { BaSyou } from "../../tool/basic/basic";
-import { GameContext, getCardBaSyou } from "../../tool/basic/gameContext";
-import { getCard, mapCard, Card } from "../../../../tool/table";
+import { BaSyou } from "../tool/basic/basic";
+import { GameContext } from "../tool/basic/gameContext";
+import { getCard, mapCard, Card } from "../../../tool/table";
+import { getCardBaSyou } from "../tool/basic/handleCard";
 import {
   CardState,
   mapEffect,
   reduceEffect,
   DEFAULT_CARD_STATE,
   CardTextState,
-  getTargetType,
-} from "../../tool/basic/gameContext";
-import { getPrototype } from "../../script";
+} from "../tool/basic/gameContext";
+import { getPrototype } from "../script";
 
 let idSeq = 0;
 export function getCardState(

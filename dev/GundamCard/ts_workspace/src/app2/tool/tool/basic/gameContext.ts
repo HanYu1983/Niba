@@ -6,11 +6,8 @@ import {
   mapCard,
   Table,
 } from "../../../../tool/table";
-import { getCustomFunction } from "../../../../tool/helper";
-import { log } from "../../../../tool/logger";
 import type {
   GameEvent,
-  TargetType,
   CardText,
   Timing,
   TokuSyuKouKa,
@@ -23,6 +20,7 @@ import type {
 } from "./basic";
 import { getBaShou, TIMING_CHART } from "./basic";
 import { BlockPayload, Require, RequireAnd, RequireOr } from "./blockPayload";
+import { TargetType } from "./targetType";
 
 export type PlayerState = {
   id: string;
@@ -73,10 +71,6 @@ export const DEFAULT_CARD_STATE: CardState = {
   prototype: DEFAULT_CARD_PROTOTYPE,
 };
 
-export type Vars = {
-  targets: { [key: string]: TargetType };
-};
-
 export type GameEffectCustom = {
   id: "GameEffectCustom";
   customID: any;
@@ -98,8 +92,14 @@ export type GameState = {
   effects: GameEffectState[];
 };
 
+export type Vars = {
+  targets: { [key: string]: TargetType };
+};
+
+export type VarsPool = { [key: string]: Vars };
+
 export type GameContext = {
-  varsPool: { [key: string]: Vars };
+  varsPool: VarsPool;
   // 指令效果。從這裡取得玩家可用的指令
   commandEffect: BlockPayload[];
   // 立即效果。玩家必須立即一個一個進行處理
@@ -148,148 +148,8 @@ export function reduceEffect<T>(
   ].reduce(doF, init);
 }
 
-export function toBaSyou(
-  baSyou: RelatedBaSyou,
-  ctx: GameContext,
-  playerID: string,
-  cardID: string
-): AbsoluteBaSyou {
-  const _playerID = (() => {
-    switch (baSyou.value[0]) {
-      case "持ち主": {
-        const card = getCard(ctx.gameState.table, cardID);
-        if (card == null) {
-          throw new Error("getAbsoluteBaSyou card not found");
-        }
-        if (card.ownerID == null) {
-          throw new Error("getAbsoluteBaSyou ownerID must not null");
-        }
-        return card.ownerID;
-      }
-      case "自軍":
-        return playerID;
-    }
-  })();
-  return {
-    id: "AbsoluteBaSyou",
-    value: [_playerID, baSyou.value[1]],
-  };
-}
-
-export function getCardBaSyou(
-  ctx: GameContext,
-  cardID: string
-): AbsoluteBaSyou {
-  const [_, cardPosition] = getCardPosition(ctx.gameState.table, cardID);
-  if (cardPosition == null) {
-    throw new Error("[getController] cardPosition not found");
-  }
-  return getBaShou(cardPosition);
-}
-
-export function getCardController(ctx: GameContext, cardID: string): PlayerID {
-  const baSyou = getCardBaSyou(ctx, cardID);
-  return baSyou.value[0];
-}
-
-export function getCardOwner(ctx: GameContext, cardID: string): PlayerID {
-  const card = getCard(ctx.gameState.table, cardID);
-  if (card == null) {
-    throw new Error("[getCardOwner] card not found");
-  }
-  if (card.ownerID == null) {
-    throw new Error("[getCardOwner] card.ownerID not found");
-  }
-  return card.ownerID;
-}
-
 export type RequireScriptFunction = (
   gameCtx: GameContext,
   blockPayload: BlockPayload,
   varCtxID: string
 ) => GameContext;
-
-export type TargetTypeCustomFunctionType = (
-  ctx: GameContext,
-  blockPayload: BlockPayload
-) => TargetType;
-
-export function getTargetType(
-  ctx: GameContext,
-  blockPayload: BlockPayload,
-  targets: { [key: string]: TargetType },
-  target: string | TargetType
-): TargetType {
-  log("getTargetType", target);
-  const targetTypeAfterProcess = (() => {
-    if (typeof target == "string") {
-      return targets[target];
-    }
-    return target;
-  })();
-  switch (targetTypeAfterProcess.id) {
-    case "このカード":
-      if (blockPayload.cause?.cardID == null) {
-        throw new Error("[getTarget] このカード not found");
-      }
-      return { id: "カード", cardID: [blockPayload.cause.cardID] };
-    case "TargetTypeCustom": {
-      const func: TargetTypeCustomFunctionType = getCustomFunction(
-        targetTypeAfterProcess.scriptString
-      );
-      return func(ctx, blockPayload);
-    }
-    default:
-      return targetTypeAfterProcess;
-  }
-}
-
-export function getCardColor(ctx: GameContext, cardID: string): CardColor {
-  const cardState = ctx.gameState.cardState.find((cs) => {
-    return cs.id == cardID;
-  });
-  if (cardState == null) {
-    throw new Error("[getCardColor] cardState not found");
-  }
-  return cardState.prototype.color;
-}
-
-function recurRequire(
-  require: Require,
-  mapF: (require: Require) => Require
-): Require {
-  switch (require.id) {
-    case "RequireAnd": {
-      const nextRequires = require.and.map((require) => {
-        return recurRequire(require, mapF);
-      });
-      const nextAnd: RequireAnd = {
-        ...require,
-        and: nextRequires,
-      };
-      return nextAnd;
-    }
-    case "RequireOr": {
-      const nextRequires = require.or.map((require) => {
-        return recurRequire(require, mapF);
-      });
-      const nextOr: RequireOr = {
-        ...require,
-        or: nextRequires,
-      };
-      return nextOr;
-    }
-    default:
-      return mapF(require);
-  }
-}
-
-let _reqKey = 0;
-export function wrapRequireKey(r: Require): Require {
-  return recurRequire(r, (r) => {
-    return {
-      ...r,
-      key: `wrapRequireKey_${_reqKey++}`,
-    };
-  });
-}
