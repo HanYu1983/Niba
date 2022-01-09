@@ -2,12 +2,6 @@ import { CardPrototype, GameContext } from "../model/gameContext";
 import { createRollCostRequire } from ".";
 import { getCustomFunctionString } from "../../../tool/helper";
 import { TargetTypeCustomFunctionType } from "../model/gameContext";
-// 179001_01A_CH_WT007R_white
-// キラ・ヤマト
-// 男性　子供　CO
-// （戦闘階段）〔２〕：這個配置群的機體は、回合終了時前「速攻」を獲得。
-// （戦闘フェイズ）〔２〕：このセットグループのユニットは、ターン終了時まで「速攻」を得る。
-
 import { BlockPayload } from "../model/blockPayload";
 import { TargetType } from "../model/basic";
 
@@ -21,6 +15,12 @@ const _main: TargetTypeCustomFunctionType = (
     cardID: [],
   };
 };
+
+// 179001_01A_CH_WT007R_white
+// キラ・ヤマト
+// 男性　子供　CO
+// （戦闘階段）〔２〕：這個配置群的機體は、回合終了時前「速攻」を獲得。
+// （戦闘フェイズ）〔２〕：このセットグループのユニットは、ターン終了時まで「速攻」を得る。
 
 const prototype: CardPrototype = {
   title: "キラ・ヤマト",
