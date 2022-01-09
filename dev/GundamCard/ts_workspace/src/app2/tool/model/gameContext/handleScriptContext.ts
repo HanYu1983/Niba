@@ -51,9 +51,7 @@ export type RequireCustomFunction = (
   varCtxID: string
 ) => GameContext;
 
-export function getRequireCustomFunctionString(
-  fn: RequireCustomFunction
-): string {
+function getRequireCustomFunctionString(fn: RequireCustomFunction): string {
   // 手動加入匿名方法的function name
   // 無法按下列這樣做，因為編譯器會把匿名方法的function name拿掉
   // (function main(){}).toString()

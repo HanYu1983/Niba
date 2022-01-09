@@ -295,6 +295,11 @@ export type TargetTypeYesNo = {
   boolean: boolean | null;
 };
 
+export type TargetTypeCustom = {
+  id: "TargetTypeCustom";
+  scriptString: string;
+};
+
 type Damage = any;
 
 type TargetTypeDamage = {
@@ -309,4 +314,5 @@ export type TargetType =
   | TargetTypeBaSyou
   | TargetTypeThisCard
   | TargetTypeYesNo
-  | TargetTypeDamage;
+  | TargetTypeDamage
+  | TargetTypeCustom;

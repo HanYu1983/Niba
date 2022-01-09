@@ -22,6 +22,8 @@ import {
 } from "../../../../tool/table";
 import { BlockPayload, Require } from "../blockPayload";
 import { getPrototype } from "../../script";
+import { getCustomFunction } from "../../../../tool/helper";
+import { log } from "../../../../tool/logger";
 
 export type PlayerState = {
   id: string;
@@ -174,23 +176,38 @@ export function getCardOwner(ctx: GameContext, cardID: string): PlayerID {
   return card.ownerID;
 }
 
+export type TargetTypeCustomFunctionType = (
+  ctx: GameContext,
+  blockPayload: BlockPayload
+) => TargetType;
+
 export function getTargetType(
   ctx: GameContext,
   blockPayload: BlockPayload,
   targets: { [key: string]: TargetType },
   target: string | TargetType
 ): TargetType {
-  if (typeof target == "string") {
-    return targets[target];
-  }
-  switch (target.id) {
+  log("getTargetType", target);
+  const targetTypeAfterProcess = (() => {
+    if (typeof target == "string") {
+      return targets[target];
+    }
+    return target;
+  })();
+  switch (targetTypeAfterProcess.id) {
     case "このカード":
       if (blockPayload.cause?.cardID == null) {
         throw new Error("[getTarget] このカード not found");
       }
       return { id: "カード", cardID: [blockPayload.cause.cardID] };
+    case "TargetTypeCustom": {
+      const func: TargetTypeCustomFunctionType = getCustomFunction(
+        targetTypeAfterProcess.scriptString
+      );
+      return func(ctx, blockPayload);
+    }
     default:
-      return target;
+      return targetTypeAfterProcess;
   }
 }
 
