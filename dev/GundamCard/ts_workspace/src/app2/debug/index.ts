@@ -53,7 +53,7 @@ export function testInit() {
   //ctx = updateCommand(ctx);
   ctx = triggerTextEvent(ctx, {});
 
-  ctx.immediateEffect.forEach((effect) => {
+  ctx.gameState.immediateEffect.forEach((effect) => {
     if (effect.require == null) {
       return;
     }

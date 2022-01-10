@@ -12,6 +12,7 @@ import {
 import {
   CardState,
   CardTextState,
+  DEFAULT_CARD_STATE,
   GameContext,
 } from "../tool/basic/gameContext";
 import {
@@ -252,7 +253,10 @@ export function doActionTarget(
           };
           return {
             ...ctx,
-            stackEffect: [wrappedBlock, ...ctx.stackEffect],
+            gameState: {
+              ...ctx.gameState,
+              stackEffect: [wrappedBlock, ...ctx.gameState.stackEffect],
+            },
           };
         }
         case "立即": {
@@ -267,7 +271,10 @@ export function doActionTarget(
           };
           return {
             ...ctx,
-            immediateEffect: [wrappedBlock, ...ctx.immediateEffect],
+            gameState: {
+              ...ctx.gameState,
+              immediateEffect: [wrappedBlock, ...ctx.gameState.immediateEffect],
+            },
           };
         }
       }
@@ -305,51 +312,98 @@ export function doActionTarget(
         },
       };
     }
+    case "ActionAddGlobalCardText": {
+      const { cardText, cardTextStateID } = action;
+      const cards = getTargetType(ctx, blockPayload, targets, action.cards);
+      if (cards.id != "カード") {
+        throw new Error("must カード");
+      }
+      if (cards.cardID.length == 0) {
+        throw new Error("card.length == 0");
+      }
+      const cardID = cards.cardID[0];
+      if (cardID == null) {
+        throw new Error("card ID not found");
+      }
+      const id = cardTextStateID || `ActionAddGlobalCardText_${idSeq++}`;
+      const cardState: CardState = {
+        ...DEFAULT_CARD_STATE,
+        id: id,
+        cardID: cardID,
+        cardTextStates: [
+          {
+            id: id,
+            enabled: true,
+            cardText: cardText,
+          },
+        ],
+      };
+      return {
+        ...ctx,
+        gameState: {
+          ...ctx.gameState,
+          globalCardState: [...ctx.gameState.globalCardState, cardState],
+        },
+      };
+    }
+    case "ActionDeleteGlobalCardText": {
+      const { cardTextStateID } = action;
+      return {
+        ...ctx,
+        gameState: {
+          ...ctx.gameState,
+          globalCardState: ctx.gameState.globalCardState.filter(
+            (v) => v.id != cardTextStateID
+          ),
+        },
+      };
+    }
     case "ActionAddCardText": {
       const { cardText, cardTextStateID } = action;
       const cards = getTargetType(ctx, blockPayload, targets, action.cards);
       if (cards.id != "カード") {
         throw new Error("must カード");
       }
-      if (cards.cardID.length) {
-        const cardID = cards.cardID[0];
-        if (cardID == null) {
-          throw new Error("card ID not found");
-        }
-        let [nextCtx, _] = getCardState(ctx, cardID);
-        const nextCardState = nextCtx.gameState.cardState.map(
-          (cardState): CardState => {
-            if (cardState.cardID != cardID) {
-              return cardState;
-            }
-            const hasSameState =
-              cardState.cardTextStates.find((s) => s.id == cardTextStateID) !=
-              null;
-            if (hasSameState) {
-              return cardState;
-            }
-            return {
-              ...cardState,
-              cardTextStates: [
-                ...cardState.cardTextStates,
-                {
-                  id: cardTextStateID || `ActionAddCardText_${idSeq++}`,
-                  enabled: true,
-                  cardText: cardText,
-                },
-              ],
-            };
-          }
-        );
-        nextCtx = {
-          ...nextCtx,
-          gameState: {
-            ...nextCtx.gameState,
-            cardState: nextCardState,
-          },
-        };
-        ctx = nextCtx;
+      if (cards.cardID.length == 0) {
+        throw new Error("card.length == 0");
       }
+      const cardID = cards.cardID[0];
+      if (cardID == null) {
+        throw new Error("card ID not found");
+      }
+      let [nextCtx, _] = getCardState(ctx, cardID);
+      const nextCardState = nextCtx.gameState.cardState.map(
+        (cardState): CardState => {
+          if (cardState.cardID != cardID) {
+            return cardState;
+          }
+          const hasSameState =
+            cardState.cardTextStates.find((s) => s.id == cardTextStateID) !=
+            null;
+          if (hasSameState) {
+            return cardState;
+          }
+          return {
+            ...cardState,
+            cardTextStates: [
+              ...cardState.cardTextStates,
+              {
+                id: cardTextStateID || `ActionAddCardText_${idSeq++}`,
+                enabled: true,
+                cardText: cardText,
+              },
+            ],
+          };
+        }
+      );
+      nextCtx = {
+        ...nextCtx,
+        gameState: {
+          ...nextCtx.gameState,
+          cardState: nextCardState,
+        },
+      };
+      ctx = nextCtx;
     }
     case "ActionDeleteCardText": {
       const { cardTextStateID } = action;
@@ -357,34 +411,35 @@ export function doActionTarget(
       if (cards.id != "カード") {
         throw new Error("must カード");
       }
-      if (cards.cardID.length) {
-        const cardID = cards.cardID[0];
-        if (cardID == null) {
-          throw new Error("card ID not found");
-        }
-        let [nextCtx, _] = getCardState(ctx, cardID);
-        const nextCardState = nextCtx.gameState.cardState.map(
-          (cardState): CardState => {
-            if (cardState.cardID != cardID) {
-              return cardState;
-            }
-            return {
-              ...cardState,
-              cardTextStates: cardState.cardTextStates.filter(
-                (s) => s.id != cardTextStateID
-              ),
-            };
-          }
-        );
-        nextCtx = {
-          ...nextCtx,
-          gameState: {
-            ...nextCtx.gameState,
-            cardState: nextCardState,
-          },
-        };
-        ctx = nextCtx;
+      if (cards.cardID.length == 0) {
+        throw new Error("card.length == 0");
       }
+      const cardID = cards.cardID[0];
+      if (cardID == null) {
+        throw new Error("card ID not found");
+      }
+      let [nextCtx, _] = getCardState(ctx, cardID);
+      const nextCardState = nextCtx.gameState.cardState.map(
+        (cardState): CardState => {
+          if (cardState.cardID != cardID) {
+            return cardState;
+          }
+          return {
+            ...cardState,
+            cardTextStates: cardState.cardTextStates.filter(
+              (s) => s.id != cardTextStateID
+            ),
+          };
+        }
+      );
+      nextCtx = {
+        ...nextCtx,
+        gameState: {
+          ...nextCtx.gameState,
+          cardState: nextCardState,
+        },
+      };
+      ctx = nextCtx;
     }
   }
   return ctx;

@@ -92,6 +92,13 @@ export type GameState = {
   playerState: PlayerState[];
   activePlayerID: string | null;
   effects: GameEffectState[];
+  globalCardState: CardState[];
+  // 指令效果
+  commandEffect: BlockPayload[];
+  // 立即效果。玩家必須立即一個一個進行處理
+  immediateEffect: BlockPayload[];
+  // 堆疊效果。每次只處理第一個代表top的block
+  stackEffect: BlockPayload[];
 };
 
 export type Vars = {
@@ -102,12 +109,6 @@ export type VarsPool = { [key: string]: Vars };
 
 export type GameContext = {
   varsPool: VarsPool;
-  // 指令效果。從這裡取得玩家可用的指令
-  commandEffect: BlockPayload[];
-  // 立即效果。玩家必須立即一個一個進行處理
-  immediateEffect: BlockPayload[];
-  // 堆疊效果。每次只處理第一個代表top的block
-  stackEffect: BlockPayload[];
   gameState: GameState;
 };
 
@@ -115,15 +116,16 @@ export const DEFAULT_GAME_CONTEXT: GameContext = {
   varsPool: {},
   gameState: {
     effects: [],
+    globalCardState: [],
     table: DEFAULT_TABLE,
     cardState: [],
     timing: TIMING_CHART[0],
     playerState: [],
     activePlayerID: null,
+    commandEffect: [],
+    immediateEffect: [],
+    stackEffect: [],
   },
-  commandEffect: [],
-  immediateEffect: [],
-  stackEffect: [],
 };
 
 export function mapEffect(
@@ -132,9 +134,12 @@ export function mapEffect(
 ): GameContext {
   return {
     ...ctx,
-    immediateEffect: ctx.immediateEffect.map(doF),
-    commandEffect: ctx.commandEffect.map(doF),
-    stackEffect: ctx.stackEffect.map(doF),
+    gameState: {
+      ...ctx.gameState,
+      immediateEffect: ctx.gameState.immediateEffect.map(doF),
+      commandEffect: ctx.gameState.commandEffect.map(doF),
+      stackEffect: ctx.gameState.stackEffect.map(doF),
+    },
   };
 }
 
@@ -144,9 +149,9 @@ export function reduceEffect<T>(
   init: T
 ): T {
   return [
-    ...ctx.immediateEffect,
-    ...ctx.commandEffect,
-    ...ctx.stackEffect,
+    ...ctx.gameState.immediateEffect,
+    ...ctx.gameState.commandEffect,
+    ...ctx.gameState.stackEffect,
   ].reduce(doF, init);
 }
 

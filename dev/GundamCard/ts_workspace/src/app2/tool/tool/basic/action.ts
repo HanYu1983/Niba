@@ -91,6 +91,18 @@ type ActionAddEffect = {
   effect: GameEffect;
 };
 
+type ActionAddGlobalCardText = {
+  id: "ActionAddGlobalCardText";
+  cards: string | TargetTypeCard | TargetTypeThisCard;
+  cardText: CardText;
+  cardTextStateID?: string;
+};
+
+type ActionDeleteGlobalCardText = {
+  id: "ActionDeleteGlobalCardText";
+  cardTextStateID: string;
+};
+
 type ActionAddCardText = {
   id: "ActionAddCardText";
   cards: string | TargetTypeCard | TargetTypeThisCard;
@@ -120,4 +132,6 @@ export type Action =
   | ActionAddBlock
   | ActionAddEffect
   | ActionAddCardText
-  | ActionDeleteCardText;
+  | ActionDeleteCardText
+  | ActionAddGlobalCardText
+  | ActionDeleteGlobalCardText;

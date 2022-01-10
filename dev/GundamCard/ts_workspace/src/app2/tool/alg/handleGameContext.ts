@@ -157,65 +157,69 @@ export function triggerTextEvent(
   ctx: GameContext,
   evt: GameEvent
 ): GameContext {
-  return ctx.gameState.cardState.reduce((ctx, cardState) => {
-    return cardState.cardTextStates.reduce((ctx, cardTextState) => {
-      log("triggerTextEvent", cardTextState.cardText.description);
-      const blocks: BlockPayload[] = (() => {
-        switch (cardTextState.cardText.id) {
-          case "自動型":
-            switch (cardTextState.cardText.category) {
-              case "常駐":
-                return [];
-              default:
-                return [cardTextState.cardText.block];
-            }
-          case "使用型":
-            return [];
-          case "特殊型":
-            return cardTextState.cardText.texts
-              .filter((t) => t.id == "自動型" && t.category != "常駐")
-              .map((t) => t.block);
-        }
-      })();
-      return blocks.reduce((ctx, block) => {
-        log("triggerTextEvent", block);
-        const wrapEvent: BlockPayload = {
-          ...block,
-          cause: {
-            id: "BlockPayloadCauseGameEvent",
-            cardID: cardState.cardID,
-            cardTextID: cardTextState.id,
-            gameEvent: evt,
-            description: JSON.stringify(cardTextState.cardText.description),
-          },
-        };
-        const varCtxID = "triggerTextEvent";
-        try {
-          if (wrapEvent.require != null) {
-            // 清空變量，因為是臨時性的訪問，所以可以這麼做
-            ctx = {
-              ...ctx,
-              varsPool: {
-                ...ctx.varsPool,
-                [varCtxID]: {
-                  targets: {},
+  // 只有事件類要和global一起算
+  return [...ctx.gameState.cardState, ...ctx.gameState.globalCardState].reduce(
+    (ctx, cardState) => {
+      return cardState.cardTextStates.reduce((ctx, cardTextState) => {
+        log("triggerTextEvent", cardTextState.cardText.description);
+        const blocks: BlockPayload[] = (() => {
+          switch (cardTextState.cardText.id) {
+            case "自動型":
+              switch (cardTextState.cardText.category) {
+                case "常駐":
+                  return [];
+                default:
+                  return [cardTextState.cardText.block];
+              }
+            case "使用型":
+              return [];
+            case "特殊型":
+              return cardTextState.cardText.texts
+                .filter((t) => t.id == "自動型" && t.category != "常駐")
+                .map((t) => t.block);
+          }
+        })();
+        return blocks.reduce((ctx, block) => {
+          log("triggerTextEvent", block);
+          const wrapEvent: BlockPayload = {
+            ...block,
+            cause: {
+              id: "BlockPayloadCauseGameEvent",
+              cardID: cardState.cardID,
+              cardTextID: cardTextState.id,
+              gameEvent: evt,
+              description: JSON.stringify(cardTextState.cardText.description),
+            },
+          };
+          const varCtxID = "triggerTextEvent";
+          try {
+            if (wrapEvent.require != null) {
+              // 清空變量，因為是臨時性的訪問，所以可以這麼做
+              ctx = {
+                ...ctx,
+                varsPool: {
+                  ...ctx.varsPool,
+                  [varCtxID]: {
+                    targets: {},
+                  },
                 },
-              },
-            };
-            ctx = doRequire(ctx, wrapEvent, wrapEvent.require, varCtxID);
+              };
+              ctx = doRequire(ctx, wrapEvent, wrapEvent.require, varCtxID);
+            }
+            if (wrapEvent.feedback) {
+              ctx = wrapEvent.feedback.reduce((ctx, feedback) => {
+                return doFeedback(ctx, wrapEvent, feedback, varCtxID);
+              }, ctx);
+            }
+          } catch (e) {
+            console.log(e);
           }
-          if (wrapEvent.feedback) {
-            ctx = wrapEvent.feedback.reduce((ctx, feedback) => {
-              return doFeedback(ctx, wrapEvent, feedback, varCtxID);
-            }, ctx);
-          }
-        } catch (e) {
-          console.log(e);
-        }
-        return ctx;
+          return ctx;
+        }, ctx);
       }, ctx);
-    }, ctx);
-  }, ctx);
+    },
+    ctx
+  );
 }
 
 // 更新命令列表
@@ -513,20 +517,23 @@ function getCommands(ctx: GameContext, playerID: string): BlockPayload[] {
 }
 
 export function setCommand(ctx: GameContext, cmd: BlockPayload): GameContext {
-  if (ctx.commandEffect.length) {
+  if (ctx.gameState.commandEffect.length) {
     throw new Error("有人在執行其它指令");
   }
   return {
     ...ctx,
-    commandEffect: [cmd],
+    gameState: {
+      ...ctx.gameState,
+      commandEffect: [cmd],
+    },
   };
 }
 
 export function cancelCommand(ctx: GameContext, playerID: string): GameContext {
-  if (ctx.commandEffect.length == 0) {
+  if (ctx.gameState.commandEffect.length == 0) {
     return ctx;
   }
-  const cmd = ctx.commandEffect[0];
+  const cmd = ctx.gameState.commandEffect[0];
   const cardID = cmd.cause?.cardID;
   if (cardID == null) {
     throw new Error("[cancelCommand] cardID not found");
@@ -540,7 +547,10 @@ export function cancelCommand(ctx: GameContext, playerID: string): GameContext {
   }
   return {
     ...ctx,
-    commandEffect: [],
+    gameState: {
+      ...ctx.gameState,
+      commandEffect: [],
+    },
   };
 }
 
@@ -571,8 +581,8 @@ type Flow =
 export function queryFlow(ctx: GameContext, playerID: string): Flow[] {
   // 處理支付指令
   // 不然就呼叫cancelCommand
-  if (ctx.commandEffect.length) {
-    const cmd = ctx.commandEffect[0];
+  if (ctx.gameState.commandEffect.length) {
+    const cmd = ctx.gameState.commandEffect[0];
     if (cmd.requirePassed != true) {
       // doEffectRequire
       return [];
@@ -584,7 +594,7 @@ export function queryFlow(ctx: GameContext, playerID: string): Flow[] {
     return [{ id: "FlowWaitPlayer" }];
   }
   // 處理立即效果
-  if (ctx.immediateEffect.length) {
+  if (ctx.gameState.immediateEffect.length) {
     // 選擇一個效果呼叫setCommand
     // 不然呼叫deleteImmediateEffect
     return [
@@ -594,8 +604,8 @@ export function queryFlow(ctx: GameContext, playerID: string): Flow[] {
     ];
   }
   // 處理堆疊效果，從最上方開始處理
-  if (ctx.stackEffect.length) {
-    const topEffect = ctx.stackEffect[0];
+  if (ctx.gameState.stackEffect.length) {
+    const topEffect = ctx.gameState.stackEffect[0];
     return [
       {
         id: "FlowWaitPlayer",
@@ -658,7 +668,7 @@ export function queryFlow(ctx: GameContext, playerID: string): Flow[] {
               // 如果已經觸發事件
               if (false) {
                 // 而立即效果有內容時
-                if (ctx.immediateEffect.length) {
+                if (ctx.gameState.immediateEffect.length) {
                   return [
                     {
                       id: "FlowWaitPlayer",
@@ -704,7 +714,7 @@ export function queryFlow(ctx: GameContext, playerID: string): Flow[] {
               // 如果已經觸發事件
               if (false) {
                 // 而立即效果有內容時
-                if (ctx.immediateEffect.length) {
+                if (ctx.gameState.immediateEffect.length) {
                   return [
                     {
                       id: "FlowWaitPlayer",

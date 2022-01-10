@@ -47,7 +47,7 @@ const prototype: CardPrototype = {
             id: "FeedbackAction",
             action: [
               {
-                id: "ActionAddCardText",
+                id: "ActionAddGlobalCardText",
                 cards: { id: "このカード" },
                 cardTextStateID:
                   "ターン終了時に、このカードを持ち主のGにできる。",
@@ -91,8 +91,7 @@ const prototype: CardPrototype = {
                             },
                           },
                           {
-                            id: "ActionDeleteCardText",
-                            cards: { id: "このカード" },
+                            id: "ActionDeleteGlobalCardText",
                             cardTextStateID:
                               "ターン終了時に、このカードを持ち主のGにできる。",
                           },
