@@ -727,6 +727,10 @@ export function queryFlow(ctx: GameContext, playerID: string): Flow[] {
             },
           ];
         case "規定の効果":
+          // 如果已經觸發規定の効果
+          if (false) {
+            return [{ id: "FlowNextTiming" }];
+          }
           return [
             {
               id: "FlowCallAction",
@@ -738,16 +742,12 @@ export function queryFlow(ctx: GameContext, playerID: string): Flow[] {
             },
           ];
         case "フリータイミング":
-          // 雙方玩家都可以getCommands, setCommand, cancelCommand
-          // 雙方玩家要宣告結束階段
-          // 如果雙方玩家都宣告結束階段
-          // 其中一個玩家如果setCommand, 則清除宣告結束的值
           if (false) {
             return [{ id: "FlowNextTiming" }];
           }
           return [
             {
-              id: "FlowWaitPlayer",
+              id: "FlowUpdateCommand",
             },
           ];
       }
@@ -762,14 +762,6 @@ export function queryFlow(ctx: GameContext, playerID: string): Flow[] {
             case "ステップ終了":
               // 如果已經觸發事件
               if (false) {
-                // 而立即效果有內容時
-                if (ctx.gameState.immediateEffect.length) {
-                  return [
-                    {
-                      id: "FlowWaitPlayer",
-                    },
-                  ];
-                }
                 return [{ id: "FlowNextTiming" }];
               }
               return [
@@ -779,6 +771,10 @@ export function queryFlow(ctx: GameContext, playerID: string): Flow[] {
                 },
               ];
             case "規定の効果":
+              // 如果已經觸發規定の効果
+              if (false) {
+                return [{ id: "FlowNextTiming" }];
+              }
               return [
                 {
                   id: "FlowCallAction",
@@ -790,8 +786,9 @@ export function queryFlow(ctx: GameContext, playerID: string): Flow[] {
                 },
               ];
             case "フリータイミング":
-              // if command lenght > 0 ? waitHandleCmd else updateCommand
-              // waitBothPlayerEnd
+              if (false) {
+                return [{ id: "FlowNextTiming" }];
+              }
               return [
                 {
                   id: "FlowUpdateCommand",
@@ -808,14 +805,6 @@ export function queryFlow(ctx: GameContext, playerID: string): Flow[] {
             case "効果終了。ターン終了":
               // 如果已經觸發事件
               if (false) {
-                // 而立即效果有內容時
-                if (ctx.gameState.immediateEffect.length) {
-                  return [
-                    {
-                      id: "FlowWaitPlayer",
-                    },
-                  ];
-                }
                 return [{ id: "FlowNextTiming" }];
               }
               return [
