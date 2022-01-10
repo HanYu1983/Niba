@@ -93,6 +93,7 @@ export type GameState = {
   activePlayerID: string | null;
   effects: GameEffectState[];
   globalCardState: CardState[];
+  activeEffectID: string | null;
   // 指令效果
   commandEffect: BlockPayload[];
   // 立即效果。玩家必須立即一個一個進行處理
@@ -122,6 +123,7 @@ export const DEFAULT_GAME_CONTEXT: GameContext = {
     timing: TIMING_CHART[0],
     playerState: [],
     activePlayerID: null,
+    activeEffectID: null,
     commandEffect: [],
     immediateEffect: [],
     stackEffect: [],
