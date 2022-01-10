@@ -2,21 +2,28 @@ import { getBaShouID, CardColor } from "../tool/basic/basic";
 import { BlockPayload, wrapRequireKey } from "../tool/basic/blockPayload";
 import { Action } from "../tool/basic/action";
 import {
+  CardStack,
   getCard,
   getCardPosition,
   getTopCards,
   mapCard,
   moveCard,
 } from "../../../tool/table";
-import { GameContext } from "../tool/basic/gameContext";
+import {
+  CardState,
+  CardTextState,
+  GameContext,
+} from "../tool/basic/gameContext";
 import {
   getCardBaSyou,
   getCardColor,
   getCardController,
   getCardOwner,
+  getAbsoluteBaSyou,
 } from "../tool/basic/handleCard";
 import { log } from "../../../tool/logger";
 import { TargetType, getTargetType } from "../tool/basic/targetType";
+import { getCardState } from "./helper";
 
 let idSeq = 0;
 export function doActionTarget(
@@ -192,6 +199,44 @@ export function doActionTarget(
       }
       return ctx;
     }
+    case "ActionMoveCardToPosition":
+      const cards = getTargetType(ctx, blockPayload, targets, action.cards);
+      if (cards?.id != "カード") {
+        throw new Error("must カード");
+      }
+      const baSyou = getTargetType(ctx, blockPayload, targets, action.baSyou);
+      if (baSyou?.id != "場所") {
+        throw new Error("must 場所");
+      }
+      ctx = cards.cardID.reduce((ctx, cardID) => {
+        if (baSyou.baSyou == null) {
+          throw new Error("baSyou not found");
+        }
+        if (cardID == null) {
+          throw new Error(
+            "[doActionTarget][ActionMoveCardToPosition] cardID not found"
+          );
+        }
+        const fromBaSyouID = getBaShouID(getCardBaSyou(ctx, cardID));
+        const toBaSyouID = getBaShouID(
+          getAbsoluteBaSyou(baSyou.baSyou, ctx, cardID)
+        );
+        const nextTable = moveCard(
+          ctx.gameState.table,
+          fromBaSyouID,
+          toBaSyouID,
+          cardID,
+          null
+        );
+        return {
+          ...ctx,
+          gameState: {
+            ...ctx.gameState,
+            table: nextTable,
+          },
+        };
+      }, ctx);
+      return ctx;
     case "ActionAddBlock": {
       const blockUuid = `ActionAddBlock_${new Date().getTime()}_${idSeq++}`;
       switch (action.type) {
@@ -210,18 +255,6 @@ export function doActionTarget(
             stackEffect: [wrappedBlock, ...ctx.stackEffect],
           };
         }
-        // case "指令": {
-        //   const wrappedBlock: BlockPayload = {
-        //     ...action.block,
-        //     id: blockUuid,
-        //     contextID: blockPayload.contextID,
-        //     cause: blockPayload.cause,
-        //   };
-        //   return {
-        //     ...ctx,
-        //     commandEffect: [wrappedBlock, ...ctx.commandEffect],
-        //   };
-        // }
         case "立即": {
           const wrappedBlock: BlockPayload = {
             ...action.block,
@@ -238,7 +271,6 @@ export function doActionTarget(
           };
         }
       }
-      return ctx;
     }
     case "ActionAddEffect": {
       if (action.effectID) {
@@ -272,6 +304,65 @@ export function doActionTarget(
           ],
         },
       };
+    }
+    case "ActionAddCardText": {
+      const { cardID, cardText, cardTextStateID } = action;
+      if (cardID) {
+        let [nextCtx, _] = getCardState(ctx, cardID);
+        const nextCardState = nextCtx.gameState.cardState.map(
+          (cardState): CardState => {
+            if (cardState.id != cardID) {
+              return cardState;
+            }
+            return {
+              ...cardState,
+              cardTextStates: [
+                ...cardState.cardTextStates,
+                {
+                  id: cardTextStateID || `ActionAddCardText_${idSeq++}`,
+                  enabled: true,
+                  cardText: cardText,
+                },
+              ],
+            };
+          }
+        );
+        nextCtx = {
+          ...nextCtx,
+          gameState: {
+            ...nextCtx.gameState,
+            cardState: nextCardState,
+          },
+        };
+        ctx = nextCtx;
+      }
+    }
+    case "ActionDeleteCardText": {
+      const { cardID, cardTextStateID } = action;
+      if (cardID) {
+        let [nextCtx, _] = getCardState(ctx, cardID);
+        const nextCardState = nextCtx.gameState.cardState.map(
+          (cardState): CardState => {
+            if (cardState.id != cardID) {
+              return cardState;
+            }
+            return {
+              ...cardState,
+              cardTextStates: cardState.cardTextStates.filter(
+                (s) => s.id != cardTextStateID
+              ),
+            };
+          }
+        );
+        nextCtx = {
+          ...nextCtx,
+          gameState: {
+            ...nextCtx.gameState,
+            cardState: nextCardState,
+          },
+        };
+        ctx = nextCtx;
+      }
     }
   }
   return ctx;

@@ -40,13 +40,55 @@ const prototype: CardPrototype = {
               id: "RequireEvent",
               // このカードが場に出た場合
             },
-            {
-              id: "RequireTarget",
-              targets: {},
-              action: [],
-            },
           ],
         },
+        feedback: [
+          {
+            id: "FeedbackAction",
+            action: [
+              {
+                id: "ActionAddCardText",
+                cardTextStateID:
+                  "ターン終了時に、このカードを持ち主のGにできる。",
+                cardText: {
+                  id: "自動型",
+                  category: "起動",
+                  description:
+                    "ターン終了時に、このカードを持ち主のGにできる。",
+                  block: {
+                    require: {
+                      id: "RequireEvent",
+                      // ターン終了時に
+                    },
+                    feedback: [
+                      {
+                        id: "FeedbackAction",
+                        action: [
+                          {
+                            id: "ActionMoveCardToPosition",
+                            cards: { id: "このカード" },
+                            baSyou: {
+                              id: "場所",
+                              baSyou: {
+                                id: "RelatedBaSyou",
+                                value: ["持ち主", "Gゾーン"],
+                              },
+                            },
+                          },
+                          {
+                            id: "ActionDeleteCardText",
+                            cardTextStateID:
+                              "ターン終了時に、このカードを持ち主のGにできる。",
+                          },
+                        ],
+                      },
+                    ],
+                  },
+                },
+              },
+            ],
+          },
+        ],
       },
     },
   ],

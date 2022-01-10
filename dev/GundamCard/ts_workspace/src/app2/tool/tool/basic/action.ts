@@ -7,6 +7,7 @@ import type {
 } from "./targetType";
 import type { BlockPayload } from "./blockPayload";
 import type { GameEffect } from "./gameContext";
+import { CardText } from "./basic";
 
 type ActionRoll = {
   id: "ActionRoll";
@@ -83,10 +84,24 @@ type ActionAddBlock = {
   block: BlockPayload;
 };
 
+// 加入全局效果
 type ActionAddEffect = {
   id: "ActionAddEffect";
   effectID?: string;
   effect: GameEffect;
+};
+
+type ActionAddCardText = {
+  id: "ActionAddCardText";
+  cardID?: string;
+  cardText: CardText;
+  cardTextStateID?: string;
+};
+
+type ActionDeleteCardText = {
+  id: "ActionDeleteCardText";
+  cardID?: string;
+  cardTextStateID: string;
 };
 
 export type Action =
@@ -103,4 +118,6 @@ export type Action =
   | ActionOKiKaeRu
   | ActionUnitDamage
   | ActionAddBlock
-  | ActionAddEffect;
+  | ActionAddEffect
+  | ActionAddCardText
+  | ActionDeleteCardText;

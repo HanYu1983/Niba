@@ -6,14 +6,17 @@ import {
   getBaShou,
   PlayerID,
   CardColor,
+  BaSyou,
 } from "./basic";
 
-export function toBaSyou(
-  baSyou: RelatedBaSyou,
+export function getAbsoluteBaSyou(
+  baSyou: BaSyou,
   ctx: GameContext,
-  playerID: string,
   cardID: string
 ): AbsoluteBaSyou {
+  if (baSyou.id == "AbsoluteBaSyou") {
+    return baSyou;
+  }
   const _playerID = (() => {
     switch (baSyou.value[0]) {
       case "持ち主": {
@@ -27,7 +30,7 @@ export function toBaSyou(
         return card.ownerID;
       }
       case "自軍":
-        return playerID;
+        return getCardController(ctx, cardID);
     }
   })();
   return {
