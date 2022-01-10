@@ -2,7 +2,7 @@ import { DEFAULT_GAME_CONTEXT } from "../tool/tool/basic/gameContext";
 import {
   initState,
   updateEffect,
-  updateCommand,
+  //updateCommand,
   triggerTextEvent,
   getTip,
 } from "../tool/alg/handleGameContext";
@@ -50,7 +50,7 @@ export function testInit() {
     });
   ctx = initState(ctx);
   ctx = updateEffect(ctx);
-  ctx = updateCommand(ctx);
+  //ctx = updateCommand(ctx);
   ctx = triggerTextEvent(ctx, {});
 
   ctx.immediateEffect.forEach((effect) => {

@@ -159,7 +159,8 @@ export const TIMING_CHART = ((): Timing[] => {
     ["戦闘フェイズ", "帰還ステップ", "フリータイミング"],
     ["戦闘フェイズ", "帰還ステップ", "規定の効果"],
     ["戦闘フェイズ", "帰還ステップ", "フリータイミング"],
-    ["戦闘フェイズ", "帰還ステップ", "ステップ終了"],
+    // 帰還ステップ 沒有 ステップ終了
+    // ["戦闘フェイズ", "帰還ステップ", "ステップ終了"],
     ["戦闘フェイズ", "ターン終了時", "ダメージリセット"],
     ["戦闘フェイズ", "ターン終了時", "効果解決"],
     ["戦闘フェイズ", "ターン終了時", "手札調整"],
@@ -170,7 +171,7 @@ export const TIMING_CHART = ((): Timing[] => {
   });
 })();
 
-export function nextTiming(timing: Timing): Timing {
+export function getNextTiming(timing: Timing): Timing {
   const nextId = timing[0] + (1 % TIMING_CHART.length);
   return TIMING_CHART[nextId];
 }

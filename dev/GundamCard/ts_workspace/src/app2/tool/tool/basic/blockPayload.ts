@@ -76,6 +76,7 @@ export type Feedback = FeedbackTargetAction | FeedbackAction;
 export type BlockPayloadCauseGameEvent = {
   id: "BlockPayloadCauseGameEvent";
   cardID: string;
+  cardTextID: string;
   gameEvent: GameEvent;
   description: string;
 };
@@ -83,12 +84,14 @@ export type BlockPayloadCauseGameEvent = {
 export type BlockPayloadCauseUpdateCommand = {
   id: "BlockPayloadCauseUpdateCommand";
   cardID: string;
+  cardTextID: string;
   description: string;
 };
 
 export type BlockPayloadCauseUpdateEffect = {
   id: "BlockPayloadCauseUpdateEffect";
   cardID: string;
+  cardTextID: string;
   description: string;
 };
 
