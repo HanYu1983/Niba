@@ -9,7 +9,11 @@ import {
   RequireTarget,
   wrapRequireKey,
 } from "../tool/basic/blockPayload";
-import { GameContext, reduceEffect } from "../tool/basic/gameContext";
+import {
+  CardTextState,
+  GameContext,
+  reduceEffect,
+} from "../tool/basic/gameContext";
 import { getCard, mapCard, Card } from "../../../tool/table";
 import { mapEffect } from "../tool/basic/gameContext";
 import { TargetType, TargetTypeCard } from "../tool/basic/targetType";
@@ -159,7 +163,7 @@ export function triggerTextEvent(
 ): GameContext {
   // 只有事件類要和global一起算
   return [...ctx.gameState.cardState, ...ctx.gameState.globalCardState].reduce(
-    (ctx, cardState) => {
+    (ctx, cardState: { cardID: string; cardTextStates: CardTextState[] }) => {
       return cardState.cardTextStates.reduce((ctx, cardTextState) => {
         log("triggerTextEvent", cardTextState.cardText.description);
         const blocks: BlockPayload[] = (() => {
