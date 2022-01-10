@@ -306,12 +306,26 @@ export function doActionTarget(
       };
     }
     case "ActionAddCardText": {
-      const { cardID, cardText, cardTextStateID } = action;
-      if (cardID) {
+      const { cardText, cardTextStateID } = action;
+      const cards = getTargetType(ctx, blockPayload, targets, action.cards);
+      if (cards.id != "カード") {
+        throw new Error("must カード");
+      }
+      if (cards.cardID.length) {
+        const cardID = cards.cardID[0];
+        if (cardID == null) {
+          throw new Error("card ID not found");
+        }
         let [nextCtx, _] = getCardState(ctx, cardID);
         const nextCardState = nextCtx.gameState.cardState.map(
           (cardState): CardState => {
-            if (cardState.id != cardID) {
+            if (cardState.cardID != cardID) {
+              return cardState;
+            }
+            const hasSameState =
+              cardState.cardTextStates.find((s) => s.id == cardTextStateID) !=
+              null;
+            if (hasSameState) {
               return cardState;
             }
             return {
@@ -338,12 +352,20 @@ export function doActionTarget(
       }
     }
     case "ActionDeleteCardText": {
-      const { cardID, cardTextStateID } = action;
-      if (cardID) {
+      const { cardTextStateID } = action;
+      const cards = getTargetType(ctx, blockPayload, targets, action.cards);
+      if (cards.id != "カード") {
+        throw new Error("must カード");
+      }
+      if (cards.cardID.length) {
+        const cardID = cards.cardID[0];
+        if (cardID == null) {
+          throw new Error("card ID not found");
+        }
         let [nextCtx, _] = getCardState(ctx, cardID);
         const nextCardState = nextCtx.gameState.cardState.map(
           (cardState): CardState => {
-            if (cardState.id != cardID) {
+            if (cardState.cardID != cardID) {
               return cardState;
             }
             return {

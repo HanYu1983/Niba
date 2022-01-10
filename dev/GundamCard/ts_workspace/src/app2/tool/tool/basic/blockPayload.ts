@@ -108,6 +108,7 @@ export type BlockPayload = {
   contextID?: string;
   requirePassed?: boolean;
   feedbackPassed?: boolean;
+  isOption?: boolean;
 };
 
 export const DEFAULT_BLOCK_PAYLOAD: BlockPayload = {};

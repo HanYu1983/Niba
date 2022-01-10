@@ -93,14 +93,14 @@ type ActionAddEffect = {
 
 type ActionAddCardText = {
   id: "ActionAddCardText";
-  cardID?: string;
+  cards: string | TargetTypeCard | TargetTypeThisCard;
   cardText: CardText;
   cardTextStateID?: string;
 };
 
 type ActionDeleteCardText = {
   id: "ActionDeleteCardText";
-  cardID?: string;
+  cards: string | TargetTypeCard | TargetTypeThisCard;
   cardTextStateID: string;
 };
 

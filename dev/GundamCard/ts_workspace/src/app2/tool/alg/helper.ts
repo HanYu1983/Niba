@@ -31,6 +31,7 @@ export function getCardState(
   const newCardState: CardState = {
     ...DEFAULT_CARD_STATE,
     id: card.id,
+    cardID: card.id,
     live: 0,
     destroy: false,
     setGroupID: uuidKey,

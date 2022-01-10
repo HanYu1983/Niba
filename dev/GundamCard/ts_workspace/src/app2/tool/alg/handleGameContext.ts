@@ -183,7 +183,7 @@ export function triggerTextEvent(
           ...block,
           cause: {
             id: "BlockPayloadCauseGameEvent",
-            cardID: cardState.id,
+            cardID: cardState.cardID,
             cardTextID: cardTextState.id,
             gameEvent: evt,
             description: JSON.stringify(cardTextState.cardText.description),
@@ -323,7 +323,7 @@ export function updateEffect(ctx: GameContext): GameContext {
           ...block,
           cause: {
             id: "BlockPayloadCauseUpdateEffect",
-            cardID: cardState.id,
+            cardID: cardState.cardID,
             cardTextID: cardTextState.id,
             description: JSON.stringify(cardTextState.cardText.description),
           },
@@ -467,7 +467,7 @@ function getCommands(ctx: GameContext, playerID: string): BlockPayload[] {
           // 準備背景資料用來判斷
           cause: {
             id: "BlockPayloadCauseUpdateCommand",
-            cardID: cardState.id,
+            cardID: cardState.cardID,
             cardTextID: cardTextState.id,
             description: JSON.stringify(cardTextState.cardText.description),
           },

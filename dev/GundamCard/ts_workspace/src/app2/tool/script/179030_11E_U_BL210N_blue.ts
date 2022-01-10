@@ -48,6 +48,7 @@ const prototype: CardPrototype = {
             action: [
               {
                 id: "ActionAddCardText",
+                cards: { id: "このカード" },
                 cardTextStateID:
                   "ターン終了時に、このカードを持ち主のGにできる。",
                 cardText: {
@@ -65,18 +66,33 @@ const prototype: CardPrototype = {
                         id: "FeedbackAction",
                         action: [
                           {
-                            id: "ActionMoveCardToPosition",
-                            cards: { id: "このカード" },
-                            baSyou: {
-                              id: "場所",
-                              baSyou: {
-                                id: "RelatedBaSyou",
-                                value: ["持ち主", "Gゾーン"],
-                              },
+                            id: "ActionAddBlock",
+                            type: "立即",
+                            block: {
+                              isOption: true,
+                              feedback: [
+                                {
+                                  id: "FeedbackAction",
+                                  action: [
+                                    {
+                                      id: "ActionMoveCardToPosition",
+                                      cards: { id: "このカード" },
+                                      baSyou: {
+                                        id: "場所",
+                                        baSyou: {
+                                          id: "RelatedBaSyou",
+                                          value: ["持ち主", "Gゾーン"],
+                                        },
+                                      },
+                                    },
+                                  ],
+                                },
+                              ],
                             },
                           },
                           {
                             id: "ActionDeleteCardText",
+                            cards: { id: "このカード" },
                             cardTextStateID:
                               "ターン終了時に、このカードを持ち主のGにできる。",
                           },

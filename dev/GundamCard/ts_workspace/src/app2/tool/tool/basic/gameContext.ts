@@ -53,6 +53,7 @@ export const DEFAULT_CARD_PROTOTYPE: CardPrototype = {
 
 export type CardState = {
   id: string;
+  cardID: string;
   live: number;
   destroy: boolean;
   setGroupID: string;
@@ -63,6 +64,7 @@ export type CardState = {
 
 export const DEFAULT_CARD_STATE: CardState = {
   id: "",
+  cardID: "",
   live: 0,
   destroy: false,
   setGroupID: "",
