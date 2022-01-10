@@ -12,6 +12,7 @@ export type TargetTypePlayer = {
 export type TargetTypeCard = {
   id: "カード";
   cardID: (string | null)[];
+  tipID?: string[];
 };
 
 export type TargetTypeBaSyou = {

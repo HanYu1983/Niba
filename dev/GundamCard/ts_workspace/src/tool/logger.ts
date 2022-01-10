@@ -1,4 +1,4 @@
-const enabledCategory = [""];
+const enabledCategory = ["updateCommand", "getTip"];
 let ignoreCategory = true;
 
 export const log = (category: string, msg: any) => {

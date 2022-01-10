@@ -140,6 +140,25 @@ export function recurRequire(
   }
 }
 
+export function mapRequireTargets(
+  require: RequireTarget,
+  func: (targetID: string, target: TargetType) => TargetType
+): RequireTarget {
+  const nextTargets = Object.entries(require.targets).reduce(
+    (acc, [targetID, target]) => {
+      return {
+        ...acc,
+        [targetID]: func(targetID, target),
+      };
+    },
+    {} as { [key: string]: TargetType }
+  );
+  return {
+    ...require,
+    targets: nextTargets,
+  };
+}
+
 export function createRollCostRequire(
   costNum: number,
   color: CardColor | null

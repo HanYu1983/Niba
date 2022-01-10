@@ -2,6 +2,7 @@ import { GameEvent } from "../tool/basic/basic";
 import {
   BlockPayload,
   Feedback,
+  mapRequireTargets,
   recurRequire,
   Require,
   RequireCustom,
@@ -180,18 +181,49 @@ export function updateCommand(ctx: GameContext): GameContext {
         }
       })();
       return blocks.reduce((ctx, block) => {
-        const wrapEvent: BlockPayload = {
+        let wrapEvent: BlockPayload = {
           ...block,
           id: `updateCommand_${ctx.commandEffect.length}`,
+          // 準備背景資料用來判斷
           cause: {
             id: "BlockPayloadCauseUpdateCommand",
             cardID: cardState.id,
             description: JSON.stringify(cardTextState.cardText.description),
           },
+          // 若有需求，則將每個需求加上ID才能讓玩家選擇
           ...(block.require
             ? { require: wrapRequireKey(block.require) }
             : null),
         };
+        // 若有需求，則將需求加上提示
+        if (wrapEvent.require) {
+          // 針對每一個需求,
+          const nextRequire = recurRequire(wrapEvent.require, (r) => {
+            if (r.id != "RequireTarget") {
+              return r;
+            }
+            // 的每一個對象,
+            return mapRequireTargets(r, (targetID, target) => {
+              if (r.key == null) {
+                return target;
+              }
+              // 取得提示.
+              const tip = getTip(ctx, wrapEvent.id || "", r.key, targetID);
+              switch (target.id) {
+                case "カード":
+                  return {
+                    ...target,
+                    tipID: tip,
+                  };
+              }
+              return target;
+            });
+          });
+          wrapEvent = {
+            ...wrapEvent,
+            require: nextRequire,
+          };
+        }
         // 直接加入指令列表
         ctx = {
           ...ctx,
@@ -284,8 +316,8 @@ export function getTip(
   blockID: string,
   requireID: string,
   targetID: string
-): TargetType | null {
-  let ret: TargetType | null = null;
+): string[] {
+  let ret: string[] = [];
   mapEffect(ctx, (effect) => {
     if (effect.id == null) {
       return effect;
@@ -337,10 +369,7 @@ export function getTip(
             }
             return card;
           });
-          ret = {
-            id: "カード",
-            cardID: validCardID,
-          };
+          ret = validCardID;
           break;
         }
       }
