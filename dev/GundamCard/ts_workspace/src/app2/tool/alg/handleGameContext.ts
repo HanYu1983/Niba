@@ -692,6 +692,8 @@ export function queryFlow(ctx: GameContext, playerID: string): Flow[] {
   }
   // 處理堆疊效果，從最上方開始處理
   if (ctx.gameState.stackEffect.length) {
+    // 如果雙方玩家還沒放棄切入
+    // 回傳切入動作與相關卡片
     const topEffect = ctx.gameState.stackEffect[0];
     // 效果使用者呼叫doEffectRequire, doEffectFeedback
     return [
