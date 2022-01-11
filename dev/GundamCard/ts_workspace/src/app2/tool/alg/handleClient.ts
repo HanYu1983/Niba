@@ -241,6 +241,9 @@ export function cancelActiveEffectID(
 }
 
 export function doEffect(ctx: GameContext, effectID: string): GameContext {
+  if (ctx.gameState.activeEffectID != effectID) {
+    throw new Error("activeEffectID != effectID");
+  }
   ctx = reduceEffect(
     ctx,
     (ctx, effect) => {
@@ -271,15 +274,13 @@ export function doEffect(ctx: GameContext, effectID: string): GameContext {
     },
     ctx
   );
-  if (ctx.gameState.activeEffectID == effectID) {
-    ctx = {
-      ...ctx,
-      gameState: {
-        ...ctx.gameState,
-        activeEffectID: null,
-      },
-    };
-  }
+  ctx = {
+    ...ctx,
+    gameState: {
+      ...ctx.gameState,
+      activeEffectID: null,
+    },
+  };
   ctx = filterEffect(ctx, (effect) => {
     return effect.requirePassed == false;
   });
