@@ -6,7 +6,7 @@ import type {
   TargetTypeThisCard,
 } from "./targetType";
 import type { BlockPayload } from "./blockPayload";
-import type { GameEffect } from "./gameContext";
+import type { CardPrototype, GameEffect } from "./gameContext";
 import { CardText } from "./basic";
 
 type ActionRoll = {
@@ -120,6 +120,18 @@ type ActionRuleDraw = {
   id: "ActionRuleDraw";
 };
 
+type ActionRegisterChip = {
+  id: "ActionRegisterChip";
+  protoID: string;
+  prototype: CardPrototype;
+};
+
+type ActionCreateChip = {
+  id: "ActionCreateChip";
+  protoID: string;
+  createChipTarget: any;
+};
+
 export type Action =
   | ActionRoll
   | ActionReroll
@@ -139,4 +151,6 @@ export type Action =
   | ActionDeleteCardText
   | ActionAddGlobalCardText
   | ActionDeleteGlobalCardText
-  | ActionRuleDraw;
+  | ActionRuleDraw
+  | ActionRegisterChip
+  | ActionCreateChip;

@@ -3,6 +3,7 @@ import { BlockPayload, wrapRequireKey } from "../tool/basic/blockPayload";
 import { Action } from "../tool/basic/action";
 import {
   CardStack,
+  createCard,
   getCard,
   getCardPosition,
   getTopCards,
@@ -26,6 +27,7 @@ import {
 import { log } from "../../../tool/logger";
 import { TargetType, getTargetType } from "../tool/basic/targetType";
 import { getCardState } from "./helper";
+import { initState } from "./handleGameContext";
 
 let idSeq = 0;
 export function doActionTarget(
@@ -434,6 +436,7 @@ export function doActionTarget(
         },
       };
       ctx = nextCtx;
+      return ctx;
     }
     case "ActionDeleteCardText": {
       const { cardTextStateID } = action;
@@ -470,6 +473,36 @@ export function doActionTarget(
         },
       };
       ctx = nextCtx;
+      return ctx;
+    }
+    case "ActionRegisterChip": {
+      return {
+        ...ctx,
+        gameState: {
+          ...ctx.gameState,
+          chipPool: {
+            [action.protoID]: action.prototype,
+          },
+        },
+      };
+    }
+    case "ActionCreateChip": {
+      const playerID = getBlockOwner(ctx, blockPayload);
+      const baSyouID = getBaShouID({
+        id: "AbsoluteBaSyou",
+        value: [playerID, "配備エリア"],
+      });
+      const nextTable = createCard(ctx.gameState.table, playerID, baSyouID, [
+        action.protoID,
+      ]);
+      ctx = {
+        ...ctx,
+        gameState: {
+          ...ctx.gameState,
+          table: nextTable,
+        },
+      };
+      ctx = initState(ctx);
       return ctx;
     }
   }

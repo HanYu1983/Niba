@@ -1,5 +1,5 @@
 import { BaSyou } from "../tool/basic/basic";
-import { GameContext } from "../tool/basic/gameContext";
+import { CardPrototype, GameContext } from "../tool/basic/gameContext";
 import { getCard, mapCard, Card } from "../../../tool/table";
 import { getCardBaSyou } from "../tool/basic/handleCard";
 import {
@@ -26,11 +26,18 @@ export function getCardState(
   if (card == null) {
     throw new Error("[getCardOwner] card not found");
   }
-  const proto = getPrototype(card.protoID);
+  const [proto, isChip] = ((): [CardPrototype, boolean] => {
+    const chip = ctx.gameState.chipPool[card.protoID];
+    if (chip != null) {
+      return [chip, true];
+    }
+    return [getPrototype(card.protoID), false];
+  })();
   const uuidKey = `getCardState_${idSeq++}`;
   const newCardState: CardState = {
     ...DEFAULT_CARD_STATE,
     id: card.id,
+    isChip: isChip,
     cardID: card.id,
     live: 0,
     destroy: false,

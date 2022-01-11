@@ -54,6 +54,7 @@ export const DEFAULT_CARD_PROTOTYPE: CardPrototype = {
 
 export type CardState = {
   id: string;
+  isChip: boolean;
   cardID: string;
   live: number;
   destroy: boolean;
@@ -65,6 +66,7 @@ export type CardState = {
 
 export const DEFAULT_CARD_STATE: CardState = {
   id: "",
+  isChip: true,
   cardID: "",
   live: 0,
   destroy: false,
@@ -107,6 +109,7 @@ export type GameState = {
     hasPlayerPassPhase: { [key: string]: boolean };
     hasPlayerPassCut: { [key: string]: boolean };
   };
+  chipPool: { [key: string]: CardPrototype };
 };
 
 export type Vars = {
@@ -139,6 +142,7 @@ export const DEFAULT_GAME_CONTEXT: GameContext = {
       hasPlayerPassPhase: {},
       hasPlayerPassCut: {},
     },
+    chipPool: {},
   },
 };
 
