@@ -157,6 +157,21 @@ export function reduceEffect<T>(
   ].reduce(doF, init);
 }
 
+export function filterEffect(
+  ctx: GameContext,
+  filterF: (effect: BlockPayload) => boolean
+): GameContext {
+  return {
+    ...ctx,
+    gameState: {
+      ...ctx.gameState,
+      immediateEffect: ctx.gameState.immediateEffect.filter(filterF),
+      commandEffect: ctx.gameState.commandEffect.filter(filterF),
+      stackEffect: ctx.gameState.stackEffect.filter(filterF),
+    },
+  };
+}
+
 export type RequireScriptFunction = (
   gameCtx: GameContext,
   blockPayload: BlockPayload,
