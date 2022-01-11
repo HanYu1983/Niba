@@ -406,6 +406,8 @@ export function applyFlow(
           },
         },
       };
+      // 每執行完一次效果，就更新指令
+      ctx = updateCommand(ctx);
       return ctx;
     }
     case "FlowPassPhase": {
