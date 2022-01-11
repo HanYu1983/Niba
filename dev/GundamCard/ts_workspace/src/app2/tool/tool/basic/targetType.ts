@@ -76,10 +76,20 @@ export function getTargetType(
   })();
   switch (targetTypeAfterProcess.id) {
     case "このカード":
-      if (blockPayload.cause?.cardID == null) {
-        throw new Error("[getTarget] このカード not found");
+      if (blockPayload.cause == null) {
+        throw new Error("must has cause");
       }
-      return { id: "カード", cardID: [blockPayload.cause.cardID] };
+      switch (blockPayload.cause.id) {
+        case "BlockPayloadCauseGameEvent":
+        case "BlockPayloadCauseUpdateCommand":
+        case "BlockPayloadCauseUpdateEffect":
+          if (blockPayload.cause.cardID == null) {
+            throw new Error("[getTarget] このカード not found");
+          }
+          return { id: "カード", cardID: [blockPayload.cause.cardID] };
+        default:
+          throw new Error("not support cause:" + blockPayload.cause.id);
+      }
     case "TargetTypeCustom": {
       const func: TargetTypeCustomFunctionType = getCustomFunction(
         targetTypeAfterProcess.scriptString

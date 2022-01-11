@@ -5,20 +5,12 @@ import {
   PlayerA,
   PlayerB,
 } from "../tool/basic/basic";
-import {
-  BlockPayload,
-  Feedback,
-  mapRequireTargets,
-  recurRequire,
-  Require,
-  RequireCustom,
-  RequireTarget,
-  wrapRequireKey,
-} from "../tool/basic/blockPayload";
+import { BlockPayload, recurRequire } from "../tool/basic/blockPayload";
 import {
   CardTextState,
   filterEffect,
   GameContext,
+  getBlockOwner,
   reduceEffect,
 } from "../tool/basic/gameContext";
 import { getCard, mapCard, Card } from "../../../tool/table";
@@ -175,11 +167,7 @@ export function setActiveEffectID(
       ...ctx.gameState.immediateEffect,
     ].find((e) => e.id == ctx.gameState.activeEffectID);
     if (currentActiveEffect != null) {
-      const cardID = currentActiveEffect.cause?.cardID;
-      if (cardID == null) {
-        throw new Error("[cancelCommand] cardID not found");
-      }
-      const controller = getCardController(ctx, cardID);
+      const controller = getBlockOwner(ctx, currentActiveEffect);
       if (controller != playerID) {
         throw new Error("[cancelCommand] 你不是控制者");
       }
@@ -195,11 +183,7 @@ export function setActiveEffectID(
   if (effect == null) {
     throw new Error("effect not found");
   }
-  const cardID = effect.cause?.cardID;
-  if (cardID == null) {
-    throw new Error("[cancelCommand] cardID not found");
-  }
-  const controller = getCardController(ctx, cardID);
+  const controller = getBlockOwner(ctx, effect);
   if (controller != playerID) {
     throw new Error("[cancelCommand] 你不是控制者");
   }
@@ -226,11 +210,7 @@ export function cancelActiveEffectID(
   if (effect == null) {
     return ctx;
   }
-  const cardID = effect.cause?.cardID;
-  if (cardID == null) {
-    throw new Error("[cancelEffectID] cardID not found");
-  }
-  const controller = getCardController(ctx, cardID);
+  const controller = getBlockOwner(ctx, effect);
   if (controller != playerID) {
     throw new Error("[cancelEffectID] 你不是控制者");
   }
@@ -306,11 +286,7 @@ export function deleteImmediateEffect(
     if (effect.id != effectID) {
       return true;
     }
-    const cardID = effect.cause?.cardID;
-    if (cardID == null) {
-      throw new Error("[cancelCommand] cardID not found");
-    }
-    const controller = getCardController(ctx, cardID);
+    const controller = getBlockOwner(ctx, effect);
     if (controller != playerID) {
       throw new Error("you are not controller");
     }
@@ -343,6 +319,7 @@ type FlowWaitPlayer = {
 type FlowSetActiveEffectID = {
   id: "FlowSetActiveEffectID";
   effectID: string | null;
+  tips: BlockPayload[];
   description?: string;
 };
 type FlowCancelActiveEffectID = {
@@ -527,6 +504,11 @@ export function applyFlow(
       block = {
         ...block,
         id: `FlowAddBlock_${idSeq++}`,
+        cause: {
+          id: "BlockPayloadCauseGameRule",
+          playerID: playerID,
+          description: "抽牌階段規定效果",
+        },
       };
       return {
         ...ctx,
@@ -550,11 +532,7 @@ export function queryFlow(ctx: GameContext, playerID: string): Flow[] {
     if (currentActiveEffect == null) {
       throw new Error("activeEffectID not found");
     }
-    const cardID = currentActiveEffect.cause?.cardID;
-    if (cardID == null) {
-      throw new Error("[cancelCommand] cardID not found");
-    }
-    const controller = getCardController(ctx, cardID);
+    const controller = getBlockOwner(ctx, currentActiveEffect);
     if (controller != playerID) {
       return [
         {
@@ -563,7 +541,7 @@ export function queryFlow(ctx: GameContext, playerID: string): Flow[] {
         },
       ];
     }
-    if (currentActiveEffect.requirePassed == false) {
+    if (currentActiveEffect.requirePassed != true) {
       return [
         {
           id: "FlowDoEffect",
@@ -584,11 +562,7 @@ export function queryFlow(ctx: GameContext, playerID: string): Flow[] {
     const myEffect: BlockPayload[] = [];
     const opponentEffect: BlockPayload[] = [];
     ctx.gameState.immediateEffect.forEach((effect) => {
-      const cardID = effect.cause?.cardID;
-      if (cardID == null) {
-        throw new Error("[cancelCommand] cardID not found");
-      }
-      const controller = getCardController(ctx, cardID);
+      const controller = getBlockOwner(ctx, effect);
       if (controller == playerID) {
         myEffect.push(effect);
       } else {
@@ -610,8 +584,9 @@ export function queryFlow(ctx: GameContext, playerID: string): Flow[] {
       return [
         {
           id: "FlowSetActiveEffectID",
-          effectID: null,
+          effectID: myEffect[0].id || null,
           description: "選擇一個起動效果",
+          tips: myEffect,
         },
         ...(optionEffect.length
           ? [
@@ -628,8 +603,9 @@ export function queryFlow(ctx: GameContext, playerID: string): Flow[] {
     return [
       {
         id: "FlowSetActiveEffectID",
-        effectID: null,
+        effectID: myEffect[0].id || null,
         description: "選擇一個起動效果",
+        tips: myEffect,
       },
       ...(optionEffect.length
         ? [
@@ -649,12 +625,8 @@ export function queryFlow(ctx: GameContext, playerID: string): Flow[] {
     if (effect.id == null) {
       throw new Error("effect.id not found");
     }
-    const cardID = effect.cause?.cardID;
-    if (cardID == null) {
-      throw new Error("[cancelCommand] cardID not found");
-    }
     // 取得效果的控制者
-    const controller = getCardController(ctx, cardID);
+    const controller = getBlockOwner(ctx, effect);
     // 判斷切入流程
     const isAllPassCut =
       ctx.gameState.flowMemory.hasPlayerPassCut[PlayerA] &&
@@ -693,11 +665,7 @@ export function queryFlow(ctx: GameContext, playerID: string): Flow[] {
           }
           const myEffect: BlockPayload[] = [];
           ctx.gameState.commandEffect.forEach((effect) => {
-            const cardID = effect.cause?.cardID;
-            if (cardID == null) {
-              throw new Error("[cancelCommand] cardID not found");
-            }
-            const controller = getCardController(ctx, cardID);
+            const controller = getBlockOwner(ctx, effect);
             if (controller == playerID) {
               myEffect.push(effect);
             }
@@ -724,6 +692,7 @@ export function queryFlow(ctx: GameContext, playerID: string): Flow[] {
         id: "FlowSetActiveEffectID",
         effectID: effect.id,
         description: "支付最上方的堆疊效果",
+        tips: [effect],
       },
     ];
   }
@@ -751,11 +720,7 @@ export function queryFlow(ctx: GameContext, playerID: string): Flow[] {
         }
         const myEffect: BlockPayload[] = [];
         ctx.gameState.commandEffect.forEach((effect) => {
-          const cardID = effect.cause?.cardID;
-          if (cardID == null) {
-            throw new Error("[cancelCommand] cardID not found");
-          }
-          const controller = getCardController(ctx, cardID);
+          const controller = getBlockOwner(ctx, effect);
           if (controller == playerID) {
             myEffect.push(effect);
           }
@@ -763,8 +728,9 @@ export function queryFlow(ctx: GameContext, playerID: string): Flow[] {
         return [
           {
             id: "FlowSetActiveEffectID",
-            effectID: null,
+            effectID: myEffect[0].id || null,
             description: "選擇一個指令",
+            tips: myEffect,
           },
         ];
       })(),

@@ -1,4 +1,4 @@
-import { getBaShouID, CardColor } from "../tool/basic/basic";
+import { getBaShouID, CardColor, getNextTiming } from "../tool/basic/basic";
 import { BlockPayload, wrapRequireKey } from "../tool/basic/blockPayload";
 import { Action } from "../tool/basic/action";
 import {
@@ -14,6 +14,7 @@ import {
   CardTextState,
   DEFAULT_CARD_STATE,
   GameContext,
+  getBlockOwner,
 } from "../tool/basic/gameContext";
 import {
   getCardBaSyou,
@@ -160,10 +161,7 @@ export function doActionTarget(
       return ctx;
     }
     case "ActionDraw": {
-      if (blockPayload.cause?.cardID == null) {
-        throw new Error("[doActionTarget][ActionDraw] cardID not found");
-      }
-      const playerID = getCardController(ctx, blockPayload.cause.cardID);
+      const playerID = getBlockOwner(ctx, blockPayload);
       if (playerID == null) {
         throw new Error(`${playerID} not found`);
       }
@@ -221,6 +219,7 @@ export function doActionTarget(
         gameState: {
           ...ctx.gameState,
           table: table,
+          timing: getNextTiming(ctx.gameState.timing),
         },
       };
     }

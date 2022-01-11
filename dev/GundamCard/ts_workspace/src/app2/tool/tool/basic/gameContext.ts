@@ -20,6 +20,7 @@ import type {
 } from "./basic";
 import { getBaShou, TIMING_CHART } from "./basic";
 import { BlockPayload, Require, RequireAnd, RequireOr } from "./blockPayload";
+import { getCardController } from "./handleCard";
 import { TargetType } from "./targetType";
 
 export type PlayerState = {
@@ -188,3 +189,28 @@ export type RequireScriptFunction = (
   blockPayload: BlockPayload,
   varCtxID: string
 ) => GameContext;
+
+export function getBlockOwner(
+  ctx: GameContext,
+  blockPayload: BlockPayload
+): PlayerID {
+  if (blockPayload.cause == null) {
+    throw new Error("must has cause");
+  }
+  switch (blockPayload.cause.id) {
+    case "BlockPayloadCauseGameEvent":
+    case "BlockPayloadCauseUpdateCommand":
+    case "BlockPayloadCauseUpdateEffect": {
+      if (blockPayload.cause.cardID == null) {
+        throw new Error("must has cardID");
+      }
+      const playerID = getCardController(ctx, blockPayload.cause.cardID);
+      if (playerID == null) {
+        throw new Error(`${playerID} not found`);
+      }
+      return playerID;
+    }
+    case "BlockPayloadCauseGameRule":
+      return blockPayload.cause.playerID;
+  }
+}

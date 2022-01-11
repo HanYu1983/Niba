@@ -1,8 +1,9 @@
-import type { GameEvent, SiYouTiming, CardColor } from "./basic";
+import type { GameEvent, SiYouTiming, CardColor, PlayerID } from "./basic";
 import type { Condition } from "./condition";
 import type { Action } from "./action";
 import { TargetType } from "./targetType";
 import { log } from "../../../../tool/logger";
+import { GameContext } from "./gameContext";
 
 export type RequireBase = {
   key?: string;
@@ -104,8 +105,8 @@ export type BlockPayloadCauseGameRule = {
 export type BlockPayloadCause =
   | BlockPayloadCauseGameEvent
   | BlockPayloadCauseUpdateCommand
-  | BlockPayloadCauseUpdateEffect;
-//| BlockPayloadCauseGameRule
+  | BlockPayloadCauseUpdateEffect
+  | BlockPayloadCauseGameRule;
 
 export type BlockPayload = {
   id?: string;

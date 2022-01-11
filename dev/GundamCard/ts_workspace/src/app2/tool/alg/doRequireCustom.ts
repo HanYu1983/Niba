@@ -19,18 +19,6 @@ export function doRequireCustom(
 ): GameContext {
   switch (requireCustomID.id) {
     case "{color}のGサインを持つ自軍Gが{number}枚以上ある場合": {
-      const cardID = blockPayload.cause?.cardID;
-      if (cardID == null) {
-        throw new Error("card id not found");
-      }
-      const [_, cardPosition] = getCardPosition(ctx.gameState.table, cardID);
-      if (cardPosition == null) {
-        throw new Error("cardPosition not found");
-      }
-      const {
-        value: [playerID],
-      } = getBaShou(cardPosition);
-      console.log(playerID);
       return ctx;
     }
     case "このカードと同じエリアに、「特徴:{x}」を持つ自軍キャラがいる": {

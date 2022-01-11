@@ -51,11 +51,26 @@ function test1() {
 function test2() {
   let ctx = DEFAULT_GAME_CONTEXT;
   let table = ctx.gameState.table;
+  table = createCard(
+    table,
+    PlayerA,
+    getBaShouID({
+      id: "AbsoluteBaSyou",
+      value: [PlayerA, "本国"],
+    }),
+    [
+      "179016_04B_U_WT075C_white",
+      "179030_11E_U_BL208S_blue",
+      "179030_11E_U_BL215R_blue",
+      "179001_01A_CH_WT007R_white",
+    ]
+  );
   ctx = {
     ...ctx,
     gameState: {
       ...ctx.gameState,
       table: table,
+      activePlayerID: PlayerA,
     },
   };
   console.log("一開始是重置階段");
@@ -103,6 +118,19 @@ function test2() {
   flows = queryFlow(ctx, PlayerA);
   if (flows[0].id != "FlowAddBlock") {
     throw new Error("必須是FlowAddBlock");
+  }
+  ctx = applyFlow(ctx, PlayerA, flows[0]);
+  flows = queryFlow(ctx, PlayerA);
+  if (flows[0].id != "FlowSetActiveEffectID") {
+    throw new Error("必須是FlowSetActiveEffectID");
+  }
+  ctx = applyFlow(ctx, PlayerA, flows[0]);
+  if (ctx.gameState.activeEffectID == null) {
+    throw new Error("ctx.gameState.activeEffectID must exist");
+  }
+  flows = queryFlow(ctx, PlayerA);
+  if (flows[0].id != "FlowDoEffect") {
+    throw new Error("必須是FlowDoEffect");
   }
   ctx = applyFlow(ctx, PlayerA, flows[0]);
   flows = queryFlow(ctx, PlayerA);

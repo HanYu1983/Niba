@@ -88,7 +88,7 @@ export function testInit() {
 }
 
 export function test() {
-  [testFlow].forEach((testF: Function) => {
+  [/*testInit,*/ testFlow].forEach((testF: Function) => {
     console.log(`============${testF.name}===========`);
     testF();
   });
