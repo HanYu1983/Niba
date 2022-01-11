@@ -100,6 +100,11 @@ export type GameState = {
   immediateEffect: BlockPayload[];
   // 堆疊效果。每次只處理第一個代表top的block
   stackEffect: BlockPayload[];
+  //
+  flowMemory: {
+    hasTriggerEvent: boolean;
+    hasPlayerPassPhase: { [key: string]: boolean };
+  };
 };
 
 export type Vars = {
@@ -127,6 +132,10 @@ export const DEFAULT_GAME_CONTEXT: GameContext = {
     commandEffect: [],
     immediateEffect: [],
     stackEffect: [],
+    flowMemory: {
+      hasTriggerEvent: false,
+      hasPlayerPassPhase: {},
+    },
   },
 };
 

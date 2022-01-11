@@ -1,4 +1,10 @@
-import { CardText, GameEvent, getNextTiming } from "../tool/basic/basic";
+import {
+  CardText,
+  GameEvent,
+  getNextTiming,
+  PlayerA,
+  PlayerB,
+} from "../tool/basic/basic";
 import {
   BlockPayload,
   Feedback,
@@ -24,7 +30,7 @@ import { Action } from "../tool/basic/action";
 import { doRequire, doFeedback } from "./handleBlockPayload";
 import { getCardState } from "./helper";
 import { doConditionTarget } from "./doConditionTarget";
-import { triggerTextEvent } from "./handleGameContext";
+import { triggerTextEvent, updateCommand } from "./handleGameContext";
 
 export function setRequireAnswer(
   ctx: GameContext,
@@ -240,7 +246,11 @@ export function cancelActiveEffectID(
   };
 }
 
-export function doEffect(ctx: GameContext, effectID: string): GameContext {
+export function doEffect(
+  ctx: GameContext,
+  playerID: string,
+  effectID: string
+): GameContext {
   if (ctx.gameState.activeEffectID != effectID) {
     throw new Error("activeEffectID != effectID");
   }
@@ -339,8 +349,8 @@ type FlowCancelActiveEffectID = {
   id: "FlowCancelActiveEffectID";
   description?: string;
 };
-type FlowDoEffectID = {
-  id: "FlowDoEffectID";
+type FlowDoEffect = {
+  id: "FlowDoEffect";
   effectID: string;
   description?: string;
 };
@@ -359,38 +369,119 @@ type FlowCancelPassPhase = {
 };
 
 type Flow =
+  | FlowCallAction
   | FlowTriggerTextEvent
   | FlowUpdateCommand
-  | FlowCallAction
   | FlowNextTiming
   | FlowWaitPlayer
   | FlowSetActiveEffectID
   | FlowCancelActiveEffectID
-  | FlowDoEffectID
+  | FlowDoEffect
   | FlowDeleteImmediateEffect
   | FlowPassPhase
   | FlowCancelPassPhase;
 
-export function applyFlow(ctx: GameContext, flow: Flow): GameContext {
+export function applyFlow(
+  ctx: GameContext,
+  playerID: string,
+  flow: Flow
+): GameContext {
   switch (flow.id) {
-    case "FlowTriggerTextEvent":
-      ctx = triggerTextEvent(ctx, flow.event);
-      break;
-    case "FlowUpdateCommand":
-      // ctx = updateCommand(ctx);
-      break;
-    case "FlowNextTiming":
-      {
-        const nextTiming = getNextTiming(ctx.gameState.timing);
-        ctx = {
-          ...ctx,
-          gameState: {
-            ...ctx.gameState,
-            timing: nextTiming,
-          },
-        };
+    case "FlowSetActiveEffectID": {
+      if (flow.effectID == null) {
+        throw new Error("effectID not found");
       }
-      break;
+      return setActiveEffectID(ctx, playerID, flow.effectID);
+    }
+    case "FlowCancelActiveEffectID": {
+      return cancelActiveEffectID(ctx, playerID);
+    }
+    case "FlowDeleteImmediateEffect": {
+      if (flow.effectID == null) {
+        throw new Error("effectID not found");
+      }
+      return deleteImmediateEffect(ctx, playerID, flow.effectID);
+    }
+    case "FlowDoEffect": {
+      if (flow.effectID == null) {
+        throw new Error("effectID not found");
+      }
+      ctx = doEffect(ctx, playerID, flow.effectID);
+      // 執行完效果時自動取消其中一方的結束宣告
+      ctx = {
+        ...ctx,
+        gameState: {
+          ...ctx.gameState,
+          flowMemory: {
+            ...ctx.gameState.flowMemory,
+            hasPlayerPassPhase: {},
+          },
+        },
+      };
+      return ctx;
+    }
+    case "FlowPassPhase": {
+      return {
+        ...ctx,
+        gameState: {
+          ...ctx.gameState,
+          flowMemory: {
+            ...ctx.gameState.flowMemory,
+            hasPlayerPassPhase: {
+              ...ctx.gameState.flowMemory.hasPlayerPassPhase,
+              [playerID]: true,
+            },
+          },
+        },
+      };
+    }
+    case "FlowCancelPassPhase":
+      return {
+        ...ctx,
+        gameState: {
+          ...ctx.gameState,
+          flowMemory: {
+            ...ctx.gameState.flowMemory,
+            hasPlayerPassPhase: {
+              ...ctx.gameState.flowMemory.hasPlayerPassPhase,
+              [playerID]: false,
+            },
+          },
+        },
+      };
+    case "FlowTriggerTextEvent":
+      if (ctx.gameState.flowMemory.hasTriggerEvent) {
+        log("applyFlow", "已經執行過triggerTextEvent");
+        return ctx;
+      }
+      ctx = triggerTextEvent(ctx, flow.event);
+      return {
+        ...ctx,
+        gameState: {
+          ...ctx.gameState,
+          flowMemory: {
+            ...ctx.gameState.flowMemory,
+            hasTriggerEvent: true,
+          },
+        },
+      };
+    case "FlowUpdateCommand":
+      return updateCommand(ctx);
+    case "FlowNextTiming": {
+      const nextTiming = getNextTiming(ctx.gameState.timing);
+      ctx = {
+        ...ctx,
+        gameState: {
+          ...ctx.gameState,
+          timing: nextTiming,
+          flowMemory: {
+            ...ctx.gameState.flowMemory,
+            hasTriggerEvent: false,
+          },
+        },
+      };
+      return ctx;
+    }
   }
   return ctx;
 }
@@ -421,7 +512,7 @@ export function queryFlow(ctx: GameContext, playerID: string): Flow[] {
     if (currentActiveEffect.requirePassed == false) {
       return [
         {
-          id: "FlowDoEffectID",
+          id: "FlowDoEffect",
           effectID: ctx.gameState.activeEffectID,
         },
       ];
@@ -526,36 +617,54 @@ export function queryFlow(ctx: GameContext, playerID: string): Flow[] {
       },
     ];
   }
-  // 處理指令
-  if (ctx.gameState.commandEffect.length) {
-    const myEffect: BlockPayload[] = [];
-    ctx.gameState.immediateEffect.forEach((effect) => {
-      const cardID = effect.cause?.cardID;
-      if (cardID == null) {
-        throw new Error("[cancelCommand] cardID not found");
-      }
-      const controller = getCardController(ctx, cardID);
-      if (controller == playerID) {
-        myEffect.push(effect);
-      }
-    });
+  const isAllPassPhase =
+    ctx.gameState.flowMemory.hasPlayerPassPhase[PlayerA] &&
+    ctx.gameState.flowMemory.hasPlayerPassPhase[PlayerB];
+  if (isAllPassPhase == false) {
+    if (ctx.gameState.flowMemory.hasPlayerPassPhase[playerID]) {
+      return [
+        {
+          id: "FlowCancelPassPhase",
+          description: "取消宣告階段結束",
+        },
+      ];
+    }
     return [
-      ...(myEffect.length
-        ? [
-            {
-              id: "FlowSetActiveEffectID",
-              effectID: null,
-              description: "選擇一個指令",
-            } as Flow,
-          ]
-        : []),
       {
         id: "FlowPassPhase",
         description: "宣告階段結束",
       },
+      // 處理指令
+      ...((): Flow[] => {
+        if (ctx.gameState.commandEffect.length == 0) {
+          return [];
+        }
+        const myEffect: BlockPayload[] = [];
+        ctx.gameState.immediateEffect.forEach((effect) => {
+          const cardID = effect.cause?.cardID;
+          if (cardID == null) {
+            throw new Error("[cancelCommand] cardID not found");
+          }
+          const controller = getCardController(ctx, cardID);
+          if (controller == playerID) {
+            myEffect.push(effect);
+          }
+        });
+        return [
+          {
+            id: "FlowSetActiveEffectID",
+            effectID: null,
+            description: "選擇一個指令",
+          },
+        ];
+      })(),
+    ];
+  }
+  if (playerID != PlayerA) {
+    return [
       {
-        id: "FlowCancelPassPhase",
-        description: "取消宣告階段結束",
+        id: "FlowWaitPlayer",
+        description: "等待伺服器處理",
       },
     ];
   }
@@ -568,7 +677,7 @@ export function queryFlow(ctx: GameContext, playerID: string): Flow[] {
         case "フェイズ開始":
         case "フェイズ終了":
           // 如果已經觸發事件
-          if (false) {
+          if (ctx.gameState.flowMemory.hasTriggerEvent) {
             return [{ id: "FlowNextTiming" }];
           }
           return [
@@ -579,7 +688,7 @@ export function queryFlow(ctx: GameContext, playerID: string): Flow[] {
           ];
         case "規定の効果":
           // 如果已經觸發規定の効果
-          if (false) {
+          if (ctx.gameState.flowMemory.hasTriggerEvent) {
             return [{ id: "FlowNextTiming" }];
           }
           return [
@@ -593,7 +702,7 @@ export function queryFlow(ctx: GameContext, playerID: string): Flow[] {
             },
           ];
         case "フリータイミング":
-          if (false) {
+          if (ctx.gameState.flowMemory.hasTriggerEvent) {
             return [{ id: "FlowNextTiming" }];
           }
           return [
@@ -612,7 +721,7 @@ export function queryFlow(ctx: GameContext, playerID: string): Flow[] {
             case "ステップ開始":
             case "ステップ終了":
               // 如果已經觸發事件
-              if (false) {
+              if (ctx.gameState.flowMemory.hasTriggerEvent) {
                 return [{ id: "FlowNextTiming" }];
               }
               return [
@@ -623,7 +732,7 @@ export function queryFlow(ctx: GameContext, playerID: string): Flow[] {
               ];
             case "規定の効果":
               // 如果已經觸發規定の効果
-              if (false) {
+              if (ctx.gameState.flowMemory.hasTriggerEvent) {
                 return [{ id: "FlowNextTiming" }];
               }
               return [
@@ -637,7 +746,7 @@ export function queryFlow(ctx: GameContext, playerID: string): Flow[] {
                 },
               ];
             case "フリータイミング":
-              if (false) {
+              if (ctx.gameState.flowMemory.hasTriggerEvent) {
                 return [{ id: "FlowNextTiming" }];
               }
               return [
@@ -655,7 +764,7 @@ export function queryFlow(ctx: GameContext, playerID: string): Flow[] {
               return [{ id: "FlowNextTiming" }];
             case "効果終了。ターン終了":
               // 如果已經觸發事件
-              if (false) {
+              if (ctx.gameState.flowMemory.hasTriggerEvent) {
                 return [{ id: "FlowNextTiming" }];
               }
               return [
