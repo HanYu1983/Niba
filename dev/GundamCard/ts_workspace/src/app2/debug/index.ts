@@ -9,6 +9,7 @@ import {
 import { createCard } from "../../tool/table";
 import { getBaShouID, PlayerA, PlayerB } from "../tool/tool/basic/basic";
 import { recurRequire } from "../tool/tool/basic/blockPayload";
+import { testFlow } from "./testFlow";
 
 export function testInit() {
   let ctx = DEFAULT_GAME_CONTEXT;
@@ -51,7 +52,10 @@ export function testInit() {
   ctx = initState(ctx);
   ctx = updateEffect(ctx);
   //ctx = updateCommand(ctx);
-  ctx = triggerTextEvent(ctx, {});
+  ctx = triggerTextEvent(ctx, {
+    id: "GameEventOnTiming",
+    timing: ctx.gameState.timing,
+  });
 
   ctx.gameState.immediateEffect.forEach((effect) => {
     if (effect.require == null) {
@@ -84,7 +88,7 @@ export function testInit() {
 }
 
 export function test() {
-  [testInit].forEach((testF: Function) => {
+  [testFlow].forEach((testF: Function) => {
     console.log(`============${testF.name}===========`);
     testF();
   });

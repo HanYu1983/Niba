@@ -188,7 +188,12 @@ export function isCanPlayCardInPhase(phase: Phase): boolean {
   }
 }
 
-export type GameEvent = any;
+export type GameEventOnTiming = {
+  id: "GameEventOnTiming";
+  timing: Timing;
+};
+
+export type GameEvent = GameEventOnTiming;
 
 export type TokuSyuKouKa =
   | ["高機動"]

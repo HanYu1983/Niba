@@ -95,10 +95,17 @@ export type BlockPayloadCauseUpdateEffect = {
   description: string;
 };
 
+export type BlockPayloadCauseGameRule = {
+  id: "BlockPayloadCauseGameRule";
+  playerID: string;
+  description: string;
+};
+
 export type BlockPayloadCause =
   | BlockPayloadCauseGameEvent
   | BlockPayloadCauseUpdateCommand
   | BlockPayloadCauseUpdateEffect;
+//| BlockPayloadCauseGameRule
 
 export type BlockPayload = {
   id?: string;

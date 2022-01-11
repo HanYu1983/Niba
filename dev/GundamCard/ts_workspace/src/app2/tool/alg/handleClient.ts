@@ -521,6 +521,8 @@ export function applyFlow(
       };
       return ctx;
     }
+    case "FlowCallAction": {
+    }
   }
   return ctx;
 }
@@ -778,7 +780,10 @@ export function queryFlow(ctx: GameContext, playerID: string): Flow[] {
           return [
             {
               id: "FlowTriggerTextEvent",
-              event: 0,
+              event: {
+                id: "GameEventOnTiming",
+                timing: ctx.gameState.timing,
+              },
             },
           ];
         case "規定の効果":
@@ -822,7 +827,10 @@ export function queryFlow(ctx: GameContext, playerID: string): Flow[] {
               return [
                 {
                   id: "FlowTriggerTextEvent",
-                  event: 0,
+                  event: {
+                    id: "GameEventOnTiming",
+                    timing: ctx.gameState.timing,
+                  },
                 },
               ];
             case "規定の効果":
@@ -836,7 +844,18 @@ export function queryFlow(ctx: GameContext, playerID: string): Flow[] {
                   action: {
                     id: "ActionAddBlock",
                     type: "立即",
-                    block: {},
+                    block: {
+                      require: {
+                        id: "RequireTarget",
+                        targets: {},
+                        action: [
+                          {
+                            id: "ActionDraw",
+                            count: 1,
+                          },
+                        ],
+                      },
+                    },
                   },
                 },
               ];
@@ -865,7 +884,10 @@ export function queryFlow(ctx: GameContext, playerID: string): Flow[] {
               return [
                 {
                   id: "FlowTriggerTextEvent",
-                  event: 0,
+                  event: {
+                    id: "GameEventOnTiming",
+                    timing: ctx.gameState.timing,
+                  },
                 },
               ];
           }
