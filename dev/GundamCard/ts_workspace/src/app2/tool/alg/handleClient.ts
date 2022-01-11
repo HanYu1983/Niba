@@ -332,9 +332,9 @@ type FlowTriggerTextEvent = {
 type FlowNextTiming = {
   id: "FlowNextTiming";
 };
-type FlowCallAction = {
-  id: "FlowCallAction";
-  action: Action;
+type FlowAddBlock = {
+  id: "FlowAddBlock";
+  block: BlockPayload;
 };
 type FlowWaitPlayer = {
   id: "FlowWaitPlayer";
@@ -377,7 +377,7 @@ type FlowCancelPassCut = {
 };
 
 type Flow =
-  | FlowCallAction
+  | FlowAddBlock
   | FlowTriggerTextEvent
   | FlowUpdateCommand
   | FlowNextTiming
@@ -391,6 +391,7 @@ type Flow =
   | FlowPassCut
   | FlowCancelPassCut;
 
+let idSeq = 0;
 export function applyFlow(
   ctx: GameContext,
   playerID: string,
@@ -521,7 +522,19 @@ export function applyFlow(
       };
       return ctx;
     }
-    case "FlowCallAction": {
+    case "FlowAddBlock": {
+      let block = flow.block;
+      block = {
+        ...block,
+        id: `FlowAddBlock_${idSeq++}`,
+      };
+      return {
+        ...ctx,
+        gameState: {
+          ...ctx.gameState,
+          immediateEffect: [block, ...ctx.gameState.immediateEffect],
+        },
+      };
     }
   }
   return ctx;
@@ -793,11 +806,18 @@ export function queryFlow(ctx: GameContext, playerID: string): Flow[] {
           }
           return [
             {
-              id: "FlowCallAction",
-              action: {
-                id: "ActionAddBlock",
-                type: "立即",
-                block: {},
+              id: "FlowAddBlock",
+              block: {
+                feedback: [
+                  {
+                    id: "FeedbackAction",
+                    action: [
+                      {
+                        id: "ActionRuleDraw",
+                      },
+                    ],
+                  },
+                ],
               },
             },
           ];
@@ -840,23 +860,8 @@ export function queryFlow(ctx: GameContext, playerID: string): Flow[] {
               }
               return [
                 {
-                  id: "FlowCallAction",
-                  action: {
-                    id: "ActionAddBlock",
-                    type: "立即",
-                    block: {
-                      require: {
-                        id: "RequireTarget",
-                        targets: {},
-                        action: [
-                          {
-                            id: "ActionDraw",
-                            count: 1,
-                          },
-                        ],
-                      },
-                    },
-                  },
+                  id: "FlowAddBlock",
+                  block: {},
                 },
               ];
             case "フリータイミング":

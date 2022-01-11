@@ -193,6 +193,37 @@ export function doActionTarget(
         },
       };
     }
+    case "ActionRuleDraw": {
+      const playerID = ctx.gameState.activePlayerID;
+      if (playerID == null) {
+        throw new Error("playerID not found");
+      }
+      const fromBaSyouID = getBaShouID({
+        id: "AbsoluteBaSyou",
+        value: [playerID, "本国"],
+      });
+      const toBaSyouID = getBaShouID({
+        id: "AbsoluteBaSyou",
+        value: [playerID, "手札"],
+      });
+      const drawCount = 1;
+      const topCards = getTopCards(
+        ctx.gameState.table,
+        fromBaSyouID,
+        drawCount
+      );
+      const table = topCards.reduce((table, card) => {
+        // TODO: trigger card move
+        return moveCard(table, fromBaSyouID, toBaSyouID, card.id, null);
+      }, ctx.gameState.table);
+      return {
+        ...ctx,
+        gameState: {
+          ...ctx.gameState,
+          table: table,
+        },
+      };
+    }
     case "ActionDestroy": {
       const cards = getTargetType(ctx, blockPayload, targets, action.cards);
       if (cards?.id != "カード") {
@@ -440,6 +471,7 @@ export function doActionTarget(
         },
       };
       ctx = nextCtx;
+      return ctx;
     }
   }
   return ctx;

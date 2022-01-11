@@ -101,6 +101,12 @@ function test2() {
     throw new Error("hasTriggerEvent must false");
   }
   flows = queryFlow(ctx, PlayerA);
+  if (flows[0].id != "FlowAddBlock") {
+    throw new Error("必須是FlowAddBlock");
+  }
+  ctx = applyFlow(ctx, PlayerA, flows[0]);
+  flows = queryFlow(ctx, PlayerA);
+  console.log(ctx);
   console.log(flows);
 }
 

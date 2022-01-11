@@ -116,6 +116,10 @@ type ActionDeleteCardText = {
   cardTextStateID: string;
 };
 
+type ActionRuleDraw = {
+  id: "ActionRuleDraw";
+};
+
 export type Action =
   | ActionRoll
   | ActionReroll
@@ -134,4 +138,5 @@ export type Action =
   | ActionAddCardText
   | ActionDeleteCardText
   | ActionAddGlobalCardText
-  | ActionDeleteGlobalCardText;
+  | ActionDeleteGlobalCardText
+  | ActionRuleDraw;
