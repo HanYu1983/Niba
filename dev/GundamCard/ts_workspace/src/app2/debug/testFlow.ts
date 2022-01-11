@@ -133,6 +133,12 @@ function test2() {
     throw new Error("必須是FlowDoEffect");
   }
   ctx = applyFlow(ctx, PlayerA, flows[0]);
+  if (ctx.gameState.activeEffectID != null) {
+    throw new Error("ctx.gameState.activeEffectID must null");
+  }
+  if (ctx.gameState.immediateEffect.length > 0) {
+    throw new Error("ctx.gameState.immediateEffect.length must be 0");
+  }
   flows = queryFlow(ctx, PlayerA);
   console.log(ctx);
   console.log(flows);
