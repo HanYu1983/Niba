@@ -580,7 +580,6 @@ export function queryFlow(ctx: GameContext, playerID: string): Flow[] {
           },
         ];
       }
-
       return [
         {
           id: "FlowSetActiveEffectID",

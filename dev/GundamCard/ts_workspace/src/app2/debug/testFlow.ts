@@ -81,20 +81,22 @@ function test2() {
     throw new Error("一開始必須是抽牌階段開始");
   }
   console.log("非伺服器玩家只能取得等待");
-  let flows = queryFlow(ctx, PlayerB);
-  if (flows.length == 0) {
-    throw new Error("必須有flow");
-  }
-  if (flows[0].id != "FlowWaitPlayer") {
-    throw new Error("玩家B必須拿到等待");
-  }
   console.log("伺服器玩家可以取得系統指令");
-  flows = queryFlow(ctx, PlayerA);
+  let flows = queryFlow(ctx, PlayerA);
   if (flows.length == 0) {
     throw new Error("必須有flow");
   }
   if (flows[0].id != "FlowTriggerTextEvent") {
     throw new Error("必須是FlowTriggerTextEvent");
+  }
+  {
+    let flowsB = queryFlow(ctx, PlayerB);
+    if (flowsB.length == 0) {
+      throw new Error("必須有flow");
+    }
+    if (flowsB[0].id != "FlowWaitPlayer") {
+      throw new Error("玩家B必須拿到等待");
+    }
   }
   console.log("執行指令");
   ctx = applyFlow(ctx, PlayerA, flows[0]);
@@ -109,6 +111,16 @@ function test2() {
   if (flows[0].id != "FlowNextTiming") {
     throw new Error("必須是FlowNextTiming");
   }
+  {
+    let flowsB = queryFlow(ctx, PlayerB);
+    if (flowsB.length == 0) {
+      throw new Error("必須有flow");
+    }
+    if (flowsB[0].id != "FlowWaitPlayer") {
+      throw new Error("玩家B必須拿到等待");
+    }
+    console.log(`PlayerB: ${flowsB[0].description}`);
+  }
   console.log("執行指令");
   ctx = applyFlow(ctx, PlayerA, flows[0]);
   console.log("到下一階段後，流程記憶必須重設");
@@ -119,10 +131,30 @@ function test2() {
   if (flows[0].id != "FlowAddBlock") {
     throw new Error("必須是FlowAddBlock");
   }
+  {
+    let flowsB = queryFlow(ctx, PlayerB);
+    if (flowsB.length == 0) {
+      throw new Error("必須有flow");
+    }
+    if (flowsB[0].id != "FlowWaitPlayer") {
+      throw new Error("玩家B必須拿到等待");
+    }
+    console.log(`PlayerB: ${flowsB[0].description}`);
+  }
   ctx = applyFlow(ctx, PlayerA, flows[0]);
   flows = queryFlow(ctx, PlayerA);
   if (flows[0].id != "FlowSetActiveEffectID") {
     throw new Error("必須是FlowSetActiveEffectID");
+  }
+  {
+    let flowsB = queryFlow(ctx, PlayerB);
+    if (flowsB.length == 0) {
+      throw new Error("必須有flow");
+    }
+    if (flowsB[0].id != "FlowWaitPlayer") {
+      throw new Error("玩家B必須拿到等待");
+    }
+    console.log(`PlayerB: ${flowsB[0].description}`);
   }
   ctx = applyFlow(ctx, PlayerA, flows[0]);
   if (ctx.gameState.activeEffectID == null) {
@@ -131,6 +163,16 @@ function test2() {
   flows = queryFlow(ctx, PlayerA);
   if (flows[0].id != "FlowDoEffect") {
     throw new Error("必須是FlowDoEffect");
+  }
+  {
+    let flowsB = queryFlow(ctx, PlayerB);
+    if (flowsB.length == 0) {
+      throw new Error("必須有flow");
+    }
+    if (flowsB[0].id != "FlowWaitPlayer") {
+      throw new Error("玩家B必須拿到等待");
+    }
+    console.log(`PlayerB: ${flowsB[0].description}`);
   }
   ctx = applyFlow(ctx, PlayerA, flows[0]);
   if (ctx.gameState.activeEffectID != null) {
@@ -142,6 +184,16 @@ function test2() {
   flows = queryFlow(ctx, PlayerA);
   console.log(ctx);
   console.log(flows);
+  {
+    let flowsB = queryFlow(ctx, PlayerB);
+    if (flowsB.length == 0) {
+      throw new Error("必須有flow");
+    }
+    if (flowsB[0].id != "FlowWaitPlayer") {
+      throw new Error("玩家B必須拿到等待");
+    }
+    console.log(`PlayerB: ${flowsB[0].description}`);
+  }
 }
 
 export function testFlow() {
