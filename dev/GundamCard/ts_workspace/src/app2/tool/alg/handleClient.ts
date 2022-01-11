@@ -367,6 +367,14 @@ type FlowCancelPassPhase = {
   id: "FlowCancelPassPhase";
   description?: string;
 };
+type FlowPassCut = {
+  id: "FlowPassCut";
+  description?: string;
+};
+type FlowCancelPassCut = {
+  id: "FlowCancelPassCut";
+  description?: string;
+};
 
 type Flow =
   | FlowCallAction
@@ -379,7 +387,9 @@ type Flow =
   | FlowDoEffect
   | FlowDeleteImmediateEffect
   | FlowPassPhase
-  | FlowCancelPassPhase;
+  | FlowCancelPassPhase
+  | FlowPassCut
+  | FlowCancelPassCut;
 
 export function applyFlow(
   ctx: GameContext,
@@ -444,6 +454,35 @@ export function applyFlow(
             ...ctx.gameState.flowMemory,
             hasPlayerPassPhase: {
               ...ctx.gameState.flowMemory.hasPlayerPassPhase,
+              [playerID]: false,
+            },
+          },
+        },
+      };
+    case "FlowPassCut": {
+      return {
+        ...ctx,
+        gameState: {
+          ...ctx.gameState,
+          flowMemory: {
+            ...ctx.gameState.flowMemory,
+            hasPlayerPassCut: {
+              ...ctx.gameState.flowMemory.hasPlayerPassCut,
+              [playerID]: true,
+            },
+          },
+        },
+      };
+    }
+    case "FlowCancelPassCut":
+      return {
+        ...ctx,
+        gameState: {
+          ...ctx.gameState,
+          flowMemory: {
+            ...ctx.gameState.flowMemory,
+            hasPlayerPassCut: {
+              ...ctx.gameState.flowMemory.hasPlayerPassCut,
               [playerID]: false,
             },
           },
@@ -590,8 +629,7 @@ export function queryFlow(ctx: GameContext, playerID: string): Flow[] {
   }
   // 處理堆疊效果，從最上方開始處理
   if (ctx.gameState.stackEffect.length) {
-    // 如果雙方玩家還沒放棄切入
-    // 回傳切入動作與相關卡片
+    // 取得最上方的效果
     const effect = ctx.gameState.stackEffect[0];
     if (effect.id == null) {
       throw new Error("effect.id not found");
@@ -600,12 +638,69 @@ export function queryFlow(ctx: GameContext, playerID: string): Flow[] {
     if (cardID == null) {
       throw new Error("[cancelCommand] cardID not found");
     }
+    // 取得效果的控制者
     const controller = getCardController(ctx, cardID);
+    // 判斷切入流程
+    const isAllPassCut =
+      ctx.gameState.flowMemory.hasPlayerPassCut[PlayerA] &&
+      ctx.gameState.flowMemory.hasPlayerPassCut[PlayerB];
+    // 如果雙方玩家還沒放棄切入
+    if (isAllPassCut == false) {
+      // 如果我宣告了放棄切入，回傳取消
+      const isPassCut = ctx.gameState.flowMemory.hasPlayerPassCut[playerID];
+      if (isPassCut) {
+        return [
+          {
+            id: "FlowCancelPassCut",
+          },
+        ];
+      }
+      // 雙方現在都可以切入，但要判斷切入的優先權在誰那
+      // 如果堆疊最上方的控制者是自己，則優先權在對方。必須等對方宣告放棄切入
+      if (controller == playerID) {
+        const opponentPlayerID = playerID == PlayerA ? PlayerB : PlayerA;
+        const isOpponentPassCut =
+          ctx.gameState.flowMemory.hasPlayerPassCut[opponentPlayerID];
+        if (isOpponentPassCut == false) {
+          return [
+            {
+              id: "FlowWaitPlayer",
+              description: "現在的切入優先權在對方",
+            },
+          ];
+        }
+      }
+      return [
+        // 可以切入的指令
+        ...(() => {
+          if (ctx.gameState.commandEffect.length == 0) {
+            return [];
+          }
+          const myEffect: BlockPayload[] = [];
+          ctx.gameState.commandEffect.forEach((effect) => {
+            const cardID = effect.cause?.cardID;
+            if (cardID == null) {
+              throw new Error("[cancelCommand] cardID not found");
+            }
+            const controller = getCardController(ctx, cardID);
+            if (controller == playerID) {
+              myEffect.push(effect);
+            }
+          });
+          return [];
+        })(),
+        // 宣告放棄切入
+        {
+          id: "FlowPassCut",
+        },
+      ];
+    }
+    // 雙方都已放棄切入，等待堆疊中的效果控制者處理
     if (controller != playerID) {
       return [
         {
           id: "FlowWaitPlayer",
-          description: "等待玩家處理堆疊效果",
+          description: "等待效果控制者處理",
         },
       ];
     }
@@ -640,7 +735,7 @@ export function queryFlow(ctx: GameContext, playerID: string): Flow[] {
           return [];
         }
         const myEffect: BlockPayload[] = [];
-        ctx.gameState.immediateEffect.forEach((effect) => {
+        ctx.gameState.commandEffect.forEach((effect) => {
           const cardID = effect.cause?.cardID;
           if (cardID == null) {
             throw new Error("[cancelCommand] cardID not found");

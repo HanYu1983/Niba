@@ -104,6 +104,7 @@ export type GameState = {
   flowMemory: {
     hasTriggerEvent: boolean;
     hasPlayerPassPhase: { [key: string]: boolean };
+    hasPlayerPassCut: { [key: string]: boolean };
   };
 };
 
@@ -135,6 +136,7 @@ export const DEFAULT_GAME_CONTEXT: GameContext = {
     flowMemory: {
       hasTriggerEvent: false,
       hasPlayerPassPhase: {},
+      hasPlayerPassCut: {},
     },
   },
 };
