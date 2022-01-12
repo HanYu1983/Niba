@@ -513,8 +513,7 @@ export function applyFlow(
           },
         },
       };
-      // 自動更新指令
-      ctx = updateCommand(ctx);
+      // 重設觸發flag
       ctx = {
         ...ctx,
         gameState: {
@@ -525,6 +524,19 @@ export function applyFlow(
           },
         },
       };
+      // 重設宣告結束的flag
+      ctx = {
+        ...ctx,
+        gameState: {
+          ...ctx.gameState,
+          flowMemory: {
+            ...ctx.gameState.flowMemory,
+            hasPlayerPassPhase: {},
+          },
+        },
+      };
+      // 自動更新指令
+      ctx = updateCommand(ctx);
       return ctx;
     }
     case "FlowAddBlock": {
