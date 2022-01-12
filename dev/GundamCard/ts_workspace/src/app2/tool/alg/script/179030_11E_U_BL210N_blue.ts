@@ -1,6 +1,6 @@
-import { createRollCostRequire } from "../tool/basic/blockPayload";
-import { CardPrototype, GameContext } from "../tool/basic/gameContext";
-import { RequireCustomID } from "../tool/basic/requireCustom";
+import { createRollCostRequire } from "../../tool/basic/blockPayload";
+import { CardPrototype, GameContext } from "../../tool/basic/gameContext";
+import { RequireCustomID } from "../../tool/basic/requireCustom";
 import { createTokuSyuKouKaText } from "./createTokuSyuKouKaText";
 
 // 179030_11E_U_BL210N_blue

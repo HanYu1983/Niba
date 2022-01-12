@@ -1,4 +1,4 @@
-import { CardPrototype, GameContext } from "../tool/basic/gameContext";
+import { CardPrototype, GameContext } from "../../tool/basic/gameContext";
 import { createTokuSyuKouKaText } from "./createTokuSyuKouKaText";
 
 // 179016_04B_U_WT075C_white

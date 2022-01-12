@@ -1,6 +1,6 @@
-import { createRollCostRequire } from "../tool/basic/blockPayload";
-import { CardText, TokuSyuKouKa } from "../tool/basic/basic";
-import { RequireCustomID } from "../tool/basic/requireCustom";
+import { createRollCostRequire } from "../../tool/basic/blockPayload";
+import { CardText, TokuSyuKouKa } from "../../tool/basic/basic";
+import { RequireCustomID } from "../../tool/basic/requireCustom";
 
 let _seqID = 0;
 export function createTokuSyuKouKaText(

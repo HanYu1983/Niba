@@ -9,7 +9,7 @@ import {
   DEFAULT_CARD_STATE,
   CardTextState,
 } from "../tool/basic/gameContext";
-import { getPrototype } from "../script";
+import { getPrototype } from "./script";
 
 let idSeq = 0;
 export function getCardState(

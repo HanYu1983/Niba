@@ -2,8 +2,8 @@ import {
   CardPrototype,
   DEFAULT_CARD_PROTOTYPE,
   GameContext,
-} from "../tool/basic/gameContext";
-import { createRollCostRequire } from "../tool/basic/blockPayload";
+} from "../../tool/basic/gameContext";
+import { createRollCostRequire } from "../../tool/basic/blockPayload";
 import { createTokuSyuKouKaText } from "./createTokuSyuKouKaText";
 
 // 179016_04B_U_RD083C_red

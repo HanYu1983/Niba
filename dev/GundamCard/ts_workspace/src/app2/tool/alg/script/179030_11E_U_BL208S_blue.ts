@@ -1,5 +1,5 @@
-import { CardPrototype, GameContext } from "../tool/basic/gameContext";
-import { RequireCustomID } from "../tool/basic/requireCustom";
+import { CardPrototype, GameContext } from "../../tool/basic/gameContext";
+import { RequireCustomID } from "../../tool/basic/requireCustom";
 import { createTokuSyuKouKaText } from "./createTokuSyuKouKaText";
 // 179030_11E_U_BL208S_blue
 // Hi-νガンダム［†］ νガンダム系　MS　専用「アムロ・レイ」
