@@ -310,6 +310,7 @@ type FlowNextTiming = {
 };
 type FlowAddBlock = {
   id: "FlowAddBlock";
+  descriptioin: string;
   block: BlockPayload;
 };
 type FlowWaitPlayer = {
@@ -474,7 +475,8 @@ export function applyFlow(
         return ctx;
       }
       ctx = triggerTextEvent(ctx, flow.event);
-      return {
+      // set hasTriggerEvent
+      ctx = {
         ...ctx,
         gameState: {
           ...ctx.gameState,
@@ -484,8 +486,21 @@ export function applyFlow(
           },
         },
       };
+      return ctx;
     case "FlowUpdateCommand":
-      return updateCommand(ctx);
+      ctx = updateCommand(ctx);
+      // set hasTriggerEvent
+      ctx = {
+        ...ctx,
+        gameState: {
+          ...ctx.gameState,
+          flowMemory: {
+            ...ctx.gameState.flowMemory,
+            hasTriggerEvent: true,
+          },
+        },
+      };
+      return ctx;
     case "FlowNextTiming": {
       const nextTiming = getNextTiming(ctx.gameState.timing);
       ctx = {
@@ -493,6 +508,15 @@ export function applyFlow(
         gameState: {
           ...ctx.gameState,
           timing: nextTiming,
+          flowMemory: {
+            ...ctx.gameState.flowMemory,
+          },
+        },
+      };
+      ctx = {
+        ...ctx,
+        gameState: {
+          ...ctx.gameState,
           flowMemory: {
             ...ctx.gameState.flowMemory,
             hasTriggerEvent: false,
@@ -509,16 +533,28 @@ export function applyFlow(
         cause: {
           id: "BlockPayloadCauseGameRule",
           playerID: playerID,
-          description: "抽牌階段規定效果",
+          description: flow.descriptioin,
         },
       };
-      return {
+      ctx = {
         ...ctx,
         gameState: {
           ...ctx.gameState,
           immediateEffect: [block, ...ctx.gameState.immediateEffect],
         },
       };
+      // set hasTriggerEvent
+      ctx = {
+        ...ctx,
+        gameState: {
+          ...ctx.gameState,
+          flowMemory: {
+            ...ctx.gameState.flowMemory,
+            hasTriggerEvent: true,
+          },
+        },
+      };
+      return ctx;
     }
   }
   return ctx;
@@ -771,23 +807,35 @@ export function queryFlow(ctx: GameContext, playerID: string): Flow[] {
           if (ctx.gameState.flowMemory.hasTriggerEvent) {
             return [{ id: "FlowNextTiming" }];
           }
-          return [
-            {
-              id: "FlowAddBlock",
-              block: {
-                feedback: [
-                  {
-                    id: "FeedbackAction",
-                    action: [
+          switch (phase[0]) {
+            case "ドローフェイズ":
+              return [
+                {
+                  id: "FlowAddBlock",
+                  descriptioin: `${phase[0]}規定效果`,
+                  block: {
+                    feedback: [
                       {
-                        id: "ActionRuleDraw",
+                        id: "FeedbackAction",
+                        action: [
+                          {
+                            id: "ActionRuleDraw",
+                          },
+                        ],
                       },
                     ],
                   },
-                ],
-              },
-            },
-          ];
+                },
+              ];
+            case "リロールフェイズ":
+              return [
+                {
+                  id: "FlowAddBlock",
+                  descriptioin: `${phase[0]}規定效果`,
+                  block: {},
+                },
+              ];
+          }
         case "フリータイミング":
           if (ctx.gameState.flowMemory.hasTriggerEvent) {
             return [{ id: "FlowNextTiming" }];
@@ -828,6 +876,7 @@ export function queryFlow(ctx: GameContext, playerID: string): Flow[] {
               return [
                 {
                   id: "FlowAddBlock",
+                  descriptioin: `${phase[1]}規定效果`,
                   block: {},
                 },
               ];

@@ -172,7 +172,7 @@ export const TIMING_CHART = ((): Timing[] => {
 })();
 
 export function getNextTiming(timing: Timing): Timing {
-  const nextId = timing[0] + (1 % TIMING_CHART.length);
+  const nextId = (timing[0] + 1) % TIMING_CHART.length;
   return TIMING_CHART[nextId];
 }
 

@@ -58,6 +58,7 @@ export const OnViewModel = OnEvent.pipe(
         }
         case "OnClickFlowConfirm": {
           const model = applyFlow(viewModel.model, evt.clientID, evt.flow);
+          console.log(model);
           firebase.sync(model);
           return viewModel;
         }
