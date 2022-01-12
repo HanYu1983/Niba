@@ -18,7 +18,13 @@ const PATH = "app/GundamCard/context/default";
 export function addListener(f: (err: any, data: any) => void) {
   return Firestore.onSnapshot(Firestore.doc(firestore, PATH), {
     next: (snapshot) => {
-      f(null, snapshot.data());
+      const wrap = snapshot.data();
+      if (wrap == null) {
+        f(null, null);
+        return;
+      }
+      const data = JSON.parse(wrap.data);
+      f(null, data);
     },
     error: (e) => {
       f(e, null);
@@ -27,5 +33,10 @@ export function addListener(f: (err: any, data: any) => void) {
 }
 
 export function sync(data: any) {
-  return Firestore.setDoc(Firestore.doc(firestore, PATH), data);
+  // 因為不支援巢狀陣列，所以要轉成字串
+  // FirebaseError: Function setDoc() called with invalid data. Nested arrays are not supported (found in document app/GundamCard/context/default)
+  const wrap = {
+    data: JSON.stringify(data),
+  };
+  return Firestore.setDoc(Firestore.doc(firestore, PATH), wrap);
 }
