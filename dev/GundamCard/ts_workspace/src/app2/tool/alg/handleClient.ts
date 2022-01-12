@@ -513,6 +513,8 @@ export function applyFlow(
           },
         },
       };
+      // 自動更新指令
+      ctx = updateCommand(ctx);
       ctx = {
         ...ctx,
         gameState: {
@@ -733,46 +735,95 @@ export function queryFlow(ctx: GameContext, playerID: string): Flow[] {
       },
     ];
   }
-  const isAllPassPhase =
-    ctx.gameState.flowMemory.hasPlayerPassPhase[PlayerA] &&
-    ctx.gameState.flowMemory.hasPlayerPassPhase[PlayerB];
-  if (isAllPassPhase == false) {
-    if (ctx.gameState.flowMemory.hasPlayerPassPhase[playerID]) {
+
+  const handleFreeTiming = (): Flow[] => {
+    const isAllPassPhase =
+      !!ctx.gameState.flowMemory.hasPlayerPassPhase[PlayerA] &&
+      !!ctx.gameState.flowMemory.hasPlayerPassPhase[PlayerB];
+    if (isAllPassPhase == false) {
+      if (ctx.gameState.flowMemory.hasPlayerPassPhase[playerID]) {
+        return [
+          {
+            id: "FlowCancelPassPhase",
+            description: `等待對方結束或是取消[${ctx.gameState.timing}]結束`,
+          },
+        ];
+      }
       return [
         {
-          id: "FlowCancelPassPhase",
-          description: "取消宣告階段結束",
+          id: "FlowPassPhase",
+          description: `宣告[${ctx.gameState.timing}]結束`,
+        },
+        // 處理指令
+        ...((): Flow[] => {
+          if (ctx.gameState.commandEffect.length == 0) {
+            return [];
+          }
+          const myEffect: BlockPayload[] = [];
+          ctx.gameState.commandEffect.forEach((effect) => {
+            const controller = getBlockOwner(ctx, effect);
+            if (controller == playerID) {
+              myEffect.push(effect);
+            }
+          });
+          return [
+            {
+              id: "FlowSetActiveEffectID",
+              effectID: myEffect[0].id || null,
+              description: "選擇一個指令",
+              tips: myEffect,
+            },
+          ];
+        })(),
+      ];
+    }
+    if (playerID != PlayerA) {
+      return [
+        {
+          id: "FlowWaitPlayer",
+          description: "等待伺服器處理",
         },
       ];
     }
     return [
       {
-        id: "FlowPassPhase",
-        description: "宣告階段結束",
+        id: "FlowNextTiming",
       },
-      // 處理指令
-      ...((): Flow[] => {
-        if (ctx.gameState.commandEffect.length == 0) {
-          return [];
-        }
-        const myEffect: BlockPayload[] = [];
-        ctx.gameState.commandEffect.forEach((effect) => {
-          const controller = getBlockOwner(ctx, effect);
-          if (controller == playerID) {
-            myEffect.push(effect);
-          }
-        });
-        return [
-          {
-            id: "FlowSetActiveEffectID",
-            effectID: myEffect[0].id || null,
-            description: "選擇一個指令",
-            tips: myEffect,
-          },
-        ];
-      })(),
     ];
+  };
+
+  const [id, phase] = ctx.gameState.timing;
+  // 處理自由時間，必須雙方都宣告結束才能進行到下一步
+  switch (phase[0]) {
+    case "ドローフェイズ":
+    case "リロールフェイズ":
+    case "配備フェイズ":
+      switch (phase[1]) {
+        case "フリータイミング": {
+          const flows = handleFreeTiming();
+          if (flows.length) {
+            return flows;
+          }
+        }
+      }
+    case "戦闘フェイズ":
+      switch (phase[1]) {
+        case "攻撃ステップ":
+        case "防御ステップ":
+        case "帰還ステップ":
+        case "ダメージ判定ステップ":
+          switch (phase[2]) {
+            case "フリータイミング": {
+              const flows = handleFreeTiming();
+              if (flows.length) {
+                return flows;
+              }
+            }
+          }
+      }
+      break;
   }
+  // 之後的都是系統事件，只能由伺服器呼叫
   if (playerID != PlayerA) {
     return [
       {
@@ -781,7 +832,6 @@ export function queryFlow(ctx: GameContext, playerID: string): Flow[] {
       },
     ];
   }
-  const [id, phase] = ctx.gameState.timing;
   switch (phase[0]) {
     case "ドローフェイズ":
     case "リロールフェイズ":
@@ -837,14 +887,15 @@ export function queryFlow(ctx: GameContext, playerID: string): Flow[] {
               ];
           }
         case "フリータイミング":
-          if (ctx.gameState.flowMemory.hasTriggerEvent) {
-            return [{ id: "FlowNextTiming" }];
-          }
-          return [
-            {
-              id: "FlowUpdateCommand",
-            },
-          ];
+          // if (ctx.gameState.flowMemory.hasTriggerEvent) {
+          //   return [{ id: "FlowNextTiming" }];
+          // }
+          // return [
+          //   {
+          //     id: "FlowUpdateCommand",
+          //   },
+          // ];
+          return [];
       }
     case "戦闘フェイズ":
       switch (phase[1]) {
@@ -881,14 +932,15 @@ export function queryFlow(ctx: GameContext, playerID: string): Flow[] {
                 },
               ];
             case "フリータイミング":
-              if (ctx.gameState.flowMemory.hasTriggerEvent) {
-                return [{ id: "FlowNextTiming" }];
-              }
-              return [
-                {
-                  id: "FlowUpdateCommand",
-                },
-              ];
+              // if (ctx.gameState.flowMemory.hasTriggerEvent) {
+              //   return [{ id: "FlowNextTiming" }];
+              // }
+              // return [
+              //   {
+              //     id: "FlowUpdateCommand",
+              //   },
+              // ];
+              return [];
           }
         case "ターン終了時":
           switch (phase[2]) {

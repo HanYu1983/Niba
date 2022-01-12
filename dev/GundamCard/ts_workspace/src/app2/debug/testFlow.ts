@@ -197,7 +197,7 @@ function test2() {
 }
 
 export function testFlow() {
-  [test2].forEach((testF: Function) => {
+  [].forEach((testF: Function) => {
     console.log(`============${testF.name}===========`);
     testF();
   });
