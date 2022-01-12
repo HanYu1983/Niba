@@ -5,8 +5,9 @@ import {
   DEFAULT_GAME_CONTEXT,
   GameContext,
 } from "../../../tool/tool/basic/gameContext";
-import { PlayerA } from "../../../tool/tool/basic/basic";
+import { getBaShouID, PlayerA } from "../../../tool/tool/basic/basic";
 import { applyFlow } from "../../../tool/alg/handleClient";
+import { createCard } from "../../../../tool/table";
 
 export type Selection = { [key: string]: boolean };
 
@@ -29,8 +30,36 @@ export const OnViewModel = OnEvent.pipe(
       switch (evt.id) {
         case "OnClickNewGame": {
           let newModel = DEFAULT_GAME_CONTEXT;
+          let table = newModel.gameState.table;
+          table = createCard(
+            table,
+            PlayerA,
+            getBaShouID({
+              id: "AbsoluteBaSyou",
+              value: [PlayerA, "本国"],
+            }),
+            [
+              "179016_04B_U_WT075C_white",
+              "179030_11E_U_BL208S_blue",
+              "179030_11E_U_BL215R_blue",
+              "179001_01A_CH_WT007R_white",
+            ]
+          );
+          newModel = {
+            ...newModel,
+            gameState: {
+              ...newModel.gameState,
+              table: table,
+              activePlayerID: PlayerA,
+            },
+          };
           firebase.sync(newModel);
           return DEFAULT_VIEW_MODEL;
+        }
+        case "OnClickFlowConfirm": {
+          const model = applyFlow(viewModel.model, evt.clientID, evt.flow);
+          firebase.sync(model);
+          return viewModel;
         }
         case "OnClickChangeClient": {
           return viewModel;

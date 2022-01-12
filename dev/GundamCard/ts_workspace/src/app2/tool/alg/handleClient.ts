@@ -353,7 +353,7 @@ type FlowCancelPassCut = {
   description?: string;
 };
 
-type Flow =
+export type Flow =
   | FlowAddBlock
   | FlowTriggerTextEvent
   | FlowUpdateCommand
