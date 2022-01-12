@@ -336,6 +336,7 @@ type FlowDeleteImmediateEffect = {
   id: "FlowDeleteImmediateEffect";
   effectID: string | null;
   description?: string;
+  tips: BlockPayload[];
 };
 type FlowPassPhase = {
   id: "FlowPassPhase";
@@ -593,15 +594,11 @@ export function queryFlow(ctx: GameContext, playerID: string): Flow[] {
         },
       ];
     }
-    if (currentActiveEffect.requirePassed != true) {
-      return [
-        {
-          id: "FlowDoEffect",
-          effectID: ctx.gameState.activeEffectID,
-        },
-      ];
-    }
     return [
+      {
+        id: "FlowDoEffect",
+        effectID: ctx.gameState.activeEffectID,
+      },
       {
         id: "FlowCancelActiveEffectID",
         description: "取消支付效果，讓其它玩家可以支付",
@@ -643,9 +640,10 @@ export function queryFlow(ctx: GameContext, playerID: string): Flow[] {
           ? [
               {
                 id: "FlowDeleteImmediateEffect",
-                effectID: null,
+                effectID: optionEffect[0].id,
                 description: "你可以放棄這些效果",
-              } as Flow,
+                tips: optionEffect,
+              } as FlowDeleteImmediateEffect,
             ]
           : []),
       ];
@@ -662,9 +660,10 @@ export function queryFlow(ctx: GameContext, playerID: string): Flow[] {
         ? [
             {
               id: "FlowDeleteImmediateEffect",
-              effectID: null,
+              effectID: optionEffect[0].id,
               description: "你可以放棄這些效果",
-            } as Flow,
+              tips: optionEffect,
+            } as FlowDeleteImmediateEffect,
           ]
         : []),
     ];
@@ -768,9 +767,6 @@ export function queryFlow(ctx: GameContext, playerID: string): Flow[] {
         },
         // 處理指令
         ...((): Flow[] => {
-          if (ctx.gameState.commandEffect.length == 0) {
-            return [];
-          }
           const myEffect: BlockPayload[] = [];
           ctx.gameState.commandEffect.forEach((effect) => {
             const controller = getBlockOwner(ctx, effect);
@@ -778,6 +774,9 @@ export function queryFlow(ctx: GameContext, playerID: string): Flow[] {
               myEffect.push(effect);
             }
           });
+          if (myEffect.length == 0) {
+            return [];
+          }
           return [
             {
               id: "FlowSetActiveEffectID",

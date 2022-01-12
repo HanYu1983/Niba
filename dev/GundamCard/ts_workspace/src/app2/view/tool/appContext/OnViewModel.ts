@@ -8,6 +8,7 @@ import {
 import { getBaShouID, PlayerA } from "../../../tool/tool/basic/basic";
 import { applyFlow } from "../../../tool/alg/handleClient";
 import { createCard } from "../../../../tool/table";
+import { initState } from "../../../tool/alg/handleGameContext";
 
 export type Selection = { [key: string]: boolean };
 
@@ -45,6 +46,15 @@ export const OnViewModel = OnEvent.pipe(
               "179001_01A_CH_WT007R_white",
             ]
           );
+          table = createCard(
+            table,
+            PlayerA,
+            getBaShouID({
+              id: "AbsoluteBaSyou",
+              value: [PlayerA, "手札"],
+            }),
+            ["179001_01A_CH_WT007R_white"]
+          );
           newModel = {
             ...newModel,
             gameState: {
@@ -53,6 +63,7 @@ export const OnViewModel = OnEvent.pipe(
               activePlayerID: PlayerA,
             },
           };
+          newModel = initState(newModel);
           firebase.sync(newModel);
           return DEFAULT_VIEW_MODEL;
         }

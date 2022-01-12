@@ -33,6 +33,7 @@ export const FlowListView = (props: { clientID: string }) => {
           return (
             <div
               key={i}
+              style={{ border: "1px solid black" }}
               onClick={() => {
                 onClickFlowConfirm(flow);
               }}

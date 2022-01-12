@@ -37,6 +37,7 @@ const prototype: CardPrototype = {
                 id: "ActionAddBlock",
                 type: "立即",
                 block: {
+                  isOption: true,
                   require: {
                     id: "RequireAnd",
                     and: [
