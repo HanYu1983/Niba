@@ -14,6 +14,7 @@ const prototype: CardPrototype = {
   characteristic: "オデュッセウス系　MS　専用「レーン・エイム」".split("　"),
   category: "ユニット",
   color: "青",
+  rollCost: ["青", "青", null, null],
   texts: [
     createTokuSyuKouKaText(["戦闘配備"], { cost: 0 }),
     createTokuSyuKouKaText(["改装", "ペーネロペー系"], { cost: 1 }),

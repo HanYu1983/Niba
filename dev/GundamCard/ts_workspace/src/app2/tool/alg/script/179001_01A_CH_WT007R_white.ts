@@ -6,6 +6,7 @@ import {
   TargetType,
   TargetTypeCustomFunctionType,
 } from "../../tool/basic/targetType";
+import { createPlayCardText } from "./createPlayCardText";
 
 const _main: TargetTypeCustomFunctionType = (
   ctx: GameContext,
@@ -29,81 +30,8 @@ const prototype: CardPrototype = {
   characteristic: "男性　子供　CO".split("　"),
   category: "キャラクター",
   color: "白",
+  rollCost: ["白", null, null, null],
   texts: [
-    {
-      id: "自動型",
-      category: "常駐",
-      description: "play card",
-      block: {
-        require: {
-          id: "RequireTarget",
-          targets: {
-            test: {
-              id: "TargetTypeCustom",
-              scriptString: getCustomFunctionString(_main),
-            },
-            test2: {
-              id: "このカード",
-            },
-          },
-          action: [
-            {
-              id: "ActionDrop",
-              cards: "test",
-            },
-          ],
-        },
-      },
-    },
-    {
-      id: "使用型",
-      timing: ["自軍", "配備フェイズ"],
-      description: "play card",
-      block: {
-        require: {
-          id: "RequireAnd",
-          and: [
-            createRollCostRequire(1, "白"),
-            {
-              id: "RequireTarget",
-              targets: {},
-              action: [
-                {
-                  id: "ActionSetFace",
-                  cards: {
-                    id: "このカード",
-                  },
-                  faceDown: {
-                    id: "TargetTypeYesNo",
-                    boolean: false,
-                  },
-                },
-              ],
-            },
-          ],
-        },
-        feedback: [
-          {
-            id: "FeedbackAction",
-            action: [
-              {
-                id: "ActionMoveCardToPosition",
-                cards: {
-                  id: "このカード",
-                },
-                baSyou: {
-                  id: "場所",
-                  baSyou: {
-                    id: "RelatedBaSyou",
-                    value: ["自軍", "配備エリア"],
-                  },
-                },
-              },
-            ],
-          },
-        ],
-      },
-    },
     {
       id: "使用型",
       timing: ["戦闘フェイズ"],
@@ -131,4 +59,10 @@ const prototype: CardPrototype = {
   ],
 };
 
-module.exports = prototype;
+const playCardAsGText = createPlayCardText(prototype, { isG: true });
+const playCardText = createPlayCardText(prototype, {});
+
+module.exports = {
+  ...prototype,
+  texts: [...prototype.texts, playCardAsGText, playCardText],
+};

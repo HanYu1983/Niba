@@ -1,4 +1,4 @@
-import { BaSyou } from "../tool/basic/basic";
+import { AbsoluteBaSyou, BaSyou } from "../tool/basic/basic";
 import { CardPrototype, GameContext } from "../tool/basic/gameContext";
 import { getCard, mapCard, Card } from "../../../tool/table";
 import { getCardBaSyou } from "../tool/basic/handleCard";
@@ -69,7 +69,7 @@ export function getCardIterator(
   ctx: GameContext
 ): [
   GameContext,
-  { id: string; card: Card; baSyou: BaSyou; state: CardState }[]
+  { id: string; card: Card; baSyou: AbsoluteBaSyou; state: CardState }[]
 ] {
   const cards: Card[] = [];
   mapCard(ctx.gameState.table, (card) => {

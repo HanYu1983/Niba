@@ -12,6 +12,7 @@ const prototype: CardPrototype = {
   characteristic: "νガンダム系　MS　専用「アムロ・レイ」".split("　"),
   category: "ユニット",
   color: "青",
+  rollCost: ["青", null, null, null, null, null],
   texts: [
     createTokuSyuKouKaText(["高機動"], { cost: 0 }),
     createTokuSyuKouKaText(["サイコミュ", 3], { cost: 1 }),

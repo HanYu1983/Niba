@@ -16,6 +16,7 @@ const prototype: CardPrototype = {
   characteristic: "リ・ガズィ系　MS　専用「ケーラ・スゥ」".split("　"),
   category: "ユニット",
   color: "青",
+  rollCost: ["青", null, null, null],
   texts: [
     createTokuSyuKouKaText(["戦闘配備"], { cost: 0 }),
     createTokuSyuKouKaText(["改装", "リ・ガズィ系"], { cost: 1 }),

@@ -16,7 +16,17 @@ export type RequireCustomID3 = {
   x: string;
 };
 
+export type RequireCustomID4 = {
+  id: "有快速就常時，不然就是自軍配置";
+};
+
+export type RequireCustomID5 = {
+  id: "Play時的合計國力";
+};
+
 export type RequireCustomID =
   | RequireCustomID1
   | RequireCustomID2
-  | RequireCustomID3;
+  | RequireCustomID3
+  | RequireCustomID4
+  | RequireCustomID5;

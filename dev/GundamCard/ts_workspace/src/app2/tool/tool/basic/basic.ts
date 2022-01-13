@@ -11,7 +11,6 @@ export type BaKeyword = "戦闘エリア" | "配備エリア";
 
 // 場所
 export type BaSyouKeyword =
-  | null // プレイされたカード
   | "本国"
   | "捨て山"
   | "Gゾーン"
@@ -19,6 +18,7 @@ export type BaSyouKeyword =
   | "手札"
   | "ハンガー"
   | "取り除かれたカード"
+  | "プレイされているカード"
   | BaKeyword;
 
 export type AbsoluteBaSyou = {

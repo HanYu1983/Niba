@@ -23,6 +23,7 @@ import { Action } from "../tool/basic/action";
 import { doRequire, doFeedback } from "./handleBlockPayload";
 import { getCardState } from "./helper";
 import { doConditionTarget } from "./doConditionTarget";
+//import { createPlayUnitText } from "./createPlayUnitText";
 
 // 觸發事件腳本
 // 在每次事件發生時都要呼叫
@@ -99,7 +100,20 @@ export function triggerTextEvent(
 
 // 更新命令列表
 export function updateCommand(ctx: GameContext): GameContext {
+  // clear command
+  ctx = {
+    ...ctx,
+    gameState: {
+      ...ctx.gameState,
+      commandEffect: [],
+    },
+  };
   return ctx.gameState.cardState.reduce((ctx, cardState) => {
+    // const playText: CardTextState = {
+    //   id: `playText${cardState.cardID}`,
+    //   enabled: true,
+    //   cardText: createPlayUnitText(ctx, cardState.cardID),
+    // };
     return cardState.cardTextStates.reduce((ctx, cardTextState) => {
       const blocks: BlockPayload[] = (() => {
         switch (cardTextState.cardText.id) {

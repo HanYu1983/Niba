@@ -19,6 +19,7 @@ const prototype: CardPrototype = {
   characteristic: "キュベレイ系　MS".split("　"),
   category: "ユニット",
   color: "白",
+  rollCost: ["白", null, null],
   texts: [
     createTokuSyuKouKaText(["サイコミュ", 2], { cost: 1 }),
     {

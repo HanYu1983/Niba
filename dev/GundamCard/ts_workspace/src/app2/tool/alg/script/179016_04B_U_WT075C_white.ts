@@ -15,6 +15,7 @@ const prototype: CardPrototype = {
   ),
   category: "ユニット",
   color: "白",
+  rollCost: ["白", null, null, null, null],
   texts: [
     createTokuSyuKouKaText(["改装", "ブルーフレーム系"], { cost: 0 }),
     {
