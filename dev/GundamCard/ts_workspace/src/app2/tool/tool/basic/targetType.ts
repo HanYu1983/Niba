@@ -1,5 +1,3 @@
-import { log } from "../../../../tool/logger";
-import { getCustomFunction } from "../../../../tool/helper";
 import { BaSyou, CardColor } from "./basic";
 import { GameContext } from "./gameContext";
 import { BlockPayload } from "./blockPayload";
@@ -25,8 +23,9 @@ export type TargetTypeCardColor = {
   color: CardColor | null;
 };
 
-export type TargetTypeThisCard = {
-  id: "このカード";
+export type TargetTypeNumber = {
+  id: "TargetTypeNumber";
+  number: number | null;
 };
 
 export type TargetTypeYesNo = {
@@ -39,11 +38,19 @@ export type TargetTypeCustom = {
   scriptString: string;
 };
 
+export type TargetTypeThisCard = {
+  id: "このカード";
+};
+
+export type TargetTypeThisCardTotalCost = {
+  id: "このカードの合計国力";
+};
+
 type Damage = any;
 
 type TargetTypeDamage = {
   id: "TargetTypeDamage";
-  damage: Damage | null;
+  damage: Damage;
 };
 
 export type TargetType =
@@ -52,6 +59,8 @@ export type TargetType =
   | TargetTypeCardColor
   | TargetTypeBaSyou
   | TargetTypeThisCard
+  | TargetTypeThisCardTotalCost
+  | TargetTypeNumber
   | TargetTypeYesNo
   | TargetTypeDamage
   | TargetTypeCustom;
@@ -60,43 +69,3 @@ export type TargetTypeCustomFunctionType = (
   ctx: GameContext,
   blockPayload: BlockPayload
 ) => TargetType;
-
-export function getTargetType(
-  ctx: GameContext,
-  blockPayload: BlockPayload,
-  targets: { [key: string]: TargetType },
-  target: string | TargetType
-): TargetType {
-  log("getTargetType", target);
-  const targetTypeAfterProcess = (() => {
-    if (typeof target == "string") {
-      return targets[target];
-    }
-    return target;
-  })();
-  switch (targetTypeAfterProcess.id) {
-    case "このカード":
-      if (blockPayload.cause == null) {
-        throw new Error("must has cause");
-      }
-      switch (blockPayload.cause.id) {
-        case "BlockPayloadCauseGameEvent":
-        case "BlockPayloadCauseUpdateCommand":
-        case "BlockPayloadCauseUpdateEffect":
-          if (blockPayload.cause.cardID == null) {
-            throw new Error("[getTarget] このカード not found");
-          }
-          return { id: "カード", cardID: [blockPayload.cause.cardID] };
-        default:
-          throw new Error("not support cause:" + blockPayload.cause.id);
-      }
-    case "TargetTypeCustom": {
-      const func: TargetTypeCustomFunctionType = getCustomFunction(
-        targetTypeAfterProcess.scriptString
-      );
-      return func(ctx, blockPayload);
-    }
-    default:
-      return targetTypeAfterProcess;
-  }
-}

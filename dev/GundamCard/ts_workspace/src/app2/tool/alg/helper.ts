@@ -1,5 +1,6 @@
 import { AbsoluteBaSyou, BaSyou } from "../tool/basic/basic";
 import { CardPrototype, GameContext } from "../tool/basic/gameContext";
+import { BlockPayload } from "../tool/basic/blockPayload";
 import { getCard, mapCard, Card } from "../../../tool/table";
 import { getCardBaSyou } from "../tool/basic/handleCard";
 import {
@@ -9,6 +10,12 @@ import {
   DEFAULT_CARD_STATE,
   CardTextState,
 } from "../tool/basic/gameContext";
+import { getCustomFunction } from "../../../tool/helper";
+import {
+  TargetType,
+  TargetTypeCustomFunctionType,
+} from "../tool/basic/targetType";
+import { log } from "../../../tool/logger";
 import { getPrototype } from "./script";
 
 let idSeq = 0;
@@ -95,4 +102,56 @@ export function getCardIterator(
       };
     }),
   ];
+}
+
+export function getTargetType(
+  ctx: GameContext,
+  blockPayload: BlockPayload,
+  targets: { [key: string]: TargetType },
+  target: string | TargetType
+): TargetType {
+  log("getTargetType", target);
+  const targetTypeAfterProcess = (() => {
+    if (typeof target == "string") {
+      return targets[target];
+    }
+    return target;
+  })();
+  const getCardID = () => {
+    if (blockPayload.cause == null) {
+      throw new Error("must has cause");
+    }
+    switch (blockPayload.cause.id) {
+      case "BlockPayloadCauseGameEvent":
+      case "BlockPayloadCauseUpdateCommand":
+      case "BlockPayloadCauseUpdateEffect":
+        if (blockPayload.cause.cardID == null) {
+          throw new Error("[getTarget] このカード not found");
+        }
+        return blockPayload.cause.cardID;
+      default:
+        throw new Error("not support cause:" + blockPayload.cause.id);
+    }
+  };
+  switch (targetTypeAfterProcess.id) {
+    case "このカードの合計国力": {
+      const cardID = getCardID();
+      const [_, cardState] = getCardState(ctx, cardID);
+      const totalCost = cardState.prototype.rollCost.length;
+      return {
+        id: "TargetTypeNumber",
+        number: totalCost,
+      };
+    }
+    case "このカード":
+      return { id: "カード", cardID: [getCardID()] };
+    case "TargetTypeCustom": {
+      const func: TargetTypeCustomFunctionType = getCustomFunction(
+        targetTypeAfterProcess.scriptString
+      );
+      return func(ctx, blockPayload);
+    }
+    default:
+      return targetTypeAfterProcess;
+  }
 }

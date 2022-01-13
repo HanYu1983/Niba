@@ -25,8 +25,8 @@ import {
   getAbsoluteBaSyou,
 } from "../tool/basic/handleCard";
 import { log } from "../../../tool/logger";
-import { TargetType, getTargetType } from "../tool/basic/targetType";
-import { getCardState } from "./helper";
+import { TargetType } from "../tool/basic/targetType";
+import { getCardState, getTargetType } from "./helper";
 import { initState } from "./handleGameContext";
 
 let idSeq = 0;
