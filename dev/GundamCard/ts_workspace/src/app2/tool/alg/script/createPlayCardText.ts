@@ -19,6 +19,7 @@ export function createPlayCardText(
   options: {
     isG?: boolean;
     command?: {
+      description: string;
       timing: SiYouTiming;
       block: BlockPayload;
     };
@@ -138,7 +139,7 @@ export function createPlayCardText(
       return {
         id: "使用型",
         timing: options.command.timing,
-        description: `プレイ ${prototype.category}[${prototype.title}]`,
+        description: options.command.description,
         block: {
           contextID: `createPlayCardText ${idSeq++}`,
           require: {

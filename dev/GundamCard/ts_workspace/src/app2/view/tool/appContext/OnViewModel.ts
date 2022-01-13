@@ -44,6 +44,7 @@ export const OnViewModel = OnEvent.pipe(
               // "179030_11E_U_BL208S_blue",
               // "179030_11E_U_BL215R_blue",
               "179001_01A_CH_WT007R_white",
+              "179030_11E_C_BL076S_blue",
             ]
           );
           // table = createCard(
