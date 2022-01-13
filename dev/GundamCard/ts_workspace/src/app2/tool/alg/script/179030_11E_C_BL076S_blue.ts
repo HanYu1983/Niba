@@ -42,6 +42,7 @@ const prototype: CardPrototype = {
                 type: "立即",
                 block: {
                   contextID: "理想の激突",
+                  isOption: true,
                   require: {
                     id: "RequireAnd",
                     and: [
@@ -63,6 +64,11 @@ const prototype: CardPrototype = {
                                 id: "RelatedBaSyou",
                                 value: ["自軍", "Gゾーン"],
                               },
+                            },
+                            {
+                              id: "ConditionCardHasTokuTyou",
+                              source: "cardA",
+                              value: "装弾",
                             },
                           ],
                         },
