@@ -1,5 +1,6 @@
 import {
   BaSyou,
+  CardCategory,
   CardColor,
   RelatedPlayerSideKeyword,
   UnitPropertyKeyword,
@@ -9,7 +10,8 @@ import { BlockPayload } from "./blockPayload";
 
 export type TargetTypeCard = {
   id: "カード";
-  cardID: (string | null)[] | "このカード";
+  source?: string;
+  cardID: (string | null)[] | "このカード" | "対象";
 };
 
 export type TargetTypePlayer = {
@@ -31,7 +33,6 @@ export type TargetTypeString = {
 
 export type TargetTypeBoolean = {
   id: "TargetTypeBoolean";
-  type?: any;
   source?: string;
   value: boolean | RelatedPlayerSideKeyword | null;
 };
@@ -44,6 +45,18 @@ export type TargetTypeBaSyou = {
 export type TargetTypeCardColor = {
   id: "カードの色";
   color: CardColor | null;
+};
+
+export type TargetTypeCardCategory = {
+  id: "TargetTypeCardCategory";
+  source?: string;
+  category: CardCategory | "このカードの" | null;
+};
+
+export type TargetTypeCardRole = {
+  id: "TargetTypeCardRole";
+  source?: string;
+  role: CardCategory | "このカードの" | null;
 };
 
 export type TargetTypeCustom = {
@@ -65,6 +78,8 @@ export type TargetType =
   | TargetTypeString
   | TargetTypeBoolean
   | TargetTypeCardColor
+  | TargetTypeCardCategory
+  | TargetTypeCardRole
   | TargetTypeBaSyou
   | TargetTypeDamage
   | TargetTypeCustom;

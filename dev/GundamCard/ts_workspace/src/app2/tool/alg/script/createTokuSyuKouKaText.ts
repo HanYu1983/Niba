@@ -212,20 +212,35 @@ export function createTokuSyuKouKaText(
                     condition: {
                       id: "ConditionAnd",
                       and: [
-                        // {
-                        //   id: "ConditionCardIsPlayerSide",
-                        //   source: "targetCard",
-                        //   playerSide: "敵軍",
-                        // },
                         {
-                          id: "ConditionCardIsRole",
-                          source: "targetCard",
-                          role: "ユニット",
+                          id: "ConditionCardPropertyCompareCard",
+                          value: [
+                            {
+                              id: "カード",
+                              source: "targetCard",
+                              cardID: "対象",
+                            },
+                            "交戦中",
+                            {
+                              id: "カード",
+                              cardID: "このカード",
+                            },
+                          ],
                         },
-                        // TODO: 和這張卡交戰中的
                         {
-                          id: "ConditionCardIsBattle",
-                          source: "targetCard",
+                          id: "ConditionCardPropertyCompareRole",
+                          value: [
+                            {
+                              id: "TargetTypeCardRole",
+                              source: "targetCard",
+                              role: "このカードの",
+                            },
+                            "==",
+                            {
+                              id: "TargetTypeCardRole",
+                              role: "ユニット",
+                            },
+                          ],
                         },
                         {
                           id: "ConditionCardPropertyCompareBoolean",

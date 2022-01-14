@@ -134,17 +134,35 @@ export function getTargetType(
     }
   };
   switch (targetTypeAfterProcess.id) {
+    // このカード -> カード
+    // 対象 -> カード
+    // カード -> カード
     case "カード": {
-      if (targetTypeAfterProcess.cardID != "このカード") {
-        return {
-          id: "カード",
-          cardID: targetTypeAfterProcess.cardID,
-        };
+      switch (targetTypeAfterProcess.cardID) {
+        case "このカード":
+          return {
+            id: "カード",
+            cardID: [getCardID()],
+          };
+        case "対象": {
+          if (targetTypeAfterProcess.source == null) {
+            throw new Error("source not found");
+          }
+          const refTargetType = targets[targetTypeAfterProcess.source];
+          if (refTargetType == null) {
+            throw new Error("source is null");
+          }
+          if (refTargetType.id != "カード") {
+            throw new Error("must be card");
+          }
+          if (Array.isArray(refTargetType.cardID) == false) {
+            throw new Error("must be array");
+          }
+          return refTargetType;
+        }
+        default:
+          return targetTypeAfterProcess;
       }
-      return {
-        id: "カード",
-        cardID: [getCardID()],
-      };
     }
     case "TargetTypeString": {
       if (targetTypeAfterProcess.value == null) {
@@ -157,11 +175,10 @@ export function getTargetType(
       if (targetTypeAfterProcess.source == null) {
         throw new Error("source not found");
       }
-      const ref = targets[targetTypeAfterProcess.source];
-      if (ref == null) {
+      const refTargetType = targets[targetTypeAfterProcess.source];
+      if (refTargetType == null) {
         throw new Error("source is null");
       }
-      const refTargetType = getTargetType(ctx, blockPayload, targets, ref);
       if (refTargetType.id != "カード") {
         throw new Error("must be card");
       }

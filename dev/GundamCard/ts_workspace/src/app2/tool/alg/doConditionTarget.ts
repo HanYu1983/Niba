@@ -168,6 +168,10 @@ export function doConditionTarget(
       // }
       return null;
     }
+    case "ConditionCardPropertyCompareCard": {
+      const [v1, op, v2] = condition.value;
+      getTargetType(ctx, blockPayload, targets, v1);
+    }
   }
   return null;
 }

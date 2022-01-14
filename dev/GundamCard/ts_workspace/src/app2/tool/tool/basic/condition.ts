@@ -7,6 +7,9 @@ import type {
 } from "./basic";
 import {
   TargetTypeBoolean,
+  TargetTypeCard,
+  TargetTypeCardCategory,
+  TargetTypeCardRole,
   TargetTypeNumber,
   TargetTypeString,
 } from "./targetType";
@@ -117,6 +120,26 @@ type ConditionCardPropertyCompareBoolean = {
   ];
 };
 
+type ConditionCardPropertyCompareRole = {
+  id: "ConditionCardPropertyCompareRole";
+  value: [
+    TargetTypeCardRole,
+    ConditionCardPropertyCompareOperator,
+    TargetTypeCardRole
+  ];
+};
+
+type ConditionCardPropertyCompareCardOperator = "交戦中";
+
+type ConditionCardPropertyCompareCard = {
+  id: "ConditionCardPropertyCompareCard";
+  value: [
+    TargetTypeCard,
+    ConditionCardPropertyCompareCardOperator,
+    TargetTypeCard
+  ];
+};
+
 export type Condition =
   | ConditionCardOnBaSyou
   | ConditionCardOnColor
@@ -132,6 +155,8 @@ export type Condition =
   | ConditionCardPropertyCompare
   | ConditionCardPropertyCompareString
   | ConditionCardPropertyCompareBoolean
+  | ConditionCardPropertyCompareRole
+  | ConditionCardPropertyCompareCard
   | ConditionNot
   | ConditionOr
   | ConditionAnd;

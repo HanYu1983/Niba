@@ -37,6 +37,9 @@ function doAction(
           if (target.cardID == "このカード") {
             break;
           }
+          if (target.cardID == "対象") {
+            break;
+          }
           target.cardID.forEach((v, i) => {
             if (v == null) {
               throw new Error(`target(${key})[${i}] must not null`);
