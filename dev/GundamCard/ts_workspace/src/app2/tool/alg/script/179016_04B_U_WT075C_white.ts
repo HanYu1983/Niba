@@ -75,8 +75,19 @@ const prototype: CardPrototype = {
                             },
                             {
                               id: "ConditionCardPropertyCompare",
-                              source: "５以下の防御力を持つ敵軍ユニット１枚",
-                              value: ["防御力", "<=", 5],
+                              value: [
+                                {
+                                  id: "TargetTypeNumber",
+                                  source:
+                                    "５以下の防御力を持つ敵軍ユニット１枚",
+                                  value: "防御力",
+                                },
+                                "<=",
+                                {
+                                  id: "TargetTypeNumber",
+                                  value: 5,
+                                },
+                              ],
                             },
                           ],
                         },

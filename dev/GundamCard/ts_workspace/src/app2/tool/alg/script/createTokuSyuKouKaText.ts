@@ -212,11 +212,11 @@ export function createTokuSyuKouKaText(
                     condition: {
                       id: "ConditionAnd",
                       and: [
-                        {
-                          id: "ConditionCardIsPlayerSide",
-                          source: "targetCard",
-                          playerSide: "敵軍",
-                        },
+                        // {
+                        //   id: "ConditionCardIsPlayerSide",
+                        //   source: "targetCard",
+                        //   playerSide: "敵軍",
+                        // },
                         {
                           id: "ConditionCardIsRole",
                           source: "targetCard",
@@ -228,9 +228,34 @@ export function createTokuSyuKouKaText(
                           source: "targetCard",
                         },
                         {
+                          id: "ConditionCardPropertyCompareBoolean",
+                          value: [
+                            {
+                              id: "TargetTypeBoolean",
+                              source: "targetCard",
+                              value: "敵軍",
+                            },
+                            "==",
+                            {
+                              id: "TargetTypeBoolean",
+                              value: true,
+                            },
+                          ],
+                        },
+                        {
                           id: "ConditionCardPropertyCompare",
-                          source: "targetCard",
-                          value: ["防御力", "<=", damage],
+                          value: [
+                            {
+                              id: "TargetTypeNumber",
+                              source: "targetCard",
+                              value: "防御力",
+                            },
+                            "<=",
+                            {
+                              id: "TargetTypeNumber",
+                              value: damage,
+                            },
+                          ],
                         },
                       ],
                     },
@@ -292,7 +317,7 @@ export function createTokuSyuKouKaText(
                   {
                     id: "RequireTarget",
                     targets: {
-                      cardA: { id: "このカード" },
+                      cardA: { id: "カード", cardID: "このカード" },
                     },
                     action: [
                       {
@@ -307,8 +332,8 @@ export function createTokuSyuKouKaText(
                     targets: {
                       cardB: { id: "カード", cardID: [null] },
                       faceDown: {
-                        id: "TargetTypeYesNo",
-                        boolean: false,
+                        id: "TargetTypeBoolean",
+                        value: false,
                       },
                     },
                     condition: {

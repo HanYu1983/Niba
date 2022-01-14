@@ -1,16 +1,39 @@
-import { BaSyou, CardColor } from "./basic";
+import {
+  BaSyou,
+  CardColor,
+  RelatedPlayerSideKeyword,
+  UnitPropertyKeyword,
+} from "./basic";
 import { GameContext } from "./gameContext";
 import { BlockPayload } from "./blockPayload";
 
-export type TargetTypePlayer = {
-  id: "プレーヤー";
-  playerID: (string | null)[];
-};
-
 export type TargetTypeCard = {
   id: "カード";
-  cardID: (string | null)[];
-  tipID?: string[];
+  cardID: (string | null)[] | "このカード";
+};
+
+export type TargetTypePlayer = {
+  id: "プレーヤー";
+  playerID: string | null;
+};
+
+export type TargetTypeNumber = {
+  id: "TargetTypeNumber";
+  source?: string;
+  value: number | "攻撃力" | "防御力" | "合計国力" | null;
+};
+
+export type TargetTypeString = {
+  id: "TargetTypeString";
+  source?: string;
+  value: (string | null)[] | "名称";
+};
+
+export type TargetTypeBoolean = {
+  id: "TargetTypeBoolean";
+  type?: any;
+  source?: string;
+  value: boolean | RelatedPlayerSideKeyword | null;
 };
 
 export type TargetTypeBaSyou = {
@@ -23,27 +46,9 @@ export type TargetTypeCardColor = {
   color: CardColor | null;
 };
 
-export type TargetTypeNumber = {
-  id: "TargetTypeNumber";
-  number: number | null;
-};
-
-export type TargetTypeYesNo = {
-  id: "TargetTypeYesNo";
-  boolean: boolean | null;
-};
-
 export type TargetTypeCustom = {
   id: "TargetTypeCustom";
   scriptString: string;
-};
-
-export type TargetTypeThisCard = {
-  id: "このカード";
-};
-
-export type TargetTypeThisCardTotalCost = {
-  id: "このカードの合計国力";
 };
 
 type Damage = any;
@@ -54,14 +59,13 @@ type TargetTypeDamage = {
 };
 
 export type TargetType =
-  | TargetTypePlayer
   | TargetTypeCard
+  | TargetTypePlayer
+  | TargetTypeNumber
+  | TargetTypeString
+  | TargetTypeBoolean
   | TargetTypeCardColor
   | TargetTypeBaSyou
-  | TargetTypeThisCard
-  | TargetTypeThisCardTotalCost
-  | TargetTypeNumber
-  | TargetTypeYesNo
   | TargetTypeDamage
   | TargetTypeCustom;
 

@@ -218,7 +218,7 @@ export function test() {
 //               cardID: [null],
 //             },
 //             faceDown: {
-//               id: "TargetTypeYesNo",
+//               id: "TargetTypeBoolean",
 //               boolean: true,
 //             },
 //           },
@@ -491,8 +491,8 @@ export function test() {
 //               cardID: [cardID],
 //             },
 //             faceDown: {
-//               id: "TargetTypeYesNo",
-//               boolean: false,
+//               id: "TargetTypeBoolean",
+//               value: false,
 //             },
 //           },
 //           action: [

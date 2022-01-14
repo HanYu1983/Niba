@@ -2,8 +2,7 @@ import type {
   TargetTypeCard,
   TargetTypeCardColor,
   TargetTypeBaSyou,
-  TargetTypeYesNo,
-  TargetTypeThisCard,
+  TargetTypeBoolean,
 } from "./targetType";
 import type { BlockPayload } from "./blockPayload";
 import type { CardPrototype, GameEffect } from "./gameContext";
@@ -11,12 +10,12 @@ import { CardText } from "./basic";
 
 type ActionRoll = {
   id: "ActionRoll";
-  cards: string | TargetTypeCard | TargetTypeThisCard;
+  cards: string | TargetTypeCard;
 };
 
 type ActionReroll = {
   id: "ActionReroll";
-  cards: string | TargetTypeCard | TargetTypeThisCard;
+  cards: string | TargetTypeCard;
 };
 
 type ActionSetTarget = {
@@ -34,7 +33,7 @@ type ActionConsumeG = {
 // 廃棄
 type ActionDrop = {
   id: "ActionDrop";
-  cards: string | TargetTypeCard | TargetTypeThisCard;
+  cards: string | TargetTypeCard;
 };
 
 type ActionDraw = {
@@ -44,37 +43,37 @@ type ActionDraw = {
 
 type ActionDestroy = {
   id: "ActionDestroy";
-  cards: string | TargetTypeCard | TargetTypeThisCard;
+  cards: string | TargetTypeCard;
 };
 
 type ActionMoveCardToPosition = {
   id: "ActionMoveCardToPosition";
-  cards: string | TargetTypeCard | TargetTypeThisCard;
+  cards: string | TargetTypeCard;
   baSyou: string | TargetTypeBaSyou;
 };
 
 type ActionSetFlag = {
   id: "ActionSetFlag";
-  cards: string | TargetTypeCard | TargetTypeThisCard;
+  cards: string | TargetTypeCard;
   flag: string;
   value: boolean;
 };
 
 type ActionSetFace = {
   id: "ActionSetFace";
-  cards: string | TargetTypeCard | TargetTypeThisCard;
-  faceDown: string | TargetTypeYesNo;
+  cards: string | TargetTypeCard;
+  faceDown: string | TargetTypeBoolean;
 };
 
 type ActionOKiKaeRu = {
   id: "ActionOKiKaeRu";
-  cardA: string | TargetTypeCard | TargetTypeThisCard;
-  cardB: string | TargetTypeCard | TargetTypeThisCard;
+  cardA: string | TargetTypeCard;
+  cardB: string | TargetTypeCard;
 };
 
 type ActionUnitDamage = {
   id: "ActionUnitDamage";
-  cards: string | TargetTypeCard | TargetTypeThisCard;
+  cards: string | TargetTypeCard;
   value: string;
 };
 
@@ -93,7 +92,7 @@ type ActionAddEffect = {
 
 type ActionAddGlobalCardText = {
   id: "ActionAddGlobalCardText";
-  cards: string | TargetTypeCard | TargetTypeThisCard;
+  cards: string | TargetTypeCard;
   cardText: CardText;
   cardTextStateID?: string;
 };
@@ -105,14 +104,14 @@ type ActionDeleteGlobalCardText = {
 
 type ActionAddCardText = {
   id: "ActionAddCardText";
-  cards: string | TargetTypeCard | TargetTypeThisCard;
+  cards: string | TargetTypeCard;
   cardText: CardText;
   cardTextStateID?: string;
 };
 
 type ActionDeleteCardText = {
   id: "ActionDeleteCardText";
-  cards: string | TargetTypeCard | TargetTypeThisCard;
+  cards: string | TargetTypeCard;
   cardTextStateID: string;
 };
 

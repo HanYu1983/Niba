@@ -44,6 +44,9 @@ export function doActionTarget(
       if (cards?.id != "カード") {
         throw new Error("must カード");
       }
+      if (typeof cards.cardID == "string") {
+        throw new Error("must no ref value");
+      }
       const table = cards.cardID.reduce((table, cardID) => {
         if (cardID == null) {
           throw new Error("target must not null");
@@ -74,6 +77,9 @@ export function doActionTarget(
       if (cards?.id != "カード") {
         throw new Error("must カード");
       }
+      if (typeof cards.cardID == "string") {
+        throw new Error("must no ref value");
+      }
       const table = cards.cardID.reduce((table, cardID) => {
         if (cardID == null) {
           throw new Error("target must not null");
@@ -103,6 +109,9 @@ export function doActionTarget(
       const cards = getTargetType(ctx, blockPayload, targets, action.cards);
       if (cards?.id != "カード") {
         throw new Error("must カード");
+      }
+      if (typeof cards.cardID == "string") {
+        throw new Error("must no ref value");
       }
       const color: CardColor | null = (() => {
         if (action.color == null) {
@@ -146,6 +155,9 @@ export function doActionTarget(
       const cards = getTargetType(ctx, blockPayload, targets, action.cards);
       if (cards?.id != "カード") {
         throw new Error("must カード");
+      }
+      if (typeof cards.cardID == "string") {
+        throw new Error("must no ref value");
       }
       ctx = cards.cardID.reduce((ctx, cardID) => {
         if (cardID == null) {
@@ -236,6 +248,9 @@ export function doActionTarget(
       const cards = getTargetType(ctx, blockPayload, targets, action.cards);
       if (cards?.id != "カード") {
         throw new Error("must カード");
+      }
+      if (typeof cards.cardID == "string") {
+        throw new Error("must no ref value");
       }
       const baSyou = getTargetType(ctx, blockPayload, targets, action.baSyou);
       if (baSyou?.id != "場所") {

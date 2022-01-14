@@ -50,7 +50,8 @@ const prototype: CardPrototype = {
                           {
                             id: "ActionMoveCardToPosition",
                             cards: {
-                              id: "このカード",
+                              id: "カード",
+                              cardID: "このカード",
                             },
                             baSyou: {
                               id: "場所",

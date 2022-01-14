@@ -41,7 +41,8 @@ function XXXcreatePlayUnitText(ctx: GameContext, cardID: string): CardText {
             id: "RequireTarget",
             targets: {
               cards: {
-                id: "このカード",
+                id: "カード",
+                cardID: "このカード",
               },
             },
             condition: {
@@ -57,8 +58,8 @@ function XXXcreatePlayUnitText(ctx: GameContext, cardID: string): CardText {
                 id: "ActionSetFace",
                 cards: "cards",
                 faceDown: {
-                  id: "TargetTypeYesNo",
-                  boolean: false,
+                  id: "TargetTypeBoolean",
+                  value: false,
                 },
               },
               {

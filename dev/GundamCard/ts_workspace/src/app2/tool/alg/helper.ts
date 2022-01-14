@@ -134,17 +134,126 @@ export function getTargetType(
     }
   };
   switch (targetTypeAfterProcess.id) {
-    case "このカードの合計国力": {
-      const cardID = getCardID();
-      const [_, cardState] = getCardState(ctx, cardID);
-      const totalCost = cardState.prototype.rollCost.length;
+    case "カード": {
+      if (targetTypeAfterProcess.cardID != "このカード") {
+        return {
+          id: "カード",
+          cardID: targetTypeAfterProcess.cardID,
+        };
+      }
       return {
-        id: "TargetTypeNumber",
-        number: totalCost,
+        id: "カード",
+        cardID: [getCardID()],
       };
     }
-    case "このカード":
-      return { id: "カード", cardID: [getCardID()] };
+    case "TargetTypeString": {
+      if (targetTypeAfterProcess.value == null) {
+        return targetTypeAfterProcess;
+      }
+      const isRef = typeof targetTypeAfterProcess.value == "string";
+      if (isRef == false) {
+        return targetTypeAfterProcess;
+      }
+      if (targetTypeAfterProcess.source == null) {
+        throw new Error("source not found");
+      }
+      const ref = targets[targetTypeAfterProcess.source];
+      if (ref == null) {
+        throw new Error("source is null");
+      }
+      const refTargetType = getTargetType(ctx, blockPayload, targets, ref);
+      if (refTargetType.id != "カード") {
+        throw new Error("must be card");
+      }
+      if (refTargetType.cardID.length == 0) {
+        throw new Error("cardID must > 0");
+      }
+      if (refTargetType.cardID[0] == null) {
+        throw new Error("cardID[0] must not null");
+      }
+      const [_, cardState] = getCardState(ctx, refTargetType.cardID[0]);
+      switch (targetTypeAfterProcess.value) {
+        default:
+        case "名称": {
+          return {
+            id: "TargetTypeString",
+            value: [""],
+          };
+        }
+      }
+    }
+    case "TargetTypeNumber": {
+      if (targetTypeAfterProcess.value == null) {
+        return targetTypeAfterProcess;
+      }
+      const isRef = Array.isArray(targetTypeAfterProcess.value);
+      if (isRef == false) {
+        return targetTypeAfterProcess;
+      }
+      if (targetTypeAfterProcess.source == null) {
+        throw new Error("source not found");
+      }
+      const ref = targets[targetTypeAfterProcess.source];
+      if (ref == null) {
+        throw new Error("source is null");
+      }
+      const refTargetType = getTargetType(ctx, blockPayload, targets, ref);
+      if (refTargetType.id != "カード") {
+        throw new Error("must be card");
+      }
+      if (refTargetType.cardID.length == 0) {
+        throw new Error("cardID must > 0");
+      }
+      if (refTargetType.cardID[0] == null) {
+        throw new Error("cardID[0] must not null");
+      }
+      const [_, cardState] = getCardState(ctx, refTargetType.cardID[0]);
+      switch (targetTypeAfterProcess.value) {
+        default:
+        case "合計国力": {
+          return {
+            id: "TargetTypeNumber",
+            value: 0,
+          };
+        }
+      }
+    }
+    case "TargetTypeBoolean": {
+      if (targetTypeAfterProcess.value == null) {
+        return targetTypeAfterProcess;
+      }
+      const isRef = Array.isArray(targetTypeAfterProcess.value);
+      if (isRef == false) {
+        return targetTypeAfterProcess;
+      }
+      if (targetTypeAfterProcess.source == null) {
+        throw new Error("source not found");
+      }
+      const ref = targets[targetTypeAfterProcess.source];
+      if (ref == null) {
+        throw new Error("source is null");
+      }
+      const refTargetType = getTargetType(ctx, blockPayload, targets, ref);
+      if (refTargetType.id != "カード") {
+        throw new Error("must be card");
+      }
+      if (refTargetType.cardID.length == 0) {
+        throw new Error("cardID must > 0");
+      }
+      if (refTargetType.cardID[0] == null) {
+        throw new Error("cardID[0] must not null");
+      }
+      const [_, cardState] = getCardState(ctx, refTargetType.cardID[0]);
+      switch (targetTypeAfterProcess.value) {
+        default:
+        case "自軍": {
+          return {
+            id: "TargetTypeBoolean",
+            value: false,
+          };
+        }
+      }
+    }
     case "TargetTypeCustom": {
       const func: TargetTypeCustomFunctionType = getCustomFunction(
         targetTypeAfterProcess.scriptString

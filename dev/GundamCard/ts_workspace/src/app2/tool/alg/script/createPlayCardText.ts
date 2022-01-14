@@ -39,7 +39,8 @@ export function createPlayCardText(
               id: "RequireTarget",
               targets: {
                 cards: {
-                  id: "このカード",
+                  id: "カード",
+                  cardID: "このカード",
                 },
               },
               condition: {
@@ -55,8 +56,8 @@ export function createPlayCardText(
                   id: "ActionSetFace",
                   cards: "cards",
                   faceDown: {
-                    id: "TargetTypeYesNo",
-                    boolean: false,
+                    id: "TargetTypeBoolean",
+                    value: false,
                   },
                 },
                 {
@@ -158,7 +159,8 @@ export function createPlayCardText(
                 id: "RequireTarget",
                 targets: {
                   cards: {
-                    id: "このカード",
+                    id: "カード",
+                    cardID: "このカード",
                   },
                 },
                 condition: {
@@ -174,8 +176,8 @@ export function createPlayCardText(
                     id: "ActionSetFace",
                     cards: "cards",
                     faceDown: {
-                      id: "TargetTypeYesNo",
-                      boolean: false,
+                      id: "TargetTypeBoolean",
+                      value: false,
                     },
                   },
                   {
@@ -243,7 +245,8 @@ export function createPlayCardText(
                 id: "RequireTarget",
                 targets: {
                   cards: {
-                    id: "このカード",
+                    id: "カード",
+                    cardID: "このカード",
                   },
                 },
                 condition: {
@@ -259,8 +262,8 @@ export function createPlayCardText(
                     id: "ActionSetFace",
                     cards: "cards",
                     faceDown: {
-                      id: "TargetTypeYesNo",
-                      boolean: false,
+                      id: "TargetTypeBoolean",
+                      value: false,
                     },
                   },
                   {
@@ -341,7 +344,8 @@ export function createPlayCardText(
                 id: "RequireTarget",
                 targets: {
                   cards: {
-                    id: "このカード",
+                    id: "カード",
+                    cardID: "このカード",
                   },
                 },
                 condition: {
@@ -357,8 +361,8 @@ export function createPlayCardText(
                     id: "ActionSetFace",
                     cards: "cards",
                     faceDown: {
-                      id: "TargetTypeYesNo",
-                      boolean: false,
+                      id: "TargetTypeBoolean",
+                      value: false,
                     },
                   },
                   {

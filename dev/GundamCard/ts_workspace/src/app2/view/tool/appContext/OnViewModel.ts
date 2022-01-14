@@ -40,11 +40,11 @@ export const OnViewModel = OnEvent.pipe(
               value: [PlayerA, "本国"],
             }),
             [
-              //"179016_04B_U_WT075C_white",
+              "179016_04B_U_WT075C_white",
               // "179030_11E_U_BL208S_blue",
               // "179030_11E_U_BL215R_blue",
-              "179001_01A_CH_WT007R_white",
-              "179030_11E_C_BL076S_blue",
+              //"179001_01A_CH_WT007R_white",
+              //"179030_11E_C_BL076S_blue",
             ]
           );
           // table = createCard(

@@ -34,6 +34,9 @@ function doAction(
     switch (target.id) {
       case "カード":
         {
+          if (target.cardID == "このカード") {
+            break;
+          }
           target.cardID.forEach((v, i) => {
             if (v == null) {
               throw new Error(`target(${key})[${i}] must not null`);
@@ -42,13 +45,18 @@ function doAction(
         }
         break;
       case "プレーヤー": {
-        target.playerID.forEach((v, i) => {
-          if (v == null) {
-            throw new Error(`target(${key})[${i}] must not null`);
-          }
-        });
+        if (target.playerID == null) {
+          throw new Error(`target(${key})[playerID] must not null`);
+        }
         break;
       }
+      case "TargetTypeBoolean":
+      case "TargetTypeNumber":
+      case "TargetTypeString":
+        if (target.value == null) {
+          throw new Error(`target(${key})[TargetTypeString] must not null`);
+        }
+        break;
     }
   });
 

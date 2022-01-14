@@ -5,6 +5,11 @@ import type {
   RelatedPlayerSideKeyword,
   UnitPropertyKeyword,
 } from "./basic";
+import {
+  TargetTypeBoolean,
+  TargetTypeNumber,
+  TargetTypeString,
+} from "./targetType";
 
 type ConditionOr = {
   id: "ConditionOr";
@@ -83,10 +88,33 @@ type ConditionCardIsBattle = {
   source: string;
 };
 
+type ConditionCardPropertyCompareOperator = "<=" | "<" | "==" | ">" | ">=";
+
 type ConditionCardPropertyCompare = {
   id: "ConditionCardPropertyCompare";
-  source: string;
-  value: [UnitPropertyKeyword, any, any];
+  value: [
+    TargetTypeNumber,
+    ConditionCardPropertyCompareOperator,
+    TargetTypeNumber
+  ];
+};
+
+type ConditionCardPropertyCompareString = {
+  id: "ConditionCardPropertyCompareString";
+  value: [
+    TargetTypeString,
+    ConditionCardPropertyCompareOperator,
+    TargetTypeString
+  ];
+};
+
+type ConditionCardPropertyCompareBoolean = {
+  id: "ConditionCardPropertyCompareBoolean";
+  value: [
+    TargetTypeBoolean,
+    ConditionCardPropertyCompareOperator,
+    TargetTypeBoolean
+  ];
 };
 
 export type Condition =
@@ -102,6 +130,8 @@ export type Condition =
   | ConditionCardHasTokuTyou
   | ConditionCardIsBattle
   | ConditionCardPropertyCompare
+  | ConditionCardPropertyCompareString
+  | ConditionCardPropertyCompareBoolean
   | ConditionNot
   | ConditionOr
   | ConditionAnd;

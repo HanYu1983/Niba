@@ -49,7 +49,7 @@ const prototype: CardPrototype = {
             action: [
               {
                 id: "ActionAddGlobalCardText",
-                cards: { id: "このカード" },
+                cards: { id: "カード", cardID: "このカード" },
                 cardTextStateID:
                   "ターン終了時に、このカードを持ち主のGにできる。",
                 cardText: {
@@ -77,7 +77,10 @@ const prototype: CardPrototype = {
                                   action: [
                                     {
                                       id: "ActionMoveCardToPosition",
-                                      cards: { id: "このカード" },
+                                      cards: {
+                                        id: "カード",
+                                        cardID: "このカード",
+                                      },
                                       baSyou: {
                                         id: "場所",
                                         baSyou: {
