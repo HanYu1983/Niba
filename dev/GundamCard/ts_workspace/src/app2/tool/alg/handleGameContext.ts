@@ -304,7 +304,7 @@ export function getTip(
           mapCard(ctx.gameState.table, (card) => {
             const tmp: TargetTypeCard = {
               id: "カード",
-              cardID: [card.id],
+              value: [card.id],
             };
             const msg = doConditionTarget(
               ctx,

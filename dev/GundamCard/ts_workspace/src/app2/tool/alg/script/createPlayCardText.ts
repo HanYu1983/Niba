@@ -40,7 +40,7 @@ export function createPlayCardText(
               targets: {
                 cards: {
                   id: "カード",
-                  cardID: "このカード",
+                  value: "このカード",
                 },
               },
               condition: {
@@ -54,21 +54,29 @@ export function createPlayCardText(
               action: [
                 {
                   id: "ActionSetFace",
-                  cards: "cards",
+                  cards: {
+                    id: "カード",
+                    value: "cards",
+                  },
                   faceDown: {
-                    id: "TargetTypeBoolean",
-                    value: false,
+                    id: "布林",
+                    value: [false],
                   },
                 },
                 {
                   id: "ActionMoveCardToPosition",
-                  cards: "cards",
+                  cards: {
+                    id: "カード",
+                    value: "cards",
+                  },
                   baSyou: {
                     id: "場所",
-                    baSyou: {
-                      id: "RelatedBaSyou",
-                      value: ["自軍", "プレイされているカード"],
-                    },
+                    value: [
+                      {
+                        id: "RelatedBaSyou",
+                        value: ["自軍", "プレイされているカード"],
+                      },
+                    ],
                   },
                 },
               ],
@@ -89,18 +97,26 @@ export function createPlayCardText(
                       action: [
                         {
                           id: "ActionMoveCardToPosition",
-                          cards: "cards",
+                          cards: {
+                            id: "カード",
+                            value: "cards",
+                          },
                           baSyou: {
                             id: "場所",
-                            baSyou: {
-                              id: "RelatedBaSyou",
-                              value: ["自軍", "Gゾーン"],
-                            },
+                            value: [
+                              {
+                                id: "RelatedBaSyou",
+                                value: ["自軍", "Gゾーン"],
+                              },
+                            ],
                           },
                         },
                         {
                           id: "ActionRoll",
-                          cards: "cards",
+                          cards: {
+                            id: "カード",
+                            value: "cards",
+                          },
                         },
                       ],
                     },
@@ -160,7 +176,7 @@ export function createPlayCardText(
                 targets: {
                   cards: {
                     id: "カード",
-                    cardID: "このカード",
+                    value: "このカード",
                   },
                 },
                 condition: {
@@ -174,21 +190,29 @@ export function createPlayCardText(
                 action: [
                   {
                     id: "ActionSetFace",
-                    cards: "cards",
+                    cards: {
+                      id: "カード",
+                      value: "cards",
+                    },
                     faceDown: {
-                      id: "TargetTypeBoolean",
-                      value: false,
+                      id: "布林",
+                      value: [false],
                     },
                   },
                   {
                     id: "ActionMoveCardToPosition",
-                    cards: "cards",
+                    cards: {
+                      id: "カード",
+                      value: "cards",
+                    },
                     baSyou: {
                       id: "場所",
-                      baSyou: {
-                        id: "RelatedBaSyou",
-                        value: ["自軍", "プレイされているカード"],
-                      },
+                      value: [
+                        {
+                          id: "RelatedBaSyou",
+                          value: ["自軍", "プレイされているカード"],
+                        },
+                      ],
                     },
                   },
                 ],
@@ -211,13 +235,18 @@ export function createPlayCardText(
                         action: [
                           {
                             id: "ActionMoveCardToPosition",
-                            cards: "cards",
+                            cards: {
+                              id: "カード",
+                              value: "cards",
+                            },
                             baSyou: {
                               id: "場所",
-                              baSyou: {
-                                id: "RelatedBaSyou",
-                                value: ["自軍", "ジャンクヤード"],
-                              },
+                              value: [
+                                {
+                                  id: "RelatedBaSyou",
+                                  value: ["自軍", "ジャンクヤード"],
+                                },
+                              ],
                             },
                           },
                         ],
@@ -246,7 +275,7 @@ export function createPlayCardText(
                 targets: {
                   cards: {
                     id: "カード",
-                    cardID: "このカード",
+                    value: "このカード",
                   },
                 },
                 condition: {
@@ -260,21 +289,29 @@ export function createPlayCardText(
                 action: [
                   {
                     id: "ActionSetFace",
-                    cards: "cards",
+                    cards: {
+                      id: "カード",
+                      value: "cards",
+                    },
                     faceDown: {
-                      id: "TargetTypeBoolean",
-                      value: false,
+                      id: "布林",
+                      value: [false],
                     },
                   },
                   {
                     id: "ActionMoveCardToPosition",
-                    cards: "cards",
+                    cards: {
+                      id: "カード",
+                      value: "cards",
+                    },
                     baSyou: {
                       id: "場所",
-                      baSyou: {
-                        id: "RelatedBaSyou",
-                        value: ["自軍", "プレイされているカード"],
-                      },
+                      value: [
+                        {
+                          id: "RelatedBaSyou",
+                          value: ["自軍", "プレイされているカード"],
+                        },
+                      ],
                     },
                   },
                 ],
@@ -295,13 +332,18 @@ export function createPlayCardText(
                         action: [
                           {
                             id: "ActionMoveCardToPosition",
-                            cards: "cards",
+                            cards: {
+                              id: "カード",
+                              value: "cards",
+                            },
                             baSyou: {
                               id: "場所",
-                              baSyou: {
-                                id: "RelatedBaSyou",
-                                value: ["自軍", "Gゾーン"],
-                              },
+                              value: [
+                                {
+                                  id: "RelatedBaSyou",
+                                  value: ["自軍", "Gゾーン"],
+                                },
+                              ],
                             },
                           },
                         ],
@@ -345,7 +387,7 @@ export function createPlayCardText(
                 targets: {
                   cards: {
                     id: "カード",
-                    cardID: "このカード",
+                    value: "このカード",
                   },
                 },
                 condition: {
@@ -359,21 +401,29 @@ export function createPlayCardText(
                 action: [
                   {
                     id: "ActionSetFace",
-                    cards: "cards",
+                    cards: {
+                      id: "カード",
+                      value: "cards",
+                    },
                     faceDown: {
-                      id: "TargetTypeBoolean",
-                      value: false,
+                      id: "布林",
+                      value: [false],
                     },
                   },
                   {
                     id: "ActionMoveCardToPosition",
-                    cards: "cards",
+                    cards: {
+                      id: "カード",
+                      value: "cards",
+                    },
                     baSyou: {
                       id: "場所",
-                      baSyou: {
-                        id: "RelatedBaSyou",
-                        value: ["自軍", "プレイされているカード"],
-                      },
+                      value: [
+                        {
+                          id: "RelatedBaSyou",
+                          value: ["自軍", "プレイされているカード"],
+                        },
+                      ],
                     },
                   },
                 ],
@@ -394,18 +444,26 @@ export function createPlayCardText(
                         action: [
                           {
                             id: "ActionMoveCardToPosition",
-                            cards: "cards",
+                            cards: {
+                              id: "カード",
+                              value: "cards",
+                            },
                             baSyou: {
                               id: "場所",
-                              baSyou: {
-                                id: "RelatedBaSyou",
-                                value: ["自軍", "配備エリア"],
-                              },
+                              value: [
+                                {
+                                  id: "RelatedBaSyou",
+                                  value: ["自軍", "配備エリア"],
+                                },
+                              ],
                             },
                           },
                           {
                             id: "ActionRoll",
-                            cards: "cards",
+                            cards: {
+                              id: "カード",
+                              value: "cards",
+                            },
                           },
                         ],
                       },

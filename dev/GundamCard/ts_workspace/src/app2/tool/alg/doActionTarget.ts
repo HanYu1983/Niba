@@ -44,10 +44,13 @@ export function doActionTarget(
       if (cards?.id != "カード") {
         throw new Error("must カード");
       }
-      if (typeof cards.cardID == "string") {
-        throw new Error("must no ref value");
+      if (!Array.isArray(cards.value)) {
+        throw new Error("執行Action時的所有target必須是陣列");
       }
-      const table = cards.cardID.reduce((table, cardID) => {
+      if (cards.value.length == 0) {
+        throw new Error("執行Action時的所有target必須最少有一個值");
+      }
+      const table = cards.value.reduce((table, cardID) => {
         if (cardID == null) {
           throw new Error("target must not null");
         }
@@ -77,10 +80,13 @@ export function doActionTarget(
       if (cards?.id != "カード") {
         throw new Error("must カード");
       }
-      if (typeof cards.cardID == "string") {
-        throw new Error("must no ref value");
+      if (!Array.isArray(cards.value)) {
+        throw new Error("執行Action時的所有target必須是陣列");
       }
-      const table = cards.cardID.reduce((table, cardID) => {
+      if (cards.value.length == 0) {
+        throw new Error("執行Action時的所有target必須最少有一個值");
+      }
+      const table = cards.value.reduce((table, cardID) => {
         if (cardID == null) {
           throw new Error("target must not null");
         }
@@ -110,8 +116,11 @@ export function doActionTarget(
       if (cards?.id != "カード") {
         throw new Error("must カード");
       }
-      if (typeof cards.cardID == "string") {
-        throw new Error("must no ref value");
+      if (!Array.isArray(cards.value)) {
+        throw new Error("執行Action時的所有target必須是陣列");
+      }
+      if (cards.value.length == 0) {
+        throw new Error("執行Action時的所有target必須最少有一個值");
       }
       const color: CardColor | null = (() => {
         if (action.color == null) {
@@ -121,9 +130,15 @@ export function doActionTarget(
         if (_color.id != "カードの色") {
           throw new Error("must カードの色");
         }
-        return _color.color;
+        if (!Array.isArray(_color.value)) {
+          throw new Error("執行Action時的所有target必須是陣列");
+        }
+        if (_color.value.length == 0) {
+          throw new Error("執行Action時的所有target必須最少有一個值");
+        }
+        return _color.value[0];
       })();
-      const table = cards.cardID.reduce((table, cardID) => {
+      const table = cards.value.reduce((table, cardID) => {
         if (cardID == null) {
           throw new Error("target must not null");
         }
@@ -156,10 +171,13 @@ export function doActionTarget(
       if (cards?.id != "カード") {
         throw new Error("must カード");
       }
-      if (typeof cards.cardID == "string") {
-        throw new Error("must no ref value");
+      if (!Array.isArray(cards.value)) {
+        throw new Error("執行Action時的所有target必須是陣列");
       }
-      ctx = cards.cardID.reduce((ctx, cardID) => {
+      if (cards.value.length == 0) {
+        throw new Error("執行Action時的所有target必須最少有一個值");
+      }
+      ctx = cards.value.reduce((ctx, cardID) => {
         if (cardID == null) {
           throw new Error("[doActionTarget][ActionDrop]target must not null");
         }
@@ -249,26 +267,36 @@ export function doActionTarget(
       if (cards?.id != "カード") {
         throw new Error("must カード");
       }
-      if (typeof cards.cardID == "string") {
-        throw new Error("must no ref value");
+      if (!Array.isArray(cards.value)) {
+        throw new Error("執行Action時的所有target必須是陣列");
       }
-      const baSyou = getTargetType(ctx, blockPayload, targets, action.baSyou);
-      if (baSyou?.id != "場所") {
+      if (cards.value.length == 0) {
+        throw new Error("執行Action時的所有target必須最少有一個值");
+      }
+      const targetBaSyou = getTargetType(
+        ctx,
+        blockPayload,
+        targets,
+        action.baSyou
+      );
+      if (targetBaSyou?.id != "場所") {
         throw new Error("must 場所");
       }
-      ctx = cards.cardID.reduce((ctx, cardID) => {
-        if (baSyou.baSyou == null) {
-          throw new Error("baSyou not found");
-        }
+      if (!Array.isArray(targetBaSyou.value)) {
+        throw new Error("執行Action時的所有target必須是陣列");
+      }
+      if (targetBaSyou.value.length == 0) {
+        throw new Error("執行Action時的所有target必須最少有一個值");
+      }
+      const baSyou = targetBaSyou.value[0];
+      ctx = cards.value.reduce((ctx, cardID) => {
         if (cardID == null) {
           throw new Error(
             "[doActionTarget][ActionMoveCardToPosition] cardID not found"
           );
         }
         const fromBaSyouID = getBaShouID(getCardBaSyou(ctx, cardID));
-        const toBaSyouID = getBaShouID(
-          getAbsoluteBaSyou(baSyou.baSyou, ctx, cardID)
-        );
+        const toBaSyouID = getBaShouID(getAbsoluteBaSyou(baSyou, ctx, cardID));
         const nextTable = moveCard(
           ctx.gameState.table,
           fromBaSyouID,
@@ -365,13 +393,13 @@ export function doActionTarget(
       if (cards.id != "カード") {
         throw new Error("must カード");
       }
-      if (cards.cardID.length == 0) {
-        throw new Error("card.length == 0");
+      if (!Array.isArray(cards.value)) {
+        throw new Error("執行Action時的所有target必須是陣列");
       }
-      const cardID = cards.cardID[0];
-      if (cardID == null) {
-        throw new Error("card ID not found");
+      if (cards.value.length == 0) {
+        throw new Error("執行Action時的所有target必須最少有一個值");
       }
+      const cardID = cards.value[0];
       const id = cardTextStateID || `ActionAddGlobalCardText_${idSeq++}`;
       const cardState: CardState = {
         ...DEFAULT_CARD_STATE,
@@ -411,13 +439,13 @@ export function doActionTarget(
       if (cards.id != "カード") {
         throw new Error("must カード");
       }
-      if (cards.cardID.length == 0) {
-        throw new Error("card.length == 0");
+      if (!Array.isArray(cards.value)) {
+        throw new Error("執行Action時的所有target必須是陣列");
       }
-      const cardID = cards.cardID[0];
-      if (cardID == null) {
-        throw new Error("card ID not found");
+      if (cards.value.length == 0) {
+        throw new Error("執行Action時的所有target必須最少有一個值");
       }
+      const cardID = cards.value[0];
       let [nextCtx, _] = getCardState(ctx, cardID);
       const nextCardState = nextCtx.gameState.cardState.map(
         (cardState): CardState => {
@@ -459,10 +487,13 @@ export function doActionTarget(
       if (cards.id != "カード") {
         throw new Error("must カード");
       }
-      if (cards.cardID.length == 0) {
-        throw new Error("card.length == 0");
+      if (!Array.isArray(cards.value)) {
+        throw new Error("執行Action時的所有target必須是陣列");
       }
-      const cardID = cards.cardID[0];
+      if (cards.value.length == 0) {
+        throw new Error("執行Action時的所有target必須最少有一個值");
+      }
+      const cardID = cards.value[0];
       if (cardID == null) {
         throw new Error("card ID not found");
       }

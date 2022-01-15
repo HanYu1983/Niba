@@ -178,24 +178,45 @@ export function createRollCostRequire(
   return {
     id: "RequireTarget",
     targets: {
-      cards: {
+      createRollCostRequire_cards: {
         id: "カード",
-        cardID: new Array(costNum).fill(null),
+        value: [],
       },
+    },
+    condition: {
+      id: "ConditionCompareNumber",
+      value: [
+        {
+          id: "數字",
+          value: {
+            path: [
+              {
+                id: "參照",
+                value: "createRollCostRequire_cards",
+              },
+              "陣列長度",
+            ],
+          },
+        },
+        "==",
+        {
+          id: "數字",
+          value: [costNum],
+        },
+      ],
     },
     action: [
       {
         id: "ActionConsumeG",
         cards: {
           id: "カード",
-          source: "cards",
-          cardID: "対象",
+          value: "createRollCostRequire_cards",
         },
         ...(color
           ? {
               color: {
                 id: "カードの色",
-                color: color,
+                value: [color],
               },
             }
           : null),

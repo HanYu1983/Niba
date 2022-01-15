@@ -20,96 +20,96 @@ const prototype: CardPrototype = {
   texts: [
     createTokuSyuKouKaText(["戦闘配備"], { cost: 0 }),
     createTokuSyuKouKaText(["改装", "リ・ガズィ系"], { cost: 1 }),
-    {
-      id: "自動型",
-      category: "起動",
-      description:
-        "『起動』：青のGサインを持つ自軍Gが４枚以上ある状態で、このカードが場に出た場合、ターン終了時に、このカードを持ち主のGにできる。",
-      block: {
-        require: {
-          id: "RequireAnd",
-          and: [
-            {
-              id: "RequireCustom",
-              customID: {
-                id: "{color}のGサインを持つ自軍Gが{number}枚以上ある場合",
-                color: "青",
-                number: 4,
-              } as RequireCustomID,
-            },
-            {
-              id: "RequireEvent",
-              // このカードが場に出た場合
-            },
-          ],
-        },
-        feedback: [
-          {
-            id: "FeedbackAction",
-            action: [
-              {
-                id: "ActionAddGlobalCardText",
-                cards: { id: "カード", cardID: "このカード" },
-                cardTextStateID:
-                  "ターン終了時に、このカードを持ち主のGにできる。",
-                cardText: {
-                  id: "自動型",
-                  category: "起動",
-                  description:
-                    "ターン終了時に、このカードを持ち主のGにできる。",
-                  block: {
-                    require: {
-                      id: "RequireEvent",
-                      // ターン終了時に
-                    },
-                    feedback: [
-                      {
-                        id: "FeedbackAction",
-                        action: [
-                          {
-                            id: "ActionAddBlock",
-                            type: "立即",
-                            block: {
-                              isOption: true,
-                              feedback: [
-                                {
-                                  id: "FeedbackAction",
-                                  action: [
-                                    {
-                                      id: "ActionMoveCardToPosition",
-                                      cards: {
-                                        id: "カード",
-                                        cardID: "このカード",
-                                      },
-                                      baSyou: {
-                                        id: "場所",
-                                        baSyou: {
-                                          id: "RelatedBaSyou",
-                                          value: ["持ち主", "Gゾーン"],
-                                        },
-                                      },
-                                    },
-                                  ],
-                                },
-                              ],
-                            },
-                          },
-                          {
-                            id: "ActionDeleteGlobalCardText",
-                            cardTextStateID:
-                              "ターン終了時に、このカードを持ち主のGにできる。",
-                          },
-                        ],
-                      },
-                    ],
-                  },
-                },
-              },
-            ],
-          },
-        ],
-      },
-    },
+    // {
+    //   id: "自動型",
+    //   category: "起動",
+    //   description:
+    //     "『起動』：青のGサインを持つ自軍Gが４枚以上ある状態で、このカードが場に出た場合、ターン終了時に、このカードを持ち主のGにできる。",
+    //   block: {
+    //     require: {
+    //       id: "RequireAnd",
+    //       and: [
+    //         {
+    //           id: "RequireCustom",
+    //           customID: {
+    //             id: "{color}のGサインを持つ自軍Gが{number}枚以上ある場合",
+    //             color: "青",
+    //             number: 4,
+    //           } as RequireCustomID,
+    //         },
+    //         {
+    //           id: "RequireEvent",
+    //           // このカードが場に出た場合
+    //         },
+    //       ],
+    //     },
+    //     feedback: [
+    //       {
+    //         id: "FeedbackAction",
+    //         action: [
+    //           {
+    //             id: "ActionAddGlobalCardText",
+    //             cards: { id: "カード", cardID: "このカード" },
+    //             cardTextStateID:
+    //               "ターン終了時に、このカードを持ち主のGにできる。",
+    //             cardText: {
+    //               id: "自動型",
+    //               category: "起動",
+    //               description:
+    //                 "ターン終了時に、このカードを持ち主のGにできる。",
+    //               block: {
+    //                 require: {
+    //                   id: "RequireEvent",
+    //                   // ターン終了時に
+    //                 },
+    //                 feedback: [
+    //                   {
+    //                     id: "FeedbackAction",
+    //                     action: [
+    //                       {
+    //                         id: "ActionAddBlock",
+    //                         type: "立即",
+    //                         block: {
+    //                           isOption: true,
+    //                           feedback: [
+    //                             {
+    //                               id: "FeedbackAction",
+    //                               action: [
+    //                                 {
+    //                                   id: "ActionMoveCardToPosition",
+    //                                   cards: {
+    //                                     id: "カード",
+    //                                     cardID: "このカード",
+    //                                   },
+    //                                   baSyou: {
+    //                                     id: "場所",
+    //                                     baSyou: {
+    //                                       id: "RelatedBaSyou",
+    //                                       value: ["持ち主", "Gゾーン"],
+    //                                     },
+    //                                   },
+    //                                 },
+    //                               ],
+    //                             },
+    //                           ],
+    //                         },
+    //                       },
+    //                       {
+    //                         id: "ActionDeleteGlobalCardText",
+    //                         cardTextStateID:
+    //                           "ターン終了時に、このカードを持ち主のGにできる。",
+    //                       },
+    //                     ],
+    //                   },
+    //                 ],
+    //               },
+    //             },
+    //           },
+    //         ],
+    //       },
+    //     ],
+    //   },
+    // },
   ],
 };
 

@@ -17,39 +17,39 @@ const prototype: CardPrototype = {
     createTokuSyuKouKaText(["高機動"], { cost: 0 }),
     createTokuSyuKouKaText(["サイコミュ", 3], { cost: 1 }),
     createTokuSyuKouKaText(["改装", "νガンダム系"], { cost: 1 }),
-    {
-      id: "自動型",
-      category: "常駐",
-      description:
-        "『常駐』：青のGサインを持つ自軍Gが５枚以上ある場合、全ての敵軍ユニットは、－３／ー３／±０を得る。",
-      block: {
-        require: {
-          id: "RequireCustom",
-          customID: {
-            id: "{color}のGサインを持つ自軍Gが{number}枚以上ある場合",
-            color: "青",
-            number: 5,
-          } as RequireCustomID,
-        },
-        feedback: [
-          {
-            id: "FeedbackAction",
-            action: [
-              {
-                id: "ActionAddEffect",
-                effectID: "全ての敵軍ユニットは、－３／ー３／±０を得る。",
-                effect: {
-                  id: "GameEffectCustom",
-                  customID: {
-                    id: "全ての敵軍ユニットは、－３／ー３／±０を得る。",
-                  },
-                },
-              },
-            ],
-          },
-        ],
-      },
-    },
+    // {
+    //   id: "自動型",
+    //   category: "常駐",
+    //   description:
+    //     "『常駐』：青のGサインを持つ自軍Gが５枚以上ある場合、全ての敵軍ユニットは、－３／ー３／±０を得る。",
+    //   block: {
+    //     require: {
+    //       id: "RequireCustom",
+    //       customID: {
+    //         id: "{color}のGサインを持つ自軍Gが{number}枚以上ある場合",
+    //         color: "青",
+    //         number: 5,
+    //       } as RequireCustomID,
+    //     },
+    //     feedback: [
+    //       {
+    //         id: "FeedbackAction",
+    //         action: [
+    //           {
+    //             id: "ActionAddEffect",
+    //             effectID: "全ての敵軍ユニットは、－３／ー３／±０を得る。",
+    //             effect: {
+    //               id: "GameEffectCustom",
+    //               customID: {
+    //                 id: "全ての敵軍ユニットは、－３／ー３／±０を得る。",
+    //               },
+    //             },
+    //           },
+    //         ],
+    //       },
+    //     ],
+    //   },
+    // },
   ],
 };
 

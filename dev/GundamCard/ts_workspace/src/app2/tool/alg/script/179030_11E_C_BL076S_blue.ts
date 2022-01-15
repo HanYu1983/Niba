@@ -23,102 +23,102 @@ const prototype: CardPrototype = {
   color: "青",
   rollCost: ["青", null, null],
   texts: [
-    {
-      id: "自動型",
-      category: "恒常",
-      description:
-        "『恒常』：このカードの解決直後に、本来の記述に｢特徴：装弾｣を持つ自軍G１枚をロールできる。その場合、自軍ユニット１枚の上に＋１／＋１／＋１コイン２個を乗せる。",
-      block: {
-        require: {
-          id: "RequireEvent",
-          // このカードの解決直後に
-        },
-        feedback: [
-          {
-            id: "FeedbackAction",
-            action: [
-              {
-                id: "ActionAddBlock",
-                type: "立即",
-                block: {
-                  contextID: "理想の激突",
-                  isOption: true,
-                  require: {
-                    id: "RequireAnd",
-                    and: [
-                      {
-                        id: "RequireTarget",
-                        targets: {
-                          cardA: {
-                            id: "カード",
-                            cardID: [null],
-                          },
-                        },
-                        condition: {
-                          id: "ConditionAnd",
-                          and: [
-                            {
-                              id: "ConditionCardOnBaSyou",
-                              source: "cardA",
-                              baSyou: {
-                                id: "RelatedBaSyou",
-                                value: ["自軍", "Gゾーン"],
-                              },
-                            },
-                            {
-                              id: "ConditionCardHasTokuTyou",
-                              source: "cardA",
-                              value: "装弾",
-                            },
-                          ],
-                        },
-                        action: [
-                          {
-                            id: "ActionRoll",
-                            cards: "cardA",
-                          },
-                        ],
-                      },
-                      {
-                        id: "RequireTarget",
-                        targets: {
-                          cardB: {
-                            id: "カード",
-                            cardID: [null],
-                          },
-                        },
-                        action: [
-                          {
-                            id: "ActionSetTarget",
-                            source: "cardB",
-                            target: "cardB",
-                          },
-                        ],
-                      },
-                    ],
-                  },
-                  feedback: [
-                    {
-                      id: "FeedbackAction",
-                      action: [
-                        // TODO: add coin
-                        {
-                          id: "ActionAddEffect",
-                          effect: {
-                            id: "GameEffectCustom",
-                            customID: "＋１／＋１／＋１コイン２個を乗せる",
-                          },
-                        },
-                      ],
-                    },
-                  ],
-                },
-              },
-            ],
-          },
-        ],
-      },
-    },
+    // {
+    //   id: "自動型",
+    //   category: "恒常",
+    //   description:
+    //     "『恒常』：このカードの解決直後に、本来の記述に｢特徴：装弾｣を持つ自軍G１枚をロールできる。その場合、自軍ユニット１枚の上に＋１／＋１／＋１コイン２個を乗せる。",
+    //   block: {
+    //     require: {
+    //       id: "RequireEvent",
+    //       // このカードの解決直後に
+    //     },
+    //     feedback: [
+    //       {
+    //         id: "FeedbackAction",
+    //         action: [
+    //           {
+    //             id: "ActionAddBlock",
+    //             type: "立即",
+    //             block: {
+    //               contextID: "理想の激突",
+    //               isOption: true,
+    //               require: {
+    //                 id: "RequireAnd",
+    //                 and: [
+    //                   {
+    //                     id: "RequireTarget",
+    //                     targets: {
+    //                       cardA: {
+    //                         id: "カード",
+    //                         cardID: [null],
+    //                       },
+    //                     },
+    //                     condition: {
+    //                       id: "ConditionAnd",
+    //                       and: [
+    //                         {
+    //                           id: "ConditionCardOnBaSyou",
+    //                           source: "cardA",
+    //                           baSyou: {
+    //                             id: "RelatedBaSyou",
+    //                             value: ["自軍", "Gゾーン"],
+    //                           },
+    //                         },
+    //                         {
+    //                           id: "ConditionCardHasTokuTyou",
+    //                           source: "cardA",
+    //                           value: "装弾",
+    //                         },
+    //                       ],
+    //                     },
+    //                     action: [
+    //                       {
+    //                         id: "ActionRoll",
+    //                         cards: "cardA",
+    //                       },
+    //                     ],
+    //                   },
+    //                   {
+    //                     id: "RequireTarget",
+    //                     targets: {
+    //                       cardB: {
+    //                         id: "カード",
+    //                         cardID: [null],
+    //                       },
+    //                     },
+    //                     action: [
+    //                       {
+    //                         id: "ActionSetTarget",
+    //                         source: "cardB",
+    //                         target: "cardB",
+    //                       },
+    //                     ],
+    //                   },
+    //                 ],
+    //               },
+    //               feedback: [
+    //                 {
+    //                   id: "FeedbackAction",
+    //                   action: [
+    //                     // TODO: add coin
+    //                     {
+    //                       id: "ActionAddEffect",
+    //                       effect: {
+    //                         id: "GameEffectCustom",
+    //                         customID: "＋１／＋１／＋１コイン２個を乗せる",
+    //                       },
+    //                     },
+    //                   ],
+    //                 },
+    //               ],
+    //             },
+    //           },
+    //         ],
+    //       },
+    //     ],
+    //   },
+    // },
   ],
 };
 
@@ -132,7 +132,7 @@ const _main: TargetTypeCustomFunctionType = (
   console.log("JIBA");
   return {
     id: "カード",
-    cardID: [],
+    value: [],
   };
 };
 const playCardText = createPlayCardText(prototype, {
@@ -154,14 +154,17 @@ const playCardText = createPlayCardText(prototype, {
             id: "RequireTarget",
             targets: {
               "交戦中ではない、全てのユニット": {
-                id: "TargetTypeCustom",
-                scriptString: getCustomFunctionString(_main),
+                id: "腳本",
+                value: getCustomFunctionString(_main),
               },
             },
             action: [
               {
                 id: "ActionDestroy",
-                cards: "交戦中ではない、全てのユニット",
+                cards: {
+                  id: "カード",
+                  value: "交戦中ではない、全てのユニット",
+                },
               },
             ],
           },

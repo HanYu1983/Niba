@@ -31,38 +31,13 @@ function doAction(
   varCtxID: string
 ): GameContext {
   Object.entries(require.targets).forEach(([key, target]) => {
-    switch (target.id) {
-      case "カード":
-        {
-          if (target.cardID == "このカード") {
-            break;
-          }
-          if (target.cardID == "対象") {
-            break;
-          }
-          target.cardID.forEach((v, i) => {
-            if (v == null) {
-              throw new Error(`target(${key})[${i}] must not null`);
-            }
-          });
-        }
-        break;
-      case "プレーヤー": {
-        if (target.playerID == null) {
-          throw new Error(`target(${key})[playerID] must not null`);
-        }
-        break;
-      }
-      case "TargetTypeBoolean":
-      case "TargetTypeNumber":
-      case "TargetTypeString":
-        if (target.value == null) {
-          throw new Error(`target(${key})[TargetTypeString] must not null`);
-        }
-        break;
+    if (!Array.isArray(target.value)) {
+      throw new Error("執行Action時的所有target必須是陣列");
+    }
+    if (target.value.length == 0) {
+      throw new Error("執行Action時的所有target必須最少有一個值");
     }
   });
-
   switch (action.id) {
     case "ActionSetTarget": {
       const { target } = action;

@@ -218,7 +218,7 @@ export function test() {
 //               cardID: [null],
 //             },
 //             faceDown: {
-//               id: "TargetTypeBoolean",
+//               id: "布林",
 //               boolean: true,
 //             },
 //           },
@@ -491,7 +491,7 @@ export function test() {
 //               cardID: [cardID],
 //             },
 //             faceDown: {
-//               id: "TargetTypeBoolean",
+//               id: "布林",
 //               value: false,
 //             },
 //           },

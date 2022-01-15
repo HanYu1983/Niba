@@ -15,7 +15,7 @@ const _main: TargetTypeCustomFunctionType = (
   console.log("JIBA");
   return {
     id: "カード",
-    cardID: [],
+    value: [],
   };
 };
 

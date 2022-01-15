@@ -148,7 +148,7 @@ export function getTargetType(
     }
   };
   switch (targetTypeAfterProcess.id) {
-    case "TargetTypeRef":
+    case "參照":
       return targetTypeAfterProcess;
     // このカード -> カード
     // 対象 -> カード
@@ -188,7 +188,7 @@ export function getTargetType(
           const values = targetType.value.map((cardID) => {
             switch (path[1]) {
               default:
-              case "Controller": {
+              case "的「コントローラー」": {
                 return getCardController(ctx, cardID);
               }
             }
@@ -222,7 +222,7 @@ export function getTargetType(
           const values = targetType.value.map((cardID): CardColor => {
             switch (path[1]) {
               default:
-              case "の色": {
+              case "的「色」": {
                 return "白";
               }
             }
@@ -236,7 +236,7 @@ export function getTargetType(
           throw new Error("path[0].id not found:" + path[0].id);
       }
     }
-    case "TargetTypeCardRole": {
+    case "「カード」的角色": {
       if (Array.isArray(targetTypeAfterProcess.value)) {
         return targetTypeAfterProcess;
       }
@@ -262,7 +262,7 @@ export function getTargetType(
             }
           });
           return {
-            id: "TargetTypeCardRole",
+            id: "「カード」的角色",
             value: values,
           };
         }
@@ -270,7 +270,7 @@ export function getTargetType(
           throw new Error("path[0].id not found:" + path[0].id);
       }
     }
-    case "TargetTypeString": {
+    case "字串": {
       if (Array.isArray(targetTypeAfterProcess.value)) {
         return targetTypeAfterProcess;
       }
@@ -293,13 +293,13 @@ export function getTargetType(
           const values = targetType.value.map((cardID): string => {
             switch (path[1]) {
               default:
-              case "名称": {
+              case "的「名称」": {
                 return "xx";
               }
             }
           });
           return {
-            id: "TargetTypeString",
+            id: "字串",
             value: values,
           };
         }
@@ -327,7 +327,7 @@ export function getTargetType(
           const values = targetType.value.map((cardID) => {
             switch (path[1]) {
               default:
-              case "の場所": {
+              case "的「場所」": {
                 return getCardBaSyou(ctx, cardID);
               }
             }
@@ -341,16 +341,16 @@ export function getTargetType(
           throw new Error("path[0].id not found:" + path[0].id);
       }
     }
-    case "TargetTypeNumber": {
+    case "數字": {
       if (Array.isArray(targetTypeAfterProcess.value)) {
         return targetTypeAfterProcess;
       }
       const path = targetTypeAfterProcess.value.path;
       switch (path[0].id) {
-        case "TargetTypeRef": {
+        case "參照": {
           const targetType = getTargetType(ctx, blockPayload, targets, path[0]);
           if (Array.isArray(targetType.value)) {
-            return { id: "TargetTypeNumber", value: [targetType.value.length] };
+            return { id: "數字", value: [targetType.value.length] };
           } else {
             throw new Error("must be real value");
           }
@@ -369,13 +369,13 @@ export function getTargetType(
           const values = targetType.value.map((cardID) => {
             switch (path[1]) {
               default:
-              case "合計国力": {
+              case "的「合計国力」": {
                 return 0;
               }
             }
           });
           return {
-            id: "TargetTypeNumber",
+            id: "數字",
             value: values,
           };
         }
@@ -383,7 +383,7 @@ export function getTargetType(
           throw new Error("path[0].id not found:" + path[0]);
       }
     }
-    case "TargetTypeBoolean": {
+    case "布林": {
       if (Array.isArray(targetTypeAfterProcess.value)) {
         return targetTypeAfterProcess;
       }
@@ -403,13 +403,13 @@ export function getTargetType(
           const values = targetType.value.map((cardID) => {
             switch (path[1]) {
               default:
-              case "交戦中": {
+              case "在「交戦中」？": {
                 return false;
               }
             }
           });
           return {
-            id: "TargetTypeBoolean",
+            id: "布林",
             value: values,
           };
         }
@@ -417,7 +417,7 @@ export function getTargetType(
           throw new Error("path[0].id not found:" + path[0].id);
       }
     }
-    case "TargetTypeCustom": {
+    case "腳本": {
       const func: TargetTypeCustomFunctionType = getCustomFunction(
         targetTypeAfterProcess.value
       );

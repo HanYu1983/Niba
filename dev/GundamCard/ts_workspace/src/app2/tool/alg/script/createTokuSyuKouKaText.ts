@@ -38,17 +38,17 @@ export function createTokuSyuKouKaText(
                           id: "ConditionCompareNumber",
                           value: [
                             {
-                              id: "TargetTypeNumber",
+                              id: "數字",
                               value: {
                                 path: [
-                                  { id: "TargetTypeRef", value: "cards" },
-                                  "value.length",
+                                  { id: "參照", value: "cards" },
+                                  "陣列長度",
                                 ],
                               },
                             },
                             "==",
                             {
-                              id: "TargetTypeNumber",
+                              id: "數字",
                               value: [1],
                             },
                           ],
@@ -61,7 +61,7 @@ export function createTokuSyuKouKaText(
                               value: {
                                 path: [
                                   { id: "カード", value: "cards" },
-                                  "Controller",
+                                  "的「コントローラー」",
                                 ],
                               },
                             },
@@ -76,7 +76,7 @@ export function createTokuSyuKouKaText(
                                       path: [{ id: "このカード" }],
                                     },
                                   },
-                                  "Controller",
+                                  "的「コントローラー」",
                                 ],
                               },
                             },
@@ -86,12 +86,12 @@ export function createTokuSyuKouKaText(
                           id: "ConditionCompareRole",
                           value: [
                             {
-                              id: "TargetTypeCardRole",
+                              id: "「カード」的角色",
                               value: "cards",
                             },
                             "==",
                             {
-                              id: "TargetTypeCardRole",
+                              id: "「カード」的角色",
                               value: ["ユニット"],
                             },
                           ],
@@ -190,7 +190,7 @@ export function createTokuSyuKouKaText(
                               value: {
                                 path: [
                                   { id: "カード", value: "targetCard" },
-                                  "Controller",
+                                  "的「コントローラー」",
                                 ],
                               },
                             },
@@ -205,7 +205,7 @@ export function createTokuSyuKouKaText(
                                       path: [{ id: "このカード" }],
                                     },
                                   },
-                                  "Controller",
+                                  "的「コントローラー」",
                                 ],
                               },
                             },
@@ -215,12 +215,12 @@ export function createTokuSyuKouKaText(
                           id: "ConditionCompareRole",
                           value: [
                             {
-                              id: "TargetTypeCardRole",
+                              id: "「カード」的角色",
                               value: "targetCard",
                             },
                             "==",
                             {
-                              id: "TargetTypeCardRole",
+                              id: "「カード」的角色",
                               value: ["ユニット"],
                             },
                           ],
@@ -229,17 +229,17 @@ export function createTokuSyuKouKaText(
                           id: "ConditionCompareBoolean",
                           value: [
                             {
-                              id: "TargetTypeBoolean",
+                              id: "布林",
                               value: {
                                 path: [
                                   { id: "カード", value: "targetCard" },
-                                  "交戦中",
+                                  "在「交戦中」？",
                                 ],
                               },
                             },
                             "==",
                             {
-                              id: "TargetTypeBoolean",
+                              id: "布林",
                               value: [true],
                             },
                           ],
@@ -356,12 +356,12 @@ export function createTokuSyuKouKaText(
                           id: "ConditionCompareRole",
                           value: [
                             {
-                              id: "TargetTypeCardRole",
+                              id: "「カード」的角色",
                               value: "targetCard",
                             },
                             "==",
                             {
-                              id: "TargetTypeCardRole",
+                              id: "「カード」的角色",
                               value: ["ユニット"],
                             },
                           ],
@@ -370,12 +370,12 @@ export function createTokuSyuKouKaText(
                           id: "ConditionCompareBoolean",
                           value: [
                             {
-                              id: "TargetTypeBoolean",
+                              id: "布林",
                               value: "targetCard",
                             },
                             "==",
                             {
-                              id: "TargetTypeBoolean",
+                              id: "布林",
                               value: [true],
                             },
                           ],
@@ -384,20 +384,20 @@ export function createTokuSyuKouKaText(
                           id: "ConditionCompareNumber",
                           value: [
                             {
-                              id: "TargetTypeNumber",
+                              id: "數字",
                               value: {
                                 path: [
                                   {
                                     id: "カード",
                                     value: "targetCard",
                                   },
-                                  "防御力",
+                                  "的「防御力」",
                                 ],
                               },
                             },
                             "<=",
                             {
-                              id: "TargetTypeNumber",
+                              id: "數字",
                               value: [damage],
                             },
                           ],
@@ -500,7 +500,7 @@ export function createTokuSyuKouKaText(
                                         id: "カード",
                                         value: "cardB",
                                       },
-                                      "の場所",
+                                      "的「場所」",
                                     ],
                                   },
                                 },
@@ -527,7 +527,7 @@ export function createTokuSyuKouKaText(
                                         id: "カード",
                                         value: "cardB",
                                       },
-                                      "の場所",
+                                      "的「場所」",
                                     ],
                                   },
                                 },
@@ -549,12 +549,12 @@ export function createTokuSyuKouKaText(
                           id: "ConditionCompareRole",
                           value: [
                             {
-                              id: "TargetTypeCardRole",
+                              id: "「カード」的角色",
                               value: "targetCard",
                             },
                             "==",
                             {
-                              id: "TargetTypeCardRole",
+                              id: "「カード」的角色",
                               value: ["ユニット"],
                             },
                           ],
@@ -574,7 +574,7 @@ export function createTokuSyuKouKaText(
                           value: "cardB",
                         },
                         faceDown: {
-                          id: "TargetTypeBoolean",
+                          id: "布林",
                           value: [false],
                         },
                       },
