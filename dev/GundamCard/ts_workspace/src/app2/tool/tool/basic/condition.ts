@@ -93,79 +93,43 @@ type ConditionCardIsBattle = {
   source: string;
 };
 
-type ConditionCardPropertyCompareOperator =
-  | "<="
-  | "<"
-  | "=="
-  | ">"
-  | ">="
-  | "!=";
+type ConditionCompareOperator = "<=" | "<" | "==" | ">" | ">=" | "!=" | "in";
 
-type ConditionCardPropertyCompare = {
-  id: "ConditionCardPropertyCompare";
-  value: [
-    TargetTypeNumber,
-    ConditionCardPropertyCompareOperator,
-    TargetTypeNumber
-  ];
+type ConditionCompareNumber = {
+  id: "ConditionCompareNumber";
+  value: [TargetTypeNumber, ConditionCompareOperator, TargetTypeNumber];
 };
 
-type ConditionCardPropertyCompareString = {
-  id: "ConditionCardPropertyCompareString";
-  value: [
-    TargetTypeString,
-    ConditionCardPropertyCompareOperator,
-    TargetTypeString
-  ];
+type ConditionCompareString = {
+  id: "ConditionCompareString";
+  value: [TargetTypeString, ConditionCompareOperator, TargetTypeString];
 };
 
-type ConditionCardPropertyCompareBoolean = {
-  id: "ConditionCardPropertyCompareBoolean";
-  value: [
-    TargetTypeBoolean,
-    ConditionCardPropertyCompareOperator,
-    TargetTypeBoolean
-  ];
+type ConditionCompareBoolean = {
+  id: "ConditionCompareBoolean";
+  value: [TargetTypeBoolean, ConditionCompareOperator, TargetTypeBoolean];
 };
 
-type ConditionCardPropertyCompareRole = {
-  id: "ConditionCardPropertyCompareRole";
-  value: [
-    TargetTypeCardRole,
-    ConditionCardPropertyCompareOperator,
-    TargetTypeCardRole
-  ];
+type ConditionCompareRole = {
+  id: "ConditionCompareRole";
+  value: [TargetTypeCardRole, ConditionCompareOperator, TargetTypeCardRole];
 };
 
-type ConditionCardPropertyCompareCardOperator =
-  | "交戦中"
-  | ConditionCardPropertyCompareOperator;
+type ConditionCompareCardOperator = "交戦中" | ConditionCompareOperator;
 
-type ConditionCardPropertyCompareCard = {
-  id: "ConditionCardPropertyCompareCard";
-  value: [
-    TargetTypeCard,
-    ConditionCardPropertyCompareCardOperator,
-    TargetTypeCard
-  ];
+type ConditionCompareCard = {
+  id: "ConditionCompareCard";
+  value: [TargetTypeCard, ConditionCompareCardOperator, TargetTypeCard];
 };
 
-type ConditionCardPropertyComparePlayer = {
-  id: "ConditionCardPropertyComparePlayer";
-  value: [
-    TargetTypePlayer,
-    ConditionCardPropertyCompareOperator,
-    TargetTypePlayer
-  ];
+type ConditionComparePlayer = {
+  id: "ConditionComparePlayer";
+  value: [TargetTypePlayer, ConditionCompareOperator, TargetTypePlayer];
 };
 
-type ConditionCardPropertyCompareBaSyou = {
-  id: "ConditionCardPropertyCompareBaSyou";
-  value: [
-    TargetTypeBaSyou,
-    ConditionCardPropertyCompareOperator,
-    TargetTypeBaSyou
-  ];
+type ConditionCompareBaSyou = {
+  id: "ConditionCompareBaSyou";
+  value: [TargetTypeBaSyou, ConditionCompareOperator, TargetTypeBaSyou];
 };
 
 export type Condition =
@@ -180,13 +144,13 @@ export type Condition =
   | ConditionTargetType
   | ConditionCardHasTokuTyou
   | ConditionCardIsBattle
-  | ConditionCardPropertyCompare
-  | ConditionCardPropertyCompareString
-  | ConditionCardPropertyCompareBoolean
-  | ConditionCardPropertyCompareRole
-  | ConditionCardPropertyCompareCard
-  | ConditionCardPropertyComparePlayer
-  | ConditionCardPropertyCompareBaSyou
+  | ConditionCompareNumber
+  | ConditionCompareString
+  | ConditionCompareBoolean
+  | ConditionCompareRole
+  | ConditionCompareCard
+  | ConditionComparePlayer
+  | ConditionCompareBaSyou
   | ConditionNot
   | ConditionOr
   | ConditionAnd;

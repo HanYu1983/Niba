@@ -168,12 +168,36 @@ export function doConditionTarget(
       // }
       return null;
     }
-    case "ConditionCardPropertyCompareCard": {
+    case "ConditionCompareCard": {
       const [v1, op, v2] = condition.value;
       const target1 = getTargetType(ctx, blockPayload, targets, v1);
-      const target2 = getTargetType(ctx, blockPayload, targets, v1);
+      if (target1.id != "カード") {
+        throw new Error("type not right");
+      }
+      if (!Array.isArray(target1.value)) {
+        throw new Error("type not right");
+      }
+      const target2 = getTargetType(ctx, blockPayload, targets, v2);
+      if (target2.id != "カード") {
+        throw new Error("type not right");
+      }
+      if (!Array.isArray(target2.value)) {
+        throw new Error("type not right");
+      }
+      if (target2.value.length == 0) {
+        throw new Error("type not right");
+      }
       switch (op) {
+        default:
         case "交戦中":
+        case "==": {
+          const b = target2.value[0];
+          target1.value.forEach((a) => {
+            if (a != b) {
+              throw new Error("ConditionCompareCard must ==");
+            }
+          });
+        }
       }
     }
   }

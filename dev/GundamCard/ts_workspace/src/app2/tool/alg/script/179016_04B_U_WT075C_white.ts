@@ -78,7 +78,7 @@ const prototype: CardPrototype = {
                               playerSide: "敵軍",
                             },
                             {
-                              id: "ConditionCardPropertyCompare",
+                              id: "ConditionCompareNumber",
                               value: [
                                 {
                                   id: "TargetTypeNumber",

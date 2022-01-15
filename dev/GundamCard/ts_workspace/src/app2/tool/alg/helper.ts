@@ -179,31 +179,24 @@ export function getTargetType(
           if (targetType.id != "カード") {
             throw new Error("must be カード");
           }
-          if (typeof targetType.value == "string") {
-            throw new Error("must only one layer");
-          }
-          if (Array.isArray(targetType.value)) {
-            if (targetType.value.length == 0) {
-              throw new Error("cardID must > 0");
-            }
-            if (targetType.value[0] == null) {
-              throw new Error("cardID[0] must not null");
-            }
-            const values = targetType.value.map((cardID) => {
-              switch (path[1]) {
-                default:
-                case "Controller": {
-                  return getCardController(ctx, cardID);
-                }
-              }
-            });
-            return {
-              id: "プレーヤー",
-              value: values,
-            };
-          } else {
+          if (!Array.isArray(targetType.value)) {
             throw new Error("must be real value");
           }
+          if (targetType.value.length == 0) {
+            throw new Error("cardID must > 0");
+          }
+          const values = targetType.value.map((cardID) => {
+            switch (path[1]) {
+              default:
+              case "Controller": {
+                return getCardController(ctx, cardID);
+              }
+            }
+          });
+          return {
+            id: "プレーヤー",
+            value: values,
+          };
         }
         default:
           throw new Error("path[0].id not found:" + path[0].id);
@@ -220,31 +213,24 @@ export function getTargetType(
           if (targetType.id != "カード") {
             throw new Error("must be カード");
           }
-          if (typeof targetType.value == "string") {
-            throw new Error("must only one layer");
-          }
-          if (Array.isArray(targetType.value)) {
-            if (targetType.value.length == 0) {
-              throw new Error("cardID must > 0");
-            }
-            if (targetType.value[0] == null) {
-              throw new Error("cardID[0] must not null");
-            }
-            const values = targetType.value.map((cardID): CardColor => {
-              switch (path[1]) {
-                default:
-                case "の色": {
-                  return "白";
-                }
-              }
-            });
-            return {
-              id: "カードの色",
-              value: values,
-            };
-          } else {
+          if (!Array.isArray(targetType.value)) {
             throw new Error("must be real value");
           }
+          if (targetType.value.length == 0) {
+            throw new Error("cardID must > 0");
+          }
+          const values = targetType.value.map((cardID): CardColor => {
+            switch (path[1]) {
+              default:
+              case "の色": {
+                return "白";
+              }
+            }
+          });
+          return {
+            id: "カードの色",
+            value: values,
+          };
         }
         default:
           throw new Error("path[0].id not found:" + path[0].id);
@@ -261,31 +247,24 @@ export function getTargetType(
           if (targetType.id != "カード") {
             throw new Error("must be カード");
           }
-          if (typeof targetType.value == "string") {
-            throw new Error("must only one layer");
-          }
-          if (Array.isArray(targetType.value)) {
-            if (targetType.value.length == 0) {
-              throw new Error("cardID must > 0");
-            }
-            if (targetType.value[0] == null) {
-              throw new Error("cardID[0] must not null");
-            }
-            const values = targetType.value.map((cardID): CardCategory => {
-              switch (path[1]) {
-                default:
-                case "的角色": {
-                  return "グラフィック";
-                }
-              }
-            });
-            return {
-              id: "TargetTypeCardRole",
-              value: values,
-            };
-          } else {
+          if (!Array.isArray(targetType.value)) {
             throw new Error("must be real value");
           }
+          if (targetType.value.length == 0) {
+            throw new Error("cardID must > 0");
+          }
+          const values = targetType.value.map((cardID): CardCategory => {
+            switch (path[1]) {
+              default:
+              case "的角色": {
+                return "グラフィック";
+              }
+            }
+          });
+          return {
+            id: "TargetTypeCardRole",
+            value: values,
+          };
         }
         default:
           throw new Error("path[0].id not found:" + path[0].id);
@@ -305,28 +284,24 @@ export function getTargetType(
           if (typeof targetType.value == "string") {
             throw new Error("must only one layer");
           }
-          if (Array.isArray(targetType.value)) {
-            if (targetType.value.length == 0) {
-              throw new Error("cardID must > 0");
-            }
-            if (targetType.value[0] == null) {
-              throw new Error("cardID[0] must not null");
-            }
-            const values = targetType.value.map((cardID): string => {
-              switch (path[1]) {
-                default:
-                case "名称": {
-                  return "xx";
-                }
-              }
-            });
-            return {
-              id: "TargetTypeString",
-              value: values,
-            };
-          } else {
+          if (!Array.isArray(targetType.value)) {
             throw new Error("must be real value");
           }
+          if (targetType.value.length == 0) {
+            throw new Error("cardID must > 0");
+          }
+          const values = targetType.value.map((cardID): string => {
+            switch (path[1]) {
+              default:
+              case "名称": {
+                return "xx";
+              }
+            }
+          });
+          return {
+            id: "TargetTypeString",
+            value: values,
+          };
         }
         default:
           throw new Error("path[0].id not found:" + path[0].id);
@@ -343,31 +318,24 @@ export function getTargetType(
           if (targetType.id != "カード") {
             throw new Error("must be カード");
           }
-          if (typeof targetType.value == "string") {
-            throw new Error("must only one layer");
-          }
-          if (Array.isArray(targetType.value)) {
-            if (targetType.value.length == 0) {
-              throw new Error("cardID must > 0");
-            }
-            if (targetType.value[0] == null) {
-              throw new Error("cardID[0] must not null");
-            }
-            const values = targetType.value.map((cardID) => {
-              switch (path[1]) {
-                default:
-                case "の場所": {
-                  return getCardBaSyou(ctx, cardID);
-                }
-              }
-            });
-            return {
-              id: "場所",
-              value: values,
-            };
-          } else {
+          if (!Array.isArray(targetType.value)) {
             throw new Error("must be real value");
           }
+          if (targetType.value.length == 0) {
+            throw new Error("cardID must > 0");
+          }
+          const values = targetType.value.map((cardID) => {
+            switch (path[1]) {
+              default:
+              case "の場所": {
+                return getCardBaSyou(ctx, cardID);
+              }
+            }
+          });
+          return {
+            id: "場所",
+            value: values,
+          };
         }
         default:
           throw new Error("path[0].id not found:" + path[0].id);
@@ -392,31 +360,24 @@ export function getTargetType(
           if (targetType.id != "カード") {
             throw new Error("must be カード");
           }
-          if (typeof targetType.value == "string") {
-            throw new Error("must only one layer");
-          }
-          if (Array.isArray(targetType.value)) {
-            if (targetType.value.length == 0) {
-              throw new Error("cardID must > 0");
-            }
-            if (targetType.value[0] == null) {
-              throw new Error("cardID[0] must not null");
-            }
-            const values = targetType.value.map((cardID) => {
-              switch (path[1]) {
-                default:
-                case "合計国力": {
-                  return 0;
-                }
-              }
-            });
-            return {
-              id: "TargetTypeNumber",
-              value: values,
-            };
-          } else {
+          if (!Array.isArray(targetType.value)) {
             throw new Error("must be real value");
           }
+          if (targetType.value.length == 0) {
+            throw new Error("cardID must > 0");
+          }
+          const values = targetType.value.map((cardID) => {
+            switch (path[1]) {
+              default:
+              case "合計国力": {
+                return 0;
+              }
+            }
+          });
+          return {
+            id: "TargetTypeNumber",
+            value: values,
+          };
         }
         default:
           throw new Error("path[0].id not found:" + path[0]);
@@ -433,31 +394,24 @@ export function getTargetType(
           if (targetType.id != "カード") {
             throw new Error("must be カード");
           }
-          if (typeof targetType.value == "string") {
-            throw new Error("must only one layer");
-          }
-          if (Array.isArray(targetType.value)) {
-            if (targetType.value.length == 0) {
-              throw new Error("cardID must > 0");
-            }
-            if (targetType.value[0] == null) {
-              throw new Error("cardID[0] must not null");
-            }
-            const values = targetType.value.map((cardID) => {
-              switch (path[1]) {
-                default:
-                case "交戦中": {
-                  return false;
-                }
-              }
-            });
-            return {
-              id: "TargetTypeBoolean",
-              value: values,
-            };
-          } else {
+          if (!Array.isArray(targetType.value)) {
             throw new Error("must be real value");
           }
+          if (targetType.value.length == 0) {
+            throw new Error("cardID must > 0");
+          }
+          const values = targetType.value.map((cardID) => {
+            switch (path[1]) {
+              default:
+              case "交戦中": {
+                return false;
+              }
+            }
+          });
+          return {
+            id: "TargetTypeBoolean",
+            value: values,
+          };
         }
         default:
           throw new Error("path[0].id not found:" + path[0].id);

@@ -35,7 +35,7 @@ export function createTokuSyuKouKaText(
                       id: "ConditionAnd",
                       and: [
                         {
-                          id: "ConditionCardPropertyCompare",
+                          id: "ConditionCompareNumber",
                           value: [
                             {
                               id: "TargetTypeNumber",
@@ -54,7 +54,7 @@ export function createTokuSyuKouKaText(
                           ],
                         },
                         {
-                          id: "ConditionCardPropertyComparePlayer",
+                          id: "ConditionComparePlayer",
                           value: [
                             {
                               id: "プレーヤー",
@@ -83,7 +83,7 @@ export function createTokuSyuKouKaText(
                           ],
                         },
                         {
-                          id: "ConditionCardPropertyCompareRole",
+                          id: "ConditionCompareRole",
                           value: [
                             {
                               id: "TargetTypeCardRole",
@@ -97,7 +97,7 @@ export function createTokuSyuKouKaText(
                           ],
                         },
                         {
-                          id: "ConditionCardPropertyCompareCard",
+                          id: "ConditionCompareCard",
                           value: [
                             {
                               id: "カード",
@@ -183,7 +183,7 @@ export function createTokuSyuKouKaText(
                       id: "ConditionAnd",
                       and: [
                         {
-                          id: "ConditionCardPropertyComparePlayer",
+                          id: "ConditionComparePlayer",
                           value: [
                             {
                               id: "プレーヤー",
@@ -212,7 +212,7 @@ export function createTokuSyuKouKaText(
                           ],
                         },
                         {
-                          id: "ConditionCardPropertyCompareRole",
+                          id: "ConditionCompareRole",
                           value: [
                             {
                               id: "TargetTypeCardRole",
@@ -226,7 +226,7 @@ export function createTokuSyuKouKaText(
                           ],
                         },
                         {
-                          id: "ConditionCardPropertyCompareBoolean",
+                          id: "ConditionCompareBoolean",
                           value: [
                             {
                               id: "TargetTypeBoolean",
@@ -333,7 +333,7 @@ export function createTokuSyuKouKaText(
                       id: "ConditionAnd",
                       and: [
                         {
-                          id: "ConditionCardPropertyCompareCard",
+                          id: "ConditionCompareCard",
                           value: [
                             {
                               id: "カード",
@@ -353,7 +353,7 @@ export function createTokuSyuKouKaText(
                           ],
                         },
                         {
-                          id: "ConditionCardPropertyCompareRole",
+                          id: "ConditionCompareRole",
                           value: [
                             {
                               id: "TargetTypeCardRole",
@@ -367,7 +367,7 @@ export function createTokuSyuKouKaText(
                           ],
                         },
                         {
-                          id: "ConditionCardPropertyCompareBoolean",
+                          id: "ConditionCompareBoolean",
                           value: [
                             {
                               id: "TargetTypeBoolean",
@@ -381,7 +381,7 @@ export function createTokuSyuKouKaText(
                           ],
                         },
                         {
-                          id: "ConditionCardPropertyCompare",
+                          id: "ConditionCompareNumber",
                           value: [
                             {
                               id: "TargetTypeNumber",
@@ -490,7 +490,7 @@ export function createTokuSyuKouKaText(
                           id: "ConditionOr",
                           or: [
                             {
-                              id: "ConditionCardPropertyCompareBaSyou",
+                              id: "ConditionCompareBaSyou",
                               value: [
                                 {
                                   id: "場所",
@@ -517,7 +517,7 @@ export function createTokuSyuKouKaText(
                               ],
                             },
                             {
-                              id: "ConditionCardPropertyCompareBaSyou",
+                              id: "ConditionCompareBaSyou",
                               value: [
                                 {
                                   id: "場所",
@@ -546,7 +546,7 @@ export function createTokuSyuKouKaText(
                           ],
                         },
                         {
-                          id: "ConditionCardPropertyCompareRole",
+                          id: "ConditionCompareRole",
                           value: [
                             {
                               id: "TargetTypeCardRole",
