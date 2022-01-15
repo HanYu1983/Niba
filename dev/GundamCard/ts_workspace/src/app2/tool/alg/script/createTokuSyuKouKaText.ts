@@ -559,11 +559,12 @@ export function createTokuSyuKouKaText(
                             },
                           ],
                         },
-                        {
-                          id: "ConditionCardHasTokuTyou",
-                          source: "cardB",
-                          value: tokuTyou,
-                        },
+                        // TODO ConditionCardHasTokuTyou
+                        // {
+                        //   id: "ConditionCardHasTokuTyou",
+                        //   source: "cardB",
+                        //   value: tokuTyou,
+                        // },
                       ],
                     },
                     action: [

@@ -38,25 +38,54 @@ export function createPlayCardText(
             {
               id: "RequireTarget",
               targets: {
-                cards: {
+                "將要「プレイ」的卡": {
                   id: "カード",
-                  value: "このカード",
+                  value: {
+                    path: [
+                      {
+                        id: "このカード",
+                      },
+                    ],
+                  },
                 },
               },
               condition: {
-                id: "ConditionCardOnBaSyou",
-                source: "cards",
-                baSyou: {
-                  id: "RelatedBaSyou",
-                  value: ["自軍", "手札"],
-                },
+                id: "ConditionCompareBaSyou",
+                value: [
+                  {
+                    id: "場所",
+                    value: {
+                      path: [
+                        {
+                          id: "カード",
+                          value: "將要「プレイ」的卡",
+                        },
+                        "的「場所」",
+                      ],
+                    },
+                  },
+                  "in",
+                  {
+                    id: "場所",
+                    value: [
+                      {
+                        id: "RelatedBaSyou",
+                        value: ["自軍", "手札"],
+                      },
+                      {
+                        id: "RelatedBaSyou",
+                        value: ["自軍", "ハンガー"],
+                      },
+                    ],
+                  },
+                ],
               },
               action: [
                 {
                   id: "ActionSetFace",
                   cards: {
                     id: "カード",
-                    value: "cards",
+                    value: "將要「プレイ」的卡",
                   },
                   faceDown: {
                     id: "布林",
@@ -67,7 +96,7 @@ export function createPlayCardText(
                   id: "ActionMoveCardToPosition",
                   cards: {
                     id: "カード",
-                    value: "cards",
+                    value: "將要「プレイ」的卡",
                   },
                   baSyou: {
                     id: "場所",
@@ -99,7 +128,7 @@ export function createPlayCardText(
                           id: "ActionMoveCardToPosition",
                           cards: {
                             id: "カード",
-                            value: "cards",
+                            value: "將要「プレイ」的卡",
                           },
                           baSyou: {
                             id: "場所",
@@ -115,7 +144,7 @@ export function createPlayCardText(
                           id: "ActionRoll",
                           cards: {
                             id: "カード",
-                            value: "cards",
+                            value: "將要「プレイ」的卡",
                           },
                         },
                       ],
@@ -166,33 +195,96 @@ export function createPlayCardText(
                 return createRollCostRequire(num, color);
               }),
               {
-                id: "RequireCustom",
-                customID: {
-                  id: "Play時的合計國力",
-                } as RequireCustomID,
-              },
-              {
                 id: "RequireTarget",
                 targets: {
-                  cards: {
+                  "將要「プレイ」的卡": {
                     id: "カード",
-                    value: "このカード",
+                    value: {
+                      path: [
+                        {
+                          id: "このカード",
+                        },
+                      ],
+                    },
                   },
                 },
                 condition: {
-                  id: "ConditionCardOnBaSyou",
-                  source: "cards",
-                  baSyou: {
-                    id: "RelatedBaSyou",
-                    value: ["自軍", "手札"],
-                  },
+                  id: "ConditionAnd",
+                  and: [
+                    {
+                      id: "ConditionCompareNumber",
+                      value: [
+                        {
+                          id: "數字",
+                          value: {
+                            path: [
+                              { id: "カード", value: "將要「プレイ」的卡" },
+                              "的「合計国力」",
+                            ],
+                          },
+                        },
+                        "<=",
+                        {
+                          id: "數字",
+                          value: {
+                            path: [
+                              {
+                                id: "プレーヤー",
+                                value: {
+                                  path: [
+                                    {
+                                      id: "カード",
+                                      value: "將要「プレイ」的卡",
+                                    },
+                                    "的「コントローラー」",
+                                  ],
+                                },
+                              },
+                              "的「合計国力」",
+                            ],
+                          },
+                        },
+                      ],
+                    },
+                    {
+                      id: "ConditionCompareBaSyou",
+                      value: [
+                        {
+                          id: "場所",
+                          value: {
+                            path: [
+                              {
+                                id: "カード",
+                                value: "將要「プレイ」的卡",
+                              },
+                              "的「場所」",
+                            ],
+                          },
+                        },
+                        "in",
+                        {
+                          id: "場所",
+                          value: [
+                            {
+                              id: "RelatedBaSyou",
+                              value: ["自軍", "手札"],
+                            },
+                            {
+                              id: "RelatedBaSyou",
+                              value: ["自軍", "ハンガー"],
+                            },
+                          ],
+                        },
+                      ],
+                    },
+                  ],
                 },
                 action: [
                   {
                     id: "ActionSetFace",
                     cards: {
                       id: "カード",
-                      value: "cards",
+                      value: "將要「プレイ」的卡",
                     },
                     faceDown: {
                       id: "布林",
@@ -203,7 +295,7 @@ export function createPlayCardText(
                     id: "ActionMoveCardToPosition",
                     cards: {
                       id: "カード",
-                      value: "cards",
+                      value: "將要「プレイ」的卡",
                     },
                     baSyou: {
                       id: "場所",
@@ -237,7 +329,7 @@ export function createPlayCardText(
                             id: "ActionMoveCardToPosition",
                             cards: {
                               id: "カード",
-                              value: "cards",
+                              value: "將要「プレイ」的卡",
                             },
                             baSyou: {
                               id: "場所",
@@ -273,25 +365,94 @@ export function createPlayCardText(
               {
                 id: "RequireTarget",
                 targets: {
-                  cards: {
+                  "將要「プレイ」的卡": {
                     id: "カード",
-                    value: "このカード",
+                    value: {
+                      path: [
+                        {
+                          id: "このカード",
+                        },
+                      ],
+                    },
                   },
                 },
                 condition: {
-                  id: "ConditionCardOnBaSyou",
-                  source: "cards",
-                  baSyou: {
-                    id: "RelatedBaSyou",
-                    value: ["自軍", "手札"],
-                  },
+                  id: "ConditionAnd",
+                  and: [
+                    {
+                      id: "ConditionCompareNumber",
+                      value: [
+                        {
+                          id: "數字",
+                          value: {
+                            path: [
+                              { id: "カード", value: "將要「プレイ」的卡" },
+                              "的「合計国力」",
+                            ],
+                          },
+                        },
+                        "<=",
+                        {
+                          id: "數字",
+                          value: {
+                            path: [
+                              {
+                                id: "プレーヤー",
+                                value: {
+                                  path: [
+                                    {
+                                      id: "カード",
+                                      value: "將要「プレイ」的卡",
+                                    },
+                                    "的「コントローラー」",
+                                  ],
+                                },
+                              },
+                              "的「合計国力」",
+                            ],
+                          },
+                        },
+                      ],
+                    },
+                    {
+                      id: "ConditionCompareBaSyou",
+                      value: [
+                        {
+                          id: "場所",
+                          value: {
+                            path: [
+                              {
+                                id: "カード",
+                                value: "將要「プレイ」的卡",
+                              },
+                              "的「場所」",
+                            ],
+                          },
+                        },
+                        "in",
+                        {
+                          id: "場所",
+                          value: [
+                            {
+                              id: "RelatedBaSyou",
+                              value: ["自軍", "手札"],
+                            },
+                            {
+                              id: "RelatedBaSyou",
+                              value: ["自軍", "ハンガー"],
+                            },
+                          ],
+                        },
+                      ],
+                    },
+                  ],
                 },
                 action: [
                   {
                     id: "ActionSetFace",
                     cards: {
                       id: "カード",
-                      value: "cards",
+                      value: "將要「プレイ」的卡",
                     },
                     faceDown: {
                       id: "布林",
@@ -302,7 +463,7 @@ export function createPlayCardText(
                     id: "ActionMoveCardToPosition",
                     cards: {
                       id: "カード",
-                      value: "cards",
+                      value: "將要「プレイ」的卡",
                     },
                     baSyou: {
                       id: "場所",
@@ -334,7 +495,7 @@ export function createPlayCardText(
                             id: "ActionMoveCardToPosition",
                             cards: {
                               id: "カード",
-                              value: "cards",
+                              value: "將要「プレイ」的卡",
                             },
                             baSyou: {
                               id: "場所",
@@ -377,33 +538,96 @@ export function createPlayCardText(
                 } as RequireCustomID,
               },
               {
-                id: "RequireCustom",
-                customID: {
-                  id: "Play時的合計國力",
-                } as RequireCustomID,
-              },
-              {
                 id: "RequireTarget",
                 targets: {
-                  cards: {
+                  "將要「プレイ」的卡": {
                     id: "カード",
-                    value: "このカード",
+                    value: {
+                      path: [
+                        {
+                          id: "このカード",
+                        },
+                      ],
+                    },
                   },
                 },
                 condition: {
-                  id: "ConditionCardOnBaSyou",
-                  source: "cards",
-                  baSyou: {
-                    id: "RelatedBaSyou",
-                    value: ["自軍", "手札"],
-                  },
+                  id: "ConditionAnd",
+                  and: [
+                    {
+                      id: "ConditionCompareNumber",
+                      value: [
+                        {
+                          id: "數字",
+                          value: {
+                            path: [
+                              { id: "カード", value: "將要「プレイ」的卡" },
+                              "的「合計国力」",
+                            ],
+                          },
+                        },
+                        "<=",
+                        {
+                          id: "數字",
+                          value: {
+                            path: [
+                              {
+                                id: "プレーヤー",
+                                value: {
+                                  path: [
+                                    {
+                                      id: "カード",
+                                      value: "將要「プレイ」的卡",
+                                    },
+                                    "的「コントローラー」",
+                                  ],
+                                },
+                              },
+                              "的「合計国力」",
+                            ],
+                          },
+                        },
+                      ],
+                    },
+                    {
+                      id: "ConditionCompareBaSyou",
+                      value: [
+                        {
+                          id: "場所",
+                          value: {
+                            path: [
+                              {
+                                id: "カード",
+                                value: "將要「プレイ」的卡",
+                              },
+                              "的「場所」",
+                            ],
+                          },
+                        },
+                        "in",
+                        {
+                          id: "場所",
+                          value: [
+                            {
+                              id: "RelatedBaSyou",
+                              value: ["自軍", "手札"],
+                            },
+                            {
+                              id: "RelatedBaSyou",
+                              value: ["自軍", "ハンガー"],
+                            },
+                          ],
+                        },
+                      ],
+                    },
+                  ],
                 },
                 action: [
                   {
                     id: "ActionSetFace",
                     cards: {
                       id: "カード",
-                      value: "cards",
+                      value: "將要「プレイ」的卡",
                     },
                     faceDown: {
                       id: "布林",
@@ -414,7 +638,7 @@ export function createPlayCardText(
                     id: "ActionMoveCardToPosition",
                     cards: {
                       id: "カード",
-                      value: "cards",
+                      value: "將要「プレイ」的卡",
                     },
                     baSyou: {
                       id: "場所",
@@ -446,7 +670,7 @@ export function createPlayCardText(
                             id: "ActionMoveCardToPosition",
                             cards: {
                               id: "カード",
-                              value: "cards",
+                              value: "將要「プレイ」的卡",
                             },
                             baSyou: {
                               id: "場所",
@@ -462,7 +686,7 @@ export function createPlayCardText(
                             id: "ActionRoll",
                             cards: {
                               id: "カード",
-                              value: "cards",
+                              value: "將要「プレイ」的卡",
                             },
                           },
                         ],

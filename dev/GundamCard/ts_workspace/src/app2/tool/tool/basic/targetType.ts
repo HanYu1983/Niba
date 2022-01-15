@@ -37,6 +37,7 @@ export type TargetTypeNumber = {
     | {
         path:
           | [TargetTypeCard, "的「攻撃力」" | "的「防御力」" | "的「合計国力」"]
+          | [TargetTypePlayer, "的「合計国力」"]
           | [TargetTypeRef, "陣列長度"];
       };
 };
