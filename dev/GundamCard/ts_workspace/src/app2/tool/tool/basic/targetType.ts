@@ -44,7 +44,10 @@ export type TargetTypeNumber = {
 
 export type TargetTypeString = {
   id: "字串";
-  value: string[] | string | { path: [TargetTypeCard, "的「名称」"] };
+  value:
+    | string[]
+    | string
+    | { path: [TargetTypeCard, "的「名称」" | "的「特徴」"] };
 };
 
 export type TargetTypeBoolean = {

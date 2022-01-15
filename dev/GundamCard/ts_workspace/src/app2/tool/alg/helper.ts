@@ -7,7 +7,11 @@ import {
 import { CardPrototype, GameContext } from "../tool/basic/gameContext";
 import { BlockPayload } from "../tool/basic/blockPayload";
 import { getCard, mapCard, Card } from "../../../tool/table";
-import { getCardBaSyou, getCardController } from "../tool/basic/handleCard";
+import {
+  getCardBaSyou,
+  getCardController,
+  getCardOwner,
+} from "../tool/basic/handleCard";
 import {
   CardState,
   mapEffect,
@@ -187,7 +191,9 @@ export function getTargetType(
           }
           const values = targetType.value.map((cardID) => {
             switch (path[1]) {
-              default:
+              case "的「持ち主」": {
+                return getCardOwner(ctx, cardID);
+              }
               case "的「コントローラー」": {
                 return getCardController(ctx, cardID);
               }
@@ -221,7 +227,6 @@ export function getTargetType(
           }
           const values = targetType.value.map((cardID): CardColor => {
             switch (path[1]) {
-              default:
               case "的「色」": {
                 return "白";
               }
@@ -255,14 +260,59 @@ export function getTargetType(
           }
           const values = targetType.value.map((cardID): CardCategory => {
             switch (path[1]) {
-              default:
               case "的角色": {
-                return "グラフィック";
+                const {
+                  value: [_, baSyou],
+                } = getCardBaSyou(ctx, cardID);
+                const [_2, cardState] = getCardState(ctx, cardID);
+                switch (baSyou) {
+                  case "Gゾーン":
+                    return "グラフィック";
+                  case "戦闘エリア":
+                  case "配備エリア":
+                    return cardState.prototype.category;
+                  default:
+                    throw new Error("no have role");
+                }
               }
             }
           });
           return {
             id: "「カード」的角色",
+            value: values,
+          };
+        }
+        default:
+          throw new Error("path[0].id not found:" + path[0].id);
+      }
+    }
+    case "カードの種類": {
+      if (Array.isArray(targetTypeAfterProcess.value)) {
+        return targetTypeAfterProcess;
+      }
+      const path = targetTypeAfterProcess.value.path;
+      switch (path[0].id) {
+        case "カード": {
+          const targetType = getTargetType(ctx, blockPayload, targets, path[0]);
+          if (targetType.id != "カード") {
+            throw new Error("must be カード");
+          }
+          if (!Array.isArray(targetType.value)) {
+            throw new Error("must be real value");
+          }
+          if (targetType.value.length == 0) {
+            throw new Error("cardID must > 0");
+          }
+          const values = targetType.value.map((cardID): CardCategory => {
+            switch (path[1]) {
+              case "的「種類」": {
+                const [_, cardState] = getCardState(ctx, cardID);
+                return cardState.prototype.category;
+              }
+            }
+          });
+          return {
+            id: "カードの種類",
             value: values,
           };
         }
@@ -291,10 +341,13 @@ export function getTargetType(
             throw new Error("cardID must > 0");
           }
           const values = targetType.value.map((cardID): string => {
+            const [_, cardState] = getCardState(ctx, cardID);
             switch (path[1]) {
-              default:
+              case "的「特徴」": {
+                return cardState.prototype.characteristic.join("|");
+              }
               case "的「名称」": {
-                return "xx";
+                return cardState.prototype.title;
               }
             }
           });
@@ -326,7 +379,6 @@ export function getTargetType(
           }
           const values = targetType.value.map((cardID) => {
             switch (path[1]) {
-              default:
               case "的「場所」": {
                 return getCardBaSyou(ctx, cardID);
               }
@@ -368,7 +420,10 @@ export function getTargetType(
           }
           const values = targetType.value.map((cardID) => {
             switch (path[1]) {
-              default:
+              case "陣列長度":
+                throw new Error("not support");
+              case "的「攻撃力」":
+              case "的「防御力」":
               case "的「合計国力」": {
                 return 0;
               }
@@ -402,7 +457,6 @@ export function getTargetType(
           }
           const values = targetType.value.map((cardID) => {
             switch (path[1]) {
-              default:
               case "在「交戦中」？": {
                 return false;
               }
