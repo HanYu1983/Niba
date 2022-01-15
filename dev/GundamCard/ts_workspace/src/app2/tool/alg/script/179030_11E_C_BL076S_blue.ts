@@ -23,102 +23,157 @@ const prototype: CardPrototype = {
   color: "青",
   rollCost: ["青", null, null],
   texts: [
-    // {
-    //   id: "自動型",
-    //   category: "恒常",
-    //   description:
-    //     "『恒常』：このカードの解決直後に、本来の記述に｢特徴：装弾｣を持つ自軍G１枚をロールできる。その場合、自軍ユニット１枚の上に＋１／＋１／＋１コイン２個を乗せる。",
-    //   block: {
-    //     require: {
-    //       id: "RequireEvent",
-    //       // このカードの解決直後に
-    //     },
-    //     feedback: [
-    //       {
-    //         id: "FeedbackAction",
-    //         action: [
-    //           {
-    //             id: "ActionAddBlock",
-    //             type: "立即",
-    //             block: {
-    //               contextID: "理想の激突",
-    //               isOption: true,
-    //               require: {
-    //                 id: "RequireAnd",
-    //                 and: [
-    //                   {
-    //                     id: "RequireTarget",
-    //                     targets: {
-    //                       cardA: {
-    //                         id: "カード",
-    //                         cardID: [null],
-    //                       },
-    //                     },
-    //                     condition: {
-    //                       id: "ConditionAnd",
-    //                       and: [
-    //                         {
-    //                           id: "ConditionCardOnBaSyou",
-    //                           source: "cardA",
-    //                           baSyou: {
-    //                             id: "RelatedBaSyou",
-    //                             value: ["自軍", "Gゾーン"],
-    //                           },
-    //                         },
-    //                         {
-    //                           id: "ConditionCardHasTokuTyou",
-    //                           source: "cardA",
-    //                           value: "装弾",
-    //                         },
-    //                       ],
-    //                     },
-    //                     action: [
-    //                       {
-    //                         id: "ActionRoll",
-    //                         cards: "cardA",
-    //                       },
-    //                     ],
-    //                   },
-    //                   {
-    //                     id: "RequireTarget",
-    //                     targets: {
-    //                       cardB: {
-    //                         id: "カード",
-    //                         cardID: [null],
-    //                       },
-    //                     },
-    //                     action: [
-    //                       {
-    //                         id: "ActionSetTarget",
-    //                         source: "cardB",
-    //                         target: "cardB",
-    //                       },
-    //                     ],
-    //                   },
-    //                 ],
-    //               },
-    //               feedback: [
-    //                 {
-    //                   id: "FeedbackAction",
-    //                   action: [
-    //                     // TODO: add coin
-    //                     {
-    //                       id: "ActionAddEffect",
-    //                       effect: {
-    //                         id: "GameEffectCustom",
-    //                         customID: "＋１／＋１／＋１コイン２個を乗せる",
-    //                       },
-    //                     },
-    //                   ],
-    //                 },
-    //               ],
-    //             },
-    //           },
-    //         ],
-    //       },
-    //     ],
-    //   },
-    // },
+    {
+      id: "自動型",
+      category: "恒常",
+      description:
+        "『恒常』：このカードの解決直後に、本来の記述に｢特徴：装弾｣を持つ自軍G１枚をロールできる。その場合、自軍ユニット１枚の上に＋１／＋１／＋１コイン２個を乗せる。",
+      block: {
+        require: {
+          id: "RequireEvent",
+          // このカードの解決直後に
+        },
+        feedback: [
+          {
+            id: "FeedbackAction",
+            action: [
+              {
+                id: "ActionAddBlock",
+                type: "立即",
+                block: {
+                  contextID: "理想の激突",
+                  isOption: true,
+                  require: {
+                    id: "RequireAnd",
+                    and: [
+                      {
+                        id: "RequireTarget",
+                        targets: {
+                          cardA: {
+                            id: "カード",
+                            value: [],
+                          },
+                        },
+                        condition: {
+                          id: "ConditionAnd",
+                          and: [
+                            {
+                              id: "ConditionCompareNumber",
+                              value: [
+                                {
+                                  id: "數字",
+                                  value: {
+                                    path: [
+                                      {
+                                        id: "參照",
+                                        value: "cardA",
+                                      },
+                                      "陣列長度",
+                                    ],
+                                  },
+                                },
+                                "==",
+                                {
+                                  id: "數字",
+                                  value: [1],
+                                },
+                              ],
+                            },
+                            {
+                              id: "ConditionCompareBaSyou",
+                              value: [
+                                {
+                                  id: "場所",
+                                  value: {
+                                    path: [
+                                      { id: "カード", value: "cardA" },
+                                      "的「場所」",
+                                    ],
+                                  },
+                                },
+                                "==",
+                                {
+                                  id: "場所",
+                                  value: [
+                                    {
+                                      id: "RelatedBaSyou",
+                                      value: ["自軍", "Gゾーン"],
+                                    },
+                                  ],
+                                },
+                              ],
+                            },
+                            {
+                              id: "ConditionCompareString",
+                              value: [
+                                {
+                                  id: "字串",
+                                  value: {
+                                    path: [
+                                      { id: "カード", value: "cardA" },
+                                      "的「特徴」",
+                                    ],
+                                  },
+                                },
+                                "hasToken",
+                                {
+                                  id: "字串",
+                                  value: ["装弾"],
+                                },
+                              ],
+                            },
+                          ],
+                        },
+                        action: [
+                          {
+                            id: "ActionRoll",
+                            cards: {
+                              id: "カード",
+                              value: "cardA",
+                            },
+                          },
+                        ],
+                      },
+                      {
+                        id: "RequireTarget",
+                        targets: {
+                          cardB: {
+                            id: "カード",
+                            value: [],
+                          },
+                        },
+                        action: [
+                          {
+                            id: "ActionSetTarget",
+                            source: "cardB",
+                            target: "cardB",
+                          },
+                        ],
+                      },
+                    ],
+                  },
+                  feedback: [
+                    {
+                      id: "FeedbackAction",
+                      action: [
+                        // TODO: add coin
+                        {
+                          id: "ActionAddEffect",
+                          effect: {
+                            id: "GameEffectCustom",
+                            customID: "＋１／＋１／＋１コイン２個を乗せる",
+                          },
+                        },
+                      ],
+                    },
+                  ],
+                },
+              },
+            ],
+          },
+        ],
+      },
+    },
   ],
 };
 
