@@ -1,8 +1,13 @@
-import { AbsoluteBaSyou, BaSyou } from "../tool/basic/basic";
+import {
+  AbsoluteBaSyou,
+  BaSyou,
+  CardCategory,
+  CardColor,
+} from "../tool/basic/basic";
 import { CardPrototype, GameContext } from "../tool/basic/gameContext";
 import { BlockPayload } from "../tool/basic/blockPayload";
 import { getCard, mapCard, Card } from "../../../tool/table";
-import { getCardBaSyou } from "../tool/basic/handleCard";
+import { getCardBaSyou, getCardController } from "../tool/basic/handleCard";
 import {
   CardState,
   mapEffect,
@@ -182,16 +187,18 @@ export function getTargetType(
             if (targetType.value[0] == null) {
               throw new Error("cardID[0] must not null");
             }
-            const [_, cardState] = getCardState(ctx, targetType.value[0]);
-            switch (path[1]) {
-              default:
-              case "Controller": {
-                return {
-                  id: "プレーヤー",
-                  value: [""],
-                };
+            const values = targetType.value.map((cardID) => {
+              switch (path[1]) {
+                default:
+                case "Controller": {
+                  return getCardController(ctx, cardID);
+                }
               }
-            }
+            });
+            return {
+              id: "プレーヤー",
+              value: values,
+            };
           } else {
             throw new Error("must be real value");
           }
@@ -221,16 +228,18 @@ export function getTargetType(
             if (targetType.value[0] == null) {
               throw new Error("cardID[0] must not null");
             }
-            const [_, cardState] = getCardState(ctx, targetType.value[0]);
-            switch (path[1]) {
-              default:
-              case "の色": {
-                return {
-                  id: "場所",
-                  value: cardState.prototype.color,
-                };
+            const values = targetType.value.map((cardID): CardColor => {
+              switch (path[1]) {
+                default:
+                case "の色": {
+                  return "白";
+                }
               }
-            }
+            });
+            return {
+              id: "カードの色",
+              value: values,
+            };
           } else {
             throw new Error("must be real value");
           }
@@ -260,16 +269,18 @@ export function getTargetType(
             if (targetType.value[0] == null) {
               throw new Error("cardID[0] must not null");
             }
-            const [_, cardState] = getCardState(ctx, targetType.value[0]);
-            switch (path[1]) {
-              default:
-              case "的角色": {
-                return {
-                  id: "TargetTypeCardRole",
-                  value: ["グラフィック"],
-                };
+            const values = targetType.value.map((cardID): CardCategory => {
+              switch (path[1]) {
+                default:
+                case "的角色": {
+                  return "グラフィック";
+                }
               }
-            }
+            });
+            return {
+              id: "TargetTypeCardRole",
+              value: values,
+            };
           } else {
             throw new Error("must be real value");
           }
@@ -299,16 +310,18 @@ export function getTargetType(
             if (targetType.value[0] == null) {
               throw new Error("cardID[0] must not null");
             }
-            const [_, cardState] = getCardState(ctx, targetType.value[0]);
-            switch (path[1]) {
-              default:
-              case "名称": {
-                return {
-                  id: "TargetTypeString",
-                  value: [""],
-                };
+            const values = targetType.value.map((cardID): string => {
+              switch (path[1]) {
+                default:
+                case "名称": {
+                  return "xx";
+                }
               }
-            }
+            });
+            return {
+              id: "TargetTypeString",
+              value: values,
+            };
           } else {
             throw new Error("must be real value");
           }
@@ -319,54 +332,9 @@ export function getTargetType(
     }
     case "場所": {
       if (Array.isArray(targetTypeAfterProcess.value)) {
-        const path = targetTypeAfterProcess.value;
-        switch (path[0].id) {
-          case "カード": {
-            const targetType = getTargetType(
-              ctx,
-              blockPayload,
-              targets,
-              path[0]
-            );
-            if (targetType.id != "カード") {
-              throw new Error("must be カード");
-            }
-            if (typeof targetType.value == "string") {
-              throw new Error("must only one layer");
-            }
-            if (Array.isArray(targetType.value)) {
-              if (targetType.value.length == 0) {
-                throw new Error("cardID must > 0");
-              }
-              if (targetType.value[0] == null) {
-                throw new Error("cardID[0] must not null");
-              }
-              const [_, cardState] = getCardState(ctx, targetType.value[0]);
-              switch (path[1]) {
-                default:
-                case "の場所": {
-                  return {
-                    id: "場所",
-                    value: getCardBaSyou(ctx, targetType.value[0]),
-                  };
-                }
-              }
-            } else {
-              throw new Error("must be real value");
-            }
-          }
-          default:
-            throw new Error("path[0].id not found:" + path[0].id);
-        }
-      } else {
         return targetTypeAfterProcess;
       }
-    }
-    case "TargetTypeNumber": {
-      if (typeof targetTypeAfterProcess.value == "number") {
-        return targetTypeAfterProcess;
-      }
-      const path = targetTypeAfterProcess.value;
+      const path = targetTypeAfterProcess.value.path;
       switch (path[0].id) {
         case "カード": {
           const targetType = getTargetType(ctx, blockPayload, targets, path[0]);
@@ -383,16 +351,59 @@ export function getTargetType(
             if (targetType.value[0] == null) {
               throw new Error("cardID[0] must not null");
             }
-            const [_, cardState] = getCardState(ctx, targetType.value[0]);
-            switch (path[1]) {
-              default:
-              case "合計国力": {
-                return {
-                  id: "TargetTypeNumber",
-                  value: 0,
-                };
+            const values = targetType.value.map((cardID) => {
+              switch (path[1]) {
+                default:
+                case "の場所": {
+                  return getCardBaSyou(ctx, cardID);
+                }
               }
+            });
+            return {
+              id: "場所",
+              value: values,
+            };
+          } else {
+            throw new Error("must be real value");
+          }
+        }
+        default:
+          throw new Error("path[0].id not found:" + path[0].id);
+      }
+    }
+    case "TargetTypeNumber": {
+      if (Array.isArray(targetTypeAfterProcess.value)) {
+        return targetTypeAfterProcess;
+      }
+      const path = targetTypeAfterProcess.value.path;
+      switch (path[0].id) {
+        case "カード": {
+          const targetType = getTargetType(ctx, blockPayload, targets, path[0]);
+          if (targetType.id != "カード") {
+            throw new Error("must be カード");
+          }
+          if (typeof targetType.value == "string") {
+            throw new Error("must only one layer");
+          }
+          if (Array.isArray(targetType.value)) {
+            if (targetType.value.length == 0) {
+              throw new Error("cardID must > 0");
             }
+            if (targetType.value[0] == null) {
+              throw new Error("cardID[0] must not null");
+            }
+            const values = targetType.value.map((cardID) => {
+              switch (path[1]) {
+                default:
+                case "合計国力": {
+                  return 0;
+                }
+              }
+            });
+            return {
+              id: "TargetTypeNumber",
+              value: values,
+            };
           } else {
             throw new Error("must be real value");
           }
@@ -402,10 +413,10 @@ export function getTargetType(
       }
     }
     case "TargetTypeBoolean": {
-      if (typeof targetTypeAfterProcess.value == "boolean") {
+      if (Array.isArray(targetTypeAfterProcess.value)) {
         return targetTypeAfterProcess;
       }
-      const path = targetTypeAfterProcess.value;
+      const path = targetTypeAfterProcess.value.path;
       switch (path[0].id) {
         case "カード": {
           const targetType = getTargetType(ctx, blockPayload, targets, path[0]);
@@ -422,16 +433,18 @@ export function getTargetType(
             if (targetType.value[0] == null) {
               throw new Error("cardID[0] must not null");
             }
-            const [_, cardState] = getCardState(ctx, targetType.value[0]);
-            switch (path[1]) {
-              default:
-              case "交戦中": {
-                return {
-                  id: "TargetTypeBoolean",
-                  value: false,
-                };
+            const values = targetType.value.map((cardID) => {
+              switch (path[1]) {
+                default:
+                case "交戦中": {
+                  return false;
+                }
               }
-            }
+            });
+            return {
+              id: "TargetTypeBoolean",
+              value: values,
+            };
           } else {
             throw new Error("must be real value");
           }

@@ -6,6 +6,7 @@ import type {
   UnitPropertyKeyword,
 } from "./basic";
 import {
+  TargetTypeBaSyou,
   TargetTypeBoolean,
   TargetTypeCard,
   TargetTypeCardCategory,
@@ -158,6 +159,15 @@ type ConditionCardPropertyComparePlayer = {
   ];
 };
 
+type ConditionCardPropertyCompareBaSyou = {
+  id: "ConditionCardPropertyCompareBaSyou";
+  value: [
+    TargetTypeBaSyou,
+    ConditionCardPropertyCompareOperator,
+    TargetTypeBaSyou
+  ];
+};
+
 export type Condition =
   | ConditionCardOnBaSyou
   | ConditionCardOnColor
@@ -176,6 +186,7 @@ export type Condition =
   | ConditionCardPropertyCompareRole
   | ConditionCardPropertyCompareCard
   | ConditionCardPropertyComparePlayer
+  | ConditionCardPropertyCompareBaSyou
   | ConditionNot
   | ConditionOr
   | ConditionAnd;

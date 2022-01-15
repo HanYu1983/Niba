@@ -27,10 +27,9 @@ export type TargetTypePlayer = {
 export type TargetTypeNumber = {
   id: "TargetTypeNumber";
   value:
-    | number
-    | null
+    | number[]
     | string
-    | [TargetTypeCard, "攻撃力" | "防御力" | "合計国力"];
+    | { path: [TargetTypeCard, "攻撃力" | "防御力" | "合計国力"] };
 };
 
 export type TargetTypeString = {
@@ -40,27 +39,27 @@ export type TargetTypeString = {
 
 export type TargetTypeBoolean = {
   id: "TargetTypeBoolean";
-  value: boolean | string | null | [TargetTypeCard, "交戦中"];
+  value: boolean[] | string | { path: [TargetTypeCard, "交戦中"] };
 };
 
 export type TargetTypeBaSyou = {
   id: "場所";
-  value: BaSyou | string | null | [TargetTypeCard, "の場所"];
+  value: BaSyou[] | string | { path: [TargetTypeCard, "の場所"] };
 };
 
 export type TargetTypeCardColor = {
   id: "カードの色";
-  value: CardColor[] | string | null | { path: [TargetTypeCard, "の色"] };
+  value: CardColor[] | string | { path: [TargetTypeCard, "の色"] };
 };
 
 export type TargetTypeCardCategory = {
   id: "TargetTypeCardCategory";
-  value: CardCategory[] | string | null | { path: [TargetTypeCard, "の種類"] };
+  value: CardCategory[] | string | { path: [TargetTypeCard, "の種類"] };
 };
 
 export type TargetTypeCardRole = {
   id: "TargetTypeCardRole";
-  value: CardCategory[] | string | null | { path: [TargetTypeCard, "的角色"] };
+  value: CardCategory[] | string | { path: [TargetTypeCard, "的角色"] };
 };
 
 export type TargetTypeCustom = {

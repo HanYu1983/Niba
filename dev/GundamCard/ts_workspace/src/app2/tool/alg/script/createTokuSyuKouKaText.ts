@@ -164,19 +164,66 @@ export function createTokuSyuKouKaText(
                       id: "ConditionAnd",
                       and: [
                         {
-                          id: "ConditionCardIsPlayerSide",
-                          source: "targetCard",
-                          playerSide: "敵軍",
+                          id: "ConditionCardPropertyComparePlayer",
+                          value: [
+                            {
+                              id: "プレーヤー",
+                              value: {
+                                path: [
+                                  { id: "カード", value: "targetCard" },
+                                  "Controller",
+                                ],
+                              },
+                            },
+                            "!=",
+                            {
+                              id: "プレーヤー",
+                              value: {
+                                path: [
+                                  {
+                                    id: "カード",
+                                    value: {
+                                      path: [{ id: "このカード" }],
+                                    },
+                                  },
+                                  "Controller",
+                                ],
+                              },
+                            },
+                          ],
                         },
                         {
-                          id: "ConditionCardIsRole",
-                          source: "targetCard",
-                          role: "ユニット",
+                          id: "ConditionCardPropertyCompareRole",
+                          value: [
+                            {
+                              id: "TargetTypeCardRole",
+                              value: "targetCard",
+                            },
+                            "==",
+                            {
+                              id: "TargetTypeCardRole",
+                              value: ["ユニット"],
+                            },
+                          ],
                         },
-                        // 交戦中
                         {
-                          id: "ConditionCardIsBattle",
-                          source: "targetCard",
+                          id: "ConditionCardPropertyCompareBoolean",
+                          value: [
+                            {
+                              id: "TargetTypeBoolean",
+                              value: {
+                                path: [
+                                  { id: "カード", value: "targetCard" },
+                                  "交戦中",
+                                ],
+                              },
+                            },
+                            "==",
+                            {
+                              id: "TargetTypeBoolean",
+                              value: [true],
+                            },
+                          ],
                         },
                       ],
                     },
@@ -310,7 +357,7 @@ export function createTokuSyuKouKaText(
                             "==",
                             {
                               id: "TargetTypeBoolean",
-                              value: true,
+                              value: [true],
                             },
                           ],
                         },
@@ -319,18 +366,20 @@ export function createTokuSyuKouKaText(
                           value: [
                             {
                               id: "TargetTypeNumber",
-                              value: [
-                                {
-                                  id: "カード",
-                                  value: "targetCard",
-                                },
-                                "防御力",
-                              ],
+                              value: {
+                                path: [
+                                  {
+                                    id: "カード",
+                                    value: "targetCard",
+                                  },
+                                  "防御力",
+                                ],
+                              },
                             },
                             "<=",
                             {
                               id: "TargetTypeNumber",
-                              value: damage,
+                              value: [damage],
                             },
                           ],
                         },
@@ -414,10 +463,6 @@ export function createTokuSyuKouKaText(
                     id: "RequireTarget",
                     targets: {
                       cardB: { id: "カード", value: [] },
-                      faceDown: {
-                        id: "TargetTypeBoolean",
-                        value: false,
-                      },
                     },
                     condition: {
                       id: "ConditionAnd",
@@ -426,27 +471,74 @@ export function createTokuSyuKouKaText(
                           id: "ConditionOr",
                           or: [
                             {
-                              id: "ConditionCardOnBaSyou",
-                              source: "cardB",
-                              baSyou: {
-                                id: "RelatedBaSyou",
-                                value: ["自軍", "手札"],
-                              },
+                              id: "ConditionCardPropertyCompareBaSyou",
+                              value: [
+                                {
+                                  id: "場所",
+                                  value: {
+                                    path: [
+                                      {
+                                        id: "カード",
+                                        value: "cardB",
+                                      },
+                                      "の場所",
+                                    ],
+                                  },
+                                },
+                                "==",
+                                {
+                                  id: "場所",
+                                  value: [
+                                    {
+                                      id: "RelatedBaSyou",
+                                      value: ["自軍", "手札"],
+                                    },
+                                  ],
+                                },
+                              ],
                             },
                             {
-                              id: "ConditionCardOnBaSyou",
-                              source: "cardB",
-                              baSyou: {
-                                id: "RelatedBaSyou",
-                                value: ["自軍", "ハンガー"],
-                              },
+                              id: "ConditionCardPropertyCompareBaSyou",
+                              value: [
+                                {
+                                  id: "場所",
+                                  value: {
+                                    path: [
+                                      {
+                                        id: "カード",
+                                        value: "cardB",
+                                      },
+                                      "の場所",
+                                    ],
+                                  },
+                                },
+                                "==",
+                                {
+                                  id: "場所",
+                                  value: [
+                                    {
+                                      id: "RelatedBaSyou",
+                                      value: ["自軍", "ハンガー"],
+                                    },
+                                  ],
+                                },
+                              ],
                             },
                           ],
                         },
                         {
-                          id: "ConditionCardOnCategory",
-                          source: "cardB",
-                          category: "ユニット",
+                          id: "ConditionCardPropertyCompareRole",
+                          value: [
+                            {
+                              id: "TargetTypeCardRole",
+                              value: "targetCard",
+                            },
+                            "==",
+                            {
+                              id: "TargetTypeCardRole",
+                              value: ["ユニット"],
+                            },
+                          ],
                         },
                         {
                           id: "ConditionCardHasTokuTyou",
@@ -464,7 +556,7 @@ export function createTokuSyuKouKaText(
                         },
                         faceDown: {
                           id: "TargetTypeBoolean",
-                          value: "faceDown",
+                          value: [false],
                         },
                       },
                       {
