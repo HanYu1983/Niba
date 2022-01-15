@@ -170,7 +170,11 @@ export function doConditionTarget(
     }
     case "ConditionCardPropertyCompareCard": {
       const [v1, op, v2] = condition.value;
-      getTargetType(ctx, blockPayload, targets, v1);
+      const target1 = getTargetType(ctx, blockPayload, targets, v1);
+      const target2 = getTargetType(ctx, blockPayload, targets, v1);
+      switch (op) {
+        case "交戦中":
+      }
     }
   }
   return null;

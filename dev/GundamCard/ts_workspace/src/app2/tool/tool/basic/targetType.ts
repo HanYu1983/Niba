@@ -2,6 +2,7 @@ import {
   BaSyou,
   CardCategory,
   CardColor,
+  PlayerID,
   RelatedPlayerSideKeyword,
   UnitPropertyKeyword,
 } from "./basic";
@@ -10,65 +11,68 @@ import { BlockPayload } from "./blockPayload";
 
 export type TargetTypeCard = {
   id: "カード";
-  source?: string;
-  cardID: (string | null)[] | "このカード" | "対象";
+  value: string[] | string | { path: [{ id: "このカード" }] };
 };
 
 export type TargetTypePlayer = {
   id: "プレーヤー";
-  playerID: string | null;
+  value:
+    | PlayerID[]
+    | string
+    | {
+        path: [TargetTypeCard, "Controller" | "Owner"];
+      };
 };
 
 export type TargetTypeNumber = {
   id: "TargetTypeNumber";
-  source?: string;
-  value: number | "攻撃力" | "防御力" | "合計国力" | null;
+  value:
+    | number
+    | null
+    | string
+    | [TargetTypeCard, "攻撃力" | "防御力" | "合計国力"];
 };
 
 export type TargetTypeString = {
   id: "TargetTypeString";
-  source?: string;
-  value: (string | null)[] | "名称";
+  value: string[] | string | { path: [TargetTypeCard, "名称"] };
 };
 
 export type TargetTypeBoolean = {
   id: "TargetTypeBoolean";
-  source?: string;
-  value: boolean | RelatedPlayerSideKeyword | null;
+  value: boolean | string | null | [TargetTypeCard, "交戦中"];
 };
 
 export type TargetTypeBaSyou = {
   id: "場所";
-  baSyou: BaSyou | null;
+  value: BaSyou | string | null | [TargetTypeCard, "の場所"];
 };
 
 export type TargetTypeCardColor = {
   id: "カードの色";
-  color: CardColor | null;
+  value: CardColor[] | string | null | { path: [TargetTypeCard, "の色"] };
 };
 
 export type TargetTypeCardCategory = {
   id: "TargetTypeCardCategory";
-  source?: string;
-  category: CardCategory | "このカードの" | null;
+  value: CardCategory[] | string | null | { path: [TargetTypeCard, "の種類"] };
 };
 
 export type TargetTypeCardRole = {
   id: "TargetTypeCardRole";
-  source?: string;
-  role: CardCategory | "このカードの" | null;
+  value: CardCategory[] | string | null | { path: [TargetTypeCard, "的角色"] };
 };
 
 export type TargetTypeCustom = {
   id: "TargetTypeCustom";
-  scriptString: string;
+  value: string;
 };
 
 type Damage = any;
 
 type TargetTypeDamage = {
   id: "TargetTypeDamage";
-  damage: Damage;
+  value: Damage | string | null;
 };
 
 export type TargetType =

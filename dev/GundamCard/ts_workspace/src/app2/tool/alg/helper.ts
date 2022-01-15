@@ -108,15 +108,24 @@ export function getTargetType(
   ctx: GameContext,
   blockPayload: BlockPayload,
   targets: { [key: string]: TargetType },
-  target: string | TargetType
+  target: TargetType
 ): TargetType {
   log("getTargetType", target);
   const targetTypeAfterProcess = (() => {
-    if (typeof target == "string") {
-      return targets[target];
+    if (typeof target.value == "string") {
+      if (targets[target.value] == null) {
+        throw new Error("target.value not found");
+      }
+      return targets[target.value];
     }
     return target;
   })();
+  if (targetTypeAfterProcess.value == null) {
+    return targetTypeAfterProcess;
+  }
+  if (typeof targetTypeAfterProcess.value == "string") {
+    throw new Error("must only one layer");
+  }
   const getCardID = () => {
     if (blockPayload.cause == null) {
       throw new Error("must has cause");
@@ -138,142 +147,302 @@ export function getTargetType(
     // 対象 -> カード
     // カード -> カード
     case "カード": {
-      switch (targetTypeAfterProcess.cardID) {
+      if (Array.isArray(targetTypeAfterProcess.value)) {
+        return targetTypeAfterProcess;
+      }
+      const path = targetTypeAfterProcess.value.path;
+      switch (path[0].id) {
         case "このカード":
           return {
             id: "カード",
-            cardID: [getCardID()],
+            value: [getCardID()],
           };
-        case "対象": {
-          if (targetTypeAfterProcess.source == null) {
-            throw new Error("source not found");
+        default:
+          throw new Error("path[0].id not found:" + path[0].id);
+      }
+    }
+    case "プレーヤー": {
+      if (Array.isArray(targetTypeAfterProcess.value)) {
+        return targetTypeAfterProcess;
+      }
+      const path = targetTypeAfterProcess.value.path;
+      switch (path[0].id) {
+        case "カード": {
+          const targetType = getTargetType(ctx, blockPayload, targets, path[0]);
+          if (targetType.id != "カード") {
+            throw new Error("must be カード");
           }
-          const refTargetType = targets[targetTypeAfterProcess.source];
-          if (refTargetType == null) {
-            throw new Error("source is null");
+          if (typeof targetType.value == "string") {
+            throw new Error("must only one layer");
           }
-          if (refTargetType.id != "カード") {
-            throw new Error("must be card");
+          if (Array.isArray(targetType.value)) {
+            if (targetType.value.length == 0) {
+              throw new Error("cardID must > 0");
+            }
+            if (targetType.value[0] == null) {
+              throw new Error("cardID[0] must not null");
+            }
+            const [_, cardState] = getCardState(ctx, targetType.value[0]);
+            switch (path[1]) {
+              default:
+              case "Controller": {
+                return {
+                  id: "プレーヤー",
+                  value: [""],
+                };
+              }
+            }
+          } else {
+            throw new Error("must be real value");
           }
-          if (Array.isArray(refTargetType.cardID) == false) {
-            throw new Error("must be array");
-          }
-          return refTargetType;
         }
         default:
-          return targetTypeAfterProcess;
+          throw new Error("path[0].id not found:" + path[0].id);
+      }
+    }
+    case "カードの色": {
+      if (Array.isArray(targetTypeAfterProcess.value)) {
+        return targetTypeAfterProcess;
+      }
+      const path = targetTypeAfterProcess.value.path;
+      switch (path[0].id) {
+        case "カード": {
+          const targetType = getTargetType(ctx, blockPayload, targets, path[0]);
+          if (targetType.id != "カード") {
+            throw new Error("must be カード");
+          }
+          if (typeof targetType.value == "string") {
+            throw new Error("must only one layer");
+          }
+          if (Array.isArray(targetType.value)) {
+            if (targetType.value.length == 0) {
+              throw new Error("cardID must > 0");
+            }
+            if (targetType.value[0] == null) {
+              throw new Error("cardID[0] must not null");
+            }
+            const [_, cardState] = getCardState(ctx, targetType.value[0]);
+            switch (path[1]) {
+              default:
+              case "の色": {
+                return {
+                  id: "場所",
+                  value: cardState.prototype.color,
+                };
+              }
+            }
+          } else {
+            throw new Error("must be real value");
+          }
+        }
+        default:
+          throw new Error("path[0].id not found:" + path[0].id);
+      }
+    }
+    case "TargetTypeCardRole": {
+      if (Array.isArray(targetTypeAfterProcess.value)) {
+        return targetTypeAfterProcess;
+      }
+      const path = targetTypeAfterProcess.value.path;
+      switch (path[0].id) {
+        case "カード": {
+          const targetType = getTargetType(ctx, blockPayload, targets, path[0]);
+          if (targetType.id != "カード") {
+            throw new Error("must be カード");
+          }
+          if (typeof targetType.value == "string") {
+            throw new Error("must only one layer");
+          }
+          if (Array.isArray(targetType.value)) {
+            if (targetType.value.length == 0) {
+              throw new Error("cardID must > 0");
+            }
+            if (targetType.value[0] == null) {
+              throw new Error("cardID[0] must not null");
+            }
+            const [_, cardState] = getCardState(ctx, targetType.value[0]);
+            switch (path[1]) {
+              default:
+              case "的角色": {
+                return {
+                  id: "TargetTypeCardRole",
+                  value: ["グラフィック"],
+                };
+              }
+            }
+          } else {
+            throw new Error("must be real value");
+          }
+        }
+        default:
+          throw new Error("path[0].id not found:" + path[0].id);
       }
     }
     case "TargetTypeString": {
-      if (targetTypeAfterProcess.value == null) {
+      if (Array.isArray(targetTypeAfterProcess.value)) {
         return targetTypeAfterProcess;
       }
-      const isRef = typeof targetTypeAfterProcess.value == "string";
-      if (isRef == false) {
-        return targetTypeAfterProcess;
-      }
-      if (targetTypeAfterProcess.source == null) {
-        throw new Error("source not found");
-      }
-      const refTargetType = targets[targetTypeAfterProcess.source];
-      if (refTargetType == null) {
-        throw new Error("source is null");
-      }
-      if (refTargetType.id != "カード") {
-        throw new Error("must be card");
-      }
-      if (refTargetType.cardID.length == 0) {
-        throw new Error("cardID must > 0");
-      }
-      if (refTargetType.cardID[0] == null) {
-        throw new Error("cardID[0] must not null");
-      }
-      const [_, cardState] = getCardState(ctx, refTargetType.cardID[0]);
-      switch (targetTypeAfterProcess.value) {
-        default:
-        case "名称": {
-          return {
-            id: "TargetTypeString",
-            value: [""],
-          };
+      const path = targetTypeAfterProcess.value.path;
+      switch (path[0].id) {
+        case "カード": {
+          const targetType = getTargetType(ctx, blockPayload, targets, path[0]);
+          if (targetType.id != "カード") {
+            throw new Error("must be カード");
+          }
+          if (typeof targetType.value == "string") {
+            throw new Error("must only one layer");
+          }
+          if (Array.isArray(targetType.value)) {
+            if (targetType.value.length == 0) {
+              throw new Error("cardID must > 0");
+            }
+            if (targetType.value[0] == null) {
+              throw new Error("cardID[0] must not null");
+            }
+            const [_, cardState] = getCardState(ctx, targetType.value[0]);
+            switch (path[1]) {
+              default:
+              case "名称": {
+                return {
+                  id: "TargetTypeString",
+                  value: [""],
+                };
+              }
+            }
+          } else {
+            throw new Error("must be real value");
+          }
         }
+        default:
+          throw new Error("path[0].id not found:" + path[0].id);
+      }
+    }
+    case "場所": {
+      if (Array.isArray(targetTypeAfterProcess.value)) {
+        const path = targetTypeAfterProcess.value;
+        switch (path[0].id) {
+          case "カード": {
+            const targetType = getTargetType(
+              ctx,
+              blockPayload,
+              targets,
+              path[0]
+            );
+            if (targetType.id != "カード") {
+              throw new Error("must be カード");
+            }
+            if (typeof targetType.value == "string") {
+              throw new Error("must only one layer");
+            }
+            if (Array.isArray(targetType.value)) {
+              if (targetType.value.length == 0) {
+                throw new Error("cardID must > 0");
+              }
+              if (targetType.value[0] == null) {
+                throw new Error("cardID[0] must not null");
+              }
+              const [_, cardState] = getCardState(ctx, targetType.value[0]);
+              switch (path[1]) {
+                default:
+                case "の場所": {
+                  return {
+                    id: "場所",
+                    value: getCardBaSyou(ctx, targetType.value[0]),
+                  };
+                }
+              }
+            } else {
+              throw new Error("must be real value");
+            }
+          }
+          default:
+            throw new Error("path[0].id not found:" + path[0].id);
+        }
+      } else {
+        return targetTypeAfterProcess;
       }
     }
     case "TargetTypeNumber": {
-      if (targetTypeAfterProcess.value == null) {
+      if (typeof targetTypeAfterProcess.value == "number") {
         return targetTypeAfterProcess;
       }
-      const isRef = Array.isArray(targetTypeAfterProcess.value);
-      if (isRef == false) {
-        return targetTypeAfterProcess;
-      }
-      if (targetTypeAfterProcess.source == null) {
-        throw new Error("source not found");
-      }
-      const ref = targets[targetTypeAfterProcess.source];
-      if (ref == null) {
-        throw new Error("source is null");
-      }
-      const refTargetType = getTargetType(ctx, blockPayload, targets, ref);
-      if (refTargetType.id != "カード") {
-        throw new Error("must be card");
-      }
-      if (refTargetType.cardID.length == 0) {
-        throw new Error("cardID must > 0");
-      }
-      if (refTargetType.cardID[0] == null) {
-        throw new Error("cardID[0] must not null");
-      }
-      const [_, cardState] = getCardState(ctx, refTargetType.cardID[0]);
-      switch (targetTypeAfterProcess.value) {
-        default:
-        case "合計国力": {
-          return {
-            id: "TargetTypeNumber",
-            value: 0,
-          };
+      const path = targetTypeAfterProcess.value;
+      switch (path[0].id) {
+        case "カード": {
+          const targetType = getTargetType(ctx, blockPayload, targets, path[0]);
+          if (targetType.id != "カード") {
+            throw new Error("must be カード");
+          }
+          if (typeof targetType.value == "string") {
+            throw new Error("must only one layer");
+          }
+          if (Array.isArray(targetType.value)) {
+            if (targetType.value.length == 0) {
+              throw new Error("cardID must > 0");
+            }
+            if (targetType.value[0] == null) {
+              throw new Error("cardID[0] must not null");
+            }
+            const [_, cardState] = getCardState(ctx, targetType.value[0]);
+            switch (path[1]) {
+              default:
+              case "合計国力": {
+                return {
+                  id: "TargetTypeNumber",
+                  value: 0,
+                };
+              }
+            }
+          } else {
+            throw new Error("must be real value");
+          }
         }
+        default:
+          throw new Error("path[0].id not found:" + path[0].id);
       }
     }
     case "TargetTypeBoolean": {
-      if (targetTypeAfterProcess.value == null) {
+      if (typeof targetTypeAfterProcess.value == "boolean") {
         return targetTypeAfterProcess;
       }
-      const isRef = Array.isArray(targetTypeAfterProcess.value);
-      if (isRef == false) {
-        return targetTypeAfterProcess;
-      }
-      if (targetTypeAfterProcess.source == null) {
-        throw new Error("source not found");
-      }
-      const ref = targets[targetTypeAfterProcess.source];
-      if (ref == null) {
-        throw new Error("source is null");
-      }
-      const refTargetType = getTargetType(ctx, blockPayload, targets, ref);
-      if (refTargetType.id != "カード") {
-        throw new Error("must be card");
-      }
-      if (refTargetType.cardID.length == 0) {
-        throw new Error("cardID must > 0");
-      }
-      if (refTargetType.cardID[0] == null) {
-        throw new Error("cardID[0] must not null");
-      }
-      const [_, cardState] = getCardState(ctx, refTargetType.cardID[0]);
-      switch (targetTypeAfterProcess.value) {
-        default:
-        case "自軍": {
-          return {
-            id: "TargetTypeBoolean",
-            value: false,
-          };
+      const path = targetTypeAfterProcess.value;
+      switch (path[0].id) {
+        case "カード": {
+          const targetType = getTargetType(ctx, blockPayload, targets, path[0]);
+          if (targetType.id != "カード") {
+            throw new Error("must be カード");
+          }
+          if (typeof targetType.value == "string") {
+            throw new Error("must only one layer");
+          }
+          if (Array.isArray(targetType.value)) {
+            if (targetType.value.length == 0) {
+              throw new Error("cardID must > 0");
+            }
+            if (targetType.value[0] == null) {
+              throw new Error("cardID[0] must not null");
+            }
+            const [_, cardState] = getCardState(ctx, targetType.value[0]);
+            switch (path[1]) {
+              default:
+              case "交戦中": {
+                return {
+                  id: "TargetTypeBoolean",
+                  value: false,
+                };
+              }
+            }
+          } else {
+            throw new Error("must be real value");
+          }
         }
+        default:
+          throw new Error("path[0].id not found:" + path[0].id);
       }
     }
     case "TargetTypeCustom": {
       const func: TargetTypeCustomFunctionType = getCustomFunction(
-        targetTypeAfterProcess.scriptString
+        targetTypeAfterProcess.value
       );
       return func(ctx, blockPayload);
     }

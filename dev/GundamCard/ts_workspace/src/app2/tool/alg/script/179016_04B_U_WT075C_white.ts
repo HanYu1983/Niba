@@ -43,13 +43,17 @@ const prototype: CardPrototype = {
                         targets: {
                           cards: {
                             id: "カード",
-                            cardID: [null, null],
+                            value: [],
                           },
                         },
+                        // TODO: condition cards.length == 2
                         action: [
                           {
                             id: "ActionConsumeG",
-                            cards: "cards",
+                            cards: {
+                              id: "カード",
+                              value: "cards",
+                            },
                             color: {
                               id: "カードの色",
                               color: "白",
@@ -62,7 +66,7 @@ const prototype: CardPrototype = {
                         targets: {
                           "５以下の防御力を持つ敵軍ユニット１枚": {
                             id: "カード",
-                            cardID: [null],
+                            value: [],
                           },
                         },
                         condition: {
@@ -78,9 +82,14 @@ const prototype: CardPrototype = {
                               value: [
                                 {
                                   id: "TargetTypeNumber",
-                                  source:
-                                    "５以下の防御力を持つ敵軍ユニット１枚",
-                                  value: "防御力",
+                                  value: [
+                                    {
+                                      id: "カード",
+                                      value:
+                                        "５以下の防御力を持つ敵軍ユニット１枚",
+                                    },
+                                    "防御力",
+                                  ],
                                 },
                                 "<=",
                                 {
@@ -94,7 +103,10 @@ const prototype: CardPrototype = {
                         action: [
                           {
                             id: "ActionDestroy",
-                            cards: "５以下の防御力を持つ敵軍ユニット１枚",
+                            cards: {
+                              id: "カード",
+                              value: "５以下の防御力を持つ敵軍ユニット１枚",
+                            },
                           },
                         ],
                       },

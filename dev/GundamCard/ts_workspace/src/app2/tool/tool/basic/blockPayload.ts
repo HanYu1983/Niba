@@ -186,7 +186,11 @@ export function createRollCostRequire(
     action: [
       {
         id: "ActionConsumeG",
-        cards: "cards",
+        cards: {
+          id: "カード",
+          source: "cards",
+          cardID: "対象",
+        },
         ...(color
           ? {
               color: {

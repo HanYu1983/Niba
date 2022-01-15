@@ -11,6 +11,7 @@ import {
   TargetTypeCardCategory,
   TargetTypeCardRole,
   TargetTypeNumber,
+  TargetTypePlayer,
   TargetTypeString,
 } from "./targetType";
 
@@ -91,7 +92,13 @@ type ConditionCardIsBattle = {
   source: string;
 };
 
-type ConditionCardPropertyCompareOperator = "<=" | "<" | "==" | ">" | ">=";
+type ConditionCardPropertyCompareOperator =
+  | "<="
+  | "<"
+  | "=="
+  | ">"
+  | ">="
+  | "!=";
 
 type ConditionCardPropertyCompare = {
   id: "ConditionCardPropertyCompare";
@@ -129,7 +136,9 @@ type ConditionCardPropertyCompareRole = {
   ];
 };
 
-type ConditionCardPropertyCompareCardOperator = "交戦中";
+type ConditionCardPropertyCompareCardOperator =
+  | "交戦中"
+  | ConditionCardPropertyCompareOperator;
 
 type ConditionCardPropertyCompareCard = {
   id: "ConditionCardPropertyCompareCard";
@@ -137,6 +146,15 @@ type ConditionCardPropertyCompareCard = {
     TargetTypeCard,
     ConditionCardPropertyCompareCardOperator,
     TargetTypeCard
+  ];
+};
+
+type ConditionCardPropertyComparePlayer = {
+  id: "ConditionCardPropertyComparePlayer";
+  value: [
+    TargetTypePlayer,
+    ConditionCardPropertyCompareOperator,
+    TargetTypePlayer
   ];
 };
 
@@ -157,6 +175,7 @@ export type Condition =
   | ConditionCardPropertyCompareBoolean
   | ConditionCardPropertyCompareRole
   | ConditionCardPropertyCompareCard
+  | ConditionCardPropertyComparePlayer
   | ConditionNot
   | ConditionOr
   | ConditionAnd;

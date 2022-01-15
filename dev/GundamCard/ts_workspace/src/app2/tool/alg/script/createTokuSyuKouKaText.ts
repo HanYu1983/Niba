@@ -28,23 +28,71 @@ export function createTokuSyuKouKaText(
                     targets: {
                       cards: {
                         id: "カード",
-                        cardID: [null],
+                        value: [],
                       },
                     },
                     condition: {
                       id: "ConditionAnd",
                       and: [
                         {
-                          id: "ConditionCardIsPlayerSide",
-                          source: "cards",
-                          playerSide: "自軍",
+                          id: "ConditionCardPropertyComparePlayer",
+                          value: [
+                            {
+                              id: "プレーヤー",
+                              value: {
+                                path: [
+                                  { id: "カード", value: "cards" },
+                                  "Controller",
+                                ],
+                              },
+                            },
+                            "==",
+                            {
+                              id: "プレーヤー",
+                              value: {
+                                path: [
+                                  {
+                                    id: "カード",
+                                    value: {
+                                      path: [{ id: "このカード" }],
+                                    },
+                                  },
+                                  "Controller",
+                                ],
+                              },
+                            },
+                          ],
                         },
                         {
-                          id: "ConditionCardIsRole",
-                          source: "cards",
-                          role: "ユニット",
+                          id: "ConditionCardPropertyCompareRole",
+                          value: [
+                            {
+                              id: "TargetTypeCardRole",
+                              value: "cards",
+                            },
+                            "==",
+                            {
+                              id: "TargetTypeCardRole",
+                              value: ["ユニット"],
+                            },
+                          ],
                         },
-                        //TODO: not this card
+                        {
+                          id: "ConditionCardPropertyCompareCard",
+                          value: [
+                            {
+                              id: "カード",
+                              value: "cards",
+                            },
+                            "!=",
+                            {
+                              id: "カード",
+                              value: {
+                                path: [{ id: "このカード" }],
+                              },
+                            },
+                          ],
+                        },
                       ],
                     },
                   },
@@ -64,7 +112,10 @@ export function createTokuSyuKouKaText(
                             action: [
                               {
                                 id: "ActionReroll",
-                                cards: "cards",
+                                cards: {
+                                  id: "カード",
+                                  value: "cards",
+                                },
                               },
                             ],
                           },
@@ -106,7 +157,7 @@ export function createTokuSyuKouKaText(
                     targets: {
                       targetCard: {
                         id: "カード",
-                        cardID: [null],
+                        value: [],
                       },
                     },
                     condition: {
@@ -142,7 +193,7 @@ export function createTokuSyuKouKaText(
                     targets: {
                       damage: {
                         id: "TargetTypeDamage",
-                        damage: damage,
+                        value: damage,
                       },
                     },
                     action: [
@@ -169,7 +220,10 @@ export function createTokuSyuKouKaText(
                             action: [
                               {
                                 id: "ActionUnitDamage",
-                                cards: "targetCard",
+                                cards: {
+                                  id: "カード",
+                                  value: "targetCard",
+                                },
                                 value: "damage",
                               },
                             ],
@@ -206,7 +260,7 @@ export function createTokuSyuKouKaText(
                     targets: {
                       targetCard: {
                         id: "カード",
-                        cardID: [null],
+                        value: [],
                       },
                     },
                     condition: {
@@ -217,13 +271,18 @@ export function createTokuSyuKouKaText(
                           value: [
                             {
                               id: "カード",
-                              source: "targetCard",
-                              cardID: "対象",
+                              value: "targetCard",
                             },
                             "交戦中",
                             {
                               id: "カード",
-                              cardID: "このカード",
+                              value: {
+                                path: [
+                                  {
+                                    id: "このカード",
+                                  },
+                                ],
+                              },
                             },
                           ],
                         },
@@ -232,13 +291,12 @@ export function createTokuSyuKouKaText(
                           value: [
                             {
                               id: "TargetTypeCardRole",
-                              source: "targetCard",
-                              role: "このカードの",
+                              value: "targetCard",
                             },
                             "==",
                             {
                               id: "TargetTypeCardRole",
-                              role: "ユニット",
+                              value: ["ユニット"],
                             },
                           ],
                         },
@@ -247,8 +305,7 @@ export function createTokuSyuKouKaText(
                           value: [
                             {
                               id: "TargetTypeBoolean",
-                              source: "targetCard",
-                              value: "敵軍",
+                              value: "targetCard",
                             },
                             "==",
                             {
@@ -262,8 +319,13 @@ export function createTokuSyuKouKaText(
                           value: [
                             {
                               id: "TargetTypeNumber",
-                              source: "targetCard",
-                              value: "防御力",
+                              value: [
+                                {
+                                  id: "カード",
+                                  value: "targetCard",
+                                },
+                                "防御力",
+                              ],
                             },
                             "<=",
                             {
@@ -298,7 +360,10 @@ export function createTokuSyuKouKaText(
                             action: [
                               {
                                 id: "ActionDestroy",
-                                cards: "targetCard",
+                                cards: {
+                                  id: "カード",
+                                  value: "targetCard",
+                                },
                               },
                             ],
                           },
@@ -332,7 +397,10 @@ export function createTokuSyuKouKaText(
                   {
                     id: "RequireTarget",
                     targets: {
-                      cardA: { id: "カード", cardID: "このカード" },
+                      cardA: {
+                        id: "カード",
+                        value: { path: [{ id: "このカード" }] },
+                      },
                     },
                     action: [
                       {
@@ -345,7 +413,7 @@ export function createTokuSyuKouKaText(
                   {
                     id: "RequireTarget",
                     targets: {
-                      cardB: { id: "カード", cardID: [null] },
+                      cardB: { id: "カード", value: [] },
                       faceDown: {
                         id: "TargetTypeBoolean",
                         value: false,
@@ -390,8 +458,14 @@ export function createTokuSyuKouKaText(
                     action: [
                       {
                         id: "ActionSetFace",
-                        cards: "cardB",
-                        faceDown: "faceDown",
+                        cards: {
+                          id: "カード",
+                          value: "cardB",
+                        },
+                        faceDown: {
+                          id: "TargetTypeBoolean",
+                          value: "faceDown",
+                        },
                       },
                       {
                         id: "ActionSetTarget",
@@ -416,8 +490,14 @@ export function createTokuSyuKouKaText(
                             action: [
                               {
                                 id: "ActionOKiKaeRu",
-                                cardA: "cardA",
-                                cardB: "cardB",
+                                cardA: {
+                                  id: "カード",
+                                  value: "cardA",
+                                },
+                                cardB: {
+                                  id: "カード",
+                                  value: "cardB",
+                                },
                               },
                             ],
                           },

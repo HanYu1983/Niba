@@ -10,12 +10,12 @@ import { CardText } from "./basic";
 
 type ActionRoll = {
   id: "ActionRoll";
-  cards: string | TargetTypeCard;
+  cards: TargetTypeCard;
 };
 
 type ActionReroll = {
   id: "ActionReroll";
-  cards: string | TargetTypeCard;
+  cards: TargetTypeCard;
 };
 
 type ActionSetTarget = {
@@ -26,14 +26,14 @@ type ActionSetTarget = {
 
 type ActionConsumeG = {
   id: "ActionConsumeG";
-  cards: string | TargetTypeCard;
-  color?: string | TargetTypeCardColor;
+  cards: TargetTypeCard;
+  color?: TargetTypeCardColor;
 };
 
 // 廃棄
 type ActionDrop = {
   id: "ActionDrop";
-  cards: string | TargetTypeCard;
+  cards: TargetTypeCard;
 };
 
 type ActionDraw = {
@@ -43,37 +43,37 @@ type ActionDraw = {
 
 type ActionDestroy = {
   id: "ActionDestroy";
-  cards: string | TargetTypeCard;
+  cards: TargetTypeCard;
 };
 
 type ActionMoveCardToPosition = {
   id: "ActionMoveCardToPosition";
-  cards: string | TargetTypeCard;
-  baSyou: string | TargetTypeBaSyou;
+  cards: TargetTypeCard;
+  baSyou: TargetTypeBaSyou;
 };
 
 type ActionSetFlag = {
   id: "ActionSetFlag";
-  cards: string | TargetTypeCard;
+  cards: TargetTypeCard;
   flag: string;
   value: boolean;
 };
 
 type ActionSetFace = {
   id: "ActionSetFace";
-  cards: string | TargetTypeCard;
-  faceDown: string | TargetTypeBoolean;
+  cards: TargetTypeCard;
+  faceDown: TargetTypeBoolean;
 };
 
 type ActionOKiKaeRu = {
   id: "ActionOKiKaeRu";
-  cardA: string | TargetTypeCard;
-  cardB: string | TargetTypeCard;
+  cardA: TargetTypeCard;
+  cardB: TargetTypeCard;
 };
 
 type ActionUnitDamage = {
   id: "ActionUnitDamage";
-  cards: string | TargetTypeCard;
+  cards: TargetTypeCard;
   value: string;
 };
 
@@ -92,7 +92,7 @@ type ActionAddEffect = {
 
 type ActionAddGlobalCardText = {
   id: "ActionAddGlobalCardText";
-  cards: string | TargetTypeCard;
+  cards: TargetTypeCard;
   cardText: CardText;
   cardTextStateID?: string;
 };
@@ -104,14 +104,14 @@ type ActionDeleteGlobalCardText = {
 
 type ActionAddCardText = {
   id: "ActionAddCardText";
-  cards: string | TargetTypeCard;
+  cards: TargetTypeCard;
   cardText: CardText;
   cardTextStateID?: string;
 };
 
 type ActionDeleteCardText = {
   id: "ActionDeleteCardText";
-  cards: string | TargetTypeCard;
+  cards: TargetTypeCard;
   cardTextStateID: string;
 };
 
