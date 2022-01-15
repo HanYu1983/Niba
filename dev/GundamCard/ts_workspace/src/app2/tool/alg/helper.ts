@@ -460,6 +460,20 @@ export function getTargetType(
               case "在「交戦中」？": {
                 return false;
               }
+              case "是「セットカード」？": {
+                const [_, cardIterator] = getCardIterator(ctx);
+                const [_2, cardState] = getCardState(ctx, cardID);
+                const findSameSetGroup =
+                  cardIterator.filter((v) => {
+                    return v.state.setGroupID == cardState.setGroupID;
+                  }).length > 1;
+                return findSameSetGroup;
+              }
+              case "存在旗標？": {
+                const flag = path[2];
+                const [_2, cardState] = getCardState(ctx, cardID);
+                return cardState.flags.includes(flag);
+              }
             }
           });
           return {

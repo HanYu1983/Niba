@@ -46,65 +46,6 @@ export function doConditionTarget(
       }
       return `不符合其中1項: ${reasons.join(".")}`;
     }
-    // case "ConditionCardContainFlag": {
-    //   const target = getTargetType(
-    //     ctx,
-    //     blockPayload,
-    //     targets,
-    //     condition.source
-    //   );
-    //   if (target.id != "カード") {
-    //     return "必須是カード";
-    //   }
-    //   const msgs = target.cardID
-    //     .map((cardID): string | null => {
-    //       if (cardID == null) {
-    //         return "[doCondition][ConditionCardContainFlag] cardID is null";
-    //       }
-    //       const [_, cardState] = getCardState(ctx, cardID);
-    //       if (cardState.flags[condition.flag] != true) {
-    //         return "flag is right";
-    //       }
-    //       return null;
-    //     })
-    //     .filter((v) => v);
-    //   if (msgs.length) {
-    //     return msgs.join(",");
-    //   }
-    //   return null;
-    // }
-    // case "ConditionCardHasSetCard": {
-    //   const target = getTargetType(
-    //     ctx,
-    //     blockPayload,
-    //     targets,
-    //     condition.source
-    //   );
-    //   if (target.id != "カード") {
-    //     return "必須是カード";
-    //   }
-    //   const [_, cardIterator] = getCardIterator(ctx);
-    //   const msgs = target.cardID
-    //     .map((cardID): string | null => {
-    //       if (cardID == null) {
-    //         return "[doCondition][ConditionCardHasSetCard] cardID is null";
-    //       }
-    //       const [_, cardState] = getCardState(ctx, cardID);
-    //       const findSameSetGroup =
-    //         cardIterator.filter((v) => {
-    //           return v.state.setGroupID == cardState.setGroupID;
-    //         }).length > 1;
-    //       if (findSameSetGroup == false) {
-    //         return "[doCondition][ConditionCardHasSetCard] must has setGroup";
-    //       }
-    //       return null;
-    //     })
-    //     .filter((v) => v);
-    //   if (msgs.length) {
-    //     return msgs.join(",");
-    //   }
-    //   return null;
-    // }
     case "ConditionCompareBoolean":
     case "ConditionCompareString":
     case "ConditionCompareNumber":

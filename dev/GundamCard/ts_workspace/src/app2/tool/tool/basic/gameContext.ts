@@ -61,7 +61,7 @@ export type CardState = {
   live: number;
   destroy: boolean;
   setGroupID: string;
-  flags: { [key: string]: boolean };
+  flags: string[];
   cardTextStates: CardTextState[];
   prototype: CardPrototype;
 };
@@ -73,7 +73,7 @@ export const DEFAULT_CARD_STATE: CardState = {
   live: 0,
   destroy: false,
   setGroupID: "",
-  flags: {},
+  flags: [],
   cardTextStates: [],
   prototype: DEFAULT_CARD_PROTOTYPE,
 };

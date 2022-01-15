@@ -52,7 +52,14 @@ export type TargetTypeString = {
 
 export type TargetTypeBoolean = {
   id: "布林";
-  value: boolean[] | string | { path: [TargetTypeCard, "在「交戦中」？"] };
+  value:
+    | boolean[]
+    | string
+    | {
+        path:
+          | [TargetTypeCard, "在「交戦中」？" | "是「セットカード」？"]
+          | [TargetTypeCard, "存在旗標？", string];
+      };
 };
 
 export type TargetTypeBaSyou = {
