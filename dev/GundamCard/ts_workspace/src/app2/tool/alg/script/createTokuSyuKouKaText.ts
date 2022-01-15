@@ -35,6 +35,25 @@ export function createTokuSyuKouKaText(
                       id: "ConditionAnd",
                       and: [
                         {
+                          id: "ConditionCardPropertyCompare",
+                          value: [
+                            {
+                              id: "TargetTypeNumber",
+                              value: {
+                                path: [
+                                  { id: "TargetTypeRef", value: "cards" },
+                                  "value.length",
+                                ],
+                              },
+                            },
+                            "==",
+                            {
+                              id: "TargetTypeNumber",
+                              value: [1],
+                            },
+                          ],
+                        },
+                        {
                           id: "ConditionCardPropertyComparePlayer",
                           value: [
                             {

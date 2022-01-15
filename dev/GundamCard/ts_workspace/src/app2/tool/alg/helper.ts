@@ -148,6 +148,8 @@ export function getTargetType(
     }
   };
   switch (targetTypeAfterProcess.id) {
+    case "TargetTypeRef":
+      return targetTypeAfterProcess;
     // このカード -> カード
     // 対象 -> カード
     // カード -> カード
@@ -377,6 +379,14 @@ export function getTargetType(
       }
       const path = targetTypeAfterProcess.value.path;
       switch (path[0].id) {
+        case "TargetTypeRef": {
+          const targetType = getTargetType(ctx, blockPayload, targets, path[0]);
+          if (Array.isArray(targetType.value)) {
+            return { id: "TargetTypeNumber", value: [targetType.value.length] };
+          } else {
+            throw new Error("must be real value");
+          }
+        }
         case "カード": {
           const targetType = getTargetType(ctx, blockPayload, targets, path[0]);
           if (targetType.id != "カード") {
@@ -409,7 +419,7 @@ export function getTargetType(
           }
         }
         default:
-          throw new Error("path[0].id not found:" + path[0].id);
+          throw new Error("path[0].id not found:" + path[0]);
       }
     }
     case "TargetTypeBoolean": {

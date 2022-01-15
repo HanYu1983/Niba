@@ -24,12 +24,21 @@ export type TargetTypePlayer = {
       };
 };
 
+export type TargetTypeRef = {
+  id: "TargetTypeRef";
+  value: string;
+};
+
 export type TargetTypeNumber = {
   id: "TargetTypeNumber";
   value:
     | number[]
     | string
-    | { path: [TargetTypeCard, "攻撃力" | "防御力" | "合計国力"] };
+    | {
+        path:
+          | [TargetTypeCard, "攻撃力" | "防御力" | "合計国力"]
+          | [TargetTypeRef, "value.length"];
+      };
 };
 
 export type TargetTypeString = {
@@ -75,6 +84,7 @@ type TargetTypeDamage = {
 };
 
 export type TargetType =
+  | TargetTypeRef
   | TargetTypeCard
   | TargetTypePlayer
   | TargetTypeNumber
