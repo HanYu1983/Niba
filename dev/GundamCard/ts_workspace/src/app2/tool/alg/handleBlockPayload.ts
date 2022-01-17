@@ -13,6 +13,8 @@ import { RequireScriptFunction } from "../tool/basic/gameContext";
 import { doActionTarget } from "./doActionTarget";
 import { doRequireCustom } from "./doRequireCustom";
 import { doConditionTarget } from "./doConditionTarget";
+import { log } from "../../../tool/logger";
+import { getTargetType } from "./helper";
 
 function doCondition(
   ctx: GameContext,
@@ -30,11 +32,13 @@ function doAction(
   action: Action,
   varCtxID: string
 ): GameContext {
+  log("doAction", action.id);
   Object.entries(require.targets).forEach(([key, target]) => {
-    if (!Array.isArray(target.value)) {
+    const processed = getTargetType(ctx, blockPayload, require.targets, target);
+    if (!Array.isArray(processed.value)) {
       throw new Error("執行Action時的所有target必須是陣列");
     }
-    if (target.value.length == 0) {
+    if (processed.value.length == 0) {
       throw new Error("執行Action時的所有target必須最少有一個值");
     }
   });

@@ -170,6 +170,7 @@ export function doConditionTarget(
               default:
                 throw new Error("baSyou not support op");
             }
+            break;
           }
           case "カード":
           case "プレーヤー":
@@ -236,6 +237,7 @@ export function doConditionTarget(
               case "交戦中":
                 throw new Error("xxxx");
             }
+            break;
           }
         }
       });

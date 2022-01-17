@@ -24,16 +24,6 @@ export const FlowListView = (props: { clientID: string }) => {
   const flows = useMemo(() => {
     return queryFlow(appContext.viewModel.model, props.clientID);
   }, [appContext.viewModel.model, props.clientID]);
-  const onClickFlowConfirm = useCallback(
-    (flow: Flow) => {
-      OnEvent.next({
-        id: "OnClickFlowConfirm",
-        clientID: props.clientID,
-        flow: flow,
-      });
-    },
-    [props.clientID]
-  );
   // ============== control panel ============= //
   const renderControlPanel = useMemo(() => {
     return (
@@ -43,7 +33,11 @@ export const FlowListView = (props: { clientID: string }) => {
             <div key={i} style={{ border: "1px solid black" }}>
               <button
                 onClick={() => {
-                  onClickFlowConfirm(flow);
+                  OnEvent.next({
+                    id: "OnClickFlowConfirm",
+                    clientID: props.clientID,
+                    flow: flow,
+                  });
                 }}
               >
                 {flow.id}
@@ -65,7 +59,17 @@ export const FlowListView = (props: { clientID: string }) => {
                       }
                       return (
                         <div key={tip.id}>
-                          {flow.description}
+                          <button
+                            onClick={() => {
+                              OnEvent.next({
+                                id: "OnClickFlowConfirm",
+                                clientID: props.clientID,
+                                flow: { ...flow, effectID: tip.id || "" },
+                              });
+                            }}
+                          >
+                            {flow.description}({tip.id})
+                          </button>
                           <BlockPayloadView
                             enabled={false}
                             clientID={props.clientID}

@@ -53,15 +53,15 @@ export const OnViewModel = OnEvent.pipe(
               //"179030_11E_C_BL076S_blue",
             ]
           );
-          // table = createCard(
-          //   table,
-          //   PlayerA,
-          //   getBaShouID({
-          //     id: "AbsoluteBaSyou",
-          //     value: [PlayerA, "手札"],
-          //   }),
-          //   ["179001_01A_CH_WT007R_white"]
-          // );
+          table = createCard(
+            table,
+            PlayerA,
+            getBaShouID({
+              id: "AbsoluteBaSyou",
+              value: [PlayerA, "手札"],
+            }),
+            ["179001_01A_CH_WT007R_white"]
+          );
           newModel = {
             ...newModel,
             gameState: {

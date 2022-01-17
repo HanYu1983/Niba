@@ -8,6 +8,7 @@ import { CardPrototype, GameContext } from "../tool/basic/gameContext";
 import { BlockPayload } from "../tool/basic/blockPayload";
 import { getCard, mapCard, Card } from "../../../tool/table";
 import {
+  getAbsoluteBaSyou,
   getCardBaSyou,
   getCardController,
   getCardOwner,
@@ -171,6 +172,7 @@ export function getTargetType(
         default:
           throw new Error("path[0].id not found:" + path[0].id);
       }
+      break;
     }
     case "プレーヤー": {
       if (Array.isArray(targetTypeAfterProcess.value)) {
@@ -207,6 +209,7 @@ export function getTargetType(
         default:
           throw new Error("path[0].id not found:" + path[0].id);
       }
+      break;
     }
     case "カードの色": {
       if (Array.isArray(targetTypeAfterProcess.value)) {
@@ -240,6 +243,7 @@ export function getTargetType(
         default:
           throw new Error("path[0].id not found:" + path[0].id);
       }
+      break;
     }
     case "「カード」的角色": {
       if (Array.isArray(targetTypeAfterProcess.value)) {
@@ -285,6 +289,7 @@ export function getTargetType(
         default:
           throw new Error("path[0].id not found:" + path[0].id);
       }
+      break;
     }
     case "カードの種類": {
       if (Array.isArray(targetTypeAfterProcess.value)) {
@@ -319,6 +324,7 @@ export function getTargetType(
         default:
           throw new Error("path[0].id not found:" + path[0].id);
       }
+      break;
     }
     case "字串": {
       if (Array.isArray(targetTypeAfterProcess.value)) {
@@ -359,10 +365,17 @@ export function getTargetType(
         default:
           throw new Error("path[0].id not found:" + path[0].id);
       }
+      break;
     }
     case "場所": {
       if (Array.isArray(targetTypeAfterProcess.value)) {
-        return targetTypeAfterProcess;
+        const cardID = getCardID();
+        return {
+          id: "場所",
+          value: targetTypeAfterProcess.value.map((v) => {
+            return getAbsoluteBaSyou(v, ctx, cardID);
+          }),
+        };
       }
       const path = targetTypeAfterProcess.value.path;
       switch (path[0].id) {
@@ -392,6 +405,7 @@ export function getTargetType(
         default:
           throw new Error("path[0].id not found:" + path[0].id);
       }
+      break;
     }
     case "數字": {
       if (Array.isArray(targetTypeAfterProcess.value)) {
@@ -437,6 +451,7 @@ export function getTargetType(
         default:
           throw new Error("path[0].id not found:" + path[0]);
       }
+      break;
     }
     case "布林": {
       if (Array.isArray(targetTypeAfterProcess.value)) {
@@ -484,6 +499,7 @@ export function getTargetType(
         default:
           throw new Error("path[0].id not found:" + path[0].id);
       }
+      break;
     }
     case "腳本": {
       const func: TargetTypeCustomFunctionType = getCustomFunction(

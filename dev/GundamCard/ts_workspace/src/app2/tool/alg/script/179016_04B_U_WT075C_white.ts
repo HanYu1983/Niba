@@ -1,5 +1,6 @@
 import { createRollCostRequire } from "../../tool/basic/blockPayload";
 import { CardPrototype, GameContext } from "../../tool/basic/gameContext";
+import { createPlayCardText } from "./createPlayCardText";
 import { createTokuSyuKouKaText } from "./createTokuSyuKouKaText";
 
 // 179016_04B_U_WT075C_white
@@ -174,4 +175,10 @@ const prototype: CardPrototype = {
   ],
 };
 
-module.exports = prototype;
+const playCardAsGText = createPlayCardText(prototype, { isG: true });
+const playCardText = createPlayCardText(prototype, {});
+
+module.exports = {
+  ...prototype,
+  texts: [...prototype.texts, playCardAsGText, playCardText],
+};
