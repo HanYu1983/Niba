@@ -6,7 +6,7 @@ import {
   GameContext,
 } from "../../../tool/tool/basic/gameContext";
 import { getBaShouID, PlayerA } from "../../../tool/tool/basic/basic";
-import { applyFlow } from "../../../tool/alg/handleClient";
+import { applyFlow, Flow } from "../../../tool/alg/handleClient";
 import { createCard } from "../../../../tool/table";
 import { initState } from "../../../tool/alg/handleGameContext";
 
@@ -16,12 +16,14 @@ export type ViewModel = {
   model: GameContext;
   cardSelection: Selection;
   cardPositionSelection: Selection;
+  flows: Flow[];
 };
 
 export const DEFAULT_VIEW_MODEL: ViewModel = {
   model: DEFAULT_GAME_CONTEXT,
   cardSelection: {},
   cardPositionSelection: {},
+  flows: [],
 };
 
 export const OnViewModel = OnEvent.pipe(
@@ -41,7 +43,7 @@ export const OnViewModel = OnEvent.pipe(
             }),
             [
               "179016_04B_U_WT075C_white",
-              // "179030_11E_U_BL208S_blue",
+              "179030_11E_U_BL208S_blue",
               // "179030_11E_U_BL215R_blue",
               //"179001_01A_CH_WT007R_white",
               //"179030_11E_C_BL076S_blue",
@@ -69,9 +71,14 @@ export const OnViewModel = OnEvent.pipe(
           return DEFAULT_VIEW_MODEL;
         }
         case "OnClickFlowConfirm": {
-          const model = applyFlow(viewModel.model, evt.clientID, evt.flow);
-          console.log(model);
-          firebase.sync(model);
+          try {
+            const model = applyFlow(viewModel.model, evt.clientID, evt.flow);
+            console.log(model);
+            firebase.sync(model);
+          } catch (e) {
+            OnError.next(e);
+          }
+
           return viewModel;
         }
         case "OnClickChangeClient": {

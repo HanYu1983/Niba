@@ -6,7 +6,7 @@ import { OnEvent } from "../tool/appContext/eventCenter";
 
 const CARD_SIZE = 100;
 
-export const CardView = (props: { cardID: string }) => {
+export const CardView = (props: { clientID?: string; cardID: string }) => {
   const appContext = useContext(AppContext);
   const card = useMemo(() => {
     return getCard(appContext.viewModel.model.gameState.table, props.cardID);

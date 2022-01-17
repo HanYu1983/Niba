@@ -6,7 +6,10 @@ import { AbsoluteBaSyou, getBaShouID } from "../../tool/tool/basic/basic";
 
 const CARD_SIZE = 100;
 
-export const CardStackView = (props: { cardPosition: AbsoluteBaSyou }) => {
+export const CardStackView = (props: {
+  clinetID: string;
+  cardPosition: AbsoluteBaSyou;
+}) => {
   const appContext = useContext(AppContext);
   const cards = useMemo(() => {
     return (
@@ -44,10 +47,21 @@ export const CardStackView = (props: { cardPosition: AbsoluteBaSyou }) => {
           </button>
         </div>
         {cards.map((card) => {
-          return <CardView key={card.id} cardID={card.id}></CardView>;
+          return (
+            <CardView
+              key={card.id}
+              clientID={props.clinetID}
+              cardID={card.id}
+            ></CardView>
+          );
         })}
       </div>
     );
-  }, [props.cardPosition, cards, appContext.viewModel.cardPositionSelection]);
+  }, [
+    props.cardPosition,
+    props.clinetID,
+    cards,
+    appContext.viewModel.cardPositionSelection,
+  ]);
   return <>{render}</>;
 };

@@ -596,12 +596,12 @@ export function queryFlow(ctx: GameContext, playerID: string): Flow[] {
     }
     return [
       {
-        id: "FlowDoEffect",
-        effectID: ctx.gameState.activeEffectID,
-      },
-      {
         id: "FlowCancelActiveEffectID",
         description: "取消支付效果，讓其它玩家可以支付",
+      },
+      {
+        id: "FlowDoEffect",
+        effectID: ctx.gameState.activeEffectID,
       },
     ];
   }

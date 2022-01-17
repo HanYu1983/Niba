@@ -1,6 +1,7 @@
 import * as rxjs from "rxjs";
 import { Card, CardStack } from "../../../../tool/table";
 import { Flow } from "../../../tool/alg/handleClient";
+import { Require } from "../../../tool/tool/basic/blockPayload";
 import { GameContext } from "../../../tool/tool/basic/gameContext";
 
 export type OnClickCardEvent = {
@@ -27,12 +28,19 @@ export type OnClickFlowConfirm = {
   flow: Flow;
 };
 
+export type OnClickRequireTargetConfirm = {
+  id: "OnClickRequireTargetConfirm";
+  clientID: string;
+  require: Require;
+};
+
 export type Event =
   | OnClickNewGame
   | OnClickChangeClient
   | OnClickCardEvent
   | OnModelFromFirebase
-  | OnClickFlowConfirm;
+  | OnClickFlowConfirm
+  | OnClickRequireTargetConfirm;
 
 export const OnEvent = new rxjs.Subject<Event>();
-export const OnError = new rxjs.Subject<Error>();
+export const OnError = new rxjs.Subject<any>();
