@@ -388,6 +388,22 @@ export function applyFlow(
         throw new Error("effectID not found");
       }
       ctx = setActiveEffectID(ctx, playerID, flow.effectID);
+      const isAllPassCut =
+        !!ctx.gameState.flowMemory.hasPlayerPassCut[PlayerA] &&
+        !!ctx.gameState.flowMemory.hasPlayerPassCut[PlayerB];
+      // 如果不是雙方都結束，就重設
+      if (isAllPassCut == false) {
+        ctx = {
+          ...ctx,
+          gameState: {
+            ...ctx.gameState,
+            flowMemory: {
+              ...ctx.gameState.flowMemory,
+              hasPlayerPassCut: {},
+            },
+          },
+        };
+      }
       return ctx;
     }
     case "FlowCancelActiveEffectID": {
