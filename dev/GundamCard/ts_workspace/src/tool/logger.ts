@@ -1,9 +1,15 @@
-const enabledCategory = ["updateCommand", "getTip"];
-let ignoreCategory = true;
+const hideCategory = [
+  "updateCommand",
+  "getTip",
+  "recurRequire",
+  //"getTargetType",
+  "triggerTextEvent",
+];
+let filterCategory = true;
 
 export const log = (category: string, msg: any) => {
-  if (ignoreCategory == false) {
-    if (enabledCategory.includes(category) == false) {
+  if (filterCategory) {
+    if (hideCategory.includes(category)) {
       return;
     }
   }

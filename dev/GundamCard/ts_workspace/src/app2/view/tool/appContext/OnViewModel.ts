@@ -5,7 +5,7 @@ import {
   DEFAULT_GAME_CONTEXT,
   GameContext,
 } from "../../../tool/tool/basic/gameContext";
-import { getBaShouID, PlayerA } from "../../../tool/tool/basic/basic";
+import { getBaShouID, PlayerA, PlayerB } from "../../../tool/tool/basic/basic";
 import {
   applyFlow,
   Flow,
@@ -13,6 +13,7 @@ import {
 } from "../../../tool/alg/handleClient";
 import { createCard } from "../../../../tool/table";
 import { initState } from "../../../tool/alg/handleGameContext";
+import { log } from "../../../../tool/logger";
 
 export type Selection = string[];
 
@@ -32,7 +33,8 @@ export const DEFAULT_VIEW_MODEL: ViewModel = {
 
 export const OnViewModel = OnEvent.pipe(
   rxjs.scan((viewModel, evt): ViewModel => {
-    console.log("OnViewModel:", evt);
+    log("OnViewModel", "evt");
+    log("OnViewModel", evt);
     try {
       switch (evt.id) {
         case "OnClickNewGame": {
@@ -59,6 +61,15 @@ export const OnViewModel = OnEvent.pipe(
             getBaShouID({
               id: "AbsoluteBaSyou",
               value: [PlayerA, "手札"],
+            }),
+            ["179001_01A_CH_WT007R_white"]
+          );
+          table = createCard(
+            table,
+            PlayerB,
+            getBaShouID({
+              id: "AbsoluteBaSyou",
+              value: [PlayerB, "手札"],
             }),
             ["179001_01A_CH_WT007R_white"]
           );
@@ -101,6 +112,8 @@ export const OnViewModel = OnEvent.pipe(
           return viewModel;
         }
         case "OnModelFromFirebase":
+          log("OnViewModel", "OnModelFromFirebase");
+          log("OnViewModel", evt.model);
           return {
             ...viewModel,
             model: evt.model,

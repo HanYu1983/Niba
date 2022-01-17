@@ -120,7 +120,10 @@ export function getTargetType(
   targets: { [key: string]: TargetType },
   target: TargetType
 ): TargetType {
+  log("getTargetType", "target");
   log("getTargetType", target);
+  log("getTargetType", "targets");
+  log("getTargetType", targets);
   const targetTypeAfterProcess = (() => {
     if (typeof target.value == "string") {
       if (targets[target.value] == null) {

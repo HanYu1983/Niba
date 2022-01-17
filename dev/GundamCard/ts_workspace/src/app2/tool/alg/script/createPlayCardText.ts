@@ -108,6 +108,11 @@ export function createPlayCardText(
                     ],
                   },
                 },
+                {
+                  id: "ActionSetTarget",
+                  source: "將要「プレイ」的卡",
+                  target: "將要「プレイ」的卡",
+                },
               ],
             },
           ],

@@ -38,6 +38,7 @@ export function doActionTarget(
   varCtxID: string
 ): GameContext {
   log("doActionTarget", action.id);
+  log("doActionTarget", action);
   switch (action.id) {
     case "ActionRoll": {
       const cards = getTargetType(ctx, blockPayload, targets, action.cards);
@@ -328,6 +329,8 @@ export function doActionTarget(
               ? { require: wrapRequireKey(action.block.require) }
               : null),
           };
+          log("doActionTarget", "ActionAddBlock");
+          log("doActionTarget", wrappedBlock);
           return {
             ...ctx,
             gameState: {

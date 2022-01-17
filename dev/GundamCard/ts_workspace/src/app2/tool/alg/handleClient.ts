@@ -179,6 +179,7 @@ export function setActiveEffectID(
   const effect = [
     ...ctx.gameState.commandEffect,
     ...ctx.gameState.immediateEffect,
+    ...ctx.gameState.stackEffect,
   ].find((e) => e.id == effectID);
   if (effect == null) {
     throw new Error("effect not found");
@@ -231,6 +232,7 @@ export function doEffect(
   playerID: string,
   effectID: string
 ): GameContext {
+  log("doEffect", effectID);
   if (ctx.gameState.activeEffectID != effectID) {
     throw new Error("activeEffectID != effectID");
   }
@@ -271,8 +273,9 @@ export function doEffect(
       activeEffectID: null,
     },
   };
+  log("doEffect", ctx);
   ctx = filterEffect(ctx, (effect) => {
-    return effect.requirePassed == false;
+    return effect.requirePassed != true;
   });
   return ctx;
 }
@@ -300,17 +303,20 @@ export function deleteImmediateEffect(
 
 type FlowUpdateCommand = {
   id: "FlowUpdateCommand";
+  description?: string;
 };
 type FlowTriggerTextEvent = {
   id: "FlowTriggerTextEvent";
   event: GameEvent;
+  description?: string;
 };
 type FlowNextTiming = {
   id: "FlowNextTiming";
+  description?: string;
 };
 type FlowAddBlock = {
   id: "FlowAddBlock";
-  descriptioin: string;
+  description?: string;
   block: BlockPayload;
 };
 type FlowWaitPlayer = {
@@ -381,7 +387,8 @@ export function applyFlow(
       if (flow.effectID == null) {
         throw new Error("effectID not found");
       }
-      return setActiveEffectID(ctx, playerID, flow.effectID);
+      ctx = setActiveEffectID(ctx, playerID, flow.effectID);
+      return ctx;
     }
     case "FlowCancelActiveEffectID": {
       return cancelActiveEffectID(ctx, playerID);
@@ -548,7 +555,7 @@ export function applyFlow(
         cause: {
           id: "BlockPayloadCauseGameRule",
           playerID: playerID,
-          description: flow.descriptioin,
+          description: flow.description || "",
         },
       };
       ctx = {
@@ -581,6 +588,7 @@ export function queryFlow(ctx: GameContext, playerID: string): Flow[] {
     const currentActiveEffect = [
       ...ctx.gameState.commandEffect,
       ...ctx.gameState.immediateEffect,
+      ...ctx.gameState.stackEffect,
     ].find((e) => e.id == ctx.gameState.activeEffectID);
     if (currentActiveEffect == null) {
       throw new Error("activeEffectID not found");
@@ -679,8 +687,9 @@ export function queryFlow(ctx: GameContext, playerID: string): Flow[] {
     const controller = getBlockOwner(ctx, effect);
     // 判斷切入流程
     const isAllPassCut =
-      ctx.gameState.flowMemory.hasPlayerPassCut[PlayerA] &&
-      ctx.gameState.flowMemory.hasPlayerPassCut[PlayerB];
+      !!ctx.gameState.flowMemory.hasPlayerPassCut[PlayerA] &&
+      !!ctx.gameState.flowMemory.hasPlayerPassCut[PlayerB];
+    log("queryFlow", `isAllPassCut: ${isAllPassCut}`);
     // 如果雙方玩家還沒放棄切入
     if (isAllPassCut == false) {
       // 如果我宣告了放棄切入，回傳取消
@@ -698,7 +707,7 @@ export function queryFlow(ctx: GameContext, playerID: string): Flow[] {
         const opponentPlayerID = playerID == PlayerA ? PlayerB : PlayerA;
         const isOpponentPassCut =
           ctx.gameState.flowMemory.hasPlayerPassCut[opponentPlayerID];
-        if (isOpponentPassCut == false) {
+        if (!isOpponentPassCut) {
           return [
             {
               id: "FlowWaitPlayer",
@@ -709,10 +718,7 @@ export function queryFlow(ctx: GameContext, playerID: string): Flow[] {
       }
       return [
         // 可以切入的指令
-        ...(() => {
-          if (ctx.gameState.commandEffect.length == 0) {
-            return [];
-          }
+        ...((): Flow[] => {
           const myEffect: BlockPayload[] = [];
           ctx.gameState.commandEffect.forEach((effect) => {
             const controller = getBlockOwner(ctx, effect);
@@ -720,7 +726,14 @@ export function queryFlow(ctx: GameContext, playerID: string): Flow[] {
               myEffect.push(effect);
             }
           });
-          return [];
+          return [
+            {
+              id: "FlowSetActiveEffectID",
+              effectID: myEffect[0].id || "",
+              tips: myEffect,
+              description: "你可以切入",
+            },
+          ];
         })(),
         // 宣告放棄切入
         {
@@ -873,7 +886,7 @@ export function queryFlow(ctx: GameContext, playerID: string): Flow[] {
               return [
                 {
                   id: "FlowAddBlock",
-                  descriptioin: `${phase[0]}規定效果`,
+                  description: `${phase[0]}規定效果`,
                   block: {
                     feedback: [
                       {
@@ -892,7 +905,7 @@ export function queryFlow(ctx: GameContext, playerID: string): Flow[] {
               return [
                 {
                   id: "FlowAddBlock",
-                  descriptioin: `${phase[0]}規定效果`,
+                  description: `${phase[0]}規定效果`,
                   block: {},
                 },
               ];
@@ -938,7 +951,7 @@ export function queryFlow(ctx: GameContext, playerID: string): Flow[] {
               return [
                 {
                   id: "FlowAddBlock",
-                  descriptioin: `${phase[1]}規定效果`,
+                  description: `${phase[1]}規定效果`,
                   block: {},
                 },
               ];

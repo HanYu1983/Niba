@@ -40,7 +40,7 @@ export const FlowListView = (props: { clientID: string }) => {
                   });
                 }}
               >
-                {flow.id}
+                {flow.id}({flow.description})
               </button>
               {(() => {
                 switch (flow.id) {
@@ -80,9 +80,6 @@ export const FlowListView = (props: { clientID: string }) => {
                     });
                 }
               })()}
-              {
-                //<pre>{JSON.stringify(flow, null, 2)}</pre>
-              }
             </div>
           );
         })}
