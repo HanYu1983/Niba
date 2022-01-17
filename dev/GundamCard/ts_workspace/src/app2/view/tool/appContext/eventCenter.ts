@@ -32,6 +32,7 @@ export type OnClickRequireTargetConfirm = {
   id: "OnClickRequireTargetConfirm";
   clientID: string;
   require: Require;
+  varID: string;
 };
 
 export type Event =

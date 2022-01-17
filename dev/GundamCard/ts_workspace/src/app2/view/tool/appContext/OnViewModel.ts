@@ -6,11 +6,15 @@ import {
   GameContext,
 } from "../../../tool/tool/basic/gameContext";
 import { getBaShouID, PlayerA } from "../../../tool/tool/basic/basic";
-import { applyFlow, Flow } from "../../../tool/alg/handleClient";
+import {
+  applyFlow,
+  Flow,
+  setRequireTarget,
+} from "../../../tool/alg/handleClient";
 import { createCard } from "../../../../tool/table";
 import { initState } from "../../../tool/alg/handleGameContext";
 
-export type Selection = { [key: string]: boolean };
+export type Selection = string[];
 
 export type ViewModel = {
   model: GameContext;
@@ -21,8 +25,8 @@ export type ViewModel = {
 
 export const DEFAULT_VIEW_MODEL: ViewModel = {
   model: DEFAULT_GAME_CONTEXT,
-  cardSelection: {},
-  cardPositionSelection: {},
+  cardSelection: [],
+  cardPositionSelection: [],
   flows: [],
 };
 
@@ -71,15 +75,27 @@ export const OnViewModel = OnEvent.pipe(
           return DEFAULT_VIEW_MODEL;
         }
         case "OnClickFlowConfirm": {
-          try {
-            const model = applyFlow(viewModel.model, evt.clientID, evt.flow);
-            console.log(model);
-            firebase.sync(model);
-          } catch (e) {
-            OnError.next(e);
-          }
-
+          const model = applyFlow(viewModel.model, evt.clientID, evt.flow);
+          console.log(model);
+          firebase.sync(model);
           return viewModel;
+        }
+        case "OnClickRequireTargetConfirm": {
+          if (evt.require.key == null) {
+            throw new Error("key must not null");
+          }
+          const model = setRequireTarget(
+            viewModel.model,
+            evt.require.key,
+            evt.varID,
+            {
+              id: "カード",
+              value: viewModel.cardSelection,
+            }
+          );
+          console.log(model);
+          firebase.sync(model);
+          return { ...viewModel, cardSelection: [] };
         }
         case "OnClickChangeClient": {
           return viewModel;
@@ -90,19 +106,24 @@ export const OnViewModel = OnEvent.pipe(
             model: evt.model,
           };
         case "OnClickCardEvent":
+          if (viewModel.cardSelection.includes(evt.card.id)) {
+            return {
+              ...viewModel,
+              cardSelection: viewModel.cardSelection.filter(
+                (v) => v != evt.card.id
+              ),
+            };
+          }
           return {
             ...viewModel,
-            cardSelection: {
-              ...viewModel.cardSelection,
-              [evt.card.id]: !!!viewModel.cardSelection[evt.card.id],
-            },
+            cardSelection: [...viewModel.cardSelection, evt.card.id],
           };
         default:
           console.log(`unknown evt ${evt}`);
           return viewModel;
       }
     } catch (e: any) {
-      console.log(e);
+      OnError.next(e);
     }
     return viewModel;
   }, DEFAULT_VIEW_MODEL)

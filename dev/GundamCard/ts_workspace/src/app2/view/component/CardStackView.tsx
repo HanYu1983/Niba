@@ -29,7 +29,9 @@ export const CardStackView = (props: {
           height: CARD_SIZE,
           display: "flex",
           border: "2px solid black",
-          ...(appContext.viewModel.cardPositionSelection[_cardPositionID]
+          ...(appContext.viewModel.cardPositionSelection.includes(
+            _cardPositionID
+          )
             ? { border: "2px solid red" }
             : null),
         }}
@@ -50,6 +52,7 @@ export const CardStackView = (props: {
           return (
             <CardView
               key={card.id}
+              enabled={true}
               clientID={props.clinetID}
               cardID={card.id}
             ></CardView>

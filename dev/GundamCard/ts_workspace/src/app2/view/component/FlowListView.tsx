@@ -39,9 +39,18 @@ export const TargetTypeView = (props: { target: TargetType }) => {
           case "布林":
           case "數字": {
             if (Array.isArray(props.target.value)) {
-              return props.target.value.map((v, i) => {
-                return <div key={i}>{v}</div>;
-              });
+              switch (props.target.id) {
+                case "カード":
+                  return props.target.value.map((v, i) => {
+                    return (
+                      <CardView enabled={false} key={v} cardID={v}></CardView>
+                    );
+                  });
+                default:
+                  return props.target.value.map((v, i) => {
+                    return <div key={i}>{v}</div>;
+                  });
+              }
             }
             const path = props.target.value.path;
             switch (path[0].id) {
@@ -187,6 +196,7 @@ export const RequireView = (props: { clientID: string; require: Require }) => {
                         id: "OnClickRequireTargetConfirm",
                         clientID: props.clientID,
                         require: props.require,
+                        varID: k,
                       });
                     }}
                   >
