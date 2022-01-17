@@ -7,9 +7,12 @@ import React, {
   useEffect,
 } from "react";
 import { queryFlow, Flow } from "../../tool/alg/handleClient";
+import { getTargetType } from "../../tool/alg/helper";
+import { getBaShou, getBaShouID } from "../../tool/tool/basic/basic";
 import { BlockPayload, Require } from "../../tool/tool/basic/blockPayload";
 import { Condition } from "../../tool/tool/basic/condition";
 import { getBlockOwner, mapEffect } from "../../tool/tool/basic/gameContext";
+import { getAbsoluteBaSyou } from "../../tool/tool/basic/handleCard";
 import { TargetType } from "../../tool/tool/basic/targetType";
 import { AppContext } from "../tool/appContext";
 import { OnEvent } from "../tool/appContext/eventCenter";
@@ -43,8 +46,12 @@ export const TargetTypeView = (props: { target: TargetType }) => {
                 case "カード":
                   return props.target.value.map((v, i) => {
                     return (
-                      <CardView enabled={false} key={v} cardID={v}></CardView>
+                      <CardView enabled={false} key={i} cardID={v}></CardView>
                     );
+                  });
+                case "場所":
+                  return props.target.value.map((v, i) => {
+                    return <div key={i}>{JSON.stringify(v.value)}</div>;
                   });
                 default:
                   return props.target.value.map((v, i) => {
@@ -128,6 +135,11 @@ export const ConditionView = (props: {
       case "ConditionCompareRole":
       case "ConditionComparePlayer":
       case "ConditionCompareNumber":
+      case "ConditionCompareBoolean":
+      case "ConditionCompareCard":
+      case "ConditionComparePlayer":
+      case "ConditionCompareString":
+      case "ConditionCompareBaSyou":
         return (
           <div>
             <TargetTypeView target={props.condition.value[0]}></TargetTypeView>
