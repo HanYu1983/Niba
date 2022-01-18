@@ -5,7 +5,12 @@ import {
   DEFAULT_GAME_CONTEXT,
   GameContext,
 } from "../../../tool/tool/basic/gameContext";
-import { getBaShouID, PlayerA, PlayerB } from "../../../tool/tool/basic/basic";
+import {
+  getBaShouID,
+  PlayerA,
+  PlayerB,
+  TIMING_CHART,
+} from "../../../tool/tool/basic/basic";
 import {
   applyFlow,
   Flow,
@@ -60,9 +65,18 @@ export const OnViewModel = OnEvent.pipe(
             PlayerA,
             getBaShouID({
               id: "AbsoluteBaSyou",
-              value: [PlayerA, "手札"],
+              value: [PlayerA, "配備エリア"],
             }),
-            ["179001_01A_CH_WT007R_white", "179030_11E_U_BL208S_blue"]
+            ["179030_11E_U_BL208S_blue", "179030_11E_U_BL208S_blue"]
+          );
+          table = createCard(
+            table,
+            PlayerB,
+            getBaShouID({
+              id: "AbsoluteBaSyou",
+              value: [PlayerB, "配備エリア"],
+            }),
+            ["179030_11E_U_BL208S_blue", "179030_11E_U_BL208S_blue"]
           );
           table = createCard(
             table,
@@ -77,6 +91,7 @@ export const OnViewModel = OnEvent.pipe(
             ...newModel,
             gameState: {
               ...newModel.gameState,
+              timing: TIMING_CHART[13],
               table: table,
               activePlayerID: PlayerA,
             },

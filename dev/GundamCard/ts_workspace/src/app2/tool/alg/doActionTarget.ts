@@ -49,7 +49,9 @@ export function doActionTarget(
         throw new Error("執行Action時的所有target必須是陣列");
       }
       if (cards.value.length == 0) {
-        throw new Error("執行Action時的所有target必須最少有一個值");
+        //throw new Error("執行Action時的所有target必須最少有一個值");
+        console.log("value.length == 0. return");
+        return ctx;
       }
       const table = cards.value.reduce((table, cardID) => {
         if (cardID == null) {
@@ -85,7 +87,9 @@ export function doActionTarget(
         throw new Error("執行Action時的所有target必須是陣列");
       }
       if (cards.value.length == 0) {
-        throw new Error("執行Action時的所有target必須最少有一個值");
+        //throw new Error("執行Action時的所有target必須最少有一個值");
+        console.log("value.length == 0. return");
+        return ctx;
       }
       const table = cards.value.reduce((table, cardID) => {
         if (cardID == null) {
@@ -121,7 +125,9 @@ export function doActionTarget(
         throw new Error("執行Action時的所有target必須是陣列");
       }
       if (cards.value.length == 0) {
-        throw new Error("執行Action時的所有target必須最少有一個值");
+        //throw new Error("執行Action時的所有target必須最少有一個值");
+        console.log("value.length == 0. return");
+        return ctx;
       }
       const color: CardColor | null = (() => {
         if (action.color == null) {
@@ -176,7 +182,9 @@ export function doActionTarget(
         throw new Error("執行Action時的所有target必須是陣列");
       }
       if (cards.value.length == 0) {
-        throw new Error("執行Action時的所有target必須最少有一個值");
+        //throw new Error("執行Action時的所有target必須最少有一個值");
+        console.log("value.length == 0. return");
+        return ctx;
       }
       ctx = cards.value.reduce((ctx, cardID) => {
         if (cardID == null) {
@@ -274,7 +282,9 @@ export function doActionTarget(
         throw new Error("執行Action時的所有target必須是陣列");
       }
       if (cards.value.length == 0) {
-        throw new Error("執行Action時的所有target必須最少有一個值");
+        //throw new Error("執行Action時的所有target必須最少有一個值");
+        console.log("value.length == 0. return");
+        return ctx;
       }
       const targetBaSyou = getTargetType(
         ctx,
@@ -402,7 +412,9 @@ export function doActionTarget(
         throw new Error("執行Action時的所有target必須是陣列");
       }
       if (cards.value.length == 0) {
-        throw new Error("執行Action時的所有target必須最少有一個值");
+        //throw new Error("執行Action時的所有target必須最少有一個值");
+        console.log("value.length == 0. return");
+        return ctx;
       }
       const cardID = cards.value[0];
       const id = cardTextStateID || `ActionAddGlobalCardText_${idSeq++}`;
@@ -448,7 +460,9 @@ export function doActionTarget(
         throw new Error("執行Action時的所有target必須是陣列");
       }
       if (cards.value.length == 0) {
-        throw new Error("執行Action時的所有target必須最少有一個值");
+        //throw new Error("執行Action時的所有target必須最少有一個值");
+        console.log("value.length == 0. return");
+        return ctx;
       }
       const cardID = cards.value[0];
       let [nextCtx, _] = getCardState(ctx, cardID);
@@ -496,7 +510,9 @@ export function doActionTarget(
         throw new Error("執行Action時的所有target必須是陣列");
       }
       if (cards.value.length == 0) {
-        throw new Error("執行Action時的所有target必須最少有一個值");
+        //throw new Error("執行Action時的所有target必須最少有一個值");
+        console.log("value.length == 0. return");
+        return ctx;
       }
       const cardID = cards.value[0];
       if (cardID == null) {

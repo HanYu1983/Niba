@@ -51,7 +51,14 @@ export const TableView = (props: { clientID: string }) => {
           clinetID={props.clientID}
           cardPosition={{
             id: "AbsoluteBaSyou",
-            value: [props.clientID, "戦闘エリア"],
+            value: [props.clientID, "地球エリア"],
+          }}
+        ></CardStackView>
+        <CardStackView
+          clinetID={props.clientID}
+          cardPosition={{
+            id: "AbsoluteBaSyou",
+            value: [props.clientID, "宇宙エリア"],
           }}
         ></CardStackView>
         <CardStackView

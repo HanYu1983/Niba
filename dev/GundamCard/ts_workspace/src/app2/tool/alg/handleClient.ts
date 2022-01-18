@@ -2,10 +2,15 @@ import {
   CardText,
   GameEvent,
   getNextTiming,
+  getOpponentPlayerID,
   PlayerA,
   PlayerB,
 } from "../tool/basic/basic";
-import { BlockPayload, recurRequire } from "../tool/basic/blockPayload";
+import {
+  BlockPayload,
+  recurRequire,
+  wrapRequireKey,
+} from "../tool/basic/blockPayload";
 import {
   CardTextState,
   filterEffect,
@@ -316,6 +321,7 @@ type FlowNextTiming = {
 };
 type FlowAddBlock = {
   id: "FlowAddBlock";
+  responsePlayerID: string;
   description?: string;
   block: BlockPayload;
 };
@@ -360,6 +366,14 @@ type FlowCancelPassCut = {
   id: "FlowCancelPassCut";
   description?: string;
 };
+type FlowHandleDamageStepRule = {
+  id: "FlowHandleDamageStepRule";
+  description?: string;
+};
+type FlowHandleReturnStepRule = {
+  id: "FlowHandleReturnStepRule";
+  description?: string;
+};
 
 export type Flow =
   | FlowAddBlock
@@ -374,7 +388,9 @@ export type Flow =
   | FlowPassPhase
   | FlowCancelPassPhase
   | FlowPassCut
-  | FlowCancelPassCut;
+  | FlowCancelPassCut
+  | FlowHandleDamageStepRule
+  | FlowHandleReturnStepRule;
 
 let idSeq = 0;
 export function applyFlow(
@@ -570,9 +586,10 @@ export function applyFlow(
         id: `FlowAddBlock_${idSeq++}`,
         cause: {
           id: "BlockPayloadCauseGameRule",
-          playerID: playerID,
+          playerID: flow.responsePlayerID,
           description: flow.description || "",
         },
+        ...(block.require ? { require: wrapRequireKey(block.require) } : null),
       };
       ctx = {
         ...ctx,
@@ -581,6 +598,34 @@ export function applyFlow(
           immediateEffect: [block, ...ctx.gameState.immediateEffect],
         },
       };
+      // set hasTriggerEvent
+      ctx = {
+        ...ctx,
+        gameState: {
+          ...ctx.gameState,
+          flowMemory: {
+            ...ctx.gameState.flowMemory,
+            hasTriggerEvent: true,
+          },
+        },
+      };
+      return ctx;
+    }
+    case "FlowHandleDamageStepRule": {
+      // set hasTriggerEvent
+      ctx = {
+        ...ctx,
+        gameState: {
+          ...ctx.gameState,
+          flowMemory: {
+            ...ctx.gameState.flowMemory,
+            hasTriggerEvent: true,
+          },
+        },
+      };
+      return ctx;
+    }
+    case "FlowHandleReturnStepRule": {
       // set hasTriggerEvent
       ctx = {
         ...ctx,
@@ -642,7 +687,6 @@ export function queryFlow(ctx: GameContext, playerID: string): Flow[] {
         opponentEffect.push(effect);
       }
     });
-    const optionEffect = myEffect.filter((v) => v.isOption == true);
     // 不是主動玩家的情況，要等主動玩家先處理完起動效果才行
     if (isActivePlayer == false) {
       if (opponentEffect.length) {
@@ -653,33 +697,28 @@ export function queryFlow(ctx: GameContext, playerID: string): Flow[] {
           },
         ];
       }
-      return [
-        {
-          id: "FlowSetActiveEffectID",
-          effectID: myEffect[0].id || null,
-          description: "選擇一個起動效果",
-          tips: myEffect,
-        },
-        ...(optionEffect.length
-          ? [
-              {
-                id: "FlowDeleteImmediateEffect",
-                effectID: optionEffect[0].id,
-                description: "你可以放棄這些效果",
-                tips: optionEffect,
-              } as FlowDeleteImmediateEffect,
-            ]
-          : []),
-      ];
     }
     // 主動玩家
+    if (myEffect.length == 0) {
+      return [
+        {
+          id: "FlowWaitPlayer",
+          description: "等待被動玩家處理起動效果",
+        },
+      ];
+    }
+    const optionEffect = myEffect.filter((v) => v.isOption == true);
     return [
-      {
-        id: "FlowSetActiveEffectID",
-        effectID: myEffect[0].id || null,
-        description: "選擇一個起動效果",
-        tips: myEffect,
-      },
+      ...(myEffect.length
+        ? [
+            {
+              id: "FlowSetActiveEffectID",
+              effectID: myEffect[0].id || null,
+              description: "選擇一個起動效果",
+              tips: myEffect,
+            } as FlowSetActiveEffectID,
+          ]
+        : []),
       ...(optionEffect.length
         ? [
             {
@@ -817,7 +856,7 @@ export function queryFlow(ctx: GameContext, playerID: string): Flow[] {
         })(),
       ];
     }
-    if (playerID != PlayerA) {
+    if (playerID != ctx.gameState.activePlayerID) {
       return [
         {
           id: "FlowWaitPlayer",
@@ -840,10 +879,7 @@ export function queryFlow(ctx: GameContext, playerID: string): Flow[] {
     case "配備フェイズ":
       switch (phase[1]) {
         case "フリータイミング": {
-          const flows = handleFreeTiming();
-          if (flows.length) {
-            return flows;
-          }
+          return handleFreeTiming();
         }
       }
     case "戦闘フェイズ":
@@ -854,17 +890,14 @@ export function queryFlow(ctx: GameContext, playerID: string): Flow[] {
         case "ダメージ判定ステップ":
           switch (phase[2]) {
             case "フリータイミング": {
-              const flows = handleFreeTiming();
-              if (flows.length) {
-                return flows;
-              }
+              return handleFreeTiming();
             }
           }
       }
       break;
   }
-  // 之後的都是系統事件，只能由伺服器呼叫
-  if (playerID != PlayerA) {
+  // 之後的都是系統事件，由主動玩家呼叫
+  if (playerID != ctx.gameState.activePlayerID) {
     return [
       {
         id: "FlowWaitPlayer",
@@ -902,6 +935,7 @@ export function queryFlow(ctx: GameContext, playerID: string): Flow[] {
               return [
                 {
                   id: "FlowAddBlock",
+                  responsePlayerID: ctx.gameState.activePlayerID,
                   description: `${phase[0]}規定效果`,
                   block: {
                     feedback: [
@@ -918,25 +952,11 @@ export function queryFlow(ctx: GameContext, playerID: string): Flow[] {
                 },
               ];
             case "リロールフェイズ":
-              return [
-                {
-                  id: "FlowAddBlock",
-                  description: `${phase[0]}規定效果`,
-                  block: {},
-                },
-              ];
+              return [];
           }
-        case "フリータイミング":
-          // if (ctx.gameState.flowMemory.hasTriggerEvent) {
-          //   return [{ id: "FlowNextTiming" }];
-          // }
-          // return [
-          //   {
-          //     id: "FlowUpdateCommand",
-          //   },
-          // ];
-          return [];
+          break;
       }
+      break;
     case "戦闘フェイズ":
       switch (phase[1]) {
         case "攻撃ステップ":
@@ -964,23 +984,137 @@ export function queryFlow(ctx: GameContext, playerID: string): Flow[] {
               if (ctx.gameState.flowMemory.hasTriggerEvent) {
                 return [{ id: "FlowNextTiming" }];
               }
-              return [
-                {
-                  id: "FlowAddBlock",
-                  description: `${phase[1]}規定效果`,
-                  block: {},
-                },
-              ];
-            case "フリータイミング":
-              // if (ctx.gameState.flowMemory.hasTriggerEvent) {
-              //   return [{ id: "FlowNextTiming" }];
-              // }
-              // return [
-              //   {
-              //     id: "FlowUpdateCommand",
-              //   },
-              // ];
-              return [];
+              switch (phase[1]) {
+                case "攻撃ステップ":
+                case "防御ステップ": {
+                  const battleArea = [];
+                  const playerID =
+                    phase[1] == "攻撃ステップ"
+                      ? ctx.gameState.activePlayerID
+                      : getOpponentPlayerID(ctx.gameState.activePlayerID);
+                  return [
+                    {
+                      id: "FlowAddBlock",
+                      description: `${phase[1]}規定效果`,
+                      responsePlayerID: playerID,
+                      block: {
+                        isOption: true,
+                        contextID: `${phase[1]}規定效果`,
+                        require: {
+                          id: "RequireTarget",
+                          targets: {
+                            去宇宙的卡: {
+                              id: "カード",
+                              value: [],
+                            },
+                            去地球的卡: {
+                              id: "カード",
+                              value: [],
+                            },
+                          },
+                          condition: {
+                            id: "ConditionAnd",
+                            and: [
+                              {
+                                id: "ConditionCompareRole",
+                                value: [
+                                  {
+                                    id: "「カード」的角色",
+                                    value: {
+                                      path: [
+                                        {
+                                          id: "カード",
+                                          value: "去宇宙的卡",
+                                        },
+                                        "的角色",
+                                      ],
+                                    },
+                                  },
+                                  "==",
+                                  {
+                                    id: "「カード」的角色",
+                                    value: ["ユニット"],
+                                  },
+                                ],
+                              },
+                            ],
+                          },
+                          action: [
+                            {
+                              id: "ActionSetTarget",
+                              source: "去宇宙的卡",
+                              target: "去宇宙的卡",
+                            },
+                            {
+                              id: "ActionSetTarget",
+                              source: "去地球的卡",
+                              target: "去地球的卡",
+                            },
+                          ],
+                        },
+                        feedback: [
+                          {
+                            id: "FeedbackAction",
+                            action: [
+                              {
+                                id: "ActionMoveCardToPosition",
+                                cards: { id: "カード", value: "去宇宙的卡" },
+                                baSyou: {
+                                  id: "場所",
+                                  value: [
+                                    {
+                                      id: "AbsoluteBaSyou",
+                                      value: [playerID, "宇宙エリア"],
+                                    },
+                                  ],
+                                },
+                              },
+                              {
+                                id: "ActionMoveCardToPosition",
+                                cards: { id: "カード", value: "去地球的卡" },
+                                baSyou: {
+                                  id: "場所",
+                                  value: [
+                                    {
+                                      id: "AbsoluteBaSyou",
+                                      value: [playerID, "地球エリア"],
+                                    },
+                                  ],
+                                },
+                              },
+                            ],
+                          },
+                        ],
+                      },
+                    },
+                  ];
+                }
+                case "帰還ステップ":
+                  // 如果已經觸發規定の効果
+                  if (ctx.gameState.flowMemory.hasTriggerEvent) {
+                    return [{ id: "FlowNextTiming" }];
+                  }
+                  return [
+                    {
+                      id: "FlowHandleReturnStepRule",
+                      description: "執行「帰還ステップ」",
+                    },
+                  ];
+                case "ダメージ判定ステップ":
+                  // 如果已經觸發規定の効果
+                  if (ctx.gameState.flowMemory.hasTriggerEvent) {
+                    return [{ id: "FlowNextTiming" }];
+                  }
+                  return [
+                    {
+                      id: "FlowHandleDamageStepRule",
+                      description: "執行「ダメージ判定ステップ」",
+                    },
+                  ];
+                default:
+                  throw new Error("unknown phase:" + phase[1]);
+              }
+              break;
           }
         case "ターン終了時":
           switch (phase[2]) {
@@ -988,7 +1122,9 @@ export function queryFlow(ctx: GameContext, playerID: string): Flow[] {
             case "効果解決":
             case "手札調整":
               // 如果玩家手牌超過6張，丟到剩下6張
-              return [{ id: "FlowNextTiming" }];
+              return [
+                { id: "FlowNextTiming", description: `TODO:執行${phase[2]}` },
+              ];
             case "効果終了。ターン終了":
               // 如果已經觸發事件
               if (ctx.gameState.flowMemory.hasTriggerEvent) {
@@ -1007,5 +1143,4 @@ export function queryFlow(ctx: GameContext, playerID: string): Flow[] {
       }
       break;
   }
-  return [];
 }

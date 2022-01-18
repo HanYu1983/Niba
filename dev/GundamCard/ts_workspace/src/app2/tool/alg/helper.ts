@@ -275,7 +275,8 @@ export function getTargetType(
                 switch (baSyou) {
                   case "Gゾーン":
                     return "グラフィック";
-                  case "戦闘エリア":
+                  case "宇宙エリア":
+                  case "地球エリア":
                   case "配備エリア":
                     return cardState.prototype.category;
                   default:
@@ -372,11 +373,13 @@ export function getTargetType(
     }
     case "場所": {
       if (Array.isArray(targetTypeAfterProcess.value)) {
-        const cardID = getCardID();
         return {
           id: "場所",
           value: targetTypeAfterProcess.value.map((v) => {
-            return getAbsoluteBaSyou(v, ctx, cardID);
+            if (v.id == "AbsoluteBaSyou") {
+              return v;
+            }
+            return getAbsoluteBaSyou(v, ctx, getCardID());
           }),
         };
       }

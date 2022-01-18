@@ -6,8 +6,10 @@ export const PlayerB = "PlayerB";
 
 export type UnitPropertyKeyword = "攻撃力" | "防御力";
 
+export type BattleArea = "宇宙エリア" | "地球エリア";
+
 // 場
-export type BaKeyword = "戦闘エリア" | "配備エリア";
+export type BaKeyword = BattleArea | "配備エリア";
 
 // 場所
 export type BaSyouKeyword =
@@ -241,3 +243,7 @@ export type CardText =
   | CardTextToKuSyuKata;
 
 export type FlagKeyword = "破壊" | "プレイされたカード";
+
+export function getOpponentPlayerID(playerID: PlayerID): PlayerID {
+  return playerID == PlayerA ? PlayerB : PlayerA;
+}

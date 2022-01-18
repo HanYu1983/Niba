@@ -202,7 +202,7 @@ export function doConditionTarget(
                 break;
               case "==":
                 if ((a == b) == false) {
-                  throw new Error("xxx");
+                  throw new Error(`不相等：${a} ${b}`);
                 }
                 break;
               case ">":

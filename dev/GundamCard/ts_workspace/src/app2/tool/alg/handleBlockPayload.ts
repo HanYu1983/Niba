@@ -39,7 +39,7 @@ function doAction(
       throw new Error("執行Action時的所有target必須是陣列");
     }
     if (processed.value.length == 0) {
-      throw new Error("執行Action時的所有target必須最少有一個值");
+      //throw new Error("執行Action時的所有target必須最少有一個值");
     }
   });
   switch (action.id) {
