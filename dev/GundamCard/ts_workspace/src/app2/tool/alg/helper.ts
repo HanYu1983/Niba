@@ -127,7 +127,7 @@ export function getTargetType(
   const targetTypeAfterProcess = (() => {
     if (typeof target.value == "string") {
       if (targets[target.value] == null) {
-        throw new Error("target.value not found");
+        throw new Error("target.value not found:" + target.value);
       }
       return targets[target.value];
     }
@@ -155,6 +155,8 @@ export function getTargetType(
         throw new Error("not support cause:" + blockPayload.cause.id);
     }
   };
+  log("getTargetType", "targetTypeAfterProcess");
+  log("getTargetType", targetTypeAfterProcess);
   switch (targetTypeAfterProcess.id) {
     case "參照":
       return targetTypeAfterProcess;
@@ -172,8 +174,6 @@ export function getTargetType(
             id: "カード",
             value: [getCardID()],
           };
-        default:
-          throw new Error("path[0].id not found:" + path[0].id);
       }
       break;
     }
@@ -209,8 +209,6 @@ export function getTargetType(
             value: values,
           };
         }
-        default:
-          throw new Error("path[0].id not found:" + path[0].id);
       }
       break;
     }
@@ -243,8 +241,6 @@ export function getTargetType(
             value: values,
           };
         }
-        default:
-          throw new Error("path[0].id not found:" + path[0].id);
       }
       break;
     }
@@ -290,8 +286,6 @@ export function getTargetType(
             value: values,
           };
         }
-        default:
-          throw new Error("path[0].id not found:" + path[0].id);
       }
       break;
     }
@@ -325,8 +319,6 @@ export function getTargetType(
             value: values,
           };
         }
-        default:
-          throw new Error("path[0].id not found:" + path[0].id);
       }
       break;
     }
@@ -366,8 +358,6 @@ export function getTargetType(
             value: values,
           };
         }
-        default:
-          throw new Error("path[0].id not found:" + path[0].id);
       }
       break;
     }
@@ -408,8 +398,6 @@ export function getTargetType(
             value: values,
           };
         }
-        default:
-          throw new Error("path[0].id not found:" + path[0].id);
       }
       break;
     }
@@ -454,8 +442,33 @@ export function getTargetType(
             value: values,
           };
         }
-        default:
-          throw new Error("path[0].id not found:" + path[0]);
+        case "プレーヤー": {
+          const targetType = getTargetType(ctx, blockPayload, targets, path[0]);
+          if (targetType.id != "プレーヤー") {
+            throw new Error("must be プレーヤー");
+          }
+          if (!Array.isArray(targetType.value)) {
+            throw new Error("must be real value");
+          }
+          // if (targetType.value.length == 0) {
+          //   throw new Error("cardID must > 0");
+          // }
+          const values = targetType.value.map((cardID) => {
+            switch (path[1]) {
+              case "陣列長度":
+              case "的「攻撃力」":
+              case "的「防御力」":
+                throw new Error("not support");
+              case "的「合計国力」": {
+                return 0;
+              }
+            }
+          });
+          return {
+            id: "數字",
+            value: values,
+          };
+        }
       }
       break;
     }
@@ -502,8 +515,6 @@ export function getTargetType(
             value: values,
           };
         }
-        default:
-          throw new Error("path[0].id not found:" + path[0].id);
       }
       break;
     }

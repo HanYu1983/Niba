@@ -29,6 +29,20 @@ export const TargetTypeView = (props: { target: TargetType }) => {
           Array.isArray(props.target.value) &&
           props.target.value.length == 0
         ) {
+          switch (props.target.id) {
+            case "カード":
+              return (
+                <div>
+                  <div>請選擇「{props.target.id}」</div>
+                  tipID:
+                  {(props.target.tipID || []).map((v, i) => {
+                    return (
+                      <CardView enabled={false} key={i} cardID={v}></CardView>
+                    );
+                  })}
+                </div>
+              );
+          }
           return <div>請選擇「{props.target.id}」</div>;
         }
         switch (props.target.id) {

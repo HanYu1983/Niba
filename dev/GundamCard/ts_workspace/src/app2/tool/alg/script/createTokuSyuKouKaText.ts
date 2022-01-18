@@ -550,7 +550,7 @@ export function createTokuSyuKouKaText(
                           value: [
                             {
                               id: "「カード」的角色",
-                              value: "targetCard",
+                              value: "cardB",
                             },
                             "==",
                             {

@@ -155,14 +155,49 @@ export function updateCommand(ctx: GameContext): GameContext {
               if (r.key == null) {
                 return target;
               }
-              // 取得提示.
-              const tip = getTip(ctx, wrapEvent.id || "", r.key, targetID);
+
               switch (target.id) {
-                case "カード":
+                case "カード": {
+                  // 取得提示.
+                  const tips = (() => {
+                    if (r.condition == null) {
+                      return [];
+                    }
+                    const condition = r.condition;
+                    switch (target.id) {
+                      case "カード": {
+                        const validCardID: string[] = [];
+                        mapCard(ctx.gameState.table, (card) => {
+                          const tmp: TargetTypeCard = {
+                            id: "カード",
+                            value: [card.id],
+                          };
+                          const msg = doConditionTarget(
+                            ctx,
+                            wrapEvent,
+                            {
+                              ...r.targets,
+                              [targetID]: tmp,
+                            },
+                            condition
+                          );
+                          log("getTip", msg);
+                          if (msg == null) {
+                            validCardID.push(card.id);
+                          }
+                          return card;
+                        });
+                        return validCardID;
+                      }
+                    }
+                  })();
+                  log("updateCommand", "tips");
+                  log("updateCommand", tips);
                   return {
                     ...target,
-                    tipID: tip,
+                    tipID: tips,
                   };
+                }
               }
               return target;
             });
@@ -274,13 +309,16 @@ export function getTip(
     if (effect.id == null) {
       return effect;
     }
-    if (effect.id != blockID) {
-      return effect;
-    }
     if (effect.require == null) {
       return effect;
     }
+    if (effect.id != blockID) {
+      return effect;
+    }
     recurRequire(effect.require, (require) => {
+      if (require.key == null) {
+        return require;
+      }
       if (require.key != requireID) {
         return require;
       }

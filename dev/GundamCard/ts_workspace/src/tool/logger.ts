@@ -1,6 +1,6 @@
 const hideCategory = [
-  "updateCommand",
-  "getTip",
+  //"updateCommand",
+  //"getTip",
   "recurRequire",
   //"getTargetType",
   "triggerTextEvent",

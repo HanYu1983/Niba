@@ -60,95 +60,95 @@ export function doConditionTarget(
       switch (condition.id) {
         case "ConditionCompareNumber":
           if (target1.id != "數字") {
-            throw new Error("type not right");
+            return "type not right";
           }
           if (target2.id != "數字") {
-            throw new Error("type not right");
+            return "type not right";
           }
           break;
         case "ConditionCompareString":
           if (target1.id != "字串") {
-            throw new Error("type not right");
+            return "type not right";
           }
           if (target2.id != "字串") {
-            throw new Error("type not right");
+            return "type not right";
           }
           break;
         case "ConditionCompareBoolean":
           if (target1.id != "布林") {
-            throw new Error("type not right");
+            return "type not right";
           }
           if (target2.id != "布林") {
-            throw new Error("type not right");
+            return "type not right";
           }
           break;
         case "ConditionCompareCard":
           if (target1.id != "カード") {
-            throw new Error("type not right");
+            return "type not right";
           }
           if (target2.id != "カード") {
-            throw new Error("type not right");
+            return "type not right";
           }
           break;
         case "ConditionComparePlayer":
           if (target1.id != "プレーヤー") {
-            throw new Error("type not right");
+            return "type not right";
           }
           if (target2.id != "プレーヤー") {
-            throw new Error("type not right");
+            return "type not right";
           }
           break;
         case "ConditionCompareRole":
           if (target1.id != "「カード」的角色") {
-            throw new Error("type not right");
+            return "type not right";
           }
           if (target2.id != "「カード」的角色") {
-            throw new Error("type not right");
+            return "type not right";
           }
           break;
         case "ConditionCompareCardCategory":
           if (target1.id != "カードの種類") {
-            throw new Error("type not right");
+            return "type not right";
           }
           if (target2.id != "カードの種類") {
-            throw new Error("type not right");
+            return "type not right";
           }
           break;
         case "ConditionCompareBaSyou":
           if (target1.id != "場所") {
-            throw new Error("type not right");
+            return "type not right";
           }
           if (target2.id != "場所") {
-            throw new Error("type not right");
+            return "type not right";
           }
           break;
       }
       if (!Array.isArray(target1.value)) {
-        throw new Error("type not right");
+        return "type not right";
       }
       target1.value.forEach((a) => {
         switch (target2.id) {
           case "場所": {
             if (typeof a != "object") {
-              throw new Error("a must be baSyou object");
+              return "a must be baSyou object";
             }
             if (!Array.isArray(target2.value)) {
-              throw new Error("type not right");
+              return "type not right";
             }
             if (a.id == "RelatedBaSyou") {
-              throw new Error("must be absolute baSyou");
+              return "must be absolute baSyou";
             }
             switch (op) {
               case "==": {
                 if (target2.value.length == 0) {
-                  throw new Error("value.length must > 0");
+                  return "value.length must > 0";
                 }
                 const b = target2.value[0];
                 if (b.id == "RelatedBaSyou") {
-                  throw new Error("must be absolute baSyou");
+                  return "must be absolute baSyou";
                 }
                 if ((getBaShouID(a) == getBaShouID(b)) == false) {
-                  throw new Error("baSyou not ==");
+                  return "baSyou not ==";
                 }
                 break;
               }
@@ -157,18 +157,18 @@ export function doConditionTarget(
                   target2.value
                     .map((b) => {
                       if (b.id == "RelatedBaSyou") {
-                        throw new Error("must be absolute baSyou");
+                        return "must be absolute baSyou";
                       }
                       return getBaShouID(b);
                     })
                     .includes(getBaShouID(a)) == false
                 ) {
-                  throw new Error("baSyou not in");
+                  return "baSyou not in";
                 }
                 break;
               }
               default:
-                throw new Error("baSyou not support op");
+                return "baSyou not support op";
             }
             break;
           }
@@ -180,62 +180,62 @@ export function doConditionTarget(
           case "「カード」的角色":
           case "カードの種類": {
             if (typeof a == "object") {
-              throw new Error("a must be basic type");
+              return "a must be basic type";
             }
             if (!Array.isArray(target2.value)) {
-              throw new Error("type not right");
+              return "type not right";
             }
             if (target2.value.length == 0) {
-              throw new Error("value.length must > 0");
+              return "value.length must > 0";
             }
             const b = target2.value[0];
             switch (op) {
               case "<":
                 if (a < b == false) {
-                  throw new Error("xxx");
+                  return "xxx";
                 }
                 break;
               case "<=":
                 if (a <= b == false) {
-                  throw new Error("xxx");
+                  return "xxx";
                 }
                 break;
               case "==":
                 if ((a == b) == false) {
-                  throw new Error(`不相等：${a} ${b}`);
+                  return `不相等：${a} ${b}`;
                 }
                 break;
               case ">":
                 if (a > b == false) {
-                  throw new Error("xxx");
+                  return "xxx";
                 }
                 break;
               case ">=":
                 if (a >= b == false) {
-                  throw new Error("xxx");
+                  return "xxx";
                 }
                 break;
               case "in":
                 // @ts-ignore
                 if (target2.value.includes(a) == false) {
-                  throw new Error("xx");
+                  return "xx";
                 }
                 break;
               case "hasToken": {
                 if (typeof a != "string") {
-                  throw new Error("hasToken only support string");
+                  return "hasToken only support string";
                 }
                 if (typeof b != "string") {
-                  throw new Error("hasToken only support string");
+                  return "hasToken only support string";
                 }
                 const tokens = a.split("|");
                 if (tokens.includes(b) == false) {
-                  throw new Error("hasToken error");
+                  return "hasToken error";
                 }
                 break;
               }
               case "交戦中":
-                throw new Error("xxxx");
+                return "xxxx";
             }
             break;
           }

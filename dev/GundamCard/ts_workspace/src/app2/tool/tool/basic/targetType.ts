@@ -12,6 +12,7 @@ import { BlockPayload } from "./blockPayload";
 export type TargetTypeCard = {
   id: "カード";
   value: string[] | string | { path: [{ id: "このカード" }] };
+  tipID?: string[];
 };
 
 export type TargetTypePlayer = {
