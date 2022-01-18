@@ -191,9 +191,9 @@ export function getTargetType(
           if (!Array.isArray(targetType.value)) {
             throw new Error("must be real value");
           }
-          if (targetType.value.length == 0) {
-            throw new Error("cardID must > 0");
-          }
+          // if (targetType.value.length == 0) {
+          //   throw new Error("cardID must > 0");
+          // }
           const values = targetType.value.map((cardID) => {
             switch (path[1]) {
               case "的「持ち主」": {
@@ -228,9 +228,9 @@ export function getTargetType(
           if (!Array.isArray(targetType.value)) {
             throw new Error("must be real value");
           }
-          if (targetType.value.length == 0) {
-            throw new Error("cardID must > 0");
-          }
+          // if (targetType.value.length == 0) {
+          //   throw new Error("cardID must > 0");
+          // }
           const values = targetType.value.map((cardID): CardColor => {
             switch (path[1]) {
               case "的「色」": {
@@ -262,9 +262,9 @@ export function getTargetType(
           if (!Array.isArray(targetType.value)) {
             throw new Error("must be real value");
           }
-          if (targetType.value.length == 0) {
-            throw new Error("cardID must > 0");
-          }
+          // if (targetType.value.length == 0) {
+          //   throw new Error("cardID must > 0");
+          // }
           const values = targetType.value.map((cardID): CardCategory => {
             switch (path[1]) {
               case "的角色": {
@@ -309,9 +309,9 @@ export function getTargetType(
           if (!Array.isArray(targetType.value)) {
             throw new Error("must be real value");
           }
-          if (targetType.value.length == 0) {
-            throw new Error("cardID must > 0");
-          }
+          // if (targetType.value.length == 0) {
+          //   throw new Error("cardID must > 0");
+          // }
           const values = targetType.value.map((cardID): CardCategory => {
             switch (path[1]) {
               case "的「種類」": {
@@ -347,9 +347,9 @@ export function getTargetType(
           if (!Array.isArray(targetType.value)) {
             throw new Error("must be real value");
           }
-          if (targetType.value.length == 0) {
-            throw new Error("cardID must > 0");
-          }
+          // if (targetType.value.length == 0) {
+          //   throw new Error("cardID must > 0");
+          // }
           const values = targetType.value.map((cardID): string => {
             const [_, cardState] = getCardState(ctx, cardID);
             switch (path[1]) {
@@ -393,9 +393,9 @@ export function getTargetType(
           if (!Array.isArray(targetType.value)) {
             throw new Error("must be real value");
           }
-          if (targetType.value.length == 0) {
-            throw new Error("cardID must > 0");
-          }
+          // if (targetType.value.length == 0) {
+          //   throw new Error("cardID must > 0");
+          // }
           const values = targetType.value.map((cardID) => {
             switch (path[1]) {
               case "的「場所」": {
@@ -435,9 +435,9 @@ export function getTargetType(
           if (!Array.isArray(targetType.value)) {
             throw new Error("must be real value");
           }
-          if (targetType.value.length == 0) {
-            throw new Error("cardID must > 0");
-          }
+          // if (targetType.value.length == 0) {
+          //   throw new Error("cardID must > 0");
+          // }
           const values = targetType.value.map((cardID) => {
             switch (path[1]) {
               case "陣列長度":
@@ -473,9 +473,9 @@ export function getTargetType(
           if (!Array.isArray(targetType.value)) {
             throw new Error("must be real value");
           }
-          if (targetType.value.length == 0) {
-            throw new Error("cardID must > 0");
-          }
+          // if (targetType.value.length == 0) {
+          //   throw new Error("cardID must > 0");
+          // }
           const values = targetType.value.map((cardID) => {
             switch (path[1]) {
               case "在「交戦中」？": {

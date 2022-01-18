@@ -526,7 +526,7 @@ export function createPlayCardText(
     case "ユニット": {
       return {
         id: "使用型",
-        timing: ["常時"],
+        timing: ["自軍", "配備フェイズ"],
         description: `プレイ ${prototype.category}[${prototype.title}]`,
         block: {
           contextID: `createPlayCardText ${idSeq++}`,
@@ -536,12 +536,13 @@ export function createPlayCardText(
               ...formatRollCost.map(([color, num]) => {
                 return createRollCostRequire(num, color);
               }),
-              {
-                id: "RequireCustom",
-                customID: {
-                  id: "有快速就常時，不然就是自軍配置",
-                } as RequireCustomID,
-              },
+              // TODO: 似乎可以改在別的地方過濾，比如，在取得command時
+              // {
+              //   id: "RequireCustom",
+              //   customID: {
+              //     id: "有快速就常時，不然就是自軍配置",
+              //   } as RequireCustomID,
+              // },
               {
                 id: "RequireTarget",
                 targets: {

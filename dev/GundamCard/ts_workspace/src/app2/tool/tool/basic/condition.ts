@@ -34,6 +34,7 @@ type ConditionNot = {
 type ConditionCompareBooleanOperator = "==" | "!=";
 
 type ConditionCompareStringOperator =
+  | "in"
   | "hasToken"
   | ConditionCompareBooleanOperator;
 
@@ -42,7 +43,6 @@ type ConditionCompareNumberOperator =
   | "<"
   | ">"
   | ">="
-  | "in"
   | ConditionCompareStringOperator;
 
 type ConditionCompareCardOperator = "交戦中" | ConditionCompareBooleanOperator;

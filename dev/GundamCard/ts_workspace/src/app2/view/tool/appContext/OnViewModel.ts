@@ -91,7 +91,7 @@ export const OnViewModel = OnEvent.pipe(
             ...newModel,
             gameState: {
               ...newModel.gameState,
-              timing: TIMING_CHART[13],
+              timing: TIMING_CHART[0],
               table: table,
               activePlayerID: PlayerA,
             },

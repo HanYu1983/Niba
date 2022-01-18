@@ -840,9 +840,102 @@ export function queryFlow(ctx: GameContext, playerID: string): Flow[] {
           const myEffect: BlockPayload[] = [];
           ctx.gameState.commandEffect.forEach((effect) => {
             const controller = getBlockOwner(ctx, effect);
-            if (controller == playerID) {
-              myEffect.push(effect);
+            if (controller != playerID) {
+              return;
             }
+            if (effect.cause?.id != "BlockPayloadCauseUpdateCommand") {
+              throw new Error("must from command cause");
+            }
+            const { cardID, cardTextID } = effect.cause;
+            const [_, cardState] = getCardState(ctx, cardID);
+            const text = cardState.cardTextStates.find(
+              (v) => v.id == cardTextID
+            );
+            if (text == null) {
+              throw new Error("must find text");
+            }
+            const siYouTiming = (() => {
+              switch (text.cardText.id) {
+                case "使用型":
+                  return text.cardText.timing;
+                case "特殊型": {
+                  const t = text.cardText.texts.find((v) => v.id == "使用型");
+                  if (t == null) {
+                    throw new Error("t must find");
+                  }
+                  if (t.id != "使用型") {
+                    throw new Error("t must be 使用型");
+                  }
+                  return t.timing;
+                }
+                default:
+                  throw new Error("not support:" + text.cardText.id);
+              }
+            })();
+            switch (siYouTiming[0]) {
+              case "自軍":
+                if (ctx.gameState.activePlayerID != playerID) {
+                  return;
+                }
+                break;
+              case "敵軍":
+                if (ctx.gameState.activePlayerID == playerID) {
+                  return;
+                }
+                break;
+              case "戦闘フェイズ":
+                if (ctx.gameState.timing[1][0] != "戦闘フェイズ") {
+                  return;
+                }
+                break;
+              case "攻撃ステップ":
+              case "防御ステップ":
+              case "ダメージ判定ステップ":
+              case "帰還ステップ":
+                if (ctx.gameState.timing[1][0] != "戦闘フェイズ") {
+                  return;
+                }
+                if (ctx.gameState.timing[1][1] != siYouTiming[0]) {
+                  return;
+                }
+                break;
+            }
+            switch (siYouTiming[0]) {
+              case "自軍":
+              case "敵軍":
+                switch (siYouTiming[0]) {
+                  case "自軍":
+                    if (ctx.gameState.activePlayerID != playerID) {
+                      return;
+                    }
+                    break;
+                  case "敵軍":
+                    if (ctx.gameState.activePlayerID == playerID) {
+                      return;
+                    }
+                    break;
+                }
+                switch (siYouTiming[1]) {
+                  case "戦闘フェイズ":
+                    if (ctx.gameState.timing[1][0] != "戦闘フェイズ") {
+                      return;
+                    }
+                    break;
+                  case "攻撃ステップ":
+                  case "防御ステップ":
+                  case "ダメージ判定ステップ":
+                  case "帰還ステップ":
+                    if (ctx.gameState.timing[1][0] != "戦闘フェイズ") {
+                      return;
+                    }
+                    if (ctx.gameState.timing[1][1] != siYouTiming[1]) {
+                      return;
+                    }
+                    break;
+                }
+                break;
+            }
+            myEffect.push(effect);
           });
           if (myEffect.length == 0) {
             return [];
@@ -954,7 +1047,14 @@ export function queryFlow(ctx: GameContext, playerID: string): Flow[] {
                 },
               ];
             case "リロールフェイズ":
-              return [];
+              return [
+                {
+                  id: "FlowAddBlock",
+                  responsePlayerID: ctx.gameState.activePlayerID,
+                  description: `${phase[0]}規定效果`,
+                  block: {},
+                },
+              ];
           }
           break;
       }
