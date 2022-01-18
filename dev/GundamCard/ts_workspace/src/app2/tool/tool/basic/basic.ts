@@ -6,10 +6,10 @@ export const PlayerB = "PlayerB";
 
 export type UnitPropertyKeyword = "攻撃力" | "防御力";
 
-export type BattleArea = "宇宙エリア" | "地球エリア";
+export type BattleAreaKeyword = "宇宙エリア" | "地球エリア";
 
 // 場
-export type BaKeyword = BattleArea | "配備エリア";
+export type BaKeyword = "戦闘エリア（左）" | "戦闘エリア（右）" | "配備エリア";
 
 // 場所
 export type BaSyouKeyword =

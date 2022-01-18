@@ -1,4 +1,6 @@
 import {
+  BaKeyword,
+  BattleAreaKeyword,
   CardText,
   GameEvent,
   getNextTiming,
@@ -987,7 +989,10 @@ export function queryFlow(ctx: GameContext, playerID: string): Flow[] {
               switch (phase[1]) {
                 case "攻撃ステップ":
                 case "防御ステップ": {
-                  const battleArea = [];
+                  const [leftArea, rightArea]: [
+                    BattleAreaKeyword,
+                    BattleAreaKeyword
+                  ] = ["地球エリア", "宇宙エリア"];
                   const playerID =
                     phase[1] == "攻撃ステップ"
                       ? ctx.gameState.activePlayerID
@@ -1003,11 +1008,11 @@ export function queryFlow(ctx: GameContext, playerID: string): Flow[] {
                         require: {
                           id: "RequireTarget",
                           targets: {
-                            去宇宙的卡: {
+                            去左方的卡: {
                               id: "カード",
                               value: [],
                             },
-                            去地球的卡: {
+                            去右方的卡: {
                               id: "カード",
                               value: [],
                             },
@@ -1024,7 +1029,7 @@ export function queryFlow(ctx: GameContext, playerID: string): Flow[] {
                                       path: [
                                         {
                                           id: "カード",
-                                          value: "去宇宙的卡",
+                                          value: "去左方的卡",
                                         },
                                         "的角色",
                                       ],
@@ -1042,13 +1047,13 @@ export function queryFlow(ctx: GameContext, playerID: string): Flow[] {
                           action: [
                             {
                               id: "ActionSetTarget",
-                              source: "去宇宙的卡",
-                              target: "去宇宙的卡",
+                              source: "去左方的卡",
+                              target: "去左方的卡",
                             },
                             {
                               id: "ActionSetTarget",
-                              source: "去地球的卡",
-                              target: "去地球的卡",
+                              source: "去右方的卡",
+                              target: "去右方的卡",
                             },
                           ],
                         },
@@ -1058,26 +1063,26 @@ export function queryFlow(ctx: GameContext, playerID: string): Flow[] {
                             action: [
                               {
                                 id: "ActionMoveCardToPosition",
-                                cards: { id: "カード", value: "去宇宙的卡" },
+                                cards: { id: "カード", value: "去左方的卡" },
                                 baSyou: {
                                   id: "場所",
                                   value: [
                                     {
                                       id: "AbsoluteBaSyou",
-                                      value: [playerID, "宇宙エリア"],
+                                      value: [playerID, "戦闘エリア（左）"],
                                     },
                                   ],
                                 },
                               },
                               {
                                 id: "ActionMoveCardToPosition",
-                                cards: { id: "カード", value: "去地球的卡" },
+                                cards: { id: "カード", value: "去右方的卡" },
                                 baSyou: {
                                   id: "場所",
                                   value: [
                                     {
                                       id: "AbsoluteBaSyou",
-                                      value: [playerID, "地球エリア"],
+                                      value: [playerID, "戦闘エリア（右）"],
                                     },
                                   ],
                                 },

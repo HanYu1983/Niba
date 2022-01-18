@@ -275,8 +275,8 @@ export function getTargetType(
                 switch (baSyou) {
                   case "Gゾーン":
                     return "グラフィック";
-                  case "宇宙エリア":
-                  case "地球エリア":
+                  case "戦闘エリア（左）":
+                  case "戦闘エリア（右）":
                   case "配備エリア":
                     return cardState.prototype.category;
                   default:

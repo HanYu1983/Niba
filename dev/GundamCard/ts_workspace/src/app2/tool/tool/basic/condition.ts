@@ -31,37 +31,49 @@ type ConditionNot = {
   not: Condition;
 };
 
-type ConditionCompareOperator =
+type ConditionCompareBooleanOperator = "==" | "!=";
+
+type ConditionCompareStringOperator =
+  | "hasToken"
+  | ConditionCompareBooleanOperator;
+
+type ConditionCompareNumberOperator =
   | "<="
   | "<"
-  | "=="
   | ">"
   | ">="
-  | "!="
   | "in"
-  | "hasToken";
+  | ConditionCompareStringOperator;
+
+type ConditionCompareCardOperator = "交戦中" | ConditionCompareBooleanOperator;
 
 type ConditionCompareNumber = {
   id: "ConditionCompareNumber";
-  value: [TargetTypeNumber, ConditionCompareOperator, TargetTypeNumber];
+  value: [TargetTypeNumber, ConditionCompareNumberOperator, TargetTypeNumber];
 };
 
 type ConditionCompareString = {
   id: "ConditionCompareString";
-  value: [TargetTypeString, ConditionCompareOperator, TargetTypeString];
+  value: [TargetTypeString, ConditionCompareStringOperator, TargetTypeString];
 };
 
 type ConditionCompareBoolean = {
   id: "ConditionCompareBoolean";
-  value: [TargetTypeBoolean, ConditionCompareOperator, TargetTypeBoolean];
+  value: [
+    TargetTypeBoolean,
+    ConditionCompareBooleanOperator,
+    TargetTypeBoolean
+  ];
 };
 
 type ConditionCompareRole = {
   id: "ConditionCompareRole";
-  value: [TargetTypeCardRole, ConditionCompareOperator, TargetTypeCardRole];
+  value: [
+    TargetTypeCardRole,
+    ConditionCompareStringOperator,
+    TargetTypeCardRole
+  ];
 };
-
-type ConditionCompareCardOperator = "交戦中" | ConditionCompareOperator;
 
 type ConditionCompareCard = {
   id: "ConditionCompareCard";
@@ -70,19 +82,19 @@ type ConditionCompareCard = {
 
 type ConditionComparePlayer = {
   id: "ConditionComparePlayer";
-  value: [TargetTypePlayer, ConditionCompareOperator, TargetTypePlayer];
+  value: [TargetTypePlayer, ConditionCompareStringOperator, TargetTypePlayer];
 };
 
 type ConditionCompareBaSyou = {
   id: "ConditionCompareBaSyou";
-  value: [TargetTypeBaSyou, ConditionCompareOperator, TargetTypeBaSyou];
+  value: [TargetTypeBaSyou, ConditionCompareStringOperator, TargetTypeBaSyou];
 };
 
 type ConditionCompareCardCategory = {
   id: "ConditionCompareCardCategory";
   value: [
     TargetTypeCardCategory,
-    ConditionCompareOperator,
+    ConditionCompareStringOperator,
     TargetTypeCardCategory
   ];
 };
