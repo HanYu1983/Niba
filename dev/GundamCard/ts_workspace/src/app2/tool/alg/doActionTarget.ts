@@ -277,7 +277,6 @@ export function doActionTarget(
         throw new Error("must カード");
       }
       log("doActionTarget", "ActionMoveCardToPosition");
-      console.log(cards);
       if (!Array.isArray(cards.value)) {
         throw new Error("執行Action時的所有target必須是陣列");
       }
