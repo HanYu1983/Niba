@@ -34,12 +34,15 @@ export const TargetTypeView = (props: { target: TargetType }) => {
               return (
                 <div>
                   <div>請選擇「{props.target.id}」</div>
+                  length: {JSON.stringify(props.target.valueLengthInclude)}
+
                   tipID:
                   {(props.target.tipID || []).map((v, i) => {
                     return (
                       <CardView enabled={false} key={i} cardID={v}></CardView>
                     );
                   })}
+
                 </div>
               );
           }

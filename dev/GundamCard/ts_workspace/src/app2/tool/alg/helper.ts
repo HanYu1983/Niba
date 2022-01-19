@@ -85,9 +85,9 @@ export function getCardState(
 export function getCardIterator(
   ctx: GameContext
 ): [
-  GameContext,
-  { id: string; card: Card; baSyou: AbsoluteBaSyou; state: CardState }[]
-] {
+    GameContext,
+    { id: string; card: Card; baSyou: AbsoluteBaSyou; state: CardState }[]
+  ] {
   const cards: Card[] = [];
   mapCard(ctx.gameState.table, (card) => {
     cards.push(card);
@@ -165,6 +165,11 @@ export function getTargetType(
     // カード -> カード
     case "カード": {
       if (Array.isArray(targetTypeAfterProcess.value)) {
+        if (targetTypeAfterProcess.valueLengthInclude) {
+          if (targetTypeAfterProcess.valueLengthInclude.includes(targetTypeAfterProcess.value.length) == false) {
+            throw new Error("card length must in " + JSON.stringify(targetTypeAfterProcess.valueLengthInclude))
+          }
+        }
         return targetTypeAfterProcess;
       }
       const path = targetTypeAfterProcess.value.path;

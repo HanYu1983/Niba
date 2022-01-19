@@ -1,7 +1,7 @@
 import type { GameEvent, SiYouTiming, CardColor, PlayerID } from "./basic";
 import type { Condition } from "./condition";
 import type { Action } from "./action";
-import { TargetType } from "./targetType";
+import { TargetType, TargetTypeCard } from "./targetType";
 import { log } from "../../../../tool/logger";
 import { GameContext } from "./gameContext";
 
@@ -181,46 +181,65 @@ export function createRollCostRequire(
       createRollCostRequire_cards: {
         id: "カード",
         value: [],
-      },
+        valueLengthInclude: [costNum]
+      } as TargetTypeCard,
     },
     condition: {
-      id: "ConditionCompareNumber",
-      value: [
+      id: "ConditionAnd",
+      and: [
         {
-          id: "數字",
-          value: {
-            path: [
-              {
-                id: "參照",
-                value: "createRollCostRequire_cards",
+          id: "ConditionCompareBaSyou",
+          value: [{
+            id: "場所",
+            value: {
+              path: [{ id: "カード", value: "createRollCostRequire_cards" }, "的「場所」"]
+            }
+          }, "==", {
+            id: "場所",
+            value: [{ id: "RelatedBaSyou", value: ["自軍", "Gゾーン"] }]
+          }]
+        },
+        ...(color ? [{
+          id: "ConditionCompareCardColor",
+          value: [{
+            id: "カードの色",
+            value: {
+              path: [{
+                id: "カード",
+                value: "createRollCostRequire_cards"
               },
-              "陣列長度",
-            ],
-          },
-        },
-        "==",
-        {
-          id: "數字",
-          value: [costNum],
-        },
-      ],
+                "的「色」"]
+            }
+          }, "==", {
+            id: "カードの色",
+            value: [color]
+          }]
+        } as Condition] : [])
+      ]
     },
     action: [
       {
-        id: "ActionConsumeG",
+        id: "ActionRoll",
         cards: {
           id: "カード",
-          value: "createRollCostRequire_cards",
-        },
-        ...(color
-          ? {
-              color: {
-                id: "カードの色",
-                value: [color],
-              },
-            }
-          : null),
+          value: "createRollCostRequire_cards"
+        }
       },
+      // {
+      //   id: "ActionConsumeG",
+      //   cards: {
+      //     id: "カード",
+      //     value: "createRollCostRequire_cards",
+      //   },
+      //   ...(color
+      //     ? {
+      //         color: {
+      //           id: "カードの色",
+      //           value: [color],
+      //         },
+      //       }
+      //     : null),
+      // },
     ],
   };
 }

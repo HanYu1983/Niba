@@ -13,16 +13,17 @@ export type TargetTypeCard = {
   id: "カード";
   value: string[] | string | { path: [{ id: "このカード" }] };
   tipID?: string[];
+  valueLengthInclude?: number[];
 };
 
 export type TargetTypePlayer = {
   id: "プレーヤー";
   value:
-    | PlayerID[]
-    | string
-    | {
-        path: [TargetTypeCard, "的「コントローラー」" | "的「持ち主」"];
-      };
+  | PlayerID[]
+  | string
+  | {
+    path: [TargetTypeCard, "的「コントローラー」" | "的「持ち主」"];
+  };
 };
 
 export type TargetTypeRef = {
@@ -33,34 +34,34 @@ export type TargetTypeRef = {
 export type TargetTypeNumber = {
   id: "數字";
   value:
-    | number[]
-    | string
-    | {
-        path:
-          | [TargetTypeCard, "的「攻撃力」" | "的「防御力」" | "的「合計国力」"]
-          | [TargetTypePlayer, "的「合計国力」"]
-          | [TargetTypeRef, "陣列長度"];
-      };
+  | number[]
+  | string
+  | {
+    path:
+    | [TargetTypeCard, "的「攻撃力」" | "的「防御力」" | "的「合計国力」"]
+    | [TargetTypePlayer, "的「合計国力」"]
+    | [TargetTypeRef, "陣列長度"];
+  };
 };
 
 export type TargetTypeString = {
   id: "字串";
   value:
-    | string[]
-    | string
-    | { path: [TargetTypeCard, "的「名称」" | "的「特徴」"] };
+  | string[]
+  | string
+  | { path: [TargetTypeCard, "的「名称」" | "的「特徴」"] };
 };
 
 export type TargetTypeBoolean = {
   id: "布林";
   value:
-    | boolean[]
-    | string
-    | {
-        path:
-          | [TargetTypeCard, "在「交戦中」？" | "是「セットカード」？"]
-          | [TargetTypeCard, "存在旗標？", string];
-      };
+  | boolean[]
+  | string
+  | {
+    path:
+    | [TargetTypeCard, "在「交戦中」？" | "是「セットカード」？"]
+    | [TargetTypeCard, "存在旗標？", string];
+  };
 };
 
 export type TargetTypeBaSyou = {

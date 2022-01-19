@@ -10,6 +10,7 @@ import {
   TargetTypeBoolean,
   TargetTypeCard,
   TargetTypeCardCategory,
+  TargetTypeCardColor,
   TargetTypeCardRole,
   TargetTypeNumber,
   TargetTypePlayer,
@@ -99,6 +100,15 @@ type ConditionCompareCardCategory = {
   ];
 };
 
+type ConditionCompareCardColor = {
+  id: "ConditionCompareCardColor";
+  value: [
+    TargetTypeCardColor,
+    ConditionCompareStringOperator,
+    TargetTypeCardColor
+  ];
+};
+
 export type Condition =
   | ConditionCompareNumber
   | ConditionCompareString
@@ -106,6 +116,7 @@ export type Condition =
   | ConditionCompareRole
   | ConditionCompareCard
   | ConditionCompareCardCategory
+  | ConditionCompareCardColor
   | ConditionComparePlayer
   | ConditionCompareBaSyou
   | ConditionNot

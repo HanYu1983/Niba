@@ -53,6 +53,7 @@ export function doConditionTarget(
     case "ConditionCompareRole":
     case "ConditionComparePlayer":
     case "ConditionCompareCardCategory":
+    case "ConditionCompareCardColor":
     case "ConditionCompareBaSyou": {
       const [v1, op, v2] = condition.value;
       const target1 = getTargetType(ctx, blockPayload, targets, v1);
@@ -114,6 +115,14 @@ export function doConditionTarget(
             return "type not right";
           }
           break;
+        case "ConditionCompareCardColor":
+          if (target1.id != "カードの色") {
+            return "type not right";
+          }
+          if (target2.id != "カードの色") {
+            return "type not right";
+          }
+          break;
         case "ConditionCompareBaSyou":
           if (target1.id != "場所") {
             return "type not right";
@@ -126,7 +135,7 @@ export function doConditionTarget(
       if (!Array.isArray(target1.value)) {
         return "type not right";
       }
-      target1.value.forEach((a) => {
+      const msgs = target1.value.map((a) => {
         switch (target2.id) {
           case "場所": {
             if (typeof a != "object") {
@@ -178,7 +187,8 @@ export function doConditionTarget(
           case "布林":
           case "數字":
           case "「カード」的角色":
-          case "カードの種類": {
+          case "カードの種類":
+          case "カードの色": {
             if (typeof a == "object") {
               return "a must be basic type";
             }
@@ -240,7 +250,10 @@ export function doConditionTarget(
             break;
           }
         }
-      });
+      }).filter(v => v);
+      if (msgs.length) {
+        return msgs.join(".")
+      }
     }
   }
   return null;
