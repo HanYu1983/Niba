@@ -60,7 +60,8 @@ export type TargetTypeBoolean = {
   | {
     path:
     | [TargetTypeCard, "在「交戦中」？" | "是「セットカード」？"]
-    | [TargetTypeCard, "存在旗標？", string];
+    | [TargetTypeCard, "存在旗標？", string]
+    | [TargetTypeCard, "是直立的？"];
   };
 };
 

@@ -173,7 +173,7 @@ export function createPlayCardText(
       ): [[CardColor, number][], (CardColor | null)[]] => {
         const number = source.filter((c) => c == color).length;
         return [
-          color == null ? result : [...result, [color, number]],
+          (color == null || number == 0) ? result : [...result, [color, number]],
           source.filter((c) => c != color),
         ];
       },
@@ -181,6 +181,7 @@ export function createPlayCardText(
     );
     return ret;
   })();
+
   switch (prototype.category) {
     default:
     case "コマンド": {

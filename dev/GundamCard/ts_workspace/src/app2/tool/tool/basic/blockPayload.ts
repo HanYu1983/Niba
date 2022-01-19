@@ -178,7 +178,7 @@ export function createRollCostRequire(
   return {
     id: "RequireTarget",
     targets: {
-      createRollCostRequire_cards: {
+      要支付的國力: {
         id: "カード",
         value: [],
         valueLengthInclude: [costNum]
@@ -192,11 +192,23 @@ export function createRollCostRequire(
           value: [{
             id: "場所",
             value: {
-              path: [{ id: "カード", value: "createRollCostRequire_cards" }, "的「場所」"]
+              path: [{ id: "カード", value: "要支付的國力" }, "的「場所」"]
             }
           }, "==", {
             id: "場所",
             value: [{ id: "RelatedBaSyou", value: ["自軍", "Gゾーン"] }]
+          }]
+        },
+        {
+          id: "ConditionCompareBoolean",
+          value: [{
+            id: "布林",
+            value: {
+              path: [{ id: "カード", value: "要支付的國力" }, "是直立的？"]
+            }
+          }, "==", {
+            id: "布林",
+            value: [true]
           }]
         },
         ...(color ? [{
@@ -206,7 +218,7 @@ export function createRollCostRequire(
             value: {
               path: [{
                 id: "カード",
-                value: "createRollCostRequire_cards"
+                value: "要支付的國力"
               },
                 "的「色」"]
             }
@@ -222,24 +234,9 @@ export function createRollCostRequire(
         id: "ActionRoll",
         cards: {
           id: "カード",
-          value: "createRollCostRequire_cards"
+          value: "要支付的國力"
         }
       },
-      // {
-      //   id: "ActionConsumeG",
-      //   cards: {
-      //     id: "カード",
-      //     value: "createRollCostRequire_cards",
-      //   },
-      //   ...(color
-      //     ? {
-      //         color: {
-      //           id: "カードの色",
-      //           value: [color],
-      //         },
-      //       }
-      //     : null),
-      // },
     ],
   };
 }

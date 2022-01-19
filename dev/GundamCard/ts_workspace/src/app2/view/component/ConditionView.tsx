@@ -78,6 +78,7 @@ export const ConditionView = (props: {
       case "ConditionComparePlayer":
       case "ConditionCompareString":
       case "ConditionCompareBaSyou":
+      case "ConditionCompareCardColor":
         return (
           <div>
             <TargetTypeView target={props.condition.value[0]}></TargetTypeView>

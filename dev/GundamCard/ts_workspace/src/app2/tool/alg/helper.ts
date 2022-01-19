@@ -237,7 +237,8 @@ export function getTargetType(
           const values = targetType.value.map((cardID): CardColor => {
             switch (path[1]) {
               case "的「色」": {
-                return "白";
+                const [_, cardState] = getCardState(ctx, cardID);
+                return cardState.prototype.color;
               }
             }
           });
@@ -512,6 +513,13 @@ export function getTargetType(
                 const flag = path[2];
                 const [_2, cardState] = getCardState(ctx, cardID);
                 return cardState.flags.includes(flag);
+              }
+              case "是直立的？": {
+                const card = getCard(ctx.gameState.table, cardID)
+                if (card == null) {
+                  throw new Error("card must find")
+                }
+                return card.tap == false
               }
             }
           });

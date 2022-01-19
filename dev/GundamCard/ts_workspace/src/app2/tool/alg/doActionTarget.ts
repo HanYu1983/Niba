@@ -116,63 +116,63 @@ export function doActionTarget(
         },
       };
     }
-    case "ActionConsumeG": {
-      const cards = getTargetType(ctx, blockPayload, targets, action.cards);
-      if (cards?.id != "カード") {
-        throw new Error("must カード");
-      }
-      if (!Array.isArray(cards.value)) {
-        throw new Error("執行Action時的所有target必須是陣列");
-      }
-      if (cards.value.length == 0) {
-        //throw new Error("執行Action時的所有target必須最少有一個值");
-        console.log("value.length == 0. return");
-        return ctx;
-      }
-      const color: CardColor | null = (() => {
-        if (action.color == null) {
-          return null;
-        }
-        const _color = getTargetType(ctx, blockPayload, targets, action.color);
-        if (_color.id != "カードの色") {
-          throw new Error("must カードの色");
-        }
-        if (!Array.isArray(_color.value)) {
-          throw new Error("執行Action時的所有target必須是陣列");
-        }
-        if (_color.value.length == 0) {
-          throw new Error("執行Action時的所有target必須最少有一個值");
-        }
-        return _color.value[0];
-      })();
-      const table = cards.value.reduce((table, cardID) => {
-        if (cardID == null) {
-          throw new Error("target must not null");
-        }
-        if (color != null) {
-          const cardColor = getCardColor(ctx, cardID);
-          if (color != cardColor) {
-            throw new Error("[doActionTarget][ActionConsumeG] color not right");
-          }
-        }
-        return mapCard(table, (card) => {
-          if (card.id != cardID) {
-            return card;
-          }
-          return {
-            ...card,
-            tap: true,
-          };
-        });
-      }, ctx.gameState.table);
-      return {
-        ...ctx,
-        gameState: {
-          ...ctx.gameState,
-          table: table,
-        },
-      };
-    }
+    // case "ActionConsumeG": {
+    //   const cards = getTargetType(ctx, blockPayload, targets, action.cards);
+    //   if (cards?.id != "カード") {
+    //     throw new Error("must カード");
+    //   }
+    //   if (!Array.isArray(cards.value)) {
+    //     throw new Error("執行Action時的所有target必須是陣列");
+    //   }
+    //   if (cards.value.length == 0) {
+    //     //throw new Error("執行Action時的所有target必須最少有一個值");
+    //     console.log("value.length == 0. return");
+    //     return ctx;
+    //   }
+    //   const color: CardColor | null = (() => {
+    //     if (action.color == null) {
+    //       return null;
+    //     }
+    //     const _color = getTargetType(ctx, blockPayload, targets, action.color);
+    //     if (_color.id != "カードの色") {
+    //       throw new Error("must カードの色");
+    //     }
+    //     if (!Array.isArray(_color.value)) {
+    //       throw new Error("執行Action時的所有target必須是陣列");
+    //     }
+    //     if (_color.value.length == 0) {
+    //       throw new Error("執行Action時的所有target必須最少有一個值");
+    //     }
+    //     return _color.value[0];
+    //   })();
+    //   const table = cards.value.reduce((table, cardID) => {
+    //     if (cardID == null) {
+    //       throw new Error("target must not null");
+    //     }
+    //     if (color != null) {
+    //       const cardColor = getCardColor(ctx, cardID);
+    //       if (color != cardColor) {
+    //         throw new Error("[doActionTarget][ActionConsumeG] color not right");
+    //       }
+    //     }
+    //     return mapCard(table, (card) => {
+    //       if (card.id != cardID) {
+    //         return card;
+    //       }
+    //       return {
+    //         ...card,
+    //         tap: true,
+    //       };
+    //     });
+    //   }, ctx.gameState.table);
+    //   return {
+    //     ...ctx,
+    //     gameState: {
+    //       ...ctx.gameState,
+    //       table: table,
+    //     },
+    //   };
+    // }
     case "ActionDrop": {
       const cards = getTargetType(ctx, blockPayload, targets, action.cards);
       if (cards?.id != "カード") {

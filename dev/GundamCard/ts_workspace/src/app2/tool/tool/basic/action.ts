@@ -24,11 +24,11 @@ type ActionSetTarget = {
   target: string;
 };
 
-type ActionConsumeG = {
-  id: "ActionConsumeG";
-  cards: TargetTypeCard;
-  color?: TargetTypeCardColor;
-};
+// type ActionConsumeG = {
+//   id: "ActionConsumeG";
+//   cards: TargetTypeCard;
+//   color?: TargetTypeCardColor;
+// };
 
 // 廃棄
 type ActionDrop = {
@@ -134,7 +134,7 @@ type ActionCreateChip = {
 export type Action =
   | ActionRoll
   | ActionReroll
-  | ActionConsumeG
+  //| ActionConsumeG
   | ActionSetTarget
   | ActionDrop
   | ActionMoveCardToPosition
