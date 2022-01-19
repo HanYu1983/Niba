@@ -434,6 +434,7 @@ export function getTargetType(
           // }
           const values = targetType.value.map((cardID) => {
             switch (path[1]) {
+              case "的「改装」的「合計国力」":
               case "陣列長度":
                 throw new Error("not support");
               case "的「攻撃力」":
@@ -467,6 +468,9 @@ export function getTargetType(
                 throw new Error("not support");
               case "的「合計国力」": {
                 return 0;
+              }
+              case "的「改装」的「合計国力」": {
+                return 0
               }
             }
           });

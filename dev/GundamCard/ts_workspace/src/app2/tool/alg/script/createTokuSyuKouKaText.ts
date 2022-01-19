@@ -465,23 +465,24 @@ export function createTokuSyuKouKaText(
                   {
                     id: "RequireTarget",
                     targets: {
-                      cardA: {
+                      被改裝置換的卡: {
                         id: "カード",
                         value: { path: [{ id: "このカード" }] },
+                        valueLengthInclude: [1]
                       },
                     },
                     action: [
                       {
                         id: "ActionSetTarget",
-                        source: "cardA",
-                        target: "cardA",
+                        source: "被改裝置換的卡",
+                        target: "被改裝置換的卡",
                       },
                     ],
                   },
                   {
                     id: "RequireTarget",
                     targets: {
-                      cardB: { id: "カード", value: [] },
+                      改裝出場的卡: { id: "カード", value: [], valueLengthInclude: [1] },
                     },
                     condition: {
                       id: "ConditionAnd",
@@ -498,7 +499,7 @@ export function createTokuSyuKouKaText(
                                     path: [
                                       {
                                         id: "カード",
-                                        value: "cardB",
+                                        value: "改裝出場的卡",
                                       },
                                       "的「場所」",
                                     ],
@@ -525,7 +526,7 @@ export function createTokuSyuKouKaText(
                                     path: [
                                       {
                                         id: "カード",
-                                        value: "cardB",
+                                        value: "改裝出場的卡",
                                       },
                                       "的「場所」",
                                     ],
@@ -550,7 +551,7 @@ export function createTokuSyuKouKaText(
                           value: [
                             {
                               id: "「カード」的角色",
-                              value: "cardB",
+                              value: "改裝出場的卡",
                             },
                             "==",
                             {
@@ -559,10 +560,31 @@ export function createTokuSyuKouKaText(
                             },
                           ],
                         },
+                        {
+                          id: "ConditionCompareNumber",
+                          value: [
+                            {
+                              id: "數字",
+                              value: {
+                                path: [{ id: "カード", value: "改裝出場的卡" }, "的「合計国力」"]
+                              }
+                            },
+                            "<=",
+                            {
+                              id: "數字",
+                              value: {
+                                path: [
+                                  { id: "プレーヤー", value: { path: [{ id: "カード", value: "改裝出場的卡" }, "的「コントローラー」"] } },
+                                  "的「改装」的「合計国力」"
+                                ]
+                              }
+                            },
+                          ]
+                        }
                         // TODO ConditionCardHasTokuTyou
                         // {
                         //   id: "ConditionCardHasTokuTyou",
-                        //   source: "cardB",
+                        //   source: "改裝出場的卡",
                         //   value: tokuTyou,
                         // },
                       ],
@@ -572,7 +594,7 @@ export function createTokuSyuKouKaText(
                         id: "ActionSetFace",
                         cards: {
                           id: "カード",
-                          value: "cardB",
+                          value: "改裝出場的卡",
                         },
                         faceDown: {
                           id: "布林",
@@ -581,8 +603,8 @@ export function createTokuSyuKouKaText(
                       },
                       {
                         id: "ActionSetTarget",
-                        source: "cardB",
-                        target: "cardB",
+                        source: "改裝出場的卡",
+                        target: "改裝出場的卡",
                       },
                     ],
                   },
@@ -604,11 +626,11 @@ export function createTokuSyuKouKaText(
                                 id: "ActionOKiKaeRu",
                                 cardA: {
                                   id: "カード",
-                                  value: "cardA",
+                                  value: "被改裝置換的卡",
                                 },
                                 cardB: {
                                   id: "カード",
-                                  value: "cardB",
+                                  value: "改裝出場的卡",
                                 },
                               },
                             ],
