@@ -1,5 +1,6 @@
 import {
   BaSyou,
+  BattleBonus,
   CardCategory,
   CardColor,
   PlayerID,
@@ -85,6 +86,11 @@ export type TargetTypeCardRole = {
   value: CardCategory[] | string | { path: [TargetTypeCard, "的角色"] };
 };
 
+export type TargetTypeBattleBonus = {
+  id: "戦闘修正",
+  value: BattleBonus[] | string | { path: [{ id: "「ゲイン」の効果の戦闘修正" }] }
+}
+
 export type TargetTypeCustom = {
   id: "腳本";
   value: string;
@@ -109,7 +115,8 @@ export type TargetType =
   | TargetTypeCardRole
   | TargetTypeBaSyou
   | TargetTypeDamage
-  | TargetTypeCustom;
+  | TargetTypeCustom
+  | TargetTypeBattleBonus;
 
 export type TargetTypeCustomFunctionType = (
   ctx: GameContext,

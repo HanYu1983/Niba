@@ -579,6 +579,20 @@ export function getTargetType(
       );
       return func(ctx, blockPayload);
     }
+    case "戦闘修正":
+      {
+        if (Array.isArray(targetTypeAfterProcess.value)) {
+          return targetTypeAfterProcess;
+        }
+        const path = targetTypeAfterProcess.value.path;
+        switch (path[0].id) {
+          case "「ゲイン」の効果の戦闘修正":
+            return {
+              id: "戦闘修正",
+              value: [[0, 0, 0]]
+            }
+        }
+      }
     default:
       throw new Error(`not impl: ${targetTypeAfterProcess.id}`)
   }

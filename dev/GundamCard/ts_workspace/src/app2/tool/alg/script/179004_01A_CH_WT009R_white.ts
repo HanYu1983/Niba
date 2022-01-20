@@ -33,8 +33,11 @@ const prototype: CardPrototype = {
         "『起動』：自軍カードが、「ゲイン」の効果で戦闘修正を得た場合、そのカードのセットグループ以外の自軍ユニット１枚は、ターン終了時まで、その戦闘修正と同じ値の戦闘修正を得る。",
       block: {
         require: {
-          id: "RequireEvent"
-          // TODO
+          id: "RequireEvent",
+          event: {
+            id: "「ゲイン」の効果で戦闘修正を得た場合",
+            value: [0, 0, 0]
+          }
         },
         feedback: [
           {
@@ -51,6 +54,10 @@ const prototype: CardPrototype = {
                         id: "カード",
                         value: [],
                         valueLengthInclude: [1]
+                      },
+                      "「ゲイン」の効果の戦闘修正": {
+                        id: "戦闘修正",
+                        value: { path: [{ id: "「ゲイン」の効果の戦闘修正" }] }
                       }
                     },
                   },

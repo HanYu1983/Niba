@@ -103,7 +103,20 @@ export type RelatedPlayerSideKeyword = "自軍" | "敵軍";
 
 export type SiYouTiming =
   | [
-      | "常時"
+    | "常時"
+    | "ドローフェイズ"
+    | "リロールフェイズ"
+    | "配備フェイズ"
+    | "戦闘フェイズ"
+    | "攻撃ステップ"
+    | "防御ステップ"
+    | "ダメージ判定ステップ"
+    | "帰還ステップ"
+  ]
+  | [
+    RelatedPlayerSideKeyword,
+    (
+      | "ターン"
       | "ドローフェイズ"
       | "リロールフェイズ"
       | "配備フェイズ"
@@ -112,21 +125,8 @@ export type SiYouTiming =
       | "防御ステップ"
       | "ダメージ判定ステップ"
       | "帰還ステップ"
-    ]
-  | [
-      RelatedPlayerSideKeyword,
-      (
-        | "ターン"
-        | "ドローフェイズ"
-        | "リロールフェイズ"
-        | "配備フェイズ"
-        | "戦闘フェイズ"
-        | "攻撃ステップ"
-        | "防御ステップ"
-        | "ダメージ判定ステップ"
-        | "帰還ステップ"
-      )
-    ];
+    )
+  ];
 
 export const TIMING_CHART = ((): Timing[] => {
   const phaseSeq: Phase[] = [
@@ -190,12 +190,19 @@ export function isCanPlayCardInPhase(phase: Phase): boolean {
   }
 }
 
+export type BattleBonus = [number, number, number]
+
 export type GameEventOnTiming = {
   id: "GameEventOnTiming";
   timing: Timing;
 };
 
-export type GameEvent = GameEventOnTiming;
+type GameEventOnGain = {
+  id: "「ゲイン」の効果で戦闘修正を得た場合"
+  value: BattleBonus
+}
+
+export type GameEvent = GameEventOnTiming | GameEventOnGain;
 
 export type TokuSyuKouKa =
   | ["高機動"]

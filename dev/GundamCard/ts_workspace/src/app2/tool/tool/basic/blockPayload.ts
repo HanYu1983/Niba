@@ -18,7 +18,7 @@ export type RequireTarget = {
 
 export type RequireEvent = {
   id: "RequireEvent";
-  condition?: Condition;
+  event: GameEvent;
 } & RequireBase;
 
 export type RequireYesNo = {
