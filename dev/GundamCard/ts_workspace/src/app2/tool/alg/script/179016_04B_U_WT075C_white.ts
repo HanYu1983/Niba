@@ -63,7 +63,7 @@ const prototype: CardPrototype = {
                                         value:
                                           "５以下の防御力を持つ敵軍ユニット１枚",
                                       },
-                                      "陣列長度",
+                                      "的陣列長度",
                                     ],
                                   },
                                 },

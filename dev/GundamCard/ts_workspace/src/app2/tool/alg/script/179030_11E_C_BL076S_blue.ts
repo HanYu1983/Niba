@@ -68,7 +68,7 @@ const prototype: CardPrototype = {
                                         id: "參照",
                                         value: "cardA",
                                       },
-                                      "陣列長度",
+                                      "的陣列長度",
                                     ],
                                   },
                                 },

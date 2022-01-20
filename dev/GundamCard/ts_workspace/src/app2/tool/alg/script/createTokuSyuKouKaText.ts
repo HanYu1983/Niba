@@ -42,7 +42,7 @@ export function createTokuSyuKouKaText(
                               value: {
                                 path: [
                                   { id: "參照", value: "cards" },
-                                  "陣列長度",
+                                  "的陣列長度",
                                 ],
                               },
                             },
