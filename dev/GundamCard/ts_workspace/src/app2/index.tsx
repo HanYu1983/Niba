@@ -9,7 +9,9 @@ const App = (props: any) => {
   }, []);
   return (
     <div>
-      <AppView></AppView>
+      {
+        //<AppView></AppView>
+      }
     </div>
   );
 };

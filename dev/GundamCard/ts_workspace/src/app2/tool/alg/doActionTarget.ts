@@ -100,11 +100,62 @@ export function doActionTarget(
             return card;
           }
           if (card.tap == false) {
-            throw new Error("[doActionTarget][ActionRoll] already not tap");
+            throw new Error("[doActionTarget][ActionRoll] 已經是直立狀態, 不能直立");
           }
           return {
             ...card,
             tap: false,
+          };
+        });
+      }, ctx.gameState.table);
+      return {
+        ...ctx,
+        gameState: {
+          ...ctx.gameState,
+          table: table,
+        },
+      };
+    }
+    case "ActionSetFace": {
+      const cards = getTargetType(ctx, blockPayload, targets, action.cards);
+      if (cards?.id != "カード") {
+        throw new Error("must カード");
+      }
+      if (!Array.isArray(cards.value)) {
+        throw new Error("執行Action時的所有target必須是陣列");
+      }
+      if (cards.value.length == 0) {
+        //throw new Error("執行Action時的所有target必須最少有一個值");
+        console.log("value.length == 0. return");
+        return ctx;
+      }
+      const faceDown = getTargetType(ctx, blockPayload, targets, action.faceDown);
+      if (faceDown?.id != "布林") {
+        throw new Error("must 布林");
+      }
+      if (!Array.isArray(faceDown.value)) {
+        throw new Error("執行Action時的所有target必須是陣列");
+      }
+      if (faceDown.value.length == 0) {
+        //throw new Error("執行Action時的所有target必須最少有一個值");
+        console.log("value.length == 0. return");
+        return ctx;
+      }
+      const faceDownValue = faceDown.value[0]
+      const table = cards.value.reduce((table, cardID) => {
+        if (cardID == null) {
+          throw new Error("target must not null");
+        }
+        return mapCard(table, (card) => {
+          if (card.id != cardID) {
+            return card;
+          }
+          if (card.faceDown == faceDownValue) {
+            throw new Error(`你必須改變朝向的狀態: 現在是${card.faceDown}`);
+          }
+          return {
+            ...card,
+            faceDown: faceDownValue
           };
         });
       }, ctx.gameState.table);
@@ -571,6 +622,80 @@ export function doActionTarget(
       ctx = initState(ctx);
       return ctx;
     }
+    case "ActionOKiKaeRu":
+      {
+        const cardA = getTargetType(ctx, blockPayload, targets, action.cardA);
+        if (cardA.id != "カード") {
+          throw new Error("must カード");
+        }
+        if (!Array.isArray(cardA.value)) {
+          throw new Error("執行Action時的所有target必須是陣列");
+        }
+        if (cardA.value.length == 0) {
+          console.log("value.length == 0. return");
+          return ctx;
+        }
+        const cardB = getTargetType(ctx, blockPayload, targets, action.cardB);
+        if (cardB.id != "カード") {
+          throw new Error("must カード");
+        }
+        if (!Array.isArray(cardB.value)) {
+          throw new Error("執行Action時的所有target必須是陣列");
+        }
+        if (cardB.value.length == 0) {
+          console.log("value.length == 0. return");
+          return ctx;
+        }
+        const cardAValue = cardA.value[0]
+        const cardBValue = cardB.value[0]
+        {
+          // 移動cardA到cardB的位置
+          // TODO: 修改setGroup
+          const cardID = cardBValue
+          const fromBaSyouID = getBaShouID(getCardBaSyou(ctx, cardID));
+          const toBaSyouID = getBaShouID(getCardBaSyou(ctx, cardAValue));
+          const nextTable = moveCard(
+            ctx.gameState.table,
+            fromBaSyouID,
+            toBaSyouID,
+            cardID,
+            null
+          );
+          ctx = {
+            ...ctx,
+            gameState: {
+              ...ctx.gameState,
+              table: nextTable,
+            },
+          };
+        }
+        {
+          // 廢棄cardA
+          const cardID = cardAValue
+          const fromBaSyouID = getBaShouID(getCardBaSyou(ctx, cardID));
+          const toBaSyouID = getBaShouID({
+            id: "AbsoluteBaSyou",
+            value: [getCardOwner(ctx, cardID), "捨て山"]
+          });
+          const nextTable = moveCard(
+            ctx.gameState.table,
+            fromBaSyouID,
+            toBaSyouID,
+            cardID,
+            null
+          );
+          ctx = {
+            ...ctx,
+            gameState: {
+              ...ctx.gameState,
+              table: nextTable,
+            },
+          };
+        }
+        return ctx
+      }
+    default:
+      throw new Error(`not impl: ${action.id}`)
   }
   return ctx;
 }

@@ -2,7 +2,7 @@ import { createRollCostRequire } from "../../tool/basic/blockPayload";
 import { CardText, TokuSyuKouKa } from "../../tool/basic/basic";
 import { RequireCustomID } from "../../tool/basic/requireCustom";
 
-let _seqID = 0;
+var _seqID = 0;
 export function createTokuSyuKouKaText(
   toku: TokuSyuKouKa,
   options: { cost?: number }
@@ -471,6 +471,22 @@ export function createTokuSyuKouKaText(
                         valueLengthInclude: [1]
                       },
                     },
+                    condition: {
+                      id: "ConditionCompareBaSyou",
+                      value: [{
+                        id: "場所",
+                        value: {
+                          path: [{ id: "カード", value: { path: [{ id: "このカード" }] } }, "的「場所」"]
+                        }
+                      }, "in", {
+                        id: "場所",
+                        value: [
+                          { id: "RelatedBaSyou", value: ["自軍", "配備エリア"] },
+                          { id: "RelatedBaSyou", value: ["自軍", "戦闘エリア（右）"] },
+                          { id: "RelatedBaSyou", value: ["自軍", "戦闘エリア（左）"] }
+                        ]
+                      }]
+                    },
                     action: [
                       {
                         id: "ActionSetTarget",
@@ -487,75 +503,60 @@ export function createTokuSyuKouKaText(
                     condition: {
                       id: "ConditionAnd",
                       and: [
+                        // {
+                        //   id: "ConditionCompareCard",
+                        //   value: [
+                        //     { id: "カード", value: "改裝出場的卡" },
+                        //     "!=",
+                        //     { id: "カード", value: { path: [{ id: "このカード" }] } }
+                        //   ]
+                        // },
                         {
-                          id: "ConditionOr",
-                          or: [
+                          id: "ConditionCompareBaSyou",
+                          value: [
                             {
-                              id: "ConditionCompareBaSyou",
-                              value: [
-                                {
-                                  id: "場所",
-                                  value: {
-                                    path: [
-                                      {
-                                        id: "カード",
-                                        value: "改裝出場的卡",
-                                      },
-                                      "的「場所」",
-                                    ],
+                              id: "場所",
+                              value: {
+                                path: [
+                                  {
+                                    id: "カード",
+                                    value: "改裝出場的卡",
                                   },
-                                },
-                                "==",
-                                {
-                                  id: "場所",
-                                  value: [
-                                    {
-                                      id: "RelatedBaSyou",
-                                      value: ["自軍", "手札"],
-                                    },
-                                  ],
-                                },
-                              ],
+                                  "的「場所」",
+                                ],
+                              },
                             },
+                            "in",
                             {
-                              id: "ConditionCompareBaSyou",
+                              id: "場所",
                               value: [
                                 {
-                                  id: "場所",
-                                  value: {
-                                    path: [
-                                      {
-                                        id: "カード",
-                                        value: "改裝出場的卡",
-                                      },
-                                      "的「場所」",
-                                    ],
-                                  },
+                                  id: "RelatedBaSyou",
+                                  value: ["自軍", "手札"],
                                 },
-                                "==",
                                 {
-                                  id: "場所",
-                                  value: [
-                                    {
-                                      id: "RelatedBaSyou",
-                                      value: ["自軍", "ハンガー"],
-                                    },
-                                  ],
+                                  id: "RelatedBaSyou",
+                                  value: ["自軍", "ハンガー"],
                                 },
                               ],
                             },
                           ],
                         },
                         {
-                          id: "ConditionCompareRole",
+                          id: "ConditionCompareCardCategory",
                           value: [
                             {
-                              id: "「カード」的角色",
-                              value: "改裝出場的卡",
+                              id: "カードの種類",
+                              value: {
+                                path: [{
+                                  id: "カード",
+                                  value: "改裝出場的卡"
+                                }, "的「種類」"]
+                              },
                             },
                             "==",
                             {
-                              id: "「カード」的角色",
+                              id: "カードの種類",
                               value: ["ユニット"],
                             },
                           ],
@@ -580,13 +581,26 @@ export function createTokuSyuKouKaText(
                               }
                             },
                           ]
-                        }
-                        // TODO ConditionCardHasTokuTyou
-                        // {
-                        //   id: "ConditionCardHasTokuTyou",
-                        //   source: "改裝出場的卡",
-                        //   value: tokuTyou,
-                        // },
+                        },
+                        {
+                          id: "ConditionCompareString",
+                          value: [
+                            {
+                              id: "字串",
+                              value: {
+                                path: [
+                                  { id: "カード", value: "改裝出場的卡" },
+                                  "的「特徴」",
+                                ],
+                              },
+                            },
+                            "hasToken",
+                            {
+                              id: "字串",
+                              value: [tokuTyou],
+                            },
+                          ],
+                        },
                       ],
                     },
                     action: [

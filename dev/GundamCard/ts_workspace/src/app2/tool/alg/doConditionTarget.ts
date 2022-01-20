@@ -5,6 +5,7 @@ import { getCardState, getCardIterator, getTargetType } from "./helper";
 import { TargetType } from "../tool/basic/targetType";
 import { getAbsoluteBaSyou, getCardController } from "../tool/basic/handleCard";
 import { getBaShouID } from "../tool/basic/basic";
+import { log } from "../../../tool/logger";
 
 export function doConditionTarget(
   ctx: GameContext,
@@ -109,10 +110,16 @@ export function doConditionTarget(
           break;
         case "ConditionCompareCardCategory":
           if (target1.id != "カードの種類") {
-            return "type not right";
+            log("doConditionTarget", condition)
+            log("doConditionTarget", target1)
+            log("doConditionTarget", target2)
+            return "type not right: ConditionCompareCardCategory";
           }
           if (target2.id != "カードの種類") {
-            return "type not right";
+            log("doConditionTarget", condition)
+            log("doConditionTarget", target1)
+            log("doConditionTarget", target2)
+            return "type not right: ConditionCompareCardCategory";
           }
           break;
         case "ConditionCompareCardColor":
@@ -125,15 +132,15 @@ export function doConditionTarget(
           break;
         case "ConditionCompareBaSyou":
           if (target1.id != "場所") {
-            return "type not right";
+            return "type not right: ConditionCompareBaSyou";
           }
           if (target2.id != "場所") {
-            return "type not right";
+            return "type not right: ConditionCompareBaSyou";
           }
           break;
       }
       if (!Array.isArray(target1.value)) {
-        return "type not right";
+        return "type not right: must array";
       }
       const msgs = target1.value.map((a) => {
         switch (target2.id) {
@@ -142,7 +149,7 @@ export function doConditionTarget(
               return "a must be baSyou object";
             }
             if (!Array.isArray(target2.value)) {
-              return "type not right";
+              return "type not right: must array 2";
             }
             if (a.id == "RelatedBaSyou") {
               return "must be absolute baSyou";
@@ -172,7 +179,7 @@ export function doConditionTarget(
                     })
                     .includes(getBaShouID(a)) == false
                 ) {
-                  return "baSyou not in";
+                  return `不包含指定的場所:變數${JSON.stringify(v1)}的場所${getBaShouID(a)}必須包含在${JSON.stringify(target2.value)}`;
                 }
                 break;
               }

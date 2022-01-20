@@ -129,7 +129,11 @@ export function getTargetType(
       if (targets[target.value] == null) {
         throw new Error("target.value not found:" + target.value);
       }
-      return targets[target.value];
+      const replaced = targets[target.value];
+      if (replaced.id != target.id) {
+        throw new Error(`從變數取來的類型必須和本來的一樣:${target.id} != ${replaced.id}`)
+      }
+      return replaced
     }
     return target;
   })();
@@ -535,6 +539,40 @@ export function getTargetType(
       }
       break;
     }
+    case "カードの種類":
+      {
+        if (Array.isArray(targetTypeAfterProcess.value)) {
+          return targetTypeAfterProcess;
+        }
+        const path = targetTypeAfterProcess.value.path;
+        switch (path[0].id) {
+          case "カード": {
+            const targetType = getTargetType(ctx, blockPayload, targets, path[0]);
+            if (targetType.id != "カード") {
+              throw new Error("must be カード");
+            }
+            if (!Array.isArray(targetType.value)) {
+              throw new Error("must be real value");
+            }
+            // if (targetType.value.length == 0) {
+            //   throw new Error("cardID must > 0");
+            // }
+            const values = targetType.value.map((cardID) => {
+              switch (path[1]) {
+                case "的「種類」": {
+                  const [_2, cardState] = getCardState(ctx, cardID);
+                  return cardState.prototype.category
+                }
+              }
+            });
+            return {
+              id: "カードの種類",
+              value: values,
+            };
+          }
+        }
+        break;
+      }
     case "腳本": {
       const func: TargetTypeCustomFunctionType = getCustomFunction(
         targetTypeAfterProcess.value
@@ -542,6 +580,6 @@ export function getTargetType(
       return func(ctx, blockPayload);
     }
     default:
-      return targetTypeAfterProcess;
+      throw new Error(`not impl: ${targetTypeAfterProcess.id}`)
   }
 }

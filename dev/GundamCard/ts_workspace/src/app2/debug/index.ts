@@ -10,6 +10,7 @@ import { createCard } from "../../tool/table";
 import { getBaShouID, PlayerA, PlayerB } from "../tool/tool/basic/basic";
 import { recurRequire } from "../tool/tool/basic/blockPayload";
 import { testFlow } from "./testFlow";
+import { testKaiSo } from "./testKaiSo";
 
 export function testInit() {
   let ctx = DEFAULT_GAME_CONTEXT;
@@ -88,10 +89,12 @@ export function testInit() {
 }
 
 export function test() {
-  [/*testInit,*/ testFlow].forEach((testF: Function) => {
-    console.log(`============${testF.name}===========`);
-    testF();
-  });
+  // [testInit].forEach((testF: Function) => {
+  //   console.log(`============${testF.name}===========`);
+  //   testF();
+  // });
+
+  testKaiSo()
 }
 
 // function testSetAnswer() {

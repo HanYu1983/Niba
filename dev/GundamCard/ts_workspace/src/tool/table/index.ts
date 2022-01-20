@@ -8,7 +8,7 @@ export type Card = {
   ownerID: string | null;
 };
 
-export type CardStack = { [key: string]: Card[] | undefined };
+export type CardStack = { [key: string]: Card[] };
 
 export type TokenPosition =
   | { id: "TokenPositionCard"; cardID: string }

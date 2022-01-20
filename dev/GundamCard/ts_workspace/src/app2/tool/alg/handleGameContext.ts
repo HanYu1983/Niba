@@ -1,4 +1,4 @@
-import { CardText, GameEvent, getNextTiming } from "../tool/basic/basic";
+import { CardText, GameEvent, getNextTiming, PlayerA } from "../tool/basic/basic";
 import {
   BlockPayload,
   Feedback,
@@ -155,10 +155,10 @@ export function updateCommand(ctx: GameContext): GameContext {
               if (r.key == null) {
                 return target;
               }
-
+              log("updateCommand", `targetID:${targetID}`)
+              // 取得提示.
               switch (target.id) {
                 case "カード": {
-                  // 取得提示.
                   const tips = (() => {
                     if (r.condition == null) {
                       return [];
@@ -172,6 +172,7 @@ export function updateCommand(ctx: GameContext): GameContext {
                             id: "カード",
                             value: [card.id],
                           };
+                          log("getTip", card);
                           const msg = doConditionTarget(
                             ctx,
                             wrapEvent,
@@ -193,8 +194,25 @@ export function updateCommand(ctx: GameContext): GameContext {
                   })();
                   log("updateCommand", "tips");
                   log("updateCommand", tips);
+                  const nextValues = (() => {
+                    if (tips.length == 0) {
+                      return target.value
+                    }
+                    if (!Array.isArray(target.value)) {
+                      return target.value
+                    }
+                    if (target.valueLengthInclude == null) {
+                      return target.value
+                    }
+                    if (target.valueLengthInclude.length == 0) {
+                      return target.value
+                    }
+                    const len = target.valueLengthInclude[0]
+                    return tips.slice(0, len)
+                  })()
                   return {
                     ...target,
+                    value: nextValues,
                     tipID: tips,
                   };
                 }
@@ -295,7 +313,12 @@ export function initState(ctx: GameContext): GameContext {
     ctx = nextCtx;
     return card;
   });
-  return ctx;
+  return {
+    ...ctx, gameState: {
+      ...ctx.gameState,
+      activePlayerID: PlayerA
+    }
+  };
 }
 
 export function getTip(
