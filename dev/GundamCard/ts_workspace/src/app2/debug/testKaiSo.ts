@@ -34,16 +34,6 @@ function test1() {
                         faceDown: true,
                         ownerID: PlayerA,
                         tap: false
-                    }],
-                    [getBaShouID({
-                        id: "AbsoluteBaSyou",
-                        value: [PlayerA, "Gゾーン"]
-                    })]: [{
-                        id: "c",
-                        protoID: "179016_04B_U_WT075C_white",
-                        faceDown: true,
-                        ownerID: PlayerA,
-                        tap: false
                     }]
                 }
             },
@@ -126,6 +116,13 @@ function test1() {
     })].length != 1) {
         throw new Error("廢棄庫必須有卡")
     }
+    if (ctx.gameState.table.cardStack[getBaShouID({
+        id: "AbsoluteBaSyou",
+        value: [PlayerA, "配備エリア"]
+    })].length != 1) {
+        throw new Error("配置區必須有卡")
+    }
+    console.log(ctx)
 }
 
 export function testKaiSo() {
