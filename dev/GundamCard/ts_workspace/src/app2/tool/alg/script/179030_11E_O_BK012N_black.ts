@@ -30,8 +30,8 @@ const prototype: CardPrototype = {
         "『常駐』：「特徴：装弾」を持つ自軍コマンドの効果で自軍Gをロールする場合、このカードを自軍Gとしてロールできる。",
       block: {
         require: {
-          id: "RequireCustom",
-          customID: { id: "「特徴：装弾」を持つ自軍コマンドの効果で自軍Gをロールする場合" }
+          id: "RequireEvent",
+          event: { id: "「特徴：装弾」を持つ自軍コマンドの効果で自軍Gをロールする場合" }
         },
         feedback: [{
           id: "FeedbackAction",

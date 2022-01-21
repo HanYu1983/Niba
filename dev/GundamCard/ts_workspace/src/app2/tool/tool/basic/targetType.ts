@@ -3,6 +3,7 @@ import {
   BattleBonus,
   CardCategory,
   CardColor,
+  GameEvent,
   PlayerID,
   RelatedPlayerSideKeyword,
   UnitPropertyKeyword,
@@ -93,13 +94,9 @@ export type TargetTypeCardCategory = {
 
 export type TargetTypeCardRole = {
   id: "「カード」的角色";
-  customID?: { id: "「特徴：装弾」を持つ自軍コマンドの効果で自軍Gをロールする場合" };
+  triggerGameEvent?: GameEvent;
   value: CardCategory[] | string | { path: [TargetTypeCard, "的角色"] };
 };
-
-
-
-
 
 export type TargetTypeCustom = {
   id: "腳本";

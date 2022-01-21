@@ -30,8 +30,16 @@ const prototype: CardPrototype = {
         "『恒常』：このカードの解決直後に、本来の記述に｢特徴：装弾｣を持つ自軍G１枚をロールできる。その場合、自軍ユニット１枚の上に＋１／＋１／＋１コイン２個を乗せる。",
       block: {
         require: {
-          id: "RequireEvent",
-          // このカードの解決直後に
+          id: "RequireTarget",
+          targets: {},
+          condition: {
+            id: "ConditionCompareCard",
+            value: [
+              { id: "カード", value: { path: [{ id: "このカード" }] } },
+              "==",
+              { id: "カード", value: { path: [{ id: "効果", value: { path: [{ id: "觸發這個事件的「効果」" }] } }, "的「カード」"] } }
+            ]
+          }
         },
         feedback: [
           {
@@ -81,7 +89,7 @@ const prototype: CardPrototype = {
                               value: [
                                 {
                                   id: "「カード」的角色",
-                                  customID: { id: "「特徴：装弾」を持つ自軍コマンドの効果で自軍Gをロールする場合" },
+                                  triggerGameEvent: { id: "「特徴：装弾」を持つ自軍コマンドの効果で自軍Gをロールする場合" },
                                   value: {
                                     path: [{ id: "カード", value: "cardA" }, "的角色"]
                                   }

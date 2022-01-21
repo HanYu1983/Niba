@@ -24,6 +24,7 @@ import {
 import { getCustomFunction } from "../../../tool/helper";
 import {
   TargetType,
+  TargetTypeBlockPayload,
   TargetTypeCustomFunctionType,
 } from "../tool/basic/targetType";
 import { log } from "../../../tool/logger";
@@ -288,11 +289,8 @@ export function getTargetType(
       if (Array.isArray(targetTypeAfterProcess.value)) {
         return targetTypeAfterProcess;
       }
-      if (targetTypeAfterProcess.customID) {
-        ctx = triggerTextEvent(ctx, {
-          id: "「ゲイン」の効果で戦闘修正を得た場合",
-          value: [0, 0, 0]
-        })
+      if (targetTypeAfterProcess.triggerGameEvent) {
+        ctx = triggerTextEvent(ctx, targetTypeAfterProcess.triggerGameEvent)
       }
       const path = targetTypeAfterProcess.value.path;
       switch (path[0].id) {
@@ -641,6 +639,28 @@ export function getTargetType(
               return {
                 id: "戦闘修正",
                 value: values
+              }
+            }
+        }
+      }
+    case "効果":
+      {
+        if (Array.isArray(targetTypeAfterProcess.value)) {
+          return targetTypeAfterProcess;
+        }
+        const path = targetTypeAfterProcess.value.path;
+        switch (path[0].id) {
+          case "觸發這個事件的「効果」":
+            {
+              if (blockPayload.cause?.id != "BlockPayloadCauseGameEvent") {
+                throw new Error("必須是BlockPayloadCauseGameEvent")
+              }
+              if (blockPayload.cause.gameEvent.id != "「効果」解決時") {
+                throw new Error("必須是「効果」解決時")
+              }
+              return {
+                id: "効果",
+                value: [blockPayload]
               }
             }
         }
