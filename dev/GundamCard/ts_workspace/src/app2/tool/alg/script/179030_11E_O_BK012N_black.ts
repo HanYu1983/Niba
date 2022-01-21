@@ -17,7 +17,6 @@ import { ManualEventCustomID } from "../manualEventCustomID";
 // 『常駐』：「特徴：装弾」を持つ自軍コマンドの効果で自軍Gをロールする場合、このカードを自軍Gとしてロールできる。
 // （常時）〔R〕：敵軍は、自分のジャンクヤードにあるカード１枚をゲームから取り除く。
 
-
 const prototype: CardPrototype = {
   title: "ショットクロー",
   characteristic: "束縛　装弾".split("　"),
