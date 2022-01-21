@@ -21,84 +21,68 @@ const prototype: CardPrototype = {
   category: "コマンド",
   color: "白",
   rollCost: ["白", null],
-  texts: [
-    {
-      id: "使用型",
-      timing: ["自軍", "配備フェイズ"],
-      description: "（自軍配備フェイズ）：「供給」を持つ自軍カード１枚をロールする。その場合、カード２枚を引く。",
-      block: {
-        contextID: `179007_02A_O_BK005C_black_${_idSeq++}`,
-        require: {
-          id: "RequireAnd",
-          and: [
-            // 「供給」を持つ自軍カード 的數量>=1
-          ]
-        },
-        feedback: [
-          {
-            id: "FeedbackAction",
-            action: [
-              {
-                id: "ActionAddBlock",
-                type: "堆疊",
-                block: {
-                  require: {
-                    id: "RequireTarget",
-                    targets: {
-                      "「供給」を持つ自軍カード１枚": {
-                        id: "カード",
-                        value: [],
-                        valueLengthInclude: [1]
-                      }
-                    },
-                    condition: {
-                      id: "ConditionAnd",
-                      and: [
-                        {
-                          id: "ConditionComparePlayer",
-                          value: [
-                            {
-                              id: "プレーヤー", value: { path: [{ id: "カード", value: "「供給」を持つ自軍カード１枚" }, "的「コントローラー」"] }
-                            },
-                            "==",
-                            {
-                              id: "プレーヤー", value: { path: [{ id: "自軍" }] }
-                            },
-                          ]
-                        },
-                        // TODO: targetText
-                        {
-                          id: "ConditionCompareString",
-                          value: [
-                            {
-                              id: "字串", value: { path: [{ id: "カード", value: "「供給」を持つ自軍カード１枚" }, "的「特徴」"] }
-                            },
-                            "hasToken",
-                            {
-                              id: "字串", value: ["供給"]
-                            },
-                          ]
-                        },
-                      ]
-                    },
-                    action: [{ id: "ActionRoll", cards: { id: "カード", value: "「供給」を持つ自軍カード１枚" } }]
-                  },
-                  feedback: [{
-                    id: "FeedbackAction",
-                    action: [{ id: "ActionDraw", count: 2 }]
-                  }]
-                }
-              }
-            ]
-          }
-        ]
-      }
-    }
-  ],
+  texts: [],
 };
 
 const playCardAsGText = createPlayCardText(prototype, { isG: true });
-const playCardText = createPlayCardText(prototype, {});
+const playCardText = createPlayCardText(prototype, {
+  command: {
+    description: "（自軍配備フェイズ）：「供給」を持つ自軍カード１枚をロールする。その場合、カード２枚を引く。",
+    timing: ["自軍", "配備フェイズ"],
+    require: {
+      id: "RequireTarget",
+      targets: {
+        "「供給」を持つ自軍カード１枚": {
+          id: "カード",
+          value: [],
+          valueLengthInclude: [1]
+        }
+      },
+      condition: {
+        id: "ConditionAnd",
+        and: [
+          {
+            id: "ConditionComparePlayer",
+            value: [
+              {
+                id: "プレーヤー", value: { path: [{ id: "カード", value: "「供給」を持つ自軍カード１枚" }, "的「コントローラー」"] }
+              },
+              "==",
+              {
+                id: "プレーヤー", value: { path: [{ id: "自軍" }] }
+              },
+            ]
+          },
+          // TODO: targetText
+          {
+            id: "ConditionCompareString",
+            value: [
+              {
+                id: "字串", value: { path: [{ id: "カード", value: "「供給」を持つ自軍カード１枚" }, "的「特徴」"] }
+              },
+              "hasToken",
+              {
+                id: "字串", value: ["供給"]
+              },
+            ]
+          },
+        ]
+      },
+      action: [{ id: "ActionSetTarget", source: "「供給」を持つ自軍カード１枚", target: "「供給」を持つ自軍カード１枚" }]
+    },
+    block: {
+      feedback: [
+        {
+          id: "FeedbackAction",
+          action: [
+            { id: "ActionRoll", cards: { id: "カード", value: "「供給」を持つ自軍カード１枚" } },
+            { id: "ActionDraw", count: 2 }
+          ]
+        }
+      ]
+    }
+  }
+});
 
 module.exports = {
   ...prototype,

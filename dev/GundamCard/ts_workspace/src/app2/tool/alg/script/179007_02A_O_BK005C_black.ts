@@ -34,8 +34,34 @@ const prototype: CardPrototype = {
           id: "RequireAnd",
           and: [
             createRollCostRequire(3, "黒"),
-            // 自軍卡數量>=1
-            // 敵軍G以外的卡數量>=1
+            {
+              id: "RequireAnd",
+              and: [
+                {
+                  id: "RequireTarget",
+                  targets: {
+                    自軍カード１枚: {
+                      id: "カード",
+                      value: [],
+                      valueLengthInclude: [1]
+                    }
+                  },
+                  action: [{ id: "ActionSetTarget", source: "自軍カード１枚", target: "自軍カード１枚" }]
+                },
+                {
+                  id: "RequireTarget",
+                  targets: {
+                    "敵軍は、G以外の自分のカード１枚": {
+                      id: "カード",
+                      value: [],
+                      valueLengthInclude: [1],
+                      responsePlayer: { id: "プレーヤー", value: { path: [{ id: "敵軍" }] } }
+                    }
+                  },
+                  action: [{ id: "ActionSetTarget", source: "敵軍は、G以外の自分のカード１枚", target: "敵軍は、G以外の自分のカード１枚" }]
+                }
+              ]
+            }
           ]
         },
         feedback: [
@@ -46,34 +72,15 @@ const prototype: CardPrototype = {
                 id: "ActionAddBlock",
                 type: "堆疊",
                 block: {
-                  require: {
-                    id: "RequireAnd",
-                    and: [
-                      {
-                        id: "RequireTarget",
-                        targets: {
-                          自軍カード１枚: {
-                            id: "カード",
-                            value: [],
-                            valueLengthInclude: [1]
-                          }
-                        },
-                        action: [{ id: "ActionDestroy", cards: { id: "カード", value: "自軍カード１枚" } }]
-                      },
-                      {
-                        id: "RequireTarget",
-                        targets: {
-                          "敵軍は、G以外の自分のカード１枚": {
-                            id: "カード",
-                            value: [],
-                            valueLengthInclude: [1],
-                            responsePlayer: { id: "プレーヤー", value: { path: [{ id: "敵軍" }] } }
-                          }
-                        },
-                        action: [{ id: "ActionDestroy", cards: { id: "カード", value: "敵軍は、G以外の自分のカード１枚" } }]
-                      }
-                    ]
-                  }
+                  feedback: [
+                    {
+                      id: "FeedbackAction",
+                      action: [
+                        { id: "ActionDestroy", cards: { id: "カード", value: "自軍カード１枚" } },
+                        { id: "ActionDestroy", cards: { id: "カード", value: "敵軍は、G以外の自分のカード１枚" } }
+                      ]
+                    }
+                  ]
                 }
               }
             ]

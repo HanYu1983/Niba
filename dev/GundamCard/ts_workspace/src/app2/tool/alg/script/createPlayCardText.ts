@@ -8,6 +8,7 @@ import {
 import {
   BlockPayload,
   createRollCostRequire,
+  Require,
   RequireCustom,
 } from "../../tool/basic/blockPayload";
 import { CardPrototype } from "../../tool/basic/gameContext";
@@ -21,6 +22,7 @@ export function createPlayCardText(
     command?: {
       description: string;
       timing: SiYouTiming;
+      require?: Require;
       block: BlockPayload;
     };
   }
@@ -315,6 +317,7 @@ export function createPlayCardText(
                   },
                 ],
               },
+              ...(options.command.require ? [options.command.require] : []),
             ],
           },
           feedback: [
