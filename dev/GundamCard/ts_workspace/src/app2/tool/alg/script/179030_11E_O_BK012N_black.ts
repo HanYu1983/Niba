@@ -17,6 +17,7 @@ import { ManualEventCustomID } from "../manualEventCustomID";
 // 『常駐』：「特徴：装弾」を持つ自軍コマンドの効果で自軍Gをロールする場合、このカードを自軍Gとしてロールできる。
 // （常時）〔R〕：敵軍は、自分のジャンクヤードにあるカード１枚をゲームから取り除く。
 
+
 const prototype: CardPrototype = {
   title: "ショットクロー",
   characteristic: "束縛　装弾".split("　"),
@@ -54,6 +55,55 @@ const prototype: CardPrototype = {
         }]
       },
     },
+    {
+      id: "使用型",
+      timing: ["常時"],
+      description: "（常時）〔R〕：敵軍は、自分のジャンクヤードにあるカード１枚をゲームから取り除く。",
+      block: {
+        require: {
+          id: "RequireTarget",
+          targets: {},
+          action: [{
+            id: "ActionRoll",
+            cards: { id: "カード", value: { path: [{ id: "このカード" }] } }
+          }]
+        },
+        feedback: [
+          {
+            id: "FeedbackAction",
+            action: [
+              {
+                id: "ActionAddBlock",
+                type: "堆疊",
+                block: {
+                  require: {
+                    id: "RequireTarget",
+                    targets: {
+                      "自分のジャンクヤードにあるカード１枚": {
+                        id: "カード",
+                        value: [],
+                        valueLengthInclude: [1]
+                      }
+                    },
+                    condition: {
+                      id: "ConditionCompareBaSyou",
+                      value: [
+                        { id: "場所", value: { path: [{ id: "カード", value: "自分のジャンクヤードにあるカード１枚" }, "的「場所」"] } },
+                        "==",
+                        { id: "場所", value: [{ id: "RelatedBaSyou", value: ["自軍", "ジャンクヤード"] }] }
+                      ]
+                    },
+                    action: [
+                      // ゲームから取り除く
+                    ]
+                  }
+                }
+              }
+            ]
+          }
+        ]
+      }
+    }
   ],
 };
 

@@ -45,6 +45,7 @@ export const FlowListView = (props: { clientID: string }) => {
               {(() => {
                 switch (flow.id) {
                   case "FlowDoEffect":
+                  case "FlowObserveEffect":
                     return (
                       <BlockPayloadView
                         enabled={true}

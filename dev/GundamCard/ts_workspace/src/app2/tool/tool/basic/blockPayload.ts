@@ -1,4 +1,4 @@
-import type { GameEvent, SiYouTiming, CardColor, PlayerID } from "./basic";
+import type { GameEvent, SiYouTiming, CardColor, PlayerID, RelatedPlayerSideKeyword } from "./basic";
 import type { Condition } from "./condition";
 import type { Action } from "./action";
 import { TargetType, TargetTypeCard } from "./targetType";
@@ -26,16 +26,6 @@ export type RequireYesNo = {
   answer: boolean | null;
 } & RequireBase;
 
-export type RequireOr = {
-  id: "RequireOr";
-  or: Require[];
-} & RequireBase;
-
-export type RequireAnd = {
-  id: "RequireAnd";
-  and: Require[];
-} & RequireBase;
-
 export type RequireSiYouTiming = {
   id: "RequireSiYouTiming";
   timing: SiYouTiming;
@@ -49,6 +39,16 @@ export type RequireCustom = {
 export type RequireScript = {
   id: "RequireScript";
   string: string;
+} & RequireBase;
+
+export type RequireOr = {
+  id: "RequireOr";
+  or: Require[];
+} & RequireBase;
+
+export type RequireAnd = {
+  id: "RequireAnd";
+  and: Require[];
 } & RequireBase;
 
 export type Require =

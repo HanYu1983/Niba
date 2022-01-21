@@ -346,6 +346,11 @@ type FlowDoEffect = {
   effectID: string;
   description?: string;
 };
+type FlowObserveEffect = {
+  id: "FlowObserveEffect";
+  effectID: string;
+  description?: string;
+};
 type FlowDeleteImmediateEffect = {
   id: "FlowDeleteImmediateEffect";
   effectID: string | null;
@@ -386,6 +391,7 @@ export type Flow =
   | FlowSetActiveEffectID
   | FlowCancelActiveEffectID
   | FlowDoEffect
+  | FlowObserveEffect
   | FlowDeleteImmediateEffect
   | FlowPassPhase
   | FlowCancelPassPhase
@@ -663,6 +669,10 @@ export function queryFlow(ctx: GameContext, playerID: string): Flow[] {
           id: "FlowWaitPlayer",
           description: "等待對方支付ActiveEffectID",
         },
+        {
+          id: "FlowObserveEffect",
+          effectID: ctx.gameState.activeEffectID,
+        },
       ];
     }
     return [
@@ -713,23 +723,23 @@ export function queryFlow(ctx: GameContext, playerID: string): Flow[] {
     return [
       ...(myEffect.length
         ? [
-            {
-              id: "FlowSetActiveEffectID",
-              effectID: myEffect[0].id || null,
-              description: "選擇一個起動效果",
-              tips: myEffect,
-            } as FlowSetActiveEffectID,
-          ]
+          {
+            id: "FlowSetActiveEffectID",
+            effectID: myEffect[0].id || null,
+            description: "選擇一個起動效果",
+            tips: myEffect,
+          } as FlowSetActiveEffectID,
+        ]
         : []),
       ...(optionEffect.length
         ? [
-            {
-              id: "FlowDeleteImmediateEffect",
-              effectID: optionEffect[0].id,
-              description: "你可以放棄這些效果",
-              tips: optionEffect,
-            } as FlowDeleteImmediateEffect,
-          ]
+          {
+            id: "FlowDeleteImmediateEffect",
+            effectID: optionEffect[0].id,
+            description: "你可以放棄這些效果",
+            tips: optionEffect,
+          } as FlowDeleteImmediateEffect,
+        ]
         : []),
     ];
   }

@@ -11,7 +11,7 @@ import { getTargetType } from "../../tool/alg/helper";
 import { getBaShou, getBaShouID } from "../../tool/tool/basic/basic";
 import { BlockPayload, Require } from "../../tool/tool/basic/blockPayload";
 import { Condition } from "../../tool/tool/basic/condition";
-import { getBlockOwner, mapEffect } from "../../tool/tool/basic/gameContext";
+import { getBlockOwner, getRequireTargetOwner, mapEffect } from "../../tool/tool/basic/gameContext";
 import { getAbsoluteBaSyou } from "../../tool/tool/basic/handleCard";
 import { TargetType } from "../../tool/tool/basic/targetType";
 import { AppContext } from "../tool/appContext";
@@ -20,7 +20,7 @@ import { CardView } from "./CardView";
 import { ConditionView } from "./ConditionView";
 import { TargetTypeView } from "./TargetTypeView";
 
-export const RequireView = (props: { clientID: string; require: Require }) => {
+export const RequireView = (props: { clientID: string; blockPayload: BlockPayload, require: Require }) => {
   const appContext = useContext(AppContext);
   const render = useMemo(() => {
     switch (props.require.id) {
@@ -33,6 +33,7 @@ export const RequireView = (props: { clientID: string; require: Require }) => {
                 <div key={r.key}>
                   <RequireView
                     clientID={props.clientID}
+                    blockPayload={props.blockPayload}
                     require={r}
                   ></RequireView>
                   ;
@@ -50,6 +51,7 @@ export const RequireView = (props: { clientID: string; require: Require }) => {
                 <div key={r.key}>
                   <RequireView
                     clientID={props.clientID}
+                    blockPayload={props.blockPayload}
                     require={r}
                   ></RequireView>
                   ;
@@ -62,9 +64,11 @@ export const RequireView = (props: { clientID: string; require: Require }) => {
         return (
           <div style={{ border: "1px solid black" }}>
             {Object.entries(props.require.targets).map(([k, v]) => {
+              const responsePlayer = getRequireTargetOwner(appContext.viewModel.model, props.blockPayload, props.require, v)
+              const isTargetOwner = responsePlayer == props.clientID
               return (
                 <div key={k} style={{ border: "1px solid black" }}>
-                  <button
+                  {isTargetOwner ? <button
                     onClick={() => {
                       OnEvent.next({
                         id: "OnClickRequireTargetConfirm",
@@ -74,9 +78,9 @@ export const RequireView = (props: { clientID: string; require: Require }) => {
                       });
                     }}
                   >
-                    {k}
-                    <TargetTypeView target={v}></TargetTypeView>
-                  </button>
+                    設定{k}
+                  </button> : null}
+                  <TargetTypeView target={v}></TargetTypeView>
                 </div>
               );
             })}
@@ -95,7 +99,7 @@ export const RequireView = (props: { clientID: string; require: Require }) => {
           </div>
         );
     }
-  }, [props.require, props.clientID]);
+  }, [appContext.viewModel.model, props.require, props.blockPayload, props.clientID]);
   return (
     <div style={{ border: "1px solid black" }}>
       {props.require.key}

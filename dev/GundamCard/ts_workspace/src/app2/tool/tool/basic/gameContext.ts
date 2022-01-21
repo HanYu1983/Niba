@@ -6,7 +6,8 @@ import {
   mapCard,
   Table,
 } from "../../../../tool/table";
-import type {
+import { getTargetType } from "../../alg/helper";
+import {
   GameEvent,
   CardText,
   Timing,
@@ -17,6 +18,7 @@ import type {
   PlayerID,
   BaSyou,
   RelatedBaSyou,
+  getOpponentPlayerID,
 } from "./basic";
 import { getBaShou, TIMING_CHART } from "./basic";
 import { BlockPayload, Require, RequireAnd, RequireOr } from "./blockPayload";
@@ -219,4 +221,26 @@ export function getBlockOwner(
     case "BlockPayloadCauseGameRule":
       return blockPayload.cause.playerID;
   }
+}
+
+export function getRequireTargetOwner(
+  ctx: GameContext,
+  blockPayload: BlockPayload,
+  require: Require,
+  target: TargetType,
+): PlayerID {
+  if (target.responsePlayer == null) {
+    return getBlockOwner(ctx, blockPayload)
+  }
+  if (require.id != "RequireTarget") {
+    return getBlockOwner(ctx, blockPayload)
+  }
+  const targetType = getTargetType(ctx, blockPayload, require.targets, target.responsePlayer)
+  if (targetType.id != "プレーヤー") {
+    throw new Error("must プレーヤー")
+  }
+  if (!Array.isArray(targetType.value)) {
+    throw new Error("must real value")
+  }
+  return targetType.value[0]
 }

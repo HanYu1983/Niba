@@ -4,8 +4,9 @@ import {
   BattleBonus,
   CardCategory,
   CardColor,
+  getOpponentPlayerID,
 } from "../tool/basic/basic";
-import { CardPrototype, GameContext } from "../tool/basic/gameContext";
+import { CardPrototype, GameContext, getBlockOwner } from "../tool/basic/gameContext";
 import { BlockPayload } from "../tool/basic/blockPayload";
 import { getCard, mapCard, Card } from "../../../tool/table";
 import {
@@ -223,6 +224,10 @@ export function getTargetType(
       }
       const path = targetTypeAfterProcess.value.path;
       switch (path[0].id) {
+        case "自軍":
+          return { id: "プレーヤー", value: [getBlockOwner(ctx, blockPayload)] }
+        case "敵軍":
+          return { id: "プレーヤー", value: [getOpponentPlayerID(getBlockOwner(ctx, blockPayload))] }
         case "カード": {
           const targetType = getTargetType(ctx, blockPayload, targets, path[0]);
           if (targetType.id != "カード") {
@@ -242,6 +247,8 @@ export function getTargetType(
               case "的「コントローラー」": {
                 return getCardController(ctx, cardID);
               }
+              default:
+                throw new Error("not support:" + path[1])
             }
           });
           return {

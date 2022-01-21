@@ -85,6 +85,7 @@ export const BlockPayloadView = (props: {
         {props.enabled && block.require ? (
           <RequireView
             clientID={props.clientID}
+            blockPayload={block}
             require={block.require}
           ></RequireView>
         ) : null}
