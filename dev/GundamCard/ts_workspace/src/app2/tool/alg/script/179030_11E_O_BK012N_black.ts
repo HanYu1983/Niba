@@ -1,0 +1,54 @@
+import { getCustomFunctionString } from "../../../../tool/helper";
+import { CardPrototype, GameContext } from "../../tool/basic/gameContext";
+import { createRollCostRequire } from "../../tool/basic/blockPayload";
+import { BlockPayload } from "../../tool/basic/blockPayload";
+import {
+  TargetType,
+  TargetTypeCustomFunctionType,
+} from "../../tool/basic/targetType";
+import { createPlayCardText } from "./createPlayCardText";
+
+// 179030_11E_O_BK012N_black
+// N
+// V
+// ショットクロー
+// 束縛　装弾
+// 『常駐』：「特徴：装弾」を持つ自軍コマンドの効果で自軍Gをロールする場合、このカードを自軍Gとしてロールできる。
+// （常時）〔R〕：敵軍は、自分のジャンクヤードにあるカード１枚をゲームから取り除く。
+
+const prototype: CardPrototype = {
+  title: "ショットクロー",
+  characteristic: "束縛　装弾".split("　"),
+  category: "オペレーション",
+  color: "黒",
+  rollCost: ["黒"],
+  texts: [
+    {
+      id: "自動型",
+      category: "起動", // 規則寫常駐應該是寫錯
+      description:
+        "『常駐』：「特徴：装弾」を持つ自軍コマンドの効果で自軍Gをロールする場合、このカードを自軍Gとしてロールできる。",
+      block: {
+        require: {
+          id: "RequireCustom",
+          customID: { id: "「特徴：装弾」を持つ自軍コマンドの効果で自軍Gをロールする場合" }
+        },
+        feedback: [{
+          id: "FeedbackAction",
+          action: [{
+            id: "ActionAddEffect",
+            effect: { id: "GameEffectCustom", customID: "このカードを自軍Gとしてロールできる" }
+          }]
+        }]
+      },
+    },
+  ],
+};
+
+const playCardAsGText = createPlayCardText(prototype, { isG: true });
+const playCardText = createPlayCardText(prototype, {});
+
+module.exports = {
+  ...prototype,
+  texts: [...prototype.texts, playCardAsGText, playCardText],
+};

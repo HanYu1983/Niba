@@ -7,12 +7,22 @@ import {
   RelatedPlayerSideKeyword,
   UnitPropertyKeyword,
 } from "./basic";
-import { GameContext } from "./gameContext";
+import { GameContext, GameEffect } from "./gameContext";
 import { BlockPayload } from "./blockPayload";
+
+export type TargetTypeBlockPayload = {
+  id: "効果",
+  value: BlockPayload[] | string | { path: [{ id: "觸發這個事件的「効果」" }] }
+}
+
+export type TargetTypeBattleBonus = {
+  id: "戦闘修正",
+  value: BattleBonus[] | string | { path: [TargetTypeBlockPayload, "の「ゲイン」の「効果」の戦闘修正"] }
+}
 
 export type TargetTypeCard = {
   id: "カード";
-  value: string[] | string | { path: [{ id: "このカード" }] };
+  value: string[] | string | { path: [{ id: "このカード" }] | [TargetTypeBlockPayload, "的「カード」"] };
   tipID?: string[];
   valueLengthInclude?: number[];
 };
@@ -83,13 +93,13 @@ export type TargetTypeCardCategory = {
 
 export type TargetTypeCardRole = {
   id: "「カード」的角色";
+  customID?: { id: "「特徴：装弾」を持つ自軍コマンドの効果で自軍Gをロールする場合" };
   value: CardCategory[] | string | { path: [TargetTypeCard, "的角色"] };
 };
 
-export type TargetTypeBattleBonus = {
-  id: "戦闘修正",
-  value: BattleBonus[] | string | { path: [{ id: "「ゲイン」の効果の戦闘修正" }] }
-}
+
+
+
 
 export type TargetTypeCustom = {
   id: "腳本";
@@ -116,7 +126,8 @@ export type TargetType =
   | TargetTypeBaSyou
   | TargetTypeDamage
   | TargetTypeCustom
-  | TargetTypeBattleBonus;
+  | TargetTypeBattleBonus
+  | TargetTypeBlockPayload;
 
 export type TargetTypeCustomFunctionType = (
   ctx: GameContext,

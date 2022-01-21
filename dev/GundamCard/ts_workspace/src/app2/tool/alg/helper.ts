@@ -1,6 +1,7 @@
 import {
   AbsoluteBaSyou,
   BaSyou,
+  BattleBonus,
   CardCategory,
   CardColor,
 } from "../tool/basic/basic";
@@ -27,6 +28,7 @@ import {
 } from "../tool/basic/targetType";
 import { log } from "../../../tool/logger";
 import { getPrototype } from "./script";
+import { triggerTextEvent } from "./handleGameContext";
 
 let idSeq = 0;
 export function getCardState(
@@ -143,20 +145,20 @@ export function getTargetType(
   if (typeof targetTypeAfterProcess.value == "string") {
     throw new Error("must only one layer");
   }
-  const getCardID = () => {
-    if (blockPayload.cause == null) {
+  const getCardID = (block: BlockPayload) => {
+    if (block.cause == null) {
       throw new Error("must has cause");
     }
-    switch (blockPayload.cause.id) {
+    switch (block.cause.id) {
       case "BlockPayloadCauseGameEvent":
       case "BlockPayloadCauseUpdateCommand":
       case "BlockPayloadCauseUpdateEffect":
-        if (blockPayload.cause.cardID == null) {
+        if (block.cause.cardID == null) {
           throw new Error("[getTarget] このカード not found");
         }
-        return blockPayload.cause.cardID;
+        return block.cause.cardID;
       default:
-        throw new Error("not support cause:" + blockPayload.cause.id);
+        throw new Error("not support cause:" + block.cause.id);
     }
   };
   log("getTargetType", "targetTypeAfterProcess");
@@ -181,8 +183,36 @@ export function getTargetType(
         case "このカード":
           return {
             id: "カード",
-            value: [getCardID()],
+            value: [getCardID(blockPayload)],
           };
+        case "効果": {
+          const targetType = getTargetType(ctx, blockPayload, targets, path[0]);
+          if (targetType.id != "効果") {
+            throw new Error("must be 効果");
+          }
+          if (!Array.isArray(targetType.value)) {
+            throw new Error("must be real value");
+          }
+          const values = targetType.value.map((blockPayload) => {
+            switch (path[1]) {
+              case "的「カード」": {
+                if (blockPayload.cause?.id != "BlockPayloadCauseGameEvent") {
+                  throw new Error("必須是BlockPayloadCauseGameEvent")
+                }
+                if (blockPayload.cause.gameEvent.id != "「効果」解決時") {
+                  throw new Error("必須是「効果」解決時")
+                }
+                return getCardID(blockPayload)
+              }
+              default:
+                throw new Error(`unknown path[1]: ${path[1]}`)
+            }
+          });
+          return {
+            id: "カード",
+            value: values,
+          };
+        }
       }
       break;
     }
@@ -257,6 +287,12 @@ export function getTargetType(
     case "「カード」的角色": {
       if (Array.isArray(targetTypeAfterProcess.value)) {
         return targetTypeAfterProcess;
+      }
+      if (targetTypeAfterProcess.customID) {
+        ctx = triggerTextEvent(ctx, {
+          id: "「ゲイン」の効果で戦闘修正を得た場合",
+          value: [0, 0, 0]
+        })
       }
       const path = targetTypeAfterProcess.value.path;
       switch (path[0].id) {
@@ -379,7 +415,7 @@ export function getTargetType(
             if (v.id == "AbsoluteBaSyou") {
               return v;
             }
-            return getAbsoluteBaSyou(v, ctx, getCardID());
+            return getAbsoluteBaSyou(v, ctx, getCardID(blockPayload));
           }),
         };
       }
@@ -586,10 +622,26 @@ export function getTargetType(
         }
         const path = targetTypeAfterProcess.value.path;
         switch (path[0].id) {
-          case "「ゲイン」の効果の戦闘修正":
-            return {
-              id: "戦闘修正",
-              value: [[0, 0, 0]]
+          case "効果":
+            {
+              const targetType = getTargetType(ctx, blockPayload, targets, path[0]);
+              if (targetType.id != "効果") {
+                throw new Error("must be 効果");
+              }
+              if (!Array.isArray(targetType.value)) {
+                throw new Error("must be real value");
+              }
+              const values = targetType.value.map((block): BattleBonus => {
+                switch (path[1]) {
+                  case "の「ゲイン」の「効果」の戦闘修正": {
+                    return [0, 0, 0]
+                  }
+                }
+              });
+              return {
+                id: "戦闘修正",
+                value: values
+              }
             }
         }
       }

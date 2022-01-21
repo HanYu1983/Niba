@@ -52,56 +52,46 @@ const prototype: CardPrototype = {
                           cardA: {
                             id: "カード",
                             value: [],
+                            valueLengthInclude: [1]
                           },
                         },
                         condition: {
                           id: "ConditionAnd",
                           and: [
                             {
-                              id: "ConditionCompareNumber",
+                              id: "ConditionComparePlayer",
                               value: [
                                 {
-                                  id: "數字",
+                                  id: "プレーヤー",
                                   value: {
-                                    path: [
-                                      {
-                                        id: "參照",
-                                        value: "cardA",
-                                      },
-                                      "的陣列長度",
-                                    ],
-                                  },
+                                    path: [{ id: "カード", value: "cardA" }, "的「コントローラー」"]
+                                  }
                                 },
                                 "==",
                                 {
-                                  id: "數字",
-                                  value: [1],
-                                },
-                              ],
+                                  id: "プレーヤー",
+                                  value: {
+                                    path: [{ id: "カード", value: { path: [{ id: "このカード" }] } }, "的「コントローラー」"]
+                                  }
+                                }
+                              ]
                             },
                             {
-                              id: "ConditionCompareBaSyou",
+                              id: "ConditionCompareRole",
                               value: [
                                 {
-                                  id: "場所",
+                                  id: "「カード」的角色",
+                                  customID: { id: "「特徴：装弾」を持つ自軍コマンドの効果で自軍Gをロールする場合" },
                                   value: {
-                                    path: [
-                                      { id: "カード", value: "cardA" },
-                                      "的「場所」",
-                                    ],
-                                  },
+                                    path: [{ id: "カード", value: "cardA" }, "的角色"]
+                                  }
                                 },
                                 "==",
                                 {
-                                  id: "場所",
-                                  value: [
-                                    {
-                                      id: "RelatedBaSyou",
-                                      value: ["自軍", "Gゾーン"],
-                                    },
-                                  ],
-                                },
-                              ],
+                                  id: "「カード」的角色",
+                                  value: ["グラフィック"]
+                                }
+                              ]
                             },
                             {
                               id: "ConditionCompareString",
