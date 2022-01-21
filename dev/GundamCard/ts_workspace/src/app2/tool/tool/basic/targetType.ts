@@ -4,6 +4,8 @@ import {
   CardCategory,
   CardColor,
   GameEvent,
+  GameEventOnAfterEffect,
+  GameEventOnManualEvent,
   PlayerID,
   RelatedPlayerSideKeyword,
   UnitPropertyKeyword,
@@ -11,19 +13,24 @@ import {
 import { GameContext, GameEffect } from "./gameContext";
 import { BlockPayload } from "./blockPayload";
 
-export type TargetTypeBlockPayload = {
-  id: "効果",
-  value: BlockPayload[] | string | { path: [{ id: "觸發這個事件的「効果」" }] }
+export type TargetTypeGameEventOnAfterEffect = {
+  id: "「効果」解決時",
+  value: GameEventOnAfterEffect[] | string | { path: [{ id: "觸發這個事件的「効果」" }] }
+}
+
+export type TargetTypeGameEventOnManualEvent = {
+  id: "手動事件發生時",
+  value: GameEventOnManualEvent[] | string | { path: [{ id: "觸發這個事件的手動事件" }] }
 }
 
 export type TargetTypeBattleBonus = {
   id: "戦闘修正",
-  value: BattleBonus[] | string | { path: [TargetTypeBlockPayload, "の「ゲイン」の「効果」の戦闘修正"] }
+  value: BattleBonus[] | string | { path: [TargetTypeGameEventOnManualEvent, "の「ゲイン」の「効果」の戦闘修正"] }
 }
 
 export type TargetTypeCard = {
   id: "カード";
-  value: string[] | string | { path: [{ id: "このカード" }] | [TargetTypeBlockPayload, "的「カード」"] };
+  value: string[] | string | { path: [{ id: "このカード" }] | [TargetTypeGameEventOnAfterEffect, "的「カード」"] };
   tipID?: string[];
   valueLengthInclude?: number[];
 };
@@ -94,8 +101,8 @@ export type TargetTypeCardCategory = {
 
 export type TargetTypeCardRole = {
   id: "「カード」的角色";
-  triggerGameEvent?: GameEvent;
-  value: CardCategory[] | string | { path: [TargetTypeCard, "的角色"] };
+  triggerGameEvent?: GameEventOnManualEvent;
+  value: CardCategory[] | string | { path: [TargetTypeCard, "的角色" | "當成横置裝彈G時的角色"] };
 };
 
 export type TargetTypeCustom = {
@@ -124,7 +131,8 @@ export type TargetType =
   | TargetTypeDamage
   | TargetTypeCustom
   | TargetTypeBattleBonus
-  | TargetTypeBlockPayload;
+  | TargetTypeGameEventOnAfterEffect
+  | TargetTypeGameEventOnManualEvent;
 
 export type TargetTypeCustomFunctionType = (
   ctx: GameContext,

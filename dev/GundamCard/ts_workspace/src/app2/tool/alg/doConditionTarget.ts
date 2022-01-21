@@ -110,15 +110,9 @@ export function doConditionTarget(
           break;
         case "ConditionCompareCardCategory":
           if (target1.id != "カードの種類") {
-            log("doConditionTarget", condition)
-            log("doConditionTarget", target1)
-            log("doConditionTarget", target2)
             return "type not right: ConditionCompareCardCategory";
           }
           if (target2.id != "カードの種類") {
-            log("doConditionTarget", condition)
-            log("doConditionTarget", target1)
-            log("doConditionTarget", target2)
             return "type not right: ConditionCompareCardCategory";
           }
           break;

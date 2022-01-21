@@ -196,18 +196,18 @@ export type GameEventOnTiming = {
   id: "GameEventOnTiming";
   timing: Timing;
 };
-type GameEvent1 = {
-  id: "「ゲイン」の効果で戦闘修正を得た場合"
-  value: BattleBonus
-}
-type GameEvent2 = {
+
+export type GameEventOnAfterEffect = {
   id: "「効果」解決時",
   block: BlockPayload
 }
-type GameEvent3 = {
-  id: "「特徴：装弾」を持つ自軍コマンドの効果で自軍Gをロールする場合",
+
+export type GameEventOnManualEvent = {
+  id: "手動事件發生時",
+  customID: any;
 }
-export type GameEvent = GameEventOnTiming | GameEvent1 | GameEvent2 | GameEvent3;
+
+export type GameEvent = GameEventOnTiming | GameEventOnAfterEffect | GameEventOnManualEvent;
 
 export type TokuSyuKouKa =
   | ["高機動"]

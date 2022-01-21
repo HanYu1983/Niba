@@ -31,7 +31,6 @@ const prototype: CardPrototype = {
       block: {
         require: {
           id: "RequireEvent",
-          event: { id: "「特徴：装弾」を持つ自軍コマンドの効果で自軍Gをロールする場合" }
         },
         feedback: [{
           id: "FeedbackAction",

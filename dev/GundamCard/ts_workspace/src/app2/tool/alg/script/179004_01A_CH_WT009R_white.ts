@@ -34,11 +34,6 @@ const prototype: CardPrototype = {
       block: {
         require: {
           id: "RequireEvent",
-          event: {
-            // TODO
-            id: "「ゲイン」の効果で戦闘修正を得た場合",
-            value: [0, 0, 0]
-          }
         },
         feedback: [
           {
@@ -58,7 +53,7 @@ const prototype: CardPrototype = {
                       },
                       "「ゲイン」の「効果」の戦闘修正": {
                         id: "戦闘修正",
-                        value: { path: [{ id: "効果", value: { path: [{ id: "觸發這個事件的「効果」" }] } }, "の「ゲイン」の「効果」の戦闘修正"] }
+                        value: { path: [{ id: "手動事件發生時", value: { path: [{ id: "觸發這個事件的手動事件" }] } }, "の「ゲイン」の「効果」の戦闘修正"] }
                       }
                     },
                   },

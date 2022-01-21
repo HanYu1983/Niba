@@ -7,6 +7,7 @@ import {
   TargetTypeCustomFunctionType,
 } from "../../tool/basic/targetType";
 import { createPlayCardText } from "./createPlayCardText";
+import { ManualEventCustomID } from "../manualEventCustomID";
 
 // 179030_11E_C_BL076S_blue
 // S
@@ -37,7 +38,7 @@ const prototype: CardPrototype = {
             value: [
               { id: "カード", value: { path: [{ id: "このカード" }] } },
               "==",
-              { id: "カード", value: { path: [{ id: "効果", value: { path: [{ id: "觸發這個事件的「効果」" }] } }, "的「カード」"] } }
+              { id: "カード", value: { path: [{ id: "「効果」解決時", value: { path: [{ id: "觸發這個事件的「効果」" }] } }, "的「カード」"] } }
             ]
           }
         },
@@ -89,9 +90,9 @@ const prototype: CardPrototype = {
                               value: [
                                 {
                                   id: "「カード」的角色",
-                                  triggerGameEvent: { id: "「特徴：装弾」を持つ自軍コマンドの効果で自軍Gをロールする場合" },
+                                  triggerGameEvent: { id: "手動事件發生時", customID: { id: "「特徴：装弾」を持つ自軍コマンドの効果で自軍Gをロールする場合" } as ManualEventCustomID },
                                   value: {
-                                    path: [{ id: "カード", value: "cardA" }, "的角色"]
+                                    path: [{ id: "カード", value: "cardA" }, "當成横置裝彈G時的角色"]
                                   }
                                 },
                                 "==",

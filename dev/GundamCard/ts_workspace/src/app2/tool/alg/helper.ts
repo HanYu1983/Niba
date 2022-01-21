@@ -24,12 +24,12 @@ import {
 import { getCustomFunction } from "../../../tool/helper";
 import {
   TargetType,
-  TargetTypeBlockPayload,
   TargetTypeCustomFunctionType,
 } from "../tool/basic/targetType";
 import { log } from "../../../tool/logger";
 import { getPrototype } from "./script";
 import { triggerTextEvent } from "./handleGameContext";
+import { ManualEventCustomID } from "./manualEventCustomID";
 
 let idSeq = 0;
 export function getCardState(
@@ -186,24 +186,24 @@ export function getTargetType(
             id: "カード",
             value: [getCardID(blockPayload)],
           };
-        case "効果": {
+        case "「効果」解決時": {
           const targetType = getTargetType(ctx, blockPayload, targets, path[0]);
-          if (targetType.id != "効果") {
-            throw new Error("must be 効果");
+          if (targetType.id != "「効果」解決時") {
+            throw new Error("must be 「効果」解決時");
           }
           if (!Array.isArray(targetType.value)) {
             throw new Error("must be real value");
           }
-          const values = targetType.value.map((blockPayload) => {
+          const values = targetType.value.map((evt) => {
             switch (path[1]) {
               case "的「カード」": {
-                if (blockPayload.cause?.id != "BlockPayloadCauseGameEvent") {
+                if (evt.block.cause?.id != "BlockPayloadCauseGameEvent") {
                   throw new Error("必須是BlockPayloadCauseGameEvent")
                 }
-                if (blockPayload.cause.gameEvent.id != "「効果」解決時") {
+                if (evt.block.cause.gameEvent.id != "「効果」解決時") {
                   throw new Error("必須是「効果」解決時")
                 }
-                return getCardID(blockPayload)
+                return getCardID(evt.block)
               }
               default:
                 throw new Error(`unknown path[1]: ${path[1]}`)
@@ -307,6 +307,7 @@ export function getTargetType(
           // }
           const values = targetType.value.map((cardID): CardCategory => {
             switch (path[1]) {
+              case "當成横置裝彈G時的角色":
               case "的角色": {
                 const {
                   value: [_, baSyou],
@@ -620,19 +621,24 @@ export function getTargetType(
         }
         const path = targetTypeAfterProcess.value.path;
         switch (path[0].id) {
-          case "効果":
+          case "手動事件發生時":
             {
               const targetType = getTargetType(ctx, blockPayload, targets, path[0]);
-              if (targetType.id != "効果") {
-                throw new Error("must be 効果");
+              if (targetType.id != "手動事件發生時") {
+                throw new Error("must be 手動事件發生時");
               }
               if (!Array.isArray(targetType.value)) {
                 throw new Error("must be real value");
               }
-              const values = targetType.value.map((block): BattleBonus => {
+
+              const values = targetType.value.map(evt => {
                 switch (path[1]) {
                   case "の「ゲイン」の「効果」の戦闘修正": {
-                    return [0, 0, 0]
+                    const customID: ManualEventCustomID = evt.customID
+                    if (customID.id != "「ゲイン」の効果で戦闘修正を得た場合") {
+                      throw new Error("must be 「ゲイン」の効果で戦闘修正を得た場合")
+                    }
+                    return customID.bonus
                   }
                 }
               });
@@ -643,7 +649,7 @@ export function getTargetType(
             }
         }
       }
-    case "効果":
+    case "「効果」解決時":
       {
         if (Array.isArray(targetTypeAfterProcess.value)) {
           return targetTypeAfterProcess;
@@ -659,8 +665,30 @@ export function getTargetType(
                 throw new Error("必須是「効果」解決時")
               }
               return {
-                id: "効果",
-                value: [blockPayload]
+                id: "「効果」解決時",
+                value: [blockPayload.cause.gameEvent]
+              }
+            }
+        }
+      }
+    case "手動事件發生時":
+      {
+        if (Array.isArray(targetTypeAfterProcess.value)) {
+          return targetTypeAfterProcess;
+        }
+        const path = targetTypeAfterProcess.value.path;
+        switch (path[0].id) {
+          case "觸發這個事件的手動事件":
+            {
+              if (blockPayload.cause?.id != "BlockPayloadCauseGameEvent") {
+                throw new Error("必須是BlockPayloadCauseGameEvent")
+              }
+              if (blockPayload.cause.gameEvent.id != "手動事件發生時") {
+                throw new Error("必須是手動事件發生時")
+              }
+              return {
+                id: "手動事件發生時",
+                value: [blockPayload.cause.gameEvent]
               }
             }
         }
