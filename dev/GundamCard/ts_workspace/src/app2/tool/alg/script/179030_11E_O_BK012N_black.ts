@@ -7,6 +7,7 @@ import {
   TargetTypeCustomFunctionType,
 } from "../../tool/basic/targetType";
 import { createPlayCardText } from "./createPlayCardText";
+import { ManualEventCustomID } from "../manualEventCustomID";
 
 // 179030_11E_O_BK012N_black
 // N
@@ -30,7 +31,19 @@ const prototype: CardPrototype = {
         "『常駐』：「特徴：装弾」を持つ自軍コマンドの効果で自軍Gをロールする場合、このカードを自軍Gとしてロールできる。",
       block: {
         require: {
-          id: "RequireEvent",
+          id: "RequireTarget",
+          targets: {},
+          condition: {
+            id: "ConditionCompareGameEventOnManualEvent",
+            value: [
+              { id: "手動事件發生時", value: { path: [{ id: "觸發這個事件的手動事件" }] } },
+              "==",
+              {
+                id: "手動事件發生時",
+                value: [{ id: "手動事件發生時", customID: { id: "「特徴：装弾」を持つ自軍コマンドの効果で自軍Gをロールする場合" } as ManualEventCustomID }]
+              }
+            ]
+          }
         },
         feedback: [{
           id: "FeedbackAction",

@@ -4,6 +4,7 @@ import type {
   CardCategory,
   RelatedPlayerSideKeyword,
   UnitPropertyKeyword,
+  GameEventOnManualEvent,
 } from "./basic";
 import {
   TargetTypeBaSyou,
@@ -12,6 +13,7 @@ import {
   TargetTypeCardCategory,
   TargetTypeCardColor,
   TargetTypeCardRole,
+  TargetTypeGameEventOnManualEvent,
   TargetTypeNumber,
   TargetTypePlayer,
   TargetTypeString,
@@ -109,6 +111,15 @@ type ConditionCompareCardColor = {
   ];
 };
 
+type ConditionCompareGameEventOnManualEvent = {
+  id: "ConditionCompareGameEventOnManualEvent",
+  value: [
+    TargetTypeGameEventOnManualEvent,
+    ConditionCompareBooleanOperator,
+    TargetTypeGameEventOnManualEvent
+  ]
+}
+
 export type Condition =
   | ConditionCompareNumber
   | ConditionCompareString
@@ -119,6 +130,7 @@ export type Condition =
   | ConditionCompareCardColor
   | ConditionComparePlayer
   | ConditionCompareBaSyou
+  | ConditionCompareGameEventOnManualEvent
   | ConditionNot
   | ConditionOr
   | ConditionAnd;
