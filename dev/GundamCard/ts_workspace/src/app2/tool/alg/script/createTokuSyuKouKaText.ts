@@ -2,7 +2,7 @@ import { createRollCostRequire, Require } from "../../tool/basic/blockPayload";
 import { CardText, TokuSyuKouKa } from "../../tool/basic/basic";
 import { RequireCustomID } from "../../tool/basic/requireCustom";
 
-export type RequireMacro = "このカードが戦闘エリアにいる場合"
+export type RequireMacro = "このカードが戦闘エリアにいる場合";
 export function createRequireMacro(macro: RequireMacro): Require {
   switch (macro) {
     case "このカードが戦闘エリアにいる場合":
@@ -18,21 +18,31 @@ export function createRequireMacro(macro: RequireMacro): Require {
                 {
                   id: "場所",
                   value: {
-                    path: [{ id: "カード", value: { path: [{ id: "このカード" }] } }, "的「場所」"]
-                  }
-                }, 'in',
+                    path: [
+                      { id: "カード", value: { path: [{ id: "このカード" }] } },
+                      "的「場所」",
+                    ],
+                  },
+                },
+                "in",
                 {
                   id: "場所",
                   value: [
-                    { id: "RelatedBaSyou", value: ["自軍", "戦闘エリア（左）"] },
-                    { id: "RelatedBaSyou", value: ["自軍", "戦闘エリア（右）"] }
-                  ]
-                }
-              ]
-            }
-          ]
-        }
-      }
+                    {
+                      id: "RelatedBaSyou",
+                      value: ["自軍", "戦闘エリア（左）"],
+                    },
+                    {
+                      id: "RelatedBaSyou",
+                      value: ["自軍", "戦闘エリア（右）"],
+                    },
+                  ],
+                },
+              ],
+            },
+          ],
+        },
+      };
   }
 }
 
@@ -46,126 +56,179 @@ export function createTokuSyuKouKaText(
       return {
         id: "特殊型",
         description: toku,
-        texts: [{
-          id: "使用型",
-          timing: ["ダメージ判定ステップ"],
-          description: JSON.stringify(toku),
-          block: {
-            require: {
-              id: "RequireAnd",
-              and: [
-                createRollCostRequire(options.cost || 0, null),
-              ]
-            },
-            feedback: [
-              {
-                id: "FeedbackAction",
-                action: [
-                  {
-                    id: "ActionAddBlock",
-                    type: "堆疊",
-                    block: {
-                      require: {
-                        id: "RequireAnd",
-                        and: [
-                          createRequireMacro("このカードが戦闘エリアにいる場合"),
-                          // 翻開本國最上方的卡
-                          {
-                            id: "RequireTarget",
-                            targets: {
-                              "自軍本國上的卡1張": {
-                                id: "カード",
-                                value: {
-                                  path: [
-                                    {
-                                      id: "カード",
-                                      value: {
-                                        path: [
-                                          {
-                                            id: "場所",
-                                            value: [{ id: "RelatedBaSyou", value: ["自軍", "本国"] }]
-                                          }, "的「カード」"
-                                        ]
-                                      }
-                                    },
-                                    "の上のカードX枚", 1
-                                  ]
-                                }
+        texts: [
+          {
+            id: "使用型",
+            timing: ["ダメージ判定ステップ"],
+            description: JSON.stringify(toku),
+            block: {
+              require: {
+                id: "RequireAnd",
+                and: [createRollCostRequire(options.cost || 0, null)],
+              },
+              feedback: [
+                {
+                  id: "FeedbackAction",
+                  action: [
+                    {
+                      id: "ActionAddBlock",
+                      type: "堆疊",
+                      block: {
+                        require: {
+                          id: "RequireAnd",
+                          and: [
+                            createRequireMacro(
+                              "このカードが戦闘エリアにいる場合"
+                            ),
+                            // 翻開本國最上方的卡
+                            {
+                              id: "RequireTarget",
+                              targets: {
+                                // xxx: [
+                                //   "カード", {},
+                                //   [
+                                //     "カード", {},
+                                //     [
+                                //       "場所", {},
+                                //       [
+                                //         "const",
+                                //         {
+                                //           id: "RelatedBaSyou",
+                                //           value: ["自軍", "本国"],
+                                //         },
+                                //       ],
+                                //     ],
+                                //     "的「カード」",
+                                //   ],
+                                //   "の上のカードX枚",
+                                // ],
+                                自軍本國上的卡1張: {
+                                  id: "カード",
+                                  value: {
+                                    path: [
+                                      {
+                                        id: "カード",
+                                        value: {
+                                          path: [
+                                            {
+                                              id: "場所",
+                                              value: [
+                                                {
+                                                  id: "RelatedBaSyou",
+                                                  value: ["自軍", "本国"],
+                                                },
+                                              ],
+                                            },
+                                            "的「カード」",
+                                          ],
+                                        },
+                                      },
+                                      "の上のカードX枚",
+                                      1,
+                                    ],
+                                  },
+                                },
                               },
-                            },
-                            // TODO: 比較G標誌
-                            condition: {
-                              id: "ConditionCompareString",
-                              value: [
-                                {
-                                  id: "字串",
-                                  value: {
-                                    path: [{ id: "カード", value: "自軍本國上的卡1張" }, "的「名称」"]
-                                  }
-                                },
-                                "==",
-                                {
-                                  id: "字串",
-                                  value: {
-                                    path: [{ id: "カード", value: { path: [{ id: "このカード" }] } }, "的「名称」"]
-                                  }
-                                }
-                              ]
-                            },
-                            action: [
-                              {
-                                id: "ActionSetFace",
-                                cards: {
-                                  id: "カード", value: "自軍本國上的卡1張"
-                                },
-                                faceDown: {
-                                  id: "布林", value: [false]
-                                }
-                              }
-                            ]
-                          },
-                          // 獲得的戰鬥修正
-                          {
-                            id: "RequireTarget",
-                            targets: {
-                              "自軍本國上的卡1張的戰鬥修正": {
-                                id: "戦闘修正",
-                                value: {
-                                  path: [
-                                    {
-                                      id: "數字",
-                                      value: {
-                                        path: [{ id: "カード", value: "自軍本國上的卡1張" }, "的「ロールコストの合計値」"]
-                                      }
+                              // TODO: 比較G標誌
+                              condition: {
+                                id: "ConditionCompareString",
+                                value: [
+                                  {
+                                    id: "字串",
+                                    value: {
+                                      path: [
+                                        {
+                                          id: "カード",
+                                          value: "自軍本國上的卡1張",
+                                        },
+                                        "的「名称」",
+                                      ],
                                     },
-                                    "の戦闘修正"
-                                  ]
-                                }
-                              }
+                                  },
+                                  "==",
+                                  {
+                                    id: "字串",
+                                    value: {
+                                      path: [
+                                        {
+                                          id: "カード",
+                                          value: {
+                                            path: [{ id: "このカード" }],
+                                          },
+                                        },
+                                        "的「名称」",
+                                      ],
+                                    },
+                                  },
+                                ],
+                              },
+                              action: [
+                                {
+                                  id: "ActionSetFace",
+                                  cards: {
+                                    id: "カード",
+                                    value: "自軍本國上的卡1張",
+                                  },
+                                  faceDown: {
+                                    id: "布林",
+                                    value: [false],
+                                  },
+                                },
+                              ],
                             },
+                            // 獲得的戰鬥修正
+                            {
+                              id: "RequireTarget",
+                              targets: {
+                                自軍本國上的卡1張的戰鬥修正: {
+                                  id: "戦闘修正",
+                                  value: {
+                                    path: [
+                                      {
+                                        id: "數字",
+                                        value: {
+                                          path: [
+                                            {
+                                              id: "カード",
+                                              value: "自軍本國上的卡1張",
+                                            },
+                                            "的「ロールコストの合計値」",
+                                          ],
+                                        },
+                                      },
+                                      "の戦闘修正",
+                                    ],
+                                  },
+                                },
+                              },
+                              action: [
+                                {
+                                  id: "ActionSetTarget",
+                                  source: "自軍本國上的卡1張的戰鬥修正",
+                                  target: "自軍本國上的卡1張的戰鬥修正",
+                                },
+                              ],
+                            },
+                          ],
+                        },
+                        feedback: [
+                          {
+                            id: "FeedbackAction",
                             action: [
-                              { id: "ActionSetTarget", source: "自軍本國上的卡1張的戰鬥修正", target: "自軍本國上的卡1張的戰鬥修正" }
-                            ]
-                          }
-                        ]
+                              // add battleBonus
+                              // trigger manualEvent
+                            ],
+                          },
+                        ],
                       },
-                      feedback: [
-                        {
-                          id: "FeedbackAction",
-                          action: [
-                            // add battleBonus
-                            // trigger manualEvent
-                          ]
-                        }
-                      ]
-                    }
-                  }
-                ]
-              }
-            ]
-          }
-        }]
-      }
+                    },
+                  ],
+                },
+              ],
+            },
+          },
+        ],
+      };
     case "供給":
       return {
         id: "特殊型",
@@ -626,24 +689,43 @@ export function createTokuSyuKouKaText(
                       被改裝置換的卡: {
                         id: "カード",
                         value: { path: [{ id: "このカード" }] },
-                        valueLengthInclude: [1]
+                        valueLengthInclude: [1],
                       },
                     },
                     condition: {
                       id: "ConditionCompareBaSyou",
-                      value: [{
-                        id: "場所",
-                        value: {
-                          path: [{ id: "カード", value: { path: [{ id: "このカード" }] } }, "的「場所」"]
-                        }
-                      }, "in", {
-                        id: "場所",
-                        value: [
-                          { id: "RelatedBaSyou", value: ["自軍", "配備エリア"] },
-                          { id: "RelatedBaSyou", value: ["自軍", "戦闘エリア（右）"] },
-                          { id: "RelatedBaSyou", value: ["自軍", "戦闘エリア（左）"] }
-                        ]
-                      }]
+                      value: [
+                        {
+                          id: "場所",
+                          value: {
+                            path: [
+                              {
+                                id: "カード",
+                                value: { path: [{ id: "このカード" }] },
+                              },
+                              "的「場所」",
+                            ],
+                          },
+                        },
+                        "in",
+                        {
+                          id: "場所",
+                          value: [
+                            {
+                              id: "RelatedBaSyou",
+                              value: ["自軍", "配備エリア"],
+                            },
+                            {
+                              id: "RelatedBaSyou",
+                              value: ["自軍", "戦闘エリア（右）"],
+                            },
+                            {
+                              id: "RelatedBaSyou",
+                              value: ["自軍", "戦闘エリア（左）"],
+                            },
+                          ],
+                        },
+                      ],
                     },
                     action: [
                       {
@@ -656,7 +738,11 @@ export function createTokuSyuKouKaText(
                   {
                     id: "RequireTarget",
                     targets: {
-                      改裝出場的卡: { id: "カード", value: [], valueLengthInclude: [1] },
+                      改裝出場的卡: {
+                        id: "カード",
+                        value: [],
+                        valueLengthInclude: [1],
+                      },
                     },
                     condition: {
                       id: "ConditionAnd",
@@ -706,10 +792,13 @@ export function createTokuSyuKouKaText(
                             {
                               id: "カードの種類",
                               value: {
-                                path: [{
-                                  id: "カード",
-                                  value: "改裝出場的卡"
-                                }, "的「種類」"]
+                                path: [
+                                  {
+                                    id: "カード",
+                                    value: "改裝出場的卡",
+                                  },
+                                  "的「種類」",
+                                ],
                               },
                             },
                             "==",
@@ -725,20 +814,31 @@ export function createTokuSyuKouKaText(
                             {
                               id: "數字",
                               value: {
-                                path: [{ id: "カード", value: "改裝出場的卡" }, "的「合計国力」"]
-                              }
+                                path: [
+                                  { id: "カード", value: "改裝出場的卡" },
+                                  "的「合計国力」",
+                                ],
+                              },
                             },
                             "<=",
                             {
                               id: "數字",
                               value: {
                                 path: [
-                                  { id: "プレーヤー", value: { path: [{ id: "カード", value: "改裝出場的卡" }, "的「コントローラー」"] } },
-                                  "的「改装」的「合計国力」"
-                                ]
-                              }
+                                  {
+                                    id: "プレーヤー",
+                                    value: {
+                                      path: [
+                                        { id: "カード", value: "改裝出場的卡" },
+                                        "的「コントローラー」",
+                                      ],
+                                    },
+                                  },
+                                  "的「改装」的「合計国力」",
+                                ],
+                              },
                             },
-                          ]
+                          ],
                         },
                         {
                           id: "ConditionCompareString",
