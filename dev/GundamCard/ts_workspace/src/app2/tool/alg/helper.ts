@@ -7,7 +7,11 @@ import {
   getBaShouID,
   getOpponentPlayerID,
 } from "../tool/basic/basic";
-import { CardPrototype, GameContext, getBlockOwner } from "../tool/basic/gameContext";
+import {
+  CardPrototype,
+  GameContext,
+  getBlockOwner,
+} from "../tool/basic/gameContext";
 import { BlockPayload } from "../tool/basic/blockPayload";
 import { getCard, mapCard, Card } from "../../../tool/table";
 import {
@@ -90,9 +94,9 @@ export function getCardState(
 export function getCardIterator(
   ctx: GameContext
 ): [
-    GameContext,
-    { id: string; card: Card; baSyou: AbsoluteBaSyou; state: CardState }[]
-  ] {
+  GameContext,
+  { id: string; card: Card; baSyou: AbsoluteBaSyou; state: CardState }[]
+] {
   const cards: Card[] = [];
   mapCard(ctx.gameState.table, (card) => {
     cards.push(card);
@@ -136,9 +140,11 @@ export function getTargetType(
       }
       const replaced = targets[target.value];
       if (replaced.id != target.id) {
-        throw new Error(`從變數取來的類型必須和本來的一樣:${target.id} != ${replaced.id}`)
+        throw new Error(
+          `從變數取來的類型必須和本來的一樣:${target.id} != ${replaced.id}`
+        );
       }
-      return replaced
+      return replaced;
     }
     return target;
   })();
@@ -175,71 +181,76 @@ export function getTargetType(
     case "カード": {
       if (Array.isArray(targetTypeAfterProcess.value)) {
         if (targetTypeAfterProcess.valueLengthInclude) {
-          if (targetTypeAfterProcess.valueLengthInclude.includes(targetTypeAfterProcess.value.length) == false) {
-            throw new Error("card length must in " + JSON.stringify(targetTypeAfterProcess.valueLengthInclude))
+          if (
+            targetTypeAfterProcess.valueLengthInclude.includes(
+              targetTypeAfterProcess.value.length
+            ) == false
+          ) {
+            throw new Error(
+              "card length must in " +
+                JSON.stringify(targetTypeAfterProcess.valueLengthInclude)
+            );
           }
         }
         return targetTypeAfterProcess;
       }
       const path = targetTypeAfterProcess.value.path;
       switch (path[0].id) {
-        case "カード":
-          {
-            const targetType = getTargetType(ctx, blockPayload, targets, path[0]);
-            if (targetType.id != "カード") {
-              throw new Error("must be カード");
-            }
-            if (!Array.isArray(targetType.value)) {
-              throw new Error("must be real value");
-            }
-            if (targetType.value.length == 0) {
-              throw new Error("must have one value")
-            }
-            switch (path[1]) {
-              case "的「カード」":
-                throw new Error("not supoort")
-              case "の上のカードX枚": {
-                const x = path[2]
-                return {
-                  id: "カード",
-                  value: targetType.value.slice(0, x)
-                }
-              }
-              default:
-                throw new Error(`unknown path[1]: ${path[1]}`)
-            }
-            break
+        case "カード": {
+          const targetType = getTargetType(ctx, blockPayload, targets, path[0]);
+          if (targetType.id != "カード") {
+            throw new Error("must be カード");
           }
-        case "場所":
-          {
-            const targetType = getTargetType(ctx, blockPayload, targets, path[0]);
-            if (targetType.id != "場所") {
-              throw new Error("must be 場所");
-            }
-            if (!Array.isArray(targetType.value)) {
-              throw new Error("must be real value");
-            }
-            if (targetType.value.length == 0) {
-              throw new Error("must have one value")
-            }
-            if (targetType.value[0].id != "AbsoluteBaSyou") {
-              throw new Error("must be AbsoluteBaSyou")
-            }
-            switch (path[1]) {
-              case "的「カード」":
-                const baSyouID = getBaShouID(targetType.value[0])
-                return {
-                  id: "カード",
-                  value: ctx.gameState.table.cardStack[baSyouID].map(c => c.id)
-                }
-              case "の上のカードX枚": {
-                throw new Error("not supoort")
-              }
-              default:
-                throw new Error(`unknown path[1]: ${path[1]}`)
-            }
-            break
+          if (!Array.isArray(targetType.value)) {
+            throw new Error("must be real value");
           }
+          if (targetType.value.length == 0) {
+            throw new Error("must have one value");
+          }
+          switch (path[1]) {
+            case "的「カード」":
+              throw new Error("not supoort");
+            case "の上のカードX枚": {
+              const x = path[2];
+              return {
+                id: "カード",
+                value: targetType.value.slice(0, x),
+              };
+            }
+            default:
+              throw new Error(`unknown path[1]: ${path[1]}`);
+          }
+          break;
+        }
+        case "場所": {
+          const targetType = getTargetType(ctx, blockPayload, targets, path[0]);
+          if (targetType.id != "場所") {
+            throw new Error("must be 場所");
+          }
+          if (!Array.isArray(targetType.value)) {
+            throw new Error("must be real value");
+          }
+          if (targetType.value.length == 0) {
+            throw new Error("must have one value");
+          }
+          if (targetType.value[0].id != "AbsoluteBaSyou") {
+            throw new Error("must be AbsoluteBaSyou");
+          }
+          switch (path[1]) {
+            case "的「カード」":
+              const baSyouID = getBaShouID(targetType.value[0]);
+              return {
+                id: "カード",
+                value: ctx.gameState.table.cardStack[baSyouID].map((c) => c.id),
+              };
+            case "の上のカードX枚": {
+              throw new Error("not supoort");
+            }
+            default:
+              throw new Error(`unknown path[1]: ${path[1]}`);
+          }
+          break;
+        }
         case "このカード":
           return {
             id: "カード",
@@ -257,15 +268,15 @@ export function getTargetType(
             switch (path[1]) {
               case "的「カード」": {
                 if (evt.block.cause?.id != "BlockPayloadCauseGameEvent") {
-                  throw new Error("必須是BlockPayloadCauseGameEvent")
+                  throw new Error("必須是BlockPayloadCauseGameEvent");
                 }
                 if (evt.block.cause.gameEvent.id != "「効果」解決時") {
-                  throw new Error("必須是「効果」解決時")
+                  throw new Error("必須是「効果」解決時");
                 }
-                return getCardID(evt.block)
+                return getCardID(evt.block);
               }
               default:
-                throw new Error(`unknown path[1]: ${path[1]}`)
+                throw new Error(`unknown path[1]: ${path[1]}`);
             }
           });
           return {
@@ -273,6 +284,31 @@ export function getTargetType(
             value: values,
           };
         }
+        case "手動事件發生時":
+          const targetType = getTargetType(ctx, blockPayload, targets, path[0]);
+          if (targetType.id != "手動事件發生時") {
+            throw new Error("must be 手動事件發生時");
+          }
+          if (!Array.isArray(targetType.value)) {
+            throw new Error("must be real value");
+          }
+          const values = targetType.value.map((evt) => {
+            switch (path[1]) {
+              case "プレイされて場に出た場合のカード": {
+                const customID: GameEventOnManualEventCustomID = evt.customID;
+                if (customID.id != "プレイされて場に出た場合") {
+                  throw new Error("must be プレイされて場に出た場合");
+                }
+                return customID.cardID;
+              }
+              default:
+                throw new Error(`unknown path[1]: ${path[1]}`);
+            }
+          });
+          return {
+            id: "カード",
+            value: values,
+          };
       }
       break;
     }
@@ -283,9 +319,15 @@ export function getTargetType(
       const path = targetTypeAfterProcess.value.path;
       switch (path[0].id) {
         case "自軍":
-          return { id: "プレーヤー", value: [getBlockOwner(ctx, blockPayload)] }
+          return {
+            id: "プレーヤー",
+            value: [getBlockOwner(ctx, blockPayload)],
+          };
         case "敵軍":
-          return { id: "プレーヤー", value: [getOpponentPlayerID(getBlockOwner(ctx, blockPayload))] }
+          return {
+            id: "プレーヤー",
+            value: [getOpponentPlayerID(getBlockOwner(ctx, blockPayload))],
+          };
         case "カード": {
           const targetType = getTargetType(ctx, blockPayload, targets, path[0]);
           if (targetType.id != "カード") {
@@ -306,7 +348,7 @@ export function getTargetType(
                 return getCardController(ctx, cardID);
               }
               default:
-                throw new Error("not support:" + path[1])
+                throw new Error("not support:" + path[1]);
             }
           });
           return {
@@ -355,7 +397,7 @@ export function getTargetType(
         return targetTypeAfterProcess;
       }
       if (targetTypeAfterProcess.triggerGameEvent) {
-        ctx = triggerTextEvent(ctx, targetTypeAfterProcess.triggerGameEvent)
+        ctx = triggerTextEvent(ctx, targetTypeAfterProcess.triggerGameEvent);
       }
       const path = targetTypeAfterProcess.value.path;
       switch (path[0].id) {
@@ -547,7 +589,7 @@ export function getTargetType(
                 return 0;
               }
               case "的「ロールコストの合計値」": {
-                return 0
+                return 0;
               }
             }
           });
@@ -578,7 +620,7 @@ export function getTargetType(
                 return 0;
               }
               case "的「改装」的「合計国力」": {
-                return 0
+                return 0;
               }
             }
           });
@@ -627,11 +669,11 @@ export function getTargetType(
                 return cardState.flags.includes(flag);
               }
               case "是直立的？": {
-                const card = getCard(ctx.gameState.table, cardID)
+                const card = getCard(ctx.gameState.table, cardID);
                 if (card == null) {
-                  throw new Error("card must find")
+                  throw new Error("card must find");
                 }
-                return card.tap == false
+                return card.tap == false;
               }
             }
           });
@@ -643,155 +685,159 @@ export function getTargetType(
       }
       break;
     }
-    case "カードの種類":
-      {
-        if (Array.isArray(targetTypeAfterProcess.value)) {
-          return targetTypeAfterProcess;
-        }
-        const path = targetTypeAfterProcess.value.path;
-        switch (path[0].id) {
-          case "カード": {
-            const targetType = getTargetType(ctx, blockPayload, targets, path[0]);
-            if (targetType.id != "カード") {
-              throw new Error("must be カード");
-            }
-            if (!Array.isArray(targetType.value)) {
-              throw new Error("must be real value");
-            }
-            // if (targetType.value.length == 0) {
-            //   throw new Error("cardID must > 0");
-            // }
-            const values = targetType.value.map((cardID) => {
-              switch (path[1]) {
-                case "的「種類」": {
-                  const [_2, cardState] = getCardState(ctx, cardID);
-                  return cardState.prototype.category
-                }
-              }
-            });
-            return {
-              id: "カードの種類",
-              value: values,
-            };
-          }
-        }
-        break;
+    case "カードの種類": {
+      if (Array.isArray(targetTypeAfterProcess.value)) {
+        return targetTypeAfterProcess;
       }
+      const path = targetTypeAfterProcess.value.path;
+      switch (path[0].id) {
+        case "カード": {
+          const targetType = getTargetType(ctx, blockPayload, targets, path[0]);
+          if (targetType.id != "カード") {
+            throw new Error("must be カード");
+          }
+          if (!Array.isArray(targetType.value)) {
+            throw new Error("must be real value");
+          }
+          // if (targetType.value.length == 0) {
+          //   throw new Error("cardID must > 0");
+          // }
+          const values = targetType.value.map((cardID) => {
+            switch (path[1]) {
+              case "的「種類」": {
+                const [_2, cardState] = getCardState(ctx, cardID);
+                return cardState.prototype.category;
+              }
+            }
+          });
+          return {
+            id: "カードの種類",
+            value: values,
+          };
+        }
+      }
+      break;
+    }
     case "腳本": {
       const func: TargetTypeCustomFunctionType = getCustomFunction(
         targetTypeAfterProcess.value
       );
       return func(ctx, blockPayload);
     }
-    case "戦闘修正":
-      {
-        if (Array.isArray(targetTypeAfterProcess.value)) {
-          return targetTypeAfterProcess;
-        }
-        const path = targetTypeAfterProcess.value.path;
-        switch (path[0].id) {
-          case "數字": {
-            const targetType = getTargetType(ctx, blockPayload, targets, path[0]);
-            if (targetType.id != "數字") {
-              throw new Error("must be 數字");
-            }
-            if (!Array.isArray(targetType.value)) {
-              throw new Error("must be real value");
-            }
-            switch (path[1]) {
-              case "の戦闘修正":
-                {
-                  if (targetType.value.length == 1) {
-                    return {
-                      id: "戦闘修正",
-                      value: [[targetType.value[0], targetType.value[0], targetType.value[0]]]
-                    }
-                  }
-                  const bonus: BattleBonus = [targetType.value?.[0] || 0, targetType.value?.[1] || 0, targetType.value?.[2] || 0]
-                  return {
-                    id: "戦闘修正",
-                    value: [bonus]
-                  }
-                }
-              default:
-                throw new Error("not support:" + path[1])
-            }
-            break
+    case "戦闘修正": {
+      if (Array.isArray(targetTypeAfterProcess.value)) {
+        return targetTypeAfterProcess;
+      }
+      const path = targetTypeAfterProcess.value.path;
+      switch (path[0].id) {
+        case "數字": {
+          const targetType = getTargetType(ctx, blockPayload, targets, path[0]);
+          if (targetType.id != "數字") {
+            throw new Error("must be 數字");
           }
-          case "手動事件發生時":
-            {
-              const targetType = getTargetType(ctx, blockPayload, targets, path[0]);
-              if (targetType.id != "手動事件發生時") {
-                throw new Error("must be 手動事件發生時");
+          if (!Array.isArray(targetType.value)) {
+            throw new Error("must be real value");
+          }
+          switch (path[1]) {
+            case "の戦闘修正": {
+              if (targetType.value.length == 1) {
+                return {
+                  id: "戦闘修正",
+                  value: [
+                    [
+                      targetType.value[0],
+                      targetType.value[0],
+                      targetType.value[0],
+                    ],
+                  ],
+                };
               }
-              if (!Array.isArray(targetType.value)) {
-                throw new Error("must be real value");
-              }
-              const values = targetType.value.map(evt => {
-                switch (path[1]) {
-                  case "の「ゲイン」の「効果」の戦闘修正": {
-                    const customID: GameEventOnManualEventCustomID = evt.customID
-                    if (customID.id != "「ゲイン」の効果で戦闘修正を得た場合") {
-                      throw new Error("must be 「ゲイン」の効果で戦闘修正を得た場合")
-                    }
-                    return customID.bonus
-                  }
-                  default:
-                    throw new Error("not support:" + path[1])
-                }
-              });
+              const bonus: BattleBonus = [
+                targetType.value?.[0] || 0,
+                targetType.value?.[1] || 0,
+                targetType.value?.[2] || 0,
+              ];
               return {
                 id: "戦闘修正",
-                value: values
-              }
+                value: [bonus],
+              };
             }
+            default:
+              throw new Error("not support:" + path[1]);
+          }
+          break;
+        }
+        case "手動事件發生時": {
+          const targetType = getTargetType(ctx, blockPayload, targets, path[0]);
+          if (targetType.id != "手動事件發生時") {
+            throw new Error("must be 手動事件發生時");
+          }
+          if (!Array.isArray(targetType.value)) {
+            throw new Error("must be real value");
+          }
+          const values = targetType.value.map((evt) => {
+            switch (path[1]) {
+              case "の「ゲイン」の「効果」の戦闘修正": {
+                const customID: GameEventOnManualEventCustomID = evt.customID;
+                if (customID.id != "「ゲイン」の効果で戦闘修正を得た場合") {
+                  throw new Error(
+                    "must be 「ゲイン」の効果で戦闘修正を得た場合"
+                  );
+                }
+                return customID.bonus;
+              }
+              default:
+                throw new Error("not support:" + path[1]);
+            }
+          });
+          return {
+            id: "戦闘修正",
+            value: values,
+          };
         }
       }
-    case "「効果」解決時":
-      {
-        if (Array.isArray(targetTypeAfterProcess.value)) {
-          return targetTypeAfterProcess;
-        }
-        const path = targetTypeAfterProcess.value.path;
-        switch (path[0].id) {
-          case "觸發這個事件的「効果」":
-            {
-              if (blockPayload.cause?.id != "BlockPayloadCauseGameEvent") {
-                throw new Error("必須是BlockPayloadCauseGameEvent")
-              }
-              if (blockPayload.cause.gameEvent.id != "「効果」解決時") {
-                throw new Error("必須是「効果」解決時")
-              }
-              return {
-                id: "「効果」解決時",
-                value: [blockPayload.cause.gameEvent]
-              }
-            }
+    }
+    case "「効果」解決時": {
+      if (Array.isArray(targetTypeAfterProcess.value)) {
+        return targetTypeAfterProcess;
+      }
+      const path = targetTypeAfterProcess.value.path;
+      switch (path[0].id) {
+        case "觸發這個事件的「効果」": {
+          if (blockPayload.cause?.id != "BlockPayloadCauseGameEvent") {
+            throw new Error("必須是BlockPayloadCauseGameEvent");
+          }
+          if (blockPayload.cause.gameEvent.id != "「効果」解決時") {
+            throw new Error("必須是「効果」解決時");
+          }
+          return {
+            id: "「効果」解決時",
+            value: [blockPayload.cause.gameEvent],
+          };
         }
       }
-    case "手動事件發生時":
-      {
-        if (Array.isArray(targetTypeAfterProcess.value)) {
-          return targetTypeAfterProcess;
-        }
-        const path = targetTypeAfterProcess.value.path;
-        switch (path[0].id) {
-          case "觸發這個事件的手動事件":
-            {
-              if (blockPayload.cause?.id != "BlockPayloadCauseGameEvent") {
-                throw new Error("必須是BlockPayloadCauseGameEvent")
-              }
-              if (blockPayload.cause.gameEvent.id != "手動事件發生時") {
-                throw new Error("必須是手動事件發生時")
-              }
-              return {
-                id: "手動事件發生時",
-                value: [blockPayload.cause.gameEvent]
-              }
-            }
+    }
+    case "手動事件發生時": {
+      if (Array.isArray(targetTypeAfterProcess.value)) {
+        return targetTypeAfterProcess;
+      }
+      const path = targetTypeAfterProcess.value.path;
+      switch (path[0].id) {
+        case "觸發這個事件的手動事件": {
+          if (blockPayload.cause?.id != "BlockPayloadCauseGameEvent") {
+            throw new Error("必須是BlockPayloadCauseGameEvent");
+          }
+          if (blockPayload.cause.gameEvent.id != "手動事件發生時") {
+            throw new Error("必須是手動事件發生時");
+          }
+          return {
+            id: "手動事件發生時",
+            value: [blockPayload.cause.gameEvent],
+          };
         }
       }
+    }
     default:
-      throw new Error(`not impl: ${targetTypeAfterProcess.id}`)
+      throw new Error(`not impl: ${targetTypeAfterProcess.id}`);
   }
 }

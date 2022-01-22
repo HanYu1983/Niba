@@ -52,6 +52,369 @@ export function createTokuSyuKouKaText(
   options: { cost?: number }
 ): CardText {
   switch (toku[0]) {
+    case "PS装甲":
+      return {
+        id: "特殊型",
+        description: toku,
+        texts: [
+          {
+            id: "自動型",
+            category: "常駐",
+            description: "",
+            block: {
+              feedback: [
+                {
+                  id: "FeedbackAction",
+                  action: [
+                    {
+                      id: "ActionAddEffect",
+                      effect: {
+                        id: "GameEffectCustom",
+                        customID: "機體出場時不用横置的效果",
+                      },
+                    },
+                  ],
+                },
+              ],
+            },
+          },
+          {
+            id: "自動型",
+            category: "起動",
+            description: "",
+            block: {
+              require: {
+                id: "RequireTarget",
+                targets: {},
+                condition: {
+                  id: "ConditionCompareCard",
+                  // TODO: 出現在戰場時
+                  value: [
+                    { id: "カード", value: { path: [{ id: "このカード" }] } },
+                    "==",
+                    {
+                      id: "カード",
+                      value: {
+                        path: [
+                          {
+                            id: "手動事件發生時",
+                            value: {
+                              path: [{ id: "觸發這個事件的手動事件" }],
+                            },
+                          },
+                          "プレイされて場に出た場合のカード",
+                        ],
+                      },
+                    },
+                  ],
+                },
+              },
+              feedback: [
+                {
+                  id: "FeedbackAction",
+                  action: [
+                    // 設置回家旗標
+                  ],
+                },
+              ],
+            },
+          },
+          {
+            id: "自動型",
+            category: "起動",
+            description: "",
+            block: {
+              require: {
+                id: "RequireTarget",
+                targets: {},
+                // 回合開始時,
+                // 並且有旗標時
+              },
+              feedback: [
+                {
+                  id: "FeedbackAction",
+                  action: [
+                    // 回手
+                    // 刪除旗標
+                  ],
+                },
+              ],
+            },
+          },
+          {
+            id: "自動型",
+            category: "起動",
+            description: "",
+            block: {
+              require: {
+                id: "RequireTarget",
+                targets: {},
+                // 和供給或補給組成部隊時
+              },
+              feedback: [
+                {
+                  id: "FeedbackAction",
+                  action: [
+                    // 刪除回家旗標
+                  ],
+                },
+              ],
+            },
+          },
+        ],
+      };
+    case "戦闘配備":
+      return {
+        id: "特殊型",
+        description: toku,
+        texts: [
+          {
+            id: "自動型",
+            category: "常駐",
+            description: JSON.stringify(toku),
+            block: {
+              feedback: [
+                {
+                  id: "FeedbackAction",
+                  action: [
+                    {
+                      id: "ActionAddEffect",
+                      effect: {
+                        id: "GameEffectCustom",
+                        customID: "機體出場時不用横置的效果",
+                      },
+                    },
+                  ],
+                },
+              ],
+            },
+          },
+        ],
+      };
+    case "クイック":
+      return {
+        id: "特殊型",
+        description: toku,
+        texts: [
+          {
+            id: "自動型",
+            category: "常駐",
+            description: JSON.stringify(toku),
+            block: {
+              feedback: [
+                {
+                  id: "FeedbackAction",
+                  action: [
+                    {
+                      id: "ActionAddEffect",
+                      effect: {
+                        id: "GameEffectCustom",
+                        customID: "可以在任一時間使用的效果",
+                      },
+                    },
+                  ],
+                },
+              ],
+            },
+          },
+        ],
+      };
+    case "ステイ":
+      return {
+        id: "特殊型",
+        description: toku,
+        texts: [
+          {
+            id: "自動型",
+            category: "常駐",
+            description: JSON.stringify(toku),
+            block: {
+              feedback: [
+                {
+                  id: "FeedbackAction",
+                  action: [
+                    {
+                      id: "ActionAddEffect",
+                      effect: {
+                        id: "GameEffectCustom",
+                        customID: "可以在配置區出場",
+                      },
+                    },
+                  ],
+                },
+              ],
+            },
+          },
+        ],
+      };
+    case "高機動":
+      return {
+        id: "特殊型",
+        description: toku,
+        texts: [
+          {
+            id: "自動型",
+            category: "常駐",
+            description: JSON.stringify(toku),
+            block: {
+              feedback: [
+                {
+                  id: "FeedbackAction",
+                  action: [
+                    {
+                      id: "ActionAddEffect",
+                      effect: {
+                        id: "GameEffectCustom",
+                        customID: "高機動",
+                      },
+                    },
+                  ],
+                },
+              ],
+            },
+          },
+        ],
+      };
+    case "速攻":
+      return {
+        id: "特殊型",
+        description: toku,
+        texts: [
+          {
+            id: "自動型",
+            category: "常駐",
+            description: JSON.stringify(toku),
+            block: {
+              feedback: [
+                {
+                  id: "FeedbackAction",
+                  action: [
+                    {
+                      id: "ActionAddEffect",
+                      effect: {
+                        id: "GameEffectCustom",
+                        customID: "速攻",
+                      },
+                    },
+                  ],
+                },
+              ],
+            },
+          },
+        ],
+      };
+    case "強襲":
+      return {
+        id: "特殊型",
+        description: toku,
+        texts: [
+          {
+            id: "自動型",
+            category: "常駐",
+            description: JSON.stringify(toku),
+            block: {
+              feedback: [
+                {
+                  id: "FeedbackAction",
+                  action: [
+                    {
+                      id: "ActionAddEffect",
+                      effect: {
+                        id: "GameEffectCustom",
+                        customID: "強襲",
+                      },
+                    },
+                  ],
+                },
+              ],
+            },
+          },
+        ],
+      };
+    case "クロスウェポン":
+      return {
+        id: "特殊型",
+        description: toku,
+        texts: [
+          {
+            id: "使用型",
+            timing: ["戦闘フェイズ"],
+            description: JSON.stringify(toku),
+            block: {
+              contextID: `createTokuSyuKouKaText_${_seqID++}`,
+              require: {
+                id: "RequireAnd",
+                and: [
+                  createRollCostRequire(options.cost || 0, null),
+                  {
+                    id: "RequireTarget",
+                    targets: {
+                      指定的卡: {
+                        id: "カード",
+                        value: [],
+                        valueLengthInclude: [1],
+                      },
+                    },
+                    action: [
+                      {
+                        id: "ActionSetTarget",
+                        source: "指定的卡",
+                        target: "指定的卡",
+                      },
+                    ],
+                  },
+                ],
+              },
+              feedback: [
+                {
+                  id: "FeedbackAction",
+                  action: [
+                    {
+                      id: "ActionAddBlock",
+                      type: "堆疊",
+                      block: {
+                        require: {
+                          id: "RequireTarget",
+                          targets: {
+                            指定的內文: {
+                              id: "TargetTypeCardTextState",
+                              value: [],
+                              valueLengthInclude: [1],
+                            },
+                          },
+                          action: [
+                            {
+                              id: "ActionSetTarget",
+                              source: "指定的內文",
+                              target: "指定的內文",
+                            },
+                          ],
+                        },
+                        feedback: [
+                          {
+                            id: "FeedbackAction",
+                            action: [
+                              {
+                                id: "ActionAddCardText",
+                                cards: { id: "カード", value: "指定的卡" },
+                                cardTextStateID: `createTokuSyuKouKaText_${_seqID++}`,
+                                cardText: {
+                                  id: "TargetTypeCardTextState",
+                                  value: "指定的內文",
+                                },
+                              },
+                            ],
+                          },
+                        ],
+                      },
+                    },
+                  ],
+                },
+              ],
+            },
+          },
+        ],
+      };
     case "ゲイン":
       return {
         id: "特殊型",
@@ -905,6 +1268,174 @@ export function createTokuSyuKouKaText(
                                   value: "改裝出場的卡",
                                 },
                               },
+                            ],
+                          },
+                        ],
+                      },
+                    },
+                  ],
+                },
+              ],
+            },
+          },
+        ],
+      };
+    }
+    case "共有": {
+      return {
+        id: "特殊型",
+        description: toku,
+        texts: [
+          {
+            id: "自動型",
+            category: "起動",
+            description: "",
+            block: {
+              require: {
+                id: "RequireTarget",
+                targets: {},
+                condition: {
+                  id: "ConditionCompareCard",
+                  value: [
+                    { id: "カード", value: { path: [{ id: "このカード" }] } },
+                    "==",
+                    {
+                      id: "カード",
+                      value: {
+                        path: [
+                          {
+                            id: "手動事件發生時",
+                            value: {
+                              path: [{ id: "觸發這個事件的手動事件" }],
+                            },
+                          },
+                          "プレイされて場に出た場合のカード",
+                        ],
+                      },
+                    },
+                  ],
+                },
+                action: [
+                  // 設置剛出場旗標
+                ],
+              },
+            },
+          },
+          {
+            id: "自動型",
+            category: "起動",
+            description: "",
+            block: {
+              require: {
+                id: "RequireTarget",
+                targets: {},
+                // 回合開始時
+                action: [
+                  // 刪除剛出場旗標
+                ],
+              },
+            },
+          },
+          {
+            id: "使用型",
+            timing: ["常時"],
+            description: "",
+            block: {
+              require: createRollCostRequire(options.cost || 0, null),
+              feedback: [
+                {
+                  id: "FeedbackAction",
+                  action: [
+                    {
+                      id: "ActionAddBlock",
+                      type: "堆疊",
+                      block: {
+                        require: {
+                          id: "RequireTarget",
+                          targets: {
+                            "「共有」出來的「カード」": {
+                              id: "カード",
+                              value: [],
+                              valueLengthInclude: [1],
+                            },
+                          },
+                          condition: {
+                            id: "ConditionAnd",
+                            and: [
+                              // 剛出場旗標存在時
+                              {
+                                id: "ConditionCompareBaSyou",
+                                value: [
+                                  {
+                                    id: "場所",
+                                    value: {
+                                      path: [
+                                        {
+                                          id: "カード",
+                                          value: "「共有」出來的「カード」",
+                                        },
+                                        "的「場所」",
+                                      ],
+                                    },
+                                  },
+                                  "==",
+                                  {
+                                    id: "場所",
+                                    value: [
+                                      {
+                                        id: "RelatedBaSyou",
+                                        value: ["自軍", "本国"],
+                                      },
+                                    ],
+                                  },
+                                ],
+                              },
+                              {
+                                id: "ConditionCompareString",
+                                value: [
+                                  {
+                                    id: "字串",
+                                    value: {
+                                      path: [
+                                        {
+                                          id: "カード",
+                                          value: "「共有」出來的「カード」",
+                                        },
+                                        "的「特徴」",
+                                      ],
+                                    },
+                                  },
+                                  "hasToken",
+                                  {
+                                    id: "字串",
+                                    value: [toku[1]],
+                                  },
+                                ],
+                              },
+                            ],
+                          },
+                        },
+                        feedback: [
+                          {
+                            id: "FeedbackAction",
+                            action: [
+                              {
+                                id: "ActionMoveCardToPosition",
+                                cards: {
+                                  id: "カード",
+                                  value: "「共有」出來的「カード」",
+                                },
+                                baSyou: {
+                                  id: "場所",
+                                  value: [
+                                    {
+                                      id: "RelatedBaSyou",
+                                      value: ["自軍", "ハンガー"],
+                                    },
+                                  ],
+                                },
+                              },
+                              // 本國洗牌
                             ],
                           },
                         ],

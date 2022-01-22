@@ -3,6 +3,7 @@ import type {
   TargetTypeCardColor,
   TargetTypeBaSyou,
   TargetTypeBoolean,
+  TargetTypeCardTextState,
 } from "./targetType";
 import type { BlockPayload } from "./blockPayload";
 import type { CardPrototype, GameEffect } from "./gameContext";
@@ -105,7 +106,7 @@ type ActionDeleteGlobalCardText = {
 type ActionAddCardText = {
   id: "ActionAddCardText";
   cards: TargetTypeCard;
-  cardText: CardText;
+  cardText: TargetTypeCardTextState;
   cardTextStateID?: string;
 };
 

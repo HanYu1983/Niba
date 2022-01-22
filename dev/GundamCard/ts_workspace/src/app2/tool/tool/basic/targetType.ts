@@ -10,7 +10,7 @@ import {
   RelatedPlayerSideKeyword,
   UnitPropertyKeyword,
 } from "./basic";
-import { GameContext, GameEffect } from "./gameContext";
+import { CardTextState, GameContext, GameEffect } from "./gameContext";
 import { BlockPayload } from "./blockPayload";
 
 export type TargetTypeBase = {
@@ -58,7 +58,11 @@ export type TargetTypeCard = {
           | [{ id: "このカード" }]
           | [TargetTypeGameEventOnAfterEffect, "的「カード」"]
           | [TargetTypeBaSyou, "的「カード」"]
-          | [TargetTypeCard, "の上のカードX枚", number];
+          | [TargetTypeCard, "の上のカードX枚", number]
+          | [
+              TargetTypeGameEventOnManualEvent,
+              "プレイされて場に出た場合のカード"
+            ];
       };
   tipID?: string[];
   valueLengthInclude?: number[];
@@ -185,6 +189,13 @@ type TargetTypeDamage = {
   value: Damage | string | null;
 } & TargetTypeBase;
 
+export type TargetTypeCardTextState = {
+  id: "TargetTypeCardTextState";
+  value: CardTextState[] | string;
+  tipID?: string[];
+  valueLengthInclude?: number[];
+};
+
 export type TargetType =
   | TargetTypeRef
   | TargetTypeCard
@@ -200,7 +211,8 @@ export type TargetType =
   | TargetTypeCustom
   | TargetTypeBattleBonus
   | TargetTypeGameEventOnAfterEffect
-  | TargetTypeGameEventOnManualEvent;
+  | TargetTypeGameEventOnManualEvent
+  | TargetTypeCardTextState;
 
 export type TargetTypeCustomFunctionType = (
   ctx: GameContext,
