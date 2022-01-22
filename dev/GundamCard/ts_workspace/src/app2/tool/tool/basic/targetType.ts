@@ -29,12 +29,22 @@ export type TargetTypeGameEventOnManualEvent = {
 
 export type TargetTypeBattleBonus = {
   id: "戦闘修正",
-  value: BattleBonus[] | string | { path: [TargetTypeGameEventOnManualEvent, "の「ゲイン」の「効果」の戦闘修正"] }
+  value: BattleBonus[] | string | {
+    path:
+    | [TargetTypeGameEventOnManualEvent, "の「ゲイン」の「効果」の戦闘修正"]
+    | [TargetTypeNumber, "の戦闘修正"]
+  }
 } & TargetTypeBase
 
 export type TargetTypeCard = {
   id: "カード";
-  value: string[] | string | { path: [{ id: "このカード" }] | [TargetTypeGameEventOnAfterEffect, "的「カード」"] };
+  value: string[] | string | {
+    path:
+    | [{ id: "このカード" }]
+    | [TargetTypeGameEventOnAfterEffect, "的「カード」"]
+    | [TargetTypeBaSyou, "的「カード」"]
+    | [TargetTypeCard, "の上のカードX枚", number]
+  };
   tipID?: string[];
   valueLengthInclude?: number[];
 } & TargetTypeBase
@@ -61,7 +71,7 @@ export type TargetTypeNumber = {
   | string
   | {
     path:
-    | [TargetTypeCard, "的「攻撃力」" | "的「防御力」" | "的「合計国力」"]
+    | [TargetTypeCard, "的「攻撃力」" | "的「防御力」" | "的「合計国力」" | "的「ロールコストの合計値」"]
     | [TargetTypePlayer, "的「合計国力」" | "的「改装」的「合計国力」"]
     | [TargetTypeRef, "的陣列長度"];
   };

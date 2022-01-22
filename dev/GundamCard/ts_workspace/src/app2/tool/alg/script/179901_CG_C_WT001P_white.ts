@@ -1,13 +1,7 @@
 import { getCustomFunctionString } from "../../../../tool/helper";
 import { CardPrototype, GameContext } from "../../tool/basic/gameContext";
 import { createRollCostRequire } from "../../tool/basic/blockPayload";
-import { BlockPayload } from "../../tool/basic/blockPayload";
-import {
-  TargetType,
-  TargetTypeCustomFunctionType,
-} from "../../tool/basic/targetType";
 import { createPlayCardText } from "./createPlayCardText";
-import { ManualEventCustomID } from "../manualEventCustomID";
 
 // 179901_CG_C_WT001P_white
 // アークエンジェル出航
