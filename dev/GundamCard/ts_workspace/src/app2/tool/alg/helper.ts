@@ -31,7 +31,7 @@ import {
 import { log } from "../../../tool/logger";
 import { getPrototype } from "./script";
 import { triggerTextEvent } from "./handleGameContext";
-import { GameEventManualEventCustomID } from "./gameEventManualEventCustomID";
+import { GameEventOnManualEventCustomID } from "./gameEventOnManualEventCustomID";
 
 let idSeq = 0;
 export function getCardState(
@@ -730,7 +730,7 @@ export function getTargetType(
               const values = targetType.value.map(evt => {
                 switch (path[1]) {
                   case "の「ゲイン」の「効果」の戦闘修正": {
-                    const customID: GameEventManualEventCustomID = evt.customID
+                    const customID: GameEventOnManualEventCustomID = evt.customID
                     if (customID.id != "「ゲイン」の効果で戦闘修正を得た場合") {
                       throw new Error("must be 「ゲイン」の効果で戦闘修正を得た場合")
                     }
