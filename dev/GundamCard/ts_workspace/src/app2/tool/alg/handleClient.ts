@@ -24,7 +24,7 @@ import { getCard, mapCard, Card } from "../../../tool/table";
 import { mapEffect } from "../tool/basic/gameContext";
 import { TargetType, TargetTypeCard } from "../tool/basic/targetType";
 import { getCardController } from "../tool/basic/handleCard";
-import { log } from "../../../tool/logger";
+import { log2 } from "../../../tool/logger";
 import { Action } from "../tool/basic/action";
 import { doRequire, doFeedback } from "./handleBlockPayload";
 import { getCardState } from "./helper";
@@ -239,7 +239,7 @@ export function doEffect(
   playerID: string,
   effectID: string
 ): GameContext {
-  log("doEffect", effectID);
+  log2("doEffect", effectID);
   if (ctx.gameState.activeEffectID != effectID) {
     throw new Error("activeEffectID != effectID");
   }
@@ -280,7 +280,7 @@ export function doEffect(
       activeEffectID: null,
     },
   };
-  log("doEffect", ctx);
+  log2("doEffect", ctx);
   ctx = filterEffect(ctx, (effect) => {
     return effect.requirePassed != true;
   });
@@ -519,7 +519,7 @@ export function applyFlow(
       };
     case "FlowTriggerTextEvent":
       if (ctx.gameState.flowMemory.hasTriggerEvent) {
-        log("applyFlow", "已經執行過triggerTextEvent");
+        log2("applyFlow", "已經執行過triggerTextEvent");
         return ctx;
       }
       ctx = triggerTextEvent(ctx, flow.event);
@@ -723,23 +723,23 @@ export function queryFlow(ctx: GameContext, playerID: string): Flow[] {
     return [
       ...(myEffect.length
         ? [
-          {
-            id: "FlowSetActiveEffectID",
-            effectID: myEffect[0].id || null,
-            description: "選擇一個起動效果",
-            tips: myEffect,
-          } as FlowSetActiveEffectID,
-        ]
+            {
+              id: "FlowSetActiveEffectID",
+              effectID: myEffect[0].id || null,
+              description: "選擇一個起動效果",
+              tips: myEffect,
+            } as FlowSetActiveEffectID,
+          ]
         : []),
       ...(optionEffect.length
         ? [
-          {
-            id: "FlowDeleteImmediateEffect",
-            effectID: optionEffect[0].id,
-            description: "你可以放棄這些效果",
-            tips: optionEffect,
-          } as FlowDeleteImmediateEffect,
-        ]
+            {
+              id: "FlowDeleteImmediateEffect",
+              effectID: optionEffect[0].id,
+              description: "你可以放棄這些效果",
+              tips: optionEffect,
+            } as FlowDeleteImmediateEffect,
+          ]
         : []),
     ];
   }
@@ -844,7 +844,7 @@ export function queryFlow(ctx: GameContext, playerID: string): Flow[] {
     const isAllPassCut =
       !!ctx.gameState.flowMemory.hasPlayerPassCut[PlayerA] &&
       !!ctx.gameState.flowMemory.hasPlayerPassCut[PlayerB];
-    log("queryFlow", `isAllPassCut: ${isAllPassCut}`);
+    log2("queryFlow", `isAllPassCut: ${isAllPassCut}`);
     // 如果雙方玩家還沒放棄切入
     if (isAllPassCut == false) {
       // 如果我宣告了放棄切入，回傳取消

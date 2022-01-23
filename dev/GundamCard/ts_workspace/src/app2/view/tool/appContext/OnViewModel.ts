@@ -18,7 +18,7 @@ import {
 } from "../../../tool/alg/handleClient";
 import { createCard } from "../../../../tool/table";
 import { initState } from "../../../tool/alg/handleGameContext";
-import { log } from "../../../../tool/logger";
+import { log2 } from "../../../../tool/logger";
 
 export type Selection = string[];
 
@@ -38,8 +38,8 @@ export const DEFAULT_VIEW_MODEL: ViewModel = {
 
 export const OnViewModel = OnEvent.pipe(
   rxjs.scan((viewModel, evt): ViewModel => {
-    log("OnViewModel", "evt");
-    log("OnViewModel", evt);
+    log2("OnViewModel", "evt");
+    log2("OnViewModel", evt);
     try {
       switch (evt.id) {
         case "OnClickNewGame": {
@@ -142,8 +142,8 @@ export const OnViewModel = OnEvent.pipe(
           return viewModel;
         }
         case "OnModelFromFirebase":
-          log("OnViewModel", "OnModelFromFirebase");
-          log("OnViewModel", evt.model);
+          log2("OnViewModel", "OnModelFromFirebase");
+          log2("OnViewModel", evt.model);
           return {
             ...viewModel,
             model: evt.model,

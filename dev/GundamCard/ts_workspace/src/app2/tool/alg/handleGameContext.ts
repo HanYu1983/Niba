@@ -23,7 +23,7 @@ import { getCard, mapCard, Card } from "../../../tool/table";
 import { mapEffect } from "../tool/basic/gameContext";
 import { TargetType, TargetTypeCard } from "../tool/basic/targetType";
 import { getCardController } from "../tool/basic/handleCard";
-import { log } from "../../../tool/logger";
+import { log2 } from "../../../tool/logger";
 import { Action } from "../tool/basic/action";
 import { doRequire, doFeedback } from "./handleBlockPayload";
 import { getCardState } from "./helper";
@@ -162,7 +162,7 @@ export function updateCommand(ctx: GameContext): GameContext {
               if (r.key == null) {
                 return target;
               }
-              log("updateCommand", `targetID:${targetID}`);
+              log2("updateCommand", `targetID:${targetID}`);
               // 取得提示.
               switch (target.id) {
                 case "カード": {
@@ -179,7 +179,7 @@ export function updateCommand(ctx: GameContext): GameContext {
                             id: "カード",
                             value: [card.id],
                           };
-                          log("getTip", card);
+                          log2("getTip", card);
                           const msg = doConditionTarget(
                             ctx,
                             wrapEvent,
@@ -189,7 +189,7 @@ export function updateCommand(ctx: GameContext): GameContext {
                             },
                             condition
                           );
-                          log("getTip", msg);
+                          log2("getTip", msg);
                           if (msg == null) {
                             validCardID.push(card.id);
                           }
@@ -199,8 +199,8 @@ export function updateCommand(ctx: GameContext): GameContext {
                       }
                     }
                   })();
-                  log("updateCommand", "tips");
-                  log("updateCommand", tips);
+                  log2("updateCommand", "tips");
+                  log2("updateCommand", tips);
                   const nextValues = (() => {
                     if (tips.length == 0) {
                       return target.value;
@@ -386,7 +386,7 @@ export function getTip(
               },
               condition
             );
-            log("getTip", msg);
+            log2("getTip", msg);
             if (msg == null) {
               validCardID.push(card.id);
             }

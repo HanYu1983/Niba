@@ -24,7 +24,7 @@ import {
   getCardOwner,
   getAbsoluteBaSyou,
 } from "../tool/basic/handleCard";
-import { log } from "../../../tool/logger";
+import { log2 } from "../../../tool/logger";
 import { TargetType } from "../tool/basic/targetType";
 import { getCardState, getTargetType } from "./helper";
 import { initState } from "./handleGameContext";
@@ -37,8 +37,8 @@ export function doActionTarget(
   action: Action,
   varCtxID: string
 ): GameContext {
-  log("doActionTarget", action.id);
-  log("doActionTarget", action);
+  log2("doActionTarget", action.id);
+  log2("doActionTarget", action);
   switch (action.id) {
     case "ActionRoll": {
       const cards = getTargetType(ctx, blockPayload, targets, action.cards);
@@ -334,7 +334,7 @@ export function doActionTarget(
       if (cards?.id != "カード") {
         throw new Error("must カード");
       }
-      log("doActionTarget", "ActionMoveCardToPosition");
+      log2("doActionTarget", "ActionMoveCardToPosition");
       if (!Array.isArray(cards.value)) {
         throw new Error("執行Action時的所有target必須是陣列");
       }
@@ -396,8 +396,8 @@ export function doActionTarget(
               ? { require: wrapRequireKey(action.block.require) }
               : null),
           };
-          log("doActionTarget", "ActionAddBlock");
-          log("doActionTarget", wrappedBlock);
+          log2("doActionTarget", "ActionAddBlock");
+          log2("doActionTarget", wrappedBlock);
           return {
             ...ctx,
             gameState: {

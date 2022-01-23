@@ -33,7 +33,7 @@ import {
   TargetType,
   TargetTypeCustomFunctionType,
 } from "../tool/basic/targetType";
-import { log } from "../../../tool/logger";
+import { log2 } from "../../../tool/logger";
 import { getPrototype } from "./script";
 import { triggerTextEvent } from "./handleGameContext";
 import { GameEventOnManualEventCustomID } from "./gameEventOnManualEventCustomID";
@@ -139,12 +139,9 @@ export function getTargetType(
       // 是參照的情況就不管取得類型
       if (target.id != "參照") {
         if (replaced.id != target.id) {
-          log("getTargetType", "blockPayload");
-          log("getTargetType", blockPayload);
-          log("getTargetType", "target");
-          log("getTargetType", target);
-          log("getTargetType", "replaced");
-          log("getTargetType", replaced);
+          log2("getTargetType", "blockPayload", blockPayload);
+          log2("getTargetType", "target", target);
+          log2("getTargetType", "replaced", replaced);
           throw new Error(
             `從變數取來的類型必須和本來的一樣:${target.id} != ${replaced.id}`
           );

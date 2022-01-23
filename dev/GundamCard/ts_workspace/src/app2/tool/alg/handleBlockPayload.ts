@@ -13,7 +13,7 @@ import { RequireScriptFunction } from "../tool/basic/gameContext";
 import { doActionTarget } from "./doActionTarget";
 import { doRequireCustom } from "./doRequireCustom";
 import { doConditionTarget } from "./doConditionTarget";
-import { log } from "../../../tool/logger";
+import { log2 } from "../../../tool/logger";
 import { getTargetType } from "./helper";
 
 function doCondition(
@@ -32,7 +32,7 @@ function doAction(
   action: Action,
   varCtxID: string
 ): GameContext {
-  log("doAction", action.id);
+  log2("doAction", action.id);
   Object.entries(require.targets).forEach(([key, target]) => {
     const processed = getTargetType(ctx, blockPayload, require.targets, target);
     if (!Array.isArray(processed.value)) {

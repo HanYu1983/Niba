@@ -5,7 +5,7 @@ import { getCardState, getCardIterator, getTargetType } from "./helper";
 import { TargetType } from "../tool/basic/targetType";
 import { getAbsoluteBaSyou, getCardController } from "../tool/basic/handleCard";
 import { getBaShouID } from "../tool/basic/basic";
-import { log } from "../../../tool/logger";
+import { log2 } from "../../../tool/logger";
 
 export function doConditionTarget(
   ctx: GameContext,
@@ -136,124 +136,130 @@ export function doConditionTarget(
       if (!Array.isArray(target1.value)) {
         return "type not right: must array";
       }
-      const msgs = target1.value.map((a) => {
-        switch (target2.id) {
-          case "場所": {
-            if (typeof a != "object") {
-              return "a must be baSyou object";
-            }
-            if (!Array.isArray(target2.value)) {
-              return "type not right: must array 2";
-            }
-            if (a.id == "RelatedBaSyou") {
-              return "must be absolute baSyou";
-            }
-            switch (op) {
-              case "==": {
-                if (target2.value.length == 0) {
-                  return "value.length must > 0";
-                }
-                const b = target2.value[0];
-                if (b.id == "RelatedBaSyou") {
-                  return "must be absolute baSyou";
-                }
-                if ((getBaShouID(a) == getBaShouID(b)) == false) {
-                  return "baSyou not ==";
-                }
-                break;
+      const msgs = target1.value
+        .map((a) => {
+          switch (target2.id) {
+            case "場所": {
+              if (typeof a != "object") {
+                return "a must be baSyou object";
               }
-              case "in": {
-                if (
-                  target2.value
-                    .map((b) => {
-                      if (b.id == "RelatedBaSyou") {
-                        return "must be absolute baSyou";
-                      }
-                      return getBaShouID(b);
-                    })
-                    .includes(getBaShouID(a)) == false
-                ) {
-                  return `不包含指定的場所:變數${JSON.stringify(v1)}的場所${getBaShouID(a)}必須包含在${JSON.stringify(target2.value)}`;
-                }
-                break;
+              if (!Array.isArray(target2.value)) {
+                return "type not right: must array 2";
               }
-              default:
-                return "baSyou not support op";
+              if (a.id == "RelatedBaSyou") {
+                return "must be absolute baSyou";
+              }
+              switch (op) {
+                case "==": {
+                  if (target2.value.length == 0) {
+                    return "value.length must > 0";
+                  }
+                  const b = target2.value[0];
+                  if (b.id == "RelatedBaSyou") {
+                    return "must be absolute baSyou";
+                  }
+                  if ((getBaShouID(a) == getBaShouID(b)) == false) {
+                    return "baSyou not ==";
+                  }
+                  break;
+                }
+                case "in": {
+                  if (
+                    target2.value
+                      .map((b) => {
+                        if (b.id == "RelatedBaSyou") {
+                          return "must be absolute baSyou";
+                        }
+                        return getBaShouID(b);
+                      })
+                      .includes(getBaShouID(a)) == false
+                  ) {
+                    return `不包含指定的場所:變數${JSON.stringify(
+                      v1
+                    )}的場所${getBaShouID(a)}必須包含在${JSON.stringify(
+                      target2.value
+                    )}`;
+                  }
+                  break;
+                }
+                default:
+                  return "baSyou not support op";
+              }
+              break;
             }
-            break;
+            case "カード":
+            case "プレーヤー":
+            case "字串":
+            case "布林":
+            case "數字":
+            case "「カード」的角色":
+            case "カードの種類":
+            case "カードの色": {
+              if (typeof a == "object") {
+                return "a must be basic type";
+              }
+              if (!Array.isArray(target2.value)) {
+                return "type not right";
+              }
+              if (target2.value.length == 0) {
+                return "value.length must > 0";
+              }
+              const b = target2.value[0];
+              switch (op) {
+                case "<":
+                  if (a < b == false) {
+                    return "xxx";
+                  }
+                  break;
+                case "<=":
+                  if (a <= b == false) {
+                    return "xxx";
+                  }
+                  break;
+                case "==":
+                  if ((a == b) == false) {
+                    return `不相等：${a} ${b}`;
+                  }
+                  break;
+                case ">":
+                  if (a > b == false) {
+                    return "xxx";
+                  }
+                  break;
+                case ">=":
+                  if (a >= b == false) {
+                    return "xxx";
+                  }
+                  break;
+                case "in":
+                  // @ts-ignore
+                  if (target2.value.includes(a) == false) {
+                    return "xx";
+                  }
+                  break;
+                case "hasToken": {
+                  if (typeof a != "string") {
+                    return "hasToken only support string";
+                  }
+                  if (typeof b != "string") {
+                    return "hasToken only support string";
+                  }
+                  const tokens = a.split("|");
+                  if (tokens.includes(b) == false) {
+                    return "hasToken error";
+                  }
+                  break;
+                }
+                case "交戦中":
+                  return "xxxx";
+              }
+              break;
+            }
           }
-          case "カード":
-          case "プレーヤー":
-          case "字串":
-          case "布林":
-          case "數字":
-          case "「カード」的角色":
-          case "カードの種類":
-          case "カードの色": {
-            if (typeof a == "object") {
-              return "a must be basic type";
-            }
-            if (!Array.isArray(target2.value)) {
-              return "type not right";
-            }
-            if (target2.value.length == 0) {
-              return "value.length must > 0";
-            }
-            const b = target2.value[0];
-            switch (op) {
-              case "<":
-                if (a < b == false) {
-                  return "xxx";
-                }
-                break;
-              case "<=":
-                if (a <= b == false) {
-                  return "xxx";
-                }
-                break;
-              case "==":
-                if ((a == b) == false) {
-                  return `不相等：${a} ${b}`;
-                }
-                break;
-              case ">":
-                if (a > b == false) {
-                  return "xxx";
-                }
-                break;
-              case ">=":
-                if (a >= b == false) {
-                  return "xxx";
-                }
-                break;
-              case "in":
-                // @ts-ignore
-                if (target2.value.includes(a) == false) {
-                  return "xx";
-                }
-                break;
-              case "hasToken": {
-                if (typeof a != "string") {
-                  return "hasToken only support string";
-                }
-                if (typeof b != "string") {
-                  return "hasToken only support string";
-                }
-                const tokens = a.split("|");
-                if (tokens.includes(b) == false) {
-                  return "hasToken error";
-                }
-                break;
-              }
-              case "交戦中":
-                return "xxxx";
-            }
-            break;
-          }
-        }
-      }).filter(v => v);
+        })
+        .filter((v) => v);
       if (msgs.length) {
-        return msgs.join(".")
+        return msgs.join(".");
       }
     }
   }

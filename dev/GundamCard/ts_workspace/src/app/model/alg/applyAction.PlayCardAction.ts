@@ -1,4 +1,4 @@
-import { log } from "../../../tool/logger";
+import { log2 } from "../../../tool/logger";
 import { Context, PlayCardAction, Effect } from "../../types";
 import { queryPlayCardPayment } from "./queryPlayCardPayment";
 
@@ -18,7 +18,7 @@ export function applyAction_PlayCardAction(
   }
   // 放G的話直接進堆疊
   if (action.to.where == "G") {
-    log("applyAction_PlayCardAction", "放G的話直接進堆疊");
+    log2("applyAction_PlayCardAction", "放G的話直接進堆疊");
     if (ctx.gameState.effectStack.effects.length) {
       throw new Error(`請先處理效果。或是雙方玩家呼叫ConfirmPhaseAction`);
     }
@@ -40,7 +40,7 @@ export function applyAction_PlayCardAction(
   const payments = queryPlayCardPayment(ctx, playerID, action.cardID);
   // 沒有cost就直接放入堆疊
   if (payments.length == 0) {
-    log("applyAction_PlayCardAction", "沒有cost就直接放入堆疊");
+    log2("applyAction_PlayCardAction", "沒有cost就直接放入堆疊");
     const effect: Effect = {
       id: "ActionEffect",
       action: action,

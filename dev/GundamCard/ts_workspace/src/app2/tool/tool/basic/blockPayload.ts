@@ -8,7 +8,7 @@ import type {
 import type { Condition } from "./condition";
 import type { Action } from "./action";
 import { TargetType, TargetTypeCard } from "./targetType";
-import { log } from "../../../../tool/logger";
+import { log2 } from "../../../../tool/logger";
 import { GameContext } from "./gameContext";
 
 export type RequireBase = {
@@ -134,7 +134,7 @@ export function recurRequire(
   require: Require,
   mapF: (require: Require) => Require
 ): Require {
-  log("recurRequire", require);
+  log2("recurRequire", require);
   switch (require.id) {
     case "RequireAnd": {
       const nextRequires = require.and.map((require) => {

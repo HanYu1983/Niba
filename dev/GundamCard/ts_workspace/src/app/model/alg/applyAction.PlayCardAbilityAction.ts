@@ -1,4 +1,4 @@
-import { log } from "../../../tool/logger";
+import { log2 } from "../../../tool/logger";
 import { Context, PlayCardAbilityAction, Effect } from "../../types";
 import { queryPlayCardAbilityPayment } from "./queryPlayCardAbilityPayment";
 
@@ -21,7 +21,7 @@ export function applyAction_PlayCardAbilityAction(
   );
   // 沒有cost就直接放入堆疊
   if (payments.length == 0) {
-    log("applyAction_PlayCardAbilityAction", "沒有cost就直接放入堆疊");
+    log2("applyAction_PlayCardAbilityAction", "沒有cost就直接放入堆疊");
     const effect: Effect = {
       id: "ActionEffect",
       action: action,

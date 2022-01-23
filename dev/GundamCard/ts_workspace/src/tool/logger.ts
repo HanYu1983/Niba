@@ -7,11 +7,11 @@ const hideCategory = [
 ];
 let filterCategory = true;
 
-export const log = (category: string, msg: any) => {
+export const log2 = (category: string, ...msg: any[]) => {
   if (filterCategory) {
     if (hideCategory.includes(category)) {
       return;
     }
   }
-  console.log(`[${category}] [${new Date().toLocaleTimeString()}]`, msg);
+  console.log(`[${category}] [${new Date().toLocaleTimeString()}]`, ...msg);
 };
