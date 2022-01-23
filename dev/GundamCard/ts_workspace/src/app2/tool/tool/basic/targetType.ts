@@ -16,6 +16,8 @@ import { BlockPayload } from "./blockPayload";
 
 export type TargetTypeBase = {
   responsePlayer?: TargetTypePlayer;
+  tipID?: string[];
+  valueLengthInclude?: number[];
 };
 
 export type TargetTypeGameEventOnAfterEffect = {
@@ -65,8 +67,6 @@ export type TargetTypeCard = {
               "プレイされて場に出た場合のカード"
             ];
       };
-  tipID?: string[];
-  valueLengthInclude?: number[];
 } & TargetTypeBase;
 
 // export type TargetTypeCard2 =
@@ -193,8 +193,6 @@ type TargetTypeDamage = {
 export type TargetTypeCardTextState = {
   id: "TargetTypeCardTextState";
   value: CardTextState[] | string;
-  tipID?: string[];
-  valueLengthInclude?: number[];
 } & TargetTypeBase;
 
 export type TargetType =

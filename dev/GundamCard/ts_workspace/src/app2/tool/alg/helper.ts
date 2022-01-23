@@ -187,8 +187,9 @@ export function getTargetType(
               targetTypeAfterProcess.value.length
             ) == false
           ) {
+            log2("getTargetType", "target", target);
             throw new Error(
-              "card length must in " +
+              "陣列長度不正確:" +
                 JSON.stringify(targetTypeAfterProcess.valueLengthInclude)
             );
           }
@@ -587,10 +588,13 @@ export function getTargetType(
               case "的「攻撃力」":
               case "的「防御力」":
               case "的「合計国力」": {
-                return 0;
+                const [_, cardState] = getCardState(ctx, cardID);
+                return cardState.prototype.rollCost.length;
               }
               case "的「ロールコストの合計値」": {
-                return 0;
+                const [_, cardState] = getCardState(ctx, cardID);
+                return cardState.prototype.rollCost.filter((v) => v != null)
+                  .length;
               }
             }
           });

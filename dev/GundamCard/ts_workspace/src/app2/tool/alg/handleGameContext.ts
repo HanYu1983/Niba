@@ -17,6 +17,7 @@ import {
 import {
   CardTextState,
   GameContext,
+  getBlockOwner,
   reduceEffect,
 } from "../tool/basic/gameContext";
 import { getCard, mapCard, Card } from "../../../tool/table";
@@ -163,69 +164,104 @@ export function updateCommand(ctx: GameContext): GameContext {
                 return target;
               }
               // 取得提示.
-              switch (target.id) {
-                case "カード": {
-                  const tips = (() => {
-                    if (r.condition == null) {
-                      return [];
-                    }
-                    const condition = r.condition;
-                    switch (target.id) {
-                      case "カード": {
-                        const validCardID: string[] = [];
-                        mapCard(ctx.gameState.table, (card) => {
-                          const tmp: TargetTypeCard = {
-                            id: "カード",
-                            value: [card.id],
-                          };
-                          const msg = doConditionTarget(
-                            ctx,
-                            wrapEvent,
-                            {
-                              ...r.targets,
-                              [targetID]: tmp,
-                            },
-                            condition
-                          );
-                          if (msg == null) {
-                            validCardID.push(card.id);
-                          }
-                          return card;
-                        });
-                        return validCardID;
-                      }
-                    }
-                  })();
-                  const nextValues = (() => {
-                    if (tips.length == 0) {
-                      return target.value;
-                    }
-                    if (!Array.isArray(target.value)) {
-                      return target.value;
-                    }
-                    if (target.valueLengthInclude == null) {
-                      return target.value;
-                    }
-                    if (target.valueLengthInclude.length == 0) {
-                      return target.value;
-                    }
-                    const len = target.valueLengthInclude[0];
-                    return tips.slice(0, len);
-                  })();
-                  return {
-                    ...target,
-                    value: nextValues,
-                    tipID: tips,
-                  };
+              const tips = (() => {
+                if (r.condition == null) {
+                  return [];
                 }
-              }
-              return target;
+                const condition = r.condition;
+                const validCardID: string[] = [];
+                mapCard(ctx.gameState.table, (card) => {
+                  const tmp: TargetTypeCard = {
+                    id: "カード",
+                    value: [card.id],
+                  };
+                  const msg = doConditionTarget(
+                    ctx,
+                    wrapEvent,
+                    {
+                      ...r.targets,
+                      [targetID]: tmp,
+                    },
+                    condition
+                  );
+                  if (msg == null) {
+                    validCardID.push(card.id);
+                  }
+                  return card;
+                });
+                return validCardID;
+              })();
+              const nextValues = (() => {
+                if (tips.length == 0) {
+                  return target.value;
+                }
+                if (!Array.isArray(target.value)) {
+                  return target.value;
+                }
+                if (target.valueLengthInclude == null) {
+                  return target.value;
+                }
+                if (target.valueLengthInclude.length == 0) {
+                  return target.value;
+                }
+                const len = target.valueLengthInclude[0];
+                return tips.slice(0, len);
+              })();
+              return {
+                ...target,
+                value: nextValues,
+                tipID: tips,
+              };
             });
           });
           wrapEvent = {
             ...wrapEvent,
             require: nextRequire,
           };
+        }
+        // 判斷需求是否能滿足
+        let canPass = true;
+        // if (wrapEvent.require) {
+        //   recurRequire(wrapEvent.require, (r) => {
+        //     if (r.id != "RequireTarget") {
+        //       return r;
+        //     }
+        //     return mapRequireTargets(r, (targetID, target) => {
+        //       if (r.key == null) {
+        //         return target;
+        //       }
+        //       if (target.valueLengthInclude == null) {
+        //         return target;
+        //       }
+        //       if (target.valueLengthInclude.length == 0) {
+        //         return target;
+        //       }
+        //       if (!Array.isArray(target.value)) {
+        //         return target;
+        //       }
+        //       const len = target.valueLengthInclude[0];
+        //       if (target.value.length < len) {
+        //         canPass = false;
+        //       }
+        //       return target;
+        //     });
+        //   });
+        // }
+        if (wrapEvent.require) {
+          try {
+            doRequire(ctx, wrapEvent, wrapEvent.require, "tmp");
+          } catch (e) {
+            log2(
+              "updateCommand",
+              "檢測可行性失敗，不加入指令列表",
+              e,
+              wrapEvent
+            );
+            canPass = false;
+          }
+        }
+        if (canPass == false) {
+          return ctx;
         }
         // 直接加入指令列表
         ctx = {
@@ -395,6 +431,95 @@ export function getTip(
     return effect;
   });
   return ret;
+}
+
+export function getClientCommand(ctx: GameContext, clientID: string) {
+  return ctx.gameState.commandEffect.filter((effect) => {
+    const controller = getBlockOwner(ctx, effect);
+    if (controller != clientID) {
+      return;
+    }
+    if (effect.cause?.id != "BlockPayloadCauseUpdateCommand") {
+      throw new Error("must from command cause");
+    }
+    const { cardID, cardTextID } = effect.cause;
+    const [_, cardState] = getCardState(ctx, cardID);
+    const text = cardState.cardTextStates.find((v) => v.id == cardTextID);
+    if (text == null) {
+      throw new Error("must find text");
+    }
+    const siYouTiming = (() => {
+      switch (text.cardText.id) {
+        case "使用型":
+          return text.cardText.timing;
+        case "特殊型": {
+          const t = text.cardText.texts.find((v) => v.id == "使用型");
+          if (t == null) {
+            throw new Error("t must find");
+          }
+          if (t.id != "使用型") {
+            throw new Error("t must be 使用型");
+          }
+          return t.timing;
+        }
+        default:
+          throw new Error("not support:" + text.cardText.id);
+      }
+    })();
+    switch (siYouTiming[0]) {
+      case "自軍":
+        if (ctx.gameState.activePlayerID != clientID) {
+          return;
+        }
+        break;
+      case "敵軍":
+        if (ctx.gameState.activePlayerID == clientID) {
+          return;
+        }
+        break;
+      case "戦闘フェイズ":
+        if (ctx.gameState.timing[1][0] != "戦闘フェイズ") {
+          return;
+        }
+        break;
+      case "攻撃ステップ":
+      case "防御ステップ":
+      case "ダメージ判定ステップ":
+      case "帰還ステップ":
+        if (ctx.gameState.timing[1][0] != "戦闘フェイズ") {
+          return;
+        }
+        if (ctx.gameState.timing[1][1] != siYouTiming[0]) {
+          return;
+        }
+        break;
+    }
+    switch (siYouTiming[0]) {
+      case "自軍":
+      case "敵軍":
+        switch (siYouTiming[1]) {
+          case "配備フェイズ":
+          case "戦闘フェイズ":
+            if (ctx.gameState.timing[1][0] != siYouTiming[1]) {
+              return;
+            }
+            break;
+          case "攻撃ステップ":
+          case "防御ステップ":
+          case "ダメージ判定ステップ":
+          case "帰還ステップ":
+            if (ctx.gameState.timing[1][0] != "戦闘フェイズ") {
+              return;
+            }
+            if (ctx.gameState.timing[1][1] != siYouTiming[1]) {
+              return;
+            }
+            break;
+        }
+        break;
+    }
+    return true;
+  });
 }
 
 // 取得指令列表
