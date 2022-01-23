@@ -63,15 +63,6 @@ export function testClientCommand2() {
     }),
     ["179016_04B_U_WT075C_white"]
   );
-  table = createCard(
-    table,
-    PlayerA,
-    getBaShouID({
-      id: "AbsoluteBaSyou",
-      value: [PlayerA, "Gゾーン"],
-    }),
-    ["179016_04B_U_WT075C_white"]
-  );
   ctx = {
     ...ctx,
     gameState: {
@@ -86,7 +77,64 @@ export function testClientCommand2() {
   ctx = initState(ctx);
   ctx = updateCommand(ctx);
   let cmdList = getClientCommand(ctx, PlayerA);
-  console.log(cmdList);
+  if (cmdList.length != 1) {
+    throw new Error("一開始沒有G, 只能有一個指令");
+  }
+  console.log("加入5個G");
+  ctx = {
+    ...ctx,
+    gameState: {
+      ...ctx.gameState,
+      table: createCard(
+        ctx.gameState.table,
+        PlayerA,
+        getBaShouID({
+          id: "AbsoluteBaSyou",
+          value: [PlayerA, "Gゾーン"],
+        }),
+        [
+          "179016_04B_U_WT075C_white",
+          "179016_04B_U_WT075C_white",
+          "179016_04B_U_WT075C_white",
+          "179016_04B_U_WT075C_white",
+          "179016_04B_U_WT075C_white",
+        ]
+      ),
+    },
+  };
+  console.log("加入G後要呼叫updateCommand");
+  ctx = updateCommand(ctx);
+  cmdList = getClientCommand(ctx, PlayerA);
+  if (cmdList.length != 2) {
+    throw new Error("加入5個G後，要有2個指令");
+  }
+  const playUnitCmd = cmdList[0];
+  console.log("強制指令activeEffectID，為了呼叫doEffect");
+  ctx = {
+    ...ctx,
+    gameState: {
+      ...ctx.gameState,
+      activeEffectID: playUnitCmd.id || null,
+    },
+  };
+  ctx = doEffect(ctx, PlayerA, playUnitCmd.id || "");
+  if (
+    ctx.gameState.table.cardStack[
+      getBaShouID({ id: "AbsoluteBaSyou", value: [PlayerA, "Gゾーン"] })
+    ].filter((c) => c.tap).length != 1
+  ) {
+    console.log("必須横置1張國力");
+  }
+  if (
+    ctx.gameState.table.cardStack[
+      getBaShouID({
+        id: "AbsoluteBaSyou",
+        value: [PlayerA, "プレイされているカード"],
+      })
+    ].filter((c) => c.tap).length != 1
+  ) {
+    console.log("卡片必須移到プレイされているカード");
+  }
 }
 
 export function testClientCommand() {

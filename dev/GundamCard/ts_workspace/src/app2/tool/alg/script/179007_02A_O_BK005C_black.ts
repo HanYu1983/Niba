@@ -10,7 +10,7 @@ import { createPlayCardText } from "./createPlayCardText";
 // 破壊
 // （帰還ステップ）〔黒３〕：自軍カード１枚を廃棄する。その場合、敵軍は、G以外の自分のカード１枚を選んで廃棄する。
 
-let _idSeq = 0
+let _idSeq = 0;
 const prototype: CardPrototype = {
   title: "コロニーが落ちる日",
   characteristic: "破壊".split("　"),
@@ -21,7 +21,8 @@ const prototype: CardPrototype = {
     {
       id: "使用型",
       timing: ["常時"],
-      description: "（帰還ステップ）〔黒３〕：自軍カード１枚を廃棄する。その場合、敵軍は、G以外の自分のカード１枚を選んで廃棄する。",
+      description:
+        "（帰還ステップ）〔黒３〕：自軍カード１枚を廃棄する。その場合、敵軍は、G以外の自分のカード１枚を選んで廃棄する。",
       block: {
         contextID: `179007_02A_O_BK005C_black_${_idSeq++}`,
         require: {
@@ -37,10 +38,16 @@ const prototype: CardPrototype = {
                     自軍カード１枚: {
                       id: "カード",
                       value: [],
-                      valueLengthInclude: [1]
-                    }
+                      valueLengthInclude: [1],
+                    },
                   },
-                  action: [{ id: "ActionSetTarget", source: "自軍カード１枚", target: "自軍カード１枚" }]
+                  action: [
+                    {
+                      id: "ActionSetTarget",
+                      source: "自軍カード１枚",
+                      target: "自軍カード１枚",
+                    },
+                  ],
                 },
                 {
                   id: "RequireTarget",
@@ -49,14 +56,20 @@ const prototype: CardPrototype = {
                       id: "カード",
                       value: [],
                       valueLengthInclude: [1],
-                      responsePlayer: { id: "プレーヤー", value: { path: [{ id: "敵軍" }] } }
-                    }
+                      responsePlayer: "敵軍",
+                    },
                   },
-                  action: [{ id: "ActionSetTarget", source: "敵軍は、G以外の自分のカード１枚", target: "敵軍は、G以外の自分のカード１枚" }]
-                }
-              ]
-            }
-          ]
+                  action: [
+                    {
+                      id: "ActionSetTarget",
+                      source: "敵軍は、G以外の自分のカード１枚",
+                      target: "敵軍は、G以外の自分のカード１枚",
+                    },
+                  ],
+                },
+              ],
+            },
+          ],
         },
         feedback: [
           {
@@ -70,18 +83,27 @@ const prototype: CardPrototype = {
                     {
                       id: "FeedbackAction",
                       action: [
-                        { id: "ActionDestroy", cards: { id: "カード", value: "自軍カード１枚" } },
-                        { id: "ActionDestroy", cards: { id: "カード", value: "敵軍は、G以外の自分のカード１枚" } }
-                      ]
-                    }
-                  ]
-                }
-              }
-            ]
-          }
-        ]
-      }
-    }
+                        {
+                          id: "ActionDestroy",
+                          cards: { id: "カード", value: "自軍カード１枚" },
+                        },
+                        {
+                          id: "ActionDestroy",
+                          cards: {
+                            id: "カード",
+                            value: "敵軍は、G以外の自分のカード１枚",
+                          },
+                        },
+                      ],
+                    },
+                  ],
+                },
+              },
+            ],
+          },
+        ],
+      },
+    },
   ],
 };
 

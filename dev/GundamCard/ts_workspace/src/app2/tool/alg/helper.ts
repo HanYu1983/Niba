@@ -325,15 +325,33 @@ export function getTargetType(
       const path = targetTypeAfterProcess.value.path;
       switch (path[0].id) {
         case "自軍":
-          return {
-            id: "プレーヤー",
-            value: [getBlockOwner(ctx, blockPayload)],
-          };
+          switch (targetTypeAfterProcess.responsePlayer) {
+            case "敵軍":
+              return {
+                id: "プレーヤー",
+                value: [getOpponentPlayerID(getBlockOwner(ctx, blockPayload))],
+              };
+            case "自軍":
+            default:
+              return {
+                id: "プレーヤー",
+                value: [getBlockOwner(ctx, blockPayload)],
+              };
+          }
         case "敵軍":
-          return {
-            id: "プレーヤー",
-            value: [getOpponentPlayerID(getBlockOwner(ctx, blockPayload))],
-          };
+          switch (targetTypeAfterProcess.responsePlayer) {
+            case "敵軍":
+              return {
+                id: "プレーヤー",
+                value: [getBlockOwner(ctx, blockPayload)],
+              };
+            case "自軍":
+            default:
+              return {
+                id: "プレーヤー",
+                value: [getOpponentPlayerID(getBlockOwner(ctx, blockPayload))],
+              };
+          }
         case "カード": {
           const targetType = getTargetType(ctx, blockPayload, targets, path[0]);
           if (targetType.id != "カード") {

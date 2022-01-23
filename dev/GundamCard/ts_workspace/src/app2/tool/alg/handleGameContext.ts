@@ -205,7 +205,6 @@ export function updateCommand(ctx: GameContext): GameContext {
                       msgs: {} as { [key: string]: string },
                     }
                   );
-
                   const nextValues = (() => {
                     if (validCardID.length == 0) {
                       return target.value;
@@ -222,6 +221,7 @@ export function updateCommand(ctx: GameContext): GameContext {
                     const len = target.valueLengthInclude[0];
                     return validCardID.slice(0, len);
                   })();
+                  log2("updateCommand", validCardID, msgs, nextValues);
                   return {
                     ...target,
                     value: nextValues,

@@ -15,7 +15,7 @@ import { CardTextState, GameContext, GameEffect } from "./gameContext";
 import { BlockPayload } from "./blockPayload";
 
 export type TargetTypeBase = {
-  responsePlayer?: TargetTypePlayer;
+  responsePlayer?: RelatedPlayerSideKeyword;
   tipID?: string[];
   tipMessage?: { [key: string]: string };
   valueLengthInclude?: number[];

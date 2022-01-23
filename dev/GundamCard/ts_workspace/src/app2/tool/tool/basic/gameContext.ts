@@ -237,17 +237,10 @@ export function getRequireTargetOwner(
   if (require.id != "RequireTarget") {
     return getBlockOwner(ctx, blockPayload);
   }
-  const targetType = getTargetType(
-    ctx,
-    blockPayload,
-    require.targets,
-    target.responsePlayer
-  );
-  if (targetType.id != "プレーヤー") {
-    throw new Error("must プレーヤー");
+  switch (target.responsePlayer) {
+    case "自軍":
+      return getBlockOwner(ctx, blockPayload);
+    case "敵軍":
+      return getOpponentPlayerID(getBlockOwner(ctx, blockPayload));
   }
-  if (!Array.isArray(targetType.value)) {
-    throw new Error("must real value");
-  }
-  return targetType.value[0];
 }
