@@ -9,6 +9,7 @@ import {
   getBaShouID,
   PlayerA,
   PlayerB,
+  Timing,
   TIMING_CHART,
 } from "../../../tool/tool/basic/basic";
 import {
@@ -26,14 +27,22 @@ export type ViewModel = {
   model: GameContext;
   cardSelection: Selection;
   cardPositionSelection: Selection;
-  flows: Flow[];
+  localMemory: {
+    clientID: string | null;
+    timing: Timing;
+    lastPassPhase: boolean;
+  };
 };
 
 export const DEFAULT_VIEW_MODEL: ViewModel = {
   model: DEFAULT_GAME_CONTEXT,
   cardSelection: [],
   cardPositionSelection: [],
-  flows: [],
+  localMemory: {
+    clientID: null,
+    timing: TIMING_CHART[0],
+    lastPassPhase: false,
+  },
 };
 
 export const OnViewModel = OnEvent.pipe(
@@ -133,7 +142,16 @@ export const OnViewModel = OnEvent.pipe(
             return viewModel;
           }
           firebase.sync(model);
-          return viewModel;
+          return {
+            ...viewModel,
+            localMemory: {
+              clientID: evt.clientID,
+              timing: model.gameState.timing,
+              lastPassPhase:
+                model.gameState.flowMemory.hasPlayerPassPhase[evt.clientID] ||
+                false,
+            },
+          };
         }
         case "OnClickRequireTargetConfirm": {
           if (evt.require.key == null) {
@@ -157,25 +175,48 @@ export const OnViewModel = OnEvent.pipe(
         case "OnModelFromFirebase":
           const originNum = viewModel.model.versionID;
           const remoteNum = evt.model.versionID;
-          if (remoteNum > originNum) {
-            OnError.next(
-              new Error(
-                `你的版號過期，本地資料將被覆蓋:origin(${viewModel.model.versionID}) remote(${evt.model.versionID})`
-              )
-            );
-            return {
-              ...viewModel,
-              model: {
-                ...evt.model,
-                versionID: remoteNum + 1,
-              },
-            };
-          } else if (remoteNum == originNum) {
-            // const isDirty =
-            //   JSON.stringify(viewModel.model) != JSON.stringify(evt.model);
-            // if (isDirty == false) {
-            //   return viewModel;
-            // }
+          if (remoteNum >= originNum) {
+            if (remoteNum > originNum) {
+              OnError.next(
+                new Error(
+                  `你的版號過期，本地資料將被覆蓋:origin(${originNum}) remote(${remoteNum})`
+                )
+              );
+            }
+            if (
+              viewModel.localMemory.clientID != null &&
+              viewModel.localMemory.timing[0] == evt.model.gameState.timing[0]
+            ) {
+              const hasPlayerPassPhaseMerge = {
+                ...evt.model.gameState.flowMemory.hasPlayerPassPhase,
+                [viewModel.localMemory.clientID]:
+                  viewModel.localMemory.lastPassPhase,
+              };
+              let model = evt.model;
+              model = {
+                ...model,
+                gameState: {
+                  ...model.gameState,
+                  flowMemory: {
+                    ...model.gameState.flowMemory,
+                    hasPlayerPassPhase: hasPlayerPassPhaseMerge,
+                  },
+                },
+              };
+              const isDirty =
+                JSON.stringify(evt.model) != JSON.stringify(model);
+              if (isDirty) {
+                model = {
+                  ...model,
+                  versionID: remoteNum + 1000,
+                };
+                firebase.sync(model);
+                return {
+                  ...viewModel,
+                  model: model,
+                };
+              }
+            }
             return {
               ...viewModel,
               model: {
@@ -186,7 +227,7 @@ export const OnViewModel = OnEvent.pipe(
           } else {
             OnError.next(
               new Error(
-                `版本號不對，送新上傳版本:origin(${viewModel.model.versionID}) remote(${evt.model.versionID})`
+                `版本號不對，送新上傳版本:origin(${originNum}) remote(${remoteNum})`
               )
             );
             firebase.sync(viewModel.model);
