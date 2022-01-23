@@ -100,7 +100,7 @@ export const OnViewModel = OnEvent.pipe(
               id: "AbsoluteBaSyou",
               value: [PlayerB, "配備エリア"],
             }),
-            ["179030_11E_U_BL208S_blue", "179030_11E_U_BL208S_blue"]
+            ["179016_04B_U_WT075C_white", "179030_11E_U_BL208S_blue"]
           );
           table = createCard(
             table,

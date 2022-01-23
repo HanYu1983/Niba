@@ -33,6 +33,92 @@ import { getCardState } from "./helper";
 import { doConditionTarget } from "./doConditionTarget";
 //import { createPlayUnitText } from "./createPlayUnitText";
 
+export function wrapTip(ctx: GameContext, block: BlockPayload): BlockPayload {
+  if (block.require == null) {
+    return block;
+  }
+  // 針對每一個需求,
+  const nextRequire = recurRequire(block.require, (r) => {
+    if (r.id != "RequireTarget") {
+      return r;
+    }
+    // 的每一個對象,
+    return mapRequireTargets(r, (targetID, target): TargetType => {
+      if (r.key == null) {
+        return target;
+      }
+      switch (target.id) {
+        case "カード": {
+          // 取得提示.
+          const { validCardID, msgs } = reduceCard(
+            ctx.gameState.table,
+            ({ validCardID, msgs }, card) => {
+              if (r.condition == null) {
+                return {
+                  validCardID,
+                  msgs,
+                };
+              }
+              const tmp: TargetTypeCard = {
+                id: "カード",
+                value: [card.id],
+              };
+              const msg = doConditionTarget(
+                ctx,
+                block,
+                {
+                  ...r.targets,
+                  [targetID]: tmp,
+                },
+                r.condition
+              );
+              return {
+                validCardID: msg ? validCardID : [...validCardID, card.id],
+                msgs: {
+                  ...msgs,
+                  ...(msg ? { [card.id]: msg } : null),
+                },
+              };
+            },
+            {
+              validCardID: [] as string[],
+              msgs: {} as { [key: string]: string },
+            }
+          );
+          const nextValues = (() => {
+            if (validCardID.length == 0) {
+              return target.value;
+            }
+            if (!Array.isArray(target.value)) {
+              return target.value;
+            }
+            if (target.valueLengthInclude == null) {
+              return target.value;
+            }
+            if (target.valueLengthInclude.length == 0) {
+              return target.value;
+            }
+            const len = target.valueLengthInclude[0];
+            return validCardID.slice(0, len);
+          })();
+          log2("updateCommand", validCardID, msgs, nextValues);
+          return {
+            ...target,
+            value: nextValues,
+            tipID: validCardID,
+            tipMessage: msgs,
+          };
+        }
+      }
+      return target;
+    });
+  });
+  return {
+    ...block,
+    require: nextRequire,
+  };
+}
+
 // 觸發事件腳本
 // 在每次事件發生時都要呼叫
 // 這時技能可能會被加到起動列表或堆疊列表中
@@ -153,119 +239,9 @@ export function updateCommand(ctx: GameContext): GameContext {
             ? { require: wrapRequireKey(block.require) }
             : null),
         };
-        // 若有需求，則將需求加上提示
-        if (wrapEvent.require) {
-          // 針對每一個需求,
-          const nextRequire = recurRequire(wrapEvent.require, (r) => {
-            if (r.id != "RequireTarget") {
-              return r;
-            }
-            // 的每一個對象,
-            return mapRequireTargets(r, (targetID, target): TargetType => {
-              if (r.key == null) {
-                return target;
-              }
-              switch (target.id) {
-                case "カード": {
-                  // 取得提示.
-                  const { validCardID, msgs } = reduceCard(
-                    ctx.gameState.table,
-                    ({ validCardID, msgs }, card) => {
-                      if (r.condition == null) {
-                        return {
-                          validCardID,
-                          msgs,
-                        };
-                      }
-                      const tmp: TargetTypeCard = {
-                        id: "カード",
-                        value: [card.id],
-                      };
-                      const msg = doConditionTarget(
-                        ctx,
-                        wrapEvent,
-                        {
-                          ...r.targets,
-                          [targetID]: tmp,
-                        },
-                        r.condition
-                      );
-                      return {
-                        validCardID: msg
-                          ? validCardID
-                          : [...validCardID, card.id],
-                        msgs: {
-                          ...msgs,
-                          ...(msg ? { [card.id]: msg } : null),
-                        },
-                      };
-                    },
-                    {
-                      validCardID: [] as string[],
-                      msgs: {} as { [key: string]: string },
-                    }
-                  );
-                  const nextValues = (() => {
-                    if (validCardID.length == 0) {
-                      return target.value;
-                    }
-                    if (!Array.isArray(target.value)) {
-                      return target.value;
-                    }
-                    if (target.valueLengthInclude == null) {
-                      return target.value;
-                    }
-                    if (target.valueLengthInclude.length == 0) {
-                      return target.value;
-                    }
-                    const len = target.valueLengthInclude[0];
-                    return validCardID.slice(0, len);
-                  })();
-                  log2("updateCommand", validCardID, msgs, nextValues);
-                  return {
-                    ...target,
-                    value: nextValues,
-                    tipID: validCardID,
-                    tipMessage: msgs,
-                  };
-                }
-              }
-              return target;
-            });
-          });
-          wrapEvent = {
-            ...wrapEvent,
-            require: nextRequire,
-          };
-        }
+        wrapEvent = wrapTip(ctx, wrapEvent);
         // 判斷需求是否能滿足
         let canPass = true;
-        // if (wrapEvent.require) {
-        //   recurRequire(wrapEvent.require, (r) => {
-        //     if (r.id != "RequireTarget") {
-        //       return r;
-        //     }
-        //     return mapRequireTargets(r, (targetID, target) => {
-        //       if (r.key == null) {
-        //         return target;
-        //       }
-        //       if (target.valueLengthInclude == null) {
-        //         return target;
-        //       }
-        //       if (target.valueLengthInclude.length == 0) {
-        //         return target;
-        //       }
-        //       if (!Array.isArray(target.value)) {
-        //         return target;
-        //       }
-        //       const len = target.valueLengthInclude[0];
-        //       if (target.value.length < len) {
-        //         canPass = false;
-        //       }
-        //       return target;
-        //     });
-        //   });
-        // }
         if (wrapEvent.require) {
           try {
             doRequire(ctx, wrapEvent, wrapEvent.require, "tmp");

@@ -95,7 +95,10 @@ export function setRequireTarget(
       // TODO: 判斷當中的張數必須一樣
       const nextTargets = {
         ...require.targets,
-        [varID]: value,
+        [varID]: {
+          ...require.targets[varID],
+          ...value,
+        },
       };
       return { ...require, targets: nextTargets };
     });

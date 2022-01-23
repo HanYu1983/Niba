@@ -269,6 +269,7 @@ export function doActionTarget(
       if (cards?.id != "カード") {
         throw new Error("must カード");
       }
+      // TODO: trigger 破壞效果
       return ctx;
     }
     case "ActionMoveCardToPosition":
