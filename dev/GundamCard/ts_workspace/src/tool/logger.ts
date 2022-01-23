@@ -2,7 +2,7 @@ const hideCategory = [
   //"updateCommand",
   //"getTip",
   "recurRequire",
-  "getTargetType",
+  //"getTargetType",
   "triggerTextEvent",
 ];
 let filterCategory = true;

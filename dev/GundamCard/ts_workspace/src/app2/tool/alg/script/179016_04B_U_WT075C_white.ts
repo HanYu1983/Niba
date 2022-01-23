@@ -106,10 +106,10 @@ const prototype: CardPrototype = {
                               ],
                             },
                             {
-                              id: "ConditionCompareRole",
+                              id: "ConditionCompareCardCategory",
                               value: [
                                 {
-                                  id: "「カード」的角色",
+                                  id: "カードの種類",
                                   value: {
                                     path: [
                                       {
@@ -117,13 +117,13 @@ const prototype: CardPrototype = {
                                         value:
                                           "５以下の防御力を持つ敵軍ユニット１枚",
                                       },
-                                      "的角色",
+                                      "的「種類」",
                                     ],
                                   },
                                 },
                                 "==",
                                 {
-                                  id: "「カード」的角色",
+                                  id: "カードの種類",
                                   value: ["ユニット"],
                                 },
                               ],

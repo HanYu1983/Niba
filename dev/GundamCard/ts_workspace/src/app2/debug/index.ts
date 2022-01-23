@@ -5,14 +5,15 @@ import {
   //updateCommand,
   triggerTextEvent,
   getTip,
+  updateCommand,
 } from "../tool/alg/handleGameContext";
 import { createCard } from "../../tool/table";
 import { getBaShouID, PlayerA, PlayerB } from "../tool/tool/basic/basic";
 import { recurRequire } from "../tool/tool/basic/blockPayload";
 import { testFlow } from "./testFlow";
-import { testKaiSo } from "./testKaiSo";
+import { testKaiSo1 } from "./testKaiSo";
 
-export function testInit() {
+export function testDryRun() {
   let ctx = DEFAULT_GAME_CONTEXT;
   let table = ctx.gameState.table;
   (table = createCard(
@@ -50,20 +51,24 @@ export function testInit() {
         table: table,
       },
     });
+  console.log("initState");
   ctx = initState(ctx);
+  console.log("updateEffect");
   ctx = updateEffect(ctx);
-  //ctx = updateCommand(ctx);
+  console.log("updateCommand");
+  ctx = updateCommand(ctx);
+  console.log("triggerTextEvent");
   ctx = triggerTextEvent(ctx, {
     id: "GameEventOnTiming",
     timing: ctx.gameState.timing,
   });
-
   ctx.gameState.immediateEffect.forEach((effect) => {
     if (effect.require == null) {
       return;
     }
     const key = ((): string | null => {
       let _key: string | null = null;
+      console.log("recurRequire");
       recurRequire(effect.require, (r) => {
         if (r.id != "RequireTarget") {
           return r;
@@ -75,26 +80,21 @@ export function testInit() {
       });
       return _key;
     })();
-    console.log(key);
+    console.log("getTip");
     const tip = getTip(
       ctx,
       effect.id || "",
       key || "",
       "５以下の防御力を持つ敵軍ユニット１枚"
     );
-    console.log(tip);
   });
-
-  console.log(ctx);
 }
 
 export function test() {
-  // [testInit].forEach((testF: Function) => {
-  //   console.log(`============${testF.name}===========`);
-  //   testF();
-  // });
-
-  testKaiSo()
+  [testDryRun, testKaiSo1].forEach((testF: Function) => {
+    console.log(`============${testF.name}===========`);
+    testF();
+  });
 }
 
 // function testSetAnswer() {

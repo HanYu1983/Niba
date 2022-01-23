@@ -3,6 +3,7 @@ import {
   BattleBonus,
   CardCategory,
   CardColor,
+  CardRole,
   GameEvent,
   GameEventOnAfterEffect,
   GameEventOnManualEvent,
@@ -172,7 +173,7 @@ export type TargetTypeCardRole = {
   id: "「カード」的角色";
   triggerGameEvent?: GameEventOnManualEvent;
   value:
-    | CardCategory[]
+    | CardRole[]
     | string
     | { path: [TargetTypeCard, "的角色" | "當成横置裝彈G時的角色"] };
 } & TargetTypeBase;

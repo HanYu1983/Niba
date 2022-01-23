@@ -54,6 +54,8 @@ export type CardCategory =
   | "ACE"
   | "グラフィック";
 
+export type CardRole = "未指定" | CardCategory;
+
 export type CardColor =
   | "緑"
   | "茶"
@@ -103,20 +105,7 @@ export type RelatedPlayerSideKeyword = "自軍" | "敵軍";
 
 export type SiYouTiming =
   | [
-    | "常時"
-    | "ドローフェイズ"
-    | "リロールフェイズ"
-    | "配備フェイズ"
-    | "戦闘フェイズ"
-    | "攻撃ステップ"
-    | "防御ステップ"
-    | "ダメージ判定ステップ"
-    | "帰還ステップ"
-  ]
-  | [
-    RelatedPlayerSideKeyword,
-    (
-      | "ターン"
+      | "常時"
       | "ドローフェイズ"
       | "リロールフェイズ"
       | "配備フェイズ"
@@ -125,8 +114,21 @@ export type SiYouTiming =
       | "防御ステップ"
       | "ダメージ判定ステップ"
       | "帰還ステップ"
-    )
-  ];
+    ]
+  | [
+      RelatedPlayerSideKeyword,
+      (
+        | "ターン"
+        | "ドローフェイズ"
+        | "リロールフェイズ"
+        | "配備フェイズ"
+        | "戦闘フェイズ"
+        | "攻撃ステップ"
+        | "防御ステップ"
+        | "ダメージ判定ステップ"
+        | "帰還ステップ"
+      )
+    ];
 
 export const TIMING_CHART = ((): Timing[] => {
   const phaseSeq: Phase[] = [
@@ -190,7 +192,7 @@ export function isCanPlayCardInPhase(phase: Phase): boolean {
   }
 }
 
-export type BattleBonus = [number, number, number]
+export type BattleBonus = [number, number, number];
 
 export type GameEventOnTiming = {
   id: "GameEventOnTiming";
@@ -198,16 +200,19 @@ export type GameEventOnTiming = {
 };
 
 export type GameEventOnAfterEffect = {
-  id: "「効果」解決時",
-  block: BlockPayload
-}
+  id: "「効果」解決時";
+  block: BlockPayload;
+};
 
 export type GameEventOnManualEvent = {
-  id: "手動事件發生時",
+  id: "手動事件發生時";
   customID: any;
-}
+};
 
-export type GameEvent = GameEventOnTiming | GameEventOnAfterEffect | GameEventOnManualEvent;
+export type GameEvent =
+  | GameEventOnTiming
+  | GameEventOnAfterEffect
+  | GameEventOnManualEvent;
 
 export type TokuSyuKouKa =
   | ["高機動"]

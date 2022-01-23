@@ -799,7 +799,15 @@ export function createTokuSyuKouKaText(
                           value: [
                             {
                               id: "「カード」的角色",
-                              value: "targetCard",
+                              value: {
+                                path: [
+                                  {
+                                    id: "カード",
+                                    value: "targetCard",
+                                  },
+                                  "的角色",
+                                ],
+                              },
                             },
                             "==",
                             {

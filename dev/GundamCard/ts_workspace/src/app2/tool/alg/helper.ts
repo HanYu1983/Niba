@@ -4,6 +4,7 @@ import {
   BattleBonus,
   CardCategory,
   CardColor,
+  CardRole,
   getBaShouID,
   getOpponentPlayerID,
 } from "../tool/basic/basic";
@@ -129,20 +130,25 @@ export function getTargetType(
   targets: { [key: string]: TargetType },
   target: TargetType
 ): TargetType {
-  log("getTargetType", "target");
-  log("getTargetType", target);
-  log("getTargetType", "targets");
-  log("getTargetType", targets);
   const targetTypeAfterProcess = (() => {
     if (typeof target.value == "string") {
       if (targets[target.value] == null) {
         throw new Error("target.value not found:" + target.value);
       }
       const replaced = targets[target.value];
-      if (replaced.id != target.id) {
-        throw new Error(
-          `從變數取來的類型必須和本來的一樣:${target.id} != ${replaced.id}`
-        );
+      // 是參照的情況就不管取得類型
+      if (target.id != "參照") {
+        if (replaced.id != target.id) {
+          log("getTargetType", "blockPayload");
+          log("getTargetType", blockPayload);
+          log("getTargetType", "target");
+          log("getTargetType", target);
+          log("getTargetType", "replaced");
+          log("getTargetType", replaced);
+          throw new Error(
+            `從變數取來的類型必須和本來的一樣:${target.id} != ${replaced.id}`
+          );
+        }
       }
       return replaced;
     }
@@ -170,8 +176,6 @@ export function getTargetType(
         throw new Error("not support cause:" + block.cause.id);
     }
   };
-  log("getTargetType", "targetTypeAfterProcess");
-  log("getTargetType", targetTypeAfterProcess);
   switch (targetTypeAfterProcess.id) {
     case "參照":
       return targetTypeAfterProcess;
@@ -412,7 +416,7 @@ export function getTargetType(
           // if (targetType.value.length == 0) {
           //   throw new Error("cardID must > 0");
           // }
-          const values = targetType.value.map((cardID): CardCategory => {
+          const values = targetType.value.map((cardID): CardRole => {
             switch (path[1]) {
               case "當成横置裝彈G時的角色":
               case "的角色": {
@@ -428,7 +432,7 @@ export function getTargetType(
                   case "配備エリア":
                     return cardState.prototype.category;
                   default:
-                    throw new Error("no have role");
+                    return "未指定";
                 }
               }
             }
