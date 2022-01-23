@@ -194,7 +194,7 @@ export type TargetTypeCardTextState = {
   value: CardTextState[] | string;
   tipID?: string[];
   valueLengthInclude?: number[];
-};
+} & TargetTypeBase;
 
 export type TargetType =
   | TargetTypeRef

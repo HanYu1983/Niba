@@ -397,8 +397,7 @@ export function createTokuSyuKouKaText(
                               {
                                 id: "ActionAddCardText",
                                 cards: { id: "カード", value: "指定的卡" },
-                                cardTextStateID: `createTokuSyuKouKaText_${_seqID++}`,
-                                cardText: {
+                                cardTextState: {
                                   id: "TargetTypeCardTextState",
                                   value: "指定的內文",
                                 },

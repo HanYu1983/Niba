@@ -106,8 +106,7 @@ type ActionDeleteGlobalCardText = {
 type ActionAddCardText = {
   id: "ActionAddCardText";
   cards: TargetTypeCard;
-  cardText: TargetTypeCardTextState;
-  cardTextStateID?: string;
+  cardTextState: TargetTypeCardTextState;
 };
 
 type ActionDeleteCardText = {
