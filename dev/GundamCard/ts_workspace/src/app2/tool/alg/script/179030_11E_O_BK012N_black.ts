@@ -1,5 +1,9 @@
 import { getCustomFunctionString } from "../../../../tool/helper";
-import { CardPrototype, GameContext } from "../../tool/basic/gameContext";
+import {
+  CardPrototype,
+  GameContext,
+  DEFAULT_CARD_PROTOTYPE,
+} from "../../tool/basic/gameContext";
 import { createRollCostRequire } from "../../tool/basic/blockPayload";
 import { BlockPayload } from "../../tool/basic/blockPayload";
 import {
@@ -18,6 +22,7 @@ import { GameEventOnManualEventCustomID } from "../gameEventOnManualEventCustomI
 // （常時）〔R〕：敵軍は、自分のジャンクヤードにあるカード１枚をゲームから取り除く。
 
 const prototype: CardPrototype = {
+  ...DEFAULT_CARD_PROTOTYPE,
   title: "ショットクロー",
   characteristic: "束縛　装弾".split("　"),
   category: "オペレーション",
@@ -36,36 +41,56 @@ const prototype: CardPrototype = {
           condition: {
             id: "ConditionCompareGameEventOnManualEvent",
             value: [
-              { id: "手動事件發生時", value: { path: [{ id: "觸發這個事件的手動事件" }] } },
+              {
+                id: "手動事件發生時",
+                value: { path: [{ id: "觸發這個事件的手動事件" }] },
+              },
               "==",
               {
                 id: "手動事件發生時",
-                value: [{ id: "手動事件發生時", customID: { id: "「特徴：装弾」を持つ自軍コマンドの効果で自軍Gをロールする場合" } as GameEventOnManualEventCustomID }]
-              }
-            ]
-          }
+                value: [
+                  {
+                    id: "手動事件發生時",
+                    customID: {
+                      id: "「特徴：装弾」を持つ自軍コマンドの効果で自軍Gをロールする場合",
+                    } as GameEventOnManualEventCustomID,
+                  },
+                ],
+              },
+            ],
+          },
         },
-        feedback: [{
-          id: "FeedbackAction",
-          action: [{
-            id: "ActionAddEffect",
-            effect: { id: "GameEffectCustom", customID: "このカードを自軍Gとしてロールできる" }
-          }]
-        }]
+        feedback: [
+          {
+            id: "FeedbackAction",
+            action: [
+              {
+                id: "ActionAddEffect",
+                effect: {
+                  id: "GameEffectCustom",
+                  customID: "このカードを自軍Gとしてロールできる",
+                },
+              },
+            ],
+          },
+        ],
       },
     },
     {
       id: "使用型",
       timing: ["常時"],
-      description: "（常時）〔R〕：敵軍は、自分のジャンクヤードにあるカード１枚をゲームから取り除く。",
+      description:
+        "（常時）〔R〕：敵軍は、自分のジャンクヤードにあるカード１枚をゲームから取り除く。",
       block: {
         require: {
           id: "RequireTarget",
           targets: {},
-          action: [{
-            id: "ActionRoll",
-            cards: { id: "カード", value: { path: [{ id: "このカード" }] } }
-          }]
+          action: [
+            {
+              id: "ActionRoll",
+              cards: { id: "カード", value: { path: [{ id: "このカード" }] } },
+            },
+          ],
         },
         feedback: [
           {
@@ -78,31 +103,50 @@ const prototype: CardPrototype = {
                   require: {
                     id: "RequireTarget",
                     targets: {
-                      "自分のジャンクヤードにあるカード１枚": {
+                      自分のジャンクヤードにあるカード１枚: {
                         id: "カード",
                         value: [],
-                        valueLengthInclude: [1]
-                      }
+                        valueLengthInclude: [1],
+                      },
                     },
                     condition: {
                       id: "ConditionCompareBaSyou",
                       value: [
-                        { id: "場所", value: { path: [{ id: "カード", value: "自分のジャンクヤードにあるカード１枚" }, "的「場所」"] } },
+                        {
+                          id: "場所",
+                          value: {
+                            path: [
+                              {
+                                id: "カード",
+                                value: "自分のジャンクヤードにあるカード１枚",
+                              },
+                              "的「場所」",
+                            ],
+                          },
+                        },
                         "==",
-                        { id: "場所", value: [{ id: "RelatedBaSyou", value: ["自軍", "ジャンクヤード"] }] }
-                      ]
+                        {
+                          id: "場所",
+                          value: [
+                            {
+                              id: "RelatedBaSyou",
+                              value: ["自軍", "ジャンクヤード"],
+                            },
+                          ],
+                        },
+                      ],
                     },
                     action: [
                       // ゲームから取り除く
-                    ]
-                  }
-                }
-              }
-            ]
-          }
-        ]
-      }
-    }
+                    ],
+                  },
+                },
+              },
+            ],
+          },
+        ],
+      },
+    },
   ],
 };
 

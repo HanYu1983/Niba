@@ -16,6 +16,7 @@ import { createPlayCardText } from "./createPlayCardText";
 // （自軍配備フェイズ）〔２〕：このカードの上に、NTチップ｛CHARACTER、「特徴：NT」、１／１／１｝１個を乗せる。
 
 const prototype: CardPrototype = {
+  ...DEFAULT_CARD_PROTOTYPE,
   title: "量産型キュベレイ",
   characteristic: "キュベレイ系　MS".split("　"),
   category: "ユニット",

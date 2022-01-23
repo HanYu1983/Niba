@@ -1,5 +1,9 @@
 import { getCustomFunctionString } from "../../../../tool/helper";
-import { CardPrototype, GameContext } from "../../tool/basic/gameContext";
+import {
+  CardPrototype,
+  GameContext,
+  DEFAULT_CARD_PROTOTYPE,
+} from "../../tool/basic/gameContext";
 import { createRollCostRequire } from "../../tool/basic/blockPayload";
 import { BlockPayload } from "../../tool/basic/blockPayload";
 import {
@@ -17,6 +21,7 @@ import { createTokuSyuKouKaText } from "./createTokuSyuKouKaText";
 // 『起動』：自軍カードが、「ゲイン」の効果で戦闘修正を得た場合、そのカードのセットグループ以外の自軍ユニット１枚は、ターン終了時まで、その戦闘修正と同じ値の戦闘修正を得る。
 
 const prototype: CardPrototype = {
+  ...DEFAULT_CARD_PROTOTYPE,
   title: "ラクス・クライン",
   characteristic: "女性　子供　CO".split("　"),
   category: "キャラクター",
@@ -46,29 +51,42 @@ const prototype: CardPrototype = {
                   require: {
                     id: "RequireTarget",
                     targets: {
-                      "そのカードのセットグループ以外の自軍ユニット１枚": {
+                      そのカードのセットグループ以外の自軍ユニット１枚: {
                         id: "カード",
                         value: [],
-                        valueLengthInclude: [1]
+                        valueLengthInclude: [1],
                       },
                       "「ゲイン」の「効果」の戦闘修正": {
                         id: "戦闘修正",
-                        value: { path: [{ id: "手動事件發生時", value: { path: [{ id: "觸發這個事件的手動事件" }] } }, "の「ゲイン」の「効果」の戦闘修正"] }
-                      }
+                        value: {
+                          path: [
+                            {
+                              id: "手動事件發生時",
+                              value: {
+                                path: [{ id: "觸發這個事件的手動事件" }],
+                              },
+                            },
+                            "の「ゲイン」の「効果」の戦闘修正",
+                          ],
+                        },
+                      },
                     },
                   },
                   feedback: [
                     {
-                      id: "FeedbackAction", action: [{
-                        id: "ActionAddEffect",
-                        effect: {
-                          id: "GameEffectCustom",
-                          customID: "その戦闘修正と同じ値の戦闘修正を得る。"
-                        }
-                      }]
-                    }
-                  ]
-                }
+                      id: "FeedbackAction",
+                      action: [
+                        {
+                          id: "ActionAddEffect",
+                          effect: {
+                            id: "GameEffectCustom",
+                            customID: "その戦闘修正と同じ値の戦闘修正を得る。",
+                          },
+                        },
+                      ],
+                    },
+                  ],
+                },
               },
             ],
           },

@@ -1,5 +1,9 @@
 import { getCustomFunctionString } from "../../../../tool/helper";
-import { CardPrototype, GameContext } from "../../tool/basic/gameContext";
+import {
+  CardPrototype,
+  GameContext,
+  DEFAULT_CARD_PROTOTYPE,
+} from "../../tool/basic/gameContext";
 import { createRollCostRequire } from "../../tool/basic/blockPayload";
 import { BlockPayload } from "../../tool/basic/blockPayload";
 import {
@@ -17,6 +21,7 @@ import { createTokuSyuKouKaText } from "./createTokuSyuKouKaText";
 // 『起動』：このセットグループのユニットは、戦闘ダメージを受けた場合、破壊される。
 
 const prototype: CardPrototype = {
+  ...DEFAULT_CARD_PROTOTYPE,
   title: "ミゲル・アイマン",
   characteristic: "男性　子供　CO".split("　"),
   category: "キャラクター",
@@ -31,7 +36,7 @@ const prototype: CardPrototype = {
         "『起動』：このセットグループのユニットは、戦闘ダメージを受けた場合、破壊される。",
       block: {
         require: {
-          id: "RequireEvent"
+          id: "RequireEvent",
           // TODO
         },
         feedback: [
@@ -45,24 +50,27 @@ const prototype: CardPrototype = {
                   require: {
                     id: "RequireTarget",
                     targets: {
-                      "このセットグループのユニットは": {
+                      このセットグループのユニットは: {
                         id: "カード",
-                        value: { path: [{ id: "このカード" }] }
-                      }
-                    }
+                        value: { path: [{ id: "このカード" }] },
+                      },
+                    },
                   },
                   feedback: [
                     {
-                      id: "FeedbackAction", action: [{
-                        id: "ActionDestroy",
-                        cards: {
-                          id: "カード",
-                          value: "このセットグループのユニットは"
-                        }
-                      }]
-                    }
-                  ]
-                }
+                      id: "FeedbackAction",
+                      action: [
+                        {
+                          id: "ActionDestroy",
+                          cards: {
+                            id: "カード",
+                            value: "このセットグループのユニットは",
+                          },
+                        },
+                      ],
+                    },
+                  ],
+                },
               },
             ],
           },

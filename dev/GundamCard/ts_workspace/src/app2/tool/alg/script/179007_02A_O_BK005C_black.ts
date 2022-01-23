@@ -1,5 +1,9 @@
 import { getCustomFunctionString } from "../../../../tool/helper";
-import { CardPrototype, GameContext } from "../../tool/basic/gameContext";
+import {
+  CardPrototype,
+  GameContext,
+  DEFAULT_CARD_PROTOTYPE,
+} from "../../tool/basic/gameContext";
 import { createRollCostRequire } from "../../tool/basic/blockPayload";
 import { createPlayCardText } from "./createPlayCardText";
 
@@ -12,6 +16,7 @@ import { createPlayCardText } from "./createPlayCardText";
 
 let _idSeq = 0;
 const prototype: CardPrototype = {
+  ...DEFAULT_CARD_PROTOTYPE,
   title: "コロニーが落ちる日",
   characteristic: "破壊".split("　"),
   category: "オペレーション",

@@ -1,5 +1,9 @@
 import { createRollCostRequire } from "../../tool/basic/blockPayload";
-import { CardPrototype, GameContext } from "../../tool/basic/gameContext";
+import {
+  CardPrototype,
+  GameContext,
+  DEFAULT_CARD_PROTOTYPE,
+} from "../../tool/basic/gameContext";
 import { RequireCustomID } from "../../tool/basic/requireCustom";
 import { createPlayCardText } from "./createPlayCardText";
 import { createTokuSyuKouKaText } from "./createTokuSyuKouKaText";
@@ -11,6 +15,7 @@ import { createTokuSyuKouKaText } from "./createTokuSyuKouKaText";
 //『起動』：このカードが場に出た場合、自軍ジャンクヤードにある、青のGサインを持つユニット１枚を自軍ハンガーに移す事ができる。
 
 const prototype: CardPrototype = {
+  ...DEFAULT_CARD_PROTOTYPE,
   title: "閃光のハサウェイ",
   characteristic: "オデュッセウス系　MS　専用「レーン・エイム」".split("　"),
   category: "ユニット",

@@ -1,5 +1,9 @@
 import { getCustomFunctionString } from "../../../../tool/helper";
-import { CardPrototype, GameContext } from "../../tool/basic/gameContext";
+import {
+  CardPrototype,
+  GameContext,
+  DEFAULT_CARD_PROTOTYPE,
+} from "../../tool/basic/gameContext";
 import { createRollCostRequire } from "../../tool/basic/blockPayload";
 import { BlockPayload } from "../../tool/basic/blockPayload";
 import {
@@ -17,8 +21,10 @@ import { createTokuSyuKouKaText } from "./createTokuSyuKouKaText";
 // ＜（戦闘フェイズ）〔１〕：このカードが、Gである状態で、白のGサインを持つ自軍Gが２枚以上ある場合、このカードを、ユニットとして自軍配備エリアにリロール状態で出す＞
 
 const prototype: CardPrototype = {
+  ...DEFAULT_CARD_PROTOTYPE,
   title: "アストレイ レッドフレーム",
-  characteristic: "アストレイ系　レッドフレーム系　MS　専用「ロウ・ギュール」".split("　"),
+  characteristic:
+    "アストレイ系　レッドフレーム系　MS　専用「ロウ・ギュール」".split("　"),
   category: "キャラクター",
   color: "白",
   rollCost: ["白", null, null, null],
@@ -31,7 +37,7 @@ const prototype: CardPrototype = {
         "＜（戦闘フェイズ）〔１〕：このカードが、Gである状態で、白のGサインを持つ自軍Gが２枚以上ある場合、このカードを、ユニットとして自軍配備エリアにリロール状態で出す＞",
       block: {
         require: {
-          id: "RequireEvent"
+          id: "RequireEvent",
           // TODO
         },
         feedback: [
@@ -51,56 +57,84 @@ const prototype: CardPrototype = {
                         targets: {
                           白のGサインを持つ自軍G: {
                             id: "腳本",
-                            value: ""
-                          }
+                            value: "",
+                          },
                         },
                         condition: {
                           id: "ConditionAnd",
-                          and: [{
-                            id: "ConditionCompareRole",
-                            value: [
-                              {
-                                id: "「カード」的角色",
-                                value: {
-                                  path: [{ id: "カード", value: { path: [{ id: "このカード" }] } }, "的角色"]
-                                }
-                              },
-                              "==",
-                              {
-                                id: "「カード」的角色", value: ["グラフィック"]
-                              }
-                            ]
-                          },
-                          {
-                            id: "ConditionCompareNumber",
-                            value: [
-                              { id: "數字", value: { path: [{ id: "參照", value: "白のGサインを持つ自軍G" }, "的陣列長度"] } },
-                              ">=",
-                              { id: "數字", value: [2] }
-                            ]
-                          }]
-                        }
-                      }
-                    ]
+                          and: [
+                            {
+                              id: "ConditionCompareRole",
+                              value: [
+                                {
+                                  id: "「カード」的角色",
+                                  value: {
+                                    path: [
+                                      {
+                                        id: "カード",
+                                        value: { path: [{ id: "このカード" }] },
+                                      },
+                                      "的角色",
+                                    ],
+                                  },
+                                },
+                                "==",
+                                {
+                                  id: "「カード」的角色",
+                                  value: ["グラフィック"],
+                                },
+                              ],
+                            },
+                            {
+                              id: "ConditionCompareNumber",
+                              value: [
+                                {
+                                  id: "數字",
+                                  value: {
+                                    path: [
+                                      {
+                                        id: "參照",
+                                        value: "白のGサインを持つ自軍G",
+                                      },
+                                      "的陣列長度",
+                                    ],
+                                  },
+                                },
+                                ">=",
+                                { id: "數字", value: [2] },
+                              ],
+                            },
+                          ],
+                        },
+                      },
+                    ],
                   },
                   feedback: [
                     {
-                      id: "FeedbackAction", action: [{
-                        id: "ActionMoveCardToPosition",
-                        cards: {
-                          id: "カード",
-                          value: {
-                            path: [{ id: "このカード" }]
-                          }
+                      id: "FeedbackAction",
+                      action: [
+                        {
+                          id: "ActionMoveCardToPosition",
+                          cards: {
+                            id: "カード",
+                            value: {
+                              path: [{ id: "このカード" }],
+                            },
+                          },
+                          baSyou: {
+                            id: "場所",
+                            value: [
+                              {
+                                id: "RelatedBaSyou",
+                                value: ["自軍", "配備エリア"],
+                              },
+                            ],
+                          },
                         },
-                        baSyou: {
-                          id: "場所",
-                          value: [{ id: "RelatedBaSyou", value: ["自軍", "配備エリア"] }]
-                        }
-                      }]
-                    }
-                  ]
-                }
+                      ],
+                    },
+                  ],
+                },
               },
             ],
           },

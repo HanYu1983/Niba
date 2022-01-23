@@ -36,7 +36,7 @@ export const TargetTypeView = (props: { target: TargetType }) => {
                   <div style={{flex:1}}>請選擇{props.target.valueLengthInclude?.join("或") || "1"}單位「{props.target.id}」</div>
                   <div style={{flex:1}}>{(props.target.tipID || []).map((v, i) => {
                     return (
-                      <CardView enabled={false} key={i} cardID={v}></CardView>
+                      <CardView enabled={true} key={i} cardID={v}></CardView>
                     );
                   })}</div>
                   <div style={{flex:3}}>{Object.entries(props.target.tipMessage||{}).map(([k,v])=>{

@@ -1,16 +1,21 @@
 import { createRollCostRequire } from "../../tool/basic/blockPayload";
-import { CardPrototype, GameContext } from "../../tool/basic/gameContext";
+import {
+  CardPrototype,
+  GameContext,
+  DEFAULT_CARD_PROTOTYPE,
+} from "../../tool/basic/gameContext";
 import { createPlayCardText } from "./createPlayCardText";
 import { createTokuSyuKouKaText } from "./createTokuSyuKouKaText";
 
 // 179008_02A_U_WT034U_white
 // アストレイ ブルーフレーム
 // アストレイ系　ブルーフレーム系　MS　専用「叢雲劾」
-// 〔０〕：改装［ブルーフレーム系］　
+// 〔０〕：改装［ブルーフレーム系］
 // 『起動』：「特徴：アストレイ系」を持つ自軍ユニットが、「改装」の効果で廃棄される場合、カード１枚を引く。
 // （注：このカードが廃棄される時にも起動する）
 
 const prototype: CardPrototype = {
+  ...DEFAULT_CARD_PROTOTYPE,
   title: "アストレイ ブルーフレーム",
   characteristic: "アストレイ系　ブルーフレーム系　MS　専用「叢雲劾」".split(
     "　"
@@ -35,13 +40,17 @@ const prototype: CardPrototype = {
                 id: "ActionAddBlock",
                 type: "立即",
                 block: {
-                  feedback: [{
-                    id: "FeedbackAction",
-                    action: [{
-                      id: "ActionDraw",
-                      count: 1,
-                    }]
-                  }]
+                  feedback: [
+                    {
+                      id: "FeedbackAction",
+                      action: [
+                        {
+                          id: "ActionDraw",
+                          count: 1,
+                        },
+                      ],
+                    },
+                  ],
                 },
               },
             ],

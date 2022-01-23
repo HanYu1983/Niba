@@ -1,5 +1,9 @@
 import { createRollCostRequire } from "../../tool/basic/blockPayload";
-import { CardPrototype, GameContext } from "../../tool/basic/gameContext";
+import {
+  CardPrototype,
+  GameContext,
+  DEFAULT_CARD_PROTOTYPE,
+} from "../../tool/basic/gameContext";
 import { RequireCustomID } from "../../tool/basic/requireCustom";
 import { createPlayCardText } from "./createPlayCardText";
 import { createTokuSyuKouKaText } from "./createTokuSyuKouKaText";
@@ -13,6 +17,7 @@ import { createTokuSyuKouKaText } from "./createTokuSyuKouKaText";
 // 『起動』：青のGサインを持つ自軍Gが４枚以上ある状態で、このカードが場に出た場合、ターン終了時に、このカードを持ち主のGにできる。
 
 const prototype: CardPrototype = {
+  ...DEFAULT_CARD_PROTOTYPE,
   title: "リ・ガズィ（ケーラ機）",
   characteristic: "リ・ガズィ系　MS　専用「ケーラ・スゥ」".split("　"),
   category: "ユニット",

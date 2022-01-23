@@ -134,20 +134,20 @@ export const OnViewModel = OnEvent.pipe(
           if (evt.require.key == null) {
             throw new Error("key must not null");
           }
-          const selection =
-            viewModel.cardSelection.length > 0
-              ? viewModel.cardSelection
-              : evt.require.targets[evt.varID]?.tipID?.slice(
-                  0,
-                  evt.require.targets[evt.varID]?.valueLengthInclude?.[0] || 1
-                ) || [];
+          // const selection =
+          //   viewModel.cardSelection.length > 0
+          //     ? viewModel.cardSelection
+          //     : evt.require.targets[evt.varID]?.tipID?.slice(
+          //         0,
+          //         evt.require.targets[evt.varID]?.valueLengthInclude?.[0] || 1
+          //       ) || [];
           const model = setRequireTarget(
             viewModel.model,
             evt.require.key,
             evt.varID,
             {
               id: "カード",
-              value: selection,
+              value: viewModel.cardSelection,
             }
           );
           console.log(model);

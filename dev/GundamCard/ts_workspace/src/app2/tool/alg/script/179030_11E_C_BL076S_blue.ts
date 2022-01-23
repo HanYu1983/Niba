@@ -1,5 +1,9 @@
 import { getCustomFunctionString } from "../../../../tool/helper";
-import { CardPrototype, GameContext } from "../../tool/basic/gameContext";
+import {
+  CardPrototype,
+  GameContext,
+  DEFAULT_CARD_PROTOTYPE,
+} from "../../tool/basic/gameContext";
 import { createRollCostRequire } from "../../tool/basic/blockPayload";
 import { BlockPayload } from "../../tool/basic/blockPayload";
 import {
@@ -18,6 +22,7 @@ import { GameEventOnManualEventCustomID } from "../gameEventOnManualEventCustomI
 // （敵軍防御ステップ）：交戦中の自軍ユニットがいる場合、交戦中ではない、全てのユニットを破壊する。
 
 const prototype: CardPrototype = {
+  ...DEFAULT_CARD_PROTOTYPE,
   title: "理想の激突",
   characteristic: "破壊　装弾".split("　"),
   category: "コマンド",
@@ -38,9 +43,20 @@ const prototype: CardPrototype = {
             value: [
               { id: "カード", value: { path: [{ id: "このカード" }] } },
               "==",
-              { id: "カード", value: { path: [{ id: "「効果」解決時", value: { path: [{ id: "觸發這個事件的「効果」" }] } }, "的「カード」"] } }
-            ]
-          }
+              {
+                id: "カード",
+                value: {
+                  path: [
+                    {
+                      id: "「効果」解決時",
+                      value: { path: [{ id: "觸發這個事件的「効果」" }] },
+                    },
+                    "的「カード」",
+                  ],
+                },
+              },
+            ],
+          },
         },
         feedback: [
           {
@@ -61,7 +77,7 @@ const prototype: CardPrototype = {
                           cardA: {
                             id: "カード",
                             value: [],
-                            valueLengthInclude: [1]
+                            valueLengthInclude: [1],
                           },
                         },
                         condition: {
@@ -73,34 +89,51 @@ const prototype: CardPrototype = {
                                 {
                                   id: "プレーヤー",
                                   value: {
-                                    path: [{ id: "カード", value: "cardA" }, "的「コントローラー」"]
-                                  }
+                                    path: [
+                                      { id: "カード", value: "cardA" },
+                                      "的「コントローラー」",
+                                    ],
+                                  },
                                 },
                                 "==",
                                 {
                                   id: "プレーヤー",
                                   value: {
-                                    path: [{ id: "カード", value: { path: [{ id: "このカード" }] } }, "的「コントローラー」"]
-                                  }
-                                }
-                              ]
+                                    path: [
+                                      {
+                                        id: "カード",
+                                        value: { path: [{ id: "このカード" }] },
+                                      },
+                                      "的「コントローラー」",
+                                    ],
+                                  },
+                                },
+                              ],
                             },
                             {
                               id: "ConditionCompareRole",
                               value: [
                                 {
                                   id: "「カード」的角色",
-                                  triggerGameEvent: { id: "手動事件發生時", customID: { id: "「特徴：装弾」を持つ自軍コマンドの効果で自軍Gをロールする場合" } as GameEventOnManualEventCustomID },
+                                  triggerGameEvent: {
+                                    id: "手動事件發生時",
+                                    customID: {
+                                      id: "「特徴：装弾」を持つ自軍コマンドの効果で自軍Gをロールする場合",
+                                    } as GameEventOnManualEventCustomID,
+                                  },
                                   value: {
-                                    path: [{ id: "カード", value: "cardA" }, "當成横置裝彈G時的角色"]
-                                  }
+                                    path: [
+                                      { id: "カード", value: "cardA" },
+                                      "當成横置裝彈G時的角色",
+                                    ],
+                                  },
                                 },
                                 "==",
                                 {
                                   id: "「カード」的角色",
-                                  value: ["グラフィック"]
-                                }
-                              ]
+                                  value: ["グラフィック"],
+                                },
+                              ],
                             },
                             {
                               id: "ConditionCompareString",

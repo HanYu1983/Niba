@@ -19,6 +19,7 @@ import {
   BaSyou,
   RelatedBaSyou,
   getOpponentPlayerID,
+  BattleBonus,
 } from "./basic";
 import { getBaShou, TIMING_CHART } from "./basic";
 import { BlockPayload, Require, RequireAnd, RequireOr } from "./blockPayload";
@@ -44,6 +45,7 @@ export type CardPrototype = {
   color: CardColor;
   category: CardCategory;
   rollCost: (CardColor | null)[];
+  battlePoint: BattleBonus;
   texts: CardText[];
 };
 
@@ -53,6 +55,7 @@ export const DEFAULT_CARD_PROTOTYPE: CardPrototype = {
   color: "白",
   category: "ユニット",
   rollCost: [],
+  battlePoint: [0, 0, 0],
   texts: [],
 };
 

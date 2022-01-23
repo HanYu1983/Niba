@@ -1,4 +1,8 @@
-import { CardPrototype, GameContext } from "../../tool/basic/gameContext";
+import {
+  CardPrototype,
+  GameContext,
+  DEFAULT_CARD_PROTOTYPE,
+} from "../../tool/basic/gameContext";
 import { RequireCustomID } from "../../tool/basic/requireCustom";
 import { createPlayCardText } from "./createPlayCardText";
 import { createTokuSyuKouKaText } from "./createTokuSyuKouKaText";
@@ -9,6 +13,7 @@ import { createTokuSyuKouKaText } from "./createTokuSyuKouKaText";
 // （戦闘フェイズ）〔１〕：本来の記述に「特徴：装弾」を持つ自軍G１枚をロールする。その場合、このターン、このカードの部隊が与える戦闘ダメージは、「速度１」と「速度２」の両方で与えられる。
 
 const prototype: CardPrototype = {
+  ...DEFAULT_CARD_PROTOTYPE,
   title: "Hi-νガンダム［†］",
   characteristic: "νガンダム系　MS　専用「アムロ・レイ」".split("　"),
   category: "ユニット",

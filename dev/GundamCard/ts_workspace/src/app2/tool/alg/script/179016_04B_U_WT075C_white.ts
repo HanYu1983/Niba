@@ -1,5 +1,9 @@
 import { createRollCostRequire } from "../../tool/basic/blockPayload";
-import { CardPrototype, GameContext } from "../../tool/basic/gameContext";
+import {
+  CardPrototype,
+  DEFAULT_CARD_PROTOTYPE,
+  GameContext,
+} from "../../tool/basic/gameContext";
 import { createPlayCardText } from "./createPlayCardText";
 import { createTokuSyuKouKaText } from "./createTokuSyuKouKaText";
 
@@ -11,6 +15,7 @@ import { createTokuSyuKouKaText } from "./createTokuSyuKouKaText";
 // （注：このカードが場に出た時にも起動する）
 
 const prototype: CardPrototype = {
+  ...DEFAULT_CARD_PROTOTYPE,
   title: "アストレイ ブルーフレーム セカンドL（ローエングリンランチャー）",
   characteristic: "アストレイ系　ブルーフレーム系　MS　専用「叢雲劾」".split(
     "　"

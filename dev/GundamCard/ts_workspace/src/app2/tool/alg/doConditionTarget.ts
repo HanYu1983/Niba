@@ -221,6 +221,11 @@ export function doConditionTarget(
                     return `不為真：${a} == ${b}`;
                   }
                   break;
+                case "!=":
+                  if ((a != b) == false) {
+                    return `不為真：${a} != ${b}`;
+                  }
+                  break;
                 case ">":
                   if (a > b == false) {
                     return `不為真：${a} > ${b}`;
@@ -252,6 +257,8 @@ export function doConditionTarget(
                 }
                 case "交戦中":
                   return "xxxx";
+                default:
+                  throw new Error(`not impl: ${op}`);
               }
               break;
             }
