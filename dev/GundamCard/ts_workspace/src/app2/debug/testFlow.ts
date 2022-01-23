@@ -11,7 +11,7 @@ import { getBaShouID, PlayerA, PlayerB } from "../tool/tool/basic/basic";
 import { recurRequire } from "../tool/tool/basic/blockPayload";
 import { applyFlow, queryFlow } from "../tool/alg/handleClient";
 
-function test1() {
+export function testFlow1() {
   let ctx = DEFAULT_GAME_CONTEXT;
   const firstTiming = ctx.gameState.timing;
   ctx = applyFlow(ctx, PlayerA, {
@@ -48,7 +48,7 @@ function test1() {
   console.log(ctx);
 }
 
-function test2() {
+export function testFlow2() {
   let ctx = DEFAULT_GAME_CONTEXT;
   let table = ctx.gameState.table;
   table = createCard(
@@ -161,8 +161,9 @@ function test2() {
     throw new Error("ctx.gameState.activeEffectID must exist");
   }
   flows = queryFlow(ctx, PlayerA);
-  if (flows[0].id != "FlowDoEffect") {
-    throw new Error("必須是FlowDoEffect");
+  const doEffectFlowA = flows.find((f) => f.id == "FlowDoEffect");
+  if (doEffectFlowA == null) {
+    throw new Error("必須有是FlowDoEffect");
   }
   {
     let flowsB = queryFlow(ctx, PlayerB);
@@ -174,7 +175,7 @@ function test2() {
     }
     console.log(`PlayerB: ${flowsB[0].description}`);
   }
-  ctx = applyFlow(ctx, PlayerA, flows[0]);
+  ctx = applyFlow(ctx, PlayerA, doEffectFlowA);
   if (ctx.gameState.activeEffectID != null) {
     throw new Error("ctx.gameState.activeEffectID must null");
   }
@@ -182,8 +183,6 @@ function test2() {
     throw new Error("ctx.gameState.immediateEffect.length must be 0");
   }
   flows = queryFlow(ctx, PlayerA);
-  console.log(ctx);
-  console.log(flows);
   {
     let flowsB = queryFlow(ctx, PlayerB);
     if (flowsB.length == 0) {
@@ -194,11 +193,4 @@ function test2() {
     }
     console.log(`PlayerB: ${flowsB[0].description}`);
   }
-}
-
-export function testFlow() {
-  [].forEach((testF: Function) => {
-    console.log(`============${testF.name}===========`);
-    testF();
-  });
 }

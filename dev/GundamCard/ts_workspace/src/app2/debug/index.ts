@@ -10,7 +10,7 @@ import {
 import { createCard } from "../../tool/table";
 import { getBaShouID, PlayerA, PlayerB } from "../tool/tool/basic/basic";
 import { recurRequire } from "../tool/tool/basic/blockPayload";
-import { testFlow } from "./testFlow";
+import { testFlow1, testFlow2 } from "./testFlow";
 import { testKaiSo1 } from "./testKaiSo";
 
 export function testDryRun() {
@@ -91,7 +91,7 @@ export function testDryRun() {
 }
 
 export function test() {
-  [testDryRun, testKaiSo1].forEach((testF: Function) => {
+  [testDryRun, testFlow1, testFlow2, testKaiSo1].forEach((testF: Function) => {
     console.log(`============${testF.name}===========`);
     testF();
   });
