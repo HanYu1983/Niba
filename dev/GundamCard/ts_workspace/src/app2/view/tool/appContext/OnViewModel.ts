@@ -119,14 +119,19 @@ export const OnViewModel = OnEvent.pipe(
               table: table,
               activePlayerID: PlayerA,
             },
+            versionID: viewModel.model.versionID,
           };
           newModel = initState(newModel);
           firebase.sync(newModel);
           return DEFAULT_VIEW_MODEL;
         }
         case "OnClickFlowConfirm": {
-          const model = applyFlow(viewModel.model, evt.clientID, evt.flow);
-          console.log(model);
+          let model = applyFlow(viewModel.model, evt.clientID, evt.flow);
+          const [_, originNum] = viewModel.model.versionID;
+          model = {
+            ...model,
+            versionID: [evt.clientID, originNum],
+          };
           firebase.sync(model);
           return viewModel;
         }
@@ -134,14 +139,7 @@ export const OnViewModel = OnEvent.pipe(
           if (evt.require.key == null) {
             throw new Error("key must not null");
           }
-          // const selection =
-          //   viewModel.cardSelection.length > 0
-          //     ? viewModel.cardSelection
-          //     : evt.require.targets[evt.varID]?.tipID?.slice(
-          //         0,
-          //         evt.require.targets[evt.varID]?.valueLengthInclude?.[0] || 1
-          //       ) || [];
-          const model = setRequireTarget(
+          let model = setRequireTarget(
             viewModel.model,
             evt.require.key,
             evt.varID,
@@ -150,6 +148,11 @@ export const OnViewModel = OnEvent.pipe(
               value: viewModel.cardSelection,
             }
           );
+          const [_, originNum] = viewModel.model.versionID;
+          model = {
+            ...model,
+            versionID: [evt.clientID, originNum],
+          };
           console.log(model);
           firebase.sync(model);
           return { ...viewModel, cardSelection: [] };
@@ -158,12 +161,73 @@ export const OnViewModel = OnEvent.pipe(
           return viewModel;
         }
         case "OnModelFromFirebase":
-          log2("OnViewModel", "OnModelFromFirebase");
-          log2("OnViewModel", evt.model);
-          return {
-            ...viewModel,
-            model: evt.model,
-          };
+          const [originKey, originNum] = viewModel.model.versionID;
+          const [remoteKey, remoteNum] = evt.model.versionID;
+          if (originKey == remoteKey) {
+            // 自己修改的情況
+            if (remoteNum > originNum) {
+              OnError.next(
+                new Error(
+                  `你的版號過期，本地資料將被覆蓋:origin(${viewModel.model.versionID}) remote(${evt.model.versionID})`
+                )
+              );
+              return {
+                ...viewModel,
+                model: {
+                  ...evt.model,
+                  versionID: [remoteKey, remoteNum + 1],
+                },
+              };
+            } else if (remoteNum == originNum) {
+              return {
+                ...viewModel,
+                model: {
+                  ...evt.model,
+                  versionID: [remoteKey, remoteNum + 1],
+                },
+              };
+            } else {
+              OnError.next(
+                new Error(
+                  `版本號不對，送新上傳版本:origin(${viewModel.model.versionID}) remote(${evt.model.versionID})`
+                )
+              );
+              firebase.sync(viewModel.model);
+              return viewModel;
+            }
+          } else {
+            // 對方修改的情況
+            if (remoteNum > originNum) {
+              OnError.next(
+                new Error(
+                  `你的版號過期，本地資料將被覆蓋:origin(${viewModel.model.versionID}) remote(${evt.model.versionID})`
+                )
+              );
+              return {
+                ...viewModel,
+                model: {
+                  ...evt.model,
+                  versionID: [remoteKey, remoteNum],
+                },
+              };
+            } else if (remoteNum == originNum) {
+              return {
+                ...viewModel,
+                model: {
+                  ...evt.model,
+                  versionID: [remoteKey, remoteNum],
+                },
+              };
+            } else {
+              OnError.next(
+                new Error(
+                  `版本號不對，忽略這個版本:origin(${viewModel.model.versionID}) remote(${evt.model.versionID})`
+                )
+              );
+              return viewModel;
+            }
+          }
+
         case "OnClickCardEvent":
           if (viewModel.cardSelection.includes(evt.card.id)) {
             return {
