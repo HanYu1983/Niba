@@ -128,7 +128,7 @@ export type VarsPool = { [key: string]: Vars };
 export type GameContext = {
   varsPool: VarsPool;
   gameState: GameState;
-  versionID: [string, number];
+  versionID: number;
 };
 
 export const DEFAULT_GAME_CONTEXT: GameContext = {
@@ -152,7 +152,7 @@ export const DEFAULT_GAME_CONTEXT: GameContext = {
     },
     chipPool: {},
   },
-  versionID: ["", 0],
+  versionID: 0,
 };
 
 export function iterateEffect(ctx: GameContext): BlockPayload[] {
