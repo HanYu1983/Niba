@@ -67,6 +67,15 @@ export const OnViewModel = OnEvent.pipe(
               id: "AbsoluteBaSyou",
               value: [PlayerA, "手札"],
             }),
+            ["179016_04B_U_WT075C_white"]
+          );
+          table = createCard(
+            table,
+            PlayerA,
+            getBaShouID({
+              id: "AbsoluteBaSyou",
+              value: [PlayerA, "Gゾーン"],
+            }),
             [
               "179016_04B_U_WT075C_white",
               "179030_11E_U_BL208S_blue",
