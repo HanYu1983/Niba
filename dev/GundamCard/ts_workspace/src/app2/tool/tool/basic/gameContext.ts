@@ -206,18 +206,20 @@ export function getBlockOwner(
     throw new Error("must has cause");
   }
   switch (blockPayload.cause.id) {
+    // case "BlockPayloadCauseGameEvent":
+    // case "BlockPayloadCauseUpdateEffect": {
+    //   if (blockPayload.cause.cardID == null) {
+    //     throw new Error("must has cardID");
+    //   }
+    //   const playerID = getCardController(ctx, blockPayload.cause.cardID);
+    //   if (playerID == null) {
+    //     throw new Error(`${playerID} not found`);
+    //   }
+    //   return playerID;
+    // }
     case "BlockPayloadCauseGameEvent":
+    case "BlockPayloadCauseUpdateEffect":
     case "BlockPayloadCauseUpdateCommand":
-    case "BlockPayloadCauseUpdateEffect": {
-      if (blockPayload.cause.cardID == null) {
-        throw new Error("must has cardID");
-      }
-      const playerID = getCardController(ctx, blockPayload.cause.cardID);
-      if (playerID == null) {
-        throw new Error(`${playerID} not found`);
-      }
-      return playerID;
-    }
     case "BlockPayloadCauseGameRule":
       return blockPayload.cause.playerID;
   }
@@ -227,20 +229,25 @@ export function getRequireTargetOwner(
   ctx: GameContext,
   blockPayload: BlockPayload,
   require: Require,
-  target: TargetType,
+  target: TargetType
 ): PlayerID {
   if (target.responsePlayer == null) {
-    return getBlockOwner(ctx, blockPayload)
+    return getBlockOwner(ctx, blockPayload);
   }
   if (require.id != "RequireTarget") {
-    return getBlockOwner(ctx, blockPayload)
+    return getBlockOwner(ctx, blockPayload);
   }
-  const targetType = getTargetType(ctx, blockPayload, require.targets, target.responsePlayer)
+  const targetType = getTargetType(
+    ctx,
+    blockPayload,
+    require.targets,
+    target.responsePlayer
+  );
   if (targetType.id != "プレーヤー") {
-    throw new Error("must プレーヤー")
+    throw new Error("must プレーヤー");
   }
   if (!Array.isArray(targetType.value)) {
-    throw new Error("must real value")
+    throw new Error("must real value");
   }
-  return targetType.value[0]
+  return targetType.value[0];
 }

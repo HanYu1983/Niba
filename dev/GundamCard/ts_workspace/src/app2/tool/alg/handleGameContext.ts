@@ -1,4 +1,9 @@
-import { CardText, GameEvent, getNextTiming, PlayerA } from "../tool/basic/basic";
+import {
+  CardText,
+  GameEvent,
+  getNextTiming,
+  PlayerA,
+} from "../tool/basic/basic";
 import {
   BlockPayload,
   Feedback,
@@ -37,7 +42,6 @@ export function triggerTextEvent(
   return [...ctx.gameState.cardState, ...ctx.gameState.globalCardState].reduce(
     (ctx, cardState: { cardID: string; cardTextStates: CardTextState[] }) => {
       return cardState.cardTextStates.reduce((ctx, cardTextState) => {
-        log("triggerTextEvent", cardTextState.cardText.description);
         const blocks: BlockPayload[] = (() => {
           switch (cardTextState.cardText.id) {
             case "自動型":
@@ -56,11 +60,12 @@ export function triggerTextEvent(
           }
         })();
         return blocks.reduce((ctx, block) => {
-          log("triggerTextEvent", block);
+          const cardController = getCardController(ctx, cardState.cardID);
           const wrapEvent: BlockPayload = {
             ...block,
             cause: {
               id: "BlockPayloadCauseGameEvent",
+              playerID: cardController,
               cardID: cardState.cardID,
               cardTextID: cardTextState.id,
               gameEvent: evt,
@@ -128,12 +133,14 @@ export function updateCommand(ctx: GameContext): GameContext {
         }
       })();
       return blocks.reduce((ctx, block) => {
+        const cardController = getCardController(ctx, cardState.cardID);
         let wrapEvent: BlockPayload = {
           ...block,
           id: `updateCommand_${ctx.gameState.commandEffect.length}`,
           // 準備背景資料用來判斷
           cause: {
             id: "BlockPayloadCauseUpdateCommand",
+            playerID: cardController,
             cardID: cardState.cardID,
             cardTextID: cardTextState.id,
             description: JSON.stringify(cardTextState.cardText.description),
@@ -155,7 +162,7 @@ export function updateCommand(ctx: GameContext): GameContext {
               if (r.key == null) {
                 return target;
               }
-              log("updateCommand", `targetID:${targetID}`)
+              log("updateCommand", `targetID:${targetID}`);
               // 取得提示.
               switch (target.id) {
                 case "カード": {
@@ -196,20 +203,20 @@ export function updateCommand(ctx: GameContext): GameContext {
                   log("updateCommand", tips);
                   const nextValues = (() => {
                     if (tips.length == 0) {
-                      return target.value
+                      return target.value;
                     }
                     if (!Array.isArray(target.value)) {
-                      return target.value
+                      return target.value;
                     }
                     if (target.valueLengthInclude == null) {
-                      return target.value
+                      return target.value;
                     }
                     if (target.valueLengthInclude.length == 0) {
-                      return target.value
+                      return target.value;
                     }
-                    const len = target.valueLengthInclude[0]
-                    return tips.slice(0, len)
-                  })()
+                    const len = target.valueLengthInclude[0];
+                    return tips.slice(0, len);
+                  })();
                   return {
                     ...target,
                     value: nextValues,
@@ -269,10 +276,12 @@ export function updateEffect(ctx: GameContext): GameContext {
         }
       })();
       return blocks.reduce((ctx, block) => {
+        const cardController = getCardController(ctx, cardState.cardID);
         const wrapEvent: BlockPayload = {
           ...block,
           cause: {
             id: "BlockPayloadCauseUpdateEffect",
+            playerID: cardController,
             cardID: cardState.cardID,
             cardTextID: cardTextState.id,
             description: JSON.stringify(cardTextState.cardText.description),
@@ -314,10 +323,11 @@ export function initState(ctx: GameContext): GameContext {
     return card;
   });
   return {
-    ...ctx, gameState: {
+    ...ctx,
+    gameState: {
       ...ctx.gameState,
-      activePlayerID: PlayerA
-    }
+      activePlayerID: PlayerA,
+    },
   };
 }
 

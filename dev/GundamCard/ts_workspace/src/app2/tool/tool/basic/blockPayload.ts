@@ -1,4 +1,10 @@
-import type { GameEvent, SiYouTiming, CardColor, PlayerID, RelatedPlayerSideKeyword } from "./basic";
+import type {
+  GameEvent,
+  SiYouTiming,
+  CardColor,
+  PlayerID,
+  RelatedPlayerSideKeyword,
+} from "./basic";
 import type { Condition } from "./condition";
 import type { Action } from "./action";
 import { TargetType, TargetTypeCard } from "./targetType";
@@ -76,6 +82,7 @@ export type Feedback = FeedbackTargetAction | FeedbackAction;
 
 export type BlockPayloadCauseGameEvent = {
   id: "BlockPayloadCauseGameEvent";
+  playerID: string;
   cardID: string;
   cardTextID: string;
   gameEvent: GameEvent;
@@ -84,6 +91,7 @@ export type BlockPayloadCauseGameEvent = {
 
 export type BlockPayloadCauseUpdateCommand = {
   id: "BlockPayloadCauseUpdateCommand";
+  playerID: string;
   cardID: string;
   cardTextID: string;
   description: string;
@@ -91,6 +99,7 @@ export type BlockPayloadCauseUpdateCommand = {
 
 export type BlockPayloadCauseUpdateEffect = {
   id: "BlockPayloadCauseUpdateEffect";
+  playerID: string;
   cardID: string;
   cardTextID: string;
   description: string;
@@ -181,7 +190,7 @@ export function createRollCostRequire(
       要支付的國力: {
         id: "カード",
         value: [],
-        valueLengthInclude: [costNum]
+        valueLengthInclude: [costNum],
       } as TargetTypeCard,
     },
     condition: {
@@ -189,53 +198,71 @@ export function createRollCostRequire(
       and: [
         {
           id: "ConditionCompareBaSyou",
-          value: [{
-            id: "場所",
-            value: {
-              path: [{ id: "カード", value: "要支付的國力" }, "的「場所」"]
-            }
-          }, "==", {
-            id: "場所",
-            value: [{ id: "RelatedBaSyou", value: ["自軍", "Gゾーン"] }]
-          }]
+          value: [
+            {
+              id: "場所",
+              value: {
+                path: [{ id: "カード", value: "要支付的國力" }, "的「場所」"],
+              },
+            },
+            "==",
+            {
+              id: "場所",
+              value: [{ id: "RelatedBaSyou", value: ["自軍", "Gゾーン"] }],
+            },
+          ],
         },
         {
           id: "ConditionCompareBoolean",
-          value: [{
-            id: "布林",
-            value: {
-              path: [{ id: "カード", value: "要支付的國力" }, "是直立的？"]
-            }
-          }, "==", {
-            id: "布林",
-            value: [true]
-          }]
-        },
-        ...(color ? [{
-          id: "ConditionCompareCardColor",
-          value: [{
-            id: "カードの色",
-            value: {
-              path: [{
-                id: "カード",
-                value: "要支付的國力"
+          value: [
+            {
+              id: "布林",
+              value: {
+                path: [{ id: "カード", value: "要支付的國力" }, "是直立的？"],
               },
-                "的「色」"]
-            }
-          }, "==", {
-            id: "カードの色",
-            value: [color]
-          }]
-        } as Condition] : [])
-      ]
+            },
+            "==",
+            {
+              id: "布林",
+              value: [true],
+            },
+          ],
+        },
+        ...(color
+          ? [
+              {
+                id: "ConditionCompareCardColor",
+                value: [
+                  {
+                    id: "カードの色",
+                    value: {
+                      path: [
+                        {
+                          id: "カード",
+                          value: "要支付的國力",
+                        },
+                        "的「色」",
+                      ],
+                    },
+                  },
+                  "==",
+                  {
+                    id: "カードの色",
+                    value: [color],
+                  },
+                ],
+              } as Condition,
+            ]
+          : []),
+      ],
     },
     action: [
       {
         id: "ActionRoll",
         cards: {
           id: "カード",
-          value: "要支付的國力"
-        }
+          value: "要支付的國力",
+        },
       },
     ],
   };
