@@ -187,7 +187,11 @@ export function getTargetType(
               targetTypeAfterProcess.value.length
             ) == false
           ) {
-            log2("getTargetType", "target", target);
+            log2(
+              "getTargetType",
+              "targetTypeAfterProcess",
+              targetTypeAfterProcess
+            );
             throw new Error(
               "陣列長度不正確:" +
                 JSON.stringify(targetTypeAfterProcess.valueLengthInclude)
@@ -621,11 +625,20 @@ export function getTargetType(
               case "的「防御力」":
               case "的「ロールコストの合計値」":
                 throw new Error("not support");
-              case "的「合計国力」": {
-                return 0;
-              }
+              case "的「合計国力」":
               case "的「改装」的「合計国力」": {
-                return 0;
+                const controller = getBlockOwner(ctx, blockPayload);
+                const gBaSyou: AbsoluteBaSyou = {
+                  id: "AbsoluteBaSyou",
+                  value: [controller, "Gゾーン"],
+                };
+                const gCards =
+                  ctx.gameState.table.cardStack[getBaShouID(gBaSyou)];
+                if (gCards == null) {
+                  log2("getTargetType", "gBaSyou", gBaSyou);
+                  throw new Error("gCards must find");
+                }
+                return gCards.length;
               }
             }
           });

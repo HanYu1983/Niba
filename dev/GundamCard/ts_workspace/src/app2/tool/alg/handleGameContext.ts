@@ -1,8 +1,10 @@
 import {
   CardText,
   GameEvent,
+  getBaShouID,
   getNextTiming,
   PlayerA,
+  PlayerB,
 } from "../tool/basic/basic";
 import {
   BlockPayload,
@@ -20,7 +22,7 @@ import {
   getBlockOwner,
   reduceEffect,
 } from "../tool/basic/gameContext";
-import { getCard, mapCard, Card } from "../../../tool/table";
+import { getCard, mapCard, Card, reduceCard } from "../../../tool/table";
 import { mapEffect } from "../tool/basic/gameContext";
 import { TargetType, TargetTypeCard } from "../tool/basic/targetType";
 import { getCardController } from "../tool/basic/handleCard";
@@ -159,59 +161,76 @@ export function updateCommand(ctx: GameContext): GameContext {
               return r;
             }
             // 的每一個對象,
-            return mapRequireTargets(r, (targetID, target) => {
+            return mapRequireTargets(r, (targetID, target): TargetType => {
               if (r.key == null) {
                 return target;
               }
-              // 取得提示.
-              const tips = (() => {
-                if (r.condition == null) {
-                  return [];
-                }
-                const condition = r.condition;
-                const validCardID: string[] = [];
-                mapCard(ctx.gameState.table, (card) => {
-                  const tmp: TargetTypeCard = {
-                    id: "カード",
-                    value: [card.id],
-                  };
-                  const msg = doConditionTarget(
-                    ctx,
-                    wrapEvent,
-                    {
-                      ...r.targets,
-                      [targetID]: tmp,
+              switch (target.id) {
+                case "カード": {
+                  // 取得提示.
+                  const { validCardID, msgs } = reduceCard(
+                    ctx.gameState.table,
+                    ({ validCardID, msgs }, card) => {
+                      if (r.condition == null) {
+                        return {
+                          validCardID,
+                          msgs,
+                        };
+                      }
+                      const tmp: TargetTypeCard = {
+                        id: "カード",
+                        value: [card.id],
+                      };
+                      const msg = doConditionTarget(
+                        ctx,
+                        wrapEvent,
+                        {
+                          ...r.targets,
+                          [targetID]: tmp,
+                        },
+                        r.condition
+                      );
+                      return {
+                        validCardID: msg
+                          ? validCardID
+                          : [...validCardID, card.id],
+                        msgs: {
+                          ...msgs,
+                          ...(msg ? { [card.id]: msg } : null),
+                        },
+                      };
                     },
-                    condition
+                    {
+                      validCardID: [] as string[],
+                      msgs: {} as { [key: string]: string },
+                    }
                   );
-                  if (msg == null) {
-                    validCardID.push(card.id);
-                  }
-                  return card;
-                });
-                return validCardID;
-              })();
-              const nextValues = (() => {
-                if (tips.length == 0) {
-                  return target.value;
+
+                  const nextValues = (() => {
+                    if (validCardID.length == 0) {
+                      return target.value;
+                    }
+                    if (!Array.isArray(target.value)) {
+                      return target.value;
+                    }
+                    if (target.valueLengthInclude == null) {
+                      return target.value;
+                    }
+                    if (target.valueLengthInclude.length == 0) {
+                      return target.value;
+                    }
+                    const len = target.valueLengthInclude[0];
+                    return validCardID.slice(0, len);
+                  })();
+                  return {
+                    ...target,
+                    value: nextValues,
+                    tipID: validCardID,
+                    tipMessage: msgs,
+                  };
                 }
-                if (!Array.isArray(target.value)) {
-                  return target.value;
-                }
-                if (target.valueLengthInclude == null) {
-                  return target.value;
-                }
-                if (target.valueLengthInclude.length == 0) {
-                  return target.value;
-                }
-                const len = target.valueLengthInclude[0];
-                return tips.slice(0, len);
-              })();
-              return {
-                ...target,
-                value: nextValues,
-                tipID: tips,
-              };
+              }
+              return target;
             });
           });
           wrapEvent = {
@@ -254,8 +273,8 @@ export function updateCommand(ctx: GameContext): GameContext {
             log2(
               "updateCommand",
               "檢測可行性失敗，不加入指令列表",
-              e,
-              wrapEvent
+              wrapEvent,
+              e
             );
             canPass = false;
           }
@@ -358,6 +377,76 @@ export function initState(ctx: GameContext): GameContext {
     gameState: {
       ...ctx.gameState,
       activePlayerID: PlayerA,
+      table: {
+        ...ctx.gameState.table,
+        cardStack: {
+          [getBaShouID({ id: "AbsoluteBaSyou", value: [PlayerA, "Gゾーン"] })]:
+            [],
+          [getBaShouID({
+            id: "AbsoluteBaSyou",
+            value: [PlayerA, "ジャンクヤード"],
+          })]: [],
+          [getBaShouID({ id: "AbsoluteBaSyou", value: [PlayerA, "ハンガー"] })]:
+            [],
+          [getBaShouID({
+            id: "AbsoluteBaSyou",
+            value: [PlayerA, "プレイされているカード"],
+          })]: [],
+          [getBaShouID({
+            id: "AbsoluteBaSyou",
+            value: [PlayerA, "取り除かれたカード"],
+          })]: [],
+          [getBaShouID({
+            id: "AbsoluteBaSyou",
+            value: [PlayerA, "戦闘エリア（右）"],
+          })]: [],
+          [getBaShouID({
+            id: "AbsoluteBaSyou",
+            value: [PlayerA, "戦闘エリア（左）"],
+          })]: [],
+          [getBaShouID({ id: "AbsoluteBaSyou", value: [PlayerA, "手札"] })]: [],
+          [getBaShouID({ id: "AbsoluteBaSyou", value: [PlayerA, "捨て山"] })]:
+            [],
+          [getBaShouID({ id: "AbsoluteBaSyou", value: [PlayerA, "本国"] })]: [],
+          [getBaShouID({
+            id: "AbsoluteBaSyou",
+            value: [PlayerA, "配備エリア"],
+          })]: [],
+          [getBaShouID({ id: "AbsoluteBaSyou", value: [PlayerB, "Gゾーン"] })]:
+            [],
+          [getBaShouID({
+            id: "AbsoluteBaSyou",
+            value: [PlayerB, "ジャンクヤード"],
+          })]: [],
+          [getBaShouID({ id: "AbsoluteBaSyou", value: [PlayerB, "ハンガー"] })]:
+            [],
+          [getBaShouID({
+            id: "AbsoluteBaSyou",
+            value: [PlayerB, "プレイされているカード"],
+          })]: [],
+          [getBaShouID({
+            id: "AbsoluteBaSyou",
+            value: [PlayerB, "取り除かれたカード"],
+          })]: [],
+          [getBaShouID({
+            id: "AbsoluteBaSyou",
+            value: [PlayerB, "戦闘エリア（右）"],
+          })]: [],
+          [getBaShouID({
+            id: "AbsoluteBaSyou",
+            value: [PlayerB, "戦闘エリア（左）"],
+          })]: [],
+          [getBaShouID({ id: "AbsoluteBaSyou", value: [PlayerB, "手札"] })]: [],
+          [getBaShouID({ id: "AbsoluteBaSyou", value: [PlayerB, "捨て山"] })]:
+            [],
+          [getBaShouID({ id: "AbsoluteBaSyou", value: [PlayerB, "本国"] })]: [],
+          [getBaShouID({
+            id: "AbsoluteBaSyou",
+            value: [PlayerB, "配備エリア"],
+          })]: [],
+          ...ctx.gameState.table.cardStack,
+        },
+      },
     },
   };
 }

@@ -40,9 +40,13 @@ export function test() {
     testClientCommand,
     testClientCommand2,
   ].forEach((testF: Function) => {
-    console.log(`====================================`);
-    console.log(`============${testF.name}===========`);
-    console.log(`====================================`);
+    console.log(
+      `================================================================`
+    );
+    console.log(`${testF.name}`);
+    console.log(
+      `================================================================`
+    );
     testF();
   });
 }
@@ -123,6 +127,7 @@ export function testClientCommand() {
     },
   };
   ctx = initState(ctx);
+  console.log(ctx);
   ctx = updateCommand(ctx);
   let cmdList = getClientCommand(ctx, PlayerA);
   if (cmdList.length != 0) {
@@ -167,7 +172,7 @@ export function testClientCommand() {
 export function testDryRun() {
   let ctx = DEFAULT_GAME_CONTEXT;
   let table = ctx.gameState.table;
-  (table = createCard(
+  table = createCard(
     table,
     PlayerA,
     getBaShouID({
@@ -180,30 +185,31 @@ export function testDryRun() {
       "179030_11E_U_BL215R_blue",
       "179001_01A_CH_WT007R_white",
     ]
-  )),
-    (table = createCard(
-      table,
-      PlayerA,
-      getBaShouID({
-        id: "AbsoluteBaSyou",
-        value: [PlayerB, "手札"],
-      }),
-      [
-        "179016_04B_U_WT075C_white",
-        "179030_11E_U_BL208S_blue",
-        "179030_11E_U_BL215R_blue",
-        "179001_01A_CH_WT007R_white",
-      ]
-    )),
-    (ctx = {
-      ...ctx,
-      gameState: {
-        ...ctx.gameState,
-        table: table,
-      },
-    });
+  );
+  table = createCard(
+    table,
+    PlayerA,
+    getBaShouID({
+      id: "AbsoluteBaSyou",
+      value: [PlayerB, "手札"],
+    }),
+    [
+      "179016_04B_U_WT075C_white",
+      "179030_11E_U_BL208S_blue",
+      "179030_11E_U_BL215R_blue",
+      "179001_01A_CH_WT007R_white",
+    ]
+  );
+  ctx = {
+    ...ctx,
+    gameState: {
+      ...ctx.gameState,
+      table: table,
+    },
+  };
   console.log("initState");
   ctx = initState(ctx);
+  console.log(ctx);
   console.log("updateEffect");
   ctx = updateEffect(ctx);
   console.log("updateCommand");

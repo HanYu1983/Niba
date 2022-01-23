@@ -159,7 +159,7 @@ export function doConditionTarget(
                     return "must be absolute baSyou";
                   }
                   if ((getBaShouID(a) == getBaShouID(b)) == false) {
-                    return "baSyou not ==";
+                    return `場所不符合:${getBaShouID(a)} != ${getBaShouID(b)}`;
                   }
                   break;
                 }
@@ -208,33 +208,33 @@ export function doConditionTarget(
               switch (op) {
                 case "<":
                   if (a < b == false) {
-                    return "xxx";
+                    return `不為真：${a} < ${b}`;
                   }
                   break;
                 case "<=":
                   if (a <= b == false) {
-                    return "xxx";
+                    return `不為真：${a} <= ${b}`;
                   }
                   break;
                 case "==":
                   if ((a == b) == false) {
-                    return `不相等：${a} ${b}`;
+                    return `不為真：${a} == ${b}`;
                   }
                   break;
                 case ">":
                   if (a > b == false) {
-                    return "xxx";
+                    return `不為真：${a} > ${b}`;
                   }
                   break;
                 case ">=":
                   if (a >= b == false) {
-                    return "xxx";
+                    return `不為真：${a} >= ${b}`;
                   }
                   break;
                 case "in":
                   // @ts-ignore
                   if (target2.value.includes(a) == false) {
-                    return "xx";
+                    return `不為真：${a}包含在${JSON.stringify(target2.value)}`;
                   }
                   break;
                 case "hasToken": {

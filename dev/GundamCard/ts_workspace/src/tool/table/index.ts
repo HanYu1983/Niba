@@ -85,6 +85,16 @@ export function moveCard(
   };
 }
 
+export function reduceCard<T>(
+  table: Table,
+  f: (acc: T, card: Card) => T,
+  ctx: T
+): T {
+  return Object.values(table.cardStack)
+    .flatMap((v) => v)
+    .reduce(f, ctx);
+}
+
 export function mapCard(table: Table, f: (card: Card) => Card) {
   const nextStack = Object.keys(table.cardStack)
     .map((key): [string, Card[]] => {

@@ -17,6 +17,7 @@ import { BlockPayload } from "./blockPayload";
 export type TargetTypeBase = {
   responsePlayer?: TargetTypePlayer;
   tipID?: string[];
+  tipMessage?: { [key: string]: string };
   valueLengthInclude?: number[];
 };
 

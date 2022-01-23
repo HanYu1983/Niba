@@ -41,6 +41,46 @@ export function testKaiSo1() {
               tap: false,
             },
           ],
+          [getBaShouID({
+            id: "AbsoluteBaSyou",
+            value: [PlayerA, "Gゾーン"],
+          })]: [
+            {
+              id: "g1",
+              protoID: "179008_02A_U_WT034U_white",
+              faceDown: true,
+              ownerID: PlayerA,
+              tap: false,
+            },
+            {
+              id: "g2",
+              protoID: "179008_02A_U_WT034U_white",
+              faceDown: true,
+              ownerID: PlayerA,
+              tap: false,
+            },
+            {
+              id: "g3",
+              protoID: "179008_02A_U_WT034U_white",
+              faceDown: true,
+              ownerID: PlayerA,
+              tap: false,
+            },
+            {
+              id: "g4",
+              protoID: "179008_02A_U_WT034U_white",
+              faceDown: true,
+              ownerID: PlayerA,
+              tap: false,
+            },
+            {
+              id: "g5",
+              protoID: "179008_02A_U_WT034U_white",
+              faceDown: true,
+              ownerID: PlayerA,
+              tap: false,
+            },
+          ],
         },
       },
       // @ts-ignore
@@ -53,6 +93,7 @@ export function testKaiSo1() {
   ctx = updateCommand(ctx);
   console.log("查詢改裝指令");
   let flows = queryFlow(ctx, PlayerA);
+  console.log(ctx);
   console.log(flows);
   const cmdFlow = flows.find((flow) => {
     if (flow.id != "FlowSetActiveEffectID") {
@@ -60,6 +101,7 @@ export function testKaiSo1() {
     }
     return flow;
   });
+  console.log(ctx);
   if (cmdFlow == null) {
     throw new Error("必須有指令");
   }
