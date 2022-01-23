@@ -162,7 +162,6 @@ export function updateCommand(ctx: GameContext): GameContext {
               if (r.key == null) {
                 return target;
               }
-              log2("updateCommand", `targetID:${targetID}`);
               // 取得提示.
               switch (target.id) {
                 case "カード": {
@@ -179,7 +178,6 @@ export function updateCommand(ctx: GameContext): GameContext {
                             id: "カード",
                             value: [card.id],
                           };
-                          log2("getTip", card);
                           const msg = doConditionTarget(
                             ctx,
                             wrapEvent,
@@ -189,7 +187,6 @@ export function updateCommand(ctx: GameContext): GameContext {
                             },
                             condition
                           );
-                          log2("getTip", msg);
                           if (msg == null) {
                             validCardID.push(card.id);
                           }
@@ -199,8 +196,6 @@ export function updateCommand(ctx: GameContext): GameContext {
                       }
                     }
                   })();
-                  log2("updateCommand", "tips");
-                  log2("updateCommand", tips);
                   const nextValues = (() => {
                     if (tips.length == 0) {
                       return target.value;
@@ -386,7 +381,6 @@ export function getTip(
               },
               condition
             );
-            log2("getTip", msg);
             if (msg == null) {
               validCardID.push(card.id);
             }

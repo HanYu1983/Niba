@@ -134,7 +134,6 @@ export function recurRequire(
   require: Require,
   mapF: (require: Require) => Require
 ): Require {
-  log2("recurRequire", require);
   switch (require.id) {
     case "RequireAnd": {
       const nextRequires = require.and.map((require) => {

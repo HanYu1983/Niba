@@ -37,8 +37,7 @@ export function doActionTarget(
   action: Action,
   varCtxID: string
 ): GameContext {
-  log2("doActionTarget", action.id);
-  log2("doActionTarget", action);
+  log2("doActionTarget", "action", action);
   switch (action.id) {
     case "ActionRoll": {
       const cards = getTargetType(ctx, blockPayload, targets, action.cards);
@@ -334,7 +333,6 @@ export function doActionTarget(
       if (cards?.id != "カード") {
         throw new Error("must カード");
       }
-      log2("doActionTarget", "ActionMoveCardToPosition");
       if (!Array.isArray(cards.value)) {
         throw new Error("執行Action時的所有target必須是陣列");
       }
@@ -396,8 +394,6 @@ export function doActionTarget(
               ? { require: wrapRequireKey(action.block.require) }
               : null),
           };
-          log2("doActionTarget", "ActionAddBlock");
-          log2("doActionTarget", wrappedBlock);
           return {
             ...ctx,
             gameState: {

@@ -1,9 +1,9 @@
-const hideCategory = [
+const hideCategory: string[] = [
   //"updateCommand",
   //"getTip",
-  "recurRequire",
+  //"recurRequire",
   //"getTargetType",
-  "triggerTextEvent",
+  //"triggerTextEvent",
 ];
 let filterCategory = true;
 
