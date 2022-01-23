@@ -175,7 +175,7 @@ export function createPlayCardText(
       ): [[CardColor, number][], (CardColor | null)[]] => {
         const number = source.filter((c) => c == color).length;
         return [
-          (color == null || number == 0) ? result : [...result, [color, number]],
+          color == null || number == 0 ? result : [...result, [color, number]],
           source.filter((c) => c != color),
         ];
       },
@@ -388,41 +388,6 @@ export function createPlayCardText(
                 condition: {
                   id: "ConditionAnd",
                   and: [
-                    {
-                      id: "ConditionCompareNumber",
-                      value: [
-                        {
-                          id: "數字",
-                          value: {
-                            path: [
-                              { id: "カード", value: "將要「プレイ」的卡" },
-                              "的「合計国力」",
-                            ],
-                          },
-                        },
-                        "<=",
-                        {
-                          id: "數字",
-                          value: {
-                            path: [
-                              {
-                                id: "プレーヤー",
-                                value: {
-                                  path: [
-                                    {
-                                      id: "カード",
-                                      value: "將要「プレイ」的卡",
-                                    },
-                                    "的「コントローラー」",
-                                  ],
-                                },
-                              },
-                              "的「合計国力」",
-                            ],
-                          },
-                        },
-                      ],
-                    },
                     {
                       id: "ConditionCompareBaSyou",
                       value: [
