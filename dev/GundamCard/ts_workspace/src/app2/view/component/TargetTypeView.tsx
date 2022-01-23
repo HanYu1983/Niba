@@ -32,17 +32,18 @@ export const TargetTypeView = (props: { target: TargetType }) => {
           switch (props.target.id) {
             case "カード":
               return (
-                <div>
-                  <div>請選擇「{props.target.id}」</div>
-                  length: {JSON.stringify(props.target.valueLengthInclude)}
-
-                  tipID:
-                  {(props.target.tipID || []).map((v, i) => {
+                <div style={{display:"flex"}}>
+                  <div style={{flex:1}}>請選擇{props.target.valueLengthInclude?.join("或") || "1"}單位「{props.target.id}」</div>
+                  <div style={{flex:1}}>{(props.target.tipID || []).map((v, i) => {
                     return (
                       <CardView enabled={false} key={i} cardID={v}></CardView>
                     );
-                  })}
-
+                  })}</div>
+                  <div style={{flex:3}}>{Object.entries(props.target.tipMessage||{}).map(([k,v])=>{
+                    return <div key={k}>
+                      {k}:{v}
+                    </div>
+                  })}</div>
                 </div>
               );
           }

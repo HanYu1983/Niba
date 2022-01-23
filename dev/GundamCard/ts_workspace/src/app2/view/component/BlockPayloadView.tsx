@@ -7,11 +7,12 @@ import React, {
   useEffect,
 } from "react";
 import { queryFlow, Flow } from "../../tool/alg/handleClient";
+import { wrapTip } from "../../tool/alg/handleGameContext";
 import { getCardState, getTargetType } from "../../tool/alg/helper";
 import { CardText, getBaShou, getBaShouID } from "../../tool/tool/basic/basic";
 import { BlockPayload, Require } from "../../tool/tool/basic/blockPayload";
 import { Condition } from "../../tool/tool/basic/condition";
-import { getBlockOwner, mapEffect } from "../../tool/tool/basic/gameContext";
+import { getBlockOwner, iterateEffect, mapEffect } from "../../tool/tool/basic/gameContext";
 import { getAbsoluteBaSyou } from "../../tool/tool/basic/handleCard";
 import { TargetType } from "../../tool/tool/basic/targetType";
 import { AppContext } from "../tool/appContext";
@@ -26,15 +27,13 @@ export const BlockPayloadView = (props: {
 }) => {
   const appContext = useContext(AppContext);
   const block: BlockPayload | null = useMemo(() => {
-    // 使用any, 不然類型推論無法推出下一行可能找到Block, 而當成ret永遠是null
-    let ret: any = null;
-    mapEffect(appContext.viewModel.model, (effect) => {
-      if (effect.id == props.blockID) {
-        ret = effect;
-      }
-      return effect;
-    });
-    return ret;
+    const find = iterateEffect(appContext.viewModel.model).filter(e=>{
+      return e.id == props.blockID
+    })
+    if(find.length == 0){
+      return null
+    }
+    return wrapTip(appContext.viewModel.model, false, find[0])
   }, [appContext.viewModel.model, props.blockID]);
   if (block == null) {
     return <div>xxx</div>;

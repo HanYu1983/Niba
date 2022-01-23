@@ -61,9 +61,10 @@ export const RequireView = (props: { clientID: string; blockPayload: BlockPayloa
           </div>
         );
       case "RequireTarget":
+        const requireTarget = props.require
         return (
           <div style={{ border: "1px solid black" }}>
-            {Object.entries(props.require.targets).map(([k, v]) => {
+            {Object.entries(requireTarget.targets).map(([k, v]) => {
               const responsePlayer = getRequireTargetOwner(appContext.viewModel.model, props.blockPayload, props.require, v)
               const isTargetOwner = responsePlayer == props.clientID
               return (
@@ -73,7 +74,8 @@ export const RequireView = (props: { clientID: string; blockPayload: BlockPayloa
                       OnEvent.next({
                         id: "OnClickRequireTargetConfirm",
                         clientID: props.clientID,
-                        require: props.require,
+                        blockPayload: props.blockPayload,
+                        require: requireTarget,
                         varID: k,
                       });
                     }}

@@ -38,8 +38,8 @@ export const DEFAULT_VIEW_MODEL: ViewModel = {
 
 export const OnViewModel = OnEvent.pipe(
   rxjs.scan((viewModel, evt): ViewModel => {
-    log2("OnViewModel", "evt");
-    log2("OnViewModel", evt);
+    log2("OnViewModel", "evt", evt);
+    log2("OnViewModel", "viewModel", viewModel);
     try {
       switch (evt.id) {
         case "OnClickNewGame": {
@@ -134,13 +134,20 @@ export const OnViewModel = OnEvent.pipe(
           if (evt.require.key == null) {
             throw new Error("key must not null");
           }
+          const selection =
+            viewModel.cardSelection.length > 0
+              ? viewModel.cardSelection
+              : evt.require.targets[evt.varID]?.tipID?.slice(
+                  0,
+                  evt.require.targets[evt.varID]?.valueLengthInclude?.[0] || 1
+                ) || [];
           const model = setRequireTarget(
             viewModel.model,
             evt.require.key,
             evt.varID,
             {
               id: "カード",
-              value: viewModel.cardSelection,
+              value: selection,
             }
           );
           console.log(model);

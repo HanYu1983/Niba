@@ -46,34 +46,12 @@ const prototype: CardPrototype = {
                           "５以下の防御力を持つ敵軍ユニット１枚": {
                             id: "カード",
                             value: [],
+                            valueLengthInclude: [1],
                           },
                         },
                         condition: {
                           id: "ConditionAnd",
                           and: [
-                            {
-                              id: "ConditionCompareNumber",
-                              value: [
-                                {
-                                  id: "數字",
-                                  value: {
-                                    path: [
-                                      {
-                                        id: "參照",
-                                        value:
-                                          "５以下の防御力を持つ敵軍ユニット１枚",
-                                      },
-                                      "的陣列長度",
-                                    ],
-                                  },
-                                },
-                                "==",
-                                {
-                                  id: "數字",
-                                  value: [1],
-                                },
-                              ],
-                            },
                             {
                               id: "ConditionComparePlayer",
                               value: [

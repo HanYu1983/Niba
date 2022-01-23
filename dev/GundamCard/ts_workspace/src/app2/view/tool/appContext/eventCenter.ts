@@ -1,7 +1,11 @@
 import * as rxjs from "rxjs";
 import { Card, CardStack } from "../../../../tool/table";
 import { Flow } from "../../../tool/alg/handleClient";
-import { Require } from "../../../tool/tool/basic/blockPayload";
+import {
+  BlockPayload,
+  Require,
+  RequireTarget,
+} from "../../../tool/tool/basic/blockPayload";
 import { GameContext } from "../../../tool/tool/basic/gameContext";
 
 export type OnClickCardEvent = {
@@ -31,7 +35,8 @@ export type OnClickFlowConfirm = {
 export type OnClickRequireTargetConfirm = {
   id: "OnClickRequireTargetConfirm";
   clientID: string;
-  require: Require;
+  blockPayload: BlockPayload;
+  require: RequireTarget;
   varID: string;
 };
 

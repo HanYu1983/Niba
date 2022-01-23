@@ -150,6 +150,14 @@ export const DEFAULT_GAME_CONTEXT: GameContext = {
   },
 };
 
+export function iterateEffect(ctx: GameContext): BlockPayload[] {
+  return [
+    ...ctx.gameState.immediateEffect,
+    ...ctx.gameState.commandEffect,
+    ...ctx.gameState.stackEffect,
+  ];
+}
+
 export function mapEffect(
   ctx: GameContext,
   doF: (effect: BlockPayload) => BlockPayload

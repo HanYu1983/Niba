@@ -33,7 +33,11 @@ import { getCardState } from "./helper";
 import { doConditionTarget } from "./doConditionTarget";
 //import { createPlayUnitText } from "./createPlayUnitText";
 
-export function wrapTip(ctx: GameContext, block: BlockPayload): BlockPayload {
+export function wrapTip(
+  ctx: GameContext,
+  autoFill: boolean,
+  block: BlockPayload
+): BlockPayload {
   if (block.require == null) {
     return block;
   }
@@ -86,6 +90,9 @@ export function wrapTip(ctx: GameContext, block: BlockPayload): BlockPayload {
             }
           );
           const nextValues = (() => {
+            if (autoFill == false) {
+              return target.value;
+            }
             if (validCardID.length == 0) {
               return target.value;
             }
@@ -101,7 +108,6 @@ export function wrapTip(ctx: GameContext, block: BlockPayload): BlockPayload {
             const len = target.valueLengthInclude[0];
             return validCardID.slice(0, len);
           })();
-          log2("updateCommand", validCardID, msgs, nextValues);
           return {
             ...target,
             value: nextValues,
@@ -239,7 +245,7 @@ export function updateCommand(ctx: GameContext): GameContext {
             ? { require: wrapRequireKey(block.require) }
             : null),
         };
-        wrapEvent = wrapTip(ctx, wrapEvent);
+        wrapEvent = wrapTip(ctx, true, wrapEvent);
         // 判斷需求是否能滿足
         let canPass = true;
         if (wrapEvent.require) {
