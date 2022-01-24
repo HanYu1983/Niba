@@ -14,6 +14,12 @@ export type GameEventOnMenualEventCustomID3 = {
   cardID: string;
 };
 
+export type GameEventOnMenualEventCustomID4 = {
+  id: "合計国力－xしてプレイできる";
+  x: number;
+  cardID: string;
+};
+
 export type GameEventOnManualEventCustomID =
   | GameEventOnMenualEventCustomID1
   | GameEventOnMenualEventCustomID2

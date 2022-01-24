@@ -34,13 +34,13 @@ import { testProto_179025_07D_U_RD156R_red } from "./testProto_179025_07D_U_RD15
 
 export function test() {
   [
-    testProto_179025_07D_U_RD156R_red,
     testDryRun,
     testFlow1,
     testFlow2,
     testKaiSo1,
     testClientCommand,
     testClientCommand2,
+    testProto_179025_07D_U_RD156R_red,
   ].forEach((testF: Function) => {
     console.log(
       `================================================================`

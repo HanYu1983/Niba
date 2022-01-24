@@ -420,8 +420,11 @@ export function getTargetType(
       if (Array.isArray(targetTypeAfterProcess.value)) {
         return targetTypeAfterProcess;
       }
-      if (targetTypeAfterProcess.triggerGameEvent) {
-        ctx = triggerTextEvent(ctx, targetTypeAfterProcess.triggerGameEvent);
+      if (targetTypeAfterProcess.value.triggerGameEvent) {
+        ctx = triggerTextEvent(
+          ctx,
+          targetTypeAfterProcess.value.triggerGameEvent
+        );
       }
       const path = targetTypeAfterProcess.value.path;
       switch (path[0].id) {
@@ -602,6 +605,12 @@ export function getTargetType(
           // if (targetType.value.length == 0) {
           //   throw new Error("cardID must > 0");
           // }
+          if (targetTypeAfterProcess.value.triggerGameEvent) {
+            ctx = triggerTextEvent(
+              ctx,
+              targetTypeAfterProcess.value.triggerGameEvent
+            );
+          }
           const values = targetType.value.map((cardID) => {
             switch (path[1]) {
               case "的「改装」的「合計国力」":

@@ -515,6 +515,7 @@ export function createPlayCardText(
               // },
               {
                 id: "RequireTarget",
+                key: "靜態替換_將要「プレイ」的卡",
                 targets: {
                   "將要「プレイ」的卡": {
                     id: "カード",

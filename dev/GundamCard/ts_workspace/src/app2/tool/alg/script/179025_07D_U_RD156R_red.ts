@@ -9,6 +9,7 @@ import { createTokuSyuKouKaText } from "./createTokuSyuKouKaText";
 import { CardText } from "../../tool/basic/basic";
 import { recurRequire, Require } from "../../tool/basic/blockPayload";
 import { Condition } from "../../tool/basic/condition";
+import { GameEventOnManualEventCustomID } from "../gameEventOnManualEventCustomID";
 
 // 179025_07D_U_RD156R_red
 // R
@@ -53,7 +54,7 @@ playCardPlus = {
           if (r.id != "RequireTarget") {
             return r;
           }
-          if (r.targets["將要「プレイ」的卡"] == null) {
+          if (r.key != "靜態替換_將要「プレイ」的卡") {
             return r;
           }
           if (r.condition?.id != "ConditionAnd") {
@@ -64,7 +65,45 @@ playCardPlus = {
               return cond;
             }
             return {
-              ...cond,
+              id: "ConditionCompareNumber",
+              value: [
+                {
+                  id: "數字",
+                  value: {
+                    triggerGameEvent: {
+                      id: "手動事件發生時",
+                      customID: {
+                        id: "合計国力－３してプレイできる",
+                      },
+                    },
+                    path: [
+                      { id: "カード", value: "將要「プレイ」的卡" },
+                      "的「合計国力」",
+                    ],
+                  },
+                },
+                "<=",
+                {
+                  id: "數字",
+                  value: {
+                    path: [
+                      {
+                        id: "プレーヤー",
+                        value: {
+                          path: [
+                            {
+                              id: "カード",
+                              value: "將要「プレイ」的卡",
+                            },
+                            "的「コントローラー」",
+                          ],
+                        },
+                      },
+                      "的「合計国力」",
+                    ],
+                  },
+                },
+              ],
             };
           });
           return {

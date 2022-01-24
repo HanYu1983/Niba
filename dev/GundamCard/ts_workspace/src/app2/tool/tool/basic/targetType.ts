@@ -131,6 +131,7 @@ export type TargetTypeNumber = {
             ]
           | [TargetTypePlayer, "的「合計国力」" | "的「改装」的「合計国力」"]
           | [TargetTypeRef, "的陣列長度"];
+        triggerGameEvent?: GameEventOnManualEvent;
       };
 } & TargetTypeBase;
 
@@ -172,11 +173,13 @@ export type TargetTypeCardCategory = {
 
 export type TargetTypeCardRole = {
   id: "「カード」的角色";
-  triggerGameEvent?: GameEventOnManualEvent;
   value:
     | CardRole[]
     | string
-    | { path: [TargetTypeCard, "的角色" | "當成横置裝彈G時的角色"] };
+    | {
+        path: [TargetTypeCard, "的角色" | "當成横置裝彈G時的角色"];
+        triggerGameEvent?: GameEventOnManualEvent;
+      };
 } & TargetTypeBase;
 
 export type TargetTypeCustom = {
