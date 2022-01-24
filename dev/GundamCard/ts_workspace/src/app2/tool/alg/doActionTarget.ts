@@ -672,6 +672,142 @@ export function doActionTarget(
       }
       return ctx;
     }
+    case "ActionSetFlag": {
+      const cards = getTargetType(ctx, blockPayload, targets, action.cards);
+      if (cards.id != "カード") {
+        throw new Error("must カード");
+      }
+      if (!Array.isArray(cards.value)) {
+        throw new Error("執行Action時的所有target必須是陣列");
+      }
+      if (cards.value.length == 0) {
+        log2("doActionTarget", "將執行action，但對象為空陣列。直接回傳。");
+        return ctx;
+      }
+      const cardIDs = cards.value;
+      const flag = getTargetType(ctx, blockPayload, targets, action.flag);
+      if (flag.id != "字串") {
+        throw new Error("must 字串");
+      }
+      if (!Array.isArray(flag.value)) {
+        throw new Error("執行Action時的所有target必須是陣列");
+      }
+      if (flag.value.length == 0) {
+        log2("doActionTarget", "將執行action，但對象為空陣列。直接回傳。");
+        return ctx;
+      }
+      const flags = flag.value;
+      const nextCardStates = ctx.gameState.cardState.map((cardState) => {
+        if (cardIDs.includes(cardState.cardID) == false) {
+          return cardState;
+        }
+        const nextFlags = flags.reduce((flags, flag) => {
+          if (flags.includes(flag)) {
+            return flags;
+          }
+          return [...flags, flag];
+        }, cardState.flags);
+        return {
+          ...cardState,
+          flags: nextFlags,
+        };
+      });
+      return {
+        ...ctx,
+        gameState: {
+          ...ctx.gameState,
+          cardState: nextCardStates,
+        },
+      };
+    }
+    case "ActionAddFlag": {
+      const cards = getTargetType(ctx, blockPayload, targets, action.cards);
+      if (cards.id != "カード") {
+        throw new Error("must カード");
+      }
+      if (!Array.isArray(cards.value)) {
+        throw new Error("執行Action時的所有target必須是陣列");
+      }
+      if (cards.value.length == 0) {
+        log2("doActionTarget", "將執行action，但對象為空陣列。直接回傳。");
+        return ctx;
+      }
+      const cardIDs = cards.value;
+      const flag = getTargetType(ctx, blockPayload, targets, action.flag);
+      if (flag.id != "字串") {
+        throw new Error("must 字串");
+      }
+      if (!Array.isArray(flag.value)) {
+        throw new Error("執行Action時的所有target必須是陣列");
+      }
+      if (flag.value.length == 0) {
+        log2("doActionTarget", "將執行action，但對象為空陣列。直接回傳。");
+        return ctx;
+      }
+      const flags = flag.value;
+      const nextCardStates = ctx.gameState.cardState.map((cardState) => {
+        if (cardIDs.includes(cardState.cardID) == false) {
+          return cardState;
+        }
+        const nextFlags = [...cardState.flags, ...flags];
+        return {
+          ...cardState,
+          flags: nextFlags,
+        };
+      });
+      return {
+        ...ctx,
+        gameState: {
+          ...ctx.gameState,
+          cardState: nextCardStates,
+        },
+      };
+    }
+    case "ActionDeleteFlag": {
+      const cards = getTargetType(ctx, blockPayload, targets, action.cards);
+      if (cards.id != "カード") {
+        throw new Error("must カード");
+      }
+      if (!Array.isArray(cards.value)) {
+        throw new Error("執行Action時的所有target必須是陣列");
+      }
+      if (cards.value.length == 0) {
+        log2("doActionTarget", "將執行action，但對象為空陣列。直接回傳。");
+        return ctx;
+      }
+      const cardIDs = cards.value;
+      const flag = getTargetType(ctx, blockPayload, targets, action.flag);
+      if (flag.id != "字串") {
+        throw new Error("must 字串");
+      }
+      if (!Array.isArray(flag.value)) {
+        throw new Error("執行Action時的所有target必須是陣列");
+      }
+      if (flag.value.length == 0) {
+        log2("doActionTarget", "將執行action，但對象為空陣列。直接回傳。");
+        return ctx;
+      }
+      const flags = flag.value;
+      const nextCardStates = ctx.gameState.cardState.map((cardState) => {
+        if (cardIDs.includes(cardState.cardID) == false) {
+          return cardState;
+        }
+        const nextFlags = flags.reduce((flags, flag) => {
+          return flags.filter((f) => f != flag);
+        }, cardState.flags);
+        return {
+          ...cardState,
+          flags: nextFlags,
+        };
+      });
+      return {
+        ...ctx,
+        gameState: {
+          ...ctx.gameState,
+          cardState: nextCardStates,
+        },
+      };
+    }
     default:
       throw new Error(`not impl: ${action.id}`);
   }

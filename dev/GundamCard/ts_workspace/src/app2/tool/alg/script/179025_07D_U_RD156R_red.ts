@@ -41,7 +41,17 @@ let playCardPlus = createPlayCardText(prototype, {
       {
         id: "FeedbackAction",
         action: [
-          // set flag
+          {
+            id: "ActionSetFlag",
+            flag: {
+              id: "字串",
+              value: ["合計国力－３してプレイ"],
+            },
+            cards: {
+              id: "カード",
+              value: { path: [{ id: "このカード" }] },
+            },
+          },
         ],
       },
     ],
@@ -129,63 +139,63 @@ playCardPlus = {
 };
 
 const texts: CardText[] = [
-  // createTokuSyuKouKaText(["クイック"], {}),
-  // createTokuSyuKouKaText(["高機動"], {}),
-  // createTokuSyuKouKaText(["改装", "F91系"], { cost: 1 }),
-  // createPlayCardText(prototype, { isG: true }),
-  // createPlayCardText(prototype, {}),
+  createTokuSyuKouKaText(["クイック"], {}),
+  createTokuSyuKouKaText(["高機動"], {}),
+  createTokuSyuKouKaText(["改装", "F91系"], { cost: 1 }),
+  createPlayCardText(prototype, { isG: true }),
+  createPlayCardText(prototype, {}),
   {
     id: "恒常",
     description:
       "『恒常』：このカードは、合計国力－３してプレイできる。その場合、カット終了時に、このカードを廃棄する。",
     texts: [
       playCardPlus,
-      // {
-      //   id: "自動型",
-      //   category: "起動",
-      //   description: "その場合、カット終了時に、このカードを廃棄する。",
-      //   block: {
-      //     require: {
-      //       id: "RequireTarget",
-      //       targets: {},
-      //       condition: {
-      //         id: "ConditionAnd",
-      //         and: [
-      //           // 如果旗標存在
-      //           {
-      //             id: "ConditionCompareGameEventOnManualEvent",
-      //             value: [
-      //               {
-      //                 id: "手動事件發生時",
-      //                 value: { path: [{ id: "觸發這個事件的手動事件" }] },
-      //               },
-      //               "==",
-      //               {
-      //                 id: "手動事件發生時",
-      //                 value: [
-      //                   {
-      //                     id: "手動事件發生時",
-      //                     customID: {
-      //                       id: "カット終了時",
-      //                     },
-      //                   },
-      //                 ],
-      //               },
-      //             ],
-      //           },
-      //         ],
-      //       },
-      //     },
-      //     feedback: [
-      //       {
-      //         id: "FeedbackAction",
-      //         action: [
-      //           // set flag
-      //         ],
-      //       },
-      //     ],
-      //   },
-      // },
+      {
+        id: "自動型",
+        category: "起動",
+        description: "その場合、カット終了時に、このカードを廃棄する。",
+        block: {
+          require: {
+            id: "RequireTarget",
+            targets: {},
+            condition: {
+              id: "ConditionAnd",
+              and: [
+                // 如果旗標存在
+                {
+                  id: "ConditionCompareGameEventOnManualEvent",
+                  value: [
+                    {
+                      id: "手動事件發生時",
+                      value: { path: [{ id: "觸發這個事件的手動事件" }] },
+                    },
+                    "==",
+                    {
+                      id: "手動事件發生時",
+                      value: [
+                        {
+                          id: "手動事件發生時",
+                          customID: {
+                            id: "カット終了時",
+                          },
+                        },
+                      ],
+                    },
+                  ],
+                },
+              ],
+            },
+          },
+          feedback: [
+            {
+              id: "FeedbackAction",
+              action: [
+                // set flag
+              ],
+            },
+          ],
+        },
+      },
     ],
   },
 ];

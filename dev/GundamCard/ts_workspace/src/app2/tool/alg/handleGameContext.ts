@@ -563,6 +563,7 @@ export function getClientCommand(ctx: GameContext, clientID: string) {
       switch (text.cardText.id) {
         case "使用型":
           return text.cardText.timing;
+        case "恒常":
         case "特殊型": {
           const t = text.cardText.texts.find((v) => v.id == "使用型");
           if (t == null) {

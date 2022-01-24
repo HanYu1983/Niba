@@ -14,7 +14,7 @@ import {
   getBlockOwner,
 } from "../tool/basic/gameContext";
 import { BlockPayload } from "../tool/basic/blockPayload";
-import { getCard, mapCard, Card } from "../../../tool/table";
+import { getCard, mapCard, Card, reduceCard } from "../../../tool/table";
 import {
   getAbsoluteBaSyou,
   getCardBaSyou,

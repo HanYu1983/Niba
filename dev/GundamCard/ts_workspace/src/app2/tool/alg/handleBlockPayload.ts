@@ -198,6 +198,23 @@ export function doFeedback(
   }
 }
 
+let _seqID = 0;
+export function doBlockPayload(
+  ctx: GameContext,
+  blockPayload: BlockPayload
+): GameContext {
+  const contextID = blockPayload.contextID || `doBlockPayload_${_seqID++}`;
+  if (blockPayload.require) {
+    ctx = doRequire(ctx, blockPayload, blockPayload.require, contextID);
+  }
+  if (blockPayload.feedback) {
+    ctx = blockPayload.feedback.reduce((ctx, feedback) => {
+      return doFeedback(ctx, blockPayload, feedback, contextID);
+    }, ctx);
+  }
+  return ctx;
+}
+
 export function wrapBlockRequireKey(block: BlockPayload): BlockPayload {
   return {
     ...block,

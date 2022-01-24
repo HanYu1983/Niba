@@ -1,11 +1,13 @@
 import { createCard, DEFAULT_TABLE, mapCard } from "../../tool/table";
 import {
+  doBlockPayload,
   doFeedback,
   doRequire,
   wrapBlockRequireKey,
 } from "../tool/alg/handleBlockPayload";
 import { applyFlow, doEffect, queryFlow } from "../tool/alg/handleClient";
 import {
+  getClientCommand,
   initState,
   updateCommand,
   updateEffect,
@@ -140,5 +142,15 @@ export function testProto_179025_07D_U_RD156R_red2() {
   ctx = initState(ctx);
   ctx = updateEffect(ctx);
   ctx = updateCommand(ctx);
+  if (ctx.gameState.commandEffect.length == 0) {
+    throw new Error("指令池必須有指令");
+  }
+  let cmd = ctx.gameState.commandEffect[0];
+  ctx = doBlockPayload(ctx, cmd);
+  if (ctx.gameState.stackEffect.length == 0) {
+    throw new Error("堆疊中必須有指令");
+  }
+  cmd = ctx.gameState.stackEffect[0];
+  ctx = doBlockPayload(ctx, cmd);
   console.log(ctx);
 }

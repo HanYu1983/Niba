@@ -4,6 +4,7 @@ import type {
   TargetTypeBaSyou,
   TargetTypeBoolean,
   TargetTypeCardTextState,
+  TargetTypeString,
 } from "./targetType";
 import type { BlockPayload } from "./blockPayload";
 import type { CardPrototype, CardState, GameEffect } from "./gameContext";
@@ -56,8 +57,19 @@ type ActionMoveCardToPosition = {
 type ActionSetFlag = {
   id: "ActionSetFlag";
   cards: TargetTypeCard;
-  flag: string;
-  value: boolean;
+  flag: TargetTypeString;
+};
+
+type ActionAddFlag = {
+  id: "ActionAddFlag";
+  cards: TargetTypeCard;
+  flag: TargetTypeString;
+};
+
+type ActionDeleteFlag = {
+  id: "ActionDeleteFlag";
+  cards: TargetTypeCard;
+  flag: TargetTypeString;
 };
 
 type ActionSetFace = {
@@ -141,6 +153,8 @@ export type Action =
   | ActionDestroy
   | ActionSetFace
   | ActionSetFlag
+  | ActionAddFlag
+  | ActionDeleteFlag
   | ActionOKiKaeRu
   | ActionUnitDamage
   | ActionAddBlock
