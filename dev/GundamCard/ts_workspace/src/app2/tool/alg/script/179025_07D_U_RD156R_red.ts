@@ -7,6 +7,8 @@ import {
 import { createPlayCardText } from "./createPlayCardText";
 import { createTokuSyuKouKaText } from "./createTokuSyuKouKaText";
 import { CardText } from "../../tool/basic/basic";
+import { recurRequire, Require } from "../../tool/basic/blockPayload";
+import { Condition } from "../../tool/basic/condition";
 
 // 179025_07D_U_RD156R_red
 // R
@@ -24,6 +26,57 @@ const prototype: CardPrototype = {
   category: "ユニット",
   color: "赤",
   rollCost: ["赤", "赤", null, null, null],
+};
+
+let playCardPlus = createPlayCardText(
+  { ...prototype, rollCost: ["赤", "赤"] },
+  {
+    description: "合計国力－３してプレイできる",
+    block: {
+      feedback: [
+        {
+          id: "FeedbackAction",
+          action: [
+            // 設置旗標
+          ],
+        },
+      ],
+    },
+  }
+);
+playCardPlus = {
+  ...playCardPlus,
+  block: {
+    ...playCardPlus.block,
+    ...(playCardPlus.block.require
+      ? recurRequire(playCardPlus.block.require, (r): Require => {
+          if (r.id != "RequireTarget") {
+            return r;
+          }
+          if (r.targets["將要「プレイ」的卡"] == null) {
+            return r;
+          }
+          if (r.condition?.id != "ConditionAnd") {
+            throw new Error("must be ConditionAnd");
+          }
+          const nextConditionAnd = r.condition.and.map((cond): Condition => {
+            if (cond.id != "ConditionCompareNumber") {
+              return cond;
+            }
+            return {
+              ...cond,
+            };
+          });
+          return {
+            ...r,
+            condition: {
+              ...r.condition,
+              and: nextConditionAnd,
+            },
+          };
+        })
+      : null),
+  },
 };
 
 const texts: CardText[] = [
@@ -54,31 +107,18 @@ const texts: CardText[] = [
                 id: "『恒常』：このカードは、合計国力－３してプレイできる。その場合、カット終了時に、このカードを廃棄する。",
                 cardTextStates: [
                   {
-                    id: "合計国力－３してプレイできる",
+                    id: "",
                     enabled: true,
-                    cardText: createPlayCardText(
-                      { ...prototype, rollCost: ["赤", "赤"] },
-                      {
-                        block: {
-                          feedback: [
-                            {
-                              id: "FeedbackAction",
-                              action: [
-                                // 設置旗標
-                              ],
-                            },
-                          ],
-                        },
-                      }
-                    ),
+                    cardText: playCardPlus,
                   },
                   {
-                    id: "その場合、カット終了時に、このカードを廃棄する。",
+                    id: "",
                     enabled: true,
                     cardText: {
                       id: "自動型",
                       category: "起動",
-                      description: "",
+                      description:
+                        "その場合、カット終了時に、このカードを廃棄する。",
                       block: {
                         // TODO: カット終了時に, 並且旗標存在時,
                         require: {

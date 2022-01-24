@@ -278,9 +278,9 @@ const _main: TargetTypeCustomFunctionType = (
   };
 };
 const playCardText = createPlayCardText(prototype, {
+  description:
+    "（敵軍防御ステップ）：交戦中の自軍ユニットがいる場合、交戦中ではない、全てのユニットを破壊する。",
   command: {
-    description:
-      "（敵軍防御ステップ）：交戦中の自軍ユニットがいる場合、交戦中ではない、全てのユニットを破壊する。",
     timing: ["敵軍", "防御ステップ"],
   },
   block: {

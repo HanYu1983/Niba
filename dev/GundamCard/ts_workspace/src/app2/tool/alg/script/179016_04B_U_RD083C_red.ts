@@ -22,6 +22,7 @@ const prototype: CardPrototype = {
   category: "ユニット",
   color: "白",
   rollCost: ["白", null, null],
+  battlePoint: [5, 1, 5],
   texts: [
     createTokuSyuKouKaText(["サイコミュ", 2], { cost: 1 }),
     {

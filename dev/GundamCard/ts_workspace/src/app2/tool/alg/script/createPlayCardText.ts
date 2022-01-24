@@ -3,6 +3,7 @@ import {
   CardCategory,
   CardColor,
   CardText,
+  CardTextSiYouKaTa,
   SiYouTiming,
 } from "../../tool/basic/basic";
 import {
@@ -20,13 +21,13 @@ export function createPlayCardText(
   options: {
     isG?: boolean;
     block?: BlockPayload;
+    description?: string;
     command?: {
-      description: string;
       timing: SiYouTiming;
       require?: Require;
     };
   }
-): CardText {
+): CardTextSiYouKaTa {
   if (options.isG) {
     return {
       id: "使用型",
@@ -193,7 +194,7 @@ export function createPlayCardText(
       return {
         id: "使用型",
         timing: options.command.timing,
-        description: options.command.description,
+        description: options?.description || `プレイ(${prototype.title})`,
         block: {
           contextID: `createPlayCardText ${idSeq++}`,
           require: {
@@ -365,7 +366,7 @@ export function createPlayCardText(
       return {
         id: "使用型",
         timing: ["自軍", "配備フェイズ"],
-        description: `プレイ ${prototype.category}[${prototype.title}]`,
+        description: options?.description || `プレイ(${prototype.title})`,
         block: {
           contextID: `createPlayCardText ${idSeq++}`,
           require: {
@@ -496,7 +497,7 @@ export function createPlayCardText(
       return {
         id: "使用型",
         timing: ["自軍", "配備フェイズ"],
-        description: `プレイ ${prototype.category}[${prototype.title}]`,
+        description: options?.description || `プレイ(${prototype.title})`,
         block: {
           contextID: `createPlayCardText ${idSeq++}`,
           require: {

@@ -30,9 +30,11 @@ import { testKaiSo1 } from "./testKaiSo";
 import { createTokuSyuKouKaText } from "../tool/alg/script/createTokuSyuKouKaText";
 import { doFeedback, doRequire } from "../tool/alg/handleBlockPayload";
 import { doEffect, doEffectRequire } from "../tool/alg/handleClient";
+import { testProto_179025_07D_U_RD156R_red } from "./testProto_179025_07D_U_RD156R_red";
 
 export function test() {
   [
+    testProto_179025_07D_U_RD156R_red,
     testDryRun,
     testFlow1,
     testFlow2,

@@ -25,9 +25,9 @@ const prototype: CardPrototype = {
 
 const playCardAsGText = createPlayCardText(prototype, { isG: true });
 const playCardText = createPlayCardText(prototype, {
+  description:
+    "（自軍配備フェイズ）：「供給」を持つ自軍カード１枚をロールする。その場合、カード２枚を引く。",
   command: {
-    description:
-      "（自軍配備フェイズ）：「供給」を持つ自軍カード１枚をロールする。その場合、カード２枚を引く。",
     timing: ["自軍", "配備フェイズ"],
     require: {
       id: "RequireTarget",
@@ -90,20 +90,20 @@ const playCardText = createPlayCardText(prototype, {
         },
       ],
     },
-    block: {
-      feedback: [
-        {
-          id: "FeedbackAction",
-          action: [
-            {
-              id: "ActionRoll",
-              cards: { id: "カード", value: "「供給」を持つ自軍カード１枚" },
-            },
-            { id: "ActionDraw", count: 2 },
-          ],
-        },
-      ],
-    },
+  },
+  block: {
+    feedback: [
+      {
+        id: "FeedbackAction",
+        action: [
+          {
+            id: "ActionRoll",
+            cards: { id: "カード", value: "「供給」を持つ自軍カード１枚" },
+          },
+          { id: "ActionDraw", count: 2 },
+        ],
+      },
+    ],
   },
 });
 

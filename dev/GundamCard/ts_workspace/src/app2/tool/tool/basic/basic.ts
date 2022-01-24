@@ -245,21 +245,21 @@ export type TokuSyuKouKa =
 // 常駐技能在每次尋問中重新計算，卡片必須在場中
 // 恆常技能在每次尋問中重新計算，無論卡片在哪
 // 起動技能在每次事件發生時，就將符合的起動技能加入block
-type CardTextZiDouKaTa = {
+export type CardTextZiDouKaTa = {
   id: "自動型";
   description: string;
   category: "常駐" | "恒常" | "起動";
   block: BlockPayload;
 };
 
-type CardTextSiYouKaTa = {
+export type CardTextSiYouKaTa = {
   id: "使用型";
   description: string;
   timing: SiYouTiming;
   block: BlockPayload;
 };
 
-type CardTextToKuSyuKata = {
+export type CardTextToKuSyuKata = {
   id: "特殊型";
   description: TokuSyuKouKa;
   texts: (CardTextZiDouKaTa | CardTextSiYouKaTa)[];
