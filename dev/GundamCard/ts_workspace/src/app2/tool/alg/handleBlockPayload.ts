@@ -3,6 +3,7 @@ import {
   Feedback,
   Require,
   RequireTarget,
+  wrapRequireKey,
 } from "../tool/basic/blockPayload";
 import { Condition } from "../tool/basic/condition";
 import { Action } from "../tool/basic/action";
@@ -195,4 +196,11 @@ export function doFeedback(
       return ctx;
     }
   }
+}
+
+export function wrapBlockRequireKey(block: BlockPayload): BlockPayload {
+  return {
+    ...block,
+    ...(block.require ? { require: wrapRequireKey(block.require) } : null),
+  };
 }
