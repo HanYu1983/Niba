@@ -428,7 +428,7 @@ export function doActionTarget(
         };
       });
       const cardStateWillAdd = cardStateAfterSignID.filter((t) => {
-        return cardState.cardTextStates.find((v) => v.id != t.id) == null;
+        return cardState.cardTextStates.find((v) => v.id == t.id) == null;
       });
       if (cardStateWillAdd.length == 0) {
         return ctx;
@@ -499,7 +499,7 @@ export function doActionTarget(
           };
         });
         const cardTextStateWillAdd = cardTextStateAfterSignID.filter((t) => {
-          return cardState.cardTextStates.find((v) => v.id != t.id) == null;
+          return cardState.cardTextStates.find((v) => v.id == t.id) == null;
         });
         if (cardTextStateWillAdd.length == 0) {
           return ctx;

@@ -11,7 +11,7 @@ import {
   updateCommand,
   getClientCommand,
 } from "../tool/alg/handleGameContext";
-import { createCard } from "../../tool/table";
+import { Card, createCard } from "../../tool/table";
 import {
   getBaShouID,
   PlayerA,
@@ -30,17 +30,23 @@ import { testKaiSo1 } from "./testKaiSo";
 import { createTokuSyuKouKaText } from "../tool/alg/script/createTokuSyuKouKaText";
 import { doFeedback, doRequire } from "../tool/alg/handleBlockPayload";
 import { doEffect, doEffectRequire } from "../tool/alg/handleClient";
-import { testProto_179025_07D_U_RD156R_red } from "./testProto_179025_07D_U_RD156R_red";
+import {
+  testProto_179025_07D_U_RD156R_red,
+  testProto_179025_07D_U_RD156R_red2,
+} from "./testProto_179025_07D_U_RD156R_red";
+import { getTargetType } from "../tool/alg/helper";
 
 export function test() {
   [
-    testDryRun,
-    testFlow1,
-    testFlow2,
-    testKaiSo1,
-    testClientCommand,
-    testClientCommand2,
+    testTargetType,
+    // testDryRun,
+    // testFlow1,
+    // testFlow2,
+    // testKaiSo1,
+    // testClientCommand,
+    // testClientCommand2,
     testProto_179025_07D_U_RD156R_red,
+    testProto_179025_07D_U_RD156R_red2,
   ].forEach((testF: Function) => {
     console.log(
       `================================================================`
@@ -51,6 +57,142 @@ export function test() {
     );
     testF();
   });
+}
+
+export function testTargetType() {
+  let ctx = DEFAULT_GAME_CONTEXT;
+  ctx = {
+    ...ctx,
+    gameState: {
+      ...ctx.gameState,
+      table: {
+        ...ctx.gameState.table,
+        cardStack: {
+          ...ctx.gameState.table.cardStack,
+          [getBaShouID({
+            id: "AbsoluteBaSyou",
+            value: [PlayerA, "手札"],
+          })]: [
+            {
+              id: "a",
+              protoID: "179008_02A_U_WT034U_white",
+              faceDown: true,
+              ownerID: PlayerA,
+              tap: false,
+            },
+          ],
+        },
+      },
+    },
+  };
+  const block: BlockPayload = {
+    cause: {
+      id: "BlockPayloadCauseUpdateCommand",
+      playerID: PlayerA,
+      cardID: "a",
+      cardTextID: "a",
+      description: "",
+    },
+  };
+  const targetType = getTargetType(
+    ctx,
+    block,
+    {
+      "將要「プレイ」的卡": {
+        id: "カード",
+        value: ["a"],
+      },
+    },
+    {
+      id: "數字",
+      value: {
+        path: [
+          {
+            id: "數字",
+            value: {
+              path: [
+                { id: "カード", value: "將要「プレイ」的卡" },
+                "的「合計国力」",
+              ],
+            },
+          },
+          "-",
+          {
+            id: "數字",
+            value: [3],
+          },
+        ],
+      },
+    }
+  );
+  if (targetType.id != "數字") {
+    throw new Error("計算完後必須還是數字");
+  }
+  if (!Array.isArray(targetType.value)) {
+    throw new Error("計算完後必須是常數");
+  }
+  if (targetType.value[0] != 2) {
+    throw new Error("5-3必須等於2");
+  }
+  const block2: BlockPayload = {
+    cause: {
+      id: "BlockPayloadCauseUpdateCommand",
+      playerID: PlayerA,
+      cardID: "a",
+      cardTextID: "a",
+      description: "",
+    },
+  };
+  try {
+    doRequire(
+      ctx,
+      block2,
+      {
+        id: "RequireTarget",
+        targets: {
+          "將要「プレイ」的卡": {
+            id: "カード",
+            value: ["a"],
+          },
+        },
+        condition: {
+          id: "ConditionCompareNumber",
+          value: [
+            {
+              id: "數字",
+              value: {
+                path: [
+                  {
+                    id: "數字",
+                    value: {
+                      path: [
+                        { id: "カード", value: "將要「プレイ」的卡" },
+                        "的「合計国力」",
+                      ],
+                    },
+                  },
+                  "-",
+                  {
+                    id: "數字",
+                    value: [3],
+                  },
+                ],
+              },
+            },
+            "<=",
+            {
+              id: "數字",
+              value: [2],
+            },
+          ],
+        },
+      },
+      "tmp"
+    );
+  } catch (e) {
+    console.log(e);
+    throw new Error("必須沒有錯誤");
+  }
 }
 
 export function testClientCommand2() {

@@ -52,137 +52,140 @@ playCardPlus = {
   block: {
     ...playCardPlus.block,
     ...(playCardPlus.block.require
-      ? recurRequire(playCardPlus.block.require, (r): Require => {
-          if (r.id != "RequireTarget") {
-            return r;
-          }
-          if (r.key != "靜態替換_將要「プレイ」的卡") {
-            return r;
-          }
-          if (r.condition?.id != "ConditionAnd") {
-            throw new Error("must be ConditionAnd");
-          }
-          const nextConditionAnd = r.condition.and.map((cond): Condition => {
-            if (cond.id != "ConditionCompareNumber") {
-              return cond;
+      ? {
+          require: recurRequire(playCardPlus.block.require, (r): Require => {
+            if (r.id != "RequireTarget") {
+              return r;
             }
+            if (r.key != "靜態替換_將要「プレイ」的卡") {
+              return r;
+            }
+            if (r.condition?.id != "ConditionAnd") {
+              throw new Error("must be ConditionAnd");
+            }
+            const nextConditionAnd = r.condition.and.map((cond): Condition => {
+              if (cond.id != "ConditionCompareNumber") {
+                return cond;
+              }
+              return {
+                id: "ConditionCompareNumber",
+                value: [
+                  {
+                    id: "數字",
+                    value: {
+                      path: [
+                        {
+                          id: "數字",
+                          value: {
+                            path: [
+                              { id: "カード", value: "將要「プレイ」的卡" },
+                              "的「合計国力」",
+                            ],
+                          },
+                        },
+                        "-",
+                        {
+                          id: "數字",
+                          value: [3],
+                        },
+                      ],
+                    },
+                  },
+                  "<=",
+                  {
+                    id: "數字",
+                    value: {
+                      path: [
+                        {
+                          id: "プレーヤー",
+                          value: {
+                            path: [
+                              {
+                                id: "カード",
+                                value: "將要「プレイ」的卡",
+                              },
+                              "的「コントローラー」",
+                            ],
+                          },
+                        },
+                        "的「合計国力」",
+                      ],
+                    },
+                  },
+                ],
+              };
+            });
             return {
-              id: "ConditionCompareNumber",
-              value: [
-                {
-                  id: "數字",
-                  value: {
-                    path: [
-                      {
-                        id: "數字",
-                        value: {
-                          path: [
-                            { id: "カード", value: "將要「プレイ」的卡" },
-                            "的「合計国力」",
-                          ],
-                        },
-                      },
-                      "-",
-                      {
-                        id: "數字",
-                        value: [3],
-                      },
-                    ],
-                  },
-                },
-                "<=",
-                {
-                  id: "數字",
-                  value: {
-                    path: [
-                      {
-                        id: "プレーヤー",
-                        value: {
-                          path: [
-                            {
-                              id: "カード",
-                              value: "將要「プレイ」的卡",
-                            },
-                            "的「コントローラー」",
-                          ],
-                        },
-                      },
-                      "的「合計国力」",
-                    ],
-                  },
-                },
-              ],
+              ...r,
+              condition: {
+                ...r.condition,
+                and: nextConditionAnd,
+              },
             };
-          });
-          return {
-            ...r,
-            condition: {
-              ...r.condition,
-              and: nextConditionAnd,
-            },
-          };
-        })
+          }),
+        }
       : null),
   },
 };
 
 const texts: CardText[] = [
-  createTokuSyuKouKaText(["クイック"], {}),
-  createTokuSyuKouKaText(["高機動"], {}),
-  createTokuSyuKouKaText(["改装", "F91系"], { cost: 1 }),
-  createPlayCardText(prototype, { isG: true }),
-  createPlayCardText(prototype, {}),
+  // createTokuSyuKouKaText(["クイック"], {}),
+  // createTokuSyuKouKaText(["高機動"], {}),
+  // createTokuSyuKouKaText(["改装", "F91系"], { cost: 1 }),
+  // createPlayCardText(prototype, { isG: true }),
+  // createPlayCardText(prototype, {}),
   {
     id: "恒常",
     description:
       "『恒常』：このカードは、合計国力－３してプレイできる。その場合、カット終了時に、このカードを廃棄する。",
     texts: [
-      {
-        id: "自動型",
-        category: "起動",
-        description: "その場合、カット終了時に、このカードを廃棄する。",
-        block: {
-          require: {
-            id: "RequireTarget",
-            targets: {},
-            condition: {
-              id: "ConditionAnd",
-              and: [
-                // 如果旗標存在
-                {
-                  id: "ConditionCompareGameEventOnManualEvent",
-                  value: [
-                    {
-                      id: "手動事件發生時",
-                      value: { path: [{ id: "觸發這個事件的手動事件" }] },
-                    },
-                    "==",
-                    {
-                      id: "手動事件發生時",
-                      value: [
-                        {
-                          id: "手動事件發生時",
-                          customID: {
-                            id: "カット終了時",
-                          },
-                        },
-                      ],
-                    },
-                  ],
-                },
-              ],
-            },
-          },
-          feedback: [
-            {
-              id: "FeedbackAction",
-              action: [
-                // set flag
-              ],
-            },
-          ],
-        },
-      },
+      playCardPlus,
+      // {
+      //   id: "自動型",
+      //   category: "起動",
+      //   description: "その場合、カット終了時に、このカードを廃棄する。",
+      //   block: {
+      //     require: {
+      //       id: "RequireTarget",
+      //       targets: {},
+      //       condition: {
+      //         id: "ConditionAnd",
+      //         and: [
+      //           // 如果旗標存在
+      //           {
+      //             id: "ConditionCompareGameEventOnManualEvent",
+      //             value: [
+      //               {
+      //                 id: "手動事件發生時",
+      //                 value: { path: [{ id: "觸發這個事件的手動事件" }] },
+      //               },
+      //               "==",
+      //               {
+      //                 id: "手動事件發生時",
+      //                 value: [
+      //                   {
+      //                     id: "手動事件發生時",
+      //                     customID: {
+      //                       id: "カット終了時",
+      //                     },
+      //                   },
+      //                 ],
+      //               },
+      //             ],
+      //           },
+      //         ],
+      //       },
+      //     },
+      //     feedback: [
+      //       {
+      //         id: "FeedbackAction",
+      //         action: [
+      //           // set flag
+      //         ],
+      //       },
+      //     ],
+      //   },
+      // },
     ],
   },
 ];

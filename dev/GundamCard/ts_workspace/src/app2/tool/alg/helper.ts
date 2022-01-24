@@ -610,7 +610,6 @@ export function getTargetType(
                     case "-":
                       return a - b;
                   }
-                  return a;
                 }),
               };
             }
