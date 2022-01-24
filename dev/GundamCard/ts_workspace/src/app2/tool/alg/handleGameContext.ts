@@ -3,6 +3,7 @@ import {
   GameEvent,
   getBaShouID,
   getNextTiming,
+  isBa,
   PlayerA,
   PlayerB,
 } from "../tool/basic/basic";
@@ -25,7 +26,7 @@ import {
 import { getCard, mapCard, Card, reduceCard } from "../../../tool/table";
 import { mapEffect } from "../tool/basic/gameContext";
 import { TargetType, TargetTypeCard } from "../tool/basic/targetType";
-import { getCardController } from "../tool/basic/handleCard";
+import { getCardBaSyou, getCardController } from "../tool/basic/handleCard";
 import { log2 } from "../../../tool/logger";
 import { Action } from "../tool/basic/action";
 import { doRequire, doFeedback } from "./handleBlockPayload";
@@ -291,11 +292,19 @@ export function updateEffect(ctx: GameContext): GameContext {
     return cardState.cardTextStates.reduce((ctx, cardTextState) => {
       const blocks: BlockPayload[] = (() => {
         // 只找出常駐型技能
+        const {
+          value: [_, baSyouKeyword],
+        } = getCardBaSyou(ctx, cardState.cardID);
+        // 常駐技能只有在場中才能計算
+        if (isBa(baSyouKeyword) == false) {
+          return [];
+        }
         switch (cardTextState.cardText.id) {
           case "自動型":
             switch (cardTextState.cardText.category) {
-              case "常駐":
+              case "常駐": {
                 return [cardTextState.cardText.block];
+              }
               default:
                 return [];
             }

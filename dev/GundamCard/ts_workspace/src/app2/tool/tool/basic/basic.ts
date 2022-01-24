@@ -23,6 +23,17 @@ export type BaSyouKeyword =
   | "プレイされているカード"
   | BaKeyword;
 
+export function isBa(k: BaSyouKeyword): boolean {
+  switch (k) {
+    case "戦闘エリア（右）":
+    case "戦闘エリア（左）":
+    case "配備エリア":
+      return true;
+    default:
+      return false;
+  }
+}
+
 export type AbsoluteBaSyou = {
   id: "AbsoluteBaSyou";
   value: [PlayerID, BaSyouKeyword];
