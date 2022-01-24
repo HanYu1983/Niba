@@ -26,106 +26,73 @@ const prototype: CardPrototype = {
     createTokuSyuKouKaText(["戦闘配備"], { cost: 0 }),
     createTokuSyuKouKaText(["改装", "ペーネロペー系"], { cost: 1 }),
     {
-      id: "自動型",
-      category: "恒常",
+      id: "恒常",
       description:
         "『恒常』：このカードが自軍手札にある状態で、青のGサインを持つ自軍ユニットが破壊されて廃棄された場合、〔１〕を支払う事ができる。その場合、このカードを、自軍配備エリアにリロール状態で出す。",
-      block: {
-        require: {
-          id: "RequireCustom",
-          customID: {
-            id: "このカードが自軍手札にある状態",
-          } as RequireCustomID,
-        },
-        feedback: [
-          {
-            id: "FeedbackAction",
-            action: [
+      texts: [
+        {
+          id: "自動型",
+          category: "起動",
+          description: "",
+          block: {
+            // TODO: 青のGサインを持つ自軍ユニットが破壊されて廃棄された場合
+            require: {
+              id: "RequireCustom",
+              customID: {
+                id: "このカードが自軍手札にある状態",
+              } as RequireCustomID,
+            },
+            feedback: [
               {
-                id: "ActionAddGlobalCardText",
-                cards: {
-                  id: "カード",
-                  value: { path: [{ id: "このカード" }] },
-                },
-                cardState: {
-                  ...DEFAULT_CARD_STATE,
-                  id: "『恒常』：このカードが自軍手札にある状態で、青のGサインを持つ自軍ユニットが破壊されて廃棄された場合、〔１〕を支払う事ができる。その場合、このカードを、自軍配備エリアにリロール状態で出す。",
-                  cardTextStates: [
-                    {
-                      id: "",
-                      enabled: true,
-                      cardText: {
-                        id: "自動型",
-                        category: "起動",
-                        description: "",
-                        block: {
-                          require: {
-                            id: "RequireCustom",
-                            customID: {
-                              id: "このカードが自軍手札にある状態",
-                            } as RequireCustomID,
-                          },
-                          feedback: [
-                            {
-                              id: "FeedbackAction",
-                              action: [
-                                {
-                                  id: "ActionAddBlock",
-                                  type: "立即",
-                                  block: {
-                                    isOption: true,
-                                    require: {
-                                      id: "RequireAnd",
-                                      and: [
-                                        createRollCostRequire(1, null),
-                                        {
-                                          id: "RequireTarget",
-                                          targets: {},
-                                          action: [
-                                            {
-                                              id: "ActionMoveCardToPosition",
-                                              cards: {
-                                                id: "カード",
-                                                value: {
-                                                  path: [
-                                                    {
-                                                      id: "このカード",
-                                                    },
-                                                  ],
-                                                },
-                                              },
-                                              baSyou: {
-                                                id: "場所",
-                                                value: [
-                                                  {
-                                                    id: "RelatedBaSyou",
-                                                    value: [
-                                                      "自軍",
-                                                      "配備エリア",
-                                                    ],
-                                                  },
-                                                ],
-                                              },
-                                            },
-                                          ],
-                                        },
-                                      ],
-                                    },
+                id: "FeedbackAction",
+                action: [
+                  {
+                    id: "ActionAddBlock",
+                    type: "立即",
+                    block: {
+                      isOption: true,
+                      require: {
+                        id: "RequireAnd",
+                        and: [
+                          createRollCostRequire(1, null),
+                          {
+                            id: "RequireTarget",
+                            targets: {},
+                            action: [
+                              {
+                                id: "ActionMoveCardToPosition",
+                                cards: {
+                                  id: "カード",
+                                  value: {
+                                    path: [
+                                      {
+                                        id: "このカード",
+                                      },
+                                    ],
                                   },
                                 },
-                              ],
-                            },
-                          ],
-                        },
+                                baSyou: {
+                                  id: "場所",
+                                  value: [
+                                    {
+                                      id: "RelatedBaSyou",
+                                      value: ["自軍", "配備エリア"],
+                                    },
+                                  ],
+                                },
+                              },
+                            ],
+                          },
+                        ],
                       },
                     },
-                  ],
-                },
+                  },
+                ],
               },
             ],
           },
-        ],
-      },
+        },
+      ],
     },
   ],
 };

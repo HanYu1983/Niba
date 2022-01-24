@@ -248,7 +248,7 @@ export type TokuSyuKouKa =
 export type CardTextZiDouKaTa = {
   id: "自動型";
   description: string;
-  category: "常駐" | "恒常" | "起動";
+  category: "常駐" | "起動" | "恒常";
   block: BlockPayload;
 };
 
@@ -265,10 +265,17 @@ export type CardTextToKuSyuKata = {
   texts: (CardTextZiDouKaTa | CardTextSiYouKaTa)[];
 };
 
+export type CardTextZiDouKaTa2 = {
+  id: "恒常";
+  description: string;
+  texts: (CardTextZiDouKaTa | CardTextSiYouKaTa)[];
+};
+
 export type CardText =
   | CardTextZiDouKaTa
   | CardTextSiYouKaTa
-  | CardTextToKuSyuKata;
+  | CardTextToKuSyuKata
+  | CardTextZiDouKaTa2;
 
 export type FlagKeyword = "破壊" | "プレイされたカード";
 

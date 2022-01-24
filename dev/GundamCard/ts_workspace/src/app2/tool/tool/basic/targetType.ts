@@ -130,7 +130,8 @@ export type TargetTypeNumber = {
               )
             ]
           | [TargetTypePlayer, "的「合計国力」" | "的「改装」的「合計国力」"]
-          | [TargetTypeRef, "的陣列長度"];
+          | [TargetTypeRef, "的陣列長度"]
+          | [TargetTypeNumber, "+" | "-", TargetTypeNumber];
         triggerGameEvent?: GameEventOnManualEvent;
       };
 } & TargetTypeBase;

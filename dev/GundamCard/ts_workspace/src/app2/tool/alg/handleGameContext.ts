@@ -149,6 +149,7 @@ export function triggerTextEvent(
             case "使用型":
               return [];
             case "特殊型":
+            case "恒常":
               return cardTextState.cardText.texts
                 .filter((t) => t.id == "自動型" && t.category == "起動")
                 .map((t) => t.block);
@@ -223,6 +224,7 @@ export function updateCommand(ctx: GameContext): GameContext {
           case "使用型":
             return [cardTextState.cardText.block];
           case "特殊型":
+          case "恒常":
             return cardTextState.cardText.texts
               .filter((t) => t.id == "使用型")
               .map((t) => t.block);
@@ -305,9 +307,6 @@ export function updateEffect(ctx: GameContext): GameContext {
                 }
                 return [cardTextState.cardText.block];
               }
-              case "恒常": {
-                return [cardTextState.cardText.block];
-              }
               default:
                 return [];
             }
@@ -328,9 +327,8 @@ export function updateEffect(ctx: GameContext): GameContext {
                       }
                       return [t.block];
                     }
-                    case "恒常": {
+                    case "恒常":
                       return [t.block];
-                    }
                     default:
                       return [];
                   }
@@ -338,6 +336,15 @@ export function updateEffect(ctx: GameContext): GameContext {
                   return [];
               }
             });
+          case "恒常":
+            // 恒常裡的常駐也是恒常
+            return cardTextState.cardText.texts
+              .filter(
+                (t) =>
+                  t.id == "自動型" &&
+                  (t.category == "恒常" || t.category == "常駐")
+              )
+              .map((t) => t.block);
         }
       })();
       return blocks.reduce((ctx, block) => {

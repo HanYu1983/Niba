@@ -20,6 +20,11 @@ import { GameEventOnManualEventCustomID } from "../gameEventOnManualEventCustomI
 // 『恒常』：このカードは、合計国力－３してプレイできる。その場合、カット終了時に、このカードを廃棄する。
 // 『起動』：このカードが場に出た場合、ユニットとキャラ以外の敵軍カード１枚のプレイを無効にし、そのカードを廃棄する。
 
+// query時發送事件
+// 起動能力聽事件改變旗標
+// 恒常或常駐能力能力判斷旗標狀態後加入全域臨時效果
+// query最後會在全域臨時效果的影響下回傳結果
+
 const prototype: CardPrototype = {
   ...DEFAULT_CARD_PROTOTYPE,
   title: "F91",
@@ -29,22 +34,19 @@ const prototype: CardPrototype = {
   rollCost: ["赤", "赤", null, null, null],
 };
 
-let playCardPlus = createPlayCardText(
-  { ...prototype, rollCost: ["赤", "赤"] },
-  {
-    description: "合計国力－３してプレイできる",
-    block: {
-      feedback: [
-        {
-          id: "FeedbackAction",
-          action: [
-            // 設置旗標
-          ],
-        },
-      ],
-    },
-  }
-);
+let playCardPlus = createPlayCardText(prototype, {
+  description: "合計国力－３してプレイできる",
+  block: {
+    feedback: [
+      {
+        id: "FeedbackAction",
+        action: [
+          // set flag
+        ],
+      },
+    ],
+  },
+});
 playCardPlus = {
   ...playCardPlus,
   block: {
@@ -70,15 +72,21 @@ playCardPlus = {
                 {
                   id: "數字",
                   value: {
-                    triggerGameEvent: {
-                      id: "手動事件發生時",
-                      customID: {
-                        id: "合計国力－３してプレイできる",
-                      },
-                    },
                     path: [
-                      { id: "カード", value: "將要「プレイ」的卡" },
-                      "的「合計国力」",
+                      {
+                        id: "數字",
+                        value: {
+                          path: [
+                            { id: "カード", value: "將要「プレイ」的卡" },
+                            "的「合計国力」",
+                          ],
+                        },
+                      },
+                      "-",
+                      {
+                        id: "數字",
+                        value: [3],
+                      },
                     ],
                   },
                 },
@@ -125,57 +133,57 @@ const texts: CardText[] = [
   createPlayCardText(prototype, { isG: true }),
   createPlayCardText(prototype, {}),
   {
-    id: "自動型",
-    category: "恒常",
+    id: "恒常",
     description:
       "『恒常』：このカードは、合計国力－３してプレイできる。その場合、カット終了時に、このカードを廃棄する。",
-    block: {
-      feedback: [
-        {
-          id: "FeedbackAction",
-          action: [
-            // 加入全域恒常內文
-            {
-              id: "ActionAddGlobalCardText",
-              cards: {
-                id: "カード",
-                value: { path: [{ id: "このカード" }] },
-              },
-              cardState: {
-                ...DEFAULT_CARD_STATE,
-                id: "『恒常』：このカードは、合計国力－３してプレイできる。その場合、カット終了時に、このカードを廃棄する。",
-                cardTextStates: [
-                  {
-                    id: "",
-                    enabled: true,
-                    cardText: playCardPlus,
-                  },
-                  {
-                    id: "",
-                    enabled: true,
-                    cardText: {
-                      id: "自動型",
-                      category: "起動",
-                      description:
-                        "その場合、カット終了時に、このカードを廃棄する。",
-                      block: {
-                        // TODO: カット終了時に, 並且旗標存在時,
-                        require: {
-                          id: "RequireTarget",
-                          targets: {},
-                        },
-                        // TODO
-                        feedback: [],
-                      },
+    texts: [
+      {
+        id: "自動型",
+        category: "起動",
+        description: "その場合、カット終了時に、このカードを廃棄する。",
+        block: {
+          require: {
+            id: "RequireTarget",
+            targets: {},
+            condition: {
+              id: "ConditionAnd",
+              and: [
+                // 如果旗標存在
+                {
+                  id: "ConditionCompareGameEventOnManualEvent",
+                  value: [
+                    {
+                      id: "手動事件發生時",
+                      value: { path: [{ id: "觸發這個事件的手動事件" }] },
                     },
-                  },
-                ],
-              },
+                    "==",
+                    {
+                      id: "手動事件發生時",
+                      value: [
+                        {
+                          id: "手動事件發生時",
+                          customID: {
+                            id: "カット終了時",
+                          },
+                        },
+                      ],
+                    },
+                  ],
+                },
+              ],
+            },
+          },
+          feedback: [
+            {
+              id: "FeedbackAction",
+              action: [
+                // set flag
+              ],
             },
           ],
         },
-      ],
-    },
+      },
+    ],
   },
 ];
 

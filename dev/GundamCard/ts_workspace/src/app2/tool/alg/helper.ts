@@ -586,6 +586,40 @@ export function getTargetType(
       }
       const path = targetTypeAfterProcess.value.path;
       switch (path[0].id) {
+        case "數字": {
+          const [v1, op] = targetTypeAfterProcess.value.path;
+          switch (op) {
+            case "+":
+            case "-": {
+              const targetType1 = getTargetType(ctx, blockPayload, targets, v1);
+              if (!Array.isArray(targetType1.value)) {
+                throw new Error("must be real value");
+              }
+              const v2 = targetTypeAfterProcess.value.path[2];
+              const targetType2 = getTargetType(ctx, blockPayload, targets, v2);
+              if (!Array.isArray(targetType2.value)) {
+                throw new Error("must be real value");
+              }
+              const b = targetType2.value[0];
+              return {
+                id: "數字",
+                value: targetType1.value.map((a) => {
+                  switch (op) {
+                    case "+":
+                      return a + b;
+                    case "-":
+                      return a - b;
+                  }
+                  return a;
+                }),
+              };
+            }
+            default:
+              throw new Error(
+                `not support:${targetTypeAfterProcess.value.path[1]}`
+              );
+          }
+        }
         case "參照": {
           const targetType = getTargetType(ctx, blockPayload, targets, path[0]);
           if (Array.isArray(targetType.value)) {
@@ -633,6 +667,8 @@ export function getTargetType(
                 return cardState.prototype.rollCost.filter((v) => v != null)
                   .length;
               }
+              default:
+                throw new Error(`not support:${path[1]}`);
             }
           });
           return {
@@ -673,6 +709,8 @@ export function getTargetType(
                 }
                 return gCards.length;
               }
+              default:
+                throw new Error(`not support:${path[1]}`);
             }
           });
           return {
