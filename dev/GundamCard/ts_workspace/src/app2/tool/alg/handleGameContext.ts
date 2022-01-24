@@ -128,8 +128,7 @@ export function wrapTip(
 
 // 觸發事件腳本
 // 在每次事件發生時都要呼叫
-// 這時技能可能會被加到起動列表或堆疊列表中
-// 起動列表必須優先讓玩家處理
+// 起動型技能
 export function triggerTextEvent(
   ctx: GameContext,
   evt: GameEvent
@@ -142,16 +141,16 @@ export function triggerTextEvent(
           switch (cardTextState.cardText.id) {
             case "自動型":
               switch (cardTextState.cardText.category) {
-                case "常駐":
-                  return [];
-                default:
+                case "起動":
                   return [cardTextState.cardText.block];
+                default:
+                  return [];
               }
             case "使用型":
               return [];
             case "特殊型":
               return cardTextState.cardText.texts
-                .filter((t) => t.id == "自動型" && t.category != "常駐")
+                .filter((t) => t.id == "自動型" && t.category == "起動")
                 .map((t) => t.block);
           }
         })();
@@ -200,6 +199,7 @@ export function triggerTextEvent(
 }
 
 // 更新命令列表
+// 使用型技能
 export function updateCommand(ctx: GameContext): GameContext {
   // clear command
   ctx = {
@@ -279,6 +279,7 @@ export function updateCommand(ctx: GameContext): GameContext {
   }, ctx);
 }
 
+// 恒常, 常駐型技能
 export function updateEffect(ctx: GameContext): GameContext {
   // 清空效果列表
   ctx = {
@@ -291,18 +292,20 @@ export function updateEffect(ctx: GameContext): GameContext {
   return ctx.gameState.cardState.reduce((ctx, cardState) => {
     return cardState.cardTextStates.reduce((ctx, cardTextState) => {
       const blocks: BlockPayload[] = (() => {
-        // 只找出常駐型技能
-        const {
-          value: [_, baSyouKeyword],
-        } = getCardBaSyou(ctx, cardState.cardID);
-        // 常駐技能只有在場中才能計算
-        if (isBa(baSyouKeyword) == false) {
-          return [];
-        }
         switch (cardTextState.cardText.id) {
           case "自動型":
             switch (cardTextState.cardText.category) {
               case "常駐": {
+                const {
+                  value: [_, baSyouKeyword],
+                } = getCardBaSyou(ctx, cardState.cardID);
+                // 常駐技能只有在場中才能計算
+                if (isBa(baSyouKeyword) == false) {
+                  return [];
+                }
+                return [cardTextState.cardText.block];
+              }
+              case "恒常": {
                 return [cardTextState.cardText.block];
               }
               default:
@@ -311,9 +314,30 @@ export function updateEffect(ctx: GameContext): GameContext {
           case "使用型":
             return [];
           case "特殊型":
-            return cardTextState.cardText.texts
-              .filter((t) => t.id == "自動型" && t.category == "常駐")
-              .map((t) => t.block);
+            return cardTextState.cardText.texts.flatMap((t) => {
+              switch (t.id) {
+                case "自動型":
+                  switch (t.category) {
+                    case "常駐": {
+                      const {
+                        value: [_, baSyouKeyword],
+                      } = getCardBaSyou(ctx, cardState.cardID);
+                      // 常駐技能只有在場中才能計算
+                      if (isBa(baSyouKeyword) == false) {
+                        return [];
+                      }
+                      return [t.block];
+                    }
+                    case "恒常": {
+                      return [t.block];
+                    }
+                    default:
+                      return [];
+                  }
+                case "使用型":
+                  return [];
+              }
+            });
         }
       })();
       return blocks.reduce((ctx, block) => {

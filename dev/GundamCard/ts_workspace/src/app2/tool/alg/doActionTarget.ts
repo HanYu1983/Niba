@@ -400,7 +400,7 @@ export function doActionTarget(
       };
     }
     case "ActionAddGlobalCardText": {
-      const { cardText, cardTextStateID } = action;
+      const { cardState } = action;
       const cards = getTargetType(ctx, blockPayload, targets, action.cards);
       if (cards.id != "カード") {
         throw new Error("must カード");
@@ -413,25 +413,34 @@ export function doActionTarget(
         log2("doActionTarget", "將執行action，但對象為空陣列。直接回傳。");
         return ctx;
       }
-      const cardID = cards.value[0];
-      const id = cardTextStateID || `ActionAddGlobalCardText_${idSeq++}`;
-      const cardState: CardState = {
-        ...DEFAULT_CARD_STATE,
-        id: id,
-        cardID: cardID,
-        cardTextStates: [
-          {
-            id: id,
-            enabled: true,
-            cardText: cardText,
-          },
-        ],
-      };
+      const cardStateAfterSignID = cards.value.map((cardID): CardState => {
+        // 修改它的ID，變成一張卡吃能新增同樣的內文一次
+        return {
+          ...cardState,
+          id: `${cardID}_${cardState.id}`,
+          cardID: cardID,
+          cardTextStates: cardState.cardTextStates.map((cts, i) => {
+            return {
+              ...cts,
+              id: `${cardID}_${cardState.id}_${cts.id}_${i}`,
+            };
+          }),
+        };
+      });
+      const cardStateWillAdd = cardStateAfterSignID.filter((t) => {
+        return cardState.cardTextStates.find((v) => v.id != t.id) == null;
+      });
+      if (cardStateWillAdd.length == 0) {
+        return ctx;
+      }
       return {
         ...ctx,
         gameState: {
           ...ctx.gameState,
-          globalCardState: [...ctx.gameState.globalCardState, cardState],
+          globalCardState: [
+            ...ctx.gameState.globalCardState,
+            ...cardStateWillAdd,
+          ],
         },
       };
     }

@@ -3,6 +3,7 @@ import {
   CardPrototype,
   GameContext,
   DEFAULT_CARD_PROTOTYPE,
+  DEFAULT_CARD_STATE,
 } from "../../tool/basic/gameContext";
 import { RequireCustomID } from "../../tool/basic/requireCustom";
 import { createPlayCardText } from "./createPlayCardText";
@@ -59,61 +60,71 @@ const prototype: CardPrototype = {
                   id: "カード",
                   value: { path: [{ id: "このカード" }] },
                 },
-                cardTextStateID:
-                  "ターン終了時に、このカードを持ち主のGにできる。",
-                cardText: {
-                  id: "自動型",
-                  category: "起動",
-                  description:
-                    "ターン終了時に、このカードを持ち主のGにできる。",
-                  block: {
-                    require: {
-                      id: "RequireEvent",
-                      // ターン終了時に
-                    },
-                    feedback: [
-                      {
-                        id: "FeedbackAction",
-                        action: [
-                          {
-                            id: "ActionAddBlock",
-                            type: "立即",
-                            block: {
-                              isOption: true,
-                              feedback: [
+                cardState: {
+                  ...DEFAULT_CARD_STATE,
+                  id: "179030_11E_U_BL210N_blue_ターン終了時に、このカードを持ち主のGにできる。",
+                  cardTextStates: [
+                    {
+                      id: "179030_11E_U_BL210N_blue_ターン終了時に、このカードを持ち主のGにできる。_0",
+                      enabled: true,
+                      cardText: {
+                        id: "自動型",
+                        category: "起動",
+                        description:
+                          "ターン終了時に、このカードを持ち主のGにできる。",
+                        block: {
+                          require: {
+                            id: "RequireEvent",
+                            // ターン終了時に
+                          },
+                          feedback: [
+                            {
+                              id: "FeedbackAction",
+                              action: [
                                 {
-                                  id: "FeedbackAction",
-                                  action: [
-                                    {
-                                      id: "ActionMoveCardToPosition",
-                                      cards: {
-                                        id: "カード",
-                                        value: { path: [{ id: "このカード" }] },
-                                      },
-                                      baSyou: {
-                                        id: "場所",
-                                        value: [
+                                  id: "ActionAddBlock",
+                                  type: "立即",
+                                  block: {
+                                    isOption: true,
+                                    feedback: [
+                                      {
+                                        id: "FeedbackAction",
+                                        action: [
                                           {
-                                            id: "RelatedBaSyou",
-                                            value: ["持ち主", "Gゾーン"],
+                                            id: "ActionMoveCardToPosition",
+                                            cards: {
+                                              id: "カード",
+                                              value: {
+                                                path: [{ id: "このカード" }],
+                                              },
+                                            },
+                                            baSyou: {
+                                              id: "場所",
+                                              value: [
+                                                {
+                                                  id: "RelatedBaSyou",
+                                                  value: ["持ち主", "Gゾーン"],
+                                                },
+                                              ],
+                                            },
                                           },
                                         ],
                                       },
-                                    },
-                                  ],
+                                    ],
+                                  },
+                                },
+                                {
+                                  id: "ActionDeleteGlobalCardText",
+                                  cardTextStateID:
+                                    "ターン終了時に、このカードを持ち主のGにできる。",
                                 },
                               ],
                             },
-                          },
-                          {
-                            id: "ActionDeleteGlobalCardText",
-                            cardTextStateID:
-                              "ターン終了時に、このカードを持ち主のGにできる。",
-                          },
-                        ],
+                          ],
+                        },
                       },
-                    ],
-                  },
+                    },
+                  ],
                 },
               },
             ],

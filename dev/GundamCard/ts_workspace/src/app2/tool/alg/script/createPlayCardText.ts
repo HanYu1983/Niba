@@ -19,11 +19,11 @@ export function createPlayCardText(
   prototype: CardPrototype,
   options: {
     isG?: boolean;
+    block?: BlockPayload;
     command?: {
       description: string;
       timing: SiYouTiming;
       require?: Require;
-      block: BlockPayload;
     };
   }
 ): CardText {
@@ -328,9 +328,9 @@ export function createPlayCardText(
                   id: "ActionAddBlock",
                   type: "堆疊",
                   block: {
-                    ...options.command.block,
+                    ...options.block,
                     feedback: [
-                      ...(options.command.block.feedback || []),
+                      ...(options?.block?.feedback || []),
                       {
                         id: "FeedbackAction",
                         action: [
@@ -642,7 +642,9 @@ export function createPlayCardText(
                   id: "ActionAddBlock",
                   type: "堆疊",
                   block: {
+                    ...options.block,
                     feedback: [
+                      ...(options?.block?.feedback || []),
                       {
                         id: "FeedbackAction",
                         action: [
@@ -662,6 +664,7 @@ export function createPlayCardText(
                               ],
                             },
                           },
+                          // TODO: 改成出機體的action, 因為要處理戰配, 有戰配的情況, 直立出場
                           {
                             id: "ActionRoll",
                             cards: {

@@ -3,6 +3,7 @@ import {
   CardPrototype,
   GameContext,
   DEFAULT_CARD_PROTOTYPE,
+  DEFAULT_CARD_STATE,
 } from "../../tool/basic/gameContext";
 import { RequireCustomID } from "../../tool/basic/requireCustom";
 import { createPlayCardText } from "./createPlayCardText";
@@ -41,44 +42,84 @@ const prototype: CardPrototype = {
             id: "FeedbackAction",
             action: [
               {
-                id: "ActionAddBlock",
-                type: "立即",
-                block: {
-                  isOption: true,
-                  require: {
-                    id: "RequireAnd",
-                    and: [
-                      createRollCostRequire(1, null),
-                      {
-                        id: "RequireTarget",
-                        targets: {},
-                        action: [
-                          {
-                            id: "ActionMoveCardToPosition",
-                            cards: {
-                              id: "カード",
-                              value: {
-                                path: [
-                                  {
-                                    id: "このカード",
-                                  },
-                                ],
-                              },
-                            },
-                            baSyou: {
-                              id: "場所",
-                              value: [
+                id: "ActionAddGlobalCardText",
+                cards: {
+                  id: "カード",
+                  value: { path: [{ id: "このカード" }] },
+                },
+                cardState: {
+                  ...DEFAULT_CARD_STATE,
+                  id: "『恒常』：このカードが自軍手札にある状態で、青のGサインを持つ自軍ユニットが破壊されて廃棄された場合、〔１〕を支払う事ができる。その場合、このカードを、自軍配備エリアにリロール状態で出す。",
+                  cardTextStates: [
+                    {
+                      id: "",
+                      enabled: true,
+                      cardText: {
+                        id: "自動型",
+                        category: "起動",
+                        description: "",
+                        block: {
+                          require: {
+                            id: "RequireCustom",
+                            customID: {
+                              id: "このカードが自軍手札にある状態",
+                            } as RequireCustomID,
+                          },
+                          feedback: [
+                            {
+                              id: "FeedbackAction",
+                              action: [
                                 {
-                                  id: "RelatedBaSyou",
-                                  value: ["自軍", "配備エリア"],
+                                  id: "ActionAddBlock",
+                                  type: "立即",
+                                  block: {
+                                    isOption: true,
+                                    require: {
+                                      id: "RequireAnd",
+                                      and: [
+                                        createRollCostRequire(1, null),
+                                        {
+                                          id: "RequireTarget",
+                                          targets: {},
+                                          action: [
+                                            {
+                                              id: "ActionMoveCardToPosition",
+                                              cards: {
+                                                id: "カード",
+                                                value: {
+                                                  path: [
+                                                    {
+                                                      id: "このカード",
+                                                    },
+                                                  ],
+                                                },
+                                              },
+                                              baSyou: {
+                                                id: "場所",
+                                                value: [
+                                                  {
+                                                    id: "RelatedBaSyou",
+                                                    value: [
+                                                      "自軍",
+                                                      "配備エリア",
+                                                    ],
+                                                  },
+                                                ],
+                                              },
+                                            },
+                                          ],
+                                        },
+                                      ],
+                                    },
+                                  },
                                 },
                               ],
                             },
-                          },
-                        ],
+                          ],
+                        },
                       },
-                    ],
-                  },
+                    },
+                  ],
                 },
               },
             ],
