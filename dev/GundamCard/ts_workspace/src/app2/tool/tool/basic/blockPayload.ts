@@ -61,7 +61,7 @@ export type RequireAnd = {
 export type RequireJsonfp = {
   id: "RequireJsonfp";
   targets: { [key: string]: TargetType };
-  condition?: [string, any][];
+  condition?: any;
   action?: any;
 } & RequireBase;
 

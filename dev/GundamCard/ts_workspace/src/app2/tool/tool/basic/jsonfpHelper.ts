@@ -1,5 +1,12 @@
 export const jsonfp = require("jsonfp");
 jsonfp.init();
+jsonfp.addMethod("error", (input: any, p: any) => {
+  throw new Error(`[jsonfp.error]${p}`);
+});
+jsonfp.addMethod("log", (input: any, p: any) => {
+  console.log(`[jsonfp.log]${p}`);
+  return input;
+});
 
 export type Keyword =
   | "->"

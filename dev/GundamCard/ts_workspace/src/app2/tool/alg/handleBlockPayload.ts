@@ -86,17 +86,28 @@ function doRequireJsonfpActionTarget(
   varCtxID: string
 ): GameContext {
   const jsonfpContext = ctx.varsPool[varCtxID]?.jsonfpContext || {};
-  const result = jsonfp.apply(
+  console.log(jsonfpContext);
+  let err: any = null;
+  let result: any = null;
+  jsonfp.apply(
     jsonfpContext,
     {
       ctx: ctx,
       cause: blockPayload.cause,
       targets: targets,
     },
-    action
+    action,
+    (e: any, ret: any) => {
+      err = e;
+      result = ret;
+    }
   );
-  if (result.gameState == null) {
-    throw new Error("must be GameContext");
+  if (err != null) {
+    throw err;
+  }
+  console.log(result);
+  if (Array.isArray(result) == false) {
+    throw new Error("must be Action[]");
   }
   ctx = {
     ...ctx,
@@ -108,7 +119,15 @@ function doRequireJsonfpActionTarget(
       },
     },
   };
-  return result;
+  return result.reduce((ctx: any, action: any) => {
+    return doRequireTargetActionTarget(
+      ctx,
+      blockPayload,
+      targets,
+      action,
+      varCtxID
+    );
+  }, ctx);
 }
 
 export function doRequire(
@@ -188,43 +207,25 @@ export function doRequire(
     }
     case "RequireJsonfp": {
       {
-        const getCardID = (block: BlockPayload) => {
-          if (block.cause == null) {
-            throw new Error("must has cause");
-          }
-          switch (block.cause.id) {
-            case "BlockPayloadCauseGameEvent":
-            case "BlockPayloadCauseUpdateCommand":
-            case "BlockPayloadCauseUpdateEffect":
-              if (block.cause.cardID == null) {
-                throw new Error("[getTarget] このカード not found");
-              }
-              return block.cause.cardID;
-            default:
-              throw new Error("not support cause:" + block.cause.id);
-          }
-        };
         const jsonfpContext = ctx.varsPool[varCtxID]?.jsonfpContext || {};
-        const result = jsonfp.apply(
+        let err: any = null;
+        let result: any = null;
+        jsonfp.apply(
           jsonfpContext,
           {
             ctx: ctx,
             cause: blockPayload.cause,
             targets: require.targets,
           },
-          require.condition
+          require.condition,
+          // 使用callback的error, 時機才會正確
+          (e: any, ret: any) => {
+            err = e;
+            result = ret;
+          }
         );
-        const msg = result
-          .filter((result: any) => {
-            const [key, pass] = result;
-            return pass == false;
-          })
-          .map((result: any) => {
-            const [key, pass] = result;
-            return key;
-          });
-        if (msg.length > 0) {
-          throw new Error(msg.join("|"));
+        if (err != null) {
+          throw err;
         }
         ctx = {
           ...ctx,
@@ -237,13 +238,15 @@ export function doRequire(
           },
         };
       }
-      return doRequireJsonfpActionTarget(
-        ctx,
-        blockPayload,
-        require.targets,
-        require.action,
-        varCtxID
-      );
+      if (require.action) {
+        return doRequireJsonfpActionTarget(
+          ctx,
+          blockPayload,
+          require.targets,
+          require.action,
+          varCtxID
+        );
+      }
     }
     default:
       console.log(`not support yet: ${require.id}`);

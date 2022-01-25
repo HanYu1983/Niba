@@ -33,46 +33,46 @@ type ActionSetTarget = {
 // };
 
 // 廃棄
-type ActionDrop = {
+export type ActionDrop = {
   id: "ActionDrop";
   cards: TargetTypeCard;
 };
 
-type ActionDraw = {
+export type ActionDraw = {
   id: "ActionDraw";
   count: number;
 };
 
-type ActionDestroy = {
+export type ActionDestroy = {
   id: "ActionDestroy";
   cards: TargetTypeCard;
 };
 
-type ActionMoveCardToPosition = {
+export type ActionMoveCardToPosition = {
   id: "ActionMoveCardToPosition";
   cards: TargetTypeCard;
   baSyou: TargetTypeBaSyou;
 };
 
-type ActionSetFlag = {
+export type ActionSetFlag = {
   id: "ActionSetFlag";
   cards: TargetTypeCard;
   flag: TargetTypeString;
 };
 
-type ActionAddFlag = {
+export type ActionAddFlag = {
   id: "ActionAddFlag";
   cards: TargetTypeCard;
   flag: TargetTypeString;
 };
 
-type ActionDeleteFlag = {
+export type ActionDeleteFlag = {
   id: "ActionDeleteFlag";
   cards: TargetTypeCard;
   flag: TargetTypeString;
 };
 
-type ActionSetFace = {
+export type ActionSetFace = {
   id: "ActionSetFace";
   cards: TargetTypeCard;
   faceDown: TargetTypeBoolean;

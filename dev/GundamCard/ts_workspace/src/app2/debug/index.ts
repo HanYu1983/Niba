@@ -40,6 +40,7 @@ import {
 } from "./testProto_179025_07D_U_RD156R_red";
 import { getTargetType } from "../tool/alg/helper";
 import { testJsonfp, testJsonfp2, testJsonfp3 } from "./testJsonfp";
+import { Action, ActionDraw, ActionDrop } from "../tool/tool/basic/action";
 
 export function test() {
   [
@@ -129,33 +130,44 @@ export function testRequireJsonfp() {
           valueLengthInclude: [1],
         },
       },
-      condition: [
-        [
-          "是否是白色",
+      condition: {
+        "->": [
           {
-            "->": [
-              {
-                $isWhite: {
-                  if: [
-                    {
-                      "->": [
-                        "$in.targets.cardA.value",
-                        { getter: 0 },
-                        { "==": "a" },
-                      ],
-                    },
-                    true,
-                    false,
+            $isWhite: {
+              if: [
+                {
+                  "->": [
+                    "$in.targets.cardA.value",
+                    { getter: 0 },
+                    { "==": "a" },
                   ],
                 },
-              },
-              "$isWhite",
+                true,
+                false,
+              ],
+            },
+          },
+          {
+            if: ["$isWhite", "$in", { error: "必須是白色" }],
+          },
+        ],
+      },
+      action: {
+        if: [
+          "$isWhite",
+          {
+            "->": [
+              { log: "yes" },
+              { def: [{ id: "ActionDraw", count: 1 } as ActionDraw] },
+            ],
+          },
+          {
+            "->": [
+              { log: "no" },
+              { def: [{ id: "ActionDraw", count: 1 } as ActionDraw] },
             ],
           },
         ],
-      ],
-      action: {
-        if: ["$isWhite", "$in.ctx", "$in.ctx"],
       },
     },
   };
