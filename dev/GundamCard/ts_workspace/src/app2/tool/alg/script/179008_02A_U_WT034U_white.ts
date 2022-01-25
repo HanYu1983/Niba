@@ -40,6 +40,21 @@ const prototype: CardPrototype = {
               {
                 "->": [
                   {
+                    cardCondition: {
+                      id: "「特徴：X」を持つ自軍ユニットが、「改装」の効果で廃棄される場合",
+                      x: "アストレイ系",
+                      cardID: {
+                        "->": [
+                          "$input",
+                          { getter: "blockPayload" },
+                          { getter: "cause" },
+                          { getter: "id" },
+                          { "==": "「改装」の効果で廃棄される場合" },
+                        ],
+                      },
+                    },
+                  },
+                  {
                     "->": [
                       "$input",
                       { getter: "blockPayload" },
