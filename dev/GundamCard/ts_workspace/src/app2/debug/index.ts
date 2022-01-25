@@ -139,7 +139,7 @@ export function testRequireJsonfp() {
                   if: [
                     {
                       "->": [
-                        "$targets.cardA.value",
+                        "$in.targets.cardA.value",
                         { getter: 0 },
                         { "==": "a" },
                       ],
@@ -155,7 +155,7 @@ export function testRequireJsonfp() {
         ],
       ],
       action: {
-        if: ["$isWhite", "$ctx", "$ctx"],
+        if: ["$isWhite", "$in.ctx", "$in.ctx"],
       },
     },
   };

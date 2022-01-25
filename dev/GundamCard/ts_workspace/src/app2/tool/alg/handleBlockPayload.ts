@@ -85,14 +85,16 @@ function doRequireJsonfpActionTarget(
   action: any,
   varCtxID: string
 ): GameContext {
-  let jsonfpContext = ctx.varsPool[varCtxID]?.jsonfpContext || {};
-  jsonfpContext = {
-    ...jsonfpContext,
-    ctx: ctx,
-    cause: blockPayload.cause,
-    targets: targets,
-  };
-  const result = jsonfp.apply(jsonfpContext, {}, action);
+  const jsonfpContext = ctx.varsPool[varCtxID]?.jsonfpContext || {};
+  const result = jsonfp.apply(
+    jsonfpContext,
+    {
+      ctx: ctx,
+      cause: blockPayload.cause,
+      targets: targets,
+    },
+    action
+  );
   if (result.gameState == null) {
     throw new Error("must be GameContext");
   }
@@ -202,14 +204,16 @@ export function doRequire(
               throw new Error("not support cause:" + block.cause.id);
           }
         };
-        let jsonfpContext = ctx.varsPool[varCtxID]?.jsonfpContext || {};
-        jsonfpContext = {
-          ...jsonfpContext,
-          ctx: ctx,
-          cause: blockPayload.cause,
-          targets: require.targets,
-        };
-        const result = jsonfp.apply(jsonfpContext, {}, require.condition);
+        const jsonfpContext = ctx.varsPool[varCtxID]?.jsonfpContext || {};
+        const result = jsonfp.apply(
+          jsonfpContext,
+          {
+            ctx: ctx,
+            cause: blockPayload.cause,
+            targets: require.targets,
+          },
+          require.condition
+        );
         const msg = result
           .filter((result: any) => {
             const [key, pass] = result;
