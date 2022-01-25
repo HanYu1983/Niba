@@ -86,25 +86,23 @@ function doRequireJsonfpActionTarget(
   varCtxID: string
 ): GameContext {
   const jsonfpContext = ctx.varsPool[varCtxID]?.jsonfpContext || {};
-  console.log(jsonfpContext);
+  const jsonfpInput = {
+    ctx: { def: ctx },
+    blockPayload: { def: blockPayload },
+    require: { def: require },
+    targets: { def: targets },
+  };
+  jsonfpContext.input = jsonfpInput;
   let err: any = null;
   let result: any = null;
-  jsonfp.apply(
-    jsonfpContext,
-    {
-      ctx: ctx,
-      cause: blockPayload.cause,
-      targets: targets,
-    },
-    action,
-    (e: any, ret: any) => {
-      err = e;
-      result = ret;
-    }
-  );
+  jsonfp.apply(jsonfpContext, {}, action, (e: any, ret: any) => {
+    err = e;
+    result = ret;
+  });
   if (err != null) {
     throw err;
   }
+  delete jsonfpContext.input;
   console.log(result);
   if (Array.isArray(result) == false) {
     throw new Error("must be Action[]");
@@ -208,15 +206,18 @@ export function doRequire(
     case "RequireJsonfp": {
       {
         const jsonfpContext = ctx.varsPool[varCtxID]?.jsonfpContext || {};
+        const jsonfpInput = {
+          ctx: { def: ctx },
+          blockPayload: { def: blockPayload },
+          require: { def: require },
+          targets: { def: require.targets },
+        };
+        jsonfpContext.input = jsonfpInput;
         let err: any = null;
         let result: any = null;
         jsonfp.apply(
           jsonfpContext,
-          {
-            ctx: ctx,
-            cause: blockPayload.cause,
-            targets: require.targets,
-          },
+          {},
           require.condition,
           // 使用callback的error, 時機才會正確
           (e: any, ret: any) => {
@@ -227,6 +228,7 @@ export function doRequire(
         if (err != null) {
           throw err;
         }
+        delete jsonfpContext.input;
         ctx = {
           ...ctx,
           varsPool: {

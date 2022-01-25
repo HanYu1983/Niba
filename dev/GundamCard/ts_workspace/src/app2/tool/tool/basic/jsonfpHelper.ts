@@ -1,10 +1,12 @@
+import { log2 } from "../../../../tool/logger";
+
 export const jsonfp = require("jsonfp");
 jsonfp.init();
 jsonfp.addMethod("error", (input: any, p: any) => {
   throw new Error(`[jsonfp.error]${p}`);
 });
 jsonfp.addMethod("log", (input: any, p: any) => {
-  console.log(`[jsonfp.log]${p}`);
+  log2("jsonfp", input, p);
   return input;
 });
 

@@ -32,6 +32,60 @@ const prototype: CardPrototype = {
         "『起動』：「特徴：アストレイ系」を持つ自軍ユニットが、「改装」の効果で廃棄される場合、カード１枚を引く。（注：このカードが廃棄される時にも起動する）",
       block: {
         // TODO: 「特徴：アストレイ系」を持つ自軍ユニットが、「改装」の効果で場に出た場合
+        require: {
+          id: "RequireJsonfp",
+          targets: {},
+          condition: {
+            if: [
+              {
+                "->": [
+                  {
+                    "->": [
+                      "$in.cause.id",
+                      { "==": "「改装」の効果で廃棄される場合" },
+                    ],
+                  },
+                  {
+                    "->": [
+                      "$in.cause.cardID",
+                      {
+                        cardController: "$in",
+                      },
+                      {
+                        "==": {
+                          "->": [
+                            {
+                              thisCard: "$in",
+                            },
+                            {
+                              cardController: {
+                                ctx: "$in.ctx",
+                                cause: "$in.cause",
+                              },
+                            },
+                          ],
+                        },
+                      },
+                    ],
+                  },
+                  {
+                    "->": [
+                      "$in.cause.cardID",
+                      { cardCh: null },
+                      {
+                        "==": {
+                          "->": [{ thisCard: null }, { cardController: null }],
+                        },
+                      },
+                    ],
+                  },
+                  { reduce: "and" },
+                ],
+              },
+            ],
+          },
+          action: [],
+        },
         feedback: [
           {
             id: "FeedbackAction",

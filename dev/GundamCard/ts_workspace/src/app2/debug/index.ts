@@ -131,40 +131,54 @@ export function testRequireJsonfp() {
         },
       },
       condition: {
-        "->": [
-          {
-            $isWhite: {
-              if: [
-                {
-                  "->": [
-                    "$in.targets.cardA.value",
-                    { getter: 0 },
-                    { "==": "a" },
-                  ],
-                },
-                true,
-                false,
-              ],
+        xx: {
+          log: "$input",
+        },
+        process: {
+          "->": [
+            {
+              $isWhite: {
+                if: [
+                  {
+                    "->": [
+                      "$input",
+                      { getter: "targets" },
+                      { getter: "cardA" },
+                      { getter: "value" },
+                      { getter: 0 },
+                      { "==": "a" },
+                    ],
+                  },
+                  true,
+                  false,
+                ],
+              },
             },
-          },
-          {
-            if: ["$isWhite", "$in", { error: "必須是白色" }],
-          },
-        ],
+            true,
+            { log: "$input" },
+            {
+              if: ["$isWhite", "$in", { error: "必須是白色" }],
+            },
+            { log: "$input" },
+          ],
+        },
       },
       action: {
         if: [
           "$isWhite",
           {
             "->": [
-              { log: "yes" },
+              true,
+              { log: "$in" },
               { def: [{ id: "ActionDraw", count: 1 } as ActionDraw] },
+              { def: [] },
             ],
           },
           {
             "->": [
               { log: "no" },
               { def: [{ id: "ActionDraw", count: 1 } as ActionDraw] },
+              { def: [] },
             ],
           },
         ],
