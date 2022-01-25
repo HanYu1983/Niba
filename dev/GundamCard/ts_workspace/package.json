@@ -19,6 +19,7 @@
     "@types/react-dom": "16.9.4",
     "clean-webpack-plugin": "3.0.0",
     "html-webpack-plugin": "3.2.0",
+    "jsonfp": "^0.2.2",
     "react": "16.11.0",
     "react-dom": "16.11.0",
     "rxjs": "^7.5.1",
