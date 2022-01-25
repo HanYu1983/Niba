@@ -1,3 +1,4 @@
+import { BattleBonus } from "../../tool/basic/basic";
 import { createRollCostRequire } from "../../tool/basic/blockPayload";
 import {
   CardPrototype,
@@ -39,6 +40,19 @@ const prototype: CardPrototype = {
             if: [
               {
                 "->": [
+                  {
+                    "->": [
+                      "$input.ctx",
+                      {
+                        triggerGameEvent: {
+                          id: "",
+                          gameEvent: "",
+                          battleBonus: { "->": <BattleBonus>[0, 0, 0] },
+                        },
+                      },
+                      { roll: { cardID: "" } },
+                    ],
+                  },
                   {
                     cardCondition: {
                       id: "「特徴：X」を持つ自軍ユニットが、「改装」の効果で廃棄される場合",
