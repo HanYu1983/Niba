@@ -51,7 +51,7 @@ export function getCardState(
   }
   const card = getCard(ctx.gameState.table, cardID);
   if (card == null) {
-    throw new Error("[getCardOwner] card not found");
+    throw new Error("[getCardState] card not found");
   }
   const [proto, isChip] = ((): [CardPrototype, boolean] => {
     const chip = ctx.gameState.chipPool[card.protoID];
