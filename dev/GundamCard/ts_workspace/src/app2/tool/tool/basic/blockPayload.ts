@@ -10,6 +10,7 @@ import type { Action } from "./action";
 import { TargetType, TargetTypeCard } from "./targetType";
 import { log2 } from "../../../../tool/logger";
 import { GameContext } from "./gameContext";
+import { JsonfpExpr } from "./jsonfpHelper";
 
 export type RequireBase = {
   key?: string;
@@ -57,6 +58,13 @@ export type RequireAnd = {
   and: Require[];
 } & RequireBase;
 
+export type RequireJsonfp = {
+  id: "RequireJsonfp";
+  targets: { [key: string]: TargetType };
+  condition?: [string, any][];
+  action?: any;
+} & RequireBase;
+
 export type Require =
   | RequireOr
   | RequireAnd
@@ -65,7 +73,8 @@ export type Require =
   | RequireSiYouTiming
   | RequireEvent
   | RequireCustom
-  | RequireScript;
+  | RequireScript
+  | RequireJsonfp;
 
 type FeedbackTargetAction = {
   id: "FeedbackTargetAction";

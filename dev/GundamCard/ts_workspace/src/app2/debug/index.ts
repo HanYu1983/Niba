@@ -28,7 +28,11 @@ import {
 import { testFlow1, testFlow2 } from "./testFlow";
 import { testKaiSo1 } from "./testKaiSo";
 import { createTokuSyuKouKaText } from "../tool/alg/script/createTokuSyuKouKaText";
-import { doFeedback, doRequire } from "../tool/alg/handleBlockPayload";
+import {
+  doBlockPayload,
+  doFeedback,
+  doRequire,
+} from "../tool/alg/handleBlockPayload";
 import { doEffect, doEffectRequire } from "../tool/alg/handleClient";
 import {
   testProto_179025_07D_U_RD156R_red,
@@ -39,17 +43,17 @@ import { testJsonfp, testJsonfp2, testJsonfp3 } from "./testJsonfp";
 
 export function test() {
   [
-    testJsonfp3,
-    //testJsonfp,
-    //testTargetType,
-    // testDryRun,
-    // testFlow1,
-    // testFlow2,
-    // testKaiSo1,
-    // testClientCommand,
-    // testClientCommand2,
-    // testProto_179025_07D_U_RD156R_red,
-    // testProto_179025_07D_U_RD156R_red2,
+    testJsonfp,
+    testTargetType,
+    testRequireJsonfp,
+    testDryRun,
+    testFlow1,
+    testFlow2,
+    testKaiSo1,
+    testClientCommand,
+    testClientCommand2,
+    testProto_179025_07D_U_RD156R_red,
+    testProto_179025_07D_U_RD156R_red2,
   ].forEach((testF: Function) => {
     console.log(
       `================================================================`
@@ -60,6 +64,94 @@ export function test() {
     );
     testF();
   });
+}
+
+export function testRequireJsonfp() {
+  let ctx = DEFAULT_GAME_CONTEXT;
+  ctx = {
+    ...ctx,
+    gameState: {
+      ...ctx.gameState,
+      table: {
+        ...ctx.gameState.table,
+        cardStack: {
+          ...ctx.gameState.table.cardStack,
+          [getBaShouID({
+            id: "AbsoluteBaSyou",
+            value: [PlayerA, "手札"],
+          })]: [
+            {
+              id: "a",
+              protoID: "179025_07D_U_RD156R_red",
+              faceDown: true,
+              ownerID: PlayerA,
+              tap: false,
+            },
+          ],
+          [getBaShouID({
+            id: "AbsoluteBaSyou",
+            value: [PlayerA, "Gゾーン"],
+          })]: [
+            {
+              id: "g1",
+              protoID: "179030_11E_G_RD021N_red",
+              faceDown: true,
+              ownerID: PlayerA,
+              tap: false,
+            },
+            {
+              id: "g2",
+              protoID: "179030_11E_G_RD021N_red",
+              faceDown: true,
+              ownerID: PlayerA,
+              tap: false,
+            },
+          ],
+        },
+      },
+    },
+  };
+  ctx = initState(ctx);
+  const block: BlockPayload = {
+    cause: {
+      id: "BlockPayloadCauseUpdateCommand",
+      cardTextID: "a",
+      cardID: "a",
+      description: "",
+      playerID: "",
+    },
+    require: {
+      id: "RequireJsonfp",
+      targets: {
+        cardA: {
+          id: "カード",
+          value: ["a"],
+          valueLengthInclude: [1],
+        },
+      },
+      condition: [
+        [
+          "是否是白色",
+          {
+            $isWhite: {
+              if: [
+                {
+                  "->": ["$targets.cardA.value", { getter: 0 }, { "==": "a" }],
+                },
+                true,
+                false,
+              ],
+            },
+          },
+        ],
+      ],
+      action: {
+        "->": [],
+      },
+    },
+  };
+  ctx = doBlockPayload(ctx, block);
+  console.log(ctx);
 }
 
 export function testTargetType() {

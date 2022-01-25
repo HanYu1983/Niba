@@ -46,56 +46,56 @@ export type Keyword =
   | "<"
   | "<=";
 
-export type Expr =
+export type JsonfpExpr =
   | string
   | number
   | boolean
   | {
-      "->"?: Expr[];
-      chain?: Expr[];
+      "->"?: JsonfpExpr[];
+      chain?: JsonfpExpr[];
       convert?: {
         var: { [key: string]: string };
-        formula: Expr;
+        formula: JsonfpExpr;
       };
-      formula?: { var: string | string[]; expr: Expr };
-      eval?: Expr;
-      if?: [Expr, Expr, Expr];
-      map?: Expr;
-      add?: Expr;
-      subtract?: Expr;
-      multiply?: Expr;
-      divide?: Expr;
-      random?: Expr;
-      min?: Expr;
-      max?: Expr;
-      and?: Expr;
-      or?: Expr;
-      "bitwise and"?: Expr;
-      "bitwise or"?: Expr;
-      "bitwise exclusive-or"?: Expr;
-      compact?: Expr;
-      difference?: Expr;
-      flatten?: Expr;
-      intersection?: Expr;
-      take?: Expr;
-      union?: Expr;
-      zipObject?: Expr;
-      clone?: Expr;
-      filter?: Expr;
-      find?: Expr;
-      getter?: Expr;
-      merge?: Expr;
-      omit?: Expr;
-      pick?: Expr;
-      pluck?: Expr;
+      formula?: { var: string | string[]; expr: JsonfpExpr };
+      eval?: JsonfpExpr;
+      if?: [JsonfpExpr, JsonfpExpr, JsonfpExpr];
+      map?: JsonfpExpr;
+      add?: JsonfpExpr;
+      subtract?: JsonfpExpr;
+      multiply?: JsonfpExpr;
+      divide?: JsonfpExpr;
+      random?: JsonfpExpr;
+      min?: JsonfpExpr;
+      max?: JsonfpExpr;
+      and?: JsonfpExpr[];
+      or?: JsonfpExpr[];
+      "bitwise and"?: JsonfpExpr;
+      "bitwise or"?: JsonfpExpr;
+      "bitwise exclusive-or"?: JsonfpExpr;
+      compact?: JsonfpExpr;
+      difference?: JsonfpExpr;
+      flatten?: JsonfpExpr;
+      intersection?: JsonfpExpr;
+      take?: JsonfpExpr;
+      union?: JsonfpExpr;
+      zipObject?: JsonfpExpr;
+      clone?: JsonfpExpr;
+      filter?: JsonfpExpr;
+      find?: JsonfpExpr;
+      getter?: JsonfpExpr;
+      merge?: JsonfpExpr;
+      omit?: JsonfpExpr;
+      pick?: JsonfpExpr;
+      pluck?: JsonfpExpr;
       reduce?: Keyword;
       size?: null;
-      where?: Expr;
-      "=="?: Expr;
-      "!="?: Expr;
-      ">"?: Expr;
-      ">="?: Expr;
-      "<"?: Expr;
-      "<="?: Expr;
+      where?: JsonfpExpr;
+      "=="?: JsonfpExpr;
+      "!="?: JsonfpExpr;
+      ">"?: JsonfpExpr;
+      ">="?: JsonfpExpr;
+      "<"?: JsonfpExpr;
+      "<="?: JsonfpExpr;
       cardPower?: { ctx: "$ctx" };
     };

@@ -1,4 +1,4 @@
-import { Expr, jsonfp } from "../tool/tool/basic/jsonfpHelper";
+import { JsonfpExpr, jsonfp } from "../tool/tool/basic/jsonfpHelper";
 import { createCard } from "../../tool/table";
 import { getCardState } from "../tool/alg/helper";
 import { getBaShouID, PlayerA } from "../tool/tool/basic/basic";
@@ -281,7 +281,7 @@ export function testJsonfp3() {
     },
   };
 
-  const conditionExpr: Expr = {
+  const conditionExpr: JsonfpExpr = {
     "->": [
       {
         "->": [

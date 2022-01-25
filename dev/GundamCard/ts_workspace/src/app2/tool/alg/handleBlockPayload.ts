@@ -16,6 +16,7 @@ import { doRequireCustom } from "./doRequireCustom";
 import { doConditionTarget } from "./doConditionTarget";
 import { log2 } from "../../../tool/logger";
 import { getTargetType } from "./helper";
+import { jsonfp } from "../tool/basic/jsonfpHelper";
 
 function doCondition(
   ctx: GameContext,
@@ -149,6 +150,61 @@ export function doRequire(
         require.customID,
         varCtxID
       );
+    }
+    case "RequireJsonfp": {
+      {
+        const getCardID = (block: BlockPayload) => {
+          if (block.cause == null) {
+            throw new Error("must has cause");
+          }
+          switch (block.cause.id) {
+            case "BlockPayloadCauseGameEvent":
+            case "BlockPayloadCauseUpdateCommand":
+            case "BlockPayloadCauseUpdateEffect":
+              if (block.cause.cardID == null) {
+                throw new Error("[getTarget] このカード not found");
+              }
+              return block.cause.cardID;
+            default:
+              throw new Error("not support cause:" + block.cause.id);
+          }
+        };
+        const program = {
+          $ctx: { def: ctx },
+          $cause: { def: blockPayload.cause },
+          $thisCard: { def: getCardID(blockPayload) },
+          $targets: { def: require.targets },
+          $condition: require.condition,
+          result: "$condition",
+        };
+        console.log(program);
+        const { result } = jsonfp.apply({}, program);
+        console.log(result);
+        const msg = result
+          .filter((result: any) => {
+            const [key, pass] = result;
+            return pass == false;
+          })
+          .map((result: any) => {
+            const [key, pass] = result;
+            return key;
+          });
+        if (msg.length > 0) {
+          throw new Error(msg.join("|"));
+        }
+      }
+      // const { result } = jsonfp.apply(
+      //   {},
+      //   {
+      //     $ctx: ctx,
+      //     $blockPayload: blockPayload,
+      //     $targets: require.targets,
+      //     $action: require.action,
+      //     result: "$action",
+      //   }
+      // );
+      // return result;
+      return ctx;
     }
     default:
       console.log(`not support yet: ${require.id}`);
