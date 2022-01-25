@@ -884,13 +884,10 @@ export function doRequireTargetActionTarget(
         throw err;
       }
       log2("doRequireTargetActionTarget", "jsonfpResult", result);
-      if (result.actions == null) {
-        throw new Error("必須回傳actions:Action[]");
+      if (result.output == null) {
+        throw new Error("必須回傳output:Action");
       }
-      if (Array.isArray(result.actions) == false) {
-        throw new Error("must be Action[]");
-      }
-      const actions: Action[] = result.actions;
+      const willDoAction: Action = result.output;
       ctx = {
         ...ctx,
         varsPool: {
@@ -901,15 +898,13 @@ export function doRequireTargetActionTarget(
           },
         },
       };
-      return actions.reduce((ctx, action) => {
-        return doRequireTargetActionTarget(
-          ctx,
-          blockPayload,
-          targets,
-          action,
-          varCtxID
-        );
-      }, ctx);
+      return doRequireTargetActionTarget(
+        ctx,
+        blockPayload,
+        targets,
+        willDoAction,
+        varCtxID
+      );
     }
     default:
       throw new Error(`not impl: ${action.id}`);

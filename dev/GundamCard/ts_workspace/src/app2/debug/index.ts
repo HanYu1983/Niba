@@ -173,21 +173,16 @@ export function testRequireJsonfp() {
         {
           id: "ActionJsonfp",
           program: {
-            actions: {
+            output: {
               if: [
                 "$isWhite",
                 {
-                  "->": [
-                    [
-                      {
-                        id: "ActionDraw",
-                        count: { "->": [2, { add: 1 }] },
-                      },
-                    ],
-                  ],
+                  id: "ActionDraw",
+                  count: { "->": [2, { add: 1 }] },
                 },
                 {
-                  "->": [{ def: [{ id: "ActionDraw", count: 1 }] }],
+                  id: "ActionDraw",
+                  count: { "->": 3 },
                 },
               ],
             },
