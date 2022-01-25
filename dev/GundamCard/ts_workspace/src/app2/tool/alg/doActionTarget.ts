@@ -28,6 +28,7 @@ import { log2 } from "../../../tool/logger";
 import { TargetType } from "../tool/basic/targetType";
 import { getCardState, getTargetType } from "./helper";
 import { initState } from "./handleGameContext";
+import { wrapBlockRequireKey } from "./handleBlockPayload";
 
 let idSeq = 0;
 export function doActionTarget(
@@ -329,15 +330,12 @@ export function doActionTarget(
       const blockUuid = `ActionAddBlock_${new Date().getTime()}_${idSeq++}`;
       switch (action.type) {
         case "堆疊": {
-          const wrappedBlock: BlockPayload = {
+          const wrappedBlock: BlockPayload = wrapBlockRequireKey({
             ...action.block,
             id: blockUuid,
             contextID: blockPayload.contextID,
             cause: blockPayload.cause,
-            ...(action.block.require
-              ? { require: wrapRequireKey(action.block.require) }
-              : null),
-          };
+          });
           return {
             ...ctx,
             gameState: {
@@ -347,15 +345,12 @@ export function doActionTarget(
           };
         }
         case "立即": {
-          const wrappedBlock: BlockPayload = {
+          const wrappedBlock: BlockPayload = wrapBlockRequireKey({
             ...action.block,
             id: blockUuid,
             contextID: blockPayload.contextID,
             cause: blockPayload.cause,
-            ...(action.block.require
-              ? { require: wrapRequireKey(action.block.require) }
-              : null),
-          };
+          });
           return {
             ...ctx,
             gameState: {
