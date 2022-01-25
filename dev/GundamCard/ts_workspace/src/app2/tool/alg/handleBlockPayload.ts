@@ -78,56 +78,6 @@ function doRequireTargetAction(
   }
 }
 
-function doRequireJsonfpActionTarget(
-  ctx: GameContext,
-  blockPayload: BlockPayload,
-  targets: { [key: string]: TargetType },
-  action: any,
-  varCtxID: string
-): GameContext {
-  const jsonfpContext = ctx.varsPool[varCtxID]?.jsonfpContext || {};
-  const jsonfpInput = {
-    ctx: { def: ctx },
-    blockPayload: { def: blockPayload },
-    require: { def: require },
-    targets: { def: targets },
-  };
-  jsonfpContext.input = jsonfpInput;
-  let err: any = null;
-  let result: any = null;
-  jsonfp.apply(jsonfpContext, {}, action, (e: any, ret: any) => {
-    err = e;
-    result = ret;
-  });
-  if (err != null) {
-    throw err;
-  }
-  delete jsonfpContext.input;
-  console.log(result);
-  if (Array.isArray(result) == false) {
-    throw new Error("must be Action[]");
-  }
-  ctx = {
-    ...ctx,
-    varsPool: {
-      ...ctx.varsPool,
-      [varCtxID]: {
-        ...ctx.varsPool[varCtxID],
-        jsonfpContext: jsonfpContext,
-      },
-    },
-  };
-  return result.reduce((ctx: any, action: any) => {
-    return doRequireTargetActionTarget(
-      ctx,
-      blockPayload,
-      targets,
-      action,
-      varCtxID
-    );
-  }, ctx);
-}
-
 export function doRequire(
   ctx: GameContext,
   blockPayload: BlockPayload,
@@ -206,18 +156,16 @@ export function doRequire(
     case "RequireJsonfp": {
       {
         const jsonfpContext = ctx.varsPool[varCtxID]?.jsonfpContext || {};
-        const jsonfpInput = {
-          ctx: { def: ctx },
-          blockPayload: { def: blockPayload },
-          require: { def: require },
-          targets: { def: require.targets },
-        };
-        jsonfpContext.input = jsonfpInput;
         let err: any = null;
         let result: any = null;
         jsonfp.apply(
           jsonfpContext,
-          {},
+          {
+            ctx: { def: ctx },
+            blockPayload: { def: blockPayload },
+            require: { def: require },
+            targets: { def: require.targets },
+          },
           require.condition,
           // 使用callback的error, 時機才會正確
           (e: any, ret: any) => {
@@ -228,7 +176,6 @@ export function doRequire(
         if (err != null) {
           throw err;
         }
-        delete jsonfpContext.input;
         ctx = {
           ...ctx,
           varsPool: {
@@ -240,15 +187,18 @@ export function doRequire(
           },
         };
       }
-      if (require.action) {
-        return doRequireJsonfpActionTarget(
-          ctx,
-          blockPayload,
-          require.targets,
-          require.action,
-          varCtxID
-        );
+      if (require.action?.length) {
+        return require.action.reduce((originGameCtx, action) => {
+          return doRequireTargetActionTarget(
+            originGameCtx,
+            blockPayload,
+            require.targets,
+            action,
+            varCtxID
+          );
+        }, ctx);
       }
+      return ctx;
     }
     default:
       console.log(`not support yet: ${require.id}`);

@@ -132,16 +132,22 @@ export function testRequireJsonfp() {
       },
       condition: {
         xx: {
-          log: "$input",
+          log: "$in",
+        },
+        xx2: {
+          "->": [["$in", "$in"], { log: "xx2" }],
         },
         process: {
           "->": [
+            {
+              log: "$in",
+            },
             {
               $isWhite: {
                 if: [
                   {
                     "->": [
-                      "$input",
+                      "$in",
                       { getter: "targets" },
                       { getter: "cardA" },
                       { getter: "value" },
@@ -155,34 +161,39 @@ export function testRequireJsonfp() {
               },
             },
             true,
-            { log: "$input" },
+            { "->": [{ log: "$in" }, { log: "$in" }] },
             {
               if: ["$isWhite", "$in", { error: "必須是白色" }],
             },
-            { log: "$input" },
+            { log: "$in" },
           ],
         },
       },
-      action: {
-        if: [
-          "$isWhite",
-          {
-            "->": [
-              true,
-              { log: "$in" },
-              { def: [{ id: "ActionDraw", count: 1 } as ActionDraw] },
-              { def: [] },
-            ],
+      action: [
+        {
+          id: "ActionJsonfp",
+          program: {
+            actions: {
+              if: [
+                "$isWhite",
+                {
+                  "->": [
+                    [
+                      {
+                        id: "ActionDraw",
+                        count: { "->": [2, { add: 1 }] },
+                      },
+                    ],
+                  ],
+                },
+                {
+                  "->": [{ def: [{ id: "ActionDraw", count: 1 }] }],
+                },
+              ],
+            },
           },
-          {
-            "->": [
-              { log: "no" },
-              { def: [{ id: "ActionDraw", count: 1 } as ActionDraw] },
-              { def: [] },
-            ],
-          },
-        ],
-      },
+        },
+      ],
     },
   };
   ctx = doBlockPayload(ctx, block);

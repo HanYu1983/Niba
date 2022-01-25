@@ -142,6 +142,11 @@ type ActionCreateChip = {
   createChipTarget: any;
 };
 
+type ActionJsonfp = {
+  id: "ActionJsonfp";
+  program: any;
+};
+
 export type Action =
   | ActionRoll
   | ActionReroll
@@ -165,4 +170,5 @@ export type Action =
   | ActionDeleteGlobalCardText
   | ActionRuleDraw
   | ActionRegisterChip
-  | ActionCreateChip;
+  | ActionCreateChip
+  | ActionJsonfp;

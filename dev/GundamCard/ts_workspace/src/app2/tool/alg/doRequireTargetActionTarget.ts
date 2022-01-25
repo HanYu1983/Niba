@@ -29,6 +29,7 @@ import { TargetType } from "../tool/basic/targetType";
 import { getCardState, getTargetType } from "./helper";
 import { initState } from "./handleGameContext";
 import { wrapBlockRequireKey } from "./handleBlockPayload";
+import { jsonfp } from "../tool/basic/jsonfpHelper";
 
 let idSeq = 0;
 export function doRequireTargetActionTarget(
@@ -860,6 +861,55 @@ export function doRequireTargetActionTarget(
           cardState: nextCardStates,
         },
       };
+    }
+    case "ActionJsonfp": {
+      const jsonfpContext = ctx.varsPool[varCtxID]?.jsonfpContext || {};
+      let err: any = null;
+      let result: any = null;
+      jsonfp.apply(
+        jsonfpContext,
+        {
+          ctx: { def: ctx },
+          blockPayload: { def: blockPayload },
+          require: { def: require },
+          targets: { def: targets },
+        },
+        action.program,
+        (e: any, ret: any) => {
+          err = e;
+          result = ret;
+        }
+      );
+      if (err != null) {
+        throw err;
+      }
+      log2("doRequireTargetActionTarget", "jsonfpResult", result);
+      if (result.actions == null) {
+        throw new Error("必須回傳actions:Action[]");
+      }
+      if (Array.isArray(result.actions) == false) {
+        throw new Error("must be Action[]");
+      }
+      const actions: Action[] = result.actions;
+      ctx = {
+        ...ctx,
+        varsPool: {
+          ...ctx.varsPool,
+          [varCtxID]: {
+            ...ctx.varsPool[varCtxID],
+            jsonfpContext: jsonfpContext,
+          },
+        },
+      };
+      return actions.reduce((ctx, action) => {
+        return doRequireTargetActionTarget(
+          ctx,
+          blockPayload,
+          targets,
+          action,
+          varCtxID
+        );
+      }, ctx);
     }
     default:
       throw new Error(`not impl: ${action.id}`);
