@@ -178,6 +178,7 @@ export function triggerTextEvent(
                   ...ctx.varsPool,
                   [varCtxID]: {
                     targets: {},
+                    jsonfpContext: {},
                   },
                 },
               };
@@ -369,6 +370,7 @@ export function updateEffect(ctx: GameContext): GameContext {
                 ...ctx.varsPool,
                 [varCtxID]: {
                   targets: {},
+                  jsonfpContext: {},
                 },
               },
             };

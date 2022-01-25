@@ -31,14 +31,14 @@ import { initState } from "./handleGameContext";
 import { wrapBlockRequireKey } from "./handleBlockPayload";
 
 let idSeq = 0;
-export function doActionTarget(
+export function doRequireTargetActionTarget(
   ctx: GameContext,
   blockPayload: BlockPayload,
   targets: { [key: string]: TargetType },
   action: Action,
   varCtxID: string
 ): GameContext {
-  log2("doActionTarget", "action", action);
+  log2("doRequireTargetActionTarget", "action", action);
   switch (action.id) {
     case "ActionRoll": {
       const cards = getTargetType(ctx, blockPayload, targets, action.cards);
@@ -50,7 +50,10 @@ export function doActionTarget(
       }
       if (cards.value.length == 0) {
         //throw new Error("執行Action時的所有target必須最少有一個值");
-        log2("doActionTarget", "將執行action，但對象為空陣列。直接回傳。");
+        log2(
+          "doRequireTargetActionTarget",
+          "將執行action，但對象為空陣列。直接回傳。"
+        );
         return ctx;
       }
       const table = cards.value.reduce((table, cardID) => {
@@ -62,7 +65,9 @@ export function doActionTarget(
             return card;
           }
           if (card.tap == true) {
-            throw new Error("[doActionTarget][ActionRoll] already tap");
+            throw new Error(
+              "[doRequireTargetActionTarget][ActionRoll] already tap"
+            );
           }
           return {
             ...card,
@@ -88,7 +93,10 @@ export function doActionTarget(
       }
       if (cards.value.length == 0) {
         //throw new Error("執行Action時的所有target必須最少有一個值");
-        log2("doActionTarget", "將執行action，但對象為空陣列。直接回傳。");
+        log2(
+          "doRequireTargetActionTarget",
+          "將執行action，但對象為空陣列。直接回傳。"
+        );
         return ctx;
       }
       const table = cards.value.reduce((table, cardID) => {
@@ -101,7 +109,7 @@ export function doActionTarget(
           }
           if (card.tap == false) {
             throw new Error(
-              "[doActionTarget][ActionRoll] 已經是直立狀態, 不能直立"
+              "[doRequireTargetActionTarget][ActionRoll] 已經是直立狀態, 不能直立"
             );
           }
           return {
@@ -128,7 +136,10 @@ export function doActionTarget(
       }
       if (cards.value.length == 0) {
         //throw new Error("執行Action時的所有target必須最少有一個值");
-        log2("doActionTarget", "將執行action，但對象為空陣列。直接回傳。");
+        log2(
+          "doRequireTargetActionTarget",
+          "將執行action，但對象為空陣列。直接回傳。"
+        );
         return ctx;
       }
       const faceDown = getTargetType(
@@ -145,7 +156,10 @@ export function doActionTarget(
       }
       if (faceDown.value.length == 0) {
         //throw new Error("執行Action時的所有target必須最少有一個值");
-        log2("doActionTarget", "將執行action，但對象為空陣列。直接回傳。");
+        log2(
+          "doRequireTargetActionTarget",
+          "將執行action，但對象為空陣列。直接回傳。"
+        );
         return ctx;
       }
       const faceDownValue = faceDown.value[0];
@@ -184,12 +198,17 @@ export function doActionTarget(
       }
       if (cards.value.length == 0) {
         //throw new Error("執行Action時的所有target必須最少有一個值");
-        log2("doActionTarget", "將執行action，但對象為空陣列。直接回傳。");
+        log2(
+          "doRequireTargetActionTarget",
+          "將執行action，但對象為空陣列。直接回傳。"
+        );
         return ctx;
       }
       ctx = cards.value.reduce((ctx, cardID) => {
         if (cardID == null) {
-          throw new Error("[doActionTarget][ActionDrop]target must not null");
+          throw new Error(
+            "[doRequireTargetActionTarget][ActionDrop]target must not null"
+          );
         }
         const ownerID = getCardOwner(ctx, cardID);
         const fromBaSyouID = getBaShouID(getCardBaSyou(ctx, cardID));
@@ -283,7 +302,10 @@ export function doActionTarget(
       }
       if (cards.value.length == 0) {
         //throw new Error("執行Action時的所有target必須最少有一個值");
-        log2("doActionTarget", "將執行action，但對象為空陣列。直接回傳。");
+        log2(
+          "doRequireTargetActionTarget",
+          "將執行action，但對象為空陣列。直接回傳。"
+        );
         return ctx;
       }
       const targetBaSyou = getTargetType(
@@ -305,7 +327,7 @@ export function doActionTarget(
       ctx = cards.value.reduce((ctx, cardID) => {
         if (cardID == null) {
           throw new Error(
-            "[doActionTarget][ActionMoveCardToPosition] cardID not found"
+            "[doRequireTargetActionTarget][ActionMoveCardToPosition] cardID not found"
           );
         }
         const fromBaSyouID = getBaShouID(getCardBaSyou(ctx, cardID));
@@ -405,7 +427,10 @@ export function doActionTarget(
       }
       if (cards.value.length == 0) {
         //throw new Error("執行Action時的所有target必須最少有一個值");
-        log2("doActionTarget", "將執行action，但對象為空陣列。直接回傳。");
+        log2(
+          "doRequireTargetActionTarget",
+          "將執行action，但對象為空陣列。直接回傳。"
+        );
         return ctx;
       }
       const cardStateAfterSignID = cards.value.map((cardID): CardState => {
@@ -461,7 +486,10 @@ export function doActionTarget(
       }
       if (cards.value.length == 0) {
         //throw new Error("執行Action時的所有target必須最少有一個值");
-        log2("doActionTarget", "將執行action，但對象為空陣列。直接回傳。");
+        log2(
+          "doRequireTargetActionTarget",
+          "將執行action，但對象為空陣列。直接回傳。"
+        );
         return ctx;
       }
       const cardTextState = getTargetType(
@@ -478,7 +506,10 @@ export function doActionTarget(
       }
       if (cardTextState.value.length == 0) {
         //throw new Error("執行Action時的所有target必須最少有一個值");
-        log2("doActionTarget", "將執行action，但對象為空陣列。直接回傳。");
+        log2(
+          "doRequireTargetActionTarget",
+          "將執行action，但對象為空陣列。直接回傳。"
+        );
         return ctx;
       }
       const cardTextStateFromSelection = cardTextState.value;
@@ -535,7 +566,10 @@ export function doActionTarget(
       }
       if (cards.value.length == 0) {
         //throw new Error("執行Action時的所有target必須最少有一個值");
-        log2("doActionTarget", "將執行action，但對象為空陣列。直接回傳。");
+        log2(
+          "doRequireTargetActionTarget",
+          "將執行action，但對象為空陣列。直接回傳。"
+        );
         return ctx;
       }
       const cardID = cards.value[0];
@@ -605,7 +639,10 @@ export function doActionTarget(
         throw new Error("執行Action時的所有target必須是陣列");
       }
       if (cardA.value.length == 0) {
-        log2("doActionTarget", "將執行action，但對象為空陣列。直接回傳。");
+        log2(
+          "doRequireTargetActionTarget",
+          "將執行action，但對象為空陣列。直接回傳。"
+        );
         return ctx;
       }
       const cardB = getTargetType(ctx, blockPayload, targets, action.cardB);
@@ -616,7 +653,10 @@ export function doActionTarget(
         throw new Error("執行Action時的所有target必須是陣列");
       }
       if (cardB.value.length == 0) {
-        log2("doActionTarget", "將執行action，但對象為空陣列。直接回傳。");
+        log2(
+          "doRequireTargetActionTarget",
+          "將執行action，但對象為空陣列。直接回傳。"
+        );
         return ctx;
       }
       const cardAValue = cardA.value[0];
@@ -676,7 +716,10 @@ export function doActionTarget(
         throw new Error("執行Action時的所有target必須是陣列");
       }
       if (cards.value.length == 0) {
-        log2("doActionTarget", "將執行action，但對象為空陣列。直接回傳。");
+        log2(
+          "doRequireTargetActionTarget",
+          "將執行action，但對象為空陣列。直接回傳。"
+        );
         return ctx;
       }
       const cardIDs = cards.value;
@@ -688,7 +731,10 @@ export function doActionTarget(
         throw new Error("執行Action時的所有target必須是陣列");
       }
       if (flag.value.length == 0) {
-        log2("doActionTarget", "將執行action，但對象為空陣列。直接回傳。");
+        log2(
+          "doRequireTargetActionTarget",
+          "將執行action，但對象為空陣列。直接回傳。"
+        );
         return ctx;
       }
       const flags = flag.value;
@@ -724,7 +770,10 @@ export function doActionTarget(
         throw new Error("執行Action時的所有target必須是陣列");
       }
       if (cards.value.length == 0) {
-        log2("doActionTarget", "將執行action，但對象為空陣列。直接回傳。");
+        log2(
+          "doRequireTargetActionTarget",
+          "將執行action，但對象為空陣列。直接回傳。"
+        );
         return ctx;
       }
       const cardIDs = cards.value;
@@ -736,7 +785,10 @@ export function doActionTarget(
         throw new Error("執行Action時的所有target必須是陣列");
       }
       if (flag.value.length == 0) {
-        log2("doActionTarget", "將執行action，但對象為空陣列。直接回傳。");
+        log2(
+          "doRequireTargetActionTarget",
+          "將執行action，但對象為空陣列。直接回傳。"
+        );
         return ctx;
       }
       const flags = flag.value;
@@ -767,7 +819,10 @@ export function doActionTarget(
         throw new Error("執行Action時的所有target必須是陣列");
       }
       if (cards.value.length == 0) {
-        log2("doActionTarget", "將執行action，但對象為空陣列。直接回傳。");
+        log2(
+          "doRequireTargetActionTarget",
+          "將執行action，但對象為空陣列。直接回傳。"
+        );
         return ctx;
       }
       const cardIDs = cards.value;
@@ -779,7 +834,10 @@ export function doActionTarget(
         throw new Error("執行Action時的所有target必須是陣列");
       }
       if (flag.value.length == 0) {
-        log2("doActionTarget", "將執行action，但對象為空陣列。直接回傳。");
+        log2(
+          "doRequireTargetActionTarget",
+          "將執行action，但對象為空陣列。直接回傳。"
+        );
         return ctx;
       }
       const flags = flag.value;

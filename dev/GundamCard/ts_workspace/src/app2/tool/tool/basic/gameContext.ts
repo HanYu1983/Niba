@@ -121,6 +121,7 @@ export type GameState = {
 
 export type Vars = {
   targets: { [key: string]: TargetType };
+  jsonfpContext: any;
 };
 
 export type VarsPool = { [key: string]: Vars };

@@ -2,6 +2,7 @@ import {
   BlockPayload,
   Feedback,
   Require,
+  RequireJsonfp,
   RequireTarget,
   wrapRequireKey,
 } from "../tool/basic/blockPayload";
@@ -11,12 +12,13 @@ import { GameContext } from "../tool/basic/gameContext";
 import { mapEffect, reduceEffect } from "../tool/basic/gameContext";
 import { getCustomFunction } from "../../../tool/helper";
 import { RequireScriptFunction } from "../tool/basic/gameContext";
-import { doActionTarget } from "./doActionTarget";
+import { doRequireTargetActionTarget } from "./doRequireTargetActionTarget";
 import { doRequireCustom } from "./doRequireCustom";
 import { doConditionTarget } from "./doConditionTarget";
 import { log2 } from "../../../tool/logger";
 import { getTargetType } from "./helper";
 import { jsonfp } from "../tool/basic/jsonfpHelper";
+import { TargetType } from "../tool/basic/targetType";
 
 function doCondition(
   ctx: GameContext,
@@ -27,14 +29,14 @@ function doCondition(
   return doConditionTarget(ctx, blockPayload, require.targets, condition);
 }
 
-function doAction(
+function doRequireTargetAction(
   ctx: GameContext,
   blockPayload: BlockPayload,
   require: RequireTarget,
   action: Action,
   varCtxID: string
 ): GameContext {
-  log2("doAction", action.id);
+  log2("doRequireTargetAction", action.id);
   Object.entries(require.targets).forEach(([key, target]) => {
     const processed = getTargetType(ctx, blockPayload, require.targets, target);
     if (!Array.isArray(processed.value)) {
@@ -66,7 +68,7 @@ function doAction(
       };
     }
     default:
-      return doActionTarget(
+      return doRequireTargetActionTarget(
         ctx,
         blockPayload,
         require.targets,
@@ -74,6 +76,37 @@ function doAction(
         varCtxID
       );
   }
+}
+
+function doRequireJsonfpActionTarget(
+  ctx: GameContext,
+  blockPayload: BlockPayload,
+  targets: { [key: string]: TargetType },
+  action: any,
+  varCtxID: string
+): GameContext {
+  let jsonfpContext = ctx.varsPool[varCtxID]?.jsonfpContext || {};
+  jsonfpContext = {
+    ...jsonfpContext,
+    ctx: ctx,
+    cause: blockPayload.cause,
+    targets: targets,
+  };
+  const result = jsonfp.apply(jsonfpContext, {}, action);
+  if (result.gameState == null) {
+    throw new Error("must be GameContext");
+  }
+  ctx = {
+    ...ctx,
+    varsPool: {
+      ...ctx.varsPool,
+      [varCtxID]: {
+        ...ctx.varsPool[varCtxID],
+        jsonfpContext: jsonfpContext,
+      },
+    },
+  };
+  return result;
 }
 
 export function doRequire(
@@ -127,7 +160,7 @@ export function doRequire(
       }
       if (require.action?.length) {
         return require.action.reduce((originGameCtx, action) => {
-          return doAction(
+          return doRequireTargetAction(
             originGameCtx,
             blockPayload,
             require,
@@ -169,17 +202,14 @@ export function doRequire(
               throw new Error("not support cause:" + block.cause.id);
           }
         };
-        const program = {
-          $ctx: { def: ctx },
-          $cause: { def: blockPayload.cause },
-          $thisCard: { def: getCardID(blockPayload) },
-          $targets: { def: require.targets },
-          $condition: require.condition,
-          result: "$condition",
+        let jsonfpContext = ctx.varsPool[varCtxID]?.jsonfpContext || {};
+        jsonfpContext = {
+          ...jsonfpContext,
+          ctx: ctx,
+          cause: blockPayload.cause,
+          targets: require.targets,
         };
-        console.log(program);
-        const { result } = jsonfp.apply({}, program);
-        console.log(result);
+        const result = jsonfp.apply(jsonfpContext, {}, require.condition);
         const msg = result
           .filter((result: any) => {
             const [key, pass] = result;
@@ -192,19 +222,24 @@ export function doRequire(
         if (msg.length > 0) {
           throw new Error(msg.join("|"));
         }
+        ctx = {
+          ...ctx,
+          varsPool: {
+            ...ctx.varsPool,
+            [varCtxID]: {
+              ...ctx.varsPool[varCtxID],
+              jsonfpContext: jsonfpContext,
+            },
+          },
+        };
       }
-      // const { result } = jsonfp.apply(
-      //   {},
-      //   {
-      //     $ctx: ctx,
-      //     $blockPayload: blockPayload,
-      //     $targets: require.targets,
-      //     $action: require.action,
-      //     result: "$action",
-      //   }
-      // );
-      // return result;
-      return ctx;
+      return doRequireJsonfpActionTarget(
+        ctx,
+        blockPayload,
+        require.targets,
+        require.action,
+        varCtxID
+      );
     }
     default:
       console.log(`not support yet: ${require.id}`);
@@ -224,7 +259,7 @@ export function doFeedback(
       if (actions.length) {
         const targets = ctx.varsPool[varCtxID]?.targets || {};
         return actions.reduce((originGameCtx, action) => {
-          return doActionTarget(
+          return doRequireTargetActionTarget(
             originGameCtx,
             blockPayload,
             targets,
@@ -240,7 +275,7 @@ export function doFeedback(
       const targets = feedback.targets;
       if (actions.length) {
         return actions.reduce((originGameCtx, action) => {
-          return doActionTarget(
+          return doRequireTargetActionTarget(
             originGameCtx,
             blockPayload,
             targets,

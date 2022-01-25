@@ -43,17 +43,17 @@ import { testJsonfp, testJsonfp2, testJsonfp3 } from "./testJsonfp";
 
 export function test() {
   [
-    testJsonfp,
-    testTargetType,
     testRequireJsonfp,
-    testDryRun,
-    testFlow1,
-    testFlow2,
-    testKaiSo1,
-    testClientCommand,
-    testClientCommand2,
-    testProto_179025_07D_U_RD156R_red,
-    testProto_179025_07D_U_RD156R_red2,
+    // testJsonfp,
+    // testTargetType,
+    // testDryRun,
+    // testFlow1,
+    // testFlow2,
+    // testKaiSo1,
+    // testClientCommand,
+    // testClientCommand2,
+    // testProto_179025_07D_U_RD156R_red,
+    // testProto_179025_07D_U_RD156R_red2,
   ].forEach((testF: Function) => {
     console.log(
       `================================================================`
@@ -133,20 +133,29 @@ export function testRequireJsonfp() {
         [
           "是否是白色",
           {
-            $isWhite: {
-              if: [
-                {
-                  "->": ["$targets.cardA.value", { getter: 0 }, { "==": "a" }],
+            "->": [
+              {
+                $isWhite: {
+                  if: [
+                    {
+                      "->": [
+                        "$targets.cardA.value",
+                        { getter: 0 },
+                        { "==": "a" },
+                      ],
+                    },
+                    true,
+                    false,
+                  ],
                 },
-                true,
-                false,
-              ],
-            },
+              },
+              "$isWhite",
+            ],
           },
         ],
       ],
       action: {
-        "->": [],
+        if: ["$isWhite", "$ctx", "$ctx"],
       },
     },
   };
