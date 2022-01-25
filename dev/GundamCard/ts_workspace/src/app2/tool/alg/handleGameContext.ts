@@ -251,7 +251,7 @@ export function updateCommand(ctx: GameContext): GameContext {
             ? { require: wrapRequireKey(block.require) }
             : null),
         };
-        const varCtxID = "tmp";
+        const varCtxID = "updateCommand";
         wrapEvent = wrapTip(ctx, true, wrapEvent, varCtxID);
         // 判斷需求是否能滿足
         let canPass = true;

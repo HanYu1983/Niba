@@ -44,17 +44,17 @@ import { Action, ActionDraw, ActionDrop } from "../tool/tool/basic/action";
 
 export function test() {
   [
+    testJsonfp,
+    testTargetType,
+    testDryRun,
+    testFlow1,
+    testFlow2,
+    testKaiSo1,
+    testClientCommand,
+    testClientCommand2,
+    testProto_179025_07D_U_RD156R_red,
+    testProto_179025_07D_U_RD156R_red2,
     testRequireJsonfp,
-    // testJsonfp,
-    // testTargetType,
-    // testDryRun,
-    // testFlow1,
-    // testFlow2,
-    // testKaiSo1,
-    // testClientCommand,
-    // testClientCommand2,
-    // testProto_179025_07D_U_RD156R_red,
-    // testProto_179025_07D_U_RD156R_red2,
   ].forEach((testF: Function) => {
     console.log(
       `================================================================`
@@ -133,41 +133,28 @@ export function testRequireJsonfp() {
       condition: {
         id: "ConditionJsonfp",
         program: {
-          xx: {
-            log: "$in",
-          },
-          xx2: {
-            "->": [["$in", "$in"], { log: "xx2" }],
-          },
-          process: {
-            "->": [
+          $isWhite: {
+            if: [
               {
-                log: "$in",
-              },
-              {
-                $isWhite: {
-                  if: [
-                    {
-                      "->": [
-                        "$in",
-                        { getter: "targets" },
-                        { getter: "cardA" },
-                        { getter: "value" },
-                        { getter: 0 },
-                        { "==": "a" },
-                      ],
-                    },
-                    true,
-                    false,
-                  ],
-                },
+                "->": [
+                  "$in",
+                  { getter: "targets" },
+                  { getter: "cardA" },
+                  { getter: "value" },
+                  { getter: 0 },
+                  { "==": "a" },
+                ],
               },
               true,
-              { "->": [{ log: "$in" }, { log: "$in" }] },
-              {
-                if: ["$isWhite", "$in", { error: "必須是白色" }],
-              },
-              { log: "$in" },
+              false,
+            ],
+          },
+          $isMy: true,
+          output: {
+            if: [
+              "$isWhite",
+              { if: ["$isMy", null, "必須是我的"] },
+              "必須是白色",
             ],
           },
         },

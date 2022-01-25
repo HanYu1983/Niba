@@ -34,90 +34,96 @@ const prototype: CardPrototype = {
       block: {
         // TODO: 「特徴：アストレイ系」を持つ自軍ユニットが、「改装」の効果で場に出た場合
         require: {
-          id: "RequireJsonfp",
+          id: "RequireTarget",
           targets: {},
           condition: {
-            if: [
-              {
-                "->": [
-                  {
-                    "->": [
-                      "$input.ctx",
-                      {
-                        triggerGameEvent: {
-                          id: "",
-                          gameEvent: "",
-                          battleBonus: { "->": <BattleBonus>[0, 0, 0] },
+            id: "ConditionJsonfp",
+            program: {
+              if: [
+                {
+                  "->": [
+                    {
+                      "->": [
+                        "$input.ctx",
+                        {
+                          triggerGameEvent: {
+                            id: "",
+                            gameEvent: "",
+                            battleBonus: { "->": <BattleBonus>[0, 0, 0] },
+                          },
                         },
-                      },
-                      { roll: { cardID: "" } },
-                    ],
-                  },
-                  {
-                    cardCondition: {
-                      id: "「特徴：X」を持つ自軍ユニットが、「改装」の効果で廃棄される場合",
-                      x: "アストレイ系",
-                      cardID: {
-                        "->": [
-                          "$input",
-                          { getter: "blockPayload" },
-                          { getter: "cause" },
-                          { getter: "id" },
-                          { "==": "「改装」の効果で廃棄される場合" },
-                        ],
-                      },
+                        { roll: { cardID: "" } },
+                      ],
                     },
-                  },
-                  {
-                    "->": [
-                      "$input",
-                      { getter: "blockPayload" },
-                      { getter: "cause" },
-                      { getter: "id" },
-                      { "==": "「改装」の効果で廃棄される場合" },
-                    ],
-                  },
-                  {
-                    "->": [
-                      "$input",
-                      { getter: "blockPayload" },
-                      { getter: "cause" },
-                      { getter: "cardID" },
-                      {
-                        cardController: "$input",
-                      },
-                      {
-                        "==": {
+                    {
+                      cardCondition: {
+                        id: "「特徴：X」を持つ自軍ユニットが、「改装」の効果で廃棄される場合",
+                        x: "アストレイ系",
+                        cardID: {
                           "->": [
-                            {
-                              thisCard: "$input",
-                            },
-                            {
-                              cardController: "$input",
-                            },
+                            "$input",
+                            { getter: "blockPayload" },
+                            { getter: "cause" },
+                            { getter: "id" },
+                            { "==": "「改装」の効果で廃棄される場合" },
                           ],
                         },
                       },
-                    ],
-                  },
-                  {
-                    "->": [
-                      "$input",
-                      { getter: "blockPayload" },
-                      { getter: "cause" },
-                      { getter: "cardID" },
-                      { cardCh: null },
-                      {
-                        "==": {
-                          "->": [{ thisCard: null }, { cardController: null }],
+                    },
+                    {
+                      "->": [
+                        "$input",
+                        { getter: "blockPayload" },
+                        { getter: "cause" },
+                        { getter: "id" },
+                        { "==": "「改装」の効果で廃棄される場合" },
+                      ],
+                    },
+                    {
+                      "->": [
+                        "$input",
+                        { getter: "blockPayload" },
+                        { getter: "cause" },
+                        { getter: "cardID" },
+                        {
+                          cardController: "$input",
                         },
-                      },
-                    ],
-                  },
-                  { reduce: "and" },
-                ],
-              },
-            ],
+                        {
+                          "==": {
+                            "->": [
+                              {
+                                thisCard: "$input",
+                              },
+                              {
+                                cardController: "$input",
+                              },
+                            ],
+                          },
+                        },
+                      ],
+                    },
+                    {
+                      "->": [
+                        "$input",
+                        { getter: "blockPayload" },
+                        { getter: "cause" },
+                        { getter: "cardID" },
+                        { cardCh: null },
+                        {
+                          "==": {
+                            "->": [
+                              { thisCard: null },
+                              { cardController: null },
+                            ],
+                          },
+                        },
+                      ],
+                    },
+                    { reduce: "and" },
+                  ],
+                },
+              ],
+            },
           },
           action: [],
         },

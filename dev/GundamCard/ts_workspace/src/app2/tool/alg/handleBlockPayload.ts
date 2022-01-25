@@ -2,7 +2,6 @@ import {
   BlockPayload,
   Feedback,
   Require,
-  RequireJsonfp,
   RequireTarget,
   wrapRequireKey,
 } from "../tool/basic/blockPayload";
@@ -160,51 +159,6 @@ export function doRequire(
         require.customID,
         varCtxID
       );
-    }
-    case "RequireJsonfp": {
-      const jsonfpContext = ctx.varsPool[varCtxID]?.jsonfpContext || {};
-      let err: any = null;
-      let result: any = null;
-      jsonfp.apply(
-        jsonfpContext,
-        {
-          ctx: { def: ctx },
-          blockPayload: { def: blockPayload },
-          require: { def: require },
-          targets: { def: require.targets },
-        },
-        require.condition,
-        // 使用callback的error, 時機才會正確
-        (e: any, ret: any) => {
-          err = e;
-          result = ret;
-        }
-      );
-      if (err != null) {
-        throw err;
-      }
-      ctx = {
-        ...ctx,
-        varsPool: {
-          ...ctx.varsPool,
-          [varCtxID]: {
-            ...ctx.varsPool[varCtxID],
-            jsonfpContext: jsonfpContext,
-          },
-        },
-      };
-      if (require.action?.length) {
-        return require.action.reduce((originGameCtx, action) => {
-          return doRequireTargetActionTarget(
-            originGameCtx,
-            blockPayload,
-            require.targets,
-            action,
-            varCtxID
-          );
-        }, ctx);
-      }
-      return ctx;
     }
     default:
       console.log(`not support yet: ${require.id}`);
