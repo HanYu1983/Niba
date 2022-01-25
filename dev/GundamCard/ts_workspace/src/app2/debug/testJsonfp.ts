@@ -1,10 +1,8 @@
+import { Expr, jsonfp } from "../tool/tool/basic/jsonfpHelper";
 import { createCard } from "../../tool/table";
 import { getCardState } from "../tool/alg/helper";
 import { getBaShouID, PlayerA } from "../tool/tool/basic/basic";
 import { DEFAULT_GAME_CONTEXT } from "../tool/tool/basic/gameContext";
-
-const jsonfp = require("jsonfp");
-jsonfp.init();
 
 export function testJsonfp() {
   {
@@ -283,6 +281,67 @@ export function testJsonfp3() {
     },
   };
 
+  const conditionExpr: Expr = {
+    "->": [
+      {
+        "->": [
+          {
+            "->": [
+              "$targets.cardA.value",
+              { map: { cardPower: { ctx: "$ctx" } } },
+              { map: { ">": 100 } },
+              { reduce: "and" },
+            ],
+          },
+        ],
+      },
+      { reduce: "add" },
+    ],
+  };
+
+  const expr = {
+    $ctx: "$in.ctx",
+    $cause: {},
+    $targets: {
+      cardA: {
+        id: "カード",
+        value: ["a"],
+      },
+    },
+    $condition: {
+      "->": [
+        [
+          {
+            "->": [
+              "$targets.cardA.value",
+              { map: { cardPower: { ctx: "$ctx" } } },
+              { map: { ">": 100 } },
+              { reduce: "and" },
+            ],
+          },
+          {
+            "->": [
+              "$targets.cardA.value",
+              { map: { gSign: { ctx: "$ctx" } } },
+              { map: { gSignColor: { ctx: "$ctx" } } },
+              { map: { "==": "白" } },
+              { reduce: "and" },
+            ],
+          },
+        ],
+        { reduce: "and" },
+      ],
+    },
+    $action: {
+      "->": ["$ctx", { getter: "gameState" }, { getter: "table" }],
+    },
+    targets: "$targets",
+    condition: "$condition",
+    result: "$action",
+
+    ret1: "$self",
+  };
+
   const ret = jsonfp.apply(
     {
       ctx,
@@ -297,30 +356,28 @@ export function testJsonfp3() {
         },
       },
       $condition: {
-        白のGサインを持つ自軍G: {
-          "->": [
-            [
-              {
-                "->": [
-                  "$targets.cardA.value",
-                  { map: { cardPower: { ctx: "$ctx" } } },
-                  { map: { ">": 100 } },
-                  { reduce: "and" },
-                ],
-              },
-              {
-                "->": [
-                  "$targets.cardA.value",
-                  { map: { gSign: { ctx: "$ctx" } } },
-                  { map: { gSignColor: { ctx: "$ctx" } } },
-                  { map: { "==": "白" } },
-                  { reduce: "and" },
-                ],
-              },
-            ],
-            { reduce: "and" },
+        "->": [
+          [
+            {
+              "->": [
+                "$targets.cardA.value",
+                { map: { cardPower: { ctx: "$ctx" } } },
+                { map: { ">": 100 } },
+                { reduce: "and" },
+              ],
+            },
+            {
+              "->": [
+                "$targets.cardA.value",
+                { map: { gSign: { ctx: "$ctx" } } },
+                { map: { gSignColor: { ctx: "$ctx" } } },
+                { map: { "==": "白" } },
+                { reduce: "and" },
+              ],
+            },
           ],
-        },
+          { reduce: "and" },
+        ],
       },
       $action: {
         "->": ["$ctx", { getter: "gameState" }, { getter: "table" }],
@@ -328,6 +385,8 @@ export function testJsonfp3() {
       targets: "$targets",
       condition: "$condition",
       result: "$action",
+
+      ret1: "$self",
     }
   );
   console.log(ret);
