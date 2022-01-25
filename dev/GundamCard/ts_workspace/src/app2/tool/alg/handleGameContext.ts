@@ -37,7 +37,8 @@ import { doConditionTarget } from "./doConditionTarget";
 export function wrapTip(
   ctx: GameContext,
   autoFill: boolean,
-  block: BlockPayload
+  block: BlockPayload,
+  varCtxID: string
 ): BlockPayload {
   if (block.require == null) {
     return block;
@@ -75,7 +76,8 @@ export function wrapTip(
                   ...r.targets,
                   [targetID]: tmp,
                 },
-                r.condition
+                r.condition,
+                varCtxID
               );
               return {
                 validCardID: msg ? validCardID : [...validCardID, card.id],
@@ -249,12 +251,13 @@ export function updateCommand(ctx: GameContext): GameContext {
             ? { require: wrapRequireKey(block.require) }
             : null),
         };
-        wrapEvent = wrapTip(ctx, true, wrapEvent);
+        const varCtxID = "tmp";
+        wrapEvent = wrapTip(ctx, true, wrapEvent, varCtxID);
         // 判斷需求是否能滿足
         let canPass = true;
         if (wrapEvent.require) {
           try {
-            doRequire(ctx, wrapEvent, wrapEvent.require, "tmp");
+            doRequire(ctx, wrapEvent, wrapEvent.require, varCtxID);
           } catch (e) {
             log2(
               "updateCommand",
@@ -479,7 +482,8 @@ export function getTip(
   ctx: GameContext,
   blockID: string,
   requireID: string,
-  targetID: string
+  targetID: string,
+  varCtxID: string
 ): string[] {
   let ret: string[] = [];
   mapEffect(ctx, (effect) => {
@@ -528,7 +532,8 @@ export function getTip(
                 ...targets,
                 [targetID]: tmp,
               },
-              condition
+              condition,
+              varCtxID
             );
             if (msg == null) {
               validCardID.push(card.id);

@@ -24,9 +24,16 @@ function doCondition(
   ctx: GameContext,
   blockPayload: BlockPayload,
   require: RequireTarget,
-  condition: Condition
+  condition: Condition,
+  varCtxID: string
 ): string | null {
-  return doConditionTarget(ctx, blockPayload, require.targets, condition);
+  return doConditionTarget(
+    ctx,
+    blockPayload,
+    require.targets,
+    condition,
+    varCtxID
+  );
 }
 
 function doRequireTargetAction(
@@ -121,7 +128,8 @@ export function doRequire(
           ctx,
           blockPayload,
           require,
-          require.condition
+          require.condition,
+          varCtxID
         );
         if (reason != null) {
           throw new Error(reason);
@@ -154,39 +162,37 @@ export function doRequire(
       );
     }
     case "RequireJsonfp": {
-      {
-        const jsonfpContext = ctx.varsPool[varCtxID]?.jsonfpContext || {};
-        let err: any = null;
-        let result: any = null;
-        jsonfp.apply(
-          jsonfpContext,
-          {
-            ctx: { def: ctx },
-            blockPayload: { def: blockPayload },
-            require: { def: require },
-            targets: { def: require.targets },
-          },
-          require.condition,
-          // 使用callback的error, 時機才會正確
-          (e: any, ret: any) => {
-            err = e;
-            result = ret;
-          }
-        );
-        if (err != null) {
-          throw err;
+      const jsonfpContext = ctx.varsPool[varCtxID]?.jsonfpContext || {};
+      let err: any = null;
+      let result: any = null;
+      jsonfp.apply(
+        jsonfpContext,
+        {
+          ctx: { def: ctx },
+          blockPayload: { def: blockPayload },
+          require: { def: require },
+          targets: { def: require.targets },
+        },
+        require.condition,
+        // 使用callback的error, 時機才會正確
+        (e: any, ret: any) => {
+          err = e;
+          result = ret;
         }
-        ctx = {
-          ...ctx,
-          varsPool: {
-            ...ctx.varsPool,
-            [varCtxID]: {
-              ...ctx.varsPool[varCtxID],
-              jsonfpContext: jsonfpContext,
-            },
-          },
-        };
+      );
+      if (err != null) {
+        throw err;
       }
+      ctx = {
+        ...ctx,
+        varsPool: {
+          ...ctx.varsPool,
+          [varCtxID]: {
+            ...ctx.varsPool[varCtxID],
+            jsonfpContext: jsonfpContext,
+          },
+        },
+      };
       if (require.action?.length) {
         return require.action.reduce((originGameCtx, action) => {
           return doRequireTargetActionTarget(

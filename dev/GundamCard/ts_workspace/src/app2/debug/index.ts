@@ -122,7 +122,7 @@ export function testRequireJsonfp() {
       playerID: "",
     },
     require: {
-      id: "RequireJsonfp",
+      id: "RequireTarget",
       targets: {
         cardA: {
           id: "カード",
@@ -131,42 +131,45 @@ export function testRequireJsonfp() {
         },
       },
       condition: {
-        xx: {
-          log: "$in",
-        },
-        xx2: {
-          "->": [["$in", "$in"], { log: "xx2" }],
-        },
-        process: {
-          "->": [
-            {
-              log: "$in",
-            },
-            {
-              $isWhite: {
-                if: [
-                  {
-                    "->": [
-                      "$in",
-                      { getter: "targets" },
-                      { getter: "cardA" },
-                      { getter: "value" },
-                      { getter: 0 },
-                      { "==": "a" },
-                    ],
-                  },
-                  true,
-                  false,
-                ],
+        id: "ConditionJsonfp",
+        program: {
+          xx: {
+            log: "$in",
+          },
+          xx2: {
+            "->": [["$in", "$in"], { log: "xx2" }],
+          },
+          process: {
+            "->": [
+              {
+                log: "$in",
               },
-            },
-            true,
-            { "->": [{ log: "$in" }, { log: "$in" }] },
-            {
-              if: ["$isWhite", "$in", { error: "必須是白色" }],
-            },
-            { log: "$in" },
-          ],
+              {
+                $isWhite: {
+                  if: [
+                    {
+                      "->": [
+                        "$in",
+                        { getter: "targets" },
+                        { getter: "cardA" },
+                        { getter: "value" },
+                        { getter: 0 },
+                        { "==": "a" },
+                      ],
+                    },
+                    true,
+                    false,
+                  ],
+                },
+              },
+              true,
+              { "->": [{ log: "$in" }, { log: "$in" }] },
+              {
+                if: ["$isWhite", "$in", { error: "必須是白色" }],
+              },
+              { log: "$in" },
+            ],
+          },
         },
       },
       action: [
@@ -570,7 +573,8 @@ export function testDryRun() {
       ctx,
       effect.id || "",
       key || "",
-      "５以下の防御力を持つ敵軍ユニット１枚"
+      "５以下の防御力を持つ敵軍ユニット１枚",
+      "tmp"
     );
   });
 }

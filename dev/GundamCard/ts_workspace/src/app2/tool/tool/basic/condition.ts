@@ -112,13 +112,18 @@ type ConditionCompareCardColor = {
 };
 
 type ConditionCompareGameEventOnManualEvent = {
-  id: "ConditionCompareGameEventOnManualEvent",
+  id: "ConditionCompareGameEventOnManualEvent";
   value: [
     TargetTypeGameEventOnManualEvent,
     ConditionCompareBooleanOperator,
     TargetTypeGameEventOnManualEvent
-  ]
-}
+  ];
+};
+
+type ConditionJsonfp = {
+  id: "ConditionJsonfp";
+  program: any;
+};
 
 export type Condition =
   | ConditionCompareNumber
@@ -131,6 +136,7 @@ export type Condition =
   | ConditionComparePlayer
   | ConditionCompareBaSyou
   | ConditionCompareGameEventOnManualEvent
+  | ConditionJsonfp
   | ConditionNot
   | ConditionOr
   | ConditionAnd;

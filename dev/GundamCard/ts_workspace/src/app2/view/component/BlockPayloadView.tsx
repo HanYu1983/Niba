@@ -33,7 +33,7 @@ export const BlockPayloadView = (props: {
     if(find.length == 0){
       return null
     }
-    return wrapTip(appContext.viewModel.model, false, find[0])
+    return wrapTip(appContext.viewModel.model, false, find[0], "BlockPayloadView")
   }, [appContext.viewModel.model, props.blockID]);
   if (block == null) {
     return <div>xxx</div>;

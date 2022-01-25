@@ -6,12 +6,14 @@ import { TargetType } from "../tool/basic/targetType";
 import { getAbsoluteBaSyou, getCardController } from "../tool/basic/handleCard";
 import { getBaShouID } from "../tool/basic/basic";
 import { log2 } from "../../../tool/logger";
+import { jsonfp } from "../tool/basic/jsonfpHelper";
 
 export function doConditionTarget(
   ctx: GameContext,
   blockPayload: BlockPayload,
   targets: { [key: string]: TargetType },
-  condition: Condition
+  condition: Condition,
+  varCtxID: string
 ): string | null {
   switch (condition.id) {
     case "ConditionNot": {
@@ -19,7 +21,8 @@ export function doConditionTarget(
         ctx,
         blockPayload,
         targets,
-        condition.not
+        condition.not,
+        varCtxID
       );
       const isOk = result == null;
       const notResult = isOk == false;
@@ -27,7 +30,7 @@ export function doConditionTarget(
     }
     case "ConditionAnd": {
       const results = condition.and.map((cond) =>
-        doConditionTarget(ctx, blockPayload, targets, cond)
+        doConditionTarget(ctx, blockPayload, targets, cond, varCtxID)
       );
       const reasons = results.filter((reason) => reason);
       const hasFalse = reasons.length > 0;
@@ -38,7 +41,7 @@ export function doConditionTarget(
     }
     case "ConditionOr": {
       const results = condition.or.map((cond) =>
-        doConditionTarget(ctx, blockPayload, targets, cond)
+        doConditionTarget(ctx, blockPayload, targets, cond, varCtxID)
       );
       const reasons = results.filter((reason) => reason);
       const hasTrue = reasons.length != condition.or.length;
@@ -268,6 +271,34 @@ export function doConditionTarget(
       if (msgs.length) {
         return msgs.join(".");
       }
+      break;
+    }
+    case "ConditionJsonfp": {
+      const jsonfpContext = ctx.varsPool[varCtxID]?.jsonfpContext || {};
+      let err: any = null;
+      let result: any = null;
+      jsonfp.apply(
+        jsonfpContext,
+        {
+          ctx: { def: ctx },
+          blockPayload: { def: blockPayload },
+          require: { def: require },
+          targets: { def: targets },
+        },
+        condition.program,
+        // 使用callback的error, 時機才會正確
+        (e: any, ret: any) => {
+          err = e;
+          result = ret;
+        }
+      );
+      if (err != null) {
+        throw err;
+      }
+      if (result.output != null) {
+        return result.output;
+      }
+      break;
     }
   }
   return null;
