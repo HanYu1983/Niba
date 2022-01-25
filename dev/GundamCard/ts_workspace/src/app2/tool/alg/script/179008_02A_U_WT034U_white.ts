@@ -41,27 +41,30 @@ const prototype: CardPrototype = {
                 "->": [
                   {
                     "->": [
-                      "$in.cause.id",
+                      "$input",
+                      { getter: "blockPayload" },
+                      { getter: "cause" },
+                      { getter: "id" },
                       { "==": "「改装」の効果で廃棄される場合" },
                     ],
                   },
                   {
                     "->": [
-                      "$in.cause.cardID",
+                      "$input",
+                      { getter: "blockPayload" },
+                      { getter: "cause" },
+                      { getter: "cardID" },
                       {
-                        cardController: "$in",
+                        cardController: "$input",
                       },
                       {
                         "==": {
                           "->": [
                             {
-                              thisCard: "$in",
+                              thisCard: "$input",
                             },
                             {
-                              cardController: {
-                                ctx: "$in.ctx",
-                                cause: "$in.cause",
-                              },
+                              cardController: "$input",
                             },
                           ],
                         },
@@ -70,7 +73,10 @@ const prototype: CardPrototype = {
                   },
                   {
                     "->": [
-                      "$in.cause.cardID",
+                      "$input",
+                      { getter: "blockPayload" },
+                      { getter: "cause" },
+                      { getter: "cardID" },
                       { cardCh: null },
                       {
                         "==": {
