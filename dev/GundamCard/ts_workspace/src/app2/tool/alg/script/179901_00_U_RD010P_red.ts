@@ -467,6 +467,7 @@ const texts: CardText[] = [
                             baSyou: {
                               id: "場所",
                               value: [
+                                // TODO
                                 {
                                   id: "RelatedBaSyou",
                                   value: ["持ち主", "手札"],
