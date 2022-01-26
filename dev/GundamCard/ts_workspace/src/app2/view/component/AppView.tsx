@@ -9,8 +9,8 @@ export function AppView() {
   // error handle
   useEffect(() => {
     const subscriber = OnError.subscribe((e) => {
-      //alert(e);
       console.error(e)
+      //alert(e);
     });
     return () => {
       subscriber.unsubscribe();
