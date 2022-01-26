@@ -54,7 +54,7 @@ export function test() {
     testClientCommand2,
     testRequireJsonfp,
     testProto_179025_07D_U_RD156R_red,
-    //testProto_179025_07D_U_RD156R_red2,
+    testProto_179025_07D_U_RD156R_red2,
   ].forEach((testF: Function) => {
     console.log(
       `================================================================`

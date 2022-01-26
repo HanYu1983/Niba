@@ -15,7 +15,12 @@ import {
   wrapTip,
 } from "../tool/alg/handleGameContext";
 import { getPrototype } from "../tool/alg/script";
-import { getBaShouID, PlayerA, TIMING_CHART } from "../tool/tool/basic/basic";
+import {
+  getBaShouID,
+  PlayerA,
+  PlayerB,
+  TIMING_CHART,
+} from "../tool/tool/basic/basic";
 import { BlockPayload, wrapRequireKey } from "../tool/tool/basic/blockPayload";
 import {
   DEFAULT_GAME_CONTEXT,
@@ -134,6 +139,16 @@ export function testProto_179025_07D_U_RD156R_red2() {
     }),
     ["179030_11E_G_RD021N_red", "179030_11E_G_RD021N_red"]
   );
+  console.log("假設敵人play到一半");
+  table = createCard(
+    table,
+    PlayerB,
+    getBaShouID({
+      id: "AbsoluteBaSyou",
+      value: [PlayerB, "プレイされているカード"],
+    }),
+    ["179030_11E_G_RD021N_red"]
+  );
   ctx = {
     ...ctx,
     gameState: {
@@ -145,7 +160,7 @@ export function testProto_179025_07D_U_RD156R_red2() {
   ctx = initState(ctx);
   ctx = updateEffect(ctx);
   ctx = updateCommand(ctx);
-  if (ctx.gameState.commandEffect.length == 0) {
+  if (ctx.gameState.commandEffect.length != 2) {
     throw new Error("指令池必須有指令-3合計國力後的指令");
   }
   let cmd = ctx.gameState.commandEffect[0];
@@ -156,6 +171,7 @@ export function testProto_179025_07D_U_RD156R_red2() {
   cmd = ctx.gameState.stackEffect[0];
   console.log("執行-3合計國力的play，出場");
   ctx = doBlockPayload(ctx, cmd);
+  console.log(ctx);
   if (ctx.gameState.immediateEffect.length != 1) {
     throw new Error("必須有出場時技能");
   }
