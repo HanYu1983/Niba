@@ -175,6 +175,7 @@ export function triggerTextEvent(
               gameEvent: evt,
               description: JSON.stringify(cardTextState.cardText.description),
             },
+            // 加上卡ID，讓varCtxID變成每張卡唯一。而不是遊戲唯一。
             contextID: `[${cardState.cardID}]_[${block.contextID}]`,
           };
           const varCtxID = "triggerTextEvent";
@@ -252,6 +253,7 @@ export function updateCommand(ctx: GameContext): GameContext {
           ...(block.require
             ? { require: wrapRequireKey(block.require) }
             : null),
+          // 加上卡ID，讓varCtxID變成每張卡唯一。而不是遊戲唯一。
           contextID: `[${cardState.cardID}]_[${block.contextID}]`,
         };
         const varCtxID = "updateCommand";
@@ -365,6 +367,7 @@ export function updateEffect(ctx: GameContext): GameContext {
             cardTextID: cardTextState.id,
             description: JSON.stringify(cardTextState.cardText.description),
           },
+          // 加上卡ID，讓varCtxID變成每張卡唯一。而不是遊戲唯一。
           contextID: `[${cardState.cardID}]_[${block.contextID}]`,
         };
         const varCtxID = "updateEffect";
