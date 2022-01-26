@@ -11,3 +11,16 @@ export function getCustomFunctionString(fn: any): string {
   // (function main(){}).toString()
   return fn.toString().replace("function", "function main");
 }
+
+export function err2string(err: any): string {
+  switch (typeof err) {
+    case "string":
+      return err;
+    case "object":
+      if (err instanceof Error) {
+        return err.message;
+      }
+    default:
+      return JSON.stringify(err);
+  }
+}

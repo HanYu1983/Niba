@@ -9,33 +9,25 @@ import { Condition } from "../tool/basic/condition";
 import { Action } from "../tool/basic/action";
 import { GameContext } from "../tool/basic/gameContext";
 import { mapEffect, reduceEffect } from "../tool/basic/gameContext";
-import { getCustomFunction } from "../../../tool/helper";
+import { err2string, getCustomFunction } from "../../../tool/helper";
 import { RequireScriptFunction } from "../tool/basic/gameContext";
 import { doRequireTargetActionTarget } from "./doRequireTargetActionTarget";
 import { doRequireCustom } from "./doRequireCustom";
 import { doConditionTarget } from "./doConditionTarget";
 import { log2 } from "../../../tool/logger";
 import { getTargetType } from "./helper";
-import { jsonfp } from "../tool/basic/jsonfpHelper";
-import { TargetType } from "../tool/basic/targetType";
 
-function doCondition(
+export function doCondition(
   ctx: GameContext,
   blockPayload: BlockPayload,
   require: RequireTarget,
   condition: Condition,
   varCtxID: string
-): string | null {
-  return doConditionTarget(
-    ctx,
-    blockPayload,
-    require.targets,
-    condition,
-    varCtxID
-  );
+) {
+  doConditionTarget(ctx, blockPayload, require.targets, condition, varCtxID);
 }
 
-function doRequireTargetAction(
+export function doRequireTargetAction(
   ctx: GameContext,
   blockPayload: BlockPayload,
   require: RequireTarget,
@@ -123,16 +115,7 @@ export function doRequire(
     }
     case "RequireTarget": {
       if (require.condition) {
-        const reason = doCondition(
-          ctx,
-          blockPayload,
-          require,
-          require.condition,
-          varCtxID
-        );
-        if (reason != null) {
-          throw new Error(reason);
-        }
+        doCondition(ctx, blockPayload, require, require.condition, varCtxID);
       }
       if (require.action?.length) {
         return require.action.reduce((originGameCtx, action) => {

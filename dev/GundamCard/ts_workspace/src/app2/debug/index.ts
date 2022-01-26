@@ -150,13 +150,6 @@ export function testRequireJsonfp() {
             ],
           },
           $isMy: true,
-          output: {
-            if: [
-              "$isWhite",
-              { if: ["$isMy", null, "必須是我的"] },
-              "必須是白色",
-            ],
-          },
         },
       },
       action: [

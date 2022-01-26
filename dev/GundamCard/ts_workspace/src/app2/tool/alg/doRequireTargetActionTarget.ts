@@ -863,7 +863,8 @@ export function doRequireTargetActionTarget(
       };
     }
     case "ActionJsonfp": {
-      const jsonfpContext = ctx.varsPool[varCtxID]?.jsonfpContext || {};
+      const originJsonfpContext = ctx.varsPool[varCtxID]?.jsonfpContext || {};
+      const jsonfpContext = { ...originJsonfpContext };
       let err: any = null;
       let result: any = null;
       jsonfp.apply(

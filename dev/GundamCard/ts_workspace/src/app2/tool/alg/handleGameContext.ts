@@ -32,8 +32,8 @@ import { Action } from "../tool/basic/action";
 import { doRequire, doFeedback } from "./handleBlockPayload";
 import { getCardState } from "./helper";
 import { doConditionTarget } from "./doConditionTarget";
+import { err2string } from "../../../tool/helper";
 //import { createPlayUnitText } from "./createPlayUnitText";
-
 export function wrapTip(
   ctx: GameContext,
   autoFill: boolean,
@@ -69,16 +69,21 @@ export function wrapTip(
                 id: "カード",
                 value: [card.id],
               };
-              const msg = doConditionTarget(
-                ctx,
-                block,
-                {
-                  ...r.targets,
-                  [targetID]: tmp,
-                },
-                r.condition,
-                varCtxID
-              );
+              let msg: string | null = null;
+              try {
+                doConditionTarget(
+                  ctx,
+                  block,
+                  {
+                    ...r.targets,
+                    [targetID]: tmp,
+                  },
+                  r.condition,
+                  varCtxID
+                );
+              } catch (e) {
+                msg = err2string(e);
+              }
               return {
                 validCardID: msg ? validCardID : [...validCardID, card.id],
                 msgs: {
@@ -525,18 +530,23 @@ export function getTip(
               id: "カード",
               value: [card.id],
             };
-            const msg = doConditionTarget(
-              ctx,
-              effect,
-              {
-                ...targets,
-                [targetID]: tmp,
-              },
-              condition,
-              varCtxID
-            );
-            if (msg == null) {
-              validCardID.push(card.id);
+            let msg: string | null = null;
+            try {
+              doConditionTarget(
+                ctx,
+                effect,
+                {
+                  ...targets,
+                  [targetID]: tmp,
+                },
+                condition,
+                varCtxID
+              );
+              if (msg == null) {
+                validCardID.push(card.id);
+              }
+            } catch (e) {
+              msg = err2string(e);
             }
             return card;
           });
