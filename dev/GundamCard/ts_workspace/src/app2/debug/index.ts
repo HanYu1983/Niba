@@ -48,7 +48,7 @@ export function test() {
     testTargetType,
     testDryRun,
     testFlow1,
-    testFlow2,
+    //testFlow2,
     testKaiSo1,
     testClientCommand,
     testClientCommand2,

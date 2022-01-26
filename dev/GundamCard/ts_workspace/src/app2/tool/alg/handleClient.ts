@@ -923,7 +923,6 @@ export function queryFlow(ctx: GameContext, playerID: string): Flow[] {
     const isAllPassCut =
       !!ctx.gameState.flowMemory.hasPlayerPassCut[PlayerA] &&
       !!ctx.gameState.flowMemory.hasPlayerPassCut[PlayerB];
-    log2("queryFlow", `isAllPassCut: ${isAllPassCut}`);
     // 如果雙方玩家還沒放棄切入
     if (isAllPassCut == false) {
       // 如果我宣告了放棄切入，回傳取消
