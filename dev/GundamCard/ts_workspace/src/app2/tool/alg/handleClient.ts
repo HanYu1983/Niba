@@ -18,6 +18,7 @@ import {
   filterEffect,
   GameContext,
   getBlockOwner,
+  iterateEffect,
   reduceEffect,
 } from "../tool/basic/gameContext";
 import { getCard, mapCard, Card } from "../../../tool/table";
@@ -27,7 +28,10 @@ import { getCardController } from "../tool/basic/handleCard";
 import { log2 } from "../../../tool/logger";
 import { Action } from "../tool/basic/action";
 import { doRequire, doFeedback, doBlockPayload } from "./handleBlockPayload";
-import { getCardState } from "./helper";
+import {
+  assertBlockPayloadTargetTypeValueLength,
+  getCardState,
+} from "./helper";
 import { doConditionTarget } from "./doConditionTarget";
 import {
   getClientCommand,
@@ -708,6 +712,11 @@ export function applyFlow(
       return ctx;
     }
     case "FlowPassPayCost": {
+      const effect = iterateEffect(ctx).find((e) => e.id == flow.effectID);
+      if (effect == null) {
+        throw new Error(`effectID not found:${flow.effectID}`);
+      }
+      assertBlockPayloadTargetTypeValueLength(effect);
       ctx = {
         ...ctx,
         gameState: {
