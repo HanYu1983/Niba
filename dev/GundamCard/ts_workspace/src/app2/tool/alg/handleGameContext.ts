@@ -175,6 +175,7 @@ export function triggerTextEvent(
               gameEvent: evt,
               description: JSON.stringify(cardTextState.cardText.description),
             },
+            contextID: `[${cardState.cardID}]_[${block.contextID}]`,
           };
           const varCtxID = "triggerTextEvent";
           try {
@@ -220,11 +221,6 @@ export function updateCommand(ctx: GameContext): GameContext {
     },
   };
   return ctx.gameState.cardState.reduce((ctx, cardState) => {
-    // const playText: CardTextState = {
-    //   id: `playText${cardState.cardID}`,
-    //   enabled: true,
-    //   cardText: createPlayUnitText(ctx, cardState.cardID),
-    // };
     return cardState.cardTextStates.reduce((ctx, cardTextState) => {
       const blocks: BlockPayload[] = (() => {
         switch (cardTextState.cardText.id) {
@@ -256,6 +252,7 @@ export function updateCommand(ctx: GameContext): GameContext {
           ...(block.require
             ? { require: wrapRequireKey(block.require) }
             : null),
+          contextID: `[${cardState.cardID}]_[${block.contextID}]`,
         };
         const varCtxID = "updateCommand";
         wrapEvent = wrapTip(ctx, true, wrapEvent, varCtxID);
@@ -368,6 +365,7 @@ export function updateEffect(ctx: GameContext): GameContext {
             cardTextID: cardTextState.id,
             description: JSON.stringify(cardTextState.cardText.description),
           },
+          contextID: `[${cardState.cardID}]_[${block.contextID}]`,
         };
         const varCtxID = "updateEffect";
         try {
@@ -651,118 +649,3 @@ export function getClientCommand(ctx: GameContext, clientID: string) {
     return true;
   });
 }
-
-// 取得指令列表
-// 玩家隨時可以呼叫
-// 取得後，選擇要執行的指令呼叫setCommand
-// 之後就按doEffectRequire, doEffectFeedback
-// function getCommands(ctx: GameContext, playerID: string): BlockPayload[] {
-//   let ret: BlockPayload[] = [];
-//   let idSeq = 0;
-//   ctx.gameState.cardState.forEach((cardState) => {
-//     const controller = getCardController(ctx, cardState.id);
-//     if (controller != playerID) {
-//       return;
-//     }
-//     cardState.cardTextStates.forEach((cardTextState) => {
-//       const blocks: BlockPayload[] = (() => {
-//         switch (cardTextState.cardText.id) {
-//           case "自動型":
-//             return [];
-//           case "使用型":
-//             return [cardTextState.cardText.block];
-//           case "特殊型":
-//             return cardTextState.cardText.texts
-//               .filter((t) => t.id == "使用型")
-//               .map((t) => t.block);
-//         }
-//       })();
-//       blocks.forEach((block) => {
-//         let wrapEvent: BlockPayload = {
-//           ...block,
-//           id: `updateCommand_${idSeq++}`,
-//           // 準備背景資料用來判斷
-//           cause: {
-//             id: "BlockPayloadCauseUpdateCommand",
-//             cardID: cardState.cardID,
-//             cardTextID: cardTextState.id,
-//             description: JSON.stringify(cardTextState.cardText.description),
-//           },
-//           // 若有需求，則將每個需求加上ID才能讓玩家選擇
-//           ...(block.require
-//             ? { require: wrapRequireKey(block.require) }
-//             : null),
-//         };
-//         // 若有需求，則將需求加上提示
-//         if (wrapEvent.require) {
-//           // 針對每一個需求,
-//           const nextRequire = recurRequire(wrapEvent.require, (r) => {
-//             if (r.id != "RequireTarget") {
-//               return r;
-//             }
-//             // 的每一個對象,
-//             return mapRequireTargets(r, (targetID, target) => {
-//               if (r.key == null) {
-//                 return target;
-//               }
-//               // 取得提示.
-//               const tip = getTip(ctx, wrapEvent.id || "", r.key, targetID);
-//               switch (target.id) {
-//                 case "カード":
-//                   return {
-//                     ...target,
-//                     tipID: tip,
-//                   };
-//               }
-//               return target;
-//             });
-//           });
-//           wrapEvent = {
-//             ...wrapEvent,
-//             require: nextRequire,
-//           };
-//           ret.push(wrapEvent);
-//         }
-//       });
-//     });
-//   });
-//   return ret;
-// }
-
-// export function setCommand(ctx: GameContext, cmd: BlockPayload): GameContext {
-//   if (ctx.gameState.commandEffect.length) {
-//     throw new Error("有人在執行其它指令");
-//   }
-//   return {
-//     ...ctx,
-//     gameState: {
-//       ...ctx.gameState,
-//       commandEffect: [cmd],
-//     },
-//   };
-// }
-
-// export function cancelCommand(ctx: GameContext, playerID: string): GameContext {
-//   if (ctx.gameState.commandEffect.length == 0) {
-//     return ctx;
-//   }
-//   const cmd = ctx.gameState.commandEffect[0];
-//   const cardID = cmd.cause?.cardID;
-//   if (cardID == null) {
-//     throw new Error("[cancelCommand] cardID not found");
-//   }
-//   const controller = getCardController(ctx, cardID);
-//   if (controller != playerID) {
-//     throw new Error("[cancelCommand] 你不是控制者");
-//   }
-//   if (cmd.requirePassed) {
-//     throw new Error("[cancelCommand] 已經處理需求的不能取消");
-//   }
-//   return {
-//     ...ctx,
-//     gameState: {
-//       ...ctx.gameState,
-//       commandEffect: [],
-//     },
-//   };
-// }

@@ -44,17 +44,17 @@ import { Action, ActionDraw, ActionDrop } from "../tool/tool/basic/action";
 
 export function test() {
   [
-    // testJsonfp,
-    // testTargetType,
-    // testDryRun,
-    // testFlow1,
-    // testFlow2,
-    // testKaiSo1,
-    // testClientCommand,
-    // testClientCommand2,
-    // testRequireJsonfp,
-    // testProto_179025_07D_U_RD156R_red,
-    // testProto_179025_07D_U_RD156R_red2,
+    testJsonfp,
+    testTargetType,
+    testDryRun,
+    testFlow1,
+    testFlow2,
+    testKaiSo1,
+    testClientCommand,
+    testClientCommand2,
+    testRequireJsonfp,
+    testProto_179025_07D_U_RD156R_red,
+    //testProto_179025_07D_U_RD156R_red2,
   ].forEach((testF: Function) => {
     console.log(
       `================================================================`
