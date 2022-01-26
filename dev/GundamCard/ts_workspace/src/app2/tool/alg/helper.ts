@@ -13,7 +13,11 @@ import {
   GameContext,
   getBlockOwner,
 } from "../tool/basic/gameContext";
-import { BlockPayload } from "../tool/basic/blockPayload";
+import {
+  BlockPayload,
+  mapRequireTargets,
+  recurRequire,
+} from "../tool/basic/blockPayload";
 import { getCard, mapCard, Card, reduceCard } from "../../../tool/table";
 import {
   getAbsoluteBaSyou,
@@ -28,7 +32,7 @@ import {
   DEFAULT_CARD_STATE,
   CardTextState,
 } from "../tool/basic/gameContext";
-import { getCustomFunction } from "../../../tool/helper";
+import { err2string, getCustomFunction } from "../../../tool/helper";
 import {
   TargetType,
   TargetTypeCustomFunctionType,
@@ -929,4 +933,41 @@ export function getTargetType(
     default:
       throw new Error(`not impl: ${targetTypeAfterProcess.id}`);
   }
+}
+
+export function assertTargetTypeValueLength(target: TargetType) {
+  if (!Array.isArray(target.value)) {
+    return;
+  }
+  if (target.valueLengthInclude) {
+    if (target.valueLengthInclude.includes(target.value.length) == false) {
+      log2("assertTargetTypeValueLength", target);
+      throw new Error(
+        "陣列長度不正確:" + JSON.stringify(target.valueLengthInclude)
+      );
+    }
+  }
+}
+
+export function assertBlockPayloadTargetTypeValueLength(
+  blockPayload: BlockPayload
+) {
+  if (blockPayload.require == null) {
+    return;
+  }
+  // 判斷需求長度
+  recurRequire(blockPayload.require, (r) => {
+    if (r.id != "RequireTarget") {
+      return r;
+    }
+    mapRequireTargets(r, (k, v) => {
+      try {
+        assertTargetTypeValueLength(v);
+      } catch (e) {
+        throw new Error(`變數(${k})的${err2string(e)}`);
+      }
+      return v;
+    });
+    return r;
+  });
 }

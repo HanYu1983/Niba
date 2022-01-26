@@ -27,9 +27,7 @@ const playCardAsGText = createPlayCardText(prototype, { isG: true });
 const playCardText = createPlayCardText(prototype, {
   description:
     "（自軍配備フェイズ）：「供給」を持つ自軍カード１枚をロールする。その場合、カード２枚を引く。",
-  command: {
-    timing: ["自軍", "配備フェイズ"],
-  },
+  timing: ["自軍", "配備フェイズ"],
   require: {
     id: "RequireTarget",
     targets: {

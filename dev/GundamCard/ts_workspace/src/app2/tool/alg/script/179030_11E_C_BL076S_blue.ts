@@ -255,9 +255,7 @@ const _main: TargetTypeCustomFunctionType = (
 const playCardText = createPlayCardText(prototype, {
   description:
     "（敵軍防御ステップ）：交戦中の自軍ユニットがいる場合、交戦中ではない、全てのユニットを破壊する。",
-  command: {
-    timing: ["敵軍", "防御ステップ"],
-  },
+  timing: ["敵軍", "防御ステップ"],
   feedbackBlock: {
     require: {
       id: "RequireAnd",

@@ -9,6 +9,7 @@ import {
   BaSyou,
   getOpponentPlayerID,
 } from "./basic";
+import { log2 } from "../../../../tool/logger";
 
 export function getAbsoluteBaSyou(
   baSyou: BaSyou,
@@ -33,6 +34,12 @@ export function getAbsoluteBaSyou(
       case "自軍":
         return getCardController(ctx, cardID);
       case "敵軍":
+        log2(
+          "getAbsoluteBaSyou",
+          baSyou.value[0],
+          "=>",
+          getOpponentPlayerID(getCardController(ctx, cardID))
+        );
         return getOpponentPlayerID(getCardController(ctx, cardID));
     }
   })();

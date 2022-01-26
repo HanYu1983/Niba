@@ -1,6 +1,8 @@
 import {
   BlockPayload,
   Feedback,
+  mapRequireTargets,
+  recurRequire,
   Require,
   RequireTarget,
   wrapRequireKey,
@@ -15,7 +17,11 @@ import { doRequireTargetActionTarget } from "./doRequireTargetActionTarget";
 import { doRequireCustom } from "./doRequireCustom";
 import { doConditionTarget } from "./doConditionTarget";
 import { log2 } from "../../../tool/logger";
-import { getTargetType } from "./helper";
+import {
+  assertBlockPayloadTargetTypeValueLength,
+  assertTargetTypeValueLength,
+  getTargetType,
+} from "./helper";
 
 export function doCondition(
   ctx: GameContext,
@@ -202,6 +208,8 @@ export function doBlockPayload(
   const varCtxID =
     blockPayload.contextID || blockPayload.id || `doBlockPayload_${_seqID++}`;
   if (blockPayload.require) {
+    // 判斷需求長度
+    assertBlockPayloadTargetTypeValueLength(blockPayload);
     ctx = doRequire(ctx, blockPayload, blockPayload.require, varCtxID);
   }
   if (blockPayload.feedbackPassed) {

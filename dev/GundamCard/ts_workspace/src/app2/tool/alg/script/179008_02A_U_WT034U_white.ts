@@ -122,6 +122,8 @@ const prototype: CardPrototype = {
                     { reduce: "and" },
                   ],
                 },
+                {},
+                {},
               ],
             },
           },

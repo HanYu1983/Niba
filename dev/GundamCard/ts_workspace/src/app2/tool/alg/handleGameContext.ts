@@ -30,7 +30,10 @@ import { getCardBaSyou, getCardController } from "../tool/basic/handleCard";
 import { log2 } from "../../../tool/logger";
 import { Action } from "../tool/basic/action";
 import { doRequire, doFeedback } from "./handleBlockPayload";
-import { getCardState } from "./helper";
+import {
+  assertBlockPayloadTargetTypeValueLength,
+  getCardState,
+} from "./helper";
 import { doConditionTarget } from "./doConditionTarget";
 import { err2string } from "../../../tool/helper";
 //import { createPlayUnitText } from "./createPlayUnitText";
@@ -113,7 +116,8 @@ export function wrapTip(
             if (target.valueLengthInclude.length == 0) {
               return target.value;
             }
-            const len = target.valueLengthInclude[0];
+            const len =
+              target.valueLengthInclude[target.valueLengthInclude.length - 1];
             return validCardID.slice(0, len);
           })();
           return {
@@ -262,6 +266,7 @@ export function updateCommand(ctx: GameContext): GameContext {
         let canPass = true;
         if (wrapEvent.require) {
           try {
+            assertBlockPayloadTargetTypeValueLength(wrapEvent);
             doRequire(ctx, wrapEvent, wrapEvent.require, varCtxID);
           } catch (e) {
             log2(

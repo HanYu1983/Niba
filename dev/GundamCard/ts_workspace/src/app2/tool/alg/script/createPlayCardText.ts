@@ -24,9 +24,7 @@ export function createPlayCardText(
     feedbackBlock?: BlockPayload;
     description?: string;
     require?: Require;
-    command?: {
-      timing: SiYouTiming;
-    };
+    timing?: SiYouTiming;
   }
 ): CardTextSiYouKaTa {
   const contextID = options.varCtxID || `createPlayCardText ${idSeq++}`;
@@ -190,12 +188,12 @@ export function createPlayCardText(
   switch (prototype.category) {
     default:
     case "コマンド": {
-      if (options.command == null) {
+      if (options.timing == null) {
         throw new Error("你要建立指令內文，但沒有command");
       }
       return {
         id: "使用型",
-        timing: options.command.timing,
+        timing: options.timing,
         description: options?.description || `プレイ(${prototype.title})`,
         block: {
           contextID: contextID,
@@ -499,7 +497,7 @@ export function createPlayCardText(
     case "ユニット": {
       return {
         id: "使用型",
-        timing: ["自軍", "配備フェイズ"],
+        timing: options.timing ? options.timing : ["自軍", "配備フェイズ"],
         description: options?.description || `プレイ(${prototype.title})`,
         block: {
           contextID: contextID,

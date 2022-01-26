@@ -31,24 +31,14 @@ import {
 } from "../tool/basic/handleCard";
 import { log2 } from "../../../tool/logger";
 import { TargetType } from "../tool/basic/targetType";
-import { getCardState, getTargetType } from "./helper";
+import {
+  assertTargetTypeValueLength,
+  getCardState,
+  getTargetType,
+} from "./helper";
 import { initState, triggerTextEvent } from "./handleGameContext";
 import { wrapBlockRequireKey } from "./handleBlockPayload";
 import { jsonfp } from "../tool/basic/jsonfpHelper";
-
-export function assertTargetTypeValueLength(target: TargetType) {
-  if (!Array.isArray(target.value)) {
-    return;
-  }
-  if (target.valueLengthInclude) {
-    if (target.valueLengthInclude.includes(target.value.length) == false) {
-      log2("assertTargetTypeValueLength", target);
-      throw new Error(
-        "陣列長度不正確:" + JSON.stringify(target.valueLengthInclude)
-      );
-    }
-  }
-}
 
 let idSeq = 0;
 export function doRequireTargetActionTarget(

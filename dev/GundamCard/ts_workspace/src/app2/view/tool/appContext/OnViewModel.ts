@@ -135,7 +135,7 @@ export const OnViewModel = OnEvent.pipe(
               id: "AbsoluteBaSyou",
               value: [PlayerA, "手札"],
             }),
-            ["179025_07D_U_RD156R_red"]
+            ["179025_07D_U_RD158C_red"]
           );
           console.log("準備2張G");
           table = createCard(
@@ -162,6 +162,15 @@ export const OnViewModel = OnEvent.pipe(
             }),
             ["179030_11E_G_RD021N_red"]
           );
+          table = createCard(
+            table,
+            PlayerB,
+            getBaShouID({
+              id: "AbsoluteBaSyou",
+              value: [PlayerB, "戦闘エリア（右）"],
+            }),
+            ["179008_02A_U_WT034U_white", "179008_02A_U_WT034U_white"]
+          );
           ctx = {
             ...ctx,
             gameState: {
@@ -174,7 +183,10 @@ export const OnViewModel = OnEvent.pipe(
             ...ctx,
             gameState: {
               ...ctx.gameState,
-              timing: TIMING_CHART[9],
+              // @ts-ignore
+              timing: TIMING_CHART.find(
+                (t) => t[1][1] == "ダメージ判定ステップ"
+              ),
             },
             versionID: viewModel.model.versionID,
           };
