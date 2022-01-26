@@ -196,16 +196,28 @@ export function doBlockPayload(
   ctx: GameContext,
   blockPayload: BlockPayload
 ): GameContext {
-  const contextID = blockPayload.contextID || `doBlockPayload_${_seqID++}`;
+  if (blockPayload.requirePassed) {
+    throw new Error("已經處理了require");
+  }
+  const varCtxID =
+    blockPayload.contextID || blockPayload.id || `doBlockPayload_${_seqID++}`;
   if (blockPayload.require) {
-    ctx = doRequire(ctx, blockPayload, blockPayload.require, contextID);
+    ctx = doRequire(ctx, blockPayload, blockPayload.require, varCtxID);
+  }
+  if (blockPayload.feedbackPassed) {
+    throw new Error("已經處理了feedback");
   }
   if (blockPayload.feedback) {
     ctx = blockPayload.feedback.reduce((ctx, feedback) => {
-      return doFeedback(ctx, blockPayload, feedback, contextID);
+      return doFeedback(ctx, blockPayload, feedback, varCtxID);
     }, ctx);
   }
-  return ctx;
+  return mapEffect(ctx, (effect) => {
+    if (blockPayload.id != effect.id) {
+      return effect;
+    }
+    return { ...effect, requirePassed: true, feedbackPassed: true };
+  });
 }
 
 export function wrapBlockRequireKey(block: BlockPayload): BlockPayload {

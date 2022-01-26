@@ -26,7 +26,7 @@ import { TargetType, TargetTypeCard } from "../tool/basic/targetType";
 import { getCardController } from "../tool/basic/handleCard";
 import { log2 } from "../../../tool/logger";
 import { Action } from "../tool/basic/action";
-import { doRequire, doFeedback } from "./handleBlockPayload";
+import { doRequire, doFeedback, doBlockPayload } from "./handleBlockPayload";
 import { getCardState } from "./helper";
 import { doConditionTarget } from "./doConditionTarget";
 import {
@@ -256,27 +256,7 @@ export function doEffect(
       if (effect.id != effectID) {
         return ctx;
       }
-      if (effect.requirePassed) {
-        throw new Error("已經處理了require");
-      }
-      const varCtxID = effect.contextID || effect.id;
-      if (effect.require) {
-        ctx = doRequire(ctx, effect, effect.require, varCtxID);
-      }
-      if (effect.feedbackPassed) {
-        throw new Error("已經處理了feedback");
-      }
-      if (effect.feedback) {
-        ctx = effect.feedback.reduce((ctx, feedback) => {
-          return doFeedback(ctx, effect, feedback, varCtxID);
-        }, ctx);
-      }
-      return mapEffect(ctx, (effect) => {
-        if (effect.id != effectID) {
-          return effect;
-        }
-        return { ...effect, requirePassed: true, feedbackPassed: true };
-      });
+      return doBlockPayload(ctx, effect);
     },
     ctx
   );
