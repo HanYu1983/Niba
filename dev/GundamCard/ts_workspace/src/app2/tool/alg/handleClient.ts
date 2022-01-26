@@ -404,6 +404,11 @@ type FlowHandleStackEffectFinished = {
   id: "FlowHandleStackEffectFinished";
   description?: string;
 };
+type FlowPassPayCost = {
+  id: "FlowPassPayCost";
+  effectID: string;
+  description?: string;
+};
 
 export type Flow =
   | FlowAddBlock
@@ -422,7 +427,8 @@ export type Flow =
   | FlowCancelPassCut
   | FlowHandleDamageStepRule
   | FlowHandleReturnStepRule
-  | FlowHandleStackEffectFinished;
+  | FlowHandleStackEffectFinished
+  | FlowPassPayCost;
 
 let idSeq = 0;
 export function applyFlow(
@@ -477,6 +483,17 @@ export function applyFlow(
           flowMemory: {
             ...ctx.gameState.flowMemory,
             hasPlayerPassPhase: {},
+          },
+        },
+      };
+      // 清空支付狀態
+      ctx = {
+        ...ctx,
+        gameState: {
+          ...ctx.gameState,
+          flowMemory: {
+            ...ctx.gameState.flowMemory,
+            hasPlayerPassPayCost: {},
           },
         },
       };
@@ -690,6 +707,23 @@ export function applyFlow(
       };
       return ctx;
     }
+    case "FlowPassPayCost": {
+      ctx = {
+        ...ctx,
+        gameState: {
+          ...ctx.gameState,
+          stackEffectMemory: [],
+          flowMemory: {
+            ...ctx.gameState.flowMemory,
+            hasPlayerPassPayCost: {
+              ...ctx.gameState.flowMemory.hasPlayerPassPayCost,
+              [playerID]: true,
+            },
+          },
+        },
+      };
+      return ctx;
+    }
   }
   return ctx;
 }
@@ -705,6 +739,69 @@ export function queryFlow(ctx: GameContext, playerID: string): Flow[] {
     if (currentActiveEffect == null) {
       throw new Error("activeEffectID not found");
     }
+
+    const enablePayCost = true;
+    if (enablePayCost) {
+      const isActivePlayer = ctx.gameState.activePlayerID == playerID;
+      const isPass = !!ctx.gameState.flowMemory.hasPlayerPassPayCost[playerID];
+      const isOpponentPass =
+        !!ctx.gameState.flowMemory.hasPlayerPassPayCost[
+          getOpponentPlayerID(playerID)
+        ];
+      if (isPass && isOpponentPass) {
+        if (isActivePlayer == false) {
+          return [
+            {
+              id: "FlowObserveEffect",
+              effectID: ctx.gameState.activeEffectID,
+            },
+          ];
+        }
+        return [
+          {
+            id: "FlowDoEffect",
+            effectID: ctx.gameState.activeEffectID,
+          },
+        ];
+      } else if (isPass || isOpponentPass) {
+        if (isActivePlayer) {
+          if (isPass) {
+            return [
+              {
+                id: "FlowObserveEffect",
+                effectID: ctx.gameState.activeEffectID,
+              },
+            ];
+          }
+        } else {
+          if (isOpponentPass == false) {
+            return [
+              {
+                id: "FlowObserveEffect",
+                effectID: ctx.gameState.activeEffectID,
+              },
+            ];
+          }
+          return [
+            {
+              id: "FlowPassPayCost",
+              effectID: ctx.gameState.activeEffectID,
+            },
+          ];
+        }
+      }
+      return [
+        {
+          id: "FlowCancelActiveEffectID",
+          description: "取消支付效果，讓其它玩家可以支付",
+        },
+        {
+          id: "FlowPassPayCost",
+          effectID: ctx.gameState.activeEffectID,
+        },
+      ];
+    }
+
     const controller = getBlockOwner(ctx, currentActiveEffect);
     if (controller != playerID) {
       return [

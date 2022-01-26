@@ -5,7 +5,7 @@ import { AppView } from "./view/component/appView";
 
 const App = (props: any) => {
   useEffect(() => {
-    test();
+    //test();
   }, []);
   return (
     <div>

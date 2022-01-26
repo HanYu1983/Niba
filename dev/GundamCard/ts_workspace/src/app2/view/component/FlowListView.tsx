@@ -44,11 +44,19 @@ export const FlowListView = (props: { clientID: string }) => {
               </button>
               {(() => {
                 switch (flow.id) {
+                  case "FlowPassPayCost":
+                    return (
+                      <BlockPayloadView
+                        enabled={true}
+                        clientID={props.clientID}
+                        blockID={flow.effectID}
+                      ></BlockPayloadView>
+                    );
                   case "FlowDoEffect":
                   case "FlowObserveEffect":
                     return (
                       <BlockPayloadView
-                        enabled={true}
+                        enabled={false}
                         clientID={props.clientID}
                         blockID={flow.effectID}
                       ></BlockPayloadView>
