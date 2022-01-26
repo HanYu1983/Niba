@@ -247,9 +247,13 @@ export function doEffect(
   effectID: string
 ): GameContext {
   log2("doEffect", effectID);
+  // 判斷這個效果是否正在支付，不然不應該執行
   if (ctx.gameState.activeEffectID != effectID) {
     throw new Error("activeEffectID != effectID");
   }
+  // 暫存原本的效果, 用來發送當堆疊結束時的事件
+  const stackEffect = ctx.gameState.stackEffect.find((e) => e.id == effectID);
+  // 處理事件
   ctx = reduceEffect(
     ctx,
     (ctx, effect) => {
@@ -260,6 +264,7 @@ export function doEffect(
     },
     ctx
   );
+  // 清除旗標，代表現在沒有正在支付的效果
   ctx = {
     ...ctx,
     gameState: {
@@ -267,10 +272,38 @@ export function doEffect(
       activeEffectID: null,
     },
   };
-  log2("doEffect", ctx);
+  // 將效果移除
   ctx = filterEffect(ctx, (effect) => {
     return effect.requirePassed != true;
   });
+  // 如果是堆疊事件，將事件移到堆疊記憶去
+  const isStackEffect = stackEffect != null;
+  if (isStackEffect) {
+    ctx = {
+      ...ctx,
+      gameState: {
+        ...ctx.gameState,
+        stackEffectMemory: [...ctx.gameState.stackEffectMemory, stackEffect],
+      },
+    };
+  }
+  // 是否堆疊結束
+  // 觸發切入解決事件，並清空堆疊記憶
+  const isStackFinished =
+    isStackEffect && ctx.gameState.stackEffect.length == 0;
+  if (isStackFinished) {
+    ctx = triggerTextEvent(ctx, {
+      id: "カット終了時",
+      effects: ctx.gameState.stackEffectMemory,
+    });
+    ctx = {
+      ...ctx,
+      gameState: {
+        ...ctx.gameState,
+        stackEffectMemory: [],
+      },
+    };
+  }
   return ctx;
 }
 

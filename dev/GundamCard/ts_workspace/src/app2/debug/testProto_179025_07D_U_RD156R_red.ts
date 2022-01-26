@@ -9,6 +9,7 @@ import { applyFlow, doEffect, queryFlow } from "../tool/alg/handleClient";
 import {
   getClientCommand,
   initState,
+  triggerTextEvent,
   updateCommand,
   updateEffect,
   wrapTip,
@@ -104,8 +105,7 @@ export function testProto_179025_07D_U_RD156R_red() {
   );
   console.log("支付內文");
   try {
-    // @ts-ignore
-    doRequire(ctx, block, block.require, "tmp");
+    doBlockPayload(ctx, block);
   } catch (e) {
     console.log("必須沒有錯誤");
   }
@@ -114,6 +114,7 @@ export function testProto_179025_07D_U_RD156R_red() {
 export function testProto_179025_07D_U_RD156R_red2() {
   let ctx = DEFAULT_GAME_CONTEXT;
   let table = ctx.gameState.table;
+  console.log("準備F91在手上");
   table = createCard(
     table,
     PlayerA,
@@ -123,6 +124,7 @@ export function testProto_179025_07D_U_RD156R_red2() {
     }),
     ["179025_07D_U_RD156R_red"]
   );
+  console.log("準備2張G");
   table = createCard(
     table,
     PlayerA,
@@ -144,14 +146,22 @@ export function testProto_179025_07D_U_RD156R_red2() {
   ctx = updateEffect(ctx);
   ctx = updateCommand(ctx);
   if (ctx.gameState.commandEffect.length == 0) {
-    throw new Error("指令池必須有指令");
+    throw new Error("指令池必須有指令-3合計國力後的指令");
   }
   let cmd = ctx.gameState.commandEffect[0];
   ctx = doBlockPayload(ctx, cmd);
   if (ctx.gameState.stackEffect.length == 0) {
-    throw new Error("堆疊中必須有指令");
+    throw new Error("必須支付成功");
   }
   cmd = ctx.gameState.stackEffect[0];
+  console.log("執行-3合計國力的play");
   ctx = doBlockPayload(ctx, cmd);
-  console.log(ctx);
+  console.log("模擬切入結束時");
+  ctx = triggerTextEvent(ctx, {
+    id: "カット終了時",
+    effects: [cmd],
+  });
+  if (ctx.gameState.immediateEffect.length == 0) {
+    throw new Error("必須存在起動效果");
+  }
 }

@@ -210,6 +210,11 @@ export type GameEventOnTiming = {
   timing: Timing;
 };
 
+export type GameEventOnStackEffectFinished = {
+  id: "カット終了時";
+  effects: BlockPayload[];
+};
+
 export type GameEventOnAfterEffect = {
   id: "「効果」解決時";
   block: BlockPayload;
@@ -223,7 +228,8 @@ export type GameEventOnManualEvent = {
 export type GameEvent =
   | GameEventOnTiming
   | GameEventOnAfterEffect
-  | GameEventOnManualEvent;
+  | GameEventOnManualEvent
+  | GameEventOnStackEffectFinished;
 
 export type TokuSyuKouKa =
   | ["高機動"]

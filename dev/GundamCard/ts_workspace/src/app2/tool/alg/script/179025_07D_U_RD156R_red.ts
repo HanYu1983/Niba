@@ -149,7 +149,9 @@ const texts: CardText[] = [
     description:
       "『恒常』：このカードは、合計国力－３してプレイできる。その場合、カット終了時に、このカードを廃棄する。",
     texts: [
+      // このカードは、合計国力－３してプレイできる
       playCardPlus,
+      // その場合、カット終了時に、このカードを廃棄する。
       {
         id: "自動型",
         category: "起動",
@@ -159,43 +161,200 @@ const texts: CardText[] = [
             id: "RequireTarget",
             targets: {},
             condition: {
-              id: "ConditionAnd",
-              and: [
-                // 如果旗標存在
-                {
-                  id: "ConditionCompareGameEventOnManualEvent",
-                  value: [
+              id: "ConditionJsonfp",
+              program: {
+                pass1: {
+                  if: [
                     {
-                      id: "手動事件發生時",
-                      value: { path: [{ id: "觸發這個事件的手動事件" }] },
-                    },
-                    "==",
-                    {
-                      id: "手動事件發生時",
-                      value: [
-                        {
-                          id: "手動事件發生時",
-                          customID: {
-                            id: "カット終了時",
-                          },
-                        },
+                      "->": [
+                        "$in.blockPayload",
+                        { log: "blockPayload" },
+                        { getter: "cause" },
+                        { getter: "id" },
+                        { "==": "BlockPayloadCauseGameEvent" },
                       ],
                     },
+                    {},
+                    { error: "事件必須是BlockPayloadCauseGameEvent" },
                   ],
                 },
-              ],
+                pass2: {
+                  if: [
+                    {
+                      "->": [
+                        "$in.blockPayload",
+                        { log: "blockPayload" },
+                        { getter: "cause" },
+                        { getter: "gameEvent" },
+                        { getter: "id" },
+                        { "==": "カット終了時" },
+                      ],
+                    },
+                    {},
+                    { error: "事件必須是カット終了時" },
+                  ],
+                },
+                $cardTextID: {
+                  "->": [
+                    "$in.blockPayload",
+                    { log: "thisEffect" },
+                    { getter: "cause" },
+                    { getter: "cardTextID" },
+                    { log: "cardTextID" },
+                  ],
+                },
+                pass3: {
+                  if: [
+                    {
+                      "->": [
+                        {
+                          "->": [
+                            "$in.blockPayload",
+                            { log: "blockPayload" },
+                            { getter: "cause" },
+                            { getter: "gameEvent" },
+                            { getter: "effects" },
+                          ],
+                        },
+                        // .運算子只支援2層
+                        { map: "$in.cause.cardTextID" },
+                        {
+                          filter: {
+                            "==": "$cardTextID",
+                          },
+                        },
+                        { size: null },
+                        { ">": 0 },
+                      ],
+                    },
+                    {},
+                    { error: "效果必須包含在堆疊記憶內" },
+                  ],
+                },
+                $cardID: {
+                  "->": [
+                    "$in.blockPayload",
+                    { getter: "cause" },
+                    { getter: "cardID" },
+                  ],
+                },
+                pass4: {
+                  if: [
+                    {
+                      "->": [
+                        {
+                          "->": [
+                            "$in.ctx",
+                            { getter: "gameState" },
+                            { getter: "cardState" },
+                          ],
+                        },
+                        {
+                          filter: {
+                            "->": [
+                              [
+                                {
+                                  "->": ["$in.id", { "==": "$cardID" }],
+                                },
+                                {
+                                  "->": [
+                                    "$in.flags",
+                                    { filter: "合計国力－３してプレイ" },
+                                    { size: null },
+                                    { ">": 0 },
+                                  ],
+                                },
+                              ],
+                              { reduce: "and" },
+                            ],
+                          },
+                        },
+                        { size: null },
+                        { ">": 0 },
+                      ],
+                    },
+                    {},
+                    { error: "必須有flag:合計国力－３してプレイ" },
+                  ],
+                },
+              },
             },
           },
           feedback: [
             {
               id: "FeedbackAction",
               action: [
-                // set flag
+                {
+                  id: "ActionAddBlock",
+                  type: "立即",
+                  block: {
+                    feedback: [
+                      {
+                        id: "FeedbackAction",
+                        action: [
+                          {
+                            id: "ActionDestroy",
+                            cards: {
+                              id: "カード",
+                              value: { path: [{ id: "このカード" }] },
+                            },
+                          },
+                        ],
+                      },
+                    ],
+                  },
+                },
               ],
             },
           ],
         },
       },
+      // {
+      //   id: "自動型",
+      //   category: "起動",
+      //   description: "その場合、カット終了時に、このカードを廃棄する。",
+      //   block: {
+      //     require: {
+      //       id: "RequireTarget",
+      //       targets: {},
+      //       condition: {
+      //         id: "ConditionAnd",
+      //         and: [
+      //           // 如果旗標存在
+      //           {
+      //             id: "ConditionCompareGameEventOnManualEvent",
+      //             value: [
+      //               {
+      //                 id: "手動事件發生時",
+      //                 value: { path: [{ id: "觸發這個事件的手動事件" }] },
+      //               },
+      //               "==",
+      //               {
+      //                 id: "手動事件發生時",
+      //                 value: [
+      //                   {
+      //                     id: "手動事件發生時",
+      //                     customID: {
+      //                       id: "カット終了時",
+      //                     },
+      //                   },
+      //                 ],
+      //               },
+      //             ],
+      //           },
+      //         ],
+      //       },
+      //     },
+      //     feedback: [
+      //       {
+      //         id: "FeedbackAction",
+      //         action: [
+      //           // set flag
+      //         ],
+      //       },
+      //     ],
+      //   },
+      // },
     ],
   },
 ];

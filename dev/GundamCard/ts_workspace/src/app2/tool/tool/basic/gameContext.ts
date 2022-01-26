@@ -110,6 +110,9 @@ export type GameState = {
   immediateEffect: BlockPayload[];
   // 堆疊效果。每次只處理第一個代表top的block
   stackEffect: BlockPayload[];
+  // 記錄上一次的堆疊。每次解決一個堆疊效果，就將那效果移到這裡
+  // 在發送切入解決時，清空。
+  stackEffectMemory: BlockPayload[];
   //
   flowMemory: {
     hasTriggerEvent: boolean;
@@ -146,6 +149,7 @@ export const DEFAULT_GAME_CONTEXT: GameContext = {
     commandEffect: [],
     immediateEffect: [],
     stackEffect: [],
+    stackEffectMemory: [],
     flowMemory: {
       hasTriggerEvent: false,
       hasPlayerPassPhase: {},
