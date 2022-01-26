@@ -41,7 +41,7 @@ export type AbsoluteBaSyou = {
 
 export type RelatedBaSyou = {
   id: "RelatedBaSyou";
-  value: ["自軍" | "持ち主", BaSyouKeyword];
+  value: [RelatedPlayerSideKeyword | "持ち主", BaSyouKeyword];
 };
 
 export type BaSyou = AbsoluteBaSyou | RelatedBaSyou;
@@ -215,6 +215,11 @@ export type GameEventOnStackEffectFinished = {
   effects: BlockPayload[];
 };
 
+export type GameEventOnShowBa = {
+  id: "場に出た場合";
+  cardID: string;
+};
+
 export type GameEventOnAfterEffect = {
   id: "「効果」解決時";
   block: BlockPayload;
@@ -229,7 +234,8 @@ export type GameEvent =
   | GameEventOnTiming
   | GameEventOnAfterEffect
   | GameEventOnManualEvent
-  | GameEventOnStackEffectFinished;
+  | GameEventOnStackEffectFinished
+  | GameEventOnShowBa;
 
 export type TokuSyuKouKa =
   | ["高機動"]

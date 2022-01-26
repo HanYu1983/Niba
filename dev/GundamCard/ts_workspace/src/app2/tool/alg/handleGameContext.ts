@@ -140,6 +140,7 @@ export function triggerTextEvent(
   ctx: GameContext,
   evt: GameEvent
 ): GameContext {
+  log2("triggerTextEvent", evt);
   // 只有事件類要和global一起算
   return [...ctx.gameState.cardState, ...ctx.gameState.globalCardState].reduce(
     (ctx, cardState: { cardID: string; cardTextStates: CardTextState[] }) => {

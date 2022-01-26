@@ -154,14 +154,21 @@ export function testProto_179025_07D_U_RD156R_red2() {
     throw new Error("必須支付成功");
   }
   cmd = ctx.gameState.stackEffect[0];
-  console.log("執行-3合計國力的play");
+  console.log("執行-3合計國力的play，出場");
   ctx = doBlockPayload(ctx, cmd);
+  if (ctx.gameState.immediateEffect.length != 1) {
+    throw new Error("必須有出場時技能");
+  }
   console.log("模擬切入結束時");
   ctx = triggerTextEvent(ctx, {
     id: "カット終了時",
     effects: [cmd],
   });
-  if (ctx.gameState.immediateEffect.length == 0) {
-    throw new Error("必須存在起動效果");
+  if (ctx.gameState.immediateEffect.length != 2) {
+    throw new Error("必須有切入結束時技能");
   }
+  cmd = ctx.gameState.immediateEffect[0];
+  console.log("執行起動效果");
+  ctx = doBlockPayload(ctx, cmd);
+  console.log(ctx);
 }

@@ -299,6 +299,17 @@ const texts: CardText[] = [
                               value: { path: [{ id: "このカード" }] },
                             },
                           },
+                          {
+                            id: "ActionDeleteFlag",
+                            cards: {
+                              id: "カード",
+                              value: { path: [{ id: "このカード" }] },
+                            },
+                            flag: {
+                              id: "字串",
+                              value: ["合計国力－３してプレイ"],
+                            },
+                          },
                         ],
                       },
                     ],
@@ -309,52 +320,182 @@ const texts: CardText[] = [
           ],
         },
       },
-      // {
-      //   id: "自動型",
-      //   category: "起動",
-      //   description: "その場合、カット終了時に、このカードを廃棄する。",
-      //   block: {
-      //     require: {
-      //       id: "RequireTarget",
-      //       targets: {},
-      //       condition: {
-      //         id: "ConditionAnd",
-      //         and: [
-      //           // 如果旗標存在
-      //           {
-      //             id: "ConditionCompareGameEventOnManualEvent",
-      //             value: [
-      //               {
-      //                 id: "手動事件發生時",
-      //                 value: { path: [{ id: "觸發這個事件的手動事件" }] },
-      //               },
-      //               "==",
-      //               {
-      //                 id: "手動事件發生時",
-      //                 value: [
-      //                   {
-      //                     id: "手動事件發生時",
-      //                     customID: {
-      //                       id: "カット終了時",
-      //                     },
-      //                   },
-      //                 ],
-      //               },
-      //             ],
-      //           },
-      //         ],
-      //       },
-      //     },
-      //     feedback: [
-      //       {
-      //         id: "FeedbackAction",
-      //         action: [
-      //           // set flag
-      //         ],
-      //       },
-      //     ],
-      //   },
-      // },
+      {
+        id: "自動型",
+        category: "起動",
+        description:
+          "『起動』：このカードが場に出た場合、ユニットとキャラ以外の敵軍カード１枚のプレイを無効にし、そのカードを廃棄する。",
+        block: {
+          require: {
+            id: "RequireTarget",
+            targets: {},
+            condition: {
+              id: "ConditionJsonfp",
+              program: {
+                pass1: {
+                  if: [
+                    {
+                      "->": [
+                        "$in.blockPayload",
+                        { log: "blockPayload" },
+                        { getter: "cause" },
+                        { getter: "id" },
+                        { "==": "BlockPayloadCauseGameEvent" },
+                      ],
+                    },
+                    {},
+                    { error: "事件必須是BlockPayloadCauseGameEvent" },
+                  ],
+                },
+                pass2: {
+                  if: [
+                    {
+                      "->": [
+                        "$in.blockPayload",
+                        { log: "blockPayload" },
+                        { getter: "cause" },
+                        { getter: "gameEvent" },
+                        { getter: "id" },
+                        { "==": "場に出た場合" },
+                      ],
+                    },
+                    {},
+                    { error: "事件必須是場に出た場合" },
+                  ],
+                },
+                $cardID: {
+                  "->": [
+                    "$in.blockPayload",
+                    { getter: "cause" },
+                    { getter: "cardID" },
+                  ],
+                },
+                pass3: {
+                  if: [
+                    {
+                      "->": [
+                        "$in.blockPayload",
+                        { log: "blockPayload" },
+                        { getter: "cause" },
+                        { getter: "gameEvent" },
+                        { getter: "cardID" },
+                        { "==": "$cardID" },
+                      ],
+                    },
+                    {},
+                    { error: "必須是這張卡" },
+                  ],
+                },
+              },
+            },
+          },
+          feedback: [
+            {
+              id: "FeedbackAction",
+              action: [
+                {
+                  id: "ActionAddBlock",
+                  type: "立即",
+                  block: {
+                    require: {
+                      id: "RequireTarget",
+                      targets: {
+                        ユニットとキャラ以外の敵軍カード１枚のプレイ: {
+                          id: "カード",
+                          value: [],
+                          valueLengthInclude: [1],
+                        },
+                      },
+                      condition: {
+                        id: "ConditionAnd",
+                        and: [
+                          {
+                            id: "ConditionCompareBaSyou",
+                            value: [
+                              {
+                                id: "場所",
+                                value: {
+                                  path: [
+                                    {
+                                      id: "カード",
+                                      value: { path: [{ id: "このカード" }] },
+                                    },
+                                    "的「場所」",
+                                  ],
+                                },
+                              },
+                              "==",
+                              {
+                                id: "場所",
+                                value: [
+                                  {
+                                    id: "RelatedBaSyou",
+                                    value: ["敵軍", "プレイされているカード"],
+                                  },
+                                ],
+                              },
+                            ],
+                          },
+                          {
+                            id: "ConditionNot",
+                            not: {
+                              id: "ConditionCompareCardCategory",
+                              value: [
+                                {
+                                  id: "カードの種類",
+                                  value: {
+                                    path: [
+                                      {
+                                        id: "カード",
+                                        value: { path: [{ id: "このカード" }] },
+                                      },
+                                      "的「種類」",
+                                    ],
+                                  },
+                                },
+                                "in",
+                                {
+                                  id: "カードの種類",
+                                  value: ["ユニット", "キャラクター"],
+                                },
+                              ],
+                            },
+                          },
+                        ],
+                      },
+                      action: [
+                        {
+                          id: "ActionSetTarget",
+                          source:
+                            "ユニットとキャラ以外の敵軍カード１枚のプレイ",
+                          target:
+                            "ユニットとキャラ以外の敵軍カード１枚のプレイ",
+                        },
+                      ],
+                    },
+                    feedback: [
+                      {
+                        id: "FeedbackAction",
+                        action: [
+                          // TODO: プレイを無効にし、そのカードを廃棄する。
+                          {
+                            id: "ActionDestroy",
+                            cards: {
+                              id: "カード",
+                              value:
+                                "ユニットとキャラ以外の敵軍カード１枚のプレイ",
+                            },
+                          },
+                        ],
+                      },
+                    ],
+                  },
+                },
+              ],
+            },
+          ],
+        },
+      },
     ],
   },
 ];

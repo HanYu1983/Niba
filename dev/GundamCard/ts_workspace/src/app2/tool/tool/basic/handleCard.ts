@@ -7,6 +7,7 @@ import {
   PlayerID,
   CardColor,
   BaSyou,
+  getOpponentPlayerID,
 } from "./basic";
 
 export function getAbsoluteBaSyou(
@@ -31,6 +32,8 @@ export function getAbsoluteBaSyou(
       }
       case "自軍":
         return getCardController(ctx, cardID);
+      case "敵軍":
+        return getOpponentPlayerID(getCardColor(ctx, cardID));
     }
   })();
   return {

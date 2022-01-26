@@ -1,4 +1,9 @@
-import { getBaShouID, CardColor, getNextTiming } from "../tool/basic/basic";
+import {
+  getBaShouID,
+  CardColor,
+  getNextTiming,
+  isBa,
+} from "../tool/basic/basic";
 import { BlockPayload, wrapRequireKey } from "../tool/basic/blockPayload";
 import { Action } from "../tool/basic/action";
 import {
@@ -27,7 +32,7 @@ import {
 import { log2 } from "../../../tool/logger";
 import { TargetType } from "../tool/basic/targetType";
 import { getCardState, getTargetType } from "./helper";
-import { initState } from "./handleGameContext";
+import { initState, triggerTextEvent } from "./handleGameContext";
 import { wrapBlockRequireKey } from "./handleBlockPayload";
 import { jsonfp } from "../tool/basic/jsonfpHelper";
 
@@ -331,8 +336,13 @@ export function doRequireTargetActionTarget(
             "[doRequireTargetActionTarget][ActionMoveCardToPosition] cardID not found"
           );
         }
-        const fromBaSyouID = getBaShouID(getCardBaSyou(ctx, cardID));
-        const toBaSyouID = getBaShouID(getAbsoluteBaSyou(baSyou, ctx, cardID));
+        // TODO: 依照規則在不同的指令場所時，卡的正面或反面會改變
+        const fromBaSyou = getCardBaSyou(ctx, cardID);
+        const fromBaSyouID = getBaShouID(fromBaSyou);
+        const isFromBa = isBa(fromBaSyou.value[1]);
+        const toBaSyou = getAbsoluteBaSyou(baSyou, ctx, cardID);
+        const toBaSyouID = getBaShouID(toBaSyou);
+        const isToBa = isBa(toBaSyou.value[1]);
         const nextTable = moveCard(
           ctx.gameState.table,
           fromBaSyouID,
@@ -340,6 +350,21 @@ export function doRequireTargetActionTarget(
           cardID,
           null
         );
+        ctx = {
+          ...ctx,
+          gameState: {
+            ...ctx.gameState,
+            table: nextTable,
+          },
+        };
+        // 出場時
+        const isShowBa = isFromBa == false && isToBa;
+        if (isShowBa) {
+          ctx = triggerTextEvent(ctx, {
+            id: "場に出た場合",
+            cardID: cardID,
+          });
+        }
         return {
           ...ctx,
           gameState: {
