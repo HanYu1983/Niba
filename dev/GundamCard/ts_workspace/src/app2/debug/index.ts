@@ -119,7 +119,7 @@ export function testRequireJsonfp() {
       cardTextID: "a",
       cardID: "a",
       description: "",
-      playerID: "",
+      playerID: PlayerA,
     },
     require: {
       id: "RequireTarget",
