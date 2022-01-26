@@ -133,6 +133,7 @@ export function getTargetType(
   const targetTypeAfterProcess = (() => {
     if (typeof target.value == "string") {
       if (targets[target.value] == null) {
+        log2("getTargetType", "blockPayload", blockPayload);
         throw new Error("target.value not found:" + target.value);
       }
       const replaced = targets[target.value];
@@ -181,23 +182,23 @@ export function getTargetType(
     // カード -> カード
     case "カード": {
       if (Array.isArray(targetTypeAfterProcess.value)) {
-        if (targetTypeAfterProcess.valueLengthInclude) {
-          if (
-            targetTypeAfterProcess.valueLengthInclude.includes(
-              targetTypeAfterProcess.value.length
-            ) == false
-          ) {
-            log2(
-              "getTargetType",
-              "targetTypeAfterProcess",
-              targetTypeAfterProcess
-            );
-            throw new Error(
-              "陣列長度不正確:" +
-                JSON.stringify(targetTypeAfterProcess.valueLengthInclude)
-            );
-          }
-        }
+        // if (targetTypeAfterProcess.valueLengthInclude) {
+        //   if (
+        //     targetTypeAfterProcess.valueLengthInclude.includes(
+        //       targetTypeAfterProcess.value.length
+        //     ) == false
+        //   ) {
+        //     log2(
+        //       "getTargetType",
+        //       "targetTypeAfterProcess",
+        //       targetTypeAfterProcess
+        //     );
+        //     throw new Error(
+        //       "陣列長度不正確:" +
+        //         JSON.stringify(targetTypeAfterProcess.valueLengthInclude)
+        //     );
+        //   }
+        // }
         return targetTypeAfterProcess;
       }
       const path = targetTypeAfterProcess.value.path;

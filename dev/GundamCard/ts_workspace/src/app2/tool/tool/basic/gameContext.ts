@@ -118,6 +118,7 @@ export type GameState = {
     hasTriggerEvent: boolean;
     hasPlayerPassPhase: { [key: string]: boolean };
     hasPlayerPassCut: { [key: string]: boolean };
+    shouldTriggerStackEffectFinishedEvent: boolean;
   };
   chipPool: { [key: string]: CardPrototype };
 };
@@ -154,6 +155,7 @@ export const DEFAULT_GAME_CONTEXT: GameContext = {
       hasTriggerEvent: false,
       hasPlayerPassPhase: {},
       hasPlayerPassCut: {},
+      shouldTriggerStackEffectFinishedEvent: false,
     },
     chipPool: {},
   },

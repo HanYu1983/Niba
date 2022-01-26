@@ -292,15 +292,14 @@ export function doEffect(
   const isStackFinished =
     isStackEffect && ctx.gameState.stackEffect.length == 0;
   if (isStackFinished) {
-    ctx = triggerTextEvent(ctx, {
-      id: "カット終了時",
-      effects: ctx.gameState.stackEffectMemory,
-    });
     ctx = {
       ...ctx,
       gameState: {
         ...ctx.gameState,
-        stackEffectMemory: [],
+        flowMemory: {
+          ...ctx.gameState.flowMemory,
+          shouldTriggerStackEffectFinishedEvent: true,
+        },
       },
     };
   }
@@ -401,6 +400,10 @@ type FlowHandleReturnStepRule = {
   id: "FlowHandleReturnStepRule";
   description?: string;
 };
+type FlowHandleStackEffectFinished = {
+  id: "FlowHandleStackEffectFinished";
+  description?: string;
+};
 
 export type Flow =
   | FlowAddBlock
@@ -418,7 +421,8 @@ export type Flow =
   | FlowPassCut
   | FlowCancelPassCut
   | FlowHandleDamageStepRule
-  | FlowHandleReturnStepRule;
+  | FlowHandleReturnStepRule
+  | FlowHandleStackEffectFinished;
 
 let idSeq = 0;
 export function applyFlow(
@@ -426,6 +430,7 @@ export function applyFlow(
   playerID: string,
   flow: Flow
 ): GameContext {
+  log2("applyFlow", playerID, flow);
   switch (flow.id) {
     case "FlowSetActiveEffectID": {
       if (flow.effectID == null) {
@@ -667,6 +672,24 @@ export function applyFlow(
       };
       return ctx;
     }
+    case "FlowHandleStackEffectFinished": {
+      ctx = triggerTextEvent(ctx, {
+        id: "カット終了時",
+        effects: ctx.gameState.stackEffectMemory,
+      });
+      ctx = {
+        ...ctx,
+        gameState: {
+          ...ctx.gameState,
+          stackEffectMemory: [],
+          flowMemory: {
+            ...ctx.gameState.flowMemory,
+            shouldTriggerStackEffectFinishedEvent: false,
+          },
+        },
+      };
+      return ctx;
+    }
   }
   return ctx;
 }
@@ -761,6 +784,23 @@ export function queryFlow(ctx: GameContext, playerID: string): Flow[] {
             } as FlowDeleteImmediateEffect,
           ]
         : []),
+    ];
+  }
+  if (ctx.gameState.flowMemory.shouldTriggerStackEffectFinishedEvent) {
+    const isActivePlayer = ctx.gameState.activePlayerID == playerID;
+    if (isActivePlayer == false) {
+      return [
+        {
+          id: "FlowWaitPlayer",
+          description: "等待主動玩家處理",
+        },
+      ];
+    }
+    return [
+      {
+        id: "FlowHandleStackEffectFinished",
+        description: "處理堆疊結束",
+      },
     ];
   }
   const myCommandList = getClientCommand(ctx, playerID);

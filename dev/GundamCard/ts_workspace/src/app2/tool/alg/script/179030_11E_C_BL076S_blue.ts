@@ -258,7 +258,7 @@ const playCardText = createPlayCardText(prototype, {
   command: {
     timing: ["敵軍", "防御ステップ"],
   },
-  block: {
+  feedbackBlock: {
     require: {
       id: "RequireAnd",
       and: [

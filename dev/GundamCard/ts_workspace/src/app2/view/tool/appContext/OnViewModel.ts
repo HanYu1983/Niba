@@ -52,17 +52,82 @@ export const OnViewModel = OnEvent.pipe(
     try {
       switch (evt.id) {
         case "OnClickNewGame": {
-          let newModel = DEFAULT_GAME_CONTEXT;
-          let table = newModel.gameState.table;
-          table = createCard(
-            table,
-            PlayerA,
-            getBaShouID({
-              id: "AbsoluteBaSyou",
-              value: [PlayerA, "本国"],
-            }),
-            ["179016_04B_U_WT075C_white", "179030_11E_U_BL208S_blue"]
-          );
+          // let newModel = DEFAULT_GAME_CONTEXT;
+          // let table = newModel.gameState.table;
+          // table = createCard(
+          //   table,
+          //   PlayerA,
+          //   getBaShouID({
+          //     id: "AbsoluteBaSyou",
+          //     value: [PlayerA, "本国"],
+          //   }),
+          //   ["179016_04B_U_WT075C_white", "179030_11E_U_BL208S_blue"]
+          // );
+          // table = createCard(
+          //   table,
+          //   PlayerA,
+          //   getBaShouID({
+          //     id: "AbsoluteBaSyou",
+          //     value: [PlayerA, "手札"],
+          //   }),
+          //   ["179016_04B_U_WT075C_white"]
+          // );
+          // table = createCard(
+          //   table,
+          //   PlayerA,
+          //   getBaShouID({
+          //     id: "AbsoluteBaSyou",
+          //     value: [PlayerA, "Gゾーン"],
+          //   }),
+          //   [
+          //     "179016_04B_U_WT075C_white",
+          //     "179030_11E_U_BL208S_blue",
+          //     "179030_11E_U_BL215R_blue",
+          //     "179001_01A_CH_WT007R_white",
+          //     "179030_11E_C_BL076S_blue",
+          //   ]
+          // );
+          // table = createCard(
+          //   table,
+          //   PlayerA,
+          //   getBaShouID({
+          //     id: "AbsoluteBaSyou",
+          //     value: [PlayerA, "配備エリア"],
+          //   }),
+          //   ["179030_11E_U_BL208S_blue", "179030_11E_U_BL208S_blue"]
+          // );
+          // table = createCard(
+          //   table,
+          //   PlayerB,
+          //   getBaShouID({
+          //     id: "AbsoluteBaSyou",
+          //     value: [PlayerB, "配備エリア"],
+          //   }),
+          //   ["179016_04B_U_WT075C_white", "179030_11E_U_BL208S_blue"]
+          // );
+          // table = createCard(
+          //   table,
+          //   PlayerB,
+          //   getBaShouID({
+          //     id: "AbsoluteBaSyou",
+          //     value: [PlayerB, "手札"],
+          //   }),
+          //   ["179001_01A_CH_WT007R_white"]
+          // );
+          // newModel = {
+          //   ...newModel,
+          //   gameState: {
+          //     ...newModel.gameState,
+          //     timing: TIMING_CHART[9],
+          //     table: table,
+          //     activePlayerID: PlayerA,
+          //   },
+          //   versionID: viewModel.model.versionID,
+          // };
+
+          let ctx = DEFAULT_GAME_CONTEXT;
+          let table = ctx.gameState.table;
+          console.log("準備F91在手上");
           table = createCard(
             table,
             PlayerA,
@@ -70,8 +135,9 @@ export const OnViewModel = OnEvent.pipe(
               id: "AbsoluteBaSyou",
               value: [PlayerA, "手札"],
             }),
-            ["179016_04B_U_WT075C_white"]
+            ["179025_07D_U_RD156R_red"]
           );
+          console.log("準備2張G");
           table = createCard(
             table,
             PlayerA,
@@ -80,52 +146,40 @@ export const OnViewModel = OnEvent.pipe(
               value: [PlayerA, "Gゾーン"],
             }),
             [
-              "179016_04B_U_WT075C_white",
-              "179030_11E_U_BL208S_blue",
-              "179030_11E_U_BL215R_blue",
-              "179001_01A_CH_WT007R_white",
-              "179030_11E_C_BL076S_blue",
+              "179030_11E_G_RD021N_red",
+              "179030_11E_G_RD021N_red",
+              "179030_11E_G_RD021N_red",
+              "179030_11E_G_RD021N_red",
+              "179030_11E_G_RD021N_red",
             ]
           );
           table = createCard(
             table,
-            PlayerA,
-            getBaShouID({
-              id: "AbsoluteBaSyou",
-              value: [PlayerA, "配備エリア"],
-            }),
-            ["179030_11E_U_BL208S_blue", "179030_11E_U_BL208S_blue"]
-          );
-          table = createCard(
-            table,
             PlayerB,
             getBaShouID({
               id: "AbsoluteBaSyou",
-              value: [PlayerB, "配備エリア"],
+              value: [PlayerB, "プレイされているカード"],
             }),
-            ["179016_04B_U_WT075C_white", "179030_11E_U_BL208S_blue"]
+            ["179030_11E_G_RD021N_red"]
           );
-          table = createCard(
-            table,
-            PlayerB,
-            getBaShouID({
-              id: "AbsoluteBaSyou",
-              value: [PlayerB, "手札"],
-            }),
-            ["179001_01A_CH_WT007R_white"]
-          );
-          newModel = {
-            ...newModel,
+          ctx = {
+            ...ctx,
             gameState: {
-              ...newModel.gameState,
-              timing: TIMING_CHART[9],
+              ...ctx.gameState,
               table: table,
               activePlayerID: PlayerA,
             },
+          };
+          ctx = {
+            ...ctx,
+            gameState: {
+              ...ctx.gameState,
+              timing: TIMING_CHART[9],
+            },
             versionID: viewModel.model.versionID,
           };
-          newModel = initState(newModel);
-          firebase.sync(newModel);
+          ctx = initState(ctx);
+          firebase.sync(ctx);
           return DEFAULT_VIEW_MODEL;
         }
         case "OnClickFlowConfirm": {

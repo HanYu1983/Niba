@@ -7,7 +7,11 @@ import {
 import { createPlayCardText } from "./createPlayCardText";
 import { createTokuSyuKouKaText } from "./createTokuSyuKouKaText";
 import { CardText } from "../../tool/basic/basic";
-import { recurRequire, Require } from "../../tool/basic/blockPayload";
+import {
+  recurRequire,
+  Require,
+  RequireTarget,
+} from "../../tool/basic/blockPayload";
 import { Condition } from "../../tool/basic/condition";
 import { GameEventOnManualEventCustomID } from "../gameEventOnManualEventCustomID";
 
@@ -34,9 +38,89 @@ const prototype: CardPrototype = {
   rollCost: ["赤", "赤", null, null, null],
 };
 
+const playCardRequire: RequireTarget = {
+  id: "RequireTarget",
+  targets: {
+    ユニットとキャラ以外の敵軍カード１枚のプレイ: {
+      id: "カード",
+      value: [],
+      valueLengthInclude: [1],
+    },
+  },
+  condition: {
+    id: "ConditionAnd",
+    and: [
+      {
+        id: "ConditionCompareBaSyou",
+        value: [
+          {
+            id: "場所",
+            value: {
+              path: [
+                {
+                  id: "カード",
+                  value: "ユニットとキャラ以外の敵軍カード１枚のプレイ",
+                },
+                "的「場所」",
+              ],
+            },
+          },
+          "==",
+          {
+            id: "場所",
+            value: [
+              {
+                id: "RelatedBaSyou",
+                value: ["敵軍", "プレイされているカード"],
+              },
+            ],
+          },
+        ],
+      },
+      {
+        id: "ConditionNot",
+        not: {
+          id: "ConditionCompareCardCategory",
+          value: [
+            {
+              id: "カードの種類",
+              value: {
+                path: [
+                  {
+                    id: "カード",
+                    value: "ユニットとキャラ以外の敵軍カード１枚のプレイ",
+                  },
+                  "的「種類」",
+                ],
+              },
+            },
+            "in",
+            {
+              id: "カードの種類",
+              value: ["ユニット", "キャラクター"],
+            },
+          ],
+        },
+      },
+    ],
+  },
+  action: [
+    {
+      id: "ActionSetTarget",
+      source: "ユニットとキャラ以外の敵軍カード１枚のプレイ",
+      target: "ユニットとキャラ以外の敵軍カード１枚のプレイ",
+    },
+  ],
+};
+
+const varCtxID1 =
+  "179025_07D_U_RD156R_red_『恒常』：このカードは、合計国力－３してプレイできる。その場合、カット終了時に、このカードを廃棄する。";
+
 let playCardPlus = createPlayCardText(prototype, {
   description: "合計国力－３してプレイできる",
-  block: {
+  varCtxID: varCtxID1,
+  require: playCardRequire,
+  feedbackBlock: {
     feedback: [
       {
         id: "FeedbackAction",
@@ -143,7 +227,10 @@ const texts: CardText[] = [
   createTokuSyuKouKaText(["高機動"], {}),
   createTokuSyuKouKaText(["改装", "F91系"], { cost: 1 }),
   createPlayCardText(prototype, { isG: true }),
-  createPlayCardText(prototype, {}),
+  createPlayCardText(prototype, {
+    require: playCardRequire,
+    varCtxID: varCtxID1,
+  }),
   {
     id: "恒常",
     description:
@@ -326,6 +413,7 @@ const texts: CardText[] = [
         description:
           "『起動』：このカードが場に出た場合、ユニットとキャラ以外の敵軍カード１枚のプレイを無効にし、そのカードを廃棄する。",
         block: {
+          contextID: varCtxID1,
           require: {
             id: "RequireTarget",
             targets: {},
@@ -397,82 +485,6 @@ const texts: CardText[] = [
                   id: "ActionAddBlock",
                   type: "立即",
                   block: {
-                    require: {
-                      id: "RequireTarget",
-                      targets: {
-                        ユニットとキャラ以外の敵軍カード１枚のプレイ: {
-                          id: "カード",
-                          value: [],
-                          valueLengthInclude: [1],
-                        },
-                      },
-                      condition: {
-                        id: "ConditionAnd",
-                        and: [
-                          {
-                            id: "ConditionCompareBaSyou",
-                            value: [
-                              {
-                                id: "場所",
-                                value: {
-                                  path: [
-                                    {
-                                      id: "カード",
-                                      value: { path: [{ id: "このカード" }] },
-                                    },
-                                    "的「場所」",
-                                  ],
-                                },
-                              },
-                              "==",
-                              {
-                                id: "場所",
-                                value: [
-                                  {
-                                    id: "RelatedBaSyou",
-                                    value: ["敵軍", "プレイされているカード"],
-                                  },
-                                ],
-                              },
-                            ],
-                          },
-                          {
-                            id: "ConditionNot",
-                            not: {
-                              id: "ConditionCompareCardCategory",
-                              value: [
-                                {
-                                  id: "カードの種類",
-                                  value: {
-                                    path: [
-                                      {
-                                        id: "カード",
-                                        value: { path: [{ id: "このカード" }] },
-                                      },
-                                      "的「種類」",
-                                    ],
-                                  },
-                                },
-                                "in",
-                                {
-                                  id: "カードの種類",
-                                  value: ["ユニット", "キャラクター"],
-                                },
-                              ],
-                            },
-                          },
-                        ],
-                      },
-                      action: [
-                        {
-                          id: "ActionSetTarget",
-                          source:
-                            "ユニットとキャラ以外の敵軍カード１枚のプレイ",
-                          target:
-                            "ユニットとキャラ以外の敵軍カード１枚のプレイ",
-                        },
-                      ],
-                    },
                     feedback: [
                       {
                         id: "FeedbackAction",

@@ -20,11 +20,11 @@ export function doConditionTarget(
     case "ConditionNot": {
       try {
         doConditionTarget(ctx, blockPayload, targets, condition.not, varCtxID);
-        throw new Error("子項目必須為否");
       } catch (e) {
         log2("doConditionTarget", "子項目為否, 符合需求. 回傳.", e);
+        return;
       }
-      return;
+      throw new Error("子項目必須為否");
     }
     case "ConditionAnd": {
       const results = condition.and.map((cond) => {

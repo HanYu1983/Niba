@@ -20,21 +20,23 @@ export function createPlayCardText(
   prototype: CardPrototype,
   options: {
     isG?: boolean;
-    block?: BlockPayload;
+    varCtxID?: string;
+    feedbackBlock?: BlockPayload;
     description?: string;
+    require?: Require;
     command?: {
       timing: SiYouTiming;
-      require?: Require;
     };
   }
 ): CardTextSiYouKaTa {
+  const contextID = options.varCtxID || `createPlayCardText ${idSeq++}`;
   if (options.isG) {
     return {
       id: "使用型",
       timing: ["自軍", "配備フェイズ"],
       description: `プレイ ${prototype.category}[${prototype.title}]當G`,
       block: {
-        contextID: `createPlayCardText ${idSeq++}`,
+        contextID: contextID,
         require: {
           id: "RequireAnd",
           and: [
@@ -196,7 +198,7 @@ export function createPlayCardText(
         timing: options.command.timing,
         description: options?.description || `プレイ(${prototype.title})`,
         block: {
-          contextID: `createPlayCardText ${idSeq++}`,
+          contextID: contextID,
           require: {
             id: "RequireAnd",
             and: [
@@ -318,7 +320,7 @@ export function createPlayCardText(
                   },
                 ],
               },
-              ...(options.command.require ? [options.command.require] : []),
+              ...(options.require ? [options.require] : []),
             ],
           },
           feedback: [
@@ -329,9 +331,9 @@ export function createPlayCardText(
                   id: "ActionAddBlock",
                   type: "堆疊",
                   block: {
-                    ...options.block,
+                    ...options.feedbackBlock,
                     feedback: [
-                      ...(options?.block?.feedback || []),
+                      ...(options?.feedbackBlock?.feedback || []),
                       {
                         id: "FeedbackAction",
                         action: [
@@ -368,7 +370,7 @@ export function createPlayCardText(
         timing: ["自軍", "配備フェイズ"],
         description: options?.description || `プレイ(${prototype.title})`,
         block: {
-          contextID: `createPlayCardText ${idSeq++}`,
+          contextID: contextID,
           require: {
             id: "RequireAnd",
             and: [
@@ -452,6 +454,7 @@ export function createPlayCardText(
                   },
                 ],
               },
+              ...(options.require ? [options.require] : []),
             ],
           },
           feedback: [
@@ -499,7 +502,7 @@ export function createPlayCardText(
         timing: ["自軍", "配備フェイズ"],
         description: options?.description || `プレイ(${prototype.title})`,
         block: {
-          contextID: `createPlayCardText ${idSeq++}`,
+          contextID: contextID,
           require: {
             id: "RequireAnd",
             and: [
@@ -634,6 +637,7 @@ export function createPlayCardText(
                   },
                 ],
               },
+              ...(options.require ? [options.require] : []),
             ],
           },
           feedback: [
@@ -644,9 +648,9 @@ export function createPlayCardText(
                   id: "ActionAddBlock",
                   type: "堆疊",
                   block: {
-                    ...options.block,
+                    ...options.feedbackBlock,
                     feedback: [
-                      ...(options?.block?.feedback || []),
+                      ...(options?.feedbackBlock?.feedback || []),
                       {
                         id: "FeedbackAction",
                         action: [

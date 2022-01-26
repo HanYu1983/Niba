@@ -29,69 +29,69 @@ const playCardText = createPlayCardText(prototype, {
     "（自軍配備フェイズ）：「供給」を持つ自軍カード１枚をロールする。その場合、カード２枚を引く。",
   command: {
     timing: ["自軍", "配備フェイズ"],
-    require: {
-      id: "RequireTarget",
-      targets: {
-        "「供給」を持つ自軍カード１枚": {
-          id: "カード",
-          value: [],
-          valueLengthInclude: [1],
-        },
+  },
+  require: {
+    id: "RequireTarget",
+    targets: {
+      "「供給」を持つ自軍カード１枚": {
+        id: "カード",
+        value: [],
+        valueLengthInclude: [1],
       },
-      condition: {
-        id: "ConditionAnd",
-        and: [
-          {
-            id: "ConditionComparePlayer",
-            value: [
-              {
-                id: "プレーヤー",
-                value: {
-                  path: [
-                    { id: "カード", value: "「供給」を持つ自軍カード１枚" },
-                    "的「コントローラー」",
-                  ],
-                },
-              },
-              "==",
-              {
-                id: "プレーヤー",
-                value: { path: [{ id: "自軍" }] },
-              },
-            ],
-          },
-          // TODO: targetText
-          {
-            id: "ConditionCompareString",
-            value: [
-              {
-                id: "字串",
-                value: {
-                  path: [
-                    { id: "カード", value: "「供給」を持つ自軍カード１枚" },
-                    "的「特徴」",
-                  ],
-                },
-              },
-              "hasToken",
-              {
-                id: "字串",
-                value: ["供給"],
-              },
-            ],
-          },
-        ],
-      },
-      action: [
+    },
+    condition: {
+      id: "ConditionAnd",
+      and: [
         {
-          id: "ActionSetTarget",
-          source: "「供給」を持つ自軍カード１枚",
-          target: "「供給」を持つ自軍カード１枚",
+          id: "ConditionComparePlayer",
+          value: [
+            {
+              id: "プレーヤー",
+              value: {
+                path: [
+                  { id: "カード", value: "「供給」を持つ自軍カード１枚" },
+                  "的「コントローラー」",
+                ],
+              },
+            },
+            "==",
+            {
+              id: "プレーヤー",
+              value: { path: [{ id: "自軍" }] },
+            },
+          ],
+        },
+        // TODO: targetText
+        {
+          id: "ConditionCompareString",
+          value: [
+            {
+              id: "字串",
+              value: {
+                path: [
+                  { id: "カード", value: "「供給」を持つ自軍カード１枚" },
+                  "的「特徴」",
+                ],
+              },
+            },
+            "hasToken",
+            {
+              id: "字串",
+              value: ["供給"],
+            },
+          ],
         },
       ],
     },
+    action: [
+      {
+        id: "ActionSetTarget",
+        source: "「供給」を持つ自軍カード１枚",
+        target: "「供給」を持つ自軍カード１枚",
+      },
+    ],
   },
-  block: {
+  feedbackBlock: {
     feedback: [
       {
         id: "FeedbackAction",
