@@ -51,7 +51,7 @@ export function test() {
     testDryRun,
     testFlow1,
     //testFlow2,
-    //testKaiSo1,
+    testKaiSo1,
     testClientCommand,
     testClientCommand2,
     testRequireJsonfp,

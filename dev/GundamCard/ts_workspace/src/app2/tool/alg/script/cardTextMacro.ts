@@ -91,18 +91,22 @@ export function getCardTextMacro(macro: CardTextMacro): CardTextMacro {
           require: {
             id: "RequireAnd",
             and: [
-              {
-                ...REQUIRE_PLAY,
-                condition: {
-                  ...REQUIRE_PLAY.condition,
-                  and: [
-                    ...(macro.totalCostConditionReplace
-                      ? macro.totalCostConditionReplace
-                      : [CONDITION_TOTAL_COST]),
-                    CONDITION_PLAY_UNIT_FROM_BASYOU,
-                  ],
-                },
-              } as RequireTarget,
+              ...(macro.id != "PlayText"
+                ? [
+                    {
+                      ...REQUIRE_PLAY,
+                      condition: {
+                        ...REQUIRE_PLAY.condition,
+                        and: [
+                          ...(macro.totalCostConditionReplace
+                            ? macro.totalCostConditionReplace
+                            : [CONDITION_TOTAL_COST]),
+                          CONDITION_PLAY_UNIT_FROM_BASYOU,
+                        ],
+                      },
+                    } as RequireTarget,
+                  ]
+                : []),
               ...(macro.additionalRequire || []),
             ],
           },

@@ -93,6 +93,7 @@ export function testKaiSo1() {
   ctx = updateCommand(ctx);
   console.log("查詢改裝指令");
   let flows = queryFlow(ctx, PlayerA);
+  console.log(flows);
   const cmdFlow = flows.find((flow) => {
     if (flow.id != "FlowSetActiveEffectID") {
       return false;

@@ -979,63 +979,64 @@ export function createTokuSyuKouKaText(
             description: JSON.stringify(toku),
             timing: ["戦闘フェイズ"],
             varCtxID: `createTokuSyuKouKaText_${_seqID++}`,
-            additionalRequire: [createRollCostRequire(options.cost || 0, null)],
+            additionalRequire: [
+              createRollCostRequire(options.cost || 0, null),
+              {
+                id: "RequireTarget",
+                targets: {
+                  被改裝置換的卡: {
+                    id: "カード",
+                    value: { path: [{ id: "このカード" }] },
+                  },
+                },
+                condition: {
+                  id: "ConditionCompareBaSyou",
+                  value: [
+                    {
+                      id: "場所",
+                      value: {
+                        path: [
+                          {
+                            id: "カード",
+                            value: { path: [{ id: "このカード" }] },
+                          },
+                          "的「場所」",
+                        ],
+                      },
+                    },
+                    "in",
+                    {
+                      id: "場所",
+                      value: [
+                        {
+                          id: "RelatedBaSyou",
+                          value: ["自軍", "配備エリア"],
+                        },
+                        {
+                          id: "RelatedBaSyou",
+                          value: ["自軍", "戦闘エリア（右）"],
+                        },
+                        {
+                          id: "RelatedBaSyou",
+                          value: ["自軍", "戦闘エリア（左）"],
+                        },
+                      ],
+                    },
+                  ],
+                },
+                action: [
+                  {
+                    id: "ActionSetTarget",
+                    source: "被改裝置換的卡",
+                    target: "被改裝置換的卡",
+                  },
+                ],
+              },
+            ],
             feedbackBlock: {
               require: {
                 id: "RequireAnd",
                 and: [
-                  {
-                    id: "RequireTarget",
-                    targets: {
-                      被改裝置換的卡: {
-                        id: "カード",
-                        value: { path: [{ id: "このカード" }] },
-                        valueLengthInclude: [1],
-                      },
-                    },
-                    condition: {
-                      id: "ConditionCompareBaSyou",
-                      value: [
-                        {
-                          id: "場所",
-                          value: {
-                            path: [
-                              {
-                                id: "カード",
-                                value: { path: [{ id: "このカード" }] },
-                              },
-                              "的「場所」",
-                            ],
-                          },
-                        },
-                        "in",
-                        {
-                          id: "場所",
-                          value: [
-                            {
-                              id: "RelatedBaSyou",
-                              value: ["自軍", "配備エリア"],
-                            },
-                            {
-                              id: "RelatedBaSyou",
-                              value: ["自軍", "戦闘エリア（右）"],
-                            },
-                            {
-                              id: "RelatedBaSyou",
-                              value: ["自軍", "戦闘エリア（左）"],
-                            },
-                          ],
-                        },
-                      ],
-                    },
-                    action: [
-                      {
-                        id: "ActionSetTarget",
-                        source: "被改裝置換的卡",
-                        target: "被改裝置換的卡",
-                      },
-                    ],
-                  },
                   {
                     id: "RequireTarget",
                     targets: {
