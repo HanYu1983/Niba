@@ -115,6 +115,7 @@ export function getCardTextMacro(macro: CardTextMacro): CardTextMacro {
                   type: "堆疊",
                   block: {
                     ...macro.feedbackBlock,
+                    contextID: macro.varCtxID,
                     feedback: [
                       ...(macro.feedbackBlock?.feedback || []),
                       {

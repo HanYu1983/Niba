@@ -1,6 +1,11 @@
 import { createRollCostRequire, Require } from "../../tool/basic/blockPayload";
-import { CardText, TokuSyuKouKa } from "../../tool/basic/basic";
+import {
+  CardText,
+  DEFAULT_CARD_TEXT_SIYOU_KATA,
+  TokuSyuKouKa,
+} from "../../tool/basic/basic";
 import { RequireCustomID } from "../../tool/basic/requireCustom";
+import { getCardTextMacro } from "./cardTextMacro";
 
 export type RequireMacro = "このカードが戦闘エリアにいる場合";
 export function createRequireMacro(macro: RequireMacro): Require {
@@ -419,176 +424,144 @@ export function createTokuSyuKouKaText(
         id: "特殊型",
         description: toku,
         texts: [
-          {
-            id: "使用型",
-            timing: ["ダメージ判定ステップ"],
+          getCardTextMacro({
+            id: "PlayText",
+            cardText: DEFAULT_CARD_TEXT_SIYOU_KATA,
             description: JSON.stringify(toku),
-            block: {
+            timing: ["ダメージ判定ステップ"],
+            varCtxID: `createTokuSyuKouKaText_${_seqID++}`,
+            additionalRequire: [
+              createRollCostRequire(options.cost || 0, null),
+              createRequireMacro("このカードが戦闘エリアにいる場合"),
+            ],
+            feedbackBlock: {
               require: {
                 id: "RequireAnd",
-                and: [createRollCostRequire(options.cost || 0, null)],
+                and: [
+                  // 翻開本國最上方的卡
+                  {
+                    id: "RequireTarget",
+                    targets: {
+                      自軍本國上的卡1張: {
+                        id: "カード",
+                        value: {
+                          path: [
+                            {
+                              id: "カード",
+                              value: {
+                                path: [
+                                  {
+                                    id: "場所",
+                                    value: [
+                                      {
+                                        id: "RelatedBaSyou",
+                                        value: ["自軍", "本国"],
+                                      },
+                                    ],
+                                  },
+                                  "的「カード」",
+                                ],
+                              },
+                            },
+                            "の上のカードX枚",
+                            1,
+                          ],
+                        },
+                      },
+                    },
+                    // TODO: 比較G標誌
+                    condition: {
+                      id: "ConditionCompareString",
+                      value: [
+                        {
+                          id: "字串",
+                          value: {
+                            path: [
+                              {
+                                id: "カード",
+                                value: "自軍本國上的卡1張",
+                              },
+                              "的「名称」",
+                            ],
+                          },
+                        },
+                        "==",
+                        {
+                          id: "字串",
+                          value: {
+                            path: [
+                              {
+                                id: "カード",
+                                value: {
+                                  path: [{ id: "このカード" }],
+                                },
+                              },
+                              "的「名称」",
+                            ],
+                          },
+                        },
+                      ],
+                    },
+                    action: [
+                      {
+                        id: "ActionSetFace",
+                        cards: {
+                          id: "カード",
+                          value: "自軍本國上的卡1張",
+                        },
+                        faceDown: {
+                          id: "布林",
+                          value: [false],
+                        },
+                      },
+                    ],
+                  },
+                  // 獲得的戰鬥修正
+                  {
+                    id: "RequireTarget",
+                    targets: {
+                      自軍本國上的卡1張的戰鬥修正: {
+                        id: "戦闘修正",
+                        value: {
+                          path: [
+                            {
+                              id: "數字",
+                              value: {
+                                path: [
+                                  {
+                                    id: "カード",
+                                    value: "自軍本國上的卡1張",
+                                  },
+                                  "的「ロールコストの合計値」",
+                                ],
+                              },
+                            },
+                            "の戦闘修正",
+                          ],
+                        },
+                      },
+                    },
+                    action: [
+                      {
+                        id: "ActionSetTarget",
+                        source: "自軍本國上的卡1張的戰鬥修正",
+                        target: "自軍本國上的卡1張的戰鬥修正",
+                      },
+                    ],
+                  },
+                ],
               },
               feedback: [
                 {
                   id: "FeedbackAction",
                   action: [
-                    {
-                      id: "ActionAddBlock",
-                      type: "堆疊",
-                      block: {
-                        require: {
-                          id: "RequireAnd",
-                          and: [
-                            createRequireMacro(
-                              "このカードが戦闘エリアにいる場合"
-                            ),
-                            // 翻開本國最上方的卡
-                            {
-                              id: "RequireTarget",
-                              targets: {
-                                // xxx: [
-                                //   "カード", {},
-                                //   [
-                                //     "カード", {},
-                                //     [
-                                //       "場所", {},
-                                //       [
-                                //         "const",
-                                //         {
-                                //           id: "RelatedBaSyou",
-                                //           value: ["自軍", "本国"],
-                                //         },
-                                //       ],
-                                //     ],
-                                //     "的「カード」",
-                                //   ],
-                                //   "の上のカードX枚",
-                                // ],
-                                自軍本國上的卡1張: {
-                                  id: "カード",
-                                  value: {
-                                    path: [
-                                      {
-                                        id: "カード",
-                                        value: {
-                                          path: [
-                                            {
-                                              id: "場所",
-                                              value: [
-                                                {
-                                                  id: "RelatedBaSyou",
-                                                  value: ["自軍", "本国"],
-                                                },
-                                              ],
-                                            },
-                                            "的「カード」",
-                                          ],
-                                        },
-                                      },
-                                      "の上のカードX枚",
-                                      1,
-                                    ],
-                                  },
-                                },
-                              },
-                              // TODO: 比較G標誌
-                              condition: {
-                                id: "ConditionCompareString",
-                                value: [
-                                  {
-                                    id: "字串",
-                                    value: {
-                                      path: [
-                                        {
-                                          id: "カード",
-                                          value: "自軍本國上的卡1張",
-                                        },
-                                        "的「名称」",
-                                      ],
-                                    },
-                                  },
-                                  "==",
-                                  {
-                                    id: "字串",
-                                    value: {
-                                      path: [
-                                        {
-                                          id: "カード",
-                                          value: {
-                                            path: [{ id: "このカード" }],
-                                          },
-                                        },
-                                        "的「名称」",
-                                      ],
-                                    },
-                                  },
-                                ],
-                              },
-                              action: [
-                                {
-                                  id: "ActionSetFace",
-                                  cards: {
-                                    id: "カード",
-                                    value: "自軍本國上的卡1張",
-                                  },
-                                  faceDown: {
-                                    id: "布林",
-                                    value: [false],
-                                  },
-                                },
-                              ],
-                            },
-                            // 獲得的戰鬥修正
-                            {
-                              id: "RequireTarget",
-                              targets: {
-                                自軍本國上的卡1張的戰鬥修正: {
-                                  id: "戦闘修正",
-                                  value: {
-                                    path: [
-                                      {
-                                        id: "數字",
-                                        value: {
-                                          path: [
-                                            {
-                                              id: "カード",
-                                              value: "自軍本國上的卡1張",
-                                            },
-                                            "的「ロールコストの合計値」",
-                                          ],
-                                        },
-                                      },
-                                      "の戦闘修正",
-                                    ],
-                                  },
-                                },
-                              },
-                              action: [
-                                {
-                                  id: "ActionSetTarget",
-                                  source: "自軍本國上的卡1張的戰鬥修正",
-                                  target: "自軍本國上的卡1張的戰鬥修正",
-                                },
-                              ],
-                            },
-                          ],
-                        },
-                        feedback: [
-                          {
-                            id: "FeedbackAction",
-                            action: [
-                              // add battleBonus
-                              // trigger manualEvent
-                            ],
-                          },
-                        ],
-                      },
-                    },
+                    // add battleBonus
+                    // trigger manualEvent
                   ],
                 },
               ],
             },
-          },
+          }).cardText,
         ],
       };
     case "供給":
@@ -596,110 +569,97 @@ export function createTokuSyuKouKaText(
         id: "特殊型",
         description: toku,
         texts: [
-          {
-            id: "使用型",
-            timing: ["自軍", "攻撃ステップ"],
+          getCardTextMacro({
+            id: "PlayText",
+            cardText: DEFAULT_CARD_TEXT_SIYOU_KATA,
             description: JSON.stringify(toku),
-            block: {
-              contextID: `createTokuSyuKouKaText_${_seqID++}`,
-              require: {
-                id: "RequireAnd",
-                and: [
-                  createRollCostRequire(options.cost || 0, null),
-                  {
-                    id: "RequireTarget",
-                    targets: {
-                      cards: {
-                        id: "カード",
-                        value: [],
-                      },
-                    },
-                    condition: {
-                      id: "ConditionAnd",
-                      and: [
+            timing: ["自軍", "攻撃ステップ"],
+            varCtxID: `createTokuSyuKouKaText_${_seqID++}`,
+            additionalRequire: [
+              createRollCostRequire(options.cost || 0, null),
+              {
+                id: "RequireTarget",
+                targets: {
+                  cards: {
+                    id: "カード",
+                    value: [],
+                    valueLengthInclude: [1],
+                  },
+                },
+                condition: {
+                  id: "ConditionAnd",
+                  and: [
+                    {
+                      id: "ConditionComparePlayer",
+                      value: [
                         {
-                          id: "ConditionCompareNumber",
-                          value: [
-                            {
-                              id: "數字",
-                              value: {
-                                path: [
-                                  { id: "參照", value: "cards" },
-                                  "的陣列長度",
-                                ],
-                              },
-                            },
-                            "==",
-                            {
-                              id: "數字",
-                              value: [1],
-                            },
-                          ],
+                          id: "プレーヤー",
+                          value: {
+                            path: [
+                              { id: "カード", value: "cards" },
+                              "的「コントローラー」",
+                            ],
+                          },
                         },
+                        "==",
                         {
-                          id: "ConditionComparePlayer",
-                          value: [
-                            {
-                              id: "プレーヤー",
-                              value: {
-                                path: [
-                                  { id: "カード", value: "cards" },
-                                  "的「コントローラー」",
-                                ],
+                          id: "プレーヤー",
+                          value: {
+                            path: [
+                              {
+                                id: "カード",
+                                value: {
+                                  path: [{ id: "このカード" }],
+                                },
                               },
-                            },
-                            "==",
-                            {
-                              id: "プレーヤー",
-                              value: {
-                                path: [
-                                  {
-                                    id: "カード",
-                                    value: {
-                                      path: [{ id: "このカード" }],
-                                    },
-                                  },
-                                  "的「コントローラー」",
-                                ],
-                              },
-                            },
-                          ],
-                        },
-                        {
-                          id: "ConditionCompareRole",
-                          value: [
-                            {
-                              id: "「カード」的角色",
-                              value: "cards",
-                            },
-                            "==",
-                            {
-                              id: "「カード」的角色",
-                              value: ["ユニット"],
-                            },
-                          ],
-                        },
-                        {
-                          id: "ConditionCompareCard",
-                          value: [
-                            {
-                              id: "カード",
-                              value: "cards",
-                            },
-                            "!=",
-                            {
-                              id: "カード",
-                              value: {
-                                path: [{ id: "このカード" }],
-                              },
-                            },
-                          ],
+                              "的「コントローラー」",
+                            ],
+                          },
                         },
                       ],
                     },
+                    {
+                      id: "ConditionCompareRole",
+                      value: [
+                        {
+                          id: "「カード」的角色",
+                          value: "cards",
+                        },
+                        "==",
+                        {
+                          id: "「カード」的角色",
+                          value: ["ユニット"],
+                        },
+                      ],
+                    },
+                    {
+                      id: "ConditionCompareCard",
+                      value: [
+                        {
+                          id: "カード",
+                          value: "cards",
+                        },
+                        "!=",
+                        {
+                          id: "カード",
+                          value: {
+                            path: [{ id: "このカード" }],
+                          },
+                        },
+                      ],
+                    },
+                  ],
+                },
+                action: [
+                  {
+                    id: "ActionSetTarget",
+                    source: "cards",
+                    target: "cards",
                   },
                 ],
               },
+            ],
+            feedbackBlock: {
               feedback: [
                 {
                   id: "FeedbackAction",
@@ -728,7 +688,7 @@ export function createTokuSyuKouKaText(
                 },
               ],
             },
-          },
+          }).cardText,
         ],
       };
     case "サイコミュ": {
@@ -737,162 +697,147 @@ export function createTokuSyuKouKaText(
         id: "特殊型",
         description: toku,
         texts: [
-          {
-            id: "使用型",
-            timing: ["防御ステップ"],
+          getCardTextMacro({
+            id: "PlayText",
+            cardText: DEFAULT_CARD_TEXT_SIYOU_KATA,
             description: JSON.stringify(toku),
-            block: {
-              contextID: `createTokuSyuKouKaText_${_seqID++}`,
-              require: {
-                id: "RequireAnd",
-                and: [
-                  createRollCostRequire(options.cost || 0, null),
-                  {
-                    id: "RequireCustom",
-                    customID: {
-                      id: "このカードと同じエリアに、「特徴:{x}」を持つ自軍キャラがいる",
-                      x: "NT",
-                    } as RequireCustomID,
+            timing: ["防御ステップ"],
+            varCtxID: `createTokuSyuKouKaText_${_seqID++}`,
+            additionalRequire: [
+              createRollCostRequire(options.cost || 0, null),
+              {
+                id: "RequireCustom",
+                customID: {
+                  id: "このカードと同じエリアに、「特徴:{x}」を持つ自軍キャラがいる",
+                  x: "NT",
+                } as RequireCustomID,
+              },
+              {
+                id: "RequireTarget",
+                targets: {
+                  targetCard: {
+                    id: "カード",
+                    value: [],
                   },
-                  {
-                    id: "RequireTarget",
-                    targets: {
-                      targetCard: {
-                        id: "カード",
-                        value: [],
-                      },
-                    },
-                    condition: {
-                      id: "ConditionAnd",
-                      and: [
+                },
+                condition: {
+                  id: "ConditionAnd",
+                  and: [
+                    {
+                      id: "ConditionComparePlayer",
+                      value: [
                         {
-                          id: "ConditionComparePlayer",
-                          value: [
-                            {
-                              id: "プレーヤー",
-                              value: {
-                                path: [
-                                  { id: "カード", value: "targetCard" },
-                                  "的「コントローラー」",
-                                ],
-                              },
-                            },
-                            "!=",
-                            {
-                              id: "プレーヤー",
-                              value: {
-                                path: [
-                                  {
-                                    id: "カード",
-                                    value: {
-                                      path: [{ id: "このカード" }],
-                                    },
-                                  },
-                                  "的「コントローラー」",
-                                ],
-                              },
-                            },
-                          ],
+                          id: "プレーヤー",
+                          value: {
+                            path: [
+                              { id: "カード", value: "targetCard" },
+                              "的「コントローラー」",
+                            ],
+                          },
                         },
+                        "!=",
                         {
-                          id: "ConditionCompareRole",
-                          value: [
-                            {
-                              id: "「カード」的角色",
-                              value: {
-                                path: [
-                                  {
-                                    id: "カード",
-                                    value: "targetCard",
-                                  },
-                                  "的角色",
-                                ],
+                          id: "プレーヤー",
+                          value: {
+                            path: [
+                              {
+                                id: "カード",
+                                value: {
+                                  path: [{ id: "このカード" }],
+                                },
                               },
-                            },
-                            "==",
-                            {
-                              id: "「カード」的角色",
-                              value: ["ユニット"],
-                            },
-                          ],
-                        },
-                        {
-                          id: "ConditionCompareBoolean",
-                          value: [
-                            {
-                              id: "布林",
-                              value: {
-                                path: [
-                                  { id: "カード", value: "targetCard" },
-                                  "在「交戦中」？",
-                                ],
-                              },
-                            },
-                            "==",
-                            {
-                              id: "布林",
-                              value: [true],
-                            },
-                          ],
+                              "的「コントローラー」",
+                            ],
+                          },
                         },
                       ],
                     },
-                    action: [
-                      {
-                        id: "ActionSetTarget",
-                        source: "targetCard",
-                        target: "targetCard",
-                      },
-                    ],
-                  },
-                  {
-                    id: "RequireTarget",
-                    targets: {
-                      damage: {
-                        id: "TargetTypeDamage",
-                        value: damage,
-                      },
+                    {
+                      id: "ConditionCompareRole",
+                      value: [
+                        {
+                          id: "「カード」的角色",
+                          value: {
+                            path: [
+                              {
+                                id: "カード",
+                                value: "targetCard",
+                              },
+                              "的角色",
+                            ],
+                          },
+                        },
+                        "==",
+                        {
+                          id: "「カード」的角色",
+                          value: ["ユニット"],
+                        },
+                      ],
                     },
-                    action: [
-                      {
-                        id: "ActionSetTarget",
-                        source: "damage",
-                        target: "damage",
-                      },
-                    ],
+                    {
+                      id: "ConditionCompareBoolean",
+                      value: [
+                        {
+                          id: "布林",
+                          value: {
+                            path: [
+                              { id: "カード", value: "targetCard" },
+                              "在「交戦中」？",
+                            ],
+                          },
+                        },
+                        "==",
+                        {
+                          id: "布林",
+                          value: [true],
+                        },
+                      ],
+                    },
+                  ],
+                },
+                action: [
+                  {
+                    id: "ActionSetTarget",
+                    source: "targetCard",
+                    target: "targetCard",
                   },
                 ],
               },
+              {
+                id: "RequireTarget",
+                targets: {
+                  damage: {
+                    id: "TargetTypeDamage",
+                    value: damage,
+                  },
+                },
+                action: [
+                  {
+                    id: "ActionSetTarget",
+                    source: "damage",
+                    target: "damage",
+                  },
+                ],
+              },
+            ],
+            feedbackBlock: {
               feedback: [
                 {
                   id: "FeedbackAction",
                   action: [
                     {
-                      id: "ActionAddBlock",
-                      type: "堆疊",
-                      block: {
-                        feedback: [
-                          {
-                            id: "FeedbackAction",
-                            action: [
-                              {
-                                id: "ActionUnitDamage",
-                                cards: {
-                                  id: "カード",
-                                  value: "targetCard",
-                                },
-                                value: "damage",
-                              },
-                            ],
-                          },
-                        ],
+                      id: "ActionUnitDamage",
+                      cards: {
+                        id: "カード",
+                        value: "targetCard",
                       },
+                      value: "damage",
                     },
                   ],
                 },
               ],
             },
-          },
+          }).cardText,
         ],
       };
     }
@@ -902,138 +847,123 @@ export function createTokuSyuKouKaText(
         id: "特殊型",
         description: toku,
         texts: [
-          {
-            id: "使用型",
-            timing: ["ダメージ判定ステップ"],
+          getCardTextMacro({
+            id: "PlayText",
+            cardText: DEFAULT_CARD_TEXT_SIYOU_KATA,
             description: JSON.stringify(toku),
-            block: {
-              contextID: `createTokuSyuKouKaText_${_seqID++}`,
-              require: {
-                id: "RequireAnd",
-                and: [
-                  createRollCostRequire(options.cost || 0, null),
-                  {
-                    id: "RequireTarget",
-                    targets: {
-                      targetCard: {
-                        id: "カード",
-                        value: [],
-                      },
-                    },
-                    condition: {
-                      id: "ConditionAnd",
-                      and: [
+            timing: ["ダメージ判定ステップ"],
+            varCtxID: `createTokuSyuKouKaText_${_seqID++}`,
+            additionalRequire: [
+              createRollCostRequire(options.cost || 0, null),
+              {
+                id: "RequireTarget",
+                targets: {
+                  targetCard: {
+                    id: "カード",
+                    value: [],
+                  },
+                },
+                condition: {
+                  id: "ConditionAnd",
+                  and: [
+                    {
+                      id: "ConditionCompareCard",
+                      value: [
                         {
-                          id: "ConditionCompareCard",
-                          value: [
-                            {
-                              id: "カード",
-                              value: "targetCard",
-                            },
-                            "交戦中",
-                            {
-                              id: "カード",
-                              value: {
-                                path: [
-                                  {
-                                    id: "このカード",
-                                  },
-                                ],
+                          id: "カード",
+                          value: "targetCard",
+                        },
+                        "交戦中",
+                        {
+                          id: "カード",
+                          value: {
+                            path: [
+                              {
+                                id: "このカード",
                               },
-                            },
-                          ],
-                        },
-                        {
-                          id: "ConditionCompareRole",
-                          value: [
-                            {
-                              id: "「カード」的角色",
-                              value: "targetCard",
-                            },
-                            "==",
-                            {
-                              id: "「カード」的角色",
-                              value: ["ユニット"],
-                            },
-                          ],
-                        },
-                        {
-                          id: "ConditionCompareBoolean",
-                          value: [
-                            {
-                              id: "布林",
-                              value: "targetCard",
-                            },
-                            "==",
-                            {
-                              id: "布林",
-                              value: [true],
-                            },
-                          ],
-                        },
-                        {
-                          id: "ConditionCompareNumber",
-                          value: [
-                            {
-                              id: "數字",
-                              value: {
-                                path: [
-                                  {
-                                    id: "カード",
-                                    value: "targetCard",
-                                  },
-                                  "的「防御力」",
-                                ],
-                              },
-                            },
-                            "<=",
-                            {
-                              id: "數字",
-                              value: [damage],
-                            },
-                          ],
+                            ],
+                          },
                         },
                       ],
                     },
-                    action: [
-                      {
-                        id: "ActionSetTarget",
-                        source: "targetCard",
-                        target: "targetCard",
-                      },
-                    ],
+                    {
+                      id: "ConditionCompareRole",
+                      value: [
+                        {
+                          id: "「カード」的角色",
+                          value: "targetCard",
+                        },
+                        "==",
+                        {
+                          id: "「カード」的角色",
+                          value: ["ユニット"],
+                        },
+                      ],
+                    },
+                    {
+                      id: "ConditionCompareBoolean",
+                      value: [
+                        {
+                          id: "布林",
+                          value: "targetCard",
+                        },
+                        "==",
+                        {
+                          id: "布林",
+                          value: [true],
+                        },
+                      ],
+                    },
+                    {
+                      id: "ConditionCompareNumber",
+                      value: [
+                        {
+                          id: "數字",
+                          value: {
+                            path: [
+                              {
+                                id: "カード",
+                                value: "targetCard",
+                              },
+                              "的「防御力」",
+                            ],
+                          },
+                        },
+                        "<=",
+                        {
+                          id: "數字",
+                          value: [damage],
+                        },
+                      ],
+                    },
+                  ],
+                },
+                action: [
+                  {
+                    id: "ActionSetTarget",
+                    source: "targetCard",
+                    target: "targetCard",
                   },
                 ],
               },
+            ],
+            feedbackBlock: {
               feedback: [
                 {
                   id: "FeedbackAction",
                   action: [
                     {
-                      id: "ActionAddBlock",
-                      type: "堆疊",
-                      block: {
-                        feedback: [
-                          {
-                            id: "FeedbackAction",
-                            action: [
-                              {
-                                id: "ActionDestroy",
-                                cards: {
-                                  id: "カード",
-                                  value: "targetCard",
-                                },
-                              },
-                            ],
-                          },
-                        ],
+                      id: "ActionDestroy",
+                      cards: {
+                        id: "カード",
+                        value: "targetCard",
                       },
                     },
                   ],
                 },
               ],
             },
-          },
+          }).cardText,
         ],
       };
     }
@@ -1043,26 +973,87 @@ export function createTokuSyuKouKaText(
         id: "特殊型",
         description: toku,
         texts: [
-          {
-            id: "使用型",
-            timing: ["戦闘フェイズ"],
+          getCardTextMacro({
+            id: "PlayText",
+            cardText: DEFAULT_CARD_TEXT_SIYOU_KATA,
             description: JSON.stringify(toku),
-            block: {
-              contextID: `createTokuSyuKouKaText_${_seqID++}`,
-              require: {
-                id: "RequireAnd",
-                and: [
-                  createRollCostRequire(options.cost || 0, null),
-                  {
-                    id: "RequireTarget",
-                    targets: {
-                      被改裝置換的卡: {
-                        id: "カード",
-                        value: { path: [{ id: "このカード" }] },
-                        valueLengthInclude: [1],
+            timing: ["戦闘フェイズ"],
+            varCtxID: `createTokuSyuKouKaText_${_seqID++}`,
+            additionalRequire: [
+              createRollCostRequire(options.cost || 0, null),
+              {
+                id: "RequireTarget",
+                targets: {
+                  被改裝置換的卡: {
+                    id: "カード",
+                    value: { path: [{ id: "このカード" }] },
+                    valueLengthInclude: [1],
+                  },
+                },
+                condition: {
+                  id: "ConditionCompareBaSyou",
+                  value: [
+                    {
+                      id: "場所",
+                      value: {
+                        path: [
+                          {
+                            id: "カード",
+                            value: { path: [{ id: "このカード" }] },
+                          },
+                          "的「場所」",
+                        ],
                       },
                     },
-                    condition: {
+                    "in",
+                    {
+                      id: "場所",
+                      value: [
+                        {
+                          id: "RelatedBaSyou",
+                          value: ["自軍", "配備エリア"],
+                        },
+                        {
+                          id: "RelatedBaSyou",
+                          value: ["自軍", "戦闘エリア（右）"],
+                        },
+                        {
+                          id: "RelatedBaSyou",
+                          value: ["自軍", "戦闘エリア（左）"],
+                        },
+                      ],
+                    },
+                  ],
+                },
+                action: [
+                  {
+                    id: "ActionSetTarget",
+                    source: "被改裝置換的卡",
+                    target: "被改裝置換的卡",
+                  },
+                ],
+              },
+              {
+                id: "RequireTarget",
+                targets: {
+                  改裝出場的卡: {
+                    id: "カード",
+                    value: [],
+                    valueLengthInclude: [1],
+                  },
+                },
+                condition: {
+                  id: "ConditionAnd",
+                  and: [
+                    // {
+                    //   id: "ConditionCompareCard",
+                    //   value: [
+                    //     { id: "カード", value: "改裝出場的卡" },
+                    //     "!=",
+                    //     { id: "カード", value: { path: [{ id: "このカード" }] } }
+                    //   ]
+                    // },
+                    {
                       id: "ConditionCompareBaSyou",
                       value: [
                         {
@@ -1071,7 +1062,7 @@ export function createTokuSyuKouKaText(
                             path: [
                               {
                                 id: "カード",
-                                value: { path: [{ id: "このカード" }] },
+                                value: "改裝出場的卡",
                               },
                               "的「場所」",
                             ],
@@ -1083,208 +1074,132 @@ export function createTokuSyuKouKaText(
                           value: [
                             {
                               id: "RelatedBaSyou",
-                              value: ["自軍", "配備エリア"],
+                              value: ["自軍", "手札"],
                             },
                             {
                               id: "RelatedBaSyou",
-                              value: ["自軍", "戦闘エリア（右）"],
-                            },
-                            {
-                              id: "RelatedBaSyou",
-                              value: ["自軍", "戦闘エリア（左）"],
+                              value: ["自軍", "ハンガー"],
                             },
                           ],
                         },
                       ],
                     },
-                    action: [
-                      {
-                        id: "ActionSetTarget",
-                        source: "被改裝置換的卡",
-                        target: "被改裝置換的卡",
-                      },
-                    ],
+                    {
+                      id: "ConditionCompareCardCategory",
+                      value: [
+                        {
+                          id: "カードの種類",
+                          value: {
+                            path: [
+                              {
+                                id: "カード",
+                                value: "改裝出場的卡",
+                              },
+                              "的「種類」",
+                            ],
+                          },
+                        },
+                        "==",
+                        {
+                          id: "カードの種類",
+                          value: ["ユニット"],
+                        },
+                      ],
+                    },
+                    {
+                      id: "ConditionCompareNumber",
+                      value: [
+                        {
+                          id: "數字",
+                          value: {
+                            path: [
+                              { id: "カード", value: "改裝出場的卡" },
+                              "的「合計国力」",
+                            ],
+                          },
+                        },
+                        "<=",
+                        {
+                          id: "數字",
+                          value: {
+                            path: [
+                              {
+                                id: "プレーヤー",
+                                value: {
+                                  path: [
+                                    { id: "カード", value: "改裝出場的卡" },
+                                    "的「コントローラー」",
+                                  ],
+                                },
+                              },
+                              "的「改装」的「合計国力」",
+                            ],
+                          },
+                        },
+                      ],
+                    },
+                    {
+                      id: "ConditionCompareString",
+                      value: [
+                        {
+                          id: "字串",
+                          value: {
+                            path: [
+                              { id: "カード", value: "改裝出場的卡" },
+                              "的「特徴」",
+                            ],
+                          },
+                        },
+                        "hasToken",
+                        {
+                          id: "字串",
+                          value: [tokuTyou],
+                        },
+                      ],
+                    },
+                  ],
+                },
+                action: [
+                  {
+                    id: "ActionSetFace",
+                    cards: {
+                      id: "カード",
+                      value: "改裝出場的卡",
+                    },
+                    faceDown: {
+                      id: "布林",
+                      value: [false],
+                    },
                   },
                   {
-                    id: "RequireTarget",
-                    targets: {
-                      改裝出場的卡: {
-                        id: "カード",
-                        value: [],
-                        valueLengthInclude: [1],
-                      },
-                    },
-                    condition: {
-                      id: "ConditionAnd",
-                      and: [
-                        // {
-                        //   id: "ConditionCompareCard",
-                        //   value: [
-                        //     { id: "カード", value: "改裝出場的卡" },
-                        //     "!=",
-                        //     { id: "カード", value: { path: [{ id: "このカード" }] } }
-                        //   ]
-                        // },
-                        {
-                          id: "ConditionCompareBaSyou",
-                          value: [
-                            {
-                              id: "場所",
-                              value: {
-                                path: [
-                                  {
-                                    id: "カード",
-                                    value: "改裝出場的卡",
-                                  },
-                                  "的「場所」",
-                                ],
-                              },
-                            },
-                            "in",
-                            {
-                              id: "場所",
-                              value: [
-                                {
-                                  id: "RelatedBaSyou",
-                                  value: ["自軍", "手札"],
-                                },
-                                {
-                                  id: "RelatedBaSyou",
-                                  value: ["自軍", "ハンガー"],
-                                },
-                              ],
-                            },
-                          ],
-                        },
-                        {
-                          id: "ConditionCompareCardCategory",
-                          value: [
-                            {
-                              id: "カードの種類",
-                              value: {
-                                path: [
-                                  {
-                                    id: "カード",
-                                    value: "改裝出場的卡",
-                                  },
-                                  "的「種類」",
-                                ],
-                              },
-                            },
-                            "==",
-                            {
-                              id: "カードの種類",
-                              value: ["ユニット"],
-                            },
-                          ],
-                        },
-                        {
-                          id: "ConditionCompareNumber",
-                          value: [
-                            {
-                              id: "數字",
-                              value: {
-                                path: [
-                                  { id: "カード", value: "改裝出場的卡" },
-                                  "的「合計国力」",
-                                ],
-                              },
-                            },
-                            "<=",
-                            {
-                              id: "數字",
-                              value: {
-                                path: [
-                                  {
-                                    id: "プレーヤー",
-                                    value: {
-                                      path: [
-                                        { id: "カード", value: "改裝出場的卡" },
-                                        "的「コントローラー」",
-                                      ],
-                                    },
-                                  },
-                                  "的「改装」的「合計国力」",
-                                ],
-                              },
-                            },
-                          ],
-                        },
-                        {
-                          id: "ConditionCompareString",
-                          value: [
-                            {
-                              id: "字串",
-                              value: {
-                                path: [
-                                  { id: "カード", value: "改裝出場的卡" },
-                                  "的「特徴」",
-                                ],
-                              },
-                            },
-                            "hasToken",
-                            {
-                              id: "字串",
-                              value: [tokuTyou],
-                            },
-                          ],
-                        },
-                      ],
-                    },
-                    action: [
-                      {
-                        id: "ActionSetFace",
-                        cards: {
-                          id: "カード",
-                          value: "改裝出場的卡",
-                        },
-                        faceDown: {
-                          id: "布林",
-                          value: [false],
-                        },
-                      },
-                      {
-                        id: "ActionSetTarget",
-                        source: "改裝出場的卡",
-                        target: "改裝出場的卡",
-                      },
-                    ],
+                    id: "ActionSetTarget",
+                    source: "改裝出場的卡",
+                    target: "改裝出場的卡",
                   },
                 ],
               },
+            ],
+            feedbackBlock: {
               feedback: [
                 {
                   id: "FeedbackAction",
                   action: [
                     {
-                      id: "ActionAddBlock",
-                      type: "堆疊",
-                      block: {
-                        feedback: [
-                          {
-                            id: "FeedbackAction",
-                            action: [
-                              {
-                                id: "ActionOKiKaeRu",
-                                cardA: {
-                                  id: "カード",
-                                  value: "被改裝置換的卡",
-                                },
-                                cardB: {
-                                  id: "カード",
-                                  value: "改裝出場的卡",
-                                },
-                              },
-                            ],
-                          },
-                        ],
+                      id: "ActionOKiKaeRu",
+                      cardA: {
+                        id: "カード",
+                        value: "被改裝置換的卡",
+                      },
+                      cardB: {
+                        id: "カード",
+                        value: "改裝出場的卡",
                       },
                     },
                   ],
                 },
               ],
             },
-          },
+          }).cardText,
         ],
       };
     }
@@ -1343,116 +1258,107 @@ export function createTokuSyuKouKaText(
               },
             },
           },
-          {
-            id: "使用型",
+          getCardTextMacro({
+            id: "PlayText",
+            cardText: DEFAULT_CARD_TEXT_SIYOU_KATA,
+            description: JSON.stringify(toku),
             timing: ["常時"],
-            description: "",
-            block: {
-              require: createRollCostRequire(options.cost || 0, null),
+            varCtxID: `createTokuSyuKouKaText_${_seqID++}`,
+            additionalRequire: [
+              createRollCostRequire(options.cost || 0, null),
+              // 剛出場旗標存在時
+            ],
+            feedbackBlock: {
+              require: {
+                id: "RequireTarget",
+                targets: {
+                  "「共有」出來的「カード」": {
+                    id: "カード",
+                    value: [],
+                    valueLengthInclude: [1],
+                  },
+                },
+                condition: {
+                  id: "ConditionAnd",
+                  and: [
+                    {
+                      id: "ConditionCompareBaSyou",
+                      value: [
+                        {
+                          id: "場所",
+                          value: {
+                            path: [
+                              {
+                                id: "カード",
+                                value: "「共有」出來的「カード」",
+                              },
+                              "的「場所」",
+                            ],
+                          },
+                        },
+                        "==",
+                        {
+                          id: "場所",
+                          value: [
+                            {
+                              id: "RelatedBaSyou",
+                              value: ["自軍", "本国"],
+                            },
+                          ],
+                        },
+                      ],
+                    },
+                    {
+                      id: "ConditionCompareString",
+                      value: [
+                        {
+                          id: "字串",
+                          value: {
+                            path: [
+                              {
+                                id: "カード",
+                                value: "「共有」出來的「カード」",
+                              },
+                              "的「特徴」",
+                            ],
+                          },
+                        },
+                        "hasToken",
+                        {
+                          id: "字串",
+                          value: [toku[1]],
+                        },
+                      ],
+                    },
+                  ],
+                },
+              },
               feedback: [
                 {
                   id: "FeedbackAction",
                   action: [
                     {
-                      id: "ActionAddBlock",
-                      type: "堆疊",
-                      block: {
-                        require: {
-                          id: "RequireTarget",
-                          targets: {
-                            "「共有」出來的「カード」": {
-                              id: "カード",
-                              value: [],
-                              valueLengthInclude: [1],
-                            },
-                          },
-                          condition: {
-                            id: "ConditionAnd",
-                            and: [
-                              // 剛出場旗標存在時
-                              {
-                                id: "ConditionCompareBaSyou",
-                                value: [
-                                  {
-                                    id: "場所",
-                                    value: {
-                                      path: [
-                                        {
-                                          id: "カード",
-                                          value: "「共有」出來的「カード」",
-                                        },
-                                        "的「場所」",
-                                      ],
-                                    },
-                                  },
-                                  "==",
-                                  {
-                                    id: "場所",
-                                    value: [
-                                      {
-                                        id: "RelatedBaSyou",
-                                        value: ["自軍", "本国"],
-                                      },
-                                    ],
-                                  },
-                                ],
-                              },
-                              {
-                                id: "ConditionCompareString",
-                                value: [
-                                  {
-                                    id: "字串",
-                                    value: {
-                                      path: [
-                                        {
-                                          id: "カード",
-                                          value: "「共有」出來的「カード」",
-                                        },
-                                        "的「特徴」",
-                                      ],
-                                    },
-                                  },
-                                  "hasToken",
-                                  {
-                                    id: "字串",
-                                    value: [toku[1]],
-                                  },
-                                ],
-                              },
-                            ],
-                          },
-                        },
-                        feedback: [
+                      id: "ActionMoveCardToPosition",
+                      cards: {
+                        id: "カード",
+                        value: "「共有」出來的「カード」",
+                      },
+                      baSyou: {
+                        id: "場所",
+                        value: [
                           {
-                            id: "FeedbackAction",
-                            action: [
-                              {
-                                id: "ActionMoveCardToPosition",
-                                cards: {
-                                  id: "カード",
-                                  value: "「共有」出來的「カード」",
-                                },
-                                baSyou: {
-                                  id: "場所",
-                                  value: [
-                                    {
-                                      id: "RelatedBaSyou",
-                                      value: ["自軍", "ハンガー"],
-                                    },
-                                  ],
-                                },
-                              },
-                              // 本國洗牌
-                            ],
+                            id: "RelatedBaSyou",
+                            value: ["自軍", "ハンガー"],
                           },
                         ],
                       },
                     },
+                    // 本國洗牌
                   ],
                 },
               ],
             },
-          },
+          }).cardText,
         ],
       };
     }
