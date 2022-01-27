@@ -23,11 +23,13 @@ import {
 
 export type CardTextMacro1 = {
   id: "PlayG";
+  description?: string;
   cardText: CardTextSiYouKaTa;
 };
 
 export type CardTextMacro2 = {
   id: "PlayUnit";
+  description?: string;
   varCtxID?: string;
   rollCostRequire?: Require[];
   totalCostConditionReplace?: Condition[];
@@ -38,6 +40,7 @@ export type CardTextMacro2 = {
 
 export type CardTextMacro3 = {
   id: "WhenCutFinished";
+  description?: string;
   varCtxID?: string;
   additionalFeedbackAction?: Action[];
   hasFlag?: string;
@@ -46,6 +49,7 @@ export type CardTextMacro3 = {
 
 export type CardTextMacro4 = {
   id: "WhenShowBa";
+  description?: string;
   varCtxID?: string;
   additionalFeedbackAction?: Action[];
   cardText: CardTextZiDouKaTa;
@@ -60,11 +64,15 @@ export type CardTextMacro =
 export function getCardTextMacro(macro: CardTextMacro): CardTextMacro {
   switch (macro.id) {
     case "PlayG":
-      macro.cardText = CARD_TEXT_PLAY_G;
+      macro.cardText = {
+        ...CARD_TEXT_PLAY_G,
+        description: macro.description || "PlayG",
+      };
       return macro;
     case "PlayUnit":
       macro.cardText = {
         ...CARD_TEXT_PLAY_UNIT,
+        description: macro.description || "PlayUnit",
         block: {
           ...CARD_TEXT_PLAY_UNIT.block,
           contextID: macro.varCtxID,
@@ -116,7 +124,7 @@ export function getCardTextMacro(macro: CardTextMacro): CardTextMacro {
       macro.cardText = {
         id: "自動型",
         category: "起動",
-        description: "その場合、カット終了時に、このカードを廃棄する。",
+        description: macro.description || "WhenCutFinished",
         block: {
           contextID: macro.varCtxID,
           require: {
@@ -293,7 +301,7 @@ export function getCardTextMacro(macro: CardTextMacro): CardTextMacro {
       macro.cardText = {
         id: "自動型",
         category: "起動",
-        description: "『起動』：このカードが場に出た場合",
+        description: macro.description || "WhenShowBa",
         block: {
           contextID: macro.varCtxID,
           require: {

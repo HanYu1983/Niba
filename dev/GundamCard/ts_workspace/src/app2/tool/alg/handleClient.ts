@@ -721,7 +721,6 @@ export function applyFlow(
         ...ctx,
         gameState: {
           ...ctx.gameState,
-          stackEffectMemory: [],
           flowMemory: {
             ...ctx.gameState.flowMemory,
             hasPlayerPassPayCost: {
@@ -798,6 +797,14 @@ export function queryFlow(ctx: GameContext, playerID: string): Flow[] {
             },
           ];
         }
+      }
+      if (isActivePlayer == false) {
+        return [
+          {
+            id: "FlowWaitPlayer",
+            description: "等待對方支付ActiveEffectID",
+          },
+        ];
       }
       return [
         {
