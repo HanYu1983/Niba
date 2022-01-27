@@ -9,6 +9,7 @@ import {
   CardColor,
   CardText,
   CardTextSiYouKaTa,
+  CardTextZiDouKaTa,
   SiYouTiming,
 } from "../../tool/basic/basic";
 import {

@@ -182,6 +182,7 @@ export function testProto_179025_07D_U_RD156R_red2() {
     effects: [cmd],
   });
   if (ctx.gameState.immediateEffect.length != 2) {
+    console.log(ctx);
     throw new Error("必須有切入結束時技能");
   }
   cmd = ctx.gameState.immediateEffect[0];
