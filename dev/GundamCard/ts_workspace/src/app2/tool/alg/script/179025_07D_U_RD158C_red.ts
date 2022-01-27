@@ -3,7 +3,6 @@ import {
   DEFAULT_CARD_PROTOTYPE,
 } from "../../tool/basic/gameContext";
 import { VAR_PLAY_CARD } from "./createPlayCardText";
-import { CARD_TEXT_DESTROY_WHEN_CUT_FINISHED_VAR_FLAG_FOR_DESTROY } from "./cardTextMacroForF91";
 import { createTokuSyuKouKaText } from "./createTokuSyuKouKaText";
 import {
   createRollCostRequire,
@@ -93,6 +92,8 @@ const playCardRequire: RequireTarget = {
 };
 
 const varCtxID1 = "varCtxID1";
+const CARD_TEXT_DESTROY_WHEN_CUT_FINISHED_VAR_FLAG_FOR_DESTROY =
+  "合計国力－３してプレイ";
 
 // 179025_07D_U_RD158C_red
 // C

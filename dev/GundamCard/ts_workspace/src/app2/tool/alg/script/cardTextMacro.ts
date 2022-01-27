@@ -11,7 +11,6 @@ import {
   Require,
 } from "../../tool/basic/blockPayload";
 import { Condition } from "../../tool/basic/condition";
-import { CARD_TEXT_DESTROY_WHEN_CUT_FINISHED } from "./cardTextMacroForF91";
 import {
   ACTION_CARD_TO_BASYOU,
   CARD_TEXT_PLAY_G,
