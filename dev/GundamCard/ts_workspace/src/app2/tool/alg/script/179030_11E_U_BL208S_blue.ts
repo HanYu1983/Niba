@@ -1,10 +1,12 @@
+import { DEFAULT_CARD_TEXT_SIYOU_KATA } from "../../tool/basic/basic";
+import { createRollCostRequire } from "../../tool/basic/blockPayload";
 import {
   CardPrototype,
   GameContext,
   DEFAULT_CARD_PROTOTYPE,
 } from "../../tool/basic/gameContext";
 import { RequireCustomID } from "../../tool/basic/requireCustom";
-import { createPlayCardText } from "./createPlayCardText";
+import { getCardTextMacro } from "./cardTextMacro";
 import { createTokuSyuKouKaText } from "./createTokuSyuKouKaText";
 // 179030_11E_U_BL208S_blue
 // Hi-νガンダム［†］ νガンダム系　MS　専用「アムロ・レイ」
@@ -23,6 +25,13 @@ const prototype: CardPrototype = {
     createTokuSyuKouKaText(["高機動"], { cost: 0 }),
     createTokuSyuKouKaText(["サイコミュ", 3], { cost: 1 }),
     createTokuSyuKouKaText(["改装", "νガンダム系"], { cost: 1 }),
+    getCardTextMacro({ id: "PlayG", cardText: DEFAULT_CARD_TEXT_SIYOU_KATA })
+      .cardText,
+    getCardTextMacro({
+      id: "PlayUnit",
+      cardText: DEFAULT_CARD_TEXT_SIYOU_KATA,
+      additionalRequire: [createRollCostRequire(1, "青")],
+    }).cardText,
     {
       id: "自動型",
       category: "常駐",
@@ -59,10 +68,4 @@ const prototype: CardPrototype = {
   ],
 };
 
-const playCardAsGText = createPlayCardText(prototype, { isG: true });
-const playCardText = createPlayCardText(prototype, {});
-
-module.exports = {
-  ...prototype,
-  texts: [...prototype.texts, playCardAsGText, playCardText],
-};
+module.exports = prototype;

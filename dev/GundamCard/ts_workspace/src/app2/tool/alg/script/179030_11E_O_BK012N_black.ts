@@ -1,8 +1,8 @@
 import { getCustomFunctionString } from "../../../../tool/helper";
 import {
   CardPrototype,
-  GameContext,
   DEFAULT_CARD_PROTOTYPE,
+  GameContext,
 } from "../../tool/basic/gameContext";
 import { createRollCostRequire } from "../../tool/basic/blockPayload";
 import { BlockPayload } from "../../tool/basic/blockPayload";
@@ -10,7 +10,9 @@ import {
   TargetType,
   TargetTypeCustomFunctionType,
 } from "../../tool/basic/targetType";
-import { createPlayCardText } from "./createPlayCardText";
+import { getCardTextMacro } from "./cardTextMacro";
+import { DEFAULT_CARD_TEXT_SIYOU_KATA } from "../../tool/basic/basic";
+import { createTokuSyuKouKaText } from "./createTokuSyuKouKaText";
 import { GameEventOnManualEventCustomID } from "../gameEventOnManualEventCustomID";
 
 // 179030_11E_O_BK012N_black
@@ -29,6 +31,13 @@ const prototype: CardPrototype = {
   color: "黒",
   rollCost: ["黒"],
   texts: [
+    getCardTextMacro({ id: "PlayG", cardText: DEFAULT_CARD_TEXT_SIYOU_KATA })
+      .cardText,
+    getCardTextMacro({
+      id: "PlayOperation",
+      cardText: DEFAULT_CARD_TEXT_SIYOU_KATA,
+      additionalRequire: [createRollCostRequire(1, "黒")],
+    }).cardText,
     {
       id: "自動型",
       category: "起動", // 規則寫常駐應該是寫錯
@@ -76,13 +85,15 @@ const prototype: CardPrototype = {
         ],
       },
     },
-    {
-      id: "使用型",
-      timing: ["常時"],
+    getCardTextMacro({
+      id: "PlayText",
+      cardText: DEFAULT_CARD_TEXT_SIYOU_KATA,
       description:
         "（常時）〔R〕：敵軍は、自分のジャンクヤードにあるカード１枚をゲームから取り除く。",
-      block: {
-        require: {
+      varCtxID:
+        "（常時）〔R〕：敵軍は、自分のジャンクヤードにあるカード１枚をゲームから取り除く。",
+      additionalRequire: [
+        {
           id: "RequireTarget",
           targets: {},
           action: [
@@ -92,68 +103,66 @@ const prototype: CardPrototype = {
             },
           ],
         },
+        {
+          id: "RequireTarget",
+          targets: {
+            "敵軍は、自分のジャンクヤードにあるカード１枚": {
+              id: "カード",
+              value: [],
+              valueLengthInclude: [1],
+              responsePlayer: "敵軍",
+            },
+          },
+          condition: {
+            id: "ConditionCompareBaSyou",
+            value: [
+              {
+                id: "場所",
+                value: {
+                  path: [
+                    {
+                      id: "カード",
+                      value: "自分のジャンクヤードにあるカード１枚",
+                    },
+                    "的「場所」",
+                  ],
+                },
+              },
+              "==",
+              {
+                id: "場所",
+                value: [
+                  {
+                    id: "RelatedBaSyou",
+                    value: ["自軍", "ジャンクヤード"],
+                  },
+                ],
+              },
+            ],
+          },
+          action: [
+            {
+              id: "ActionSetTarget",
+              source: "敵軍は、自分のジャンクヤードにあるカード１枚",
+              target: "敵軍は、自分のジャンクヤードにあるカード１枚",
+            },
+          ],
+        },
+      ],
+      feedbackBlock: {
+        contextID:
+          "（常時）〔R〕：敵軍は、自分のジャンクヤードにあるカード１枚をゲームから取り除く。",
         feedback: [
           {
             id: "FeedbackAction",
             action: [
-              {
-                id: "ActionAddBlock",
-                type: "堆疊",
-                block: {
-                  require: {
-                    id: "RequireTarget",
-                    targets: {
-                      自分のジャンクヤードにあるカード１枚: {
-                        id: "カード",
-                        value: [],
-                        valueLengthInclude: [1],
-                      },
-                    },
-                    condition: {
-                      id: "ConditionCompareBaSyou",
-                      value: [
-                        {
-                          id: "場所",
-                          value: {
-                            path: [
-                              {
-                                id: "カード",
-                                value: "自分のジャンクヤードにあるカード１枚",
-                              },
-                              "的「場所」",
-                            ],
-                          },
-                        },
-                        "==",
-                        {
-                          id: "場所",
-                          value: [
-                            {
-                              id: "RelatedBaSyou",
-                              value: ["自軍", "ジャンクヤード"],
-                            },
-                          ],
-                        },
-                      ],
-                    },
-                    action: [
-                      // ゲームから取り除く
-                    ],
-                  },
-                },
-              },
+              // ゲームから取り除く
             ],
           },
         ],
       },
-    },
+    }).cardText,
   ],
 };
 
-const playCardAsGText = createPlayCardText(prototype, { isG: true });
-const playCardText = createPlayCardText(prototype, {});
-
-module.exports = {
-  ...prototype,
-  texts: [...prototype.texts, playCardAsGText, playCardText],
-};
+module.exports = prototype;

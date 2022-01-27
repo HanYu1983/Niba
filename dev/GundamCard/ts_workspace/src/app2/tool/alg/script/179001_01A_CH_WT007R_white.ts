@@ -10,23 +10,12 @@ import {
   TargetType,
   TargetTypeCustomFunctionType,
 } from "../../tool/basic/targetType";
-import { createPlayCardText } from "./createPlayCardText";
-
-const _main: TargetTypeCustomFunctionType = (
-  ctx: GameContext,
-  blockPayload: BlockPayload
-): TargetType => {
-  console.log("JIBA");
-  return {
-    id: "カード",
-    value: [],
-  };
-};
+import { getCardTextMacro } from "./cardTextMacro";
+import { DEFAULT_CARD_TEXT_SIYOU_KATA } from "../../tool/basic/basic";
 
 // 179001_01A_CH_WT007R_white
 // キラ・ヤマト
 // 男性　子供　CO
-// （戦闘階段）〔２〕：這個配置群的機體は、回合終了時前「速攻」を獲得。
 // （戦闘フェイズ）〔２〕：このセットグループのユニットは、ターン終了時まで「速攻」を得る。
 
 const prototype: CardPrototype = {
@@ -37,13 +26,19 @@ const prototype: CardPrototype = {
   color: "白",
   rollCost: ["白", null, null, null],
   texts: [
-    {
-      id: "使用型",
-      timing: ["戦闘フェイズ"],
+    getCardTextMacro({ id: "PlayG", cardText: DEFAULT_CARD_TEXT_SIYOU_KATA })
+      .cardText,
+    getCardTextMacro({
+      id: "PlayCharacter",
+      cardText: DEFAULT_CARD_TEXT_SIYOU_KATA,
+    }).cardText,
+    getCardTextMacro({
+      id: "PlayText",
+      cardText: DEFAULT_CARD_TEXT_SIYOU_KATA,
       description:
-        "（戦闘階段）〔２〕：這個配置群的機體は、回合終了時前「速攻」を獲得。",
-      block: {
-        require: createRollCostRequire(2, null),
+        "（戦闘フェイズ）〔２〕：このセットグループのユニットは、ターン終了時まで「速攻」を得る。",
+      additionalRequire: [createRollCostRequire(2, null)],
+      feedbackBlock: {
         feedback: [
           {
             id: "FeedbackAction",
@@ -60,14 +55,8 @@ const prototype: CardPrototype = {
           },
         ],
       },
-    },
+    }).cardText,
   ],
 };
 
-const playCardAsGText = createPlayCardText(prototype, { isG: true });
-const playCardText = createPlayCardText(prototype, {});
-
-module.exports = {
-  ...prototype,
-  texts: [...prototype.texts, playCardAsGText, playCardText],
-};
+module.exports = prototype;

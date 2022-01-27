@@ -1,3 +1,4 @@
+import { DEFAULT_CARD_TEXT_SIYOU_KATA } from "../../tool/basic/basic";
 import { createRollCostRequire } from "../../tool/basic/blockPayload";
 import {
   CardPrototype,
@@ -6,7 +7,7 @@ import {
   DEFAULT_CARD_STATE,
 } from "../../tool/basic/gameContext";
 import { RequireCustomID } from "../../tool/basic/requireCustom";
-import { createPlayCardText } from "./createPlayCardText";
+import { getCardTextMacro } from "./cardTextMacro";
 import { createTokuSyuKouKaText } from "./createTokuSyuKouKaText";
 
 // 179030_11E_U_BL215R_blue
@@ -25,6 +26,13 @@ const prototype: CardPrototype = {
   texts: [
     createTokuSyuKouKaText(["戦闘配備"], { cost: 0 }),
     createTokuSyuKouKaText(["改装", "ペーネロペー系"], { cost: 1 }),
+    getCardTextMacro({ id: "PlayG", cardText: DEFAULT_CARD_TEXT_SIYOU_KATA })
+      .cardText,
+    getCardTextMacro({
+      id: "PlayUnit",
+      cardText: DEFAULT_CARD_TEXT_SIYOU_KATA,
+      additionalRequire: [createRollCostRequire(2, "青")],
+    }).cardText,
     {
       id: "恒常",
       description:
@@ -97,10 +105,4 @@ const prototype: CardPrototype = {
   ],
 };
 
-const playCardAsGText = createPlayCardText(prototype, { isG: true });
-const playCardText = createPlayCardText(prototype, {});
-
-module.exports = {
-  ...prototype,
-  texts: [...prototype.texts, playCardAsGText, playCardText],
-};
+module.exports = prototype;

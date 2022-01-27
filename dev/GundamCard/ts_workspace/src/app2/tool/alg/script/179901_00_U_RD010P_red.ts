@@ -158,21 +158,28 @@ const prototype: CardPrototype = {
               ],
             },
           ],
-          additionalFeedbackAction: [
-            {
-              id: "ActionSetFlag",
-              flag: {
-                id: "字串",
-                value: [
-                  CARD_TEXT_DESTROY_WHEN_CUT_FINISHED_VAR_FLAG_FOR_DESTROY,
+          feedbackBlock: {
+            feedback: [
+              {
+                id: "FeedbackAction",
+                action: [
+                  {
+                    id: "ActionSetFlag",
+                    flag: {
+                      id: "字串",
+                      value: [
+                        CARD_TEXT_DESTROY_WHEN_CUT_FINISHED_VAR_FLAG_FOR_DESTROY,
+                      ],
+                    },
+                    cards: {
+                      id: "カード",
+                      value: { path: [{ id: "このカード" }] },
+                    },
+                  },
                 ],
               },
-              cards: {
-                id: "カード",
-                value: { path: [{ id: "このカード" }] },
-              },
-            },
-          ],
+            ],
+          },
         }).cardText,
         getCardTextMacro({
           id: "WhenCutFinished",

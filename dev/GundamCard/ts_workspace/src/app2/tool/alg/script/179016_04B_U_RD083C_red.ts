@@ -1,11 +1,18 @@
+import { getCustomFunctionString } from "../../../../tool/helper";
 import {
   CardPrototype,
   DEFAULT_CARD_PROTOTYPE,
   GameContext,
 } from "../../tool/basic/gameContext";
 import { createRollCostRequire } from "../../tool/basic/blockPayload";
+import { BlockPayload } from "../../tool/basic/blockPayload";
+import {
+  TargetType,
+  TargetTypeCustomFunctionType,
+} from "../../tool/basic/targetType";
+import { getCardTextMacro } from "./cardTextMacro";
+import { DEFAULT_CARD_TEXT_SIYOU_KATA } from "../../tool/basic/basic";
 import { createTokuSyuKouKaText } from "./createTokuSyuKouKaText";
-import { createPlayCardText } from "./createPlayCardText";
 
 // 179016_04B_U_RD083C_red
 // C
@@ -57,10 +64,4 @@ const prototype: CardPrototype = {
   ],
 };
 
-const playCardAsGText = createPlayCardText(prototype, { isG: true });
-const playCardText = createPlayCardText(prototype, {});
-
-module.exports = {
-  ...prototype,
-  texts: [...prototype.texts, playCardAsGText, playCardText],
-};
+module.exports = prototype;

@@ -25,7 +25,7 @@ import { CardPrototype } from "../../tool/basic/gameContext";
 import { RequireCustomID } from "../../tool/basic/requireCustom";
 
 let idSeq = 0;
-export function createPlayCardText(
+function createPlayCardText(
   prototype: CardPrototype,
   options: {
     isG?: boolean;

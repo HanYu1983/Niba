@@ -1,10 +1,17 @@
-import { createRollCostRequire } from "../../tool/basic/blockPayload";
+import { getCustomFunctionString } from "../../../../tool/helper";
 import {
   CardPrototype,
   DEFAULT_CARD_PROTOTYPE,
   GameContext,
 } from "../../tool/basic/gameContext";
-import { createPlayCardText } from "./createPlayCardText";
+import { createRollCostRequire } from "../../tool/basic/blockPayload";
+import { BlockPayload } from "../../tool/basic/blockPayload";
+import {
+  TargetType,
+  TargetTypeCustomFunctionType,
+} from "../../tool/basic/targetType";
+import { getCardTextMacro } from "./cardTextMacro";
+import { DEFAULT_CARD_TEXT_SIYOU_KATA } from "../../tool/basic/basic";
 import { createTokuSyuKouKaText } from "./createTokuSyuKouKaText";
 
 // 179016_04B_U_WT075C_white
@@ -25,6 +32,13 @@ const prototype: CardPrototype = {
   rollCost: ["白", null, null, null, null],
   texts: [
     createTokuSyuKouKaText(["改装", "ブルーフレーム系"], { cost: 0 }),
+    getCardTextMacro({ id: "PlayG", cardText: DEFAULT_CARD_TEXT_SIYOU_KATA })
+      .cardText,
+    getCardTextMacro({
+      id: "PlayUnit",
+      cardText: DEFAULT_CARD_TEXT_SIYOU_KATA,
+      additionalRequire: [createRollCostRequire(1, "白")],
+    }).cardText,
     {
       id: "自動型",
       category: "起動",
@@ -158,10 +172,4 @@ const prototype: CardPrototype = {
   ],
 };
 
-const playCardAsGText = createPlayCardText(prototype, { isG: true });
-const playCardText = createPlayCardText(prototype, {});
-
-module.exports = {
-  ...prototype,
-  texts: [...prototype.texts, playCardAsGText, playCardText],
-};
+module.exports = prototype;

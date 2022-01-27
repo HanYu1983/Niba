@@ -1,18 +1,11 @@
-import { getCustomFunctionString } from "../../../../tool/helper";
 import {
   CardPrototype,
-  GameContext,
   DEFAULT_CARD_PROTOTYPE,
-  DEFAULT_CARD_STATE,
 } from "../../tool/basic/gameContext";
 import { createRollCostRequire } from "../../tool/basic/blockPayload";
-import { BlockPayload } from "../../tool/basic/blockPayload";
-import {
-  TargetType,
-  TargetTypeCustomFunctionType,
-} from "../../tool/basic/targetType";
-import { createPlayCardText } from "./createPlayCardText";
 import { GameEventOnManualEventCustomID } from "../gameEventOnManualEventCustomID";
+import { getCardTextMacro } from "./cardTextMacro";
+import { DEFAULT_CARD_TEXT_SIYOU_KATA } from "../../tool/basic/basic";
 
 // 179030_11E_C_BL076S_blue
 // S
@@ -30,6 +23,52 @@ const prototype: CardPrototype = {
   color: "青",
   rollCost: ["青", null, null],
   texts: [
+    getCardTextMacro({ id: "PlayG", cardText: DEFAULT_CARD_TEXT_SIYOU_KATA })
+      .cardText,
+    getCardTextMacro({
+      id: "PlayCommand",
+      cardText: DEFAULT_CARD_TEXT_SIYOU_KATA,
+      description:
+        "（敵軍防御ステップ）：交戦中の自軍ユニットがいる場合、交戦中ではない、全てのユニットを破壊する。",
+      timing: ["敵軍", "防御ステップ"],
+      additionalRequire: [createRollCostRequire(1, "青")],
+      feedbackBlock: {
+        require: {
+          id: "RequireAnd",
+          and: [
+            {
+              id: "RequireCustom",
+              customID: {
+                id: "交戦中の自軍ユニットがいる場合",
+              },
+            },
+            {
+              id: "RequireTarget",
+              targets: {
+                "交戦中ではない、全てのユニット": {
+                  id: "腳本",
+                  value: "",
+                },
+              },
+            },
+          ],
+        },
+        feedback: [
+          {
+            id: "FeedbackAction",
+            action: [
+              {
+                id: "ActionDestroy",
+                cards: {
+                  id: "カード",
+                  value: "交戦中ではない、全てのユニット",
+                },
+              },
+            ],
+          },
+        ],
+      },
+    }).cardText,
     {
       id: "恒常",
       description:
@@ -239,57 +278,4 @@ const prototype: CardPrototype = {
   ],
 };
 
-const playCardAsGText = createPlayCardText(prototype, { isG: true });
-
-// 交戦中ではない、全てのユニット
-const _main: TargetTypeCustomFunctionType = (
-  ctx: GameContext,
-  blockPayload: BlockPayload
-): TargetType => {
-  console.log("JIBA");
-  return {
-    id: "カード",
-    value: [],
-  };
-};
-const playCardText = createPlayCardText(prototype, {
-  description:
-    "（敵軍防御ステップ）：交戦中の自軍ユニットがいる場合、交戦中ではない、全てのユニットを破壊する。",
-  timing: ["敵軍", "防御ステップ"],
-  feedbackBlock: {
-    require: {
-      id: "RequireAnd",
-      and: [
-        {
-          id: "RequireCustom",
-          customID: {
-            id: "交戦中の自軍ユニットがいる場合",
-          },
-        },
-        {
-          id: "RequireTarget",
-          targets: {
-            "交戦中ではない、全てのユニット": {
-              id: "腳本",
-              value: getCustomFunctionString(_main),
-            },
-          },
-          action: [
-            {
-              id: "ActionDestroy",
-              cards: {
-                id: "カード",
-                value: "交戦中ではない、全てのユニット",
-              },
-            },
-          ],
-        },
-      ],
-    },
-  },
-});
-
-module.exports = {
-  ...prototype,
-  texts: [...prototype.texts, playCardAsGText, playCardText],
-};
+module.exports = prototype;

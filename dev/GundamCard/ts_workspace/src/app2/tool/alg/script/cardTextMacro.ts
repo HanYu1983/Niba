@@ -1,3 +1,4 @@
+import { Block } from "typescript";
 import {
   Action,
   ActionDeleteFlag,
@@ -8,12 +9,14 @@ import {
   CardText,
   CardTextSiYouKaTa,
   CardTextZiDouKaTa,
+  RelatedBaSyou,
   SiYouTiming,
 } from "../../tool/basic/basic";
 import {
   createRollCostRequire,
   RequireTarget,
   Require,
+  BlockPayload,
 } from "../../tool/basic/blockPayload";
 import { Condition } from "../../tool/basic/condition";
 
@@ -24,13 +27,18 @@ export type CardTextMacro1 = {
 };
 
 export type CardTextMacro2 = {
-  id: "PlayUnit";
+  id:
+    | "PlayUnit"
+    | "PlayCommand"
+    | "PlayCharacter"
+    | "PlayOperation"
+    | "PlayText";
   description?: string;
   varCtxID?: string;
   rollCostRequire?: Require[];
   totalCostConditionReplace?: Condition[];
   additionalRequire?: Require[];
-  additionalFeedbackAction?: Action[];
+  feedbackBlock?: BlockPayload;
   timing?: SiYouTiming;
   cardText: CardTextSiYouKaTa;
 };
@@ -60,261 +68,6 @@ export type CardTextMacro =
 
 export const VAR_PLAY_CARD = "將要「プレイ」的卡";
 
-const CONDITION_TOTAL_COST: Condition = {
-  id: "ConditionCompareNumber",
-  value: [
-    {
-      id: "數字",
-      value: {
-        path: [{ id: "カード", value: VAR_PLAY_CARD }, "的「合計国力」"],
-      },
-    },
-    "<=",
-    {
-      id: "數字",
-      value: {
-        path: [
-          {
-            id: "プレーヤー",
-            value: {
-              path: [
-                {
-                  id: "カード",
-                  value: VAR_PLAY_CARD,
-                },
-                "的「コントローラー」",
-              ],
-            },
-          },
-          "的「合計国力」",
-        ],
-      },
-    },
-  ],
-};
-const CONDITION_PLAY_UNIT_FROM_BASYOU: Condition = {
-  id: "ConditionCompareBaSyou",
-  value: [
-    {
-      id: "場所",
-      value: {
-        path: [
-          {
-            id: "カード",
-            value: VAR_PLAY_CARD,
-          },
-          "的「場所」",
-        ],
-      },
-    },
-    "in",
-    {
-      id: "場所",
-      value: [
-        {
-          id: "RelatedBaSyou",
-          value: ["自軍", "手札"],
-        },
-        {
-          id: "RelatedBaSyou",
-          value: ["自軍", "ハンガー"],
-        },
-      ],
-    },
-  ],
-};
-
-const REQUIRE_PLAY: RequireTarget = {
-  id: "RequireTarget",
-  targets: {
-    [VAR_PLAY_CARD]: {
-      id: "カード",
-      value: {
-        path: [
-          {
-            id: "このカード",
-          },
-        ],
-      },
-    },
-  },
-  condition: {
-    id: "ConditionAnd",
-    and: [CONDITION_PLAY_UNIT_FROM_BASYOU],
-  },
-  action: [
-    {
-      id: "ActionSetFace",
-      cards: {
-        id: "カード",
-        value: VAR_PLAY_CARD,
-      },
-      faceDown: {
-        id: "布林",
-        value: [false],
-      },
-    },
-    {
-      id: "ActionMoveCardToPosition",
-      cards: {
-        id: "カード",
-        value: VAR_PLAY_CARD,
-      },
-      baSyou: {
-        id: "場所",
-        value: [
-          {
-            id: "RelatedBaSyou",
-            value: ["自軍", "プレイされているカード"],
-          },
-        ],
-      },
-    },
-    {
-      id: "ActionSetTarget",
-      source: VAR_PLAY_CARD,
-      target: VAR_PLAY_CARD,
-    },
-  ],
-};
-
-const ACTION_CARD_TO_BASYOU: ActionMoveCardToPosition = {
-  id: "ActionMoveCardToPosition",
-  cards: {
-    id: "カード",
-    value: VAR_PLAY_CARD,
-  },
-  baSyou: {
-    id: "場所",
-    value: [
-      {
-        id: "RelatedBaSyou",
-        value: ["自軍", "配備エリア"],
-      },
-    ],
-  },
-};
-
-const CARD_TEXT_PLAY: CardTextSiYouKaTa = {
-  id: "使用型",
-  timing: ["自軍", "配備フェイズ"],
-  description: `プレイ`,
-  block: {
-    contextID: "CARD_TEXT_PLAY",
-    require: {
-      id: "RequireAnd",
-      and: [REQUIRE_PLAY],
-    },
-    feedback: [
-      {
-        id: "FeedbackAction",
-        action: [
-          {
-            id: "ActionAddBlock",
-            type: "堆疊",
-            block: {
-              feedback: [
-                {
-                  id: "FeedbackAction",
-                  action: [],
-                },
-              ],
-            },
-          },
-        ],
-      },
-    ],
-  },
-};
-
-const CARD_TEXT_PLAY_G: CardTextSiYouKaTa = {
-  ...CARD_TEXT_PLAY,
-  description: `プレイG`,
-  block: {
-    ...CARD_TEXT_PLAY.block,
-    contextID: "CARD_TEXT_PLAY_G",
-    require: {
-      id: "RequireAnd",
-      and: [REQUIRE_PLAY],
-    },
-    feedback: [
-      {
-        id: "FeedbackAction",
-        action: [
-          {
-            id: "ActionAddBlock",
-            type: "堆疊",
-            block: {
-              feedback: [
-                {
-                  id: "FeedbackAction",
-                  action: [
-                    {
-                      id: "ActionMoveCardToPosition",
-                      cards: {
-                        id: "カード",
-                        value: VAR_PLAY_CARD,
-                      },
-                      baSyou: {
-                        id: "場所",
-                        value: [
-                          {
-                            id: "RelatedBaSyou",
-                            value: ["自軍", "Gゾーン"],
-                          },
-                        ],
-                      },
-                    },
-                    {
-                      id: "ActionRoll",
-                      cards: {
-                        id: "カード",
-                        value: VAR_PLAY_CARD,
-                      },
-                    },
-                  ],
-                },
-              ],
-            },
-          },
-        ],
-      },
-    ],
-  },
-};
-
-export const CARD_TEXT_PLAY_UNIT: CardTextSiYouKaTa = {
-  ...CARD_TEXT_PLAY,
-  description: `プレイUNIT`,
-  block: {
-    ...CARD_TEXT_PLAY.block,
-    contextID: "CARD_TEXT_PLAY_UNIT",
-    require: {
-      id: "RequireAnd",
-      and: [REQUIRE_PLAY],
-    },
-    feedback: [
-      {
-        id: "FeedbackAction",
-        action: [
-          {
-            id: "ActionAddBlock",
-            type: "堆疊",
-            block: {
-              feedback: [
-                {
-                  id: "FeedbackAction",
-                  action: [ACTION_CARD_TO_BASYOU],
-                },
-              ],
-            },
-          },
-        ],
-      },
-    ],
-  },
-};
-
 export function getCardTextMacro(macro: CardTextMacro): CardTextMacro {
   switch (macro.id) {
     case "PlayG":
@@ -324,17 +77,20 @@ export function getCardTextMacro(macro: CardTextMacro): CardTextMacro {
       };
       return macro;
     case "PlayUnit":
+    case "PlayCommand":
+    case "PlayCharacter":
+    case "PlayOperation":
+    case "PlayText":
       macro.cardText = {
-        ...CARD_TEXT_PLAY_UNIT,
+        ...CARD_TEXT_PLAY,
         description: macro.description || "PlayUnit",
-        timing: macro.timing || CARD_TEXT_PLAY_UNIT.timing,
+        timing: macro.timing || CARD_TEXT_PLAY.timing,
         block: {
-          ...CARD_TEXT_PLAY_UNIT.block,
+          ...CARD_TEXT_PLAY.block,
           contextID: macro.varCtxID,
           require: {
             id: "RequireAnd",
             and: [
-              ...(macro.rollCostRequire || []),
               {
                 ...REQUIRE_PLAY,
                 condition: {
@@ -358,12 +114,48 @@ export function getCardTextMacro(macro: CardTextMacro): CardTextMacro {
                   id: "ActionAddBlock",
                   type: "堆疊",
                   block: {
+                    ...macro.feedbackBlock,
                     feedback: [
+                      ...(macro.feedbackBlock?.feedback || []),
                       {
                         id: "FeedbackAction",
                         action: [
-                          ACTION_CARD_TO_BASYOU,
-                          ...(macro.additionalFeedbackAction || []),
+                          {
+                            id: "ActionMoveCardToPosition",
+                            cards: {
+                              id: "カード",
+                              value: VAR_PLAY_CARD,
+                            },
+                            baSyou: {
+                              id: "場所",
+                              value: [
+                                ...(macro.id == "PlayUnit"
+                                  ? [
+                                      {
+                                        id: "RelatedBaSyou",
+                                        value: ["自軍", "配備エリア"],
+                                      } as RelatedBaSyou,
+                                    ]
+                                  : []),
+                                ...(macro.id == "PlayOperation"
+                                  ? [
+                                      {
+                                        id: "RelatedBaSyou",
+                                        value: ["自軍", "配備エリア"],
+                                      } as RelatedBaSyou,
+                                    ]
+                                  : []),
+                                ...(macro.id == "PlayCommand"
+                                  ? [
+                                      {
+                                        id: "RelatedBaSyou",
+                                        value: ["自軍", "ジャンクヤード"],
+                                      } as RelatedBaSyou,
+                                    ]
+                                  : []),
+                              ],
+                            },
+                          },
                         ],
                       },
                     ],
@@ -663,3 +455,258 @@ export function formatRollCost(rollCost: (CardColor | null)[]) {
   );
   return ret;
 }
+
+const CONDITION_TOTAL_COST: Condition = {
+  id: "ConditionCompareNumber",
+  value: [
+    {
+      id: "數字",
+      value: {
+        path: [{ id: "カード", value: VAR_PLAY_CARD }, "的「合計国力」"],
+      },
+    },
+    "<=",
+    {
+      id: "數字",
+      value: {
+        path: [
+          {
+            id: "プレーヤー",
+            value: {
+              path: [
+                {
+                  id: "カード",
+                  value: VAR_PLAY_CARD,
+                },
+                "的「コントローラー」",
+              ],
+            },
+          },
+          "的「合計国力」",
+        ],
+      },
+    },
+  ],
+};
+const CONDITION_PLAY_UNIT_FROM_BASYOU: Condition = {
+  id: "ConditionCompareBaSyou",
+  value: [
+    {
+      id: "場所",
+      value: {
+        path: [
+          {
+            id: "カード",
+            value: VAR_PLAY_CARD,
+          },
+          "的「場所」",
+        ],
+      },
+    },
+    "in",
+    {
+      id: "場所",
+      value: [
+        {
+          id: "RelatedBaSyou",
+          value: ["自軍", "手札"],
+        },
+        {
+          id: "RelatedBaSyou",
+          value: ["自軍", "ハンガー"],
+        },
+      ],
+    },
+  ],
+};
+
+const REQUIRE_PLAY: RequireTarget = {
+  id: "RequireTarget",
+  targets: {
+    [VAR_PLAY_CARD]: {
+      id: "カード",
+      value: {
+        path: [
+          {
+            id: "このカード",
+          },
+        ],
+      },
+    },
+  },
+  condition: {
+    id: "ConditionAnd",
+    and: [CONDITION_PLAY_UNIT_FROM_BASYOU],
+  },
+  action: [
+    {
+      id: "ActionSetFace",
+      cards: {
+        id: "カード",
+        value: VAR_PLAY_CARD,
+      },
+      faceDown: {
+        id: "布林",
+        value: [false],
+      },
+    },
+    {
+      id: "ActionMoveCardToPosition",
+      cards: {
+        id: "カード",
+        value: VAR_PLAY_CARD,
+      },
+      baSyou: {
+        id: "場所",
+        value: [
+          {
+            id: "RelatedBaSyou",
+            value: ["自軍", "プレイされているカード"],
+          },
+        ],
+      },
+    },
+    {
+      id: "ActionSetTarget",
+      source: VAR_PLAY_CARD,
+      target: VAR_PLAY_CARD,
+    },
+  ],
+};
+
+const ACTION_CARD_TO_BASYOU: ActionMoveCardToPosition = {
+  id: "ActionMoveCardToPosition",
+  cards: {
+    id: "カード",
+    value: VAR_PLAY_CARD,
+  },
+  baSyou: {
+    id: "場所",
+    value: [
+      {
+        id: "RelatedBaSyou",
+        value: ["自軍", "配備エリア"],
+      },
+    ],
+  },
+};
+
+const CARD_TEXT_PLAY: CardTextSiYouKaTa = {
+  id: "使用型",
+  timing: ["自軍", "配備フェイズ"],
+  description: `プレイ`,
+  block: {
+    contextID: "CARD_TEXT_PLAY",
+    require: {
+      id: "RequireAnd",
+      and: [REQUIRE_PLAY],
+    },
+    feedback: [
+      {
+        id: "FeedbackAction",
+        action: [
+          {
+            id: "ActionAddBlock",
+            type: "堆疊",
+            block: {
+              feedback: [
+                {
+                  id: "FeedbackAction",
+                  action: [],
+                },
+              ],
+            },
+          },
+        ],
+      },
+    ],
+  },
+};
+
+const CARD_TEXT_PLAY_G: CardTextSiYouKaTa = {
+  ...CARD_TEXT_PLAY,
+  description: `プレイG`,
+  block: {
+    ...CARD_TEXT_PLAY.block,
+    contextID: "CARD_TEXT_PLAY_G",
+    require: {
+      id: "RequireAnd",
+      and: [REQUIRE_PLAY],
+    },
+    feedback: [
+      {
+        id: "FeedbackAction",
+        action: [
+          {
+            id: "ActionAddBlock",
+            type: "堆疊",
+            block: {
+              feedback: [
+                {
+                  id: "FeedbackAction",
+                  action: [
+                    {
+                      id: "ActionMoveCardToPosition",
+                      cards: {
+                        id: "カード",
+                        value: VAR_PLAY_CARD,
+                      },
+                      baSyou: {
+                        id: "場所",
+                        value: [
+                          {
+                            id: "RelatedBaSyou",
+                            value: ["自軍", "Gゾーン"],
+                          },
+                        ],
+                      },
+                    },
+                    {
+                      id: "ActionRoll",
+                      cards: {
+                        id: "カード",
+                        value: VAR_PLAY_CARD,
+                      },
+                    },
+                  ],
+                },
+              ],
+            },
+          },
+        ],
+      },
+    ],
+  },
+};
+
+export const CARD_TEXT_PLAY_UNIT: CardTextSiYouKaTa = {
+  ...CARD_TEXT_PLAY,
+  description: `プレイUNIT`,
+  block: {
+    ...CARD_TEXT_PLAY.block,
+    contextID: "CARD_TEXT_PLAY_UNIT",
+    require: {
+      id: "RequireAnd",
+      and: [REQUIRE_PLAY],
+    },
+    feedback: [
+      {
+        id: "FeedbackAction",
+        action: [
+          {
+            id: "ActionAddBlock",
+            type: "堆疊",
+            block: {
+              feedback: [
+                {
+                  id: "FeedbackAction",
+                  action: [ACTION_CARD_TO_BASYOU],
+                },
+              ],
+            },
+          },
+        ],
+      },
+    ],
+  },
+};

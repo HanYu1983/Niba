@@ -1,13 +1,20 @@
-import { createRollCostRequire } from "../../tool/basic/blockPayload";
+import { getCustomFunctionString } from "../../../../tool/helper";
 import {
   CardPrototype,
-  GameContext,
   DEFAULT_CARD_PROTOTYPE,
   DEFAULT_CARD_STATE,
+  GameContext,
 } from "../../tool/basic/gameContext";
-import { RequireCustomID } from "../../tool/basic/requireCustom";
-import { createPlayCardText } from "./createPlayCardText";
+import { createRollCostRequire } from "../../tool/basic/blockPayload";
+import { BlockPayload } from "../../tool/basic/blockPayload";
+import {
+  TargetType,
+  TargetTypeCustomFunctionType,
+} from "../../tool/basic/targetType";
+import { getCardTextMacro } from "./cardTextMacro";
+import { DEFAULT_CARD_TEXT_SIYOU_KATA } from "../../tool/basic/basic";
 import { createTokuSyuKouKaText } from "./createTokuSyuKouKaText";
+import { RequireCustomID } from "../../tool/basic/requireCustom";
 
 // 179030_11E_U_BL210N_blue
 // N
@@ -27,6 +34,13 @@ const prototype: CardPrototype = {
   texts: [
     createTokuSyuKouKaText(["戦闘配備"], { cost: 0 }),
     createTokuSyuKouKaText(["改装", "リ・ガズィ系"], { cost: 1 }),
+    getCardTextMacro({ id: "PlayG", cardText: DEFAULT_CARD_TEXT_SIYOU_KATA })
+      .cardText,
+    getCardTextMacro({
+      id: "PlayUnit",
+      cardText: DEFAULT_CARD_TEXT_SIYOU_KATA,
+      additionalRequire: [createRollCostRequire(1, "青")],
+    }).cardText,
     {
       id: "自動型",
       category: "起動",
@@ -135,10 +149,4 @@ const prototype: CardPrototype = {
   ],
 };
 
-const playCardAsGText = createPlayCardText(prototype, { isG: true });
-const playCardText = createPlayCardText(prototype, {});
-
-module.exports = {
-  ...prototype,
-  texts: [...prototype.texts, playCardAsGText, playCardText],
-};
+module.exports = prototype;
