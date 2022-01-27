@@ -133,6 +133,8 @@ const prototype: CardPrototype = {
         getCardTextMacro({
           id: "PlayUnit",
           cardText: DEFAULT_CARD_TEXT_SIYOU_KATA,
+          description:
+            "『恒常』：[このカードは、合計国力－３してプレイできる]。その場合、カット終了時に、このカードを廃棄する。",
           varCtxID: varCtxID1,
           rollCostRequire: [createRollCostRequire(2, "赤")],
           additionalRequire: [playCardRequire],
@@ -204,6 +206,8 @@ const prototype: CardPrototype = {
         getCardTextMacro({
           id: "WhenCutFinished",
           cardText: DEFAULT_CARD_TEXT_ZIDOU_KATA,
+          description:
+            "『恒常』：このカードは、合計国力－３してプレイできる。[その場合、カット終了時に、このカードを廃棄する。]",
           hasFlag: CARD_TEXT_DESTROY_WHEN_CUT_FINISHED_VAR_FLAG_FOR_DESTROY,
           additionalFeedbackAction: [
             {
@@ -218,6 +222,8 @@ const prototype: CardPrototype = {
         getCardTextMacro({
           id: "WhenShowBa",
           cardText: DEFAULT_CARD_TEXT_ZIDOU_KATA,
+          description:
+            "『起動』：このカードが場に出た場合、戦闘エリアにいる敵軍ユニット１～２枚をロールする。",
           varCtxID: varCtxID1,
           additionalFeedbackAction: [
             {

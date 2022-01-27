@@ -4,6 +4,7 @@ import {
   CardText,
   CardTextSiYouKaTa,
   CardTextZiDouKaTa,
+  SiYouTiming,
 } from "../../tool/basic/basic";
 import {
   createRollCostRequire,
@@ -35,6 +36,7 @@ export type CardTextMacro2 = {
   totalCostConditionReplace?: Condition[];
   additionalRequire?: Require[];
   additionalFeedbackAction?: Action[];
+  timing?: SiYouTiming;
   cardText: CardTextSiYouKaTa;
 };
 
@@ -73,6 +75,7 @@ export function getCardTextMacro(macro: CardTextMacro): CardTextMacro {
       macro.cardText = {
         ...CARD_TEXT_PLAY_UNIT,
         description: macro.description || "PlayUnit",
+        timing: macro.timing || CARD_TEXT_PLAY_UNIT.timing,
         block: {
           ...CARD_TEXT_PLAY_UNIT.block,
           contextID: macro.varCtxID,

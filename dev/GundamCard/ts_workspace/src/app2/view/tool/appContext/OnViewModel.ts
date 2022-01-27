@@ -135,7 +135,7 @@ export const OnViewModel = OnEvent.pipe(
               id: "AbsoluteBaSyou",
               value: [PlayerA, "手札"],
             }),
-            ["179901_00_U_RD010P_red", "179025_07D_U_RD156R_red"]
+            ["179901_00_U_RD010P_red", "179025_07D_U_RD158C_red"]
           );
           console.log("準備2張G");
           table = createCard(

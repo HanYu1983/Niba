@@ -108,6 +108,7 @@ const prototype: CardPrototype = {
             "『恒常』：[このカードは、合計国力－３してプレイできる。その場合]、カット終了時に、このカードを廃棄する。",
           varCtxID: varCtxID1,
           rollCostRequire: [createRollCostRequire(2, "赤")],
+          timing: ["戦闘フェイズ"],
           additionalRequire: [playCardRequire],
           totalCostConditionReplace: [
             {

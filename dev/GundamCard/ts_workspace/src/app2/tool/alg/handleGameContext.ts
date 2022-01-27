@@ -149,12 +149,12 @@ export function triggerTextEvent(
   return [...ctx.gameState.cardState, ...ctx.gameState.globalCardState].reduce(
     (ctx, cardState: { cardID: string; cardTextStates: CardTextState[] }) => {
       return cardState.cardTextStates.reduce((ctx, cardTextState) => {
-        const blocks: BlockPayload[] = (() => {
+        const cardTexts = (() => {
           switch (cardTextState.cardText.id) {
             case "自動型":
               switch (cardTextState.cardText.category) {
                 case "起動":
-                  return [cardTextState.cardText.block];
+                  return [cardTextState.cardText];
                 default:
                   return [];
               }
@@ -164,23 +164,23 @@ export function triggerTextEvent(
             case "恒常":
               return cardTextState.cardText.texts
                 .filter((t) => t.id == "自動型" && t.category == "起動")
-                .map((t) => t.block);
+                .map((t) => t);
           }
         })();
-        return blocks.reduce((ctx, block) => {
+        return cardTexts.reduce((ctx, cardText) => {
           const cardController = getCardController(ctx, cardState.cardID);
           const wrapEvent: BlockPayload = {
-            ...block,
+            ...cardText.block,
             cause: {
               id: "BlockPayloadCauseGameEvent",
               playerID: cardController,
               cardID: cardState.cardID,
               cardTextID: cardTextState.id,
               gameEvent: evt,
-              description: JSON.stringify(cardTextState.cardText.description),
+              description: cardText.description,
             },
             // 加上卡ID，讓varCtxID變成每張卡唯一。而不是遊戲唯一。
-            contextID: `[${cardState.cardID}]_[${block.contextID}]`,
+            contextID: `[${cardState.cardID}]_[${cardText.block.contextID}]`,
           };
           const varCtxID = "triggerTextEvent";
           try {
@@ -227,23 +227,23 @@ export function updateCommand(ctx: GameContext): GameContext {
   };
   return ctx.gameState.cardState.reduce((ctx, cardState) => {
     return cardState.cardTextStates.reduce((ctx, cardTextState) => {
-      const blocks: BlockPayload[] = (() => {
+      const cardTexts = (() => {
         switch (cardTextState.cardText.id) {
           case "自動型":
             return [];
           case "使用型":
-            return [cardTextState.cardText.block];
+            return [cardTextState.cardText];
           case "特殊型":
           case "恒常":
             return cardTextState.cardText.texts
               .filter((t) => t.id == "使用型")
-              .map((t) => t.block);
+              .map((t) => t);
         }
       })();
-      return blocks.reduce((ctx, block) => {
+      return cardTexts.reduce((ctx, cardText) => {
         const cardController = getCardController(ctx, cardState.cardID);
         let wrapEvent: BlockPayload = {
-          ...block,
+          ...cardText.block,
           id: `updateCommand_${ctx.gameState.commandEffect.length}`,
           // 準備背景資料用來判斷
           cause: {
@@ -251,14 +251,14 @@ export function updateCommand(ctx: GameContext): GameContext {
             playerID: cardController,
             cardID: cardState.cardID,
             cardTextID: cardTextState.id,
-            description: JSON.stringify(cardTextState.cardText.description),
+            description: cardText.description,
           },
           // 若有需求，則將每個需求加上ID才能讓玩家選擇
-          ...(block.require
-            ? { require: wrapRequireKey(block.require) }
+          ...(cardText.block.require
+            ? { require: wrapRequireKey(cardText.block.require) }
             : null),
           // 加上卡ID，讓varCtxID變成每張卡唯一。而不是遊戲唯一。
-          contextID: `[${cardState.cardID}]_[${block.contextID}]`,
+          contextID: `[${cardState.cardID}]_[${cardText.block.contextID}]`,
         };
         const varCtxID = "updateCommand";
         wrapEvent = wrapTip(ctx, true, wrapEvent, varCtxID);
@@ -307,7 +307,7 @@ export function updateEffect(ctx: GameContext): GameContext {
   };
   return ctx.gameState.cardState.reduce((ctx, cardState) => {
     return cardState.cardTextStates.reduce((ctx, cardTextState) => {
-      const blocks: BlockPayload[] = (() => {
+      const cardTexts = (() => {
         switch (cardTextState.cardText.id) {
           case "自動型":
             switch (cardTextState.cardText.category) {
@@ -319,7 +319,7 @@ export function updateEffect(ctx: GameContext): GameContext {
                 if (isBa(baSyouKeyword) == false) {
                   return [];
                 }
-                return [cardTextState.cardText.block];
+                return [cardTextState.cardText];
               }
               default:
                 return [];
@@ -339,10 +339,10 @@ export function updateEffect(ctx: GameContext): GameContext {
                       if (isBa(baSyouKeyword) == false) {
                         return [];
                       }
-                      return [t.block];
+                      return [t];
                     }
                     case "恒常":
-                      return [t.block];
+                      return [t];
                     default:
                       return [];
                   }
@@ -358,22 +358,22 @@ export function updateEffect(ctx: GameContext): GameContext {
                   t.id == "自動型" &&
                   (t.category == "恒常" || t.category == "常駐")
               )
-              .map((t) => t.block);
+              .map((t) => t);
         }
       })();
-      return blocks.reduce((ctx, block) => {
+      return cardTexts.reduce((ctx, cardText) => {
         const cardController = getCardController(ctx, cardState.cardID);
         const wrapEvent: BlockPayload = {
-          ...block,
+          ...cardText.block,
           cause: {
             id: "BlockPayloadCauseUpdateEffect",
             playerID: cardController,
             cardID: cardState.cardID,
             cardTextID: cardTextState.id,
-            description: JSON.stringify(cardTextState.cardText.description),
+            description: cardText.description,
           },
           // 加上卡ID，讓varCtxID變成每張卡唯一。而不是遊戲唯一。
-          contextID: `[${cardState.cardID}]_[${block.contextID}]`,
+          contextID: `[${cardState.cardID}]_[${cardText.block.contextID}]`,
         };
         const varCtxID = "updateEffect";
         try {
