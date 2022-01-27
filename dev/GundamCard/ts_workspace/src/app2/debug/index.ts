@@ -41,6 +41,7 @@ import {
 import { getTargetType } from "../tool/alg/helper";
 import { testJsonfp, testJsonfp2, testJsonfp3 } from "./testJsonfp";
 import { Action, ActionDraw, ActionDrop } from "../tool/tool/basic/action";
+import { testProto_179025_07D_U_RD158C_red } from "./testProto_179025_07D_U_RD158C_red";
 
 export function test() {
   [
@@ -55,6 +56,7 @@ export function test() {
     testRequireJsonfp,
     testProto_179025_07D_U_RD156R_red,
     testProto_179025_07D_U_RD156R_red2,
+    testProto_179025_07D_U_RD158C_red,
   ].forEach((testF: Function) => {
     console.log(
       `================================================================`
