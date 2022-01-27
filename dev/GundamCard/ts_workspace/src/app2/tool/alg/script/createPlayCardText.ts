@@ -886,6 +886,7 @@ export const CARD_TEXT_PLAY: CardTextSiYouKaTa = {
 
 export const CARD_TEXT_PLAY_G: CardTextSiYouKaTa = {
   ...CARD_TEXT_PLAY,
+  description: `プレイG`,
   block: {
     ...CARD_TEXT_PLAY.block,
     contextID: "CARD_TEXT_PLAY_G",
@@ -941,6 +942,7 @@ export const CARD_TEXT_PLAY_G: CardTextSiYouKaTa = {
 
 export const CARD_TEXT_PLAY_UNIT: CardTextSiYouKaTa = {
   ...CARD_TEXT_PLAY,
+  description: `プレイUNIT`,
   block: {
     ...CARD_TEXT_PLAY.block,
     contextID: "CARD_TEXT_PLAY_UNIT",

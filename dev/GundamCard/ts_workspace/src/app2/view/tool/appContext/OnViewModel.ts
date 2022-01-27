@@ -135,7 +135,7 @@ export const OnViewModel = OnEvent.pipe(
               id: "AbsoluteBaSyou",
               value: [PlayerA, "手札"],
             }),
-            ["179901_00_U_RD010P_red"]
+            ["179901_00_U_RD010P_red", "179025_07D_U_RD156R_red"]
           );
           console.log("準備2張G");
           table = createCard(
@@ -186,7 +186,8 @@ export const OnViewModel = OnEvent.pipe(
               ...ctx.gameState,
               // @ts-ignore
               timing: TIMING_CHART.find(
-                (t) => t[1][1] == "ダメージ判定ステップ"
+                //(t) => t[1][1] == "ダメージ判定ステップ"
+                (t) => t[1][0] == "配備フェイズ"
               ),
             },
             versionID: viewModel.model.versionID,
