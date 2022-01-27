@@ -2,7 +2,6 @@ import {
   CardPrototype,
   DEFAULT_CARD_PROTOTYPE,
 } from "../../tool/basic/gameContext";
-import { VAR_PLAY_CARD } from "./createPlayCardText";
 import { createTokuSyuKouKaText } from "./createTokuSyuKouKaText";
 import {
   createRollCostRequire,
@@ -13,7 +12,7 @@ import {
   DEFAULT_CARD_TEXT_SIYOU_KATA,
   DEFAULT_CARD_TEXT_ZIDOU_KATA,
 } from "../../tool/basic/basic";
-import { getCardTextMacro } from "./cardTextMacro";
+import { getCardTextMacro, VAR_PLAY_CARD } from "./cardTextMacro";
 
 const playCardRequire: RequireTarget = {
   id: "RequireTarget",

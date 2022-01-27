@@ -1,4 +1,8 @@
-import { Action, ActionDeleteFlag } from "../../tool/basic/action";
+import {
+  Action,
+  ActionDeleteFlag,
+  ActionMoveCardToPosition,
+} from "../../tool/basic/action";
 import {
   CardColor,
   CardText,
@@ -12,15 +16,6 @@ import {
   Require,
 } from "../../tool/basic/blockPayload";
 import { Condition } from "../../tool/basic/condition";
-import {
-  ACTION_CARD_TO_BASYOU,
-  CARD_TEXT_PLAY_G,
-  CARD_TEXT_PLAY_UNIT,
-  CONDITION_PLAY_UNIT_FROM_BASYOU,
-  CONDITION_TOTAL_COST,
-  formatRollCost,
-  REQUIRE_PLAY,
-} from "./createPlayCardText";
 
 export type CardTextMacro1 = {
   id: "PlayG";
@@ -62,6 +57,263 @@ export type CardTextMacro =
   | CardTextMacro2
   | CardTextMacro3
   | CardTextMacro4;
+
+export const VAR_PLAY_CARD = "將要「プレイ」的卡";
+
+const CONDITION_TOTAL_COST: Condition = {
+  id: "ConditionCompareNumber",
+  value: [
+    {
+      id: "數字",
+      value: {
+        path: [{ id: "カード", value: VAR_PLAY_CARD }, "的「合計国力」"],
+      },
+    },
+    "<=",
+    {
+      id: "數字",
+      value: {
+        path: [
+          {
+            id: "プレーヤー",
+            value: {
+              path: [
+                {
+                  id: "カード",
+                  value: VAR_PLAY_CARD,
+                },
+                "的「コントローラー」",
+              ],
+            },
+          },
+          "的「合計国力」",
+        ],
+      },
+    },
+  ],
+};
+const CONDITION_PLAY_UNIT_FROM_BASYOU: Condition = {
+  id: "ConditionCompareBaSyou",
+  value: [
+    {
+      id: "場所",
+      value: {
+        path: [
+          {
+            id: "カード",
+            value: VAR_PLAY_CARD,
+          },
+          "的「場所」",
+        ],
+      },
+    },
+    "in",
+    {
+      id: "場所",
+      value: [
+        {
+          id: "RelatedBaSyou",
+          value: ["自軍", "手札"],
+        },
+        {
+          id: "RelatedBaSyou",
+          value: ["自軍", "ハンガー"],
+        },
+      ],
+    },
+  ],
+};
+
+const REQUIRE_PLAY: RequireTarget = {
+  id: "RequireTarget",
+  targets: {
+    [VAR_PLAY_CARD]: {
+      id: "カード",
+      value: {
+        path: [
+          {
+            id: "このカード",
+          },
+        ],
+      },
+    },
+  },
+  condition: {
+    id: "ConditionAnd",
+    and: [CONDITION_PLAY_UNIT_FROM_BASYOU],
+  },
+  action: [
+    {
+      id: "ActionSetFace",
+      cards: {
+        id: "カード",
+        value: VAR_PLAY_CARD,
+      },
+      faceDown: {
+        id: "布林",
+        value: [false],
+      },
+    },
+    {
+      id: "ActionMoveCardToPosition",
+      cards: {
+        id: "カード",
+        value: VAR_PLAY_CARD,
+      },
+      baSyou: {
+        id: "場所",
+        value: [
+          {
+            id: "RelatedBaSyou",
+            value: ["自軍", "プレイされているカード"],
+          },
+        ],
+      },
+    },
+    {
+      id: "ActionSetTarget",
+      source: VAR_PLAY_CARD,
+      target: VAR_PLAY_CARD,
+    },
+  ],
+};
+
+const ACTION_CARD_TO_BASYOU: ActionMoveCardToPosition = {
+  id: "ActionMoveCardToPosition",
+  cards: {
+    id: "カード",
+    value: VAR_PLAY_CARD,
+  },
+  baSyou: {
+    id: "場所",
+    value: [
+      {
+        id: "RelatedBaSyou",
+        value: ["自軍", "配備エリア"],
+      },
+    ],
+  },
+};
+
+const CARD_TEXT_PLAY: CardTextSiYouKaTa = {
+  id: "使用型",
+  timing: ["自軍", "配備フェイズ"],
+  description: `プレイ`,
+  block: {
+    contextID: "CARD_TEXT_PLAY",
+    require: {
+      id: "RequireAnd",
+      and: [REQUIRE_PLAY],
+    },
+    feedback: [
+      {
+        id: "FeedbackAction",
+        action: [
+          {
+            id: "ActionAddBlock",
+            type: "堆疊",
+            block: {
+              feedback: [
+                {
+                  id: "FeedbackAction",
+                  action: [],
+                },
+              ],
+            },
+          },
+        ],
+      },
+    ],
+  },
+};
+
+const CARD_TEXT_PLAY_G: CardTextSiYouKaTa = {
+  ...CARD_TEXT_PLAY,
+  description: `プレイG`,
+  block: {
+    ...CARD_TEXT_PLAY.block,
+    contextID: "CARD_TEXT_PLAY_G",
+    require: {
+      id: "RequireAnd",
+      and: [REQUIRE_PLAY],
+    },
+    feedback: [
+      {
+        id: "FeedbackAction",
+        action: [
+          {
+            id: "ActionAddBlock",
+            type: "堆疊",
+            block: {
+              feedback: [
+                {
+                  id: "FeedbackAction",
+                  action: [
+                    {
+                      id: "ActionMoveCardToPosition",
+                      cards: {
+                        id: "カード",
+                        value: VAR_PLAY_CARD,
+                      },
+                      baSyou: {
+                        id: "場所",
+                        value: [
+                          {
+                            id: "RelatedBaSyou",
+                            value: ["自軍", "Gゾーン"],
+                          },
+                        ],
+                      },
+                    },
+                    {
+                      id: "ActionRoll",
+                      cards: {
+                        id: "カード",
+                        value: VAR_PLAY_CARD,
+                      },
+                    },
+                  ],
+                },
+              ],
+            },
+          },
+        ],
+      },
+    ],
+  },
+};
+
+export const CARD_TEXT_PLAY_UNIT: CardTextSiYouKaTa = {
+  ...CARD_TEXT_PLAY,
+  description: `プレイUNIT`,
+  block: {
+    ...CARD_TEXT_PLAY.block,
+    contextID: "CARD_TEXT_PLAY_UNIT",
+    require: {
+      id: "RequireAnd",
+      and: [REQUIRE_PLAY],
+    },
+    feedback: [
+      {
+        id: "FeedbackAction",
+        action: [
+          {
+            id: "ActionAddBlock",
+            type: "堆疊",
+            block: {
+              feedback: [
+                {
+                  id: "FeedbackAction",
+                  action: [ACTION_CARD_TO_BASYOU],
+                },
+              ],
+            },
+          },
+        ],
+      },
+    ],
+  },
+};
 
 export function getCardTextMacro(macro: CardTextMacro): CardTextMacro {
   switch (macro.id) {
@@ -393,4 +645,21 @@ export function getCardTextMacro(macro: CardTextMacro): CardTextMacro {
       };
       return macro;
   }
+}
+
+export function formatRollCost(rollCost: (CardColor | null)[]) {
+  const [ret] = rollCost.reduce(
+    (
+      [result, source],
+      color
+    ): [[CardColor, number][], (CardColor | null)[]] => {
+      const number = source.filter((c) => c == color).length;
+      return [
+        color == null || number == 0 ? result : [...result, [color, number]],
+        source.filter((c) => c != color),
+      ];
+    },
+    [[], rollCost] as [[CardColor, number][], (CardColor | null)[]]
+  );
+  return ret;
 }
