@@ -1,38 +1,20 @@
 import {
   CardPrototype,
-  GameContext,
   DEFAULT_CARD_PROTOTYPE,
-  DEFAULT_CARD_STATE,
 } from "../../tool/basic/gameContext";
-import { createPlayCardText } from "./createPlayCardText";
+import { VAR_PLAY_CARD } from "./createPlayCardText";
+import { CARD_TEXT_DESTROY_WHEN_CUT_FINISHED_VAR_FLAG_FOR_DESTROY } from "./cardTextMacroForF91";
 import { createTokuSyuKouKaText } from "./createTokuSyuKouKaText";
-import { CardText } from "../../tool/basic/basic";
 import {
-  recurRequire,
-  Require,
+  createRollCostRequire,
   RequireTarget,
 } from "../../tool/basic/blockPayload";
-import { Condition } from "../../tool/basic/condition";
-import { GameEventOnManualEventCustomID } from "../gameEventOnManualEventCustomID";
-
-// 179025_07D_U_RD158C_red
-// C
-// F91
-// ガンダムF91（ツインヴェスバータイプ）
-// F91系　MS　専用｢シーブック・アノー｣
-// クイック　〔１〕：改装〔F91系〕
-// 『恒常』：このカードは、ダメージ判定ステップ中、合計国力－３してプレイできる。その場合、カット終了時に、このカードを廃棄する。
-// 『起動』：このカードが場に出た場合、戦闘エリアにいる敵軍ユニット１～２枚をロールする。
-
-const prototype: CardPrototype = {
-  ...DEFAULT_CARD_PROTOTYPE,
-  title: "ガンダムF91（ツインヴェスバータイプ）",
-  characteristic: "F91系　MS　専用｢シーブック・アノー｣".split("　"),
-  category: "ユニット",
-  color: "赤",
-  rollCost: ["赤", "赤", null, null, null],
-  battlePoint: [5, 2, 5],
-};
+import {
+  CardColor,
+  DEFAULT_CARD_TEXT_SIYOU_KATA,
+  DEFAULT_CARD_TEXT_ZIDOU_KATA,
+} from "../../tool/basic/basic";
+import { getCardTextMacro } from "./cardTextMacro";
 
 const playCardRequire: RequireTarget = {
   id: "RequireTarget",
@@ -110,405 +92,145 @@ const playCardRequire: RequireTarget = {
   ],
 };
 
-const varCtxID1 =
-  "179025_07D_U_RD158C_red_『恒常』：このカードは、ダメージ判定ステップ中、合計国力－３してプレイできる。その場合、カット終了時に、このカードを廃棄する。";
+const varCtxID1 = "varCtxID1";
 
-let playCardPlus = createPlayCardText(prototype, {
-  description:
-    "『恒常』：このカードは、ダメージ判定ステップ中、合計国力－３してプレイできる。その場合、カット終了時に、このカードを廃棄する。",
-  varCtxID: varCtxID1,
-  timing: ["ダメージ判定ステップ"],
-  require: playCardRequire,
-  feedbackBlock: {
-    feedback: [
-      {
-        id: "FeedbackAction",
-        action: [
-          {
-            id: "ActionSetFlag",
-            flag: {
-              id: "字串",
-              value: ["合計国力－３してプレイ"],
+// 179025_07D_U_RD158C_red
+// C
+// F91
+// ガンダムF91（ツインヴェスバータイプ）
+// F91系　MS　専用｢シーブック・アノー｣
+// クイック　〔１〕：改装〔F91系〕
+// 『恒常』：このカードは、ダメージ判定ステップ中、合計国力－３してプレイできる。その場合、カット終了時に、このカードを廃棄する。
+// 『起動』：このカードが場に出た場合、戦闘エリアにいる敵軍ユニット１～２枚をロールする。
+
+const rollCost: (CardColor | null)[] = ["赤", "赤", null, null, null];
+const prototype: CardPrototype = {
+  ...DEFAULT_CARD_PROTOTYPE,
+  title: "ガンダムF91（ツインヴェスバータイプ）",
+  characteristic: "F91系　MS　専用｢シーブック・アノー｣".split("　"),
+  category: "ユニット",
+  color: "赤",
+  rollCost: rollCost,
+  battlePoint: [5, 2, 5],
+  texts: [
+    createTokuSyuKouKaText(["クイック"], {}),
+    createTokuSyuKouKaText(["改装", "F91系"], { cost: 1 }),
+    getCardTextMacro({ id: "PlayG", cardText: DEFAULT_CARD_TEXT_SIYOU_KATA })
+      .cardText,
+    getCardTextMacro({
+      id: "PlayUnit",
+      cardText: DEFAULT_CARD_TEXT_SIYOU_KATA,
+      varCtxID: varCtxID1,
+      rollCostRequire: [createRollCostRequire(2, "赤")],
+      additionalRequire: [playCardRequire],
+    }).cardText,
+    {
+      id: "恒常",
+      description:
+        "『恒常』：このカードは、合計国力－３してプレイできる。その場合、カット終了時に、このカードを廃棄する。",
+      texts: [
+        getCardTextMacro({
+          id: "PlayUnit",
+          cardText: DEFAULT_CARD_TEXT_SIYOU_KATA,
+          varCtxID: varCtxID1,
+          rollCostRequire: [createRollCostRequire(2, "赤")],
+          additionalRequire: [playCardRequire],
+          totalCostConditionReplace: [
+            {
+              id: "ConditionCompareNumber",
+              value: [
+                {
+                  id: "數字",
+                  value: {
+                    path: [
+                      {
+                        id: "數字",
+                        value: {
+                          path: [
+                            { id: "カード", value: VAR_PLAY_CARD },
+                            "的「合計国力」",
+                          ],
+                        },
+                      },
+                      "-",
+                      {
+                        id: "數字",
+                        value: [3],
+                      },
+                    ],
+                  },
+                },
+                "<=",
+                {
+                  id: "數字",
+                  value: {
+                    path: [
+                      {
+                        id: "プレーヤー",
+                        value: {
+                          path: [
+                            {
+                              id: "カード",
+                              value: VAR_PLAY_CARD,
+                            },
+                            "的「コントローラー」",
+                          ],
+                        },
+                      },
+                      "的「合計国力」",
+                    ],
+                  },
+                },
+              ],
             },
-            cards: {
-              id: "カード",
-              value: { path: [{ id: "このカード" }] },
-            },
-          },
-        ],
-      },
-    ],
-  },
-});
-playCardPlus = {
-  ...playCardPlus,
-  block: {
-    ...playCardPlus.block,
-    ...(playCardPlus.block.require
-      ? {
-          require: recurRequire(playCardPlus.block.require, (r): Require => {
-            if (r.id != "RequireTarget") {
-              return r;
-            }
-            if (r.key != "靜態替換_將要「プレイ」的卡") {
-              return r;
-            }
-            if (r.condition?.id != "ConditionAnd") {
-              throw new Error("must be ConditionAnd");
-            }
-            const nextConditionAnd = r.condition.and.map((cond): Condition => {
-              if (cond.id != "ConditionCompareNumber") {
-                return cond;
-              }
-              return {
-                id: "ConditionCompareNumber",
+          ],
+          additionalFeedbackAction: [
+            {
+              id: "ActionSetFlag",
+              flag: {
+                id: "字串",
                 value: [
-                  {
-                    id: "數字",
-                    value: {
-                      path: [
-                        {
-                          id: "數字",
-                          value: {
-                            path: [
-                              { id: "カード", value: "將要「プレイ」的卡" },
-                              "的「合計国力」",
-                            ],
-                          },
-                        },
-                        "-",
-                        {
-                          id: "數字",
-                          value: [3],
-                        },
-                      ],
-                    },
-                  },
-                  "<=",
-                  {
-                    id: "數字",
-                    value: {
-                      path: [
-                        {
-                          id: "プレーヤー",
-                          value: {
-                            path: [
-                              {
-                                id: "カード",
-                                value: "將要「プレイ」的卡",
-                              },
-                              "的「コントローラー」",
-                            ],
-                          },
-                        },
-                        "的「合計国力」",
-                      ],
-                    },
-                  },
+                  CARD_TEXT_DESTROY_WHEN_CUT_FINISHED_VAR_FLAG_FOR_DESTROY,
                 ],
-              };
-            });
-            return {
-              ...r,
-              condition: {
-                ...r.condition,
-                and: nextConditionAnd,
               },
-            };
-          }),
-        }
-      : null),
-  },
-};
-
-const texts: CardText[] = [
-  createTokuSyuKouKaText(["クイック"], {}),
-  createTokuSyuKouKaText(["改装", "F91系"], { cost: 1 }),
-  createPlayCardText(prototype, { isG: true }),
-  createPlayCardText(prototype, {
-    require: playCardRequire,
-    varCtxID: varCtxID1,
-  }),
-  {
-    id: "恒常",
-    description:
-      "『恒常』：このカードは、合計国力－３してプレイできる。その場合、カット終了時に、このカードを廃棄する。",
-    texts: [
-      // このカードは、合計国力－３してプレイできる
-      playCardPlus,
-      // その場合、カット終了時に、このカードを廃棄する。
-      {
-        id: "自動型",
-        category: "起動",
-        description: "その場合、カット終了時に、このカードを廃棄する。",
-        block: {
-          require: {
-            id: "RequireTarget",
-            targets: {},
-            condition: {
-              id: "ConditionJsonfp",
-              program: {
-                pass1: {
-                  if: [
-                    {
-                      "->": [
-                        "$in.blockPayload",
-                        { log: "blockPayload" },
-                        { getter: "cause" },
-                        { getter: "id" },
-                        { "==": "BlockPayloadCauseGameEvent" },
-                      ],
-                    },
-                    {},
-                    { error: "事件必須是BlockPayloadCauseGameEvent" },
-                  ],
-                },
-                pass2: {
-                  if: [
-                    {
-                      "->": [
-                        "$in.blockPayload",
-                        { log: "blockPayload" },
-                        { getter: "cause" },
-                        { getter: "gameEvent" },
-                        { getter: "id" },
-                        { "==": "カット終了時" },
-                      ],
-                    },
-                    {},
-                    { error: "事件必須是カット終了時" },
-                  ],
-                },
-                $cardTextID: {
-                  "->": [
-                    "$in.blockPayload",
-                    { log: "thisEffect" },
-                    { getter: "cause" },
-                    { getter: "cardTextID" },
-                    { log: "cardTextID" },
-                  ],
-                },
-                pass3: {
-                  if: [
-                    {
-                      "->": [
-                        {
-                          "->": [
-                            "$in.blockPayload",
-                            { log: "blockPayload" },
-                            { getter: "cause" },
-                            { getter: "gameEvent" },
-                            { getter: "effects" },
-                          ],
-                        },
-                        // .運算子只支援2層
-                        { map: "$in.cause.cardTextID" },
-                        {
-                          filter: {
-                            "==": "$cardTextID",
-                          },
-                        },
-                        { size: null },
-                        { ">": 0 },
-                      ],
-                    },
-                    {},
-                    { error: "效果必須包含在堆疊記憶內" },
-                  ],
-                },
-                $cardID: {
-                  "->": [
-                    "$in.blockPayload",
-                    { getter: "cause" },
-                    { getter: "cardID" },
-                  ],
-                },
-                pass4: {
-                  if: [
-                    {
-                      "->": [
-                        {
-                          "->": [
-                            "$in.ctx",
-                            { getter: "gameState" },
-                            { getter: "cardState" },
-                          ],
-                        },
-                        {
-                          filter: {
-                            "->": [
-                              [
-                                {
-                                  "->": ["$in.id", { "==": "$cardID" }],
-                                },
-                                {
-                                  "->": [
-                                    "$in.flags",
-                                    { filter: "合計国力－３してプレイ" },
-                                    { size: null },
-                                    { ">": 0 },
-                                  ],
-                                },
-                              ],
-                              { reduce: "and" },
-                            ],
-                          },
-                        },
-                        { size: null },
-                        { ">": 0 },
-                      ],
-                    },
-                    {},
-                    { error: "必須有flag:合計国力－３してプレイ" },
-                  ],
-                },
+              cards: {
+                id: "カード",
+                value: { path: [{ id: "このカード" }] },
               },
-            },
-          },
-          feedback: [
-            {
-              id: "FeedbackAction",
-              action: [
-                {
-                  id: "ActionAddBlock",
-                  type: "立即",
-                  block: {
-                    feedback: [
-                      {
-                        id: "FeedbackAction",
-                        action: [
-                          {
-                            id: "ActionDestroy",
-                            cards: {
-                              id: "カード",
-                              value: { path: [{ id: "このカード" }] },
-                            },
-                          },
-                          {
-                            id: "ActionDeleteFlag",
-                            cards: {
-                              id: "カード",
-                              value: { path: [{ id: "このカード" }] },
-                            },
-                            flag: {
-                              id: "字串",
-                              value: ["合計国力－３してプレイ"],
-                            },
-                          },
-                        ],
-                      },
-                    ],
-                  },
-                },
-              ],
             },
           ],
-        },
-      },
-      {
-        id: "自動型",
-        category: "起動",
-        description:
-          "『起動』：このカードが場に出た場合、戦闘エリアにいる敵軍ユニット１～２枚をロールする。",
-        block: {
-          contextID: varCtxID1,
-          require: {
-            id: "RequireTarget",
-            targets: {},
-            condition: {
-              id: "ConditionJsonfp",
-              program: {
-                pass1: {
-                  if: [
-                    {
-                      "->": [
-                        "$in.blockPayload",
-                        { log: "blockPayload" },
-                        { getter: "cause" },
-                        { getter: "id" },
-                        { "==": "BlockPayloadCauseGameEvent" },
-                      ],
-                    },
-                    {},
-                    { error: "事件必須是BlockPayloadCauseGameEvent" },
-                  ],
-                },
-                pass2: {
-                  if: [
-                    {
-                      "->": [
-                        "$in.blockPayload",
-                        { log: "blockPayload" },
-                        { getter: "cause" },
-                        { getter: "gameEvent" },
-                        { getter: "id" },
-                        { "==": "場に出た場合" },
-                      ],
-                    },
-                    {},
-                    { error: "事件必須是場に出た場合" },
-                  ],
-                },
-                $cardID: {
-                  "->": [
-                    "$in.blockPayload",
-                    { getter: "cause" },
-                    { getter: "cardID" },
-                  ],
-                },
-                pass3: {
-                  if: [
-                    {
-                      "->": [
-                        "$in.blockPayload",
-                        { log: "blockPayload" },
-                        { getter: "cause" },
-                        { getter: "gameEvent" },
-                        { getter: "cardID" },
-                        { "==": "$cardID" },
-                      ],
-                    },
-                    {},
-                    { error: "必須是這張卡" },
-                  ],
-                },
+        }).cardText,
+        getCardTextMacro({
+          id: "WhenCutFinished",
+          cardText: DEFAULT_CARD_TEXT_ZIDOU_KATA,
+          hasFlag: CARD_TEXT_DESTROY_WHEN_CUT_FINISHED_VAR_FLAG_FOR_DESTROY,
+          additionalFeedbackAction: [
+            {
+              id: "ActionDestroy",
+              cards: {
+                id: "カード",
+                value: { path: [{ id: "このカード" }] },
               },
             },
-          },
-          feedback: [
+          ],
+        }).cardText,
+        getCardTextMacro({
+          id: "WhenShowBa",
+          cardText: DEFAULT_CARD_TEXT_ZIDOU_KATA,
+          varCtxID: varCtxID1,
+          additionalFeedbackAction: [
             {
-              id: "FeedbackAction",
-              action: [
-                {
-                  id: "ActionAddBlock",
-                  type: "立即",
-                  block: {
-                    feedback: [
-                      {
-                        id: "FeedbackAction",
-                        action: [
-                          {
-                            id: "ActionRoll",
-                            cards: {
-                              id: "カード",
-                              value: "戦闘エリアにいる敵軍ユニット１～２枚",
-                            },
-                          },
-                        ],
-                      },
-                    ],
-                  },
-                },
-              ],
+              id: "ActionRoll",
+              cards: {
+                id: "カード",
+                value: "戦闘エリアにいる敵軍ユニット１～２枚",
+              },
             },
           ],
-        },
-      },
-    ],
-  },
-];
-
-module.exports = {
-  ...prototype,
-  texts: texts,
+        }).cardText,
+      ],
+    },
+  ],
 };
+
+module.exports = prototype;

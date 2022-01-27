@@ -289,6 +289,20 @@ export type CardText =
   | CardTextToKuSyuKata
   | CardTextZiDouKaTa2;
 
+export const DEFAULT_CARD_TEXT_SIYOU_KATA: CardTextSiYouKaTa = {
+  id: "使用型",
+  timing: ["自軍", "配備フェイズ"],
+  description: "",
+  block: {},
+};
+
+export const DEFAULT_CARD_TEXT_ZIDOU_KATA: CardTextZiDouKaTa = {
+  id: "自動型",
+  category: "起動",
+  description: "",
+  block: {},
+};
+
 export type FlagKeyword = "破壊" | "プレイされたカード";
 
 export function getOpponentPlayerID(playerID: PlayerID): PlayerID {
