@@ -78,71 +78,71 @@ export type ActionSetFace = {
   faceDown: TargetTypeBoolean;
 };
 
-type ActionOKiKaeRu = {
+export type ActionOKiKaeRu = {
   id: "ActionOKiKaeRu";
   cardA: TargetTypeCard;
   cardB: TargetTypeCard;
 };
 
-type ActionUnitDamage = {
+export type ActionUnitDamage = {
   id: "ActionUnitDamage";
   cards: TargetTypeCard;
   value: string;
 };
 
-type ActionAddBlock = {
+export type ActionAddBlock = {
   id: "ActionAddBlock";
   type: "立即" | "堆疊";
   block: BlockPayload;
 };
 
 // 加入全局效果
-type ActionAddEffect = {
+export type ActionAddEffect = {
   id: "ActionAddEffect";
   effectID?: string;
   effect: GameEffect;
 };
 
-type ActionAddGlobalCardText = {
+export type ActionAddGlobalCardText = {
   id: "ActionAddGlobalCardText";
   cards: TargetTypeCard;
   cardState: CardState;
 };
 
-type ActionDeleteGlobalCardText = {
+export type ActionDeleteGlobalCardText = {
   id: "ActionDeleteGlobalCardText";
   cardTextStateID: string;
 };
 
-type ActionAddCardText = {
+export type ActionAddCardText = {
   id: "ActionAddCardText";
   cards: TargetTypeCard;
   cardTextState: TargetTypeCardTextState;
 };
 
-type ActionDeleteCardText = {
+export type ActionDeleteCardText = {
   id: "ActionDeleteCardText";
   cards: TargetTypeCard;
   cardTextStateID: string;
 };
 
-type ActionRuleDraw = {
+export type ActionRuleDraw = {
   id: "ActionRuleDraw";
 };
 
-type ActionRegisterChip = {
+export type ActionRegisterChip = {
   id: "ActionRegisterChip";
   protoID: string;
   prototype: CardPrototype;
 };
 
-type ActionCreateChip = {
+export type ActionCreateChip = {
   id: "ActionCreateChip";
   protoID: string;
   createChipTarget: any;
 };
 
-type ActionJsonfp = {
+export type ActionJsonfp = {
   id: "ActionJsonfp";
   program: any;
 };

@@ -161,6 +161,7 @@ export function testProto_179025_07D_U_RD156R_red2() {
   ctx = updateEffect(ctx);
   ctx = updateCommand(ctx);
   if (ctx.gameState.commandEffect.length != 2) {
+    console.log(ctx);
     throw new Error("指令池必須有指令-3合計國力後的指令");
   }
   let cmd = ctx.gameState.commandEffect[0];

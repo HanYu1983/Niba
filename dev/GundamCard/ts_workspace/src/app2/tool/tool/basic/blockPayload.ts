@@ -68,13 +68,18 @@ export type Require =
   | RequireCustom
   | RequireScript;
 
-type FeedbackTargetAction = {
+export const DEFAULT_REQUIRE_TARGET: RequireTarget = {
+  id: "RequireTarget",
+  targets: {},
+};
+
+export type FeedbackTargetAction = {
   id: "FeedbackTargetAction";
   targets: { [key: string]: TargetType };
   action: Action[];
 };
 
-type FeedbackAction = {
+export type FeedbackAction = {
   id: "FeedbackAction";
   action: Action[];
 };
