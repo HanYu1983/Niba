@@ -155,16 +155,21 @@ export function testProto_179025_07D_U_RD156R_red2() {
       ...ctx.gameState,
       table: table,
       activePlayerID: PlayerA,
+      // @ts-ignore
+      timing: TIMING_CHART.find(
+        (t) => t[1][0] == "配備フェイズ" && t[1][1] == "フリータイミング"
+      ),
     },
   };
   ctx = initState(ctx);
   ctx = updateEffect(ctx);
   ctx = updateCommand(ctx);
-  if (ctx.gameState.commandEffect.length != 2) {
+  const cmds = getClientCommand(ctx, PlayerA);
+  if (cmds.length == 0) {
     console.log(ctx);
-    throw new Error("指令池必須有指令-3合計國力後的指令");
+    throw new Error("必須有指令-3合計國力後的指令");
   }
-  let cmd = ctx.gameState.commandEffect[0];
+  let cmd = cmds[0];
   ctx = doBlockPayload(ctx, cmd);
   if (ctx.gameState.stackEffect.length == 0) {
     console.log(ctx);

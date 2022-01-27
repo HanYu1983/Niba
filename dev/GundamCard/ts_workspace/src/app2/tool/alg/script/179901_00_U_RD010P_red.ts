@@ -98,13 +98,13 @@ const prototype: CardPrototype = {
     {
       id: "恒常",
       description:
-        "『恒常』：このカードは、合計国力－３してプレイできる。その場合、カット終了時に、このカードを廃棄する。",
+        "『恒常』：このカードは、戦闘フェイズ中、合計国力－３してプレイできる。その場合、カット終了時に、このカードを廃棄する。",
       texts: [
         getCardTextMacro({
           id: "PlayUnit",
           cardText: DEFAULT_CARD_TEXT_SIYOU_KATA,
           description:
-            "『恒常』：[このカードは、合計国力－３してプレイできる。その場合]、カット終了時に、このカードを廃棄する。",
+            "『恒常』：[このカードは、戦闘フェイズ中、合計国力－３してプレイできる。]その場合、カット終了時に、このカードを廃棄する。",
           varCtxID: varCtxID1,
           rollCostRequire: [createRollCostRequire(2, "赤")],
           timing: ["戦闘フェイズ"],
@@ -184,7 +184,7 @@ const prototype: CardPrototype = {
         getCardTextMacro({
           id: "WhenCutFinished",
           description:
-            "『恒常』：このカードは、合計国力－３してプレイできる。[その場合、カット終了時に、このカードを廃棄する。]",
+            "『恒常』：このカードは、戦闘フェイズ中、合計国力－３してプレイできる。[その場合、カット終了時に、このカードを廃棄する。]",
           cardText: DEFAULT_CARD_TEXT_ZIDOU_KATA,
           hasFlag: CARD_TEXT_DESTROY_WHEN_CUT_FINISHED_VAR_FLAG_FOR_DESTROY,
           additionalFeedbackAction: [
