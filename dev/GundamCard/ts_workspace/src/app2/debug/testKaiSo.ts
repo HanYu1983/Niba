@@ -93,16 +93,15 @@ export function testKaiSo1() {
   ctx = updateCommand(ctx);
   console.log("查詢改裝指令");
   let flows = queryFlow(ctx, PlayerA);
-  console.log(ctx);
-  console.log(flows);
   const cmdFlow = flows.find((flow) => {
     if (flow.id != "FlowSetActiveEffectID") {
       return false;
     }
     return flow;
   });
-  console.log(ctx);
   if (cmdFlow == null) {
+    console.log(ctx);
+    console.log(flows);
     throw new Error("必須有指令");
   }
   if (cmdFlow.id != "FlowSetActiveEffectID") {
@@ -130,6 +129,8 @@ export function testKaiSo1() {
     return true;
   });
   if (kaiSoBflow == null) {
+    console.log(ctx);
+    console.log(cmdFlow);
     throw new Error("b必須有改裝指令");
   }
   console.log("宣告改裝並支付");
