@@ -1,35 +1,19 @@
 import {
   CardPrototype,
-  GameContext,
   DEFAULT_CARD_PROTOTYPE,
-  DEFAULT_CARD_STATE,
 } from "../../tool/basic/gameContext";
-import {
-  ACTION_CARD_TO_BASYOU,
-  CARD_TEXT_PLAY,
-  CARD_TEXT_PLAY_G,
-  CARD_TEXT_PLAY_UNIT,
-  CONDITION_PLAY_UNIT_FROM_BASYOU,
-  CONDITION_TOTAL_COST,
-  createPlayCardText,
-  REQUIRE_PLAY,
-  VAR_PLAY_CARD,
-} from "./createPlayCardText";
-import {
-  CARD_TEXT_DESTROY_WHEN_CUT_FINISHED,
-  CARD_TEXT_DESTROY_WHEN_CUT_FINISHED_VAR_FLAG_FOR_DESTROY,
-  CARD_TEXT_WHEN_SHOW_BA,
-} from "./cardTextMacroForF91";
+import { VAR_PLAY_CARD } from "./createPlayCardText";
 import { createTokuSyuKouKaText } from "./createTokuSyuKouKaText";
 import {
   createRollCostRequire,
   RequireTarget,
 } from "../../tool/basic/blockPayload";
 import {
-  CardText,
-  CardTextSiYouKaTa,
-  CardTextZiDouKaTa,
+  CardColor,
+  DEFAULT_CARD_TEXT_SIYOU_KATA,
+  DEFAULT_CARD_TEXT_ZIDOU_KATA,
 } from "../../tool/basic/basic";
+import { getCardTextMacro } from "./cardTextMacro";
 
 const playCardRequire: RequireTarget = {
   id: "RequireTarget",
@@ -107,6 +91,8 @@ const playCardRequire: RequireTarget = {
 };
 
 const varCtxID1 = "varCtxID1";
+const CARD_TEXT_DESTROY_WHEN_CUT_FINISHED_VAR_FLAG_FOR_DESTROY =
+  "合計国力－３してプレイ";
 
 // 179025_07D_U_RD156R_red
 // R
@@ -117,6 +103,7 @@ const varCtxID1 = "varCtxID1";
 // 『恒常』：このカードは、合計国力－３してプレイできる。その場合、カット終了時に、このカードを廃棄する。
 // 『起動』：このカードが場に出た場合、ユニットとキャラ以外の敵軍カード１枚のプレイを無効にし、そのカードを廃棄する。
 
+const rollCost: (CardColor | null)[] = ["赤", "赤", null, null, null];
 const prototype: CardPrototype = {
   ...DEFAULT_CARD_PROTOTYPE,
   title: "F91",
@@ -128,175 +115,125 @@ const prototype: CardPrototype = {
     createTokuSyuKouKaText(["クイック"], {}),
     createTokuSyuKouKaText(["高機動"], {}),
     createTokuSyuKouKaText(["改装", "F91系"], { cost: 1 }),
-    CARD_TEXT_PLAY_G,
-    {
-      ...CARD_TEXT_PLAY_UNIT,
-      block: {
-        ...CARD_TEXT_PLAY_UNIT.block,
-        contextID: varCtxID1,
-        require: {
-          id: "RequireAnd",
-          and: [
-            createRollCostRequire(2, "赤"),
-            {
-              ...REQUIRE_PLAY,
-              condition: {
-                ...REQUIRE_PLAY.condition,
-                and: [CONDITION_TOTAL_COST, CONDITION_PLAY_UNIT_FROM_BASYOU],
-              },
-            } as RequireTarget,
-            playCardRequire,
-          ],
-        },
-      },
-    },
+    getCardTextMacro({ id: "PlayG", cardText: DEFAULT_CARD_TEXT_SIYOU_KATA })
+      .cardText,
+    getCardTextMacro({
+      id: "PlayUnit",
+      cardText: DEFAULT_CARD_TEXT_SIYOU_KATA,
+      varCtxID: varCtxID1,
+      rollCostRequire: [createRollCostRequire(2, "赤")],
+      additionalRequire: [playCardRequire],
+    }).cardText,
     {
       id: "恒常",
       description:
         "『恒常』：このカードは、合計国力－３してプレイできる。その場合、カット終了時に、このカードを廃棄する。",
       texts: [
-        // このカードは、合計国力－３してプレイできる
-        {
-          ...CARD_TEXT_PLAY_UNIT,
-          block: {
-            ...CARD_TEXT_PLAY_UNIT.block,
-            contextID: varCtxID1,
-            require: {
-              id: "RequireAnd",
-              and: [
-                createRollCostRequire(2, "赤"),
+        getCardTextMacro({
+          id: "PlayUnit",
+          cardText: DEFAULT_CARD_TEXT_SIYOU_KATA,
+          description:
+            "『恒常』：[このカードは、合計国力－３してプレイできる。]その場合、カット終了時に、このカードを廃棄する。",
+          varCtxID: varCtxID1,
+          rollCostRequire: [createRollCostRequire(2, "赤")],
+          additionalRequire: [playCardRequire],
+          totalCostConditionReplace: [
+            {
+              id: "ConditionCompareNumber",
+              value: [
                 {
-                  ...REQUIRE_PLAY,
-                  condition: {
-                    ...REQUIRE_PLAY.condition,
-                    and: [
+                  id: "數字",
+                  value: {
+                    path: [
                       {
-                        id: "ConditionCompareNumber",
-                        value: [
-                          {
-                            id: "數字",
-                            value: {
-                              path: [
-                                {
-                                  id: "數字",
-                                  value: {
-                                    path: [
-                                      { id: "カード", value: VAR_PLAY_CARD },
-                                      "的「合計国力」",
-                                    ],
-                                  },
-                                },
-                                "-",
-                                {
-                                  id: "數字",
-                                  value: [3],
-                                },
-                              ],
-                            },
-                          },
-                          "<=",
-                          {
-                            id: "數字",
-                            value: {
-                              path: [
-                                {
-                                  id: "プレーヤー",
-                                  value: {
-                                    path: [
-                                      {
-                                        id: "カード",
-                                        value: VAR_PLAY_CARD,
-                                      },
-                                      "的「コントローラー」",
-                                    ],
-                                  },
-                                },
-                                "的「合計国力」",
-                              ],
-                            },
-                          },
-                        ],
+                        id: "數字",
+                        value: {
+                          path: [
+                            { id: "カード", value: VAR_PLAY_CARD },
+                            "的「合計国力」",
+                          ],
+                        },
                       },
-                      CONDITION_PLAY_UNIT_FROM_BASYOU,
+                      "-",
+                      {
+                        id: "數字",
+                        value: [3],
+                      },
                     ],
                   },
-                } as RequireTarget,
-                playCardRequire,
+                },
+                "<=",
+                {
+                  id: "數字",
+                  value: {
+                    path: [
+                      {
+                        id: "プレーヤー",
+                        value: {
+                          path: [
+                            {
+                              id: "カード",
+                              value: VAR_PLAY_CARD,
+                            },
+                            "的「コントローラー」",
+                          ],
+                        },
+                      },
+                      "的「合計国力」",
+                    ],
+                  },
+                },
               ],
             },
-            feedback: [
-              {
-                id: "FeedbackAction",
-                action: [
-                  {
-                    id: "ActionAddBlock",
-                    type: "堆疊",
-                    block: {
-                      feedback: [
-                        {
-                          id: "FeedbackAction",
-                          action: [
-                            ACTION_CARD_TO_BASYOU,
-                            {
-                              id: "ActionSetFlag",
-                              flag: {
-                                id: "字串",
-                                value: [
-                                  CARD_TEXT_DESTROY_WHEN_CUT_FINISHED_VAR_FLAG_FOR_DESTROY,
-                                ],
-                              },
-                              cards: {
-                                id: "カード",
-                                value: { path: [{ id: "このカード" }] },
-                              },
-                            },
-                          ],
-                        },
-                      ],
-                    },
-                  },
+          ],
+          additionalFeedbackAction: [
+            {
+              id: "ActionSetFlag",
+              flag: {
+                id: "字串",
+                value: [
+                  CARD_TEXT_DESTROY_WHEN_CUT_FINISHED_VAR_FLAG_FOR_DESTROY,
                 ],
               },
-            ],
-          },
-        } as CardTextSiYouKaTa,
-        CARD_TEXT_DESTROY_WHEN_CUT_FINISHED,
-        {
-          ...CARD_TEXT_WHEN_SHOW_BA,
-          block: {
-            ...CARD_TEXT_WHEN_SHOW_BA.block,
-            contextID: varCtxID1,
-            feedback: [
-              {
-                id: "FeedbackAction",
-                action: [
-                  {
-                    id: "ActionAddBlock",
-                    type: "立即",
-                    block: {
-                      feedback: [
-                        {
-                          id: "FeedbackAction",
-                          action: [
-                            // TODO: プレイを無効にし、そのカードを廃棄する。
-                            {
-                              id: "ActionDestroy",
-                              cards: {
-                                id: "カード",
-                                value:
-                                  "ユニットとキャラ以外の敵軍カード１枚のプレイ",
-                              },
-                            },
-                          ],
-                        },
-                      ],
-                    },
-                  },
-                ],
+              cards: {
+                id: "カード",
+                value: { path: [{ id: "このカード" }] },
               },
-            ],
-          },
-        } as CardTextZiDouKaTa,
+            },
+          ],
+        }).cardText,
+        getCardTextMacro({
+          id: "WhenCutFinished",
+          cardText: DEFAULT_CARD_TEXT_ZIDOU_KATA,
+          description:
+            "『恒常』：このカードは、合計国力－３してプレイできる。[その場合、カット終了時に、このカードを廃棄する。]",
+          hasFlag: CARD_TEXT_DESTROY_WHEN_CUT_FINISHED_VAR_FLAG_FOR_DESTROY,
+          additionalFeedbackAction: [
+            {
+              id: "ActionDestroy",
+              cards: {
+                id: "カード",
+                value: { path: [{ id: "このカード" }] },
+              },
+            },
+          ],
+        }).cardText,
+        getCardTextMacro({
+          id: "WhenShowBa",
+          cardText: DEFAULT_CARD_TEXT_ZIDOU_KATA,
+          description:
+            "『起動』：このカードが場に出た場合、戦闘エリアにいる敵軍ユニット１～２枚をロールする。",
+          varCtxID: varCtxID1,
+          additionalFeedbackAction: [
+            {
+              id: "ActionDestroy",
+              cards: {
+                id: "カード",
+                value: "ユニットとキャラ以外の敵軍カード１枚のプレイ",
+              },
+            },
+          ],
+        }).cardText,
       ],
     },
   ],
