@@ -17,6 +17,7 @@ import {
   RequireTarget,
   Require,
   BlockPayload,
+  FeedbackAction,
 } from "../../tool/basic/blockPayload";
 import { Condition } from "../../tool/basic/condition";
 
@@ -122,47 +123,51 @@ export function getCardTextMacro(macro: CardTextMacro): CardTextMacro {
                     contextID: macro.varCtxID,
                     feedback: [
                       ...(macro.feedbackBlock?.feedback || []),
-                      {
-                        id: "FeedbackAction",
-                        action: [
-                          {
-                            id: "ActionMoveCardToPosition",
-                            cards: {
-                              id: "カード",
-                              value: VAR_PLAY_CARD,
-                            },
-                            baSyou: {
-                              id: "場所",
-                              value: [
-                                ...(macro.id == "PlayUnit"
-                                  ? [
-                                      {
-                                        id: "RelatedBaSyou",
-                                        value: ["自軍", "配備エリア"],
-                                      } as RelatedBaSyou,
-                                    ]
-                                  : []),
-                                ...(macro.id == "PlayOperation"
-                                  ? [
-                                      {
-                                        id: "RelatedBaSyou",
-                                        value: ["自軍", "配備エリア"],
-                                      } as RelatedBaSyou,
-                                    ]
-                                  : []),
-                                ...(macro.id == "PlayCommand"
-                                  ? [
-                                      {
-                                        id: "RelatedBaSyou",
-                                        value: ["自軍", "ジャンクヤード"],
-                                      } as RelatedBaSyou,
-                                    ]
-                                  : []),
+                      ...(macro.id != "PlayText"
+                        ? [
+                            {
+                              id: "FeedbackAction",
+                              action: [
+                                {
+                                  id: "ActionMoveCardToPosition",
+                                  cards: {
+                                    id: "カード",
+                                    value: VAR_PLAY_CARD,
+                                  },
+                                  baSyou: {
+                                    id: "場所",
+                                    value: [
+                                      ...(macro.id == "PlayUnit"
+                                        ? [
+                                            {
+                                              id: "RelatedBaSyou",
+                                              value: ["自軍", "配備エリア"],
+                                            } as RelatedBaSyou,
+                                          ]
+                                        : []),
+                                      ...(macro.id == "PlayOperation"
+                                        ? [
+                                            {
+                                              id: "RelatedBaSyou",
+                                              value: ["自軍", "配備エリア"],
+                                            } as RelatedBaSyou,
+                                          ]
+                                        : []),
+                                      ...(macro.id == "PlayCommand"
+                                        ? [
+                                            {
+                                              id: "RelatedBaSyou",
+                                              value: ["自軍", "ジャンクヤード"],
+                                            } as RelatedBaSyou,
+                                          ]
+                                        : []),
+                                    ],
+                                  },
+                                },
                               ],
-                            },
-                          },
-                        ],
-                      },
+                            } as FeedbackAction,
+                          ]
+                        : []),
                     ],
                   },
                 },
