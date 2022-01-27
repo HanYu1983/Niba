@@ -224,6 +224,7 @@ export function cancelActiveEffectID(
   }
   const effect = [
     ...ctx.gameState.stackEffect,
+    ...ctx.gameState.commandEffect,
     ...ctx.gameState.immediateEffect,
   ].find((e) => e.id == ctx.gameState.activeEffectID);
   if (effect == null) {
