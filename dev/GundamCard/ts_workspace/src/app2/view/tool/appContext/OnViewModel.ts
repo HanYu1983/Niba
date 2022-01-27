@@ -141,6 +141,15 @@ export const OnViewModel = OnEvent.pipe(
               "179025_07D_U_RD158C_red",
             ]
           );
+          table = createCard(
+            table,
+            PlayerA,
+            getBaShouID({
+              id: "AbsoluteBaSyou",
+              value: [PlayerA, "戦闘エリア（右）"],
+            }),
+            ["179901_00_U_RD010P_red"]
+          );
           console.log("準備2張G");
           table = createCard(
             table,
@@ -190,8 +199,10 @@ export const OnViewModel = OnEvent.pipe(
               ...ctx.gameState,
               // @ts-ignore
               timing: TIMING_CHART.find(
-                //(t) => t[1][1] == "ダメージ判定ステップ"
-                (t) => t[1][0] == "配備フェイズ"
+                (t) =>
+                  t[1][0] == "戦闘フェイズ" &&
+                  t[1][1] == "ダメージ判定ステップ" &&
+                  t[1][2] == "フリータイミング"
               ),
             },
             versionID: viewModel.model.versionID,
@@ -205,6 +216,11 @@ export const OnViewModel = OnEvent.pipe(
           const isDirty =
             JSON.stringify(viewModel.model) != JSON.stringify(model);
           if (isDirty == false) {
+            log2(
+              "OnViewModel",
+              "OnClickFlowConfirm. but isDirty == false. return",
+              model
+            );
             return viewModel;
           }
           firebase.sync(model);

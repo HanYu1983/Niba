@@ -28,9 +28,9 @@ export const RequireView = (props: { clientID: string; blockPayload: BlockPayloa
         return (
           <div>
             <div>必須符合全部</div>
-            {props.require.and.map((r) => {
+            {props.require.and.map((r, i) => {
               return (
-                <div key={r.key}>
+                <div key={i}>
                   <RequireView
                     clientID={props.clientID}
                     blockPayload={props.blockPayload}
@@ -46,9 +46,9 @@ export const RequireView = (props: { clientID: string; blockPayload: BlockPayloa
         return (
           <div>
             <div>必須符合其中一項</div>
-            {props.require.or.map((r) => {
+            {props.require.or.map((r, i) => {
               return (
-                <div key={r.key}>
+                <div key={i}>
                   <RequireView
                     clientID={props.clientID}
                     blockPayload={props.blockPayload}
@@ -64,11 +64,11 @@ export const RequireView = (props: { clientID: string; blockPayload: BlockPayloa
         const requireTarget = props.require
         return (
           <div style={{ border: "1px solid black" }}>
-            {Object.entries(requireTarget.targets).map(([k, v]) => {
+            {Object.entries(requireTarget.targets).map(([k, v], i) => {
               const responsePlayer = getRequireTargetOwner(appContext.viewModel.model, props.blockPayload, props.require, v)
               const isTargetOwner = responsePlayer == props.clientID
               return (
-                <div key={k} style={{ border: "1px solid black" }}>
+                <div key={i} style={{ border: "1px solid black" }}>
                   {isTargetOwner ? <button
                     onClick={() => {
                       OnEvent.next({

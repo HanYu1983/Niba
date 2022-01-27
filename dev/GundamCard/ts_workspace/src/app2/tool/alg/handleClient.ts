@@ -223,7 +223,7 @@ export function cancelActiveEffectID(
     throw new Error("[cancelEffectID] activeEffectID not exist");
   }
   const effect = [
-    ...ctx.gameState.commandEffect,
+    ...ctx.gameState.stackEffect,
     ...ctx.gameState.immediateEffect,
   ].find((e) => e.id == ctx.gameState.activeEffectID);
   if (effect == null) {
@@ -750,14 +750,14 @@ export function queryFlow(ctx: GameContext, playerID: string): Flow[] {
 
     const enablePayCost = true;
     if (enablePayCost) {
-      const isActivePlayer = ctx.gameState.activePlayerID == playerID;
+      const controller = getBlockOwner(ctx, currentActiveEffect);
       const isPass = !!ctx.gameState.flowMemory.hasPlayerPassPayCost[playerID];
       const isOpponentPass =
         !!ctx.gameState.flowMemory.hasPlayerPassPayCost[
           getOpponentPlayerID(playerID)
         ];
       if (isPass && isOpponentPass) {
-        if (isActivePlayer == false) {
+        if (controller != playerID) {
           return [
             {
               id: "FlowObserveEffect",
@@ -772,7 +772,7 @@ export function queryFlow(ctx: GameContext, playerID: string): Flow[] {
           },
         ];
       } else if (isPass || isOpponentPass) {
-        if (isActivePlayer) {
+        if (controller == playerID) {
           if (isPass) {
             return [
               {
@@ -798,7 +798,7 @@ export function queryFlow(ctx: GameContext, playerID: string): Flow[] {
           ];
         }
       }
-      if (isActivePlayer == false) {
+      if (controller != playerID) {
         return [
           {
             id: "FlowWaitPlayer",

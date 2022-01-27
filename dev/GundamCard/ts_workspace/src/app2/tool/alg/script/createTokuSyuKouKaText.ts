@@ -1032,9 +1032,7 @@ export function createTokuSyuKouKaText(
                   },
                 ],
               },
-            ],
-            feedbackBlock: {
-              require: {
+              {
                 id: "RequireAnd",
                 and: [
                   {
@@ -1184,6 +1182,8 @@ export function createTokuSyuKouKaText(
                   },
                 ],
               },
+            ],
+            feedbackBlock: {
               feedback: [
                 {
                   id: "FeedbackAction",
