@@ -198,12 +198,7 @@ export const OnViewModel = OnEvent.pipe(
             gameState: {
               ...ctx.gameState,
               // @ts-ignore
-              timing: TIMING_CHART.find(
-                (t) =>
-                  t[1][0] == "戦闘フェイズ" &&
-                  t[1][1] == "ダメージ判定ステップ" &&
-                  t[1][2] == "フリータイミング"
-              ),
+              timing: TIMING_CHART.find((t) => t[1][0] == "配備フェイズ"),
             },
             versionID: viewModel.model.versionID,
           };
