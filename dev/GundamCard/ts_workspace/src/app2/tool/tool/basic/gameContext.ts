@@ -95,6 +95,11 @@ export type GameEffectState = {
   effect: GameEffect;
 };
 
+export type Message = {
+  id: "MessageCustom";
+  value: string;
+};
+
 export type GameState = {
   table: Table;
   cardState: CardState[];
@@ -113,6 +118,8 @@ export type GameState = {
   // 記錄上一次的堆疊。每次解決一個堆疊效果，就將那效果移到這裡
   // 在發送切入解決時，清空。
   stackEffectMemory: BlockPayload[];
+  // setGroup
+  setGroupLink: { [key: string]: string };
   //
   flowMemory: {
     hasTriggerEvent: boolean;
@@ -120,6 +127,7 @@ export type GameState = {
     hasPlayerPassCut: { [key: string]: boolean };
     hasPlayerPassPayCost: { [key: string]: boolean };
     shouldTriggerStackEffectFinishedEvent: boolean;
+    msgs: Message[];
   };
   chipPool: { [key: string]: CardPrototype };
 };
@@ -152,12 +160,14 @@ export const DEFAULT_GAME_CONTEXT: GameContext = {
     immediateEffect: [],
     stackEffect: [],
     stackEffectMemory: [],
+    setGroupLink: {},
     flowMemory: {
       hasTriggerEvent: false,
       hasPlayerPassPhase: {},
       hasPlayerPassCut: {},
       hasPlayerPassPayCost: {},
       shouldTriggerStackEffectFinishedEvent: false,
+      msgs: [],
     },
     chipPool: {},
   },

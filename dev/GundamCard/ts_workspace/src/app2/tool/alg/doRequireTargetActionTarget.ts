@@ -50,6 +50,104 @@ export function doRequireTargetActionTarget(
 ): GameContext {
   log2("doRequireTargetActionTarget", "action", action);
   switch (action.id) {
+    case "ActionSetSetCard": {
+      const cards = getTargetType(ctx, blockPayload, targets, action.cards);
+      if (cards?.id != "カード") {
+        throw new Error("must カード");
+      }
+      if (!Array.isArray(cards.value)) {
+        throw new Error("執行Action時的所有target必須是陣列");
+      }
+      assertTargetTypeValueLength(cards);
+      const distCard = getTargetType(
+        ctx,
+        blockPayload,
+        targets,
+        action.distCard
+      );
+      if (distCard?.id != "カード") {
+        throw new Error("must カード");
+      }
+      if (!Array.isArray(distCard.value)) {
+        throw new Error("執行Action時的所有target必須是陣列");
+      }
+      assertTargetTypeValueLength(distCard);
+      const distCardID = distCard.value[0];
+      // 處理setGroup
+      {
+        const setGroupLink = cards.value.reduce((link, cardID) => {
+          if (cardID == null) {
+            throw new Error("target must not null");
+          }
+          if (link[distCardID] != null) {
+            throw new Error("指定的卡是setCard, 不能再次set");
+          }
+          return {
+            ...link,
+            [cardID]: distCardID,
+          };
+        }, ctx.gameState.setGroupLink);
+        ctx = {
+          ...ctx,
+          gameState: {
+            ...ctx.gameState,
+            setGroupLink: setGroupLink,
+          },
+        };
+      }
+      // 處理移動
+      {
+        const toBaSyou = getCardBaSyou(ctx, distCardID);
+        if (toBaSyou.value[1] != "配備エリア") {
+          return {
+            ...ctx,
+            gameState: {
+              ...ctx.gameState,
+              flowMemory: {
+                ...ctx.gameState.flowMemory,
+                msgs: [
+                  ...ctx.gameState.flowMemory.msgs,
+                  {
+                    id: "MessageCustom",
+                    value: "要設置的目標卡被移動了, 設置失敗",
+                  },
+                ],
+              },
+            },
+          };
+        }
+        const toBaSyouID = getBaShouID(toBaSyou);
+        const isToBa = isBa(toBaSyou.value[1]);
+        ctx = cards.value.reduce((ctx, cardID) => {
+          const fromBaSyou = getCardBaSyou(ctx, cardID);
+          const fromBaSyouID = getBaShouID(fromBaSyou);
+          const isFromBa = isBa(fromBaSyou.value[1]);
+          const nextTable = moveCard(
+            ctx.gameState.table,
+            fromBaSyouID,
+            toBaSyouID,
+            cardID,
+            null
+          );
+          ctx = {
+            ...ctx,
+            gameState: {
+              ...ctx.gameState,
+              table: nextTable,
+            },
+          };
+          const isShowBa = isFromBa == false && isToBa;
+          if (isShowBa) {
+            ctx = triggerTextEvent(ctx, {
+              id: "場に出た場合",
+              cardID: cardID,
+            });
+          }
+          return ctx;
+        }, ctx);
+      }
+      return ctx;
+    }
     case "ActionRoll": {
       const cards = getTargetType(ctx, blockPayload, targets, action.cards);
       if (cards?.id != "カード") {
@@ -299,7 +397,23 @@ export function doRequireTargetActionTarget(
         throw new Error("執行Action時的所有target必須最少有一個值");
       }
       const baSyou = targetBaSyou.value[0];
-      ctx = cards.value.reduce((ctx, cardID) => {
+      // 整個setGroup一起移動
+      const cardsWithItsSetCard = cards.value
+        .flatMap((cardID) => {
+          return [
+            cardID,
+            ...Object.keys(ctx.gameState.setGroupLink).filter((setCardID) => {
+              return ctx.gameState.setGroupLink[setCardID] == cardID;
+            }),
+          ];
+        })
+        .reduce((acc, cardID) => {
+          if (acc.includes(cardID)) {
+            return acc;
+          }
+          return [...acc, cardID];
+        }, [] as string[]);
+      ctx = cardsWithItsSetCard.reduce((ctx, cardID) => {
         if (cardID == null) {
           throw new Error(
             "[doRequireTargetActionTarget][ActionMoveCardToPosition] cardID not found"
@@ -334,13 +448,7 @@ export function doRequireTargetActionTarget(
             cardID: cardID,
           });
         }
-        return {
-          ...ctx,
-          gameState: {
-            ...ctx.gameState,
-            table: nextTable,
-          },
-        };
+        return ctx;
       }, ctx);
       return ctx;
     case "ActionAddBlock": {

@@ -234,6 +234,13 @@ export function getCardTextMacro(macro: CardTextMacro): Return {
                       }).condition,
                     ],
                   },
+                  action: [
+                    {
+                      id: "ActionSetTarget",
+                      source: "目標機體",
+                      target: "目標機體",
+                    },
+                  ],
                 },
                 ...(macro.additionalRequire || []),
               ],

@@ -21,6 +21,12 @@ export const CardStackView = (props: {
     props.cardPosition,
     appContext.viewModel.model.gameState.table.cardStack,
   ]);
+  // 整個setGroup一起移動
+  const cardsOnlySetGroupRoot = useMemo(() => {
+    return cards.filter((card) => {
+      return appContext.viewModel.model.gameState.setGroupLink[card.id] == null;
+    });
+  }, [cards, appContext.viewModel.model.gameState.setGroupLink]);
   const render = useMemo(() => {
     const _cardPositionID = getBaShouID(props.cardPosition);
     return (
@@ -48,23 +54,56 @@ export const CardStackView = (props: {
             select {_cardPositionID}
           </button>
         </div>
-        {cards.map((card) => {
+        {cardsOnlySetGroupRoot.map((rootCard) => {
+          const cardsInSetGroup = [
+            rootCard.id,
+            ...Object.keys(
+              appContext.viewModel.model.gameState.setGroupLink
+            ).filter((setCardID) => {
+              return (
+                appContext.viewModel.model.gameState.setGroupLink[setCardID] ==
+                rootCard.id
+              );
+            }),
+          ];
           return (
-            <CardView
-              key={card.id}
-              enabled={true}
-              clientID={props.clinetID}
-              cardID={card.id}
-            ></CardView>
+            <div
+              key={rootCard.id}
+              style={{ border: "3px solid blue", display: "flex" }}
+            >
+              {cardsInSetGroup.map((cardID) => {
+                return (
+                  <CardView
+                    key={`${rootCard.id}_${cardID}`}
+                    enabled={true}
+                    clientID={props.clinetID}
+                    cardID={cardID}
+                  ></CardView>
+                );
+              })}
+            </div>
           );
         })}
+        {
+          // cards.map((card) => {
+          //   return (
+          //     <CardView
+          //       key={card.id}
+          //       enabled={true}
+          //       clientID={props.clinetID}
+          //       cardID={card.id}
+          //     ></CardView>
+          //   );
+          // })
+        }
       </div>
     );
   }, [
     props.cardPosition,
     props.clinetID,
-    cards,
+    cardsOnlySetGroupRoot,
     appContext.viewModel.cardPositionSelection,
+    appContext.viewModel.model.gameState.setGroupLink,
   ]);
   return <>{render}</>;
 };
