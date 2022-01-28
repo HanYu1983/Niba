@@ -141,6 +141,7 @@ export const OnViewModel = OnEvent.pipe(
               "179025_07D_U_RD158C_red",
               "179001_01A_CH_WT007R_white",
               "179029_05C_O_BK014C_black",
+              "179030_11E_O_GN023N_green",
             ]
           );
           table = createCard(
@@ -173,7 +174,7 @@ export const OnViewModel = OnEvent.pipe(
               "179030_11E_G_RD021N_red",
               "179030_11E_G_RD021N_red",
               "179030_11E_G_RD021N_red",
-              "179030_11E_G_RD021N_red",
+              "179030_11E_O_GN023N_green",
               "179029_05C_O_BK014C_black",
               "179001_01A_CH_WT007R_white",
             ]

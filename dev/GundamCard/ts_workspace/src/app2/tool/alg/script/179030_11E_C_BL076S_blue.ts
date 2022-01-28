@@ -176,11 +176,9 @@ const prototype: CardPrototype = {
                                       value: {
                                         triggerGameEvent: {
                                           id: "手動事件發生時",
-                                          customID: <
-                                            GameEventOnManualEventCustomID
-                                          >{
+                                          customID: {
                                             id: "「特徴：装弾」を持つ自軍コマンドの効果で自軍Gをロールする場合",
-                                          },
+                                          } as GameEventOnManualEventCustomID,
                                         },
                                         path: [
                                           {
