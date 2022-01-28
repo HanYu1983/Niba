@@ -276,3 +276,12 @@ export function getRequireTargetOwner(
       return getOpponentPlayerID(getBlockOwner(ctx, blockPayload));
   }
 }
+
+export function getSetGroupCards(ctx: GameContext, cardID: string) {
+  return [
+    cardID,
+    ...Object.keys(ctx.gameState.setGroupLink).filter((k) => {
+      return ctx.gameState.setGroupLink[k] == cardID;
+    }),
+  ];
+}

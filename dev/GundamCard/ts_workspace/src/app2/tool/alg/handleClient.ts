@@ -38,6 +38,7 @@ import {
   triggerTextEvent,
   updateCommand,
 } from "./handleGameContext";
+import { getCardTextMacro } from "./script/cardTextMacro";
 
 export function setRequireAnswer(
   ctx: GameContext,
@@ -1191,28 +1192,36 @@ export function queryFlow(ctx: GameContext, playerID: string): Flow[] {
                           condition: {
                             id: "ConditionAnd",
                             and: [
-                              {
-                                id: "ConditionCompareRole",
-                                value: [
+                              getCardTextMacro({
+                                id: "變量x的場所包含於y",
+                                x: { id: "カード", value: "去左方的卡" },
+                                y: [
                                   {
-                                    id: "「カード」的角色",
-                                    value: {
-                                      path: [
-                                        {
-                                          id: "カード",
-                                          value: "去左方的卡",
-                                        },
-                                        "的角色",
-                                      ],
-                                    },
-                                  },
-                                  "==",
-                                  {
-                                    id: "「カード」的角色",
-                                    value: ["ユニット"],
+                                    id: "AbsoluteBaSyou",
+                                    value: [playerID, "配備エリア"],
                                   },
                                 ],
-                              },
+                              }).condition,
+                              getCardTextMacro({
+                                id: "變量x的角色包含於y",
+                                x: { id: "カード", value: "去左方的卡" },
+                                y: ["ユニット"],
+                              }).condition,
+                              getCardTextMacro({
+                                id: "變量x的場所包含於y",
+                                x: { id: "カード", value: "去右方的卡" },
+                                y: [
+                                  {
+                                    id: "AbsoluteBaSyou",
+                                    value: [playerID, "配備エリア"],
+                                  },
+                                ],
+                              }).condition,
+                              getCardTextMacro({
+                                id: "變量x的角色包含於y",
+                                x: { id: "カード", value: "去右方的卡" },
+                                y: ["ユニット"],
+                              }).condition,
                             ],
                           },
                           action: [

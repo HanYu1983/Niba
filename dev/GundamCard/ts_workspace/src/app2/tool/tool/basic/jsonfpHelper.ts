@@ -1,5 +1,5 @@
 import { log2 } from "../../../../tool/logger";
-import { GameContext } from "./gameContext";
+import { GameContext, getSetGroupCards } from "./gameContext";
 export const jsonfp = require("jsonfp");
 // 使用前先呼叫
 export function initJsonfp() {
@@ -17,12 +17,7 @@ export function initJsonfp() {
       if (cardID == null) {
         throw new Error("cardID not found");
       }
-      return [
-        cardID,
-        ...Object.keys(ctx.gameState.setGroupLink).filter((k) => {
-          return ctx.gameState.setGroupLink[k] == cardID;
-        }),
-      ];
+      return getSetGroupCards(ctx, cardID);
     }
   );
 }
