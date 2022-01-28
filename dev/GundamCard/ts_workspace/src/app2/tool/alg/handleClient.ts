@@ -180,10 +180,9 @@ export function setActiveEffectID(
     throw new Error("有人在執行其它指令");
   }
   if (ctx.gameState.activeEffectID != null) {
-    const currentActiveEffect = [
-      ...ctx.gameState.commandEffect,
-      ...ctx.gameState.immediateEffect,
-    ].find((e) => e.id == ctx.gameState.activeEffectID);
+    const currentActiveEffect = iterateEffect(ctx).find(
+      (e) => e.id == ctx.gameState.activeEffectID
+    );
     if (currentActiveEffect != null) {
       const controller = getBlockOwner(ctx, currentActiveEffect);
       if (controller != playerID) {
@@ -194,11 +193,7 @@ export function setActiveEffectID(
       }
     }
   }
-  const effect = [
-    ...ctx.gameState.commandEffect,
-    ...ctx.gameState.immediateEffect,
-    ...ctx.gameState.stackEffect,
-  ].find((e) => e.id == effectID);
+  const effect = iterateEffect(ctx).find((e) => e.id == effectID);
   if (effect == null) {
     throw new Error("effect not found");
   }
@@ -222,11 +217,9 @@ export function cancelActiveEffectID(
   if (ctx.gameState.activeEffectID == null) {
     throw new Error("[cancelEffectID] activeEffectID not exist");
   }
-  const effect = [
-    ...ctx.gameState.stackEffect,
-    ...ctx.gameState.commandEffect,
-    ...ctx.gameState.immediateEffect,
-  ].find((e) => e.id == ctx.gameState.activeEffectID);
+  const effect = iterateEffect(ctx).find(
+    (e) => e.id == ctx.gameState.activeEffectID
+  );
   if (effect == null) {
     return ctx;
   }
