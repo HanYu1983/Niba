@@ -8,7 +8,7 @@ import type {
 } from "./targetType";
 import type { BlockPayload } from "./blockPayload";
 import type { CardPrototype, CardState, GameEffect } from "./gameContext";
-import { CardText } from "./basic";
+import { CardText, GameEvent } from "./basic";
 
 type ActionRoll = {
   id: "ActionRoll";
@@ -147,6 +147,11 @@ export type ActionSetSetCard = {
   distCard: TargetTypeCard;
 };
 
+export type ActionTriggerGameEvent = {
+  id: "ActionTriggerGameEvent";
+  gameEvent: GameEvent;
+};
+
 export type Action =
   | ActionRoll
   | ActionReroll
@@ -171,4 +176,5 @@ export type Action =
   | ActionRegisterChip
   | ActionCreateChip
   | ActionJsonfp
-  | ActionSetSetCard;
+  | ActionSetSetCard
+  | ActionTriggerGameEvent;

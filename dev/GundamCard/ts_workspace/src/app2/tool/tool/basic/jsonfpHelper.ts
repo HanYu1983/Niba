@@ -1,14 +1,31 @@
 import { log2 } from "../../../../tool/logger";
-
+import { GameContext } from "./gameContext";
 export const jsonfp = require("jsonfp");
-jsonfp.init();
-jsonfp.addMethod("error", (input: any, p: any) => {
-  throw new Error(`[jsonfp.error]${p}`);
-});
-jsonfp.addMethod("log", (input: any, p: any) => {
-  log2("jsonfp", input, p);
-  return input;
-});
+// 使用前先呼叫
+export function initJsonfp() {
+  jsonfp.init();
+  jsonfp.addMethod("error", (input: any, p: any) => {
+    throw new Error(`[jsonfp.error]${p}`);
+  });
+  jsonfp.addMethod("log", (input: any, p: any) => {
+    log2("jsonfp", input, p);
+    return input;
+  });
+  jsonfp.addMethod(
+    "getSetGroupCards",
+    (ctx: GameContext, { cardID }: { cardID: string }) => {
+      if (cardID == null) {
+        throw new Error("cardID not found");
+      }
+      return [
+        cardID,
+        ...Object.keys(ctx.gameState.setGroupLink).filter((k) => {
+          return ctx.gameState.setGroupLink[k] == cardID;
+        }),
+      ];
+    }
+  );
+}
 
 export type Keyword =
   | "->"

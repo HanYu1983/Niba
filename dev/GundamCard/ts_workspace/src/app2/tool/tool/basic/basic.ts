@@ -220,6 +220,12 @@ export type GameEventOnShowBa = {
   cardID: string;
 };
 
+export type GameEventOnPlayText = {
+  id: "プレイした場合";
+  cardID: string;
+  cardTextID: string;
+};
+
 export type GameEventOnAfterEffect = {
   id: "「効果」解決時";
   block: BlockPayload;
@@ -235,7 +241,8 @@ export type GameEvent =
   | GameEventOnAfterEffect
   | GameEventOnManualEvent
   | GameEventOnStackEffectFinished
-  | GameEventOnShowBa;
+  | GameEventOnShowBa
+  | GameEventOnPlayText;
 
 export type TokuSyuKouKa =
   | ["高機動"]

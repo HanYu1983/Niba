@@ -39,6 +39,7 @@ type CardTextMacro2 = {
     | "PlayCharacter"
     | "PlayCharacter(Stay)"
     | "PlayOperation"
+    | "PlayOperation(Unit)"
     | "PlayText";
   description?: string;
   varCtxID?: string;
@@ -176,6 +177,7 @@ export function getCardTextMacro(macro: CardTextMacro): Return {
         },
       };
     case "PlayCharacter":
+    case "PlayOperation(Unit)":
       return {
         ...DEFAULT_RETURN,
         cardText: {
@@ -249,6 +251,7 @@ export function getCardTextMacro(macro: CardTextMacro): Return {
               {
                 id: "FeedbackAction",
                 action: [
+                  ActionTriggerPlayCard,
                   {
                     id: "ActionAddBlock",
                     type: "堆疊",
@@ -322,6 +325,7 @@ export function getCardTextMacro(macro: CardTextMacro): Return {
               {
                 id: "FeedbackAction",
                 action: [
+                  ActionTriggerPlayCard,
                   {
                     id: "ActionAddBlock",
                     type: "堆疊",
@@ -940,5 +944,41 @@ export const CARD_TEXT_PLAY_UNIT: CardTextSiYouKaTa = {
         ],
       },
     ],
+  },
+};
+
+const ActionTriggerPlayCard: Action = {
+  id: "ActionJsonfp",
+  program: {
+    pass1: {
+      if: [
+        {
+          "->": [
+            "$in.blockPayload",
+            { getter: "cause" },
+            { getter: "id" },
+            { "==": "BlockPayloadCauseUpdateCommand" },
+          ],
+        },
+        {},
+        { error: "事件必須是BlockPayloadCauseUpdateCommand" },
+      ],
+    },
+    output: {
+      id: "ActionTriggerGameEvent",
+      gameEvent: {
+        id: "プレイした場合",
+        cardID: {
+          "->": ["$in.blockPayload", { getter: "cause" }, { getter: "cardID" }],
+        },
+        cardTextID: {
+          "->": [
+            "$in.blockPayload",
+            { getter: "cause" },
+            { getter: "cardTextID" },
+          ],
+        },
+      },
+    },
   },
 };

@@ -157,7 +157,23 @@ export function doRequireTargetActionTarget(
         throw new Error("執行Action時的所有target必須是陣列");
       }
       assertTargetTypeValueLength(cards);
-      const table = cards.value.reduce((table, cardID) => {
+      // 整個setGroup一起
+      const cardsWithItsSetCard = cards.value
+        .flatMap((cardID) => {
+          return [
+            cardID,
+            ...Object.keys(ctx.gameState.setGroupLink).filter((setCardID) => {
+              return ctx.gameState.setGroupLink[setCardID] == cardID;
+            }),
+          ];
+        })
+        .reduce((acc, cardID) => {
+          if (acc.includes(cardID)) {
+            return acc;
+          }
+          return [...acc, cardID];
+        }, [] as string[]);
+      const table = cardsWithItsSetCard.reduce((table, cardID) => {
         if (cardID == null) {
           throw new Error("target must not null");
         }
@@ -193,7 +209,23 @@ export function doRequireTargetActionTarget(
         throw new Error("執行Action時的所有target必須是陣列");
       }
       assertTargetTypeValueLength(cards);
-      const table = cards.value.reduce((table, cardID) => {
+      // 整個setGroup一起
+      const cardsWithItsSetCard = cards.value
+        .flatMap((cardID) => {
+          return [
+            cardID,
+            ...Object.keys(ctx.gameState.setGroupLink).filter((setCardID) => {
+              return ctx.gameState.setGroupLink[setCardID] == cardID;
+            }),
+          ];
+        })
+        .reduce((acc, cardID) => {
+          if (acc.includes(cardID)) {
+            return acc;
+          }
+          return [...acc, cardID];
+        }, [] as string[]);
+      const table = cardsWithItsSetCard.reduce((table, cardID) => {
         if (cardID == null) {
           throw new Error("target must not null");
         }
@@ -963,6 +995,10 @@ export function doRequireTargetActionTarget(
         willDoAction,
         varCtxID
       );
+    }
+    case "ActionTriggerGameEvent": {
+      ctx = triggerTextEvent(ctx, action.gameEvent);
+      return ctx;
     }
     default:
       throw new Error(`not impl: ${action.id}`);
