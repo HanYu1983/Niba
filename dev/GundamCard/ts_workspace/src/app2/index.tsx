@@ -9,13 +9,7 @@ const App = (props: any) => {
     initJsonfp();
     test();
   }, []);
-  return (
-    <div>
-      {
-        //<AppView></AppView>
-      }
-    </div>
-  );
+  return <div>{<AppView></AppView>}</div>;
 };
 
 ReactDOM.render(<App />, document.getElementById("root"));

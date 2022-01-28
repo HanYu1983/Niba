@@ -13,6 +13,8 @@ import {
   CardTextSiYouKaTa,
   CardTextZiDouKaTa,
   DEFAULT_CARD_TEXT_SIYOU_KATA,
+  PlayerA,
+  PlayerB,
   RelatedBaSyou,
   RelatedPlayerSideKeyword,
   SiYouTiming,
@@ -118,7 +120,7 @@ export function getCardTextMacro(macro: CardTextMacro): Return {
                 path: [macro.x, "的「場所」"],
               },
             },
-            "==",
+            "in",
             {
               id: "場所",
               value: macro.y,
@@ -182,7 +184,7 @@ export function getCardTextMacro(macro: CardTextMacro): Return {
         ...DEFAULT_RETURN,
         cardText: {
           ...CARD_TEXT_PLAY,
-          description: macro.description || "PlayCharacter",
+          description: macro.description || macro.id,
           timing: macro.timing || CARD_TEXT_PLAY.timing,
           block: {
             ...CARD_TEXT_PLAY.block,
@@ -214,11 +216,40 @@ export function getCardTextMacro(macro: CardTextMacro): Return {
                   condition: {
                     id: "ConditionAnd",
                     and: [
-                      getCardTextMacro({
-                        id: "變量x的是y軍",
-                        x: { id: "カード", value: "目標機體" },
-                        y: "自軍",
-                      }).condition,
+                      // 角色只能配置在自軍
+                      ...(macro.id == "PlayCharacter"
+                        ? [
+                            getCardTextMacro({
+                              id: "變量x的是y軍",
+                              x: { id: "カード", value: "目標機體" },
+                              y: "自軍",
+                            }).condition,
+                          ]
+                        : []),
+                      // Operation(Unit)可以配置在敵軍
+                      ...(macro.id == "PlayOperation(Unit)"
+                        ? [
+                            {
+                              id: "ConditionComparePlayer",
+                              value: [
+                                {
+                                  id: "プレーヤー",
+                                  value: {
+                                    path: [
+                                      { id: "カード", value: "目標機體" },
+                                      "的「コントローラー」",
+                                    ],
+                                  },
+                                },
+                                "in",
+                                {
+                                  id: "プレーヤー",
+                                  value: [PlayerA, PlayerB],
+                                },
+                              ],
+                            } as Condition,
+                          ]
+                        : []),
                       getCardTextMacro({
                         id: "變量x的角色包含於y",
                         x: { id: "カード", value: "目標機體" },
@@ -228,10 +259,20 @@ export function getCardTextMacro(macro: CardTextMacro): Return {
                         id: "變量x的場所包含於y",
                         x: { id: "カード", value: "目標機體" },
                         y: [
+                          // 角色只能配置在自軍
                           {
                             id: "RelatedBaSyou",
                             value: ["自軍", "配備エリア"],
                           },
+                          // Operation(Unit)可以配置在敵軍
+                          ...(macro.id == "PlayOperation(Unit)"
+                            ? [
+                                {
+                                  id: "RelatedBaSyou",
+                                  value: ["敵軍", "配備エリア"],
+                                } as RelatedBaSyou,
+                              ]
+                            : []),
                         ],
                       }).condition,
                     ],

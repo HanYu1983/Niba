@@ -28,6 +28,10 @@ const prototype: CardPrototype = {
   rollCost: ["黒", null],
   texts: [
     getCardTextMacro({ id: "PlayG" }).cardText,
+    getCardTextMacro({
+      id: "PlayOperation(Unit)",
+      additionalRequire: [createRollCostRequire(1, "黒")],
+    }).cardText,
     {
       id: "自動型",
       category: "起動",
