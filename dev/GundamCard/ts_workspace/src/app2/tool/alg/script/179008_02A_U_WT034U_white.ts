@@ -35,11 +35,10 @@ const prototype: CardPrototype = {
   rollCost: ["白", null, null, null, null],
   texts: [
     createTokuSyuKouKaText(["改装", "ブルーフレーム系"], { cost: 0 }),
-    getCardTextMacro({ id: "PlayG", cardText: DEFAULT_CARD_TEXT_SIYOU_KATA })
-      .cardText,
+    getCardTextMacro({ id: "PlayG" }).cardText,
     getCardTextMacro({
       id: "PlayCommand",
-      cardText: DEFAULT_CARD_TEXT_SIYOU_KATA,
+
       additionalRequire: [createRollCostRequire(1, "白")],
     }).cardText,
     {

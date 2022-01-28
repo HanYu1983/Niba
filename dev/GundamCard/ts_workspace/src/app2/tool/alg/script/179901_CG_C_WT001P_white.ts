@@ -22,11 +22,10 @@ const prototype: CardPrototype = {
   color: "白",
   rollCost: ["白", null],
   texts: [
-    getCardTextMacro({ id: "PlayG", cardText: DEFAULT_CARD_TEXT_SIYOU_KATA })
-      .cardText,
+    getCardTextMacro({ id: "PlayG" }).cardText,
     getCardTextMacro({
       id: "PlayCommand",
-      cardText: DEFAULT_CARD_TEXT_SIYOU_KATA,
+
       description:
         "（自軍配備フェイズ）：「供給」を持つ自軍カード１枚をロールする。その場合、カード２枚を引く。",
       varCtxID: "varCtxID1",

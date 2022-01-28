@@ -29,15 +29,13 @@ const prototype: CardPrototype = {
   color: "黒",
   rollCost: [null, null, null, null, null],
   texts: [
-    getCardTextMacro({ id: "PlayG", cardText: DEFAULT_CARD_TEXT_SIYOU_KATA })
-      .cardText,
+    getCardTextMacro({ id: "PlayG" }).cardText,
     getCardTextMacro({
       id: "PlayOperation",
-      cardText: DEFAULT_CARD_TEXT_SIYOU_KATA,
     }).cardText,
     getCardTextMacro({
       id: "PlayText",
-      cardText: DEFAULT_CARD_TEXT_SIYOU_KATA,
+
       description:
         "（帰還ステップ）〔黒３〕：自軍カード１枚を廃棄する。その場合、敵軍は、G以外の自分のカード１枚を選んで廃棄する。",
       timing: ["帰還ステップ"],

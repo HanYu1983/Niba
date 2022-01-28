@@ -86,11 +86,10 @@ const prototype: CardPrototype = {
     createTokuSyuKouKaText(["クイック"], {}),
     createTokuSyuKouKaText(["高機動"], {}),
     createTokuSyuKouKaText(["改装", "F91系"], { cost: 1 }),
-    getCardTextMacro({ id: "PlayG", cardText: DEFAULT_CARD_TEXT_SIYOU_KATA })
-      .cardText,
+    getCardTextMacro({ id: "PlayG" }).cardText,
     getCardTextMacro({
       id: "PlayUnit",
-      cardText: DEFAULT_CARD_TEXT_SIYOU_KATA,
+
       varCtxID: varCtxID1,
       rollCostRequire: [createRollCostRequire(2, "赤")],
       additionalRequire: [playCardRequire],
@@ -102,7 +101,7 @@ const prototype: CardPrototype = {
       texts: [
         getCardTextMacro({
           id: "PlayUnit",
-          cardText: DEFAULT_CARD_TEXT_SIYOU_KATA,
+
           description:
             "『恒常』：[このカードは、戦闘フェイズ中、合計国力－３してプレイできる。]その場合、カット終了時に、このカードを廃棄する。",
           varCtxID: varCtxID1,
@@ -185,7 +184,7 @@ const prototype: CardPrototype = {
           id: "WhenCutFinished",
           description:
             "『恒常』：このカードは、戦闘フェイズ中、合計国力－３してプレイできる。[その場合、カット終了時に、このカードを廃棄する。]",
-          cardText: DEFAULT_CARD_TEXT_ZIDOU_KATA,
+
           hasFlag: CARD_TEXT_DESTROY_WHEN_CUT_FINISHED_VAR_FLAG_FOR_DESTROY,
           additionalFeedbackAction: [
             {
@@ -199,7 +198,7 @@ const prototype: CardPrototype = {
         }).cardText,
         getCardTextMacro({
           id: "WhenShowBa",
-          cardText: DEFAULT_CARD_TEXT_ZIDOU_KATA,
+
           description:
             "『起動』このカードが場に出た場合、敵軍は、自分のユニット１枚を選んで持ち主の手札に移す。",
           varCtxID: varCtxID1,

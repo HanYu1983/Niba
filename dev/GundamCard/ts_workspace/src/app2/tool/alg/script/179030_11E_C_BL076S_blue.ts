@@ -23,11 +23,10 @@ const prototype: CardPrototype = {
   color: "青",
   rollCost: ["青", null, null],
   texts: [
-    getCardTextMacro({ id: "PlayG", cardText: DEFAULT_CARD_TEXT_SIYOU_KATA })
-      .cardText,
+    getCardTextMacro({ id: "PlayG" }).cardText,
     getCardTextMacro({
       id: "PlayCommand",
-      cardText: DEFAULT_CARD_TEXT_SIYOU_KATA,
+
       description:
         "（敵軍防御ステップ）：交戦中の自軍ユニットがいる場合、交戦中ではない、全てのユニットを破壊する。",
       timing: ["敵軍", "防御ステップ"],

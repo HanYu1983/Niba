@@ -26,18 +26,31 @@ const prototype: CardPrototype = {
   color: "白",
   rollCost: ["白", null, null, null],
   texts: [
-    getCardTextMacro({ id: "PlayG", cardText: DEFAULT_CARD_TEXT_SIYOU_KATA })
-      .cardText,
+    getCardTextMacro({ id: "PlayG" }).cardText,
     getCardTextMacro({
       id: "PlayCharacter",
-      cardText: DEFAULT_CARD_TEXT_SIYOU_KATA,
+      additionalRequire: [createRollCostRequire(1, "白")],
     }).cardText,
     getCardTextMacro({
       id: "PlayText",
-      cardText: DEFAULT_CARD_TEXT_SIYOU_KATA,
       description:
         "（戦闘フェイズ）〔２〕：このセットグループのユニットは、ターン終了時まで「速攻」を得る。",
-      additionalRequire: [createRollCostRequire(2, null)],
+      additionalRequire: [
+        createRollCostRequire(2, null),
+        {
+          id: "RequireTarget",
+          targets: {},
+          condition: getCardTextMacro({
+            id: "變量x的場所包含於y",
+            x: { id: "カード", value: { path: [{ id: "このカード" }] } },
+            y: [
+              { id: "RelatedBaSyou", value: ["自軍", "配備エリア"] },
+              { id: "RelatedBaSyou", value: ["自軍", "戦闘エリア（左）"] },
+              { id: "RelatedBaSyou", value: ["自軍", "戦闘エリア（右）"] },
+            ],
+          }).condition,
+        },
+      ],
       feedbackBlock: {
         feedback: [
           {

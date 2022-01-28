@@ -31,11 +31,9 @@ const prototype: CardPrototype = {
   color: "黒",
   rollCost: ["黒"],
   texts: [
-    getCardTextMacro({ id: "PlayG", cardText: DEFAULT_CARD_TEXT_SIYOU_KATA })
-      .cardText,
+    getCardTextMacro({ id: "PlayG" }).cardText,
     getCardTextMacro({
       id: "PlayOperation",
-      cardText: DEFAULT_CARD_TEXT_SIYOU_KATA,
       additionalRequire: [createRollCostRequire(1, "黒")],
     }).cardText,
     {
@@ -87,7 +85,7 @@ const prototype: CardPrototype = {
     },
     getCardTextMacro({
       id: "PlayText",
-      cardText: DEFAULT_CARD_TEXT_SIYOU_KATA,
+
       description:
         "（常時）〔R〕：敵軍は、自分のジャンクヤードにあるカード１枚をゲームから取り除く。",
       varCtxID:

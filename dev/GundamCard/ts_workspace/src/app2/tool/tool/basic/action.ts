@@ -26,12 +26,6 @@ type ActionSetTarget = {
   target: string;
 };
 
-// type ActionConsumeG = {
-//   id: "ActionConsumeG";
-//   cards: TargetTypeCard;
-//   color?: TargetTypeCardColor;
-// };
-
 // 廃棄
 export type ActionDrop = {
   id: "ActionDrop";
@@ -147,10 +141,15 @@ export type ActionJsonfp = {
   program: any;
 };
 
+export type ActionSetSetCard = {
+  id: "ActionSetSetCard";
+  cards: TargetTypeCard;
+  distCard: TargetTypeCard;
+};
+
 export type Action =
   | ActionRoll
   | ActionReroll
-  //| ActionConsumeG
   | ActionSetTarget
   | ActionDrop
   | ActionMoveCardToPosition
@@ -171,4 +170,5 @@ export type Action =
   | ActionRuleDraw
   | ActionRegisterChip
   | ActionCreateChip
-  | ActionJsonfp;
+  | ActionJsonfp
+  | ActionSetSetCard;

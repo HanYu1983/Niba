@@ -426,7 +426,7 @@ export function createTokuSyuKouKaText(
         texts: [
           getCardTextMacro({
             id: "PlayText",
-            cardText: DEFAULT_CARD_TEXT_SIYOU_KATA,
+
             description: JSON.stringify(toku),
             timing: ["ダメージ判定ステップ"],
             varCtxID: `createTokuSyuKouKaText_${_seqID++}`,
@@ -571,7 +571,7 @@ export function createTokuSyuKouKaText(
         texts: [
           getCardTextMacro({
             id: "PlayText",
-            cardText: DEFAULT_CARD_TEXT_SIYOU_KATA,
+
             description: JSON.stringify(toku),
             timing: ["自軍", "攻撃ステップ"],
             varCtxID: `createTokuSyuKouKaText_${_seqID++}`,
@@ -699,7 +699,7 @@ export function createTokuSyuKouKaText(
         texts: [
           getCardTextMacro({
             id: "PlayText",
-            cardText: DEFAULT_CARD_TEXT_SIYOU_KATA,
+
             description: JSON.stringify(toku),
             timing: ["防御ステップ"],
             varCtxID: `createTokuSyuKouKaText_${_seqID++}`,
@@ -849,7 +849,7 @@ export function createTokuSyuKouKaText(
         texts: [
           getCardTextMacro({
             id: "PlayText",
-            cardText: DEFAULT_CARD_TEXT_SIYOU_KATA,
+
             description: JSON.stringify(toku),
             timing: ["ダメージ判定ステップ"],
             varCtxID: `createTokuSyuKouKaText_${_seqID++}`,
@@ -975,7 +975,7 @@ export function createTokuSyuKouKaText(
         texts: [
           getCardTextMacro({
             id: "PlayText",
-            cardText: DEFAULT_CARD_TEXT_SIYOU_KATA,
+
             description: JSON.stringify(toku),
             timing: ["戦闘フェイズ"],
             varCtxID: `createTokuSyuKouKaText_${_seqID++}`,
@@ -1264,7 +1264,7 @@ export function createTokuSyuKouKaText(
           },
           getCardTextMacro({
             id: "PlayText",
-            cardText: DEFAULT_CARD_TEXT_SIYOU_KATA,
+
             description: JSON.stringify(toku),
             timing: ["常時"],
             varCtxID: `createTokuSyuKouKaText_${_seqID++}`,

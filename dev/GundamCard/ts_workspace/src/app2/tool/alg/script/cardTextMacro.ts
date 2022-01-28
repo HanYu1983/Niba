@@ -5,11 +5,16 @@ import {
   ActionMoveCardToPosition,
 } from "../../tool/basic/action";
 import {
+  BaSyou,
+  BaSyouKeyword,
   CardColor,
+  CardRole,
   CardText,
   CardTextSiYouKaTa,
   CardTextZiDouKaTa,
+  DEFAULT_CARD_TEXT_SIYOU_KATA,
   RelatedBaSyou,
+  RelatedPlayerSideKeyword,
   SiYouTiming,
 } from "../../tool/basic/basic";
 import {
@@ -20,18 +25,19 @@ import {
   FeedbackAction,
 } from "../../tool/basic/blockPayload";
 import { Condition } from "../../tool/basic/condition";
+import { TargetTypeCard } from "../../tool/basic/targetType";
 
-export type CardTextMacro1 = {
+type CardTextMacro1 = {
   id: "PlayG";
   description?: string;
-  cardText: CardTextSiYouKaTa;
 };
 
-export type CardTextMacro2 = {
+type CardTextMacro2 = {
   id:
     | "PlayUnit"
     | "PlayCommand"
     | "PlayCharacter"
+    | "PlayCharacter(Stay)"
     | "PlayOperation"
     | "PlayText";
   description?: string;
@@ -41,411 +47,620 @@ export type CardTextMacro2 = {
   additionalRequire?: Require[];
   feedbackBlock?: BlockPayload;
   timing?: SiYouTiming;
-  cardText: CardTextSiYouKaTa;
 };
 
-export type CardTextMacro3 = {
+type CardTextMacro3 = {
   id: "WhenCutFinished";
   description?: string;
   varCtxID?: string;
   additionalFeedbackAction?: Action[];
   hasFlag?: string;
-  cardText: CardTextZiDouKaTa;
 };
 
-export type CardTextMacro4 = {
+type CardTextMacro4 = {
   id: "WhenShowBa";
   description?: string;
   varCtxID?: string;
   additionalFeedbackAction?: Action[];
-  cardText: CardTextZiDouKaTa;
+};
+
+type CardTextMacro5 = {
+  id: "變量x的角色包含於y";
+  x: TargetTypeCard;
+  y: CardRole[];
+};
+
+type CardTextMacro6 = {
+  id: "變量x的是y軍";
+  x: TargetTypeCard;
+  y: RelatedPlayerSideKeyword;
+};
+
+type CardTextMacro7 = {
+  id: "變量x的場所包含於y";
+  x: TargetTypeCard;
+  y: BaSyou[];
 };
 
 export type CardTextMacro =
   | CardTextMacro1
   | CardTextMacro2
   | CardTextMacro3
-  | CardTextMacro4;
+  | CardTextMacro4
+  | CardTextMacro5
+  | CardTextMacro6
+  | CardTextMacro7;
+
+export type Return = {
+  condition: Condition;
+  cardText: CardTextZiDouKaTa | CardTextSiYouKaTa;
+};
+
+const DEFAULT_RETURN: Return = {
+  condition: { id: "ConditionAnd", and: [] },
+  cardText: DEFAULT_CARD_TEXT_SIYOU_KATA,
+};
 
 export const VAR_PLAY_CARD = "將要「プレイ」的卡";
 
-export function getCardTextMacro(macro: CardTextMacro): CardTextMacro {
+export function getCardTextMacro(macro: CardTextMacro): Return {
   switch (macro.id) {
-    case "PlayG":
-      macro.cardText = {
-        ...CARD_TEXT_PLAY_G,
-        description: macro.description || "PlayG",
+    case "變量x的場所包含於y":
+      return {
+        ...DEFAULT_RETURN,
+        condition: {
+          id: "ConditionCompareBaSyou",
+          value: [
+            {
+              id: "場所",
+              value: {
+                path: [macro.x, "的「場所」"],
+              },
+            },
+            "==",
+            {
+              id: "場所",
+              value: macro.y,
+            },
+          ],
+        },
       };
-      return macro;
-    case "PlayUnit":
-    case "PlayCommand":
+    case "變量x的是y軍":
+      return {
+        ...DEFAULT_RETURN,
+        condition: {
+          id: "ConditionComparePlayer",
+          value: [
+            {
+              id: "プレーヤー",
+              value: {
+                path: [macro.x, "的「コントローラー」"],
+              },
+            },
+            "==",
+            {
+              id: "プレーヤー",
+              value: {
+                path: [{ id: "自軍" }],
+              },
+            },
+          ],
+        },
+      };
+    case "變量x的角色包含於y":
+      return {
+        ...DEFAULT_RETURN,
+        condition: {
+          id: "ConditionCompareRole",
+          value: [
+            {
+              id: "「カード」的角色",
+              value: {
+                path: [macro.x, "的角色"],
+              },
+            },
+            "in",
+            {
+              id: "「カード」的角色",
+              value: macro.y,
+            },
+          ],
+        },
+      };
+    case "PlayG":
+      return {
+        ...DEFAULT_RETURN,
+        cardText: {
+          ...CARD_TEXT_PLAY_G,
+          description: macro.description || "PlayG",
+        },
+      };
     case "PlayCharacter":
-    case "PlayOperation":
-    case "PlayText":
-      macro.cardText = {
-        ...CARD_TEXT_PLAY,
-        description: macro.description || "PlayUnit",
-        timing: macro.timing || CARD_TEXT_PLAY.timing,
-        block: {
-          ...CARD_TEXT_PLAY.block,
-          contextID: macro.varCtxID,
-          require: {
-            id: "RequireAnd",
-            and: [
-              ...(macro.id != "PlayText"
-                ? [
-                    {
-                      ...REQUIRE_PLAY,
-                      condition: {
-                        ...REQUIRE_PLAY.condition,
-                        and: [
-                          ...(macro.totalCostConditionReplace
-                            ? macro.totalCostConditionReplace
-                            : [CONDITION_TOTAL_COST]),
-                          CONDITION_PLAY_UNIT_FROM_BASYOU,
+      return {
+        ...DEFAULT_RETURN,
+        cardText: {
+          ...CARD_TEXT_PLAY,
+          description: macro.description || "PlayCharacter",
+          timing: macro.timing || CARD_TEXT_PLAY.timing,
+          block: {
+            ...CARD_TEXT_PLAY.block,
+            contextID: macro.varCtxID,
+            require: {
+              id: "RequireAnd",
+              and: [
+                {
+                  ...REQUIRE_PLAY,
+                  condition: {
+                    ...REQUIRE_PLAY.condition,
+                    and: [
+                      ...(macro.totalCostConditionReplace
+                        ? macro.totalCostConditionReplace
+                        : [CONDITION_TOTAL_COST]),
+                      CONDITION_PLAY_UNIT_FROM_BASYOU,
+                    ],
+                  },
+                } as RequireTarget,
+                {
+                  id: "RequireTarget",
+                  targets: {
+                    目標機體: {
+                      id: "カード",
+                      value: [],
+                      valueLengthInclude: [1],
+                    },
+                  },
+                  condition: {
+                    id: "ConditionAnd",
+                    and: [
+                      getCardTextMacro({
+                        id: "變量x的是y軍",
+                        x: { id: "カード", value: "目標機體" },
+                        y: "自軍",
+                      }).condition,
+                      getCardTextMacro({
+                        id: "變量x的角色包含於y",
+                        x: { id: "カード", value: "目標機體" },
+                        y: ["ユニット"],
+                      }).condition,
+                      getCardTextMacro({
+                        id: "變量x的場所包含於y",
+                        x: { id: "カード", value: "目標機體" },
+                        y: [
+                          {
+                            id: "RelatedBaSyou",
+                            value: ["自軍", "配備エリア"],
+                          },
                         ],
-                      },
-                    } as RequireTarget,
-                  ]
-                : []),
-              ...(macro.additionalRequire || []),
+                      }).condition,
+                    ],
+                  },
+                },
+                ...(macro.additionalRequire || []),
+              ],
+            },
+            feedback: [
+              {
+                id: "FeedbackAction",
+                action: [
+                  {
+                    id: "ActionAddBlock",
+                    type: "堆疊",
+                    block: {
+                      ...macro.feedbackBlock,
+                      contextID: macro.varCtxID,
+                      feedback: [
+                        ...(macro.feedbackBlock?.feedback || []),
+                        {
+                          id: "FeedbackAction",
+                          action: [
+                            {
+                              id: "ActionSetSetCard",
+                              cards: {
+                                id: "カード",
+                                value: VAR_PLAY_CARD,
+                              },
+                              distCard: {
+                                id: "カード",
+                                value: "目標機體",
+                              },
+                            },
+                          ],
+                        } as FeedbackAction,
+                      ],
+                    },
+                  },
+                ],
+              },
             ],
           },
-          feedback: [
-            {
-              id: "FeedbackAction",
-              action: [
-                {
-                  id: "ActionAddBlock",
-                  type: "堆疊",
-                  block: {
-                    ...macro.feedbackBlock,
-                    contextID: macro.varCtxID,
-                    feedback: [
-                      ...(macro.feedbackBlock?.feedback || []),
-                      ...(macro.id != "PlayText"
-                        ? [
-                            {
-                              id: "FeedbackAction",
-                              action: [
-                                {
-                                  id: "ActionMoveCardToPosition",
-                                  cards: {
-                                    id: "カード",
-                                    value: VAR_PLAY_CARD,
-                                  },
-                                  baSyou: {
-                                    id: "場所",
-                                    value: [
-                                      ...(macro.id == "PlayUnit"
-                                        ? [
-                                            {
-                                              id: "RelatedBaSyou",
-                                              value: ["自軍", "配備エリア"],
-                                            } as RelatedBaSyou,
-                                          ]
-                                        : []),
-                                      ...(macro.id == "PlayOperation"
-                                        ? [
-                                            {
-                                              id: "RelatedBaSyou",
-                                              value: ["自軍", "配備エリア"],
-                                            } as RelatedBaSyou,
-                                          ]
-                                        : []),
-                                      ...(macro.id == "PlayCommand"
-                                        ? [
-                                            {
-                                              id: "RelatedBaSyou",
-                                              value: ["自軍", "ジャンクヤード"],
-                                            } as RelatedBaSyou,
-                                          ]
-                                        : []),
-                                    ],
-                                  },
-                                },
-                              ],
-                            } as FeedbackAction,
-                          ]
-                        : []),
-                    ],
-                  },
-                },
-              ],
-            },
-          ],
         },
       };
-      return macro;
-    case "WhenCutFinished":
-      macro.cardText = {
-        id: "自動型",
-        category: "起動",
-        description: macro.description || "WhenCutFinished",
-        block: {
-          contextID: macro.varCtxID,
-          require: {
-            id: "RequireTarget",
-            targets: {},
-            condition: {
-              id: "ConditionJsonfp",
-              program: {
-                pass1: {
-                  if: [
-                    {
-                      "->": [
-                        "$in.blockPayload",
-                        { log: "blockPayload" },
-                        { getter: "cause" },
-                        { getter: "id" },
-                        { "==": "BlockPayloadCauseGameEvent" },
-                      ],
-                    },
-                    {},
-                    { error: "事件必須是BlockPayloadCauseGameEvent" },
-                  ],
-                },
-                pass2: {
-                  if: [
-                    {
-                      "->": [
-                        "$in.blockPayload",
-                        { log: "blockPayload" },
-                        { getter: "cause" },
-                        { getter: "gameEvent" },
-                        { getter: "id" },
-                        { "==": "カット終了時" },
-                      ],
-                    },
-                    {},
-                    { error: "事件必須是カット終了時" },
-                  ],
-                },
-                $cardTextID: {
-                  "->": [
-                    "$in.blockPayload",
-                    { log: "thisEffect" },
-                    { getter: "cause" },
-                    { getter: "cardTextID" },
-                    { log: "cardTextID" },
-                  ],
-                },
-                pass3: {
-                  if: [
-                    {
-                      "->": [
-                        {
-                          "->": [
-                            "$in.blockPayload",
-                            { log: "blockPayload" },
-                            { getter: "cause" },
-                            { getter: "gameEvent" },
-                            { getter: "effects" },
+    case "PlayUnit":
+    case "PlayCommand":
+    case "PlayCharacter(Stay)":
+    case "PlayOperation":
+    case "PlayText":
+      return {
+        ...DEFAULT_RETURN,
+        cardText: {
+          ...CARD_TEXT_PLAY,
+          description: macro.description || macro.id,
+          timing: macro.timing || CARD_TEXT_PLAY.timing,
+          block: {
+            ...CARD_TEXT_PLAY.block,
+            contextID: macro.varCtxID,
+            require: {
+              id: "RequireAnd",
+              and: [
+                ...(macro.id != "PlayText"
+                  ? [
+                      {
+                        ...REQUIRE_PLAY,
+                        condition: {
+                          ...REQUIRE_PLAY.condition,
+                          and: [
+                            ...(macro.totalCostConditionReplace
+                              ? macro.totalCostConditionReplace
+                              : [CONDITION_TOTAL_COST]),
+                            CONDITION_PLAY_UNIT_FROM_BASYOU,
                           ],
                         },
-                        // .運算子只支援2層
-                        { map: "$in.cause.cardTextID" },
-                        {
-                          filter: {
-                            "==": "$cardTextID",
-                          },
-                        },
-                        { size: null },
-                        { ">": 0 },
+                      } as RequireTarget,
+                    ]
+                  : []),
+                ...(macro.additionalRequire || []),
+              ],
+            },
+            feedback: [
+              {
+                id: "FeedbackAction",
+                action: [
+                  {
+                    id: "ActionAddBlock",
+                    type: "堆疊",
+                    block: {
+                      ...macro.feedbackBlock,
+                      contextID: macro.varCtxID,
+                      feedback: [
+                        ...(macro.feedbackBlock?.feedback || []),
+                        ...(macro.id != "PlayText"
+                          ? [
+                              {
+                                id: "FeedbackAction",
+                                action: [
+                                  {
+                                    id: "ActionMoveCardToPosition",
+                                    cards: {
+                                      id: "カード",
+                                      value: VAR_PLAY_CARD,
+                                    },
+                                    baSyou: {
+                                      id: "場所",
+                                      value: [
+                                        ...(macro.id == "PlayUnit"
+                                          ? [
+                                              {
+                                                id: "RelatedBaSyou",
+                                                value: ["自軍", "配備エリア"],
+                                              } as RelatedBaSyou,
+                                            ]
+                                          : []),
+                                        ...(macro.id == "PlayCharacter(Stay)"
+                                          ? [
+                                              {
+                                                id: "RelatedBaSyou",
+                                                value: ["自軍", "配備エリア"],
+                                              } as RelatedBaSyou,
+                                            ]
+                                          : []),
+                                        ...(macro.id == "PlayOperation"
+                                          ? [
+                                              {
+                                                id: "RelatedBaSyou",
+                                                value: ["自軍", "配備エリア"],
+                                              } as RelatedBaSyou,
+                                            ]
+                                          : []),
+                                        ...(macro.id == "PlayCommand"
+                                          ? [
+                                              {
+                                                id: "RelatedBaSyou",
+                                                value: [
+                                                  "自軍",
+                                                  "ジャンクヤード",
+                                                ],
+                                              } as RelatedBaSyou,
+                                            ]
+                                          : []),
+                                      ],
+                                    },
+                                  },
+                                ],
+                              } as FeedbackAction,
+                            ]
+                          : []),
                       ],
                     },
-                    {},
-                    { error: "效果必須包含在堆疊記憶內" },
-                  ],
-                },
-                $cardID: {
-                  "->": [
-                    "$in.blockPayload",
-                    { getter: "cause" },
-                    { getter: "cardID" },
-                  ],
-                },
-                ...(macro.hasFlag
-                  ? {
-                      pass4: {
-                        if: [
+                  },
+                ],
+              },
+            ],
+          },
+        },
+      };
+    case "WhenCutFinished":
+      return {
+        ...DEFAULT_RETURN,
+        cardText: {
+          id: "自動型",
+          category: "起動",
+          description: macro.description || "WhenCutFinished",
+          block: {
+            contextID: macro.varCtxID,
+            require: {
+              id: "RequireTarget",
+              targets: {},
+              condition: {
+                id: "ConditionJsonfp",
+                program: {
+                  pass1: {
+                    if: [
+                      {
+                        "->": [
+                          "$in.blockPayload",
+                          { log: "blockPayload" },
+                          { getter: "cause" },
+                          { getter: "id" },
+                          { "==": "BlockPayloadCauseGameEvent" },
+                        ],
+                      },
+                      {},
+                      { error: "事件必須是BlockPayloadCauseGameEvent" },
+                    ],
+                  },
+                  pass2: {
+                    if: [
+                      {
+                        "->": [
+                          "$in.blockPayload",
+                          { log: "blockPayload" },
+                          { getter: "cause" },
+                          { getter: "gameEvent" },
+                          { getter: "id" },
+                          { "==": "カット終了時" },
+                        ],
+                      },
+                      {},
+                      { error: "事件必須是カット終了時" },
+                    ],
+                  },
+                  $cardTextID: {
+                    "->": [
+                      "$in.blockPayload",
+                      { log: "thisEffect" },
+                      { getter: "cause" },
+                      { getter: "cardTextID" },
+                      { log: "cardTextID" },
+                    ],
+                  },
+                  pass3: {
+                    if: [
+                      {
+                        "->": [
                           {
                             "->": [
-                              {
-                                "->": [
-                                  "$in.ctx",
-                                  { getter: "gameState" },
-                                  { getter: "cardState" },
-                                ],
-                              },
-                              {
-                                filter: {
-                                  "->": [
-                                    [
-                                      {
-                                        "->": ["$in.id", { "==": "$cardID" }],
-                                      },
-                                      {
-                                        "->": [
-                                          "$in.flags",
-                                          {
-                                            filter: macro.hasFlag,
-                                          },
-                                          { size: null },
-                                          { ">": 0 },
-                                        ],
-                                      },
-                                    ],
-                                    { reduce: "and" },
-                                  ],
-                                },
-                              },
-                              { size: null },
-                              { ">": 0 },
+                              "$in.blockPayload",
+                              { log: "blockPayload" },
+                              { getter: "cause" },
+                              { getter: "gameEvent" },
+                              { getter: "effects" },
                             ],
                           },
-                          {},
+                          // .運算子只支援2層
+                          { map: "$in.cause.cardTextID" },
                           {
-                            error: `必須有flag:${macro.hasFlag}`,
+                            filter: {
+                              "==": "$cardTextID",
+                            },
                           },
+                          { size: null },
+                          { ">": 0 },
                         ],
                       },
-                    }
-                  : null),
-              },
-            },
-          },
-          feedback: [
-            {
-              id: "FeedbackAction",
-              action: [
-                {
-                  id: "ActionAddBlock",
-                  type: "立即",
-                  block: {
-                    feedback: [
-                      {
-                        id: "FeedbackAction",
-                        action: [
-                          ...(macro.additionalFeedbackAction || []),
-                          ...(macro.hasFlag
-                            ? [
+                      {},
+                      { error: "效果必須包含在堆疊記憶內" },
+                    ],
+                  },
+                  $cardID: {
+                    "->": [
+                      "$in.blockPayload",
+                      { getter: "cause" },
+                      { getter: "cardID" },
+                    ],
+                  },
+                  ...(macro.hasFlag
+                    ? {
+                        pass4: {
+                          if: [
+                            {
+                              "->": [
                                 {
-                                  id: "ActionDeleteFlag",
-                                  cards: {
-                                    id: "カード",
-                                    value: { path: [{ id: "このカード" }] },
+                                  "->": [
+                                    "$in.ctx",
+                                    { getter: "gameState" },
+                                    { getter: "cardState" },
+                                  ],
+                                },
+                                {
+                                  filter: {
+                                    "->": [
+                                      [
+                                        {
+                                          "->": ["$in.id", { "==": "$cardID" }],
+                                        },
+                                        {
+                                          "->": [
+                                            "$in.flags",
+                                            {
+                                              filter: macro.hasFlag,
+                                            },
+                                            { size: null },
+                                            { ">": 0 },
+                                          ],
+                                        },
+                                      ],
+                                      { reduce: "and" },
+                                    ],
                                   },
-                                  flag: {
-                                    id: "字串",
-                                    value: [macro.hasFlag],
-                                  },
-                                } as ActionDeleteFlag,
-                              ]
-                            : []),
-                        ],
-                      },
-                    ],
-                  },
-                },
-              ],
-            },
-          ],
-        },
-      };
-      return macro;
-    case "WhenShowBa":
-      macro.cardText = {
-        id: "自動型",
-        category: "起動",
-        description: macro.description || "WhenShowBa",
-        block: {
-          contextID: macro.varCtxID,
-          require: {
-            id: "RequireTarget",
-            targets: {},
-            condition: {
-              id: "ConditionJsonfp",
-              program: {
-                pass1: {
-                  if: [
-                    {
-                      "->": [
-                        "$in.blockPayload",
-                        { log: "blockPayload" },
-                        { getter: "cause" },
-                        { getter: "id" },
-                        { "==": "BlockPayloadCauseGameEvent" },
-                      ],
-                    },
-                    {},
-                    { error: "事件必須是BlockPayloadCauseGameEvent" },
-                  ],
-                },
-                pass2: {
-                  if: [
-                    {
-                      "->": [
-                        "$in.blockPayload",
-                        { log: "blockPayload" },
-                        { getter: "cause" },
-                        { getter: "gameEvent" },
-                        { getter: "id" },
-                        { "==": "場に出た場合" },
-                      ],
-                    },
-                    {},
-                    { error: "事件必須是場に出た場合" },
-                  ],
-                },
-                $cardID: {
-                  "->": [
-                    "$in.blockPayload",
-                    { getter: "cause" },
-                    { getter: "cardID" },
-                  ],
-                },
-                pass3: {
-                  if: [
-                    {
-                      "->": [
-                        "$in.blockPayload",
-                        { log: "blockPayload" },
-                        { getter: "cause" },
-                        { getter: "gameEvent" },
-                        { getter: "cardID" },
-                        { "==": "$cardID" },
-                      ],
-                    },
-                    {},
-                    { error: "必須是這張卡" },
-                  ],
+                                },
+                                { size: null },
+                                { ">": 0 },
+                              ],
+                            },
+                            {},
+                            {
+                              error: `必須有flag:${macro.hasFlag}`,
+                            },
+                          ],
+                        },
+                      }
+                    : null),
                 },
               },
             },
+            feedback: [
+              {
+                id: "FeedbackAction",
+                action: [
+                  {
+                    id: "ActionAddBlock",
+                    type: "立即",
+                    block: {
+                      feedback: [
+                        {
+                          id: "FeedbackAction",
+                          action: [
+                            ...(macro.additionalFeedbackAction || []),
+                            ...(macro.hasFlag
+                              ? [
+                                  {
+                                    id: "ActionDeleteFlag",
+                                    cards: {
+                                      id: "カード",
+                                      value: { path: [{ id: "このカード" }] },
+                                    },
+                                    flag: {
+                                      id: "字串",
+                                      value: [macro.hasFlag],
+                                    },
+                                  } as ActionDeleteFlag,
+                                ]
+                              : []),
+                          ],
+                        },
+                      ],
+                    },
+                  },
+                ],
+              },
+            ],
           },
-          feedback: [
-            {
-              id: "FeedbackAction",
-              action: [
-                {
-                  id: "ActionAddBlock",
-                  type: "立即",
-                  block: {
-                    feedback: [
+        },
+      };
+    case "WhenShowBa":
+      return {
+        ...DEFAULT_RETURN,
+        cardText: {
+          id: "自動型",
+          category: "起動",
+          description: macro.description || "WhenShowBa",
+          block: {
+            contextID: macro.varCtxID,
+            require: {
+              id: "RequireTarget",
+              targets: {},
+              condition: {
+                id: "ConditionJsonfp",
+                program: {
+                  pass1: {
+                    if: [
                       {
-                        id: "FeedbackAction",
-                        action: [...(macro.additionalFeedbackAction || [])],
+                        "->": [
+                          "$in.blockPayload",
+                          { log: "blockPayload" },
+                          { getter: "cause" },
+                          { getter: "id" },
+                          { "==": "BlockPayloadCauseGameEvent" },
+                        ],
                       },
+                      {},
+                      { error: "事件必須是BlockPayloadCauseGameEvent" },
+                    ],
+                  },
+                  pass2: {
+                    if: [
+                      {
+                        "->": [
+                          "$in.blockPayload",
+                          { log: "blockPayload" },
+                          { getter: "cause" },
+                          { getter: "gameEvent" },
+                          { getter: "id" },
+                          { "==": "場に出た場合" },
+                        ],
+                      },
+                      {},
+                      { error: "事件必須是場に出た場合" },
+                    ],
+                  },
+                  $cardID: {
+                    "->": [
+                      "$in.blockPayload",
+                      { getter: "cause" },
+                      { getter: "cardID" },
+                    ],
+                  },
+                  pass3: {
+                    if: [
+                      {
+                        "->": [
+                          "$in.blockPayload",
+                          { log: "blockPayload" },
+                          { getter: "cause" },
+                          { getter: "gameEvent" },
+                          { getter: "cardID" },
+                          { "==": "$cardID" },
+                        ],
+                      },
+                      {},
+                      { error: "必須是這張卡" },
                     ],
                   },
                 },
-              ],
+              },
             },
-          ],
+            feedback: [
+              {
+                id: "FeedbackAction",
+                action: [
+                  {
+                    id: "ActionAddBlock",
+                    type: "立即",
+                    block: {
+                      feedback: [
+                        {
+                          id: "FeedbackAction",
+                          action: [...(macro.additionalFeedbackAction || [])],
+                        },
+                      ],
+                    },
+                  },
+                ],
+              },
+            ],
+          },
         },
       };
-      return macro;
   }
 }
 

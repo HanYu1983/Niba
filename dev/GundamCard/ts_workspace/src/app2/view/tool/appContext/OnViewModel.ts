@@ -139,7 +139,17 @@ export const OnViewModel = OnEvent.pipe(
               "179901_00_U_RD010P_red",
               "179025_07D_U_RD156R_red",
               "179025_07D_U_RD158C_red",
+              "179001_01A_CH_WT007R_white",
             ]
+          );
+          table = createCard(
+            table,
+            PlayerA,
+            getBaShouID({
+              id: "AbsoluteBaSyou",
+              value: [PlayerA, "配備エリア"],
+            }),
+            ["179901_00_U_RD010P_red"]
           );
           table = createCard(
             table,
@@ -164,7 +174,7 @@ export const OnViewModel = OnEvent.pipe(
               "179030_11E_G_RD021N_red",
               "179030_11E_G_RD021N_red",
               "179030_11E_G_RD021N_red",
-              "179030_11E_G_RD021N_red",
+              "179001_01A_CH_WT007R_white",
             ]
           );
           table = createCard(

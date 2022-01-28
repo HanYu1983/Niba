@@ -733,11 +733,9 @@ export function applyFlow(
 export function queryFlow(ctx: GameContext, playerID: string): Flow[] {
   // 有玩家在支付卡片
   if (ctx.gameState.activeEffectID != null) {
-    const currentActiveEffect = [
-      ...ctx.gameState.commandEffect,
-      ...ctx.gameState.immediateEffect,
-      ...ctx.gameState.stackEffect,
-    ].find((e) => e.id == ctx.gameState.activeEffectID);
+    const currentActiveEffect = iterateEffect(ctx).find(
+      (e) => e.id == ctx.gameState.activeEffectID
+    );
     if (currentActiveEffect == null) {
       throw new Error("activeEffectID not found");
     }
