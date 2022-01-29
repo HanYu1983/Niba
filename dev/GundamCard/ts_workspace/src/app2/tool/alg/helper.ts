@@ -64,15 +64,15 @@ export function getCardState(
     }
     return [getPrototype(card.protoID), false];
   })();
-  const uuidKey = `getCardState_${idSeq++}`;
+  //const uuidKey = `getCardState_${idSeq++}`;
   const newCardState: CardState = {
     ...DEFAULT_CARD_STATE,
     id: card.id,
     isChip: isChip,
     cardID: card.id,
-    live: 0,
+    damage: 0,
     destroy: false,
-    setGroupID: uuidKey,
+    //setGroupID: uuidKey,
     cardTextStates: proto.texts.map((text, i): CardTextState => {
       return {
         id: `${card.id}_${i}`,
@@ -663,6 +663,11 @@ export function getTargetType(
                 return cardState.prototype.battlePoint[2];
               }
               case "的「合計国力」": {
+                // p.55
+                // 1. 加算効果
+                // 2. 減算效果
+                // 3. 支付
+                // 4. 特殊支付
                 const [_, cardState] = getCardState(ctx, cardID);
                 return cardState.prototype.rollCost.length;
               }
@@ -748,13 +753,14 @@ export function getTargetType(
                 return false;
               }
               case "是「セットカード」？": {
-                const [_, cardIterator] = getCardIterator(ctx);
-                const [_2, cardState] = getCardState(ctx, cardID);
-                const findSameSetGroup =
-                  cardIterator.filter((v) => {
-                    return v.state.setGroupID == cardState.setGroupID;
-                  }).length > 1;
-                return findSameSetGroup;
+                // const [_, cardIterator] = getCardIterator(ctx);
+                // const [_2, cardState] = getCardState(ctx, cardID);
+                // const findSameSetGroup =
+                //   cardIterator.filter((v) => {
+                //     return v.state.setGroupID == cardState.setGroupID;
+                //   }).length > 1;
+                //return findSameSetGroup;
+                return ctx.gameState.setGroupLink[cardID] != null;
               }
               case "存在旗標？": {
                 const flag = path[2];

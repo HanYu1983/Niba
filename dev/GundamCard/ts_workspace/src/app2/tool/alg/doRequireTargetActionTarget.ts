@@ -21,6 +21,7 @@ import {
   DEFAULT_CARD_STATE,
   GameContext,
   getBlockOwner,
+  getSetGroupCards,
 } from "../tool/basic/gameContext";
 import {
   getCardBaSyou,
@@ -770,8 +771,52 @@ export function doRequireTargetActionTarget(
       const cardAValue = cardA.value[0];
       const cardBValue = cardB.value[0];
       {
+        // p.77
+        // 置換的繼承
+        // 1. 直立/横置, 破壞, 累積的傷害
+        // 2. 針對這張卡的戰鬥修正
+        // 3. setCard
+        // 4. 戰鬥修正的coin
+        // 5. 未解決的待機中效果的對象
+        // const [_, cardAState] = getCardState(ctx, cardAValue);
+        // const [_2, cardBState] = getCardState(ctx, cardBValue);
+        // cardBState.damage = cardAState.damage;
+        // ctx = {
+        //   ...ctx,
+        //   gameState: {
+        //     ...ctx.gameState,
+        //     cardState:ctx.gameState.cardState.map(cs=>{
+        //       if(cs.id != cardBValue){
+        //         return cs
+        //       }
+        //       return cs
+        //     })
+        //   },
+        // };
+        // 修改setGroup, 將B的整個setGroup移到A
+        const cardBSetGroup = getSetGroupCards(ctx, cardBValue);
+        const setGroupLink = cardBSetGroup.reduce(
+          (link, cardBSetGroupCardID) => {
+            if (cardBSetGroupCardID == cardBValue) {
+              return link;
+            }
+            return {
+              ...link,
+              [cardBSetGroupCardID]: cardAValue,
+            };
+          },
+          ctx.gameState.setGroupLink
+        );
+        ctx = {
+          ...ctx,
+          gameState: {
+            ...ctx.gameState,
+            setGroupLink: setGroupLink,
+          },
+        };
+      }
+      {
         // 移動cardA到cardB的位置
-        // TODO: 修改setGroup
         const cardID = cardBValue;
         const fromBaSyouID = getBaShouID(getCardBaSyou(ctx, cardID));
         const toBaSyouID = getBaShouID(getCardBaSyou(ctx, cardAValue));

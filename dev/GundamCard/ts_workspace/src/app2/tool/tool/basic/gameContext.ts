@@ -63,9 +63,9 @@ export type CardState = {
   id: string;
   isChip: boolean;
   cardID: string;
-  live: number;
+  damage: number;
   destroy: boolean;
-  setGroupID: string;
+  //setGroupID: string;
   flags: string[];
   cardTextStates: CardTextState[];
   prototype: CardPrototype;
@@ -75,9 +75,9 @@ export const DEFAULT_CARD_STATE: CardState = {
   id: "",
   isChip: true,
   cardID: "",
-  live: 0,
+  damage: 0,
   destroy: false,
-  setGroupID: "",
+  //setGroupID: "",
   flags: [],
   cardTextStates: [],
   prototype: DEFAULT_CARD_PROTOTYPE,
