@@ -205,25 +205,30 @@ export function isCanPlayCardInPhase(phase: Phase): boolean {
 
 export type BattleBonus = [number, number, number];
 
-export type GameEventOnTiming = {
+type GameEventOnTiming = {
   id: "GameEventOnTiming";
   timing: Timing;
 };
 
-export type GameEventOnStackEffectFinished = {
+type GameEventOnStackEffectFinished = {
   id: "カット終了時";
   effects: BlockPayload[];
 };
 
-export type GameEventOnShowBa = {
+type GameEventOnShowBa = {
   id: "場に出た場合";
   cardID: string;
 };
 
-export type GameEventOnPlayText = {
+type GameEventOnPlayText = {
   id: "プレイした場合";
   cardID: string;
   cardTextID: string;
+};
+
+type GameEventOnDestroyByKaiSo = {
+  id: "「改装」の効果で廃棄される場合" | "「改装」の効果で場に出た場合";
+  cardID: string;
 };
 
 export type GameEventOnAfterEffect = {
@@ -242,7 +247,8 @@ export type GameEvent =
   | GameEventOnManualEvent
   | GameEventOnStackEffectFinished
   | GameEventOnShowBa
-  | GameEventOnPlayText;
+  | GameEventOnPlayText
+  | GameEventOnDestroyByKaiSo;
 
 export type TokuSyuKouKa =
   | ["高機動"]

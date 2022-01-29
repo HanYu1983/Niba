@@ -13,6 +13,7 @@ import {
   CardTextSiYouKaTa,
   CardTextZiDouKaTa,
   DEFAULT_CARD_TEXT_SIYOU_KATA,
+  GameEvent,
   PlayerA,
   PlayerB,
   RelatedBaSyou,
@@ -85,6 +86,11 @@ type CardTextMacro7 = {
   y: BaSyou[];
 };
 
+type CardTextMacro8 = {
+  id: "當觸發GameEvent的變量x的id時";
+  x: GameEvent;
+};
+
 export type CardTextMacro =
   | CardTextMacro1
   | CardTextMacro2
@@ -92,7 +98,8 @@ export type CardTextMacro =
   | CardTextMacro4
   | CardTextMacro5
   | CardTextMacro6
-  | CardTextMacro7;
+  | CardTextMacro7
+  | CardTextMacro8;
 
 export type Return = {
   condition: Condition;
@@ -108,6 +115,46 @@ export const VAR_PLAY_CARD = "將要「プレイ」的卡";
 
 export function getCardTextMacro(macro: CardTextMacro): Return {
   switch (macro.id) {
+    case "當觸發GameEvent的變量x的id時":
+      return {
+        ...DEFAULT_RETURN,
+        condition: {
+          id: "ConditionJsonfp",
+          program: {
+            pass1: {
+              if: [
+                {
+                  "->": [
+                    "$in.blockPayload",
+                    { log: "blockPayload" },
+                    { getter: "cause" },
+                    { getter: "id" },
+                    { "==": "BlockPayloadCauseGameEvent" },
+                  ],
+                },
+                {},
+                { error: "事件必須是BlockPayloadCauseGameEvent" },
+              ],
+            },
+            pass2: {
+              if: [
+                {
+                  "->": [
+                    "$in.blockPayload",
+                    { log: "blockPayload" },
+                    { getter: "cause" },
+                    { getter: "gameEvent" },
+                    { getter: "id" },
+                    { "==": macro.x.id },
+                  ],
+                },
+                {},
+                { error: `事件必須是プレイした場合:${macro.x.id}` },
+              ],
+            },
+          },
+        },
+      };
     case "變量x的場所包含於y":
       return {
         ...DEFAULT_RETURN,

@@ -7,6 +7,7 @@ import {
   Table,
 } from "../../../../tool/table";
 import { getTargetType } from "../../alg/helper";
+import { getPrototype } from "../../alg/script";
 import {
   GameEvent,
   CardText,
@@ -288,4 +289,13 @@ export function getSetGroupCards(ctx: GameContext, cardID: string) {
       return ctx.gameState.setGroupLink[k] == cardID;
     }),
   ];
+}
+
+export function getCardCharacteristic(ctx: GameContext, cardID: string) {
+  const card = getCard(ctx.gameState.table, cardID);
+  if (card == null) {
+    throw new Error("card not found");
+  }
+  const prototype = getPrototype(card.protoID);
+  return prototype.characteristic;
 }

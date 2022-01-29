@@ -42,88 +42,95 @@ const prototype: CardPrototype = {
           id: "RequireTarget",
           targets: {},
           condition: {
-            id: "ConditionJsonfp",
-            program: {
-              pass1: {
-                if: [
-                  {
+            id: "ConditionAnd",
+            and: [
+              getCardTextMacro({
+                id: "當觸發GameEvent的變量x的id時",
+                x: { id: "プレイした場合", cardTextID: "", cardID: "" },
+              }).condition,
+              {
+                id: "ConditionJsonfp",
+                program: {
+                  // pass1: {
+                  //   if: [
+                  //     {
+                  //       "->": [
+                  //         "$in.blockPayload",
+                  //         { log: "blockPayload" },
+                  //         { getter: "cause" },
+                  //         { getter: "id" },
+                  //         { "==": "BlockPayloadCauseGameEvent" },
+                  //       ],
+                  //     },
+                  //     {},
+                  //     { error: "事件必須是BlockPayloadCauseGameEvent" },
+                  //   ],
+                  // },
+                  // pass2: {
+                  //   if: [
+                  //     {
+                  //       "->": [
+                  //         "$in.blockPayload",
+                  //         { log: "blockPayload" },
+                  //         { getter: "cause" },
+                  //         { getter: "gameEvent" },
+                  //         { getter: "id" },
+                  //         { "==": "プレイした場合" },
+                  //       ],
+                  //     },
+                  //     {},
+                  //     { error: "事件必須是プレイした場合" },
+                  //   ],
+                  // },
+                  $cardID: {
                     "->": [
                       "$in.blockPayload",
-                      { log: "blockPayload" },
                       { getter: "cause" },
-                      { getter: "id" },
-                      { "==": "BlockPayloadCauseGameEvent" },
+                      { getter: "cardID" },
                     ],
                   },
-                  {},
-                  { error: "事件必須是BlockPayloadCauseGameEvent" },
-                ],
-              },
-              pass2: {
-                if: [
-                  {
+                  $setGroupRootCardID: {
+                    "->": [
+                      "$in.ctx",
+                      { getter: "gameState" },
+                      { getter: "setGroupLink" },
+                      { getter: "$cardID" },
+                    ],
+                  },
+                  $setGroupCards: {
+                    "->": [
+                      "$in.ctx",
+                      {
+                        getSetGroupCards: "$setGroupRootCardID",
+                      },
+                    ],
+                  },
+                  $gameEventCardID: {
                     "->": [
                       "$in.blockPayload",
                       { log: "blockPayload" },
                       { getter: "cause" },
                       { getter: "gameEvent" },
-                      { getter: "id" },
-                      { "==": "プレイした場合" },
+                      { getter: "cardID" },
                     ],
                   },
-                  {},
-                  { error: "事件必須是プレイした場合" },
-                ],
-              },
-              $cardID: {
-                "->": [
-                  "$in.blockPayload",
-                  { getter: "cause" },
-                  { getter: "cardID" },
-                ],
-              },
-              $setGroupRootCardID: {
-                "->": [
-                  "$in.ctx",
-                  { getter: "gameState" },
-                  { getter: "setGroupLink" },
-                  { getter: "$cardID" },
-                ],
-              },
-              $setGroupCards: {
-                "->": [
-                  "$in.ctx",
-                  {
-                    getSetGroupCards: {
-                      cardID: "$setGroupRootCardID",
-                    },
-                  },
-                ],
-              },
-              $gameEventCardID: {
-                "->": [
-                  "$in.blockPayload",
-                  { log: "blockPayload" },
-                  { getter: "cause" },
-                  { getter: "gameEvent" },
-                  { getter: "cardID" },
-                ],
-              },
-              pass3: {
-                if: [
-                  {
-                    "->": [
-                      "$setGroupCards",
-                      { filter: { "==": "$gameEventCardID" } },
-                      { size: null },
-                      { ">": 0 },
+                  pass3: {
+                    if: [
+                      {
+                        "->": [
+                          "$setGroupCards",
+                          { filter: { "==": "$gameEventCardID" } },
+                          { size: null },
+                          { ">": 0 },
+                        ],
+                      },
+                      {},
+                      { error: "必須是這張卡的被配置卡的play" },
                     ],
                   },
-                  {},
-                  { error: "必須是這張卡的被配置卡的play" },
-                ],
+                },
               },
-            },
+            ],
           },
         },
         feedback: [

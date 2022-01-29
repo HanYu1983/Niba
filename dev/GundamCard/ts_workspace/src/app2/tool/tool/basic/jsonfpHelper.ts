@@ -1,5 +1,10 @@
 import { log2 } from "../../../../tool/logger";
-import { GameContext, getSetGroupCards } from "./gameContext";
+import {
+  GameContext,
+  getCardCharacteristic,
+  getSetGroupCards,
+} from "./gameContext";
+import { getCardController } from "./handleCard";
 export const jsonfp = require("jsonfp");
 // 使用前先呼叫
 export function initJsonfp() {
@@ -11,15 +16,27 @@ export function initJsonfp() {
     log2("jsonfp", input, p);
     return input;
   });
+  jsonfp.addMethod("getSetGroupCards", (ctx: GameContext, cardID: string) => {
+    if (cardID == null) {
+      throw new Error("cardID not found");
+    }
+    return getSetGroupCards(ctx, cardID);
+  });
   jsonfp.addMethod(
-    "getSetGroupCards",
-    (ctx: GameContext, { cardID }: { cardID: string }) => {
+    "getCardCharacteristic",
+    (ctx: GameContext, cardID: string) => {
       if (cardID == null) {
         throw new Error("cardID not found");
       }
-      return getSetGroupCards(ctx, cardID);
+      return getCardCharacteristic(ctx, cardID);
     }
   );
+  jsonfp.addMethod("getCardController", (ctx: GameContext, cardID: string) => {
+    if (cardID == null) {
+      throw new Error("cardID not found");
+    }
+    return getCardController(ctx, cardID);
+  });
 }
 
 export type Keyword =

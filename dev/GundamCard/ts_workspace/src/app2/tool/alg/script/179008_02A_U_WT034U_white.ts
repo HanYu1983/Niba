@@ -37,8 +37,7 @@ const prototype: CardPrototype = {
     createTokuSyuKouKaText(["改装", "ブルーフレーム系"], { cost: 0 }),
     getCardTextMacro({ id: "PlayG" }).cardText,
     getCardTextMacro({
-      id: "PlayCommand",
-
+      id: "PlayUnit",
       additionalRequire: [createRollCostRequire(1, "白")],
     }).cardText,
     {
@@ -47,102 +46,93 @@ const prototype: CardPrototype = {
       description:
         "『起動』：「特徴：アストレイ系」を持つ自軍ユニットが、「改装」の効果で廃棄される場合、カード１枚を引く。（注：このカードが廃棄される時にも起動する）",
       block: {
-        // TODO: 「特徴：アストレイ系」を持つ自軍ユニットが、「改装」の効果で場に出た場合
         require: {
           id: "RequireTarget",
           targets: {},
           condition: {
-            id: "ConditionJsonfp",
-            program: {
-              if: [
-                {
-                  "->": [
-                    {
-                      "->": [
-                        "$input.ctx",
-                        {
-                          triggerGameEvent: {
-                            id: "",
-                            gameEvent: "",
-                            battleBonus: { "->": <BattleBonus>[0, 0, 0] },
-                          },
-                        },
-                        { roll: { cardID: "" } },
-                      ],
-                    },
-                    {
-                      cardCondition: {
-                        id: "「特徴：X」を持つ自軍ユニットが、「改装」の効果で廃棄される場合",
-                        x: "アストレイ系",
-                        cardID: {
-                          "->": [
-                            "$input",
-                            { getter: "blockPayload" },
-                            { getter: "cause" },
-                            { getter: "id" },
-                            { "==": "「改装」の効果で廃棄される場合" },
+            id: "ConditionAnd",
+            and: [
+              getCardTextMacro({
+                id: "當觸發GameEvent的變量x的id時",
+                x: { id: "「改装」の効果で廃棄される場合", cardID: "" },
+              }).condition,
+              {
+                id: "ConditionJsonfp",
+                program: {
+                  $cardID: {
+                    "->": [
+                      "$in.blockPayload",
+                      { getter: "cause" },
+                      { getter: "cardID" },
+                    ],
+                  },
+                  $gameEventCardID: {
+                    "->": [
+                      "$in.blockPayload",
+                      { log: "blockPayload" },
+                      { getter: "cause" },
+                      { getter: "gameEvent" },
+                      { getter: "cardID" },
+                    ],
+                  },
+                  $isThisCard: {
+                    "->": ["$gameEventCardID", { "==": "$cardID" }],
+                  },
+                  $hasCharacteristic: {
+                    "->": [
+                      "$in.ctx",
+                      { getCardCharacteristic: "$gameEventCardID" },
+                      { filter: { "==": "アストレイ系" } },
+                      { size: null },
+                      { ">": 0 },
+                    ],
+                  },
+                  pass0: {
+                    if: [
+                      {
+                        "->": [
+                          [
+                            {
+                              "->": [
+                                "$in.ctx",
+                                { getCardController: "$cardID" },
+                              ],
+                            },
+                            {
+                              "->": [
+                                "$in.ctx",
+                                { getCardController: "$gameEventCardID" },
+                              ],
+                            },
                           ],
-                        },
+                          { reduce: "==" },
+                        ],
                       },
-                    },
-                    {
-                      "->": [
-                        "$input",
-                        { getter: "blockPayload" },
-                        { getter: "cause" },
-                        { getter: "id" },
-                        { "==": "「改装」の効果で廃棄される場合" },
-                      ],
-                    },
-                    {
-                      "->": [
-                        "$input",
-                        { getter: "blockPayload" },
-                        { getter: "cause" },
-                        { getter: "cardID" },
-                        {
-                          cardController: "$input",
-                        },
-                        {
-                          "==": {
-                            "->": [
-                              {
-                                thisCard: "$input",
-                              },
-                              {
-                                cardController: "$input",
-                              },
-                            ],
-                          },
-                        },
-                      ],
-                    },
-                    {
-                      "->": [
-                        "$input",
-                        { getter: "blockPayload" },
-                        { getter: "cause" },
-                        { getter: "cardID" },
-                        { cardCh: null },
-                        {
-                          "==": {
-                            "->": [
-                              { thisCard: null },
-                              { cardController: null },
-                            ],
-                          },
-                        },
-                      ],
-                    },
-                    { reduce: "and" },
-                  ],
+                      {},
+                      {
+                        error: "必須是自軍機體",
+                      },
+                    ],
+                  },
+                  pass1: {
+                    if: [
+                      {
+                        "->": [
+                          ["$isThisCard", "$hasCharacteristic"],
+                          { reduce: "or" },
+                        ],
+                      },
+                      {},
+                      {
+                        error:
+                          "被換裝廢棄的卡必須是這張卡或是存在特徵アストレイ系",
+                      },
+                    ],
+                  },
                 },
-                {},
-                {},
-              ],
-            },
+              },
+            ],
           },
-          action: [],
         },
         feedback: [
           {

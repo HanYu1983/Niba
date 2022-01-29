@@ -40,7 +40,8 @@ const prototype: CardPrototype = {
         {
           id: "自動型",
           category: "起動",
-          description: "",
+          description:
+            "『恒常』：このカードが自軍手札にある状態で、青のGサインを持つ自軍ユニットが破壊されて廃棄された場合、〔１〕を支払う事ができる。その場合、このカードを、自軍配備エリアにリロール状態で出す。",
           block: {
             // TODO: 青のGサインを持つ自軍ユニットが破壊されて廃棄された場合
             require: {

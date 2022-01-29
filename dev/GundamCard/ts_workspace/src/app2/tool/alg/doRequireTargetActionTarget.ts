@@ -925,6 +925,21 @@ export function doRequireTargetActionTarget(
             table: nextTable,
           },
         };
+        ctx = triggerTextEvent(ctx, {
+          id: "「改装」の効果で廃棄される場合",
+          cardID: cardID,
+        });
+      }
+      {
+        const cardID = cardAValue;
+        ctx = triggerTextEvent(ctx, {
+          id: "「改装」の効果で場に出た場合",
+          cardID: cardID,
+        });
+        ctx = triggerTextEvent(ctx, {
+          id: "場に出た場合",
+          cardID: cardID,
+        });
       }
       // 更新指令
       ctx = updateCommand(ctx);

@@ -18,8 +18,7 @@ import { createTokuSyuKouKaText } from "./createTokuSyuKouKaText";
 // アストレイ ブルーフレーム セカンドL（ローエングリンランチャー）
 // アストレイ系　ブルーフレーム系　MS　専用「叢雲劾」
 // 〔０〕：改装［ブルーフレーム系］
-// 『起動』：「特徴：アストレイ系」を持つ自軍ユニットが、「改装」の効果で場に出た場合、〔白２〕を支払う事ができる。その場合、５以下の防御力を持つ敵軍ユニット１枚を破壊する。
-// （注：このカードが場に出た時にも起動する）
+// 『起動』：「特徴：アストレイ系」を持つ自軍ユニットが、「改装」の効果で場に出た場合、〔白２〕を支払う事ができる。その場合、５以下の防御力を持つ敵軍ユニット１枚を破壊する。（注：このカードが場に出た時にも起動する）
 
 const prototype: CardPrototype = {
   ...DEFAULT_CARD_PROTOTYPE,
@@ -42,9 +41,96 @@ const prototype: CardPrototype = {
       id: "自動型",
       category: "起動",
       description:
-        "『起動』：「特徴：アストレイ系」を持つ自軍ユニットが、「改装」の効果で場に出た場合、〔白２〕を支払う事ができる。その場合、５以下の防御力を持つ敵軍ユニット１枚を破壊する。",
+        "『起動』：「特徴：アストレイ系」を持つ自軍ユニットが、「改装」の効果で場に出た場合、〔白２〕を支払う事ができる。その場合、５以下の防御力を持つ敵軍ユニット１枚を破壊する。（注：このカードが場に出た時にも起動する）",
       block: {
-        // TODO: 「特徴：アストレイ系」を持つ自軍ユニットが、「改装」の効果で場に出た場合
+        require: {
+          id: "RequireTarget",
+          targets: {},
+          condition: {
+            id: "ConditionAnd",
+            and: [
+              getCardTextMacro({
+                id: "當觸發GameEvent的變量x的id時",
+                x: { id: "「改装」の効果で場に出た場合", cardID: "" },
+              }).condition,
+              {
+                id: "ConditionJsonfp",
+                program: {
+                  $cardID: {
+                    "->": [
+                      "$in.blockPayload",
+                      { getter: "cause" },
+                      { getter: "cardID" },
+                    ],
+                  },
+                  $gameEventCardID: {
+                    "->": [
+                      "$in.blockPayload",
+                      { log: "blockPayload" },
+                      { getter: "cause" },
+                      { getter: "gameEvent" },
+                      { getter: "cardID" },
+                    ],
+                  },
+                  $isThisCard: {
+                    "->": ["$gameEventCardID", { "==": "$cardID" }],
+                  },
+                  $hasCharacteristic: {
+                    "->": [
+                      "$in.ctx",
+                      { getCardCharacteristic: "$gameEventCardID" },
+                      { filter: { "==": "アストレイ系" } },
+                      { size: null },
+                      { ">": 0 },
+                    ],
+                  },
+                  pass0: {
+                    if: [
+                      {
+                        "->": [
+                          [
+                            {
+                              "->": [
+                                "$in.ctx",
+                                { getCardController: "$cardID" },
+                              ],
+                            },
+                            {
+                              "->": [
+                                "$in.ctx",
+                                { getCardController: "$gameEventCardID" },
+                              ],
+                            },
+                          ],
+                          { reduce: "==" },
+                        ],
+                      },
+                      {},
+                      {
+                        error: "必須是自軍機體",
+                      },
+                    ],
+                  },
+                  pass1: {
+                    if: [
+                      {
+                        "->": [
+                          ["$isThisCard", "$hasCharacteristic"],
+                          { reduce: "or" },
+                        ],
+                      },
+                      {},
+                      {
+                        error:
+                          "被換裝廢棄的卡必須是這張卡或是存在特徵アストレイ系",
+                      },
+                    ],
+                  },
+                },
+              },
+            ],
+          },
+        },
         feedback: [
           {
             id: "FeedbackAction",
