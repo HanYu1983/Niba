@@ -60,9 +60,8 @@ export const DEFAULT_CARD_PROTOTYPE: CardPrototype = {
 };
 
 export type CardState = {
-  id: string;
+  id: string; // card.id
   isChip: boolean;
-  cardID: string;
   damage: number;
   destroy: boolean;
   //setGroupID: string;
@@ -74,13 +73,18 @@ export type CardState = {
 export const DEFAULT_CARD_STATE: CardState = {
   id: "",
   isChip: true,
-  cardID: "",
   damage: 0,
   destroy: false,
   //setGroupID: "",
   flags: [],
   cardTextStates: [],
   prototype: DEFAULT_CARD_PROTOTYPE,
+};
+
+export type GlobalCardState = {
+  id: string;
+  cardID: string;
+  cardTextStates: CardTextState[];
 };
 
 export type GameEffectCustom = {
@@ -107,7 +111,7 @@ export type GameState = {
   playerState: PlayerState[];
   activePlayerID: string | null;
   effects: GameEffectState[];
-  globalCardState: CardState[];
+  globalCardState: GlobalCardState[];
   activeEffectID: string | null;
   // 指令效果
   commandEffect: BlockPayload[];

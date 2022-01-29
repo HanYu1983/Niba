@@ -146,8 +146,15 @@ export function triggerTextEvent(
 ): GameContext {
   log2("triggerTextEvent", evt);
   // 只有事件類要和global一起算
-  return [...ctx.gameState.cardState, ...ctx.gameState.globalCardState].reduce(
-    (ctx, cardState: { cardID: string; cardTextStates: CardTextState[] }) => {
+  // 轉換: globalCardState的cardID等於cardState的id
+  const converGlobalCardState = ctx.gameState.globalCardState.map((gs) => {
+    return {
+      id: gs.cardID,
+      cardTextStates: gs.cardTextStates,
+    };
+  });
+  return [...ctx.gameState.cardState, ...converGlobalCardState].reduce(
+    (ctx, cardState: { id: string; cardTextStates: CardTextState[] }) => {
       return cardState.cardTextStates.reduce((ctx, cardTextState) => {
         const cardTexts = (() => {
           switch (cardTextState.cardText.id) {
@@ -168,19 +175,19 @@ export function triggerTextEvent(
           }
         })();
         return cardTexts.reduce((ctx, cardText) => {
-          const cardController = getCardController(ctx, cardState.cardID);
+          const cardController = getCardController(ctx, cardState.id);
           const wrapEvent: BlockPayload = {
             ...cardText.block,
             cause: {
               id: "BlockPayloadCauseGameEvent",
               playerID: cardController,
-              cardID: cardState.cardID,
+              cardID: cardState.id,
               cardTextID: cardTextState.id,
               gameEvent: evt,
               description: cardText.description,
             },
             // 加上卡ID，讓varCtxID變成每張卡唯一。而不是遊戲唯一。
-            contextID: `[${cardState.cardID}]_[${cardText.block.contextID}]`,
+            contextID: `[${cardState.id}]_[${cardText.block.contextID}]`,
           };
           const varCtxID = "triggerTextEvent";
           try {
@@ -241,7 +248,7 @@ export function updateCommand(ctx: GameContext): GameContext {
         }
       })();
       return cardTexts.reduce((ctx, cardText) => {
-        const cardController = getCardController(ctx, cardState.cardID);
+        const cardController = getCardController(ctx, cardState.id);
         let wrapEvent: BlockPayload = {
           ...cardText.block,
           id: `updateCommand_${ctx.gameState.commandEffect.length}`,
@@ -249,7 +256,7 @@ export function updateCommand(ctx: GameContext): GameContext {
           cause: {
             id: "BlockPayloadCauseUpdateCommand",
             playerID: cardController,
-            cardID: cardState.cardID,
+            cardID: cardState.id,
             cardTextID: cardTextState.id,
             description: cardText.description,
           },
@@ -258,7 +265,7 @@ export function updateCommand(ctx: GameContext): GameContext {
             ? { require: wrapRequireKey(cardText.block.require) }
             : null),
           // 加上卡ID，讓varCtxID變成每張卡唯一。而不是遊戲唯一。
-          contextID: `[${cardState.cardID}]_[${cardText.block.contextID}]`,
+          contextID: `[${cardState.id}]_[${cardText.block.contextID}]`,
         };
         const varCtxID = "updateCommand";
         wrapEvent = wrapTip(ctx, true, wrapEvent, varCtxID);
@@ -314,7 +321,7 @@ export function updateEffect(ctx: GameContext): GameContext {
               case "常駐": {
                 const {
                   value: [_, baSyouKeyword],
-                } = getCardBaSyou(ctx, cardState.cardID);
+                } = getCardBaSyou(ctx, cardState.id);
                 // 常駐技能只有在場中才能計算
                 if (isBa(baSyouKeyword) == false) {
                   return [];
@@ -334,7 +341,7 @@ export function updateEffect(ctx: GameContext): GameContext {
                     case "常駐": {
                       const {
                         value: [_, baSyouKeyword],
-                      } = getCardBaSyou(ctx, cardState.cardID);
+                      } = getCardBaSyou(ctx, cardState.id);
                       // 常駐技能只有在場中才能計算
                       if (isBa(baSyouKeyword) == false) {
                         return [];
@@ -362,18 +369,18 @@ export function updateEffect(ctx: GameContext): GameContext {
         }
       })();
       return cardTexts.reduce((ctx, cardText) => {
-        const cardController = getCardController(ctx, cardState.cardID);
+        const cardController = getCardController(ctx, cardState.id);
         const wrapEvent: BlockPayload = {
           ...cardText.block,
           cause: {
             id: "BlockPayloadCauseUpdateEffect",
             playerID: cardController,
-            cardID: cardState.cardID,
+            cardID: cardState.id,
             cardTextID: cardTextState.id,
             description: cardText.description,
           },
           // 加上卡ID，讓varCtxID變成每張卡唯一。而不是遊戲唯一。
-          contextID: `[${cardState.cardID}]_[${cardText.block.contextID}]`,
+          contextID: `[${cardState.id}]_[${cardText.block.contextID}]`,
         };
         const varCtxID = "updateEffect";
         try {

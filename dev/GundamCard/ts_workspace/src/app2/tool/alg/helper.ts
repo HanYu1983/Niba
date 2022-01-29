@@ -69,7 +69,6 @@ export function getCardState(
     ...DEFAULT_CARD_STATE,
     id: card.id,
     isChip: isChip,
-    cardID: card.id,
     damage: 0,
     destroy: false,
     //setGroupID: uuidKey,

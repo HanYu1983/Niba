@@ -7,7 +7,12 @@ import type {
   TargetTypeString,
 } from "./targetType";
 import type { BlockPayload } from "./blockPayload";
-import type { CardPrototype, CardState, GameEffect } from "./gameContext";
+import type {
+  CardPrototype,
+  CardState,
+  GameEffect,
+  GlobalCardState,
+} from "./gameContext";
 import { CardText, GameEvent } from "./basic";
 
 type ActionRoll = {
@@ -100,7 +105,7 @@ export type ActionAddEffect = {
 export type ActionAddGlobalCardText = {
   id: "ActionAddGlobalCardText";
   cards: TargetTypeCard;
-  cardState: CardState;
+  cardState: GlobalCardState;
 };
 
 export type ActionDeleteGlobalCardText = {

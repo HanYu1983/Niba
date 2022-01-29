@@ -22,6 +22,7 @@ import {
   GameContext,
   getBlockOwner,
   getSetGroupCards,
+  GlobalCardState,
 } from "../tool/basic/gameContext";
 import {
   getCardBaSyou,
@@ -562,20 +563,22 @@ export function doRequireTargetActionTarget(
         throw new Error("執行Action時的所有target必須是陣列");
       }
       assertTargetTypeValueLength(cards);
-      const cardStateAfterSignID = cards.value.map((cardID): CardState => {
-        // 修改它的ID，變成一張卡吃能新增同樣的內文一次
-        return {
-          ...cardState,
-          id: `${cardID}_${cardState.id}`,
-          cardID: cardID,
-          cardTextStates: cardState.cardTextStates.map((cts, i) => {
-            return {
-              ...cts,
-              id: `${cardID}_${cardState.id}_${cts.id}_${i}`,
-            };
-          }),
-        };
-      });
+      const cardStateAfterSignID = cards.value.map(
+        (cardID): GlobalCardState => {
+          // 修改它的ID，變成一張卡吃能新增同樣的內文一次
+          return {
+            ...cardState,
+            id: `${cardID}_${cardState.id}`,
+            cardID: cardID,
+            cardTextStates: cardState.cardTextStates.map((cts, i) => {
+              return {
+                ...cts,
+                id: `${cardID}_${cardState.id}_${cts.id}_${i}`,
+              };
+            }),
+          };
+        }
+      );
       const cardStateWillAdd = cardStateAfterSignID.filter((t) => {
         return cardState.cardTextStates.find((v) => v.id == t.id) == null;
       });
@@ -654,7 +657,7 @@ export function doRequireTargetActionTarget(
         }
         const nextCardState = nextCtx.gameState.cardState.map(
           (cardState): CardState => {
-            if (cardState.cardID != cardID) {
+            if (cardState.id != cardID) {
               return cardState;
             }
             return {
@@ -694,7 +697,7 @@ export function doRequireTargetActionTarget(
       let [nextCtx, _] = getCardState(ctx, cardID);
       const nextCardState = nextCtx.gameState.cardState.map(
         (cardState): CardState => {
-          if (cardState.cardID != cardID) {
+          if (cardState.id != cardID) {
             return cardState;
           }
           return {
@@ -886,7 +889,7 @@ export function doRequireTargetActionTarget(
       }
       const flags = flag.value;
       const nextCardStates = ctx.gameState.cardState.map((cardState) => {
-        if (cardIDs.includes(cardState.cardID) == false) {
+        if (cardIDs.includes(cardState.id) == false) {
           return cardState;
         }
         const nextFlags = flags.reduce((flags, flag) => {
@@ -934,7 +937,7 @@ export function doRequireTargetActionTarget(
       }
       const flags = flag.value;
       const nextCardStates = ctx.gameState.cardState.map((cardState) => {
-        if (cardIDs.includes(cardState.cardID) == false) {
+        if (cardIDs.includes(cardState.id) == false) {
           return cardState;
         }
         const nextFlags = [...cardState.flags, ...flags];
@@ -977,7 +980,7 @@ export function doRequireTargetActionTarget(
       }
       const flags = flag.value;
       const nextCardStates = ctx.gameState.cardState.map((cardState) => {
-        if (cardIDs.includes(cardState.cardID) == false) {
+        if (cardIDs.includes(cardState.id) == false) {
           return cardState;
         }
         const nextFlags = flags.reduce((flags, flag) => {
