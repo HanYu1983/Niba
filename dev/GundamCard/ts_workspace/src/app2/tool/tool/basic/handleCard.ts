@@ -10,6 +10,7 @@ import {
   getOpponentPlayerID,
 } from "./basic";
 import { log2 } from "../../../../tool/logger";
+import { getPrototype } from "../../alg/script";
 
 export function getAbsoluteBaSyou(
   baSyou: BaSyou,
@@ -77,11 +78,10 @@ export function getCardOwner(ctx: GameContext, cardID: string): PlayerID {
 }
 
 export function getCardColor(ctx: GameContext, cardID: string): CardColor {
-  const cardState = ctx.gameState.cardState.find((cs) => {
-    return cs.id == cardID;
-  });
-  if (cardState == null) {
-    throw new Error("[getCardColor] cardState not found");
+  const card = getCard(ctx.gameState.table, cardID);
+  if (card == null) {
+    throw new Error("card not found");
   }
-  return cardState.prototype.color;
+  const prototype = getPrototype(card.protoID);
+  return prototype.color;
 }

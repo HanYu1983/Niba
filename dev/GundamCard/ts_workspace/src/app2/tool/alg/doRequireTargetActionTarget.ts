@@ -7,6 +7,7 @@ import {
 import { BlockPayload, wrapRequireKey } from "../tool/basic/blockPayload";
 import { Action } from "../tool/basic/action";
 import {
+  Card,
   CardStack,
   createCard,
   getCard,
@@ -38,7 +39,12 @@ import {
   getCardState,
   getTargetType,
 } from "./helper";
-import { initState, triggerTextEvent } from "./handleGameContext";
+import {
+  initState,
+  triggerTextEvent,
+  updateCommand,
+  updateEffect,
+} from "./handleGameContext";
 import { wrapBlockRequireKey } from "./handleBlockPayload";
 import { jsonfp } from "../tool/basic/jsonfpHelper";
 
@@ -773,74 +779,133 @@ export function doRequireTargetActionTarget(
       }
       const cardAValue = cardA.value[0];
       const cardBValue = cardB.value[0];
+
+      // p.77
+      // 置換的繼承
+      // 1. 直立/横置, 破壞, 累積的傷害
+      // 2. 針對這張卡的戰鬥修正
+      // 3. setCard
+      // 4. 戰鬥修正的coin
+      // 5. 未解決的待機中效果的對象
       {
-        // p.77
-        // 置換的繼承
-        // 1. 直立/横置, 破壞, 累積的傷害
-        // 2. 針對這張卡的戰鬥修正
-        // 3. setCard
-        // 4. 戰鬥修正的coin
-        // 5. 未解決的待機中效果的對象
-        // const [_, cardAState] = getCardState(ctx, cardAValue);
-        // const [_2, cardBState] = getCardState(ctx, cardBValue);
-        // cardBState.damage = cardAState.damage;
-        // ctx = {
-        //   ...ctx,
-        //   gameState: {
-        //     ...ctx.gameState,
-        //     cardState:ctx.gameState.cardState.map(cs=>{
-        //       if(cs.id != cardBValue){
-        //         return cs
-        //       }
-        //       return cs
-        //     })
-        //   },
-        // };
-        // 修改setGroup, 將B的整個setGroup移到A
-        const cardBSetGroup = getSetGroupCards(ctx, cardBValue);
-        const setGroupLink = cardBSetGroup.reduce(
-          (link, cardBSetGroupCardID) => {
-            if (cardBSetGroupCardID == cardBValue) {
-              return link;
-            }
-            return {
-              ...link,
-              [cardBSetGroupCardID]: cardAValue,
-            };
-          },
-          ctx.gameState.setGroupLink
-        );
+        // 除了卡片ID，交換外觀和所有狀態
+        let table = ctx.gameState.table;
+        const cardACard = getCard(table, cardAValue);
+        if (cardACard == null) {
+          throw new Error("cardACard not found");
+        }
+        const cardBCard = getCard(table, cardBValue);
+        if (cardBCard == null) {
+          throw new Error("cardBCard not found");
+        }
+        const nextCardACard: Card = {
+          ...cardBCard,
+          id: cardACard.id,
+        };
+        table = mapCard(table, (card) => {
+          if (card.id != cardACard.id) {
+            return card;
+          }
+          return nextCardACard;
+        });
+        const nextCardBCard: Card = {
+          ...cardACard,
+          id: cardBCard.id,
+        };
+        table = mapCard(table, (card) => {
+          if (card.id != cardBCard.id) {
+            return card;
+          }
+          return nextCardBCard;
+        });
         ctx = {
           ...ctx,
           gameState: {
             ...ctx.gameState,
-            setGroupLink: setGroupLink,
+            table: table,
           },
         };
       }
       {
-        // 移動cardA到cardB的位置
+        // 只交換內文，其它的維持原樣
+        const [_, cardAState] = getCardState(ctx, cardAValue);
+        const [_2, cardBState] = getCardState(ctx, cardBValue);
+        const nextCardAState: CardState = {
+          ...cardAState,
+          cardTextStates: cardBState.cardTextStates,
+        };
+        let cardState = ctx.gameState.cardState;
+        cardState = ctx.gameState.cardState.map((cs) => {
+          if (cs.id != cardAState.id) {
+            return cs;
+          }
+          return nextCardAState;
+        });
+        const nextCardBState: CardState = {
+          ...cardBState,
+          cardTextStates: cardAState.cardTextStates,
+        };
+        cardState = ctx.gameState.cardState.map((cs) => {
+          if (cs.id != cardBState.id) {
+            return cs;
+          }
+          return nextCardBState;
+        });
+        ctx = {
+          ...ctx,
+          gameState: {
+            ...ctx.gameState,
+            cardState: cardState,
+          },
+        };
+      }
+      // {
+      //   //修改setGroup, 將B的整個setGroup移到A
+      //   const cardBSetGroup = getSetGroupCards(ctx, cardBValue);
+      //   const setGroupLink = cardBSetGroup.reduce(
+      //     (link, cardBSetGroupCardID) => {
+      //       if (cardBSetGroupCardID == cardBValue) {
+      //         return link;
+      //       }
+      //       return {
+      //         ...link,
+      //         [cardBSetGroupCardID]: cardAValue,
+      //       };
+      //     },
+      //     ctx.gameState.setGroupLink
+      //   );
+      //   ctx = {
+      //     ...ctx,
+      //     gameState: {
+      //       ...ctx.gameState,
+      //       setGroupLink: setGroupLink,
+      //     },
+      //   };
+      // }
+
+      // {
+      //   // 移動cardA到cardB的位置
+      //   const cardID = cardBValue;
+      //   const fromBaSyouID = getBaShouID(getCardBaSyou(ctx, cardID));
+      //   const toBaSyouID = getBaShouID(getCardBaSyou(ctx, cardAValue));
+      //   const nextTable = moveCard(
+      //     ctx.gameState.table,
+      //     fromBaSyouID,
+      //     toBaSyouID,
+      //     cardID,
+      //     null
+      //   );
+      //   ctx = {
+      //     ...ctx,
+      //     gameState: {
+      //       ...ctx.gameState,
+      //       table: nextTable,
+      //     },
+      //   };
+      // }
+      {
+        // 直接廢棄cardB就行了，不必移動。因為卡被交換了
         const cardID = cardBValue;
-        const fromBaSyouID = getBaShouID(getCardBaSyou(ctx, cardID));
-        const toBaSyouID = getBaShouID(getCardBaSyou(ctx, cardAValue));
-        const nextTable = moveCard(
-          ctx.gameState.table,
-          fromBaSyouID,
-          toBaSyouID,
-          cardID,
-          null
-        );
-        ctx = {
-          ...ctx,
-          gameState: {
-            ...ctx.gameState,
-            table: nextTable,
-          },
-        };
-      }
-      {
-        // 廢棄cardA
-        const cardID = cardAValue;
         const fromBaSyouID = getBaShouID(getCardBaSyou(ctx, cardID));
         const toBaSyouID = getBaShouID({
           id: "AbsoluteBaSyou",
@@ -861,6 +926,10 @@ export function doRequireTargetActionTarget(
           },
         };
       }
+      // 更新指令
+      ctx = updateCommand(ctx);
+      // 更新效果
+      ctx = updateEffect(ctx);
       return ctx;
     }
     case "ActionSetFlag": {

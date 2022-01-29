@@ -81,7 +81,7 @@ export function getCardState(
         },
       };
     }),
-    prototype: proto,
+    //prototype: proto,
   };
   return [
     {
@@ -407,8 +407,12 @@ export function getTargetType(
           const values = targetType.value.map((cardID): CardColor => {
             switch (path[1]) {
               case "的「色」": {
-                const [_, cardState] = getCardState(ctx, cardID);
-                return cardState.prototype.color;
+                const card = getCard(ctx.gameState.table, cardID);
+                if (card == null) {
+                  throw new Error("card not found");
+                }
+                const prototype = getPrototype(card.protoID);
+                return prototype.color;
               }
             }
           });
@@ -457,7 +461,12 @@ export function getTargetType(
                   case "戦闘エリア（左）":
                   case "戦闘エリア（右）":
                   case "配備エリア":
-                    return cardState.prototype.category;
+                    const card = getCard(ctx.gameState.table, cardID);
+                    if (card == null) {
+                      throw new Error("card not found");
+                    }
+                    const prototype = getPrototype(card.protoID);
+                    return prototype.category;
                   default:
                     return "未指定";
                 }
@@ -492,8 +501,12 @@ export function getTargetType(
           const values = targetType.value.map((cardID): CardCategory => {
             switch (path[1]) {
               case "的「種類」": {
-                const [_, cardState] = getCardState(ctx, cardID);
-                return cardState.prototype.category;
+                const card = getCard(ctx.gameState.table, cardID);
+                if (card == null) {
+                  throw new Error("card not found");
+                }
+                const prototype = getPrototype(card.protoID);
+                return prototype.category;
               }
             }
           });
@@ -529,10 +542,20 @@ export function getTargetType(
             const [_, cardState] = getCardState(ctx, cardID);
             switch (path[1]) {
               case "的「特徴」": {
-                return cardState.prototype.characteristic.join("|");
+                const card = getCard(ctx.gameState.table, cardID);
+                if (card == null) {
+                  throw new Error("card not found");
+                }
+                const prototype = getPrototype(card.protoID);
+                return prototype.characteristic.join("|");
               }
               case "的「名称」": {
-                return cardState.prototype.title;
+                const card = getCard(ctx.gameState.table, cardID);
+                if (card == null) {
+                  throw new Error("card not found");
+                }
+                const prototype = getPrototype(card.protoID);
+                return prototype.title;
               }
             }
           });
@@ -654,12 +677,21 @@ export function getTargetType(
               case "的陣列長度":
                 throw new Error("not support");
               case "的「攻撃力」": {
-                const [_, cardState] = getCardState(ctx, cardID);
-                return cardState.prototype.battlePoint[0];
+                const card = getCard(ctx.gameState.table, cardID);
+                if (card == null) {
+                  throw new Error("card not found");
+                }
+                const prototype = getPrototype(card.protoID);
+                return prototype.battlePoint[0];
               }
               case "的「防御力」": {
+                const card = getCard(ctx.gameState.table, cardID);
+                if (card == null) {
+                  throw new Error("card not found");
+                }
+                const prototype = getPrototype(card.protoID);
                 const [_, cardState] = getCardState(ctx, cardID);
-                return cardState.prototype.battlePoint[2];
+                return prototype.battlePoint[2];
               }
               case "的「合計国力」": {
                 // p.55
@@ -667,13 +699,20 @@ export function getTargetType(
                 // 2. 減算效果
                 // 3. 支付
                 // 4. 特殊支付
-                const [_, cardState] = getCardState(ctx, cardID);
-                return cardState.prototype.rollCost.length;
+                const card = getCard(ctx.gameState.table, cardID);
+                if (card == null) {
+                  throw new Error("card not found");
+                }
+                const prototype = getPrototype(card.protoID);
+                return prototype.rollCost.length;
               }
               case "的「ロールコストの合計値」": {
-                const [_, cardState] = getCardState(ctx, cardID);
-                return cardState.prototype.rollCost.filter((v) => v != null)
-                  .length;
+                const card = getCard(ctx.gameState.table, cardID);
+                if (card == null) {
+                  throw new Error("card not found");
+                }
+                const prototype = getPrototype(card.protoID);
+                return prototype.rollCost.filter((v) => v != null).length;
               }
               default:
                 throw new Error(`not support:${path[1]}`);
@@ -803,8 +842,12 @@ export function getTargetType(
           const values = targetType.value.map((cardID) => {
             switch (path[1]) {
               case "的「種類」": {
-                const [_2, cardState] = getCardState(ctx, cardID);
-                return cardState.prototype.category;
+                const card = getCard(ctx.gameState.table, cardID);
+                if (card == null) {
+                  throw new Error("card not found");
+                }
+                const prototype = getPrototype(card.protoID);
+                return prototype.category;
               }
             }
           });

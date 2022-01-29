@@ -67,7 +67,7 @@ export type CardState = {
   //setGroupID: string;
   flags: string[];
   cardTextStates: CardTextState[];
-  prototype: CardPrototype;
+  //prototype: CardPrototype;
 };
 
 export const DEFAULT_CARD_STATE: CardState = {
@@ -78,7 +78,7 @@ export const DEFAULT_CARD_STATE: CardState = {
   //setGroupID: "",
   flags: [],
   cardTextStates: [],
-  prototype: DEFAULT_CARD_PROTOTYPE,
+  // prototype: DEFAULT_CARD_PROTOTYPE,
 };
 
 export type GlobalCardState = {
