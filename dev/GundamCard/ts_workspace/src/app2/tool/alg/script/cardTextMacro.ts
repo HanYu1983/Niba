@@ -2,7 +2,9 @@ import { Block } from "typescript";
 import {
   Action,
   ActionDeleteFlag,
+  ActionJsonfp,
   ActionMoveCardToPosition,
+  ActionTriggerGameEvent,
 } from "../../tool/basic/action";
 import {
   BaSyou,
@@ -489,6 +491,7 @@ export function getCardTextMacro(macro: CardTextMacro): Return {
                                       ],
                                     },
                                   },
+                                  ActionTriggerOnShowBaByPlay,
                                 ],
                               } as FeedbackAction,
                             ]
@@ -1071,6 +1074,42 @@ const ActionTriggerPlayCard: Action = {
       id: "ActionTriggerGameEvent",
       gameEvent: {
         id: "プレイした場合",
+        cardID: {
+          "->": ["$in.blockPayload", { getter: "cause" }, { getter: "cardID" }],
+        },
+        cardTextID: {
+          "->": [
+            "$in.blockPayload",
+            { getter: "cause" },
+            { getter: "cardTextID" },
+          ],
+        },
+      },
+    },
+  },
+};
+
+const ActionTriggerOnShowBaByPlay: Action = {
+  id: "ActionJsonfp",
+  program: {
+    pass1: {
+      if: [
+        {
+          "->": [
+            "$in.blockPayload",
+            { getter: "cause" },
+            { getter: "id" },
+            { "==": "BlockPayloadCauseUpdateCommand" },
+          ],
+        },
+        {},
+        { error: "事件必須是BlockPayloadCauseUpdateCommand" },
+      ],
+    },
+    output: {
+      id: "ActionTriggerGameEvent",
+      gameEvent: {
+        id: "プレイされて場に出た場合",
         cardID: {
           "->": ["$in.blockPayload", { getter: "cause" }, { getter: "cardID" }],
         },

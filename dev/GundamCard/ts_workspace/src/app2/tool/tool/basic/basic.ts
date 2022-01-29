@@ -216,7 +216,7 @@ type GameEventOnStackEffectFinished = {
 };
 
 type GameEventOnShowBa = {
-  id: "場に出た場合";
+  id: "場に出た場合" | "プレイされて場に出た場合";
   cardID: string;
 };
 
