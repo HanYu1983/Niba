@@ -91,6 +91,10 @@ type CardTextMacro8 = {
   x: GameEvent;
 };
 
+type CardTextMacro9 = {
+  id: "這張卡在場時";
+};
+
 export type CardTextMacro =
   | CardTextMacro1
   | CardTextMacro2
@@ -99,7 +103,8 @@ export type CardTextMacro =
   | CardTextMacro5
   | CardTextMacro6
   | CardTextMacro7
-  | CardTextMacro8;
+  | CardTextMacro8
+  | CardTextMacro9;
 
 export type Return = {
   condition: Condition;
@@ -115,6 +120,16 @@ export const VAR_PLAY_CARD = "將要「プレイ」的卡";
 
 export function getCardTextMacro(macro: CardTextMacro): Return {
   switch (macro.id) {
+    case "這張卡在場時":
+      return getCardTextMacro({
+        id: "變量x的場所包含於y",
+        x: { id: "カード", value: { path: [{ id: "このカード" }] } },
+        y: [
+          { id: "RelatedBaSyou", value: ["自軍", "配備エリア"] },
+          { id: "RelatedBaSyou", value: ["自軍", "戦闘エリア（左）"] },
+          { id: "RelatedBaSyou", value: ["自軍", "戦闘エリア（右）"] },
+        ],
+      });
     case "當觸發GameEvent的變量x的id時":
       return {
         ...DEFAULT_RETURN,
