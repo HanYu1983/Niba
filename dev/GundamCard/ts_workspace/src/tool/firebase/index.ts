@@ -1,6 +1,8 @@
 import * as App from "@firebase/app";
 import * as Firestore from "@firebase/firestore";
 
+const debugLocal = true;
+
 const firebaseConfig = {
   apiKey: "AIzaSyCeQYlOSnX48Qagt_8Dotxezh2xYItJ4TU",
   authDomain: "gundamcard-1b980.firebaseapp.com",
@@ -15,7 +17,13 @@ export const rootApp = App.initializeApp(firebaseConfig, "rootApp");
 const firestore = Firestore.initializeFirestore(rootApp, {});
 
 const PATH = "app/GundamCard/context/default";
+
+let _listener: (err: any, data: any) => void = () => {};
 export function addListener(f: (err: any, data: any) => void) {
+  if (debugLocal) {
+    _listener = f;
+    return;
+  }
   return Firestore.onSnapshot(Firestore.doc(firestore, PATH), {
     next: (snapshot) => {
       const wrap = snapshot.data();
@@ -33,6 +41,13 @@ export function addListener(f: (err: any, data: any) => void) {
 }
 
 export function sync(data: any) {
+  if (debugLocal) {
+    // 必須異步發送
+    setTimeout(() => {
+      _listener(null, data);
+    }, 0);
+    return;
+  }
   // 因為不支援巢狀陣列，所以要轉成字串
   // FirebaseError: Function setDoc() called with invalid data. Nested arrays are not supported (found in document app/GundamCard/context/default)
   const wrap = {

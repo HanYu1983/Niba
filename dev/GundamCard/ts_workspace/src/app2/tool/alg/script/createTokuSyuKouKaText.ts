@@ -229,27 +229,10 @@ export function createTokuSyuKouKaText(
         id: "特殊型",
         description: toku,
         texts: [
-          {
-            id: "自動型",
-            category: "常駐",
-            description: JSON.stringify(toku),
-            block: {
-              feedback: [
-                {
-                  id: "FeedbackAction",
-                  action: [
-                    {
-                      id: "ActionAddEffect",
-                      effect: {
-                        id: "GameEffectCustom",
-                        customID: "可以在配置區出場",
-                      },
-                    },
-                  ],
-                },
-              ],
-            },
-          },
+          getCardTextMacro({
+            id: "PlayCharacter(Stay)",
+            additionalRequire: [createRollCostRequire(options.cost || 0, null)],
+          }).cardText,
         ],
       };
     case "高機動":

@@ -50,50 +50,50 @@ const prototype: CardPrototype = {
           {
             id: "FeedbackAction",
             action: [
-              {
-                id: "ActionAddBlock",
-                type: "立即",
-                block: {
-                  require: {
-                    id: "RequireTarget",
-                    targets: {
-                      そのカードのセットグループ以外の自軍ユニット１枚: {
-                        id: "カード",
-                        value: [],
-                        valueLengthInclude: [1],
-                      },
-                      "「ゲイン」の「効果」の戦闘修正": {
-                        id: "戦闘修正",
-                        value: {
-                          path: [
-                            {
-                              id: "手動事件發生時",
-                              value: {
-                                path: [{ id: "觸發這個事件的手動事件" }],
-                              },
-                            },
-                            "の「ゲイン」の「効果」の戦闘修正",
-                          ],
-                        },
-                      },
-                    },
-                  },
-                  feedback: [
-                    {
-                      id: "FeedbackAction",
-                      action: [
-                        {
-                          id: "ActionAddEffect",
-                          effect: {
-                            id: "GameEffectCustom",
-                            customID: "その戦闘修正と同じ値の戦闘修正を得る。",
-                          },
-                        },
-                      ],
-                    },
-                  ],
-                },
-              },
+              // {
+              //   id: "ActionAddBlock",
+              //   type: "立即",
+              //   block: {
+              //     require: {
+              //       id: "RequireTarget",
+              //       targets: {
+              //         そのカードのセットグループ以外の自軍ユニット１枚: {
+              //           id: "カード",
+              //           value: [],
+              //           valueLengthInclude: [1],
+              //         },
+              //         "「ゲイン」の「効果」の戦闘修正": {
+              //           id: "戦闘修正",
+              //           value: {
+              //             path: [
+              //               {
+              //                 id: "手動事件發生時",
+              //                 value: {
+              //                   path: [{ id: "觸發這個事件的手動事件" }],
+              //                 },
+              //               },
+              //               "の「ゲイン」の「効果」の戦闘修正",
+              //             ],
+              //           },
+              //         },
+              //       },
+              //     },
+              //     feedback: [
+              //       {
+              //         id: "FeedbackAction",
+              //         action: [
+              //           {
+              //             id: "ActionAddEffect",
+              //             effect: {
+              //               id: "GameEffectCustom",
+              //               customID: "その戦闘修正と同じ値の戦闘修正を得る。",
+              //             },
+              //           },
+              //         ],
+              //       },
+              //     ],
+              //   },
+              // },
             ],
           },
         ],
