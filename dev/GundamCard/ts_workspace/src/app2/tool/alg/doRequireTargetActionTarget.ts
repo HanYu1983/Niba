@@ -149,6 +149,10 @@ export function doRequireTargetActionTarget(
               cardID: cardID,
             });
           }
+          ctx = triggerTextEvent(ctx, {
+            id: "プレイされて場にセットされた場合",
+            cardID: cardID,
+          });
           return ctx;
         }, ctx);
       }
