@@ -1037,3 +1037,12 @@ export function getCardColor(ctx: GameContext, cardID: string): CardColor {
   const prototype = getPrototype(card.protoID);
   return prototype.color;
 }
+
+export function getCardTitle(ctx: GameContext, cardID: string): string {
+  const card = getCard(ctx.gameState.table, cardID);
+  if (card == null) {
+    throw new Error("card not found");
+  }
+  const prototype = getPrototype(card.protoID);
+  return prototype.title;
+}

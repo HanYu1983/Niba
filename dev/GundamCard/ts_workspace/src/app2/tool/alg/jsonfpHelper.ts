@@ -1,5 +1,5 @@
 import { log2 } from "../../../tool/logger";
-import { getCardCharacteristic } from "./helper";
+import { getCardCharacteristic, getCardTitle } from "./helper";
 import { GameContext, getSetGroupCards } from "../tool/basic/gameContext";
 import { getCardController } from "../tool/basic/handleCard";
 
@@ -34,6 +34,12 @@ export function initJsonfp() {
       throw new Error("cardID not found");
     }
     return getCardController(ctx, cardID);
+  });
+  jsonfp.addMethod("getCardTitle", (ctx: GameContext, cardID: string) => {
+    if (cardID == null) {
+      throw new Error("cardID not found");
+    }
+    return getCardTitle(ctx, cardID);
   });
 }
 
