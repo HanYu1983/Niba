@@ -90,13 +90,6 @@ const prototype: CardPrototype = {
       description:
         "『起動』：[自軍「マニィ・アンバサダ」が場に出た]、または自軍「マニィ・アンバサダ」がいる状態で、このカードが場に出た場合、[G以外の敵軍カード１枚を破壊する]。",
       varCtxID: varCtxID1,
-      additionalRequire: [
-        {
-          id: "RequireTarget",
-          targets: {},
-          condition: getConditionMacro({ id: "這張卡在場時" }),
-        },
-      ],
       feedbackBlock: {
         feedback: [
           {

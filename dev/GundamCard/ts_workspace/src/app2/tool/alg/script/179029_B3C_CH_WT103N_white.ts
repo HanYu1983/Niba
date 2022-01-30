@@ -37,13 +37,6 @@ const prototype: CardPrototype = {
       x: "ルイン・リー",
       description:
         "『起動』：[自軍「ルイン・リー」が場に出た]、または自軍「ルイン・リー」がいる状態で、このカードが場に出た場合、[カード２枚を引く事ができる]。",
-      additionalRequire: [
-        {
-          id: "RequireTarget",
-          targets: {},
-          condition: getConditionMacro({ id: "這張卡在場時" }),
-        },
-      ],
       feedbackBlock: {
         feedback: [
           {

@@ -155,6 +155,15 @@ export function triggerTextEvent(
   });
   return [...ctx.gameState.cardState, ...converGlobalCardState].reduce(
     (ctx, cardState: { id: string; cardTextStates: CardTextState[] }) => {
+      {
+        const {
+          value: [_, baSyouKeyword],
+        } = getCardBaSyou(ctx, cardState.id);
+        // [起動]應該只有在場時有效
+        if (isBa(baSyouKeyword) == false) {
+          return ctx;
+        }
+      }
       return cardState.cardTextStates.reduce((ctx, cardTextState) => {
         const cardTexts = (() => {
           switch (cardTextState.cardText.id) {

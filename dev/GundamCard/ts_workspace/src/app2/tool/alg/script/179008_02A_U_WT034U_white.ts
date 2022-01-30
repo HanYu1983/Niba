@@ -56,9 +56,9 @@ const prototype: CardPrototype = {
                 id: "當觸發GameEvent的變量x的id時",
                 x: { id: "「改装」の効果で廃棄される場合", cardID: "" },
               }),
-              getConditionMacro({
-                id: "這張卡在場時",
-              }),
+              // getConditionMacro({
+              //   id: "這張卡在場時",
+              // }),
               {
                 id: "ConditionJsonfp",
                 program: {
