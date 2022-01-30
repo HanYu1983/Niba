@@ -16,6 +16,7 @@ export function doConditionTarget(
   condition: Condition,
   varCtxID: string
 ): void {
+  log2("doConditionTarget", condition);
   switch (condition.id) {
     case "ConditionNot": {
       try {

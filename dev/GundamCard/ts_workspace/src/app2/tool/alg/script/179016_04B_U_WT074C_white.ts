@@ -109,7 +109,7 @@ const prototype: CardPrototype = {
                       },
                       {},
                       {
-                        error: "必須是自軍機體",
+                        error: "必須是自軍",
                       },
                     ],
                   },

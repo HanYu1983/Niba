@@ -215,15 +215,22 @@ const prototype: CardPrototype = {
           description:
             "『恒常』：このカードは、ダメージ判定ステップ中、合計国力－３してプレイできる。[その場合、カット終了時に、このカードを廃棄する。]",
           hasFlag: CARD_TEXT_DESTROY_WHEN_CUT_FINISHED_VAR_FLAG_FOR_DESTROY,
-          additionalFeedbackAction: [
-            {
-              id: "ActionDestroy",
-              cards: {
-                id: "カード",
-                value: { path: [{ id: "このカード" }] },
+          feedbackBlock: {
+            feedback: [
+              {
+                id: "FeedbackAction",
+                action: [
+                  {
+                    id: "ActionDestroy",
+                    cards: {
+                      id: "カード",
+                      value: { path: [{ id: "このカード" }] },
+                    },
+                  },
+                ],
               },
-            },
-          ],
+            ],
+          },
         }).cardText,
         getCardTextMacro({
           id: "WhenShowBa",
@@ -231,15 +238,22 @@ const prototype: CardPrototype = {
           description:
             "『起動』：このカードが場に出た場合、戦闘エリアにいる敵軍ユニット１～２枚をロールする。",
           varCtxID: varCtxID1,
-          additionalFeedbackAction: [
-            {
-              id: "ActionRoll",
-              cards: {
-                id: "カード",
-                value: "戦闘エリアにいる敵軍ユニット１～２枚",
+          feedbackBlock: {
+            feedback: [
+              {
+                id: "FeedbackAction",
+                action: [
+                  {
+                    id: "ActionRoll",
+                    cards: {
+                      id: "カード",
+                      value: "戦闘エリアにいる敵軍ユニット１～２枚",
+                    },
+                  },
+                ],
               },
-            },
-          ],
+            ],
+          },
         }).cardText,
       ],
     },

@@ -186,15 +186,22 @@ const prototype: CardPrototype = {
             "『恒常』：このカードは、戦闘フェイズ中、合計国力－３してプレイできる。[その場合、カット終了時に、このカードを廃棄する。]",
 
           hasFlag: CARD_TEXT_DESTROY_WHEN_CUT_FINISHED_VAR_FLAG_FOR_DESTROY,
-          additionalFeedbackAction: [
-            {
-              id: "ActionDestroy",
-              cards: {
-                id: "カード",
-                value: { path: [{ id: "このカード" }] },
+          feedbackBlock: {
+            feedback: [
+              {
+                id: "FeedbackAction",
+                action: [
+                  {
+                    id: "ActionDestroy",
+                    cards: {
+                      id: "カード",
+                      value: { path: [{ id: "このカード" }] },
+                    },
+                  },
+                ],
               },
-            },
-          ],
+            ],
+          },
         }).cardText,
         getCardTextMacro({
           id: "WhenShowBa",
@@ -202,25 +209,32 @@ const prototype: CardPrototype = {
           description:
             "『起動』このカードが場に出た場合、敵軍は、自分のユニット１枚を選んで持ち主の手札に移す。",
           varCtxID: varCtxID1,
-          additionalFeedbackAction: [
-            {
-              id: "ActionMoveCardToPosition",
-              cards: {
-                id: "カード",
-                value: "敵軍は、自分のユニット１枚",
-              },
-              baSyou: {
-                id: "場所",
-                value: [
-                  // TODO
+          feedbackBlock: {
+            feedback: [
+              {
+                id: "FeedbackAction",
+                action: [
                   {
-                    id: "RelatedBaSyou",
-                    value: ["持ち主", "手札"],
+                    id: "ActionMoveCardToPosition",
+                    cards: {
+                      id: "カード",
+                      value: "敵軍は、自分のユニット１枚",
+                    },
+                    baSyou: {
+                      id: "場所",
+                      value: [
+                        // TODO
+                        {
+                          id: "RelatedBaSyou",
+                          value: ["持ち主", "手札"],
+                        },
+                      ],
+                    },
                   },
                 ],
               },
-            },
-          ],
+            ],
+          },
         }).cardText,
       ],
     },

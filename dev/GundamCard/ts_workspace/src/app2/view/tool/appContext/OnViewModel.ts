@@ -53,7 +53,7 @@ export const OnViewModel = OnEvent.pipe(
       switch (evt.id) {
         case "OnClickNewGame": {
           let ctx = DEFAULT_GAME_CONTEXT;
-          if (true) {
+          if (false) {
             let table = ctx.gameState.table;
             table = createCard(
               table,
@@ -251,6 +251,85 @@ export const OnViewModel = OnEvent.pipe(
                 activePlayerID: PlayerA,
                 // @ts-ignore
                 timing: TIMING_CHART.find((t) => t[1][0] == "配備フェイズ"),
+              },
+              versionID: viewModel.model.versionID,
+            };
+          }
+          if (true) {
+            let table = ctx.gameState.table;
+            table = createCard(
+              table,
+              PlayerA,
+              getBaShouID({
+                id: "AbsoluteBaSyou",
+                value: [PlayerA, "本国"],
+              }),
+              [
+                "179016_04B_U_WT075C_white",
+                "179016_04B_U_WT075C_white",
+                "179029_05C_O_BK014C_black",
+              ]
+            );
+            table = createCard(
+              table,
+              PlayerA,
+              getBaShouID({
+                id: "AbsoluteBaSyou",
+                value: [PlayerA, "手札"],
+              }),
+              ["179029_B3C_CH_WT102R_white", "179029_B3C_CH_WT103N_white"]
+            );
+            table = createCard(
+              table,
+              PlayerA,
+              getBaShouID({
+                id: "AbsoluteBaSyou",
+                value: [PlayerA, "Gゾーン"],
+              }),
+              [
+                "179016_04B_U_WT075C_white",
+                "179016_04B_U_WT075C_white",
+                "179016_04B_U_WT075C_white",
+                "179001_01A_CH_WT007R_white",
+                "179030_11E_C_BL076S_blue",
+              ]
+            );
+            table = createCard(
+              table,
+              PlayerA,
+              getBaShouID({
+                id: "AbsoluteBaSyou",
+                value: [PlayerA, "配備エリア"],
+              }),
+              [
+                "179029_B3C_CH_WT102R_white",
+                "179008_02A_U_WT034U_white",
+                "179016_04B_U_WT074C_white",
+              ]
+            );
+            table = createCard(
+              table,
+              PlayerB,
+              getBaShouID({
+                id: "AbsoluteBaSyou",
+                value: [PlayerB, "配備エリア"],
+              }),
+              ["179008_02A_U_WT034U_white"]
+            );
+            ctx = {
+              ...ctx,
+              gameState: {
+                ...ctx.gameState,
+                table: table,
+              },
+            };
+            ctx = {
+              ...ctx,
+              gameState: {
+                ...ctx.gameState,
+                // @ts-ignore
+                timing: TIMING_CHART.find((t) => t[1][0] == "配備フェイズ"),
+                activePlayerID: PlayerA,
               },
               versionID: viewModel.model.versionID,
             };

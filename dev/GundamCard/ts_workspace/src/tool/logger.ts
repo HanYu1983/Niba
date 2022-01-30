@@ -4,6 +4,7 @@ const hideCategory: string[] = [
   //"recurRequire",
   //"getTargetType",
   //"triggerTextEvent",
+  "doConditionTarget",
 ];
 let filterCategory = true;
 

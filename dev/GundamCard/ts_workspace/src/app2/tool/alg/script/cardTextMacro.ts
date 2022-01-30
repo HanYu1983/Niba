@@ -59,7 +59,7 @@ type CardTextMacro3 = {
   id: "WhenCutFinished";
   description?: string;
   varCtxID?: string;
-  additionalFeedbackAction?: Action[];
+  feedbackBlock?: BlockPayload;
   hasFlag?: string;
 };
 
@@ -67,7 +67,17 @@ type CardTextMacro4 = {
   id: "WhenShowBa";
   description?: string;
   varCtxID?: string;
-  additionalFeedbackAction?: Action[];
+  additionalRequire?: Require[];
+  feedbackBlock?: BlockPayload;
+};
+
+type CardTextMacro4_2 = {
+  id: "自軍「x」が場に出た場合";
+  description?: string;
+  varCtxID?: string;
+  additionalRequire?: Require[];
+  feedbackBlock?: BlockPayload;
+  x: string;
 };
 
 type CardTextMacro5 = {
@@ -102,6 +112,7 @@ export type CardTextMacro =
   | CardTextMacro2
   | CardTextMacro3
   | CardTextMacro4
+  | CardTextMacro4_2
   | CardTextMacro5
   | CardTextMacro6
   | CardTextMacro7
@@ -208,7 +219,7 @@ export function getCardTextMacro(macro: CardTextMacro): Return {
             {
               id: "プレーヤー",
               value: {
-                path: [{ id: "自軍" }],
+                path: [{ id: macro.y }],
               },
             },
           ],
@@ -653,11 +664,12 @@ export function getCardTextMacro(macro: CardTextMacro): Return {
                     id: "ActionAddBlock",
                     type: "立即",
                     block: {
+                      ...macro.feedbackBlock,
                       feedback: [
+                        ...(macro.feedbackBlock?.feedback || []),
                         {
                           id: "FeedbackAction",
                           action: [
-                            ...(macro.additionalFeedbackAction || []),
                             ...(macro.hasFlag
                               ? [
                                   {
@@ -685,6 +697,7 @@ export function getCardTextMacro(macro: CardTextMacro): Return {
         },
       };
     case "WhenShowBa":
+    case "自軍「x」が場に出た場合":
       return {
         ...DEFAULT_RETURN,
         cardText: {
@@ -694,67 +707,126 @@ export function getCardTextMacro(macro: CardTextMacro): Return {
           block: {
             contextID: macro.varCtxID,
             require: {
-              id: "RequireTarget",
-              targets: {},
-              condition: {
-                id: "ConditionJsonfp",
-                program: {
-                  pass1: {
-                    if: [
-                      {
-                        "->": [
-                          "$in.blockPayload",
-                          { log: "blockPayload" },
-                          { getter: "cause" },
-                          { getter: "id" },
-                          { "==": "BlockPayloadCauseGameEvent" },
+              id: "RequireAnd",
+              and: [
+                {
+                  id: "RequireTarget",
+                  targets: {},
+                  condition: {
+                    id: "ConditionJsonfp",
+                    program: {
+                      pass1: {
+                        if: [
+                          {
+                            "->": [
+                              "$in.blockPayload",
+                              { log: "blockPayload" },
+                              { getter: "cause" },
+                              { getter: "id" },
+                              { "==": "BlockPayloadCauseGameEvent" },
+                            ],
+                          },
+                          {},
+                          { error: "事件必須是BlockPayloadCauseGameEvent" },
                         ],
                       },
-                      {},
-                      { error: "事件必須是BlockPayloadCauseGameEvent" },
-                    ],
-                  },
-                  pass2: {
-                    if: [
-                      {
-                        "->": [
-                          "$in.blockPayload",
-                          { log: "blockPayload" },
-                          { getter: "cause" },
-                          { getter: "gameEvent" },
-                          { getter: "id" },
-                          { "==": "場に出た場合" },
+                      pass2: {
+                        if: [
+                          {
+                            "->": [
+                              "$in.blockPayload",
+                              { log: "blockPayload" },
+                              { getter: "cause" },
+                              { getter: "gameEvent" },
+                              { getter: "id" },
+                              { "==": "場に出た場合" },
+                            ],
+                          },
+                          {},
+                          { error: "事件必須是場に出た場合" },
                         ],
                       },
-                      {},
-                      { error: "事件必須是場に出た場合" },
-                    ],
-                  },
-                  $cardID: {
-                    "->": [
-                      "$in.blockPayload",
-                      { getter: "cause" },
-                      { getter: "cardID" },
-                    ],
-                  },
-                  pass3: {
-                    if: [
-                      {
+                      $cardID: {
+                        "->": [
+                          "$in.blockPayload",
+                          { getter: "cause" },
+                          { getter: "cardID" },
+                        ],
+                      },
+                      $gameEventCardID: {
                         "->": [
                           "$in.blockPayload",
                           { log: "blockPayload" },
                           { getter: "cause" },
                           { getter: "gameEvent" },
                           { getter: "cardID" },
-                          { "==": "$cardID" },
                         ],
                       },
-                      {},
-                      { error: "必須是這張卡" },
-                    ],
+                      ...(macro.id == "自軍「x」が場に出た場合"
+                        ? {
+                            pass3: {
+                              if: [
+                                {
+                                  "->": [
+                                    "$in.ctx",
+                                    { getCardTitle: "$gameEventCardID" },
+                                    { "==": macro.x },
+                                  ],
+                                },
+                                {},
+                                { error: `必須是${macro.x}出場` },
+                              ],
+                            },
+                            pass4: {
+                              if: [
+                                {
+                                  "->": [
+                                    [
+                                      {
+                                        "->": [
+                                          "$in.ctx",
+                                          { getCardController: "$cardID" },
+                                        ],
+                                      },
+                                      {
+                                        "->": [
+                                          "$in.ctx",
+                                          {
+                                            getCardController:
+                                              "$gameEventCardID",
+                                          },
+                                        ],
+                                      },
+                                    ],
+                                    { reduce: "==" },
+                                  ],
+                                },
+                                {},
+                                {
+                                  error: "必須是自軍",
+                                },
+                              ],
+                            },
+                          }
+                        : {
+                            pass3: {
+                              if: [
+                                {
+                                  "->": [
+                                    "$gameEventCardID",
+                                    { "==": "$cardID" },
+                                  ],
+                                },
+                                {},
+                                { error: "必須是這張卡" },
+                              ],
+                            },
+                          }),
+                    },
                   },
                 },
-              },
+                ...(macro.additionalRequire || []),
+              ],
             },
             feedback: [
               {
@@ -764,12 +836,8 @@ export function getCardTextMacro(macro: CardTextMacro): Return {
                     id: "ActionAddBlock",
                     type: "立即",
                     block: {
-                      feedback: [
-                        {
-                          id: "FeedbackAction",
-                          action: [...(macro.additionalFeedbackAction || [])],
-                        },
-                      ],
+                      ...macro.feedbackBlock,
+                      feedback: [...(macro.feedbackBlock?.feedback || [])],
                     },
                   },
                 ],
