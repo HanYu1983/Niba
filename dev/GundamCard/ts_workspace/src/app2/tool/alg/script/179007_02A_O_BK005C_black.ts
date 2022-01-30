@@ -29,10 +29,10 @@ const prototype: CardPrototype = {
   color: "黒",
   rollCost: [null, null, null, null, null],
   texts: [
-    getCardTextMacro({ id: "PlayG" }).cardText,
+    getCardTextMacro({ id: "PlayG" }),
     getCardTextMacro({
       id: "PlayOperation",
-    }).cardText,
+    }),
     getCardTextMacro({
       id: "PlayText",
 
@@ -102,7 +102,7 @@ const prototype: CardPrototype = {
           },
         ],
       },
-    }).cardText,
+    }),
   ],
 };
 

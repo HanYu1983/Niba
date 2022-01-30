@@ -10,7 +10,7 @@ import {
   TargetType,
   TargetTypeCustomFunctionType,
 } from "../../tool/basic/targetType";
-import { getCardTextMacro } from "./cardTextMacro";
+import { getCardTextMacro, getConditionMacro } from "./cardTextMacro";
 import { DEFAULT_CARD_TEXT_SIYOU_KATA } from "../../tool/basic/basic";
 import { createTokuSyuKouKaText } from "./createTokuSyuKouKaText";
 
@@ -30,7 +30,7 @@ const prototype: CardPrototype = {
   battlePoint: [2, 2, 2],
   texts: [
     createTokuSyuKouKaText(["高機動"], {}),
-    getCardTextMacro({ id: "PlayG" }).cardText,
+    getCardTextMacro({ id: "PlayG" }),
     getCardTextMacro({
       id: "PlayCharacter",
       varCtxID: varCtxID1,
@@ -48,11 +48,11 @@ const prototype: CardPrototype = {
           condition: {
             id: "ConditionAnd",
             and: [
-              getCardTextMacro({
+              getConditionMacro({
                 id: "變量x的是y軍",
                 x: { id: "カード", value: "G以外の敵軍カード１枚" },
                 y: "敵軍",
-              }).condition,
+              }),
               {
                 id: "ConditionCompareRole",
                 value: [
@@ -83,7 +83,7 @@ const prototype: CardPrototype = {
           ],
         },
       ],
-    }).cardText,
+    }),
     getCardTextMacro({
       id: "自軍「x」が場に出た場合",
       x: "マニィ・アンバサダ",
@@ -106,7 +106,7 @@ const prototype: CardPrototype = {
           },
         ],
       },
-    }).cardText,
+    }),
     getCardTextMacro({
       id: "WhenShowBa",
       description:
@@ -131,7 +131,7 @@ const prototype: CardPrototype = {
           },
         ],
       },
-    }).cardText,
+    }),
   ],
 };
 

@@ -29,11 +29,11 @@ const prototype: CardPrototype = {
   color: "緑",
   rollCost: ["緑"],
   texts: [
-    getCardTextMacro({ id: "PlayG" }).cardText,
+    getCardTextMacro({ id: "PlayG" }),
     getCardTextMacro({
       id: "PlayOperation",
       additionalRequire: [createRollCostRequire(1, "緑")],
-    }).cardText,
+    }),
     // TODO
     // 當「特徴：装弾」を持つ自軍コマンドの効果で自軍Gをロールする場合時, 設定FLAG
     // updateEffect時, 新增一個EFFECT, 在詢問ROLE時, 這個等於G

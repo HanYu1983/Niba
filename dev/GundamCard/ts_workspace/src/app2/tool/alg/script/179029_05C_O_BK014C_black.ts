@@ -10,7 +10,7 @@ import {
   TargetType,
   TargetTypeCustomFunctionType,
 } from "../../tool/basic/targetType";
-import { getCardTextMacro } from "./cardTextMacro";
+import { getCardTextMacro, getConditionMacro } from "./cardTextMacro";
 
 // 179029_05C_O_BK014C_black
 // C
@@ -27,11 +27,11 @@ const prototype: CardPrototype = {
   color: "黒",
   rollCost: ["黒", null],
   texts: [
-    getCardTextMacro({ id: "PlayG" }).cardText,
+    getCardTextMacro({ id: "PlayG" }),
     getCardTextMacro({
       id: "PlayOperation(Unit)",
       additionalRequire: [createRollCostRequire(1, "黒")],
-    }).cardText,
+    }),
     {
       id: "自動型",
       category: "起動",
@@ -44,10 +44,10 @@ const prototype: CardPrototype = {
           condition: {
             id: "ConditionAnd",
             and: [
-              getCardTextMacro({
+              getConditionMacro({
                 id: "當觸發GameEvent的變量x的id時",
                 x: { id: "プレイした場合", cardTextID: "", cardID: "" },
-              }).condition,
+              }),
               {
                 id: "ConditionJsonfp",
                 program: {

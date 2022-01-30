@@ -31,11 +31,11 @@ const prototype: CardPrototype = {
   color: "黒",
   rollCost: ["黒"],
   texts: [
-    getCardTextMacro({ id: "PlayG" }).cardText,
+    getCardTextMacro({ id: "PlayG" }),
     getCardTextMacro({
       id: "PlayOperation",
       additionalRequire: [createRollCostRequire(1, "黒")],
-    }).cardText,
+    }),
     {
       id: "自動型",
       category: "起動", // 規則寫常駐應該是寫錯
@@ -85,7 +85,6 @@ const prototype: CardPrototype = {
     },
     getCardTextMacro({
       id: "PlayText",
-
       description:
         "（常時）〔R〕：敵軍は、自分のジャンクヤードにあるカード１枚をゲームから取り除く。",
       varCtxID:
@@ -159,7 +158,7 @@ const prototype: CardPrototype = {
           },
         ],
       },
-    }).cardText,
+    }),
   ],
 };
 

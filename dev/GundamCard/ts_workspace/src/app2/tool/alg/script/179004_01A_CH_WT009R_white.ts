@@ -32,11 +32,11 @@ const prototype: CardPrototype = {
     createTokuSyuKouKaText(["ゲイン"], { cost: 1 }),
     createTokuSyuKouKaText(["供給"], { cost: 1 }),
     createTokuSyuKouKaText(["速攻"], {}),
-    getCardTextMacro({ id: "PlayG" }).cardText,
+    getCardTextMacro({ id: "PlayG" }),
     getCardTextMacro({
       id: "PlayCharacter",
       additionalRequire: [createRollCostRequire(1, "白")],
-    }).cardText,
+    }),
     {
       id: "自動型",
       category: "起動",

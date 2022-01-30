@@ -38,7 +38,7 @@ import {
   triggerTextEvent,
   updateCommand,
 } from "./handleGameContext";
-import { getCardTextMacro } from "./script/cardTextMacro";
+import { getCardTextMacro, getConditionMacro } from "./script/cardTextMacro";
 
 export function setRequireAnswer(
   ctx: GameContext,
@@ -1192,7 +1192,7 @@ export function queryFlow(ctx: GameContext, playerID: string): Flow[] {
                           condition: {
                             id: "ConditionAnd",
                             and: [
-                              getCardTextMacro({
+                              getConditionMacro({
                                 id: "變量x的場所包含於y",
                                 x: { id: "カード", value: "去左方的卡" },
                                 y: [
@@ -1201,13 +1201,13 @@ export function queryFlow(ctx: GameContext, playerID: string): Flow[] {
                                     value: [playerID, "配備エリア"],
                                   },
                                 ],
-                              }).condition,
-                              getCardTextMacro({
+                              }),
+                              getConditionMacro({
                                 id: "變量x的角色包含於y",
                                 x: { id: "カード", value: "去左方的卡" },
                                 y: ["ユニット"],
-                              }).condition,
-                              getCardTextMacro({
+                              }),
+                              getConditionMacro({
                                 id: "變量x的場所包含於y",
                                 x: { id: "カード", value: "去右方的卡" },
                                 y: [
@@ -1216,12 +1216,12 @@ export function queryFlow(ctx: GameContext, playerID: string): Flow[] {
                                     value: [playerID, "配備エリア"],
                                   },
                                 ],
-                              }).condition,
-                              getCardTextMacro({
+                              }),
+                              getConditionMacro({
                                 id: "變量x的角色包含於y",
                                 x: { id: "カード", value: "去右方的卡" },
                                 y: ["ユニット"],
-                              }).condition,
+                              }),
                             ],
                           },
                           action: [

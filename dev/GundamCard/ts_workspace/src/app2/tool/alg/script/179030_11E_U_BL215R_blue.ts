@@ -26,12 +26,12 @@ const prototype: CardPrototype = {
   texts: [
     createTokuSyuKouKaText(["戦闘配備"], { cost: 0 }),
     createTokuSyuKouKaText(["改装", "ペーネロペー系"], { cost: 1 }),
-    getCardTextMacro({ id: "PlayG" }).cardText,
+    getCardTextMacro({ id: "PlayG" }),
     getCardTextMacro({
       id: "PlayUnit",
 
       additionalRequire: [createRollCostRequire(2, "青")],
-    }).cardText,
+    }),
     {
       id: "恒常",
       description:

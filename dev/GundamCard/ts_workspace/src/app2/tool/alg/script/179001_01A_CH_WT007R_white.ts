@@ -10,7 +10,7 @@ import {
   TargetType,
   TargetTypeCustomFunctionType,
 } from "../../tool/basic/targetType";
-import { getCardTextMacro } from "./cardTextMacro";
+import { getCardTextMacro, getConditionMacro } from "./cardTextMacro";
 import { DEFAULT_CARD_TEXT_SIYOU_KATA } from "../../tool/basic/basic";
 
 // 179001_01A_CH_WT007R_white
@@ -26,11 +26,11 @@ const prototype: CardPrototype = {
   color: "白",
   rollCost: ["白", null, null, null],
   texts: [
-    getCardTextMacro({ id: "PlayG" }).cardText,
+    getCardTextMacro({ id: "PlayG" }),
     getCardTextMacro({
       id: "PlayCharacter",
       additionalRequire: [createRollCostRequire(1, "白")],
-    }).cardText,
+    }),
     getCardTextMacro({
       id: "PlayText",
       description:
@@ -40,7 +40,7 @@ const prototype: CardPrototype = {
         {
           id: "RequireTarget",
           targets: {},
-          condition: getCardTextMacro({
+          condition: getConditionMacro({
             id: "變量x的場所包含於y",
             x: { id: "カード", value: { path: [{ id: "このカード" }] } },
             y: [
@@ -48,7 +48,7 @@ const prototype: CardPrototype = {
               { id: "RelatedBaSyou", value: ["自軍", "戦闘エリア（左）"] },
               { id: "RelatedBaSyou", value: ["自軍", "戦闘エリア（右）"] },
             ],
-          }).condition,
+          }),
         },
       ],
       feedbackBlock: {
@@ -68,7 +68,7 @@ const prototype: CardPrototype = {
           },
         ],
       },
-    }).cardText,
+    }),
   ],
 };
 

@@ -10,7 +10,7 @@ import {
   TargetType,
   TargetTypeCustomFunctionType,
 } from "../../tool/basic/targetType";
-import { getCardTextMacro } from "./cardTextMacro";
+import { getCardTextMacro, getConditionMacro } from "./cardTextMacro";
 import {
   BattleBonus,
   DEFAULT_CARD_TEXT_SIYOU_KATA,
@@ -35,11 +35,11 @@ const prototype: CardPrototype = {
   rollCost: ["白", null, null, null, null],
   texts: [
     createTokuSyuKouKaText(["改装", "ブルーフレーム系"], { cost: 0 }),
-    getCardTextMacro({ id: "PlayG" }).cardText,
+    getCardTextMacro({ id: "PlayG" }),
     getCardTextMacro({
       id: "PlayUnit",
       additionalRequire: [createRollCostRequire(1, "白")],
-    }).cardText,
+    }),
     {
       id: "自動型",
       category: "起動",
@@ -52,13 +52,13 @@ const prototype: CardPrototype = {
           condition: {
             id: "ConditionAnd",
             and: [
-              getCardTextMacro({
+              getConditionMacro({
                 id: "當觸發GameEvent的變量x的id時",
                 x: { id: "「改装」の効果で廃棄される場合", cardID: "" },
-              }).condition,
-              getCardTextMacro({
+              }),
+              getConditionMacro({
                 id: "這張卡在場時",
-              }).condition,
+              }),
               {
                 id: "ConditionJsonfp",
                 program: {

@@ -30,12 +30,12 @@ const prototype: CardPrototype = {
   rollCost: ["白", null, null, null],
   texts: [
     createTokuSyuKouKaText(["改装", "レッドフレーム系"], {}),
-    getCardTextMacro({ id: "PlayG" }).cardText,
+    getCardTextMacro({ id: "PlayG" }),
     getCardTextMacro({
       id: "PlayCharacter",
 
       additionalRequire: [createRollCostRequire(1, "白")],
-    }).cardText,
+    }),
     getCardTextMacro({
       id: "PlayText",
 
@@ -134,7 +134,7 @@ const prototype: CardPrototype = {
           },
         ],
       },
-    }).cardText,
+    }),
   ],
 };
 

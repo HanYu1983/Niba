@@ -232,7 +232,7 @@ export function createTokuSyuKouKaText(
           getCardTextMacro({
             id: "PlayCharacter(Stay)",
             additionalRequire: [createRollCostRequire(options.cost || 0, null)],
-          }).cardText,
+          }),
         ],
       };
     case "高機動":
@@ -544,7 +544,7 @@ export function createTokuSyuKouKaText(
                 },
               ],
             },
-          }).cardText,
+          }),
         ],
       };
     case "供給":
@@ -671,7 +671,7 @@ export function createTokuSyuKouKaText(
                 },
               ],
             },
-          }).cardText,
+          }),
         ],
       };
     case "サイコミュ": {
@@ -820,7 +820,7 @@ export function createTokuSyuKouKaText(
                 },
               ],
             },
-          }).cardText,
+          }),
         ],
       };
     }
@@ -946,7 +946,7 @@ export function createTokuSyuKouKaText(
                 },
               ],
             },
-          }).cardText,
+          }),
         ],
       };
     }
@@ -1186,7 +1186,7 @@ export function createTokuSyuKouKaText(
                 },
               ],
             },
-          }).cardText,
+          }),
         ],
       };
     }
@@ -1345,7 +1345,7 @@ export function createTokuSyuKouKaText(
                 },
               ],
             },
-          }).cardText,
+          }),
         ],
       };
     }

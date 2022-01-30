@@ -27,11 +27,11 @@ const prototype: CardPrototype = {
   rollCost: ["白"],
   battlePoint: [0, 0, 1],
   texts: [
-    getCardTextMacro({ id: "PlayG" }).cardText,
+    getCardTextMacro({ id: "PlayG" }),
     getCardTextMacro({
       id: "PlayCharacter",
       additionalRequire: [createRollCostRequire(1, "白")],
-    }).cardText,
+    }),
     getCardTextMacro({
       id: "自軍「x」が場に出た場合",
       x: "ルイン・リー",
@@ -50,7 +50,7 @@ const prototype: CardPrototype = {
           },
         ],
       },
-    }).cardText,
+    }),
     getCardTextMacro({
       id: "WhenShowBa",
       description:
@@ -71,7 +71,7 @@ const prototype: CardPrototype = {
           },
         ],
       },
-    }).cardText,
+    }),
   ],
 };
 
