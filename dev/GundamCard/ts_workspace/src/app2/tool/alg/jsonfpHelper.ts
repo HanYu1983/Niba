@@ -1,10 +1,8 @@
-import { log2 } from "../../../../tool/logger";
-import {
-  GameContext,
-  getCardCharacteristic,
-  getSetGroupCards,
-} from "./gameContext";
-import { getCardController } from "./handleCard";
+import { log2 } from "../../../tool/logger";
+import { getCardCharacteristic } from "./helper";
+import { GameContext, getSetGroupCards } from "../tool/basic/gameContext";
+import { getCardController } from "../tool/basic/handleCard";
+
 export const jsonfp = require("jsonfp");
 // 使用前先呼叫
 export function initJsonfp() {

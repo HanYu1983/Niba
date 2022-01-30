@@ -10,7 +10,7 @@ import type { Action } from "./action";
 import { TargetType, TargetTypeCard } from "./targetType";
 import { log2 } from "../../../../tool/logger";
 import { GameContext } from "./gameContext";
-import { JsonfpExpr } from "./jsonfpHelper";
+import { JsonfpExpr } from "../../alg/jsonfpHelper";
 
 export type RequireBase = {
   key?: string;

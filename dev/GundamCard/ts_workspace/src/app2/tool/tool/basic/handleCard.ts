@@ -76,12 +76,3 @@ export function getCardOwner(ctx: GameContext, cardID: string): PlayerID {
   }
   return card.ownerID;
 }
-
-export function getCardColor(ctx: GameContext, cardID: string): CardColor {
-  const card = getCard(ctx.gameState.table, cardID);
-  if (card == null) {
-    throw new Error("card not found");
-  }
-  const prototype = getPrototype(card.protoID);
-  return prototype.color;
-}

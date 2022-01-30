@@ -27,8 +27,6 @@ import {
 } from "../tool/basic/gameContext";
 import {
   getCardBaSyou,
-  getCardColor,
-  getCardController,
   getCardOwner,
   getAbsoluteBaSyou,
 } from "../tool/basic/handleCard";
@@ -46,7 +44,7 @@ import {
   updateEffect,
 } from "./handleGameContext";
 import { wrapBlockRequireKey } from "./handleBlockPayload";
-import { jsonfp } from "../tool/basic/jsonfpHelper";
+import { jsonfp } from "./jsonfpHelper";
 
 let idSeq = 0;
 export function doRequireTargetActionTarget(

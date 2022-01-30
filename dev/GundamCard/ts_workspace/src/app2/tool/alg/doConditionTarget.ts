@@ -6,7 +6,7 @@ import { TargetType } from "../tool/basic/targetType";
 import { getAbsoluteBaSyou, getCardController } from "../tool/basic/handleCard";
 import { getBaShouID } from "../tool/basic/basic";
 import { log2 } from "../../../tool/logger";
-import { jsonfp } from "../tool/basic/jsonfpHelper";
+import { jsonfp } from "./jsonfpHelper";
 import { err2string } from "../../../tool/helper";
 
 export function doConditionTarget(

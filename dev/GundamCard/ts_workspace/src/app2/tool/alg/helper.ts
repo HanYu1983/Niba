@@ -1019,3 +1019,21 @@ export function assertBlockPayloadTargetTypeValueLength(
     return r;
   });
 }
+
+export function getCardCharacteristic(ctx: GameContext, cardID: string) {
+  const card = getCard(ctx.gameState.table, cardID);
+  if (card == null) {
+    throw new Error("card not found");
+  }
+  const prototype = getPrototype(card.protoID);
+  return prototype.characteristic;
+}
+
+export function getCardColor(ctx: GameContext, cardID: string): CardColor {
+  const card = getCard(ctx.gameState.table, cardID);
+  if (card == null) {
+    throw new Error("card not found");
+  }
+  const prototype = getPrototype(card.protoID);
+  return prototype.color;
+}

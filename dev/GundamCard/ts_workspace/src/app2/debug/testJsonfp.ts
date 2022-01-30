@@ -1,4 +1,4 @@
-import { JsonfpExpr, jsonfp } from "../tool/tool/basic/jsonfpHelper";
+import { JsonfpExpr, jsonfp } from "../tool/alg/jsonfpHelper";
 import { createCard } from "../../tool/table";
 import { getCardState } from "../tool/alg/helper";
 import { getBaShouID, PlayerA } from "../tool/tool/basic/basic";
