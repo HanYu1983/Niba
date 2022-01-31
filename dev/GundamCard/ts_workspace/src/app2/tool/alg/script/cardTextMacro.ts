@@ -155,7 +155,7 @@ export function getConditionMacro(macro: ConditionMacro): Condition {
                 ],
               },
               {},
-              { error: `事件必須是プレイした場合:${macro.x.id}` },
+              { error: `事件必須是${macro.x.id}` },
             ],
           },
         },

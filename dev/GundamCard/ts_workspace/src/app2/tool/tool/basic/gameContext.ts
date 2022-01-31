@@ -288,3 +288,7 @@ export function getSetGroupCards(ctx: GameContext, cardID: string) {
     }),
   ];
 }
+
+export function getSetGroupUnit(ctx: GameContext, cardID: string): string {
+  return ctx.gameState.setGroupLink[cardID];
+}

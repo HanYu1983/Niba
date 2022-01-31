@@ -68,6 +68,18 @@ export function testProto_179025_07D_U_RD156R_red() {
               tap: false,
             },
           ],
+          [getBaShouID({
+            id: "AbsoluteBaSyou",
+            value: [PlayerB, "プレイされているカード"],
+          })]: [
+            {
+              id: "b1",
+              protoID: "179030_11E_O_BK012N_black",
+              faceDown: true,
+              ownerID: PlayerB,
+              tap: false,
+            },
+          ],
         },
       },
     },
@@ -92,7 +104,6 @@ export function testProto_179025_07D_U_RD156R_red() {
   if (text.texts.length == 0) {
     throw new Error("XX");
   }
-  console.log("準備block");
   const block = wrapTip(
     ctx,
     true,
@@ -108,11 +119,13 @@ export function testProto_179025_07D_U_RD156R_red() {
     }),
     "tmp"
   );
+  console.log(block);
   console.log("支付內文");
   try {
     doBlockPayload(ctx, block);
   } catch (e) {
     console.log("必須沒有錯誤");
+    throw e;
   }
 }
 

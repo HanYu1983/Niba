@@ -73,9 +73,8 @@ const prototype: CardPrototype = {
                   value: { path: [{ id: "このカード" }] },
                 },
                 cardState: {
-                  ...DEFAULT_CARD_STATE,
-                  cardID:
-                    "179030_11E_U_BL210N_blue_ターン終了時に、このカードを持ち主のGにできる。",
+                  id: "",
+                  cardID: "",
                   cardTextStates: [
                     {
                       id: "179030_11E_U_BL210N_blue_ターン終了時に、このカードを持ち主のGにできる。_0",

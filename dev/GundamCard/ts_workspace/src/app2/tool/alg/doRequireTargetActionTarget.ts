@@ -573,10 +573,11 @@ export function doRequireTargetActionTarget(
       assertTargetTypeValueLength(cards);
       const cardStateAfterSignID = cards.value.map(
         (cardID): GlobalCardState => {
-          // 修改它的ID，變成一張卡吃能新增同樣的內文一次
+          // 修正ID，變成一張卡吃能新增同樣的內文一次
+          const cardStateID = `${cardID}_${cardState.id}`;
           return {
             ...cardState,
-            id: `${cardID}_${cardState.id}`,
+            id: cardStateID,
             cardID: cardID,
             cardTextStates: cardState.cardTextStates.map((cts, i) => {
               return {
@@ -610,9 +611,11 @@ export function doRequireTargetActionTarget(
         ...ctx,
         gameState: {
           ...ctx.gameState,
-          globalCardState: ctx.gameState.globalCardState.filter(
-            (v) => v.id != cardTextStateID
-          ),
+          globalCardState: ctx.gameState.globalCardState.filter((v) => {
+            // 修正ID
+            const cardStateID = `${v.cardID}_${cardTextStateID}`;
+            return v.id != cardStateID;
+          }),
         },
       };
     }

@@ -2,6 +2,7 @@ import { getCustomFunctionString } from "../../../../tool/helper";
 import {
   CardPrototype,
   DEFAULT_CARD_PROTOTYPE,
+  DEFAULT_CARD_STATE,
   GameContext,
 } from "../../tool/basic/gameContext";
 import { createRollCostRequire } from "../../tool/basic/blockPayload";
@@ -11,7 +12,11 @@ import {
   TargetTypeCustomFunctionType,
 } from "../../tool/basic/targetType";
 import { getCardTextMacro, getConditionMacro } from "./cardTextMacro";
-import { DEFAULT_CARD_TEXT_SIYOU_KATA } from "../../tool/basic/basic";
+import {
+  DEFAULT_CARD_TEXT_SIYOU_KATA,
+  Phase,
+  TIMING_CHART,
+} from "../../tool/basic/basic";
 
 // 179001_01A_CH_WT007R_white
 // キラ・ヤマト
@@ -41,13 +46,7 @@ const prototype: CardPrototype = {
           id: "RequireTarget",
           targets: {},
           condition: getConditionMacro({
-            id: "變量x的場所包含於y",
-            x: { id: "カード", value: { path: [{ id: "このカード" }] } },
-            y: [
-              { id: "RelatedBaSyou", value: ["自軍", "配備エリア"] },
-              { id: "RelatedBaSyou", value: ["自軍", "戦闘エリア（左）"] },
-              { id: "RelatedBaSyou", value: ["自軍", "戦闘エリア（右）"] },
-            ],
+            id: "這張卡在場時",
           }),
         },
       ],
@@ -57,11 +56,115 @@ const prototype: CardPrototype = {
             id: "FeedbackAction",
             action: [
               {
-                id: "ActionAddEffect",
-                effectID: "",
-                effect: {
-                  id: "GameEffectCustom",
-                  customID: "「速攻」を獲得。",
+                id: "ActionAddGlobalCardText",
+                cards: {
+                  id: "カード",
+                  value: { path: [{ id: "このカード" }] },
+                },
+                cardState: {
+                  id: "ターン終了時まで「速攻」を得る",
+                  cardID: "",
+                  cardTextStates: [
+                    {
+                      id: "",
+                      enabled: true,
+                      cardText: {
+                        id: "自動型",
+                        category: "常駐",
+                        description: "ターン終了時まで[「速攻」を得る]。",
+                        block: {
+                          feedback: [
+                            {
+                              id: "FeedbackAction",
+                              action: [
+                                {
+                                  id: "ActionAddEffect",
+                                  effectID: "",
+                                  effect: {
+                                    id: "GameEffectCustom",
+                                    customID: "",
+                                  },
+                                },
+                              ],
+                            },
+                          ],
+                        },
+                      },
+                    },
+                    {
+                      id: "",
+                      enabled: true,
+                      cardText: {
+                        id: "自動型",
+                        category: "起動",
+                        description: "[ターン終了時まで]「速攻」を得る。",
+                        block: {
+                          require: {
+                            id: "RequireTarget",
+                            targets: {},
+                            condition: {
+                              id: "ConditionAnd",
+                              and: [
+                                getConditionMacro({
+                                  id: "當觸發GameEvent的變量x的id時",
+                                  x: {
+                                    id: "GameEventOnTiming",
+                                    timing: TIMING_CHART[0],
+                                  },
+                                }),
+                                {
+                                  id: "ConditionJsonfp",
+                                  program: {
+                                    pass1: {
+                                      if: [
+                                        {
+                                          "->": [
+                                            "$in.blockPayload",
+                                            { getter: "cause" },
+                                            { getter: "gameEvent" },
+                                            { getter: "timing" },
+                                            { log: "timing" },
+                                            { getter: 1 },
+                                            { getter: 2 },
+                                            {
+                                              "==": {
+                                                "->": [
+                                                  [
+                                                    "戦闘フェイズ",
+                                                    "ターン終了時",
+                                                    "効果終了。ターン終了",
+                                                  ] as Phase,
+                                                  { getter: 2 },
+                                                ],
+                                              },
+                                            },
+                                          ],
+                                        },
+                                        {},
+                                        { error: "必須是回結束" },
+                                      ],
+                                    },
+                                  },
+                                },
+                              ],
+                            },
+                          },
+                          feedback: [
+                            {
+                              id: "FeedbackAction",
+                              action: [
+                                {
+                                  id: "ActionDeleteGlobalCardText",
+                                  cardTextStateID:
+                                    "ターン終了時まで「速攻」を得る",
+                                },
+                              ],
+                            },
+                          ],
+                        },
+                      },
+                    },
+                  ],
                 },
               },
             ],

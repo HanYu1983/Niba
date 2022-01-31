@@ -44,6 +44,7 @@ import { Action, ActionDraw, ActionDrop } from "../tool/tool/basic/action";
 import { testProto_179025_07D_U_RD158C_red } from "./testProto_179025_07D_U_RD158C_red";
 import { testProto_179901_00_U_RD010P_red } from "./testProto_179901_00_U_RD010P_red";
 import { testProto_179029_05C_O_BK014C_black } from "./testProto_179029_05C_O_BK014C_black";
+import { testProto_179001_01A_CH_WT007R_white } from "./testProto_179001_01A_CH_WT007R_white";
 
 export function test() {
   [
@@ -61,6 +62,7 @@ export function test() {
     testProto_179025_07D_U_RD158C_red,
     testProto_179901_00_U_RD010P_red,
     testProto_179029_05C_O_BK014C_black,
+    testProto_179001_01A_CH_WT007R_white,
   ].forEach((testF: Function) => {
     console.log(
       `================================================================`

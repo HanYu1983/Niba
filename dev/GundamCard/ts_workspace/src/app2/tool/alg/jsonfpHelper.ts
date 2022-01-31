@@ -1,6 +1,10 @@
 import { log2 } from "../../../tool/logger";
 import { getCardCharacteristic, getCardTitle } from "./helper";
-import { GameContext, getSetGroupCards } from "../tool/basic/gameContext";
+import {
+  GameContext,
+  getSetGroupCards,
+  getSetGroupUnit,
+} from "../tool/basic/gameContext";
 import { getCardController } from "../tool/basic/handleCard";
 
 export const jsonfp = require("jsonfp");
@@ -40,6 +44,12 @@ export function initJsonfp() {
       throw new Error("cardID not found");
     }
     return getCardTitle(ctx, cardID);
+  });
+  jsonfp.addMethod("getSetGroupUnit", (ctx: GameContext, cardID: string) => {
+    if (cardID == null) {
+      throw new Error("cardID not found");
+    }
+    return getSetGroupUnit(ctx, cardID);
   });
 }
 
