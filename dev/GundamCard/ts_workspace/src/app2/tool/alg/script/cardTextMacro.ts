@@ -28,6 +28,7 @@ import {
   Require,
   BlockPayload,
   FeedbackAction,
+  BlockPayloadCauseDestroy,
 } from "../../tool/basic/blockPayload";
 import { Condition } from "../../tool/basic/condition";
 import { TargetTypeCard } from "../../tool/basic/targetType";
@@ -1157,3 +1158,30 @@ const ActionTriggerOnShowBaByPlay: Action = {
     },
   },
 };
+
+export function createDestroyEffect(
+  cause: BlockPayloadCauseDestroy
+): BlockPayload {
+  // 產生廢棄自己的效果
+  return {
+    cause: cause,
+    feedback: [
+      {
+        id: "FeedbackAction",
+        action: [
+          {
+            id: "ActionMoveCardToPosition",
+            cards: {
+              id: "カード",
+              value: { path: [{ id: "このカード" }] },
+            },
+            baSyou: {
+              id: "場所",
+              value: [{ id: "RelatedBaSyou", value: ["持ち主", "捨て山"] }],
+            },
+          },
+        ],
+      },
+    ],
+  };
+}

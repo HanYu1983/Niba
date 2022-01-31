@@ -65,14 +65,10 @@ export function getCardState(
     }
     return [getPrototype(card.protoID), false];
   })();
-  //const uuidKey = `getCardState_${idSeq++}`;
   const newCardState: CardState = {
     ...DEFAULT_CARD_STATE,
     id: card.id,
     isChip: isChip,
-    damage: 0,
-    destroy: false,
-    //setGroupID: uuidKey,
     cardTextStates: proto.texts.map((text, i): CardTextState => {
       return {
         id: `${card.id}_${i}`,
@@ -82,7 +78,6 @@ export function getCardState(
         },
       };
     }),
-    //prototype: proto,
   };
   return [
     {

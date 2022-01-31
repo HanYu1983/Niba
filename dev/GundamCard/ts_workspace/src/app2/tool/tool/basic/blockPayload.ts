@@ -9,7 +9,7 @@ import type { Condition } from "./condition";
 import type { Action } from "./action";
 import { TargetType, TargetTypeCard } from "./targetType";
 import { log2 } from "../../../../tool/logger";
-import { GameContext } from "./gameContext";
+import { DestroyReason, GameContext } from "./gameContext";
 import { JsonfpExpr } from "../../alg/jsonfpHelper";
 
 export type RequireBase = {
@@ -88,7 +88,9 @@ export type Feedback = FeedbackTargetAction | FeedbackAction;
 
 export type BlockPayloadCauseGameEvent = {
   id: "BlockPayloadCauseGameEvent";
+  // 發生的卡的控制者
   playerID: string;
+  // 發生的卡
   cardID: string;
   cardTextID: string;
   gameEvent: GameEvent;
@@ -97,7 +99,9 @@ export type BlockPayloadCauseGameEvent = {
 
 export type BlockPayloadCauseUpdateCommand = {
   id: "BlockPayloadCauseUpdateCommand";
+  // 發生的卡的控制者(這個效果的控制者)
   playerID: string;
+  // 發生的卡
   cardID: string;
   cardTextID: string;
   description: string;
@@ -105,7 +109,9 @@ export type BlockPayloadCauseUpdateCommand = {
 
 export type BlockPayloadCauseUpdateEffect = {
   id: "BlockPayloadCauseUpdateEffect";
+  // 發生的卡的控制者(這個效果的控制者)
   playerID: string;
+  // 發生的卡
   cardID: string;
   cardTextID: string;
   description: string;
@@ -113,7 +119,18 @@ export type BlockPayloadCauseUpdateEffect = {
 
 export type BlockPayloadCauseGameRule = {
   id: "BlockPayloadCauseGameRule";
+  // 這個效果的控制者
   playerID: string;
+  description: string;
+};
+
+export type BlockPayloadCauseDestroy = {
+  id: "BlockPayloadCauseDestroy";
+  // 誰造成的破壞效果(用來切入的優先權計算)
+  playerID: string;
+  // 發生破壞的卡
+  cardID: string;
+  reason: DestroyReason;
   description: string;
 };
 
@@ -121,7 +138,8 @@ export type BlockPayloadCause =
   | BlockPayloadCauseGameEvent
   | BlockPayloadCauseUpdateCommand
   | BlockPayloadCauseUpdateEffect
-  | BlockPayloadCauseGameRule;
+  | BlockPayloadCauseGameRule
+  | BlockPayloadCauseDestroy;
 
 export type BlockPayload = {
   id?: string;

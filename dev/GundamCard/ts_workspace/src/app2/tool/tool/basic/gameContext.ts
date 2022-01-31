@@ -62,7 +62,7 @@ export type CardState = {
   id: string; // card.id
   isChip: boolean;
   damage: number;
-  destroy: boolean;
+  destroyReason: DestroyReason | null;
   //setGroupID: string;
   flags: string[];
   cardTextStates: CardTextState[];
@@ -73,7 +73,7 @@ export const DEFAULT_CARD_STATE: CardState = {
   id: "",
   isChip: true,
   damage: 0,
-  destroy: false,
+  destroyReason: null,
   //setGroupID: "",
   flags: [],
   cardTextStates: [],
@@ -103,6 +103,14 @@ export type Message = {
   value: string;
 };
 
+export type DestroyReason1 = {
+  id: "通常ダメージ" | "戦闘ダメージ" | "破壊する" | "マイナスの戦闘修正";
+  // 誰造成的
+  playerID: string;
+};
+
+export type DestroyReason = DestroyReason1;
+
 export type GameState = {
   table: Table;
   cardState: CardState[];
@@ -121,6 +129,12 @@ export type GameState = {
   // 記錄上一次的堆疊。每次解決一個堆疊效果，就將那效果移到這裡
   // 在發送切入解決時，清空。
   stackEffectMemory: BlockPayload[];
+  // 專門給破壞效果用的用的堆疊
+  // 傷害判定結束時，將所有破壞產生的廢棄效果丟到這，重設「決定解決順序」的旗標為真
+  // 如果這個堆疊一有值時並「決定解決順序」為真時，就立刻讓主動玩家決定解決順序，決定完後，將旗標設為假
+  // 旗標為假時，才能才能開放給玩家切入
+  // 這個堆疊解決完後，才回復到本來的堆疊的解決程序
+  stackEffectForDestroy: BlockPayload[];
   // setGroup
   setGroupLink: { [key: string]: string };
   //
@@ -163,6 +177,7 @@ export const DEFAULT_GAME_CONTEXT: GameContext = {
     immediateEffect: [],
     stackEffect: [],
     stackEffectMemory: [],
+    stackEffectForDestroy: [],
     setGroupLink: {},
     flowMemory: {
       hasTriggerEvent: false,
@@ -256,6 +271,7 @@ export function getBlockOwner(
     case "BlockPayloadCauseUpdateEffect":
     case "BlockPayloadCauseUpdateCommand":
     case "BlockPayloadCauseGameRule":
+    case "BlockPayloadCauseDestroy":
       return blockPayload.cause.playerID;
   }
 }

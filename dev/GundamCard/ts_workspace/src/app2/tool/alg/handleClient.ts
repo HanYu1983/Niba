@@ -37,6 +37,7 @@ import {
   getClientCommand,
   triggerTextEvent,
   updateCommand,
+  updateDestroyEffect,
 } from "./handleGameContext";
 import { getCardTextMacro, getConditionMacro } from "./script/cardTextMacro";
 
@@ -591,17 +592,30 @@ export function applyFlow(
       };
       return ctx;
     case "FlowNextTiming": {
-      const nextTiming = getNextTiming(ctx.gameState.timing);
-      ctx = {
-        ...ctx,
-        gameState: {
-          ...ctx.gameState,
-          timing: nextTiming,
-          flowMemory: {
-            ...ctx.gameState.flowMemory,
+      // 傷判的規定效果一結束就收集所有破壞的卡並建立破壞而廢棄的效果
+      if (
+        ctx.gameState.timing[1][0] == "戦闘フェイズ" &&
+        ctx.gameState.timing[1][1] == "ダメージ判定ステップ" &&
+        ctx.gameState.timing[1][2] == "規定の効果"
+      ) {
+        // 更新所有破壞而廢棄的效果
+        // 若有產生值，在下一步時主動玩家就要拿到決定解決順序的指令
+        ctx = updateDestroyEffect(ctx);
+      }
+      // 下一步
+      {
+        const nextTiming = getNextTiming(ctx.gameState.timing);
+        ctx = {
+          ...ctx,
+          gameState: {
+            ...ctx.gameState,
+            timing: nextTiming,
+            flowMemory: {
+              ...ctx.gameState.flowMemory,
+            },
           },
-        },
-      };
+        };
+      }
       // 重設觸發flag
       ctx = {
         ...ctx,

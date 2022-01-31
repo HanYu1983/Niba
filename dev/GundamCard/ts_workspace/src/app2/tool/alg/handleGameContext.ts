@@ -19,6 +19,7 @@ import {
 } from "../tool/basic/blockPayload";
 import {
   CardTextState,
+  DestroyReason,
   GameContext,
   getBlockOwner,
   reduceEffect,
@@ -36,6 +37,7 @@ import {
 } from "./helper";
 import { doConditionTarget } from "./doConditionTarget";
 import { err2string } from "../../../tool/helper";
+import { getPrototype } from "./script";
 //import { createPlayUnitText } from "./createPlayUnitText";
 export function wrapTip(
   ctx: GameContext,
@@ -523,6 +525,34 @@ export function initState(ctx: GameContext): GameContext {
       },
     },
   };
+}
+
+export function updateDestroyEffect(ctx: GameContext): GameContext {
+  // TODO: 將所有破壞效果加入破壞用堆疊
+  // 加入破壞用堆疊後，主動玩家就必須決定解決順序
+  // 決定後，依順序將所有效果移到正在解決中的堆疊，並重設切入的旗標，讓玩家可以在堆疊解決中可以再次切入
+  const reasons = ctx.gameState.cardState
+    .map((cs): DestroyReason | null => {
+      const card = getCard(ctx.gameState.table, cs.id);
+      if (card == null) {
+        throw new Error("card not found");
+      }
+      if (cs.destroyReason == null) {
+        return null;
+      }
+      const prototype = getPrototype(card.protoID);
+      const hp = prototype.battlePoint[2];
+      if (hp <= 0) {
+        return {
+          id: "マイナスの戦闘修正",
+          playerID: cs.destroyReason.playerID,
+        };
+      }
+      return cs.destroyReason;
+    })
+    .filter((v) => v);
+
+  return ctx;
 }
 
 export function getTip(

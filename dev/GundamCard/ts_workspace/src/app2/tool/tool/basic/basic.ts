@@ -1,4 +1,5 @@
 import { BlockPayload } from "./blockPayload";
+import { DestroyReason } from "./gameContext";
 
 export type PlayerID = string;
 export const PlayerA = "PlayerA";
@@ -262,6 +263,12 @@ type GameEventOnShowBa = {
   cardID: string;
 };
 
+type GameEvent1 = {
+  id: "破壊された場合";
+  cardID: string;
+  destroyReason: DestroyReason;
+};
+
 type GameEventOnPlayText = {
   id: "プレイした場合";
   cardID: string;
@@ -290,7 +297,8 @@ export type GameEvent =
   | GameEventOnStackEffectFinished
   | GameEventOnShowBa
   | GameEventOnPlayText
-  | GameEventOnDestroyByKaiSo;
+  | GameEventOnDestroyByKaiSo
+  | GameEvent1;
 
 export type TokuSyuKouKa =
   | ["高機動"]

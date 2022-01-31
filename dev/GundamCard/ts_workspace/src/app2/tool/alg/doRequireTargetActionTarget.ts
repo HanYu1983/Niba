@@ -20,6 +20,7 @@ import {
   CardState,
   CardTextState,
   DEFAULT_CARD_STATE,
+  DestroyReason,
   GameContext,
   getBlockOwner,
   getSetGroupCards,
@@ -41,10 +42,12 @@ import {
   initState,
   triggerTextEvent,
   updateCommand,
+  updateDestroyEffect,
   updateEffect,
 } from "./handleGameContext";
 import { wrapBlockRequireKey } from "./handleBlockPayload";
 import { jsonfp } from "./jsonfpHelper";
+import { createDestroyEffect } from "./script/cardTextMacro";
 
 let idSeq = 0;
 export function doRequireTargetActionTarget(
@@ -411,40 +414,48 @@ export function doRequireTargetActionTarget(
       if (cards?.id != "カード") {
         throw new Error("must カード");
       }
-      // TODO: trigger 破壞效果
-
-      doRequireTargetActionTarget(
-        ctx,
-        blockPayload,
-        targets,
-        {
-          id: "ActionAddBlock",
-          type: "立即",
-          block: {
-            feedback: [
-              {
-                id: "FeedbackAction",
-                action: [
-                  {
-                    id: "ActionMoveCardToPosition",
-                    cards: {
-                      id: "カード",
-                      value: cards.value,
-                    },
-                    baSyou: {
-                      id: "場所",
-                      value: [
-                        { id: "RelatedBaSyou", value: ["持ち主", "捨て山"] },
-                      ],
-                    },
-                  },
-                ],
-              },
-            ],
+      if (!Array.isArray(cards.value)) {
+        throw new Error("執行Action時的所有target必須是陣列");
+      }
+      assertTargetTypeValueLength(cards);
+      if (blockPayload.cause?.playerID == null) {
+        throw new Error("效果的控制者必須存在");
+      }
+      const destroyReason: DestroyReason = {
+        id: "破壊する",
+        playerID: blockPayload.cause.playerID,
+      };
+      // p.71(複數部隊的處理小節)
+      {
+        // 設定破壞狀態
+        const values = cards.value;
+        const cardState = ctx.gameState.cardState.map((cs): CardState => {
+          if (values.includes(cs.id) == false) {
+            return cs;
+          }
+          return {
+            ...cs,
+            destroyReason: destroyReason,
+          };
+        });
+        ctx = {
+          ...ctx,
+          gameState: {
+            ...ctx.gameState,
+            cardState: cardState,
           },
-        },
-        varCtxID
-      );
+        };
+        ctx = updateDestroyEffect(ctx);
+      }
+      {
+        ctx = cards.value.reduce((ctx, cardID) => {
+          return triggerTextEvent(ctx, {
+            id: "破壊された場合",
+            cardID: cardID,
+            destroyReason: destroyReason,
+          });
+        }, ctx);
+      }
       return ctx;
     }
     case "ActionMoveCardToPosition":
@@ -523,6 +534,7 @@ export function doRequireTargetActionTarget(
             cardID: cardID,
           });
         }
+        // TODO 從場移到場外時，破壞效果和累計的傷害都變成無效
         return ctx;
       }, ctx);
       return ctx;
