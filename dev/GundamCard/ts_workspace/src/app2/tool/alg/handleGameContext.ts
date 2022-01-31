@@ -145,7 +145,6 @@ export function triggerTextEvent(
   evt: GameEvent
 ): GameContext {
   log2("triggerTextEvent", evt);
-  // 只有事件類要和global一起算
   // 轉換: globalCardState的cardID等於cardState的id
   const converGlobalCardState = ctx.gameState.globalCardState.map((gs) => {
     return {
@@ -241,74 +240,84 @@ export function updateCommand(ctx: GameContext): GameContext {
       commandEffect: [],
     },
   };
-  return ctx.gameState.cardState.reduce((ctx, cardState) => {
-    return cardState.cardTextStates.reduce((ctx, cardTextState) => {
-      const cardTexts = (() => {
-        switch (cardTextState.cardText.id) {
-          case "自動型":
-            return [];
-          case "使用型":
-            return [cardTextState.cardText];
-          case "特殊型":
-          case "恒常":
-            return cardTextState.cardText.texts
-              .filter((t) => t.id == "使用型")
-              .map((t) => t);
-        }
-      })();
-      return cardTexts.reduce((ctx, cardText) => {
-        const cardController = getCardController(ctx, cardState.id);
-        let wrapEvent: BlockPayload = {
-          ...cardText.block,
-          id: `updateCommand_${ctx.gameState.commandEffect.length}`,
-          // 準備背景資料用來判斷
-          cause: {
-            id: "BlockPayloadCauseUpdateCommand",
-            playerID: cardController,
-            cardID: cardState.id,
-            cardTextID: cardTextState.id,
-            description: cardText.description,
-          },
-          // 若有需求，則將每個需求加上ID才能讓玩家選擇
-          ...(cardText.block.require
-            ? { require: wrapRequireKey(cardText.block.require) }
-            : null),
-          // 加上卡ID，讓varCtxID變成每張卡唯一。而不是遊戲唯一。
-          contextID: `[${cardState.id}]_[${cardText.block.contextID}]`,
-        };
-        const varCtxID = "updateCommand";
-        wrapEvent = wrapTip(ctx, true, wrapEvent, varCtxID);
-        // 判斷需求是否能滿足
-        let canPass = true;
-        if (wrapEvent.require) {
-          try {
-            assertBlockPayloadTargetTypeValueLength(wrapEvent);
-            doRequire(ctx, wrapEvent, wrapEvent.require, varCtxID);
-          } catch (e) {
-            log2(
-              "updateCommand",
-              "檢測可行性失敗，不加入指令列表",
-              wrapEvent,
-              e
-            );
-            canPass = false;
+  // 轉換: globalCardState的cardID等於cardState的id
+  const converGlobalCardState = ctx.gameState.globalCardState.map((gs) => {
+    return {
+      id: gs.cardID,
+      cardTextStates: gs.cardTextStates,
+    };
+  });
+  return [...ctx.gameState.cardState, ...converGlobalCardState].reduce(
+    (ctx, cardState) => {
+      return cardState.cardTextStates.reduce((ctx, cardTextState) => {
+        const cardTexts = (() => {
+          switch (cardTextState.cardText.id) {
+            case "自動型":
+              return [];
+            case "使用型":
+              return [cardTextState.cardText];
+            case "特殊型":
+            case "恒常":
+              return cardTextState.cardText.texts
+                .filter((t) => t.id == "使用型")
+                .map((t) => t);
           }
-        }
-        if (canPass == false) {
+        })();
+        return cardTexts.reduce((ctx, cardText) => {
+          const cardController = getCardController(ctx, cardState.id);
+          let wrapEvent: BlockPayload = {
+            ...cardText.block,
+            id: `updateCommand_${ctx.gameState.commandEffect.length}`,
+            // 準備背景資料用來判斷
+            cause: {
+              id: "BlockPayloadCauseUpdateCommand",
+              playerID: cardController,
+              cardID: cardState.id,
+              cardTextID: cardTextState.id,
+              description: cardText.description,
+            },
+            // 若有需求，則將每個需求加上ID才能讓玩家選擇
+            ...(cardText.block.require
+              ? { require: wrapRequireKey(cardText.block.require) }
+              : null),
+            // 加上卡ID，讓varCtxID變成每張卡唯一。而不是遊戲唯一。
+            contextID: `[${cardState.id}]_[${cardText.block.contextID}]`,
+          };
+          const varCtxID = "updateCommand";
+          wrapEvent = wrapTip(ctx, true, wrapEvent, varCtxID);
+          // 判斷需求是否能滿足
+          let canPass = true;
+          if (wrapEvent.require) {
+            try {
+              assertBlockPayloadTargetTypeValueLength(wrapEvent);
+              doRequire(ctx, wrapEvent, wrapEvent.require, varCtxID);
+            } catch (e) {
+              log2(
+                "updateCommand",
+                "檢測可行性失敗，不加入指令列表",
+                wrapEvent,
+                e
+              );
+              canPass = false;
+            }
+          }
+          if (canPass == false) {
+            return ctx;
+          }
+          // 直接加入指令列表
+          ctx = {
+            ...ctx,
+            gameState: {
+              ...ctx.gameState,
+              commandEffect: [wrapEvent, ...ctx.gameState.commandEffect],
+            },
+          };
           return ctx;
-        }
-        // 直接加入指令列表
-        ctx = {
-          ...ctx,
-          gameState: {
-            ...ctx.gameState,
-            commandEffect: [wrapEvent, ...ctx.gameState.commandEffect],
-          },
-        };
-        return ctx;
+        }, ctx);
       }, ctx);
-    }, ctx);
-  }, ctx);
+    },
+    ctx
+  );
 }
 
 // 恒常, 常駐型技能
@@ -321,104 +330,114 @@ export function updateEffect(ctx: GameContext): GameContext {
       effects: [],
     },
   };
-  return ctx.gameState.cardState.reduce((ctx, cardState) => {
-    return cardState.cardTextStates.reduce((ctx, cardTextState) => {
-      const cardTexts = (() => {
-        switch (cardTextState.cardText.id) {
-          case "自動型":
-            switch (cardTextState.cardText.category) {
-              case "常駐": {
-                const {
-                  value: [_, baSyouKeyword],
-                } = getCardBaSyou(ctx, cardState.id);
-                // 常駐技能只有在場中才能計算
-                if (isBa(baSyouKeyword) == false) {
-                  return [];
-                }
-                return [cardTextState.cardText];
-              }
-              default:
-                return [];
-            }
-          case "使用型":
-            return [];
-          case "特殊型":
-            return cardTextState.cardText.texts.flatMap((t) => {
-              switch (t.id) {
-                case "自動型":
-                  switch (t.category) {
-                    case "常駐": {
-                      const {
-                        value: [_, baSyouKeyword],
-                      } = getCardBaSyou(ctx, cardState.id);
-                      // 常駐技能只有在場中才能計算
-                      if (isBa(baSyouKeyword) == false) {
-                        return [];
-                      }
-                      return [t];
-                    }
-                    case "恒常":
-                      return [t];
-                    default:
-                      return [];
+  // 轉換: globalCardState的cardID等於cardState的id
+  const converGlobalCardState = ctx.gameState.globalCardState.map((gs) => {
+    return {
+      id: gs.cardID,
+      cardTextStates: gs.cardTextStates,
+    };
+  });
+  return [...ctx.gameState.cardState, ...converGlobalCardState].reduce(
+    (ctx, cardState) => {
+      return cardState.cardTextStates.reduce((ctx, cardTextState) => {
+        const cardTexts = (() => {
+          switch (cardTextState.cardText.id) {
+            case "自動型":
+              switch (cardTextState.cardText.category) {
+                case "常駐": {
+                  const {
+                    value: [_, baSyouKeyword],
+                  } = getCardBaSyou(ctx, cardState.id);
+                  // 常駐技能只有在場中才能計算
+                  if (isBa(baSyouKeyword) == false) {
+                    return [];
                   }
-                case "使用型":
+                  return [cardTextState.cardText];
+                }
+                default:
                   return [];
               }
-            });
-          case "恒常":
-            // 恒常裡的常駐也是恒常
-            return cardTextState.cardText.texts
-              .filter(
-                (t) =>
-                  t.id == "自動型" &&
-                  (t.category == "恒常" || t.category == "常駐")
-              )
-              .map((t) => t);
-        }
-      })();
-      return cardTexts.reduce((ctx, cardText) => {
-        const cardController = getCardController(ctx, cardState.id);
-        const wrapEvent: BlockPayload = {
-          ...cardText.block,
-          cause: {
-            id: "BlockPayloadCauseUpdateEffect",
-            playerID: cardController,
-            cardID: cardState.id,
-            cardTextID: cardTextState.id,
-            description: cardText.description,
-          },
-          // 加上卡ID，讓varCtxID變成每張卡唯一。而不是遊戲唯一。
-          contextID: `[${cardState.id}]_[${cardText.block.contextID}]`,
-        };
-        const varCtxID = "updateEffect";
-        try {
-          if (wrapEvent.require != null) {
-            // 清空變量，因為是臨時性的訪問，所以可以這麼做
-            ctx = {
-              ...ctx,
-              varsPool: {
-                ...ctx.varsPool,
-                [varCtxID]: {
-                  targets: {},
-                  jsonfpContext: {},
+            case "使用型":
+              return [];
+            case "特殊型":
+              return cardTextState.cardText.texts.flatMap((t) => {
+                switch (t.id) {
+                  case "自動型":
+                    switch (t.category) {
+                      case "常駐": {
+                        const {
+                          value: [_, baSyouKeyword],
+                        } = getCardBaSyou(ctx, cardState.id);
+                        // 常駐技能只有在場中才能計算
+                        if (isBa(baSyouKeyword) == false) {
+                          return [];
+                        }
+                        return [t];
+                      }
+                      case "恒常":
+                        return [t];
+                      default:
+                        return [];
+                    }
+                  case "使用型":
+                    return [];
+                }
+              });
+            case "恒常":
+              // 恒常裡的常駐也是恒常
+              return cardTextState.cardText.texts
+                .filter(
+                  (t) =>
+                    t.id == "自動型" &&
+                    (t.category == "恒常" || t.category == "常駐")
+                )
+                .map((t) => t);
+          }
+        })();
+        return cardTexts.reduce((ctx, cardText) => {
+          const cardController = getCardController(ctx, cardState.id);
+          const wrapEvent: BlockPayload = {
+            ...cardText.block,
+            cause: {
+              id: "BlockPayloadCauseUpdateEffect",
+              playerID: cardController,
+              cardID: cardState.id,
+              cardTextID: cardTextState.id,
+              description: cardText.description,
+            },
+            // 加上卡ID，讓varCtxID變成每張卡唯一。而不是遊戲唯一。
+            contextID: `[${cardState.id}]_[${cardText.block.contextID}]`,
+          };
+          const varCtxID = "updateEffect";
+          try {
+            if (wrapEvent.require != null) {
+              // 清空變量，因為是臨時性的訪問，所以可以這麼做
+              ctx = {
+                ...ctx,
+                varsPool: {
+                  ...ctx.varsPool,
+                  [varCtxID]: {
+                    targets: {},
+                    jsonfpContext: {},
+                  },
                 },
-              },
-            };
-            ctx = doRequire(ctx, wrapEvent, wrapEvent.require, varCtxID);
+              };
+              ctx = doRequire(ctx, wrapEvent, wrapEvent.require, varCtxID);
+            }
+            if (wrapEvent.feedback) {
+              ctx = wrapEvent.feedback.reduce((ctx, feedback) => {
+                return doFeedback(ctx, wrapEvent, feedback, varCtxID);
+              }, ctx);
+            }
+          } catch (e) {
+            console.log(e);
           }
-          if (wrapEvent.feedback) {
-            ctx = wrapEvent.feedback.reduce((ctx, feedback) => {
-              return doFeedback(ctx, wrapEvent, feedback, varCtxID);
-            }, ctx);
-          }
-        } catch (e) {
-          console.log(e);
-        }
-        return ctx;
+          return ctx;
+        }, ctx);
       }, ctx);
-    }, ctx);
-  }, ctx);
+    },
+    ctx
+  );
 }
 
 export function initState(ctx: GameContext): GameContext {

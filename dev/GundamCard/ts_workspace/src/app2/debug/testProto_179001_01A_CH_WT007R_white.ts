@@ -72,13 +72,7 @@ export function testProto_179001_01A_CH_WT007R_white() {
         },
       },
       activePlayerID: PlayerA,
-      // @ts-ignore
-      timing: TIMING_CHART.find(
-        (t) =>
-          t[1][0] == "戦闘フェイズ" &&
-          t[1][1] == "ダメージ判定ステップ" &&
-          t[1][2] == "フリータイミング"
-      ),
+      timing: [0, ["戦闘フェイズ", "ダメージ判定ステップ", "フリータイミング"]],
     },
   };
   ctx = initState(ctx);
@@ -119,13 +113,25 @@ export function testProto_179001_01A_CH_WT007R_white() {
   block = ctx.gameState.stackEffect[0];
   ctx = doBlockPayload(ctx, block);
   if (ctx.gameState.globalCardState.length == 0) {
+    throw new Error("必須有全域內文");
+  }
+  console.log("更新全域效果");
+  ctx = updateEffect(ctx);
+  console.log(ctx);
+  if (ctx.gameState.effects.length == 0) {
     throw new Error("必須有全域效果");
   }
+  console.log("觸發回合結束");
   ctx = triggerTextEvent(ctx, {
     id: "GameEventOnTiming",
     timing: [34, ["戦闘フェイズ", "ターン終了時", "効果終了。ターン終了"]],
   });
   if (ctx.gameState.globalCardState.length != 0) {
+    throw new Error("全域內文必須被刪除");
+  }
+  console.log("更新全域效果");
+  ctx = updateEffect(ctx);
+  if (ctx.gameState.effects.length != 0) {
     throw new Error("全域效果必須被刪除");
   }
 }
