@@ -17,6 +17,7 @@ import {
   Phase,
   TIMING_CHART,
 } from "../../tool/basic/basic";
+import { createTokuSyuKouKaText } from "./createTokuSyuKouKaText";
 
 // 179001_01A_CH_WT007R_white
 // キラ・ヤマト
@@ -68,28 +69,7 @@ const prototype: CardPrototype = {
                     {
                       id: "",
                       enabled: true,
-                      cardText: {
-                        id: "自動型",
-                        category: "常駐",
-                        description: "ターン終了時まで[「速攻」を得る]。",
-                        block: {
-                          feedback: [
-                            {
-                              id: "FeedbackAction",
-                              action: [
-                                {
-                                  id: "ActionAddEffect",
-                                  effectID: "",
-                                  effect: {
-                                    id: "GameEffectCustom",
-                                    customID: "",
-                                  },
-                                },
-                              ],
-                            },
-                          ],
-                        },
-                      },
+                      cardText: createTokuSyuKouKaText(["速攻"], {}),
                     },
                     {
                       id: "",
