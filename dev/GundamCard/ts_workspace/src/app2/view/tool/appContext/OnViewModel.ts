@@ -255,7 +255,7 @@ export const OnViewModel = OnEvent.pipe(
               versionID: viewModel.model.versionID,
             };
           }
-          if (true) {
+          if (false) {
             let table = ctx.gameState.table;
             table = createCard(
               table,
@@ -335,7 +335,64 @@ export const OnViewModel = OnEvent.pipe(
                 timing: TIMING_CHART.find((t) => t[1][0] == "配備フェイズ"),
                 activePlayerID: PlayerA,
               },
-              versionID: viewModel.model.versionID,
+            };
+          }
+          if (true) {
+            ctx = {
+              ...ctx,
+              gameState: {
+                ...ctx.gameState,
+                table: {
+                  ...ctx.gameState.table,
+                  cardStack: {
+                    ...ctx.gameState.table.cardStack,
+                    [getBaShouID({
+                      id: "AbsoluteBaSyou",
+                      value: [PlayerA, "配備エリア"],
+                    })]: [
+                      {
+                        id: "a1",
+                        protoID: "179004_01A_CH_WT010C_white",
+                        faceDown: true,
+                        ownerID: PlayerA,
+                        tap: false,
+                      },
+                      {
+                        id: "a2",
+                        protoID: "179030_11E_G_RD021N_red",
+                        faceDown: true,
+                        ownerID: PlayerA,
+                        tap: false,
+                      },
+                    ],
+                    [getBaShouID({
+                      id: "AbsoluteBaSyou",
+                      value: [PlayerA, "Gゾーン"],
+                    })]: [
+                      {
+                        id: "g1",
+                        protoID: "179030_11E_G_RD021N_red",
+                        faceDown: true,
+                        ownerID: PlayerA,
+                        tap: false,
+                      },
+                      {
+                        id: "g2",
+                        protoID: "179030_11E_G_RD021N_red",
+                        faceDown: true,
+                        ownerID: PlayerA,
+                        tap: false,
+                      },
+                    ],
+                  },
+                },
+                setGroupLink: { a1: "a2" },
+                activePlayerID: PlayerA,
+                timing: [
+                  24,
+                  ["戦闘フェイズ", "ダメージ判定ステップ", "規定の効果"],
+                ],
+              },
             };
           }
           ctx = {

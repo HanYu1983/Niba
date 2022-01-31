@@ -527,6 +527,7 @@ export function initState(ctx: GameContext): GameContext {
   };
 }
 
+let _seqID = 0;
 export function updateDestroyEffect(ctx: GameContext): GameContext {
   // TODO: 將所有破壞效果加入破壞用堆疊
   // 加入破壞用堆疊後，主動玩家就必須決定解決順序
@@ -549,6 +550,7 @@ export function updateDestroyEffect(ctx: GameContext): GameContext {
       const prototype = getPrototype(card.protoID);
       const hp = prototype.battlePoint[2];
       return {
+        id: `updateDestroyEffect_${_seqID++}`,
         cause: {
           id: "BlockPayloadCauseDestroy",
           reason:
@@ -560,7 +562,7 @@ export function updateDestroyEffect(ctx: GameContext): GameContext {
               : cs.destroyReason,
           playerID: cs.destroyReason.playerID,
           cardID: cs.id,
-          description: "破壞效果",
+          description: "破壞產生的自身的廢棄效果",
         },
         feedback: [
           {

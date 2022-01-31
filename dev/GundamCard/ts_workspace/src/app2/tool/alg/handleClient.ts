@@ -681,6 +681,12 @@ export function applyFlow(
       return ctx;
     }
     case "FlowHandleDamageStepRule": {
+      ctx = ctx.gameState.cardState.reduce((ctx, cs) => {
+        return triggerTextEvent(ctx, {
+          id: "戦闘ダメージを受けた場合",
+          cardID: cs.id,
+        });
+      }, ctx);
       // set hasTriggerEvent
       ctx = {
         ...ctx,
@@ -1332,17 +1338,7 @@ export function queryFlow(ctx: GameContext, playerID: string): Flow[] {
                     },
                   ];
                 }
-                case "帰還ステップ":
-                  // 如果已經觸發規定の効果
-                  if (ctx.gameState.flowMemory.hasTriggerEvent) {
-                    return [{ id: "FlowNextTiming" }];
-                  }
-                  return [
-                    {
-                      id: "FlowHandleReturnStepRule",
-                      description: "執行「帰還ステップ」",
-                    },
-                  ];
+
                 case "ダメージ判定ステップ":
                   // 如果已經觸發規定の効果
                   if (ctx.gameState.flowMemory.hasTriggerEvent) {
@@ -1352,6 +1348,17 @@ export function queryFlow(ctx: GameContext, playerID: string): Flow[] {
                     {
                       id: "FlowHandleDamageStepRule",
                       description: "執行「ダメージ判定ステップ」",
+                    },
+                  ];
+                case "帰還ステップ":
+                  // 如果已經觸發規定の効果
+                  if (ctx.gameState.flowMemory.hasTriggerEvent) {
+                    return [{ id: "FlowNextTiming" }];
+                  }
+                  return [
+                    {
+                      id: "FlowHandleReturnStepRule",
+                      description: "執行「帰還ステップ」",
                     },
                   ];
                 default:

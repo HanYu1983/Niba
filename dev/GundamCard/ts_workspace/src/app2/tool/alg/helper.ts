@@ -165,6 +165,7 @@ export function getTargetType(
       case "BlockPayloadCauseGameEvent":
       case "BlockPayloadCauseUpdateCommand":
       case "BlockPayloadCauseUpdateEffect":
+      case "BlockPayloadCauseDestroy":
         if (block.cause.cardID == null) {
           throw new Error("[getTarget] このカード not found");
         }
