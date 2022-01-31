@@ -12,6 +12,7 @@ import {
   CardPrototype,
   GameContext,
   getBlockOwner,
+  getSetGroupRoot,
 } from "../tool/basic/gameContext";
 import {
   BlockPayload,
@@ -227,6 +228,19 @@ export function getTargetType(
                 value: targetType.value.slice(0, x),
               };
             }
+            case "のセットグループのユニット": {
+              return {
+                id: "カード",
+                value: targetType.value.map((cardID) => {
+                  const rootCardID = getSetGroupRoot(ctx, cardID);
+                  if (rootCardID == null) {
+                    throw new Error("rootCardID not found");
+                  }
+                  return rootCardID;
+                }),
+              };
+            }
+            case "プレイされて場に出た場合のカード":
             default:
               throw new Error(`unknown path[1]: ${path[1]}`);
           }

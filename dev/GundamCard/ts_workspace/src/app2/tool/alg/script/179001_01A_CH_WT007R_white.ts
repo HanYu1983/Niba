@@ -60,7 +60,12 @@ const prototype: CardPrototype = {
                 id: "ActionAddGlobalCardText",
                 cards: {
                   id: "カード",
-                  value: { path: [{ id: "このカード" }] },
+                  value: {
+                    path: [
+                      { id: "カード", value: { path: [{ id: "このカード" }] } },
+                      "のセットグループのユニット",
+                    ],
+                  },
                 },
                 cardState: {
                   id: "ターン終了時まで「速攻」を得る",

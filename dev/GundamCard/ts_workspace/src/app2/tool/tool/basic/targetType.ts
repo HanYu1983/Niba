@@ -63,6 +63,7 @@ export type TargetTypeCard = {
           | [TargetTypeGameEventOnAfterEffect, "的「カード」"]
           | [TargetTypeBaSyou, "的「カード」"]
           | [TargetTypeCard, "の上のカードX枚", number]
+          | [TargetTypeCard, "のセットグループのユニット"]
           | [
               TargetTypeGameEventOnManualEvent,
               "プレイされて場に出た場合のカード"

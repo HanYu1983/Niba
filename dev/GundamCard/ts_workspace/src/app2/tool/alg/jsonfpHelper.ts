@@ -3,7 +3,7 @@ import { getCardCharacteristic, getCardTitle } from "./helper";
 import {
   GameContext,
   getSetGroupCards,
-  getSetGroupUnit,
+  getSetGroupRoot,
 } from "../tool/basic/gameContext";
 import { getCardController } from "../tool/basic/handleCard";
 
@@ -45,11 +45,11 @@ export function initJsonfp() {
     }
     return getCardTitle(ctx, cardID);
   });
-  jsonfp.addMethod("getSetGroupUnit", (ctx: GameContext, cardID: string) => {
+  jsonfp.addMethod("getSetGroupRoot", (ctx: GameContext, cardID: string) => {
     if (cardID == null) {
       throw new Error("cardID not found");
     }
-    return getSetGroupUnit(ctx, cardID);
+    return getSetGroupRoot(ctx, cardID);
   });
 }
 

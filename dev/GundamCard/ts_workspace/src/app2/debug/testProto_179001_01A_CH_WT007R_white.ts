@@ -43,8 +43,15 @@ export function testProto_179001_01A_CH_WT007R_white() {
             value: [PlayerA, "配備エリア"],
           })]: [
             {
-              id: "a",
+              id: "a1",
               protoID: "179001_01A_CH_WT007R_white",
+              faceDown: true,
+              ownerID: PlayerA,
+              tap: false,
+            },
+            {
+              id: "a2",
+              protoID: "179030_11E_G_RD021N_red",
               faceDown: true,
               ownerID: PlayerA,
               tap: false,
@@ -73,6 +80,7 @@ export function testProto_179001_01A_CH_WT007R_white() {
       },
       activePlayerID: PlayerA,
       timing: [0, ["戦闘フェイズ", "ダメージ判定ステップ", "フリータイミング"]],
+      setGroupLink: { a1: "a2" },
     },
   };
   ctx = initState(ctx);
@@ -98,7 +106,7 @@ export function testProto_179001_01A_CH_WT007R_white() {
       cause: {
         id: "BlockPayloadCauseUpdateCommand",
         playerID: PlayerA,
-        cardID: "a",
+        cardID: "a1",
         cardTextID: "",
         description: "",
       },
