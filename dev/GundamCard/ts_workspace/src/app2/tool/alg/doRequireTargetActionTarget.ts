@@ -412,6 +412,39 @@ export function doRequireTargetActionTarget(
         throw new Error("must カード");
       }
       // TODO: trigger 破壞效果
+
+      doRequireTargetActionTarget(
+        ctx,
+        blockPayload,
+        targets,
+        {
+          id: "ActionAddBlock",
+          type: "立即",
+          block: {
+            feedback: [
+              {
+                id: "FeedbackAction",
+                action: [
+                  {
+                    id: "ActionMoveCardToPosition",
+                    cards: {
+                      id: "カード",
+                      value: cards.value,
+                    },
+                    baSyou: {
+                      id: "場所",
+                      value: [
+                        { id: "RelatedBaSyou", value: ["持ち主", "捨て山"] },
+                      ],
+                    },
+                  },
+                ],
+              },
+            ],
+          },
+        },
+        varCtxID
+      );
       return ctx;
     }
     case "ActionMoveCardToPosition":
