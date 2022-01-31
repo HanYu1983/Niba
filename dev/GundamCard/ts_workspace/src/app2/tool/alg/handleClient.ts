@@ -409,6 +409,11 @@ type FlowPassPayCost = {
   effectID: string;
   description?: string;
 };
+type FlowMakeDestroyOrder = {
+  id: "FlowMakeDestroyOrder";
+  destroyEffect: BlockPayload[];
+  description?: string;
+};
 
 export type Flow =
   | FlowAddBlock
@@ -428,7 +433,8 @@ export type Flow =
   | FlowHandleDamageStepRule
   | FlowHandleReturnStepRule
   | FlowHandleStackEffectFinished
-  | FlowPassPayCost;
+  | FlowPassPayCost
+  | FlowMakeDestroyOrder;
 
 let idSeq = 0;
 export function applyFlow(
@@ -741,6 +747,25 @@ export function applyFlow(
       };
       return ctx;
     }
+    case "FlowMakeDestroyOrder": {
+      if (flow.destroyEffect.length != ctx.gameState.destroyEffect.length) {
+        throw new Error("長度不符合");
+      }
+      return {
+        ...ctx,
+        gameState: {
+          ...ctx.gameState,
+          // 移除破壞效果，全部移到堆疊
+          destroyEffect: [],
+          stackEffect: [...flow.destroyEffect, ...ctx.gameState.stackEffect],
+          // 重設切入旗標，讓玩家再次切入
+          flowMemory: {
+            ...ctx.gameState.flowMemory,
+            hasPlayerPassCut: {},
+          },
+        },
+      };
+    }
   }
   return ctx;
 }
@@ -920,6 +945,25 @@ export function queryFlow(ctx: GameContext, playerID: string): Flow[] {
       {
         id: "FlowHandleStackEffectFinished",
         description: "處理堆疊結束",
+      },
+    ];
+  }
+  // 破壞效果，如果效果多於1個，則讓主動玩家選擇順序
+  if (ctx.gameState.destroyEffect.length) {
+    const isActivePlayer = ctx.gameState.activePlayerID == playerID;
+    if (isActivePlayer == false) {
+      return [
+        {
+          id: "FlowWaitPlayer",
+          description: "等待主動玩家決定破壞廢棄效果的順序",
+        },
+      ];
+    }
+    return [
+      {
+        id: "FlowMakeDestroyOrder",
+        destroyEffect: ctx.gameState.destroyEffect,
+        description: "決定破壞廢棄效果的順序",
       },
     ];
   }
