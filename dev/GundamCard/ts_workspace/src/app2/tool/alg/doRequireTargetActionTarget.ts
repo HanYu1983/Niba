@@ -449,6 +449,7 @@ export function doRequireTargetActionTarget(
       }
       {
         ctx = cards.value.reduce((ctx, cardID) => {
+          // 若當中有破壞無效等的效果把destroyReason改變的話，那個效果後要呼叫updateDestroyEffect
           return triggerTextEvent(ctx, {
             id: "破壊された場合",
             cardID: cardID,

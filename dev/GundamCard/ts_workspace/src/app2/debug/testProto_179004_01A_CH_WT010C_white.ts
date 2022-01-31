@@ -89,6 +89,7 @@ export function testProto_179004_01A_CH_WT010C_white() {
   }
   const block = ctx.gameState.immediateEffect[0];
   ctx = doBlockPayload(ctx, block);
-
-  console.log(ctx);
+  if (ctx.gameState.destroyEffect.length == 0) {
+    throw new Error("必須有一個破壞效果");
+  }
 }

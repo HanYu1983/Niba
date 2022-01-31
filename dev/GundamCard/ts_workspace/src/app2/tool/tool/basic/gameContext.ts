@@ -134,7 +134,7 @@ export type GameState = {
   // 如果這個堆疊一有值時並「決定解決順序」為真時，就立刻讓主動玩家決定解決順序，決定完後，將旗標設為假
   // 旗標為假時，才能才能開放給玩家切入
   // 這個堆疊解決完後，才回復到本來的堆疊的解決程序
-  stackEffectForDestroy: BlockPayload[];
+  destroyEffect: BlockPayload[];
   // setGroup
   setGroupLink: { [key: string]: string };
   //
@@ -177,7 +177,7 @@ export const DEFAULT_GAME_CONTEXT: GameContext = {
     immediateEffect: [],
     stackEffect: [],
     stackEffectMemory: [],
-    stackEffectForDestroy: [],
+    destroyEffect: [],
     setGroupLink: {},
     flowMemory: {
       hasTriggerEvent: false,

@@ -531,27 +531,69 @@ export function updateDestroyEffect(ctx: GameContext): GameContext {
   // TODO: 將所有破壞效果加入破壞用堆疊
   // 加入破壞用堆疊後，主動玩家就必須決定解決順序
   // 決定後，依順序將所有效果移到正在解決中的堆疊，並重設切入的旗標，讓玩家可以在堆疊解決中可以再次切入
-  const reasons = ctx.gameState.cardState
-    .map((cs): DestroyReason | null => {
+  const effects = ctx.gameState.cardState
+    .filter((cs) => {
+      if (cs.destroyReason == null) {
+        return false;
+      }
+      return true;
+    })
+    .map((cs): BlockPayload => {
       const card = getCard(ctx.gameState.table, cs.id);
       if (card == null) {
         throw new Error("card not found");
       }
       if (cs.destroyReason == null) {
-        return null;
+        throw new Error("destroyReason must found");
       }
       const prototype = getPrototype(card.protoID);
       const hp = prototype.battlePoint[2];
-      if (hp <= 0) {
-        return {
-          id: "マイナスの戦闘修正",
+      return {
+        cause: {
+          id: "BlockPayloadCauseDestroy",
+          reason:
+            hp <= 0
+              ? {
+                  id: "マイナスの戦闘修正",
+                  playerID: cs.destroyReason.playerID,
+                }
+              : cs.destroyReason,
           playerID: cs.destroyReason.playerID,
-        };
-      }
-      return cs.destroyReason;
-    })
-    .filter((v) => v);
-
+          cardID: cs.id,
+          description: "破壞效果",
+        },
+        feedback: [
+          {
+            id: "FeedbackAction",
+            action: [
+              {
+                id: "ActionMoveCardToPosition",
+                cards: {
+                  id: "カード",
+                  value: [cs.id],
+                },
+                baSyou: {
+                  id: "場所",
+                  value: [
+                    {
+                      id: "RelatedBaSyou",
+                      value: ["持ち主", "ジャンクヤード"],
+                    },
+                  ],
+                },
+              },
+            ],
+          },
+        ],
+      };
+    });
+  ctx = {
+    ...ctx,
+    gameState: {
+      ...ctx.gameState,
+      destroyEffect: effects,
+    },
+  };
   return ctx;
 }
 
