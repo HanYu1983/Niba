@@ -955,23 +955,33 @@ export function queryFlow(ctx: GameContext, playerID: string): Flow[] {
     ];
   }
   // 破壞效果，如果效果多於1個，則讓主動玩家選擇順序
-  if (ctx.gameState.destroyEffect.length) {
-    const isActivePlayer = ctx.gameState.activePlayerID == playerID;
-    if (isActivePlayer == false) {
-      return [
-        {
-          id: "FlowWaitPlayer",
-          description: "等待主動玩家決定破壞廢棄效果的順序",
-        },
-      ];
-    }
-    return [
-      {
-        id: "FlowMakeDestroyOrder",
-        destroyEffect: ctx.gameState.destroyEffect,
-        description: "決定破壞廢棄效果的順序",
-      },
-    ];
+  SelectDestroyOrder: switch (ctx.gameState.timing[1][0]) {
+    case "戦闘フェイズ":
+      switch (ctx.gameState.timing[1][1]) {
+        case "ダメージ判定ステップ":
+          switch (ctx.gameState.timing[1][2]) {
+            case "規定の効果":
+              break SelectDestroyOrder;
+          }
+      }
+      if (ctx.gameState.destroyEffect.length) {
+        const isActivePlayer = ctx.gameState.activePlayerID == playerID;
+        if (isActivePlayer == false) {
+          return [
+            {
+              id: "FlowWaitPlayer",
+              description: "等待主動玩家決定破壞廢棄效果的順序",
+            },
+          ];
+        }
+        return [
+          {
+            id: "FlowMakeDestroyOrder",
+            destroyEffect: ctx.gameState.destroyEffect,
+            description: "決定破壞廢棄效果的順序",
+          },
+        ];
+      }
   }
   const myCommandList = getClientCommand(ctx, playerID);
   // 處理堆疊效果，從最上方開始處理
