@@ -1,5 +1,5 @@
 import { log2 } from "../../../tool/logger";
-import { getCardCharacteristic, getCardTitle } from "./helper";
+import { getCardCharacteristic, getCardState, getCardTitle } from "./helper";
 import {
   GameContext,
   getSetGroupCards,
@@ -50,6 +50,13 @@ export function initJsonfp() {
       throw new Error("cardID not found");
     }
     return getSetGroupRoot(ctx, cardID);
+  });
+  jsonfp.addMethod("getDestroyReason", (ctx: GameContext, cardID: string) => {
+    if (cardID == null) {
+      throw new Error("cardID not found");
+    }
+    const [_, cs] = getCardState(ctx, cardID);
+    return cs.destroyReason;
   });
 }
 

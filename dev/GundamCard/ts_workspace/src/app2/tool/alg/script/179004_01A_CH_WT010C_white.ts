@@ -64,7 +64,6 @@ const prototype: CardPrototype = {
                       "$in.blockPayload",
                       { getter: "cause" },
                       { getter: "cardID" },
-                      { log: "card1" },
                     ],
                   },
                   $gameEventCardID: {
@@ -73,7 +72,6 @@ const prototype: CardPrototype = {
                       { getter: "cause" },
                       { getter: "gameEvent" },
                       { getter: "cardID" },
-                      { log: "card2" },
                     ],
                   },
                   pass1: {

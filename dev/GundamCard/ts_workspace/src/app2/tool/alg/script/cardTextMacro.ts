@@ -413,7 +413,15 @@ export function getCardTextMacro(
                       },
                     } as RequireTarget,
                   ]
-                : []),
+                : [
+                    {
+                      id: "RequireTarget",
+                      targets: {},
+                      condition: getConditionMacro({
+                        id: "這張卡在場時",
+                      }),
+                    } as RequireTarget,
+                  ]),
               ...(macro.additionalRequire || []),
             ],
           },

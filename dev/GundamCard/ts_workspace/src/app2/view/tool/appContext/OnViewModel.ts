@@ -364,6 +364,13 @@ export const OnViewModel = OnEvent.pipe(
                         ownerID: PlayerA,
                         tap: false,
                       },
+                      // {
+                      //   id: "a3",
+                      //   protoID: "179003_01A_U_BK008U_black",
+                      //   faceDown: true,
+                      //   ownerID: PlayerA,
+                      //   tap: false,
+                      // },
                     ],
                     [getBaShouID({
                       id: "AbsoluteBaSyou",

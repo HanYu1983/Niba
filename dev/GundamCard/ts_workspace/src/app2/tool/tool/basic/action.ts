@@ -157,6 +157,11 @@ export type ActionTriggerGameEvent = {
   gameEvent: GameEvent;
 };
 
+export type ActionInvalidateDistroy = {
+  id: "ActionInvalidateDistroy";
+  cards: TargetTypeCard;
+};
+
 export type Action =
   | ActionRoll
   | ActionReroll
@@ -182,4 +187,5 @@ export type Action =
   | ActionCreateChip
   | ActionJsonfp
   | ActionSetSetCard
-  | ActionTriggerGameEvent;
+  | ActionTriggerGameEvent
+  | ActionInvalidateDistroy;

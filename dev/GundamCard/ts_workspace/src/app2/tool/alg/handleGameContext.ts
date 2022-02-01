@@ -527,9 +527,8 @@ export function initState(ctx: GameContext): GameContext {
   };
 }
 
-let _seqID = 0;
 export function updateDestroyEffect(ctx: GameContext): GameContext {
-  // TODO: 將所有破壞效果加入破壞用堆疊
+  // 將所有破壞效果加入破壞用堆疊
   // 加入破壞用堆疊後，主動玩家就必須決定解決順序
   // 決定後，依順序將所有效果移到正在解決中的堆疊，並重設切入的旗標，讓玩家可以在堆疊解決中可以再次切入
   const effects = ctx.gameState.cardState
@@ -550,7 +549,7 @@ export function updateDestroyEffect(ctx: GameContext): GameContext {
       const prototype = getPrototype(card.protoID);
       const hp = prototype.battlePoint[2];
       return {
-        id: `updateDestroyEffect_${_seqID++}`,
+        id: `updateDestroyEffect_${cs.id}`,
         cause: {
           id: "BlockPayloadCauseDestroy",
           reason:

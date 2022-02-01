@@ -1183,6 +1183,70 @@ export function doRequireTargetActionTarget(
       ctx = triggerTextEvent(ctx, action.gameEvent);
       return ctx;
     }
+    case "ActionInvalidateDistroy": {
+      const cards = getTargetType(ctx, blockPayload, targets, action.cards);
+      if (cards.id != "カード") {
+        throw new Error("must カード");
+      }
+      if (!Array.isArray(cards.value)) {
+        throw new Error("執行Action時的所有target必須是陣列");
+      }
+      assertTargetTypeValueLength(cards);
+      {
+        // 破壞無效
+        ctx = cards.value.reduce((ctx, cardID) => {
+          const nextCardStates = ctx.gameState.cardState.map((cardState) => {
+            if (cardState.id != cardID) {
+              return cardState;
+            }
+            if (cardState.destroyReason == null) {
+              // TODO: 這個破壞無效失敗，因為這張卡已經沒有被破壞
+              return cardState;
+            }
+            if (cardState.destroyReason.id == "マイナスの戦闘修正") {
+              // TODO: 0以下的防禦力無法被破壞無效
+              return cardState;
+            }
+            return {
+              ...cardState,
+              damage: 0,
+              destroyReason: null,
+            };
+          });
+          ctx = {
+            ...ctx,
+            gameState: {
+              ...ctx.gameState,
+              cardState: nextCardStates,
+            },
+          };
+          return ctx;
+        }, ctx);
+        // 更新破壞堆疊（破壞無效的就被移出列表）
+        ctx = updateDestroyEffect(ctx);
+      }
+      {
+        // 從堆疊中移除破壞效果
+        const cardValue = cards.value;
+        const stackEffect = ctx.gameState.stackEffect.filter((effect) => {
+          if (effect.cause?.id != "BlockPayloadCauseDestroy") {
+            return true;
+          }
+          if (cardValue.includes(effect.cause.cardID) == false) {
+            return true;
+          }
+          return false;
+        });
+        ctx = {
+          ...ctx,
+          gameState: {
+            ...ctx.gameState,
+            stackEffect: stackEffect,
+          },
+        };
+      }
+      return ctx;
+    }
     default:
       throw new Error(`not impl: ${action.id}`);
   }

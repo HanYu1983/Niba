@@ -754,7 +754,10 @@ export function applyFlow(
       return ctx;
     }
     case "FlowMakeDestroyOrder": {
-      if (flow.destroyEffect.length != ctx.gameState.destroyEffect.length) {
+      const willAddedDestroyEffect = ctx.gameState.destroyEffect.filter((a) => {
+        return ctx.gameState.stackEffect.find((b) => a.id == b.id) == null;
+      });
+      if (flow.destroyEffect.length != willAddedDestroyEffect.length) {
         throw new Error("長度不符合");
       }
       return {
@@ -763,7 +766,10 @@ export function applyFlow(
           ...ctx.gameState,
           // 移除破壞效果，全部移到堆疊
           destroyEffect: [],
-          stackEffect: [...flow.destroyEffect, ...ctx.gameState.stackEffect],
+          stackEffect: [
+            ...willAddedDestroyEffect,
+            ...ctx.gameState.stackEffect,
+          ],
           // 重設切入旗標，讓玩家再次切入
           flowMemory: {
             ...ctx.gameState.flowMemory,
@@ -955,33 +961,41 @@ export function queryFlow(ctx: GameContext, playerID: string): Flow[] {
     ];
   }
   // 破壞效果，如果效果多於1個，則讓主動玩家選擇順序
-  SelectDestroyOrder: switch (ctx.gameState.timing[1][0]) {
-    case "戦闘フェイズ":
-      switch (ctx.gameState.timing[1][1]) {
-        case "ダメージ判定ステップ":
-          switch (ctx.gameState.timing[1][2]) {
-            case "規定の効果":
-              break SelectDestroyOrder;
+  SelectDestroyOrder: {
+    switch (ctx.gameState.timing[1][0]) {
+      case "戦闘フェイズ":
+        switch (ctx.gameState.timing[1][1]) {
+          case "ダメージ判定ステップ":
+            switch (ctx.gameState.timing[1][2]) {
+              case "規定の効果":
+                break SelectDestroyOrder;
+            }
+        }
+        // 因為destroyEffect可以重復刷新，所以在加入到堆疊時，不能加入重復的
+        const willAddedDestroyEffect = ctx.gameState.destroyEffect.filter(
+          (a) => {
+            return ctx.gameState.stackEffect.find((b) => a.id == b.id) == null;
           }
-      }
-      if (ctx.gameState.destroyEffect.length) {
-        const isActivePlayer = ctx.gameState.activePlayerID == playerID;
-        if (isActivePlayer == false) {
+        );
+        if (willAddedDestroyEffect.length) {
+          const isActivePlayer = ctx.gameState.activePlayerID == playerID;
+          if (isActivePlayer == false) {
+            return [
+              {
+                id: "FlowWaitPlayer",
+                description: "等待主動玩家決定破壞廢棄效果的順序",
+              },
+            ];
+          }
           return [
             {
-              id: "FlowWaitPlayer",
-              description: "等待主動玩家決定破壞廢棄效果的順序",
+              id: "FlowMakeDestroyOrder",
+              destroyEffect: willAddedDestroyEffect,
+              description: "決定破壞廢棄效果的順序",
             },
           ];
         }
-        return [
-          {
-            id: "FlowMakeDestroyOrder",
-            destroyEffect: ctx.gameState.destroyEffect,
-            description: "決定破壞廢棄效果的順序",
-          },
-        ];
-      }
+    }
   }
   const myCommandList = getClientCommand(ctx, playerID);
   // 處理堆疊效果，從最上方開始處理

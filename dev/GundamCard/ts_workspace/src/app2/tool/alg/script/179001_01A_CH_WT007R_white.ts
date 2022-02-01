@@ -44,13 +44,13 @@ const prototype: CardPrototype = {
         "（戦闘フェイズ）〔２〕：このセットグループのユニットは、ターン終了時まで「速攻」を得る。",
       additionalRequire: [
         createRollCostRequire(2, null),
-        {
-          id: "RequireTarget",
-          targets: {},
-          condition: getConditionMacro({
-            id: "這張卡在場時",
-          }),
-        },
+        // {
+        //   id: "RequireTarget",
+        //   targets: {},
+        //   condition: getConditionMacro({
+        //     id: "這張卡在場時",
+        //   }),
+        // },
       ],
       feedbackBlock: {
         feedback: [
