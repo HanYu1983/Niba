@@ -1,5 +1,10 @@
 import { log2 } from "../../../tool/logger";
-import { getCardCharacteristic, getCardState, getCardTitle } from "./helper";
+import {
+  getCardCharacteristic,
+  getCardState,
+  getCardTitle,
+  isOpponentHasBattleGroup,
+} from "./helper";
 import {
   GameContext,
   getSetGroupCards,
@@ -61,6 +66,12 @@ export function initJsonfp() {
   jsonfp.addMethod("stringify", (input: GameContext, p: any) => {
     return JSON.stringify(input);
   });
+  jsonfp.addMethod(
+    "isOpponentHasBattleGroup",
+    (ctx: GameContext, cardID: string) => {
+      return isOpponentHasBattleGroup(ctx, cardID);
+    }
+  );
 }
 
 export type Keyword =

@@ -42,6 +42,7 @@ const prototype: CardPrototype = {
       id: "PlayText",
       description:
         "（戦闘フェイズ）〔２〕：このセットグループのユニットは、ターン終了時まで「速攻」を得る。",
+      timing: ["戦闘フェイズ"],
       additionalRequire: [
         createRollCostRequire(2, null),
         // {

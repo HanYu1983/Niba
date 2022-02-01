@@ -1084,7 +1084,7 @@ export function hasTokuSyouKouKa(
   return has;
 }
 
-export function isAGroup(
+export function isABattleGroup(
   ctx: GameContext,
   a: TokuSyuKouKa,
   cardID: string
@@ -1110,5 +1110,22 @@ export function isAGroup(
       .reduce((acc, c) => {
         return acc && c;
       }) || false
+  );
+}
+
+export function isOpponentHasBattleGroup(
+  ctx: GameContext,
+  cardID: string
+): boolean {
+  const controller = getCardController(ctx, cardID);
+  const opponentPlayerID = getOpponentPlayerID(controller);
+  const battleAreas: AbsoluteBaSyou[] = [
+    { id: "AbsoluteBaSyou", value: [opponentPlayerID, "戦闘エリア（右）"] },
+    { id: "AbsoluteBaSyou", value: [opponentPlayerID, "戦闘エリア（左）"] },
+  ];
+  return (
+    battleAreas.flatMap((battleArea) => {
+      return ctx.gameState.table.cardStack[getBaShouID(battleArea)] || [];
+    }).length == 0
   );
 }
