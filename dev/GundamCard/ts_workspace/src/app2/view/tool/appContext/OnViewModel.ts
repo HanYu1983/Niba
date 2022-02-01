@@ -348,6 +348,18 @@ export const OnViewModel = OnEvent.pipe(
                     ...ctx.gameState.table.cardStack,
                     [getBaShouID({
                       id: "AbsoluteBaSyou",
+                      value: [PlayerA, "手札"],
+                    })]: [
+                      {
+                        id: "h1",
+                        protoID: "179028_10D_C_BL070N_blue",
+                        faceDown: true,
+                        ownerID: PlayerA,
+                        tap: false,
+                      },
+                    ],
+                    [getBaShouID({
+                      id: "AbsoluteBaSyou",
                       value: [PlayerA, "配備エリア"],
                     })]: [
                       {
@@ -359,7 +371,7 @@ export const OnViewModel = OnEvent.pipe(
                       },
                       {
                         id: "a2",
-                        protoID: "179030_11E_G_RD021N_red",
+                        protoID: "179016_04B_U_WT075C_white",
                         faceDown: true,
                         ownerID: PlayerA,
                         tap: false,
@@ -386,6 +398,13 @@ export const OnViewModel = OnEvent.pipe(
                       {
                         id: "g2",
                         protoID: "179030_11E_G_RD021N_red",
+                        faceDown: true,
+                        ownerID: PlayerA,
+                        tap: false,
+                      },
+                      {
+                        id: "g3",
+                        protoID: "179028_10D_C_BL070N_blue",
                         faceDown: true,
                         ownerID: PlayerA,
                         tap: false,

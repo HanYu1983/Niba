@@ -58,6 +58,9 @@ export function initJsonfp() {
     const [_, cs] = getCardState(ctx, cardID);
     return cs.destroyReason;
   });
+  jsonfp.addMethod("stringify", (input: GameContext, p: any) => {
+    return JSON.stringify(input);
+  });
 }
 
 export type Keyword =
