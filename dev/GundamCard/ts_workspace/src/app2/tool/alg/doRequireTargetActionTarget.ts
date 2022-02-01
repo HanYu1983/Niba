@@ -173,12 +173,7 @@ export function doRequireTargetActionTarget(
       // 整個setGroup一起
       const cardsWithItsSetCard = cards.value
         .flatMap((cardID) => {
-          return [
-            cardID,
-            ...Object.keys(ctx.gameState.setGroupLink).filter((setCardID) => {
-              return ctx.gameState.setGroupLink[setCardID] == cardID;
-            }),
-          ];
+          return getSetGroupCards(ctx, cardID);
         })
         .reduce((acc, cardID) => {
           if (acc.includes(cardID)) {
@@ -225,12 +220,7 @@ export function doRequireTargetActionTarget(
       // 整個setGroup一起
       const cardsWithItsSetCard = cards.value
         .flatMap((cardID) => {
-          return [
-            cardID,
-            ...Object.keys(ctx.gameState.setGroupLink).filter((setCardID) => {
-              return ctx.gameState.setGroupLink[setCardID] == cardID;
-            }),
-          ];
+          return getSetGroupCards(ctx, cardID);
         })
         .reduce((acc, cardID) => {
           if (acc.includes(cardID)) {
@@ -487,12 +477,7 @@ export function doRequireTargetActionTarget(
       // 整個setGroup一起移動
       const cardsWithItsSetCard = cards.value
         .flatMap((cardID) => {
-          return [
-            cardID,
-            ...Object.keys(ctx.gameState.setGroupLink).filter((setCardID) => {
-              return ctx.gameState.setGroupLink[setCardID] == cardID;
-            }),
-          ];
+          return getSetGroupCards(ctx, cardID);
         })
         .reduce((acc, cardID) => {
           if (acc.includes(cardID)) {

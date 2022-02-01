@@ -18,7 +18,7 @@ import {
   setRequireTarget,
 } from "../../../tool/alg/handleClient";
 import { createCard } from "../../../../tool/table";
-import { initState } from "../../../tool/alg/handleGameContext";
+import { initState, updateCommand } from "../../../tool/alg/handleGameContext";
 import { log2 } from "../../../../tool/logger";
 
 export type Selection = string[];
@@ -337,7 +337,7 @@ export const OnViewModel = OnEvent.pipe(
               },
             };
           }
-          if (true) {
+          if (false) {
             ctx = {
               ...ctx,
               gameState: {
@@ -428,11 +428,100 @@ export const OnViewModel = OnEvent.pipe(
               },
             };
           }
+          if (true) {
+            ctx = {
+              ...ctx,
+              gameState: {
+                ...ctx.gameState,
+                table: {
+                  ...ctx.gameState.table,
+                  cardStack: {
+                    ...ctx.gameState.table.cardStack,
+                    [getBaShouID({
+                      id: "AbsoluteBaSyou",
+                      value: [PlayerA, "手札"],
+                    })]: [],
+                    [getBaShouID({
+                      id: "AbsoluteBaSyou",
+                      value: [PlayerA, "配備エリア"],
+                    })]: [
+                      {
+                        id: "a1",
+                        protoID: "179023_06C_CH_WT067C_white",
+                        faceDown: true,
+                        ownerID: PlayerA,
+                        tap: true,
+                      },
+                      {
+                        id: "a2",
+                        protoID: "179016_04B_U_WT075C_white",
+                        faceDown: true,
+                        ownerID: PlayerA,
+                        tap: true,
+                      },
+                    ],
+                    [getBaShouID({
+                      id: "AbsoluteBaSyou",
+                      value: [PlayerA, "Gゾーン"],
+                    })]: [
+                      {
+                        id: "g1",
+                        protoID: "179019_01A_C_WT010C_white",
+                        faceDown: true,
+                        ownerID: PlayerA,
+                        tap: false,
+                      },
+                      {
+                        id: "g2",
+                        protoID: "179030_11E_G_RD021N_red",
+                        faceDown: true,
+                        ownerID: PlayerA,
+                        tap: false,
+                      },
+                      {
+                        id: "g3",
+                        protoID: "179028_10D_C_BL070N_blue",
+                        faceDown: true,
+                        ownerID: PlayerA,
+                        tap: false,
+                      },
+                      {
+                        id: "g4",
+                        protoID: "179028_10D_C_BL070N_blue",
+                        faceDown: true,
+                        ownerID: PlayerA,
+                        tap: false,
+                      },
+                    ],
+                    [getBaShouID({
+                      id: "AbsoluteBaSyou",
+                      value: [PlayerB, "戦闘エリア（左）"],
+                    })]: [
+                      {
+                        id: "b1",
+                        protoID: "179019_01A_C_WT010C_white",
+                        faceDown: true,
+                        ownerID: PlayerB,
+                        tap: false,
+                      },
+                    ],
+                  },
+                },
+                setGroupLink: { a1: "a2" },
+                activePlayerID: PlayerA,
+                timing: [
+                  23,
+                  ["戦闘フェイズ", "ダメージ判定ステップ", "ステップ開始"],
+                ],
+              },
+            };
+          }
           ctx = {
             ...ctx,
             versionID: viewModel.model.versionID,
           };
           ctx = initState(ctx);
+          ctx = updateCommand(ctx);
           firebase.sync(ctx);
           return DEFAULT_VIEW_MODEL;
         }

@@ -301,7 +301,11 @@ export function getRequireTargetOwner(
   }
 }
 
-export function getSetGroupCards(ctx: GameContext, cardID: string) {
+export function getSetGroupCards(ctx: GameContext, cardID: string): string[] {
+  const root = getSetGroupRoot(ctx, cardID);
+  if (root != null) {
+    return getSetGroupCards(ctx, root);
+  }
   return [
     cardID,
     ...Object.keys(ctx.gameState.setGroupLink).filter((k) => {

@@ -62,7 +62,7 @@ const prototype: CardPrototype = {
               pass1: {
                 if: [
                   {
-                    "->": ["@in.ctx", { isOpponentHasBattleGroup: "$cardID" }],
+                    "->": ["$in.ctx", { isOpponentHasBattleGroup: "$cardID" }],
                   },
                   {},
                   { error: "對方必須存在部隊" },

@@ -1126,6 +1126,6 @@ export function isOpponentHasBattleGroup(
   return (
     battleAreas.flatMap((battleArea) => {
       return ctx.gameState.table.cardStack[getBaShouID(battleArea)] || [];
-    }).length == 0
+    }).length != 0
   );
 }
