@@ -16,11 +16,13 @@ import {
   CardTextZiDouKaTa,
   DEFAULT_CARD_TEXT_SIYOU_KATA,
   GameEvent,
+  Phase,
   PlayerA,
   PlayerB,
   RelatedBaSyou,
   RelatedPlayerSideKeyword,
   SiYouTiming,
+  TIMING_CHART,
 } from "../../tool/basic/basic";
 import {
   createRollCostRequire,
@@ -82,12 +84,21 @@ type CardTextMacro5 = {
   x: string;
 };
 
+type CardTextMacro6 = {
+  id: "ターン終了時までの場合";
+  description?: string;
+  varCtxID?: string;
+  additionalRequire?: Require[];
+  feedbackAction?: Action[];
+};
+
 export type CardTextMacro =
   | CardTextMacro1
   | CardTextMacro2
   | CardTextMacro3
   | CardTextMacro4
-  | CardTextMacro5;
+  | CardTextMacro5
+  | CardTextMacro6;
 
 type ConditionMacro1 = {
   id: "變量x的角色包含於y";
@@ -131,6 +142,10 @@ type ConditionMacro8 = {
   x: DestroyReason;
 };
 
+type ConditionMacro9 = {
+  id: "ターン終了時まで";
+};
+
 export type ConditionMacro =
   | ConditionMacro1
   | ConditionMacro2
@@ -139,10 +154,46 @@ export type ConditionMacro =
   | ConditionMacro5
   | ConditionMacro6
   | ConditionMacro7
-  | ConditionMacro8;
+  | ConditionMacro8
+  | ConditionMacro9;
 
 export function getConditionMacro(macro: ConditionMacro): Condition {
   switch (macro.id) {
+    case "ターン終了時まで":
+      return {
+        id: "ConditionJsonfp",
+        program: {
+          pass1: {
+            if: [
+              {
+                "->": [
+                  "$in.blockPayload",
+                  { getter: "cause" },
+                  { getter: "gameEvent" },
+                  { getter: "timing" },
+                  { log: "timing" },
+                  { getter: 1 },
+                  { getter: 2 },
+                  {
+                    "==": {
+                      "->": [
+                        [
+                          "戦闘フェイズ",
+                          "ターン終了時",
+                          "効果終了。ターン終了",
+                        ] as Phase,
+                        { getter: 2 },
+                      ],
+                    },
+                  },
+                ],
+              },
+              {},
+              { error: "必須是回結束" },
+            ],
+          },
+        },
+      };
     case "このカードがx的idで破壊されている場合":
       return {
         id: "ConditionJsonfp",
@@ -911,6 +962,46 @@ export function getCardTextMacro(
                   },
                 },
               ],
+            },
+          ],
+        },
+      };
+    case "ターン終了時までの場合":
+      return {
+        id: "自動型",
+        category: "起動",
+        description: macro.description || "ターン終了時までの場合",
+        block: {
+          contextID: macro.varCtxID,
+          require: {
+            id: "RequireAnd",
+            and: [
+              {
+                id: "RequireTarget",
+                targets: {},
+                condition: {
+                  id: "ConditionAnd",
+                  and: [
+                    getConditionMacro({
+                      id: "當觸發GameEvent的變量x的id時",
+                      x: {
+                        id: "GameEventOnTiming",
+                        timing: TIMING_CHART[0],
+                      },
+                    }),
+                    getConditionMacro({
+                      id: "ターン終了時まで",
+                    }),
+                  ],
+                },
+              },
+              ...(macro.additionalRequire || []),
+            ],
+          },
+          feedback: [
+            {
+              id: "FeedbackAction",
+              action: macro.feedbackAction || [],
             },
           ],
         },

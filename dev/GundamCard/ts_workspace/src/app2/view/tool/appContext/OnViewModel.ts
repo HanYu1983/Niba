@@ -357,6 +357,13 @@ export const OnViewModel = OnEvent.pipe(
                         ownerID: PlayerA,
                         tap: false,
                       },
+                      {
+                        id: "h2",
+                        protoID: "179019_01A_C_WT010C_white",
+                        faceDown: true,
+                        ownerID: PlayerA,
+                        tap: false,
+                      },
                     ],
                     [getBaShouID({
                       id: "AbsoluteBaSyou",
@@ -390,7 +397,7 @@ export const OnViewModel = OnEvent.pipe(
                     })]: [
                       {
                         id: "g1",
-                        protoID: "179030_11E_G_RD021N_red",
+                        protoID: "179019_01A_C_WT010C_white",
                         faceDown: true,
                         ownerID: PlayerA,
                         tap: false,

@@ -77,78 +77,57 @@ const prototype: CardPrototype = {
                       enabled: true,
                       cardText: createTokuSyuKouKaText(["速攻"], {}),
                     },
+
                     {
                       id: "",
                       enabled: true,
-                      cardText: {
-                        id: "自動型",
-                        category: "起動",
-                        description: "[ターン終了時まで]「速攻」を得る。",
-                        block: {
-                          require: {
-                            id: "RequireTarget",
-                            targets: {},
-                            condition: {
-                              id: "ConditionAnd",
-                              and: [
-                                getConditionMacro({
-                                  id: "當觸發GameEvent的變量x的id時",
-                                  x: {
-                                    id: "GameEventOnTiming",
-                                    timing: TIMING_CHART[0],
-                                  },
-                                }),
-                                {
-                                  id: "ConditionJsonfp",
-                                  program: {
-                                    pass1: {
-                                      if: [
-                                        {
-                                          "->": [
-                                            "$in.blockPayload",
-                                            { getter: "cause" },
-                                            { getter: "gameEvent" },
-                                            { getter: "timing" },
-                                            { log: "timing" },
-                                            { getter: 1 },
-                                            { getter: 2 },
-                                            {
-                                              "==": {
-                                                "->": [
-                                                  [
-                                                    "戦闘フェイズ",
-                                                    "ターン終了時",
-                                                    "効果終了。ターン終了",
-                                                  ] as Phase,
-                                                  { getter: 2 },
-                                                ],
-                                              },
-                                            },
-                                          ],
-                                        },
-                                        {},
-                                        { error: "必須是回結束" },
-                                      ],
-                                    },
-                                  },
-                                },
-                              ],
-                            },
+                      cardText: getCardTextMacro({
+                        id: "ターン終了時までの場合",
+                        feedbackAction: [
+                          {
+                            id: "ActionDeleteGlobalCardText",
+                            cardTextStateID: "ターン終了時まで「速攻」を得る",
                           },
-                          feedback: [
-                            {
-                              id: "FeedbackAction",
-                              action: [
-                                {
-                                  id: "ActionDeleteGlobalCardText",
-                                  cardTextStateID:
-                                    "ターン終了時まで「速攻」を得る",
-                                },
-                              ],
-                            },
-                          ],
-                        },
-                      },
+                        ],
+                      }),
+                      // {
+                      //   id: "自動型",
+                      //   category: "起動",
+                      //   description: "[ターン終了時まで]「速攻」を得る。",
+                      //   block: {
+                      //     require: {
+                      //       id: "RequireTarget",
+                      //       targets: {},
+                      //       condition: {
+                      //         id: "ConditionAnd",
+                      //         and: [
+                      //           getConditionMacro({
+                      //             id: "當觸發GameEvent的變量x的id時",
+                      //             x: {
+                      //               id: "GameEventOnTiming",
+                      //               timing: TIMING_CHART[0],
+                      //             },
+                      //           }),
+                      //           getConditionMacro({
+                      //             id: "ターン終了時まで",
+                      //           }),
+                      //         ],
+                      //       },
+                      //     },
+                      //     feedback: [
+                      //       {
+                      //         id: "FeedbackAction",
+                      //         action: [
+                      //           {
+                      //             id: "ActionDeleteGlobalCardText",
+                      //             cardTextStateID:
+                      //               "ターン終了時まで「速攻」を得る",
+                      //           },
+                      //         ],
+                      //       },
+                      //     ],
+                      //   },
+                      // },
                     },
                   ],
                 },
