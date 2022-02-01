@@ -31,6 +31,7 @@ import {
   BlockPayloadCauseDestroy,
 } from "../../tool/basic/blockPayload";
 import { Condition } from "../../tool/basic/condition";
+import { DestroyReason } from "../../tool/basic/gameContext";
 import { TargetTypeCard } from "../../tool/basic/targetType";
 
 type CardTextMacro1 = {
@@ -115,15 +116,109 @@ type ConditionMacro5 = {
   id: "這張卡在場時";
 };
 
+type ConditionMacro6 = {
+  id: "變量字串x的第一個元素是破壞中";
+  x: string;
+};
+
+type ConditionMacro7 = {
+  id: "變量x的是交戰中";
+  x: TargetTypeCard;
+};
+
+type ConditionMacro8 = {
+  id: "このカードがx的idで破壊されている場合";
+  x: DestroyReason;
+};
+
 export type ConditionMacro =
   | ConditionMacro1
   | ConditionMacro2
   | ConditionMacro3
   | ConditionMacro4
-  | ConditionMacro5;
+  | ConditionMacro5
+  | ConditionMacro6
+  | ConditionMacro7
+  | ConditionMacro8;
 
 export function getConditionMacro(macro: ConditionMacro): Condition {
   switch (macro.id) {
+    case "このカードがx的idで破壊されている場合":
+      return {
+        id: "ConditionJsonfp",
+        program: {
+          $cardID: {
+            "->": [
+              "$in.blockPayload",
+              { getter: "cause" },
+              { getter: "cardID" },
+              { log: "cardID" },
+            ],
+          },
+          pass1: {
+            if: [
+              {
+                "->": [
+                  "$in.ctx",
+                  // jsonfp不用比對null, 因為自定方法回傳null的情況，在jsonfp會轉成空物件{}
+                  { getDestroyReason: "$cardID" },
+                  { getter: "id" },
+                  { "==": macro.x.id },
+                ],
+              },
+              {},
+              { error: `必須是被${macro.x.id}破壞` },
+            ],
+          },
+        },
+      };
+    case "變量x的是交戰中":
+      return {
+        id: "ConditionCompareBoolean",
+        value: [
+          {
+            id: "布林",
+            value: {
+              path: [macro.x, "在「交戦中」？"],
+            },
+          },
+          "==",
+          {
+            id: "布林",
+            value: [true],
+          },
+        ],
+      };
+    case "變量字串x的第一個元素是破壞中":
+      return {
+        id: "ConditionJsonfp",
+        program: {
+          $cardID: {
+            "->": [
+              "$in.targets",
+              { getter: macro.x },
+              { getter: "value" },
+              { getter: 0 },
+              { log: "cardID" },
+            ],
+          },
+          pass1: {
+            if: [
+              {
+                "->": [
+                  "$in.ctx",
+                  { getDestroyReason: "$cardID" },
+                  { stringify: null },
+                  { log: "stringify" },
+                  { "!=": "{}" },
+                ],
+              },
+              {},
+              { error: `必須被破壞:${macro.x}` },
+            ],
+          },
+        },
+      };
     case "當觸發GameEvent的變量x的id時":
       return {
         id: "ConditionJsonfp",

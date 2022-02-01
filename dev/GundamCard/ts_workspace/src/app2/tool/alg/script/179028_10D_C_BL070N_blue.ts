@@ -66,52 +66,16 @@ const prototype: CardPrototype = {
                 y: ["ユニット"],
               }),
               {
-                id: "ConditionCompareBoolean",
-                value: [
-                  {
-                    id: "布林",
-                    value: {
-                      path: [
-                        { id: "カード", value: "非交戦中の自軍ユニット１枚" },
-                        "在「交戦中」？",
-                      ],
-                    },
-                  },
-                  "==",
-                  {
-                    id: "布林",
-                    value: [false],
-                  },
-                ],
+                id: "ConditionNot",
+                not: getConditionMacro({
+                  id: "變量x的是交戰中",
+                  x: { id: "カード", value: "非交戦中の自軍ユニット１枚" },
+                }),
               },
-              {
-                id: "ConditionJsonfp",
-                program: {
-                  $cardID: {
-                    "->": [
-                      "$in.blockPayload",
-                      { getter: "cause" },
-                      { getter: "cardID" },
-                      { log: "cardID" },
-                    ],
-                  },
-                  pass1: {
-                    if: [
-                      {
-                        "->": [
-                          "$in.ctx",
-                          { getDestroyReason: "$cardID" },
-                          { stringify: null },
-                          { log: "stringify" },
-                          { "==": "{}" },
-                        ],
-                      },
-                      {},
-                      { error: "必須被破壞" },
-                    ],
-                  },
-                },
-              },
+              getConditionMacro({
+                id: "變量字串x的第一個元素是破壞中",
+                x: "非交戦中の自軍ユニット１枚",
+              }),
             ],
           },
           action: [

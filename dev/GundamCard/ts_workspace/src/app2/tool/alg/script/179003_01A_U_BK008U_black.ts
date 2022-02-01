@@ -50,34 +50,10 @@ const prototype: CardPrototype = {
         {
           id: "RequireTarget",
           targets: {},
-          condition: {
-            id: "ConditionJsonfp",
-            program: {
-              $cardID: {
-                "->": [
-                  "$in.blockPayload",
-                  { getter: "cause" },
-                  { getter: "cardID" },
-                  { log: "cardID" },
-                ],
-              },
-              pass1: {
-                if: [
-                  {
-                    "->": [
-                      "$in.ctx",
-                      // jsonfp不用比對null, 因為自定方法回傳null的情況，在jsonfp會轉成空物件{}
-                      { getDestroyReason: "$cardID" },
-                      { getter: "id" },
-                      { "==": "戦闘ダメージ" },
-                    ],
-                  },
-                  {},
-                  { error: "必須是被戰鬥傷害破壞" },
-                ],
-              },
-            },
-          },
+          condition: getConditionMacro({
+            id: "このカードがx的idで破壊されている場合",
+            x: { id: "戦闘ダメージ", playerID: "" },
+          }),
         },
       ],
       feedbackBlock: {
