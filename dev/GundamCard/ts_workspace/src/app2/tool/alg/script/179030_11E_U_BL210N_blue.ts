@@ -127,7 +127,7 @@ const prototype: CardPrototype = {
                                 },
                                 {
                                   id: "ActionDeleteGlobalCardText",
-                                  cardTextStateID:
+                                  cardStateID:
                                     "ターン終了時に、このカードを持ち主のGにできる。",
                                 },
                               ],

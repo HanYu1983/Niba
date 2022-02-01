@@ -99,7 +99,7 @@ const prototype: CardPrototype = {
                         feedbackAction: [
                           {
                             id: "ActionDeleteGlobalCardText",
-                            cardTextStateID: "ターン終了時まで「速攻」を得る。",
+                            cardStateID: "ターン終了時まで「速攻」を得る。",
                           },
                         ],
                       }),
@@ -171,8 +171,7 @@ const prototype: CardPrototype = {
                         feedbackAction: [
                           {
                             id: "ActionDeleteGlobalCardText",
-                            cardTextStateID:
-                              "ターン終了時まで「高機動」を得る。",
+                            cardStateID: "ターン終了時まで「高機動」を得る。",
                           },
                         ],
                       }),

@@ -110,7 +110,7 @@ export type ActionAddGlobalCardText = {
 
 export type ActionDeleteGlobalCardText = {
   id: "ActionDeleteGlobalCardText";
-  cardTextStateID: string;
+  cardStateID: string;
 };
 
 export type ActionAddCardText = {

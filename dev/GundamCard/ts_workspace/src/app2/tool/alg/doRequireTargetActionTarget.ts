@@ -652,15 +652,15 @@ export function doRequireTargetActionTarget(
       };
     }
     case "ActionDeleteGlobalCardText": {
-      const { cardTextStateID } = action;
+      const { cardStateID } = action;
       return {
         ...ctx,
         gameState: {
           ...ctx.gameState,
           globalCardState: ctx.gameState.globalCardState.filter((v) => {
             // 修正ID
-            const cardStateID = `${v.cardID}_${cardTextStateID}`;
-            return v.id != cardStateID;
+            const _cardStateID = `${v.cardID}_${cardStateID}`;
+            return v.id != _cardStateID;
           }),
         },
       };
