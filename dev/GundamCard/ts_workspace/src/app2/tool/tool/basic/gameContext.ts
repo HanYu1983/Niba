@@ -19,10 +19,12 @@ import {
   RelatedBaSyou,
   getOpponentPlayerID,
   BattleBonus,
+  getBaShouID,
+  PlayerA,
 } from "./basic";
 import { getBaShou, TIMING_CHART } from "./basic";
 import { BlockPayload, Require, RequireAnd, RequireOr } from "./blockPayload";
-import { getCardController } from "./handleCard";
+import { getCardBaSyou, getCardController } from "./handleCard";
 import { TargetType } from "./targetType";
 
 export type PlayerState = {
@@ -137,6 +139,8 @@ export type GameState = {
   destroyEffect: BlockPayload[];
   // setGroup
   setGroupLink: { [key: string]: string };
+  // 是否交戰中，key代表牌堆名稱的字串
+  isBattle: { [key: string]: boolean };
   //
   flowMemory: {
     hasTriggerEvent: boolean;
@@ -179,6 +183,7 @@ export const DEFAULT_GAME_CONTEXT: GameContext = {
     stackEffectMemory: [],
     destroyEffect: [],
     setGroupLink: {},
+    isBattle: {},
     flowMemory: {
       hasTriggerEvent: false,
       hasPlayerPassPhase: {},
@@ -310,4 +315,74 @@ export function getSetGroupRoot(
   cardID: string
 ): string | null {
   return ctx.gameState.setGroupLink[cardID] || null;
+}
+
+export function getOpponentBattleArea(baSyou: AbsoluteBaSyou): AbsoluteBaSyou {
+  const {
+    value: [playerID, baSyouKW],
+  } = baSyou;
+  return {
+    id: "AbsoluteBaSyou",
+    value: [getOpponentPlayerID(playerID), baSyouKW],
+  };
+}
+
+export function checkIsBattle(ctx: GameContext): GameContext {
+  const battleAreas: AbsoluteBaSyou[] = [
+    { id: "AbsoluteBaSyou", value: [PlayerA, "戦闘エリア（左）"] },
+    { id: "AbsoluteBaSyou", value: [PlayerA, "戦闘エリア（右）"] },
+  ];
+  return battleAreas.reduce((ctx, battleArea) => {
+    const baSyouID1 = getBaShouID(battleArea);
+    const baSyouID2 = getBaShouID(getOpponentBattleArea(battleArea));
+    if (
+      ctx.gameState.table.cardStack[baSyouID1]?.length &&
+      ctx.gameState.table.cardStack[baSyouID2]?.length
+    ) {
+      return {
+        ...ctx,
+        gameState: {
+          ...ctx.gameState,
+          isBattle: {
+            ...ctx.gameState.isBattle,
+            [baSyouID1]: true,
+            [baSyouID2]: true,
+          },
+        },
+      };
+    }
+    return {
+      ...ctx,
+      gameState: {
+        ...ctx.gameState,
+        isBattle: {
+          ...ctx.gameState.isBattle,
+          [baSyouID1]: false,
+          [baSyouID2]: false,
+        },
+      },
+    };
+  }, ctx);
+}
+
+export function isBattle(
+  ctx: GameContext,
+  cardID: string,
+  cardID2: string | null
+): boolean {
+  const baSyou1 = getCardBaSyou(ctx, cardID);
+  if (ctx.gameState.isBattle[getBaShouID(baSyou1)] != true) {
+    return false;
+  }
+  if (cardID2 != null) {
+    const baSyou2 = getOpponentBattleArea(baSyou1);
+    const isFindCardID2 =
+      ctx.gameState.table.cardStack[getBaShouID(baSyou2)].find((card) => {
+        return card.id == cardID2;
+      }) != null;
+    if (isFindCardID2 == false) {
+      return false;
+    }
+  }
+  return true;
 }

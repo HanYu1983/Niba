@@ -15,6 +15,7 @@ import {
 } from "../tool/basic/blockPayload";
 import {
   CardTextState,
+  checkIsBattle,
   filterEffect,
   GameContext,
   getBlockOwner,
@@ -616,11 +617,16 @@ export function applyFlow(
           gameState: {
             ...ctx.gameState,
             timing: nextTiming,
-            flowMemory: {
-              ...ctx.gameState.flowMemory,
-            },
           },
         };
+      }
+      // p34
+      // 戰鬥階段的每個步驟開始時，確認是否交戰中
+      if (
+        ctx.gameState.timing[1][0] == "戦闘フェイズ" &&
+        ctx.gameState.timing[1][2] == "ステップ開始"
+      ) {
+        ctx = checkIsBattle(ctx);
       }
       // 重設觸發flag
       ctx = {

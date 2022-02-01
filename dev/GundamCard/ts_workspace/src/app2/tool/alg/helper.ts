@@ -7,11 +7,13 @@ import {
   CardRole,
   getBaShouID,
   getOpponentPlayerID,
+  TokuSyuKouKa,
 } from "../tool/basic/basic";
 import {
   CardPrototype,
   GameContext,
   getBlockOwner,
+  getSetGroupCards,
   getSetGroupRoot,
 } from "../tool/basic/gameContext";
 import {
@@ -1055,4 +1057,58 @@ export function getCardTitle(ctx: GameContext, cardID: string): string {
   }
   const prototype = getPrototype(card.protoID);
   return prototype.title;
+}
+
+export function hasTokuSyouKouKa(
+  ctx: GameContext,
+  a: TokuSyuKouKa,
+  cardID: string
+): boolean {
+  const [_, cs] = getCardState(ctx, cardID);
+  const gcs = ctx.gameState.globalCardState.filter((cs) => {
+    return cs.cardID == cardID;
+  });
+  const texts = [cs, ...gcs]
+    .flatMap((cs) => cs.cardTextStates)
+    .map((cts) => cts.cardText);
+  const has =
+    texts.find((text) => {
+      if (text.id != "特殊型") {
+        return false;
+      }
+      if (text.description[0] != a[0]) {
+        return false;
+      }
+      return true;
+    }) != null;
+  return has;
+}
+
+export function isAGroup(
+  ctx: GameContext,
+  a: TokuSyuKouKa,
+  cardID: string
+): boolean {
+  const baSyou = getCardBaSyou(ctx, cardID);
+  return (
+    ctx.gameState.table.cardStack[getBaShouID(baSyou)]
+      ?.map((card) => {
+        // setCard的情況就忽略
+        const isSetCard = getSetGroupRoot(ctx, card.id) != null;
+        if (isSetCard) {
+          return true;
+        }
+        // 其中一張卡有就行了
+        const setGroupCards = getSetGroupCards(ctx, card.id);
+        for (const cardGroupCardID of setGroupCards) {
+          if (hasTokuSyouKouKa(ctx, a, cardGroupCardID)) {
+            return true;
+          }
+        }
+        return false;
+      })
+      .reduce((acc, c) => {
+        return acc && c;
+      }) || false
+  );
 }
