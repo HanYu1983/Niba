@@ -435,8 +435,8 @@ export function doRequireTargetActionTarget(
             cardState: cardState,
           },
         };
-        ctx = updateDestroyEffect(ctx);
       }
+      ctx = updateDestroyEffect(ctx);
       {
         ctx = cards.value.reduce((ctx, cardID) => {
           // 若當中有破壞無效等的效果把destroyReason改變的話，那個效果後要呼叫updateDestroyEffect
