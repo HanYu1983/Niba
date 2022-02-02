@@ -428,7 +428,7 @@ export const OnViewModel = OnEvent.pipe(
               },
             };
           }
-          if (true) {
+          if (false) {
             ctx = {
               ...ctx,
               gameState: {
@@ -508,6 +508,49 @@ export const OnViewModel = OnEvent.pipe(
                   },
                 },
                 setGroupLink: { a1: "a2" },
+                activePlayerID: PlayerA,
+                timing: [
+                  23,
+                  ["戦闘フェイズ", "ダメージ判定ステップ", "ステップ開始"],
+                ],
+              },
+            };
+          }
+          if (true) {
+            ctx = {
+              ...ctx,
+              gameState: {
+                ...ctx.gameState,
+                table: {
+                  ...ctx.gameState.table,
+                  cardStack: {
+                    ...ctx.gameState.table.cardStack,
+                    [getBaShouID({
+                      id: "AbsoluteBaSyou",
+                      value: [PlayerA, "戦闘エリア（左）"],
+                    })]: [
+                      {
+                        id: "a1",
+                        protoID: "179016_04B_U_WT075C_white",
+                        faceDown: true,
+                        ownerID: PlayerA,
+                        tap: false,
+                      },
+                    ],
+                    [getBaShouID({
+                      id: "AbsoluteBaSyou",
+                      value: [PlayerB, "戦闘エリア（左）"],
+                    })]: [
+                      {
+                        id: "b1",
+                        protoID: "179016_04B_U_WT075C_white",
+                        faceDown: true,
+                        ownerID: PlayerB,
+                        tap: false,
+                      },
+                    ],
+                  },
+                },
                 activePlayerID: PlayerA,
                 timing: [
                   23,

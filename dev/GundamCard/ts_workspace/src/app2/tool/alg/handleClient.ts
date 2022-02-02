@@ -706,7 +706,7 @@ export function applyFlow(
         ctx,
         attackPlayerID,
         guardPlayerID,
-        "戦闘エリア（左）",
+        "戦闘エリア（右）",
         1
       );
       // 速度2
@@ -714,7 +714,7 @@ export function applyFlow(
         ctx,
         attackPlayerID,
         guardPlayerID,
-        "戦闘エリア（右）",
+        "戦闘エリア（左）",
         2
       );
       ctx = handleAttackDamage(

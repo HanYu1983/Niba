@@ -28,13 +28,13 @@ const prototype: CardPrototype = {
   ),
   category: "ユニット",
   color: "白",
-  rollCost: ["白", null, null, null, null],
+  rollCost: ["白", "白", null, null, null],
+  battlePoint: [5, 2, 4],
   texts: [
     createTokuSyuKouKaText(["改装", "ブルーフレーム系"], { cost: 0 }),
     getCardTextMacro({ id: "PlayG" }),
     getCardTextMacro({
       id: "PlayUnit",
-
       additionalRequire: [createRollCostRequire(1, "白")],
     }),
     {
