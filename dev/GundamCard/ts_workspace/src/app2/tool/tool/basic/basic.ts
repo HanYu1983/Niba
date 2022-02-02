@@ -371,3 +371,5 @@ export type FlagKeyword = "破壊" | "プレイされたカード";
 export function getOpponentPlayerID(playerID: PlayerID): PlayerID {
   return playerID == PlayerA ? PlayerB : PlayerA;
 }
+
+export type AttackSpeed = 1 | 2;

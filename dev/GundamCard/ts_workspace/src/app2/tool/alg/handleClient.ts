@@ -36,6 +36,7 @@ import {
 import { doConditionTarget } from "./doConditionTarget";
 import {
   getClientCommand,
+  handleAttackDamage,
   triggerTextEvent,
   updateCommand,
   updateDestroyEffect,
@@ -687,12 +688,42 @@ export function applyFlow(
       return ctx;
     }
     case "FlowHandleDamageStepRule": {
-      ctx = ctx.gameState.cardState.reduce((ctx, cs) => {
-        return triggerTextEvent(ctx, {
-          id: "戦闘ダメージを受けた場合",
-          cardID: cs.id,
-        });
-      }, ctx);
+      // 傷害計算並造成傷害
+      const attackPlayerID = ctx.gameState.activePlayerID;
+      if (attackPlayerID == null) {
+        throw new Error("attackPlayerID not found");
+      }
+      const guardPlayerID = getOpponentPlayerID(attackPlayerID);
+      // 速度1
+      ctx = handleAttackDamage(
+        ctx,
+        attackPlayerID,
+        guardPlayerID,
+        "戦闘エリア（左）",
+        1
+      );
+      ctx = handleAttackDamage(
+        ctx,
+        attackPlayerID,
+        guardPlayerID,
+        "戦闘エリア（左）",
+        1
+      );
+      // 速度2
+      ctx = handleAttackDamage(
+        ctx,
+        attackPlayerID,
+        guardPlayerID,
+        "戦闘エリア（右）",
+        2
+      );
+      ctx = handleAttackDamage(
+        ctx,
+        attackPlayerID,
+        guardPlayerID,
+        "戦闘エリア（右）",
+        2
+      );
       // set hasTriggerEvent
       ctx = {
         ...ctx,

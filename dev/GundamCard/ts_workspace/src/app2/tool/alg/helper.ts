@@ -1059,6 +1059,33 @@ export function getCardTitle(ctx: GameContext, cardID: string): string {
   return prototype.title;
 }
 
+export function getCardBattlePoint(
+  ctx: GameContext,
+  cardID: string
+): BattleBonus {
+  const card = getCard(ctx.gameState.table, cardID);
+  if (card == null) {
+    throw new Error("card not found");
+  }
+  const prototype = getPrototype(card.protoID);
+  return prototype.battlePoint;
+}
+
+export function getBattleGroup(
+  ctx: GameContext,
+  baSyou: AbsoluteBaSyou
+): string[] {
+  return (
+    ctx.gameState.table.cardStack[getBaShouID(baSyou)]
+      ?.filter((card) => {
+        return getSetGroupRoot(ctx, card.id) == null;
+      })
+      .map((root) => {
+        return root.id;
+      }) || []
+  );
+}
+
 export function hasTokuSyouKouKa(
   ctx: GameContext,
   a: TokuSyuKouKa,
@@ -1090,16 +1117,12 @@ export function isABattleGroup(
   cardID: string
 ): boolean {
   const baSyou = getCardBaSyou(ctx, cardID);
+  const battleGroup = getBattleGroup(ctx, baSyou);
   return (
-    ctx.gameState.table.cardStack[getBaShouID(baSyou)]
-      ?.map((card) => {
-        // setCard的情況就忽略
-        const isSetCard = getSetGroupRoot(ctx, card.id) != null;
-        if (isSetCard) {
-          return true;
-        }
+    battleGroup
+      .map((cardID) => {
         // 其中一張卡有就行了
-        const setGroupCards = getSetGroupCards(ctx, card.id);
+        const setGroupCards = getSetGroupCards(ctx, cardID);
         for (const cardGroupCardID of setGroupCards) {
           if (hasTokuSyouKouKa(ctx, a, cardGroupCardID)) {
             return true;

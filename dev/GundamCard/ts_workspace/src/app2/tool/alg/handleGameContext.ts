@@ -1,4 +1,6 @@
 import {
+  AttackSpeed,
+  BaSyouKeyword,
   CardText,
   GameEvent,
   getBaShouID,
@@ -18,6 +20,7 @@ import {
   wrapRequireKey,
 } from "../tool/basic/blockPayload";
 import {
+  CardState,
   CardTextState,
   DestroyReason,
   GameContext,
@@ -33,7 +36,10 @@ import { Action } from "../tool/basic/action";
 import { doRequire, doFeedback } from "./handleBlockPayload";
 import {
   assertBlockPayloadTargetTypeValueLength,
+  getBattleGroup,
+  getCardBattlePoint,
   getCardState,
+  isABattleGroup,
 } from "./helper";
 import { doConditionTarget } from "./doConditionTarget";
 import { err2string } from "../../../tool/helper";
@@ -764,4 +770,227 @@ export function getClientCommand(ctx: GameContext, clientID: string) {
     }
     return true;
   });
+}
+
+export function handleAttackDamage(
+  ctx: GameContext,
+  attackPlayerID: string,
+  guardPlayerID: string,
+  where: BaSyouKeyword,
+  speed: AttackSpeed
+): GameContext {
+  const attackUnits = getBattleGroup(ctx, {
+    id: "AbsoluteBaSyou",
+    value: [attackPlayerID, where],
+  });
+  const attackPower =
+    attackUnits
+      .map((cardID, i): number => {
+        // 破壞的單位沒有攻擊力
+        const [_, cs] = getCardState(ctx, cardID);
+        if (cs.destroyReason != null) {
+          return 0;
+        }
+        const card = getCard(ctx.gameState.table, cardID);
+        if (card == null) {
+          throw new Error("card not found");
+        }
+        // 横置的單位沒有攻擊力
+        if (card.tap) {
+          return 0;
+        }
+        const [melee, range] = getCardBattlePoint(ctx, cardID);
+        if (i == 0) {
+          return melee || 0;
+        }
+        return range || 0;
+      })
+      ?.reduce((acc, c) => acc + c, 0) || 0;
+  const guardUnits = getBattleGroup(ctx, {
+    id: "AbsoluteBaSyou",
+    value: [guardPlayerID, where],
+  });
+  const guardPower =
+    guardUnits
+      .map((cardID, i): number => {
+        // 破壞的單位沒有攻擊力
+        const [_, cs] = getCardState(ctx, cardID);
+        if (cs.destroyReason != null) {
+          return 0;
+        }
+        const card = getCard(ctx.gameState.table, cardID);
+        if (card == null) {
+          throw new Error("card not found");
+        }
+        // 横置的單位沒有攻擊力
+        if (card.tap) {
+          return 0;
+        }
+        const [melee, range] = getCardBattlePoint(ctx, cardID);
+        if (i == 0) {
+          return melee || 0;
+        }
+        return range || 0;
+      })
+      ?.reduce((acc, c) => acc + c, 0) || 0;
+  const willTriggerEvent: GameEvent[] = [];
+  {
+    const currentAttackPlayerID = attackPlayerID;
+    const currentGuardPlayerID = guardPlayerID;
+    const willAttackUnits = attackUnits;
+    const willGuardUnits = guardUnits;
+    const willAttackPower = attackPower;
+    if (willAttackUnits.length) {
+      if (willGuardUnits.length == 0) {
+        // TODO: 本國傷害
+      } else {
+        if (
+          speed == 2 ||
+          (speed == 1 && isABattleGroup(ctx, ["速攻"], willAttackUnits[0]))
+        ) {
+          let currentAttackPower = willAttackPower;
+          const changedCardState = willGuardUnits.map((cardID): CardState => {
+            const [_, cs] = getCardState(ctx, cardID);
+            if (currentAttackPower <= 0) {
+              return cs;
+            }
+            const [_2, _3, hp] = getCardBattlePoint(ctx, cardID);
+            const live = hp - cs.damage;
+            if (live <= 0) {
+              return cs;
+            }
+            currentAttackPower -= live;
+            if (currentAttackPower >= 0) {
+              const reason: DestroyReason = {
+                id: "戦闘ダメージ",
+                playerID: currentAttackPlayerID,
+              };
+              const gameEvent: GameEvent = {
+                id: "破壊された場合",
+                cardID: cs.id,
+                destroyReason: reason,
+              };
+              willTriggerEvent.push(gameEvent);
+              return {
+                ...cs,
+                damage: hp,
+                destroyReason: reason,
+              };
+            }
+            // 剩餘血量
+            const nextLive = -currentAttackPower;
+            const nextDamage = hp - nextLive;
+            currentAttackPower = 0;
+            const gameEvent: GameEvent = {
+              id: "戦闘ダメージを受けた場合",
+              cardID: cs.id,
+            };
+            willTriggerEvent.push(gameEvent);
+            return {
+              ...cs,
+              damage: nextDamage,
+            };
+          });
+          const cardState = ctx.gameState.cardState.map((cs1) => {
+            for (const cs2 of changedCardState) {
+              if (cs1.id != cs2.id) {
+                return cs1;
+              }
+              return cs2;
+            }
+            return cs1;
+          });
+          ctx = {
+            ...ctx,
+            gameState: {
+              ...ctx.gameState,
+              cardState: cardState,
+            },
+          };
+        }
+      }
+    }
+  }
+  {
+    const currentAttackPlayerID = guardPlayerID;
+    const currentGuardPlayerID = attackPlayerID;
+    const willAttackUnits = guardUnits;
+    const willGuardUnits = attackUnits;
+    const willAttackPower = guardPower;
+    if (willAttackUnits.length) {
+      if (willGuardUnits.length == 0) {
+        // TODO: 本國傷害
+      } else {
+        if (
+          speed == 2 ||
+          (speed == 1 && isABattleGroup(ctx, ["速攻"], willAttackUnits[0]))
+        ) {
+          let currentAttackPower = willAttackPower;
+          const changedCardState = willGuardUnits.map((cardID): CardState => {
+            const [_, cs] = getCardState(ctx, cardID);
+            if (currentAttackPower <= 0) {
+              return cs;
+            }
+            const [_2, _3, hp] = getCardBattlePoint(ctx, cardID);
+            const live = hp - cs.damage;
+            if (live <= 0) {
+              return cs;
+            }
+            currentAttackPower -= live;
+            if (currentAttackPower >= 0) {
+              const reason: DestroyReason = {
+                id: "戦闘ダメージ",
+                playerID: currentAttackPlayerID,
+              };
+              const gameEvent: GameEvent = {
+                id: "破壊された場合",
+                cardID: cs.id,
+                destroyReason: reason,
+              };
+              willTriggerEvent.push(gameEvent);
+              return {
+                ...cs,
+                damage: hp,
+                destroyReason: reason,
+              };
+            }
+            // 剩餘血量
+            const nextLive = -currentAttackPower;
+            const nextDamage = hp - nextLive;
+            currentAttackPower = 0;
+            const gameEvent: GameEvent = {
+              id: "戦闘ダメージを受けた場合",
+              cardID: cs.id,
+            };
+            willTriggerEvent.push(gameEvent);
+            return {
+              ...cs,
+              damage: nextDamage,
+            };
+          });
+          const cardState = ctx.gameState.cardState.map((cs1) => {
+            for (const cs2 of changedCardState) {
+              if (cs1.id != cs2.id) {
+                return cs1;
+              }
+              return cs2;
+            }
+            return cs1;
+          });
+          ctx = {
+            ...ctx,
+            gameState: {
+              ...ctx.gameState,
+              cardState: cardState,
+            },
+          };
+        }
+      }
+    }
+  }
+  ctx = willTriggerEvent.reduce((ctx, evt) => {
+    return triggerTextEvent(ctx, evt);
+  }, ctx);
+  ctx = updateDestroyEffect(ctx);
+  return ctx;
 }
