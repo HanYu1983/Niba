@@ -1152,3 +1152,21 @@ export function isOpponentHasBattleGroup(
     }).length != 0
   );
 }
+
+export function isMaster(
+  ctx: GameContext,
+  unitCardID: string,
+  cardID: string
+): boolean {
+  const match = getCardCharacteristic(ctx, unitCardID)
+    .join("|")
+    .match(/専用「(.+?)」/);
+  if (match == null) {
+    return false;
+  }
+  const [_, masterName] = match;
+  if (masterName != getCardTitle(ctx, cardID)) {
+    return false;
+  }
+  return true;
+}

@@ -3,6 +3,7 @@ import {
   getCardCharacteristic,
   getCardState,
   getCardTitle,
+  isMaster,
   isOpponentHasBattleGroup,
 } from "./helper";
 import {
@@ -63,13 +64,19 @@ export function initJsonfp() {
     const [_, cs] = getCardState(ctx, cardID);
     return cs.destroyReason;
   });
-  jsonfp.addMethod("stringify", (input: GameContext, p: any) => {
+  jsonfp.addMethod("stringify", (input: any, p: any) => {
     return JSON.stringify(input);
   });
   jsonfp.addMethod(
     "isOpponentHasBattleGroup",
     (ctx: GameContext, cardID: string) => {
       return isOpponentHasBattleGroup(ctx, cardID);
+    }
+  );
+  jsonfp.addMethod(
+    "isMaster",
+    (ctx: GameContext, props: { unitCardID: string; cardID: string }) => {
+      return isMaster(ctx, props.unitCardID, props.cardID);
     }
   );
 }
