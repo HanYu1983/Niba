@@ -1,5 +1,6 @@
 import { createRollCostRequire, Require } from "../../tool/basic/blockPayload";
 import {
+  CardColor,
   CardText,
   DEFAULT_CARD_TEXT_SIYOU_KATA,
   TokuSyuKouKa,
@@ -54,7 +55,7 @@ export function createRequireMacro(macro: RequireMacro): Require {
 var _seqID = 0;
 export function createTokuSyuKouKaText(
   toku: TokuSyuKouKa,
-  options: { cost?: number }
+  options: { cost?: number; costColor?: CardColor }
 ): CardText {
   switch (toku[0]) {
     case "PS装甲":
@@ -231,7 +232,12 @@ export function createTokuSyuKouKaText(
         texts: [
           getCardTextMacro({
             id: "PlayCharacter(Stay)",
-            additionalRequire: [createRollCostRequire(options.cost || 0, null)],
+            additionalRequire: [
+              createRollCostRequire(
+                options.cost || 0,
+                options.costColor || null
+              ),
+            ],
           }),
         ],
       };
@@ -333,7 +339,10 @@ export function createTokuSyuKouKaText(
               require: {
                 id: "RequireAnd",
                 and: [
-                  createRollCostRequire(options.cost || 0, null),
+                  createRollCostRequire(
+                    options.cost || 0,
+                    options.costColor || null
+                  ),
                   {
                     id: "RequireTarget",
                     targets: {
@@ -414,7 +423,10 @@ export function createTokuSyuKouKaText(
             timing: ["ダメージ判定ステップ"],
             varCtxID: `createTokuSyuKouKaText_${_seqID++}`,
             additionalRequire: [
-              createRollCostRequire(options.cost || 0, null),
+              createRollCostRequire(
+                options.cost || 0,
+                options.costColor || null
+              ),
               createRequireMacro("このカードが戦闘エリアにいる場合"),
             ],
             feedbackBlock: {
@@ -559,7 +571,10 @@ export function createTokuSyuKouKaText(
             timing: ["自軍", "攻撃ステップ"],
             varCtxID: `createTokuSyuKouKaText_${_seqID++}`,
             additionalRequire: [
-              createRollCostRequire(options.cost || 0, null),
+              createRollCostRequire(
+                options.cost || 0,
+                options.costColor || null
+              ),
               {
                 id: "RequireTarget",
                 targets: {
@@ -687,7 +702,10 @@ export function createTokuSyuKouKaText(
             timing: ["防御ステップ"],
             varCtxID: `createTokuSyuKouKaText_${_seqID++}`,
             additionalRequire: [
-              createRollCostRequire(options.cost || 0, null),
+              createRollCostRequire(
+                options.cost || 0,
+                options.costColor || null
+              ),
               {
                 id: "RequireCustom",
                 customID: {
@@ -837,7 +855,10 @@ export function createTokuSyuKouKaText(
             timing: ["ダメージ判定ステップ"],
             varCtxID: `createTokuSyuKouKaText_${_seqID++}`,
             additionalRequire: [
-              createRollCostRequire(options.cost || 0, null),
+              createRollCostRequire(
+                options.cost || 0,
+                options.costColor || null
+              ),
               {
                 id: "RequireTarget",
                 targets: {
@@ -963,7 +984,10 @@ export function createTokuSyuKouKaText(
             timing: ["戦闘フェイズ"],
             varCtxID: `createTokuSyuKouKaText_${_seqID++}`,
             additionalRequire: [
-              createRollCostRequire(options.cost || 0, null),
+              createRollCostRequire(
+                options.cost || 0,
+                options.costColor || null
+              ),
               {
                 id: "RequireTarget",
                 targets: {
@@ -1252,7 +1276,10 @@ export function createTokuSyuKouKaText(
             timing: ["常時"],
             varCtxID: `createTokuSyuKouKaText_${_seqID++}`,
             additionalRequire: [
-              createRollCostRequire(options.cost || 0, null),
+              createRollCostRequire(
+                options.cost || 0,
+                options.costColor || null
+              ),
               // 剛出場旗標存在時
             ],
             feedbackBlock: {

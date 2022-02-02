@@ -43,42 +43,6 @@ const prototype: CardPrototype = {
       additionalRequire: [
         createRollCostRequire(1, null),
         // TODO: 自軍ユニットの「専用機のセット」が成立している場合
-        {
-          id: "RequireTarget",
-          targets: {},
-          condition: {
-            id: "ConditionJsonfp",
-            program: {
-              $cardID: {
-                "->": [
-                  "$in.blockPayload",
-                  { getter: "cause" },
-                  { getter: "cardID" },
-                ],
-              },
-              $unitCardID: {
-                "->": ["$in.ctx", { getSetGroupRoot: "$cardID" }],
-              },
-              pass1: {
-                if: [
-                  {
-                    "->": [
-                      "$in.ctx",
-                      {
-                        isMaster: {
-                          unitCardID: "$unitCardID",
-                          cardID: "$cardID",
-                        },
-                      },
-                    ],
-                  },
-                  {},
-                  { error: "必須成立專用機" },
-                ],
-              },
-            },
-          },
-        },
       ],
       feedbackBlock: {
         feedback: [

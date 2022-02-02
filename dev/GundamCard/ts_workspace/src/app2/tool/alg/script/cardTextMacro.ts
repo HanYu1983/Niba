@@ -146,6 +146,10 @@ type ConditionMacro9 = {
   id: "ターン終了時まで";
 };
 
+type ConditionMacro10 = {
+  id: "このカードは、「専用機のセット」が成立するユニットにセットされている場合";
+};
+
 export type ConditionMacro =
   | ConditionMacro1
   | ConditionMacro2
@@ -155,10 +159,44 @@ export type ConditionMacro =
   | ConditionMacro6
   | ConditionMacro7
   | ConditionMacro8
-  | ConditionMacro9;
+  | ConditionMacro9
+  | ConditionMacro10;
 
 export function getConditionMacro(macro: ConditionMacro): Condition {
   switch (macro.id) {
+    case "このカードは、「専用機のセット」が成立するユニットにセットされている場合":
+      return {
+        id: "ConditionJsonfp",
+        program: {
+          $cardID: {
+            "->": [
+              "$in.blockPayload",
+              { getter: "cause" },
+              { getter: "cardID" },
+            ],
+          },
+          $unitCardID: {
+            "->": ["$in.ctx", { getSetGroupRoot: "$cardID" }],
+          },
+          pass1: {
+            if: [
+              {
+                "->": [
+                  "$in.ctx",
+                  {
+                    isMaster: {
+                      unitCardID: "$unitCardID",
+                      cardID: "$cardID",
+                    },
+                  },
+                ],
+              },
+              {},
+              { error: "必須成立專用機" },
+            ],
+          },
+        },
+      };
     case "ターン終了時まで":
       return {
         id: "ConditionJsonfp",
