@@ -76,7 +76,12 @@ export function initJsonfp() {
   jsonfp.addMethod(
     "isMaster",
     (ctx: GameContext, props: { unitCardID: string; cardID: string }) => {
-      return isMaster(ctx, props.unitCardID, props.cardID);
+      try {
+        return isMaster(ctx, props.unitCardID, props.cardID);
+      } catch (e) {
+        log2("initJsonfp", "isMaster", "駕駛員可能被移動了", e);
+      }
+      throw new Error("駕駛員可能被移動了");
     }
   );
 }

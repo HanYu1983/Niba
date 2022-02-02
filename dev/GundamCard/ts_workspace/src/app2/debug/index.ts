@@ -46,6 +46,7 @@ import { testProto_179901_00_U_RD010P_red } from "./testProto_179901_00_U_RD010P
 import { testProto_179029_05C_O_BK014C_black } from "./testProto_179029_05C_O_BK014C_black";
 import { testProto_179001_01A_CH_WT007R_white } from "./testProto_179001_01A_CH_WT007R_white";
 import { testProto_179004_01A_CH_WT010C_white } from "./testProto_179004_01A_CH_WT010C_white";
+import { testProto_179022_06C_CH_WT057R_white } from "./testProto_179022_06C_CH_WT057R_white";
 
 export function test() {
   [
@@ -65,6 +66,7 @@ export function test() {
     testProto_179029_05C_O_BK014C_black,
     testProto_179001_01A_CH_WT007R_white,
     testProto_179004_01A_CH_WT010C_white,
+    testProto_179022_06C_CH_WT057R_white,
   ].forEach((testF: Function) => {
     console.log(
       `================================================================`

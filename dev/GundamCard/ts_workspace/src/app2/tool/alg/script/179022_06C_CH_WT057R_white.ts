@@ -76,6 +76,39 @@ const prototype: CardPrototype = {
                       enabled: true,
                       cardText: createTokuSyuKouKaText(["強襲"], {}),
                     },
+                    {
+                      id: "",
+                      enabled: true,
+                      cardText: {
+                        id: "自動型",
+                        category: "常駐",
+                        description: "",
+                        block: {
+                          require: {
+                            id: "RequireTarget",
+                            targets: {},
+                            condition: {
+                              id: "ConditionNot",
+                              not: getConditionMacro({
+                                id: "このカードは、「専用機のセット」が成立するユニットにセットされている場合",
+                              }),
+                            },
+                          },
+                          feedback: [
+                            {
+                              id: "FeedbackAction",
+                              action: [
+                                {
+                                  id: "ActionDeleteGlobalCardText",
+                                  cardStateID:
+                                    "『常駐』：このカードは、「専用機のセット」が成立するユニットにセットされている場合、「速攻」「強襲」を得る。",
+                                },
+                              ],
+                            },
+                          ],
+                        },
+                      },
+                    },
                   ],
                 },
               },

@@ -694,7 +694,7 @@ export function doRequireTargetActionTarget(
         }
       );
       const cardStateWillAdd = cardStateAfterSignID.filter((t) => {
-        return cardState.cardTextStates.find((v) => v.id == t.id) == null;
+        return ctx.gameState.globalCardState.find((v) => v.id == t.id) == null;
       });
       if (cardStateWillAdd.length == 0) {
         return ctx;
