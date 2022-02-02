@@ -25,6 +25,7 @@ import {
   DestroyReason,
   GameContext,
   getBlockOwner,
+  getSetGroupCards,
   reduceEffect,
 } from "../tool/basic/gameContext";
 import { getCard, mapCard, Card, reduceCard } from "../../../tool/table";
@@ -552,8 +553,13 @@ export function updateDestroyEffect(ctx: GameContext): GameContext {
       if (cs.destroyReason == null) {
         throw new Error("destroyReason must found");
       }
-      const prototype = getPrototype(card.protoID);
-      const hp = prototype.battlePoint[2];
+      const setGroupCards = getSetGroupCards(ctx, card.id);
+      const hp = setGroupCards
+        .map((setGroupCardID) => {
+          const [_2, _3, hp] = getCardBattlePoint(ctx, setGroupCardID);
+          return hp;
+        })
+        .reduce((a, b) => a + b);
       return {
         id: `updateDestroyEffect_${cs.id}`,
         cause: {
@@ -799,11 +805,17 @@ export function handleAttackDamage(
         if (card.tap) {
           return 0;
         }
-        const [melee, range] = getCardBattlePoint(ctx, cardID);
-        if (i == 0) {
-          return melee || 0;
-        }
-        return range || 0;
+        const setGroupCards = getSetGroupCards(ctx, cardID);
+        const power = setGroupCards
+          .map((setGroupCardID) => {
+            const [melee, range] = getCardBattlePoint(ctx, setGroupCardID);
+            if (i == 0) {
+              return melee || 0;
+            }
+            return range || 0;
+          })
+          .reduce((a, b) => a + b);
+        return power;
       })
       ?.reduce((acc, c) => acc + c, 0) || 0;
   const guardUnits = getBattleGroup(ctx, {
@@ -826,11 +838,17 @@ export function handleAttackDamage(
         if (card.tap) {
           return 0;
         }
-        const [melee, range] = getCardBattlePoint(ctx, cardID);
-        if (i == 0) {
-          return melee || 0;
-        }
-        return range || 0;
+        const setGroupCards = getSetGroupCards(ctx, cardID);
+        const power = setGroupCards
+          .map((setGroupCardID) => {
+            const [melee, range] = getCardBattlePoint(ctx, setGroupCardID);
+            if (i == 0) {
+              return melee || 0;
+            }
+            return range || 0;
+          })
+          .reduce((a, b) => a + b);
+        return power;
       })
       ?.reduce((acc, c) => acc + c, 0) || 0;
   const willTriggerEvent: GameEvent[] = [];
@@ -840,6 +858,11 @@ export function handleAttackDamage(
     const willAttackUnits = attackUnits;
     const willGuardUnits = guardUnits;
     const willAttackPower = attackPower;
+    log2("handleAttackDamage", "speed", speed);
+    log2("handleAttackDamage", "baSyou", where);
+    log2("handleAttackDamage", "willAttackUnits", willAttackUnits);
+    log2("handleAttackDamage", "willGuardUnits", willGuardUnits);
+    log2("handleAttackDamage", "willAttackPower", willAttackPower);
     if (willAttackUnits.length) {
       if (willGuardUnits.length == 0) {
         // TODO: 本國傷害
@@ -854,7 +877,13 @@ export function handleAttackDamage(
             if (currentAttackPower <= 0) {
               return cs;
             }
-            const [_2, _3, hp] = getCardBattlePoint(ctx, cardID);
+            const setGroupCards = getSetGroupCards(ctx, cardID);
+            const hp = setGroupCards
+              .map((setGroupCardID) => {
+                const [_2, _3, hp] = getCardBattlePoint(ctx, setGroupCardID);
+                return hp;
+              })
+              .reduce((a, b) => a + b);
             const live = hp - cs.damage;
             if (live <= 0) {
               return cs;
@@ -917,6 +946,11 @@ export function handleAttackDamage(
     const willAttackUnits = guardUnits;
     const willGuardUnits = attackUnits;
     const willAttackPower = guardPower;
+    log2("handleAttackDamage", "speed", speed);
+    log2("handleAttackDamage", "baSyou", where);
+    log2("handleAttackDamage", "willAttackUnits", willAttackUnits);
+    log2("handleAttackDamage", "willGuardUnits", willGuardUnits);
+    log2("handleAttackDamage", "willAttackPower", willAttackPower);
     if (willAttackUnits.length) {
       if (willGuardUnits.length == 0) {
         // TODO: 本國傷害
@@ -931,7 +965,13 @@ export function handleAttackDamage(
             if (currentAttackPower <= 0) {
               return cs;
             }
-            const [_2, _3, hp] = getCardBattlePoint(ctx, cardID);
+            const setGroupCards = getSetGroupCards(ctx, cardID);
+            const hp = setGroupCards
+              .map((setGroupCardID) => {
+                const [_2, _3, hp] = getCardBattlePoint(ctx, setGroupCardID);
+                return hp;
+              })
+              .reduce((a, b) => a + b);
             const live = hp - cs.damage;
             if (live <= 0) {
               return cs;

@@ -491,7 +491,6 @@ export function doRequireTargetActionTarget(
             "[doRequireTargetActionTarget][ActionMoveCardToPosition] cardID not found"
           );
         }
-        // TODO: 依照規則在不同的指令場所時，卡的正面或反面會改變
         const fromBaSyou = getCardBaSyou(ctx, cardID);
         const fromBaSyouID = getBaShouID(fromBaSyou);
         const isFromBa = isBa(fromBaSyou.value[1]);
@@ -512,6 +511,81 @@ export function doRequireTargetActionTarget(
             table: nextTable,
           },
         };
+        // 依照規則在不同的指令場所時，卡的正面或反面會改變
+        {
+          // 重設傷害
+          switch (toBaSyou.value[1]) {
+            case "本国":
+            case "手札":
+            case "捨て山":
+            case "ジャンクヤード":
+            case "ハンガー":
+            case "Gゾーン": {
+              const cardState = ctx.gameState.cardState.map((cs) => {
+                if (cs.id != cardID) {
+                  return cs;
+                }
+                return {
+                  ...cs,
+                  damage: 0,
+                };
+              });
+              ctx = {
+                ...ctx,
+                gameState: {
+                  ...ctx.gameState,
+                  cardState: cardState,
+                },
+              };
+            }
+          }
+          // 翻開牌
+          switch (toBaSyou.value[1]) {
+            case "ハンガー":
+            case "プレイされているカード":
+            case "配備エリア":
+            case "戦闘エリア（右）":
+            case "戦闘エリア（左）":
+            case "ジャンクヤード":
+              {
+                const table = mapCard(ctx.gameState.table, (card) => {
+                  if (card.id != cardID) {
+                    return card;
+                  }
+                  return {
+                    ...card,
+                    faceDown: false,
+                  };
+                });
+                ctx = {
+                  ...ctx,
+                  gameState: {
+                    ...ctx.gameState,
+                    table: table,
+                  },
+                };
+              }
+              break;
+            default: {
+              const table = mapCard(ctx.gameState.table, (card) => {
+                if (card.id != cardID) {
+                  return card;
+                }
+                return {
+                  ...card,
+                  faceDown: true,
+                };
+              });
+              ctx = {
+                ...ctx,
+                gameState: {
+                  ...ctx.gameState,
+                  table: table,
+                },
+              };
+            }
+          }
+        }
         // 出場時
         const isShowBa = isFromBa == false && isToBa;
         if (isShowBa) {
