@@ -536,6 +536,13 @@ export const OnViewModel = OnEvent.pipe(
                         ownerID: PlayerA,
                         tap: false,
                       },
+                      {
+                        id: "a2",
+                        protoID: "179023_06C_CH_WT067C_white",
+                        faceDown: true,
+                        ownerID: PlayerA,
+                        tap: false,
+                      },
                     ],
                     [getBaShouID({
                       id: "AbsoluteBaSyou",
@@ -552,6 +559,7 @@ export const OnViewModel = OnEvent.pipe(
                   },
                 },
                 activePlayerID: PlayerA,
+                setGroupLink: { a2: "a1" },
                 timing: [
                   23,
                   ["戦闘フェイズ", "ダメージ判定ステップ", "ステップ開始"],

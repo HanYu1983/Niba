@@ -988,9 +988,9 @@ export function handleAttackDamage(
       }
     }
   }
+  ctx = updateDestroyEffect(ctx);
   ctx = willTriggerEvent.reduce((ctx, evt) => {
     return triggerTextEvent(ctx, evt);
   }, ctx);
-  ctx = updateDestroyEffect(ctx);
   return ctx;
 }
