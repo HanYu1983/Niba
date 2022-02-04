@@ -867,10 +867,9 @@ export function handleAttackDamage(
           });
           const cardState = ctx.gameState.cardState.map((cs1) => {
             for (const cs2 of changedCardState) {
-              if (cs1.id != cs2.id) {
-                return cs1;
+              if (cs1.id == cs2.id) {
+                return cs2;
               }
-              return cs2;
             }
             return cs1;
           });
@@ -955,10 +954,9 @@ export function handleAttackDamage(
           });
           const cardState = ctx.gameState.cardState.map((cs1) => {
             for (const cs2 of changedCardState) {
-              if (cs1.id != cs2.id) {
-                return cs1;
+              if (cs1.id == cs2.id) {
+                return cs2;
               }
-              return cs2;
             }
             return cs1;
           });
