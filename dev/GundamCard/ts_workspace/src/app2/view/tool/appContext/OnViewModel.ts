@@ -539,6 +539,18 @@ export const OnViewModel = OnEvent.pipe(
                     ],
                     [getBaShouID({
                       id: "AbsoluteBaSyou",
+                      value: [PlayerA, "配備エリア"],
+                    })]: [
+                      {
+                        id: "aset1",
+                        protoID: "179901_CG_CH_WT002P_white",
+                        faceDown: true,
+                        ownerID: PlayerA,
+                        tap: false,
+                      },
+                    ],
+                    [getBaShouID({
+                      id: "AbsoluteBaSyou",
                       value: [PlayerA, "戦闘エリア（左）"],
                     })]: [
                       {
