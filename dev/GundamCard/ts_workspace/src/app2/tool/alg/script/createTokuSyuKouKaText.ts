@@ -7,50 +7,7 @@ import {
 } from "../../tool/basic/basic";
 import { RequireCustomID } from "../../tool/basic/requireCustom";
 import { getCardTextMacro } from "./cardTextMacro";
-
-export type RequireMacro = "このカードが戦闘エリアにいる場合";
-export function createRequireMacro(macro: RequireMacro): Require {
-  switch (macro) {
-    case "このカードが戦闘エリアにいる場合":
-      return {
-        id: "RequireTarget",
-        targets: {},
-        condition: {
-          id: "ConditionAnd",
-          and: [
-            {
-              id: "ConditionCompareBaSyou",
-              value: [
-                {
-                  id: "場所",
-                  value: {
-                    path: [
-                      { id: "カード", value: { path: [{ id: "このカード" }] } },
-                      "的「場所」",
-                    ],
-                  },
-                },
-                "in",
-                {
-                  id: "場所",
-                  value: [
-                    {
-                      id: "RelatedBaSyou",
-                      value: ["自軍", "戦闘エリア（左）"],
-                    },
-                    {
-                      id: "RelatedBaSyou",
-                      value: ["自軍", "戦闘エリア（右）"],
-                    },
-                  ],
-                },
-              ],
-            },
-          ],
-        },
-      };
-  }
-}
+import { getRequireMacro } from "./getRequireMacro";
 
 var _seqID = 0;
 export function createTokuSyuKouKaText(
@@ -427,7 +384,7 @@ export function createTokuSyuKouKaText(
                 options.cost || 0,
                 options.costColor || null
               ),
-              createRequireMacro("このカードが戦闘エリアにいる場合"),
+              getRequireMacro({ id: "このカードが戦闘エリアにいる場合" }),
             ],
             feedbackBlock: {
               require: {

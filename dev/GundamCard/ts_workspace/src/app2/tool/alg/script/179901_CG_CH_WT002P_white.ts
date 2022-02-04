@@ -5,10 +5,7 @@ import {
   DEFAULT_CARD_STATE,
   GameContext,
 } from "../../tool/basic/gameContext";
-import {
-  createRollCostRequire,
-  createRollRequire,
-} from "../../tool/basic/blockPayload";
+import { createRollCostRequire } from "../../tool/basic/blockPayload";
 import { BlockPayload } from "../../tool/basic/blockPayload";
 import {
   TargetType,
@@ -21,6 +18,7 @@ import {
   TIMING_CHART,
 } from "../../tool/basic/basic";
 import { createTokuSyuKouKaText } from "./createTokuSyuKouKaText";
+import { getRequireMacro } from "./getRequireMacro";
 
 // 179901_CG_CH_WT002P_white
 // ラクス・クライン
@@ -51,7 +49,7 @@ const prototype: CardPrototype = {
       varCtxID:
         "（戦闘フェイズ）〔R〕：自軍キャラ１枚は、ターン終了時まで、＋２／＋２／＋２を得る。",
       additionalRequire: [
-        createRollRequire(),
+        getRequireMacro({ id: "roll" }),
         {
           id: "RequireTarget",
           targets: {

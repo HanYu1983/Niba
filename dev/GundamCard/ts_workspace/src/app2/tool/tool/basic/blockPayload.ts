@@ -291,38 +291,6 @@ export function createRollCostRequire(
   };
 }
 
-export function createRollRequire(): RequireTarget {
-  return {
-    id: "RequireTarget",
-    targets: {},
-    condition: {
-      id: "ConditionCompareBoolean",
-      value: [
-        {
-          id: "布林",
-          value: {
-            path: [
-              { id: "カード", value: { path: [{ id: "このカード" }] } },
-              "是直立的？",
-            ],
-          },
-        },
-        "==",
-        {
-          id: "布林",
-          value: [true],
-        },
-      ],
-    },
-    action: [
-      {
-        id: "ActionRoll",
-        cards: { id: "カード", value: { path: [{ id: "このカード" }] } },
-      },
-    ],
-  };
-}
-
 let _reqKey = 0;
 export function wrapRequireKey(r: Require): Require {
   return recurRequire(r, (r) => {
