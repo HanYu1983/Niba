@@ -1,6 +1,7 @@
 import {
   DEFAULT_GAME_CONTEXT,
   GameContext,
+  GlobalCardState,
 } from "../tool/tool/basic/gameContext";
 import {
   initState,
@@ -38,7 +39,12 @@ import {
   testProto_179025_07D_U_RD156R_red,
   testProto_179025_07D_U_RD156R_red2,
 } from "./testProto_179025_07D_U_RD156R_red";
-import { getTargetType } from "../tool/alg/helper";
+import {
+  getBattleGroup,
+  getBattleGroupBattlePoint,
+  getCardBattlePoint,
+  getTargetType,
+} from "../tool/alg/helper";
 import { testJsonfp, testJsonfp2, testJsonfp3 } from "./testJsonfp";
 import { Action, ActionDraw, ActionDrop } from "../tool/tool/basic/action";
 import { testProto_179025_07D_U_RD158C_red } from "./testProto_179025_07D_U_RD158C_red";
@@ -67,6 +73,7 @@ export function test() {
     testProto_179001_01A_CH_WT007R_white,
     testProto_179004_01A_CH_WT010C_white,
     testProto_179022_06C_CH_WT057R_white,
+    testBattleBonus,
   ].forEach((testF: Function) => {
     console.log(
       `================================================================`
@@ -77,6 +84,138 @@ export function test() {
     );
     testF();
   });
+}
+
+export function testBattleBonus() {
+  let ctx = DEFAULT_GAME_CONTEXT;
+  ctx = {
+    ...ctx,
+    gameState: {
+      ...ctx.gameState,
+      table: {
+        ...ctx.gameState.table,
+        cardStack: {
+          ...ctx.gameState.table.cardStack,
+          [getBaShouID({
+            id: "AbsoluteBaSyou",
+            value: [PlayerA, "戦闘エリア（左）"],
+          })]: [
+            {
+              id: "a1",
+              protoID: "179016_04B_U_WT075C_white",
+              faceDown: true,
+              ownerID: PlayerA,
+              tap: false,
+            },
+            {
+              id: "a2",
+              protoID: "179001_01A_CH_WT007R_white",
+              faceDown: true,
+              ownerID: PlayerA,
+              tap: false,
+            },
+          ],
+          [getBaShouID({
+            id: "AbsoluteBaSyou",
+            value: [PlayerB, "戦闘エリア（左）"],
+          })]: [
+            {
+              id: "b1",
+              protoID: "179016_04B_U_WT075C_white",
+              faceDown: true,
+              ownerID: PlayerB,
+              tap: false,
+            },
+            {
+              id: "b2",
+              protoID: "179016_04B_U_WT075C_white",
+              faceDown: true,
+              ownerID: PlayerB,
+              tap: false,
+            },
+          ],
+        },
+      },
+      activePlayerID: PlayerA,
+      setGroupLink: { a2: "a1" },
+      timing: [22, ["戦闘フェイズ", "ダメージ判定ステップ", "ステップ開始"]],
+    },
+  };
+  ctx = initState(ctx);
+  {
+    const [x, y, z] = getCardBattlePoint(ctx, "a1");
+    if (x != 5) {
+      throw new Error("x != 5");
+    }
+    if (y != 2) {
+      throw new Error("y != 2");
+    }
+    if (z != 4) {
+      throw new Error("z != 4");
+    }
+  }
+  {
+    const bta = getBattleGroupBattlePoint(
+      ctx,
+      getBattleGroup(ctx, {
+        id: "AbsoluteBaSyou",
+        value: [PlayerA, "戦闘エリア（左）"],
+      })
+    );
+    if (bta != 7) {
+      throw new Error("must be 7");
+    }
+  }
+  console.log("給a1獲得+3/+3/+3");
+  ctx = {
+    ...ctx,
+    gameState: {
+      ...ctx.gameState,
+      globalCardState: [
+        {
+          id: "",
+          cardID: "a1",
+          cardTextStates: [
+            {
+              id: "",
+              enabled: true,
+              cardText: {
+                id: "CardTextCustom",
+                customID: {
+                  id: "CardTextCustomIDBattleBonus",
+                  battleBonus: [3, 3, 3],
+                },
+              },
+            },
+          ],
+        } as GlobalCardState,
+      ],
+    },
+  };
+  {
+    const [x, y, z] = getCardBattlePoint(ctx, "a1");
+    if (x != 8) {
+      throw new Error("x != 8");
+    }
+    if (y != 5) {
+      throw new Error("y != 5");
+    }
+    if (z != 7) {
+      throw new Error("z != 7");
+    }
+  }
+  {
+    const bta = getBattleGroupBattlePoint(
+      ctx,
+      getBattleGroup(ctx, {
+        id: "AbsoluteBaSyou",
+        value: [PlayerA, "戦闘エリア（左）"],
+      })
+    );
+    if (bta != 10) {
+      throw new Error("must be 10");
+    }
+  }
 }
 
 export function testRequireJsonfp() {

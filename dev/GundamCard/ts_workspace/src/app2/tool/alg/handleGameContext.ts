@@ -38,6 +38,7 @@ import { doRequire, doFeedback } from "./handleBlockPayload";
 import {
   assertBlockPayloadTargetTypeValueLength,
   getBattleGroup,
+  getBattleGroupBattlePoint,
   getCardBattlePoint,
   getCardState,
   isABattleGroup,
@@ -789,68 +790,12 @@ export function handleAttackDamage(
     id: "AbsoluteBaSyou",
     value: [attackPlayerID, where],
   });
-  const attackPower =
-    attackUnits
-      .map((cardID, i): number => {
-        // 破壞的單位沒有攻擊力
-        const [_, cs] = getCardState(ctx, cardID);
-        if (cs.destroyReason != null) {
-          return 0;
-        }
-        const card = getCard(ctx.gameState.table, cardID);
-        if (card == null) {
-          throw new Error("card not found");
-        }
-        // 横置的單位沒有攻擊力
-        if (card.tap) {
-          return 0;
-        }
-        const setGroupCards = getSetGroupCards(ctx, cardID);
-        const power = setGroupCards
-          .map((setGroupCardID) => {
-            const [melee, range] = getCardBattlePoint(ctx, setGroupCardID);
-            if (i == 0) {
-              return melee || 0;
-            }
-            return range || 0;
-          })
-          .reduce((a, b) => a + b);
-        return power;
-      })
-      ?.reduce((acc, c) => acc + c, 0) || 0;
+  const attackPower = getBattleGroupBattlePoint(ctx, attackUnits);
   const guardUnits = getBattleGroup(ctx, {
     id: "AbsoluteBaSyou",
     value: [guardPlayerID, where],
   });
-  const guardPower =
-    guardUnits
-      .map((cardID, i): number => {
-        // 破壞的單位沒有攻擊力
-        const [_, cs] = getCardState(ctx, cardID);
-        if (cs.destroyReason != null) {
-          return 0;
-        }
-        const card = getCard(ctx.gameState.table, cardID);
-        if (card == null) {
-          throw new Error("card not found");
-        }
-        // 横置的單位沒有攻擊力
-        if (card.tap) {
-          return 0;
-        }
-        const setGroupCards = getSetGroupCards(ctx, cardID);
-        const power = setGroupCards
-          .map((setGroupCardID) => {
-            const [melee, range] = getCardBattlePoint(ctx, setGroupCardID);
-            if (i == 0) {
-              return melee || 0;
-            }
-            return range || 0;
-          })
-          .reduce((a, b) => a + b);
-        return power;
-      })
-      ?.reduce((acc, c) => acc + c, 0) || 0;
+  const guardPower = getBattleGroupBattlePoint(ctx, guardUnits);
   const willTriggerEvent: GameEvent[] = [];
   {
     const currentAttackPlayerID = attackPlayerID;

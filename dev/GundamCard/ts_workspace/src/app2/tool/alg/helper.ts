@@ -1069,6 +1069,7 @@ export function getCardBattlePoint(
   }
   const prototype = getPrototype(card.protoID);
   const bonus = ctx.gameState.globalCardState
+    .filter((cs) => cs.cardID == cardID)
     .flatMap((cs) => cs.cardTextStates.map((cts) => cts.cardText))
     .filter(
       (ct) =>
@@ -1103,6 +1104,42 @@ export function getBattleGroup(
         return root.id;
       }) || []
   );
+}
+
+export function getBattleGroupBattlePoint(
+  ctx: GameContext,
+  unitCardIDs: string[]
+) {
+  const attackPower =
+    unitCardIDs
+      .map((cardID, i): number => {
+        // 破壞的單位沒有攻擊力
+        const [_, cs] = getCardState(ctx, cardID);
+        if (cs.destroyReason != null) {
+          return 0;
+        }
+        const card = getCard(ctx.gameState.table, cardID);
+        if (card == null) {
+          throw new Error("card not found");
+        }
+        // 横置的單位沒有攻擊力
+        if (card.tap) {
+          return 0;
+        }
+        const setGroupCards = getSetGroupCards(ctx, cardID);
+        const power = setGroupCards
+          .map((setGroupCardID) => {
+            const [melee, range] = getCardBattlePoint(ctx, setGroupCardID);
+            if (i == 0) {
+              return melee || 0;
+            }
+            return range || 0;
+          })
+          .reduce((a, b) => a + b);
+        return power;
+      })
+      ?.reduce((acc, c) => acc + c, 0) || 0;
+  return attackPower;
 }
 
 export function hasTokuSyouKouKa(
