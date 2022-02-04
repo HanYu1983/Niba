@@ -95,13 +95,20 @@ type CardTextMacro6 = {
   feedbackAction?: Action[];
 };
 
+type CardTextMacro7 = {
+  id: "破壊する";
+  description?: string;
+  cause: BlockPayloadCauseDestroy;
+};
+
 export type CardTextMacro =
   | CardTextMacro1
   | CardTextMacro2
   | CardTextMacro3
   | CardTextMacro4
   | CardTextMacro5
-  | CardTextMacro6;
+  | CardTextMacro6
+  | CardTextMacro7;
 
 export const VAR_PLAY_CARD = "將要「プレイ」的卡";
 
@@ -109,6 +116,38 @@ export function getCardTextMacro(
   macro: CardTextMacro
 ): CardTextSiYouKaTa | CardTextZiDouKaTa {
   switch (macro.id) {
+    case "破壊する":
+      return {
+        id: "使用型",
+        timing: ["常時"],
+        description: macro.id,
+        block: {
+          cause: macro.cause,
+          feedback: [
+            {
+              id: "FeedbackAction",
+              action: [
+                {
+                  id: "ActionMoveCardToPosition",
+                  cards: {
+                    id: "カード",
+                    value: [macro.cause.cardID],
+                  },
+                  baSyou: {
+                    id: "場所",
+                    value: [
+                      {
+                        id: "RelatedBaSyou",
+                        value: ["持ち主", "ジャンクヤード"],
+                      },
+                    ],
+                  },
+                },
+              ],
+            },
+          ],
+        },
+      };
     case "PlayG":
       return {
         ...CARD_TEXT_PLAY_G,

@@ -47,7 +47,6 @@ import {
 } from "./handleGameContext";
 import { wrapBlockRequireKey } from "./handleBlockPayload";
 import { jsonfp } from "./jsonfpHelper";
-import { createDestroyEffect } from "./script/cardTextMacro";
 
 let idSeq = 0;
 export function doRequireTargetActionTarget(

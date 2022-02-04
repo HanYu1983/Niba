@@ -46,6 +46,7 @@ import {
 import { doConditionTarget } from "./doConditionTarget";
 import { err2string } from "../../../tool/helper";
 import { getPrototype } from "./script";
+import { getCardTextMacro } from "./script/getCardTextMacro";
 //import { createPlayUnitText } from "./createPlayUnitText";
 export function wrapTip(
   ctx: GameContext,
@@ -562,43 +563,59 @@ export function updateDestroyEffect(ctx: GameContext): GameContext {
         })
         .reduce((a, b) => a + b);
       return {
-        id: `updateDestroyEffect_${cs.id}`,
-        cause: {
-          id: "BlockPayloadCauseDestroy",
-          reason:
-            hp <= 0
-              ? {
-                  id: "マイナスの戦闘修正",
-                  playerID: cs.destroyReason.playerID,
-                }
-              : cs.destroyReason,
-          playerID: cs.destroyReason.playerID,
-          cardID: cs.id,
-          description: "破壞產生的自身的廢棄效果",
-        },
-        feedback: [
-          {
-            id: "FeedbackAction",
-            action: [
-              {
-                id: "ActionMoveCardToPosition",
-                cards: {
-                  id: "カード",
-                  value: [cs.id],
-                },
-                baSyou: {
-                  id: "場所",
-                  value: [
-                    {
-                      id: "RelatedBaSyou",
-                      value: ["持ち主", "ジャンクヤード"],
-                    },
-                  ],
-                },
-              },
-            ],
+        ...getCardTextMacro({
+          id: "破壊する",
+          cause: {
+            id: "BlockPayloadCauseDestroy",
+            reason:
+              hp <= 0
+                ? {
+                    id: "マイナスの戦闘修正",
+                    playerID: cs.destroyReason.playerID,
+                  }
+                : cs.destroyReason,
+            playerID: cs.destroyReason.playerID,
+            cardID: cs.id,
+            description: "破壞產生的自身的廢棄效果",
           },
-        ],
+        }).block,
+        id: `updateDestroyEffect_${cs.id}`,
+        // cause: {
+        //   id: "BlockPayloadCauseDestroy",
+        //   reason:
+        //     hp <= 0
+        //       ? {
+        //           id: "マイナスの戦闘修正",
+        //           playerID: cs.destroyReason.playerID,
+        //         }
+        //       : cs.destroyReason,
+        //   playerID: cs.destroyReason.playerID,
+        //   cardID: cs.id,
+        //   description: "破壞產生的自身的廢棄效果",
+        // },
+        // feedback: [
+        //   {
+        //     id: "FeedbackAction",
+        //     action: [
+        //       {
+        //         id: "ActionMoveCardToPosition",
+        //         cards: {
+        //           id: "カード",
+        //           value: [cs.id],
+        //         },
+        //         baSyou: {
+        //           id: "場所",
+        //           value: [
+        //             {
+        //               id: "RelatedBaSyou",
+        //               value: ["持ち主", "ジャンクヤード"],
+        //             },
+        //           ],
+        //         },
+        //       },
+        //     ],
+        //   },
+        // ],
       };
     });
   ctx = {
