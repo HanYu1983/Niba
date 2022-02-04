@@ -1,23 +1,11 @@
-import { getCustomFunctionString } from "../../../../tool/helper";
 import {
   CardPrototype,
   DEFAULT_CARD_PROTOTYPE,
-  DEFAULT_CARD_STATE,
-  GameContext,
 } from "../../tool/basic/gameContext";
 import { createRollCostRequire } from "../../tool/basic/blockPayload";
-import { BlockPayload } from "../../tool/basic/blockPayload";
-import {
-  TargetType,
-  TargetTypeCustomFunctionType,
-} from "../../tool/basic/targetType";
-import { getCardTextMacro, getConditionMacro } from "./cardTextMacro";
-import {
-  DEFAULT_CARD_TEXT_SIYOU_KATA,
-  Phase,
-  TIMING_CHART,
-} from "../../tool/basic/basic";
 import { createTokuSyuKouKaText } from "./createTokuSyuKouKaText";
+import { getCardTextMacro } from "./getCardTextMacro";
+import { getConditionMacro } from "./getConditionMacro";
 
 // 179003_01A_U_BK008U_black
 // U

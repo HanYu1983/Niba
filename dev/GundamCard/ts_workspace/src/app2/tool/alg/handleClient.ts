@@ -41,7 +41,7 @@ import {
   updateCommand,
   updateDestroyEffect,
 } from "./handleGameContext";
-import { getCardTextMacro, getConditionMacro } from "./script/cardTextMacro";
+import { getConditionMacro } from "./script/getConditionMacro";
 
 export function setRequireAnswer(
   ctx: GameContext,

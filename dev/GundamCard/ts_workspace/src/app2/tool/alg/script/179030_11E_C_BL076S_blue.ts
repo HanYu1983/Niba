@@ -3,9 +3,12 @@ import {
   DEFAULT_CARD_PROTOTYPE,
 } from "../../tool/basic/gameContext";
 import { createRollCostRequire } from "../../tool/basic/blockPayload";
+import { createTokuSyuKouKaText } from "./createTokuSyuKouKaText";
+import { getCardTextMacro, VAR_PLAY_CARD } from "./getCardTextMacro";
+import { getConditionMacro } from "./getConditionMacro";
+import { RequireTarget } from "../../tool/basic/blockPayload";
+import { CardColor } from "../../tool/basic/basic";
 import { GameEventOnManualEventCustomID } from "../gameEventOnManualEventCustomID";
-import { getCardTextMacro } from "./cardTextMacro";
-import { DEFAULT_CARD_TEXT_SIYOU_KATA } from "../../tool/basic/basic";
 
 // 179030_11E_C_BL076S_blue
 // S

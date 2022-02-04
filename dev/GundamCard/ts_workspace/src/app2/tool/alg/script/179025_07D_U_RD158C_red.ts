@@ -2,17 +2,12 @@ import {
   CardPrototype,
   DEFAULT_CARD_PROTOTYPE,
 } from "../../tool/basic/gameContext";
+import { createRollCostRequire } from "../../tool/basic/blockPayload";
 import { createTokuSyuKouKaText } from "./createTokuSyuKouKaText";
-import {
-  createRollCostRequire,
-  RequireTarget,
-} from "../../tool/basic/blockPayload";
-import {
-  CardColor,
-  DEFAULT_CARD_TEXT_SIYOU_KATA,
-  DEFAULT_CARD_TEXT_ZIDOU_KATA,
-} from "../../tool/basic/basic";
-import { getCardTextMacro, VAR_PLAY_CARD } from "./cardTextMacro";
+import { getCardTextMacro, VAR_PLAY_CARD } from "./getCardTextMacro";
+import { getConditionMacro } from "./getConditionMacro";
+import { RequireTarget } from "../../tool/basic/blockPayload";
+import { CardColor } from "../../tool/basic/basic";
 
 const playCardRequire: RequireTarget = {
   id: "RequireTarget",

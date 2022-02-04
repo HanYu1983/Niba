@@ -1,13 +1,15 @@
 import {
-  DEFAULT_CARD_TEXT_SIYOU_KATA,
-  DEFAULT_CARD_TEXT_ZIDOU_KATA,
-} from "../../tool/basic/basic";
-import {
   CardPrototype,
-  GameContext,
   DEFAULT_CARD_PROTOTYPE,
 } from "../../tool/basic/gameContext";
-import { getCardTextMacro } from "./cardTextMacro";
+import { createRollCostRequire } from "../../tool/basic/blockPayload";
+import { createTokuSyuKouKaText } from "./createTokuSyuKouKaText";
+import { getCardTextMacro, VAR_PLAY_CARD } from "./getCardTextMacro";
+import { getConditionMacro } from "./getConditionMacro";
+import { RequireTarget } from "../../tool/basic/blockPayload";
+import { CardColor } from "../../tool/basic/basic";
+import { GameEventOnManualEventCustomID } from "../gameEventOnManualEventCustomID";
+import { RequireCustomID } from "../../tool/basic/requireCustom";
 
 // 179901_CG_C_WT001P_white
 // アークエンジェル出航

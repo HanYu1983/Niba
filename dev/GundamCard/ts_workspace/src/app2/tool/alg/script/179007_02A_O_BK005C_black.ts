@@ -1,17 +1,11 @@
-import { getCustomFunctionString } from "../../../../tool/helper";
 import {
   CardPrototype,
-  GameContext,
   DEFAULT_CARD_PROTOTYPE,
 } from "../../tool/basic/gameContext";
-import {
-  createRollCostRequire,
-  RequireAnd,
-  RequireTarget,
-} from "../../tool/basic/blockPayload";
-import { getCard } from "../../../../tool/table";
-import { getCardTextMacro } from "./cardTextMacro";
-import { DEFAULT_CARD_TEXT_SIYOU_KATA } from "../../tool/basic/basic";
+import { createRollCostRequire } from "../../tool/basic/blockPayload";
+import { createTokuSyuKouKaText } from "./createTokuSyuKouKaText";
+import { getCardTextMacro } from "./getCardTextMacro";
+import { getConditionMacro } from "./getConditionMacro";
 
 // 179007_02A_O_BK005C_black
 // C

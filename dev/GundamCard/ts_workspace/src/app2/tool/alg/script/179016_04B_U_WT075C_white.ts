@@ -1,18 +1,11 @@
-import { getCustomFunctionString } from "../../../../tool/helper";
 import {
   CardPrototype,
   DEFAULT_CARD_PROTOTYPE,
-  GameContext,
 } from "../../tool/basic/gameContext";
 import { createRollCostRequire } from "../../tool/basic/blockPayload";
-import { BlockPayload } from "../../tool/basic/blockPayload";
-import {
-  TargetType,
-  TargetTypeCustomFunctionType,
-} from "../../tool/basic/targetType";
-import { getCardTextMacro, getConditionMacro } from "./cardTextMacro";
-import { DEFAULT_CARD_TEXT_SIYOU_KATA } from "../../tool/basic/basic";
 import { createTokuSyuKouKaText } from "./createTokuSyuKouKaText";
+import { getCardTextMacro } from "./getCardTextMacro";
+import { getConditionMacro } from "./getConditionMacro";
 
 // 179016_04B_U_WT075C_white
 // アストレイ ブルーフレーム セカンドL（ローエングリンランチャー）

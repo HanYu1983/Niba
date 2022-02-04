@@ -1,19 +1,14 @@
-import { getCustomFunctionString } from "../../../../tool/helper";
 import {
   CardPrototype,
   DEFAULT_CARD_PROTOTYPE,
-  DEFAULT_CARD_STATE,
-  GameContext,
 } from "../../tool/basic/gameContext";
 import { createRollCostRequire } from "../../tool/basic/blockPayload";
-import { BlockPayload } from "../../tool/basic/blockPayload";
-import {
-  TargetType,
-  TargetTypeCustomFunctionType,
-} from "../../tool/basic/targetType";
-import { getCardTextMacro } from "./cardTextMacro";
-import { DEFAULT_CARD_TEXT_SIYOU_KATA } from "../../tool/basic/basic";
 import { createTokuSyuKouKaText } from "./createTokuSyuKouKaText";
+import { getCardTextMacro, VAR_PLAY_CARD } from "./getCardTextMacro";
+import { getConditionMacro } from "./getConditionMacro";
+import { RequireTarget } from "../../tool/basic/blockPayload";
+import { CardColor } from "../../tool/basic/basic";
+import { GameEventOnManualEventCustomID } from "../gameEventOnManualEventCustomID";
 import { RequireCustomID } from "../../tool/basic/requireCustom";
 
 // 179030_11E_U_BL210N_blue

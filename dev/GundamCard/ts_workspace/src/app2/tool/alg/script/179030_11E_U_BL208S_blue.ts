@@ -1,13 +1,15 @@
-import { DEFAULT_CARD_TEXT_SIYOU_KATA } from "../../tool/basic/basic";
-import { createRollCostRequire } from "../../tool/basic/blockPayload";
 import {
   CardPrototype,
-  GameContext,
   DEFAULT_CARD_PROTOTYPE,
 } from "../../tool/basic/gameContext";
-import { RequireCustomID } from "../../tool/basic/requireCustom";
-import { getCardTextMacro } from "./cardTextMacro";
+import { createRollCostRequire } from "../../tool/basic/blockPayload";
 import { createTokuSyuKouKaText } from "./createTokuSyuKouKaText";
+import { getCardTextMacro, VAR_PLAY_CARD } from "./getCardTextMacro";
+import { getConditionMacro } from "./getConditionMacro";
+import { RequireTarget } from "../../tool/basic/blockPayload";
+import { CardColor } from "../../tool/basic/basic";
+import { GameEventOnManualEventCustomID } from "../gameEventOnManualEventCustomID";
+import { RequireCustomID } from "../../tool/basic/requireCustom";
 // 179030_11E_U_BL208S_blue
 // Hi-νガンダム［†］ νガンダム系　MS　専用「アムロ・レイ」
 // 戦闘配備　高機動　〔１〕：サイコミュ（３）　〔１〕：改装［νガンダム系］

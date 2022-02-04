@@ -6,8 +6,8 @@ import {
   TokuSyuKouKa,
 } from "../../tool/basic/basic";
 import { RequireCustomID } from "../../tool/basic/requireCustom";
-import { getCardTextMacro } from "./cardTextMacro";
 import { getRequireMacro } from "./getRequireMacro";
+import { getCardTextMacro } from "./getCardTextMacro";
 
 var _seqID = 0;
 export function createTokuSyuKouKaText(
