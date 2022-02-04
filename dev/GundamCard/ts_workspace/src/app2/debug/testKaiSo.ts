@@ -97,7 +97,6 @@ export function testKaiSo1() {
   ctx = updateCommand(ctx);
   console.log("查詢改裝指令");
   let flows = queryFlow(ctx, PlayerA);
-  console.log("XXXXX", flows);
   const cmdFlow = flows.find((flow) => {
     if (flow.id != "FlowSetActiveEffectID") {
       return false;
@@ -154,8 +153,6 @@ export function testKaiSo1() {
   console.log("執行改裝效果");
   let topEffect = ctx.gameState.stackEffect[0];
   topEffect = wrapTip(ctx, true, topEffect, "tmp");
-
-  console.log("XXXXX", topEffect);
   if (topEffect.require) {
     ctx = doRequire(ctx, topEffect, topEffect.require, varCtxID);
   }

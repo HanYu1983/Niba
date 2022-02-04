@@ -230,7 +230,7 @@ export function triggerTextEvent(
               }, ctx);
             }
           } catch (e) {
-            console.log(e);
+            log2("triggerTextEvent", err2string(e));
           }
           return ctx;
         }, ctx);
@@ -441,7 +441,7 @@ export function updateEffect(ctx: GameContext): GameContext {
               }, ctx);
             }
           } catch (e) {
-            console.log(e);
+            log2("updateEffect", e);
           }
           return ctx;
         }, ctx);
