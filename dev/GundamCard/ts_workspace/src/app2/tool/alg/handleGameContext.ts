@@ -182,13 +182,13 @@ export function triggerTextEvent(
                 default:
                   return [];
               }
-            case "使用型":
-              return [];
             case "特殊型":
             case "恒常":
               return cardTextState.cardText.texts
                 .filter((t) => t.id == "自動型" && t.category == "起動")
                 .map((t) => t);
+            default:
+              return [];
           }
         })();
         return cardTexts.reduce((ctx, cardText) => {
@@ -261,8 +261,6 @@ export function updateCommand(ctx: GameContext): GameContext {
       return cardState.cardTextStates.reduce((ctx, cardTextState) => {
         const cardTexts = (() => {
           switch (cardTextState.cardText.id) {
-            case "自動型":
-              return [];
             case "使用型":
               return [cardTextState.cardText];
             case "特殊型":
@@ -270,6 +268,8 @@ export function updateCommand(ctx: GameContext): GameContext {
               return cardTextState.cardText.texts
                 .filter((t) => t.id == "使用型")
                 .map((t) => t);
+            default:
+              return [];
           }
         })();
         return cardTexts.reduce((ctx, cardText) => {
@@ -366,8 +366,6 @@ export function updateEffect(ctx: GameContext): GameContext {
                 default:
                   return [];
               }
-            case "使用型":
-              return [];
             case "特殊型":
               return cardTextState.cardText.texts.flatMap((t) => {
                 switch (t.id) {
@@ -401,6 +399,8 @@ export function updateEffect(ctx: GameContext): GameContext {
                     (t.category == "恒常" || t.category == "常駐")
                 )
                 .map((t) => t);
+            default:
+              return [];
           }
         })();
         return cardTexts.reduce((ctx, cardText) => {

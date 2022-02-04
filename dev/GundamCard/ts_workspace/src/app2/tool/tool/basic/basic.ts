@@ -346,11 +346,25 @@ export type CardTextZiDouKaTa2 = {
   texts: (CardTextZiDouKaTa | CardTextSiYouKaTa)[];
 };
 
+export type CardTextCustomIDBattleBonus = {
+  id: "CardTextCustomIDBattleBonus";
+  battleBonus: BattleBonus;
+};
+
+export type CardTextCustomID = CardTextCustomIDBattleBonus;
+
+export type CardTextCustom = {
+  id: "CardTextCustom";
+  description: string;
+  customID: CardTextCustomID;
+};
+
 export type CardText =
   | CardTextZiDouKaTa
   | CardTextSiYouKaTa
   | CardTextToKuSyuKata
-  | CardTextZiDouKaTa2;
+  | CardTextZiDouKaTa2
+  | CardTextCustom;
 
 export const DEFAULT_CARD_TEXT_SIYOU_KATA: CardTextSiYouKaTa = {
   id: "使用型",

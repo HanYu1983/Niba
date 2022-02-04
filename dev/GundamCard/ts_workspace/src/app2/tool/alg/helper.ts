@@ -1068,7 +1068,26 @@ export function getCardBattlePoint(
     throw new Error("card not found");
   }
   const prototype = getPrototype(card.protoID);
-  return prototype.battlePoint;
+  const bonus = ctx.gameState.globalCardState
+    .flatMap((cs) => cs.cardTextStates.map((cts) => cts.cardText))
+    .filter(
+      (ct) =>
+        ct.id == "CardTextCustom" &&
+        ct.customID.id == "CardTextCustomIDBattleBonus"
+    )
+    .map((ct) => {
+      if (
+        ct.id != "CardTextCustom" ||
+        ct.customID.id != "CardTextCustomIDBattleBonus"
+      ) {
+        throw new Error("must be CardTextCustomIDBattleBonus");
+      }
+      return ct.customID.battleBonus;
+    });
+  const retBonus = bonus.reduce(([x, y, z], [x2, y2, z2]): BattleBonus => {
+    return [x + x2, y + y2, z + z2];
+  }, prototype.battlePoint);
+  return retBonus;
 }
 
 export function getBattleGroup(

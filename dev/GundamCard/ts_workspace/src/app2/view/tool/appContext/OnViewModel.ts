@@ -527,6 +527,18 @@ export const OnViewModel = OnEvent.pipe(
                     ...ctx.gameState.table.cardStack,
                     [getBaShouID({
                       id: "AbsoluteBaSyou",
+                      value: [PlayerA, "手札"],
+                    })]: [
+                      {
+                        id: "h1",
+                        protoID: "179025_07D_C_WT060U_white",
+                        faceDown: true,
+                        ownerID: PlayerA,
+                        tap: false,
+                      },
+                    ],
+                    [getBaShouID({
+                      id: "AbsoluteBaSyou",
                       value: [PlayerA, "戦闘エリア（左）"],
                     })]: [
                       {
@@ -555,6 +567,13 @@ export const OnViewModel = OnEvent.pipe(
                         ownerID: PlayerB,
                         tap: false,
                       },
+                      {
+                        id: "b2",
+                        protoID: "179016_04B_U_WT075C_white",
+                        faceDown: true,
+                        ownerID: PlayerB,
+                        tap: false,
+                      },
                     ],
                     [getBaShouID({
                       id: "AbsoluteBaSyou",
@@ -569,6 +588,27 @@ export const OnViewModel = OnEvent.pipe(
                       },
                       {
                         id: "g2",
+                        protoID: "179030_11E_G_RD021N_red",
+                        faceDown: true,
+                        ownerID: PlayerA,
+                        tap: false,
+                      },
+                      {
+                        id: "g3",
+                        protoID: "179030_11E_G_RD021N_red",
+                        faceDown: true,
+                        ownerID: PlayerA,
+                        tap: false,
+                      },
+                      {
+                        id: "g4",
+                        protoID: "179030_11E_G_RD021N_red",
+                        faceDown: true,
+                        ownerID: PlayerA,
+                        tap: false,
+                      },
+                      {
+                        id: "g5",
                         protoID: "179030_11E_G_RD021N_red",
                         faceDown: true,
                         ownerID: PlayerA,
