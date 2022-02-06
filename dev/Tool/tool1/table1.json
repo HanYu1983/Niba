@@ -1,0 +1,210 @@
+[
+  {
+    "type": "data",
+    "width": 50,
+    "height": 75,
+    "pos": [
+      100,
+      100
+    ],
+    "back": true,
+    "lock": false,
+    "count": 3,
+    "extra": [
+      "<div style='overflow:hidden;background-color:red; width:100%; height:100%; left:0; top:0; text-align:right'>鬼劍<br>重2<br>斬擊-刀 4 3<br>鬼斬<br>暗-暗闇6 近招 斬x</div>",
+      "內攻+6/8/10."
+    ]
+  },
+  {
+    "type": "data",
+    "width": 50,
+    "height": 75,
+    "pos": [
+      100,
+      100
+    ],
+    "back": true,
+    "lock": false,
+    "count": 3,
+    "extra": [
+      "<div style='overflow:hidden;background-color:red; width:100%; height:100%; left:0; top:0; text-align:right'>鬼劍<br>重2<br>斬擊-刀 4 3<br>三日月斬<br>暗-暗闇6 近招 斬斬x</div>",
+      "內攻+6/8/10."
+    ]
+  },
+  {
+    "type": "data",
+    "width": 50,
+    "height": 75,
+    "pos": [
+      100,
+      100
+    ],
+    "back": true,
+    "lock": false,
+    "count": 3,
+    "extra": [
+      "<div style='overflow:hidden;background-color:grey; width:100%; height:100%; left:0; top:0; text-align:right'>鬼劍<br>重2<br>斬擊-刀 4 3<br>血之宿命<br>暗-暗闇6 氣場 斬1</div>",
+      "移除這張卡。回復X血。X為這回合造成的傷害。X最多為10."
+    ]
+  },
+  {
+    "type": "data",
+    "width": 50,
+    "height": 75,
+    "pos": [
+      100,
+      100
+    ],
+    "back": true,
+    "lock": false,
+    "count": 3,
+    "extra": [
+      "<div style='overflow:hidden;background-color:grey; width:100%; height:100%; left:0; top:0; text-align:right'>鬼劍<br>重2<br>斬擊-刀 4 3<br>闇擊氣場<br>暗-暗闇6 氣場 斬1</div>",
+      "敵軍反應步時可以宣告。支付2血。機率4: 造成的傷害+X。X為本來造成的傷害。X為多為6."
+    ]
+  },
+  {
+    "type": "data",
+    "width": 50,
+    "height": 75,
+    "pos": [
+      100,
+      100
+    ],
+    "back": true,
+    "lock": false,
+    "count": 3,
+    "extra": [
+      "<div style='overflow:hidden;background-color:gainsboro; width:100%; height:100%; left:0; top:0; text-align:right'>鬼劍<br>重2<br>斬擊-刀 4 3<br>覇體<br>無 氣功 2</div>",
+      "下次的攻擊在對抗外攻時一定生效。對方的對抗值改為對對抗對象的傷害。"
+    ]
+  },
+  {
+    "type": "data",
+    "width": 50,
+    "height": 75,
+    "pos": [
+      100,
+      100
+    ],
+    "back": true,
+    "lock": false,
+    "count": 3,
+    "extra": [
+      "<div style='overflow:hidden;background-color:red; width:100%; height:100%; left:0; top:0; text-align:right'>鬼劍<br>重2<br>斬擊-刀 4 3<br>十字鬼斬<br>暗-暗闇6 近招 斬斬x</div>",
+      "內攻+6/8/10"
+    ]
+  },
+  {
+    "type": "data",
+    "width": 50,
+    "height": 75,
+    "pos": [
+      100,
+      100
+    ],
+    "back": true,
+    "lock": false,
+    "count": 3,
+    "extra": [
+      "<div style='overflow:hidden;background-color:FloralWhite; width:100%; height:100%; left:0; top:0; text-align:right'>大手裡劍<br>重2<br>斬擊-刀 5 2<br>風投擲<br>風-撕裂5 遠招 2</div>",
+      "外功4"
+    ]
+  },
+  {
+    "type": "data",
+    "width": 50,
+    "height": 75,
+    "pos": [
+      100,
+      100
+    ],
+    "back": true,
+    "lock": false,
+    "count": 3,
+    "extra": [
+      "<div style='overflow:hidden;background-color:FloralWhite; width:100%; height:100%; left:0; top:0; text-align:right'>大手裡劍<br>重2<br>斬擊-刀 5 2<br>火投擲<br>火-燒傷5 遠招 2</div>",
+      "外功4"
+    ]
+  },
+  {
+    "type": "data",
+    "width": 50,
+    "height": 75,
+    "pos": [
+      100,
+      100
+    ],
+    "back": true,
+    "lock": false,
+    "count": 3,
+    "extra": [
+      "<div style='overflow:hidden;background-color:FloralWhite; width:100%; height:100%; left:0; top:0; text-align:right'>大手裡劍<br>重2<br>斬擊-刀 5 2<br>水投擲<br>水-冰凍5 遠招 2</div>",
+      "外功4"
+    ]
+  },
+  {
+    "type": "data",
+    "width": 50,
+    "height": 75,
+    "pos": [
+      100,
+      100
+    ],
+    "back": true,
+    "lock": false,
+    "count": 3,
+    "extra": [
+      "<div style='overflow:hidden;background-color:grey; width:100%; height:100%; left:0; top:0; text-align:right'>忍刀<br>重2<br>斬擊-刀 5 2<br>二刀流<br>無 氣場 斬斬0</div>",
+      "在交戰判定時，2條攻擊路線都只有1個自己非招式武器的時候，那2條線的所有自己武器外功+2. 出擊時若達成2路線各1個武器的情況下，氣+1."
+    ]
+  },
+  {
+    "type": "data",
+    "width": 50,
+    "height": 75,
+    "pos": [
+      100,
+      100
+    ],
+    "back": true,
+    "lock": false,
+    "count": 3,
+    "extra": [
+      "<div style='overflow:hidden;background-color:red; width:100%; height:100%; left:0; top:0; text-align:right'>忍刀<br>重2<br>斬擊-刀 5 2<br>鬼魅術<br>無 近招 斬2</div>",
+      "可以將憑依武器移到另一個路線。若原路線上不存在自己武器時，那條路線的敵方武器在交戰判定時失效。"
+    ]
+  },
+  {
+    "type": "data",
+    "width": 50,
+    "height": 75,
+    "pos": [
+      100,
+      100
+    ],
+    "back": true,
+    "lock": false,
+    "count": 3,
+    "extra": [
+      "<div style='overflow:hidden;background-color:red; width:100%; height:100%; left:0; top:0; text-align:right'>忍刀<br>重2<br>斬擊-刀 5 2<br>背刺<br>無 近招 斬0</div>",
+      "外功+0. 回1氣。造成傷害時，機率5那個傷害+4."
+    ]
+  },
+  {
+    "type": "data",
+    "width": 50,
+    "height": 75,
+    "pos": [
+      100,
+      100
+    ],
+    "back": true,
+    "lock": false,
+    "count": 3,
+    "extra": [
+      "<div style='overflow:hidden;background-color:red; width:100%; height:100%; left:0; top:0; text-align:right'>忍刀<br>重2<br>斬擊-刀 5 2<br>偷襲<br>無 近招 斬0</div>",
+      "外功+0. 回1氣。造成傷害時，那個傷害+2."
+    ]
+  }
+]

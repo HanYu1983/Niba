@@ -1,0 +1,210 @@
+[
+  {
+    "type": "data",
+    "width": 50,
+    "height": 75,
+    "pos": [
+      100,
+      100
+    ],
+    "back": true,
+    "lock": false,
+    "count": 3,
+    "extra": [
+      "<div style='overflow:hidden;background-color:red; width:100%; height:100%; left:0; top:0; text-align:right'>破壞大劍<br>重4<br>斬擊-大 9 4<br>狂斬<br>無 近招 斬x</div>",
+      "外功+3/5/7"
+    ]
+  },
+  {
+    "type": "data",
+    "width": 50,
+    "height": 75,
+    "pos": [
+      100,
+      100
+    ],
+    "back": true,
+    "lock": false,
+    "count": 3,
+    "extra": [
+      "<div style='overflow:hidden;background-color:red; width:100%; height:100%; left:0; top:0; text-align:right'>破壞大劍<br>重4<br>斬擊-大 9 4<br>刀斬<br>無 近招 斬x</div>",
+      "外功+2/4/6。對象沒有防具的時候，造成的傷害值+2."
+    ]
+  },
+  {
+    "type": "data",
+    "width": 50,
+    "height": 75,
+    "pos": [
+      100,
+      100
+    ],
+    "back": true,
+    "lock": false,
+    "count": 3,
+    "extra": [
+      "<div style='overflow:hidden;background-color:FloralWhite; width:100%; height:100%; left:0; top:0; text-align:right'>破壞大劍<br>重4<br>斬擊-大 9 4<br>流星雨<br>地-昏眩2 遠招 斬x</div>",
+      "内功+6/8/10.這個招式不能被回避之類的效果指定。"
+    ]
+  },
+  {
+    "type": "data",
+    "width": 50,
+    "height": 75,
+    "pos": [
+      100,
+      100
+    ],
+    "back": true,
+    "lock": false,
+    "count": 3,
+    "extra": [
+      "<div style='overflow:hidden;background-color:FloralWhite; width:100%; height:100%; left:0; top:0; text-align:right'>破壞大劍<br>重4<br>斬擊-大 9 4<br>畫龍點睛<br>風-撕裂5 遠招 斬x</div>",
+      "内功+6/8/10。造成傷害時，對象所有裝備幾率5脫手。"
+    ]
+  },
+  {
+    "type": "data",
+    "width": 50,
+    "height": 75,
+    "pos": [
+      100,
+      100
+    ],
+    "back": true,
+    "lock": false,
+    "count": 3,
+    "extra": [
+      "<div style='overflow:hidden;background-color:red; width:100%; height:100%; left:0; top:0; text-align:right'>破壞大劍<br>重4<br>斬擊-大 9 4<br>超究武神霸斬<br>無 近招 斬x</div>",
+      "外功+5/7/9."
+    ]
+  },
+  {
+    "type": "data",
+    "width": 50,
+    "height": 75,
+    "pos": [
+      100,
+      100
+    ],
+    "back": true,
+    "lock": false,
+    "count": 3,
+    "extra": [
+      "<div style='overflow:hidden;background-color:grey; width:100%; height:100%; left:0; top:0; text-align:right'>神羅裝束<br>重1<br>防具-衣 2 2<br>架勢<br>無 氣場 2</div>",
+      "敵軍配置時可以支付這張卡上的1氣，重置自己重量3以上的武器。"
+    ]
+  },
+  {
+    "type": "data",
+    "width": 50,
+    "height": 75,
+    "pos": [
+      100,
+      100
+    ],
+    "back": true,
+    "lock": false,
+    "count": 3,
+    "extra": [
+      "<div style='overflow:hidden;background-color:grey; width:100%; height:100%; left:0; top:0; text-align:right'>火魔石<br>重1<br>防具-飾 1 3<br>火球術<br>火-燒傷5 氣場 2</div>",
+      "自己招式階段可以支付這張卡上的1氣，造成内力2的遠招。"
+    ]
+  },
+  {
+    "type": "data",
+    "width": 50,
+    "height": 75,
+    "pos": [
+      100,
+      100
+    ],
+    "back": true,
+    "lock": false,
+    "count": 3,
+    "extra": [
+      "<div style='overflow:hidden;background-color:grey; width:100%; height:100%; left:0; top:0; text-align:right'>治療魔石<br>重1<br>防具-飾 1 3<br>治療術<br>光-封印3 氣場 2</div>",
+      "自己配置階段可以支付這張卡上的1氣，回復3點血量。"
+    ]
+  },
+  {
+    "type": "data",
+    "width": 50,
+    "height": 75,
+    "pos": [
+      100,
+      100
+    ],
+    "back": true,
+    "lock": false,
+    "count": 3,
+    "extra": [
+      "<div style='overflow:hidden;background-color:grey; width:100%; height:100%; left:0; top:0; text-align:right'>神羅裝束<br>重1<br>防具-衣 2 2<br>元士兵<br>無 氣場 4</div>",
+      "自己回合開始時氣+3.連技時不需要橫置武器。"
+    ]
+  },
+  {
+    "type": "data",
+    "width": 50,
+    "height": 75,
+    "pos": [
+      100,
+      100
+    ],
+    "back": true,
+    "lock": false,
+    "count": 3,
+    "extra": [
+      "<div style='overflow:hidden;background-color:grey; width:100%; height:100%; left:0; top:0; text-align:right'>粗布麻褲<br>重1<br>防具-褲 2 2<br>還神<br>光-封印3 氣場 1</div>",
+      "這張卡廢棄時，回復2"
+    ]
+  },
+  {
+    "type": "data",
+    "width": 50,
+    "height": 75,
+    "pos": [
+      100,
+      100
+    ],
+    "back": true,
+    "lock": false,
+    "count": 3,
+    "extra": [
+      "<div style='overflow:hidden;background-color:gainsboro; width:100%; height:100%; left:0; top:0; text-align:right'>粗布麻衣<br>重1<br>防具-衣 2 2<br>調息<br>光-封印3 氣功 1</div>",
+      "配置步使用，回復5。"
+    ]
+  },
+  {
+    "type": "data",
+    "width": 50,
+    "height": 75,
+    "pos": [
+      100,
+      100
+    ],
+    "back": true,
+    "lock": false,
+    "count": 3,
+    "extra": [
+      "<div style='overflow:hidden;background-color:green; width:100%; height:100%; left:0; top:0; text-align:right'>破壞大劍<br>重4<br>斬擊-大 9 4<br>巨劍防禦<br>無 防招 斬x</div>",
+      "外功+6/8/10."
+    ]
+  },
+  {
+    "type": "data",
+    "width": 50,
+    "height": 75,
+    "pos": [
+      100,
+      100
+    ],
+    "back": true,
+    "lock": false,
+    "count": 3,
+    "extra": [
+      "<div style='overflow:hidden;background-color:grey; width:100%; height:100%; left:0; top:0; text-align:right'>毒魔石<br>重1<br>防具-飾 1 3<br>中毒術<br>毒-中毒7 氣場 2</div>",
+      "自己招式階段可以支付這張卡上的1氣，造成内力2的遠招。"
+    ]
+  }
+]
