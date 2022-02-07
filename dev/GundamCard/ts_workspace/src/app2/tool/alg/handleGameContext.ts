@@ -165,29 +165,51 @@ export function triggerTextEvent(
   });
   return [...ctx.gameState.cardState, ...converGlobalCardState].reduce(
     (ctx, cardState: { id: string; cardTextStates: CardTextState[] }) => {
-      {
-        const {
-          value: [_, baSyouKeyword],
-        } = getCardBaSyou(ctx, cardState.id);
-        // [起動]應該只有在場時有效
-        if (isBa(baSyouKeyword) == false) {
-          return ctx;
-        }
-      }
       return cardState.cardTextStates.reduce((ctx, cardTextState) => {
         const cardTexts = (() => {
           switch (cardTextState.cardText.id) {
             case "自動型":
               switch (cardTextState.cardText.category) {
-                case "起動":
+                case "起動": {
+                  const {
+                    value: [_, baSyouKeyword],
+                  } = getCardBaSyou(ctx, cardState.id);
+                  // [起動]應該只有在場時有效
+                  if (isBa(baSyouKeyword) == false) {
+                    // 是G時，計算<>技能
+                    if (
+                      baSyouKeyword == "Gゾーン" &&
+                      cardTextState.cardText.fixed
+                    ) {
+                      return [cardTextState.cardText];
+                    }
+                    return [];
+                  }
                   return [cardTextState.cardText];
+                }
                 default:
                   return [];
               }
             case "特殊型":
             case "恒常":
               return cardTextState.cardText.texts
-                .filter((t) => t.id == "自動型" && t.category == "起動")
+                .filter((t) => {
+                  if (t.id == "自動型" && t.category == "起動") {
+                    const {
+                      value: [_, baSyouKeyword],
+                    } = getCardBaSyou(ctx, cardState.id);
+                    // [起動]應該只有在場時有效
+                    if (isBa(baSyouKeyword) == false) {
+                      // 是G時，計算<>技能
+                      if (baSyouKeyword == "Gゾーン" && t.fixed) {
+                        return true;
+                      }
+                      return false;
+                    }
+                    return true;
+                  }
+                  return false;
+                })
                 .map((t) => t);
             default:
               return [];
@@ -263,12 +285,38 @@ export function updateCommand(ctx: GameContext): GameContext {
       return cardState.cardTextStates.reduce((ctx, cardTextState) => {
         const cardTexts = (() => {
           switch (cardTextState.cardText.id) {
-            case "使用型":
+            case "使用型": {
+              const {
+                value: [_, baSyouKeyword],
+              } = getCardBaSyou(ctx, cardState.id);
+              // G的話，只計算<>
+              if (baSyouKeyword == "Gゾーン") {
+                if (cardTextState.cardText.fixed) {
+                  return [cardTextState.cardText];
+                }
+                return [];
+              }
               return [cardTextState.cardText];
+            }
             case "特殊型":
             case "恒常":
               return cardTextState.cardText.texts
-                .filter((t) => t.id == "使用型")
+                .filter((t) => {
+                  if (t.id == "使用型") {
+                    const {
+                      value: [_, baSyouKeyword],
+                    } = getCardBaSyou(ctx, cardState.id);
+                    // G的話，只計算<>
+                    if (baSyouKeyword == "Gゾーン") {
+                      if (t.fixed) {
+                        return true;
+                      }
+                      return false;
+                    }
+                    return true;
+                  }
+                  return false;
+                })
                 .map((t) => t);
             default:
               return [];
@@ -361,6 +409,13 @@ export function updateEffect(ctx: GameContext): GameContext {
                   } = getCardBaSyou(ctx, cardState.id);
                   // 常駐技能只有在場中才能計算
                   if (isBa(baSyouKeyword) == false) {
+                    // 是G時，計算<>技能
+                    if (
+                      baSyouKeyword == "Gゾーン" &&
+                      cardTextState.cardText.fixed
+                    ) {
+                      return [cardTextState.cardText];
+                    }
                     return [];
                   }
                   return [cardTextState.cardText];
@@ -379,6 +434,10 @@ export function updateEffect(ctx: GameContext): GameContext {
                         } = getCardBaSyou(ctx, cardState.id);
                         // 常駐技能只有在場中才能計算
                         if (isBa(baSyouKeyword) == false) {
+                          // 是G時，計算<>技能
+                          if (baSyouKeyword == "Gゾーン" && t.fixed) {
+                            return [t];
+                          }
                           return [];
                         }
                         return [t];
@@ -395,11 +454,26 @@ export function updateEffect(ctx: GameContext): GameContext {
             case "恒常":
               // 恒常裡的常駐也是恒常
               return cardTextState.cardText.texts
-                .filter(
-                  (t) =>
+                .filter((t) => {
+                  if (
                     t.id == "自動型" &&
                     (t.category == "恒常" || t.category == "常駐")
-                )
+                  ) {
+                    const {
+                      value: [_, baSyouKeyword],
+                    } = getCardBaSyou(ctx, cardState.id);
+                    // 常駐技能只有在場中才能計算
+                    if (isBa(baSyouKeyword) == false) {
+                      // 是G時，計算<>技能
+                      if (baSyouKeyword == "Gゾーン" && t.fixed) {
+                        return [t];
+                      }
+                      return false;
+                    }
+                    return true;
+                  }
+                  return false;
+                })
                 .map((t) => t);
             default:
               return [];
