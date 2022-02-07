@@ -47,7 +47,7 @@ import { doConditionTarget } from "./doConditionTarget";
 import { err2string } from "../../../tool/helper";
 import { getPrototype } from "./script";
 import { getCardTextMacro } from "./script/getCardTextMacro";
-//import { createPlayUnitText } from "./createPlayUnitText";
+
 export function wrapTip(
   ctx: GameContext,
   autoFill: boolean,

@@ -91,6 +91,10 @@ export function testKaiSo1() {
       timing: TIMING_CHART.find(
         (t) => t[1][0] == "戦闘フェイズ" && t[1][2] == "フリータイミング"
       ),
+      flowMemory: {
+        ...ctx.gameState.flowMemory,
+        state: "playing",
+      },
     },
   };
   ctx = initState(ctx);

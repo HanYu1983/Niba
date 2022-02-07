@@ -7,7 +7,7 @@ import { AppView } from "./view/component/appView";
 const App = (props: any) => {
   useEffect(() => {
     initJsonfp();
-    //test();
+    test();
   }, []);
   return <div>{<AppView></AppView>}</div>;
 };

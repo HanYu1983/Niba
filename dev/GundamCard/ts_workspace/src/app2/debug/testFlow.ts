@@ -13,6 +13,16 @@ import { applyFlow, queryFlow } from "../tool/alg/handleClient";
 
 export function testFlow1() {
   let ctx = DEFAULT_GAME_CONTEXT;
+  ctx = {
+    ...ctx,
+    gameState: {
+      ...ctx.gameState,
+      flowMemory: {
+        ...ctx.gameState.flowMemory,
+        state: "playing",
+      },
+    },
+  };
   const firstTiming = ctx.gameState.timing;
   ctx = applyFlow(ctx, PlayerA, {
     id: "FlowNextTiming",

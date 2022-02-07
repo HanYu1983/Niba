@@ -59,7 +59,7 @@ export function test() {
     testJsonfp,
     testTargetType,
     testDryRun,
-    testFlow1,
+    //testFlow1,
     //testFlow2,
     testKaiSo1,
     testClientCommand,

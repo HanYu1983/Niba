@@ -42,7 +42,7 @@ import {
 } from "../tool/basic/targetType";
 import { log2 } from "../../../tool/logger";
 import { getPrototype } from "./script";
-import { triggerTextEvent } from "./handleGameContext";
+import { getTip, triggerTextEvent, wrapTip } from "./handleGameContext";
 import { GameEventOnManualEventCustomID } from "./gameEventOnManualEventCustomID";
 
 let idSeq = 0;
@@ -659,11 +659,21 @@ export function getTargetType(
           }
         }
         case "參照": {
-          const targetType = getTargetType(ctx, blockPayload, targets, path[0]);
-          if (Array.isArray(targetType.value)) {
-            return { id: "數字", value: [targetType.value.length] };
-          } else {
-            throw new Error("must be real value");
+          switch (path[1]) {
+            case "的陣列長度":
+              const targetType = getTargetType(
+                ctx,
+                blockPayload,
+                targets,
+                path[0]
+              );
+              if (Array.isArray(targetType.value)) {
+                return { id: "數字", value: [targetType.value.length] };
+              } else {
+                throw new Error("must be real value");
+              }
+            default:
+              throw new Error(`not support:${path[1]}`);
           }
         }
         case "カード": {
