@@ -16,6 +16,7 @@ export type TokenPosition =
 
 export type Token = {
   id: string;
+  protoID: any;
   position: TokenPosition;
 };
 

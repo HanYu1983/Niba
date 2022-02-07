@@ -13,7 +13,7 @@ import type {
   GameEffect,
   GlobalCardState,
 } from "./gameContext";
-import { CardText, GameEvent } from "./basic";
+import { CardText, Coin, GameEvent } from "./basic";
 
 type ActionRoll = {
   id: "ActionRoll";
@@ -162,6 +162,13 @@ export type ActionInvalidateDistroy = {
   cards: TargetTypeCard;
 };
 
+export type ActionAddCoinToCard = {
+  id: "ActionAddCoinToCard";
+  cards: TargetTypeCard;
+  coin: Coin;
+  count: number;
+};
+
 export type Action =
   | ActionRoll
   | ActionReroll
@@ -188,4 +195,5 @@ export type Action =
   | ActionJsonfp
   | ActionSetSetCard
   | ActionTriggerGameEvent
-  | ActionInvalidateDistroy;
+  | ActionInvalidateDistroy
+  | ActionAddCoinToCard;

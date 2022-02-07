@@ -389,3 +389,9 @@ export function getOpponentPlayerID(playerID: PlayerID): PlayerID {
 }
 
 export type AttackSpeed = 1 | 2;
+
+type CoinBattleBonus = {
+  id: "CoinBattleBonus";
+  battleBonus: BattleBonus;
+};
+export type Coin = CoinBattleBonus;

@@ -5,6 +5,7 @@ import {
   CardCategory,
   CardColor,
   CardRole,
+  Coin,
   getBaShouID,
   getOpponentPlayerID,
   TokuSyuKouKa,
@@ -1092,7 +1093,7 @@ export function getCardBattlePoint(
     throw new Error("card not found");
   }
   const prototype = getPrototype(card.protoID);
-  const bonus = ctx.gameState.globalCardState
+  const bonusFromCardState = ctx.gameState.globalCardState
     .filter((cs) => cs.cardID == cardID)
     .flatMap((cs) => cs.cardTextStates.map((cts) => cts.cardText))
     .filter(
@@ -1109,9 +1110,36 @@ export function getCardBattlePoint(
       }
       return ct.customID.battleBonus;
     });
-  const retBonus = bonus.reduce(([x, y, z], [x2, y2, z2]): BattleBonus => {
-    return [x + x2, y + y2, z + z2];
-  }, prototype.battlePoint);
+  const bonusFromCoin = ctx.gameState.table.tokens
+    .filter((t) => {
+      if (t.position.id != "TokenPositionCard") {
+        return false;
+      }
+      if (t.position.cardID != cardID) {
+        return false;
+      }
+      const coin = t.protoID as Coin;
+      if (coin == null) {
+        return false;
+      }
+      if (coin.id != "CoinBattleBonus") {
+        return false;
+      }
+      return true;
+    })
+    .map((t) => {
+      const coin = t.protoID as Coin;
+      if (coin.id != "CoinBattleBonus") {
+        throw new Error("must be CoinBattleBonus");
+      }
+      return coin.battleBonus;
+    });
+  const retBonus = [...bonusFromCardState, ...bonusFromCoin].reduce(
+    ([x, y, z], [x2, y2, z2]): BattleBonus => {
+      return [x + x2, y + y2, z + z2];
+    },
+    prototype.battlePoint
+  );
   return retBonus;
 }
 
