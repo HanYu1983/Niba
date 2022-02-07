@@ -1,6 +1,7 @@
 import { log2 } from "../../../tool/logger";
 import {
   getCardCharacteristic,
+  getCardCoins,
   getCardState,
   getCardTitle,
   isMaster,
@@ -21,7 +22,7 @@ export function initJsonfp() {
     throw new Error(`[jsonfp.error]${p}`);
   });
   jsonfp.addMethod("log", (input: any, p: any) => {
-    log2("jsonfp", input, p);
+    log2("initJsonfp", input, p);
     return input;
   });
   jsonfp.addMethod("getSetGroupCards", (ctx: GameContext, cardID: string) => {
@@ -84,6 +85,9 @@ export function initJsonfp() {
       throw new Error("駕駛員可能被移動了");
     }
   );
+  jsonfp.addMethod("getCardCoinCount", (ctx: GameContext, cardID: string) => {
+    return getCardCoins(ctx, cardID).length;
+  });
 }
 
 export type Keyword =

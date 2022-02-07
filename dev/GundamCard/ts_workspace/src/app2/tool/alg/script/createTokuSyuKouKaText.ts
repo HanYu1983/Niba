@@ -761,22 +761,6 @@ export function createTokuSyuKouKaText(
                   },
                 ],
               },
-              {
-                id: "RequireTarget",
-                targets: {
-                  damage: {
-                    id: "TargetTypeDamage",
-                    value: damage,
-                  },
-                },
-                action: [
-                  {
-                    id: "ActionSetTarget",
-                    source: "damage",
-                    target: "damage",
-                  },
-                ],
-              },
             ],
             feedbackBlock: {
               feedback: [
@@ -789,7 +773,7 @@ export function createTokuSyuKouKaText(
                         id: "カード",
                         value: "targetCard",
                       },
-                      value: "damage",
+                      damage: { id: "數字", value: [damage] },
                     },
                   ],
                 },

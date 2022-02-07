@@ -60,6 +60,18 @@ export function doRequireTargetActionTarget(
 ): GameContext {
   log2("doRequireTargetActionTarget", "action", action);
   switch (action.id) {
+    case "ActionUnitDamage": {
+      const cards = getTargetType(ctx, blockPayload, targets, action.cards);
+      if (cards?.id != "カード") {
+        throw new Error("must カード");
+      }
+      if (!Array.isArray(cards.value)) {
+        throw new Error("執行Action時的所有target必須是陣列");
+      }
+      assertTargetTypeValueLength(cards);
+      // TODO: damage
+      return ctx;
+    }
     case "ActionAddCoinToCard": {
       const cards = getTargetType(ctx, blockPayload, targets, action.cards);
       if (cards?.id != "カード") {
@@ -69,27 +81,35 @@ export function doRequireTargetActionTarget(
         throw new Error("執行Action時的所有target必須是陣列");
       }
       assertTargetTypeValueLength(cards);
-      const tokens = cards.value.map((cardID) => {
-        return {
-          id: `ActionAddCoinToCard_${idSeq++}`,
-          protoID: action.coin,
-          position: { id: "TokenPositionCard", cardID: cardID },
-        } as Token;
-      });
-      let table = ctx.gameState.table;
-      for (let i = 0; i < action.count; ++i) {
-        table = {
-          ...table,
-          tokens: [...tokens, ...table.tokens],
+      {
+        const tokens = cards.value.map((cardID) => {
+          return {
+            id: `ActionAddCoinToCard_${idSeq++}`,
+            protoID: action.coin,
+            position: { id: "TokenPositionCard", cardID: cardID },
+          } as Token;
+        });
+        let table = ctx.gameState.table;
+        for (let i = 0; i < action.count; ++i) {
+          table = {
+            ...table,
+            tokens: [...tokens, ...table.tokens],
+          };
+        }
+        ctx = {
+          ...ctx,
+          gameState: {
+            ...ctx.gameState,
+            table: table,
+          },
         };
       }
-      ctx = {
-        ...ctx,
-        gameState: {
-          ...ctx.gameState,
-          table: table,
-        },
-      };
+      ctx = cards.value.reduce((ctx, cardID) => {
+        return triggerTextEvent(ctx, {
+          id: "コインがx個以上になった場合",
+          cardID: cardID,
+        });
+      }, ctx);
       return ctx;
     }
     case "ActionSetSetCard": {

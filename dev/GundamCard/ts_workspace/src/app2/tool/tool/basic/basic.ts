@@ -259,7 +259,8 @@ type GameEventOnShowBa = {
     | "場に出た場合"
     | "プレイされて場に出た場合"
     | "プレイされて場にセットされた場合"
-    | "戦闘ダメージを受けた場合";
+    | "戦闘ダメージを受けた場合"
+    | "コインがx個以上になった場合";
   cardID: string;
 };
 
@@ -394,4 +395,8 @@ type CoinBattleBonus = {
   id: "CoinBattleBonus";
   battleBonus: BattleBonus;
 };
-export type Coin = CoinBattleBonus;
+
+type CoinCoin = {
+  id: "CoinCoin";
+};
+export type Coin = CoinCoin | CoinBattleBonus;

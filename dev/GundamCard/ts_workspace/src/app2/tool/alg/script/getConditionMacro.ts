@@ -86,6 +86,14 @@ type ConditionMacro10 = {
   id: "このカードは、「専用機のセット」が成立するユニットにセットされている場合";
 };
 
+type ConditionMacro11 = {
+  id: "ターン開始時";
+};
+
+type ConditionMacro12 = {
+  id: "是主動玩家";
+};
+
 export type ConditionMacro =
   | ConditionMacro1
   | ConditionMacro2
@@ -96,10 +104,50 @@ export type ConditionMacro =
   | ConditionMacro7
   | ConditionMacro8
   | ConditionMacro9
-  | ConditionMacro10;
+  | ConditionMacro10
+  | ConditionMacro11
+  | ConditionMacro12;
 
 export function getConditionMacro(macro: ConditionMacro): Condition {
   switch (macro.id) {
+    case "是主動玩家":
+      return {
+        id: "ConditionJsonfp",
+        program: {
+          $cardID: {
+            "->": [
+              "$in.blockPayload",
+              { getter: "cause" },
+              { getter: "cardID" },
+              { log: "cardID" },
+            ],
+          },
+          $cardController: {
+            "->": [
+              "$in.ctx",
+              { getCardController: "$cardID" },
+              { log: "cardController" },
+            ],
+          },
+          $activePlayerID: {
+            "->": [
+              "$in.ctx",
+              { getter: "gameState" },
+              { getter: "activePlayerID" },
+              { log: "activePlayerID" },
+            ],
+          },
+          pass1: {
+            if: [
+              {
+                "->": ["$cardController", { "==": "$activePlayerID" }],
+              },
+              {},
+              { error: `必須是主動玩家` },
+            ],
+          },
+        },
+      };
     case "このカードは、「専用機のセット」が成立するユニットにセットされている場合":
       return {
         id: "ConditionJsonfp",
@@ -164,6 +212,31 @@ export function getConditionMacro(macro: ConditionMacro): Condition {
               },
               {},
               { error: "必須是回結束" },
+            ],
+          },
+        },
+      };
+    case "ターン開始時":
+      return {
+        id: "ConditionJsonfp",
+        program: {
+          pass1: {
+            if: [
+              {
+                "->": [
+                  "$in.blockPayload",
+                  { getter: "cause" },
+                  { getter: "gameEvent" },
+                  { getter: "timing" },
+                  { log: "timing" },
+                  { getter: 0 },
+                  {
+                    "==": 0,
+                  },
+                ],
+              },
+              {},
+              { error: "必須是回合開始" },
             ],
           },
         },

@@ -5,6 +5,7 @@ import type {
   TargetTypeBoolean,
   TargetTypeCardTextState,
   TargetTypeString,
+  TargetTypeNumber,
 } from "./targetType";
 import type { BlockPayload } from "./blockPayload";
 import type {
@@ -86,7 +87,7 @@ export type ActionOKiKaeRu = {
 export type ActionUnitDamage = {
   id: "ActionUnitDamage";
   cards: TargetTypeCard;
-  value: string;
+  damage: TargetTypeNumber;
 };
 
 export type ActionAddBlock = {

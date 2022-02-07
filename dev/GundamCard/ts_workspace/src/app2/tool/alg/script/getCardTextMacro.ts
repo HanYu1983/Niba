@@ -757,7 +757,7 @@ export function getCardTextMacro(
                       id: "當觸發GameEvent的變量x的id時",
                       x: {
                         id: "GameEventOnTiming",
-                        timing: TIMING_CHART[0],
+                        timing: TIMING_CHART[0], // hook
                       },
                     }),
                     getConditionMacro({

@@ -6,7 +6,7 @@ const hideCategory: string[] = [
   //"triggerTextEvent",
   "doConditionTarget",
   //"updateEffect",
-  "initJsonfp",
+  //"initJsonfp",
   //"doRequireTargetActionTarget",
   "jsonfp",
   "doRequireTargetAction",
