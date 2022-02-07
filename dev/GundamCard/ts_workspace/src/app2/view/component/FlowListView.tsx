@@ -11,7 +11,11 @@ import { getTargetType } from "../../tool/alg/helper";
 import { getBaShou, getBaShouID } from "../../tool/tool/basic/basic";
 import { BlockPayload, Require } from "../../tool/tool/basic/blockPayload";
 import { Condition } from "../../tool/tool/basic/condition";
-import { getBlockOwner, mapEffect } from "../../tool/tool/basic/gameContext";
+import {
+  getBlockOwner,
+  iterateEffect,
+  mapEffect,
+} from "../../tool/tool/basic/gameContext";
 import { getAbsoluteBaSyou } from "../../tool/tool/basic/handleCard";
 import { TargetType } from "../../tool/tool/basic/targetType";
 import { AppContext } from "../tool/appContext";
@@ -24,6 +28,28 @@ export const FlowListView = (props: { clientID: string }) => {
   const flows = useMemo(() => {
     return queryFlow(appContext.viewModel.model, props.clientID);
   }, [appContext.viewModel.model, props.clientID]);
+  useEffect(() => {
+    const payCost = flows.find((flow) => flow.id == "FlowPassPayCost");
+    if (payCost == null) {
+      return;
+    }
+    if (payCost.id != "FlowPassPayCost") {
+      throw new Error("must be FlowPassPayCost");
+    }
+    const effect = iterateEffect(appContext.viewModel.model).find(
+      (e) => e.id == payCost.effectID
+    );
+    if (effect == null) {
+      throw new Error("must find effect");
+    }
+    if (effect.require == null) {
+      OnEvent.next({
+        id: "OnClickFlowConfirm",
+        clientID: props.clientID,
+        flow: payCost,
+      });
+    }
+  }, [appContext.viewModel.model, props.clientID, flows]);
   // ============== control panel ============= //
   const renderControlPanel = useMemo(() => {
     return (

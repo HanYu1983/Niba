@@ -708,6 +708,10 @@ export const OnViewModel = OnEvent.pipe(
               gameState: {
                 ...ctx.gameState,
                 table,
+                flowMemory: {
+                  ...ctx.gameState.flowMemory,
+                  //state: "playing",
+                },
               },
             };
           }

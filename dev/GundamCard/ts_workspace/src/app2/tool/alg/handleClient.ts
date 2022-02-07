@@ -1397,12 +1397,36 @@ export function queryFlow(ctx: GameContext, playerID: string): Flow[] {
     // 處理遊戲開始的效果
     // 在FlowNextTiming處理
     if (ctx.gameState.flowMemory.state == "prepareDeck") {
+      if (playerID != PlayerA) {
+        return [
+          {
+            id: "FlowWaitPlayer",
+            description: "等待伺服器處理",
+          },
+        ];
+      }
       return [{ id: "FlowNextTiming", description: "準備卡組" }];
     }
     if (ctx.gameState.flowMemory.state == "whoFirst") {
+      if (playerID != PlayerA) {
+        return [
+          {
+            id: "FlowWaitPlayer",
+            description: "等待伺服器處理",
+          },
+        ];
+      }
       return [{ id: "FlowNextTiming", description: "PlayerA先攻" }];
     }
     if (ctx.gameState.flowMemory.state == "draw6AndConfirm") {
+      if (playerID != PlayerA) {
+        return [
+          {
+            id: "FlowWaitPlayer",
+            description: "等待伺服器處理",
+          },
+        ];
+      }
       return [{ id: "FlowNextTiming", description: "抽6張" }];
     }
   }
