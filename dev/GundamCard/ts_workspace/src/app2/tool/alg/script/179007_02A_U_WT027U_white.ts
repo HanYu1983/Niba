@@ -67,6 +67,10 @@ const prototype: CardPrototype = {
             白のGサインを持つ自軍G: {
               id: "カード",
               value: [],
+              // 張數必須 >= 2
+              // [2,3,4,...,49]
+              // 像這樣使用的話[...Array(50).keys()]，必須在tsconfig.json中加入"downlevelIteration": true
+              valueLengthInclude: [...Array(50).keys()].slice(2),
             },
           },
           condition: {
@@ -104,35 +108,12 @@ const prototype: CardPrototype = {
                 x: { id: "カード", value: "白のGサインを持つ自軍G" },
                 y: ["グラフィック"],
               }),
-              {
-                id: "ConditionCompareNumber",
-                value: [
-                  {
-                    id: "數字",
-                    value: {
-                      path: [
-                        {
-                          id: "參照",
-                          value: "白のGサインを持つ自軍G",
-                        },
-                        "的陣列長度",
-                      ],
-                    },
-                  },
-                  ">=",
-                  { id: "數字", value: [2] },
-                ],
-              },
             ],
           },
         },
       ],
       timing: ["戦闘フェイズ"],
       feedbackBlock: {
-        require: {
-          id: "RequireAnd",
-          and: [createRollCostRequire(1, null)],
-        },
         feedback: [
           {
             id: "FeedbackAction",

@@ -1,5 +1,5 @@
 const hideCategory: string[] = [
-  "updateCommand",
+  //"updateCommand",
   "getTip",
   "recurRequire",
   "getTargetType",

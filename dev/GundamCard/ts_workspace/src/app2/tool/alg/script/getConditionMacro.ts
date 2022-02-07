@@ -339,6 +339,7 @@ export function getConditionMacro(macro: ConditionMacro): Condition {
         id: "變量x的場所包含於y",
         x: { id: "カード", value: { path: [{ id: "このカード" }] } },
         y: [
+          { id: "RelatedBaSyou", value: ["自軍", "Gゾーン"] },
           { id: "RelatedBaSyou", value: ["自軍", "配備エリア"] },
           { id: "RelatedBaSyou", value: ["自軍", "戦闘エリア（左）"] },
           { id: "RelatedBaSyou", value: ["自軍", "戦闘エリア（右）"] },

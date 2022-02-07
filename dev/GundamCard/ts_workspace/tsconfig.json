@@ -8,7 +8,8 @@
     "strict": true,
     "target": "es5",
     "jsx": "react",
-    "lib": ["dom", "es6"]
+    "lib": ["dom", "es6"],
+    "downlevelIteration": true
   },
   "include": ["src"],
   "compileOnSave": false

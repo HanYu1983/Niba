@@ -305,7 +305,7 @@ export function updateCommand(ctx: GameContext): GameContext {
             } catch (e) {
               log2(
                 "updateCommand",
-                "檢測可行性失敗，不加入指令列表",
+                `檢測可行性失敗，不加入指令列表:${cardText.description}`,
                 wrapEvent,
                 e
               );
