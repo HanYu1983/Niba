@@ -3,6 +3,7 @@ import Resct, { useState, createContext, PropsWithChildren } from "react";
 import * as firebase from "../../../../tool/firebase";
 import { DEFAULT_VIEW_MODEL, OnViewModel, ViewModel } from "./OnViewModel";
 import { OnEvent } from "./eventCenter";
+import { log2 } from "../../../../tool/logger";
 
 export type AppContextType = {
   viewModel: ViewModel;
@@ -15,7 +16,10 @@ export const AppContext = createContext<AppContextType>({
 export const AppContextProvider = (props: PropsWithChildren<any>) => {
   const [viewModel, setViewModel] = useState<ViewModel>(DEFAULT_VIEW_MODEL);
   useEffect(() => {
-    const subscriber = OnViewModel.subscribe(setViewModel);
+    const subscriber = OnViewModel.subscribe((model) => {
+      log2("AppContextProvider", "OnViewModel", model);
+      setViewModel(model);
+    });
     return () => {
       subscriber.unsubscribe();
     };

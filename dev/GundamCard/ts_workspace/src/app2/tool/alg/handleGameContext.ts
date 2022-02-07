@@ -457,7 +457,7 @@ export function initState(ctx: GameContext): GameContext {
     ctx = nextCtx;
     return card;
   });
-  return {
+  ctx = {
     ...ctx,
     gameState: {
       ...ctx.gameState,
@@ -532,6 +532,35 @@ export function initState(ctx: GameContext): GameContext {
           ...ctx.gameState.table.cardStack,
         },
       },
+    },
+  };
+  ctx = initCardFace(ctx);
+  return ctx;
+}
+
+export function initCardFace(ctx: GameContext): GameContext {
+  const table = mapCard(ctx.gameState.table, (card) => {
+    const baSyou = getCardBaSyou(ctx, card.id);
+    switch (baSyou.value[1]) {
+      case "本国":
+      case "捨て山":
+      case "手札":
+        return {
+          ...card,
+          faceDown: true,
+        };
+      default:
+        return {
+          ...card,
+          faceDown: false,
+        };
+    }
+  });
+  return {
+    ...ctx,
+    gameState: {
+      ...ctx.gameState,
+      table: table,
     },
   };
 }

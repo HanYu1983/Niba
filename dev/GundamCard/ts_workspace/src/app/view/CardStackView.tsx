@@ -23,7 +23,7 @@ export const CardStackView = (props: { cardPosition: CardPosition }) => {
     return (
       <div
         style={{
-          height: CARD_SIZE,
+          //height: CARD_SIZE,
           display: "flex",
           border: "2px solid black",
           ...(appContext.viewModel.cardPositionSelection[_cardPositionID]

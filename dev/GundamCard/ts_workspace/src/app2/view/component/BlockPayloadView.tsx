@@ -84,6 +84,7 @@ export const BlockPayloadView = (props: {
           enabled={false}
           clientID={props.clientID}
           cardID={cardID}
+          visible={true}
         ></CardView>
       ) : (
         <div>{JSON.stringify(block.cause)}</div>

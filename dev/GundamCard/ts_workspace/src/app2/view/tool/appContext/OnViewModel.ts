@@ -48,7 +48,6 @@ export const DEFAULT_VIEW_MODEL: ViewModel = {
 export const OnViewModel = OnEvent.pipe(
   rxjs.scan((viewModel, evt): ViewModel => {
     log2("OnViewModel", "evt", evt);
-    log2("OnViewModel", "viewModel", viewModel);
     try {
       switch (evt.id) {
         case "OnClickNewGame": {
@@ -516,7 +515,7 @@ export const OnViewModel = OnEvent.pipe(
               },
             };
           }
-          if (true) {
+          if (false) {
             ctx = {
               ...ctx,
               gameState: {
@@ -635,6 +634,80 @@ export const OnViewModel = OnEvent.pipe(
                   22,
                   ["戦闘フェイズ", "ダメージ判定ステップ", "ステップ開始"],
                 ],
+              },
+            };
+          }
+          if (true) {
+            const deck = [
+              "179001_01A_CH_WT007R_white",
+              "179004_01A_CH_WT009R_white",
+              "179004_01A_CH_WT010C_white",
+              "179007_02A_U_WT027U_white",
+              "179007_02A_U_WT027U_white",
+              "179008_02A_U_WT034U_white",
+              "179008_02A_U_WT034U_white",
+              "179008_02A_U_WT034U_white",
+              "179014_03B_CH_WT027R_white",
+              "179015_04B_U_WT067C_white",
+              "179015_04B_U_WT067C_white",
+              "179015_04B_U_WT067C_white",
+              "179016_04B_U_WT074C_white",
+              "179016_04B_U_WT074C_white",
+              "179016_04B_U_WT074C_white",
+              "179016_04B_U_WT075C_white",
+              "179016_04B_U_WT075C_white",
+              "179016_04B_U_WT075C_white",
+              "179019_01A_C_WT010C_white",
+              "179019_01A_C_WT010C_white",
+              "179019_02A_U_WT028R_white",
+              "179019_02A_U_WT028R_white",
+              "179022_06C_CH_WT057R_white",
+              "179022_06C_CH_WT057R_white",
+              "179022_06C_CH_WT057R_white",
+              "179022_06C_U_WT113R_white",
+              "179022_06C_U_WT113R_white",
+              "179022_06C_U_WT113R_white",
+              "179023_06C_CH_WT067C_white",
+              "179024_03B_U_WT057U_white",
+              "179024_03B_U_WT057U_white",
+              "179025_07D_C_WT060U_white",
+              "179025_07D_CH_WT075C_white",
+              "179025_07D_CH_WT075C_white",
+              "179025_07D_CH_WT075C_white",
+              "179027_09D_C_WT067R_white",
+              "179027_09D_C_WT067R_white",
+              "179029_B3C_CH_WT102R_white",
+              "179029_B3C_CH_WT103N_white",
+              "179029_B3C_U_WT196R_white",
+              "179030_11E_C_WT077S_white",
+              "179030_11E_C_WT077S_white",
+              "179030_11E_C_WT077S_white",
+              "179030_11E_CH_WT108N_white",
+              "179901_00_C_WT003P_white",
+              "179901_00_C_WT003P_white",
+              "179901_00_C_WT003P_white",
+              "179901_CG_C_WT001P_white",
+              "179901_CG_C_WT001P_white",
+              "179901_CG_CH_WT002P_white",
+            ];
+            let table = ctx.gameState.table;
+            table = createCard(
+              table,
+              PlayerA,
+              getBaShouID({ id: "AbsoluteBaSyou", value: [PlayerA, "本国"] }),
+              deck
+            );
+            table = createCard(
+              table,
+              PlayerB,
+              getBaShouID({ id: "AbsoluteBaSyou", value: [PlayerB, "本国"] }),
+              deck
+            );
+            ctx = {
+              ...ctx,
+              gameState: {
+                ...ctx.gameState,
+                table,
               },
             };
           }

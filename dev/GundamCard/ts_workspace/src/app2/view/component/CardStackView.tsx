@@ -9,6 +9,7 @@ const CARD_SIZE = 100;
 export const CardStackView = (props: {
   clinetID: string;
   cardPosition: AbsoluteBaSyou;
+  isCardVisible: boolean;
 }) => {
   const appContext = useContext(AppContext);
   const cards = useMemo(() => {
@@ -32,7 +33,7 @@ export const CardStackView = (props: {
     return (
       <div
         style={{
-          height: CARD_SIZE,
+          //height: CARD_SIZE,
           display: "flex",
           border: "2px solid black",
           ...(appContext.viewModel.cardPositionSelection.includes(
@@ -78,6 +79,7 @@ export const CardStackView = (props: {
                     enabled={true}
                     clientID={props.clinetID}
                     cardID={cardID}
+                    visible={props.isCardVisible}
                   ></CardView>
                 );
               })}
@@ -101,6 +103,7 @@ export const CardStackView = (props: {
   }, [
     props.cardPosition,
     props.clinetID,
+    props.isCardVisible,
     cardsOnlySetGroupRoot,
     appContext.viewModel.cardPositionSelection,
     appContext.viewModel.model.gameState.setGroupLink,
