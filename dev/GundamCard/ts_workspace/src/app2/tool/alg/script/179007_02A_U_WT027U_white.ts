@@ -33,6 +33,7 @@ const prototype: CardPrototype = {
       id: "PlayText",
       description:
         "＜（戦闘フェイズ）〔１〕：このカードが、Gである状態で、白のGサインを持つ自軍Gが２枚以上ある場合、このカードを、ユニットとして自軍配備エリアにリロール状態で出す＞",
+      fixed: true,
       additionalRequire: [
         createRollCostRequire(1, null),
         {

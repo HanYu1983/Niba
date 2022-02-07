@@ -325,6 +325,7 @@ export type CardTextZiDouKaTa = {
   description: string;
   category: "常駐" | "起動" | "恒常";
   block: BlockPayload;
+  fixed?: boolean;
 };
 
 export type CardTextSiYouKaTa = {
@@ -332,6 +333,7 @@ export type CardTextSiYouKaTa = {
   description: string;
   timing: SiYouTiming;
   block: BlockPayload;
+  fixed?: boolean;
 };
 
 export type CardTextToKuSyuKata = {

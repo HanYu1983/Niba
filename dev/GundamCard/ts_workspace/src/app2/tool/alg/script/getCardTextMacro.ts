@@ -60,6 +60,7 @@ type CardTextMacro2 = {
   additionalRequire?: Require[];
   feedbackBlock?: BlockPayload;
   timing?: SiYouTiming;
+  fixed?: boolean;
 };
 
 type CardTextMacro3 = {
@@ -307,6 +308,7 @@ export function getCardTextMacro(
         ...CARD_TEXT_PLAY,
         description: macro.description || macro.id,
         timing: macro.timing || CARD_TEXT_PLAY.timing,
+        fixed: macro.fixed,
         block: {
           ...CARD_TEXT_PLAY.block,
           contextID: macro.varCtxID,
