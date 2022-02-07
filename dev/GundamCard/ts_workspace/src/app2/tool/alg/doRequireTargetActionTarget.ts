@@ -39,6 +39,7 @@ import {
   getTargetType,
 } from "./helper";
 import {
+  initCardFace,
   initState,
   triggerTextEvent,
   updateCommand,
@@ -367,7 +368,10 @@ export function doRequireTargetActionTarget(
       };
     }
     case "ActionRuleDraw": {
-      const playerID = ctx.gameState.activePlayerID;
+      if (blockPayload.cause?.id != "BlockPayloadCauseGameRule") {
+        throw new Error("must be BlockPayloadCauseGameRule");
+      }
+      const playerID = blockPayload.cause.playerID;
       if (playerID == null) {
         throw new Error("playerID not found");
       }
@@ -394,7 +398,6 @@ export function doRequireTargetActionTarget(
         gameState: {
           ...ctx.gameState,
           table: table,
-          timing: getNextTiming(ctx.gameState.timing),
         },
       };
     }
@@ -539,51 +542,52 @@ export function doRequireTargetActionTarget(
             }
           }
           // 翻開牌
-          switch (toBaSyou.value[1]) {
-            case "ハンガー":
-            case "プレイされているカード":
-            case "配備エリア":
-            case "戦闘エリア（右）":
-            case "戦闘エリア（左）":
-            case "ジャンクヤード":
-              {
-                const table = mapCard(ctx.gameState.table, (card) => {
-                  if (card.id != cardID) {
-                    return card;
-                  }
-                  return {
-                    ...card,
-                    faceDown: false,
-                  };
-                });
-                ctx = {
-                  ...ctx,
-                  gameState: {
-                    ...ctx.gameState,
-                    table: table,
-                  },
-                };
-              }
-              break;
-            default: {
-              const table = mapCard(ctx.gameState.table, (card) => {
-                if (card.id != cardID) {
-                  return card;
-                }
-                return {
-                  ...card,
-                  faceDown: true,
-                };
-              });
-              ctx = {
-                ...ctx,
-                gameState: {
-                  ...ctx.gameState,
-                  table: table,
-                },
-              };
-            }
-          }
+          ctx = initCardFace(ctx);
+          // switch (toBaSyou.value[1]) {
+          //   case "ハンガー":
+          //   case "プレイされているカード":
+          //   case "配備エリア":
+          //   case "戦闘エリア（右）":
+          //   case "戦闘エリア（左）":
+          //   case "ジャンクヤード":
+          //     {
+          //       const table = mapCard(ctx.gameState.table, (card) => {
+          //         if (card.id != cardID) {
+          //           return card;
+          //         }
+          //         return {
+          //           ...card,
+          //           faceDown: false,
+          //         };
+          //       });
+          //       ctx = {
+          //         ...ctx,
+          //         gameState: {
+          //           ...ctx.gameState,
+          //           table: table,
+          //         },
+          //       };
+          //     }
+          //     break;
+          //   default: {
+          //     const table = mapCard(ctx.gameState.table, (card) => {
+          //       if (card.id != cardID) {
+          //         return card;
+          //       }
+          //       return {
+          //         ...card,
+          //         faceDown: true,
+          //       };
+          //     });
+          //     ctx = {
+          //       ...ctx,
+          //       gameState: {
+          //         ...ctx.gameState,
+          //         table: table,
+          //       },
+          //     };
+          //   }
+          // }
         }
         // 出場時
         const isShowBa = isFromBa == false && isToBa;

@@ -1,8 +1,10 @@
 import {
+  AbsoluteBaSyou,
   BaKeyword,
   BattleAreaKeyword,
   CardText,
   GameEvent,
+  getBaShouID,
   getNextTiming,
   getOpponentPlayerID,
   PlayerA,
@@ -28,7 +30,12 @@ import { TargetType, TargetTypeCard } from "../tool/basic/targetType";
 import { getCardController } from "../tool/basic/handleCard";
 import { log2 } from "../../../tool/logger";
 import { Action } from "../tool/basic/action";
-import { doRequire, doFeedback, doBlockPayload } from "./handleBlockPayload";
+import {
+  doRequire,
+  doFeedback,
+  doBlockPayload,
+  doRequireTargetAction,
+} from "./handleBlockPayload";
 import {
   assertBlockPayloadTargetTypeValueLength,
   getCardState,
@@ -600,6 +607,225 @@ export function applyFlow(
       };
       return ctx;
     case "FlowNextTiming": {
+      if (ctx.gameState.flowMemory.state != "playing") {
+        switch (ctx.gameState.flowMemory.state) {
+          case "prepareDeck": {
+            {
+              const plyrID = PlayerA;
+              const baSyou: AbsoluteBaSyou = {
+                id: "AbsoluteBaSyou",
+                value: [plyrID, "本国"],
+              };
+              const fromCS = ctx.gameState.table.cardStack[getBaShouID(baSyou)];
+              ctx = {
+                ...ctx,
+                gameState: {
+                  ...ctx.gameState,
+                  table: {
+                    ...ctx.gameState.table,
+                    cardStack: {
+                      ...ctx.gameState.table.cardStack,
+                      [getBaShouID(baSyou)]: fromCS.sort(
+                        () => Math.random() - 0.5
+                      ),
+                    },
+                  },
+                },
+              };
+            }
+            {
+              const plyrID = PlayerB;
+              const baSyou: AbsoluteBaSyou = {
+                id: "AbsoluteBaSyou",
+                value: [plyrID, "本国"],
+              };
+              const fromCS = ctx.gameState.table.cardStack[getBaShouID(baSyou)];
+              ctx = {
+                ...ctx,
+                gameState: {
+                  ...ctx.gameState,
+                  table: {
+                    ...ctx.gameState.table,
+                    cardStack: {
+                      ...ctx.gameState.table.cardStack,
+                      [getBaShouID(baSyou)]: fromCS.sort(
+                        () => Math.random() - 0.5
+                      ),
+                    },
+                  },
+                },
+              };
+            }
+            ctx = {
+              ...ctx,
+              gameState: {
+                ...ctx.gameState,
+                flowMemory: {
+                  ...ctx.gameState.flowMemory,
+                  state: "whoFirst",
+                },
+              },
+            };
+            break;
+          }
+          case "whoFirst": {
+            ctx = {
+              ...ctx,
+              gameState: {
+                ...ctx.gameState,
+                flowMemory: {
+                  ...ctx.gameState.flowMemory,
+                  state: "draw6AndConfirm",
+                },
+              },
+            };
+            break;
+          }
+          case "draw6AndConfirm": {
+            // {
+            //   const plyrID = PlayerA;
+            //   const baSyou: AbsoluteBaSyou = {
+            //     id: "AbsoluteBaSyou",
+            //     value: [plyrID, "本国"],
+            //   };
+            //   const fromCS = ctx.gameState.table.cardStack[getBaShouID(baSyou)];
+            //   const toBaSyou: AbsoluteBaSyou = {
+            //     id: "AbsoluteBaSyou",
+            //     value: [plyrID, "手札"],
+            //   };
+            //   const toCS = ctx.gameState.table.cardStack[getBaShouID(toBaSyou)];
+            //   ctx = {
+            //     ...ctx,
+            //     gameState: {
+            //       ...ctx.gameState,
+            //       table: {
+            //         ...ctx.gameState.table,
+            //         cardStack: {
+            //           ...ctx.gameState.table.cardStack,
+            //           [getBaShouID(baSyou)]: fromCS.slice(6),
+            //           [getBaShouID(toBaSyou)]: [...fromCS.slice(0, 6), ...toCS],
+            //         },
+            //       },
+            //     },
+            //   };
+            // }
+            // {
+            //   const plyrID = PlayerB;
+            //   const baSyou: AbsoluteBaSyou = {
+            //     id: "AbsoluteBaSyou",
+            //     value: [plyrID, "本国"],
+            //   };
+            //   const fromCS = ctx.gameState.table.cardStack[getBaShouID(baSyou)];
+            //   const toBaSyou: AbsoluteBaSyou = {
+            //     id: "AbsoluteBaSyou",
+            //     value: [plyrID, "手札"],
+            //   };
+            //   const toCS = ctx.gameState.table.cardStack[getBaShouID(toBaSyou)];
+            //   ctx = {
+            //     ...ctx,
+            //     gameState: {
+            //       ...ctx.gameState,
+            //       table: {
+            //         ...ctx.gameState.table,
+            //         cardStack: {
+            //           ...ctx.gameState.table.cardStack,
+            //           [getBaShouID(baSyou)]: fromCS.slice(6),
+            //           [getBaShouID(toBaSyou)]: [...fromCS.slice(0, 6), ...toCS],
+            //         },
+            //       },
+            //     },
+            //   };
+            // }
+            {
+              ctx = applyFlow(ctx, playerID, {
+                id: "FlowAddBlock",
+                responsePlayerID: PlayerA,
+                block: {
+                  feedback: [
+                    {
+                      id: "FeedbackAction",
+                      action: [{ id: "ActionRuleDraw" }],
+                    },
+                    {
+                      id: "FeedbackAction",
+                      action: [{ id: "ActionRuleDraw" }],
+                    },
+                    {
+                      id: "FeedbackAction",
+                      action: [{ id: "ActionRuleDraw" }],
+                    },
+                    {
+                      id: "FeedbackAction",
+                      action: [{ id: "ActionRuleDraw" }],
+                    },
+                    {
+                      id: "FeedbackAction",
+                      action: [{ id: "ActionRuleDraw" }],
+                    },
+                    {
+                      id: "FeedbackAction",
+                      action: [{ id: "ActionRuleDraw" }],
+                    },
+                  ],
+                },
+              });
+
+              ctx = applyFlow(ctx, playerID, {
+                id: "FlowAddBlock",
+                responsePlayerID: PlayerB,
+                block: {
+                  feedback: [
+                    {
+                      id: "FeedbackAction",
+                      action: [{ id: "ActionRuleDraw" }],
+                    },
+                    {
+                      id: "FeedbackAction",
+                      action: [{ id: "ActionRuleDraw" }],
+                    },
+                    {
+                      id: "FeedbackAction",
+                      action: [{ id: "ActionRuleDraw" }],
+                    },
+                    {
+                      id: "FeedbackAction",
+                      action: [{ id: "ActionRuleDraw" }],
+                    },
+                    {
+                      id: "FeedbackAction",
+                      action: [{ id: "ActionRuleDraw" }],
+                    },
+                    {
+                      id: "FeedbackAction",
+                      action: [{ id: "ActionRuleDraw" }],
+                    },
+                  ],
+                },
+              });
+            }
+
+            ctx = {
+              ...ctx,
+              gameState: {
+                ...ctx.gameState,
+                timing: [0, ["リロールフェイズ", "フェイズ開始"]],
+              },
+            };
+            ctx = {
+              ...ctx,
+              gameState: {
+                ...ctx.gameState,
+                flowMemory: {
+                  ...ctx.gameState.flowMemory,
+                  state: "playing",
+                },
+              },
+            };
+            break;
+          }
+        }
+        return ctx;
+      }
       // 傷判的規定效果一結束就收集所有破壞的卡並建立破壞而廢棄的效果
       if (
         ctx.gameState.timing[1][0] == "戦闘フェイズ" &&
@@ -1162,7 +1388,15 @@ export function queryFlow(ctx: GameContext, playerID: string): Flow[] {
       },
     ];
   };
-
+  if (ctx.gameState.flowMemory.state == "prepareDeck") {
+    return [{ id: "FlowNextTiming", description: "準備卡組" }];
+  }
+  if (ctx.gameState.flowMemory.state == "whoFirst") {
+    return [{ id: "FlowNextTiming", description: "PlayerA先攻" }];
+  }
+  if (ctx.gameState.flowMemory.state == "draw6AndConfirm") {
+    return [{ id: "FlowNextTiming", description: "抽6張" }];
+  }
   const [id, phase] = ctx.gameState.timing;
   // 處理自由時間，必須雙方都宣告結束才能進行到下一步
   switch (phase[0]) {

@@ -143,6 +143,7 @@ export type GameState = {
   isBattle: { [key: string]: boolean };
   //
   flowMemory: {
+    state: "prepareDeck" | "whoFirst" | "draw6AndConfirm" | "playing";
     hasTriggerEvent: boolean;
     hasPlayerPassPhase: { [key: string]: boolean };
     hasPlayerPassCut: { [key: string]: boolean };
@@ -185,6 +186,7 @@ export const DEFAULT_GAME_CONTEXT: GameContext = {
     setGroupLink: {},
     isBattle: {},
     flowMemory: {
+      state: "prepareDeck",
       hasTriggerEvent: false,
       hasPlayerPassPhase: {},
       hasPlayerPassCut: {},

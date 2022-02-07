@@ -7,12 +7,12 @@ const hideCategory: string[] = [
   "doConditionTarget",
   "updateEffect",
   "initJsonfp",
-  "doRequireTargetActionTarget",
+  //"doRequireTargetActionTarget",
   "jsonfp",
   "doRequireTargetAction",
   "getAbsoluteBaSyou",
   "assertTargetTypeValueLength",
-  "applyFlow",
+  //"applyFlow",
 ];
 let filterCategory = true;
 

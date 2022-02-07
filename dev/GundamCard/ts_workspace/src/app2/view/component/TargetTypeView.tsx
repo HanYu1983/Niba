@@ -40,12 +40,7 @@ export const TargetTypeView = (props: { target: TargetType }) => {
                   <div style={{ flex: 1 }}>
                     {(props.target.tipID || []).map((v, i) => {
                       return (
-                        <CardView
-                          enabled={true}
-                          key={i}
-                          cardID={v}
-                          visible={true}
-                        ></CardView>
+                        <CardView enabled={true} key={i} cardID={v}></CardView>
                       );
                     })}
                   </div>
@@ -80,12 +75,7 @@ export const TargetTypeView = (props: { target: TargetType }) => {
                 case "カード":
                   return props.target.value.map((v, i) => {
                     return (
-                      <CardView
-                        enabled={false}
-                        key={i}
-                        cardID={v}
-                        visible={true}
-                      ></CardView>
+                      <CardView enabled={false} key={i} cardID={v}></CardView>
                     );
                   });
                 case "場所":
