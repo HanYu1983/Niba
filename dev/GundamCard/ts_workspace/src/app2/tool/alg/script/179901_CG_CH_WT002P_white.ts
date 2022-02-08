@@ -83,10 +83,10 @@ const prototype: CardPrototype = {
               {
                 id: "ActionAddGlobalCardText",
                 cards: { id: "カード", value: "自軍キャラ１枚" },
-                cardState: {
-                  id: "ターン終了時まで、＋２／＋２／＋２を得る",
-                  cardID: "",
-                  cardTextStates: [
+                cardStateID: "ターン終了時まで、＋２／＋２／＋２を得る",
+                cardTextState: {
+                  id: "TargetTypeCardTextState",
+                  value: [
                     {
                       id: "",
                       enabled: true,

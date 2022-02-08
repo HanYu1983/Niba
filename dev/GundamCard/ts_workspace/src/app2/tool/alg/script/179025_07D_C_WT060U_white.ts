@@ -70,10 +70,11 @@ const prototype: CardPrototype = {
               {
                 id: "ActionAddGlobalCardText",
                 cards: { id: "カード", value: "自軍ユニット１～２枚" },
-                cardState: {
-                  id: "ターン終了時まで「高機動」、＋３／＋３／＋３を得る。",
-                  cardID: "",
-                  cardTextStates: [
+                cardStateID:
+                  "ターン終了時まで「高機動」、＋３／＋３／＋３を得る。",
+                cardTextState: {
+                  id: "TargetTypeCardTextState",
+                  value: [
                     {
                       id: "",
                       enabled: true,

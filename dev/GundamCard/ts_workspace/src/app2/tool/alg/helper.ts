@@ -1015,6 +1015,11 @@ export function getTargetType(
         }
       }
     }
+    case "TargetTypeCardTextState":
+      if (Array.isArray(targetTypeAfterProcess.value)) {
+        return targetTypeAfterProcess;
+      }
+      throw new Error(`not impl for other type: ${targetTypeAfterProcess.id}`);
     default:
       throw new Error(`not impl: ${targetTypeAfterProcess.id}`);
   }
@@ -1291,4 +1296,21 @@ export function getCardCoins(ctx: GameContext, cardID: string): Coin[] {
       return true;
     })
     .map((token) => token.protoID as Coin);
+}
+
+export function getCardCardTextState(
+  ctx: GameContext,
+  cardID: string
+): CardTextState[] {
+  const converGlobalCardState = ctx.gameState.globalCardState.map((gs) => {
+    return {
+      id: gs.cardID,
+      cardTextStates: gs.cardTextStates,
+    };
+  });
+  return [...ctx.gameState.cardState, ...converGlobalCardState]
+    .filter((v) => {
+      return v.id == cardID;
+    })
+    .flatMap((v) => v.cardTextStates);
 }

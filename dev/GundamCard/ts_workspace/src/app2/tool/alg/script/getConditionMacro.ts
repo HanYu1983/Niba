@@ -94,6 +94,12 @@ type ConditionMacro12 = {
   id: "是主動玩家";
 };
 
+type ConditionMacro13 = {
+  id: "變量x的特徵包含於y";
+  x: TargetTypeCard;
+  y: string[];
+};
+
 export type ConditionMacro =
   | ConditionMacro1
   | ConditionMacro2
@@ -106,10 +112,29 @@ export type ConditionMacro =
   | ConditionMacro9
   | ConditionMacro10
   | ConditionMacro11
-  | ConditionMacro12;
+  | ConditionMacro12
+  | ConditionMacro13;
 
 export function getConditionMacro(macro: ConditionMacro): Condition {
   switch (macro.id) {
+    case "變量x的特徵包含於y": {
+      return {
+        id: "ConditionCompareString",
+        value: [
+          {
+            id: "字串",
+            value: {
+              path: [macro.x, "的「特徴」"],
+            },
+          },
+          "hasToken",
+          {
+            id: "字串",
+            value: macro.y,
+          },
+        ],
+      };
+    }
     case "是主動玩家":
       return {
         id: "ConditionJsonfp",

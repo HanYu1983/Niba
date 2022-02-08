@@ -8,6 +8,8 @@ import {
 import { RequireCustomID } from "../../tool/basic/requireCustom";
 import { getRequireMacro } from "./getRequireMacro";
 import { getCardTextMacro } from "./getCardTextMacro";
+import { getConditionMacro } from "./getConditionMacro";
+import { CardTextState } from "../../tool/basic/gameContext";
 
 var _seqID = 0;
 export function createTokuSyuKouKaText(
@@ -287,35 +289,81 @@ export function createTokuSyuKouKaText(
         id: "特殊型",
         description: toku,
         texts: [
-          {
-            id: "使用型",
+          getCardTextMacro({
+            id: "PlayText",
+            description:
+              "（戦闘フェイズ）：［ ］の特徴を持つ自軍ユニット１枚は、ターン終了時まで、このカードの本来のテキスト１つと同じテキストを得る。ただし同じテキストは得られない）",
             timing: ["戦闘フェイズ"],
-            description: JSON.stringify(toku),
-            block: {
-              contextID: `createTokuSyuKouKaText_${_seqID++}`,
-              require: {
-                id: "RequireAnd",
-                and: [
-                  createRollCostRequire(
-                    options.cost || 0,
-                    options.costColor || null
-                  ),
-                  {
-                    id: "RequireTarget",
-                    targets: {
-                      指定的卡: {
+            varCtxID: `createTokuSyuKouKaText_${_seqID++}`,
+            additionalRequire: [
+              {
+                id: "RequireTarget",
+                targets: {
+                  "［ ］の特徴を持つ自軍ユニット１枚": {
+                    id: "カード",
+                    value: [],
+                    valueLengthInclude: [1],
+                  },
+                },
+                condition: {
+                  id: "ConditionAnd",
+                  and: [
+                    getConditionMacro({
+                      id: "變量x的是y軍",
+                      x: {
                         id: "カード",
-                        value: [],
-                        valueLengthInclude: [1],
+                        value: "［ ］の特徴を持つ自軍ユニット１枚",
                       },
-                    },
-                    action: [
+                      y: "自軍",
+                    }),
+                    getConditionMacro({
+                      id: "變量x的角色包含於y",
+                      x: {
+                        id: "カード",
+                        value: "［ ］の特徴を持つ自軍ユニット１枚",
+                      },
+                      y: ["ユニット"],
+                    }),
+                    getConditionMacro({
+                      id: "變量x的特徵包含於y",
+                      x: {
+                        id: "カード",
+                        value: "［ ］の特徴を持つ自軍ユニット１枚",
+                      },
+                      y: [toku[1]],
+                    }),
+                  ],
+                },
+                action: [
+                  {
+                    id: "ActionSetTarget",
+                    source: "［ ］の特徴を持つ自軍ユニット１枚",
+                    target: "［ ］の特徴を持つ自軍ユニット１枚",
+                  },
+                ],
+              },
+            ],
+            feedbackBlock: {
+              require: {
+                id: "RequireTarget",
+                targets: {
+                  本来のテキスト１つ: {
+                    id: "TargetTypeCardTextState",
+                    value: [
                       {
-                        id: "ActionSetTarget",
-                        source: "指定的卡",
-                        target: "指定的卡",
+                        id: "速攻",
+                        enabled: true,
+                        cardText: createTokuSyuKouKaText(["速攻"], {}),
                       },
                     ],
+                    valueLengthInclude: [1],
+                  },
+                },
+                action: [
+                  {
+                    id: "ActionSetTarget",
+                    source: "本来のテキスト１つ",
+                    target: "本来のテキスト１つ",
                   },
                 ],
               },
@@ -324,39 +372,47 @@ export function createTokuSyuKouKaText(
                   id: "FeedbackAction",
                   action: [
                     {
-                      id: "ActionAddBlock",
-                      type: "堆疊",
-                      block: {
-                        require: {
-                          id: "RequireTarget",
-                          targets: {
-                            指定的內文: {
-                              id: "TargetTypeCardTextState",
-                              value: [],
-                              valueLengthInclude: [1],
-                            },
-                          },
-                          action: [
-                            {
-                              id: "ActionSetTarget",
-                              source: "指定的內文",
-                              target: "指定的內文",
-                            },
-                          ],
-                        },
-                        feedback: [
+                      id: "ActionAddGlobalCardText",
+                      cards: {
+                        id: "カード",
+                        value: "［ ］の特徴を持つ自軍ユニット１枚",
+                      },
+                      cardStateID:
+                        "（戦闘フェイズ）：［ ］の特徴を持つ自軍ユニット１枚は、ターン終了時まで、[このカードの本来のテキスト１つと同じテキストを得る]。ただし同じテキストは得られない）",
+                      cardTextState: {
+                        id: "TargetTypeCardTextState",
+                        value: "本来のテキスト１つ",
+                      },
+                    },
+                    {
+                      id: "ActionAddGlobalCardText",
+                      cards: {
+                        id: "カード",
+                        value: "［ ］の特徴を持つ自軍ユニット１枚",
+                      },
+                      cardStateID:
+                        "（戦闘フェイズ）：［ ］の特徴を持つ自軍ユニット１枚は、[ターン終了時まで]、このカードの本来のテキスト１つと同じテキストを得る。ただし同じテキストは得られない）",
+                      cardTextState: {
+                        id: "TargetTypeCardTextState",
+                        value: [
                           {
-                            id: "FeedbackAction",
-                            action: [
-                              {
-                                id: "ActionAddCardText",
-                                cards: { id: "カード", value: "指定的卡" },
-                                cardTextState: {
-                                  id: "TargetTypeCardTextState",
-                                  value: "指定的內文",
+                            id: "",
+                            enabled: true,
+                            cardText: getCardTextMacro({
+                              id: "ターン終了時までの場合",
+                              feedbackAction: [
+                                {
+                                  id: "ActionDeleteGlobalCardText",
+                                  cardStateID:
+                                    "（戦闘フェイズ）：［ ］の特徴を持つ自軍ユニット１枚は、ターン終了時まで、[このカードの本来のテキスト１つと同じテキストを得る]。ただし同じテキストは得られない）",
                                 },
-                              },
-                            ],
+                                {
+                                  id: "ActionDeleteGlobalCardText",
+                                  cardStateID:
+                                    "（戦闘フェイズ）：［ ］の特徴を持つ自軍ユニット１枚は、[ターン終了時まで]、このカードの本来のテキスト１つと同じテキストを得る。ただし同じテキストは得られない）",
+                                },
+                              ],
+                            }),
                           },
                         ],
                       },
@@ -365,7 +421,7 @@ export function createTokuSyuKouKaText(
                 },
               ],
             },
-          },
+          }),
         ],
       };
     case "ゲイン":
@@ -654,7 +710,6 @@ export function createTokuSyuKouKaText(
         texts: [
           getCardTextMacro({
             id: "PlayText",
-
             description: JSON.stringify(toku),
             timing: ["防御ステップ"],
             varCtxID: `createTokuSyuKouKaText_${_seqID++}`,
@@ -791,7 +846,6 @@ export function createTokuSyuKouKaText(
         texts: [
           getCardTextMacro({
             id: "PlayText",
-
             description: JSON.stringify(toku),
             timing: ["ダメージ判定ステップ"],
             varCtxID: `createTokuSyuKouKaText_${_seqID++}`,
@@ -920,7 +974,6 @@ export function createTokuSyuKouKaText(
         texts: [
           getCardTextMacro({
             id: "PlayText",
-
             description: JSON.stringify(toku),
             timing: ["戦闘フェイズ"],
             varCtxID: `createTokuSyuKouKaText_${_seqID++}`,
