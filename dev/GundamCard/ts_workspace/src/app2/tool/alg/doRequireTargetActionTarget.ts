@@ -723,7 +723,7 @@ export function doRequireTargetActionTarget(
       };
     }
     case "ActionAddGlobalCardText": {
-      const { cardState } = action;
+      const { cardStateID } = action;
       const cards = getTargetType(ctx, blockPayload, targets, action.cards);
       if (cards.id != "カード") {
         throw new Error("must カード");
@@ -732,18 +732,32 @@ export function doRequireTargetActionTarget(
         throw new Error("執行Action時的所有target必須是陣列");
       }
       assertTargetTypeValueLength(cards);
+      const cardTextState = getTargetType(
+        ctx,
+        blockPayload,
+        targets,
+        action.cardTextState
+      );
+      if (cardTextState.id != "カードのテキスト") {
+        throw new Error("must TargetTypeCardTextState");
+      }
+      if (!Array.isArray(cardTextState.value)) {
+        throw new Error("執行Action時的所有target必須是陣列");
+      }
+      assertTargetTypeValueLength(cardTextState);
+      const cardTextStates = cardTextState.value;
       const cardStateAfterSignID = cards.value.map(
         (cardID): GlobalCardState => {
           // 修正ID，變成一張卡吃能新增同樣的內文一次
-          const cardStateID = `${cardID}_${cardState.id}`;
+          const _cardStateID = `${cardID}_${cardStateID}`;
           return {
-            ...cardState,
-            id: cardStateID,
+            id: _cardStateID,
             cardID: cardID,
-            cardTextStates: cardState.cardTextStates.map((cts, i) => {
+            cardTextStates: cardTextStates.map((cts, i) => {
+              const _cardTextStateID = `${cardID}_${cardStateID}_${cts.id}_${i}`;
               return {
                 ...cts,
-                id: `${cardID}_${cardState.id}_${cts.id}_${i}`,
+                id: _cardTextStateID,
               };
             }),
           };
@@ -795,7 +809,7 @@ export function doRequireTargetActionTarget(
         targets,
         action.cardTextState
       );
-      if (cardTextState.id != "TargetTypeCardTextState") {
+      if (cardTextState.id != "カードのテキスト") {
         throw new Error("must TargetTypeCardTextState");
       }
       if (!Array.isArray(cardTextState.value)) {

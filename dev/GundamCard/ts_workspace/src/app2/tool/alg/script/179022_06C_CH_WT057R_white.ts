@@ -50,10 +50,11 @@ const prototype: CardPrototype = {
                   id: "カード",
                   value: { path: [{ id: "このカード" }] },
                 },
-                cardState: {
-                  id: "『常駐』：このカードは、「専用機のセット」が成立するユニットにセットされている場合、「速攻」「強襲」を得る。",
-                  cardID: "",
-                  cardTextStates: [
+                cardStateID:
+                  "『常駐』：このカードは、「専用機のセット」が成立するユニットにセットされている場合、「速攻」「強襲」を得る。",
+                cardTextState: {
+                  id: "カードのテキスト",
+                  value: [
                     {
                       id: "",
                       enabled: true,

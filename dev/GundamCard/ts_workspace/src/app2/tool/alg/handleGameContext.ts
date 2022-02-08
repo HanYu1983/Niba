@@ -41,6 +41,7 @@ import {
   getBattleGroupBattlePoint,
   getCardBattlePoint,
   getCardState,
+  getCardStateIterator,
   isABattleGroup,
 } from "./helper";
 import { doConditionTarget } from "./doConditionTarget";
@@ -68,6 +69,48 @@ export function wrapTip(
         return target;
       }
       switch (target.id) {
+        case "カードのテキスト": {
+          if (block.cause?.id != "BlockPayloadCauseUpdateCommand") {
+            throw new Error("must be BlockPayloadCauseUpdateCommand");
+          }
+          // TODO: 先做成只提示這個卡的原本文
+          const cardID = block.cause.cardID;
+          const [_, cardState] = getCardState(ctx, cardID);
+          const validCardID = cardState.cardTextStates.map((cts) => cts.id);
+          const nextValues = (() => {
+            if (autoFill == false) {
+              return target.value;
+            }
+            if (validCardID.length == 0) {
+              return target.value;
+            }
+            if (!Array.isArray(target.value)) {
+              return target.value;
+            }
+            if (target.valueLengthInclude == null) {
+              return target.value;
+            }
+            if (target.valueLengthInclude.length == 0) {
+              return target.value;
+            }
+            const len =
+              target.valueLengthInclude[target.valueLengthInclude.length - 1];
+            return validCardID.slice(0, len).map((cardTextStateID) => {
+              const find = getCardStateIterator(ctx)
+                .flatMap(([_, cts]) => cts)
+                .find((cts) => cts.id == cardTextStateID);
+              if (find == null) {
+                throw new Error(`cardTextState not found: ${cardTextStateID}`);
+              }
+              return find;
+            });
+          })();
+          return {
+            ...target,
+            tipID: validCardID,
+            value: nextValues,
+          };
+        }
         case "カード": {
           // 取得提示.
           const { validCardID, msgs } = reduceCard(
@@ -731,7 +774,7 @@ export function updateDestroyEffect(ctx: GameContext): GameContext {
   return ctx;
 }
 
-export function getTip(
+function getTipXX(
   ctx: GameContext,
   blockID: string,
   requireID: string,

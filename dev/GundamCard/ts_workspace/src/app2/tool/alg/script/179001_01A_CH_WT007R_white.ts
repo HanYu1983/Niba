@@ -56,16 +56,15 @@ const prototype: CardPrototype = {
                     ],
                   },
                 },
-                cardState: {
-                  id: "ターン終了時まで「速攻」を得る",
-                  cardID: "",
-                  cardTextStates: [
+                cardStateID: "ターン終了時まで「速攻」を得る",
+                cardTextState: {
+                  id: "カードのテキスト",
+                  value: [
                     {
                       id: "",
                       enabled: true,
                       cardText: createTokuSyuKouKaText(["速攻"], {}),
                     },
-
                     {
                       id: "",
                       enabled: true,
@@ -78,44 +77,6 @@ const prototype: CardPrototype = {
                           },
                         ],
                       }),
-                      // {
-                      //   id: "自動型",
-                      //   category: "起動",
-                      //   description: "[ターン終了時まで]「速攻」を得る。",
-                      //   block: {
-                      //     require: {
-                      //       id: "RequireTarget",
-                      //       targets: {},
-                      //       condition: {
-                      //         id: "ConditionAnd",
-                      //         and: [
-                      //           getConditionMacro({
-                      //             id: "當觸發GameEvent的變量x的id時",
-                      //             x: {
-                      //               id: "GameEventOnTiming",
-                      //               timing: TIMING_CHART[0],
-                      //             },
-                      //           }),
-                      //           getConditionMacro({
-                      //             id: "ターン終了時まで",
-                      //           }),
-                      //         ],
-                      //       },
-                      //     },
-                      //     feedback: [
-                      //       {
-                      //         id: "FeedbackAction",
-                      //         action: [
-                      //           {
-                      //             id: "ActionDeleteGlobalCardText",
-                      //             cardTextStateID:
-                      //               "ターン終了時まで「速攻」を得る",
-                      //           },
-                      //         ],
-                      //       },
-                      //     ],
-                      //   },
-                      // },
                     },
                   ],
                 },

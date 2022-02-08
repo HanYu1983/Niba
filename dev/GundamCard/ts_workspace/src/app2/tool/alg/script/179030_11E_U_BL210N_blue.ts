@@ -67,10 +67,10 @@ const prototype: CardPrototype = {
                   id: "カード",
                   value: { path: [{ id: "このカード" }] },
                 },
-                cardState: {
-                  id: "",
-                  cardID: "",
-                  cardTextStates: [
+                cardStateID: "ターン終了時に、このカードを持ち主のGにできる",
+                cardTextState: {
+                  id: "カードのテキスト",
+                  value: [
                     {
                       id: "179030_11E_U_BL210N_blue_ターン終了時に、このカードを持ち主のGにできる。_0",
                       enabled: true,

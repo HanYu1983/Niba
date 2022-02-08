@@ -11,7 +11,7 @@ const hideCategory: string[] = [
   "jsonfp",
   "doRequireTargetAction",
   "getAbsoluteBaSyou",
-  "assertTargetTypeValueLength",
+  //"assertTargetTypeValueLength",
   //"applyFlow",
 ];
 let filterCategory = true;

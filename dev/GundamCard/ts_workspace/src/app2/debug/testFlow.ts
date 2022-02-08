@@ -4,7 +4,6 @@ import {
   updateEffect,
   //updateCommand,
   triggerTextEvent,
-  getTip,
 } from "../tool/alg/handleGameContext";
 import { createCard } from "../../tool/table";
 import { getBaShouID, PlayerA, PlayerB } from "../tool/tool/basic/basic";

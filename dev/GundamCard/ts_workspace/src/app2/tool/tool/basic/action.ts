@@ -106,7 +106,8 @@ export type ActionAddEffect = {
 export type ActionAddGlobalCardText = {
   id: "ActionAddGlobalCardText";
   cards: TargetTypeCard;
-  cardState: GlobalCardState;
+  cardStateID: string;
+  cardTextState: TargetTypeCardTextState;
 };
 
 export type ActionDeleteGlobalCardText = {
