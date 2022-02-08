@@ -42,7 +42,7 @@ const prototype: CardPrototype = {
                 cards: { id: "カード", value: "自軍ユニット１枚" },
                 cardStateID: "ターン終了時まで「高機動」を得る。",
                 cardTextState: {
-                  id: "TargetTypeCardTextState",
+                  id: "カードのテキスト",
                   value: [
                     {
                       id: "",

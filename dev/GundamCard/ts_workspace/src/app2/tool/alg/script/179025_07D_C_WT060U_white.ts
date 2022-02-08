@@ -73,7 +73,7 @@ const prototype: CardPrototype = {
                 cardStateID:
                   "ターン終了時まで「高機動」、＋３／＋３／＋３を得る。",
                 cardTextState: {
-                  id: "TargetTypeCardTextState",
+                  id: "カードのテキスト",
                   value: [
                     {
                       id: "",

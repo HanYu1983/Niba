@@ -223,12 +223,14 @@ export function getTargetType(
             case "の上のカードX枚": {
               const x = path[2];
               return {
+                ...targetTypeAfterProcess,
                 id: "カード",
                 value: targetType.value.slice(0, x),
               };
             }
             case "のセットグループのユニット": {
               return {
+                ...targetTypeAfterProcess,
                 id: "カード",
                 value: targetType.value.map((cardID) => {
                   const rootCardID = getSetGroupRoot(ctx, cardID);
@@ -303,6 +305,7 @@ export function getTargetType(
             }
           });
           return {
+            ...targetTypeAfterProcess,
             id: "カード",
             value: values,
           };
@@ -329,6 +332,7 @@ export function getTargetType(
             }
           });
           return {
+            ...targetTypeAfterProcess,
             id: "カード",
             value: values,
           };
@@ -345,12 +349,14 @@ export function getTargetType(
           switch (targetTypeAfterProcess.responsePlayer) {
             case "敵軍":
               return {
+                ...targetTypeAfterProcess,
                 id: "プレーヤー",
                 value: [getOpponentPlayerID(getBlockOwner(ctx, blockPayload))],
               };
             case "自軍":
             default:
               return {
+                ...targetTypeAfterProcess,
                 id: "プレーヤー",
                 value: [getBlockOwner(ctx, blockPayload)],
               };
@@ -359,12 +365,14 @@ export function getTargetType(
           switch (targetTypeAfterProcess.responsePlayer) {
             case "敵軍":
               return {
+                ...targetTypeAfterProcess,
                 id: "プレーヤー",
                 value: [getBlockOwner(ctx, blockPayload)],
               };
             case "自軍":
             default:
               return {
+                ...targetTypeAfterProcess,
                 id: "プレーヤー",
                 value: [getOpponentPlayerID(getBlockOwner(ctx, blockPayload))],
               };
@@ -393,6 +401,7 @@ export function getTargetType(
             }
           });
           return {
+            ...targetTypeAfterProcess,
             id: "プレーヤー",
             value: values,
           };
@@ -430,6 +439,7 @@ export function getTargetType(
             }
           });
           return {
+            ...targetTypeAfterProcess,
             id: "カードの色",
             value: values,
           };
@@ -487,6 +497,7 @@ export function getTargetType(
             }
           });
           return {
+            ...targetTypeAfterProcess,
             id: "「カード」的角色",
             value: values,
           };
@@ -524,6 +535,7 @@ export function getTargetType(
             }
           });
           return {
+            ...targetTypeAfterProcess,
             id: "カードの種類",
             value: values,
           };
@@ -573,6 +585,7 @@ export function getTargetType(
             }
           });
           return {
+            ...targetTypeAfterProcess,
             id: "字串",
             value: values,
           };
@@ -613,6 +626,7 @@ export function getTargetType(
             }
           });
           return {
+            ...targetTypeAfterProcess,
             id: "場所",
             value: values,
           };
@@ -756,6 +770,7 @@ export function getTargetType(
             }
           });
           return {
+            ...targetTypeAfterProcess,
             id: "數字",
             value: values,
           };
@@ -798,6 +813,7 @@ export function getTargetType(
             }
           });
           return {
+            ...targetTypeAfterProcess,
             id: "數字",
             value: values,
           };
@@ -852,6 +868,7 @@ export function getTargetType(
             }
           });
           return {
+            ...targetTypeAfterProcess,
             id: "布林",
             value: values,
           };
@@ -889,6 +906,7 @@ export function getTargetType(
             }
           });
           return {
+            ...targetTypeAfterProcess,
             id: "カードの種類",
             value: values,
           };
@@ -969,6 +987,7 @@ export function getTargetType(
             }
           });
           return {
+            ...targetTypeAfterProcess,
             id: "戦闘修正",
             value: values,
           };
@@ -989,6 +1008,7 @@ export function getTargetType(
             throw new Error("必須是「効果」解決時");
           }
           return {
+            ...targetTypeAfterProcess,
             id: "「効果」解決時",
             value: [blockPayload.cause.gameEvent],
           };
@@ -1009,17 +1029,45 @@ export function getTargetType(
             throw new Error("必須是手動事件發生時");
           }
           return {
+            ...targetTypeAfterProcess,
             id: "手動事件發生時",
             value: [blockPayload.cause.gameEvent],
           };
         }
       }
     }
-    case "TargetTypeCardTextState":
+    case "カードのテキスト":
       if (Array.isArray(targetTypeAfterProcess.value)) {
         return targetTypeAfterProcess;
       }
-      throw new Error(`not impl for other type: ${targetTypeAfterProcess.id}`);
+      const path = targetTypeAfterProcess.value.path;
+      switch (path[0].id) {
+        case "カード": {
+          const targetType = getTargetType(ctx, blockPayload, targets, path[0]);
+          if (targetType.id != "カード") {
+            throw new Error("must be カード");
+          }
+          if (!Array.isArray(targetType.value)) {
+            throw new Error("must be real value");
+          }
+          const values = targetType.value.flatMap((cardID) => {
+            switch (path[1]) {
+              case "的「テキスト」": {
+                return getCardStateIterator(ctx)
+                  .filter(([id, _]) => {
+                    return id == cardID;
+                  })
+                  .flatMap(([_, cts]) => cts);
+              }
+            }
+          });
+          return {
+            ...targetTypeAfterProcess,
+            id: "カードのテキスト",
+            value: values,
+          };
+        }
+      }
     default:
       throw new Error(`not impl: ${targetTypeAfterProcess.id}`);
   }

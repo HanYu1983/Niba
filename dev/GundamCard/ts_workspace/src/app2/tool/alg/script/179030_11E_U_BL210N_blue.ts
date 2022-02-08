@@ -69,7 +69,7 @@ const prototype: CardPrototype = {
                 },
                 cardStateID: "ターン終了時に、このカードを持ち主のGにできる",
                 cardTextState: {
-                  id: "TargetTypeCardTextState",
+                  id: "カードのテキスト",
                   value: [
                     {
                       id: "179030_11E_U_BL210N_blue_ターン終了時に、このカードを持ち主のGにできる。_0",

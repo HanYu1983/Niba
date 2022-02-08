@@ -348,8 +348,17 @@ export function createTokuSyuKouKaText(
                 id: "RequireTarget",
                 targets: {
                   本来のテキスト１つ: {
-                    id: "TargetTypeCardTextState",
+                    id: "カードのテキスト",
                     value: [],
+                    // value: {
+                    //   path: [
+                    //     {
+                    //       id: "カード",
+                    //       value: { path: [{ id: "このカード" }] },
+                    //     },
+                    //     "的「テキスト」",
+                    //   ],
+                    // },
                     valueLengthInclude: [1],
                   },
                 },
@@ -374,7 +383,7 @@ export function createTokuSyuKouKaText(
                       cardStateID:
                         "（戦闘フェイズ）：［ ］の特徴を持つ自軍ユニット１枚は、ターン終了時まで、[このカードの本来のテキスト１つと同じテキストを得る]。ただし同じテキストは得られない）",
                       cardTextState: {
-                        id: "TargetTypeCardTextState",
+                        id: "カードのテキスト",
                         value: "本来のテキスト１つ",
                       },
                     },
@@ -387,7 +396,7 @@ export function createTokuSyuKouKaText(
                       cardStateID:
                         "（戦闘フェイズ）：［ ］の特徴を持つ自軍ユニット１枚は、[ターン終了時まで]、このカードの本来のテキスト１つと同じテキストを得る。ただし同じテキストは得られない）",
                       cardTextState: {
-                        id: "TargetTypeCardTextState",
+                        id: "カードのテキスト",
                         value: [
                           {
                             id: "",

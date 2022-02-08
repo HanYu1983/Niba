@@ -738,7 +738,7 @@ export function doRequireTargetActionTarget(
         targets,
         action.cardTextState
       );
-      if (cardTextState.id != "TargetTypeCardTextState") {
+      if (cardTextState.id != "カードのテキスト") {
         throw new Error("must TargetTypeCardTextState");
       }
       if (!Array.isArray(cardTextState.value)) {
@@ -809,7 +809,7 @@ export function doRequireTargetActionTarget(
         targets,
         action.cardTextState
       );
-      if (cardTextState.id != "TargetTypeCardTextState") {
+      if (cardTextState.id != "カードのテキスト") {
         throw new Error("must TargetTypeCardTextState");
       }
       if (!Array.isArray(cardTextState.value)) {

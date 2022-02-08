@@ -72,10 +72,12 @@ export function testProto_179015_04B_U_WT067C_white() {
       throw new Error("a2的內文原本是4個");
     }
   }
+  console.log("更新指令");
   ctx = updateCommand(ctx);
   if (ctx.gameState.commandEffect.length != 1) {
     throw new Error("必須有一個指令(交叉武器)");
   }
+  console.log("使用交叉武器, 放入堆疊");
   {
     const cmd = ctx.gameState.commandEffect[0];
     ctx = doBlockPayload(ctx, cmd);
@@ -83,10 +85,13 @@ export function testProto_179015_04B_U_WT067C_white() {
   if (ctx.gameState.stackEffect.length != 1) {
     throw new Error("堆疊中必須有一指令");
   }
+  console.log("解決交叉武器的內文");
   {
     const cmd = wrapTip(ctx, true, ctx.gameState.stackEffect[0], "tmp");
+    console.log(cmd);
     ctx = doBlockPayload(ctx, cmd);
   }
+  console.log("重新查詢a2的內文數量");
   {
     const cts = getCardCardTextState(ctx, "a2");
     if (cts.length != 6) {
@@ -94,6 +99,7 @@ export function testProto_179015_04B_U_WT067C_white() {
       throw new Error("a2的內文必須新增到6個");
     }
   }
+  console.log("手動觸發回合結束");
   ctx = triggerTextEvent(ctx, {
     id: "GameEventOnTiming",
     timing: [34, ["戦闘フェイズ", "ターン終了時", "効果終了。ターン終了"]],

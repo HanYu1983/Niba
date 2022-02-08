@@ -69,7 +69,7 @@ export function wrapTip(
         return target;
       }
       switch (target.id) {
-        case "TargetTypeCardTextState": {
+        case "カードのテキスト": {
           if (block.cause?.id != "BlockPayloadCauseUpdateCommand") {
             throw new Error("must be BlockPayloadCauseUpdateCommand");
           }

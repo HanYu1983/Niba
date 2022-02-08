@@ -58,7 +58,7 @@ const prototype: CardPrototype = {
                 },
                 cardStateID: "ターン終了時まで「速攻」を得る",
                 cardTextState: {
-                  id: "TargetTypeCardTextState",
+                  id: "カードのテキスト",
                   value: [
                     {
                       id: "",

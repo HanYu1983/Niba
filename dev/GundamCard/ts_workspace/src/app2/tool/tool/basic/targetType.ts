@@ -197,8 +197,13 @@ type TargetTypeDamage = {
 } & TargetTypeBase;
 
 export type TargetTypeCardTextState = {
-  id: "TargetTypeCardTextState";
-  value: CardTextState[] | string;
+  id: "カードのテキスト";
+  value:
+    | CardTextState[]
+    | string
+    | {
+        path: [TargetTypeCard, "的「テキスト」"];
+      };
 } & TargetTypeBase;
 
 export type TargetType =

@@ -53,7 +53,7 @@ const prototype: CardPrototype = {
                 cardStateID:
                   "『常駐』：このカードは、「専用機のセット」が成立するユニットにセットされている場合、「速攻」「強襲」を得る。",
                 cardTextState: {
-                  id: "TargetTypeCardTextState",
+                  id: "カードのテキスト",
                   value: [
                     {
                       id: "",

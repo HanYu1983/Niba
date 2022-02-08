@@ -85,7 +85,7 @@ const prototype: CardPrototype = {
                 cards: { id: "カード", value: "自軍キャラ１枚" },
                 cardStateID: "ターン終了時まで、＋２／＋２／＋２を得る",
                 cardTextState: {
-                  id: "TargetTypeCardTextState",
+                  id: "カードのテキスト",
                   value: [
                     {
                       id: "",
