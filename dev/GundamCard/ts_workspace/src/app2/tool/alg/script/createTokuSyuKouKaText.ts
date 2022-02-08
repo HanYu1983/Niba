@@ -349,13 +349,7 @@ export function createTokuSyuKouKaText(
                 targets: {
                   本来のテキスト１つ: {
                     id: "TargetTypeCardTextState",
-                    value: [
-                      {
-                        id: "速攻",
-                        enabled: true,
-                        cardText: createTokuSyuKouKaText(["速攻"], {}),
-                      },
-                    ],
+                    value: [],
                     valueLengthInclude: [1],
                   },
                 },

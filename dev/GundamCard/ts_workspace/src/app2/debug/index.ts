@@ -8,7 +8,6 @@ import {
   updateEffect,
   //updateCommand,
   triggerTextEvent,
-  getTip,
   updateCommand,
   getClientCommand,
 } from "../tool/alg/handleGameContext";
@@ -725,12 +724,12 @@ export function testDryRun() {
       return _key;
     })();
     console.log("getTip");
-    const tip = getTip(
-      ctx,
-      effect.id || "",
-      key || "",
-      "５以下の防御力を持つ敵軍ユニット１枚",
-      "tmp"
-    );
+    // const tip = getTip(
+    //   ctx,
+    //   effect.id || "",
+    //   key || "",
+    //   "５以下の防御力を持つ敵軍ユニット１枚",
+    //   "tmp"
+    // );
   });
 }

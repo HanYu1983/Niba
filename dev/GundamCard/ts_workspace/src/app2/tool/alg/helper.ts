@@ -43,7 +43,7 @@ import {
 } from "../tool/basic/targetType";
 import { log2 } from "../../../tool/logger";
 import { getPrototype } from "./script";
-import { getTip, triggerTextEvent, wrapTip } from "./handleGameContext";
+import { triggerTextEvent, wrapTip } from "./handleGameContext";
 import { GameEventOnManualEventCustomID } from "./gameEventOnManualEventCustomID";
 
 let idSeq = 0;
@@ -1298,19 +1298,39 @@ export function getCardCoins(ctx: GameContext, cardID: string): Coin[] {
     .map((token) => token.protoID as Coin);
 }
 
-export function getCardCardTextState(
-  ctx: GameContext,
-  cardID: string
-): CardTextState[] {
+export function getCardStateIterator(
+  ctx: GameContext
+): [string, CardTextState[]][] {
   const converGlobalCardState = ctx.gameState.globalCardState.map((gs) => {
     return {
       id: gs.cardID,
       cardTextStates: gs.cardTextStates,
     };
   });
-  return [...ctx.gameState.cardState, ...converGlobalCardState]
-    .filter((v) => {
-      return v.id == cardID;
+  return [...ctx.gameState.cardState, ...converGlobalCardState].map((v) => {
+    return [v.id, v.cardTextStates] as [string, CardTextState[]];
+  });
+}
+
+export function getCardCardTextState(
+  ctx: GameContext,
+  cardID: string
+): CardTextState[] {
+  return getCardStateIterator(ctx)
+    .filter(([id, cts]) => {
+      return id == cardID;
     })
-    .flatMap((v) => v.cardTextStates);
+    .flatMap(([_, cts]) => cts);
+
+  // const converGlobalCardState = ctx.gameState.globalCardState.map((gs) => {
+  //   return {
+  //     id: gs.cardID,
+  //     cardTextStates: gs.cardTextStates,
+  //   };
+  // });
+  // return [...ctx.gameState.cardState, ...converGlobalCardState]
+  //   .filter((v) => {
+  //     return v.id == cardID;
+  //   })
+  //   .flatMap((v) => v.cardTextStates);
 }

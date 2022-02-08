@@ -65,13 +65,14 @@ export function testProto_179015_04B_U_WT067C_white() {
     },
   };
   ctx = initState(ctx);
-  ctx = updateCommand(ctx);
+  console.log("檢查本來a2的內文數量");
   {
     const cts = getCardCardTextState(ctx, "a2");
     if (cts.length != 4) {
       throw new Error("a2的內文原本是4個");
     }
   }
+  ctx = updateCommand(ctx);
   if (ctx.gameState.commandEffect.length != 1) {
     throw new Error("必須有一個指令(交叉武器)");
   }
@@ -83,7 +84,7 @@ export function testProto_179015_04B_U_WT067C_white() {
     throw new Error("堆疊中必須有一指令");
   }
   {
-    const cmd = ctx.gameState.stackEffect[0];
+    const cmd = wrapTip(ctx, true, ctx.gameState.stackEffect[0], "tmp");
     ctx = doBlockPayload(ctx, cmd);
   }
   {
