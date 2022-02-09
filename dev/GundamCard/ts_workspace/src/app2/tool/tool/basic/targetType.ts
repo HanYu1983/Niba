@@ -16,8 +16,6 @@ import { BlockPayload } from "./blockPayload";
 
 export type TargetTypeBase = {
   responsePlayer?: RelatedPlayerSideKeyword;
-  tipID?: string[];
-  tipMessage?: { [key: string]: string };
   valueLengthInclude?: number[];
 };
 
@@ -50,6 +48,8 @@ export type TargetTypeBattleBonus = {
             ]
           | [TargetTypeNumber, "の戦闘修正"];
       };
+  tip?: TargetTypeBattleBonus;
+  tipMessage?: { [key: string]: string };
 } & TargetTypeBase;
 
 export type TargetTypeCard = {
@@ -69,33 +69,9 @@ export type TargetTypeCard = {
               "プレイされて場に出た場合のカード"
             ];
       };
+  tip?: TargetTypeCard;
+  tipMessage?: { [key: string]: string };
 } & TargetTypeBase;
-
-// export type TargetTypeCard2 =
-//   | [
-//       "カード",
-//       { tipID?: string[]; valueLengthInclude?: number[] },
-//       { id: "このカード" }
-//     ]
-//   | [
-//       "カード",
-//       { tipID?: string[]; valueLengthInclude?: number[] },
-//       TargetTypeGameEventOnAfterEffect,
-//       "的「カード」"
-//     ]
-//   | [
-//       "カード",
-//       { tipID?: string[]; valueLengthInclude?: number[] },
-//       TargetTypeBaSyou,
-//       "的「カード」"
-//     ]
-//   | [
-//       "カード",
-//       { tipID?: string[]; valueLengthInclude?: number[] },
-//       TargetTypeCard2,
-//       "の上のカードX枚",
-//       number
-//     ];
 
 export type TargetTypePlayer = {
   id: "プレーヤー";
@@ -131,7 +107,7 @@ export type TargetTypeNumber = {
               )
             ]
           | [TargetTypePlayer, "的「合計国力」" | "的「改装」的「合計国力」"]
-          | [TargetTypeRef, "的陣列長度" | "的tip陣列長度"]
+          | [TargetTypeRef, "的陣列長度"]
           | [TargetTypeNumber, "+" | "-", TargetTypeNumber];
         triggerGameEvent?: GameEventOnManualEvent;
       };
@@ -204,6 +180,8 @@ export type TargetTypeCardTextState = {
     | {
         path: [TargetTypeCard, "的「テキスト」"];
       };
+  tip?: TargetTypeCardTextState;
+  tipMessage?: { [key: string]: string };
 } & TargetTypeBase;
 
 export type TargetType =

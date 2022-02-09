@@ -95,6 +95,7 @@ export function testProto_179015_04B_U_WT067C_white() {
   {
     const cts = getCardCardTextState(ctx, "a2");
     if (cts.length != 6) {
+      console.log(ctx);
       console.log(cts);
       throw new Error("a2的內文必須新增到6個");
     }

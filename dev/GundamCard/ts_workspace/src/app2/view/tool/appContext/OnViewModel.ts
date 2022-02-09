@@ -515,7 +515,7 @@ export const OnViewModel = OnEvent.pipe(
               },
             };
           }
-          if (false) {
+          if (true) {
             ctx = {
               ...ctx,
               gameState: {
@@ -634,10 +634,14 @@ export const OnViewModel = OnEvent.pipe(
                   22,
                   ["戦闘フェイズ", "ダメージ判定ステップ", "ステップ開始"],
                 ],
+                flowMemory: {
+                  ...ctx.gameState.flowMemory,
+                  state: "playing",
+                },
               },
             };
           }
-          if (true) {
+          if (false) {
             const deck = [
               "179001_01A_CH_WT007R_white",
               "179004_01A_CH_WT009R_white",

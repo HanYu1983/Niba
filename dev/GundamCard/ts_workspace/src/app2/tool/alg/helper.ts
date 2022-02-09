@@ -689,19 +689,6 @@ export function getTargetType(
                 throw new Error("must be real value");
               }
             }
-            case "的tip陣列長度": {
-              const targetType = getTargetType(
-                ctx,
-                blockPayload,
-                targets,
-                path[0]
-              );
-              if (Array.isArray(targetType.tipID)) {
-                return { id: "數字", value: [targetType.tipID.length] };
-              } else {
-                throw new Error("tip must be real value");
-              }
-            }
             default:
               throw new Error(`not support:${path[1]}`);
           }

@@ -100,6 +100,11 @@ type ConditionMacro13 = {
   y: string[];
 };
 
+type ConditionMacro14 = {
+  id: "變量x不是這張卡";
+  x: TargetTypeCard;
+};
+
 export type ConditionMacro =
   | ConditionMacro1
   | ConditionMacro2
@@ -113,10 +118,24 @@ export type ConditionMacro =
   | ConditionMacro10
   | ConditionMacro11
   | ConditionMacro12
-  | ConditionMacro13;
+  | ConditionMacro13
+  | ConditionMacro14;
 
 export function getConditionMacro(macro: ConditionMacro): Condition {
   switch (macro.id) {
+    case "變量x不是這張卡": {
+      return {
+        id: "ConditionCompareCard",
+        value: [
+          {
+            id: "カード",
+            value: { path: [{ id: "このカード" }] },
+          },
+          "!=",
+          macro.x,
+        ],
+      };
+    }
     case "變量x的特徵包含於y": {
       return {
         id: "ConditionCompareString",

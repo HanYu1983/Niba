@@ -13,6 +13,8 @@ import {
 import {
   BlockPayload,
   recurRequire,
+  Require,
+  RequireTarget,
   wrapRequireKey,
 } from "../tool/basic/blockPayload";
 import {
@@ -88,7 +90,7 @@ export function setRequireTarget(
     if (effect.require == null) {
       return effect;
     }
-    const nextRequire = recurRequire(effect.require, (require) => {
+    const nextRequire = recurRequire(effect.require, (require): Require => {
       if (require.key == null) {
         return require;
       }
@@ -110,11 +112,8 @@ export function setRequireTarget(
       // TODO: 判斷當中的張數必須一樣
       const nextTargets = {
         ...require.targets,
-        [varID]: {
-          ...require.targets[varID],
-          ...value,
-        },
       };
+      nextTargets[varID] = value;
       return { ...require, targets: nextTargets };
     });
     return {

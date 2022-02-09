@@ -20,7 +20,9 @@ import { CardView } from "./CardView";
 import { TargetTypeView } from "./TargetTypeView";
 
 export const ConditionView = (props: {
+  blockPayload: BlockPayload;
   require: Require;
+  targets: { [key: string]: TargetType };
   condition: Condition;
 }) => {
   const appContext = useContext(AppContext);
@@ -34,7 +36,9 @@ export const ConditionView = (props: {
               return (
                 <div key={i}>
                   <ConditionView
+                    blockPayload={props.blockPayload}
                     require={props.require}
+                    targets={props.targets}
                     condition={r}
                   ></ConditionView>
                   ;
@@ -51,7 +55,9 @@ export const ConditionView = (props: {
               return (
                 <div key={i}>
                   <ConditionView
+                    blockPayload={props.blockPayload}
                     require={props.require}
+                    targets={props.targets}
                     condition={r}
                   ></ConditionView>
                   ;
@@ -65,7 +71,9 @@ export const ConditionView = (props: {
           <div>
             <div>必須為否</div>
             <ConditionView
+              blockPayload={props.blockPayload}
               require={props.require}
+              targets={props.targets}
               condition={props.condition.not}
             ></ConditionView>
           </div>
@@ -81,9 +89,19 @@ export const ConditionView = (props: {
       case "ConditionCompareCardColor":
         return (
           <div>
-            <TargetTypeView target={props.condition.value[0]}></TargetTypeView>
+            <TargetTypeView
+              blockPayload={props.blockPayload}
+              require={props.require}
+              targets={props.targets}
+              target={props.condition.value[0]}
+            ></TargetTypeView>
             {props.condition.value[1]}
-            <TargetTypeView target={props.condition.value[2]}></TargetTypeView>
+            <TargetTypeView
+              blockPayload={props.blockPayload}
+              require={props.require}
+              targets={props.targets}
+              target={props.condition.value[2]}
+            ></TargetTypeView>
           </div>
         );
       default:
@@ -93,6 +111,6 @@ export const ConditionView = (props: {
           </div>
         );
     }
-  }, [props.condition]);
+  }, [props.blockPayload, props.require, props.targets, props.condition]);
   return <>{render}</>;
 };

@@ -11,7 +11,11 @@ import { getTargetType } from "../../tool/alg/helper";
 import { getBaShou, getBaShouID } from "../../tool/tool/basic/basic";
 import { BlockPayload, Require } from "../../tool/tool/basic/blockPayload";
 import { Condition } from "../../tool/tool/basic/condition";
-import { getBlockOwner, getRequireTargetOwner, mapEffect } from "../../tool/tool/basic/gameContext";
+import {
+  getBlockOwner,
+  getRequireTargetOwner,
+  mapEffect,
+} from "../../tool/tool/basic/gameContext";
 import { getAbsoluteBaSyou } from "../../tool/tool/basic/handleCard";
 import { TargetType } from "../../tool/tool/basic/targetType";
 import { AppContext } from "../tool/appContext";
@@ -20,7 +24,11 @@ import { CardView } from "./CardView";
 import { ConditionView } from "./ConditionView";
 import { TargetTypeView } from "./TargetTypeView";
 
-export const RequireView = (props: { clientID: string; blockPayload: BlockPayload, require: Require }) => {
+export const RequireView = (props: {
+  clientID: string;
+  blockPayload: BlockPayload;
+  require: Require;
+}) => {
   const appContext = useContext(AppContext);
   const render = useMemo(() => {
     switch (props.require.id) {
@@ -61,34 +69,48 @@ export const RequireView = (props: { clientID: string; blockPayload: BlockPayloa
           </div>
         );
       case "RequireTarget":
-        const requireTarget = props.require
+        const requireTarget = props.require;
         return (
           <div style={{ border: "1px solid black" }}>
             {Object.entries(requireTarget.targets).map(([k, v], i) => {
-              const responsePlayer = getRequireTargetOwner(appContext.viewModel.model, props.blockPayload, props.require, v)
-              const isTargetOwner = responsePlayer == props.clientID
+              const responsePlayer = getRequireTargetOwner(
+                appContext.viewModel.model,
+                props.blockPayload,
+                props.require,
+                v
+              );
+              const isTargetOwner = responsePlayer == props.clientID;
               return (
                 <div key={i} style={{ border: "1px solid black" }}>
-                  {isTargetOwner ? <button
-                    onClick={() => {
-                      OnEvent.next({
-                        id: "OnClickRequireTargetConfirm",
-                        clientID: props.clientID,
-                        blockPayload: props.blockPayload,
-                        require: requireTarget,
-                        varID: k,
-                      });
-                    }}
-                  >
-                    設定{k}
-                  </button> : null}
-                  <TargetTypeView target={v}></TargetTypeView>
+                  {isTargetOwner ? (
+                    <button
+                      onClick={() => {
+                        OnEvent.next({
+                          id: "OnClickRequireTargetConfirm",
+                          clientID: props.clientID,
+                          blockPayload: props.blockPayload,
+                          require: requireTarget,
+                          varID: k,
+                        });
+                      }}
+                    >
+                      設定{k}
+                    </button>
+                  ) : null}
+                  <TargetTypeView
+                    blockPayload={props.blockPayload}
+                    require={props.require}
+                    targets={requireTarget.targets}
+                    target={v}
+                  ></TargetTypeView>
                 </div>
               );
             })}
             {props.require.condition ? (
               <ConditionView
+                blockPayload={props.blockPayload}
                 require={props.require}
+                targets={requireTarget.targets}
                 condition={props.require.condition}
               ></ConditionView>
             ) : null}
@@ -101,7 +123,12 @@ export const RequireView = (props: { clientID: string; blockPayload: BlockPayloa
           </div>
         );
     }
-  }, [appContext.viewModel.model, props.require, props.blockPayload, props.clientID]);
+  }, [
+    appContext.viewModel.model,
+    props.require,
+    props.blockPayload,
+    props.clientID,
+  ]);
   return (
     <div style={{ border: "1px solid black" }}>
       {props.require.key}

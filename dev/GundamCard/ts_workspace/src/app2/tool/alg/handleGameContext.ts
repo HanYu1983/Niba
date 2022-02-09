@@ -43,6 +43,7 @@ import {
   getCardBattlePoint,
   getCardState,
   getCardStateIterator,
+  getTargetType,
   isABattleGroup,
 } from "./helper";
 import { doConditionTarget } from "./doConditionTarget";
@@ -72,47 +73,80 @@ export function wrapTip(
       }
       switch (target.id) {
         case "カードのテキスト": {
-          if (target.tipID == null) {
-            throw new Error(
-              "「カードのテキスト」的提示必須手動在卡牌腳本中定義(tipID)"
-            );
-          }
-          const validCardID = target.tipID;
-          const nextValues = (() => {
-            if (autoFill == false) {
-              return target.value;
+          if (target.tip) {
+            const tip = getTargetType(ctx, block, r.targets, target.tip);
+            if (tip.id != "カードのテキスト") {
+              throw new Error("must be カードのテキスト");
             }
-            if (validCardID.length == 0) {
-              return target.value;
+            if (!Array.isArray(tip.value)) {
+              throw new Error("must be real value");
             }
-            if (!Array.isArray(target.value)) {
-              return target.value;
-            }
-            if (target.valueLengthInclude == null) {
-              return target.value;
-            }
-            if (target.valueLengthInclude.length == 0) {
-              return target.value;
-            }
-            const len =
-              target.valueLengthInclude[target.valueLengthInclude.length - 1];
-            return validCardID.slice(0, len).map((cardTextStateID) => {
-              const find = getCardStateIterator(ctx)
-                .flatMap(([_, cts]) => cts)
-                .find((cts) => cts.id == cardTextStateID);
-              if (find == null) {
-                throw new Error(`cardTextState not found: ${cardTextStateID}`);
+            const validCardID = tip.value;
+            const nextValues = (() => {
+              if (autoFill == false) {
+                return target.value;
               }
-              return find;
-            });
-          })();
-          return {
-            ...target,
-            tipID: validCardID,
-            value: nextValues,
-          };
+              if (validCardID.length == 0) {
+                return target.value;
+              }
+              if (!Array.isArray(target.value)) {
+                return target.value;
+              }
+              if (target.valueLengthInclude == null) {
+                return target.value;
+              }
+              if (target.valueLengthInclude.length == 0) {
+                return target.value;
+              }
+              const len =
+                target.valueLengthInclude[target.valueLengthInclude.length - 1];
+              return validCardID.slice(0, len);
+            })();
+            return {
+              ...target,
+              tip: tip,
+              value: nextValues,
+            };
+          }
+          throw new Error(
+            "「カードのテキスト」的提示必須手動在卡牌腳本中定義(tipID)"
+          );
         }
         case "カード": {
+          if (target.tip) {
+            const tip = getTargetType(ctx, block, r.targets, target.tip);
+            if (tip.id != "カード") {
+              throw new Error("must be カード");
+            }
+            if (!Array.isArray(tip.value)) {
+              throw new Error("must be real value");
+            }
+            const nextValues = (() => {
+              if (autoFill == false) {
+                return target.value;
+              }
+              if (validCardID.length == 0) {
+                return target.value;
+              }
+              if (!Array.isArray(target.value)) {
+                return target.value;
+              }
+              if (target.valueLengthInclude == null) {
+                return target.value;
+              }
+              if (target.valueLengthInclude.length == 0) {
+                return target.value;
+              }
+              const len =
+                target.valueLengthInclude[target.valueLengthInclude.length - 1];
+              return validCardID.slice(0, len);
+            })();
+            return {
+              ...target,
+              value: nextValues,
+              tip: tip,
+            };
+          }
           // 取得提示.
           const { validCardID, msgs } = reduceCard(
             ctx.gameState.table,
@@ -122,9 +156,6 @@ export function wrapTip(
                   validCardID,
                   msgs,
                 };
-              }
-              if (target.tipID != null) {
-                return { validCardID: target.tipID, msgs: msgs };
               }
               const tmp: TargetTypeCard = {
                 id: "カード",
@@ -181,7 +212,10 @@ export function wrapTip(
           return {
             ...target,
             value: nextValues,
-            tipID: validCardID,
+            tip: {
+              id: "カード",
+              value: validCardID,
+            },
             tipMessage: msgs,
           };
         }

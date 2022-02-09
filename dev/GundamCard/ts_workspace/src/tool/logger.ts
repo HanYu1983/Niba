@@ -7,7 +7,7 @@ const hideCategory: string[] = [
   "doConditionTarget",
   "updateEffect",
   "initJsonfp",
-  "doRequireTargetActionTarget",
+  //"doRequireTargetActionTarget",
   "jsonfp",
   "doRequireTargetAction",
   "getAbsoluteBaSyou",

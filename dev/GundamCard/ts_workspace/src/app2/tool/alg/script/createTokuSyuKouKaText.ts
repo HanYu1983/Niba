@@ -17,7 +17,6 @@ export function createTokuSyuKouKaText(
   options: {
     cost?: number;
     costColor?: CardColor;
-    crossWeaponTextStateIDs?: string[];
     cardTextStateID?: string;
   }
 ): CardText {
@@ -343,6 +342,13 @@ export function createTokuSyuKouKaText(
                       },
                       y: [toku[1]],
                     }),
+                    getConditionMacro({
+                      id: "變量x不是這張卡",
+                      x: {
+                        id: "カード",
+                        value: "［ ］の特徴を持つ自軍ユニット１枚",
+                      },
+                    }),
                   ],
                 },
                 action: [
@@ -362,7 +368,18 @@ export function createTokuSyuKouKaText(
                     id: "カードのテキスト",
                     value: [],
                     valueLengthInclude: [1],
-                    tipID: options.crossWeaponTextStateIDs || [],
+                    tip: {
+                      id: "カードのテキスト",
+                      value: {
+                        path: [
+                          {
+                            id: "カード",
+                            value: { path: [{ id: "このカード" }] },
+                          },
+                          "的「テキスト」",
+                        ],
+                      },
+                    },
                   },
                 },
                 action: [

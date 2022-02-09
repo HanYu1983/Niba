@@ -31,7 +31,7 @@ const prototype: CardPrototype = {
   characteristic: "アストレイ系　ブルーフレーム系　MS　専用「叢雲劾」".split(
     "　"
   ),
-  category: "キャラクター",
+  category: "ユニット",
   color: "白",
   rollCost: ["白", "白", null, null],
   battlePoint: [5, 0, 4],
@@ -41,13 +41,10 @@ const prototype: CardPrototype = {
       id: "PlayUnit",
       additionalRequire: [createRollCostRequire(2, "白")],
     }),
-    ...originTexts,
-    // 交叉武器
+    createTokuSyuKouKaText(["速攻"], {}),
+    createTokuSyuKouKaText(["改装", "ブルーフレーム系"], {}),
     createTokuSyuKouKaText(["クロスウェポン", "アストレイ系"], {
       cost: 2,
-      crossWeaponTextStateIDs: originTexts.map(
-        (t) => t.cardTextStateID || "must has cardTextStateID"
-      ),
     }),
   ],
 };

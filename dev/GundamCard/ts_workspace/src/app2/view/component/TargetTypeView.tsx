@@ -18,7 +18,13 @@ import { AppContext } from "../tool/appContext";
 import { OnEvent } from "../tool/appContext/eventCenter";
 import { CardView } from "./CardView";
 
-export const TargetTypeView = (props: { target: TargetType }) => {
+export const TargetTypeView = (props: {
+  blockPayload: BlockPayload;
+  require: Require;
+  targets: { [key: string]: TargetType };
+  target: TargetType;
+}) => {
+  const appContext = useContext(AppContext);
   return (
     <>
       {(() => {
@@ -31,6 +37,24 @@ export const TargetTypeView = (props: { target: TargetType }) => {
         ) {
           switch (props.target.id) {
             case "カード":
+              const tipID: string[] = (() => {
+                if (props.target.tip == null) {
+                  return [];
+                }
+                const tip = getTargetType(
+                  appContext.viewModel.model,
+                  props.blockPayload,
+                  props.targets,
+                  props.target.tip
+                );
+                if (tip.id != "カード") {
+                  throw new Error("must be カード");
+                }
+                if (!Array.isArray(tip.value)) {
+                  throw new Error("must be real value");
+                }
+                return tip.value;
+              })();
               return (
                 <div style={{ display: "flex" }}>
                   <div style={{ flex: 1 }}>
@@ -38,7 +62,7 @@ export const TargetTypeView = (props: { target: TargetType }) => {
                     單位「{props.target.id}」
                   </div>
                   <div style={{ flex: 1 }}>
-                    {(props.target.tipID || []).map((v, i) => {
+                    {tipID.map((v, i) => {
                       return (
                         <CardView enabled={true} key={i} cardID={v}></CardView>
                       );
@@ -97,7 +121,12 @@ export const TargetTypeView = (props: { target: TargetType }) => {
               case "カード": {
                 return (
                   <>
-                    <TargetTypeView target={path[0]}></TargetTypeView>
+                    <TargetTypeView
+                      blockPayload={props.blockPayload}
+                      require={props.require}
+                      targets={props.targets}
+                      target={path[0]}
+                    ></TargetTypeView>
                     {path[1]}
                   </>
                 );
