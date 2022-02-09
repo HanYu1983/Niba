@@ -14,13 +14,19 @@ import { CardTextState } from "../../tool/basic/gameContext";
 var _seqID = 0;
 export function createTokuSyuKouKaText(
   toku: TokuSyuKouKa,
-  options: { cost?: number; costColor?: CardColor }
+  options: {
+    cost?: number;
+    costColor?: CardColor;
+    crossWeaponTextStateIDs?: string[];
+    cardTextStateID?: string;
+  }
 ): CardText {
   switch (toku[0]) {
     case "PS装甲":
       return {
         id: "特殊型",
         description: toku,
+        cardTextStateID: options.cardTextStateID,
         texts: [
           {
             id: "自動型",
@@ -132,6 +138,7 @@ export function createTokuSyuKouKaText(
       return {
         id: "特殊型",
         description: toku,
+        cardTextStateID: options.cardTextStateID,
         texts: [
           {
             id: "自動型",
@@ -188,6 +195,7 @@ export function createTokuSyuKouKaText(
       return {
         id: "特殊型",
         description: toku,
+        cardTextStateID: options.cardTextStateID,
         texts: [
           getCardTextMacro({
             id: "PlayCharacter(Stay)",
@@ -232,6 +240,7 @@ export function createTokuSyuKouKaText(
       return {
         id: "特殊型",
         description: toku,
+        cardTextStateID: options.cardTextStateID,
         texts: [
           {
             id: "自動型",
@@ -260,6 +269,7 @@ export function createTokuSyuKouKaText(
       return {
         id: "特殊型",
         description: toku,
+        cardTextStateID: options.cardTextStateID,
         texts: [
           {
             id: "自動型",
@@ -288,6 +298,7 @@ export function createTokuSyuKouKaText(
       return {
         id: "特殊型",
         description: toku,
+        cardTextStateID: options.cardTextStateID,
         texts: [
           getCardTextMacro({
             id: "PlayText",
@@ -350,16 +361,8 @@ export function createTokuSyuKouKaText(
                   本来のテキスト１つ: {
                     id: "カードのテキスト",
                     value: [],
-                    // value: {
-                    //   path: [
-                    //     {
-                    //       id: "カード",
-                    //       value: { path: [{ id: "このカード" }] },
-                    //     },
-                    //     "的「テキスト」",
-                    //   ],
-                    // },
                     valueLengthInclude: [1],
+                    tipID: options.crossWeaponTextStateIDs || [],
                   },
                 },
                 action: [
@@ -431,6 +434,7 @@ export function createTokuSyuKouKaText(
       return {
         id: "特殊型",
         description: toku,
+        cardTextStateID: options.cardTextStateID,
         texts: [
           getCardTextMacro({
             id: "PlayText",
@@ -579,6 +583,7 @@ export function createTokuSyuKouKaText(
       return {
         id: "特殊型",
         description: toku,
+        cardTextStateID: options.cardTextStateID,
         texts: [
           getCardTextMacro({
             id: "PlayText",
@@ -710,6 +715,7 @@ export function createTokuSyuKouKaText(
       return {
         id: "特殊型",
         description: toku,
+        cardTextStateID: options.cardTextStateID,
         texts: [
           getCardTextMacro({
             id: "PlayText",
@@ -846,6 +852,7 @@ export function createTokuSyuKouKaText(
       return {
         id: "特殊型",
         description: toku,
+        cardTextStateID: options.cardTextStateID,
         texts: [
           getCardTextMacro({
             id: "PlayText",
@@ -974,6 +981,7 @@ export function createTokuSyuKouKaText(
       return {
         id: "特殊型",
         description: toku,
+        cardTextStateID: options.cardTextStateID,
         texts: [
           getCardTextMacro({
             id: "PlayText",
@@ -1215,6 +1223,7 @@ export function createTokuSyuKouKaText(
       return {
         id: "特殊型",
         description: toku,
+        cardTextStateID: options.cardTextStateID,
         texts: [
           {
             id: "自動型",
@@ -1377,6 +1386,7 @@ export function createTokuSyuKouKaText(
       return {
         id: "特殊型",
         description: toku,
+        cardTextStateID: options.cardTextStateID,
         texts: [],
       };
     }

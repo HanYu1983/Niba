@@ -24,3 +24,8 @@ export function err2string(err: any): string {
       return JSON.stringify(err);
   }
 }
+
+let _idSeq = 0;
+export function getIDSeq() {
+  return _idSeq++;
+}

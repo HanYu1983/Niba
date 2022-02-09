@@ -327,6 +327,7 @@ export type CardTextZiDouKaTa = {
   category: "常駐" | "起動" | "恒常";
   block: BlockPayload;
   fixed?: boolean;
+  cardTextStateID?: string;
 };
 
 export type CardTextSiYouKaTa = {
@@ -335,23 +336,27 @@ export type CardTextSiYouKaTa = {
   timing: SiYouTiming;
   block: BlockPayload;
   fixed?: boolean;
+  cardTextStateID?: string;
 };
 
 export type CardTextToKuSyuKata = {
   id: "特殊型";
   description: TokuSyuKouKa;
   texts: (CardTextZiDouKaTa | CardTextSiYouKaTa)[];
+  cardTextStateID?: string;
 };
 
 export type CardTextZiDouKaTa2 = {
   id: "恒常";
   description: string;
   texts: (CardTextZiDouKaTa | CardTextSiYouKaTa)[];
+  cardTextStateID?: string;
 };
 
 export type CardTextCustomIDBattleBonus = {
   id: "CardTextCustomIDBattleBonus";
   battleBonus: BattleBonus;
+  cardTextStateID?: string;
 };
 
 export type CardTextCustomID = CardTextCustomIDBattleBonus;
@@ -360,6 +365,7 @@ export type CardTextCustom = {
   id: "CardTextCustom";
   description: string;
   customID: CardTextCustomID;
+  cardTextStateID?: string;
 };
 
 export type CardText =

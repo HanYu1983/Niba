@@ -73,8 +73,9 @@ export function getCardState(
     id: card.id,
     isChip: isChip,
     cardTextStates: proto.texts.map((text, i): CardTextState => {
+      const cardTextStateID = text.cardTextStateID || `${card.id}_${i}`;
       return {
-        id: `${card.id}_${i}`,
+        id: cardTextStateID,
         enabled: true,
         cardText: {
           ...text,

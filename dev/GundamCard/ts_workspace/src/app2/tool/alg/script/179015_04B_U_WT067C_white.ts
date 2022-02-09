@@ -5,6 +5,8 @@ import {
 import { createRollCostRequire } from "../../tool/basic/blockPayload";
 import { createTokuSyuKouKaText } from "./createTokuSyuKouKaText";
 import { getCardTextMacro } from "./getCardTextMacro";
+import { CardText } from "../../tool/basic/basic";
+import { getIDSeq } from "../../../../tool/helper";
 
 // 179015_04B_U_WT067C_white
 // アストレイ ブルーフレーム セカンドG
@@ -12,6 +14,16 @@ import { getCardTextMacro } from "./getCardTextMacro";
 // 速攻　〔０〕：改装［ブルーフレーム系］
 // 〔２〕：クロスウェポン［アストレイ系］
 // （クロスウェポンのルール＞（戦闘フェイズ）：［ ］の特徴を持つ自軍ユニット１枚は、ターン終了時まで、このカードの本来のテキスト１つと同じテキストを得る。ただし同じテキストは得られない）
+
+const originTexts: CardText[] = [
+  // 指定內文ID給交叉武器用
+  createTokuSyuKouKaText(["速攻"], {
+    cardTextStateID: `179015_04B_U_WT067C_white_${getIDSeq()}`,
+  }),
+  createTokuSyuKouKaText(["改装", "ブルーフレーム系"], {
+    cardTextStateID: `179015_04B_U_WT067C_white_${getIDSeq()}`,
+  }),
+];
 
 const prototype: CardPrototype = {
   ...DEFAULT_CARD_PROTOTYPE,
@@ -29,9 +41,14 @@ const prototype: CardPrototype = {
       id: "PlayUnit",
       additionalRequire: [createRollCostRequire(2, "白")],
     }),
-    createTokuSyuKouKaText(["速攻"], {}),
-    createTokuSyuKouKaText(["改装", "ブルーフレーム系"], {}),
-    createTokuSyuKouKaText(["クロスウェポン", "アストレイ系"], { cost: 2 }),
+    ...originTexts,
+    // 交叉武器
+    createTokuSyuKouKaText(["クロスウェポン", "アストレイ系"], {
+      cost: 2,
+      crossWeaponTextStateIDs: originTexts.map(
+        (t) => t.cardTextStateID || "must has cardTextStateID"
+      ),
+    }),
   ],
 };
 

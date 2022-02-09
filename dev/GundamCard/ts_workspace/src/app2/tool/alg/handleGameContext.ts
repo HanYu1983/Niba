@@ -72,13 +72,12 @@ export function wrapTip(
       }
       switch (target.id) {
         case "カードのテキスト": {
-          if (block.cause?.id != "BlockPayloadCauseUpdateCommand") {
-            throw new Error("must be BlockPayloadCauseUpdateCommand");
+          if (target.tipID == null) {
+            throw new Error(
+              "「カードのテキスト」的提示必須手動在卡牌腳本中定義(tipID)"
+            );
           }
-          // TODO: 先做成只提示這個卡的原本文
-          const cardID = block.cause.cardID;
-          const [_, cardState] = getCardState(ctx, cardID);
-          const validCardID = cardState.cardTextStates.map((cts) => cts.id);
+          const validCardID = target.tipID;
           const nextValues = (() => {
             if (autoFill == false) {
               return target.value;
@@ -123,6 +122,9 @@ export function wrapTip(
                   validCardID,
                   msgs,
                 };
+              }
+              if (target.tipID != null) {
+                return { validCardID: target.tipID, msgs: msgs };
               }
               const tmp: TargetTypeCard = {
                 id: "カード",
