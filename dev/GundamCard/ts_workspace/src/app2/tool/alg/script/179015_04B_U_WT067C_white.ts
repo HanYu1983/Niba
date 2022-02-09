@@ -15,16 +15,6 @@ import { getIDSeq } from "../../../../tool/helper";
 // 〔２〕：クロスウェポン［アストレイ系］
 // （クロスウェポンのルール＞（戦闘フェイズ）：［ ］の特徴を持つ自軍ユニット１枚は、ターン終了時まで、このカードの本来のテキスト１つと同じテキストを得る。ただし同じテキストは得られない）
 
-const originTexts: CardText[] = [
-  // 指定內文ID給交叉武器用
-  createTokuSyuKouKaText(["速攻"], {
-    cardTextStateID: `179015_04B_U_WT067C_white_${getIDSeq()}`,
-  }),
-  createTokuSyuKouKaText(["改装", "ブルーフレーム系"], {
-    cardTextStateID: `179015_04B_U_WT067C_white_${getIDSeq()}`,
-  }),
-];
-
 const prototype: CardPrototype = {
   ...DEFAULT_CARD_PROTOTYPE,
   title: "アストレイ ブルーフレーム セカンドG",

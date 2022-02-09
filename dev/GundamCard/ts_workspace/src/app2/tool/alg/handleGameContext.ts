@@ -72,6 +72,44 @@ export function wrapTip(
         return target;
       }
       switch (target.id) {
+        case "戦闘修正": {
+          if (target.tip) {
+            const tip = getTargetType(ctx, block, r.targets, target.tip);
+            if (tip.id != "戦闘修正") {
+              throw new Error("must be 戦闘修正");
+            }
+            if (!Array.isArray(tip.value)) {
+              throw new Error("must be real value");
+            }
+            const validCardID = tip.value;
+            const nextValues = (() => {
+              if (autoFill == false) {
+                return target.value;
+              }
+              if (validCardID.length == 0) {
+                return target.value;
+              }
+              if (!Array.isArray(target.value)) {
+                return target.value;
+              }
+              if (target.valueLengthInclude == null) {
+                return target.value;
+              }
+              if (target.valueLengthInclude.length == 0) {
+                return target.value;
+              }
+              const len =
+                target.valueLengthInclude[target.valueLengthInclude.length - 1];
+              return validCardID.slice(0, len);
+            })();
+            return {
+              ...target,
+              tip: tip,
+              value: nextValues,
+            };
+          }
+          throw new Error("「戦闘修正」的提示必須手動在卡牌腳本中定義(tip)");
+        }
         case "カードのテキスト": {
           if (target.tip) {
             const tip = getTargetType(ctx, block, r.targets, target.tip);
@@ -109,7 +147,7 @@ export function wrapTip(
             };
           }
           throw new Error(
-            "「カードのテキスト」的提示必須手動在卡牌腳本中定義(tipID)"
+            "「カードのテキスト」的提示必須手動在卡牌腳本中定義(tip)"
           );
         }
         case "カード": {
