@@ -59,6 +59,7 @@ export type TargetTypeCard = {
     | {
         path:
           | [{ id: "このカード" }]
+          | [{ id: "custom" }, any]
           //| [TargetTypeGameEventOnAfterEffect, "的「カード」"]
           | [TargetTypeBaSyou, "的「カード」"]
           | [TargetTypeCard, "の上のカードX枚", number]
@@ -159,7 +160,7 @@ export type TargetTypeCardRole = {
       };
 } & TargetTypeBase;
 
-export type TargetTypeCustom = {
+export type TargetTypeScript = {
   id: "腳本";
   value: string;
 } & TargetTypeBase;
@@ -195,13 +196,13 @@ export type TargetType =
   | TargetTypeCardRole
   | TargetTypeBaSyou
   | TargetTypeDamage
-  | TargetTypeCustom
+  | TargetTypeScript
   | TargetTypeBattleBonus
   // | TargetTypeGameEventOnAfterEffect
   // | TargetTypeGameEventOnManualEvent
   | TargetTypeCardTextState;
 
-export type TargetTypeCustomFunctionType = (
+export type TargetTypeScriptFunctionType = (
   ctx: GameContext,
   blockPayload: BlockPayload,
   targets: { [key: string]: TargetType },

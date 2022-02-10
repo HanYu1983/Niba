@@ -8,6 +8,7 @@ import {
   Coin,
   getBaShouID,
   getOpponentPlayerID,
+  isBa,
   TokuSyuKouKa,
 } from "../tool/basic/basic";
 import {
@@ -39,7 +40,8 @@ import {
 import { err2string, getCustomFunction } from "../../../tool/helper";
 import {
   TargetType,
-  TargetTypeCustomFunctionType,
+  TargetTypeCard,
+  TargetTypeScriptFunctionType,
 } from "../tool/basic/targetType";
 import { log2 } from "../../../tool/logger";
 import { getPrototype } from "./script";
@@ -125,6 +127,38 @@ export function getCardIterator(
       };
     }),
   ];
+}
+
+export type TargetTypeCardCustom1 = {
+  id: "交戦中ではない、全てのユニット";
+};
+
+export type TargetTypeCardCustom = TargetTypeCardCustom1;
+
+export function getTargetTypeCardCustom(
+  ctx: GameContext,
+  blockPayload: BlockPayload,
+  targets: { [key: string]: TargetType },
+  target: TargetType,
+  customID: TargetTypeCardCustom1
+): TargetTypeCard {
+  switch (customID.id) {
+    case "交戦中ではない、全てのユニット": {
+      const allUnitCards = Object.keys(ctx.gameState.table.cardStack)
+        .filter((baSyouID) => {
+          const [_, kw] = JSON.parse(baSyouID);
+          return isBa(kw);
+        })
+        .filter((baSyouID) => {
+          return ctx.gameState.isBattle[baSyouID] != true;
+        })
+        .flatMap((baSyouID) => ctx.gameState.table.cardStack[baSyouID]);
+      return {
+        id: "カード",
+        value: allUnitCards.map((card) => card.id),
+      };
+    }
+  }
 }
 
 export function getTargetType(
@@ -277,6 +311,14 @@ export function getTargetType(
           }
           break;
         }
+        case "custom":
+          return getTargetTypeCardCustom(
+            ctx,
+            blockPayload,
+            targets,
+            target,
+            path[1]
+          );
         case "このカード":
           return {
             id: "カード",
@@ -897,7 +939,7 @@ export function getTargetType(
       break;
     }
     case "腳本": {
-      const func: TargetTypeCustomFunctionType = getCustomFunction(
+      const func: TargetTypeScriptFunctionType = getCustomFunction(
         targetTypeAfterProcess.value
       );
       return func(ctx, blockPayload, targets, target);

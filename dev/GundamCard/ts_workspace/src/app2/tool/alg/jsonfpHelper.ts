@@ -89,9 +89,6 @@ export function initJsonfp() {
   jsonfp.addMethod("getCardCoinCount", (ctx: GameContext, cardID: string) => {
     return getCardCoins(ctx, cardID).length;
   });
-  jsonfp.addMethod("getCardIterator", (ctx: GameContext) => {
-    return getCardIterator(ctx);
-  });
 }
 
 export type Keyword =

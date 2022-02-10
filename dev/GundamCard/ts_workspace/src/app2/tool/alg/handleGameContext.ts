@@ -294,11 +294,13 @@ export function triggerTextEvent(
                   ) {
                     return [cardTextState.cardText];
                   }
+                  log2("triggerTextEvent-return", "return 1");
                   return [];
                 }
                 return [cardTextState.cardText];
               }
               default:
+                log2("triggerTextEvent-return", "return 2");
                 return [];
             }
           case "特殊型":
@@ -315,14 +317,25 @@ export function triggerTextEvent(
                     if (baSyouKeyword == "Gゾーン" && t.fixed) {
                       return true;
                     }
+                    if (baSyouKeyword == "ジャンクヤード") {
+                      return true;
+                    }
+                    log2(
+                      "triggerTextEvent-return",
+                      cardID,
+                      baSyouKeyword,
+                      t.description
+                    );
                     return false;
                   }
                   return true;
                 }
+                log2("triggerTextEvent-return", "return 4");
                 return false;
               })
               .map((t) => t);
           default:
+            log2("triggerTextEvent-return", "return 5");
             return [];
         }
       })();
@@ -623,7 +636,7 @@ export function initState(ctx: GameContext): GameContext {
     ...ctx,
     gameState: {
       ...ctx.gameState,
-      activePlayerID: PlayerA,
+      activePlayerID: ctx.gameState.activePlayerID || PlayerA,
       table: {
         ...ctx.gameState.table,
         cardStack: {
@@ -901,6 +914,7 @@ export function getClientCommand(ctx: GameContext, clientID: string) {
   return ctx.gameState.commandEffect.filter((effect) => {
     const controller = getBlockOwner(ctx, effect);
     if (controller != clientID) {
+      log2("getClientCommand", "you are not owner. return");
       return;
     }
     if (effect.cause?.id != "BlockPayloadCauseUpdateCommand") {
@@ -934,16 +948,31 @@ export function getClientCommand(ctx: GameContext, clientID: string) {
     switch (siYouTiming[0]) {
       case "自軍":
         if (ctx.gameState.activePlayerID != clientID) {
+          log2(
+            "getClientCommand",
+            `ctx.gameState.activePlayerID != ${clientID}`,
+            effect
+          );
           return;
         }
         break;
       case "敵軍":
         if (ctx.gameState.activePlayerID == clientID) {
+          log2(
+            "getClientCommand",
+            `ctx.gameState.activePlayerID == ${clientID}`,
+            effect
+          );
           return;
         }
         break;
       case "戦闘フェイズ":
         if (ctx.gameState.timing[1][0] != "戦闘フェイズ") {
+          log2(
+            "getClientCommand",
+            `ctx.gameState.timing[1][0] != "戦闘フェイズ"`,
+            effect
+          );
           return;
         }
         break;
@@ -952,9 +981,19 @@ export function getClientCommand(ctx: GameContext, clientID: string) {
       case "ダメージ判定ステップ":
       case "帰還ステップ":
         if (ctx.gameState.timing[1][0] != "戦闘フェイズ") {
+          log2(
+            "getClientCommand",
+            `ctx.gameState.timing[1][0] != "戦闘フェイズ"`,
+            effect
+          );
           return;
         }
         if (ctx.gameState.timing[1][1] != siYouTiming[0]) {
+          log2(
+            "getClientCommand",
+            `ctx.gameState.timing[1][1] != ${siYouTiming[0]}`,
+            effect
+          );
           return;
         }
         break;
@@ -966,6 +1005,11 @@ export function getClientCommand(ctx: GameContext, clientID: string) {
           case "配備フェイズ":
           case "戦闘フェイズ":
             if (ctx.gameState.timing[1][0] != siYouTiming[1]) {
+              log2(
+                "getClientCommand",
+                `ctx.gameState.timing[1][0] != ${siYouTiming[1]}`,
+                effect
+              );
               return;
             }
             break;
@@ -974,9 +1018,19 @@ export function getClientCommand(ctx: GameContext, clientID: string) {
           case "ダメージ判定ステップ":
           case "帰還ステップ":
             if (ctx.gameState.timing[1][0] != "戦闘フェイズ") {
+              log2(
+                "getClientCommand",
+                `ctx.gameState.timing[1][0] != "戦闘フェイズ"`,
+                effect
+              );
               return;
             }
             if (ctx.gameState.timing[1][1] != siYouTiming[1]) {
+              log2(
+                "getClientCommand",
+                `ctx.gameState.timing[1][1] != ${siYouTiming[1]}`,
+                effect
+              );
               return;
             }
             break;

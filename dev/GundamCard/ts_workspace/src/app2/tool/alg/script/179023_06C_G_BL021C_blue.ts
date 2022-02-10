@@ -8,7 +8,7 @@ import {
 const prototype: CardPrototype = {
   ...DEFAULT_CARD_PROTOTYPE,
   category: "グラフィック",
-  color: "赤",
+  color: "青",
 };
 
 module.exports = prototype;

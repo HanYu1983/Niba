@@ -43,24 +43,23 @@ export function doRequireCustom(
         "戦闘エリア（右）",
         "戦闘エリア（左）",
       ];
-      const hasMyUnitInBattleArea =
-        battleAreaKW
-          .map((kw): AbsoluteBaSyou => {
-            return { id: "AbsoluteBaSyou", value: [myID, kw] };
-          })
-          .filter((baSyou) => {
-            const baSyouID = getBaShouID(baSyou);
-            const isBattle = ctx.gameState.isBattle[baSyouID];
-            if (isBattle == false) {
-              return false;
-            }
-            const hasUnit = ctx.gameState.table.cardStack[baSyouID]?.length > 0;
-            if (hasUnit == false) {
-              return false;
-            }
-            return true;
-          }).length > 0;
-      if (hasMyUnitInBattleArea == false) {
+      const unitInBattleArea = battleAreaKW
+        .map((kw): AbsoluteBaSyou => {
+          return { id: "AbsoluteBaSyou", value: [myID, kw] };
+        })
+        .filter((baSyou) => {
+          const baSyouID = getBaShouID(baSyou);
+          const isBattle = ctx.gameState.isBattle[baSyouID];
+          if (isBattle != true) {
+            return false;
+          }
+          const hasUnit = ctx.gameState.table.cardStack[baSyouID]?.length > 0;
+          if (hasUnit != true) {
+            return false;
+          }
+          return true;
+        });
+      if (unitInBattleArea.length == 0) {
         throw new Error(JSON.stringify(requireCustomID));
       }
     }

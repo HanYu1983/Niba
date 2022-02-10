@@ -466,6 +466,7 @@ export function doRequireTargetActionTarget(
       if (blockPayload.cause?.playerID == null) {
         throw new Error("效果的控制者必須存在");
       }
+      log2("doRequireTargetActionTarget", "ActionDestroy", "cards", cards);
       const destroyReason: DestroyReason = {
         id: "破壊する",
         playerID: blockPayload.cause.playerID,
