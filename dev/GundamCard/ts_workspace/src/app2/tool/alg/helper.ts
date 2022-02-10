@@ -900,7 +900,7 @@ export function getTargetType(
       const func: TargetTypeCustomFunctionType = getCustomFunction(
         targetTypeAfterProcess.value
       );
-      return func(ctx, blockPayload);
+      return func(ctx, blockPayload, targets, target);
     }
     case "戦闘修正": {
       if (Array.isArray(targetTypeAfterProcess.value)) {

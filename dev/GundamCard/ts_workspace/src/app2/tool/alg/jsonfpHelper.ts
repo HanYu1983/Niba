@@ -2,6 +2,7 @@ import { log2 } from "../../../tool/logger";
 import {
   getCardCharacteristic,
   getCardCoins,
+  getCardIterator,
   getCardState,
   getCardTitle,
   isMaster,
@@ -87,6 +88,9 @@ export function initJsonfp() {
   );
   jsonfp.addMethod("getCardCoinCount", (ctx: GameContext, cardID: string) => {
     return getCardCoins(ctx, cardID).length;
+  });
+  jsonfp.addMethod("getCardIterator", (ctx: GameContext) => {
+    return getCardIterator(ctx);
   });
 }
 

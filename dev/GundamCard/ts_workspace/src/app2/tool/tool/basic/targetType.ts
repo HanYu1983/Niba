@@ -203,5 +203,7 @@ export type TargetType =
 
 export type TargetTypeCustomFunctionType = (
   ctx: GameContext,
-  blockPayload: BlockPayload
+  blockPayload: BlockPayload,
+  targets: { [key: string]: TargetType },
+  target: TargetType
 ) => TargetType;

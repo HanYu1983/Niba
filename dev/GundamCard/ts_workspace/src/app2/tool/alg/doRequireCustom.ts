@@ -1,5 +1,12 @@
 import { getCardPosition } from "../../../tool/table";
-import { CardColor, getBaShou } from "../tool/basic/basic";
+import {
+  AbsoluteBaSyou,
+  BaSyouKeyword,
+  CardColor,
+  getBaShou,
+  getBaShouID,
+  getOpponentPlayerID,
+} from "../tool/basic/basic";
 import {
   BlockPayload,
   Feedback,
@@ -20,6 +27,43 @@ export function doRequireCustom(
   varCtxID: string
 ): GameContext {
   switch (requireCustomID.id) {
+    case "交戦中のx軍ユニットがいる場合": {
+      if (blockPayload.cause?.playerID == null) {
+        throw new Error("playerID not found");
+      }
+      const myID = (() => {
+        switch (requireCustomID.x) {
+          case "自軍":
+            return blockPayload.cause.playerID;
+          case "敵軍":
+            return getOpponentPlayerID(blockPayload.cause.playerID);
+        }
+      })();
+      const battleAreaKW: BaSyouKeyword[] = [
+        "戦闘エリア（右）",
+        "戦闘エリア（左）",
+      ];
+      const hasMyUnitInBattleArea =
+        battleAreaKW
+          .map((kw): AbsoluteBaSyou => {
+            return { id: "AbsoluteBaSyou", value: [myID, kw] };
+          })
+          .filter((baSyou) => {
+            const baSyouID = getBaShouID(baSyou);
+            const isBattle = ctx.gameState.isBattle[baSyouID];
+            if (isBattle == false) {
+              return false;
+            }
+            const hasUnit = ctx.gameState.table.cardStack[baSyouID]?.length > 0;
+            if (hasUnit == false) {
+              return false;
+            }
+            return true;
+          }).length > 0;
+      if (hasMyUnitInBattleArea == false) {
+        throw new Error(JSON.stringify(requireCustomID));
+      }
+    }
     case "{color}のGサインを持つ自軍Gが{number}枚以上ある場合": {
       return ctx;
     }
