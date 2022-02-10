@@ -244,62 +244,46 @@ export function isCanPlayCardInPhase(phase: Phase): boolean {
 
 export type BattleBonus = [number, number, number];
 
-type GameEventOnTiming = {
+type GameEvent1 = {
   id: "GameEventOnTiming";
   timing: Timing;
 };
 
-type GameEventOnStackEffectFinished = {
+type GameEvent2 = {
   id: "カット終了時";
   effects: BlockPayload[];
 };
 
-type GameEventOnShowBa = {
+type GameEvent3 = {
   id:
     | "場に出た場合"
     | "プレイされて場に出た場合"
     | "プレイされて場にセットされた場合"
     | "戦闘ダメージを受けた場合"
-    | "コインがx個以上になった場合";
+    | "コインがx個以上になった場合"
+    | "「改装」の効果で廃棄される場合"
+    | "「改装」の効果で場に出た場合";
   cardID: string;
 };
 
-type GameEvent1 = {
+type GameEvent4 = {
   id: "破壊された場合";
   cardID: string;
   destroyReason: DestroyReason;
 };
 
-type GameEventOnPlayText = {
-  id: "プレイした場合";
+type GameEvent5 = {
+  id: "プレイした場合" | "解決直後";
   cardID: string;
   cardTextID: string;
 };
 
-type GameEventOnDestroyByKaiSo = {
-  id: "「改装」の効果で廃棄される場合" | "「改装」の効果で場に出た場合";
-  cardID: string;
-};
-
-export type GameEventOnAfterEffect = {
-  id: "「効果」解決時";
-  block: BlockPayload;
-};
-
-export type GameEventOnManualEvent = {
-  id: "手動事件發生時";
-  customID: any;
-};
-
 export type GameEvent =
-  | GameEventOnTiming
-  | GameEventOnAfterEffect
-  | GameEventOnManualEvent
-  | GameEventOnStackEffectFinished
-  | GameEventOnShowBa
-  | GameEventOnPlayText
-  | GameEventOnDestroyByKaiSo
-  | GameEvent1;
+  | GameEvent1
+  | GameEvent2
+  | GameEvent3
+  | GameEvent4
+  | GameEvent5;
 
 export type TokuSyuKouKa =
   | ["高機動"]

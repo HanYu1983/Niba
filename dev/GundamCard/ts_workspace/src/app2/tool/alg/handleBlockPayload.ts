@@ -22,6 +22,7 @@ import {
   assertTargetTypeValueLength,
   getTargetType,
 } from "./helper";
+import { triggerTextEvent } from "./handleGameContext";
 
 export function doCondition(
   ctx: GameContext,
@@ -220,12 +221,32 @@ export function doBlockPayload(
       return doFeedback(ctx, blockPayload, feedback, varCtxID);
     }, ctx);
   }
-  return mapEffect(ctx, (effect) => {
+  ctx = mapEffect(ctx, (effect) => {
     if (blockPayload.id != effect.id) {
       return effect;
     }
     return { ...effect, requirePassed: true, feedbackPassed: true };
   });
+  // 如果是堆疊事件，觸發"解決直後"
+  const isStackEffect =
+    ctx.gameState.stackEffect.find((e) => e.id == blockPayload.id) != null;
+  if (isStackEffect) {
+    if (blockPayload.cause == null) {
+      throw new Error("找不到cause");
+    }
+    switch (blockPayload.cause.id) {
+      case "BlockPayloadCauseGameRule":
+      case "BlockPayloadCauseDestroy":
+        break;
+      default:
+        ctx = triggerTextEvent(ctx, {
+          id: "解決直後",
+          cardID: blockPayload.cause.cardID,
+          cardTextID: blockPayload.cause.cardTextID,
+        });
+    }
+  }
+  return ctx;
 }
 
 export function wrapBlockRequireKey(block: BlockPayload): BlockPayload {

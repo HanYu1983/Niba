@@ -274,7 +274,7 @@ export function triggerTextEvent(
   ctx: GameContext,
   evt: GameEvent
 ): GameContext {
-  log2("triggerTextEvent", evt);
+  log2("triggerTextEvent", evt.id);
   return getCardStateIterator(ctx).reduce((ctx, [cardID, cardTextStates]) => {
     return cardTextStates.reduce((ctx, cardTextState) => {
       const cardTexts = (() => {

@@ -117,6 +117,7 @@ export type BlockPayloadCauseUpdateEffect = {
   description: string;
 };
 
+// 因為是遊戲規則產生的效果，不是任何一張卡產生的，所以沒有cardID
 export type BlockPayloadCauseGameRule = {
   id: "BlockPayloadCauseGameRule";
   // 這個效果的控制者

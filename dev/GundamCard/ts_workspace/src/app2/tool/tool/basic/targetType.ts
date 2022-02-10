@@ -5,8 +5,8 @@ import {
   CardColor,
   CardRole,
   GameEvent,
-  GameEventOnAfterEffect,
-  GameEventOnManualEvent,
+  //GameEventOnAfterEffect,
+  //GameEventOnManualEvent,
   PlayerID,
   RelatedPlayerSideKeyword,
   UnitPropertyKeyword,
@@ -19,21 +19,21 @@ export type TargetTypeBase = {
   valueLengthInclude?: number[];
 };
 
-export type TargetTypeGameEventOnAfterEffect = {
-  id: "「効果」解決時";
-  value:
-    | GameEventOnAfterEffect[]
-    | string
-    | { path: [{ id: "觸發這個事件的「効果」" }] };
-} & TargetTypeBase;
+// type TargetTypeGameEventOnAfterEffect = {
+//   id: "「効果」解決時";
+//   value:
+//     | GameEventOnAfterEffect[]
+//     | string
+//     | { path: [{ id: "觸發這個事件的「効果」" }] };
+// } & TargetTypeBase;
 
-export type TargetTypeGameEventOnManualEvent = {
-  id: "手動事件發生時";
-  value:
-    | GameEventOnManualEvent[]
-    | string
-    | { path: [{ id: "觸發這個事件的手動事件" }] };
-} & TargetTypeBase;
+// export type TargetTypeGameEventOnManualEvent = {
+//   id: "手動事件發生時";
+//   value:
+//     | GameEventOnManualEvent[]
+//     | string
+//     | { path: [{ id: "觸發這個事件的手動事件" }] };
+// } & TargetTypeBase;
 
 export type TargetTypeBattleBonus = {
   id: "戦闘修正";
@@ -41,12 +41,11 @@ export type TargetTypeBattleBonus = {
     | BattleBonus[]
     | string
     | {
-        path:
-          | [
-              TargetTypeGameEventOnManualEvent,
-              "の「ゲイン」の「効果」の戦闘修正"
-            ]
-          | [TargetTypeNumber, "の戦闘修正"];
+        path: // | [
+        //     TargetTypeGameEventOnManualEvent,
+        //     "の「ゲイン」の「効果」の戦闘修正"
+        //   ]
+        [TargetTypeNumber, "の戦闘修正"];
       };
   tip?: TargetTypeBattleBonus;
   tipMessage?: { [key: string]: string };
@@ -60,14 +59,14 @@ export type TargetTypeCard = {
     | {
         path:
           | [{ id: "このカード" }]
-          | [TargetTypeGameEventOnAfterEffect, "的「カード」"]
+          //| [TargetTypeGameEventOnAfterEffect, "的「カード」"]
           | [TargetTypeBaSyou, "的「カード」"]
           | [TargetTypeCard, "の上のカードX枚", number]
-          | [TargetTypeCard, "のセットグループのユニット"]
-          | [
-              TargetTypeGameEventOnManualEvent,
-              "プレイされて場に出た場合のカード"
-            ];
+          | [TargetTypeCard, "のセットグループのユニット"];
+        // | [
+        //     TargetTypeGameEventOnManualEvent,
+        //     "プレイされて場に出た場合のカード"
+        //   ];
       };
   tip?: TargetTypeCard;
   tipMessage?: { [key: string]: string };
@@ -109,7 +108,7 @@ export type TargetTypeNumber = {
           | [TargetTypePlayer, "的「合計国力」" | "的「改装」的「合計国力」"]
           | [TargetTypeRef, "的陣列長度"]
           | [TargetTypeNumber, "+" | "-", TargetTypeNumber];
-        triggerGameEvent?: GameEventOnManualEvent;
+        triggerGameEvent?: GameEvent;
       };
 } & TargetTypeBase;
 
@@ -156,7 +155,7 @@ export type TargetTypeCardRole = {
     | string
     | {
         path: [TargetTypeCard, "的角色" | "當成横置裝彈G時的角色"];
-        triggerGameEvent?: GameEventOnManualEvent;
+        triggerGameEvent?: GameEvent;
       };
 } & TargetTypeBase;
 
@@ -198,8 +197,8 @@ export type TargetType =
   | TargetTypeDamage
   | TargetTypeCustom
   | TargetTypeBattleBonus
-  | TargetTypeGameEventOnAfterEffect
-  | TargetTypeGameEventOnManualEvent
+  // | TargetTypeGameEventOnAfterEffect
+  // | TargetTypeGameEventOnManualEvent
   | TargetTypeCardTextState;
 
 export type TargetTypeCustomFunctionType = (

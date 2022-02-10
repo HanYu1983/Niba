@@ -242,7 +242,7 @@ export function getTargetType(
                 }),
               };
             }
-            case "プレイされて場に出た場合のカード":
+            //case "プレイされて場に出た場合のカード":
             default:
               throw new Error(`unknown path[1]: ${path[1]}`);
           }
@@ -282,61 +282,55 @@ export function getTargetType(
             id: "カード",
             value: [getCardID(blockPayload)],
           };
-        case "「効果」解決時": {
-          const targetType = getTargetType(ctx, blockPayload, targets, path[0]);
-          if (targetType.id != "「効果」解決時") {
-            throw new Error("must be 「効果」解決時");
-          }
-          if (!Array.isArray(targetType.value)) {
-            throw new Error("must be real value");
-          }
-          const values = targetType.value.map((evt) => {
-            switch (path[1]) {
-              case "的「カード」": {
-                if (evt.block.cause?.id != "BlockPayloadCauseGameEvent") {
-                  throw new Error("必須是BlockPayloadCauseGameEvent");
-                }
-                if (evt.block.cause.gameEvent.id != "「効果」解決時") {
-                  throw new Error("必須是「効果」解決時");
-                }
-                return getCardID(evt.block);
-              }
-              default:
-                throw new Error(`unknown path[1]: ${path[1]}`);
-            }
-          });
-          return {
-            ...targetTypeAfterProcess,
-            id: "カード",
-            value: values,
-          };
-        }
-        case "手動事件發生時":
-          const targetType = getTargetType(ctx, blockPayload, targets, path[0]);
-          if (targetType.id != "手動事件發生時") {
-            throw new Error("must be 手動事件發生時");
-          }
-          if (!Array.isArray(targetType.value)) {
-            throw new Error("must be real value");
-          }
-          const values = targetType.value.map((evt) => {
-            switch (path[1]) {
-              case "プレイされて場に出た場合のカード": {
-                const customID: GameEventOnManualEventCustomID = evt.customID;
-                if (customID.id != "プレイされて場に出た場合") {
-                  throw new Error("must be プレイされて場に出た場合");
-                }
-                return customID.cardID;
-              }
-              default:
-                throw new Error(`unknown path[1]: ${path[1]}`);
-            }
-          });
-          return {
-            ...targetTypeAfterProcess,
-            id: "カード",
-            value: values,
-          };
+        // case "「効果」解決時": {
+        //   const targetType = getTargetType(ctx, blockPayload, targets, path[0]);
+        //   if (targetType.id != "「効果」解決時") {
+        //     throw new Error("must be 「効果」解決時");
+        //   }
+        //   if (!Array.isArray(targetType.value)) {
+        //     throw new Error("must be real value");
+        //   }
+        //   const values = targetType.value.map((evt) => {
+        //     switch (path[1]) {
+        //       case "的「カード」": {
+        //         if (evt.block.cause?.id != "BlockPayloadCauseGameEvent") {
+        //           throw new Error("必須是BlockPayloadCauseGameEvent");
+        //         }
+        //         if (evt.block.cause.gameEvent.id != "「効果」解決時") {
+        //           throw new Error("必須是「効果」解決時");
+        //         }
+        //         return getCardID(evt.block);
+        //       }
+        //       default:
+        //         throw new Error(`unknown path[1]: ${path[1]}`);
+        //     }
+        //   });
+        //   return {
+        //     ...targetTypeAfterProcess,
+        //     id: "カード",
+        //     value: values,
+        //   };
+        // }
+        // case "手動事件發生時":
+        //   const targetType = getTargetType(ctx, blockPayload, targets, path[0]);
+        //   if (targetType.id != "手動事件發生時") {
+        //     throw new Error("must be 手動事件發生時");
+        //   }
+        //   if (!Array.isArray(targetType.value)) {
+        //     throw new Error("must be real value");
+        //   }
+        //   const values = targetType.value.map((evt) => {
+        //     switch (path[1]) {
+        //       case "プレイされて場に出た場合のカード":
+        //       default:
+        //         throw new Error(`unknown path[1]: ${path[1]}`);
+        //     }
+        //   });
+        //   return {
+        //     ...targetTypeAfterProcess,
+        //     id: "カード",
+        //     value: values,
+        //   };
       }
       break;
     }
@@ -951,79 +945,71 @@ export function getTargetType(
           }
           break;
         }
-        case "手動事件發生時": {
-          const targetType = getTargetType(ctx, blockPayload, targets, path[0]);
-          if (targetType.id != "手動事件發生時") {
-            throw new Error("must be 手動事件發生時");
-          }
-          if (!Array.isArray(targetType.value)) {
-            throw new Error("must be real value");
-          }
-          const values = targetType.value.map((evt) => {
-            switch (path[1]) {
-              case "の「ゲイン」の「効果」の戦闘修正": {
-                const customID: GameEventOnManualEventCustomID = evt.customID;
-                if (customID.id != "「ゲイン」の効果で戦闘修正を得た場合") {
-                  throw new Error(
-                    "must be 「ゲイン」の効果で戦闘修正を得た場合"
-                  );
-                }
-                return customID.bonus;
-              }
-              default:
-                throw new Error("not support:" + path[1]);
-            }
-          });
-          return {
-            ...targetTypeAfterProcess,
-            id: "戦闘修正",
-            value: values,
-          };
-        }
+        // case "手動事件發生時": {
+        //   const targetType = getTargetType(ctx, blockPayload, targets, path[0]);
+        //   if (targetType.id != "手動事件發生時") {
+        //     throw new Error("must be 手動事件發生時");
+        //   }
+        //   if (!Array.isArray(targetType.value)) {
+        //     throw new Error("must be real value");
+        //   }
+        //   const values = targetType.value.map((evt) => {
+        //     switch (path[1]) {
+        //       case "の「ゲイン」の「効果」の戦闘修正":
+        //       default:
+        //         throw new Error("not support:" + path[1]);
+        //     }
+        //   });
+        //   return {
+        //     ...targetTypeAfterProcess,
+        //     id: "戦闘修正",
+        //     value: values,
+        //   };
+        // }
       }
     }
-    case "「効果」解決時": {
-      if (Array.isArray(targetTypeAfterProcess.value)) {
-        return targetTypeAfterProcess;
-      }
-      const path = targetTypeAfterProcess.value.path;
-      switch (path[0].id) {
-        case "觸發這個事件的「効果」": {
-          if (blockPayload.cause?.id != "BlockPayloadCauseGameEvent") {
-            throw new Error("必須是BlockPayloadCauseGameEvent");
-          }
-          if (blockPayload.cause.gameEvent.id != "「効果」解決時") {
-            throw new Error("必須是「効果」解決時");
-          }
-          return {
-            ...targetTypeAfterProcess,
-            id: "「効果」解決時",
-            value: [blockPayload.cause.gameEvent],
-          };
-        }
-      }
-    }
-    case "手動事件發生時": {
-      if (Array.isArray(targetTypeAfterProcess.value)) {
-        return targetTypeAfterProcess;
-      }
-      const path = targetTypeAfterProcess.value.path;
-      switch (path[0].id) {
-        case "觸發這個事件的手動事件": {
-          if (blockPayload.cause?.id != "BlockPayloadCauseGameEvent") {
-            throw new Error("必須是BlockPayloadCauseGameEvent");
-          }
-          if (blockPayload.cause.gameEvent.id != "手動事件發生時") {
-            throw new Error("必須是手動事件發生時");
-          }
-          return {
-            ...targetTypeAfterProcess,
-            id: "手動事件發生時",
-            value: [blockPayload.cause.gameEvent],
-          };
-        }
-      }
-    }
+    // case "「効果」解決時": {
+    //   if (Array.isArray(targetTypeAfterProcess.value)) {
+    //     return targetTypeAfterProcess;
+    //   }
+    //   const path = targetTypeAfterProcess.value.path;
+    //   switch (path[0].id) {
+    //     case "觸發這個事件的「効果」": {
+    //       if (blockPayload.cause?.id != "BlockPayloadCauseGameEvent") {
+    //         throw new Error("必須是BlockPayloadCauseGameEvent");
+    //       }
+    //       if (blockPayload.cause.gameEvent.id != "「効果」解決時") {
+    //         throw new Error("必須是「効果」解決時");
+    //       }
+    //       return {
+    //         ...targetTypeAfterProcess,
+    //         id: "「効果」解決時",
+    //         value: [blockPayload.cause.gameEvent],
+    //       };
+    //     }
+    //   }
+    // }
+    // case "手動事件發生時": {
+    //   if (Array.isArray(targetTypeAfterProcess.value)) {
+    //     return targetTypeAfterProcess;
+    //   }
+    //   const path = targetTypeAfterProcess.value.path;
+    //   switch (path[0].id) {
+    //     case "觸發這個事件的手動事件": {
+    //       if (blockPayload.cause?.id != "BlockPayloadCauseGameEvent") {
+    //         throw new Error("必須是BlockPayloadCauseGameEvent");
+    //       }
+    //       if (blockPayload.cause.gameEvent.id != "手動事件發生時") {
+    //         throw new Error("必須是手動事件發生時");
+    //       }
+    //       return {
+    //         ...targetTypeAfterProcess,
+    //         id: "手動事件發生時",
+    //         value: [blockPayload.cause.gameEvent],
+    //       };
+    //     }
+    //   }
+    // }
     case "カードのテキスト":
       if (Array.isArray(targetTypeAfterProcess.value)) {
         return targetTypeAfterProcess;

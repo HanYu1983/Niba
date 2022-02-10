@@ -48,37 +48,6 @@ const prototype: CardPrototype = {
               {
                 id: "ConditionJsonfp",
                 program: {
-                  // pass1: {
-                  //   if: [
-                  //     {
-                  //       "->": [
-                  //         "$in.blockPayload",
-                  //         { log: "blockPayload" },
-                  //         { getter: "cause" },
-                  //         { getter: "id" },
-                  //         { "==": "BlockPayloadCauseGameEvent" },
-                  //       ],
-                  //     },
-                  //     {},
-                  //     { error: "事件必須是BlockPayloadCauseGameEvent" },
-                  //   ],
-                  // },
-                  // pass2: {
-                  //   if: [
-                  //     {
-                  //       "->": [
-                  //         "$in.blockPayload",
-                  //         { log: "blockPayload" },
-                  //         { getter: "cause" },
-                  //         { getter: "gameEvent" },
-                  //         { getter: "id" },
-                  //         { "==": "プレイした場合" },
-                  //       ],
-                  //     },
-                  //     {},
-                  //     { error: "事件必須是プレイした場合" },
-                  //   ],
-                  // },
                   $cardID: {
                     "->": [
                       "$in.blockPayload",

@@ -32,35 +32,10 @@ const prototype: CardPrototype = {
     }),
     {
       id: "自動型",
-      category: "起動", // 規則寫常駐應該是寫錯
+      category: "常駐",
       description:
         "『常駐』：「特徴：装弾」を持つ自軍コマンドの効果で自軍Gをロールする場合、このカードを自軍Gとしてロールできる。",
       block: {
-        require: {
-          id: "RequireTarget",
-          targets: {},
-          condition: {
-            id: "ConditionCompareGameEventOnManualEvent",
-            value: [
-              {
-                id: "手動事件發生時",
-                value: { path: [{ id: "觸發這個事件的手動事件" }] },
-              },
-              "==",
-              {
-                id: "手動事件發生時",
-                value: [
-                  {
-                    id: "手動事件發生時",
-                    customID: {
-                      id: "「特徴：装弾」を持つ自軍コマンドの効果で自軍Gをロールする場合",
-                    } as GameEventOnManualEventCustomID,
-                  },
-                ],
-              },
-            ],
-          },
-        },
         feedback: [
           {
             id: "FeedbackAction",

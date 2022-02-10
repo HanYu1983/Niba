@@ -19,7 +19,8 @@ const prototype: CardPrototype = {
   characteristic: "女性　子供　CO".split("　"),
   category: "キャラクター",
   color: "白",
-  rollCost: ["白", null, null, null],
+  rollCost: ["白", null, null],
+  battlePoint: [0, 0, 0],
   texts: [
     createTokuSyuKouKaText(["ステイ"], {}),
     createTokuSyuKouKaText(["ゲイン"], { cost: 1 }),

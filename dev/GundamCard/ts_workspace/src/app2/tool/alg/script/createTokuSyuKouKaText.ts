@@ -53,32 +53,32 @@ export function createTokuSyuKouKaText(
             category: "起動",
             description: "",
             block: {
-              require: {
-                id: "RequireTarget",
-                targets: {},
-                condition: {
-                  id: "ConditionCompareCard",
-                  // TODO: 出現在戰場時
-                  value: [
-                    { id: "カード", value: { path: [{ id: "このカード" }] } },
-                    "==",
-                    {
-                      id: "カード",
-                      value: {
-                        path: [
-                          {
-                            id: "手動事件發生時",
-                            value: {
-                              path: [{ id: "觸發這個事件的手動事件" }],
-                            },
-                          },
-                          "プレイされて場に出た場合のカード",
-                        ],
-                      },
-                    },
-                  ],
-                },
-              },
+              // require: {
+              //   id: "RequireTarget",
+              //   targets: {},
+              //   condition: {
+              //     id: "ConditionCompareCard",
+              //     // TODO: 出現在戰場時
+              //     value: [
+              //       { id: "カード", value: { path: [{ id: "このカード" }] } },
+              //       "==",
+              //       {
+              //         id: "カード",
+              //         value: {
+              //           path: [
+              //             {
+              //               id: "手動事件發生時",
+              //               value: {
+              //                 path: [{ id: "觸發這個事件的手動事件" }],
+              //               },
+              //             },
+              //             "プレイされて場に出た場合のカード",
+              //           ],
+              //         },
+              //       },
+              //     ],
+              //   },
+              // },
               feedback: [
                 {
                   id: "FeedbackAction",
@@ -1247,34 +1247,34 @@ export function createTokuSyuKouKaText(
             category: "起動",
             description: "",
             block: {
-              require: {
-                id: "RequireTarget",
-                targets: {},
-                condition: {
-                  id: "ConditionCompareCard",
-                  value: [
-                    { id: "カード", value: { path: [{ id: "このカード" }] } },
-                    "==",
-                    {
-                      id: "カード",
-                      value: {
-                        path: [
-                          {
-                            id: "手動事件發生時",
-                            value: {
-                              path: [{ id: "觸發這個事件的手動事件" }],
-                            },
-                          },
-                          "プレイされて場に出た場合のカード",
-                        ],
-                      },
-                    },
-                  ],
-                },
-                action: [
-                  // 設置剛出場旗標
-                ],
-              },
+              // require: {
+              //   id: "RequireTarget",
+              //   targets: {},
+              //   condition: {
+              //     id: "ConditionCompareCard",
+              //     value: [
+              //       { id: "カード", value: { path: [{ id: "このカード" }] } },
+              //       "==",
+              //       {
+              //         id: "カード",
+              //         value: {
+              //           path: [
+              //             {
+              //               id: "手動事件發生時",
+              //               value: {
+              //                 path: [{ id: "觸發這個事件的手動事件" }],
+              //               },
+              //             },
+              //             "プレイされて場に出た場合のカード",
+              //           ],
+              //         },
+              //       },
+              //     ],
+              //   },
+              //   action: [
+              //     // 設置剛出場旗標
+              //   ],
+              // },
             },
           },
           {

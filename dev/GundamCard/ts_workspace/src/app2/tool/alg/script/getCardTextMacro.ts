@@ -1105,9 +1105,10 @@ const ActionTriggerOnShowBaByPlay: Action = {
         { error: "事件必須是BlockPayloadCauseUpdateCommand" },
       ],
     },
-    output: {
+    output: <ActionTriggerGameEvent>{
       id: "ActionTriggerGameEvent",
-      gameEvent: {
+      // @ts-ignore
+      gameEvent: <GameEvent>{
         id: "プレイされて場に出た場合",
         cardID: {
           "->": ["$in.blockPayload", { getter: "cause" }, { getter: "cardID" }],

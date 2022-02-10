@@ -4,7 +4,7 @@ import type {
   CardCategory,
   RelatedPlayerSideKeyword,
   UnitPropertyKeyword,
-  GameEventOnManualEvent,
+  //GameEventOnManualEvent,
 } from "./basic";
 import {
   TargetTypeBaSyou,
@@ -13,7 +13,7 @@ import {
   TargetTypeCardCategory,
   TargetTypeCardColor,
   TargetTypeCardRole,
-  TargetTypeGameEventOnManualEvent,
+  //TargetTypeGameEventOnManualEvent,
   TargetTypeNumber,
   TargetTypePlayer,
   TargetTypeString,
@@ -111,14 +111,14 @@ type ConditionCompareCardColor = {
   ];
 };
 
-type ConditionCompareGameEventOnManualEvent = {
-  id: "ConditionCompareGameEventOnManualEvent";
-  value: [
-    TargetTypeGameEventOnManualEvent,
-    ConditionCompareBooleanOperator,
-    TargetTypeGameEventOnManualEvent
-  ];
-};
+// type ConditionCompareGameEventOnManualEvent = {
+//   id: "ConditionCompareGameEventOnManualEvent";
+//   value: [
+//     TargetTypeGameEventOnManualEvent,
+//     ConditionCompareBooleanOperator,
+//     TargetTypeGameEventOnManualEvent
+//   ];
+// };
 
 type ConditionJsonfp = {
   id: "ConditionJsonfp";
@@ -135,7 +135,7 @@ export type Condition =
   | ConditionCompareCardColor
   | ConditionComparePlayer
   | ConditionCompareBaSyou
-  | ConditionCompareGameEventOnManualEvent
+  //| ConditionCompareGameEventOnManualEvent
   | ConditionJsonfp
   | ConditionNot
   | ConditionOr

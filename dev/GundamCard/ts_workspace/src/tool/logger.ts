@@ -3,7 +3,7 @@ const hideCategory: string[] = [
   "getTip",
   "recurRequire",
   "getTargetType",
-  "triggerTextEvent",
+  //"triggerTextEvent",
   "doConditionTarget",
   "updateEffect",
   //"initJsonfp",
