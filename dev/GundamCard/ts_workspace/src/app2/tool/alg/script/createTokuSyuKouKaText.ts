@@ -9,9 +9,8 @@ import { RequireCustomID } from "../../tool/basic/requireCustom";
 import { getRequireMacro } from "./getRequireMacro";
 import { getCardTextMacro } from "./getCardTextMacro";
 import { getConditionMacro } from "./getConditionMacro";
-import { CardTextState } from "../../tool/basic/gameContext";
+import { getIDSeq } from "../../../../tool/helper";
 
-var _seqID = 0;
 export function createTokuSyuKouKaText(
   toku: TokuSyuKouKa,
   options: {
@@ -304,7 +303,7 @@ export function createTokuSyuKouKaText(
             description:
               "（戦闘フェイズ）：［ ］の特徴を持つ自軍ユニット１枚は、ターン終了時まで、このカードの本来のテキスト１つと同じテキストを得る。ただし同じテキストは得られない）",
             timing: ["戦闘フェイズ"],
-            varCtxID: `createTokuSyuKouKaText_${_seqID++}`,
+            varCtxID: `createTokuSyuKouKaText_${getIDSeq()}`,
             additionalRequire: [
               {
                 id: "RequireTarget",
@@ -458,7 +457,7 @@ export function createTokuSyuKouKaText(
 
             description: JSON.stringify(toku),
             timing: ["ダメージ判定ステップ"],
-            varCtxID: `createTokuSyuKouKaText_${_seqID++}`,
+            varCtxID: `createTokuSyuKouKaText_${getIDSeq()}`,
             additionalRequire: [
               createRollCostRequire(
                 options.cost || 0,
@@ -607,7 +606,7 @@ export function createTokuSyuKouKaText(
 
             description: JSON.stringify(toku),
             timing: ["自軍", "攻撃ステップ"],
-            varCtxID: `createTokuSyuKouKaText_${_seqID++}`,
+            varCtxID: `createTokuSyuKouKaText_${getIDSeq()}`,
             additionalRequire: [
               createRollCostRequire(
                 options.cost || 0,
@@ -738,7 +737,7 @@ export function createTokuSyuKouKaText(
             id: "PlayText",
             description: JSON.stringify(toku),
             timing: ["防御ステップ"],
-            varCtxID: `createTokuSyuKouKaText_${_seqID++}`,
+            varCtxID: `createTokuSyuKouKaText_${getIDSeq()}`,
             additionalRequire: [
               createRollCostRequire(
                 options.cost || 0,
@@ -875,7 +874,7 @@ export function createTokuSyuKouKaText(
             id: "PlayText",
             description: JSON.stringify(toku),
             timing: ["ダメージ判定ステップ"],
-            varCtxID: `createTokuSyuKouKaText_${_seqID++}`,
+            varCtxID: `createTokuSyuKouKaText_${getIDSeq()}`,
             additionalRequire: [
               createRollCostRequire(
                 options.cost || 0,
@@ -1004,7 +1003,7 @@ export function createTokuSyuKouKaText(
             id: "PlayText",
             description: JSON.stringify(toku),
             timing: ["戦闘フェイズ"],
-            varCtxID: `createTokuSyuKouKaText_${_seqID++}`,
+            varCtxID: `createTokuSyuKouKaText_${getIDSeq()}`,
             additionalRequire: [
               createRollCostRequire(
                 options.cost || 0,
@@ -1297,7 +1296,7 @@ export function createTokuSyuKouKaText(
 
             description: JSON.stringify(toku),
             timing: ["常時"],
-            varCtxID: `createTokuSyuKouKaText_${_seqID++}`,
+            varCtxID: `createTokuSyuKouKaText_${getIDSeq()}`,
             additionalRequire: [
               createRollCostRequire(
                 options.cost || 0,

@@ -11,7 +11,7 @@ import { Condition } from "../tool/basic/condition";
 import { Action } from "../tool/basic/action";
 import { GameContext } from "../tool/basic/gameContext";
 import { mapEffect, reduceEffect } from "../tool/basic/gameContext";
-import { err2string, getCustomFunction } from "../../../tool/helper";
+import { err2string, getCustomFunction, getIDSeq } from "../../../tool/helper";
 import { RequireScriptFunction } from "../tool/basic/gameContext";
 import { doRequireTargetActionTarget } from "./doRequireTargetActionTarget";
 import { doRequireCustom } from "./doRequireCustom";
@@ -198,7 +198,6 @@ export function doFeedback(
   }
 }
 
-let _seqID = 0;
 export function doBlockPayload(
   ctx: GameContext,
   blockPayload: BlockPayload
@@ -207,7 +206,7 @@ export function doBlockPayload(
     throw new Error("已經處理了require");
   }
   const varCtxID =
-    blockPayload.contextID || blockPayload.id || `doBlockPayload_${_seqID++}`;
+    blockPayload.contextID || blockPayload.id || `doBlockPayload_${getIDSeq()}`;
   if (blockPayload.require) {
     // 判斷需求長度
     assertBlockPayloadTargetTypeValueLength(blockPayload);
