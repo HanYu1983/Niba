@@ -37,6 +37,7 @@ export type TargetTypeCard = {
     | {
         path:
           | [{ id: "このカード" }]
+          | [{ id: "事件的卡" }]
           | [{ id: "custom" }, any]
           | [TargetTypeBaSyou, "的「カード」"]
           | [TargetTypeCard, "の上のカードX枚", number]

@@ -10,6 +10,9 @@ import { getRequireMacro } from "./getRequireMacro";
 import { getCardTextMacro } from "./getCardTextMacro";
 import { getConditionMacro } from "./getConditionMacro";
 import { getIDSeq } from "../../../../tool/helper";
+import { ActionAddGlobalCardText } from "../../tool/basic/action";
+import { CardTextState } from "../../tool/basic/gameContext";
+import { INJECT_JSONFP_MACRO } from "./getJsonfpMacro";
 
 export function createTokuSyuKouKaText(
   toku: TokuSyuKouKa,
@@ -454,7 +457,6 @@ export function createTokuSyuKouKaText(
         texts: [
           getCardTextMacro({
             id: "PlayText",
-
             description: JSON.stringify(toku),
             timing: ["ダメージ判定ステップ"],
             varCtxID: `createTokuSyuKouKaText_${getIDSeq()}`,
@@ -586,8 +588,123 @@ export function createTokuSyuKouKaText(
                 {
                   id: "FeedbackAction",
                   action: [
-                    // add battleBonus
-                    // trigger manualEvent
+                    {
+                      id: "ActionAddBlock",
+                      type: "立即",
+                      block: {
+                        feedback: [
+                          {
+                            id: "FeedbackAction",
+                            action: [
+                              {
+                                id: "ActionJsonfp",
+                                program: {
+                                  $battleBonusTargetType: {
+                                    "->": [
+                                      "$in.targets",
+                                      {
+                                        getter: "自軍本國上的卡1張的戰鬥修正",
+                                      },
+                                      {
+                                        log: "自軍本國上的卡1張的戰鬥修正targetType",
+                                      },
+                                    ],
+                                  },
+                                  $battleBonus: {
+                                    "->": [
+                                      {
+                                        getTargetType: "$battleBonusTargetType",
+                                      },
+                                      {
+                                        getter: "value",
+                                      },
+                                      { log: "battleBonus" },
+                                    ],
+                                  },
+                                  output: {
+                                    id: "ActionAddGlobalCardText",
+                                    cards: {
+                                      id: "カード",
+                                      value: "自軍本國上的卡1張",
+                                    },
+                                    cardStateID: "ゲイン",
+                                    cardTextState: {
+                                      id: "カードのテキスト",
+                                      value: [
+                                        {
+                                          id: "",
+                                          enabled: true,
+                                          cardText: {
+                                            id: "CardTextCustom",
+                                            description: "",
+                                            customID: {
+                                              id: "CardTextCustomIDBattleBonus",
+                                              battleBonus: "$battleBonus",
+                                              cardTextStateID: "",
+                                            },
+                                          },
+                                        },
+                                        {
+                                          def: {
+                                            id: "",
+                                            enabled: true,
+                                            cardText: getCardTextMacro({
+                                              id: "ターン終了時までの場合",
+                                              feedbackAction: [
+                                                {
+                                                  id: "ActionDeleteGlobalCardText",
+                                                  cardStateID: "ゲイン",
+                                                },
+                                              ],
+                                            }),
+                                          } as CardTextState,
+                                        },
+                                      ],
+                                    },
+                                  },
+                                },
+                              },
+                              {
+                                id: "ActionJsonfp",
+                                program: {
+                                  ...INJECT_JSONFP_MACRO,
+                                  $battleBonusTargetType: {
+                                    "->": [
+                                      "$in.targets",
+                                      {
+                                        getter: "自軍本國上的卡1張的戰鬥修正",
+                                      },
+                                      {
+                                        log: "自軍本國上的卡1張的戰鬥修正targetType",
+                                      },
+                                    ],
+                                  },
+                                  $battleBonus: {
+                                    "->": [
+                                      {
+                                        getTargetType: "$battleBonusTargetType",
+                                      },
+                                      {
+                                        getter: "value",
+                                      },
+                                      { log: "battleBonus" },
+                                    ],
+                                  },
+                                  output: {
+                                    id: "ActionTriggerGameEvent",
+                                    gameEvent: {
+                                      id: "「ゲイン」の効果で戦闘修正を得る場合",
+                                      cardID: "$cardID",
+                                      battleBonus: "$battleBonus",
+                                    },
+                                  },
+                                },
+                              },
+                            ],
+                          },
+                        ],
+                      },
+                    },
                   ],
                 },
               ],

@@ -278,12 +278,19 @@ type GameEvent5 = {
   cardTextID: string;
 };
 
+type GameEvent6 = {
+  id: "「ゲイン」の効果で戦闘修正を得る場合";
+  cardID: string;
+  battleBonus: BattleBonus;
+};
+
 export type GameEvent =
   | GameEvent1
   | GameEvent2
   | GameEvent3
   | GameEvent4
-  | GameEvent5;
+  | GameEvent5
+  | GameEvent6;
 
 export type TokuSyuKouKa =
   | ["高機動"]

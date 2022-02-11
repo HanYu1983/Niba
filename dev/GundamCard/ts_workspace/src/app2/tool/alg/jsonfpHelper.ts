@@ -14,8 +14,19 @@ import {
   getSetGroupRoot,
 } from "../tool/basic/gameContext";
 import { getCardController } from "../tool/basic/handleCard";
+import { getTargetType } from "./getTargetType";
+import { BlockPayload } from "../tool/basic/blockPayload";
+import { TargetType } from "../tool/basic/targetType";
 
 export const jsonfp = require("jsonfp");
+
+type Input = {
+  ctx: GameContext;
+  blockPayload: BlockPayload;
+  targets: { [key: string]: TargetType };
+  target: TargetType;
+};
+
 // 使用前先呼叫
 export function initJsonfp() {
   jsonfp.init();
@@ -88,6 +99,14 @@ export function initJsonfp() {
   );
   jsonfp.addMethod("getCardCoinCount", (ctx: GameContext, cardID: string) => {
     return getCardCoins(ctx, cardID).length;
+  });
+  jsonfp.addMethod("getTargetType", (input: Input, targetType: TargetType) => {
+    return getTargetType(
+      input.ctx,
+      input.blockPayload,
+      input.targets,
+      targetType
+    );
   });
 }
 

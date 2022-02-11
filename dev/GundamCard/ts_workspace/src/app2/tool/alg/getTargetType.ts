@@ -187,6 +187,13 @@ export function getTargetType(
             id: "カード",
             value: [getCardID(blockPayload)],
           };
+        case "事件的卡":
+          switch (blockPayload.cause?.id) {
+            case "BlockPayloadCauseGameEvent":
+              return { id: "カード", value: [blockPayload.cause.cardID] };
+            default:
+              throw new Error(`not support:${blockPayload.cause?.id}`);
+          }
       }
       break;
     }
