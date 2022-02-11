@@ -40,38 +40,7 @@ import { log2 } from "../../../tool/logger";
 import { getPrototype } from "./script";
 import { triggerTextEvent, wrapTip } from "./handleGameContext";
 import { getCardState, getCardStateIterator } from "./helper";
-
-export type TargetTypeCardCustom1 = {
-  id: "交戦中ではない、全てのユニット";
-};
-
-export type TargetTypeCardCustom = TargetTypeCardCustom1;
-
-export function getTargetTypeCardCustom(
-  ctx: GameContext,
-  blockPayload: BlockPayload,
-  targets: { [key: string]: TargetType },
-  target: TargetType,
-  customID: TargetTypeCardCustom1
-): TargetTypeCard {
-  switch (customID.id) {
-    case "交戦中ではない、全てのユニット": {
-      const allUnitCards = Object.keys(ctx.gameState.table.cardStack)
-        .filter((baSyouID) => {
-          const [_, kw] = JSON.parse(baSyouID);
-          return isBa(kw);
-        })
-        .filter((baSyouID) => {
-          return ctx.gameState.isBattle[baSyouID] != true;
-        })
-        .flatMap((baSyouID) => ctx.gameState.table.cardStack[baSyouID]);
-      return {
-        id: "カード",
-        value: allUnitCards.map((card) => card.id),
-      };
-    }
-  }
-}
+import { getTargetTypeCardCustom } from "./getTargetTypeCardCustom";
 
 export function getTargetType(
   ctx: GameContext,
