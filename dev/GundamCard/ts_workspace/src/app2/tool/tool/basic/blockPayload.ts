@@ -8,9 +8,7 @@ import type {
 import type { Condition } from "./condition";
 import type { Action } from "./action";
 import { TargetType, TargetTypeCard } from "./targetType";
-import { log2 } from "../../../../tool/logger";
 import { DestroyReason, GameContext } from "./gameContext";
-import { JsonfpExpr } from "../../alg/jsonfpHelper";
 
 export type RequireBase = {
   key?: string;

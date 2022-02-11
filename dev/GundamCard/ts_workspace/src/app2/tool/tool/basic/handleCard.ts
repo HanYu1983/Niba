@@ -10,7 +10,6 @@ import {
   getOpponentPlayerID,
 } from "./basic";
 import { log2 } from "../../../../tool/logger";
-import { getPrototype } from "../../alg/script";
 
 export function getAbsoluteBaSyou(
   baSyou: BaSyou,

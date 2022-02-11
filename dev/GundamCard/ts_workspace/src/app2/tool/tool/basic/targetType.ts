@@ -5,8 +5,6 @@ import {
   CardColor,
   CardRole,
   GameEvent,
-  //GameEventOnAfterEffect,
-  //GameEventOnManualEvent,
   PlayerID,
   RelatedPlayerSideKeyword,
   UnitPropertyKeyword,
@@ -19,33 +17,13 @@ export type TargetTypeBase = {
   valueLengthInclude?: number[];
 };
 
-// type TargetTypeGameEventOnAfterEffect = {
-//   id: "「効果」解決時";
-//   value:
-//     | GameEventOnAfterEffect[]
-//     | string
-//     | { path: [{ id: "觸發這個事件的「効果」" }] };
-// } & TargetTypeBase;
-
-// export type TargetTypeGameEventOnManualEvent = {
-//   id: "手動事件發生時";
-//   value:
-//     | GameEventOnManualEvent[]
-//     | string
-//     | { path: [{ id: "觸發這個事件的手動事件" }] };
-// } & TargetTypeBase;
-
 export type TargetTypeBattleBonus = {
   id: "戦闘修正";
   value:
     | BattleBonus[]
     | string
     | {
-        path: // | [
-        //     TargetTypeGameEventOnManualEvent,
-        //     "の「ゲイン」の「効果」の戦闘修正"
-        //   ]
-        [TargetTypeNumber, "の戦闘修正"];
+        path: [TargetTypeNumber, "の戦闘修正"];
       };
   tip?: TargetTypeBattleBonus;
   tipMessage?: { [key: string]: string };
@@ -60,14 +38,9 @@ export type TargetTypeCard = {
         path:
           | [{ id: "このカード" }]
           | [{ id: "custom" }, any]
-          //| [TargetTypeGameEventOnAfterEffect, "的「カード」"]
           | [TargetTypeBaSyou, "的「カード」"]
           | [TargetTypeCard, "の上のカードX枚", number]
           | [TargetTypeCard, "のセットグループのユニット"];
-        // | [
-        //     TargetTypeGameEventOnManualEvent,
-        //     "プレイされて場に出た場合のカード"
-        //   ];
       };
   tip?: TargetTypeCard;
   tipMessage?: { [key: string]: string };
@@ -198,8 +171,6 @@ export type TargetType =
   | TargetTypeDamage
   | TargetTypeScript
   | TargetTypeBattleBonus
-  // | TargetTypeGameEventOnAfterEffect
-  // | TargetTypeGameEventOnManualEvent
   | TargetTypeCardTextState;
 
 export type TargetTypeScriptFunctionType = (

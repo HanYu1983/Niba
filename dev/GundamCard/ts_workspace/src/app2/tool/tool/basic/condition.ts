@@ -1,11 +1,3 @@
-import type {
-  CardColor,
-  BaSyou,
-  CardCategory,
-  RelatedPlayerSideKeyword,
-  UnitPropertyKeyword,
-  //GameEventOnManualEvent,
-} from "./basic";
 import {
   TargetTypeBaSyou,
   TargetTypeBoolean,
@@ -13,7 +5,6 @@ import {
   TargetTypeCardCategory,
   TargetTypeCardColor,
   TargetTypeCardRole,
-  //TargetTypeGameEventOnManualEvent,
   TargetTypeNumber,
   TargetTypePlayer,
   TargetTypeString,
