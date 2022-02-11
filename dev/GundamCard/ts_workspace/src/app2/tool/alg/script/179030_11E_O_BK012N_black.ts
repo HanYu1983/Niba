@@ -8,7 +8,7 @@ import { getCardTextMacro, VAR_PLAY_CARD } from "./getCardTextMacro";
 import { getConditionMacro } from "./getConditionMacro";
 import { RequireTarget } from "../../tool/basic/blockPayload";
 import { CardColor } from "../../tool/basic/basic";
-import { GameEventOnManualEventCustomID } from "../gameEventOnManualEventCustomID";
+
 // 179030_11E_O_BK012N_black
 // N
 // V

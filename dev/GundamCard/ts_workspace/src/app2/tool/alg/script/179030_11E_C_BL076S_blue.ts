@@ -12,7 +12,6 @@ import { getCardTextMacro, VAR_PLAY_CARD } from "./getCardTextMacro";
 import { getConditionMacro } from "./getConditionMacro";
 import { RequireTarget } from "../../tool/basic/blockPayload";
 import { AbsoluteBaSyou, CardColor } from "../../tool/basic/basic";
-import { GameEventOnManualEventCustomID } from "../gameEventOnManualEventCustomID";
 import { getJsonfpMacro, INJECT_JSONFP_MACRO } from "./getJsonfpMacro";
 import { getCustomFunctionString, getIDSeq } from "../../../../tool/helper";
 import { RequireCustomID } from "../../tool/basic/requireCustom";
@@ -21,7 +20,7 @@ import {
   TargetType,
   TargetTypeScriptFunctionType,
 } from "../../tool/basic/targetType";
-import { TargetTypeCardCustom } from "../getTargetTypeCardCustom";
+import { TargetTypeCardCustom } from "../../tool/basic/targetTypeCardCustom";
 // 179030_11E_C_BL076S_blue
 // S
 // CCA

@@ -2,19 +2,14 @@ import { isBa } from "../tool/basic/basic";
 import { GameContext } from "../tool/basic/gameContext";
 import { BlockPayload } from "../tool/basic/blockPayload";
 import { TargetType, TargetTypeCard } from "../tool/basic/targetType";
-
-export type TargetTypeCardCustom1 = {
-  id: "交戦中ではない、全てのユニット";
-};
-
-export type TargetTypeCardCustom = TargetTypeCardCustom1;
+import { TargetTypeCardCustom } from "../tool/basic/targetTypeCardCustom";
 
 export function getTargetTypeCardCustom(
   ctx: GameContext,
   blockPayload: BlockPayload,
   targets: { [key: string]: TargetType },
   target: TargetType,
-  customID: TargetTypeCardCustom1
+  customID: TargetTypeCardCustom
 ): TargetTypeCard {
   switch (customID.id) {
     case "交戦中ではない、全てのユニット": {

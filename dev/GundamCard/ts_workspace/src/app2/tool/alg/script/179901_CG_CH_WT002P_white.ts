@@ -6,10 +6,6 @@ import { createRollCostRequire } from "../../tool/basic/blockPayload";
 import { createTokuSyuKouKaText } from "./createTokuSyuKouKaText";
 import { getCardTextMacro, VAR_PLAY_CARD } from "./getCardTextMacro";
 import { getConditionMacro } from "./getConditionMacro";
-import { RequireTarget } from "../../tool/basic/blockPayload";
-import { CardColor } from "../../tool/basic/basic";
-import { GameEventOnManualEventCustomID } from "../gameEventOnManualEventCustomID";
-import { RequireCustomID } from "../../tool/basic/requireCustom";
 import { getRequireMacro } from "./getRequireMacro";
 
 // 179901_CG_CH_WT002P_white
