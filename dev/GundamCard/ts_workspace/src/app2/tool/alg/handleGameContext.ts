@@ -45,7 +45,6 @@ import {
   getCardBattlePoint,
   getCardState,
   getCardStateIterator,
-  getTargetType,
   isABattleGroup,
 } from "./helper";
 import { doConditionTarget } from "./doConditionTarget";
@@ -53,6 +52,7 @@ import { err2string } from "../../../tool/helper";
 import { getPrototype } from "./script";
 import { getCardTextMacro } from "./script/getCardTextMacro";
 import { Block } from "typescript";
+import { getTargetType } from "./getTargetType";
 
 export function wrapTip(
   ctx: GameContext,

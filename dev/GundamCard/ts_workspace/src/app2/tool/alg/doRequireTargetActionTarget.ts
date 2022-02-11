@@ -34,11 +34,7 @@ import {
 } from "../tool/basic/handleCard";
 import { log2 } from "../../../tool/logger";
 import { TargetType } from "../tool/basic/targetType";
-import {
-  assertTargetTypeValueLength,
-  getCardState,
-  getTargetType,
-} from "./helper";
+import { assertTargetTypeValueLength, getCardState } from "./helper";
 import {
   initCardFace,
   initState,
@@ -49,6 +45,7 @@ import {
 } from "./handleGameContext";
 import { wrapBlockRequireKey } from "./handleBlockPayload";
 import { jsonfp } from "./jsonfpHelper";
+import { getTargetType } from "./getTargetType";
 
 let idSeq = 0;
 export function doRequireTargetActionTarget(

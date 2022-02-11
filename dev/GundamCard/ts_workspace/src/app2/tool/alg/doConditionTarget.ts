@@ -1,13 +1,12 @@
 import { BlockPayload } from "../tool/basic/blockPayload";
 import { Condition } from "../tool/basic/condition";
 import { GameContext, getBlockOwner } from "../tool/basic/gameContext";
-import { getCardState, getCardIterator, getTargetType } from "./helper";
 import { TargetType } from "../tool/basic/targetType";
-import { getAbsoluteBaSyou, getCardController } from "../tool/basic/handleCard";
 import { getBaShouID } from "../tool/basic/basic";
 import { log2 } from "../../../tool/logger";
 import { jsonfp } from "./jsonfpHelper";
 import { err2string } from "../../../tool/helper";
+import { getTargetType } from "./getTargetType";
 
 export function doConditionTarget(
   ctx: GameContext,

@@ -3,24 +3,16 @@ import React, {
   useMemo,
   useCallback,
   useState,
-  HTMLAttributes,
   useEffect,
 } from "react";
-import { queryFlow, Flow } from "../../tool/alg/handleClient";
 import { wrapTip } from "../../tool/alg/handleGameContext";
-import { getCardState, getTargetType } from "../../tool/alg/helper";
-import { CardText, getBaShou, getBaShouID } from "../../tool/tool/basic/basic";
 import { BlockPayload, Require } from "../../tool/tool/basic/blockPayload";
-import { Condition } from "../../tool/tool/basic/condition";
 import {
   getBlockOwner,
   iterateEffect,
   mapEffect,
 } from "../../tool/tool/basic/gameContext";
-import { getAbsoluteBaSyou } from "../../tool/tool/basic/handleCard";
-import { TargetType } from "../../tool/tool/basic/targetType";
 import { AppContext } from "../tool/appContext";
-import { OnEvent } from "../tool/appContext/eventCenter";
 import { CardView } from "./CardView";
 import { RequireView } from "./RequireView";
 

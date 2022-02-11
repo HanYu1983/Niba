@@ -20,9 +20,9 @@ import { log2 } from "../../../tool/logger";
 import {
   assertBlockPayloadTargetTypeValueLength,
   assertTargetTypeValueLength,
-  getTargetType,
 } from "./helper";
 import { triggerTextEvent } from "./handleGameContext";
+import { getTargetType } from "./getTargetType";
 
 export function doCondition(
   ctx: GameContext,

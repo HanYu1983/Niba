@@ -21,8 +21,7 @@ import {
   TargetType,
   TargetTypeScriptFunctionType,
 } from "../../tool/basic/targetType";
-import { TargetTypeCardCustom } from "../helper";
-
+import { TargetTypeCardCustom } from "../getTargetType";
 // 179030_11E_C_BL076S_blue
 // S
 // CCA

@@ -42,7 +42,6 @@ import {
   getBattleGroup,
   getBattleGroupBattlePoint,
   getCardBattlePoint,
-  getTargetType,
 } from "../tool/alg/helper";
 import { testJsonfp, testJsonfp2, testJsonfp3 } from "./testJsonfp";
 import { Action, ActionDraw, ActionDrop } from "../tool/tool/basic/action";
@@ -57,6 +56,7 @@ import { testProto_179025_07D_O_GN019C_green } from "./testProto_179025_07D_O_GN
 import { testProto_179015_04B_U_WT067C_white } from "./testProto_179015_04B_U_WT067C_white";
 import { testProto_179024_03B_U_WT057U_white } from "./testProto_179024_03B_U_WT057U_white";
 import { testProto_179030_11E_C_BL076S_blue } from "./testProto_179030_11E_C_BL076S_blue";
+import { getTargetType } from "../tool/alg/getTargetType";
 
 export function test() {
   [
