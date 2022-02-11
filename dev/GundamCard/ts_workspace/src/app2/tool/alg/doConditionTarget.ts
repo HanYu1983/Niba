@@ -220,6 +220,7 @@ export function doConditionTarget(
                 throw new Error("value.length must > 0");
               }
               const b = target2.value[0];
+              log2("doConditionTarget", condition.id, `${a} ${op} ${b}`);
               switch (op) {
                 case "<":
                   if (a < b == false) {

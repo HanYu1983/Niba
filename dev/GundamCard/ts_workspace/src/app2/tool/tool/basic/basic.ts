@@ -254,6 +254,11 @@ type GameEvent2 = {
   effects: BlockPayload[];
 };
 
+export type GameEventWithCard = {
+  id: string;
+  cardID: string;
+};
+
 type GameEvent3 = {
   id:
     | "場に出た場合"

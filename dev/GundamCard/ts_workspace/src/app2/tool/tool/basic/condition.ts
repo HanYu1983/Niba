@@ -39,7 +39,7 @@ type ConditionCompareNumberOperator =
   | ">="
   | ConditionCompareStringOperator;
 
-type ConditionCompareCardOperator = "交戦中" | ConditionCompareBooleanOperator;
+type ConditionCompareCardOperator = "交戦中" | ConditionCompareStringOperator;
 
 type ConditionCompareNumber = {
   id: "ConditionCompareNumber";

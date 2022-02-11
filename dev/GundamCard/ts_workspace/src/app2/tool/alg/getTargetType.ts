@@ -140,6 +140,15 @@ export function getTargetType(
                 }),
               };
             }
+            case "のセットグループ": {
+              return {
+                ...targetTypeAfterProcess,
+                id: "カード",
+                value: targetType.value.flatMap((cardID) => {
+                  return getSetGroupCards(ctx, cardID);
+                }),
+              };
+            }
             default:
               throw new Error(`unknown path[1]: ${path[1]}`);
           }
@@ -190,7 +199,18 @@ export function getTargetType(
         case "事件的卡":
           switch (blockPayload.cause?.id) {
             case "BlockPayloadCauseGameEvent":
-              return { id: "カード", value: [blockPayload.cause.cardID] };
+              switch (blockPayload.cause.gameEvent.id) {
+                case "カット終了時":
+                case "GameEventOnTiming":
+                  throw new Error(
+                    `not support:${blockPayload.cause.gameEvent.id}`
+                  );
+                default:
+                  return {
+                    id: "カード",
+                    value: [blockPayload.cause.gameEvent.cardID],
+                  };
+              }
             default:
               throw new Error(`not support:${blockPayload.cause?.id}`);
           }

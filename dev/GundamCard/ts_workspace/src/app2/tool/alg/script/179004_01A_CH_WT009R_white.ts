@@ -90,27 +90,30 @@ const prototype: CardPrototype = {
                           },
                         }),
                         {
-                          id: "ConditionCompareCard",
-                          value: [
-                            {
-                              id: "カード",
-                              value: {
-                                path: [
-                                  {
-                                    id: "カード",
-                                    value: { path: [{ id: "事件的卡" }] },
-                                  },
-                                  "のセットグループのユニット",
-                                ],
+                          id: "ConditionNot",
+                          not: {
+                            id: "ConditionCompareCard",
+                            value: [
+                              {
+                                id: "カード",
+                                value:
+                                  "そのカードのセットグループ以外の自軍ユニット１枚",
                               },
-                            },
-                            "!=",
-                            {
-                              id: "カード",
-                              value:
-                                "そのカードのセットグループ以外の自軍ユニット１枚",
-                            },
-                          ],
+                              "in",
+                              {
+                                id: "カード",
+                                value: {
+                                  path: [
+                                    {
+                                      id: "カード",
+                                      value: { path: [{ id: "事件的卡" }] },
+                                    },
+                                    "のセットグループ",
+                                  ],
+                                },
+                              },
+                            ],
+                          },
                         },
                         getConditionMacro({
                           id: "變量x的是y軍",
@@ -132,6 +135,15 @@ const prototype: CardPrototype = {
                         }),
                       ],
                     },
+                    action: [
+                      {
+                        id: "ActionSetTarget",
+                        source:
+                          "そのカードのセットグループ以外の自軍ユニット１枚",
+                        target:
+                          "そのカードのセットグループ以外の自軍ユニット１枚",
+                      },
+                    ],
                   },
                   feedback: [
                     {
@@ -143,6 +155,7 @@ const prototype: CardPrototype = {
                             $battleBonus: {
                               "->": [
                                 "$in.blockPayload",
+                                { getter: "cause" },
                                 { getter: "gameEvent" },
                                 { getter: "battleBonus" },
                               ],
@@ -173,16 +186,19 @@ const prototype: CardPrototype = {
                                   {
                                     id: "",
                                     enabled: true,
-                                    cardText: getCardTextMacro({
-                                      id: "ターン終了時までの場合",
-                                      feedbackAction: [
-                                        {
-                                          id: "ActionDeleteGlobalCardText",
-                                          cardStateID:
-                                            "『起動』：自軍カードが、「ゲイン」の効果で戦闘修正を得た場合、そのカードのセットグループ以外の自軍ユニット１枚は、ターン終了時まで、その戦闘修正と同じ値の戦闘修正を得る。",
-                                        },
-                                      ],
-                                    }),
+                                    cardText: {
+                                      // @ts-ignore
+                                      def: getCardTextMacro({
+                                        id: "ターン終了時までの場合",
+                                        feedbackAction: [
+                                          {
+                                            id: "ActionDeleteGlobalCardText",
+                                            cardStateID:
+                                              "『起動』：自軍カードが、「ゲイン」の効果で戦闘修正を得た場合、そのカードのセットグループ以外の自軍ユニット１枚は、ターン終了時まで、その戦闘修正と同じ値の戦闘修正を得る。",
+                                          },
+                                        ],
+                                      }),
+                                    },
                                   },
                                 ],
                               },

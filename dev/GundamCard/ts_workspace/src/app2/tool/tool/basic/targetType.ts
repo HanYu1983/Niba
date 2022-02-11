@@ -41,7 +41,8 @@ export type TargetTypeCard = {
           | [{ id: "custom" }, any]
           | [TargetTypeBaSyou, "的「カード」"]
           | [TargetTypeCard, "の上のカードX枚", number]
-          | [TargetTypeCard, "のセットグループのユニット"];
+          | [TargetTypeCard, "のセットグループのユニット"]
+          | [TargetTypeCard, "のセットグループ"];
       };
   tip?: TargetTypeCard;
   tipMessage?: { [key: string]: string };

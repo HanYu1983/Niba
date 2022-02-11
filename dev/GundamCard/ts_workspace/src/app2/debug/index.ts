@@ -57,6 +57,7 @@ import { testProto_179015_04B_U_WT067C_white } from "./testProto_179015_04B_U_WT
 import { testProto_179024_03B_U_WT057U_white } from "./testProto_179024_03B_U_WT057U_white";
 import { testProto_179030_11E_C_BL076S_blue } from "./testProto_179030_11E_C_BL076S_blue";
 import { getTargetType } from "../tool/alg/getTargetType";
+import { testProto_179004_01A_CH_WT009R_white } from "./testProto_179004_01A_CH_WT009R_white";
 
 export function test() {
   [
@@ -83,6 +84,7 @@ export function test() {
     testProto_179015_04B_U_WT067C_white,
     testProto_179024_03B_U_WT057U_white,
     testProto_179030_11E_C_BL076S_blue,
+    testProto_179004_01A_CH_WT009R_white,
   ].forEach((testF: Function) => {
     console.log(
       `================================================================`

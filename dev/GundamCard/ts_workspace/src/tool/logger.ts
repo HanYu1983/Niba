@@ -4,7 +4,6 @@ const hideCategory: string[] = [
   "recurRequire",
   "getTargetType",
   "triggerTextEvent",
-  "triggerTextEvent-return",
   "doConditionTarget",
   "updateEffect",
   "initJsonfp",
