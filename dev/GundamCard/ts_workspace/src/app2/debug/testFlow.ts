@@ -6,7 +6,7 @@ import {
   triggerTextEvent,
 } from "../tool/alg/handleGameContext";
 import { createCard } from "../../tool/table";
-import { getBaShouID, PlayerA, PlayerB } from "../tool/tool/basic/basic";
+import { getBaSyouID, PlayerA, PlayerB } from "../tool/tool/basic/basic";
 import { recurRequire } from "../tool/tool/basic/blockPayload";
 import { applyFlow, queryFlow } from "../tool/alg/handleClient";
 
@@ -63,7 +63,7 @@ export function testFlow2() {
   table = createCard(
     table,
     PlayerA,
-    getBaShouID({
+    getBaSyouID({
       id: "AbsoluteBaSyou",
       value: [PlayerA, "本国"],
     }),

@@ -16,7 +16,7 @@ import {
 } from "../tool/alg/handleGameContext";
 import { getPrototype } from "../tool/alg/script";
 import {
-  getBaShouID,
+  getBaSyouID,
   PlayerA,
   PlayerB,
   Timing,
@@ -38,7 +38,7 @@ export function testProto_179001_01A_CH_WT007R_white() {
         ...ctx.gameState.table,
         cardStack: {
           ...ctx.gameState.table.cardStack,
-          [getBaShouID({
+          [getBaSyouID({
             id: "AbsoluteBaSyou",
             value: [PlayerA, "配備エリア"],
           })]: [
@@ -57,7 +57,7 @@ export function testProto_179001_01A_CH_WT007R_white() {
               tap: false,
             },
           ],
-          [getBaShouID({
+          [getBaSyouID({
             id: "AbsoluteBaSyou",
             value: [PlayerA, "Gゾーン"],
           })]: [

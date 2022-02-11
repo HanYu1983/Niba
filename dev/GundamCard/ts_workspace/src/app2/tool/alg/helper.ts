@@ -6,7 +6,7 @@ import {
   CardColor,
   CardRole,
   Coin,
-  getBaShouID,
+  getBaSyouID,
   getOpponentPlayerID,
   isBa,
   TokuSyuKouKa,
@@ -45,10 +45,7 @@ import {
 } from "../tool/basic/targetType";
 import { log2 } from "../../../tool/logger";
 import { getPrototype } from "./script";
-import { triggerTextEvent, wrapTip } from "./handleGameContext";
-import { GameEventOnManualEventCustomID } from "./gameEventOnManualEventCustomID";
 
-let idSeq = 0;
 export function getCardState(
   ctx: GameContext,
   cardID: string
@@ -257,7 +254,7 @@ export function getBattleGroup(
   baSyou: AbsoluteBaSyou
 ): string[] {
   return (
-    ctx.gameState.table.cardStack[getBaShouID(baSyou)]
+    ctx.gameState.table.cardStack[getBaSyouID(baSyou)]
       ?.filter((card) => {
         return getSetGroupRoot(ctx, card.id) == null;
       })
@@ -365,7 +362,7 @@ export function isOpponentHasBattleGroup(
   ];
   return (
     battleAreas.flatMap((battleArea) => {
-      return ctx.gameState.table.cardStack[getBaShouID(battleArea)] || [];
+      return ctx.gameState.table.cardStack[getBaSyouID(battleArea)] || [];
     }).length != 0
   );
 }

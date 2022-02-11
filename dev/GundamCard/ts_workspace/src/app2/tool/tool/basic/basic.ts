@@ -47,11 +47,11 @@ export type RelatedBaSyou = {
 
 export type BaSyou = AbsoluteBaSyou | RelatedBaSyou;
 
-export function getBaShouID(baSyou: AbsoluteBaSyou) {
+export function getBaSyouID(baSyou: AbsoluteBaSyou) {
   return JSON.stringify(baSyou.value);
 }
 
-export function getBaShou(id: string): AbsoluteBaSyou {
+export function getBaSyou(id: string): AbsoluteBaSyou {
   return {
     id: "AbsoluteBaSyou",
     value: JSON.parse(id),

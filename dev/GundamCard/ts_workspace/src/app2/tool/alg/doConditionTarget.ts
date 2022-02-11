@@ -2,7 +2,7 @@ import { BlockPayload } from "../tool/basic/blockPayload";
 import { Condition } from "../tool/basic/condition";
 import { GameContext, getBlockOwner } from "../tool/basic/gameContext";
 import { TargetType } from "../tool/basic/targetType";
-import { getBaShouID } from "../tool/basic/basic";
+import { getBaSyouID } from "../tool/basic/basic";
 import { log2 } from "../../../tool/logger";
 import { jsonfp } from "./jsonfpHelper";
 import { err2string } from "../../../tool/helper";
@@ -169,9 +169,9 @@ export function doConditionTarget(
                   if (b.id == "RelatedBaSyou") {
                     throw new Error("must be absolute baSyou");
                   }
-                  if ((getBaShouID(a) == getBaShouID(b)) == false) {
+                  if ((getBaSyouID(a) == getBaSyouID(b)) == false) {
                     throw new Error(
-                      `場所不符合:${getBaShouID(a)} != ${getBaShouID(b)}`
+                      `場所不符合:${getBaSyouID(a)} != ${getBaSyouID(b)}`
                     );
                   }
                   break;
@@ -183,14 +183,14 @@ export function doConditionTarget(
                         if (b.id == "RelatedBaSyou") {
                           throw new Error("must be absolute baSyou");
                         }
-                        return getBaShouID(b);
+                        return getBaSyouID(b);
                       })
-                      .includes(getBaShouID(a)) == false
+                      .includes(getBaSyouID(a)) == false
                   ) {
                     throw new Error(
                       `不包含指定的場所:變數${JSON.stringify(
                         v1
-                      )}的場所${getBaShouID(a)}必須包含在${JSON.stringify(
+                      )}的場所${getBaSyouID(a)}必須包含在${JSON.stringify(
                         target2.value
                       )}`
                     );

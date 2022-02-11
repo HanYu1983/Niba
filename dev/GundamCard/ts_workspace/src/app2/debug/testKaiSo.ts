@@ -6,7 +6,7 @@ import {
   updateCommand,
   wrapTip,
 } from "../tool/alg/handleGameContext";
-import { getBaShouID, PlayerA, TIMING_CHART } from "../tool/tool/basic/basic";
+import { getBaSyouID, PlayerA, TIMING_CHART } from "../tool/tool/basic/basic";
 import {
   DEFAULT_GAME_CONTEXT,
   GameContext,
@@ -21,7 +21,7 @@ export function testKaiSo1() {
       table: {
         ...DEFAULT_TABLE,
         cardStack: {
-          [getBaShouID({
+          [getBaSyouID({
             id: "AbsoluteBaSyou",
             value: [PlayerA, "手札"],
           })]: [
@@ -33,7 +33,7 @@ export function testKaiSo1() {
               tap: false,
             },
           ],
-          [getBaShouID({
+          [getBaSyouID({
             id: "AbsoluteBaSyou",
             value: [PlayerA, "配備エリア"],
           })]: [
@@ -45,7 +45,7 @@ export function testKaiSo1() {
               tap: false,
             },
           ],
-          [getBaShouID({
+          [getBaSyouID({
             id: "AbsoluteBaSyou",
             value: [PlayerA, "Gゾーン"],
           })]: [
@@ -167,7 +167,7 @@ export function testKaiSo1() {
   }
   if (
     ctx.gameState.table.cardStack[
-      getBaShouID({
+      getBaSyouID({
         id: "AbsoluteBaSyou",
         value: [PlayerA, "手札"],
       })
@@ -177,7 +177,7 @@ export function testKaiSo1() {
   }
   if (
     ctx.gameState.table.cardStack[
-      getBaShouID({
+      getBaSyouID({
         id: "AbsoluteBaSyou",
         value: [PlayerA, "捨て山"],
       })
@@ -187,7 +187,7 @@ export function testKaiSo1() {
   }
   if (
     ctx.gameState.table.cardStack[
-      getBaShouID({
+      getBaSyouID({
         id: "AbsoluteBaSyou",
         value: [PlayerA, "配備エリア"],
       })

@@ -6,7 +6,7 @@ import {
   GameContext,
 } from "../../../tool/tool/basic/gameContext";
 import {
-  getBaShouID,
+  getBaSyouID,
   PlayerA,
   PlayerB,
   Timing,
@@ -57,7 +57,7 @@ export const OnViewModel = OnEvent.pipe(
             table = createCard(
               table,
               PlayerA,
-              getBaShouID({
+              getBaSyouID({
                 id: "AbsoluteBaSyou",
                 value: [PlayerA, "本国"],
               }),
@@ -70,7 +70,7 @@ export const OnViewModel = OnEvent.pipe(
             table = createCard(
               table,
               PlayerA,
-              getBaShouID({
+              getBaSyouID({
                 id: "AbsoluteBaSyou",
                 value: [PlayerA, "手札"],
               }),
@@ -79,7 +79,7 @@ export const OnViewModel = OnEvent.pipe(
             table = createCard(
               table,
               PlayerA,
-              getBaShouID({
+              getBaSyouID({
                 id: "AbsoluteBaSyou",
                 value: [PlayerA, "Gゾーン"],
               }),
@@ -94,7 +94,7 @@ export const OnViewModel = OnEvent.pipe(
             table = createCard(
               table,
               PlayerA,
-              getBaShouID({
+              getBaSyouID({
                 id: "AbsoluteBaSyou",
                 value: [PlayerA, "配備エリア"],
               }),
@@ -107,7 +107,7 @@ export const OnViewModel = OnEvent.pipe(
             table = createCard(
               table,
               PlayerB,
-              getBaShouID({
+              getBaSyouID({
                 id: "AbsoluteBaSyou",
                 value: [PlayerB, "配備エリア"],
               }),
@@ -116,7 +116,7 @@ export const OnViewModel = OnEvent.pipe(
             table = createCard(
               table,
               PlayerB,
-              getBaShouID({
+              getBaSyouID({
                 id: "AbsoluteBaSyou",
                 value: [PlayerB, "手札"],
               }),
@@ -125,7 +125,7 @@ export const OnViewModel = OnEvent.pipe(
             table = createCard(
               table,
               PlayerB,
-              getBaShouID({
+              getBaSyouID({
                 id: "AbsoluteBaSyou",
                 value: [PlayerB, "Gゾーン"],
               }),
@@ -161,7 +161,7 @@ export const OnViewModel = OnEvent.pipe(
             table = createCard(
               table,
               PlayerA,
-              getBaShouID({
+              getBaSyouID({
                 id: "AbsoluteBaSyou",
                 value: [PlayerA, "手札"],
               }),
@@ -177,7 +177,7 @@ export const OnViewModel = OnEvent.pipe(
             table = createCard(
               table,
               PlayerA,
-              getBaShouID({
+              getBaSyouID({
                 id: "AbsoluteBaSyou",
                 value: [PlayerA, "配備エリア"],
               }),
@@ -186,7 +186,7 @@ export const OnViewModel = OnEvent.pipe(
             table = createCard(
               table,
               PlayerA,
-              getBaShouID({
+              getBaSyouID({
                 id: "AbsoluteBaSyou",
                 value: [PlayerA, "戦闘エリア（右）"],
               }),
@@ -196,7 +196,7 @@ export const OnViewModel = OnEvent.pipe(
             table = createCard(
               table,
               PlayerA,
-              getBaShouID({
+              getBaSyouID({
                 id: "AbsoluteBaSyou",
                 value: [PlayerA, "Gゾーン"],
               }),
@@ -212,7 +212,7 @@ export const OnViewModel = OnEvent.pipe(
             table = createCard(
               table,
               PlayerB,
-              getBaShouID({
+              getBaSyouID({
                 id: "AbsoluteBaSyou",
                 value: [PlayerB, "プレイされているカード"],
               }),
@@ -221,7 +221,7 @@ export const OnViewModel = OnEvent.pipe(
             table = createCard(
               table,
               PlayerB,
-              getBaShouID({
+              getBaSyouID({
                 id: "AbsoluteBaSyou",
                 value: [PlayerB, "配備エリア"],
               }),
@@ -230,7 +230,7 @@ export const OnViewModel = OnEvent.pipe(
             table = createCard(
               table,
               PlayerB,
-              getBaShouID({
+              getBaSyouID({
                 id: "AbsoluteBaSyou",
                 value: [PlayerB, "戦闘エリア（右）"],
               }),
@@ -259,7 +259,7 @@ export const OnViewModel = OnEvent.pipe(
             table = createCard(
               table,
               PlayerA,
-              getBaShouID({
+              getBaSyouID({
                 id: "AbsoluteBaSyou",
                 value: [PlayerA, "本国"],
               }),
@@ -272,7 +272,7 @@ export const OnViewModel = OnEvent.pipe(
             table = createCard(
               table,
               PlayerA,
-              getBaShouID({
+              getBaSyouID({
                 id: "AbsoluteBaSyou",
                 value: [PlayerA, "手札"],
               }),
@@ -285,7 +285,7 @@ export const OnViewModel = OnEvent.pipe(
             table = createCard(
               table,
               PlayerA,
-              getBaShouID({
+              getBaSyouID({
                 id: "AbsoluteBaSyou",
                 value: [PlayerA, "Gゾーン"],
               }),
@@ -300,7 +300,7 @@ export const OnViewModel = OnEvent.pipe(
             table = createCard(
               table,
               PlayerA,
-              getBaShouID({
+              getBaSyouID({
                 id: "AbsoluteBaSyou",
                 value: [PlayerA, "配備エリア"],
               }),
@@ -313,7 +313,7 @@ export const OnViewModel = OnEvent.pipe(
             table = createCard(
               table,
               PlayerB,
-              getBaShouID({
+              getBaSyouID({
                 id: "AbsoluteBaSyou",
                 value: [PlayerB, "配備エリア"],
               }),
@@ -345,7 +345,7 @@ export const OnViewModel = OnEvent.pipe(
                   ...ctx.gameState.table,
                   cardStack: {
                     ...ctx.gameState.table.cardStack,
-                    [getBaShouID({
+                    [getBaSyouID({
                       id: "AbsoluteBaSyou",
                       value: [PlayerA, "手札"],
                     })]: [
@@ -364,7 +364,7 @@ export const OnViewModel = OnEvent.pipe(
                         tap: false,
                       },
                     ],
-                    [getBaShouID({
+                    [getBaSyouID({
                       id: "AbsoluteBaSyou",
                       value: [PlayerA, "配備エリア"],
                     })]: [
@@ -390,7 +390,7 @@ export const OnViewModel = OnEvent.pipe(
                       //   tap: false,
                       // },
                     ],
-                    [getBaShouID({
+                    [getBaSyouID({
                       id: "AbsoluteBaSyou",
                       value: [PlayerA, "Gゾーン"],
                     })]: [
@@ -436,11 +436,11 @@ export const OnViewModel = OnEvent.pipe(
                   ...ctx.gameState.table,
                   cardStack: {
                     ...ctx.gameState.table.cardStack,
-                    [getBaShouID({
+                    [getBaSyouID({
                       id: "AbsoluteBaSyou",
                       value: [PlayerA, "手札"],
                     })]: [],
-                    [getBaShouID({
+                    [getBaSyouID({
                       id: "AbsoluteBaSyou",
                       value: [PlayerA, "配備エリア"],
                     })]: [
@@ -459,7 +459,7 @@ export const OnViewModel = OnEvent.pipe(
                         tap: true,
                       },
                     ],
-                    [getBaShouID({
+                    [getBaSyouID({
                       id: "AbsoluteBaSyou",
                       value: [PlayerA, "Gゾーン"],
                     })]: [
@@ -492,7 +492,7 @@ export const OnViewModel = OnEvent.pipe(
                         tap: false,
                       },
                     ],
-                    [getBaShouID({
+                    [getBaSyouID({
                       id: "AbsoluteBaSyou",
                       value: [PlayerB, "戦闘エリア（左）"],
                     })]: [
@@ -524,7 +524,7 @@ export const OnViewModel = OnEvent.pipe(
                   ...ctx.gameState.table,
                   cardStack: {
                     ...ctx.gameState.table.cardStack,
-                    [getBaShouID({
+                    [getBaSyouID({
                       id: "AbsoluteBaSyou",
                       value: [PlayerA, "手札"],
                     })]: [
@@ -536,7 +536,7 @@ export const OnViewModel = OnEvent.pipe(
                         tap: false,
                       },
                     ],
-                    [getBaShouID({
+                    [getBaSyouID({
                       id: "AbsoluteBaSyou",
                       value: [PlayerA, "配備エリア"],
                     })]: [
@@ -548,7 +548,7 @@ export const OnViewModel = OnEvent.pipe(
                         tap: false,
                       },
                     ],
-                    [getBaShouID({
+                    [getBaSyouID({
                       id: "AbsoluteBaSyou",
                       value: [PlayerA, "戦闘エリア（左）"],
                     })]: [
@@ -567,7 +567,7 @@ export const OnViewModel = OnEvent.pipe(
                         tap: false,
                       },
                     ],
-                    [getBaShouID({
+                    [getBaSyouID({
                       id: "AbsoluteBaSyou",
                       value: [PlayerB, "戦闘エリア（左）"],
                     })]: [
@@ -586,7 +586,7 @@ export const OnViewModel = OnEvent.pipe(
                         tap: false,
                       },
                     ],
-                    [getBaShouID({
+                    [getBaSyouID({
                       id: "AbsoluteBaSyou",
                       value: [PlayerA, "Gゾーン"],
                     })]: [
@@ -698,13 +698,13 @@ export const OnViewModel = OnEvent.pipe(
             table = createCard(
               table,
               PlayerA,
-              getBaShouID({ id: "AbsoluteBaSyou", value: [PlayerA, "本国"] }),
+              getBaSyouID({ id: "AbsoluteBaSyou", value: [PlayerA, "本国"] }),
               deck
             );
             table = createCard(
               table,
               PlayerB,
-              getBaShouID({ id: "AbsoluteBaSyou", value: [PlayerB, "本国"] }),
+              getBaSyouID({ id: "AbsoluteBaSyou", value: [PlayerB, "本国"] }),
               deck
             );
             ctx = {

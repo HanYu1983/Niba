@@ -17,7 +17,7 @@ import {
 import { getCardCardTextState } from "../tool/alg/helper";
 import { getPrototype } from "../tool/alg/script";
 import {
-  getBaShouID,
+  getBaSyouID,
   PlayerA,
   PlayerB,
   Timing,
@@ -39,7 +39,7 @@ export function testProto_179015_04B_U_WT067C_white() {
         ...ctx.gameState.table,
         cardStack: {
           ...ctx.gameState.table.cardStack,
-          [getBaShouID({
+          [getBaSyouID({
             id: "AbsoluteBaSyou",
             value: [PlayerA, "配備エリア"],
           })]: [

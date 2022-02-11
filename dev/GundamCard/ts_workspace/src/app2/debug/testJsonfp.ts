@@ -1,7 +1,7 @@
 import { JsonfpExpr, jsonfp } from "../tool/alg/jsonfpHelper";
 import { createCard } from "../../tool/table";
 import { getCardState } from "../tool/alg/helper";
-import { getBaShouID, PlayerA } from "../tool/tool/basic/basic";
+import { getBaSyouID, PlayerA } from "../tool/tool/basic/basic";
 import { DEFAULT_GAME_CONTEXT } from "../tool/tool/basic/gameContext";
 
 export function testJsonfp() {
@@ -245,7 +245,7 @@ export function testJsonfp3() {
         ...ctx.gameState.table,
         cardStack: {
           ...ctx.gameState.table.cardStack,
-          [getBaShouID({
+          [getBaSyouID({
             id: "AbsoluteBaSyou",
             value: [PlayerA, "手札"],
           })]: [
@@ -257,7 +257,7 @@ export function testJsonfp3() {
               tap: false,
             },
           ],
-          [getBaShouID({
+          [getBaSyouID({
             id: "AbsoluteBaSyou",
             value: [PlayerA, "Gゾーン"],
           })]: [

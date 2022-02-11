@@ -19,10 +19,10 @@ import {
   RelatedBaSyou,
   getOpponentPlayerID,
   BattleBonus,
-  getBaShouID,
+  getBaSyouID,
   PlayerA,
 } from "./basic";
-import { getBaShou, TIMING_CHART } from "./basic";
+import { getBaSyou, TIMING_CHART } from "./basic";
 import { BlockPayload, Require, RequireAnd, RequireOr } from "./blockPayload";
 import { getCardBaSyou, getCardController } from "./handleCard";
 import { TargetType } from "./targetType";
@@ -339,8 +339,8 @@ export function checkIsBattle(ctx: GameContext): GameContext {
     { id: "AbsoluteBaSyou", value: [PlayerA, "戦闘エリア（右）"] },
   ];
   return battleAreas.reduce((ctx, battleArea) => {
-    const baSyouID1 = getBaShouID(battleArea);
-    const baSyouID2 = getBaShouID(getOpponentBattleArea(battleArea));
+    const baSyouID1 = getBaSyouID(battleArea);
+    const baSyouID2 = getBaSyouID(getOpponentBattleArea(battleArea));
     if (
       ctx.gameState.table.cardStack[baSyouID1]?.length &&
       ctx.gameState.table.cardStack[baSyouID2]?.length
@@ -377,13 +377,13 @@ export function isBattle(
   cardID2: string | null
 ): boolean {
   const baSyou1 = getCardBaSyou(ctx, cardID);
-  if (ctx.gameState.isBattle[getBaShouID(baSyou1)] != true) {
+  if (ctx.gameState.isBattle[getBaSyouID(baSyou1)] != true) {
     return false;
   }
   if (cardID2 != null) {
     const baSyou2 = getOpponentBattleArea(baSyou1);
     const isFindCardID2 =
-      ctx.gameState.table.cardStack[getBaShouID(baSyou2)].find((card) => {
+      ctx.gameState.table.cardStack[getBaSyouID(baSyou2)].find((card) => {
         return card.id == cardID2;
       }) != null;
     if (isFindCardID2 == false) {

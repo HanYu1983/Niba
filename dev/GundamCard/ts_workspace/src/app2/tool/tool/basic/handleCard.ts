@@ -3,7 +3,7 @@ import { GameContext } from "./gameContext";
 import {
   RelatedBaSyou,
   AbsoluteBaSyou,
-  getBaShou,
+  getBaSyou,
   PlayerID,
   CardColor,
   BaSyou,
@@ -58,7 +58,7 @@ export function getCardBaSyou(
   if (cardPosition == null) {
     throw new Error("[getController] cardPosition not found");
   }
-  return getBaShou(cardPosition);
+  return getBaSyou(cardPosition);
 }
 
 export function getCardController(ctx: GameContext, cardID: string): PlayerID {

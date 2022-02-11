@@ -3,8 +3,8 @@ import {
   AbsoluteBaSyou,
   BaSyouKeyword,
   CardColor,
-  getBaShou,
-  getBaShouID,
+  getBaSyou,
+  getBaSyouID,
   getOpponentPlayerID,
 } from "../tool/basic/basic";
 import {
@@ -48,7 +48,7 @@ export function doRequireCustom(
           return { id: "AbsoluteBaSyou", value: [myID, kw] };
         })
         .filter((baSyou) => {
-          const baSyouID = getBaShouID(baSyou);
+          const baSyouID = getBaSyouID(baSyou);
           const isBattle = ctx.gameState.isBattle[baSyouID];
           if (isBattle != true) {
             return false;

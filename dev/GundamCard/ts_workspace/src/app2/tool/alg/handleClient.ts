@@ -4,7 +4,7 @@ import {
   BattleAreaKeyword,
   CardText,
   GameEvent,
-  getBaShouID,
+  getBaSyouID,
   getNextTiming,
   getOpponentPlayerID,
   PlayerA,
@@ -618,7 +618,7 @@ export function applyFlow(
                   value: [plyrID, "本国"],
                 };
                 const fromCS =
-                  ctx.gameState.table.cardStack[getBaShouID(baSyou)];
+                  ctx.gameState.table.cardStack[getBaSyouID(baSyou)];
                 ctx = {
                   ...ctx,
                   gameState: {
@@ -627,7 +627,7 @@ export function applyFlow(
                       ...ctx.gameState.table,
                       cardStack: {
                         ...ctx.gameState.table.cardStack,
-                        [getBaShouID(baSyou)]: fromCS.sort(
+                        [getBaSyouID(baSyou)]: fromCS.sort(
                           () => Math.random() - 0.5
                         ),
                       },
@@ -642,7 +642,7 @@ export function applyFlow(
                   value: [plyrID, "本国"],
                 };
                 const fromCS =
-                  ctx.gameState.table.cardStack[getBaShouID(baSyou)];
+                  ctx.gameState.table.cardStack[getBaSyouID(baSyou)];
                 ctx = {
                   ...ctx,
                   gameState: {
@@ -651,7 +651,7 @@ export function applyFlow(
                       ...ctx.gameState.table,
                       cardStack: {
                         ...ctx.gameState.table.cardStack,
-                        [getBaShouID(baSyou)]: fromCS.sort(
+                        [getBaSyouID(baSyou)]: fromCS.sort(
                           () => Math.random() - 0.5
                         ),
                       },
@@ -691,12 +691,12 @@ export function applyFlow(
               //     id: "AbsoluteBaSyou",
               //     value: [plyrID, "本国"],
               //   };
-              //   const fromCS = ctx.gameState.table.cardStack[getBaShouID(baSyou)];
+              //   const fromCS = ctx.gameState.table.cardStack[getBaSyouID(baSyou)];
               //   const toBaSyou: AbsoluteBaSyou = {
               //     id: "AbsoluteBaSyou",
               //     value: [plyrID, "手札"],
               //   };
-              //   const toCS = ctx.gameState.table.cardStack[getBaShouID(toBaSyou)];
+              //   const toCS = ctx.gameState.table.cardStack[getBaSyouID(toBaSyou)];
               //   ctx = {
               //     ...ctx,
               //     gameState: {
@@ -705,8 +705,8 @@ export function applyFlow(
               //         ...ctx.gameState.table,
               //         cardStack: {
               //           ...ctx.gameState.table.cardStack,
-              //           [getBaShouID(baSyou)]: fromCS.slice(6),
-              //           [getBaShouID(toBaSyou)]: [...fromCS.slice(0, 6), ...toCS],
+              //           [getBaSyouID(baSyou)]: fromCS.slice(6),
+              //           [getBaSyouID(toBaSyou)]: [...fromCS.slice(0, 6), ...toCS],
               //         },
               //       },
               //     },
@@ -718,12 +718,12 @@ export function applyFlow(
               //     id: "AbsoluteBaSyou",
               //     value: [plyrID, "本国"],
               //   };
-              //   const fromCS = ctx.gameState.table.cardStack[getBaShouID(baSyou)];
+              //   const fromCS = ctx.gameState.table.cardStack[getBaSyouID(baSyou)];
               //   const toBaSyou: AbsoluteBaSyou = {
               //     id: "AbsoluteBaSyou",
               //     value: [plyrID, "手札"],
               //   };
-              //   const toCS = ctx.gameState.table.cardStack[getBaShouID(toBaSyou)];
+              //   const toCS = ctx.gameState.table.cardStack[getBaSyouID(toBaSyou)];
               //   ctx = {
               //     ...ctx,
               //     gameState: {
@@ -732,8 +732,8 @@ export function applyFlow(
               //         ...ctx.gameState.table,
               //         cardStack: {
               //           ...ctx.gameState.table.cardStack,
-              //           [getBaShouID(baSyou)]: fromCS.slice(6),
-              //           [getBaShouID(toBaSyou)]: [...fromCS.slice(0, 6), ...toCS],
+              //           [getBaSyouID(baSyou)]: fromCS.slice(6),
+              //           [getBaSyouID(toBaSyou)]: [...fromCS.slice(0, 6), ...toCS],
               //         },
               //       },
               //     },

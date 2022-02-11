@@ -1,5 +1,5 @@
 import {
-  getBaShouID,
+  getBaSyouID,
   CardColor,
   getNextTiming,
   isBa,
@@ -175,11 +175,11 @@ export function doRequireTargetActionTarget(
             },
           };
         }
-        const toBaSyouID = getBaShouID(toBaSyou);
+        const toBaSyouID = getBaSyouID(toBaSyou);
         const isToBa = isBa(toBaSyou.value[1]);
         ctx = cards.value.reduce((ctx, cardID) => {
           const fromBaSyou = getCardBaSyou(ctx, cardID);
-          const fromBaSyouID = getBaShouID(fromBaSyou);
+          const fromBaSyouID = getBaSyouID(fromBaSyou);
           const isFromBa = isBa(fromBaSyou.value[1]);
           const nextTable = moveCard(
             ctx.gameState.table,
@@ -376,8 +376,8 @@ export function doRequireTargetActionTarget(
           );
         }
         const ownerID = getCardOwner(ctx, cardID);
-        const fromBaSyouID = getBaShouID(getCardBaSyou(ctx, cardID));
-        const toBaSyouID = getBaShouID({
+        const fromBaSyouID = getBaSyouID(getCardBaSyou(ctx, cardID));
+        const toBaSyouID = getBaSyouID({
           id: "AbsoluteBaSyou",
           value: [ownerID, "捨て山"],
         });
@@ -391,11 +391,11 @@ export function doRequireTargetActionTarget(
       if (playerID == null) {
         throw new Error(`${playerID} not found`);
       }
-      const fromBaSyouID = getBaShouID({
+      const fromBaSyouID = getBaSyouID({
         id: "AbsoluteBaSyou",
         value: [playerID, "本国"],
       });
-      const toBaSyouID = getBaShouID({
+      const toBaSyouID = getBaSyouID({
         id: "AbsoluteBaSyou",
         value: [playerID, "手札"],
       });
@@ -425,11 +425,11 @@ export function doRequireTargetActionTarget(
       if (playerID == null) {
         throw new Error("playerID not found");
       }
-      const fromBaSyouID = getBaShouID({
+      const fromBaSyouID = getBaSyouID({
         id: "AbsoluteBaSyou",
         value: [playerID, "本国"],
       });
-      const toBaSyouID = getBaShouID({
+      const toBaSyouID = getBaSyouID({
         id: "AbsoluteBaSyou",
         value: [playerID, "手札"],
       });
@@ -545,10 +545,10 @@ export function doRequireTargetActionTarget(
           );
         }
         const fromBaSyou = getCardBaSyou(ctx, cardID);
-        const fromBaSyouID = getBaShouID(fromBaSyou);
+        const fromBaSyouID = getBaSyouID(fromBaSyou);
         const isFromBa = isBa(fromBaSyou.value[1]);
         const toBaSyou = getAbsoluteBaSyou(baSyou, ctx, cardID);
-        const toBaSyouID = getBaShouID(toBaSyou);
+        const toBaSyouID = getBaSyouID(toBaSyou);
         const isToBa = isBa(toBaSyou.value[1]);
         const nextTable = moveCard(
           ctx.gameState.table,
@@ -915,7 +915,7 @@ export function doRequireTargetActionTarget(
     }
     case "ActionCreateChip": {
       const playerID = getBlockOwner(ctx, blockPayload);
-      const baSyouID = getBaShouID({
+      const baSyouID = getBaSyouID({
         id: "AbsoluteBaSyou",
         value: [playerID, "配備エリア"],
       });
@@ -1064,8 +1064,8 @@ export function doRequireTargetActionTarget(
       // {
       //   // 移動cardA到cardB的位置
       //   const cardID = cardBValue;
-      //   const fromBaSyouID = getBaShouID(getCardBaSyou(ctx, cardID));
-      //   const toBaSyouID = getBaShouID(getCardBaSyou(ctx, cardAValue));
+      //   const fromBaSyouID = getBaSyouID(getCardBaSyou(ctx, cardID));
+      //   const toBaSyouID = getBaSyouID(getCardBaSyou(ctx, cardAValue));
       //   const nextTable = moveCard(
       //     ctx.gameState.table,
       //     fromBaSyouID,
@@ -1084,8 +1084,8 @@ export function doRequireTargetActionTarget(
       {
         // 直接廢棄cardB就行了，不必移動。因為卡被交換了
         const cardID = cardBValue;
-        const fromBaSyouID = getBaShouID(getCardBaSyou(ctx, cardID));
-        const toBaSyouID = getBaShouID({
+        const fromBaSyouID = getBaSyouID(getCardBaSyou(ctx, cardID));
+        const toBaSyouID = getBaSyouID({
           id: "AbsoluteBaSyou",
           value: [getCardOwner(ctx, cardID), "捨て山"],
         });

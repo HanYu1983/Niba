@@ -17,7 +17,7 @@ import {
 import { getCardBattlePoint } from "../tool/alg/helper";
 import { getPrototype } from "../tool/alg/script";
 import {
-  getBaShouID,
+  getBaSyouID,
   PlayerA,
   PlayerB,
   Timing,
@@ -39,7 +39,7 @@ export function testProto_179024_03B_U_WT057U_white() {
         ...ctx.gameState.table,
         cardStack: {
           ...ctx.gameState.table.cardStack,
-          [getBaShouID({
+          [getBaSyouID({
             id: "AbsoluteBaSyou",
             value: [PlayerA, "配備エリア"],
           })]: [
@@ -51,7 +51,7 @@ export function testProto_179024_03B_U_WT057U_white() {
               tap: false,
             },
           ],
-          [getBaShouID({
+          [getBaSyouID({
             id: "AbsoluteBaSyou",
             value: [PlayerA, "Gゾーン"],
           })]: [

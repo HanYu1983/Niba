@@ -17,7 +17,7 @@ import {
 import { getCardCoins } from "../tool/alg/helper";
 import { getPrototype } from "../tool/alg/script";
 import {
-  getBaShouID,
+  getBaSyouID,
   PlayerA,
   PlayerB,
   Timing,
@@ -39,7 +39,7 @@ export function testProto_179025_07D_O_GN019C_green() {
         ...ctx.gameState.table,
         cardStack: {
           ...ctx.gameState.table.cardStack,
-          [getBaShouID({
+          [getBaSyouID({
             id: "AbsoluteBaSyou",
             value: [PlayerA, "配備エリア"],
           })]: [
@@ -51,7 +51,7 @@ export function testProto_179025_07D_O_GN019C_green() {
               tap: false,
             },
           ],
-          [getBaShouID({
+          [getBaSyouID({
             id: "AbsoluteBaSyou",
             value: [PlayerB, "配備エリア"],
           })]: [
@@ -131,14 +131,14 @@ export function testProto_179025_07D_O_GN019C_green() {
   }
   if (
     ctx.gameState.table.cardStack[
-      getBaShouID({ id: "AbsoluteBaSyou", value: [PlayerA, "配備エリア"] })
+      getBaSyouID({ id: "AbsoluteBaSyou", value: [PlayerA, "配備エリア"] })
     ].length != 0
   ) {
     throw new Error("配置區必須沒有卡");
   }
   if (
     ctx.gameState.table.cardStack[
-      getBaShouID({ id: "AbsoluteBaSyou", value: [PlayerA, "ジャンクヤード"] })
+      getBaSyouID({ id: "AbsoluteBaSyou", value: [PlayerA, "ジャンクヤード"] })
     ].length != 1
   ) {
     throw new Error("廢棄庫必須有1張卡");

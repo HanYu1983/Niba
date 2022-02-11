@@ -8,7 +8,7 @@ import React, {
 } from "react";
 import { getTargetType } from "../../tool/alg/getTargetType";
 import { queryFlow, Flow } from "../../tool/alg/handleClient";
-import { getBaShou, getBaShouID } from "../../tool/tool/basic/basic";
+import { getBaSyou, getBaSyouID } from "../../tool/tool/basic/basic";
 import { BlockPayload, Require } from "../../tool/tool/basic/blockPayload";
 import { Condition } from "../../tool/tool/basic/condition";
 import { getBlockOwner, mapEffect } from "../../tool/tool/basic/gameContext";

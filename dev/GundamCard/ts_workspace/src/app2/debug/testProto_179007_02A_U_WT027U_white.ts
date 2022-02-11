@@ -16,7 +16,7 @@ import {
 } from "../tool/alg/handleGameContext";
 import { getPrototype } from "../tool/alg/script";
 import {
-  getBaShouID,
+  getBaSyouID,
   PlayerA,
   PlayerB,
   Timing,
@@ -38,7 +38,7 @@ export function testProto_179007_02A_U_WT027U_white() {
         ...ctx.gameState.table,
         cardStack: {
           ...ctx.gameState.table.cardStack,
-          [getBaShouID({
+          [getBaSyouID({
             id: "AbsoluteBaSyou",
             value: [PlayerA, "Gゾーン"],
           })]: [
@@ -79,7 +79,7 @@ export function testProto_179007_02A_U_WT027U_white() {
   console.log("效果沒有解決前先判斷狀態");
   if (
     ctx.gameState.table.cardStack[
-      getBaShouID({ id: "AbsoluteBaSyou", value: [PlayerA, "Gゾーン"] })
+      getBaSyouID({ id: "AbsoluteBaSyou", value: [PlayerA, "Gゾーン"] })
     ].length != 2
   ) {
     console.log(ctx);
@@ -87,7 +87,7 @@ export function testProto_179007_02A_U_WT027U_white() {
   }
   if (
     ctx.gameState.table.cardStack[
-      getBaShouID({ id: "AbsoluteBaSyou", value: [PlayerA, "配備エリア"] })
+      getBaSyouID({ id: "AbsoluteBaSyou", value: [PlayerA, "配備エリア"] })
     ].length != 0
   ) {
     console.log(ctx);
@@ -97,7 +97,7 @@ export function testProto_179007_02A_U_WT027U_white() {
   ctx = doBlockPayload(ctx, ctx.gameState.stackEffect[0]);
   if (
     ctx.gameState.table.cardStack[
-      getBaShouID({ id: "AbsoluteBaSyou", value: [PlayerA, "Gゾーン"] })
+      getBaSyouID({ id: "AbsoluteBaSyou", value: [PlayerA, "Gゾーン"] })
     ].length != 1
   ) {
     console.log(ctx);
@@ -105,7 +105,7 @@ export function testProto_179007_02A_U_WT027U_white() {
   }
   if (
     ctx.gameState.table.cardStack[
-      getBaShouID({ id: "AbsoluteBaSyou", value: [PlayerA, "配備エリア"] })
+      getBaSyouID({ id: "AbsoluteBaSyou", value: [PlayerA, "配備エリア"] })
     ].length != 1
   ) {
     console.log(ctx);

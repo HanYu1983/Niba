@@ -17,7 +17,7 @@ import {
 import { getCardBattlePoint, getCardState } from "../tool/alg/helper";
 import { getPrototype } from "../tool/alg/script";
 import {
-  getBaShouID,
+  getBaSyouID,
   PlayerA,
   PlayerB,
   Timing,
@@ -40,7 +40,7 @@ export function testProto_179030_11E_C_BL076S_blue() {
         ...ctx.gameState.table,
         cardStack: {
           ...ctx.gameState.table.cardStack,
-          [getBaShouID({
+          [getBaSyouID({
             id: "AbsoluteBaSyou",
             value: [PlayerA, "手札"],
           })]: [
@@ -52,7 +52,7 @@ export function testProto_179030_11E_C_BL076S_blue() {
               tap: false,
             },
           ],
-          [getBaShouID({
+          [getBaSyouID({
             id: "AbsoluteBaSyou",
             value: [PlayerA, "配備エリア"],
           })]: [
@@ -71,7 +71,7 @@ export function testProto_179030_11E_C_BL076S_blue() {
               tap: false,
             },
           ],
-          [getBaShouID({
+          [getBaSyouID({
             id: "AbsoluteBaSyou",
             value: [PlayerA, "戦闘エリア（右）"],
           })]: [
@@ -83,7 +83,7 @@ export function testProto_179030_11E_C_BL076S_blue() {
               tap: false,
             },
           ],
-          [getBaShouID({
+          [getBaSyouID({
             id: "AbsoluteBaSyou",
             value: [PlayerA, "Gゾーン"],
           })]: [
@@ -109,7 +109,7 @@ export function testProto_179030_11E_C_BL076S_blue() {
               tap: false,
             },
           ],
-          [getBaShouID({
+          [getBaSyouID({
             id: "AbsoluteBaSyou",
             value: [PlayerB, "戦闘エリア（右）"],
           })]: [
@@ -153,7 +153,7 @@ export function testProto_179030_11E_C_BL076S_blue() {
   ctx = checkIsBattle(ctx);
   if (
     ctx.gameState.isBattle[
-      getBaShouID({
+      getBaSyouID({
         id: "AbsoluteBaSyou",
         value: [PlayerA, "戦闘エリア（右）"],
       })

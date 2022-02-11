@@ -6,7 +6,7 @@ import {
   CardColor,
   CardRole,
   Coin,
-  getBaShouID,
+  getBaSyouID,
   getOpponentPlayerID,
   isBa,
   TokuSyuKouKa,
@@ -192,7 +192,7 @@ export function getTargetType(
           }
           switch (path[1]) {
             case "的「カード」":
-              const baSyouID = getBaShouID(targetType.value[0]);
+              const baSyouID = getBaSyouID(targetType.value[0]);
               return {
                 id: "カード",
                 value: ctx.gameState.table.cardStack[baSyouID].map((c) => c.id),
@@ -670,7 +670,7 @@ export function getTargetType(
                   value: [controller, "Gゾーン"],
                 };
                 const gCards =
-                  ctx.gameState.table.cardStack[getBaShouID(gBaSyou)];
+                  ctx.gameState.table.cardStack[getBaSyouID(gBaSyou)];
                 if (gCards == null) {
                   log2("getTargetType", "gBaSyou", gBaSyou);
                   throw new Error("gCards must find");

@@ -13,7 +13,7 @@ import {
 } from "../tool/alg/handleGameContext";
 import { Card, createCard } from "../../tool/table";
 import {
-  getBaShouID,
+  getBaSyouID,
   PlayerA,
   PlayerB,
   TIMING_CHART,
@@ -105,7 +105,7 @@ export function testBattleBonus() {
         ...ctx.gameState.table,
         cardStack: {
           ...ctx.gameState.table.cardStack,
-          [getBaShouID({
+          [getBaSyouID({
             id: "AbsoluteBaSyou",
             value: [PlayerA, "戦闘エリア（左）"],
           })]: [
@@ -124,7 +124,7 @@ export function testBattleBonus() {
               tap: false,
             },
           ],
-          [getBaShouID({
+          [getBaSyouID({
             id: "AbsoluteBaSyou",
             value: [PlayerB, "戦闘エリア（左）"],
           })]: [
@@ -237,7 +237,7 @@ export function testRequireJsonfp() {
         ...ctx.gameState.table,
         cardStack: {
           ...ctx.gameState.table.cardStack,
-          [getBaShouID({
+          [getBaSyouID({
             id: "AbsoluteBaSyou",
             value: [PlayerA, "手札"],
           })]: [
@@ -249,7 +249,7 @@ export function testRequireJsonfp() {
               tap: false,
             },
           ],
-          [getBaShouID({
+          [getBaSyouID({
             id: "AbsoluteBaSyou",
             value: [PlayerA, "Gゾーン"],
           })]: [
@@ -268,7 +268,7 @@ export function testRequireJsonfp() {
               tap: false,
             },
           ],
-          [getBaShouID({
+          [getBaSyouID({
             id: "AbsoluteBaSyou",
             value: [PlayerB, "戦闘エリア（右）"],
           })]: [
@@ -367,7 +367,7 @@ export function testTargetType() {
         ...ctx.gameState.table,
         cardStack: {
           ...ctx.gameState.table.cardStack,
-          [getBaShouID({
+          [getBaSyouID({
             id: "AbsoluteBaSyou",
             value: [PlayerA, "手札"],
           })]: [
@@ -499,7 +499,7 @@ export function testClientCommand2() {
   table = createCard(
     table,
     PlayerA,
-    getBaShouID({
+    getBaSyouID({
       id: "AbsoluteBaSyou",
       value: [PlayerA, "手札"],
     }),
@@ -530,7 +530,7 @@ export function testClientCommand2() {
       table: createCard(
         ctx.gameState.table,
         PlayerA,
-        getBaShouID({
+        getBaSyouID({
           id: "AbsoluteBaSyou",
           value: [PlayerA, "Gゾーン"],
         }),
@@ -562,14 +562,14 @@ export function testClientCommand2() {
   ctx = doEffect(ctx, PlayerA, playUnitCmd.id || "");
   if (
     ctx.gameState.table.cardStack[
-      getBaShouID({ id: "AbsoluteBaSyou", value: [PlayerA, "Gゾーン"] })
+      getBaSyouID({ id: "AbsoluteBaSyou", value: [PlayerA, "Gゾーン"] })
     ].filter((c) => c.tap).length != 1
   ) {
     console.log("必須横置1張國力");
   }
   if (
     ctx.gameState.table.cardStack[
-      getBaShouID({
+      getBaSyouID({
         id: "AbsoluteBaSyou",
         value: [PlayerA, "プレイされているカード"],
       })
@@ -585,7 +585,7 @@ export function testClientCommand() {
   table = createCard(
     table,
     PlayerA,
-    getBaShouID({
+    getBaSyouID({
       id: "AbsoluteBaSyou",
       value: [PlayerA, "手札"],
     }),
@@ -594,7 +594,7 @@ export function testClientCommand() {
   table = createCard(
     table,
     PlayerA,
-    getBaShouID({
+    getBaSyouID({
       id: "AbsoluteBaSyou",
       value: [PlayerA, "配備エリア"],
     }),
@@ -603,7 +603,7 @@ export function testClientCommand() {
   table = createCard(
     table,
     PlayerA,
-    getBaShouID({
+    getBaSyouID({
       id: "AbsoluteBaSyou",
       value: [PlayerB, "手札"],
     }),
@@ -665,7 +665,7 @@ export function testDryRun() {
   table = createCard(
     table,
     PlayerA,
-    getBaShouID({
+    getBaSyouID({
       id: "AbsoluteBaSyou",
       value: [PlayerA, "手札"],
     }),
@@ -679,7 +679,7 @@ export function testDryRun() {
   table = createCard(
     table,
     PlayerA,
-    getBaShouID({
+    getBaSyouID({
       id: "AbsoluteBaSyou",
       value: [PlayerB, "手札"],
     }),

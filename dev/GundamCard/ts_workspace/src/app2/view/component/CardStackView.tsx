@@ -2,7 +2,7 @@ import React, { useContext, useMemo, HTMLAttributes } from "react";
 import { CardView } from "./CardView";
 import { AppContext } from "../tool/appContext";
 import { OnEvent } from "../tool/appContext/eventCenter";
-import { AbsoluteBaSyou, getBaShouID } from "../../tool/tool/basic/basic";
+import { AbsoluteBaSyou, getBaSyouID } from "../../tool/tool/basic/basic";
 
 const CARD_SIZE = 100;
 
@@ -14,7 +14,7 @@ export const CardStackView = (props: {
   const cards = useMemo(() => {
     return (
       appContext.viewModel.model.gameState.table.cardStack[
-        getBaShouID(props.cardPosition)
+        getBaSyouID(props.cardPosition)
       ] || []
     );
   }, [
@@ -28,7 +28,7 @@ export const CardStackView = (props: {
     });
   }, [cards, appContext.viewModel.model.gameState.setGroupLink]);
   const render = useMemo(() => {
-    const _cardPositionID = getBaShouID(props.cardPosition);
+    const _cardPositionID = getBaSyouID(props.cardPosition);
     return (
       <div
         style={{

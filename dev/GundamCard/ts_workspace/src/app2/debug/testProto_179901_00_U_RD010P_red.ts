@@ -16,7 +16,7 @@ import {
 } from "../tool/alg/handleGameContext";
 import { getPrototype } from "../tool/alg/script";
 import {
-  getBaShouID,
+  getBaSyouID,
   PlayerA,
   PlayerB,
   TIMING_CHART,
@@ -34,7 +34,7 @@ export function testProto_179901_00_U_RD010P_red() {
   table = createCard(
     table,
     PlayerA,
-    getBaShouID({
+    getBaSyouID({
       id: "AbsoluteBaSyou",
       value: [PlayerA, "手札"],
     }),
@@ -44,7 +44,7 @@ export function testProto_179901_00_U_RD010P_red() {
   table = createCard(
     table,
     PlayerA,
-    getBaShouID({
+    getBaSyouID({
       id: "AbsoluteBaSyou",
       value: [PlayerA, "Gゾーン"],
     }),
@@ -54,7 +54,7 @@ export function testProto_179901_00_U_RD010P_red() {
   table = createCard(
     table,
     PlayerB,
-    getBaShouID({
+    getBaSyouID({
       id: "AbsoluteBaSyou",
       value: [PlayerB, "プレイされているカード"],
     }),
@@ -63,7 +63,7 @@ export function testProto_179901_00_U_RD010P_red() {
   table = createCard(
     table,
     PlayerB,
-    getBaShouID({
+    getBaSyouID({
       id: "AbsoluteBaSyou",
       value: [PlayerB, "戦闘エリア（右）"],
     }),
