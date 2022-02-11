@@ -1,117 +1,114 @@
 const { parse } = require("csv");
-const fs = require('fs')
+const fs = require("fs");
 
-const table1 = `1	大手裡劍	2	刺擊-劍	4	3	遠招	2	火投擲	火-燒傷5	外功3
-1	大手裡劍	2	刺擊-劍	4	3	遠招	2	水投擲	水-冰凍5	外功3
-1	忍具	1	防具-飾	2	2	遠招	1	吹箭	雷-麻痺2	外功1.
-1	忍具	1	防具-飾	2	2	反應	3	替身術	無	對方外功攻擊時可以使用, 廢棄1個防具. 對方的攻擊失效.
-1	忍具	1	防具-飾	2	2	氣場	2	投擲大師	無	使用名稱中有投擲的遠招時, 那個遠招的外功+1.
-1	神羅裝束	1	防具-衣	2	2	氣場	2	架勢	無	敵軍配置時可以支付這張卡上的1氣，重置自己重量3以上的武器。
-1	神羅裝束	1	防具-衣	2	2	氣場	4	元士兵	無	自己回合開始時氣+3.連技時不需要橫置武器。
-1	鬼劍	3	斬擊-刀	5	5	近招	斬0/1/2	鬼斬	暗-暗闇6	內攻+6/8/10.
-1	鬼劍	3	斬擊-刀	5	5	遠招	斬0/1/2	三日月斬	暗-暗闇6	內攻+6/8/10.
-1	鬼劍	3	斬擊-刀	5	5	氣場	斬1	血之宿命	暗-暗闇6	移除這張卡。回復X血。X為這回合造成的傷害。X最多為10.
-1	鬼劍	3	斬擊-刀	5	5	氣場	斬1	闇擊氣場	暗-暗闇6	敵軍反應步時可以宣告。支付2血。機率4: 造成的傷害+X。X為本來造成的傷害。X為多為6.
-1	鬼劍	3	斬擊-刀	5	5	氣功	2	覇體	無	下次的攻擊在對抗外攻時一定生效。對方的對抗值改為對對抗對象的傷害。
-1	鬼劍	3	斬擊-刀	5	5	防招	斬0/1/2	擋劈	無	外功+4/6/8. 宣告時氣+1.
-1	鬼劍	3	斬擊-刀	5	5	近招	斬2	靈魂鬼斬	暗-暗闇6	內攻10. 宣告對象有暗闇時, 這招的氣費用變成0. 對象因為這招的效果產生暗闇狀態的話, 使用這招的人回2氣.
-1	魔術帽	1	防具-頭	1	3	氣場	2	魔消	無	對方內功攻擊的反應宣告時可以當成反應使用. 進攻方內功傷害變成0. 這張卡廢棄. 
-1	魔術帽	1	防具-頭	1	3	氣場	4	魔反	無	對方內功攻擊的反應宣告時可以當成反應使用. 進攻方內功傷害變成0. 這張卡廢棄. 進攻方-x血, x為進攻方的內攻值. x最多不超過6.`;
+const table1 = `1	雙頭鋼棍	3	打擊-棍	7	3	近招	打0/1/2	重力棍擊	打-昏眩2	外功+2/4/6
+1	雙頭鋼棍	3	打擊-棍	7	3	近招	打腿0/1/2	猛力揮擊	打-昏眩2	外功+2/4/6
+1	雙頭鋼棍	3	打擊-棍	7	3	氣場	2	雙頭連擊	無	接招步可以1氣。使出外功4的招式。
+1	雙頭鋼棍	3	打擊-棍	7	3	氣場	2	爆裂棍擊	打-昏眩2	對方受傷時可以1氣。對方-3血。
+1	雙頭鋼棍	3	打擊-棍	7	3	防招	打腿0/1/2	震地擊	打-昏眩2	外功+4/6/8。這張卡成功打贏交戰時，對方行動力-1.
+1	猛士披挂	1	防具-衣	2	2	氣功	2	猛烈撞擊	無	敵人抽牌階段可以使用。敵人-2體力。
+1	猛士披挂	1	防具-衣	2	2	氣場	1	蓄力	無	這張卡在招式宣告步可以當成【腿 2 2】來支付招式。
+1	練甲	1	防具-衣	3	1	氣場	3	迅如雷	雷-麻痺2	使用回避時可以1氣。動作消耗-1。
+1	練甲	1	防具-衣	3	1	氣功	2	徐如風	風-撕裂7	自配置步使用。回復1行動力。3血。
+1	法杖	2	打擊-棍	2	5	氣功	打	治療術	光-封印3	指定玩家回復憑依武器内功+2的血量
+1	法杖	2	打擊-棍	2	5	遠招	打0/1/2	火球術	火-燒傷7	内功+6/8/10
+1	法杖	2	打擊-棍	2	5	遠招	打0/1/2	冰凍術	水-冰凍7	内功+6/8/10
+1	法杖	2	打擊-棍	2	5	氣功	4	活化術	無	重置1個武器. 回復x氣. x為武器重量. 但那個武器這回合不能出擊. 
+1	柔術道服	1	防具-衣	2	2	氣功	1	進攻心法	無	本國看4張, 抽出1張近招或遠招展示後回手. 其餘回本國洗牌.
+1	柔術道服	1	防具-衣	2	2	氣功	1	回避心法	無	本國看4張, 抽出1張防招或反應展示後回手. 其餘回本國洗牌.
+1	武器大師裝束	1	防具-衣	3	1	防招	全0/1/2	武器格擋	無	外功+6/8/10`;
 
-const table2 = `1	練甲	1	防具-衣	3	1	防招	全0/1/2	侵略如火	火-燒傷5	外功+4/6/8。下一次自己的變招少2氣支付。
-1	練甲	1	防具-衣	3	1	氣功	2	徐如風	風-撕裂5	自配置步使用。回復1行動力。3血。
-1	練甲	1	防具-衣	3	1	氣場	2	迅如雷	雷-麻痺2	使用回避時可以1氣。回避機率+1。動作消耗-1。
-1	練甲	1	防具-衣	3	1	反應	3	不動如山	地-昏眩2	本次傷害-6。免疫本次的狀態攻擊。
-1	練甲	1	防具-衣	3	1	氣場	3	俠客行	無	出擊時1氣，指定一把自己重量2的武器，他可以跟任意一重量爲1的武器聯合。這個效果一次出擊可以最多用到2氣。
-1	鉄劍	2	刺擊-劍	5	2	近招	刺0/1/2	刺劍	無	外功+2/4/6
-1	鉄劍	2	刺擊-劍	5	2	防招	刺0/1/2	挑劍	無	外功+6/8/10.
-1	黑風拳套	1	格鬥-拳	2	2	近招	格0/1/2	闇擊掌	暗-暗闇6	外功+2/4/6.
-1	黑風拳套	1	格鬥-拳	2	2	遠招	格格0/1/2	炎魔天爆地熱	火-燒傷5	外功+2/4/6 對方行動力-1. 氣-2.
-1	黑風拳套	1	格鬥-拳	2	2	近招	格0/1/2	九宮連環手	無	內功+6/8/10.
-1	黑風拳套	1	格鬥-拳	2	2	氣場	格格0	紫霞諸滅	無	自己回合的第一擊外功+2.
-1	黑風拳套	1	格鬥-拳	2	2	防招	格格0/1/2	防禦氣功	光-封印3	外功+6/8/10.
-1	黑風拳套	1	格鬥-拳	2	2	反應	格格0	閃避	無	閃躲7.
-1	大手裡劍	2	刺擊-劍	4	3	遠招	2	風投擲	風-撕裂5	外功3
-1	大手裡劍	2	刺擊-劍	4	3	遠招	2	火投擲	火-燒傷5	外功3
-1	大手裡劍	2	刺擊-劍	4	3	遠招	2	水投擲	水-冰凍5	外功3`
-
+const table2 = `1	法杖	2	打擊-短	2	5	氣功	打	治療術	光-封印3	指定玩家回復憑依武器内功+2的血量
+1	法杖	2	打擊-短	2	5	遠招	打0/1/2	火球術	火-燒傷7	内功+6/8/10
+1	法杖	2	打擊-短	2	5	遠招	打0/1/2	冰凍術	水-冰凍7	内功+6/8/10
+1	法杖	2	打擊-短	2	5	氣功	2	活化術	無	重置1個武器. 回復x氣. x為武器重量. 但那個武器這回合不能出擊. 
+1	羽毛帽	1	防具-頭	2	2	反應	2	警戒	無	只能在敵軍回合用. 這回合剩下的所有敵人的打人判定都機率6失效.
+1	道具	1	防具-飾	2	2	氣場	2	高級回復藥	無	廢棄這張卡，那個時候回6血。剛出場的回合不能使用。這個氣場可以重復。
+1	道具	1	防具-飾	2	2	氣場	2	高級以太	無	廢棄這張卡，那個時候回4氣。剛出場的回合不能使用。這個氣場可以重復。
+1	背包	2	打擊-包	4	3	反應	0	自動回復藥	無	指定一個名稱為道具的氣場，若那個內文可以解決就解決。不然就廢棄那個氣場，回3血。
+1	背包	2	打擊-包	4	3	氣功	3	道具投擲	無	展示一張手牌中名稱為道具的卡，廢棄那張卡並直接解決那張卡的內文。
+1	背包	2	打擊-包	4	3	氣場	2	道具維護	無	這氣場在場時，對方在選擇破壞防具與偷防具的對象時，一定要選這張。若那個效果生效時，取代生效的結果，改為廢棄這張卡。這個氣場可以重復。
+1	背包	2	打擊-包	4	3	氣功	0	裝備變更	無	無條件將自己手上合計重量為x的武器直立放到配置區，收回自己場上所有武器。x為自己場上所有直立武器的重量合計加1或減1.
+1	背包	2	打擊-包	4	3	氣場	2	發現道具移動	無	抽牌階段時，若抽到名稱為道具的卡時，展示那張卡。那個時候抽一張。
+1	白帶	1	防具-飾	2	2	氣功	2	蓄力	無	下一次判定外功+2. 這個效果可以重復。
+1	白帶	1	防具-飾	2	2	反應	2	衝擊反擊	無	自己有穿防具時可以使用。機率x對方一個武器脫手。x為自己防具外功值的總合的2倍。
+1	白帶	1	防具-飾	2	2	氣場	2	防禦	無	這個氣場在場時，自己不能出擊。自己回合結束時支付1氣。不必支付行動力就可以使用閃避。
+1	白帶	1	防具-飾	2	2	氣功	1	取得氣力UP	無	下一次判定成功時。氣力+2並抽1張。`;
 
 genJson(table1, "table1.json", (err) => {
-    if (err) {
-        throw err
-    }
-    console.log("table1 ok")
-})
+  if (err) {
+    throw err;
+  }
+  console.log("table1 ok");
+});
 genJson(table2, "table2.json", (err) => {
-    if (err) {
-        throw err
-    }
-    console.log("table2 ok")
-})
+  if (err) {
+    throw err;
+  }
+  console.log("table2 ok");
+});
 
 function genJson(table, output, cb) {
-    parse(table, { delimiter: "\t" }, (err, data) => {
-        if (err) {
-            throw err;
-        }
-        const cards = data.map(
-            ([
-                id,
-                title,
-                weight,
-                attackType,
-                outsidePower,
-                insidePower,
-                skillType,
-                skillCost,
-                skillName,
-                skillMana,
-                skillText,
-            ]) => {
-                const colorMapping = {
-                    "近招": "red",
-                    "遠招": "FloralWhite",
-                    "氣功": "gainsboro",
-                    "氣場": "grey",
-                    "防招": "green",
-                    "反應": "yellow"
-                }
-                return getCardJson({
-                    id,
-                    title,
-                    weight,
-                    attackType,
-                    outsidePower,
-                    insidePower,
-                    skillType,
-                    skillCost,
-                    skillName,
-                    skillText,
-                    skillMana,
-                    color: colorMapping[skillType],
-                });
-            }
-        );
-        fs.writeFile(output, JSON.stringify(cards, null, 2), err => {
-            cb(err)
-        })
+  parse(table, { delimiter: "\t" }, (err, data) => {
+    if (err) {
+      throw err;
+    }
+    const cards = data.map(
+      ([
+        id,
+        title,
+        weight,
+        attackType,
+        outsidePower,
+        insidePower,
+        skillType,
+        skillCost,
+        skillName,
+        skillMana,
+        skillText,
+      ]) => {
+        const colorMapping = {
+          近招: "red",
+          遠招: "yellow",
+          氣功: "white",
+          氣場: "LightGray",
+          防招: "green",
+          反應: "Fuchsia",
+        };
+        return getCardJson({
+          id,
+          title,
+          weight,
+          attackType,
+          outsidePower,
+          insidePower,
+          skillType,
+          skillCost,
+          skillName,
+          skillText,
+          skillMana,
+          color: colorMapping[skillType],
+        });
+      }
+    );
+    fs.writeFile(output, JSON.stringify(cards, null, 2), (err) => {
+      cb(err);
     });
+  });
 }
 
-
-
 function getCardJson(info) {
-    return {
-        type: "data",
-        width: 50,
-        height: 75,
-        pos: [100, 100],
-        back: true,
-        lock: false,
-        count: 3,
-        extra: [
-            `<div style='overflow:hidden;background-color:${info.color}; width:100%; height:100%; left:0; top:0; text-align:right'>${info.title}<br>重${info.weight}<br>${info.attackType} ${info.outsidePower} ${info.insidePower}<br>${info.skillName}<br>${info.skillMana} ${info.skillType} ${info.skillCost}</div>`,
-            info.skillText,
-        ],
-    };
+  return {
+    type: "data",
+    width: 50,
+    height: 75,
+    pos: [100, 100],
+    back: true,
+    lock: false,
+    count: 3,
+    extra: [
+      `<div style='overflow:hidden;background-color:${info.color}; width:100%; height:100%; left:0; top:0; text-align:right'>${info.title}<br>重${info.weight}<br>${info.attackType} ${info.outsidePower} ${info.insidePower}<br>${info.skillName}<br>${info.skillMana} ${info.skillType} ${info.skillCost}</div>`,
+      info.skillText,
+    ],
+  };
 }
