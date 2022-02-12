@@ -1,0 +1,258 @@
+[
+  {
+    "type": "data",
+    "width": 50,
+    "height": 75,
+    "pos": [
+      100,
+      100
+    ],
+    "back": true,
+    "lock": false,
+    "count": 3,
+    "extra": [
+      "<div style='overflow:hidden;background-color:yellow; width:100%; height:100%; left:0; top:0; text-align:right'>法杖<br>重2<br>打擊-短 2 5<br>火球術<br>火-燒傷7 遠招 打0/1/2</div>",
+      "内功*1/2/3"
+    ]
+  },
+  {
+    "type": "data",
+    "width": 50,
+    "height": 75,
+    "pos": [
+      100,
+      100
+    ],
+    "back": true,
+    "lock": false,
+    "count": 3,
+    "extra": [
+      "<div style='overflow:hidden;background-color:yellow; width:100%; height:100%; left:0; top:0; text-align:right'>法杖<br>重2<br>打擊-短 2 5<br>雷電術<br>雷-麻痺5 遠招 打0/1/2</div>",
+      "内功*1/2/3"
+    ]
+  },
+  {
+    "type": "data",
+    "width": 50,
+    "height": 75,
+    "pos": [
+      100,
+      100
+    ],
+    "back": true,
+    "lock": false,
+    "count": 3,
+    "extra": [
+      "<div style='overflow:hidden;background-color:yellow; width:100%; height:100%; left:0; top:0; text-align:right'>法杖<br>重2<br>打擊-短 2 5<br>颶風術<br>風-撕裂7 遠招 打0/1/2</div>",
+      "内功*1/2/3"
+    ]
+  },
+  {
+    "type": "data",
+    "width": 50,
+    "height": 75,
+    "pos": [
+      100,
+      100
+    ],
+    "back": true,
+    "lock": false,
+    "count": 3,
+    "extra": [
+      "<div style='overflow:hidden;background-color:yellow; width:100%; height:100%; left:0; top:0; text-align:right'>法杖<br>重2<br>打擊-短 2 5<br>地震術<br>地-石化5 遠招 打0/1/2</div>",
+      "内功*1/2/3"
+    ]
+  },
+  {
+    "type": "data",
+    "width": 50,
+    "height": 75,
+    "pos": [
+      100,
+      100
+    ],
+    "back": true,
+    "lock": false,
+    "count": 3,
+    "extra": [
+      "<div style='overflow:hidden;background-color:yellow; width:100%; height:100%; left:0; top:0; text-align:right'>法杖<br>重2<br>打擊-短 2 5<br>猛毒術<br>毒-中毒8 遠招 打0/1/2</div>",
+      "内功*1/2/3"
+    ]
+  },
+  {
+    "type": "data",
+    "width": 50,
+    "height": 75,
+    "pos": [
+      100,
+      100
+    ],
+    "back": true,
+    "lock": false,
+    "count": 3,
+    "extra": [
+      "<div style='overflow:hidden;background-color:yellow; width:100%; height:100%; left:0; top:0; text-align:right'>法杖<br>重2<br>打擊-短 2 5<br>聖光束<br>光-封印5 遠招 打0/1/2</div>",
+      "内功*1/2/3"
+    ]
+  },
+  {
+    "type": "data",
+    "width": 50,
+    "height": 75,
+    "pos": [
+      100,
+      100
+    ],
+    "back": true,
+    "lock": false,
+    "count": 3,
+    "extra": [
+      "<div style='overflow:hidden;background-color:yellow; width:100%; height:100%; left:0; top:0; text-align:right'>法杖<br>重2<br>打擊-短 2 5<br>冰凍術<br>水-冰凍5 遠招 打0/1/2</div>",
+      "内功*1/2/3"
+    ]
+  },
+  {
+    "type": "data",
+    "width": 50,
+    "height": 75,
+    "pos": [
+      100,
+      100
+    ],
+    "back": true,
+    "lock": false,
+    "count": 3,
+    "extra": [
+      "<div style='overflow:hidden;background-color:LightGray; width:100%; height:100%; left:0; top:0; text-align:right'>道具<br>重1<br>防具-飾 2 2<br>超級回復藥<br>無 氣場 3</div>",
+      "廢棄這張卡，那個時候回6血。剛出場回合不能使用。這個氣場可以重復。這張卡可以從手牌廢棄並抽1張."
+    ]
+  },
+  {
+    "type": "data",
+    "width": 50,
+    "height": 75,
+    "pos": [
+      100,
+      100
+    ],
+    "back": true,
+    "lock": false,
+    "count": 3,
+    "extra": [
+      "<div style='overflow:hidden;background-color:LightGray; width:100%; height:100%; left:0; top:0; text-align:right'>道具<br>重1<br>防具-飾 2 2<br>高級以太<br>無 氣場 2</div>",
+      "廢棄這張卡，那個時候回4氣。剛出場回合不能使用。這個氣場可以重復。這張卡可以從手牌廢棄並抽1張."
+    ]
+  },
+  {
+    "type": "data",
+    "width": 50,
+    "height": 75,
+    "pos": [
+      100,
+      100
+    ],
+    "back": true,
+    "lock": false,
+    "count": 3,
+    "extra": [
+      "<div style='overflow:hidden;background-color:LightGray; width:100%; height:100%; left:0; top:0; text-align:right'>道具<br>重1<br>防具-飾 2 2<br>聖靈藥<br>無 氣場 4</div>",
+      "廢棄這張卡，那個時候回6血, 回2氣。剛出場回合不能使用。這個氣場可以重復。這張卡可以從手牌廢棄並抽1張."
+    ]
+  },
+  {
+    "type": "data",
+    "width": 50,
+    "height": 75,
+    "pos": [
+      100,
+      100
+    ],
+    "back": true,
+    "lock": false,
+    "count": 3,
+    "extra": [
+      "<div style='overflow:hidden;background-color:LightGray; width:100%; height:100%; left:0; top:0; text-align:right'>道具<br>重1<br>防具-飾 2 2<br>不死鳥之尾<br>無 氣場 1</div>",
+      "頻死時才能使用。回復3血。剛出場回合不能使用。這個氣場可以重復。這張卡可以從手牌廢棄並抽1張."
+    ]
+  },
+  {
+    "type": "data",
+    "width": 50,
+    "height": 75,
+    "pos": [
+      100,
+      100
+    ],
+    "back": true,
+    "lock": false,
+    "count": 3,
+    "extra": [
+      "<div style='overflow:hidden;background-color:Fuchsia; width:100%; height:100%; left:0; top:0; text-align:right'>背包<br>重2<br>打擊-包 4 3<br>自動回復藥<br>無 反應 1</div>",
+      "展示一張手牌中名稱為道具的卡，那張卡回到本國洗牌, 並直接解決那張卡的內文。解決完後抽1張."
+    ]
+  },
+  {
+    "type": "data",
+    "width": 50,
+    "height": 75,
+    "pos": [
+      100,
+      100
+    ],
+    "back": true,
+    "lock": false,
+    "count": 3,
+    "extra": [
+      "<div style='overflow:hidden;background-color:white; width:100%; height:100%; left:0; top:0; text-align:right'>背包<br>重2<br>打擊-包 4 3<br>道具投擲<br>無 氣功 3</div>",
+      "展示一張手牌中名稱為道具的卡，那張卡回到本國洗牌, 並直接解決那張卡的內文。解決完後抽1張."
+    ]
+  },
+  {
+    "type": "data",
+    "width": 50,
+    "height": 75,
+    "pos": [
+      100,
+      100
+    ],
+    "back": true,
+    "lock": false,
+    "count": 3,
+    "extra": [
+      "<div style='overflow:hidden;background-color:LightGray; width:100%; height:100%; left:0; top:0; text-align:right'>道具<br>重1<br>防具-飾 2 2<br>萬能藥<br>無 氣場 3</div>",
+      "自己有狀態時才能使用。廢棄這張卡，移除一個狀態並抽1張。剛出場的回合不能使用, 出場時抽1張。這個氣場可以重復。"
+    ]
+  },
+  {
+    "type": "data",
+    "width": 50,
+    "height": 75,
+    "pos": [
+      100,
+      100
+    ],
+    "back": true,
+    "lock": false,
+    "count": 3,
+    "extra": [
+      "<div style='overflow:hidden;background-color:Fuchsia; width:100%; height:100%; left:0; top:0; text-align:right'>白帶<br>重1<br>防具-飾 2 2<br>衝擊反擊<br>無 反應 2</div>",
+      "自己有穿防具時可以使用。機率x對方一個武器脫手。x為自己防具外功值的總合的2倍。"
+    ]
+  },
+  {
+    "type": "data",
+    "width": 50,
+    "height": 75,
+    "pos": [
+      100,
+      100
+    ],
+    "back": true,
+    "lock": false,
+    "count": 3,
+    "extra": [
+      "<div style='overflow:hidden;background-color:LightGray; width:100%; height:100%; left:0; top:0; text-align:right'>背包<br>重2<br>打擊-包 4 3<br>發現道具移動<br>無 氣場 1</div>",
+      "抽牌時, 如果是防具卡, 展示它並抽1張. "
+    ]
+  }
+]

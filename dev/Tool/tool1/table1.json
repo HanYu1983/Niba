@@ -11,8 +11,8 @@
     "lock": false,
     "count": 3,
     "extra": [
-      "<div style='overflow:hidden;background-color:yellow; width:100%; height:100%; left:0; top:0; text-align:right'>法杖<br>重2<br>打擊-短 2 5<br>火球術<br>火-燒傷7 遠招 打0/1/2</div>",
-      "内功*1/2/3"
+      "<div style='overflow:hidden;background-color:LightGray; width:100%; height:100%; left:0; top:0; text-align:right'>道具<br>重1<br>防具-飾 2 2<br>以太<br>無 氣場 1</div>",
+      "廢棄這張卡，那個時候回2氣。剛出場回合不能使用。這個氣場可以重復。這張卡可以從手牌廢棄並抽1張."
     ]
   },
   {
@@ -27,215 +27,7 @@
     "lock": false,
     "count": 3,
     "extra": [
-      "<div style='overflow:hidden;background-color:yellow; width:100%; height:100%; left:0; top:0; text-align:right'>法杖<br>重2<br>打擊-短 2 5<br>雷電術<br>雷-麻痺5 遠招 打0/1/2</div>",
-      "内功*1/2/3"
-    ]
-  },
-  {
-    "type": "data",
-    "width": 50,
-    "height": 75,
-    "pos": [
-      100,
-      100
-    ],
-    "back": true,
-    "lock": false,
-    "count": 3,
-    "extra": [
-      "<div style='overflow:hidden;background-color:yellow; width:100%; height:100%; left:0; top:0; text-align:right'>法杖<br>重2<br>打擊-短 2 5<br>颶風術<br>風-撕裂7 遠招 打0/1/2</div>",
-      "内功*1/2/3"
-    ]
-  },
-  {
-    "type": "data",
-    "width": 50,
-    "height": 75,
-    "pos": [
-      100,
-      100
-    ],
-    "back": true,
-    "lock": false,
-    "count": 3,
-    "extra": [
-      "<div style='overflow:hidden;background-color:yellow; width:100%; height:100%; left:0; top:0; text-align:right'>法杖<br>重2<br>打擊-短 2 5<br>地震術<br>地-石化5 遠招 打0/1/2</div>",
-      "内功*1/2/3"
-    ]
-  },
-  {
-    "type": "data",
-    "width": 50,
-    "height": 75,
-    "pos": [
-      100,
-      100
-    ],
-    "back": true,
-    "lock": false,
-    "count": 3,
-    "extra": [
-      "<div style='overflow:hidden;background-color:yellow; width:100%; height:100%; left:0; top:0; text-align:right'>法杖<br>重2<br>打擊-短 2 5<br>猛毒術<br>毒-中毒8 遠招 打0/1/2</div>",
-      "内功*1/2/3"
-    ]
-  },
-  {
-    "type": "data",
-    "width": 50,
-    "height": 75,
-    "pos": [
-      100,
-      100
-    ],
-    "back": true,
-    "lock": false,
-    "count": 3,
-    "extra": [
-      "<div style='overflow:hidden;background-color:yellow; width:100%; height:100%; left:0; top:0; text-align:right'>法杖<br>重2<br>打擊-短 2 5<br>聖光束<br>光-封印5 遠招 打0/1/2</div>",
-      "内功*1/2/3"
-    ]
-  },
-  {
-    "type": "data",
-    "width": 50,
-    "height": 75,
-    "pos": [
-      100,
-      100
-    ],
-    "back": true,
-    "lock": false,
-    "count": 3,
-    "extra": [
-      "<div style='overflow:hidden;background-color:yellow; width:100%; height:100%; left:0; top:0; text-align:right'>法杖<br>重2<br>打擊-短 2 5<br>冰凍術<br>水-冰凍5 遠招 打0/1/2</div>",
-      "内功*1/2/3"
-    ]
-  },
-  {
-    "type": "data",
-    "width": 50,
-    "height": 75,
-    "pos": [
-      100,
-      100
-    ],
-    "back": true,
-    "lock": false,
-    "count": 3,
-    "extra": [
-      "<div style='overflow:hidden;background-color:LightGray; width:100%; height:100%; left:0; top:0; text-align:right'>道具<br>重1<br>防具-飾 2 2<br>超級回復藥<br>無 氣場 3</div>",
-      "廢棄這張卡，那個時候回9血。剛出場回合的配置步不能使用。這個氣場可以重復。這張卡可以從手牌廢棄並抽1張."
-    ]
-  },
-  {
-    "type": "data",
-    "width": 50,
-    "height": 75,
-    "pos": [
-      100,
-      100
-    ],
-    "back": true,
-    "lock": false,
-    "count": 3,
-    "extra": [
-      "<div style='overflow:hidden;background-color:LightGray; width:100%; height:100%; left:0; top:0; text-align:right'>道具<br>重1<br>防具-飾 2 2<br>高級以太<br>無 氣場 2</div>",
-      "廢棄這張卡，那個時候回4氣。剛出場回合的配置步不能使用。這個氣場可以重復。這張卡可以從手牌廢棄並抽1張."
-    ]
-  },
-  {
-    "type": "data",
-    "width": 50,
-    "height": 75,
-    "pos": [
-      100,
-      100
-    ],
-    "back": true,
-    "lock": false,
-    "count": 3,
-    "extra": [
-      "<div style='overflow:hidden;background-color:LightGray; width:100%; height:100%; left:0; top:0; text-align:right'>道具<br>重1<br>防具-飾 2 2<br>聖靈藥<br>無 氣場 4</div>",
-      "廢棄這張卡，那個時候回9血, 回2氣。剛出場回合的配置步不能使用。這個氣場可以重復。這張卡可以從手牌廢棄並抽1張."
-    ]
-  },
-  {
-    "type": "data",
-    "width": 50,
-    "height": 75,
-    "pos": [
-      100,
-      100
-    ],
-    "back": true,
-    "lock": false,
-    "count": 3,
-    "extra": [
-      "<div style='overflow:hidden;background-color:LightGray; width:100%; height:100%; left:0; top:0; text-align:right'>道具<br>重1<br>防具-飾 2 2<br>不死鳥之尾<br>無 氣場 1</div>",
-      "頻死時才能使用。回復3血。剛出場回合的配置步不能使用。這個氣場可以重復。這張卡可以從手牌廢棄並抽1張."
-    ]
-  },
-  {
-    "type": "data",
-    "width": 50,
-    "height": 75,
-    "pos": [
-      100,
-      100
-    ],
-    "back": true,
-    "lock": false,
-    "count": 3,
-    "extra": [
-      "<div style='overflow:hidden;background-color:Fuchsia; width:100%; height:100%; left:0; top:0; text-align:right'>背包<br>重2<br>打擊-包 4 3<br>自動回復藥<br>無 反應 1</div>",
-      "展示一張手牌中名稱為道具的卡，那張卡回到本國洗牌, 並直接解決那張卡的內文。解決完後抽1張."
-    ]
-  },
-  {
-    "type": "data",
-    "width": 50,
-    "height": 75,
-    "pos": [
-      100,
-      100
-    ],
-    "back": true,
-    "lock": false,
-    "count": 3,
-    "extra": [
-      "<div style='overflow:hidden;background-color:white; width:100%; height:100%; left:0; top:0; text-align:right'>背包<br>重2<br>打擊-包 4 3<br>道具投擲<br>無 氣功 3</div>",
-      "展示一張手牌中名稱為道具的卡，那張卡回到本國洗牌, 並直接解決那張卡的內文。解決完後抽1張."
-    ]
-  },
-  {
-    "type": "data",
-    "width": 50,
-    "height": 75,
-    "pos": [
-      100,
-      100
-    ],
-    "back": true,
-    "lock": false,
-    "count": 3,
-    "extra": [
-      "<div style='overflow:hidden;background-color:LightGray; width:100%; height:100%; left:0; top:0; text-align:right'>道具<br>重1<br>防具-飾 2 2<br>萬能藥<br>無 氣場 3</div>",
-      "自己有狀態時才能使用。廢棄這張卡，移除一個狀態並抽1張。剛出場的回合不能使用, 出場時抽1張。這個氣場可以重復。"
-    ]
-  },
-  {
-    "type": "data",
-    "width": 50,
-    "height": 75,
-    "pos": [
-      100,
-      100
-    ],
-    "back": true,
-    "lock": false,
-    "count": 3,
-    "extra": [
-      "<div style='overflow:hidden;background-color:Fuchsia; width:100%; height:100%; left:0; top:0; text-align:right'>白帶<br>重1<br>防具-飾 2 2<br>衝擊反擊<br>無 反應 2</div>",
+      "<div style='overflow:hidden;background-color:Fuchsia; width:100%; height:100%; left:0; top:0; text-align:right'>道服<br>重1<br>防具-衣 2 2<br>衝擊反擊<br>無 反應 2</div>",
       "自己有穿防具時可以使用。機率x對方一個武器脫手。x為自己防具外功值的總合的2倍。"
     ]
   },
@@ -251,8 +43,216 @@
     "lock": false,
     "count": 3,
     "extra": [
-      "<div style='overflow:hidden;background-color:LightGray; width:100%; height:100%; left:0; top:0; text-align:right'>背包<br>重2<br>打擊-包 4 3<br>發現道具移動<br>無 氣場 1</div>",
-      "抽牌時, 如果是防具卡, 展示它並抽1張. "
+      "<div style='overflow:hidden;background-color:Fuchsia; width:100%; height:100%; left:0; top:0; text-align:right'>羽毛帽<br>重1<br>防具-頭 2 2<br>速度儲蓄<br>無 反應 2</div>",
+      "回復最多3行動力."
+    ]
+  },
+  {
+    "type": "data",
+    "width": 50,
+    "height": 75,
+    "pos": [
+      100,
+      100
+    ],
+    "back": true,
+    "lock": false,
+    "count": 3,
+    "extra": [
+      "<div style='overflow:hidden;background-color:Fuchsia; width:100%; height:100%; left:0; top:0; text-align:right'>羽毛帽<br>重1<br>防具-頭 2 2<br>警戒<br>無 反應 2</div>",
+      "只能在敵軍回合用. 這回合剩下的所有敵人的打人判定都機率6失效."
+    ]
+  },
+  {
+    "type": "data",
+    "width": 50,
+    "height": 75,
+    "pos": [
+      100,
+      100
+    ],
+    "back": true,
+    "lock": false,
+    "count": 3,
+    "extra": [
+      "<div style='overflow:hidden;background-color:red; width:100%; height:100%; left:0; top:0; text-align:right'>道服<br>重1<br>防具-衣 2 2<br>衝擊<br>打-昏眩5 近招 1</div>",
+      "打人判定時並自己有穿防具時可以使用。判定成功時，機率x對方一個武器脫手。x為自己防具外功值的總合的2倍。"
+    ]
+  },
+  {
+    "type": "data",
+    "width": 50,
+    "height": 75,
+    "pos": [
+      100,
+      100
+    ],
+    "back": true,
+    "lock": false,
+    "count": 3,
+    "extra": [
+      "<div style='overflow:hidden;background-color:LightGray; width:100%; height:100%; left:0; top:0; text-align:right'>神羅裝束<br>重1<br>防具-衣 2 2<br>架勢<br>無 氣場 2</div>",
+      "敵軍配置時可以支付這張卡上的1氣，重置自己重量3以上的武器。"
+    ]
+  },
+  {
+    "type": "data",
+    "width": 50,
+    "height": 75,
+    "pos": [
+      100,
+      100
+    ],
+    "back": true,
+    "lock": false,
+    "count": 3,
+    "extra": [
+      "<div style='overflow:hidden;background-color:LightGray; width:100%; height:100%; left:0; top:0; text-align:right'>神羅裝束<br>重1<br>防具-衣 2 2<br>元士兵<br>無 氣場 4</div>",
+      "自己回合開始時氣+3.連技時不需要橫置武器。"
+    ]
+  },
+  {
+    "type": "data",
+    "width": 50,
+    "height": 75,
+    "pos": [
+      100,
+      100
+    ],
+    "back": true,
+    "lock": false,
+    "count": 3,
+    "extra": [
+      "<div style='overflow:hidden;background-color:red; width:100%; height:100%; left:0; top:0; text-align:right'>鬼劍<br>重3<br>斬擊-刀 5 5<br>鬼斬<br>暗-暗闇6 近招 斬0/1/2</div>",
+      "內攻*1/2/3."
+    ]
+  },
+  {
+    "type": "data",
+    "width": 50,
+    "height": 75,
+    "pos": [
+      100,
+      100
+    ],
+    "back": true,
+    "lock": false,
+    "count": 3,
+    "extra": [
+      "<div style='overflow:hidden;background-color:yellow; width:100%; height:100%; left:0; top:0; text-align:right'>鬼劍<br>重3<br>斬擊-刀 5 5<br>三日月斬<br>暗-暗闇6 遠招 斬0/1/2</div>",
+      "內攻*1/2/3."
+    ]
+  },
+  {
+    "type": "data",
+    "width": 50,
+    "height": 75,
+    "pos": [
+      100,
+      100
+    ],
+    "back": true,
+    "lock": false,
+    "count": 3,
+    "extra": [
+      "<div style='overflow:hidden;background-color:LightGray; width:100%; height:100%; left:0; top:0; text-align:right'>鬼劍<br>重3<br>斬擊-刀 5 5<br>血之宿命<br>暗-暗闇6 氣場 2</div>",
+      "移除這張卡。回復X血。X為這回合造成的傷害。X最多為6."
+    ]
+  },
+  {
+    "type": "data",
+    "width": 50,
+    "height": 75,
+    "pos": [
+      100,
+      100
+    ],
+    "back": true,
+    "lock": false,
+    "count": 3,
+    "extra": [
+      "<div style='overflow:hidden;background-color:LightGray; width:100%; height:100%; left:0; top:0; text-align:right'>鬼劍<br>重3<br>斬擊-刀 5 5<br>闇擊氣場<br>暗-暗闇6 氣場 3</div>",
+      "敵軍反應步時可以宣告。支付2血。機率5: 造成的傷害+X。X為本來造成的傷害。X為多為6."
+    ]
+  },
+  {
+    "type": "data",
+    "width": 50,
+    "height": 75,
+    "pos": [
+      100,
+      100
+    ],
+    "back": true,
+    "lock": false,
+    "count": 3,
+    "extra": [
+      "<div style='overflow:hidden;background-color:green; width:100%; height:100%; left:0; top:0; text-align:right'>鬼劍<br>重3<br>斬擊-刀 5 5<br>擋劈<br>無 防招 斬0/1/2</div>",
+      "外功+4/6/8. 宣告時氣+1."
+    ]
+  },
+  {
+    "type": "data",
+    "width": 50,
+    "height": 75,
+    "pos": [
+      100,
+      100
+    ],
+    "back": true,
+    "lock": false,
+    "count": 3,
+    "extra": [
+      "<div style='overflow:hidden;background-color:red; width:100%; height:100%; left:0; top:0; text-align:right'>鬼劍<br>重3<br>斬擊-刀 5 5<br>靈魂鬼斬<br>暗-暗闇6 近招 斬2</div>",
+      "內攻10. 宣告對象有暗闇時, 這招的氣費用變成0. 對象因為這招的效果產生暗闇狀態的話, 使用這招的人回2氣."
+    ]
+  },
+  {
+    "type": "data",
+    "width": 50,
+    "height": 75,
+    "pos": [
+      100,
+      100
+    ],
+    "back": true,
+    "lock": false,
+    "count": 3,
+    "extra": [
+      "<div style='overflow:hidden;background-color:LightGray; width:100%; height:100%; left:0; top:0; text-align:right'>無限刃<br>重3<br>斬擊-刀 7 3<br>炎靈<br>無 氣場 1</div>",
+      "自軍打人判定時, 當成有火-燒傷78的攻擊, 若判定後造成狀態時. 這張卡移除. 這個氣場可以多張在場. 但每回合只能解決1次."
+    ]
+  },
+  {
+    "type": "data",
+    "width": 50,
+    "height": 75,
+    "pos": [
+      100,
+      100
+    ],
+    "back": true,
+    "lock": false,
+    "count": 3,
+    "extra": [
+      "<div style='overflow:hidden;background-color:red; width:100%; height:100%; left:0; top:0; text-align:right'>無限刃<br>重3<br>斬擊-刀 7 3<br>火產靈神<br>火-燒傷7 近招 斬0/1/2</div>",
+      "外功+0/2/4. 宣告時, 若對方有燒傷狀態時, 外功+2. "
+    ]
+  },
+  {
+    "type": "data",
+    "width": 50,
+    "height": 75,
+    "pos": [
+      100,
+      100
+    ],
+    "back": true,
+    "lock": false,
+    "count": 3,
+    "extra": [
+      "<div style='overflow:hidden;background-color:LightGray; width:100%; height:100%; left:0; top:0; text-align:right'>道具<br>重1<br>防具-飾 2 2<br>不死鳥之尾<br>無 氣場 1</div>",
+      "頻死時才能使用。回復3血。剛出場回合不能使用。這個氣場可以重復。這張卡可以從手牌廢棄並抽1張."
     ]
   }
 ]
