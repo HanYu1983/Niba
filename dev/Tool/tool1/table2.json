@@ -11,8 +11,8 @@
     "lock": false,
     "count": 3,
     "extra": [
-      "<div style='overflow:hidden;background-color:yellow; width:100%; height:100%; left:0; top:0; text-align:right'>法杖<br>重2<br>打擊-短 2 5<br>火球術<br>火-燒傷7 遠招 打0/1/2</div>",
-      "内功+6/8/10"
+      "<div style='overflow:hidden;background-color:yellow; width:100%; height:100%; left:0; top:0; text-align:right'>寒月<br>重2<br>刺擊-劍 4 3<br>劍氣<br>無 遠招 刺0/1/2</div>",
+      "內功*1/2/3。"
     ]
   },
   {
@@ -27,8 +27,8 @@
     "lock": false,
     "count": 3,
     "extra": [
-      "<div style='overflow:hidden;background-color:yellow; width:100%; height:100%; left:0; top:0; text-align:right'>法杖<br>重2<br>打擊-短 2 5<br>雷電術<br>雷-麻痺3 遠招 打0/1/2</div>",
-      "内功+6/8/10"
+      "<div style='overflow:hidden;background-color:yellow; width:100%; height:100%; left:0; top:0; text-align:right'>寒月<br>重2<br>刺擊-劍 4 3<br>重劍氣<br>無 遠招 格刺0/1/2</div>",
+      "內功*1/2/3。"
     ]
   },
   {
@@ -43,8 +43,8 @@
     "lock": false,
     "count": 3,
     "extra": [
-      "<div style='overflow:hidden;background-color:yellow; width:100%; height:100%; left:0; top:0; text-align:right'>法杖<br>重2<br>打擊-短 2 5<br>颶風術<br>風-撕裂7 遠招 打0/1/2</div>",
-      "内功+6/8/10"
+      "<div style='overflow:hidden;background-color:green; width:100%; height:100%; left:0; top:0; text-align:right'>寒月<br>重2<br>刺擊-劍 4 3<br>鬼婆婆劍<br>無 防招 刺0/1/2</div>",
+      "外功+6/8/10。這個招式交戰勝利時。對方-1氣。否則自己扣1氣。"
     ]
   },
   {
@@ -59,8 +59,8 @@
     "lock": false,
     "count": 3,
     "extra": [
-      "<div style='overflow:hidden;background-color:yellow; width:100%; height:100%; left:0; top:0; text-align:right'>法杖<br>重2<br>打擊-短 2 5<br>地震術<br>地-石化2 遠招 打0/1/2</div>",
-      "内功+6/8/10"
+      "<div style='overflow:hidden;background-color:LightGray; width:100%; height:100%; left:0; top:0; text-align:right'>寒月<br>重2<br>刺擊-劍 4 3<br>亂情瘴<br>無 氣場 3</div>",
+      "配置步開始時。1氣。指定敵方一個交戰武器內功-3。"
     ]
   },
   {
@@ -75,8 +75,8 @@
     "lock": false,
     "count": 3,
     "extra": [
-      "<div style='overflow:hidden;background-color:yellow; width:100%; height:100%; left:0; top:0; text-align:right'>法杖<br>重2<br>打擊-短 2 5<br>猛毒術<br>毒-中毒8 遠招 打0/1/2</div>",
-      "内功+6/8/10"
+      "<div style='overflow:hidden;background-color:red; width:100%; height:100%; left:0; top:0; text-align:right'>寒月<br>重2<br>刺擊-劍 4 3<br>前刺<br>刺-點打3 近招 刺0/1/2</div>",
+      "外功+0/2/4。"
     ]
   },
   {
@@ -91,8 +91,8 @@
     "lock": false,
     "count": 3,
     "extra": [
-      "<div style='overflow:hidden;background-color:yellow; width:100%; height:100%; left:0; top:0; text-align:right'>法杖<br>重2<br>打擊-短 2 5<br>聖光束<br>光-封印3 遠招 打0/1/2</div>",
-      "内功+6/8/10"
+      "<div style='overflow:hidden;background-color:red; width:100%; height:100%; left:0; top:0; text-align:right'>寒月<br>重2<br>刺擊-劍 4 3<br>勾鎌劍法<br>刺-點打3 近招 格刺0/1/2</div>",
+      "外功+0/2/4。自己每有一個氣場在場時。外功+2。這個效果最多+4。"
     ]
   },
   {
@@ -107,8 +107,8 @@
     "lock": false,
     "count": 3,
     "extra": [
-      "<div style='overflow:hidden;background-color:yellow; width:100%; height:100%; left:0; top:0; text-align:right'>法杖<br>重2<br>打擊-短 2 5<br>冰凍術<br>水-冰凍5 遠招 打0/1/2</div>",
-      "内功+6/8/10"
+      "<div style='overflow:hidden;background-color:red; width:100%; height:100%; left:0; top:0; text-align:right'>寒月<br>重2<br>刺擊-劍 4 3<br>兩段刺<br>刺-點打3 近招 格刺0/1/2</div>",
+      "外功+0/2/4。"
     ]
   },
   {
@@ -123,8 +123,8 @@
     "lock": false,
     "count": 3,
     "extra": [
-      "<div style='overflow:hidden;background-color:LightGray; width:100%; height:100%; left:0; top:0; text-align:right'>道具<br>重1<br>防具-飾 2 2<br>超級回復藥<br>無 氣場 3</div>",
-      "廢棄這張卡，那個時候回9血。剛出場回合的配置步不能使用, 出場時抽1張。這個氣場可以重復。"
+      "<div style='overflow:hidden;background-color:LightGray; width:100%; height:100%; left:0; top:0; text-align:right'>麻腦串<br>重1<br>防具-飾 1 3<br>醒神<br>無 氣場 1</div>",
+      "自軍回合開始時，氣+1。這個效果不能重復。"
     ]
   },
   {
@@ -139,8 +139,8 @@
     "lock": false,
     "count": 3,
     "extra": [
-      "<div style='overflow:hidden;background-color:LightGray; width:100%; height:100%; left:0; top:0; text-align:right'>道具<br>重1<br>防具-飾 2 2<br>高級以太<br>無 氣場 2</div>",
-      "廢棄這張卡，那個時候回4氣。剛出場回合的配置步不能使用, 出場時抽1張。這個氣場可以重復。"
+      "<div style='overflow:hidden;background-color:LightGray; width:100%; height:100%; left:0; top:0; text-align:right'>麻腦串<br>重1<br>防具-飾 1 3<br>聞香<br>無 氣場 2</div>",
+      "自配置步可以1氣。機率6回復3。這個效果一回合一次。"
     ]
   },
   {
@@ -155,8 +155,8 @@
     "lock": false,
     "count": 3,
     "extra": [
-      "<div style='overflow:hidden;background-color:LightGray; width:100%; height:100%; left:0; top:0; text-align:right'>道具<br>重1<br>防具-飾 2 2<br>聖靈藥<br>無 氣場 4</div>",
-      "廢棄這張卡，那個時候回9血, 回2氣。剛出場回合的配置步不能使用, 出場時抽1張。這個氣場可以重復。"
+      "<div style='overflow:hidden;background-color:Fuchsia; width:100%; height:100%; left:0; top:0; text-align:right'>練甲<br>重1<br>防具-衣 3 1<br>不動如山<br>打-昏眩5 反應 3</div>",
+      "本次傷害-6。免疫本次的狀態攻擊。如果傷害減少至0，攻擊方不能繼續連招。"
     ]
   },
   {
@@ -171,8 +171,8 @@
     "lock": false,
     "count": 3,
     "extra": [
-      "<div style='overflow:hidden;background-color:LightGray; width:100%; height:100%; left:0; top:0; text-align:right'>道具<br>重1<br>防具-飾 2 2<br>不死鳥之尾<br>無 氣場 1</div>",
-      "頻死時才能使用。回復9\b血。剛出場回合的配置步不能使用, 出場時抽1張。這個氣場可以重復。"
+      "<div style='overflow:hidden;background-color:white; width:100%; height:100%; left:0; top:0; text-align:right'>練甲<br>重1<br>防具-衣 3 1<br>徐如風<br>風-撕裂7 氣功 2</div>",
+      "自配置步使用。回復1行動力。3血。"
     ]
   },
   {
@@ -187,8 +187,8 @@
     "lock": false,
     "count": 3,
     "extra": [
-      "<div style='overflow:hidden;background-color:Fuchsia; width:100%; height:100%; left:0; top:0; text-align:right'>背包<br>重2<br>打擊-包 4 3<br>自動回復藥<br>無 反應 1</div>",
-      "展示一張手牌中名稱為道具的卡，那張卡回到本國洗牌, 並直接解決那張卡的內文。解決完後抽1張."
+      "<div style='overflow:hidden;background-color:LightGray; width:100%; height:100%; left:0; top:0; text-align:right'>練甲<br>重1<br>防具-衣 3 1<br>迅如雷<br>雷-麻痺5 氣場 2</div>",
+      "使用回避時可以1氣。動作消耗-1。"
     ]
   },
   {
@@ -203,8 +203,8 @@
     "lock": false,
     "count": 3,
     "extra": [
-      "<div style='overflow:hidden;background-color:white; width:100%; height:100%; left:0; top:0; text-align:right'>背包<br>重2<br>打擊-包 4 3<br>道具投擲<br>無 氣功 3</div>",
-      "展示一張手牌中名稱為道具的卡，那張卡回到本國洗牌, 並直接解決那張卡的內文。解決完後抽1張."
+      "<div style='overflow:hidden;background-color:Fuchsia; width:100%; height:100%; left:0; top:0; text-align:right'>拳套<br>重1<br>格鬥-拳 2 2<br>頻死HP回復<br>無 反應 1</div>",
+      "頻死時才能使用. 機率x回10血. x為現在的自己直立氣量. "
     ]
   },
   {
@@ -219,8 +219,8 @@
     "lock": false,
     "count": 3,
     "extra": [
-      "<div style='overflow:hidden;background-color:LightGray; width:100%; height:100%; left:0; top:0; text-align:right'>道具<br>重1<br>防具-飾 2 2<br>萬能藥<br>無 氣場 3</div>",
-      "自己有狀態時才能使用。廢棄這張卡，移除一個狀態並抽1張。剛出場的回合不能使用, 出場時抽1張。這個氣場可以重復。"
+      "<div style='overflow:hidden;background-color:LightGray; width:100%; height:100%; left:0; top:0; text-align:right'>練甲<br>重1<br>防具-衣 3 1<br>俠客行<br>無 氣場 3</div>",
+      "出擊時1氣，指定一把自己包含重量3以下的武器，他可以跟任意一重量爲1的武器聯合。這個效果一次出擊可以最多用到2氣。"
     ]
   },
   {
@@ -235,8 +235,8 @@
     "lock": false,
     "count": 3,
     "extra": [
-      "<div style='overflow:hidden;background-color:Fuchsia; width:100%; height:100%; left:0; top:0; text-align:right'>白帶<br>重1<br>防具-飾 2 2<br>衝擊反擊<br>無 反應 2</div>",
-      "自己有穿防具時可以使用。機率x對方一個武器脫手。x為自己防具外功值的總合的2倍。"
+      "<div style='overflow:hidden;background-color:white; width:100%; height:100%; left:0; top:0; text-align:right'>拳套<br>重1<br>格鬥-拳 2 2<br>氣愈<br>無 氣功 2</div>",
+      "回2血, 回4氣。"
     ]
   },
   {
@@ -251,8 +251,8 @@
     "lock": false,
     "count": 3,
     "extra": [
-      "<div style='overflow:hidden;background-color:LightGray; width:100%; height:100%; left:0; top:0; text-align:right'>背包<br>重2<br>打擊-包 4 3<br>發現道具移動<br>無 氣場 3</div>",
-      "抽牌階段時可以支付1氣. 抽1張. 如果那個是道具時, 可以再抽1張."
+      "<div style='overflow:hidden;background-color:LightGray; width:100%; height:100%; left:0; top:0; text-align:right'>拳套<br>重1<br>格鬥-拳 2 2<br>HP回復移動<br>無 氣場 1</div>",
+      "抽牌時, 如果是氣場時, 展示它並回復3血. "
     ]
   }
 ]
