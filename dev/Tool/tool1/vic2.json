@@ -1,0 +1,258 @@
+[
+  {
+    "type": "data",
+    "width": 50,
+    "height": 75,
+    "pos": [
+      100,
+      100
+    ],
+    "back": true,
+    "lock": false,
+    "count": 3,
+    "extra": [
+      "<div style='overflow:hidden;background-color:LightGray; width:100%; height:100%; left:0; top:0; text-align:right'>鐵指環<br>重1<br>防具-飾 2 0<br>穿戴<br>無 氣場 拳0</div>",
+      "自軍一個拳套武器判定時外功+1。這個效果不能指向已經有這個效果的武器。"
+    ]
+  },
+  {
+    "type": "data",
+    "width": 50,
+    "height": 75,
+    "pos": [
+      100,
+      100
+    ],
+    "back": true,
+    "lock": false,
+    "count": 3,
+    "extra": [
+      "<div style='overflow:hidden;background-color:LightGray; width:100%; height:100%; left:0; top:0; text-align:right'>拳套<br>重1<br>格鬥-拳 2 2<br>格鬥<br>無 氣場 4</div>",
+      "自己回合時使用聚力. 但出擊時若包含非格鬥武器時, 聚力失效. "
+    ]
+  },
+  {
+    "type": "data",
+    "width": 50,
+    "height": 75,
+    "pos": [
+      100,
+      100
+    ],
+    "back": true,
+    "lock": false,
+    "count": 3,
+    "extra": [
+      "<div style='overflow:hidden;background-color:green; width:100%; height:100%; left:0; top:0; text-align:right'>拳套<br>重1<br>格鬥-拳 2 2<br>回轉拳<br>無 防招 拳拳0/1/2</div>",
+      "外功+6/8/10."
+    ]
+  },
+  {
+    "type": "data",
+    "width": 50,
+    "height": 75,
+    "pos": [
+      100,
+      100
+    ],
+    "back": true,
+    "lock": false,
+    "count": 3,
+    "extra": [
+      "<div style='overflow:hidden;background-color:red; width:100%; height:100%; left:0; top:0; text-align:right'>拳套<br>重1<br>格鬥-拳 2 2<br>連續拳<br>打-昏眩5 近招 拳拳0</div>",
+      "外功+2. 宣告時, 可以支付1氣. 這張卡回手."
+    ]
+  },
+  {
+    "type": "data",
+    "width": 50,
+    "height": 75,
+    "pos": [
+      100,
+      100
+    ],
+    "back": true,
+    "lock": false,
+    "count": 3,
+    "extra": [
+      "<div style='overflow:hidden;background-color:yellow; width:100%; height:100%; left:0; top:0; text-align:right'>拳套<br>重1<br>格鬥-拳 2 2<br>波動擊<br>無 遠招 拳拳0/1/2</div>",
+      "內功*1/2/3"
+    ]
+  },
+  {
+    "type": "data",
+    "width": 50,
+    "height": 75,
+    "pos": [
+      100,
+      100
+    ],
+    "back": true,
+    "lock": false,
+    "count": 3,
+    "extra": [
+      "<div style='overflow:hidden;background-color:yellow; width:100%; height:100%; left:0; top:0; text-align:right'>拳套<br>重1<br>格鬥-拳 2 2<br>地裂斬<br>地-石化5 遠招 拳拳2</div>",
+      "內功*3. 對方不能對這招響應反應."
+    ]
+  },
+  {
+    "type": "data",
+    "width": 50,
+    "height": 75,
+    "pos": [
+      100,
+      100
+    ],
+    "back": true,
+    "lock": false,
+    "count": 3,
+    "extra": [
+      "<div style='overflow:hidden;background-color:red; width:100%; height:100%; left:0; top:0; text-align:right'>拳套<br>重1<br>格鬥-拳 2 2<br>秘孔拳<br>雷-麻痺5 近招 拳拳</div>",
+      "打人判定時才能使用. 狀態機率判定時機率+3."
+    ]
+  },
+  {
+    "type": "data",
+    "width": 50,
+    "height": 75,
+    "pos": [
+      100,
+      100
+    ],
+    "back": true,
+    "lock": false,
+    "count": 3,
+    "extra": [
+      "<div style='overflow:hidden;background-color:white; width:100%; height:100%; left:0; top:0; text-align:right'>拳套<br>重1<br>格鬥-拳 2 2<br>氣孔術<br>無 氣功 2</div>",
+      "自己有狀態時才能使用。移除一個狀態並抽1張."
+    ]
+  },
+  {
+    "type": "data",
+    "width": 50,
+    "height": 75,
+    "pos": [
+      100,
+      100
+    ],
+    "back": true,
+    "lock": false,
+    "count": 3,
+    "extra": [
+      "<div style='overflow:hidden;background-color:LightGray; width:100%; height:100%; left:0; top:0; text-align:right'>腐蟲砂<br>重1<br>防具-飾 0 3<br>蠱降<br>無 氣場 2</div>",
+      "自配置時可以1氣。指定玩家機率7中毒。"
+    ]
+  },
+  {
+    "type": "data",
+    "width": 50,
+    "height": 75,
+    "pos": [
+      100,
+      100
+    ],
+    "back": true,
+    "lock": false,
+    "count": 3,
+    "extra": [
+      "<div style='overflow:hidden;background-color:white; width:100%; height:100%; left:0; top:0; text-align:right'>腐蟲砂<br>重1<br>防具-飾 0 3<br>引毒術<br>無 氣功 1</div>",
+      "重置並移動自己身上的狀態指示物給指定玩家。使用時，如果自己身上沒有狀態指示物，自己中毒。"
+    ]
+  },
+  {
+    "type": "data",
+    "width": 50,
+    "height": 75,
+    "pos": [
+      100,
+      100
+    ],
+    "back": true,
+    "lock": false,
+    "count": 3,
+    "extra": [
+      "<div style='overflow:hidden;background-color:LightGray; width:100%; height:100%; left:0; top:0; text-align:right'>腐蟲砂<br>重1<br>防具-飾 0 3<br>迷蟲香<br>無 氣場 2</div>",
+      "自己回合結束時，指定一個有氣玩家-1氣(從非氣場開始)。"
+    ]
+  },
+  {
+    "type": "data",
+    "width": 50,
+    "height": 75,
+    "pos": [
+      100,
+      100
+    ],
+    "back": true,
+    "lock": false,
+    "count": 3,
+    "extra": [
+      "<div style='overflow:hidden;background-color:yellow; width:100%; height:100%; left:0; top:0; text-align:right'>腐蟲砂<br>重1<br>防具-飾 0 3<br>滅蠱咒<br>毒-中毒8 遠招 2</div>",
+      "內功3。如果自己身上有狀態指示物。前項數值變為5。"
+    ]
+  },
+  {
+    "type": "data",
+    "width": 50,
+    "height": 75,
+    "pos": [
+      100,
+      100
+    ],
+    "back": true,
+    "lock": false,
+    "count": 3,
+    "extra": [
+      "<div style='overflow:hidden;background-color:LightGray; width:100%; height:100%; left:0; top:0; text-align:right'>獅相門道服<br>重1<br>防具-衣 2 0<br>鉄鼎金身功<br>無 氣場 2</div>",
+      "敵方交戰回合中，自己被打脫手的一個武器，在歸還時變爲橫置狀態。效果發動時1氣。"
+    ]
+  },
+  {
+    "type": "data",
+    "width": 50,
+    "height": 75,
+    "pos": [
+      100,
+      100
+    ],
+    "back": true,
+    "lock": false,
+    "count": 3,
+    "extra": [
+      "<div style='overflow:hidden;background-color:yellow; width:100%; height:100%; left:0; top:0; text-align:right'>忍者指套<br>重1<br>格鬥-拳 2 2<br>豪火球術<br>火-燒傷7 遠招 拳拳0/1/2</div>",
+      "內功*1/2/3。"
+    ]
+  },
+  {
+    "type": "data",
+    "width": 50,
+    "height": 75,
+    "pos": [
+      100,
+      100
+    ],
+    "back": true,
+    "lock": false,
+    "count": 3,
+    "extra": [
+      "<div style='overflow:hidden;background-color:LightGray; width:100%; height:100%; left:0; top:0; text-align:right'>獅相門道服<br>重1<br>防具-衣 2 0<br>獅子奮迅<br>無 氣場 4</div>",
+      "這張卡上的氣可以當作戰鬥行動力使用。"
+    ]
+  },
+  {
+    "type": "data",
+    "width": 50,
+    "height": 75,
+    "pos": [
+      100,
+      100
+    ],
+    "back": true,
+    "lock": false,
+    "count": 3,
+    "extra": [
+      "<div style='overflow:hidden;background-color:red; width:100%; height:100%; left:0; top:0; text-align:right'>獅相門拳套<br>重1<br>格鬥-拳 2 2<br>推山掌<br>無 近招 拳0/1/2</div>",
+      "外功+0/2/4.如果這張卡接著防守招式使用。這張卡的外功+2."
+    ]
+  }
+]
