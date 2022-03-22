@@ -1,0 +1,94 @@
+<div
+  id="input"
+  style="border: 1px solid black; display: flex; flex-wrap: wrap"
+></div>
+<div id="output"></div>
+<script
+  src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"
+  integrity="sha512-BNaRQnYJYiPSqHHDb58B0yaPfCu+Wgds8Gp/gU33kqBtgNS4tSPHuGibyoeqMV/TJlSKda6FXzoEyYGjTe+vXA=="
+  crossorigin="anonymous"
+  referrerpolicy="no-referrer"
+></script>
+<script
+  src="https://code.jquery.com/jquery-3.6.0.min.js"
+  integrity="sha256-/xUj+3OJU5yExlq6GSYGSHk7tPXikynS7ogEvDej/m4="
+  crossorigin="anonymous"
+></script>
+<script
+  src="https://cdnjs.cloudflare.com/ajax/libs/datalib/1.9.3/datalib.min.js"
+  integrity="sha512-0Wxch7yEHpq8eszzwYYczf6VJxBz9pDsx/K2LirpZ05WgDaoo7BK6uap/osDV21OO1KGNFhKJ2ujZXm0vk18pg=="
+  crossorigin="anonymous"
+  referrerpolicy="no-referrer"
+></script>
+<script>
+  function cardView({ title, color, skillText }) {
+    return `
+<div style="width: 100px; height: 200px; background:${color}">
+    <div>${title}</div>
+    <div>${skillText}</div>
+    <img src="images/blade.png">
+</div>
+`;
+  }
+  function draw() {
+    // const params = new URLSearchParams(window.location.search);
+    const rows = dl.tsv("格鬥風雲錄2 - main.tsv").slice(0, 10);
+    console.log(rows);
+    rows.forEach((row) => {
+      const colorMapping = {
+        近招: "red",
+        遠招: "yellow",
+        氣功: "white",
+        氣場: "LightGray",
+        防招: "green",
+        反應: "Fuchsia",
+      };
+      const id = row["id/int"];
+      const title = row["title/string"];
+      const weight = row["weight/int"];
+      const attackType = row["attackType/string"];
+      const outsidePower = row["outsidePower/int"];
+      const insidePower = row["insidePower/int"];
+      const skillType = row["skillType/string"];
+      const skillCost = row["skillCost/string"];
+      const skillName = row["skillName/string"];
+      const skillText = row["skillText/string"];
+      const skillMana = row["skillMana/string"];
+      $("#input").append(
+        $(
+          cardView({
+            id,
+            title,
+            weight,
+            attackType,
+            outsidePower,
+            insidePower,
+            skillType,
+            skillCost,
+            skillName,
+            skillText,
+            skillMana,
+            color: colorMapping[skillType],
+          })
+        )
+      );
+    });
+  }
+
+  function build() {
+    return Promise.all(
+      $("#input")
+        .children()
+        .map((k, v) => {
+          return html2canvas(v);
+        })
+    ).then((imgs) => {
+      imgs.forEach((img) => {
+        $("#output").append(`<img src=${img.toDataURL()}>`);
+      });
+    });
+  }
+
+  draw();
+  build();
+</script>
