@@ -21,8 +21,8 @@
   referrerpolicy="no-referrer"
 ></script>
 <script>
-  function weightView(n) {
-    return `<div>O</div>`;
+  function weightView() {
+    return `<div style="flex: 1; background: white; border: 2px solid black"></div>`;
   }
   function cardView({
     id,
@@ -38,18 +38,50 @@
     skillMana,
     color,
   }) {
+    const W = 260 * 0.8;
+    const H = 390 * 0.8;
     return `
-<div style="width: 100px; height: 200px; background:${color}">
-    <div>${title}</div>
-    <div>${skillText}</div>
-    ${[...new Array(weight).keys()].map(weightView).join("")}
-    <img src="images/blade.png">
+<div style="width: ${W}px; height: ${H}px; background:${color};">
+    <div style="font-size: 25px; text-align: center;">${title}</div>
+    <div style="display:flex; justify-content: center; align-items: center;">
+      <div style="flex: 1; background: white">
+        <div style="font-size: 60px">${outsidePower}</div>
+      </div>
+      <div style="flex: 3; background: yellow">
+        <div style="display:flex; height: 10px">
+          ${[...new Array(weight).keys()].map(weightView).join("")}
+        </div>
+        <div style="display:flex; justify-content: center">
+          <img src="images/blade.png" style="height: ${150 * 0.8}px">
+        </div>
+        <div style="display:flex; height: 10px">
+          ${[...new Array(weight).keys()].map(weightView).join("")}
+        </div>
+      </div>
+      <div style="flex: 1; background: white">
+        <div style="font-size: 60px; text-align: center">${insidePower}</div>
+      </div>
+    </div>
+   
+    <div style="display:flex">
+      <div style="flex: 1">
+        <div style="font-size: 12px; text-align: center">${skillName}</div>
+      </div>
+      <div style="flex: 1">
+        <div style="font-size: 12px; text-align: center">${skillCost}</div>
+      </div>
+      <div style="flex: 1">
+        <div style="font-size: 12px; text-align: center">${skillMana}</div>
+      </div>
+    </div>
+    <div style="font-size: 10px; text-align: center">${skillText}</div>
+   
 </div>
 `;
   }
   function draw() {
     // const params = new URLSearchParams(window.location.search);
-    const rows = dl.tsv("格鬥風雲錄2 - main.tsv").slice(0, 10);
+    const rows = dl.tsv("格鬥風雲錄2 - main.tsv").slice(50, 100);
     console.log(rows);
     rows.forEach((row) => {
       const colorMapping = {
