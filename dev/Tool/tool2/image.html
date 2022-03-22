@@ -21,11 +21,15 @@
   referrerpolicy="no-referrer"
 ></script>
 <script>
-  function cardView({ title, color, skillText }) {
+  function weightView(n) {
+    return `<div>O</div>`;
+  }
+  function cardView({ title, color, skillText, weight }) {
     return `
 <div style="width: 100px; height: 200px; background:${color}">
     <div>${title}</div>
     <div>${skillText}</div>
+    ${[...new Array(weight).keys()].map(weightView).join("")}
     <img src="images/blade.png">
 </div>
 `;
