@@ -62,7 +62,6 @@
         <div style="font-size: 60px; text-align: center">${insidePower}</div>
       </div>
     </div>
-   
     <div style="display:flex">
       <div style="flex: 1">
         <div style="font-size: 12px; text-align: center">${skillName}</div>
@@ -75,13 +74,12 @@
       </div>
     </div>
     <div style="font-size: 10px; text-align: center">${skillText}</div>
-   
 </div>
 `;
   }
   function draw() {
     // const params = new URLSearchParams(window.location.search);
-    const rows = dl.tsv("格鬥風雲錄2 - main.tsv").slice(50, 100);
+    const rows = dl.tsv("格鬥風雲錄2 - main.tsv").slice(0, 3);
     console.log(rows);
     rows.forEach((row) => {
       const colorMapping = {
