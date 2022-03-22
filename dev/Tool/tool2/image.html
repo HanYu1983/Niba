@@ -24,7 +24,20 @@
   function weightView(n) {
     return `<div>O</div>`;
   }
-  function cardView({ title, color, skillText, weight }) {
+  function cardView({
+    id,
+    title,
+    weight,
+    attackType,
+    outsidePower,
+    insidePower,
+    skillType,
+    skillCost,
+    skillName,
+    skillText,
+    skillMana,
+    color,
+  }) {
     return `
 <div style="width: 100px; height: 200px; background:${color}">
     <div>${title}</div>
