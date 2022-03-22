@@ -20,6 +20,19 @@
   crossorigin="anonymous"
   referrerpolicy="no-referrer"
 ></script>
+<script
+  src="https://cdnjs.cloudflare.com/ajax/libs/FileSaver.js/2.0.0/FileSaver.min.js"
+  integrity="sha512-csNcFYJniKjJxRWRV1R7fvnXrycHP6qDR21mgz1ZP55xY5d+aHLfo9/FcGDQLfn2IfngbAHd8LdfsagcCqgTcQ=="
+  crossorigin="anonymous"
+  referrerpolicy="no-referrer"
+></script>
+<script
+  src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.7.1/jszip.min.js"
+  integrity="sha512-xQBQYt9UcgblF6aCMrwU1NkVA7HCXaSN2oq0so80KO+y68M+n64FOcqgav4igHe6D5ObBLIf68DWv+gfBowczg=="
+  crossorigin="anonymous"
+  referrerpolicy="no-referrer"
+></script>
+
 <script>
   function weightView() {
     return `<div style="flex: 1; background: white; border: 2px solid black"></div>`;
@@ -42,45 +55,47 @@
     const H = 390 * 0.8;
     return `
 <div style="width: ${W}px; height: ${H}px; background:${color};">
-    <div style="font-size: 25px; text-align: center;">${title}</div>
-    <div style="display:flex; justify-content: center; align-items: center;">
-      <div style="flex: 1; background: white">
-        <div style="font-size: 60px">${outsidePower}</div>
+  <div style="font-size: 25px; text-align: center;">${title}</div>
+  <div style="display:flex; justify-content: center; align-items: center;">
+    <div style="flex: 1; background: white">
+      <div style="font-size: 60px">${outsidePower}</div>
+    </div>
+    <div style="flex: 3; background: yellow">
+      <div style="display:flex; height: 10px">
+        ${[...new Array(weight).keys()].map(weightView).join("")}
       </div>
-      <div style="flex: 3; background: yellow">
-        <div style="display:flex; height: 10px">
-          ${[...new Array(weight).keys()].map(weightView).join("")}
-        </div>
-        <div style="display:flex; justify-content: center">
-          <img src="images/blade.png" style="height: ${150 * 0.8}px">
-        </div>
-        <div style="display:flex; height: 10px">
-          ${[...new Array(weight).keys()].map(weightView).join("")}
-        </div>
+      <div style="display:flex; justify-content: center">
+        <img src="images/blade.png" style="height: ${150 * 0.8}px">
+        <div style="font-size: 3px;">${id}</div>   
       </div>
-      <div style="flex: 1; background: white">
-        <div style="font-size: 60px; text-align: center">${insidePower}</div>
+      <div style="display:flex; height: 10px">
+        ${[...new Array(weight).keys()].map(weightView).join("")}
       </div>
     </div>
-    <div style="display:flex">
-      <div style="flex: 1">
-        <div style="font-size: 12px; text-align: center">${skillName}</div>
-      </div>
-      <div style="flex: 1">
-        <div style="font-size: 12px; text-align: center">${skillCost}</div>
-      </div>
-      <div style="flex: 1">
-        <div style="font-size: 12px; text-align: center">${skillMana}</div>
-      </div>
+    <div style="flex: 1; background: white">
+      <div style="font-size: 60px; text-align: center">${insidePower}</div>
     </div>
-    <div style="font-size: 10px; text-align: center">${skillText}</div>
+  </div>
+  <div style="display:flex">
+    <div style="flex: 1">
+      <div style="font-size: 12px; text-align: center">${skillName}</div>
+    </div>
+    <div style="flex: 1">
+      <div style="font-size: 12px; text-align: center">${skillCost}</div>
+    </div>
+    <div style="flex: 1">
+      <div style="font-size: 12px; text-align: center">${skillMana}</div>
+    </div>
+  </div>
+  <div style="font-size: 10px; text-align: center">${skillText}</div>
 </div>
 `;
   }
+
+  const rows = dl.tsv("格鬥風雲錄2 - main.tsv").slice(0, 100);
+
   function draw() {
     // const params = new URLSearchParams(window.location.search);
-    const rows = dl.tsv("格鬥風雲錄2 - main.tsv").slice(0, 3);
-    console.log(rows);
     rows.forEach((row) => {
       const colorMapping = {
         近招: "red",
@@ -130,9 +145,42 @@
           return html2canvas(v);
         })
     ).then((imgs) => {
-      imgs.forEach((img) => {
-        $("#output").append(`<img src=${img.toDataURL()}>`);
-      });
+      const zip = new JSZip();
+
+      for (let i in imgs) {
+        const img = imgs[i];
+        const info = rows[i];
+        const id = info["id/int"];
+        console.log(i, id);
+        if (false) {
+          $("#output").append(
+            `<a href=${img.toDataURL()} download=${id}.png>
+            <img src=${img.toDataURL()}>
+          </a>`
+          );
+        }
+        const imgData = img.toDataURL();
+        const imgB64 = imgData.substring(imgData.indexOf(",") + 1);
+        zip.file(`${id}.png`, imgB64, { base64: true });
+      }
+
+      zip
+        .generateAsync({
+          type: "blob", // 壓縮型別
+          compression: "DEFLATE", // STORE：預設不壓縮 DEFLATE：需要壓縮
+          compressionOptions: {
+            level: 9, // 壓縮等級1~9    1壓縮速度最快，9最優壓縮方式
+            // [使用一張圖片測試之後1和9壓縮的力度不大，相差100K左右]
+          },
+        })
+        .then(function (content) {
+          // 壓縮的結果為blob型別
+          $(document.body).append(
+            `<a href=${URL.createObjectURL(
+              content
+            )} download=build.zip>build.zip</a>`
+          );
+        });
     });
   }
 
