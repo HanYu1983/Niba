@@ -2,7 +2,8 @@
   id="input"
   style="border: 1px solid black; display: flex; flex-wrap: wrap"
 ></div>
-<div id="output"></div>
+<div id="output">
+</div>
 <script
   src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"
   integrity="sha512-BNaRQnYJYiPSqHHDb58B0yaPfCu+Wgds8Gp/gU33kqBtgNS4tSPHuGibyoeqMV/TJlSKda6FXzoEyYGjTe+vXA=="
@@ -89,7 +90,68 @@
 `;
   }
 
-  const rows = dl.tsv("格鬥風雲錄2 - main.tsv").slice(0, 3);
+  function weightView2() {
+    return `<div style="flex: 1; background: #ff9800; border: 2px solid black"></div>`;
+  }
+  function cardView2({
+    id,
+    title,
+    weight,
+    attackType,
+    outsidePower,
+    insidePower,
+    skillType,
+    skillCost,
+    skillName,
+    skillText,
+    skillMana,
+    color,
+  }) {
+    const scale = 1;
+    const W = 260 * scale;
+    const H = 390 * scale;
+    const fontSize = 64 * scale;
+    return `
+<div style="position:relative; width:${W}px; height:${H}px; background:${color}">
+  <div style="position:relative; width:100%; height:20%; outline:solid; outline-width:1px;">
+    <div style="position:relative; width:100%; height:100%; left:0; top:0; text-align:center; font-size:${fontSize}px; overflow:hidden">${skillName}</div>
+  </div>
+  <div style="position:relative; width:100%; height:60%; outline:solid; outline-width:1px;">
+    <div style="position:relative; width:100%; height:60%; outline:solid; outline-width:1px;">
+      <div style="position:relative; width:20%; height:100%; outline:solid; outline-width:1px; float:left; background:white">
+        <div style="position:relative; width:100%; height:100%; left:0; top:35px; text-align:center; font-size:${fontSize}px; overflow:hidden">${outsidePower}</div>
+      </div>
+      <div style="position:relative; width:60%; height:100%; outline:solid; outline-width:1px; float:left; background:yellow">
+        <div style="position:relative; width:100%; height:90%; outline:solid; outline-width:1px;">
+          <img src="images/blade.png" style="position:relative; left:2.5%; top:2.5%; width:95%; height:95%;">
+        </div>
+        <div style="position:relative; width:100%; height:10%; outline:solid; outline-width:1px;">
+          <div style="position:relative; display:flex; height: 100%; ">
+            ${[...new Array(weight).keys()].map(weightView2).join("")}
+          </div>
+        </div>
+      </div>
+      <div style="position:relative; width:20%; height:100%; outline:solid; outline-width:1px; float:left; background:white">
+        <div style="position:relative; width:100%; height:100%; left:0; top:35px; text-align:center; font-size:${fontSize}px; overflow:hidden">${insidePower}</div>
+      </div>
+    </div>
+    <div style="position:relative; width:100%; height:40%; outline:solid; outline-width:1px;">
+      <div style="position:relative; width:95%; height:95%; left:2.5%; top:2.5%; font-size:14px; overflow:hidden;">
+        ${skillText}
+      </div>
+      <div style="position:absolute; right:2px; bottom:2px; font-size:14px">
+        ID${id} ${title} 重${weight} ${attackType} ${skillType} ${skillCost} ${skillMana}
+      </div>
+    </div>
+  </div>
+  <div style="position:relative; width:100%; height:20%; outline:solid; outline-width:1px;">
+    <div style="position:relative; width:100%; height:100%; left:0; top:0; text-align:center; font-size:${fontSize}px; overflow:hidden">${title}</div>
+  </div>
+</div>
+`;
+  }
+
+  const rows = dl.tsv("格鬥風雲錄2 - main.tsv").slice(0, 10);
 
   function draw() {
     // const params = new URLSearchParams(window.location.search);
@@ -115,7 +177,7 @@
       const skillMana = row["skillMana/string"];
       $("#input").append(
         $(
-          cardView({
+          cardView2({
             id,
             title,
             weight,
