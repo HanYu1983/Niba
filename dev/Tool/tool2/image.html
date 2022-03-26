@@ -92,6 +92,34 @@
   function weightView2() {
     return `<div style="flex: 1; background: #ff9800; border: 2px solid black"></div>`;
   }
+
+  var imageMaps = {
+    '斬擊-大':'wea_bigSword.png',
+    '打擊-鎚':'wea_bigHummer.png',
+    '斬擊-刀':'wea_bigBlade.png',
+    '打擊-棍':'wea_longstick.png',
+    '刺擊-槍':'wea_spear.png',
+    '打擊-弓':'wea_bow.png',
+    '打擊-短':'wea_stick.png',
+    '打擊-包':'wea_backpack.png',
+    '盾擊-盾':'def_shield.png',
+    '斬擊-單':'wea_blade.png',
+    '刺擊-劍':'wea_sword.png',
+    '刺擊-匕':'wea_knife.png',
+    '格鬥-拳':'wea_hand.png',
+    '格鬥-腿':'wea_shoe.png',
+    '防具-衣':'def_cloth.png',
+    '防具-飾':'def_ring.png',
+    '防具-褲':'def_pant.png',
+    '防具-頭':'def_head.png',
+    '防具-盾':'def_shield.png'
+  }
+  function getAtkImage(atkType){
+    if(imageMaps[atkType]){
+      return imageMaps[atkType];
+    }
+    return 'wea_bigSword.png';
+  }
   function cardView2({
     id,
     title,
@@ -123,7 +151,7 @@
       </div>
       <div style="position:relative; width:60%; height:100%; outline:solid; outline-width:1px; float:left; background:yellow">
         <div style="position:relative; width:100%; height:90%; outline:solid; outline-width:1px;">
-          <img src="images/blade.png" style="position:relative; left:2.5%; top:2.5%; width:95%; height:95%;">
+          <img src="images/${getAtkImage(attackType)}" style="position:relative; left:2.5%; top:2.5%; width:95%; height:95%;">
         </div>
         <div style="position:relative; width:100%; height:10%; outline:solid; outline-width:1px;">
           <div style="position:relative; display:flex; height: 100%; ">

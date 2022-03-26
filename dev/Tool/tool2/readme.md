@@ -6,6 +6,8 @@
 
     http-server -c-1
 
+    http-server -c-1 -p 8081
+
 http://localhost:8080/image.html
 
 # download image
