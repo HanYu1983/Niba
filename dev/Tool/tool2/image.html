@@ -28,97 +28,123 @@
 ></script>
 
 <script>
-  function weightView() {
-    return `<div style="flex: 1; background: white; border: 2px solid black"></div>`;
-  }
-  function cardView({
-    id,
-    title,
-    weight,
-    attackType,
-    outsidePower,
-    insidePower,
-    skillType,
-    skillCost,
-    skillName,
-    skillText,
-    skillMana,
-    color,
-  }) {
-    const W = 260 * 0.8;
-    const H = 390 * 0.8;
-    return `
-<div style="width: ${W}px; height: ${H}px; background:${color};">
-  <div>
-    <div style="height: 60px; overflow: hidden; font-size: 50px; text-align: center">${skillName}</div>
-  </div>
-  <div style="display:flex; justify-content: center; align-items: center;">
-    <div style="flex: 1; background: white">
-      <div style="font-size: 60px">${outsidePower}</div>
-    </div>
-    <div style="flex: 3; background: yellow">
-      <div style="display:flex; height: 10px">
-        ${[...new Array(weight).keys()].map(weightView).join("")}
-      </div>
-      <div style="display:flex; justify-content: center">
-        <img src="images/blade.png" style="height: ${150 * 0.8}px">
-        <div>
-          <div style="font-size: 3px;">${id}</div>
-          <div style="font-size: 6px;">${title}</div>
-          <div style="font-size: 6px;">${skillName}</div>
-        </div>
-      </div>
-      <div style="display:flex; height: 10px">
-        ${[...new Array(weight).keys()].map(weightView).join("")}
-      </div>
-    </div>
-    <div style="flex: 1; background: white">
-      <div style="font-size: 60px; text-align: center">${insidePower}</div>
-    </div>
-  </div>
-  <div style="display:flex">
-    <div style="flex: 1">
-      <div style="font-size: 12px; text-align: center">${skillCost}</div>
-    </div>
-    <div style="flex: 1">
-      <div style="font-size: 12px; text-align: center">${skillMana}</div>
-    </div>
-  </div>
-  <div style="font-size: 10px; text-align: center">${skillText}</div>
-</div>
-`;
-  }
+  //   function weightView() {
+  //     return `<div style="flex: 1; background: white; border: 2px solid black"></div>`;
+  //   }
+  //   function cardView({
+  //     id,
+  //     title,
+  //     weight,
+  //     attackType,
+  //     outsidePower,
+  //     insidePower,
+  //     skillType,
+  //     skillCost,
+  //     skillName,
+  //     skillText,
+  //     skillMana,
+  //     color,
+  //   }) {
+  //     const W = 260 * 0.8;
+  //     const H = 390 * 0.8;
+  //     return `
+  // <div style="width: ${W}px; height: ${H}px; background:${color};">
+  //   <div>
+  //     <div style="height: 60px; overflow: hidden; font-size: 50px; text-align: center">${skillName}</div>
+  //   </div>
+  //   <div style="display:flex; justify-content: center; align-items: center;">
+  //     <div style="flex: 1; background: white">
+  //       <div style="font-size: 60px">${outsidePower}</div>
+  //     </div>
+  //     <div style="flex: 3; background: yellow">
+  //       <div style="display:flex; height: 10px">
+  //         ${[...new Array(weight).keys()].map(weightView).join("")}
+  //       </div>
+  //       <div style="display:flex; justify-content: center">
+  //         <img src="images/blade.png" style="height: ${150 * 0.8}px">
+  //         <div>
+  //           <div style="font-size: 3px;">${id}</div>
+  //           <div style="font-size: 6px;">${title}</div>
+  //           <div style="font-size: 6px;">${skillName}</div>
+  //         </div>
+  //       </div>
+  //       <div style="display:flex; height: 10px">
+  //         ${[...new Array(weight).keys()].map(weightView).join("")}
+  //       </div>
+  //     </div>
+  //     <div style="flex: 1; background: white">
+  //       <div style="font-size: 60px; text-align: center">${insidePower}</div>
+  //     </div>
+  //   </div>
+  //   <div style="display:flex">
+  //     <div style="flex: 1">
+  //       <div style="font-size: 12px; text-align: center">${skillCost}</div>
+  //     </div>
+  //     <div style="flex: 1">
+  //       <div style="font-size: 12px; text-align: center">${skillMana}</div>
+  //     </div>
+  //   </div>
+  //   <div style="font-size: 10px; text-align: center">${skillText}</div>
+  // </div>
+  // `;
+  //   }
 
   function weightView2() {
     return `<div style="flex: 1; background: #ff9800; border: 2px solid black"></div>`;
   }
 
-  var imageMaps = {
-    '斬擊-大':'wea_bigSword.png',
-    '打擊-鎚':'wea_bigHummer.png',
-    '斬擊-刀':'wea_bigBlade.png',
-    '打擊-棍':'wea_longstick.png',
-    '刺擊-槍':'wea_spear.png',
-    '打擊-弓':'wea_bow.png',
-    '打擊-短':'wea_stick.png',
-    '打擊-包':'wea_backpack.png',
-    '盾擊-盾':'def_shield.png',
-    '斬擊-單':'wea_blade.png',
-    '刺擊-劍':'wea_sword.png',
-    '刺擊-匕':'wea_knife.png',
-    '格鬥-拳':'wea_hand.png',
-    '格鬥-腿':'wea_shoe.png',
-    '防具-衣':'def_cloth.png',
-    '防具-飾':'def_ring.png',
-    '防具-褲':'def_pant.png',
-    '防具-頭':'def_head.png',
-    '防具-盾':'def_shield.png'
+  const imageMaps = {
+    "斬擊-大": "wea_bigSword.png",
+    "打擊-鎚": "wea_bigHummer.png",
+    "斬擊-刀": "wea_bigBlade.png",
+    "打擊-棍": "wea_longstick.png",
+    "刺擊-槍": "wea_spear.png",
+    "打擊-弓": "wea_bow.png",
+    "打擊-短": "wea_stick.png",
+    "打擊-包": "wea_backpack.png",
+    "盾擊-盾": "def_shield.png",
+    "斬擊-單": "wea_blade.png",
+    "刺擊-劍": "wea_sword.png",
+    "刺擊-匕": "wea_knife.png",
+    "格鬥-拳": "wea_hand.png",
+    "格鬥-腿": "wea_shoe.png",
+    "防具-衣": "def_cloth.png",
+    "防具-飾": "def_ring.png",
+    "防具-褲": "def_pant.png",
+    "防具-頭": "def_head.png",
+    "防具-盾": "def_shield.png",
+  };
+  const colorMapping = {
+    近招: "red",
+    遠招: "yellow",
+    氣功: "white",
+    氣場: "LightGray",
+    防招: "green",
+    反應: "Fuchsia",
+  };
+  function getManaColor(skillMana) {
+    const mapping = {
+      無: null,
+      雷: "#F4D03F",
+      暗: "#76448A",
+      毒: "#1E8449",
+      火: "red",
+      水: "#3498DB",
+      風: "#58D68D",
+      光: "#FCF3CF",
+      地: "#DC7633",
+      刺: "#D4E6F1",
+      斬: "#C0392B",
+      打: "#EBDEF0",
+    };
+    return mapping[skillMana[0]];
   }
-  function getAtkImage(atkType){
-    if(imageMaps[atkType]){
+
+  function getAtkImage(atkType) {
+    if (imageMaps[atkType]) {
       return imageMaps[atkType];
     }
-    return 'wea_bigSword.png';
+    return "wea_bigSword.png";
   }
   function cardView2({
     id,
@@ -132,13 +158,14 @@
     skillName,
     skillText,
     skillMana,
-    color,
   }) {
-    const scale = .8;
+    const scale = 0.8;
     const W = 260 * scale;
     const H = 390 * scale;
     const fontSize = 64 * scale;
     const fontSize2 = 10 * scale;
+    const color = colorMapping[skillType];
+    const manaColor = getManaColor(skillMana);
     return `
 <div style="position:relative; width:${W}px; height:${H}px; background:${color}">
   <div style="position:relative; width:100%; height:20%; outline:solid; outline-width:1px;">
@@ -149,9 +176,11 @@
       <div style="position:relative; width:20%; height:100%; outline:solid; outline-width:1px; float:left; background:white">
         <div style="position:relative; width:100%; height:100%; left:0; top:19px; text-align:center; font-size:${fontSize}px; overflow:hidden">${outsidePower}</div>
       </div>
-      <div style="position:relative; width:60%; height:100%; outline:solid; outline-width:1px; float:left; background:yellow">
+      <div style="position:relative; width:60%; height:100%; outline:solid; outline-width:1px; float:left; background:${manaColor}">
         <div style="position:relative; width:100%; height:90%; outline:solid; outline-width:1px;">
-          <img src="images/${getAtkImage(attackType)}" style="position:relative; left:2.5%; top:2.5%; width:95%; height:95%;">
+          <img src="images/${getAtkImage(
+            attackType
+          )}" style="position:relative; left:2.5%; top:2.5%; width:95%; height:95%;">
         </div>
         <div style="position:relative; width:100%; height:10%; outline:solid; outline-width:1px;">
           <div style="position:relative; display:flex; height: 100%; ">
@@ -179,19 +208,10 @@
 `;
   }
 
-  const rows = dl.tsv("格鬥風雲錄2 - main.tsv").slice(0, 30);
+  const rows = dl.tsv("格鬥風雲錄2 - main.tsv").slice(30, 60);
 
   function draw() {
-    // const params = new URLSearchParams(window.location.search);
     rows.forEach((row) => {
-      const colorMapping = {
-        近招: "red",
-        遠招: "yellow",
-        氣功: "white",
-        氣場: "LightGray",
-        防招: "green",
-        反應: "Fuchsia",
-      };
       const id = row["id/int"];
       const title = row["title/string"];
       const weight = row["weight/int"];
@@ -217,7 +237,6 @@
             skillName,
             skillText,
             skillMana,
-            color: colorMapping[skillType],
           })
         )
       );
