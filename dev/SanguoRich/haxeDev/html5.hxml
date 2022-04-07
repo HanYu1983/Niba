@@ -7,4 +7,4 @@
 -lib hxSet
 -lib tweenx
 
--js output/Main.js
+-js public/Main.js
