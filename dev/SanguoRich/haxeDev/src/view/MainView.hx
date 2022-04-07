@@ -83,15 +83,14 @@ class MainView extends VBox {
     private function syncView() {
         var gameInfo = Main.model.gameInfo();
         syncViewByInfo(gameInfo);
-
         syncActions(gameInfo);
-        syncUI(gameInfo);
     }
 
     private function syncViewByInfo(gameInfo:GameInfo){
         syncGameInfo(gameInfo);
         syncGridViews(gameInfo);
         syncPlayerViews(gameInfo);
+        syncUI(gameInfo);
     }
 
     private function syncActions(gameInfo:GameInfo) {
