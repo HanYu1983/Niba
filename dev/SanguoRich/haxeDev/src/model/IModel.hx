@@ -13,7 +13,8 @@ typedef PlayerInfo = {
 
 typedef ActionInfo = {
     id:Int,
-    value:Dynamic
+    value:Dynamic,
+    gameInfo:GameInfo
 }
 
 typedef GameInfo = {
