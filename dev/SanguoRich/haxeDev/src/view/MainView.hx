@@ -83,7 +83,7 @@ class MainView extends VBox {
     private function syncView() {
         var gameInfo = Main.model.gameInfo();
         syncViewByInfo(gameInfo);
-        
+
         syncActions(gameInfo);
         syncUI(gameInfo);
     }
@@ -100,9 +100,10 @@ class MainView extends VBox {
             function getInfo(_gameInfo:GameInfo){
                 return _gameInfo;
             }
-            tweens.push(TweenX.func(()->{trace(id); syncViewByInfo(getInfo(action.gameInfo));}).delay(2));
+            tweens.push(TweenX.func(()->{syncViewByInfo(getInfo(action.gameInfo));}).delay(2));
         }
         if(tweens.length > 0) {
+            tweens.push(TweenX.func(syncView));
             TweenX.serial(tweens);
         }
     }
