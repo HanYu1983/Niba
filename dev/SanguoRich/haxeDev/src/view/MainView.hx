@@ -1,8 +1,8 @@
 package view;
 
+import tweenx909.TweenX;
 import model.IModel.GameInfo;
 import model.PeopleGenerator;
-import libnoise.generator.Perlin;
 import haxe.ui.events.UIEvent;
 import haxe.ui.core.Component;
 import haxe.ui.containers.VBox;
@@ -86,6 +86,19 @@ class MainView extends VBox {
         syncGridViews(gameInfo);
         syncPlayerViews(gameInfo);
         syncUI(gameInfo);
+        syncActions(gameInfo);
+    }
+
+    private function syncActions(gameInfo:GameInfo) {
+
+        var tweens = [];
+        for(id => action in gameInfo.actions){
+            // TweenX.func()
+            trace('push act');
+            tweens.push(TweenX.func(()->{trace(id);}).delay(1));
+        }
+        // TweenX.playAll(tweens);
+        if(tweens.length > 0) TweenX.parallel(tweens);
     }
 
     private function syncUI(gameInfo:GameInfo){
@@ -101,7 +114,7 @@ class MainView extends VBox {
     private function syncGridViews(gameInfo:GameInfo){
         for (index => grid in grids) {
             var info = gameInfo.grids[index];
-            grid.type = info.landType + "";
+            grid.type = info.landType;
         }
     }
 

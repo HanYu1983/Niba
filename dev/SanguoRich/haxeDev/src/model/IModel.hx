@@ -22,7 +22,7 @@ typedef GameInfo = {
     isPlayerTurn:Bool,
     currentPlayer:PlayerInfo,
     isPlaying:Bool,
-    currentActionName:Array<ActionInfo>,
+    actions:Array<ActionInfo>,
 }
 
 interface IModel{

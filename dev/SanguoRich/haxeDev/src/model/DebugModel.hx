@@ -9,6 +9,8 @@ class DebugModel implements IModel {
 
     public function new() {}
 
+    private var info:GameInfo;
+
 	public function getGrids(count:Int):Array<Grid> {
 		return GridGenerator.getInst().getGrids(count);
 	}
@@ -22,25 +24,7 @@ class DebugModel implements IModel {
 	}
 
 	public function gameStart(cb:Void->Void):Void {
-		cb();
-	}
-
-	public function currentPlayer():PlayerInfo {
-		return {
-            id:0,
-            name:'han',
-            money:1000,
-            people:[],
-            atGridId:0
-        };
-	}
-
-	public function isPlayerTurn():Bool {
-		return (Math.random() > .5);
-	}
-
-	public function gameInfo():GameInfo {
-		return {
+        info = {
             players:[
                 {
                     id:0,
@@ -50,29 +34,65 @@ class DebugModel implements IModel {
                     atGridId:0
                 },
                 {
-                    id:0,
+                    id:1,
                     name:'han',
                     money:1000,
                     people:[],
                     atGridId:3
                 },
                 {
-                    id:0,
+                    id:2,
                     name:'xiao',
+                    money:1000,
+                    people:[],
+                    atGridId:2
+                },
+                {
+                    id:3,
+                    name:'yu',
                     money:1000,
                     people:[],
                     atGridId:2
                 }
             ],
             grids:getGrids(100),
-            isPlayerTurn:isPlayerTurn(),
-            currentPlayer:currentPlayer(),
+            isPlayerTurn:true,
+            currentPlayer:{
+                id:0,
+                name:'vic',
+                money:1000,
+                people:[],
+                atGridId:0
+            },
             isPlaying: true,
-            currentActionName:[]
+            actions:[]
         };
+		cb();
+	}
+
+	public function currentPlayer():PlayerInfo {
+		return info.currentPlayer;
+	}
+
+	public function isPlayerTurn():Bool {
+        return info.isPlayerTurn;
+	}
+
+	public function gameInfo():GameInfo {
+		return info;
 	}
 
 	public function playerDice(cb:() -> Void) {
+        info.players[0].atGridId += Math.floor(Math.random() * 6);
+        info.currentPlayer = info.players[Math.floor(Math.random() * 4)];
+        info.isPlayerTurn = (info.currentPlayer.id == 0);
+        info.actions = [{
+            id:0,
+            value:{}
+        },{
+            id:1,
+            value:{}
+        }];
         cb();
     }
 }

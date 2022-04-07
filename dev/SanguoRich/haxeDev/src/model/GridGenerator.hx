@@ -1,4 +1,5 @@
 package model;
+import libnoise.QualityMode;
 import haxe.ui.components.Rule;
 import libnoise.generator.Perlin;
 
@@ -36,7 +37,7 @@ class GridGenerator{
     }
 
     private function getHeight(x:Int = 0, y:Int = 0, z:Int = 0) {
-        var noise = new Perlin(.1);
+        var noise = new Perlin(.1, 2, .5, 16, 0, QualityMode.HIGH);
         return (noise.getValue(x, y, z) + 1) / 2;
     }
 

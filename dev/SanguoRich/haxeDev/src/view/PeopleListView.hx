@@ -6,18 +6,18 @@ class PeopleListView extends TableView{
     public function new(){
         super();
 
-        this.dataSource.add({
-            chk_sel:"true",
-            name:"A1",
-            command:"B1"
-        });
+        // this.dataSource.add({
+        //     chk_sel:"true",
+        //     name:"A1",
+        //     command:"B1"
+        // });
 
     }
 
-    public function setList(list:Array<Dynamic>){
-        dataSource.clear();
-        for (index => value in list) {
-            dataSource.add(value);
-        }
-    }
+    // public function setList(list:Array<Dynamic>){
+    //     dataSource.clear();
+    //     for (index => value in list) {
+    //         dataSource.add(value);
+    //     }
+    // }
 }
