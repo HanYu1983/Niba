@@ -82,23 +82,29 @@ class MainView extends VBox {
 
     private function syncView() {
         var gameInfo = Main.model.gameInfo();
+        syncViewByInfo(gameInfo);
+        syncActions(gameInfo);
+    }
+
+    private function syncViewByInfo(gameInfo:GameInfo){
         syncGameInfo(gameInfo);
         syncGridViews(gameInfo);
         syncPlayerViews(gameInfo);
         syncUI(gameInfo);
-        syncActions(gameInfo);
     }
 
     private function syncActions(gameInfo:GameInfo) {
-
         var tweens = [];
         for(id => action in gameInfo.actions){
-            // TweenX.func()
-            trace('push act');
-            tweens.push(TweenX.func(()->{trace(id);}).delay(1));
+            function getInfo(_gameInfo:GameInfo){
+                return _gameInfo;
+            }
+            tweens.push(TweenX.func(()->{syncViewByInfo(getInfo(action.gameInfo));}).delay(2));
         }
-        // TweenX.playAll(tweens);
-        if(tweens.length > 0) TweenX.parallel(tweens);
+        if(tweens.length > 0) {
+            tweens.push(TweenX.func(syncView));
+            TweenX.serial(tweens);
+        }
     }
 
     private function syncUI(gameInfo:GameInfo){

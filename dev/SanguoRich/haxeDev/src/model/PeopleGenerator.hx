@@ -70,11 +70,12 @@ class PeopleGenerator {
 
     var peopleId = 0;
     public function generate():People{
-        var name = this.names[Math.floor(Math.random() * this.names.length)];
+        var name = this.names[peopleId];
         var type = [0,0,0,0,0,1,1,2,2,3][(Math.floor(Math.random() * 10))];
         var values = this.valueMaps[type];
         var genAbilitys = this.abiMaps[type];
         var skillCount = [1,2,2,3][type];
+        skillCount = Math.ceil(Math.random() * skillCount);
         
         var abilities = new Set<Int>();
         while(abilities.length < skillCount){

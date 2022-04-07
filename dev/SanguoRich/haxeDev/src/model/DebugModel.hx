@@ -88,10 +88,12 @@ class DebugModel implements IModel {
         info.isPlayerTurn = (info.currentPlayer.id == 0);
         info.actions = [{
             id:0,
-            value:{}
+            value:{},
+            gameInfo:gameInfo()
         },{
             id:1,
-            value:{}
+            value:{},
+            gameInfo:gameInfo()
         }];
         cb();
     }
