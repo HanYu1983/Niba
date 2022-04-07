@@ -1,0 +1,4 @@
+<box width="50" height="50" style="background-color: red;border:1px solid red;background-opacity: .3">
+    <label id="lbl_name" text="" textAlign="center" width="100%"/>
+    <label id="lbl_type" text="abc" textAlign="center" marginTop="20" width="100%" height="100%" style="font-size:20px;"/>
+</box>

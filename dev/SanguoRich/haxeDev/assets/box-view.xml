@@ -1,0 +1,3 @@
+<box width="50" height="50" style="background-color: red;border:1px solid red;background-opacity: .3">
+    <label id="lbl_name" text="" textAlign="center" width="100%"/>
+</box>
