@@ -1,0 +1,1 @@
+docker run --rm -ti -v d:/dev/Niba/dev/SanguoRich/haxeDev:/haxeDev -w /haxeDev sanguorich_dev haxe html5.hxml
