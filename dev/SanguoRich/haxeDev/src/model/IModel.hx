@@ -11,10 +11,23 @@ typedef PlayerInfo = {
     atGridId:Int
 }
 
+enum ActionInfoID {
+    MOVE;
+}
+
 typedef ActionInfo = {
-    id:Int,
+    id:ActionInfoID,
     value:Dynamic,
     gameInfo:GameInfo
+}
+
+enum EventInfoID {
+    WORLD_EVENT;
+}
+
+typedef EventInfo = {
+    id:EventInfoID,
+    value:Dynamic
 }
 
 typedef GameInfo = {
@@ -23,19 +36,22 @@ typedef GameInfo = {
     isPlayerTurn:Bool,
     currentPlayer:PlayerInfo,
     isPlaying:Bool,
+    events:Array<EventInfo>,
+    beforeActions:Array<ActionInfo>,
     actions:Array<ActionInfo>,
 }
 
 interface IModel{
 
     
-    public function gameStart(cb:Void->Void):Void;
-    public function currentPlayer():PlayerInfo;
-    public function isPlayerTurn():Bool;
-    public function gameInfo():GameInfo;
+    function gameStart(cb:Void->Void):Void;
+    function gameInfo():GameInfo;
+    function getPeople(count:Int):Array<People>;
+    function playerDice(cb:Void->Void):Void;
+    function playerEnd(cb:()->Void):Void;
 
-    private function getGrids(count:Int):Array<Grid>;
-    public function getPeople(count:Int):Array<People>;
-
-    public function playerDice(cb:Void->Void):Void;
+    // function currentPlayer():PlayerInfo;
+    // function isPlayerTurn():Bool;
+    // function getGrids(count:Int):Array<Grid>;
+    
 }

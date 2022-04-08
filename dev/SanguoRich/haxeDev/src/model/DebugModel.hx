@@ -1,5 +1,7 @@
 package model;
 
+import model.IModel.ActionInfoID;
+import model.IModel.EventInfoID;
 import model.IModel.PlayerInfo;
 import model.IModel.GameInfo;
 import model.GridGenerator.Grid;
@@ -65,7 +67,9 @@ class DebugModel implements IModel {
                 atGridId:0
             },
             isPlaying: true,
-            actions:[]
+            beforeActions: [],
+            actions:[],
+            events: []
         };
 		cb();
 	}
@@ -86,15 +90,68 @@ class DebugModel implements IModel {
         info.players[0].atGridId += Math.floor(Math.random() * 6);
         info.currentPlayer = info.players[Math.floor(Math.random() * 4)];
         info.isPlayerTurn = (info.currentPlayer.id == 0);
+        info.beforeActions = [
+            {
+                id:ActionInfoID.MOVE,
+                value:{
+                    playerId:0,
+                    fromGridId:5,
+                    toGridId:10
+                },
+                gameInfo: gameInfo()
+            }
+        ];
         info.actions = [{
-            id:0,
-            value:{},
+            id:ActionInfoID.MOVE,
+            value:{
+                playerId:1,
+                fromGridId:8,
+                toGridId:13
+            },
             gameInfo:gameInfo()
         },{
-            id:1,
-            value:{},
+            id:ActionInfoID.MOVE,
+            value:{
+                playerId:2,
+                fromGridId:10,
+                toGridId:15
+            },
             gameInfo:gameInfo()
         }];
+        info.events = [
+            {
+                id:EventInfoID.WORLD_EVENT,
+                value:{
+                    commands:[]
+                }
+            }
+        ];
+        cb();
+    }
+
+	public function playerEnd(cb:() -> Void) {
+        info.players[0].atGridId += Math.floor(Math.random() * 6);
+        info.currentPlayer = info.players[Math.floor(Math.random() * 4)];
+        info.isPlayerTurn = (info.currentPlayer.id == 0);
+        info.actions = [];
+        info.beforeActions = [{
+            id:ActionInfoID.MOVE,
+            value:{
+                playerId:1,
+                fromGridId:8,
+                toGridId:13
+            },
+            gameInfo:gameInfo()
+        },{
+            id:ActionInfoID.MOVE,
+            value:{
+                playerId:2,
+                fromGridId:10,
+                toGridId:15
+            },
+            gameInfo:gameInfo()
+        }];
+        info.events = [];
         cb();
     }
 }

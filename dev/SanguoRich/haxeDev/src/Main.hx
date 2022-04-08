@@ -10,7 +10,6 @@ class Main {
 	public static var model:IModel;
 
 	public static function main() {
-		// model = new DebugModel();
 		model = new ModelVer1();
 
 		var app = new HaxeUIApp();

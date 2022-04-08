@@ -1,5 +1,9 @@
 package view;
 
+import model.IModel.ActionInfo;
+import tweenx909.advanced.TweenTypeX;
+import model.IModel.ActionInfoID;
+import model.IModel.EventInfo;
 import tweenx909.TweenX;
 import model.IModel.GameInfo;
 import model.PeopleGenerator;
@@ -39,25 +43,11 @@ class MainView extends VBox {
         box_bottom.addComponent(peopleListView);
 
         var people = Main.model.getPeople(30);
-        setPeopleList(people);
-    }
-
-    private function setPeopleList(people:Array<People>) {
-        peopleListView.dataSource.clear();
-        for (index => p in people) {
-            for(i in 0...3){
-                var abi = "";
-                if(i < p.abilities.length){
-                    abi = PeopleGenerator.getInst().getAbilityName(p.abilities[i]);
-                }
-                Reflect.setField(p, 'ability${i+1}', abi);
-            }
-            peopleListView.dataSource.add(p);
-        }
+        peopleListView.setPeopleList(people);
     }
 
     @:bind(this, UIEvent.READY)
-    private function onUIReady(e:UIEvent) {
+    function onUIReady(e:UIEvent) {
         for (index => grid in grids) {
             grid.name = index + "";
             grid.left = (index % 10) * 50;
@@ -67,33 +57,81 @@ class MainView extends VBox {
     }
     
     @:bind(btn_go, MouseEvent.CLICK)
-    private function onBtnGoClick(e:MouseEvent) {
+    function onBtnGoClick(e:MouseEvent) {
         Main.model.playerDice(syncView);
     }
 
     @:bind(btn_start, MouseEvent.CLICK)
-    private function onBtnStartClick(e:MouseEvent){
+    function onBtnStartClick(e:MouseEvent){
         Main.model.gameStart(syncView);
     }
 
-    private function getGridPositionByGridId(id:Int) {
+    @:bind(btn_end, MouseEvent.CLICK)
+    function onBtnEndClick(e:MouseEvent){
+        Main.model.playerEnd(syncView);
+    }
+
+    function getGridPositionByGridId(id:Int) {
         return [grids[id].left, grids[id].top];
     }
 
-    private function syncView() {
+    function syncView() {
         var gameInfo = Main.model.gameInfo();
-        syncViewByInfo(gameInfo);
-        syncActions(gameInfo);
+
+        // ui可以直接更新
+        syncUI(gameInfo);
+
+        // 播放同步前的所有動畫
+        var tweens = [];
+        playBeforeSync(gameInfo, tweens);
+        
+        tweens.push(TweenX.func(()->{
+            syncViewByInfo(gameInfo);
+            playEvents(gameInfo);
+            // syncActions(gameInfo);
+        }));
+
+        TweenX.serial(tweens);
     }
 
-    private function syncViewByInfo(gameInfo:GameInfo){
+    function syncViewByInfo(gameInfo:GameInfo){
         syncGameInfo(gameInfo);
         syncGridViews(gameInfo);
         syncPlayerViews(gameInfo);
-        syncUI(gameInfo);
+        
     }
 
-    private function syncActions(gameInfo:GameInfo) {
+    function playBeforeSync(gameInfo:GameInfo, tweens:Array<TweenX>){
+        playActions(gameInfo.beforeActions, tweens);
+    }
+
+    function playActions(actions:Array<ActionInfo>, tweens:Array<TweenX>) {
+        for(id => event in actions){
+            switch (event.id){
+                case ActionInfoID.MOVE:
+                    var pv = players[event.value.playerId];
+                    var toPos = getGridPositionByGridId(event.value.toGridId);
+                    tweens.push(TweenX.to(pv, {"left":toPos[0], "top":toPos[1]}));
+            }
+        }
+    }
+
+    var events:Array<EventInfo>;
+    function playEvents(gameInfo:GameInfo){
+        box_commands.disabled = true;
+        events = gameInfo.events;
+        doOneEvent();
+    }
+
+    function doOneEvent(){
+        if(events.length > 0){
+            box_commands.disabled = false;
+            var event = events.shift();
+            trace(event);
+        }
+    }
+
+    function syncActions(gameInfo:GameInfo) {
         var tweens = [];
         for(id => action in gameInfo.actions){
             function getInfo(_gameInfo:GameInfo){
@@ -102,12 +140,11 @@ class MainView extends VBox {
             tweens.push(TweenX.func(()->{syncViewByInfo(getInfo(action.gameInfo));}).delay(2));
         }
         if(tweens.length > 0) {
-            tweens.push(TweenX.func(syncView));
             TweenX.serial(tweens);
         }
     }
 
-    private function syncUI(gameInfo:GameInfo){
+    function syncUI(gameInfo:GameInfo){
         btn_start.disabled = gameInfo.isPlaying;
 
         if(gameInfo.isPlayerTurn){
@@ -117,14 +154,14 @@ class MainView extends VBox {
         }
     }
 
-    private function syncGridViews(gameInfo:GameInfo){
+    function syncGridViews(gameInfo:GameInfo){
         for (index => grid in grids) {
             var info = gameInfo.grids[index];
             grid.type = info.landType;
         }
     }
 
-    private function syncPlayerViews(gameInfo:GameInfo){
+    function syncPlayerViews(gameInfo:GameInfo){
         for (index => playerInfo in gameInfo.players) {
             var playerView = players[index];
             var pos = getGridPositionByGridId(playerInfo.atGridId);
@@ -133,7 +170,7 @@ class MainView extends VBox {
         }
     }
 
-    private function syncGameInfo(gameInfo:GameInfo){
+    function syncGameInfo(gameInfo:GameInfo){
         var str = '
             玩家:${gameInfo.currentPlayer.name}
             是否自己回合:${gameInfo.isPlayerTurn}
