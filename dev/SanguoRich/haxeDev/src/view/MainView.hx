@@ -1,5 +1,6 @@
 package view;
 
+import model.IModel.PlayerInfo;
 import model.IModel.ActionInfo;
 import model.IModel.ActionInfoID;
 import model.IModel.EventInfo;
@@ -69,6 +70,32 @@ class MainView extends VBox {
         Main.model.playerEnd(syncView);
     }
 
+    @:bind(opt_p1, MouseEvent.CLICK)
+    function onBtnShowP1Click(e:MouseEvent){
+        syncPlayerInfo(0);
+    }
+
+
+    @:bind(opt_p2, MouseEvent.CLICK)
+    function onBtnShowP2Click(e:MouseEvent){
+        syncPlayerInfo(1);
+    }
+
+    @:bind(opt_p3, MouseEvent.CLICK)
+    function onBtnShowP3Click(e:MouseEvent){
+        syncPlayerInfo(2);
+    }
+
+    @:bind(opt_p4, MouseEvent.CLICK)
+    function onBtnShowP4Click(e:MouseEvent){
+        syncPlayerInfo(3);
+    }
+
+    @:bind(btn_showStrategy, MouseEvent.CLICK)
+    function onBtnShowStrategyClick(e:MouseEvent){
+        
+    }
+
     function getGridPositionByGridId(id:Int) {
         return [grids[id].left, grids[id].top];
     }
@@ -115,14 +142,14 @@ class MainView extends VBox {
 
     var events:Array<EventInfo>;
     function playEvents(gameInfo:GameInfo){
-        box_commands.disabled = true;
+        box_commands2.disabled = true;
         events = gameInfo.events;
         doOneEvent();
     }
 
     function doOneEvent(){
         if(events.length > 0){
-            box_commands.disabled = false;
+            box_commands2.disabled = false;
             var event = events.shift();
             trace(event);
         }
@@ -143,12 +170,20 @@ class MainView extends VBox {
 
     function syncUI(gameInfo:GameInfo){
         btn_start.disabled = gameInfo.isPlaying;
+        box_commands1.disabled = !gameInfo.isPlayerTurn;
 
-        if(gameInfo.isPlayerTurn){
-            btn_go.disabled = false;
-        }else{
-            btn_go.disabled = true;
-        }
+        syncPlayerInfo(0);
+    }
+
+    function syncPlayerInfo(id:Int){
+        var gameInfo = Main.model.gameInfo();
+        var p = gameInfo.players[id];
+        pro_name.value = p.name;
+        pro_money.value = p.money;
+        pro_army.value = p.army;
+        pro_peopleCount.value = p.people.length;
+        pro_cityCount.value = "0";
+        peopleListView.setPeopleList(p.people);
     }
 
     function syncGridViews(gameInfo:GameInfo){

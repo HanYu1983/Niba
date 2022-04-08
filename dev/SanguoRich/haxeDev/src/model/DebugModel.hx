@@ -32,28 +32,54 @@ class DebugModel implements IModel {
                     id:0,
                     name:'vic',
                     money:1000,
-                    people:[],
+                    army: 100,
+                    strategy: 10,
+                    people:[
+                        PeopleGenerator.getInst().generate(),
+                        PeopleGenerator.getInst().generate()
+                    ],
                     atGridId:0
                 },
                 {
                     id:1,
                     name:'han',
-                    money:1000,
-                    people:[],
+                    money:10001,
+                    army: 1001,
+                    strategy: 101,
+                    people:[
+                        PeopleGenerator.getInst().generate(),
+                        PeopleGenerator.getInst().generate(),
+                        PeopleGenerator.getInst().generate()
+                    ],
                     atGridId:3
                 },
                 {
                     id:2,
                     name:'xiao',
-                    money:1000,
-                    people:[],
+                    money:10002,
+                    army: 1002,
+                    strategy: 102,
+                    people:[
+                        PeopleGenerator.getInst().generate(),
+                        PeopleGenerator.getInst().generate(),
+                        PeopleGenerator.getInst().generate(),
+                        PeopleGenerator.getInst().generate()
+                    ],
                     atGridId:2
                 },
                 {
                     id:3,
                     name:'yu',
-                    money:1000,
-                    people:[],
+                    money:10003,
+                    army: 1003,
+                    strategy: 103,
+                    people:[
+                        PeopleGenerator.getInst().generate(),
+                        PeopleGenerator.getInst().generate(),
+                        PeopleGenerator.getInst().generate(),
+                        PeopleGenerator.getInst().generate(),
+                        PeopleGenerator.getInst().generate()
+                    ],
                     atGridId:2
                 }
             ],
@@ -63,6 +89,8 @@ class DebugModel implements IModel {
                 id:0,
                 name:'vic',
                 money:1000,
+                army: 1003,
+                strategy: 103,
                 people:[],
                 atGridId:0
             },

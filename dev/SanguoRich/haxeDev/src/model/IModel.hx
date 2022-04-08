@@ -7,6 +7,8 @@ typedef PlayerInfo = {
     id:Int,
     name:String,
     money:Int,
+    army:Int,
+    strategy:Int,
     people:Array<People>,
     atGridId:Int
 }
