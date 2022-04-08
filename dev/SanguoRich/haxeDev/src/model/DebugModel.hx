@@ -67,7 +67,6 @@ class DebugModel implements IModel {
                 atGridId:0
             },
             isPlaying: true,
-            beforeActions: [],
             actions:[],
             events: []
         };
@@ -90,7 +89,7 @@ class DebugModel implements IModel {
         info.players[0].atGridId += Math.floor(Math.random() * 6);
         info.currentPlayer = info.players[Math.floor(Math.random() * 4)];
         info.isPlayerTurn = (info.currentPlayer.id == 0);
-        info.beforeActions = [
+        info.actions = [
             {
                 id:ActionInfoID.MOVE,
                 value:{
@@ -101,23 +100,6 @@ class DebugModel implements IModel {
                 gameInfo: gameInfo()
             }
         ];
-        info.actions = [{
-            id:ActionInfoID.MOVE,
-            value:{
-                playerId:1,
-                fromGridId:8,
-                toGridId:13
-            },
-            gameInfo:gameInfo()
-        },{
-            id:ActionInfoID.MOVE,
-            value:{
-                playerId:2,
-                fromGridId:10,
-                toGridId:15
-            },
-            gameInfo:gameInfo()
-        }];
         info.events = [
             {
                 id:EventInfoID.WORLD_EVENT,
@@ -133,8 +115,7 @@ class DebugModel implements IModel {
         info.players[0].atGridId += Math.floor(Math.random() * 6);
         info.currentPlayer = info.players[Math.floor(Math.random() * 4)];
         info.isPlayerTurn = (info.currentPlayer.id == 0);
-        info.actions = [];
-        info.beforeActions = [{
+        info.actions = [{
             id:ActionInfoID.MOVE,
             value:{
                 playerId:1,

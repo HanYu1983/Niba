@@ -1,12 +1,10 @@
 package view;
 
 import model.IModel.ActionInfo;
-import tweenx909.advanced.TweenTypeX;
 import model.IModel.ActionInfoID;
 import model.IModel.EventInfo;
 import tweenx909.TweenX;
 import model.IModel.GameInfo;
-import model.PeopleGenerator;
 import haxe.ui.events.UIEvent;
 import haxe.ui.core.Component;
 import haxe.ui.containers.VBox;
@@ -88,7 +86,6 @@ class MainView extends VBox {
         tweens.push(TweenX.func(()->{
             syncViewByInfo(gameInfo);
             playEvents(gameInfo);
-            // syncActions(gameInfo);
         }));
 
         TweenX.serial(tweens);
@@ -102,7 +99,7 @@ class MainView extends VBox {
     }
 
     function playBeforeSync(gameInfo:GameInfo, tweens:Array<TweenX>){
-        playActions(gameInfo.beforeActions, tweens);
+        playActions(gameInfo.actions, tweens);
     }
 
     function playActions(actions:Array<ActionInfo>, tweens:Array<TweenX>) {
@@ -131,18 +128,18 @@ class MainView extends VBox {
         }
     }
 
-    function syncActions(gameInfo:GameInfo) {
-        var tweens = [];
-        for(id => action in gameInfo.actions){
-            function getInfo(_gameInfo:GameInfo){
-                return _gameInfo;
-            }
-            tweens.push(TweenX.func(()->{syncViewByInfo(getInfo(action.gameInfo));}).delay(2));
-        }
-        if(tweens.length > 0) {
-            TweenX.serial(tweens);
-        }
-    }
+    // function syncActions(gameInfo:GameInfo) {
+    //     var tweens = [];
+    //     for(id => action in gameInfo.actions){
+    //         function getInfo(_gameInfo:GameInfo){
+    //             return _gameInfo;
+    //         }
+    //         tweens.push(TweenX.func(()->{syncViewByInfo(getInfo(action.gameInfo));}).delay(2));
+    //     }
+    //     if(tweens.length > 0) {
+    //         TweenX.serial(tweens);
+    //     }
+    // }
 
     function syncUI(gameInfo:GameInfo){
         btn_start.disabled = gameInfo.isPlaying;

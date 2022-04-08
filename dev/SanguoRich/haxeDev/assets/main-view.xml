@@ -15,6 +15,8 @@
                 <button text="移動" width="100%" id="btn_go" />
             </vbox>
             <vbox id="box_commands" width="100">
+                <button text="戰爭" width="100%" id="btn_war" />
+                <button text="進貢" width="100%" id="btn_give" />
                 <button text="結束" width="100%" id="btn_end" />
             </vbox>
         </vbox>

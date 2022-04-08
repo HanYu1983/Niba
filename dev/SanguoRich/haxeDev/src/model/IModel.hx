@@ -37,7 +37,6 @@ typedef GameInfo = {
     currentPlayer:PlayerInfo,
     isPlaying:Bool,
     events:Array<EventInfo>,
-    beforeActions:Array<ActionInfo>,
     actions:Array<ActionInfo>,
 }
 
