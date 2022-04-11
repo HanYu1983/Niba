@@ -18,6 +18,11 @@
                 <button text="計略" width="100%" id="btn_showStrategy" />
             </vbox>
             <vbox id="box_commands2" width="100">
+                <button text="交涉" width="100%" id="btn_negotiate" />
+                <button text="搶奪" width="100%" id="btn_snatch" />
+                <button text="占領" width="100%" id="btn_occupation" />
+            </vbox>
+            <vbox id="box_commands3" width="100">
                 <button text="戰爭" width="100%" id="btn_war" />
                 <button text="進貢" width="100%" id="btn_give" />
                 <button text="結束" width="100%" id="btn_end" />

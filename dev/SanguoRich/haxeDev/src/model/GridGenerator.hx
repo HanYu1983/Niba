@@ -6,9 +6,24 @@ import libnoise.generator.Perlin;
 typedef Grid = {
     id:Int,
     landType:Int,
-    buildtype:Int,
+    buildtype:BUILDING,
     height:Float,
-    attachs:Array<Int>
+    attachs:Array<Int>,
+    belongPlayerId:Int,
+    value:Int
+}
+
+enum BUILDING{
+    EMPTY;
+    MARKET;
+    FARM;
+    VILLAGE;
+    FORGE;
+    POLICE;
+    WALL;
+    EXPLORE;
+    BARRACKS;
+    CITY;
 }
 
 class GridGenerator{
@@ -20,17 +35,38 @@ class GridGenerator{
         return inst;
     }
 
+    public function getGrid():Grid{
+        return {
+            id:0,
+            landType:0,
+            buildtype:BUILDING.EMPTY,
+            height:0,
+            attachs:[],
+            belongPlayerId: null,
+            value:0
+        };
+    }
+
     public function getGrids(count:Int):Array<Grid> {
         var grids = [];
         for(i in 0...count){
             var height = getHeight(i);
-            var g = {
-                id:i,
-                landType:[0,0,1,1,1,1,2,2,3,3][Math.floor(height * 10)],
-                buildtype:[0,0,0,0,0,0,2,2,3,3][Math.floor(Math.random() * 10)],
-                height:height,
-                attachs:[]
-            };
+            var g = getGrid();
+            g.id = i;
+            g.landType = [0,0,1,1,1,1,2,2,3,3][Math.floor(height * 10)];
+            g.buildtype = [
+                BUILDING.EMPTY,
+                BUILDING.EMPTY,
+                BUILDING.EMPTY,
+                BUILDING.MARKET,
+                BUILDING.MARKET,
+                BUILDING.FARM,
+                BUILDING.FARM,
+                BUILDING.VILLAGE,
+                BUILDING.VILLAGE,
+                BUILDING.CITY
+            ][Math.floor(Math.random() * 10)];
+            g.height = height;
             grids.push(g);
         }
         return grids;

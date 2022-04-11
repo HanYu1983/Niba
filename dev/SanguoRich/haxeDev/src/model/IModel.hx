@@ -25,6 +25,7 @@ typedef ActionInfo = {
 
 enum EventInfoID {
     WORLD_EVENT;
+    WALK_STOP;
 }
 
 typedef EventInfo = {

@@ -1,5 +1,7 @@
 package view;
 
+import model.GridGenerator.Grid;
+import model.GridGenerator.Grid;
 import model.IModel.PlayerInfo;
 import model.IModel.ActionInfo;
 import model.IModel.ActionInfoID;
@@ -53,11 +55,16 @@ class MainView extends VBox {
             grid.top = Math.floor(index / 10) * 50;
             grid.backgroundColor = '#0000FF';
         }
+        box_commands2.disabled = true;
+        box_commands3.disabled = true;
     }
     
     @:bind(btn_go, MouseEvent.CLICK)
     function onBtnGoClick(e:MouseEvent) {
         Main.model.playerDice(syncView);
+
+        box_commands2.disabled = true;
+        box_commands3.disabled = true;
     }
 
     @:bind(btn_start, MouseEvent.CLICK)
@@ -142,15 +149,30 @@ class MainView extends VBox {
 
     var events:Array<EventInfo>;
     function playEvents(gameInfo:GameInfo){
-        box_commands2.disabled = true;
         events = gameInfo.events;
         doOneEvent();
     }
 
     function doOneEvent(){
         if(events.length > 0){
-            box_commands2.disabled = false;
             var event = events.shift();
+            switch (event.id){
+                case WALK_STOP:
+                    var g:Grid = event.value.grid;
+                    if(g.belongPlayerId == null){
+                        box_commands2.disabled = false;
+                    }else{
+                        if(g.belongPlayerId == 0){
+
+                        }else{
+                            box_commands3.disabled = false;
+                        }
+                    }
+                case WORLD_EVENT:
+                    trace("WORLD_EVENT");
+                case _:
+                    trace("null");
+            }
             trace(event);
         }
     }
@@ -190,6 +212,7 @@ class MainView extends VBox {
         for (index => grid in grids) {
             var info = gameInfo.grids[index];
             grid.type = info.landType;
+            grid.building = info.buildtype;
         }
     }
 

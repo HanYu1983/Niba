@@ -128,10 +128,16 @@ class DebugModel implements IModel {
                 gameInfo: gameInfo()
             }
         ];
+
+
+        var g = GridGenerator.getInst().getGrid();
+        g.belongPlayerId = 1;
+        
         info.events = [
             {
-                id:EventInfoID.WORLD_EVENT,
+                id:EventInfoID.WALK_STOP,
                 value:{
+                    grid:g,
                     commands:[]
                 }
             }
