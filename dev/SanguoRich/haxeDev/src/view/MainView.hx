@@ -1,5 +1,6 @@
 package view;
 
+import haxe.ui.containers.Absolute;
 import model.GridGenerator.Grid;
 import model.GridGenerator.Grid;
 import model.IModel.PlayerInfo;
@@ -14,7 +15,7 @@ import haxe.ui.containers.VBox;
 import haxe.ui.events.MouseEvent;
 
 @:build(haxe.ui.ComponentBuilder.build("assets/main-view.xml"))
-class MainView extends VBox {
+class MainView extends Absolute {
     var grids:Array<GridView> = [];
     var players:Array<PlayerView> = [];
     var peopleListView:PeopleListView;
@@ -57,6 +58,7 @@ class MainView extends VBox {
         }
         box_commands2.disabled = true;
         box_commands3.disabled = true;
+        box_popup.hide();
     }
     
     @:bind(btn_go, MouseEvent.CLICK)
@@ -103,6 +105,21 @@ class MainView extends VBox {
         
     }
 
+    @:bind(btn_war, MouseEvent.CLICK)
+    function onBtnWarClick(e:MouseEvent){
+        
+    }
+
+    @:bind(btn_warStrategy, MouseEvent.CLICK)
+    function onBtnWarStrategyClick(e:MouseEvent){
+        
+    }
+
+    @:bind(btn_give, MouseEvent.CLICK)
+    function onBtnGiveClick(e:MouseEvent){
+        
+    }
+
     function getGridPositionByGridId(id:Int) {
         return [grids[id].left, grids[id].top];
     }
@@ -129,7 +146,6 @@ class MainView extends VBox {
         syncGameInfo(gameInfo);
         syncGridViews(gameInfo);
         syncPlayerViews(gameInfo);
-        
     }
 
     function playBeforeSync(gameInfo:GameInfo, tweens:Array<TweenX>){
@@ -230,6 +246,6 @@ class MainView extends VBox {
             玩家:${gameInfo.currentPlayer.name}
             是否自己回合:${gameInfo.isPlayerTurn}
         ';
-        lbl_gameInfo.text = str;
+        // lbl_gameInfo.text = str;
     }
 }

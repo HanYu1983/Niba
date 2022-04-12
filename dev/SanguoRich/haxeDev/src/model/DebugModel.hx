@@ -1,5 +1,6 @@
 package model;
 
+import model.IModel.WarPreview;
 import model.IModel.ActionInfoID;
 import model.IModel.EventInfoID;
 import model.IModel.PlayerInfo;
@@ -169,4 +170,22 @@ class DebugModel implements IModel {
         info.events = [];
         cb();
     }
+
+	public function getTakeWarPreview(playerId:Int, grid:Grid):Array<WarPreview> {
+		return [
+            {
+                player: info.players[0],
+                armyBefore: 100,
+                armyAfter: 30,
+                moneyBefore: 1000,
+                moneyAfter: 500
+            },{
+                player: info.players[1],
+                armyBefore: 200,
+                armyAfter: 20,
+                moneyBefore: 1300,
+                moneyAfter: 540
+            }
+        ];
+	}
 }
