@@ -63,14 +63,15 @@
                                        _ (setContext! context)
                                        _ (cb)]))
                     :playerDice (fn [cb]
-                                  (let [atGridId (R.path ["players" 0 "atGridId"] context)
+                                  (let [currentPlayer context.currentPlayer
+                                        atGridId (R.path ["players" currentPlayer "atGridId"] context)
                                         nextGridId (mod (+ atGridId 4) 100)
-                                        context (R.modifyPath ["players" 0]
+                                        context (R.modifyPath ["players" currentPlayer]
                                                               (fn [player]
                                                                 (assoc player :atGridId nextGridId))
                                                               context)
                                         context (assoc context :actions [{:id "MOVE"
-                                                                          :value {:playerId 0
+                                                                          :value {:playerId currentPlayer
                                                                                   :fromGridId atGridId
                                                                                   :toGridId nextGridId}
                                                                           :gameInfo (assoc context :actions [])}])

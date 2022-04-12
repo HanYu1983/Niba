@@ -19,7 +19,7 @@ function native2haxe(nativeInfo:Dynamic):GameInfo {
 	return {
 		players: nativeInfo.players,
 		grids: nativeInfo.grids,
-		isPlayerTurn: nativeInfo.currentPlayer == 0,
+		isPlayerTurn: true, // nativeInfo.currentPlayer == 0,
 		currentPlayer: nativeInfo.players[nativeInfo.currentPlayer],
 		isPlaying: true,
 		events: [],
