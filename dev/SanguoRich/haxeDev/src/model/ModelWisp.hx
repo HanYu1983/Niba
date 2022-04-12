@@ -37,6 +37,9 @@ class ModelWisp extends DebugModel {
 	public override function gameInfo():GameInfo {
 		var nativeInfo = new NativeModule().gameInfo();
 		var gameInfo = native2haxe(nativeInfo);
+		// 因為是從JS來的資料, 所以即使有定義GameInfo的類型, 還是有可能會出錯
+		// 比如明明定義為整數卻是字串的情況
+		// 這時就是wisp中的程式碼的問題
 		return gameInfo;
 	}
 
