@@ -16,37 +16,16 @@
       genPeople (fn []
                   (assertPackage)
                   (haxePackage.peopleGenerator.generate))
-      ; define
-      defaultGameInfo {:players [{:id 0
-                                  :name "vic"
-                                  :money 100
-                                  :army 0
-                                  :strategy 0
-                                  :people []
-                                  :atGridId 0}]
-                       :grids (repeat 100 {:id 0
-                                           :landType 0
-                                           :buildtype 0
-                                           :height 0
-                                           :attachs []})
-                       :isPlayerTurn false
-                       :currentPlayer {:id 0
-                                       :name ""
-                                       :money 0
-                                       :army 0
-                                       :strategy 0
-                                       :people []
-                                       :atGridId 0}
-                       :isPlaying false
-                       :events []
-                       :actions []}
       ; vars
       context {:players []
                :grids []
-               :currentPlayer 0}
+               :currentPlayer 0
+               :actions []}
       setContext! (fn [ctx]
+                    (console.log ctx)
                     (assertGameContext ctx)
                     (set! context ctx))
+      _ (setContext! context)
       ; binding
       nativeModule {:installPackage installPackage
                     :gameInfo (fn [] context)
@@ -85,5 +64,23 @@
                                        _ (setContext! context)
                                        _ (cb)]))
                     :playerDice (fn [cb]
-                                  (cb))}
+                                  (let [atGridId (R.path ["players" 0 "atGridId"] context)
+                                        nextGridId (mod (+ atGridId 4) 100)
+                                        context (R.modifyPath ["players" 0]
+                                                              (fn [player]
+                                                                (assoc player :atGridId nextGridId))
+                                                              context)
+                                        context (assoc context :actions [{:id "MOVE"
+                                                                          :value {:playerId 0
+                                                                                  :fromGridId atGridId
+                                                                                  :toGridId nextGridId}
+                                                                          :gameInfo (assoc context :actions [])}])
+                                        _ (setContext! context)
+                                        _ (cb)]))
+                    :playerEnd (fn [cb]
+                                 (let [context (assoc context
+                                                      :actions []
+                                                      :events [])
+                                       _ (setContext! context)
+                                       _ (cb)]))}
       _ (set! window.getNativeModule (fn [] nativeModule))])

@@ -23,26 +23,21 @@ function native2haxe(nativeInfo:Dynamic):GameInfo {
 		currentPlayer: nativeInfo.players[nativeInfo.currentPlayer],
 		isPlaying: true,
 		events: [],
-		actions: [
-			// {
-			// 	id: haxe.EnumTools.createByName(ActionInfoID, "MOVE"),
-			// 	value: {
-			// 		playerId: 0,
-			// 		fromGridId: 5,
-			// 		toGridId: 10
-			// 	},
-			// 	gameInfo: gameInfo()
-			// }
-		]
+		actions: nativeInfo.actions.map(action -> {
+			return {
+				id: haxe.EnumTools.createByName(ActionInfoID, action.id),
+				value: action.value,
+				gameInfo: native2haxe(action.gameInfo)
+			}
+		})
 	};
 }
 
 class ModelWisp extends DebugModel {
 	public override function gameInfo():GameInfo {
 		var nativeInfo = new NativeModule().gameInfo();
-		trace("[ModelWisp][gameInfo]");
-		trace(nativeInfo);
-		return native2haxe(nativeInfo);
+		var gameInfo = native2haxe(nativeInfo);
+		return gameInfo;
 	}
 
 	public override function gameStart(cb:Void->Void):Void {
