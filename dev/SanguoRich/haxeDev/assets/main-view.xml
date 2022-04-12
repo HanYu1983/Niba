@@ -1,58 +1,117 @@
-<vbox width="1024" height="800" style="padding: 5px;">
+<absolute width="1024" height="800" style="padding: 5px;">
     <style>
         .button {
             font-size: 14px;
         }
     </style>
-    <hbox width="100%" height="500">
-        <box id="stage" width="500" height="100%" style="background-color: grey;border:1px solid grey;background-opacity: .3">
-            <box id="box_grids" width="100%" height="100%" />
-            <box id="box_players" width="100%" height="100%" />
-        </box>
-        <vbox width="100">
+    <vbox width="100%" height="100%">
+        <hbox width="100%" height="500">
+            <box id="stage" width="500" height="100%" style="background-color: grey;border:1px solid grey;background-opacity: .3">
+                <box id="box_grids" width="100%" height="100%" />
+                <box id="box_players" width="100%" height="100%" />
+            </box>
             <vbox width="100">
-                <button text="游戲開始" width="100%" id="btn_start" />
-            </vbox>
-            <vbox id="box_commands1" width="100">
-                <button text="移動" width="100%" id="btn_go" />
-                <button text="計略" width="100%" id="btn_showStrategy" />
-            </vbox>
-            <vbox id="box_commands2" width="100">
-                <button text="交涉" width="100%" id="btn_negotiate" />
-                <button text="搶奪" width="100%" id="btn_snatch" />
-                <button text="占領" width="100%" id="btn_occupation" />
-            </vbox>
-            <vbox id="box_commands3" width="100">
-                <button text="戰爭" width="100%" id="btn_war" />
-                <button text="進貢" width="100%" id="btn_give" />
+                <vbox width="100">
+                    <button text="游戲開始" width="100%" id="btn_start" />
+                </vbox>
+                <vbox id="box_commands1" width="100">
+                    <button text="移動" width="100%" id="btn_go" />
+                    <button text="計略" width="100%" id="btn_showStrategy" />
+                </vbox>
+                <vbox id="box_commands2" width="100">
+                    <button text="交涉" width="100%" id="btn_negotiate" />
+                    <button text="搶奪" width="100%" id="btn_snatch" />
+                    <button text="占領" width="100%" id="btn_occupation" />
+                </vbox>
+                <vbox id="box_commands3" width="100">
+                    <button text="戰爭" width="100%" id="btn_war" />
+                    <button text="計策" width="100%" id="btn_warStrategy" />
+                    <button text="進貢" width="100%" id="btn_give" />
+                </vbox>
                 <button text="結束" width="100%" id="btn_end" />
             </vbox>
-        </vbox>
-        <vbox width="100%" height="100%">
-            <hbox width="100%" >
-                <optionbox text="玩家一" group="player_grp" width="100%" id="opt_p1" selected="true" />
-                <optionbox text="玩家二" group="player_grp" width="100%" id="opt_p2" />
-                <optionbox text="玩家三" group="player_grp" width="100%" id="opt_p3" />
-                <optionbox text="玩家四" group="player_grp" width="100%" id="opt_p4" />
+            <vbox width="100%" height="100%">
+                <hbox width="100%" >
+                    <optionbox text="玩家一" group="player_grp" width="100%" id="opt_p1" selected="true" />
+                    <optionbox text="玩家二" group="player_grp" width="100%" id="opt_p2" />
+                    <optionbox text="玩家三" group="player_grp" width="100%" id="opt_p3" />
+                    <optionbox text="玩家四" group="player_grp" width="100%" id="opt_p4" />
+                </hbox>
+                
+                <property-grid id="pg_playerInfo" width="100%" height="100%">
+                    <property-group text="君主資料">
+                        <property id="pro_name" label="名稱" value="1000" />
+                        <property id="pro_money" label="金錢" value="1000" />
+                        <property id="pro_army" label="士兵" value="1000" />
+                        <property id="pro_strategy" label="計略" value="1000" />   
+                        <property id="pro_peopleCount" label="武將數" value="5" />
+                        <property id="pro_cityCount" label="城池數" value="1000" />
+                    </property-group>
+                    <property-group text="格子資料">
+                        <property id="pro_gridName" label="名稱" value="空地" />
+                        <property id="pro_gridLandType" label="地形" value="空地" />
+                        <property id="pro_gridMoney" label="金錢" value="1000" />
+                        <property id="pro_gridArmy" label="士兵" value="1000" />
+                        <property id="pro_gridPlayer" label="所有者" value="" />
+                    </property-group>
+                </property-grid>
+                <!-- <label id="lbl_gameInfo" width="100%" height="100" text=""/> -->
+            </vbox>
+        </hbox>    
+        <hbox id="box_bottom" width="100%" height="100%">
+            <!-- people list view  -->
+        </hbox>
+    </vbox>
+    <box id="box_popup" width="100%" height="100%" style="background-color: grey;border:1px solid grey;background-opacity: .3">
+        <vbox id="box_warPreview" width="400" padding="20" verticalAlign="center" horizontalAlign="center" style="background-color: white;border:1px solid grey;">
+            <hbox width="100%" height="250">
+                <property-grid id="pg_playerInfo" width="50%">
+                    <property-group text="君主資料">
+                        <property id="pro_name" label="武將" type="list" value="張飛">
+                            <data>
+                                <item text="張飛"/>
+                                <item text="關於"/>
+                            </data>
+                        </property>
+                        <property id="pro_money" label="武力" value="1000" />
+                        <property id="pro_money" label="統率" value="1000" />
+                        <property id="pro_money" label="智力" value="1000" />
+                        <property id="pro_money" label="金錢" value="1000" />
+                        <property id="pro_army" label="士兵" value="1000" />
+                        <property id="pro_strategy" label="計略" value="1000" />   
+                    </property-group>
+                </property-grid>
+                <property-grid id="pg_playerInfo" width="50%">
+                    <property-group text="君主資料">
+                        <property id="pro_name" label="武將" type="list" value="張飛">
+                            <data>
+                                <item text="張飛"/>
+                                <item text="關於"/>
+                            </data>
+                        </property>
+                        <property id="pro_money" label="武力" value="1000" />
+                        <property id="pro_money" label="統率" value="1000" />
+                        <property id="pro_money" label="智力" value="1000" />
+                        <property id="pro_money" label="金錢" value="1000" />
+                        <property id="pro_army" label="士兵" value="1000" />
+                        <property id="pro_strategy" label="計略" value="1000" />   
+                    </property-group>
+                </property-grid>
             </hbox>
+            <frame width="100%" text="指揮">
+                <hbox width="100%">
+                    <label text="士兵數量"/>
+                    <slider width="100%" horizontalAlign="right" pos="0" />
+                </hbox>
+                
+            </frame>
             
-            <property-grid id="pg_playerInfo" width="100%" height="100%">
-                <property-group text="君主資料">
-                    <property id="pro_name" label="名稱" value="1000" />
-                    <property id="pro_money" label="金錢" value="1000" />
-                    <property id="pro_army" label="士兵" value="1000" />
-                    <property id="pro_strategy" label="計略" value="1000" />   
-                    <property id="pro_peopleCount" label="武將數" value="5" />
-                    <property id="pro_cityCount" label="城池數" value="1000" />
-                </property-group>
-                <!-- <property-group text="游戲資訊">
-                    <property id="lbl_gameInfo" label="城池數" value="1000" />
-                </property-group> -->
-            </property-grid>
-            <label id="lbl_gameInfo" width="100%" height="100" text=""/>
+            <hbox horizontalAlign="center">
+                <button text="取消戰爭" id="btn_cancelWar" />
+                <button text="確定戰爭" id="btn_confirmWar" />
+            </hbox>
         </vbox>
-    </hbox>    
-    <hbox id="box_bottom" width="100%" height="200">
-        <!-- people list view  -->
-    </hbox>
-</vbox>
+    </box>
+    
+
+</absolute>

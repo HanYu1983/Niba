@@ -1,5 +1,6 @@
 package;
 
+import model.ModelWisp.NativeModule;
 import haxe.ui.themes.Theme;
 import haxe.ui.themes.ThemeManager;
 import model.DebugModel;
