@@ -58,6 +58,7 @@ class MainView extends Absolute {
         }
         box_commands2.disabled = true;
         box_commands3.disabled = true;
+        box_popup.hide();
     }
     
     @:bind(btn_go, MouseEvent.CLICK)
