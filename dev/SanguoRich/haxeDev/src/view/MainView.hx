@@ -19,6 +19,7 @@ class MainView extends Absolute {
     var grids:Array<GridView> = [];
     var players:Array<PlayerView> = [];
     var peopleListView:PeopleListView;
+    var popupView:PopupView;
 
     public function new() {
         super();
@@ -41,6 +42,9 @@ class MainView extends Absolute {
             box_players.addComponent(p);
         }
 
+        popupView = new PopupView();
+        addComponent(popupView);
+
         peopleListView = new PeopleListView();
         box_bottom.addComponent(peopleListView);
 
@@ -58,7 +62,7 @@ class MainView extends Absolute {
         }
         box_commands2.disabled = true;
         box_commands3.disabled = true;
-        box_popup.hide();
+        popupView.hide();
     }
     
     @:bind(btn_go, MouseEvent.CLICK)
@@ -107,7 +111,9 @@ class MainView extends Absolute {
 
     @:bind(btn_war, MouseEvent.CLICK)
     function onBtnWarClick(e:MouseEvent){
-        
+        var player = Main.model.gameInfo().players[0];
+        var previewInfo = Main.model.getTakeWarPreview(0, player.atGridId);
+        popupView.showPreviewWar(previewInfo);
     }
 
     @:bind(btn_warStrategy, MouseEvent.CLICK)

@@ -171,20 +171,28 @@ class DebugModel implements IModel {
         cb();
     }
 
-	public function getTakeWarPreview(playerId:Int, grid:Grid):Array<WarPreview> {
+	public function getTakeWarPreview(playerId:Int, gridId:Int):Array<WarPreview> {
 		return [
             {
                 player: info.players[0],
+                fightPeople: [
+                    PeopleGenerator.getInst().generate(),
+                    PeopleGenerator.getInst().generate()
+                ],
                 armyBefore: 100,
-                armyAfter: 30,
+                armyAfter: [30, 5],
                 moneyBefore: 1000,
-                moneyAfter: 500
+                moneyAfter: [500, 400]
             },{
                 player: info.players[1],
+                fightPeople: [
+                    PeopleGenerator.getInst().generate(),
+                    PeopleGenerator.getInst().generate()
+                ],
                 armyBefore: 200,
-                armyAfter: 20,
+                armyAfter: [320, 52],
                 moneyBefore: 1300,
-                moneyAfter: 540
+                moneyAfter: [320, 533]
             }
         ];
 	}

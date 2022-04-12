@@ -46,10 +46,11 @@ typedef GameInfo = {
 
 typedef WarPreview = {
     player:PlayerInfo,
+    fightPeople:Array<People>,
     armyBefore:Int,
-    armyAfter:Int,
+    armyAfter:Array<Int>,
     moneyBefore:Int,
-    moneyAfter:Int
+    moneyAfter:Array<Int>
 }
 
 interface IModel{
@@ -60,7 +61,7 @@ interface IModel{
     function getPeople(count:Int):Array<People>;
     function playerDice(cb:Void->Void):Void;
     function playerEnd(cb:()->Void):Void;
-    function getTakeWarPreview(playerId:Int, grid:Grid):Array<WarPreview>;
+    function getTakeWarPreview(playerId:Int, gridId:Int):Array<WarPreview>;
     // function currentPlayer():PlayerInfo;
     // function isPlayerTurn():Bool;
     // function getGrids(count:Int):Array<Grid>;
