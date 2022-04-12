@@ -2,6 +2,7 @@ package model;
 
 import model.DebugModel;
 import model.IModel.GameInfo;
+import model.IModel.ActionInfoID;
 import model.GridGenerator.Grid;
 import model.PeopleGenerator.People;
 
@@ -14,20 +15,34 @@ import model.PeopleGenerator.People;
 	public function playerEnd(cb:() -> Void):Void;
 }
 
+function native2haxe(nativeInfo:Dynamic):GameInfo {
+	return {
+		players: nativeInfo.players,
+		grids: nativeInfo.grids,
+		isPlayerTurn: nativeInfo.currentPlayer == 0,
+		currentPlayer: nativeInfo.players[nativeInfo.currentPlayer],
+		isPlaying: true,
+		events: [],
+		actions: [
+			// {
+			// 	id: haxe.EnumTools.createByName(ActionInfoID, "MOVE"),
+			// 	value: {
+			// 		playerId: 0,
+			// 		fromGridId: 5,
+			// 		toGridId: 10
+			// 	},
+			// 	gameInfo: gameInfo()
+			// }
+		]
+	};
+}
+
 class ModelWisp extends DebugModel {
 	public override function gameInfo():GameInfo {
 		var nativeInfo = new NativeModule().gameInfo();
 		trace("[ModelWisp][gameInfo]");
 		trace(nativeInfo);
-		return {
-			players: nativeInfo.players,
-			grids: nativeInfo.grids,
-			isPlayerTurn: nativeInfo.currentPlayer == 0,
-			currentPlayer: nativeInfo.players[nativeInfo.currentPlayer],
-			isPlaying: true,
-			events: [],
-			actions: []
-		};
+		return native2haxe(nativeInfo);
 	}
 
 	public override function gameStart(cb:Void->Void):Void {

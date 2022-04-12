@@ -1,0 +1,1 @@
+docker run --rm -ti -v d:/dev/Niba/dev/SanguoRich/haxeDev/public:/public -p 8080:8080 node npx --yes http-server -c-1 -p 8080 public
