@@ -78,7 +78,10 @@
                                         _ (setContext! context)
                                         _ (cb)]))
                     :playerEnd (fn [cb]
-                                 (let [context (assoc context
+                                 (let [context (R.modify "currentPlayer"
+                                                         #(mod (inc %) 4)
+                                                         context)
+                                       context (assoc context
                                                       :actions []
                                                       :events [])
                                        _ (setContext! context)
