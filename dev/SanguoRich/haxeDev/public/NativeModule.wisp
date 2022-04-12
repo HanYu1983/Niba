@@ -30,7 +30,6 @@
       nativeModule {:installPackage installPackage
                     :gameInfo (fn [] context)
                     :gameStart (fn [cb]
-                                 (assertPackage)
                                  (let [context (assoc context
                                                       :players [{:id 0
                                                                  :name "vic"
