@@ -1,5 +1,6 @@
 package view;
 
+import haxe.ui.components.OptionBox;
 import haxe.ui.containers.Absolute;
 import model.GridGenerator.Grid;
 import model.GridGenerator.Grid;
@@ -48,8 +49,8 @@ class MainView extends Absolute {
         peopleListView = new PeopleListView();
         box_bottom.addComponent(peopleListView);
 
-        var people = Main.model.getPeople(30);
-        peopleListView.setPeopleList(people);
+        // var people = Main.model.getPeople(30);
+        // peopleListView.setPeopleList(people);
     }
 
     @:bind(this, UIEvent.READY)
@@ -111,8 +112,8 @@ class MainView extends Absolute {
 
     @:bind(btn_war, MouseEvent.CLICK)
     function onBtnWarClick(e:MouseEvent){
-        var player = Main.model.gameInfo().players[0];
-        var previewInfo = Main.model.getTakeWarPreview(0, player.atGridId);
+        var player = Main.model.gameInfo().currentPlayer;
+        var previewInfo = Main.model.getTakeWarPreview(player.id, player.atGridId);
         popupView.showPreviewWar(previewInfo);
     }
 
@@ -172,10 +173,10 @@ class MainView extends Absolute {
     var events:Array<EventInfo>;
     function playEvents(gameInfo:GameInfo){
         events = gameInfo.events;
-        doOneEvent();
+        doOneEvent(gameInfo);
     }
 
-    function doOneEvent(){
+    function doOneEvent(gameInfo:GameInfo){
         if(events.length > 0){
             var event = events.shift();
             switch (event.id){
@@ -184,7 +185,7 @@ class MainView extends Absolute {
                     if(g.belongPlayerId == null){
                         box_commands2.disabled = false;
                     }else{
-                        if(g.belongPlayerId == 0){
+                        if(g.belongPlayerId == gameInfo.currentPlayer.id){
 
                         }else{
                             box_commands3.disabled = false;
@@ -216,7 +217,11 @@ class MainView extends Absolute {
         btn_start.disabled = gameInfo.isPlaying;
         box_commands1.disabled = !gameInfo.isPlayerTurn;
 
-        syncPlayerInfo(0);
+        var pid = gameInfo.currentPlayer.id;
+        var opt_p:OptionBox = Reflect.field(this, 'opt_p${pid+1}');
+        opt_p.selected = true;
+
+        syncPlayerInfo(pid);
     }
 
     function syncPlayerInfo(id:Int){
