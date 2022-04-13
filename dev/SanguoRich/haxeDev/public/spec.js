@@ -28,22 +28,33 @@ const Grid = spec.map("Grid", {
   height: spec.number,
   attachs: spec.collection("ints", spec.int),
 });
+
+const Action = spec.or("Action", {
+  move: spec.map("move", {
+    id: spec.oneOf("id", "MOVE"),
+    value: spec.map("value", {
+      playerId: spec.int,
+      fromGridId: spec.int,
+      toGridId: spec.int,
+    }),
+    gameInfo: spec.obj,
+  }),
+});
+
+const EventSpec = spec.or("Event", {
+  walkStop: spec.map("walkStop", {
+    id: spec.oneOf("id", "WALK_STOP"),
+    value: spec.map("value", {
+      grid: Grid,
+      commands: spec.collection("commands", spec.obj),
+    }),
+  }),
+});
+
 var GameContext = spec.map("GameContext", {
   players: spec.collection("players", PlayerInfo),
   grids: spec.collection("grids", Grid),
   currentPlayer: spec.int,
-  actions: spec.collection(
-    "actions",
-    spec.or("actions", {
-      move: spec.map("action.move", {
-        id: spec.oneOf("move", "MOVE"),
-        value: spec.map("action.move.value", {
-          playerId: spec.int,
-          fromGridId: spec.int,
-          toGridId: spec.int,
-        }),
-        gameInfo: spec.obj,
-      }),
-    })
-  ),
+  actions: spec.collection("actions", Action),
+  events: spec.collection("events", EventSpec),
 });

@@ -3,6 +3,7 @@ package model;
 import model.DebugModel;
 import model.IModel.GameInfo;
 import model.IModel.ActionInfoID;
+import model.IModel.EventInfoID;
 import model.GridGenerator.Grid;
 import model.PeopleGenerator.People;
 
@@ -22,7 +23,12 @@ function native2haxe(nativeInfo:Dynamic):GameInfo {
 		isPlayerTurn: true, // nativeInfo.currentPlayer == 0,
 		currentPlayer: nativeInfo.players[nativeInfo.currentPlayer],
 		isPlaying: true,
-		events: [],
+		events: nativeInfo.events.map(event -> {
+			return {
+				id: haxe.EnumTools.createByName(EventInfoID, event.id),
+				value: event.value
+			}
+		}),
 		actions: nativeInfo.actions.map(action -> {
 			return {
 				id: haxe.EnumTools.createByName(ActionInfoID, action.id),
