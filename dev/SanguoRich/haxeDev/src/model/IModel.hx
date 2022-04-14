@@ -26,6 +26,8 @@ typedef ActionInfo = {
 enum EventInfoID {
     WORLD_EVENT;
     WALK_STOP;
+    NEGOTIATE_RESULT;
+    WAR_RESULT;
 }
 
 typedef EventInfo = {
@@ -53,6 +55,10 @@ typedef WarPreview = {
     moneyAfter:Array<Int>
 }
 
+typedef NegoPreview = {
+
+}
+
 interface IModel{
 
     
@@ -62,6 +68,9 @@ interface IModel{
     function playerDice(cb:Void->Void):Void;
     function playerEnd(cb:()->Void):Void;
     function getTakeWarPreview(playerId:Int, gridId:Int):Array<WarPreview>;
+    function takeWarOn(playerId:Int, gridId:Int, cb:(gameInfo:GameInfo)->Void):Void;
+    function getTakeNegoPreview(playerId:Int, gridId:Int):Array<NegoPreview>;
+    function takeNegoOn(playerId:Int, gridId:Int, cb:(gameInfo:GameInfo)->Void):Void;
     // function currentPlayer():PlayerInfo;
     // function isPlayerTurn():Bool;
     // function getGrids(count:Int):Array<Grid>;

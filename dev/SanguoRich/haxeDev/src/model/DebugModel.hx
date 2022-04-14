@@ -1,5 +1,6 @@
 package model;
 
+import model.IModel.NegoPreview;
 import model.IModel.WarPreview;
 import model.IModel.ActionInfoID;
 import model.IModel.EventInfoID;
@@ -196,4 +197,30 @@ class DebugModel implements IModel {
             }
         ];
 	}
+
+	public function takeWarOn(playerId:Int, gridId:Int, cb:(gameInfo:GameInfo) -> Void) {
+        var info = gameInfo();
+        info.events = [
+            {
+                id:EventInfoID.NEGOTIATE_RESULT,
+                value:null
+            }
+        ];
+        cb(info);
+    }
+
+	public function getTakeNegoPreview(playerId:Int, gridId:Int):Array<NegoPreview> {
+		return [];
+	}
+
+	public function takeNegoOn(playerId:Int, gridId:Int, cb:(gameInfo:GameInfo) -> Void) {
+        var info = gameInfo();
+        info.events = [
+            {
+                id:EventInfoID.NEGOTIATE_RESULT,
+                value:null
+            }
+        ];
+        cb(info);
+    }
 }

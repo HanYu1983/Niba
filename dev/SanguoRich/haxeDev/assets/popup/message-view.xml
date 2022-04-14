@@ -1,0 +1,12 @@
+<vbox id="box_warPreview" width="400" padding="20" verticalAlign="center" horizontalAlign="center" style="background-color: white;border:1px solid grey;">
+    <hbox width="100%" height="250">
+        <frame width="100%" text="指揮">
+            <label width="100%">
+            </label>
+        </frame>
+    </hbox>
+    <hbox horizontalAlign="center">
+        <button text="取消" id="btn_cancel" />
+        <button text="確定" id="btn_confirm" />
+    </hbox>
+</vbox>

@@ -1,5 +1,6 @@
 package view;
 
+import view.popup.MessageView;
 import view.popup.NegoPreviewView;
 import view.popup.WarPreviewView;
 import model.GridGenerator.BUILDING;
@@ -23,6 +24,7 @@ class MainView extends Absolute {
     var peopleListView:PeopleListView;
     var warPreviewView:WarPreviewView;
     var negoPreviewView:NegoPreviewView;
+    var messageView:MessageView;
 
     public function new() {
         super();
@@ -55,6 +57,10 @@ class MainView extends Absolute {
         negoPreviewView.hide();
         box_popup.addComponent(negoPreviewView);
 
+        messageView = new MessageView();
+        messageView.hide();
+        box_popup.addComponent(messageView);
+
         peopleListView = new PeopleListView();
         box_bottom.addComponent(peopleListView);
 
@@ -68,6 +74,18 @@ class MainView extends Absolute {
 
     public function onHidePopup() {
         box_popup.fadeOut();
+    }
+
+    public function onWarPreviewConfirmWarClick() {
+        Main.model.takeWarOn(0,0, (gameInfo:GameInfo)->{
+            syncViewByInfo(gameInfo);
+        });
+    }
+
+    public function onNegoPreviewConfirmNegoClick() {
+        Main.model.takeNegoOn(0,0, (gameInfo:GameInfo)->{
+            syncViewByInfo(gameInfo);
+        });
     }
 
     @:bind(this, UIEvent.READY)
@@ -164,7 +182,6 @@ class MainView extends Absolute {
         
         tweens.push(TweenX.func(()->{
             syncViewByInfo(gameInfo);
-            playEvents(gameInfo);
         }));
 
         TweenX.serial(tweens);
@@ -175,6 +192,7 @@ class MainView extends Absolute {
         syncGridViews(gameInfo);
         syncPlayerViews(gameInfo);
         syncGridInfo(gameInfo.currentPlayer.atGridId);
+        playEvents(gameInfo);
     }
 
     function playBeforeSync(gameInfo:GameInfo, tweens:Array<TweenX>){
@@ -202,6 +220,8 @@ class MainView extends Absolute {
     function doOneEvent(gameInfo:GameInfo){
         if(events.length > 0){
             box_commands1.disabled = true;
+            box_commands2.disabled = true;
+            box_commands3.disabled = true;
 
             var event = events.shift();
             setEventInfo(event);
@@ -221,11 +241,12 @@ class MainView extends Absolute {
                             }
                         }
                     }
-                    
+                case NEGOTIATE_RESULT:
+                    messageView.showMessage({});
+                case WAR_RESULT:
+
                 case WORLD_EVENT:
                     trace("WORLD_EVENT");
-                case _:
-                    trace("null");
             }
             trace(event);
         }
@@ -235,8 +256,11 @@ class MainView extends Absolute {
         switch(event.id){
             case WALK_STOP:
                 pro_currentEvent.value = "行走停止。等待指令中";
+            case WAR_RESULT:
+                pro_currentEvent.value = "戰爭結果。等待指令中";
+            case NEGOTIATE_RESULT:
+                pro_currentEvent.value = "交涉結果。等待指令中";
             case WORLD_EVENT:
-
         };
     }
 

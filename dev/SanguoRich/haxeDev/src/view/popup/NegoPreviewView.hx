@@ -20,5 +20,6 @@ class NegoPreviewView extends PopupView{
     @:bind(btn_confirmNego, MouseEvent.CLICK)
     function onBtnConfirmNego(e:MouseEvent) {
         fadeOut();
+        Main.view.onNegoPreviewConfirmNegoClick();
     }
 }
