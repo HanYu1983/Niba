@@ -1,10 +1,11 @@
 package view;
 
+import view.popup.NegoPreviewView;
+import view.popup.WarPreviewView;
+import model.GridGenerator.BUILDING;
 import haxe.ui.components.OptionBox;
 import haxe.ui.containers.Absolute;
 import model.GridGenerator.Grid;
-import model.GridGenerator.Grid;
-import model.IModel.PlayerInfo;
 import model.IModel.ActionInfo;
 import model.IModel.ActionInfoID;
 import model.IModel.EventInfo;
@@ -20,7 +21,8 @@ class MainView extends Absolute {
     var grids:Array<GridView> = [];
     var players:Array<PlayerView> = [];
     var peopleListView:PeopleListView;
-    var popupView:PopupView;
+    var warPreviewView:WarPreviewView;
+    var negoPreviewView:NegoPreviewView;
 
     public function new() {
         super();
@@ -43,14 +45,29 @@ class MainView extends Absolute {
             box_players.addComponent(p);
         }
 
-        popupView = new PopupView();
-        addComponent(popupView);
+        box_popup.hide();
+
+        warPreviewView = new WarPreviewView();
+        warPreviewView.hide();
+        box_popup.addComponent(warPreviewView);
+
+        negoPreviewView = new NegoPreviewView();
+        negoPreviewView.hide();
+        box_popup.addComponent(negoPreviewView);
 
         peopleListView = new PeopleListView();
         box_bottom.addComponent(peopleListView);
 
         // var people = Main.model.getPeople(30);
         // peopleListView.setPeopleList(people);
+    }
+
+    public function onShowPopup() {
+        box_popup.fadeIn();
+    }
+
+    public function onHidePopup() {
+        box_popup.fadeOut();
     }
 
     @:bind(this, UIEvent.READY)
@@ -63,7 +80,6 @@ class MainView extends Absolute {
         }
         box_commands2.disabled = true;
         box_commands3.disabled = true;
-        popupView.hide();
     }
     
     @:bind(btn_go, MouseEvent.CLICK)
@@ -72,6 +88,11 @@ class MainView extends Absolute {
 
         box_commands2.disabled = true;
         box_commands3.disabled = true;
+    }
+
+    @:bind(btn_negotiate, MouseEvent.CLICK)
+    function onBtnNegotiateClick(e:MouseEvent){
+        negoPreviewView.showNegoPreview();
     }
 
     @:bind(btn_start, MouseEvent.CLICK)
@@ -114,7 +135,7 @@ class MainView extends Absolute {
     function onBtnWarClick(e:MouseEvent){
         var player = Main.model.gameInfo().currentPlayer;
         var previewInfo = Main.model.getTakeWarPreview(player.id, player.atGridId);
-        popupView.showPreviewWar(previewInfo);
+        warPreviewView.showPreviewWar(previewInfo);
     }
 
     @:bind(btn_warStrategy, MouseEvent.CLICK)
@@ -153,6 +174,7 @@ class MainView extends Absolute {
         syncGameInfo(gameInfo);
         syncGridViews(gameInfo);
         syncPlayerViews(gameInfo);
+        syncGridInfo(gameInfo.currentPlayer.atGridId);
     }
 
     function playBeforeSync(gameInfo:GameInfo, tweens:Array<TweenX>){
@@ -160,11 +182,12 @@ class MainView extends Absolute {
     }
 
     function playActions(actions:Array<ActionInfo>, tweens:Array<TweenX>) {
-        for(id => event in actions){
-            switch (event.id){
+        for(id => action in actions){
+            setActionInfo(action);
+            switch (action.id){
                 case ActionInfoID.MOVE:
-                    var pv = players[event.value.playerId];
-                    var toPos = getGridPositionByGridId(event.value.toGridId);
+                    var pv = players[action.value.playerId];
+                    var toPos = getGridPositionByGridId(action.value.toGridId);
                     tweens.push(TweenX.to(pv, {"left":toPos[0], "top":toPos[1]}));
             }
         }
@@ -178,25 +201,49 @@ class MainView extends Absolute {
 
     function doOneEvent(gameInfo:GameInfo){
         if(events.length > 0){
+            box_commands1.disabled = true;
+
             var event = events.shift();
+            setEventInfo(event);
             switch (event.id){
                 case WALK_STOP:
                     var g:Grid = event.value.grid;
-                    if(g.belongPlayerId == null){
-                        box_commands2.disabled = false;
-                    }else{
-                        if(g.belongPlayerId == gameInfo.currentPlayer.id){
+                    if(g.buildtype == BUILDING.EMPTY){
 
+                    }else{
+                        if(g.belongPlayerId == null){
+                            box_commands2.disabled = false;
                         }else{
-                            box_commands3.disabled = false;
+                            if(g.belongPlayerId == gameInfo.currentPlayer.id){
+    
+                            }else{
+                                box_commands3.disabled = false;
+                            }
                         }
                     }
+                    
                 case WORLD_EVENT:
                     trace("WORLD_EVENT");
                 case _:
                     trace("null");
             }
             trace(event);
+        }
+    }
+
+    function setEventInfo(event:EventInfo){
+        switch(event.id){
+            case WALK_STOP:
+                pro_currentEvent.value = "行走停止。等待指令中";
+            case WORLD_EVENT:
+
+        };
+    }
+
+    function setActionInfo(action:ActionInfo) {
+        switch (action.id){
+            case MOVE:
+                pro_currentEvent.value = "行走中";
         }
     }
 
@@ -216,11 +263,16 @@ class MainView extends Absolute {
     function syncUI(gameInfo:GameInfo){
         btn_start.disabled = gameInfo.isPlaying;
         box_commands1.disabled = !gameInfo.isPlayerTurn;
+        box_commands2.disabled = true;
+        box_commands3.disabled = true;
 
         var pid = gameInfo.currentPlayer.id;
         var opt_p:OptionBox = Reflect.field(this, 'opt_p${pid+1}');
         opt_p.selected = true;
 
+        if(gameInfo.isPlayerTurn){
+            pro_currentEvent.value = "等待指令中";
+        }
         syncPlayerInfo(pid);
     }
 
@@ -233,6 +285,12 @@ class MainView extends Absolute {
         pro_peopleCount.value = p.people.length;
         pro_cityCount.value = "0";
         peopleListView.setPeopleList(p.people);
+    }
+
+    function syncGridInfo(gridId:Int){
+        var grid:Grid = Main.model.gameInfo().grids[gridId];
+        pro_gridName.value = grid.id;
+        pro_gridLandType.value = grids[gridId].lbl_building.text;
     }
 
     function syncGridViews(gameInfo:GameInfo){
@@ -253,10 +311,6 @@ class MainView extends Absolute {
     }
 
     function syncGameInfo(gameInfo:GameInfo){
-        var str = '
-            玩家:${gameInfo.currentPlayer.name}
-            是否自己回合:${gameInfo.isPlayerTurn}
-        ';
-        // lbl_gameInfo.text = str;
+        pro_currentPlayer.value = gameInfo.currentPlayer.name;
     }
 }

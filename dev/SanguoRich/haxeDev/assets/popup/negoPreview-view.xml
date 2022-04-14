@@ -1,0 +1,35 @@
+<vbox id="box_negoPreview" width="400" padding="20" verticalAlign="center" horizontalAlign="center" style="background-color: white;border:1px solid grey;">
+    <hbox width="100%" height="250">
+        <property-grid id="pg_playerInfo" width="50%">
+            <property-group text="君主資料">
+                <property id="pro_name0" label="武將" type="list" value="">
+                    <data>
+                        <!-- <item text="張飛"/>
+                        <item text="關於"/> -->
+                    </data>
+                </property>
+                <property id="pro_intelligence0" label="智力" value="1000" />
+                <property id="political0" label="政治" value="1000" />
+                <property id="pro_charm0" label="魅力" value="1000" />
+            </property-group>
+        </property-grid>
+        <property-grid id="pg_playerInfo" width="50%">
+            <property-group text="君主資料">
+                <property id="pro_name1" label="武將" type="list" value="">
+                    <data>
+                        <!-- <item text="張飛"/>
+                        <item text="關於"/> -->
+                    </data>
+                </property>
+                <property id="pro_intelligence1" label="智力" value="1000" />
+                <property id="political1" label="政治" value="1000" />
+                <property id="pro_charm1" label="魅力" value="1000" />   
+            </property-group>
+        </property-grid>
+    </hbox>
+    
+    <hbox horizontalAlign="center">
+        <button text="取消交涉" id="btn_cancelNego" />
+        <button text="確定交涉" id="btn_confirmNego" />
+    </hbox>
+</vbox>

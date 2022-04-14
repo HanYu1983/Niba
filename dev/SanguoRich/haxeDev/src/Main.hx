@@ -12,13 +12,16 @@ import model.ModelWisp;
 
 class Main {
 	public static var model:IModel;
+	public static var view:MainView;
 
 	public static function main() {
 		model = new ModelWisp();
+		// model = new DebugModel();
 
 		var app = new HaxeUIApp();
 		app.ready(function() {
-			app.addComponent(new MainView());
+			view = new MainView();
+			app.addComponent(view);
 
 			// ThemeManager.instance.applyTheme(Theme.DARK);
 		});

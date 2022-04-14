@@ -1,16 +1,13 @@
-package view;
+package view.popup;
 
-import model.PeopleGenerator.People;
-import model.IModel.PlayerInfo;
-import haxe.ui.containers.properties.Property;
-import haxe.ui.containers.properties.PropertyGroup;
 import haxe.ui.events.UIEvent;
+import model.PeopleGenerator.People;
+import haxe.ui.containers.properties.Property;
 import model.IModel.WarPreview;
 import haxe.ui.events.MouseEvent;
-import haxe.ui.containers.Box;
 
-@:build(haxe.ui.ComponentBuilder.build("assets/popup-view.xml"))
-class PopupView extends Box{
+@:build(haxe.ui.ComponentBuilder.build("assets/popup/warPreview-view.xml"))
+class WarPreviewView extends PopupView{
     public function new() {
         super();
     }
@@ -25,14 +22,7 @@ class PopupView extends Box{
         fadeOut();
     }
 
-    function hideAllPanel() {
-        box_warPreview.hide();
-    }
-
     public function showPreviewWar(infos:Array<WarPreview>){
-        hideAllPanel();
-        box_warPreview.show();
-
         fadeIn();
 
         function setOnePlayer(id:Int){

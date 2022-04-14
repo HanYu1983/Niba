@@ -54,12 +54,18 @@
                         <property id="pro_gridArmy" label="士兵" value="1000" />
                         <property id="pro_gridPlayer" label="所有者" value="" />
                     </property-group>
+                    <property-group text="游戲資料">
+                        <property id="pro_currentPlayer" label="當前玩家" value="" />
+                        <property id="pro_currentEvent" label="當前事件" value="" />
+                    </property-group>
                 </property-grid>
-                <!-- <label id="lbl_gameInfo" width="100%" height="100" text=""/> -->
             </vbox>
         </hbox>    
         <hbox id="box_bottom" width="100%" height="100%">
             <!-- people list view  -->
         </hbox>
     </vbox>
+    <box id="box_popup" width="100%" height="100%" style="background-color: grey;border:1px solid grey;background-opacity: .3">
+        <!-- by script -->
+    </box>
 </absolute>
