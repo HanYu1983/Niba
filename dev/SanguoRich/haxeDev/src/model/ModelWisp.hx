@@ -1,6 +1,8 @@
 package model;
 
 import model.DebugModel;
+import model.IModel.NegoPreview;
+import model.IModel.WarPreview;
 import model.IModel.GameInfo;
 import model.IModel.ActionInfoID;
 import model.IModel.EventInfoID;
@@ -14,6 +16,10 @@ import model.PeopleGenerator.People;
 	public function gameStart(cb:Void->Void):Void;
 	public function playerDice(cb:() -> Void):Void;
 	public function playerEnd(cb:() -> Void):Void;
+	public function getTakeWarPreview(playerId:Int, gridId:Int):Dynamic;
+	public function takeWarOn(playerId:Int, gridId:Int, cb:(gameInfo:Dynamic) -> Void):Void;
+	public function getTakeNegoPreview(playerId:Int, gridId:Int):Dynamic;
+	public function takeNegoOn(playerId:Int, gridId:Int, cb:(gameInfo:Dynamic) -> Void):Void;
 }
 
 function native2haxe(nativeInfo:Dynamic):GameInfo {
@@ -63,5 +69,27 @@ class ModelWisp extends DebugModel {
 
 	public override function playerEnd(cb:() -> Void) {
 		return new NativeModule().playerEnd(cb);
+	}
+
+	public override function getTakeWarPreview(playerId:Int, gridId:Int):Array<WarPreview> {
+		return new NativeModule().getTakeWarPreview(playerId, gridId);
+	}
+
+	public override function takeWarOn(playerId:Int, gridId:Int, cb:(gameInfo:GameInfo) -> Void) {
+		return new NativeModule().takeWarOn(playerId, gridId, nativeInfo -> {
+			var gameInfo = native2haxe(nativeInfo);
+			cb(gameInfo);
+		});
+	}
+
+	public override function getTakeNegoPreview(playerId:Int, gridId:Int):Array<NegoPreview> {
+		return new NativeModule().getTakeNegoPreview(playerId, gridId);
+	}
+
+	public override function takeNegoOn(playerId:Int, gridId:Int, cb:(gameInfo:GameInfo) -> Void) {
+		return new NativeModule().takeNegoOn(playerId, gridId, nativeInfo -> {
+			var gameInfo = native2haxe(nativeInfo);
+			cb(gameInfo);
+		});
 	}
 }

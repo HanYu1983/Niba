@@ -94,5 +94,14 @@
                                            :actions []
                                            :events [])
                             _ (setContext! context)
-                            _ (cb)]))}
+                            _ (cb)]))
+
+                    :takeNegoOn
+                    (fn [playerId gridId cb]
+                      (let [context (assoc context
+                                           :actions []
+                                           :events [{:id "NEGOTIATE_RESULT"
+                                                     :value nil}])
+                            _ (setContext! context)
+                            _ (cb context)]))}
       _ (set! window.getNativeModule (fn [] nativeModule))])
