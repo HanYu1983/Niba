@@ -48,6 +48,10 @@ export function moveCard(
   cardID: string,
   beforeCardID: string | null
 ): Table {
+  if (from == to) {
+    console.warn("from == to. ignore moveCard");
+    return table;
+  }
   const findCard = (table.cardStack[from] || []).filter(
     (card) => card.id == cardID
   );

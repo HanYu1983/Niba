@@ -28,7 +28,13 @@ import {
   iterateEffect,
   reduceEffect,
 } from "../tool/basic/gameContext";
-import { getCard, mapCard, Card, iterateCard } from "../../../tool/table";
+import {
+  getCard,
+  mapCard,
+  Card,
+  iterateCard,
+  moveCard,
+} from "../../../tool/table";
 import { mapEffect } from "../tool/basic/gameContext";
 import { TargetType, TargetTypeCard } from "../tool/basic/targetType";
 import { getCardBaSyou, getCardController } from "../tool/basic/handleCard";
@@ -978,6 +984,70 @@ export function applyFlow(
       return ctx;
     }
     case "FlowHandleReturnStepRule": {
+      // TODO: 如果地形不適應，移到廢棄庫
+      {
+        ctx = updateEffect(ctx);
+      }
+      const cardsInBattleArea = iterateCard(ctx.gameState.table).filter(
+        (card) => {
+          switch (getCardBaSyou(ctx, card.id).value[1]) {
+            case "戦闘エリア（右）":
+            case "戦闘エリア（左）":
+              return true;
+            default:
+              return false;
+          }
+        }
+      );
+      // 移動到配置區
+      ctx = cardsInBattleArea.reduce((ctx, card) => {
+        const cardNotInBattleArea =
+          cardsInBattleArea.map((c) => c.id).includes(card.id) == false;
+        if (cardNotInBattleArea) {
+          return ctx;
+        }
+        const cardController = getCardController(ctx, card.id);
+        const fromBaSyou = getCardBaSyou(ctx, card.id);
+        const toBaSyou: AbsoluteBaSyou = {
+          ...fromBaSyou,
+          value: [cardController, "配備エリア"],
+        };
+        const table = moveCard(
+          ctx.gameState.table,
+          getBaSyouID(fromBaSyou),
+          getBaSyouID(toBaSyou),
+          card.id,
+          null
+        );
+        return {
+          ...ctx,
+          gameState: {
+            ...ctx.gameState,
+            table: table,
+          },
+        };
+      }, ctx);
+      // 横置
+      {
+        const table = mapCard(ctx.gameState.table, (card) => {
+          const cardNotInBattleArea =
+            cardsInBattleArea.map((c) => c.id).includes(card.id) == false;
+          if (cardNotInBattleArea) {
+            return card;
+          }
+          return {
+            ...card,
+            tap: true,
+          };
+        });
+        ctx = {
+          ...ctx,
+          gameState: {
+            ...ctx.gameState,
+            table: table,
+          },
+        };
+      }
       // set hasTriggerEvent
       ctx = {
         ...ctx,

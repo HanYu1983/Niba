@@ -59,6 +59,7 @@ import { testProto_179030_11E_C_BL076S_blue } from "./testProto_179030_11E_C_BL0
 import { getTargetType } from "../tool/alg/getTargetType";
 import { testProto_179004_01A_CH_WT009R_white } from "./testProto_179004_01A_CH_WT009R_white";
 import { testReollPhase } from "./testReollPhase";
+import { testReturnStep } from "./testReturnStep";
 
 export function test() {
   [
@@ -73,6 +74,7 @@ export function test() {
     testRequireJsonfp,
     testBattleBonus,
     testReollPhase,
+    testReturnStep,
     testProto_179025_07D_U_RD156R_red,
     testProto_179025_07D_U_RD156R_red2,
     testProto_179025_07D_U_RD158C_red,
