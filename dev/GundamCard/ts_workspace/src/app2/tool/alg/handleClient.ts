@@ -7,6 +7,7 @@ import {
   getBaSyouID,
   getNextTiming,
   getOpponentPlayerID,
+  isBa,
   PlayerA,
   PlayerB,
 } from "../tool/basic/basic";
@@ -23,13 +24,14 @@ import {
   filterEffect,
   GameContext,
   getBlockOwner,
+  getSetGroupCards,
   iterateEffect,
   reduceEffect,
 } from "../tool/basic/gameContext";
-import { getCard, mapCard, Card } from "../../../tool/table";
+import { getCard, mapCard, Card, iterateCard } from "../../../tool/table";
 import { mapEffect } from "../tool/basic/gameContext";
 import { TargetType, TargetTypeCard } from "../tool/basic/targetType";
-import { getCardController } from "../tool/basic/handleCard";
+import { getCardBaSyou, getCardController } from "../tool/basic/handleCard";
 import { log2 } from "../../../tool/logger";
 import { Action } from "../tool/basic/action";
 import {
@@ -41,6 +43,7 @@ import {
 import {
   assertBlockPayloadTargetTypeValueLength,
   getCardState,
+  isCanReroll,
 } from "./helper";
 import { doConditionTarget } from "./doConditionTarget";
 import {
@@ -49,6 +52,7 @@ import {
   triggerTextEvent,
   updateCommand,
   updateDestroyEffect,
+  updateEffect,
 } from "./handleGameContext";
 import { getConditionMacro } from "./script/getConditionMacro";
 
@@ -423,6 +427,11 @@ type FlowMakeDestroyOrder = {
   description?: string;
 };
 
+type FlowHandleRerollPhaseRule = {
+  id: "FlowHandleRerollPhaseRule";
+  description?: string;
+};
+
 export type Flow =
   | FlowAddBlock
   | FlowTriggerTextEvent
@@ -442,7 +451,8 @@ export type Flow =
   | FlowHandleReturnStepRule
   | FlowHandleStackEffectFinished
   | FlowPassPayCost
-  | FlowMakeDestroyOrder;
+  | FlowMakeDestroyOrder
+  | FlowHandleRerollPhaseRule;
 
 let idSeq = 0;
 export function applyFlow(
@@ -1045,6 +1055,55 @@ export function applyFlow(
         },
       };
     }
+    case "FlowHandleRerollPhaseRule": {
+      const activePlayerID = ctx.gameState.activePlayerID;
+      if (activePlayerID == null) {
+        throw new Error("activePlayer not found");
+      }
+      // 先更新效果
+      ctx = updateEffect(ctx);
+      const myCards = iterateCard(ctx.gameState.table)
+        // 我控制的
+        .filter((card) => {
+          return getCardController(ctx, card.id) == activePlayerID;
+        })
+        // 可以重置的
+        .filter((card) => {
+          // 檢查是否可以重置
+          // 必須在updateEffect之後呼叫才能確保卡片效果有在作用
+          return isCanReroll(ctx, null, card.id);
+        });
+      // 重置控制者為主動玩家的卡
+      const table = mapCard(ctx.gameState.table, (card) => {
+        const isNotMyCard = myCards.map((c) => c.id).includes(card.id) == false;
+        if (isNotMyCard) {
+          return card;
+        }
+        return {
+          ...card,
+          tap: false,
+        };
+      });
+      ctx = {
+        ...ctx,
+        gameState: {
+          ...ctx.gameState,
+          table: table,
+        },
+      };
+      // set hasTriggerEvent
+      ctx = {
+        ...ctx,
+        gameState: {
+          ...ctx.gameState,
+          flowMemory: {
+            ...ctx.gameState.flowMemory,
+            hasTriggerEvent: true,
+          },
+        },
+      };
+      return ctx;
+    }
   }
   return ctx;
 }
@@ -1510,12 +1569,14 @@ export function queryFlow(ctx: GameContext, playerID: string): Flow[] {
                 },
               ];
             case "リロールフェイズ":
+              // 如果已經觸發規定の効果
+              if (ctx.gameState.flowMemory.hasTriggerEvent) {
+                return [{ id: "FlowNextTiming" }];
+              }
               return [
                 {
-                  id: "FlowAddBlock",
-                  responsePlayerID: ctx.gameState.activePlayerID,
-                  description: `${phase[0]}規定效果`,
-                  block: {},
+                  id: "FlowHandleRerollPhaseRule",
+                  description: "執行「リロールフェイズ」",
                 },
               ];
           }

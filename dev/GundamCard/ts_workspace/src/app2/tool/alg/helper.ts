@@ -350,6 +350,26 @@ export function isABattleGroup(
   );
 }
 
+export function isCanReroll(
+  ctx: GameContext,
+  condition: any,
+  cardID: string
+): boolean {
+  const baSyouKW = getCardBaSyou(ctx, cardID).value[1];
+  switch (baSyouKW) {
+    case "Gゾーン":
+    case "配備エリア":
+    case "戦闘エリア（右）":
+    case "戦闘エリア（左）":
+      break;
+    default:
+      return false;
+  }
+  const baSyou = getCardBaSyou(ctx, cardID);
+  const setGroup = getSetGroupCards(ctx, cardID);
+  return true;
+}
+
 export function isOpponentHasBattleGroup(
   ctx: GameContext,
   cardID: string

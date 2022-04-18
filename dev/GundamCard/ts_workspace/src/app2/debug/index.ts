@@ -58,6 +58,7 @@ import { testProto_179024_03B_U_WT057U_white } from "./testProto_179024_03B_U_WT
 import { testProto_179030_11E_C_BL076S_blue } from "./testProto_179030_11E_C_BL076S_blue";
 import { getTargetType } from "../tool/alg/getTargetType";
 import { testProto_179004_01A_CH_WT009R_white } from "./testProto_179004_01A_CH_WT009R_white";
+import { testReollPhase } from "./testReollPhase";
 
 export function test() {
   [
@@ -70,6 +71,8 @@ export function test() {
     testClientCommand,
     testClientCommand2,
     testRequireJsonfp,
+    testBattleBonus,
+    testReollPhase,
     testProto_179025_07D_U_RD156R_red,
     testProto_179025_07D_U_RD156R_red2,
     testProto_179025_07D_U_RD158C_red,
@@ -78,7 +81,6 @@ export function test() {
     testProto_179001_01A_CH_WT007R_white,
     testProto_179004_01A_CH_WT010C_white,
     testProto_179022_06C_CH_WT057R_white,
-    testBattleBonus,
     testProto_179007_02A_U_WT027U_white,
     testProto_179025_07D_O_GN019C_green,
     testProto_179015_04B_U_WT067C_white,
