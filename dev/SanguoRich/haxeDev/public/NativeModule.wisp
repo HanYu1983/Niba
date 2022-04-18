@@ -91,6 +91,16 @@
                       (let [context (R.modify "currentPlayer"
                                               #(mod (inc %) 4)
                                               context)
+                            context (R.modify "grids"
+                                              (fn [grids]
+                                                (map (fn [grid]
+                                                       (let [{:strs [money moneyGrow food foodGrow army armyGrow]} grid]
+                                                         (assoc grid
+                                                                :money (+ money (* money moneyGrow))
+                                                                :food (+ food (* food foodGrow))
+                                                                :army (+ army (* army armyGrow)))))
+                                                     grids))
+                                              context)
                             context (assoc context
                                            :actions []
                                            :events [])
