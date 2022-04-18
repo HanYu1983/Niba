@@ -856,6 +856,23 @@ export function applyFlow(
         // 若有產生值，在下一步時主動玩家就要拿到決定解決順序的指令
         ctx = updateDestroyEffect(ctx);
       }
+      // 回合結束時切換主動玩家
+      if (
+        ctx.gameState.timing[1][0] == "戦闘フェイズ" &&
+        ctx.gameState.timing[1][1] == "ターン終了時" &&
+        ctx.gameState.timing[1][2] == "効果終了。ターン終了"
+      ) {
+        if (ctx.gameState.activePlayerID == null) {
+          throw new Error("activePlayerID not found");
+        }
+        ctx = {
+          ...ctx,
+          gameState: {
+            ...ctx.gameState,
+            activePlayerID: getOpponentPlayerID(ctx.gameState.activePlayerID),
+          },
+        };
+      }
       // 下一步
       {
         const nextTiming = getNextTiming(ctx.gameState.timing);
