@@ -1,5 +1,6 @@
 package view;
 
+import js.Syntax;
 import view.popup.MessageView;
 import view.popup.NegoPreviewView;
 import view.popup.WarPreviewView;
@@ -191,7 +192,6 @@ class MainView extends Absolute {
         syncGameInfo(gameInfo);
         syncGridViews(gameInfo);
         syncPlayerViews(gameInfo);
-        syncGridInfo(gameInfo.currentPlayer.atGridId);
         playEvents(gameInfo);
     }
 
@@ -294,8 +294,27 @@ class MainView extends Absolute {
         var opt_p:OptionBox = Reflect.field(this, 'opt_p${pid+1}');
         opt_p.selected = true;
 
+        stage.unregisterEvents();
         if(gameInfo.isPlayerTurn){
             pro_currentEvent.value = "等待指令中";
+
+            stage.registerEvent(MouseEvent.MOUSE_MOVE, function(e:MouseEvent){
+                var gx = Math.floor(e.screenX / 50);
+                var gy = Math.floor(e.screenY / 50);
+                var gridId = gx + gy * 10;
+                var pos = getGridPositionByGridId(gridId);
+                box_cursor.left = pos[0];
+                box_cursor.top = pos[1];
+                syncGridInfo(gridId);
+
+                var gridInfo = gameInfo.grids[gridId];
+                peopleListView.setPeopleList(gridInfo.people);
+            });
+
+            stage.registerEvent(MouseEvent.MOUSE_OUT, function(e:MouseEvent){
+                syncGridInfo(gameInfo.currentPlayer.atGridId);
+                peopleListView.setPeopleList(gameInfo.currentPlayer.people);
+            });
         }
         syncPlayerInfo(pid);
     }
@@ -305,16 +324,24 @@ class MainView extends Absolute {
         var p = gameInfo.players[id];
         pro_name.value = p.name;
         pro_money.value = p.money;
+        pro_food.value = p.food;
         pro_army.value = p.army;
         pro_peopleCount.value = p.people.length;
         pro_cityCount.value = "0";
         peopleListView.setPeopleList(p.people);
+
+        syncGridInfo(gameInfo.players[id].atGridId);
     }
 
     function syncGridInfo(gridId:Int){
         var grid:Grid = Main.model.gameInfo().grids[gridId];
         pro_gridName.value = grid.id;
         pro_gridLandType.value = grids[gridId].lbl_building.text;
+        
+        var round = Syntax.code('Number.prototype.toFixed');
+        pro_gridMoney.value = '${grid.money}(${round.call(grid.moneyGrow, 4)}%)';
+        pro_gridFood.value = '${grid.food}(${round.call(grid.foodGrow, 4)}%)';
+        pro_gridArmy.value = '${grid.army}(${round.call(grid.armyGrow, 4)}%)';
     }
 
     function syncGridViews(gameInfo:GameInfo){

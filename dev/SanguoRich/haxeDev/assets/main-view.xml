@@ -9,6 +9,9 @@
             <box id="stage" width="500" height="100%" style="background-color: grey;border:1px solid grey;background-opacity: .3">
                 <box id="box_grids" width="100%" height="100%" />
                 <box id="box_players" width="100%" height="100%" />
+                <box id="box_stageFront" width="100%" height="100%">
+                    <box id="box_cursor" width="50" height="50" style="background-color: white;border:1px solid yellow;background-opacity: .3"></box>
+                </box>
             </box>
             <vbox width="100">
                 <vbox width="100">
@@ -42,6 +45,7 @@
                     <property-group text="君主資料">
                         <property id="pro_name" label="名稱" value="1000" />
                         <property id="pro_money" label="金錢" value="1000" />
+                        <property id="pro_food" label="糧草" value="1000" />
                         <property id="pro_army" label="士兵" value="1000" />
                         <property id="pro_strategy" label="計略" value="1000" />   
                         <property id="pro_peopleCount" label="武將數" value="5" />
@@ -51,6 +55,7 @@
                         <property id="pro_gridName" label="名稱" value="空地" />
                         <property id="pro_gridLandType" label="地形" value="空地" />
                         <property id="pro_gridMoney" label="金錢" value="1000" />
+                        <property id="pro_gridFood" label="糧草" value="1000" />
                         <property id="pro_gridArmy" label="士兵" value="1000" />
                         <property id="pro_gridPlayer" label="所有者" value="" />
                     </property-group>

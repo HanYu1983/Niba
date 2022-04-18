@@ -1,4 +1,5 @@
 package model;
+import model.PeopleGenerator.People;
 import libnoise.QualityMode;
 import haxe.ui.components.Rule;
 import libnoise.generator.Perlin;
@@ -10,7 +11,14 @@ typedef Grid = {
     height:Float,
     attachs:Array<Int>,
     belongPlayerId:Int,
-    value:Int
+    value:Int,
+    money:Float,
+    moneyGrow:Float,
+    food:Float,
+    foodGrow:Float,
+    army:Float,
+    armyGrow:Float,
+    people:Array<People>
 }
 
 enum BUILDING{
@@ -43,7 +51,16 @@ class GridGenerator{
             height:0,
             attachs:[],
             belongPlayerId: null,
-            value:0
+            value:0,
+            money: 100,
+            moneyGrow: 0.01,
+            food:100,
+            foodGrow:0.01,
+            army: 100,
+            armyGrow: 0.01,
+            people: [
+                PeopleGenerator.getInst().generate()
+            ]
         };
     }
 
@@ -54,6 +71,9 @@ class GridGenerator{
             var g = getGrid();
             g.id = i;
             g.landType = [0,0,1,1,1,1,2,2,3,3][Math.floor(height * 10)];
+            g.moneyGrow = Math.random() * .01;
+            g.foodGrow = Math.random() * .01;
+            g.armyGrow = Math.random() * .01;
             g.buildtype = [
                 BUILDING.EMPTY,
                 BUILDING.EMPTY,

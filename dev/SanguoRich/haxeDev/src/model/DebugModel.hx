@@ -27,75 +27,35 @@ class DebugModel implements IModel {
 		return people;
 	}
 
+    function gp(id, name) {
+        return {
+            {
+                id:id,
+                name:name,
+                money:1000.0,
+                army: 100.0,
+                food: 100.0,
+                strategy: 10.0,
+                people:[
+                    PeopleGenerator.getInst().generate(),
+                    PeopleGenerator.getInst().generate()
+                ],
+                atGridId:0
+            }
+        }
+    }
+
 	public function gameStart(cb:Void->Void):Void {
         info = {
             players:[
-                {
-                    id:0,
-                    name:'vic',
-                    money:1000,
-                    army: 100,
-                    strategy: 10,
-                    people:[
-                        PeopleGenerator.getInst().generate(),
-                        PeopleGenerator.getInst().generate()
-                    ],
-                    atGridId:0
-                },
-                {
-                    id:1,
-                    name:'han',
-                    money:10001,
-                    army: 1001,
-                    strategy: 101,
-                    people:[
-                        PeopleGenerator.getInst().generate(),
-                        PeopleGenerator.getInst().generate(),
-                        PeopleGenerator.getInst().generate()
-                    ],
-                    atGridId:3
-                },
-                {
-                    id:2,
-                    name:'xiao',
-                    money:10002,
-                    army: 1002,
-                    strategy: 102,
-                    people:[
-                        PeopleGenerator.getInst().generate(),
-                        PeopleGenerator.getInst().generate(),
-                        PeopleGenerator.getInst().generate(),
-                        PeopleGenerator.getInst().generate()
-                    ],
-                    atGridId:2
-                },
-                {
-                    id:3,
-                    name:'yu',
-                    money:10003,
-                    army: 1003,
-                    strategy: 103,
-                    people:[
-                        PeopleGenerator.getInst().generate(),
-                        PeopleGenerator.getInst().generate(),
-                        PeopleGenerator.getInst().generate(),
-                        PeopleGenerator.getInst().generate(),
-                        PeopleGenerator.getInst().generate()
-                    ],
-                    atGridId:2
-                }
+                gp(0, 'vic'),
+                gp(0, 'han'),
+                gp(0, 'xiao'),
+                gp(0, 'any')
             ],
             grids:getGrids(100),
             isPlayerTurn:true,
-            currentPlayer:{
-                id:0,
-                name:'vic',
-                money:1000,
-                army: 1003,
-                strategy: 103,
-                people:[],
-                atGridId:0
-            },
+            currentPlayer:gp(0, 'vic'),
             isPlaying: true,
             actions:[],
             events: []

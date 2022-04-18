@@ -6,9 +6,10 @@ import model.PeopleGenerator.People;
 typedef PlayerInfo = {
     id:Int,
     name:String,
-    money:Int,
-    army:Int,
-    strategy:Int,
+    money:Float,
+    food:Float,
+    army:Float,
+    strategy:Float,
     people:Array<People>,
     atGridId:Int
 }
