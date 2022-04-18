@@ -68,7 +68,8 @@
                     (fn [cb]
                       (let [currentPlayer context.currentPlayer
                             atGridId (R.path ["players" currentPlayer "atGridId"] context)
-                            nextGridId (mod (+ atGridId 4) 100)
+                            moveStep (inc (mod (Math.floor (* (Math.random) 10)) 6))
+                            nextGridId (mod (+ atGridId moveStep) 100)
                             nextGrid (R.path ["grids" nextGridId] context)
                             context (R.modifyPath ["players" currentPlayer]
                                                   (fn [player]

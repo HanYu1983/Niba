@@ -27,6 +27,13 @@ const Grid = spec.map("Grid", {
   buildtype: spec.obj, // haxe enum object
   height: spec.number,
   attachs: spec.collection("ints", spec.int),
+  money: spec.number,
+  moneyGrow: spec.number,
+  food: spec.number,
+  foodGrow: spec.number,
+  army: spec.number,
+  armyGrow: spec.number,
+  people: spec.collection("people", People),
 });
 
 const Action = spec.or("Action", {
