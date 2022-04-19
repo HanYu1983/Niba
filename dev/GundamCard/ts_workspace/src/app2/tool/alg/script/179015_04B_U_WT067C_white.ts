@@ -25,6 +25,7 @@ const prototype: CardPrototype = {
   color: "白",
   rollCost: ["白", "白", null, null],
   battlePoint: [5, 0, 4],
+  battleArea: ["地球エリア", "宇宙エリア"],
   texts: [
     getCardTextMacro({ id: "PlayG" }),
     getCardTextMacro({
