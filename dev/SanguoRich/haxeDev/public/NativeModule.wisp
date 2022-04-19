@@ -150,7 +150,8 @@
                                          :successRate 0.2}
                             _ (console.log previewLeft)
                             _ (assertNegoPreview previewLeft)
-                            gridCost (aget costs 1)
+                            ; 取得第一個人對戰結果的敵方資料
+                            gridCost (R.path [0 1] costs)
                             previewRight {:player player
                                           :fightPeople [gridOnePeople]
                                           :armyBefore grid.army
