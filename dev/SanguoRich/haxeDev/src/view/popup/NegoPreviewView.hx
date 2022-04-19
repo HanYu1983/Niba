@@ -48,7 +48,9 @@ class NegoPreviewView extends PopupView{
             }
 
             pro_name.onChange = function(e:UIEvent){
-                setOnePeople(e.data.id, e.data.people);
+                if(e.data){
+                    setOnePeople(e.data.id, e.data.people);
+                }
             }
 
             // pro_successRate.value = '${Math.floor(info.successRate * 100)}%';
