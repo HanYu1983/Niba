@@ -50,6 +50,7 @@ export type CardPrototype = {
   battlePoint: BattleBonus;
   battleArea: BattleAreaKeyword[];
   texts: CardText[];
+  implProgress: number;
 };
 
 export const DEFAULT_CARD_PROTOTYPE: CardPrototype = {
@@ -61,6 +62,7 @@ export const DEFAULT_CARD_PROTOTYPE: CardPrototype = {
   battlePoint: [0, 0, 0],
   battleArea: ["地球エリア", "宇宙エリア"],
   texts: [],
+  implProgress: 0,
 };
 
 export type CardState = {
