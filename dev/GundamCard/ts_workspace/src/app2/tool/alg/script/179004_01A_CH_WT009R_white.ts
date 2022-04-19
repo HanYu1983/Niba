@@ -25,7 +25,7 @@ const prototype: CardPrototype = {
   rollCost: ["白", null, null],
   battlePoint: [0, 0, 0],
   texts: [
-    createTokuSyuKouKaText(["ステイ"], {}),
+    createTokuSyuKouKaText(["ステイ"], { cost: 1, costColor: "白" }),
     createTokuSyuKouKaText(["ゲイン"], { cost: 1 }),
     createTokuSyuKouKaText(["供給"], { cost: 1 }),
     getCardTextMacro({ id: "PlayG" }),

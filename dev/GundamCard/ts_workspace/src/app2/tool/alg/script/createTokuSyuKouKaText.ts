@@ -572,6 +572,7 @@ export function createTokuSyuKouKaText(
                             "の戦闘修正",
                           ],
                         },
+                        tip: { id: "戦闘修正", value: [] },
                       },
                     },
                     action: [

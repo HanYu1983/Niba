@@ -684,6 +684,13 @@ export const OnViewModel = OnEvent.pipe(
               "179901_CG_C_WT001P_white",
               "179901_CG_CH_WT002P_white",
             ];
+            const gDeck = [
+              "179023_06C_G_BL021C_blue",
+              "179030_11E_G_RD021N_red",
+              "179901_CG_C_WT001P_white",
+              "179901_CG_C_WT001P_white",
+              "179901_CG_C_WT001P_white",
+            ];
             let table = ctx.gameState.table;
             table = createCard(
               table,
@@ -693,18 +700,49 @@ export const OnViewModel = OnEvent.pipe(
             );
             table = createCard(
               table,
+              PlayerA,
+              getBaSyouID({ id: "AbsoluteBaSyou", value: [PlayerA, "手札"] }),
+              deck.slice(0, 6)
+            );
+            table = createCard(
+              table,
+              PlayerA,
+              getBaSyouID({
+                id: "AbsoluteBaSyou",
+                value: [PlayerA, "Gゾーン"],
+              }),
+              gDeck
+            );
+            table = createCard(
+              table,
               PlayerB,
               getBaSyouID({ id: "AbsoluteBaSyou", value: [PlayerB, "本国"] }),
               deck
+            );
+            table = createCard(
+              table,
+              PlayerB,
+              getBaSyouID({ id: "AbsoluteBaSyou", value: [PlayerB, "手札"] }),
+              deck.slice(6, 12)
+            );
+            table = createCard(
+              table,
+              PlayerB,
+              getBaSyouID({
+                id: "AbsoluteBaSyou",
+                value: [PlayerB, "Gゾーン"],
+              }),
+              gDeck
             );
             ctx = {
               ...ctx,
               gameState: {
                 ...ctx.gameState,
                 table,
+                timing: TIMING_CHART[9],
                 flowMemory: {
                   ...ctx.gameState.flowMemory,
-                  //state: "playing",
+                  state: "playing",
                 },
               },
             };
