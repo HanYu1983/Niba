@@ -1002,13 +1002,6 @@ const CARD_TEXT_PLAY_G: CardTextSiYouKaTa = {
                         ],
                       },
                     },
-                    {
-                      id: "ActionRoll",
-                      cards: {
-                        id: "カード",
-                        value: VAR_PLAY_CARD,
-                      },
-                    },
                   ],
                 },
               ],

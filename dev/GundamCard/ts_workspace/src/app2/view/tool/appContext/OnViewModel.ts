@@ -702,7 +702,7 @@ export const OnViewModel = OnEvent.pipe(
               table,
               PlayerA,
               getBaSyouID({ id: "AbsoluteBaSyou", value: [PlayerA, "手札"] }),
-              deck.slice(0, 6)
+              deck.slice(0, 2)
             );
             table = createCard(
               table,
