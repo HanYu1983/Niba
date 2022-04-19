@@ -22,7 +22,9 @@ const prototype: CardPrototype = {
   ),
   category: "ユニット",
   color: "白",
-  rollCost: ["白", null, null, null, null],
+  rollCost: ["白", null, null, null],
+  battlePoint: [4, 1, 4],
+  battleArea: ["地球エリア", "宇宙エリア"],
   texts: [
     createTokuSyuKouKaText(["改装", "ブルーフレーム系"], { cost: 0 }),
     getCardTextMacro({ id: "PlayG" }),

@@ -52,7 +52,7 @@ export const OnViewModel = OnEvent.pipe(
       switch (evt.id) {
         case "OnClickNewGame": {
           let ctx = DEFAULT_GAME_CONTEXT;
-          if (false) {
+          if (true) {
             let table = ctx.gameState.table;
             table = createCard(
               table,
@@ -148,9 +148,12 @@ export const OnViewModel = OnEvent.pipe(
               ...ctx,
               gameState: {
                 ...ctx.gameState,
-                // @ts-ignore
-                timing: TIMING_CHART.find((t) => t[1][0] == "配備フェイズ"),
+                timing: [14, ["戦闘フェイズ", "攻撃ステップ", "規定の効果"]],
                 activePlayerID: PlayerA,
+                flowMemory: {
+                  ...ctx.gameState.flowMemory,
+                  state: "playing",
+                },
               },
               versionID: viewModel.model.versionID,
             };
@@ -641,7 +644,7 @@ export const OnViewModel = OnEvent.pipe(
               },
             };
           }
-          if (true) {
+          if (false) {
             const deck = [
               "179001_01A_CH_WT007R_white",
               "179004_01A_CH_WT009R_white",

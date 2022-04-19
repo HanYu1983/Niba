@@ -1,6 +1,7 @@
 import {
   AbsoluteBaSyou,
   BaSyou,
+  BattleAreaKeyword,
   BattleBonus,
   CardCategory,
   CardColor,
@@ -454,4 +455,16 @@ export function getCardCardTextState(
   //     return v.id == cardID;
   //   })
   //   .flatMap((v) => v.cardTextStates);
+}
+
+export function getCardBattleArea(
+  ctx: GameContext,
+  cardID: string
+): BattleAreaKeyword[] {
+  const card = getCard(ctx.gameState.table, cardID);
+  if (card == null) {
+    throw new Error("card not found");
+  }
+  const prototype = getPrototype(card.protoID);
+  return prototype.battleArea;
 }

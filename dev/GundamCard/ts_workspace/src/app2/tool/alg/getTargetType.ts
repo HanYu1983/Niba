@@ -39,7 +39,11 @@ import {
 import { log2 } from "../../../tool/logger";
 import { getPrototype } from "./script";
 import { triggerTextEvent, wrapTip } from "./handleGameContext";
-import { getCardState, getCardStateIterator } from "./helper";
+import {
+  getCardBattleArea,
+  getCardState,
+  getCardStateIterator,
+} from "./helper";
 import { getTargetTypeCardCustom } from "./getTargetTypeCardCustom";
 
 export function getTargetType(
@@ -459,6 +463,9 @@ export function getTargetType(
                 }
                 const prototype = getPrototype(card.protoID);
                 return prototype.title;
+              }
+              case "的「地形適性」": {
+                return getCardBattleArea(ctx, cardID).join("|");
               }
             }
           });

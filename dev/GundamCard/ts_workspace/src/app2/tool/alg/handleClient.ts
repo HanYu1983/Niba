@@ -1746,6 +1746,22 @@ export function queryFlow(ctx: GameContext, playerID: string): Flow[] {
                                 x: { id: "カード", value: "去左方的卡" },
                                 y: ["ユニット"],
                               }),
+                              {
+                                id: "ConditionCompareString",
+                                value: [
+                                  {
+                                    id: "字串",
+                                    value: {
+                                      path: [
+                                        { id: "カード", value: "去左方的卡" },
+                                        "的「地形適性」",
+                                      ],
+                                    },
+                                  },
+                                  "hasToken",
+                                  { id: "字串", value: ["宇宙エリア"] },
+                                ],
+                              },
                               getConditionMacro({
                                 id: "變量x的場所包含於y",
                                 x: { id: "カード", value: "去右方的卡" },
@@ -1761,6 +1777,22 @@ export function queryFlow(ctx: GameContext, playerID: string): Flow[] {
                                 x: { id: "カード", value: "去右方的卡" },
                                 y: ["ユニット"],
                               }),
+                              {
+                                id: "ConditionCompareString",
+                                value: [
+                                  {
+                                    id: "字串",
+                                    value: {
+                                      path: [
+                                        { id: "カード", value: "去右方的卡" },
+                                        "的「地形適性」",
+                                      ],
+                                    },
+                                  },
+                                  "hasToken",
+                                  { id: "字串", value: ["地球エリア"] },
+                                ],
+                              },
                             ],
                           },
                           action: [
