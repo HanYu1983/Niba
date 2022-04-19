@@ -1,5 +1,3 @@
-import { CardPosition } from "../../app/types";
-
 export type Card = {
   id: string;
   protoID: string;

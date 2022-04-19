@@ -93,7 +93,9 @@ export type TargetTypeString = {
   value:
     | string[]
     | string
-    | { path: [TargetTypeCard, "的「名称」" | "的「特徴」"] };
+    | {
+        path: [TargetTypeCard, "的「名称」" | "的「特徴」" | "的「地形適性」"];
+      };
 } & TargetTypeBase;
 
 export type TargetTypeBoolean = {

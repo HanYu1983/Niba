@@ -25,13 +25,13 @@ const prototype: CardPrototype = {
   battlePoint: [5, 1, 5],
   texts: [
     createTokuSyuKouKaText(["サイコミュ", 2], { cost: 1 }),
-    {
-      id: "使用型",
-      timing: ["自軍", "配備フェイズ"],
+    getCardTextMacro({
+      id: "PlayText",
       description:
         "（自軍配備フェイズ）〔２〕：このカードの上に、NTチップ｛CHARACTER、「特徴：NT」、１／１／１｝１個を乗せる。",
-      block: {
-        require: createRollCostRequire(2, null),
+      timing: ["自軍", "配備フェイズ"],
+      additionalRequire: [createRollCostRequire(2, null)],
+      feedbackBlock: {
         feedback: [
           {
             id: "FeedbackAction",
@@ -53,7 +53,7 @@ const prototype: CardPrototype = {
           },
         ],
       },
-    },
+    }),
   ],
 };
 

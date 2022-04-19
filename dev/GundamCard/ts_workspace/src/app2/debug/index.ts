@@ -435,8 +435,8 @@ export function testTargetType() {
   if (!Array.isArray(targetType.value)) {
     throw new Error("計算完後必須是常數");
   }
-  if (targetType.value[0] != 2) {
-    throw new Error("5-3必須等於2");
+  if (targetType.value[0] != 1) {
+    throw new Error("4-3必須等於1");
   }
   const block2: BlockPayload = {
     cause: {

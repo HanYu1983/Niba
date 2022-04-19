@@ -269,7 +269,7 @@ export function doConditionTarget(
                   }
                   const tokens = a.split("|");
                   if (tokens.includes(b) == false) {
-                    throw new Error("hasToken error");
+                    throw new Error(`${JSON.stringify(tokens)}必須存在"${b}"`);
                   }
                   break;
                 }

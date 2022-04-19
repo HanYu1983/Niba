@@ -148,9 +148,12 @@ export const OnViewModel = OnEvent.pipe(
               ...ctx,
               gameState: {
                 ...ctx.gameState,
-                // @ts-ignore
-                timing: TIMING_CHART.find((t) => t[1][0] == "配備フェイズ"),
+                timing: [14, ["戦闘フェイズ", "攻撃ステップ", "規定の効果"]],
                 activePlayerID: PlayerA,
+                flowMemory: {
+                  ...ctx.gameState.flowMemory,
+                  state: "playing",
+                },
               },
               versionID: viewModel.model.versionID,
             };
@@ -644,55 +647,49 @@ export const OnViewModel = OnEvent.pipe(
           if (true) {
             const deck = [
               "179001_01A_CH_WT007R_white",
+              "179003_01A_U_BK008U_black",
               "179004_01A_CH_WT009R_white",
               "179004_01A_CH_WT010C_white",
-              "179007_02A_U_WT027U_white",
+              "179007_02A_O_BK005C_black",
               "179007_02A_U_WT027U_white",
               "179008_02A_U_WT034U_white",
-              "179008_02A_U_WT034U_white",
-              // "179008_02A_U_WT034U_white",
-              // "179014_03B_CH_WT027R_white",
-              // "179015_04B_U_WT067C_white",
-              // "179015_04B_U_WT067C_white",
-              // "179015_04B_U_WT067C_white",
-              // "179016_04B_U_WT074C_white",
-              // "179016_04B_U_WT074C_white",
-              // "179016_04B_U_WT074C_white",
-              // "179016_04B_U_WT075C_white",
-              // "179016_04B_U_WT075C_white",
-              // "179016_04B_U_WT075C_white",
-              // "179019_01A_C_WT010C_white",
-              // "179019_01A_C_WT010C_white",
-              // "179019_02A_U_WT028R_white",
-              // "179019_02A_U_WT028R_white",
-              // "179022_06C_CH_WT057R_white",
-              // "179022_06C_CH_WT057R_white",
-              // "179022_06C_CH_WT057R_white",
-              // "179022_06C_U_WT113R_white",
-              // "179022_06C_U_WT113R_white",
-              // "179022_06C_U_WT113R_white",
-              // "179023_06C_CH_WT067C_white",
-              // "179024_03B_U_WT057U_white",
-              // "179024_03B_U_WT057U_white",
-              // "179025_07D_C_WT060U_white",
-              // "179025_07D_CH_WT075C_white",
-              // "179025_07D_CH_WT075C_white",
-              // "179025_07D_CH_WT075C_white",
-              // "179027_09D_C_WT067R_white",
-              // "179027_09D_C_WT067R_white",
-              // "179029_B3C_CH_WT102R_white",
-              // "179029_B3C_CH_WT103N_white",
-              // "179029_B3C_U_WT196R_white",
-              // "179030_11E_C_WT077S_white",
-              // "179030_11E_C_WT077S_white",
-              // "179030_11E_C_WT077S_white",
-              // "179030_11E_CH_WT108N_white",
-              // "179901_00_C_WT003P_white",
-              // "179901_00_C_WT003P_white",
-              // "179901_00_C_WT003P_white",
-              // "179901_CG_C_WT001P_white",
-              // "179901_CG_C_WT001P_white",
-              // "179901_CG_CH_WT002P_white",
+              "179014_03B_CH_WT027R_white",
+              "179015_04B_U_WT067C_white",
+              "179016_04B_U_RD083C_red",
+              "179016_04B_U_WT074C_white",
+              "179016_04B_U_WT075C_white",
+              "179019_01A_C_WT010C_white",
+              "179022_06C_CH_WT057R_white",
+              "179022_06C_U_WT113R_white",
+              "179023_06C_CH_WT067C_white",
+              "179023_06C_G_BL021C_blue",
+              "179024_03B_U_WT057U_white",
+              "179025_07D_C_WT060U_white",
+              "179025_07D_CH_WT075C_white",
+              "179025_07D_O_GN019C_green",
+              "179025_07D_U_RD156R_red",
+              "179025_07D_U_RD158C_red",
+              "179028_10D_C_BL070N_blue",
+              "179029_05C_O_BK014C_black",
+              "179029_B3C_CH_WT102R_white",
+              "179029_B3C_CH_WT103N_white",
+              "179030_11E_C_BL076S_blue",
+              "179030_11E_G_RD021N_red",
+              "179030_11E_O_BK012N_black",
+              "179030_11E_O_GN023N_green",
+              "179030_11E_U_BL208S_blue",
+              "179030_11E_U_BL210N_blue",
+              "179030_11E_U_BL215R_blue",
+              "179901_00_U_RD010P_red",
+              "179901_CG_C_WT001P_white",
+              "179901_CG_CH_WT002P_white",
+            ];
+            const gDeck = [
+              "179023_06C_G_BL021C_blue",
+              "179030_11E_G_RD021N_red",
+              "179901_CG_C_WT001P_white",
+              "179901_CG_C_WT001P_white",
+              "179901_CG_C_WT001P_white",
             ];
             let table = ctx.gameState.table;
             table = createCard(
@@ -703,18 +700,49 @@ export const OnViewModel = OnEvent.pipe(
             );
             table = createCard(
               table,
+              PlayerA,
+              getBaSyouID({ id: "AbsoluteBaSyou", value: [PlayerA, "手札"] }),
+              deck.slice(0, 2)
+            );
+            table = createCard(
+              table,
+              PlayerA,
+              getBaSyouID({
+                id: "AbsoluteBaSyou",
+                value: [PlayerA, "Gゾーン"],
+              }),
+              gDeck
+            );
+            table = createCard(
+              table,
               PlayerB,
               getBaSyouID({ id: "AbsoluteBaSyou", value: [PlayerB, "本国"] }),
               deck
+            );
+            table = createCard(
+              table,
+              PlayerB,
+              getBaSyouID({ id: "AbsoluteBaSyou", value: [PlayerB, "手札"] }),
+              deck.slice(6, 12)
+            );
+            table = createCard(
+              table,
+              PlayerB,
+              getBaSyouID({
+                id: "AbsoluteBaSyou",
+                value: [PlayerB, "Gゾーン"],
+              }),
+              gDeck
             );
             ctx = {
               ...ctx,
               gameState: {
                 ...ctx.gameState,
                 table,
+                timing: TIMING_CHART[9],
                 flowMemory: {
                   ...ctx.gameState.flowMemory,
-                  //state: "playing",
+                  state: "playing",
                 },
               },
             };

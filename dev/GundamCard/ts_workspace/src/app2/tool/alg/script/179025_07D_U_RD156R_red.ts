@@ -97,7 +97,6 @@ const CARD_TEXT_DESTROY_WHEN_CUT_FINISHED_VAR_FLAG_FOR_DESTROY =
 // 『恒常』：このカードは、合計国力－３してプレイできる。その場合、カット終了時に、このカードを廃棄する。
 // 『起動』：このカードが場に出た場合、ユニットとキャラ以外の敵軍カード１枚のプレイを無効にし、そのカードを廃棄する。
 
-const rollCost: (CardColor | null)[] = ["赤", "赤", null, null, null];
 const prototype: CardPrototype = {
   ...DEFAULT_CARD_PROTOTYPE,
   title: "F91",

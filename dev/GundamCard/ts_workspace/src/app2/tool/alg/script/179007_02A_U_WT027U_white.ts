@@ -18,10 +18,11 @@ const prototype: CardPrototype = {
   title: "アストレイ レッドフレーム",
   characteristic:
     "アストレイ系　レッドフレーム系　MS　専用「ロウ・ギュール」".split("　"),
-  category: "キャラクター",
+  category: "ユニット",
   color: "白",
   rollCost: ["白", null, null, null],
   battlePoint: [4, 1, 4],
+  battleArea: ["地球エリア", "宇宙エリア"],
   texts: [
     createTokuSyuKouKaText(["改装", "レッドフレーム系"], {}),
     getCardTextMacro({ id: "PlayG" }),

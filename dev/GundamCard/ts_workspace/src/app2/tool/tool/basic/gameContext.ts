@@ -21,6 +21,7 @@ import {
   BattleBonus,
   getBaSyouID,
   PlayerA,
+  BattleAreaKeyword,
 } from "./basic";
 import { getBaSyou, TIMING_CHART } from "./basic";
 import { BlockPayload, Require, RequireAnd, RequireOr } from "./blockPayload";
@@ -47,17 +48,21 @@ export type CardPrototype = {
   category: CardCategory;
   rollCost: (CardColor | null)[];
   battlePoint: BattleBonus;
+  battleArea: BattleAreaKeyword[];
   texts: CardText[];
+  implProgress: number;
 };
 
 export const DEFAULT_CARD_PROTOTYPE: CardPrototype = {
-  title: "",
+  title: "名稱未定義",
   characteristic: [],
   color: "白",
   category: "ユニット",
   rollCost: [],
   battlePoint: [0, 0, 0],
+  battleArea: ["地球エリア", "宇宙エリア"],
   texts: [],
+  implProgress: 0,
 };
 
 export type CardState = {
