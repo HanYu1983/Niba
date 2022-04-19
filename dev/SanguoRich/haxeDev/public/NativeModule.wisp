@@ -18,7 +18,7 @@
       genPeople (fn []
                   (assertPackage)
                   (haxePackage.peopleGenerator.generate))
-      ; vars
+      ; context
       context {:players []
                :grids []
                :currentPlayer 0
@@ -29,6 +29,16 @@
                     (assertGameContext ctx)
                     (set! context ctx))
       _ (setContext! context)
+      ; helper
+      getPeopleFightCost (fn [ctx {p1 :people army1 :army} {p2 :people army2 :army}]
+                           [{:money 10
+                             :food 10
+                             :army 10
+                             :rate 0.8}
+                            {:money 10
+                             :food 10
+                             :army 10
+                             :rate 0.2}])
       ; binding
       nativeModule {:installPackage installPackage
                     :gameInfo (fn [] context)
@@ -38,29 +48,33 @@
                                            :players [{:id 0
                                                       :name "vic"
                                                       :money 100
-                                                      :army 0
-                                                      :strategy 0
+                                                      :army 100
+                                                      :food 100
+                                                      :strategy 100
                                                       :people (repeatedly 2 genPeople)
                                                       :atGridId 0}
                                                      {:id 1
                                                       :name "vic"
                                                       :money 100
-                                                      :army 0
-                                                      :strategy 0
+                                                      :army 100
+                                                      :food 100
+                                                      :strategy 100
                                                       :people (repeatedly 2 genPeople)
                                                       :atGridId 0}
                                                      {:id 2
                                                       :name "vic"
                                                       :money 100
-                                                      :army 0
-                                                      :strategy 0
+                                                      :army 100
+                                                      :food 100
+                                                      :strategy 100
                                                       :people (repeatedly 2 genPeople)
                                                       :atGridId 0}
                                                      {:id 3
                                                       :name "vic"
                                                       :money 100
-                                                      :army 0
-                                                      :strategy 0
+                                                      :army 100
+                                                      :food 100
+                                                      :strategy 100
                                                       :people (repeatedly 2 genPeople)
                                                       :atGridId 0}]
                                            :grids (gen100Grids))
@@ -111,23 +125,41 @@
 
                     :getTakeNegoPreview
                     (fn [playerId gridId]
-                      (let [gridBefore (R.path ["grids" gridId] context)
-                            gridAfter (assoc gridBefore
-                                             :army (- gridBefore.army 1)
-                                             :money (- gridBefore.money 1)
-                                             :food (- gridBefore.food 1))
-                            previewLeft {:player (R.path ["players" playerId] context)
-                                         :fightPeople gridBefore.people
-                                         :armyBefore gridBefore.army
-                                         :armyAfter [gridAfter.army 2]
-                                         :moneyBefore gridBefore.money
-                                         :moneyAfter [gridAfter.money 2]
-                                         :foodBefore gridBefore.food
-                                         :foodAfter [gridAfter.food 2]
+                      (let [grid (R.path ["grids" gridId] context)
+                            gridOnePeople (R.path ["people" 0] grid)
+                            _ (when (nil? gridOnePeople)
+                                (throw (Error. "還沒實做沒有人時")))
+                            ; attack
+                            player (R.path ["players" playerId] context)
+                            costs (map (fn [p1]
+                                         (getPeopleFightCost context p1 gridOnePeople)) player.people)
+                            previewLeft {:player player
+                                         :fightPeople player.people
+                                         :armyBefore player.army
+                                         :armyAfter (map (fn [[cost _]]
+                                                           (- player.army cost.army))
+                                                         costs)
+                                         :moneyBefore player.money
+                                         :moneyAfter (map (fn [[cost _]]
+                                                            (- player.army cost.money))
+                                                          costs)
+                                         :foodBefore player.food
+                                         :foodAfter (map (fn [[cost _]]
+                                                           (- player.army cost.food))
+                                                         costs)
                                          :successRate 0.2}
                             _ (console.log previewLeft)
                             _ (assertNegoPreview previewLeft)
-                            previewRight previewLeft
+                            gridCost (aget costs 1)
+                            previewRight {:player player
+                                          :fightPeople [gridOnePeople]
+                                          :armyBefore grid.army
+                                          :armyAfter [(- grid.army gridCost.army)]
+                                          :moneyBefore grid.money
+                                          :moneyAfter  [(- grid.army gridCost.money)]
+                                          :foodBefore grid.food
+                                          :foodAfter [(- grid.army gridCost.food)]
+                                          :successRate 0.2}
                             _ (console.log previewRight)
                             _ (assertNegoPreview previewRight)]
                         [previewLeft previewRight]))

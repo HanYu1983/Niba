@@ -16,12 +16,14 @@ const People = spec.map("People", {
 const PlayerInfo = spec.map("PlayerInfo", {
   id: spec.int,
   name: spec.str,
-  money: spec.int,
-  army: spec.int,
-  strategy: spec.int,
+  money: spec.number,
+  food: spec.number,
+  army: spec.number,
+  strategy: spec.number,
   people: spec.collection("people", People),
   atGridId: spec.int,
 });
+
 const Grid = spec.map("Grid", {
   id: spec.int,
   landType: spec.int,
@@ -91,21 +93,21 @@ var WarPreview = spec.map("WarPreview", {
   player: PlayerInfo,
   fightPeople: spec.collection("fightPeople", People),
   armyBefore: spec.number,
-  armyAfter: spec.tuple("armyAfter", spec.number, spec.number),
+  armyAfter: spec.collection("armyAfter", spec.number),
   moneyBefore: spec.number,
-  moneyAfter: spec.tuple("moneyAfter", spec.number, spec.number),
+  moneyAfter: spec.collection("moneyAfter", spec.number),
   foodBefore: spec.number,
-  foodAfter: spec.tuple("foodAfter", spec.number, spec.number),
+  foodAfter: spec.collection("foodAfter", spec.number),
 });
 
 var NegoPreview = spec.map("NegoPreview", {
   player: PlayerInfo,
   fightPeople: spec.collection("fightPeople", People),
   armyBefore: spec.number,
-  armyAfter: spec.tuple("armyAfter", spec.number, spec.number),
+  armyAfter: spec.collection("armyAfter", spec.number),
   moneyBefore: spec.number,
-  moneyAfter: spec.tuple("moneyAfter", spec.number, spec.number),
+  moneyAfter: spec.collection("moneyAfter", spec.number),
   foodBefore: spec.number,
-  foodAfter: spec.tuple("foodAfter", spec.number, spec.number),
+  foodAfter: spec.collection("foodAfter", spec.number),
   successRate: spec.number,
 });
