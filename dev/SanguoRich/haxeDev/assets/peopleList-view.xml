@@ -2,6 +2,7 @@
     <header width="100%">
         <column id="chk_sel" text="X" width="60" sortable="true" style="text-align:center;font-size:12;" />
         <column id="name" text="姓名" width="100%" sortable="true" style="text-align:center;font-size:12;"/>
+        <column id="energy" text="體力" width="60" sortable="true" style="text-align:center;font-size:12;"/>
         <column id="command" text="統率" width="60" sortable="true" style="text-align:center;font-size:12;"/>
         <column id="force" text="武力" width="60" sortable="true" style="text-align:center;font-size:12;"/>
         <column id="intelligence" text="智力" width="60" sortable="true" style="text-align:center;font-size:12;"/>

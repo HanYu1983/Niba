@@ -29,7 +29,7 @@ class WarPreviewView extends PopupView{
             var info = infos[id];
 
             var pro_name:Property = Reflect.getProperty(this, 'pro_name${id}');
-
+            var pro_energy:Property = Reflect.getProperty(this, 'pro_energy${id}');
             var pro_force:Property = Reflect.getProperty(this, 'pro_force${id}');
             var pro_command:Property = Reflect.getProperty(this, 'pro_command${id}');
             var pro_intelligence:Property = Reflect.getProperty(this, 'pro_intelligence${id}');
@@ -38,6 +38,7 @@ class WarPreviewView extends PopupView{
             var pro_strategy:Property = Reflect.getProperty(this, 'pro_strategy${id}');
 
             function setOnePeople(id:Int, p:People){
+                pro_energy.value = p.energy;
                 pro_force.value = p.force;
                 pro_command.value = p.command;
                 pro_intelligence.value = p.intelligence;

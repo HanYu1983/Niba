@@ -111,7 +111,9 @@ class MainView extends Absolute {
 
     @:bind(btn_negotiate, MouseEvent.CLICK)
     function onBtnNegotiateClick(e:MouseEvent){
-        negoPreviewView.showNegoPreview();
+        var player = Main.model.gameInfo().currentPlayer;
+        var previewInfo = Main.model.getTakeNegoPreview(player.id, player.atGridId);
+        negoPreviewView.showNegoPreview(previewInfo);
     }
 
     @:bind(btn_start, MouseEvent.CLICK)
@@ -242,13 +244,12 @@ class MainView extends Absolute {
                         }
                     }
                 case NEGOTIATE_RESULT:
-                    messageView.showMessage({});
+                    messageView.showMessage(event.value);
                 case WAR_RESULT:
 
                 case WORLD_EVENT:
                     trace("WORLD_EVENT");
             }
-            trace(event);
         }
     }
 
@@ -319,13 +320,17 @@ class MainView extends Absolute {
         syncPlayerInfo(pid);
     }
 
+    function name() {
+        
+    }
+
     function syncPlayerInfo(id:Int){
         var gameInfo = Main.model.gameInfo();
         var p = gameInfo.players[id];
         pro_name.value = p.name;
-        pro_money.value = p.money;
-        pro_food.value = p.food;
-        pro_army.value = p.army;
+        pro_money.value = Math.floor(p.money);
+        pro_food.value = Math.floor(p.food);
+        pro_army.value = Math.floor(p.army);
         pro_peopleCount.value = p.people.length;
         pro_cityCount.value = "0";
         peopleListView.setPeopleList(p.people);
@@ -339,9 +344,9 @@ class MainView extends Absolute {
         pro_gridLandType.value = grids[gridId].lbl_building.text;
         
         var round = Syntax.code('Number.prototype.toFixed');
-        pro_gridMoney.value = '${grid.money}(${round.call(grid.moneyGrow, 4)}%)';
-        pro_gridFood.value = '${grid.food}(${round.call(grid.foodGrow, 4)}%)';
-        pro_gridArmy.value = '${grid.army}(${round.call(grid.armyGrow, 4)}%)';
+        pro_gridMoney.value = '${Math.floor(grid.money)}(${round.call(grid.moneyGrow, 4)}%)';
+        pro_gridFood.value = '${Math.floor(grid.food)}(${round.call(grid.foodGrow, 4)}%)';
+        pro_gridArmy.value = '${Math.floor(grid.army)}(${round.call(grid.armyGrow, 4)}%)';
     }
 
     function syncGridViews(gameInfo:GameInfo){

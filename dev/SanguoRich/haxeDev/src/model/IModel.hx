@@ -53,11 +53,21 @@ typedef WarPreview = {
     armyBefore:Int,
     armyAfter:Array<Int>,
     moneyBefore:Int,
-    moneyAfter:Array<Int>
+    moneyAfter:Array<Int>,
+    foodBefore:Int,
+    foodAfter:Array<Int>
 }
 
 typedef NegoPreview = {
-
+    player:PlayerInfo,
+    fightPeople:Array<People>,
+    armyBefore:Int,
+    armyAfter:Array<Int>,
+    moneyBefore:Int,
+    moneyAfter:Array<Int>,
+    foodBefore:Int,
+    foodAfter:Array<Int>,
+    successRate:Float
 }
 
 interface IModel{

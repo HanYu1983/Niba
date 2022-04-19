@@ -8,9 +8,15 @@
                         <item text="關於"/> -->
                     </data>
                 </property>
+                <property id="pro_energy0" label="體力" value="100" />
                 <property id="pro_intelligence0" label="智力" value="1000" />
-                <property id="political0" label="政治" value="1000" />
+                <property id="pro_political0" label="政治" value="1000" />
                 <property id="pro_charm0" label="魅力" value="1000" />
+                <property id="pro_money0" label="金錢" value="1000" />
+                <property id="pro_army0" label="士兵" value="1000" />
+                <property id="pro_successRate0" label="成功率" value="50%" />
+                <!-- <property id="pro_strategy0" label="計略" value="1000" />    -->
+
             </property-group>
         </property-grid>
         <property-grid id="pg_playerInfo" width="50%">
@@ -21,14 +27,18 @@
                         <item text="關於"/> -->
                     </data>
                 </property>
+                <property id="pro_energy1" label="體力" value="100" />
                 <property id="pro_intelligence1" label="智力" value="1000" />
-                <property id="political1" label="政治" value="1000" />
+                <property id="pro_political1" label="政治" value="1000" />
                 <property id="pro_charm1" label="魅力" value="1000" />   
+                <property id="pro_money1" label="金錢" value="1000" />
+                <property id="pro_army1" label="士兵" value="1000" />
+                <property id="pro_successRate1" label="成功率" value="50%" />
+                <!-- <property id="pro_strategy1" label="計略" value="1000" />   -->
             </property-group>
         </property-grid>
     </hbox>
-    
-    <hbox horizontalAlign="center">
+    <hbox horizontalAlign="center" paddingTop="10">
         <button text="取消交涉" id="btn_cancelNego" />
         <button text="確定交涉" id="btn_confirmNego" />
     </hbox>

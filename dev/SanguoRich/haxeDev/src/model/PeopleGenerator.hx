@@ -1,4 +1,5 @@
 package model;
+
 typedef People = {
     id:Int,
     type:Int,
@@ -9,7 +10,8 @@ typedef People = {
     political:Int,
     charm:Int,
     cost:Int,
-    abilities:Array<Int>
+    abilities:Array<Int>,
+    energy:Int
 }
 
 class PeopleGenerator {
@@ -105,7 +107,8 @@ class PeopleGenerator {
             political: political,
             charm: charm,
             cost: cost,
-            abilities: abilitiesAry
+            abilities: abilitiesAry,
+            energy: 100
         };
     }
 }

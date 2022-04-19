@@ -8,6 +8,7 @@
                         <item text="關於"/> -->
                     </data>
                 </property>
+                <property id="pro_energy0" label="體力" value="100" />
                 <property id="pro_force0" label="武力" value="1000" />
                 <property id="pro_command0" label="統率" value="1000" />
                 <property id="pro_intelligence0" label="智力" value="1000" />
@@ -24,6 +25,7 @@
                         <item text="關於"/> -->
                     </data>
                 </property>
+                <property id="pro_energy1" label="體力" value="100" />
                 <property id="pro_force1" label="武力" value="1000" />
                 <property id="pro_command1" label="統率" value="1000" />
                 <property id="pro_intelligence1" label="智力" value="1000" />

@@ -9,8 +9,15 @@ class MessageView extends PopupView{
     }
     
 
-    public function showMessage(info){
+    public function showMessage(info:Dynamic){
         fadeIn();
+
+        lbl_content.text = '
+        ${info.success ? '成功' : '失敗'}\n
+        金錢:${info.moneyBefore}=>${info.moneyAfter}\n
+        糧草:${info.foodBefore}=>${info.foodAfter}\n
+        士兵:${info.armyBefore}=>${info.armyAfter}\n
+        ';
     }
 
     @:bind(btn_cancel, MouseEvent.CLICK)

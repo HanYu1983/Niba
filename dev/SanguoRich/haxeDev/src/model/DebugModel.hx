@@ -1,5 +1,6 @@
 package model;
 
+import model.GridGenerator.BUILDING;
 import model.IModel.NegoPreview;
 import model.IModel.WarPreview;
 import model.IModel.ActionInfoID;
@@ -32,7 +33,7 @@ class DebugModel implements IModel {
             {
                 id:id,
                 name:name,
-                money:1000.0,
+                money: 1000.0,
                 army: 100.0,
                 food: 100.0,
                 strategy: 10.0,
@@ -93,8 +94,8 @@ class DebugModel implements IModel {
 
 
         var g = GridGenerator.getInst().getGrid();
-        g.belongPlayerId = 1;
-        
+        g.belongPlayerId = null;
+        g.buildtype = BUILDING.MARKET;
         info.events = [
             {
                 id:EventInfoID.WALK_STOP,
@@ -143,7 +144,9 @@ class DebugModel implements IModel {
                 armyBefore: 100,
                 armyAfter: [30, 5],
                 moneyBefore: 1000,
-                moneyAfter: [500, 400]
+                moneyAfter: [500, 400],
+                foodBefore: 100,
+                foodAfter: [100,120]
             },{
                 player: info.players[1],
                 fightPeople: [
@@ -153,7 +156,9 @@ class DebugModel implements IModel {
                 armyBefore: 200,
                 armyAfter: [320, 52],
                 moneyBefore: 1300,
-                moneyAfter: [320, 533]
+                moneyAfter: [320, 533],
+                foodBefore: 100,
+                foodAfter: [100,120]
             }
         ];
 	}
@@ -170,7 +175,35 @@ class DebugModel implements IModel {
     }
 
 	public function getTakeNegoPreview(playerId:Int, gridId:Int):Array<NegoPreview> {
-		return [];
+		return [
+            {
+                player: info.players[0],
+                fightPeople: [
+                    PeopleGenerator.getInst().generate(),
+                    PeopleGenerator.getInst().generate()
+                ],
+                armyBefore: 100,
+                armyAfter: [30, 5],
+                moneyBefore: 1000,
+                moneyAfter: [500, 400],
+                foodBefore: 100,
+                foodAfter: [100,120],
+                successRate: .28,
+            },{
+                player: info.players[1],
+                fightPeople: [
+                    PeopleGenerator.getInst().generate(),
+                    PeopleGenerator.getInst().generate()
+                ],
+                armyBefore: 200,
+                armyAfter: [320, 52],
+                moneyBefore: 1300,
+                moneyAfter: [320, 533],
+                foodBefore: 100,
+                foodAfter: [100,120],
+                successRate: 0,
+            }
+        ];
 	}
 
 	public function takeNegoOn(playerId:Int, gridId:Int, cb:(gameInfo:GameInfo) -> Void) {
@@ -178,7 +211,15 @@ class DebugModel implements IModel {
         info.events = [
             {
                 id:EventInfoID.NEGOTIATE_RESULT,
-                value:null
+                value:{
+                    success:true,
+                    armyBefore: 200,
+                    armyAfter: 300,
+                    moneyBefore: 200,
+                    moneyAfter: 300,
+                    foodBefore: 100,
+                    foodAfter: 200
+                }
             }
         ];
         cb(info);
