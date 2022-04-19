@@ -10,6 +10,7 @@ const People = spec.map("People", {
   charm: spec.int,
   cost: spec.int,
   abilities: spec.collection("ints", spec.int),
+  energy: spec.int,
   [symbol.optional]: {},
 });
 const PlayerInfo = spec.map("PlayerInfo", {
@@ -18,7 +19,7 @@ const PlayerInfo = spec.map("PlayerInfo", {
   money: spec.int,
   army: spec.int,
   strategy: spec.int,
-  people: spec.collection("peoples", People),
+  people: spec.collection("people", People),
   atGridId: spec.int,
 });
 const Grid = spec.map("Grid", {
@@ -62,7 +63,15 @@ const EventSpec = spec.or("Event", {
   }),
   NEGOTIATE_RESULT: spec.map("NEGOTIATE_RESULT", {
     id: spec.oneOf("id", "NEGOTIATE_RESULT"),
-    value: spec.nilable("value", spec.obj),
+    value: spec.map("value", {
+      success: spec.boolean,
+      armyBefore: spec.number,
+      armyAfter: spec.number,
+      moneyBefore: spec.number,
+      moneyAfter: spec.number,
+      foodBefore: spec.number,
+      foodAfter: spec.number,
+    }),
   }),
   WAR_RESULT: spec.map("WAR_RESULT", {
     id: spec.oneOf("id", "WAR_RESULT"),
@@ -81,8 +90,22 @@ var GameContext = spec.map("GameContext", {
 var WarPreview = spec.map("WarPreview", {
   player: PlayerInfo,
   fightPeople: spec.collection("fightPeople", People),
-  armyBefore: spec.int,
-  armyAfter: spec.tuple("armyAfter", spec.int, spec.int),
-  moneyBefore: spec.int,
-  moneyAfter: spec.tuple("armyAfter", spec.int, spec.int),
+  armyBefore: spec.number,
+  armyAfter: spec.tuple("armyAfter", spec.number, spec.number),
+  moneyBefore: spec.number,
+  moneyAfter: spec.tuple("moneyAfter", spec.number, spec.number),
+  foodBefore: spec.number,
+  foodAfter: spec.tuple("foodAfter", spec.number, spec.number),
+});
+
+var NegoPreview = spec.map("NegoPreview", {
+  player: PlayerInfo,
+  fightPeople: spec.collection("fightPeople", People),
+  armyBefore: spec.number,
+  armyAfter: spec.tuple("armyAfter", spec.number, spec.number),
+  moneyBefore: spec.number,
+  moneyAfter: spec.tuple("moneyAfter", spec.number, spec.number),
+  foodBefore: spec.number,
+  foodAfter: spec.tuple("foodAfter", spec.number, spec.number),
+  successRate: spec.number,
 });

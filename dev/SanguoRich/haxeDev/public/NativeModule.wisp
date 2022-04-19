@@ -3,6 +3,8 @@
       spec (get window "js.spec")
       assertGameContext (fn [ctx]
                           (spec.assert window.GameContext ctx))
+      assertNegoPreview (fn [ctx]
+                          (spec.assert window.NegoPreview ctx))
       ; haxe package
       haxePackage nil
       assertPackage (fn []
@@ -107,12 +109,40 @@
                             _ (setContext! context)
                             _ (cb)]))
 
+                    :getTakeNegoPreview
+                    (fn [playerId gridId]
+                      (let [gridBefore (R.path ["grids" gridId] context)
+                            gridAfter (assoc gridBefore
+                                             :army (- gridBefore.army 1)
+                                             :money (- gridBefore.money 1)
+                                             :food (- gridBefore.food 1))
+                            previewLeft {:player (R.path ["players" playerId] context)
+                                         :fightPeople gridBefore.people
+                                         :armyBefore gridBefore.army
+                                         :armyAfter [gridAfter.army 2]
+                                         :moneyBefore gridBefore.money
+                                         :moneyAfter [gridAfter.money 2]
+                                         :foodBefore gridBefore.food
+                                         :foodAfter [gridAfter.food 2]
+                                         :successRate 0.2}
+                            _ (console.log previewLeft)
+                            _ (assertNegoPreview previewLeft)
+                            previewRight previewLeft
+                            _ (console.log previewRight)
+                            _ (assertNegoPreview previewRight)]
+                        [previewLeft previewRight]))
                     :takeNegoOn
                     (fn [playerId gridId cb]
                       (let [context (assoc context
                                            :actions []
                                            :events [{:id "NEGOTIATE_RESULT"
-                                                     :value nil}])
+                                                     :value {:success true
+                                                             :armyBefore 200
+                                                             :armyAfter 300
+                                                             :moneyBefore 200
+                                                             :moneyAfter 300
+                                                             :foodBefore 100
+                                                             :foodAfter 200}}])
                             _ (setContext! context)
                             _ (cb context)]))}
       _ (set! window.getNativeModule (fn [] nativeModule))])
