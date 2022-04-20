@@ -1196,6 +1196,23 @@ export function applyFlow(
 }
 
 export function queryFlow(ctx: GameContext, playerID: string): Flow[] {
+  if (false) {
+    const hasSomeoneLiveIsZero =
+      [PlayerA, PlayerB]
+        .map((pid) => {
+          return getBaSyouID({ id: "AbsoluteBaSyou", value: [pid, "本国"] });
+        })
+        .map((baSyouID) => {
+          return ctx.gameState.table.cardStack[baSyouID] || [];
+        })
+        .filter((cards) => {
+          return cards.length == 0;
+        }).length > 0;
+    if (hasSomeoneLiveIsZero) {
+      console.log(ctx);
+      return [{ id: "FlowWaitPlayer", description: "遊戲結束" }];
+    }
+  }
   // 有玩家在支付卡片
   if (ctx.gameState.activeEffectID != null) {
     const currentActiveEffect = iterateEffect(ctx).find(

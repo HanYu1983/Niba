@@ -518,7 +518,7 @@ export const OnViewModel = OnEvent.pipe(
               },
             };
           }
-          if (false) {
+          if (true) {
             ctx = {
               ...ctx,
               gameState: {
@@ -644,7 +644,7 @@ export const OnViewModel = OnEvent.pipe(
               },
             };
           }
-          if (true) {
+          if (false) {
             const deck = [
               "179001_01A_CH_WT007R_white",
               "179003_01A_U_BK008U_black",
@@ -696,7 +696,7 @@ export const OnViewModel = OnEvent.pipe(
               table,
               PlayerA,
               getBaSyouID({ id: "AbsoluteBaSyou", value: [PlayerA, "本国"] }),
-              deck
+              deck.slice(0, 10)
             );
             table = createCard(
               table,
@@ -717,7 +717,7 @@ export const OnViewModel = OnEvent.pipe(
               table,
               PlayerB,
               getBaSyouID({ id: "AbsoluteBaSyou", value: [PlayerB, "本国"] }),
-              deck
+              deck.slice(10, 20)
             );
             table = createCard(
               table,
