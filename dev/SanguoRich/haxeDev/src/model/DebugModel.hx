@@ -1,5 +1,6 @@
 package model;
 
+import model.IModel.ExplorePreview;
 import model.GridGenerator.BUILDING;
 import model.IModel.NegoPreview;
 import model.IModel.WarPreview;
@@ -229,4 +230,29 @@ class DebugModel implements IModel {
         ];
         cb(info);
     }
+
+	public function getTakeExplorePreview(playerId:Int, gridId:Int):ExplorePreview {
+		return {
+            explorePeople:[
+                PeopleGenerator.getInst().generate(),
+                PeopleGenerator.getInst().generate(),
+                PeopleGenerator.getInst().generate(),
+            ],
+            fightPeople: [
+                PeopleGenerator.getInst().generate(),
+                PeopleGenerator.getInst().generate(),
+                PeopleGenerator.getInst().generate(),
+            ],
+            energyAfter: [
+                10,20,30
+            ],
+            // successRate: [0.3, .5, 2]
+        }
+	}
+
+	public function takeExplore(playerId:Int, gridInt:Int, p1SelectId:Int, exploreId:Int, cb:(gameInfo:GameInfo) -> Void) {}
+
+	public function getRateOfInvitePeople(people:People, invite:People):Float {
+		return .5;
+	}
 }

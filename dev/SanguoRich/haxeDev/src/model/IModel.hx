@@ -28,6 +28,7 @@ enum EventInfoID {
     WORLD_EVENT;
     WALK_STOP;
     NEGOTIATE_RESULT;
+    EXPLORE_RESULT;
     WAR_RESULT;
 }
 
@@ -71,6 +72,13 @@ typedef NegoPreview = {
     successRate:Float
 }
 
+typedef ExplorePreview = {
+    explorePeople:Array<People>,
+    fightPeople:Array<People>,
+    energyAfter:Array<Int>,
+    // successRate:Array<Float>
+}
+
 interface IModel{
 
     
@@ -83,8 +91,7 @@ interface IModel{
     function takeWarOn(playerId:Int, gridId:Int, cb:(gameInfo:GameInfo)->Void):Void;
     function getTakeNegoPreview(playerId:Int, gridId:Int):Array<NegoPreview>;
     function takeNegoOn(playerId:Int, gridId:Int, p1SelectId:Int, p2SelectId:Int, cb:(gameInfo:GameInfo)->Void):Void;
-    // function currentPlayer():PlayerInfo;
-    // function isPlayerTurn():Bool;
-    // function getGrids(count:Int):Array<Grid>;
-    
+    function getTakeExplorePreview(playerId:Int, gridId:Int):ExplorePreview;
+    function takeExplore(playerId:Int, gridInt:Int, p1PeopleId:Int, explorePeopleId:Int, cb:(gameInfo:GameInfo)->Void):Void;
+    function getRateOfInvitePeople(people:People, invite:People):Float;
 }

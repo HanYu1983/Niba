@@ -1,5 +1,6 @@
 package view;
 
+import view.popup.ExplorePreviewView;
 import js.Syntax;
 import view.popup.MessageView;
 import view.popup.NegoPreviewView;
@@ -26,6 +27,7 @@ class MainView extends Absolute {
     var warPreviewView:WarPreviewView;
     var negoPreviewView:NegoPreviewView;
     var messageView:MessageView;
+    var explorePreviewView:ExplorePreviewView;
 
     public function new() {
         super();
@@ -62,6 +64,9 @@ class MainView extends Absolute {
         messageView.hide();
         box_popup.addComponent(messageView);
 
+        explorePreviewView = new ExplorePreviewView();
+        box_popup.addComponent(explorePreviewView);
+
         peopleListView = new PeopleListView();
         box_bottom.addComponent(peopleListView);
 
@@ -96,6 +101,19 @@ class MainView extends Absolute {
         );
     }
 
+    public function onExplorePreviewConfirmClick(p1Id:Int, exploreId:Int){
+        var gameInfo = Main.model.gameInfo();
+        Main.model.takeExplore(
+            gameInfo.currentPlayer.id,
+            gameInfo.currentPlayer.atGridId,
+            p1Id,
+            exploreId,
+            (gameInfo:GameInfo)->{
+                syncViewByInfo(gameInfo);
+            }
+        );
+    }
+
     @:bind(this, UIEvent.READY)
     function onUIReady(e:UIEvent) {
         for (index => grid in grids) {
@@ -121,6 +139,14 @@ class MainView extends Absolute {
         var player = Main.model.gameInfo().currentPlayer;
         var previewInfo = Main.model.getTakeNegoPreview(player.id, player.atGridId);
         negoPreviewView.showNegoPreview(previewInfo);
+    }
+
+    @:bind(btn_explore, MouseEvent.CLICK)
+    function onBtnExploreClick(e:MouseEvent) {
+        var gameInfo = Main.model.gameInfo();
+        var previewInfo = Main.model.getTakeExplorePreview(gameInfo.currentPlayer.id, gameInfo.currentPlayer.atGridId);
+        explorePreviewView.showPopup(previewInfo);
+        trace('btn_explore');
     }
 
     @:bind(btn_start, MouseEvent.CLICK)
@@ -159,7 +185,7 @@ class MainView extends Absolute {
         
     }
 
-    @:bind(btn_war, MouseEvent.CLICK)
+    @:bind(btn_smallWar, MouseEvent.CLICK)
     function onBtnWarClick(e:MouseEvent){
         var player = Main.model.gameInfo().currentPlayer;
         var previewInfo = Main.model.getTakeWarPreview(player.id, player.atGridId);
@@ -228,9 +254,7 @@ class MainView extends Absolute {
 
     function doOneEvent(gameInfo:GameInfo){
         if(events.length > 0){
-            box_commands1.disabled = true;
-            box_commands2.disabled = true;
-            box_commands3.disabled = true;
+            disabledAllCommands();
 
             var event = events.shift();
             setEventInfo(event);
@@ -238,7 +262,7 @@ class MainView extends Absolute {
                 case WALK_STOP:
                     var g:Grid = event.value.grid;
                     if(g.buildtype == BUILDING.EMPTY){
-
+                        box_commands4.disabled = false;
                     }else{
                         if(g.belongPlayerId == null){
                             box_commands2.disabled = false;
@@ -252,6 +276,8 @@ class MainView extends Absolute {
                     }
                 case NEGOTIATE_RESULT:
                     messageView.showMessage(event.value);
+                case EXPLORE_RESULT:
+                    messageView.showMessage(event.value);
                 case WAR_RESULT:
 
                 case WORLD_EVENT:
@@ -262,6 +288,8 @@ class MainView extends Absolute {
 
     function setEventInfo(event:EventInfo){
         switch(event.id){
+            case EXPLORE_RESULT:
+                pro_currentEvent.value = "探索停止。等待指令中";
             case WALK_STOP:
                 pro_currentEvent.value = "行走停止。等待指令中";
             case WAR_RESULT:
@@ -292,11 +320,18 @@ class MainView extends Absolute {
     //     }
     // }
 
-    function syncUI(gameInfo:GameInfo){
-        btn_start.disabled = gameInfo.isPlaying;
-        box_commands1.disabled = !gameInfo.isPlayerTurn;
+
+    function disabledAllCommands() {
+        box_commands1.disabled = true;
         box_commands2.disabled = true;
         box_commands3.disabled = true;
+        box_commands4.disabled = true;
+    }
+
+    function syncUI(gameInfo:GameInfo){
+        btn_start.disabled = gameInfo.isPlaying;
+        disabledAllCommands();
+        box_commands1.disabled = !gameInfo.isPlayerTurn;
 
         var pid = gameInfo.currentPlayer.id;
         var opt_p:OptionBox = Reflect.field(this, 'opt_p${pid+1}');
@@ -350,10 +385,9 @@ class MainView extends Absolute {
         pro_gridName.value = grid.id;
         pro_gridLandType.value = grids[gridId].lbl_building.text;
         
-        var round = Syntax.code('Number.prototype.toFixed');
-        pro_gridMoney.value = '${Math.floor(grid.money)}(${round.call(grid.moneyGrow, 4)}%)';
-        pro_gridFood.value = '${Math.floor(grid.food)}(${round.call(grid.foodGrow, 4)}%)';
-        pro_gridArmy.value = '${Math.floor(grid.army)}(${round.call(grid.armyGrow, 4)}%)';
+        pro_gridMoney.value = '${Math.floor(grid.money)}(${Main.getFixNumber(grid.moneyGrow, 4)}%)';
+        pro_gridFood.value = '${Math.floor(grid.food)}(${Main.getFixNumber(grid.foodGrow, 4)}%)';
+        pro_gridArmy.value = '${Math.floor(grid.army)}(${Main.getFixNumber(grid.armyGrow, 4)}%)';
     }
 
     function syncGridViews(gameInfo:GameInfo){
