@@ -6,5 +6,6 @@
 -lib libnoise
 -lib hxSet
 -lib tweenx
+--macro nullSafety("model.ModelVer1")
 
 -js public/Main.js

@@ -19,7 +19,7 @@ class Main {
 
 	public static function main() {
 		// model = new ModelWisp();
-		model = new TestNegoModel();
+		model = new ModelVer1();
 
 		var app = new HaxeUIApp();
 		app.ready(function() {
@@ -30,12 +30,12 @@ class Main {
 		});
 	}
 
-	public static function getFixNumber(number:Float, count:Int = 2){
+	public static function getFixNumber(number:Float, count:Int = 2) {
 		var round = Syntax.code('Number.prototype.toFixed');
-        return round.call(number, count);
+		return round.call(number, count);
 	}
 
-	public static function getRateString(rate:Float){
+	public static function getRateString(rate:Float) {
 		return getFixNumber(rate * 100, 2) + '%';
 	}
 }
