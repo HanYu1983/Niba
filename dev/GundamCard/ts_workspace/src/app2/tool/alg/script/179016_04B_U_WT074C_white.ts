@@ -42,9 +42,6 @@ const prototype: CardPrototype = {
                 id: "當觸發GameEvent的變量x的id時",
                 x: { id: "プレイされて場に出た場合", cardID: "" },
               }),
-              // getConditionMacro({
-              //   id: "這張卡在場時",
-              // }),
               {
                 id: "ConditionJsonfp",
                 program: {

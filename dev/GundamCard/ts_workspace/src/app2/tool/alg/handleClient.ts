@@ -119,12 +119,15 @@ export function setRequireTarget(
           `require(${requireID}) target(${varID}) type not match: ${target.id} != ${value.id}`
         );
       }
-      // TODO: 判斷當中的張數必須一樣
       const nextTargets = {
         ...require.targets,
       };
-      nextTargets[varID] = value;
-      return { ...require, targets: nextTargets };
+      nextTargets[varID] = {
+        ...nextTargets[varID],
+        value: value.value,
+      };
+      const nextRequire: Require = { ...require, targets: nextTargets };
+      return nextRequire;
     });
     return {
       ...effect,

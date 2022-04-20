@@ -12,6 +12,7 @@ const hideCategory: string[] = [
   "getAbsoluteBaSyou",
   "assertTargetTypeValueLength",
   "applyFlow",
+  "getClientCommand",
 ];
 let filterCategory = true;
 
