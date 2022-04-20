@@ -856,6 +856,21 @@ export function getClientCommand(ctx: GameContext, clientID: string) {
       throw new Error("must from command cause");
     }
     const { cardID, cardTextID } = effect.cause;
+    // 在堆疊裡的技能不能再次發動(記免同一個技能一直切入)
+    if (
+      ctx.gameState.stackEffect.filter((e) => {
+        if (e.cause?.id != "BlockPayloadCauseUpdateCommand") {
+          return false;
+        }
+        if (e.cause.cardTextID != cardTextID) {
+          return false;
+        }
+        return true;
+      }).length
+    ) {
+      log2("getClientCommand", `cardTextID(${cardTextID})已經在堆疊裡.`);
+      return;
+    }
     const [_, cardState] = getCardState(ctx, cardID);
     const text = cardState.cardTextStates.find((v) => v.id == cardTextID);
     if (text == null) {
