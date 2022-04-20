@@ -30,7 +30,7 @@ class NegoPreviewView extends PopupView{
             // var pro_strategy:Property = Reflect.getProperty(this, 'pro_strategy${id}');
 
             function setOnePeople(id:Int, p:People){
-                pro_energy.value = p.energy;
+                pro_energy.value = '${p.energy}=>${info.energyAfter[id]}';
                 pro_charm.value = p.charm;
                 pro_political.value = p.political;
                 pro_intelligence.value = p.intelligence;
@@ -52,8 +52,6 @@ class NegoPreviewView extends PopupView{
                     setOnePeople(e.data.id, e.data.people);
                 }
             }
-
-            // pro_successRate.value = '${Math.floor(info.successRate * 100)}%';
         }
         
         setOnePlayer(0);
@@ -68,6 +66,7 @@ class NegoPreviewView extends PopupView{
     @:bind(btn_confirmNego, MouseEvent.CLICK)
     function onBtnConfirmNego(e:MouseEvent) {
         fadeOut();
-        Main.view.onNegoPreviewConfirmNegoClick();
+
+        Main.view.onNegoPreviewConfirmNegoClick(pro_name0.value.id, pro_name1.value.id);
     }
 }

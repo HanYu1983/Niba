@@ -83,10 +83,17 @@ class MainView extends Absolute {
         });
     }
 
-    public function onNegoPreviewConfirmNegoClick() {
-        Main.model.takeNegoOn(0,0, (gameInfo:GameInfo)->{
-            syncViewByInfo(gameInfo);
-        });
+    public function onNegoPreviewConfirmNegoClick(p1Id:Int, p2Id:Int) {
+        var gameInfo = Main.model.gameInfo();
+        Main.model.takeNegoOn(
+            gameInfo.currentPlayer.id,
+            gameInfo.currentPlayer.atGridId,
+            p1Id,
+            p2Id,
+            (gameInfo:GameInfo)->{
+                syncViewByInfo(gameInfo);
+            }
+        );
     }
 
     @:bind(this, UIEvent.READY)

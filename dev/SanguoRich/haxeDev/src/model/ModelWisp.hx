@@ -86,7 +86,7 @@ class ModelWisp extends DebugModel {
 		return new NativeModule().getTakeNegoPreview(playerId, gridId);
 	}
 
-	public override function takeNegoOn(playerId:Int, gridId:Int, cb:(gameInfo:GameInfo) -> Void) {
+	public override function takeNegoOn(playerId:Int, gridId:Int, p1SelectId:Int, p2SelectId:Int, cb:(gameInfo:GameInfo) -> Void) {
 		return new NativeModule().takeNegoOn(playerId, gridId, nativeInfo -> {
 			var gameInfo = native2haxe(nativeInfo);
 			cb(gameInfo);

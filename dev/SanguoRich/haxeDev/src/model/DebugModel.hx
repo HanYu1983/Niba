@@ -189,6 +189,7 @@ class DebugModel implements IModel {
                 foodBefore: 100,
                 foodAfter: [100,120],
                 successRate: .28,
+                energyAfter: [10,20]
             },{
                 player: info.players[1],
                 fightPeople: [
@@ -202,17 +203,21 @@ class DebugModel implements IModel {
                 foodBefore: 100,
                 foodAfter: [100,120],
                 successRate: 0,
+                energyAfter: [10,20]
             }
         ];
 	}
 
-	public function takeNegoOn(playerId:Int, gridId:Int, cb:(gameInfo:GameInfo) -> Void) {
+	public function takeNegoOn(playerId:Int, gridId:Int, p1SelectId:Int, p2SelectId:Int, cb:(gameInfo:GameInfo) -> Void) {
         var info = gameInfo();
         info.events = [
             {
                 id:EventInfoID.NEGOTIATE_RESULT,
                 value:{
                     success:true,
+                    people:PeopleGenerator.getInst().generate(),
+                    energyBefore: 100,
+                    energyAfter:50,
                     armyBefore: 200,
                     armyAfter: 300,
                     moneyBefore: 200,
