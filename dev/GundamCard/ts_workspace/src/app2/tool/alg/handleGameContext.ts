@@ -1116,17 +1116,7 @@ export function handleAttackDamage(
           });
           let toCardStackID = getBaSyouID({
             id: "AbsoluteBaSyou",
-            value: [currentGuardPlayerID, "ジャンクヤード"],
-          });
-          let topCards = table.cardStack[fromCardStackID].slice(
-            0,
-            currentAttackPower
-          );
-          topCards = topCards.map((card) => {
-            return {
-              ...card,
-              faceDown: false,
-            };
+            value: [currentGuardPlayerID, "捨て山"],
           });
           table = {
             ...table,
@@ -1134,7 +1124,13 @@ export function handleAttackDamage(
               ...table.cardStack,
               [fromCardStackID]:
                 table.cardStack[fromCardStackID].slice(currentAttackPower),
-              [toCardStackID]: [...table.cardStack[toCardStackID], ...topCards],
+              [toCardStackID]: [
+                ...table.cardStack[fromCardStackID].slice(
+                  0,
+                  currentAttackPower
+                ),
+                ...table.cardStack[toCardStackID],
+              ],
             },
           };
           ctx = {

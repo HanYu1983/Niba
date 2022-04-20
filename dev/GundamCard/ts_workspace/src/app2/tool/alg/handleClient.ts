@@ -1196,7 +1196,7 @@ export function applyFlow(
 }
 
 export function queryFlow(ctx: GameContext, playerID: string): Flow[] {
-  if (false) {
+  if (true) {
     const hasSomeoneLiveIsZero =
       [PlayerA, PlayerB]
         .map((pid) => {

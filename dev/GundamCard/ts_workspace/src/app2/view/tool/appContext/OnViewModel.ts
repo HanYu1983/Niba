@@ -518,7 +518,7 @@ export const OnViewModel = OnEvent.pipe(
               },
             };
           }
-          if (true) {
+          if (false) {
             ctx = {
               ...ctx,
               gameState: {
@@ -527,6 +527,18 @@ export const OnViewModel = OnEvent.pipe(
                   ...ctx.gameState.table,
                   cardStack: {
                     ...ctx.gameState.table.cardStack,
+                    [getBaSyouID({
+                      id: "AbsoluteBaSyou",
+                      value: [PlayerA, "本国"],
+                    })]: [
+                      {
+                        id: "a_1",
+                        protoID: "179025_07D_C_WT060U_white",
+                        faceDown: true,
+                        ownerID: PlayerA,
+                        tap: false,
+                      },
+                    ],
                     [getBaSyouID({
                       id: "AbsoluteBaSyou",
                       value: [PlayerA, "手札"],
@@ -567,6 +579,18 @@ export const OnViewModel = OnEvent.pipe(
                         protoID: "179001_01A_CH_WT007R_white",
                         faceDown: true,
                         ownerID: PlayerA,
+                        tap: false,
+                      },
+                    ],
+                    [getBaSyouID({
+                      id: "AbsoluteBaSyou",
+                      value: [PlayerB, "本国"],
+                    })]: [
+                      {
+                        id: "b_1",
+                        protoID: "179025_07D_C_WT060U_white",
+                        faceDown: true,
+                        ownerID: PlayerB,
                         tap: false,
                       },
                     ],
@@ -644,7 +668,7 @@ export const OnViewModel = OnEvent.pipe(
               },
             };
           }
-          if (false) {
+          if (true) {
             const deck = [
               "179001_01A_CH_WT007R_white",
               "179003_01A_U_BK008U_black",
@@ -702,7 +726,7 @@ export const OnViewModel = OnEvent.pipe(
               table,
               PlayerA,
               getBaSyouID({ id: "AbsoluteBaSyou", value: [PlayerA, "手札"] }),
-              deck.slice(0, 2)
+              deck.slice(0, 6)
             );
             table = createCard(
               table,
