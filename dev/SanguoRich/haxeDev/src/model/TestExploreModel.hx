@@ -1,5 +1,6 @@
 package model;
 
+import model.IModel.PreResultOnExplore;
 import model.IModel.ExplorePreview;
 import model.GridGenerator.BUILDING;
 import model.IModel.NegoPreview;
@@ -47,20 +48,16 @@ class TestExploreModel extends DebugModel {
 
     override function getTakeExplorePreview(playerId:Int, gridId:Int):ExplorePreview {
         return {
-            explorePeople:[
+            p1ValidPeople:[
                 PeopleGenerator.getInst().generate(),
                 PeopleGenerator.getInst().generate(),
                 PeopleGenerator.getInst().generate(),
             ],
-            fightPeople: [
+            p2ValidPeople: [
                 PeopleGenerator.getInst().generate(),
                 PeopleGenerator.getInst().generate(),
                 PeopleGenerator.getInst().generate(),
             ],
-            energyAfter: [
-                10,20,30
-            ],
-            // successRate: [0.3, .5, 2]
         }
     }
 
@@ -88,5 +85,12 @@ class TestExploreModel extends DebugModel {
 
     override function getRateOfInvitePeople(people:People, invite:People):Float {
         return 0.05;
+    }
+
+    override function getPreResultOfExplore(people:People, invite:People):PreResultOnExplore {
+        return {
+            energyAfter:20,
+            successRate:.2
+        }
     }
 }

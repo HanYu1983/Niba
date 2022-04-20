@@ -1,5 +1,7 @@
 package model;
 
+import model.IModel.PreResultOnExplore;
+import model.IModel.PreResultOnNego;
 import model.IModel.ExplorePreview;
 import model.GridGenerator.BUILDING;
 import model.IModel.NegoPreview;
@@ -175,38 +177,8 @@ class DebugModel implements IModel {
         cb(info);
     }
 
-	public function getTakeNegoPreview(playerId:Int, gridId:Int):Array<NegoPreview> {
-		return [
-            {
-                player: info.players[0],
-                fightPeople: [
-                    PeopleGenerator.getInst().generate(),
-                    PeopleGenerator.getInst().generate()
-                ],
-                armyBefore: 100,
-                armyAfter: [30, 5],
-                moneyBefore: 1000,
-                moneyAfter: [500, 400],
-                foodBefore: 100,
-                foodAfter: [100,120],
-                successRate: .28,
-                energyAfter: [10,20]
-            },{
-                player: info.players[1],
-                fightPeople: [
-                    PeopleGenerator.getInst().generate(),
-                    PeopleGenerator.getInst().generate()
-                ],
-                armyBefore: 200,
-                armyAfter: [320, 52],
-                moneyBefore: 1300,
-                moneyAfter: [320, 533],
-                foodBefore: 100,
-                foodAfter: [100,120],
-                successRate: 0,
-                energyAfter: [10,20]
-            }
-        ];
+	public function getTakeNegoPreview(playerId:Int, gridId:Int):NegoPreview {
+        return null;
 	}
 
 	public function takeNegoOn(playerId:Int, gridId:Int, p1SelectId:Int, p2SelectId:Int, cb:(gameInfo:GameInfo) -> Void) {
@@ -232,27 +204,20 @@ class DebugModel implements IModel {
     }
 
 	public function getTakeExplorePreview(playerId:Int, gridId:Int):ExplorePreview {
-		return {
-            explorePeople:[
-                PeopleGenerator.getInst().generate(),
-                PeopleGenerator.getInst().generate(),
-                PeopleGenerator.getInst().generate(),
-            ],
-            fightPeople: [
-                PeopleGenerator.getInst().generate(),
-                PeopleGenerator.getInst().generate(),
-                PeopleGenerator.getInst().generate(),
-            ],
-            energyAfter: [
-                10,20,30
-            ],
-            // successRate: [0.3, .5, 2]
-        }
+		return null;
 	}
 
 	public function takeExplore(playerId:Int, gridInt:Int, p1SelectId:Int, exploreId:Int, cb:(gameInfo:GameInfo) -> Void) {}
 
 	public function getRateOfInvitePeople(people:People, invite:People):Float {
 		return .5;
+	}
+
+	public function getPreResultOfNego(people:People, invite:People):PreResultOnNego {
+		return null;
+	}
+
+	public function getPreResultOfExplore(people:People, invite:People):PreResultOnExplore {
+		return null;
 	}
 }

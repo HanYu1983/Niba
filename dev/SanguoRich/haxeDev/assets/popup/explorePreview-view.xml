@@ -2,13 +2,12 @@
     <hbox horizontalAlign="center">
         <label text="探索人才"/>
     </hbox>
-    <hbox id="box_peopleList" width="100%" height="150"></hbox>
-    <hbox id="box_explorePeople" width="100%" height="150"></hbox>
+    <hbox id="box_peopleList1" width="100%" height="150"></hbox>
+    <hbox id="box_peopleList2" width="100%" height="150"></hbox>
     <hbox width="100%">
         <property-grid id="pg_playerInfo" width="100%">
             <property-group text="君主資料">
                 <property id="pro_name" label="執行武將" value="100" />
-                <property id="pro_exploreName" label="求賢對象" value="100" />
                 <property id="pro_energy" label="體力" value="100" />
                 <property id="pro_charm" label="魅力" value="1000" />
                 <property id="pro_successRate" label="成功率" value="50%" />

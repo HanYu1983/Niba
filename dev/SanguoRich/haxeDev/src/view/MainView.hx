@@ -65,6 +65,7 @@ class MainView extends Absolute {
         box_popup.addComponent(messageView);
 
         explorePreviewView = new ExplorePreviewView();
+        explorePreviewView.hide();
         box_popup.addComponent(explorePreviewView);
 
         peopleListView = new PeopleListView();
@@ -101,13 +102,13 @@ class MainView extends Absolute {
         );
     }
 
-    public function onExplorePreviewConfirmClick(p1Id:Int, exploreId:Int){
+    public function onExplorePreviewConfirmClick(p1Id:Int, p2Id:Int){
         var gameInfo = Main.model.gameInfo();
         Main.model.takeExplore(
             gameInfo.currentPlayer.id,
             gameInfo.currentPlayer.atGridId,
             p1Id,
-            exploreId,
+            p2Id,
             (gameInfo:GameInfo)->{
                 syncViewByInfo(gameInfo);
             }
@@ -136,9 +137,10 @@ class MainView extends Absolute {
 
     @:bind(btn_negotiate, MouseEvent.CLICK)
     function onBtnNegotiateClick(e:MouseEvent){
+        trace(e);
         var player = Main.model.gameInfo().currentPlayer;
         var previewInfo = Main.model.getTakeNegoPreview(player.id, player.atGridId);
-        negoPreviewView.showNegoPreview(previewInfo);
+        negoPreviewView.showPopup(previewInfo);
     }
 
     @:bind(btn_explore, MouseEvent.CLICK)
@@ -146,7 +148,6 @@ class MainView extends Absolute {
         var gameInfo = Main.model.gameInfo();
         var previewInfo = Main.model.getTakeExplorePreview(gameInfo.currentPlayer.id, gameInfo.currentPlayer.atGridId);
         explorePreviewView.showPopup(previewInfo);
-        trace('btn_explore');
     }
 
     @:bind(btn_start, MouseEvent.CLICK)

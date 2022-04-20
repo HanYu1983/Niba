@@ -1,5 +1,6 @@
 package view.popup;
 
+import model.IModel.PreResultOnNego;
 import haxe.ui.events.UIEvent;
 import model.PeopleGenerator.People;
 import haxe.ui.containers.properties.Property;
@@ -8,65 +9,75 @@ import haxe.ui.events.MouseEvent;
 
 @:build(haxe.ui.ComponentBuilder.build("assets/popup/negoPreview-view.xml"))
 class NegoPreviewView extends PopupView{
+
+    var p1List:PeopleListView;
+    var p2List:PeopleListView;
+
     public function new() {
         super();
+
+        p1List = new PeopleListView();
+        box_peopleList1.addComponent(p1List);
+
+        p2List = new PeopleListView();
+        box_peopleList2.addComponent(p2List);
     }
 
-    public function showNegoPreview(infos:Array<NegoPreview>) {
-        fadeIn();
+    override function showPopup(info:Dynamic) {
+        super.showPopup(info);
 
-        function setOnePlayer(id:Int){
-            var info = infos[id];
+        var info:NegoPreview = info;
 
-            var pro_name:Property = Reflect.getProperty(this, 'pro_name${id}');
+        function setRate(){
+            var p1 = p1List.selectedItem;
+            var p2 = p2List.selectedItem;
+            var result:PreResultOnNego = Main.model.getPreResultOfNego(p1, p2);
 
-            var pro_energy:Property = Reflect.getProperty(this, 'pro_energy${id}');
-            var pro_intelligence:Property = Reflect.getProperty(this, 'pro_intelligence${id}');
-            var pro_charm:Property = Reflect.getProperty(this, 'pro_charm${id}');
-            var pro_political:Property = Reflect.getProperty(this, 'pro_political${id}');
-            var pro_money:Property = Reflect.getProperty(this, 'pro_money${id}');
-            var pro_army:Property = Reflect.getProperty(this, 'pro_army${id}');
-            var pro_successRate:Property = Reflect.getProperty(this, 'pro_successRate${id}');
-            // var pro_strategy:Property = Reflect.getProperty(this, 'pro_strategy${id}');
+            pro_energy.value = '${p1.energy}=>${result.energyAfter}';
+            pro_money.value = '${result.moneyBefore}=>${result.moneyAfter}';
+            pro_army.value = '${result.armyBefore}=>${result.armyAfter}';
+            pro_successRate.value = Main.getRateString(result.successRate);
+        }
 
-            function setOnePeople(id:Int, p:People){
-                pro_energy.value = '${p.energy}=>${info.energyAfter[id]}';
-                pro_charm.value = p.charm;
-                pro_political.value = p.political;
-                pro_intelligence.value = p.intelligence;
-                pro_money.value = '${info.moneyBefore}=>${info.moneyAfter[id]}';
-                pro_army.value = '${info.armyBefore}=>${info.armyAfter[id]}';
-                pro_successRate.value = '${Math.floor(info.successRate * 100)}%';
-            }
-            
-            pro_name.dataSource.clear();
-            pro_name.value = info.fightPeople[0].name;
-            for(index => p in info.fightPeople){
-                pro_name.dataSource.add({
-                    text:p.name, id:index, people:p
-                });
-            }
+        function setOnePeople(){
+            var p1:People = p1List.selectedItem;
+            var p2:People = p2List.selectedItem;
+            pro_name.value = '${p1.name} vs ${p2.name}';
+            pro_charm.value = '${p1.charm} vs ${p2.charm}';
+            pro_political.value = '${p1.political} vs ${p2.political}';
+            pro_intelligence.value = '${p1.intelligence} vs ${p2.intelligence}';
 
-            pro_name.onChange = function(e:UIEvent){
-                if(e.data){
-                    setOnePeople(e.data.id, e.data.people);
-                }
+            setRate();
+        }
+
+        p1List.setPeopleList(info.p1ValidPeople);
+        p1List.onChange = function(e){
+            var p:Dynamic = p1List.selectedItem;
+            if(p){
+                setOnePeople();
             }
         }
-        
-        setOnePlayer(0);
-        setOnePlayer(1);
+        p1List.selectedIndex = 0;
+
+        p2List.setPeopleList(info.p2ValidPeople);
+        p2List.onChange = function(e){
+            var p:Dynamic = p2List.selectedItem;
+            if(p){
+                setOnePeople();
+            }
+        }
+        p2List.selectedIndex = 0;
     }
 
-    @:bind(btn_cancelNego, MouseEvent.CLICK)
+    @:bind(btn_cancel, MouseEvent.CLICK)
     function onBtnCancelNego(e:MouseEvent) {
         fadeOut();
     }
 
-    @:bind(btn_confirmNego, MouseEvent.CLICK)
+    @:bind(btn_confirm, MouseEvent.CLICK)
     function onBtnConfirmNego(e:MouseEvent) {
         fadeOut();
 
-        Main.view.onNegoPreviewConfirmNegoClick(pro_name0.value.id, pro_name1.value.id);
+        Main.view.onNegoPreviewConfirmNegoClick(p1List.selectedItem.id, p2List.selectedItem.id);
     }
 }
