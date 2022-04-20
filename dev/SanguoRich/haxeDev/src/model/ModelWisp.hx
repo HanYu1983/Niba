@@ -88,7 +88,7 @@ class ModelWisp extends DebugModel {
 		});
 	}
 
-	public override function getTakeNegoPreview(playerId:Int, gridId:Int):Array<NegoPreview> {
+	public override function getTakeNegoPreview(playerId:Int, gridId:Int):NegoPreview {
 		return new NativeModule().getTakeNegoPreview(playerId, gridId);
 	}
 

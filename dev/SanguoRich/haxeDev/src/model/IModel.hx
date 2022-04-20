@@ -60,28 +60,32 @@ typedef WarPreview = {
 }
 
 typedef NegoPreview = {
-    player:PlayerInfo,
-    fightPeople:Array<People>,
-    energyAfter:Array<Int>,
-    armyBefore:Int,
-    armyAfter:Array<Int>,
-    moneyBefore:Int,
-    moneyAfter:Array<Int>,
-    foodBefore:Int,
-    foodAfter:Array<Int>,
-    successRate:Float
+    p1ValidPeople:Array<People>,
+    p2ValidPeople:Array<People>,
 }
 
 typedef ExplorePreview = {
-    explorePeople:Array<People>,
-    fightPeople:Array<People>,
-    energyAfter:Array<Int>,
-    // successRate:Array<Float>
+    p1ValidPeople:Array<People>,
+    p2ValidPeople:Array<People>,
+}
+
+typedef PreResultOnNego = {
+    energyAfter:Int,
+    armyBefore:Int,
+    armyAfter:Int,
+    moneyBefore:Int,
+    moneyAfter:Int,
+    foodBefore:Int,
+    foodAfter:Int,
+    successRate:Float
+} 
+
+typedef PreResultOnExplore = {
+    energyAfter:Int,
+    successRate:Float
 }
 
 interface IModel{
-
-    
     function gameStart(cb:Void->Void):Void;
     function gameInfo():GameInfo;
     function getPeople(count:Int):Array<People>;
@@ -89,9 +93,11 @@ interface IModel{
     function playerEnd(cb:()->Void):Void;
     function getTakeWarPreview(playerId:Int, gridId:Int):Array<WarPreview>;
     function takeWarOn(playerId:Int, gridId:Int, cb:(gameInfo:GameInfo)->Void):Void;
-    function getTakeNegoPreview(playerId:Int, gridId:Int):Array<NegoPreview>;
-    function takeNegoOn(playerId:Int, gridId:Int, p1SelectId:Int, p2SelectId:Int, cb:(gameInfo:GameInfo)->Void):Void;
+    function getTakeNegoPreview(playerId:Int, gridId:Int):NegoPreview;
+    function takeNegoOn(playerId:Int, gridId:Int, p1PeopleId:Int, p2PeopleId:Int, cb:(gameInfo:GameInfo)->Void):Void;
     function getTakeExplorePreview(playerId:Int, gridId:Int):ExplorePreview;
-    function takeExplore(playerId:Int, gridInt:Int, p1PeopleId:Int, explorePeopleId:Int, cb:(gameInfo:GameInfo)->Void):Void;
+    function takeExplore(playerId:Int, gridInt:Int, p1PeopleId:Int, p2PeopleId:Int, cb:(gameInfo:GameInfo)->Void):Void;
     function getRateOfInvitePeople(people:People, invite:People):Float;
+    function getPreResultOfNego(people:People, invite:People):PreResultOnNego;
+    function getPreResultOfExplore(people:People, invite:People):PreResultOnExplore;
 }
