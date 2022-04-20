@@ -1006,55 +1006,18 @@ export function handleAttackDamage(
     log2("handleAttackDamage", "willGuardUnits", willGuardUnits);
     log2("handleAttackDamage", "willAttackPower", willAttackPower);
     if (willAttackUnits.length) {
-      if (willGuardUnits.length == 0) {
-        // 本國傷害
+      // 判斷速度1速度2是否可攻擊
+      const hasSpeedAttack = isABattleGroup(ctx, ["速攻"], willAttackUnits[0]);
+      if (
+        // 有速攻的情況在速度1
+        (hasSpeedAttack && speed == 1) ||
+        // 沒速攻的情況在速度2
+        (hasSpeedAttack == false && speed == 2)
+      ) {
         let currentAttackPower = willAttackPower;
-        let table = ctx.gameState.table;
-        let fromCardStackID = getBaSyouID({
-          id: "AbsoluteBaSyou",
-          value: [currentGuardPlayerID, "本国"],
-        });
-        let toCardStackID = getBaSyouID({
-          id: "AbsoluteBaSyou",
-          value: [currentGuardPlayerID, "ジャンクヤード"],
-        });
-        let topCards = table.cardStack[fromCardStackID].slice(
-          0,
-          currentAttackPower
-        );
-        topCards = topCards.map((card) => {
-          return {
-            ...card,
-            faceDown: false,
-          };
-        });
-        table = {
-          ...table,
-          cardStack: {
-            ...table.cardStack,
-            [fromCardStackID]:
-              table.cardStack[fromCardStackID].slice(currentAttackPower),
-            [toCardStackID]: [...table.cardStack[toCardStackID], ...topCards],
-          },
-        };
-        ctx = {
-          ...ctx,
-          gameState: {
-            ...ctx.gameState,
-            table: table,
-          },
-        };
-      } else {
-        const hasSpeedAttack = isABattleGroup(
-          ctx,
-          ["速攻"],
-          willAttackUnits[0]
-        );
-        if (
-          (hasSpeedAttack && speed == 1) ||
-          (hasSpeedAttack == false && speed == 2)
-        ) {
-          let currentAttackPower = willAttackPower;
+        log2("handleAttackDamage", "attack", currentAttackPower);
+        // 敵方機體存在, 攻擊機體
+        if (willGuardUnits.length) {
           const changedCardState = willGuardUnits.map((cardID): CardState => {
             const [_, cs] = getCardState(ctx, cardID);
             if (currentAttackPower <= 0) {
@@ -1120,51 +1083,52 @@ export function handleAttackDamage(
               cardState: cardState,
             },
           };
-          // 若傷害沒有用完, 就判斷強襲
-          if (
-            currentAttackPower > 0 &&
-            isABattleGroup(ctx, ["強襲"], willAttackUnits[0])
-          ) {
-            // 本國傷害
-            let table = ctx.gameState.table;
-            let fromCardStackID = getBaSyouID({
-              id: "AbsoluteBaSyou",
-              value: [currentGuardPlayerID, "本国"],
-            });
-            let toCardStackID = getBaSyouID({
-              id: "AbsoluteBaSyou",
-              value: [currentGuardPlayerID, "ジャンクヤード"],
-            });
-            let topCards = table.cardStack[fromCardStackID].slice(
-              0,
-              currentAttackPower
-            );
-            topCards = topCards.map((card) => {
-              return {
-                ...card,
-                faceDown: false,
-              };
-            });
-            table = {
-              ...table,
-              cardStack: {
-                ...table.cardStack,
-                [fromCardStackID]:
-                  table.cardStack[fromCardStackID].slice(currentAttackPower),
-                [toCardStackID]: [
-                  ...table.cardStack[toCardStackID],
-                  ...topCards,
-                ],
-              },
+        }
+        // 攻擊方可以攻擊本國
+        // 若傷害沒有用完, 攻擊本國
+        if (
+          currentAttackPower > 0 ||
+          // 對方有防禦機體的情況, 有強襲就攻擊本國
+          (willGuardUnits.length &&
+            isABattleGroup(ctx, ["強襲"], willAttackUnits[0]))
+        ) {
+          // 本國傷害
+          log2("handleAttackDamage", "attack 本国", currentAttackPower);
+          let table = ctx.gameState.table;
+          let fromCardStackID = getBaSyouID({
+            id: "AbsoluteBaSyou",
+            value: [currentGuardPlayerID, "本国"],
+          });
+          let toCardStackID = getBaSyouID({
+            id: "AbsoluteBaSyou",
+            value: [currentGuardPlayerID, "ジャンクヤード"],
+          });
+          let topCards = table.cardStack[fromCardStackID].slice(
+            0,
+            currentAttackPower
+          );
+          topCards = topCards.map((card) => {
+            return {
+              ...card,
+              faceDown: false,
             };
-            ctx = {
-              ...ctx,
-              gameState: {
-                ...ctx.gameState,
-                table: table,
-              },
-            };
-          }
+          });
+          table = {
+            ...table,
+            cardStack: {
+              ...table.cardStack,
+              [fromCardStackID]:
+                table.cardStack[fromCardStackID].slice(currentAttackPower),
+              [toCardStackID]: [...table.cardStack[toCardStackID], ...topCards],
+            },
+          };
+          ctx = {
+            ...ctx,
+            gameState: {
+              ...ctx.gameState,
+              table: table,
+            },
+          };
         }
       }
     }
@@ -1181,19 +1145,18 @@ export function handleAttackDamage(
     log2("handleAttackDamage", "willGuardUnits", willGuardUnits);
     log2("handleAttackDamage", "willAttackPower", willAttackPower);
     if (willAttackUnits.length) {
-      if (willGuardUnits.length == 0) {
-        // 防禦方不對本國造成傷害
-      } else {
-        const hasSpeedAttack = isABattleGroup(
-          ctx,
-          ["速攻"],
-          willAttackUnits[0]
-        );
-        if (
-          (hasSpeedAttack && speed == 1) ||
-          (hasSpeedAttack == false && speed == 2)
-        ) {
-          let currentAttackPower = willAttackPower;
+      // 判斷速度1速度2是否可攻擊
+      const hasSpeedAttack = isABattleGroup(ctx, ["速攻"], willAttackUnits[0]);
+      if (
+        // 有速攻的情況在速度1
+        (hasSpeedAttack && speed == 1) ||
+        // 沒速攻的情況在速度2
+        (hasSpeedAttack == false && speed == 2)
+      ) {
+        let currentAttackPower = willAttackPower;
+        log2("handleAttackDamage", "attack", currentAttackPower);
+        // 敵方機體存在, 攻擊機體
+        if (willGuardUnits.length) {
           const changedCardState = willGuardUnits.map((cardID): CardState => {
             const [_, cs] = getCardState(ctx, cardID);
             if (currentAttackPower <= 0) {
@@ -1231,6 +1194,7 @@ export function handleAttackDamage(
             // 剩餘血量
             const nextLive = -currentAttackPower;
             const nextDamage = hp - nextLive;
+            // 傷害用完了, 重設為0
             currentAttackPower = 0;
             const gameEvent: GameEvent = {
               id: "戦闘ダメージを受けた場合",
@@ -1242,6 +1206,7 @@ export function handleAttackDamage(
               damage: nextDamage,
             };
           });
+          // 套用傷害
           const cardState = ctx.gameState.cardState.map((cs1) => {
             for (const cs2 of changedCardState) {
               if (cs1.id == cs2.id) {
