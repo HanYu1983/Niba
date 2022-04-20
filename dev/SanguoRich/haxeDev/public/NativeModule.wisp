@@ -5,6 +5,8 @@
                           (spec.assert window.GameContext ctx))
       assertNegoPreview (fn [ctx]
                           (spec.assert window.NegoPreview ctx))
+      assertPreResultOnNego (fn [ctx]
+                              (spec.assert window.PreResultOnNego ctx))
       ; haxe package
       haxePackage nil
       assertPackage (fn []
@@ -30,15 +32,8 @@
                     (set! context ctx))
       _ (setContext! context)
       ; helper
-      getPeopleFightCost (fn [ctx {p1 :people army1 :army} {p2 :people army2 :army}]
-                           [{:money 10
-                             :food 10
-                             :army 10
-                             :rate 0.8}
-                            {:money 10
-                             :food 10
-                             :army 10
-                             :rate 0.2}])
+      doNego (fn [ctx p1 p2]
+               ctx)
       ; binding
       nativeModule {:installPackage installPackage
                     :gameInfo (fn [] context)
@@ -122,54 +117,30 @@
                                            :events [])
                             _ (setContext! context)
                             _ (cb)]))
-
                     :getTakeNegoPreview
                     (fn [playerId gridId]
                       (let [grid (R.path ["grids" gridId] context)
-                            gridOnePeople (R.path ["people" 0] grid)
-                            _ (when (nil? gridOnePeople)
-                                (throw (Error. "還沒實做沒有人時")))
-                            ; attack
                             player (R.path ["players" playerId] context)
-                            costs (map (fn [p1]
-                                         (getPeopleFightCost context p1 gridOnePeople)) player.people)
-                            previewLeft {:player player
-                                         :fightPeople player.people
-                                         :armyBefore player.army
-                                         :armyAfter (map (fn [[cost _]]
-                                                           (- player.army cost.army))
-                                                         costs)
-                                         :moneyBefore player.money
-                                         :moneyAfter (map (fn [[cost _]]
-                                                            (- player.army cost.money))
-                                                          costs)
-                                         :foodBefore player.food
-                                         :foodAfter (map (fn [[cost _]]
-                                                           (- player.army cost.food))
-                                                         costs)
-                                         :successRate 0.2}
-                            _ (console.log previewLeft)
-                            _ (assertNegoPreview previewLeft)
-                            ; 取得第一個人對戰結果的敵方資料
-                            gridCost (R.path [0 1] costs)
-                            previewRight {:player player
-                                          :fightPeople [gridOnePeople]
-                                          :armyBefore grid.army
-                                          :armyAfter [(- grid.army gridCost.army)]
-                                          :moneyBefore grid.money
-                                          :moneyAfter  [(- grid.army gridCost.money)]
-                                          :foodBefore grid.food
-                                          :foodAfter [(- grid.army gridCost.food)]
-                                          :successRate 0.2}
-                            _ (console.log previewRight)
-                            _ (assertNegoPreview previewRight)]
-                        [previewLeft previewRight]))
+                            preview {:p1ValidPeople player.people
+                                     :p2ValidPeople grid.people}
+                            _ (console.log preview)
+                            _ (assertNegoPreview preview)]
+                        preview))
+                    :getPreResultOfNego
+                    (fn [playerId gridId p1 p2]
+                      (let [_ (console.log playerId gridId p1 p2)
+                            view {}
+                            _ (assertPreResultOnNego view)]
+                        view))
                     :takeNegoOn
-                    (fn [playerId gridId cb]
+                    (fn [playerId gridId p1SelectId p2SelectId cb]
                       (let [context (assoc context
                                            :actions []
                                            :events [{:id "NEGOTIATE_RESULT"
                                                      :value {:success true
+                                                             :people People
+                                                             :energyBefore 100
+                                                             :energyAfter 100
                                                              :armyBefore 200
                                                              :armyAfter 300
                                                              :moneyBefore 200

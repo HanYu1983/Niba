@@ -67,6 +67,9 @@ const EventSpec = spec.or("Event", {
     id: spec.oneOf("id", "NEGOTIATE_RESULT"),
     value: spec.map("value", {
       success: spec.boolean,
+      people: People,
+      energyBefore: spec.number,
+      energyAfter: spec.number,
       armyBefore: spec.number,
       armyAfter: spec.number,
       moneyBefore: spec.number,
@@ -101,13 +104,22 @@ var WarPreview = spec.map("WarPreview", {
 });
 
 var NegoPreview = spec.map("NegoPreview", {
-  player: PlayerInfo,
-  fightPeople: spec.collection("fightPeople", People),
+  p1ValidPeople: spec.collection("p1ValidPeople", People),
+  p2ValidPeople: spec.collection("p2ValidPeople", People),
+});
+
+var ExplorePreview = spec.map("ExplorePreview", {
+  p1ValidPeople: spec.collection("p1ValidPeople", People),
+  p2ValidPeople: spec.collection("p2ValidPeople", People),
+});
+
+var PreResultOnNego = spec.map("PreResultOnNego", {
+  energyAfter: spec.number,
   armyBefore: spec.number,
-  armyAfter: spec.collection("armyAfter", spec.number),
+  armyAfter: spec.number,
   moneyBefore: spec.number,
-  moneyAfter: spec.collection("moneyAfter", spec.number),
+  moneyAfter: spec.number,
   foodBefore: spec.number,
-  foodAfter: spec.collection("foodAfter", spec.number),
+  foodAfter: spec.number,
   successRate: spec.number,
 });

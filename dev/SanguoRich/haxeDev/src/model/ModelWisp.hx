@@ -1,6 +1,8 @@
 package model;
 
 import model.DebugModel;
+import model.IModel.PreResultOnExplore;
+import model.IModel.PreResultOnNego;
 import model.IModel.ExplorePreview;
 import model.GridGenerator.BUILDING;
 import model.IModel.NegoPreview;
@@ -22,9 +24,11 @@ import model.PeopleGenerator.People;
 	public function getTakeWarPreview(playerId:Int, gridId:Int):Dynamic;
 	public function takeWarOn(playerId:Int, gridId:Int, cb:(gameInfo:Dynamic) -> Void):Void;
 	public function getTakeNegoPreview(playerId:Int, gridId:Int):Dynamic;
-	public function takeNegoOn(playerId:Int, gridId:Int, cb:(gameInfo:Dynamic) -> Void):Void;
-	public function getTakeExplorePreview(playerId:Int, gridId:Int):ExplorePreview;
+	public function takeNegoOn(playerId:Int, gridId:Int, p1SelectId:Int, p2SelectId:Int, cb:(gameInfo:GameInfo) -> Void):Void;
+	public function getPreResultOfNego(playerId:Int, gridId:Int, people:People, invite:People):Dynamic;
+	public function getTakeExplorePreview(playerId:Int, gridId:Int):Dynamic;
 	public function takeExplore(playerId:Int, gridInt:Int, p1SelectId:Int, exploreId:Int, cb:(gameInfo:Dynamic) -> Void):Void;
+	public function getPreResultOfExplore(playerId:Int, gridId:Int, people:People, invite:People):Dynamic;
 	public function getRateOfInvitePeople(people:People, invite:People):Float;
 }
 
@@ -52,7 +56,7 @@ function native2haxe(nativeInfo:Dynamic):GameInfo {
 }
 
 class ModelWisp extends DebugModel {
-	public override function gameInfo():GameInfo {
+	override function gameInfo():GameInfo {
 		var nativeInfo = new NativeModule().gameInfo();
 		var gameInfo = native2haxe(nativeInfo);
 		// 因為是從JS來的資料, 所以即使有定義GameInfo的類型, 還是有可能會出錯
@@ -61,7 +65,7 @@ class ModelWisp extends DebugModel {
 		return gameInfo;
 	}
 
-	public override function gameStart(cb:Void->Void):Void {
+	override function gameStart(cb:Void->Void):Void {
 		new NativeModule().installPackage({
 			gridGenerator: GridGenerator.getInst(),
 			peopleGenerator: PeopleGenerator.getInst(),
@@ -69,48 +73,56 @@ class ModelWisp extends DebugModel {
 		return new NativeModule().gameStart(cb);
 	}
 
-	public override function playerDice(cb:() -> Void) {
+	override function playerDice(cb:() -> Void) {
 		return new NativeModule().playerDice(cb);
 	}
 
-	public override function playerEnd(cb:() -> Void) {
+	override function playerEnd(cb:() -> Void) {
 		return new NativeModule().playerEnd(cb);
 	}
 
-	public override function getTakeWarPreview(playerId:Int, gridId:Int):Array<WarPreview> {
+	override function getTakeWarPreview(playerId:Int, gridId:Int):Array<WarPreview> {
 		return new NativeModule().getTakeWarPreview(playerId, gridId);
 	}
 
-	public override function takeWarOn(playerId:Int, gridId:Int, cb:(gameInfo:GameInfo) -> Void) {
+	override function takeWarOn(playerId:Int, gridId:Int, cb:(gameInfo:GameInfo) -> Void) {
 		return new NativeModule().takeWarOn(playerId, gridId, nativeInfo -> {
 			var gameInfo = native2haxe(nativeInfo);
 			cb(gameInfo);
 		});
 	}
 
-	public override function getTakeNegoPreview(playerId:Int, gridId:Int):NegoPreview {
+	override function getTakeNegoPreview(playerId:Int, gridId:Int):NegoPreview {
 		return new NativeModule().getTakeNegoPreview(playerId, gridId);
 	}
 
-	public override function takeNegoOn(playerId:Int, gridId:Int, p1SelectId:Int, p2SelectId:Int, cb:(gameInfo:GameInfo) -> Void) {
-		return new NativeModule().takeNegoOn(playerId, gridId, nativeInfo -> {
+	override function takeNegoOn(playerId:Int, gridId:Int, p1SelectId:Int, p2SelectId:Int, cb:(gameInfo:GameInfo) -> Void) {
+		return new NativeModule().takeNegoOn(playerId, gridId, p1SelectId, p2SelectId, nativeInfo -> {
 			var gameInfo = native2haxe(nativeInfo);
 			cb(gameInfo);
 		});
 	}
 
-	public override function getTakeExplorePreview(playerId:Int, gridId:Int):ExplorePreview {
+	override function getPreResultOfNego(playerId:Int, gridId:Int, people:People, invite:People):PreResultOnNego {
+		return new NativeModule().getPreResultOfNego(playerId, gridId, people, invite);
+	}
+
+	override function getTakeExplorePreview(playerId:Int, gridId:Int):ExplorePreview {
 		return new NativeModule().getTakeExplorePreview(playerId, gridId);
 	}
 
-	public override function takeExplore(playerId:Int, gridId:Int, p1SelectId:Int, exploreId:Int, cb:(gameInfo:GameInfo) -> Void) {
+	override function takeExplore(playerId:Int, gridId:Int, p1SelectId:Int, exploreId:Int, cb:(gameInfo:GameInfo) -> Void) {
 		return new NativeModule().takeExplore(playerId, gridId, p1SelectId, exploreId, nativeInfo -> {
 			var gameInfo = native2haxe(nativeInfo);
 			cb(gameInfo);
 		});
 	}
 
-	public override function getRateOfInvitePeople(people:People, invite:People):Float {
+	override function getPreResultOfExplore(playerId:Int, gridId:Int, people:People, invite:People):PreResultOnExplore {
+		return new NativeModule().getPreResultOfExplore(playerId, gridId, people, invite);
+	}
+
+	override function getRateOfInvitePeople(people:People, invite:People):Float {
 		return new NativeModule().getRateOfInvitePeople(people, invite);
 	}
 }
