@@ -83,11 +83,7 @@ class TestExploreModel extends DebugModel {
         cb(info);
     }
 
-    override function getRateOfInvitePeople(people:People, invite:People):Float {
-        return 0.05;
-    }
-
-    override function getPreResultOfExplore(people:People, invite:People):PreResultOnExplore {
+    override function getPreResultOfExplore(playerId:Int, gridId:Int, people:People, invite:People):PreResultOnExplore {
         return {
             energyAfter:20,
             successRate:.2

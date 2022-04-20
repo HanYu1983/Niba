@@ -31,7 +31,12 @@ class NegoPreviewView extends PopupView{
         function setRate(){
             var p1 = p1List.selectedItem;
             var p2 = p2List.selectedItem;
-            var result:PreResultOnNego = Main.model.getPreResultOfNego(p1, p2);
+
+            var gameInfo = Main.model.gameInfo();
+            var result:PreResultOnNego = Main.model.getPreResultOfNego(
+                gameInfo.currentPlayer.id,
+                gameInfo.currentPlayer.atGridId,
+                p1, p2);
 
             pro_energy.value = '${p1.energy}=>${result.energyAfter}';
             pro_money.value = '${result.moneyBefore}=>${result.moneyAfter}';

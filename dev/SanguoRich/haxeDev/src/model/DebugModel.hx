@@ -213,11 +213,11 @@ class DebugModel implements IModel {
 		return .5;
 	}
 
-	public function getPreResultOfNego(people:People, invite:People):PreResultOnNego {
+	public function getPreResultOfNego(playerId:Int, gridId:Int, people:People, invite:People):PreResultOnNego {
 		return null;
 	}
 
-	public function getPreResultOfExplore(people:People, invite:People):PreResultOnExplore {
+	public function getPreResultOfExplore(playerId:Int, gridId:Int, people:People, invite:People):PreResultOnExplore {
 		return null;
 	}
 }

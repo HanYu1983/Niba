@@ -82,7 +82,7 @@ class TestNegoModel extends DebugModel {
         cb(info);
     }
 
-    override function getPreResultOfNego(people:People, invite:People):PreResultOnNego {
+    override function getPreResultOfNego(playerId:Int, gridId:Int, people:People, invite:People):PreResultOnNego {
         return {
             energyAfter:1,
             armyBefore:2,
