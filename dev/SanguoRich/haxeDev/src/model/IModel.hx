@@ -61,6 +61,7 @@ typedef WarPreview = {
 typedef NegoPreview = {
     player:PlayerInfo,
     fightPeople:Array<People>,
+    energyAfter:Array<Int>,
     armyBefore:Int,
     armyAfter:Array<Int>,
     moneyBefore:Int,
@@ -81,7 +82,7 @@ interface IModel{
     function getTakeWarPreview(playerId:Int, gridId:Int):Array<WarPreview>;
     function takeWarOn(playerId:Int, gridId:Int, cb:(gameInfo:GameInfo)->Void):Void;
     function getTakeNegoPreview(playerId:Int, gridId:Int):Array<NegoPreview>;
-    function takeNegoOn(playerId:Int, gridId:Int, cb:(gameInfo:GameInfo)->Void):Void;
+    function takeNegoOn(playerId:Int, gridId:Int, p1SelectId:Int, p2SelectId:Int, cb:(gameInfo:GameInfo)->Void):Void;
     // function currentPlayer():PlayerInfo;
     // function isPlayerTurn():Bool;
     // function getGrids(count:Int):Array<Grid>;
