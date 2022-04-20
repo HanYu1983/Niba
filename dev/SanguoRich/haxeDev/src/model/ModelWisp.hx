@@ -1,11 +1,14 @@
 package model;
 
 import model.DebugModel;
+import model.IModel.ExplorePreview;
+import model.GridGenerator.BUILDING;
 import model.IModel.NegoPreview;
 import model.IModel.WarPreview;
-import model.IModel.GameInfo;
 import model.IModel.ActionInfoID;
 import model.IModel.EventInfoID;
+import model.IModel.PlayerInfo;
+import model.IModel.GameInfo;
 import model.GridGenerator.Grid;
 import model.PeopleGenerator.People;
 
@@ -20,6 +23,9 @@ import model.PeopleGenerator.People;
 	public function takeWarOn(playerId:Int, gridId:Int, cb:(gameInfo:Dynamic) -> Void):Void;
 	public function getTakeNegoPreview(playerId:Int, gridId:Int):Dynamic;
 	public function takeNegoOn(playerId:Int, gridId:Int, cb:(gameInfo:Dynamic) -> Void):Void;
+	public function getTakeExplorePreview(playerId:Int, gridId:Int):ExplorePreview;
+	public function takeExplore(playerId:Int, gridInt:Int, p1SelectId:Int, exploreId:Int, cb:(gameInfo:Dynamic) -> Void):Void;
+	public function getRateOfInvitePeople(people:People, invite:People):Float;
 }
 
 function native2haxe(nativeInfo:Dynamic):GameInfo {
@@ -91,5 +97,20 @@ class ModelWisp extends DebugModel {
 			var gameInfo = native2haxe(nativeInfo);
 			cb(gameInfo);
 		});
+	}
+
+	public override function getTakeExplorePreview(playerId:Int, gridId:Int):ExplorePreview {
+		return new NativeModule().getTakeExplorePreview(playerId, gridId);
+	}
+
+	public override function takeExplore(playerId:Int, gridId:Int, p1SelectId:Int, exploreId:Int, cb:(gameInfo:GameInfo) -> Void) {
+		return new NativeModule().takeExplore(playerId, gridId, p1SelectId, exploreId, nativeInfo -> {
+			var gameInfo = native2haxe(nativeInfo);
+			cb(gameInfo);
+		});
+	}
+
+	public override function getRateOfInvitePeople(people:People, invite:People):Float {
+		return new NativeModule().getRateOfInvitePeople(people, invite);
 	}
 }
