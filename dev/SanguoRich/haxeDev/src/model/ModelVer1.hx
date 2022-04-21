@@ -1,5 +1,6 @@
 package model;
 
+import model.IModel.PreResultOnWar;
 import model.IModel.PreResultOnExplore;
 import model.IModel.PreResultOnNego;
 import model.IModel.ExplorePreview;
@@ -93,6 +94,21 @@ class ModelVer1 extends DebugModel {
 		};
 	}
 
+	override function getPreResultOfNego(playerId:Int, gridId:Int, people:People, invite:People):PreResultOnNego {
+		var player = info.players[playerId];
+		var negoCost = getNegoCost(playerId, gridId, people.id, invite.id);
+		return {
+			energyAfter: people.energy - negoCost.peopleCost.energy,
+			armyBefore: Std.int(player.army),
+			armyAfter: Std.int(player.army - negoCost.playerCost.army),
+			moneyBefore: Std.int(player.money),
+			moneyAfter: Std.int(player.money - negoCost.playerCost.money),
+			foodBefore: Std.int(player.food),
+			foodAfter: Std.int(player.food - negoCost.playerCost.food),
+			successRate: negoCost.successRate
+		};
+	}
+
 	override function takeNegoOn(playerId:Int, gridId:Int, p1SelectId:Int, p2SelectId:Int, cb:(gameInfo:GameInfo) -> Void) {
 		var p1 = getPeopleById(p1SelectId);
 		var p2 = getPeopleById(p2SelectId);
@@ -119,26 +135,20 @@ class ModelVer1 extends DebugModel {
 		cb(info);
 	}
 
-	override function getPreResultOfNego(playerId:Int, gridId:Int, people:People, invite:People):PreResultOnNego {
-		var player = info.players[playerId];
-		var negoCost = getNegoCost(playerId, gridId, people.id, invite.id);
-		return {
-			energyAfter: people.energy - negoCost.peopleCost.energy,
-			armyBefore: Std.int(player.army),
-			armyAfter: Std.int(player.army - negoCost.playerCost.army),
-			moneyBefore: Std.int(player.money),
-			moneyAfter: Std.int(player.money - negoCost.playerCost.money),
-			foodBefore: Std.int(player.food),
-			foodAfter: Std.int(player.food - negoCost.playerCost.food),
-			successRate: negoCost.successRate
-		};
-	}
-
 	override function getTakeExplorePreview(playerId:Int, gridId:Int):ExplorePreview {
 		return {
 			p1ValidPeople: info.players[playerId].people,
 			p2ValidPeople: info.grids[gridId].people
 		};
+	}
+
+	override function getPreResultOfExplore(playerId:Int, gridId:Int, people:People, invite:People):PreResultOnExplore {
+		var player = info.players[playerId];
+		var cost = getExploreCost(playerId, gridId, people.id, invite.id);
+		return {
+			energyAfter: people.energy - cost.peopleCost.energy,
+			successRate: cost.successRate
+		}
 	}
 
 	override function takeExplore(playerId:Int, gridId:Int, p1SelectId:Int, exploreId:Int, cb:(gameInfo:GameInfo) -> Void) {
@@ -165,13 +175,61 @@ class ModelVer1 extends DebugModel {
 		cb(info);
 	}
 
-	override function getPreResultOfExplore(playerId:Int, gridId:Int, people:People, invite:People):PreResultOnExplore {
-		var player = info.players[playerId];
-		var cost = getExploreCost(playerId, gridId, people.id, invite.id);
-		return {
-			energyAfter: people.energy - cost.peopleCost.energy,
-			successRate: cost.successRate
+	override function getTakeWarPreview(playerId:Int, gridId:Int):WarPreview {
+		if (info.grids[gridId].belongPlayerId == null) {
+			throw new haxe.Exception('info.grids[${gridId}].belongPlayerId not found');
 		}
+		return {
+			p1: info.players[playerId],
+			p2: info.players[info.grids[gridId].belongPlayerId],
+			p1ValidPeople: info.players[playerId].people,
+			p2ValidPeople: info.grids[gridId].people
+		};
+	}
+
+	override function getPreResultOfWar(playerId:Int, gridId:Int, p1:People, p2:People, army1:Float, army2:Float):Array<PreResultOnWar> {
+		return [
+			{
+				energyAfter: 1,
+				armyBefore: 2,
+				armyAfter: 4,
+				moneyBefore: 5,
+				moneyAfter: 6,
+				foodBefore: 7,
+				foodAfter: 8,
+			},
+			{
+				energyAfter: 1,
+				armyBefore: 2,
+				armyAfter: 4,
+				moneyBefore: 5,
+				moneyAfter: 6,
+				foodBefore: 7,
+				foodAfter: 8,
+			}
+		];
+	}
+
+	override function takeWarOn(playerId:Int, gridId:Int, p1PeopleId:Int, p2PeopleId:Int, army1:Float, army2:Float, cb:(gameInfo:GameInfo) -> Void) {
+		var info = gameInfo();
+		info.events = [
+			{
+				id: EventInfoID.WAR_RESULT,
+				value: {
+					success: true,
+					people: PeopleGenerator.getInst().generate(),
+					energyBefore: 100,
+					energyAfter: 50,
+					armyBefore: 200,
+					armyAfter: 300,
+					moneyBefore: 200,
+					moneyAfter: 300,
+					foodBefore: 100,
+					foodAfter: 200
+				}
+			}
+		];
+		cb(info);
 	}
 
 	function getPeopleIterator():Array<People> {
