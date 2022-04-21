@@ -6,14 +6,6 @@ import haxe.ui.containers.TableView;
 class PeopleListView extends TableView{
     public function new(){
         super();
-
-        onClick = function(e){
-            trace(selectedItem);
-        }
-
-        // onChange = function(e){
-        //     trace(e);
-        // }
     }
 
     public function setPeopleList(people:Array<People>) {
@@ -29,6 +21,4 @@ class PeopleListView extends TableView{
             dataSource.add(p);
         }
     }
-
-
 }

@@ -30,12 +30,12 @@ class Main {
 		});
 	}
 
-	public static function getFixNumber(number:Float, count:Int = 2) {
+	public static function getFixNumber(number:Float, count:Int = 2):Float {
 		var round = Syntax.code('Number.prototype.toFixed');
 		return round.call(number, count);
 	}
 
-	public static function getRateString(rate:Float) {
+	public static function getRateString(rate:Float):String {
 		return getFixNumber(rate * 100, 2) + '%';
 	}
 }

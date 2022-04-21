@@ -39,12 +39,12 @@ class MainView extends Absolute {
         }
 
         for(i in 0...4){
-            var p = new PlayerView(20, 20);
+            var p = new PlayerView(25, 25);
             switch(i){
-                case 0: p.boxColor = '#FF0000'; break;
-                case 1: p.boxColor = '#00FF00'; break;
-                case 2: p.boxColor = '#0000FF'; break;
-                case 3: p.boxColor = '#FFFF00'; break;
+                case 0: p.boxColor = '#FF0000';
+                case 1: p.boxColor = '#00FF00';
+                case 2: p.boxColor = '#0000FF';
+                case 3: p.boxColor = '#FFFF00';
             }
             players.push(p);
             box_players.addComponent(p);
@@ -70,9 +70,6 @@ class MainView extends Absolute {
 
         peopleListView = new PeopleListView();
         box_bottom.addComponent(peopleListView);
-
-        // var people = Main.model.getPeople(30);
-        // peopleListView.setPeopleList(people);
     }
 
     public function onShowPopup() {
@@ -83,11 +80,11 @@ class MainView extends Absolute {
         box_popup.fadeOut();
     }
 
-    public function onWarPreviewConfirmWarClick() {
-        Main.model.takeWarOn(0,0, (gameInfo:GameInfo)->{
-            syncViewByInfo(gameInfo);
-        });
-    }
+    // public function onWarPreviewConfirmWarClick() {
+    //     Main.model.takeWarOn(0,0, (gameInfo:GameInfo)->{
+    //         syncViewByInfo(gameInfo);
+    //     });
+    // }
 
     public function onNegoPreviewConfirmNegoClick(p1Id:Int, p2Id:Int) {
         var gameInfo = Main.model.gameInfo();
@@ -109,6 +106,21 @@ class MainView extends Absolute {
             gameInfo.currentPlayer.atGridId,
             p1Id,
             p2Id,
+            (gameInfo:GameInfo)->{
+                syncViewByInfo(gameInfo);
+            }
+        );
+    }
+
+    public function onWarPreviewConfirmClick(p1Id:Int, p2Id:Int, p1Army:Float, p2Army:Float){
+        var gameInfo = Main.model.gameInfo();
+        Main.model.takeWarOn(
+            gameInfo.currentPlayer.id,
+            gameInfo.currentPlayer.atGridId,
+            p1Id,
+            p2Id,
+            p1Army,
+            p2Army,
             (gameInfo:GameInfo)->{
                 syncViewByInfo(gameInfo);
             }
@@ -137,10 +149,16 @@ class MainView extends Absolute {
 
     @:bind(btn_negotiate, MouseEvent.CLICK)
     function onBtnNegotiateClick(e:MouseEvent){
-        trace(e);
         var player = Main.model.gameInfo().currentPlayer;
         var previewInfo = Main.model.getTakeNegoPreview(player.id, player.atGridId);
         negoPreviewView.showPopup(previewInfo);
+    }
+
+    @:bind(btn_occupation, MouseEvent.CLICK)
+    function onBtnOccupationClick(e:MouseEvent){
+        var player = Main.model.gameInfo().currentPlayer;
+        var previewInfo = Main.model.getTakeWarPreview(player.id, player.atGridId);
+        warPreviewView.showPopup(previewInfo);
     }
 
     @:bind(btn_explore, MouseEvent.CLICK)
@@ -152,7 +170,12 @@ class MainView extends Absolute {
 
     @:bind(btn_start, MouseEvent.CLICK)
     function onBtnStartClick(e:MouseEvent){
-        Main.model.gameStart(syncView);
+        Main.model.gameStart(()->{
+            for(index => player in Main.model.gameInfo().players){
+                players[index].name = player.name;
+            }
+            syncView();
+        });
     }
 
     @:bind(btn_end, MouseEvent.CLICK)
@@ -190,7 +213,7 @@ class MainView extends Absolute {
     function onBtnWarClick(e:MouseEvent){
         var player = Main.model.gameInfo().currentPlayer;
         var previewInfo = Main.model.getTakeWarPreview(player.id, player.atGridId);
-        warPreviewView.showPreviewWar(previewInfo);
+        // warPreviewView.showPreviewWar(previewInfo);
     }
 
     @:bind(btn_warStrategy, MouseEvent.CLICK)
@@ -203,8 +226,9 @@ class MainView extends Absolute {
         
     }
 
-    function getGridPositionByGridId(id:Int) {
-        return [grids[id].left, grids[id].top];
+    function getGridPositionByGridId(pid:Int, gridId:Int) {
+        var grid = grids[gridId];
+        return offsetPlayerPos(pid, grid.left, grid.top);
     }
 
     function syncView() {
@@ -240,11 +264,26 @@ class MainView extends Absolute {
             setActionInfo(action);
             switch (action.id){
                 case ActionInfoID.MOVE:
+
                     var pv = players[action.value.playerId];
-                    var toPos = getGridPositionByGridId(action.value.toGridId);
+                    var toPos = getGridPositionByGridId(action.value.playerId, action.value.toGridId);
+                    
                     tweens.push(TweenX.to(pv, {"left":toPos[0], "top":toPos[1]}));
+
+                    trace('這裏有時候會收到一樣的fromGridId:${action.value.fromGridId}和toGridId:${action.value.toGridId}');
             }
         }
+    }
+
+    function offsetPlayerPos(pid:Int, x:Float, y:Float){
+        var newPos = switch (pid){
+            case 0: [x, y];
+            case 1: [x+25, y];
+            case 2: [x, y+25];
+            case 3: [x+25, y+25];
+            case _: [x,y];
+        }
+        return newPos;
     }
 
     var events:Array<EventInfo>;
@@ -275,12 +314,16 @@ class MainView extends Absolute {
                             }
                         }
                     }
+                    btn_end.disabled = false;
                 case NEGOTIATE_RESULT:
                     messageView.showMessage(event.value);
+                    btn_end.disabled = false;
                 case EXPLORE_RESULT:
                     messageView.showMessage(event.value);
+                    btn_end.disabled = false;
                 case WAR_RESULT:
-
+                    messageView.showMessage(event.value);
+                    btn_end.disabled = false;
                 case WORLD_EVENT:
                     trace("WORLD_EVENT");
             }
@@ -304,7 +347,7 @@ class MainView extends Absolute {
     function setActionInfo(action:ActionInfo) {
         switch (action.id){
             case MOVE:
-                pro_currentEvent.value = "行走中";
+                pro_currentEvent.value = '由${action.value.fromGridId}往${action.value.toGridId}行走中...';
         }
     }
 
@@ -327,6 +370,7 @@ class MainView extends Absolute {
         box_commands2.disabled = true;
         box_commands3.disabled = true;
         box_commands4.disabled = true;
+        btn_end.disabled = true;
     }
 
     function syncUI(gameInfo:GameInfo){
@@ -346,7 +390,7 @@ class MainView extends Absolute {
                 var gx = Math.floor(e.screenX / 50);
                 var gy = Math.floor(e.screenY / 50);
                 var gridId = gx + gy * 10;
-                var pos = getGridPositionByGridId(gridId);
+                var pos = getGridPositionByGridId(0, gridId);
                 box_cursor.left = pos[0];
                 box_cursor.top = pos[1];
                 syncGridInfo(gridId);
@@ -402,7 +446,8 @@ class MainView extends Absolute {
     function syncPlayerViews(gameInfo:GameInfo){
         for (index => playerInfo in gameInfo.players) {
             var playerView = players[index];
-            var pos = getGridPositionByGridId(playerInfo.atGridId);
+            
+            var pos = getGridPositionByGridId(playerInfo.id, playerInfo.atGridId);
             playerView.left = pos[0];
             playerView.top = pos[1];
         }

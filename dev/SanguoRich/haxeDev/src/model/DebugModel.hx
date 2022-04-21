@@ -1,5 +1,6 @@
 package model;
 
+import model.IModel.PreResultOnWar;
 import model.IModel.PreResultOnExplore;
 import model.IModel.PreResultOnNego;
 import model.IModel.ExplorePreview;
@@ -53,9 +54,9 @@ class DebugModel implements IModel {
         info = {
             players:[
                 gp(0, 'vic'),
-                gp(0, 'han'),
-                gp(0, 'xiao'),
-                gp(0, 'any')
+                gp(1, 'han'),
+                gp(2, 'xiao'),
+                gp(3, 'any')
             ],
             grids:getGrids(100),
             isPlayerTurn:true,
@@ -136,37 +137,11 @@ class DebugModel implements IModel {
         cb();
     }
 
-	public function getTakeWarPreview(playerId:Int, gridId:Int):Array<WarPreview> {
-		return [
-            {
-                player: info.players[0],
-                fightPeople: [
-                    PeopleGenerator.getInst().generate(),
-                    PeopleGenerator.getInst().generate()
-                ],
-                armyBefore: 100,
-                armyAfter: [30, 5],
-                moneyBefore: 1000,
-                moneyAfter: [500, 400],
-                foodBefore: 100,
-                foodAfter: [100,120]
-            },{
-                player: info.players[1],
-                fightPeople: [
-                    PeopleGenerator.getInst().generate(),
-                    PeopleGenerator.getInst().generate()
-                ],
-                armyBefore: 200,
-                armyAfter: [320, 52],
-                moneyBefore: 1300,
-                moneyAfter: [320, 533],
-                foodBefore: 100,
-                foodAfter: [100,120]
-            }
-        ];
+	public function getTakeWarPreview(playerId:Int, gridId:Int):WarPreview {
+		return null;
 	}
 
-	public function takeWarOn(playerId:Int, gridId:Int, cb:(gameInfo:GameInfo) -> Void) {
+	public function takeWarOn(playerId:Int, gridId:Int, p1PeopleId:Int, p2PeopleId:Int, army1:Float, army2:Float, cb:(gameInfo:GameInfo) -> Void) {
         var info = gameInfo();
         info.events = [
             {
@@ -218,6 +193,10 @@ class DebugModel implements IModel {
 	}
 
 	public function getPreResultOfExplore(playerId:Int, gridId:Int, people:People, invite:People):PreResultOnExplore {
+		return null;
+	}
+
+	public function getPreResultOfWar(playerId:Int, gridId:Int, p1:People, p2:People, army1:Float, army2:Float):Array<PreResultOnWar> {
 		return null;
 	}
 }

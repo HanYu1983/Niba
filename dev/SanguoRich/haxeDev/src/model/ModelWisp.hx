@@ -81,11 +81,11 @@ class ModelWisp extends DebugModel {
 		return new NativeModule().playerEnd(cb);
 	}
 
-	override function getTakeWarPreview(playerId:Int, gridId:Int):Array<WarPreview> {
+	override function getTakeWarPreview(playerId:Int, gridId:Int):WarPreview {
 		return new NativeModule().getTakeWarPreview(playerId, gridId);
 	}
 
-	override function takeWarOn(playerId:Int, gridId:Int, cb:(gameInfo:GameInfo) -> Void) {
+	override function takeWarOn(playerId:Int, gridId:Int, p1PeopleId:Int, p2PeopleId:Int, army1:Float, army2:Float, cb:(gameInfo:GameInfo) -> Void) {
 		return new NativeModule().takeWarOn(playerId, gridId, nativeInfo -> {
 			var gameInfo = native2haxe(nativeInfo);
 			cb(gameInfo);
