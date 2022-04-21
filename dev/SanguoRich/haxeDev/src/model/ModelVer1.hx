@@ -103,7 +103,7 @@ class ModelVer1 extends DebugModel {
 		var player = info.players[playerId];
 		var negoCost = getNegoCost(playerId, gridId, people.id, invite.id);
 		return {
-			energyAfter: people.energy - negoCost.peopleCost.energy,
+			energyAfter: people.energy - Std.int(negoCost.peopleCost.energy),
 			armyBefore: Std.int(player.army),
 			armyAfter: Std.int(player.army + negoCost.playerCost.army),
 			moneyBefore: Std.int(player.money),
@@ -150,12 +150,16 @@ class ModelVer1 extends DebugModel {
 		var fightPeople = [p1SelectId, p2SelectId].map(getPeopleById);
 		switch fightPeople {
 			case [p1, p2]:
-				var base = 0.5;
+				// 用掉1/5的體力(最多20)
+				// 體力越少效率越低
+				var useEnergy = p1.energy / 5;
+				// 使用20體力的情況下基礎值為0.5
+				var base = (useEnergy / 100) + 0.3;
 				var intelligenceFactor = p1.intelligence / p2.intelligence;
 				var politicalFactor = p1.political / p2.political;
 				var charmFactor = p1.charm / p2.charm;
 				var rate = base * intelligenceFactor * politicalFactor * charmFactor;
-				var gainRate = 0.2 * rate;
+				var gainRate = 0.1 * rate + 0.1;
 				return {
 					playerCost: {
 						id: playerId,
@@ -165,7 +169,7 @@ class ModelVer1 extends DebugModel {
 					},
 					peopleCost: {
 						id: p1.id,
-						energy: 10,
+						energy: useEnergy,
 					},
 					successRate: rate
 				};
@@ -178,7 +182,7 @@ class ModelVer1 extends DebugModel {
 		var negoCost = getNegoCost(playerId, gridId, p1SelectId, p2SelectId);
 		// 無論成功或失敗武將先消體力
 		var people = getPeopleById(p1SelectId);
-		people.energy -= negoCost.peopleCost.energy;
+		people.energy -= Std.int(negoCost.peopleCost.energy);
 		//
 		var success = Math.random() < negoCost.successRate;
 		if (success == false) {
@@ -213,7 +217,7 @@ class ModelVer1 extends DebugModel {
 		var player = info.players[playerId];
 		var cost = getExploreCost(playerId, gridId, people.id, invite.id);
 		return {
-			energyAfter: people.energy - cost.peopleCost.energy,
+			energyAfter: people.energy - Std.int(cost.peopleCost.energy),
 			successRate: cost.successRate
 		}
 	}
