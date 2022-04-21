@@ -19,15 +19,13 @@ typedef GameInfoBackground = {
 	currentPlayerId:Int
 }
 
-var defaultGameInfoBackground:GameInfoBackground = {
-	currentPlayerId: 0
-}
-
 // 打開nullsafty選項
 // 請參照html5.hxml
 // https://haxe.org/manual/cr-null-safety.html
 class ModelVer1 extends DebugModel {
-	final background = defaultGameInfoBackground;
+	final background:GameInfoBackground = {
+		currentPlayerId: 0
+	}
 
 	function updateGameInfo() {
 		info.isPlayerTurn = true; // background.currentPlayerId == 0;
@@ -188,7 +186,7 @@ class ModelVer1 extends DebugModel {
 		final people = getPeopleById(p1SelectId);
 		people.energy -= Std.int(negoCost.peopleCost.energy);
 		//
-		var success = Math.random() < negoCost.successRate;
+		final success = Math.random() < negoCost.successRate;
 		if (success == false) {
 			return false;
 		}
@@ -337,7 +335,7 @@ class ModelVer1 extends DebugModel {
 	}
 
 	function getPeopleById(id:Int):People {
-		var find = getPeopleIterator().filter(p -> p.id == id);
+		final find = getPeopleIterator().filter(p -> p.id == id);
 		if (find.length == 0) {
 			throw new haxe.Exception('people not found: ${id}');
 		}
