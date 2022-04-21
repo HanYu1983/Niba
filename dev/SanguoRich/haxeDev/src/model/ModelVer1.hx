@@ -52,7 +52,8 @@ class ModelVer1 extends DebugModel {
 		var activePlayerId = background.currentPlayerId;
 		var player = info.players[activePlayerId];
 		var fromGridId = player.atGridId;
-		var toGridId = fromGridId + Math.floor(Math.random() * 6);
+		var moveStep = Math.floor(Math.random() * 6) + 1;
+		var toGridId = fromGridId + moveStep;
 		player.atGridId = toGridId;
 		info.actions = [
 			{
@@ -90,52 +91,6 @@ class ModelVer1 extends DebugModel {
 			p1ValidPeople: info.players[playerId].people,
 			p2ValidPeople: info.grids[gridId].people
 		};
-	}
-
-	function getPeopleIterator():Array<People> {
-		var ret:Array<People> = [];
-		for (player in info.players) {
-			ret = ret.concat(player.people);
-		}
-		for (grid in info.grids) {
-			ret = ret.concat(grid.people);
-		}
-		return ret;
-	}
-
-	function getPeopleById(id:Int):People {
-		var find = getPeopleIterator().filter(p -> p.id == id);
-		if (find.length == 0) {
-			throw new haxe.Exception('people not found: ${id}');
-		}
-		return find[0];
-	}
-
-	function getNegoCost(playerId:Int, gridId:Int, p1SelectId:Int, p2SelectId:Int) {
-		var fightPeople = [p1SelectId, p2SelectId].map(getPeopleById);
-		switch fightPeople {
-			case [p1, p2]:
-				return {
-					playerCost: {
-						id: playerId,
-						army: 10,
-						money: 10,
-						food: 10
-					},
-					peopleCost: {
-						id: p1.id,
-						energy: 10,
-					},
-					successRate: 0.7
-				};
-			default:
-				throw new haxe.Exception("fightPeople not right");
-		}
-	}
-
-	function applyNegoCost(playerId:Int, gridId:Int, p1SelectId:Int, p2SelectId:Int) {
-		var negoCost = getNegoCost(playerId, gridId, p1SelectId, p2SelectId);
-		// TODO
 	}
 
 	override function takeNegoOn(playerId:Int, gridId:Int, p1SelectId:Int, p2SelectId:Int, cb:(gameInfo:GameInfo) -> Void) {
@@ -186,22 +141,24 @@ class ModelVer1 extends DebugModel {
 		};
 	}
 
-	override function takeExplore(playerId:Int, gridInt:Int, p1SelectId:Int, exploreId:Int, cb:(gameInfo:GameInfo) -> Void) {
-		var info = gameInfo();
+	override function takeExplore(playerId:Int, gridId:Int, p1SelectId:Int, exploreId:Int, cb:(gameInfo:GameInfo) -> Void) {
+		var p1 = getPeopleById(p1SelectId);
+		var p2 = getPeopleById(exploreId);
+		var preResult = getPreResultOfExplore(playerId, gridId, p1, p2);
 		info.events = [
 			{
 				id: EventInfoID.EXPLORE_RESULT,
 				value: {
 					success: true,
-					people: PeopleGenerator.getInst().generate(),
-					energyBefore: 100,
-					energyAfter: 50,
-					armyBefore: 200,
-					armyAfter: 300,
-					moneyBefore: 200,
-					moneyAfter: 300,
-					foodBefore: 100,
-					foodAfter: 200
+					people: p1,
+					energyBefore: p1.energy,
+					energyAfter: preResult.energyAfter,
+					armyBefore: 0,
+					armyAfter: 0,
+					moneyBefore: 0,
+					moneyAfter: 0,
+					foodBefore: 0,
+					foodAfter: 0
 				}
 			}
 		];
@@ -209,9 +166,61 @@ class ModelVer1 extends DebugModel {
 	}
 
 	override function getPreResultOfExplore(playerId:Int, gridId:Int, people:People, invite:People):PreResultOnExplore {
+		var player = info.players[playerId];
+		var cost = getExploreCost(playerId, gridId, people.id, invite.id);
 		return {
-			energyAfter: 20,
-			successRate: .2
+			energyAfter: people.energy - cost.peopleCost.energy,
+			successRate: cost.successRate
 		}
+	}
+
+	function getPeopleIterator():Array<People> {
+		var ret:Array<People> = [];
+		for (player in info.players) {
+			ret = ret.concat(player.people);
+		}
+		for (grid in info.grids) {
+			ret = ret.concat(grid.people);
+		}
+		return ret;
+	}
+
+	function getPeopleById(id:Int):People {
+		var find = getPeopleIterator().filter(p -> p.id == id);
+		if (find.length == 0) {
+			throw new haxe.Exception('people not found: ${id}');
+		}
+		return find[0];
+	}
+
+	function getNegoCost(playerId:Int, gridId:Int, p1SelectId:Int, p2SelectId:Int) {
+		var fightPeople = [p1SelectId, p2SelectId].map(getPeopleById);
+		switch fightPeople {
+			case [p1, p2]:
+				return {
+					playerCost: {
+						id: playerId,
+						army: 10,
+						money: 10,
+						food: 10
+					},
+					peopleCost: {
+						id: p1.id,
+						energy: 10,
+					},
+					successRate: 0.7
+				};
+			default:
+				throw new haxe.Exception("fightPeople not right");
+		}
+	}
+
+	function applyNegoCost(playerId:Int, gridId:Int, p1SelectId:Int, p2SelectId:Int) {
+		var negoCost = getNegoCost(playerId, gridId, p1SelectId, p2SelectId);
+		// TODO
+	}
+
+	function getExploreCost(playerId:Int, gridId:Int, p1SelectId:Int, p2SelectId:Int) {
+		return getNegoCost(playerId, gridId, p1SelectId, p2SelectId);
 	}
 }
