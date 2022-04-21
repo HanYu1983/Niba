@@ -176,14 +176,30 @@ class ModelVer1 extends DebugModel {
 	}
 
 	override function getTakeWarPreview(playerId:Int, gridId:Int):WarPreview {
-		if (info.grids[gridId].belongPlayerId == null) {
-			throw new haxe.Exception('info.grids[${gridId}].belongPlayerId not found');
+		var grid = info.grids[gridId];
+		if (grid.buildtype == BUILDING.EMPTY) {
+			throw new haxe.Exception("空地不能攻擊");
+		}
+		var gridOrPlayer:PlayerInfo = switch info.grids[gridId].belongPlayerId {
+			case null:
+				{
+					id: grid.id,
+					name: 'grid${gridId}',
+					money: grid.money,
+					food: grid.food,
+					army: grid.army,
+					strategy: 0,
+					people: grid.people,
+					atGridId: gridId
+				};
+			default:
+				info.players[info.grids[gridId].belongPlayerId];
 		}
 		return {
 			p1: info.players[playerId],
-			p2: info.players[info.grids[gridId].belongPlayerId],
+			p2: gridOrPlayer,
 			p1ValidPeople: info.players[playerId].people,
-			p2ValidPeople: info.grids[gridId].people
+			p2ValidPeople: gridOrPlayer.people
 		};
 	}
 
