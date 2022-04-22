@@ -383,6 +383,7 @@ class MainView extends Absolute {
                     btn_end.show();
                 case WORLD_EVENT:
                     growView.showPopup(event.value);
+                    box_basicCmds.show();
             }
         }
     }
