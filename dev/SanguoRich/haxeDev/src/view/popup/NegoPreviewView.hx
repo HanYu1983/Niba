@@ -51,7 +51,9 @@ class NegoPreviewView extends PopupView{
             pro_charm.value = '${p1.charm} vs ${p2.charm}';
             pro_political.value = '${p1.political} vs ${p2.political}';
             pro_intelligence.value = '${p1.intelligence} vs ${p2.intelligence}';
-
+            if(p1.abilities.indexOf(7) > 0){
+                pro_ability.value = "良官";
+            }
             setRate();
         }
 

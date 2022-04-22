@@ -54,6 +54,9 @@ class WarPreviewView extends PopupView{
                 gameInfo.currentPlayer.atGridId,
                 p1, p2, p1army, grid.army);
 
+            pro_force1.value = p1.force;
+            pro_command2.value = p2.command;
+
             pro_money1.value = '${result[0].moneyBefore}=>${result[0].moneyAfter}';
             pro_money2.value = '${result[1].moneyBefore}=>${result[1].moneyAfter}';
 
@@ -69,15 +72,31 @@ class WarPreviewView extends PopupView{
         function setOnePeople(id:Int, p:People){
             var pro_name:Property = Reflect.getProperty(this, 'pro_name${id}');
             var pro_energy:Property = Reflect.getProperty(this, 'pro_energy${id}');
-            var pro_force:Property = Reflect.getProperty(this, 'pro_force${id}');
-            var pro_command:Property = Reflect.getProperty(this, 'pro_command${id}');
+            // var pro_force:Property = Reflect.getProperty(this, 'pro_force${id}');
+            // var pro_command:Property = Reflect.getProperty(this, 'pro_command${id}');
             var pro_intelligence:Property = Reflect.getProperty(this, 'pro_intelligence${id}');
+            var pro_ability:Property = Reflect.getProperty(this, 'pro_ability${id}');
             
             pro_name.value = p.name;
             pro_energy.value = p.energy;
-            pro_force.value = p.force;
-            pro_command.value = p.command;
+            // pro_force.value = p.force;
+            // pro_command.value = p.command;
             pro_intelligence.value = p.intelligence;
+            
+            var abistr = '';
+            if(p.abilities.indexOf(0) > -1){
+                abistr += '槍將 ';
+            }
+            if(p.abilities.indexOf(1) > -1){
+                abistr += '弓將 ';
+            }
+            if(p.abilities.indexOf(2) > -1){
+                abistr += '騎將 ';
+            }
+            if(p.abilities.indexOf(3) > -1){
+                abistr += '妙計 ';
+            }
+            pro_ability.value = abistr;
 
             setRate();
         }
@@ -85,7 +104,8 @@ class WarPreviewView extends PopupView{
         sli_army.onChange = function(e) {
             setRate();
         }
-        sli_army.value = 50;
+        // bug?
+        // sli_army.value = 50;
 
         p1List.setPeopleList(info.p1ValidPeople);
         p1List.onChange = function(e){

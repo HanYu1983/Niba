@@ -14,6 +14,7 @@
                 <property id="pro_energy" label="體力" value="100" />
                 <property id="pro_money" label="金錢" value="1000" />
                 <property id="pro_army" label="士兵" value="1000" />
+                <property id="pro_ability" label="專長加成" value="" />
                 <property id="pro_successRate" label="成功率" value="50%" />
             </property-group>
         </property-grid>

@@ -1,5 +1,6 @@
 package view;
 
+import view.popup.GrowView;
 import view.popup.ExplorePreviewView;
 import view.popup.HirePreviewView;
 import view.popup.MessageView;
@@ -29,6 +30,7 @@ class MainView extends Absolute {
     var messageView:MessageView;
     var hirePreviewView:HirePreviewView;
     var explorePreviewView:ExplorePreviewView;
+    var growView:GrowView;
 
     public function new() {
         super();
@@ -72,6 +74,10 @@ class MainView extends Absolute {
         explorePreviewView = new ExplorePreviewView();
         explorePreviewView.hide();
         box_popup.addComponent(explorePreviewView);
+
+        growView = new GrowView();
+        growView.hide();
+        box_popup.addComponent(growView);
 
         peopleListView = new PeopleListView();
         box_bottom.addComponent(peopleListView);
@@ -121,6 +127,7 @@ class MainView extends Absolute {
             p2Id,
             syncViewByInfo
         );
+        // trace('[han]takeHire之後，好像沒有把Get')
     }
 
     public function onWarPreviewConfirmClick(p1Id:Int, p2Id:Int, p1Army:Float, p2Army:Float){
@@ -167,13 +174,26 @@ class MainView extends Absolute {
     function onBtnOccupationClick(e:MouseEvent){
         var player = Main.model.gameInfo().currentPlayer;
         var previewInfo = Main.model.getTakeWarPreview(player.id, player.atGridId);
-        warPreviewView.showPopup(previewInfo);
+        if(previewInfo.p1ValidPeople.length < 1){
+            messageView.showMessage('沒有武將可以執行');
+            return;
+        }
+        if(previewInfo.p2ValidPeople.length < 1){
+            messageView.showMessage('沒有武將可以占領');
+            return ;
+        }else{
+            warPreviewView.showPopup(previewInfo);
+        }
     }
 
     @:bind(btn_explore, MouseEvent.CLICK)
     function onBtnExploreClick(e:MouseEvent) {
         var gameInfo = Main.model.gameInfo();
         var previewInfo = Main.model.getTakeExplorePreview(gameInfo.currentPlayer.id, gameInfo.currentPlayer.atGridId);
+        if(previewInfo.p1ValidPeople.length < 1){
+            messageView.showMessage('沒有武將可以執行');
+            return;
+        }
         explorePreviewView.showPopup(previewInfo);
     }
     
@@ -181,10 +201,15 @@ class MainView extends Absolute {
     function onBtnHireClick(e:MouseEvent) {
         var gameInfo = Main.model.gameInfo();
         var previewInfo = Main.model.getTakeHirePreview(gameInfo.currentPlayer.id, gameInfo.currentPlayer.atGridId);
-        if(previewInfo.p2ValidPeople.length > 0){
-            hirePreviewView.showPopup(previewInfo);
-        }else{
+        if(previewInfo.p1ValidPeople.length < 1){
+            messageView.showMessage('沒有武將可以執行');
+            return;
+        }
+        if(previewInfo.p2ValidPeople.length < 1){
             messageView.showMessage('沒有武將可以聘用');
+            return ;
+        }else{
+            hirePreviewView.showPopup(previewInfo);
         }
     }
 
@@ -317,6 +342,7 @@ class MainView extends Absolute {
 
             var event = events.shift();
             setEventInfo(event);
+            trace(event);
             switch (event.id){
                 case WALK_STOP:
                     var g:Grid = event.value.grid;
@@ -347,7 +373,7 @@ class MainView extends Absolute {
                     messageView.showMessage(event.value);
                     btn_end.show();
                 case WORLD_EVENT:
-                    trace("WORLD_EVENT");
+                    growView.showPopup(event.value);
             }
         }
     }
