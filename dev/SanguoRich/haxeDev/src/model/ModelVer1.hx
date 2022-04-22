@@ -1,5 +1,7 @@
 package model;
 
+import model.IModel.ExplorePreview;
+import model.IModel.PreResultOnExplore;
 import model.IModel.PreResultOnWar;
 import model.IModel.PreResultOnHire;
 import model.IModel.PreResultOnNego;
@@ -271,7 +273,7 @@ class ModelVer1 extends DebugModel {
 	}
 
 	// =================================
-	// 探索
+	// 雇用
 	// 找武將
 	// =================================
 	override function getTakeHirePreview(playerId:Int, gridId:Int):HirePreview {
@@ -370,6 +372,95 @@ class ModelVer1 extends DebugModel {
 		grid.people = grid.people.filter(p -> p.id != people2.id);
 		updateGameInfo();
 		return true;
+	}
+
+	// =================================
+	// 探索
+	// ================================
+	override function getTakeExplorePreview(playerId:Int, gridId:Int):ExplorePreview {
+		return {
+			p1ValidPeople: info.players[playerId].people
+		}
+	}
+
+	override function getPreResultOfExplore(playerId:Int, gridId:Int, people:People):PreResultOnExplore {
+		final cost = getExploreCost(playerId, gridId, people.id);
+		return {
+			energyAfter: people.energy - Std.int(cost.peopleCost.energy),
+			successRate: cost.successRate
+		}
+	}
+
+	override function takeExplore(playerId:Int, gridId:Int, p1SelectId:Int, cb:(gameInfo:GameInfo) -> Void) {
+		final p1 = getPeopleById(p1SelectId);
+		final player = info.players[playerId];
+		final evt = {
+			id: EventInfoID.EXPLORE_RESULT,
+			value: {
+				success: false,
+				people: p1,
+				peopleList: [],
+				energyBefore: p1.energy,
+				energyAfter: p1.energy,
+				armyBefore: player.army,
+				armyAfter: player.army,
+				moneyBefore: player.money,
+				moneyAfter: player.money,
+				foodBefore: player.food,
+				foodAfter: player.food,
+			}
+		};
+		final findPeople = applyExploreCost(playerId, gridId, p1SelectId);
+		evt.value.success = findPeople.length > 0;
+		evt.value.peopleList = findPeople;
+		evt.value.energyAfter = p1.energy;
+		evt.value.armyAfter = player.army;
+		evt.value.moneyAfter = player.money;
+		evt.value.foodAfter = player.food;
+		info.events = [evt];
+		updateGameInfo();
+		cb(info);
+	}
+
+	function getExploreCost(playerId:Int, gridId:Int, p1SelectId:Int) {
+		final grid = info.grids[gridId];
+		final p1 = getPeopleById(p1SelectId);
+		final useEnergy = p1.energy / 3;
+		final base = (useEnergy / 100) + 0.2;
+		final charmFactor = p1.charm / 100;
+		// 人脈加成
+		final abiFactor = p1.abilities.has(10) ? 1.5 : 1;
+		final rate = base * charmFactor * abiFactor;
+		return {
+			playerCost: {
+				id: playerId,
+			},
+			peopleCost: {
+				id: p1.id,
+				energy: useEnergy,
+			},
+			successRate: rate
+		};
+	}
+
+	function applyExploreCost(playerId:Int, gridId:Int, p1SelectId:Int):Array<People> {
+		final negoCost = getExploreCost(playerId, gridId, p1SelectId);
+		// 無論成功或失敗武將先消體力
+		final people = getPeopleById(p1SelectId);
+		if (people.energy < negoCost.peopleCost.energy) {
+			throw new haxe.Exception('people.energy ${people.energy} < ${negoCost.peopleCost.energy}');
+		}
+		people.energy -= Std.int(negoCost.peopleCost.energy);
+		//
+		final success = Math.random() < negoCost.successRate;
+		if (success == false) {
+			return [];
+		}
+		final grid = info.grids[gridId];
+		final newPeople = PeopleGenerator.getInst().generate();
+		grid.people.push(newPeople);
+		updateGameInfo();
+		return [newPeople];
 	}
 
 	// =================================
