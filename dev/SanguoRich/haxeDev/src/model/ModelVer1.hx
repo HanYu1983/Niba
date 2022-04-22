@@ -89,28 +89,59 @@ class ModelVer1 extends DebugModel {
 		// 四個玩家走完後才計算回合
 		final isLastPlayer = background.currentPlayerId == 3;
 		if (isLastPlayer) {
-			// 城池成長
+			// 城池
 			for (grid in info.grids) {
+				// 支付武將的薪水
+				{
+					final peopleMainCost = grid.people.fold((p, a) -> {
+						// 薪水是雇傭金的1%
+						return a + p.cost * 0.1;
+					}, 0.0);
+					grid.money -= peopleMainCost;
+					if (grid.money < 0) {
+						grid.money = 0;
+					}
+				}
+				// 吃食物
+				{
+					final foodCost = grid.army * 0.01;
+					grid.food -= foodCost;
+					if (grid.food < 0) {
+						grid.food = 0;
+					}
+				}
+				// 城池成長
 				grid.money += grid.money * grid.moneyGrow;
 				grid.food += grid.food * grid.foodGrow;
 				grid.army += grid.army * grid.armyGrow;
+			}
+			// 玩家
+			for (player in info.players) {
+				// 支付武將的薪水
+				{
+					final peopleMainCost = player.people.fold((p, a) -> {
+						// 薪水是雇傭金的1%
+						return a + p.cost * 0.1;
+					}, 0.0);
+					player.money -= peopleMainCost;
+					if (player.money < 0) {
+						player.money = 0;
+					}
+				}
+				// 吃食物
+				{
+					final foodCost = player.army * 0.01;
+					player.food -= foodCost;
+					if (player.food < 0) {
+						player.food = 0;
+					}
+				}
 			}
 			// 回體力
 			for (people in getPeopleIterator()) {
 				people.energy += Std.int(5 + people.energy / 10);
 				if (people.energy > 100) {
 					people.energy = 100;
-				}
-			}
-			// 支付武將的薪水
-			for (player in info.players) {
-				final peopleMainCost = player.people.fold((p, a) -> {
-					// 薪水是雇傭金的1%
-					return a + p.cost * 0.1;
-				}, 0.0);
-				player.money -= peopleMainCost;
-				if (player.money < 0) {
-					player.money = 0;
 				}
 			}
 		}
