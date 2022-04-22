@@ -29,6 +29,7 @@ enum EventInfoID {
     WALK_STOP;
     NEGOTIATE_RESULT;
     EXPLORE_RESULT;
+    HIRE_RESULT;
     WAR_RESULT;
 }
 
@@ -91,6 +92,15 @@ typedef PreResultOnHire = {
     successRate:Float
 }
 
+typedef ExplorePreview = {
+    p1ValidPeople:Array<People>,
+}
+
+typedef PreResultOnExplore = {
+    energyAfter:Int,
+    successRate:Float
+}
+
 interface IModel{
     function gameStart(cb:Void->Void):Void;
     function gameInfo():GameInfo;
@@ -110,4 +120,8 @@ interface IModel{
     function getTakeHirePreview(playerId:Int, gridId:Int):HirePreview;
     function getPreResultOfHire(playerId:Int, gridId:Int, p1:People, p2:People):PreResultOnHire;
     function takeHire(playerId:Int, gridInt:Int, p1PeopleId:Int, p2PeopleId:Int, cb:(gameInfo:GameInfo)->Void):Void;
+
+    function getTakeExplorePreview(playerId:Int, gridId:Int):ExplorePreview;
+    function getPreResultOfExplore(playerId:Int, gridId:Int, p1:People):PreResultOnExplore;
+    function takeExplore(playerId:Int, gridInt:Int, p1PeopleId:Int, cb:(gameInfo:GameInfo)->Void):Void;
 }

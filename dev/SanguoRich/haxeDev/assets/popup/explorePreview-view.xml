@@ -1,15 +1,15 @@
 <vbox id="box_explore" width="800" padding="20" verticalAlign="center" horizontalAlign="center" style="background-color: white;border:1px solid grey;">
     <hbox horizontalAlign="center">
-        <label text="聘用人才"/>
+        <label text="探索人才"/>
     </hbox>
     <hbox id="box_peopleList1" width="100%" height="150"></hbox>
-    <hbox id="box_peopleList2" width="100%" height="150"></hbox>
     <hbox width="100%">
         <property-grid id="pg_playerInfo" width="100%">
             <property-group text="君主資料">
                 <property id="pro_name" label="執行武將" value="100" />
                 <property id="pro_energy" label="體力" value="100" />
                 <property id="pro_charm" label="魅力" value="1000" />
+                <property id="pro_ability" label="專長加成" value="" />
                 <property id="pro_successRate" label="成功率" value="50%" />
             </property-group>
         </property-grid>

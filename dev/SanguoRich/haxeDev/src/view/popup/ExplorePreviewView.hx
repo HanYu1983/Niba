@@ -1,51 +1,51 @@
 package view.popup;
 
+import model.IModel.PreResultOnExplore;
+import model.IModel.ExplorePreview;
 import model.IModel.PreResultOnHire;
 import haxe.ui.events.MouseEvent;
 import model.PeopleGenerator.People;
 import haxe.ui.events.UIEvent;
 import model.IModel.HirePreview;
 
-@:build(haxe.ui.ComponentBuilder.build("assets/popup/HirePreview-view.xml"))
-class HirePreviewView extends PopupView{
+@:build(haxe.ui.ComponentBuilder.build("assets/popup/explorePreview-view.xml"))
+class ExplorePreviewView extends PopupView{
 
     var p1List:PeopleListView;
-    var p2List:PeopleListView;
 
     public function new() {
         super();
 
         p1List = new PeopleListView();
         box_peopleList1.addComponent(p1List);
-
-        p2List = new PeopleListView();
-        box_peopleList2.addComponent(p2List);
     }
 
     override function showPopup(info:Dynamic) {
         super.showPopup(info);
 
-        var info:HirePreview = info;
+
+        var info:ExplorePreview = info;
 
         function setRate(){
             var p1 = p1List.selectedItem;
-            var p2 = p2List.selectedItem;
 
             var gameInfo = Main.model.gameInfo();
-            var result:PreResultOnHire = Main.model.getPreResultOfHire(
+            var result:PreResultOnExplore = Main.model.getPreResultOfExplore(
                 gameInfo.currentPlayer.id,
                 gameInfo.currentPlayer.atGridId,
-                p1, p2);
-
+                p1);
+        
             pro_energy.value = '${p1.energy}=>${result.energyAfter}';
             pro_successRate.value = Main.getRateString(result.successRate);
         }
 
         function setOnePeople(){
             var p1:People = p1List.selectedItem;
-            var p2:People = p2List.selectedItem;
-            pro_name.value = '${p1.name} vs ${p2.name}';
-            pro_charm.value = '${p1.charm} vs ${p2.charm}';
+            pro_name.value = p1.name;
+            pro_ability.value = '';
+            if( p1.abilities.indexOf(10) > -1 ){
+                pro_ability.value = '人脈';
+            }
             setRate();
         }
 
@@ -57,15 +57,6 @@ class HirePreviewView extends PopupView{
             }
         }
         p1List.selectedIndex = 0;
-
-        p2List.setPeopleList(info.p2ValidPeople);
-        p2List.onChange = function(e){
-            var p:Dynamic = p2List.selectedItem;
-            if(p){
-                setOnePeople();
-            }
-        }
-        p2List.selectedIndex = 0;
     }
 
     @:bind(btn_cancel, MouseEvent.CLICK)
@@ -77,6 +68,6 @@ class HirePreviewView extends PopupView{
     function onBtnConfirm(e:MouseEvent) {
         fadeOut();
 
-        Main.view.onHirePreviewConfirmClick(p1List.selectedItem.id, p2List.selectedItem.id);
+        Main.view.onExplorePreviewConfirmClick(p1List.selectedItem.id);
     }
 }

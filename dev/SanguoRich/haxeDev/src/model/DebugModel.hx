@@ -1,5 +1,7 @@
 package model;
 
+import model.IModel.ExplorePreview;
+import model.IModel.PreResultOnExplore;
 import model.IModel.PreResultOnWar;
 import model.IModel.PreResultOnHire;
 import model.IModel.PreResultOnNego;
@@ -199,4 +201,14 @@ class DebugModel implements IModel {
 	public function getPreResultOfWar(playerId:Int, gridId:Int, p1:People, p2:People, army1:Float, army2:Float):Array<PreResultOnWar> {
 		return null;
 	}
+
+	public function getTakeExplorePreview(playerId:Int, gridId:Int):ExplorePreview {
+		return null;
+	}
+
+	public function getPreResultOfExplore(playerId:Int, gridId:Int, p1:People):PreResultOnExplore {
+		return null;
+	}
+
+	public function takeExplore(playerId:Int, gridInt:Int, p1PeopleId:Int, cb:(gameInfo:GameInfo) -> Void) {}
 }

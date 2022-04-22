@@ -1,7 +1,5 @@
 package model;
 
-import model.IModel.PreResultOnExplore;
-import model.IModel.ExplorePreview;
 import model.IModel.PreResultOnHire;
 import model.IModel.HirePreview;
 import model.GridGenerator.BUILDING;
@@ -14,7 +12,7 @@ import model.IModel.GameInfo;
 import model.GridGenerator.Grid;
 import model.PeopleGenerator.People;
 
-class TestExploreModel extends DebugModel {
+class TestHireModel extends DebugModel {
 
 	override public function playerDice(cb:() -> Void) {
         info.players[0].atGridId += Math.floor(Math.random() * 6);
@@ -48,17 +46,29 @@ class TestExploreModel extends DebugModel {
         cb();
     }
 
-    override function takeExplore(playerId:Int, gridInt:Int, p1PeopleId:Int, cb:(gameInfo:GameInfo) -> Void) {
+    override function getTakeHirePreview(playerId:Int, gridId:Int):HirePreview {
+        return {
+            p1ValidPeople:[
+                PeopleGenerator.getInst().generate(),
+                PeopleGenerator.getInst().generate(),
+                PeopleGenerator.getInst().generate(),
+            ],
+            p2ValidPeople: [
+                PeopleGenerator.getInst().generate(),
+                PeopleGenerator.getInst().generate(),
+                PeopleGenerator.getInst().generate(),
+            ],
+        }
+    }
+
+    override function takeHire(playerId:Int, gridInt:Int, p1SelectId:Int, exploreId:Int, cb:(gameInfo:GameInfo) -> Void) {
         var info = gameInfo();
         info.events = [
             {
-                id:EventInfoID.EXPLORE_RESULT,
+                id:EventInfoID.HIRE_RESULT,
                 value:{
-                    success:false,
+                    success:true,
                     people:PeopleGenerator.getInst().generate(),
-                    peopleList:[
-                        // PeopleGenerator.getInst().generate()
-                    ],
                     energyBefore: 100,
                     energyAfter:50,
                     armyBefore: 200,
@@ -73,20 +83,10 @@ class TestExploreModel extends DebugModel {
         cb(info);
     }
 
-    override function getTakeExplorePreview(playerId:Int, gridId:Int):ExplorePreview {
+    override function getPreResultOfHire(playerId:Int, gridId:Int, people:People, invite:People):PreResultOnHire {
         return {
-            p1ValidPeople: [
-                PeopleGenerator.getInst().generate(),
-                PeopleGenerator.getInst().generate()
-            ]
-        }
-        
-    }
-
-    override function getPreResultOfExplore(playerId:Int, gridId:Int, p1:People):PreResultOnExplore {
-        return {
-            energyAfter: 20,
-            successRate: .5
+            energyAfter:20,
+            successRate:.2
         }
     }
 }

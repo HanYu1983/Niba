@@ -73,19 +73,18 @@ class GridGenerator {
 			g.moneyGrow = Math.random() * .01;
 			g.foodGrow = Math.random() * .01;
 			g.armyGrow = Math.random() * .01;
-			g.buildtype = BUILDING.EMPTY;
-			// g.buildtype = [
-			//     BUILDING.EMPTY,
-			//     BUILDING.EMPTY,
-			//     BUILDING.EMPTY,
-			//     BUILDING.MARKET,
-			//     BUILDING.MARKET,
-			//     BUILDING.FARM,
-			//     BUILDING.FARM,
-			//     BUILDING.VILLAGE,
-			//     BUILDING.VILLAGE,
-			//     BUILDING.CITY
-			// ][Math.floor(Math.random() * 10)];
+			g.buildtype = [
+			    BUILDING.EMPTY,
+			    BUILDING.EMPTY,
+			    BUILDING.EMPTY,
+			    BUILDING.EMPTY,
+			    BUILDING.EMPTY,
+			    BUILDING.EMPTY,
+                BUILDING.FARM,
+                BUILDING.MARKET,
+			    BUILDING.VILLAGE,
+			    BUILDING.CITY
+			][Math.floor(Math.random() * 10)];
 			g.height = height;
 			grids.push(g);
 		}

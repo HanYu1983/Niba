@@ -4,8 +4,14 @@ import haxe.ui.events.MouseEvent;
 
 @:build(haxe.ui.ComponentBuilder.build("assets/popup/message-view.xml"))
 class MessageView extends PopupView{
+
+    var pList:PeopleListView;
+
     public function new() {
         super();
+
+        pList = new PeopleListView();
+        box_peopleList.addComponent(pList);
     }
     
 
@@ -20,6 +26,12 @@ class MessageView extends PopupView{
         糧草:${Main.getFixNumber(info.foodBefore,0)}=>${Main.getFixNumber(info.foodAfter,0)}\n
         士兵:${Main.getFixNumber(info.armyBefore,0)}=>${Main.getFixNumber(info.armyAfter,0)}\n
         ';
+
+        box_peopleList.hide();
+        if(info.peopleList && info.peopleList.length > 0){
+            box_peopleList.show();
+            pList.setPeopleList(info.peopleList);
+        }
     }
 
     @:bind(btn_cancel, MouseEvent.CLICK)

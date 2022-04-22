@@ -1,5 +1,6 @@
 package view;
 
+import view.popup.ExplorePreviewView;
 import view.popup.HirePreviewView;
 import view.popup.MessageView;
 import view.popup.NegoPreviewView;
@@ -27,6 +28,7 @@ class MainView extends Absolute {
     var negoPreviewView:NegoPreviewView;
     var messageView:MessageView;
     var hirePreviewView:HirePreviewView;
+    var explorePreviewView:ExplorePreviewView;
 
     public function new() {
         super();
@@ -67,6 +69,10 @@ class MainView extends Absolute {
         hirePreviewView.hide();
         box_popup.addComponent(hirePreviewView);
 
+        explorePreviewView = new ExplorePreviewView();
+        explorePreviewView.hide();
+        box_popup.addComponent(explorePreviewView);
+
         peopleListView = new PeopleListView();
         box_bottom.addComponent(peopleListView);
     }
@@ -92,9 +98,17 @@ class MainView extends Absolute {
             gameInfo.currentPlayer.atGridId,
             p1Id,
             p2Id,
-            (gameInfo:GameInfo)->{
-                syncView();
-            }   
+            syncViewByInfo 
+        );
+    }
+
+    public function onExplorePreviewConfirmClick(p1Id:Int){
+        var gameInfo = Main.model.gameInfo();
+        Main.model.takeExplore(
+            gameInfo.currentPlayer.id,
+            gameInfo.currentPlayer.atGridId,
+            p1Id,
+            syncViewByInfo
         );
     }
 
@@ -105,23 +119,8 @@ class MainView extends Absolute {
             gameInfo.currentPlayer.atGridId,
             p1Id,
             p2Id,
-            (gameInfo:GameInfo)->{
-                syncView();
-            }
+            syncViewByInfo
         );
-    }
-
-    public function onHirePreviewConfirmClick(p1Id:Int, p2Id:Int){
-        // var gameInfo = Main.model.gameInfo();
-        // Main.model.takeHire(
-        //     gameInfo.currentPlayer.id,
-        //     gameInfo.currentPlayer.atGridId,
-        //     p1Id,
-        //     p2Id,
-        //     (gameInfo:GameInfo)->{
-        //         syncView();
-        //     }
-        // );
     }
 
     public function onWarPreviewConfirmClick(p1Id:Int, p2Id:Int, p1Army:Float, p2Army:Float){
@@ -133,9 +132,7 @@ class MainView extends Absolute {
             p2Id,
             p1Army,
             p2Army,
-            (gameInfo:GameInfo)->{
-                syncView();
-            }
+            syncViewByInfo
         );
     }
 
@@ -147,16 +144,16 @@ class MainView extends Absolute {
             grid.top = Math.floor(index / 10) * 50;
             grid.backgroundColor = '#0000FF';
         }
-        box_commands2.disabled = true;
-        box_commands3.disabled = true;
+        box_npcCmds.hide();
+        box_enemyCmds.hide();
     }
     
     @:bind(btn_go, MouseEvent.CLICK)
     function onBtnGoClick(e:MouseEvent) {
         Main.model.playerDice(syncView);
 
-        box_commands2.disabled = true;
-        box_commands3.disabled = true;
+        box_npcCmds.hide();
+        box_enemyCmds.hide();
     }
 
     @:bind(btn_negotiate, MouseEvent.CLICK)
@@ -176,15 +173,19 @@ class MainView extends Absolute {
     @:bind(btn_explore, MouseEvent.CLICK)
     function onBtnExploreClick(e:MouseEvent) {
         var gameInfo = Main.model.gameInfo();
-        var previewInfo = Main.model.getTakeHirePreview(gameInfo.currentPlayer.id, gameInfo.currentPlayer.atGridId);
-        hirePreviewView.showPopup(previewInfo);
+        var previewInfo = Main.model.getTakeExplorePreview(gameInfo.currentPlayer.id, gameInfo.currentPlayer.atGridId);
+        explorePreviewView.showPopup(previewInfo);
     }
     
     @:bind(btn_hire, MouseEvent.CLICK)
     function onBtnHireClick(e:MouseEvent) {
         var gameInfo = Main.model.gameInfo();
         var previewInfo = Main.model.getTakeHirePreview(gameInfo.currentPlayer.id, gameInfo.currentPlayer.atGridId);
-        hirePreviewView.showPopup(previewInfo);
+        if(previewInfo.p2ValidPeople.length > 0){
+            hirePreviewView.showPopup(previewInfo);
+        }else{
+            messageView.showMessage('沒有武將可以聘用');
+        }
     }
 
     @:bind(btn_start, MouseEvent.CLICK)
@@ -268,6 +269,7 @@ class MainView extends Absolute {
     }
 
     function syncViewByInfo(gameInfo:GameInfo){
+        syncUI(gameInfo);
         syncGameInfo(gameInfo);
         syncGridViews(gameInfo);
         syncPlayerViews(gameInfo);
@@ -288,8 +290,6 @@ class MainView extends Absolute {
                     var toPos = getGridPositionByGridId(action.value.playerId, action.value.toGridId);
                     
                     tweens.push(TweenX.to(pv, {"left":toPos[0], "top":toPos[1]}));
-
-                    trace('這裏有時候會收到一樣的fromGridId:${action.value.fromGridId}和toGridId:${action.value.toGridId}');
             }
         }
     }
@@ -321,28 +321,31 @@ class MainView extends Absolute {
                 case WALK_STOP:
                     var g:Grid = event.value.grid;
                     if(g.buildtype == BUILDING.EMPTY){
-                        box_commands4.disabled = false;
+                        box_emptyCmds.show();
                     }else{
                         if(g.belongPlayerId == null){
-                            box_commands2.disabled = false;
+                            box_npcCmds.show();
                         }else{
                             if(g.belongPlayerId == gameInfo.currentPlayer.id){
     
                             }else{
-                                box_commands3.disabled = false;
+                                box_enemyCmds.show();
                             }
                         }
                     }
-                    btn_end.disabled = false;
+                    btn_end.show();
+                case HIRE_RESULT:
+                    messageView.showMessage(event.value);
+                    btn_end.show();
                 case NEGOTIATE_RESULT:
                     messageView.showMessage(event.value);
-                    btn_end.disabled = false;
+                    btn_end.show();
                 case EXPLORE_RESULT:
                     messageView.showMessage(event.value);
-                    btn_end.disabled = false;
+                    btn_end.show();
                 case WAR_RESULT:
                     messageView.showMessage(event.value);
-                    btn_end.disabled = false;
+                    btn_end.show();
                 case WORLD_EVENT:
                     trace("WORLD_EVENT");
             }
@@ -351,8 +354,10 @@ class MainView extends Absolute {
 
     function setEventInfo(event:EventInfo){
         switch(event.id){
-            case EXPLORE_RESULT:
+            case HIRE_RESULT:
                 pro_currentEvent.value = "探索停止。等待指令中";
+            case EXPLORE_RESULT:
+                pro_currentEvent.value = "聘用停止。等待指令中";
             case WALK_STOP:
                 pro_currentEvent.value = "行走停止。等待指令中";
             case WAR_RESULT:
@@ -385,17 +390,17 @@ class MainView extends Absolute {
 
 
     function disabledAllCommands() {
-        box_commands1.disabled = true;
-        box_commands2.disabled = true;
-        box_commands3.disabled = true;
-        box_commands4.disabled = true;
-        btn_end.disabled = true;
+        box_basicCmds.hide();
+        box_npcCmds.hide();
+        box_enemyCmds.hide();
+        box_emptyCmds.hide();
+        btn_end.hide();
     }
 
     function syncUI(gameInfo:GameInfo){
-        btn_start.disabled = gameInfo.isPlaying;
+        gameInfo.isPlaying ? btn_start.hide() : btn_start.show();
         disabledAllCommands();
-        box_commands1.disabled = !gameInfo.isPlayerTurn;
+        gameInfo.isPlayerTurn ? box_basicCmds.show() : box_basicCmds.hide();
 
         var pid = gameInfo.currentPlayer.id;
         var opt_p:OptionBox = Reflect.field(this, 'opt_p${pid+1}');
