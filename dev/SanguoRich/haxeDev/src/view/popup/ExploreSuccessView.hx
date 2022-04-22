@@ -28,9 +28,11 @@ class ExploreSuccessView extends PopupView{
         ';
 
         box_peopleList.hide();
+        btn_confirm.disabled = true;
         if(info.peopleList && info.peopleList.length > 0){
             box_peopleList.show();
             pList.setPeopleList(info.peopleList);
+            btn_confirm.disabled = false;
         }
     }
 
