@@ -15,6 +15,8 @@ import model.IModel.EventInfo;
 import model.GridGenerator.Grid;
 import model.PeopleGenerator.People;
 
+using Lambda;
+
 typedef GameInfoBackground = {
 	currentPlayerId:Int
 }
@@ -84,7 +86,37 @@ class ModelVer1 extends DebugModel {
 	}
 
 	override function playerEnd(cb:() -> Void) {
+		// 四個玩家走完後才計算回合
+		final isLastPlayer = background.currentPlayerId == 3;
+		if (isLastPlayer) {
+			// 城池成長
+			for (grid in info.grids) {
+				grid.money += grid.money * grid.moneyGrow;
+				grid.food += grid.food * grid.foodGrow;
+				grid.army += grid.army * grid.armyGrow;
+			}
+			// 回體力
+			for (people in getPeopleIterator()) {
+				people.energy += Std.int(5 + people.energy / 10);
+				if (people.energy > 100) {
+					people.energy = 100;
+				}
+			}
+			// 支付武將的薪水
+			for (player in info.players) {
+				final peopleMainCost = player.people.fold((p, a) -> {
+					// 薪水是雇傭金的1%
+					return a + p.cost * 0.1;
+				}, 0.0);
+				player.money -= peopleMainCost;
+				if (player.money < 0) {
+					player.money = 0;
+				}
+			}
+		}
+		// 下一個玩家
 		background.currentPlayerId = (background.currentPlayerId + 1) % 4;
+		updateGameInfo();
 		info.actions = [];
 		info.events = [];
 		cb();
@@ -269,6 +301,7 @@ class ModelVer1 extends DebugModel {
 				return {
 					playerCost: {
 						id: playerId,
+						money: p2.cost
 					},
 					peopleCost: {
 						id: p1.id,
@@ -297,6 +330,7 @@ class ModelVer1 extends DebugModel {
 		final people2 = getPeopleById(p2SelectId);
 		// 將人移到玩家上
 		final player = info.players[playerId];
+		player.money -= negoCost.playerCost.money;
 		player.people.push(people2);
 		// 從格子上移除人
 		final grid = info.grids[gridId];
