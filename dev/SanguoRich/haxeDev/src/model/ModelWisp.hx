@@ -1,9 +1,9 @@
 package model;
 
 import model.DebugModel;
-import model.IModel.PreResultOnExplore;
+import model.IModel.PreResultOnHire;
 import model.IModel.PreResultOnNego;
-import model.IModel.ExplorePreview;
+import model.IModel.HirePreview;
 import model.GridGenerator.BUILDING;
 import model.IModel.NegoPreview;
 import model.IModel.WarPreview;
@@ -26,8 +26,8 @@ import model.PeopleGenerator.People;
 	public function getTakeNegoPreview(playerId:Int, gridId:Int):Dynamic;
 	public function takeNegoOn(playerId:Int, gridId:Int, p1SelectId:Int, p2SelectId:Int, cb:(gameInfo:GameInfo) -> Void):Void;
 	public function getPreResultOfNego(playerId:Int, gridId:Int, people:People, invite:People):Dynamic;
-	public function getTakeExplorePreview(playerId:Int, gridId:Int):Dynamic;
-	public function takeExplore(playerId:Int, gridInt:Int, p1SelectId:Int, exploreId:Int, cb:(gameInfo:Dynamic) -> Void):Void;
+	public function getTakeHirePreview(playerId:Int, gridId:Int):Dynamic;
+	public function takeHire(playerId:Int, gridInt:Int, p1SelectId:Int, exploreId:Int, cb:(gameInfo:Dynamic) -> Void):Void;
 	public function getPreResultOfExplore(playerId:Int, gridId:Int, people:People, invite:People):Dynamic;
 	public function getRateOfInvitePeople(people:People, invite:People):Float;
 }
@@ -107,18 +107,18 @@ class ModelWisp extends DebugModel {
 		return new NativeModule().getPreResultOfNego(playerId, gridId, people, invite);
 	}
 
-	override function getTakeExplorePreview(playerId:Int, gridId:Int):ExplorePreview {
-		return new NativeModule().getTakeExplorePreview(playerId, gridId);
+	override function getTakeHirePreview(playerId:Int, gridId:Int):HirePreview {
+		return new NativeModule().getTakeHirePreview(playerId, gridId);
 	}
 
-	override function takeExplore(playerId:Int, gridId:Int, p1SelectId:Int, exploreId:Int, cb:(gameInfo:GameInfo) -> Void) {
-		return new NativeModule().takeExplore(playerId, gridId, p1SelectId, exploreId, nativeInfo -> {
+	override function takeHire(playerId:Int, gridId:Int, p1SelectId:Int, exploreId:Int, cb:(gameInfo:GameInfo) -> Void) {
+		return new NativeModule().takeHire(playerId, gridId, p1SelectId, exploreId, nativeInfo -> {
 			var gameInfo = native2haxe(nativeInfo);
 			cb(gameInfo);
 		});
 	}
 
-	override function getPreResultOfExplore(playerId:Int, gridId:Int, people:People, invite:People):PreResultOnExplore {
+	override function getPreResultOfExplore(playerId:Int, gridId:Int, people:People, invite:People):PreResultOnHire {
 		return new NativeModule().getPreResultOfExplore(playerId, gridId, people, invite);
 	}
 

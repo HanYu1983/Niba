@@ -108,7 +108,7 @@ var NegoPreview = spec.map("NegoPreview", {
   p2ValidPeople: spec.collection("p2ValidPeople", People),
 });
 
-var ExplorePreview = spec.map("ExplorePreview", {
+var HirePreview = spec.map("HirePreview", {
   p1ValidPeople: spec.collection("p1ValidPeople", People),
   p2ValidPeople: spec.collection("p2ValidPeople", People),
 });

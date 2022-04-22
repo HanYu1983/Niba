@@ -77,6 +77,6 @@ class HirePreviewView extends PopupView{
     function onBtnConfirm(e:MouseEvent) {
         fadeOut();
 
-        Main.view.onHirePreviewConfirmClick(p1List.selectedItem.id, p2List.selectedItem.id);
+        Main.view.onHirePreviewViewConfirmClick(p1List.selectedItem.id, p2List.selectedItem.id);
     }
 }

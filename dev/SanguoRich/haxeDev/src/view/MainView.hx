@@ -1,7 +1,6 @@
 package view;
 
-import view.popup.ExplorePreviewView;
-import js.Syntax;
+import view.popup.HirePreviewView;
 import view.popup.MessageView;
 import view.popup.NegoPreviewView;
 import view.popup.WarPreviewView;
@@ -27,7 +26,7 @@ class MainView extends Absolute {
     var warPreviewView:WarPreviewView;
     var negoPreviewView:NegoPreviewView;
     var messageView:MessageView;
-    var explorePreviewView:ExplorePreviewView;
+    var hirePreviewView:HirePreviewView;
 
     public function new() {
         super();
@@ -64,9 +63,9 @@ class MainView extends Absolute {
         messageView.hide();
         box_popup.addComponent(messageView);
 
-        explorePreviewView = new ExplorePreviewView();
-        explorePreviewView.hide();
-        box_popup.addComponent(explorePreviewView);
+        hirePreviewView = new HirePreviewView();
+        hirePreviewView.hide();
+        box_popup.addComponent(hirePreviewView);
 
         peopleListView = new PeopleListView();
         box_bottom.addComponent(peopleListView);
@@ -94,22 +93,35 @@ class MainView extends Absolute {
             p1Id,
             p2Id,
             (gameInfo:GameInfo)->{
-                syncViewByInfo(gameInfo);
-            }
+                syncView();
+            }   
         );
     }
 
-    public function onExplorePreviewConfirmClick(p1Id:Int, p2Id:Int){
+    public function onHirePreviewViewConfirmClick(p1Id:Int, p2Id:Int){
         var gameInfo = Main.model.gameInfo();
-        Main.model.takeExplore(
+        Main.model.takeHire(
             gameInfo.currentPlayer.id,
             gameInfo.currentPlayer.atGridId,
             p1Id,
             p2Id,
             (gameInfo:GameInfo)->{
-                syncViewByInfo(gameInfo);
+                syncView();
             }
         );
+    }
+
+    public function onHirePreviewConfirmClick(p1Id:Int, p2Id:Int){
+        // var gameInfo = Main.model.gameInfo();
+        // Main.model.takeHire(
+        //     gameInfo.currentPlayer.id,
+        //     gameInfo.currentPlayer.atGridId,
+        //     p1Id,
+        //     p2Id,
+        //     (gameInfo:GameInfo)->{
+        //         syncView();
+        //     }
+        // );
     }
 
     public function onWarPreviewConfirmClick(p1Id:Int, p2Id:Int, p1Army:Float, p2Army:Float){
@@ -122,7 +134,7 @@ class MainView extends Absolute {
             p1Army,
             p2Army,
             (gameInfo:GameInfo)->{
-                syncViewByInfo(gameInfo);
+                syncView();
             }
         );
     }
@@ -164,8 +176,15 @@ class MainView extends Absolute {
     @:bind(btn_explore, MouseEvent.CLICK)
     function onBtnExploreClick(e:MouseEvent) {
         var gameInfo = Main.model.gameInfo();
-        var previewInfo = Main.model.getTakeExplorePreview(gameInfo.currentPlayer.id, gameInfo.currentPlayer.atGridId);
-        explorePreviewView.showPopup(previewInfo);
+        var previewInfo = Main.model.getTakeHirePreview(gameInfo.currentPlayer.id, gameInfo.currentPlayer.atGridId);
+        hirePreviewView.showPopup(previewInfo);
+    }
+    
+    @:bind(btn_hire, MouseEvent.CLICK)
+    function onBtnHireClick(e:MouseEvent) {
+        var gameInfo = Main.model.gameInfo();
+        var previewInfo = Main.model.getTakeHirePreview(gameInfo.currentPlayer.id, gameInfo.currentPlayer.atGridId);
+        hirePreviewView.showPopup(previewInfo);
     }
 
     @:bind(btn_start, MouseEvent.CLICK)

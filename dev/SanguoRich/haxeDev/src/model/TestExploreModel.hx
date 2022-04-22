@@ -1,7 +1,7 @@
 package model;
 
-import model.IModel.PreResultOnExplore;
-import model.IModel.ExplorePreview;
+import model.IModel.PreResultOnHire;
+import model.IModel.HirePreview;
 import model.GridGenerator.BUILDING;
 import model.IModel.NegoPreview;
 import model.IModel.WarPreview;
@@ -46,7 +46,7 @@ class TestExploreModel extends DebugModel {
         cb();
     }
 
-    override function getTakeExplorePreview(playerId:Int, gridId:Int):ExplorePreview {
+    override function getTakeHirePreview(playerId:Int, gridId:Int):HirePreview {
         return {
             p1ValidPeople:[
                 PeopleGenerator.getInst().generate(),
@@ -61,7 +61,7 @@ class TestExploreModel extends DebugModel {
         }
     }
 
-    override function takeExplore(playerId:Int, gridInt:Int, p1SelectId:Int, exploreId:Int, cb:(gameInfo:GameInfo) -> Void) {
+    override function takeHire(playerId:Int, gridInt:Int, p1SelectId:Int, exploreId:Int, cb:(gameInfo:GameInfo) -> Void) {
         var info = gameInfo();
         info.events = [
             {
@@ -83,7 +83,7 @@ class TestExploreModel extends DebugModel {
         cb(info);
     }
 
-    override function getPreResultOfExplore(playerId:Int, gridId:Int, people:People, invite:People):PreResultOnExplore {
+    override function getPreResultOfExplore(playerId:Int, gridId:Int, people:People, invite:People):PreResultOnHire {
         return {
             energyAfter:20,
             successRate:.2

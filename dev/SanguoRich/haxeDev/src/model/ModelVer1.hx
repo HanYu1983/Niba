@@ -1,9 +1,9 @@
 package model;
 
 import model.IModel.PreResultOnWar;
-import model.IModel.PreResultOnExplore;
+import model.IModel.PreResultOnHire;
 import model.IModel.PreResultOnNego;
-import model.IModel.ExplorePreview;
+import model.IModel.HirePreview;
 import model.GridGenerator.BUILDING;
 import model.IModel.NegoPreview;
 import model.IModel.WarPreview;
@@ -211,14 +211,14 @@ class ModelVer1 extends DebugModel {
 	// 探索
 	// 找武將
 	// =================================
-	override function getTakeExplorePreview(playerId:Int, gridId:Int):ExplorePreview {
+	override function getTakeHirePreview(playerId:Int, gridId:Int):HirePreview {
 		return {
 			p1ValidPeople: info.players[playerId].people,
 			p2ValidPeople: info.grids[gridId].people
 		};
 	}
 
-	override function getPreResultOfExplore(playerId:Int, gridId:Int, people:People, invite:People):PreResultOnExplore {
+	override function getPreResultOfExplore(playerId:Int, gridId:Int, people:People, invite:People):PreResultOnHire {
 		final player = info.players[playerId];
 		final cost = getExploreCost(playerId, gridId, people.id, invite.id);
 		return {
@@ -227,7 +227,7 @@ class ModelVer1 extends DebugModel {
 		}
 	}
 
-	override function takeExplore(playerId:Int, gridId:Int, p1SelectId:Int, p2SelectId:Int, cb:(gameInfo:GameInfo) -> Void) {
+	override function takeHire(playerId:Int, gridId:Int, p1SelectId:Int, p2SelectId:Int, cb:(gameInfo:GameInfo) -> Void) {
 		final p1 = getPeopleById(p1SelectId);
 		final p2 = getPeopleById(p2SelectId);
 		final player = info.players[playerId];
