@@ -11,7 +11,9 @@ typedef PlayerInfo = {
     army:Float,
     strategy:Float,
     people:Array<People>,
-    atGridId:Int
+    atGridId:Int,
+    maintainPeople:Float,
+    maintainArmy:Float
 }
 
 enum ActionInfoID {
@@ -88,7 +90,10 @@ typedef PreResultOnWar = {
 } 
 
 typedef PreResultOnHire = {
+    energyBefore:Int,
     energyAfter:Int,
+    moneyBefore:Float,
+    moneyAfter:Float,
     successRate:Float
 }
 
@@ -97,6 +102,7 @@ typedef ExplorePreview = {
 }
 
 typedef PreResultOnExplore = {
+    energyBefore:Int,
     energyAfter:Int,
     successRate:Float
 }

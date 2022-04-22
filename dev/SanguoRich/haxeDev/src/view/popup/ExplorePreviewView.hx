@@ -35,13 +35,15 @@ class ExplorePreviewView extends PopupView{
                 gameInfo.currentPlayer.atGridId,
                 p1);
         
-            pro_energy.value = '${p1.energy}=>${result.energyAfter}';
+            pro_energy.value = '${result.energyBefore} => ${result.energyAfter}';
             pro_successRate.value = Main.getRateString(result.successRate);
         }
 
         function setOnePeople(){
             var p1:People = p1List.selectedItem;
             pro_name.value = p1.name;
+            pro_charm.value = p1.charm;
+
             pro_ability.value = '';
             if( p1.abilities.indexOf(10) > -1 ){
                 pro_ability.value = '人脈';

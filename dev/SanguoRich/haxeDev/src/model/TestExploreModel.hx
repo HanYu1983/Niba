@@ -86,6 +86,7 @@ class TestExploreModel extends DebugModel {
     override function getPreResultOfExplore(playerId:Int, gridId:Int, p1:People):PreResultOnExplore {
         return {
             energyAfter: 20,
+            energyBefore: 20,
             successRate: .5
         }
     }

@@ -37,7 +37,8 @@ class HirePreviewView extends PopupView{
                 gameInfo.currentPlayer.atGridId,
                 p1, p2);
 
-            pro_energy.value = '${p1.energy}=>${result.energyAfter}';
+            pro_energy.value = '${result.energyBefore} => ${result.energyAfter}';
+            pro_money.value = '${result.moneyBefore} => ${result.moneyAfter}';
             pro_successRate.value = Main.getRateString(result.successRate);
         }
 

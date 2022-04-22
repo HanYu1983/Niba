@@ -287,7 +287,10 @@ class ModelVer1 extends DebugModel {
 		final player = info.players[playerId];
 		final cost = getHireCost(playerId, gridId, people.id, invite.id);
 		return {
+			energyBefore: people.energy,
 			energyAfter: people.energy - Std.int(cost.peopleCost.energy),
+			moneyBefore:0,
+			moneyAfter:0,
 			successRate: cost.successRate
 		}
 	}
@@ -386,6 +389,7 @@ class ModelVer1 extends DebugModel {
 	override function getPreResultOfExplore(playerId:Int, gridId:Int, people:People):PreResultOnExplore {
 		final cost = getExploreCost(playerId, gridId, people.id);
 		return {
+			energyBefore: people.energy,
 			energyAfter: people.energy - Std.int(cost.peopleCost.energy),
 			successRate: cost.successRate
 		}
@@ -481,7 +485,9 @@ class ModelVer1 extends DebugModel {
 					army: grid.army,
 					strategy: 0,
 					people: grid.people,
-					atGridId: gridId
+					atGridId: gridId,
+					maintainArmy: 0,
+					maintainPeople: 0,
 				};
 			default:
 				info.players[info.grids[gridId].belongPlayerId];

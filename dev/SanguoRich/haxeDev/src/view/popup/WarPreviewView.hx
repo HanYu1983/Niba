@@ -72,15 +72,11 @@ class WarPreviewView extends PopupView{
         function setOnePeople(id:Int, p:People){
             var pro_name:Property = Reflect.getProperty(this, 'pro_name${id}');
             var pro_energy:Property = Reflect.getProperty(this, 'pro_energy${id}');
-            // var pro_force:Property = Reflect.getProperty(this, 'pro_force${id}');
-            // var pro_command:Property = Reflect.getProperty(this, 'pro_command${id}');
             var pro_intelligence:Property = Reflect.getProperty(this, 'pro_intelligence${id}');
             var pro_ability:Property = Reflect.getProperty(this, 'pro_ability${id}');
             
             pro_name.value = p.name;
             pro_energy.value = p.energy;
-            // pro_force.value = p.force;
-            // pro_command.value = p.command;
             pro_intelligence.value = p.intelligence;
             
             var abistr = '';

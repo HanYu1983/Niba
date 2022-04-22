@@ -38,9 +38,9 @@ class NegoPreviewView extends PopupView{
                 gameInfo.currentPlayer.atGridId,
                 p1, p2);
 
-            pro_energy.value = '${p1.energy}=>${result.energyAfter}';
-            pro_money.value = '${result.moneyBefore}=>${result.moneyAfter}';
-            pro_army.value = '${result.armyBefore}=>${result.armyAfter}';
+            pro_energy.value = '${p1.energy} => ${result.energyAfter}';
+            pro_money.value = '${result.moneyBefore} => ${result.moneyAfter}';
+            pro_army.value = '${result.armyBefore} => ${result.armyAfter}';
             pro_successRate.value = Main.getRateString(result.successRate);
         }
 
@@ -51,6 +51,8 @@ class NegoPreviewView extends PopupView{
             pro_charm.value = '${p1.charm} vs ${p2.charm}';
             pro_political.value = '${p1.political} vs ${p2.political}';
             pro_intelligence.value = '${p1.intelligence} vs ${p2.intelligence}';
+
+            pro_ability.value = '';
             if(p1.abilities.indexOf(7) > 0){
                 pro_ability.value = "良官";
             }

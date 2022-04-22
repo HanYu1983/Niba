@@ -469,6 +469,8 @@ class MainView extends Absolute {
         pro_food.value = Math.floor(p.food);
         pro_army.value = Math.floor(p.army);
         pro_peopleCount.value = p.people.length;
+        pro_maintainPeople.value = p.maintainPeople;
+        pro_maintainArmy.value = p.maintainArmy;
         pro_cityCount.value = "0";
         peopleListView.setPeopleList(p.people);
 
