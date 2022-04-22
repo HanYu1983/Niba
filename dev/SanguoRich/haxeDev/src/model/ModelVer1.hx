@@ -252,7 +252,7 @@ class ModelVer1 extends DebugModel {
 
 	override function getPreResultOfExplore(playerId:Int, gridId:Int, people:People, invite:People):PreResultOnHire {
 		final player = info.players[playerId];
-		final cost = getExploreCost(playerId, gridId, people.id, invite.id);
+		final cost = getHireCost(playerId, gridId, people.id, invite.id);
 		return {
 			energyAfter: people.energy - Std.int(cost.peopleCost.energy),
 			successRate: cost.successRate
@@ -278,7 +278,7 @@ class ModelVer1 extends DebugModel {
 				foodAfter: player.food,
 			}
 		};
-		final success = applyExploreCost(playerId, gridId, p1SelectId, p2SelectId);
+		final success = applyHireCost(playerId, gridId, p1SelectId, p2SelectId);
 		evt.value.success = success;
 		evt.value.energyAfter = p1.energy;
 		evt.value.armyAfter = player.army;
@@ -289,7 +289,7 @@ class ModelVer1 extends DebugModel {
 		cb(info);
 	}
 
-	function getExploreCost(playerId:Int, gridId:Int, p1SelectId:Int, p2SelectId:Int) {
+	function getHireCost(playerId:Int, gridId:Int, p1SelectId:Int, p2SelectId:Int) {
 		final grid = info.grids[gridId];
 		final fightPeople = [p1SelectId, p2SelectId].map(getPeopleById);
 		switch fightPeople {
@@ -297,7 +297,9 @@ class ModelVer1 extends DebugModel {
 				final useEnergy = p1.energy / 3;
 				final base = (useEnergy / 100) + 0.2;
 				final charmFactor = p1.charm / p2.charm;
-				final rate = base * charmFactor;
+				// 人脈加成
+				final abiFactor = p1.abilities.has(10) ? 1.5 : 1;
+				final rate = base * charmFactor * abiFactor;
 				return {
 					playerCost: {
 						id: playerId,
@@ -314,8 +316,8 @@ class ModelVer1 extends DebugModel {
 		}
 	}
 
-	function applyExploreCost(playerId:Int, gridId:Int, p1SelectId:Int, p2SelectId:Int):Bool {
-		final negoCost = getExploreCost(playerId, gridId, p1SelectId, p2SelectId);
+	function applyHireCost(playerId:Int, gridId:Int, p1SelectId:Int, p2SelectId:Int):Bool {
+		final negoCost = getHireCost(playerId, gridId, p1SelectId, p2SelectId);
 		// 無論成功或失敗武將先消體力
 		final people = getPeopleById(p1SelectId);
 		if (people.energy < negoCost.peopleCost.energy) {
