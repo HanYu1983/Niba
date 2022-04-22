@@ -184,6 +184,9 @@ class ModelVer1 extends DebugModel {
 		final negoCost = getNegoCost(playerId, gridId, p1SelectId, p2SelectId);
 		// 無論成功或失敗武將先消體力
 		final people = getPeopleById(p1SelectId);
+		if (people.energy < negoCost.peopleCost.energy) {
+			throw new haxe.Exception('people.energy ${people.energy} < ${negoCost.peopleCost.energy}');
+		}
 		people.energy -= Std.int(negoCost.peopleCost.energy);
 		//
 		final success = Math.random() < negoCost.successRate;
@@ -224,28 +227,82 @@ class ModelVer1 extends DebugModel {
 		}
 	}
 
-	override function takeExplore(playerId:Int, gridId:Int, p1SelectId:Int, exploreId:Int, cb:(gameInfo:GameInfo) -> Void) {
+	override function takeExplore(playerId:Int, gridId:Int, p1SelectId:Int, p2SelectId:Int, cb:(gameInfo:GameInfo) -> Void) {
 		final p1 = getPeopleById(p1SelectId);
-		final p2 = getPeopleById(exploreId);
-		final preResult = getPreResultOfExplore(playerId, gridId, p1, p2);
-		info.events = [
-			{
-				id: EventInfoID.EXPLORE_RESULT,
-				value: {
-					success: true,
-					people: p1,
-					energyBefore: p1.energy,
-					energyAfter: preResult.energyAfter,
-					armyBefore: 0,
-					armyAfter: 0,
-					moneyBefore: 0,
-					moneyAfter: 0,
-					foodBefore: 0,
-					foodAfter: 0
-				}
+		final p2 = getPeopleById(p2SelectId);
+		final player = info.players[playerId];
+		final evt = {
+			id: EventInfoID.EXPLORE_RESULT,
+			value: {
+				success: false,
+				people: p1,
+				energyBefore: p1.energy,
+				energyAfter: p1.energy,
+				armyBefore: player.army,
+				armyAfter: player.army,
+				moneyBefore: player.money,
+				moneyAfter: player.money,
+				foodBefore: player.food,
+				foodAfter: player.food,
 			}
-		];
+		};
+		final success = applyExploreCost(playerId, gridId, p1SelectId, p2SelectId);
+		evt.value.success = success;
+		evt.value.energyAfter = p1.energy;
+		evt.value.armyAfter = player.army;
+		evt.value.moneyAfter = player.money;
+		evt.value.foodAfter = player.food;
+		info.events = [evt];
+		updateGameInfo();
 		cb(info);
+	}
+
+	function getExploreCost(playerId:Int, gridId:Int, p1SelectId:Int, p2SelectId:Int) {
+		final grid = info.grids[gridId];
+		final fightPeople = [p1SelectId, p2SelectId].map(getPeopleById);
+		switch fightPeople {
+			case [p1, p2]:
+				final useEnergy = p1.energy / 3;
+				final base = (useEnergy / 100) + 0.2;
+				final charmFactor = p1.charm / p2.charm;
+				final rate = base * charmFactor;
+				return {
+					playerCost: {
+						id: playerId,
+					},
+					peopleCost: {
+						id: p1.id,
+						energy: useEnergy,
+					},
+					successRate: rate
+				};
+			case _:
+				throw new haxe.Exception("fightPeople not right");
+		}
+	}
+
+	function applyExploreCost(playerId:Int, gridId:Int, p1SelectId:Int, p2SelectId:Int):Bool {
+		final negoCost = getExploreCost(playerId, gridId, p1SelectId, p2SelectId);
+		// 無論成功或失敗武將先消體力
+		final people = getPeopleById(p1SelectId);
+		if (people.energy < negoCost.peopleCost.energy) {
+			throw new haxe.Exception('people.energy ${people.energy} < ${negoCost.peopleCost.energy}');
+		}
+		people.energy -= Std.int(negoCost.peopleCost.energy);
+		//
+		final success = Math.random() < negoCost.successRate;
+		if (success == false) {
+			return false;
+		}
+		final people2 = getPeopleById(p2SelectId);
+		// 將人移到玩家上
+		final player = info.players[playerId];
+		player.people.push(people2);
+		// 從格子上移除人
+		final grid = info.grids[gridId];
+		grid.people = grid.people.filter(p -> p.id != people2.id);
+		updateGameInfo();
+		return true;
 	}
 
 	// =================================
@@ -340,9 +397,5 @@ class ModelVer1 extends DebugModel {
 			throw new haxe.Exception('people not found: ${id}');
 		}
 		return find[0];
-	}
-
-	function getExploreCost(playerId:Int, gridId:Int, p1SelectId:Int, p2SelectId:Int) {
-		return getNegoCost(playerId, gridId, p1SelectId, p2SelectId);
 	}
 }
