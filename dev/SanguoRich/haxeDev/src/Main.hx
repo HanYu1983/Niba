@@ -36,6 +36,7 @@ class Main {
 	}
 
 	public static function getRateString(rate:Float):String {
+		rate = rate > 1 ? 1 : rate;
 		return getFixNumber(rate * 100, 2) + '%';
 	}
 }

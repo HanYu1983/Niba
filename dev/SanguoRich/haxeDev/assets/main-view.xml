@@ -34,6 +34,7 @@
                 </vbox>
                 <vbox id="box_commands4" width="100">
                     <button text="探索" width="100%" id="btn_explore" />
+                    <button text="聘用" width="100%" id="btn_hire" />
                 </vbox>
                 <button text="結束" width="100%" id="btn_end" />
             </vbox>

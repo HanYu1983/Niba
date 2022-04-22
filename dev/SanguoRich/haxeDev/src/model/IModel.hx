@@ -60,7 +60,7 @@ typedef NegoPreview = {
     p2ValidPeople:Array<People>,
 }
 
-typedef ExplorePreview = {
+typedef HirePreview = {
     p1ValidPeople:Array<People>,
     p2ValidPeople:Array<People>,
 }
@@ -86,7 +86,7 @@ typedef PreResultOnWar = {
     foodAfter:Int,
 } 
 
-typedef PreResultOnExplore = {
+typedef PreResultOnHire = {
     energyAfter:Int,
     successRate:Float
 }
@@ -97,14 +97,19 @@ interface IModel{
     function getPeople(count:Int):Array<People>;
     function playerDice(cb:Void->Void):Void;
     function playerEnd(cb:()->Void):Void;
-    function getTakeWarPreview(playerId:Int, gridId:Int):WarPreview;
-    function takeWarOn(playerId:Int, gridId:Int, p1PeopleId:Int, p2PeopleId:Int, army1:Float, army2:Float, cb:(gameInfo:GameInfo)->Void):Void;
-    function getTakeNegoPreview(playerId:Int, gridId:Int):NegoPreview;
-    function takeNegoOn(playerId:Int, gridId:Int, p1PeopleId:Int, p2PeopleId:Int, cb:(gameInfo:GameInfo)->Void):Void;
-    function getTakeExplorePreview(playerId:Int, gridId:Int):ExplorePreview;
-    function takeExplore(playerId:Int, gridInt:Int, p1PeopleId:Int, p2PeopleId:Int, cb:(gameInfo:GameInfo)->Void):Void;
     
+
+    function getTakeWarPreview(playerId:Int, gridId:Int):WarPreview;
     function getPreResultOfWar(playerId:Int, gridId:Int, p1:People, p2:People, army1:Float, army2:Float):Array<PreResultOnWar>;
+    function takeWarOn(playerId:Int, gridId:Int, p1PeopleId:Int, p2PeopleId:Int, army1:Float, army2:Float, cb:(gameInfo:GameInfo)->Void):Void;
+    
+    function getTakeNegoPreview(playerId:Int, gridId:Int):NegoPreview;
     function getPreResultOfNego(playerId:Int, gridId:Int, p1:People, p2:People):PreResultOnNego;
-    function getPreResultOfExplore(playerId:Int, gridId:Int, p1:People, p2:People):PreResultOnExplore;
+    function takeNegoOn(playerId:Int, gridId:Int, p1PeopleId:Int, p2PeopleId:Int, cb:(gameInfo:GameInfo)->Void):Void;
+
+    function getTakeHirePreview(playerId:Int, gridId:Int):HirePreview;
+    function getPreResultOfExplore(playerId:Int, gridId:Int, p1:People, p2:People):PreResultOnHire;
+    function takeHire(playerId:Int, gridInt:Int, p1PeopleId:Int, p2PeopleId:Int, cb:(gameInfo:GameInfo)->Void):Void;
+    
+    
 }

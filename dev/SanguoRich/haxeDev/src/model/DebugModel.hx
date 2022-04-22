@@ -1,9 +1,9 @@
 package model;
 
 import model.IModel.PreResultOnWar;
-import model.IModel.PreResultOnExplore;
+import model.IModel.PreResultOnHire;
 import model.IModel.PreResultOnNego;
-import model.IModel.ExplorePreview;
+import model.IModel.HirePreview;
 import model.GridGenerator.BUILDING;
 import model.IModel.NegoPreview;
 import model.IModel.WarPreview;
@@ -178,11 +178,11 @@ class DebugModel implements IModel {
         cb(info);
     }
 
-	public function getTakeExplorePreview(playerId:Int, gridId:Int):ExplorePreview {
+	public function getTakeHirePreview(playerId:Int, gridId:Int):HirePreview {
 		return null;
 	}
 
-	public function takeExplore(playerId:Int, gridInt:Int, p1SelectId:Int, exploreId:Int, cb:(gameInfo:GameInfo) -> Void) {}
+	public function takeHire(playerId:Int, gridInt:Int, p1SelectId:Int, exploreId:Int, cb:(gameInfo:GameInfo) -> Void) {}
 
 	public function getRateOfInvitePeople(people:People, invite:People):Float {
 		return .5;
@@ -192,7 +192,7 @@ class DebugModel implements IModel {
 		return null;
 	}
 
-	public function getPreResultOfExplore(playerId:Int, gridId:Int, people:People, invite:People):PreResultOnExplore {
+	public function getPreResultOfExplore(playerId:Int, gridId:Int, people:People, invite:People):PreResultOnHire {
 		return null;
 	}
 
