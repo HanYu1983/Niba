@@ -83,7 +83,7 @@ class TestExploreModel extends DebugModel {
         cb(info);
     }
 
-    override function getPreResultOfExplore(playerId:Int, gridId:Int, people:People, invite:People):PreResultOnHire {
+    override function getPreResultOfHire(playerId:Int, gridId:Int, people:People, invite:People):PreResultOnHire {
         return {
             energyAfter:20,
             successRate:.2

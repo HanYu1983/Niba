@@ -32,7 +32,7 @@ class HirePreviewView extends PopupView{
             var p2 = p2List.selectedItem;
 
             var gameInfo = Main.model.gameInfo();
-            var result:PreResultOnHire = Main.model.getPreResultOfExplore(
+            var result:PreResultOnHire = Main.model.getPreResultOfHire(
                 gameInfo.currentPlayer.id,
                 gameInfo.currentPlayer.atGridId,
                 p1, p2);
