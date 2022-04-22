@@ -218,7 +218,7 @@ class ModelVer1 extends DebugModel {
 		};
 	}
 
-	override function getPreResultOfExplore(playerId:Int, gridId:Int, people:People, invite:People):PreResultOnHire {
+	override function getPreResultOfHire(playerId:Int, gridId:Int, people:People, invite:People):PreResultOnHire {
 		final player = info.players[playerId];
 		final cost = getExploreCost(playerId, gridId, people.id, invite.id);
 		return {

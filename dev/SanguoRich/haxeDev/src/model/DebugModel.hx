@@ -192,7 +192,7 @@ class DebugModel implements IModel {
 		return null;
 	}
 
-	public function getPreResultOfExplore(playerId:Int, gridId:Int, people:People, invite:People):PreResultOnHire {
+	public function getPreResultOfHire(playerId:Int, gridId:Int, people:People, invite:People):PreResultOnHire {
 		return null;
 	}
 

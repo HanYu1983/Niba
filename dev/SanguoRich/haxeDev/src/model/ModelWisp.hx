@@ -28,7 +28,7 @@ import model.PeopleGenerator.People;
 	public function getPreResultOfNego(playerId:Int, gridId:Int, people:People, invite:People):Dynamic;
 	public function getTakeHirePreview(playerId:Int, gridId:Int):Dynamic;
 	public function takeHire(playerId:Int, gridInt:Int, p1SelectId:Int, exploreId:Int, cb:(gameInfo:Dynamic) -> Void):Void;
-	public function getPreResultOfExplore(playerId:Int, gridId:Int, people:People, invite:People):Dynamic;
+	public function getPreResultOfHire(playerId:Int, gridId:Int, people:People, invite:People):Dynamic;
 	public function getRateOfInvitePeople(people:People, invite:People):Float;
 }
 
@@ -118,8 +118,8 @@ class ModelWisp extends DebugModel {
 		});
 	}
 
-	override function getPreResultOfExplore(playerId:Int, gridId:Int, people:People, invite:People):PreResultOnHire {
-		return new NativeModule().getPreResultOfExplore(playerId, gridId, people, invite);
+	override function getPreResultOfHire(playerId:Int, gridId:Int, people:People, invite:People):PreResultOnHire {
+		return new NativeModule().getPreResultOfHire(playerId, gridId, people, invite);
 	}
 
 	override function getRateOfInvitePeople(people:People, invite:People):Float {
