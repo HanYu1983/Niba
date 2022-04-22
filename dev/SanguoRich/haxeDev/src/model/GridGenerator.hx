@@ -74,11 +74,11 @@ class GridGenerator {
 			    BUILDING.EMPTY,
 			    BUILDING.EMPTY,
 			    BUILDING.EMPTY,
-                BUILDING.FARM,
+				BUILDING.EMPTY,
+				BUILDING.EMPTY,
+				BUILDING.EMPTY,
 				BUILDING.FARM,
-                BUILDING.MARKET,
 				BUILDING.MARKET,
-			    BUILDING.VILLAGE,
 				BUILDING.VILLAGE,
 			    BUILDING.CITY
 			][Math.floor(Math.random() * 10)];

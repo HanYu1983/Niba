@@ -47,8 +47,8 @@ class DebugModel implements IModel {
                     PeopleGenerator.getInst().generate(),
                     PeopleGenerator.getInst().generate()
                 ],
-                maintainPeople:0.0,
-                maintainArmy:0.0,
+                maintainPeople:-1.2,
+                maintainArmy:-1.1,
                 atGridId:0
             }
         }

@@ -474,8 +474,8 @@ class MainView extends Absolute {
         var gameInfo = Main.model.gameInfo();
         var p = gameInfo.players[id];
         pro_name.value = p.name;
-        pro_money.value = Math.floor(p.money);
-        pro_food.value = Math.floor(p.food);
+        pro_money.value = '${Math.floor(p.money)} (${Main.getFixNumber(p.maintainPeople)})';
+        pro_food.value = '${Math.floor(p.food)} (${Main.getFixNumber(p.maintainArmy)})';
         pro_army.value = Math.floor(p.army);
         pro_peopleCount.value = p.people.length;
         pro_maintainPeople.value = p.maintainPeople;
@@ -491,9 +491,9 @@ class MainView extends Absolute {
         pro_gridName.value = grid.id;
         pro_gridLandType.value = grids[gridId].lbl_building.text;
         
-        pro_gridMoney.value = '${Math.floor(grid.money)}(${Main.getFixNumber(grid.moneyGrow, 4)}%)';
-        pro_gridFood.value = '${Math.floor(grid.food)}(${Main.getFixNumber(grid.foodGrow, 4)}%)';
-        pro_gridArmy.value = '${Math.floor(grid.army)}(${Main.getFixNumber(grid.armyGrow, 4)}%)';
+        pro_gridMoney.value = '${Math.floor(grid.money)} (${Main.getFixNumber(grid.moneyGrow, 4)}%)';
+        pro_gridFood.value = '${Math.floor(grid.food)} (${Main.getFixNumber(grid.foodGrow, 4)}%)';
+        pro_gridArmy.value = '${Math.floor(grid.army)} (${Main.getFixNumber(grid.armyGrow, 4)}%)';
     }
 
     function syncGridViews(gameInfo:GameInfo){
