@@ -289,8 +289,8 @@ class ModelVer1 extends DebugModel {
 		return {
 			energyBefore: people.energy,
 			energyAfter: people.energy - Std.int(cost.peopleCost.energy),
-			moneyBefore:0,
-			moneyAfter:0,
+			moneyBefore: 0,
+			moneyAfter: 0,
 			successRate: cost.successRate
 		}
 	}
@@ -300,7 +300,7 @@ class ModelVer1 extends DebugModel {
 		final p2 = getPeopleById(p2SelectId);
 		final player = info.players[playerId];
 		final evt = {
-			id: EventInfoID.EXPLORE_RESULT,
+			id: EventInfoID.HIRE_RESULT,
 			value: {
 				success: false,
 				people: p1,
