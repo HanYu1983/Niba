@@ -88,9 +88,20 @@ class ModelVer1 extends DebugModel {
 	}
 
 	override function playerEnd(cb:() -> Void) {
+		info.actions = [];
+		info.events = [];
 		// 四個玩家走完後才計算回合
 		final isLastPlayer = background.currentPlayerId == 3;
 		if (isLastPlayer) {
+			final worldEvent = {
+				id: EventInfoID.WORLD_EVENT,
+				value: {
+					playerBefore: info.players.map(Reflect.copy),
+					playerAfter: info.players.map(Reflect.copy),
+					gridBefore: info.grids.map(Reflect.copy),
+					gridAfter: info.grids.map(Reflect.copy),
+				}
+			}
 			// 城池
 			for (grid in info.grids) {
 				// 支付武將的薪水
@@ -146,12 +157,13 @@ class ModelVer1 extends DebugModel {
 					people.energy = 100;
 				}
 			}
+			worldEvent.value.playerAfter = info.players.map(Reflect.copy);
+			worldEvent.value.gridAfter = info.grids.map(Reflect.copy);
+			info.events.push(worldEvent);
 		}
 		// 下一個玩家
 		background.currentPlayerId = (background.currentPlayerId + 1) % 4;
 		updateGameInfo();
-		info.actions = [];
-		info.events = [];
 		cb();
 	}
 
