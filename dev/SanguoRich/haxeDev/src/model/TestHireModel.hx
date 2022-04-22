@@ -85,7 +85,10 @@ class TestHireModel extends DebugModel {
 
     override function getPreResultOfHire(playerId:Int, gridId:Int, people:People, invite:People):PreResultOnHire {
         return {
+            energyBefore:20,
             energyAfter:20,
+            moneyBefore: 10,
+            moneyAfter: 10,
             successRate:.2
         }
     }

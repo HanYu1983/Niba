@@ -59,7 +59,7 @@ class GridGenerator {
 			foodGrow: 0.01,
 			army: 100,
 			armyGrow: 0.01,
-			people: [PeopleGenerator.getInst().generate()]
+			people: []
 		};
 	}
 
@@ -70,21 +70,53 @@ class GridGenerator {
 			var g = getGrid();
 			g.id = i;
 			g.landType = [0, 0, 1, 1, 1, 1, 2, 2, 3, 3][Math.floor(height * 10)];
-			g.moneyGrow = Math.random() * .01;
-			g.foodGrow = Math.random() * .01;
-			g.armyGrow = Math.random() * .01;
 			g.buildtype = [
 			    BUILDING.EMPTY,
 			    BUILDING.EMPTY,
 			    BUILDING.EMPTY,
-			    BUILDING.EMPTY,
-			    BUILDING.EMPTY,
-			    BUILDING.EMPTY,
                 BUILDING.FARM,
+				BUILDING.FARM,
                 BUILDING.MARKET,
+				BUILDING.MARKET,
 			    BUILDING.VILLAGE,
+				BUILDING.VILLAGE,
 			    BUILDING.CITY
 			][Math.floor(Math.random() * 10)];
+
+			g.moneyGrow = Math.random() * .01;
+			g.foodGrow = Math.random() * .01;
+			g.armyGrow = Math.random() * .01;
+			
+			switch (g.buildtype){
+				case EMPTY:
+					g.money = 0;
+					g.army = 0;
+					g.food = 0;
+					g.moneyGrow = 0;
+					g.foodGrow = 0;
+					g.armyGrow = 0;
+				case MARKET:
+					g.moneyGrow += .01;
+					g.people.push(PeopleGenerator.getInst().generate());
+				case FARM:
+					g.foodGrow += .01;
+					g.people.push(PeopleGenerator.getInst().generate());
+				case VILLAGE:
+					g.armyGrow += .01;
+					g.people.push(PeopleGenerator.getInst().generate());
+				case CITY:
+					g.money = 300;
+					g.army = 300;
+					g.food = 300;
+					g.moneyGrow += .007;
+					g.foodGrow += .007;
+					g.armyGrow += .007;
+					g.people.push(PeopleGenerator.getInst().generate());
+					g.people.push(PeopleGenerator.getInst().generate());
+				case _:
+					
+			}
+
 			g.height = height;
 			grids.push(g);
 		}

@@ -1,5 +1,6 @@
 package view;
 
+import view.popup.ExploreSuccessView;
 import view.popup.GrowView;
 import view.popup.ExplorePreviewView;
 import view.popup.HirePreviewView;
@@ -30,6 +31,7 @@ class MainView extends Absolute {
     var messageView:MessageView;
     var hirePreviewView:HirePreviewView;
     var explorePreviewView:ExplorePreviewView;
+    var exploreSuccessView:ExploreSuccessView;
     var growView:GrowView;
 
     public function new() {
@@ -74,6 +76,10 @@ class MainView extends Absolute {
         explorePreviewView = new ExplorePreviewView();
         explorePreviewView.hide();
         box_popup.addComponent(explorePreviewView);
+
+        exploreSuccessView = new ExploreSuccessView();
+        exploreSuccessView.hide();
+        box_popup.addComponent(exploreSuccessView);
 
         growView = new GrowView();
         growView.hide();
@@ -127,7 +133,6 @@ class MainView extends Absolute {
             p2Id,
             syncViewByInfo
         );
-        // trace('[han]takeHire之後，好像沒有把Get')
     }
 
     public function onWarPreviewConfirmClick(p1Id:Int, p2Id:Int, p1Army:Float, p2Army:Float){
@@ -141,6 +146,10 @@ class MainView extends Absolute {
             p2Army,
             syncViewByInfo
         );
+    }
+
+    public function onExploreSuccessViewConfirmClick(){
+        onBtnHireClick(null);
     }
 
     @:bind(this, UIEvent.READY)
@@ -367,7 +376,7 @@ class MainView extends Absolute {
                     messageView.showMessage(event.value);
                     btn_end.show();
                 case EXPLORE_RESULT:
-                    messageView.showMessage(event.value);
+                    exploreSuccessView.showMessage(event.value);
                     btn_end.show();
                 case WAR_RESULT:
                     messageView.showMessage(event.value);

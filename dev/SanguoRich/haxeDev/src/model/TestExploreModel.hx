@@ -54,10 +54,10 @@ class TestExploreModel extends DebugModel {
             {
                 id:EventInfoID.EXPLORE_RESULT,
                 value:{
-                    success:false,
+                    success:true,
                     people:PeopleGenerator.getInst().generate(),
                     peopleList:[
-                        // PeopleGenerator.getInst().generate()
+                        PeopleGenerator.getInst().generate()
                     ],
                     energyBefore: 100,
                     energyAfter:50,
@@ -88,6 +88,53 @@ class TestExploreModel extends DebugModel {
             energyAfter: 20,
             energyBefore: 20,
             successRate: .5
+        }
+    }
+
+    override function getTakeHirePreview(playerId:Int, gridId:Int):HirePreview {
+        return {
+            p1ValidPeople:[
+                PeopleGenerator.getInst().generate(),
+                PeopleGenerator.getInst().generate(),
+                PeopleGenerator.getInst().generate(),
+            ],
+            p2ValidPeople: [
+                PeopleGenerator.getInst().generate(),
+                PeopleGenerator.getInst().generate(),
+                PeopleGenerator.getInst().generate(),
+            ],
+        }
+    }
+
+    override function takeHire(playerId:Int, gridInt:Int, p1SelectId:Int, exploreId:Int, cb:(gameInfo:GameInfo) -> Void) {
+        var info = gameInfo();
+        info.events = [
+            {
+                id:EventInfoID.HIRE_RESULT,
+                value:{
+                    success:true,
+                    people:PeopleGenerator.getInst().generate(),
+                    energyBefore: 100,
+                    energyAfter:50,
+                    armyBefore: 200,
+                    armyAfter: 300,
+                    moneyBefore: 200,
+                    moneyAfter: 300,
+                    foodBefore: 100,
+                    foodAfter: 200
+                }
+            }
+        ];
+        cb(info);
+    }
+
+    override function getPreResultOfHire(playerId:Int, gridId:Int, people:People, invite:People):PreResultOnHire {
+        return {
+            energyBefore:20,
+            energyAfter:20,
+            moneyBefore: 10,
+            moneyAfter: 10,
+            successRate:.2
         }
     }
 }

@@ -21,6 +21,8 @@
                     <vbox width="100%">
                         <button text="移動" width="100%" id="btn_go" />
                         <button text="計略" width="100%" id="btn_showStrategy" />
+                        <button text="解散" width="100%" id="btn_fireArmy" />
+                        <button text="解雇" width="100%" id="btn_firePeople" />
                     </vbox>
                 </frame>
                 <frame id="box_npcCmds" width="100%" text="對盜賊指令">
@@ -40,6 +42,9 @@
                 </frame>
                 <frame id="box_emptyCmds" width="100%" text="對空地指令">
                     <vbox width="100%">
+                        <button text="經商" width="100%" id="btn_earnMoney" />
+                        <button text="買賣糧食" width="100%" id="btn_marketFood" />
+                        <button text="買賣士兵" width="100%" id="btn_marketArmy" />
                         <button text="探索" width="100%" id="btn_explore" />
                         <button text="聘用" width="100%" id="btn_hire" />
                     </vbox>
