@@ -18,7 +18,6 @@ class ModelVer2 extends DebugModel {
 
 	override function gameStart(cb:Void->Void):Void {
 		initContext(context, {});
-		trace(context);
 		cb();
 	}
 
@@ -310,7 +309,8 @@ private function doPlayerDice(ctx:Context) {
 			playerId: activePlayerId,
 			fromGridId: fromGridId,
 			toGridId: toGridId
-		}, ctx)
+		}, // 強制將nullable轉型成非nullable
+			cast Reflect.copy(ctx))
 	];
 	final toGrid = ctx.grids[toGridId];
 	ctx.events = [
