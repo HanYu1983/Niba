@@ -10,6 +10,7 @@ import model.IModel;
 import view.MainView;
 import haxe.ui.HaxeUIApp;
 import model.ModelVer1;
+import model.ModelVer2;
 import model.ModelWisp;
 import model.TestExploreModel;
 
@@ -19,7 +20,7 @@ class Main {
 
 	public static function main() {
 		// model = new ModelWisp();
-		model = new ModelVer1();
+		model = new ModelVer2();
 
 		var app = new HaxeUIApp();
 		app.ready(function() {
