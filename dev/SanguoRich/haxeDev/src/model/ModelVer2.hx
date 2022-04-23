@@ -4,6 +4,14 @@ import model.IModel.GameInfo;
 import model.GridGenerator.BUILDING;
 import model.IModel.ActionInfoID;
 import model.IModel.EventInfoID;
+import model.IModel.ExplorePreview;
+import model.IModel.PreResultOnExplore;
+import model.IModel.PreResultOnWar;
+import model.IModel.PreResultOnHire;
+import model.IModel.PreResultOnNego;
+import model.IModel.HirePreview;
+import model.IModel.NegoPreview;
+import model.IModel.WarPreview;
 
 class ModelVer2 extends DebugModel {
 	final context:Context = {
@@ -34,10 +42,24 @@ class ModelVer2 extends DebugModel {
 		doPlayerEnd(context);
 		cb();
 	}
+
+	override function getTakeNegoPreview(playerId:Int, gridId:Int):NegoPreview {
+		return doGetTakeNegoPreview(context, playerId, gridId);
+	}
+
+	override function getPreResultOfNego(playerId:Int, gridId:Int, people:model.PeopleGenerator.People, invite:model.PeopleGenerator.People):PreResultOnNego {
+		return doGetPreResultOfNego(context, playerId, gridId, people.id, invite.id);
+	}
+
+	override function takeNegoOn(playerId:Int, gridId:Int, p1SelectId:Int, p2SelectId:Int, cb:(gameInfo:GameInfo) -> Void) {
+		doTakeNegoOn(context, playerId, gridId, p1SelectId, p2SelectId);
+		cb(gameInfo());
+	}
 }
 
 private typedef Grid = {
 	id:Int,
+	buildtype:BUILDING,
 	money:Float,
 	food:Float,
 	army:Float,
@@ -55,13 +77,13 @@ private typedef People = {
 		gridId:Null<Int>, player:Bool
 	},
 	name:String,
-	force:Int,
-	intelligence:Int,
-	political:Int,
-	charm:Int,
-	cost:Int,
+	force:Float,
+	intelligence:Float,
+	political:Float,
+	charm:Float,
+	cost:Float,
 	abilities:Array<Int>,
-	energy:Int
+	energy:Float
 }
 
 private typedef Player = {
@@ -88,7 +110,18 @@ private enum Event {
 		grid:Grid,
 		commands:Dynamic,
 	});
-	NEGOTIATE_RESULT(value:{});
+	NEGOTIATE_RESULT(value:{
+		success:Bool,
+		people:People,
+		energyBefore:Float,
+		energyAfter:Float,
+		armyBefore:Float,
+		armyAfter:Float,
+		moneyBefore:Float,
+		moneyAfter:Float,
+		foodBefore:Float,
+		foodAfter:Float,
+	});
 	EXPLORE_RESULT(value:{});
 	HIRE_RESULT(value:{});
 	WAR_RESULT(value:{});
@@ -110,13 +143,13 @@ private function getPeopleInfo(ctx:Context, people:People):model.PeopleGenerator
 		type: 0,
 		name: people.name,
 		command: 0,
-		force: people.force,
-		intelligence: people.intelligence,
-		political: people.political,
-		charm: people.charm,
-		cost: people.cost,
+		force: Std.int(people.force),
+		intelligence: Std.int(people.intelligence),
+		political: Std.int(people.political),
+		charm: Std.int(people.charm),
+		cost: Std.int(people.cost),
 		abilities: people.abilities,
-		energy: people.energy
+		energy: Std.int(people.energy)
 	}
 }
 
@@ -140,7 +173,7 @@ private function getGridInfo(ctx:Context, grid:Grid):model.GridGenerator.Grid {
 	return {
 		id: grid.id,
 		landType: 0,
-		buildtype: BUILDING.EMPTY,
+		buildtype: grid.buildtype,
 		height: 0,
 		attachs: [],
 		belongPlayerId: peopleInGrid.length > 0 ? peopleInGrid[0].belongToPlayerId : null,
@@ -177,6 +210,22 @@ private function getGameInfo(ctx:Context, root:Bool):GameInfo {
 							commands: value.commands
 						},
 					}
+				case NEGOTIATE_RESULT(value):
+					{
+						id: EventInfoID.NEGOTIATE_RESULT,
+						value: {
+							success: value.success,
+							people: getPeopleInfo(ctx, value.people),
+							energyBefore: value.energyBefore,
+							energyAfter: value.energyAfter,
+							armyBefore: value.armyBefore,
+							armyAfter: value.armyAfter,
+							moneyBefore: value.moneyBefore,
+							moneyAfter: value.moneyAfter,
+							foodBefore: value.foodBefore,
+							foodAfter: value.foodAfter,
+						},
+					}
 				case _:
 					throw new haxe.Exception("未知的event");
 			}
@@ -199,6 +248,7 @@ private function getGameInfo(ctx:Context, root:Bool):GameInfo {
 private function addGridInfo(ctx:Context, grid:model.GridGenerator.Grid):Void {
 	ctx.grids.push({
 		id: grid.id,
+		buildtype: grid.buildtype,
 		money: grid.money,
 		food: grid.food,
 		army: grid.army,
@@ -297,6 +347,14 @@ private function initContext(ctx:Context, option:{}) {
 	}
 }
 
+private function getPeopleById(ctx:Context, id:Int):People {
+	final find = ctx.peoples.filter(p -> p.id == id);
+	if (find.length == 0) {
+		throw new haxe.Exception('people not found: ${id}');
+	}
+	return find[0];
+}
+
 private function doPlayerDice(ctx:Context) {
 	final activePlayerId = ctx.currentPlayerId;
 	final player = ctx.players[activePlayerId];
@@ -325,4 +383,116 @@ private function doPlayerEnd(ctx:Context) {
 	ctx.currentPlayerId = (ctx.currentPlayerId + 1) % ctx.players.length;
 	ctx.actions = [];
 	ctx.events = [];
+}
+
+// =================================
+// 交涉
+// 向城池奪取%資源
+// =================================
+private function doGetTakeNegoPreview(ctx:Context, playerId:Int, gridId:Int):NegoPreview {
+	return {
+		p1ValidPeople: getPlayerInfo(ctx, ctx.players[playerId]).people,
+		p2ValidPeople: getGridInfo(ctx, ctx.grids[gridId]).people,
+	};
+}
+
+private function doGetPreResultOfNego(ctx:Context, playerId:Int, gridId:Int, peopleId:Int, inviteId:Int):PreResultOnNego {
+	final player = ctx.players[playerId];
+	final people = getPeopleById(ctx, peopleId);
+	final negoCost = getNegoCost(ctx, playerId, gridId, peopleId, inviteId);
+	return {
+		energyAfter: Std.int(people.energy - negoCost.peopleCost.energy),
+		armyBefore: Std.int(player.army),
+		armyAfter: Std.int(player.army + negoCost.playerCost.army),
+		moneyBefore: Std.int(player.money),
+		moneyAfter: Std.int(player.money + negoCost.playerCost.money),
+		foodBefore: Std.int(player.food),
+		foodAfter: Std.int(player.food + negoCost.playerCost.food),
+		successRate: negoCost.successRate
+	};
+}
+
+private function doTakeNegoOn(ctx:Context, playerId:Int, gridId:Int, p1SelectId:Int, p2SelectId:Int) {
+	final p1 = getPeopleById(ctx, p1SelectId);
+	final p2 = getPeopleById(ctx, p2SelectId);
+	final player = ctx.players[playerId];
+	final resultValue = {
+		success: false,
+		people: cast Reflect.copy(p1),
+		energyBefore: p1.energy,
+		energyAfter: p1.energy,
+		armyBefore: player.army,
+		armyAfter: player.army,
+		moneyBefore: player.money,
+		moneyAfter: player.money,
+		foodBefore: player.food,
+		foodAfter: player.food,
+	}
+	final success = applyNegoCost(ctx, playerId, gridId, p1SelectId, p2SelectId);
+	resultValue.success = success;
+	resultValue.energyAfter = p1.energy;
+	resultValue.armyAfter = player.army;
+	resultValue.moneyAfter = player.money;
+	resultValue.foodAfter = player.food;
+	ctx.events = [Event.NEGOTIATE_RESULT(resultValue)];
+}
+
+// 交涉(智力/政治/魅力)
+private function getNegoCost(ctx:Context, playerId:Int, gridId:Int, p1SelectId:Int, p2SelectId:Int) {
+	final grid = ctx.grids[gridId];
+	final fightPeople = [p1SelectId, p2SelectId].map(id -> getPeopleById(ctx, id));
+	switch fightPeople {
+		case [p1, p2]:
+			// 用掉1/5的體力(最多20)
+			// 體力越少效率越低
+			final useEnergy = p1.energy / 5;
+			// 使用20體力的情況下基礎值為0.5
+			final base = (useEnergy / 100) + 0.3;
+			final intelligenceFactor = p1.intelligence / p2.intelligence;
+			final politicalFactor = p1.political / p2.political;
+			final charmFactor = p1.charm / p2.charm;
+			final rate = base * intelligenceFactor * politicalFactor * charmFactor;
+			final gainRate = 0.1 * rate + 0.1;
+			return {
+				playerCost: {
+					id: playerId,
+					army: grid.army * gainRate,
+					money: grid.money * gainRate,
+					food: grid.food * gainRate
+				},
+				peopleCost: {
+					id: p1.id,
+					energy: useEnergy,
+				},
+				successRate: rate
+			};
+		case _:
+			throw new haxe.Exception("fightPeople not right");
+	}
+}
+
+private function applyNegoCost(ctx:Context, playerId:Int, gridId:Int, p1SelectId:Int, p2SelectId:Int):Bool {
+	final negoCost = getNegoCost(ctx, playerId, gridId, p1SelectId, p2SelectId);
+	// 無論成功或失敗武將先消體力
+	final people = getPeopleById(ctx, p1SelectId);
+	if (people.energy < negoCost.peopleCost.energy) {
+		throw new haxe.Exception('people.energy ${people.energy} < ${negoCost.peopleCost.energy}');
+	}
+	people.energy -= Std.int(negoCost.peopleCost.energy);
+	//
+	final success = Math.random() < negoCost.successRate;
+	if (success == false) {
+		return false;
+	}
+	// 城池被搶奪
+	final grid = ctx.grids[gridId];
+	grid.army -= negoCost.playerCost.army;
+	grid.money -= negoCost.playerCost.money;
+	grid.food -= negoCost.playerCost.food;
+	// 玩家搶奪
+	final player = ctx.players[playerId];
+	player.army += negoCost.playerCost.army;
+	player.money += negoCost.playerCost.money;
+	player.food += negoCost.playerCost.food;
+	return true;
 }
