@@ -6,7 +6,7 @@ import model.IModel.ActionInfoID;
 import model.IModel.EventInfoID;
 
 class ModelVer2 extends DebugModel {
-	var context:Context = {
+	final context:Context = {
 		grids: [],
 		attachments: [],
 		peoples: [],
