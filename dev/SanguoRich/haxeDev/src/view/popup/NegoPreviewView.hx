@@ -52,10 +52,11 @@ class NegoPreviewView extends PopupView{
             pro_political.value = '${p1.political} vs ${p2.political}';
             pro_intelligence.value = '${p1.intelligence} vs ${p2.intelligence}';
 
-            pro_ability.value = '';
-            if(p1.abilities.indexOf(7) > 0){
-                pro_ability.value = "良官";
-            }
+            // pro_ability.value = '';
+            // if(p1.abilities.indexOf(7) > 0){
+            //     pro_ability.value = "良官";
+            // }
+            pro_ability.value = Main.getAbilityString(p1, [7]);
             setRate();
         }
 

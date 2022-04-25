@@ -79,20 +79,20 @@ class WarPreviewView extends PopupView{
             pro_energy.value = p.energy;
             pro_intelligence.value = p.intelligence;
             
-            var abistr = '';
-            if(p.abilities.indexOf(0) > -1){
-                abistr += '槍將 ';
-            }
-            if(p.abilities.indexOf(1) > -1){
-                abistr += '弓將 ';
-            }
-            if(p.abilities.indexOf(2) > -1){
-                abistr += '騎將 ';
-            }
-            if(p.abilities.indexOf(3) > -1){
-                abistr += '妙計 ';
-            }
-            pro_ability.value = abistr;
+            // var abistr = '';
+            // if(p.abilities.indexOf(0) > -1){
+            //     abistr += '槍將 ';
+            // }
+            // if(p.abilities.indexOf(1) > -1){
+            //     abistr += '弓將 ';
+            // }
+            // if(p.abilities.indexOf(2) > -1){
+            //     abistr += '騎將 ';
+            // }
+            // if(p.abilities.indexOf(3) > -1){
+            //     abistr += '妙計 ';
+            // }
+            pro_ability.value = Main.getAbilityString(p, [0, 1, 2, 3]);
 
             setRate();
         }

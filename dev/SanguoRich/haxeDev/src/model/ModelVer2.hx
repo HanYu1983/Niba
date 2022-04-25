@@ -927,6 +927,7 @@ private function _getTakeWarPreview(ctx:Context, playerId:Int, gridId:Int):WarPr
 private function _getPreResultOfWar(ctx:Context, playerId:Int, gridId:Int, p1:Int, p2:Int, army1:Float, army2:Float):Array<PreResultOnWar> {
 	return [
 		{
+			energyBefore:0,
 			energyAfter: 1,
 			armyBefore: 2,
 			armyAfter: 4,
@@ -936,6 +937,7 @@ private function _getPreResultOfWar(ctx:Context, playerId:Int, gridId:Int, p1:In
 			foodAfter: 8,
 		},
 		{
+			energyBefore:0,
 			energyAfter: 1,
 			armyBefore: 2,
 			armyAfter: 4,

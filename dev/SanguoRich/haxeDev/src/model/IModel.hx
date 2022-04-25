@@ -33,6 +33,19 @@ enum EventInfoID {
     EXPLORE_RESULT;
     HIRE_RESULT;
     WAR_RESULT;
+    RESOURCE_RESULT;
+}
+
+enum MARKET {
+    BUY;
+    SELL;
+}
+
+enum RESOURCE {
+    MONEY;
+    FOOD;
+    ARMY;
+    STRETEGY;
 }
 
 typedef EventInfo = {
@@ -80,6 +93,7 @@ typedef PreResultOnNego = {
 } 
 
 typedef PreResultOnWar = {
+    energyBefore:Int,
     energyAfter:Int,
     armyBefore:Int,
     armyAfter:Int,
@@ -107,6 +121,21 @@ typedef PreResultOnExplore = {
     successRate:Float
 }
 
+typedef ResourcePreview = {
+    p1ValidPeople:Array<People>,
+}
+
+typedef PreResultOnResource = {
+    energyBefore:Int,
+    energyAfter:Int,
+    armyBefore:Int,
+    armyAfter:Int,
+    moneyBefore:Int,
+    moneyAfter:Int,
+    foodBefore:Int,
+    foodAfter:Int,
+}
+
 interface IModel{
     function gameStart(cb:Void->Void):Void;
     function gameInfo():GameInfo;
@@ -130,4 +159,8 @@ interface IModel{
     function getTakeExplorePreview(playerId:Int, gridId:Int):ExplorePreview;
     function getPreResultOfExplore(playerId:Int, gridId:Int, p1:People):PreResultOnExplore;
     function takeExplore(playerId:Int, gridInt:Int, p1PeopleId:Int, cb:(gameInfo:GameInfo)->Void):Void;
+
+    function getTakeResourcePreview(playerId:Int, gridId:Int, market:MARKET, type:RESOURCE): ResourcePreview;
+    function getPreResultOfResource(playerId:Int, gridId:Int, p1:People, market:MARKET, type:RESOURCE):PreResultOnResource;
+    function takeResource(playerId:Int, gridInt:Int, p1PeopleId:Int, market:MARKET, type:RESOURCE, cb:(gameInfo:GameInfo)->Void):Void;
 }

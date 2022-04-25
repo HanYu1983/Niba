@@ -18,9 +18,9 @@ class MessageView extends PopupView{
     public function showMessage(info:Dynamic){
         fadeIn();
 
+        box_peopleList.hide();
         if(Std.is(info, String)){
             lbl_content.text = info;
-            box_peopleList.hide();
         }else{
             lbl_content.text = '
             ${info.success ? '任務成功' : '任務失敗'}\n
@@ -30,8 +30,6 @@ class MessageView extends PopupView{
             糧草:${Main.getFixNumber(info.foodBefore,0)} => ${Main.getFixNumber(info.foodAfter,0)}\n
             士兵:${Main.getFixNumber(info.armyBefore,0)} => ${Main.getFixNumber(info.armyAfter,0)}\n
             ';
-
-            box_peopleList.hide();
             if(info.peopleList && info.peopleList.length > 0){
                 box_peopleList.show();
                 pList.setPeopleList(info.peopleList);

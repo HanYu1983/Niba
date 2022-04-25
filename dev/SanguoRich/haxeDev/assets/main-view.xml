@@ -43,8 +43,10 @@
                 <frame id="box_emptyCmds" width="100%" text="對空地指令">
                     <vbox width="100%">
                         <button text="經商" width="100%" id="btn_earnMoney" />
-                        <button text="買賣糧食" width="100%" id="btn_marketFood" />
-                        <button text="買賣士兵" width="100%" id="btn_marketArmy" />
+                        <button text="買糧" width="100%" id="btn_buyFood" />
+                        <button text="賣糧" width="100%" id="btn_sellFood" />
+                        <button text="徵兵" width="100%" id="btn_buyArmy" />
+                        <button text="裁兵" width="100%" id="btn_sellArmy" />
                         <button text="探索" width="100%" id="btn_explore" />
                         <button text="聘用" width="100%" id="btn_hire" />
                     </vbox>
