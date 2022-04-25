@@ -504,6 +504,7 @@ class ModelVer1 extends DebugModel {
 					atGridId: gridId,
 					maintainArmy: 0,
 					maintainPeople: 0,
+					grids:[]
 				};
 			default:
 				info.players[info.grids[gridId].belongPlayerId];
