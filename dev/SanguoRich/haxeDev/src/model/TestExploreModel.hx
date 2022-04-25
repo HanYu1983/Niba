@@ -134,7 +134,9 @@ class TestExploreModel extends DebugModel {
             energyAfter:20,
             moneyBefore: 10,
             moneyAfter: 10,
-            successRate:.2
+            successRate:.2,
+            maintainMoneyAfter: 10,
+            maintainMoneyBefore: 10,
         }
     }
 }

@@ -189,6 +189,8 @@ class ModelVer1 extends DebugModel {
 			moneyAfter: Std.int(player.money + negoCost.playerCost.money),
 			foodBefore: Std.int(player.food),
 			foodAfter: Std.int(player.food + negoCost.playerCost.food),
+			maintainFoodBefore:10,
+    		maintainFoodAfter:10,
 			successRate: negoCost.successRate
 		};
 	}
@@ -303,7 +305,9 @@ class ModelVer1 extends DebugModel {
 			energyAfter: people.energy - Std.int(cost.peopleCost.energy),
 			moneyBefore: 0,
 			moneyAfter: 0,
-			successRate: cost.successRate
+			successRate: cost.successRate,
+			maintainMoneyAfter: 10,
+			maintainMoneyBefore: 10,
 		}
 	}
 
@@ -523,6 +527,8 @@ class ModelVer1 extends DebugModel {
 				moneyAfter: 6,
 				foodBefore: 7,
 				foodAfter: 8,
+				maintainFoodBefore:10,
+    			maintainFoodAfter:10,
 			},
 			{
 				energyBefore:0,
@@ -533,6 +539,8 @@ class ModelVer1 extends DebugModel {
 				moneyAfter: 6,
 				foodBefore: 7,
 				foodAfter: 8,
+				maintainFoodBefore:10,
+    			maintainFoodAfter:10,
 			}
 		];
 	}

@@ -14,6 +14,7 @@
                 <property id="pro_money" label="金錢" value="1000" />
                 <property id="pro_food" label="食物" value="1000" />
                 <property id="pro_army" label="士兵" value="1000" />
+                <property id="pro_maintainFood" label="糧草消耗" value="1000" />
                 <property id="pro_ability" label="專長加成" value="" />
             </property-group>
         </property-grid>

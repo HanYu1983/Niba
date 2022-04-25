@@ -43,6 +43,7 @@ class ResourcePreviewView extends PopupView{
             pro_energy.value = '${p1.energy} => ${result.energyAfter}';
             pro_money.value = '${result.moneyBefore} => ${result.moneyAfter}';
             pro_army.value = '${result.armyBefore} => ${result.armyAfter}';
+            pro_maintainFood.value = '${Main.getFixNumber(result.maintainFoodBefore, 2)} => ${Main.getFixNumber(result.maintainFoodAfter, 2)}';
         }
 
         function setOnePeople(){

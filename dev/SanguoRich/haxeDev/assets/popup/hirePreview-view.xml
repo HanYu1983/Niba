@@ -11,6 +11,7 @@
                 <property id="pro_energy" label="體力" value="100" />
                 <property id="pro_charm" label="魅力" value="1000" />
                 <property id="pro_money" label="金錢" value="100" />
+                <property id="pro_maintainMoney" label="薪俸" value="100" />
                 <property id="pro_successRate" label="成功率" value="50%" />
             </property-group>
         </property-grid>
