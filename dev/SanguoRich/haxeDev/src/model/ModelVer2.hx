@@ -21,6 +21,9 @@ using Lambda;
 
 // =========================================
 // config
+// 以下的方法都不定義回傳的類型, 因為是動態設計, 做到哪想到哪
+// 每一個回傳都是依靠編譯器的類型推理
+// 所以可以把回傳最多欄位的放在case的第1個, 讓編譯器告訴你其它的回傳少了哪些欄位
 // =========================================
 // 交涉計算
 private function getNegoCost(ctx:Context, playerId:Int, gridId:Int, p1SelectId:Int, p2SelectId:Int) {
