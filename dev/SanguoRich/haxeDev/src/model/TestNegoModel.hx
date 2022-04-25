@@ -91,6 +91,8 @@ class TestNegoModel extends DebugModel {
             moneyAfter:5,
             foodBefore:6,
             foodAfter:7,
+            maintainFoodBefore:10,
+    		maintainFoodAfter:10,
             successRate:.8
         };
     }

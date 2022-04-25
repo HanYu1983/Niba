@@ -89,6 +89,8 @@ typedef PreResultOnNego = {
     moneyAfter:Int,
     foodBefore:Int,
     foodAfter:Int,
+    maintainFoodBefore:Float,
+    maintainFoodAfter:Float,
     successRate:Float
 } 
 
@@ -101,6 +103,8 @@ typedef PreResultOnWar = {
     moneyAfter:Int,
     foodBefore:Int,
     foodAfter:Int,
+    maintainFoodBefore:Float,
+    maintainFoodAfter:Float,
 } 
 
 typedef PreResultOnHire = {
@@ -108,6 +112,8 @@ typedef PreResultOnHire = {
     energyAfter:Int,
     moneyBefore:Float,
     moneyAfter:Float,
+    maintainMoneyBefore:Float,
+    maintainMoneyAfter:Float,
     successRate:Float
 }
 
@@ -134,6 +140,8 @@ typedef PreResultOnResource = {
     moneyAfter:Int,
     foodBefore:Int,
     foodAfter:Int,
+    maintainFoodBefore:Float,
+    maintainFoodAfter:Float,
 }
 
 interface IModel{

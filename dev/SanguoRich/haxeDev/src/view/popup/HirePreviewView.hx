@@ -39,6 +39,7 @@ class HirePreviewView extends PopupView{
 
             pro_energy.value = '${result.energyBefore} => ${result.energyAfter}';
             pro_money.value = '${result.moneyBefore} => ${result.moneyAfter}';
+            pro_maintainMoney.value = '${Main.getFixNumber(result.maintainMoneyBefore, 2)} => ${Main.getFixNumber(result.maintainMoneyAfter, 2)}';
             pro_successRate.value = Main.getRateString(result.successRate);
         }
 
