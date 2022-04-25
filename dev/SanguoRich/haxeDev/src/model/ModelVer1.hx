@@ -515,6 +515,7 @@ class ModelVer1 extends DebugModel {
 	override function getPreResultOfWar(playerId:Int, gridId:Int, p1:People, p2:People, army1:Float, army2:Float):Array<PreResultOnWar> {
 		return [
 			{
+				energyBefore:0,
 				energyAfter: 1,
 				armyBefore: 2,
 				armyAfter: 4,
@@ -524,6 +525,7 @@ class ModelVer1 extends DebugModel {
 				foodAfter: 8,
 			},
 			{
+				energyBefore:0,
 				energyAfter: 1,
 				armyBefore: 2,
 				armyAfter: 4,

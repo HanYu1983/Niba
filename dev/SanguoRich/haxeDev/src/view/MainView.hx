@@ -1,5 +1,6 @@
 package view;
 
+import view.popup.ResourcePreviewView;
 import view.popup.ExploreSuccessView;
 import view.popup.GrowView;
 import view.popup.ExplorePreviewView;
@@ -32,6 +33,7 @@ class MainView extends Absolute {
     var hirePreviewView:HirePreviewView;
     var explorePreviewView:ExplorePreviewView;
     var exploreSuccessView:ExploreSuccessView;
+    var resourcePreviewView:ResourcePreviewView;
     var growView:GrowView;
 
     public function new() {
@@ -80,6 +82,10 @@ class MainView extends Absolute {
         exploreSuccessView = new ExploreSuccessView();
         exploreSuccessView.hide();
         box_popup.addComponent(exploreSuccessView);
+
+        resourcePreviewView = new ResourcePreviewView();
+        resourcePreviewView.hide();
+        box_popup.addComponent(resourcePreviewView);
 
         growView = new GrowView();
         growView.hide();
@@ -148,6 +154,18 @@ class MainView extends Absolute {
         );
     }
 
+    public function onResourcePreviewConfirmClick(p1Id:Int, market:model.IModel.MARKET, resource:model.IModel.RESOURCE){
+        var gameInfo = Main.model.gameInfo();
+        Main.model.takeResource(
+            gameInfo.currentPlayer.id,
+            gameInfo.currentPlayer.atGridId,
+            p1Id,
+            market,
+            resource,
+            syncViewByInfo
+        );
+    }
+
     public function onExploreSuccessViewConfirmClick(){
         onBtnHireClick(null);
     }
@@ -170,6 +188,61 @@ class MainView extends Absolute {
 
         box_npcCmds.hide();
         box_enemyCmds.hide();
+    }
+
+    @:bind(btn_earnMoney, MouseEvent.CLICK)
+    function onBtnEarnMoneyClick(e){
+        var player = Main.model.gameInfo().currentPlayer;
+        final market = model.IModel.MARKET.BUY;
+        final resource = model.IModel.RESOURCE.MONEY;
+        var previewInfo:Dynamic = Main.model.getTakeResourcePreview(player.id, player.atGridId, market, resource);
+        previewInfo.market = market;
+        previewInfo.resource = resource;
+        resourcePreviewView.showPopup(previewInfo);
+    }
+
+    @:bind(btn_buyFood, MouseEvent.CLICK)
+    function onBtnBuyFoodClick(e){
+        var player = Main.model.gameInfo().currentPlayer;
+        final market = model.IModel.MARKET.BUY;
+        final resource = model.IModel.RESOURCE.MONEY;
+        var previewInfo:Dynamic = Main.model.getTakeResourcePreview(player.id, player.atGridId, market, resource);
+        previewInfo.market = market;
+        previewInfo.resource = resource;
+        resourcePreviewView.showPopup(previewInfo);
+    }
+
+    @:bind(btn_buyArmy, MouseEvent.CLICK)
+    function onBtnBuyArmyClick(e){
+        var player = Main.model.gameInfo().currentPlayer;
+        final market = model.IModel.MARKET.BUY;
+        final resource = model.IModel.RESOURCE.ARMY;
+        var previewInfo:Dynamic = Main.model.getTakeResourcePreview(player.id, player.atGridId, market, resource);
+        previewInfo.market = market;
+        previewInfo.resource = resource;
+        resourcePreviewView.showPopup(previewInfo);
+    }
+
+    @:bind(btn_sellFood, MouseEvent.CLICK)
+    function onBtnSellFoodClick(e){
+        var player = Main.model.gameInfo().currentPlayer;
+        final market = model.IModel.MARKET.SELL;
+        final resource = model.IModel.RESOURCE.FOOD;
+        var previewInfo:Dynamic = Main.model.getTakeResourcePreview(player.id, player.atGridId, market, resource);
+        previewInfo.market = market;
+        previewInfo.resource = resource;
+        resourcePreviewView.showPopup(previewInfo);
+    }
+
+    @:bind(btn_sellArmy, MouseEvent.CLICK)
+    function onBtnSellArmyClick(e){
+        var player = Main.model.gameInfo().currentPlayer;
+        final market = model.IModel.MARKET.SELL;
+        final resource = model.IModel.RESOURCE.ARMY;
+        var previewInfo:Dynamic = Main.model.getTakeResourcePreview(player.id, player.atGridId, market, resource);
+        previewInfo.market = market;
+        previewInfo.resource = resource;
+        resourcePreviewView.showPopup(previewInfo);
     }
 
     @:bind(btn_negotiate, MouseEvent.CLICK)
@@ -351,7 +424,6 @@ class MainView extends Absolute {
 
             var event = events.shift();
             setEventInfo(event);
-            trace(event);
             switch (event.id){
                 case WALK_STOP:
                     var g:Grid = event.value.grid;
@@ -381,6 +453,9 @@ class MainView extends Absolute {
                 case WAR_RESULT:
                     messageView.showMessage(event.value);
                     btn_end.show();
+                case RESOURCE_RESULT:
+                    messageView.showMessage(event.value);
+                    btn_end.show();
                 case WORLD_EVENT:
                     growView.showPopup(event.value);
                     box_basicCmds.show();
@@ -400,7 +475,9 @@ class MainView extends Absolute {
                 pro_currentEvent.value = "戰爭結果。等待指令中";
             case NEGOTIATE_RESULT:
                 pro_currentEvent.value = "交涉結果。等待指令中";
+            case RESOURCE_RESULT:
             case WORLD_EVENT:
+            
         };
     }
 

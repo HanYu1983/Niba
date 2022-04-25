@@ -1,5 +1,9 @@
 package model;
 
+import model.IModel.MARKET;
+import model.IModel.RESOURCE;
+import model.IModel.ResourcePreview;
+import model.IModel.PreResultOnResource;
 import model.IModel.ExplorePreview;
 import model.IModel.PreResultOnExplore;
 import model.IModel.PreResultOnWar;
@@ -213,4 +217,14 @@ class DebugModel implements IModel {
 	}
 
 	public function takeExplore(playerId:Int, gridInt:Int, p1PeopleId:Int, cb:(gameInfo:GameInfo) -> Void) {}
+
+	public function getTakeResourcePreview(playerId:Int, gridId:Int, market:MARKET, type:RESOURCE):ResourcePreview {
+		return null;
+	}
+
+	public function getPreResultOfResource(playerId:Int, gridId:Int, p1:People, market:MARKET, type:RESOURCE):PreResultOnResource {
+		return null;
+	}
+
+	public function takeResource(playerId:Int, gridInt:Int, p1PeopleId:Int, market:MARKET, type:RESOURCE, cb:(gameInfo:GameInfo) -> Void) {}
 }
