@@ -83,6 +83,20 @@ class ModelVer2 extends DebugModel {
 		_takeExplore(context, playerId, gridId, p1SelectId);
 		cb(gameInfo());
 	}
+
+	override function getTakeWarPreview(playerId:Int, gridId:Int):WarPreview {
+		return _getTakeWarPreview(context, playerId, gridId);
+	}
+
+	override function getPreResultOfWar(playerId:Int, gridId:Int, p1:model.PeopleGenerator.People, p2:model.PeopleGenerator.People, army1:Float,
+			army2:Float):Array<PreResultOnWar> {
+		return _getPreResultOfWar(context, playerId, gridId, p1.id, p2.id, army1, army2);
+	}
+
+	override function takeWarOn(playerId:Int, gridId:Int, p1PeopleId:Int, p2PeopleId:Int, army1:Float, army2:Float, cb:(gameInfo:GameInfo) -> Void) {
+		_takeWarOn(context, playerId, gridId, p1PeopleId, p2PeopleId, army1, army2);
+		cb(gameInfo());
+	}
 }
 
 private typedef Grid = {
@@ -175,7 +189,18 @@ private enum Event {
 		foodBefore:Float,
 		foodAfter:Float,
 	});
-	WAR_RESULT(value:{});
+	WAR_RESULT(value:{
+		success:Bool,
+		people:People,
+		energyBefore:Float,
+		energyAfter:Float,
+		armyBefore:Float,
+		armyAfter:Float,
+		moneyBefore:Float,
+		moneyAfter:Float,
+		foodBefore:Float,
+		foodAfter:Float,
+	});
 }
 
 private typedef Context = {
@@ -219,6 +244,11 @@ private function getPlayerInfo(ctx:Context, player:Player):model.IModel.PlayerIn
 	}
 }
 
+private function getGridBelongPlayerId(ctx:Context, gridId:Int):Null<Int> {
+	final peopleInGrid = ctx.peoples.filter(p -> p.position.gridId == gridId);
+	return peopleInGrid.length > 0 ? peopleInGrid[0].belongToPlayerId : null;
+}
+
 private function getGridInfo(ctx:Context, grid:Grid):model.GridGenerator.Grid {
 	final peopleInGrid = ctx.peoples.filter(p -> p.position.gridId == grid.id);
 	return {
@@ -227,7 +257,7 @@ private function getGridInfo(ctx:Context, grid:Grid):model.GridGenerator.Grid {
 		buildtype: grid.buildtype,
 		height: 0,
 		attachs: [],
-		belongPlayerId: peopleInGrid.length > 0 ? peopleInGrid[0].belongToPlayerId : null,
+		belongPlayerId: cast getGridBelongPlayerId(ctx, grid.id),
 		value: 0,
 		money: grid.money,
 		moneyGrow: 0,
@@ -297,6 +327,22 @@ private function getGameInfo(ctx:Context, root:Bool):GameInfo {
 				case HIRE_RESULT(value):
 					{
 						id: EventInfoID.HIRE_RESULT,
+						value: {
+							success: value.success,
+							people: getPeopleInfo(ctx, value.people),
+							energyBefore: value.energyBefore,
+							energyAfter: value.energyAfter,
+							armyBefore: value.armyBefore,
+							armyAfter: value.armyAfter,
+							moneyBefore: value.moneyBefore,
+							moneyAfter: value.moneyAfter,
+							foodBefore: value.foodBefore,
+							foodAfter: value.foodAfter,
+						},
+					}
+				case WAR_RESULT(value):
+					{
+						id: EventInfoID.WAR_RESULT,
 						value: {
 							success: value.success,
 							people: getPeopleInfo(ctx, value.people),
@@ -761,4 +807,83 @@ private function applyExploreCost(ctx:Context, playerId:Int, gridId:Int, p1Selec
 	final newPeople = PeopleGenerator.getInst().generate();
 	addPeopleInfo(ctx, null, gridId, newPeople);
 	return [newPeople.id];
+}
+
+// =================================
+// 佔領
+// =================================
+private function _getTakeWarPreview(ctx:Context, playerId:Int, gridId:Int):WarPreview {
+	final grid = ctx.grids[gridId];
+	if (grid.buildtype == BUILDING.EMPTY) {
+		throw new haxe.Exception("空地不能攻擊");
+	}
+	final gridBelongPlayerId = getGridBelongPlayerId(ctx, gridId);
+	return switch gridBelongPlayerId {
+		case null:
+			{
+				p1: getPlayerInfo(ctx, ctx.players[playerId]),
+				p2: {
+					id: grid.id,
+					name: 'grid${gridId}',
+					money: grid.money,
+					food: grid.food,
+					army: grid.army,
+					strategy: 0,
+					people: ctx.peoples.filter(p -> p.position.gridId == gridId).map(p -> getPeopleInfo(ctx, p)),
+					atGridId: gridId,
+					maintainArmy: 0,
+					maintainPeople: 0,
+				},
+				p1ValidPeople: getPlayerInfo(ctx, ctx.players[playerId]).people,
+				p2ValidPeople: getGridInfo(ctx, ctx.grids[gridId]).people
+			};
+		case _:
+			final gridPlayer = ctx.players[gridBelongPlayerId];
+			{
+				p1: getPlayerInfo(ctx, ctx.players[playerId]),
+				p2: getPlayerInfo(ctx, gridPlayer),
+				p1ValidPeople: getPlayerInfo(ctx, ctx.players[playerId]).people,
+				p2ValidPeople: getPlayerInfo(ctx, gridPlayer).people,
+			};
+	}
+}
+
+private function _getPreResultOfWar(ctx:Context, playerId:Int, gridId:Int, p1:Int, p2:Int, army1:Float, army2:Float):Array<PreResultOnWar> {
+	return [
+		{
+			energyAfter: 1,
+			armyBefore: 2,
+			armyAfter: 4,
+			moneyBefore: 5,
+			moneyAfter: 6,
+			foodBefore: 7,
+			foodAfter: 8,
+		},
+		{
+			energyAfter: 1,
+			armyBefore: 2,
+			armyAfter: 4,
+			moneyBefore: 5,
+			moneyAfter: 6,
+			foodBefore: 7,
+			foodAfter: 8,
+		}
+	];
+}
+
+private function _takeWarOn(ctx:Context, playerId:Int, gridId:Int, p1PeopleId:Int, p2PeopleId:Int, army1:Float, army2:Float) {
+	ctx.events = [
+		Event.WAR_RESULT({
+			success: true,
+			people: getPeopleById(ctx, playerId),
+			energyBefore: 100,
+			energyAfter: 50,
+			armyBefore: 200,
+			armyAfter: 300,
+			moneyBefore: 200,
+			moneyAfter: 300,
+			foodBefore: 100,
+			foodAfter: 200
+		})
+	];
 }
