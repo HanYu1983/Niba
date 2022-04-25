@@ -25,9 +25,9 @@
     <item-renderer>
         <label id="command" width="100%" />
     </item-renderer>
-    <item-renderer>
+    <!-- <item-renderer>
         <button id="btn_assign" text="指派" width="100%" />
-    </item-renderer>
+    </item-renderer> -->
     <!-- <item-renderer>
         <button id="btn_fire" onclick="trace('abbd')" text="解雇" width="100%" />
     </item-renderer> -->

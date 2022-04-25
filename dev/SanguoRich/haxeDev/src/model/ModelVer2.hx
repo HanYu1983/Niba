@@ -20,10 +20,36 @@ import model.IModel.WarPreview;
 using Lambda;
 
 // 幾個回合加成(4人走完算1回合)
-// 主公支付所有武將薪水
-// 主公用身上的兵支付身上的食物
-// 格子用格子上的兵支付格子上的食物
-final EARN_BY_TURN = 3;
+// 主公支付所有包含格子上的武將的薪水
+// 主公依據所有包含格子上的士兵支付食物
+final PLAYER_EARN_PER_TURN = 1;
+
+// 主公支付的薪水為主公所有武將的value總合的%數
+// 所有格子以及主公支付的食物為所有士兵的數量的%數
+final PLAYER_EARN_PER_TURN_PERSENT = 0.02;
+
+// 格子的成長週期
+// 格子依據自己的成長值成長
+// 格子的成長植受到該格子上的所有武將的智力(主要影響食物)、政治(主要影響金錢)、統率(主要影響士兵)影響
+final GRID_EARN_PER_TURN = 2;
+
+// 幾個回合收稅(4人走完算1回合)
+final PLAYER_EARN_FROM_CITY_PER_TURN = 10;
+
+// 收稅:主公身上的資源增加，依據所有城池的金錢、食物、士兵、策略點個別合計之後的%數
+final PLAYER_EARN_FROM_CITY_BY_TURN_PERSENT = .05;
+
+// 所有支出能量的加權(方便整體調整體力支出)
+final TOTAL_ENERGY_COST_FACTOR = 1.0;
+
+// 基本一單買糧買兵的的金錢
+final MONEY_PER_DEAL = 100;
+
+// 基本一單賣糧的數目
+final FOOD_PER_DEAL = 100;
+
+// 基本一單賣兵的數目
+final ARMY_PER_DEAL = 100;
 
 // 稅收
 // 主公會得到所有城池的成數
@@ -734,15 +760,16 @@ private function initContext(ctx:Context, option:{}) {
 			id: i++,
 			name: name,
 			money: 1000.0,
-			army: 100.0,
-			food: 100.0,
-			strategy: 10.0,
+			army: 1000.0,
+			food: 1000.0,
+			strategy: 1000.0,
 			people: [
+				model.PeopleGenerator.getInst().generate(),
 				model.PeopleGenerator.getInst().generate(),
 				model.PeopleGenerator.getInst().generate()
 			],
-			maintainPeople: -1.2,
-			maintainArmy: -1.1,
+			maintainPeople: 0,
+			maintainArmy: 0,
 			atGridId: 0,
 			grids: []
 		});
