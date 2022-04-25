@@ -1,5 +1,9 @@
 package model;
 
+import model.IModel.PreResultOnResource;
+import model.IModel.ResourcePreview;
+import model.IModel.MARKET;
+import model.IModel.RESOURCE;
 import model.IModel.GameInfo;
 import model.GridGenerator.BUILDING;
 import model.IModel.ActionInfoID;
@@ -95,6 +99,19 @@ class ModelVer2 extends DebugModel {
 
 	override function takeWarOn(playerId:Int, gridId:Int, p1PeopleId:Int, p2PeopleId:Int, army1:Float, army2:Float, cb:(gameInfo:GameInfo) -> Void) {
 		_takeWarOn(context, playerId, gridId, p1PeopleId, p2PeopleId, army1, army2);
+		cb(gameInfo());
+	}
+
+	override function getTakeResourcePreview(playerId:Int, gridId:Int, market:MARKET, type:RESOURCE):ResourcePreview {
+		return _getTakeResourcePreview(context, playerId, gridId, market, type);
+	}
+
+	override function getPreResultOfResource(playerId:Int, gridId:Int, p1:model.PeopleGenerator.People, market:MARKET, type:RESOURCE):PreResultOnResource {
+		return _getPreResultOfResource(context, playerId, gridId, p1.id, market, type);
+	}
+
+	override function takeResource(playerId:Int, gridId:Int, p1PeopleId:Int, market:MARKET, type:RESOURCE, cb:(gameInfo:GameInfo) -> Void) {
+		_takeResource(context, playerId, gridId, p1PeopleId, market, type);
 		cb(gameInfo());
 	}
 }
@@ -195,6 +212,18 @@ private enum Event {
 		foodAfter:Float,
 	});
 	WAR_RESULT(value:{
+		success:Bool,
+		people:model.PeopleGenerator.People,
+		energyBefore:Float,
+		energyAfter:Float,
+		armyBefore:Float,
+		armyAfter:Float,
+		moneyBefore:Float,
+		moneyAfter:Float,
+		foodBefore:Float,
+		foodAfter:Float,
+	});
+	RESOURCE_RESULT(value:{
 		success:Bool,
 		people:model.PeopleGenerator.People,
 		energyBefore:Float,
@@ -310,6 +339,11 @@ private function getGameInfo(ctx:Context, root:Bool):GameInfo {
 						value: value
 					}
 				case WAR_RESULT(value):
+					{
+						id: EventInfoID.WAR_RESULT,
+						value: value
+					}
+				case RESOURCE_RESULT(value):
 					{
 						id: EventInfoID.WAR_RESULT,
 						value: value
@@ -877,7 +911,7 @@ private function _getTakeWarPreview(ctx:Context, playerId:Int, gridId:Int):WarPr
 private function _getPreResultOfWar(ctx:Context, playerId:Int, gridId:Int, p1:Int, p2:Int, army1:Float, army2:Float):Array<PreResultOnWar> {
 	return [
 		{
-			energyBefore:0,
+			energyBefore: 0,
 			energyAfter: 1,
 			armyBefore: 2,
 			armyAfter: 4,
@@ -887,7 +921,7 @@ private function _getPreResultOfWar(ctx:Context, playerId:Int, gridId:Int, p1:In
 			foodAfter: 8,
 		},
 		{
-			energyBefore:0,
+			energyBefore: 0,
 			energyAfter: 1,
 			armyBefore: 2,
 			armyAfter: 4,
@@ -904,6 +938,45 @@ private function _takeWarOn(ctx:Context, playerId:Int, gridId:Int, p1PeopleId:In
 		Event.WAR_RESULT({
 			success: true,
 			people: getPeopleInfo(ctx, getPeopleById(ctx, playerId)),
+			energyBefore: 100,
+			energyAfter: 50,
+			armyBefore: 200,
+			armyAfter: 300,
+			moneyBefore: 200,
+			moneyAfter: 300,
+			foodBefore: 100,
+			foodAfter: 200
+		})
+	];
+}
+
+// =================================
+// 資源
+// =================================
+private function _getTakeResourcePreview(ctx:Context, playerId:Int, gridId:Int, market:MARKET, type:RESOURCE):ResourcePreview {
+	return {
+		p1ValidPeople: getPlayerInfo(ctx, ctx.players[playerId]).people
+	};
+}
+
+private function _getPreResultOfResource(ctx:Context, playerId:Int, gridId:Int, peopleId:Int, market:MARKET, type:RESOURCE):PreResultOnResource {
+	return {
+		energyAfter: 10,
+		energyBefore: 10,
+		armyBefore: 10,
+		armyAfter: 10,
+		moneyBefore: 10,
+		moneyAfter: 10,
+		foodBefore: 10,
+		foodAfter: 10
+	}
+}
+
+private function _takeResource(ctx:Context, playerId:Int, gridInt:Int, p1PeopleId:Int, market:MARKET, type:RESOURCE) {
+	ctx.events = [
+		Event.RESOURCE_RESULT({
+			success: true,
+			people: PeopleGenerator.getInst().generate(),
 			energyBefore: 100,
 			energyAfter: 50,
 			armyBefore: 200,
