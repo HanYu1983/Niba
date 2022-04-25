@@ -20,35 +20,43 @@ import model.IModel.WarPreview;
 using Lambda;
 
 // 幾個回合加成(4人走完算1回合)
-// 主公支付所有包含格子上的武將的薪水
-// 主公依據所有包含格子上的士兵支付食物
+// 作用中
 final PLAYER_EARN_PER_TURN = 1;
 
-// 主公支付的薪水為主公所有武將的value總合的%數
-// 所有格子以及主公支付的食物為所有士兵的數量的%數
+// 主公支付的薪水為主公所有武將的value(?)總合的%數
+// 所有格子(?)以及主公支付的食物為所有士兵的數量的%數
+// 作用中
 final PLAYER_EARN_PER_TURN_PERSENT = 0.02;
 
 // 格子的成長週期
 // 格子依據自己的成長值成長
 // 格子的成長植受到該格子上的所有武將的智力(主要影響食物)、政治(主要影響金錢)、統率(主要影響士兵)影響
+// 作用中
 final GRID_EARN_PER_TURN = 2;
 
 // 幾個回合收稅(4人走完算1回合)
+// 作用中
 final PLAYER_EARN_FROM_CITY_PER_TURN = 10;
 
-// 收稅:主公身上的資源增加，依據所有城池的金錢、食物、士兵、策略點個別合計之後的%數
+// 收稅:主公身上的資源增加，依據所有城池的金錢、食物、士兵、策略點(?)個別合計之後的%數
+// 實作成會從城中扣掉加到主公身上
+// 作用中
 final PLAYER_EARN_FROM_CITY_BY_TURN_PERSENT = .05;
 
 // 所有支出能量的加權(方便整體調整體力支出)
-final TOTAL_ENERGY_COST_FACTOR = 1.0;
+// 作用中
+final TOTAL_ENERGY_COST_FACTOR = 0.3;
 
 // 基本一單買糧買兵的的金錢
+// 作用中
 final MONEY_PER_DEAL = 100;
 
 // 基本一單賣糧的數目
+// 作用中
 final FOOD_PER_DEAL = 100;
 
 // 基本一單賣兵的數目
+// 作用中
 final ARMY_PER_DEAL = 100;
 
 // 稅收
@@ -123,7 +131,7 @@ private function getHireCost(ctx:Context, playerId:Int, gridId:Int, p1SelectId:I
 			final fightPeople = [p1SelectId, p2SelectId].map(p -> getPeopleById(ctx, p));
 			return switch fightPeople {
 				case [p1, p2]:
-					final useEnergy = p1.energy / 3;
+					final useEnergy = p1.energy * TOTAL_ENERGY_COST_FACTOR;
 					final base = (useEnergy / 100) + 0.2;
 					final charmFactor = p1.charm / p2.charm;
 					// 人脈加成
@@ -154,7 +162,7 @@ private function getExploreCost(ctx:Context, playerId:Int, gridId:Int, p1SelectI
 		case 0:
 			final grid = ctx.grids[gridId];
 			final p1 = getPeopleById(ctx, p1SelectId);
-			final useEnergy = p1.energy / 3;
+			final useEnergy = p1.energy * TOTAL_ENERGY_COST_FACTOR;
 			final base = (useEnergy / 100) + 0.2;
 			final charmFactor = p1.charm / 100;
 			// 人脈加成
@@ -177,12 +185,12 @@ private function getExploreCost(ctx:Context, playerId:Int, gridId:Int, p1SelectI
 
 // 經商買賣計算
 private function getResourceCost(ctx:Context, playerId:Int, gridId:Int, p1SelectId:Int, market:MARKET, type:RESOURCE) {
-	trace("MondelVer2.getResourceCost", market, type);
+	trace("MondelVer2", "getResourceCost", market, type);
 	return switch 0 {
 		case 0:
 			final grid = ctx.grids[gridId];
 			final p1 = getPeopleById(ctx, p1SelectId);
-			final useEnergy = p1.energy / 3;
+			final useEnergy = p1.energy * TOTAL_ENERGY_COST_FACTOR;
 			final base = (useEnergy / 100) + 0.2;
 			final abiFactor:Float = if (type == RESOURCE.MONEY && (p1.abilities.has(4) || p1.abilities.has(10))) {
 				1.5;
@@ -211,11 +219,11 @@ private function getResourceCost(ctx:Context, playerId:Int, gridId:Int, p1Select
 				case [MONEY, _]:
 					returnInfo.playerCost.money = -1 * 100 * rate;
 				case [ARMY, SELL]:
-					final sellArmyCount = 100;
+					final sellArmyCount = ARMY_PER_DEAL;
 					returnInfo.playerCost.money = -1 * sellArmyCount * rate;
 					returnInfo.playerCost.army = sellArmyCount;
 				case [FOOD, SELL]:
-					final sellFoodCount = 100;
+					final sellFoodCount = FOOD_PER_DEAL;
 					returnInfo.playerCost.money = -1 * sellFoodCount * rate;
 					returnInfo.playerCost.food = sellFoodCount;
 				case [STRETEGY, SELL]:
@@ -223,11 +231,11 @@ private function getResourceCost(ctx:Context, playerId:Int, gridId:Int, p1Select
 					returnInfo.playerCost.money = -1 * sellIntCount * rate;
 					returnInfo.playerCost.strategy = sellIntCount;
 				case [ARMY, BUY]:
-					final moneyCost = 100;
+					final moneyCost = MONEY_PER_DEAL;
 					returnInfo.playerCost.money = moneyCost;
 					returnInfo.playerCost.army = -moneyCost * rate;
 				case [FOOD, BUY]:
-					final moneyCost = 100;
+					final moneyCost = MONEY_PER_DEAL;
 					returnInfo.playerCost.money = moneyCost;
 					returnInfo.playerCost.food = -moneyCost * rate;
 				case [STRETEGY, BUY]:
@@ -241,82 +249,126 @@ private function getResourceCost(ctx:Context, playerId:Int, gridId:Int, p1Select
 	}
 }
 
+private function getMaintainPeople(ctx:Context, playerId:Int):Float {
+	final totalPeopleCost = ctx.peoples.filter(p -> p.belongToPlayerId == playerId).fold((p, a) -> {
+		return a + p.cost;
+	}, 0.0);
+	return totalPeopleCost * PLAYER_EARN_PER_TURN_PERSENT;
+}
+
+private function getMaintainArmy(ctx:Context, playerId:Int):Float {
+	final totalArmy = ctx.grids.filter(g -> getGridBelongPlayerId(ctx, g.id) == playerId).fold((p, a) -> {
+		return a + p.army;
+	}, 0.0) + ctx.players[playerId].army;
+	return totalArmy * PLAYER_EARN_PER_TURN_PERSENT;
+}
+
 // TODO: 佔領計算
 // 玩家回合結束
 private function doPlayerEnd(ctx:Context) {
-	// 還沒想到要怎麼提出算法
-	// 如果有想法可以先寫下來
-	// 比如幾回合算一次, 怎麼算
-	// ===============
 	ctx.actions = [];
 	ctx.events = [];
 	// 四個玩家走完後才計算回合
-	final isLastPlayer = ctx.currentPlayerId == (ctx.players.length - 1);
-	if (isLastPlayer) {
+	final isTurnEnd = ctx.currentPlayerId == (ctx.players.length - 1);
+	if (isTurnEnd) {
 		final worldEventValue = {
 			playerBefore: ctx.players.map(p -> getPlayerInfo(ctx, p)),
 			playerAfter: ([] : Array<model.IModel.PlayerInfo>),
 			gridBefore: ctx.grids.map(g -> getGridInfo(ctx, g)),
 			gridAfter: ([] : Array<model.GridGenerator.Grid>),
 		}
-		// 城池
-		for (grid in ctx.grids) {
-			// 支付武將的薪水
-			{
-				final peopleMainCost = ctx.peoples.filter(p -> p.position.gridId == grid.id).fold((p, a) -> {
-					// 薪水是雇傭金的1%
-					return a + p.cost * 0.1;
-				}, 0.0);
-				grid.money -= peopleMainCost;
-				if (grid.money < 0) {
-					grid.money = 0;
-				}
-			}
-			// 吃食物
-			{
-				final foodCost = grid.army * 0.01;
-				grid.food -= foodCost;
-				if (grid.food < 0) {
-					grid.food = 0;
-				}
-			}
-			// 城池成長
-			grid.money += grid.money * 0.01;
-			grid.food += grid.food * 0.01;
-			grid.army += grid.army * 0.01;
-		}
-		// 玩家
-		for (player in ctx.players) {
-			// 支付武將的薪水
-			{
-				final peopleMainCost = ctx.peoples.filter(p -> p.position.player == true && p.belongToPlayerId == player.id).fold((p, a) -> {
-					// 薪水是雇傭金的1%
-					return a + p.cost * 0.1;
-				}, 0.0);
-				player.money -= peopleMainCost;
-				if (player.money < 0) {
-					player.money = 0;
-				}
-			}
-			// 吃食物
-			{
-				final foodCost = player.army * 0.01;
-				player.food -= foodCost;
-				if (player.food < 0) {
-					player.food = 0;
+		// 先假設每回合回體力
+		{
+			final enable = ctx.turn % 1 == 0;
+			// 回體力
+			for (people in ctx.peoples) {
+				people.energy += 5 + people.energy / 10;
+				if (people.energy > 100) {
+					people.energy = 100;
 				}
 			}
 		}
-		// 回體力
-		for (people in ctx.peoples) {
-			people.energy += 5 + people.energy / 10;
-			if (people.energy > 100) {
-				people.energy = 100;
+		// 支付薪水
+		{
+			final enable = ctx.turn % PLAYER_EARN_PER_TURN == 0;
+			if (enable) {
+				trace("ModelVer2", "doPlayerEnd", "支付薪水");
+				// 玩家
+				for (player in ctx.players) {
+					// 支付武將的薪水
+					{
+						player.money -= getMaintainPeople(ctx, player.id);
+						if (player.money < 0) {
+							player.money = 0;
+						}
+					}
+					// 吃食物
+					{
+						player.food -= getMaintainArmy(ctx, player.id);
+						if (player.food < 0) {
+							player.food = 0;
+						}
+					}
+				}
+			}
+		}
+		// 格子成長
+		{
+			final enable = ctx.turn % GRID_EARN_PER_TURN == 0;
+			if (enable) {
+				trace("ModelVer2", "doPlayerEnd", "格子成長");
+				for (grid in ctx.grids) {
+					final peopleInGrid = ctx.peoples.filter(p -> p.position.gridId == grid.id);
+					// 沒武將的格子不成長
+					if (peopleInGrid.length == 0) {
+						continue;
+					}
+					final totalPeopleIntelligence = peopleInGrid.fold((p, a) -> {
+						return a + p.intelligence;
+					}, 0.0);
+					final totalPeoplePolitical = peopleInGrid.fold((p, a) -> {
+						return a + p.political;
+					}, 0.0);
+					final totalPeoplecharm = peopleInGrid.fold((p, a) -> {
+						return a + p.charm;
+					}, 0.0);
+					final factor1 = 1 / (peopleInGrid.length * 100);
+					// 城池成長
+					grid.money += grid.money * grid.moneyGrow * (totalPeopleIntelligence * factor1);
+					grid.food += grid.food * grid.foodGrow * (totalPeopleIntelligence * factor1);
+					grid.army += grid.army * grid.armyGrow * (totalPeopleIntelligence * factor1);
+				}
+			}
+		}
+		// 收稅
+		{
+			final enable = ctx.turn % PLAYER_EARN_FROM_CITY_PER_TURN == 0;
+			if (enable) {
+				trace("ModelVer2", "doPlayerEnd", "收稅");
+				for (grid in ctx.grids) {
+					// 有主公的才有稅收
+					final belongPlayerId = getGridBelongPlayerId(ctx, grid.id);
+					if (belongPlayerId == null) {
+						continue;
+					}
+					final player = ctx.players[belongPlayerId];
+					final earnArmy = grid.army * PLAYER_EARN_FROM_CITY_BY_TURN_PERSENT;
+					final earnFood = grid.food * PLAYER_EARN_FROM_CITY_BY_TURN_PERSENT;
+					final earnMoney = grid.money * PLAYER_EARN_FROM_CITY_BY_TURN_PERSENT;
+					grid.army -= earnArmy;
+					grid.food -= earnFood;
+					grid.money -= earnMoney;
+					player.army += earnArmy;
+					player.food += earnFood;
+					player.money += earnMoney;
+				}
 			}
 		}
 		worldEventValue.playerAfter = ctx.players.map(p -> getPlayerInfo(ctx, p));
 		worldEventValue.gridAfter = ctx.grids.map(g -> getGridInfo(ctx, g));
 		ctx.events.push(Event.WORLD_EVENT(worldEventValue));
+		// 下一回合
+		ctx.turn += 1;
 	}
 	// 下一個玩家
 	ctx.currentPlayerId = (ctx.currentPlayerId + 1) % ctx.players.length;
@@ -334,6 +386,7 @@ class ModelVer2 extends DebugModel {
 		currentPlayerId: 0,
 		actions: [],
 		events: [],
+		turn: 0
 	}
 
 	override function gameStart(cb:Void->Void):Void {
@@ -428,6 +481,9 @@ private typedef Grid = {
 	money:Float,
 	food:Float,
 	army:Float,
+	moneyGrow:Float,
+	foodGrow:Float,
+	armyGrow:Float
 }
 
 private typedef Attachment = {
@@ -551,6 +607,7 @@ private typedef Context = {
 	currentPlayerId:Int,
 	actions:Array<Action>,
 	events:Array<Event>,
+	turn:Int
 }
 
 private function getPeopleInfo(ctx:Context, people:People):model.PeopleGenerator.People {
@@ -579,8 +636,8 @@ private function getPlayerInfo(ctx:Context, player:Player):model.IModel.PlayerIn
 		strategy: player.strategy,
 		people: ctx.peoples.filter(p -> p.position.player == true && p.belongToPlayerId == player.id).map(p -> getPeopleInfo(ctx, p)),
 		atGridId: player.position,
-		maintainPeople: 0,
-		maintainArmy: 0,
+		maintainPeople: getMaintainPeople(ctx, player.id),
+		maintainArmy: getMaintainArmy(ctx, player.id),
 		grids: []
 	}
 }
@@ -679,6 +736,9 @@ private function addGridInfo(ctx:Context, grid:model.GridGenerator.Grid):Void {
 		money: grid.money,
 		food: grid.food,
 		army: grid.army,
+		moneyGrow: grid.moneyGrow,
+		foodGrow: grid.foodGrow,
+		armyGrow: grid.armyGrow,
 	});
 	for (p in grid.people) {
 		ctx.peoples.push({
