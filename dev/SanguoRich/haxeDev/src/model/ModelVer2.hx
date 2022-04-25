@@ -148,10 +148,10 @@ private enum Action {
 
 private enum Event {
 	WORLD_EVENT(value:{
-		// playerBefore:Array<model.IModel.PlayerInfo>,
-		// playerAfter:Array<model.IModel.PlayerInfo>,
-		// gridBefore:Array<model.GridGenerator.Grid>,
-		// gridAfter:Array<model.GridGenerator.Grid>
+		playerBefore:Array<model.IModel.PlayerInfo>,
+		playerAfter:Array<model.IModel.PlayerInfo>,
+		gridBefore:Array<model.GridGenerator.Grid>,
+		gridAfter:Array<model.GridGenerator.Grid>
 	});
 	WALK_STOP(value:{
 		grid:Grid,
@@ -282,7 +282,8 @@ private function getGameInfo(ctx:Context, root:Bool):GameInfo {
 		currentPlayer: getPlayerInfo(ctx, ctx.players[ctx.currentPlayerId]),
 		isPlaying: true,
 		events: root ? ctx.events.map(e -> {
-			return switch e {
+			// 顯式使用類型(EventInfo), 這裡不能依靠類型推理, 不然會編譯錯誤
+			final eventInfo:model.IModel.EventInfo = switch e {
 				case WORLD_EVENT(value):
 					{
 						id: EventInfoID.WORLD_EVENT,
@@ -364,6 +365,7 @@ private function getGameInfo(ctx:Context, root:Bool):GameInfo {
 				case _:
 					throw new haxe.Exception("未知的event");
 			}
+			return eventInfo;
 		}) : [],
 		actions: root ? ctx.actions.map(a -> {
 			return switch a {
