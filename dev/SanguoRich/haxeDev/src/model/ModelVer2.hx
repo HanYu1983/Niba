@@ -658,11 +658,11 @@ private function getGridInfo(ctx:Context, grid:Grid):model.GridGenerator.Grid {
 		belongPlayerId: cast getGridBelongPlayerId(ctx, grid.id),
 		value: 0,
 		money: grid.money,
-		moneyGrow: 0,
+		moneyGrow: grid.moneyGrow,
 		food: grid.food,
-		foodGrow: 0,
+		foodGrow: grid.foodGrow,
 		army: grid.army,
-		armyGrow: 0,
+		armyGrow: grid.armyGrow,
 		people: peopleInGrid.map(p -> getPeopleInfo(ctx, p)),
 	}
 }
