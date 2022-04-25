@@ -148,18 +148,18 @@ private enum Action {
 
 private enum Event {
 	WORLD_EVENT(value:{
-		// playerBefore:Array<model.IModel.PlayerInfo>,
-		// playerAfter:Array<model.IModel.PlayerInfo>,
-		// gridBefore:Array<model.GridGenerator.Grid>,
-		// gridAfter:Array<model.GridGenerator.Grid>
+		playerBefore:Array<model.IModel.PlayerInfo>,
+		playerAfter:Array<model.IModel.PlayerInfo>,
+		gridBefore:Array<model.GridGenerator.Grid>,
+		gridAfter:Array<model.GridGenerator.Grid>
 	});
 	WALK_STOP(value:{
-		grid:Grid,
+		grid:model.GridGenerator.Grid,
 		commands:Array<Dynamic>,
 	});
 	NEGOTIATE_RESULT(value:{
 		success:Bool,
-		people:People,
+		people:model.PeopleGenerator.People,
 		energyBefore:Float,
 		energyAfter:Float,
 		armyBefore:Float,
@@ -171,8 +171,8 @@ private enum Event {
 	});
 	EXPLORE_RESULT(value:{
 		success:Bool,
-		people:People,
-		peopleList:Array<People>,
+		people:model.PeopleGenerator.People,
+		peopleList:Array<model.PeopleGenerator.People>,
 		energyBefore:Float,
 		energyAfter:Float,
 		armyBefore:Float,
@@ -184,7 +184,7 @@ private enum Event {
 	});
 	HIRE_RESULT(value:{
 		success:Bool,
-		people:People,
+		people:model.PeopleGenerator.People,
 		energyBefore:Float,
 		energyAfter:Float,
 		armyBefore:Float,
@@ -196,7 +196,7 @@ private enum Event {
 	});
 	WAR_RESULT(value:{
 		success:Bool,
-		people:People,
+		people:model.PeopleGenerator.People,
 		energyBefore:Float,
 		energyAfter:Float,
 		armyBefore:Float,
@@ -282,7 +282,8 @@ private function getGameInfo(ctx:Context, root:Bool):GameInfo {
 		currentPlayer: getPlayerInfo(ctx, ctx.players[ctx.currentPlayerId]),
 		isPlaying: true,
 		events: root ? ctx.events.map(e -> {
-			return switch e {
+			// 顯式使用類型(EventInfo), 這裡不能依靠類型推理, 不然會編譯錯誤
+			final eventInfo:model.IModel.EventInfo = switch e {
 				case WORLD_EVENT(value):
 					{
 						id: EventInfoID.WORLD_EVENT,
@@ -291,79 +292,30 @@ private function getGameInfo(ctx:Context, root:Bool):GameInfo {
 				case WALK_STOP(value):
 					{
 						id: EventInfoID.WALK_STOP,
-						value: {
-							grid: getGridInfo(ctx, value.grid),
-							commands: value.commands
-						}
+						value: value
 					}
 				case NEGOTIATE_RESULT(value):
 					{
 						id: EventInfoID.NEGOTIATE_RESULT,
-						value: {
-							success: value.success,
-							people: getPeopleInfo(ctx, value.people),
-							energyBefore: value.energyBefore,
-							energyAfter: value.energyAfter,
-							armyBefore: value.armyBefore,
-							armyAfter: value.armyAfter,
-							moneyBefore: value.moneyBefore,
-							moneyAfter: value.moneyAfter,
-							foodBefore: value.foodBefore,
-							foodAfter: value.foodAfter,
-						},
+						value: value
 					}
 				case EXPLORE_RESULT(value):
 					{
 						id: EventInfoID.EXPLORE_RESULT,
-						value: {
-							success: value.success,
-							people: getPeopleInfo(ctx, value.people),
-							peopleList: value.peopleList.map(p -> getPeopleInfo(ctx, p)),
-							energyBefore: value.energyBefore,
-							energyAfter: value.energyAfter,
-							armyBefore: value.armyBefore,
-							armyAfter: value.armyAfter,
-							moneyBefore: value.moneyBefore,
-							moneyAfter: value.moneyAfter,
-							foodBefore: value.foodBefore,
-							foodAfter: value.foodAfter,
-						},
+						value: value
 					}
 				case HIRE_RESULT(value):
 					{
 						id: EventInfoID.HIRE_RESULT,
-						value: {
-							success: value.success,
-							people: getPeopleInfo(ctx, value.people),
-							energyBefore: value.energyBefore,
-							energyAfter: value.energyAfter,
-							armyBefore: value.armyBefore,
-							armyAfter: value.armyAfter,
-							moneyBefore: value.moneyBefore,
-							moneyAfter: value.moneyAfter,
-							foodBefore: value.foodBefore,
-							foodAfter: value.foodAfter,
-						},
+						value: value
 					}
 				case WAR_RESULT(value):
 					{
 						id: EventInfoID.WAR_RESULT,
-						value: {
-							success: value.success,
-							people: getPeopleInfo(ctx, value.people),
-							energyBefore: value.energyBefore,
-							energyAfter: value.energyAfter,
-							armyBefore: value.armyBefore,
-							armyAfter: value.armyAfter,
-							moneyBefore: value.moneyBefore,
-							moneyAfter: value.moneyAfter,
-							foodBefore: value.foodBefore,
-							foodAfter: value.foodAfter,
-						},
+						value: value
 					}
-				case _:
-					throw new haxe.Exception("未知的event");
 			}
+			return eventInfo;
 		}) : [],
 		actions: root ? ctx.actions.map(a -> {
 			return switch a {
@@ -373,8 +325,6 @@ private function getGameInfo(ctx:Context, root:Bool):GameInfo {
 						value: value,
 						gameInfo: getGameInfo(ctx, false)
 					}
-				case _:
-					throw new haxe.Exception("未知的action");
 			}
 		}) : []
 	}
@@ -508,7 +458,7 @@ private function doPlayerDice(ctx:Context) {
 	final toGrid = ctx.grids[toGridId];
 	ctx.events = [
 		Event.WALK_STOP({
-			grid: toGrid,
+			grid: getGridInfo(ctx, toGrid),
 			commands: [],
 		})
 	];
@@ -825,8 +775,8 @@ private function _takeExplore(ctx:Context, playerId:Int, gridId:Int, p1SelectId:
 	final player = ctx.players[playerId];
 	final resultValue = {
 		success: false,
-		people: cast Reflect.copy(p1),
-		peopleList: ([] : Array<People>),
+		people: getPeopleInfo(ctx, cast Reflect.copy(p1)),
+		peopleList: ([] : Array<model.PeopleGenerator.People>),
 		energyBefore: p1.energy,
 		energyAfter: p1.energy,
 		armyBefore: player.army,
@@ -838,7 +788,7 @@ private function _takeExplore(ctx:Context, playerId:Int, gridId:Int, p1SelectId:
 	}
 	final newPeopleIds = applyExploreCost(ctx, playerId, gridId, p1SelectId);
 	resultValue.success = newPeopleIds.length > 0;
-	resultValue.peopleList = newPeopleIds.map(id -> getPeopleById(ctx, id));
+	resultValue.peopleList = newPeopleIds.map(id -> getPeopleById(ctx, id)).map(p -> getPeopleInfo(ctx, p));
 	resultValue.energyAfter = p1.energy;
 	resultValue.armyAfter = player.army;
 	resultValue.moneyAfter = player.money;
@@ -953,7 +903,7 @@ private function _takeWarOn(ctx:Context, playerId:Int, gridId:Int, p1PeopleId:In
 	ctx.events = [
 		Event.WAR_RESULT({
 			success: true,
-			people: getPeopleById(ctx, playerId),
+			people: getPeopleInfo(ctx, getPeopleById(ctx, playerId)),
 			energyBefore: 100,
 			energyAfter: 50,
 			armyBefore: 200,
