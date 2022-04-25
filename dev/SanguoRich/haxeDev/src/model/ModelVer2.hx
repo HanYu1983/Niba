@@ -274,7 +274,8 @@ private function getPlayerInfo(ctx:Context, player:Player):model.IModel.PlayerIn
 		people: ctx.peoples.filter(p -> p.position.player == true && p.belongToPlayerId == player.id).map(p -> getPeopleInfo(ctx, p)),
 		atGridId: player.position,
 		maintainPeople: 0,
-		maintainArmy: 0
+		maintainArmy: 0,
+		grids:[]
 	}
 }
 
@@ -462,7 +463,8 @@ private function initContext(ctx:Context, option:{}) {
 			],
 			maintainPeople: -1.2,
 			maintainArmy: -1.1,
-			atGridId: 0
+			atGridId: 0,
+			grids:[]
 		});
 	}
 }
@@ -897,6 +899,7 @@ private function _getTakeWarPreview(ctx:Context, playerId:Int, gridId:Int):WarPr
 					atGridId: gridId,
 					maintainArmy: 0,
 					maintainPeople: 0,
+					grids:[]
 				},
 				p1ValidPeople: getPlayerInfo(ctx, ctx.players[playerId]).people,
 				p2ValidPeople: getGridInfo(ctx, ctx.grids[gridId]).people
