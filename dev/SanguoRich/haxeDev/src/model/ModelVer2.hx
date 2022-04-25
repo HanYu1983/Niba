@@ -143,7 +143,7 @@ private enum Action {
 		playerId:Int,
 		fromGridId:Int,
 		toGridId:Int,
-	}, context:Context);
+	}, gameInfo:GameInfo);
 }
 
 private enum Event {
@@ -318,14 +318,15 @@ private function getGameInfo(ctx:Context, root:Bool):GameInfo {
 			return eventInfo;
 		}) : [],
 		actions: root ? ctx.actions.map(a -> {
-			return switch a {
-				case MOVE(value, ctx):
+			final actionInfo:model.IModel.ActionInfo = switch a {
+				case MOVE(value, gameInfo):
 					{
 						id: ActionInfoID.MOVE,
 						value: value,
-						gameInfo: getGameInfo(ctx, false)
+						gameInfo: gameInfo
 					}
 			}
+			return actionInfo;
 		}) : []
 	}
 }
@@ -452,8 +453,7 @@ private function doPlayerDice(ctx:Context) {
 			playerId: activePlayerId,
 			fromGridId: fromGridId,
 			toGridId: toGridId
-		}, // 強制將nullable轉型成非nullable
-			cast Reflect.copy(ctx))
+		}, getGameInfo(ctx, false))
 	];
 	final toGrid = ctx.grids[toGridId];
 	ctx.events = [
@@ -574,7 +574,7 @@ private function doTakeNegoOn(ctx:Context, playerId:Int, gridId:Int, p1SelectId:
 	final player = ctx.players[playerId];
 	final resultValue = {
 		success: false,
-		people: cast Reflect.copy(p1),
+		people: getPeopleInfo(ctx, p1),
 		energyBefore: p1.energy,
 		energyAfter: p1.energy,
 		armyBefore: player.army,
@@ -679,7 +679,7 @@ private function doTakeHire(ctx:Context, playerId:Int, gridId:Int, p1SelectId:In
 	final player = ctx.players[playerId];
 	final resultValue = {
 		success: false,
-		people: cast Reflect.copy(p1),
+		people: getPeopleInfo(ctx, p1),
 		energyBefore: p1.energy,
 		energyAfter: p1.energy,
 		armyBefore: player.army,
@@ -775,7 +775,7 @@ private function _takeExplore(ctx:Context, playerId:Int, gridId:Int, p1SelectId:
 	final player = ctx.players[playerId];
 	final resultValue = {
 		success: false,
-		people: getPeopleInfo(ctx, cast Reflect.copy(p1)),
+		people: getPeopleInfo(ctx, p1),
 		peopleList: ([] : Array<model.PeopleGenerator.People>),
 		energyBefore: p1.energy,
 		energyAfter: p1.energy,
