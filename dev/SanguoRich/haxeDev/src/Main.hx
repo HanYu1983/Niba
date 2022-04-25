@@ -1,5 +1,7 @@
 package;
 
+import model.TestResourceModel;
+import model.PeopleGenerator;
 import model.TestNegoModel;
 import js.Syntax;
 import model.ModelWisp.NativeModule;
@@ -19,7 +21,7 @@ class Main {
 	public static var view:MainView;
 
 	public static function main() {
-		// model = new ModelWisp();
+		// model = new TestResourceModel();
 		model = new ModelVer2();
 
 		var app = new HaxeUIApp();
@@ -39,5 +41,15 @@ class Main {
 	public static function getRateString(rate:Float):String {
 		rate = rate > 1 ? 1 : rate;
 		return getFixNumber(rate * 100, 2) + '%';
+	}
+
+	public static function getAbilityString(p:People, abilitys:Array<Int>) {
+		var abiString = '';
+		for(ability in abilitys){
+			if(p.abilities.indexOf(ability) > -1){
+				abiString += PeopleGenerator.getInst().getAbilityName(ability) + ' ';
+			}
+		}
+		return abiString;
 	}
 }

@@ -204,6 +204,10 @@ class MainView extends Absolute {
     @:bind(btn_buyFood, MouseEvent.CLICK)
     function onBtnBuyFoodClick(e){
         var player = Main.model.gameInfo().currentPlayer;
+        if(player.money < 1.0){
+            messageView.showMessage('你沒有足夠的金錢哦!');
+            return;
+        }
         final market = model.IModel.MARKET.BUY;
         final resource = model.IModel.RESOURCE.MONEY;
         var previewInfo:Dynamic = Main.model.getTakeResourcePreview(player.id, player.atGridId, market, resource);
@@ -215,6 +219,10 @@ class MainView extends Absolute {
     @:bind(btn_buyArmy, MouseEvent.CLICK)
     function onBtnBuyArmyClick(e){
         var player = Main.model.gameInfo().currentPlayer;
+        if(player.money < 1.0){
+            messageView.showMessage('你沒有足夠的金錢哦!');
+            return;
+        }
         final market = model.IModel.MARKET.BUY;
         final resource = model.IModel.RESOURCE.ARMY;
         var previewInfo:Dynamic = Main.model.getTakeResourcePreview(player.id, player.atGridId, market, resource);
@@ -226,6 +234,10 @@ class MainView extends Absolute {
     @:bind(btn_sellFood, MouseEvent.CLICK)
     function onBtnSellFoodClick(e){
         var player = Main.model.gameInfo().currentPlayer;
+        if(player.food < 1.0){
+            messageView.showMessage('你沒有足夠的糧食哦!');
+            return;
+        }
         final market = model.IModel.MARKET.SELL;
         final resource = model.IModel.RESOURCE.FOOD;
         var previewInfo:Dynamic = Main.model.getTakeResourcePreview(player.id, player.atGridId, market, resource);
@@ -237,6 +249,10 @@ class MainView extends Absolute {
     @:bind(btn_sellArmy, MouseEvent.CLICK)
     function onBtnSellArmyClick(e){
         var player = Main.model.gameInfo().currentPlayer;
+        if(player.army < 1.0){
+            messageView.showMessage('你沒有足夠的士兵哦!');
+            return;
+        }
         final market = model.IModel.MARKET.SELL;
         final resource = model.IModel.RESOURCE.ARMY;
         var previewInfo:Dynamic = Main.model.getTakeResourcePreview(player.id, player.atGridId, market, resource);
