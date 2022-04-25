@@ -1,5 +1,6 @@
 package model;
 
+import model.IModel.PreResultOnFire;
 import model.IModel.MARKET;
 import model.IModel.RESOURCE;
 import model.IModel.ResourcePreview;
@@ -227,4 +228,28 @@ class DebugModel implements IModel {
 	}
 
 	public function takeResource(playerId:Int, gridInt:Int, p1PeopleId:Int, market:MARKET, type:RESOURCE, cb:(gameInfo:GameInfo) -> Void) {}
+
+
+	public function getPreResultOfFire(playerId:Int, p1PeopleId:Int):PreResultOnFire {
+		return {
+            maintainMoneyAfter: 10,
+            maintainMoneyBefore: 10,
+        }
+	}
+
+	public function takeFire(playerId:Int, p1PeopleId:Int, cb:(gameInfo:GameInfo) -> Void) {
+        var info = gameInfo();
+        info.events = [
+            {
+                id:EventInfoID.FIRE_RESULT,
+                value:{
+                    success:true,
+                    people:PeopleGenerator.getInst().generate(),
+                    maintainMoneyAfter: 10,
+                    maintainMoneyBefore: 10,
+                }
+            }
+        ];
+        cb(info);
+    }
 }

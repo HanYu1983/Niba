@@ -112,7 +112,6 @@ class GridGenerator {
 					g.foodGrow += .007;
 					g.armyGrow += .007;
 					g.people.push(PeopleGenerator.getInst().generate());
-					g.people.push(PeopleGenerator.getInst().generate());
 				case _:
 					
 			}

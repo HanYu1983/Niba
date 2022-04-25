@@ -1,5 +1,6 @@
 package view;
 
+import view.popup.FirePreviewView;
 import view.popup.ResourcePreviewView;
 import view.popup.ExploreSuccessView;
 import view.popup.GrowView;
@@ -34,6 +35,7 @@ class MainView extends Absolute {
     var explorePreviewView:ExplorePreviewView;
     var exploreSuccessView:ExploreSuccessView;
     var resourcePreviewView:ResourcePreviewView;
+    var firePreviewView:FirePreviewView;
     var growView:GrowView;
 
     public function new() {
@@ -86,6 +88,10 @@ class MainView extends Absolute {
         resourcePreviewView = new ResourcePreviewView();
         resourcePreviewView.hide();
         box_popup.addComponent(resourcePreviewView);
+
+        firePreviewView = new FirePreviewView();
+        firePreviewView.hide();
+        box_popup.addComponent(firePreviewView);
 
         growView = new GrowView();
         growView.hide();
@@ -141,6 +147,15 @@ class MainView extends Absolute {
         );
     }
 
+    public function onFirePreviewViewConfirmClick(pId:Int){
+        var gameInfo = Main.model.gameInfo();
+        Main.model.takeFire(
+            gameInfo.currentPlayer.id,
+            pId,
+            syncViewByInfo
+        );
+    }
+
     public function onWarPreviewConfirmClick(p1Id:Int, p2Id:Int, p1Army:Float, p2Army:Float){
         var gameInfo = Main.model.gameInfo();
         Main.model.takeWarOn(
@@ -188,6 +203,22 @@ class MainView extends Absolute {
 
         box_npcCmds.hide();
         box_enemyCmds.hide();
+    }
+
+    @:bind(btn_assignPeople, MouseEvent.CLICK)
+    function onBtnAssignPeopleClick(e:MouseEvent) {
+        final p = peopleListView.selectedItem;
+        if(p){
+
+        }
+    }
+
+    @:bind(btn_firePeople, MouseEvent.CLICK)
+    function onBtnFirePeopleClick(e:MouseEvent) {
+        var player = Main.model.gameInfo().currentPlayer;
+        if(player.people.length > 0){
+            firePreviewView.showPopup(null);
+        }
     }
 
     @:bind(btn_earnMoney, MouseEvent.CLICK)
@@ -458,19 +489,60 @@ class MainView extends Absolute {
                     }
                     btn_end.show();
                 case HIRE_RESULT:
-                    messageView.showMessage(event.value);
+                    
+                    final info:Dynamic = event.value;
+                    final msg = '${info.success ? '雇用任務成功' : '雇用任務失敗'}\n
+武將:${info.people.name}\n
+體力:${Main.getFixNumber(info.energyBefore,0)} => ${Main.getFixNumber(info.energyAfter,0)}\n
+金錢:${Main.getFixNumber(info.moneyBefore,0)} => ${Main.getFixNumber(info.moneyAfter,0)}\n
+糧草:${Main.getFixNumber(info.foodBefore,0)} => ${Main.getFixNumber(info.foodAfter,0)}\n
+士兵:${Main.getFixNumber(info.armyBefore,0)} => ${Main.getFixNumber(info.armyAfter,0)}\n
+                    ';
+                    messageView.showMessage(msg);
+                    btn_end.show();
+                case FIRE_RESULT:
+                    final info:Dynamic = event.value;
+                    final msg = '解雇完成\n
+武將:${info.people.name}\n
+薪俸:${Main.getFixNumber(info.maintainMoneyBefore,0)} => ${Main.getFixNumber(info.maintainMoneyAfter,0)}\n
+                    ';
+                    messageView.showMessage(msg);
                     btn_end.show();
                 case NEGOTIATE_RESULT:
-                    messageView.showMessage(event.value);
+                    final info:Dynamic = event.value;
+                    final msg = '${info.success ? '任務成功' : '任務失敗'}\n
+武將:${info.people.name}\n
+體力:${Main.getFixNumber(info.energyBefore,0)} => ${Main.getFixNumber(info.energyAfter,0)}\n
+金錢:${Main.getFixNumber(info.moneyBefore,0)} => ${Main.getFixNumber(info.moneyAfter,0)}\n
+糧草:${Main.getFixNumber(info.foodBefore,0)} => ${Main.getFixNumber(info.foodAfter,0)}\n
+士兵:${Main.getFixNumber(info.armyBefore,0)} => ${Main.getFixNumber(info.armyAfter,0)}\n
+                    ';
+                    messageView.showMessage(msg);
                     btn_end.show();
                 case EXPLORE_RESULT:
                     exploreSuccessView.showMessage(event.value);
                     btn_end.show();
                 case WAR_RESULT:
-                    messageView.showMessage(event.value);
+                    final info:Dynamic = event.value;
+                    final msg = '${info.success ? '任務成功' : '任務失敗'}\n
+武將:${info.people.name}\n
+體力:${Main.getFixNumber(info.energyBefore,0)} => ${Main.getFixNumber(info.energyAfter,0)}\n
+金錢:${Main.getFixNumber(info.moneyBefore,0)} => ${Main.getFixNumber(info.moneyAfter,0)}\n
+糧草:${Main.getFixNumber(info.foodBefore,0)} => ${Main.getFixNumber(info.foodAfter,0)}\n
+士兵:${Main.getFixNumber(info.armyBefore,0)} => ${Main.getFixNumber(info.armyAfter,0)}\n
+                    ';
+                    messageView.showMessage(msg);
                     btn_end.show();
                 case RESOURCE_RESULT:
-                    messageView.showMessage(event.value);
+                    final info:Dynamic = event.value;
+                    final msg = '${info.success ? '任務成功' : '任務失敗'}\n
+武將:${info.people.name}\n
+體力:${Main.getFixNumber(info.energyBefore,0)} => ${Main.getFixNumber(info.energyAfter,0)}\n
+金錢:${Main.getFixNumber(info.moneyBefore,0)} => ${Main.getFixNumber(info.moneyAfter,0)}\n
+糧草:${Main.getFixNumber(info.foodBefore,0)} => ${Main.getFixNumber(info.foodAfter,0)}\n
+士兵:${Main.getFixNumber(info.armyBefore,0)} => ${Main.getFixNumber(info.armyAfter,0)}\n
+                    ';
+                    messageView.showMessage(msg);
                     btn_end.show();
                 case WORLD_EVENT:
                     growView.showPopup(event.value);
@@ -481,6 +553,7 @@ class MainView extends Absolute {
 
     function setEventInfo(event:EventInfo){
         switch(event.id){
+            case FIRE_RESULT:
             case HIRE_RESULT:
                 pro_currentEvent.value = "探索停止。等待指令中";
             case EXPLORE_RESULT:
@@ -578,6 +651,12 @@ class MainView extends Absolute {
         peopleListView.setPeopleList(p.people);
 
         syncGridInfo(gameInfo.players[id].atGridId);
+
+        if(p.id == gameInfo.currentPlayer.id){
+            box_basicCmds.show();
+        }else{
+            box_basicCmds.hide();
+        }
     }
 
     function syncGridInfo(gridId:Int){

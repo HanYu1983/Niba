@@ -6,7 +6,7 @@ import model.PeopleGenerator.People;
 import haxe.ui.events.UIEvent;
 import model.IModel.HirePreview;
 
-@:build(haxe.ui.ComponentBuilder.build("assets/popup/HirePreview-view.xml"))
+@:build(haxe.ui.ComponentBuilder.build("assets/popup/hirePreview-view.xml"))
 class HirePreviewView extends PopupView{
 
     var p1List:PeopleListView;

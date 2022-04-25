@@ -21,7 +21,8 @@
                     <vbox width="100%">
                         <button text="移動" width="100%" id="btn_go" />
                         <button text="計略" width="100%" id="btn_showStrategy" />
-                        <button text="解散" width="100%" id="btn_fireArmy" />
+                        <!-- <button text="解散" width="100%" id="btn_fireArmy" /> -->
+                        <button text="指派" width="100%" id="btn_assignPeople" />
                         <button text="解雇" width="100%" id="btn_firePeople" />
                     </vbox>
                 </frame>

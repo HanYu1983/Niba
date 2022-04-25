@@ -32,6 +32,7 @@ enum EventInfoID {
     NEGOTIATE_RESULT;
     EXPLORE_RESULT;
     HIRE_RESULT;
+    FIRE_RESULT;
     WAR_RESULT;
     RESOURCE_RESULT;
 }
@@ -116,6 +117,7 @@ typedef PreResultOnHire = {
     maintainMoneyAfter:Float,
     successRate:Float
 }
+// }
 
 typedef ExplorePreview = {
     p1ValidPeople:Array<People>,
@@ -144,6 +146,11 @@ typedef PreResultOnResource = {
     maintainFoodAfter:Float,
 }
 
+typedef PreResultOnFire = {
+    maintainMoneyBefore:Float,
+    maintainMoneyAfter:Float,
+}
+
 interface IModel{
     function gameStart(cb:Void->Void):Void;
     function gameInfo():GameInfo;
@@ -151,6 +158,8 @@ interface IModel{
     function playerDice(cb:Void->Void):Void;
     function playerEnd(cb:()->Void):Void;
     
+    function getPreResultOfFire(playerId:Int, p1PeopleId:Int):PreResultOnFire;
+    function takeFire(playerId:Int, p1PeopleId:Int, cb:(gameInfo:GameInfo)->Void):Void;
 
     function getTakeWarPreview(playerId:Int, gridId:Int):WarPreview;
     function getPreResultOfWar(playerId:Int, gridId:Int, p1:People, p2:People, army1:Float, army2:Float):Array<PreResultOnWar>;

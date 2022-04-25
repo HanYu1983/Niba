@@ -976,7 +976,9 @@ private function _getPreResultOfResource(ctx:Context, playerId:Int, gridId:Int, 
 		moneyBefore: 10,
 		moneyAfter: 10,
 		foodBefore: 10,
-		foodAfter: 10
+		foodAfter: 10,
+		maintainFoodAfter: 10,
+		maintainFoodBefore: 10,
 	}
 }
 
