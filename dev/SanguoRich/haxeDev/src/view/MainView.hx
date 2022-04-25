@@ -479,6 +479,18 @@ class MainView extends Absolute {
                     }else{
                         if(g.belongPlayerId == null){
                             box_npcCmds.show();
+
+                            switch (g.buildtype){
+                                case CITY:
+                                    box_moneyCmds.show();
+                                    box_foodCmds.show();
+                                    box_armyCmds.show();
+                                case MARKET: box_moneyCmds.show();
+                                case FARM: box_foodCmds.show();
+                                case VILLAGE: box_armyCmds.show();
+                                case _:
+                            }
+                            
                         }else{
                             if(g.belongPlayerId == gameInfo.currentPlayer.id){
     
@@ -535,7 +547,7 @@ class MainView extends Absolute {
                     btn_end.show();
                 case RESOURCE_RESULT:
                     final info:Dynamic = event.value;
-                    final msg = '${info.success ? '任務成功' : '任務失敗'}\n
+                    final msg = '任務完成\n
 武將:${info.people.name}\n
 體力:${Main.getFixNumber(info.energyBefore,0)} => ${Main.getFixNumber(info.energyAfter,0)}\n
 金錢:${Main.getFixNumber(info.moneyBefore,0)} => ${Main.getFixNumber(info.moneyAfter,0)}\n
@@ -597,6 +609,15 @@ class MainView extends Absolute {
         box_enemyCmds.hide();
         box_emptyCmds.hide();
         btn_end.hide();
+        box_moneyCmds.hide();
+        box_foodCmds.hide();
+        box_armyCmds.hide();
+    }
+
+    function moveCursorToGrid(gridId:Int){
+        var pos = getGridPositionByGridId(0, gridId);
+        box_cursor.left = pos[0];
+        box_cursor.top = pos[1];
     }
 
     function syncUI(gameInfo:GameInfo){
@@ -608,6 +629,8 @@ class MainView extends Absolute {
         var opt_p:OptionBox = Reflect.field(this, 'opt_p${pid+1}');
         opt_p.selected = true;
 
+        moveCursorToGrid(gameInfo.currentPlayer.atGridId);
+
         stage.unregisterEvents();
         if(gameInfo.isPlayerTurn){
             pro_currentEvent.value = "等待指令中";
@@ -616,9 +639,7 @@ class MainView extends Absolute {
                 var gx = Math.floor(e.screenX / 50);
                 var gy = Math.floor(e.screenY / 50);
                 var gridId = gx + gy * 10;
-                var pos = getGridPositionByGridId(0, gridId);
-                box_cursor.left = pos[0];
-                box_cursor.top = pos[1];
+                moveCursorToGrid(gridId);
                 syncGridInfo(gridId);
 
                 var gridInfo = gameInfo.grids[gridId];
@@ -628,13 +649,11 @@ class MainView extends Absolute {
             stage.registerEvent(MouseEvent.MOUSE_OUT, function(e:MouseEvent){
                 syncGridInfo(gameInfo.currentPlayer.atGridId);
                 peopleListView.setPeopleList(gameInfo.currentPlayer.people);
+
+                moveCursorToGrid(gameInfo.currentPlayer.atGridId);
             });
         }
         syncPlayerInfo(pid);
-    }
-
-    function name() {
-        
     }
 
     function syncPlayerInfo(id:Int){

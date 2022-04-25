@@ -345,7 +345,7 @@ private function getGameInfo(ctx:Context, root:Bool):GameInfo {
 					}
 				case RESOURCE_RESULT(value):
 					{
-						id: EventInfoID.WAR_RESULT,
+						id: EventInfoID.RESOURCE_RESULT,
 						value: value
 					}
 			}
