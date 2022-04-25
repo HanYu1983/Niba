@@ -19,6 +19,14 @@ import model.IModel.WarPreview;
 
 using Lambda;
 
+// 幾個回合加成(4人走完算1回合)
+// 主公支付所有武將薪水
+// 主公用身上的兵支付身上的食物
+// 格子用格子上的兵支付格子上的食物
+final EARN_BY_TURN = 3;
+
+// 稅收
+// 主公會得到所有城池的成數
 // =========================================
 // config
 // 以下的方法都不定義回傳的類型, 因為是動態設計, 做到哪想到哪
@@ -547,7 +555,7 @@ private function getPlayerInfo(ctx:Context, player:Player):model.IModel.PlayerIn
 		atGridId: player.position,
 		maintainPeople: 0,
 		maintainArmy: 0,
-		grids:[]
+		grids: []
 	}
 }
 
@@ -736,7 +744,7 @@ private function initContext(ctx:Context, option:{}) {
 			maintainPeople: -1.2,
 			maintainArmy: -1.1,
 			atGridId: 0,
-			grids:[]
+			grids: []
 		});
 	}
 }
@@ -1012,7 +1020,7 @@ private function _getTakeWarPreview(ctx:Context, playerId:Int, gridId:Int):WarPr
 					atGridId: gridId,
 					maintainArmy: 0,
 					maintainPeople: 0,
-					grids:[]
+					grids: []
 				},
 				p1ValidPeople: getPlayerInfo(ctx, ctx.players[playerId]).people,
 				p2ValidPeople: getGridInfo(ctx, ctx.grids[gridId]).people
