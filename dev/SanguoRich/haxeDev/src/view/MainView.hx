@@ -240,7 +240,7 @@ class MainView extends Absolute {
             return;
         }
         final market = model.IModel.MARKET.BUY;
-        final resource = model.IModel.RESOURCE.MONEY;
+        final resource = model.IModel.RESOURCE.FOOD;
         var previewInfo:Dynamic = Main.model.getTakeResourcePreview(player.id, player.atGridId, market, resource);
         previewInfo.market = market;
         previewInfo.resource = resource;
