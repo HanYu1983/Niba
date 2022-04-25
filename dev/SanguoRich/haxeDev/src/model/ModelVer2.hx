@@ -58,10 +58,6 @@ class ModelVer2 extends DebugModel {
 		cb(gameInfo());
 	}
 
-	// =================================
-	// 雇用
-	// 找武將
-	// =================================
 	override function getTakeHirePreview(playerId:Int, gridId:Int):HirePreview {
 		return doGetTakeHirePreview(context, playerId, gridId);
 	}
@@ -72,6 +68,19 @@ class ModelVer2 extends DebugModel {
 
 	override function takeHire(playerId:Int, gridId:Int, p1SelectId:Int, p2SelectId:Int, cb:(gameInfo:GameInfo) -> Void) {
 		doTakeHire(context, playerId, gridId, p1SelectId, p2SelectId);
+		cb(gameInfo());
+	}
+
+	override function getTakeExplorePreview(playerId:Int, gridId:Int):ExplorePreview {
+		return _getTakeExplorePreview(context, playerId, gridId);
+	}
+
+	override function getPreResultOfExplore(playerId:Int, gridId:Int, people:model.PeopleGenerator.People):PreResultOnExplore {
+		return _getPreResultOfExplore(context, playerId, gridId, people.id);
+	}
+
+	override function takeExplore(playerId:Int, gridId:Int, p1SelectId:Int, cb:(gameInfo:GameInfo) -> Void) {
+		_takeExplore(context, playerId, gridId, p1SelectId);
 		cb(gameInfo());
 	}
 }
@@ -141,7 +150,19 @@ private enum Event {
 		foodBefore:Float,
 		foodAfter:Float,
 	});
-	EXPLORE_RESULT(value:{});
+	EXPLORE_RESULT(value:{
+		success:Bool,
+		people:People,
+		peopleList:Array<People>,
+		energyBefore:Float,
+		energyAfter:Float,
+		armyBefore:Float,
+		armyAfter:Float,
+		moneyBefore:Float,
+		moneyAfter:Float,
+		foodBefore:Float,
+		foodAfter:Float,
+	});
 	HIRE_RESULT(value:{
 		success:Bool,
 		people:People,
@@ -243,6 +264,39 @@ private function getGameInfo(ctx:Context, root:Bool):GameInfo {
 				case NEGOTIATE_RESULT(value):
 					{
 						id: EventInfoID.NEGOTIATE_RESULT,
+						value: {
+							success: value.success,
+							people: getPeopleInfo(ctx, value.people),
+							energyBefore: value.energyBefore,
+							energyAfter: value.energyAfter,
+							armyBefore: value.armyBefore,
+							armyAfter: value.armyAfter,
+							moneyBefore: value.moneyBefore,
+							moneyAfter: value.moneyAfter,
+							foodBefore: value.foodBefore,
+							foodAfter: value.foodAfter,
+						},
+					}
+				case EXPLORE_RESULT(value):
+					{
+						id: EventInfoID.EXPLORE_RESULT,
+						value: {
+							success: value.success,
+							people: getPeopleInfo(ctx, value.people),
+							peopleList: value.peopleList.map(p -> getPeopleInfo(ctx, p)),
+							energyBefore: value.energyBefore,
+							energyAfter: value.energyAfter,
+							armyBefore: value.armyBefore,
+							armyAfter: value.armyAfter,
+							moneyBefore: value.moneyBefore,
+							moneyAfter: value.moneyAfter,
+							foodBefore: value.foodBefore,
+							foodAfter: value.foodAfter,
+						},
+					}
+				case HIRE_RESULT(value):
+					{
+						id: EventInfoID.HIRE_RESULT,
 						value: {
 							success: value.success,
 							people: getPeopleInfo(ctx, value.people),
@@ -563,7 +617,7 @@ private function doTakeHire(ctx:Context, playerId:Int, gridId:Int, p1SelectId:In
 		foodBefore: player.food,
 		foodAfter: player.food,
 	}
-	final success = applyNegoCost(ctx, playerId, gridId, p1SelectId, p2SelectId);
+	final success = applyHireCost(ctx, playerId, gridId, p1SelectId, p2SelectId);
 	resultValue.success = success;
 	resultValue.energyAfter = p1.energy;
 	resultValue.armyAfter = player.army;
@@ -623,4 +677,88 @@ private function applyHireCost(ctx:Context, playerId:Int, gridId:Int, p1SelectId
 	// 從格子上移除人
 	hirePeople.position.gridId = null;
 	return true;
+}
+
+// =================================
+// 探索
+// ================================
+private function _getTakeExplorePreview(ctx:Context, playerId:Int, gridId:Int):ExplorePreview {
+	return {
+		p1ValidPeople: getPlayerInfo(ctx, ctx.players[playerId]).people
+	};
+}
+
+private function _getPreResultOfExplore(ctx:Context, playerId:Int, gridId:Int, peopleId:Int):PreResultOnExplore {
+	final cost = getExploreCost(ctx, playerId, gridId, peopleId);
+	final p1 = getPeopleById(ctx, peopleId);
+	return {
+		energyBefore: Std.int(p1.energy),
+		energyAfter: Std.int(p1.energy - cost.peopleCost.energy),
+		successRate: cost.successRate
+	}
+}
+
+private function _takeExplore(ctx:Context, playerId:Int, gridId:Int, p1SelectId:Int) {
+	final p1 = getPeopleById(ctx, p1SelectId);
+	final player = ctx.players[playerId];
+	final resultValue = {
+		success: false,
+		people: cast Reflect.copy(p1),
+		peopleList: ([] : Array<People>),
+		energyBefore: p1.energy,
+		energyAfter: p1.energy,
+		armyBefore: player.army,
+		armyAfter: player.army,
+		moneyBefore: player.money,
+		moneyAfter: player.money,
+		foodBefore: player.food,
+		foodAfter: player.food,
+	}
+	final newPeopleIds = applyExploreCost(ctx, playerId, gridId, p1SelectId);
+	resultValue.success = newPeopleIds.length > 0;
+	resultValue.peopleList = newPeopleIds.map(id -> getPeopleById(ctx, id));
+	resultValue.energyAfter = p1.energy;
+	resultValue.armyAfter = player.army;
+	resultValue.moneyAfter = player.money;
+	resultValue.foodAfter = player.food;
+	ctx.events = [Event.EXPLORE_RESULT(resultValue)];
+}
+
+private function getExploreCost(ctx:Context, playerId:Int, gridId:Int, p1SelectId:Int) {
+	final grid = ctx.grids[gridId];
+	final p1 = getPeopleById(ctx, p1SelectId);
+	final useEnergy = p1.energy / 3;
+	final base = (useEnergy / 100) + 0.2;
+	final charmFactor = p1.charm / 100;
+	// 人脈加成
+	final abiFactor = p1.abilities.has(10) ? 1.5 : 1;
+	final rate = base * charmFactor * abiFactor;
+	return {
+		playerCost: {
+			id: playerId,
+		},
+		peopleCost: {
+			id: p1.id,
+			energy: useEnergy,
+		},
+		successRate: rate
+	};
+}
+
+private function applyExploreCost(ctx:Context, playerId:Int, gridId:Int, p1SelectId:Int):Array<Int> {
+	final negoCost = getExploreCost(ctx, playerId, gridId, p1SelectId);
+	// 無論成功或失敗武將先消體力
+	final people = getPeopleById(ctx, p1SelectId);
+	if (people.energy < negoCost.peopleCost.energy) {
+		throw new haxe.Exception('people.energy ${people.energy} < ${negoCost.peopleCost.energy}');
+	}
+	people.energy -= negoCost.peopleCost.energy;
+	//
+	final success = Math.random() < negoCost.successRate;
+	if (success == false) {
+		return [];
+	}
+	final newPeople = PeopleGenerator.getInst().generate();
+	addPeopleInfo(ctx, null, gridId, newPeople);
+	return [newPeople.id];
 }
