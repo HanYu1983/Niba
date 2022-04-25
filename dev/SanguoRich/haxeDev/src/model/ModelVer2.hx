@@ -356,8 +356,17 @@ private function doPlayerEnd(ctx:Context) {
 					final earnFood = grid.food * PLAYER_EARN_FROM_CITY_BY_TURN_PERSENT;
 					final earnMoney = grid.money * PLAYER_EARN_FROM_CITY_BY_TURN_PERSENT;
 					grid.army -= earnArmy;
+					if (grid.army < 0) {
+						grid.army = 0;
+					}
 					grid.food -= earnFood;
+					if (grid.food < 0) {
+						grid.food = 0;
+					}
 					grid.money -= earnMoney;
+					if (grid.money < 0) {
+						grid.money = 0;
+					}
 					player.army += earnArmy;
 					player.food += earnFood;
 					player.money += earnMoney;
