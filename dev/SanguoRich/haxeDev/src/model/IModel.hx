@@ -11,6 +11,7 @@ typedef PlayerInfo = {
     army:Float,
     strategy:Float,
     people:Array<People>,
+    grids:Array<Grid>,
     atGridId:Int,
     maintainPeople:Float,
     maintainArmy:Float

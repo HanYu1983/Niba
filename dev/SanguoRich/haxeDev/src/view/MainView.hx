@@ -666,9 +666,10 @@ class MainView extends Absolute {
         pro_peopleCount.value = p.people.length;
         pro_maintainPeople.value = p.maintainPeople;
         pro_maintainArmy.value = p.maintainArmy;
-        pro_cityCount.value = "0";
+        pro_cityCount.value = p.grids.length;
         peopleListView.setPeopleList(p.people);
 
+        trace('[vic]可以套用maintainPeople,maintainArmy,grids');
         syncGridInfo(gameInfo.players[id].atGridId);
 
         if(p.id == gameInfo.currentPlayer.id){
