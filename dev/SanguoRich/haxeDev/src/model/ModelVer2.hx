@@ -147,10 +147,15 @@ private enum Action {
 }
 
 private enum Event {
-	WORLD_EVENT(value:{});
+	WORLD_EVENT(value:{
+		// playerBefore:Array<model.IModel.PlayerInfo>,
+		// playerAfter:Array<model.IModel.PlayerInfo>,
+		// gridBefore:Array<model.GridGenerator.Grid>,
+		// gridAfter:Array<model.GridGenerator.Grid>
+	});
 	WALK_STOP(value:{
 		grid:Grid,
-		commands:Dynamic,
+		commands:Array<Dynamic>,
 	});
 	NEGOTIATE_RESULT(value:{
 		success:Bool,
@@ -289,7 +294,7 @@ private function getGameInfo(ctx:Context, root:Bool):GameInfo {
 						value: {
 							grid: getGridInfo(ctx, value.grid),
 							commands: value.commands
-						},
+						}
 					}
 				case NEGOTIATE_RESULT(value):
 					{
@@ -510,9 +515,80 @@ private function doPlayerDice(ctx:Context) {
 }
 
 private function doPlayerEnd(ctx:Context) {
-	ctx.currentPlayerId = (ctx.currentPlayerId + 1) % ctx.players.length;
+	// TODO: 每十天會加到身上
+	// TODO: 每天加到城裡
 	ctx.actions = [];
 	ctx.events = [];
+	// 四個玩家走完後才計算回合
+	final isLastPlayer = ctx.currentPlayerId == (ctx.players.length - 1);
+	if (isLastPlayer) {
+		final worldEventValue = {
+			playerBefore: ctx.players.map(p -> getPlayerInfo(ctx, p)),
+			playerAfter: ([] : Array<model.IModel.PlayerInfo>),
+			gridBefore: ctx.grids.map(g -> getGridInfo(ctx, g)),
+			gridAfter: ([] : Array<model.GridGenerator.Grid>),
+		}
+		// 城池
+		for (grid in ctx.grids) {
+			// 支付武將的薪水
+			{
+				final peopleMainCost = ctx.peoples.filter(p -> p.position.gridId == grid.id).fold((p, a) -> {
+					// 薪水是雇傭金的1%
+					return a + p.cost * 0.1;
+				}, 0.0);
+				grid.money -= peopleMainCost;
+				if (grid.money < 0) {
+					grid.money = 0;
+				}
+			}
+			// 吃食物
+			{
+				final foodCost = grid.army * 0.01;
+				grid.food -= foodCost;
+				if (grid.food < 0) {
+					grid.food = 0;
+				}
+			}
+			// 城池成長
+			grid.money += grid.money * 0.01;
+			grid.food += grid.food * 0.01;
+			grid.army += grid.army * 0.01;
+		}
+		// 玩家
+		for (player in ctx.players) {
+			// 支付武將的薪水
+			{
+				final peopleMainCost = ctx.peoples.filter(p -> p.position.player == true && p.belongToPlayerId == player.id).fold((p, a) -> {
+					// 薪水是雇傭金的1%
+					return a + p.cost * 0.1;
+				}, 0.0);
+				player.money -= peopleMainCost;
+				if (player.money < 0) {
+					player.money = 0;
+				}
+			}
+			// 吃食物
+			{
+				final foodCost = player.army * 0.01;
+				player.food -= foodCost;
+				if (player.food < 0) {
+					player.food = 0;
+				}
+			}
+		}
+		// 回體力
+		for (people in ctx.peoples) {
+			people.energy += 5 + people.energy / 10;
+			if (people.energy > 100) {
+				people.energy = 100;
+			}
+		}
+		worldEventValue.playerAfter = ctx.players.map(p -> getPlayerInfo(ctx, p));
+		worldEventValue.gridAfter = ctx.grids.map(g -> getGridInfo(ctx, g));
+		ctx.events.push(Event.WORLD_EVENT(worldEventValue));
+	}
+	// 下一個玩家
+	ctx.currentPlayerId = (ctx.currentPlayerId + 1) % ctx.players.length;
 }
 
 // =================================
