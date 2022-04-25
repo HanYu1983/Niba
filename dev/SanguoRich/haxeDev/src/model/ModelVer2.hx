@@ -638,7 +638,7 @@ private function getPlayerInfo(ctx:Context, player:Player):model.IModel.PlayerIn
 		atGridId: player.position,
 		maintainPeople: getMaintainPeople(ctx, player.id),
 		maintainArmy: getMaintainArmy(ctx, player.id),
-		grids: []
+		grids: ctx.grids.filter(g -> getGridBelongPlayerId(ctx, g.id) == player.id).map(g -> getGridInfo(ctx, g))
 	}
 }
 
