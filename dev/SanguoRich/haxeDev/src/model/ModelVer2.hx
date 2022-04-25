@@ -598,8 +598,8 @@ private function doGetPreResultOfNego(ctx:Context, playerId:Int, gridId:Int, peo
 		moneyAfter: Std.int(player.money + negoCost.playerCost.money),
 		foodBefore: Std.int(player.food),
 		foodAfter: Std.int(player.food + negoCost.playerCost.food),
-		maintainFoodBefore:10,
-    	maintainFoodAfter:10,
+		maintainFoodBefore: 10,
+		maintainFoodAfter: 10,
 		successRate: negoCost.successRate
 	};
 }
@@ -923,8 +923,8 @@ private function _getPreResultOfWar(ctx:Context, playerId:Int, gridId:Int, p1:In
 			moneyAfter: 6,
 			foodBefore: 7,
 			foodAfter: 8,
-			maintainFoodBefore:10,
-    		maintainFoodAfter:10,
+			maintainFoodBefore: 10,
+			maintainFoodAfter: 10,
 		},
 		{
 			energyBefore: 0,
@@ -935,8 +935,8 @@ private function _getPreResultOfWar(ctx:Context, playerId:Int, gridId:Int, p1:In
 			moneyAfter: 6,
 			foodBefore: 7,
 			foodAfter: 8,
-			maintainFoodBefore:10,
-    		maintainFoodAfter:10,
+			maintainFoodBefore: 10,
+			maintainFoodAfter: 10,
 		}
 	];
 }
@@ -959,7 +959,11 @@ private function _takeWarOn(ctx:Context, playerId:Int, gridId:Int, p1PeopleId:In
 }
 
 // =================================
-// 資源
+// 經商：加不定錢
+// 買糧：扣固定錢加不定糧食
+// 賣糧：扣固定糧加不定錢
+// 徵兵：扣固定錢加不定兵
+// 裁兵：扣固定兵加不定錢
 // =================================
 private function _getTakeResourcePreview(ctx:Context, playerId:Int, gridId:Int, market:MARKET, type:RESOURCE):ResourcePreview {
 	return {
@@ -968,33 +972,118 @@ private function _getTakeResourcePreview(ctx:Context, playerId:Int, gridId:Int, 
 }
 
 private function _getPreResultOfResource(ctx:Context, playerId:Int, gridId:Int, peopleId:Int, market:MARKET, type:RESOURCE):PreResultOnResource {
+	final player = ctx.players[playerId];
+	final cost = getResourceCost(ctx, playerId, gridId, peopleId, market, type);
+	final p1 = getPeopleById(ctx, peopleId);
 	return {
-		energyAfter: 10,
-		energyBefore: 10,
-		armyBefore: 10,
-		armyAfter: 10,
-		moneyBefore: 10,
-		moneyAfter: 10,
-		foodBefore: 10,
-		foodAfter: 10,
-		maintainFoodAfter: 10,
-		maintainFoodBefore: 10,
+		energyBefore: Std.int(p1.energy),
+		energyAfter: Std.int(p1.energy - cost.peopleCost.energy),
+		armyBefore: Std.int(player.army),
+		armyAfter: Std.int(player.army - cost.playerCost.army),
+		moneyBefore: Std.int(player.money),
+		moneyAfter: Std.int(player.money - cost.playerCost.money),
+		foodBefore: Std.int(player.food),
+		foodAfter: Std.int(player.food - cost.playerCost.food),
+		maintainFoodBefore: 0,
+		maintainFoodAfter: 0,
 	}
 }
 
-private function _takeResource(ctx:Context, playerId:Int, gridInt:Int, p1PeopleId:Int, market:MARKET, type:RESOURCE) {
-	ctx.events = [
-		Event.RESOURCE_RESULT({
-			success: true,
-			people: PeopleGenerator.getInst().generate(),
-			energyBefore: 100,
-			energyAfter: 50,
-			armyBefore: 200,
-			armyAfter: 300,
-			moneyBefore: 200,
-			moneyAfter: 300,
-			foodBefore: 100,
-			foodAfter: 200
-		})
-	];
+private function _takeResource(ctx:Context, playerId:Int, gridId:Int, p1SelectId:Int, market:MARKET, type:RESOURCE) {
+	final p1 = getPeopleById(ctx, p1SelectId);
+	final player = ctx.players[playerId];
+	final resultValue = {
+		success: false,
+		people: getPeopleInfo(ctx, p1),
+		energyBefore: p1.energy,
+		energyAfter: p1.energy,
+		armyBefore: player.army,
+		armyAfter: player.army,
+		moneyBefore: player.money,
+		moneyAfter: player.money,
+		foodBefore: player.food,
+		foodAfter: player.food,
+	}
+	applyResourceCost(ctx, playerId, gridId, p1SelectId, market, type);
+	resultValue.energyAfter = p1.energy;
+	resultValue.armyAfter = player.army;
+	resultValue.moneyAfter = player.money;
+	resultValue.foodAfter = player.food;
+	ctx.events = [Event.RESOURCE_RESULT(resultValue)];
+}
+
+private function getResourceCost(ctx:Context, playerId:Int, gridId:Int, p1SelectId:Int, market:MARKET, type:RESOURCE) {
+	trace("MondelVer2.getResourceCost", market, type);
+	final grid = ctx.grids[gridId];
+	final p1 = getPeopleById(ctx, p1SelectId);
+	final useEnergy = p1.energy / 3;
+	final base = (useEnergy / 100) + 0.2;
+	final abiFactor:Float = if (type == RESOURCE.MONEY && (p1.abilities.has(4) || p1.abilities.has(10))) {
+		1.5;
+	} else if (type == RESOURCE.ARMY && (p1.abilities.has(7) || p1.abilities.has(10))) {
+		1.5;
+	} else if (type == RESOURCE.FOOD && (p1.abilities.has(5) || p1.abilities.has(7))) {
+		1.5;
+	} else {
+		1;
+	};
+	final rate = base * abiFactor;
+	final returnInfo = {
+		playerCost: {
+			id: playerId,
+			money: 0.0,
+			army: 0.0,
+			food: 0.0,
+			strategy: 0.0,
+		},
+		peopleCost: {
+			id: p1.id,
+			energy: useEnergy,
+		}
+	};
+	switch [type, market] {
+		case [MONEY, _]:
+			returnInfo.playerCost.money = -1 * 100 * rate;
+		case [ARMY, SELL]:
+			final sellArmyCount = 100;
+			returnInfo.playerCost.money = -1 * sellArmyCount * rate;
+			returnInfo.playerCost.army = sellArmyCount;
+		case [FOOD, SELL]:
+			final sellFoodCount = 100;
+			returnInfo.playerCost.money = -1 * sellFoodCount * rate;
+			returnInfo.playerCost.food = sellFoodCount;
+		case [STRETEGY, SELL]:
+			final sellIntCount = 100;
+			returnInfo.playerCost.money = -1 * sellIntCount * rate;
+			returnInfo.playerCost.strategy = sellIntCount;
+		case [ARMY, BUY]:
+			final moneyCost = 100;
+			returnInfo.playerCost.money = moneyCost;
+			returnInfo.playerCost.army = -moneyCost * rate;
+		case [FOOD, BUY]:
+			final moneyCost = 100;
+			returnInfo.playerCost.money = moneyCost;
+			returnInfo.playerCost.food = -moneyCost * rate;
+		case [STRETEGY, BUY]:
+			final moneyCost = 100;
+			returnInfo.playerCost.money = moneyCost;
+			returnInfo.playerCost.strategy = -moneyCost * rate;
+	}
+	return returnInfo;
+}
+
+private function applyResourceCost(ctx:Context, playerId:Int, gridId:Int, p1SelectId:Int, market:MARKET, type:RESOURCE) {
+	final negoCost = getResourceCost(ctx, playerId, gridId, p1SelectId, market, type);
+	// 無論成功或失敗武將先消體力
+	final people = getPeopleById(ctx, p1SelectId);
+	if (people.energy < negoCost.peopleCost.energy) {
+		throw new haxe.Exception('people.energy ${people.energy} < ${negoCost.peopleCost.energy}');
+	}
+	people.energy -= negoCost.peopleCost.energy;
+	//
+	final player = ctx.players[playerId];
+	player.money -= negoCost.playerCost.money;
+	player.food -= negoCost.playerCost.food;
+	player.army -= negoCost.playerCost.army;
+	player.strategy -= negoCost.playerCost.strategy;
 }
