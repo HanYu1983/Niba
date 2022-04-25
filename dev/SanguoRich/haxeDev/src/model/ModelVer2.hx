@@ -598,8 +598,8 @@ private function doGetPreResultOfNego(ctx:Context, playerId:Int, gridId:Int, peo
 		moneyAfter: Std.int(player.money + negoCost.playerCost.money),
 		foodBefore: Std.int(player.food),
 		foodAfter: Std.int(player.food + negoCost.playerCost.food),
-		maintainFoodBefore:10,
-    	maintainFoodAfter:10,
+		maintainFoodBefore: 10,
+		maintainFoodAfter: 10,
 		successRate: negoCost.successRate
 	};
 }
@@ -923,8 +923,8 @@ private function _getPreResultOfWar(ctx:Context, playerId:Int, gridId:Int, p1:In
 			moneyAfter: 6,
 			foodBefore: 7,
 			foodAfter: 8,
-			maintainFoodBefore:10,
-    		maintainFoodAfter:10,
+			maintainFoodBefore: 10,
+			maintainFoodAfter: 10,
 		},
 		{
 			energyBefore: 0,
@@ -935,8 +935,8 @@ private function _getPreResultOfWar(ctx:Context, playerId:Int, gridId:Int, p1:In
 			moneyAfter: 6,
 			foodBefore: 7,
 			foodAfter: 8,
-			maintainFoodBefore:10,
-    		maintainFoodAfter:10,
+			maintainFoodBefore: 10,
+			maintainFoodAfter: 10,
 		}
 	];
 }
@@ -984,6 +984,8 @@ private function _getPreResultOfResource(ctx:Context, playerId:Int, gridId:Int, 
 		moneyAfter: Std.int(player.money - cost.playerCost.money),
 		foodBefore: Std.int(player.food),
 		foodAfter: Std.int(player.food - cost.playerCost.food),
+		maintainFoodBefore: 0,
+		maintainFoodAfter: 0,
 	}
 }
 
