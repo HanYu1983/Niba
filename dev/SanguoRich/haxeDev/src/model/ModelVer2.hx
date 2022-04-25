@@ -24,54 +24,108 @@ using Lambda;
 // =========================================
 // 交涉計算
 private function getNegoCost(ctx:Context, playerId:Int, gridId:Int, p1SelectId:Int, p2SelectId:Int) {
-	final grid = ctx.grids[gridId];
-	final fightPeople = [p1SelectId, p2SelectId].map(id -> getPeopleById(ctx, id));
-	switch fightPeople {
-		case [p1, p2]:
-			// 用掉1/5的體力(最多20)
-			// 體力越少效率越低
-			final useEnergy = p1.energy / 5;
-			// 使用20體力的情況下基礎值為0.5
-			final base = (useEnergy / 100) + 0.3;
-			final intelligenceFactor = p1.intelligence / p2.intelligence;
-			final politicalFactor = p1.political / p2.political;
-			final charmFactor = p1.charm / p2.charm;
-			final rate = base * intelligenceFactor * politicalFactor * charmFactor;
-			final gainRate = 0.1 * rate + 0.1;
-			return {
+	// 使用switch達成策略模式
+	// 0代表預設的隨意實作
+	return switch 0 {
+		case 0:
+			final grid = ctx.grids[gridId];
+			final fightPeople = [p1SelectId, p2SelectId].map(id -> getPeopleById(ctx, id));
+			return switch fightPeople {
+				case [p1, p2]:
+					// 用掉1/5的體力(最多20)
+					// 體力越少效率越低
+					final useEnergy = p1.energy / 5;
+					// 使用20體力的情況下基礎值為0.5
+					final base = (useEnergy / 100) + 0.3;
+					final intelligenceFactor = p1.intelligence / p2.intelligence;
+					final politicalFactor = p1.political / p2.political;
+					final charmFactor = p1.charm / p2.charm;
+					final rate = base * intelligenceFactor * politicalFactor * charmFactor;
+					final gainRate = 0.1 * rate + 0.1;
+					{
+						playerCost: {
+							id: playerId,
+							army: grid.army * gainRate,
+							money: grid.money * gainRate,
+							food: grid.food * gainRate
+						},
+						peopleCost: {
+							id: p1.id,
+							energy: useEnergy,
+						},
+						successRate: rate
+					};
+				case _:
+					throw new haxe.Exception("fightPeople not right");
+			}
+		case 1:
+			// 版本1
+			{
 				playerCost: {
-					id: playerId,
-					army: grid.army * gainRate,
-					money: grid.money * gainRate,
-					food: grid.food * gainRate
+					id: 0,
+					army: 0.0,
+					money: 0.0,
+					food: 0.0,
 				},
 				peopleCost: {
-					id: p1.id,
-					energy: useEnergy,
+					id: 0,
+					energy: 0.0,
 				},
-				successRate: rate
-			};
+				successRate: 0.0,
+			}
 		case _:
-			throw new haxe.Exception("fightPeople not right");
+			throw new haxe.Exception("not impl");
 	}
 }
 
 // 雇用計算
 private function getHireCost(ctx:Context, playerId:Int, gridId:Int, p1SelectId:Int, p2SelectId:Int) {
-	final grid = ctx.grids[gridId];
-	final fightPeople = [p1SelectId, p2SelectId].map(p -> getPeopleById(ctx, p));
-	switch fightPeople {
-		case [p1, p2]:
+	return switch 0 {
+		case 0:
+			final grid = ctx.grids[gridId];
+			final fightPeople = [p1SelectId, p2SelectId].map(p -> getPeopleById(ctx, p));
+			return switch fightPeople {
+				case [p1, p2]:
+					final useEnergy = p1.energy / 3;
+					final base = (useEnergy / 100) + 0.2;
+					final charmFactor = p1.charm / p2.charm;
+					// 人脈加成
+					final abiFactor = p1.abilities.has(10) ? 1.5 : 1;
+					final rate = base * charmFactor * abiFactor;
+					{
+						playerCost: {
+							id: playerId,
+							money: p2.cost
+						},
+						peopleCost: {
+							id: p1.id,
+							energy: useEnergy,
+						},
+						successRate: rate
+					};
+				case _:
+					throw new haxe.Exception("fightPeople not right");
+			}
+		case _:
+			throw new haxe.Exception("not impl");
+	}
+}
+
+// 探索計算
+private function getExploreCost(ctx:Context, playerId:Int, gridId:Int, p1SelectId:Int) {
+	return switch 0 {
+		case 0:
+			final grid = ctx.grids[gridId];
+			final p1 = getPeopleById(ctx, p1SelectId);
 			final useEnergy = p1.energy / 3;
 			final base = (useEnergy / 100) + 0.2;
-			final charmFactor = p1.charm / p2.charm;
+			final charmFactor = p1.charm / 100;
 			// 人脈加成
 			final abiFactor = p1.abilities.has(10) ? 1.5 : 1;
 			final rate = base * charmFactor * abiFactor;
 			return {
 				playerCost: {
 					id: playerId,
-					money: p2.cost
 				},
 				peopleCost: {
 					id: p1.id,
@@ -80,91 +134,74 @@ private function getHireCost(ctx:Context, playerId:Int, gridId:Int, p1SelectId:I
 				successRate: rate
 			};
 		case _:
-			throw new haxe.Exception("fightPeople not right");
+			throw new haxe.Exception("not impl");
 	}
-}
-
-// 探索計算
-private function getExploreCost(ctx:Context, playerId:Int, gridId:Int, p1SelectId:Int) {
-	final grid = ctx.grids[gridId];
-	final p1 = getPeopleById(ctx, p1SelectId);
-	final useEnergy = p1.energy / 3;
-	final base = (useEnergy / 100) + 0.2;
-	final charmFactor = p1.charm / 100;
-	// 人脈加成
-	final abiFactor = p1.abilities.has(10) ? 1.5 : 1;
-	final rate = base * charmFactor * abiFactor;
-	return {
-		playerCost: {
-			id: playerId,
-		},
-		peopleCost: {
-			id: p1.id,
-			energy: useEnergy,
-		},
-		successRate: rate
-	};
 }
 
 // 經商買賣計算
 private function getResourceCost(ctx:Context, playerId:Int, gridId:Int, p1SelectId:Int, market:MARKET, type:RESOURCE) {
 	trace("MondelVer2.getResourceCost", market, type);
-	final grid = ctx.grids[gridId];
-	final p1 = getPeopleById(ctx, p1SelectId);
-	final useEnergy = p1.energy / 3;
-	final base = (useEnergy / 100) + 0.2;
-	final abiFactor:Float = if (type == RESOURCE.MONEY && (p1.abilities.has(4) || p1.abilities.has(10))) {
-		1.5;
-	} else if (type == RESOURCE.ARMY && (p1.abilities.has(7) || p1.abilities.has(10))) {
-		1.5;
-	} else if (type == RESOURCE.FOOD && (p1.abilities.has(5) || p1.abilities.has(7))) {
-		1.5;
-	} else {
-		1;
-	};
-	final rate = base * abiFactor;
-	final returnInfo = {
-		playerCost: {
-			id: playerId,
-			money: 0.0,
-			army: 0.0,
-			food: 0.0,
-			strategy: 0.0,
-		},
-		peopleCost: {
-			id: p1.id,
-			energy: useEnergy,
-		}
-	};
-	switch [type, market] {
-		case [MONEY, _]:
-			returnInfo.playerCost.money = -1 * 100 * rate;
-		case [ARMY, SELL]:
-			final sellArmyCount = 100;
-			returnInfo.playerCost.money = -1 * sellArmyCount * rate;
-			returnInfo.playerCost.army = sellArmyCount;
-		case [FOOD, SELL]:
-			final sellFoodCount = 100;
-			returnInfo.playerCost.money = -1 * sellFoodCount * rate;
-			returnInfo.playerCost.food = sellFoodCount;
-		case [STRETEGY, SELL]:
-			final sellIntCount = 100;
-			returnInfo.playerCost.money = -1 * sellIntCount * rate;
-			returnInfo.playerCost.strategy = sellIntCount;
-		case [ARMY, BUY]:
-			final moneyCost = 100;
-			returnInfo.playerCost.money = moneyCost;
-			returnInfo.playerCost.army = -moneyCost * rate;
-		case [FOOD, BUY]:
-			final moneyCost = 100;
-			returnInfo.playerCost.money = moneyCost;
-			returnInfo.playerCost.food = -moneyCost * rate;
-		case [STRETEGY, BUY]:
-			final moneyCost = 100;
-			returnInfo.playerCost.money = moneyCost;
-			returnInfo.playerCost.strategy = -moneyCost * rate;
+	return switch 0 {
+		case 0:
+			final grid = ctx.grids[gridId];
+			final p1 = getPeopleById(ctx, p1SelectId);
+			final useEnergy = p1.energy / 3;
+			final base = (useEnergy / 100) + 0.2;
+			final abiFactor:Float = if (type == RESOURCE.MONEY && (p1.abilities.has(4) || p1.abilities.has(10))) {
+				1.5;
+			} else if (type == RESOURCE.ARMY && (p1.abilities.has(7) || p1.abilities.has(10))) {
+				1.5;
+			} else if (type == RESOURCE.FOOD && (p1.abilities.has(5) || p1.abilities.has(7))) {
+				1.5;
+			} else {
+				1;
+			};
+			final rate = base * abiFactor;
+			final returnInfo = {
+				playerCost: {
+					id: playerId,
+					money: 0.0,
+					army: 0.0,
+					food: 0.0,
+					strategy: 0.0,
+				},
+				peopleCost: {
+					id: p1.id,
+					energy: useEnergy,
+				}
+			};
+			switch [type, market] {
+				case [MONEY, _]:
+					returnInfo.playerCost.money = -1 * 100 * rate;
+				case [ARMY, SELL]:
+					final sellArmyCount = 100;
+					returnInfo.playerCost.money = -1 * sellArmyCount * rate;
+					returnInfo.playerCost.army = sellArmyCount;
+				case [FOOD, SELL]:
+					final sellFoodCount = 100;
+					returnInfo.playerCost.money = -1 * sellFoodCount * rate;
+					returnInfo.playerCost.food = sellFoodCount;
+				case [STRETEGY, SELL]:
+					final sellIntCount = 100;
+					returnInfo.playerCost.money = -1 * sellIntCount * rate;
+					returnInfo.playerCost.strategy = sellIntCount;
+				case [ARMY, BUY]:
+					final moneyCost = 100;
+					returnInfo.playerCost.money = moneyCost;
+					returnInfo.playerCost.army = -moneyCost * rate;
+				case [FOOD, BUY]:
+					final moneyCost = 100;
+					returnInfo.playerCost.money = moneyCost;
+					returnInfo.playerCost.food = -moneyCost * rate;
+				case [STRETEGY, BUY]:
+					final moneyCost = 100;
+					returnInfo.playerCost.money = moneyCost;
+					returnInfo.playerCost.strategy = -moneyCost * rate;
+			}
+			return returnInfo;
+		case _:
+			throw new haxe.Exception("not impl");
 	}
-	return returnInfo;
 }
 
 // TODO: 佔領計算
