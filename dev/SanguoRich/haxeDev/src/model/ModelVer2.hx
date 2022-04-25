@@ -1093,20 +1093,30 @@ private function _getPreResultOfWar(ctx:Context, playerId:Int, gridId:Int, p1:In
 }
 
 private function _takeWarOn(ctx:Context, playerId:Int, gridId:Int, p1PeopleId:Int, p2PeopleId:Int, army1:Float, army2:Float) {
-	ctx.events = [
-		Event.WAR_RESULT({
-			success: true,
-			people: getPeopleInfo(ctx, getPeopleById(ctx, playerId)),
-			energyBefore: 100,
-			energyAfter: 50,
-			armyBefore: 200,
-			armyAfter: 300,
-			moneyBefore: 200,
-			moneyAfter: 300,
-			foodBefore: 100,
-			foodAfter: 200
-		})
-	];
+	// TODO: 武將回到主公身上, 體力減半
+	// TODO: 中立將領就解散
+	final success = true;
+	final people1 = getPeopleById(ctx, p1PeopleId);
+	final people2 = getPeopleById(ctx, p2PeopleId);
+	final resultValue = {
+		success: success,
+		people: getPeopleInfo(ctx, people1),
+		energyBefore: 0.0,
+		energyAfter: 0.0,
+		armyBefore: 0.0,
+		armyAfter: 0.0,
+		moneyBefore: 0.0,
+		moneyAfter: 0.0,
+		foodBefore: 0.0,
+		foodAfter: 0.0
+	}
+	if (success == false) {
+		return;
+	}
+	// 回到主公身上或解散
+	people2.position.gridId = null;
+	people2.energy *= 0.5;
+	ctx.events = [Event.WAR_RESULT(resultValue)];
 }
 
 // =================================
