@@ -81,6 +81,12 @@ final WAR_HIGH_LOW_FACTOR = 1.5;
 // 保底傷害, 1的話代表派100兵最少打100
 final WAR_ARMY_FACTOR = 0.3;
 
+// 每回合基本回體力
+final PEOPLE_ENERGY_SUPPLY_BASE = 3;
+
+// 每回合額外回復％數體力(體力越多回越快)
+final PEOPLE_ENERGY_SUPPLY_SAVE_FACTOR = 0.05;
+
 // 派越少的兵力體力扣越少
 function getEnergyFactor(atkArmy:Float) {
 	return (Math.min(atkArmy / 500, 0) * .3 + .7);
@@ -424,7 +430,7 @@ private function doPlayerEnd(ctx:Context) {
 			final enable = ctx.turn > 0 && ctx.turn % 1 == 0;
 			// 回體力
 			for (people in ctx.peoples) {
-				people.energy += 5 + people.energy / 10;
+				people.energy += PEOPLE_ENERGY_SUPPLY_BASE + people.energy * PEOPLE_ENERGY_SUPPLY_SAVE_FACTOR;
 				if (people.energy > 100) {
 					people.energy = 100;
 				}
