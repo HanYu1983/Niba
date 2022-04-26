@@ -1,5 +1,6 @@
 package model;
 
+import model.IModel.PreResultOnFire;
 import model.IModel.PreResultOnResource;
 import model.IModel.ResourcePreview;
 import model.IModel.MARKET;
@@ -469,7 +470,7 @@ private function getMaintainPeople(ctx:Context, playerId:Int):Float {
 	final totalPeopleCost = ctx.peoples.filter(p -> p.belongToPlayerId == playerId).fold((p, a) -> {
 		return a + p.cost;
 	}, 0.0);
-	return totalPeopleCost * PLAYER_EARN_PER_TURN_PERSENT;
+	return getMaintainPeoplePure(totalPeopleCost);
 }
 
 private function getMaintainArmy(ctx:Context, playerId:Int):Float {
@@ -477,6 +478,10 @@ private function getMaintainArmy(ctx:Context, playerId:Int):Float {
 		return a + p.army;
 	}, 0.0) + ctx.players[playerId].army;
 	return getMaintainArmyPure(totalArmy);
+}
+
+private function getMaintainPeoplePure(totalPeopleCost:Float):Float {
+	return totalPeopleCost * PLAYER_EARN_PER_TURN_PERSENT;
 }
 
 private function getMaintainArmyPure(totalArmy:Float):Float {
@@ -582,6 +587,25 @@ class ModelVer2 extends DebugModel {
 
 	override function takeResource(playerId:Int, gridId:Int, p1PeopleId:Int, market:MARKET, type:RESOURCE, cb:(gameInfo:GameInfo) -> Void) {
 		_takeResource(context, playerId, gridId, p1PeopleId, market, type);
+		cb(gameInfo());
+	}
+
+	override function getPreResultOfFire(playerId:Int, p1PeopleId:Int):PreResultOnFire {
+		return _getPreResultOfFire(context, playerId, p1PeopleId);
+	}
+
+	override function takeFire(playerId:Int, p1PeopleId:Int, cb:(gameInfo:GameInfo) -> Void) {
+		_takeFire(context, playerId, p1PeopleId);
+		cb(gameInfo());
+	}
+
+	override function checkValidTransfer(playerId:Int, gridId:Int, playerInfo:model.IModel.PlayerInfo, gridInfo:model.GridGenerator.Grid):Bool {
+		return _checkValidTransfer(context, playerId, gridId);
+	}
+
+	override function takeTransfer(playerId:Int, gridId:Int, playerInfo:model.IModel.PlayerInfo, gridInfo:model.GridGenerator.Grid,
+			cb:(gameInfo:GameInfo) -> Void) {
+		_takeTransfer(context, playerId, gridId);
 		cb(gameInfo());
 	}
 }
@@ -735,7 +759,7 @@ private function getPeopleInfo(ctx:Context, people:People):model.PeopleGenerator
 		cost: Std.int(people.cost),
 		abilities: people.abilities,
 		energy: Std.int(people.energy),
-		gridId: null,
+		gridId: cast people.position.gridId,
 	}
 }
 
@@ -1077,14 +1101,17 @@ private function doGetPreResultOfHire(ctx:Context, playerId:Int, gridId:Int, peo
 	final player = ctx.players[playerId];
 	final cost = getHireCost(ctx, playerId, gridId, peopleId, inviteId);
 	final p1 = getPeopleById(ctx, peopleId);
+	final totalPeopleCost = ctx.peoples.filter(p -> p.belongToPlayerId == playerId).fold((p, a) -> {
+		return a + p.cost;
+	}, 0.0) + p1.cost;
 	return {
 		energyBefore: Std.int(p1.energy),
 		energyAfter: Std.int(p1.energy - cost.peopleCost.energy),
 		moneyBefore: 0,
 		moneyAfter: 0,
 		successRate: cost.successRate,
-		maintainMoneyAfter: 10,
-		maintainMoneyBefore: 10,
+		maintainMoneyAfter: getMaintainPeoplePure(totalPeopleCost),
+		maintainMoneyBefore: getMaintainPeople(ctx, playerId),
 	}
 }
 
@@ -1410,3 +1437,36 @@ private function applyResourceCost(ctx:Context, playerId:Int, gridId:Int, p1Sele
 	player.army -= negoCost.playerCost.army;
 	player.strategy -= negoCost.playerCost.strategy;
 }
+
+private function _getPreResultOfFire(ctx:Context, playerId:Int, p1PeopleId:Int):PreResultOnFire {
+	final totalPeopleCost = ctx.peoples.filter(p -> p.belongToPlayerId == playerId).fold((p, a) -> {
+		if (p.id == p1PeopleId) {
+			return a;
+		}
+		return a + p.cost;
+	}, 0.0);
+	return {
+		maintainMoneyAfter: getMaintainPeoplePure(totalPeopleCost),
+		maintainMoneyBefore: getMaintainPeople(ctx, playerId),
+	}
+}
+
+private function _takeFire(ctx:Context, playerId:Int, p1PeopleId:Int) {
+	// info.events = [
+	// 	{
+	// 		id: EventInfoID.FIRE_RESULT,
+	// 		value: {
+	// 			success: true,
+	// 			people: PeopleGenerator.getInst().generate(),
+	// 			maintainMoneyAfter: 10,
+	// 			maintainMoneyBefore: 10,
+	// 		}
+	// 	}
+	// ];
+}
+
+private function _checkValidTransfer(ctx:Context, playerId:Int, gridId:Int):Bool {
+	return true;
+}
+
+private function _takeTransfer(ctx:Context, playerId:Int, gridId:Int) {}
