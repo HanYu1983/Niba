@@ -218,6 +218,7 @@ private function getExploreCost(ctx:Context, playerId:Int, gridId:Int, p1SelectI
 // food:     ability 5
 // army:     ability 11
 // strategy: ability 3
+// 智力、政治、魅力也會影響最終數值
 private function getResourceCost(ctx:Context, playerId:Int, gridId:Int, p1SelectId:Int, market:MARKET, type:RESOURCE) {
 	trace("MondelVer2", "getResourceCost", market, type);
 	return switch 0 {
@@ -235,7 +236,16 @@ private function getResourceCost(ctx:Context, playerId:Int, gridId:Int, p1Select
 			} else {
 				1;
 			};
-			final rate = base * abiFactor;
+			final attrFactor:Float = if (type == RESOURCE.MONEY) {
+				(p1.political/100) * .8 + (p1.intelligence/100) * .1 + (p1.charm/100) * .1 + (grid.money / 1000) * .1;
+			} else if (type == RESOURCE.ARMY) {
+				(p1.political/100) * .1 + (p1.intelligence/100) * .1 + (p1.charm/100) * .8 + (grid.army / 1000) * .1;
+			} else if (type == RESOURCE.FOOD) {
+				(p1.political/100) * .1 + (p1.intelligence/100) * .8 + (p1.charm/100) * .1 + (grid.food / 1000) * .1;
+			} else {
+				0;
+			};
+			final rate = (base + attrFactor) * abiFactor;
 			final returnInfo = {
 				playerCost: {
 					id: playerId,
