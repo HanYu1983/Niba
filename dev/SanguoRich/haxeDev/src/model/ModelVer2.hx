@@ -354,15 +354,9 @@ private function doPlayerEnd(ctx:Context) {
 	// 四個玩家走完後才計算回合
 	final isTurnEnd = ctx.currentPlayerId == (ctx.players.length - 1);
 	if (isTurnEnd) {
-		final worldEventValue = {
-			playerBefore: ctx.players.map(p -> getPlayerInfo(ctx, p)),
-			playerAfter: ([] : Array<model.IModel.PlayerInfo>),
-			gridBefore: ctx.grids.map(g -> getGridInfo(ctx, g)),
-			gridAfter: ([] : Array<model.GridGenerator.Grid>),
-		}
 		// 先假設每回合回體力
 		{
-			final enable = ctx.turn % 1 == 0;
+			final enable = ctx.turn > 0 && ctx.turn % 1 == 0;
 			// 回體力
 			for (people in ctx.peoples) {
 				people.energy += 5 + people.energy / 10;
@@ -373,9 +367,15 @@ private function doPlayerEnd(ctx:Context) {
 		}
 		// 支付薪水
 		{
-			final enable = ctx.turn % PLAYER_EARN_PER_TURN == 0;
+			final enable = ctx.turn > 0 && ctx.turn % PLAYER_EARN_PER_TURN == 0;
 			if (enable) {
 				trace("ModelVer2", "doPlayerEnd", "支付薪水");
+				final worldEventValue = {
+					playerBefore: ctx.players.map(p -> getPlayerInfo(ctx, p)),
+					playerAfter: ([] : Array<model.IModel.PlayerInfo>),
+					gridBefore: ctx.grids.map(g -> getGridInfo(ctx, g)),
+					gridAfter: ([] : Array<model.GridGenerator.Grid>),
+				}
 				// 玩家
 				for (player in ctx.players) {
 					// 支付武將的薪水
@@ -393,11 +393,14 @@ private function doPlayerEnd(ctx:Context) {
 						}
 					}
 				}
+				worldEventValue.playerAfter = ctx.players.map(p -> getPlayerInfo(ctx, p));
+				worldEventValue.gridAfter = ctx.grids.map(g -> getGridInfo(ctx, g));
+				ctx.events.push(Event.WORLD_EVENT(worldEventValue));
 			}
 		}
 		// 格子成長
 		{
-			final enable = ctx.turn % GRID_EARN_PER_TURN == 0;
+			final enable = ctx.turn > 0 && ctx.turn % GRID_EARN_PER_TURN == 0;
 			if (enable) {
 				trace("ModelVer2", "doPlayerEnd", "格子成長");
 				for (grid in ctx.grids) {
@@ -425,9 +428,15 @@ private function doPlayerEnd(ctx:Context) {
 		}
 		// 收稅
 		{
-			final enable = ctx.turn % PLAYER_EARN_FROM_CITY_PER_TURN == 0;
+			final enable = ctx.turn > 0 && ctx.turn % PLAYER_EARN_FROM_CITY_PER_TURN == 0;
 			if (enable) {
 				trace("ModelVer2", "doPlayerEnd", "收稅");
+				final worldEventValue = {
+					playerBefore: ctx.players.map(p -> getPlayerInfo(ctx, p)),
+					playerAfter: ([] : Array<model.IModel.PlayerInfo>),
+					gridBefore: ctx.grids.map(g -> getGridInfo(ctx, g)),
+					gridAfter: ([] : Array<model.GridGenerator.Grid>),
+				}
 				for (grid in ctx.grids) {
 					// 有主公的才有稅收
 					final belongPlayerId = getGridBelongPlayerId(ctx, grid.id);
@@ -454,11 +463,11 @@ private function doPlayerEnd(ctx:Context) {
 					player.food += earnFood;
 					player.money += earnMoney;
 				}
+				worldEventValue.playerAfter = ctx.players.map(p -> getPlayerInfo(ctx, p));
+				worldEventValue.gridAfter = ctx.grids.map(g -> getGridInfo(ctx, g));
+				ctx.events.push(Event.WORLD_EVENT(worldEventValue));
 			}
 		}
-		worldEventValue.playerAfter = ctx.players.map(p -> getPlayerInfo(ctx, p));
-		worldEventValue.gridAfter = ctx.grids.map(g -> getGridInfo(ctx, g));
-		ctx.events.push(Event.WORLD_EVENT(worldEventValue));
 		// 下一回合
 		ctx.turn += 1;
 	}
