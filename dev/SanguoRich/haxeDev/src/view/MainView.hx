@@ -34,6 +34,7 @@ class MainView extends Absolute {
     var leaderView:LeaderGridView;
     var gridView:GridGridView;
     var peopleListView:PeopleListView;
+    var gridPeopleListView:PeopleListView;
     var warPreviewView:WarPreviewView;
     var negoPreviewView:NegoPreviewView;
     var messageView:MessageView;
@@ -45,10 +46,12 @@ class MainView extends Absolute {
     var transferPreview:TransferPreview;
     var growView:GrowView;
 
+    var gridSize = 80;
+
     public function new() {
         super();
 
-        for(i in 0...100){
+        for(i in 0...30){
             var grid = new GridView();
             box_grids.addComponent(grid);
             grids.push(grid);
@@ -69,7 +72,7 @@ class MainView extends Absolute {
         box_popup.hide();
 
         leaderView = new LeaderGridView();
-        box_leaderView.addComponent(leaderView);
+        box_playerView.addComponent(leaderView);
 
         gridView = new GridGridView();
         box_gridView.addComponent(gridView);
@@ -115,7 +118,10 @@ class MainView extends Absolute {
         box_popup.addComponent(growView);
 
         peopleListView = new PeopleListView();
-        box_bottom.addComponent(peopleListView);
+        box_playerPeopleList.addComponent(peopleListView);
+
+        gridPeopleListView = new PeopleListView();
+        box_gridPeopleList.addComponent(gridPeopleListView);
     }
 
     public function onShowPopup() {
@@ -213,8 +219,8 @@ class MainView extends Absolute {
     function onUIReady(e:UIEvent) {
         for (index => grid in grids) {
             grid.name = index + "";
-            grid.left = (index % 10) * 50;
-            grid.top = Math.floor(index / 10) * 50;
+            grid.left = (index % 10) * gridSize;
+            grid.top = Math.floor(index / 10) * gridSize;
         }
         box_npcCmds.hide();
         box_enemyCmds.hide();
@@ -680,20 +686,18 @@ class MainView extends Absolute {
             // pro_currentEvent.value = "等待指令中";
 
             stage.registerEvent(MouseEvent.MOUSE_MOVE, function(e:MouseEvent){
-                var gx = Math.floor(e.screenX / 50);
-                var gy = Math.floor(e.screenY / 50);
+                var gx = Math.floor(e.screenX / gridSize);
+                var gy = Math.floor(e.screenY / gridSize);
                 var gridId = gx + gy * 10;
                 gridId = Math.floor(Math.min(gridId, gameInfo.grids.length - 1));
                 moveCursorToGrid(gridId);
                 syncGridInfo(gridId);
-
-                var gridInfo = gameInfo.grids[gridId];
-                peopleListView.setPeopleList(gridInfo.people);
             });
 
             stage.registerEvent(MouseEvent.MOUSE_OUT, function(e:MouseEvent){
                 syncGridInfo(gameInfo.currentPlayer.atGridId);
-                peopleListView.setPeopleList(gameInfo.currentPlayer.people);
+                // peopleListView.setPeopleList(gameInfo.currentPlayer.people);
+                //gridPeopleListView.dataSource.clear();
 
                 moveCursorToGrid(gameInfo.currentPlayer.atGridId);
             });
@@ -721,6 +725,8 @@ class MainView extends Absolute {
         var gameInfo = Main.model.gameInfo();
         var grid:Grid = gameInfo.grids[gridId];
         gridView.setInfo(grid);
+        
+        gridPeopleListView.setPeopleList(grid.people);
     }
 
     function syncGridViews(gameInfo:GameInfo){

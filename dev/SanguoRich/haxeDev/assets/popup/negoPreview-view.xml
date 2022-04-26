@@ -1,4 +1,4 @@
-<vbox id="box_negoPreview" width="100%" padding="20" verticalAlign="center" horizontalAlign="center" style="background-color: white;border:1px solid grey;">
+<vbox id="box_negoPreview" width="95%" padding="10" verticalAlign="center" horizontalAlign="center" style="background-color: white;border:1px solid grey;">
     <hbox horizontalAlign="center">
         <label text="交涉"/>
     </hbox>
