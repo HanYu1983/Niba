@@ -786,7 +786,7 @@ private enum Event {
 	});
 	RESOURCE_RESULT(value:{
 		success:Bool,
-		people:model.PeopleGenerator.People,
+		people:Null<model.PeopleGenerator.People>,
 		energyBefore:Float,
 		energyAfter:Float,
 		armyBefore:Float,
@@ -1629,17 +1629,12 @@ private function _checkValidTransfer(ctx:Context, playerId:Int, gridId:Int, play
 }
 
 private function _takeTransfer(ctx:Context, playerId:Int, gridId:Int, playerInfo:model.IModel.PlayerInfo, gridInfo:model.GridGenerator.Grid) {
-	final peopleInGrid = ctx.peoples.filter(p -> p.position.gridId == gridId);
-	if (peopleInGrid.length == 0) {
-		throw new haxe.Exception('找不到守城人在gridId${gridId}');
-	};
-	final p1 = peopleInGrid[0];
 	final player = ctx.players[playerId];
 	final resultValue = {
 		success: false,
-		people: getPeopleInfo(ctx, p1),
-		energyBefore: p1.energy,
-		energyAfter: p1.energy,
+		people: (null : Null<model.PeopleGenerator.People>),
+		energyBefore: 0.0,
+		energyAfter: 0.0,
 		armyBefore: player.army,
 		armyAfter: player.army,
 		moneyBefore: player.money,
@@ -1648,7 +1643,6 @@ private function _takeTransfer(ctx:Context, playerId:Int, gridId:Int, playerInfo
 		foodAfter: player.food,
 	}
 	applyTransfer(ctx, playerId, gridId, playerInfo, gridInfo);
-	resultValue.energyAfter = p1.energy;
 	resultValue.armyAfter = player.army;
 	resultValue.moneyAfter = player.money;
 	resultValue.foodAfter = player.food;
