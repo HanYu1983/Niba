@@ -181,4 +181,7 @@ interface IModel{
     function getTakeResourcePreview(playerId:Int, gridId:Int, market:MARKET, type:RESOURCE): ResourcePreview;
     function getPreResultOfResource(playerId:Int, gridId:Int, p1:People, market:MARKET, type:RESOURCE):PreResultOnResource;
     function takeResource(playerId:Int, gridInt:Int, p1PeopleId:Int, market:MARKET, type:RESOURCE, cb:(gameInfo:GameInfo)->Void):Void;
+
+    function checkValidTransfer(playerId:Int, gridInt:Int, playerInfo:PlayerInfo, gridInfo:Grid):Bool;
+    function takeTransfer(playerId:Int, gridInt:Int, playerInfo:PlayerInfo, gridInfo:Grid, cb:(gameInfo:GameInfo)->Void):Void;
 }

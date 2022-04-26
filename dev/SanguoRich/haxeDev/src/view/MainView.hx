@@ -1,5 +1,7 @@
 package view;
 
+import model.IModel.PlayerInfo;
+import view.popup.TransferPreview;
 import view.popup.FirePreviewView;
 import view.popup.ResourcePreviewView;
 import view.popup.ExploreSuccessView;
@@ -36,6 +38,7 @@ class MainView extends Absolute {
     var exploreSuccessView:ExploreSuccessView;
     var resourcePreviewView:ResourcePreviewView;
     var firePreviewView:FirePreviewView;
+    var transferPreview:TransferPreview;
     var growView:GrowView;
 
     public function new() {
@@ -93,6 +96,10 @@ class MainView extends Absolute {
         firePreviewView.hide();
         box_popup.addComponent(firePreviewView);
 
+        transferPreview = new TransferPreview();
+        transferPreview.hide();
+        box_popup.addComponent(transferPreview);
+        
         growView = new GrowView();
         growView.hide();
         box_popup.addComponent(growView);
@@ -109,11 +116,18 @@ class MainView extends Absolute {
         box_popup.fadeOut();
     }
 
-    // public function onWarPreviewConfirmWarClick() {
-    //     Main.model.takeWarOn(0,0, (gameInfo:GameInfo)->{
-    //         syncViewByInfo(gameInfo);
-    //     });
-    // }
+    public function onTransferPreviewConfirmClick(data:Dynamic){
+        final gameInfo = Main.model.gameInfo();
+        final p:PlayerInfo = data[0];
+        final g:Grid = data[1];
+
+        Main.model.takeTransfer(
+            gameInfo.currentPlayer.id,
+            gameInfo.currentPlayer.atGridId,
+            p, g,
+            syncViewByInfo
+        );
+    }
 
     public function onNegoPreviewConfirmNegoClick(p1Id:Int, p2Id:Int) {
         var gameInfo = Main.model.gameInfo();
@@ -191,7 +205,6 @@ class MainView extends Absolute {
             grid.name = index + "";
             grid.left = (index % 10) * 50;
             grid.top = Math.floor(index / 10) * 50;
-            grid.backgroundColor = '#0000FF';
         }
         box_npcCmds.hide();
         box_enemyCmds.hide();
@@ -291,6 +304,13 @@ class MainView extends Absolute {
         previewInfo.resource = resource;
         resourcePreviewView.showPopup(previewInfo);
     }
+
+    @:bind(btn_transfer, MouseEvent.CLICK)
+    function onBtnTransferClick(e:MouseEvent){
+        var player = Main.model.gameInfo().currentPlayer;
+        transferPreview.showPopup(null);
+    }
+
 
     @:bind(btn_negotiate, MouseEvent.CLICK)
     function onBtnNegotiateClick(e:MouseEvent){
@@ -493,7 +513,7 @@ class MainView extends Absolute {
                             
                         }else{
                             if(g.belongPlayerId == gameInfo.currentPlayer.id){
-    
+                                box_myAreaCmds.show();
                             }else{
                                 box_enemyCmds.show();
                             }
@@ -536,14 +556,17 @@ class MainView extends Absolute {
                     btn_end.show();
                 case WAR_RESULT:
                     final info:Dynamic = event.value;
-                    final msg = '${info.success ? '任務成功' : '任務失敗'}\n
+                    final msg = '${info.success ? '占領成功!請記得調度!' : '攻城失敗'}\n
 武將:${info.people.name}\n
 體力:${Main.getFixNumber(info.energyBefore,0)} => ${Main.getFixNumber(info.energyAfter,0)}\n
 金錢:${Main.getFixNumber(info.moneyBefore,0)} => ${Main.getFixNumber(info.moneyAfter,0)}\n
 糧草:${Main.getFixNumber(info.foodBefore,0)} => ${Main.getFixNumber(info.foodAfter,0)}\n
 士兵:${Main.getFixNumber(info.armyBefore,0)} => ${Main.getFixNumber(info.armyAfter,0)}\n
                     ';
-                    messageView.showMessage(msg);
+                    messageView.showMessage(msg, null, ()->{
+                        transferPreview.showPopup(null);
+                    });
+
                     btn_end.show();
                 case RESOURCE_RESULT:
                     final info:Dynamic = event.value;
@@ -612,6 +635,7 @@ class MainView extends Absolute {
         box_moneyCmds.hide();
         box_foodCmds.hide();
         box_armyCmds.hide();
+        box_myAreaCmds.hide();
     }
 
     function moveCursorToGrid(gridId:Int){
@@ -664,12 +688,9 @@ class MainView extends Absolute {
         pro_food.value = '${Math.floor(p.food)} (士兵消耗:${Main.getFixNumber(p.maintainArmy)})';
         pro_army.value = Math.floor(p.army);
         pro_peopleCount.value = p.people.length;
-        // pro_maintainPeople.value = Main.getFixNumber(p.maintainPeople);
-        // pro_maintainArmy.value = Main.getFixNumber(p.maintainArmy);
         pro_cityCount.value = p.grids.length;
         peopleListView.setPeopleList(p.people);
         
-        trace('[vic] 交涉預覽的糧草消耗還沒有設定到，是我後來加的maintainFood');
         syncGridInfo(gameInfo.players[id].atGridId);
 
         if(p.id == gameInfo.currentPlayer.id){
@@ -688,12 +709,13 @@ class MainView extends Absolute {
         pro_gridMoney.value = '${Math.floor(grid.money)} (基礎成長值:${Main.getRateString(grid.moneyGrow)})';
         pro_gridFood.value = '${Math.floor(grid.food)} (基礎成長值:${Main.getRateString(grid.foodGrow)})';
         pro_gridArmy.value = '${Math.floor(grid.army)} (基礎成長值:${Main.getRateString(grid.armyGrow)})';
+        
         if(grid.belongPlayerId != null){
             pro_gridPlayer.value = gameInfo.players[grid.belongPlayerId].name;
+        }else{
+            pro_gridPlayer.value = "";
         }
 
-        trace('[vic]占領后，所有的belongPlayerId都變成同一個人');
-        trace('[vic]交涉可能先不能拿兵。因爲兵士防守用的');
         trace('[vic]PLAYER_EARN_PER_TURN這個設置好像沒用？');
     }
 
@@ -702,6 +724,7 @@ class MainView extends Absolute {
             var info = gameInfo.grids[index];
             grid.type = info.landType;
             grid.building = info.buildtype;
+            grid.playerId = info.belongPlayerId == null ? -1 :info.belongPlayerId;
         }
     }
 

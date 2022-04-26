@@ -1,7 +1,8 @@
-<box width="50" height="50" style="background-color: red;border:1px solid red;background-opacity: .3">
+<box width="50" height="50" style="background-color: gray;border:1px solid gray;background-opacity: .3">
     <label id="lbl_name" text="" textAlign="center" width="100%"/>
     <label id="lbl_type" text="" textAlign="center" marginTop="20" width="100%" height="100%" style="font-size:12px;"/>
     <box width="18" height="18" verticalAlign="bottom" horizontalAlign="right" style="background-color: #FF6666;border:1px solid red;background-opacity: 1">
         <label id="lbl_building" text="" textAlign="center" width="100%" height="100%" style="color: black; font-size:12px;"/>
     </box>
+    <box id='box_playerCover' width='100%' height='100%' style="background-color: white;border:1px solid gray;background-opacity: .3"/>
 </box>

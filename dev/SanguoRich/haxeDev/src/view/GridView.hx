@@ -38,6 +38,24 @@ class GridView extends Box{
         return type;
     }
 
+    public var playerId(default, set):Int = -1;
+    function set_playerId(id:Int){
+        if(id == -1){
+            box_playerCover.hide();
+        }else{
+            box_playerCover.show();
+            box_playerCover.backgroundColor = switch(id){
+                case 0: '#FF0000';
+                case 1: '#00FF00';
+                case 2: '#0000FF';
+                case 3: '#FFFF00';
+                case _: '#000000';
+            };
+        }
+        playerId = id;
+        return id;
+    }
+
     public function new() {
         super();
     }

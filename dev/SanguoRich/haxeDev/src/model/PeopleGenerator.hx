@@ -11,7 +11,8 @@ typedef People = {
     charm:Int,
     cost:Int,
     abilities:Array<Int>,
-    energy:Int
+    energy:Int,
+    gridId:Int,
 }
 
 class PeopleGenerator {
@@ -108,7 +109,8 @@ class PeopleGenerator {
             charm: charm,
             cost: cost,
             abilities: abilitiesAry,
-            energy: 100
+            energy: 100,
+            gridId: null,
         };
     }
 }

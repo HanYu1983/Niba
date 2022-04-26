@@ -9,9 +9,23 @@ class PeopleListView extends TableView{
     }
 
     public function setPeopleList(people:Array<People>) {
+        
+        updateList(people);
+        
+        onChange = function(e){
+            selectedItem.chk_sel = !selectedItem.chk_sel;
+
+            var list:Array<Dynamic> = dataSource.data;
+            updateList(list.slice(0));
+        }
+        // if(people.length > 0) selectedIndex = 0;
+    }
+    
+    function updateList(people:Array<Dynamic>){
         dataSource.clear();
         for (index => p in people) {
             var info:Dynamic = p;
+            info.gridId = p.gridId == null ? "" : p.gridId;
             for(i in 0...3){
                 var abi = "";
                 if(i < p.abilities.length){
@@ -21,6 +35,5 @@ class PeopleListView extends TableView{
             }
             dataSource.add(info);
         }
-        // if(people.length > 0) selectedIndex = 0;
     }
 }

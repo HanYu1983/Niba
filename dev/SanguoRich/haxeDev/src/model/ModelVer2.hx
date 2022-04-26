@@ -734,7 +734,8 @@ private function getPeopleInfo(ctx:Context, people:People):model.PeopleGenerator
 		charm: Std.int(people.charm),
 		cost: Std.int(people.cost),
 		abilities: people.abilities,
-		energy: Std.int(people.energy)
+		energy: Std.int(people.energy),
+		gridId: null,
 	}
 }
 

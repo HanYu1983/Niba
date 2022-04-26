@@ -75,6 +75,9 @@ class DebugModel implements IModel {
             actions:[],
             events: []
         };
+        info.grids[5].belongPlayerId = 2;
+        info.grids[9].belongPlayerId = 1;
+        info.grids[11].belongPlayerId = 3;
 		cb();
 	}
 
@@ -252,5 +255,13 @@ class DebugModel implements IModel {
             }
         ];
         cb(info);
+    }
+
+	public function checkValidTransfer(playerId:Int, gridInt:Int, playerInfo:PlayerInfo, gridInfo:Grid):Bool {
+		return true;
+	}
+
+	public function takeTransfer(playerId:Int, gridInt:Int, playerInfo:PlayerInfo, gridInfo:Grid, cb:(gameInfo:GameInfo) -> Void) {
+        
     }
 }

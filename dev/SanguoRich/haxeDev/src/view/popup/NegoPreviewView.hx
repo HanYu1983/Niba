@@ -38,12 +38,11 @@ class NegoPreviewView extends PopupView{
                 gameInfo.currentPlayer.atGridId,
                 p1, p2);
 
-            
             pro_energy.value = '${p1.energy} => ${result.energyAfter}';
             pro_money.value = '${result.moneyBefore} => ${result.moneyAfter}';
             pro_food.value = '${result.foodBefore} => ${result.foodAfter}';
             pro_army.value = '${result.armyBefore} => ${result.armyAfter}';
-            pro_maintainFood.value = '${Main.getFixNumber(result.maintainFoodBefore, 2)} => ${Main.getFixNumber(result.maintainFoodAfter, 2)}';
+            // pro_maintainFood.value = '${Main.getFixNumber(result.maintainFoodBefore, 2)} => ${Main.getFixNumber(result.maintainFoodAfter, 2)}';
             pro_successRate.value = Main.getRateString(result.successRate);
         }
 
