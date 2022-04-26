@@ -82,7 +82,7 @@ final WAR_HIGH_LOW_FACTOR = 1.5;
 final WAR_ARMY_FACTOR = 0.3;
 
 // 每回合基本回體力
-final PEOPLE_ENERGY_SUPPLY_BASE = 3;
+final PEOPLE_ENERGY_SUPPLY_BASE = 0;
 
 // 每回合額外回復％數體力(體力越多回越快)
 final PEOPLE_ENERGY_SUPPLY_SAVE_FACTOR = 0.05;
@@ -92,7 +92,7 @@ final ENABLE_NEGO_ARMY = true;
 
 // 派越少的兵力體力扣越少
 function getEnergyFactor(atkArmy:Float) {
-	return (Math.min(atkArmy / 500, 0) * .3 + .7);
+	return (Math.min(atkArmy / 500, 1) * .3 + .7);
 }
 
 // 稅收
