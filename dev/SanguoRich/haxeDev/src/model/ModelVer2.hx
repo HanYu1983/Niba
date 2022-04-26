@@ -476,6 +476,10 @@ private function getMaintainArmy(ctx:Context, playerId:Int):Float {
 	final totalArmy = ctx.grids.filter(g -> getGridBelongPlayerId(ctx, g.id) == playerId).fold((p, a) -> {
 		return a + p.army;
 	}, 0.0) + ctx.players[playerId].army;
+	return getMaintainArmyPure(totalArmy);
+}
+
+private function getMaintainArmyPure(totalArmy:Float):Float {
 	return totalArmy * PLAYER_EARN_PER_TURN_PERSENT;
 }
 
@@ -991,6 +995,9 @@ private function doGetPreResultOfNego(ctx:Context, playerId:Int, gridId:Int, peo
 	final player = ctx.players[playerId];
 	final people = getPeopleById(ctx, peopleId);
 	final negoCost = getNegoCost(ctx, playerId, gridId, peopleId, inviteId);
+	final totalArmy = ctx.grids.filter(g -> getGridBelongPlayerId(ctx, g.id) == playerId).fold((p, a) -> {
+		return a + p.army;
+	}, 0.0) + ctx.players[playerId].army;
 	return {
 		energyAfter: Std.int(people.energy - negoCost.peopleCost.energy),
 		armyBefore: Std.int(player.army),
@@ -999,8 +1006,8 @@ private function doGetPreResultOfNego(ctx:Context, playerId:Int, gridId:Int, peo
 		moneyAfter: Std.int(player.money + negoCost.playerCost.money),
 		foodBefore: Std.int(player.food),
 		foodAfter: Std.int(player.food + negoCost.playerCost.food),
-		maintainFoodBefore: 10,
-		maintainFoodAfter: 10,
+		maintainFoodBefore: getMaintainArmy(ctx, playerId),
+		maintainFoodAfter: getMaintainArmyPure(totalArmy + negoCost.playerCost.army),
 		successRate: negoCost.successRate
 	};
 }
