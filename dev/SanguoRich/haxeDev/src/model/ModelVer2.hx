@@ -1002,7 +1002,8 @@ private function initContext(ctx:Context, option:{}) {
 		addGridInfo(ctx, grid);
 	}
 	var i = 0;
-	for (name in ["vic", "han", "xiao", "any"]) {
+	// for (name in ["vic", "han", "xiao", "any"]) {
+	for (name in ["vic", "han"]) {
 		addPlayerInfo(ctx, {
 			id: i++,
 			name: name,
