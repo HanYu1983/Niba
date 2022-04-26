@@ -70,7 +70,7 @@ final WAR_FOOD_COST_FACTOR = 1.3;
 final WAR_HIGH_LOW_FACTOR = 2.0;
 
 // 保底傷害, 1的話代表派100兵最少打100
-final WAR_ARMY_FACTOR = 0.7;
+final WAR_ARMY_FACTOR = 0.5;
 
 function getEnergyFactor(atkArmy:Float) {
 	return (Math.min(atkArmy / 500, 0) * .8 + .2);
@@ -288,8 +288,8 @@ private function getWarCost(ctx:Context, playerId:Int, gridId:Int, p1PeopleId:In
 		final fact3 = if (atkPeople.abilities.has(1)) WAR_FRONT_ABILITY_FACTOR else 1.0;
 		final fact4 = if (atkPeople.abilities.has(2)) WAR_FRONT_ABILITY_FACTOR else 1.0;
 		final fact5 = if (atkPeople.abilities.has(3)) WAR_FRONT_ABILITY_FACTOR else 1.0;
-		final fact6 = atkPeople.command / 100 * fact1;
-		final fact7 = atkPeople.force * 2 / (defPeople.force + defPeople.command);
+		final fact6 = atkPeople.force / defPeople.command;
+		final fact7 = atkPeople.intelligence / defPeople.intelligence;
 		final base = atkArmy;
 		final damage = atkArmy * WAR_ARMY_FACTOR + base * fact0 * fact1 * fact2 * fact3 * fact4 * fact5 * fact6 * fact7;
 		atkDamage = damage;
@@ -311,8 +311,8 @@ private function getWarCost(ctx:Context, playerId:Int, gridId:Int, p1PeopleId:In
 		final fact5 = if (atkPeople.abilities.has(3)) WAR_FRONT_ABILITY_FACTOR else 1.0;
 		final fact6 = if (atkPeople.abilities.has(8)) WAR_FRONT_ABILITY_FACTOR else 1.0;
 		final fact7 = if (atkPeople.abilities.has(9)) WAR_FRONT_ABILITY_FACTOR else 1.0;
-		final fact8 = atkPeople.command / 100 * fact1;
-		final fact9 = atkPeople.force * 2 / (defPeople.force + defPeople.command);
+		final fact8 = atkPeople.command / defPeople.force;
+		final fact9 = atkPeople.intelligence / defPeople.intelligence;
 		final base = atkArmy;
 		final damage = atkArmy * WAR_ARMY_FACTOR + base * fact0 * fact1 * fact2 * fact3 * fact4 * fact5 * fact6 * fact7 * fact8 * fact9;
 		defDamage = damage;
