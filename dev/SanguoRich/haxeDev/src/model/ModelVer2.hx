@@ -1632,6 +1632,7 @@ private function _takeTransfer(ctx:Context, playerId:Int, gridId:Int, playerInfo
 	final player = ctx.players[playerId];
 	final resultValue = {
 		success: false,
+		// 轉型後才能編譯器才知道要檢查null
 		people: (null : Null<model.PeopleGenerator.People>),
 		energyBefore: 0.0,
 		energyAfter: 0.0,
