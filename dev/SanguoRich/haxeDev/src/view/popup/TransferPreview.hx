@@ -1,5 +1,6 @@
 package view.popup;
 
+import model.GridGenerator.Grid;
 import view.widgets.GridGridView;
 import model.IModel.PreResultOnWar;
 import view.widgets.LeaderGridView;
@@ -8,6 +9,8 @@ import model.PeopleGenerator.People;
 import haxe.ui.containers.properties.Property;
 import model.IModel.WarPreview;
 import haxe.ui.events.MouseEvent;
+
+using Lambda;
 
 @:build(haxe.ui.ComponentBuilder.build("assets/popup/transferPreview-view.xml"))
 class TransferPreview extends PopupView{
@@ -49,9 +52,10 @@ class TransferPreview extends PopupView{
         );
 
         if(valid){
-            trace('[vic][bug]這裡有BUG，我帶給你的PEOPLE是前端想要的配置。然後MODEL好像沒有改:', outData);
             fadeOut();
             Main.view.onTransferPreviewConfirmClick(outData);
+        }else{
+            trace("這裡要再增強ux");
         }
     }
 
@@ -68,10 +72,11 @@ class TransferPreview extends PopupView{
 
         final gameInfo = Main.model.gameInfo();
         final player = gameInfo.currentPlayer;
-        final grid = gameInfo.grids[player.atGridId];
+        final grid:Grid = gameInfo.grids[player.atGridId];
         final peopleInPlayer = player.people.slice(0);
+        final gridPeopleIds:Array<Int> = grid.people.map(p->p.id);
         for(p in peopleInPlayer){
-            Reflect.setField(p, 'chk_sel', p.gridId != null);
+            Reflect.setField(p, 'chk_sel', gridPeopleIds.has(p.id));
         }
         outData = [player, grid];
         plist.setPeopleList(peopleInPlayer);

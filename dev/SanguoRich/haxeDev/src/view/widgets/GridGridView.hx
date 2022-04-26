@@ -20,16 +20,17 @@ class GridGridView extends BasicGridView{
 
         var grid:Grid = info;
         pro_name.value = grid.id;
-        pro_landType.value = grid.landType;
+        // pro_landType.value = grid.landType;
         
         pro_money.value = '${Math.floor(grid.money)} (成:${Main.getRateString(grid.moneyGrow)})';
         pro_food.value = '${Math.floor(grid.food)} (成:${Main.getRateString(grid.foodGrow)})';
         pro_army.value = '${Math.floor(grid.army)} (成:${Main.getRateString(grid.armyGrow)})';
+        pro_peopleCount.value = grid.people.length;
         
         if(grid.belongPlayerId != null){
             pro_player.value = gameInfo.players[grid.belongPlayerId].name;
         }else{
-            pro_player.value = "";
+            pro_player.value = "無";
         }
     }
 }

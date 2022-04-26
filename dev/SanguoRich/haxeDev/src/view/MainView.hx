@@ -1,5 +1,7 @@
 package view;
 
+import view.widgets.GridGridView;
+import view.widgets.LeaderGridView;
 import model.IModel.PlayerInfo;
 import view.popup.TransferPreview;
 import view.popup.FirePreviewView;
@@ -29,6 +31,8 @@ import haxe.ui.events.MouseEvent;
 class MainView extends Absolute {
     var grids:Array<GridView> = [];
     var players:Array<PlayerView> = [];
+    var leaderView:LeaderGridView;
+    var gridView:GridGridView;
     var peopleListView:PeopleListView;
     var warPreviewView:WarPreviewView;
     var negoPreviewView:NegoPreviewView;
@@ -63,6 +67,12 @@ class MainView extends Absolute {
         }
 
         box_popup.hide();
+
+        leaderView = new LeaderGridView();
+        box_leaderView.addComponent(leaderView);
+
+        gridView = new GridGridView();
+        box_gridView.addComponent(gridView);
 
         warPreviewView = new WarPreviewView();
         warPreviewView.hide();
@@ -319,8 +329,7 @@ class MainView extends Absolute {
         negoPreviewView.showPopup(previewInfo);
     }
 
-    @:bind(btn_occupation, MouseEvent.CLICK)
-    function onBtnOccupationClick(e:MouseEvent){
+    function takeWar() {
         var player = Main.model.gameInfo().currentPlayer;
         var previewInfo = Main.model.getTakeWarPreview(player.id, player.atGridId);
         if(previewInfo.p1ValidPeople.length < 1){
@@ -333,6 +342,16 @@ class MainView extends Absolute {
         }else{
             warPreviewView.showPopup(previewInfo);
         }
+    }
+
+    @:bind(btn_occupationPlayer, MouseEvent.CLICK)
+    function onBtnOccupationPlayerClick(e:MouseEvent){
+        takeWar();
+    }
+
+    @:bind(btn_occupation, MouseEvent.CLICK)
+    function onBtnOccupationClick(e:MouseEvent){
+        takeWar();
     }
 
     @:bind(btn_explore, MouseEvent.CLICK)
@@ -403,22 +422,22 @@ class MainView extends Absolute {
         
     }
 
-    @:bind(btn_smallWar, MouseEvent.CLICK)
-    function onBtnWarClick(e:MouseEvent){
-        var player = Main.model.gameInfo().currentPlayer;
-        var previewInfo = Main.model.getTakeWarPreview(player.id, player.atGridId);
-        // warPreviewView.showPreviewWar(previewInfo);
-    }
+    // @:bind(btn_smallWar, MouseEvent.CLICK)
+    // function onBtnWarClick(e:MouseEvent){
+    //     var player = Main.model.gameInfo().currentPlayer;
+    //     var previewInfo = Main.model.getTakeWarPreview(player.id, player.atGridId);
+    //     // warPreviewView.showPreviewWar(previewInfo);
+    // }
 
     @:bind(btn_warStrategy, MouseEvent.CLICK)
     function onBtnWarStrategyClick(e:MouseEvent){
         
     }
 
-    @:bind(btn_give, MouseEvent.CLICK)
-    function onBtnGiveClick(e:MouseEvent){
+    // @:bind(btn_give, MouseEvent.CLICK)
+    // function onBtnGiveClick(e:MouseEvent){
         
-    }
+    // }
 
     function getGridPositionByGridId(pid:Int, gridId:Int) {
         var grid = grids[gridId];
@@ -444,7 +463,7 @@ class MainView extends Absolute {
 
     function syncViewByInfo(gameInfo:GameInfo){
         syncUI(gameInfo);
-        syncGameInfo(gameInfo);
+        // syncGameInfo(gameInfo);
         syncGridViews(gameInfo);
         syncPlayerViews(gameInfo);
         playEvents(gameInfo);
@@ -456,7 +475,7 @@ class MainView extends Absolute {
 
     function playActions(actions:Array<ActionInfo>, tweens:Array<TweenX>) {
         for(id => action in actions){
-            setActionInfo(action);
+            // setActionInfo(action);
             switch (action.id){
                 case ActionInfoID.MOVE:
 
@@ -490,7 +509,7 @@ class MainView extends Absolute {
             disabledAllCommands();
 
             var event = events.shift();
-            setEventInfo(event);
+            // setEventInfo(event);
             switch (event.id){
                 case WALK_STOP:
                     var g:Grid = event.value.grid;
@@ -587,31 +606,31 @@ class MainView extends Absolute {
         }
     }
 
-    function setEventInfo(event:EventInfo){
-        switch(event.id){
-            case FIRE_RESULT:
-            case HIRE_RESULT:
-                pro_currentEvent.value = "探索停止。等待指令中";
-            case EXPLORE_RESULT:
-                pro_currentEvent.value = "聘用停止。等待指令中";
-            case WALK_STOP:
-                pro_currentEvent.value = "行走停止。等待指令中";
-            case WAR_RESULT:
-                pro_currentEvent.value = "戰爭結果。等待指令中";
-            case NEGOTIATE_RESULT:
-                pro_currentEvent.value = "交涉結果。等待指令中";
-            case RESOURCE_RESULT:
-            case WORLD_EVENT:
+    // function setEventInfo(event:EventInfo){
+    //     switch(event.id){
+    //         case FIRE_RESULT:
+    //         case HIRE_RESULT:
+    //             pro_currentEvent.value = "探索停止。等待指令中";
+    //         case EXPLORE_RESULT:
+    //             pro_currentEvent.value = "聘用停止。等待指令中";
+    //         case WALK_STOP:
+    //             pro_currentEvent.value = "行走停止。等待指令中";
+    //         case WAR_RESULT:
+    //             pro_currentEvent.value = "戰爭結果。等待指令中";
+    //         case NEGOTIATE_RESULT:
+    //             pro_currentEvent.value = "交涉結果。等待指令中";
+    //         case RESOURCE_RESULT:
+    //         case WORLD_EVENT:
             
-        };
-    }
+    //     };
+    // }
 
-    function setActionInfo(action:ActionInfo) {
-        switch (action.id){
-            case MOVE:
-                pro_currentEvent.value = '由${action.value.fromGridId}往${action.value.toGridId}行走中...';
-        }
-    }
+    // function setActionInfo(action:ActionInfo) {
+    //     switch (action.id){
+    //         case MOVE:
+    //             pro_currentEvent.value = '由${action.value.fromGridId}往${action.value.toGridId}行走中...';
+    //     }
+    // }
 
     // function syncActions(gameInfo:GameInfo) {
     //     var tweens = [];
@@ -658,7 +677,7 @@ class MainView extends Absolute {
 
         stage.unregisterEvents();
         if(gameInfo.isPlayerTurn){
-            pro_currentEvent.value = "等待指令中";
+            // pro_currentEvent.value = "等待指令中";
 
             stage.registerEvent(MouseEvent.MOUSE_MOVE, function(e:MouseEvent){
                 var gx = Math.floor(e.screenX / 50);
@@ -685,12 +704,8 @@ class MainView extends Absolute {
     function syncPlayerInfo(id:Int){
         var gameInfo = Main.model.gameInfo();
         var p = gameInfo.players[id];
-        pro_name.value = p.name;
-        pro_money.value = '${Math.floor(p.money)} (武將薪俸:${Main.getFixNumber(p.maintainPeople)})';
-        pro_food.value = '${Math.floor(p.food)} (士兵消耗:${Main.getFixNumber(p.maintainArmy)})';
-        pro_army.value = Math.floor(p.army);
-        pro_peopleCount.value = p.people.length;
-        pro_cityCount.value = p.grids.length;
+
+        leaderView.setInfo(p);
         peopleListView.setPeopleList(p.people);
         
         syncGridInfo(gameInfo.players[id].atGridId);
@@ -705,18 +720,7 @@ class MainView extends Absolute {
     function syncGridInfo(gridId:Int){
         var gameInfo = Main.model.gameInfo();
         var grid:Grid = gameInfo.grids[gridId];
-        pro_gridName.value = grid.id;
-        pro_gridLandType.value = grids[gridId].lbl_building.text;
-        
-        pro_gridMoney.value = '${Math.floor(grid.money)} (成:${Main.getRateString(grid.moneyGrow)})';
-        pro_gridFood.value = '${Math.floor(grid.food)} (成:${Main.getRateString(grid.foodGrow)})';
-        pro_gridArmy.value = '${Math.floor(grid.army)} (成:${Main.getRateString(grid.armyGrow)})';
-        
-        if(grid.belongPlayerId != null){
-            pro_gridPlayer.value = gameInfo.players[grid.belongPlayerId].name;
-        }else{
-            pro_gridPlayer.value = "";
-        }
+        gridView.setInfo(grid);
     }
 
     function syncGridViews(gameInfo:GameInfo){
@@ -739,7 +743,7 @@ class MainView extends Absolute {
         }
     }
 
-    function syncGameInfo(gameInfo:GameInfo){
-        pro_currentPlayer.value = gameInfo.currentPlayer.name;
-    }
+    // function syncGameInfo(gameInfo:GameInfo){
+    //     pro_currentPlayer.value = gameInfo.currentPlayer.name;
+    // }
 }

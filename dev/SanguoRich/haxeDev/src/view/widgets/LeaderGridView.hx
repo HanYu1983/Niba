@@ -38,8 +38,8 @@ class LeaderGridView extends BasicGridView{
 
         var p:PlayerInfo = info;
         pro_name.value = p.name;
-        pro_money.value = Math.floor(p.money);
-        pro_food.value = Math.floor(p.food);
+        pro_money.value = '${Math.floor(p.money)} (武將薪俸:${Main.getFixNumber(p.maintainPeople)})';
+        pro_food.value = '${Math.floor(p.food)} (士兵消耗:${Main.getFixNumber(p.maintainArmy)})';
         pro_army.value = Math.floor(p.army);
         pro_peopleCount.value = p.people.length;
         pro_cityCount.value = p.grids.length;

@@ -83,7 +83,11 @@ final WAR_ARMY_FACTOR = 0.5;
 
 // 派越少的兵力體力扣越少
 function getEnergyFactor(atkArmy:Float) {
-	return (Math.min(atkArmy / 500, 0) * .3 + .7);
+	return (Math.min(atkArmy / 500, 1) * .3 + .7);
+}
+
+function getEnergyRecover(people:People){
+	return people.energy / 20;
 }
 
 // 稅收
@@ -412,7 +416,7 @@ private function doPlayerEnd(ctx:Context) {
 			final enable = ctx.turn > 0 && ctx.turn % 1 == 0;
 			// 回體力
 			for (people in ctx.peoples) {
-				people.energy += 5 + people.energy / 10;
+				people.energy += getEnergyRecover(people);
 				if (people.energy > 100) {
 					people.energy = 100;
 				}
@@ -1472,7 +1476,7 @@ private function applyWarCost(ctx:Context, playerId:Int, gridId:Int, p1PeopleId:
 			}
 			if (success) {
 				// 沒有進駐的話, 自動進駐
-				if (people.position.gridId == null) {
+				if (people.position.gridId != null) {
 					people.position.gridId = gridId;
 				}
 				// 回到主公身上或解散

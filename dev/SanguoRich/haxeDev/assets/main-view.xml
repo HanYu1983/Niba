@@ -28,16 +28,17 @@
                 <frame id="box_npcCmds" width="100%" text="對盜賊指令">
                     <vbox width="100%">
                         <button text="交涉" width="100%" id="btn_negotiate" />
-                        <!-- <button text="搶奪" width="100%" id="btn_snatch" /> -->
-                        <button text="占領" width="100%" id="btn_occupation" />
+                        <button text="搶奪" width="100%" id="btn_snatch" />
+                        <button text="攻城" width="100%" id="btn_occupation" />
                     </vbox>
                 </frame>
                 <frame id="box_enemyCmds" width="100%" text="對敵方指令">
                     <vbox width="100%">
-                        <button text="野戰" width="100%" id="btn_smallWar" />
-                        <button text="攻城戰" width="100%" id="btn_bigWar" />
+                        <button text="搶奪" width="100%" id="btn_snatchPlayer" />
+                        <button text="攻城" width="100%" id="btn_occupationPlayer" />
                         <button text="計策" width="100%" id="btn_warStrategy" />
-                        <button text="進貢" width="100%" id="btn_give" />
+                        <!-- 回合結束時如果站在敵方玩家的地區，會給出扣資源事件 -->
+                        <!-- <button text="進貢" width="100%" id="btn_give" /> -->
                     </vbox>
                 </frame>
                 <frame id="box_emptyCmds" width="100%" text="對空地指令">
@@ -78,32 +79,8 @@
                     <optionbox text="玩家三" group="player_grp" width="100%" id="opt_p3" />
                     <optionbox text="玩家四" group="player_grp" width="100%" id="opt_p4" />
                 </hbox>
-                
-                <property-grid id="pg_playerInfo" width="100%" height="100%">
-                    <property-group text="君主資料">
-                        <property id="pro_name" label="名稱" value="1000" />
-                        <property id="pro_money" label="金錢" value="1000" />
-                        <property id="pro_food" label="糧草" value="1000" />
-                        <property id="pro_army" label="士兵" value="1000" />
-                        <property id="pro_strategy" label="計略" value="1000" />   
-                        <property id="pro_peopleCount" label="武將數" value="5" />
-                        <!-- <property id="pro_maintainPeople" label="武將薪俸" value="5" />
-                        <property id="pro_maintainArmy" label="糧草消耗" value="5" /> -->
-                        <property id="pro_cityCount" label="城池數" value="1000" />
-                    </property-group>
-                    <property-group text="格子資料">
-                        <property id="pro_gridName" label="名稱" value="空地" />
-                        <property id="pro_gridLandType" label="地形" value="空地" />
-                        <property id="pro_gridMoney" label="金錢" value="1000" />
-                        <property id="pro_gridFood" label="糧草" value="1000" />
-                        <property id="pro_gridArmy" label="士兵" value="1000" />
-                        <property id="pro_gridPlayer" label="所有者" value="" />
-                    </property-group>
-                    <property-group text="游戲資料">
-                        <property id="pro_currentPlayer" label="當前玩家" value="" />
-                        <property id="pro_currentEvent" label="當前事件" value="" />
-                    </property-group>
-                </property-grid>
+                <hbox id="box_leaderView" width="100%" />
+                <hbox id="box_gridView" width="100%" />
             </vbox>
         </hbox>    
         <hbox id="box_bottom" width="100%" height="100%">

@@ -4,7 +4,8 @@
         <property id="pro_money" label="金錢" value="1000" />
         <property id="pro_food" label="糧草" value="1000" />
         <property id="pro_army" label="士兵" value="1000" />
-        <property id="pro_landType" label="地形" value="空地" />
+        <!-- <property id="pro_landType" label="地形" value="空地" /> -->
         <property id="pro_player" label="所有者" value="" />
+        <property id="pro_peopleCount" label="武將數" value="" />
     </property-group>
 </property-grid>
