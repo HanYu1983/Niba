@@ -85,6 +85,7 @@ function getEnergyFactor(atkArmy:Float) {
 // 所以可以把回傳最多欄位的放在case的第1個, 讓編譯器告訴你其它的回傳少了哪些欄位
 // =========================================
 // 交涉計算
+// 參與能力為:7良官
 private function getNegoCost(ctx:Context, playerId:Int, gridId:Int, p1SelectId:Int, p2SelectId:Int) {
 	// 使用switch達成策略模式
 	// 0代表預設的隨意實作
@@ -102,7 +103,9 @@ private function getNegoCost(ctx:Context, playerId:Int, gridId:Int, p1SelectId:I
 					final intelligenceFactor = p1.intelligence / p2.intelligence;
 					final politicalFactor = p1.political / p2.political;
 					final charmFactor = p1.charm / p2.charm;
-					final rate = base * intelligenceFactor * politicalFactor * charmFactor;
+					// 良官加成
+					final abiFactor = p1.abilities.has(7) ? 1.5 : 1;
+					final rate = base * intelligenceFactor * politicalFactor * charmFactor * abiFactor;
 					final gainRate = 0.1 * rate + 0.1;
 					{
 						playerCost: {
@@ -201,6 +204,10 @@ private function getExploreCost(ctx:Context, playerId:Int, gridId:Int, p1SelectI
 }
 
 // 經商買賣計算
+// money:    ability 4
+// food:     ability 5
+// army:     ability 11
+// strategy: ability 3
 private function getResourceCost(ctx:Context, playerId:Int, gridId:Int, p1SelectId:Int, market:MARKET, type:RESOURCE) {
 	trace("MondelVer2", "getResourceCost", market, type);
 	return switch 0 {
@@ -209,11 +216,11 @@ private function getResourceCost(ctx:Context, playerId:Int, gridId:Int, p1Select
 			final p1 = getPeopleById(ctx, p1SelectId);
 			final useEnergy = p1.energy * TOTAL_ENERGY_COST_FACTOR;
 			final base = (useEnergy / 100) + 0.2;
-			final abiFactor:Float = if (type == RESOURCE.MONEY && (p1.abilities.has(4) || p1.abilities.has(10))) {
+			final abiFactor:Float = if (type == RESOURCE.MONEY && (p1.abilities.has(4))) {
 				1.5;
-			} else if (type == RESOURCE.ARMY && (p1.abilities.has(7) || p1.abilities.has(10))) {
+			} else if (type == RESOURCE.ARMY && (p1.abilities.has(11))) {
 				1.5;
-			} else if (type == RESOURCE.FOOD && (p1.abilities.has(5) || p1.abilities.has(7))) {
+			} else if (type == RESOURCE.FOOD && (p1.abilities.has(5))) {
 				1.5;
 			} else {
 				1;

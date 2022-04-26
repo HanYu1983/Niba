@@ -54,10 +54,10 @@ class ResourcePreviewView extends PopupView{
             pro_political.value = p1.political;
             pro_intelligence.value = p1.intelligence;
             pro_ability.value = switch(cast(info.resource, RESOURCE)){
-                case MONEY:     Main.getAbilityString(p1, [4, 7, 10]);
-                case FOOD:      Main.getAbilityString(p1, [5, 7, 10]);
-                case ARMY:      Main.getAbilityString(p1, [11, 7, 10]);
-                case STRETEGY:  Main.getAbilityString(p1, [3, 7, 10]);
+                case MONEY:     Main.getAbilityString(p1, [4]);
+                case FOOD:      Main.getAbilityString(p1, [5]);
+                case ARMY:      Main.getAbilityString(p1, [11]);
+                case STRETEGY:  Main.getAbilityString(p1, [3]);
             }
             setRate();
         }
