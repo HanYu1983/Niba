@@ -733,6 +733,12 @@ private enum Event {
 		foodBefore:Float,
 		foodAfter:Float,
 	});
+	FIRE_RESULT(value:{
+		success:Bool,
+		people:model.PeopleGenerator.People,
+		maintainMoneyAfter:Float,
+		maintainMoneyBefore:Float,
+	});
 }
 
 private typedef Context = {
@@ -847,6 +853,11 @@ private function getGameInfo(ctx:Context, root:Bool):GameInfo {
 				case RESOURCE_RESULT(value):
 					{
 						id: EventInfoID.RESOURCE_RESULT,
+						value: value
+					}
+				case FIRE_RESULT(value):
+					{
+						id: EventInfoID.FIRE_RESULT,
 						value: value
 					}
 			}
@@ -1452,17 +1463,23 @@ private function _getPreResultOfFire(ctx:Context, playerId:Int, p1PeopleId:Int):
 }
 
 private function _takeFire(ctx:Context, playerId:Int, p1PeopleId:Int) {
-	// info.events = [
-	// 	{
-	// 		id: EventInfoID.FIRE_RESULT,
-	// 		value: {
-	// 			success: true,
-	// 			people: PeopleGenerator.getInst().generate(),
-	// 			maintainMoneyAfter: 10,
-	// 			maintainMoneyBefore: 10,
-	// 		}
-	// 	}
-	// ];
+	final totalPeopleCost = ctx.peoples.filter(p -> p.belongToPlayerId == playerId).fold((p, a) -> {
+		if (p.id == p1PeopleId) {
+			return a;
+		}
+		return a + p.cost;
+	}, 0.0);
+	final people = getPeopleById(ctx, p1PeopleId);
+	people.belongToPlayerId = null;
+	people.position.gridId = ctx.players[playerId].position;
+	ctx.events = [
+		Event.FIRE_RESULT({
+			success: true,
+			people: getPeopleInfo(ctx, people),
+			maintainMoneyAfter: getMaintainPeoplePure(totalPeopleCost),
+			maintainMoneyBefore: getMaintainPeople(ctx, playerId),
+		})
+	];
 }
 
 private function _checkValidTransfer(ctx:Context, playerId:Int, gridId:Int):Bool {
