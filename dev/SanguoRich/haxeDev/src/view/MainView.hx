@@ -570,8 +570,9 @@ class MainView extends Absolute {
                     btn_end.show();
                 case RESOURCE_RESULT:
                     final info:Dynamic = event.value;
+
                     final msg = '任務完成\n
-武將:${info.people.name}\n
+武將:${info.people ? info.people.name : ""}\n
 體力:${Main.getFixNumber(info.energyBefore,0)} => ${Main.getFixNumber(info.energyAfter,0)}\n
 金錢:${Main.getFixNumber(info.moneyBefore,0)} => ${Main.getFixNumber(info.moneyAfter,0)}\n
 糧草:${Main.getFixNumber(info.foodBefore,0)} => ${Main.getFixNumber(info.foodAfter,0)}\n
@@ -715,9 +716,6 @@ class MainView extends Absolute {
         }else{
             pro_gridPlayer.value = "";
         }
-
-        trace('[vic][bug]TakeFire解雇完給的result事件裏的maintainBefore和mainAfter一樣');
-        trace('[vic][info]TakeTransfer之後，要給RESOURCE_RESULT事件');
     }
 
     function syncGridViews(gameInfo:GameInfo){

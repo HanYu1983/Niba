@@ -83,7 +83,7 @@ final WAR_ARMY_FACTOR = 0.5;
 
 // 派越少的兵力體力扣越少
 function getEnergyFactor(atkArmy:Float) {
-	return (Math.min(atkArmy / 500, 0) * .8 + .2);
+	return (Math.min(atkArmy / 500, 0) * .3 + .7);
 }
 
 // 稅收
@@ -308,7 +308,7 @@ private function getWarCost(ctx:Context, playerId:Int, gridId:Int, p1PeopleId:In
 		final defArmy = army2;
 		final atkPeople = getPeopleById(ctx, p1PeopleId);
 		final defPeople = getPeopleById(ctx, p2PeopleId);
-		final useEnergy = (atkPeople.energy * TOTAL_ENERGY_COST_FACTOR);
+		final useEnergy = (atkPeople.energy * (TOTAL_ENERGY_COST_FACTOR * 3.0));
 		final fact0 = useEnergy / 100;
 		final fact1 = (atkArmy + defArmy * WAR_HIGH_LOW_FACTOR) / (defArmy + defArmy * WAR_HIGH_LOW_FACTOR);
 		final fact2 = if (atkPeople.abilities.has(0)) WAR_FRONT_ABILITY_FACTOR else 1.0;
@@ -329,7 +329,7 @@ private function getWarCost(ctx:Context, playerId:Int, gridId:Int, p1PeopleId:In
 		final defArmy = army1;
 		final atkPeople = getPeopleById(ctx, p2PeopleId);
 		final defPeople = getPeopleById(ctx, p1PeopleId);
-		final useEnergy = (atkPeople.energy * TOTAL_ENERGY_COST_FACTOR);
+		final useEnergy = (atkPeople.energy * (TOTAL_ENERGY_COST_FACTOR * 3.0));
 		final fact0 = useEnergy / 100;
 		final fact1 = (atkArmy + defArmy * WAR_HIGH_LOW_FACTOR) / (defArmy + defArmy * WAR_HIGH_LOW_FACTOR);
 		final fact2 = if (atkPeople.abilities.has(0)) WAR_FRONT_ABILITY_FACTOR else 1.0;
