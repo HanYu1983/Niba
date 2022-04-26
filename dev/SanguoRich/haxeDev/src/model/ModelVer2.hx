@@ -642,12 +642,13 @@ class ModelVer2 extends DebugModel {
 	}
 
 	override function checkValidTransfer(playerId:Int, gridId:Int, playerInfo:model.IModel.PlayerInfo, gridInfo:model.GridGenerator.Grid):Bool {
-		return _checkValidTransfer(context, playerId, gridId);
+		js.Browser.console.log(playerInfo, gridInfo);
+		return _checkValidTransfer(context, playerId, gridId, playerInfo, gridInfo);
 	}
 
 	override function takeTransfer(playerId:Int, gridId:Int, playerInfo:model.IModel.PlayerInfo, gridInfo:model.GridGenerator.Grid,
 			cb:(gameInfo:GameInfo) -> Void) {
-		_takeTransfer(context, playerId, gridId);
+		_takeTransfer(context, playerId, gridId, playerInfo, gridInfo);
 		cb(gameInfo());
 	}
 }
@@ -1008,7 +1009,8 @@ private function initContext(ctx:Context, option:{}) {
 		addGridInfo(ctx, grid);
 	}
 	var i = 0;
-	for (name in ["vic", "han", "xiao", "any"]) {
+	// for (name in ["vic", "han", "xiao", "any"]) {
+	for (name in ["vic", "han"]) {
 		addPlayerInfo(ctx, {
 			id: i++,
 			name: name,
@@ -1563,27 +1565,58 @@ private function _getPreResultOfFire(ctx:Context, playerId:Int, p1PeopleId:Int):
 }
 
 private function _takeFire(ctx:Context, playerId:Int, p1PeopleId:Int) {
-	final totalPeopleCost = ctx.peoples.filter(p -> p.belongToPlayerId == playerId).fold((p, a) -> {
-		if (p.id == p1PeopleId) {
-			return a;
-		}
-		return a + p.cost;
-	}, 0.0);
 	final people = getPeopleById(ctx, p1PeopleId);
+	final resultValue = {
+		success: true,
+		people: getPeopleInfo(ctx, people),
+		maintainMoneyAfter: 0.0,
+		maintainMoneyBefore: getMaintainPeople(ctx, playerId),
+	}
 	people.belongToPlayerId = null;
 	people.position.gridId = ctx.players[playerId].position;
-	ctx.events = [
-		Event.FIRE_RESULT({
-			success: true,
-			people: getPeopleInfo(ctx, people),
-			maintainMoneyAfter: getMaintainPeoplePure(totalPeopleCost),
-			maintainMoneyBefore: getMaintainPeople(ctx, playerId),
-		})
-	];
+	resultValue.maintainMoneyAfter = getMaintainPeople(ctx, playerId);
+	ctx.events = [Event.FIRE_RESULT(resultValue)];
 }
 
-private function _checkValidTransfer(ctx:Context, playerId:Int, gridId:Int):Bool {
+private function _checkValidTransfer(ctx:Context, playerId:Int, gridId:Int, playerInfo:model.IModel.PlayerInfo, gridInfo:model.GridGenerator.Grid):Bool {
+	trace("ModelVer2", "_checkValidTransfer", "checkValidTransfer怎麼情況會不成功?");
 	return true;
 }
 
-private function _takeTransfer(ctx:Context, playerId:Int, gridId:Int) {}
+private function _takeTransfer(ctx:Context, playerId:Int, gridId:Int, playerInfo:model.IModel.PlayerInfo, gridInfo:model.GridGenerator.Grid) {
+	final peopleInGrid = ctx.peoples.filter(p -> p.position.gridId == gridId);
+	if (peopleInGrid.length == 0) {
+		throw new haxe.Exception('找不到守城人在gridId${gridId}');
+	};
+	final p1 = peopleInGrid[0];
+	final player = ctx.players[playerId];
+	final resultValue = {
+		success: false,
+		people: getPeopleInfo(ctx, p1),
+		energyBefore: p1.energy,
+		energyAfter: p1.energy,
+		armyBefore: player.army,
+		armyAfter: player.army,
+		moneyBefore: player.money,
+		moneyAfter: player.money,
+		foodBefore: player.food,
+		foodAfter: player.food,
+	}
+	applyTransfer(ctx, playerId, gridId, playerInfo, gridInfo);
+	resultValue.energyAfter = p1.energy;
+	resultValue.armyAfter = player.army;
+	resultValue.moneyAfter = player.money;
+	resultValue.foodAfter = player.food;
+	ctx.events = [Event.RESOURCE_RESULT(resultValue)];
+}
+
+private function applyTransfer(ctx:Context, playerId:Int, gridId:Int, playerInfo:model.IModel.PlayerInfo, gridInfo:model.GridGenerator.Grid) {
+	final player = ctx.players[playerId];
+	final grid = ctx.grids[gridId];
+	player.food = playerInfo.food;
+	player.army = playerInfo.army;
+	player.money = playerInfo.money;
+	grid.food = gridInfo.food;
+	grid.army = gridInfo.army;
+	grid.money = gridInfo.money;
+}
