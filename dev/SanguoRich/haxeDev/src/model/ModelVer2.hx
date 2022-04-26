@@ -504,7 +504,9 @@ class ModelVer2 extends DebugModel {
 	}
 
 	override function gameInfo():GameInfo {
-		return getGameInfo(context, true);
+		final info = getGameInfo(context, true);
+		js.Browser.console.log(info);
+		return info;
 	}
 
 	override function playerDice(cb:() -> Void) {
@@ -1326,7 +1328,7 @@ private function applyWarCost(ctx:Context, playerId:Int, gridId:Int, p1PeopleId:
 			grid.money -= playerCost2.money;
 			grid.food -= playerCost2.food;
 			grid.army -= playerCost2.army;
-
+			// 佔領
 			people.position.gridId = gridId;
 			// 回到主公身上或解散
 			people2.position.gridId = null;
