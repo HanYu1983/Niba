@@ -11,22 +11,28 @@ class TestOccupationModel extends DebugModel{
     override function getPreResultOfWar(playerId:Int, gridId:Int, p1:People, p2:People, army1:Float, army2:Float):Array<PreResultOnWar> {
         return [
             {
+                energyBefore:1,
                 energyAfter:1,
-                armyBefore:2,
-                armyAfter:4,
-                moneyBefore:5,
-                moneyAfter:6,
-                foodBefore:7,
-                foodAfter:8,
+                armyBefore:1,
+                armyAfter:1,
+                moneyBefore:1,
+                moneyAfter:1,
+                foodBefore:1,
+                foodAfter:1,
+                maintainFoodBefore:1,
+                maintainFoodAfter:1,
             },
             {
+                energyBefore:1,
                 energyAfter:1,
-                armyBefore:2,
-                armyAfter:4,
-                moneyBefore:5,
-                moneyAfter:6,
-                foodBefore:7,
-                foodAfter:8,
+                armyBefore:1,
+                armyAfter:1,
+                moneyBefore:1,
+                moneyAfter:1,
+                foodBefore:1,
+                foodAfter:1,
+                maintainFoodBefore:1,
+                maintainFoodAfter:1,
             }
         ];
     }

@@ -660,16 +660,15 @@ class MainView extends Absolute {
         var gameInfo = Main.model.gameInfo();
         var p = gameInfo.players[id];
         pro_name.value = p.name;
-        pro_money.value = '${Math.floor(p.money)} (${Main.getFixNumber(p.maintainPeople)})';
-        pro_food.value = '${Math.floor(p.food)} (${Main.getFixNumber(p.maintainArmy)})';
+        pro_money.value = '${Math.floor(p.money)} (-${Main.getFixNumber(p.maintainPeople)})';
+        pro_food.value = '${Math.floor(p.food)} (-${Main.getFixNumber(p.maintainArmy)})';
         pro_army.value = Math.floor(p.army);
         pro_peopleCount.value = p.people.length;
-        pro_maintainPeople.value = p.maintainPeople;
-        pro_maintainArmy.value = p.maintainArmy;
+        pro_maintainPeople.value = Main.getFixNumber(p.maintainPeople);
+        pro_maintainArmy.value = Main.getFixNumber(p.maintainArmy);
         pro_cityCount.value = p.grids.length;
         peopleListView.setPeopleList(p.people);
-
-        trace('[vic]可以套用maintainPeople,maintainArmy,grids');
+        trace('[vic] 統率都變成0了？有調什麽嗎？');
         syncGridInfo(gameInfo.players[id].atGridId);
 
         if(p.id == gameInfo.currentPlayer.id){
@@ -680,13 +679,19 @@ class MainView extends Absolute {
     }
 
     function syncGridInfo(gridId:Int){
-        var grid:Grid = Main.model.gameInfo().grids[gridId];
+        var gameInfo = Main.model.gameInfo();
+        var grid:Grid = gameInfo.grids[gridId];
         pro_gridName.value = grid.id;
         pro_gridLandType.value = grids[gridId].lbl_building.text;
         
         pro_gridMoney.value = '${Math.floor(grid.money)} (${Main.getFixNumber(grid.moneyGrow, 4)}%)';
         pro_gridFood.value = '${Math.floor(grid.food)} (${Main.getFixNumber(grid.foodGrow, 4)}%)';
         pro_gridArmy.value = '${Math.floor(grid.army)} (${Main.getFixNumber(grid.armyGrow, 4)}%)';
+        if(grid.belongPlayerId != null){
+            pro_gridPlayer.value = gameInfo.players[grid.belongPlayerId].name;
+        }
+
+        trace('[vic]占領后，belongPlayerId好像還沒有?');
     }
 
     function syncGridViews(gameInfo:GameInfo){

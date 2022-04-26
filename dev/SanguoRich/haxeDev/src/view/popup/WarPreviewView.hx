@@ -47,7 +47,8 @@ class WarPreviewView extends PopupView{
             var p2 = p2List.selectedItem;
 
             var gameInfo = Main.model.gameInfo();
-            var p1army = Main.getFixNumber(info.p1.army * sli_army.value, 0);
+            var p1army = info.p1.army * sli_army.value * .01;
+
             var grid = gameInfo.grids[gameInfo.currentPlayer.atGridId];
             var result:Array<PreResultOnWar> = Main.model.getPreResultOfWar(
                 gameInfo.currentPlayer.id,
@@ -63,8 +64,10 @@ class WarPreviewView extends PopupView{
             pro_food1.value = '${result[0].foodBefore}=>${result[0].foodAfter}';
             pro_food2.value = '${result[1].foodBefore}=>${result[1].foodAfter}';
 
-            pro_army1.value = '${result[0].armyBefore}=>${result[0].armyAfter}';
-            pro_army2.value = '${result[1].armyBefore}=>${result[1].armyAfter}';
+            final army1_dead = result[0].armyBefore - result[0].armyAfter;
+            var army1_remain = Math.max(p1army - army1_dead, 0);
+            pro_army1.value = '${Main.getFixNumber(p1army, 0)}=>${Main.getFixNumber(army1_remain, 0)}';
+            pro_army2.value = '${result[1].armyBefore}=>${Math.max(result[1].armyAfter, 0)}';
 
             outData = [p1army, grid.army];
         }
@@ -78,20 +81,6 @@ class WarPreviewView extends PopupView{
             pro_name.value = p.name;
             pro_energy.value = p.energy;
             pro_intelligence.value = p.intelligence;
-            
-            // var abistr = '';
-            // if(p.abilities.indexOf(0) > -1){
-            //     abistr += '槍將 ';
-            // }
-            // if(p.abilities.indexOf(1) > -1){
-            //     abistr += '弓將 ';
-            // }
-            // if(p.abilities.indexOf(2) > -1){
-            //     abistr += '騎將 ';
-            // }
-            // if(p.abilities.indexOf(3) > -1){
-            //     abistr += '妙計 ';
-            // }
             pro_ability.value = Main.getAbilityString(p, [0, 1, 2, 3]);
 
             setRate();
