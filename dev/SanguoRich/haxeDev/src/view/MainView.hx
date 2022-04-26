@@ -706,9 +706,9 @@ class MainView extends Absolute {
         pro_gridName.value = grid.id;
         pro_gridLandType.value = grids[gridId].lbl_building.text;
         
-        pro_gridMoney.value = '${Math.floor(grid.money)} (基礎成長值:${Main.getRateString(grid.moneyGrow)})';
-        pro_gridFood.value = '${Math.floor(grid.food)} (基礎成長值:${Main.getRateString(grid.foodGrow)})';
-        pro_gridArmy.value = '${Math.floor(grid.army)} (基礎成長值:${Main.getRateString(grid.armyGrow)})';
+        pro_gridMoney.value = '${Math.floor(grid.money)} (成:${Main.getRateString(grid.moneyGrow)})';
+        pro_gridFood.value = '${Math.floor(grid.food)} (成:${Main.getRateString(grid.foodGrow)})';
+        pro_gridArmy.value = '${Math.floor(grid.army)} (成:${Main.getRateString(grid.armyGrow)})';
         
         if(grid.belongPlayerId != null){
             pro_gridPlayer.value = gameInfo.players[grid.belongPlayerId].name;

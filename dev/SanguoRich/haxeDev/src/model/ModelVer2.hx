@@ -60,6 +60,16 @@ final FOOD_PER_DEAL = 100;
 // 作用中
 final ARMY_PER_DEAL = 100;
 
+// 戰鬥能力影響倍率
+final WAR_FRONT_ABILITY_FACTOR = 1.3;
+final WAR_BACK_ABILITY_FACTOR = .8;
+final WAR_MONEY_COST_FACTOR = .05;
+final WAR_FOOD_COST_FACTOR = 1.3;
+
+function getEnergyFactor(atkArmy:Float){
+	return (Math.min(atkArmy / 500, 0) * .8 + .2);
+}
+
 // 稅收
 // 主公會得到所有城池的成數
 // =========================================
@@ -261,16 +271,16 @@ private function getWarCost(ctx:Context, playerId:Int, gridId:Int, p1PeopleId:In
 		final useEnergy = (atkPeople.energy * 0.9);
 		final fact0 = useEnergy / 100;
 		final fact1 = (atkArmy + defArmy) / (defArmy + defArmy);
-		final fact2 = if (atkPeople.abilities.has(0)) 1.2 else 1.0;
-		final fact3 = if (atkPeople.abilities.has(1)) 1.2 else 1.0;
-		final fact4 = if (atkPeople.abilities.has(2)) 1.2 else 1.0;
-		final fact5 = if (atkPeople.abilities.has(3)) 1.2 else 1.0;
+		final fact2 = if (atkPeople.abilities.has(0)) WAR_FRONT_ABILITY_FACTOR else 1.0;
+		final fact3 = if (atkPeople.abilities.has(1)) WAR_FRONT_ABILITY_FACTOR else 1.0;
+		final fact4 = if (atkPeople.abilities.has(2)) WAR_FRONT_ABILITY_FACTOR else 1.0;
+		final fact5 = if (atkPeople.abilities.has(3)) WAR_FRONT_ABILITY_FACTOR else 1.0;
 		final fact6 = atkPeople.command / 100 * fact1;
 		final fact7 = atkPeople.force * 2 / (defPeople.force + defPeople.command);
 		final base = atkArmy / 2;
 		final damage = base * fact0 * fact1 * fact2 * fact3 * fact4 * fact5 * fact6 * fact7;
 		atkDamage = damage;
-		atkEnergyCost = useEnergy;
+		atkEnergyCost = useEnergy * getEnergyFactor(atkArmy);
 	}
 	var defDamage = 0.0;
 	var defEnergyCost = 0.0;
@@ -282,42 +292,44 @@ private function getWarCost(ctx:Context, playerId:Int, gridId:Int, p1PeopleId:In
 		final useEnergy = (atkPeople.energy * 0.9);
 		final fact0 = useEnergy / 100;
 		final fact1 = (atkArmy + defArmy) / (defArmy + defArmy);
-		final fact2 = if (atkPeople.abilities.has(0)) 1.2 else 1.0;
-		final fact3 = if (atkPeople.abilities.has(1)) 1.2 else 1.0;
-		final fact4 = if (atkPeople.abilities.has(2)) 1.2 else 1.0;
-		final fact5 = if (atkPeople.abilities.has(3)) 1.2 else 1.0;
-		final fact6 = atkPeople.command / 100 * fact1;
-		final fact7 = atkPeople.force * 2 / (defPeople.force + defPeople.command);
+		final fact2 = if (atkPeople.abilities.has(0)) WAR_FRONT_ABILITY_FACTOR else 1.0;
+		final fact3 = if (atkPeople.abilities.has(1)) WAR_FRONT_ABILITY_FACTOR else 1.0;
+		final fact4 = if (atkPeople.abilities.has(2)) WAR_FRONT_ABILITY_FACTOR else 1.0;
+		final fact5 = if (atkPeople.abilities.has(3)) WAR_FRONT_ABILITY_FACTOR else 1.0;
+		final fact6 = if (atkPeople.abilities.has(8)) WAR_FRONT_ABILITY_FACTOR else 1.0;
+		final fact7 = if (atkPeople.abilities.has(9)) WAR_FRONT_ABILITY_FACTOR else 1.0;
+		final fact8 = atkPeople.command / 100 * fact1;
+		final fact9 = atkPeople.force * 2 / (defPeople.force + defPeople.command);
 		final base = atkArmy / 2;
-		final damage = base * fact0 * fact1 * fact2 * fact3 * fact4 * fact5 * fact6 * fact7;
+		final damage = base * fact0 * fact1 * fact2 * fact3 * fact4 * fact5 * fact6 * fact7 * fact8 * fact9;
 		defDamage = damage;
-		defEnergyCost = useEnergy;
+		defEnergyCost = useEnergy * getEnergyFactor(atkArmy);
 	}
 	var atkMoneyCost = 0.0;
 	var atkFoodCost = 0.0;
 	{
 		final atkArmy = army1;
 		final atkPeople = getPeopleById(ctx, p1PeopleId);
-		final fact1 = if (atkPeople.abilities.has(6)) 0.9 else 1.0;
-		final fact2 = if (atkPeople.abilities.has(7)) 0.9 else 1.0;
+		final fact1 = if (atkPeople.abilities.has(6)) WAR_BACK_ABILITY_FACTOR else 1.0;
+		final fact2 = if (atkPeople.abilities.has(7)) WAR_BACK_ABILITY_FACTOR else 1.0;
 		final fact3 = atkPeople.intelligence / 100;
 		final base = atkArmy / 2;
 		final cost = base * fact1 * fact2 * fact3;
-		atkMoneyCost = cost;
-		atkFoodCost = cost;
+		atkMoneyCost = cost * WAR_MONEY_COST_FACTOR;
+		atkFoodCost = cost * WAR_FOOD_COST_FACTOR;
 	}
 	var defMoneyCost = 0.0;
 	var defFoodCost = 0.0;
 	{
 		final atkArmy = army2;
 		final atkPeople = getPeopleById(ctx, p2PeopleId);
-		final fact1 = if (atkPeople.abilities.has(6)) 0.9 else 1.0;
-		final fact2 = if (atkPeople.abilities.has(7)) 0.9 else 1.0;
+		final fact1 = if (atkPeople.abilities.has(6)) WAR_BACK_ABILITY_FACTOR else 1.0;
+		final fact2 = if (atkPeople.abilities.has(7)) WAR_BACK_ABILITY_FACTOR else 1.0;
 		final fact3 = atkPeople.intelligence / 100;
 		final base = atkArmy / 2;
 		final cost = base * fact1 * fact2 * fact3;
-		defMoneyCost = cost;
-		defFoodCost = cost;
+		defMoneyCost = cost * WAR_MONEY_COST_FACTOR;
+		defFoodCost = cost * WAR_FOOD_COST_FACTOR;
 	}
 	return {
 		playerCost: [

@@ -64,6 +64,11 @@ class GridGenerator {
 	}
 
 	public function getGrids(count:Int):Array<Grid> {
+
+		function getRandomRange(range:Float, offset:Float) {
+			return Math.random() * range + offset;
+		}
+
 		var grids = [];
 		for (i in 0...count) {
 			var height = getHeight(i);
@@ -83,7 +88,7 @@ class GridGenerator {
 			    BUILDING.CITY
 			][Math.floor(Math.random() * 10)];
 
-			final basicArmy = Math.random() * 200 + 70;
+			final basicArmy = getRandomRange(150, 50);
 
 			g.moneyGrow = Math.random() * .01;
 			g.foodGrow = Math.random() * .01;
@@ -99,24 +104,25 @@ class GridGenerator {
 					g.foodGrow = 0;
 					g.armyGrow = 0;
 				case MARKET:
-					g.money = Math.random() * 50 + 50;
-					g.food = Math.random() * 10 + 10;
+					g.money = getRandomRange(120, 80);
+					g.food = getRandomRange(60, 50);
 					g.moneyGrow += .02;
 					g.people.push(PeopleGenerator.getInst().generate());
 				case FARM:
-					g.money = Math.random() * 10 + 10;
-					g.food = Math.random() * 50 + 50;
+					g.money = getRandomRange(60, 50);
+					g.food = getRandomRange(120, 80);
 					g.foodGrow += .02;
 					g.people.push(PeopleGenerator.getInst().generate());
 				case VILLAGE:
-					g.money = Math.random() * 10 + 10;
-					g.food = Math.random() * 10 + 10;
+					g.money = getRandomRange(60, 50);
+					g.food = getRandomRange(60, 50);
+					g.army *= 1.5;
 					g.armyGrow += .02;
 					g.people.push(PeopleGenerator.getInst().generate());
 				case CITY:
-					g.money = Math.random() * 100 + 100;
+					g.money = getRandomRange(180, 80);
 					g.army *= 2;
-					g.food = Math.random() * 100 + 100;
+					g.food = getRandomRange(180, 80);
 					g.moneyGrow += .01;
 					g.foodGrow += .01;
 					g.armyGrow += .01;

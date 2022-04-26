@@ -83,8 +83,8 @@ class WarPreviewView extends PopupView{
             pro_intelligence.value = p.intelligence;
 
             pro_ability.value = Main.getAbilityString(p, switch(id){
-                case 1: [0,1,2,3];
-                case 2: [0,1,2,3,8,9];
+                case 1: [0,1,2,3,6,7];
+                case 2: [0,1,2,3,6,7,8,9];
                 case _: [];
             });
 
