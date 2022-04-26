@@ -249,21 +249,104 @@ private function getResourceCost(ctx:Context, playerId:Int, gridId:Int, p1Select
 	}
 }
 
-private function getMaintainPeople(ctx:Context, playerId:Int):Float {
-	final totalPeopleCost = ctx.peoples.filter(p -> p.belongToPlayerId == playerId).fold((p, a) -> {
-		return a + p.cost;
-	}, 0.0);
-	return totalPeopleCost * PLAYER_EARN_PER_TURN_PERSENT;
+private function getWarCost(ctx:Context, playerId:Int, gridId:Int, p1PeopleId:Int, p2PeopleId:Int, army1:Float, army2:Float) {
+	trace('${army1}+${army2}=${army1 + army2}, army1是字串, haxe的編譯器沒有檢查到');
+	var atkDamage = 0.0;
+	var atkEnergyCost = 0.0;
+	{
+		final atkArmy = army1;
+		final defArmy = army2;
+		final atkPeople = getPeopleById(ctx, p1PeopleId);
+		final defPeople = getPeopleById(ctx, p2PeopleId);
+		final useEnergy = (atkPeople.energy * 0.9);
+		final fact0 = useEnergy / 100;
+		final fact1 = (atkArmy + defArmy) / (defArmy + defArmy);
+		final fact2 = if (atkPeople.abilities.has(0)) 1.2 else 1.0;
+		final fact3 = if (atkPeople.abilities.has(1)) 1.2 else 1.0;
+		final fact4 = if (atkPeople.abilities.has(2)) 1.2 else 1.0;
+		final fact5 = if (atkPeople.abilities.has(3)) 1.2 else 1.0;
+		final fact6 = atkPeople.charm / 100 * fact1;
+		final fact7 = atkPeople.force * 2 / (defPeople.force + defPeople.charm);
+		final base = atkArmy / 2;
+		final damage = base * fact0 * fact1 * fact2 * fact3 * fact4 * fact5 * fact6 * fact7;
+		atkDamage = damage;
+		atkEnergyCost = useEnergy;
+	}
+	var defDamage = 0.0;
+	var defEnergyCost = 0.0;
+	{
+		final atkArmy = army2;
+		final defArmy = army1;
+		final atkPeople = getPeopleById(ctx, p2PeopleId);
+		final defPeople = getPeopleById(ctx, p1PeopleId);
+		final useEnergy = (atkPeople.energy * 0.9);
+		final fact0 = useEnergy / 100;
+		final fact1 = (atkArmy + defArmy) / (defArmy + defArmy);
+		final fact2 = if (atkPeople.abilities.has(0)) 1.2 else 1.0;
+		final fact3 = if (atkPeople.abilities.has(1)) 1.2 else 1.0;
+		final fact4 = if (atkPeople.abilities.has(2)) 1.2 else 1.0;
+		final fact5 = if (atkPeople.abilities.has(3)) 1.2 else 1.0;
+		final fact6 = atkPeople.charm / 100 * fact1;
+		final fact7 = atkPeople.force * 2 / (defPeople.force + defPeople.charm);
+		final base = atkArmy / 2;
+		final damage = base * fact0 * fact1 * fact2 * fact3 * fact4 * fact5 * fact6 * fact7;
+		defDamage = damage;
+		defEnergyCost = useEnergy;
+	}
+	var atkMoneyCost = 0.0;
+	var atkFoodCost = 0.0;
+	{
+		final atkArmy = army1;
+		final atkPeople = getPeopleById(ctx, p1PeopleId);
+		final fact1 = if (atkPeople.abilities.has(6)) 0.9 else 1.0;
+		final fact2 = if (atkPeople.abilities.has(7)) 0.9 else 1.0;
+		final fact3 = atkPeople.intelligence / 100;
+		final base = atkArmy / 2;
+		final cost = base * fact1 * fact2 * fact3;
+		atkMoneyCost = cost;
+		atkFoodCost = cost;
+	}
+	var defMoneyCost = 0.0;
+	var defFoodCost = 0.0;
+	{
+		final atkArmy = army2;
+		final atkPeople = getPeopleById(ctx, p2PeopleId);
+		final fact1 = if (atkPeople.abilities.has(6)) 0.9 else 1.0;
+		final fact2 = if (atkPeople.abilities.has(7)) 0.9 else 1.0;
+		final fact3 = atkPeople.intelligence / 100;
+		final base = atkArmy / 2;
+		final cost = base * fact1 * fact2 * fact3;
+		defMoneyCost = cost;
+		defFoodCost = cost;
+	}
+	return {
+		playerCost: [
+			{
+				id: (playerId : Null<Int>),
+				army: defDamage,
+				money: atkMoneyCost,
+				food: atkFoodCost,
+			},
+			{
+				id: getGridBelongPlayerId(ctx, gridId),
+				army: atkDamage,
+				money: defMoneyCost,
+				food: defFoodCost,
+			}
+		],
+		peopleCost: [
+			{
+				id: p1PeopleId,
+				energy: atkEnergyCost,
+			},
+			{
+				id: p2PeopleId,
+				energy: defEnergyCost,
+			}
+		]
+	}
 }
 
-private function getMaintainArmy(ctx:Context, playerId:Int):Float {
-	final totalArmy = ctx.grids.filter(g -> getGridBelongPlayerId(ctx, g.id) == playerId).fold((p, a) -> {
-		return a + p.army;
-	}, 0.0) + ctx.players[playerId].army;
-	return totalArmy * PLAYER_EARN_PER_TURN_PERSENT;
-}
-
-// TODO: 佔領計算
 // 玩家回合結束
 private function doPlayerEnd(ctx:Context) {
 	ctx.actions = [];
@@ -381,6 +464,20 @@ private function doPlayerEnd(ctx:Context) {
 	}
 	// 下一個玩家
 	ctx.currentPlayerId = (ctx.currentPlayerId + 1) % ctx.players.length;
+}
+
+private function getMaintainPeople(ctx:Context, playerId:Int):Float {
+	final totalPeopleCost = ctx.peoples.filter(p -> p.belongToPlayerId == playerId).fold((p, a) -> {
+		return a + p.cost;
+	}, 0.0);
+	return totalPeopleCost * PLAYER_EARN_PER_TURN_PERSENT;
+}
+
+private function getMaintainArmy(ctx:Context, playerId:Int):Float {
+	final totalArmy = ctx.grids.filter(g -> getGridBelongPlayerId(ctx, g.id) == playerId).fold((p, a) -> {
+		return a + p.army;
+	}, 0.0) + ctx.players[playerId].army;
+	return totalArmy * PLAYER_EARN_PER_TURN_PERSENT;
 }
 
 // =========================================
@@ -1132,60 +1229,102 @@ private function _getTakeWarPreview(ctx:Context, playerId:Int, gridId:Int):WarPr
 	}
 }
 
-private function _getPreResultOfWar(ctx:Context, playerId:Int, gridId:Int, p1:Int, p2:Int, army1:Float, army2:Float):Array<PreResultOnWar> {
-	return [
-		{
-			energyBefore: 0,
-			energyAfter: 1,
-			armyBefore: 2,
-			armyAfter: 4,
-			moneyBefore: 5,
-			moneyAfter: 6,
-			foodBefore: 7,
-			foodAfter: 8,
-			maintainFoodBefore: 10,
-			maintainFoodAfter: 10,
-		},
-		{
-			energyBefore: 0,
-			energyAfter: 1,
-			armyBefore: 2,
-			armyAfter: 4,
-			moneyBefore: 5,
-			moneyAfter: 6,
-			foodBefore: 7,
-			foodAfter: 8,
-			maintainFoodBefore: 10,
-			maintainFoodAfter: 10,
-		}
-	];
+private function _getPreResultOfWar(ctx:Context, playerId:Int, gridId:Int, p1PeopleId:Int, p2PeopleId:Int, army1:Float, army2:Float):Array<PreResultOnWar> {
+	return switch getWarCost(ctx, playerId, gridId, p1PeopleId, p2PeopleId, army1, army2) {
+		case {playerCost: [playerCost1, playerCost2], peopleCost: [peopleCost1, peopleCost2]}:
+			final player1 = ctx.players[playerId];
+			final grid = ctx.grids[gridId];
+			final people1 = getPeopleById(ctx, p1PeopleId);
+			final people2 = getPeopleById(ctx, p2PeopleId);
+			[
+				{
+					energyBefore: Std.int(people1.energy),
+					energyAfter: Std.int(people1.energy - peopleCost1.energy),
+					armyBefore: Std.int(player1.army),
+					armyAfter: Std.int(player1.army - playerCost1.army),
+					moneyBefore: Std.int(player1.money),
+					moneyAfter: Std.int(player1.money - playerCost1.money),
+					foodBefore: Std.int(player1.food),
+					foodAfter: Std.int(player1.food - playerCost1.food),
+					maintainFoodBefore: 0,
+					maintainFoodAfter: 0,
+				},
+				{
+					energyBefore: Std.int(people2.energy),
+					energyAfter: Std.int(people2.energy - peopleCost2.energy),
+					armyBefore: Std.int(grid.army),
+					armyAfter: Std.int(grid.army - playerCost2.army),
+					moneyBefore: Std.int(grid.money),
+					moneyAfter: Std.int(grid.money - playerCost2.money),
+					foodBefore: Std.int(grid.food),
+					foodAfter: Std.int(grid.food - playerCost2.food),
+					maintainFoodBefore: 0,
+					maintainFoodAfter: 0,
+				}
+			];
+		case _:
+			throw new haxe.Exception("getWarCost not match");
+	}
 }
 
 private function _takeWarOn(ctx:Context, playerId:Int, gridId:Int, p1PeopleId:Int, p2PeopleId:Int, army1:Float, army2:Float) {
-	// TODO: 武將回到主公身上, 體力減半
-	// TODO: 中立將領就解散
-	final success = true;
 	final people1 = getPeopleById(ctx, p1PeopleId);
 	final people2 = getPeopleById(ctx, p2PeopleId);
+	final player = ctx.players[playerId];
 	final resultValue = {
-		success: success,
+		success: false,
 		people: getPeopleInfo(ctx, people1),
-		energyBefore: 0.0,
-		energyAfter: 0.0,
-		armyBefore: 0.0,
-		armyAfter: 0.0,
-		moneyBefore: 0.0,
-		moneyAfter: 0.0,
-		foodBefore: 0.0,
-		foodAfter: 0.0
+		energyBefore: people1.energy,
+		energyAfter: people1.energy,
+		armyBefore: player.army,
+		armyAfter: player.army,
+		moneyBefore: player.money,
+		moneyAfter: player.money,
+		foodBefore: player.food,
+		foodAfter: player.food,
 	}
-	if (success == false) {
-		return;
-	}
-	// 回到主公身上或解散
-	people2.position.gridId = null;
-	people2.energy *= 0.5;
+	final success = applyWarCost(ctx, playerId, gridId, p1PeopleId, p2PeopleId, army1, army2);
+	resultValue.success = success;
+	resultValue.energyAfter = people1.energy;
+	resultValue.armyAfter = player.army;
+	resultValue.moneyAfter = player.money;
+	resultValue.foodAfter = player.food;
 	ctx.events = [Event.WAR_RESULT(resultValue)];
+}
+
+private function applyWarCost(ctx:Context, playerId:Int, gridId:Int, p1PeopleId:Int, p2PeopleId:Int, army1:Float, army2:Float):Bool {
+	switch getWarCost(ctx, playerId, gridId, p1PeopleId, p2PeopleId, army1, army2) {
+		case {playerCost: [playerCost1, playerCost2], peopleCost: [peopleCost1, peopleCost2]}:
+			// 無論成功或失敗武將先消體力
+			final people = getPeopleById(ctx, p1PeopleId);
+			if (people.energy < peopleCost1.energy) {
+				throw new haxe.Exception('people.energy ${people.energy} < ${peopleCost1.energy}');
+			}
+			final people2 = getPeopleById(ctx, p2PeopleId);
+			if (people2.energy < peopleCost2.energy) {
+				throw new haxe.Exception('people.energy ${people2.energy} < ${peopleCost2.energy}');
+			}
+			people.energy -= peopleCost1.energy;
+			people2.energy -= peopleCost2.energy;
+			//
+			final player = ctx.players[playerId];
+			player.money -= playerCost1.money;
+			player.food -= playerCost1.food;
+			player.army -= playerCost1.army;
+
+			final grid = ctx.grids[gridId];
+			grid.money -= playerCost2.money;
+			grid.food -= playerCost2.food;
+			grid.army -= playerCost2.army;
+
+			// 回到主公身上或解散
+			people2.position.gridId = null;
+			// 體力減半
+			people2.energy *= 0.5;
+			return true;
+		case _:
+			throw new haxe.Exception("getWarCost not match");
+	}
 }
 
 // =================================
