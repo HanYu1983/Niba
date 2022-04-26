@@ -536,7 +536,7 @@ class MainView extends Absolute {
                     final info:Dynamic = event.value;
                     final msg = '解雇完成\n
 武將:${info.people.name}\n
-薪俸:${Main.getFixNumber(info.maintainMoneyBefore,0)} => ${Main.getFixNumber(info.maintainMoneyAfter,0)}\n
+薪俸:${Main.getFixNumber(info.maintainMoneyBefore,2)} => ${Main.getFixNumber(info.maintainMoneyAfter,2)}\n
                     ';
                     messageView.showMessage(msg);
                     btn_end.show();
@@ -716,9 +716,8 @@ class MainView extends Absolute {
             pro_gridPlayer.value = "";
         }
 
-        trace('[vic]PLAYER_EARN_PER_TURN這個設置好像沒用？');
-        trace('[vic]TakeFire解雇好像還沒套？');
-        trace('[vic]people多了一個gridId的參數，就是駐守在哪裏的參數');
+        trace('[vic][bug]TakeFire解雇完給的result事件裏的maintainBefore和mainAfter一樣');
+        trace('[vic][info]TakeTransfer之後，要給RESOURCE_RESULT事件');
     }
 
     function syncGridViews(gameInfo:GameInfo){
