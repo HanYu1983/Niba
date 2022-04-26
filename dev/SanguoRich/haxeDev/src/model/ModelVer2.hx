@@ -263,7 +263,7 @@ private function getResourceCost(ctx:Context, playerId:Int, gridId:Int, p1Select
 					returnInfo.playerCost.money = moneyCost;
 					returnInfo.playerCost.food = -moneyCost * rate;
 				case [STRETEGY, BUY]:
-					final moneyCost = 100;
+					final moneyCost = MONEY_PER_DEAL;
 					returnInfo.playerCost.money = moneyCost;
 					returnInfo.playerCost.strategy = -moneyCost * rate;
 			}
@@ -552,7 +552,7 @@ class ModelVer2 extends DebugModel {
 
 	override function gameInfo():GameInfo {
 		final info = getGameInfo(context, true);
-		js.Browser.console.log(info);
+		// js.Browser.console.log(info);
 		return info;
 	}
 
