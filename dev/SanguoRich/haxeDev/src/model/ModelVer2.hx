@@ -90,7 +90,7 @@ private function getNegoCost(ctx:Context, playerId:Int, gridId:Int, p1SelectId:I
 					{
 						playerCost: {
 							id: playerId,
-							army: grid.army * gainRate,
+							army: 0, // 交涉可能先不能拿兵。因爲兵士防守用的
 							money: grid.money * gainRate,
 							food: grid.food * gainRate
 						},
