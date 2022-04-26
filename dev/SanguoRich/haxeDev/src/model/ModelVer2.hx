@@ -1269,6 +1269,10 @@ private function applyExploreCost(ctx:Context, playerId:Int, gridId:Int, p1Selec
 
 // =================================
 // 佔領
+// 派兵目前的設計是【糧食】消耗為主要，【金錢】次之或者不用消耗
+// 攻擊方主要參數為【武力】及【智力】  	防守方主要參數為【統率】及【智力】
+// 攻擊方影響能力[0,1,2,3]         	 防守方影響能力[0,1,2,3,8,9];
+// 2022/4/26 測試到奇怪的現象，就是感覺就是强很多的武將，結果爲了打爆對方。糧食扣的比爛武將多。感覺很奇怪？
 // =================================
 private function _getTakeWarPreview(ctx:Context, playerId:Int, gridId:Int):WarPreview {
 	final grid = ctx.grids[gridId];
@@ -1436,6 +1440,8 @@ private function applyWarCost(ctx:Context, playerId:Int, gridId:Int, p1PeopleId:
 // 賣糧：扣固定糧加不定錢
 // 徵兵：扣固定錢加不定兵
 // 裁兵：扣固定兵加不定錢
+// 2022/4/26 希望演算法可以把當前格子的資源量納入計算，資源越多，可以得到越多
+// 2022/4/26 這個交易的資源也是會影響格子裏的資源量。就是經過交易后變少或變多
 // =================================
 private function _getTakeResourcePreview(ctx:Context, playerId:Int, gridId:Int, market:MARKET, type:RESOURCE):ResourcePreview {
 	return {

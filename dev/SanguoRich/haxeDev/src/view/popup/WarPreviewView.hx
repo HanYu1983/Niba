@@ -81,7 +81,12 @@ class WarPreviewView extends PopupView{
             pro_name.value = p.name;
             pro_energy.value = p.energy;
             pro_intelligence.value = p.intelligence;
-            pro_ability.value = Main.getAbilityString(p, [0, 1, 2, 3]);
+
+            pro_ability.value = Main.getAbilityString(p, switch(id){
+                case 1: [0,1,2,3];
+                case 2: [0,1,2,3,8,9];
+                case _: [];
+            });
 
             setRate();
         }
