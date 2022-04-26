@@ -719,8 +719,9 @@ class MainView extends Absolute {
     }
 
     function syncGridViews(gameInfo:GameInfo){
-        for (index => grid in grids) {
-            var info = gameInfo.grids[index];
+
+        for (index => info in gameInfo.grids) {
+            var grid = grids[index];
             grid.type = info.landType;
             grid.building = info.buildtype;
             grid.playerId = info.belongPlayerId == null ? -1 :info.belongPlayerId;
