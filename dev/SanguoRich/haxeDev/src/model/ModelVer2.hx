@@ -250,7 +250,6 @@ private function getResourceCost(ctx:Context, playerId:Int, gridId:Int, p1Select
 }
 
 private function getWarCost(ctx:Context, playerId:Int, gridId:Int, p1PeopleId:Int, p2PeopleId:Int, army1:Float, army2:Float) {
-	trace('${army1}+${army2}=${army1 + army2}, army1是字串, haxe的編譯器沒有檢查到');
 	var atkDamage = 0.0;
 	var atkEnergyCost = 0.0;
 	{
@@ -265,8 +264,8 @@ private function getWarCost(ctx:Context, playerId:Int, gridId:Int, p1PeopleId:In
 		final fact3 = if (atkPeople.abilities.has(1)) 1.2 else 1.0;
 		final fact4 = if (atkPeople.abilities.has(2)) 1.2 else 1.0;
 		final fact5 = if (atkPeople.abilities.has(3)) 1.2 else 1.0;
-		final fact6 = atkPeople.charm / 100 * fact1;
-		final fact7 = atkPeople.force * 2 / (defPeople.force + defPeople.charm);
+		final fact6 = atkPeople.command / 100 * fact1;
+		final fact7 = atkPeople.force * 2 / (defPeople.force + defPeople.command);
 		final base = atkArmy / 2;
 		final damage = base * fact0 * fact1 * fact2 * fact3 * fact4 * fact5 * fact6 * fact7;
 		atkDamage = damage;
@@ -286,8 +285,8 @@ private function getWarCost(ctx:Context, playerId:Int, gridId:Int, p1PeopleId:In
 		final fact3 = if (atkPeople.abilities.has(1)) 1.2 else 1.0;
 		final fact4 = if (atkPeople.abilities.has(2)) 1.2 else 1.0;
 		final fact5 = if (atkPeople.abilities.has(3)) 1.2 else 1.0;
-		final fact6 = atkPeople.charm / 100 * fact1;
-		final fact7 = atkPeople.force * 2 / (defPeople.force + defPeople.charm);
+		final fact6 = atkPeople.command / 100 * fact1;
+		final fact7 = atkPeople.force * 2 / (defPeople.force + defPeople.command);
 		final base = atkArmy / 2;
 		final damage = base * fact0 * fact1 * fact2 * fact3 * fact4 * fact5 * fact6 * fact7;
 		defDamage = damage;
@@ -609,6 +608,7 @@ private typedef People = {
 	political:Float,
 	charm:Float,
 	cost:Float,
+	command:Float,
 	abilities:Array<Int>,
 	energy:Float
 }
@@ -721,7 +721,7 @@ private function getPeopleInfo(ctx:Context, people:People):model.PeopleGenerator
 		id: people.id,
 		type: 0,
 		name: people.name,
-		command: 0,
+		command: Std.int(people.command),
 		force: Std.int(people.force),
 		intelligence: Std.int(people.intelligence),
 		political: Std.int(people.political),
@@ -861,6 +861,7 @@ private function addGridInfo(ctx:Context, grid:model.GridGenerator.Grid):Void {
 			charm: p.charm,
 			cost: p.cost,
 			abilities: p.abilities,
+			command: p.command,
 			energy: p.energy,
 		});
 	}
@@ -881,6 +882,7 @@ private function addPeopleInfo(ctx:Context, belongToPlayerId:Null<Int>, gridId:N
 		charm: p.charm,
 		cost: p.cost,
 		abilities: p.abilities,
+		command: p.command,
 		energy: p.energy,
 	});
 }
@@ -910,6 +912,7 @@ private function addPlayerInfo(ctx:Context, player:model.IModel.PlayerInfo):Void
 			charm: p.charm,
 			cost: p.cost,
 			abilities: p.abilities,
+			command: p.command,
 			energy: p.energy,
 		});
 	}
@@ -1317,6 +1320,7 @@ private function applyWarCost(ctx:Context, playerId:Int, gridId:Int, p1PeopleId:
 			grid.food -= playerCost2.food;
 			grid.army -= playerCost2.army;
 
+			people.position.gridId = gridId;
 			// 回到主公身上或解散
 			people2.position.gridId = null;
 			// 體力減半
