@@ -1472,7 +1472,7 @@ private function applyWarCost(ctx:Context, playerId:Int, gridId:Int, p1PeopleId:
 			}
 			if (success) {
 				// 沒有進駐的話, 自動進駐
-				if (people.position.gridId != null) {
+				if (people.position.gridId == null) {
 					people.position.gridId = gridId;
 				}
 				// 回到主公身上或解散
