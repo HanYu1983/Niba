@@ -1024,7 +1024,7 @@ private function addPlayerInfo(ctx:Context, player:model.IModel.PlayerInfo):Void
 }
 
 private function initContext(ctx:Context, option:{}) {
-	final genGrids = model.GridGenerator.getInst().getGrids(100);
+	final genGrids = model.GridGenerator.getInst().getGrids(30);
 	for (grid in genGrids) {
 		addGridInfo(ctx, grid);
 	}
@@ -1064,7 +1064,7 @@ private function doPlayerDice(ctx:Context) {
 	final player = ctx.players[activePlayerId];
 	final fromGridId = player.position;
 	final moveStep = Math.floor(Math.random() * 6) + 1;
-	final toGridId = fromGridId + moveStep;
+	final toGridId = (fromGridId + moveStep) % ctx.grids.length;
 	player.position = toGridId;
 	ctx.actions = [
 		Action.MOVE({
