@@ -87,6 +87,9 @@ final PEOPLE_ENERGY_SUPPLY_BASE = 3;
 // 每回合額外回復％數體力(體力越多回越快)
 final PEOPLE_ENERGY_SUPPLY_SAVE_FACTOR = 0.05;
 
+// 允許交涉加兵
+final ENABLE_NEGO_ARMY = true;
+
 // 派越少的兵力體力扣越少
 function getEnergyFactor(atkArmy:Float) {
 	return (Math.min(atkArmy / 500, 0) * .3 + .7);
@@ -126,7 +129,7 @@ private function getNegoCost(ctx:Context, playerId:Int, gridId:Int, p1SelectId:I
 					{
 						playerCost: {
 							id: playerId,
-							army: 0.0, // 交涉可能先不能拿兵。因爲兵士防守用的
+							army: ENABLE_NEGO_ARMY ? grid.army * gainRate : 0.0,
 							money: grid.money * gainRate,
 							food: grid.food * gainRate
 						},
