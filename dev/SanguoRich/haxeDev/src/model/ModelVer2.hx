@@ -1471,8 +1471,10 @@ private function applyWarCost(ctx:Context, playerId:Int, gridId:Int, p1PeopleId:
 				grid.army = 0;
 			}
 			if (success) {
-				// 佔領
-				people.position.gridId = gridId;
+				// 沒有進駐的話, 自動進駐
+				if (people.position.gridId != null) {
+					people.position.gridId = gridId;
+				}
 				// 回到主公身上或解散
 				people2.position.gridId = null;
 				// 體力減半
@@ -1602,7 +1604,13 @@ private function _takeFire(ctx:Context, playerId:Int, p1PeopleId:Int) {
 // 把已經有駐守在別的地方的武將派到這裡來
 // 或者前端沒有派任何武將到這個格子上
 private function _checkValidTransfer(ctx:Context, playerId:Int, gridId:Int, playerInfo:model.IModel.PlayerInfo, gridInfo:model.GridGenerator.Grid):Bool {
-	trace("ModelVer2", "_checkValidTransfer", "checkValidTransfer怎麼情況會不成功?");
+	for (people in gridInfo.people) {
+		final originPeople = getPeopleById(ctx, people.id);
+		if (originPeople.position.gridId != null && originPeople.position.gridId != gridId) {
+			trace("ModelVer2", "_checkValidTransfer", 'people(${people.id})已經被派駐在grid(${originPeople.position.gridId})');
+			return false;
+		}
+	}
 	return true;
 }
 
@@ -1642,4 +1650,16 @@ private function applyTransfer(ctx:Context, playerId:Int, gridId:Int, playerInfo
 	grid.food = gridInfo.food;
 	grid.army = gridInfo.army;
 	grid.money = gridInfo.money;
+	// 在同一格的情況, 離開城池
+	for (people in playerInfo.people) {
+		final originPeople = getPeopleById(ctx, people.id);
+		if (originPeople.position.gridId == gridId) {
+			originPeople.position.gridId = null;
+		}
+	}
+	// 進入城池
+	for (people in gridInfo.people) {
+		final originPeople = getPeopleById(ctx, people.id);
+		originPeople.position.gridId = gridId;
+	}
 }
