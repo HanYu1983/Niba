@@ -21,7 +21,7 @@ using Lambda;
 
 // 幾個回合加成(4人走完算1回合)
 // 作用中
-final PLAYER_EARN_PER_TURN = 1;
+final PLAYER_EARN_PER_TURN = 3;
 
 // 主公支付的薪水為主公所有武將的value(?)總合的%數
 // 所有格子(?)以及主公支付的食物為所有士兵的數量的%數
@@ -32,7 +32,7 @@ final PLAYER_EARN_PER_TURN_PERSENT = 0.02;
 // 格子依據自己的成長值成長
 // 格子的成長植受到該格子上的所有武將的智力(主要影響食物)、政治(主要影響金錢)、統率(主要影響士兵)影響
 // 作用中
-final GRID_EARN_PER_TURN = 2;
+final GRID_EARN_PER_TURN = 1;
 
 // 幾個回合收稅(4人走完算1回合)
 // 作用中

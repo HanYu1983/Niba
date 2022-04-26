@@ -660,15 +660,16 @@ class MainView extends Absolute {
         var gameInfo = Main.model.gameInfo();
         var p = gameInfo.players[id];
         pro_name.value = p.name;
-        pro_money.value = '${Math.floor(p.money)} (-${Main.getFixNumber(p.maintainPeople)})';
-        pro_food.value = '${Math.floor(p.food)} (-${Main.getFixNumber(p.maintainArmy)})';
+        pro_money.value = '${Math.floor(p.money)} (武將薪俸:${Main.getFixNumber(p.maintainPeople)})';
+        pro_food.value = '${Math.floor(p.food)} (士兵消耗:${Main.getFixNumber(p.maintainArmy)})';
         pro_army.value = Math.floor(p.army);
         pro_peopleCount.value = p.people.length;
-        pro_maintainPeople.value = Main.getFixNumber(p.maintainPeople);
-        pro_maintainArmy.value = Main.getFixNumber(p.maintainArmy);
+        // pro_maintainPeople.value = Main.getFixNumber(p.maintainPeople);
+        // pro_maintainArmy.value = Main.getFixNumber(p.maintainArmy);
         pro_cityCount.value = p.grids.length;
         peopleListView.setPeopleList(p.people);
-        trace('[vic] 統率都變成0了？有調什麽嗎？');
+        
+        trace('[vic] 交涉預覽的糧草消耗還沒有設定到，是我後來加的maintainFood');
         syncGridInfo(gameInfo.players[id].atGridId);
 
         if(p.id == gameInfo.currentPlayer.id){
@@ -684,14 +685,16 @@ class MainView extends Absolute {
         pro_gridName.value = grid.id;
         pro_gridLandType.value = grids[gridId].lbl_building.text;
         
-        pro_gridMoney.value = '${Math.floor(grid.money)} (${Main.getFixNumber(grid.moneyGrow, 4)}%)';
-        pro_gridFood.value = '${Math.floor(grid.food)} (${Main.getFixNumber(grid.foodGrow, 4)}%)';
-        pro_gridArmy.value = '${Math.floor(grid.army)} (${Main.getFixNumber(grid.armyGrow, 4)}%)';
+        pro_gridMoney.value = '${Math.floor(grid.money)} (基礎成長值:${Main.getRateString(grid.moneyGrow)})';
+        pro_gridFood.value = '${Math.floor(grid.food)} (基礎成長值:${Main.getRateString(grid.foodGrow)})';
+        pro_gridArmy.value = '${Math.floor(grid.army)} (基礎成長值:${Main.getRateString(grid.armyGrow)})';
         if(grid.belongPlayerId != null){
             pro_gridPlayer.value = gameInfo.players[grid.belongPlayerId].name;
         }
 
-        trace('[vic]占領后，belongPlayerId好像還沒有?');
+        trace('[vic]占領后，所有的belongPlayerId都變成同一個人');
+        trace('[vic]交涉可能先不能拿兵。因爲兵士防守用的');
+        trace('[vic]PLAYER_EARN_PER_TURN這個設置好像沒用？');
     }
 
     function syncGridViews(gameInfo:GameInfo){

@@ -83,10 +83,13 @@ class GridGenerator {
 			    BUILDING.CITY
 			][Math.floor(Math.random() * 10)];
 
+			final basicArmy = Math.random() * 200 + 70;
+
 			g.moneyGrow = Math.random() * .01;
 			g.foodGrow = Math.random() * .01;
 			g.armyGrow = Math.random() * .01;
-			
+			g.army = basicArmy;
+
 			switch (g.buildtype){
 				case EMPTY:
 					g.money = 0;
@@ -96,25 +99,35 @@ class GridGenerator {
 					g.foodGrow = 0;
 					g.armyGrow = 0;
 				case MARKET:
-					g.moneyGrow += .01;
+					g.money = Math.random() * 50 + 50;
+					g.food = Math.random() * 10 + 10;
+					g.moneyGrow += .02;
 					g.people.push(PeopleGenerator.getInst().generate());
 				case FARM:
-					g.foodGrow += .01;
+					g.money = Math.random() * 10 + 10;
+					g.food = Math.random() * 50 + 50;
+					g.foodGrow += .02;
 					g.people.push(PeopleGenerator.getInst().generate());
 				case VILLAGE:
-					g.armyGrow += .01;
+					g.money = Math.random() * 10 + 10;
+					g.food = Math.random() * 10 + 10;
+					g.armyGrow += .02;
 					g.people.push(PeopleGenerator.getInst().generate());
 				case CITY:
-					g.money = 300;
-					g.army = 300;
-					g.food = 300;
-					g.moneyGrow += .007;
-					g.foodGrow += .007;
-					g.armyGrow += .007;
+					g.money = Math.random() * 100 + 100;
+					g.army *= 2;
+					g.food = Math.random() * 100 + 100;
+					g.moneyGrow += .01;
+					g.foodGrow += .01;
+					g.armyGrow += .01;
 					g.people.push(PeopleGenerator.getInst().generate());
 				case _:
 					
 			}
+
+			g.moneyGrow *= g.army * .01;
+			g.foodGrow *= g.army * .01;
+			g.armyGrow *= g.army * .01;
 
 			g.height = height;
 			grids.push(g);

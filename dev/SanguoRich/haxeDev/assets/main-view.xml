@@ -81,8 +81,8 @@
                         <property id="pro_army" label="士兵" value="1000" />
                         <property id="pro_strategy" label="計略" value="1000" />   
                         <property id="pro_peopleCount" label="武將數" value="5" />
-                        <property id="pro_maintainPeople" label="武將薪俸" value="5" />
-                        <property id="pro_maintainArmy" label="糧草消耗" value="5" />
+                        <!-- <property id="pro_maintainPeople" label="武將薪俸" value="5" />
+                        <property id="pro_maintainArmy" label="糧草消耗" value="5" /> -->
                         <property id="pro_cityCount" label="城池數" value="1000" />
                     </property-group>
                     <property-group text="格子資料">
