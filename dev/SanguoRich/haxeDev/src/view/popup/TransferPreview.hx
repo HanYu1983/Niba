@@ -38,8 +38,8 @@ class TransferPreview extends PopupView{
     function onBtnConfirmClick(e:MouseEvent) {
 
         final list:Array<Dynamic> = plist.dataSource.data;
-        outData[0].people = list.filter((p:Dynamic)-> Reflect.field(p, 'chk_sel'));
-        outData[1].people = list.filter((p:Dynamic)-> !Reflect.field(p, 'chk_sel'));
+        outData[0].people = list.filter((p:Dynamic)-> !Reflect.field(p, 'chk_sel'));
+        outData[1].people = list.filter((p:Dynamic)-> Reflect.field(p, 'chk_sel'));
 
         final gameInfo = Main.model.gameInfo();
         final valid = Main.model.checkValidTransfer(
@@ -49,6 +49,7 @@ class TransferPreview extends PopupView{
         );
 
         if(valid){
+            trace('[vic][bug]這裡有BUG，我帶給你的PEOPLE是前端想要的配置。然後MODEL好像沒有改:', outData);
             fadeOut();
             Main.view.onTransferPreviewConfirmClick(outData);
         }

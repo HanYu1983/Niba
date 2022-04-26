@@ -1588,6 +1588,9 @@ private function _takeFire(ctx:Context, playerId:Int, p1PeopleId:Int) {
 	ctx.events = [Event.FIRE_RESULT(resultValue)];
 }
 
+// 可能不成的情況是
+// 把已經有駐守在別的地方的武將派到這裡來
+// 或者前端沒有派任何武將到這個格子上
 private function _checkValidTransfer(ctx:Context, playerId:Int, gridId:Int, playerInfo:model.IModel.PlayerInfo, gridInfo:model.GridGenerator.Grid):Bool {
 	trace("ModelVer2", "_checkValidTransfer", "checkValidTransfer怎麼情況會不成功?");
 	return true;
