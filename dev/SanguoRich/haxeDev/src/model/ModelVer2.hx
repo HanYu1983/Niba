@@ -635,12 +635,13 @@ class ModelVer2 extends DebugModel {
 	}
 
 	override function checkValidTransfer(playerId:Int, gridId:Int, playerInfo:model.IModel.PlayerInfo, gridInfo:model.GridGenerator.Grid):Bool {
-		return _checkValidTransfer(context, playerId, gridId);
+		js.Browser.console.log(playerInfo, gridInfo);
+		return _checkValidTransfer(context, playerId, gridId, playerInfo, gridInfo);
 	}
 
 	override function takeTransfer(playerId:Int, gridId:Int, playerInfo:model.IModel.PlayerInfo, gridInfo:model.GridGenerator.Grid,
 			cb:(gameInfo:GameInfo) -> Void) {
-		_takeTransfer(context, playerId, gridId);
+		_takeTransfer(context, playerId, gridId, playerInfo, gridInfo);
 		cb(gameInfo());
 	}
 }
@@ -1569,13 +1570,17 @@ private function _takeFire(ctx:Context, playerId:Int, p1PeopleId:Int) {
 	ctx.events = [Event.FIRE_RESULT(resultValue)];
 }
 
-private function _checkValidTransfer(ctx:Context, playerId:Int, gridId:Int):Bool {
+private function _checkValidTransfer(ctx:Context, playerId:Int, gridId:Int, playerInfo:model.IModel.PlayerInfo, gridInfo:model.GridGenerator.Grid):Bool {
+	trace("ModelVer2", "_checkValidTransfer", "checkValidTransfer怎麼情況會不成功?");
 	return true;
 }
 
-private function _takeTransfer(ctx:Context, playerId:Int, gridId:Int) {
-	trace("ModelVer2", "_takeTransfer", "回傳RESOURCE_RESULT時, people是誰?");
-	final p1 = getPeopleById(ctx, 0);
+private function _takeTransfer(ctx:Context, playerId:Int, gridId:Int, playerInfo:model.IModel.PlayerInfo, gridInfo:model.GridGenerator.Grid) {
+	final peopleInGrid = ctx.peoples.filter(p -> p.position.gridId == gridId);
+	if (peopleInGrid.length == 0) {
+		throw new haxe.Exception('找不到守城人在gridId${gridId}');
+	};
+	final p1 = peopleInGrid[0];
 	final player = ctx.players[playerId];
 	final resultValue = {
 		success: false,
@@ -1589,7 +1594,7 @@ private function _takeTransfer(ctx:Context, playerId:Int, gridId:Int) {
 		foodBefore: player.food,
 		foodAfter: player.food,
 	}
-	applyTransfer(ctx, playerId, gridId);
+	applyTransfer(ctx, playerId, gridId, playerInfo, gridInfo);
 	resultValue.energyAfter = p1.energy;
 	resultValue.armyAfter = player.army;
 	resultValue.moneyAfter = player.money;
@@ -1597,4 +1602,13 @@ private function _takeTransfer(ctx:Context, playerId:Int, gridId:Int) {
 	ctx.events = [Event.RESOURCE_RESULT(resultValue)];
 }
 
-private function applyTransfer(ctx:Context, playerId:Int, gridId:Int) {}
+private function applyTransfer(ctx:Context, playerId:Int, gridId:Int, playerInfo:model.IModel.PlayerInfo, gridInfo:model.GridGenerator.Grid) {
+	final player = ctx.players[playerId];
+	final grid = ctx.grids[gridId];
+	player.food = playerInfo.food;
+	player.army = playerInfo.army;
+	player.money = playerInfo.money;
+	grid.food = gridInfo.food;
+	grid.army = gridInfo.army;
+	grid.money = gridInfo.money;
+}
