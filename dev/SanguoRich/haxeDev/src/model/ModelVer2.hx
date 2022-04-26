@@ -396,13 +396,13 @@ private function getWarCost(ctx:Context, playerId:Int, gridId:Int, p1PeopleId:In
 		playerCost: [
 			{
 				id: (playerId : Null<Int>),
-				army: defDamage,
+				army: Math.min(Std.int(defDamage), Std.int(army1)) + 0.0,
 				money: atkMoneyCost,
 				food: atkFoodCost,
 			},
 			{
 				id: getGridBelongPlayerId(ctx, gridId),
-				army: atkDamage,
+				army: Math.min(Std.int(atkDamage), Std.int(army2)) + 0.0,
 				money: defMoneyCost,
 				food: defFoodCost,
 			}
