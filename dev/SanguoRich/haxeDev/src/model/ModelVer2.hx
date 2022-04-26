@@ -237,11 +237,11 @@ private function getResourceCost(ctx:Context, playerId:Int, gridId:Int, p1Select
 				1;
 			};
 			final attrFactor:Float = if (type == RESOURCE.MONEY) {
-				(p1.political/100) * .8 + (p1.intelligence/100) * .1 + (p1.charm/100) * .1 + (grid.money / 1000) * .1;
+				(p1.political / 100) * .8 + (p1.intelligence / 100) * .1 + (p1.charm / 100) * .1 + (grid.money / 1000) * .1;
 			} else if (type == RESOURCE.ARMY) {
-				(p1.political/100) * .1 + (p1.intelligence/100) * .1 + (p1.charm/100) * .8 + (grid.army / 1000) * .1;
+				(p1.political / 100) * .1 + (p1.intelligence / 100) * .1 + (p1.charm / 100) * .8 + (grid.army / 1000) * .1;
 			} else if (type == RESOURCE.FOOD) {
-				(p1.political/100) * .1 + (p1.intelligence/100) * .8 + (p1.charm/100) * .1 + (grid.food / 1000) * .1;
+				(p1.political / 100) * .1 + (p1.intelligence / 100) * .8 + (p1.charm / 100) * .1 + (grid.food / 1000) * .1;
 			} else {
 				0;
 			};
@@ -1553,7 +1553,7 @@ private function applyResourceCost(ctx:Context, playerId:Int, gridId:Int, p1Sele
 	if (people.energy < 0) {
 		people.energy = 0;
 	}
-	//
+	// 增加資源
 	final player = ctx.players[playerId];
 	player.money -= negoCost.playerCost.money;
 	if (player.money < 0) {
@@ -1570,6 +1570,20 @@ private function applyResourceCost(ctx:Context, playerId:Int, gridId:Int, p1Sele
 	player.strategy -= negoCost.playerCost.strategy;
 	if (player.strategy < 0) {
 		player.strategy = 0;
+	}
+	// 減去資源
+	final grid = ctx.grids[gridId];
+	grid.money += negoCost.playerCost.money;
+	if (grid.money < 0) {
+		grid.money = 0;
+	}
+	grid.food += negoCost.playerCost.food;
+	if (grid.food < 0) {
+		grid.food = 0;
+	}
+	grid.army += negoCost.playerCost.army;
+	if (grid.army < 0) {
+		grid.army = 0;
 	}
 }
 
