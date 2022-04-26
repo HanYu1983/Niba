@@ -556,7 +556,7 @@ class MainView extends Absolute {
                     btn_end.show();
                 case WAR_RESULT:
                     final info:Dynamic = event.value;
-                    final msg = '${info.success ? '占領成功!請記得調度!' : '攻城失敗'}\n
+                    final msg = '${info.success ? '占領成功' : '攻城失敗'}\n
 武將:${info.people.name}\n
 體力:${Main.getFixNumber(info.energyBefore,0)} => ${Main.getFixNumber(info.energyAfter,0)}\n
 金錢:${Main.getFixNumber(info.moneyBefore,0)} => ${Main.getFixNumber(info.moneyAfter,0)}\n
