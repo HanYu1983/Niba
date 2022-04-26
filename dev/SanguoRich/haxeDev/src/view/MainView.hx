@@ -717,6 +717,8 @@ class MainView extends Absolute {
         }
 
         trace('[vic]PLAYER_EARN_PER_TURN這個設置好像沒用？');
+        trace('[vic]TakeFire解雇好像還沒套？');
+        trace('[vic]people多了一個gridId的參數，就是駐守在哪裏的參數');
     }
 
     function syncGridViews(gameInfo:GameInfo){
