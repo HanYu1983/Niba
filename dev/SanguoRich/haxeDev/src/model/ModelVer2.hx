@@ -1556,27 +1556,45 @@ private function _getPreResultOfFire(ctx:Context, playerId:Int, p1PeopleId:Int):
 }
 
 private function _takeFire(ctx:Context, playerId:Int, p1PeopleId:Int) {
-	final totalPeopleCost = ctx.peoples.filter(p -> p.belongToPlayerId == playerId).fold((p, a) -> {
-		if (p.id == p1PeopleId) {
-			return a;
-		}
-		return a + p.cost;
-	}, 0.0);
 	final people = getPeopleById(ctx, p1PeopleId);
+	final resultValue = {
+		success: true,
+		people: getPeopleInfo(ctx, people),
+		maintainMoneyAfter: 0.0,
+		maintainMoneyBefore: getMaintainPeople(ctx, playerId),
+	}
 	people.belongToPlayerId = null;
 	people.position.gridId = ctx.players[playerId].position;
-	ctx.events = [
-		Event.FIRE_RESULT({
-			success: true,
-			people: getPeopleInfo(ctx, people),
-			maintainMoneyAfter: getMaintainPeoplePure(totalPeopleCost),
-			maintainMoneyBefore: getMaintainPeople(ctx, playerId),
-		})
-	];
+	resultValue.maintainMoneyAfter = getMaintainPeople(ctx, playerId);
+	ctx.events = [Event.FIRE_RESULT(resultValue)];
 }
 
 private function _checkValidTransfer(ctx:Context, playerId:Int, gridId:Int):Bool {
 	return true;
 }
 
-private function _takeTransfer(ctx:Context, playerId:Int, gridId:Int) {}
+private function _takeTransfer(ctx:Context, playerId:Int, gridId:Int) {
+	trace("ModelVer2", "_takeTransfer", "回傳RESOURCE_RESULT時, people是誰?");
+	final p1 = getPeopleById(ctx, 0);
+	final player = ctx.players[playerId];
+	final resultValue = {
+		success: false,
+		people: getPeopleInfo(ctx, p1),
+		energyBefore: p1.energy,
+		energyAfter: p1.energy,
+		armyBefore: player.army,
+		armyAfter: player.army,
+		moneyBefore: player.money,
+		moneyAfter: player.money,
+		foodBefore: player.food,
+		foodAfter: player.food,
+	}
+	applyTransfer(ctx, playerId, gridId);
+	resultValue.energyAfter = p1.energy;
+	resultValue.armyAfter = player.army;
+	resultValue.moneyAfter = player.money;
+	resultValue.foodAfter = player.food;
+	ctx.events = [Event.RESOURCE_RESULT(resultValue)];
+}
+
+private function applyTransfer(ctx:Context, playerId:Int, gridId:Int) {}
