@@ -1100,8 +1100,17 @@ private function applyNegoCost(ctx:Context, playerId:Int, gridId:Int, p1SelectId
 	// 城池被搶奪
 	final grid = ctx.grids[gridId];
 	grid.army -= negoCost.playerCost.army;
+	if (grid.army < 0) {
+		grid.army = 0;
+	}
 	grid.money -= negoCost.playerCost.money;
+	if (grid.money < 0) {
+		grid.money = 0;
+	}
 	grid.food -= negoCost.playerCost.food;
+	if (grid.food < 0) {
+		grid.food = 0;
+	}
 	// 玩家搶奪
 	final player = ctx.players[playerId];
 	player.army += negoCost.playerCost.army;
@@ -1168,6 +1177,9 @@ private function applyHireCost(ctx:Context, playerId:Int, gridId:Int, p1SelectId
 		throw new haxe.Exception('people.energy ${people.energy} < ${negoCost.peopleCost.energy}');
 	}
 	people.energy -= negoCost.peopleCost.energy;
+	if (people.energy < 0) {
+		people.energy = 0;
+	}
 	//
 	final success = Math.random() < negoCost.successRate;
 	if (success == false) {
@@ -1177,6 +1189,9 @@ private function applyHireCost(ctx:Context, playerId:Int, gridId:Int, p1SelectId
 	final player = ctx.players[playerId];
 	// 支付雇用費
 	player.money -= negoCost.playerCost.money;
+	if (player.money < 0) {
+		player.money = 0;
+	}
 	// 將人變成主公的
 	hirePeople.belongToPlayerId = playerId;
 	// 將人移到玩家上
@@ -1239,6 +1254,9 @@ private function applyExploreCost(ctx:Context, playerId:Int, gridId:Int, p1Selec
 		throw new haxe.Exception('people.energy ${people.energy} < ${negoCost.peopleCost.energy}');
 	}
 	people.energy -= negoCost.peopleCost.energy;
+	if (people.energy < 0) {
+		people.energy = 0;
+	}
 	//
 	final success = Math.random() < negoCost.successRate;
 	if (success == false) {
@@ -1365,17 +1383,41 @@ private function applyWarCost(ctx:Context, playerId:Int, gridId:Int, p1PeopleId:
 				throw new haxe.Exception('people.energy ${people2.energy} < ${peopleCost2.energy}');
 			}
 			people.energy -= peopleCost1.energy;
+			if (people.energy < 0) {
+				people.energy = 0;
+			}
 			people2.energy -= peopleCost2.energy;
+			if (people2.energy < 0) {
+				people2.energy = 0;
+			}
 			//
 			final player = ctx.players[playerId];
 			player.money -= playerCost1.money;
+			if (player.money < 0) {
+				player.money = 0;
+			}
 			player.food -= playerCost1.food;
+			if (player.food < 0) {
+				player.food = 0;
+			}
 			player.army -= playerCost1.army;
+			if (player.army < 0) {
+				player.army = 0;
+			}
 
 			final grid = ctx.grids[gridId];
 			grid.money -= playerCost2.money;
+			if (grid.money < 0) {
+				grid.money = 0;
+			}
 			grid.food -= playerCost2.food;
+			if (grid.food < 0) {
+				grid.food = 0;
+			}
 			grid.army -= playerCost2.army;
+			if (grid.army < 0) {
+				grid.army = 0;
+			}
 			// 佔領
 			people.position.gridId = gridId;
 			// 回到主公身上或解散
@@ -1450,12 +1492,27 @@ private function applyResourceCost(ctx:Context, playerId:Int, gridId:Int, p1Sele
 		throw new haxe.Exception('people.energy ${people.energy} < ${negoCost.peopleCost.energy}');
 	}
 	people.energy -= negoCost.peopleCost.energy;
+	if (people.energy < 0) {
+		people.energy = 0;
+	}
 	//
 	final player = ctx.players[playerId];
 	player.money -= negoCost.playerCost.money;
+	if (player.money < 0) {
+		player.money = 0;
+	}
 	player.food -= negoCost.playerCost.food;
+	if (player.food < 0) {
+		player.food = 0;
+	}
 	player.army -= negoCost.playerCost.army;
+	if (player.army < 0) {
+		player.army = 0;
+	}
 	player.strategy -= negoCost.playerCost.strategy;
+	if (player.strategy < 0) {
+		player.strategy = 0;
+	}
 }
 
 private function _getPreResultOfFire(ctx:Context, playerId:Int, p1PeopleId:Int):PreResultOnFire {
