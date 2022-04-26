@@ -40,10 +40,10 @@ class GrowView extends PopupView{
     override function showPopup(info:Dynamic) {
         super.showPopup(info);
 
-        setInfo(p1Info, info.playerBefore[0], info.playerAfter[0]);
-        setInfo(p2Info, info.playerBefore[1], info.playerAfter[1]);
-        setInfo(p3Info, info.playerBefore[2], info.playerAfter[2]);
-        setInfo(p4Info, info.playerBefore[3], info.playerAfter[3]);
+        final gameInfo = Main.model.gameInfo();
+        for( index => p in gameInfo.players){
+            setInfo([p1Info, p2Info, p3Info, p4Info][index], info.playerBefore[index], info.playerAfter[index]);
+        }
     }
 
     @:bind(btn_confirm, MouseEvent.CLICK)
