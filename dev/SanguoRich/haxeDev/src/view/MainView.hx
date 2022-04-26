@@ -664,6 +664,7 @@ class MainView extends Absolute {
                 var gx = Math.floor(e.screenX / 50);
                 var gy = Math.floor(e.screenY / 50);
                 var gridId = gx + gy * 10;
+                gridId = Math.floor(Math.min(gridId, gameInfo.grids.length - 1));
                 moveCursorToGrid(gridId);
                 syncGridInfo(gridId);
 
