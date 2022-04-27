@@ -22,10 +22,10 @@ using Lambda;
 
 // 幾個回合加成(4人走完算1回合)
 // 作用中
-final PLAYER_EARN_PER_TURN = 3;
+final PLAYER_EARN_PER_TURN = 2;
 
-// 主公支付的薪水為主公所有武將的value(?)總合的%數
-// 所有格子(?)以及主公支付的食物為所有士兵的數量的%數
+// 主公支付的薪水為主公所有武將的價值參數(value)總合的%數
+// 主公支付的食物為所有格子上以及身上的士兵的數量的%數
 // 作用中
 final PLAYER_EARN_PER_TURN_PERSENT = 0.02;
 
@@ -35,6 +35,11 @@ final PLAYER_EARN_PER_TURN_PERSENT = 0.02;
 // 作用中
 final GRID_EARN_PER_TURN = 1;
 
+// 格子的基本保底成長
+final BASIC_GROW_MONEY = 1;
+final BASIC_GROW_FOOD = 1;
+final BASIC_GROW_ARMY = 1;
+
 // 幾個回合收稅(4人走完算1回合)
 // 作用中
 final PLAYER_EARN_FROM_CITY_PER_TURN = 10;
@@ -42,11 +47,7 @@ final PLAYER_EARN_FROM_CITY_PER_TURN = 10;
 // 收稅:主公身上的資源增加，依據所有城池的金錢、食物、士兵、策略點(?)個別合計之後的%數
 // 實作成會從城中扣掉加到主公身上
 // 作用中
-final PLAYER_EARN_FROM_CITY_BY_TURN_PERSENT = .05;
-
-// 所有支出能量的加權(方便整體調整體力支出)
-// 作用中
-final TOTAL_ENERGY_COST_FACTOR = 0.3;
+final PLAYER_EARN_FROM_CITY_BY_TURN_PERSENT = .1;
 
 // 基本一單買糧買兵的的金錢
 // 作用中
@@ -61,19 +62,19 @@ final FOOD_PER_DEAL = 100;
 final ARMY_PER_DEAL = 100;
 
 // 戰鬥能力影響倍率
-final WAR_FRONT_ABILITY_FACTOR = 1.3;
+final WAR_FRONT_ABILITY_FACTOR = 1.4;
 
 // 戰鬥支援能力，影響及金錢糧草
-final WAR_BACK_ABILITY_FACTOR = .8;
+final WAR_BACK_ABILITY_FACTOR = .7;
 
 // 戰鬥支付金錢整體調整
 final WAR_MONEY_COST_FACTOR = .05;
 
 // 戰鬥支付食物整體調整
-final WAR_FOOD_COST_FACTOR = 1.3;
+final WAR_FOOD_COST_FACTOR = 1.4;
 
 // 戰鬥防守方士兵加成
-final WAR_DEFFENDER_FACTOR = 2.5;
+final WAR_DEFFENDER_FACTOR = 4.0;
 
 // 兵數量差優勢, 越高代表影響越小
 final WAR_HIGH_LOW_FACTOR = 1.5;
@@ -93,6 +94,16 @@ final ENABLE_NEGO_ARMY = true;
 // 派越少的兵力體力扣越少
 function getEnergyFactor(atkArmy:Float) {
 	return (Math.min(atkArmy / 500, 1) * .3 + .7);
+}
+
+
+// 所有支出能量的加權(方便整體調整體力支出)
+// 作用中
+final TOTAL_ENERGY_COST_FACTOR = 1.0;
+
+// 基本值算法
+function getBase(useEnergy:Float, totalEnergy:Float = 30.0, offset:Float = 0.0, bottom:Float = 0.0):Float{
+	return Math.max((useEnergy / totalEnergy) + offset, bottom);
 }
 
 // 稅收
@@ -116,9 +127,9 @@ private function getNegoCost(ctx:Context, playerId:Int, gridId:Int, p1SelectId:I
 				case [p1, p2]:
 					// 用掉1/5的體力(最多20)
 					// 體力越少效率越低
-					final useEnergy = p1.energy / 5;
+					final useEnergy = p1.energy / 10;
 					// 使用20體力的情況下基礎值為0.5
-					final base = (useEnergy / 100) + 0.3;
+					final base = getBase(useEnergy, 10, -.4);
 					final intelligenceFactor = p1.intelligence / p2.intelligence;
 					final politicalFactor = p1.political / p2.political;
 					final charmFactor = p1.charm / p2.charm;
@@ -170,8 +181,8 @@ private function getHireCost(ctx:Context, playerId:Int, gridId:Int, p1SelectId:I
 			final fightPeople = [p1SelectId, p2SelectId].map(p -> getPeopleById(ctx, p));
 			return switch fightPeople {
 				case [p1, p2]:
-					final useEnergy = p1.energy * TOTAL_ENERGY_COST_FACTOR;
-					final base = (useEnergy / 100) + 0.2;
+					final useEnergy = p1.energy / 10 * TOTAL_ENERGY_COST_FACTOR;
+					final base = getBase(useEnergy, 10, -.3);
 					final charmFactor = p1.charm / p2.charm;
 					// 人脈加成
 					final abiFactor = p1.abilities.has(10) ? 1.5 : 1;
@@ -201,8 +212,8 @@ private function getExploreCost(ctx:Context, playerId:Int, gridId:Int, p1SelectI
 		case 0:
 			final grid = ctx.grids[gridId];
 			final p1 = getPeopleById(ctx, p1SelectId);
-			final useEnergy = p1.energy * TOTAL_ENERGY_COST_FACTOR;
-			final base = (useEnergy / 100) + 0.2;
+			final useEnergy = p1.energy / 3 * TOTAL_ENERGY_COST_FACTOR;
+			final base = getBase(useEnergy, 30, -.1);
 			final charmFactor = p1.charm / 100;
 			// 人脈加成
 			final abiFactor = p1.abilities.has(10) ? 1.5 : 1;
@@ -234,8 +245,8 @@ private function getResourceCost(ctx:Context, playerId:Int, gridId:Int, p1Select
 		case 0:
 			final grid = ctx.grids[gridId];
 			final p1 = getPeopleById(ctx, p1SelectId);
-			final useEnergy = p1.energy * TOTAL_ENERGY_COST_FACTOR;
-			final base = (useEnergy / 100) + 0.2;
+			final useEnergy = p1.energy / 5 * TOTAL_ENERGY_COST_FACTOR;
+			final base = getBase(useEnergy, 20, -0.2);
 			final abiFactor:Float = if (type == RESOURCE.MONEY && (p1.abilities.has(4))) {
 				1.5;
 			} else if (type == RESOURCE.ARMY && (p1.abilities.has(11))) {
@@ -334,8 +345,8 @@ private function getWarCost(ctx:Context, playerId:Int, gridId:Int, p1PeopleId:In
 		final currFood = ctx.players[playerId].food;
 		final moneyCost = atkMoneyCost;
 		final foodCost = atkFoodCost;
-		final useEnergy = (atkPeople.energy * (TOTAL_ENERGY_COST_FACTOR * 3.0));
-		final fact0 = useEnergy / 100;
+		final useEnergy = atkPeople.energy / 2 * TOTAL_ENERGY_COST_FACTOR;
+		final fact0 = useEnergy / 50;
 		final fact1 = (atkArmy + defArmy * WAR_HIGH_LOW_FACTOR) / (defArmy + defArmy * WAR_HIGH_LOW_FACTOR);
 		final fact2 = if (atkPeople.abilities.has(0)) WAR_FRONT_ABILITY_FACTOR else 1.0;
 		final fact3 = if (atkPeople.abilities.has(1)) WAR_FRONT_ABILITY_FACTOR else 1.0;
@@ -374,8 +385,8 @@ private function getWarCost(ctx:Context, playerId:Int, gridId:Int, p1PeopleId:In
 		final currFood = ctx.grids[gridId].food;
 		final moneyCost = defMoneyCost;
 		final foodCost = defFoodCost;
-		final useEnergy = (atkPeople.energy * (TOTAL_ENERGY_COST_FACTOR * 3.0));
-		final fact0 = useEnergy / 100;
+		final useEnergy = atkPeople.energy / 2 * TOTAL_ENERGY_COST_FACTOR;
+		final fact0 = useEnergy / 50;
 		final fact1 = (atkArmy + defArmy * WAR_HIGH_LOW_FACTOR) / (defArmy + defArmy * WAR_HIGH_LOW_FACTOR);
 		final fact2 = if (atkPeople.abilities.has(0)) WAR_FRONT_ABILITY_FACTOR else 1.0;
 		final fact3 = if (atkPeople.abilities.has(1)) WAR_FRONT_ABILITY_FACTOR else 1.0;
@@ -494,9 +505,9 @@ private function doPlayerEnd(ctx:Context) {
 					}, 0.0);
 					final factor1 = 1 / (peopleInGrid.length * 100);
 					// 城池成長
-					grid.money += grid.money * grid.moneyGrow * (totalPeopleIntelligence * factor1);
-					grid.food += grid.food * grid.foodGrow * (totalPeopleIntelligence * factor1);
-					grid.army += grid.army * grid.armyGrow * (totalPeopleIntelligence * factor1);
+					grid.money += grid.money * grid.moneyGrow * (totalPeoplePolitical * factor1) + BASIC_GROW_MONEY;
+					grid.food += grid.food * grid.foodGrow * (totalPeopleIntelligence * factor1) + BASIC_GROW_FOOD;
+					grid.army += grid.army * grid.armyGrow * (totalPeoplecharm * factor1) + BASIC_GROW_ARMY;
 				}
 			}
 		}

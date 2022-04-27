@@ -588,10 +588,13 @@ class MainView extends Absolute {
 糧草:${Main.getFixNumber(info.foodBefore,0)} => ${Main.getFixNumber(info.foodAfter,0)}\n
 士兵:${Main.getFixNumber(info.armyBefore,0)} => ${Main.getFixNumber(info.armyAfter,0)}\n
                     ';
-                    messageView.showMessage(msg, null, ()->{
-                        transferPreview.showPopup(null);
-                    });
-
+                    if(info.success){
+                        messageView.showMessage(msg, null, ()->{
+                            transferPreview.showPopup(null);
+                        });
+                    }else{
+                        messageView.showMessage(msg);
+                    }
                     btn_end.show();
                 case RESOURCE_RESULT:
                     final info:Dynamic = event.value;

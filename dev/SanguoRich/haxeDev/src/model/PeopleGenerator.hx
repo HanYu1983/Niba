@@ -109,7 +109,7 @@ class PeopleGenerator {
             charm: charm,
             cost: cost,
             abilities: abilitiesAry,
-            energy: 100,
+            energy: 70,
             gridId: null,
         };
     }
