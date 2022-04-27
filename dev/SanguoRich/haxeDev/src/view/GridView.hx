@@ -1,5 +1,6 @@
 package view;
 
+import model.GridGenerator.Grid;
 import model.GridGenerator.BUILDING;
 import haxe.ui.containers.Box;
 
@@ -14,13 +15,13 @@ class GridView extends Box{
 
     public var type(default,set):Int;
     function set_type(type:Int){
-        lbl_type.text = switch(type){
-            case 0: "低地";
-            case 1: "平地";
-            case 2: "山丘";
-            case 3: "高地";
-            case _: "未定義";
-        };
+        // lbl_type.text = switch(type){
+        //     case 0: "低地";
+        //     case 1: "平地";
+        //     case 2: "山丘";
+        //     case 3: "高地";
+        //     case _: "未定義";
+        // };
         return type;
     }
 
@@ -34,6 +35,10 @@ class GridView extends Box{
             case FORGE: "工";
             case CITY: "城";
             case _:"";
+        }
+        switch (type){
+            case EMPTY:box_build.hide();
+            case _:box_build.show();
         }
         return type;
     }
@@ -60,5 +65,9 @@ class GridView extends Box{
         super();
     }
 
-    
+    public function setInfo(grid:Grid) {
+        box_money.percentHeight = Main.clamp(grid.money / 500) * 100;
+        box_food.percentHeight = Main.clamp(grid.food / 500) * 100;
+        box_army.percentHeight = Main.clamp(grid.army / 500) * 100;
+    }
 }

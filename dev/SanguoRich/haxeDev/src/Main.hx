@@ -52,4 +52,10 @@ class Main {
 		}
 		return abiString;
 	}
+
+	public static function clamp(value:Float, min:Float = 0, max:Float = 1):Float{
+		value = Math.min(value, 1);
+		value = Math.max(value, 0);
+		return value;
+	}
 }

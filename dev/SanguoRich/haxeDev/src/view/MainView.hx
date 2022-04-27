@@ -683,7 +683,7 @@ class MainView extends Absolute {
     }
 
     function moveCursorToGrid(gridId:Int){
-        var pos = getGridPositionByGridId(0, gridId);
+        var pos = getGridPositionByGridId(99, gridId);
         box_cursor.left = pos[0];
         box_cursor.top = pos[1];
     }
@@ -754,6 +754,7 @@ class MainView extends Absolute {
             grid.type = info.landType;
             grid.building = info.buildtype;
             grid.playerId = info.belongPlayerId == null ? -1 :info.belongPlayerId;
+            grid.setInfo(info);
         }
     }
 
