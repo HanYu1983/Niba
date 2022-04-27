@@ -1375,7 +1375,7 @@ private function _getTakeWarPreview(ctx:Context, playerId:Int, gridId:Int):WarPr
 				p1: getPlayerInfo(ctx, ctx.players[playerId]),
 				p2: getPlayerInfo(ctx, gridPlayer),
 				p1ValidPeople: getPlayerInfo(ctx, ctx.players[playerId]).people,
-				p2ValidPeople: getPlayerInfo(ctx, gridPlayer).people,
+				p2ValidPeople: getGridInfo(ctx, ctx.grids[gridId]).people
 			};
 	}
 }
