@@ -20,6 +20,9 @@ import model.IModel.WarPreview;
 
 using Lambda;
 
+
+
+
 // 幾個回合加成(4人走完算1回合)
 // 作用中
 final PLAYER_EARN_PER_TURN = 2;
@@ -97,9 +100,12 @@ function getEnergyFactor(atkArmy:Float) {
 }
 
 
-// 所有支出能量的加權(方便整體調整體力支出)
-// 作用中
-final TOTAL_ENERGY_COST_FACTOR = 1.0;
+final ENERGY_COST_ON_NEGO = 10;
+final ENERGY_COST_ON_WAR = 50;
+final ENERGY_COST_ON_HIRE = 10;
+final ENERGY_COST_ON_RESOURCE = 20;
+final ENERGY_COST_ON_EXPLORE = 30;
+
 
 // 基本值算法
 function getBase(useEnergy:Float, totalEnergy:Float = 30.0, offset:Float = 0.0, bottom:Float = 0.0):Float{
@@ -127,9 +133,9 @@ private function getNegoCost(ctx:Context, playerId:Int, gridId:Int, p1SelectId:I
 				case [p1, p2]:
 					// 用掉1/5的體力(最多20)
 					// 體力越少效率越低
-					final useEnergy = p1.energy / 10;
+					final useEnergy = p1.energy / (100/ENERGY_COST_ON_NEGO);
 					// 使用20體力的情況下基礎值為0.5
-					final base = getBase(useEnergy, 10, -.4);
+					final base = getBase(useEnergy, ENERGY_COST_ON_NEGO, -.4);
 					final intelligenceFactor = p1.intelligence / p2.intelligence;
 					final politicalFactor = p1.political / p2.political;
 					final charmFactor = p1.charm / p2.charm;
@@ -181,8 +187,8 @@ private function getHireCost(ctx:Context, playerId:Int, gridId:Int, p1SelectId:I
 			final fightPeople = [p1SelectId, p2SelectId].map(p -> getPeopleById(ctx, p));
 			return switch fightPeople {
 				case [p1, p2]:
-					final useEnergy = p1.energy / 10 * TOTAL_ENERGY_COST_FACTOR;
-					final base = getBase(useEnergy, 10, -.3);
+					final useEnergy = p1.energy / (100 / ENERGY_COST_ON_HIRE);
+					final base = getBase(useEnergy, ENERGY_COST_ON_HIRE, -.3);
 					final charmFactor = p1.charm / p2.charm;
 					// 人脈加成
 					final abiFactor = p1.abilities.has(10) ? 1.5 : 1;
@@ -212,8 +218,8 @@ private function getExploreCost(ctx:Context, playerId:Int, gridId:Int, p1SelectI
 		case 0:
 			final grid = ctx.grids[gridId];
 			final p1 = getPeopleById(ctx, p1SelectId);
-			final useEnergy = p1.energy / 3 * TOTAL_ENERGY_COST_FACTOR;
-			final base = getBase(useEnergy, 30, -.1);
+			final useEnergy = p1.energy / (100 / ENERGY_COST_ON_WAR);
+			final base = getBase(useEnergy, ENERGY_COST_ON_WAR, -.1);
 			final charmFactor = p1.charm / 100;
 			// 人脈加成
 			final abiFactor = p1.abilities.has(10) ? 1.5 : 1;
@@ -245,8 +251,8 @@ private function getResourceCost(ctx:Context, playerId:Int, gridId:Int, p1Select
 		case 0:
 			final grid = ctx.grids[gridId];
 			final p1 = getPeopleById(ctx, p1SelectId);
-			final useEnergy = p1.energy / 5 * TOTAL_ENERGY_COST_FACTOR;
-			final base = getBase(useEnergy, 20, -0.2);
+			final useEnergy = p1.energy / (100 / ENERGY_COST_ON_RESOURCE);
+			final base = getBase(useEnergy, ENERGY_COST_ON_RESOURCE, -0.2);
 			final abiFactor:Float = if (type == RESOURCE.MONEY && (p1.abilities.has(4))) {
 				1.5;
 			} else if (type == RESOURCE.ARMY && (p1.abilities.has(11))) {
@@ -345,8 +351,8 @@ private function getWarCost(ctx:Context, playerId:Int, gridId:Int, p1PeopleId:In
 		final currFood = ctx.players[playerId].food;
 		final moneyCost = atkMoneyCost;
 		final foodCost = atkFoodCost;
-		final useEnergy = atkPeople.energy / 2 * TOTAL_ENERGY_COST_FACTOR;
-		final fact0 = useEnergy / 50;
+		final useEnergy = atkPeople.energy / (100/ENERGY_COST_ON_WAR);
+		final fact0 = useEnergy / ENERGY_COST_ON_WAR;
 		final fact1 = (atkArmy + defArmy * WAR_HIGH_LOW_FACTOR) / (defArmy + defArmy * WAR_HIGH_LOW_FACTOR);
 		final fact2 = if (atkPeople.abilities.has(0)) WAR_FRONT_ABILITY_FACTOR else 1.0;
 		final fact3 = if (atkPeople.abilities.has(1)) WAR_FRONT_ABILITY_FACTOR else 1.0;
@@ -385,8 +391,8 @@ private function getWarCost(ctx:Context, playerId:Int, gridId:Int, p1PeopleId:In
 		final currFood = ctx.grids[gridId].food;
 		final moneyCost = defMoneyCost;
 		final foodCost = defFoodCost;
-		final useEnergy = atkPeople.energy / 2 * TOTAL_ENERGY_COST_FACTOR;
-		final fact0 = useEnergy / 50;
+		final useEnergy = atkPeople.energy / (100/ENERGY_COST_ON_WAR);
+		final fact0 = useEnergy / ENERGY_COST_ON_WAR;
 		final fact1 = (atkArmy + defArmy * WAR_HIGH_LOW_FACTOR) / (defArmy + defArmy * WAR_HIGH_LOW_FACTOR);
 		final fact2 = if (atkPeople.abilities.has(0)) WAR_FRONT_ABILITY_FACTOR else 1.0;
 		final fact3 = if (atkPeople.abilities.has(1)) WAR_FRONT_ABILITY_FACTOR else 1.0;

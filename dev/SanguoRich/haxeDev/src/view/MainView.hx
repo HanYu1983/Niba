@@ -1,5 +1,10 @@
 package view;
 
+import model.ModelVer2.ENERGY_COST_ON_NEGO;
+import model.ModelVer2.ENERGY_COST_ON_WAR;
+import model.ModelVer2.ENERGY_COST_ON_RESOURCE;
+import model.ModelVer2.ENERGY_COST_ON_HIRE;
+import model.ModelVer2.ENERGY_COST_ON_EXPLORE;
 import view.widgets.GridGridView;
 import view.widgets.LeaderGridView;
 import model.IModel.PlayerInfo;
@@ -224,6 +229,16 @@ class MainView extends Absolute {
         }
         box_npcCmds.hide();
         box_enemyCmds.hide();
+
+        btn_negotiate.text = '${btn_negotiate.text}(${ENERGY_COST_ON_NEGO})';
+        btn_occupation.text = '${btn_occupation.text}(${ENERGY_COST_ON_WAR})';
+        btn_explore.text = '${btn_explore.text}(${ENERGY_COST_ON_EXPLORE})';
+        btn_hire.text = '${btn_hire.text}(${ENERGY_COST_ON_HIRE})';
+        btn_buyArmy.text = '${btn_buyArmy.text}(${ENERGY_COST_ON_RESOURCE})';
+        btn_buyFood.text = '${btn_buyFood.text}(${ENERGY_COST_ON_RESOURCE})';
+        btn_earnMoney.text = '${btn_earnMoney.text}(${ENERGY_COST_ON_RESOURCE})';
+        btn_sellArmy.text = '${btn_sellArmy.text}(${ENERGY_COST_ON_RESOURCE})';
+        btn_sellFood.text = '${btn_sellFood.text}(${ENERGY_COST_ON_RESOURCE})';
     }
     
     @:bind(btn_go, MouseEvent.CLICK)
