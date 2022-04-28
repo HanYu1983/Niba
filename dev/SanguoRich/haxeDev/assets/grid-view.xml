@@ -11,7 +11,7 @@
         <box id="box_money" width="25%" height="0" styleName="resource_bar" style="background-color: yellow;"/>
         <box id="box_food" width="25%" height="0" styleName="resource_bar" style="background-color: green;"/>
         <box id="box_army" width="25%" height="0" styleName="resource_bar" style="background-color: gray;"/>
-        <box id="box_strategy" width="25%" height="0" styleName="resource_bar" style="background-color: purple;"/>
+        <box id="box_favor" width="25%" height="0" styleName="resource_bar" style="background-color: purple;"/>
     </hbox>
     <label id="lbl_name" text="" textAlign="center" width="100%"/>
     <!-- <label id="lbl_type" text="" textAlign="center" marginTop="20" width="100%" height="100%" style="font-size:12px;"/> -->
