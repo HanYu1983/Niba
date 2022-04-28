@@ -68,7 +68,7 @@ class SnatchPreviewView extends PopupView {
 			pro_army1.value = '${Main.getFixNumber(SNATCH_ARMY_AT_LEAST, 0)} => ${Main.getFixNumber(army1_remain, 0)}';
 			pro_army2.value = '${Main.getFixNumber(SNATCH_ARMY_AT_LEAST, 0)} => ${Main.getFixNumber(army2_remain, 0)}';
 
-			lbl_willSnacth.value = '金錢:${result.money}及糧草:${result.food}';
+			lbl_willSnacth.value = '金錢:${Main.getFixNumber(result.money, 0)}及糧草:${Main.getFixNumber(result.food, 0)}';
 		}
 
 		function setOnePeople(id:Int, p:People) {
