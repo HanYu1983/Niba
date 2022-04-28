@@ -58,4 +58,23 @@ class Main {
 		value = Math.max(value, 0);
 		return value;
 	}
+
+	public static function getVSString(p1Value:Float, p2Value:Float):String {
+		final symbol:String = if(p1Value / p2Value > 2.0){
+			"OOO";
+		}else if(p1Value / p2Value > 1.5){
+			"OO";
+		}else if(p1Value / p2Value > 1.0){
+			"O";
+		}else if(p1Value / p2Value > 0.7){
+			"X";
+		}else {
+			"XX";
+		}
+		return '${p1Value} vs ${p2Value} (${ symbol })';
+	}
+	
+	public static function getEnergyString(before:Float, after:Float, max:Float):String {
+		return'${before} => ${after} (${getRateString((before-after)/max)})';
+	}
 }

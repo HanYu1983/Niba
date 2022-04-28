@@ -182,6 +182,7 @@ class ModelVer1 extends DebugModel {
 		final player = info.players[playerId];
 		final negoCost = getNegoCost(playerId, gridId, people.id, invite.id);
 		return {
+			energyBefore: people.energy,
 			energyAfter: people.energy - Std.int(negoCost.peopleCost.energy),
 			armyBefore: Std.int(player.army),
 			armyAfter: Std.int(player.army + negoCost.playerCost.army),

@@ -58,16 +58,16 @@ class WarPreviewView extends PopupView{
             pro_force1.value = p1.force;
             pro_command2.value = p2.command;
 
-            pro_money1.value = '${result[0].moneyBefore}=>${result[0].moneyAfter}';
-            pro_money2.value = '${result[1].moneyBefore}=>${result[1].moneyAfter}';
+            pro_money1.value = '${result[0].moneyBefore} => ${result[0].moneyAfter}';
+            pro_money2.value = '${result[1].moneyBefore} => ${result[1].moneyAfter}';
 
-            pro_food1.value = '${result[0].foodBefore}=>${result[0].foodAfter}';
-            pro_food2.value = '${result[1].foodBefore}=>${result[1].foodAfter}';
+            pro_food1.value = '${result[0].foodBefore} =>${result[0].foodAfter}';
+            pro_food2.value = '${result[1].foodBefore} => ${result[1].foodAfter}';
 
             final army1_dead = result[0].armyBefore - result[0].armyAfter;
             var army1_remain = Math.max(p1army - army1_dead, 0);
-            pro_army1.value = '${Main.getFixNumber(p1army, 0)}=>${Main.getFixNumber(army1_remain, 0)}';
-            pro_army2.value = '${result[1].armyBefore}=>${Math.max(result[1].armyAfter, 0)}';
+            pro_army1.value = '${Main.getFixNumber(p1army, 0)} => ${Main.getFixNumber(army1_remain, 0)}';
+            pro_army2.value = '${result[1].armyBefore} => ${Math.max(result[1].armyAfter, 0)}';
 
             outData = [p1army, grid.army];
         }

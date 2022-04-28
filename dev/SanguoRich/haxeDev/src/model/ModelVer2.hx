@@ -220,8 +220,8 @@ private function getExploreCost(ctx:Context, playerId:Int, gridId:Int, p1SelectI
 		case 0:
 			final grid = ctx.grids[gridId];
 			final p1 = getPeopleById(ctx, p1SelectId);
-			final useEnergy = p1.energy / (100 / ENERGY_COST_ON_WAR);
-			final base = getBase(useEnergy, ENERGY_COST_ON_WAR, -.1);
+			final useEnergy = p1.energy / (100 / ENERGY_COST_ON_EXPLORE);
+			final base = getBase(useEnergy, ENERGY_COST_ON_EXPLORE, -.1);
 			final charmFactor = p1.charm / 100;
 			// 人脈加成
 			final abiFactor = p1.abilities.has(10) ? 1.5 : 1;
@@ -1141,6 +1141,7 @@ private function doGetPreResultOfNego(ctx:Context, playerId:Int, gridId:Int, peo
 		return a + p.army;
 	}, 0.0) + ctx.players[playerId].army;
 	return {
+		energyBefore: Std.int(people.energy),
 		energyAfter: Std.int(people.energy - negoCost.peopleCost.energy),
 		armyBefore: Std.int(player.army),
 		armyAfter: Std.int(player.army + negoCost.playerCost.army),

@@ -1,5 +1,6 @@
 package view.popup;
 
+import model.ModelVer2.ENERGY_COST_ON_NEGO;
 import model.IModel.PreResultOnNego;
 import haxe.ui.events.UIEvent;
 import model.PeopleGenerator.People;
@@ -38,7 +39,7 @@ class NegoPreviewView extends PopupView{
                 gameInfo.currentPlayer.atGridId,
                 p1, p2);
 
-            pro_energy.value = '${p1.energy} => ${result.energyAfter}';
+            pro_energy.value = Main.getEnergyString(result.energyBefore, result.energyAfter, ENERGY_COST_ON_NEGO);
             pro_money.value = '${result.moneyBefore} => ${result.moneyAfter}';
             pro_food.value = '${result.foodBefore} => ${result.foodAfter}';
             pro_army.value = '${result.armyBefore} => ${result.armyAfter}';
@@ -50,9 +51,9 @@ class NegoPreviewView extends PopupView{
             var p1:People = p1List.selectedItem;
             var p2:People = p2List.selectedItem;
             pro_name.value = '${p1.name} vs ${p2.name}';
-            pro_charm.value = '${p1.charm} vs ${p2.charm}';
-            pro_political.value = '${p1.political} vs ${p2.political}';
-            pro_intelligence.value = '${p1.intelligence} vs ${p2.intelligence}';
+            pro_charm.value = Main.getVSString(p1.charm, p2.charm);
+            pro_political.value = Main.getVSString(p1.political, p2.political);
+            pro_intelligence.value = Main.getVSString(p1.intelligence, p2.intelligence);
             pro_ability.value = Main.getAbilityString(p1, [7]);
             setRate();
         }

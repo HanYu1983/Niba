@@ -1,5 +1,6 @@
 package view.popup;
 
+import model.ModelVer2.ENERGY_COST_ON_EXPLORE;
 import model.IModel.PreResultOnExplore;
 import model.IModel.ExplorePreview;
 import model.IModel.PreResultOnHire;
@@ -35,7 +36,7 @@ class ExplorePreviewView extends PopupView{
                 gameInfo.currentPlayer.atGridId,
                 p1);
         
-            pro_energy.value = '${result.energyBefore} => ${result.energyAfter}';
+            pro_energy.value = Main.getEnergyString(result.energyBefore, result.energyAfter, ENERGY_COST_ON_EXPLORE);
             pro_successRate.value = Main.getRateString(result.successRate);
         }
 

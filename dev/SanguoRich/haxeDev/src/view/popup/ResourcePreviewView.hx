@@ -1,5 +1,6 @@
 package view.popup;
 
+import model.ModelVer2.ENERGY_COST_ON_RESOURCE;
 import model.IModel.RESOURCE;
 import model.IModel.MARKET;
 import model.IModel.ResourcePreview;
@@ -40,7 +41,7 @@ class ResourcePreviewView extends PopupView{
                 info.market, 
                 info.resource);
         
-            pro_energy.value = '${p1.energy} => ${result.energyAfter}';
+            pro_energy.value = Main.getEnergyString(result.energyBefore, result.energyAfter, ENERGY_COST_ON_RESOURCE);
             pro_money.value = '${result.moneyBefore} => ${result.moneyAfter}';
             pro_food.value = '${result.foodBefore} => ${result.foodAfter}';
             pro_army.value = '${result.armyBefore} => ${result.armyAfter}';

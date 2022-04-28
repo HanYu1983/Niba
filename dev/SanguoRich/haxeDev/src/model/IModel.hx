@@ -91,6 +91,7 @@ typedef HirePreview = {
 }
 
 typedef PreResultOnNego = {
+    energyBefore:Int,
     energyAfter:Int,
     armyBefore:Int,
     armyAfter:Int,

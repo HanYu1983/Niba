@@ -1,5 +1,6 @@
 package view.popup;
 
+import model.ModelVer2.ENERGY_COST_ON_HIRE;
 import model.IModel.PreResultOnHire;
 import haxe.ui.events.MouseEvent;
 import model.PeopleGenerator.People;
@@ -37,7 +38,7 @@ class HirePreviewView extends PopupView{
                 gameInfo.currentPlayer.atGridId,
                 p1, p2);
 
-            pro_energy.value = '${result.energyBefore} => ${result.energyAfter}';
+            pro_energy.value = Main.getEnergyString(result.energyBefore, result.energyAfter, ENERGY_COST_ON_HIRE);
             pro_money.value = '${result.moneyBefore} => ${result.moneyAfter}';
             pro_maintainMoney.value = '${Main.getFixNumber(result.maintainMoneyBefore, 2)} => ${Main.getFixNumber(result.maintainMoneyAfter, 2)}';
             pro_successRate.value = Main.getRateString(result.successRate);
