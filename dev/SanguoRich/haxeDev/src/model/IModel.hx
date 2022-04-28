@@ -117,6 +117,12 @@ typedef PreResultOnWar = {
     maintainFoodAfter:Float,
 } 
 
+typedef PreResultOnSnatch = {
+    war:Array<PreResultOnWar>,
+    money:Float,
+    food:Float,
+}
+
 typedef PreResultOnHire = {
     energyBefore:Int,
     energyAfter:Int,
@@ -175,7 +181,7 @@ interface IModel{
     function takeWarOn(playerId:Int, gridId:Int, p1PeopleId:Int, p2PeopleId:Int, army1:Float, army2:Float, cb:(gameInfo:GameInfo)->Void):Void;
     
     function getTakeSnatchPreview(playerId:Int, gridId:Int):SnatchPreview;
-    function getPreResultOfSnatch(playerId:Int, gridId:Int, p1:People, p2:People):Array<PreResultOnWar>;
+    function getPreResultOfSnatch(playerId:Int, gridId:Int, p1:People, p2:People):PreResultOnSnatch;
     function takeSnatchOn(playerId:Int, gridId:Int, p1PeopleId:Int, p2PeopleId:Int, cb:(gameInfo:GameInfo)->Void):Void;
 
     function getTakeNegoPreview(playerId:Int, gridId:Int):NegoPreview;

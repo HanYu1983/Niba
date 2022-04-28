@@ -23,6 +23,8 @@ class HirePreviewView extends PopupView{
         box_peopleList2.addComponent(p2List);
     }
 
+    var isValidHire = false;
+
     override function showPopup(info:Dynamic) {
         super.showPopup(info);
 
@@ -38,8 +40,9 @@ class HirePreviewView extends PopupView{
                 gameInfo.currentPlayer.atGridId,
                 p1, p2);
 
+            isValidHire = result.moneyAfter >= 0;
             pro_energy.value = Main.getEnergyString(result.energyBefore, result.energyAfter, ENERGY_COST_ON_HIRE);
-            pro_money.value = '${result.moneyBefore} => ${result.moneyAfter}';
+            pro_money.value = '${Main.getFixNumber(result.moneyBefore)} => ${Main.getFixNumber(result.moneyAfter)} ${!isValidHire ? "金錢不夠" : ""}';
             pro_maintainMoney.value = '${Main.getFixNumber(result.maintainMoneyBefore, 2)} => ${Main.getFixNumber(result.maintainMoneyAfter, 2)}';
             pro_successRate.value = Main.getRateString(result.successRate);
         }
@@ -48,7 +51,7 @@ class HirePreviewView extends PopupView{
             var p1:People = p1List.selectedItem;
             var p2:People = p2List.selectedItem;
             pro_name.value = '${p1.name} vs ${p2.name}';
-            pro_charm.value = '${p1.charm} vs ${p2.charm}';
+            pro_charm.value = Main.getVSString(p1.charm, p2.charm);
             setRate();
         }
 
@@ -78,8 +81,10 @@ class HirePreviewView extends PopupView{
 
     @:bind(btn_confirm, MouseEvent.CLICK)
     function onBtnConfirm(e:MouseEvent) {
-        fadeOut();
-
-        Main.view.onHirePreviewViewConfirmClick(p1List.selectedItem.id, p2List.selectedItem.id);
+        
+        if(isValidHire){
+            fadeOut();
+            Main.view.onHirePreviewViewConfirmClick(p1List.selectedItem.id, p2List.selectedItem.id);
+        } 
     }
 }

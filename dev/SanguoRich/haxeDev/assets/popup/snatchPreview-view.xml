@@ -36,10 +36,10 @@
             </property-group>
         </property-grid>
     </hbox>
-    <!-- <hbox horizontalAlign="center">
-        <label text="成功率" style="font-size:24"/>
-        <label text="10%" style="font-size:24" />
-    </hbox> -->
+    <hbox horizontalAlign="center">
+        <label text="預計搶奪:" style="font-size:24"/>
+        <label id="lbl_willSnacth" text="10%" style="font-size:24" />
+    </hbox>
     <hbox horizontalAlign="center">
         <button text="取消" id="btn_cancel" />
         <button text="確定" id="btn_confirm" />

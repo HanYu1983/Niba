@@ -32,6 +32,9 @@ final PLAYER_EARN_PER_TURN = 2;
 // 作用中
 final PLAYER_EARN_PER_TURN_PERSENT = 0.02;
 
+// 武將聘用價格%數
+final PEOPLE_HIRE_COST_FACTOR = .1;
+
 // 格子的成長週期
 // 格子依據自己的成長值成長
 // 格子的成長植受到該格子上的所有武將的智力(主要影響食物)、政治(主要影響金錢)、統率(主要影響士兵)影響
@@ -101,7 +104,7 @@ function getEnergyFactor(atkArmy:Float) {
 
 
 final ENERGY_COST_ON_HIRE = 10;
-final ENERGY_COST_ON_NEGO = 10;
+final ENERGY_COST_ON_NEGO = 20;
 final ENERGY_COST_ON_RESOURCE = 20;
 final ENERGY_COST_ON_EXPLORE = 30;
 final ENERGY_COST_ON_SNATCH = 30;
@@ -198,7 +201,7 @@ private function getHireCost(ctx:Context, playerId:Int, gridId:Int, p1SelectId:I
 					{
 						playerCost: {
 							id: playerId,
-							money: p2.cost
+							money: p2.cost * PEOPLE_HIRE_COST_FACTOR
 						},
 						peopleCost: {
 							id: p1.id,
@@ -1074,10 +1077,10 @@ private function initContext(ctx:Context, option:{}) {
 		addPlayerInfo(ctx, {
 			id: i++,
 			name: name,
-			money: 1000.0,
-			army: 1000.0,
-			food: 1000.0,
-			strategy: 1000.0,
+			money: 300.0,
+			army: 300.0,
+			food: 300.0,
+			strategy: 300.0,
 			people: [
 				model.PeopleGenerator.getInst().generate(),
 				model.PeopleGenerator.getInst().generate(),
@@ -1232,8 +1235,8 @@ private function doGetPreResultOfHire(ctx:Context, playerId:Int, gridId:Int, peo
 	return {
 		energyBefore: Std.int(p1.energy),
 		energyAfter: Std.int(p1.energy - cost.peopleCost.energy),
-		moneyBefore: 0,
-		moneyAfter: 0,
+		moneyBefore: player.money,
+		moneyAfter: player.money - cost.playerCost.money,
 		successRate: cost.successRate,
 		maintainMoneyAfter: getMaintainPeoplePure(totalPeopleCost),
 		maintainMoneyBefore: getMaintainPeople(ctx, playerId),

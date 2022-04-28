@@ -516,6 +516,9 @@ class MainView extends Absolute {
         }));
 
         TweenX.serial(tweens);
+
+        trace('經商，買賣糧食，買賣士兵，不能拿超過格子本身的一半');
+        trace( '目前聘用的後端如果金錢不夠沒有防呆，我前段先防了');
     }
 
     function syncViewByInfo(gameInfo:GameInfo){

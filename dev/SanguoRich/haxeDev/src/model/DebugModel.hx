@@ -1,5 +1,6 @@
 package model;
 
+import model.IModel.PreResultOnSnatch;
 import model.IModel.SnatchPreview;
 import model.IModel.PreResultOnFire;
 import model.IModel.MARKET;
@@ -280,8 +281,8 @@ class DebugModel implements IModel {
         };
 	}
 
-	public function getPreResultOfSnatch(playerId:Int, gridId:Int, p1:People, p2:People):Array<PreResultOnWar> {
-		return [
+	public function getPreResultOfSnatch(playerId:Int, gridId:Int, p1:People, p2:People):PreResultOnSnatch {
+		return {war:[
             {
                 energyBefore:1,
                 energyAfter:1,
@@ -306,7 +307,10 @@ class DebugModel implements IModel {
                 maintainFoodBefore:1,
                 maintainFoodAfter:1,
             }
-        ];
+        ],
+        money:2,
+        food:1
+        }
 	}
 
 	public function takeSnatchOn(playerId:Int, gridId:Int, p1PeopleId:Int, p2PeopleId:Int, cb:(gameInfo:GameInfo) -> Void) {

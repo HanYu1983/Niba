@@ -1,5 +1,6 @@
 package view.popup;
 
+import model.IModel.PreResultOnSnatch;
 import model.ModelVer2.SNATCH_ARMY_AT_LEAST;
 import model.IModel.PreResultOnWar;
 import model.PeopleGenerator.People;
@@ -46,28 +47,31 @@ class SnatchPreviewView extends PopupView{
             var p2 = p2List.selectedItem;
 
             var gameInfo = Main.model.gameInfo();
-            var result:Array<PreResultOnWar> = Main.model.getPreResultOfSnatch(
+            var result:PreResultOnSnatch = Main.model.getPreResultOfSnatch(
                 gameInfo.currentPlayer.id,
                 gameInfo.currentPlayer.atGridId,
                 p1, p2);
 
+            var warResult = result.war;
             pro_force1.value = p1.force;
             pro_command2.value = p2.command;
 
-            pro_money1.value = '${result[0].moneyBefore} => ${result[0].moneyAfter}';
-            pro_money2.value = '${result[1].moneyBefore} => ${result[1].moneyAfter}';
+            pro_money1.value = '${warResult[0].moneyBefore} => ${warResult[0].moneyAfter}';
+            pro_money2.value = '${warResult[1].moneyBefore} => ${warResult[1].moneyAfter}';
 
-            pro_food1.value = '${result[0].foodBefore} => ${result[0].foodAfter}';
-            pro_food2.value = '${result[1].foodBefore} => ${result[1].foodAfter}';
+            pro_food1.value = '${warResult[0].foodBefore} => ${warResult[0].foodAfter}';
+            pro_food2.value = '${warResult[1].foodBefore} => ${warResult[1].foodAfter}';
 
-            final army1_dead = result[0].armyBefore - result[0].armyAfter;
+            final army1_dead = warResult[0].armyBefore - warResult[0].armyAfter;
             final army1_remain = Math.max(SNATCH_ARMY_AT_LEAST - army1_dead, 0);
 
-            final army2_dead = result[1].armyBefore - result[1].armyAfter;
+            final army2_dead = warResult[1].armyBefore - warResult[1].armyAfter;
             final army2_remain = Math.max(SNATCH_ARMY_AT_LEAST - army2_dead, 0);
 
             pro_army1.value = '${Main.getFixNumber(SNATCH_ARMY_AT_LEAST, 0)} => ${Main.getFixNumber(army1_remain, 0)}';
             pro_army2.value = '${Main.getFixNumber(SNATCH_ARMY_AT_LEAST, 0)} => ${Main.getFixNumber(army2_remain, 0)}';
+
+            lbl_willSnacth.value = '金錢:${result.money}及糧草:${result.food}';
         }
 
         function setOnePeople(id:Int, p:People){
