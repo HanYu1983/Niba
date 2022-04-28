@@ -109,6 +109,21 @@ final ENERGY_COST_ON_SNATCH = 30;
 final ENERGY_COST_ON_WAR = 70;
 final SNATCH_ARMY_AT_LEAST = 100;
 
+// 最低友好度
+final MIN_GRID_FAVOR = -3;
+
+// 最高友好度
+final MAX_GRID_FAVOR = 3;
+
+// 交涉失敗時討厭你的機率
+final NEGO_HATE_RATE = 0.15;
+
+// 交涉成功時喜歡你的機率
+final NEGO_LIKE_RATE = 0.7;
+
+// 搶奪時額外討厭你的機率
+final SNATCH_HATE_RATE = 0.3;
+
 // 基本值算法
 function getBase(useEnergy:Float, totalEnergy:Float = 30.0, offset:Float = 0.0, bottom:Float = 0.0):Float {
 	return Math.max((useEnergy / totalEnergy) + offset, bottom);
@@ -556,6 +571,21 @@ private function doPlayerEnd(ctx:Context) {
 				worldEventValue.gridAfter = ctx.grids.map(g -> getGridInfo(ctx, g));
 				ctx.events.push(Event.WORLD_EVENT(worldEventValue));
 			}
+			// 收稅時計算友好度
+			if (enable) {
+				for (grid in ctx.grids) {
+					for (playerId in 0...ctx.players.length) {
+						grid.favor[playerId] = switch grid.favor[playerId] {
+							case favor if (favor < 0):
+								Std.int(Math.max(favor - 1, MIN_GRID_FAVOR));
+							case favor if (favor > 0):
+								Std.int(Math.min(favor + 1, MAX_GRID_FAVOR));
+							case favor:
+								favor;
+						}
+					}
+				}
+			}
 		}
 		// 下一回合
 		ctx.turn += 1;
@@ -730,7 +760,8 @@ private typedef Grid = {
 	army:Float,
 	moneyGrow:Float,
 	foodGrow:Float,
-	armyGrow:Float
+	armyGrow:Float,
+	favor:Array<Int>,
 }
 
 private typedef Attachment = {
@@ -931,7 +962,7 @@ private function getGridInfo(ctx:Context, grid:Grid):model.GridGenerator.Grid {
 		army: grid.army,
 		armyGrow: grid.armyGrow,
 		people: peopleInGrid.map(p -> getPeopleInfo(ctx, p)),
-		favor:[0,0,0,0]
+		favor: grid.favor
 	}
 }
 
@@ -1017,6 +1048,7 @@ private function addGridInfo(ctx:Context, grid:model.GridGenerator.Grid):Void {
 		moneyGrow: grid.moneyGrow,
 		foodGrow: grid.foodGrow,
 		armyGrow: grid.armyGrow,
+		favor: grid.favor
 	});
 	for (p in grid.people) {
 		ctx.peoples.push({
@@ -1214,14 +1246,19 @@ private function applyNegoCost(ctx:Context, playerId:Int, gridId:Int, p1SelectId
 	if (people.energy < negoCost.peopleCost.energy) {
 		throw new haxe.Exception('people.energy ${people.energy} < ${negoCost.peopleCost.energy}');
 	}
+	final grid = ctx.grids[gridId];
 	people.energy -= Std.int(negoCost.peopleCost.energy);
 	//
 	final success = Math.random() < negoCost.successRate;
 	if (success == false) {
+		// 降低友好度
+		final isHateYou = Math.random() < NEGO_HATE_RATE;
+		if (isHateYou) {
+			grid.favor[playerId] = Std.int(Math.max(grid.favor[playerId] - 1, MIN_GRID_FAVOR));
+		}
 		return false;
 	}
 	// 城池被搶奪
-	final grid = ctx.grids[gridId];
 	grid.army -= negoCost.playerCost.army;
 	if (grid.army < 0) {
 		grid.army = 0;
@@ -1239,6 +1276,11 @@ private function applyNegoCost(ctx:Context, playerId:Int, gridId:Int, p1SelectId
 	player.army += negoCost.playerCost.army;
 	player.money += negoCost.playerCost.money;
 	player.food += negoCost.playerCost.food;
+	// 提升友好度
+	final isLikeYou = Math.random() < NEGO_LIKE_RATE;
+	if (isLikeYou) {
+		grid.favor[playerId] = Std.int(Math.min(grid.favor[playerId] + 1, MAX_GRID_FAVOR));
+	}
 	return true;
 }
 
@@ -1538,17 +1580,32 @@ private function applyWarCost(ctx:Context, playerId:Int, gridId:Int, p1PeopleId:
 			if (grid.army < 0) {
 				grid.army = 0;
 			}
-			if (success) {
-				if (options.occupy) {
+			if (options.occupy) {
+				if (success) {
 					// 沒有進駐的話, 自動進駐
 					if (people.position.gridId == null) {
 						people.position.gridId = gridId;
 					}
 					// 回到主公身上或解散
 					people2.position.gridId = null;
+
+					// 體力減半
+					people2.energy *= 0.5;
 				}
-				// 體力減半
-				people2.energy *= 0.5;
+			} else {
+				//
+			}
+			// 友好度
+			if (options.occupy) {
+				grid.favor[playerId] = MIN_GRID_FAVOR;
+			} else {
+				// 先減1
+				grid.favor[playerId] = Std.int(Math.max(grid.favor[playerId] - 1, MIN_GRID_FAVOR));
+				// 額外再減
+				final isHateYou = Math.random() < SNATCH_HATE_RATE;
+				if (isHateYou) {
+					grid.favor[playerId] = Std.int(Math.max(grid.favor[playerId] - 1, MIN_GRID_FAVOR));
+				}
 			}
 			return success;
 		case _:
@@ -1757,7 +1814,7 @@ private function _getPreResultOfSnatch(ctx:Context, playerId:Int, gridId:Int, p1
 	final army1 = Math.min(Std.int(ctx.players[playerId].army), SNATCH_ARMY_AT_LEAST);
 	final army2 = Math.min(Std.int(ctx.grids[gridId].army), SNATCH_ARMY_AT_LEAST);
 	final preResultOnSnatch = {
-		war:_getPreResultOfWar(ctx, playerId, gridId, p1PeopleId, p2PeopleId, army1, army2),
+		war: _getPreResultOfWar(ctx, playerId, gridId, p1PeopleId, p2PeopleId, army1, army2),
 		money: 10.0,
 		food: 10.0,
 	}
