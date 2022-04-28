@@ -1,4 +1,4 @@
-package model;
+package model.ver2;
 
 import model.IModel.PreResultOnSnatch;
 import model.IModel.SnatchPreview;
@@ -19,118 +19,10 @@ import model.IModel.PreResultOnNego;
 import model.IModel.HirePreview;
 import model.IModel.NegoPreview;
 import model.IModel.WarPreview;
+import model.ver2.Config;
+import model.ver2.Define;
 
 using Lambda;
-
-// 幾個回合加成(4人走完算1回合)
-// 作用中
-final PLAYER_EARN_PER_TURN = 2;
-
-// 主公支付的薪水為主公所有武將的價值參數(value)總合的%數
-// 主公支付的食物為所有格子上以及身上的士兵的數量的%數
-// 作用中
-final PLAYER_EARN_PER_TURN_PERSENT = 0.02;
-
-// 武將聘用價格%數
-final PEOPLE_HIRE_COST_FACTOR = .1;
-
-// 格子的成長週期
-// 格子依據自己的成長值成長
-// 格子的成長植受到該格子上的所有武將的智力(主要影響食物)、政治(主要影響金錢)、統率(主要影響士兵)影響
-// 作用中
-final GRID_EARN_PER_TURN = 1;
-
-// 格子的基本保底成長
-final BASIC_GROW_MONEY = 1;
-final BASIC_GROW_FOOD = 1;
-final BASIC_GROW_ARMY = 1;
-
-// 幾個回合收稅(4人走完算1回合)
-// 作用中
-final PLAYER_EARN_FROM_CITY_PER_TURN = 10;
-
-// 收稅:主公身上的資源增加，依據所有城池的金錢、食物、士兵、策略點(?)個別合計之後的%數
-// 實作成會從城中扣掉加到主公身上
-// 作用中
-final PLAYER_EARN_FROM_CITY_BY_TURN_PERSENT = .1;
-
-// 基本一單買糧買兵的的金錢
-// 作用中
-final MONEY_PER_DEAL = 100;
-
-// 基本一單賣糧的數目
-// 作用中
-final FOOD_PER_DEAL = 100;
-
-// 基本一單賣兵的數目
-// 作用中
-final ARMY_PER_DEAL = 100;
-
-// 戰鬥能力影響倍率
-final WAR_FRONT_ABILITY_FACTOR = 1.4;
-
-// 戰鬥支援能力，影響及金錢糧草
-final WAR_BACK_ABILITY_FACTOR = .7;
-
-// 戰鬥支付金錢整體調整
-final WAR_MONEY_COST_FACTOR = .05;
-
-// 戰鬥支付食物整體調整
-final WAR_FOOD_COST_FACTOR = 1.4;
-
-// 戰鬥防守方士兵加成
-final WAR_DEFFENDER_FACTOR = 4.0;
-
-// 兵數量差優勢, 越高代表影響越小
-final WAR_HIGH_LOW_FACTOR = 1.5;
-
-// 保底傷害, 1的話代表派100兵最少打100
-final WAR_ARMY_FACTOR = 0.3;
-
-// 戰爭最後係數
-final WAR_FINAL_DAMAGE_FACTOR = 0.75;
-
-// 每回合基本回體力
-final PEOPLE_ENERGY_SUPPLY_BASE = 0;
-
-// 每回合額外回復％數體力(體力越多回越快)
-final PEOPLE_ENERGY_SUPPLY_SAVE_FACTOR = 0.05;
-
-// 允許交涉加兵
-final ENABLE_NEGO_ARMY = true;
-
-// 派越少的兵力體力扣越少
-function getEnergyFactor(atkArmy:Float) {
-	return (Math.min(atkArmy / 500, 1) * .3 + .7);
-}
-
-final ENERGY_COST_ON_HIRE = 10;
-final ENERGY_COST_ON_NEGO = 20;
-final ENERGY_COST_ON_RESOURCE = 20;
-final ENERGY_COST_ON_EXPLORE = 30;
-final ENERGY_COST_ON_SNATCH = 30;
-final ENERGY_COST_ON_WAR = 70;
-final SNATCH_ARMY_AT_LEAST = 100;
-
-// 最低友好度
-final MIN_GRID_FAVOR = -3;
-
-// 最高友好度
-final MAX_GRID_FAVOR = 3;
-
-// 交涉失敗時討厭你的機率
-final NEGO_HATE_RATE = 0.15;
-
-// 交涉成功時喜歡你的機率
-final NEGO_LIKE_RATE = 0.7;
-
-// 搶奪時額外討厭你的機率
-final SNATCH_HATE_RATE = 0.3;
-
-// 基本值算法
-function getBase(useEnergy:Float, totalEnergy:Float = 30.0, offset:Float = 0.0, bottom:Float = 0.0):Float {
-	return Math.max((useEnergy / totalEnergy) + offset, bottom);
-}
 
 // 稅收
 // 主公會得到所有城池的成數
@@ -142,7 +34,7 @@ function getBase(useEnergy:Float, totalEnergy:Float = 30.0, offset:Float = 0.0, 
 // =========================================
 // 交涉計算
 // 參與能力為:7良官
-private function getNegoCost(ctx:Context, playerId:Int, gridId:Int, p1SelectId:Int, p2SelectId:Int) {
+function getNegoCost(ctx:Context, playerId:Int, gridId:Int, p1SelectId:Int, p2SelectId:Int) {
 	// 使用switch達成策略模式
 	// 0代表預設的隨意實作
 	return switch 0 {
@@ -200,7 +92,7 @@ private function getNegoCost(ctx:Context, playerId:Int, gridId:Int, p1SelectId:I
 }
 
 // 雇用計算
-private function getHireCost(ctx:Context, playerId:Int, gridId:Int, p1SelectId:Int, p2SelectId:Int) {
+function getHireCost(ctx:Context, playerId:Int, gridId:Int, p1SelectId:Int, p2SelectId:Int) {
 	return switch 0 {
 		case 0:
 			final grid = ctx.grids[gridId];
@@ -233,7 +125,7 @@ private function getHireCost(ctx:Context, playerId:Int, gridId:Int, p1SelectId:I
 }
 
 // 探索計算
-private function getExploreCost(ctx:Context, playerId:Int, gridId:Int, p1SelectId:Int) {
+function getExploreCost(ctx:Context, playerId:Int, gridId:Int, p1SelectId:Int) {
 	return switch 0 {
 		case 0:
 			final grid = ctx.grids[gridId];
@@ -265,7 +157,7 @@ private function getExploreCost(ctx:Context, playerId:Int, gridId:Int, p1SelectI
 // army:     ability 11
 // strategy: ability 3
 // 智力、政治、魅力也會影響最終數值
-private function getResourceCost(ctx:Context, playerId:Int, gridId:Int, p1SelectId:Int, market:MARKET, type:RESOURCE) {
+function getResourceCost(ctx:Context, playerId:Int, gridId:Int, p1SelectId:Int, market:MARKET, type:RESOURCE) {
 	trace("MondelVer2", "getResourceCost", market, type);
 	return switch 0 {
 		case 0:
@@ -342,7 +234,7 @@ private function getResourceCost(ctx:Context, playerId:Int, gridId:Int, p1Select
 // 攻擊方影響能力[0,1,2,3]         	 防守方影響能力[0,1,2,3,8,9];
 // 2022/4/26 測試到奇怪的現象，就是感覺就是强很多的武將，結果爲了打爆對方。糧食扣的比爛武將多。感覺很奇怪？
 // =================================
-private function getWarCost(ctx:Context, playerId:Int, gridId:Int, p1PeopleId:Int, p2PeopleId:Int, army1:Float, army2:Float, options:{occupy:Bool}) {
+function getWarCost(ctx:Context, playerId:Int, gridId:Int, p1PeopleId:Int, p2PeopleId:Int, army1:Float, army2:Float, options:{occupy:Bool}) {
 	var atkMoneyCost = 0.0;
 	var atkFoodCost = 0.0;
 	{
@@ -455,7 +347,7 @@ private function getWarCost(ctx:Context, playerId:Int, gridId:Int, p1PeopleId:In
 }
 
 // 玩家回合結束
-private function doPlayerEnd(ctx:Context) {
+function doPlayerEnd(ctx:Context) {
 	ctx.actions = [];
 	ctx.events = [];
 	// 四個玩家走完後才計算回合
@@ -597,320 +489,29 @@ private function doPlayerEnd(ctx:Context) {
 	ctx.currentPlayerId = (ctx.currentPlayerId + 1) % ctx.players.length;
 }
 
-private function getMaintainPeople(ctx:Context, playerId:Int):Float {
+function getMaintainPeople(ctx:Context, playerId:Int):Float {
 	final totalPeopleCost = ctx.peoples.filter(p -> p.belongToPlayerId == playerId).fold((p, a) -> {
 		return a + p.cost;
 	}, 0.0);
 	return getMaintainPeoplePure(totalPeopleCost);
 }
 
-private function getMaintainArmy(ctx:Context, playerId:Int):Float {
+function getMaintainArmy(ctx:Context, playerId:Int):Float {
 	final totalArmy = ctx.grids.filter(g -> getGridBelongPlayerId(ctx, g.id) == playerId).fold((p, a) -> {
 		return a + p.army;
 	}, 0.0) + ctx.players[playerId].army;
 	return getMaintainArmyPure(totalArmy);
 }
 
-private function getMaintainPeoplePure(totalPeopleCost:Float):Float {
+function getMaintainPeoplePure(totalPeopleCost:Float):Float {
 	return totalPeopleCost * PLAYER_EARN_PER_TURN_PERSENT;
 }
 
-private function getMaintainArmyPure(totalArmy:Float):Float {
+function getMaintainArmyPure(totalArmy:Float):Float {
 	return totalArmy * PLAYER_EARN_PER_TURN_PERSENT;
 }
 
-// =========================================
-// binding
-// =========================================
-class ModelVer2 extends DebugModel {
-	final context:Context = {
-		grids: [],
-		attachments: [],
-		peoples: [],
-		players: [],
-		currentPlayerId: 0,
-		actions: [],
-		events: [],
-		turn: 0
-	}
-
-	override function gameStart(cb:Void->Void):Void {
-		initContext(context, {});
-		cb();
-	}
-
-	override function gameInfo():GameInfo {
-		final info = getGameInfo(context, true);
-		js.Browser.console.log(info);
-		return info;
-	}
-
-	override function playerDice(cb:() -> Void) {
-		doPlayerDice(context);
-		cb();
-	}
-
-	override function playerEnd(cb:() -> Void) {
-		doPlayerEnd(context);
-		cb();
-	}
-
-	override function getTakeNegoPreview(playerId:Int, gridId:Int):NegoPreview {
-		return doGetTakeNegoPreview(context, playerId, gridId);
-	}
-
-	override function getPreResultOfNego(playerId:Int, gridId:Int, people:model.PeopleGenerator.People, invite:model.PeopleGenerator.People):PreResultOnNego {
-		return doGetPreResultOfNego(context, playerId, gridId, people.id, invite.id);
-	}
-
-	override function takeNegoOn(playerId:Int, gridId:Int, p1SelectId:Int, p2SelectId:Int, cb:(gameInfo:GameInfo) -> Void) {
-		doTakeNegoOn(context, playerId, gridId, p1SelectId, p2SelectId);
-		cb(gameInfo());
-	}
-
-	override function getTakeHirePreview(playerId:Int, gridId:Int):HirePreview {
-		return doGetTakeHirePreview(context, playerId, gridId);
-	}
-
-	override function getPreResultOfHire(playerId:Int, gridId:Int, people:model.PeopleGenerator.People, invite:model.PeopleGenerator.People):PreResultOnHire {
-		return doGetPreResultOfHire(context, playerId, gridId, people.id, invite.id);
-	}
-
-	override function takeHire(playerId:Int, gridId:Int, p1SelectId:Int, p2SelectId:Int, cb:(gameInfo:GameInfo) -> Void) {
-		doTakeHire(context, playerId, gridId, p1SelectId, p2SelectId);
-		cb(gameInfo());
-	}
-
-	override function getTakeExplorePreview(playerId:Int, gridId:Int):ExplorePreview {
-		return _getTakeExplorePreview(context, playerId, gridId);
-	}
-
-	override function getPreResultOfExplore(playerId:Int, gridId:Int, people:model.PeopleGenerator.People):PreResultOnExplore {
-		return _getPreResultOfExplore(context, playerId, gridId, people.id);
-	}
-
-	override function takeExplore(playerId:Int, gridId:Int, p1SelectId:Int, cb:(gameInfo:GameInfo) -> Void) {
-		_takeExplore(context, playerId, gridId, p1SelectId);
-		cb(gameInfo());
-	}
-
-	override function getTakeWarPreview(playerId:Int, gridId:Int):WarPreview {
-		return _getTakeWarPreview(context, playerId, gridId);
-	}
-
-	override function getPreResultOfWar(playerId:Int, gridId:Int, p1:model.PeopleGenerator.People, p2:model.PeopleGenerator.People, army1:Float,
-			army2:Float):Array<PreResultOnWar> {
-		return _getPreResultOfWar(context, playerId, gridId, p1.id, p2.id, army1, army2, {occupy: true});
-	}
-
-	override function takeWarOn(playerId:Int, gridId:Int, p1PeopleId:Int, p2PeopleId:Int, army1:Float, army2:Float, cb:(gameInfo:GameInfo) -> Void) {
-		_takeWarOn(context, playerId, gridId, p1PeopleId, p2PeopleId, army1, army2);
-		cb(gameInfo());
-	}
-
-	override function getTakeResourcePreview(playerId:Int, gridId:Int, market:MARKET, type:RESOURCE):ResourcePreview {
-		return _getTakeResourcePreview(context, playerId, gridId, market, type);
-	}
-
-	override function getPreResultOfResource(playerId:Int, gridId:Int, p1:model.PeopleGenerator.People, market:MARKET, type:RESOURCE):PreResultOnResource {
-		return _getPreResultOfResource(context, playerId, gridId, p1.id, market, type);
-	}
-
-	override function takeResource(playerId:Int, gridId:Int, p1PeopleId:Int, market:MARKET, type:RESOURCE, cb:(gameInfo:GameInfo) -> Void) {
-		_takeResource(context, playerId, gridId, p1PeopleId, market, type);
-		cb(gameInfo());
-	}
-
-	override function getPreResultOfFire(playerId:Int, p1PeopleId:Int):PreResultOnFire {
-		return _getPreResultOfFire(context, playerId, p1PeopleId);
-	}
-
-	override function takeFire(playerId:Int, p1PeopleId:Int, cb:(gameInfo:GameInfo) -> Void) {
-		_takeFire(context, playerId, p1PeopleId);
-		cb(gameInfo());
-	}
-
-	override function checkValidTransfer(playerId:Int, gridId:Int, playerInfo:model.IModel.PlayerInfo, gridInfo:model.GridGenerator.Grid):Bool {
-		js.Browser.console.log(playerInfo, gridInfo);
-		return _checkValidTransfer(context, playerId, gridId, playerInfo, gridInfo);
-	}
-
-	override function takeTransfer(playerId:Int, gridId:Int, playerInfo:model.IModel.PlayerInfo, gridInfo:model.GridGenerator.Grid,
-			cb:(gameInfo:GameInfo) -> Void) {
-		_takeTransfer(context, playerId, gridId, playerInfo, gridInfo);
-		cb(gameInfo());
-	}
-
-	override function getTakeSnatchPreview(playerId:Int, gridId:Int):SnatchPreview {
-		return _getTakeSnatchPreview(context, playerId, gridId);
-	}
-
-	override function getPreResultOfSnatch(playerId:Int, gridId:Int, p1:model.PeopleGenerator.People, p2:model.PeopleGenerator.People):PreResultOnSnatch {
-		return _getPreResultOfSnatch(context, playerId, gridId, p1.id, p2.id);
-	}
-
-	override function takeSnatchOn(playerId:Int, gridId:Int, p1PeopleId:Int, p2PeopleId:Int, cb:(gameInfo:GameInfo) -> Void) {
-		_takeSnatchOn(context, playerId, gridId, p1PeopleId, p2PeopleId);
-		cb(gameInfo());
-	}
-}
-
-private typedef Grid = {
-	id:Int,
-	buildtype:BUILDING,
-	money:Float,
-	food:Float,
-	army:Float,
-	moneyGrow:Float,
-	foodGrow:Float,
-	armyGrow:Float,
-	favor:Array<Int>,
-}
-
-private typedef Attachment = {
-	id:Int,
-	belongToGridId:Int
-}
-
-private typedef People = {
-	id:Int,
-	belongToPlayerId:Null<Int>,
-	position:{
-		gridId:Null<Int>, player:Bool
-	},
-	name:String,
-	force:Float,
-	intelligence:Float,
-	political:Float,
-	charm:Float,
-	cost:Float,
-	command:Float,
-	abilities:Array<Int>,
-	energy:Float
-}
-
-private typedef Player = {
-	id:Int,
-	name:String,
-	money:Float,
-	food:Float,
-	army:Float,
-	strategy:Float,
-	position:Int,
-}
-
-private enum Action {
-	MOVE(value:{
-		playerId:Int,
-		fromGridId:Int,
-		toGridId:Int,
-	}, gameInfo:GameInfo);
-}
-
-private enum Event {
-	WORLD_EVENT(value:{
-		playerBefore:Array<model.IModel.PlayerInfo>,
-		playerAfter:Array<model.IModel.PlayerInfo>,
-		gridBefore:Array<model.GridGenerator.Grid>,
-		gridAfter:Array<model.GridGenerator.Grid>
-	});
-	WALK_STOP(value:{
-		grid:model.GridGenerator.Grid,
-		commands:Array<Dynamic>,
-	});
-	NEGOTIATE_RESULT(value:{
-		success:Bool,
-		people:model.PeopleGenerator.People,
-		energyBefore:Float,
-		energyAfter:Float,
-		armyBefore:Float,
-		armyAfter:Float,
-		moneyBefore:Float,
-		moneyAfter:Float,
-		foodBefore:Float,
-		foodAfter:Float,
-	});
-	EXPLORE_RESULT(value:{
-		success:Bool,
-		people:model.PeopleGenerator.People,
-		peopleList:Array<model.PeopleGenerator.People>,
-		energyBefore:Float,
-		energyAfter:Float,
-		armyBefore:Float,
-		armyAfter:Float,
-		moneyBefore:Float,
-		moneyAfter:Float,
-		foodBefore:Float,
-		foodAfter:Float,
-	});
-	HIRE_RESULT(value:{
-		success:Bool,
-		people:model.PeopleGenerator.People,
-		energyBefore:Float,
-		energyAfter:Float,
-		armyBefore:Float,
-		armyAfter:Float,
-		moneyBefore:Float,
-		moneyAfter:Float,
-		foodBefore:Float,
-		foodAfter:Float,
-	});
-	WAR_RESULT(value:{
-		success:Bool,
-		people:model.PeopleGenerator.People,
-		energyBefore:Float,
-		energyAfter:Float,
-		armyBefore:Float,
-		armyAfter:Float,
-		moneyBefore:Float,
-		moneyAfter:Float,
-		foodBefore:Float,
-		foodAfter:Float,
-	});
-	SNATCH_RESULT(value:{
-		success:Bool,
-		people:model.PeopleGenerator.People,
-		energyBefore:Float,
-		energyAfter:Float,
-		armyBefore:Float,
-		armyAfter:Float,
-		moneyBefore:Float,
-		moneyAfter:Float,
-		foodBefore:Float,
-		foodAfter:Float,
-	});
-	RESOURCE_RESULT(value:{
-		success:Bool,
-		people:Null<model.PeopleGenerator.People>,
-		energyBefore:Float,
-		energyAfter:Float,
-		armyBefore:Float,
-		armyAfter:Float,
-		moneyBefore:Float,
-		moneyAfter:Float,
-		foodBefore:Float,
-		foodAfter:Float,
-	});
-	FIRE_RESULT(value:{
-		success:Bool,
-		people:model.PeopleGenerator.People,
-		maintainMoneyAfter:Float,
-		maintainMoneyBefore:Float,
-	});
-}
-
-private typedef Context = {
-	grids:Array<Grid>,
-	attachments:Array<Attachment>,
-	peoples:Array<People>,
-	players:Array<Player>,
-	currentPlayerId:Int,
-	actions:Array<Action>,
-	events:Array<Event>,
-	turn:Int
-}
-
-private function getPeopleInfo(ctx:Context, people:People):model.PeopleGenerator.People {
+function getPeopleInfo(ctx:Context, people:People):model.PeopleGenerator.People {
 	return {
 		id: people.id,
 		type: 0,
@@ -927,7 +528,7 @@ private function getPeopleInfo(ctx:Context, people:People):model.PeopleGenerator
 	}
 }
 
-private function getPlayerInfo(ctx:Context, player:Player):model.IModel.PlayerInfo {
+function getPlayerInfo(ctx:Context, player:Player):model.IModel.PlayerInfo {
 	return {
 		id: player.id,
 		name: player.name,
@@ -943,12 +544,12 @@ private function getPlayerInfo(ctx:Context, player:Player):model.IModel.PlayerIn
 	}
 }
 
-private function getGridBelongPlayerId(ctx:Context, gridId:Int):Null<Int> {
+function getGridBelongPlayerId(ctx:Context, gridId:Int):Null<Int> {
 	final peopleInGrid = ctx.peoples.filter(p -> p.position.gridId == gridId);
 	return peopleInGrid.length > 0 ? peopleInGrid[0].belongToPlayerId : null;
 }
 
-private function getGridInfo(ctx:Context, grid:Grid):model.GridGenerator.Grid {
+function getGridInfo(ctx:Context, grid:Grid):model.GridGenerator.Grid {
 	final peopleInGrid = ctx.peoples.filter(p -> p.position.gridId == grid.id);
 	return {
 		id: grid.id,
@@ -969,7 +570,7 @@ private function getGridInfo(ctx:Context, grid:Grid):model.GridGenerator.Grid {
 	}
 }
 
-private function getGameInfo(ctx:Context, root:Bool):GameInfo {
+function getGameInfo(ctx:Context, root:Bool):GameInfo {
 	return {
 		players: ctx.players.map(p -> getPlayerInfo(ctx, p)),
 		grids: ctx.grids.map(p -> getGridInfo(ctx, p)),
@@ -1041,7 +642,7 @@ private function getGameInfo(ctx:Context, root:Bool):GameInfo {
 	}
 }
 
-private function addGridInfo(ctx:Context, grid:model.GridGenerator.Grid):Void {
+function addGridInfo(ctx:Context, grid:model.GridGenerator.Grid):Void {
 	ctx.grids.push({
 		id: grid.id,
 		buildtype: grid.buildtype,
@@ -1074,7 +675,7 @@ private function addGridInfo(ctx:Context, grid:model.GridGenerator.Grid):Void {
 	}
 }
 
-private function addPeopleInfo(ctx:Context, belongToPlayerId:Null<Int>, gridId:Null<Int>, p:model.PeopleGenerator.People):Void {
+function addPeopleInfo(ctx:Context, belongToPlayerId:Null<Int>, gridId:Null<Int>, p:model.PeopleGenerator.People):Void {
 	ctx.peoples.push({
 		id: p.id,
 		belongToPlayerId: belongToPlayerId,
@@ -1094,7 +695,7 @@ private function addPeopleInfo(ctx:Context, belongToPlayerId:Null<Int>, gridId:N
 	});
 }
 
-private function addPlayerInfo(ctx:Context, player:model.IModel.PlayerInfo):Void {
+function addPlayerInfo(ctx:Context, player:model.IModel.PlayerInfo):Void {
 	ctx.players.push({
 		id: player.id,
 		name: player.name,
@@ -1125,7 +726,7 @@ private function addPlayerInfo(ctx:Context, player:model.IModel.PlayerInfo):Void
 	}
 }
 
-private function initContext(ctx:Context, option:{}) {
+function initContext(ctx:Context, option:{}) {
 	final genGrids = model.GridGenerator.getInst().getGrids(30);
 	for (grid in genGrids) {
 		addGridInfo(ctx, grid);
@@ -1153,7 +754,7 @@ private function initContext(ctx:Context, option:{}) {
 	}
 }
 
-private function getPeopleById(ctx:Context, id:Int):People {
+function getPeopleById(ctx:Context, id:Int):People {
 	final find = ctx.peoples.filter(p -> p.id == id);
 	if (find.length == 0) {
 		throw new haxe.Exception('people not found: ${id}');
@@ -1161,7 +762,7 @@ private function getPeopleById(ctx:Context, id:Int):People {
 	return find[0];
 }
 
-private function doPlayerDice(ctx:Context) {
+function doPlayerDice(ctx:Context) {
 	final activePlayerId = ctx.currentPlayerId;
 	final player = ctx.players[activePlayerId];
 	final fromGridId = player.position;
@@ -1188,14 +789,14 @@ private function doPlayerDice(ctx:Context) {
 // 交涉
 // 向城池奪取%資源
 // =================================
-private function doGetTakeNegoPreview(ctx:Context, playerId:Int, gridId:Int):NegoPreview {
+function doGetTakeNegoPreview(ctx:Context, playerId:Int, gridId:Int):NegoPreview {
 	return {
 		p1ValidPeople: getPlayerInfo(ctx, ctx.players[playerId]).people,
 		p2ValidPeople: getGridInfo(ctx, ctx.grids[gridId]).people,
 	};
 }
 
-private function doGetPreResultOfNego(ctx:Context, playerId:Int, gridId:Int, peopleId:Int, inviteId:Int):PreResultOnNego {
+function doGetPreResultOfNego(ctx:Context, playerId:Int, gridId:Int, peopleId:Int, inviteId:Int):PreResultOnNego {
 	final player = ctx.players[playerId];
 	final people = getPeopleById(ctx, peopleId);
 	final negoCost = getNegoCost(ctx, playerId, gridId, peopleId, inviteId);
@@ -1217,7 +818,7 @@ private function doGetPreResultOfNego(ctx:Context, playerId:Int, gridId:Int, peo
 	};
 }
 
-private function doTakeNegoOn(ctx:Context, playerId:Int, gridId:Int, p1SelectId:Int, p2SelectId:Int) {
+function doTakeNegoOn(ctx:Context, playerId:Int, gridId:Int, p1SelectId:Int, p2SelectId:Int) {
 	final p1 = getPeopleById(ctx, p1SelectId);
 	final p2 = getPeopleById(ctx, p2SelectId);
 	final player = ctx.players[playerId];
@@ -1244,7 +845,7 @@ private function doTakeNegoOn(ctx:Context, playerId:Int, gridId:Int, p1SelectId:
 	ctx.events = [Event.NEGOTIATE_RESULT(resultValue)];
 }
 
-private function applyNegoCost(ctx:Context, playerId:Int, gridId:Int, p1SelectId:Int, p2SelectId:Int):Bool {
+function applyNegoCost(ctx:Context, playerId:Int, gridId:Int, p1SelectId:Int, p2SelectId:Int):Bool {
 	final negoCost = getNegoCost(ctx, playerId, gridId, p1SelectId, p2SelectId);
 	// 無論成功或失敗武將先消體力
 	final people = getPeopleById(ctx, p1SelectId);
@@ -1289,14 +890,14 @@ private function applyNegoCost(ctx:Context, playerId:Int, gridId:Int, p1SelectId
 	return true;
 }
 
-private function doGetTakeHirePreview(ctx:Context, playerId:Int, gridId:Int):HirePreview {
+function doGetTakeHirePreview(ctx:Context, playerId:Int, gridId:Int):HirePreview {
 	return {
 		p1ValidPeople: getPlayerInfo(ctx, ctx.players[playerId]).people,
 		p2ValidPeople: getGridInfo(ctx, ctx.grids[gridId]).people,
 	};
 }
 
-private function doGetPreResultOfHire(ctx:Context, playerId:Int, gridId:Int, peopleId:Int, inviteId:Int):PreResultOnHire {
+function doGetPreResultOfHire(ctx:Context, playerId:Int, gridId:Int, peopleId:Int, inviteId:Int):PreResultOnHire {
 	final player = ctx.players[playerId];
 	final cost = getHireCost(ctx, playerId, gridId, peopleId, inviteId);
 	final p1 = getPeopleById(ctx, peopleId);
@@ -1314,7 +915,7 @@ private function doGetPreResultOfHire(ctx:Context, playerId:Int, gridId:Int, peo
 	}
 }
 
-private function doTakeHire(ctx:Context, playerId:Int, gridId:Int, p1SelectId:Int, p2SelectId:Int) {
+function doTakeHire(ctx:Context, playerId:Int, gridId:Int, p1SelectId:Int, p2SelectId:Int) {
 	final p1 = getPeopleById(ctx, p1SelectId);
 	final p2 = getPeopleById(ctx, p2SelectId);
 	final player = ctx.players[playerId];
@@ -1339,7 +940,7 @@ private function doTakeHire(ctx:Context, playerId:Int, gridId:Int, p1SelectId:In
 	ctx.events = [Event.HIRE_RESULT(resultValue)];
 }
 
-private function applyHireCost(ctx:Context, playerId:Int, gridId:Int, p1SelectId:Int, p2SelectId:Int):Bool {
+function applyHireCost(ctx:Context, playerId:Int, gridId:Int, p1SelectId:Int, p2SelectId:Int):Bool {
 	final negoCost = getHireCost(ctx, playerId, gridId, p1SelectId, p2SelectId);
 	// 無論成功或失敗武將先消體力
 	final people = getPeopleById(ctx, p1SelectId);
@@ -1374,13 +975,13 @@ private function applyHireCost(ctx:Context, playerId:Int, gridId:Int, p1SelectId
 // =================================
 // 探索
 // ================================
-private function _getTakeExplorePreview(ctx:Context, playerId:Int, gridId:Int):ExplorePreview {
+function _getTakeExplorePreview(ctx:Context, playerId:Int, gridId:Int):ExplorePreview {
 	return {
 		p1ValidPeople: getPlayerInfo(ctx, ctx.players[playerId]).people
 	};
 }
 
-private function _getPreResultOfExplore(ctx:Context, playerId:Int, gridId:Int, peopleId:Int):PreResultOnExplore {
+function _getPreResultOfExplore(ctx:Context, playerId:Int, gridId:Int, peopleId:Int):PreResultOnExplore {
 	final cost = getExploreCost(ctx, playerId, gridId, peopleId);
 	final p1 = getPeopleById(ctx, peopleId);
 	return {
@@ -1390,7 +991,7 @@ private function _getPreResultOfExplore(ctx:Context, playerId:Int, gridId:Int, p
 	}
 }
 
-private function _takeExplore(ctx:Context, playerId:Int, gridId:Int, p1SelectId:Int) {
+function _takeExplore(ctx:Context, playerId:Int, gridId:Int, p1SelectId:Int) {
 	final p1 = getPeopleById(ctx, p1SelectId);
 	final player = ctx.players[playerId];
 	final resultValue = {
@@ -1416,7 +1017,7 @@ private function _takeExplore(ctx:Context, playerId:Int, gridId:Int, p1SelectId:
 	ctx.events = [Event.EXPLORE_RESULT(resultValue)];
 }
 
-private function applyExploreCost(ctx:Context, playerId:Int, gridId:Int, p1SelectId:Int):Array<Int> {
+function applyExploreCost(ctx:Context, playerId:Int, gridId:Int, p1SelectId:Int):Array<Int> {
 	final negoCost = getExploreCost(ctx, playerId, gridId, p1SelectId);
 	// 無論成功或失敗武將先消體力
 	final people = getPeopleById(ctx, p1SelectId);
@@ -1437,7 +1038,7 @@ private function applyExploreCost(ctx:Context, playerId:Int, gridId:Int, p1Selec
 	return [newPeople.id];
 }
 
-private function _getTakeWarPreview(ctx:Context, playerId:Int, gridId:Int):WarPreview {
+function _getTakeWarPreview(ctx:Context, playerId:Int, gridId:Int):WarPreview {
 	final grid = ctx.grids[gridId];
 	if (grid.buildtype == BUILDING.EMPTY) {
 		throw new haxe.Exception("空地不能攻擊");
@@ -1474,7 +1075,7 @@ private function _getTakeWarPreview(ctx:Context, playerId:Int, gridId:Int):WarPr
 	}
 }
 
-private function _getPreResultOfWar(ctx:Context, playerId:Int, gridId:Int, p1PeopleId:Int, p2PeopleId:Int, army1:Float, army2:Float,
+function _getPreResultOfWar(ctx:Context, playerId:Int, gridId:Int, p1PeopleId:Int, p2PeopleId:Int, army1:Float, army2:Float,
 		options:{occupy:Bool}):Array<PreResultOnWar> {
 	return switch getWarCost(ctx, playerId, gridId, p1PeopleId, p2PeopleId, army1, army2, options) {
 		case {playerCost: [playerCost1, playerCost2], peopleCost: [peopleCost1, peopleCost2]}:
@@ -1513,7 +1114,7 @@ private function _getPreResultOfWar(ctx:Context, playerId:Int, gridId:Int, p1Peo
 	}
 }
 
-private function _takeWarOn(ctx:Context, playerId:Int, gridId:Int, p1PeopleId:Int, p2PeopleId:Int, army1:Float, army2:Float) {
+function _takeWarOn(ctx:Context, playerId:Int, gridId:Int, p1PeopleId:Int, p2PeopleId:Int, army1:Float, army2:Float) {
 	final people1 = getPeopleById(ctx, p1PeopleId);
 	final people2 = getPeopleById(ctx, p2PeopleId);
 	final player = ctx.players[playerId];
@@ -1538,7 +1139,7 @@ private function _takeWarOn(ctx:Context, playerId:Int, gridId:Int, p1PeopleId:In
 	ctx.events = [Event.WAR_RESULT(resultValue)];
 }
 
-private function applyWarCost(ctx:Context, playerId:Int, gridId:Int, p1PeopleId:Int, p2PeopleId:Int, army1:Float, army2:Float, options:{occupy:Bool}):Bool {
+function applyWarCost(ctx:Context, playerId:Int, gridId:Int, p1PeopleId:Int, p2PeopleId:Int, army1:Float, army2:Float, options:{occupy:Bool}):Bool {
 	switch getWarCost(ctx, playerId, gridId, p1PeopleId, p2PeopleId, army1, army2, options) {
 		case {playerCost: [playerCost1, playerCost2], peopleCost: [peopleCost1, peopleCost2], success: success}:
 			// 無論成功或失敗武將先消體力
@@ -1628,13 +1229,13 @@ private function applyWarCost(ctx:Context, playerId:Int, gridId:Int, p1PeopleId:
 // 2022/4/26 希望演算法可以把當前格子的資源量納入計算，資源越多，可以得到越多
 // 2022/4/26 這個交易的資源也是會影響格子裏的資源量。就是經過交易后變少或變多
 // =================================
-private function _getTakeResourcePreview(ctx:Context, playerId:Int, gridId:Int, market:MARKET, type:RESOURCE):ResourcePreview {
+function _getTakeResourcePreview(ctx:Context, playerId:Int, gridId:Int, market:MARKET, type:RESOURCE):ResourcePreview {
 	return {
 		p1ValidPeople: getPlayerInfo(ctx, ctx.players[playerId]).people
 	};
 }
 
-private function _getPreResultOfResource(ctx:Context, playerId:Int, gridId:Int, peopleId:Int, market:MARKET, type:RESOURCE):PreResultOnResource {
+function _getPreResultOfResource(ctx:Context, playerId:Int, gridId:Int, peopleId:Int, market:MARKET, type:RESOURCE):PreResultOnResource {
 	final player = ctx.players[playerId];
 	final cost = getResourceCost(ctx, playerId, gridId, peopleId, market, type);
 	final p1 = getPeopleById(ctx, peopleId);
@@ -1652,7 +1253,7 @@ private function _getPreResultOfResource(ctx:Context, playerId:Int, gridId:Int, 
 	}
 }
 
-private function _takeResource(ctx:Context, playerId:Int, gridId:Int, p1SelectId:Int, market:MARKET, type:RESOURCE) {
+function _takeResource(ctx:Context, playerId:Int, gridId:Int, p1SelectId:Int, market:MARKET, type:RESOURCE) {
 	final p1 = getPeopleById(ctx, p1SelectId);
 	final player = ctx.players[playerId];
 	final resultValue = {
@@ -1675,7 +1276,7 @@ private function _takeResource(ctx:Context, playerId:Int, gridId:Int, p1SelectId
 	ctx.events = [Event.RESOURCE_RESULT(resultValue)];
 }
 
-private function applyResourceCost(ctx:Context, playerId:Int, gridId:Int, p1SelectId:Int, market:MARKET, type:RESOURCE) {
+function applyResourceCost(ctx:Context, playerId:Int, gridId:Int, p1SelectId:Int, market:MARKET, type:RESOURCE) {
 	final negoCost = getResourceCost(ctx, playerId, gridId, p1SelectId, market, type);
 	// 無論成功或失敗武將先消體力
 	final people = getPeopleById(ctx, p1SelectId);
@@ -1720,7 +1321,7 @@ private function applyResourceCost(ctx:Context, playerId:Int, gridId:Int, p1Sele
 	}
 }
 
-private function _getPreResultOfFire(ctx:Context, playerId:Int, p1PeopleId:Int):PreResultOnFire {
+function _getPreResultOfFire(ctx:Context, playerId:Int, p1PeopleId:Int):PreResultOnFire {
 	final totalPeopleCost = ctx.peoples.filter(p -> p.belongToPlayerId == playerId).fold((p, a) -> {
 		if (p.id == p1PeopleId) {
 			return a;
@@ -1733,7 +1334,7 @@ private function _getPreResultOfFire(ctx:Context, playerId:Int, p1PeopleId:Int):
 	}
 }
 
-private function _takeFire(ctx:Context, playerId:Int, p1PeopleId:Int) {
+function _takeFire(ctx:Context, playerId:Int, p1PeopleId:Int) {
 	final people = getPeopleById(ctx, p1PeopleId);
 	final resultValue = {
 		success: true,
@@ -1750,7 +1351,7 @@ private function _takeFire(ctx:Context, playerId:Int, p1PeopleId:Int) {
 // 可能不成的情況是
 // 把已經有駐守在別的地方的武將派到這裡來
 // 或者前端沒有派任何武將到這個格子上
-private function _checkValidTransfer(ctx:Context, playerId:Int, gridId:Int, playerInfo:model.IModel.PlayerInfo, gridInfo:model.GridGenerator.Grid):Bool {
+function _checkValidTransfer(ctx:Context, playerId:Int, gridId:Int, playerInfo:model.IModel.PlayerInfo, gridInfo:model.GridGenerator.Grid):Bool {
 	for (people in gridInfo.people) {
 		final originPeople = getPeopleById(ctx, people.id);
 		if (originPeople.position.gridId != null && originPeople.position.gridId != gridId) {
@@ -1761,7 +1362,7 @@ private function _checkValidTransfer(ctx:Context, playerId:Int, gridId:Int, play
 	return true;
 }
 
-private function _takeTransfer(ctx:Context, playerId:Int, gridId:Int, playerInfo:model.IModel.PlayerInfo, gridInfo:model.GridGenerator.Grid) {
+function _takeTransfer(ctx:Context, playerId:Int, gridId:Int, playerInfo:model.IModel.PlayerInfo, gridInfo:model.GridGenerator.Grid) {
 	final player = ctx.players[playerId];
 	final resultValue = {
 		success: false,
@@ -1783,7 +1384,7 @@ private function _takeTransfer(ctx:Context, playerId:Int, gridId:Int, playerInfo
 	ctx.events = [Event.RESOURCE_RESULT(resultValue)];
 }
 
-private function applyTransfer(ctx:Context, playerId:Int, gridId:Int, playerInfo:model.IModel.PlayerInfo, gridInfo:model.GridGenerator.Grid) {
+function applyTransfer(ctx:Context, playerId:Int, gridId:Int, playerInfo:model.IModel.PlayerInfo, gridInfo:model.GridGenerator.Grid) {
 	final player = ctx.players[playerId];
 	final grid = ctx.grids[gridId];
 	player.food = playerInfo.food;
@@ -1806,7 +1407,7 @@ private function applyTransfer(ctx:Context, playerId:Int, gridId:Int, playerInfo
 	}
 }
 
-private function _getTakeSnatchPreview(ctx:Context, playerId:Int, gridId:Int):SnatchPreview {
+function _getTakeSnatchPreview(ctx:Context, playerId:Int, gridId:Int):SnatchPreview {
 	final warPreview = _getTakeWarPreview(ctx, playerId, gridId);
 	return {
 		p1ValidPeople: warPreview.p1ValidPeople,
@@ -1816,7 +1417,7 @@ private function _getTakeSnatchPreview(ctx:Context, playerId:Int, gridId:Int):Sn
 	};
 }
 
-private function _getPreResultOfSnatch(ctx:Context, playerId:Int, gridId:Int, p1PeopleId:Int, p2PeopleId:Int):PreResultOnSnatch {
+function _getPreResultOfSnatch(ctx:Context, playerId:Int, gridId:Int, p1PeopleId:Int, p2PeopleId:Int):PreResultOnSnatch {
 	final army1 = Math.min(Std.int(ctx.players[playerId].army), SNATCH_ARMY_AT_LEAST);
 	final army2 = Math.min(Std.int(ctx.grids[gridId].army), SNATCH_ARMY_AT_LEAST);
 	final cost = getSnatchCost(ctx, playerId, gridId, p1PeopleId, p2PeopleId, army1, army2);
@@ -1829,7 +1430,7 @@ private function _getPreResultOfSnatch(ctx:Context, playerId:Int, gridId:Int, p1
 	return preResultOnSnatch;
 }
 
-private function getSnatchCost(ctx:Context, playerId:Int, gridId:Int, p1PeopleId:Int, p2PeopleId:Int, army1:Float, army2:Float) {
+function getSnatchCost(ctx:Context, playerId:Int, gridId:Int, p1PeopleId:Int, p2PeopleId:Int, army1:Float, army2:Float) {
 	final warCost = getWarCost(ctx, playerId, gridId, p1PeopleId, p2PeopleId, army1, army2, {occupy: false});
 	final negoCost = getNegoCost(ctx, playerId, gridId, p1PeopleId, p2PeopleId);
 	final grid = ctx.grids[gridId];
@@ -1841,7 +1442,7 @@ private function getSnatchCost(ctx:Context, playerId:Int, gridId:Int, p1PeopleId
 	}
 }
 
-private function applySnatchCost(ctx:Context, playerId:Int, gridId:Int, p1PeopleId:Int, p2PeopleId:Int, army1:Float, army2:Float):Bool {
+function applySnatchCost(ctx:Context, playerId:Int, gridId:Int, p1PeopleId:Int, p2PeopleId:Int, army1:Float, army2:Float):Bool {
 	applyWarCost(ctx, playerId, gridId, p1PeopleId, p2PeopleId, army1, army2, {occupy: false});
 	final cost = getSnatchCost(ctx, playerId, gridId, p1PeopleId, p2PeopleId, army1, army2);
 	if (cost.success == false) {
@@ -1862,7 +1463,7 @@ private function applySnatchCost(ctx:Context, playerId:Int, gridId:Int, p1People
 	return true;
 }
 
-private function _takeSnatchOn(ctx:Context, playerId:Int, gridId:Int, p1PeopleId:Int, p2PeopleId:Int) {
+function _takeSnatchOn(ctx:Context, playerId:Int, gridId:Int, p1PeopleId:Int, p2PeopleId:Int) {
 	final people1 = getPeopleById(ctx, p1PeopleId);
 	final people2 = getPeopleById(ctx, p2PeopleId);
 	final player = ctx.players[playerId];

@@ -12,7 +12,7 @@ import model.IModel;
 import view.MainView;
 import haxe.ui.HaxeUIApp;
 import model.ModelVer1;
-import model.ModelVer2;
+import model.ver2.ModelVer2;
 import model.ModelWisp;
 import model.TestExploreModel;
 
@@ -45,37 +45,37 @@ class Main {
 
 	public static function getAbilityString(p:People, abilitys:Array<Int>) {
 		var abiString = '';
-		for(ability in abilitys){
-			if(p.abilities.indexOf(ability) > -1){
+		for (ability in abilitys) {
+			if (p.abilities.indexOf(ability) > -1) {
 				abiString += PeopleGenerator.getInst().getAbilityName(ability) + ' ';
 			}
 		}
 		return abiString;
 	}
 
-	public static function clamp(value:Float, min:Float = 0, max:Float = 1):Float{
+	public static function clamp(value:Float, min:Float = 0, max:Float = 1):Float {
 		value = Math.min(value, 1);
 		value = Math.max(value, 0);
 		return value;
 	}
 
 	public static function getVSString(p1Value:Float, p2Value:Float):String {
-		final symbol:String = if(p1Value / p2Value > 2.0){
+		final symbol:String = if (p1Value / p2Value > 2.0) {
 			"OOO";
-		}else if(p1Value / p2Value > 1.5){
+		} else if (p1Value / p2Value > 1.5) {
 			"OO";
-		}else if(p1Value / p2Value > 1.0){
+		} else if (p1Value / p2Value > 1.0) {
 			"O";
-		}else if(p1Value / p2Value > 0.7){
+		} else if (p1Value / p2Value > 0.7) {
 			"X";
-		}else {
+		} else {
 			"XX";
 		}
-		return '${p1Value} vs ${p2Value} (${ symbol })';
+		return '${p1Value} vs ${p2Value} (${symbol})';
 	}
-	
+
 	public static function getEnergyString(before:Float, after:Float, max:Float):String {
-		return'${before} => ${after} (${getRateString((before-after)/max)})';
+		return '${before} => ${after} (${getRateString((before - after) / max)})';
 	}
 
 	// public static function getFavorString(favor:Int):String {
@@ -93,15 +93,15 @@ class Main {
 	// }
 
 	public static function getFavorString(favor:Int):String {
-		return if(favor <= -2){
+		return if (favor <= -2) {
 			'(ﾟ皿ﾟﾒ)';
-		}else if(favor <= -1){
+		} else if (favor <= -1) {
 			'(`д´)/';
-		}else if(favor <= 0){
+		} else if (favor <= 0) {
 			'(⁰▿⁰)';
-		}else if(favor <= 1){
+		} else if (favor <= 1) {
 			'\\(^u^)/';
-		}else{
+		} else {
 			'(*´∀`)~♥';
 		}
 	}
