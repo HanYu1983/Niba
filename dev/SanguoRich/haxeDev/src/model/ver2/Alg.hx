@@ -822,6 +822,7 @@ function doTakeNegoOn(ctx:Context, playerId:Int, gridId:Int, p1SelectId:Int, p2S
 	final p1 = getPeopleById(ctx, p1SelectId);
 	final p2 = getPeopleById(ctx, p2SelectId);
 	final player = ctx.players[playerId];
+	final grid = ctx.grids[gridId];
 	final resultValue = {
 		success: false,
 		people: getPeopleInfo(ctx, p1),
@@ -833,8 +834,8 @@ function doTakeNegoOn(ctx:Context, playerId:Int, gridId:Int, p1SelectId:Int, p2S
 		moneyAfter: player.money,
 		foodBefore: player.food,
 		foodAfter: player.food,
-		favorBefore: 0,
-		favorAfter: 0,
+		favorBefore: grid.favor[playerId],
+		favorAfter: grid.favor[playerId],
 	}
 	final success = applyNegoCost(ctx, playerId, gridId, p1SelectId, p2SelectId);
 	resultValue.success = success;
@@ -842,6 +843,7 @@ function doTakeNegoOn(ctx:Context, playerId:Int, gridId:Int, p1SelectId:Int, p2S
 	resultValue.armyAfter = player.army;
 	resultValue.moneyAfter = player.money;
 	resultValue.foodAfter = player.food;
+	resultValue.favorAfter = grid.favor[playerId];
 	ctx.events = [Event.NEGOTIATE_RESULT(resultValue)];
 }
 
