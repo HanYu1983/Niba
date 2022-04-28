@@ -1197,6 +1197,8 @@ private function doTakeNegoOn(ctx:Context, playerId:Int, gridId:Int, p1SelectId:
 		moneyAfter: player.money,
 		foodBefore: player.food,
 		foodAfter: player.food,
+		favorBefore:0,
+		favorAfter:0,
 	}
 	final success = applyNegoCost(ctx, playerId, gridId, p1SelectId, p2SelectId);
 	resultValue.success = success;
