@@ -88,7 +88,7 @@ final WAR_HIGH_LOW_FACTOR = 1.5;
 final WAR_ARMY_FACTOR = 0.3;
 
 // 戰爭最後係數
-final WAR_FINAL_DAMAGE_FACTOR = 0.5;
+final WAR_FINAL_DAMAGE_FACTOR = 0.75;
 
 // 每回合基本回體力
 final PEOPLE_ENERGY_SUPPLY_BASE = 0;
@@ -700,7 +700,7 @@ class ModelVer2 extends DebugModel {
 
 	override function getPreResultOfWar(playerId:Int, gridId:Int, p1:model.PeopleGenerator.People, p2:model.PeopleGenerator.People, army1:Float,
 			army2:Float):Array<PreResultOnWar> {
-		return _getPreResultOfWar(context, playerId, gridId, p1.id, p2.id, army1, army2);
+		return _getPreResultOfWar(context, playerId, gridId, p1.id, p2.id, army1, army2, {occupy: true});
 	}
 
 	override function takeWarOn(playerId:Int, gridId:Int, p1PeopleId:Int, p2PeopleId:Int, army1:Float, army2:Float, cb:(gameInfo:GameInfo) -> Void) {
@@ -1474,8 +1474,9 @@ private function _getTakeWarPreview(ctx:Context, playerId:Int, gridId:Int):WarPr
 	}
 }
 
-private function _getPreResultOfWar(ctx:Context, playerId:Int, gridId:Int, p1PeopleId:Int, p2PeopleId:Int, army1:Float, army2:Float):Array<PreResultOnWar> {
-	return switch getWarCost(ctx, playerId, gridId, p1PeopleId, p2PeopleId, army1, army2, {occupy: true}) {
+private function _getPreResultOfWar(ctx:Context, playerId:Int, gridId:Int, p1PeopleId:Int, p2PeopleId:Int, army1:Float, army2:Float,
+		options:{occupy:Bool}):Array<PreResultOnWar> {
+	return switch getWarCost(ctx, playerId, gridId, p1PeopleId, p2PeopleId, army1, army2, options) {
 		case {playerCost: [playerCost1, playerCost2], peopleCost: [peopleCost1, peopleCost2]}:
 			final player1 = ctx.players[playerId];
 			final grid = ctx.grids[gridId];
@@ -1820,10 +1821,11 @@ private function _getPreResultOfSnatch(ctx:Context, playerId:Int, gridId:Int, p1
 	final army2 = Math.min(Std.int(ctx.grids[gridId].army), SNATCH_ARMY_AT_LEAST);
 	final cost = getSnatchCost(ctx, playerId, gridId, p1PeopleId, p2PeopleId, army1, army2);
 	final preResultOnSnatch = {
-		war: _getPreResultOfWar(ctx, playerId, gridId, p1PeopleId, p2PeopleId, army1, army2),
+		war: _getPreResultOfWar(ctx, playerId, gridId, p1PeopleId, p2PeopleId, army1, army2, {occupy: false}),
 		money: cost.money,
 		food: cost.food,
 	}
+	// js.Browser.console.log(preResultOnSnatch);
 	return preResultOnSnatch;
 }
 
