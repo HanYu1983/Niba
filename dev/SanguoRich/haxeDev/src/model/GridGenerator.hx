@@ -90,7 +90,7 @@ class GridGenerator {
 			    BUILDING.CITY
 			][Math.floor(Math.random() * 10)];
 
-			final basicArmy = getRandomRange(150, 50);
+			final basicArmy = getRandomRange(100, 40);
 
 			g.moneyGrow = Math.random() * .01;
 			g.foodGrow = Math.random() * .01;
@@ -105,6 +105,7 @@ class GridGenerator {
 					g.moneyGrow = 0;
 					g.foodGrow = 0;
 					g.armyGrow = 0;
+					g.people.push(PeopleGenerator.getInst().generate());
 				case MARKET:
 					g.money = getRandomRange(120, 80);
 					g.food = getRandomRange(60, 50);

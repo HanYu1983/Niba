@@ -33,7 +33,7 @@ using Lambda;
 // 所以可以把回傳最多欄位的放在case的第1個, 讓編譯器告訴你其它的回傳少了哪些欄位
 // =========================================
 // 交涉計算
-// 參與能力為:7良官
+// 參與能力為:7良官 
 function getNegoCost(ctx:Context, playerId:Int, gridId:Int, p1SelectId:Int, p2SelectId:Int) {
 	// 使用switch達成策略模式
 	// 0代表預設的隨意實作
@@ -47,20 +47,22 @@ function getNegoCost(ctx:Context, playerId:Int, gridId:Int, p1SelectId:Int, p2Se
 					// 體力越少效率越低
 					final useEnergy = p1.energy / (100 / ENERGY_COST_ON_NEGO);
 					// 使用20體力的情況下基礎值為0.5
-					final base = getBase(useEnergy, ENERGY_COST_ON_NEGO, -.4);
+					final base = getBase(useEnergy, ENERGY_COST_ON_NEGO, -.15);
 					final intelligenceFactor = p1.intelligence / p2.intelligence;
 					final politicalFactor = p1.political / p2.political;
 					final charmFactor = p1.charm / p2.charm;
-					// 良官加成
+					// 良官加成(決定勝率)
 					final abiFactor = p1.abilities.has(7) ? 1.5 : 1;
 					final rate = base * intelligenceFactor * politicalFactor * charmFactor * abiFactor;
-					final gainRate = 0.1 * rate + 0.1;
+
+					// 商才，務農，徵兵分別可以提高獲得數量
+					final gainRate = 0.05 * rate + .1;
 					{
 						playerCost: {
 							id: playerId,
-							army: ENABLE_NEGO_ARMY ? grid.army * gainRate : 0.0,
-							money: grid.money * gainRate,
-							food: grid.food * gainRate
+							army: ENABLE_NEGO_ARMY ? grid.army * (gainRate + (p1.abilities.has(11) ? .05 : 0)) : 0.0,
+							money: grid.money * (gainRate + (p1.abilities.has(4) ? .05 : 0)),
+							food: grid.food * (gainRate + (p1.abilities.has(5) ? .05 : 0))
 						},
 						peopleCost: {
 							id: p1.id,
@@ -100,7 +102,7 @@ function getHireCost(ctx:Context, playerId:Int, gridId:Int, p1SelectId:Int, p2Se
 			return switch fightPeople {
 				case [p1, p2]:
 					final useEnergy = p1.energy / (100 / ENERGY_COST_ON_HIRE);
-					final base = getBase(useEnergy, ENERGY_COST_ON_HIRE, -.3);
+					final base = getBase(useEnergy, ENERGY_COST_ON_HIRE, -.1);
 					final charmFactor = p1.charm / p2.charm;
 					// 人脈加成
 					final abiFactor = p1.abilities.has(10) ? 1.5 : 1;
@@ -131,7 +133,7 @@ function getExploreCost(ctx:Context, playerId:Int, gridId:Int, p1SelectId:Int) {
 			final grid = ctx.grids[gridId];
 			final p1 = getPeopleById(ctx, p1SelectId);
 			final useEnergy = p1.energy / (100 / ENERGY_COST_ON_EXPLORE);
-			final base = getBase(useEnergy, ENERGY_COST_ON_EXPLORE, -.1);
+			final base = getBase(useEnergy, ENERGY_COST_ON_EXPLORE, .1);
 			final charmFactor = p1.charm / 100;
 			// 人脈加成
 			final abiFactor = p1.abilities.has(10) ? 1.5 : 1;
@@ -508,7 +510,7 @@ function getMaintainPeoplePure(totalPeopleCost:Float):Float {
 }
 
 function getMaintainArmyPure(totalArmy:Float):Float {
-	return totalArmy * PLAYER_EARN_PER_TURN_PERSENT;
+	return totalArmy * PLAYER_EARN_PER_TURN_PERSENT * 5;
 }
 
 function getPeopleInfo(ctx:Context, people:People):model.PeopleGenerator.People {

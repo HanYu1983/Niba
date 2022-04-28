@@ -591,7 +591,7 @@ class MainView extends Absolute {
 薪俸:${Main.getFixNumber(info.maintainMoneyBefore, 2)} => ${Main.getFixNumber(info.maintainMoneyAfter, 2)}\n
                     ';
 					messageView.showMessage(msg);
-					btn_end.show();
+					box_basicCmds.show();
 				case NEGOTIATE_RESULT:
 					final info:Dynamic = event.value;
 					final msg = '${info.success ? '任務成功' : '任務失敗'}\n

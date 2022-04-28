@@ -7,7 +7,7 @@ final PLAYER_EARN_PER_TURN = 2;
 // 主公支付的薪水為主公所有武將的價值參數(value)總合的%數
 // 主公支付的食物為所有格子上以及身上的士兵的數量的%數
 // 作用中
-final PLAYER_EARN_PER_TURN_PERSENT = 0.02;
+final PLAYER_EARN_PER_TURN_PERSENT = 0.03;
 
 // 武將聘用價格%數
 final PEOPLE_HIRE_COST_FACTOR = .1;

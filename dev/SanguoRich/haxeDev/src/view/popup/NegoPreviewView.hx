@@ -50,7 +50,7 @@ class NegoPreviewView extends PopupView {
 			pro_charm.value = Main.getVSString(p1.charm, p2.charm);
 			pro_political.value = Main.getVSString(p1.political, p2.political);
 			pro_intelligence.value = Main.getVSString(p1.intelligence, p2.intelligence);
-			pro_ability.value = Main.getAbilityString(p1, [7]);
+			pro_ability.value = Main.getAbilityString(p1, [4,5,11,7]);
 			setRate();
 		}
 
