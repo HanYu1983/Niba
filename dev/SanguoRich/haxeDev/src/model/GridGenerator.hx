@@ -19,7 +19,8 @@ typedef Grid = {
 	foodGrow:Float,
 	army:Float,
 	armyGrow:Float,
-	people:Array<People>
+	people:Array<People>,
+	favor:Array<Int>,
 }
 
 enum BUILDING {
@@ -59,7 +60,8 @@ class GridGenerator {
 			foodGrow: 0.01,
 			army: 100,
 			armyGrow: 0.01,
-			people: []
+			people: [],
+			favor:[0,0,0,0]
 		};
 	}
 

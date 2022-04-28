@@ -519,6 +519,7 @@ class MainView extends Absolute {
 
         trace('經商，買賣糧食，買賣士兵，不能拿超過格子本身的一半');
         trace( '目前聘用的後端如果金錢不夠沒有防呆，我前段先防了');
+        trace( '野戰的時候，敵人要調成沒有防守加成');
     }
 
     function syncViewByInfo(gameInfo:GameInfo){
@@ -579,17 +580,23 @@ class MainView extends Absolute {
                         if(g.belongPlayerId == null){
                             box_npcCmds.show();
 
-                            switch (g.buildtype){
-                                case CITY:
-                                    box_moneyCmds.show();
-                                    box_foodCmds.show();
-                                    box_armyCmds.show();
-                                case MARKET: box_moneyCmds.show();
-                                case FARM: box_foodCmds.show();
-                                case VILLAGE: box_armyCmds.show();
+                            switch(g){
+                                case {  buildtype:CITY,
+                                        favor:_[gameInfo.currentPlayer.id] >= 2 => true}:
+                                        box_moneyCmds.show();
+                                        box_foodCmds.show();
+                                        box_armyCmds.show();
+                                case {  buildtype:MARKET,
+                                        favor:_[gameInfo.currentPlayer.id] >= 1 => true}:
+                                        box_moneyCmds.show();
+                                case {  buildtype:FARM,
+                                        favor:_[gameInfo.currentPlayer.id] >= 1 => true}:
+                                        box_foodCmds.show();
+                                case {  buildtype:VILLAGE,
+                                        favor:_[gameInfo.currentPlayer.id] >= 1 => true}:
+                                        box_armyCmds.show();
                                 case _:
                             }
-                            
                         }else{
                             if(g.belongPlayerId == gameInfo.currentPlayer.id){
                                 box_myAreaCmds.show();

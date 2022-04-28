@@ -25,6 +25,7 @@ class GridGridView extends BasicGridView{
         pro_money.value = '${Math.floor(grid.money)} (成:${Main.getRateString(grid.moneyGrow)})';
         pro_food.value = '${Math.floor(grid.food)} (成:${Main.getRateString(grid.foodGrow)})';
         pro_army.value = '${Math.floor(grid.army)} (成:${Main.getRateString(grid.armyGrow)})';
+        pro_favor.value = grid.favor[gameInfo.currentPlayer.id];
         pro_peopleCount.value = grid.people.length;
         
         if(grid.belongPlayerId != null){

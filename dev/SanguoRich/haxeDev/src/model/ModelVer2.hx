@@ -931,6 +931,7 @@ private function getGridInfo(ctx:Context, grid:Grid):model.GridGenerator.Grid {
 		army: grid.army,
 		armyGrow: grid.armyGrow,
 		people: peopleInGrid.map(p -> getPeopleInfo(ctx, p)),
+		favor:[0,0,0,0]
 	}
 }
 

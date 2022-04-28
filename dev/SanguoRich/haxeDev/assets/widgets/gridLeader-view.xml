@@ -4,7 +4,7 @@
         <property id="pro_money" label="金錢" value="1000" />
         <property id="pro_food" label="糧草" value="1000" />
         <property id="pro_army" label="士兵" value="1000" />
-        <property id="pro_strategy" label="計略" value="1000" />   
+        <!-- <property id="pro_strategy" label="計略" value="1000" />    -->
         <property id="pro_peopleCount" label="武將數" value="5" />
         <property id="pro_cityCount" label="城池數" value="1000" />
     </property-group>
