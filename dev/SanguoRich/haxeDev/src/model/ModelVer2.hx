@@ -1,5 +1,6 @@
 package model;
 
+import model.IModel.SnatchPreview;
 import model.IModel.PreResultOnFire;
 import model.IModel.PreResultOnResource;
 import model.IModel.ResourcePreview;
@@ -19,9 +20,6 @@ import model.IModel.NegoPreview;
 import model.IModel.WarPreview;
 
 using Lambda;
-
-
-
 
 // 幾個回合加成(4人走完算1回合)
 // 作用中
@@ -99,18 +97,16 @@ function getEnergyFactor(atkArmy:Float) {
 	return (Math.min(atkArmy / 500, 1) * .3 + .7);
 }
 
-
 final ENERGY_COST_ON_HIRE = 10;
 final ENERGY_COST_ON_NEGO = 10;
 final ENERGY_COST_ON_RESOURCE = 20;
 final ENERGY_COST_ON_EXPLORE = 30;
 final ENERGY_COST_ON_SNATCH = 30;
 final ENERGY_COST_ON_WAR = 70;
-
 final SNATCH_ARMY_AT_LEAST = 100;
 
 // 基本值算法
-function getBase(useEnergy:Float, totalEnergy:Float = 30.0, offset:Float = 0.0, bottom:Float = 0.0):Float{
+function getBase(useEnergy:Float, totalEnergy:Float = 30.0, offset:Float = 0.0, bottom:Float = 0.0):Float {
 	return Math.max((useEnergy / totalEnergy) + offset, bottom);
 }
 
@@ -135,7 +131,7 @@ private function getNegoCost(ctx:Context, playerId:Int, gridId:Int, p1SelectId:I
 				case [p1, p2]:
 					// 用掉1/5的體力(最多20)
 					// 體力越少效率越低
-					final useEnergy = p1.energy / (100/ENERGY_COST_ON_NEGO);
+					final useEnergy = p1.energy / (100 / ENERGY_COST_ON_NEGO);
 					// 使用20體力的情況下基礎值為0.5
 					final base = getBase(useEnergy, ENERGY_COST_ON_NEGO, -.4);
 					final intelligenceFactor = p1.intelligence / p2.intelligence;
@@ -353,7 +349,7 @@ private function getWarCost(ctx:Context, playerId:Int, gridId:Int, p1PeopleId:In
 		final currFood = ctx.players[playerId].food;
 		final moneyCost = atkMoneyCost;
 		final foodCost = atkFoodCost;
-		final useEnergy = atkPeople.energy / (100/ENERGY_COST_ON_WAR);
+		final useEnergy = atkPeople.energy / (100 / ENERGY_COST_ON_WAR);
 		final fact0 = useEnergy / ENERGY_COST_ON_WAR;
 		final fact1 = (atkArmy + defArmy * WAR_HIGH_LOW_FACTOR) / (defArmy + defArmy * WAR_HIGH_LOW_FACTOR);
 		final fact2 = if (atkPeople.abilities.has(0)) WAR_FRONT_ABILITY_FACTOR else 1.0;
@@ -393,7 +389,7 @@ private function getWarCost(ctx:Context, playerId:Int, gridId:Int, p1PeopleId:In
 		final currFood = ctx.grids[gridId].food;
 		final moneyCost = defMoneyCost;
 		final foodCost = defFoodCost;
-		final useEnergy = atkPeople.energy / (100/ENERGY_COST_ON_WAR);
+		final useEnergy = atkPeople.energy / (100 / ENERGY_COST_ON_WAR);
 		final fact0 = useEnergy / ENERGY_COST_ON_WAR;
 		final fact1 = (atkArmy + defArmy * WAR_HIGH_LOW_FACTOR) / (defArmy + defArmy * WAR_HIGH_LOW_FACTOR);
 		final fact2 = if (atkPeople.abilities.has(0)) WAR_FRONT_ABILITY_FACTOR else 1.0;
@@ -711,6 +707,19 @@ class ModelVer2 extends DebugModel {
 		_takeTransfer(context, playerId, gridId, playerInfo, gridInfo);
 		cb(gameInfo());
 	}
+
+	override function getTakeSnatchPreview(playerId:Int, gridId:Int):SnatchPreview {
+		return _getTakeSnatchPreview(context, playerId, gridId);
+	}
+
+	override function getPreResultOfSnatch(playerId:Int, gridId:Int, p1:model.PeopleGenerator.People, p2:model.PeopleGenerator.People):Array<PreResultOnWar> {
+		return _getPreResultOfSnatch(context, playerId, gridId, p1.id, p2.id);
+	}
+
+	override function takeSnatchOn(playerId:Int, gridId:Int, p1PeopleId:Int, p2PeopleId:Int, cb:(gameInfo:GameInfo) -> Void) {
+		_takeSnatchOn(context, playerId, gridId, p1PeopleId, p2PeopleId);
+		cb(gameInfo());
+	}
 }
 
 private typedef Grid = {
@@ -813,6 +822,18 @@ private enum Event {
 		foodAfter:Float,
 	});
 	WAR_RESULT(value:{
+		success:Bool,
+		people:model.PeopleGenerator.People,
+		energyBefore:Float,
+		energyAfter:Float,
+		armyBefore:Float,
+		armyAfter:Float,
+		moneyBefore:Float,
+		moneyAfter:Float,
+		foodBefore:Float,
+		foodAfter:Float,
+	});
+	SNATCH_RESULT(value:{
 		success:Bool,
 		people:model.PeopleGenerator.People,
 		energyBefore:Float,
@@ -961,6 +982,11 @@ private function getGameInfo(ctx:Context, root:Bool):GameInfo {
 				case FIRE_RESULT(value):
 					{
 						id: EventInfoID.FIRE_RESULT,
+						value: value
+					}
+				case SNATCH_RESULT(value):
+					{
+						id: EventInfoID.SNATCH_RESULT,
 						value: value
 					}
 			}
@@ -1454,7 +1480,7 @@ private function _takeWarOn(ctx:Context, playerId:Int, gridId:Int, p1PeopleId:In
 		foodBefore: player.food,
 		foodAfter: player.food,
 	}
-	final success = applyWarCost(ctx, playerId, gridId, p1PeopleId, p2PeopleId, army1, army2);
+	final success = applyWarCost(ctx, playerId, gridId, p1PeopleId, p2PeopleId, army1, army2, {occupy: true});
 	resultValue.success = success;
 	resultValue.energyAfter = people1.energy;
 	resultValue.armyAfter = player.army;
@@ -1463,7 +1489,7 @@ private function _takeWarOn(ctx:Context, playerId:Int, gridId:Int, p1PeopleId:In
 	ctx.events = [Event.WAR_RESULT(resultValue)];
 }
 
-private function applyWarCost(ctx:Context, playerId:Int, gridId:Int, p1PeopleId:Int, p2PeopleId:Int, army1:Float, army2:Float):Bool {
+private function applyWarCost(ctx:Context, playerId:Int, gridId:Int, p1PeopleId:Int, p2PeopleId:Int, army1:Float, army2:Float, options:{occupy:Bool}):Bool {
 	switch getWarCost(ctx, playerId, gridId, p1PeopleId, p2PeopleId, army1, army2) {
 		case {playerCost: [playerCost1, playerCost2], peopleCost: [peopleCost1, peopleCost2], success: success}:
 			// 無論成功或失敗武將先消體力
@@ -1512,12 +1538,14 @@ private function applyWarCost(ctx:Context, playerId:Int, gridId:Int, p1PeopleId:
 				grid.army = 0;
 			}
 			if (success) {
-				// 沒有進駐的話, 自動進駐
-				if (people.position.gridId == null) {
-					people.position.gridId = gridId;
+				if (options.occupy) {
+					// 沒有進駐的話, 自動進駐
+					if (people.position.gridId == null) {
+						people.position.gridId = gridId;
+					}
+					// 回到主公身上或解散
+					people2.position.gridId = null;
 				}
-				// 回到主公身上或解散
-				people2.position.gridId = null;
 				// 體力減半
 				people2.energy *= 0.5;
 			}
@@ -1712,4 +1740,51 @@ private function applyTransfer(ctx:Context, playerId:Int, gridId:Int, playerInfo
 		final originPeople = getPeopleById(ctx, people.id);
 		originPeople.position.gridId = gridId;
 	}
+}
+
+private function _getTakeSnatchPreview(ctx:Context, playerId:Int, gridId:Int):SnatchPreview {
+	final warPreview = _getTakeWarPreview(ctx, playerId, gridId);
+	return {
+		p1ValidPeople: warPreview.p1ValidPeople,
+		p2ValidPeople: warPreview.p2ValidPeople,
+		isP1ArmyValid: ctx.players[playerId].army >= SNATCH_ARMY_AT_LEAST,
+		isP2ArmyValid: ctx.grids[gridId].army >= SNATCH_ARMY_AT_LEAST,
+	};
+}
+
+private function _getPreResultOfSnatch(ctx:Context, playerId:Int, gridId:Int, p1PeopleId:Int, p2PeopleId:Int):Array<PreResultOnWar> {
+	final army1 = Math.min(Std.int(ctx.players[playerId].army), SNATCH_ARMY_AT_LEAST);
+	final army2 = Math.min(Std.int(ctx.grids[gridId].army), SNATCH_ARMY_AT_LEAST);
+	return _getPreResultOfWar(ctx, playerId, gridId, p1PeopleId, p2PeopleId, army1, army2);
+}
+
+private function applySnatchCost(ctx:Context, playerId:Int, gridId:Int, p1PeopleId:Int, p2PeopleId:Int, army1:Float, army2:Float, options:{occupy:Bool}):Bool {
+	return false;
+}
+
+private function _takeSnatchOn(ctx:Context, playerId:Int, gridId:Int, p1PeopleId:Int, p2PeopleId:Int) {
+	final people1 = getPeopleById(ctx, p1PeopleId);
+	final people2 = getPeopleById(ctx, p2PeopleId);
+	final player = ctx.players[playerId];
+	final resultValue = {
+		success: false,
+		people: getPeopleInfo(ctx, people1),
+		energyBefore: people1.energy,
+		energyAfter: people1.energy,
+		armyBefore: player.army,
+		armyAfter: player.army,
+		moneyBefore: player.money,
+		moneyAfter: player.money,
+		foodBefore: player.food,
+		foodAfter: player.food,
+	};
+	final army1 = Math.min(Std.int(ctx.players[playerId].army), SNATCH_ARMY_AT_LEAST);
+	final army2 = Math.min(Std.int(ctx.grids[gridId].army), SNATCH_ARMY_AT_LEAST);
+	final success = applyWarCost(ctx, playerId, gridId, p1PeopleId, p2PeopleId, army1, army2, {occupy: false});
+	resultValue.success = success;
+	resultValue.energyAfter = people1.energy;
+	resultValue.armyAfter = player.army;
+	resultValue.moneyAfter = player.money;
+	resultValue.foodAfter = player.food;
+	ctx.events = [Event.SNATCH_RESULT(resultValue)];
 }
