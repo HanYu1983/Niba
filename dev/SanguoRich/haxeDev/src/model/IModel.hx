@@ -35,6 +35,7 @@ enum EventInfoID {
     HIRE_RESULT;
     FIRE_RESULT;
     WAR_RESULT;
+    SNATCH_RESULT;
     RESOURCE_RESULT;
 }
 
@@ -65,6 +66,12 @@ typedef GameInfo = {
     actions:Array<ActionInfo>,
 }
 
+typedef SnatchPreview = {
+    p1ValidPeople:Array<People>,
+    p2ValidPeople:Array<People>,
+    isP1ArmyValid:Bool,
+    isP2ArmyValid:Bool,
+}
 
 typedef WarPreview = {
     p1:PlayerInfo,
@@ -166,6 +173,10 @@ interface IModel{
     function getPreResultOfWar(playerId:Int, gridId:Int, p1:People, p2:People, army1:Float, army2:Float):Array<PreResultOnWar>;
     function takeWarOn(playerId:Int, gridId:Int, p1PeopleId:Int, p2PeopleId:Int, army1:Float, army2:Float, cb:(gameInfo:GameInfo)->Void):Void;
     
+    function getTakeSnatchPreview(playerId:Int, gridId:Int):SnatchPreview;
+    function getPreResultOfSnatch(playerId:Int, gridId:Int, p1:People, p2:People):Array<PreResultOnWar>;
+    function takeSnatchOn(playerId:Int, gridId:Int, p1PeopleId:Int, p2PeopleId:Int, cb:(gameInfo:GameInfo)->Void):Void;
+
     function getTakeNegoPreview(playerId:Int, gridId:Int):NegoPreview;
     function getPreResultOfNego(playerId:Int, gridId:Int, p1:People, p2:People):PreResultOnNego;
     function takeNegoOn(playerId:Int, gridId:Int, p1PeopleId:Int, p2PeopleId:Int, cb:(gameInfo:GameInfo)->Void):Void;

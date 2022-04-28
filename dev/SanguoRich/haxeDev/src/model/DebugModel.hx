@@ -1,5 +1,6 @@
 package model;
 
+import model.IModel.SnatchPreview;
 import model.IModel.PreResultOnFire;
 import model.IModel.MARKET;
 import model.IModel.RESOURCE;
@@ -263,5 +264,74 @@ class DebugModel implements IModel {
 
 	public function takeTransfer(playerId:Int, gridInt:Int, playerInfo:PlayerInfo, gridInfo:Grid, cb:(gameInfo:GameInfo) -> Void) {
         
+    }
+
+	public function getTakeSnatchPreview(playerId:Int, gridId:Int):SnatchPreview {
+		return {
+            p1ValidPeople: [
+                PeopleGenerator.getInst().generate(),
+                PeopleGenerator.getInst().generate(),
+            ],
+            p2ValidPeople: [
+                PeopleGenerator.getInst().generate(),
+            ],
+            isP1ArmyValid: true,
+            isP2ArmyValid: true,
+        };
+	}
+
+	public function getPreResultOfSnatch(playerId:Int, gridId:Int, p1:People, p2:People):Array<PreResultOnWar> {
+		return [
+            {
+                energyBefore:1,
+                energyAfter:1,
+                armyBefore:1,
+                armyAfter:1,
+                moneyBefore:1,
+                moneyAfter:1,
+                foodBefore:1,
+                foodAfter:1,
+                maintainFoodBefore:1,
+                maintainFoodAfter:1,
+            },
+            {
+                energyBefore:1,
+                energyAfter:1,
+                armyBefore:1,
+                armyAfter:1,
+                moneyBefore:1,
+                moneyAfter:1,
+                foodBefore:1,
+                foodAfter:1,
+                maintainFoodBefore:1,
+                maintainFoodAfter:1,
+            }
+        ];
+	}
+
+	public function takeSnatchOn(playerId:Int, gridId:Int, p1PeopleId:Int, p2PeopleId:Int, cb:(gameInfo:GameInfo) -> Void) {
+        var info = gameInfo();
+        info.grids[gridId].belongPlayerId = playerId;
+        info.grids[gridId].people = [
+            PeopleGenerator.getInst().generate()
+        ];
+        info.events = [
+            {
+                id:EventInfoID.SNATCH_RESULT,
+                value:{
+                    success:false,
+                    people:PeopleGenerator.getInst().generate(),
+                    energyBefore: 100,
+                    energyAfter:50,
+                    armyBefore: 200,
+                    armyAfter: 300,
+                    moneyBefore: 200,
+                    moneyAfter: 300,
+                    foodBefore: 100,
+                    foodAfter: 200
+                }
+            }
+        ];
+        cb(info);
     }
 }

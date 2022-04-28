@@ -1,5 +1,6 @@
 package view;
 
+import model.ModelVer2.ENERGY_COST_ON_SNATCH;
 import model.ModelVer2.ENERGY_COST_ON_NEGO;
 import model.ModelVer2.ENERGY_COST_ON_WAR;
 import model.ModelVer2.ENERGY_COST_ON_RESOURCE;
@@ -18,6 +19,7 @@ import view.popup.HirePreviewView;
 import view.popup.MessageView;
 import view.popup.NegoPreviewView;
 import view.popup.WarPreviewView;
+import view.popup.SnatchPreviewView;
 import model.GridGenerator.BUILDING;
 import haxe.ui.components.OptionBox;
 import haxe.ui.containers.Absolute;
@@ -41,6 +43,7 @@ class MainView extends Absolute {
     var peopleListView:PeopleListView;
     var gridPeopleListView:PeopleListView;
     var warPreviewView:WarPreviewView;
+    var snatchPreviewView:SnatchPreviewView;
     var negoPreviewView:NegoPreviewView;
     var messageView:MessageView;
     var hirePreviewView:HirePreviewView;
@@ -85,6 +88,10 @@ class MainView extends Absolute {
         warPreviewView = new WarPreviewView();
         warPreviewView.hide();
         box_popup.addComponent(warPreviewView);
+
+        snatchPreviewView = new SnatchPreviewView();
+        snatchPreviewView.hide();
+        box_popup.addComponent(snatchPreviewView);
 
         negoPreviewView = new NegoPreviewView();
         negoPreviewView.hide();
@@ -204,6 +211,17 @@ class MainView extends Absolute {
         );
     }
 
+    public function onSnatchPreviewConfirmClick(p1Id:Int, p2Id:Int) {
+        var gameInfo = Main.model.gameInfo();
+        Main.model.takeSnatchOn(
+            gameInfo.currentPlayer.id,
+            gameInfo.currentPlayer.atGridId,
+            p1Id,
+            p2Id,
+            syncViewByInfo
+        );
+    }
+
     public function onResourcePreviewConfirmClick(p1Id:Int, market:model.IModel.MARKET, resource:model.IModel.RESOURCE){
         var gameInfo = Main.model.gameInfo();
         Main.model.takeResource(
@@ -231,6 +249,7 @@ class MainView extends Absolute {
         box_enemyCmds.hide();
 
         btn_negotiate.text = '${btn_negotiate.text}(${ENERGY_COST_ON_NEGO})';
+        btn_snatch.text = '${btn_snatch.text}(${ENERGY_COST_ON_SNATCH})';
         btn_occupation.text = '${btn_occupation.text}(${ENERGY_COST_ON_WAR})';
         btn_explore.text = '${btn_explore.text}(${ENERGY_COST_ON_EXPLORE})';
         btn_hire.text = '${btn_hire.text}(${ENERGY_COST_ON_HIRE})';
@@ -338,7 +357,6 @@ class MainView extends Absolute {
 
     @:bind(btn_transfer, MouseEvent.CLICK)
     function onBtnTransferClick(e:MouseEvent){
-        var player = Main.model.gameInfo().currentPlayer;
         transferPreview.showPopup(null);
     }
 
@@ -373,6 +391,24 @@ class MainView extends Absolute {
     @:bind(btn_occupation, MouseEvent.CLICK)
     function onBtnOccupationClick(e:MouseEvent){
         takeWar();
+    }
+
+    @:bind(btn_snatch, MouseEvent.CLICK)
+    function onBtnSnatchClick(e:MouseEvent){
+        var player = Main.model.gameInfo().currentPlayer;
+        var previewInfo = Main.model.getTakeSnatchPreview(player.id, player.atGridId);
+        switch(previewInfo){
+            case {p1ValidPeople: _.length < 1 => true }:
+                messageView.showMessage('沒有武將可以執行');
+            case {p2ValidPeople: _.length < 1 => true }:
+                messageView.showMessage('沒有武將可以占領');
+            case {isP1ArmyValid: _ => false}:
+                messageView.showMessage('主公兵力不足100');
+            case {isP2ArmyValid: _ => false}:
+                messageView.showMessage('攻擊地點兵力不足100');
+            case _:
+                snatchPreviewView.showPopup(previewInfo);
+        }
     }
 
     @:bind(btn_explore, MouseEvent.CLICK)
@@ -610,6 +646,17 @@ class MainView extends Absolute {
                     }else{
                         messageView.showMessage(msg);
                     }
+                    btn_end.show();
+                case SNATCH_RESULT:
+                    final info:Dynamic = event.value;
+                    final msg = '${info.success ? '搶奪成功' : '搶奪失敗'}\n
+武將:${info.people.name}\n
+體力:${Main.getFixNumber(info.energyBefore,0)} => ${Main.getFixNumber(info.energyAfter,0)}\n
+金錢:${Main.getFixNumber(info.moneyBefore,0)} => ${Main.getFixNumber(info.moneyAfter,0)}\n
+糧草:${Main.getFixNumber(info.foodBefore,0)} => ${Main.getFixNumber(info.foodAfter,0)}\n
+士兵:${Main.getFixNumber(info.armyBefore,0)} => ${Main.getFixNumber(info.armyAfter,0)}\n
+                    ';
+                    messageView.showMessage(msg);
                     btn_end.show();
                 case RESOURCE_RESULT:
                     final info:Dynamic = event.value;

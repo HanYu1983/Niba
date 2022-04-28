@@ -1,0 +1,47 @@
+<vbox id="box_warPreview" width="100%" padding="20" verticalAlign="center" horizontalAlign="center" style="background-color: white;border:1px solid grey;">
+    <hbox horizontalAlign="center">
+        <label text="野戰"/>
+    </hbox>
+    <hbox id="box_peopleList1" width="100%" height="150"></hbox>
+    <hbox id="box_peopleList2" width="100%" height="150"></hbox>
+    <hbox width="100%">
+        <property-grid id="grid_leader1" width="50%">
+            <property-group text="攻擊方武將">
+                <property id="pro_name1" label="武將" value="100" />
+                <property id="pro_energy1" label="體力" value="100" />
+                <property id="pro_force1" label="武力" value="1000" />
+                <property id="pro_intelligence1" label="智力" value="1000" />
+                <property id="pro_ability1" label="專長加成" value="" />
+            </property-group>
+            <property-group text="攻擊方">
+                <property id="pro_money1" label="金錢" value="1000" />
+                <property id="pro_food1" label="糧草" value="1000" />
+                <property id="pro_army1" label="士兵" value="1000" />
+                <!-- <property id="pro_strategy1" label="計略" value="1000" />    -->
+            </property-group>
+        </property-grid>
+        <property-grid id="grid_leader2" width="50%">
+            <property-group id="pro_player2" text="防守方武將">
+                <property id="pro_name2" label="武將" value="100" />
+                <property id="pro_energy2" label="體力" value="100" />
+                <property id="pro_command2" label="統率" value="1000" />
+                <property id="pro_intelligence2" label="智力" value="1000" /> 
+                <property id="pro_ability2" label="專長加成" value="" />
+            </property-group>
+            <property-group text="防守方">
+                <property id="pro_money2" label="金錢" value="1000" />
+                <property id="pro_food2" label="糧草" value="1000" />
+                <property id="pro_army2" label="士兵" value="1000" />
+                <!-- <property id="pro_strategy2" label="計略" value="1000" />    -->
+            </property-group>
+        </property-grid>
+    </hbox>
+    <!-- <hbox horizontalAlign="center">
+        <label text="成功率" style="font-size:24"/>
+        <label text="10%" style="font-size:24" />
+    </hbox> -->
+    <hbox horizontalAlign="center">
+        <button text="取消" id="btn_cancel" />
+        <button text="確定" id="btn_confirm" />
+    </hbox>
+</vbox>

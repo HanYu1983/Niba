@@ -100,12 +100,14 @@ function getEnergyFactor(atkArmy:Float) {
 }
 
 
-final ENERGY_COST_ON_NEGO = 10;
-final ENERGY_COST_ON_WAR = 50;
 final ENERGY_COST_ON_HIRE = 10;
+final ENERGY_COST_ON_NEGO = 10;
 final ENERGY_COST_ON_RESOURCE = 20;
 final ENERGY_COST_ON_EXPLORE = 30;
+final ENERGY_COST_ON_SNATCH = 30;
+final ENERGY_COST_ON_WAR = 70;
 
+final SNATCH_ARMY_AT_LEAST = 100;
 
 // 基本值算法
 function getBase(useEnergy:Float, totalEnergy:Float = 30.0, offset:Float = 0.0, bottom:Float = 0.0):Float{
