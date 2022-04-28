@@ -1,5 +1,6 @@
 package model;
 
+import model.IModel.PreResultOnSnatch;
 import model.IModel.SnatchPreview;
 import model.IModel.PreResultOnFire;
 import model.IModel.PreResultOnResource;
@@ -711,7 +712,7 @@ class ModelVer2 extends DebugModel {
 		return _getTakeSnatchPreview(context, playerId, gridId);
 	}
 
-	override function getPreResultOfSnatch(playerId:Int, gridId:Int, p1:model.PeopleGenerator.People, p2:model.PeopleGenerator.People):Array<PreResultOnWar> {
+	override function getPreResultOfSnatch(playerId:Int, gridId:Int, p1:model.PeopleGenerator.People, p2:model.PeopleGenerator.People):PreResultOnSnatch {
 		return _getPreResultOfSnatch(context, playerId, gridId, p1.id, p2.id);
 	}
 
@@ -1751,10 +1752,15 @@ private function _getTakeSnatchPreview(ctx:Context, playerId:Int, gridId:Int):Sn
 	};
 }
 
-private function _getPreResultOfSnatch(ctx:Context, playerId:Int, gridId:Int, p1PeopleId:Int, p2PeopleId:Int):Array<PreResultOnWar> {
+private function _getPreResultOfSnatch(ctx:Context, playerId:Int, gridId:Int, p1PeopleId:Int, p2PeopleId:Int):PreResultOnSnatch {
 	final army1 = Math.min(Std.int(ctx.players[playerId].army), SNATCH_ARMY_AT_LEAST);
 	final army2 = Math.min(Std.int(ctx.grids[gridId].army), SNATCH_ARMY_AT_LEAST);
-	return _getPreResultOfWar(ctx, playerId, gridId, p1PeopleId, p2PeopleId, army1, army2);
+	final preResultOnSnatch = {
+		war:_getPreResultOfWar(ctx, playerId, gridId, p1PeopleId, p2PeopleId, army1, army2),
+		money: 10.0,
+		food: 10.0,
+	}
+	return preResultOnSnatch;
 }
 
 private function applySnatchCost(ctx:Context, playerId:Int, gridId:Int, p1PeopleId:Int, p2PeopleId:Int, army1:Float, army2:Float, options:{occupy:Bool}):Bool {
