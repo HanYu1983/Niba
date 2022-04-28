@@ -393,8 +393,7 @@ class MainView extends Absolute {
         takeWar();
     }
 
-    @:bind(btn_snatch, MouseEvent.CLICK)
-    function onBtnSnatchClick(e:MouseEvent){
+    function takeSnatch() {
         var player = Main.model.gameInfo().currentPlayer;
         var previewInfo = Main.model.getTakeSnatchPreview(player.id, player.atGridId);
         switch(previewInfo){
@@ -409,6 +408,16 @@ class MainView extends Absolute {
             case _:
                 snatchPreviewView.showPopup(previewInfo);
         }
+    }
+
+    @:bind(btn_snatchPlayer, MouseEvent.CLICK)
+    function onBtnSnatchPlayerClick(e:MouseEvent){
+        takeSnatch();
+    }
+
+    @:bind(btn_snatch, MouseEvent.CLICK)
+    function onBtnSnatchClick(e:MouseEvent){
+        takeSnatch();
     }
 
     @:bind(btn_explore, MouseEvent.CLICK)
@@ -634,6 +643,7 @@ class MainView extends Absolute {
 金錢:${Main.getFixNumber(info.moneyBefore,0)} => ${Main.getFixNumber(info.moneyAfter,0)}\n
 糧草:${Main.getFixNumber(info.foodBefore,0)} => ${Main.getFixNumber(info.foodAfter,0)}\n
 士兵:${Main.getFixNumber(info.armyBefore,0)} => ${Main.getFixNumber(info.armyAfter,0)}\n
+友好:${Main.getFavorString(info.favorBefore)} => ${Main.getFavorString(info.favorAfter)}\n
                     ';
                     messageView.showMessage(msg);
                     btn_end.show();

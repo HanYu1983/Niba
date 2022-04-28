@@ -77,4 +77,18 @@ class Main {
 	public static function getEnergyString(before:Float, after:Float, max:Float):String {
 		return'${before} => ${after} (${getRateString((before-after)/max)})';
 	}
+
+	public static function getFavorString(favor:Int):String {
+		return if(favor <= -2){
+			'厭惡';
+		}else if(favor <= -1){
+			'不悅';
+		}else if(favor <= 0){
+			'陌生';
+		}else if(favor <= 1){
+			'熟悉';
+		}else{
+			'友好';
+		}
+	}
 }
