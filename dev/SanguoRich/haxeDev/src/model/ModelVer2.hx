@@ -294,22 +294,18 @@ private function getResourceCost(ctx:Context, playerId:Int, gridId:Int, p1Select
 					final sellFoodCount = FOOD_PER_DEAL;
 					returnInfo.playerCost.money = -1 * sellFoodCount * rate;
 					returnInfo.playerCost.food = sellFoodCount;
-				case [STRETEGY, SELL]:
-					final sellIntCount = 100;
-					returnInfo.playerCost.money = -1 * sellIntCount * rate;
-					returnInfo.playerCost.strategy = sellIntCount;
 				case [ARMY, BUY]:
 					final moneyCost = MONEY_PER_DEAL;
+					final gain = Math.min(Std.int(moneyCost * rate), grid.army / 2);
 					returnInfo.playerCost.money = moneyCost;
-					returnInfo.playerCost.army = -moneyCost * rate;
+					returnInfo.playerCost.army = -gain;
 				case [FOOD, BUY]:
 					final moneyCost = MONEY_PER_DEAL;
+					final gain = Math.min(Std.int(moneyCost * rate), grid.food / 2);
 					returnInfo.playerCost.money = moneyCost;
-					returnInfo.playerCost.food = -moneyCost * rate;
-				case [STRETEGY, BUY]:
-					final moneyCost = MONEY_PER_DEAL;
-					returnInfo.playerCost.money = moneyCost;
-					returnInfo.playerCost.strategy = -moneyCost * rate;
+					returnInfo.playerCost.food = -gain;
+				case _:
+					throw new haxe.Exception('not support: ${type} ${market}');
 			}
 			return returnInfo;
 		case _:
