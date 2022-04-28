@@ -87,6 +87,9 @@ final WAR_HIGH_LOW_FACTOR = 1.5;
 // 保底傷害, 1的話代表派100兵最少打100
 final WAR_ARMY_FACTOR = 0.3;
 
+// 戰爭最後係數
+final WAR_FINAL_DAMAGE_FACTOR = 0.5;
+
 // 每回合基本回體力
 final PEOPLE_ENERGY_SUPPLY_BASE = 0;
 
@@ -339,7 +342,7 @@ private function getResourceCost(ctx:Context, playerId:Int, gridId:Int, p1Select
 // 攻擊方影響能力[0,1,2,3]         	 防守方影響能力[0,1,2,3,8,9];
 // 2022/4/26 測試到奇怪的現象，就是感覺就是强很多的武將，結果爲了打爆對方。糧食扣的比爛武將多。感覺很奇怪？
 // =================================
-private function getWarCost(ctx:Context, playerId:Int, gridId:Int, p1PeopleId:Int, p2PeopleId:Int, army1:Float, army2:Float) {
+private function getWarCost(ctx:Context, playerId:Int, gridId:Int, p1PeopleId:Int, p2PeopleId:Int, army1:Float, army2:Float, options:{occupy:Bool}) {
 	var atkMoneyCost = 0.0;
 	var atkFoodCost = 0.0;
 	{
@@ -377,7 +380,7 @@ private function getWarCost(ctx:Context, playerId:Int, gridId:Int, p1PeopleId:In
 		final factFood = if (currFood - foodCost < 0) (1.0 - (-1 * (currFood - foodCost) / foodCost)) else 1.0;
 		final base = atkArmy;
 		final damage = atkArmy * WAR_ARMY_FACTOR + base * fact0 * fact1 * fact2 * fact3 * fact4 * fact5 * fact6 * fact7 * factMoney * factFood;
-		atkDamage = damage;
+		atkDamage = damage * WAR_FINAL_DAMAGE_FACTOR;
 		atkEnergyCost = useEnergy * getEnergyFactor(atkArmy);
 	}
 	var defMoneyCost = 0.0;
@@ -417,22 +420,22 @@ private function getWarCost(ctx:Context, playerId:Int, gridId:Int, p1PeopleId:In
 		final fact9 = atkPeople.intelligence / defPeople.intelligence;
 		final factMoney = if (currMoney - moneyCost < 0) (1.0 - (-1 * (currMoney - moneyCost) / moneyCost)) else 1.0;
 		final factFood = if (currFood - foodCost < 0) (1.0 - (-1 * (currFood - foodCost) / foodCost)) else 1.0;
-		final base = atkArmy * WAR_DEFFENDER_FACTOR;
+		final base = if (options.occupy) atkArmy * WAR_DEFFENDER_FACTOR else 1.0;
 		final damage = atkArmy * WAR_ARMY_FACTOR + base * fact0 * fact1 * fact2 * fact3 * fact4 * fact5 * fact6 * fact7 * fact8 * fact9 * factMoney * factFood;
-		defDamage = damage;
+		defDamage = damage * WAR_FINAL_DAMAGE_FACTOR;
 		defEnergyCost = useEnergy * getEnergyFactor(atkArmy);
 	}
 	return {
 		playerCost: [
 			{
 				id: (playerId : Null<Int>),
-				army: Math.min(Std.int(defDamage), Std.int(army1)) + 0.0,
+				army: Math.min(defDamage, army1),
 				money: atkMoneyCost,
 				food: atkFoodCost,
 			},
 			{
 				id: getGridBelongPlayerId(ctx, gridId),
-				army: Math.min(Std.int(atkDamage), Std.int(army2)) + 0.0,
+				army: Math.min(atkDamage, army2),
 				money: defMoneyCost,
 				food: defFoodCost,
 			}
@@ -447,7 +450,7 @@ private function getWarCost(ctx:Context, playerId:Int, gridId:Int, p1PeopleId:In
 				energy: defEnergyCost,
 			}
 		],
-		success: (ctx.grids[gridId].army - atkDamage) <= 0
+		success: options.occupy ? ((ctx.grids[gridId].army - atkDamage) <= 0) : (atkDamage > defDamage)
 	}
 }
 
@@ -1229,8 +1232,8 @@ private function doTakeNegoOn(ctx:Context, playerId:Int, gridId:Int, p1SelectId:
 		moneyAfter: player.money,
 		foodBefore: player.food,
 		foodAfter: player.food,
-		favorBefore:0,
-		favorAfter:0,
+		favorBefore: 0,
+		favorAfter: 0,
 	}
 	final success = applyNegoCost(ctx, playerId, gridId, p1SelectId, p2SelectId);
 	resultValue.success = success;
@@ -1472,7 +1475,7 @@ private function _getTakeWarPreview(ctx:Context, playerId:Int, gridId:Int):WarPr
 }
 
 private function _getPreResultOfWar(ctx:Context, playerId:Int, gridId:Int, p1PeopleId:Int, p2PeopleId:Int, army1:Float, army2:Float):Array<PreResultOnWar> {
-	return switch getWarCost(ctx, playerId, gridId, p1PeopleId, p2PeopleId, army1, army2) {
+	return switch getWarCost(ctx, playerId, gridId, p1PeopleId, p2PeopleId, army1, army2, {occupy: true}) {
 		case {playerCost: [playerCost1, playerCost2], peopleCost: [peopleCost1, peopleCost2]}:
 			final player1 = ctx.players[playerId];
 			final grid = ctx.grids[gridId];
@@ -1535,7 +1538,7 @@ private function _takeWarOn(ctx:Context, playerId:Int, gridId:Int, p1PeopleId:In
 }
 
 private function applyWarCost(ctx:Context, playerId:Int, gridId:Int, p1PeopleId:Int, p2PeopleId:Int, army1:Float, army2:Float, options:{occupy:Bool}):Bool {
-	switch getWarCost(ctx, playerId, gridId, p1PeopleId, p2PeopleId, army1, army2) {
+	switch getWarCost(ctx, playerId, gridId, p1PeopleId, p2PeopleId, army1, army2, options) {
 		case {playerCost: [playerCost1, playerCost2], peopleCost: [peopleCost1, peopleCost2], success: success}:
 			// 無論成功或失敗武將先消體力
 			final people = getPeopleById(ctx, p1PeopleId);
@@ -1815,16 +1818,46 @@ private function _getTakeSnatchPreview(ctx:Context, playerId:Int, gridId:Int):Sn
 private function _getPreResultOfSnatch(ctx:Context, playerId:Int, gridId:Int, p1PeopleId:Int, p2PeopleId:Int):PreResultOnSnatch {
 	final army1 = Math.min(Std.int(ctx.players[playerId].army), SNATCH_ARMY_AT_LEAST);
 	final army2 = Math.min(Std.int(ctx.grids[gridId].army), SNATCH_ARMY_AT_LEAST);
+	final cost = getSnatchCost(ctx, playerId, gridId, p1PeopleId, p2PeopleId, army1, army2);
 	final preResultOnSnatch = {
 		war: _getPreResultOfWar(ctx, playerId, gridId, p1PeopleId, p2PeopleId, army1, army2),
-		money: 10.0,
-		food: 10.0,
+		money: cost.money,
+		food: cost.food,
 	}
 	return preResultOnSnatch;
 }
 
-private function applySnatchCost(ctx:Context, playerId:Int, gridId:Int, p1PeopleId:Int, p2PeopleId:Int, army1:Float, army2:Float, options:{occupy:Bool}):Bool {
-	return false;
+private function getSnatchCost(ctx:Context, playerId:Int, gridId:Int, p1PeopleId:Int, p2PeopleId:Int, army1:Float, army2:Float) {
+	final warCost = getWarCost(ctx, playerId, gridId, p1PeopleId, p2PeopleId, army1, army2, {occupy: false});
+	final negoCost = getNegoCost(ctx, playerId, gridId, p1PeopleId, p2PeopleId);
+	final grid = ctx.grids[gridId];
+	return {
+		warCost: warCost,
+		money: warCost.success ? Math.min(negoCost.playerCost.money * 3, grid.money) : 0.0,
+		food: warCost.success ? Math.min(negoCost.playerCost.food * 3, grid.food) : 0.0,
+		success: warCost.success
+	}
+}
+
+private function applySnatchCost(ctx:Context, playerId:Int, gridId:Int, p1PeopleId:Int, p2PeopleId:Int, army1:Float, army2:Float):Bool {
+	applyWarCost(ctx, playerId, gridId, p1PeopleId, p2PeopleId, army1, army2, {occupy: false});
+	final cost = getSnatchCost(ctx, playerId, gridId, p1PeopleId, p2PeopleId, army1, army2);
+	if (cost.success == false) {
+		return false;
+	}
+	final grid = ctx.grids[gridId];
+	grid.money -= cost.money;
+	if (grid.money < 0) {
+		grid.money = 0;
+	}
+	grid.food -= cost.food;
+	if (grid.food < 0) {
+		grid.food = 0;
+	}
+	final player = ctx.players[playerId];
+	player.money += cost.money;
+	player.food += cost.food;
+	return true;
 }
 
 private function _takeSnatchOn(ctx:Context, playerId:Int, gridId:Int, p1PeopleId:Int, p2PeopleId:Int) {
@@ -1845,7 +1878,7 @@ private function _takeSnatchOn(ctx:Context, playerId:Int, gridId:Int, p1PeopleId
 	};
 	final army1 = Math.min(Std.int(ctx.players[playerId].army), SNATCH_ARMY_AT_LEAST);
 	final army2 = Math.min(Std.int(ctx.grids[gridId].army), SNATCH_ARMY_AT_LEAST);
-	final success = applyWarCost(ctx, playerId, gridId, p1PeopleId, p2PeopleId, army1, army2, {occupy: false});
+	final success = applySnatchCost(ctx, playerId, gridId, p1PeopleId, p2PeopleId, army1, army2);
 	resultValue.success = success;
 	resultValue.energyAfter = people1.energy;
 	resultValue.armyAfter = player.army;
