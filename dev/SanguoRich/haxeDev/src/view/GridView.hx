@@ -70,15 +70,10 @@ class GridView extends Box{
         box_food.percentHeight = Main.clamp(grid.food / 500) * 100;
         box_army.percentHeight = Main.clamp(grid.army / 500) * 100;
 
-        final gameInfo = Main.model.gameInfo();
-        var favor = grid.favor[gameInfo.currentPlayer.id];
-        favor += 3;
-        box_favor.percentHeight = (favor / 7) * 100;
-
-        // if( favor < 3 ){
-        //     box_favor.backgroundColor = '#FF0000';
-        // }else{
-        //     box_favor.backgroundColor = '#00FF00';
-        // }
+        if(grid.buildtype != BUILDING.EMPTY){
+            final gameInfo = Main.model.gameInfo();
+            var favor = grid.favor[gameInfo.currentPlayer.id];
+            lbl_favor.text = Main.getFavorString(favor);
+        }
     }
 }

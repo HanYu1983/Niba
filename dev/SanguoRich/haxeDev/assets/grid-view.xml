@@ -8,16 +8,18 @@
     }
     </style>
     <hbox width="80" height="100%">
-        <box id="box_money" width="25%" height="0" styleName="resource_bar" style="background-color: yellow;"/>
-        <box id="box_food" width="25%" height="0" styleName="resource_bar" style="background-color: green;"/>
-        <box id="box_army" width="25%" height="0" styleName="resource_bar" style="background-color: gray;"/>
-        <box id="box_favor" width="25%" height="0" styleName="resource_bar" style="background-color: purple;"/>
+        <box id="box_money" width="33%" height="0" styleName="resource_bar" style="background-color: yellow;"/>
+        <box id="box_food" width="33%" height="0" styleName="resource_bar" style="background-color: green;"/>
+        <box id="box_army" width="33%" height="0" styleName="resource_bar" style="background-color: gray;"/>
+        <!-- <box id="box_favor" width="25%" height="0" styleName="resource_bar" style="background-color: purple;"/> -->
     </hbox>
     <label id="lbl_name" text="" textAlign="center" width="100%"/>
     <!-- <label id="lbl_type" text="" textAlign="center" marginTop="20" width="100%" height="100%" style="font-size:12px;"/> -->
     <box id="box_build" width="18" height="18" verticalAlign="bottom" horizontalAlign="right" style="background-color: #FF6666;border:1px solid red;background-opacity: 1">
         <label id="lbl_building" text="" textAlign="center" width="100%" height="100%" style="color: black; font-size:12px;"/>
     </box>
-    
+    <box verticalAlign="center" horizontalAlign="center" >
+        <label id="lbl_favor" text=""/>
+    </box>
     <box id='box_playerCover' width='100%' height='100%' style="background-color: white;border:1px solid gray;background-opacity: .3"/>
 </box>

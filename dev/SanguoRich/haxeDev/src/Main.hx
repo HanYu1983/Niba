@@ -78,17 +78,31 @@ class Main {
 		return'${before} => ${after} (${getRateString((before-after)/max)})';
 	}
 
+	// public static function getFavorString(favor:Int):String {
+	// 	return if(favor <= -2){
+	// 		'厭惡';
+	// 	}else if(favor <= -1){
+	// 		'不悅';
+	// 	}else if(favor <= 0){
+	// 		'陌生';
+	// 	}else if(favor <= 1){
+	// 		'熟悉';
+	// 	}else{
+	// 		'友好';
+	// 	}
+	// }
+
 	public static function getFavorString(favor:Int):String {
 		return if(favor <= -2){
-			'厭惡';
+			'(ﾟ皿ﾟﾒ)';
 		}else if(favor <= -1){
-			'不悅';
+			'(`д´)/';
 		}else if(favor <= 0){
-			'陌生';
+			'(⁰▿⁰)';
 		}else if(favor <= 1){
-			'熟悉';
+			'\\(^u^)/';
 		}else{
-			'友好';
+			'(*´∀`)~♥';
 		}
 	}
 }
