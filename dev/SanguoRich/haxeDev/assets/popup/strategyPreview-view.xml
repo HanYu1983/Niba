@@ -1,4 +1,4 @@
-<vbox width="100%" padding="20" verticalAlign="center" horizontalAlign="center" style="background-color: white;border:1px solid grey;">
+<vbox width="70%" padding="20" verticalAlign="center" horizontalAlign="center" style="background-color: white;border:1px solid grey;">
     <hbox id="box_peopleList" width="100%" height="150"></hbox>
     <hbox id="box_strategyList" width="100%" height="150"></hbox>
     <hbox horizontalAlign="center">

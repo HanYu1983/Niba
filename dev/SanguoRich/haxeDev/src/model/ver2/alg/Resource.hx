@@ -29,7 +29,7 @@ function getResourceCost(ctx:Context, playerId:Int, gridId:Int, p1SelectId:Int, 
 			final grid = ctx.grids[gridId];
 			final p1 = getPeopleById(ctx, p1SelectId);
 			final useEnergy = p1.energy / (100 / ENERGY_COST_ON_RESOURCE);
-			final base = getBase(useEnergy, ENERGY_COST_ON_RESOURCE, -0.2);
+			final base = getBase(useEnergy, ENERGY_COST_ON_RESOURCE, 1.0);
 			final abiFactor:Float = if (type == RESOURCE.MONEY && (p1.abilities.has(4))) {
 				1.5;
 			} else if (type == RESOURCE.ARMY && (p1.abilities.has(11))) {
@@ -39,16 +39,18 @@ function getResourceCost(ctx:Context, playerId:Int, gridId:Int, p1SelectId:Int, 
 			} else {
 				1;
 			};
+
+			final top = 60;
 			final attrFactor:Float = if (type == RESOURCE.MONEY) {
-				(p1.political / 100) * .8 + (p1.intelligence / 100) * .1 + (p1.charm / 100) * .1 + (grid.money / 1000) * .1;
+				(p1.political / top) * .7 + (p1.intelligence / top) * .1 + (p1.charm / top) * .1 + (grid.money / 300) * .1;
 			} else if (type == RESOURCE.ARMY) {
-				(p1.political / 100) * .1 + (p1.intelligence / 100) * .1 + (p1.charm / 100) * .8 + (grid.army / 1000) * .1;
+				(p1.political / top) * .1 + (p1.intelligence / top) * .1 + (p1.charm / top) * .7 + (grid.army / 300) * .1;
 			} else if (type == RESOURCE.FOOD) {
-				(p1.political / 100) * .1 + (p1.intelligence / 100) * .8 + (p1.charm / 100) * .1 + (grid.food / 1000) * .1;
+				(p1.political / top) * .1 + (p1.intelligence / top) * .7 + (p1.charm / top) * .1 + (grid.food / 300) * .1;
 			} else {
 				0;
 			};
-			final rate = (base + attrFactor) * abiFactor;
+			final rate = base * attrFactor * abiFactor;
 			final returnInfo = {
 				playerCost: {
 					id: playerId,
@@ -62,26 +64,47 @@ function getResourceCost(ctx:Context, playerId:Int, gridId:Int, p1SelectId:Int, 
 					energy: useEnergy,
 				}
 			};
+
+			// 依據友好度來決定自己願意給出多少
+			// -3 ~ 3
+			var limitFactor:Float = grid.favor[playerId];
+			// 0 ~ 6
+			limitFactor += 3;
+			// 0 ~ 1
+			limitFactor /= 6;
+			// 0.2 ~ 0.7
+			limitFactor *= .5 + .2;
+
 			switch [type, market] {
 				case [MONEY, _]:
-					returnInfo.playerCost.money = -1 * 100 * rate;
+					final moneyCost = MONEY_PER_DEAL;
+					final totalGain = moneyCost * rate * .5;
+					limitFactor *= .5;
+					final gain = Math.min(totalGain, grid.money * limitFactor);
+					returnInfo.playerCost.money = -gain;
 				case [ARMY, SELL]:
 					final sellArmyCount = ARMY_PER_DEAL;
-					returnInfo.playerCost.money = -1 * sellArmyCount * rate;
-					returnInfo.playerCost.army = sellArmyCount;
+					final totalgain = sellArmyCount * rate;
+					final gain = Math.min(totalgain, grid.money * limitFactor);
+					returnInfo.playerCost.money = -gain;
+					returnInfo.playerCost.army = sellArmyCount * gain / totalgain; // 依據少拿的部分返還錢
 				case [FOOD, SELL]:
 					final sellFoodCount = FOOD_PER_DEAL;
-					returnInfo.playerCost.money = -1 * sellFoodCount * rate;
-					returnInfo.playerCost.food = sellFoodCount;
+					final totalgain = sellFoodCount * rate;
+					final gain = Math.min(totalgain, grid.money * limitFactor);
+					returnInfo.playerCost.money = -gain;
+					returnInfo.playerCost.food = sellFoodCount * gain / totalgain; // 依據少拿的部分返還錢
 				case [ARMY, BUY]:
 					final moneyCost = MONEY_PER_DEAL;
-					final gain = Math.min(moneyCost * rate, grid.army / 2);
-					returnInfo.playerCost.money = moneyCost;
+					final totalGain = moneyCost * rate;
+					final gain = Math.min(totalGain, grid.army * limitFactor);
+					returnInfo.playerCost.money = moneyCost * gain / totalGain; // 依據少拿的部分返還錢
 					returnInfo.playerCost.army = -gain;
 				case [FOOD, BUY]:
 					final moneyCost = MONEY_PER_DEAL;
-					final gain = Math.min(moneyCost * rate, grid.food / 2);
-					returnInfo.playerCost.money = moneyCost;
+					final totalGain = moneyCost * rate;
+					final gain = Math.min(totalGain, grid.food * limitFactor);
+					returnInfo.playerCost.money = moneyCost * gain / totalGain; // 依據少拿的部分返還錢
 					returnInfo.playerCost.food = -gain;
 				case _:
 					throw new haxe.Exception('not support: ${type} ${market}');

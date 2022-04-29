@@ -1,11 +1,11 @@
-<vbox id="box_negoPreview" width="95%" padding="10" verticalAlign="center" horizontalAlign="center" style="background-color: white;border:1px solid grey;">
+<vbox width="70%" padding="10" verticalAlign="center" horizontalAlign="center" style="background-color: white;border:1px solid grey;">
     <hbox horizontalAlign="center">
         <label text="交涉"/>
     </hbox>
     <hbox id="box_peopleList1" width="100%" height="150"></hbox>
     <hbox id="box_peopleList2" width="100%" height="150"></hbox>
-    <hbox width="100%">
-        <property-grid id="pg_playerInfo" width="100%">
+    <hbox horizontalAlign="center">
+        <property-grid id="pg_playerInfo" width="300">
             <property-group text="君主資料">
                 <property id="pro_name" label="執行武將" value="100" />
                 <property id="pro_intelligence" label="智力" value="1000" />

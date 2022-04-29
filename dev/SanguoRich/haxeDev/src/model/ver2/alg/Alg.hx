@@ -136,9 +136,9 @@ function doPlayerEnd(ctx:Context) {
 					for (playerId in 0...ctx.players.length) {
 						grid.favor[playerId] = switch grid.favor[playerId] {
 							case favor if (favor < 0):
-								Std.int(Math.max(favor - 1, MIN_GRID_FAVOR));
-							case favor if (favor > 0):
 								Std.int(Math.min(favor + 1, MAX_GRID_FAVOR));
+							case favor if (favor > 0):
+								Std.int(Math.max(favor - 1, MIN_GRID_FAVOR));
 							case favor:
 								favor;
 						}

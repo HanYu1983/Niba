@@ -35,15 +35,15 @@ final PLAYER_EARN_FROM_CITY_BY_TURN_PERSENT = .1;
 
 // 基本一單買糧買兵的的金錢
 // 作用中
-final MONEY_PER_DEAL = 100;
+final MONEY_PER_DEAL = 50;
 
 // 基本一單賣糧的數目
 // 作用中
-final FOOD_PER_DEAL = 100;
+final FOOD_PER_DEAL = 50;
 
 // 基本一單賣兵的數目
 // 作用中
-final ARMY_PER_DEAL = 100;
+final ARMY_PER_DEAL = 50;
 
 // 戰鬥能力影響倍率
 final WAR_FRONT_ABILITY_FACTOR = 1.4;
@@ -73,7 +73,7 @@ final WAR_FINAL_DAMAGE_FACTOR = 0.75;
 final PEOPLE_ENERGY_SUPPLY_BASE = 0;
 
 // 每回合額外回復％數體力(體力越多回越快)
-final PEOPLE_ENERGY_SUPPLY_SAVE_FACTOR = 0.06;
+final PEOPLE_ENERGY_SUPPLY_SAVE_FACTOR = 0.05;
 
 // 允許交涉加兵
 final ENABLE_NEGO_ARMY = true;
@@ -86,11 +86,12 @@ function getEnergyFactor(atkArmy:Float) {
 final ENERGY_COST_ON_STRATEGY = 20;
 final ENERGY_COST_ON_HIRE = 10;
 final ENERGY_COST_ON_NEGO = 20;
-final ENERGY_COST_ON_RESOURCE = 20;
-final ENERGY_COST_ON_EXPLORE = 30;
-final ENERGY_COST_ON_SNATCH = 30;
-final ENERGY_COST_ON_WAR = 50;
-final SNATCH_ARMY_AT_LEAST = 50;
+final ENERGY_COST_ON_RESOURCE = 15;
+final ENERGY_COST_ON_EXPLORE = 20;
+final ENERGY_COST_ON_SNATCH = 10;
+final ENERGY_COST_ON_WAR = 35;
+
+final SNATCH_ARMY_AT_LEAST = 30;
 
 // 最低友好度
 final MIN_GRID_FAVOR = -3;
@@ -102,7 +103,7 @@ final MAX_GRID_FAVOR = 3;
 final NEGO_HATE_RATE = 0.15;
 
 // 交涉成功時喜歡你的機率
-final NEGO_LIKE_RATE = 0.7;
+final NEGO_LIKE_RATE = 0.8;
 
 // 搶奪時額外討厭你的機率
 final SNATCH_HATE_RATE = 0.3;

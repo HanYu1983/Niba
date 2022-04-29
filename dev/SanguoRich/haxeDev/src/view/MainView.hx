@@ -566,7 +566,7 @@ class MainView extends Absolute {
 							switch (g) {
 								case {
 									buildtype: CITY,
-									favor: _[gameInfo.currentPlayer.id] >= 2 => true
+									favor: _[gameInfo.currentPlayer.id] >= 1 => true
 								}:
 									box_moneyCmds.show();
 									box_foodCmds.show();

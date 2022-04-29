@@ -1,4 +1,4 @@
-<vbox width="100%" padding="20" verticalAlign="center" horizontalAlign="center" style="background-color: white;border:1px solid grey;">
+<vbox width="70%" padding="20" verticalAlign="center" horizontalAlign="center" style="background-color: white;border:1px solid grey;">
     <hbox horizontalAlign="center">
         <label text="探索人才"/>
     </hbox>

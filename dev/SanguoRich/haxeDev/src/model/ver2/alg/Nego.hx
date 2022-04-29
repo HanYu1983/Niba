@@ -34,7 +34,7 @@ function getNegoCost(ctx:Context, playerId:Int, gridId:Int, p1SelectId:Int, p2Se
 					// 體力越少效率越低
 					final useEnergy = p1.energy / (100 / ENERGY_COST_ON_NEGO);
 					// 使用20體力的情況下基礎值為0.5
-					final base = getBase(useEnergy, ENERGY_COST_ON_NEGO, -.15);
+					final base = getBase(useEnergy, ENERGY_COST_ON_NEGO, -.2);
 					final intelligenceFactor = p1.intelligence / p2.intelligence;
 					final politicalFactor = p1.political / p2.political;
 					final charmFactor = p1.charm / p2.charm;
@@ -50,19 +50,19 @@ function getNegoCost(ctx:Context, playerId:Int, gridId:Int, p1SelectId:Int, p2Se
 					// 根據友好度決定基本%數
 					final favor = grid.favor[playerId];
 					final basePersent = if (favor <= -2) {
-						0.02;
+						0.06;
 					} else if (favor <= -1) {
-						0.05;
+						0.08;
 					} else if (favor <= 0) {
 						0.1;
 					} else if (favor <= 1) {
-						0.15;
+						0.12;
 					} else {
-						0.2;
+						0.14;
 					}
 
 					// 商才，務農，徵兵分別可以提高獲得數量（rate些微影響獲得的數量）
-					final gainRate = basePersent + rate / 50;
+					final gainRate = basePersent + rate / 30;
 					{
 						playerCost: {
 							id: playerId,

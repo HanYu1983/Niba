@@ -1,4 +1,4 @@
-<vbox id="box_warPreview" width="100%" padding="20" verticalAlign="center" horizontalAlign="center" style="background-color: white;border:1px solid grey;">
+<vbox id="box_warPreview" width="70%" padding="20" verticalAlign="center" horizontalAlign="center" style="background-color: white;border:1px solid grey;">
     <hbox horizontalAlign="center">
         <label text="交戰"/>
     </hbox>

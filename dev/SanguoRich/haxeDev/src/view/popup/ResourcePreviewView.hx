@@ -37,9 +37,9 @@ class ResourcePreviewView extends PopupView {
 				info.resource);
 
 			pro_energy.value = Main.getEnergyString(result.energyBefore, result.energyAfter, ENERGY_COST_ON_RESOURCE);
-			pro_money.value = '${result.moneyBefore} => ${result.moneyAfter}';
-			pro_food.value = '${result.foodBefore} => ${result.foodAfter}';
-			pro_army.value = '${result.armyBefore} => ${result.armyAfter}';
+			pro_money.value = '${result.moneyBefore} => ${result.moneyAfter} (${result.moneyAfter - result.moneyBefore})';
+			pro_food.value = '${result.foodBefore} => ${result.foodAfter} (${result.foodAfter - result.foodBefore})';
+			pro_army.value = '${result.armyBefore} => ${result.armyAfter} (${result.armyAfter - result.armyBefore})';
 			pro_maintainFood.value = '${Main.getFixNumber(result.maintainFoodBefore, 2)} => ${Main.getFixNumber(result.maintainFoodAfter, 2)}';
 		}
 
