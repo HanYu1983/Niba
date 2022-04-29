@@ -33,7 +33,7 @@ using Lambda;
 // 所以可以把回傳最多欄位的放在case的第1個, 讓編譯器告訴你其它的回傳少了哪些欄位
 // =========================================
 // 交涉計算
-// 參與能力為:7良官 
+// 參與能力為:7良官
 function getNegoCost(ctx:Context, playerId:Int, gridId:Int, p1SelectId:Int, p2SelectId:Int) {
 	// 使用switch達成策略模式
 	// 0代表預設的隨意實作
@@ -212,12 +212,12 @@ function getResourceCost(ctx:Context, playerId:Int, gridId:Int, p1SelectId:Int, 
 					returnInfo.playerCost.food = sellFoodCount;
 				case [ARMY, BUY]:
 					final moneyCost = MONEY_PER_DEAL;
-					final gain = Math.min(Std.int(moneyCost * rate), grid.army / 2);
+					final gain = Math.min(moneyCost * rate, grid.army / 2);
 					returnInfo.playerCost.money = moneyCost;
 					returnInfo.playerCost.army = -gain;
 				case [FOOD, BUY]:
 					final moneyCost = MONEY_PER_DEAL;
-					final gain = Math.min(Std.int(moneyCost * rate), grid.food / 2);
+					final gain = Math.min(moneyCost * rate, grid.food / 2);
 					returnInfo.playerCost.money = moneyCost;
 					returnInfo.playerCost.food = -gain;
 				case _:
@@ -1422,8 +1422,8 @@ function _getTakeSnatchPreview(ctx:Context, playerId:Int, gridId:Int):SnatchPrev
 }
 
 function _getPreResultOfSnatch(ctx:Context, playerId:Int, gridId:Int, p1PeopleId:Int, p2PeopleId:Int):PreResultOnSnatch {
-	final army1 = Math.min(Std.int(ctx.players[playerId].army), SNATCH_ARMY_AT_LEAST);
-	final army2 = Math.min(Std.int(ctx.grids[gridId].army), SNATCH_ARMY_AT_LEAST);
+	final army1 = Math.min(ctx.players[playerId].army, SNATCH_ARMY_AT_LEAST);
+	final army2 = Math.min(ctx.grids[gridId].army, SNATCH_ARMY_AT_LEAST);
 	final cost = getSnatchCost(ctx, playerId, gridId, p1PeopleId, p2PeopleId, army1, army2);
 	final preResultOnSnatch = {
 		war: _getPreResultOfWar(ctx, playerId, gridId, p1PeopleId, p2PeopleId, army1, army2, {occupy: false}),
@@ -1483,8 +1483,8 @@ function _takeSnatchOn(ctx:Context, playerId:Int, gridId:Int, p1PeopleId:Int, p2
 		foodBefore: player.food,
 		foodAfter: player.food,
 	};
-	final army1 = Math.min(Std.int(ctx.players[playerId].army), SNATCH_ARMY_AT_LEAST);
-	final army2 = Math.min(Std.int(ctx.grids[gridId].army), SNATCH_ARMY_AT_LEAST);
+	final army1 = Math.min(ctx.players[playerId].army, SNATCH_ARMY_AT_LEAST);
+	final army2 = Math.min(ctx.grids[gridId].army, SNATCH_ARMY_AT_LEAST);
 	final success = applySnatchCost(ctx, playerId, gridId, p1PeopleId, p2PeopleId, army1, army2);
 	resultValue.success = success;
 	resultValue.energyAfter = people1.energy;
