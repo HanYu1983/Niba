@@ -1,20 +1,14 @@
 package;
 
-import model.TestResourceModel;
 import model.PeopleGenerator;
-import model.TestNegoModel;
 import js.Syntax;
-import model.ModelWisp.NativeModule;
 import haxe.ui.themes.Theme;
 import haxe.ui.themes.ThemeManager;
 import model.DebugModel;
 import model.IModel;
 import view.MainView;
 import haxe.ui.HaxeUIApp;
-import model.ModelVer1;
 import model.ver2.ModelVer2;
-import model.ModelWisp;
-import model.TestExploreModel;
 
 private function runTest() {
 	model.ver2.TestCase.test();

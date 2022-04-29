@@ -1,4 +1,4 @@
-package model;
+package model.debug;
 
 import model.DebugModel;
 import model.IModel.PreResultOnHire;

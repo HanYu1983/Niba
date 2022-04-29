@@ -1,4 +1,4 @@
-package model;
+package model.debug;
 
 import model.IModel.PreResultOnExplore;
 import model.IModel.ExplorePreview;
@@ -15,23 +15,23 @@ import model.GridGenerator.Grid;
 import model.PeopleGenerator.People;
 
 class TestGrowModel extends DebugModel {
+	override function gameInfo():GameInfo {
+		trace(info.events);
+		return info;
+	}
 
-    override function gameInfo():GameInfo {
-        trace(info.events);
-        return info;
-    }
 	override function playerEnd(cb:() -> Void) {
-        info.events = [
-            {
-                id:EventInfoID.WORLD_EVENT,
-                value:{
-                    playerBefore:info.players,
-                    playerAfter:info.players,
-                    gridBefore:info.grids,
-                    gridAfter:info.grids,
-                }
-            }
-        ];
-        cb();
-    }
+		info.events = [
+			{
+				id: EventInfoID.WORLD_EVENT,
+				value: {
+					playerBefore: info.players,
+					playerAfter: info.players,
+					gridBefore: info.grids,
+					gridAfter: info.grids,
+				}
+			}
+		];
+		cb();
+	}
 }

@@ -1,6 +1,6 @@
 package view.popup;
 
-import model.ver2.Config;
+import model.Config;
 import model.IModel.PreResultOnNego;
 import haxe.ui.events.UIEvent;
 import model.PeopleGenerator.People;
@@ -36,9 +36,9 @@ class NegoPreviewView extends PopupView {
 			var result:PreResultOnNego = Main.model.getPreResultOfNego(gameInfo.currentPlayer.id, gameInfo.currentPlayer.atGridId, p1, p2);
 
 			pro_energy.value = Main.getEnergyString(result.energyBefore, result.energyAfter, ENERGY_COST_ON_NEGO);
-			pro_money.value = '${result.moneyBefore} => ${result.moneyAfter} (${result.moneyAfter-result.moneyBefore})';
-			pro_food.value = '${result.foodBefore} => ${result.foodAfter} (${result.foodAfter-result.foodBefore})';
-			pro_army.value = '${result.armyBefore} => ${result.armyAfter} (${result.armyAfter-result.armyBefore})';
+			pro_money.value = '${result.moneyBefore} => ${result.moneyAfter} (${result.moneyAfter - result.moneyBefore})';
+			pro_food.value = '${result.foodBefore} => ${result.foodAfter} (${result.foodAfter - result.foodBefore})';
+			pro_army.value = '${result.armyBefore} => ${result.armyAfter} (${result.armyAfter - result.armyBefore})';
 			// pro_maintainFood.value = '${Main.getFixNumber(result.maintainFoodBefore, 2)} => ${Main.getFixNumber(result.maintainFoodAfter, 2)}';
 			pro_successRate.value = Main.getRateString(result.successRate);
 		}
@@ -50,7 +50,7 @@ class NegoPreviewView extends PopupView {
 			pro_charm.value = Main.getVSString(p1.charm, p2.charm);
 			pro_political.value = Main.getVSString(p1.political, p2.political);
 			pro_intelligence.value = Main.getVSString(p1.intelligence, p2.intelligence);
-			pro_ability.value = Main.getAbilityString(p1, [4,5,11,7]);
+			pro_ability.value = Main.getAbilityString(p1, [4, 5, 11, 7]);
 			setRate();
 		}
 

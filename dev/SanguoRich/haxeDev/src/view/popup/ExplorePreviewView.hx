@@ -1,6 +1,6 @@
 package view.popup;
 
-import model.ver2.Config;
+import model.Config;
 import model.IModel.PreResultOnExplore;
 import model.IModel.ExplorePreview;
 import model.IModel.PreResultOnHire;

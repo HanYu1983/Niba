@@ -6,7 +6,7 @@
 -lib libnoise
 -lib hxSet
 -lib tweenx
---macro nullSafety("model.ModelVer2")
+--macro nullSafety("model.ver2.ModelVer2")
 -D debug
 
 -js public/Main.js

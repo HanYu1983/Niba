@@ -2,7 +2,7 @@ package model.ver2;
 
 import model.GridGenerator;
 import model.IModel;
-import model.ver2.Config;
+import model.Config;
 import model.ver2.Define;
 import model.ver2.alg.Alg;
 import model.ver2.alg.Nego;

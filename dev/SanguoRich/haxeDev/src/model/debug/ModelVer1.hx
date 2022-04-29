@@ -1,4 +1,4 @@
-package model;
+package model.debug;
 
 import model.IModel.ExplorePreview;
 import model.IModel.PreResultOnExplore;
@@ -190,8 +190,8 @@ class ModelVer1 extends DebugModel {
 			moneyAfter: Std.int(player.money + negoCost.playerCost.money),
 			foodBefore: Std.int(player.food),
 			foodAfter: Std.int(player.food + negoCost.playerCost.food),
-			maintainFoodBefore:10,
-    		maintainFoodAfter:10,
+			maintainFoodBefore: 10,
+			maintainFoodAfter: 10,
 			successRate: negoCost.successRate
 		};
 	}
@@ -505,7 +505,7 @@ class ModelVer1 extends DebugModel {
 					atGridId: gridId,
 					maintainArmy: 0,
 					maintainPeople: 0,
-					grids:[]
+					grids: []
 				};
 			default:
 				info.players[info.grids[gridId].belongPlayerId];
@@ -521,7 +521,7 @@ class ModelVer1 extends DebugModel {
 	override function getPreResultOfWar(playerId:Int, gridId:Int, p1:People, p2:People, army1:Float, army2:Float):Array<PreResultOnWar> {
 		return [
 			{
-				energyBefore:0,
+				energyBefore: 0,
 				energyAfter: 1,
 				armyBefore: 2,
 				armyAfter: 4,
@@ -529,11 +529,11 @@ class ModelVer1 extends DebugModel {
 				moneyAfter: 6,
 				foodBefore: 7,
 				foodAfter: 8,
-				maintainFoodBefore:10,
-    			maintainFoodAfter:10,
+				maintainFoodBefore: 10,
+				maintainFoodAfter: 10,
 			},
 			{
-				energyBefore:0,
+				energyBefore: 0,
 				energyAfter: 1,
 				armyBefore: 2,
 				armyAfter: 4,
@@ -541,8 +541,8 @@ class ModelVer1 extends DebugModel {
 				moneyAfter: 6,
 				foodBefore: 7,
 				foodAfter: 8,
-				maintainFoodBefore:10,
-    			maintainFoodAfter:10,
+				maintainFoodBefore: 10,
+				maintainFoodAfter: 10,
 			}
 		];
 	}
