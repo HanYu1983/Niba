@@ -16,11 +16,21 @@ import model.ver2.ModelVer2;
 import model.ModelWisp;
 import model.TestExploreModel;
 
+private function runTest() {
+	model.ver2.TestCase.test();
+}
+
 class Main {
 	public static var model:IModel;
 	public static var view:MainView;
 
 	public static function main() {
+		// 跑測試
+		// 只開發前台時可以關掉
+		if (false) {
+			runTest();
+		}
+
 		// model = new TestResourceModel();
 		model = new ModelVer2();
 
