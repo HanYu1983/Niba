@@ -84,7 +84,7 @@ class SnatchPreviewView extends PopupView {
 
 			pro_ability.value = Main.getAbilityString(p, switch (id) {
 				case 1: [0, 1, 2, 3, 6, 7];
-				case 2: [0, 1, 2, 3, 6, 7, 8, 9];
+				case 2: info.isOccupation ? [0, 1, 2, 3, 6, 7, 8, 9] : [0, 1, 2, 3, 6, 7];
 				case _: [];
 			});
 

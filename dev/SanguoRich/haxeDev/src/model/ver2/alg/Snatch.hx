@@ -34,12 +34,15 @@ function _getPreResultOfSnatch(ctx:Context, playerId:Int, gridId:Int, p1PeopleId
 
 function getSnatchCost(ctx:Context, playerId:Int, gridId:Int, p1PeopleId:Int, p2PeopleId:Int, army1:Float, army2:Float) {
 	final warCost = getWarCost(ctx, playerId, gridId, p1PeopleId, p2PeopleId, army1, army2, {occupy: false});
-	final negoCost = getNegoCost(ctx, playerId, gridId, p1PeopleId, p2PeopleId);
+
+	// 本來搶奪的資源跟交涉能力挂鈎，實際玩起來覺得很怪。改爲越是大勝利，搶的越多
+	// final negoCost = getNegoCost(ctx, playerId, gridId, p1PeopleId, p2PeopleId);
+	var base = 0.1 + (warCost.playerCost[1].army / warCost.playerCost[0].army) * .06;
 	final grid = ctx.grids[gridId];
 	return {
 		warCost: warCost,
-		money: warCost.success ? Math.min(negoCost.playerCost.money * 3, grid.money) : 0.0,
-		food: warCost.success ? Math.min(negoCost.playerCost.food * 3, grid.food) : 0.0,
+		money: warCost.success ? grid.money * base : 0.0,
+		food: warCost.success ? grid.food * base : 0.0,
 		success: warCost.success
 	}
 }
