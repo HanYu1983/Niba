@@ -1,13 +1,18 @@
 package model.ver2;
 
+import model.ver2.Define.StrategyTargetType;
+import model.ver2.Define.Strategy;
+
 // 幾個回合加成(4人走完算1回合)
 // 作用中
-final PLAYER_EARN_PER_TURN = 2;
+final PLAYER_EARN_PER_TURN = 1;
+
+final SHOW_POPUP_WHEN_EARN = false;
 
 // 主公支付的薪水為主公所有武將的價值參數(value)總合的%數
 // 主公支付的食物為所有格子上以及身上的士兵的數量的%數
 // 作用中
-final PLAYER_EARN_PER_TURN_PERSENT = 0.03;
+final PLAYER_EARN_PER_TURN_PERSENT = 0.01;
 
 // 武將聘用價格%數
 final PEOPLE_HIRE_COST_FACTOR = .1;
@@ -109,3 +114,27 @@ final SNATCH_HATE_RATE = 0.3;
 function getBase(useEnergy:Float, totalEnergy:Float = 30.0, offset:Float = 0.0, bottom:Float = 0.0):Float {
 	return Math.max((useEnergy / totalEnergy) + offset, bottom);
 }
+
+final StrategyList:Array<Strategy> = [
+	{
+		id:0,
+		name: '暗渡陳艙',
+		intelligence: 70,
+		describe: '移動指定格數',
+		targetType: StrategyTargetType.PLAYER_SELF
+	},
+	{
+		id:1,
+		name: '步步為營',
+		intelligence: 50,
+		describe: '指定武將回復40體力（可以恢復自己）',
+		targetType: StrategyTargetType.PLAYER_SELF_PEOPLE
+	},
+	{
+		id:2,
+		name: '遠交近攻',
+		intelligence: 80,
+		describe: '直接獲取該格子的20%資源。並且友好度上升1',
+		targetType: StrategyTargetType.CURRENT_GRID
+	},
+];

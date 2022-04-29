@@ -1,5 +1,6 @@
 package model;
 
+import model.ver2.Define.Strategy;
 import model.GridGenerator.Grid;
 import model.PeopleGenerator.People;
 
@@ -202,4 +203,9 @@ interface IModel{
 
     function checkValidTransfer(playerId:Int, gridInt:Int, playerInfo:PlayerInfo, gridInfo:Grid):Bool;
     function takeTransfer(playerId:Int, gridInt:Int, playerInfo:PlayerInfo, gridInfo:Grid, cb:(gameInfo:GameInfo)->Void):Void;
+
+    function getStrategyRate(p1People:People, strategy:Strategy):{energyBefore:Int, energyAfter:Int, rate:Float};
+
+
+    function getTakeStrategyPreview(playerId:Int, gridId:Int, peopleId:Dynamic, strategyId:Dynamic):{};
 }

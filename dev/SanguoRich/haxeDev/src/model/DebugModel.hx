@@ -1,5 +1,6 @@
 package model;
 
+import model.ver2.Define.Strategy;
 import model.IModel.PreResultOnSnatch;
 import model.IModel.SnatchPreview;
 import model.IModel.PreResultOnFire;
@@ -338,4 +339,16 @@ class DebugModel implements IModel {
         ];
         cb(info);
     }
+
+	public function getStrategyRate(p1People:People, strategy:Strategy):{energyBefore:Int, energyAfter:Int, rate:Float} {
+		return {
+            energyAfter: 10,
+            energyBefore: 5,
+            rate: Math.random(),
+        }
+	}
+
+	public function getTakeStrategyPreview(playerId:Int, gridId:Int, peopleId:Dynamic, strategyId:Dynamic):{} {
+		return null;
+	}
 }

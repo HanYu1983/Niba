@@ -6,6 +6,7 @@ package view;
 // import model.ModelVer2.ENERGY_COST_ON_RESOURCE;
 // import model.ModelVer2.ENERGY_COST_ON_HIRE;
 // import model.ModelVer2.ENERGY_COST_ON_EXPLORE;
+import view.popup.StrategyPreviewView;
 import model.ver2.Config;
 import view.widgets.GridGridView;
 import view.widgets.LeaderGridView;
@@ -42,6 +43,7 @@ class MainView extends Absolute {
 	var leaderView:LeaderGridView;
 	var gridView:GridGridView;
 	var peopleListView:PeopleListView;
+	var strategyPreviewView:StrategyPreviewView;
 	var gridPeopleListView:PeopleListView;
 	var warPreviewView:WarPreviewView;
 	var snatchPreviewView:SnatchPreviewView;
@@ -134,11 +136,17 @@ class MainView extends Absolute {
 		growView.hide();
 		box_popup.addComponent(growView);
 
+		strategyPreviewView = new StrategyPreviewView();
+		strategyPreviewView.hide();
+		box_popup.addComponent(strategyPreviewView);
+
 		peopleListView = new PeopleListView();
 		box_playerPeopleList.addComponent(peopleListView);
 
 		gridPeopleListView = new PeopleListView();
 		box_gridPeopleList.addComponent(gridPeopleListView);
+
+		
 	}
 
 	public function onShowPopup() {
@@ -459,7 +467,9 @@ class MainView extends Absolute {
 	}
 
 	@:bind(btn_showStrategy, MouseEvent.CLICK)
-	function onBtnShowStrategyClick(e:MouseEvent) {}
+	function onBtnShowStrategyClick(e:MouseEvent) {
+		strategyPreviewView.showPopup(null);
+	}
 
 	// @:bind(btn_smallWar, MouseEvent.CLICK)
 	// function onBtnWarClick(e:MouseEvent){
@@ -808,7 +818,8 @@ class MainView extends Absolute {
 		}
 	}
 
-	// function syncGameInfo(gameInfo:GameInfo){
-	//     pro_currentPlayer.value = gameInfo.currentPlayer.name;
-	// }
+	public function onStrategyPreviewConfirmClick(peopleId:Dynamic, strategyId:Dynamic) {
+		var player = Main.model.gameInfo().currentPlayer;
+		Main.model.getTakeStrategyPreview(player.id, player.atGridId, peopleId, strategyId);
+	}
 }

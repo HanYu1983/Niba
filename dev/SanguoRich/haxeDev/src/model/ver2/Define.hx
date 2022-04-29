@@ -6,6 +6,20 @@ import model.ver2.Config;
 
 using Lambda;
 
+enum StrategyTargetType {
+	PLAYER_SELF;
+	PLAYER_SELF_PEOPLE;
+	CURRENT_GRID;
+}
+
+typedef Strategy = {
+	id:Int,
+	name:String,
+	intelligence:Float,
+	describe:String,
+	targetType:StrategyTargetType,
+}
+
 typedef Grid = {
 	id:Int,
 	buildtype:BUILDING,

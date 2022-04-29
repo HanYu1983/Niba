@@ -57,7 +57,7 @@ function doPlayerEnd(ctx:Context) {
 				}
 				worldEventValue.playerAfter = ctx.players.map(p -> getPlayerInfo(ctx, p));
 				worldEventValue.gridAfter = ctx.grids.map(g -> getGridInfo(ctx, g));
-				ctx.events.push(Event.WORLD_EVENT(worldEventValue));
+				if(SHOW_POPUP_WHEN_EARN) ctx.events.push(Event.WORLD_EVENT(worldEventValue));
 			}
 		}
 		// 格子成長
