@@ -82,9 +82,10 @@ function guessArmy(ctx:Context, playerId:Int, gridId:Int, p1PeopleId:Int, p2Peop
 		}
 	}
 	final warCost = getWarCost(ctx, playerId, gridId, p1PeopleId, p2PeopleId, successArmy, army2, {occupy: true});
+	final success = warCost.playerCost[1].army >= army2;
 	return {
-		success: warCost.playerCost[1].army >= army2,
-		army: successArmy == 0.0 ? army1 : successArmy
+		success: success,
+		army: success ? successArmy : totalArmy
 	}
 }
 
