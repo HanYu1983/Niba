@@ -15,7 +15,8 @@ typedef PlayerInfo = {
 	grids:Array<Grid>,
 	atGridId:Int,
 	maintainPeople:Float,
-	maintainArmy:Float
+	maintainArmy:Float,
+	enabledCast:Bool
 }
 
 enum ActionInfoID {

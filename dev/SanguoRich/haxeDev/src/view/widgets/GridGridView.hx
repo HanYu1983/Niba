@@ -22,10 +22,14 @@ class GridGridView extends BasicGridView{
         var grid:Grid = info;
         pro_name.value = grid.name;
         // pro_landType.value = grid.landType;
+
+        final gainMoney = Main.getFixNumber(grid.money * grid.moneyGrow);
+        final gainFood = Main.getFixNumber(grid.food * grid.foodGrow);
+        final gainArmy = Main.getFixNumber(grid.army * grid.armyGrow);
         
-        pro_money.value = '${Math.floor(grid.money)} (成:${Main.getRateString(grid.moneyGrow)})';
-        pro_food.value = '${Math.floor(grid.food)} (成:${Main.getRateString(grid.foodGrow)})';
-        pro_army.value = '${Math.floor(grid.army)} (成:${Main.getRateString(grid.armyGrow)})';
+        pro_money.value = '${Math.floor(grid.money)} (成長:${gainMoney)})';
+        pro_food.value = '${Math.floor(grid.food)} (成長:${gainFood)})';
+        pro_army.value = '${Math.floor(grid.army)} (成長:${gainArmy})';
         pro_peopleCount.value = grid.people.length;
         
         if(grid.belongPlayerId != null){

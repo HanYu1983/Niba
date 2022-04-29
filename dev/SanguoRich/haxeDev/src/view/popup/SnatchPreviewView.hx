@@ -54,11 +54,11 @@ class SnatchPreviewView extends PopupView {
 			pro_force1.value = p1.force;
 			pro_command2.value = p2.command;
 
-			pro_money1.value = '${warResult[0].moneyBefore} => ${warResult[0].moneyAfter}';
-			pro_money2.value = '${warResult[1].moneyBefore} => ${warResult[1].moneyAfter}';
+			pro_money1.value = '${warResult[0].moneyBefore} => ${warResult[0].moneyAfter} (${warResult[0].moneyAfter-warResult[0].moneyBefore})';
+			pro_money2.value = '${warResult[1].moneyBefore} => ${warResult[1].moneyAfter} (${warResult[1].moneyAfter-warResult[1].moneyBefore})';
 
-			pro_food1.value = '${warResult[0].foodBefore} => ${warResult[0].foodAfter}';
-			pro_food2.value = '${warResult[1].foodBefore} => ${warResult[1].foodAfter}';
+			pro_food1.value = '${warResult[0].foodBefore} => ${warResult[0].foodAfter} (${warResult[0].foodAfter-warResult[0].foodBefore})';
+			pro_food2.value = '${warResult[1].foodBefore} => ${warResult[1].foodAfter} (${warResult[1].foodAfter-warResult[1].foodBefore})';
 
 			final army1_dead = warResult[0].armyBefore - warResult[0].armyAfter;
 			final army1_remain = Math.max(SNATCH_ARMY_AT_LEAST - army1_dead, 0);
@@ -67,12 +67,12 @@ class SnatchPreviewView extends PopupView {
 			final army2_remain = Math.max(SNATCH_ARMY_AT_LEAST - army2_dead, 0);
 
 			if (isOccupation) {
-				pro_army1.value = '${Main.getFixNumber(warResult[0].armyBefore, 0)} => ${Main.getFixNumber(warResult[0].armyAfter, 0)}';
-				pro_army2.value = '${Main.getFixNumber(warResult[1].armyBefore, 0)} => ${Main.getFixNumber(warResult[1].armyAfter, 0)}';
+				pro_army1.value = '${Main.getFixNumber(warResult[0].armyBefore, 0)} => ${Main.getFixNumber(warResult[0].armyAfter, 0)} (${Main.getFixNumber(warResult[0].armyAfter - warResult[0].armyBefore)})';
+				pro_army2.value = '${Main.getFixNumber(warResult[1].armyBefore, 0)} => ${Main.getFixNumber(warResult[1].armyAfter, 0)} (${Main.getFixNumber(warResult[1].armyAfter - warResult[1].armyBefore)})';
 				lbl_willSnacth.value = warResult[1].armyAfter < 1 ? '占領成功' : '占領失敗';
 			} else {
-				pro_army1.value = '${Main.getFixNumber(SNATCH_ARMY_AT_LEAST, 0)} => ${Main.getFixNumber(army1_remain, 0)}';
-				pro_army2.value = '${Main.getFixNumber(SNATCH_ARMY_AT_LEAST, 0)} => ${Main.getFixNumber(army2_remain, 0)}';
+				pro_army1.value = '${Main.getFixNumber(SNATCH_ARMY_AT_LEAST, 0)} => ${Main.getFixNumber(army1_remain, 0)} (${Main.getFixNumber(army1_remain - SNATCH_ARMY_AT_LEAST)})';
+				pro_army2.value = '${Main.getFixNumber(SNATCH_ARMY_AT_LEAST, 0)} => ${Main.getFixNumber(army2_remain, 0)} (${Main.getFixNumber(army2_remain - SNATCH_ARMY_AT_LEAST)})';
 				lbl_willSnacth.value = '金錢:${Main.getFixNumber(result.money, 0)}及糧草:${Main.getFixNumber(result.food, 0)}';
 			}
 		}

@@ -27,8 +27,8 @@ class GridView extends Box{
 
     public var building(default, set):BUILDING;
     function set_building(type:BUILDING) {
+
         lbl_building.text = switch (type){
-            case EMPTY: "";
             case MARKET: "市";
             case FARM: "田";
             case VILLAGE: "村";
@@ -71,14 +71,19 @@ class GridView extends Box{
         building = grid.buildtype;
         playerId = grid.belongPlayerId == null ? -1 : grid.belongPlayerId;
         
-        box_money.percentHeight = Main.clamp(grid.money / 500) * 100;
-        box_food.percentHeight = Main.clamp(grid.food / 500) * 100;
-        box_army.percentHeight = Main.clamp(grid.army / 500) * 100;
+        // 不知道為什麼haxeui的box縮放設為0的話，不會有反應，這裏最小先設為0.1
+        box_money.percentHeight = Math.max(Main.clamp(grid.money / 500) * 100, .1);
+        box_food.percentHeight = Math.max(Main.clamp(grid.food / 500) * 100, .1);
+        box_army.percentHeight = Math.max(Main.clamp(grid.army / 500) * 100, .1);
 
         if(grid.buildtype != BUILDING.EMPTY){
             final gameInfo = Main.model.gameInfo();
             var favor = grid.favor[gameInfo.currentPlayer.id];
             lbl_favor.text = Main.getFavorString(favor);
+
+            lbl_favor.show();
+        }else{
+            lbl_favor.hide();
         }
     }
 }

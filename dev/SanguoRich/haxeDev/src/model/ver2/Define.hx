@@ -197,7 +197,8 @@ function getPlayerInfo(ctx:Context, player:Player):model.IModel.PlayerInfo {
 		atGridId: player.position,
 		maintainPeople: getMaintainPeople(ctx, player.id),
 		maintainArmy: getMaintainArmy(ctx, player.id),
-		grids: ctx.grids.filter(g -> getGridBelongPlayerId(ctx, g.id) == player.id).map(g -> getGridInfo(ctx, g))
+		grids: ctx.grids.filter(g -> getGridBelongPlayerId(ctx, g.id) == player.id).map(g -> getGridInfo(ctx, g)),
+		enabledCast: true
 	}
 }
 

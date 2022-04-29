@@ -145,13 +145,20 @@ class StrategyPreviewView extends PopupView {
 		}
 
 		updatePlayerList();
-		drp_player.selectedIndex = 0;
-
 		updatePeopleList();
 		updateGridList();
 
 		drp_player.onChange = function(e) {
 			updatePeopleList();
+			setRate();
+		}
+		drp_player.selectedIndex = 0;
+
+		drp_people.onChange = function(e){
+			setRate();
+		}
+
+		drp_grid.onChange = function(e){
 			setRate();
 		}
 	}

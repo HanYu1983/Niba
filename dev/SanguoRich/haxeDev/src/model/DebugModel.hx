@@ -35,7 +35,8 @@ class DebugModel implements IModel {
 				grids: [],
 				maintainPeople: -1.2,
 				maintainArmy: -1.1,
-				atGridId: 0
+				atGridId: 0,
+				enabledCast: false
 			}
 		}
 	}

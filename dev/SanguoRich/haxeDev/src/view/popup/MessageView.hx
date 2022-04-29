@@ -6,6 +6,18 @@ import haxe.ui.events.MouseEvent;
 @:build(haxe.ui.ComponentBuilder.build("assets/popup/message-view.xml"))
 class MessageView extends PopupView{
 
+    public var title(null, set):String;
+    function set_title(title:String){
+        lbl_title.value = title;
+        return title;
+    }
+
+    public var content(null, set):String;
+    function set_content(content:String){
+        lbl_content.value = content;
+        return content;
+    }
+
     var pList:PeopleListView;
 
     public function new() {
@@ -17,18 +29,20 @@ class MessageView extends PopupView{
     
     var confirmMethod:()->Void = null;
 
-    public function showMessage(info:String, list:Array<People> = null, confirm:()->Void = null){
+    public function showMessage(title:String, info:String, list:Array<People> = null, confirm:()->Void = null){
         fadeIn();
 
-        box_peopleList.hide();
+        this.title = title;
+        this.content = info;
 
-        lbl_content.text = info;
+        box_peopleList.hide();
         if(list != null && list.length > 0){
             box_peopleList.show();
             pList.setPeopleList(list);
         }
-
+        
         confirmMethod = confirm;
+        confirmMethod == null ? btn_cancel.show() : btn_cancel.hide();
     }
 
     @:bind(btn_cancel, MouseEvent.CLICK)

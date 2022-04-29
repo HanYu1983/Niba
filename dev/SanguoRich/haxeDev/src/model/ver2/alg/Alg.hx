@@ -198,7 +198,8 @@ function initContext(ctx:Context, option:{}) {
 			maintainPeople: 0,
 			maintainArmy: 0,
 			atGridId: 0,
-			grids: []
+			grids: [],
+			enabledCast: true
 		});
 	}
 }
