@@ -57,7 +57,8 @@ function doPlayerEnd(ctx:Context) {
 				}
 				worldEventValue.playerAfter = ctx.players.map(p -> getPlayerInfo(ctx, p));
 				worldEventValue.gridAfter = ctx.grids.map(g -> getGridInfo(ctx, g));
-				if(SHOW_POPUP_WHEN_EARN) ctx.events.push(Event.WORLD_EVENT(worldEventValue));
+				if (SHOW_POPUP_WHEN_EARN)
+					ctx.events.push(Event.WORLD_EVENT(worldEventValue));
 			}
 		}
 		// 格子成長
@@ -169,8 +170,7 @@ function doPlayerDice(ctx:Context) {
 	final toGrid = ctx.grids[toGridId];
 	ctx.events = [
 		Event.WALK_STOP({
-			grid: getGridInfo(ctx, toGrid),
-			commands: [],
+			grid: getGridInfo(ctx, toGrid)
 		})
 	];
 }
