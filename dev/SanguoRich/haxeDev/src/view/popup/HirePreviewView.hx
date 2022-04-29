@@ -1,6 +1,6 @@
 package view.popup;
 
-import model.ver2.Config;
+import model.Config;
 import model.IModel.PreResultOnHire;
 import haxe.ui.events.MouseEvent;
 import model.PeopleGenerator.People;

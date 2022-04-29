@@ -2,7 +2,7 @@ package model.ver2.alg;
 
 import model.GridGenerator;
 import model.IModel;
-import model.ver2.Config;
+import model.Config;
 import model.ver2.Define;
 
 using Lambda;
@@ -38,7 +38,7 @@ function getNegoCost(ctx:Context, playerId:Int, gridId:Int, p1SelectId:Int, p2Se
 					final intelligenceFactor = p1.intelligence / p2.intelligence;
 					final politicalFactor = p1.political / p2.political;
 					final charmFactor = p1.charm / p2.charm;
-					
+
 					// 沒有良官的時候，rate最高限制在1.2
 					var rate = base * intelligenceFactor * politicalFactor * charmFactor;
 					rate = Math.min(rate, 1.2);
@@ -49,7 +49,7 @@ function getNegoCost(ctx:Context, playerId:Int, gridId:Int, p1SelectId:Int, p2Se
 
 					// 根據友好度決定基本%數
 					final favor = grid.favor[playerId];
-					final basePersent = if(favor <= -2) {
+					final basePersent = if (favor <= -2) {
 						0.02;
 					} else if (favor <= -1) {
 						0.05;

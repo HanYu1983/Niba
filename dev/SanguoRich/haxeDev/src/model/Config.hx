@@ -1,12 +1,8 @@
-package model.ver2;
-
-import model.ver2.Define.StrategyTargetType;
-import model.ver2.Define.Strategy;
+package model;
 
 // 幾個回合加成(4人走完算1回合)
 // 作用中
 final PLAYER_EARN_PER_TURN = 1;
-
 final SHOW_POPUP_WHEN_EARN = false;
 
 // 主公支付的薪水為主公所有武將的價值參數(value)總合的%數
@@ -89,13 +85,12 @@ function getEnergyFactor(atkArmy:Float) {
 
 final ENERGY_COST_ON_STRATEGY = 20;
 final ENERGY_COST_ON_HIRE = 10;
-final ENERGY_COST_ON_NEGO = 15;
-final ENERGY_COST_ON_RESOURCE = 15;
-final ENERGY_COST_ON_EXPLORE = 20;
-final ENERGY_COST_ON_SNATCH = 25;
-final ENERGY_COST_ON_WAR = 35;
-
-final SNATCH_ARMY_AT_LEAST = 30;
+final ENERGY_COST_ON_NEGO = 20;
+final ENERGY_COST_ON_RESOURCE = 20;
+final ENERGY_COST_ON_EXPLORE = 30;
+final ENERGY_COST_ON_SNATCH = 30;
+final ENERGY_COST_ON_WAR = 50;
+final SNATCH_ARMY_AT_LEAST = 50;
 
 // 最低友好度
 final MIN_GRID_FAVOR = -3;
@@ -116,27 +111,3 @@ final SNATCH_HATE_RATE = 0.3;
 function getBase(useEnergy:Float, totalEnergy:Float = 30.0, offset:Float = 0.0, bottom:Float = 0.0):Float {
 	return Math.max((useEnergy / totalEnergy) + offset, bottom);
 }
-
-final StrategyList:Array<Strategy> = [
-	{
-		id:0,
-		name: '暗渡陳艙',
-		intelligence: 70,
-		describe: '移動指定格數',
-		targetType: StrategyTargetType.TARGET_GRID
-	},
-	{
-		id:1,
-		name: '步步為營',
-		intelligence: 50,
-		describe: '指定武將回復40體力（可以恢復自己）',
-		targetType: StrategyTargetType.SELF_PEOPLE
-	},
-	{
-		id:2,
-		name: '遠交近攻',
-		intelligence: 80,
-		describe: '直接獲取該格子的20%資源。並且友好度上升1',
-		targetType: StrategyTargetType.SELF_GRID
-	},
-];

@@ -2,7 +2,7 @@ package model.ver2.alg;
 
 import model.GridGenerator;
 import model.IModel;
-import model.ver2.Config;
+import model.Config;
 import model.ver2.Define;
 import model.ver2.Mock;
 

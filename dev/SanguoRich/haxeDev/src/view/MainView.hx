@@ -7,7 +7,7 @@ package view;
 // import model.ModelVer2.ENERGY_COST_ON_HIRE;
 // import model.ModelVer2.ENERGY_COST_ON_EXPLORE;
 import view.popup.StrategyPreviewView;
-import model.ver2.Config;
+import model.Config;
 import view.widgets.GridGridView;
 import view.widgets.LeaderGridView;
 import model.IModel.PlayerInfo;
@@ -145,8 +145,6 @@ class MainView extends Absolute {
 
 		gridPeopleListView = new PeopleListView();
 		box_gridPeopleList.addComponent(gridPeopleListView);
-
-		
 	}
 
 	public function onShowPopup() {
@@ -360,20 +358,21 @@ class MainView extends Absolute {
 	function takeSnatch(isOccupation = false) {
 		var player = Main.model.gameInfo().currentPlayer;
 		var previewInfo = Main.model.getTakeSnatchPreview(player.id, player.atGridId);
-		
+
 		Reflect.setField(previewInfo, 'isOccupation', isOccupation);
 		switch (previewInfo) {
 			case {p1ValidPeople: _.length < 1 => true}:
 				messageView.showMessage('沒有武將可以執行');
 			case {p2ValidPeople: _.length < 1 => true}:
 				messageView.showMessage('沒有武將可以占領');
-			case {isP1ArmyValid: _ => false} | {isP2ArmyValid: _ => false}:
-				if(!isOccupation){
-					messageView.showMessage('搶奪條件（雙方兵力至少都要有100）不足，進入攻城模式', null, ()->{
+			case {isP1ArmyValid: _ => false}
+				| {isP2ArmyValid: _ => false}:
+				if (!isOccupation) {
+					messageView.showMessage('搶奪條件（雙方兵力至少都要有100）不足，進入攻城模式', null, () -> {
 						Reflect.setField(previewInfo, 'isOccupation', true);
 						snatchPreviewView.showPopup(previewInfo);
 					});
-				}else{
+				} else {
 					snatchPreviewView.showPopup(previewInfo);
 				}
 			// case {isP1ArmyValid: _ => false}:
@@ -391,7 +390,6 @@ class MainView extends Absolute {
 			case _:
 				snatchPreviewView.showPopup(previewInfo);
 		}
-		
 	}
 
 	@:bind(btn_snatchPlayer, MouseEvent.CLICK)
@@ -435,7 +433,7 @@ class MainView extends Absolute {
 	function onBtnStartClick(e:MouseEvent) {
 		Main.model.gameStart(() -> {
 			for (index => player in Main.model.gameInfo().players) {
-				players[index].name = player.name.substr(0,1);
+				players[index].name = player.name.substr(0, 1);
 			}
 			syncView();
 		});
@@ -477,10 +475,8 @@ class MainView extends Absolute {
 	//     var previewInfo = Main.model.getTakeWarPreview(player.id, player.atGridId);
 	//     // warPreviewView.showPreviewWar(previewInfo);
 	// }
-
 	// @:bind(btn_warStrategy, MouseEvent.CLICK)
 	// function onBtnWarStrategyClick(e:MouseEvent) {}
-
 	// @:bind(btn_give, MouseEvent.CLICK)
 	// function onBtnGiveClick(e:MouseEvent){
 	// }
@@ -823,12 +819,6 @@ class MainView extends Absolute {
 	}
 
 	public function onStrategyPreviewConfirmClick(peopleId:Int, strategyId:Int, targetPlayerId:Int, targetPeopleId:Int, targetGridId:Int) {
-		Main.model.takeStrategy(
-			peopleId, 
-			strategyId, 
-			targetPlayerId, 
-			targetPeopleId, 
-			targetGridId,
-			syncViewByInfo);
+		Main.model.takeStrategy(peopleId, strategyId, targetPlayerId, targetPeopleId, targetGridId, syncViewByInfo);
 	}
 }

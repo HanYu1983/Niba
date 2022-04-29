@@ -2,27 +2,9 @@ package model.ver2;
 
 import model.GridGenerator;
 import model.IModel;
-import model.ver2.Config;
+import model.Config;
 
 using Lambda;
-
-enum StrategyTargetType {
-	SELF_PLAYER;
-	TARGET_PLAYER;
-
-	SELF_PEOPLE;
-	TARGET_PEOPLE;
-	SELF_GRID;
-	TARGET_GRID;
-}
-
-typedef Strategy = {
-	id:Int,
-	name:String,
-	intelligence:Float,
-	describe:String,
-	targetType:StrategyTargetType,
-}
 
 typedef Grid = {
 	id:Int,
