@@ -4,6 +4,7 @@ import model.GridGenerator;
 import model.IModel;
 import model.ver2.Config;
 import model.ver2.Define;
+import model.ver2.Mock;
 
 using Lambda;
 
@@ -91,7 +92,7 @@ function applyExploreCost(ctx:Context, playerId:Int, gridId:Int, p1SelectId:Int)
 		people.energy = 0;
 	}
 	//
-	final success = Math.random() < negoCost.successRate;
+	final success = random() < negoCost.successRate;
 	if (success == false) {
 		return [];
 	}
