@@ -20,7 +20,15 @@ function _getTakeSnatchPreview(ctx:Context, playerId:Int, gridId:Int):SnatchPrev
 }
 
 function _getPreResultOfSnatch(ctx:Context, playerId:Int, gridId:Int, p1PeopleId:Int, p2PeopleId:Int, isOccupation:Bool):PreResultOnSnatch {
-	final army1 = Math.min(ctx.players[playerId].army, SNATCH_ARMY_AT_LEAST);
+	final army1 = if (isOccupation) {
+		final guessArmyResult = guessArmy(ctx, playerId, gridId, p1PeopleId, p2PeopleId);
+		if (guessArmyResult.success == false) {
+			trace("Snatch", "applySnatchCost", "你選攻城戰,但沒有足夠的兵把對方打光, 這種情況下目前是派出0兵, 所以也不會損失");
+		}
+		guessArmyResult.army;
+	} else {
+		Math.min(ctx.players[playerId].army, SNATCH_ARMY_AT_LEAST);
+	}
 	final army2 = Math.min(ctx.grids[gridId].army, SNATCH_ARMY_AT_LEAST);
 	final cost = getSnatchCost(ctx, playerId, gridId, p1PeopleId, p2PeopleId, army1, army2, isOccupation);
 	final preResultOnSnatch = {
@@ -48,9 +56,45 @@ function getSnatchCost(ctx:Context, playerId:Int, gridId:Int, p1PeopleId:Int, p2
 	}
 }
 
+function guessArmy(ctx:Context, playerId:Int, gridId:Int, p1PeopleId:Int, p2PeopleId:Int) {
+	final army2 = ctx.grids[gridId].army;
+	final totalArmy = ctx.players[playerId].army;
+	var s = 0.0;
+	var e = totalArmy;
+	var army1 = 0.0;
+	var successArmy = 0.0;
+	for (i in 0...10) {
+		army1 = (s + e) / 2;
+		final warCost = getWarCost(ctx, playerId, gridId, p1PeopleId, p2PeopleId, army1, army2, {occupy: true});
+		// trace(i, s, e, army1, army2, warCost.playerCost[0].army, warCost.playerCost[1].army);
+		switch warCost.playerCost[1].army {
+			case costArmy if (costArmy >= army2):
+				e = army1;
+				successArmy = army1;
+			case _:
+				s = army1;
+		}
+	}
+	final warCost = getWarCost(ctx, playerId, gridId, p1PeopleId, p2PeopleId, successArmy, army2, {occupy: true});
+	return {
+		success: warCost.playerCost[1].army >= army2,
+		army: successArmy
+	}
+}
+
 function applySnatchCost(ctx:Context, playerId:Int, gridId:Int, p1PeopleId:Int, p2PeopleId:Int, army1:Float, army2:Float, isOccupation:Bool):Bool {
 	// 處理搶奪中的戰爭部分
-	applyWarCost(ctx, playerId, gridId, p1PeopleId, p2PeopleId, army1, army2, {occupy: isOccupation});
+	if (isOccupation) {
+		final guessArmyResult = guessArmy(ctx, playerId, gridId, p1PeopleId, p2PeopleId);
+		if (guessArmyResult.success == false) {
+			trace("Snatch", "applySnatchCost", "你選攻城戰,但沒有足夠的兵把對方打光");
+		}
+		final warArmy1 = guessArmyResult.army;
+		final warArmy2 = ctx.grids[gridId].army;
+		applyWarCost(ctx, playerId, gridId, p1PeopleId, p2PeopleId, warArmy1, warArmy2, {occupy: true});
+	} else {
+		applyWarCost(ctx, playerId, gridId, p1PeopleId, p2PeopleId, army1, army2, {occupy: false});
+	}
 	// 處理搶奪中的搶資源部分
 	final cost = getSnatchCost(ctx, playerId, gridId, p1PeopleId, p2PeopleId, army1, army2, isOccupation);
 	if (cost.success == false) {
