@@ -12,7 +12,6 @@ enum StrategyTargetType {
 
 	SELF_PEOPLE;
 	TARGET_PEOPLE;
-
 	SELF_GRID;
 	TARGET_GRID;
 }
@@ -86,8 +85,7 @@ enum Event {
 		gridAfter:Array<model.GridGenerator.Grid>
 	});
 	WALK_STOP(value:{
-		grid:model.GridGenerator.Grid,
-		commands:Array<Dynamic>,
+		grid:model.GridGenerator.Grid
 	});
 	NEGOTIATE_RESULT(value:{
 		success:Bool,
@@ -167,6 +165,13 @@ enum Event {
 		people:model.PeopleGenerator.People,
 		maintainMoneyAfter:Float,
 		maintainMoneyBefore:Float,
+	});
+	STRATEGY_RESULT(value:{
+		success:Bool,
+		people:model.PeopleGenerator.People,
+		strategy:Strategy,
+		energyBefore:Float,
+		energyAfter:Float,
 	});
 }
 
@@ -292,6 +297,11 @@ function getGameInfo(ctx:Context, root:Bool):GameInfo {
 						value: value
 					}
 				case SNATCH_RESULT(value):
+					{
+						id: EventInfoID.SNATCH_RESULT,
+						value: value
+					}
+				case STRATEGY_RESULT(value):
 					{
 						id: EventInfoID.SNATCH_RESULT,
 						value: value

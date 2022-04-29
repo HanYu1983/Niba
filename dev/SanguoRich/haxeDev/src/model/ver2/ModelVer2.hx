@@ -13,6 +13,7 @@ import model.ver2.alg.Resource;
 import model.ver2.alg.Fire;
 import model.ver2.alg.Snatch;
 import model.ver2.alg.Transfer;
+import model.ver2.alg.Strategy;
 
 class ModelVer2 extends DebugModel {
 	final context:Context = {
@@ -144,6 +145,17 @@ class ModelVer2 extends DebugModel {
 
 	override function takeSnatchOn(playerId:Int, gridId:Int, p1PeopleId:Int, p2PeopleId:Int, isOccupation:Bool, cb:(gameInfo:GameInfo) -> Void) {
 		_takeSnatchOn(context, playerId, gridId, p1PeopleId, p2PeopleId, isOccupation);
+		cb(gameInfo());
+	}
+
+	override function getStrategyRate(p1People:model.PeopleGenerator.People, strategy:Strategy, targetPlayerId:Int, targetPeopleId:Int,
+			targetGridId:Int):{energyBefore:Int, energyAfter:Int, rate:Float} {
+		return _getStrategyRate(context, p1People, strategy, targetPlayerId, targetPeopleId, targetGridId);
+	}
+
+	override function takeStrategy(p1PeopleId:Int, strategyId:Int, targetPlayerId:Int, targetPeopleId:Int, targetGridId:Int,
+			cb:(gameInfo:GameInfo) -> Void):Void {
+		_takeStrategy(context, p1PeopleId, strategyId, targetPlayerId, targetPeopleId, targetGridId);
 		cb(gameInfo());
 	}
 }
