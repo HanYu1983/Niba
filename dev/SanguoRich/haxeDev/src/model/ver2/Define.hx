@@ -427,7 +427,7 @@ function getMaintainPeoplePure(totalPeopleCost:Float):Float {
 }
 
 function getMaintainArmyPure(totalArmy:Float):Float {
-	return totalArmy * PLAYER_EARN_PER_TURN_PERSENT * 5;
+	return totalArmy * PLAYER_EARN_PER_TURN_PERSENT;
 }
 
 function getPeopleById(ctx:Context, id:Int):People {
