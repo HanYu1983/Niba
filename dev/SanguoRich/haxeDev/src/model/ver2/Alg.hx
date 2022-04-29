@@ -1,24 +1,7 @@
 package model.ver2;
 
-import model.IModel.PreResultOnSnatch;
-import model.IModel.SnatchPreview;
-import model.IModel.PreResultOnFire;
-import model.IModel.PreResultOnResource;
-import model.IModel.ResourcePreview;
-import model.IModel.MARKET;
-import model.IModel.RESOURCE;
-import model.IModel.GameInfo;
-import model.GridGenerator.BUILDING;
-import model.IModel.ActionInfoID;
-import model.IModel.EventInfoID;
-import model.IModel.ExplorePreview;
-import model.IModel.PreResultOnExplore;
-import model.IModel.PreResultOnWar;
-import model.IModel.PreResultOnHire;
-import model.IModel.PreResultOnNego;
-import model.IModel.HirePreview;
-import model.IModel.NegoPreview;
-import model.IModel.WarPreview;
+import model.GridGenerator;
+import model.IModel;
 import model.ver2.Config;
 import model.ver2.Define;
 
