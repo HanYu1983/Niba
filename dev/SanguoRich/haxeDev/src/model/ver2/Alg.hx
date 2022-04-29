@@ -7,330 +7,6 @@ import model.ver2.Define;
 
 using Lambda;
 
-// 稅收
-// 主公會得到所有城池的成數
-// =========================================
-// config
-// 以下的方法都不定義回傳的類型, 因為是動態設計, 做到哪想到哪
-// 每一個回傳都是依靠編譯器的類型推理
-// 所以可以把回傳最多欄位的放在case的第1個, 讓編譯器告訴你其它的回傳少了哪些欄位
-// =========================================
-// 交涉計算
-// 參與能力為:7良官
-function getNegoCost(ctx:Context, playerId:Int, gridId:Int, p1SelectId:Int, p2SelectId:Int) {
-	// 使用switch達成策略模式
-	// 0代表預設的隨意實作
-	return switch 0 {
-		case 0:
-			final grid = ctx.grids[gridId];
-			final fightPeople = [p1SelectId, p2SelectId].map(id -> getPeopleById(ctx, id));
-			return switch fightPeople {
-				case [p1, p2]:
-					// 用掉1/5的體力(最多20)
-					// 體力越少效率越低
-					final useEnergy = p1.energy / (100 / ENERGY_COST_ON_NEGO);
-					// 使用20體力的情況下基礎值為0.5
-					final base = getBase(useEnergy, ENERGY_COST_ON_NEGO, -.15);
-					final intelligenceFactor = p1.intelligence / p2.intelligence;
-					final politicalFactor = p1.political / p2.political;
-					final charmFactor = p1.charm / p2.charm;
-					// 良官加成(決定勝率)
-					final abiFactor = p1.abilities.has(7) ? 1.5 : 1;
-					final rate = base * intelligenceFactor * politicalFactor * charmFactor * abiFactor;
-
-					// 商才，務農，徵兵分別可以提高獲得數量
-					final gainRate = 0.05 * rate + .1;
-					{
-						playerCost: {
-							id: playerId,
-							army: ENABLE_NEGO_ARMY ? grid.army * (gainRate + (p1.abilities.has(11) ? .05 : 0)) : 0.0,
-							money: grid.money * (gainRate + (p1.abilities.has(4) ? .05 : 0)),
-							food: grid.food * (gainRate + (p1.abilities.has(5) ? .05 : 0))
-						},
-						peopleCost: {
-							id: p1.id,
-							energy: useEnergy,
-						},
-						successRate: rate
-					};
-				case _:
-					throw new haxe.Exception("fightPeople not right");
-			}
-		case 1:
-			// 版本1
-			{
-				playerCost: {
-					id: 0,
-					army: 0.0,
-					money: 0.0,
-					food: 0.0,
-				},
-				peopleCost: {
-					id: 0,
-					energy: 0.0,
-				},
-				successRate: 0.0,
-			}
-		case _:
-			throw new haxe.Exception("not impl");
-	}
-}
-
-// 雇用計算
-function getHireCost(ctx:Context, playerId:Int, gridId:Int, p1SelectId:Int, p2SelectId:Int) {
-	return switch 0 {
-		case 0:
-			final grid = ctx.grids[gridId];
-			final fightPeople = [p1SelectId, p2SelectId].map(p -> getPeopleById(ctx, p));
-			return switch fightPeople {
-				case [p1, p2]:
-					final useEnergy = p1.energy / (100 / ENERGY_COST_ON_HIRE);
-					final base = getBase(useEnergy, ENERGY_COST_ON_HIRE, -.1);
-					final charmFactor = p1.charm / p2.charm;
-					// 人脈加成
-					final abiFactor = p1.abilities.has(10) ? 1.5 : 1;
-					final rate = base * charmFactor * abiFactor;
-					{
-						playerCost: {
-							id: playerId,
-							money: p2.cost * PEOPLE_HIRE_COST_FACTOR
-						},
-						peopleCost: {
-							id: p1.id,
-							energy: useEnergy,
-						},
-						successRate: rate
-					};
-				case _:
-					throw new haxe.Exception("fightPeople not right");
-			}
-		case _:
-			throw new haxe.Exception("not impl");
-	}
-}
-
-// 探索計算
-function getExploreCost(ctx:Context, playerId:Int, gridId:Int, p1SelectId:Int) {
-	return switch 0 {
-		case 0:
-			final grid = ctx.grids[gridId];
-			final p1 = getPeopleById(ctx, p1SelectId);
-			final useEnergy = p1.energy / (100 / ENERGY_COST_ON_EXPLORE);
-			final base = getBase(useEnergy, ENERGY_COST_ON_EXPLORE, .1);
-			final charmFactor = p1.charm / 100;
-			// 人脈加成
-			final abiFactor = p1.abilities.has(10) ? 1.5 : 1;
-			final rate = base * charmFactor * abiFactor;
-			return {
-				playerCost: {
-					id: playerId,
-				},
-				peopleCost: {
-					id: p1.id,
-					energy: useEnergy,
-				},
-				successRate: rate
-			};
-		case _:
-			throw new haxe.Exception("not impl");
-	}
-}
-
-// 經商買賣計算
-// money:    ability 4
-// food:     ability 5
-// army:     ability 11
-// strategy: ability 3
-// 智力、政治、魅力也會影響最終數值
-function getResourceCost(ctx:Context, playerId:Int, gridId:Int, p1SelectId:Int, market:MARKET, type:RESOURCE) {
-	trace("MondelVer2", "getResourceCost", market, type);
-	return switch 0 {
-		case 0:
-			final grid = ctx.grids[gridId];
-			final p1 = getPeopleById(ctx, p1SelectId);
-			final useEnergy = p1.energy / (100 / ENERGY_COST_ON_RESOURCE);
-			final base = getBase(useEnergy, ENERGY_COST_ON_RESOURCE, -0.2);
-			final abiFactor:Float = if (type == RESOURCE.MONEY && (p1.abilities.has(4))) {
-				1.5;
-			} else if (type == RESOURCE.ARMY && (p1.abilities.has(11))) {
-				1.5;
-			} else if (type == RESOURCE.FOOD && (p1.abilities.has(5))) {
-				1.5;
-			} else {
-				1;
-			};
-			final attrFactor:Float = if (type == RESOURCE.MONEY) {
-				(p1.political / 100) * .8 + (p1.intelligence / 100) * .1 + (p1.charm / 100) * .1 + (grid.money / 1000) * .1;
-			} else if (type == RESOURCE.ARMY) {
-				(p1.political / 100) * .1 + (p1.intelligence / 100) * .1 + (p1.charm / 100) * .8 + (grid.army / 1000) * .1;
-			} else if (type == RESOURCE.FOOD) {
-				(p1.political / 100) * .1 + (p1.intelligence / 100) * .8 + (p1.charm / 100) * .1 + (grid.food / 1000) * .1;
-			} else {
-				0;
-			};
-			final rate = (base + attrFactor) * abiFactor;
-			final returnInfo = {
-				playerCost: {
-					id: playerId,
-					money: 0.0,
-					army: 0.0,
-					food: 0.0,
-					strategy: 0.0,
-				},
-				peopleCost: {
-					id: p1.id,
-					energy: useEnergy,
-				}
-			};
-			switch [type, market] {
-				case [MONEY, _]:
-					returnInfo.playerCost.money = -1 * 100 * rate;
-				case [ARMY, SELL]:
-					final sellArmyCount = ARMY_PER_DEAL;
-					returnInfo.playerCost.money = -1 * sellArmyCount * rate;
-					returnInfo.playerCost.army = sellArmyCount;
-				case [FOOD, SELL]:
-					final sellFoodCount = FOOD_PER_DEAL;
-					returnInfo.playerCost.money = -1 * sellFoodCount * rate;
-					returnInfo.playerCost.food = sellFoodCount;
-				case [ARMY, BUY]:
-					final moneyCost = MONEY_PER_DEAL;
-					final gain = Math.min(moneyCost * rate, grid.army / 2);
-					returnInfo.playerCost.money = moneyCost;
-					returnInfo.playerCost.army = -gain;
-				case [FOOD, BUY]:
-					final moneyCost = MONEY_PER_DEAL;
-					final gain = Math.min(moneyCost * rate, grid.food / 2);
-					returnInfo.playerCost.money = moneyCost;
-					returnInfo.playerCost.food = -gain;
-				case _:
-					throw new haxe.Exception('not support: ${type} ${market}');
-			}
-			return returnInfo;
-		case _:
-			throw new haxe.Exception("not impl");
-	}
-}
-
-// =================================
-// 佔領
-// 派兵目前的設計是【糧食】消耗為主要，【金錢】次之或者不用消耗
-// 攻擊方主要參數為【武力】及【智力】  	防守方主要參數為【統率】及【智力】
-// 攻擊方影響能力[0,1,2,3]         	 防守方影響能力[0,1,2,3,8,9];
-// 2022/4/26 測試到奇怪的現象，就是感覺就是强很多的武將，結果爲了打爆對方。糧食扣的比爛武將多。感覺很奇怪？
-// =================================
-function getWarCost(ctx:Context, playerId:Int, gridId:Int, p1PeopleId:Int, p2PeopleId:Int, army1:Float, army2:Float, options:{occupy:Bool}) {
-	var atkMoneyCost = 0.0;
-	var atkFoodCost = 0.0;
-	{
-		final atkArmy = army1;
-		final atkPeople = getPeopleById(ctx, p1PeopleId);
-		final fact1 = if (atkPeople.abilities.has(6)) WAR_BACK_ABILITY_FACTOR else 1.0;
-		final fact2 = if (atkPeople.abilities.has(7)) WAR_BACK_ABILITY_FACTOR else 1.0;
-		final fact3 = atkPeople.intelligence / 100;
-		final base = atkArmy;
-		final cost = base * fact1 * fact2 * fact3;
-		atkMoneyCost = cost * WAR_MONEY_COST_FACTOR;
-		atkFoodCost = cost * WAR_FOOD_COST_FACTOR;
-	}
-	var atkDamage = 0.0;
-	var atkEnergyCost = 0.0;
-	{
-		final atkArmy = army1;
-		final defArmy = army2;
-		final atkPeople = getPeopleById(ctx, p1PeopleId);
-		final defPeople = getPeopleById(ctx, p2PeopleId);
-		final currMoney = ctx.players[playerId].money;
-		final currFood = ctx.players[playerId].food;
-		final moneyCost = atkMoneyCost;
-		final foodCost = atkFoodCost;
-		final useEnergy = atkPeople.energy / (100 / ENERGY_COST_ON_WAR);
-		final fact0 = useEnergy / ENERGY_COST_ON_WAR;
-		final fact1 = (atkArmy + defArmy * WAR_HIGH_LOW_FACTOR) / (defArmy + defArmy * WAR_HIGH_LOW_FACTOR);
-		final fact2 = if (atkPeople.abilities.has(0)) WAR_FRONT_ABILITY_FACTOR else 1.0;
-		final fact3 = if (atkPeople.abilities.has(1)) WAR_FRONT_ABILITY_FACTOR else 1.0;
-		final fact4 = if (atkPeople.abilities.has(2)) WAR_FRONT_ABILITY_FACTOR else 1.0;
-		final fact5 = if (atkPeople.abilities.has(3)) WAR_FRONT_ABILITY_FACTOR else 1.0;
-		final fact6 = atkPeople.force / defPeople.command;
-		final fact7 = atkPeople.intelligence / defPeople.intelligence;
-		final factMoney = if (currMoney - moneyCost < 0) (1.0 - (-1 * (currMoney - moneyCost) / moneyCost)) else 1.0;
-		final factFood = if (currFood - foodCost < 0) (1.0 - (-1 * (currFood - foodCost) / foodCost)) else 1.0;
-		final base = atkArmy;
-		final damage = atkArmy * WAR_ARMY_FACTOR + base * fact0 * fact1 * fact2 * fact3 * fact4 * fact5 * fact6 * fact7 * factMoney * factFood;
-		atkDamage = damage * WAR_FINAL_DAMAGE_FACTOR;
-		atkEnergyCost = useEnergy * getEnergyFactor(atkArmy);
-	}
-	var defMoneyCost = 0.0;
-	var defFoodCost = 0.0;
-	{
-		final atkArmy = army2;
-		final atkPeople = getPeopleById(ctx, p2PeopleId);
-		final fact1 = if (atkPeople.abilities.has(6)) WAR_BACK_ABILITY_FACTOR else 1.0;
-		final fact2 = if (atkPeople.abilities.has(7)) WAR_BACK_ABILITY_FACTOR else 1.0;
-		final fact3 = atkPeople.intelligence / 100;
-		final base = atkArmy;
-		final cost = base * fact1 * fact2 * fact3;
-		defMoneyCost = cost * WAR_MONEY_COST_FACTOR;
-		defFoodCost = cost * WAR_FOOD_COST_FACTOR;
-	}
-	var defDamage = 0.0;
-	var defEnergyCost = 0.0;
-	{
-		final atkArmy = army2;
-		final defArmy = army1;
-		final atkPeople = getPeopleById(ctx, p2PeopleId);
-		final defPeople = getPeopleById(ctx, p1PeopleId);
-		final currMoney = ctx.grids[gridId].money;
-		final currFood = ctx.grids[gridId].food;
-		final moneyCost = defMoneyCost;
-		final foodCost = defFoodCost;
-		final useEnergy = atkPeople.energy / (100 / ENERGY_COST_ON_WAR);
-		final fact0 = useEnergy / ENERGY_COST_ON_WAR;
-		final fact1 = (atkArmy + defArmy * WAR_HIGH_LOW_FACTOR) / (defArmy + defArmy * WAR_HIGH_LOW_FACTOR);
-		final fact2 = if (atkPeople.abilities.has(0)) WAR_FRONT_ABILITY_FACTOR else 1.0;
-		final fact3 = if (atkPeople.abilities.has(1)) WAR_FRONT_ABILITY_FACTOR else 1.0;
-		final fact4 = if (atkPeople.abilities.has(2)) WAR_FRONT_ABILITY_FACTOR else 1.0;
-		final fact5 = if (atkPeople.abilities.has(3)) WAR_FRONT_ABILITY_FACTOR else 1.0;
-		final fact6 = if (atkPeople.abilities.has(8)) WAR_FRONT_ABILITY_FACTOR else 1.0;
-		final fact7 = if (atkPeople.abilities.has(9)) WAR_FRONT_ABILITY_FACTOR else 1.0;
-		final fact8 = atkPeople.command / defPeople.force;
-		final fact9 = atkPeople.intelligence / defPeople.intelligence;
-		final factMoney = if (currMoney - moneyCost < 0) (1.0 - (-1 * (currMoney - moneyCost) / moneyCost)) else 1.0;
-		final factFood = if (currFood - foodCost < 0) (1.0 - (-1 * (currFood - foodCost) / foodCost)) else 1.0;
-		final base = if (options.occupy) atkArmy * WAR_DEFFENDER_FACTOR else 1.0;
-		final damage = atkArmy * WAR_ARMY_FACTOR + base * fact0 * fact1 * fact2 * fact3 * fact4 * fact5 * fact6 * fact7 * fact8 * fact9 * factMoney * factFood;
-		defDamage = damage * WAR_FINAL_DAMAGE_FACTOR;
-		defEnergyCost = useEnergy * getEnergyFactor(atkArmy);
-	}
-	return {
-		playerCost: [
-			{
-				id: (playerId : Null<Int>),
-				army: Math.min(defDamage, army1),
-				money: atkMoneyCost,
-				food: atkFoodCost,
-			},
-			{
-				id: getGridBelongPlayerId(ctx, gridId),
-				army: Math.min(atkDamage, army2),
-				money: defMoneyCost,
-				food: defFoodCost,
-			}
-		],
-		peopleCost: [
-			{
-				id: p1PeopleId,
-				energy: atkEnergyCost,
-			},
-			{
-				id: p2PeopleId,
-				energy: defEnergyCost,
-			}
-		],
-		success: options.occupy ? ((ctx.grids[gridId].army - atkDamage) <= 0) : (atkDamage > defDamage)
-	}
-}
-
 // 玩家回合結束
 function doPlayerEnd(ctx:Context) {
 	ctx.actions = [];
@@ -474,243 +150,6 @@ function doPlayerEnd(ctx:Context) {
 	ctx.currentPlayerId = (ctx.currentPlayerId + 1) % ctx.players.length;
 }
 
-function getMaintainPeople(ctx:Context, playerId:Int):Float {
-	final totalPeopleCost = ctx.peoples.filter(p -> p.belongToPlayerId == playerId).fold((p, a) -> {
-		return a + p.cost;
-	}, 0.0);
-	return getMaintainPeoplePure(totalPeopleCost);
-}
-
-function getMaintainArmy(ctx:Context, playerId:Int):Float {
-	final totalArmy = ctx.grids.filter(g -> getGridBelongPlayerId(ctx, g.id) == playerId).fold((p, a) -> {
-		return a + p.army;
-	}, 0.0) + ctx.players[playerId].army;
-	return getMaintainArmyPure(totalArmy);
-}
-
-function getMaintainPeoplePure(totalPeopleCost:Float):Float {
-	return totalPeopleCost * PLAYER_EARN_PER_TURN_PERSENT;
-}
-
-function getMaintainArmyPure(totalArmy:Float):Float {
-	return totalArmy * PLAYER_EARN_PER_TURN_PERSENT * 5;
-}
-
-function getPeopleInfo(ctx:Context, people:People):model.PeopleGenerator.People {
-	return {
-		id: people.id,
-		type: 0,
-		name: people.name,
-		command: Std.int(people.command),
-		force: Std.int(people.force),
-		intelligence: Std.int(people.intelligence),
-		political: Std.int(people.political),
-		charm: Std.int(people.charm),
-		cost: Std.int(people.cost),
-		abilities: people.abilities,
-		energy: Std.int(people.energy),
-		gridId: cast people.position.gridId,
-	}
-}
-
-function getPlayerInfo(ctx:Context, player:Player):model.IModel.PlayerInfo {
-	return {
-		id: player.id,
-		name: player.name,
-		money: player.money,
-		food: player.food,
-		army: player.army,
-		strategy: player.strategy,
-		people: ctx.peoples.filter(p -> p.position.player == true && p.belongToPlayerId == player.id).map(p -> getPeopleInfo(ctx, p)),
-		atGridId: player.position,
-		maintainPeople: getMaintainPeople(ctx, player.id),
-		maintainArmy: getMaintainArmy(ctx, player.id),
-		grids: ctx.grids.filter(g -> getGridBelongPlayerId(ctx, g.id) == player.id).map(g -> getGridInfo(ctx, g))
-	}
-}
-
-function getGridBelongPlayerId(ctx:Context, gridId:Int):Null<Int> {
-	final peopleInGrid = ctx.peoples.filter(p -> p.position.gridId == gridId);
-	return peopleInGrid.length > 0 ? peopleInGrid[0].belongToPlayerId : null;
-}
-
-function getGridInfo(ctx:Context, grid:Grid):model.GridGenerator.Grid {
-	final peopleInGrid = ctx.peoples.filter(p -> p.position.gridId == grid.id);
-	return {
-		id: grid.id,
-		landType: 0,
-		buildtype: grid.buildtype,
-		height: 0,
-		attachs: [],
-		belongPlayerId: cast getGridBelongPlayerId(ctx, grid.id),
-		value: 0,
-		money: grid.money,
-		moneyGrow: grid.moneyGrow,
-		food: grid.food,
-		foodGrow: grid.foodGrow,
-		army: grid.army,
-		armyGrow: grid.armyGrow,
-		people: peopleInGrid.map(p -> getPeopleInfo(ctx, p)),
-		favor: grid.favor
-	}
-}
-
-function getGameInfo(ctx:Context, root:Bool):GameInfo {
-	return {
-		players: ctx.players.map(p -> getPlayerInfo(ctx, p)),
-		grids: ctx.grids.map(p -> getGridInfo(ctx, p)),
-		isPlayerTurn: true,
-		currentPlayer: getPlayerInfo(ctx, ctx.players[ctx.currentPlayerId]),
-		isPlaying: true,
-		events: root ? ctx.events.map(e -> {
-			// 顯式使用類型(EventInfo), 這裡不能依靠類型推理, 不然會編譯錯誤
-			final eventInfo:model.IModel.EventInfo = switch e {
-				case WORLD_EVENT(value):
-					{
-						id: EventInfoID.WORLD_EVENT,
-						value: value,
-					}
-				case WALK_STOP(value):
-					{
-						id: EventInfoID.WALK_STOP,
-						value: value
-					}
-				case NEGOTIATE_RESULT(value):
-					{
-						id: EventInfoID.NEGOTIATE_RESULT,
-						value: value
-					}
-				case EXPLORE_RESULT(value):
-					{
-						id: EventInfoID.EXPLORE_RESULT,
-						value: value
-					}
-				case HIRE_RESULT(value):
-					{
-						id: EventInfoID.HIRE_RESULT,
-						value: value
-					}
-				case WAR_RESULT(value):
-					{
-						id: EventInfoID.WAR_RESULT,
-						value: value
-					}
-				case RESOURCE_RESULT(value):
-					{
-						id: EventInfoID.RESOURCE_RESULT,
-						value: value
-					}
-				case FIRE_RESULT(value):
-					{
-						id: EventInfoID.FIRE_RESULT,
-						value: value
-					}
-				case SNATCH_RESULT(value):
-					{
-						id: EventInfoID.SNATCH_RESULT,
-						value: value
-					}
-			}
-			return eventInfo;
-		}) : [],
-		actions: root ? ctx.actions.map(a -> {
-			final actionInfo:model.IModel.ActionInfo = switch a {
-				case MOVE(value, gameInfo):
-					{
-						id: ActionInfoID.MOVE,
-						value: value,
-						gameInfo: gameInfo
-					}
-			}
-			return actionInfo;
-		}) : []
-	}
-}
-
-function addGridInfo(ctx:Context, grid:model.GridGenerator.Grid):Void {
-	ctx.grids.push({
-		id: grid.id,
-		buildtype: grid.buildtype,
-		money: grid.money,
-		food: grid.food,
-		army: grid.army,
-		moneyGrow: grid.moneyGrow,
-		foodGrow: grid.foodGrow,
-		armyGrow: grid.armyGrow,
-		favor: grid.favor
-	});
-	for (p in grid.people) {
-		ctx.peoples.push({
-			id: p.id,
-			belongToPlayerId: null,
-			position: {
-				gridId: grid.id,
-				player: false
-			},
-			name: p.name,
-			force: p.force,
-			intelligence: p.intelligence,
-			political: p.political,
-			charm: p.charm,
-			cost: p.cost,
-			abilities: p.abilities,
-			command: p.command,
-			energy: p.energy,
-		});
-	}
-}
-
-function addPeopleInfo(ctx:Context, belongToPlayerId:Null<Int>, gridId:Null<Int>, p:model.PeopleGenerator.People):Void {
-	ctx.peoples.push({
-		id: p.id,
-		belongToPlayerId: belongToPlayerId,
-		position: {
-			gridId: gridId,
-			player: belongToPlayerId != null
-		},
-		name: p.name,
-		force: p.force,
-		intelligence: p.intelligence,
-		political: p.political,
-		charm: p.charm,
-		cost: p.cost,
-		abilities: p.abilities,
-		command: p.command,
-		energy: p.energy,
-	});
-}
-
-function addPlayerInfo(ctx:Context, player:model.IModel.PlayerInfo):Void {
-	ctx.players.push({
-		id: player.id,
-		name: player.name,
-		money: player.money,
-		food: player.food,
-		army: player.army,
-		strategy: player.strategy,
-		position: player.atGridId,
-	});
-	for (p in player.people) {
-		ctx.peoples.push({
-			id: p.id,
-			belongToPlayerId: player.id,
-			position: {
-				gridId: null,
-				player: true
-			},
-			name: p.name,
-			force: p.force,
-			intelligence: p.intelligence,
-			political: p.political,
-			charm: p.charm,
-			cost: p.cost,
-			abilities: p.abilities,
-			command: p.command,
-			energy: p.energy,
-		});
-	}
-}
-
 function initContext(ctx:Context, option:{}) {
 	final genGrids = model.GridGenerator.getInst().getGrids(30);
 	for (grid in genGrids) {
@@ -774,6 +213,75 @@ function doPlayerDice(ctx:Context) {
 // 交涉
 // 向城池奪取%資源
 // =================================
+// 稅收
+// 主公會得到所有城池的成數
+// =========================================
+// config
+// 以下的方法都不定義回傳的類型, 因為是動態設計, 做到哪想到哪
+// 每一個回傳都是依靠編譯器的類型推理
+// 所以可以把回傳最多欄位的放在case的第1個, 讓編譯器告訴你其它的回傳少了哪些欄位
+// =========================================
+// 交涉計算
+// 參與能力為:7良官
+function getNegoCost(ctx:Context, playerId:Int, gridId:Int, p1SelectId:Int, p2SelectId:Int) {
+	// 使用switch達成策略模式
+	// 0代表預設的隨意實作
+	return switch 0 {
+		case 0:
+			final grid = ctx.grids[gridId];
+			final fightPeople = [p1SelectId, p2SelectId].map(id -> getPeopleById(ctx, id));
+			return switch fightPeople {
+				case [p1, p2]:
+					// 用掉1/5的體力(最多20)
+					// 體力越少效率越低
+					final useEnergy = p1.energy / (100 / ENERGY_COST_ON_NEGO);
+					// 使用20體力的情況下基礎值為0.5
+					final base = getBase(useEnergy, ENERGY_COST_ON_NEGO, -.15);
+					final intelligenceFactor = p1.intelligence / p2.intelligence;
+					final politicalFactor = p1.political / p2.political;
+					final charmFactor = p1.charm / p2.charm;
+					// 良官加成(決定勝率)
+					final abiFactor = p1.abilities.has(7) ? 1.5 : 1;
+					final rate = base * intelligenceFactor * politicalFactor * charmFactor * abiFactor;
+
+					// 商才，務農，徵兵分別可以提高獲得數量
+					final gainRate = 0.05 * rate + .1;
+					{
+						playerCost: {
+							id: playerId,
+							army: ENABLE_NEGO_ARMY ? grid.army * (gainRate + (p1.abilities.has(11) ? .05 : 0)) : 0.0,
+							money: grid.money * (gainRate + (p1.abilities.has(4) ? .05 : 0)),
+							food: grid.food * (gainRate + (p1.abilities.has(5) ? .05 : 0))
+						},
+						peopleCost: {
+							id: p1.id,
+							energy: useEnergy,
+						},
+						successRate: rate
+					};
+				case _:
+					throw new haxe.Exception("fightPeople not right");
+			}
+		case 1:
+			// 版本1
+			{
+				playerCost: {
+					id: 0,
+					army: 0.0,
+					money: 0.0,
+					food: 0.0,
+				},
+				peopleCost: {
+					id: 0,
+					energy: 0.0,
+				},
+				successRate: 0.0,
+			}
+		case _:
+			throw new haxe.Exception("not impl");
+	}
+}
+
 function doGetTakeNegoPreview(ctx:Context, playerId:Int, gridId:Int):NegoPreview {
 	return {
 		p1ValidPeople: getPlayerInfo(ctx, ctx.players[playerId]).people,
@@ -877,6 +385,40 @@ function applyNegoCost(ctx:Context, playerId:Int, gridId:Int, p1SelectId:Int, p2
 	return true;
 }
 
+//
+// 雇用計算
+function getHireCost(ctx:Context, playerId:Int, gridId:Int, p1SelectId:Int, p2SelectId:Int) {
+	return switch 0 {
+		case 0:
+			final grid = ctx.grids[gridId];
+			final fightPeople = [p1SelectId, p2SelectId].map(p -> getPeopleById(ctx, p));
+			return switch fightPeople {
+				case [p1, p2]:
+					final useEnergy = p1.energy / (100 / ENERGY_COST_ON_HIRE);
+					final base = getBase(useEnergy, ENERGY_COST_ON_HIRE, -.1);
+					final charmFactor = p1.charm / p2.charm;
+					// 人脈加成
+					final abiFactor = p1.abilities.has(10) ? 1.5 : 1;
+					final rate = base * charmFactor * abiFactor;
+					{
+						playerCost: {
+							id: playerId,
+							money: p2.cost * PEOPLE_HIRE_COST_FACTOR
+						},
+						peopleCost: {
+							id: p1.id,
+							energy: useEnergy,
+						},
+						successRate: rate
+					};
+				case _:
+					throw new haxe.Exception("fightPeople not right");
+			}
+		case _:
+			throw new haxe.Exception("not impl");
+	}
+}
+
 function doGetTakeHirePreview(ctx:Context, playerId:Int, gridId:Int):HirePreview {
 	return {
 		p1ValidPeople: getPlayerInfo(ctx, ctx.players[playerId]).people,
@@ -962,6 +504,33 @@ function applyHireCost(ctx:Context, playerId:Int, gridId:Int, p1SelectId:Int, p2
 // =================================
 // 探索
 // ================================
+// 探索計算
+function getExploreCost(ctx:Context, playerId:Int, gridId:Int, p1SelectId:Int) {
+	return switch 0 {
+		case 0:
+			final grid = ctx.grids[gridId];
+			final p1 = getPeopleById(ctx, p1SelectId);
+			final useEnergy = p1.energy / (100 / ENERGY_COST_ON_EXPLORE);
+			final base = getBase(useEnergy, ENERGY_COST_ON_EXPLORE, .1);
+			final charmFactor = p1.charm / 100;
+			// 人脈加成
+			final abiFactor = p1.abilities.has(10) ? 1.5 : 1;
+			final rate = base * charmFactor * abiFactor;
+			return {
+				playerCost: {
+					id: playerId,
+				},
+				peopleCost: {
+					id: p1.id,
+					energy: useEnergy,
+				},
+				successRate: rate
+			};
+		case _:
+			throw new haxe.Exception("not impl");
+	}
+}
+
 function _getTakeExplorePreview(ctx:Context, playerId:Int, gridId:Int):ExplorePreview {
 	return {
 		p1ValidPeople: getPlayerInfo(ctx, ctx.players[playerId]).people
@@ -1023,6 +592,125 @@ function applyExploreCost(ctx:Context, playerId:Int, gridId:Int, p1SelectId:Int)
 	final newPeople = PeopleGenerator.getInst().generate();
 	addPeopleInfo(ctx, null, gridId, newPeople);
 	return [newPeople.id];
+}
+
+// =================================
+// 佔領
+// 派兵目前的設計是【糧食】消耗為主要，【金錢】次之或者不用消耗
+// 攻擊方主要參數為【武力】及【智力】  	防守方主要參數為【統率】及【智力】
+// 攻擊方影響能力[0,1,2,3]         	 防守方影響能力[0,1,2,3,8,9];
+// 2022/4/26 測試到奇怪的現象，就是感覺就是强很多的武將，結果爲了打爆對方。糧食扣的比爛武將多。感覺很奇怪？
+// =================================
+function getWarCost(ctx:Context, playerId:Int, gridId:Int, p1PeopleId:Int, p2PeopleId:Int, army1:Float, army2:Float, options:{occupy:Bool}) {
+	var atkMoneyCost = 0.0;
+	var atkFoodCost = 0.0;
+	{
+		final atkArmy = army1;
+		final atkPeople = getPeopleById(ctx, p1PeopleId);
+		final fact1 = if (atkPeople.abilities.has(6)) WAR_BACK_ABILITY_FACTOR else 1.0;
+		final fact2 = if (atkPeople.abilities.has(7)) WAR_BACK_ABILITY_FACTOR else 1.0;
+		final fact3 = atkPeople.intelligence / 100;
+		final base = atkArmy;
+		final cost = base * fact1 * fact2 * fact3;
+		atkMoneyCost = cost * WAR_MONEY_COST_FACTOR;
+		atkFoodCost = cost * WAR_FOOD_COST_FACTOR;
+	}
+	var atkDamage = 0.0;
+	var atkEnergyCost = 0.0;
+	{
+		final atkArmy = army1;
+		final defArmy = army2;
+		final atkPeople = getPeopleById(ctx, p1PeopleId);
+		final defPeople = getPeopleById(ctx, p2PeopleId);
+		final currMoney = ctx.players[playerId].money;
+		final currFood = ctx.players[playerId].food;
+		final moneyCost = atkMoneyCost;
+		final foodCost = atkFoodCost;
+		final useEnergy = atkPeople.energy / (100 / ENERGY_COST_ON_WAR);
+		final fact0 = useEnergy / ENERGY_COST_ON_WAR;
+		final fact1 = (atkArmy + defArmy * WAR_HIGH_LOW_FACTOR) / (defArmy + defArmy * WAR_HIGH_LOW_FACTOR);
+		final fact2 = if (atkPeople.abilities.has(0)) WAR_FRONT_ABILITY_FACTOR else 1.0;
+		final fact3 = if (atkPeople.abilities.has(1)) WAR_FRONT_ABILITY_FACTOR else 1.0;
+		final fact4 = if (atkPeople.abilities.has(2)) WAR_FRONT_ABILITY_FACTOR else 1.0;
+		final fact5 = if (atkPeople.abilities.has(3)) WAR_FRONT_ABILITY_FACTOR else 1.0;
+		final fact6 = atkPeople.force / defPeople.command;
+		final fact7 = atkPeople.intelligence / defPeople.intelligence;
+		final factMoney = if (currMoney - moneyCost < 0) (1.0 - (-1 * (currMoney - moneyCost) / moneyCost)) else 1.0;
+		final factFood = if (currFood - foodCost < 0) (1.0 - (-1 * (currFood - foodCost) / foodCost)) else 1.0;
+		final base = atkArmy;
+		final damage = atkArmy * WAR_ARMY_FACTOR + base * fact0 * fact1 * fact2 * fact3 * fact4 * fact5 * fact6 * fact7 * factMoney * factFood;
+		atkDamage = damage * WAR_FINAL_DAMAGE_FACTOR;
+		atkEnergyCost = useEnergy * getEnergyFactor(atkArmy);
+	}
+	var defMoneyCost = 0.0;
+	var defFoodCost = 0.0;
+	{
+		final atkArmy = army2;
+		final atkPeople = getPeopleById(ctx, p2PeopleId);
+		final fact1 = if (atkPeople.abilities.has(6)) WAR_BACK_ABILITY_FACTOR else 1.0;
+		final fact2 = if (atkPeople.abilities.has(7)) WAR_BACK_ABILITY_FACTOR else 1.0;
+		final fact3 = atkPeople.intelligence / 100;
+		final base = atkArmy;
+		final cost = base * fact1 * fact2 * fact3;
+		defMoneyCost = cost * WAR_MONEY_COST_FACTOR;
+		defFoodCost = cost * WAR_FOOD_COST_FACTOR;
+	}
+	var defDamage = 0.0;
+	var defEnergyCost = 0.0;
+	{
+		final atkArmy = army2;
+		final defArmy = army1;
+		final atkPeople = getPeopleById(ctx, p2PeopleId);
+		final defPeople = getPeopleById(ctx, p1PeopleId);
+		final currMoney = ctx.grids[gridId].money;
+		final currFood = ctx.grids[gridId].food;
+		final moneyCost = defMoneyCost;
+		final foodCost = defFoodCost;
+		final useEnergy = atkPeople.energy / (100 / ENERGY_COST_ON_WAR);
+		final fact0 = useEnergy / ENERGY_COST_ON_WAR;
+		final fact1 = (atkArmy + defArmy * WAR_HIGH_LOW_FACTOR) / (defArmy + defArmy * WAR_HIGH_LOW_FACTOR);
+		final fact2 = if (atkPeople.abilities.has(0)) WAR_FRONT_ABILITY_FACTOR else 1.0;
+		final fact3 = if (atkPeople.abilities.has(1)) WAR_FRONT_ABILITY_FACTOR else 1.0;
+		final fact4 = if (atkPeople.abilities.has(2)) WAR_FRONT_ABILITY_FACTOR else 1.0;
+		final fact5 = if (atkPeople.abilities.has(3)) WAR_FRONT_ABILITY_FACTOR else 1.0;
+		final fact6 = if (atkPeople.abilities.has(8)) WAR_FRONT_ABILITY_FACTOR else 1.0;
+		final fact7 = if (atkPeople.abilities.has(9)) WAR_FRONT_ABILITY_FACTOR else 1.0;
+		final fact8 = atkPeople.command / defPeople.force;
+		final fact9 = atkPeople.intelligence / defPeople.intelligence;
+		final factMoney = if (currMoney - moneyCost < 0) (1.0 - (-1 * (currMoney - moneyCost) / moneyCost)) else 1.0;
+		final factFood = if (currFood - foodCost < 0) (1.0 - (-1 * (currFood - foodCost) / foodCost)) else 1.0;
+		final base = if (options.occupy) atkArmy * WAR_DEFFENDER_FACTOR else 1.0;
+		final damage = atkArmy * WAR_ARMY_FACTOR + base * fact0 * fact1 * fact2 * fact3 * fact4 * fact5 * fact6 * fact7 * fact8 * fact9 * factMoney * factFood;
+		defDamage = damage * WAR_FINAL_DAMAGE_FACTOR;
+		defEnergyCost = useEnergy * getEnergyFactor(atkArmy);
+	}
+	return {
+		playerCost: [
+			{
+				id: (playerId : Null<Int>),
+				army: Math.min(defDamage, army1),
+				money: atkMoneyCost,
+				food: atkFoodCost,
+			},
+			{
+				id: getGridBelongPlayerId(ctx, gridId),
+				army: Math.min(atkDamage, army2),
+				money: defMoneyCost,
+				food: defFoodCost,
+			}
+		],
+		peopleCost: [
+			{
+				id: p1PeopleId,
+				energy: atkEnergyCost,
+			},
+			{
+				id: p2PeopleId,
+				energy: defEnergyCost,
+			}
+		],
+		success: options.occupy ? ((ctx.grids[gridId].army - atkDamage) <= 0) : (atkDamage > defDamage)
+	}
 }
 
 function _getTakeWarPreview(ctx:Context, playerId:Int, gridId:Int):WarPreview {
@@ -1216,6 +904,82 @@ function applyWarCost(ctx:Context, playerId:Int, gridId:Int, p1PeopleId:Int, p2P
 // 2022/4/26 希望演算法可以把當前格子的資源量納入計算，資源越多，可以得到越多
 // 2022/4/26 這個交易的資源也是會影響格子裏的資源量。就是經過交易后變少或變多
 // =================================
+// 經商買賣計算
+// money:    ability 4
+// food:     ability 5
+// army:     ability 11
+// strategy: ability 3
+// 智力、政治、魅力也會影響最終數值
+function getResourceCost(ctx:Context, playerId:Int, gridId:Int, p1SelectId:Int, market:MARKET, type:RESOURCE) {
+	trace("MondelVer2", "getResourceCost", market, type);
+	return switch 0 {
+		case 0:
+			final grid = ctx.grids[gridId];
+			final p1 = getPeopleById(ctx, p1SelectId);
+			final useEnergy = p1.energy / (100 / ENERGY_COST_ON_RESOURCE);
+			final base = getBase(useEnergy, ENERGY_COST_ON_RESOURCE, -0.2);
+			final abiFactor:Float = if (type == RESOURCE.MONEY && (p1.abilities.has(4))) {
+				1.5;
+			} else if (type == RESOURCE.ARMY && (p1.abilities.has(11))) {
+				1.5;
+			} else if (type == RESOURCE.FOOD && (p1.abilities.has(5))) {
+				1.5;
+			} else {
+				1;
+			};
+			final attrFactor:Float = if (type == RESOURCE.MONEY) {
+				(p1.political / 100) * .8 + (p1.intelligence / 100) * .1 + (p1.charm / 100) * .1 + (grid.money / 1000) * .1;
+			} else if (type == RESOURCE.ARMY) {
+				(p1.political / 100) * .1 + (p1.intelligence / 100) * .1 + (p1.charm / 100) * .8 + (grid.army / 1000) * .1;
+			} else if (type == RESOURCE.FOOD) {
+				(p1.political / 100) * .1 + (p1.intelligence / 100) * .8 + (p1.charm / 100) * .1 + (grid.food / 1000) * .1;
+			} else {
+				0;
+			};
+			final rate = (base + attrFactor) * abiFactor;
+			final returnInfo = {
+				playerCost: {
+					id: playerId,
+					money: 0.0,
+					army: 0.0,
+					food: 0.0,
+					strategy: 0.0,
+				},
+				peopleCost: {
+					id: p1.id,
+					energy: useEnergy,
+				}
+			};
+			switch [type, market] {
+				case [MONEY, _]:
+					returnInfo.playerCost.money = -1 * 100 * rate;
+				case [ARMY, SELL]:
+					final sellArmyCount = ARMY_PER_DEAL;
+					returnInfo.playerCost.money = -1 * sellArmyCount * rate;
+					returnInfo.playerCost.army = sellArmyCount;
+				case [FOOD, SELL]:
+					final sellFoodCount = FOOD_PER_DEAL;
+					returnInfo.playerCost.money = -1 * sellFoodCount * rate;
+					returnInfo.playerCost.food = sellFoodCount;
+				case [ARMY, BUY]:
+					final moneyCost = MONEY_PER_DEAL;
+					final gain = Math.min(moneyCost * rate, grid.army / 2);
+					returnInfo.playerCost.money = moneyCost;
+					returnInfo.playerCost.army = -gain;
+				case [FOOD, BUY]:
+					final moneyCost = MONEY_PER_DEAL;
+					final gain = Math.min(moneyCost * rate, grid.food / 2);
+					returnInfo.playerCost.money = moneyCost;
+					returnInfo.playerCost.food = -gain;
+				case _:
+					throw new haxe.Exception('not support: ${type} ${market}');
+			}
+			return returnInfo;
+		case _:
+			throw new haxe.Exception("not impl");
+	}
+}
+
 function _getTakeResourcePreview(ctx:Context, playerId:Int, gridId:Int, market:MARKET, type:RESOURCE):ResourcePreview {
 	return {
 		p1ValidPeople: getPlayerInfo(ctx, ctx.players[playerId]).people

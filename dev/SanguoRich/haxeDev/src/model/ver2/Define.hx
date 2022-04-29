@@ -1,7 +1,10 @@
 package model.ver2;
 
-import model.GridGenerator.BUILDING;
-import model.IModel.GameInfo;
+import model.GridGenerator;
+import model.IModel;
+import model.ver2.Config;
+
+using Lambda;
 
 typedef Grid = {
 	id:Int,
@@ -156,4 +159,241 @@ typedef Context = {
 	actions:Array<Action>,
 	events:Array<Event>,
 	turn:Int
+}
+
+function getPeopleInfo(ctx:Context, people:People):model.PeopleGenerator.People {
+	return {
+		id: people.id,
+		type: 0,
+		name: people.name,
+		command: Std.int(people.command),
+		force: Std.int(people.force),
+		intelligence: Std.int(people.intelligence),
+		political: Std.int(people.political),
+		charm: Std.int(people.charm),
+		cost: Std.int(people.cost),
+		abilities: people.abilities,
+		energy: Std.int(people.energy),
+		gridId: cast people.position.gridId,
+	}
+}
+
+function getPlayerInfo(ctx:Context, player:Player):model.IModel.PlayerInfo {
+	return {
+		id: player.id,
+		name: player.name,
+		money: player.money,
+		food: player.food,
+		army: player.army,
+		strategy: player.strategy,
+		people: ctx.peoples.filter(p -> p.position.player == true && p.belongToPlayerId == player.id).map(p -> getPeopleInfo(ctx, p)),
+		atGridId: player.position,
+		maintainPeople: getMaintainPeople(ctx, player.id),
+		maintainArmy: getMaintainArmy(ctx, player.id),
+		grids: ctx.grids.filter(g -> getGridBelongPlayerId(ctx, g.id) == player.id).map(g -> getGridInfo(ctx, g))
+	}
+}
+
+function getGridBelongPlayerId(ctx:Context, gridId:Int):Null<Int> {
+	final peopleInGrid = ctx.peoples.filter(p -> p.position.gridId == gridId);
+	return peopleInGrid.length > 0 ? peopleInGrid[0].belongToPlayerId : null;
+}
+
+function getGridInfo(ctx:Context, grid:Grid):model.GridGenerator.Grid {
+	final peopleInGrid = ctx.peoples.filter(p -> p.position.gridId == grid.id);
+	return {
+		id: grid.id,
+		landType: 0,
+		buildtype: grid.buildtype,
+		height: 0,
+		attachs: [],
+		belongPlayerId: cast getGridBelongPlayerId(ctx, grid.id),
+		value: 0,
+		money: grid.money,
+		moneyGrow: grid.moneyGrow,
+		food: grid.food,
+		foodGrow: grid.foodGrow,
+		army: grid.army,
+		armyGrow: grid.armyGrow,
+		people: peopleInGrid.map(p -> getPeopleInfo(ctx, p)),
+		favor: grid.favor
+	}
+}
+
+function getGameInfo(ctx:Context, root:Bool):GameInfo {
+	return {
+		players: ctx.players.map(p -> getPlayerInfo(ctx, p)),
+		grids: ctx.grids.map(p -> getGridInfo(ctx, p)),
+		isPlayerTurn: true,
+		currentPlayer: getPlayerInfo(ctx, ctx.players[ctx.currentPlayerId]),
+		isPlaying: true,
+		events: root ? ctx.events.map(e -> {
+			// 顯式使用類型(EventInfo), 這裡不能依靠類型推理, 不然會編譯錯誤
+			final eventInfo:model.IModel.EventInfo = switch e {
+				case WORLD_EVENT(value):
+					{
+						id: EventInfoID.WORLD_EVENT,
+						value: value,
+					}
+				case WALK_STOP(value):
+					{
+						id: EventInfoID.WALK_STOP,
+						value: value
+					}
+				case NEGOTIATE_RESULT(value):
+					{
+						id: EventInfoID.NEGOTIATE_RESULT,
+						value: value
+					}
+				case EXPLORE_RESULT(value):
+					{
+						id: EventInfoID.EXPLORE_RESULT,
+						value: value
+					}
+				case HIRE_RESULT(value):
+					{
+						id: EventInfoID.HIRE_RESULT,
+						value: value
+					}
+				case WAR_RESULT(value):
+					{
+						id: EventInfoID.WAR_RESULT,
+						value: value
+					}
+				case RESOURCE_RESULT(value):
+					{
+						id: EventInfoID.RESOURCE_RESULT,
+						value: value
+					}
+				case FIRE_RESULT(value):
+					{
+						id: EventInfoID.FIRE_RESULT,
+						value: value
+					}
+				case SNATCH_RESULT(value):
+					{
+						id: EventInfoID.SNATCH_RESULT,
+						value: value
+					}
+			}
+			return eventInfo;
+		}) : [],
+		actions: root ? ctx.actions.map(a -> {
+			final actionInfo:model.IModel.ActionInfo = switch a {
+				case MOVE(value, gameInfo):
+					{
+						id: ActionInfoID.MOVE,
+						value: value,
+						gameInfo: gameInfo
+					}
+			}
+			return actionInfo;
+		}) : []
+	}
+}
+
+function addGridInfo(ctx:Context, grid:model.GridGenerator.Grid):Void {
+	ctx.grids.push({
+		id: grid.id,
+		buildtype: grid.buildtype,
+		money: grid.money,
+		food: grid.food,
+		army: grid.army,
+		moneyGrow: grid.moneyGrow,
+		foodGrow: grid.foodGrow,
+		armyGrow: grid.armyGrow,
+		favor: grid.favor
+	});
+	for (p in grid.people) {
+		ctx.peoples.push({
+			id: p.id,
+			belongToPlayerId: null,
+			position: {
+				gridId: grid.id,
+				player: false
+			},
+			name: p.name,
+			force: p.force,
+			intelligence: p.intelligence,
+			political: p.political,
+			charm: p.charm,
+			cost: p.cost,
+			abilities: p.abilities,
+			command: p.command,
+			energy: p.energy,
+		});
+	}
+}
+
+function addPeopleInfo(ctx:Context, belongToPlayerId:Null<Int>, gridId:Null<Int>, p:model.PeopleGenerator.People):Void {
+	ctx.peoples.push({
+		id: p.id,
+		belongToPlayerId: belongToPlayerId,
+		position: {
+			gridId: gridId,
+			player: belongToPlayerId != null
+		},
+		name: p.name,
+		force: p.force,
+		intelligence: p.intelligence,
+		political: p.political,
+		charm: p.charm,
+		cost: p.cost,
+		abilities: p.abilities,
+		command: p.command,
+		energy: p.energy,
+	});
+}
+
+function addPlayerInfo(ctx:Context, player:model.IModel.PlayerInfo):Void {
+	ctx.players.push({
+		id: player.id,
+		name: player.name,
+		money: player.money,
+		food: player.food,
+		army: player.army,
+		strategy: player.strategy,
+		position: player.atGridId,
+	});
+	for (p in player.people) {
+		ctx.peoples.push({
+			id: p.id,
+			belongToPlayerId: player.id,
+			position: {
+				gridId: null,
+				player: true
+			},
+			name: p.name,
+			force: p.force,
+			intelligence: p.intelligence,
+			political: p.political,
+			charm: p.charm,
+			cost: p.cost,
+			abilities: p.abilities,
+			command: p.command,
+			energy: p.energy,
+		});
+	}
+}
+
+function getMaintainPeople(ctx:Context, playerId:Int):Float {
+	final totalPeopleCost = ctx.peoples.filter(p -> p.belongToPlayerId == playerId).fold((p, a) -> {
+		return a + p.cost;
+	}, 0.0);
+	return getMaintainPeoplePure(totalPeopleCost);
+}
+
+function getMaintainArmy(ctx:Context, playerId:Int):Float {
+	final totalArmy = ctx.grids.filter(g -> getGridBelongPlayerId(ctx, g.id) == playerId).fold((p, a) -> {
+		return a + p.army;
+	}, 0.0) + ctx.players[playerId].army;
+	return getMaintainArmyPure(totalArmy);
+}
+
+function getMaintainPeoplePure(totalPeopleCost:Float):Float {
+	return totalPeopleCost * PLAYER_EARN_PER_TURN_PERSENT;
+}
+
+function getMaintainArmyPure(totalArmy:Float):Float {
+	return totalArmy * PLAYER_EARN_PER_TURN_PERSENT * 5;
 }
