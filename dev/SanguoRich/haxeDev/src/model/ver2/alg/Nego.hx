@@ -38,12 +38,31 @@ function getNegoCost(ctx:Context, playerId:Int, gridId:Int, p1SelectId:Int, p2Se
 					final intelligenceFactor = p1.intelligence / p2.intelligence;
 					final politicalFactor = p1.political / p2.political;
 					final charmFactor = p1.charm / p2.charm;
-					// 良官加成(決定勝率)
-					final abiFactor = p1.abilities.has(7) ? 1.5 : 1;
-					final rate = base * intelligenceFactor * politicalFactor * charmFactor * abiFactor;
+					
+					// 沒有良官的時候，rate最高限制在1.2
+					var rate = base * intelligenceFactor * politicalFactor * charmFactor;
+					rate = Math.min(rate, 1.2);
 
-					// 商才，務農，徵兵分別可以提高獲得數量
-					final gainRate = 0.05 * rate + .1;
+					// 良官加成，rate最高可以突破1.2
+					final abiFactor = p1.abilities.has(7) ? 1.5 : 1;
+					rate *= abiFactor;
+
+					// 根據友好度決定基本%數
+					final favor = grid.favor[playerId];
+					final basePersent = if(favor <= -2) {
+						0.02;
+					} else if (favor <= -1) {
+						0.05;
+					} else if (favor <= 0) {
+						0.1;
+					} else if (favor <= 1) {
+						0.15;
+					} else {
+						0.2;
+					}
+
+					// 商才，務農，徵兵分別可以提高獲得數量（rate些微影響獲得的數量）
+					final gainRate = basePersent + rate / 50;
 					{
 						playerCost: {
 							id: playerId,
