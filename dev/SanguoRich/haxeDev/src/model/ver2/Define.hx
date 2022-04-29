@@ -208,14 +208,16 @@ function getGridBelongPlayerId(ctx:Context, gridId:Int):Null<Int> {
 
 function getGridInfo(ctx:Context, grid:Grid):model.GridGenerator.Grid {
 	final peopleInGrid = ctx.peoples.filter(p -> p.position.gridId == grid.id);
+	final belongPlayerId = getGridBelongPlayerId(ctx, grid.id);
+	final isEmpty = belongPlayerId == null && peopleInGrid.length == 0;
 	return {
 		id: grid.id,
 		name: grid.name,
 		landType: 0,
-		buildtype: grid.buildtype,
+		buildtype: isEmpty ? BUILDING.EMPTY : grid.buildtype,
 		height: 0,
 		attachs: [],
-		belongPlayerId: cast getGridBelongPlayerId(ctx, grid.id),
+		belongPlayerId: cast belongPlayerId,
 		value: 0,
 		money: grid.money,
 		moneyGrow: grid.moneyGrow,
@@ -285,7 +287,7 @@ function getGameInfo(ctx:Context, root:Bool):GameInfo {
 					}
 				case STRATEGY_RESULT(value):
 					{
-						id: EventInfoID.SNATCH_RESULT,
+						id: EventInfoID.STRATEGY_RESULT,
 						value: value
 					}
 			}
