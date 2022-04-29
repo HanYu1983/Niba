@@ -4,7 +4,15 @@ import model.GridGenerator;
 import model.IModel;
 import model.ver2.Config;
 import model.ver2.Define;
-import model.ver2.Alg;
+import model.ver2.alg.Alg;
+import model.ver2.alg.Nego;
+import model.ver2.alg.Hire;
+import model.ver2.alg.Explore;
+import model.ver2.alg.War;
+import model.ver2.alg.Resource;
+import model.ver2.alg.Fire;
+import model.ver2.alg.Snatch;
+import model.ver2.alg.Transfer;
 
 class ModelVer2 extends DebugModel {
 	final context:Context = {

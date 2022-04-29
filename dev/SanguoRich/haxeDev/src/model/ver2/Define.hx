@@ -397,3 +397,11 @@ function getMaintainPeoplePure(totalPeopleCost:Float):Float {
 function getMaintainArmyPure(totalArmy:Float):Float {
 	return totalArmy * PLAYER_EARN_PER_TURN_PERSENT * 5;
 }
+
+function getPeopleById(ctx:Context, id:Int):People {
+	final find = ctx.peoples.filter(p -> p.id == id);
+	if (find.length == 0) {
+		throw new haxe.Exception('people not found: ${id}');
+	}
+	return find[0];
+}
