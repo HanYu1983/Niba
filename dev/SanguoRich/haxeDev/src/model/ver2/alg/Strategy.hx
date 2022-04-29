@@ -110,6 +110,7 @@ function _takeStrategy(ctx:Context, p1PeopleId:Int, strategyId:Int, targetPlayer
 		throw new Exception("belongToPlayerId not found");
 	}
 	final player = ctx.players[p1.belongToPlayerId];
+	final playerOriginPosition = player.position;
 	final strategy = StrategyList[strategyId];
 	final strategyResultValue = {
 		success: false,
@@ -122,10 +123,12 @@ function _takeStrategy(ctx:Context, p1PeopleId:Int, strategyId:Int, targetPlayer
 	strategyResultValue.success = success;
 	strategyResultValue.people = getPeopleInfo(ctx, p1);
 	strategyResultValue.energyAfter = p1.energy;
-	ctx.events = [
-		Event.STRATEGY_RESULT(strategyResultValue),
-		WALK_STOP({
+	ctx.events = [Event.STRATEGY_RESULT(strategyResultValue)];
+	// 有改變位置才送WALK_STOP
+	final isPositionChange = player.position != playerOriginPosition;
+	if (isPositionChange) {
+		ctx.events.push(WALK_STOP({
 			grid: getGridInfo(ctx, ctx.grids[player.position])
-		})
-	];
+		}));
+	}
 }
