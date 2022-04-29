@@ -214,6 +214,7 @@ class MainView extends Absolute {
 		box_npcCmds.hide();
 		box_enemyCmds.hide();
 
+		btn_showStrategy.text = '${btn_showStrategy.text}(${ENERGY_COST_ON_STRATEGY})';
 		btn_negotiate.text = '${btn_negotiate.text}(${ENERGY_COST_ON_NEGO})';
 		btn_snatch.text = '${btn_snatch.text}(${ENERGY_COST_ON_SNATCH})';
 		btn_occupation.text = '${btn_occupation.text}(${ENERGY_COST_ON_WAR})';
@@ -234,11 +235,11 @@ class MainView extends Absolute {
 		box_enemyCmds.hide();
 	}
 
-	@:bind(btn_assignPeople, MouseEvent.CLICK)
-	function onBtnAssignPeopleClick(e:MouseEvent) {
-		final p = peopleListView.selectedItem;
-		if (p) {}
-	}
+	// @:bind(btn_assignPeople, MouseEvent.CLICK)
+	// function onBtnAssignPeopleClick(e:MouseEvent) {
+	// 	final p = peopleListView.selectedItem;
+	// 	if (p) {}
+	// }
 
 	@:bind(btn_firePeople, MouseEvent.CLICK)
 	function onBtnFirePeopleClick(e:MouseEvent) {
@@ -478,8 +479,8 @@ class MainView extends Absolute {
 	//     // warPreviewView.showPreviewWar(previewInfo);
 	// }
 
-	@:bind(btn_warStrategy, MouseEvent.CLICK)
-	function onBtnWarStrategyClick(e:MouseEvent) {}
+	// @:bind(btn_warStrategy, MouseEvent.CLICK)
+	// function onBtnWarStrategyClick(e:MouseEvent) {}
 
 	// @:bind(btn_give, MouseEvent.CLICK)
 	// function onBtnGiveClick(e:MouseEvent){

@@ -40,7 +40,7 @@
                         <vbox width="100%">
                             <button text="移動" width="100%" id="btn_go" />
                             <button text="計略" width="100%" id="btn_showStrategy" />
-                            <button text="指派" width="100%" id="btn_assignPeople" />
+                            <!-- <button text="指派" width="100%" id="btn_assignPeople" /> -->
                             <button text="解雇" width="100%" id="btn_firePeople" />
                         </vbox>
                     </frame>
@@ -55,7 +55,7 @@
                         <vbox width="100%">
                             <button text="搶奪" width="100%" id="btn_snatchPlayer" />
                             <button text="攻城" width="100%" id="btn_occupationPlayer" />
-                            <button text="計策" width="100%" id="btn_warStrategy" />
+                            <!-- <button text="計策" width="100%" id="btn_warStrategy" /> -->
                             <!-- 回合結束時如果站在敵方玩家的地區，會給出扣資源事件 -->
                             <!-- <button text="進貢" width="100%" id="btn_give" /> -->
                         </vbox>

@@ -87,6 +87,7 @@ function getEnergyFactor(atkArmy:Float) {
 	return (Math.min(atkArmy / 500, 1) * .3 + .7);
 }
 
+final ENERGY_COST_ON_STRATEGY = 40;
 final ENERGY_COST_ON_HIRE = 10;
 final ENERGY_COST_ON_NEGO = 20;
 final ENERGY_COST_ON_RESOURCE = 20;
