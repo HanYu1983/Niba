@@ -182,7 +182,7 @@ function initContext(ctx:Context, option:{}) {
 	}
 	var i = 0;
 	// for (name in ["vic", "han", "xiao", "any"]) {
-	for (name in ["vic", "han"]) {
+	for (name in ["劉備", "曹操"]) {
 		addPlayerInfo(ctx, {
 			id: i++,
 			name: name,

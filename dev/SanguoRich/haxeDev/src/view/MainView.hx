@@ -207,7 +207,6 @@ class MainView extends Absolute {
 	@:bind(this, UIEvent.READY)
 	function onUIReady(e:UIEvent) {
 		for (index => grid in grids) {
-			grid.name = index + "";
 			grid.left = (index % 10) * gridSize;
 			grid.top = Math.floor(index / 10) * gridSize;
 		}
@@ -436,7 +435,7 @@ class MainView extends Absolute {
 	function onBtnStartClick(e:MouseEvent) {
 		Main.model.gameStart(() -> {
 			for (index => player in Main.model.gameInfo().players) {
-				players[index].name = player.name;
+				players[index].name = player.name.substr(0,1);
 			}
 			syncView();
 		});
@@ -507,10 +506,7 @@ class MainView extends Absolute {
 
 		TweenX.serial(tweens);
 
-		trace('經商，買賣糧食，買賣士兵，不能拿超過格子本身的一半');
 		trace('目前聘用的後端如果金錢不夠沒有防呆，我前段先防了');
-		trace('野戰的時候，敵人要調成沒有防守加成');
-		trace('nego的result事件也要給favorBefore, favorAfter');
 	}
 
 	function syncViewByInfo(gameInfo:GameInfo) {
@@ -682,6 +678,16 @@ class MainView extends Absolute {
 				case WORLD_EVENT:
 					growView.showPopup(event.value);
 					box_basicCmds.show();
+				case STRATEGY_RESULT:
+					final info:Dynamic = event.value;
+
+					final msg = '${info.success ? '計策成功' : '計策失敗'}\n
+武將:${info.people ? info.people.name : ""}\n
+武將:${info.strategy ? info.strategy.name : ""}\n
+體力:${Main.getFixNumber(info.energyBefore, 0)} => ${Main.getFixNumber(info.energyAfter, 0)}\n
+                    ';
+					messageView.showMessage(msg);
+					doOneEvent(gameInfo);
 			}
 		}
 	}
@@ -802,9 +808,6 @@ class MainView extends Absolute {
 	function syncGridViews(gameInfo:GameInfo) {
 		for (index => info in gameInfo.grids) {
 			var grid = grids[index];
-			grid.type = info.landType;
-			grid.building = info.buildtype;
-			grid.playerId = info.belongPlayerId == null ? -1 : info.belongPlayerId;
 			grid.setInfo(info);
 		}
 	}
@@ -819,8 +822,13 @@ class MainView extends Absolute {
 		}
 	}
 
-	public function onStrategyPreviewConfirmClick(peopleId:Dynamic, strategyId:Dynamic) {
-		var player = Main.model.gameInfo().currentPlayer;
-		Main.model.getTakeStrategyPreview(player.id, player.atGridId, peopleId, strategyId);
+	public function onStrategyPreviewConfirmClick(peopleId:Int, strategyId:Int, targetPlayerId:Int, targetPeopleId:Int, targetGridId:Int) {
+		Main.model.takeStrategy(
+			peopleId, 
+			strategyId, 
+			targetPlayerId, 
+			targetPeopleId, 
+			targetGridId,
+			syncViewByInfo);
 	}
 }

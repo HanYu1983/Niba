@@ -18,9 +18,12 @@ class StrategyListView extends TableView{
         dataSource.clear();
         for (strategy in strategys) {
             Reflect.setField(strategy, 'target', switch(strategy.targetType){
-                case PLAYER_SELF: '玩家自己';
-                case PLAYER_SELF_PEOPLE: '玩家自己的武將';
-                case CURRENT_GRID: '玩家所在的格子';
+                case TARGET_GRID: '指定格子';
+                case TARGET_PLAYER: '指定玩家';
+                case TARGET_PEOPLE: '指定武將';
+                case SELF_GRID: '玩家自己';
+                case SELF_PEOPLE: '玩家自己的武將';
+                case SELF_PLAYER: '玩家所在的格子';
             });
             dataSource.add(strategy);
         }

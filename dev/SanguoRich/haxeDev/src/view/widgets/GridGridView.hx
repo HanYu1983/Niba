@@ -20,7 +20,7 @@ class GridGridView extends BasicGridView{
         final gameInfo = Main.model.gameInfo();
 
         var grid:Grid = info;
-        pro_name.value = grid.id;
+        pro_name.value = grid.name;
         // pro_landType.value = grid.landType;
         
         pro_money.value = '${Math.floor(grid.money)} (成:${Main.getRateString(grid.moneyGrow)})';

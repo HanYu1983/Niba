@@ -122,20 +122,20 @@ final StrategyList:Array<Strategy> = [
 		name: '暗渡陳艙',
 		intelligence: 70,
 		describe: '移動指定格數',
-		targetType: StrategyTargetType.PLAYER_SELF
+		targetType: StrategyTargetType.TARGET_GRID
 	},
 	{
 		id:1,
 		name: '步步為營',
 		intelligence: 50,
 		describe: '指定武將回復40體力（可以恢復自己）',
-		targetType: StrategyTargetType.PLAYER_SELF_PEOPLE
+		targetType: StrategyTargetType.SELF_PEOPLE
 	},
 	{
 		id:2,
 		name: '遠交近攻',
 		intelligence: 80,
 		describe: '直接獲取該格子的20%資源。並且友好度上升1',
-		targetType: StrategyTargetType.CURRENT_GRID
+		targetType: StrategyTargetType.SELF_GRID
 	},
 ];

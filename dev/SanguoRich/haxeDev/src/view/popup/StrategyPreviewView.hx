@@ -37,44 +37,29 @@ class StrategyPreviewView extends PopupView{
     function onBtnConfirmClick(e:MouseEvent) {
         fadeOut();
 
-        Main.view.onStrategyPreviewConfirmClick(p1List.selectedItem.id, strategyList.selectedItem.id);
+        var targetPlayer = drp_player.selectedItem.id;
+        var targetPeople = drp_people.selectedItem.id;
+        var targetGrid = drp_grid.selectedItem.id;
+        Main.view.onStrategyPreviewConfirmClick(p1List.selectedItem.id, strategyList.selectedItem.id, targetPlayer, targetPeople, targetGrid);
     }
 
     override function showPopup(info:Dynamic) {
         super.showPopup(info);
 
         final gameInfo = Main.model.gameInfo();
-
-        drp_player.dataSource.clear();
-        for( player in gameInfo.players ){
-            drp_player.dataSource.add({
-                id:player.id, text:player.name
-            });
-        }
-        drp_player.onChange = function(e){
-            drp_people.dataSource.clear();
-            for(people in gameInfo.players[drp_player.selectedItem.id].people){
-                drp_people.dataSource.add({
-                    id:people.id, text:people.name
-                });
-            }
-        }
-        drp_player.selectedIndex = 0;
-
-        drp_grid.dataSource.clear();
-        for( grid in gameInfo.grids){
-            drp_grid.dataSource.add({
-                id:grid.id, text:grid.id + ''
-            });
-        }
-
         function setRate(){
+            if(drp_player.selectedItem == null) return;
+            if(drp_people.selectedItem == null) return;
+            if(drp_grid.selectedItem == null) return;
+            
             var p1 = p1List.selectedItem;
             var s = strategyList.selectedItem;
 
+            var targetPlayer = drp_player.selectedItem.id;
+            var targetPeople = drp_people.selectedItem.id;
+            var targetGrid = drp_grid.selectedItem.id;
             var result:{energyBefore:Int, energyAfter:Int, rate:Float} = Main.model.getStrategyRate(
-                p1,
-                s);
+                p1, s, targetPlayer, targetPeople, targetGrid);
 
             pro_energy.value = '${result.energyBefore} => ${result.energyAfter}';
             lbl_rate.value = Main.getRateString(result.rate);
@@ -89,7 +74,6 @@ class StrategyPreviewView extends PopupView{
             setRate();
         }
 
-        
         p1List.setPeopleList(gameInfo.currentPlayer.people);
         p1List.onChange = function(e){
             var p:Dynamic = p1List.selectedItem;
@@ -103,9 +87,71 @@ class StrategyPreviewView extends PopupView{
             var s:Strategy = strategyList.selectedItem;
             if(s != null){
                 lbl_usingStrategy.value = s.name;
+
+                drp_player.disabled = true;
+                drp_people.disabled = true;
+                drp_grid.disabled = true;
+                switch(s.targetType){
+                    case TARGET_GRID: 
+                        drp_grid.disabled = false;
+                    case TARGET_PLAYER:
+                        drp_player.disabled = false;
+                    case TARGET_PEOPLE:
+                        drp_player.disabled = false;
+                        drp_people.disabled = false;
+                    case SELF_GRID:
+                    case SELF_PEOPLE: 
+                        drp_player.selectedIndex = gameInfo.currentPlayer.id;
+                        drp_people.disabled = false;
+                    case SELF_PLAYER: 
+                }
                 setRate();
             }
         }
         strategyList.selectedIndex = 0;
+
+        function updatePlayerList(){
+            drp_player.dataSource.clear();
+            for( player in gameInfo.players ){
+                drp_player.dataSource.add({
+                    id:player.id, text:player.name
+                });
+                drp_player.selectedIndex = 0;
+            }
+        }
+
+        function updatePeopleList(){
+            drp_people.dataSource.clear();
+            for(people in gameInfo.players[drp_player.selectedItem.id].people){
+                drp_people.dataSource.add({
+                    id:people.id, text:people.name
+                });
+            }
+            drp_people.selectedIndex = 0;
+        }
+
+        function updateGridList(){
+            drp_grid.dataSource.clear();
+            for( grid in gameInfo.grids){
+                drp_grid.dataSource.add({
+                    id:grid.id, text:grid.name
+                });
+                drp_grid.selectedIndex = 0;
+            }
+        }
+
+
+        updatePlayerList();
+        drp_player.selectedIndex = 0;
+
+        updatePeopleList();
+        updateGridList();
+        
+        drp_player.onChange = function(e){
+            updatePeopleList();
+            setRate();
+        }
+        
+
     }
 }

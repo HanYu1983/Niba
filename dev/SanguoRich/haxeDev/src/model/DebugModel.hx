@@ -1,5 +1,6 @@
 package model;
 
+import model.ver2.Config.StrategyList;
 import model.ver2.Define.Strategy;
 import model.IModel.PreResultOnSnatch;
 import model.IModel.SnatchPreview;
@@ -340,7 +341,7 @@ class DebugModel implements IModel {
         cb(info);
     }
 
-	public function getStrategyRate(p1People:People, strategy:Strategy):{energyBefore:Int, energyAfter:Int, rate:Float} {
+	public function getStrategyRate(p1People:People, strategy:Strategy, targetPlayerId:Int, targetPeopleId:Int, targetGridId:Int):{energyBefore:Int, energyAfter:Int, rate:Float} {
 		return {
             energyAfter: 10,
             energyBefore: 5,
@@ -348,7 +349,25 @@ class DebugModel implements IModel {
         }
 	}
 
-	public function getTakeStrategyPreview(playerId:Int, gridId:Int, peopleId:Dynamic, strategyId:Dynamic):{} {
-		return null;
+	public function takeStrategy(p1PeopleId:Int, strategyId:Int, targetPlayerId:Int, targetPeopleId:Int, targetGridId:Int, cb:(gameInfo:GameInfo) -> Void):Void {
+        var info = gameInfo();
+		info.events = [
+            {
+                id:EventInfoID.STRATEGY_RESULT,
+                value:{
+                    success:true,
+                    people:PeopleGenerator.getInst().generate(),
+                    strategy:StrategyList[0],
+                    energyBefore:0,
+                    energyAfter:1,
+                }
+            },{
+                id:EventInfoID.WALK_STOP,
+                value:{
+                    grid:info.grids[0]
+                }
+            }
+        ];
+        cb(info);
 	}
 }

@@ -10,28 +10,32 @@
                 <property id="pro_ability" label="專長加成" value="" />
             </property-group>
         </property-grid>
+        <frame text="指定玩家">
+            <dropdown id="drp_player" text="玩家">
+                <data>
+                    <item text="指定玩家" />
+                </data>
+            </dropdown>
+        </frame>
+        <frame text="指定武將" >
+            <dropdown id="drp_people" text="武將">
+                <data>
+                    <item text="指定武將" />
+                </data>
+            </dropdown>
+        </frame>
+        <frame text="指定格子" >
+            <dropdown id="drp_grid" text="格子">
+                <data>
+                    <item text="指定格子" />
+                </data>
+            </dropdown>
+        </frame>
     </hbox>
     <hbox horizontalAlign="center">
-        <dropdown id="drp_player" text="玩家">
-            <data>
-                <item text="Item 1" />
-            </data>
-        </dropdown>
-        <dropdown id="drp_people" text="武將">
-            <data>
-                <item text="Item 1" />
-            </data>
-        </dropdown>
-        <dropdown id="drp_grid" text="格子">
-            <data>
-                <item text="Item 1" />
-            </data>
-        </dropdown>
-    </hbox>
-    <hbox horizontalAlign="center">
-        <label text="計策:" />
+        <label text="計策:"  style="font-size:14" />
         <label id="lbl_usingStrategy" text="" style="font-size:24" />
-        <label text="成功率:" />
+        <label text="成功率:"  style="font-size:14" />
         <label id="lbl_rate" text="" style="font-size:24" />
     </hbox>
     <hbox horizontalAlign="center">

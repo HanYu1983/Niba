@@ -7,6 +7,7 @@ import libnoise.generator.Perlin;
 
 typedef Grid = {
 	id:Int,
+	name:String,
 	landType:Int,
 	buildtype:BUILDING,
 	height:Float,
@@ -48,6 +49,7 @@ class GridGenerator {
 	public function getGrid():Grid {
 		return {
 			id: 0,
+			name: '',
 			landType: 0,
 			buildtype: BUILDING.EMPTY,
 			height: 0,
@@ -65,6 +67,8 @@ class GridGenerator {
 		};
 	}
 
+	var gridNames = ['滴島','通河','貸鄉','樹莊','商區','富州','翅坊','東鎮','蹄堡','雷省','扔山','握港','通鄉','佩府','乏坡','社觀','誕壩','鐮莊','綱莊','悠路','緒港','客湖','喚坊','啄山','組省','震村','山山','嫁河','寸壩','暢縣','鴉峰','乏州','壓村','灑島','忍崖','睬觀','斥城','波峰','溫郡','驟鎮','療省','喝省','生道','緞坊','半鄉','蒼崖','棵島','序巷','岔島','遙鎮','醬觀','拌鎮','殼湖','致谷','扇崖','信坊','竿島','徒鎮','務港','廳鄉'];
+
 	public function getGrids(count:Int):Array<Grid> {
 
 		function getRandomRange(range:Float, offset:Float) {
@@ -76,6 +80,7 @@ class GridGenerator {
 			var height = getHeight(i);
 			var g = getGrid();
 			g.id = i;
+			g.name = gridNames[i];
 			g.landType = [0, 0, 1, 1, 1, 1, 2, 2, 3, 3][Math.floor(height * 10)];
 			g.buildtype = [
 			    BUILDING.EMPTY,

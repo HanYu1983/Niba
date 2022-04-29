@@ -7,9 +7,14 @@ import model.ver2.Config;
 using Lambda;
 
 enum StrategyTargetType {
-	PLAYER_SELF;
-	PLAYER_SELF_PEOPLE;
-	CURRENT_GRID;
+	SELF_PLAYER;
+	TARGET_PLAYER;
+
+	SELF_PEOPLE;
+	TARGET_PEOPLE;
+
+	SELF_GRID;
+	TARGET_GRID;
 }
 
 typedef Strategy = {
@@ -22,6 +27,7 @@ typedef Strategy = {
 
 typedef Grid = {
 	id:Int,
+	name:String,
 	buildtype:BUILDING,
 	money:Float,
 	food:Float,
@@ -217,6 +223,7 @@ function getGridInfo(ctx:Context, grid:Grid):model.GridGenerator.Grid {
 	final peopleInGrid = ctx.peoples.filter(p -> p.position.gridId == grid.id);
 	return {
 		id: grid.id,
+		name: grid.name,
 		landType: 0,
 		buildtype: grid.buildtype,
 		height: 0,
@@ -309,6 +316,7 @@ function getGameInfo(ctx:Context, root:Bool):GameInfo {
 function addGridInfo(ctx:Context, grid:model.GridGenerator.Grid):Void {
 	ctx.grids.push({
 		id: grid.id,
+		name: grid.name,
 		buildtype: grid.buildtype,
 		money: grid.money,
 		food: grid.food,

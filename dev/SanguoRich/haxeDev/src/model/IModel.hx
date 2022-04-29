@@ -38,6 +38,7 @@ enum EventInfoID {
     WAR_RESULT;
     SNATCH_RESULT;
     RESOURCE_RESULT;
+    STRATEGY_RESULT;
 }
 
 enum MARKET {
@@ -204,8 +205,8 @@ interface IModel{
     function checkValidTransfer(playerId:Int, gridInt:Int, playerInfo:PlayerInfo, gridInfo:Grid):Bool;
     function takeTransfer(playerId:Int, gridInt:Int, playerInfo:PlayerInfo, gridInfo:Grid, cb:(gameInfo:GameInfo)->Void):Void;
 
-    function getStrategyRate(p1People:People, strategy:Strategy):{energyBefore:Int, energyAfter:Int, rate:Float};
+    function getStrategyRate(p1People:People, strategy:Strategy, targetPlayerId:Int, targetPeopleId:Int, targetGridId:Int):{energyBefore:Int, energyAfter:Int, rate:Float};
+    function takeStrategy(p1PeopleId:Int, strategyId:Int, targetPlayerId:Int, targetPeopleId:Int, targetGridId:Int, cb:(gameInfo:GameInfo) -> Void):Void;
+    
 
-
-    function getTakeStrategyPreview(playerId:Int, gridId:Int, peopleId:Dynamic, strategyId:Dynamic):{};
 }

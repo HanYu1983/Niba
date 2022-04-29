@@ -66,6 +66,11 @@ class GridView extends Box{
     }
 
     public function setInfo(grid:Grid) {
+        name = grid.name;
+        type = grid.landType;
+        building = grid.buildtype;
+        playerId = grid.belongPlayerId == null ? -1 : grid.belongPlayerId;
+        
         box_money.percentHeight = Main.clamp(grid.money / 500) * 100;
         box_food.percentHeight = Main.clamp(grid.food / 500) * 100;
         box_army.percentHeight = Main.clamp(grid.army / 500) * 100;
