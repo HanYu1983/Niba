@@ -109,7 +109,7 @@ class PeopleGenerator {
             charm: charm,
             cost: cost,
             abilities: abilitiesAry,
-            energy: Math.floor(Math.random() * 25) + 70,
+            energy: Math.floor(Math.random() * 15) + 80,
             gridId: null,
         };
     }

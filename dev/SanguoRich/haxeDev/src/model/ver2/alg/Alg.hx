@@ -186,9 +186,9 @@ function initContext(ctx:Context, option:{}) {
 		addPlayerInfo(ctx, {
 			id: i++,
 			name: name,
-			money: 300.0,
-			army: 300.0,
-			food: 300.0,
+			money: 500.0,
+			army: 500.0,
+			food: 500.0,
 			strategy: 300.0,
 			people: [
 				model.PeopleGenerator.getInst().generate(),

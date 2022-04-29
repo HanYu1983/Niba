@@ -24,9 +24,9 @@ final PEOPLE_HIRE_COST_FACTOR = .1;
 final GRID_EARN_PER_TURN = 1;
 
 // 格子的基本保底成長
-final BASIC_GROW_MONEY = 1;
-final BASIC_GROW_FOOD = 1;
-final BASIC_GROW_ARMY = 1;
+final BASIC_GROW_MONEY = 0;
+final BASIC_GROW_FOOD = 0;
+final BASIC_GROW_ARMY = 0;
 
 // 幾個回合收稅(4人走完算1回合)
 // 作用中
@@ -77,7 +77,7 @@ final WAR_FINAL_DAMAGE_FACTOR = 0.75;
 final PEOPLE_ENERGY_SUPPLY_BASE = 0;
 
 // 每回合額外回復％數體力(體力越多回越快)
-final PEOPLE_ENERGY_SUPPLY_SAVE_FACTOR = 0.05;
+final PEOPLE_ENERGY_SUPPLY_SAVE_FACTOR = 0.06;
 
 // 允許交涉加兵
 final ENABLE_NEGO_ARMY = true;
@@ -87,14 +87,15 @@ function getEnergyFactor(atkArmy:Float) {
 	return (Math.min(atkArmy / 500, 1) * .3 + .7);
 }
 
-final ENERGY_COST_ON_STRATEGY = 40;
+final ENERGY_COST_ON_STRATEGY = 20;
 final ENERGY_COST_ON_HIRE = 10;
 final ENERGY_COST_ON_NEGO = 20;
 final ENERGY_COST_ON_RESOURCE = 20;
 final ENERGY_COST_ON_EXPLORE = 30;
 final ENERGY_COST_ON_SNATCH = 30;
-final ENERGY_COST_ON_WAR = 70;
-final SNATCH_ARMY_AT_LEAST = 100;
+final ENERGY_COST_ON_WAR = 50;
+
+final SNATCH_ARMY_AT_LEAST = 50;
 
 // 最低友好度
 final MIN_GRID_FAVOR = -3;

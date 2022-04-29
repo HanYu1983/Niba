@@ -37,12 +37,21 @@ class TransferPreview extends PopupView{
         fadeOut();
     }
 
+    var isChecked = false;
+
     @:bind(btn_confirm, MouseEvent.CLICK)
     function onBtnConfirmClick(e:MouseEvent) {
 
         final list:Array<Dynamic> = plist.dataSource.data;
         outData[0].people = list.filter((p:Dynamic)-> !Reflect.field(p, 'chk_sel'));
         outData[1].people = list.filter((p:Dynamic)-> Reflect.field(p, 'chk_sel'));
+
+        lbl_note.value = '';
+        if(!isChecked && outData[1].people.length == 0){
+            lbl_note.value = '確定不派武將佔領嗎?';
+            isChecked = true;
+            return;
+        }
 
         final gameInfo = Main.model.gameInfo();
         final valid = Main.model.checkValidTransfer(
@@ -63,11 +72,17 @@ class TransferPreview extends PopupView{
     override function showPopup(info:Dynamic) {
         super.showPopup(info);
 
+        isChecked = false;
+        lbl_note.value = '';
+
         function updateView(p, g){
             leaderView.setInfo(p);
             gridView.setInfo(g);
 
             outData = [p, g];
+            
+            isChecked = false;
+            lbl_note.value = '';
         }
 
         final gameInfo = Main.model.gameInfo();

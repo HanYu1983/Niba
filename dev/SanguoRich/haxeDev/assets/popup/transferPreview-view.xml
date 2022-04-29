@@ -23,4 +23,7 @@
         <button text="取消" id="btn_cancel" />
         <button text="確定" id="btn_confirm" />
     </hbox>
+    <hbox horizontalAlign="center">
+        <label id="lbl_note" text="" style="color:red"/>
+    </hbox>
 </vbox>

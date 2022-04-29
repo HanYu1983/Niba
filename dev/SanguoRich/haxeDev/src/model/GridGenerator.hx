@@ -139,9 +139,9 @@ class GridGenerator {
 					
 			}
 
-			g.moneyGrow *= g.army * .01;
-			g.foodGrow *= g.army * .01;
-			g.armyGrow *= g.army * .01;
+			g.moneyGrow += g.army / 300 * .01;
+			g.foodGrow += g.army / 300 * .01;
+			g.armyGrow += g.army / 300 * .01;
 
 			g.height = height;
 			grids.push(g);
