@@ -1,5 +1,7 @@
 package view.popup;
 
+import model.IModel.SnatchPreview;
+import haxe.ui.events.UIEvent;
 import model.IModel.PreResultOnSnatch;
 import model.ver2.Config;
 import model.IModel.PreResultOnWar;
@@ -32,22 +34,21 @@ class SnatchPreviewView extends PopupView {
 	function onBtnConfirmClick(e:MouseEvent) {
 		fadeOut();
 
-		Main.view.onSnatchPreviewConfirmClick(p1List.selectedItem.id, p2List.selectedItem.id);
+		Main.view.onSnatchPreviewConfirmClick(p1List.selectedItem.id, p2List.selectedItem.id, btn_isOccupation.selected);
 	}
-
-	var outData = [];
 
 	override function showPopup(info:Dynamic) {
 		super.showPopup(info);
 
-		var info:WarPreview = info;
+		var warInfo:SnatchPreview = info;
 
 		function setRate() {
 			var p1 = p1List.selectedItem;
 			var p2 = p2List.selectedItem;
 
+			var isOccupation = btn_isOccupation.selected;
 			var gameInfo = Main.model.gameInfo();
-			var result:PreResultOnSnatch = Main.model.getPreResultOfSnatch(gameInfo.currentPlayer.id, gameInfo.currentPlayer.atGridId, p1, p2);
+			var result:PreResultOnSnatch = Main.model.getPreResultOfSnatch(gameInfo.currentPlayer.id, gameInfo.currentPlayer.atGridId, p1, p2, isOccupation);
 
 			var warResult = result.war;
 			pro_force1.value = p1.force;
@@ -90,7 +91,7 @@ class SnatchPreviewView extends PopupView {
 			setRate();
 		}
 
-		p1List.setPeopleList(info.p1ValidPeople);
+		p1List.setPeopleList(warInfo.p1ValidPeople);
 		p1List.onChange = function(e) {
 			var p:Dynamic = p1List.selectedItem;
 			if (p) {
@@ -99,7 +100,7 @@ class SnatchPreviewView extends PopupView {
 		}
 		p1List.selectedIndex = 0;
 
-		p2List.setPeopleList(info.p2ValidPeople);
+		p2List.setPeopleList(warInfo.p2ValidPeople);
 		p2List.onChange = function(e) {
 			var p:Dynamic = p2List.selectedItem;
 			if (p) {
@@ -107,5 +108,13 @@ class SnatchPreviewView extends PopupView {
 			}
 		}
 		p2List.selectedIndex = 0;
+
+		btn_isOccupation.onChange = function(e){
+			lbl_warTypeName.value = btn_isOccupation.selected ? '攻城(${ENERGY_COST_ON_WAR})' : '搶奪(${ENERGY_COST_ON_SNATCH})';
+			setRate();
+		}
+
+		btn_isOccupation.selected = info.isOccupation;
+		btn_isOccupation.disabled = (!warInfo.isP1ArmyValid || !warInfo.isP2ArmyValid);
 	}
 }

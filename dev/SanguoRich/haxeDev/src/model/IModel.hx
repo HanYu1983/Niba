@@ -181,8 +181,8 @@ interface IModel{
     function takeWarOn(playerId:Int, gridId:Int, p1PeopleId:Int, p2PeopleId:Int, army1:Float, army2:Float, cb:(gameInfo:GameInfo)->Void):Void;
     
     function getTakeSnatchPreview(playerId:Int, gridId:Int):SnatchPreview;
-    function getPreResultOfSnatch(playerId:Int, gridId:Int, p1:People, p2:People):PreResultOnSnatch;
-    function takeSnatchOn(playerId:Int, gridId:Int, p1PeopleId:Int, p2PeopleId:Int, cb:(gameInfo:GameInfo)->Void):Void;
+    function getPreResultOfSnatch(playerId:Int, gridId:Int, p1:People, p2:People, isOccupation:Bool):PreResultOnSnatch;
+    function takeSnatchOn(playerId:Int, gridId:Int, p1PeopleId:Int, p2PeopleId:Int, isOccupation:Bool, cb:(gameInfo:GameInfo)->Void):Void;
 
     function getTakeNegoPreview(playerId:Int, gridId:Int):NegoPreview;
     function getPreResultOfNego(playerId:Int, gridId:Int, p1:People, p2:People):PreResultOnNego;

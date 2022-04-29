@@ -281,7 +281,7 @@ class DebugModel implements IModel {
         };
 	}
 
-	public function getPreResultOfSnatch(playerId:Int, gridId:Int, p1:People, p2:People):PreResultOnSnatch {
+	public function getPreResultOfSnatch(playerId:Int, gridId:Int, p1:People, p2:People, isOccupation:Bool):PreResultOnSnatch {
 		return {war:[
             {
                 energyBefore:1,
@@ -313,7 +313,7 @@ class DebugModel implements IModel {
         }
 	}
 
-	public function takeSnatchOn(playerId:Int, gridId:Int, p1PeopleId:Int, p2PeopleId:Int, cb:(gameInfo:GameInfo) -> Void) {
+	public function takeSnatchOn(playerId:Int, gridId:Int, p1PeopleId:Int, p2PeopleId:Int, isOccupation:Bool, cb:(gameInfo:GameInfo) -> Void) {
         var info = gameInfo();
         info.grids[gridId].belongPlayerId = playerId;
         info.grids[gridId].people = [

@@ -137,11 +137,11 @@ class ModelVer2 extends DebugModel {
 		return _getTakeSnatchPreview(context, playerId, gridId);
 	}
 
-	override function getPreResultOfSnatch(playerId:Int, gridId:Int, p1:model.PeopleGenerator.People, p2:model.PeopleGenerator.People):PreResultOnSnatch {
+	override function getPreResultOfSnatch(playerId:Int, gridId:Int, p1:model.PeopleGenerator.People, p2:model.PeopleGenerator.People, isOccupation:Bool):PreResultOnSnatch {
 		return _getPreResultOfSnatch(context, playerId, gridId, p1.id, p2.id);
 	}
 
-	override function takeSnatchOn(playerId:Int, gridId:Int, p1PeopleId:Int, p2PeopleId:Int, cb:(gameInfo:GameInfo) -> Void) {
+	override function takeSnatchOn(playerId:Int, gridId:Int, p1PeopleId:Int, p2PeopleId:Int, isOccupation:Bool, cb:(gameInfo:GameInfo) -> Void) {
 		_takeSnatchOn(context, playerId, gridId, p1PeopleId, p2PeopleId);
 		cb(gameInfo());
 	}

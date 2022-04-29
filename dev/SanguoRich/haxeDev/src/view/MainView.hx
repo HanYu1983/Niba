@@ -182,9 +182,9 @@ class MainView extends Absolute {
 		Main.model.takeWarOn(gameInfo.currentPlayer.id, gameInfo.currentPlayer.atGridId, p1Id, p2Id, p1Army, p2Army, syncViewByInfo);
 	}
 
-	public function onSnatchPreviewConfirmClick(p1Id:Int, p2Id:Int) {
+	public function onSnatchPreviewConfirmClick(p1Id:Int, p2Id:Int, isOccupation:Bool) {
 		var gameInfo = Main.model.gameInfo();
-		Main.model.takeSnatchOn(gameInfo.currentPlayer.id, gameInfo.currentPlayer.atGridId, p1Id, p2Id, syncViewByInfo);
+		Main.model.takeSnatchOn(gameInfo.currentPlayer.id, gameInfo.currentPlayer.atGridId, p1Id, p2Id, isOccupation, syncViewByInfo);
 	}
 
 	public function onResourcePreviewConfirmClick(p1Id:Int, market:model.IModel.MARKET, resource:model.IModel.RESOURCE) {
@@ -324,18 +324,19 @@ class MainView extends Absolute {
 	}
 
 	function takeWar() {
-		var player = Main.model.gameInfo().currentPlayer;
-		var previewInfo = Main.model.getTakeWarPreview(player.id, player.atGridId);
-		if (previewInfo.p1ValidPeople.length < 1) {
-			messageView.showMessage('沒有武將可以執行');
-			return;
-		}
-		if (previewInfo.p2ValidPeople.length < 1) {
-			messageView.showMessage('沒有武將可以占領');
-			return;
-		} else {
-			warPreviewView.showPopup(previewInfo);
-		}
+		takeSnatch(true);
+		// var player = Main.model.gameInfo().currentPlayer;
+		// var previewInfo = Main.model.getTakeWarPreview(player.id, player.atGridId);
+		// if (previewInfo.p1ValidPeople.length < 1) {
+		// 	messageView.showMessage('沒有武將可以執行');
+		// 	return;
+		// }
+		// if (previewInfo.p2ValidPeople.length < 1) {
+		// 	messageView.showMessage('沒有武將可以占領');
+		// 	return;
+		// } else {
+		// 	warPreviewView.showPopup(previewInfo);
+		// }
 	}
 
 	@:bind(btn_occupationPlayer, MouseEvent.CLICK)
@@ -348,21 +349,41 @@ class MainView extends Absolute {
 		takeWar();
 	}
 
-	function takeSnatch() {
+	function takeSnatch(isOccupation = false) {
 		var player = Main.model.gameInfo().currentPlayer;
 		var previewInfo = Main.model.getTakeSnatchPreview(player.id, player.atGridId);
+		
+		Reflect.setField(previewInfo, 'isOccupation', isOccupation);
 		switch (previewInfo) {
 			case {p1ValidPeople: _.length < 1 => true}:
 				messageView.showMessage('沒有武將可以執行');
 			case {p2ValidPeople: _.length < 1 => true}:
 				messageView.showMessage('沒有武將可以占領');
-			case {isP1ArmyValid: _ => false}:
-				messageView.showMessage('主公兵力不足100');
-			case {isP2ArmyValid: _ => false}:
-				messageView.showMessage('攻擊地點兵力不足100');
+			case {isP1ArmyValid: _ => false} | {isP2ArmyValid: _ => false}:
+				if(!isOccupation){
+					messageView.showMessage('搶奪條件（雙方兵力至少都要有100）不足，進入攻城模式', null, ()->{
+						Reflect.setField(previewInfo, 'isOccupation', true);
+						snatchPreviewView.showPopup(previewInfo);
+					});
+				}else{
+					snatchPreviewView.showPopup(previewInfo);
+				}
+			// case {isP1ArmyValid: _ => false}:
+			// 	if(!isOccupation){
+			// 		// messageView.showMessage('主公兵力不足100，進入攻城模式');
+			// 		Reflect.setField(previewInfo, 'isOccupation', true);
+			// 	}
+			// 	snatchPreviewView.showPopup(previewInfo);
+			// case {isP2ArmyValid: _ => false}:
+			// 	if(!isOccupation){
+			// 		// messageView.showMessage('攻擊地點兵力不足100，進入攻城模式');
+			// 		Reflect.setField(previewInfo, 'isOccupation', true);
+			// 	}
+			// 	snatchPreviewView.showPopup(previewInfo);
 			case _:
 				snatchPreviewView.showPopup(previewInfo);
 		}
+		
 	}
 
 	@:bind(btn_snatchPlayer, MouseEvent.CLICK)
