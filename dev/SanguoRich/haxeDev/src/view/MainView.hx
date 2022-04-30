@@ -800,7 +800,7 @@ class MainView extends Absolute {
 		for(p in playerInfos){
 			var info:Dynamic = Main.cloneObject(p);
 			info.money = '${Main.getFixNumber(p.money,0)} (${Main.getFixNumber(p.maintainPeople)})';
-			info.food = '${Main.getFixNumber(p.money,0)} (${Main.getFixNumber(p.maintainArmy)})';
+			info.food = '${Main.getFixNumber(p.food,0)} (${Main.getFixNumber(p.maintainArmy)})';
 			info.army = Main.getFixNumber(p.army, 0);
 			info.peopleCount = p.people.length;
 			info.cityCount = p.grids.length;
