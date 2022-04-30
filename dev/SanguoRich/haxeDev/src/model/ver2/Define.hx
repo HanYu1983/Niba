@@ -236,6 +236,8 @@ function getGridInfo(ctx:Context, grid:Grid):model.GridGenerator.Grid {
 function getGameInfo(ctx:Context, root:Bool):GameInfo {
 	return {
 		players: ctx.players.map(p -> getPlayerInfo(ctx, p)),
+		playerGrids: ctx.players.map(p -> getPlayerInfo(ctx, p)),
+		playerTotals: ctx.players.map(p -> getPlayerInfo(ctx, p)),
 		grids: ctx.grids.map(p -> getGridInfo(ctx, p)),
 		isPlayerTurn: true,
 		currentPlayer: getPlayerInfo(ctx, ctx.players[ctx.currentPlayerId]),

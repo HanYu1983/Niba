@@ -6,6 +6,7 @@ package view;
 // import model.ModelVer2.ENERGY_COST_ON_RESOURCE;
 // import model.ModelVer2.ENERGY_COST_ON_HIRE;
 // import model.ModelVer2.ENERGY_COST_ON_EXPLORE;
+import haxe.Exception;
 import model.PeopleGenerator;
 import model.PeopleGenerator.People;
 import haxe.ui.containers.dialogs.Dialog;
@@ -418,6 +419,11 @@ class MainView extends Absolute {
 			for (index => player in Main.model.gameInfo().players) {
 				players[index].name = player.name.substr(0, 1);
 			}
+
+			tab_whichInfo.onChange = function(e){
+				syncGameInfo(Main.model.gameInfo());
+			}
+
 			syncView();
 		});
 	}
@@ -427,25 +433,25 @@ class MainView extends Absolute {
 		Main.model.playerEnd(syncView);
 	}
 
-	@:bind(opt_p1, MouseEvent.CLICK)
-	function onBtnShowP1Click(e:MouseEvent) {
-		syncPlayerInfo(0);
-	}
+	// @:bind(opt_p1, MouseEvent.CLICK)
+	// function onBtnShowP1Click(e:MouseEvent) {
+	// 	syncPlayerInfo(0);
+	// }
 
-	@:bind(opt_p2, MouseEvent.CLICK)
-	function onBtnShowP2Click(e:MouseEvent) {
-		syncPlayerInfo(1);
-	}
+	// @:bind(opt_p2, MouseEvent.CLICK)
+	// function onBtnShowP2Click(e:MouseEvent) {
+	// 	syncPlayerInfo(1);
+	// }
 
-	@:bind(opt_p3, MouseEvent.CLICK)
-	function onBtnShowP3Click(e:MouseEvent) {
-		syncPlayerInfo(2);
-	}
+	// @:bind(opt_p3, MouseEvent.CLICK)
+	// function onBtnShowP3Click(e:MouseEvent) {
+	// 	syncPlayerInfo(2);
+	// }
 
-	@:bind(opt_p4, MouseEvent.CLICK)
-	function onBtnShowP4Click(e:MouseEvent) {
-		syncPlayerInfo(3);
-	}
+	// @:bind(opt_p4, MouseEvent.CLICK)
+	// function onBtnShowP4Click(e:MouseEvent) {
+	// 	syncPlayerInfo(3);
+	// }
 
 	@:bind(btn_showStrategy, MouseEvent.CLICK)
 	function onBtnShowStrategyClick(e:MouseEvent) {
@@ -481,6 +487,11 @@ class MainView extends Absolute {
 
 		tweens.push(TweenX.func(() -> {
 			syncViewByInfo(gameInfo);
+			// syncUI(gameInfo);
+			// syncGameInfo(gameInfo);
+			// syncGridViews(gameInfo);
+			// syncPlayerViews(gameInfo);
+			// playEvents(gameInfo);
 		}));
 
 		TweenX.serial(tweens);
@@ -490,10 +501,12 @@ class MainView extends Absolute {
 
 	function syncViewByInfo(gameInfo:GameInfo) {
 		syncUI(gameInfo);
-		// syncGameInfo(gameInfo);
+		syncGameInfo(gameInfo);
 		syncGridViews(gameInfo);
 		syncPlayerViews(gameInfo);
 		playEvents(gameInfo);
+
+		// syncView();
 	}
 
 	function playBeforeSync(gameInfo:GameInfo, tweens:Array<TweenX>) {
@@ -502,7 +515,6 @@ class MainView extends Absolute {
 
 	function playActions(actions:Array<ActionInfo>, tweens:Array<TweenX>) {
 		for (id => action in actions) {
-			// setActionInfo(action);
 			switch (action.id) {
 				case ActionInfoID.MOVE:
 					var pv = players[action.value.playerId];
@@ -752,15 +764,13 @@ class MainView extends Absolute {
 		gameInfo.isPlayerTurn ? showBasicCommand(gameInfo) : box_basicCmds.hide();
 
 		var pid = gameInfo.currentPlayer.id;
-		var opt_p:OptionBox = Reflect.field(this, 'opt_p${pid + 1}');
-		opt_p.selected = true;
+		syncPlayerInfo(pid);
+		syncGameInfo(gameInfo);
 
 		moveCursorToGrid(gameInfo.currentPlayer.atGridId);
 
 		stage.unregisterEvents();
 		if (gameInfo.isPlayerTurn) {
-			// pro_currentEvent.value = "等待指令中";
-
 			stage.registerEvent(MouseEvent.MOUSE_MOVE, function(e:MouseEvent) {
 				var gx = Math.floor(e.screenX / gridSize);
 				var gy = Math.floor(e.screenY / gridSize);
@@ -772,13 +782,30 @@ class MainView extends Absolute {
 
 			stage.registerEvent(MouseEvent.MOUSE_OUT, function(e:MouseEvent) {
 				syncGridInfo(gameInfo.currentPlayer.atGridId);
-				// peopleListView.setPeopleList(gameInfo.currentPlayer.people);
-				// gridPeopleListView.dataSource.clear();
-
 				moveCursorToGrid(gameInfo.currentPlayer.atGridId);
 			});
 		}
-		syncPlayerInfo(pid);
+	}
+
+	function syncGameInfo(gameInfo:GameInfo){
+
+		final playerInfos = switch(tab_whichInfo.selectedIndex){
+			case 0:gameInfo.playerTotals;
+			case 1:gameInfo.players;
+			case 2:gameInfo.playerGrids;
+			case _:throw new Exception("no type");
+		}
+
+		tab_allPlayers.dataSource.clear();
+		for(p in playerInfos){
+			var info:Dynamic = Main.cloneObject(p);
+			info.money = '${Main.getFixNumber(p.money,0)} (${Main.getFixNumber(p.maintainPeople)})';
+			info.food = '${Main.getFixNumber(p.money,0)} (${Main.getFixNumber(p.maintainArmy)})';
+			info.army = Main.getFixNumber(p.army, 0);
+			info.peopleCount = p.people.length;
+			info.cityCount = p.grids.length;
+			tab_allPlayers.dataSource.add(info);
+		}
 	}
 
 	function syncPlayerInfo(id:Int) {

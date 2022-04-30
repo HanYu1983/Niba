@@ -62,6 +62,8 @@ typedef EventInfo = {
 
 typedef GameInfo = {
 	players:Array<PlayerInfo>,
+	playerGrids:Array<PlayerInfo>,
+	playerTotals:Array<PlayerInfo>,
 	grids:Array<Grid>,
 	isPlayerTurn:Bool,
 	currentPlayer:PlayerInfo,
