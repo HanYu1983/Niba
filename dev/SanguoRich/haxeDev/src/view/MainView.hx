@@ -74,8 +74,8 @@ class MainView extends Absolute {
 			grids.push(grid);
 		}
 
-		for (i in 0...4) {
-			var p = new PlayerView(25, 25);
+		for (i in 0...2) {
+			var p = new PlayerView(20, 20);
 			switch (i) {
 				case 0:
 					p.boxColor = '#FF0000';
@@ -527,10 +527,10 @@ class MainView extends Absolute {
 
 	function offsetPlayerPos(pid:Int, x:Float, y:Float) {
 		var newPos = switch (pid) {
-			case 0: [x, y];
-			case 1: [x + 25, y];
-			case 2: [x, y + 25];
-			case 3: [x + 25, y + 25];
+			case 0: [x, y + 40];
+			case 1: [x + 20, y + 40];
+			case 2: [x, y + 20 + 40];
+			case 3: [x + 20, y + 20 + 40];
 			case _: [x, y];
 		}
 		return newPos;
