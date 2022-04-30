@@ -1,5 +1,6 @@
 package;
 
+import model.debug.TestResourceModel;
 import model.PeopleGenerator;
 import js.Syntax;
 import haxe.ui.themes.Theme;
@@ -109,4 +110,13 @@ class Main {
 			'(*´∀`)~♥';
 		}
 	}
+
+	public static function cloneObject(obj:Dynamic) {
+		final clone = {};
+		for(key in Reflect.fields(obj)){
+			Reflect.setField(clone, key, Reflect.field(obj, key));
+		}
+		return clone;
+	}
+
 }

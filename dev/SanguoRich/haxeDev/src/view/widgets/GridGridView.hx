@@ -32,15 +32,14 @@ class GridGridView extends BasicGridView{
         pro_army.value = '${Math.floor(grid.army)} (成長:${gainArmy})';
         pro_peopleCount.value = grid.people.length;
         
+        pro_player.value = "無";
         if(grid.belongPlayerId != null){
             pro_player.value = gameInfo.players[grid.belongPlayerId].name;
-        }else{
-            pro_player.value = "無";
         }
+
+        pro_favor.value = "無";
         if(grid.buildtype != BUILDING.EMPTY){
             pro_favor.value = Main.getFavorString(grid.favor[gameInfo.currentPlayer.id]);
-        }else{
-            pro_favor.value = "無";
         }
     }
 }

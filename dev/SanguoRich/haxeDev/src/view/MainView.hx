@@ -6,6 +6,8 @@ package view;
 // import model.ModelVer2.ENERGY_COST_ON_RESOURCE;
 // import model.ModelVer2.ENERGY_COST_ON_HIRE;
 // import model.ModelVer2.ENERGY_COST_ON_EXPLORE;
+import model.PeopleGenerator;
+import model.PeopleGenerator.People;
 import haxe.ui.containers.dialogs.Dialog;
 import haxe.ui.containers.dialogs.MessageBox.MessageBoxType;
 import haxe.ui.containers.dialogs.Dialogs;
@@ -578,6 +580,26 @@ class MainView extends Absolute {
 						}
 					}
 					btn_end.show();
+				case PEOPLE_LEVEL_UP_EVENT:
+					final info:Dynamic = event.value;
+					final title = '功績到達，職位升等!';
+					final p1:People = info.peopleBefore;
+					final p2:People = info.peopleAfter;
+					var msg = '將領:${p1.name}\n';
+					msg += '職等:${PeopleGenerator.getInst().getPeopleTypeName(p1.type)} => ${PeopleGenerator.getInst().getPeopleTypeName(p2.type)}\n';
+					switch (p2.type){
+						case WENGUAN(level): 
+							msg += '智力:${p1.intelligence} => ${p2.intelligence}\n';
+							msg += '政治:${p1.political} => ${p2.political}\n';
+						case WUJIANG(level):
+							msg += '智力:${p1.force} => ${p2.force}\n';
+							msg += '政治:${p1.command} => ${p2.command}\n';
+						case _:
+					}
+					msg += '魅力:${p1.charm} => ${p2.charm}}\n';
+					msg += '體力:${p1.energy} => ${p2.energy}}\n';
+					Dialogs.messageBox(msg, title, MessageBoxType.TYPE_INFO);
+					showBasicCommand(gameInfo);
 				case HIRE_RESULT:
 					final info:Dynamic = event.value;
 					final title = info.success ? '雇用任務成功' : '雇用任務失敗';
@@ -779,8 +801,10 @@ class MainView extends Absolute {
 
 	function syncGridViews(gameInfo:GameInfo) {
 		for (index => info in gameInfo.grids) {
-			var grid = grids[index];
-			grid.setInfo(info);
+			if(index < grids.length){
+				var grid = grids[index];
+				grid.setInfo(info);
+			}
 		}
 	}
 

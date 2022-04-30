@@ -124,7 +124,15 @@ class DebugModel implements IModel {
 				gameInfo: gameInfo()
 			}
 		];
-		info.events = [];
+		info.events = [
+			{
+				id:EventInfoID.PEOPLE_LEVEL_UP_EVENT,
+				value:{
+					peopleBefore:PeopleGenerator.getInst().generate(),
+					peopleAfter:PeopleGenerator.getInst().generate(),
+				}
+			}
+		];
 		cb();
 	}
 

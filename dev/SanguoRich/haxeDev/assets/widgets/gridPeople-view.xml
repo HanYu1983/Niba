@@ -7,5 +7,8 @@
         <property id="pro_intelligence" label="智力" value="1000" />
         <property id="pro_political" label="政治" value="1000" />
         <property id="pro_charm" label="魅力" value="1000" />
+        <property id="pro_type" label="類型" value="1000" />
+        <property id="pro_level" label="職務" value="1000" />
+        <property id="pro_exp" label="功績" value="1000" />
     </property-group>
 </property-grid>

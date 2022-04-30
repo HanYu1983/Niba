@@ -1,8 +1,15 @@
 package model;
 
+enum PeopleType {
+	WENGUAN(level:Int);
+	WUJIANG(level:Int);
+	PUTONG;
+	QILIN;
+}
+
 typedef People = {
     id:Int,
-    type:Int,
+    type:PeopleType,
     name:String,
     command:Int, 
     force:Int,
@@ -13,6 +20,7 @@ typedef People = {
     abilities:Array<Int>,
     energy:Int,
     gridId:Int,
+    exp:Float,
 }
 
 class PeopleGenerator {
@@ -71,6 +79,34 @@ class PeopleGenerator {
         return Reflect.field(valuesName, key);
     }
 
+    public function getPeopleTypeName(type:PeopleType){
+        return switch (type){
+            case PUTONG:'普通';
+            case QILIN: '麒麟';
+            case WENGUAN(0): '文官';
+            case WENGUAN(1): '尚書令';
+            case WENGUAN(2): '少府';
+            case WENGUAN(3): '廷尉';
+            case WENGUAN(4): '衛尉';
+            case WENGUAN(5): '太常';
+            case WENGUAN(6): '丞相';
+            case WENGUAN(7): '太尉';
+            case WENGUAN(8): '大司馬';
+            case WENGUAN(9): '太傅';
+            case WUJIANG(0): '武將';
+            case WUJIANG(1): '都尉';
+            case WUJIANG(2): '中郎將';
+            case WUJIANG(3): '中領軍';
+            case WUJIANG(4): '偏將軍';
+            case WUJIANG(5): '四方將軍';
+            case WUJIANG(6): '衛將軍';
+            case WUJIANG(7): '車騎將軍';
+            case WUJIANG(8): '驃騎將軍';
+            case WUJIANG(9): '大將軍';
+            case _: '';
+        }
+    }
+
     var peopleId = 0;
     public function generate():People{
         var name = this.names[peopleId];
@@ -100,7 +136,13 @@ class PeopleGenerator {
         
         return {
             id:peopleId++,
-            type:type,
+            type:switch(type){
+                case 0:PeopleType.PUTONG;
+                case 1:PeopleType.WUJIANG(Math.ceil(Math.random()*9));
+                case 2:PeopleType.WENGUAN(Math.ceil(Math.random()*9));
+                case 3:PeopleType.QILIN;
+                case _:PeopleType.PUTONG;
+            },
             name:name,
             command: command,
             force: force,
@@ -111,6 +153,7 @@ class PeopleGenerator {
             abilities: abilitiesAry,
             energy: Math.floor(Math.random() * 15) + 80,
             gridId: null,
+            exp:0,
         };
     }
 }

@@ -1,5 +1,6 @@
 package model.ver2;
 
+import model.PeopleGenerator.PeopleType;
 import model.GridGenerator;
 import model.IModel;
 import model.Config;
@@ -171,7 +172,7 @@ typedef Context = {
 function getPeopleInfo(ctx:Context, people:People):model.PeopleGenerator.People {
 	return {
 		id: people.id,
-		type: 0,
+		type: PeopleType.WENGUAN(0),
 		name: people.name,
 		command: Std.int(people.command),
 		force: Std.int(people.force),
@@ -182,6 +183,7 @@ function getPeopleInfo(ctx:Context, people:People):model.PeopleGenerator.People 
 		abilities: people.abilities,
 		energy: Std.int(people.energy),
 		gridId: cast people.position.gridId,
+		exp:0,
 	}
 }
 
