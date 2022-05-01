@@ -1,6 +1,5 @@
 package;
 
-import model.GridGenerator.BUILDING;
 import model.debug.TestResourceModel;
 import model.PeopleGenerator;
 import js.Syntax;
@@ -11,6 +10,7 @@ import model.IModel;
 import view.MainView;
 import haxe.ui.HaxeUIApp;
 import model.ver2.ModelVer2;
+import model.CacheModel;
 
 private function runTest() {
 	model.ver2.TestCase.test();
@@ -28,7 +28,7 @@ class Main {
 		}
 
 		// model = new TestResourceModel();
-		model = new ModelVer2();
+		model = new CacheModel(new ModelVer2());
 
 		var app = new HaxeUIApp();
 		app.ready(function() {
@@ -112,16 +112,11 @@ class Main {
 		}
 	}
 
-	public static function cloneObject(obj:Dynamic):Dynamic {
+	public static function cloneObject(obj:Dynamic) {
 		final clone = {};
-		for(key in Reflect.fields(obj)){
+		for (key in Reflect.fields(obj)) {
 			Reflect.setField(clone, key, Reflect.field(obj, key));
 		}
 		return clone;
-	}
-
-	public static function getBuildingCatelog(b:BUILDING) {
-		final catelog = BuildingList.filter((catelog)-> Type.enumEq(catelog.type, b));
-		return catelog[0];
 	}
 }
