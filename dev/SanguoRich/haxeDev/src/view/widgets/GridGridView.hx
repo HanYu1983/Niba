@@ -20,7 +20,7 @@ class GridGridView extends BasicGridView{
 
         final gameInfo = Main.model.gameInfo();
 
-        var grid:Grid = info;
+        var grid:Grid = Main.cloneObject(info);
         pro_name.value = grid.name;
         // pro_landType.value = grid.landType;
 

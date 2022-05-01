@@ -98,6 +98,34 @@ class GridGenerator {
 			    GROWTYPE.CITY
 			][Math.floor(Math.random() * 10)];
 
+			switch(g.buildtype){
+				case EMPTY:
+				case MARKET:
+					g.attachs = [
+						BUILDING.MARKET(1),
+						BUILDING.WALL(0)
+					];
+				case FARM:
+					g.attachs = [
+						BUILDING.FARM(3),
+						BUILDING.WALL(0)
+					];
+				case VILLAGE:
+					g.attachs = [
+						BUILDING.BARRACKS(2),
+						BUILDING.WALL(0)
+					];
+				case CITY:
+					g.attachs = [
+						BUILDING.MARKET(0),
+						BUILDING.FARM(1),
+						BUILDING.BARRACKS(0),
+						BUILDING.EXPLORE(0),
+						BUILDING.WALL(0),
+					];
+
+			}
+
 			final basicArmy = getRandomRange(100, 40);
 
 			g.moneyGrow = Math.random() * .01;

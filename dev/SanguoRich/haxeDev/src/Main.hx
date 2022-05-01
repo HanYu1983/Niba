@@ -1,5 +1,6 @@
 package;
 
+import model.GridGenerator.BUILDING;
 import model.debug.TestResourceModel;
 import model.PeopleGenerator;
 import js.Syntax;
@@ -111,7 +112,7 @@ class Main {
 		}
 	}
 
-	public static function cloneObject(obj:Dynamic) {
+	public static function cloneObject(obj:Dynamic):Dynamic {
 		final clone = {};
 		for(key in Reflect.fields(obj)){
 			Reflect.setField(clone, key, Reflect.field(obj, key));
@@ -119,4 +120,8 @@ class Main {
 		return clone;
 	}
 
+	public static function getBuildingCatelog(b:BUILDING) {
+		final catelog = BuildingList.filter((catelog)-> Type.enumEq(catelog.type, b));
+		return catelog[0];
+	}
 }

@@ -41,6 +41,7 @@ class DebugModel implements IModel {
 				commands:[
 					ActionInfoID.MOVE,
 					ActionInfoID.STRATEGY,
+					ActionInfoID.BUILD,
 					ActionInfoID.FIRE,
 					ActionInfoID.END,
 				]
@@ -361,6 +362,21 @@ class DebugModel implements IModel {
 				id: EventInfoID.WALK_STOP,
 				value: {
 					grid: info.grids[0]
+				}
+			}
+		];
+		cb(info);
+	}
+
+	public function takeBuilding(p1PeopleId:Int, gridId:Int, peopleId:Int, current:Dynamic, to:Dynamic, cb:(gameInfo:GameInfo) -> Void) {
+		var info = gameInfo();
+		info.events = [
+			{
+				id: EventInfoID.BUILDING_RESULT,
+				value: {
+					success: true,
+					people: PeopleGenerator.getInst().generate(),
+					building: BUILDING.FARM(2),
 				}
 			}
 		];
