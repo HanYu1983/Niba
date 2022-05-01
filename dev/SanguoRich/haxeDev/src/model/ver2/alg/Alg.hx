@@ -72,16 +72,6 @@ function doPlayerEnd(ctx:Context) {
 					if (peopleInGrid.length == 0) {
 						continue;
 					}
-					final totalPeopleIntelligence = peopleInGrid.fold((p, a) -> {
-						return a + p.intelligence;
-					}, 0.0);
-					final totalPeoplePolitical = peopleInGrid.fold((p, a) -> {
-						return a + p.political;
-					}, 0.0);
-					final totalPeoplecharm = peopleInGrid.fold((p, a) -> {
-						return a + p.charm;
-					}, 0.0);
-					final factor1 = 1 / (peopleInGrid.length * 100);
 					// 城池成長
 					grid.money += grid.money * getGridMoneyGrow(ctx, grid.id) + BASIC_GROW_MONEY;
 					grid.food += grid.food * getGridFoodGrow(ctx, grid.id) + BASIC_GROW_FOOD;

@@ -42,11 +42,14 @@ function getResourceCost(ctx:Context, playerId:Int, gridId:Int, p1SelectId:Int, 
 
 			final top = 60;
 			final attrFactor:Float = if (type == RESOURCE.MONEY) {
-				(p1.political / top) * .7 + (p1.intelligence / top) * .1 + (p1.charm / top) * .1 + (grid.money / 300) * .1;
+				(getPeoplePolitical(ctx, p1.id) / top) * .7 + (getPeopleIntelligence(ctx, p1.id) / top) * .1 + (getPeopleCharm(ctx, p1.id) / top) * .1
+					+ (grid.money / 300) * .1;
 			} else if (type == RESOURCE.ARMY) {
-				(p1.political / top) * .1 + (p1.intelligence / top) * .1 + (p1.charm / top) * .7 + (grid.army / 300) * .1;
+				(getPeoplePolitical(ctx, p1.id) / top) * .1 + (getPeopleIntelligence(ctx, p1.id) / top) * .1 + (getPeopleCharm(ctx, p1.id) / top) * .7
+					+ (grid.army / 300) * .1;
 			} else if (type == RESOURCE.FOOD) {
-				(p1.political / top) * .1 + (p1.intelligence / top) * .7 + (p1.charm / top) * .1 + (grid.food / 300) * .1;
+				(getPeoplePolitical(ctx, p1.id) / top) * .1 + (getPeopleIntelligence(ctx, p1.id) / top) * .7 + (getPeopleCharm(ctx, p1.id) / top) * .1
+					+ (grid.food / 300) * .1;
 			} else {
 				0;
 			};
@@ -169,6 +172,8 @@ function applyResourceCost(ctx:Context, playerId:Int, gridId:Int, p1SelectId:Int
 	if (people.energy < negoCost.peopleCost.energy) {
 		throw new haxe.Exception('people.energy ${people.energy} < ${negoCost.peopleCost.energy}');
 	}
+	// 功績
+	people.exp += getExpAdd(Math.min(1, 0.5));
 	people.energy -= negoCost.peopleCost.energy;
 	if (people.energy < 0) {
 		people.energy = 0;

@@ -9,16 +9,15 @@ import model.ver2.Define;
 using Lambda;
 
 function getStrategyCost(ctx:Context, p1PeopleId:Int, strategyId:Int, targetPlayerId:Int, targetPeopleId:Int, targetGridId:Int) {
-	trace("getStrategyCost", "指定武將很像沒有作用(targetPeopleId)", targetPeopleId);
 	final p1 = getPeopleById(ctx, p1PeopleId);
 	final strategy = StrategyList[strategyId];
 	final useEnergy = p1.energy / (100 / ENERGY_COST_ON_STRATEGY);
 	final base = getBase(useEnergy, ENERGY_COST_ON_STRATEGY, 0.0);
-	final fact1 = p1.intelligence / Math.max(strategy.intelligence, 1.0);
+	final fact1 = getPeopleIntelligence(ctx, p1.id) / Math.max(strategy.intelligence, 1.0);
 	final fact2 = switch strategy.targetType {
 		case TARGET_PEOPLE:
 			final p2 = getPeopleById(ctx, targetPeopleId);
-			p1.intelligence / p2.intelligence;
+			getPeopleIntelligence(ctx, p1.id) / getPeopleIntelligence(ctx, p2.id);
 		case _:
 			1.0;
 	}
@@ -48,7 +47,6 @@ function getStrategyCost(ctx:Context, p1PeopleId:Int, strategyId:Int, targetPlay
 }
 
 function applyStrategyCost(ctx:Context, p1PeopleId:Int, strategyId:Int, targetPlayerId:Int, targetPeopleId:Int, targetGridId:Int):Bool {
-	trace("applyStrategyCost", "指定武將很像沒有作用(targetPeopleId)", targetPeopleId);
 	final cost = getStrategyCost(ctx, p1PeopleId, strategyId, targetPlayerId, targetPeopleId, targetGridId);
 	final p1 = getPeopleById(ctx, p1PeopleId);
 	p1.energy = Math.max(0, p1.energy - cost.peopleCost.energy);
@@ -56,6 +54,8 @@ function applyStrategyCost(ctx:Context, p1PeopleId:Int, strategyId:Int, targetPl
 	if (success == false) {
 		return false;
 	}
+	// 功績
+	p1.exp += getExpAdd(cost.successRate);
 	switch strategyId {
 		case 0:
 			// 暗渡陳艙

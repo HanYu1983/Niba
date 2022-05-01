@@ -35,9 +35,9 @@ function getNegoCost(ctx:Context, playerId:Int, gridId:Int, p1SelectId:Int, p2Se
 					final useEnergy = p1.energy / (100 / ENERGY_COST_ON_NEGO);
 					// 使用20體力的情況下基礎值為0.5
 					final base = getBase(useEnergy, ENERGY_COST_ON_NEGO, -.2);
-					final intelligenceFactor = p1.intelligence / p2.intelligence;
-					final politicalFactor = p1.political / p2.political;
-					final charmFactor = p1.charm / p2.charm;
+					final intelligenceFactor = getPeopleIntelligence(ctx, p1.id) / getPeopleIntelligence(ctx, p2.id);
+					final politicalFactor = getPeoplePolitical(ctx, p1.id) / getPeoplePolitical(ctx, p2.id);
+					final charmFactor = getPeopleCharm(ctx, p1.id) / getPeopleCharm(ctx, p2.id);
 
 					// 沒有良官的時候，rate最高限制在1.2
 					var rate = base * intelligenceFactor * politicalFactor * charmFactor;
@@ -176,6 +176,8 @@ function applyNegoCost(ctx:Context, playerId:Int, gridId:Int, p1SelectId:Int, p2
 		}
 		return false;
 	}
+	// 功績
+	people.exp += getExpAdd(Math.min(1, negoCost.successRate));
 	// 城池被搶奪
 	grid.army -= negoCost.playerCost.army;
 	if (grid.army < 0) {

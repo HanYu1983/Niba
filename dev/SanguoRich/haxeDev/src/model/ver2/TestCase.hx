@@ -35,7 +35,8 @@ function testExplore() {
 				command: 0.0,
 				abilities: [],
 				energy: 100.0,
-				type: PeopleType.PUTONG
+				defaultType: PeopleType.PUTONG,
+				exp: 0.0,
 			}
 		],
 		players: [],
@@ -89,7 +90,8 @@ function testGuessArmy() {
 				command: 50.0,
 				abilities: [],
 				energy: 100.0,
-				type: PeopleType.PUTONG
+				defaultType: PeopleType.PUTONG,
+				exp: 0.0,
 			}
 		],
 		players: [

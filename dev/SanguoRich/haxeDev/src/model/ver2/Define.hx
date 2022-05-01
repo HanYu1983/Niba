@@ -40,7 +40,8 @@ typedef People = {
 	command:Float,
 	abilities:Array<Int>,
 	energy:Float,
-	type:PeopleType,
+	defaultType:PeopleType,
+	exp:Float,
 }
 
 typedef Player = {
@@ -173,18 +174,18 @@ typedef Context = {
 function getPeopleInfo(ctx:Context, people:People):model.PeopleGenerator.People {
 	return {
 		id: people.id,
-		type: people.type,
+		type: getPeopleType(ctx, people.id),
 		name: people.name,
-		command: Std.int(people.command),
-		force: Std.int(people.force),
-		intelligence: Std.int(people.intelligence),
-		political: Std.int(people.political),
-		charm: Std.int(people.charm),
+		command: Std.int(getPeopleCommand(ctx, people.id)),
+		force: Std.int(getPeopleForce(ctx, people.id)),
+		intelligence: Std.int(getPeopleIntelligence(ctx, people.id)),
+		political: Std.int(getPeoplePolitical(ctx, people.id)),
+		charm: Std.int(getPeopleCharm(ctx, people.id)),
 		cost: Std.int(people.cost),
 		abilities: people.abilities,
 		energy: Std.int(people.energy),
-		gridId: cast people.position.gridId,
-		exp: 0,
+		gridId: people.position.gridId,
+		exp: people.exp,
 	}
 }
 
@@ -411,27 +412,10 @@ function addGridInfo(ctx:Context, grid:model.GridGenerator.Grid):Void {
 		moneyGrow: grid.moneyGrow,
 		foodGrow: grid.foodGrow,
 		armyGrow: grid.armyGrow,
-		favor: grid.favor
+		favor: grid.favor,
 	});
 	for (p in grid.people) {
-		ctx.peoples.push({
-			id: p.id,
-			belongToPlayerId: null,
-			position: {
-				gridId: grid.id,
-				player: false
-			},
-			name: p.name,
-			force: p.force,
-			intelligence: p.intelligence,
-			political: p.political,
-			charm: p.charm,
-			cost: p.cost,
-			abilities: p.abilities,
-			command: p.command,
-			energy: p.energy,
-			type: p.type
-		});
+		addPeopleInfo(ctx, null, grid.id, p);
 	}
 }
 
@@ -452,7 +436,8 @@ function addPeopleInfo(ctx:Context, belongToPlayerId:Null<Int>, gridId:Null<Int>
 		abilities: p.abilities,
 		command: p.command,
 		energy: p.energy,
-		type: p.type
+		defaultType: p.type,
+		exp: p.exp
 	});
 }
 
@@ -467,30 +452,13 @@ function addPlayerInfo(ctx:Context, player:model.IModel.PlayerInfo):Void {
 		position: player.atGridId,
 	});
 	for (p in player.people) {
-		ctx.peoples.push({
-			id: p.id,
-			belongToPlayerId: player.id,
-			position: {
-				gridId: null,
-				player: true
-			},
-			name: p.name,
-			force: p.force,
-			intelligence: p.intelligence,
-			political: p.political,
-			charm: p.charm,
-			cost: p.cost,
-			abilities: p.abilities,
-			command: p.command,
-			energy: p.energy,
-			type: p.type
-		});
+		addPeopleInfo(ctx, player.id, null, p);
 	}
 }
 
 function getMaintainPeople(ctx:Context, playerId:Int):Float {
 	final totalPeopleCost = ctx.peoples.filter(p -> p.belongToPlayerId == playerId).fold((p, a) -> {
-		return a + p.cost;
+		return a + getPeopleMaintainCost(ctx, p.id);
 	}, 0.0);
 	return getMaintainPeoplePure(totalPeopleCost);
 }
@@ -516,4 +484,94 @@ function getPeopleById(ctx:Context, id:Int):People {
 		throw new haxe.Exception('people not found: ${id}');
 	}
 	return find[0];
+}
+
+function getPeopleType(ctx:Context, peopleId:Int):PeopleType {
+	final people = getPeopleById(ctx, peopleId);
+	final level = getExpLevel(people.exp);
+	return switch people.defaultType {
+		case PUTONG | QILIN:
+			switch level {
+				case 0:
+					people.defaultType;
+				case _:
+					// 1級以上的話, 隨機文官文武將
+					switch peopleId % 2 {
+						case 0:
+							WENGUAN(level);
+						case _:
+							WUJIANG(level);
+					}
+			}
+		// 文官
+		case WENGUAN(_):
+			WENGUAN(level);
+		// 武將
+		case WUJIANG(_):
+			WUJIANG(level);
+	}
+}
+
+function getPeopleMaintainCost(ctx:Context, peopleId):Float {
+	final people = getPeopleById(ctx, peopleId);
+	return switch getPeopleType(ctx, peopleId) {
+		case WENGUAN(level):
+			people.cost * (1 + EXP_LEVEL_COST_EXT[level]);
+		case WUJIANG(level):
+			people.cost * (1 + EXP_LEVEL_COST_EXT[level]);
+		case _:
+			people.cost;
+	}
+}
+
+function getPeopleForce(ctx:Context, peopleId):Float {
+	final people = getPeopleById(ctx, peopleId);
+	return switch getPeopleType(ctx, peopleId) {
+		case WUJIANG(level):
+			people.force + EXP_LEVEL_ABI_EXT[level];
+		case _:
+			people.force;
+	}
+}
+
+function getPeopleIntelligence(ctx:Context, peopleId):Float {
+	final people = getPeopleById(ctx, peopleId);
+	return switch getPeopleType(ctx, peopleId) {
+		case WENGUAN(level):
+			people.intelligence + EXP_LEVEL_ABI_EXT[level];
+		case _:
+			people.intelligence;
+	}
+}
+
+function getPeoplePolitical(ctx:Context, peopleId):Float {
+	final people = getPeopleById(ctx, peopleId);
+	return switch getPeopleType(ctx, peopleId) {
+		case WENGUAN(level):
+			people.political + EXP_LEVEL_ABI_EXT[level];
+		case _:
+			people.political;
+	}
+}
+
+function getPeopleCharm(ctx:Context, peopleId):Float {
+	final people = getPeopleById(ctx, peopleId);
+	return switch getPeopleType(ctx, peopleId) {
+		case WENGUAN(level):
+			people.charm + EXP_LEVEL_ABI_EXT[level];
+		case WUJIANG(level):
+			people.charm + EXP_LEVEL_ABI_EXT[level];
+		case _:
+			people.charm;
+	}
+}
+
+function getPeopleCommand(ctx:Context, peopleId):Float {
+	final people = getPeopleById(ctx, peopleId);
+	return switch getPeopleType(ctx, peopleId) {
+		case WUJIANG(level):
+			people.command + EXP_LEVEL_ABI_EXT[level];
+		case _:
+			people.command;
+	}
 }
