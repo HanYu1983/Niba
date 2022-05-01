@@ -6,6 +6,7 @@ package view;
 // import model.ModelVer2.ENERGY_COST_ON_RESOURCE;
 // import model.ModelVer2.ENERGY_COST_ON_HIRE;
 // import model.ModelVer2.ENERGY_COST_ON_EXPLORE;
+import model.IModel.EventInfoID;
 import haxe.Exception;
 import model.PeopleGenerator;
 import model.PeopleGenerator.People;
@@ -496,7 +497,8 @@ class MainView extends Absolute {
 
 		TweenX.serial(tweens);
 
-		trace('目前聘用的後端如果金錢不夠沒有防呆，我前段先防了');
+		trace(' playerInfo 多了armyGrow可以套了。這樣就可以傳城地的成長值過來了，然後本身的士兵也可以成長了');
+		trace(' 經驗值成長可以套用，如果升級了，記得要傳升級事件EventInfoID.PEOPLE_LEVEL_UP_EVENT');
 	}
 
 	function syncViewByInfo(gameInfo:GameInfo) {
@@ -801,11 +803,14 @@ class MainView extends Absolute {
 			var info:Dynamic = Main.cloneObject(p);
 			info.money = '${Main.getFixNumber(p.money,0)} (${Main.getFixNumber(p.maintainPeople)})';
 			info.food = '${Main.getFixNumber(p.food,0)} (${Main.getFixNumber(p.maintainArmy)})';
-			info.army = Main.getFixNumber(p.army, 0);
+			info.army ='${Main.getFixNumber(p.army,0)} (${Main.getFixNumber(p.armyGrow)})';
 			info.peopleCount = p.people.length;
 			info.cityCount = p.grids.length;
 			tab_allPlayers.dataSource.add(info);
 		}
+
+		
+		
 	}
 
 	function syncPlayerInfo(id:Int) {

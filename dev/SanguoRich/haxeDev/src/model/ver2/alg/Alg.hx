@@ -197,6 +197,7 @@ function initContext(ctx:Context, option:{}) {
 			],
 			maintainPeople: 0,
 			maintainArmy: 0,
+			armyGrow: 0.01,
 			atGridId: 0,
 			grids: [],
 			enabledCast: true

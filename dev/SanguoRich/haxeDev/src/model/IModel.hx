@@ -16,6 +16,7 @@ typedef PlayerInfo = {
 	atGridId:Int,
 	maintainPeople:Float,
 	maintainArmy:Float,
+	armyGrow:Float,
 	enabledCast:Bool
 }
 

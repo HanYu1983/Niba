@@ -25,7 +25,7 @@
                             <column id="name" text="名" width="100%" />
                             <column id="money" text="金" width="100" />
                             <column id="food" text="糧" width="100" />
-                            <column id="army" text="兵" width="60" />
+                            <column id="army" text="兵" width="100" />
                             <column id="cityCount" text="城" width="30" />
                             <column id="peopleCount" text="將" width="30" />
                         </header>

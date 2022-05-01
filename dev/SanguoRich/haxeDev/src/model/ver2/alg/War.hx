@@ -144,8 +144,9 @@ function _getTakeWarPreview(ctx:Context, playerId:Int, gridId:Int):WarPreview {
 					strategy: 0,
 					people: ctx.peoples.filter(p -> p.position.gridId == gridId).map(p -> getPeopleInfo(ctx, p)),
 					atGridId: gridId,
-					maintainArmy: 0,
-					maintainPeople: 0,
+					maintainArmy: grid.foodGrow * grid.food,
+					maintainPeople: grid.moneyGrow * grid.money,
+					armyGrow: grid.armyGrow * grid.army,
 					grids: [],
 					enabledCast: true
 				},

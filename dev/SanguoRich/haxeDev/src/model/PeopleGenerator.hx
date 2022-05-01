@@ -138,8 +138,8 @@ class PeopleGenerator {
             id:peopleId++,
             type:switch(type){
                 case 0:PeopleType.PUTONG;
-                case 1:PeopleType.WUJIANG(Math.ceil(Math.random()*9));
-                case 2:PeopleType.WENGUAN(Math.ceil(Math.random()*9));
+                case 1:PeopleType.WUJIANG(0);
+                case 2:PeopleType.WENGUAN(0);
                 case 3:PeopleType.QILIN;
                 case _:PeopleType.PUTONG;
             },
