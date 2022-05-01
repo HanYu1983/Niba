@@ -131,5 +131,7 @@ class ProxyModel implements IModel {
 		return model.takeStrategy(p1PeopleId, strategyId, targetPlayerId, targetPeopleId, targetGridId, cb);
 	}
 
-	public function takeBuilding(p1PeopleId:Int, gridId:Int, peopleId:Int, current:Dynamic, to:Dynamic, cb:(gameInfo:GameInfo) -> Void) {}
+	public function takeBuilding(p1PeopleId:Int, gridId:Int, peopleId:Int, current:Dynamic, to:Dynamic, cb:(gameInfo:GameInfo) -> Void) {
+		return model.takeBuilding(p1PeopleId, gridId, peopleId, current, to, cb);
+	}
 }

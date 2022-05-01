@@ -25,7 +25,8 @@ typedef Grid = {
 
 typedef Attachment = {
 	id:Int,
-	belongToGridId:Int
+	belongToGridId:Int,
+	type:BUILDING,
 }
 
 typedef People = {
@@ -164,6 +165,11 @@ enum Event {
 		energyBefore:Float,
 		energyAfter:Float,
 	});
+	BUILDING_RESULT(value:{
+		success:Bool,
+		people:model.PeopleGenerator.People,
+		building:BUILDING,
+	});
 }
 
 typedef Context = {
@@ -274,7 +280,7 @@ function getGridInfo(ctx:Context, grid:Grid):model.GridGenerator.Grid {
 		landType: 0,
 		buildtype: isEmpty ? GROWTYPE.EMPTY : grid.buildtype,
 		height: 0,
-		attachs: [],
+		attachs: ctx.attachments.filter(a -> a.belongToGridId == grid.id).map(a -> a.type),
 		belongPlayerId: cast belongPlayerId,
 		value: 0,
 		money: grid.money,
@@ -403,6 +409,11 @@ function getGameInfo(ctx:Context, root:Bool):GameInfo {
 						id: EventInfoID.STRATEGY_RESULT,
 						value: value
 					}
+				case BUILDING_RESULT(value):
+					{
+						id: EventInfoID.BUILDING_RESULT,
+						value: value
+					}
 			}
 			return eventInfo;
 		}) : [],
@@ -436,6 +447,19 @@ function addGridInfo(ctx:Context, grid:model.GridGenerator.Grid):Void {
 	for (p in grid.people) {
 		addPeopleInfo(ctx, null, grid.id, p);
 	}
+	for (p in grid.attachs) {
+		addAttachInfo(ctx, grid.id, p);
+	}
+}
+
+var _id = 0;
+
+function addAttachInfo(ctx:Context, belongToGridId:Int, attach:BUILDING) {
+	ctx.attachments.push({
+		id: _id++,
+		belongToGridId: belongToGridId,
+		type: attach
+	});
 }
 
 function addPeopleInfo(ctx:Context, belongToPlayerId:Null<Int>, gridId:Null<Int>, p:model.PeopleGenerator.People):Void {
@@ -602,6 +626,7 @@ function getPeopleCommand(ctx:Context, peopleId):Float {
 
 function getPlayerCommand(ctx:Context, playerId:Int):Array<ActionInfoID> {
 	final ret:Array<ActionInfoID> = [];
+	ret.push(ActionInfoID.BUILD);
 	final player = ctx.players[playerId];
 	final gridInfo = getGridInfo(ctx, ctx.grids[player.position]);
 	if (player.memory.hasDice == false) {

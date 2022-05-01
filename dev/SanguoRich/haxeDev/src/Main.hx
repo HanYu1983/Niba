@@ -8,6 +8,7 @@ import view.MainView;
 import haxe.ui.HaxeUIApp;
 import model.ver2.ModelVer2;
 import model.CacheModel;
+import model.DebugModel;
 
 private function runTest() {
 	model.ver2.TestCase.test();
@@ -118,7 +119,7 @@ class Main {
 	}
 
 	public static function getBuildingCatelog(b:BUILDING) {
-        final catelog = BuildingList.filter((catelog)-> Type.enumEq(catelog.type, b));
-        return catelog[0];
-    }
+		final catelog = BuildingList.filter((catelog) -> Type.enumEq(catelog.type, b));
+		return catelog[0];
+	}
 }

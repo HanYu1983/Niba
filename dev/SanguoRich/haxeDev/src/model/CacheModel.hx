@@ -84,4 +84,9 @@ class CacheModel extends ProxyModel {
 		isDirty = true;
 		return super.takeStrategy(p1PeopleId, strategyId, targetPlayerId, targetPeopleId, targetGridId, cb);
 	}
+
+	override function takeBuilding(p1PeopleId:Int, gridId:Int, peopleId:Int, current:Dynamic, to:Dynamic, cb:(gameInfo:GameInfo) -> Void) {
+		isDirty = true;
+		return super.takeBuilding(p1PeopleId, gridId, peopleId, current, to, cb);
+	}
 }

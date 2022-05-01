@@ -149,13 +149,28 @@ class ModelVer2 extends DebugModel {
 	}
 
 	override function getStrategyRate(p1People:model.PeopleGenerator.People, strategy:StrategyCatelog, targetPlayerId:Int, targetPeopleId:Int,
-			targetGridId:Int):{energyBefore:Int, energyAfter:Int, rate:Float} {
+			targetGridId:Int):{
+		energyBefore:Int,
+		energyAfter:Int,
+		rate:Float
+	} {
 		return _getStrategyRate(context, p1People.id, strategy.id, targetPlayerId, targetPeopleId, targetGridId);
 	}
 
 	override function takeStrategy(p1PeopleId:Int, strategyId:Int, targetPlayerId:Int, targetPeopleId:Int, targetGridId:Int,
 			cb:(gameInfo:GameInfo) -> Void):Void {
 		_takeStrategy(context, p1PeopleId, strategyId, targetPlayerId, targetPeopleId, targetGridId);
+		cb(gameInfo());
+	}
+
+	override function takeBuilding(p1PeopleId:Int, gridId:Int, peopleId:Int, current:Dynamic, to:Dynamic, cb:(gameInfo:GameInfo) -> Void) {
+		context.events = [
+			Event.BUILDING_RESULT({
+				success: true,
+				people: PeopleGenerator.getInst().generate(),
+				building: BUILDING.FARM(2),
+			})
+		];
 		cb(gameInfo());
 	}
 }
