@@ -176,6 +176,8 @@ function applyNegoCost(ctx:Context, playerId:Int, gridId:Int, p1SelectId:Int, p2
 		}
 		return false;
 	}
+	// 功績
+	people.exp += getExpAdd(Math.min(1, negoCost.successRate));
 	// 城池被搶奪
 	grid.army -= negoCost.playerCost.army;
 	if (grid.army < 0) {

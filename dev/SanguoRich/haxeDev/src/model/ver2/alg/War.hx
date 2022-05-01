@@ -304,6 +304,10 @@ function applyWarCost(ctx:Context, playerId:Int, gridId:Int, p1PeopleId:Int, p2P
 					grid.favor[playerId] = Std.int(Math.max(grid.favor[playerId] - 1, MIN_GRID_FAVOR));
 				}
 			}
+			if (success) {
+				// 功績
+				people.exp += getExpAdd(1);
+			}
 			return success;
 		case _:
 			throw new haxe.Exception("getWarCost not match");

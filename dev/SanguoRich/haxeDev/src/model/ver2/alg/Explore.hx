@@ -96,6 +96,8 @@ function applyExploreCost(ctx:Context, playerId:Int, gridId:Int, p1SelectId:Int)
 	if (success == false) {
 		return [];
 	}
+	// 功績
+	people.exp += getExpAdd(Math.min(1, negoCost.successRate));
 	final newPeople = PeopleGenerator.getInst().generate();
 	addPeopleInfo(ctx, null, gridId, newPeople);
 	return [newPeople.id];

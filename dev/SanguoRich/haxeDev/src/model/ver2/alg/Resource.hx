@@ -172,6 +172,8 @@ function applyResourceCost(ctx:Context, playerId:Int, gridId:Int, p1SelectId:Int
 	if (people.energy < negoCost.peopleCost.energy) {
 		throw new haxe.Exception('people.energy ${people.energy} < ${negoCost.peopleCost.energy}');
 	}
+	// 功績
+	people.exp += getExpAdd(Math.min(1, 0.5));
 	people.energy -= negoCost.peopleCost.energy;
 	if (people.energy < 0) {
 		people.energy = 0;
