@@ -12,7 +12,7 @@ function _getPreResultOfFire(ctx:Context, playerId:Int, p1PeopleId:Array<Int>):P
 		if (p.id == p1PeopleId[0]) {
 			return a;
 		}
-		return a + p.cost;
+		return a + getPeopleMaintainCost(ctx, p.id);
 	}, 0.0);
 	return {
 		maintainMoneyAfter: getMaintainPeoplePure(totalPeopleCost),

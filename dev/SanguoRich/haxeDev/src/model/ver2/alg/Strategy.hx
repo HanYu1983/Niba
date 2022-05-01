@@ -14,11 +14,11 @@ function getStrategyCost(ctx:Context, p1PeopleId:Int, strategyId:Int, targetPlay
 	final strategy = StrategyList[strategyId];
 	final useEnergy = p1.energy / (100 / ENERGY_COST_ON_STRATEGY);
 	final base = getBase(useEnergy, ENERGY_COST_ON_STRATEGY, 0.0);
-	final fact1 = p1.intelligence / Math.max(strategy.intelligence, 1.0);
+	final fact1 = getPeopleIntelligence(ctx, p1.id) / Math.max(strategy.intelligence, 1.0);
 	final fact2 = switch strategy.targetType {
 		case TARGET_PEOPLE:
 			final p2 = getPeopleById(ctx, targetPeopleId);
-			p1.intelligence / p2.intelligence;
+			getPeopleIntelligence(ctx, p1.id) / getPeopleIntelligence(ctx, p2.id);
 		case _:
 			1.0;
 	}

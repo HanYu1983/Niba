@@ -21,7 +21,7 @@ function getWarCost(ctx:Context, playerId:Int, gridId:Int, p1PeopleId:Int, p2Peo
 		final atkPeople = getPeopleById(ctx, p1PeopleId);
 		final fact1 = if (atkPeople.abilities.has(6)) WAR_BACK_ABILITY_FACTOR else 1.0;
 		final fact2 = if (atkPeople.abilities.has(7)) WAR_BACK_ABILITY_FACTOR else 1.0;
-		final fact3 = atkPeople.intelligence / 100;
+		final fact3 = getPeopleIntelligence(ctx, atkPeople.id) / 100;
 		final base = atkArmy;
 		final cost = base * fact1 * fact2 * fact3;
 		atkMoneyCost = cost * WAR_MONEY_COST_FACTOR;
@@ -45,8 +45,8 @@ function getWarCost(ctx:Context, playerId:Int, gridId:Int, p1PeopleId:Int, p2Peo
 		final fact3 = if (atkPeople.abilities.has(1)) WAR_FRONT_ABILITY_FACTOR else 1.0;
 		final fact4 = if (atkPeople.abilities.has(2)) WAR_FRONT_ABILITY_FACTOR else 1.0;
 		final fact5 = if (atkPeople.abilities.has(3)) WAR_FRONT_ABILITY_FACTOR else 1.0;
-		final fact6 = atkPeople.force / defPeople.command;
-		final fact7 = atkPeople.intelligence / defPeople.intelligence;
+		final fact6 = getPeopleForce(ctx, atkPeople.id) / getPeopleCommand(ctx, defPeople.id);
+		final fact7 = getPeopleIntelligence(ctx, atkPeople.id) / getPeopleIntelligence(ctx, defPeople.id);
 		final factMoney = if (currMoney - moneyCost < 0) (1.0 - (-1 * (currMoney - moneyCost) / moneyCost)) else 1.0;
 		final factFood = if (currFood - foodCost < 0) (1.0 - (-1 * (currFood - foodCost) / foodCost)) else 1.0;
 		final base = atkArmy;
@@ -61,7 +61,7 @@ function getWarCost(ctx:Context, playerId:Int, gridId:Int, p1PeopleId:Int, p2Peo
 		final atkPeople = getPeopleById(ctx, p2PeopleId);
 		final fact1 = if (atkPeople.abilities.has(6)) WAR_BACK_ABILITY_FACTOR else 1.0;
 		final fact2 = if (atkPeople.abilities.has(7)) WAR_BACK_ABILITY_FACTOR else 1.0;
-		final fact3 = atkPeople.intelligence / 100;
+		final fact3 = getPeopleIntelligence(ctx, atkPeople.id) / 100;
 		final base = atkArmy;
 		final cost = base * fact1 * fact2 * fact3;
 		defMoneyCost = cost * WAR_MONEY_COST_FACTOR;
@@ -87,8 +87,8 @@ function getWarCost(ctx:Context, playerId:Int, gridId:Int, p1PeopleId:Int, p2Peo
 		final fact5 = if (atkPeople.abilities.has(3)) WAR_FRONT_ABILITY_FACTOR else 1.0;
 		final fact6 = if (options.occupy && atkPeople.abilities.has(8)) WAR_FRONT_ABILITY_FACTOR else 1.0;
 		final fact7 = if (options.occupy && atkPeople.abilities.has(9)) WAR_FRONT_ABILITY_FACTOR else 1.0;
-		final fact8 = atkPeople.command / defPeople.force;
-		final fact9 = atkPeople.intelligence / defPeople.intelligence;
+		final fact8 = getPeopleCommand(ctx, atkPeople.id) / getPeopleForce(ctx, defPeople.id);
+		final fact9 = getPeopleIntelligence(ctx, atkPeople.id) / getPeopleIntelligence(ctx, defPeople.id);
 		final factMoney = if (currMoney - moneyCost < 0) (1.0 - (-1 * (currMoney - moneyCost) / moneyCost)) else 1.0;
 		final factFood = if (currFood - foodCost < 0) (1.0 - (-1 * (currFood - foodCost) / foodCost)) else 1.0;
 		final base = if (options.occupy) atkArmy * WAR_DEFFENDER_FACTOR else atkArmy;

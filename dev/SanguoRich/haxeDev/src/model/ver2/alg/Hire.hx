@@ -18,7 +18,7 @@ function getHireCost(ctx:Context, playerId:Int, gridId:Int, p1SelectId:Int, p2Se
 				case [p1, p2]:
 					final useEnergy = p1.energy / (100 / ENERGY_COST_ON_HIRE);
 					final base = getBase(useEnergy, ENERGY_COST_ON_HIRE, -.1);
-					final charmFactor = p1.charm / p2.charm;
+					final charmFactor = getPeopleCharm(ctx, p1.id) / getPeopleCharm(ctx, p2.id);
 					// 人脈加成
 					final abiFactor = p1.abilities.has(10) ? 1.5 : 1;
 					final rate = base * charmFactor * abiFactor;
@@ -53,8 +53,8 @@ function doGetPreResultOfHire(ctx:Context, playerId:Int, gridId:Int, peopleId:In
 	final cost = getHireCost(ctx, playerId, gridId, peopleId, inviteId);
 	final p1 = getPeopleById(ctx, peopleId);
 	final totalPeopleCost = ctx.peoples.filter(p -> p.belongToPlayerId == playerId).fold((p, a) -> {
-		return a + p.cost;
-	}, 0.0) + p1.cost;
+		return a + getPeopleMaintainCost(ctx, p.id);
+	}, 0.0) + getPeopleMaintainCost(ctx, p1.id);
 	return {
 		energyBefore: Std.int(p1.energy),
 		energyAfter: Std.int(p1.energy - cost.peopleCost.energy),

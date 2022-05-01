@@ -113,7 +113,9 @@ function getBase(useEnergy:Float, totalEnergy:Float = 30.0, offset:Float = 0.0, 
 }
 
 // 升級
-final EXP_LEVEL_GATES = [50, 110, 180, 260, 350, 450, 560, 680, 810];
+final EXP_LEVEL_GATES:Array<Int> = [50, 110, 180, 260, 350, 450, 560, 680, 810];
+final EXP_LEVEL_COST_EXT:Array<Float> = [0.0, 0.02, 0.04, 0.06, 0.08, 0.1, 0.12, 0.14, 0.16, 0.18];
+final EXP_LEVEL_ABI_EXT:Array<Int> = [0, 2, 4, 6, 8, 10, 12, 14, 16, 18];
 
 // 功績等級0~9
 // 0為普通人

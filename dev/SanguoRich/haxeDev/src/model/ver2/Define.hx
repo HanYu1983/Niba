@@ -176,11 +176,11 @@ function getPeopleInfo(ctx:Context, people:People):model.PeopleGenerator.People 
 		id: people.id,
 		type: getPeopleType(ctx, people.id),
 		name: people.name,
-		command: Std.int(people.command),
-		force: Std.int(people.force),
-		intelligence: Std.int(people.intelligence),
-		political: Std.int(people.political),
-		charm: Std.int(people.charm),
+		command: Std.int(getPeopleCommand(ctx, people.id)),
+		force: Std.int(getPeopleForce(ctx, people.id)),
+		intelligence: Std.int(getPeopleIntelligence(ctx, people.id)),
+		political: Std.int(getPeoplePolitical(ctx, people.id)),
+		charm: Std.int(getPeopleCharm(ctx, people.id)),
 		cost: Std.int(people.cost),
 		abilities: people.abilities,
 		energy: Std.int(people.energy),
@@ -433,7 +433,7 @@ function addPeopleInfo(ctx:Context, belongToPlayerId:Null<Int>, gridId:Null<Int>
 		command: p.command,
 		energy: p.energy,
 		defaultType: p.type,
-		exp: 0
+		exp: p.exp
 	});
 }
 
@@ -454,7 +454,7 @@ function addPlayerInfo(ctx:Context, player:model.IModel.PlayerInfo):Void {
 
 function getMaintainPeople(ctx:Context, playerId:Int):Float {
 	final totalPeopleCost = ctx.peoples.filter(p -> p.belongToPlayerId == playerId).fold((p, a) -> {
-		return a + p.cost;
+		return a + getPeopleMaintainCost(ctx, p.id);
 	}, 0.0);
 	return getMaintainPeoplePure(totalPeopleCost);
 }
@@ -505,5 +505,77 @@ function getPeopleType(ctx:Context, peopleId:Int):PeopleType {
 		// 武將
 		case WUJIANG(_):
 			WUJIANG(level);
+	}
+}
+
+function getPeopleMaintainCost(ctx:Context, peopleId):Float {
+	final people = getPeopleById(ctx, peopleId);
+	return switch getPeopleType(ctx, peopleId) {
+		case WENGUAN(level):
+			people.cost * (1 + EXP_LEVEL_COST_EXT[level]);
+		case WUJIANG(level):
+			people.cost * (1 + EXP_LEVEL_COST_EXT[level]);
+		case _:
+			people.cost;
+	}
+}
+
+function getPeopleForce(ctx:Context, peopleId):Float {
+	final people = getPeopleById(ctx, peopleId);
+	return switch getPeopleType(ctx, peopleId) {
+		case WENGUAN(level):
+			people.force + EXP_LEVEL_ABI_EXT[level];
+		case WUJIANG(level):
+			people.force + EXP_LEVEL_ABI_EXT[level];
+		case _:
+			people.force;
+	}
+}
+
+function getPeopleIntelligence(ctx:Context, peopleId):Float {
+	final people = getPeopleById(ctx, peopleId);
+	return switch getPeopleType(ctx, peopleId) {
+		case WENGUAN(level):
+			people.intelligence + EXP_LEVEL_ABI_EXT[level];
+		case WUJIANG(level):
+			people.intelligence + EXP_LEVEL_ABI_EXT[level];
+		case _:
+			people.intelligence;
+	}
+}
+
+function getPeoplePolitical(ctx:Context, peopleId):Float {
+	final people = getPeopleById(ctx, peopleId);
+	return switch getPeopleType(ctx, peopleId) {
+		case WENGUAN(level):
+			people.political + EXP_LEVEL_ABI_EXT[level];
+		case WUJIANG(level):
+			people.political + EXP_LEVEL_ABI_EXT[level];
+		case _:
+			people.political;
+	}
+}
+
+function getPeopleCharm(ctx:Context, peopleId):Float {
+	final people = getPeopleById(ctx, peopleId);
+	return switch getPeopleType(ctx, peopleId) {
+		case WENGUAN(level):
+			people.charm + EXP_LEVEL_ABI_EXT[level];
+		case WUJIANG(level):
+			people.charm + EXP_LEVEL_ABI_EXT[level];
+		case _:
+			people.charm;
+	}
+}
+
+function getPeopleCommand(ctx:Context, peopleId):Float {
+	final people = getPeopleById(ctx, peopleId);
+	return switch getPeopleType(ctx, peopleId) {
+		case WENGUAN(level):
+			people.command + EXP_LEVEL_ABI_EXT[level];
+		case WUJIANG(level):
+			people.command + EXP_LEVEL_ABI_EXT[level];
+		case _:
+			people.command;
 	}
 }
