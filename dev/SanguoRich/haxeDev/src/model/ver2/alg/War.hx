@@ -4,6 +4,7 @@ import model.GridGenerator;
 import model.IModel;
 import model.Config;
 import model.ver2.Define;
+import model.ver2.alg.Alg;
 
 using Lambda;
 
@@ -221,6 +222,7 @@ function _getPreResultOfWar(ctx:Context, playerId:Int, gridId:Int, p1PeopleId:In
 }
 
 function _takeWarOn(ctx:Context, playerId:Int, gridId:Int, p1PeopleId:Int, p2PeopleId:Int, army1:Float, army2:Float) {
+	ctx.events = [];
 	final people1 = getPeopleById(ctx, p1PeopleId);
 	final people2 = getPeopleById(ctx, p2PeopleId);
 	final player = ctx.players[playerId];
@@ -242,7 +244,7 @@ function _takeWarOn(ctx:Context, playerId:Int, gridId:Int, p1PeopleId:Int, p2Peo
 	resultValue.armyAfter = player.army;
 	resultValue.moneyAfter = player.money;
 	resultValue.foodAfter = player.food;
-	ctx.events = [Event.WAR_RESULT(resultValue)];
+	ctx.events.push(Event.WAR_RESULT(resultValue));
 }
 
 function applyWarCost(ctx:Context, playerId:Int, gridId:Int, p1PeopleId:Int, p2PeopleId:Int, army1:Float, army2:Float, options:{occupy:Bool}):Bool {
@@ -322,7 +324,7 @@ function applyWarCost(ctx:Context, playerId:Int, gridId:Int, p1PeopleId:Int, p2P
 			}
 			if (success) {
 				// 功績
-				people.exp += getExpAdd(1);
+				onPeopleExpAdd(ctx, people.id, getExpAdd(1));
 			}
 			return success;
 		case _:

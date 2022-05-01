@@ -56,7 +56,7 @@ function applyStrategyCost(ctx:Context, p1PeopleId:Int, strategyId:Int, targetPl
 		return false;
 	}
 	// 功績
-	p1.exp += getExpAdd(cost.successRate);
+	onPeopleExpAdd(ctx, p1.id, getExpAdd(cost.successRate));
 	switch strategyId {
 		case 0:
 			// 暗渡陳艙
@@ -65,6 +65,7 @@ function applyStrategyCost(ctx:Context, p1PeopleId:Int, strategyId:Int, targetPl
 			}
 			final player = ctx.players[p1.belongToPlayerId];
 			player.position = targetGridId;
+			onPlayerGoToPosition(ctx, player.id, player.position);
 		case 1:
 			// 步步為營
 			final p2 = getPeopleById(ctx, targetPeopleId);
@@ -106,6 +107,7 @@ function _getStrategyRate(ctx:Context, p1PeopleId:Int, strategyId:Int, targetPla
 }
 
 function _takeStrategy(ctx:Context, p1PeopleId:Int, strategyId:Int, targetPlayerId:Int, targetPeopleId:Int, targetGridId:Int):Void {
+	ctx.events = [];
 	final p1 = getPeopleById(ctx, p1PeopleId);
 	if (p1.belongToPlayerId == null) {
 		throw new Exception("belongToPlayerId not found");
@@ -124,33 +126,5 @@ function _takeStrategy(ctx:Context, p1PeopleId:Int, strategyId:Int, targetPlayer
 	strategyResultValue.success = success;
 	strategyResultValue.people = getPeopleInfo(ctx, p1);
 	strategyResultValue.energyAfter = p1.energy;
-	ctx.events = [Event.STRATEGY_RESULT(strategyResultValue)];
-	final isPositionChange = player.position != playerOriginPosition;
-	{
-		final player = ctx.players[ctx.currentPlayerId];
-		player.memory.hasStrategy = true;
-		if (isPositionChange) {
-			player.memory.hasDice = true;
-			{
-				final toGrid = ctx.grids[player.position];
-				final toGridBelongPlayerId = getGridBelongPlayerId(ctx, toGrid.id);
-				final isStopAtEnemyGrid = toGridBelongPlayerId != null && toGridBelongPlayerId != player.id;
-				if (isStopAtEnemyGrid) {
-					final eventValue = {
-						armyBefore: player.army,
-						armyAfter: player.army,
-						moneyBefore: player.money,
-						moneyAfter: player.money,
-						foodBefore: player.food,
-						foodAfter: player.food,
-					}
-					doPayTaxToGrid(ctx, player.id, toGrid.id);
-					eventValue.moneyAfter = player.money;
-					ctx.events.push({
-						Event.PAY_FOR_OVER_ENEMY_GRID(eventValue);
-					});
-				}
-			}
-		}
-	}
+	ctx.events.push(Event.STRATEGY_RESULT(strategyResultValue));
 }

@@ -206,24 +206,7 @@ function doPlayerDice(ctx:Context) {
 		}, getGameInfo(ctx, false))
 	];
 	ctx.events = [];
-	final toGrid = ctx.grids[toGridId];
-	final toGridBelongPlayerId = getGridBelongPlayerId(ctx, toGrid.id);
-	final isStopAtEnemyGrid = toGridBelongPlayerId != null && toGridBelongPlayerId != player.id;
-	if (isStopAtEnemyGrid) {
-		final eventValue = {
-			armyBefore: player.army,
-			armyAfter: player.army,
-			moneyBefore: player.money,
-			moneyAfter: player.money,
-			foodBefore: player.food,
-			foodAfter: player.food,
-		}
-		doPayTaxToGrid(ctx, player.id, toGrid.id);
-		eventValue.moneyAfter = player.money;
-		ctx.events.push({
-			Event.PAY_FOR_OVER_ENEMY_GRID(eventValue);
-		});
-	}
+	onPlayerGoToPosition(ctx, activePlayerId, toGridId);
 }
 
 function initContext(ctx:Context, option:{}) {
@@ -252,6 +235,43 @@ function initContext(ctx:Context, option:{}) {
 			atGridId: 0,
 			grids: [],
 			commands: []
+		});
+	}
+}
+
+function onPeopleExpAdd(ctx:Context, peopleId:Int, exp:Float) {
+	final people = getPeopleById(ctx, peopleId);
+	final eventValue = {
+		peopleBefore: getPeopleInfo(ctx, people),
+		peopleAfter: getPeopleInfo(ctx, people),
+	}
+	final originLevel = getExpLevel(people.exp);
+	people.exp += exp;
+	final isLevelUp = getExpLevel(people.exp) > originLevel;
+	if (isLevelUp) {
+		eventValue.peopleAfter = getPeopleInfo(ctx, people);
+		ctx.events.push(Event.PEOPLE_LEVEL_UP_EVENT(eventValue));
+	}
+}
+
+function onPlayerGoToPosition(ctx:Context, playerId:Int, toGridId:Int) {
+	final player = ctx.players[playerId];
+	final toGrid = ctx.grids[toGridId];
+	final toGridBelongPlayerId = getGridBelongPlayerId(ctx, toGrid.id);
+	final isStopAtEnemyGrid = toGridBelongPlayerId != null && toGridBelongPlayerId != player.id;
+	if (isStopAtEnemyGrid) {
+		final eventValue = {
+			armyBefore: player.army,
+			armyAfter: player.army,
+			moneyBefore: player.money,
+			moneyAfter: player.money,
+			foodBefore: player.food,
+			foodAfter: player.food,
+		}
+		doPayTaxToGrid(ctx, player.id, toGrid.id);
+		eventValue.moneyAfter = player.money;
+		ctx.events.push({
+			Event.PAY_FOR_OVER_ENEMY_GRID(eventValue);
 		});
 	}
 }

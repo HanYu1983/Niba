@@ -5,6 +5,7 @@ import model.IModel;
 import model.Config;
 import model.ver2.Define;
 import model.ver2.Mock;
+import model.ver2.alg.Alg;
 
 using Lambda;
 
@@ -63,6 +64,7 @@ function _getPreResultOfExplore(ctx:Context, playerId:Int, gridId:Int, peopleId:
 }
 
 function _takeExplore(ctx:Context, playerId:Int, gridId:Int, p1SelectId:Int) {
+	ctx.events = [];
 	final p1 = getPeopleById(ctx, p1SelectId);
 	final player = ctx.players[playerId];
 	final resultValue = {
@@ -85,7 +87,7 @@ function _takeExplore(ctx:Context, playerId:Int, gridId:Int, p1SelectId:Int) {
 	resultValue.armyAfter = player.army;
 	resultValue.moneyAfter = player.money;
 	resultValue.foodAfter = player.food;
-	ctx.events = [Event.EXPLORE_RESULT(resultValue)];
+	ctx.events.push(Event.EXPLORE_RESULT(resultValue));
 	{
 		final player = ctx.players[ctx.currentPlayerId];
 		player.memory.hasCommand = true;
@@ -109,7 +111,7 @@ function applyExploreCost(ctx:Context, playerId:Int, gridId:Int, p1SelectId:Int)
 		return [];
 	}
 	// 功績
-	people.exp += getExpAdd(Math.min(1, negoCost.successRate));
+	onPeopleExpAdd(ctx, people.id, getExpAdd(Math.min(1, negoCost.successRate)));
 	final newPeople = PeopleGenerator.getInst().generate();
 	addPeopleInfo(ctx, null, gridId, newPeople);
 	return [newPeople.id];

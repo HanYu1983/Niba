@@ -5,6 +5,7 @@ import model.GridGenerator;
 import model.IModel;
 import model.Config;
 import model.ver2.Define;
+import model.ver2.alg.Alg;
 
 using Lambda;
 
@@ -18,7 +19,7 @@ private function applyBuildingCost(ctx:Context, playerId:Int, gridId:Int, people
 	if (success) {
 		player.money = Math.max(0, player.money - costMoney);
 		// 功績
-		people.exp += getExpAdd(0.3);
+		onPeopleExpAdd(ctx, peopleId, getExpAdd(0.3));
 		var checked = false;
 		ctx.attachments = ctx.attachments.map(a -> {
 			if (a.belongToGridId != gridId) {
@@ -38,17 +39,16 @@ private function applyBuildingCost(ctx:Context, playerId:Int, gridId:Int, people
 }
 
 function _takeBuilding(ctx:Context, playerId:Int, gridId:Int, peopleId:Int, current:Dynamic, to:Dynamic) {
+	ctx.events = [];
 	final success = applyBuildingCost(ctx, playerId, gridId, peopleId, current, to);
 	if (success) {
 		final people = getPeopleById(ctx, peopleId);
 		final toBuilding = (to : BUILDING);
-		ctx.events = [
-			Event.BUILDING_RESULT({
-				success: success,
-				people: getPeopleInfo(ctx, people),
-				building: toBuilding,
-			})
-		];
+		ctx.events.push(Event.BUILDING_RESULT({
+			success: success,
+			people: getPeopleInfo(ctx, people),
+			building: toBuilding,
+		}));
 	}
 	{
 		final player = ctx.players[ctx.currentPlayerId];

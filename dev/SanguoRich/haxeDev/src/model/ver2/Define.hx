@@ -178,6 +178,10 @@ enum Event {
 		foodBefore:Float,
 		foodAfter:Float,
 	});
+	PEOPLE_LEVEL_UP_EVENT(value:{
+		peopleBefore:model.PeopleGenerator.People,
+		peopleAfter:model.PeopleGenerator.People,
+	});
 }
 
 typedef Context = {
@@ -425,6 +429,11 @@ function getGameInfo(ctx:Context, root:Bool):GameInfo {
 				case PAY_FOR_OVER_ENEMY_GRID(value):
 					{
 						id: EventInfoID.PAY_FOR_OVER_ENEMY_GRID,
+						value: value
+					}
+				case PEOPLE_LEVEL_UP_EVENT(value):
+					{
+						id: EventInfoID.PEOPLE_LEVEL_UP_EVENT,
 						value: value
 					}
 			}

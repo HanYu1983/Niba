@@ -4,6 +4,7 @@ import model.GridGenerator;
 import model.IModel;
 import model.Config;
 import model.ver2.Define;
+import model.ver2.alg.Alg;
 
 using Lambda;
 
@@ -129,6 +130,7 @@ function doGetPreResultOfNego(ctx:Context, playerId:Int, gridId:Int, peopleId:In
 }
 
 function doTakeNegoOn(ctx:Context, playerId:Int, gridId:Int, p1SelectId:Int, p2SelectId:Int) {
+	ctx.events = [];
 	final p1 = getPeopleById(ctx, p1SelectId);
 	final p2 = getPeopleById(ctx, p2SelectId);
 	final player = ctx.players[playerId];
@@ -154,7 +156,7 @@ function doTakeNegoOn(ctx:Context, playerId:Int, gridId:Int, p1SelectId:Int, p2S
 	resultValue.moneyAfter = player.money;
 	resultValue.foodAfter = player.food;
 	resultValue.favorAfter = grid.favor[playerId];
-	ctx.events = [Event.NEGOTIATE_RESULT(resultValue)];
+	ctx.events.push(Event.NEGOTIATE_RESULT(resultValue));
 	{
 		final player = ctx.players[ctx.currentPlayerId];
 		player.memory.hasCommand = true;
@@ -181,7 +183,7 @@ function applyNegoCost(ctx:Context, playerId:Int, gridId:Int, p1SelectId:Int, p2
 		return false;
 	}
 	// 功績
-	people.exp += getExpAdd(Math.min(1, negoCost.successRate));
+	onPeopleExpAdd(ctx, people.id, getExpAdd(Math.min(1, negoCost.successRate)));
 	// 城池被搶奪
 	grid.army -= negoCost.playerCost.army;
 	if (grid.army < 0) {

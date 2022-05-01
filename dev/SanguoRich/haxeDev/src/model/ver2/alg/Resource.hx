@@ -4,6 +4,7 @@ import model.GridGenerator;
 import model.IModel;
 import model.Config;
 import model.ver2.Define;
+import model.ver2.alg.Alg;
 
 using Lambda;
 
@@ -143,6 +144,7 @@ function _getPreResultOfResource(ctx:Context, playerId:Int, gridId:Int, peopleId
 }
 
 function _takeResource(ctx:Context, playerId:Int, gridId:Int, p1SelectId:Int, market:MARKET, type:RESOURCE) {
+	ctx.events = [];
 	final p1 = getPeopleById(ctx, p1SelectId);
 	final player = ctx.players[playerId];
 	final resultValue = {
@@ -162,7 +164,7 @@ function _takeResource(ctx:Context, playerId:Int, gridId:Int, p1SelectId:Int, ma
 	resultValue.armyAfter = player.army;
 	resultValue.moneyAfter = player.money;
 	resultValue.foodAfter = player.food;
-	ctx.events = [Event.RESOURCE_RESULT(resultValue)];
+	ctx.events.push(Event.RESOURCE_RESULT(resultValue));
 	{
 		final player = ctx.players[ctx.currentPlayerId];
 		player.memory.hasCommand = true;
@@ -177,7 +179,7 @@ function applyResourceCost(ctx:Context, playerId:Int, gridId:Int, p1SelectId:Int
 		throw new haxe.Exception('people.energy ${people.energy} < ${negoCost.peopleCost.energy}');
 	}
 	// 功績
-	people.exp += getExpAdd(Math.min(1, 0.5));
+	onPeopleExpAdd(ctx, people.id, getExpAdd(Math.min(1, 0.5)));
 	people.energy -= negoCost.peopleCost.energy;
 	if (people.energy < 0) {
 		people.energy = 0;
