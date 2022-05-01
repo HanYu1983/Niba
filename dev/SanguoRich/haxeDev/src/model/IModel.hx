@@ -276,7 +276,7 @@ final StrategyList:Array<StrategyCatelog> = [
 		id: 0,
 		name: '暗渡陳艙',
 		intelligence: 70,
-		describe: '移動指定格數',
+		describe: '可以指定移動1~6格數',
 		targetType: StrategyTargetType.TARGET_GRID
 	},
 	{
