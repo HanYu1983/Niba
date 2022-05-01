@@ -5,6 +5,8 @@ import model.GridGenerator.Grid;
 import model.GridGenerator.BUILDING;
 import haxe.ui.containers.Box;
 
+using Lambda;
+
 @:build(haxe.ui.ComponentBuilder.build("assets/grid-view.xml"))
 class GridView extends Box{
 
@@ -75,6 +77,14 @@ class GridView extends Box{
         box_money.percentHeight = Math.max(Main.clamp(grid.money / 500) * 100, .1);
         box_food.percentHeight = Math.max(Main.clamp(grid.food / 500) * 100, .1);
         box_army.percentHeight = Math.max(Main.clamp(grid.army / 500) * 100, .1);
+
+        box_stop.hide();
+        for(ary in grid.strategys){
+            if(ary.has(3)){
+                box_stop.show();
+                break;
+            }
+        }
 
         if(grid.buildtype != GROWTYPE.EMPTY){
             final gameInfo = Main.model.gameInfo();

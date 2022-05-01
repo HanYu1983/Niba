@@ -105,23 +105,20 @@ class StrategyPreviewView extends PopupView {
 					case TARGET_GRID:
 						drp_grid.disabled = false;
 
-						// 暗度陳倉
-						if(s.id == 0){
-							final currentId = gameInfo.currentPlayer.atGridId;
-
-							function remapId(i){
-								final remapId = i + currentId;
-								if(remapId > gameInfo.grids.length - 1){
-									return remapId - gameInfo.grids.length;
-								}else if( remapId < 0 ){
-									return gameInfo.grids.length + remapId;
-								}else{
-									return remapId;
-								}
+						final currentId = gameInfo.currentPlayer.atGridId;
+						function remapId(i){
+							final remapId = i + currentId;
+							if(remapId > gameInfo.grids.length - 1){
+								return remapId - gameInfo.grids.length;
+							}else if( remapId < 0 ){
+								return gameInfo.grids.length + remapId;
+							}else{
+								return remapId;
 							}
-							final canGo = [1,2,3,4,5,6].map(remapId).map((i)->gameInfo.grids[i]);
-							updateGridList(canGo);
 						}
+						final rangeSetting:Array<Int> = s.value.valid;
+						final canGo = rangeSetting.map(remapId).map((i)->gameInfo.grids[i]);
+						updateGridList(canGo);
 					case TARGET_PLAYER:
 						drp_player.disabled = false;
 					case TARGET_PEOPLE:

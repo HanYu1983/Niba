@@ -218,6 +218,7 @@ typedef StrategyCatelog = {
 	intelligence:Float,
 	describe:String,
 	targetType:StrategyTargetType,
+	value:Dynamic,
 }
 
 typedef BuildingCatelog = {
@@ -276,22 +277,37 @@ final StrategyList:Array<StrategyCatelog> = [
 		id: 0,
 		name: '暗渡陳艙',
 		intelligence: 70,
-		describe: '可以指定移動1~6格數',
-		targetType: StrategyTargetType.TARGET_GRID
+		describe: '可以指定移動1~6格數(無視路障)',
+		targetType: StrategyTargetType.TARGET_GRID,
+		value:{
+			valid:[1,2,3,4,5,6]
+		}
 	},
 	{
 		id: 1,
 		name: '步步為營',
 		intelligence: 50,
 		describe: '指定武將回復40體力（可以恢復自己）',
-		targetType: StrategyTargetType.SELF_PEOPLE
+		targetType: StrategyTargetType.SELF_PEOPLE,
+		value:null
 	},
 	{
 		id: 2,
 		name: '遠交近攻',
 		intelligence: 80,
 		describe: '直接獲取該格子的20%資源。並且友好度上升1',
-		targetType: StrategyTargetType.SELF_GRID
+		targetType: StrategyTargetType.SELF_GRID,
+		value:null
+	},
+	{
+		id: 3,
+		name: '緩兵之計',
+		intelligence: 80,
+		describe: '指定自己前後5格當中的其中一格設置路障。走到那個格子的所以玩家會自動停下。然後路障消失',
+		targetType: StrategyTargetType.TARGET_GRID,
+		value:{
+			valid:[-5,-4,-3,-2,-1,1,2,3,4,5]
+		}
 	},
 ];
 
