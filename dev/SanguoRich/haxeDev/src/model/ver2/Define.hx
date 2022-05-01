@@ -211,6 +211,48 @@ function getGridBelongPlayerId(ctx:Context, gridId:Int):Null<Int> {
 	return peopleInGrid.length > 0 ? peopleInGrid[0].belongToPlayerId : null;
 }
 
+function getGridMoneyGrow(ctx:Context, gridId:Int):Float {
+	final peopleInGrid = ctx.peoples.filter(p -> p.position.gridId == gridId);
+	// 沒武將的格子不成長
+	if (peopleInGrid.length == 0) {
+		return 0.0;
+	}
+	final grid = ctx.grids[gridId];
+	final totalPeoplePolitical = peopleInGrid.fold((p, a) -> {
+		return a + p.political;
+	}, 0.0);
+	final factor1 = 1 / (peopleInGrid.length * 100);
+	return grid.moneyGrow * (totalPeoplePolitical * factor1);
+}
+
+function getGridFoodGrow(ctx:Context, gridId:Int):Float {
+	final peopleInGrid = ctx.peoples.filter(p -> p.position.gridId == gridId);
+	// 沒武將的格子不成長
+	if (peopleInGrid.length == 0) {
+		return 0.0;
+	}
+	final grid = ctx.grids[gridId];
+	final totalPeopleIntelligence = peopleInGrid.fold((p, a) -> {
+		return a + p.intelligence;
+	}, 0.0);
+	final factor1 = 1 / (peopleInGrid.length * 100);
+	return grid.foodGrow * (totalPeopleIntelligence * factor1);
+}
+
+function getGridArmyGrow(ctx:Context, gridId:Int):Float {
+	final peopleInGrid = ctx.peoples.filter(p -> p.position.gridId == gridId);
+	// 沒武將的格子不成長
+	if (peopleInGrid.length == 0) {
+		return 0.0;
+	}
+	final grid = ctx.grids[gridId];
+	final totalPeoplecharm = peopleInGrid.fold((p, a) -> {
+		return a + p.charm;
+	}, 0.0);
+	final factor1 = 1 / (peopleInGrid.length * 100);
+	return grid.armyGrow * (totalPeoplecharm * factor1);
+}
+
 function getGridInfo(ctx:Context, grid:Grid):model.GridGenerator.Grid {
 	final peopleInGrid = ctx.peoples.filter(p -> p.position.gridId == grid.id);
 	final belongPlayerId = getGridBelongPlayerId(ctx, grid.id);
@@ -225,11 +267,11 @@ function getGridInfo(ctx:Context, grid:Grid):model.GridGenerator.Grid {
 		belongPlayerId: cast belongPlayerId,
 		value: 0,
 		money: grid.money,
-		moneyGrow: grid.moneyGrow,
+		moneyGrow: getGridMoneyGrow(ctx, grid.id),
 		food: grid.food,
-		foodGrow: grid.foodGrow,
+		foodGrow: getGridFoodGrow(ctx, grid.id),
 		army: grid.army,
-		armyGrow: grid.armyGrow,
+		armyGrow: getGridArmyGrow(ctx, grid.id),
 		people: peopleInGrid.map(p -> getPeopleInfo(ctx, p)),
 		favor: grid.favor
 	}

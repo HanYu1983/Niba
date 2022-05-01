@@ -83,9 +83,9 @@ function doPlayerEnd(ctx:Context) {
 					}, 0.0);
 					final factor1 = 1 / (peopleInGrid.length * 100);
 					// 城池成長
-					grid.money += grid.money * grid.moneyGrow * (totalPeoplePolitical * factor1) + BASIC_GROW_MONEY;
-					grid.food += grid.food * grid.foodGrow * (totalPeopleIntelligence * factor1) + BASIC_GROW_FOOD;
-					grid.army += grid.army * grid.armyGrow * (totalPeoplecharm * factor1) + BASIC_GROW_ARMY;
+					grid.money += grid.money * getGridMoneyGrow(ctx, grid.id) + BASIC_GROW_MONEY;
+					grid.food += grid.food * getGridFoodGrow(ctx, grid.id) + BASIC_GROW_FOOD;
+					grid.army += grid.army * getGridArmyGrow(ctx, grid.id) + BASIC_GROW_ARMY;
 				}
 			}
 		}
