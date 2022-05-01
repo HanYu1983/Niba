@@ -20,16 +20,18 @@ function _getPreResultOfFire(ctx:Context, playerId:Int, p1PeopleId:Array<Int>):P
 	}
 }
 
-function _takeFire(ctx:Context, playerId:Int, p1PeopleId:Array<Int>) {
-	final people = getPeopleById(ctx, p1PeopleId[0]);
+function _takeFire(ctx:Context, playerId:Int, peopleIds:Array<Int>) {
 	final resultValue = {
 		success: true,
-		people: [getPeopleInfo(ctx, people)],
+		people: peopleIds.map(id -> getPeopleById(ctx, id)).map(p -> getPeopleInfo(ctx, p)),
 		maintainMoneyAfter: 0.0,
 		maintainMoneyBefore: getMaintainPeople(ctx, playerId),
 	}
-	people.belongToPlayerId = null;
-	people.position.gridId = ctx.players[playerId].position;
+	for (peopleId in peopleIds) {
+		final people = getPeopleById(ctx, peopleId);
+		people.belongToPlayerId = null;
+		people.position.gridId = ctx.players[playerId].position;
+	}
 	resultValue.maintainMoneyAfter = getMaintainPeople(ctx, playerId);
 	ctx.events = [Event.FIRE_RESULT(resultValue)];
 	{
