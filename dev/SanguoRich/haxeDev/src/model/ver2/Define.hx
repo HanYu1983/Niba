@@ -146,14 +146,14 @@ enum Event {
 	});
 	FIRE_RESULT(value:{
 		success:Bool,
-		people:model.PeopleGenerator.People,
+		people:Array<model.PeopleGenerator.People>,
 		maintainMoneyAfter:Float,
 		maintainMoneyBefore:Float,
 	});
 	STRATEGY_RESULT(value:{
 		success:Bool,
 		people:model.PeopleGenerator.People,
-		strategy:Strategy,
+		strategy:StrategyCatelog,
 		energyBefore:Float,
 		energyAfter:Float,
 	});

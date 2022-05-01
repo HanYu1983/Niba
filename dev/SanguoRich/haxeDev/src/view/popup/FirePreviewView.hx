@@ -23,22 +23,24 @@ class FirePreviewView extends PopupView{
         super.showPopup(info);
 
         function setOnePeople(){
-            var p1:People = p1List.selectedItem;
             var gameInfo = Main.model.gameInfo();
+
+            final list:Array<Dynamic> = p1List.dataSource.data;
+            var fireList = list.filter((p:Dynamic)-> Reflect.field(p, 'chk_sel')).map((p)->p.id);
+
             var result:PreResultOnFire = Main.model.getPreResultOfFire(
                 gameInfo.currentPlayer.id,
-                p1.id);
+                fireList);
             pro_maintainMoney.value = '${Main.getFixNumber(result.maintainMoneyBefore, 2)} => ${Main.getFixNumber(result.maintainMoneyAfter, 2)}';
         }
 
         p1List.setPeopleList(Main.model.gameInfo().currentPlayer.people);
-        p1List.onChange = function(e){
+        p1List.registerEvent(UIEvent.CHANGE, (e)->{
             var p:Dynamic = p1List.selectedItem;
             if(p){
                 setOnePeople();
             }
-        }
-        p1List.selectedIndex = 0;
+        });
 
     }
 
@@ -51,6 +53,8 @@ class FirePreviewView extends PopupView{
     function onBtnConfirm(e:MouseEvent) {
         fadeOut();
 
-        Main.view.onFirePreviewViewConfirmClick(p1List.selectedItem.id);
+        final list:Array<Dynamic> = p1List.dataSource.data;
+        var fireList = list.filter((p:Dynamic)-> Reflect.field(p, 'chk_sel')).map((p)->p.id);
+        Main.view.onFirePreviewViewConfirmClick(fireList);
     }
 }

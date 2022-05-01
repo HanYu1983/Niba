@@ -23,7 +23,7 @@ class PeopleListView extends TableView{
     
     function updateList(people:Array<Dynamic>){
         dataSource.clear();
-        for (index => p in people) {
+        for (p in people) {
             var info:Dynamic = Main.cloneObject(p);
             info.gridId = p.gridId == null ? "" : p.gridId;
             for(i in 0...3){
@@ -33,7 +33,8 @@ class PeopleListView extends TableView{
                 }
                 Reflect.setField(info, 'ability${i+1}', abi);
             }
-            info.type = PeopleGenerator.getInst().getPeopleTypeName(p.type);
+            
+            info.typeView = PeopleGenerator.getInst().getPeopleTypeName(p.type);
             dataSource.add(info);
         }
     }

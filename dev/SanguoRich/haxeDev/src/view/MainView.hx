@@ -186,8 +186,9 @@ class MainView extends Absolute {
 		Main.model.takeHire(gameInfo.currentPlayer.id, gameInfo.currentPlayer.atGridId, p1Id, p2Id, syncViewByInfo);
 	}
 
-	public function onFirePreviewViewConfirmClick(pId:Int) {
+	public function onFirePreviewViewConfirmClick(pId:Array<Int>) {
 		var gameInfo = Main.model.gameInfo();
+		trace(pId);
 		Main.model.takeFire(gameInfo.currentPlayer.id, pId, syncViewByInfo);
 	}
 
@@ -625,12 +626,12 @@ class MainView extends Absolute {
 士兵:${Main.getFixNumber(info.armyBefore, 0)} => ${Main.getFixNumber(info.armyAfter, 0)}\n
                     ';
 					Dialogs.messageBox(msg, title, MessageBoxType.TYPE_INFO);
-					btn_end.show();
 				case FIRE_RESULT:
 					final info:Dynamic = event.value;
-					final msg = '武將:${info.people.name}\n
-薪俸:${Main.getFixNumber(info.maintainMoneyBefore, 2)} => ${Main.getFixNumber(info.maintainMoneyAfter, 2)}\n
-                    ';
+					var people:Array<People> = info.people;
+					var msg = '解雇:${people.map((p)->p.name).join(',')}\n';
+					msg += '薪俸:${Main.getFixNumber(info.maintainMoneyBefore, 2)} => ${Main.getFixNumber(info.maintainMoneyAfter, 2)}\n';
+                    
 					Dialogs.messageBox(msg, '解雇完成', MessageBoxType.TYPE_INFO);
 					showBasicCommand(gameInfo);
 				case NEGOTIATE_RESULT:

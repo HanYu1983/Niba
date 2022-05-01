@@ -199,8 +199,8 @@ interface IModel {
 	function playerDice(cb:Void->Void):Void;
 	function playerEnd(cb:() -> Void):Void;
 
-	function getPreResultOfFire(playerId:Int, p1PeopleId:Int):PreResultOnFire;
-	function takeFire(playerId:Int, p1PeopleId:Int, cb:(gameInfo:GameInfo) -> Void):Void;
+	function getPreResultOfFire(playerId:Int, p1PeopleId:Array<Int>):PreResultOnFire;
+	function takeFire(playerId:Int, p1PeopleId:Array<Int>, cb:(gameInfo:GameInfo) -> Void):Void;
 
 	function getTakeWarPreview(playerId:Int, gridId:Int):WarPreview;
 	function getPreResultOfWar(playerId:Int, gridId:Int, p1:People, p2:People, army1:Float, army2:Float):Array<PreResultOnWar>;

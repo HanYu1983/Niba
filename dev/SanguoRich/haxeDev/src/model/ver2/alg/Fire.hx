@@ -7,9 +7,9 @@ import model.ver2.Define;
 
 using Lambda;
 
-function _getPreResultOfFire(ctx:Context, playerId:Int, p1PeopleId:Int):PreResultOnFire {
+function _getPreResultOfFire(ctx:Context, playerId:Int, p1PeopleId:Array<Int>):PreResultOnFire {
 	final totalPeopleCost = ctx.peoples.filter(p -> p.belongToPlayerId == playerId).fold((p, a) -> {
-		if (p.id == p1PeopleId) {
+		if (p.id == p1PeopleId[0]) {
 			return a;
 		}
 		return a + p.cost;
@@ -20,11 +20,11 @@ function _getPreResultOfFire(ctx:Context, playerId:Int, p1PeopleId:Int):PreResul
 	}
 }
 
-function _takeFire(ctx:Context, playerId:Int, p1PeopleId:Int) {
-	final people = getPeopleById(ctx, p1PeopleId);
+function _takeFire(ctx:Context, playerId:Int, p1PeopleId:Array<Int>) {
+	final people = getPeopleById(ctx, p1PeopleId[0]);
 	final resultValue = {
 		success: true,
-		people: getPeopleInfo(ctx, people),
+		people: [getPeopleInfo(ctx, people)],
 		maintainMoneyAfter: 0.0,
 		maintainMoneyBefore: getMaintainPeople(ctx, playerId),
 	}

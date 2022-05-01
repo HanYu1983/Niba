@@ -114,11 +114,11 @@ class ModelVer2 extends DebugModel {
 		cb(gameInfo());
 	}
 
-	override function getPreResultOfFire(playerId:Int, p1PeopleId:Int):PreResultOnFire {
+	override function getPreResultOfFire(playerId:Int, p1PeopleId:Array<Int>):PreResultOnFire {
 		return _getPreResultOfFire(context, playerId, p1PeopleId);
 	}
 
-	override function takeFire(playerId:Int, p1PeopleId:Int, cb:(gameInfo:GameInfo) -> Void) {
+	override function takeFire(playerId:Int, p1PeopleId:Array<Int>, cb:(gameInfo:GameInfo) -> Void) {
 		_takeFire(context, playerId, p1PeopleId);
 		cb(gameInfo());
 	}
