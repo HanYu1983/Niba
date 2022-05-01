@@ -626,7 +626,7 @@ function getPlayerCommand(ctx:Context, playerId:Int):Array<ActionInfoID> {
 							ret.push(ActionInfoID.HIRE);
 						case _:
 							if (gridInfo.favor[playerId] >= 1) {
-								// 友好的
+								// 好感的
 								switch gridInfo.buildtype {
 									case MARKET:
 										ret.push(ActionInfoID.EARN_MONEY);
@@ -645,7 +645,7 @@ function getPlayerCommand(ctx:Context, playerId:Int):Array<ActionInfoID> {
 									case _:
 								}
 							} else {
-								// 敵對的
+								// 討厭的
 								switch gridInfo.buildtype {
 									case MARKET | FARM | VILLAGE | CITY:
 										ret.push(ActionInfoID.NEGOTIATE);
