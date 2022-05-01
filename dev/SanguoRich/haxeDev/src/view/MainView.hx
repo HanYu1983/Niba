@@ -1,13 +1,8 @@
 package view;
 
-// import model.ModelVer2.ENERGY_COST_ON_SNATCH;
-// import model.ModelVer2.ENERGY_COST_ON_NEGO;
-// import model.ModelVer2.ENERGY_COST_ON_WAR;
-// import model.ModelVer2.ENERGY_COST_ON_RESOURCE;
-// import model.ModelVer2.ENERGY_COST_ON_HIRE;
-// import model.ModelVer2.ENERGY_COST_ON_EXPLORE;
-import model.GridGenerator.GROWTYPE;
-import model.IModel.EventInfoID;
+import model.GridGenerator.BUILDING;
+import haxe.ui.containers.Box;
+import view.popup.BuildPreview;
 import haxe.Exception;
 import model.PeopleGenerator;
 import model.PeopleGenerator.People;
@@ -26,12 +21,9 @@ import view.popup.ExploreSuccessView;
 import view.popup.GrowView;
 import view.popup.ExplorePreviewView;
 import view.popup.HirePreviewView;
-// import view.popup.MessageView;
 import view.popup.NegoPreviewView;
 import view.popup.WarPreviewView;
 import view.popup.SnatchPreviewView;
-import model.GridGenerator.BUILDING;
-import haxe.ui.components.OptionBox;
 import haxe.ui.containers.Absolute;
 import model.GridGenerator.Grid;
 import model.IModel.ActionInfo;
@@ -45,7 +37,7 @@ import haxe.ui.containers.VBox;
 import haxe.ui.events.MouseEvent;
 
 @:build(haxe.ui.ComponentBuilder.build("assets/main-view.xml"))
-class MainView extends Absolute {
+class MainView extends Box {
 	var grids:Array<GridView> = [];
 	var players:Array<PlayerView> = [];
 	var leaderView:LeaderGridView;
@@ -56,13 +48,13 @@ class MainView extends Absolute {
 	var warPreviewView:WarPreviewView;
 	var snatchPreviewView:SnatchPreviewView;
 	var negoPreviewView:NegoPreviewView;
-	// var messageView:MessageView;
 	var hirePreviewView:HirePreviewView;
 	var explorePreviewView:ExplorePreviewView;
 	var exploreSuccessView:ExploreSuccessView;
 	var resourcePreviewView:ResourcePreviewView;
 	var firePreviewView:FirePreviewView;
 	var transferPreview:TransferPreview;
+	var buildingPreview:BuildPreview;
 	var growView:GrowView;
 
 	var gridSize = 80;
@@ -112,10 +104,6 @@ class MainView extends Absolute {
 		negoPreviewView.hide();
 		box_popup.addComponent(negoPreviewView);
 
-		// messageView = new MessageView();
-		// messageView.hide();
-		// box_popup.addComponent(messageView);
-
 		hirePreviewView = new HirePreviewView();
 		hirePreviewView.hide();
 		box_popup.addComponent(hirePreviewView);
@@ -139,6 +127,10 @@ class MainView extends Absolute {
 		transferPreview = new TransferPreview();
 		transferPreview.hide();
 		box_popup.addComponent(transferPreview);
+
+		buildingPreview = new BuildPreview();
+		buildingPreview.hide();
+		box_popup.addComponent(buildingPreview);
 
 		growView = new GrowView();
 		growView.hide();
@@ -167,7 +159,6 @@ class MainView extends Absolute {
 		final gameInfo = Main.model.gameInfo();
 		final p:PlayerInfo = data[0];
 		final g:Grid = data[1];
-
 		Main.model.takeTransfer(gameInfo.currentPlayer.id, gameInfo.currentPlayer.atGridId, p, g, syncViewByInfo);
 	}
 
@@ -328,6 +319,11 @@ class MainView extends Absolute {
 	@:bind(btn_transfer, MouseEvent.CLICK)
 	function onBtnTransferClick(e:MouseEvent) {
 		transferPreview.showPopup(null);
+	}
+
+	@:bind(btn_build, MouseEvent.CLICK)
+	function onBtnBuildClick(e:MouseEvent) {
+		buildingPreview.showPopup(null);
 	}
 
 	@:bind(btn_negotiate, MouseEvent.CLICK)
@@ -679,7 +675,12 @@ class MainView extends Absolute {
 
 					// 如果是停在原地的計策，就顯示原來的指令
 					// showBasicCommand(gameInfo, false);
-
+				case BUILDING_RESULT:
+					final info:Dynamic = event.value;
+					final catelog = Main.getBuildingCatelog(info.building);
+					var msg = '武將:${info.people.name : ""}\n';
+					msg += '已擴建 ${catelog.name}\n';
+					Dialogs.messageBox(msg, '擴建完畢', MessageBoxType.TYPE_INFO);
 				case WORLD_EVENT:
 					growView.showPopup(event.value, ()->{
 						doOneEvent(gameInfo);
@@ -850,8 +851,8 @@ class MainView extends Absolute {
 		stage.unregisterEvents();
 		if (gameInfo.isPlayerTurn) {
 			stage.registerEvent(MouseEvent.MOUSE_MOVE, function(e:MouseEvent) {
-				var gx = Math.floor(e.screenX / gridSize);
-				var gy = Math.floor(e.screenY / gridSize);
+				var gx = Math.floor(e.localX / gridSize);
+				var gy = Math.floor(e.localY / gridSize);
 				var gridId = gx + gy * 10;
 				gridId = Math.floor(Math.min(gridId, gameInfo.grids.length - 1));
 				moveCursorToGrid(gridId);
@@ -928,5 +929,10 @@ class MainView extends Absolute {
 
 	public function onStrategyPreviewConfirmClick(peopleId:Int, strategyId:Int, targetPlayerId:Int, targetPeopleId:Int, targetGridId:Int) {
 		Main.model.takeStrategy(peopleId, strategyId, targetPlayerId, targetPeopleId, targetGridId, syncViewByInfo);
+	}
+
+	public function onBuildingPreviewConfirmClick(peopleId:Int, current:BUILDING, to:BUILDING) {
+		final gameInfo = Main.model.gameInfo();
+		Main.model.takeBuilding(gameInfo.currentPlayer.id, gameInfo.currentPlayer.atGridId, peopleId, current, to, syncViewByInfo);
 	}
 }

@@ -130,4 +130,6 @@ class ProxyModel implements IModel {
 			cb:(gameInfo:GameInfo) -> Void):Void {
 		return model.takeStrategy(p1PeopleId, strategyId, targetPlayerId, targetPeopleId, targetGridId, cb);
 	}
+
+	public function takeBuilding(p1PeopleId:Int, gridId:Int, peopleId:Int, current:Dynamic, to:Dynamic, cb:(gameInfo:GameInfo) -> Void) {}
 }

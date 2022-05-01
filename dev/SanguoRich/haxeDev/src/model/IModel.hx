@@ -64,6 +64,7 @@ enum EventInfoID {
 	SNATCH_RESULT;
 	RESOURCE_RESULT;
 	STRATEGY_RESULT;
+	BUILDING_RESULT;
 
 	// 這些事件有可能會連著其他的事件
 	WORLD_EVENT;
@@ -251,22 +252,23 @@ interface IModel {
 
 	function getTakeHirePreview(playerId:Int, gridId:Int):HirePreview;
 	function getPreResultOfHire(playerId:Int, gridId:Int, p1:People, p2:People):PreResultOnHire;
-	function takeHire(playerId:Int, gridInt:Int, p1PeopleId:Int, p2PeopleId:Int, cb:(gameInfo:GameInfo) -> Void):Void;
+	function takeHire(playerId:Int, gridId:Int, p1PeopleId:Int, p2PeopleId:Int, cb:(gameInfo:GameInfo) -> Void):Void;
 
 	function getTakeExplorePreview(playerId:Int, gridId:Int):ExplorePreview;
 	function getPreResultOfExplore(playerId:Int, gridId:Int, p1:People):PreResultOnExplore;
-	function takeExplore(playerId:Int, gridInt:Int, p1PeopleId:Int, cb:(gameInfo:GameInfo) -> Void):Void;
+	function takeExplore(playerId:Int, gridId:Int, p1PeopleId:Int, cb:(gameInfo:GameInfo) -> Void):Void;
 
 	function getTakeResourcePreview(playerId:Int, gridId:Int, market:MARKET, type:RESOURCE):ResourcePreview;
 	function getPreResultOfResource(playerId:Int, gridId:Int, p1:People, market:MARKET, type:RESOURCE):PreResultOnResource;
-	function takeResource(playerId:Int, gridInt:Int, p1PeopleId:Int, market:MARKET, type:RESOURCE, cb:(gameInfo:GameInfo) -> Void):Void;
+	function takeResource(playerId:Int, gridId:Int, p1PeopleId:Int, market:MARKET, type:RESOURCE, cb:(gameInfo:GameInfo) -> Void):Void;
 
-	function checkValidTransfer(playerId:Int, gridInt:Int, playerInfo:PlayerInfo, gridInfo:Grid):Bool;
-	function takeTransfer(playerId:Int, gridInt:Int, playerInfo:PlayerInfo, gridInfo:Grid, cb:(gameInfo:GameInfo) -> Void):Void;
+	function checkValidTransfer(playerId:Int, gridId:Int, playerInfo:PlayerInfo, gridInfo:Grid):Bool;
+	function takeTransfer(playerId:Int, gridId:Int, playerInfo:PlayerInfo, gridInfo:Grid, cb:(gameInfo:GameInfo) -> Void):Void;
 
 	function getStrategyRate(p1People:People, strategy:StrategyCatelog, targetPlayerId:Int, targetPeopleId:Int,
 		targetGridId:Int):{energyBefore:Int, energyAfter:Int, rate:Float};
 	function takeStrategy(p1PeopleId:Int, strategyId:Int, targetPlayerId:Int, targetPeopleId:Int, targetGridId:Int, cb:(gameInfo:GameInfo) -> Void):Void;
+	function takeBuilding(p1PeopleId:Int, gridId:Int, peopleId:Int, current:Dynamic, to:Dynamic, cb:(gameInfo:GameInfo) -> Void):Void;
 }
 
 final StrategyList:Array<StrategyCatelog> = [
@@ -297,37 +299,129 @@ final StrategyList:Array<StrategyCatelog> = [
 final BuildingList:Array<BuildingCatelog> = [
 	{
 		id:0,
-		name:'農田',
-		money: 20,
-		describe: '糧食每回合+1/2/3',
+		name:'農田(未建)',
+		money: 50,
+		describe: '糧食每回合+0',
 		type:FARM(0)
 	},
 	{
 		id:1,
-		name:'市集',
+		name:'農田(小)',
 		money: 20,
-		describe: '金錢每回合+1/2/3',
-		type:MARKET(0)
+		describe: '糧食每回合+2',
+		type:FARM(1)
 	},
 	{
 		id:2,
-		name:'兵營',
+		name:'農田(中)',
 		money: 20,
-		describe: '士兵每回合+1/2/3',
-		type:BARRACKS(0)
+		describe: '糧食每回合+3',
+		type:FARM(2)
 	},
 	{
 		id:3,
-		name:'人材所',
-		money: 20,
-		describe: '提高武將在探索計算時的魅力(+5/10/15)及聘用計算時的魅力(+5/10/15)',
-		type:EXPLORE(0)
+		name:'農田(大)',
+		money: 0,
+		describe: '糧食每回合+4',
+		type:FARM(3)
 	},
 	{
 		id:4,
-		name:'城墻',
+		name:'市集(未建)',
+		money: 50,
+		describe: '金錢每回合+0',
+		type:MARKET(0)
+	},
+	{
+		id:5,
+		name:'市集(小)',
 		money: 20,
-		describe: '此格子防禦方的加成提高。(+15%/35%/50%)',
+		describe: '金錢每回合+2',
+		type:MARKET(1)
+	},
+	{
+		id:6,
+		name:'市集(中)',
+		money: 20,
+		describe: '金錢每回合+3',
+		type:MARKET(2)
+	},
+	{
+		id:7,
+		name:'市集(大)',
+		money: 0,
+		describe: '金錢每回合+4',
+		type:MARKET(3)
+	},
+	{
+		id:8,
+		name:'兵營(未建)',
+		money: 50,
+		describe: '士兵每回合+0',
+		type:BARRACKS(0)
+	},
+	{
+		id:9,
+		name:'兵營(小)',
+		money: 20,
+		describe: '士兵每回合+1',
+		type:BARRACKS(1)
+	},
+	{
+		id:10,
+		name:'兵營(中)',
+		money: 20,
+		describe: '士兵每回合+2',
+		type:BARRACKS(2)
+	},
+	{
+		id:11,
+		name:'兵營(大)',
+		money: 0,
+		describe: '士兵每回合+3',
+		type:BARRACKS(3)
+	},
+	{
+		id:12,
+		name:'人材所(未建)',
+		money: 50,
+		describe: '提高武將在探索計算時的魅力(+0)及聘用計算時的魅力(+0)',
+		type:EXPLORE(0)
+	},
+	{
+		id:13,
+		name:'人材所',
+		money: 0,
+		describe: '提高武將在探索計算時的魅力(+5)及聘用計算時的魅力(+5)',
+		type:EXPLORE(1)
+	},
+	{
+		id:14,
+		name:'城墻(未建)',
+		money: 50,
+		describe: '此格子防禦方的加成提高。(+0%)',
 		type:WALL(0)
+	},
+	{
+		id:15,
+		name:'城墻(弱)',
+		money: 20,
+		describe: '此格子防禦方的加成提高。(+15%)',
+		type:WALL(1)
+	},
+	{
+		id:16,
+		name:'城墻(中)',
+		money: 20,
+		describe: '此格子防禦方的加成提高。(+30%)',
+		type:WALL(2)
+	},
+	{
+		id:17,
+		name:'城墻(強)',
+		money: 0,
+		describe: '此格子防禦方的加成提高。(+50%)',
+		type:WALL(3)
 	}
 ];
+
