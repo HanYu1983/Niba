@@ -4,8 +4,11 @@ import model.PeopleGenerator;
 import model.GridGenerator;
 import model.IModel;
 import model.Config;
+import cloner.Cloner;
 
 using Lambda;
+
+private var _cloner = new Cloner();
 
 typedef Grid = {
 	id:Int,
@@ -203,16 +206,11 @@ function getPlayerInfo(ctx:Context, player:Player):model.IModel.PlayerInfo {
 		strategy: player.strategy,
 		people: ctx.peoples.filter(p -> p.position.player == true && p.belongToPlayerId == player.id).map(p -> getPeopleInfo(ctx, p)),
 		atGridId: player.position,
-		maintainPeople: getMaintainPeople(ctx, player.id),
-		maintainArmy: getMaintainArmy(ctx, player.id),
-		armyGrow: getPlayerArmyGrow(ctx, player.id),
+		maintainPeople: 0.0,
+		maintainArmy: 0.0,
+		armyGrow: 0.0,
 		grids: ctx.grids.filter(g -> getGridBelongPlayerId(ctx, g.id) == player.id).map(g -> getGridInfo(ctx, g)),
-		commands: [
-			ActionInfoID.MOVE,
-			ActionInfoID.STRATEGY,
-			ActionInfoID.FIRE,
-			ActionInfoID.END,
-		]
+		commands: [ActionInfoID.MOVE, ActionInfoID.STRATEGY, ActionInfoID.FIRE, ActionInfoID.END,]
 	}
 }
 
@@ -277,11 +275,11 @@ function getGridInfo(ctx:Context, grid:Grid):model.GridGenerator.Grid {
 		belongPlayerId: cast belongPlayerId,
 		value: 0,
 		money: grid.money,
-		moneyGrow: getGridMoneyGrow(ctx, grid.id),
+		moneyGrow: 0.0,
 		food: grid.food,
-		foodGrow: getGridFoodGrow(ctx, grid.id),
+		foodGrow: 0.0,
 		army: grid.army,
-		armyGrow: getGridArmyGrow(ctx, grid.id),
+		armyGrow: 0.0,
 		people: peopleInGrid.map(p -> getPeopleInfo(ctx, p)),
 		favor: grid.favor
 	}
@@ -311,13 +309,23 @@ function getGameInfo(ctx:Context, root:Bool):GameInfo {
 		playerInfo.money = total.money;
 		playerInfo.army = total.army;
 		playerInfo.people = total.people;
-		playerInfo.maintainPeople = 0.0;
-		playerInfo.maintainArmy = 0.0;
 		return playerInfo;
 	}
 
+	// 不管週期, 直接計算下一次的結果
+	final nextCtx = _cloner.clone(ctx);
+	model.ver2.alg.Alg.doPeopleMaintain(nextCtx);
+	model.ver2.alg.Alg.doGridGrow(nextCtx);
+
 	return {
-		players: ctx.players.map(p -> getPlayerInfo(ctx, p)),
+		players: ctx.players.map(p -> getPlayerInfo(ctx, p)).map(p -> {
+			// 計算下次結算後的差額
+			final nextP = nextCtx.players[p.id];
+			p.maintainPeople = nextP.money - p.money;
+			p.maintainArmy = nextP.food - p.food;
+			p.armyGrow = nextP.army - p.army;
+			return p;
+		}),
 		playerGrids: ctx.players.map(p -> getPlayerInfo(ctx, p)).map(calcGrids),
 		playerTotals: ctx.players.map(p -> {
 			final playerInfo = getPlayerInfo(ctx, p);
@@ -327,7 +335,14 @@ function getGameInfo(ctx:Context, root:Bool):GameInfo {
 			playerInfo.army = playerInfo.army + total.army;
 			return playerInfo;
 		}),
-		grids: ctx.grids.map(p -> getGridInfo(ctx, p)),
+		grids: ctx.grids.map(p -> getGridInfo(ctx, p)).map(p -> {
+			// 計算下次結算後的差額
+			final nextP = nextCtx.grids[p.id];
+			p.moneyGrow = nextP.money - p.money;
+			p.armyGrow = nextP.army - p.army;
+			p.foodGrow = nextP.food - p.food;
+			return p;
+		}),
 		isPlayerTurn: true,
 		currentPlayer: getPlayerInfo(ctx, ctx.players[ctx.currentPlayerId]),
 		isPlaying: true,

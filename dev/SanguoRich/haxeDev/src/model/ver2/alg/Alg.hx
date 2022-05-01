@@ -9,6 +9,42 @@ import model.ver2.alg.War;
 
 using Lambda;
 
+function doPeopleMaintain(ctx:Context) {
+	trace("Alg", "doPeopleMaintain");
+	// 玩家
+	for (player in ctx.players) {
+		// 支付武將的薪水
+		{
+			player.money -= getMaintainPeople(ctx, player.id);
+			if (player.money < 0) {
+				player.money = 0;
+			}
+		}
+		// 吃食物
+		{
+			player.food -= getMaintainArmy(ctx, player.id);
+			if (player.food < 0) {
+				player.food = 0;
+			}
+		}
+	}
+}
+
+function doGridGrow(ctx:Context) {
+	trace("Alg", "doGridGrow");
+	for (grid in ctx.grids) {
+		final peopleInGrid = ctx.peoples.filter(p -> p.position.gridId == grid.id);
+		// 沒武將的格子不成長
+		if (peopleInGrid.length == 0) {
+			continue;
+		}
+		// 城池成長
+		grid.money += grid.money * getGridMoneyGrow(ctx, grid.id) + BASIC_GROW_MONEY;
+		grid.food += grid.food * getGridFoodGrow(ctx, grid.id) + BASIC_GROW_FOOD;
+		grid.army += grid.army * getGridArmyGrow(ctx, grid.id) + BASIC_GROW_ARMY;
+	}
+}
+
 // 玩家回合結束
 function doPlayerEnd(ctx:Context) {
 	ctx.actions = [];
@@ -31,52 +67,25 @@ function doPlayerEnd(ctx:Context) {
 		{
 			final enable = ctx.turn > 0 && ctx.turn % PLAYER_EARN_PER_TURN == 0;
 			if (enable) {
-				trace("ModelVer2", "doPlayerEnd", "支付薪水");
 				final worldEventValue = {
 					playerBefore: ctx.players.map(p -> getPlayerInfo(ctx, p)),
 					playerAfter: ([] : Array<model.IModel.PlayerInfo>),
 					gridBefore: ctx.grids.map(g -> getGridInfo(ctx, g)),
 					gridAfter: ([] : Array<model.GridGenerator.Grid>),
 				}
-				// 玩家
-				for (player in ctx.players) {
-					// 支付武將的薪水
-					{
-						player.money -= getMaintainPeople(ctx, player.id);
-						if (player.money < 0) {
-							player.money = 0;
-						}
-					}
-					// 吃食物
-					{
-						player.food -= getMaintainArmy(ctx, player.id);
-						if (player.food < 0) {
-							player.food = 0;
-						}
-					}
-				}
+				doPeopleMaintain(ctx);
 				worldEventValue.playerAfter = ctx.players.map(p -> getPlayerInfo(ctx, p));
 				worldEventValue.gridAfter = ctx.grids.map(g -> getGridInfo(ctx, g));
-				if (SHOW_POPUP_WHEN_EARN)
+				if (SHOW_POPUP_WHEN_EARN) {
 					ctx.events.push(Event.WORLD_EVENT(worldEventValue));
+				}
 			}
 		}
 		// 格子成長
 		{
 			final enable = ctx.turn > 0 && ctx.turn % GRID_EARN_PER_TURN == 0;
 			if (enable) {
-				trace("ModelVer2", "doPlayerEnd", "格子成長");
-				for (grid in ctx.grids) {
-					final peopleInGrid = ctx.peoples.filter(p -> p.position.gridId == grid.id);
-					// 沒武將的格子不成長
-					if (peopleInGrid.length == 0) {
-						continue;
-					}
-					// 城池成長
-					grid.money += grid.money * getGridMoneyGrow(ctx, grid.id) + BASIC_GROW_MONEY;
-					grid.food += grid.food * getGridFoodGrow(ctx, grid.id) + BASIC_GROW_FOOD;
-					grid.army += grid.army * getGridArmyGrow(ctx, grid.id) + BASIC_GROW_ARMY;
-				}
+				doGridGrow(ctx);
 			}
 		}
 		// 收稅
@@ -190,12 +199,7 @@ function initContext(ctx:Context, option:{}) {
 			armyGrow: 0.01,
 			atGridId: 0,
 			grids: [],
-			commands: [
-				ActionInfoID.MOVE,
-				ActionInfoID.STRATEGY,
-				ActionInfoID.FIRE,
-				ActionInfoID.END,
-			]
+			commands: [ActionInfoID.MOVE, ActionInfoID.STRATEGY, ActionInfoID.FIRE, ActionInfoID.END,]
 		});
 	}
 }
