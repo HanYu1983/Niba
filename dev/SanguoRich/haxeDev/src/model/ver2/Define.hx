@@ -17,9 +17,9 @@ typedef Grid = {
 	money:Float,
 	food:Float,
 	army:Float,
-	moneyGrow:Float,
-	foodGrow:Float,
-	armyGrow:Float,
+	defaultMoneyGrow:Float,
+	defaultFoodGrow:Float,
+	defaultArmyGrow:Float,
 	favor:Array<Int>,
 }
 
@@ -230,7 +230,7 @@ function getGridMoneyGrow(ctx:Context, gridId:Int):Float {
 		return a + p.political;
 	}, 0.0);
 	final factor1 = 1 / (peopleInGrid.length * 100);
-	return grid.moneyGrow * (totalPeoplePolitical * factor1);
+	return grid.defaultMoneyGrow * (totalPeoplePolitical * factor1);
 }
 
 function getGridFoodGrow(ctx:Context, gridId:Int):Float {
@@ -244,7 +244,7 @@ function getGridFoodGrow(ctx:Context, gridId:Int):Float {
 		return a + p.intelligence;
 	}, 0.0);
 	final factor1 = 1 / (peopleInGrid.length * 100);
-	return grid.foodGrow * (totalPeopleIntelligence * factor1);
+	return grid.defaultFoodGrow * (totalPeopleIntelligence * factor1);
 }
 
 function getGridArmyGrow(ctx:Context, gridId:Int):Float {
@@ -258,7 +258,7 @@ function getGridArmyGrow(ctx:Context, gridId:Int):Float {
 		return a + p.charm;
 	}, 0.0);
 	final factor1 = 1 / (peopleInGrid.length * 100);
-	return grid.armyGrow * (totalPeoplecharm * factor1);
+	return grid.defaultArmyGrow * (totalPeoplecharm * factor1);
 }
 
 function getGridInfo(ctx:Context, grid:Grid):model.GridGenerator.Grid {
@@ -424,9 +424,9 @@ function addGridInfo(ctx:Context, grid:model.GridGenerator.Grid):Void {
 		money: grid.money,
 		food: grid.food,
 		army: grid.army,
-		moneyGrow: grid.moneyGrow,
-		foodGrow: grid.foodGrow,
-		armyGrow: grid.armyGrow,
+		defaultMoneyGrow: grid.moneyGrow,
+		defaultFoodGrow: grid.foodGrow,
+		defaultArmyGrow: grid.armyGrow,
 		favor: grid.favor,
 	});
 	for (p in grid.people) {
