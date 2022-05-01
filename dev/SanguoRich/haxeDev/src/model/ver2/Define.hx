@@ -659,6 +659,7 @@ function getPlayerCommand(ctx:Context, playerId:Int):Array<ActionInfoID> {
 				ret.push(ActionInfoID.END);
 			} else if (gridInfo.belongPlayerId != playerId) {
 				// 敵人的
+				ret.push(ActionInfoID.NEGOTIATE);
 				ret.push(ActionInfoID.SNATCH);
 				ret.push(ActionInfoID.OCCUPATION);
 			} else {
