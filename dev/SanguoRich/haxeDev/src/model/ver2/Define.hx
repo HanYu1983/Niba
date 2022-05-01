@@ -188,6 +188,10 @@ function getPeopleInfo(ctx:Context, people:People):model.PeopleGenerator.People 
 	}
 }
 
+function getPlayerArmyGrow(ctx:Context, playerId:Int):Float {
+	return 0.0;
+}
+
 function getPlayerInfo(ctx:Context, player:Player):model.IModel.PlayerInfo {
 	return {
 		id: player.id,
@@ -200,7 +204,7 @@ function getPlayerInfo(ctx:Context, player:Player):model.IModel.PlayerInfo {
 		atGridId: player.position,
 		maintainPeople: getMaintainPeople(ctx, player.id),
 		maintainArmy: getMaintainArmy(ctx, player.id),
-		armyGrow: 0.0,
+		armyGrow: getPlayerArmyGrow(ctx, player.id),
 		grids: ctx.grids.filter(g -> getGridBelongPlayerId(ctx, g.id) == player.id).map(g -> getGridInfo(ctx, g)),
 		enabledCast: true
 	}
