@@ -3,6 +3,7 @@ package model.ver2;
 import haxe.Exception;
 import model.IModel;
 import model.GridGenerator;
+import model.PeopleGenerator;
 import model.ver2.Define;
 import model.ver2.alg.Explore;
 import model.ver2.alg.Snatch;
@@ -34,6 +35,7 @@ function testExplore() {
 				command: 0.0,
 				abilities: [],
 				energy: 100.0,
+				type: PeopleType.PUTONG
 			}
 		],
 		players: [],
@@ -87,6 +89,7 @@ function testGuessArmy() {
 				command: 50.0,
 				abilities: [],
 				energy: 100.0,
+				type: PeopleType.PUTONG
 			}
 		],
 		players: [

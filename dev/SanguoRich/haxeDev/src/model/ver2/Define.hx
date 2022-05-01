@@ -1,6 +1,6 @@
 package model.ver2;
 
-import model.PeopleGenerator.PeopleType;
+import model.PeopleGenerator;
 import model.GridGenerator;
 import model.IModel;
 import model.Config;
@@ -39,7 +39,8 @@ typedef People = {
 	cost:Float,
 	command:Float,
 	abilities:Array<Int>,
-	energy:Float
+	energy:Float,
+	type:PeopleType,
 }
 
 typedef Player = {
@@ -172,7 +173,7 @@ typedef Context = {
 function getPeopleInfo(ctx:Context, people:People):model.PeopleGenerator.People {
 	return {
 		id: people.id,
-		type: PeopleType.WENGUAN(0),
+		type: people.type,
 		name: people.name,
 		command: Std.int(people.command),
 		force: Std.int(people.force),
@@ -183,7 +184,7 @@ function getPeopleInfo(ctx:Context, people:People):model.PeopleGenerator.People 
 		abilities: people.abilities,
 		energy: Std.int(people.energy),
 		gridId: cast people.position.gridId,
-		exp:0,
+		exp: 0,
 	}
 }
 
@@ -342,6 +343,7 @@ function addGridInfo(ctx:Context, grid:model.GridGenerator.Grid):Void {
 			abilities: p.abilities,
 			command: p.command,
 			energy: p.energy,
+			type: p.type
 		});
 	}
 }
@@ -363,6 +365,7 @@ function addPeopleInfo(ctx:Context, belongToPlayerId:Null<Int>, gridId:Null<Int>
 		abilities: p.abilities,
 		command: p.command,
 		energy: p.energy,
+		type: p.type
 	});
 }
 
@@ -393,6 +396,7 @@ function addPlayerInfo(ctx:Context, player:model.IModel.PlayerInfo):Void {
 			abilities: p.abilities,
 			command: p.command,
 			energy: p.energy,
+			type: p.type
 		});
 	}
 }
