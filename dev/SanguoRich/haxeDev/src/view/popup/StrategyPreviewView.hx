@@ -66,7 +66,7 @@ class StrategyPreviewView extends PopupView {
 			pro_name.value = p.name;
 
 			pro_intelligence.value = p.intelligence;
-			pro_ability.value = Main.getAbilityString(p, [4]);
+			pro_ability.value = Main.getAbilityString(p, [3]);
 
 			setRate();
 		}
