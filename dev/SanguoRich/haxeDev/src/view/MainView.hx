@@ -501,6 +501,7 @@ class MainView extends Absolute {
 
 		trace(' playerInfo 多了armyGrow可以套了。這樣就可以傳城地的成長值過來了，然後本身的士兵也可以成長了');
 		trace(' 經驗值成長可以套用，如果升級了，記得要傳升級事件EventInfoID.PEOPLE_LEVEL_UP_EVENT');
+		trace(' 遊戲流程越來越多了，所以單靠前端已經比較難判斷要顯示哪些UI了，所以PlayerInfo多了enabledCast, enabledEnd來決定是否能用計策和結束');
 	}
 
 	function syncViewByInfo(gameInfo:GameInfo) {
@@ -595,7 +596,6 @@ class MainView extends Absolute {
 							}
 						}
 					}
-					btn_end.show();
 				case PEOPLE_LEVEL_UP_EVENT:
 					final info:Dynamic = event.value;
 					final title = '功績到達，職位升等!';
@@ -645,10 +645,8 @@ class MainView extends Absolute {
 友好:${Main.getFavorString(info.favorBefore)} => ${Main.getFavorString(info.favorAfter)}\n
                     ';
 					Dialogs.messageBox(msg, title, MessageBoxType.TYPE_INFO);
-					btn_end.show();
 				case EXPLORE_RESULT:
 					exploreSuccessView.showMessage(event.value);
-					btn_end.show();
 				case WAR_RESULT:
 					final info:Dynamic = event.value;
 					final msg = '武將:${info.people.name}\n
@@ -664,7 +662,6 @@ class MainView extends Absolute {
 					} else {
 						Dialogs.messageBox(msg, '占領失敗', MessageBoxType.TYPE_INFO );
 					}
-					btn_end.show();
 				case SNATCH_RESULT:
 					final info:Dynamic = event.value;
 					final title = info.success ? '搶奪成功' : '搶奪失敗';
@@ -675,7 +672,6 @@ class MainView extends Absolute {
 士兵:${Main.getFixNumber(info.armyBefore, 0)} => ${Main.getFixNumber(info.armyAfter, 0)}\n
                     ';
 					Dialogs.messageBox(msg, title, MessageBoxType.TYPE_INFO );
-					btn_end.show();
 				case RESOURCE_RESULT:
 					final info:Dynamic = event.value;
 					final msg = '武將:${info.people ? info.people.name : ""}\n
@@ -685,7 +681,6 @@ class MainView extends Absolute {
 士兵:${Main.getFixNumber(info.armyBefore, 0)} => ${Main.getFixNumber(info.armyAfter, 0)}\n
                     ';
 					Dialogs.messageBox(msg, '交易完成', MessageBoxType.TYPE_INFO );
-					btn_end.show();
 				case WORLD_EVENT:
 					growView.showPopup(event.value);
 					showBasicCommand(gameInfo);
@@ -764,14 +759,18 @@ class MainView extends Absolute {
 
 	function syncUI(gameInfo:GameInfo) {
 		gameInfo.isPlaying ? btn_start.hide() : btn_start.show();
+		
 		disabledAllCommands();
 		gameInfo.isPlayerTurn ? showBasicCommand(gameInfo) : box_basicCmds.hide();
 
-		var pid = gameInfo.currentPlayer.id;
+		var currentPlayer = gameInfo.currentPlayer;
+		currentPlayer.enabledEnd ? btn_end.show() : btn_end.hide();
+
+		var pid = currentPlayer.id;
 		syncPlayerInfo(pid);
 		syncGameInfo(gameInfo);
 
-		moveCursorToGrid(gameInfo.currentPlayer.atGridId);
+		moveCursorToGrid(currentPlayer.atGridId);
 
 		stage.unregisterEvents();
 		if (gameInfo.isPlayerTurn) {

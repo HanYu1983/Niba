@@ -38,7 +38,8 @@ class DebugModel implements IModel {
 				maintainArmy: -1.1,
 				armyGrow: 0.01,
 				atGridId: 0,
-				enabledCast: false
+				enabledCast: false,
+				enabledEnd:false
 			}
 		}
 	}

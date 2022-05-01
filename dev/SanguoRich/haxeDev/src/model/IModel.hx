@@ -17,7 +17,8 @@ typedef PlayerInfo = {
 	maintainPeople:Float,
 	maintainArmy:Float,
 	armyGrow:Float,
-	enabledCast:Bool
+	enabledCast:Bool,
+	enabledEnd:Bool
 }
 
 enum ActionInfoID {

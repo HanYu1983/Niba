@@ -148,7 +148,8 @@ function _getTakeWarPreview(ctx:Context, playerId:Int, gridId:Int):WarPreview {
 					maintainPeople: grid.moneyGrow * grid.money,
 					armyGrow: grid.armyGrow * grid.army,
 					grids: [],
-					enabledCast: true
+					enabledCast: true,
+					enabledEnd: false,
 				},
 				p1ValidPeople: getPlayerInfo(ctx, ctx.players[playerId]).people,
 				p2ValidPeople: getGridInfo(ctx, ctx.grids[gridId]).people
