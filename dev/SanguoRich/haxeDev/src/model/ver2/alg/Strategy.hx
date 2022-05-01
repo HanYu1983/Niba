@@ -126,9 +126,11 @@ function _takeStrategy(ctx:Context, p1PeopleId:Int, strategyId:Int, targetPlayer
 	ctx.events = [Event.STRATEGY_RESULT(strategyResultValue)];
 	// 有改變位置才送WALK_STOP
 	final isPositionChange = player.position != playerOriginPosition;
-	if (isPositionChange) {
-		ctx.events.push(WALK_STOP({
-			grid: getGridInfo(ctx, ctx.grids[player.position])
-		}));
+	{
+		final player = ctx.players[ctx.currentPlayerId];
+		player.memory.hasStrategy = true;
+		if (isPositionChange) {
+			player.memory.hasDice = true;
+		}
 	}
 }

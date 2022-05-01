@@ -150,4 +150,8 @@ function _takeSnatchOn(ctx:Context, playerId:Int, gridId:Int, p1PeopleId:Int, p2
 	} else {
 		[Event.SNATCH_RESULT(resultValue)];
 	}
+	{
+		final player = ctx.players[ctx.currentPlayerId];
+		player.memory.hasCommand = true;
+	}
 }

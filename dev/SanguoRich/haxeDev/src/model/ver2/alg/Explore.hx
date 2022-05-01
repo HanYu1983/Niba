@@ -78,6 +78,10 @@ function _takeExplore(ctx:Context, playerId:Int, gridId:Int, p1SelectId:Int) {
 	resultValue.moneyAfter = player.money;
 	resultValue.foodAfter = player.food;
 	ctx.events = [Event.EXPLORE_RESULT(resultValue)];
+	{
+		final player = ctx.players[ctx.currentPlayerId];
+		player.memory.hasCommand = true;
+	}
 }
 
 function applyExploreCost(ctx:Context, playerId:Int, gridId:Int, p1SelectId:Int):Array<Int> {

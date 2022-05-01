@@ -55,6 +55,9 @@ typedef Player = {
 	army:Float,
 	strategy:Float,
 	position:Int,
+	memory:{
+		hasDice:Bool, hasStrategy:Bool, hasCommand:Bool
+	},
 }
 
 enum Action {
@@ -210,7 +213,7 @@ function getPlayerInfo(ctx:Context, player:Player):model.IModel.PlayerInfo {
 		maintainArmy: 0.0,
 		armyGrow: 0.0,
 		grids: ctx.grids.filter(g -> getGridBelongPlayerId(ctx, g.id) == player.id).map(g -> getGridInfo(ctx, g)),
-		commands: [ActionInfoID.MOVE, ActionInfoID.STRATEGY, ActionInfoID.FIRE, ActionInfoID.END,]
+		commands: getPlayerCommand(ctx, player.id)
 	}
 }
 
@@ -465,6 +468,11 @@ function addPlayerInfo(ctx:Context, player:model.IModel.PlayerInfo):Void {
 		army: player.army,
 		strategy: player.strategy,
 		position: player.atGridId,
+		memory: {
+			hasDice: false,
+			hasStrategy: false,
+			hasCommand: false
+		}
 	});
 	for (p in player.people) {
 		addPeopleInfo(ctx, player.id, null, p);
@@ -589,4 +597,78 @@ function getPeopleCommand(ctx:Context, peopleId):Float {
 		case _:
 			people.command;
 	}
+}
+
+function getPlayerCommand(ctx:Context, playerId:Int):Array<ActionInfoID> {
+	final ret:Array<ActionInfoID> = [];
+	final player = ctx.players[playerId];
+	final gridInfo = getGridInfo(ctx, ctx.grids[player.position]);
+	if (player.memory.hasDice == false) {
+		ret.push(ActionInfoID.MOVE);
+		if (player.memory.hasStrategy == false) {
+			ret.push(ActionInfoID.STRATEGY);
+		}
+		ret.push(ActionInfoID.FIRE);
+	} else {
+		if (player.memory.hasCommand == false) {
+			if (gridInfo.belongPlayerId == null) {
+				// 中立的
+				switch gridInfo.buildtype {
+					case EMPTY:
+						ret.push(ActionInfoID.EXPLORE);
+					case _:
+				}
+				if (gridInfo.people.length > 0) {
+					// 有人的
+					switch gridInfo.buildtype {
+						case EMPTY:
+							ret.push(ActionInfoID.HIRE);
+						case _:
+							if (gridInfo.favor[playerId] >= 1) {
+								// 友好的
+								switch gridInfo.buildtype {
+									case MARKET:
+										ret.push(ActionInfoID.EARN_MONEY);
+									case FARM:
+										ret.push(ActionInfoID.BUY_FOOD);
+										ret.push(ActionInfoID.SELL_FOOD);
+									case VILLAGE:
+										ret.push(ActionInfoID.BUY_ARMY);
+										ret.push(ActionInfoID.SELL_ARMY);
+									case CITY:
+										ret.push(ActionInfoID.EARN_MONEY);
+										ret.push(ActionInfoID.BUY_FOOD);
+										ret.push(ActionInfoID.SELL_FOOD);
+										ret.push(ActionInfoID.BUY_ARMY);
+										ret.push(ActionInfoID.SELL_ARMY);
+									case _:
+								}
+							} else {
+								// 敵對的
+								switch gridInfo.buildtype {
+									case MARKET | FARM | VILLAGE | CITY:
+										ret.push(ActionInfoID.NEGOTIATE);
+										ret.push(ActionInfoID.SNATCH);
+										ret.push(ActionInfoID.OCCUPATION);
+									case _:
+								}
+							}
+					}
+				}
+				ret.push(ActionInfoID.END);
+			} else if (gridInfo.belongPlayerId != playerId) {
+				// 敵人的
+				ret.push(ActionInfoID.SNATCH);
+				ret.push(ActionInfoID.OCCUPATION);
+			} else {
+				// 自己的
+				ret.push(ActionInfoID.TRANSFER);
+				ret.push(ActionInfoID.BUILD);
+				ret.push(ActionInfoID.END);
+			}
+		} else {
+			ret.push(ActionInfoID.END);
+		}
+	}
+	return ret;
 }

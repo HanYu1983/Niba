@@ -155,6 +155,10 @@ function doTakeNegoOn(ctx:Context, playerId:Int, gridId:Int, p1SelectId:Int, p2S
 	resultValue.foodAfter = player.food;
 	resultValue.favorAfter = grid.favor[playerId];
 	ctx.events = [Event.NEGOTIATE_RESULT(resultValue)];
+	{
+		final player = ctx.players[ctx.currentPlayerId];
+		player.memory.hasCommand = true;
+	}
 }
 
 function applyNegoCost(ctx:Context, playerId:Int, gridId:Int, p1SelectId:Int, p2SelectId:Int):Bool {

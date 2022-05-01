@@ -150,6 +150,12 @@ function doPlayerEnd(ctx:Context) {
 	}
 	// 下一個玩家
 	ctx.currentPlayerId = (ctx.currentPlayerId + 1) % ctx.players.length;
+	// clear memory
+	for (player in ctx.players) {
+		player.memory.hasDice = false;
+		player.memory.hasStrategy = false;
+		player.memory.hasCommand = false;
+	}
 }
 
 function doPlayerDice(ctx:Context) {
@@ -159,6 +165,7 @@ function doPlayerDice(ctx:Context) {
 	final moveStep = Math.floor(Math.random() * 6) + 1;
 	final toGridId = (fromGridId + moveStep) % ctx.grids.length;
 	player.position = toGridId;
+	player.memory.hasDice = true;
 	ctx.actions = [
 		Action.MOVE({
 			playerId: activePlayerId,
@@ -167,11 +174,7 @@ function doPlayerDice(ctx:Context) {
 		}, getGameInfo(ctx, false))
 	];
 	final toGrid = ctx.grids[toGridId];
-	ctx.events = [
-		Event.WALK_STOP({
-			grid: getGridInfo(ctx, toGrid)
-		})
-	];
+	ctx.events = [];
 }
 
 function initContext(ctx:Context, option:{}) {
@@ -199,7 +202,7 @@ function initContext(ctx:Context, option:{}) {
 			armyGrow: 0.01,
 			atGridId: 0,
 			grids: [],
-			commands: [ActionInfoID.MOVE, ActionInfoID.STRATEGY, ActionInfoID.FIRE, ActionInfoID.END,]
+			commands: []
 		});
 	}
 }
