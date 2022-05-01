@@ -38,10 +38,34 @@ function doGridGrow(ctx:Context) {
 		if (peopleInGrid.length == 0) {
 			continue;
 		}
+		final extMoney = ctx.attachments.filter(a -> a.belongToGridId == grid.id).fold((p, a) -> {
+			return a + switch p.type {
+				case MARKET(level):
+					return [0, 2, 3, 4][level];
+				case _:
+					0;
+			}
+		}, 0);
+		final extFood = ctx.attachments.filter(a -> a.belongToGridId == grid.id).fold((p, a) -> {
+			return a + switch p.type {
+				case FARM(level):
+					return [0, 2, 3, 4][level];
+				case _:
+					0;
+			}
+		}, 0);
+		final extArmy = ctx.attachments.filter(a -> a.belongToGridId == grid.id).fold((p, a) -> {
+			return a + switch p.type {
+				case BARRACKS(level):
+					return [0, 2, 3, 4][level];
+				case _:
+					0;
+			}
+		}, 0);
 		// 城池成長
-		grid.money += grid.money * getGridMoneyGrow(ctx, grid.id) + BASIC_GROW_MONEY;
-		grid.food += grid.food * getGridFoodGrow(ctx, grid.id) + BASIC_GROW_FOOD;
-		grid.army += grid.army * getGridArmyGrow(ctx, grid.id) + BASIC_GROW_ARMY;
+		grid.money += grid.money * getGridMoneyGrow(ctx, grid.id) + BASIC_GROW_MONEY + extMoney;
+		grid.food += grid.food * getGridFoodGrow(ctx, grid.id) + BASIC_GROW_FOOD + extFood;
+		grid.army += grid.army * getGridArmyGrow(ctx, grid.id) + BASIC_GROW_ARMY + extArmy;
 	}
 }
 

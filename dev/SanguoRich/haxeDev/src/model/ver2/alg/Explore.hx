@@ -19,7 +19,15 @@ function getExploreCost(ctx:Context, playerId:Int, gridId:Int, p1SelectId:Int) {
 			final p1 = getPeopleById(ctx, p1SelectId);
 			final useEnergy = p1.energy / (100 / ENERGY_COST_ON_EXPLORE);
 			final base = getBase(useEnergy, ENERGY_COST_ON_EXPLORE, .1);
-			final charmFactor = getPeopleCharm(ctx, p1.id) / 100;
+			final charmExt = ctx.attachments.filter(a -> a.belongToGridId == gridId).fold((p, a) -> {
+				return a + switch p.type {
+					case EXPLORE(level):
+						return [0, 5, 10, 15][level];
+					case _:
+						0;
+				}
+			}, 0);
+			final charmFactor = (getPeopleCharm(ctx, p1.id) + charmExt) / 100;
 			// 人脈加成
 			final abiFactor = p1.abilities.has(10) ? 1.5 : 1;
 			final rate = base * charmFactor * abiFactor;

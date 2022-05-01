@@ -89,10 +89,19 @@ function getWarCost(ctx:Context, playerId:Int, gridId:Int, p1PeopleId:Int, p2Peo
 		final fact7 = if (options.occupy && atkPeople.abilities.has(9)) WAR_FRONT_ABILITY_FACTOR else 1.0;
 		final fact8 = getPeopleCommand(ctx, atkPeople.id) / getPeopleForce(ctx, defPeople.id);
 		final fact9 = getPeopleIntelligence(ctx, atkPeople.id) / getPeopleIntelligence(ctx, defPeople.id);
+		final fact10 = 1.0 + ctx.attachments.filter(a -> a.belongToGridId == gridId).fold((p, a) -> {
+			return a + switch p.type {
+				case WALL(level):
+					return [0.0, 0.15, 0.35, 0.5][level];
+				case _:
+					0.0;
+			}
+		}, 0.0);
 		final factMoney = if (currMoney - moneyCost < 0) (1.0 - (-1 * (currMoney - moneyCost) / moneyCost)) else 1.0;
 		final factFood = if (currFood - foodCost < 0) (1.0 - (-1 * (currFood - foodCost) / foodCost)) else 1.0;
 		final base = if (options.occupy) atkArmy * WAR_DEFFENDER_FACTOR else atkArmy;
-		final damage = atkArmy * WAR_ARMY_FACTOR + base * fact0 * fact1 * fact2 * fact3 * fact4 * fact5 * fact6 * fact7 * fact8 * fact9 * factMoney * factFood;
+		final damage = atkArmy * WAR_ARMY_FACTOR
+			+ base * fact0 * fact1 * fact2 * fact3 * fact4 * fact5 * fact6 * fact7 * fact8 * fact9 * fact10 * factMoney * factFood;
 		defDamage = damage * WAR_FINAL_DAMAGE_FACTOR;
 		defEnergyCost = useEnergy * getEnergyFactor(atkArmy);
 	}
