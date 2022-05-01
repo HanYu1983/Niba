@@ -1,11 +1,8 @@
 package;
 
-import model.debug.TestResourceModel;
+import model.GridGenerator.BUILDING;
 import model.PeopleGenerator;
 import js.Syntax;
-import haxe.ui.themes.Theme;
-import haxe.ui.themes.ThemeManager;
-import model.DebugModel;
 import model.IModel;
 import view.MainView;
 import haxe.ui.HaxeUIApp;
@@ -112,11 +109,16 @@ class Main {
 		}
 	}
 
-	public static function cloneObject(obj:Dynamic) {
+	public static function cloneObject(obj:Dynamic):Dynamic {
 		final clone = {};
 		for (key in Reflect.fields(obj)) {
 			Reflect.setField(clone, key, Reflect.field(obj, key));
 		}
 		return clone;
 	}
+
+	public static function getBuildingCatelog(b:BUILDING) {
+        final catelog = BuildingList.filter((catelog)-> Type.enumEq(catelog.type, b));
+        return catelog[0];
+    }
 }
