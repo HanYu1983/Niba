@@ -496,9 +496,10 @@ class MainView extends Absolute {
 		TweenX.serial(tweens);
 
 		trace(' playerInfo 多了armyGrow可以套了。這樣就可以傳城地的成長值過來了，然後本身的士兵也可以成長了');
-		trace(' 經驗值成長可以套用，如果升級了，記得要傳升級事件EventInfoID.PEOPLE_LEVEL_UP_EVENT');
+		trace(' 如果升級了記得要傳升級事件EventInfoID.PEOPLE_LEVEL_UP_EVENT');
 		trace(' 遊戲流程越來越多了，所以單靠前端已經比較難判斷要顯示哪些UI了，所以PlayerInfo多了commands來決定目前可以用什麼指令');
-		trace(' 移動到敵人的格子上時，會扣過路費。給前端 PAY_FOR_OVER_ENEMY_GRID');
+		trace(' 移動到敵人的格子上時，會扣過路費。給 PAY_FOR_OVER_ENEMY_GRID 事件');
+		trace( '解顧的API我改成允許多ID傳入，你那邊我只改成可以運作而已，所以你要補一下');
 	}
 
 	function syncViewByInfo(gameInfo:GameInfo) {
