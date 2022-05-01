@@ -626,7 +626,7 @@ function getPeopleCommand(ctx:Context, peopleId):Float {
 
 function getPlayerCommand(ctx:Context, playerId:Int):Array<ActionInfoID> {
 	final ret:Array<ActionInfoID> = [];
-	ret.push(ActionInfoID.BUILD);
+	// ret.push(ActionInfoID.BUILD);
 	final player = ctx.players[playerId];
 	final gridInfo = getGridInfo(ctx, ctx.grids[player.position]);
 	if (player.memory.hasDice == false) {

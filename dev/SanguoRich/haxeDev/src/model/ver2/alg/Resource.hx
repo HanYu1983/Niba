@@ -158,15 +158,15 @@ function _takeResource(ctx:Context, playerId:Int, gridId:Int, p1SelectId:Int, ma
 		foodAfter: player.food,
 	}
 	applyResourceCost(ctx, playerId, gridId, p1SelectId, market, type);
-	{
-		final player = ctx.players[ctx.currentPlayerId];
-		player.memory.hasCommand = true;
-	}
 	resultValue.energyAfter = p1.energy;
 	resultValue.armyAfter = player.army;
 	resultValue.moneyAfter = player.money;
 	resultValue.foodAfter = player.food;
 	ctx.events = [Event.RESOURCE_RESULT(resultValue)];
+	{
+		final player = ctx.players[ctx.currentPlayerId];
+		player.memory.hasCommand = true;
+	}
 }
 
 function applyResourceCost(ctx:Context, playerId:Int, gridId:Int, p1SelectId:Int, market:MARKET, type:RESOURCE) {

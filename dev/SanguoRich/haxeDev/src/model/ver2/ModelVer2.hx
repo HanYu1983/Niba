@@ -14,6 +14,7 @@ import model.ver2.alg.Fire;
 import model.ver2.alg.Snatch;
 import model.ver2.alg.Transfer;
 import model.ver2.alg.Strategy;
+import model.ver2.alg.Building;
 
 class ModelVer2 extends DebugModel {
 	final context:Context = {
@@ -163,14 +164,8 @@ class ModelVer2 extends DebugModel {
 		cb(gameInfo());
 	}
 
-	override function takeBuilding(p1PeopleId:Int, gridId:Int, peopleId:Int, current:Dynamic, to:Dynamic, cb:(gameInfo:GameInfo) -> Void) {
-		context.events = [
-			Event.BUILDING_RESULT({
-				success: true,
-				people: PeopleGenerator.getInst().generate(),
-				building: BUILDING.FARM(2),
-			})
-		];
+	override function takeBuilding(playerId:Int, gridId:Int, peopleId:Int, current:Dynamic, to:Dynamic, cb:(gameInfo:GameInfo) -> Void) {
+		return _takeBuilding(context, playerId, gridId, peopleId, current, to);
 		cb(gameInfo());
 	}
 }
