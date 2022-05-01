@@ -523,8 +523,6 @@ function getPeopleMaintainCost(ctx:Context, peopleId):Float {
 function getPeopleForce(ctx:Context, peopleId):Float {
 	final people = getPeopleById(ctx, peopleId);
 	return switch getPeopleType(ctx, peopleId) {
-		case WENGUAN(level):
-			people.force + EXP_LEVEL_ABI_EXT[level];
 		case WUJIANG(level):
 			people.force + EXP_LEVEL_ABI_EXT[level];
 		case _:
@@ -537,8 +535,6 @@ function getPeopleIntelligence(ctx:Context, peopleId):Float {
 	return switch getPeopleType(ctx, peopleId) {
 		case WENGUAN(level):
 			people.intelligence + EXP_LEVEL_ABI_EXT[level];
-		case WUJIANG(level):
-			people.intelligence + EXP_LEVEL_ABI_EXT[level];
 		case _:
 			people.intelligence;
 	}
@@ -548,8 +544,6 @@ function getPeoplePolitical(ctx:Context, peopleId):Float {
 	final people = getPeopleById(ctx, peopleId);
 	return switch getPeopleType(ctx, peopleId) {
 		case WENGUAN(level):
-			people.political + EXP_LEVEL_ABI_EXT[level];
-		case WUJIANG(level):
 			people.political + EXP_LEVEL_ABI_EXT[level];
 		case _:
 			people.political;
@@ -571,8 +565,6 @@ function getPeopleCharm(ctx:Context, peopleId):Float {
 function getPeopleCommand(ctx:Context, peopleId):Float {
 	final people = getPeopleById(ctx, peopleId);
 	return switch getPeopleType(ctx, peopleId) {
-		case WENGUAN(level):
-			people.command + EXP_LEVEL_ABI_EXT[level];
 		case WUJIANG(level):
 			people.command + EXP_LEVEL_ABI_EXT[level];
 		case _:
