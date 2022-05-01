@@ -284,7 +284,8 @@ function getGridInfo(ctx:Context, grid:Grid):model.GridGenerator.Grid {
 		army: grid.army,
 		armyGrow: 0.0,
 		people: peopleInGrid.map(p -> getPeopleInfo(ctx, p)),
-		favor: grid.favor
+		favor: grid.favor,
+		strategys: []
 	}
 }
 

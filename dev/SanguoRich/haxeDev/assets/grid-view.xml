@@ -15,6 +15,10 @@
     </hbox>
     <label id="lbl_name" text="" textAlign="center" width="100%"/>
     <!-- <label id="lbl_type" text="" textAlign="center" marginTop="20" width="100%" height="100%" style="font-size:12px;"/> -->
+
+    <box id="box_stop" width="10" height="10" verticalAlign="center" horizontalAlign="right" style="background-color: black;border:1px solid black;background-opacity: 1">
+        
+    </box>
     <box id="box_build" width="18" height="18" verticalAlign="bottom" horizontalAlign="right" style="background-color: #FF6666;border:1px solid red;background-opacity: 1">
         <label id="lbl_building" text="" textAlign="center" width="100%" height="100%" style="color: black; font-size:12px;"/>
     </box>

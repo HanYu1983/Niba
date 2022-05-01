@@ -22,6 +22,7 @@ typedef Grid = {
 	armyGrow:Float,
 	people:Array<People>,
 	favor:Array<Int>,
+	strategys:Array<Array<Int>>
 }
 
 enum GROWTYPE {
@@ -66,7 +67,10 @@ class GridGenerator {
 			army: 100,
 			armyGrow: 0.01,
 			people: [],
-			favor:[0,0,0,0]
+			favor:[0,0,0,0],
+			strategys: [
+				[],[],[],[]
+			],
 		};
 	}
 

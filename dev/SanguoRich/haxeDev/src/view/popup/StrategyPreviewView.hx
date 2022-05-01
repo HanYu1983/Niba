@@ -1,5 +1,6 @@
 package view.popup;
 
+import model.GridGenerator.Grid;
 import model.IModel.StrategyCatelog;
 import model.IModel.StrategyList;
 import model.PeopleGenerator.People;
@@ -65,7 +66,7 @@ class StrategyPreviewView extends PopupView {
 			pro_name.value = p.name;
 
 			pro_intelligence.value = p.intelligence;
-			pro_ability.value = Main.getAbilityString(p, [4]);
+			pro_ability.value = Main.getAbilityString(p, [3]);
 
 			setRate();
 		}
@@ -79,6 +80,19 @@ class StrategyPreviewView extends PopupView {
 		}
 		p1List.selectedIndex = 0;
 
+		function updateGridList(grids:Array<Grid>) {
+			if (drp_grid == null)
+				return;
+			drp_grid.dataSource.clear();
+			for (grid in grids) {
+				drp_grid.dataSource.add({
+					id: grid.id,
+					text: grid.name
+				});
+				drp_grid.selectedIndex = 0;
+			}
+		}
+
 		strategyList.onChange = function(e) {
 			var s:StrategyCatelog = strategyList.selectedItem;
 			if (s != null) {
@@ -90,6 +104,21 @@ class StrategyPreviewView extends PopupView {
 				switch (s.targetType) {
 					case TARGET_GRID:
 						drp_grid.disabled = false;
+
+						final currentId = gameInfo.currentPlayer.atGridId;
+						function remapId(i){
+							final remapId = i + currentId;
+							if(remapId > gameInfo.grids.length - 1){
+								return remapId - gameInfo.grids.length;
+							}else if( remapId < 0 ){
+								return gameInfo.grids.length + remapId;
+							}else{
+								return remapId;
+							}
+						}
+						final rangeSetting:Array<Int> = s.value.valid;
+						final canGo = rangeSetting.map(remapId).map((i)->gameInfo.grids[i]);
+						updateGridList(canGo);
 					case TARGET_PLAYER:
 						drp_player.disabled = false;
 					case TARGET_PEOPLE:
@@ -104,7 +133,7 @@ class StrategyPreviewView extends PopupView {
 				setRate();
 			}
 		}
-		strategyList.selectedIndex = 0;
+		
 
 		function updatePlayerList() {
 			drp_player.dataSource.clear();
@@ -128,20 +157,20 @@ class StrategyPreviewView extends PopupView {
 			drp_people.selectedIndex = 0;
 		}
 
-		function updateGridList() {
-			drp_grid.dataSource.clear();
-			for (grid in gameInfo.grids) {
-				drp_grid.dataSource.add({
-					id: grid.id,
-					text: grid.name
-				});
-				drp_grid.selectedIndex = 0;
-			}
-		}
+		// function updateGridList(grids:Array<Grid>) {
+		// 	drp_grid.dataSource.clear();
+		// 	for (grid in grids) {
+		// 		drp_grid.dataSource.add({
+		// 			id: grid.id,
+		// 			text: grid.name
+		// 		});
+		// 		drp_grid.selectedIndex = 0;
+		// 	}
+		// }
 
 		updatePlayerList();
 		updatePeopleList();
-		updateGridList();
+		updateGridList(gameInfo.grids);
 
 		drp_player.onChange = function(e) {
 			updatePeopleList();
@@ -156,5 +185,7 @@ class StrategyPreviewView extends PopupView {
 		drp_grid.onChange = function(e){
 			setRate();
 		}
+
+		strategyList.selectedIndex = 0;
 	}
 }
