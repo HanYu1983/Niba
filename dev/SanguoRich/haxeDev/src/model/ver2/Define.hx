@@ -147,14 +147,14 @@ enum Event {
 	});
 	FIRE_RESULT(value:{
 		success:Bool,
-		people:model.PeopleGenerator.People,
+		people:Array<model.PeopleGenerator.People>,
 		maintainMoneyAfter:Float,
 		maintainMoneyBefore:Float,
 	});
 	STRATEGY_RESULT(value:{
 		success:Bool,
 		people:model.PeopleGenerator.People,
-		strategy:Strategy,
+		strategy:StrategyCatelog,
 		energyBefore:Float,
 		energyAfter:Float,
 	});
@@ -207,7 +207,8 @@ function getPlayerInfo(ctx:Context, player:Player):model.IModel.PlayerInfo {
 		maintainArmy: getMaintainArmy(ctx, player.id),
 		armyGrow: getPlayerArmyGrow(ctx, player.id),
 		grids: ctx.grids.filter(g -> getGridBelongPlayerId(ctx, g.id) == player.id).map(g -> getGridInfo(ctx, g)),
-		enabledCast: true
+		enabledCast: true,
+		enabledEnd: false,
 	}
 }
 

@@ -190,7 +190,8 @@ function initContext(ctx:Context, option:{}) {
 			armyGrow: 0.01,
 			atGridId: 0,
 			grids: [],
-			enabledCast: true
+			enabledCast: true,
+			enabledEnd: false,
 		});
 	}
 }

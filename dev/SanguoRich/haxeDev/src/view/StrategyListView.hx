@@ -1,6 +1,6 @@
 package view;
 
-import model.IModel.Strategy;
+import model.IModel.StrategyCatelog;
 import model.PeopleGenerator;
 import haxe.ui.containers.TableView;
 
@@ -10,11 +10,11 @@ class StrategyListView extends TableView {
 		super();
 	}
 
-	public function setList(strategys:Array<Strategy>) {
+	public function setList(strategys:Array<StrategyCatelog>) {
 		updateList(strategys);
 	}
 
-	function updateList(strategys:Array<Strategy>) {
+	function updateList(strategys:Array<StrategyCatelog>) {
 		dataSource.clear();
 		for (strategy in strategys) {
 			Reflect.setField(strategy, 'target', switch (strategy.targetType) {

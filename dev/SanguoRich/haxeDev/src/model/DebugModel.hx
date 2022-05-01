@@ -38,7 +38,8 @@ class DebugModel implements IModel {
 				maintainArmy: -1.1,
 				armyGrow: 0.01,
 				atGridId: 0,
-				enabledCast: false
+				enabledCast: false,
+				enabledEnd:false
 			}
 		}
 	}
@@ -223,14 +224,14 @@ class DebugModel implements IModel {
 
 	public function takeResource(playerId:Int, gridInt:Int, p1PeopleId:Int, market:MARKET, type:RESOURCE, cb:(gameInfo:GameInfo) -> Void) {}
 
-	public function getPreResultOfFire(playerId:Int, p1PeopleId:Int):PreResultOnFire {
+	public function getPreResultOfFire(playerId:Int, p1PeopleId:Array<Int>):PreResultOnFire {
 		return {
 			maintainMoneyAfter: 10,
 			maintainMoneyBefore: 10,
 		}
 	}
 
-	public function takeFire(playerId:Int, p1PeopleId:Int, cb:(gameInfo:GameInfo) -> Void) {
+	public function takeFire(playerId:Int, p1PeopleId:Array<Int>, cb:(gameInfo:GameInfo) -> Void) {
 		var info = gameInfo();
 		info.events = [
 			{
@@ -318,7 +319,7 @@ class DebugModel implements IModel {
 		cb(info);
 	}
 
-	public function getStrategyRate(p1People:People, strategy:Strategy, targetPlayerId:Int, targetPeopleId:Int,
+	public function getStrategyRate(p1People:People, strategy:StrategyCatelog, targetPlayerId:Int, targetPeopleId:Int,
 			targetGridId:Int):{energyBefore:Int, energyAfter:Int, rate:Float} {
 		return {
 			energyAfter: 10,
