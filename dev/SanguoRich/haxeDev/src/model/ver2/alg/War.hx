@@ -144,16 +144,11 @@ function _getTakeWarPreview(ctx:Context, playerId:Int, gridId:Int):WarPreview {
 					strategy: 0,
 					people: ctx.peoples.filter(p -> p.position.gridId == gridId).map(p -> getPeopleInfo(ctx, p)),
 					atGridId: gridId,
-					maintainArmy: grid.foodGrow * grid.food,
-					maintainPeople: grid.moneyGrow * grid.money,
-					armyGrow: grid.armyGrow * grid.army,
+					maintainArmy: 0.0,
+					maintainPeople: 0.0,
+					armyGrow: 0.0,
 					grids: [],
-					commands: [
-						ActionInfoID.MOVE,
-						ActionInfoID.STRATEGY,
-						ActionInfoID.FIRE,
-						ActionInfoID.END,
-					]
+					commands: []
 				},
 				p1ValidPeople: getPlayerInfo(ctx, ctx.players[playerId]).people,
 				p2ValidPeople: getGridInfo(ctx, ctx.grids[gridId]).people
