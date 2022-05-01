@@ -69,6 +69,14 @@ function doGridGrow(ctx:Context) {
 	}
 }
 
+function doPayTaxToGrid(ctx:Context, playerId:Int, gridId:Int) {
+	final player = ctx.players[playerId];
+	final grid = ctx.grids[gridId];
+	final taxMoney = grid.money / 5;
+	player.money = Math.max(0, player.money - taxMoney);
+	grid.money += taxMoney;
+}
+
 // 玩家回合結束
 function doPlayerEnd(ctx:Context) {
 	ctx.actions = [];
@@ -197,8 +205,25 @@ function doPlayerDice(ctx:Context) {
 			toGridId: toGridId
 		}, getGameInfo(ctx, false))
 	];
-	final toGrid = ctx.grids[toGridId];
 	ctx.events = [];
+	final toGrid = ctx.grids[toGridId];
+	final toGridBelongPlayerId = getGridBelongPlayerId(ctx, toGrid.id);
+	final isStopAtEnemyGrid = toGridBelongPlayerId != null && toGridBelongPlayerId != player.id;
+	if (isStopAtEnemyGrid) {
+		final eventValue = {
+			armyBefore: player.army,
+			armyAfter: player.army,
+			moneyBefore: player.money,
+			moneyAfter: player.money,
+			foodBefore: player.food,
+			foodAfter: player.food,
+		}
+		doPayTaxToGrid(ctx, player.id, toGrid.id);
+		eventValue.moneyAfter = player.money;
+		ctx.events.push({
+			Event.PAY_FOR_OVER_ENEMY_GRID(eventValue);
+		});
+	}
 }
 
 function initContext(ctx:Context, option:{}) {

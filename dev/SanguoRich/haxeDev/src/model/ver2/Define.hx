@@ -170,6 +170,14 @@ enum Event {
 		people:model.PeopleGenerator.People,
 		building:BUILDING,
 	});
+	PAY_FOR_OVER_ENEMY_GRID(value:{
+		armyBefore:Float,
+		armyAfter:Float,
+		moneyBefore:Float,
+		moneyAfter:Float,
+		foodBefore:Float,
+		foodAfter:Float,
+	});
 }
 
 typedef Context = {
@@ -412,6 +420,11 @@ function getGameInfo(ctx:Context, root:Bool):GameInfo {
 				case BUILDING_RESULT(value):
 					{
 						id: EventInfoID.BUILDING_RESULT,
+						value: value
+					}
+				case PAY_FOR_OVER_ENEMY_GRID(value):
+					{
+						id: EventInfoID.PAY_FOR_OVER_ENEMY_GRID,
 						value: value
 					}
 			}
@@ -684,9 +697,9 @@ function getPlayerCommand(ctx:Context, playerId:Int):Array<ActionInfoID> {
 				ret.push(ActionInfoID.END);
 			} else if (gridInfo.belongPlayerId != playerId) {
 				// 敵人的
-				ret.push(ActionInfoID.NEGOTIATE);
 				ret.push(ActionInfoID.SNATCH);
 				ret.push(ActionInfoID.OCCUPATION);
+				ret.push(ActionInfoID.END);
 			} else {
 				// 自己的
 				ret.push(ActionInfoID.TRANSFER);

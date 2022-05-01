@@ -5,6 +5,7 @@ import model.GridGenerator;
 import model.IModel;
 import model.Config;
 import model.ver2.Define;
+import model.ver2.alg.Alg;
 
 using Lambda;
 
@@ -124,13 +125,32 @@ function _takeStrategy(ctx:Context, p1PeopleId:Int, strategyId:Int, targetPlayer
 	strategyResultValue.people = getPeopleInfo(ctx, p1);
 	strategyResultValue.energyAfter = p1.energy;
 	ctx.events = [Event.STRATEGY_RESULT(strategyResultValue)];
-	// 有改變位置才送WALK_STOP
 	final isPositionChange = player.position != playerOriginPosition;
 	{
 		final player = ctx.players[ctx.currentPlayerId];
 		player.memory.hasStrategy = true;
 		if (isPositionChange) {
 			player.memory.hasDice = true;
+			{
+				final toGrid = ctx.grids[player.position];
+				final toGridBelongPlayerId = getGridBelongPlayerId(ctx, toGrid.id);
+				final isStopAtEnemyGrid = toGridBelongPlayerId != null && toGridBelongPlayerId != player.id;
+				if (isStopAtEnemyGrid) {
+					final eventValue = {
+						armyBefore: player.army,
+						armyAfter: player.army,
+						moneyBefore: player.money,
+						moneyAfter: player.money,
+						foodBefore: player.food,
+						foodAfter: player.food,
+					}
+					doPayTaxToGrid(ctx, player.id, toGrid.id);
+					eventValue.moneyAfter = player.money;
+					ctx.events.push({
+						Event.PAY_FOR_OVER_ENEMY_GRID(eventValue);
+					});
+				}
+			}
 		}
 	}
 }
