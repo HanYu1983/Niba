@@ -35,6 +35,7 @@ class PeopleListView extends TableView{
             }
             
             info.typeView = PeopleGenerator.getInst().getPeopleTypeName(p.type);
+            info.expView = Main.getFixNumber(p.exp, 0);
             dataSource.add(info);
         }
     }
