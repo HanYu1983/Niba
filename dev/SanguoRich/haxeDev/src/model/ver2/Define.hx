@@ -235,10 +235,45 @@ function getGridInfo(ctx:Context, grid:Grid):model.GridGenerator.Grid {
 }
 
 function getGameInfo(ctx:Context, root:Bool):GameInfo {
+	function calcGrids(playerInfo:model.IModel.PlayerInfo):model.IModel.PlayerInfo {
+		final total = playerInfo.grids.fold((g:model.GridGenerator.Grid, a:{
+			food:Float,
+			money:Float,
+			army:Float,
+			people:Array<model.PeopleGenerator.People>
+		}) -> {
+			return {
+				food: a.food + g.food,
+				money: a.money + g.money,
+				army: a.army + g.army,
+				people: a.people.concat(g.people),
+			}
+		}, {
+			food: 0.0,
+			money: 0.0,
+			army: 0.0,
+			people: []
+		});
+		playerInfo.food = total.food;
+		playerInfo.money = total.money;
+		playerInfo.army = total.army;
+		playerInfo.people = total.people;
+		playerInfo.maintainPeople = 0.0;
+		playerInfo.maintainArmy = 0.0;
+		return playerInfo;
+	}
+
 	return {
 		players: ctx.players.map(p -> getPlayerInfo(ctx, p)),
-		playerGrids: ctx.players.map(p -> getPlayerInfo(ctx, p)),
-		playerTotals: ctx.players.map(p -> getPlayerInfo(ctx, p)),
+		playerGrids: ctx.players.map(p -> getPlayerInfo(ctx, p)).map(calcGrids),
+		playerTotals: ctx.players.map(p -> {
+			final playerInfo = getPlayerInfo(ctx, p);
+			final total = calcGrids(Reflect.copy(playerInfo));
+			playerInfo.food = playerInfo.food + total.food;
+			playerInfo.money = playerInfo.money + total.money;
+			playerInfo.army = playerInfo.army + total.army;
+			return playerInfo;
+		}),
 		grids: ctx.grids.map(p -> getGridInfo(ctx, p)),
 		isPlayerTurn: true,
 		currentPlayer: getPlayerInfo(ctx, ctx.players[ctx.currentPlayerId]),
