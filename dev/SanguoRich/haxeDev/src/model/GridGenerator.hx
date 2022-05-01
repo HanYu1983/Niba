@@ -102,23 +102,23 @@ class GridGenerator {
 				case EMPTY:
 				case MARKET:
 					g.attachs = [
-						BUILDING.MARKET(1),
+						BUILDING.MARKET(0),
 						BUILDING.WALL(0)
 					];
 				case FARM:
 					g.attachs = [
-						BUILDING.FARM(3),
+						BUILDING.FARM(0),
 						BUILDING.WALL(0)
 					];
 				case VILLAGE:
 					g.attachs = [
-						BUILDING.BARRACKS(2),
+						BUILDING.BARRACKS(0),
 						BUILDING.WALL(0)
 					];
 				case CITY:
 					g.attachs = [
 						BUILDING.MARKET(0),
-						BUILDING.FARM(1),
+						BUILDING.FARM(0),
 						BUILDING.BARRACKS(0),
 						BUILDING.EXPLORE(0),
 						BUILDING.WALL(0),
