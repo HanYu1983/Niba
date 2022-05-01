@@ -11,7 +11,7 @@
         <column id="intelligence" text="智" width="40" sortable="true" style="text-align:center;font-size:12;"/>
         <column id="political" text="政" width="40" sortable="true" style="text-align:center;font-size:12;"/>
         <column id="charm" text="魅" width="40" sortable="true" style="text-align:center;font-size:12;"/>
-        <column id="cost" text="值" width="40" sortable="true" style="text-align:center;font-size:12;"/>
+        <column id="cost" text="值" width="50" sortable="true" style="text-align:center;font-size:12;"/>
         <column id="ability1" text="能一" width="60" sortable="true" style="text-align:center;font-size:12;"/>
         <column id="ability2" text="能二" width="60" sortable="true" style="text-align:center;font-size:12;"/>
         <column id="ability3" text="能三" width="60" sortable="true" style="text-align:center;font-size:12;"/>

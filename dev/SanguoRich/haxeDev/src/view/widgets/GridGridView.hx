@@ -24,9 +24,9 @@ class GridGridView extends BasicGridView{
         pro_name.value = grid.name;
         // pro_landType.value = grid.landType;
 
-        final gainMoney = Main.getFixNumber(grid.money * grid.moneyGrow);
-        final gainFood = Main.getFixNumber(grid.food * grid.foodGrow);
-        final gainArmy = Main.getFixNumber(grid.army * grid.armyGrow);
+        final gainMoney = Main.getFixNumber(grid.moneyGrow);
+        final gainFood = Main.getFixNumber(grid.foodGrow);
+        final gainArmy = Main.getFixNumber(grid.armyGrow);
         
         pro_money.value = '${Math.floor(grid.money)} (成長:${gainMoney)})';
         pro_food.value = '${Math.floor(grid.food)} (成長:${gainFood)})';
