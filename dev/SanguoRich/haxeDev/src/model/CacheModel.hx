@@ -26,7 +26,6 @@ class CacheModel extends ProxyModel {
 			isDirty = false;
 			return cache;
 		}
-		trace("CacheModel", "use cache");
 		return cache;
 	}
 
