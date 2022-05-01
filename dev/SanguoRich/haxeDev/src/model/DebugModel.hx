@@ -319,7 +319,7 @@ class DebugModel implements IModel {
 		cb(info);
 	}
 
-	public function getStrategyRate(p1People:People, strategy:Strategy, targetPlayerId:Int, targetPeopleId:Int,
+	public function getStrategyRate(p1People:People, strategy:StrategyCatelog, targetPlayerId:Int, targetPeopleId:Int,
 			targetGridId:Int):{energyBefore:Int, energyAfter:Int, rate:Float} {
 		return {
 			energyAfter: 10,

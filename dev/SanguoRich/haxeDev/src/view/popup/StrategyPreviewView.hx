@@ -1,14 +1,9 @@
 package view.popup;
 
-import js.html.MediaStreamError;
-import model.IModel.Strategy;
+import model.IModel.StrategyCatelog;
 import model.IModel.StrategyList;
-import model.IModel.PreResultOnWar;
-import view.widgets.LeaderGridView;
-import haxe.ui.events.UIEvent;
 import model.PeopleGenerator.People;
 import haxe.ui.containers.properties.Property;
-import model.IModel.WarPreview;
 import haxe.ui.events.MouseEvent;
 
 @:build(haxe.ui.ComponentBuilder.build("assets/popup/strategyPreview-view.xml"))
@@ -85,7 +80,7 @@ class StrategyPreviewView extends PopupView {
 		p1List.selectedIndex = 0;
 
 		strategyList.onChange = function(e) {
-			var s:Strategy = strategyList.selectedItem;
+			var s:StrategyCatelog = strategyList.selectedItem;
 			if (s != null) {
 				lbl_usingStrategy.value = s.name;
 

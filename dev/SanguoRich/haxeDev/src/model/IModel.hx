@@ -1,6 +1,6 @@
 package model;
 
-import model.IModel.Strategy;
+import model.GridGenerator.BUILDING;
 import model.GridGenerator.Grid;
 import model.PeopleGenerator.People;
 
@@ -185,12 +185,20 @@ enum StrategyTargetType {
 	TARGET_GRID;
 }
 
-typedef Strategy = {
+typedef StrategyCatelog = {
 	id:Int,
 	name:String,
 	intelligence:Float,
 	describe:String,
 	targetType:StrategyTargetType,
+}
+
+typedef BuildingCatelog = {
+	id:Int,
+	name:String,
+	money:Float,
+	describe:String,
+	type:BUILDING,
 }
 
 interface IModel {
@@ -230,12 +238,12 @@ interface IModel {
 	function checkValidTransfer(playerId:Int, gridInt:Int, playerInfo:PlayerInfo, gridInfo:Grid):Bool;
 	function takeTransfer(playerId:Int, gridInt:Int, playerInfo:PlayerInfo, gridInfo:Grid, cb:(gameInfo:GameInfo) -> Void):Void;
 
-	function getStrategyRate(p1People:People, strategy:Strategy, targetPlayerId:Int, targetPeopleId:Int,
+	function getStrategyRate(p1People:People, strategy:StrategyCatelog, targetPlayerId:Int, targetPeopleId:Int,
 		targetGridId:Int):{energyBefore:Int, energyAfter:Int, rate:Float};
 	function takeStrategy(p1PeopleId:Int, strategyId:Int, targetPlayerId:Int, targetPeopleId:Int, targetGridId:Int, cb:(gameInfo:GameInfo) -> Void):Void;
 }
 
-final StrategyList:Array<Strategy> = [
+final StrategyList:Array<StrategyCatelog> = [
 	{
 		id: 0,
 		name: '暗渡陳艙',
@@ -257,4 +265,43 @@ final StrategyList:Array<Strategy> = [
 		describe: '直接獲取該格子的20%資源。並且友好度上升1',
 		targetType: StrategyTargetType.SELF_GRID
 	},
+];
+
+
+final BuildingList:Array<BuildingCatelog> = [
+	{
+		id:0,
+		name:'農田',
+		money: 20,
+		describe: '糧食每回合+1/2/3',
+		type:FARM(0)
+	},
+	{
+		id:1,
+		name:'市集',
+		money: 20,
+		describe: '金錢每回合+1/2/3',
+		type:MARKET(0)
+	},
+	{
+		id:2,
+		name:'兵營',
+		money: 20,
+		describe: '士兵每回合+1/2/3',
+		type:BARRACKS(0)
+	},
+	{
+		id:3,
+		name:'人材所',
+		money: 20,
+		describe: '提高武將在探索計算時的魅力(+5/10/15)及聘用計算時的魅力(+5/10/15)',
+		type:EXPLORE(0)
+	},
+	{
+		id:4,
+		name:'城墻',
+		money: 20,
+		describe: '此格子防禦方的加成提高。(+15%/35%/50%)',
+		type:WALL(0)
+	}
 ];

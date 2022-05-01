@@ -188,7 +188,6 @@ class MainView extends Absolute {
 
 	public function onFirePreviewViewConfirmClick(pId:Array<Int>) {
 		var gameInfo = Main.model.gameInfo();
-		trace(pId);
 		Main.model.takeFire(gameInfo.currentPlayer.id, pId, syncViewByInfo);
 	}
 
@@ -784,8 +783,8 @@ class MainView extends Absolute {
 			});
 
 			stage.registerEvent(MouseEvent.MOUSE_OUT, function(e:MouseEvent) {
-				syncGridInfo(gameInfo.currentPlayer.atGridId);
-				moveCursorToGrid(gameInfo.currentPlayer.atGridId);
+				syncGridInfo(currentPlayer.atGridId);
+				moveCursorToGrid(currentPlayer.atGridId);
 			});
 		}
 	}
