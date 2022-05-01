@@ -90,7 +90,6 @@ final ENERGY_COST_ON_RESOURCE = 15;
 final ENERGY_COST_ON_EXPLORE = 20;
 final ENERGY_COST_ON_SNATCH = 10;
 final ENERGY_COST_ON_WAR = 35;
-
 final SNATCH_ARMY_AT_LEAST = 30;
 
 // 最低友好度
@@ -111,4 +110,19 @@ final SNATCH_HATE_RATE = 0.3;
 // 基本值算法
 function getBase(useEnergy:Float, totalEnergy:Float = 30.0, offset:Float = 0.0, bottom:Float = 0.0):Float {
 	return Math.max((useEnergy / totalEnergy) + offset, bottom);
+}
+
+// 升級
+final EXP_LEVEL_GATES = [50, 110, 180, 260, 350, 450, 560, 680, 810];
+
+// 功績等級0~9
+// 0為普通人
+// 1~9為武將或文官
+function getExpLevel(exp:Float):Int {
+	for (i in 0...EXP_LEVEL_GATES.length) {
+		if (exp < EXP_LEVEL_GATES[i]) {
+			return i;
+		}
+	}
+	return EXP_LEVEL_GATES.length;
 }

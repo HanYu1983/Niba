@@ -40,7 +40,8 @@ typedef People = {
 	command:Float,
 	abilities:Array<Int>,
 	energy:Float,
-	type:PeopleType,
+	defaultType:PeopleType,
+	exp:Float,
 }
 
 typedef Player = {
@@ -173,7 +174,7 @@ typedef Context = {
 function getPeopleInfo(ctx:Context, people:People):model.PeopleGenerator.People {
 	return {
 		id: people.id,
-		type: people.type,
+		type: getPeopleType(ctx, people.id),
 		name: people.name,
 		command: Std.int(people.command),
 		force: Std.int(people.force),
@@ -183,8 +184,8 @@ function getPeopleInfo(ctx:Context, people:People):model.PeopleGenerator.People 
 		cost: Std.int(people.cost),
 		abilities: people.abilities,
 		energy: Std.int(people.energy),
-		gridId: cast people.position.gridId,
-		exp: 0,
+		gridId: people.position.gridId,
+		exp: people.exp,
 	}
 }
 
@@ -406,27 +407,10 @@ function addGridInfo(ctx:Context, grid:model.GridGenerator.Grid):Void {
 		moneyGrow: grid.moneyGrow,
 		foodGrow: grid.foodGrow,
 		armyGrow: grid.armyGrow,
-		favor: grid.favor
+		favor: grid.favor,
 	});
 	for (p in grid.people) {
-		ctx.peoples.push({
-			id: p.id,
-			belongToPlayerId: null,
-			position: {
-				gridId: grid.id,
-				player: false
-			},
-			name: p.name,
-			force: p.force,
-			intelligence: p.intelligence,
-			political: p.political,
-			charm: p.charm,
-			cost: p.cost,
-			abilities: p.abilities,
-			command: p.command,
-			energy: p.energy,
-			type: p.type
-		});
+		addPeopleInfo(ctx, null, grid.id, p);
 	}
 }
 
@@ -447,7 +431,8 @@ function addPeopleInfo(ctx:Context, belongToPlayerId:Null<Int>, gridId:Null<Int>
 		abilities: p.abilities,
 		command: p.command,
 		energy: p.energy,
-		type: p.type
+		defaultType: p.type,
+		exp: 0
 	});
 }
 
@@ -462,24 +447,7 @@ function addPlayerInfo(ctx:Context, player:model.IModel.PlayerInfo):Void {
 		position: player.atGridId,
 	});
 	for (p in player.people) {
-		ctx.peoples.push({
-			id: p.id,
-			belongToPlayerId: player.id,
-			position: {
-				gridId: null,
-				player: true
-			},
-			name: p.name,
-			force: p.force,
-			intelligence: p.intelligence,
-			political: p.political,
-			charm: p.charm,
-			cost: p.cost,
-			abilities: p.abilities,
-			command: p.command,
-			energy: p.energy,
-			type: p.type
-		});
+		addPeopleInfo(ctx, player.id, null, p);
 	}
 }
 
@@ -511,4 +479,30 @@ function getPeopleById(ctx:Context, id:Int):People {
 		throw new haxe.Exception('people not found: ${id}');
 	}
 	return find[0];
+}
+
+function getPeopleType(ctx:Context, peopleId:Int):PeopleType {
+	final people = getPeopleById(ctx, peopleId);
+	final level = getExpLevel(people.exp);
+	return switch people.defaultType {
+		case PUTONG | QILIN:
+			switch level {
+				case 0:
+					people.defaultType;
+				case _:
+					// 1級以上的話, 隨機文官文武將
+					switch peopleId % 2 {
+						case 0:
+							WENGUAN(level);
+						case _:
+							WUJIANG(level);
+					}
+			}
+		// 文官
+		case WENGUAN(_):
+			WENGUAN(level);
+		// 武將
+		case WUJIANG(_):
+			WUJIANG(level);
+	}
 }
