@@ -1,5 +1,6 @@
 package view.widgets;
 
+import model.GridGenerator.GROWTYPE;
 import model.GridGenerator.BUILDING;
 import model.GridGenerator.Grid;
 import model.IModel.PlayerInfo;
@@ -38,7 +39,7 @@ class GridGridView extends BasicGridView{
         }
 
         pro_favor.value = "無";
-        if(grid.buildtype != BUILDING.EMPTY){
+        if(grid.buildtype != GROWTYPE.EMPTY){
             pro_favor.value = Main.getFavorString(grid.favor[gameInfo.currentPlayer.id]);
         }
     }

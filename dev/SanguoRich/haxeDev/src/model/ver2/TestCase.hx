@@ -61,7 +61,7 @@ function testGuessArmy() {
 			{
 				id: 0,
 				name: "grid0",
-				buildtype: BUILDING.EMPTY,
+				buildtype: GROWTYPE.EMPTY,
 				money: 100.0,
 				food: 100.0,
 				army: 100.0,

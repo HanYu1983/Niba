@@ -10,7 +10,7 @@ using Lambda;
 typedef Grid = {
 	id:Int,
 	name:String,
-	buildtype:BUILDING,
+	buildtype:GROWTYPE,
 	money:Float,
 	food:Float,
 	army:Float,
@@ -265,7 +265,7 @@ function getGridInfo(ctx:Context, grid:Grid):model.GridGenerator.Grid {
 		id: grid.id,
 		name: grid.name,
 		landType: 0,
-		buildtype: isEmpty ? BUILDING.EMPTY : grid.buildtype,
+		buildtype: isEmpty ? GROWTYPE.EMPTY : grid.buildtype,
 		height: 0,
 		attachs: [],
 		belongPlayerId: cast belongPlayerId,

@@ -1,5 +1,6 @@
 package model;
 
+import model.GridGenerator.GROWTYPE;
 import model.GridGenerator.BUILDING;
 import model.IModel;
 import model.GridGenerator.Grid;
@@ -90,7 +91,7 @@ class DebugModel implements IModel {
 
 		var g = GridGenerator.getInst().getGrid();
 		g.belongPlayerId = null;
-		g.buildtype = BUILDING.MARKET;
+		g.buildtype = GROWTYPE.MARKET;
 		info.events = [
 			{
 				id: EventInfoID.WALK_STOP,

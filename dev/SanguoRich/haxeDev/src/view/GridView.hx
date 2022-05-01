@@ -1,5 +1,6 @@
 package view;
 
+import model.GridGenerator.GROWTYPE;
 import model.GridGenerator.Grid;
 import model.GridGenerator.BUILDING;
 import haxe.ui.containers.Box;
@@ -25,14 +26,13 @@ class GridView extends Box{
         return type;
     }
 
-    public var building(default, set):BUILDING;
-    function set_building(type:BUILDING) {
+    public var building(default, set):GROWTYPE;
+    function set_building(type:GROWTYPE) {
 
         lbl_building.text = switch (type){
             case MARKET: "市";
             case FARM: "田";
             case VILLAGE: "村";
-            case FORGE: "工";
             case CITY: "城";
             case _:"";
         }
@@ -76,7 +76,7 @@ class GridView extends Box{
         box_food.percentHeight = Math.max(Main.clamp(grid.food / 500) * 100, .1);
         box_army.percentHeight = Math.max(Main.clamp(grid.army / 500) * 100, .1);
 
-        if(grid.buildtype != BUILDING.EMPTY){
+        if(grid.buildtype != GROWTYPE.EMPTY){
             final gameInfo = Main.model.gameInfo();
             var favor = grid.favor[gameInfo.currentPlayer.id];
             lbl_favor.text = Main.getFavorString(favor);

@@ -127,7 +127,7 @@ function getWarCost(ctx:Context, playerId:Int, gridId:Int, p1PeopleId:Int, p2Peo
 
 function _getTakeWarPreview(ctx:Context, playerId:Int, gridId:Int):WarPreview {
 	final grid = ctx.grids[gridId];
-	if (grid.buildtype == BUILDING.EMPTY) {
+	if (grid.buildtype == GROWTYPE.EMPTY) {
 		throw new haxe.Exception("空地不能攻擊");
 	}
 	final gridBelongPlayerId = getGridBelongPlayerId(ctx, gridId);

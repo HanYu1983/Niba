@@ -31,7 +31,7 @@ function getStrategyCost(ctx:Context, p1PeopleId:Int, strategyId:Int, targetPlay
 			}
 			final player = ctx.players[p1.belongToPlayerId];
 			final grid = ctx.grids[player.position];
-			final isEmpty = getGridInfo(ctx, grid).buildtype == BUILDING.EMPTY;
+			final isEmpty = getGridInfo(ctx, grid).buildtype == GROWTYPE.EMPTY;
 			trace(strategyId, isEmpty);
 			isEmpty ? 0.0 : 1;
 		case _:
@@ -75,7 +75,7 @@ function applyStrategyCost(ctx:Context, p1PeopleId:Int, strategyId:Int, targetPl
 			}
 			final player = ctx.players[p1.belongToPlayerId];
 			final grid = ctx.grids[player.position];
-			final isEmpty = getGridInfo(ctx, grid).buildtype == BUILDING.EMPTY;
+			final isEmpty = getGridInfo(ctx, grid).buildtype == GROWTYPE.EMPTY;
 			if (isEmpty) {
 				throw new Exception("這是空地, 搶了沒資源");
 			}

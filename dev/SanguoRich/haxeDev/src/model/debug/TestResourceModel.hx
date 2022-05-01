@@ -1,5 +1,6 @@
 package model.debug;
 
+import model.GridGenerator.GROWTYPE;
 import model.GridGenerator.BUILDING;
 import model.IModel.ActionInfoID;
 import model.IModel.MARKET;
@@ -29,7 +30,7 @@ class TestResourceModel extends DebugModel {
 
 		var g = GridGenerator.getInst().getGrid();
 		g.belongPlayerId = null;
-		g.buildtype = BUILDING.EMPTY;
+		g.buildtype = GROWTYPE.EMPTY;
 		info.events = [
 			{
 				id: EventInfoID.WALK_STOP,

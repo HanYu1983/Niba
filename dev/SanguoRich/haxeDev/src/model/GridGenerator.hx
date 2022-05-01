@@ -9,9 +9,9 @@ typedef Grid = {
 	id:Int,
 	name:String,
 	landType:Int,
-	buildtype:BUILDING,
+	buildtype:GROWTYPE,
 	height:Float,
-	attachs:Array<Int>,
+	attachs:Array<BUILDING>,
 	belongPlayerId:Int,
 	value:Int,
 	money:Float,
@@ -24,17 +24,20 @@ typedef Grid = {
 	favor:Array<Int>,
 }
 
-enum BUILDING {
+enum GROWTYPE {
 	EMPTY;
 	MARKET;
 	FARM;
 	VILLAGE;
-	FORGE;
-	POLICE;
-	WALL;
-	EXPLORE;
-	BARRACKS;
 	CITY;
+}
+
+enum BUILDING {
+	MARKET(level:Int);
+	FARM(level:Int);
+	BARRACKS(level:Int);
+	WALL(level:Int);
+	EXPLORE(level:Int);
 }
 
 class GridGenerator {
@@ -51,7 +54,7 @@ class GridGenerator {
 			id: 0,
 			name: '',
 			landType: 0,
-			buildtype: BUILDING.EMPTY,
+			buildtype: GROWTYPE.EMPTY,
 			height: 0,
 			attachs: [],
 			belongPlayerId: null,
@@ -83,16 +86,16 @@ class GridGenerator {
 			g.name = gridNames[i];
 			g.landType = [0, 0, 1, 1, 1, 1, 2, 2, 3, 3][Math.floor(height * 10)];
 			g.buildtype = [
-			    BUILDING.EMPTY,
-			    BUILDING.EMPTY,
-			    BUILDING.EMPTY,
-				BUILDING.FARM,
-				BUILDING.MARKET,
-				BUILDING.VILLAGE,
-				BUILDING.FARM,
-				BUILDING.MARKET,
-				BUILDING.VILLAGE,
-			    BUILDING.CITY
+			    GROWTYPE.EMPTY,
+			    GROWTYPE.EMPTY,
+			    GROWTYPE.EMPTY,
+				GROWTYPE.FARM,
+				GROWTYPE.MARKET,
+				GROWTYPE.VILLAGE,
+				GROWTYPE.FARM,
+				GROWTYPE.MARKET,
+				GROWTYPE.VILLAGE,
+			    GROWTYPE.CITY
 			][Math.floor(Math.random() * 10)];
 
 			final basicArmy = getRandomRange(100, 40);

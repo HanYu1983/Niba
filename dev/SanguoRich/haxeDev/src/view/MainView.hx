@@ -6,6 +6,7 @@ package view;
 // import model.ModelVer2.ENERGY_COST_ON_RESOURCE;
 // import model.ModelVer2.ENERGY_COST_ON_HIRE;
 // import model.ModelVer2.ENERGY_COST_ON_EXPLORE;
+import model.GridGenerator.GROWTYPE;
 import model.IModel.EventInfoID;
 import haxe.Exception;
 import model.PeopleGenerator;
@@ -554,7 +555,7 @@ class MainView extends Absolute {
 			switch (event.id) {
 				case WALK_STOP:
 					var g:Grid = event.value.grid;
-					if (g.buildtype == BUILDING.EMPTY) {
+					if (g.buildtype == GROWTYPE.EMPTY) {
 						box_emptyCmds.show();
 					} else {
 						if (g.belongPlayerId == null) {
@@ -808,9 +809,6 @@ class MainView extends Absolute {
 			info.cityCount = p.grids.length;
 			tab_allPlayers.dataSource.add(info);
 		}
-
-		
-		
 	}
 
 	function syncPlayerInfo(id:Int) {
