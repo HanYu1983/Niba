@@ -37,8 +37,8 @@ class StrategyPreviewView extends PopupView {
 		Main.view.onStrategyPreviewConfirmClick(p1List.selectedItem.id, strategyList.selectedItem.id, targetPlayer, targetPeople, targetGrid);
 	}
 
-	override function showPopup(info:Dynamic) {
-		super.showPopup(info);
+	override function showPopup(info:Dynamic, cb:()->Void = null) {
+		super.showPopup(info, cb);
 
 		final gameInfo = Main.model.gameInfo();
 		function setRate() {

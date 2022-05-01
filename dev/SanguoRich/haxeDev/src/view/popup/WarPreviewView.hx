@@ -37,8 +37,8 @@ class WarPreviewView extends PopupView{
     }
 
     var outData = [];
-    override function showPopup(info:Dynamic) {
-        super.showPopup(info);
+    override function showPopup(info:Dynamic, cb:()->Void = null) {
+        super.showPopup(info, cb);
 
         var info:WarPreview = info;
 

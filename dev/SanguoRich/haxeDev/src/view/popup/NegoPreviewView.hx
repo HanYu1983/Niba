@@ -23,8 +23,8 @@ class NegoPreviewView extends PopupView {
 		box_peopleList2.addComponent(p2List);
 	}
 
-	override function showPopup(info:Dynamic) {
-		super.showPopup(info);
+	override function showPopup(info:Dynamic, cb:()->Void = null) {
+		super.showPopup(info, cb);
 
 		var info:NegoPreview = info;
 

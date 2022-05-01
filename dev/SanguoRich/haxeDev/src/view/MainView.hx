@@ -216,8 +216,8 @@ class MainView extends Absolute {
 			grid.left = (index % 10) * gridSize;
 			grid.top = Math.floor(index / 10) * gridSize;
 		}
-		box_npcCmds.hide();
-		box_enemyCmds.hide();
+		// box_npcCmds.hide();
+		// box_enemyCmds.hide();
 
 		btn_showStrategy.text = '${btn_showStrategy.text}(${ENERGY_COST_ON_STRATEGY})';
 		btn_negotiate.text = '${btn_negotiate.text}(${ENERGY_COST_ON_NEGO})';
@@ -236,8 +236,8 @@ class MainView extends Absolute {
 	function onBtnGoClick(e:MouseEvent) {
 		Main.model.playerDice(syncView);
 
-		box_npcCmds.hide();
-		box_enemyCmds.hide();
+		// box_npcCmds.hide();
+		// box_enemyCmds.hide();
 	}
 
 	// @:bind(btn_assignPeople, MouseEvent.CLICK)
@@ -341,10 +341,10 @@ class MainView extends Absolute {
 		takeSnatch(true);
 	}
 
-	@:bind(btn_occupationPlayer, MouseEvent.CLICK)
-	function onBtnOccupationPlayerClick(e:MouseEvent) {
-		takeWar();
-	}
+	// @:bind(btn_occupationPlayer, MouseEvent.CLICK)
+	// function onBtnOccupationPlayerClick(e:MouseEvent) {
+	// 	takeWar();
+	// }
 
 	@:bind(btn_occupation, MouseEvent.CLICK)
 	function onBtnOccupationClick(e:MouseEvent) {
@@ -378,10 +378,10 @@ class MainView extends Absolute {
 		}
 	}
 
-	@:bind(btn_snatchPlayer, MouseEvent.CLICK)
-	function onBtnSnatchPlayerClick(e:MouseEvent) {
-		takeSnatch();
-	}
+	// @:bind(btn_snatchPlayer, MouseEvent.CLICK)
+	// function onBtnSnatchPlayerClick(e:MouseEvent) {
+	// 	takeSnatch();
+	// }
 
 	@:bind(btn_snatch, MouseEvent.CLICK)
 	function onBtnSnatchClick(e:MouseEvent) {
@@ -419,7 +419,9 @@ class MainView extends Absolute {
 	function onBtnStartClick(e:MouseEvent) {
 		Main.model.gameStart(() -> {
 			for (index => player in Main.model.gameInfo().players) {
-				players[index].name = player.name.substr(0, 1);
+				if(index < players.length){
+					players[index].name = player.name.substr(0, 1);
+				}
 			}
 
 			tab_whichInfo.onChange = function(e){
@@ -489,18 +491,14 @@ class MainView extends Absolute {
 
 		tweens.push(TweenX.func(() -> {
 			syncViewByInfo(gameInfo);
-			// syncUI(gameInfo);
-			// syncGameInfo(gameInfo);
-			// syncGridViews(gameInfo);
-			// syncPlayerViews(gameInfo);
-			// playEvents(gameInfo);
 		}));
 
 		TweenX.serial(tweens);
 
 		trace(' playerInfo 多了armyGrow可以套了。這樣就可以傳城地的成長值過來了，然後本身的士兵也可以成長了');
 		trace(' 經驗值成長可以套用，如果升級了，記得要傳升級事件EventInfoID.PEOPLE_LEVEL_UP_EVENT');
-		trace(' 遊戲流程越來越多了，所以單靠前端已經比較難判斷要顯示哪些UI了，所以PlayerInfo多了enabledCast, enabledEnd來決定是否能用計策和結束');
+		trace(' 遊戲流程越來越多了，所以單靠前端已經比較難判斷要顯示哪些UI了，所以PlayerInfo多了commands來決定目前可以用什麼指令');
+		trace(' 移動到敵人的格子上時，會扣過路費。給前端 PAY_FOR_OVER_ENEMY_GRID');
 	}
 
 	function syncViewByInfo(gameInfo:GameInfo) {
@@ -509,8 +507,6 @@ class MainView extends Absolute {
 		syncGridViews(gameInfo);
 		syncPlayerViews(gameInfo);
 		playEvents(gameInfo);
-
-		// syncView();
 	}
 
 	function playBeforeSync(gameInfo:GameInfo, tweens:Array<TweenX>) {
@@ -525,6 +521,7 @@ class MainView extends Absolute {
 					var toPos = getGridPositionByGridId(action.value.playerId, action.value.toGridId);
 
 					tweens.push(TweenX.to(pv, {"left": toPos[0], "top": toPos[1]}));
+				case _:
 			}
 		}
 	}
@@ -549,52 +546,143 @@ class MainView extends Absolute {
 
 	function doOneEvent(gameInfo:GameInfo) {
 		if (events.length > 0) {
-			disabledAllCommands();
+			// disabledAllCommands();
 
 			var event = events.shift();
-			// setEventInfo(event);
 			switch (event.id) {
 				case WALK_STOP:
-					var g:Grid = event.value.grid;
-					if (g.buildtype == GROWTYPE.EMPTY) {
-						box_emptyCmds.show();
-					} else {
-						if (g.belongPlayerId == null) {
-							box_npcCmds.show();
+					// var g:Grid = event.value.grid;
+					// if (g.buildtype == GROWTYPE.EMPTY) {
+					// 	box_emptyCmds.show();
+					// } else {
+					// 	if (g.belongPlayerId == null) {
+					// 		box_npcCmds.show();
 
-							switch (g) {
-								case {
-									buildtype: CITY,
-									favor: _[gameInfo.currentPlayer.id] >= 1 => true
-								}:
-									box_moneyCmds.show();
-									box_foodCmds.show();
-									box_armyCmds.show();
-								case {
-									buildtype: MARKET,
-									favor: _[gameInfo.currentPlayer.id] >= 1 => true
-								}:
-									box_moneyCmds.show();
-								case {
-									buildtype: FARM,
-									favor: _[gameInfo.currentPlayer.id] >= 1 => true
-								}:
-									box_foodCmds.show();
-								case {
-									buildtype: VILLAGE,
-									favor: _[gameInfo.currentPlayer.id] >= 1 => true
-								}:
-									box_armyCmds.show();
-								case _:
-							}
-						} else {
-							if (g.belongPlayerId == gameInfo.currentPlayer.id) {
-								box_myAreaCmds.show();
-							} else {
-								box_enemyCmds.show();
-							}
-						}
+					// 		switch (g) {
+					// 			case {
+					// 				buildtype: CITY,
+					// 				favor: _[gameInfo.currentPlayer.id] >= 1 => true
+					// 			}:
+					// 				box_moneyCmds.show();
+					// 				box_foodCmds.show();
+					// 				box_armyCmds.show();
+					// 			case {
+					// 				buildtype: MARKET,
+					// 				favor: _[gameInfo.currentPlayer.id] >= 1 => true
+					// 			}:
+					// 				box_moneyCmds.show();
+					// 			case {
+					// 				buildtype: FARM,
+					// 				favor: _[gameInfo.currentPlayer.id] >= 1 => true
+					// 			}:
+					// 				box_foodCmds.show();
+					// 			case {
+					// 				buildtype: VILLAGE,
+					// 				favor: _[gameInfo.currentPlayer.id] >= 1 => true
+					// 			}:
+					// 				box_armyCmds.show();
+					// 			case _:
+					// 		}
+					// 	} else {
+					// 		if (g.belongPlayerId == gameInfo.currentPlayer.id) {
+					// 			box_myAreaCmds.show();
+					// 		} else {
+					// 			box_enemyCmds.show();
+					// 		}
+					// 	}
+					// }
+					// btn_end.show();
+
+				case HIRE_RESULT:
+					final info:Dynamic = event.value;
+					final title = info.success ? '雇用任務成功' : '雇用任務失敗';
+					var msg = '武將:${info.people.name}\n';
+					msg += '體力:${Main.getFixNumber(info.energyBefore, 0)} => ${Main.getFixNumber(info.energyAfter, 0)}\n';
+					msg += '金錢:${Main.getFixNumber(info.moneyBefore, 0)} => ${Main.getFixNumber(info.moneyAfter, 0)}\n';
+					msg += '糧草:${Main.getFixNumber(info.foodBefore, 0)} => ${Main.getFixNumber(info.foodAfter, 0)}\n';
+					msg += '士兵:${Main.getFixNumber(info.armyBefore, 0)} => ${Main.getFixNumber(info.armyAfter, 0)}\n';
+					Dialogs.messageBox(msg, title, MessageBoxType.TYPE_INFO);
+					// btn_end.show();
+
+				case FIRE_RESULT:
+					final info:Dynamic = event.value;
+					var people:Array<People> = info.people;
+					var msg = '解雇:${people.map((p)->p.name).join(',')}\n';
+					msg += '薪俸:${Main.getFixNumber(info.maintainMoneyBefore, 2)} => ${Main.getFixNumber(info.maintainMoneyAfter, 2)}\n';
+                    
+					Dialogs.messageBox(msg, '解雇完成', MessageBoxType.TYPE_INFO);
+					// showBasicCommand(gameInfo);
+
+				case NEGOTIATE_RESULT:
+					final info:Dynamic = event.value;
+					final title = info.success ? '交涉任務成功' : '交涉任務失敗';
+					var msg = '武將:${info.people.name}\n';
+					msg += '體力:${Main.getFixNumber(info.energyBefore, 0)} => ${Main.getFixNumber(info.energyAfter, 0)}\n';
+					msg += '金錢:${Main.getFixNumber(info.moneyBefore, 0)} => ${Main.getFixNumber(info.moneyAfter, 0)}\n';
+					msg += '糧草:${Main.getFixNumber(info.foodBefore, 0)} => ${Main.getFixNumber(info.foodAfter, 0)}\n';
+					msg += '士兵:${Main.getFixNumber(info.armyBefore, 0)} => ${Main.getFixNumber(info.armyAfter, 0)}\n';
+					msg += '友好:${Main.getFavorString(info.favorBefore)} => ${Main.getFavorString(info.favorAfter)}\n';
+					Dialogs.messageBox(msg, title, MessageBoxType.TYPE_INFO);
+					// btn_end.show();
+
+				case EXPLORE_RESULT:
+					exploreSuccessView.showMessage(event.value);
+
+				case WAR_RESULT:
+					final info:Dynamic = event.value;
+					var msg = '武將:${info.people.name}\n';
+					msg += '體力:${Main.getFixNumber(info.energyBefore, 0)} => ${Main.getFixNumber(info.energyAfter, 0)}\n';
+					msg += '金錢:${Main.getFixNumber(info.moneyBefore, 0)} => ${Main.getFixNumber(info.moneyAfter, 0)}\n';
+					msg += '糧草:${Main.getFixNumber(info.foodBefore, 0)} => ${Main.getFixNumber(info.foodAfter, 0)}\n';
+					msg += '士兵:${Main.getFixNumber(info.armyBefore, 0)} => ${Main.getFixNumber(info.armyAfter, 0)}\n';
+					if (info.success) {
+						Dialogs.messageBox(msg, '占領成功', MessageBoxType.TYPE_INFO, true, (target)->{
+							transferPreview.showPopup(null);
+						});
+					} else {
+						Dialogs.messageBox(msg, '占領失敗', MessageBoxType.TYPE_INFO );
 					}
+					// btn_end.show();
+
+				case SNATCH_RESULT:
+					final info:Dynamic = event.value;
+					final title = info.success ? '搶奪成功' : '搶奪失敗';
+					var msg = '武將:${info.people.name}\n';
+					msg += '體力:${Main.getFixNumber(info.energyBefore, 0)} => ${Main.getFixNumber(info.energyAfter, 0)}\n';
+					msg += '金錢:${Main.getFixNumber(info.moneyBefore, 0)} => ${Main.getFixNumber(info.moneyAfter, 0)}\n';
+					msg += '糧草:${Main.getFixNumber(info.foodBefore, 0)} => ${Main.getFixNumber(info.foodAfter, 0)}\n';
+					msg += '士兵:${Main.getFixNumber(info.armyBefore, 0)} => ${Main.getFixNumber(info.armyAfter, 0)}\n';
+					Dialogs.messageBox(msg, title, MessageBoxType.TYPE_INFO);
+					// btn_end.show();
+
+				case RESOURCE_RESULT:
+					final info:Dynamic = event.value;
+					var msg = '武將:${info.people ? info.people.name : ""}\n';
+					msg += '體力:${Main.getFixNumber(info.energyBefore, 0)} => ${Main.getFixNumber(info.energyAfter, 0)}\n';
+					msg += '金錢:${Main.getFixNumber(info.moneyBefore, 0)} => ${Main.getFixNumber(info.moneyAfter, 0)}\n';
+					msg += '糧草:${Main.getFixNumber(info.foodBefore, 0)} => ${Main.getFixNumber(info.foodAfter, 0)}\n';
+					msg += '士兵:${Main.getFixNumber(info.armyBefore, 0)} => ${Main.getFixNumber(info.armyAfter, 0)}\n';
+					Dialogs.messageBox(msg, '交易完成', MessageBoxType.TYPE_INFO);
+					// btn_end.show();
+					
+				case STRATEGY_RESULT:
+					final info:Dynamic = event.value;
+					final title = info.success ? '計策成功' : '計策失敗';
+					var msg = '武將:${info.people ? info.people.name : ""}\n';
+					msg += '計策:${info.strategy ? info.strategy.name : ""}\n';
+					msg += '體力:${Main.getFixNumber(info.energyBefore, 0)} => ${Main.getFixNumber(info.energyAfter, 0)}\n';
+					Dialogs.messageBox(msg, title, MessageBoxType.TYPE_INFO, true, (b)->{
+						// 如果是停在移動的計策，下一個事件就會是walk_stop事件。由那個事件決定要顯示按鈕
+						doOneEvent(gameInfo);
+					});
+
+					// 如果是停在原地的計策，就顯示原來的指令
+					// showBasicCommand(gameInfo, false);
+
+				case WORLD_EVENT:
+					growView.showPopup(event.value, ()->{
+						doOneEvent(gameInfo);
+					});
 				case PEOPLE_LEVEL_UP_EVENT:
 					final info:Dynamic = event.value;
 					final title = '功績到達，職位升等!';
@@ -613,86 +701,20 @@ class MainView extends Absolute {
 					}
 					msg += '魅力:${p1.charm} => ${p2.charm}}\n';
 					msg += '體力:${p1.energy} => ${p2.energy}}\n';
-					Dialogs.messageBox(msg, title, MessageBoxType.TYPE_INFO);
-					showBasicCommand(gameInfo);
-				case HIRE_RESULT:
+					Dialogs.messageBox(msg, title, MessageBoxType.TYPE_INFO, true, (b)->{
+						doOneEvent(gameInfo);
+					});
+				
+				case PAY_FOR_OVER_ENEMY_GRID:
 					final info:Dynamic = event.value;
-					final title = info.success ? '雇用任務成功' : '雇用任務失敗';
-					final msg = '武將:${info.people.name}\n
-體力:${Main.getFixNumber(info.energyBefore, 0)} => ${Main.getFixNumber(info.energyAfter, 0)}\n
-金錢:${Main.getFixNumber(info.moneyBefore, 0)} => ${Main.getFixNumber(info.moneyAfter, 0)}\n
-糧草:${Main.getFixNumber(info.foodBefore, 0)} => ${Main.getFixNumber(info.foodAfter, 0)}\n
-士兵:${Main.getFixNumber(info.armyBefore, 0)} => ${Main.getFixNumber(info.armyAfter, 0)}\n
-                    ';
-					Dialogs.messageBox(msg, title, MessageBoxType.TYPE_INFO);
-				case FIRE_RESULT:
-					final info:Dynamic = event.value;
-					var people:Array<People> = info.people;
-					var msg = '解雇:${people.map((p)->p.name).join(',')}\n';
-					msg += '薪俸:${Main.getFixNumber(info.maintainMoneyBefore, 2)} => ${Main.getFixNumber(info.maintainMoneyAfter, 2)}\n';
-                    
-					Dialogs.messageBox(msg, '解雇完成', MessageBoxType.TYPE_INFO);
-					showBasicCommand(gameInfo);
-				case NEGOTIATE_RESULT:
-					final info:Dynamic = event.value;
-					final title = info.success ? '交涉任務成功' : '交涉任務失敗';
-					final msg = '武將:${info.people.name}\n
-體力:${Main.getFixNumber(info.energyBefore, 0)} => ${Main.getFixNumber(info.energyAfter, 0)}\n
-金錢:${Main.getFixNumber(info.moneyBefore, 0)} => ${Main.getFixNumber(info.moneyAfter, 0)}\n
-糧草:${Main.getFixNumber(info.foodBefore, 0)} => ${Main.getFixNumber(info.foodAfter, 0)}\n
-士兵:${Main.getFixNumber(info.armyBefore, 0)} => ${Main.getFixNumber(info.armyAfter, 0)}\n
-友好:${Main.getFavorString(info.favorBefore)} => ${Main.getFavorString(info.favorAfter)}\n
-                    ';
-					Dialogs.messageBox(msg, title, MessageBoxType.TYPE_INFO);
-				case EXPLORE_RESULT:
-					exploreSuccessView.showMessage(event.value);
-				case WAR_RESULT:
-					final info:Dynamic = event.value;
-					final msg = '武將:${info.people.name}\n
-體力:${Main.getFixNumber(info.energyBefore, 0)} => ${Main.getFixNumber(info.energyAfter, 0)}\n
-金錢:${Main.getFixNumber(info.moneyBefore, 0)} => ${Main.getFixNumber(info.moneyAfter, 0)}\n
-糧草:${Main.getFixNumber(info.foodBefore, 0)} => ${Main.getFixNumber(info.foodAfter, 0)}\n
-士兵:${Main.getFixNumber(info.armyBefore, 0)} => ${Main.getFixNumber(info.armyAfter, 0)}\n
-                    ';
-					if (info.success) {
-						Dialogs.messageBox(msg, '占領成功', MessageBoxType.TYPE_INFO, true, (target)->{
-							transferPreview.showPopup(null);
-						});
-					} else {
-						Dialogs.messageBox(msg, '占領失敗', MessageBoxType.TYPE_INFO );
-					}
-				case SNATCH_RESULT:
-					final info:Dynamic = event.value;
-					final title = info.success ? '搶奪成功' : '搶奪失敗';
-					final msg = '武將:${info.people.name}\n
-體力:${Main.getFixNumber(info.energyBefore, 0)} => ${Main.getFixNumber(info.energyAfter, 0)}\n
-金錢:${Main.getFixNumber(info.moneyBefore, 0)} => ${Main.getFixNumber(info.moneyAfter, 0)}\n
-糧草:${Main.getFixNumber(info.foodBefore, 0)} => ${Main.getFixNumber(info.foodAfter, 0)}\n
-士兵:${Main.getFixNumber(info.armyBefore, 0)} => ${Main.getFixNumber(info.armyAfter, 0)}\n
-                    ';
-					Dialogs.messageBox(msg, title, MessageBoxType.TYPE_INFO );
-				case RESOURCE_RESULT:
-					final info:Dynamic = event.value;
-					final msg = '武將:${info.people ? info.people.name : ""}\n
-體力:${Main.getFixNumber(info.energyBefore, 0)} => ${Main.getFixNumber(info.energyAfter, 0)}\n
-金錢:${Main.getFixNumber(info.moneyBefore, 0)} => ${Main.getFixNumber(info.moneyAfter, 0)}\n
-糧草:${Main.getFixNumber(info.foodBefore, 0)} => ${Main.getFixNumber(info.foodAfter, 0)}\n
-士兵:${Main.getFixNumber(info.armyBefore, 0)} => ${Main.getFixNumber(info.armyAfter, 0)}\n
-                    ';
-					Dialogs.messageBox(msg, '交易完成', MessageBoxType.TYPE_INFO );
-				case WORLD_EVENT:
-					growView.showPopup(event.value);
-					showBasicCommand(gameInfo);
-				case STRATEGY_RESULT:
-					final info:Dynamic = event.value;
-					final title = info.success ? '計策成功' : '計策失敗';
-					final msg = '武將:${info.people ? info.people.name : ""}\n
-計策:${info.strategy ? info.strategy.name : ""}\n
-體力:${Main.getFixNumber(info.energyBefore, 0)} => ${Main.getFixNumber(info.energyAfter, 0)}\n
-                    ';
-					Dialogs.messageBox(msg, title, MessageBoxType.TYPE_INFO );
-					showBasicCommand(gameInfo);
-					doOneEvent(gameInfo);
+					final title = '走到其他主公的領地，過路費…';
+					var msg = '走到其他主公的領地，過路費…\n';
+					msg += '金錢:${Main.getFixNumber(info.moneyBefore, 0)} => ${Main.getFixNumber(info.moneyAfter, 0)}\n';
+					msg += '糧草:${Main.getFixNumber(info.foodBefore, 0)} => ${Main.getFixNumber(info.foodAfter, 0)}\n';
+					msg += '士兵:${Main.getFixNumber(info.armyBefore, 0)} => ${Main.getFixNumber(info.armyAfter, 0)}\n';
+					Dialogs.messageBox(msg, title, MessageBoxType.TYPE_INFO, true, (b)->{
+						doOneEvent(gameInfo);
+					});
 			}
 		}
 	}
@@ -733,21 +755,40 @@ class MainView extends Absolute {
 	//     }
 	// }
 
-	function showBasicCommand(gameInfo:GameInfo) {
-		box_basicCmds.show();
-		btn_showStrategy.disabled = !gameInfo.currentPlayer.enabledCast;
-	}
+	// function showBasicCommand(gameInfo:GameInfo, enabledCast = true) {
+	// 	box_basicCmds.show();
+	// 	// btn_showStrategy.disabled = !gameInfo.currentPlayer.enabledCast;
+	// 	btn_showStrategy.disabled = !enabledCast;
+	// }
 
 	function disabledAllCommands() {
-		box_basicCmds.hide();
-		box_npcCmds.hide();
-		box_enemyCmds.hide();
-		box_emptyCmds.hide();
+		// box_basicCmds.hide();
+		// box_npcCmds.hide();
+		// box_enemyCmds.hide();
+		// box_emptyCmds.hide();
+		// btn_end.hide();
+		// box_moneyCmds.hide();
+		// box_foodCmds.hide();
+		// box_armyCmds.hide();
+		// box_myAreaCmds.hide();
+		btn_go.hide();
+		btn_showStrategy.hide();
+		btn_firePeople.hide();
+		btn_negotiate.hide();
+		btn_snatch.hide();
+		// btn_snatchPlayer.hide();
+		btn_occupation.hide();
+		// btn_occupationPlayer.hide();
+		btn_hire.hide();
+		btn_explore.hide();
+		btn_earnMoney.hide();
+		btn_buyFood.hide();
+		btn_sellFood.hide();
+		btn_buyArmy.hide();
+		btn_sellArmy.hide();
+		btn_transfer.hide();
+		btn_build.hide();
 		btn_end.hide();
-		box_moneyCmds.hide();
-		box_foodCmds.hide();
-		box_armyCmds.hide();
-		box_myAreaCmds.hide();
 	}
 
 	function moveCursorToGrid(gridId:Int) {
@@ -760,10 +801,44 @@ class MainView extends Absolute {
 		gameInfo.isPlaying ? btn_start.hide() : btn_start.show();
 		
 		disabledAllCommands();
-		gameInfo.isPlayerTurn ? showBasicCommand(gameInfo) : box_basicCmds.hide();
 
 		var currentPlayer = gameInfo.currentPlayer;
-		currentPlayer.enabledEnd ? btn_end.show() : btn_end.hide();
+		for(cmd in currentPlayer.commands){
+			switch(cmd){
+				case MOVE:
+					btn_go.show();
+				case STRATEGY:
+					btn_showStrategy.show();
+				case FIRE:
+					btn_firePeople.show();
+				case NEGOTIATE:
+					btn_negotiate.show();
+				case SNATCH:
+					btn_snatch.show();
+				case OCCUPATION: 
+					btn_occupation.show();
+				case HIRE: 
+					btn_hire.show();
+				case EXPLORE: 
+					btn_explore.show();
+				case EARN_MONEY: 
+					btn_earnMoney.show();
+				case BUY_FOOD: 
+					btn_buyFood.show();
+				case SELL_FOOD: 
+					btn_sellFood.show();
+				case BUY_ARMY: 
+					btn_buyArmy.show();
+				case SELL_ARMY: 
+					btn_sellArmy.show();
+				case TRANSFER: 
+					btn_transfer.show();
+				case BUILD: 
+					btn_build.show();
+				case END: 
+					btn_end.show();
+			};
+		}
 
 		var pid = currentPlayer.id;
 		syncPlayerInfo(pid);
@@ -839,11 +914,14 @@ class MainView extends Absolute {
 
 	function syncPlayerViews(gameInfo:GameInfo) {
 		for (index => playerInfo in gameInfo.players) {
-			var playerView = players[index];
+			if(index < players.length){
+				var playerView = players[index];
 
-			var pos = getGridPositionByGridId(playerInfo.id, playerInfo.atGridId);
-			playerView.left = pos[0];
-			playerView.top = pos[1];
+				var pos = getGridPositionByGridId(playerInfo.id, playerInfo.atGridId);
+				playerView.left = pos[0];
+				playerView.top = pos[1];
+			}
+			
 		}
 	}
 

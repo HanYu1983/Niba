@@ -38,8 +38,12 @@ class DebugModel implements IModel {
 				maintainArmy: -1.1,
 				armyGrow: 0.01,
 				atGridId: 0,
-				enabledCast: false,
-				enabledEnd:false
+				commands:[
+					ActionInfoID.MOVE,
+					ActionInfoID.STRATEGY,
+					ActionInfoID.FIRE,
+					ActionInfoID.END,
+				]
 			}
 		}
 	}
@@ -113,7 +117,7 @@ class DebugModel implements IModel {
 			{
 				id: ActionInfoID.MOVE,
 				value: {
-					playerId: 1,
+					playerId: 0,
 					fromGridId: 8,
 					toGridId: 13
 				},
@@ -122,7 +126,7 @@ class DebugModel implements IModel {
 			{
 				id: ActionInfoID.MOVE,
 				value: {
-					playerId: 2,
+					playerId: 1,
 					fromGridId: 10,
 					toGridId: 15
 				},
@@ -135,6 +139,17 @@ class DebugModel implements IModel {
 				value:{
 					peopleBefore:PeopleGenerator.getInst().generate(),
 					peopleAfter:PeopleGenerator.getInst().generate(),
+				},
+			},
+			{
+				id:EventInfoID.PAY_FOR_OVER_ENEMY_GRID,
+				value:{
+					moneyBefore:0,
+					moneyAfter:1,
+					foodBefore:1,
+					foodAfter:1,
+					armyBefore:0,
+					armyAfter:1
 				}
 			}
 		];

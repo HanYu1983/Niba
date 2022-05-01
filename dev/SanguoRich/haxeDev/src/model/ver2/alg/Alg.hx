@@ -200,8 +200,12 @@ function initContext(ctx:Context, option:{}) {
 			armyGrow: 0.01,
 			atGridId: 0,
 			grids: [],
-			enabledCast: true,
-			enabledEnd: false,
+			commands: [
+				ActionInfoID.MOVE,
+				ActionInfoID.STRATEGY,
+				ActionInfoID.FIRE,
+				ActionInfoID.END,
+			]
 		});
 	}
 }

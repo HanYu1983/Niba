@@ -206,8 +206,12 @@ function getPlayerInfo(ctx:Context, player:Player):model.IModel.PlayerInfo {
 		maintainArmy: getMaintainArmy(ctx, player.id),
 		armyGrow: getPlayerArmyGrow(ctx, player.id),
 		grids: ctx.grids.filter(g -> getGridBelongPlayerId(ctx, g.id) == player.id).map(g -> getGridInfo(ctx, g)),
-		enabledCast: true,
-		enabledEnd: false,
+		commands: [
+			ActionInfoID.MOVE,
+			ActionInfoID.STRATEGY,
+			ActionInfoID.FIRE,
+			ActionInfoID.END,
+		]
 	}
 }
 

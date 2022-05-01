@@ -7,8 +7,10 @@ class PopupView extends VBox{
         super();
     }
 
-    public function showPopup(info:Dynamic) {
+    var cb:()->Void;
+    public function showPopup(info:Dynamic, cb:()->Void = null) {
         fadeIn();
+        this.cb = cb;
     }
 
     override function fadeIn(onEnd:() -> Void = null, show:Bool = true) {
@@ -19,5 +21,7 @@ class PopupView extends VBox{
     override function fadeOut(onEnd:() -> Void = null, hide:Bool = true) {
         super.fadeOut(onEnd, hide);
         Main.view.onHidePopup();
+
+        if(this.cb != null) cb();
     }
 }

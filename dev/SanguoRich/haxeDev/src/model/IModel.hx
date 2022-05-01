@@ -17,12 +17,33 @@ typedef PlayerInfo = {
 	maintainPeople:Float,
 	maintainArmy:Float,
 	armyGrow:Float,
-	enabledCast:Bool,
-	enabledEnd:Bool
+	commands:Array<ActionInfoID>
+	// enabledCast:Bool,
+	// enabledEnd:Bool
 }
 
 enum ActionInfoID {
 	MOVE;
+	STRATEGY;
+	FIRE;
+	
+	NEGOTIATE;
+	SNATCH;
+	OCCUPATION;
+
+	HIRE;
+	EXPLORE;
+
+	EARN_MONEY;
+	BUY_FOOD;
+	SELL_FOOD;
+	BUY_ARMY;
+	SELL_ARMY;
+
+	TRANSFER;
+	BUILD;
+
+	END;
 }
 
 typedef ActionInfo = {
@@ -32,7 +53,8 @@ typedef ActionInfo = {
 }
 
 enum EventInfoID {
-	WORLD_EVENT;
+
+	// 通常不會再有下一個事件
 	WALK_STOP;
 	NEGOTIATE_RESULT;
 	EXPLORE_RESULT;
@@ -42,7 +64,11 @@ enum EventInfoID {
 	SNATCH_RESULT;
 	RESOURCE_RESULT;
 	STRATEGY_RESULT;
+
+	// 這些事件有可能會連著其他的事件
+	WORLD_EVENT;
 	PEOPLE_LEVEL_UP_EVENT;
+	PAY_FOR_OVER_ENEMY_GRID;
 }
 
 enum MARKET {

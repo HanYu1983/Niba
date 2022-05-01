@@ -24,8 +24,8 @@ class HirePreviewView extends PopupView {
 
 	var isValidHire = false;
 
-	override function showPopup(info:Dynamic) {
-		super.showPopup(info);
+	override function showPopup(info:Dynamic, cb:()->Void = null) {
+		super.showPopup(info, cb);
 
 		var info:HirePreview = info;
 

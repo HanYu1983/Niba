@@ -69,8 +69,8 @@ class TransferPreview extends PopupView{
     }
 
     var outData:Dynamic = [];
-    override function showPopup(info:Dynamic) {
-        super.showPopup(info);
+    override function showPopup(info:Dynamic, cb:()->Void = null) {
+        super.showPopup(info, cb);
 
         isChecked = false;
         lbl_note.value = '';

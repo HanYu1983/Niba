@@ -37,8 +37,8 @@ class GrowView extends PopupView{
         view.pro_cityCount.value = "0";
     }
 
-    override function showPopup(info:Dynamic) {
-        super.showPopup(info);
+    override function showPopup(info:Dynamic, cb:()->Void = null) {
+        super.showPopup(info, cb);
 
         final gameInfo = Main.model.gameInfo();
         for( index => p in gameInfo.players){

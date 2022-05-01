@@ -53,27 +53,44 @@
                         <vbox width="100%">
                             <button text="移動" width="100%" id="btn_go" />
                             <button text="計略" width="100%" id="btn_showStrategy" />
-                            <!-- <button text="指派" width="100%" id="btn_assignPeople" /> -->
                             <button text="解雇" width="100%" id="btn_firePeople" />
+
+                            <button text="交涉" width="100%" id="btn_negotiate" />
+                            <button text="搶奪" width="100%" id="btn_snatch" />
+                            <button text="攻城" width="100%" id="btn_occupation" />
+
+                            <button text="探索" width="100%" id="btn_explore" />
+                            <button text="聘用" width="100%" id="btn_hire" />
+
+                            <button text="經商" width="100%" id="btn_earnMoney" />
+                            <button text="買糧" width="100%" id="btn_buyFood" />
+                            <button text="賣糧" width="100%" id="btn_sellFood" />
+                            <button text="徵兵" width="100%" id="btn_buyArmy" />
+                            <button text="裁兵" width="100%" id="btn_sellArmy" />
+
+                            <button text="調度" width="100%" id="btn_transfer" />
+                            <button text="擴建" width="100%" id="btn_build" />
+
+                            <button text="結束" width="100%" id="btn_end" />
                         </vbox>
                     </frame>
-                    <frame id="box_npcCmds" width="100%" text="對盜賊指令">
+                    <!-- <frame id="box_npcCmds" width="100%" text="對格子指令">
                         <vbox width="100%">
                             <button text="交涉" width="100%" id="btn_negotiate" />
                             <button text="搶奪" width="100%" id="btn_snatch" />
                             <button text="攻城" width="100%" id="btn_occupation" />
+                            <button text="經商" width="100%" id="btn_earnMoney" />
+                            <button text="探索" width="100%" id="btn_explore" />
+                            <button text="聘用" width="100%" id="btn_hire" />
                         </vbox>
-                    </frame>
-                    <frame id="box_enemyCmds" width="100%" text="對敵方指令">
+                    </frame> -->
+                    <!-- <frame id="box_enemyCmds" width="100%" text="對敵方指令">
                         <vbox width="100%">
                             <button text="搶奪" width="100%" id="btn_snatchPlayer" />
                             <button text="攻城" width="100%" id="btn_occupationPlayer" />
-                            <!-- <button text="計策" width="100%" id="btn_warStrategy" /> -->
-                            <!-- 回合結束時如果站在敵方玩家的地區，會給出扣資源事件 -->
-                            <!-- <button text="進貢" width="100%" id="btn_give" /> -->
                         </vbox>
-                    </frame>
-                    <frame id="box_emptyCmds" width="100%" text="對空地指令">
+                    </frame> -->
+                    <!-- <frame id="box_emptyCmds" width="100%" text="對空地指令">
                         <vbox width="100%">
                             <button text="探索" width="100%" id="btn_explore" />
                             <button text="聘用" width="100%" id="btn_hire" />
@@ -101,8 +118,7 @@
                             <button text="調度" width="100%" id="btn_transfer" />
                             <button text="擴建" width="100%" id="btn_build" />
                         </vbox>
-                    </frame>
-                    <button text="結束" width="100%" id="btn_end" />
+                    </frame> -->
                 </vbox>
                 
             </hbox>

@@ -37,8 +37,8 @@ class SnatchPreviewView extends PopupView {
 		Main.view.onSnatchPreviewConfirmClick(p1List.selectedItem.id, p2List.selectedItem.id, btn_isOccupation.selected);
 	}
 
-	override function showPopup(info:Dynamic) {
-		super.showPopup(info);
+	override function showPopup(info:Dynamic, cb:()->Void = null) {
+		super.showPopup(info, cb);
 
 		var warInfo:SnatchPreview = info;
 
