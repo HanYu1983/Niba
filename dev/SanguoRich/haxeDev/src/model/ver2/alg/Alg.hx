@@ -14,17 +14,43 @@ function doPeopleMaintain(ctx:Context) {
 	for (player in ctx.players) {
 		// 支付武將的薪水
 		{
-			player.money -= getMaintainPeople(ctx, player.id);
-			if (player.money < 0) {
-				player.money = 0;
+			final cost = getMaintainPeople(ctx, player.id);
+			player.money = Math.max(0, player.money - cost);
+			// 計算體力回復率
+			final offset = player.money - cost;
+			// 沒錢的話, 這個系數為0
+			final offsetFactor = offset >= 0 ? 1 : (1 - Math.min(1, -1 * offset / cost));
+			for (people in ctx.peoples) {
+				// 別人的武將不回復
+				if (people.belongToPlayerId != player.id) {
+					continue;
+				}
+				// 回體力
+				final addEnergy = (PEOPLE_ENERGY_SUPPLY_BASE + people.energy * PEOPLE_ENERGY_SUPPLY_SAVE_FACTOR) * offsetFactor;
+				people.energy = Math.min(100, people.energy + addEnergy);
 			}
 		}
 		// 吃食物
 		{
-			player.food -= getMaintainArmy(ctx, player.id);
-			if (player.food < 0) {
-				player.food = 0;
+			final cost = getMaintainArmy(ctx, player.id);
+			player.food = Math.max(0, player.food - cost);
+			// 計算士兵逃率
+			final offset = player.food - cost;
+			// 沒食的話, 這個系數為0
+			final offsetFactor = offset >= 0 ? 1 : (1 - Math.min(1, -1 * offset / cost));
+			for (grid in ctx.grids) {
+				if (getGridBelongPlayerId(ctx, grid.id) != player.id) {
+					continue;
+				}
+				// 從格子逃兵
+				final base = grid.army * 0.1;
+				final lostArmy = base * offsetFactor;
+				grid.army = Math.max(0, grid.army - lostArmy);
 			}
+			// 從主公逃兵
+			final base = player.army * 0.1;
+			final lostArmy = base * offsetFactor;
+			player.army = Math.max(0, player.army - lostArmy);
 		}
 	}
 }
@@ -82,17 +108,6 @@ function doPlayerEnd(ctx:Context) {
 	// 四個玩家走完後才計算回合
 	final isTurnEnd = ctx.currentPlayerId == (ctx.players.length - 1);
 	if (isTurnEnd) {
-		// 先假設每回合回體力
-		{
-			final enable = ctx.turn > 0 && ctx.turn % 1 == 0;
-			// 回體力
-			for (people in ctx.peoples) {
-				people.energy += PEOPLE_ENERGY_SUPPLY_BASE + people.energy * PEOPLE_ENERGY_SUPPLY_SAVE_FACTOR;
-				if (people.energy > 100) {
-					people.energy = 100;
-				}
-			}
-		}
 		// 支付薪水
 		{
 			final enable = ctx.turn > 0 && ctx.turn % PLAYER_EARN_PER_TURN == 0;
