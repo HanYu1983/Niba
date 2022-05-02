@@ -42,5 +42,24 @@ class GridGridView extends BasicGridView{
         if(grid.buildtype != GROWTYPE.EMPTY){
             pro_favor.value = Main.getFavorString(grid.favor[gameInfo.currentPlayer.id]);
         }
+
+        var building = "";
+        for(b in grid.attachs){
+            final catelog = Main.getBuildingCatelog(b);
+            switch(catelog.type){
+                case MARKET(level):
+                    building += '市${level}';
+                case FARM(level):
+                    building += '農${level}';
+                case BARRACKS(level):
+                    building += '兵${level}';
+                case WALL(level):
+                    building += '牆${level}';
+                case EXPLORE(level):
+                    building += '人${level}';
+                case _:
+            }
+        }
+        pro_building.value = building;
     }
 }

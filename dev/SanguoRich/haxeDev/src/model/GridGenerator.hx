@@ -87,7 +87,7 @@ class GridGenerator {
 			var height = getHeight(i);
 			var g = getGrid();
 			g.id = i;
-			g.name = gridNames[i];
+			g.name = g.id + gridNames[i];
 			g.landType = [0, 0, 1, 1, 1, 1, 2, 2, 3, 3][Math.floor(height * 10)];
 			g.buildtype = [
 			    GROWTYPE.EMPTY,

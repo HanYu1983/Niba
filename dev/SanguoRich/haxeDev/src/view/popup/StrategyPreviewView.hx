@@ -1,5 +1,6 @@
 package view.popup;
 
+import haxe.ui.events.UIEvent;
 import model.GridGenerator.Grid;
 import model.IModel.StrategyCatelog;
 import model.IModel.StrategyList;
@@ -43,6 +44,10 @@ class StrategyPreviewView extends PopupView {
 
 		final gameInfo = Main.model.gameInfo();
 		function setRate() {
+			if (p1List.selectedItem == null)
+				return ;
+			if (strategyList.selectedItem == null)
+				return;
 			if (drp_player.selectedItem == null)
 				return;
 			if (drp_people.selectedItem == null)
@@ -81,16 +86,14 @@ class StrategyPreviewView extends PopupView {
 		p1List.selectedIndex = 0;
 
 		function updateGridList(grids:Array<Grid>) {
-			if (drp_grid == null)
-				return;
 			drp_grid.dataSource.clear();
 			for (grid in grids) {
 				drp_grid.dataSource.add({
 					id: grid.id,
 					text: grid.name
 				});
-				drp_grid.selectedIndex = 0;
 			}
+			drp_grid.selectedIndex = 0;
 		}
 
 		strategyList.onChange = function(e) {
@@ -142,8 +145,8 @@ class StrategyPreviewView extends PopupView {
 					id: player.id,
 					text: player.name
 				});
-				drp_player.selectedIndex = 0;
 			}
+			drp_player.selectedIndex = 0;
 		}
 
 		function updatePeopleList() {
@@ -157,27 +160,11 @@ class StrategyPreviewView extends PopupView {
 			drp_people.selectedIndex = 0;
 		}
 
-		// function updateGridList(grids:Array<Grid>) {
-		// 	drp_grid.dataSource.clear();
-		// 	for (grid in grids) {
-		// 		drp_grid.dataSource.add({
-		// 			id: grid.id,
-		// 			text: grid.name
-		// 		});
-		// 		drp_grid.selectedIndex = 0;
-		// 	}
-		// }
-
-		updatePlayerList();
-		updatePeopleList();
-		updateGridList(gameInfo.grids);
-
 		drp_player.onChange = function(e) {
 			updatePeopleList();
 			setRate();
 		}
-		drp_player.selectedIndex = 0;
-
+		
 		drp_people.onChange = function(e){
 			setRate();
 		}
@@ -185,6 +172,10 @@ class StrategyPreviewView extends PopupView {
 		drp_grid.onChange = function(e){
 			setRate();
 		}
+
+		updatePlayerList();
+		updatePeopleList();
+		updateGridList(gameInfo.grids);
 
 		strategyList.selectedIndex = 0;
 	}
