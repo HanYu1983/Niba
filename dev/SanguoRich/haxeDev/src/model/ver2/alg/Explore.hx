@@ -111,7 +111,7 @@ function applyExploreCost(ctx:Context, playerId:Int, gridId:Int, p1SelectId:Int)
 		return [];
 	}
 	// 功績
-	onPeopleExpAdd(ctx, people.id, getExpAdd(Math.min(1, negoCost.successRate)));
+	onPeopleExpAdd(ctx, people.id, getExpAdd(Math.min(1, negoCost.successRate), model.Config.ENERGY_COST_ON_EXPLORE));
 	final newPeople = PeopleGenerator.getInst().generate();
 	addPeopleInfo(ctx, null, gridId, newPeople);
 	return [newPeople.id];

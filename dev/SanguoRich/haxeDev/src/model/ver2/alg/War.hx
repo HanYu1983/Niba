@@ -324,7 +324,7 @@ function applyWarCost(ctx:Context, playerId:Int, gridId:Int, p1PeopleId:Int, p2P
 			}
 			if (success) {
 				// 功績
-				onPeopleExpAdd(ctx, people.id, getExpAdd(1));
+				onPeopleExpAdd(ctx, people.id, getExpAdd(1, peopleCost1.energy));
 			}
 			return success;
 		case _:

@@ -19,7 +19,7 @@ private function applyBuildingCost(ctx:Context, playerId:Int, gridId:Int, people
 	if (success) {
 		player.money = Math.max(0, player.money - costMoney);
 		// 功績
-		onPeopleExpAdd(ctx, peopleId, getExpAdd(0.3));
+		onPeopleExpAdd(ctx, peopleId, getExpAdd(0.3, ENERGY_COST_ON_BUILDING));
 		var checked = false;
 		ctx.attachments = ctx.attachments.map(a -> {
 			if (a.belongToGridId != gridId) {

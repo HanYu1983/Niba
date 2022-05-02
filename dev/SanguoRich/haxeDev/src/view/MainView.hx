@@ -503,12 +503,10 @@ class MainView extends Box {
 
 		TweenX.serial(tweens);
 
-		trace('計策一回合只能用一次好像還沒有實作？');
 		trace('用了暗度陳倉之後，指令要變成在那個格子可以使用的指令。目前用了之後，指令還是沒用之前的指令');
 		trace( '解顧的API在PREVIEW時的還沒有改成多人的');
-		trace('目前用暗度走到別人的格子時，事件順序是先給PAY_FOR_OVER_ENEMY_GRID，然后才是計策成功。這個有辦法按照順序嗎？');
-
 		trace(' 如果升級了記得要傳升級事件EventInfoID.PEOPLE_LEVEL_UP_EVENT');
+		trace(' 送，試了一下，發現加的功績應該是要看當前體力值的最大消耗量來當成上限才對');
 	}
 
 	function syncViewByInfo(gameInfo:GameInfo) {
@@ -678,7 +676,8 @@ class MainView extends Box {
 				case STRATEGY_RESULT:
 					final info:Dynamic = event.value;
 					final title = info.success ? '計策成功' : '計策失敗';
-					var msg = '武將:${info.people ? info.people.name : ""}\n';
+					var msg = title;
+					msg += '武將:${info.people ? info.people.name : ""}\n';
 					msg += '計策:${info.strategy ? info.strategy.name : ""}\n';
 					msg += '體力:${Main.getFixNumber(info.energyBefore, 0)} => ${Main.getFixNumber(info.energyAfter, 0)}\n';
 					Dialogs.messageBox(msg, title, MessageBoxType.TYPE_INFO, true, (b)->{

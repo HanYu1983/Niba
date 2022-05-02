@@ -122,7 +122,7 @@ function applyHireCost(ctx:Context, playerId:Int, gridId:Int, p1SelectId:Int, p2
 		return false;
 	}
 	// 功績
-	onPeopleExpAdd(ctx, people.id, getExpAdd(Math.min(1, negoCost.successRate)));
+	onPeopleExpAdd(ctx, people.id, getExpAdd(Math.min(1, negoCost.successRate), ENERGY_COST_ON_HIRE));
 	final hirePeople = getPeopleById(ctx, p2SelectId);
 	final player = ctx.players[playerId];
 	// 支付雇用費

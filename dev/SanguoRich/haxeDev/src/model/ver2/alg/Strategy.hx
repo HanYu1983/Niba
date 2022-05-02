@@ -56,7 +56,7 @@ function applyStrategyCost(ctx:Context, p1PeopleId:Int, strategyId:Int, targetPl
 		return false;
 	}
 	// 功績
-	onPeopleExpAdd(ctx, p1.id, getExpAdd(cost.successRate));
+	onPeopleExpAdd(ctx, p1.id, getExpAdd(cost.successRate, ENERGY_COST_ON_STRATEGY));
 	switch strategyId {
 		case 0:
 			// 暗渡陳艙
