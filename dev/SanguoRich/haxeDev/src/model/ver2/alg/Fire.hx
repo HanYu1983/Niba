@@ -21,6 +21,7 @@ function _getPreResultOfFire(ctx:Context, playerId:Int, peopleIds:Array<Int>):Pr
 }
 
 function _takeFire(ctx:Context, playerId:Int, peopleIds:Array<Int>) {
+	ctx.events = [];
 	final resultValue = {
 		success: true,
 		people: peopleIds.map(id -> getPeopleById(ctx, id)).map(p -> getPeopleInfo(ctx, p)),
@@ -33,7 +34,7 @@ function _takeFire(ctx:Context, playerId:Int, peopleIds:Array<Int>) {
 		people.position.gridId = ctx.players[playerId].position;
 	}
 	resultValue.maintainMoneyAfter = getMaintainPeople(ctx, playerId);
-	ctx.events = [Event.FIRE_RESULT(resultValue)];
+	ctx.events.push(Event.FIRE_RESULT(resultValue));
 	{
 		final player = ctx.players[ctx.currentPlayerId];
 		player.memory.hasCommand = true;

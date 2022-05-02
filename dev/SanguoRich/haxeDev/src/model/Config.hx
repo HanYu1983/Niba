@@ -131,5 +131,5 @@ function getExpLevel(exp:Float):Int {
 }
 
 function getExpAdd(p:Float):Float {
-	return (EXP_UP.e - EXP_UP.s) * p + EXP_UP.s;
+	return 100 + (EXP_UP.e - EXP_UP.s) * p + EXP_UP.s;
 }
