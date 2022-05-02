@@ -22,10 +22,12 @@ class PeopleListView extends TableView{
     }
     
     function updateList(people:Array<Dynamic>){
+        final gameInfo = Main.model.gameInfo();
+
         dataSource.clear();
         for (p in people) {
             var info:Dynamic = Main.cloneObject(p);
-            info.gridId = p.gridId == null ? "" : p.gridId;
+            
             for(i in 0...3){
                 var abi = "";
                 if(i < p.abilities.length){
@@ -34,8 +36,13 @@ class PeopleListView extends TableView{
                 Reflect.setField(info, 'ability${i+1}', abi);
             }
             
+            info.gridIdView = p.gridId == null ? "" : gameInfo.grids[p.gridId].name;
             info.typeView = PeopleGenerator.getInst().getPeopleTypeName(p.type);
             info.expView = Main.getFixNumber(p.exp, 0);
+            info.nameView = p.name;
+            if(p.sleep) info.nameView += '(休)';
+
+
             dataSource.add(info);
         }
     }

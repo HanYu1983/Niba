@@ -1,10 +1,8 @@
 <tableview width="100%" height="100%" contentWidth="100%" style="font-size:12;">
     <header width="100%">
         <column id="chk_sel" text="指派" width="40" style="text-align:center;font-size:12;" />
-        <!-- <column id="btn_assign" width="80" style="text-align:center;font-size:12;"/>
-        <column id="btn_fire" width="80" style="text-align:center;font-size:12;"/> -->
-        <column id="gridId" text="駐" width="40" sortable="true" style="text-align:center;font-size:12;"/>
-        <column id="name" text="名" width="100%" sortable="true" style="text-align:center;font-size:12;"/>
+        <column id="gridIdView" text="駐" width="70" sortable="true" style="text-align:center;font-size:12;"/>
+        <column id="nameView" text="名" width="100%" sortable="true" style="text-align:center;font-size:12;"/>
         <column id="energy" text="體" width="40" sortable="true" style="text-align:center;font-size:12;"/>
         <column id="command" text="統" width="40" sortable="true" style="text-align:center;font-size:12;"/>
         <column id="force" text="武" width="40" sortable="true" style="text-align:center;font-size:12;"/>
@@ -23,7 +21,7 @@
         <checkbox id="chk_sel" disabled="true" width="100%" />
     </item-renderer>
     <item-renderer verticalAlign="center">
-        <label id="name" textAlign="center" width="100%" />
+        <label id="nameView" textAlign="center" width="100%" />
     </item-renderer>
     <item-renderer verticalAlign="center">
         <label id="gridId" textAlign="center" width="100%" />

@@ -21,6 +21,7 @@ typedef People = {
     energy:Int,
     gridId:Int,
     exp:Float,
+    sleep:Bool,
 }
 
 class PeopleGenerator {
@@ -84,15 +85,15 @@ class PeopleGenerator {
             case PUTONG:'普通';
             case QILIN: '麒麟';
             case WENGUAN(0): '文官';
-            case WENGUAN(1): '尚書令';
-            case WENGUAN(2): '少府';
-            case WENGUAN(3): '廷尉';
-            case WENGUAN(4): '衛尉';
-            case WENGUAN(5): '太常';
-            case WENGUAN(6): '丞相';
-            case WENGUAN(7): '太尉';
-            case WENGUAN(8): '大司馬';
-            case WENGUAN(9): '太傅';
+            case WENGUAN(1): '尚書令*';
+            case WENGUAN(2): '少府*';
+            case WENGUAN(3): '廷尉*';
+            case WENGUAN(4): '衛尉*';
+            case WENGUAN(5): '太常*';
+            case WENGUAN(6): '丞相*';
+            case WENGUAN(7): '太尉*';
+            case WENGUAN(8): '大司馬*';
+            case WENGUAN(9): '太傅*';
             case WUJIANG(0): '武將';
             case WUJIANG(1): '都尉';
             case WUJIANG(2): '中郎將';
@@ -154,6 +155,7 @@ class PeopleGenerator {
             energy: Math.floor(Math.random() * 15) + 80,
             gridId: null,
             exp:0,
+            sleep:false
         };
     }
 }

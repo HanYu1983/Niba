@@ -25,7 +25,7 @@
             </dropdown>
         </frame>
         <frame text="指定格子" >
-            <dropdown id="drp_grid" text="格子">
+            <dropdown id="drp_grid" width="100" text="格子">
                 <data>
                     <item text="指定格子" />
                 </data>

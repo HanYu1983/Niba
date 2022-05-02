@@ -21,10 +21,9 @@ class FirePreviewView extends PopupView{
 
     override function showPopup(info:Dynamic, cb:()->Void = null) {
         super.showPopup(info, cb);
+        final gameInfo = Main.model.gameInfo();
 
         function setOnePeople(){
-            var gameInfo = Main.model.gameInfo();
-
             final list:Array<Dynamic> = p1List.dataSource.data;
             var fireList = list.filter((p:Dynamic)-> Reflect.field(p, 'chk_sel')).map((p)->p.id);
 
@@ -41,7 +40,7 @@ class FirePreviewView extends PopupView{
                 setOnePeople();
             }
         });
-
+        pro_maintainMoney.value = Main.getFixNumber(gameInfo.currentPlayer.maintainPeople);
     }
 
     @:bind(btn_cancel, MouseEvent.CLICK)

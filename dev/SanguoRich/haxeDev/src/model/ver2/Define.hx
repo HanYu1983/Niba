@@ -210,6 +210,7 @@ function getPeopleInfo(ctx:Context, people:People):model.PeopleGenerator.People 
 		energy: Std.int(people.energy),
 		gridId: people.position.gridId,
 		exp: people.exp,
+		sleep:false
 	}
 }
 
