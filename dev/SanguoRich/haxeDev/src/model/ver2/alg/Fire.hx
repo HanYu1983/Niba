@@ -7,9 +7,9 @@ import model.ver2.Define;
 
 using Lambda;
 
-function _getPreResultOfFire(ctx:Context, playerId:Int, p1PeopleId:Array<Int>):PreResultOnFire {
+function _getPreResultOfFire(ctx:Context, playerId:Int, peopleIds:Array<Int>):PreResultOnFire {
 	final totalPeopleCost = ctx.peoples.filter(p -> p.belongToPlayerId == playerId).fold((p, a) -> {
-		if (p.id == p1PeopleId[0]) {
+		if (peopleIds.has(p.id)) {
 			return a;
 		}
 		return a + getPeopleMaintainCost(ctx, p.id);
