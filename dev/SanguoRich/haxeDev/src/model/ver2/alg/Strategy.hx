@@ -127,4 +127,8 @@ function _takeStrategy(ctx:Context, p1PeopleId:Int, strategyId:Int, targetPlayer
 	strategyResultValue.people = getPeopleInfo(ctx, p1);
 	strategyResultValue.energyAfter = p1.energy;
 	ctx.events.push(Event.STRATEGY_RESULT(strategyResultValue));
+	{
+		final player = ctx.players[ctx.currentPlayerId];
+		player.memory.hasStrategy = true;
+	}
 }
