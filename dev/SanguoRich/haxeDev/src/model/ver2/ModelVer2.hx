@@ -164,7 +164,7 @@ class ModelVer2 extends DebugModel {
 	}
 
 	override function takeBuilding(playerId:Int, gridId:Int, peopleId:Int, current:Dynamic, to:Dynamic, cb:(gameInfo:GameInfo) -> Void) {
-		return _takeBuilding(context, playerId, gridId, peopleId, current, to);
+		_takeBuilding(context, playerId, gridId, peopleId, current, to);
 		cb(gameInfo());
 	}
 }
