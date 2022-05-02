@@ -99,10 +99,6 @@ function doTakeHire(ctx:Context, playerId:Int, gridId:Int, p1SelectId:Int, p2Sel
 	resultValue.moneyAfter = player.money;
 	resultValue.foodAfter = player.food;
 	ctx.events.push(Event.HIRE_RESULT(resultValue));
-	{
-		final player = ctx.players[ctx.currentPlayerId];
-		player.memory.hasCommand = true;
-	}
 }
 
 function applyHireCost(ctx:Context, playerId:Int, gridId:Int, p1SelectId:Int, p2SelectId:Int):Bool {
