@@ -13,10 +13,13 @@ using Lambda;
 function getHireCost(ctx:Context, playerId:Int, gridId:Int, p1SelectId:Int, p2SelectId:Int) {
 	return switch 0 {
 		case 0:
+			final player = ctx.players[gridId];
 			final grid = ctx.grids[gridId];
 			final fightPeople = [p1SelectId, p2SelectId].map(p -> getPeopleById(ctx, p));
 			return switch fightPeople {
 				case [p1, p2]:
+					final hireCost = p2.cost * PEOPLE_HIRE_COST_FACTOR;
+					final hireMoneyOffset = player.money - hireCost;
 					final useEnergy = p1.energy / (100 / ENERGY_COST_ON_HIRE);
 					final base = getBase(useEnergy, ENERGY_COST_ON_HIRE, -.1);
 					final charmExt = ctx.attachments.filter(a -> a.belongToGridId == gridId).fold((p, a) -> {
@@ -30,17 +33,19 @@ function getHireCost(ctx:Context, playerId:Int, gridId:Int, p1SelectId:Int, p2Se
 					final charmFactor = (getPeopleCharm(ctx, p1.id) + charmExt) / getPeopleCharm(ctx, p2.id);
 					// 人脈加成
 					final abiFactor = p1.abilities.has(10) ? 1.5 : 1;
-					final rate = base * charmFactor * abiFactor;
+					// 越不夠錢減成
+					final hireCostFactor = hireMoneyOffset >= 0 ? 1.0 : -1.0 * hireMoneyOffset / hireCost;
+					final rate = base * charmFactor * abiFactor * hireCostFactor;
 					{
 						playerCost: {
 							id: playerId,
-							money: p2.cost * PEOPLE_HIRE_COST_FACTOR
+							money: hireCost
 						},
 						peopleCost: {
 							id: p1.id,
 							energy: useEnergy,
 						},
-						successRate: rate
+						successRate: hireCostFactor
 					};
 				case _:
 					throw new haxe.Exception("fightPeople not right");
@@ -99,10 +104,6 @@ function doTakeHire(ctx:Context, playerId:Int, gridId:Int, p1SelectId:Int, p2Sel
 	resultValue.moneyAfter = player.money;
 	resultValue.foodAfter = player.food;
 	ctx.events.push(Event.HIRE_RESULT(resultValue));
-	{
-		final player = ctx.players[ctx.currentPlayerId];
-		player.memory.hasCommand = true;
-	}
 }
 
 function applyHireCost(ctx:Context, playerId:Int, gridId:Int, p1SelectId:Int, p2SelectId:Int):Bool {
@@ -121,8 +122,6 @@ function applyHireCost(ctx:Context, playerId:Int, gridId:Int, p1SelectId:Int, p2
 	if (success == false) {
 		return false;
 	}
-	// 功績
-	onPeopleExpAdd(ctx, people.id, getExpAdd(Math.min(1, negoCost.successRate), ENERGY_COST_ON_HIRE));
 	final hirePeople = getPeopleById(ctx, p2SelectId);
 	final player = ctx.players[playerId];
 	// 支付雇用費
@@ -136,5 +135,7 @@ function applyHireCost(ctx:Context, playerId:Int, gridId:Int, p1SelectId:Int, p2
 	hirePeople.position.player = true;
 	// 從格子上移除人
 	hirePeople.position.gridId = null;
+	// 功績
+	onPeopleExpAdd(ctx, people.id, getExpAdd(Math.min(1, negoCost.successRate), ENERGY_COST_ON_HIRE));
 	return true;
 }
