@@ -22,6 +22,7 @@ function _checkValidTransfer(ctx:Context, playerId:Int, gridId:Int, playerInfo:m
 }
 
 function _takeTransfer(ctx:Context, playerId:Int, gridId:Int, playerInfo:model.IModel.PlayerInfo, gridInfo:model.GridGenerator.Grid) {
+	ctx.events = [];
 	final player = ctx.players[playerId];
 	final resultValue = {
 		success: false,
@@ -40,7 +41,7 @@ function _takeTransfer(ctx:Context, playerId:Int, gridId:Int, playerInfo:model.I
 	resultValue.armyAfter = player.army;
 	resultValue.moneyAfter = player.money;
 	resultValue.foodAfter = player.food;
-	ctx.events = [Event.RESOURCE_RESULT(resultValue)];
+	ctx.events.push(Event.RESOURCE_RESULT(resultValue));
 	{
 		final player = ctx.players[ctx.currentPlayerId];
 		player.memory.hasCommand = true;

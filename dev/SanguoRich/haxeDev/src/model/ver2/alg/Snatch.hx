@@ -122,6 +122,7 @@ function applySnatchCost(ctx:Context, playerId:Int, gridId:Int, p1PeopleId:Int, 
 }
 
 function _takeSnatchOn(ctx:Context, playerId:Int, gridId:Int, p1PeopleId:Int, p2PeopleId:Int, isOccupation:Bool) {
+	ctx.events = [];
 	final people1 = getPeopleById(ctx, p1PeopleId);
 	final people2 = getPeopleById(ctx, p2PeopleId);
 	final player = ctx.players[playerId];
@@ -145,11 +146,11 @@ function _takeSnatchOn(ctx:Context, playerId:Int, gridId:Int, p1PeopleId:Int, p2
 	resultValue.armyAfter = player.army;
 	resultValue.moneyAfter = player.money;
 	resultValue.foodAfter = player.food;
-	ctx.events = if (isOccupation) {
-		[Event.WAR_RESULT(resultValue)];
+	ctx.events.push(if (isOccupation) {
+		Event.WAR_RESULT(resultValue);
 	} else {
-		[Event.SNATCH_RESULT(resultValue)];
-	}
+		Event.SNATCH_RESULT(resultValue);
+	});
 	{
 		final player = ctx.players[ctx.currentPlayerId];
 		player.memory.hasCommand = true;

@@ -252,6 +252,7 @@ function onPeopleExpAdd(ctx:Context, peopleId:Int, exp:Float) {
 		eventValue.peopleAfter = getPeopleInfo(ctx, people);
 		ctx.events.push(Event.PEOPLE_LEVEL_UP_EVENT(eventValue));
 	}
+	trace("Alg", "onPeopleExpAdd", ctx.events);
 }
 
 function onPlayerGoToPosition(ctx:Context, playerId:Int, toGridId:Int) {
