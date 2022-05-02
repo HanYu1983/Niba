@@ -339,6 +339,80 @@ function getGameInfo(ctx:Context, root:Bool):GameInfo {
 	model.ver2.alg.Alg.doPeopleMaintain(nextCtx);
 	model.ver2.alg.Alg.doGridGrow(nextCtx);
 
+	final events:Array<model.IModel.EventInfo> = root ? ctx.events.map(e -> {
+		// 顯式使用類型(EventInfo), 這裡不能依靠類型推理, 不然會編譯錯誤
+		final eventInfo:model.IModel.EventInfo = switch e {
+			case WORLD_EVENT(value):
+				{
+					id: EventInfoID.WORLD_EVENT,
+					value: value,
+				}
+			case WALK_STOP(value):
+				{
+					id: EventInfoID.WALK_STOP,
+					value: value
+				}
+			case NEGOTIATE_RESULT(value):
+				{
+					id: EventInfoID.NEGOTIATE_RESULT,
+					value: value
+				}
+			case EXPLORE_RESULT(value):
+				{
+					id: EventInfoID.EXPLORE_RESULT,
+					value: value
+				}
+			case HIRE_RESULT(value):
+				{
+					id: EventInfoID.HIRE_RESULT,
+					value: value
+				}
+			case WAR_RESULT(value):
+				{
+					id: EventInfoID.WAR_RESULT,
+					value: value
+				}
+			case RESOURCE_RESULT(value):
+				{
+					id: EventInfoID.RESOURCE_RESULT,
+					value: value
+				}
+			case FIRE_RESULT(value):
+				{
+					id: EventInfoID.FIRE_RESULT,
+					value: value
+				}
+			case SNATCH_RESULT(value):
+				{
+					id: EventInfoID.SNATCH_RESULT,
+					value: value
+				}
+			case STRATEGY_RESULT(value):
+				{
+					id: EventInfoID.STRATEGY_RESULT,
+					value: value
+				}
+			case BUILDING_RESULT(value):
+				{
+					id: EventInfoID.BUILDING_RESULT,
+					value: value
+				}
+			case PAY_FOR_OVER_ENEMY_GRID(value):
+				{
+					id: EventInfoID.PAY_FOR_OVER_ENEMY_GRID,
+					value: value
+				}
+			case PEOPLE_LEVEL_UP_EVENT(value):
+				{
+					id: EventInfoID.PEOPLE_LEVEL_UP_EVENT,
+					value: value
+				}
+		}
+		return eventInfo;
+	}) : [];
+	// 先進後出
+	events.reverse();
+
 	return {
 		players: ctx.players.map(p -> getPlayerInfo(ctx, p)).map(p -> {
 			// 計算下次結算後的差額
@@ -368,77 +442,7 @@ function getGameInfo(ctx:Context, root:Bool):GameInfo {
 		isPlayerTurn: true,
 		currentPlayer: getPlayerInfo(ctx, ctx.players[ctx.currentPlayerId]),
 		isPlaying: true,
-		events: root ? ctx.events.map(e -> {
-			// 顯式使用類型(EventInfo), 這裡不能依靠類型推理, 不然會編譯錯誤
-			final eventInfo:model.IModel.EventInfo = switch e {
-				case WORLD_EVENT(value):
-					{
-						id: EventInfoID.WORLD_EVENT,
-						value: value,
-					}
-				case WALK_STOP(value):
-					{
-						id: EventInfoID.WALK_STOP,
-						value: value
-					}
-				case NEGOTIATE_RESULT(value):
-					{
-						id: EventInfoID.NEGOTIATE_RESULT,
-						value: value
-					}
-				case EXPLORE_RESULT(value):
-					{
-						id: EventInfoID.EXPLORE_RESULT,
-						value: value
-					}
-				case HIRE_RESULT(value):
-					{
-						id: EventInfoID.HIRE_RESULT,
-						value: value
-					}
-				case WAR_RESULT(value):
-					{
-						id: EventInfoID.WAR_RESULT,
-						value: value
-					}
-				case RESOURCE_RESULT(value):
-					{
-						id: EventInfoID.RESOURCE_RESULT,
-						value: value
-					}
-				case FIRE_RESULT(value):
-					{
-						id: EventInfoID.FIRE_RESULT,
-						value: value
-					}
-				case SNATCH_RESULT(value):
-					{
-						id: EventInfoID.SNATCH_RESULT,
-						value: value
-					}
-				case STRATEGY_RESULT(value):
-					{
-						id: EventInfoID.STRATEGY_RESULT,
-						value: value
-					}
-				case BUILDING_RESULT(value):
-					{
-						id: EventInfoID.BUILDING_RESULT,
-						value: value
-					}
-				case PAY_FOR_OVER_ENEMY_GRID(value):
-					{
-						id: EventInfoID.PAY_FOR_OVER_ENEMY_GRID,
-						value: value
-					}
-				case PEOPLE_LEVEL_UP_EVENT(value):
-					{
-						id: EventInfoID.PEOPLE_LEVEL_UP_EVENT,
-						value: value
-					}
-			}
-			return eventInfo;
-		}) : [],
+		events: events,
 		actions: root ? ctx.actions.map(a -> {
 			final actionInfo:model.IModel.ActionInfo = switch a {
 				case MOVE(value, gameInfo):
