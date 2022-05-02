@@ -43,6 +43,8 @@ class DebugModel implements IModel {
 					ActionInfoID.STRATEGY,
 					ActionInfoID.BUILD,
 					ActionInfoID.FIRE,
+					ActionInfoID.CAMP,
+					ActionInfoID.PRACTICE,
 					ActionInfoID.END,
 				]
 			}
@@ -377,6 +379,29 @@ class DebugModel implements IModel {
 					success: true,
 					people: PeopleGenerator.getInst().generate(),
 					building: BUILDING.FARM(2),
+				}
+			}
+		];
+		cb(info);
+	}
+
+	
+
+	public function getResultOfCost(p1Player:PlayerInfo, p1People:People, costType:Int):{costFood:Float, gainExp:Float, gainEnergy:Float} {
+		return {
+			costFood: 1,
+			gainEnergy: 3,
+			gainExp: 5,
+		}
+	}
+
+	public function takeCostForBonus(playerId:Int, peopleId:Int, costType:Int, cb:(gameInfo:GameInfo) -> Void) {
+		info.events = [
+			{
+				id:COST_FOR_BONUS_RESULT,
+				value:{
+					costType:costType,
+					people:PeopleGenerator.getInst().generate()
 				}
 			}
 		];

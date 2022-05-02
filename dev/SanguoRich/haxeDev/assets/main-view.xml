@@ -59,6 +59,8 @@
                             <button text="搶奪" width="100%" id="btn_snatch" />
                             <button text="攻城" width="100%" id="btn_occupation" />
 
+                            <button text="札營" width="100%" id="btn_camp" />
+                            <button text="練兵" width="100%" id="btn_practice" />
                             <button text="探索" width="100%" id="btn_explore" />
                             <button text="聘用" width="100%" id="btn_hire" />
 

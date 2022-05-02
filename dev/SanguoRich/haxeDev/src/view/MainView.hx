@@ -1,5 +1,6 @@
 package view;
 
+import view.popup.CostForBonusView;
 import model.GridGenerator.BUILDING;
 import haxe.ui.containers.Box;
 import view.popup.BuildPreview;
@@ -24,7 +25,6 @@ import view.popup.HirePreviewView;
 import view.popup.WarPreviewView;
 import view.popup.NegoPreviewView;
 import view.popup.SnatchPreviewView;
-import haxe.ui.containers.Absolute;
 import model.GridGenerator.Grid;
 import model.IModel.ActionInfo;
 import model.IModel.ActionInfoID;
@@ -49,6 +49,7 @@ class MainView extends Box {
 	var snatchPreviewView:SnatchPreviewView;
 	var negoPreviewView:NegoPreviewView;
 	var hirePreviewView:HirePreviewView;
+	var costForBonusView:CostForBonusView;
 	var explorePreviewView:ExplorePreviewView;
 	var exploreSuccessView:ExploreSuccessView;
 	var resourcePreviewView:ResourcePreviewView;
@@ -140,6 +141,10 @@ class MainView extends Box {
 		strategyPreviewView.hide();
 		box_popup.addComponent(strategyPreviewView);
 
+		costForBonusView = new CostForBonusView();
+		costForBonusView.hide();
+		box_popup.addComponent(costForBonusView);
+
 		peopleListView = new PeopleListView();
 		box_playerPeopleList.addComponent(peopleListView);
 
@@ -224,6 +229,16 @@ class MainView extends Box {
 	@:bind(btn_go, MouseEvent.CLICK)
 	function onBtnGoClick(e:MouseEvent) {
 		Main.model.playerDice(syncView);
+	}
+
+	@:bind(btn_camp, MouseEvent.CLICK)
+	function onBtnCampClick(e){
+		costForBonusView.showPopup({type:0});
+	}
+
+	@:bind(btn_practice, MouseEvent.CLICK)
+	function onBtnPracticeClick(e){
+		costForBonusView.showPopup({type:1});
 	}
 
 	@:bind(btn_firePeople, MouseEvent.CLICK)
@@ -503,6 +518,17 @@ class MainView extends Box {
 			var event = events.shift();
 			switch (event.id) {
 				case WALK_STOP:
+				case COST_FOR_BONUS_RESULT:
+					final info:Dynamic = event.value;
+					final title = switch( info.costType ){
+						case 0: '札營完畢！ 武將們回復體力';
+						case 1: '練兵完畢! 武將們提高功績';
+						case _: '';
+					}
+					var msg = title;
+					Dialogs.messageBox(msg, title, MessageBoxType.TYPE_INFO, true, (b)->{
+						doOneEvent(gameInfo);
+					});
 
 				case HIRE_RESULT:
 					final info:Dynamic = event.value;
@@ -648,6 +674,8 @@ class MainView extends Box {
 		btn_snatch.hide();
 		btn_occupation.hide();
 		btn_hire.hide();
+		btn_camp.hide();
+		btn_practice.hide();
 		btn_explore.hide();
 		btn_earnMoney.hide();
 		btn_buyFood.hide();
@@ -705,6 +733,10 @@ class MainView extends Box {
 					btn_build.show();
 				case END: 
 					btn_end.show();
+				case CAMP:
+					btn_camp.show();
+				case PRACTICE:
+					btn_practice.show();
 			};
 		}
 
@@ -800,5 +832,10 @@ class MainView extends Box {
 	public function onBuildingPreviewConfirmClick(peopleId:Int, current:BUILDING, to:BUILDING) {
 		final gameInfo = Main.model.gameInfo();
 		Main.model.takeBuilding(gameInfo.currentPlayer.id, gameInfo.currentPlayer.atGridId, peopleId, current, to, syncViewByInfo);
+	}
+
+	public function onCostForBonusConfirmClick(pId:Int, costType:Int) {
+		final gameInfo = Main.model.gameInfo();
+		Main.model.takeCostForBonus(gameInfo.currentPlayer.id, pId, costType, syncViewByInfo);
 	}
 }

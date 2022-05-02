@@ -31,6 +31,8 @@ enum ActionInfoID {
 	SNATCH;
 	OCCUPATION;
 
+	CAMP;
+	PRACTICE;
 	HIRE;
 	EXPLORE;
 
@@ -65,6 +67,7 @@ enum EventInfoID {
 	RESOURCE_RESULT;
 	STRATEGY_RESULT;
 	BUILDING_RESULT;
+	COST_FOR_BONUS_RESULT;
 
 	// 這些事件有可能會連著其他的事件
 	WORLD_EVENT;
@@ -270,6 +273,9 @@ interface IModel {
 		targetGridId:Int):{energyBefore:Int, energyAfter:Int, rate:Float};
 	function takeStrategy(p1PeopleId:Int, strategyId:Int, targetPlayerId:Int, targetPeopleId:Int, targetGridId:Int, cb:(gameInfo:GameInfo) -> Void):Void;
 	function takeBuilding(p1PeopleId:Int, gridId:Int, peopleId:Int, current:Dynamic, to:Dynamic, cb:(gameInfo:GameInfo) -> Void):Void;
+
+	function getResultOfCost(p1Player:PlayerInfo, p1People:People, costType:Int):{costFood:Float, gainExp:Float, gainEnergy:Float};
+	function takeCostForBonus(playerId:Int, peopleId:Int, costType:Int, cb:(gameInfo:GameInfo)->Void):Void;
 }
 
 final StrategyList:Array<StrategyCatelog> = [
@@ -440,4 +446,5 @@ final BuildingList:Array<BuildingCatelog> = [
 		type:WALL(3)
 	}
 ];
+
 

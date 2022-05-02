@@ -1,0 +1,21 @@
+<vbox width="70%" padding="10" verticalAlign="center" horizontalAlign="center" style="background-color: white;border:1px solid grey;">
+    <hbox horizontalAlign="center">
+        <label text=""/>
+    </hbox>
+    <hbox id="box_peopleList" width="100%" height="150"></hbox>
+    <hbox horizontalAlign="center">
+        <vbox>
+            <hbox horizontalAlign="center">
+                <button-bar id="btnbr_ops" allowUnselection="true">
+                    <button id="btn_camp" text="札營" />
+                    <button id="btn_practice" text="練兵" />
+                </button-bar>
+            </hbox>
+            <label id="lbl_result" textAlign="center" text="" style="font-size:24"/>
+        </vbox>
+    </hbox>
+    <hbox horizontalAlign="center">
+        <button text="取消" id="btn_cancel" />
+        <button text="確定" id="btn_confirm" />
+    </hbox>
+</vbox>
