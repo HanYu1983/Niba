@@ -66,6 +66,10 @@ function applyStrategyCost(ctx:Context, p1PeopleId:Int, strategyId:Int, targetPl
 			final player = ctx.players[p1.belongToPlayerId];
 			player.position = targetGridId;
 			onPlayerGoToPosition(ctx, player.id, player.position);
+			{
+				final player = ctx.players[player.id];
+				player.memory.hasDice = true;
+			}
 		case 1:
 			// 步步為營
 			final p2 = getPeopleById(ctx, targetPeopleId);
