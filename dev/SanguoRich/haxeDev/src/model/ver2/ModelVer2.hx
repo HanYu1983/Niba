@@ -35,7 +35,6 @@ class ModelVer2 extends DebugModel {
 
 	override function gameInfo():GameInfo {
 		final info = getGameInfo(context, true);
-		js.Browser.console.log(info);
 		return info;
 	}
 
