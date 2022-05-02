@@ -4,11 +4,13 @@ import model.PeopleGenerator;
 import model.GridGenerator;
 import model.IModel;
 import model.Config;
-import cloner.Cloner;
+import haxe.Serializer;
+import haxe.Unserializer;
 
+// import cloner.Cloner;
 using Lambda;
 
-private var _cloner = new Cloner();
+// private var _cloner = new Cloner();
 
 typedef Grid = {
 	id:Int,
@@ -335,7 +337,7 @@ function getGameInfo(ctx:Context, root:Bool):GameInfo {
 	}
 
 	// 不管週期, 直接計算下一次的結果
-	final nextCtx = _cloner.clone(ctx);
+	final nextCtx = deepCopy(ctx); // _cloner.clone(ctx);
 	model.ver2.alg.Alg.doPeopleMaintain(nextCtx);
 	model.ver2.alg.Alg.doGridGrow(nextCtx);
 
@@ -724,4 +726,23 @@ function getPlayerCommand(ctx:Context, playerId:Int):Array<ActionInfoID> {
 		}
 	}
 	return ret;
+}
+
+function deepCopy<T>(v:T):T {
+	final serializer = new Serializer();
+	serializer.serialize(v);
+	final memonto = serializer.toString();
+	final unserializer = new Unserializer(memonto);
+	return unserializer.unserialize();
+}
+
+function getMemontoByContext(v:Context):String {
+	final serializer = new Serializer();
+	serializer.serialize(v);
+	return serializer.toString();
+}
+
+function getConetxtByMemonto(memonto:String):Context {
+	final unserializer = new Unserializer(memonto);
+	return unserializer.unserialize();
 }
