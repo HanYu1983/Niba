@@ -10,7 +10,6 @@ import model.ver2.alg.War;
 using Lambda;
 
 function doPeopleMaintain(ctx:Context) {
-	trace("Alg", "doPeopleMaintain");
 	// 玩家
 	for (player in ctx.players) {
 		// 支付武將的薪水
@@ -31,7 +30,6 @@ function doPeopleMaintain(ctx:Context) {
 }
 
 function doGridGrow(ctx:Context) {
-	trace("Alg", "doGridGrow");
 	for (grid in ctx.grids) {
 		final peopleInGrid = ctx.peoples.filter(p -> p.position.gridId == grid.id);
 		// 沒武將的格子不成長
@@ -252,7 +250,6 @@ function onPeopleExpAdd(ctx:Context, peopleId:Int, exp:Float) {
 		eventValue.peopleAfter = getPeopleInfo(ctx, people);
 		ctx.events.push(Event.PEOPLE_LEVEL_UP_EVENT(eventValue));
 	}
-	trace("Alg", "onPeopleExpAdd", ctx.events);
 }
 
 function onPlayerGoToPosition(ctx:Context, playerId:Int, toGridId:Int) {
@@ -261,6 +258,7 @@ function onPlayerGoToPosition(ctx:Context, playerId:Int, toGridId:Int) {
 	final toGridBelongPlayerId = getGridBelongPlayerId(ctx, toGrid.id);
 	final isStopAtEnemyGrid = toGridBelongPlayerId != null && toGridBelongPlayerId != player.id;
 	if (isStopAtEnemyGrid) {
+		doPayTaxToGrid(ctx, player.id, toGrid.id);
 		final eventValue = {
 			armyBefore: player.army,
 			armyAfter: player.army,
@@ -269,7 +267,6 @@ function onPlayerGoToPosition(ctx:Context, playerId:Int, toGridId:Int) {
 			foodBefore: player.food,
 			foodAfter: player.food,
 		}
-		doPayTaxToGrid(ctx, player.id, toGrid.id);
 		eventValue.moneyAfter = player.money;
 		ctx.events.push({
 			Event.PAY_FOR_OVER_ENEMY_GRID(eventValue);
