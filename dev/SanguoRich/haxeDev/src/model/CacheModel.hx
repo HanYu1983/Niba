@@ -26,6 +26,7 @@ class CacheModel extends ProxyModel {
 			isDirty = false;
 			return cache;
 		}
+		js.Browser.console.log("CacheModel", "use cache", cache);
 		return cache;
 	}
 
