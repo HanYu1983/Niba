@@ -21,8 +21,8 @@ import view.popup.ExploreSuccessView;
 import view.popup.GrowView;
 import view.popup.ExplorePreviewView;
 import view.popup.HirePreviewView;
-import view.popup.NegoPreviewView;
 import view.popup.WarPreviewView;
+import view.popup.NegoPreviewView;
 import view.popup.SnatchPreviewView;
 import haxe.ui.containers.Absolute;
 import model.GridGenerator.Grid;
@@ -330,7 +330,14 @@ class MainView extends Box {
 	function onBtnNegotiateClick(e:MouseEvent) {
 		var player = Main.model.gameInfo().currentPlayer;
 		var previewInfo = Main.model.getTakeNegoPreview(player.id, player.atGridId);
-		negoPreviewView.showPopup(previewInfo);
+		switch (previewInfo){
+			case {p1ValidPeople: _.length < 1 => true}:
+				Dialogs.messageBox('沒有武將可以執行', '主公啊…', MessageBoxType.TYPE_INFO);
+			case {p2ValidPeople: _.length < 1 => true}:
+				Dialogs.messageBox('對方沒有武將可以交涉', '主公啊…', MessageBoxType.TYPE_INFO);
+			case _:
+				negoPreviewView.showPopup(previewInfo);
+		}
 	}
 
 	function takeWar() {
@@ -455,6 +462,11 @@ class MainView extends Box {
 
 	@:bind(btn_showStrategy, MouseEvent.CLICK)
 	function onBtnShowStrategyClick(e:MouseEvent) {
+		final gameInfo = Main.model.gameInfo();
+		if(gameInfo.currentPlayer.people.length == 0){
+			Dialogs.messageBox('沒有武將可以使用', '', MessageBoxType.TYPE_INFO);
+			return;
+		}
 		strategyPreviewView.showPopup(null);
 	}
 
@@ -491,10 +503,12 @@ class MainView extends Box {
 
 		TweenX.serial(tweens);
 
+		trace('計策一回合只能用一次好像還沒有實作？');
+		trace('用了暗度陳倉之後，指令要變成在那個格子可以使用的指令。目前用了之後，指令還是沒用之前的指令');
+		trace( '解顧的API在PREVIEW時的還沒有改成多人的');
+		trace('目前用暗度走到別人的格子時，事件順序是先給PAY_FOR_OVER_ENEMY_GRID，然后才是計策成功。這個有辦法按照順序嗎？');
+
 		trace(' 如果升級了記得要傳升級事件EventInfoID.PEOPLE_LEVEL_UP_EVENT');
-		trace(' 遊戲流程越來越多了，所以單靠前端已經比較難判斷要顯示哪些UI了，所以PlayerInfo多了commands來決定目前可以用什麼指令');
-		trace(' 移動到敵人的格子上時，會扣過路費。給 PAY_FOR_OVER_ENEMY_GRID 事件');
-		trace( '解顧的API我改成允許多ID傳入，你那邊我只改成可以運作而已，所以你要補一下');
 	}
 
 	function syncViewByInfo(gameInfo:GameInfo) {
