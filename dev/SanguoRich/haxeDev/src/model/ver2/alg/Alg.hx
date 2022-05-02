@@ -196,11 +196,7 @@ function doPlayerEnd(ctx:Context) {
 	// 下一個玩家
 	ctx.currentPlayerId = (ctx.currentPlayerId + 1) % ctx.players.length;
 	// clear memory
-	for (player in ctx.players) {
-		player.memory.hasDice = false;
-		player.memory.hasStrategy = false;
-		player.memory.hasCommand = false;
-	}
+	clearMemory(ctx);
 }
 
 function doPlayerDice(ctx:Context) {

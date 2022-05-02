@@ -48,6 +48,7 @@ typedef People = {
 	energy:Float,
 	defaultType:PeopleType,
 	exp:Float,
+	lastWorkTurn:Int
 }
 
 typedef Player = {
@@ -59,7 +60,7 @@ typedef Player = {
 	strategy:Float,
 	position:Int,
 	memory:{
-		hasDice:Bool, hasStrategy:Bool, hasCommand:Bool
+		hasDice:Bool, hasStrategy:Bool, hasCommand:Bool, hasBuild:Bool
 	},
 }
 
@@ -212,7 +213,7 @@ function getPeopleInfo(ctx:Context, people:People):model.PeopleGenerator.People 
 		energy: Std.int(people.energy),
 		gridId: people.position.gridId,
 		exp: people.exp,
-		sleep:false
+		sleep: false
 	}
 }
 
@@ -509,7 +510,8 @@ function addPeopleInfo(ctx:Context, belongToPlayerId:Null<Int>, gridId:Null<Int>
 		command: p.command,
 		energy: p.energy,
 		defaultType: p.type,
-		exp: p.exp
+		exp: p.exp,
+		lastWorkTurn: 0
 	});
 }
 
@@ -525,7 +527,8 @@ function addPlayerInfo(ctx:Context, player:model.IModel.PlayerInfo):Void {
 		memory: {
 			hasDice: false,
 			hasStrategy: false,
-			hasCommand: false
+			hasCommand: false,
+			hasBuild: false,
 		}
 	});
 	for (p in player.people) {
@@ -665,9 +668,9 @@ function getPlayerCommand(ctx:Context, playerId:Int):Array<ActionInfoID> {
 		}
 		ret.push(ActionInfoID.FIRE);
 	} else {
-		if (player.memory.hasCommand == false) {
-			if (gridInfo.belongPlayerId == null) {
-				// 中立的
+		if (gridInfo.belongPlayerId == null) {
+			// 中立的
+			if (player.memory.hasCommand == false) {
 				switch gridInfo.buildtype {
 					case EMPTY:
 						ret.push(ActionInfoID.EXPLORE);
@@ -710,21 +713,85 @@ function getPlayerCommand(ctx:Context, playerId:Int):Array<ActionInfoID> {
 							}
 					}
 				}
-				ret.push(ActionInfoID.END);
-			} else if (gridInfo.belongPlayerId != playerId) {
-				// 敵人的
+			}
+			ret.push(ActionInfoID.END);
+		} else if (gridInfo.belongPlayerId != playerId) {
+			// 敵人的
+			if (player.memory.hasCommand == false) {
 				ret.push(ActionInfoID.SNATCH);
 				ret.push(ActionInfoID.OCCUPATION);
-				ret.push(ActionInfoID.END);
-			} else {
-				// 自己的
-				ret.push(ActionInfoID.TRANSFER);
-				ret.push(ActionInfoID.BUILD);
-				ret.push(ActionInfoID.END);
 			}
+			ret.push(ActionInfoID.END);
 		} else {
+			// 自己的
+			ret.push(ActionInfoID.TRANSFER);
+			if (player.memory.hasBuild == false) {
+				ret.push(ActionInfoID.BUILD);
+			}
 			ret.push(ActionInfoID.END);
 		}
+
+		// ========================
+		// if (player.memory.hasCommand == false) {
+		// 	if (gridInfo.belongPlayerId == null) {
+		// 		// 中立的
+		// 		switch gridInfo.buildtype {
+		// 			case EMPTY:
+		// 				ret.push(ActionInfoID.EXPLORE);
+		// 			case _:
+		// 		}
+		// 		if (gridInfo.people.length > 0) {
+		// 			// 有人的
+		// 			switch gridInfo.buildtype {
+		// 				case EMPTY:
+		// 					ret.push(ActionInfoID.HIRE);
+		// 				case _:
+		// 					if (gridInfo.favor[playerId] >= 1) {
+		// 						// 好感的
+		// 						switch gridInfo.buildtype {
+		// 							case MARKET:
+		// 								ret.push(ActionInfoID.EARN_MONEY);
+		// 							case FARM:
+		// 								ret.push(ActionInfoID.BUY_FOOD);
+		// 								ret.push(ActionInfoID.SELL_FOOD);
+		// 							case VILLAGE:
+		// 								ret.push(ActionInfoID.BUY_ARMY);
+		// 								ret.push(ActionInfoID.SELL_ARMY);
+		// 							case CITY:
+		// 								ret.push(ActionInfoID.EARN_MONEY);
+		// 								ret.push(ActionInfoID.BUY_FOOD);
+		// 								ret.push(ActionInfoID.SELL_FOOD);
+		// 								ret.push(ActionInfoID.BUY_ARMY);
+		// 								ret.push(ActionInfoID.SELL_ARMY);
+		// 							case _:
+		// 						}
+		// 					} else {
+		// 						// 討厭的
+		// 						switch gridInfo.buildtype {
+		// 							case MARKET | FARM | VILLAGE | CITY:
+		// 								ret.push(ActionInfoID.NEGOTIATE);
+		// 								ret.push(ActionInfoID.SNATCH);
+		// 								ret.push(ActionInfoID.OCCUPATION);
+		// 							case _:
+		// 						}
+		// 					}
+		// 			}
+		// 		}
+		// 		ret.push(ActionInfoID.END);
+		// 	} else if (gridInfo.belongPlayerId != playerId) {
+		// 		// 敵人的
+		// 		ret.push(ActionInfoID.SNATCH);
+		// 		ret.push(ActionInfoID.OCCUPATION);
+		// 		ret.push(ActionInfoID.END);
+		// 	} else {
+		// 		// 自己的
+		// 		ret.push(ActionInfoID.TRANSFER);
+		// 		ret.push(ActionInfoID.BUILD);
+		// 		ret.push(ActionInfoID.END);
+		// 	}
+		// } else {
+		// 	ret.push(ActionInfoID.END);
+		// }
 	}
 	return ret;
 }
@@ -746,4 +813,13 @@ function getMemontoByContext(v:Context):String {
 function getConetxtByMemonto(memonto:String):Context {
 	final unserializer = new Unserializer(memonto);
 	return unserializer.unserialize();
+}
+
+function clearMemory(ctx:Context) {
+	for (player in ctx.players) {
+		player.memory.hasDice = false;
+		player.memory.hasStrategy = false;
+		player.memory.hasCommand = false;
+		player.memory.hasBuild = false;
+	}
 }

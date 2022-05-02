@@ -18,8 +18,6 @@ private function applyBuildingCost(ctx:Context, playerId:Int, gridId:Int, people
 	final people = getPeopleById(ctx, peopleId);
 	if (success) {
 		player.money = Math.max(0, player.money - costMoney);
-		// 功績
-		onPeopleExpAdd(ctx, peopleId, getExpAdd(0.3, ENERGY_COST_ON_BUILDING));
 		var checked = false;
 		ctx.attachments = ctx.attachments.map(a -> {
 			if (a.belongToGridId != gridId) {
@@ -34,6 +32,8 @@ private function applyBuildingCost(ctx:Context, playerId:Int, gridId:Int, people
 		if (checked == false) {
 			throw new Exception("current傳錯了, 沒有這個building");
 		}
+		// 功績
+		onPeopleExpAdd(ctx, peopleId, getExpAdd(0.3, ENERGY_COST_ON_BUILDING));
 	}
 	return success;
 }
@@ -52,6 +52,6 @@ function _takeBuilding(ctx:Context, playerId:Int, gridId:Int, peopleId:Int, curr
 	}
 	{
 		final player = ctx.players[ctx.currentPlayerId];
-		player.memory.hasCommand = true;
+		player.memory.hasBuild = true;
 	}
 }

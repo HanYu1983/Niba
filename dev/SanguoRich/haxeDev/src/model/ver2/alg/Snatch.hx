@@ -154,5 +154,7 @@ function _takeSnatchOn(ctx:Context, playerId:Int, gridId:Int, p1PeopleId:Int, p2
 	{
 		final player = ctx.players[ctx.currentPlayerId];
 		player.memory.hasCommand = true;
+		// 剛打完不能擴建
+		player.memory.hasBuild = true;
 	}
 }
