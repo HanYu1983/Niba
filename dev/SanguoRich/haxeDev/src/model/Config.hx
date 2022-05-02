@@ -88,6 +88,7 @@ final ENERGY_COST_ON_HIRE = 10;
 final ENERGY_COST_ON_NEGO = 20;
 final ENERGY_COST_ON_RESOURCE = 15;
 final ENERGY_COST_ON_EXPLORE = 20;
+final ENERGY_COST_ON_BUILDING = 20;
 final ENERGY_COST_ON_SNATCH = 10;
 final ENERGY_COST_ON_WAR = 35;
 final SNATCH_ARMY_AT_LEAST = 30;
@@ -130,6 +131,6 @@ function getExpLevel(exp:Float):Int {
 	return EXP_LEVEL_GATES.length;
 }
 
-function getExpAdd(p:Float):Float {
-	return 100 + (EXP_UP.e - EXP_UP.s) * p + EXP_UP.s;
+function getExpAdd(p:Float, max:Float):Float {
+	return (max - EXP_UP.s) * p + EXP_UP.s;
 }

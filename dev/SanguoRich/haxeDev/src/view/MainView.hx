@@ -207,8 +207,6 @@ class MainView extends Box {
 			grid.left = (index % 10) * gridSize;
 			grid.top = Math.floor(index / 10) * gridSize;
 		}
-		// box_npcCmds.hide();
-		// box_enemyCmds.hide();
 
 		btn_showStrategy.text = '${btn_showStrategy.text}(${ENERGY_COST_ON_STRATEGY})';
 		btn_negotiate.text = '${btn_negotiate.text}(${ENERGY_COST_ON_NEGO})';
@@ -226,16 +224,7 @@ class MainView extends Box {
 	@:bind(btn_go, MouseEvent.CLICK)
 	function onBtnGoClick(e:MouseEvent) {
 		Main.model.playerDice(syncView);
-
-		// box_npcCmds.hide();
-		// box_enemyCmds.hide();
 	}
-
-	// @:bind(btn_assignPeople, MouseEvent.CLICK)
-	// function onBtnAssignPeopleClick(e:MouseEvent) {
-	// 	final p = peopleListView.selectedItem;
-	// 	if (p) {}
-	// }
 
 	@:bind(btn_firePeople, MouseEvent.CLICK)
 	function onBtnFirePeopleClick(e:MouseEvent) {
@@ -344,11 +333,6 @@ class MainView extends Box {
 		takeSnatch(true);
 	}
 
-	// @:bind(btn_occupationPlayer, MouseEvent.CLICK)
-	// function onBtnOccupationPlayerClick(e:MouseEvent) {
-	// 	takeWar();
-	// }
-
 	@:bind(btn_occupation, MouseEvent.CLICK)
 	function onBtnOccupationClick(e:MouseEvent) {
 		takeWar();
@@ -380,11 +364,6 @@ class MainView extends Box {
 				snatchPreviewView.showPopup(previewInfo);
 		}
 	}
-
-	// @:bind(btn_snatchPlayer, MouseEvent.CLICK)
-	// function onBtnSnatchPlayerClick(e:MouseEvent) {
-	// 	takeSnatch();
-	// }
 
 	@:bind(btn_snatch, MouseEvent.CLICK)
 	function onBtnSnatchClick(e:MouseEvent) {
@@ -440,26 +419,6 @@ class MainView extends Box {
 		Main.model.playerEnd(syncView);
 	}
 
-	// @:bind(opt_p1, MouseEvent.CLICK)
-	// function onBtnShowP1Click(e:MouseEvent) {
-	// 	syncPlayerInfo(0);
-	// }
-
-	// @:bind(opt_p2, MouseEvent.CLICK)
-	// function onBtnShowP2Click(e:MouseEvent) {
-	// 	syncPlayerInfo(1);
-	// }
-
-	// @:bind(opt_p3, MouseEvent.CLICK)
-	// function onBtnShowP3Click(e:MouseEvent) {
-	// 	syncPlayerInfo(2);
-	// }
-
-	// @:bind(opt_p4, MouseEvent.CLICK)
-	// function onBtnShowP4Click(e:MouseEvent) {
-	// 	syncPlayerInfo(3);
-	// }
-
 	@:bind(btn_showStrategy, MouseEvent.CLICK)
 	function onBtnShowStrategyClick(e:MouseEvent) {
 		final gameInfo = Main.model.gameInfo();
@@ -469,18 +428,6 @@ class MainView extends Box {
 		}
 		strategyPreviewView.showPopup(null);
 	}
-
-	// @:bind(btn_smallWar, MouseEvent.CLICK)
-	// function onBtnWarClick(e:MouseEvent){
-	//     var player = Main.model.gameInfo().currentPlayer;
-	//     var previewInfo = Main.model.getTakeWarPreview(player.id, player.atGridId);
-	//     // warPreviewView.showPreviewWar(previewInfo);
-	// }
-	// @:bind(btn_warStrategy, MouseEvent.CLICK)
-	// function onBtnWarStrategyClick(e:MouseEvent) {}
-	// @:bind(btn_give, MouseEvent.CLICK)
-	// function onBtnGiveClick(e:MouseEvent){
-	// }
 
 	function getGridPositionByGridId(pid:Int, gridId:Int) {
 		var grid = grids[gridId];
@@ -503,10 +450,9 @@ class MainView extends Box {
 
 		TweenX.serial(tweens);
 
-		trace('用了暗度陳倉之後，指令要變成在那個格子可以使用的指令。目前用了之後，指令還是沒用之前的指令');
-		trace( '解顧的API在PREVIEW時的還沒有改成多人的');
-		trace(' 如果升級了記得要傳升級事件EventInfoID.PEOPLE_LEVEL_UP_EVENT');
-		trace(' 送，試了一下，發現加的功績應該是要看當前體力值的最大消耗量來當成上限才對');
+
+		trace('總資產和城池的GROW值還沒傳');
+		trace('計策緩兵之計還沒套');
 	}
 
 	function syncViewByInfo(gameInfo:GameInfo) {
@@ -554,52 +500,9 @@ class MainView extends Box {
 
 	function doOneEvent(gameInfo:GameInfo) {
 		if (events.length > 0) {
-			// disabledAllCommands();
-
 			var event = events.shift();
 			switch (event.id) {
 				case WALK_STOP:
-					// var g:Grid = event.value.grid;
-					// if (g.buildtype == GROWTYPE.EMPTY) {
-					// 	box_emptyCmds.show();
-					// } else {
-					// 	if (g.belongPlayerId == null) {
-					// 		box_npcCmds.show();
-
-					// 		switch (g) {
-					// 			case {
-					// 				buildtype: CITY,
-					// 				favor: _[gameInfo.currentPlayer.id] >= 1 => true
-					// 			}:
-					// 				box_moneyCmds.show();
-					// 				box_foodCmds.show();
-					// 				box_armyCmds.show();
-					// 			case {
-					// 				buildtype: MARKET,
-					// 				favor: _[gameInfo.currentPlayer.id] >= 1 => true
-					// 			}:
-					// 				box_moneyCmds.show();
-					// 			case {
-					// 				buildtype: FARM,
-					// 				favor: _[gameInfo.currentPlayer.id] >= 1 => true
-					// 			}:
-					// 				box_foodCmds.show();
-					// 			case {
-					// 				buildtype: VILLAGE,
-					// 				favor: _[gameInfo.currentPlayer.id] >= 1 => true
-					// 			}:
-					// 				box_armyCmds.show();
-					// 			case _:
-					// 		}
-					// 	} else {
-					// 		if (g.belongPlayerId == gameInfo.currentPlayer.id) {
-					// 			box_myAreaCmds.show();
-					// 		} else {
-					// 			box_enemyCmds.show();
-					// 		}
-					// 	}
-					// }
-					// btn_end.show();
 
 				case HIRE_RESULT:
 					final info:Dynamic = event.value;
@@ -609,8 +512,9 @@ class MainView extends Box {
 					msg += '金錢:${Main.getFixNumber(info.moneyBefore, 0)} => ${Main.getFixNumber(info.moneyAfter, 0)}\n';
 					msg += '糧草:${Main.getFixNumber(info.foodBefore, 0)} => ${Main.getFixNumber(info.foodAfter, 0)}\n';
 					msg += '士兵:${Main.getFixNumber(info.armyBefore, 0)} => ${Main.getFixNumber(info.armyAfter, 0)}\n';
-					Dialogs.messageBox(msg, title, MessageBoxType.TYPE_INFO);
-					// btn_end.show();
+					Dialogs.messageBox(msg, title, MessageBoxType.TYPE_INFO, true, (b)->{
+						doOneEvent(gameInfo);
+					});
 
 				case FIRE_RESULT:
 					final info:Dynamic = event.value;
@@ -618,8 +522,9 @@ class MainView extends Box {
 					var msg = '解雇:${people.map((p)->p.name).join(',')}\n';
 					msg += '薪俸:${Main.getFixNumber(info.maintainMoneyBefore, 2)} => ${Main.getFixNumber(info.maintainMoneyAfter, 2)}\n';
                     
-					Dialogs.messageBox(msg, '解雇完成', MessageBoxType.TYPE_INFO);
-					// showBasicCommand(gameInfo);
+					Dialogs.messageBox(msg, '解雇完成', MessageBoxType.TYPE_INFO, true, (b)->{
+						doOneEvent(gameInfo);
+					});
 
 				case NEGOTIATE_RESULT:
 					final info:Dynamic = event.value;
@@ -630,8 +535,9 @@ class MainView extends Box {
 					msg += '糧草:${Main.getFixNumber(info.foodBefore, 0)} => ${Main.getFixNumber(info.foodAfter, 0)}\n';
 					msg += '士兵:${Main.getFixNumber(info.armyBefore, 0)} => ${Main.getFixNumber(info.armyAfter, 0)}\n';
 					msg += '友好:${Main.getFavorString(info.favorBefore)} => ${Main.getFavorString(info.favorAfter)}\n';
-					Dialogs.messageBox(msg, title, MessageBoxType.TYPE_INFO);
-					// btn_end.show();
+					Dialogs.messageBox(msg, title, MessageBoxType.TYPE_INFO, true, (b)->{
+						doOneEvent(gameInfo);
+					});
 
 				case EXPLORE_RESULT:
 					exploreSuccessView.showMessage(event.value);
@@ -648,9 +554,10 @@ class MainView extends Box {
 							transferPreview.showPopup(null);
 						});
 					} else {
-						Dialogs.messageBox(msg, '占領失敗', MessageBoxType.TYPE_INFO );
+						Dialogs.messageBox(msg, '占領失敗', MessageBoxType.TYPE_INFO, true, (b)->{
+							doOneEvent(gameInfo);
+						});
 					}
-					// btn_end.show();
 
 				case SNATCH_RESULT:
 					final info:Dynamic = event.value;
@@ -660,8 +567,9 @@ class MainView extends Box {
 					msg += '金錢:${Main.getFixNumber(info.moneyBefore, 0)} => ${Main.getFixNumber(info.moneyAfter, 0)}\n';
 					msg += '糧草:${Main.getFixNumber(info.foodBefore, 0)} => ${Main.getFixNumber(info.foodAfter, 0)}\n';
 					msg += '士兵:${Main.getFixNumber(info.armyBefore, 0)} => ${Main.getFixNumber(info.armyAfter, 0)}\n';
-					Dialogs.messageBox(msg, title, MessageBoxType.TYPE_INFO);
-					// btn_end.show();
+					Dialogs.messageBox(msg, title, MessageBoxType.TYPE_INFO, true, (b)->{
+						doOneEvent(gameInfo);
+					});
 
 				case RESOURCE_RESULT:
 					final info:Dynamic = event.value;
@@ -670,8 +578,9 @@ class MainView extends Box {
 					msg += '金錢:${Main.getFixNumber(info.moneyBefore, 0)} => ${Main.getFixNumber(info.moneyAfter, 0)}\n';
 					msg += '糧草:${Main.getFixNumber(info.foodBefore, 0)} => ${Main.getFixNumber(info.foodAfter, 0)}\n';
 					msg += '士兵:${Main.getFixNumber(info.armyBefore, 0)} => ${Main.getFixNumber(info.armyAfter, 0)}\n';
-					Dialogs.messageBox(msg, '交易完成', MessageBoxType.TYPE_INFO);
-					// btn_end.show();
+					Dialogs.messageBox(msg, '交易完成', MessageBoxType.TYPE_INFO, true, (b)->{
+						doOneEvent(gameInfo);
+					});
 					
 				case STRATEGY_RESULT:
 					final info:Dynamic = event.value;
@@ -681,18 +590,16 @@ class MainView extends Box {
 					msg += '計策:${info.strategy ? info.strategy.name : ""}\n';
 					msg += '體力:${Main.getFixNumber(info.energyBefore, 0)} => ${Main.getFixNumber(info.energyAfter, 0)}\n';
 					Dialogs.messageBox(msg, title, MessageBoxType.TYPE_INFO, true, (b)->{
-						// 如果是停在移動的計策，下一個事件就會是walk_stop事件。由那個事件決定要顯示按鈕
 						doOneEvent(gameInfo);
 					});
-
-					// 如果是停在原地的計策，就顯示原來的指令
-					// showBasicCommand(gameInfo, false);
 				case BUILDING_RESULT:
 					final info:Dynamic = event.value;
 					final catelog = Main.getBuildingCatelog(info.building);
 					var msg = '武將:${info.people.name : ""}\n';
 					msg += '已擴建 ${catelog.name}\n';
-					Dialogs.messageBox(msg, '擴建完畢', MessageBoxType.TYPE_INFO);
+					Dialogs.messageBox(msg, '擴建完畢', MessageBoxType.TYPE_INFO, true, (b)->{
+						doOneEvent(gameInfo);
+					});
 				case WORLD_EVENT:
 					growView.showPopup(event.value, ()->{
 						doOneEvent(gameInfo);
@@ -713,8 +620,8 @@ class MainView extends Box {
 							msg += '政治:${p1.command} => ${p2.command}\n';
 						case _:
 					}
-					msg += '魅力:${p1.charm} => ${p2.charm}}\n';
-					msg += '體力:${p1.energy} => ${p2.energy}}\n';
+					msg += '魅力:${p1.charm} => ${p2.charm}\n';
+					msg += '體力:${p1.energy} => ${p2.energy}\n';
 					Dialogs.messageBox(msg, title, MessageBoxType.TYPE_INFO, true, (b)->{
 						doOneEvent(gameInfo);
 					});
@@ -733,66 +640,13 @@ class MainView extends Box {
 		}
 	}
 
-	// function setEventInfo(event:EventInfo){
-	//     switch(event.id){
-	//         case FIRE_RESULT:
-	//         case HIRE_RESULT:
-	//             pro_currentEvent.value = "探索停止。等待指令中";
-	//         case EXPLORE_RESULT:
-	//             pro_currentEvent.value = "聘用停止。等待指令中";
-	//         case WALK_STOP:
-	//             pro_currentEvent.value = "行走停止。等待指令中";
-	//         case WAR_RESULT:
-	//             pro_currentEvent.value = "戰爭結果。等待指令中";
-	//         case NEGOTIATE_RESULT:
-	//             pro_currentEvent.value = "交涉結果。等待指令中";
-	//         case RESOURCE_RESULT:
-	//         case WORLD_EVENT:
-	//     };
-	// }
-	// function setActionInfo(action:ActionInfo) {
-	//     switch (action.id){
-	//         case MOVE:
-	//             pro_currentEvent.value = '由${action.value.fromGridId}往${action.value.toGridId}行走中...';
-	//     }
-	// }
-	// function syncActions(gameInfo:GameInfo) {
-	//     var tweens = [];
-	//     for(id => action in gameInfo.actions){
-	//         function getInfo(_gameInfo:GameInfo){
-	//             return _gameInfo;
-	//         }
-	//         tweens.push(TweenX.func(()->{syncViewByInfo(getInfo(action.gameInfo));}).delay(2));
-	//     }
-	//     if(tweens.length > 0) {
-	//         TweenX.serial(tweens);
-	//     }
-	// }
-
-	// function showBasicCommand(gameInfo:GameInfo, enabledCast = true) {
-	// 	box_basicCmds.show();
-	// 	// btn_showStrategy.disabled = !gameInfo.currentPlayer.enabledCast;
-	// 	btn_showStrategy.disabled = !enabledCast;
-	// }
-
 	function disabledAllCommands() {
-		// box_basicCmds.hide();
-		// box_npcCmds.hide();
-		// box_enemyCmds.hide();
-		// box_emptyCmds.hide();
-		// btn_end.hide();
-		// box_moneyCmds.hide();
-		// box_foodCmds.hide();
-		// box_armyCmds.hide();
-		// box_myAreaCmds.hide();
 		btn_go.hide();
 		btn_showStrategy.hide();
 		btn_firePeople.hide();
 		btn_negotiate.hide();
 		btn_snatch.hide();
-		// btn_snatchPlayer.hide();
 		btn_occupation.hide();
-		// btn_occupationPlayer.hide();
 		btn_hire.hide();
 		btn_explore.hide();
 		btn_earnMoney.hide();
