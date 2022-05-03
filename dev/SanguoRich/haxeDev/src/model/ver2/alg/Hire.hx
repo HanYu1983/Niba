@@ -34,8 +34,9 @@ function getHireCost(ctx:Context, playerId:Int, gridId:Int, p1SelectId:Int, p2Se
 					// 人脈加成
 					final abiFactor = p1.abilities.has(10) ? 1.5 : 1;
 					// 越不夠錢減成
-					final hireCostFactor = hireMoneyOffset >= 0 ? 1.0 : (1 - Math.min(1, -1 * hireMoneyOffset / hireCost));
-					final rate = base * charmFactor * abiFactor * hireCostFactor;
+					// 完全付不出來的話, 這個系數為1
+					final hireCostFactor = hireMoneyOffset >= 0 ? 0 : Math.min(1, -1 * hireMoneyOffset / hireCost);
+					final rate = base * charmFactor * abiFactor * (1 - hireCostFactor);
 					{
 						playerCost: {
 							id: playerId,

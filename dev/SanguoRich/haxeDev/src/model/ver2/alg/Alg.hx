@@ -15,29 +15,28 @@ function doPeopleMaintain(ctx:Context) {
 		// 支付武將的薪水
 		{
 			final cost = getMaintainPeople(ctx, player.id);
-			player.money = Math.max(0, player.money - cost);
 			// 計算體力回復率
 			final offset = player.money - cost;
-			// 沒錢的話, 這個系數為0
-			final offsetFactor = offset >= 0 ? 1 : (1 - Math.min(1, -1 * offset / cost));
+			// 完全付不出來的話, 這個系數為1
+			final offsetFactor = offset >= 0 ? 0 : Math.min(1, -1 * offset / cost);
 			for (people in ctx.peoples) {
 				// 別人的武將不回復
 				if (people.belongToPlayerId != player.id) {
 					continue;
 				}
 				// 回體力
-				final addEnergy = (PEOPLE_ENERGY_SUPPLY_BASE + people.energy * PEOPLE_ENERGY_SUPPLY_SAVE_FACTOR) * offsetFactor;
+				final addEnergy = (PEOPLE_ENERGY_SUPPLY_BASE + people.energy * PEOPLE_ENERGY_SUPPLY_SAVE_FACTOR) * (1 - offsetFactor);
 				people.energy = Math.min(100, people.energy + addEnergy);
 			}
+			player.money = Math.max(0, player.money - cost);
 		}
 		// 吃食物
 		{
 			final cost = getMaintainArmy(ctx, player.id);
-			player.food = Math.max(0, player.food - cost);
 			// 計算士兵逃率
 			final offset = player.food - cost;
-			// 沒食的話, 這個系數為0
-			final offsetFactor = offset >= 0 ? 1 : (1 - Math.min(1, -1 * offset / cost));
+			// 完全付不出來的話, 這個系數為1
+			final offsetFactor = offset >= 0 ? 0 : Math.min(1, -1 * offset / cost);
 			for (grid in ctx.grids) {
 				if (getGridBelongPlayerId(ctx, grid.id) != player.id) {
 					continue;
@@ -51,6 +50,7 @@ function doPeopleMaintain(ctx:Context) {
 			final base = player.army * 0.1;
 			final lostArmy = base * offsetFactor;
 			player.army = Math.max(0, player.army - lostArmy);
+			player.food = Math.max(0, player.food - cost);
 		}
 	}
 }

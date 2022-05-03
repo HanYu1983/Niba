@@ -95,4 +95,9 @@ class CacheModel extends ProxyModel {
 		isDirty = true;
 		return super.takeCostForBonus(playerId, peopleId, costType, cb);
 	}
+
+	override function load(cb:(success:Bool, gameInfo:GameInfo) -> Void) {
+		isDirty = true;
+		return super.load(cb);
+	}
 }
