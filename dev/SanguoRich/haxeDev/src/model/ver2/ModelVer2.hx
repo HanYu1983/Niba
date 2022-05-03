@@ -16,9 +16,10 @@ import model.ver2.alg.Transfer;
 import model.ver2.alg.Strategy;
 import model.ver2.alg.Building;
 import model.ver2.alg.CostForBonus;
+import model.ver2.alg.SaveLoad;
 
 class ModelVer2 extends DebugModel {
-	final context:Context = {
+	var context:Context = {
 		grids: [],
 		attachments: [],
 		peoples: [],
@@ -177,5 +178,29 @@ class ModelVer2 extends DebugModel {
 	override function takeCostForBonus(playerId:Int, peopleId:Int, costType:Int, cb:(gameInfo:GameInfo) -> Void) {
 		_takeCostForBonus(context, playerId, peopleId, costType);
 		cb(gameInfo());
+	}
+
+	override function save(cb:(success:Bool) -> Void) {
+		try {
+			_save(context);
+			cb(true);
+		} catch (e:haxe.Exception) {
+			js.Browser.console.log("ModelVer2", "save", e);
+			cb(false);
+		}
+	}
+
+	override function load(cb:(success:Bool, gameInfo:GameInfo) -> Void) {
+		try {
+			final loadCtx = _load();
+			if (loadCtx == null) {
+				return cb(false, gameInfo());
+			}
+			context = loadCtx;
+			cb(true, gameInfo());
+		} catch (e:haxe.Exception) {
+			js.Browser.console.log("ModelVer2", "load", e);
+			cb(false, gameInfo());
+		}
 	}
 }
