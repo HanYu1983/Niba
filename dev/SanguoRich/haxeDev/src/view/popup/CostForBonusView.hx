@@ -58,7 +58,7 @@ class CostForBonusView extends PopupView {
 			var resultStr = '讓 ${p.name} 領導 ${costName} 嗎?\n';
 
 			final gain = isCamp ? result.gainEnergy : result.gainExp;
-			resultStr += '預計消耗糧草 ${Main.getFixNumber(result.costFood)} 提升自身所有武將 ${ btn_camp.selected ? "體力" : "功績"} ${Main.getFixNumber(gain)}';
+			resultStr += '預計消耗糧草 ${Main.getFixNumber(result.costFood)} 提升自身所有武將 ${ btn_camp.selected ? "體力" : "功績"}差距的 ${Main.getRateString(gain)}';
 			lbl_result.value = resultStr;
 		}
 

@@ -10,26 +10,80 @@ import model.ver2.alg.Alg;
 using Lambda;
 
 function getCostForBonusCost(ctx:Context, playerId:Int, peopleId:Int, costType:Int) {
+	final player = ctx.players[playerId];
+	final people = getPeopleById(ctx, peopleId);
+	final peopleBelongPlayer = ctx.peoples.filter(p -> p.belongToPlayerId == player.id);
+	
 	return switch costType {
 		case 0:
-			{
+
+			var totalLake = 0.0;
+
+			// 總共差全滿多少
+			var notFull = peopleBelongPlayer.filter((p)->p.energy < 100);
+			for( p in notFull ){
+				totalLake += 100 - p.energy;
+			}
+
+			// 基本回復20%
+			var recover = 0.2;
+			recover *= 1.0 + (.2 *(people.command / 100));
+
+			// 回復縂差距的10%
+			totalLake *= recover;
+
+			// 縂花食物量
+			var food = totalLake * 3;
+			
+			if(player.food < food){
+				recover *= player.food / food;
+				food = player.food;
+			}
+			food *= .8 + (.2 *(1-(people.political / 100)));
+
+			return {
 				playerCost: {
-					food: 100.0,
+					food: food,
 				},
 				peopleGain: {
-					energy: 10.0,
+					energy: recover,
 					exp: 0.0,
 				},
 				successRate: 0.5
-			}
+			};
 		case 1:
+
+			var totalLake = 0.0;
+
+			// 總共差全滿多少
+			var notFull = peopleBelongPlayer.filter((p)->p.exp < 810);
+			for( p in notFull ){
+				totalLake += 810 - p.exp;
+			}
+
+			// 基本回復2%
+			var recover = 0.02;
+			recover *= 1.0 + (.2 *(people.command / 100));
+
+			// 回復縂差距的10%
+			totalLake *= recover;
+
+			// 縂花食物量
+			var food = totalLake * .5;
+			
+			if(player.food < food){
+				recover *= player.food / food;
+				food = player.food;
+			}
+			food *= .8 + (.2 *(1-(people.political / 100)));
+			
 			{
 				playerCost: {
-					food: 100.0,
+					food: food,
 				},
 				peopleGain: {
 					energy: 0.0,
-					exp: 10.0
+					exp: recover
 				},
 				successRate: 0.5
 			}
@@ -45,9 +99,11 @@ function onCostForBonusCost(ctx:Context, playerId:Int, peopleId:Int, costType:In
 			player.food = Math.max(0, player.food - costFood);
 			final peopleBelongPlayer = ctx.peoples.filter(p -> p.belongToPlayerId == player.id);
 			for (people in peopleBelongPlayer) {
-				people.energy = Math.min(100, people.energy + gainEnergy);
+				if(people.energy < 100){
+					people.energy = Math.min(100, people.energy + (100-people.energy) * gainEnergy);
+				}
 				// 功績
-				onPeopleExpAdd(ctx, people.id, gainExp);
+				onPeopleExpAdd(ctx, people.id, (810-people.exp) * gainExp);
 			}
 			final people = getPeopleById(ctx, peopleId);
 			// TODO
