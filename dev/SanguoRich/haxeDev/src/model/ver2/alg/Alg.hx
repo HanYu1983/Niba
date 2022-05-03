@@ -208,14 +208,14 @@ function doPlayerDice(ctx:Context) {
 	var moveStep = Math.floor(Math.random() * 6) + 1;
 	{
 		// 計算路障
-		final everyStep = [for (i in 0...moveStep) player.position + i].map(s -> s % ctx.grids.length);
+		final everyStep = [for (i in 1...moveStep) player.position + i].map(s -> s % ctx.grids.length);
 		final findGroundItem = ctx.groundItems.filter(item -> everyStep.has(item.position) && item.belongToPlayerId != activePlayerId);
 		if (findGroundItem.length > 0) {
 			final stopItem = findGroundItem[0];
 			// 停住
 			moveStep = stopItem.position - player.position;
 			// 移除路障
-			ctx.groundItems = ctx.groundItems.filter(item -> item.id == stopItem.id);
+			ctx.groundItems = ctx.groundItems.filter(item -> item.id != stopItem.id);
 		}
 	}
 	final toGridId = (fromGridId + moveStep) % ctx.grids.length;

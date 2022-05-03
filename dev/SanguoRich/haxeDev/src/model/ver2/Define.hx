@@ -318,7 +318,11 @@ function getGridInfo(ctx:Context, grid:Grid):model.GridGenerator.Grid {
 		armyGrow: 0.0,
 		people: peopleInGrid.map(p -> getPeopleInfo(ctx, p)),
 		favor: grid.favor,
-		strategys: []
+		strategys: [
+			for (i in 0...4)
+				// 3代表緩兵計
+				ctx.groundItems.filter(item -> item.belongToPlayerId == i && item.position == grid.id).map(item -> 3)
+		]
 	}
 }
 
