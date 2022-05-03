@@ -64,6 +64,12 @@ typedef Player = {
 	},
 }
 
+typedef GroundItem = {
+	id:Int,
+	position:Int,
+	belongToPlayerId:Null<Int>,
+}
+
 enum Action {
 	MOVE(value:{
 		playerId:Int,
@@ -199,6 +205,7 @@ typedef Context = {
 	currentPlayerId:Int,
 	actions:Array<Action>,
 	events:Array<Event>,
+	groundItems:Array<GroundItem>,
 	turn:Int
 }
 
@@ -491,11 +498,15 @@ function addGridInfo(ctx:Context, grid:model.GridGenerator.Grid):Void {
 	}
 }
 
-var _id = 0;
+private var _id = 0;
+
+function getNextId():Int {
+	return _id++;
+}
 
 function addAttachInfo(ctx:Context, belongToGridId:Int, attach:BUILDING) {
 	ctx.attachments.push({
-		id: _id++,
+		id: getNextId(),
 		belongToGridId: belongToGridId,
 		type: attach
 	});

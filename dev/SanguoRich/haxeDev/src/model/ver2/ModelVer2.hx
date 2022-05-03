@@ -27,6 +27,7 @@ class ModelVer2 extends DebugModel {
 		currentPlayerId: 0,
 		actions: [],
 		events: [],
+		groundItems: [],
 		turn: 0
 	}
 

@@ -200,21 +200,32 @@ function doPlayerEnd(ctx:Context) {
 }
 
 function doPlayerDice(ctx:Context) {
+	ctx.events = [];
+	ctx.actions = [];
 	final activePlayerId = ctx.currentPlayerId;
 	final player = ctx.players[activePlayerId];
 	final fromGridId = player.position;
-	final moveStep = Math.floor(Math.random() * 6) + 1;
+	var moveStep = Math.floor(Math.random() * 6) + 1;
+	{
+		// 計算路障
+		final everyStep = [for (i in 0...moveStep) player.position + i].map(s -> s % ctx.grids.length);
+		final findGroundItem = ctx.groundItems.filter(item -> everyStep.has(item.position) && item.belongToPlayerId != activePlayerId);
+		if (findGroundItem.length > 0) {
+			final stopItem = findGroundItem[0];
+			// 停住
+			moveStep = stopItem.position - player.position;
+			// 移除路障
+			ctx.groundItems = ctx.groundItems.filter(item -> item.id == stopItem.id);
+		}
+	}
 	final toGridId = (fromGridId + moveStep) % ctx.grids.length;
 	player.position = toGridId;
 	player.memory.hasDice = true;
-	ctx.actions = [
-		Action.MOVE({
-			playerId: activePlayerId,
-			fromGridId: fromGridId,
-			toGridId: toGridId
-		}, getGameInfo(ctx, false))
-	];
-	ctx.events = [];
+	ctx.actions.push(Action.MOVE({
+		playerId: activePlayerId,
+		fromGridId: fromGridId,
+		toGridId: toGridId
+	}, getGameInfo(ctx, false)));
 	onPlayerGoToPosition(ctx, activePlayerId, toGridId);
 }
 

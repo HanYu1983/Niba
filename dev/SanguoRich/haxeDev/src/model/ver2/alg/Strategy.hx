@@ -32,7 +32,6 @@ function getStrategyCost(ctx:Context, p1PeopleId:Int, strategyId:Int, targetPlay
 			final player = ctx.players[p1.belongToPlayerId];
 			final grid = ctx.grids[player.position];
 			final isEmpty = getGridInfo(ctx, grid).buildtype == GROWTYPE.EMPTY;
-			trace(strategyId, isEmpty);
 			isEmpty ? 0.0 : 1;
 		case _:
 			1;
@@ -92,6 +91,13 @@ function applyStrategyCost(ctx:Context, p1PeopleId:Int, strategyId:Int, targetPl
 			player.food += gainFood;
 			player.money += gainMoney;
 			grid.favor[player.id] = Std.int(Math.min(MAX_GRID_FAVOR, grid.favor[player.id] + 1));
+		case 3:
+			// 緩兵之計
+			ctx.groundItems.push({
+				id: getNextId(),
+				belongToPlayerId: p1.belongToPlayerId,
+				position: targetGridId
+			});
 	}
 	return true;
 }
