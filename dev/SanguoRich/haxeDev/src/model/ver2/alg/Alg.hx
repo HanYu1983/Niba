@@ -280,7 +280,6 @@ function onPlayerGoToPosition(ctx:Context, playerId:Int, toGridId:Int) {
 	final toGridBelongPlayerId = getGridBelongPlayerId(ctx, toGrid.id);
 	final isStopAtEnemyGrid = toGridBelongPlayerId != null && toGridBelongPlayerId != player.id;
 	if (isStopAtEnemyGrid) {
-		doPayTaxToGrid(ctx, player.id, toGrid.id);
 		final eventValue = {
 			armyBefore: player.army,
 			armyAfter: player.army,
@@ -289,6 +288,7 @@ function onPlayerGoToPosition(ctx:Context, playerId:Int, toGridId:Int) {
 			foodBefore: player.food,
 			foodAfter: player.food,
 		}
+		doPayTaxToGrid(ctx, player.id, toGrid.id);
 		eventValue.moneyAfter = player.money;
 		ctx.events.push({
 			Event.PAY_FOR_OVER_ENEMY_GRID(eventValue);

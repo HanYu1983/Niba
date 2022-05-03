@@ -33,7 +33,7 @@ function getCostForBonusCost(ctx:Context, playerId:Int, peopleId:Int, costType:I
 			totalLake *= recover;
 
 			// 縂花食物量
-			var food = totalLake * 3;
+			var food = totalLake * 1;
 
 			if (player.food < food) {
 				recover *= player.food / food;
@@ -68,7 +68,7 @@ function getCostForBonusCost(ctx:Context, playerId:Int, peopleId:Int, costType:I
 			totalLake *= recover;
 
 			// 縂花食物量
-			var food = totalLake * 1.0;
+			var food = totalLake * .3;
 
 			if (player.food < food) {
 				recover *= player.food / food;

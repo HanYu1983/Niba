@@ -86,10 +86,13 @@ function applyStrategyCost(ctx:Context, p1PeopleId:Int, strategyId:Int, targetPl
 			}
 			final gainFood = grid.food * 0.2;
 			final gainMoney = grid.money * 0.2;
+			final gainArmy = grid.army * 0.2;
 			grid.food -= gainFood;
 			grid.money -= gainMoney;
+			grid.army -= gainArmy;
 			player.food += gainFood;
 			player.money += gainMoney;
+			player.army += gainArmy;
 			grid.favor[player.id] = Std.int(Math.min(MAX_GRID_FAVOR, grid.favor[player.id] + 1));
 		case 3:
 			// 緩兵之計

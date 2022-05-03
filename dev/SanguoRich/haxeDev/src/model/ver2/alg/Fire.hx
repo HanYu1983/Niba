@@ -35,8 +35,4 @@ function _takeFire(ctx:Context, playerId:Int, peopleIds:Array<Int>) {
 	}
 	resultValue.maintainMoneyAfter = getMaintainPeople(ctx, playerId);
 	ctx.events.push(Event.FIRE_RESULT(resultValue));
-	{
-		final player = ctx.players[ctx.currentPlayerId];
-		player.memory.hasCommand = true;
-	}
 }

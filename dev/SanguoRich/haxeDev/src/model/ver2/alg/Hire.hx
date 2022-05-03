@@ -13,7 +13,7 @@ using Lambda;
 function getHireCost(ctx:Context, playerId:Int, gridId:Int, p1SelectId:Int, p2SelectId:Int) {
 	return switch 0 {
 		case 0:
-			final player = ctx.players[gridId];
+			final player = ctx.players[playerId];
 			final grid = ctx.grids[gridId];
 			final fightPeople = [p1SelectId, p2SelectId].map(p -> getPeopleById(ctx, p));
 			return switch fightPeople {
@@ -46,7 +46,7 @@ function getHireCost(ctx:Context, playerId:Int, gridId:Int, p1SelectId:Int, p2Se
 							id: p1.id,
 							energy: useEnergy,
 						},
-						successRate: hireCostFactor
+						successRate: rate
 					};
 				case _:
 					throw new haxe.Exception("fightPeople not right");
@@ -105,6 +105,10 @@ function doTakeHire(ctx:Context, playerId:Int, gridId:Int, p1SelectId:Int, p2Sel
 	resultValue.moneyAfter = player.money;
 	resultValue.foodAfter = player.food;
 	ctx.events.push(Event.HIRE_RESULT(resultValue));
+	{
+		final player = ctx.players[ctx.currentPlayerId];
+		player.memory.hasCommand = true;
+	}
 }
 
 function applyHireCost(ctx:Context, playerId:Int, gridId:Int, p1SelectId:Int, p2SelectId:Int):Bool {

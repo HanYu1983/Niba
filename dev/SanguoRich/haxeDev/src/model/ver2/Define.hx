@@ -265,7 +265,7 @@ function getGridMoneyGrow(ctx:Context, gridId:Int):Float {
 	final totalPeoplePolitical = peopleInGrid.fold((p, a) -> {
 		return a + p.political;
 	}, 0.0);
-	final factor1 = 1 / (peopleInGrid.length * 100);
+	final factor1 = 2 / (peopleInGrid.length * 100);
 	return grid.defaultMoneyGrow * (totalPeoplePolitical * factor1);
 }
 
@@ -279,7 +279,7 @@ function getGridFoodGrow(ctx:Context, gridId:Int):Float {
 	final totalPeopleIntelligence = peopleInGrid.fold((p, a) -> {
 		return a + p.intelligence;
 	}, 0.0);
-	final factor1 = 1 / (peopleInGrid.length * 100);
+	final factor1 = 2 / (peopleInGrid.length * 100);
 	return grid.defaultFoodGrow * (totalPeopleIntelligence * factor1);
 }
 
@@ -293,7 +293,7 @@ function getGridArmyGrow(ctx:Context, gridId:Int):Float {
 	final totalPeoplecharm = peopleInGrid.fold((p, a) -> {
 		return a + p.charm;
 	}, 0.0);
-	final factor1 = 1 / (peopleInGrid.length * 100);
+	final factor1 = 2 / (peopleInGrid.length * 100);
 	return grid.defaultArmyGrow * (totalPeoplecharm * factor1);
 }
 
@@ -708,7 +708,7 @@ function getPlayerCommand(ctx:Context, playerId:Int):Array<ActionInfoID> {
 						case EMPTY:
 							ret.push(ActionInfoID.HIRE);
 						case _:
-							if (gridInfo.favor[playerId] >= 1) {
+							if (gridInfo.favor[playerId] >= 0) {
 								// 好感的
 								switch gridInfo.buildtype {
 									case MARKET:
@@ -727,15 +727,14 @@ function getPlayerCommand(ctx:Context, playerId:Int):Array<ActionInfoID> {
 										ret.push(ActionInfoID.SELL_ARMY);
 									case _:
 								}
-							} else {
-								// 討厭的
-								switch gridInfo.buildtype {
-									case MARKET | FARM | VILLAGE | CITY:
-										ret.push(ActionInfoID.NEGOTIATE);
-										ret.push(ActionInfoID.SNATCH);
-										ret.push(ActionInfoID.OCCUPATION);
-									case _:
-								}
+							}
+							// 討厭的
+							switch gridInfo.buildtype {
+								case MARKET | FARM | VILLAGE | CITY:
+									ret.push(ActionInfoID.NEGOTIATE);
+									ret.push(ActionInfoID.SNATCH);
+									ret.push(ActionInfoID.OCCUPATION);
+								case _:
 							}
 					}
 				}

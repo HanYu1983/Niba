@@ -67,17 +67,18 @@ class GridGenerator {
 			army: 100,
 			armyGrow: 0.01,
 			people: [],
-			favor:[0,0,0,0],
-			strategys: [
-				[],[],[],[]
-			],
+			favor: [0, 0, 0, 0],
+			strategys: [[], [], [], []],
 		};
 	}
 
-	var gridNames = ['滴島','通河','貸鄉','樹莊','商區','富州','翅坊','東鎮','蹄堡','雷省','扔山','握港','通鄉','佩府','乏坡','社觀','誕壩','鐮莊','綱莊','悠路','緒港','客湖','喚坊','啄山','組省','震村','山山','嫁河','寸壩','暢縣','鴉峰','乏州','壓村','灑島','忍崖','睬觀','斥城','波峰','溫郡','驟鎮','療省','喝省','生道','緞坊','半鄉','蒼崖','棵島','序巷','岔島','遙鎮','醬觀','拌鎮','殼湖','致谷','扇崖','信坊','竿島','徒鎮','務港','廳鄉'];
+	var gridNames = [
+		'滴島', '通河', '貸鄉', '樹莊', '商區', '富州', '翅坊', '東鎮', '蹄堡', '雷省', '扔山', '握港', '通鄉', '佩府', '乏坡', '社觀', '誕壩', '鐮莊', '綱莊', '悠路', '緒港', '客湖', '喚坊', '啄山', '組省',
+		'震村', '山山', '嫁河', '寸壩', '暢縣', '鴉峰', '乏州', '壓村', '灑島', '忍崖', '睬觀', '斥城', '波峰', '溫郡', '驟鎮', '療省', '喝省', '生道', '緞坊', '半鄉', '蒼崖', '棵島', '序巷', '岔島', '遙鎮',
+		'醬觀', '拌鎮', '殼湖', '致谷', '扇崖', '信坊', '竿島', '徒鎮', '務港', '廳鄉'
+	];
 
 	public function getGrids(count:Int):Array<Grid> {
-
 		function getRandomRange(range:Float, offset:Float) {
 			return Math.random() * range + offset;
 		}
@@ -90,35 +91,18 @@ class GridGenerator {
 			g.name = g.id + gridNames[i];
 			g.landType = [0, 0, 1, 1, 1, 1, 2, 2, 3, 3][Math.floor(height * 10)];
 			g.buildtype = [
-			    GROWTYPE.EMPTY,
-			    GROWTYPE.EMPTY,
-			    GROWTYPE.EMPTY,
-				GROWTYPE.FARM,
-				GROWTYPE.MARKET,
-				GROWTYPE.VILLAGE,
-				GROWTYPE.FARM,
-				GROWTYPE.MARKET,
-				GROWTYPE.VILLAGE,
-			    GROWTYPE.CITY
+				GROWTYPE.EMPTY, GROWTYPE.EMPTY, GROWTYPE.EMPTY, GROWTYPE.FARM, GROWTYPE.MARKET, GROWTYPE.VILLAGE, GROWTYPE.FARM, GROWTYPE.MARKET,
+				GROWTYPE.VILLAGE, GROWTYPE.CITY
 			][Math.floor(Math.random() * 10)];
 
-			switch(g.buildtype){
+			switch (g.buildtype) {
 				case EMPTY:
 				case MARKET:
-					g.attachs = [
-						BUILDING.MARKET(0),
-						BUILDING.WALL(0)
-					];
+					g.attachs = [BUILDING.MARKET(0), BUILDING.WALL(0)];
 				case FARM:
-					g.attachs = [
-						BUILDING.FARM(0),
-						BUILDING.WALL(0)
-					];
+					g.attachs = [BUILDING.FARM(0), BUILDING.WALL(0)];
 				case VILLAGE:
-					g.attachs = [
-						BUILDING.BARRACKS(0),
-						BUILDING.WALL(0)
-					];
+					g.attachs = [BUILDING.BARRACKS(0), BUILDING.WALL(0)];
 				case CITY:
 					g.attachs = [
 						BUILDING.MARKET(0),
@@ -127,7 +111,6 @@ class GridGenerator {
 						BUILDING.EXPLORE(0),
 						BUILDING.WALL(0),
 					];
-
 			}
 
 			final basicArmy = getRandomRange(100, 40);
@@ -137,7 +120,7 @@ class GridGenerator {
 			g.armyGrow = Math.random() * .01;
 			g.army = basicArmy;
 
-			switch (g.buildtype){
+			switch (g.buildtype) {
 				case EMPTY:
 					g.money = 0;
 					g.army = 0;
@@ -171,7 +154,6 @@ class GridGenerator {
 					g.armyGrow += .01;
 					g.people.push(PeopleGenerator.getInst().generate());
 				case _:
-					
 			}
 
 			g.moneyGrow += g.army / 300 * .01;

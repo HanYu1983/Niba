@@ -58,7 +58,7 @@ final WAR_MONEY_COST_FACTOR = .05;
 final WAR_FOOD_COST_FACTOR = 1.4;
 
 // 戰鬥防守方士兵加成
-final WAR_DEFFENDER_FACTOR = 4.0;
+final WAR_DEFFENDER_FACTOR = 3.0;
 
 // 兵數量差優勢, 越高代表影響越小
 final WAR_HIGH_LOW_FACTOR = 1.5;
@@ -70,7 +70,7 @@ final WAR_ARMY_FACTOR = 0.3;
 final WAR_FINAL_DAMAGE_FACTOR = 0.75;
 
 // 每回合基本回體力
-final PEOPLE_ENERGY_SUPPLY_BASE = 0;
+final PEOPLE_ENERGY_SUPPLY_BASE = 1;
 
 // 每回合額外回復％數體力(體力越多回越快)
 final PEOPLE_ENERGY_SUPPLY_SAVE_FACTOR = 0.05;

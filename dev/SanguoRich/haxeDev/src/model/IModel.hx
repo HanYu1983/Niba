@@ -26,25 +26,21 @@ enum ActionInfoID {
 	MOVE;
 	STRATEGY;
 	FIRE;
-	
+
 	NEGOTIATE;
 	SNATCH;
 	OCCUPATION;
-
 	CAMP;
 	PRACTICE;
 	HIRE;
 	EXPLORE;
-
 	EARN_MONEY;
 	BUY_FOOD;
 	SELL_FOOD;
 	BUY_ARMY;
 	SELL_ARMY;
-
 	TRANSFER;
 	BUILD;
-
 	END;
 }
 
@@ -55,7 +51,6 @@ typedef ActionInfo = {
 }
 
 enum EventInfoID {
-
 	// 通常不會再有下一個事件
 	WALK_STOP;
 	NEGOTIATE_RESULT;
@@ -275,10 +270,10 @@ interface IModel {
 	function takeBuilding(p1PeopleId:Int, gridId:Int, peopleId:Int, current:Dynamic, to:Dynamic, cb:(gameInfo:GameInfo) -> Void):Void;
 
 	function getResultOfCost(p1Player:PlayerInfo, p1People:People, costType:Int):{costFood:Float, gainExp:Float, gainEnergy:Float};
-	function takeCostForBonus(playerId:Int, peopleId:Int, costType:Int, cb:(gameInfo:GameInfo)->Void):Void;
+	function takeCostForBonus(playerId:Int, peopleId:Int, costType:Int, cb:(gameInfo:GameInfo) -> Void):Void;
 
-	function save(cb:(success:Bool)->Void):Void;
-	function load(cb:(success:Bool, gameInfo:GameInfo)->Void):Void;
+	function save(cb:(success:Bool) -> Void):Void;
+	function load(cb:(success:Bool, gameInfo:GameInfo) -> Void):Void;
 }
 
 final StrategyList:Array<StrategyCatelog> = [
@@ -288,8 +283,8 @@ final StrategyList:Array<StrategyCatelog> = [
 		intelligence: 70,
 		describe: '可以指定移動1~6格數(無視路障)',
 		targetType: StrategyTargetType.TARGET_GRID,
-		value:{
-			valid:[1,2,3,4,5,6]
+		value: {
+			valid: [1, 2, 3, 4, 5, 6]
 		}
 	},
 	{
@@ -298,156 +293,153 @@ final StrategyList:Array<StrategyCatelog> = [
 		intelligence: 50,
 		describe: '指定武將回復40體力（可以恢復自己）',
 		targetType: StrategyTargetType.SELF_PEOPLE,
-		value:null
+		value: null
 	},
 	{
 		id: 2,
 		name: '遠交近攻',
-		intelligence: 80,
+		intelligence: 75,
 		describe: '直接獲取該格子的20%資源。並且友好度上升1',
 		targetType: StrategyTargetType.SELF_GRID,
-		value:null
+		value: null
 	},
 	{
 		id: 3,
 		name: '緩兵之計',
-		intelligence: 80,
+		intelligence: 55,
 		describe: '指定自己前後5格當中的其中一格設置路障。走到那個格子的所以玩家會自動停下。然後路障消失',
 		targetType: StrategyTargetType.TARGET_GRID,
-		value:{
-			valid:[-5,-4,-3,-2,-1,1,2,3,4,5]
+		value: {
+			valid: [-5, -4, -3, -2, -1, 1, 2, 3, 4, 5]
 		}
 	},
 ];
 
-
 final BuildingList:Array<BuildingCatelog> = [
 	{
-		id:0,
-		name:'農田(未建)',
+		id: 0,
+		name: '農田(未建)',
 		money: 50,
 		describe: '糧食每回合+0',
-		type:FARM(0)
+		type: FARM(0)
 	},
 	{
-		id:1,
-		name:'農田(小)',
+		id: 1,
+		name: '農田(小)',
 		money: 20,
 		describe: '糧食每回合+2',
-		type:FARM(1)
+		type: FARM(1)
 	},
 	{
-		id:2,
-		name:'農田(中)',
+		id: 2,
+		name: '農田(中)',
 		money: 20,
 		describe: '糧食每回合+3',
-		type:FARM(2)
+		type: FARM(2)
 	},
 	{
-		id:3,
-		name:'農田(大)',
+		id: 3,
+		name: '農田(大)',
 		money: 0,
 		describe: '糧食每回合+4',
-		type:FARM(3)
+		type: FARM(3)
 	},
 	{
-		id:4,
-		name:'市集(未建)',
+		id: 4,
+		name: '市集(未建)',
 		money: 50,
 		describe: '金錢每回合+0',
-		type:MARKET(0)
+		type: MARKET(0)
 	},
 	{
-		id:5,
-		name:'市集(小)',
+		id: 5,
+		name: '市集(小)',
 		money: 20,
 		describe: '金錢每回合+2',
-		type:MARKET(1)
+		type: MARKET(1)
 	},
 	{
-		id:6,
-		name:'市集(中)',
+		id: 6,
+		name: '市集(中)',
 		money: 20,
 		describe: '金錢每回合+3',
-		type:MARKET(2)
+		type: MARKET(2)
 	},
 	{
-		id:7,
-		name:'市集(大)',
+		id: 7,
+		name: '市集(大)',
 		money: 0,
 		describe: '金錢每回合+4',
-		type:MARKET(3)
+		type: MARKET(3)
 	},
 	{
-		id:8,
-		name:'兵營(未建)',
+		id: 8,
+		name: '兵營(未建)',
 		money: 50,
 		describe: '士兵每回合+0',
-		type:BARRACKS(0)
+		type: BARRACKS(0)
 	},
 	{
-		id:9,
-		name:'兵營(小)',
+		id: 9,
+		name: '兵營(小)',
 		money: 20,
 		describe: '士兵每回合+1',
-		type:BARRACKS(1)
+		type: BARRACKS(1)
 	},
 	{
-		id:10,
-		name:'兵營(中)',
+		id: 10,
+		name: '兵營(中)',
 		money: 20,
 		describe: '士兵每回合+2',
-		type:BARRACKS(2)
+		type: BARRACKS(2)
 	},
 	{
-		id:11,
-		name:'兵營(大)',
+		id: 11,
+		name: '兵營(大)',
 		money: 0,
 		describe: '士兵每回合+3',
-		type:BARRACKS(3)
+		type: BARRACKS(3)
 	},
 	{
-		id:12,
-		name:'人材所(未建)',
+		id: 12,
+		name: '人材所(未建)',
 		money: 50,
 		describe: '提高武將在探索計算時的魅力(+0)及聘用計算時的魅力(+0)',
-		type:EXPLORE(0)
+		type: EXPLORE(0)
 	},
 	{
-		id:13,
-		name:'人材所',
+		id: 13,
+		name: '人材所',
 		money: 0,
 		describe: '提高武將在探索計算時的魅力(+5)及聘用計算時的魅力(+5)',
-		type:EXPLORE(1)
+		type: EXPLORE(1)
 	},
 	{
-		id:14,
-		name:'城墻(未建)',
+		id: 14,
+		name: '城墻(未建)',
 		money: 50,
 		describe: '此格子防禦方的加成提高。(+0%)',
-		type:WALL(0)
+		type: WALL(0)
 	},
 	{
-		id:15,
-		name:'城墻(弱)',
+		id: 15,
+		name: '城墻(弱)',
 		money: 20,
 		describe: '此格子防禦方的加成提高。(+15%)',
-		type:WALL(1)
+		type: WALL(1)
 	},
 	{
-		id:16,
-		name:'城墻(中)',
+		id: 16,
+		name: '城墻(中)',
 		money: 20,
 		describe: '此格子防禦方的加成提高。(+30%)',
-		type:WALL(2)
+		type: WALL(2)
 	},
 	{
-		id:17,
-		name:'城墻(強)',
+		id: 17,
+		name: '城墻(強)',
 		money: 0,
 		describe: '此格子防禦方的加成提高。(+50%)',
-		type:WALL(3)
+		type: WALL(3)
 	}
 ];
-
-
