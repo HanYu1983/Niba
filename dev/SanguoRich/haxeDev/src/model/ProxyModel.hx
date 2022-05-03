@@ -135,10 +135,11 @@ class ProxyModel implements IModel {
 		return model.takeBuilding(p1PeopleId, gridId, peopleId, current, to, cb);
 	}
 
-
 	public function getResultOfCost(p1Player:PlayerInfo, p1People:People, costType:Int):{costFood:Float, gainExp:Float, gainEnergy:Float} {
-		throw new haxe.exceptions.NotImplementedException();
+		return model.getResultOfCost(p1Player, p1People, costType);
 	}
 
-	public function takeCostForBonus(playerId:Int, peopleId:Int, costType:Int, cb:(gameInfo:GameInfo) -> Void) {}
+	public function takeCostForBonus(playerId:Int, peopleId:Int, costType:Int, cb:(gameInfo:GameInfo) -> Void) {
+		return model.takeCostForBonus(playerId, peopleId, costType, cb);
+	}
 }

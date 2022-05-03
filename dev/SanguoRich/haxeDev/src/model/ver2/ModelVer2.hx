@@ -15,6 +15,7 @@ import model.ver2.alg.Snatch;
 import model.ver2.alg.Transfer;
 import model.ver2.alg.Strategy;
 import model.ver2.alg.Building;
+import model.ver2.alg.CostForBonus;
 
 class ModelVer2 extends DebugModel {
 	final context:Context = {
@@ -165,6 +166,16 @@ class ModelVer2 extends DebugModel {
 
 	override function takeBuilding(playerId:Int, gridId:Int, peopleId:Int, current:Dynamic, to:Dynamic, cb:(gameInfo:GameInfo) -> Void) {
 		_takeBuilding(context, playerId, gridId, peopleId, current, to);
+		cb(gameInfo());
+	}
+
+	override function getResultOfCost(p1Player:PlayerInfo, p1People:model.PeopleGenerator.People,
+			costType:Int):{costFood:Float, gainExp:Float, gainEnergy:Float} {
+		return _getResultOfCost(context, p1Player, p1People, costType);
+	}
+
+	override function takeCostForBonus(playerId:Int, peopleId:Int, costType:Int, cb:(gameInfo:GameInfo) -> Void) {
+		_takeCostForBonus(context, playerId, peopleId, costType);
 		cb(gameInfo());
 	}
 }

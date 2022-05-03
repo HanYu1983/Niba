@@ -185,6 +185,10 @@ enum Event {
 		peopleBefore:model.PeopleGenerator.People,
 		peopleAfter:model.PeopleGenerator.People,
 	});
+	COST_FOR_BONUS_RESULT(value:{
+		costType:Int,
+		people:model.PeopleGenerator.People,
+	});
 }
 
 typedef Context = {
@@ -409,6 +413,11 @@ function getGameInfo(ctx:Context, root:Bool):GameInfo {
 			case PEOPLE_LEVEL_UP_EVENT(value):
 				{
 					id: EventInfoID.PEOPLE_LEVEL_UP_EVENT,
+					value: value
+				}
+			case COST_FOR_BONUS_RESULT(value):
+				{
+					id: EventInfoID.COST_FOR_BONUS_RESULT,
 					value: value
 				}
 		}
@@ -674,6 +683,8 @@ function getPlayerCommand(ctx:Context, playerId:Int):Array<ActionInfoID> {
 				switch gridInfo.buildtype {
 					case EMPTY:
 						ret.push(ActionInfoID.EXPLORE);
+						ret.push(ActionInfoID.CAMP);
+						ret.push(ActionInfoID.PRACTICE);
 					case _:
 				}
 				if (gridInfo.people.length > 0) {
