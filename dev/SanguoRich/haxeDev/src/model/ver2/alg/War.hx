@@ -45,9 +45,11 @@ function getWarCost(ctx:Context, playerId:Int, gridId:Int, p1PeopleId:Int, p2Peo
 		final fact2 = if (atkPeople.abilities.has(0)) WAR_FRONT_ABILITY_FACTOR else 1.0;
 		final fact3 = if (atkPeople.abilities.has(1)) WAR_FRONT_ABILITY_FACTOR else 1.0;
 		final fact4 = if (atkPeople.abilities.has(2)) WAR_FRONT_ABILITY_FACTOR else 1.0;
-		final fact5 = if (atkPeople.abilities.has(3)) WAR_FRONT_ABILITY_FACTOR else 1.0;
+		var fact5 = if (atkPeople.abilities.has(3)) WAR_FRONT_ABILITY_FACTOR else 1.0;
+		fact5 = 1.0;
 		final fact6 = getPeopleForce(ctx, atkPeople.id) / getPeopleCommand(ctx, defPeople.id);
-		final fact7 = getPeopleIntelligence(ctx, atkPeople.id) / getPeopleIntelligence(ctx, defPeople.id);
+		var fact7 = getPeopleIntelligence(ctx, atkPeople.id) / getPeopleIntelligence(ctx, defPeople.id);
+		fact7 = 1.0;
 		final factWall = 1.0 - ctx.attachments.filter(a -> a.belongToGridId == gridId).fold((p, a) -> {
 			return a + switch p.type {
 				case WALL(level):
@@ -93,11 +95,13 @@ function getWarCost(ctx:Context, playerId:Int, gridId:Int, p1PeopleId:Int, p2Peo
 		final fact2 = if (atkPeople.abilities.has(0)) WAR_FRONT_ABILITY_FACTOR else 1.0;
 		final fact3 = if (atkPeople.abilities.has(1)) WAR_FRONT_ABILITY_FACTOR else 1.0;
 		final fact4 = if (atkPeople.abilities.has(2)) WAR_FRONT_ABILITY_FACTOR else 1.0;
-		final fact5 = if (atkPeople.abilities.has(3)) WAR_FRONT_ABILITY_FACTOR else 1.0;
+		var fact5 = if (atkPeople.abilities.has(3)) WAR_FRONT_ABILITY_FACTOR else 1.0;
+		fact5 = 1.0;
 		final fact6 = if (options.occupy && atkPeople.abilities.has(8)) WAR_FRONT_ABILITY_FACTOR else 1.0;
 		final fact7 = if (options.occupy && atkPeople.abilities.has(9)) WAR_FRONT_ABILITY_FACTOR else 1.0;
 		final fact8 = getPeopleCommand(ctx, atkPeople.id) / getPeopleForce(ctx, defPeople.id);
-		final fact9 = getPeopleIntelligence(ctx, atkPeople.id) / getPeopleIntelligence(ctx, defPeople.id);
+		var fact9 = getPeopleIntelligence(ctx, atkPeople.id) / getPeopleIntelligence(ctx, defPeople.id);
+		fact9 = 1.0;
 		final factWall = 1.0 + ctx.attachments.filter(a -> a.belongToGridId == gridId).fold((p, a) -> {
 			return a + switch p.type {
 				case WALL(level):
