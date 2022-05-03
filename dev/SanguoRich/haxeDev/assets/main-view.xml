@@ -76,51 +76,12 @@
                             <button text="結束" width="100%" id="btn_end" />
                         </vbox>
                     </frame>
-                    <!-- <frame id="box_npcCmds" width="100%" text="對格子指令">
+                    <frame id="box_system" width="100%" text="系統指令">
                         <vbox width="100%">
-                            <button text="交涉" width="100%" id="btn_negotiate" />
-                            <button text="搶奪" width="100%" id="btn_snatch" />
-                            <button text="攻城" width="100%" id="btn_occupation" />
-                            <button text="經商" width="100%" id="btn_earnMoney" />
-                            <button text="探索" width="100%" id="btn_explore" />
-                            <button text="聘用" width="100%" id="btn_hire" />
-                        </vbox>
-                    </frame> -->
-                    <!-- <frame id="box_enemyCmds" width="100%" text="對敵方指令">
-                        <vbox width="100%">
-                            <button text="搶奪" width="100%" id="btn_snatchPlayer" />
-                            <button text="攻城" width="100%" id="btn_occupationPlayer" />
-                        </vbox>
-                    </frame> -->
-                    <!-- <frame id="box_emptyCmds" width="100%" text="對空地指令">
-                        <vbox width="100%">
-                            <button text="探索" width="100%" id="btn_explore" />
-                            <button text="聘用" width="100%" id="btn_hire" />
+                            <button text="記錄" width="100%" id="btn_save" />
+                            <button text="讀取" width="100%" id="btn_load" />
                         </vbox>
                     </frame>
-                    <frame id="box_moneyCmds" width="100%" text="金錢指令">
-                        <vbox width="100%">
-                            <button text="經商" width="100%" id="btn_earnMoney" />
-                        </vbox>
-                    </frame>
-                    <frame id="box_foodCmds" width="100%" text="糧食指令">
-                        <vbox width="100%">
-                            <button text="買糧" width="100%" id="btn_buyFood" />
-                            <button text="賣糧" width="100%" id="btn_sellFood" />
-                        </vbox>
-                    </frame>
-                    <frame id="box_armyCmds" width="100%" text="士兵指令">
-                        <vbox width="100%">
-                            <button text="徵兵" width="100%" id="btn_buyArmy" />
-                            <button text="裁兵" width="100%" id="btn_sellArmy" />
-                        </vbox>
-                    </frame>
-                    <frame id="box_myAreaCmds" width="100%" text="自己所屬指令">
-                        <vbox width="100%">
-                            <button text="調度" width="100%" id="btn_transfer" />
-                            <button text="擴建" width="100%" id="btn_build" />
-                        </vbox>
-                    </frame> -->
                 </vbox>
                 
             </hbox>

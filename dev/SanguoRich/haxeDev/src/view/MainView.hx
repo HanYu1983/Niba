@@ -226,6 +226,25 @@ class MainView extends Box {
 		btn_sellFood.text = '${btn_sellFood.text}(${ENERGY_COST_ON_RESOURCE})';
 	}
 
+	@:bind(btn_save, MouseEvent.CLICK)
+	function onBtnSaveClick(e){
+		Main.model.save((success:Bool)->{
+			final msg = success ? '成功記錄' : '記錄失敗';
+			Dialogs.messageBox(msg, msg, MessageBoxType.TYPE_INFO);
+		});
+	}
+
+	@:bind(btn_load, MouseEvent.CLICK)
+	function onBtnLoadClick(e){
+		Main.model.load((success:Bool, gameInfo:GameInfo)->{
+			final msg = success ? '成功讀取' : '讀取失敗';
+			if(success) {
+				syncViewByInfo(gameInfo);
+			}
+			Dialogs.messageBox(msg, msg, MessageBoxType.TYPE_INFO);
+		});
+	}
+
 	@:bind(btn_go, MouseEvent.CLICK)
 	function onBtnGoClick(e:MouseEvent) {
 		Main.model.playerDice(syncView);

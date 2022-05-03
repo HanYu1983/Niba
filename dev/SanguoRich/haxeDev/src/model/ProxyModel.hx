@@ -142,4 +142,8 @@ class ProxyModel implements IModel {
 	public function takeCostForBonus(playerId:Int, peopleId:Int, costType:Int, cb:(gameInfo:GameInfo) -> Void) {
 		return model.takeCostForBonus(playerId, peopleId, costType, cb);
 	}
+
+	public function save(cb:(success:Bool) -> Void) {}
+
+	public function load(cb:(success:Bool, gameInfo:GameInfo) -> Void) {}
 }
