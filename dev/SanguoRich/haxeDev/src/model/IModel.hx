@@ -276,6 +276,9 @@ interface IModel {
 
 	function getResultOfCost(p1Player:PlayerInfo, p1People:People, costType:Int):{costFood:Float, gainExp:Float, gainEnergy:Float};
 	function takeCostForBonus(playerId:Int, peopleId:Int, costType:Int, cb:(gameInfo:GameInfo)->Void):Void;
+
+	function save(cb:(success:Bool)->Void):Void;
+	function load(cb:(success:Bool, gameInfo:GameInfo)->Void):Void;
 }
 
 final StrategyList:Array<StrategyCatelog> = [

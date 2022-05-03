@@ -407,4 +407,12 @@ class DebugModel implements IModel {
 		];
 		cb(info);
 	}
+
+	public function save(cb:(success:Bool) -> Void) {
+		cb(true);
+	}
+
+	public function load(cb:(success:Bool, gameInfo:GameInfo) -> Void) {
+		cb(true, info);
+	}
 }
