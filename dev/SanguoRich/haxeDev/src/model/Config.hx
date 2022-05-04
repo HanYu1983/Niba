@@ -97,7 +97,7 @@ final ENERGY_COST_ON_SNATCH = 15;
 final ENERGY_COST_ON_WAR = 30;
 
 // 最低搶奪兵力
-final SNATCH_ARMY_AT_LEAST = 30;
+final SNATCH_ARMY_AT_LEAST = 40;
 
 // 最低友好度
 final MIN_GRID_FAVOR = -3;
