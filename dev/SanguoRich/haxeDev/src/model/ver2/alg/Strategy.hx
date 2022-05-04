@@ -93,7 +93,15 @@ function applyStrategyCost(ctx:Context, p1PeopleId:Int, strategyId:Int, targetPl
 			player.food += gainFood;
 			player.money += gainMoney;
 			player.army += gainArmy;
-			grid.favor[player.id] = Std.int(Math.min(MAX_GRID_FAVOR, grid.favor[player.id] + 1));
+			for (targetPlayerId in 0...grid.favor.length) {
+				if (targetPlayerId == player.id) {
+					// 對你提升友好
+					grid.favor[targetPlayerId] = Std.int(Math.min(MAX_GRID_FAVOR, grid.favor[targetPlayerId] + 1));
+				} else {
+					// 對其它人降低友好
+					grid.favor[targetPlayerId] = Std.int(Math.max(MIN_GRID_FAVOR, grid.favor[targetPlayerId] - 1));
+				}
+			}
 		case 3:
 			// 緩兵之計
 			ctx.groundItems.push({
