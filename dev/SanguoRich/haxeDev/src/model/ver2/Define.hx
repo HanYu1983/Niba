@@ -326,38 +326,48 @@ function getGridInfo(ctx:Context, grid:Grid):model.GridGenerator.Grid {
 	}
 }
 
-function getGameInfo(ctx:Context, root:Bool):GameInfo {
-	function calcGrids(playerInfo:model.IModel.PlayerInfo):model.IModel.PlayerInfo {
-		final total = playerInfo.grids.fold((g:model.GridGenerator.Grid, a:{
-			food:Float,
-			money:Float,
-			army:Float,
-			people:Array<model.PeopleGenerator.People>
-		}) -> {
-			return {
-				food: a.food + g.food,
-				money: a.money + g.money,
-				army: a.army + g.army,
-				people: a.people.concat(g.people),
-			}
-		}, {
-			food: 0.0,
-			money: 0.0,
-			army: 0.0,
-			people: []
-		});
-		playerInfo.food = total.food;
-		playerInfo.money = total.money;
-		playerInfo.army = total.army;
-		playerInfo.people = total.people;
+private function calcGridsByPlayerInfo(ctx:Context, playerInfo:model.IModel.PlayerInfo):model.IModel.PlayerInfo {
+	final total = playerInfo.grids.fold((g:model.GridGenerator.Grid, a:{
+		food:Float,
+		money:Float,
+		army:Float,
+		people:Array<model.PeopleGenerator.People>
+	}) -> {
+		return {
+			food: a.food + g.food,
+			money: a.money + g.money,
+			army: a.army + g.army,
+			people: a.people.concat(g.people),
+		}
+	}, {
+		food: 0.0,
+		money: 0.0,
+		army: 0.0,
+		people: []
+	});
+	playerInfo.food = total.food;
+	playerInfo.money = total.money;
+	playerInfo.army = total.army;
+	playerInfo.people = total.people;
+	return playerInfo;
+}
+
+private function calcGrids(ctx:Context):Array<model.IModel.PlayerInfo> {
+	return ctx.players.map(p -> getPlayerInfo(ctx, p)).map(p -> calcGridsByPlayerInfo(ctx, p));
+}
+
+private function calcTotals(ctx:Context):Array<model.IModel.PlayerInfo> {
+	return ctx.players.map(p -> {
+		final playerInfo = getPlayerInfo(ctx, p);
+		final total = calcGridsByPlayerInfo(ctx, Reflect.copy(playerInfo));
+		playerInfo.food = playerInfo.food + total.food;
+		playerInfo.money = playerInfo.money + total.money;
+		playerInfo.army = playerInfo.army + total.army;
 		return playerInfo;
-	}
+	});
+}
 
-	// 不管週期, 直接計算下一次的結果
-	final nextCtx = deepCopy(ctx); // _cloner.clone(ctx);
-	model.ver2.alg.Alg.doPeopleMaintain(nextCtx);
-	model.ver2.alg.Alg.doGridGrow(nextCtx);
-
+function getGameInfo(ctx:Context, root:Bool):GameInfo {
 	final events:Array<model.IModel.EventInfo> = root ? ctx.events.map(e -> {
 		// 顯式使用類型(EventInfo), 這裡不能依靠類型推理, 不然會編譯錯誤
 		final eventInfo:model.IModel.EventInfo = switch e {
@@ -437,6 +447,11 @@ function getGameInfo(ctx:Context, root:Bool):GameInfo {
 	// 先進後出
 	events.reverse();
 
+	// 不管週期, 直接計算下一次的結果
+	final nextCtx = deepCopy(ctx); // _cloner.clone(ctx);
+	model.ver2.alg.Alg.doPeopleMaintain(nextCtx);
+	model.ver2.alg.Alg.doGridGrow(nextCtx);
+
 	return {
 		players: ctx.players.map(p -> getPlayerInfo(ctx, p)).map(p -> {
 			// 計算下次結算後的差額
@@ -446,15 +461,30 @@ function getGameInfo(ctx:Context, root:Bool):GameInfo {
 			p.armyGrow = nextP.army - p.army;
 			return p;
 		}),
-		playerGrids: ctx.players.map(p -> getPlayerInfo(ctx, p)).map(calcGrids),
-		playerTotals: ctx.players.map(p -> {
-			final playerInfo = getPlayerInfo(ctx, p);
-			final total = calcGrids(Reflect.copy(playerInfo));
-			playerInfo.food = playerInfo.food + total.food;
-			playerInfo.money = playerInfo.money + total.money;
-			playerInfo.army = playerInfo.army + total.army;
-			return playerInfo;
-		}),
+		playerGrids: {
+			final curr = calcGrids(ctx);
+			final next = calcGrids(nextCtx);
+			for (i in 0...curr.length) {
+				final p = curr[i];
+				final nextP = next[i];
+				p.maintainPeople = nextP.money - p.money;
+				p.maintainArmy = nextP.food - p.food;
+				p.armyGrow = nextP.army - p.army;
+			}
+			curr;
+		},
+		playerTotals: {
+			final curr = calcTotals(ctx);
+			final next = calcTotals(nextCtx);
+			for (i in 0...curr.length) {
+				final p = curr[i];
+				final nextP = next[i];
+				p.maintainPeople = nextP.money - p.money;
+				p.maintainArmy = nextP.food - p.food;
+				p.armyGrow = nextP.army - p.army;
+			}
+			curr;
+		},
 		grids: ctx.grids.map(p -> getGridInfo(ctx, p)).map(p -> {
 			// 計算下次結算後的差額
 			final nextP = nextCtx.grids[p.id];
