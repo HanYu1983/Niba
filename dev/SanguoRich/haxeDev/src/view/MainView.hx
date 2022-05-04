@@ -802,6 +802,9 @@ class MainView extends Box {
 			info.cityCount = p.grids.length;
 			tab_allPlayers.dataSource.add(info);
 		}
+
+
+		lbl_gameInfo.value = '玩家:${gameInfo.currentPlayer.name}正在行動';
 	}
 
 	function syncPlayerInfo(id:Int) {

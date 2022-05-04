@@ -5,10 +5,11 @@ package model;
 final PLAYER_EARN_PER_TURN = 1;
 final SHOW_POPUP_WHEN_EARN = false;
 
-// 主公支付的薪水為主公所有武將的價值參數(value)總合的%數
+// 主公支付的薪水為主公所有武將的價值參數(cost)總合的%數
 // 主公支付的食物為所有格子上以及身上的士兵的數量的%數
-// 作用中
-final PLAYER_EARN_PER_TURN_PERSENT = 0.01;
+final PLAYER_SPEND_MONEY_FOR_PEOPLE_PER_TURN_PERSENT = 0.005;
+
+final PLAYER_SPEND_FOOD_FOR_ARMY_PER_TURN_PERSENT = 0.01;
 
 // 武將聘用價格%數
 final PEOPLE_HIRE_COST_FACTOR = .1;
@@ -85,11 +86,11 @@ function getEnergyFactor(atkArmy:Float) {
 
 final ENERGY_COST_ON_STRATEGY = 30;
 final ENERGY_COST_ON_HIRE = 10;
-final ENERGY_COST_ON_NEGO = 20;
+final ENERGY_COST_ON_NEGO = 15;
 final ENERGY_COST_ON_RESOURCE = 10;
 final ENERGY_COST_ON_EXPLORE = 10;
 final ENERGY_COST_ON_BUILDING = 10;
-final ENERGY_COST_ON_SNATCH = 20;
+final ENERGY_COST_ON_SNATCH = 15;
 final ENERGY_COST_ON_WAR = 30;
 
 // 最低搶奪兵力

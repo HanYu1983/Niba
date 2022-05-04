@@ -122,4 +122,9 @@ class Main {
 		final catelog = BuildingList.filter((catelog) -> Type.enumEq(catelog.type, b));
 		return catelog[0];
 	}
+
+	public static function getStrategyCatelog(sid:Int){
+		final catelog = StrategyList.filter((catelog) -> catelog.id == sid );
+		return catelog[0];
+	}
 }

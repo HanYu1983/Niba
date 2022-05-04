@@ -78,12 +78,9 @@ class GridView extends Box{
         box_food.percentHeight = Math.max(Main.clamp(grid.food / 500) * 100, .1);
         box_army.percentHeight = Math.max(Main.clamp(grid.army / 500) * 100, .1);
 
-        box_stop.hide();
-        for(ary in grid.strategys){
-            if(ary.has(3)){
-                box_stop.show();
-                break;
-            }
+        final strategyViews = [box_s0, box_s1, box_s2, box_s3];
+        for(index => ary in grid.strategys){
+            ary.length > 0 ? strategyViews[index].show() : strategyViews[index].hide();
         }
 
         if(grid.buildtype != GROWTYPE.EMPTY){

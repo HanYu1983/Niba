@@ -40,7 +40,7 @@ class LeaderGridView extends BasicGridView{
         pro_name.value = p.name;
         pro_money.value = '${Math.floor(p.money)} (薪俸:${Main.getFixNumber(p.maintainPeople)})';
         pro_food.value = '${Math.floor(p.food)} (消耗:${Main.getFixNumber(p.maintainArmy)})';
-        pro_army.value = Math.floor(p.army);
+        pro_army.value = '${Math.floor(p.army)} (消耗:${Main.getFixNumber(p.armyGrow)})';
         pro_peopleCount.value = p.people.length;
         pro_cityCount.value = p.grids.length;
     }

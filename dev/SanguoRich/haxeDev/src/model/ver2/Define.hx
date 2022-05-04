@@ -575,11 +575,11 @@ function getMaintainArmy(ctx:Context, playerId:Int):Float {
 }
 
 function getMaintainPeoplePure(totalPeopleCost:Float):Float {
-	return totalPeopleCost * PLAYER_EARN_PER_TURN_PERSENT;
+	return totalPeopleCost * PLAYER_SPEND_MONEY_FOR_PEOPLE_PER_TURN_PERSENT;
 }
 
 function getMaintainArmyPure(totalArmy:Float):Float {
-	return totalArmy * PLAYER_EARN_PER_TURN_PERSENT;
+	return totalArmy * PLAYER_SPEND_FOOD_FOR_ARMY_PER_TURN_PERSENT;
 }
 
 function getPeopleById(ctx:Context, id:Int):People {

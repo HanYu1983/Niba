@@ -4,8 +4,9 @@
     </hbox>
     <hbox id="box_peopleList1" width="100%" height="150"></hbox>
     <hbox id="box_peopleList2" width="100%" height="150"></hbox>
-    <hbox horizontalAlign="center">
-        <property-grid id="pg_playerInfo" width="300">
+    <hbox width="100%">
+        <box id="box_gridInfo" width="50%"/>
+        <property-grid id="pg_playerInfo" width="50%">
             <property-group text="君主資料">
                 <property id="pro_name" label="執行武將" value="100" />
                 <property id="pro_intelligence" label="智力" value="1000" />
@@ -15,7 +16,6 @@
                 <property id="pro_money" label="金錢" value="1000" />
                 <property id="pro_food" label="食物" value="1000" />
                 <property id="pro_army" label="士兵" value="1000" />
-                <!-- <property id="pro_maintainFood" label="糧草消耗" value="1000" /> -->
                 <property id="pro_ability" label="專長加成" value="" />
                 <property id="pro_successRate" label="成功率" value="50%" />
             </property-group>

@@ -8,6 +8,6 @@
         <property id="pro_favor" label="友好度" value="空地" />
         <property id="pro_player" label="所有者" value="空地" />
         <property id="pro_peopleCount" label="武將數" value="" />
-        <!-- <property id="pro_landType" label="地形" value="空地" /> -->
+        <property id="pro_strategy" label="計策" value="" />
     </property-group>
 </property-grid>

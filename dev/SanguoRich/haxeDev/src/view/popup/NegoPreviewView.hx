@@ -1,5 +1,6 @@
 package view.popup;
 
+import view.widgets.GridGridView;
 import model.Config;
 import model.IModel.PreResultOnNego;
 import haxe.ui.events.UIEvent;
@@ -12,6 +13,7 @@ import haxe.ui.events.MouseEvent;
 class NegoPreviewView extends PopupView {
 	var p1List:PeopleListView;
 	var p2List:PeopleListView;
+	var gridView:GridGridView;
 
 	public function new() {
 		super();
@@ -21,6 +23,9 @@ class NegoPreviewView extends PopupView {
 
 		p2List = new PeopleListView();
 		box_peopleList2.addComponent(p2List);
+
+		gridView = new GridGridView();
+		box_gridInfo.addComponent(gridView);
 	}
 
 	override function showPopup(info:Dynamic, cb:()->Void = null) {
@@ -71,6 +76,12 @@ class NegoPreviewView extends PopupView {
 			}
 		}
 		p2List.selectedIndex = 0;
+
+
+		final gameInfo = Main.model.gameInfo();
+		final gridId = gameInfo.currentPlayer.atGridId;
+		final grid = gameInfo.grids[gridId];
+		gridView.setInfo(grid);
 	}
 
 	@:bind(btn_cancel, MouseEvent.CLICK)
