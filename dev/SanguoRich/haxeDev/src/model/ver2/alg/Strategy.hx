@@ -110,6 +110,28 @@ function applyStrategyCost(ctx:Context, p1PeopleId:Int, strategyId:Int, targetPl
 				belongToPlayerId: p1.belongToPlayerId,
 				position: targetGridId
 			});
+		case 4:
+			// 火中取栗
+			// 將拆除指定格中非自己的路障
+			final player = ctx.players[p1.belongToPlayerId];
+			final itemWillRemoved = ctx.groundItems.filter(i -> i.position == targetGridId && i.belongToPlayerId != player.id);
+			for (item in itemWillRemoved) {
+				// 中立路障不搶錢
+				if (item.belongToPlayerId == null) {
+					throw new haxe.Exception("不該有中立路障");
+				}
+				// 搶錢
+				final targetPlayer = ctx.players[item.belongToPlayerId];
+				final tax = 10;
+				targetPlayer.money = Math.max(0, player.money - tax);
+				player.money += tax;
+			}
+			// 拆除
+			ctx.groundItems = ctx.groundItems.filter(i -> itemWillRemoved.map(j -> j.id).has(i.id) == false);
+		case 5:
+			// 趁虛而入
+			final p2 = getPeopleById(ctx, targetPeopleId);
+			p2.energy = Math.max(0, p2.energy - 50);
 	}
 	return true;
 }
