@@ -89,7 +89,7 @@ function getSnatchCost(ctx:Context, playerId:Int, gridId:Int, p1PeopleId:Int, p2
 			final fact2 = {
 				// -3~3 => 0~1
 				var tmp = grid.favor[playerId] + 3.0;
-				tmp /= 7.0;
+				tmp /= 6.0;
 				// 0~1 => 1~0
 				tmp = 1.0 - tmp;
 				Math.pow(tmp, 0.3);
