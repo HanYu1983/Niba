@@ -19,7 +19,7 @@ function getExploreCost(ctx:Context, playerId:Int, gridId:Int, p1SelectId:Int) {
 			final grid = ctx.grids[gridId];
 			final p1 = getPeopleById(ctx, p1SelectId);
 			final useEnergy = p1.energy / (100 / ENERGY_COST_ON_EXPLORE);
-			final base = getBase(useEnergy, ENERGY_COST_ON_EXPLORE, .1);
+			final base = getBase(useEnergy, ENERGY_COST_ON_EXPLORE, 0.0) * BASE_RATE_EXPLORE;
 			final charmExt = ctx.attachments.filter(a -> a.belongToGridId == gridId).fold((p, a) -> {
 				return a + switch p.type {
 					case EXPLORE(level):

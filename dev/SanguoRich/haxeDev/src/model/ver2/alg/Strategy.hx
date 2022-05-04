@@ -13,7 +13,8 @@ function getStrategyCost(ctx:Context, p1PeopleId:Int, strategyId:Int, targetPlay
 	final p1 = getPeopleById(ctx, p1PeopleId);
 	final strategy = StrategyList[strategyId];
 	final useEnergy = p1.energy / (100 / ENERGY_COST_ON_STRATEGY);
-	final base = getBase(useEnergy, ENERGY_COST_ON_STRATEGY, 0.0);
+	// 基本值最高0.5
+	final base = getBase(useEnergy, ENERGY_COST_ON_STRATEGY, 0.0) * BASE_RATE_STRATEGY;
 	final fact1 = getPeopleIntelligence(ctx, p1.id) / Math.max(strategy.intelligence, 1.0);
 	final fact2 = switch strategy.targetType {
 		case TARGET_PEOPLE:

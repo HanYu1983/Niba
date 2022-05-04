@@ -140,3 +140,11 @@ function getExpLevel(exp:Float):Int {
 function getExpAdd(p:Float, max:Float):Float {
 	return (max - EXP_UP.s) * p + EXP_UP.s;
 }
+
+// 體力產生的基本值成數
+// 1代表支付所有體力時, 機率為1
+final BASE_RATE_STRATEGY = 0.5;
+final BASE_RATE_RESOURCE = 0.6;
+final BASE_RATE_NEGO = 0.3;
+final BASE_RATE_HIRE = 0.4;
+final BASE_RATE_EXPLORE = 0.6;

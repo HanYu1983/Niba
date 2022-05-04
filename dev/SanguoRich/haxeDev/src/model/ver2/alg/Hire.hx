@@ -21,7 +21,7 @@ function getHireCost(ctx:Context, playerId:Int, gridId:Int, p1SelectId:Int, p2Se
 					final hireCost = p2.cost * PEOPLE_HIRE_COST_FACTOR;
 					final hireMoneyOffset = player.money - hireCost;
 					final useEnergy = p1.energy / (100 / ENERGY_COST_ON_HIRE);
-					final base = getBase(useEnergy, ENERGY_COST_ON_HIRE, -.1);
+					final base = getBase(useEnergy, ENERGY_COST_ON_HIRE, 0.0) * BASE_RATE_HIRE;
 					final charmExt = ctx.attachments.filter(a -> a.belongToGridId == gridId).fold((p, a) -> {
 						return a + switch p.type {
 							case EXPLORE(level):

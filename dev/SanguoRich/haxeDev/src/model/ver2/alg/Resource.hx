@@ -30,7 +30,7 @@ function getResourceCost(ctx:Context, playerId:Int, gridId:Int, p1SelectId:Int, 
 			final grid = ctx.grids[gridId];
 			final p1 = getPeopleById(ctx, p1SelectId);
 			final useEnergy = p1.energy / (100 / ENERGY_COST_ON_RESOURCE);
-			final base = getBase(useEnergy, ENERGY_COST_ON_RESOURCE, 1.0);
+			final base = getBase(useEnergy, ENERGY_COST_ON_RESOURCE, 0.0) * BASE_RATE_RESOURCE;
 			final abiFactor:Float = if (type == RESOURCE.MONEY && (p1.abilities.has(4))) {
 				1.5;
 			} else if (type == RESOURCE.ARMY && (p1.abilities.has(11))) {

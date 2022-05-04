@@ -35,7 +35,7 @@ function getNegoCost(ctx:Context, playerId:Int, gridId:Int, p1SelectId:Int, p2Se
 					// 體力越少效率越低
 					final useEnergy = p1.energy / (100 / ENERGY_COST_ON_NEGO);
 					// 使用20體力的情況下基礎值為0.5
-					final base = getBase(useEnergy, ENERGY_COST_ON_NEGO, -.2);
+					final base = getBase(useEnergy, ENERGY_COST_ON_NEGO, 0.0) * BASE_RATE_NEGO;
 					final intelligenceFactor = getPeopleIntelligence(ctx, p1.id) / getPeopleIntelligence(ctx, p2.id);
 					final politicalFactor = getPeoplePolitical(ctx, p1.id) / getPeoplePolitical(ctx, p2.id);
 					final charmFactor = getPeopleCharm(ctx, p1.id) / getPeopleCharm(ctx, p2.id);
