@@ -117,7 +117,7 @@ class PeopleGenerator {
 	}
 
 	public function generate():People {
-		var peopleId = Std.int(Date.now().getTime());
+		var peopleId = Math.floor(Date.now().getTime() + Math.random() * 9999);
 		var name = this.names[peopleId % this.names.length];
 		var type = [0, 0, 0, 0, 0, 1, 1, 2, 2, 3][(Math.floor(Math.random() * 10))];
 		var values = this.valueMaps[type];
