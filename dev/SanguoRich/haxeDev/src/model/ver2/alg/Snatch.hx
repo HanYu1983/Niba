@@ -83,7 +83,8 @@ function getSnatchCost(ctx:Context, playerId:Int, gridId:Int, p1PeopleId:Int, p2
 			}
 			// 基本搶劫成數為守方派出的兵佔城裡總兵的成數
 			// 比如城裡100兵, 派出20兵的話, 就只能搶0.2
-			final base = army2 / grid.army;
+			// 使用對數調整曲線
+			final base = Math.pow(army2 / grid.army, 1.5);
 			// 我留下越多兵搶越多, 使用對數調整曲線
 			final fact1 = Math.pow(Math.max(0, army1 - warCost.playerCost[0].army) / army1, 0.2);
 			final fact2 = {
