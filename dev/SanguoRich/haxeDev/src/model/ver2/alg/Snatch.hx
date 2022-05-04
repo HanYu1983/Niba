@@ -50,9 +50,6 @@ function _getPreResultOfSnatch(ctx:Context, playerId:Int, gridId:Int, p1PeopleId
 function getSnatchCost(ctx:Context, playerId:Int, gridId:Int, p1PeopleId:Int, p2PeopleId:Int, army1:Float, army2:Float, isOccupation:Bool) {
 	final warCost = getWarCost(ctx, playerId, gridId, p1PeopleId, p2PeopleId, army1, army2, {occupy: isOccupation});
 
-	// 本來搶奪的資源跟交涉能力挂鈎，實際玩起來覺得很怪。改爲越是大勝利，搶的越多
-	var base = 0.3 + (warCost.playerCost[1].army / warCost.playerCost[0].army) * .2;
-
 	final grid = ctx.grids[gridId];
 	var maxPercent = grid.favor[playerId] + 3.0;
 	// -3~3 => 0~1
@@ -60,6 +57,9 @@ function getSnatchCost(ctx:Context, playerId:Int, gridId:Int, p1PeopleId:Int, p2
 	// 0~1 => 1~0
 	maxPercent = 1.0 - maxPercent;
 
+	// 本來搶奪的資源跟交涉能力挂鈎，實際玩起來覺得很怪。改爲越是大勝利，搶的越多
+	var base = 0.4 + (warCost.playerCost[1].army / warCost.playerCost[0].army) * .2;
+	base += maxPercent *.2;
 	base = Math.min(base, .6 + maxPercent * .2);
 	return {
 		warCost: warCost,
