@@ -119,9 +119,14 @@ class StrategyPreviewView extends PopupView {
 								return remapId;
 							}
 						}
-						final rangeSetting:Array<Int> = s.value.valid;
-						final canGo = rangeSetting.map(remapId).map((i)->gameInfo.grids[i]);
-						updateGridList(canGo);
+						if(s.value != null){
+							final rangeSetting:Array<Int> = s.value.valid;
+							final canGo = rangeSetting.map(remapId).map((i)->gameInfo.grids[i]);
+							updateGridList(canGo);
+						}else{
+							updateGridList(gameInfo.grids);
+						}
+						
 					case TARGET_PLAYER:
 						drp_player.disabled = false;
 					case TARGET_PEOPLE:
