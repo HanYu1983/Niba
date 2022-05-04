@@ -292,7 +292,7 @@ final StrategyList:Array<StrategyCatelog> = [
 		id: 1,
 		name: '步步為營',
 		intelligence: 50,
-		describe: '指定武將回復40體力（可以恢復自己）',
+		describe: '指定武將回復30體力（可以恢復自己）',
 		targetType: StrategyTargetType.SELF_PEOPLE,
 		value: null
 	},
@@ -325,8 +325,8 @@ final StrategyList:Array<StrategyCatelog> = [
 	{
 		id: 5,
 		name: '趁虛而入',
-		intelligence: 90,
-		describe: '指定武將體力-50',
+		intelligence: 60,
+		describe: '指定武將體力-20',
 		targetType: StrategyTargetType.TARGET_PEOPLE,
 		value: null
 	},

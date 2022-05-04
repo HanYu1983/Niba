@@ -19,7 +19,7 @@ function getStrategyCost(ctx:Context, p1PeopleId:Int, strategyId:Int, targetPlay
 	final fact2 = switch strategy.targetType {
 		case TARGET_PEOPLE:
 			final p2 = getPeopleById(ctx, targetPeopleId);
-			getPeopleIntelligence(ctx, p1.id) / getPeopleIntelligence(ctx, p2.id);
+			Math.pow(getPeopleIntelligence(ctx, p1.id) / getPeopleIntelligence(ctx, p2.id), 0.20);
 		case _:
 			1.0;
 	}
@@ -73,11 +73,11 @@ function applyStrategyCost(ctx:Context, p1PeopleId:Int, strategyId:Int, targetPl
 		case 1:
 			// 步步為營
 			final p2 = getPeopleById(ctx, targetPeopleId);
-			p2.energy = Math.min(100, p2.energy + 40);
+			p2.energy = Math.min(100, p2.energy + 30);
 		case 2:
 			// 遠交近攻
 			if (p1.belongToPlayerId == null) {
-				throw new Exception("belongToPlayerId not found");
+				throw new Exception('belongToPlayerId not found: ${p1.id}');
 			}
 			final player = ctx.players[p1.belongToPlayerId];
 			final grid = ctx.grids[player.position];
@@ -131,7 +131,7 @@ function applyStrategyCost(ctx:Context, p1PeopleId:Int, strategyId:Int, targetPl
 		case 5:
 			// 趁虛而入
 			final p2 = getPeopleById(ctx, targetPeopleId);
-			p2.energy = Math.max(0, p2.energy - 50);
+			p2.energy = Math.max(0, p2.energy - 20);
 	}
 	return true;
 }

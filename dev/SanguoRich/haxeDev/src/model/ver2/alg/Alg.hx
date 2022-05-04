@@ -97,8 +97,11 @@ function doPayTaxToGrid(ctx:Context, playerId:Int, gridId:Int) {
 	final player = ctx.players[playerId];
 	final grid = ctx.grids[gridId];
 	final taxMoney = grid.money / 5;
+	final taxFood = grid.food / 5;
 	player.money = Math.max(0, player.money - taxMoney);
+	player.food = Math.max(0, player.food - taxFood);
 	grid.money += taxMoney;
+	grid.food += taxFood;
 }
 
 // 玩家回合結束

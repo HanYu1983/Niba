@@ -6,7 +6,7 @@ final PLAYER_EARN_PER_TURN = 1;
 final SHOW_POPUP_WHEN_EARN = false;
 
 // 可以交易友好度
-final CAN_CHANGE_FAVOR = 1;
+final CAN_CHANGE_FAVOR = 0;
 
 // 主公支付的薪水為主公所有武將的價值參數(cost)總合的%數
 final PLAYER_SPEND_MONEY_FOR_PEOPLE_PER_TURN_PERSENT = 0.005;
@@ -39,15 +39,15 @@ final PLAYER_EARN_FROM_CITY_BY_TURN_PERSENT = .1;
 
 // 基本一單買糧買兵的的金錢
 // 作用中
-final MONEY_PER_DEAL = 50;
+final MONEY_PER_DEAL = 100;
 
 // 基本一單賣糧的數目
 // 作用中
-final FOOD_PER_DEAL = 50;
+final FOOD_PER_DEAL = 100;
 
 // 基本一單賣兵的數目
 // 作用中
-final ARMY_PER_DEAL = 50;
+final ARMY_PER_DEAL = 100;
 
 // 戰鬥能力影響倍率
 final WAR_FRONT_ABILITY_FACTOR = 1.4;
@@ -143,8 +143,8 @@ function getExpAdd(p:Float, max:Float):Float {
 
 // 體力產生的基本值成數
 // 1代表支付所有體力時, 機率為1
-final BASE_RATE_STRATEGY = 0.5;
-final BASE_RATE_RESOURCE = 0.6;
-final BASE_RATE_NEGO = 0.3;
-final BASE_RATE_HIRE = 0.4;
-final BASE_RATE_EXPLORE = 0.6;
+final BASE_RATE_STRATEGY = 1.0;
+final BASE_RATE_RESOURCE = 1.1;
+final BASE_RATE_NEGO = 0.8;
+final BASE_RATE_HIRE = 0.9;
+final BASE_RATE_EXPLORE = 1.1;
