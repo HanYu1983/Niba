@@ -53,44 +53,41 @@
                     </hbox>
                 </vbox>
                 <vbox width="120" height="100%">
-                    <vbox width="100%">
-                        <button text="游戲開始" width="100%" id="btn_start" />
-                    </vbox>
-                    <frame id="box_basicCmds" width="100%" text="基本指令">
-                        <vbox width="100%">
-                            <button text="移動" width="100%" id="btn_go" />
-                            <button text="計略" width="100%" id="btn_showStrategy" />
-                            <button text="解雇" width="100%" id="btn_firePeople" />
+                    <button text="游戲開始" width="100%" id="btn_start" />
 
-                            <button text="交涉" width="100%" id="btn_negotiate" />
-                            <button text="搶奪" width="100%" id="btn_snatch" />
-                            <button text="攻城" width="100%" id="btn_occupation" />
+                    <section-header text="基本" />
+                    <button text="移動" width="100%" id="btn_go" />
+                    <button text="計略" width="100%" id="btn_showStrategy" />
+                    <button text="解雇" width="100%" id="btn_firePeople" />
+                    <button text="結束" width="100%" id="btn_end" />
 
-                            <button text="札營" width="100%" id="btn_camp" />
-                            <button text="練兵" width="100%" id="btn_practice" />
-                            <button text="探索" width="100%" id="btn_explore" />
-                            <button text="聘用" width="100%" id="btn_hire" />
+                    <section-header text="外交" />
+                    <button text="交涉" width="100%" id="btn_negotiate" />
+                    <button text="搶奪" width="100%" id="btn_snatch" />
+                    <button text="攻城" width="100%" id="btn_occupation" />
+                    
+                    <section-header text="武將" />
+                    <button text="札營" width="100%" id="btn_camp" />
+                    <button text="練兵" width="100%" id="btn_practice" />
+                    <button text="探索" width="100%" id="btn_explore" />
+                    <button text="聘用" width="100%" id="btn_hire" />
 
-                            <button text="經商" width="100%" id="btn_earnMoney" />
-                            <button text="買糧" width="100%" id="btn_buyFood" />
-                            <button text="賣糧" width="100%" id="btn_sellFood" />
-                            <button text="徵兵" width="100%" id="btn_buyArmy" />
-                            <button text="裁兵" width="100%" id="btn_sellArmy" />
+                    <section-header text="交易" />
+                    <button text="經商" width="100%" id="btn_earnMoney" />
+                    <button text="買糧" width="100%" id="btn_buyFood" />
+                    <button text="賣糧" width="100%" id="btn_sellFood" />
+                    <button text="徵兵" width="100%" id="btn_buyArmy" />
+                    <button text="裁兵" width="100%" id="btn_sellArmy" />
 
-                            <button text="調度" width="100%" id="btn_transfer" />
-                            <button text="擴建" width="100%" id="btn_build" />
+                    <section-header text="内政" />
+                    <button text="調度" width="100%" id="btn_transfer" />
+                    <button text="擴建" width="100%" id="btn_build" />
 
-                            <button text="結束" width="100%" id="btn_end" />
-                        </vbox>
-                    </frame>
-                    <frame id="box_system" width="100%" text="系統指令">
-                        <vbox width="100%">
-                            <button text="記錄" width="100%" id="btn_save" />
-                            <button text="讀取" width="100%" id="btn_load" />
-                        </vbox>
-                    </frame>
+                    <section-header text="系統" />
+                    <button text="記錄" width="100%" id="btn_save" />
+                    <button text="讀取" width="100%" id="btn_load" />
+
                 </vbox>
-                
             </hbox>
         </vbox>
     </hbox>

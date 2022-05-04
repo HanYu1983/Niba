@@ -97,6 +97,7 @@ typedef GameInfo = {
 	isPlaying:Bool,
 	events:Array<EventInfo>,
 	actions:Array<ActionInfo>,
+	currentTurn:Int,
 }
 
 typedef SnatchPreview = {

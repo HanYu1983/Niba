@@ -48,38 +48,63 @@ function _getPreResultOfSnatch(ctx:Context, playerId:Int, gridId:Int, p1PeopleId
 }
 
 function getSnatchCost(ctx:Context, playerId:Int, gridId:Int, p1PeopleId:Int, p2PeopleId:Int, army1:Float, army2:Float, isOccupation:Bool) {
-	final warCost = getWarCost(ctx, playerId, gridId, p1PeopleId, p2PeopleId, army1, army2, {occupy: isOccupation});
-	final grid = ctx.grids[gridId];
-	if (grid.army == 0) {
-		trace("Snatch", "getSnatchCost", "防守方城池為0兵");
-		return {
-			warCost: warCost,
-			money: grid.money,
-			food: grid.food,
-			success: true
-		}
-	}
-	// 基本搶劫成數為守方派出的兵佔城裡總兵的成數
-	// 比如城裡100兵, 派出20兵的話, 就只能搶0.2
-	final base = army2 / grid.army;
-	// 我留下越多兵搶越多, 使用對數調整曲線
-	final fact1 = Math.pow(Math.max(0, army1 - warCost.playerCost[0].army) / army1, 0.2);
-	final fact2 = {
-		// -3~3 => 0~1
-		var tmp = grid.favor[playerId] + 3.0;
-		tmp /= 7.0;
-		// 0~1 => 1~0
-		tmp = 1.0 - tmp;
-		Math.pow(tmp, 0.3);
-	};
-	final gainRate = base * fact1 * fact2;
-	// 這個計算結果代表攻擊方有留下兵就能搶到資源
-	final success = gainRate > 0;
-	return {
-		warCost: warCost,
-		money: success ? grid.money * gainRate : 0.0,
-		food: success ? grid.food * gainRate : 0.0,
-		success: success
+	return switch 1 {
+		case 0:
+			final warCost = getWarCost(ctx, playerId, gridId, p1PeopleId, p2PeopleId, army1, army2, {occupy: isOccupation});
+			final grid = ctx.grids[gridId];
+			var maxPercent = grid.favor[playerId] + 3.0;
+			// -3~3 => 0~1
+			maxPercent /= 7.0;
+			// 0~1 => 1~0
+			maxPercent = 1.0 - maxPercent;
+
+			// 本來搶奪的資源跟交涉能力挂鈎，實際玩起來覺得很怪。改爲越是大勝利，搶的越多
+			var base = 0.4 + (warCost.playerCost[1].army / warCost.playerCost[0].army) * .2;
+			base += maxPercent * .2;
+			base = Math.min(base, .6 + maxPercent * .2);
+			final success = warCost.success;
+			return {
+				warCost: warCost,
+				money: success ? grid.money * base : 0.0,
+				food: success ? grid.food * base : 0.0,
+				success: success
+			}
+		case 1:
+			final warCost = getWarCost(ctx, playerId, gridId, p1PeopleId, p2PeopleId, army1, army2, {occupy: isOccupation});
+			final grid = ctx.grids[gridId];
+			if (grid.army == 0) {
+				trace("Snatch", "getSnatchCost", "防守方城池為0兵");
+				return {
+					warCost: warCost,
+					money: grid.money,
+					food: grid.food,
+					success: true
+				}
+			}
+			// 基本搶劫成數為守方派出的兵佔城裡總兵的成數
+			// 比如城裡100兵, 派出20兵的話, 就只能搶0.2
+			final base = army2 / grid.army;
+			// 我留下越多兵搶越多, 使用對數調整曲線
+			final fact1 = Math.pow(Math.max(0, army1 - warCost.playerCost[0].army) / army1, 0.2);
+			final fact2 = {
+				// -3~3 => 0~1
+				var tmp = grid.favor[playerId] + 3.0;
+				tmp /= 7.0;
+				// 0~1 => 1~0
+				tmp = 1.0 - tmp;
+				Math.pow(tmp, 0.3);
+			};
+			final gainRate = base * fact1 * fact2;
+			// 這個計算結果代表攻擊方有留下兵就能搶到資源
+			final success = gainRate > 0;
+			{
+				warCost: warCost,
+				money: success ? grid.money * gainRate : 0.0,
+				food: success ? grid.food * gainRate : 0.0,
+				success: success
+			}
+		case _:
+			throw new haxe.Exception("未知的實作");
 	}
 }
 
