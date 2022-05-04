@@ -61,7 +61,8 @@ class DebugModel implements IModel {
 			currentPlayer: gp(0, 'vic'),
 			isPlaying: true,
 			actions: [],
-			events: []
+			events: [],
+			currentTurn: 0
 		};
 		info.grids[5].belongPlayerId = 2;
 		info.grids[9].belongPlayerId = 1;

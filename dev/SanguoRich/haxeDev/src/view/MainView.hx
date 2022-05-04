@@ -385,7 +385,7 @@ class MainView extends Box {
 			case {isP1ArmyValid: _ => false}
 				| {isP2ArmyValid: _ => false}:
 				if (!isOccupation) {
-					Dialogs.messageBox('搶奪條件（雙方兵力至少都要有30）不足，是否進入攻城模式', '主公啊…', MessageBoxType.TYPE_QUESTION, true, (target)->{
+					Dialogs.messageBox('搶奪條件（雙方兵力至少都要有${SNATCH_ARMY_AT_LEAST}）不足，是否進入攻城模式', '主公啊…', MessageBoxType.TYPE_QUESTION, true, (target)->{
 						if(target == DialogButton.YES){
 							Reflect.setField(previewInfo, 'isOccupation', true);
 							snatchPreviewView.showPopup(previewInfo);
@@ -804,7 +804,7 @@ class MainView extends Box {
 		}
 
 
-		lbl_gameInfo.value = '玩家:${gameInfo.currentPlayer.name}正在行動';
+		lbl_gameInfo.value = '第${gameInfo.currentTurn+1}回合，${gameInfo.currentPlayer.name}正在行動';
 	}
 
 	function syncPlayerInfo(id:Int) {
