@@ -60,8 +60,9 @@ function getWarCost(ctx:Context, playerId:Int, gridId:Int, p1PeopleId:Int, p2Peo
 		}, 0.0);
 		final factMoney = if (currMoney - moneyCost < 0) (1.0 - (-1 * (currMoney - moneyCost) / moneyCost)) else 1.0;
 		final factFood = if (currFood - foodCost < 0) (1.0 - (-1 * (currFood - foodCost) / foodCost)) else 1.0;
-		final base = atkArmy;
-		final damage = atkArmy * WAR_ARMY_FACTOR + base * fact0 * fact1 * fact2 * fact3 * fact4 * fact5 * fact6 * fact7 * factMoney * factFood * factWall;
+		final base = atkArmy * if (options.occupy) (1 / WAR_DEFFENDER_FACTOR) else 1;
+		final baseDamage = atkArmy * WAR_ARMY_FACTOR;
+		final damage = baseDamage + base * fact0 * fact1 * fact2 * fact3 * fact4 * fact5 * fact6 * fact7 * factMoney * factFood * factWall;
 		atkDamage = damage * WAR_FINAL_DAMAGE_FACTOR;
 		atkEnergyCost = useEnergy * getEnergyFactor(atkArmy);
 	}
@@ -112,9 +113,9 @@ function getWarCost(ctx:Context, playerId:Int, gridId:Int, p1PeopleId:Int, p2Peo
 		}, 0.0);
 		final factMoney = if (currMoney - moneyCost < 0) (1.0 - (-1 * (currMoney - moneyCost) / moneyCost)) else 1.0;
 		final factFood = if (currFood - foodCost < 0) (1.0 - (-1 * (currFood - foodCost) / foodCost)) else 1.0;
-		final base = if (options.occupy) atkArmy * WAR_DEFFENDER_FACTOR else atkArmy;
-		final damage = atkArmy * WAR_ARMY_FACTOR
-			+ base * fact0 * fact1 * fact2 * fact3 * fact4 * fact5 * fact6 * fact7 * fact8 * fact9 * factMoney * factFood * factWall;
+		final base = atkArmy * if (options.occupy) WAR_DEFFENDER_FACTOR else 1;
+		final baseDamage = atkArmy * WAR_ARMY_FACTOR;
+		final damage = baseDamage + base * fact0 * fact1 * fact2 * fact3 * fact4 * fact5 * fact6 * fact7 * fact8 * fact9 * factMoney * factFood * factWall;
 		defDamage = damage * WAR_FINAL_DAMAGE_FACTOR;
 		defEnergyCost = useEnergy * getEnergyFactor(atkArmy);
 	}
@@ -143,7 +144,7 @@ function getWarCost(ctx:Context, playerId:Int, gridId:Int, p1PeopleId:Int, p2Peo
 				energy: defEnergyCost,
 			}
 		],
-		success: options.occupy ? ((ctx.grids[gridId].army - atkDamage) <= 0) : (atkDamage > defDamage)
+		success: (ctx.grids[gridId].army - atkDamage) <= 0 && ctx.players[playerId].army - defDamage >= 0,
 	}
 }
 

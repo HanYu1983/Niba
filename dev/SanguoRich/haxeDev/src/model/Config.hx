@@ -68,7 +68,7 @@ final WAR_DEFFENDER_FACTOR = 3.0;
 final WAR_HIGH_LOW_FACTOR = 1.5;
 
 // 保底傷害, 1的話代表派100兵最少打100
-final WAR_ARMY_FACTOR = 0.3;
+final WAR_ARMY_FACTOR = 0.0;
 
 // 戰爭最後係數
 final WAR_FINAL_DAMAGE_FACTOR = 0.75;
