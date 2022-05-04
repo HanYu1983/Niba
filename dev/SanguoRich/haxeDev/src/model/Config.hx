@@ -80,7 +80,7 @@ final PEOPLE_ENERGY_SUPPLY_BASE = 1;
 final PEOPLE_ENERGY_SUPPLY_SAVE_FACTOR = 0.05;
 
 // 允許交涉加兵
-final ENABLE_NEGO_ARMY = true;
+final ENABLE_NEGO_ARMY = false;
 
 // 派越少的兵力體力扣越少
 function getEnergyFactor(atkArmy:Float) {
