@@ -5,10 +5,13 @@ package model;
 final PLAYER_EARN_PER_TURN = 1;
 final SHOW_POPUP_WHEN_EARN = false;
 
+// 可以交易友好度
+final CAN_CHANGE_FAVOR = 1;
+
 // 主公支付的薪水為主公所有武將的價值參數(cost)總合的%數
-// 主公支付的食物為所有格子上以及身上的士兵的數量的%數
 final PLAYER_SPEND_MONEY_FOR_PEOPLE_PER_TURN_PERSENT = 0.005;
 
+// 主公支付的食物為所有格子上以及身上的士兵的數量的%數
 final PLAYER_SPEND_FOOD_FOR_ARMY_PER_TURN_PERSENT = 0.01;
 
 // 武將聘用價格%數
@@ -106,7 +109,7 @@ final MAX_GRID_FAVOR = 3;
 final NEGO_HATE_RATE = 0.15;
 
 // 交涉成功時喜歡你的機率
-final NEGO_LIKE_RATE = 0.8;
+final NEGO_LIKE_RATE = 0.85;
 
 // 搶奪時額外討厭你的機率
 final SNATCH_HATE_RATE = 0.3;

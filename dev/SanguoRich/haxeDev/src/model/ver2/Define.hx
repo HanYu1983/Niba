@@ -708,7 +708,7 @@ function getPlayerCommand(ctx:Context, playerId:Int):Array<ActionInfoID> {
 						case EMPTY:
 							ret.push(ActionInfoID.HIRE);
 						case _:
-							if (gridInfo.favor[playerId] >= 0) {
+							if (gridInfo.favor[playerId] >= CAN_CHANGE_FAVOR) {
 								// 好感的
 								switch gridInfo.buildtype {
 									case MARKET:

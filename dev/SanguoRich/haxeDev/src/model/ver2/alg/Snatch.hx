@@ -52,7 +52,7 @@ function getSnatchCost(ctx:Context, playerId:Int, gridId:Int, p1PeopleId:Int, p2
 
 	// 本來搶奪的資源跟交涉能力挂鈎，實際玩起來覺得很怪。改爲越是大勝利，搶的越多
 	// final negoCost = getNegoCost(ctx, playerId, gridId, p1PeopleId, p2PeopleId);
-	var base = 0.3 + (warCost.playerCost[1].army / warCost.playerCost[0].army) * .06;
+	var base = 0.4 + (warCost.playerCost[1].army / warCost.playerCost[0].army) * .07;
 	base = Math.min(base, .6);
 	final grid = ctx.grids[gridId];
 	return {

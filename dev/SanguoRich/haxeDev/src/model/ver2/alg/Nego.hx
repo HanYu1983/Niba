@@ -67,7 +67,7 @@ function getNegoCost(ctx:Context, playerId:Int, gridId:Int, p1SelectId:Int, p2Se
 					{
 						playerCost: {
 							id: playerId,
-							army: ENABLE_NEGO_ARMY ? grid.army * (gainRate + (p1.abilities.has(11) ? .05 : 0)) : 0.0,
+							army: ENABLE_NEGO_ARMY ? grid.army * (gainRate + (p1.abilities.has(11) ? .05 : 0)) * .5 : 0.0,
 							money: grid.money * (gainRate + (p1.abilities.has(4) ? .05 : 0)),
 							food: grid.food * (gainRate + (p1.abilities.has(5) ? .05 : 0))
 						},
