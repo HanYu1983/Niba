@@ -85,13 +85,10 @@ function getSnatchCost(ctx:Context, playerId:Int, gridId:Int, p1PeopleId:Int, p2
 			// 比如城裡100兵, 派出20兵的話, 就只能搶0.2
 			// 使用對數調整曲線
 			var base = army2 / grid.army;
-			// 我留下越多兵搶越多, 使用對數調整曲線
-
 			base *= .7;
-
 			// 保底
 			base += .3;
-
+			// 我留下越多兵搶越多, 使用對數調整曲線
 			final fact1 = Math.pow(Math.max(0, army1 - warCost.playerCost[0].army) / army1, 0.2);
 			final fact2 = {
 				// -3~3 => 0~1
@@ -102,12 +99,17 @@ function getSnatchCost(ctx:Context, playerId:Int, gridId:Int, p1PeopleId:Int, p2
 				Math.pow(tmp, 0.3);
 			};
 			final gainRate = base * fact1 * fact2;
+			// 以戰後剩下的資源來計算搶劫
+			final moneyAfterWar = Math.max(0, grid.money - warCost.playerCost[1].money);
+			final foodAfterWar = Math.max(0, grid.food - warCost.playerCost[1].food);
+			final gainMoney = moneyAfterWar * gainRate;
+			final gainFood = foodAfterWar * gainRate;
 			// 這個計算結果代表攻擊方有留下兵就能搶到資源
 			final success = gainRate > 0;
 			{
 				warCost: warCost,
-				money: success ? grid.money * gainRate : 0.0,
-				food: success ? grid.food * gainRate : 0.0,
+				money: success ? gainMoney : 0.0,
+				food: success ? gainFood : 0.0,
 				success: success
 			}
 		case _:
