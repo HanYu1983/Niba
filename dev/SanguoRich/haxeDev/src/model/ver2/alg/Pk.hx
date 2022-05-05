@@ -19,7 +19,11 @@ private function getPkCost(ctx:Context, playerId:Int, gridId:Int, p1PeopleId:Int
 	final fact3 = 1 + p1.abilities.filter(a -> [0, 1, 2, 3].has(a)).length * 0.15;
 	final successRate = base * fact1 * fact2 * fact3;
 	final factCharm = getPeopleCharm(ctx, p1.id) / getPeopleCharm(ctx, p2.id);
-	final gainArmy = Math.min(grid.army, Math.pow(successRate, 0.7) * factCharm);
+	var gainArmy = Math.min(grid.army, PK_ARMY_BASE_CHANGE * Math.pow(successRate, 0.7) * factCharm);
+
+	final player = ctx.players[playerId];
+	gainArmy = Math.min(gainArmy, player.army);
+
 	return {
 		peopleCost: [
 			{

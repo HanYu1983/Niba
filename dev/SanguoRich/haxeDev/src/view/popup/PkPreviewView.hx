@@ -37,7 +37,7 @@ class PkPreviewView extends PopupView {
 			var p1 = p1List.selectedItem;
 			var p2 = p2List.selectedItem;
 
-			var result:{energyBefore:Int, energyAfter:Int, armyChange:Int, successRate:Float} = Main.model.getPreResultOfPk(gameInfo.currentPlayer.id, gameInfo.currentPlayer.atGridId, p1, p2);
+			var result:{energyBefore:Int, energyAfter:Int, armyChange:Int, successRate:Float} = Main.model.getPreResultOfPk(gameInfo.currentPlayer.id, gameInfo.currentPlayer.atGridId, p1.id, p2.id);
 
 			pro_energy.value = Main.getEnergyString(result.energyBefore, result.energyAfter, ENERGY_COST_ON_NEGO);
 			pro_army.value = result.armyChange;

@@ -97,8 +97,11 @@ final ENERGY_COST_ON_SNATCH = 15;
 final ENERGY_COST_ON_WAR = 30;
 final ENERGY_COST_ON_PK = 15;
 
-// 最低搶奪兵力
-final SNATCH_ARMY_AT_LEAST = 40;
+// 最低搶奪所需兵力
+final SNATCH_ARMY_AT_LEAST = 30;
+
+// 單挑的士兵變化基本量
+final PK_ARMY_BASE_CHANGE = 30;
 
 // 最低友好度
 final MIN_GRID_FAVOR = -3;
