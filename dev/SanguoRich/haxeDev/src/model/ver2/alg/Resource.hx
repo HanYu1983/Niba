@@ -216,4 +216,9 @@ function applyResourceCost(ctx:Context, playerId:Int, gridId:Int, p1SelectId:Int
 	if (grid.army < 0) {
 		grid.army = 0;
 	}
+	// 提升友好度
+	final isLikeYou = Math.random() < RESOURCE_LIKE_RATE;
+	if (isLikeYou) {
+		grid.favor[playerId] = Std.int(Math.min(grid.favor[playerId] + 1, MAX_GRID_FAVOR));
+	}
 }

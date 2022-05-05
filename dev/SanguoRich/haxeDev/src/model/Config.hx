@@ -115,6 +115,9 @@ final NEGO_HATE_RATE = 0.15;
 // 交涉成功時喜歡你的機率
 final NEGO_LIKE_RATE = 0.85;
 
+// 交易時喜歡你的機率
+final RESOURCE_LIKE_RATE = 0.3;
+
 // 搶奪時額外討厭你的機率
 final SNATCH_HATE_RATE = 0.3;
 
@@ -155,4 +158,4 @@ final BASE_RATE_HIRE = 0.9;
 final BASE_RATE_EXPLORE = 1.1;
 
 // 格子資源上限
-final GRID_RESOURCE_MAX = 1000.0;
+final GRID_RESOURCE_MAX = 500.0;

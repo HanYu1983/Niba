@@ -30,7 +30,7 @@ function getHireCost(ctx:Context, playerId:Int, gridId:Int, p1SelectId:Int, p2Se
 								0;
 						}
 					}, 0);
-					final charmFactor = (getPeopleCharm(ctx, p1.id) + charmExt) / getPeopleCharm(ctx, p2.id);
+					final charmFactor = (getPeopleCharm(ctx, p1.id) + charmExt) / 50;
 					// 人脈加成
 					final abiFactor = p1.abilities.has(10) ? 1.5 : 1;
 					// 越不夠錢減成

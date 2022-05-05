@@ -519,7 +519,7 @@ function getGameInfo(ctx:Context, root:Bool):GameInfo {
 			}
 			return actionInfo;
 		}) : [],
-		currentTurn: 0,
+		currentTurn: ctx.turn,
 	}
 }
 

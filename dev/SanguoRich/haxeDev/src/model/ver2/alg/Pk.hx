@@ -58,6 +58,8 @@ function onTakePk(ctx:Context, playerId:Int, gridId:Int, p1PeopleId:Int, p2Peopl
 			p2.energy = Math.max(0, p2.energy - p2Cost.energy);
 			player.army += gainArmy;
 			grid.army = Math.max(0, grid.army - gainArmy);
+			// 功績
+			onPeopleExpAdd(ctx, p1.id, getExpAdd(Math.min(1, successRate), ENERGY_COST_ON_PK));
 		case _:
 			throw new haxe.Exception("getPkCost not found");
 	}
@@ -83,4 +85,8 @@ function _getPreResultOfPk(ctx:Context, playerId:Int, gridId:Int, p1PeopleId:Int
 
 function _takePk(ctx:Context, playerId:Int, gridId:Int, p1PeopleId:Int, p2PeopleId:Int) {
 	onTakePk(ctx, playerId, gridId, p1PeopleId, p2PeopleId);
+	{
+		final player = ctx.players[ctx.currentPlayerId];
+		player.memory.hasCommand = true;
+	}
 }
