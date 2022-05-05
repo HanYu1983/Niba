@@ -54,15 +54,15 @@ function getSnatchCost(ctx:Context, playerId:Int, gridId:Int, p1PeopleId:Int, p2
 			final grid = ctx.grids[gridId];
 			var maxPercent = grid.favor[playerId] + 3.0;
 			// -3~3 => 0~1
-			maxPercent /= 7.0;
+			maxPercent /= 6.0;
 			// 0~1 => 1~0
 			maxPercent = 1.0 - maxPercent;
 
 			// 本來搶奪的資源跟交涉能力挂鈎，實際玩起來覺得很怪。改爲越是大勝利，搶的越多
-			var base = 0.4 + (warCost.playerCost[1].army / warCost.playerCost[0].army) * .2;
+			var base = 0.3 + (warCost.playerCost[1].army / warCost.playerCost[0].army - 1.0) * .3;
 			base += maxPercent * .2;
-			base = Math.min(base, .6 + maxPercent * .2);
-			final success = warCost.success;
+			final success = warCost.playerCost[1].army > warCost.playerCost[0].army;
+			trace(success, base);
 			return {
 				warCost: warCost,
 				money: success ? grid.money * base : 0.0,
@@ -85,9 +85,9 @@ function getSnatchCost(ctx:Context, playerId:Int, gridId:Int, p1PeopleId:Int, p2
 			// 比如城裡100兵, 派出20兵的話, 就只能搶0.2
 			// 使用對數調整曲線
 			var base = army2 / grid.army;
-			base *= .7;
+			base *= .5;
 			// 保底
-			base += .3;
+			base += .5;
 			// 我留下越多兵搶越多, 使用對數調整曲線
 			final fact1 = Math.pow(Math.max(0, army1 - warCost.playerCost[0].army) / army1, 0.2);
 			final fact2 = {
