@@ -718,6 +718,7 @@ class MainView extends Box {
 		btn_showStrategy.hide();
 		btn_firePeople.hide();
 		btn_negotiate.hide();
+		btn_pk.hide();
 		btn_snatch.hide();
 		btn_occupation.hide();
 		btn_hire.hide();
