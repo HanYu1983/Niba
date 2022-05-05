@@ -63,6 +63,7 @@
 
                     <section-header text="外交" />
                     <button text="交涉" width="100%" id="btn_negotiate" />
+                    <button text="單挑" width="100%" id="btn_pk" />
                     <button text="搶奪" width="100%" id="btn_snatch" />
                     <button text="攻城" width="100%" id="btn_occupation" />
                     

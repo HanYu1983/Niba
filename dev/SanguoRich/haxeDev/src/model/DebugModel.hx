@@ -43,6 +43,7 @@ class DebugModel implements IModel {
 					ActionInfoID.STRATEGY,
 					ActionInfoID.BUILD,
 					ActionInfoID.FIRE,
+					ActionInfoID.PK,
 					ActionInfoID.CAMP,
 					ActionInfoID.PRACTICE,
 					ActionInfoID.END,
@@ -415,5 +416,29 @@ class DebugModel implements IModel {
 
 	public function load(cb:(success:Bool, gameInfo:GameInfo) -> Void) {
 		cb(true, info);
+	}
+
+	public function getPreResultOfPk(playerId:Int, gridId:Int, p1PeopleId:Int, p2PeopleId:Int):{energyBefore:Int, energyAfter:Int, armyChange:Int, successRate:Float} {
+		return {
+			energyAfter: 1,
+			energyBefore: 1,
+			armyChange: 4,
+			successRate: .5
+		}
+	}
+
+	public function takePk(playerId:Int, gridId:Int, p1PeopleId:Int, p2PeopleId:Int, syncViewByInfo:(gameInfo:GameInfo) -> Void) {
+		info.events = [
+			{
+				id:PK_RESULT,
+				value:{
+					success:true,
+					people: PeopleGenerator.getInst().generate(),
+					armyBefore:0,
+					armyAfter:0,
+				}
+			}
+		];
+		syncViewByInfo(info);
 	}
 }

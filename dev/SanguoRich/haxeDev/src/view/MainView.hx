@@ -1,5 +1,6 @@
 package view;
 
+import view.popup.PkPreviewView;
 import view.popup.CostForBonusView;
 import model.GridGenerator.BUILDING;
 import haxe.ui.containers.Box;
@@ -48,6 +49,7 @@ class MainView extends Box {
 	var warPreviewView:WarPreviewView;
 	var snatchPreviewView:SnatchPreviewView;
 	var negoPreviewView:NegoPreviewView;
+	var pkPrevieView:PkPreviewView;
 	var hirePreviewView:HirePreviewView;
 	var costForBonusView:CostForBonusView;
 	var explorePreviewView:ExplorePreviewView;
@@ -104,6 +106,10 @@ class MainView extends Box {
 		negoPreviewView = new NegoPreviewView();
 		negoPreviewView.hide();
 		box_popup.addComponent(negoPreviewView);
+
+		pkPrevieView = new PkPreviewView();
+		pkPrevieView.hide();
+		box_popup.addComponent(pkPrevieView);
 
 		hirePreviewView = new HirePreviewView();
 		hirePreviewView.hide();
@@ -215,6 +221,7 @@ class MainView extends Box {
 
 		btn_showStrategy.text = '${btn_showStrategy.text}(${ENERGY_COST_ON_STRATEGY})';
 		btn_negotiate.text = '${btn_negotiate.text}(${ENERGY_COST_ON_NEGO})';
+		btn_pk.text = '${btn_pk.text}(${ENERGY_COST_ON_PK})';
 		btn_snatch.text = '${btn_snatch.text}(${ENERGY_COST_ON_SNATCH})';
 		btn_occupation.text = '${btn_occupation.text}(${ENERGY_COST_ON_WAR})';
 		btn_explore.text = '${btn_explore.text}(${ENERGY_COST_ON_EXPLORE})';
@@ -243,6 +250,19 @@ class MainView extends Box {
 			}
 			Dialogs.messageBox(msg, msg, MessageBoxType.TYPE_INFO);
 		});
+	}
+
+	@:bind(btn_pk, MouseEvent.CLICK)
+	function onBtnPKClick(e:MouseEvent) {
+		final gameInfo:GameInfo = Main.model.gameInfo();
+		switch(gameInfo.currentPlayer){
+			case {atGridId : gameInfo.grids[_].people.length == 0 => true}:
+				Dialogs.messageBox('對方沒有武將可以單挑', '', MessageBoxType.TYPE_INFO);
+			case {people: _.length == 0 => true}:
+				Dialogs.messageBox('沒有武將可以單挑', '', MessageBoxType.TYPE_INFO);
+			case _:
+				pkPrevieView.showPopup(null);
+		}
 	}
 
 	@:bind(btn_go, MouseEvent.CLICK)
@@ -483,10 +503,6 @@ class MainView extends Box {
 		}));
 
 		TweenX.serial(tweens);
-
-
-		trace('總資產和城池的GROW值還沒傳');
-		trace('計策緩兵之計還沒套');
 	}
 
 	function syncViewByInfo(gameInfo:GameInfo) {
@@ -537,6 +553,18 @@ class MainView extends Box {
 			var event = events.shift();
 			switch (event.id) {
 				case WALK_STOP:
+				case PK_RESULT:
+					final info:Dynamic = event.value;
+					final title = if(info.success){
+						'單挑獲勝';
+					}else{
+						'單挑失敗';
+					}
+					var msg = '武將:${info.people.name}\n';
+					msg += '士兵:${Main.getFixNumber(info.armyBefore,0)} => ${Main.getFixNumber(info.armyAfter, 0)} (${Main.getFixNumber(info.armyAfter - info.armyBefore, 0)})';
+					Dialogs.messageBox(msg, title, MessageBoxType.TYPE_INFO, true, (b)->{
+						doOneEvent(gameInfo);
+					});
 				case COST_FOR_BONUS_RESULT:
 					final info:Dynamic = event.value;
 					final title = switch( info.costType ){
@@ -728,6 +756,8 @@ class MainView extends Box {
 					btn_firePeople.show();
 				case NEGOTIATE:
 					btn_negotiate.show();
+				case PK:
+					btn_pk.show();
 				case SNATCH:
 					btn_snatch.show();
 				case OCCUPATION: 
@@ -802,8 +832,6 @@ class MainView extends Box {
 			info.cityCount = p.grids.length;
 			tab_allPlayers.dataSource.add(info);
 		}
-
-
 		lbl_gameInfo.value = '第${gameInfo.currentTurn+1}回合，${gameInfo.currentPlayer.name}正在行動';
 	}
 
@@ -859,5 +887,10 @@ class MainView extends Box {
 	public function onCostForBonusConfirmClick(pId:Int, costType:Int) {
 		final gameInfo = Main.model.gameInfo();
 		Main.model.takeCostForBonus(gameInfo.currentPlayer.id, pId, costType, syncViewByInfo);
+	}
+
+	public function onPkPreviewConfirmNegoClick(p1PeopleId:Int, p2PeopleId:Int) {
+		final gameInfo = Main.model.gameInfo();
+		Main.model.takePk(gameInfo.currentPlayer.id, gameInfo.currentPlayer.atGridId, p1PeopleId, p2PeopleId, syncViewByInfo);
 	}
 }

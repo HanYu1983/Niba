@@ -28,19 +28,24 @@ enum ActionInfoID {
 	FIRE;
 
 	NEGOTIATE;
+	PK;
 	SNATCH;
 	OCCUPATION;
+
 	CAMP;
 	PRACTICE;
 	HIRE;
 	EXPLORE;
+
 	EARN_MONEY;
 	BUY_FOOD;
 	SELL_FOOD;
 	BUY_ARMY;
 	SELL_ARMY;
+
 	TRANSFER;
 	BUILD;
+
 	END;
 }
 
@@ -51,7 +56,6 @@ typedef ActionInfo = {
 }
 
 enum EventInfoID {
-	// 通常不會再有下一個事件
 	WALK_STOP;
 	NEGOTIATE_RESULT;
 	EXPLORE_RESULT;
@@ -63,8 +67,8 @@ enum EventInfoID {
 	STRATEGY_RESULT;
 	BUILDING_RESULT;
 	COST_FOR_BONUS_RESULT;
+	PK_RESULT;
 
-	// 這些事件有可能會連著其他的事件
 	WORLD_EVENT;
 	PEOPLE_LEVEL_UP_EVENT;
 	PAY_FOR_OVER_ENEMY_GRID;
@@ -265,8 +269,7 @@ interface IModel {
 	function checkValidTransfer(playerId:Int, gridId:Int, playerInfo:PlayerInfo, gridInfo:Grid):Bool;
 	function takeTransfer(playerId:Int, gridId:Int, playerInfo:PlayerInfo, gridInfo:Grid, cb:(gameInfo:GameInfo) -> Void):Void;
 
-	function getStrategyRate(p1People:People, strategy:StrategyCatelog, targetPlayerId:Int, targetPeopleId:Int,
-		targetGridId:Int):{energyBefore:Int, energyAfter:Int, rate:Float};
+	function getStrategyRate(p1People:People, strategy:StrategyCatelog, targetPlayerId:Int, targetPeopleId:Int, targetGridId:Int):{energyBefore:Int, energyAfter:Int, rate:Float};
 	function takeStrategy(p1PeopleId:Int, strategyId:Int, targetPlayerId:Int, targetPeopleId:Int, targetGridId:Int, cb:(gameInfo:GameInfo) -> Void):Void;
 	function takeBuilding(p1PeopleId:Int, gridId:Int, peopleId:Int, current:Dynamic, to:Dynamic, cb:(gameInfo:GameInfo) -> Void):Void;
 
@@ -275,6 +278,9 @@ interface IModel {
 
 	function save(cb:(success:Bool) -> Void):Void;
 	function load(cb:(success:Bool, gameInfo:GameInfo) -> Void):Void;
+
+	function getPreResultOfPk(playerId:Int, gridId:Int, p1PeopleId:Int, p2PeopleId:Int):{energyBefore:Int, energyAfter:Int, armyChange:Int, successRate:Float};
+	function takePk(playerId:Int, gridId:Int, p1PeopleId:Int, p2PeopleId:Int, syncViewByInfo:(gameInfo:GameInfo) -> Void):Void;
 }
 
 final StrategyList:Array<StrategyCatelog> = [
@@ -460,3 +466,5 @@ final BuildingList:Array<BuildingCatelog> = [
 		type: WALL(3)
 	}
 ];
+
+
