@@ -55,7 +55,6 @@ function getResourceCost(ctx:Context, playerId:Int, gridId:Int, p1SelectId:Int, 
 				0;
 			};
 			final rate = base * attrFactor * abiFactor;
-			trace(rate, base, attrFactor, abiFactor);
 			final returnInfo = {
 				playerCost: {
 					id: playerId,
@@ -85,8 +84,6 @@ function getResourceCost(ctx:Context, playerId:Int, gridId:Int, p1SelectId:Int, 
 					final moneyCost = MONEY_PER_DEAL * 0.5;
 					final totalGain = moneyCost * rate;
 					limitFactor *= .5;
-					trace('moneyCost', moneyCost);
-					trace('totalGain', totalGain);
 					final gain = Math.min(totalGain, grid.money * limitFactor);
 					returnInfo.playerCost.money = -gain;
 				case [ARMY, SELL]:
