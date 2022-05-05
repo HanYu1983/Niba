@@ -233,7 +233,7 @@ function doPlayerDice(ctx:Context) {
 }
 
 function initContext(ctx:Context, option:{}) {
-	final genGrids = model.GridGenerator.getInst().getGrids(30);
+	final genGrids = model.GridGenerator.getInst().getGrids(20);
 	for (grid in genGrids) {
 		addGridInfo(ctx, grid);
 	}
