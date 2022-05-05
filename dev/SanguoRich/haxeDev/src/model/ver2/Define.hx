@@ -785,7 +785,8 @@ function getPlayerCommand(ctx:Context, playerId:Int):Array<ActionInfoID> {
 		} else if (gridInfo.belongPlayerId != playerId) {
 			// 敵人的
 			if (player.memory.hasCommand == false) {
-				ret.push(ActionInfoID.PK);
+				// 人打人不能單挑
+				// ret.push(ActionInfoID.PK);
 				ret.push(ActionInfoID.SNATCH);
 				ret.push(ActionInfoID.OCCUPATION);
 			}

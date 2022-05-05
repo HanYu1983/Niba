@@ -87,9 +87,12 @@ function doGridGrow(ctx:Context) {
 			}
 		}, 0);
 		// 城池成長
-		grid.money += grid.money * getGridMoneyGrow(ctx, grid.id) + BASIC_GROW_MONEY + extMoney;
-		grid.food += grid.food * getGridFoodGrow(ctx, grid.id) + BASIC_GROW_FOOD + extFood;
-		grid.army += grid.army * getGridArmyGrow(ctx, grid.id) + BASIC_GROW_ARMY + extArmy;
+		final gainMoney = grid.money * getGridMoneyGrow(ctx, grid.id) + BASIC_GROW_MONEY + extMoney;
+		final gainFood = grid.food * getGridFoodGrow(ctx, grid.id) + BASIC_GROW_FOOD + extFood;
+		final gainArmy = grid.army * getGridArmyGrow(ctx, grid.id) + BASIC_GROW_ARMY + extArmy;
+		grid.money = Math.min(GRID_RESOURCE_MAX, grid.money + gainMoney);
+		grid.food = Math.min(GRID_RESOURCE_MAX, grid.food + gainFood);
+		grid.army = Math.min(GRID_RESOURCE_MAX, grid.army + gainArmy);
 	}
 }
 
