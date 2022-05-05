@@ -23,10 +23,9 @@ function getStrategyCost(ctx:Context, p1PeopleId:Int, strategyId:Int, targetPlay
 		case _:
 			1.0;
 	}
-	// 遠交近攻對空地沒有作用
 	final fact3 = switch strategyId {
 		case 2:
-			// 遠交近攻
+			// 遠交近攻對空地沒有作用
 			if (p1.belongToPlayerId == null) {
 				throw new Exception("belongToPlayerId not found");
 			}
@@ -34,6 +33,12 @@ function getStrategyCost(ctx:Context, p1PeopleId:Int, strategyId:Int, targetPlay
 			final grid = ctx.grids[player.position];
 			final isEmpty = getGridInfo(ctx, grid).buildtype == GROWTYPE.EMPTY;
 			isEmpty ? 0.0 : 1;
+		case 4:
+			// 火中取栗
+			// 對沒路障的地沒有作用
+			final player = ctx.players[p1.belongToPlayerId];
+			final itemWillRemoved = ctx.groundItems.filter(i -> i.position == targetGridId /* && i.belongToPlayerId != player.id*/);
+			itemWillRemoved.length <= 0 ? 0.0 : 1;
 		case _:
 			1;
 	}
@@ -114,7 +119,7 @@ function applyStrategyCost(ctx:Context, p1PeopleId:Int, strategyId:Int, targetPl
 			// 火中取栗
 			// 將拆除指定格中非自己的路障
 			final player = ctx.players[p1.belongToPlayerId];
-			final itemWillRemoved = ctx.groundItems.filter(i -> i.position == targetGridId && i.belongToPlayerId != player.id);
+			final itemWillRemoved = ctx.groundItems.filter(i -> i.position == targetGridId /*&& i.belongToPlayerId != player.id*/);
 			for (item in itemWillRemoved) {
 				// 中立路障不搶錢
 				if (item.belongToPlayerId == null) {
