@@ -31,21 +31,17 @@ enum ActionInfoID {
 	PK;
 	SNATCH;
 	OCCUPATION;
-
 	CAMP;
 	PRACTICE;
 	HIRE;
 	EXPLORE;
-
 	EARN_MONEY;
 	BUY_FOOD;
 	SELL_FOOD;
 	BUY_ARMY;
 	SELL_ARMY;
-
 	TRANSFER;
 	BUILD;
-
 	END;
 }
 
@@ -269,7 +265,8 @@ interface IModel {
 	function checkValidTransfer(playerId:Int, gridId:Int, playerInfo:PlayerInfo, gridInfo:Grid):Bool;
 	function takeTransfer(playerId:Int, gridId:Int, playerInfo:PlayerInfo, gridInfo:Grid, cb:(gameInfo:GameInfo) -> Void):Void;
 
-	function getStrategyRate(p1People:People, strategy:StrategyCatelog, targetPlayerId:Int, targetPeopleId:Int, targetGridId:Int):{energyBefore:Int, energyAfter:Int, rate:Float};
+	function getStrategyRate(p1People:People, strategy:StrategyCatelog, targetPlayerId:Int, targetPeopleId:Int,
+		targetGridId:Int):{energyBefore:Int, energyAfter:Int, rate:Float};
 	function takeStrategy(p1PeopleId:Int, strategyId:Int, targetPlayerId:Int, targetPeopleId:Int, targetGridId:Int, cb:(gameInfo:GameInfo) -> Void):Void;
 	function takeBuilding(p1PeopleId:Int, gridId:Int, peopleId:Int, current:Dynamic, to:Dynamic, cb:(gameInfo:GameInfo) -> Void):Void;
 
@@ -279,7 +276,12 @@ interface IModel {
 	function save(cb:(success:Bool) -> Void):Void;
 	function load(cb:(success:Bool, gameInfo:GameInfo) -> Void):Void;
 
-	function getPreResultOfPk(playerId:Int, gridId:Int, p1PeopleId:Int, p2PeopleId:Int):{energyBefore:Int, energyAfter:Int, armyChange:Int, successRate:Float};
+	function getPreResultOfPk(playerId:Int, gridId:Int, p1PeopleId:Int, p2PeopleId:Int):{
+		energyBefore:Int,
+		energyAfter:Int,
+		armyChange:Int,
+		successRate:Float
+	};
 	function takePk(playerId:Int, gridId:Int, p1PeopleId:Int, p2PeopleId:Int, syncViewByInfo:(gameInfo:GameInfo) -> Void):Void;
 }
 
@@ -306,7 +308,7 @@ final StrategyList:Array<StrategyCatelog> = [
 		id: 2,
 		name: '遠交近攻',
 		intelligence: 75,
-		describe: '直接獲取該格子的20%資源。並且友好度上升1',
+		describe: '直接獲取該格子的10%資源。並且友好度上升1',
 		targetType: StrategyTargetType.SELF_GRID,
 		value: null
 	},
@@ -334,6 +336,30 @@ final StrategyList:Array<StrategyCatelog> = [
 		intelligence: 60,
 		describe: '指定武將體力-20',
 		targetType: StrategyTargetType.TARGET_PEOPLE,
+		value: null
+	},
+	{
+		id: 6,
+		name: '按兵不動',
+		intelligence: 40,
+		describe: '這回合不移動',
+		targetType: StrategyTargetType.SELF_PLAYER,
+		value: null
+	},
+	{
+		id: 7,
+		name: '急功近利',
+		intelligence: 80,
+		describe: '指定玩家變賣20糧獲得20錢',
+		targetType: StrategyTargetType.TARGET_PLAYER,
+		value: null
+	},
+	{
+		id: 8,
+		name: '五穀豐登',
+		intelligence: 90,
+		describe: '所有自己城池的糧食+5%',
+		targetType: StrategyTargetType.SELF_PLAYER,
 		value: null
 	},
 ];
@@ -466,5 +492,3 @@ final BuildingList:Array<BuildingCatelog> = [
 		type: WALL(3)
 	}
 ];
-
-

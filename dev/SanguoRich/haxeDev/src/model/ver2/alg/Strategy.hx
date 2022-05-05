@@ -42,6 +42,17 @@ function getStrategyCost(ctx:Context, p1PeopleId:Int, strategyId:Int, targetPlay
 		case _:
 			1;
 	}
+	// final fact4 = switch strategy.targetType {
+	// 	case TARGET_PLAYER:
+	// 		//
+	// 		if(p1.belongToPlayerId == targetPlayerId){
+	// 			0.0;
+	// 		} else {
+	// 			1.0;
+	// 		}
+	// 	case _:
+	// 		1.0;
+	// }
 	final rate = base * fact1 * fact2 * fact3;
 	return {
 		peopleCost: {
@@ -90,9 +101,10 @@ function applyStrategyCost(ctx:Context, p1PeopleId:Int, strategyId:Int, targetPl
 			if (isEmpty) {
 				throw new Exception("這是空地, 搶了沒資源");
 			}
-			final gainFood = grid.food * 0.2;
-			final gainMoney = grid.money * 0.2;
-			final gainArmy = grid.army * 0.2;
+			final gainRate = 0.1;
+			final gainFood = grid.food * gainRate;
+			final gainMoney = grid.money * gainRate;
+			final gainArmy = grid.army * gainRate;
 			grid.food -= gainFood;
 			grid.money -= gainMoney;
 			grid.army -= gainArmy;
@@ -137,6 +149,25 @@ function applyStrategyCost(ctx:Context, p1PeopleId:Int, strategyId:Int, targetPl
 			// 趁虛而入
 			final p2 = getPeopleById(ctx, targetPeopleId);
 			p2.energy = Math.max(0, p2.energy - 20);
+		case 6:
+			// 按兵不动
+			if (p1.belongToPlayerId == null) {
+				throw new Exception('belongToPlayerId not found: ${p1.id}');
+			}
+			final player = ctx.players[p1.belongToPlayerId];
+			player.memory.hasDice = true;
+		case 7:
+			// 急功近利
+			final targetPlayer = ctx.players[targetPlayerId];
+			final give = Math.min(20, targetPlayer.food);
+			targetPlayer.food -= give;
+			targetPlayer.money += give;
+		case 8:
+			// 五穀豐登
+			final myGrids = ctx.grids.filter(g -> getGridBelongPlayerId(ctx, g.id) == p1.belongToPlayerId);
+			for (grid in myGrids) {
+				grid.food = Math.min(GRID_RESOURCE_MAX, grid.food * 0.05);
+			}
 	}
 	return true;
 }
