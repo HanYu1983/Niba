@@ -71,8 +71,6 @@ function _getPreResultOfPk(ctx:Context, playerId:Int, gridId:Int, p1PeopleId:Int
 	armyChange:Int,
 	successRate:Float
 } {
-	trace("p1PeopleId/p2PeopleId定義成Int, 但傳入People");
-	js.Browser.console.log("Pk", "_getPreResultOfPk", p1PeopleId, p2PeopleId);
 	final p1 = getPeopleById(ctx, p1PeopleId);
 	final cost = getPkCost(ctx, playerId, gridId, p1PeopleId, p2PeopleId);
 	return {
