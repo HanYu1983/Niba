@@ -41,7 +41,7 @@ function getResourceCost(ctx:Context, playerId:Int, gridId:Int, p1SelectId:Int, 
 				1;
 			};
 
-			final top = 60;
+			final top = 30;
 			final attrFactor:Float = if (type == RESOURCE.MONEY) {
 				(getPeoplePolitical(ctx, p1.id) / top) * .7 + (getPeopleIntelligence(ctx, p1.id) / top) * .1 + (getPeopleCharm(ctx, p1.id) / top) * .1
 					+ (grid.money / 300) * .1;
@@ -76,8 +76,10 @@ function getResourceCost(ctx:Context, playerId:Int, gridId:Int, p1SelectId:Int, 
 			limitFactor += 3;
 			// 0 ~ 1
 			limitFactor /= 6;
-			// 0.2 ~ 0.7
-			limitFactor *= .5 + .2;
+			// 0.3 ~ 0.8
+			limitFactor *= .5 + .3;
+
+			trace(rate, limitFactor);
 
 			switch [type, market] {
 				case [MONEY, _]:

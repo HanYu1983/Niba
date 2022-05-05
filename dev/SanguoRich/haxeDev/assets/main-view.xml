@@ -63,22 +63,22 @@
 
                     <section-header text="外交" />
                     <button text="交涉" width="100%" id="btn_negotiate" />
-                    <button text="單挑" width="100%" id="btn_pk" />
                     <button text="搶奪" width="100%" id="btn_snatch" />
                     <button text="攻城" width="100%" id="btn_occupation" />
                     
-                    <section-header text="武將" />
-                    <button text="札營" width="100%" id="btn_camp" />
-                    <button text="練兵" width="100%" id="btn_practice" />
-                    <button text="探索" width="100%" id="btn_explore" />
-                    <button text="聘用" width="100%" id="btn_hire" />
-
                     <section-header text="交易" />
                     <button text="經商" width="100%" id="btn_earnMoney" />
                     <button text="買糧" width="100%" id="btn_buyFood" />
                     <button text="賣糧" width="100%" id="btn_sellFood" />
                     <button text="徵兵" width="100%" id="btn_buyArmy" />
                     <button text="裁兵" width="100%" id="btn_sellArmy" />
+
+                    <section-header text="武將" />
+                    <button text="單挑" width="100%" id="btn_pk" />
+                    <button text="札營" width="100%" id="btn_camp" />
+                    <button text="練兵" width="100%" id="btn_practice" />
+                    <button text="探索" width="100%" id="btn_explore" />
+                    <button text="聘用" width="100%" id="btn_hire" />
 
                     <section-header text="内政" />
                     <button text="調度" width="100%" id="btn_transfer" />
