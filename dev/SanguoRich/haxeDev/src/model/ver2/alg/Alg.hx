@@ -293,6 +293,7 @@ function onPlayerGoToPosition(ctx:Context, playerId:Int, toGridId:Int) {
 		}
 		doPayTaxToGrid(ctx, player.id, toGrid.id);
 		eventValue.moneyAfter = player.money;
+		eventValue.foodAfter = player.food;
 		ctx.events.push({
 			Event.PAY_FOR_OVER_ENEMY_GRID(eventValue);
 		});
