@@ -100,4 +100,9 @@ class CacheModel extends ProxyModel {
 		isDirty = true;
 		return super.load(cb);
 	}
+
+	override function takePk(playerId:Int, gridId:Int, p1PeopleId:Int, p2PeopleId:Int, syncViewByInfo:(gameInfo:GameInfo) -> Void) {
+		isDirty = true;
+		return super.takePk(playerId, gridId, p1PeopleId, p2PeopleId, syncViewByInfo);
+	}
 }

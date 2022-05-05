@@ -151,9 +151,16 @@ class ProxyModel implements IModel {
 		return model.load(cb);
 	}
 
-	public function getPreResultOfPk(playerId:Int, gridId:Int, p1PeopleId:Int, p2PeopleId:Int):{energyBefore:Int, energyAfter:Int, armyChange:Int, successRate:Float} {
-		throw new haxe.exceptions.NotImplementedException();
+	public function getPreResultOfPk(playerId:Int, gridId:Int, p1PeopleId:Int, p2PeopleId:Int):{
+		energyBefore:Int,
+		energyAfter:Int,
+		armyChange:Int,
+		successRate:Float
+	} {
+		return model.getPreResultOfPk(playerId, gridId, p1PeopleId, p2PeopleId);
 	}
 
-	public function takePk(playerId:Int, gridId:Int, p1PeopleId:Int, p2PeopleId:Int, syncViewByInfo:(gameInfo:GameInfo) -> Void) {}
+	public function takePk(playerId:Int, gridId:Int, p1PeopleId:Int, p2PeopleId:Int, syncViewByInfo:(gameInfo:GameInfo) -> Void) {
+		return model.takePk(playerId, gridId, p1PeopleId, p2PeopleId, syncViewByInfo);
+	}
 }

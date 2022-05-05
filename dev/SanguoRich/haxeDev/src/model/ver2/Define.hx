@@ -195,6 +195,12 @@ enum Event {
 		costType:Int,
 		people:model.PeopleGenerator.People,
 	});
+	PK_RESULT(value:{
+		success:Bool,
+		people:model.PeopleGenerator.People,
+		armyBefore:Float,
+		armyAfter:Float,
+	});
 }
 
 typedef Context = {
@@ -439,6 +445,11 @@ function getGameInfo(ctx:Context, root:Bool):GameInfo {
 			case COST_FOR_BONUS_RESULT(value):
 				{
 					id: EventInfoID.COST_FOR_BONUS_RESULT,
+					value: value
+				}
+			case PK_RESULT(value):
+				{
+					id: EventInfoID.PK_RESULT,
 					value: value
 				}
 		}
@@ -759,10 +770,10 @@ function getPlayerCommand(ctx:Context, playerId:Int):Array<ActionInfoID> {
 									case _:
 								}
 							}
-							// 討厭的
 							switch gridInfo.buildtype {
 								case MARKET | FARM | VILLAGE | CITY:
 									ret.push(ActionInfoID.NEGOTIATE);
+									ret.push(ActionInfoID.PK);
 									ret.push(ActionInfoID.SNATCH);
 									ret.push(ActionInfoID.OCCUPATION);
 								case _:
@@ -774,6 +785,7 @@ function getPlayerCommand(ctx:Context, playerId:Int):Array<ActionInfoID> {
 		} else if (gridInfo.belongPlayerId != playerId) {
 			// 敵人的
 			if (player.memory.hasCommand == false) {
+				ret.push(ActionInfoID.PK);
 				ret.push(ActionInfoID.SNATCH);
 				ret.push(ActionInfoID.OCCUPATION);
 			}

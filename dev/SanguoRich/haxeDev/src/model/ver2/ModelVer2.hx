@@ -17,6 +17,7 @@ import model.ver2.alg.Strategy;
 import model.ver2.alg.Building;
 import model.ver2.alg.CostForBonus;
 import model.ver2.alg.SaveLoad;
+import model.ver2.alg.Pk;
 
 class ModelVer2 extends DebugModel {
 	var context:Context = {
@@ -203,5 +204,19 @@ class ModelVer2 extends DebugModel {
 			js.Browser.console.log("ModelVer2", "load", e);
 			cb(false, gameInfo());
 		}
+	}
+
+	override function getPreResultOfPk(playerId:Int, gridId:Int, p1PeopleId:Int, p2PeopleId:Int):{
+		energyBefore:Int,
+		energyAfter:Int,
+		armyChange:Int,
+		successRate:Float
+	} {
+		return _getPreResultOfPk(context, playerId, gridId, p1PeopleId, p2PeopleId);
+	}
+
+	override function takePk(playerId:Int, gridId:Int, p1PeopleId:Int, p2PeopleId:Int, syncViewByInfo:(gameInfo:GameInfo) -> Void) {
+		_takePk(context, playerId, gridId, p1PeopleId, p2PeopleId);
+		syncViewByInfo(gameInfo());
 	}
 }
