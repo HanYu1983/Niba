@@ -41,7 +41,7 @@ function getResourceCost(ctx:Context, playerId:Int, gridId:Int, p1SelectId:Int, 
 				1;
 			};
 
-			final top = 30;
+			final top = 70;
 			final attrFactor:Float = if (type == RESOURCE.MONEY) {
 				(getPeoplePolitical(ctx, p1.id) / top) * .7 + (getPeopleIntelligence(ctx, p1.id) / top) * .1 + (getPeopleCharm(ctx, p1.id) / top) * .1
 					+ (grid.money / 300) * .1;
@@ -55,6 +55,7 @@ function getResourceCost(ctx:Context, playerId:Int, gridId:Int, p1SelectId:Int, 
 				0;
 			};
 			final rate = base * attrFactor * abiFactor;
+			trace(rate, base, attrFactor, abiFactor);
 			final returnInfo = {
 				playerCost: {
 					id: playerId,
@@ -79,13 +80,13 @@ function getResourceCost(ctx:Context, playerId:Int, gridId:Int, p1SelectId:Int, 
 			// 0.3 ~ 0.8
 			limitFactor *= .5 + .3;
 
-			trace(rate, limitFactor);
-
 			switch [type, market] {
 				case [MONEY, _]:
-					final moneyCost = MONEY_PER_DEAL;
-					final totalGain = moneyCost * rate * .5;
+					final moneyCost = MONEY_PER_DEAL * 0.5;
+					final totalGain = moneyCost * rate;
 					limitFactor *= .5;
+					trace('moneyCost', moneyCost);
+					trace('totalGain', totalGain);
 					final gain = Math.min(totalGain, grid.money * limitFactor);
 					returnInfo.playerCost.money = -gain;
 				case [ARMY, SELL]:
