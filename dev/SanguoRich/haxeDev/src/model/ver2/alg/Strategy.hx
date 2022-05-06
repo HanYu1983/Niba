@@ -141,21 +141,33 @@ private function onStrategyCost(ctx:Context, p1PeopleId:Int, strategyId:Int, tar
 				wrapResourceResultEvent(ctx, p1.belongToPlayerId, p1.id, () -> {
 					p1.energy = Math.max(0, p1.energy - cost.peopleCost.energy);
 					if (success) {
-						// 將拆除指定格中非自己的路障
-						final itemWillRemoved = ctx.groundItems.filter(i -> i.position == targetGridId /*&& i.belongToPlayerId != player.id*/);
+						// 格子裡將移除的路障
+						final itemWillRemoved = ctx.groundItems.filter(i -> i.position == targetGridId);
+						// , 當中是我的路障
+						final myItem = itemWillRemoved.filter(i -> i.belongToPlayerId == player.id);
+						// 如果除了我的以外有其它的路障存在就只移除其它的路障, 否則移除全部
+						final isRemoveOtherButNotMe = itemWillRemoved.length - myItem.length > 0;
 						for (item in itemWillRemoved) {
 							// 中立路障不搶錢
 							if (item.belongToPlayerId == null) {
 								throw new haxe.Exception("不該有中立路障");
 							}
+							if (isRemoveOtherButNotMe) {
+								if (item.belongToPlayerId == player.id) {
+									continue;
+								}
+							}
 							// 搶錢
-							final targetPlayer = ctx.players[item.belongToPlayerId];
-							final tax = 10;
-							targetPlayer.money = Math.max(0, player.money - tax);
-							player.money += tax;
+							if (item.belongToPlayerId != player.id) {
+								final targetPlayer = ctx.players[item.belongToPlayerId];
+								final tax = 10;
+								targetPlayer.money = Math.max(0, player.money - tax);
+								player.money += tax;
+							}
+							// 拆除
+							ctx.groundItems = ctx.groundItems.filter(i -> i.id != item.id);
 						}
-						// 拆除
-						ctx.groundItems = ctx.groundItems.filter(i -> itemWillRemoved.map(j -> j.id).has(i.id) == false);
+
 						onPeopleExpAdd(ctx, p1.id, getExpAdd(cost.successRate, ENERGY_COST_ON_STRATEGY));
 					}
 					success;
