@@ -220,6 +220,9 @@ class MainView extends Box {
 			grid.top = Math.floor(index / 10) * gridSize;
 		}
 
+		btn_camp.text = '${btn_camp.text}(${ENERGY_COST_ON_COST_FOR_FUN})';
+		btn_practice.text = '${btn_practice.text}(${ENERGY_COST_ON_COST_FOR_FUN})';
+		btn_payForFun.text = '${btn_payForFun.text}(${ENERGY_COST_ON_COST_FOR_FUN})';
 		btn_showStrategy.text = '${btn_showStrategy.text}(${ENERGY_COST_ON_STRATEGY})';
 		btn_negotiate.text = '${btn_negotiate.text}(${ENERGY_COST_ON_NEGO})';
 		btn_pk.text = '${btn_pk.text}(${ENERGY_COST_ON_PK})';

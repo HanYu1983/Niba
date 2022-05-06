@@ -96,6 +96,7 @@ final ENERGY_COST_ON_BUILDING = 10;
 final ENERGY_COST_ON_SNATCH = 15;
 final ENERGY_COST_ON_WAR = 30;
 final ENERGY_COST_ON_PK = 15;
+final ENERGY_COST_ON_COST_FOR_FUN = 15;
 
 // 最低搶奪所需兵力
 final SNATCH_ARMY_AT_LEAST = 30;
@@ -153,9 +154,9 @@ function getExpAdd(p:Float, max:Float):Float {
 final BASE_RATE_STRATEGY = 1.0;
 final BASE_RATE_RESOURCE = 1.0;
 final BASE_RATE_PK = 0.7;
-final BASE_RATE_NEGO = 0.8;
-final BASE_RATE_HIRE = 0.9;
-final BASE_RATE_EXPLORE = 1.1;
+final BASE_RATE_NEGO = 1.0;
+final BASE_RATE_HIRE = 1.0;
+final BASE_RATE_EXPLORE = 1.2;
 
 // 格子資源上限
 final GRID_RESOURCE_MAX = 500.0;
