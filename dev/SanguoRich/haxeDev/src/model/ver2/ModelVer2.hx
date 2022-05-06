@@ -179,7 +179,6 @@ class ModelVer2 extends DebugModel {
 		gainEnergy:Float
 	} {
 		final ret = _getResultOfCost(context, p1Player, p1People, costType);
-		js.Browser.console.log(ret);
 		return ret;
 	}
 
