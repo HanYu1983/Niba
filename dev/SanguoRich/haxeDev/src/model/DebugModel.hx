@@ -45,6 +45,7 @@ class DebugModel implements IModel {
 					ActionInfoID.FIRE,
 					ActionInfoID.PK,
 					ActionInfoID.CAMP,
+					ActionInfoID.PAY_FOR_FUN,
 					ActionInfoID.PRACTICE,
 					ActionInfoID.END,
 				]

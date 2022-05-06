@@ -33,10 +33,17 @@ class CostForBonusView extends PopupView {
 		final costType = info.type;
 		final gameInfo = Main.model.gameInfo();
 
+		btnbr_ops.selectedIndex = costType;
+
+		for( btn in [btn_camp, btn_practice, btn_payForFun] ){
+			btn.disabled = false;
+		}
 		switch(costType){
-			case 0:btnbr_ops.selectedIndex = 0;
-			case 1:btnbr_ops.selectedIndex = 1;
-			case _:
+			case 0 | 1: 
+				btn_payForFun.disabled = true;
+			case 2:
+				btn_camp.disabled = true;
+				btn_practice.disabled = true;
 		}
 
 		p1List.setPeopleList(gameInfo.currentPlayer.people);
@@ -47,11 +54,21 @@ class CostForBonusView extends PopupView {
 			final isCamp = btnbr_ops.selectedIndex == 0;
 			final result:{costFood:Float, gainExp:Float, gainEnergy:Float} = Main.model.getResultOfCost(gameInfo.currentPlayer, p, isCamp ? 0 : 1);
 			
-			final costName = isCamp ? "札營" : "練兵";
+			final costName = btnbr_ops.selectedButton.text;
 			var resultStr = '讓 ${p.name} 領導 ${costName} 嗎?\n';
 
+			final costType = switch(btnbr_ops.selectedIndex){
+				case 0|1: '糧草';
+				case 2: '金錢';
+				case _: '';
+			}
 			final gain = isCamp ? result.gainEnergy : result.gainExp;
-			resultStr += '預計消耗糧草 ${Main.getFixNumber(result.costFood)} 提升自身所有武將 ${ btn_camp.selected ? "體力" : "功績"}差距的 ${Main.getRateString(gain)}';
+			final recoverName = switch(btnbr_ops.selectedIndex){
+				case 0|2: '體力';
+				case 1: '功績';
+				case _: '';
+			}
+			resultStr += '預計消耗${costType} ${Main.getFixNumber(result.costFood)} 提升自身所有武將 ${recoverName}差距的 ${Main.getRateString(gain)}';
 			lbl_result.value = resultStr;
 		}
 

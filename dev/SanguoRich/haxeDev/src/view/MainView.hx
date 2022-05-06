@@ -271,6 +271,11 @@ class MainView extends Box {
 		Main.model.playerDice(syncView);
 	}
 
+	@:bind(btn_payForFun, MouseEvent.CLICK)
+	function onBtnPayForFunClick(e){
+		costForBonusView.showPopup({type:2});
+	}
+
 	@:bind(btn_camp, MouseEvent.CLICK)
 	function onBtnCampClick(e){
 		costForBonusView.showPopup({type:0});
@@ -723,6 +728,7 @@ class MainView extends Box {
 		btn_snatch.hide();
 		btn_occupation.hide();
 		btn_hire.hide();
+		btn_payForFun.hide();
 		btn_camp.hide();
 		btn_practice.hide();
 		btn_explore.hide();
@@ -768,6 +774,8 @@ class MainView extends Box {
 					btn_hire.show();
 				case EXPLORE: 
 					btn_explore.show();
+				case PAY_FOR_FUN:
+					btn_payForFun.show();
 				case EARN_MONEY: 
 					btn_earnMoney.show();
 				case BUY_FOOD: 
