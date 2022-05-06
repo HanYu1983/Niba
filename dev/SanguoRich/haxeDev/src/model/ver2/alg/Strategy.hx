@@ -77,8 +77,7 @@ function onStrategyCost(ctx:Context, p1PeopleId:Int, strategyId:Int, targetPlaye
 				// 暗渡陳艙
 				p1.energy = Math.max(0, p1.energy - cost.peopleCost.energy);
 				if (success) {
-					player.position = targetGridId;
-					onPlayerGoToPosition(ctx, player.id, player.position);
+					onPlayerGoToPosition(ctx, player.id, targetGridId);
 					player.memory.hasDice = true;
 					onPeopleExpAdd(ctx, p1.id, getExpAdd(cost.successRate, ENERGY_COST_ON_STRATEGY));
 				}
