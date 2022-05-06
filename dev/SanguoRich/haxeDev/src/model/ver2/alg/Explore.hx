@@ -13,7 +13,7 @@ using Lambda;
 // 探索
 // ================================
 // 探索計算
-function getExploreCost(ctx:Context, playerId:Int, gridId:Int, p1SelectId:Int) {
+private function getExploreCost(ctx:Context, playerId:Int, gridId:Int, p1SelectId:Int) {
 	return switch 0 {
 		case 0:
 			final grid = ctx.grids[gridId];
@@ -47,23 +47,7 @@ function getExploreCost(ctx:Context, playerId:Int, gridId:Int, p1SelectId:Int) {
 	}
 }
 
-function _getTakeExplorePreview(ctx:Context, playerId:Int, gridId:Int):ExplorePreview {
-	return {
-		p1ValidPeople: getPlayerInfo(ctx, ctx.players[playerId]).people
-	};
-}
-
-function _getPreResultOfExplore(ctx:Context, playerId:Int, gridId:Int, peopleId:Int):PreResultOnExplore {
-	final cost = getExploreCost(ctx, playerId, gridId, peopleId);
-	final p1 = getPeopleById(ctx, peopleId);
-	return {
-		energyBefore: Std.int(p1.energy),
-		energyAfter: Std.int(p1.energy - cost.peopleCost.energy),
-		successRate: cost.successRate
-	}
-}
-
-function onExploreCost(ctx:Context, playerId:Int, gridId:Int, p1SelectId:Int) {
+private function onExploreCost(ctx:Context, playerId:Int, gridId:Int, p1SelectId:Int) {
 	final p1 = getPeopleById(ctx, p1SelectId);
 	final player = ctx.players[playerId];
 	final resultValue = {
@@ -108,6 +92,22 @@ function onExploreCost(ctx:Context, playerId:Int, gridId:Int, p1SelectId:Int) {
 	resultValue.moneyAfter = player.money;
 	resultValue.foodAfter = player.food;
 	ctx.events.push(Event.EXPLORE_RESULT(resultValue));
+}
+
+function _getTakeExplorePreview(ctx:Context, playerId:Int, gridId:Int):ExplorePreview {
+	return {
+		p1ValidPeople: getPlayerInfo(ctx, ctx.players[playerId]).people
+	};
+}
+
+function _getPreResultOfExplore(ctx:Context, playerId:Int, gridId:Int, peopleId:Int):PreResultOnExplore {
+	final cost = getExploreCost(ctx, playerId, gridId, peopleId);
+	final p1 = getPeopleById(ctx, peopleId);
+	return {
+		energyBefore: Std.int(p1.energy),
+		energyAfter: Std.int(p1.energy - cost.peopleCost.energy),
+		successRate: cost.successRate
+	}
 }
 
 function _takeExplore(ctx:Context, playerId:Int, gridId:Int, p1SelectId:Int) {

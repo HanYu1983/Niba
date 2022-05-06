@@ -41,7 +41,7 @@ private function getPkCost(ctx:Context, playerId:Int, gridId:Int, p1PeopleId:Int
 	}
 }
 
-function onTakePk(ctx:Context, playerId:Int, gridId:Int, p1PeopleId:Int, p2PeopleId:Int) {
+private function onTakePk(ctx:Context, playerId:Int, gridId:Int, p1PeopleId:Int, p2PeopleId:Int) {
 	final player = ctx.players[playerId];
 	final grid = ctx.grids[gridId];
 	final p1 = getPeopleById(ctx, p1PeopleId);
@@ -84,6 +84,7 @@ function _getPreResultOfPk(ctx:Context, playerId:Int, gridId:Int, p1PeopleId:Int
 }
 
 function _takePk(ctx:Context, playerId:Int, gridId:Int, p1PeopleId:Int, p2PeopleId:Int) {
+	ctx.events = [];
 	onTakePk(ctx, playerId, gridId, p1PeopleId, p2PeopleId);
 	{
 		final player = ctx.players[ctx.currentPlayerId];

@@ -9,45 +9,7 @@ import model.ver2.alg.War;
 
 using Lambda;
 
-function _getTakeSnatchPreview(ctx:Context, playerId:Int, gridId:Int):SnatchPreview {
-	final warPreview = _getTakeWarPreview(ctx, playerId, gridId);
-	return {
-		p1ValidPeople: warPreview.p1ValidPeople,
-		p2ValidPeople: warPreview.p2ValidPeople,
-		isP1ArmyValid: ctx.players[playerId].army >= SNATCH_ARMY_AT_LEAST,
-		isP2ArmyValid: ctx.grids[gridId].army >= SNATCH_ARMY_AT_LEAST,
-	};
-}
-
-function _getPreResultOfSnatch(ctx:Context, playerId:Int, gridId:Int, p1PeopleId:Int, p2PeopleId:Int, isOccupation:Bool):PreResultOnSnatch {
-	if (isOccupation) {
-		final army1 = switch guessArmy(ctx, playerId, gridId, p1PeopleId, p2PeopleId) {
-			case {army: army}:
-				army;
-		}
-		final army2 = ctx.grids[gridId].army;
-		final preResultOnSnatch = {
-			war: _getPreResultOfWar(ctx, playerId, gridId, p1PeopleId, p2PeopleId, army1, army2, {occupy: true}),
-			money: 0.0,
-			food: 0.0,
-		}
-		// js.Browser.console.log(preResultOnSnatch);
-		return preResultOnSnatch;
-	} else {
-		final army1 = Math.min(ctx.players[playerId].army, SNATCH_ARMY_AT_LEAST);
-		final army2 = Math.min(ctx.grids[gridId].army, SNATCH_ARMY_AT_LEAST);
-		final cost = getSnatchCost(ctx, playerId, gridId, p1PeopleId, p2PeopleId, army1, army2, false);
-		final preResultOnSnatch = {
-			war: _getPreResultOfWar(ctx, playerId, gridId, p1PeopleId, p2PeopleId, army1, army2, {occupy: false}),
-			money: cost.money,
-			food: cost.food,
-		}
-		// js.Browser.console.log(preResultOnSnatch);
-		return preResultOnSnatch;
-	}
-}
-
-function getSnatchCost(ctx:Context, playerId:Int, gridId:Int, p1PeopleId:Int, p2PeopleId:Int, army1:Float, army2:Float, isOccupation:Bool) {
+private function getSnatchCost(ctx:Context, playerId:Int, gridId:Int, p1PeopleId:Int, p2PeopleId:Int, army1:Float, army2:Float, isOccupation:Bool) {
 	return switch 1 {
 		case 0:
 			final warCost = getWarCost(ctx, playerId, gridId, p1PeopleId, p2PeopleId, army1, army2, {occupy: isOccupation});
@@ -117,7 +79,7 @@ function getSnatchCost(ctx:Context, playerId:Int, gridId:Int, p1PeopleId:Int, p2
 	}
 }
 
-function guessArmy(ctx:Context, playerId:Int, gridId:Int, p1PeopleId:Int, p2PeopleId:Int) {
+private function guessArmy(ctx:Context, playerId:Int, gridId:Int, p1PeopleId:Int, p2PeopleId:Int) {
 	final army2 = ctx.grids[gridId].army;
 	final totalArmy = ctx.players[playerId].army;
 	var s = 0.0;
@@ -143,40 +105,7 @@ function guessArmy(ctx:Context, playerId:Int, gridId:Int, p1PeopleId:Int, p2Peop
 	}
 }
 
-function applySnatchCost(ctx:Context, playerId:Int, gridId:Int, p1PeopleId:Int, p2PeopleId:Int, army1:Float, army2:Float, isOccupation:Bool):Bool {
-	if (isOccupation) {
-		final warArmy1 = switch guessArmy(ctx, playerId, gridId, p1PeopleId, p2PeopleId) {
-			case {army: army}:
-				army;
-		}
-		final warArmy2 = ctx.grids[gridId].army;
-		return applyWarCost(ctx, playerId, gridId, p1PeopleId, p2PeopleId, warArmy1, warArmy2, {occupy: true});
-	} else {
-		// 處理搶奪中的戰爭部分
-		applyWarCost(ctx, playerId, gridId, p1PeopleId, p2PeopleId, army1, army2, {occupy: false});
-		// 處理搶奪中的搶資源部分
-		final cost = getSnatchCost(ctx, playerId, gridId, p1PeopleId, p2PeopleId, army1, army2, isOccupation);
-		if (cost.success == false) {
-			return false;
-		}
-		final grid = ctx.grids[gridId];
-		grid.money -= cost.money;
-		if (grid.money < 0) {
-			grid.money = 0;
-		}
-		grid.food -= cost.food;
-		if (grid.food < 0) {
-			grid.food = 0;
-		}
-		final player = ctx.players[playerId];
-		player.money += cost.money;
-		player.food += cost.food;
-		return true;
-	}
-}
-
-function _takeSnatchOn(ctx:Context, playerId:Int, gridId:Int, p1PeopleId:Int, p2PeopleId:Int, isOccupation:Bool) {
-	ctx.events = [];
+private function onSnatchCost(ctx:Context, playerId:Int, gridId:Int, p1PeopleId:Int, p2PeopleId:Int, army1:Float, army2:Float, isOccupation:Bool) {
 	final people1 = getPeopleById(ctx, p1PeopleId);
 	final people2 = getPeopleById(ctx, p2PeopleId);
 	final player = ctx.players[playerId];
@@ -192,9 +121,35 @@ function _takeSnatchOn(ctx:Context, playerId:Int, gridId:Int, p1PeopleId:Int, p2
 		foodBefore: player.food,
 		foodAfter: player.food,
 	};
-	final army1 = Math.min(ctx.players[playerId].army, SNATCH_ARMY_AT_LEAST);
-	final army2 = Math.min(ctx.grids[gridId].army, SNATCH_ARMY_AT_LEAST);
-	final success = applySnatchCost(ctx, playerId, gridId, p1PeopleId, p2PeopleId, army1, army2, isOccupation);
+	final success = {
+		if (isOccupation) {
+			final warArmy1 = switch guessArmy(ctx, playerId, gridId, p1PeopleId, p2PeopleId) {
+				case {army: army}:
+					army;
+			}
+			final warArmy2 = ctx.grids[gridId].army;
+			onWarCost(ctx, playerId, gridId, p1PeopleId, p2PeopleId, warArmy1, warArmy2, {occupy: true});
+		} else {
+			// 處理搶奪中的戰爭部分
+			onWarCost(ctx, playerId, gridId, p1PeopleId, p2PeopleId, army1, army2, {occupy: false});
+			// 處理搶奪中的搶資源部分
+			final cost = getSnatchCost(ctx, playerId, gridId, p1PeopleId, p2PeopleId, army1, army2, isOccupation);
+			if (cost.success) {
+				final grid = ctx.grids[gridId];
+				grid.money -= cost.money;
+				if (grid.money < 0) {
+					grid.money = 0;
+				}
+				grid.food -= cost.food;
+				if (grid.food < 0) {
+					grid.food = 0;
+				}
+				player.money += cost.money;
+				player.food += cost.food;
+			}
+			cost.success;
+		}
+	}
 	resultValue.success = success;
 	resultValue.energyAfter = people1.energy;
 	resultValue.armyAfter = player.army;
@@ -205,6 +160,51 @@ function _takeSnatchOn(ctx:Context, playerId:Int, gridId:Int, p1PeopleId:Int, p2
 	} else {
 		Event.SNATCH_RESULT(resultValue);
 	});
+}
+
+function _getTakeSnatchPreview(ctx:Context, playerId:Int, gridId:Int):SnatchPreview {
+	final warPreview = _getTakeWarPreview(ctx, playerId, gridId);
+	return {
+		p1ValidPeople: warPreview.p1ValidPeople,
+		p2ValidPeople: warPreview.p2ValidPeople,
+		isP1ArmyValid: ctx.players[playerId].army >= SNATCH_ARMY_AT_LEAST,
+		isP2ArmyValid: ctx.grids[gridId].army >= SNATCH_ARMY_AT_LEAST,
+	};
+}
+
+function _getPreResultOfSnatch(ctx:Context, playerId:Int, gridId:Int, p1PeopleId:Int, p2PeopleId:Int, isOccupation:Bool):PreResultOnSnatch {
+	if (isOccupation) {
+		final army1 = switch guessArmy(ctx, playerId, gridId, p1PeopleId, p2PeopleId) {
+			case {army: army}:
+				army;
+		}
+		final army2 = ctx.grids[gridId].army;
+		final preResultOnSnatch = {
+			war: _getPreResultOfWar(ctx, playerId, gridId, p1PeopleId, p2PeopleId, army1, army2, {occupy: true}),
+			money: 0.0,
+			food: 0.0,
+		}
+		// js.Browser.console.log(preResultOnSnatch);
+		return preResultOnSnatch;
+	} else {
+		final army1 = Math.min(ctx.players[playerId].army, SNATCH_ARMY_AT_LEAST);
+		final army2 = Math.min(ctx.grids[gridId].army, SNATCH_ARMY_AT_LEAST);
+		final cost = getSnatchCost(ctx, playerId, gridId, p1PeopleId, p2PeopleId, army1, army2, false);
+		final preResultOnSnatch = {
+			war: _getPreResultOfWar(ctx, playerId, gridId, p1PeopleId, p2PeopleId, army1, army2, {occupy: false}),
+			money: cost.money,
+			food: cost.food,
+		}
+		// js.Browser.console.log(preResultOnSnatch);
+		return preResultOnSnatch;
+	}
+}
+
+function _takeSnatchOn(ctx:Context, playerId:Int, gridId:Int, p1PeopleId:Int, p2PeopleId:Int, isOccupation:Bool) {
+	ctx.events = [];
+	final army1 = Math.min(ctx.players[playerId].army, SNATCH_ARMY_AT_LEAST);
+	final army2 = Math.min(ctx.grids[gridId].army, SNATCH_ARMY_AT_LEAST);
+	onSnatchCost(ctx, playerId, gridId, p1PeopleId, p2PeopleId, army1, army2, isOccupation);
 	{
 		final player = ctx.players[ctx.currentPlayerId];
 		player.memory.hasCommand = true;

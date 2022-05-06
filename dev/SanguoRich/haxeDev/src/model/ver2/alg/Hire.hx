@@ -10,7 +10,7 @@ using Lambda;
 
 //
 // 雇用計算
-function getHireCost(ctx:Context, playerId:Int, gridId:Int, p1SelectId:Int, p2SelectId:Int) {
+private function getHireCost(ctx:Context, playerId:Int, gridId:Int, p1SelectId:Int, p2SelectId:Int) {
 	return switch 0 {
 		case 0:
 			final player = ctx.players[playerId];
@@ -56,6 +56,61 @@ function getHireCost(ctx:Context, playerId:Int, gridId:Int, p1SelectId:Int, p2Se
 	}
 }
 
+private function onHireCost(ctx:Context, playerId:Int, gridId:Int, p1SelectId:Int, p2SelectId:Int) {
+	final p1 = getPeopleById(ctx, p1SelectId);
+	final p2 = getPeopleById(ctx, p2SelectId);
+	final player = ctx.players[playerId];
+	final resultValue = {
+		success: false,
+		people: getPeopleInfo(ctx, p1),
+		energyBefore: p1.energy,
+		energyAfter: p1.energy,
+		armyBefore: player.army,
+		armyAfter: player.army,
+		moneyBefore: player.money,
+		moneyAfter: player.money,
+		foodBefore: player.food,
+		foodAfter: player.food,
+	}
+	final success = {
+		final negoCost = getHireCost(ctx, playerId, gridId, p1SelectId, p2SelectId);
+		// 無論成功或失敗武將先消體力
+		if (p1.energy < negoCost.peopleCost.energy) {
+			throw new haxe.Exception('people.energy ${p1.energy} < ${negoCost.peopleCost.energy}');
+		}
+		p1.energy -= negoCost.peopleCost.energy;
+		if (p1.energy < 0) {
+			p1.energy = 0;
+		}
+		//
+		final success = Math.random() < negoCost.successRate;
+		if (success) {
+			final hirePeople = getPeopleById(ctx, p2SelectId);
+			final player = ctx.players[playerId];
+			// 支付雇用費
+			player.money -= negoCost.playerCost.money;
+			if (player.money < 0) {
+				player.money = 0;
+			}
+			// 將人變成主公的
+			hirePeople.belongToPlayerId = playerId;
+			// 將人移到玩家上
+			hirePeople.position.player = true;
+			// 從格子上移除人
+			hirePeople.position.gridId = null;
+			// 功績
+			onPeopleExpAdd(ctx, p1.id, getExpAdd(Math.min(1, negoCost.successRate), ENERGY_COST_ON_HIRE));
+		}
+		success;
+	}
+	resultValue.success = success;
+	resultValue.energyAfter = p1.energy;
+	resultValue.armyAfter = player.army;
+	resultValue.moneyAfter = player.money;
+	resultValue.foodAfter = player.food;
+	ctx.events.push(Event.HIRE_RESULT(resultValue));
+}
+
 function doGetTakeHirePreview(ctx:Context, playerId:Int, gridId:Int):HirePreview {
 	return {
 		p1ValidPeople: getPlayerInfo(ctx, ctx.players[playerId]).people,
@@ -83,64 +138,9 @@ function doGetPreResultOfHire(ctx:Context, playerId:Int, gridId:Int, peopleId:In
 
 function doTakeHire(ctx:Context, playerId:Int, gridId:Int, p1SelectId:Int, p2SelectId:Int) {
 	ctx.events = [];
-	final p1 = getPeopleById(ctx, p1SelectId);
-	final p2 = getPeopleById(ctx, p2SelectId);
-	final player = ctx.players[playerId];
-	final resultValue = {
-		success: false,
-		people: getPeopleInfo(ctx, p1),
-		energyBefore: p1.energy,
-		energyAfter: p1.energy,
-		armyBefore: player.army,
-		armyAfter: player.army,
-		moneyBefore: player.money,
-		moneyAfter: player.money,
-		foodBefore: player.food,
-		foodAfter: player.food,
-	}
-	final success = applyHireCost(ctx, playerId, gridId, p1SelectId, p2SelectId);
-	resultValue.success = success;
-	resultValue.energyAfter = p1.energy;
-	resultValue.armyAfter = player.army;
-	resultValue.moneyAfter = player.money;
-	resultValue.foodAfter = player.food;
-	ctx.events.push(Event.HIRE_RESULT(resultValue));
+	onHireCost(ctx, playerId, gridId, p1SelectId, p2SelectId);
 	{
 		final player = ctx.players[ctx.currentPlayerId];
 		player.memory.hasCommand = true;
 	}
-}
-
-function applyHireCost(ctx:Context, playerId:Int, gridId:Int, p1SelectId:Int, p2SelectId:Int):Bool {
-	final negoCost = getHireCost(ctx, playerId, gridId, p1SelectId, p2SelectId);
-	// 無論成功或失敗武將先消體力
-	final people = getPeopleById(ctx, p1SelectId);
-	if (people.energy < negoCost.peopleCost.energy) {
-		throw new haxe.Exception('people.energy ${people.energy} < ${negoCost.peopleCost.energy}');
-	}
-	people.energy -= negoCost.peopleCost.energy;
-	if (people.energy < 0) {
-		people.energy = 0;
-	}
-	//
-	final success = Math.random() < negoCost.successRate;
-	if (success == false) {
-		return false;
-	}
-	final hirePeople = getPeopleById(ctx, p2SelectId);
-	final player = ctx.players[playerId];
-	// 支付雇用費
-	player.money -= negoCost.playerCost.money;
-	if (player.money < 0) {
-		player.money = 0;
-	}
-	// 將人變成主公的
-	hirePeople.belongToPlayerId = playerId;
-	// 將人移到玩家上
-	hirePeople.position.player = true;
-	// 從格子上移除人
-	hirePeople.position.gridId = null;
-	// 功績
-	onPeopleExpAdd(ctx, people.id, getExpAdd(Math.min(1, negoCost.successRate), ENERGY_COST_ON_HIRE));
-	return true;
 }

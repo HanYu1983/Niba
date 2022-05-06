@@ -9,7 +9,7 @@ import model.ver2.alg.Alg;
 
 using Lambda;
 
-function getStrategyCost(ctx:Context, p1PeopleId:Int, strategyId:Int, targetPlayerId:Int, targetPeopleId:Int, targetGridId:Int) {
+private function getStrategyCost(ctx:Context, p1PeopleId:Int, strategyId:Int, targetPlayerId:Int, targetPeopleId:Int, targetGridId:Int) {
 	final p1 = getPeopleById(ctx, p1PeopleId);
 	final strategy = StrategyList[strategyId];
 	final useEnergy = p1.energy / (100 / ENERGY_COST_ON_STRATEGY);
@@ -63,7 +63,7 @@ function getStrategyCost(ctx:Context, p1PeopleId:Int, strategyId:Int, targetPlay
 	}
 }
 
-function onStrategyCost(ctx:Context, p1PeopleId:Int, strategyId:Int, targetPlayerId:Int, targetPeopleId:Int, targetGridId:Int) {
+private function onStrategyCost(ctx:Context, p1PeopleId:Int, strategyId:Int, targetPlayerId:Int, targetPeopleId:Int, targetGridId:Int) {
 	final p1 = getPeopleById(ctx, p1PeopleId);
 	if (p1.belongToPlayerId == null) {
 		throw new Exception("belongToPlayerId not found");

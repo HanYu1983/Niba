@@ -22,7 +22,7 @@ using Lambda;
 // =========================================
 // 交涉計算
 // 參與能力為:7良官
-function getNegoCost(ctx:Context, playerId:Int, gridId:Int, p1SelectId:Int, p2SelectId:Int) {
+private function getNegoCost(ctx:Context, playerId:Int, gridId:Int, p1SelectId:Int, p2SelectId:Int) {
 	// 使用switch達成策略模式
 	// 0代表預設的隨意實作
 	return switch 0 {
@@ -100,6 +100,79 @@ function getNegoCost(ctx:Context, playerId:Int, gridId:Int, p1SelectId:Int, p2Se
 	}
 }
 
+private function onNegoCost(ctx:Context, playerId:Int, gridId:Int, p1SelectId:Int, p2SelectId:Int) {
+	final p1 = getPeopleById(ctx, p1SelectId);
+	final p2 = getPeopleById(ctx, p2SelectId);
+	final player = ctx.players[playerId];
+	final grid = ctx.grids[gridId];
+	final resultValue = {
+		success: false,
+		people: getPeopleInfo(ctx, p1),
+		energyBefore: p1.energy,
+		energyAfter: p1.energy,
+		armyBefore: player.army,
+		armyAfter: player.army,
+		moneyBefore: player.money,
+		moneyAfter: player.money,
+		foodBefore: player.food,
+		foodAfter: player.food,
+		favorBefore: grid.favor[playerId],
+		favorAfter: grid.favor[playerId],
+	}
+	final success = {
+		final negoCost = getNegoCost(ctx, playerId, gridId, p1SelectId, p2SelectId);
+		// 無論成功或失敗武將先消體力
+		if (p1.energy < negoCost.peopleCost.energy) {
+			throw new haxe.Exception('people.energy ${p1.energy} < ${negoCost.peopleCost.energy}');
+		}
+		final grid = ctx.grids[gridId];
+		p1.energy -= Std.int(negoCost.peopleCost.energy);
+		//
+		final success = Math.random() < negoCost.successRate;
+		if (success == false) {
+			// 降低友好度
+			final isHateYou = Math.random() < NEGO_HATE_RATE;
+			if (isHateYou) {
+				grid.favor[playerId] = Std.int(Math.max(grid.favor[playerId] - 1, MIN_GRID_FAVOR));
+			}
+		} else {
+			// 功績
+			onPeopleExpAdd(ctx, p1.id, getExpAdd(Math.min(1, negoCost.successRate), ENERGY_COST_ON_NEGO));
+			// 城池被搶奪
+			grid.army -= negoCost.playerCost.army;
+			if (grid.army < 0) {
+				grid.army = 0;
+			}
+			grid.money -= negoCost.playerCost.money;
+			if (grid.money < 0) {
+				grid.money = 0;
+			}
+			grid.food -= negoCost.playerCost.food;
+			if (grid.food < 0) {
+				grid.food = 0;
+			}
+			// 玩家搶奪
+			final player = ctx.players[playerId];
+			player.army += negoCost.playerCost.army;
+			player.money += negoCost.playerCost.money;
+			player.food += negoCost.playerCost.food;
+			// 提升友好度
+			final isLikeYou = Math.random() < NEGO_LIKE_RATE;
+			if (isLikeYou) {
+				grid.favor[playerId] = Std.int(Math.min(grid.favor[playerId] + 1, MAX_GRID_FAVOR));
+			}
+		}
+		success;
+	}
+	resultValue.success = success;
+	resultValue.energyAfter = p1.energy;
+	resultValue.armyAfter = player.army;
+	resultValue.moneyAfter = player.money;
+	resultValue.foodAfter = player.food;
+	resultValue.favorAfter = grid.favor[playerId];
+	ctx.events.push(Event.NEGOTIATE_RESULT(resultValue));
+}
+
 function doGetTakeNegoPreview(ctx:Context, playerId:Int, gridId:Int):NegoPreview {
 	return {
 		p1ValidPeople: getPlayerInfo(ctx, ctx.players[playerId]).people,
@@ -131,81 +204,9 @@ function doGetPreResultOfNego(ctx:Context, playerId:Int, gridId:Int, peopleId:In
 
 function doTakeNegoOn(ctx:Context, playerId:Int, gridId:Int, p1SelectId:Int, p2SelectId:Int) {
 	ctx.events = [];
-	final p1 = getPeopleById(ctx, p1SelectId);
-	final p2 = getPeopleById(ctx, p2SelectId);
-	final player = ctx.players[playerId];
-	final grid = ctx.grids[gridId];
-	final resultValue = {
-		success: false,
-		people: getPeopleInfo(ctx, p1),
-		energyBefore: p1.energy,
-		energyAfter: p1.energy,
-		armyBefore: player.army,
-		armyAfter: player.army,
-		moneyBefore: player.money,
-		moneyAfter: player.money,
-		foodBefore: player.food,
-		foodAfter: player.food,
-		favorBefore: grid.favor[playerId],
-		favorAfter: grid.favor[playerId],
-	}
-	final success = applyNegoCost(ctx, playerId, gridId, p1SelectId, p2SelectId);
-	resultValue.success = success;
-	resultValue.energyAfter = p1.energy;
-	resultValue.armyAfter = player.army;
-	resultValue.moneyAfter = player.money;
-	resultValue.foodAfter = player.food;
-	resultValue.favorAfter = grid.favor[playerId];
-	ctx.events.push(Event.NEGOTIATE_RESULT(resultValue));
+	onNegoCost(ctx, playerId, gridId, p1SelectId, p2SelectId);
 	{
 		final player = ctx.players[ctx.currentPlayerId];
 		player.memory.hasCommand = true;
 	}
-}
-
-function applyNegoCost(ctx:Context, playerId:Int, gridId:Int, p1SelectId:Int, p2SelectId:Int):Bool {
-	final negoCost = getNegoCost(ctx, playerId, gridId, p1SelectId, p2SelectId);
-	// 無論成功或失敗武將先消體力
-	final people = getPeopleById(ctx, p1SelectId);
-	if (people.energy < negoCost.peopleCost.energy) {
-		throw new haxe.Exception('people.energy ${people.energy} < ${negoCost.peopleCost.energy}');
-	}
-	final grid = ctx.grids[gridId];
-	people.energy -= Std.int(negoCost.peopleCost.energy);
-	//
-	final success = Math.random() < negoCost.successRate;
-	if (success == false) {
-		// 降低友好度
-		final isHateYou = Math.random() < NEGO_HATE_RATE;
-		if (isHateYou) {
-			grid.favor[playerId] = Std.int(Math.max(grid.favor[playerId] - 1, MIN_GRID_FAVOR));
-		}
-		return false;
-	}
-	// 功績
-	onPeopleExpAdd(ctx, people.id, getExpAdd(Math.min(1, negoCost.successRate), ENERGY_COST_ON_NEGO));
-	// 城池被搶奪
-	grid.army -= negoCost.playerCost.army;
-	if (grid.army < 0) {
-		grid.army = 0;
-	}
-	grid.money -= negoCost.playerCost.money;
-	if (grid.money < 0) {
-		grid.money = 0;
-	}
-	grid.food -= negoCost.playerCost.food;
-	if (grid.food < 0) {
-		grid.food = 0;
-	}
-	// 玩家搶奪
-	final player = ctx.players[playerId];
-	player.army += negoCost.playerCost.army;
-	player.money += negoCost.playerCost.money;
-	player.food += negoCost.playerCost.food;
-	// 提升友好度
-	final isLikeYou = Math.random() < NEGO_LIKE_RATE;
-	if (isLikeYou) {
-		grid.favor[playerId] = Std.int(Math.min(grid.favor[playerId] + 1, MAX_GRID_FAVOR));
-	}
-	return true;
 }

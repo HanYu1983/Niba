@@ -23,7 +23,7 @@ using Lambda;
 // army:     ability 11
 // strategy: ability 3
 // 智力、政治、魅力也會影響最終數值
-function getResourceCost(ctx:Context, playerId:Int, gridId:Int, p1SelectId:Int, market:MARKET, type:RESOURCE) {
+private function getResourceCost(ctx:Context, playerId:Int, gridId:Int, p1SelectId:Int, market:MARKET, type:RESOURCE) {
 	trace("MondelVer2", "getResourceCost", market, type);
 	return switch 0 {
 		case 0:
@@ -119,7 +119,7 @@ function getResourceCost(ctx:Context, playerId:Int, gridId:Int, p1SelectId:Int, 
 	}
 }
 
-function onResourceCost(ctx:Context, playerId:Int, gridId:Int, p1SelectId:Int, market:MARKET, type:RESOURCE) {
+private function onResourceCost(ctx:Context, playerId:Int, gridId:Int, p1SelectId:Int, market:MARKET, type:RESOURCE) {
 	wrapResourceResultEvent(ctx, playerId, p1SelectId, () -> {
 		final negoCost = getResourceCost(ctx, playerId, gridId, p1SelectId, market, type);
 		// 無論成功或失敗武將先消體力
