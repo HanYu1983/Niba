@@ -44,6 +44,7 @@ private function getCostForBonusCost(ctx:Context, playerId:Int, peopleId:Int, co
 			return {
 				playerCost: {
 					food: food,
+					money: 0.0
 				},
 				peopleGain: {
 					energy: recover,
@@ -79,6 +80,7 @@ private function getCostForBonusCost(ctx:Context, playerId:Int, peopleId:Int, co
 			{
 				playerCost: {
 					food: food,
+					money: 0.0
 				},
 				peopleGain: {
 					energy: 0.0,
@@ -86,6 +88,43 @@ private function getCostForBonusCost(ctx:Context, playerId:Int, peopleId:Int, co
 				},
 				successRate: 0.5
 			}
+		case 2:
+			var totalLake = 0.0;
+
+			// 總共差全滿多少
+			var notFull = peopleBelongPlayer.filter((p) -> p.energy < 100);
+			for (p in notFull) {
+				totalLake += 100 - p.energy;
+			}
+
+			// 基本回復20%
+			var recover = 0.2;
+			// 使用getPeopleCommand, getPeoplePolitical等取得升級後的數值
+			recover *= 1.0 + (.2 * (getPeopleCommand(ctx, people.id) / 100));
+
+			// 回復縂差距的10%
+			totalLake *= recover;
+
+			// 縂花
+			var money = totalLake * 1;
+
+			if (player.money < money) {
+				recover *= player.money / money;
+				money = player.money;
+			}
+			money *= .8 + (.2 * (1 - (getPeoplePolitical(ctx, people.id) / 100)));
+
+			return {
+				playerCost: {
+					food: 0.0,
+					money: money
+				},
+				peopleGain: {
+					energy: recover,
+					exp: 0.0,
+				},
+				successRate: 0.5
+			};
 		case _:
 			throw new haxe.Exception('unknown costType: ${costType}');
 	}
@@ -93,9 +132,10 @@ private function getCostForBonusCost(ctx:Context, playerId:Int, peopleId:Int, co
 
 private function onCostForBonusCost(ctx:Context, playerId:Int, peopleId:Int, costType:Int) {
 	switch getCostForBonusCost(ctx, playerId, peopleId, costType) {
-		case {playerCost: {food: costFood}, peopleGain: {energy: gainEnergy, exp: gainExp}, successRate: successRate}:
+		case {playerCost: {food: costFood, money: costMoney}, peopleGain: {energy: gainEnergy, exp: gainExp}, successRate: successRate}:
 			final player = ctx.players[playerId];
 			player.food = Math.max(0, player.food - costFood);
+			player.money = Math.max(0, player.money - costMoney);
 			final peopleBelongPlayer = ctx.peoples.filter(p -> p.belongToPlayerId == player.id);
 			for (people in peopleBelongPlayer) {
 				if (people.energy < 100) {

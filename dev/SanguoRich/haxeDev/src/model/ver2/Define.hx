@@ -752,6 +752,7 @@ function getPlayerCommand(ctx:Context, playerId:Int):Array<ActionInfoID> {
 						case _:
 							if (gridInfo.favor[playerId] >= CAN_CHANGE_FAVOR) {
 								// 好感的
+								ret.push(ActionInfoID.PAY_FOR_FUN);
 								switch gridInfo.buildtype {
 									case MARKET:
 										ret.push(ActionInfoID.EARN_MONEY);
@@ -795,6 +796,7 @@ function getPlayerCommand(ctx:Context, playerId:Int):Array<ActionInfoID> {
 			// 自己的
 			ret.push(ActionInfoID.TRANSFER);
 			if (player.memory.hasBuild == false) {
+				ret.push(ActionInfoID.PAY_FOR_FUN);
 				ret.push(ActionInfoID.BUILD);
 			}
 			ret.push(ActionInfoID.END);
