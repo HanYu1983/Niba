@@ -51,9 +51,7 @@ class CostForBonusView extends PopupView {
 
 		function setRate() {
 			final p = p1List.selectedItem;
-			final isCamp = btnbr_ops.selectedIndex == 0;
-			final result:{costFood:Float, costMoney:Float, gainExp:Float, gainEnergy:Float} = Main.model.getResultOfCost(gameInfo.currentPlayer, p, isCamp ? 0 : 1);
-			
+			final result:{costFood:Float, costMoney:Float, gainExp:Float, gainEnergy:Float} = Main.model.getResultOfCost(gameInfo.currentPlayer, p, btnbr_ops.selectedIndex);
 			final costName = btnbr_ops.selectedButton.text;
 			var resultStr = '讓 ${p.name} 領導 ${costName} 嗎?\n';
 
