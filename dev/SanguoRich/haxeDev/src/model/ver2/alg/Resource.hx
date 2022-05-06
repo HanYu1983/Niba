@@ -168,7 +168,15 @@ private function onResourceCost(ctx:Context, playerId:Int, gridId:Int, p1SelectI
 		// 提升友好度
 		final isLikeYou = Math.random() < RESOURCE_LIKE_RATE;
 		if (isLikeYou) {
-			grid.favor[playerId] = Std.int(Math.min(grid.favor[playerId] + 1, MAX_GRID_FAVOR));
+			for (targetPlayerId in 0...grid.favor.length) {
+				if (targetPlayerId == playerId) {
+					// 對你提升友好
+					grid.favor[targetPlayerId] = Std.int(Math.min(MAX_GRID_FAVOR, grid.favor[targetPlayerId] + 1));
+				} else {
+					// 對其它人降低友好
+					grid.favor[targetPlayerId] = Std.int(Math.max(MIN_GRID_FAVOR, grid.favor[targetPlayerId] - 1));
+				}
+			}
 		}
 		return true;
 	});
