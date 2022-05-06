@@ -574,8 +574,9 @@ class MainView extends Box {
 				case COST_FOR_BONUS_RESULT:
 					final info:Dynamic = event.value;
 					final title = switch( info.costType ){
-						case 0|2: '札營完畢！ 武將們回復體力';
+						case 0: '札營完畢！ 武將們回復體力';
 						case 1: '練兵完畢! 武將們提高功績';
+						case 2: '作樂完畢！ 武將們回復體力';
 						case _: '';
 					}
 
