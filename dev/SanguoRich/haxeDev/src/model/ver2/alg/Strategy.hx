@@ -70,12 +70,12 @@ function onStrategyCost(ctx:Context, p1PeopleId:Int, strategyId:Int, targetPlaye
 	}
 	final player = ctx.players[p1.belongToPlayerId];
 	final cost = getStrategyCost(ctx, p1PeopleId, strategyId, targetPlayerId, targetPeopleId, targetGridId);
+	final success = Math.random() < cost.successRate;
 	wrapStrategyEvent(ctx, player.id, p1.id, strategyId, () -> {
 		return switch strategyId {
 			case 0:
 				// 暗渡陳艙
 				p1.energy = Math.max(0, p1.energy - cost.peopleCost.energy);
-				final success = Math.random() < cost.successRate;
 				if (success) {
 					player.position = targetGridId;
 					onPlayerGoToPosition(ctx, player.id, player.position);
@@ -86,7 +86,6 @@ function onStrategyCost(ctx:Context, p1PeopleId:Int, strategyId:Int, targetPlaye
 			case 1:
 				// 步步為營
 				p1.energy = Math.max(0, p1.energy - cost.peopleCost.energy);
-				final success = Math.random() < cost.successRate;
 				if (success) {
 					final p2 = getPeopleById(ctx, targetPeopleId);
 					p2.energy = Math.min(100, p2.energy + 30);
@@ -97,7 +96,6 @@ function onStrategyCost(ctx:Context, p1PeopleId:Int, strategyId:Int, targetPlaye
 				// 遠交近攻
 				wrapResourceResultEvent(ctx, p1.belongToPlayerId, p1.id, () -> {
 					p1.energy = Math.max(0, p1.energy - cost.peopleCost.energy);
-					final success = Math.random() < cost.successRate;
 					if (success) {
 						final grid = ctx.grids[player.position];
 						final isEmpty = getGridInfo(ctx, grid).buildtype == GROWTYPE.EMPTY;
@@ -130,7 +128,6 @@ function onStrategyCost(ctx:Context, p1PeopleId:Int, strategyId:Int, targetPlaye
 			case 3:
 				// 緩兵之計
 				p1.energy = Math.max(0, p1.energy - cost.peopleCost.energy);
-				final success = Math.random() < cost.successRate;
 				if (success) {
 					ctx.groundItems.push({
 						id: getNextId(),
@@ -144,7 +141,6 @@ function onStrategyCost(ctx:Context, p1PeopleId:Int, strategyId:Int, targetPlaye
 				// 火中取栗
 				wrapResourceResultEvent(ctx, p1.belongToPlayerId, p1.id, () -> {
 					p1.energy = Math.max(0, p1.energy - cost.peopleCost.energy);
-					final success = Math.random() < cost.successRate;
 					if (success) {
 						// 將拆除指定格中非自己的路障
 						final itemWillRemoved = ctx.groundItems.filter(i -> i.position == targetGridId /*&& i.belongToPlayerId != player.id*/);
@@ -168,7 +164,6 @@ function onStrategyCost(ctx:Context, p1PeopleId:Int, strategyId:Int, targetPlaye
 			case 5:
 				// 趁虛而入
 				p1.energy = Math.max(0, p1.energy - cost.peopleCost.energy);
-				final success = Math.random() < cost.successRate;
 				if (success) {
 					final p2 = getPeopleById(ctx, targetPeopleId);
 					p2.energy = Math.max(0, p2.energy - 20);
@@ -178,7 +173,6 @@ function onStrategyCost(ctx:Context, p1PeopleId:Int, strategyId:Int, targetPlaye
 			case 6:
 				// 按兵不动
 				p1.energy = Math.max(0, p1.energy - cost.peopleCost.energy);
-				final success = Math.random() < cost.successRate;
 				if (success) {
 					player.memory.hasDice = true;
 					onPeopleExpAdd(ctx, p1.id, getExpAdd(cost.successRate, ENERGY_COST_ON_STRATEGY));
@@ -188,7 +182,6 @@ function onStrategyCost(ctx:Context, p1PeopleId:Int, strategyId:Int, targetPlaye
 				// 急功近利
 				wrapResourceResultEvent(ctx, targetPlayerId, p1.id, () -> {
 					p1.energy = Math.max(0, p1.energy - cost.peopleCost.energy);
-					final success = Math.random() < cost.successRate;
 					if (success) {
 						final targetPlayer = ctx.players[targetPlayerId];
 						final give = Math.min(20, targetPlayer.food);
@@ -201,7 +194,6 @@ function onStrategyCost(ctx:Context, p1PeopleId:Int, strategyId:Int, targetPlaye
 			case 8:
 				// 五穀豐登
 				p1.energy = Math.max(0, p1.energy - cost.peopleCost.energy);
-				final success = Math.random() < cost.successRate;
 				if (success) {
 					final myGrids = ctx.grids.filter(g -> getGridBelongPlayerId(ctx, g.id) == p1.belongToPlayerId);
 					for (grid in myGrids) {
