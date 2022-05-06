@@ -562,6 +562,32 @@ class MainView extends Box {
 			var event = events.shift();
 			switch (event.id) {
 				case WALK_STOP:
+				case GRID_BORN_EVENT:
+					final info:Dynamic = event.value;
+					final grid:Grid = info.grid;
+					final title = '異軍突起';
+					var msg = '${title}\n';
+					msg += '地點:${grid.name}';
+					Dialogs.messageBox(msg, title, MessageBoxType.TYPE_INFO, true, (b)->{
+						doOneEvent(gameInfo);
+					});
+				case GRID_RESOURCE_EVENT:
+					final info:Dynamic = event.value;
+					final grids:Array<{gridBefore:Grid, gridAfter:Grid}> = info.grids;
+					final title = '資源轉移或增生';
+					var msg = '';
+					for(result in grids){
+						final before = result.gridBefore;
+						final after = result.gridAfter;
+						msg += '地點:${before.name}\n';
+						msg += '金錢:${Main.getFixNumber(before.money,0)} => ${Main.getFixNumber(after.money,0)} \n';
+						msg += '糧草:${Main.getFixNumber(before.food,0)} => ${Main.getFixNumber(after.food,0)} \n';
+						msg += '士兵:${Main.getFixNumber(before.army,0)} => ${Main.getFixNumber(after.army,0)} \n';
+						msg += '\n';
+					}
+					Dialogs.messageBox(msg, title, MessageBoxType.TYPE_INFO, true, (b)->{
+						doOneEvent(gameInfo);
+					});
 				case PK_RESULT:
 					final info:Dynamic = event.value;
 					final title = if(info.success){

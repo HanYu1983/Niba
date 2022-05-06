@@ -105,10 +105,24 @@ class DebugModel implements IModel {
 		g.buildtype = GROWTYPE.MARKET;
 		info.events = [
 			{
-				id: EventInfoID.WALK_STOP,
-				value: {
-					grid: g,
-					commands: []
+				id: EventInfoID.GRID_RESOURCE_EVENT,
+				value:{
+					grids:[
+						{
+							gridBefore: g,
+							gridAfter: g
+						},
+						{
+							gridBefore: g,
+							gridAfter: g
+						}
+					]
+				},
+			},
+			{
+				id:EventInfoID.GRID_BORN_EVENT,
+				value:{
+					grid:g,
 				}
 			}
 		];
