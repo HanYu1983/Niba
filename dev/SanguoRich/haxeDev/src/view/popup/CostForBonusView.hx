@@ -62,7 +62,11 @@ class CostForBonusView extends PopupView {
 				case 2: '金錢';
 				case _: '';
 			}
-			final gain = isCamp ? result.gainEnergy : result.gainExp;
+			final gain = switch(btnbr_ops.selectedIndex){
+				case 0|2: result.gainEnergy;
+				case 1: result.gainExp;
+				case _: 0;
+			}
 			final recoverName = switch(btnbr_ops.selectedIndex){
 				case 0|2: '體力';
 				case 1: '功績';
