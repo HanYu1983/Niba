@@ -405,7 +405,15 @@ class DebugModel implements IModel {
 				id:COST_FOR_BONUS_RESULT,
 				value:{
 					costType:costType,
-					people:PeopleGenerator.getInst().generate()
+					people:PeopleGenerator.getInst().generate(),
+					peopleBefore:[
+						PeopleGenerator.getInst().generate(),
+						PeopleGenerator.getInst().generate(),
+					],
+					peopleAfter:[
+						PeopleGenerator.getInst().generate(),
+						PeopleGenerator.getInst().generate(),
+					]
 				}
 			}
 		];

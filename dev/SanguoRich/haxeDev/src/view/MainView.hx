@@ -574,11 +574,27 @@ class MainView extends Box {
 				case COST_FOR_BONUS_RESULT:
 					final info:Dynamic = event.value;
 					final title = switch( info.costType ){
-						case 0: '札營完畢！ 武將們回復體力';
+						case 0|2: '札營完畢！ 武將們回復體力';
 						case 1: '練兵完畢! 武將們提高功績';
 						case _: '';
 					}
-					var msg = title;
+
+					final pBefore:Array<People> = info.peopleBefore;
+					var msg = '';
+					for( index => peopleBefore in pBefore){
+						final peopleAfter = info.peopleAfter[index];
+						final recoverType = switch( info.costType ){
+							case 0|2: '體力';
+							case 1: '功績';
+							case _: '';
+						};
+						final recover = switch( info.costType ){
+							case 0|2: Main.getFixNumber(peopleAfter.energy - peopleBefore.energy);
+							case 1: Main.getFixNumber(peopleAfter.exp - peopleBefore.exp);
+							case _: 0;
+						};
+						msg += '${peopleAfter.name} ${recoverType} 上升 ${recover}\n';
+					}
 					Dialogs.messageBox(msg, title, MessageBoxType.TYPE_INFO, true, (b)->{
 						doOneEvent(gameInfo);
 					});
