@@ -160,3 +160,15 @@ final BASE_RATE_EXPLORE = 1.2;
 
 // 格子資源上限
 final GRID_RESOURCE_MAX = 500.0;
+
+// 每回合每個城加糧事件機率
+final EVENT_GROW_FOOD_RATE = 0.1;
+
+// 每回合每個城加糧事件的糧食數量
+final EVENT_GROW_FOOD_AMOUNT = 50;
+
+// 每回合異軍突起的機率
+final EVENT_GRID_BORN_RATE = 1;
+
+// 異軍突起的資源數量
+final EVENT_GRID_BORN_RESOURCE_AMOUNT = 100.0;

@@ -105,7 +105,7 @@ function doPlayerEnd(ctx:Context) {
 	if (isTurnEnd) {
 		// 支付薪水
 		{
-			final enable = ctx.turn > 0 && ctx.turn % PLAYER_EARN_PER_TURN == 0;
+			final enable = (ctx.turn + 1) % PLAYER_EARN_PER_TURN == 0;
 			if (enable) {
 				final worldEventValue = {
 					playerBefore: ctx.players.map(p -> getPlayerInfo(ctx, p)),
@@ -123,14 +123,14 @@ function doPlayerEnd(ctx:Context) {
 		}
 		// 格子成長
 		{
-			final enable = ctx.turn > 0 && ctx.turn % GRID_EARN_PER_TURN == 0;
+			final enable = (ctx.turn + 1) % GRID_EARN_PER_TURN == 0;
 			if (enable) {
 				doGridGrow(ctx);
 			}
 		}
 		// 收稅
 		{
-			final enable = ctx.turn > 0 && ctx.turn % PLAYER_EARN_FROM_CITY_PER_TURN == 0;
+			final enable = (ctx.turn + 1) % PLAYER_EARN_FROM_CITY_PER_TURN == 0;
 			if (enable) {
 				trace("ModelVer2", "doPlayerEnd", "收稅");
 				final worldEventValue = {
@@ -170,20 +170,65 @@ function doPlayerEnd(ctx:Context) {
 				ctx.events.push(Event.WORLD_EVENT(worldEventValue));
 			}
 			// 收稅時計算友好度
-			// if (enable) {
-			// 	for (grid in ctx.grids) {
-			// 		for (playerId in 0...ctx.players.length) {
-			// 			grid.favor[playerId] = switch grid.favor[playerId] {
-			// 				case favor if (favor < 0):
-			// 					Std.int(Math.min(favor + 1, MAX_GRID_FAVOR));
-			// 				case favor if (favor > 0):
-			// 					Std.int(Math.max(favor - 1, MIN_GRID_FAVOR));
-			// 				case favor:
-			// 					favor;
-			// 			}
-			// 		}
-			// 	}
-			// }
+			if (enable) {
+				for (grid in ctx.grids) {
+					for (playerId in 0...ctx.players.length) {
+						grid.favor[playerId] = switch grid.favor[playerId] {
+							case favor if (favor < 0):
+								Std.int(Math.min(favor + 1, MAX_GRID_FAVOR));
+							case favor if (favor > 0):
+								Std.int(Math.max(favor - 1, MIN_GRID_FAVOR));
+							case favor:
+								favor;
+						}
+					}
+				}
+			}
+		}
+		// 事件
+		{
+			final enable = (ctx.turn + 1) % 1 == 0;
+			if (enable) {
+				//
+				if (true) {
+					final gridsWillGrow = ctx.grids.filter(g -> getGridBuildType(ctx, g.id) != EMPTY
+						&& Math.random() < EVENT_GROW_FOOD_RATE);
+					if (gridsWillGrow.length > 0) {
+						final gridsBefore = gridsWillGrow.map(g -> getGridInfo(ctx, g));
+						for (grid in gridsWillGrow) {
+							grid.food = Math.min(GRID_RESOURCE_MAX, grid.food + EVENT_GROW_FOOD_AMOUNT);
+						}
+						final gridsAfter = gridsWillGrow.map(g -> getGridInfo(ctx, g));
+						ctx.events.push(GRID_RESOURCE_EVENT({
+							grids: [
+								for (i in 0...gridsWillGrow.length)
+									{
+										gridBefore: gridsBefore[i],
+										gridAfter: gridsAfter[i]
+									}
+							]
+						}));
+					}
+				}
+				final isBorn = Math.random() < EVENT_GRID_BORN_RATE;
+				if (isBorn) {
+					final emptyGrids = ctx.grids.filter(g -> getGridBuildType(ctx, g.id) == EMPTY);
+					if (emptyGrids.length > 0) {
+						final chooseId = Std.int(Math.random() * emptyGrids.length);
+						final chooseGrid = emptyGrids[chooseId];
+						// 隨機生成類型
+						chooseGrid.buildtype = [GROWTYPE.FARM, GROWTYPE.MARKET, GROWTYPE.VILLAGE, GROWTYPE.CITY][Math.floor(Math.random() * 4)];
+						chooseGrid.money = EVENT_GRID_BORN_RESOURCE_AMOUNT;
+						chooseGrid.army = EVENT_GRID_BORN_RESOURCE_AMOUNT;
+						chooseGrid.food = EVENT_GRID_BORN_RESOURCE_AMOUNT;
+						// 加入武將
+						addPeopleInfo(ctx, null, chooseGrid.id, model.PeopleGenerator.getInst().generate());
+						ctx.events.push(GRID_BORN_EVENT({
+							grid: getGridInfo(ctx, chooseGrid)
+						}));
+					}
+				}
+			}
 		}
 		// 下一回合
 		ctx.turn += 1;

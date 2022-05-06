@@ -203,6 +203,15 @@ enum Event {
 		armyBefore:Float,
 		armyAfter:Float,
 	});
+	GRID_RESOURCE_EVENT(value:{
+		grids:Array<{
+			gridBefore:model.GridGenerator.Grid,
+			gridAfter:model.GridGenerator.Grid,
+		}>
+	});
+	GRID_BORN_EVENT(value:{
+		grid:model.GridGenerator.Grid
+	});
 }
 
 typedef Context = {
@@ -305,6 +314,14 @@ function getGridArmyGrow(ctx:Context, gridId:Int):Float {
 	return grid.defaultArmyGrow * (totalPeoplecharm * factor1);
 }
 
+function getGridBuildType(ctx:Context, gridId:Int):GROWTYPE {
+	final grid = ctx.grids[gridId];
+	final peopleInGrid = ctx.peoples.filter(p -> p.position.gridId == grid.id);
+	final belongPlayerId = getGridBelongPlayerId(ctx, grid.id);
+	final isEmpty = belongPlayerId == null && peopleInGrid.length == 0;
+	return isEmpty ? GROWTYPE.EMPTY : grid.buildtype;
+}
+
 function getGridInfo(ctx:Context, grid:Grid):model.GridGenerator.Grid {
 	final peopleInGrid = ctx.peoples.filter(p -> p.position.gridId == grid.id);
 	final belongPlayerId = getGridBelongPlayerId(ctx, grid.id);
@@ -313,7 +330,7 @@ function getGridInfo(ctx:Context, grid:Grid):model.GridGenerator.Grid {
 		id: grid.id,
 		name: grid.name,
 		landType: 0,
-		buildtype: isEmpty ? GROWTYPE.EMPTY : grid.buildtype,
+		buildtype: getGridBuildType(ctx, grid.id),
 		height: 0,
 		attachs: ctx.attachments.filter(a -> a.belongToGridId == grid.id).map(a -> a.type),
 		belongPlayerId: cast belongPlayerId,
@@ -452,6 +469,16 @@ function getGameInfo(ctx:Context, root:Bool):GameInfo {
 			case PK_RESULT(value):
 				{
 					id: EventInfoID.PK_RESULT,
+					value: value
+				}
+			case GRID_RESOURCE_EVENT(value):
+				{
+					id: EventInfoID.GRID_RESOURCE_EVENT,
+					value: value
+				}
+			case GRID_BORN_EVENT(value):
+				{
+					id: EventInfoID.GRID_BORN_EVENT,
 					value: value
 				}
 		}
