@@ -99,7 +99,7 @@ final ENERGY_COST_ON_PK = 15;
 final ENERGY_COST_ON_COST_FOR_FUN = 15;
 
 // 最低搶奪所需兵力
-final SNATCH_ARMY_AT_LEAST = 30;
+final SNATCH_ARMY_AT_LEAST = 50;
 
 // 單挑的士兵變化基本量
 final PK_ARMY_BASE_CHANGE = 30;
@@ -115,6 +115,9 @@ final NEGO_HATE_RATE = 0.15;
 
 // 交涉成功時喜歡你的機率
 final NEGO_LIKE_RATE = 0.85;
+
+//
+final PK_LIKE_RATE = 0.5;
 
 // 交易時喜歡你的機率
 final RESOURCE_LIKE_RATE = 0.3;
@@ -151,7 +154,7 @@ function getExpAdd(p:Float, max:Float):Float {
 
 // 體力產生的基本值成數
 // 1代表支付所有體力時, 機率為1
-final BASE_RATE_STRATEGY = 1.0;
+final BASE_RATE_STRATEGY = 0.8;
 final BASE_RATE_RESOURCE = 1.0;
 final BASE_RATE_PK = 0.7;
 final BASE_RATE_NEGO = 1.0;
@@ -162,13 +165,13 @@ final BASE_RATE_EXPLORE = 1.2;
 final GRID_RESOURCE_MAX = 500.0;
 
 // 每回合每個城加糧事件機率
-final EVENT_GROW_FOOD_RATE = 0.1;
+final EVENT_GROW_FOOD_RATE = 0.01;
 
 // 每回合每個城加糧事件的糧食數量
 final EVENT_GROW_FOOD_AMOUNT = 50;
 
 // 每回合異軍突起的機率
-final EVENT_GRID_BORN_RATE = 1;
+final EVENT_GRID_BORN_RATE = 1 / 20.0;
 
 // 異軍突起的資源數量
 final EVENT_GRID_BORN_RESOURCE_AMOUNT = 100.0;
