@@ -119,6 +119,61 @@ function getResourceCost(ctx:Context, playerId:Int, gridId:Int, p1SelectId:Int, 
 	}
 }
 
+function onResourceCost(ctx:Context, playerId:Int, gridId:Int, p1SelectId:Int, market:MARKET, type:RESOURCE) {
+	wrapResourceResultEvent(ctx, playerId, p1SelectId, () -> {
+		final negoCost = getResourceCost(ctx, playerId, gridId, p1SelectId, market, type);
+		// 無論成功或失敗武將先消體力
+		final people = getPeopleById(ctx, p1SelectId);
+		if (people.energy < negoCost.peopleCost.energy) {
+			throw new haxe.Exception('people.energy ${people.energy} < ${negoCost.peopleCost.energy}');
+		}
+		// 功績
+		onPeopleExpAdd(ctx, people.id, getExpAdd(Math.min(1, 0.5), ENERGY_COST_ON_RESOURCE));
+		people.energy -= negoCost.peopleCost.energy;
+		if (people.energy < 0) {
+			people.energy = 0;
+		}
+		// 增加資源
+		final player = ctx.players[playerId];
+		player.money -= negoCost.playerCost.money;
+		if (player.money < 0) {
+			player.money = 0;
+		}
+		player.food -= negoCost.playerCost.food;
+		if (player.food < 0) {
+			player.food = 0;
+		}
+		player.army -= negoCost.playerCost.army;
+		if (player.army < 0) {
+			player.army = 0;
+		}
+		player.strategy -= negoCost.playerCost.strategy;
+		if (player.strategy < 0) {
+			player.strategy = 0;
+		}
+		// 減去資源
+		final grid = ctx.grids[gridId];
+		grid.money += negoCost.playerCost.money;
+		if (grid.money < 0) {
+			grid.money = 0;
+		}
+		grid.food += negoCost.playerCost.food;
+		if (grid.food < 0) {
+			grid.food = 0;
+		}
+		grid.army += negoCost.playerCost.army;
+		if (grid.army < 0) {
+			grid.army = 0;
+		}
+		// 提升友好度
+		final isLikeYou = Math.random() < RESOURCE_LIKE_RATE;
+		if (isLikeYou) {
+			grid.favor[playerId] = Std.int(Math.min(grid.favor[playerId] + 1, MAX_GRID_FAVOR));
+		}
+		return true;
+	});
+}
+
 function _getTakeResourcePreview(ctx:Context, playerId:Int, gridId:Int, market:MARKET, type:RESOURCE):ResourcePreview {
 	return {
 		p1ValidPeople: getPlayerInfo(ctx, ctx.players[playerId]).people
@@ -145,80 +200,9 @@ function _getPreResultOfResource(ctx:Context, playerId:Int, gridId:Int, peopleId
 
 function _takeResource(ctx:Context, playerId:Int, gridId:Int, p1SelectId:Int, market:MARKET, type:RESOURCE) {
 	ctx.events = [];
-	final p1 = getPeopleById(ctx, p1SelectId);
-	final player = ctx.players[playerId];
-	final resultValue = {
-		success: false,
-		people: getPeopleInfo(ctx, p1),
-		energyBefore: p1.energy,
-		energyAfter: p1.energy,
-		armyBefore: player.army,
-		armyAfter: player.army,
-		moneyBefore: player.money,
-		moneyAfter: player.money,
-		foodBefore: player.food,
-		foodAfter: player.food,
-	}
-	applyResourceCost(ctx, playerId, gridId, p1SelectId, market, type);
-	resultValue.energyAfter = p1.energy;
-	resultValue.armyAfter = player.army;
-	resultValue.moneyAfter = player.money;
-	resultValue.foodAfter = player.food;
-	ctx.events.push(Event.RESOURCE_RESULT(resultValue));
+	onResourceCost(ctx, playerId, gridId, p1SelectId, market, type);
 	{
 		final player = ctx.players[ctx.currentPlayerId];
 		player.memory.hasCommand = true;
-	}
-}
-
-function applyResourceCost(ctx:Context, playerId:Int, gridId:Int, p1SelectId:Int, market:MARKET, type:RESOURCE) {
-	final negoCost = getResourceCost(ctx, playerId, gridId, p1SelectId, market, type);
-	// 無論成功或失敗武將先消體力
-	final people = getPeopleById(ctx, p1SelectId);
-	if (people.energy < negoCost.peopleCost.energy) {
-		throw new haxe.Exception('people.energy ${people.energy} < ${negoCost.peopleCost.energy}');
-	}
-	// 功績
-	onPeopleExpAdd(ctx, people.id, getExpAdd(Math.min(1, 0.5), ENERGY_COST_ON_RESOURCE));
-	people.energy -= negoCost.peopleCost.energy;
-	if (people.energy < 0) {
-		people.energy = 0;
-	}
-	// 增加資源
-	final player = ctx.players[playerId];
-	player.money -= negoCost.playerCost.money;
-	if (player.money < 0) {
-		player.money = 0;
-	}
-	player.food -= negoCost.playerCost.food;
-	if (player.food < 0) {
-		player.food = 0;
-	}
-	player.army -= negoCost.playerCost.army;
-	if (player.army < 0) {
-		player.army = 0;
-	}
-	player.strategy -= negoCost.playerCost.strategy;
-	if (player.strategy < 0) {
-		player.strategy = 0;
-	}
-	// 減去資源
-	final grid = ctx.grids[gridId];
-	grid.money += negoCost.playerCost.money;
-	if (grid.money < 0) {
-		grid.money = 0;
-	}
-	grid.food += negoCost.playerCost.food;
-	if (grid.food < 0) {
-		grid.food = 0;
-	}
-	grid.army += negoCost.playerCost.army;
-	if (grid.army < 0) {
-		grid.army = 0;
-	}
-	// 提升友好度
-	final isLikeYou = Math.random() < RESOURCE_LIKE_RATE;
-	if (isLikeYou) {
-		grid.favor[playerId] = Std.int(Math.min(grid.favor[playerId] + 1, MAX_GRID_FAVOR));
 	}
 }

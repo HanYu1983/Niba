@@ -892,3 +892,45 @@ function clearMemory(ctx:Context) {
 		player.memory.hasBuild = false;
 	}
 }
+
+function wrapResourceResultEvent(ctx:Context, playerId:Int, p1SelectId:Int, fn:() -> Bool):Bool {
+	final p1 = getPeopleById(ctx, p1SelectId);
+	final player = ctx.players[playerId];
+	final resultValue = {
+		success: false,
+		people: getPeopleInfo(ctx, p1),
+		energyBefore: p1.energy,
+		energyAfter: p1.energy,
+		armyBefore: player.army,
+		armyAfter: player.army,
+		moneyBefore: player.money,
+		moneyAfter: player.money,
+		foodBefore: player.food,
+		foodAfter: player.food,
+	}
+	resultValue.success = fn();
+	resultValue.energyAfter = p1.energy;
+	resultValue.armyAfter = player.army;
+	resultValue.moneyAfter = player.money;
+	resultValue.foodAfter = player.food;
+	ctx.events.push(Event.RESOURCE_RESULT(resultValue));
+	return resultValue.success;
+}
+
+function wrapStrategyEvent(ctx:Context, playerId:Int, peopleId:Int, strategyId:Int, fn:() -> Bool):Bool {
+	final p1 = getPeopleById(ctx, peopleId);
+	final player = ctx.players[playerId];
+	final strategy = StrategyList[strategyId];
+	final strategyResultValue = {
+		success: false,
+		people: getPeopleInfo(ctx, p1),
+		strategy: strategy,
+		energyBefore: p1.energy,
+		energyAfter: 0.0,
+	}
+	strategyResultValue.success = fn();
+	strategyResultValue.people = getPeopleInfo(ctx, p1);
+	strategyResultValue.energyAfter = p1.energy;
+	ctx.events.push(Event.STRATEGY_RESULT(strategyResultValue));
+	return strategyResultValue.success;
+}
