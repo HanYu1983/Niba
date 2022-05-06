@@ -128,10 +128,10 @@ private function onSnatchCost(ctx:Context, playerId:Int, gridId:Int, p1PeopleId:
 					army;
 			}
 			final warArmy2 = ctx.grids[gridId].army;
-			onWarCost(ctx, playerId, gridId, p1PeopleId, p2PeopleId, warArmy1, warArmy2, {occupy: true});
+			onWarCost(ctx, playerId, gridId, p1PeopleId, p2PeopleId, warArmy1, warArmy2, {occupy: true, warEvent: false});
 		} else {
 			// 處理搶奪中的戰爭部分
-			onWarCost(ctx, playerId, gridId, p1PeopleId, p2PeopleId, army1, army2, {occupy: false});
+			onWarCost(ctx, playerId, gridId, p1PeopleId, p2PeopleId, army1, army2, {occupy: false, warEvent: false});
 			// 處理搶奪中的搶資源部分
 			final cost = getSnatchCost(ctx, playerId, gridId, p1PeopleId, p2PeopleId, army1, army2, isOccupation);
 			if (cost.success) {

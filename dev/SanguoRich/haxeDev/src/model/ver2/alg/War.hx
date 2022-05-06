@@ -148,7 +148,8 @@ private function getWarCostImpl(ctx:Context, playerId:Int, gridId:Int, p1PeopleI
 	}
 }
 
-private function onWarCostImpl(ctx:Context, playerId:Int, gridId:Int, p1PeopleId:Int, p2PeopleId:Int, army1:Float, army2:Float, options:{occupy:Bool}):Bool {
+private function onWarCostImpl(ctx:Context, playerId:Int, gridId:Int, p1PeopleId:Int, p2PeopleId:Int, army1:Float, army2:Float,
+		options:{occupy:Bool, warEvent:Bool}):Bool {
 	final people1 = getPeopleById(ctx, p1PeopleId);
 	final people2 = getPeopleById(ctx, p2PeopleId);
 	final player = ctx.players[playerId];
@@ -245,12 +246,14 @@ private function onWarCostImpl(ctx:Context, playerId:Int, gridId:Int, p1PeopleId
 				throw new haxe.Exception("getWarCost not match");
 		}
 	}
-	resultValue.success = success;
-	resultValue.energyAfter = people1.energy;
-	resultValue.armyAfter = player.army;
-	resultValue.moneyAfter = player.money;
-	resultValue.foodAfter = player.food;
-	ctx.events.push(Event.WAR_RESULT(resultValue));
+	if (options.warEvent) {
+		resultValue.success = success;
+		resultValue.energyAfter = people1.energy;
+		resultValue.armyAfter = player.army;
+		resultValue.moneyAfter = player.money;
+		resultValue.foodAfter = player.food;
+		ctx.events.push(Event.WAR_RESULT(resultValue));
+	}
 	return success;
 }
 
@@ -334,7 +337,7 @@ function _getPreResultOfWar(ctx:Context, playerId:Int, gridId:Int, p1PeopleId:In
 
 function _takeWarOn(ctx:Context, playerId:Int, gridId:Int, p1PeopleId:Int, p2PeopleId:Int, army1:Float, army2:Float) {
 	ctx.events = [];
-	onWarCostImpl(ctx, playerId, gridId, p1PeopleId, p2PeopleId, army1, army2, {occupy: true});
+	onWarCostImpl(ctx, playerId, gridId, p1PeopleId, p2PeopleId, army1, army2, {occupy: true, warEvent: true});
 	{
 		final player = ctx.players[ctx.currentPlayerId];
 		player.memory.hasCommand = true;
