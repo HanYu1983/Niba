@@ -2,7 +2,7 @@
     <header width="100%">
         <column id="chk_sel" text="指派" width="40" style="text-align:center;font-size:12;" />
         <column id="gridIdView" text="駐" width="70" sortable="true" style="text-align:center;font-size:12;"/>
-        <column id="nameView" text="名" width="100%" sortable="true" style="text-align:center;font-size:12;"/>
+        <column id="nameView" text="名" width="100%" sortable="false" style="text-align:center;font-size:12;"/>
         <column id="energy" text="體" width="40" sortable="true" style="text-align:center;font-size:12;"/>
         <column id="command" text="統" width="40" sortable="true" style="text-align:center;font-size:12;"/>
         <column id="force" text="武" width="40" sortable="true" style="text-align:center;font-size:12;"/>

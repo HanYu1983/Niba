@@ -1,5 +1,6 @@
 package view.popup;
 
+import view.widgets.PeopleListView;
 import view.widgets.GridGridView;
 import model.Config;
 import model.IModel.PreResultOnNego;

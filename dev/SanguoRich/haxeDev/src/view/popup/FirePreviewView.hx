@@ -1,11 +1,9 @@
 package view.popup;
 
+import view.widgets.PeopleListView;
 import model.IModel.PreResultOnFire;
-import model.IModel.PreResultOnHire;
 import haxe.ui.events.MouseEvent;
-import model.PeopleGenerator.People;
 import haxe.ui.events.UIEvent;
-import model.IModel.HirePreview;
 
 @:build(haxe.ui.ComponentBuilder.build("assets/popup/FirePreview-view.xml"))
 class FirePreviewView extends PopupView{

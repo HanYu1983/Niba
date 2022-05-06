@@ -1,13 +1,11 @@
 package view.popup;
 
+import view.widgets.PeopleListView;
 import model.Config;
 import model.IModel.PreResultOnExplore;
 import model.IModel.ExplorePreview;
-import model.IModel.PreResultOnHire;
 import haxe.ui.events.MouseEvent;
 import model.PeopleGenerator.People;
-import haxe.ui.events.UIEvent;
-import model.IModel.HirePreview;
 
 @:build(haxe.ui.ComponentBuilder.build("assets/popup/explorePreview-view.xml"))
 class ExplorePreviewView extends PopupView {

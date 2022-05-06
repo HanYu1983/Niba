@@ -1,5 +1,9 @@
 package view.popup;
 
+import view.widgets.GridListView;
+import view.widgets.LeaderListView;
+import view.widgets.StrategyListView;
+import view.widgets.PeopleListView;
 import haxe.ui.events.UIEvent;
 import model.GridGenerator.Grid;
 import model.IModel.StrategyCatelog;
@@ -11,7 +15,11 @@ import haxe.ui.events.MouseEvent;
 @:build(haxe.ui.ComponentBuilder.build("assets/popup/strategyPreview-view.xml"))
 class StrategyPreviewView extends PopupView {
 	var p1List:PeopleListView;
+	var p2List:PeopleListView;
 	var strategyList:StrategyListView;
+
+	var leaderList:LeaderListView;
+	var gridList:GridListView;
 
 	public function new() {
 		super();
@@ -19,8 +27,18 @@ class StrategyPreviewView extends PopupView {
 		p1List = new PeopleListView();
 		box_peopleList.addComponent(p1List);
 
+		p2List = new PeopleListView();
+		box_peopleList2.addComponent(p2List);
+
+		leaderList = new LeaderListView();
+		box_leaderList.addComponent(leaderList);
+
+		gridList = new GridListView();
+		box_gridList.addComponent(gridList);
+
 		strategyList = new StrategyListView();
 		strategyList.setList(StrategyList);
+
 		box_strategyList.addComponent(strategyList);
 	}
 
@@ -33,9 +51,14 @@ class StrategyPreviewView extends PopupView {
 	function onBtnConfirmClick(e:MouseEvent) {
 		fadeOut();
 
-		var targetPlayer = drp_player.selectedItem.id;
-		var targetPeople = drp_people.selectedItem.id;
-		var targetGrid = drp_grid.selectedItem.id;
+		if(leaderList.selectedItem == null) return;
+		if(p2List.selectedItem == null) return;
+		if(gridList.selectedItem == null) return;
+
+		var targetPlayer = leaderList.selectedItem.id;
+		var targetPeople = p2List.selectedItem.id;
+		var targetGrid = gridList.selectedItem.id;
+		trace(targetPlayer, targetPeople, targetGrid);
 		Main.view.onStrategyPreviewConfirmClick(p1List.selectedItem.id, strategyList.selectedItem.id, targetPlayer, targetPeople, targetGrid);
 	}
 
@@ -48,19 +71,19 @@ class StrategyPreviewView extends PopupView {
 				return ;
 			if (strategyList.selectedItem == null)
 				return;
-			if (drp_player.selectedItem == null)
+			if (leaderList.selectedItem == null)
 				return;
-			if (drp_people.selectedItem == null)
+			if (p2List.selectedItem == null)
 				return;
-			if (drp_grid.selectedItem == null)
+			if (gridList.selectedItem == null)
 				return;
 
 			var p1 = p1List.selectedItem;
 			var s = strategyList.selectedItem;
 
-			var targetPlayer = drp_player.selectedItem.id;
-			var targetPeople = drp_people.selectedItem.id;
-			var targetGrid = drp_grid.selectedItem.id;
+			var targetPlayer = leaderList.selectedItem.id;
+			var targetPeople = p2List.selectedItem.id;
+			var targetGrid = gridList.selectedItem.id;
 			var result:{energyBefore:Int, energyAfter:Int, rate:Float} = Main.model.getStrategyRate(p1, s, targetPlayer, targetPeople, targetGrid);
 
 			pro_energy.value = '${result.energyBefore} => ${result.energyAfter}';
@@ -86,14 +109,8 @@ class StrategyPreviewView extends PopupView {
 		p1List.selectedIndex = 0;
 
 		function updateGridList(grids:Array<Grid>) {
-			drp_grid.dataSource.clear();
-			for (grid in grids) {
-				drp_grid.dataSource.add({
-					id: grid.id,
-					text: grid.name
-				});
-			}
-			drp_grid.selectedIndex = 0;
+			gridList.setList(grids);
+			gridList.selectedIndex = 0;
 		}
 
 		strategyList.onChange = function(e) {
@@ -101,12 +118,12 @@ class StrategyPreviewView extends PopupView {
 			if (s != null) {
 				lbl_usingStrategy.value = s.name;
 
-				drp_player.disabled = true;
-				drp_people.disabled = true;
-				drp_grid.disabled = true;
+				box_leaderList.hide();
+				box_peopleList2.hide();
+				box_gridList.hide();
 				switch (s.targetType) {
 					case TARGET_GRID:
-						drp_grid.disabled = false;
+						box_gridList.show();
 
 						final currentId = gameInfo.currentPlayer.atGridId;
 						function remapId(i){
@@ -128,14 +145,14 @@ class StrategyPreviewView extends PopupView {
 						}
 						
 					case TARGET_PLAYER:
-						drp_player.disabled = false;
+						box_leaderList.show();
 					case TARGET_PEOPLE:
-						drp_player.disabled = false;
-						drp_people.disabled = false;
+						box_leaderList.show();
+						box_peopleList2.show();
 					case SELF_GRID:
 					case SELF_PEOPLE:
-						drp_player.selectedIndex = gameInfo.currentPlayer.id;
-						drp_people.disabled = false;
+						leaderList.selectedIndex = gameInfo.currentPlayer.id;
+						box_peopleList2.show();
 					case SELF_PLAYER:
 				}
 				setRate();
@@ -144,42 +161,30 @@ class StrategyPreviewView extends PopupView {
 		
 
 		function updatePlayerList() {
-			drp_player.dataSource.clear();
-			for (player in gameInfo.players) {
-				drp_player.dataSource.add({
-					id: player.id,
-					text: player.name
-				});
-			}
-			drp_player.selectedIndex = 0;
+			leaderList.setList(gameInfo.players);
+			leaderList.selectedIndex = 0;
 		}
 
-		function updatePeopleList() {
-			drp_people.dataSource.clear();
-			for (people in gameInfo.players[drp_player.selectedItem.id].people) {
-				drp_people.dataSource.add({
-					id: people.id,
-					text: people.name
-				});
-			}
-			drp_people.selectedIndex = 0;
+		function updatePeopleList(list:Array<People>) {
+			p2List.setPeopleList(list);
+			p2List.selectedIndex = 0;
 		}
 
-		drp_player.onChange = function(e) {
-			updatePeopleList();
+		leaderList.onChange = function(e) {
+			updatePeopleList(gameInfo.players[leaderList.selectedItem.id].people);
 			setRate();
 		}
 		
-		drp_people.onChange = function(e){
+		p2List.onChange = function(e){
 			setRate();
 		}
 
-		drp_grid.onChange = function(e){
+		gridList.onChange = function(e){
 			setRate();
 		}
 
 		updatePlayerList();
-		updatePeopleList();
+		updatePeopleList(gameInfo.currentPlayer.people);
 		updateGridList(gameInfo.grids);
 
 		strategyList.selectedIndex = 0;

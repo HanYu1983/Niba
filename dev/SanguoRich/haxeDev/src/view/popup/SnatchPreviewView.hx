@@ -1,5 +1,6 @@
 package view.popup;
 
+import view.widgets.PeopleListView;
 import model.IModel.SnatchPreview;
 import haxe.ui.events.UIEvent;
 import model.IModel.PreResultOnSnatch;

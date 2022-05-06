@@ -1,5 +1,6 @@
 package view.popup;
 
+import view.widgets.PeopleListView;
 import model.Config;
 import model.IModel.RESOURCE;
 import model.IModel.MARKET;

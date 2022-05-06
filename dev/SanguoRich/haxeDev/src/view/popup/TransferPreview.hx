@@ -1,5 +1,6 @@
 package view.popup;
 
+import view.widgets.PeopleListView;
 import model.GridGenerator.Grid;
 import view.widgets.GridGridView;
 import model.IModel.PreResultOnWar;

@@ -22,7 +22,6 @@ class GridGridView extends BasicGridView{
 
         var grid:Grid = Main.cloneObject(info);
         pro_name.value = grid.name;
-        // pro_landType.value = grid.landType;
 
         final gainMoney = Main.getFixNumber(grid.moneyGrow);
         final gainFood = Main.getFixNumber(grid.foodGrow);
@@ -73,7 +72,6 @@ class GridGridView extends BasicGridView{
                     }
                 }
             }
-            
         }
         pro_strategy.value = strategyString;
     }

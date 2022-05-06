@@ -1,10 +1,10 @@
-package view;
+package view.widgets;
 
 import model.IModel.StrategyCatelog;
 import model.PeopleGenerator;
 import haxe.ui.containers.TableView;
 
-@:build(haxe.ui.ComponentBuilder.build("assets/strategyList-view.xml"))
+@:build(haxe.ui.ComponentBuilder.build("assets/widgets/strategyList-view.xml"))
 class StrategyListView extends TableView {
 	public function new() {
 		super();
@@ -16,8 +16,11 @@ class StrategyListView extends TableView {
 
 	function updateList(strategys:Array<StrategyCatelog>) {
 		dataSource.clear();
+
+		final clones = [];
 		for (strategy in strategys) {
-			Reflect.setField(strategy, 'target', switch (strategy.targetType) {
+			final clone = Main.cloneObject(strategy);
+			Reflect.setField(clone, 'target', switch (strategy.targetType) {
 				case TARGET_GRID: '指定格子';
 				case TARGET_PLAYER: '指定玩家';
 				case TARGET_PEOPLE: '指定武將';
@@ -25,7 +28,8 @@ class StrategyListView extends TableView {
 				case SELF_PEOPLE: '玩家自己的武將';
 				case SELF_PLAYER: '玩家所在的格子';
 			});
-			dataSource.add(strategy);
+			clones.push(clone);
 		}
+		dataSource.data = clones;
 	}
 }

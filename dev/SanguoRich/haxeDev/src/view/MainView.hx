@@ -1,5 +1,6 @@
 package view;
 
+import view.widgets.PeopleListView;
 import view.popup.PkPreviewView;
 import view.popup.CostForBonusView;
 import model.GridGenerator.BUILDING;

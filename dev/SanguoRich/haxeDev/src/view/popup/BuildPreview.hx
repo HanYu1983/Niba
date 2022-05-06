@@ -1,19 +1,12 @@
 package view.popup;
 
+import view.widgets.PeopleListView;
 import haxe.ui.containers.dialogs.Dialog.DialogButton;
 import haxe.ui.containers.dialogs.MessageBox.MessageBoxType;
 import haxe.ui.containers.dialogs.Dialogs;
 import model.GridGenerator.BUILDING;
-import model.IModel.BuildingList;
-import model.IModel.BuildingCatelog;
 import model.GridGenerator.Grid;
 import view.widgets.GridGridView;
-import model.IModel.PreResultOnWar;
-import view.widgets.LeaderGridView;
-import haxe.ui.events.UIEvent;
-import model.PeopleGenerator.People;
-import haxe.ui.containers.properties.Property;
-import model.IModel.WarPreview;
 import haxe.ui.events.MouseEvent;
 
 using Lambda;
