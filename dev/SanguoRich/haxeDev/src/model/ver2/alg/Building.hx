@@ -9,7 +9,7 @@ import model.ver2.alg.Alg;
 
 using Lambda;
 
-private function applyBuildingCost(ctx:Context, playerId:Int, gridId:Int, peopleId:Int, current:Dynamic, to:Dynamic):Bool {
+private function onBuildingCost(ctx:Context, playerId:Int, gridId:Int, peopleId:Int, current:Dynamic, to:Dynamic) {
 	final costMoney = 20;
 	final currBuilding = (current : BUILDING);
 	final toBuilding = (to : BUILDING);
@@ -35,21 +35,16 @@ private function applyBuildingCost(ctx:Context, playerId:Int, gridId:Int, people
 		// 功績
 		onPeopleExpAdd(ctx, peopleId, getExpAdd(0.3, ENERGY_COST_ON_BUILDING));
 	}
-	return success;
+	ctx.events.push(Event.BUILDING_RESULT({
+		success: success,
+		people: getPeopleInfo(ctx, people),
+		building: toBuilding,
+	}));
 }
 
 function _takeBuilding(ctx:Context, playerId:Int, gridId:Int, peopleId:Int, current:Dynamic, to:Dynamic) {
 	ctx.events = [];
-	final success = applyBuildingCost(ctx, playerId, gridId, peopleId, current, to);
-	if (success) {
-		final people = getPeopleById(ctx, peopleId);
-		final toBuilding = (to : BUILDING);
-		ctx.events.push(Event.BUILDING_RESULT({
-			success: success,
-			people: getPeopleInfo(ctx, people),
-			building: toBuilding,
-		}));
-	}
+	onBuildingCost(ctx, playerId, gridId, peopleId, current, to);
 	{
 		final player = ctx.players[ctx.currentPlayerId];
 		player.memory.hasBuild = true;
