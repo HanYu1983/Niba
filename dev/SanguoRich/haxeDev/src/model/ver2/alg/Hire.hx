@@ -32,7 +32,7 @@ private function getHireCost(ctx:Context, playerId:Int, gridId:Int, p1SelectId:I
 					}, 0);
 
 					// 改爲用敵人的cost為基準難度(1200大概爲最强武將了)
-					final vsCharm = (p2.cost / 1200) * 70 + 30;
+					final vsCharm = (p2.cost / 1200) * 80 + 20;
 					final charmFactor = (getPeopleCharm(ctx, p1.id) + charmExt) / vsCharm;
 					// 人脈加成
 					final abiFactor = p1.abilities.has(10) ? 1.5 : 1;

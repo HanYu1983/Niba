@@ -1,5 +1,7 @@
 package view.popup;
 
+import haxe.ui.containers.dialogs.Dialogs;
+import haxe.ui.containers.dialogs.MessageBox;
 import view.widgets.GridListView;
 import view.widgets.LeaderListView;
 import view.widgets.StrategyListView;
@@ -55,10 +57,21 @@ class StrategyPreviewView extends PopupView {
 		if(p2List.selectedItem == null) return;
 		if(gridList.selectedItem == null) return;
 
+		final gameInfo = Main.model.gameInfo();
 		var targetPlayer = leaderList.selectedItem.id;
 		var targetPeople = p2List.selectedItem.id;
 		var targetGrid = gridList.selectedItem.id;
-		trace(targetPlayer, targetPeople, targetGrid);
+		var strategy = strategyList.selectedItem.id;
+		
+		switch(strategy.id){
+			// 遠交近攻
+			case 2:
+				final grid = gameInfo.grids[targetGrid];
+				if(grid.belongPlayerId != null){
+					Dialogs.messageBox('這個計策只能用在中立格子哦', '', MessageBoxType.TYPE_INFO);
+					return;
+				}
+		}
 		Main.view.onStrategyPreviewConfirmClick(p1List.selectedItem.id, strategyList.selectedItem.id, targetPlayer, targetPeople, targetGrid);
 	}
 

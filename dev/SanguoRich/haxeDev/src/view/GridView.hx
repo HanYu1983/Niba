@@ -83,7 +83,7 @@ class GridView extends Box{
             ary.length > 0 ? strategyViews[index].show() : strategyViews[index].hide();
         }
 
-        if(grid.buildtype != GROWTYPE.EMPTY){
+        if(grid.buildtype != GROWTYPE.EMPTY && grid.belongPlayerId == null){
             final gameInfo = Main.model.gameInfo();
             var favor = grid.favor[gameInfo.currentPlayer.id];
             lbl_favor.text = Main.getFavorString(favor);

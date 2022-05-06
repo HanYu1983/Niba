@@ -1,6 +1,6 @@
 <vbox width="70%" padding="20" verticalAlign="center" horizontalAlign="center" style="background-color: white;border:1px solid grey;">
-    <hbox id="box_peopleList" width="100%" height="150"></hbox>
     <hbox id="box_strategyList" width="100%" height="150"></hbox>
+    <hbox id="box_peopleList" width="100%" height="150"></hbox>
     <hbox id="box_leaderList" width="100%" height="150"></hbox>
     <hbox id="box_peopleList2" width="100%" height="150"></hbox>
     <hbox id="box_gridList" width="100%" height="150"></hbox>
@@ -14,27 +14,6 @@
                 <property id="pro_ability" label="專長加成" value="" />
             </property-group>
         </property-grid>
-        <!-- <frame text="指定玩家">
-            <dropdown id="drp_player" text="玩家">
-                <data>
-                    <item text="指定玩家" />
-                </data>
-            </dropdown>
-        </frame>
-        <frame text="指定武將" >
-            <dropdown id="drp_people" text="武將">
-                <data>
-                    <item text="指定武將" />
-                </data>
-            </dropdown>
-        </frame>
-        <frame text="指定格子" >
-            <dropdown id="drp_grid" width="100" text="格子">
-                <data>
-                    <item text="指定格子" />
-                </data>
-            </dropdown>
-        </frame> -->
     </hbox>
     <hbox horizontalAlign="center">
         <label text="計策:"  style="font-size:14" />
