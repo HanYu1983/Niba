@@ -9,7 +9,7 @@ import model.ver2.alg.Alg;
 
 using Lambda;
 
-function getStrategyCost(ctx:Context, p1PeopleId:Int, strategyId:Int, targetPlayerId:Int, targetPeopleId:Int, targetGridId:Int) {
+private function getStrategyCost(ctx:Context, p1PeopleId:Int, strategyId:Int, targetPlayerId:Int, targetPeopleId:Int, targetGridId:Int) {
 	final p1 = getPeopleById(ctx, p1PeopleId);
 	final strategy = StrategyList[strategyId];
 	final useEnergy = p1.energy / (100 / ENERGY_COST_ON_STRATEGY);
@@ -63,113 +63,148 @@ function getStrategyCost(ctx:Context, p1PeopleId:Int, strategyId:Int, targetPlay
 	}
 }
 
-function applyStrategyCost(ctx:Context, p1PeopleId:Int, strategyId:Int, targetPlayerId:Int, targetPeopleId:Int, targetGridId:Int):Bool {
-	final cost = getStrategyCost(ctx, p1PeopleId, strategyId, targetPlayerId, targetPeopleId, targetGridId);
+private function onStrategyCost(ctx:Context, p1PeopleId:Int, strategyId:Int, targetPlayerId:Int, targetPeopleId:Int, targetGridId:Int) {
 	final p1 = getPeopleById(ctx, p1PeopleId);
-	p1.energy = Math.max(0, p1.energy - cost.peopleCost.energy);
+	if (p1.belongToPlayerId == null) {
+		throw new Exception("belongToPlayerId not found");
+	}
+	final player = ctx.players[p1.belongToPlayerId];
+	final cost = getStrategyCost(ctx, p1PeopleId, strategyId, targetPlayerId, targetPeopleId, targetGridId);
 	final success = Math.random() < cost.successRate;
-	if (success == false) {
-		return false;
-	}
-	// 功績
-	onPeopleExpAdd(ctx, p1.id, getExpAdd(cost.successRate, ENERGY_COST_ON_STRATEGY));
-	switch strategyId {
-		case 0:
-			// 暗渡陳艙
-			if (p1.belongToPlayerId == null) {
-				throw new Exception("belongToPlayerId not found");
-			}
-			final player = ctx.players[p1.belongToPlayerId];
-			player.position = targetGridId;
-			onPlayerGoToPosition(ctx, player.id, player.position);
-			{
-				final player = ctx.players[player.id];
-				player.memory.hasDice = true;
-			}
-		case 1:
-			// 步步為營
-			final p2 = getPeopleById(ctx, targetPeopleId);
-			p2.energy = Math.min(100, p2.energy + 30);
-		case 2:
-			// 遠交近攻
-			if (p1.belongToPlayerId == null) {
-				throw new Exception('belongToPlayerId not found: ${p1.id}');
-			}
-			final player = ctx.players[p1.belongToPlayerId];
-			final grid = ctx.grids[player.position];
-			final isEmpty = getGridInfo(ctx, grid).buildtype == GROWTYPE.EMPTY;
-			if (isEmpty) {
-				throw new Exception("這是空地, 搶了沒資源");
-			}
-			final gainRate = 0.1;
-			final gainFood = grid.food * gainRate;
-			final gainMoney = grid.money * gainRate;
-			final gainArmy = grid.army * gainRate;
-			grid.food -= gainFood;
-			grid.money -= gainMoney;
-			grid.army -= gainArmy;
-			player.food += gainFood;
-			player.money += gainMoney;
-			player.army += gainArmy;
-			for (targetPlayerId in 0...grid.favor.length) {
-				if (targetPlayerId == player.id) {
-					// 對你提升友好
-					grid.favor[targetPlayerId] = Std.int(Math.min(MAX_GRID_FAVOR, grid.favor[targetPlayerId] + 1));
-				} else {
-					// 對其它人降低友好
-					grid.favor[targetPlayerId] = Std.int(Math.max(MIN_GRID_FAVOR, grid.favor[targetPlayerId] - 1));
+	wrapStrategyEvent(ctx, player.id, p1.id, strategyId, () -> {
+		return switch strategyId {
+			case 0:
+				// 暗渡陳艙
+				p1.energy = Math.max(0, p1.energy - cost.peopleCost.energy);
+				if (success) {
+					onPlayerGoToPosition(ctx, player.id, targetGridId);
+					player.memory.hasDice = true;
+					onPeopleExpAdd(ctx, p1.id, getExpAdd(cost.successRate, ENERGY_COST_ON_STRATEGY));
 				}
-			}
-		case 3:
-			// 緩兵之計
-			ctx.groundItems.push({
-				id: getNextId(),
-				belongToPlayerId: p1.belongToPlayerId,
-				position: targetGridId
-			});
-		case 4:
-			// 火中取栗
-			// 將拆除指定格中非自己的路障
-			final player = ctx.players[p1.belongToPlayerId];
-			final itemWillRemoved = ctx.groundItems.filter(i -> i.position == targetGridId /*&& i.belongToPlayerId != player.id*/);
-			for (item in itemWillRemoved) {
-				// 中立路障不搶錢
-				if (item.belongToPlayerId == null) {
-					throw new haxe.Exception("不該有中立路障");
+				success;
+			case 1:
+				// 步步為營
+				p1.energy = Math.max(0, p1.energy - cost.peopleCost.energy);
+				if (success) {
+					final p2 = getPeopleById(ctx, targetPeopleId);
+					p2.energy = Math.min(100, p2.energy + 30);
+					onPeopleExpAdd(ctx, p1.id, getExpAdd(cost.successRate, ENERGY_COST_ON_STRATEGY));
 				}
-				// 搶錢
-				final targetPlayer = ctx.players[item.belongToPlayerId];
-				final tax = 10;
-				targetPlayer.money = Math.max(0, player.money - tax);
-				player.money += tax;
-			}
-			// 拆除
-			ctx.groundItems = ctx.groundItems.filter(i -> itemWillRemoved.map(j -> j.id).has(i.id) == false);
-		case 5:
-			// 趁虛而入
-			final p2 = getPeopleById(ctx, targetPeopleId);
-			p2.energy = Math.max(0, p2.energy - 20);
-		case 6:
-			// 按兵不动
-			if (p1.belongToPlayerId == null) {
-				throw new Exception('belongToPlayerId not found: ${p1.id}');
-			}
-			final player = ctx.players[p1.belongToPlayerId];
-			player.memory.hasDice = true;
-		case 7:
-			// 急功近利
-			final targetPlayer = ctx.players[targetPlayerId];
-			final give = Math.min(20, targetPlayer.food);
-			targetPlayer.food -= give;
-			targetPlayer.money += give;
-		case 8:
-			// 五穀豐登
-			final myGrids = ctx.grids.filter(g -> getGridBelongPlayerId(ctx, g.id) == p1.belongToPlayerId);
-			for (grid in myGrids) {
-				grid.food = Math.min(GRID_RESOURCE_MAX, grid.food * 0.05);
-			}
-	}
-	return true;
+				success;
+			case 2:
+				// 遠交近攻
+				wrapResourceResultEvent(ctx, p1.belongToPlayerId, p1.id, () -> {
+					p1.energy = Math.max(0, p1.energy - cost.peopleCost.energy);
+					if (success) {
+						final grid = ctx.grids[player.position];
+						final isEmpty = getGridInfo(ctx, grid).buildtype == GROWTYPE.EMPTY;
+						if (isEmpty) {
+							throw new Exception("這是空地, 搶了沒資源");
+						}
+						final gainRate = 0.1;
+						final gainFood = grid.food * gainRate;
+						final gainMoney = grid.money * gainRate;
+						final gainArmy = grid.army * gainRate;
+						grid.food -= gainFood;
+						grid.money -= gainMoney;
+						grid.army -= gainArmy;
+						player.food += gainFood;
+						player.money += gainMoney;
+						player.army += gainArmy;
+						for (targetPlayerId in 0...grid.favor.length) {
+							if (targetPlayerId == player.id) {
+								// 對你提升友好
+								grid.favor[targetPlayerId] = Std.int(Math.min(MAX_GRID_FAVOR, grid.favor[targetPlayerId] + 1));
+							} else {
+								// 對其它人降低友好
+								grid.favor[targetPlayerId] = Std.int(Math.max(MIN_GRID_FAVOR, grid.favor[targetPlayerId] - 1));
+							}
+						}
+						onPeopleExpAdd(ctx, p1.id, getExpAdd(cost.successRate, ENERGY_COST_ON_STRATEGY));
+					}
+					success;
+				});
+			case 3:
+				// 緩兵之計
+				p1.energy = Math.max(0, p1.energy - cost.peopleCost.energy);
+				if (success) {
+					ctx.groundItems.push({
+						id: getNextId(),
+						belongToPlayerId: p1.belongToPlayerId,
+						position: targetGridId
+					});
+					onPeopleExpAdd(ctx, p1.id, getExpAdd(cost.successRate, ENERGY_COST_ON_STRATEGY));
+				}
+				success;
+			case 4:
+				// 火中取栗
+				wrapResourceResultEvent(ctx, p1.belongToPlayerId, p1.id, () -> {
+					p1.energy = Math.max(0, p1.energy - cost.peopleCost.energy);
+					if (success) {
+						// 將拆除指定格中非自己的路障
+						final itemWillRemoved = ctx.groundItems.filter(i -> i.position == targetGridId /*&& i.belongToPlayerId != player.id*/);
+						for (item in itemWillRemoved) {
+							// 中立路障不搶錢
+							if (item.belongToPlayerId == null) {
+								throw new haxe.Exception("不該有中立路障");
+							}
+							// 搶錢
+							final targetPlayer = ctx.players[item.belongToPlayerId];
+							final tax = 10;
+							targetPlayer.money = Math.max(0, player.money - tax);
+							player.money += tax;
+						}
+						// 拆除
+						ctx.groundItems = ctx.groundItems.filter(i -> itemWillRemoved.map(j -> j.id).has(i.id) == false);
+						onPeopleExpAdd(ctx, p1.id, getExpAdd(cost.successRate, ENERGY_COST_ON_STRATEGY));
+					}
+					success;
+				});
+			case 5:
+				// 趁虛而入
+				p1.energy = Math.max(0, p1.energy - cost.peopleCost.energy);
+				if (success) {
+					final p2 = getPeopleById(ctx, targetPeopleId);
+					p2.energy = Math.max(0, p2.energy - 20);
+					onPeopleExpAdd(ctx, p1.id, getExpAdd(cost.successRate, ENERGY_COST_ON_STRATEGY));
+				}
+				success;
+			case 6:
+				// 按兵不动
+				p1.energy = Math.max(0, p1.energy - cost.peopleCost.energy);
+				if (success) {
+					player.memory.hasDice = true;
+					onPeopleExpAdd(ctx, p1.id, getExpAdd(cost.successRate, ENERGY_COST_ON_STRATEGY));
+				}
+				success;
+			case 7:
+				// 急功近利
+				wrapResourceResultEvent(ctx, targetPlayerId, p1.id, () -> {
+					p1.energy = Math.max(0, p1.energy - cost.peopleCost.energy);
+					if (success) {
+						final targetPlayer = ctx.players[targetPlayerId];
+						final give = Math.min(20, targetPlayer.food);
+						targetPlayer.food -= give;
+						targetPlayer.money += give;
+						onPeopleExpAdd(ctx, p1.id, getExpAdd(cost.successRate, ENERGY_COST_ON_STRATEGY));
+					}
+					success;
+				});
+			case 8:
+				// 五穀豐登
+				p1.energy = Math.max(0, p1.energy - cost.peopleCost.energy);
+				if (success) {
+					final myGrids = ctx.grids.filter(g -> getGridBelongPlayerId(ctx, g.id) == p1.belongToPlayerId);
+					for (grid in myGrids) {
+						grid.food = Math.min(GRID_RESOURCE_MAX, grid.food * 0.05);
+					}
+					onPeopleExpAdd(ctx, p1.id, getExpAdd(cost.successRate, ENERGY_COST_ON_STRATEGY));
+				}
+				success;
+			case _:
+				throw new haxe.Exception('unknown strategyId:${strategyId}');
+		}
+	});
 }
 
 function _getStrategyRate(ctx:Context, p1PeopleId:Int, strategyId:Int, targetPlayerId:Int, targetPeopleId:Int, targetGridId:Int):{
@@ -188,25 +223,7 @@ function _getStrategyRate(ctx:Context, p1PeopleId:Int, strategyId:Int, targetPla
 
 function _takeStrategy(ctx:Context, p1PeopleId:Int, strategyId:Int, targetPlayerId:Int, targetPeopleId:Int, targetGridId:Int):Void {
 	ctx.events = [];
-	final p1 = getPeopleById(ctx, p1PeopleId);
-	if (p1.belongToPlayerId == null) {
-		throw new Exception("belongToPlayerId not found");
-	}
-	final player = ctx.players[p1.belongToPlayerId];
-	final playerOriginPosition = player.position;
-	final strategy = StrategyList[strategyId];
-	final strategyResultValue = {
-		success: false,
-		people: getPeopleInfo(ctx, p1),
-		strategy: strategy,
-		energyBefore: p1.energy,
-		energyAfter: 0.0,
-	}
-	final success = applyStrategyCost(ctx, p1PeopleId, strategyId, targetPlayerId, targetPeopleId, targetGridId);
-	strategyResultValue.success = success;
-	strategyResultValue.people = getPeopleInfo(ctx, p1);
-	strategyResultValue.energyAfter = p1.energy;
-	ctx.events.push(Event.STRATEGY_RESULT(strategyResultValue));
+	onStrategyCost(ctx, p1PeopleId, strategyId, targetPlayerId, targetPeopleId, targetGridId);
 	{
 		final player = ctx.players[ctx.currentPlayerId];
 		player.memory.hasStrategy = true;

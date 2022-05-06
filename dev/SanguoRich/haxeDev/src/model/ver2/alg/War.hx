@@ -14,7 +14,7 @@ using Lambda;
 // 攻擊方主要參數為【武力】及【智力】  	防守方主要參數為【統率】及【智力】
 // 攻擊方影響能力[0,1,2,3]         	 防守方影響能力[0,1,2,3,8,9];
 // =================================
-function getWarCost(ctx:Context, playerId:Int, gridId:Int, p1PeopleId:Int, p2PeopleId:Int, army1:Float, army2:Float, options:{occupy:Bool}) {
+private function getWarCostImpl(ctx:Context, playerId:Int, gridId:Int, p1PeopleId:Int, p2PeopleId:Int, army1:Float, army2:Float, options:{occupy:Bool}) {
 	var atkMoneyCost = 0.0;
 	var atkFoodCost = 0.0;
 	{
@@ -148,6 +148,112 @@ function getWarCost(ctx:Context, playerId:Int, gridId:Int, p1PeopleId:Int, p2Peo
 	}
 }
 
+private function onWarCostImpl(ctx:Context, playerId:Int, gridId:Int, p1PeopleId:Int, p2PeopleId:Int, army1:Float, army2:Float, options:{occupy:Bool}):Bool {
+	final people1 = getPeopleById(ctx, p1PeopleId);
+	final people2 = getPeopleById(ctx, p2PeopleId);
+	final player = ctx.players[playerId];
+	final resultValue = {
+		success: false,
+		people: getPeopleInfo(ctx, people1),
+		energyBefore: people1.energy,
+		energyAfter: people1.energy,
+		armyBefore: player.army,
+		armyAfter: player.army,
+		moneyBefore: player.money,
+		moneyAfter: player.money,
+		foodBefore: player.food,
+		foodAfter: player.food,
+	}
+	final success = {
+		switch getWarCostImpl(ctx, playerId, gridId, p1PeopleId, p2PeopleId, army1, army2, options) {
+			case {playerCost: [playerCost1, playerCost2], peopleCost: [peopleCost1, peopleCost2], success: success}:
+				// 無論成功或失敗武將先消體力
+				if (people1.energy < peopleCost1.energy) {
+					throw new haxe.Exception('people.energy ${people1.energy} < ${peopleCost1.energy}');
+				}
+				if (people2.energy < peopleCost2.energy) {
+					throw new haxe.Exception('people.energy ${people2.energy} < ${peopleCost2.energy}');
+				}
+				people1.energy -= peopleCost1.energy;
+				if (people1.energy < 0) {
+					people1.energy = 0;
+				}
+				people2.energy -= peopleCost2.energy;
+				if (people2.energy < 0) {
+					people2.energy = 0;
+				}
+				//
+				player.money -= playerCost1.money;
+				if (player.money < 0) {
+					player.money = 0;
+				}
+				player.food -= playerCost1.food;
+				if (player.food < 0) {
+					player.food = 0;
+				}
+				player.army -= playerCost1.army;
+				if (player.army < 0) {
+					player.army = 0;
+				}
+
+				final grid = ctx.grids[gridId];
+				grid.money -= playerCost2.money;
+				if (grid.money < 0) {
+					grid.money = 0;
+				}
+				grid.food -= playerCost2.food;
+				if (grid.food < 0) {
+					grid.food = 0;
+				}
+				grid.army -= playerCost2.army;
+				if (grid.army < 0) {
+					grid.army = 0;
+				}
+				if (options.occupy) {
+					if (success) {
+						// 沒有進駐的話, 自動進駐
+						if (people1.position.gridId == null) {
+							people1.position.gridId = gridId;
+						}
+						// 回到主公身上或解散
+						people2.position.gridId = null;
+
+						// 體力減半
+						people2.energy *= 0.5;
+					}
+				} else {
+					//
+				}
+				// 友好度
+				if (options.occupy) {
+					grid.favor[playerId] = MIN_GRID_FAVOR;
+				} else {
+					// 先減1
+					grid.favor[playerId] = Std.int(Math.max(grid.favor[playerId] - 1, MIN_GRID_FAVOR));
+					// 額外再減
+					final isHateYou = Math.random() < SNATCH_HATE_RATE;
+					if (isHateYou) {
+						grid.favor[playerId] = Std.int(Math.max(grid.favor[playerId] - 1, MIN_GRID_FAVOR));
+					}
+				}
+				if (success) {
+					// 功績
+					onPeopleExpAdd(ctx, people1.id, getExpAdd(1, peopleCost1.energy));
+				}
+				success;
+			case _:
+				throw new haxe.Exception("getWarCost not match");
+		}
+	}
+	resultValue.success = success;
+	resultValue.energyAfter = people1.energy;
+	resultValue.armyAfter = player.army;
+	resultValue.moneyAfter = player.money;
+	resultValue.foodAfter = player.food;
+	ctx.events.push(Event.WAR_RESULT(resultValue));
+	return success;
+}
+
 function _getTakeWarPreview(ctx:Context, playerId:Int, gridId:Int):WarPreview {
 	final grid = ctx.grids[gridId];
 	if (grid.buildtype == GROWTYPE.EMPTY) {
@@ -189,7 +295,7 @@ function _getTakeWarPreview(ctx:Context, playerId:Int, gridId:Int):WarPreview {
 
 function _getPreResultOfWar(ctx:Context, playerId:Int, gridId:Int, p1PeopleId:Int, p2PeopleId:Int, army1:Float, army2:Float,
 		options:{occupy:Bool}):Array<PreResultOnWar> {
-	return switch getWarCost(ctx, playerId, gridId, p1PeopleId, p2PeopleId, army1, army2, options) {
+	return switch getWarCostImpl(ctx, playerId, gridId, p1PeopleId, p2PeopleId, army1, army2, options) {
 		case {playerCost: [playerCost1, playerCost2], peopleCost: [peopleCost1, peopleCost2]}:
 			final player1 = ctx.players[playerId];
 			final grid = ctx.grids[gridId];
@@ -228,111 +334,13 @@ function _getPreResultOfWar(ctx:Context, playerId:Int, gridId:Int, p1PeopleId:In
 
 function _takeWarOn(ctx:Context, playerId:Int, gridId:Int, p1PeopleId:Int, p2PeopleId:Int, army1:Float, army2:Float) {
 	ctx.events = [];
-	final people1 = getPeopleById(ctx, p1PeopleId);
-	final people2 = getPeopleById(ctx, p2PeopleId);
-	final player = ctx.players[playerId];
-	final resultValue = {
-		success: false,
-		people: getPeopleInfo(ctx, people1),
-		energyBefore: people1.energy,
-		energyAfter: people1.energy,
-		armyBefore: player.army,
-		armyAfter: player.army,
-		moneyBefore: player.money,
-		moneyAfter: player.money,
-		foodBefore: player.food,
-		foodAfter: player.food,
-	}
-	final success = applyWarCost(ctx, playerId, gridId, p1PeopleId, p2PeopleId, army1, army2, {occupy: true});
-	resultValue.success = success;
-	resultValue.energyAfter = people1.energy;
-	resultValue.armyAfter = player.army;
-	resultValue.moneyAfter = player.money;
-	resultValue.foodAfter = player.food;
-	ctx.events.push(Event.WAR_RESULT(resultValue));
-}
-
-function applyWarCost(ctx:Context, playerId:Int, gridId:Int, p1PeopleId:Int, p2PeopleId:Int, army1:Float, army2:Float, options:{occupy:Bool}):Bool {
-	switch getWarCost(ctx, playerId, gridId, p1PeopleId, p2PeopleId, army1, army2, options) {
-		case {playerCost: [playerCost1, playerCost2], peopleCost: [peopleCost1, peopleCost2], success: success}:
-			// 無論成功或失敗武將先消體力
-			final people = getPeopleById(ctx, p1PeopleId);
-			if (people.energy < peopleCost1.energy) {
-				throw new haxe.Exception('people.energy ${people.energy} < ${peopleCost1.energy}');
-			}
-			final people2 = getPeopleById(ctx, p2PeopleId);
-			if (people2.energy < peopleCost2.energy) {
-				throw new haxe.Exception('people.energy ${people2.energy} < ${peopleCost2.energy}');
-			}
-			people.energy -= peopleCost1.energy;
-			if (people.energy < 0) {
-				people.energy = 0;
-			}
-			people2.energy -= peopleCost2.energy;
-			if (people2.energy < 0) {
-				people2.energy = 0;
-			}
-			//
-			final player = ctx.players[playerId];
-			player.money -= playerCost1.money;
-			if (player.money < 0) {
-				player.money = 0;
-			}
-			player.food -= playerCost1.food;
-			if (player.food < 0) {
-				player.food = 0;
-			}
-			player.army -= playerCost1.army;
-			if (player.army < 0) {
-				player.army = 0;
-			}
-
-			final grid = ctx.grids[gridId];
-			grid.money -= playerCost2.money;
-			if (grid.money < 0) {
-				grid.money = 0;
-			}
-			grid.food -= playerCost2.food;
-			if (grid.food < 0) {
-				grid.food = 0;
-			}
-			grid.army -= playerCost2.army;
-			if (grid.army < 0) {
-				grid.army = 0;
-			}
-			if (options.occupy) {
-				if (success) {
-					// 沒有進駐的話, 自動進駐
-					if (people.position.gridId == null) {
-						people.position.gridId = gridId;
-					}
-					// 回到主公身上或解散
-					people2.position.gridId = null;
-
-					// 體力減半
-					people2.energy *= 0.5;
-				}
-			} else {
-				//
-			}
-			// 友好度
-			if (options.occupy) {
-				grid.favor[playerId] = MIN_GRID_FAVOR;
-			} else {
-				// 先減1
-				grid.favor[playerId] = Std.int(Math.max(grid.favor[playerId] - 1, MIN_GRID_FAVOR));
-				// 額外再減
-				final isHateYou = Math.random() < SNATCH_HATE_RATE;
-				if (isHateYou) {
-					grid.favor[playerId] = Std.int(Math.max(grid.favor[playerId] - 1, MIN_GRID_FAVOR));
-				}
-			}
-			if (success) {
-				// 功績
-				onPeopleExpAdd(ctx, people.id, getExpAdd(1, peopleCost1.energy));
-			}
-			return success;
-		case _:
-			throw new haxe.Exception("getWarCost not match");
+	onWarCostImpl(ctx, playerId, gridId, p1PeopleId, p2PeopleId, army1, army2, {occupy: true});
+	{
+		final player = ctx.players[ctx.currentPlayerId];
+		player.memory.hasCommand = true;
 	}
 }
+
+// expose
+final getWarCost = getWarCostImpl;
+final onWarCost = onWarCostImpl;

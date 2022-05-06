@@ -7,6 +7,22 @@ import model.ver2.Define;
 
 using Lambda;
 
+private function onFire(ctx:Context, playerId:Int, peopleIds:Array<Int>) {
+	final resultValue = {
+		success: true,
+		people: peopleIds.map(id -> getPeopleById(ctx, id)).map(p -> getPeopleInfo(ctx, p)),
+		maintainMoneyAfter: 0.0,
+		maintainMoneyBefore: getMaintainPeople(ctx, playerId),
+	}
+	for (peopleId in peopleIds) {
+		final people = getPeopleById(ctx, peopleId);
+		people.belongToPlayerId = null;
+		people.position.gridId = ctx.players[playerId].position;
+	}
+	resultValue.maintainMoneyAfter = getMaintainPeople(ctx, playerId);
+	ctx.events.push(Event.FIRE_RESULT(resultValue));
+}
+
 function _getPreResultOfFire(ctx:Context, playerId:Int, peopleIds:Array<Int>):PreResultOnFire {
 	final totalPeopleCost = ctx.peoples.filter(p -> p.belongToPlayerId == playerId).fold((p, a) -> {
 		if (peopleIds.has(p.id)) {
@@ -22,17 +38,5 @@ function _getPreResultOfFire(ctx:Context, playerId:Int, peopleIds:Array<Int>):Pr
 
 function _takeFire(ctx:Context, playerId:Int, peopleIds:Array<Int>) {
 	ctx.events = [];
-	final resultValue = {
-		success: true,
-		people: peopleIds.map(id -> getPeopleById(ctx, id)).map(p -> getPeopleInfo(ctx, p)),
-		maintainMoneyAfter: 0.0,
-		maintainMoneyBefore: getMaintainPeople(ctx, playerId),
-	}
-	for (peopleId in peopleIds) {
-		final people = getPeopleById(ctx, peopleId);
-		people.belongToPlayerId = null;
-		people.position.gridId = ctx.players[playerId].position;
-	}
-	resultValue.maintainMoneyAfter = getMaintainPeople(ctx, playerId);
-	ctx.events.push(Event.FIRE_RESULT(resultValue));
+	onFire(ctx, playerId, peopleIds);
 }

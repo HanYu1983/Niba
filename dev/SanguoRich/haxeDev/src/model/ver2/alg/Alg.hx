@@ -96,17 +96,6 @@ function doGridGrow(ctx:Context) {
 	}
 }
 
-function doPayTaxToGrid(ctx:Context, playerId:Int, gridId:Int) {
-	final player = ctx.players[playerId];
-	final grid = ctx.grids[gridId];
-	final taxMoney = grid.money / 5;
-	final taxFood = grid.food / 5;
-	player.money = Math.max(0, player.money - taxMoney);
-	player.food = Math.max(0, player.food - taxFood);
-	grid.money += taxMoney;
-	grid.food += taxFood;
-}
-
 // 玩家回合結束
 function doPlayerEnd(ctx:Context) {
 	ctx.actions = [];
@@ -225,14 +214,13 @@ function doPlayerDice(ctx:Context) {
 			ctx.groundItems = ctx.groundItems.filter(item -> item.id != stopItem.id);
 		}
 	}
-	player.position = toGridId;
+	onPlayerGoToPosition(ctx, activePlayerId, toGridId);
 	player.memory.hasDice = true;
 	ctx.actions.push(Action.MOVE({
 		playerId: activePlayerId,
 		fromGridId: fromGridId,
 		toGridId: toGridId
 	}, getGameInfo(ctx, false)));
-	onPlayerGoToPosition(ctx, activePlayerId, toGridId);
 }
 
 function initContext(ctx:Context, option:{}) {
@@ -286,19 +274,33 @@ function onPlayerGoToPosition(ctx:Context, playerId:Int, toGridId:Int) {
 	final toGridBelongPlayerId = getGridBelongPlayerId(ctx, toGrid.id);
 	final isStopAtEnemyGrid = toGridBelongPlayerId != null && toGridBelongPlayerId != player.id;
 	if (isStopAtEnemyGrid) {
-		final eventValue = {
-			armyBefore: player.army,
-			armyAfter: player.army,
-			moneyBefore: player.money,
-			moneyAfter: player.money,
-			foodBefore: player.food,
-			foodAfter: player.food,
-		}
-		doPayTaxToGrid(ctx, player.id, toGrid.id);
-		eventValue.moneyAfter = player.money;
-		eventValue.foodAfter = player.food;
-		ctx.events.push({
-			Event.PAY_FOR_OVER_ENEMY_GRID(eventValue);
-		});
+		onPayTaxToGrid(ctx, player.id, toGrid.id);
 	}
+	player.position = toGridId;
+}
+
+function onPayTaxToGrid(ctx:Context, playerId:Int, gridId:Int) {
+	final player = ctx.players[playerId];
+	final eventValue = {
+		armyBefore: player.army,
+		armyAfter: player.army,
+		moneyBefore: player.money,
+		moneyAfter: player.money,
+		foodBefore: player.food,
+		foodAfter: player.food,
+	}
+	{
+		final grid = ctx.grids[gridId];
+		final taxMoney = grid.money / 5;
+		final taxFood = grid.food / 5;
+		player.money = Math.max(0, player.money - taxMoney);
+		player.food = Math.max(0, player.food - taxFood);
+		grid.money += taxMoney;
+		grid.food += taxFood;
+	}
+	eventValue.moneyAfter = player.money;
+	eventValue.foodAfter = player.food;
+	ctx.events.push({
+		Event.PAY_FOR_OVER_ENEMY_GRID(eventValue);
+	});
 }

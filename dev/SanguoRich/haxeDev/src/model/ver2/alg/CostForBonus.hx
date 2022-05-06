@@ -9,7 +9,7 @@ import model.ver2.alg.Alg;
 
 using Lambda;
 
-function getCostForBonusCost(ctx:Context, playerId:Int, peopleId:Int, costType:Int) {
+private function getCostForBonusCost(ctx:Context, playerId:Int, peopleId:Int, costType:Int) {
 	final player = ctx.players[playerId];
 	final people = getPeopleById(ctx, peopleId);
 	final peopleBelongPlayer = ctx.peoples.filter(p -> p.belongToPlayerId == player.id);
@@ -91,7 +91,7 @@ function getCostForBonusCost(ctx:Context, playerId:Int, peopleId:Int, costType:I
 	}
 }
 
-function onCostForBonusCost(ctx:Context, playerId:Int, peopleId:Int, costType:Int) {
+private function onCostForBonusCost(ctx:Context, playerId:Int, peopleId:Int, costType:Int) {
 	switch getCostForBonusCost(ctx, playerId, peopleId, costType) {
 		case {playerCost: {food: costFood}, peopleGain: {energy: gainEnergy, exp: gainExp}, successRate: successRate}:
 			final player = ctx.players[playerId];

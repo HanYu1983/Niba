@@ -13,7 +13,7 @@ using Lambda;
 // 探索
 // ================================
 // 探索計算
-function getExploreCost(ctx:Context, playerId:Int, gridId:Int, p1SelectId:Int) {
+private function getExploreCost(ctx:Context, playerId:Int, gridId:Int, p1SelectId:Int) {
 	return switch 0 {
 		case 0:
 			final grid = ctx.grids[gridId];
@@ -47,6 +47,53 @@ function getExploreCost(ctx:Context, playerId:Int, gridId:Int, p1SelectId:Int) {
 	}
 }
 
+private function onExploreCost(ctx:Context, playerId:Int, gridId:Int, p1SelectId:Int) {
+	final p1 = getPeopleById(ctx, p1SelectId);
+	final player = ctx.players[playerId];
+	final resultValue = {
+		success: false,
+		people: getPeopleInfo(ctx, p1),
+		peopleList: ([] : Array<model.PeopleGenerator.People>),
+		energyBefore: p1.energy,
+		energyAfter: p1.energy,
+		armyBefore: player.army,
+		armyAfter: player.army,
+		moneyBefore: player.money,
+		moneyAfter: player.money,
+		foodBefore: player.food,
+		foodAfter: player.food,
+	}
+	final newPeopleIds:Array<Int> = {
+		final negoCost = getExploreCost(ctx, playerId, gridId, p1SelectId);
+		// 無論成功或失敗武將先消體力
+		if (p1.energy < negoCost.peopleCost.energy) {
+			throw new haxe.Exception('people.energy ${p1.energy} < ${negoCost.peopleCost.energy}');
+		}
+		p1.energy -= negoCost.peopleCost.energy;
+		if (p1.energy < 0) {
+			p1.energy = 0;
+		}
+		//
+		final success = random() < negoCost.successRate;
+		if (success) {
+			// 功績
+			onPeopleExpAdd(ctx, p1.id, getExpAdd(Math.min(1, negoCost.successRate), model.Config.ENERGY_COST_ON_EXPLORE));
+			final newPeople = PeopleGenerator.getInst().generate();
+			addPeopleInfo(ctx, null, gridId, newPeople);
+			[newPeople.id];
+		} else {
+			[];
+		}
+	}
+	resultValue.success = newPeopleIds.length > 0;
+	resultValue.peopleList = newPeopleIds.map(id -> getPeopleById(ctx, id)).map(p -> getPeopleInfo(ctx, p));
+	resultValue.energyAfter = p1.energy;
+	resultValue.armyAfter = player.army;
+	resultValue.moneyAfter = player.money;
+	resultValue.foodAfter = player.food;
+	ctx.events.push(Event.EXPLORE_RESULT(resultValue));
+}
+
 function _getTakeExplorePreview(ctx:Context, playerId:Int, gridId:Int):ExplorePreview {
 	return {
 		p1ValidPeople: getPlayerInfo(ctx, ctx.players[playerId]).people
@@ -65,54 +112,9 @@ function _getPreResultOfExplore(ctx:Context, playerId:Int, gridId:Int, peopleId:
 
 function _takeExplore(ctx:Context, playerId:Int, gridId:Int, p1SelectId:Int) {
 	ctx.events = [];
-	final p1 = getPeopleById(ctx, p1SelectId);
-	final player = ctx.players[playerId];
-	final resultValue = {
-		success: false,
-		people: getPeopleInfo(ctx, p1),
-		peopleList: ([] : Array<model.PeopleGenerator.People>),
-		energyBefore: p1.energy,
-		energyAfter: p1.energy,
-		armyBefore: player.army,
-		armyAfter: player.army,
-		moneyBefore: player.money,
-		moneyAfter: player.money,
-		foodBefore: player.food,
-		foodAfter: player.food,
-	}
-	final newPeopleIds = applyExploreCost(ctx, playerId, gridId, p1SelectId);
-	resultValue.success = newPeopleIds.length > 0;
-	resultValue.peopleList = newPeopleIds.map(id -> getPeopleById(ctx, id)).map(p -> getPeopleInfo(ctx, p));
-	resultValue.energyAfter = p1.energy;
-	resultValue.armyAfter = player.army;
-	resultValue.moneyAfter = player.money;
-	resultValue.foodAfter = player.food;
-	ctx.events.push(Event.EXPLORE_RESULT(resultValue));
+	onExploreCost(ctx, playerId, gridId, p1SelectId);
 	{
 		final player = ctx.players[ctx.currentPlayerId];
 		player.memory.hasCommand = true;
 	}
-}
-
-function applyExploreCost(ctx:Context, playerId:Int, gridId:Int, p1SelectId:Int):Array<Int> {
-	final negoCost = getExploreCost(ctx, playerId, gridId, p1SelectId);
-	// 無論成功或失敗武將先消體力
-	final people = getPeopleById(ctx, p1SelectId);
-	if (people.energy < negoCost.peopleCost.energy) {
-		throw new haxe.Exception('people.energy ${people.energy} < ${negoCost.peopleCost.energy}');
-	}
-	people.energy -= negoCost.peopleCost.energy;
-	if (people.energy < 0) {
-		people.energy = 0;
-	}
-	//
-	final success = random() < negoCost.successRate;
-	if (success == false) {
-		return [];
-	}
-	// 功績
-	onPeopleExpAdd(ctx, people.id, getExpAdd(Math.min(1, negoCost.successRate), model.Config.ENERGY_COST_ON_EXPLORE));
-	final newPeople = PeopleGenerator.getInst().generate();
-	addPeopleInfo(ctx, null, gridId, newPeople);
-	return [newPeople.id];
 }
