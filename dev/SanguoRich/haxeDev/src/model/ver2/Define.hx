@@ -194,6 +194,8 @@ enum Event {
 	COST_FOR_BONUS_RESULT(value:{
 		costType:Int,
 		people:model.PeopleGenerator.People,
+		peopleBefore:Array<model.PeopleGenerator.People>,
+		peopleAfter:Array<model.PeopleGenerator.People>
 	});
 	PK_RESULT(value:{
 		success:Bool,
