@@ -1,13 +1,6 @@
 package view.popup;
 
-import model.IModel.SnatchPreview;
-import haxe.ui.events.UIEvent;
-import model.IModel.PreResultOnSnatch;
-import model.Config;
-import model.IModel.PreResultOnWar;
-import model.PeopleGenerator.People;
-import haxe.ui.containers.properties.Property;
-import model.IModel.WarPreview;
+import view.widgets.PeopleListView;
 import haxe.ui.events.MouseEvent;
 
 @:build(haxe.ui.ComponentBuilder.build("assets/popup/costForBonus-view.xml"))

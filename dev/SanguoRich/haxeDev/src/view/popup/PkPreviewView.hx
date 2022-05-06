@@ -1,12 +1,10 @@
 package view.popup;
 
+import view.widgets.PeopleListView;
 import view.widgets.GridGridView;
 import model.Config;
-import model.IModel.PreResultOnNego;
-import haxe.ui.events.UIEvent;
 import model.PeopleGenerator.People;
 import haxe.ui.containers.properties.Property;
-import model.IModel.NegoPreview;
 import haxe.ui.events.MouseEvent;
 
 @:build(haxe.ui.ComponentBuilder.build("assets/popup/pkPreview-view.xml"))

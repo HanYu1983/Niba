@@ -1,5 +1,6 @@
 package view.popup;
 
+import view.widgets.PeopleListView;
 import haxe.ui.events.MouseEvent;
 
 @:build(haxe.ui.ComponentBuilder.build("assets/popup/exploreSuccess-view.xml"))

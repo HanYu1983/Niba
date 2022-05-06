@@ -1,5 +1,6 @@
 package view.popup;
 
+import view.widgets.PeopleListView;
 import model.IModel.PreResultOnWar;
 import view.widgets.LeaderGridView;
 import haxe.ui.events.UIEvent;

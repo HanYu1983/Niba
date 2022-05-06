@@ -25,7 +25,7 @@ class Main {
 			runTest();
 		}
 
-		// model = new TestResourceModel();
+		// model = new DebugModel();
 		model = new CacheModel(new ModelVer2());
 
 		var app = new HaxeUIApp();

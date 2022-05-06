@@ -116,9 +116,11 @@ class PeopleGenerator {
 		}
 	}
 
+	var randomStart = Math.floor(Math.random() * 100);
+
 	public function generate():People {
 		var peopleId = Math.floor(Date.now().getTime() + Math.random() * 9999);
-		var name = this.names[peopleId % this.names.length];
+		var name = this.names[(peopleId + randomStart) % this.names.length];
 		var type = [0, 0, 0, 0, 0, 1, 1, 2, 2, 3][(Math.floor(Math.random() * 10))];
 		var values = this.valueMaps[type];
 		var genAbilitys = this.abiMaps[type];

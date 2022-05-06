@@ -1,8 +1,8 @@
-package view;
+package view.widgets;
 import model.PeopleGenerator;
 import haxe.ui.containers.TableView;
 
-@:build(haxe.ui.ComponentBuilder.build("assets/peopleList-view.xml"))
+@:build(haxe.ui.ComponentBuilder.build("assets/widgets/peopleList-view.xml"))
 class PeopleListView extends TableView{
     public function new(){
         super();
