@@ -172,9 +172,15 @@ class ModelVer2 extends DebugModel {
 		cb(gameInfo());
 	}
 
-	override function getResultOfCost(p1Player:PlayerInfo, p1People:model.PeopleGenerator.People,
-			costType:Int):{costFood:Float, costMoney:Float, gainExp:Float, gainEnergy:Float} {
-		return _getResultOfCost(context, p1Player, p1People, costType);
+	override function getResultOfCost(p1Player:PlayerInfo, p1People:model.PeopleGenerator.People, costType:Int):{
+		costFood:Float,
+		costMoney:Float,
+		gainExp:Float,
+		gainEnergy:Float
+	} {
+		final ret = _getResultOfCost(context, p1Player, p1People, costType);
+		js.Browser.console.log(ret);
+		return ret;
 	}
 
 	override function takeCostForBonus(playerId:Int, peopleId:Int, costType:Int, cb:(gameInfo:GameInfo) -> Void) {

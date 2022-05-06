@@ -154,13 +154,17 @@ private function onCostForBonusCost(ctx:Context, playerId:Int, peopleId:Int, cos
 	}
 }
 
-function _getResultOfCost(ctx:Context, p1Player:PlayerInfo, p1People:model.PeopleGenerator.People,
-		costType:Int):{costFood:Float, costMoney:Float, gainExp:Float, gainEnergy:Float} {
+function _getResultOfCost(ctx:Context, p1Player:PlayerInfo, p1People:model.PeopleGenerator.People, costType:Int):{
+	costFood:Float,
+	costMoney:Float,
+	gainExp:Float,
+	gainEnergy:Float
+} {
 	return switch getCostForBonusCost(ctx, p1Player.id, p1People.id, costType) {
-		case {playerCost: {food: costFood}, peopleGain: {energy: gainEnergy, exp: gainExp}, successRate: successRate}:
+		case {playerCost: {food: costFood, money: costMoney}, peopleGain: {energy: gainEnergy, exp: gainExp}, successRate: successRate}:
 			return {
 				costFood: costFood,
-				costMoney: 0,
+				costMoney: costMoney,
 				gainEnergy: gainEnergy,
 				gainExp: gainExp,
 			}
