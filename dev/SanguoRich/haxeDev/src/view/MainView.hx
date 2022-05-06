@@ -572,14 +572,20 @@ class MainView extends Box {
 						doOneEvent(gameInfo);
 					});
 				case GRID_RESOURCE_EVENT:
+					final gameInfo = Main.model.gameInfo();
 					final info:Dynamic = event.value;
 					final grids:Array<{gridBefore:Grid, gridAfter:Grid}> = info.grids;
-					final title = '資源轉移或增生';
-					var msg = '';
+					final title = info.describtion;
+					var msg = '${title}\n\n';
 					for(result in grids){
 						final before = result.gridBefore;
 						final after = result.gridAfter;
+						final owner = switch(before.belongPlayerId){
+							case null: '無';
+							case _: gameInfo.players[before.belongPlayerId].name;
+						}
 						msg += '地點:${before.name}\n';
+						msg += '所有:${owner}\n';
 						msg += '金錢:${Main.getFixNumber(before.money,0)} => ${Main.getFixNumber(after.money,0)} \n';
 						msg += '糧草:${Main.getFixNumber(before.food,0)} => ${Main.getFixNumber(after.food,0)} \n';
 						msg += '士兵:${Main.getFixNumber(before.army,0)} => ${Main.getFixNumber(after.army,0)} \n';

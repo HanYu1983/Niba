@@ -110,13 +110,15 @@ class DebugModel implements IModel {
 					grids:[
 						{
 							gridBefore: g,
-							gridAfter: g
+							gridAfter: g,
+							
 						},
 						{
 							gridBefore: g,
-							gridAfter: g
+							gridAfter: g,
 						}
-					]
+					],
+					describtion:'aaa'
 				},
 			},
 			{
