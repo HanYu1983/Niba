@@ -18,12 +18,12 @@ class PeopleListView extends TableView{
             var list:Array<Dynamic> = dataSource.data;
             updateList(list.slice(0));
         }
-        // if(people.length > 0) selectedIndex = 0;
     }
     
     function updateList(people:Array<Dynamic>){
         final gameInfo = Main.model.gameInfo();
 
+        final clones = [];
         dataSource.clear();
         for (p in people) {
             var info:Dynamic = Main.cloneObject(p);
@@ -42,8 +42,8 @@ class PeopleListView extends TableView{
             info.nameView = p.name;
             if(p.sleep) info.nameView += '(休)';
 
-
-            dataSource.add(info);
+            clones.push(info);
         }
+        dataSource.data = clones;
     }
 }

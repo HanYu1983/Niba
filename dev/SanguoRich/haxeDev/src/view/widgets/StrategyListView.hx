@@ -16,6 +16,8 @@ class StrategyListView extends TableView {
 
 	function updateList(strategys:Array<StrategyCatelog>) {
 		dataSource.clear();
+
+		final clones = [];
 		for (strategy in strategys) {
 			final clone = Main.cloneObject(strategy);
 			Reflect.setField(clone, 'target', switch (strategy.targetType) {
@@ -26,7 +28,8 @@ class StrategyListView extends TableView {
 				case SELF_PEOPLE: '玩家自己的武將';
 				case SELF_PLAYER: '玩家所在的格子';
 			});
-			dataSource.add(clone);
+			clones.push(clone);
 		}
+		dataSource.data = clones;
 	}
 }

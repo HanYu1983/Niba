@@ -19,7 +19,7 @@ class GridListView extends TableView {
 	function updateList(grids:Array<Grid>) {
 
 		final gameInfo = Main.model.gameInfo();
-
+		final clones = [];
 		dataSource.clear();
 		for (grid in grids) {
 			final clone:Dynamic = {};
@@ -78,8 +78,8 @@ class GridListView extends TableView {
 				}
 			}
 			clone.strategy = strategyString;
-			
-			dataSource.add(clone);
+			clones.push(clone);
 		}
+		dataSource.data = clones;
 	}
 }

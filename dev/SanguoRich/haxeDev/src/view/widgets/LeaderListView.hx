@@ -17,6 +17,8 @@ class LeaderListView extends TableView {
 
 	function updateList(leaders:Array<PlayerInfo>) {
 		dataSource.clear();
+		
+		final clones = [];
 		for (p in leaders) {
 			final clone = Main.cloneObject(p);
 			clone.name = p.name;
@@ -25,7 +27,8 @@ class LeaderListView extends TableView {
 			clone.army = '${Math.floor(p.army)} (消耗:${Main.getFixNumber(p.armyGrow)})';
 			clone.peopleCount = p.people.length;
 			clone.cityCount = p.grids.length;
-			dataSource.add(clone);
+			clones.push(clone);
 		}
+		dataSource.data = clones;
 	}
 }
