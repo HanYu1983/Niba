@@ -136,21 +136,27 @@ private function onCostForBonusCost(ctx:Context, playerId:Int, peopleId:Int, cos
 			final player = ctx.players[playerId];
 			player.food = Math.max(0, player.food - costFood);
 			player.money = Math.max(0, player.money - costMoney);
+			final peopleBelongPlayer = ctx.peoples.filter(p -> p.belongToPlayerId == player.id);
 			switch costType {
-				case 1:
-					// 訓練
-					final peopleBelongPlayer = ctx.peoples.filter(p -> p.belongToPlayerId == player.id);
+				case 0:
+					// 回體
 					for (people in peopleBelongPlayer) {
-						if (people.energy < 100) {
-							people.energy = Math.min(100, people.energy + (100 - people.energy) * gainEnergy);
-						}
-						// 功績
+						people.energy = Math.min(100, people.energy + (100 - people.energy) * gainEnergy);
+					}
+				case 1:
+					// 練兵
+					// 加功績
+					for (people in peopleBelongPlayer) {
 						onPeopleExpAdd(ctx, people.id, (810 - people.exp) * gainExp);
 					}
 				case 2:
 					// 作樂會將錢付給格子
 					final grid = ctx.grids[player.position];
 					grid.money += costMoney;
+					// 回體
+					for (people in peopleBelongPlayer) {
+						people.energy = Math.min(100, people.energy + (100 - people.energy) * gainEnergy);
+					}
 			}
 			final people = getPeopleById(ctx, peopleId);
 			// TODO
