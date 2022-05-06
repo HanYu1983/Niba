@@ -31,12 +31,10 @@ enum ActionInfoID {
 	PK;
 	SNATCH;
 	OCCUPATION;
-
 	CAMP;
 	PRACTICE;
 	HIRE;
 	EXPLORE;
-
 	PAY_FOR_FUN;
 	EARN_MONEY;
 	BUY_FOOD;
@@ -44,7 +42,6 @@ enum ActionInfoID {
 	BUY_ARMY;
 	SELL_ARMY;
 	TRANSFER;
-
 	BUILD;
 	END;
 }
@@ -276,7 +273,12 @@ interface IModel {
 	function takeStrategy(p1PeopleId:Int, strategyId:Int, targetPlayerId:Int, targetPeopleId:Int, targetGridId:Int, cb:(gameInfo:GameInfo) -> Void):Void;
 	function takeBuilding(p1PeopleId:Int, gridId:Int, peopleId:Int, current:Dynamic, to:Dynamic, cb:(gameInfo:GameInfo) -> Void):Void;
 
-	function getResultOfCost(p1Player:PlayerInfo, p1People:People, costType:Int):{costFood:Float, costMoney:Float, gainExp:Float, gainEnergy:Float};
+	function getResultOfCost(p1Player:PlayerInfo, p1People:People, costType:Int):{
+		costFood:Float,
+		costMoney:Float,
+		gainExp:Float,
+		gainEnergy:Float
+	};
 	function takeCostForBonus(playerId:Int, peopleId:Int, costType:Int, cb:(gameInfo:GameInfo) -> Void):Void;
 
 	function save(cb:(success:Bool) -> Void):Void;
@@ -295,11 +297,11 @@ final StrategyList:Array<StrategyCatelog> = [
 	{
 		id: 0,
 		name: '暗渡陳艙',
-		intelligence: 85,
-		describe: '可以指定移動1~6格數(無視路障)',
+		intelligence: 75,
+		describe: '可以指定移動1~3格數(無視路障)',
 		targetType: StrategyTargetType.TARGET_GRID,
 		value: {
-			valid: [1, 2, 3, 4, 5, 6]
+			valid: [1, 2, 3]
 		}
 	},
 	{
@@ -325,13 +327,13 @@ final StrategyList:Array<StrategyCatelog> = [
 		describe: '指定自己前後5格當中的其中一格設置路障。走到那個格子的所以玩家會自動停下。然後路障消失',
 		targetType: StrategyTargetType.TARGET_GRID,
 		value: {
-			valid: [-5, -4, -3, -2, -1, 1, 2, 3, 4, 5]
+			valid: [-5, -4, -3, -2, -1, 0, 1, 2, 3, 4, 5]
 		}
 	},
 	{
 		id: 4,
 		name: '火中取栗',
-		intelligence: 70,
+		intelligence: 75,
 		describe: '拆除指定路障，如果那個路障是別的玩家，拿取那個玩家10金',
 		targetType: StrategyTargetType.TARGET_GRID,
 		value: null

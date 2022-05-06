@@ -13,7 +13,8 @@ private function getCostForBonusCost(ctx:Context, playerId:Int, peopleId:Int, co
 	final player = ctx.players[playerId];
 	final people = getPeopleById(ctx, peopleId);
 	final peopleBelongPlayer = ctx.peoples.filter(p -> p.belongToPlayerId == player.id);
-
+	final useEnergy = people.energy / (100 / ENERGY_COST_ON_COST_FOR_FUN);
+	final base = getBase(useEnergy, ENERGY_COST_ON_COST_FOR_FUN, 0.0) * 1.0;
 	return switch costType {
 		case 0:
 			var totalLake = 0.0;
@@ -25,10 +26,10 @@ private function getCostForBonusCost(ctx:Context, playerId:Int, peopleId:Int, co
 			}
 
 			// 基本回復20%
-			var recover = 0.2;
+			var recover = base * 0.3;
 			// 使用getPeopleCommand, getPeoplePolitical等取得升級後的數值
 			recover *= 1.0 + (.2 * (getPeopleCommand(ctx, people.id) / 100));
-
+			recover *= people.abilities.has(6) ? 1.5 : 1.0;
 			// 回復縂差距的10%
 			totalLake *= recover;
 
@@ -39,7 +40,7 @@ private function getCostForBonusCost(ctx:Context, playerId:Int, peopleId:Int, co
 				recover *= player.food / food;
 				food = player.food;
 			}
-			food *= .8 + (.2 * (1 - (getPeoplePolitical(ctx, people.id) / 100)));
+			food *= .8 + (.2 * (1 - (getPeopleIntelligence(ctx, people.id) / 100)));
 
 			return {
 				playerCost: {
@@ -49,6 +50,9 @@ private function getCostForBonusCost(ctx:Context, playerId:Int, peopleId:Int, co
 				peopleGain: {
 					energy: recover,
 					exp: 0.0,
+				},
+				peopleCost: {
+					energy: base
 				},
 				successRate: 0.5
 			};
@@ -62,20 +66,20 @@ private function getCostForBonusCost(ctx:Context, playerId:Int, peopleId:Int, co
 			}
 
 			// 基本回復2%
-			var recover = 0.02;
+			var recover = base * 0.3;
 			recover *= 1.0 + (.2 * (getPeopleCommand(ctx, people.id) / 100));
-
+			recover *= people.abilities.has(6) ? 1.5 : 1.0;
 			// 回復縂差距的10%
 			totalLake *= recover;
 
 			// 縂花食物量
-			var food = totalLake * .3;
+			var food = totalLake * 0.03;
 
 			if (player.food < food) {
 				recover *= player.food / food;
 				food = player.food;
 			}
-			food *= .8 + (.2 * (1 - (getPeoplePolitical(ctx, people.id) / 100)));
+			food *= .8 + (.2 * (1 - (getPeopleIntelligence(ctx, people.id) / 100)));
 
 			{
 				playerCost: {
@@ -85,6 +89,9 @@ private function getCostForBonusCost(ctx:Context, playerId:Int, peopleId:Int, co
 				peopleGain: {
 					energy: 0.0,
 					exp: recover
+				},
+				peopleCost: {
+					energy: base
 				},
 				successRate: 0.5
 			}
@@ -98,9 +105,10 @@ private function getCostForBonusCost(ctx:Context, playerId:Int, peopleId:Int, co
 			}
 
 			// 基本回復20%
-			var recover = 0.2;
+			var recover = base * 0.3;
 			// 使用getPeopleCommand, getPeoplePolitical等取得升級後的數值
 			recover *= 1.0 + (.2 * (getPeopleCommand(ctx, people.id) / 100));
+			recover *= people.abilities.has(6) ? 1.5 : 1.0;
 
 			// 回復縂差距的10%
 			totalLake *= recover;
@@ -123,6 +131,9 @@ private function getCostForBonusCost(ctx:Context, playerId:Int, peopleId:Int, co
 					energy: recover,
 					exp: 0.0,
 				},
+				peopleCost: {
+					energy: base
+				},
 				successRate: 0.5
 			};
 		case _:
@@ -132,7 +143,12 @@ private function getCostForBonusCost(ctx:Context, playerId:Int, peopleId:Int, co
 
 private function onCostForBonusCost(ctx:Context, playerId:Int, peopleId:Int, costType:Int) {
 	switch getCostForBonusCost(ctx, playerId, peopleId, costType) {
-		case {playerCost: {food: costFood, money: costMoney}, peopleGain: {energy: gainEnergy, exp: gainExp}, successRate: successRate}:
+		case {
+			playerCost: {food: costFood, money: costMoney},
+			peopleCost: {energy: costEnergy},
+			peopleGain: {energy: gainEnergy, exp: gainExp},
+			successRate: successRate
+		}:
 			final p1 = getPeopleById(ctx, peopleId);
 			final player = ctx.players[playerId];
 			final eventValue = {
@@ -142,6 +158,7 @@ private function onCostForBonusCost(ctx:Context, playerId:Int, peopleId:Int, cos
 				peopleAfter: getPlayerInfo(ctx, player).people,
 			}
 			{
+				p1.energy = Math.max(0, p1.energy - costEnergy);
 				player.food = Math.max(0, player.food - costFood);
 				player.money = Math.max(0, player.money - costMoney);
 				final peopleBelongPlayer = ctx.peoples.filter(p -> p.belongToPlayerId == player.id);

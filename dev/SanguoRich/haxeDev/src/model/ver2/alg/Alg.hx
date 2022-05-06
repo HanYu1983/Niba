@@ -27,6 +27,10 @@ function doPeopleMaintain(ctx:Context) {
 				// 回體力
 				final addEnergy = (PEOPLE_ENERGY_SUPPLY_BASE + people.energy * PEOPLE_ENERGY_SUPPLY_SAVE_FACTOR) * (1 - offsetFactor);
 				people.energy = Math.min(100, people.energy + addEnergy);
+				// 如果完全付不出來
+				if (offsetFactor >= 1) {
+					people.energy = Math.max(0, people.energy - people.energy * 0.1);
+				}
 			}
 			player.money = Math.max(0, player.money - cost);
 		}

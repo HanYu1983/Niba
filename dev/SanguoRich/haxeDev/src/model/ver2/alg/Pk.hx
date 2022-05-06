@@ -54,12 +54,29 @@ private function onTakePk(ctx:Context, playerId:Int, gridId:Int, p1PeopleId:Int,
 	};
 	switch getPkCost(ctx, playerId, gridId, p1PeopleId, p2PeopleId) {
 		case {peopleCost: [p1Cost, p2Cost], gainArmy: gainArmy, successRate: successRate}:
-			p1.energy = Math.max(0, p1.energy - p1Cost.energy);
-			p2.energy = Math.max(0, p2.energy - p2Cost.energy);
-			player.army += gainArmy;
-			grid.army = Math.max(0, grid.army - gainArmy);
-			// 功績
-			onPeopleExpAdd(ctx, p1.id, getExpAdd(Math.min(1, successRate), ENERGY_COST_ON_PK));
+			final success = Math.random() < successRate;
+			eventValue.success = success;
+			if (success) {
+				p1.energy = Math.max(0, p1.energy - p1Cost.energy);
+				p2.energy = Math.max(0, p2.energy - p2Cost.energy);
+				player.army += gainArmy;
+				grid.army = Math.max(0, grid.army - gainArmy);
+				// 功績
+				onPeopleExpAdd(ctx, p1.id, getExpAdd(Math.min(1, successRate), ENERGY_COST_ON_PK));
+				// 提升友好度
+				final isLikeYou = Math.random() < PK_LIKE_RATE;
+				if (isLikeYou) {
+					for (targetPlayerId in 0...grid.favor.length) {
+						if (targetPlayerId == playerId) {
+							// 對你提升友好
+							grid.favor[targetPlayerId] = Std.int(Math.min(MAX_GRID_FAVOR, grid.favor[targetPlayerId] + 1));
+						} else {
+							// 對其它人降低友好
+							grid.favor[targetPlayerId] = Std.int(Math.max(MIN_GRID_FAVOR, grid.favor[targetPlayerId] - 1));
+						}
+					}
+				}
+			}
 		case _:
 			throw new haxe.Exception("getPkCost not found");
 	}
