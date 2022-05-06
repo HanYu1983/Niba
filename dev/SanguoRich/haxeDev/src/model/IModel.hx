@@ -274,7 +274,7 @@ interface IModel {
 	function takeStrategy(p1PeopleId:Int, strategyId:Int, targetPlayerId:Int, targetPeopleId:Int, targetGridId:Int, cb:(gameInfo:GameInfo) -> Void):Void;
 	function takeBuilding(p1PeopleId:Int, gridId:Int, peopleId:Int, current:Dynamic, to:Dynamic, cb:(gameInfo:GameInfo) -> Void):Void;
 
-	function getResultOfCost(p1Player:PlayerInfo, p1People:People, costType:Int):{costFood:Float, gainExp:Float, gainEnergy:Float};
+	function getResultOfCost(p1Player:PlayerInfo, p1People:People, costType:Int):{costFood:Float, costMoney:Float, gainExp:Float, gainEnergy:Float};
 	function takeCostForBonus(playerId:Int, peopleId:Int, costType:Int, cb:(gameInfo:GameInfo) -> Void):Void;
 
 	function save(cb:(success:Bool) -> Void):Void;

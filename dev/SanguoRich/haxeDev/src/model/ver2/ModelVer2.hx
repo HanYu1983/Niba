@@ -173,7 +173,7 @@ class ModelVer2 extends DebugModel {
 	}
 
 	override function getResultOfCost(p1Player:PlayerInfo, p1People:model.PeopleGenerator.People,
-			costType:Int):{costFood:Float, gainExp:Float, gainEnergy:Float} {
+			costType:Int):{costFood:Float, costMoney:Float, gainExp:Float, gainEnergy:Float} {
 		return _getResultOfCost(context, p1Player, p1People, costType);
 	}
 

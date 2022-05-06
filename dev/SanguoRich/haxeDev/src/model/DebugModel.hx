@@ -390,9 +390,10 @@ class DebugModel implements IModel {
 
 	
 
-	public function getResultOfCost(p1Player:PlayerInfo, p1People:People, costType:Int):{costFood:Float, gainExp:Float, gainEnergy:Float} {
+	public function getResultOfCost(p1Player:PlayerInfo, p1People:People, costType:Int):{costFood:Float, costMoney:Float, gainExp:Float, gainEnergy:Float} {
 		return {
 			costFood: 1,
+			costMoney: 1.0,
 			gainEnergy: 3,
 			gainExp: 5,
 		}

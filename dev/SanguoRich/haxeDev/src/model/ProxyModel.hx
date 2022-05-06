@@ -135,7 +135,7 @@ class ProxyModel implements IModel {
 		return model.takeBuilding(p1PeopleId, gridId, peopleId, current, to, cb);
 	}
 
-	public function getResultOfCost(p1Player:PlayerInfo, p1People:People, costType:Int):{costFood:Float, gainExp:Float, gainEnergy:Float} {
+	public function getResultOfCost(p1Player:PlayerInfo, p1People:People, costType:Int):{costFood:Float, costMoney:Float, gainExp:Float, gainEnergy:Float} {
 		return model.getResultOfCost(p1Player, p1People, costType);
 	}
 

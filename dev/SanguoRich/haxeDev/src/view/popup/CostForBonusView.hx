@@ -52,7 +52,7 @@ class CostForBonusView extends PopupView {
 		function setRate() {
 			final p = p1List.selectedItem;
 			final isCamp = btnbr_ops.selectedIndex == 0;
-			final result:{costFood:Float, gainExp:Float, gainEnergy:Float} = Main.model.getResultOfCost(gameInfo.currentPlayer, p, isCamp ? 0 : 1);
+			final result:{costFood:Float, costMoney:Float, gainExp:Float, gainEnergy:Float} = Main.model.getResultOfCost(gameInfo.currentPlayer, p, isCamp ? 0 : 1);
 			
 			final costName = btnbr_ops.selectedButton.text;
 			var resultStr = '讓 ${p.name} 領導 ${costName} 嗎?\n';
@@ -68,7 +68,12 @@ class CostForBonusView extends PopupView {
 				case 1: '功績';
 				case _: '';
 			}
-			resultStr += '預計消耗${costType} ${Main.getFixNumber(result.costFood)} 提升自身所有武將 ${recoverName}差距的 ${Main.getRateString(gain)}';
+			final cost = switch(btnbr_ops.selectedIndex){
+				case 0|1: Main.getFixNumber(result.costFood);
+				case 2: Main.getFixNumber(result.costMoney);
+				case _: 0;
+			}
+			resultStr += '預計消耗${costType} ${cost} 提升自身所有武將 ${recoverName}差距的 ${Main.getRateString(gain)}';
 			lbl_result.value = resultStr;
 		}
 
