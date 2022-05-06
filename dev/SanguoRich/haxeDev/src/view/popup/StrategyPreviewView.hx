@@ -150,6 +150,10 @@ class StrategyPreviewView extends PopupView {
 						box_leaderList.show();
 						box_peopleList2.show();
 					case SELF_GRID:
+						box_gridList.show();
+						
+						final grid = gameInfo.grids[gameInfo.currentPlayer.atGridId];
+						updateGridList([grid]);
 					case SELF_PEOPLE:
 						leaderList.selectedIndex = gameInfo.currentPlayer.id;
 						box_peopleList2.show();
