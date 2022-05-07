@@ -53,8 +53,15 @@ private function onTransfer(ctx:Context, playerId:Int, gridId:Int, playerInfo:mo
 // 把已經有駐守在別的地方的武將派到這裡來
 // 或者前端沒有派任何武將到這個格子上
 function _checkValidTransfer(ctx:Context, playerId:Int, gridId:Int, playerInfo:model.IModel.PlayerInfo, gridInfo:model.GridGenerator.Grid):Bool {
+	final gridBelongPlayerId = getGridBelongPlayerId(ctx, gridId);
+
 	for (people in gridInfo.people) {
 		final originPeople = getPeopleById(ctx, people.id);
+		final isNotMyGrid = gridBelongPlayerId != originPeople.belongToPlayerId;
+		if (isNotMyGrid) {
+			trace("ModelVer2", "_checkValidTransfer", 'people(${people.id})無法進入非自己的城池');
+			return false;
+		}
 		if (originPeople.position.gridId != null && originPeople.position.gridId != gridId) {
 			trace("ModelVer2", "_checkValidTransfer", 'people(${people.id})已經被派駐在grid(${originPeople.position.gridId})');
 			return false;

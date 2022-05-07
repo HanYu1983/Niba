@@ -207,7 +207,8 @@ enum Event {
 		grids:Array<{
 			gridBefore:model.GridGenerator.Grid,
 			gridAfter:model.GridGenerator.Grid,
-		}>
+		}>,
+		describtion:String
 	});
 	GRID_BORN_EVENT(value:{
 		grid:model.GridGenerator.Grid

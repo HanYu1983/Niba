@@ -210,7 +210,50 @@ function doPlayerEnd(ctx:Context) {
 										gridBefore: gridsBefore[i],
 										gridAfter: gridsAfter[i]
 									}
-							]
+							],
+							describtion: "大豐收"
+						}));
+					}
+				}
+				if (true) {
+					final gridsWillGrow = ctx.grids.filter(g -> getGridBuildType(ctx, g.id) != EMPTY
+						&& Math.random() < EVENT_GROW_FOOD_RATE);
+					if (gridsWillGrow.length > 0) {
+						final gridsBefore = gridsWillGrow.map(g -> getGridInfo(ctx, g));
+						for (grid in gridsWillGrow) {
+							grid.money = Math.min(GRID_RESOURCE_MAX, grid.money + EVENT_GROW_FOOD_AMOUNT);
+						}
+						final gridsAfter = gridsWillGrow.map(g -> getGridInfo(ctx, g));
+						ctx.events.push(GRID_RESOURCE_EVENT({
+							grids: [
+								for (i in 0...gridsWillGrow.length)
+									{
+										gridBefore: gridsBefore[i],
+										gridAfter: gridsAfter[i]
+									}
+							],
+							describtion: "大發利市"
+						}));
+					}
+				}
+				if (true) {
+					final gridsWillGrow = ctx.grids.filter(g -> getGridBuildType(ctx, g.id) != EMPTY
+						&& Math.random() < EVENT_GROW_FOOD_RATE);
+					if (gridsWillGrow.length > 0) {
+						final gridsBefore = gridsWillGrow.map(g -> getGridInfo(ctx, g));
+						for (grid in gridsWillGrow) {
+							grid.army = Math.min(GRID_RESOURCE_MAX, grid.army + EVENT_GROW_FOOD_AMOUNT);
+						}
+						final gridsAfter = gridsWillGrow.map(g -> getGridInfo(ctx, g));
+						ctx.events.push(GRID_RESOURCE_EVENT({
+							grids: [
+								for (i in 0...gridsWillGrow.length)
+									{
+										gridBefore: gridsBefore[i],
+										gridAfter: gridsAfter[i]
+									}
+							],
+							describtion: "接收民兵"
 						}));
 					}
 				}
