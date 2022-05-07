@@ -53,8 +53,8 @@ class DebugModel implements IModel {
 					ActionInfoID.END,
 				],
 				treasures:[
-					TreasureGenerator.getInst().generator(),
-					TreasureGenerator.getInst().generator(),
+					// TreasureGenerator.getInst().generator(),
+					// TreasureGenerator.getInst().generator(),
 				]
 			}
 		}

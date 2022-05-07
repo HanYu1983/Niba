@@ -170,7 +170,7 @@ class PeopleGenerator {
 			exp: 0,
 			sleep: false,
 			treasures:[
-				TreasureGenerator.getInst().generator()
+				// TreasureGenerator.getInst().generator()
 			]
 		};
 	}
