@@ -37,5 +37,11 @@
     <script src="./spec.js"></script>
     <script src="./NativeModule.wisp" type="application/wisp"></script>
     <script src="Main.js"></script>
+    <script>
+      // ts環境的context, 用放存放module
+      var exports = {};
+    </script>
+    <script src="ts/spec.js"></script>
+    <script src="ts/app.js"></script>
   </body>
 </html>
