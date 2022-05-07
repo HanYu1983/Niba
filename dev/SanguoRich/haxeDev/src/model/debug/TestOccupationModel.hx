@@ -40,7 +40,10 @@ class TestOccupationModel extends DebugModel {
 			{
 				id:FIND_TREASURE_RESULT,
 				value:{
-					treasure:TreasureGenerator.getInst().generator().catelog
+					treasures:[
+						TreasureGenerator.getInst().generator().catelog,
+						TreasureGenerator.getInst().generator().catelog,
+					]
 				}
 			}
 		];

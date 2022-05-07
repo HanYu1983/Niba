@@ -40,6 +40,7 @@ class PeopleListView extends TableView{
             info.typeView = PeopleGenerator.getInst().getPeopleTypeName(p.type);
             info.expView = Main.getFixNumber(p.exp, 0);
             info.nameView = p.name;
+            info.treasureCount = p.treasures.length;
             if(p.sleep) info.nameView += '(休)';
 
             clones.push(info);

@@ -14,6 +14,7 @@
         <column id="ability2" text="能二" width="60" sortable="true" style="text-align:center;font-size:12;"/>
         <column id="ability3" text="能三" width="60" sortable="true" style="text-align:center;font-size:12;"/>
         <column id="typeView" text="職務" width="70" sortable="true" style="text-align:center;font-size:12;"/>
+        <column id="treasureCount" text="寶" width="40" sortable="true" style="text-align:center;font-size:12;"/>
         <column id="expView" text="功" width="40" sortable="true" style="text-align:center;font-size:12;"/>
     </header>
 

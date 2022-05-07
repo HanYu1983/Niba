@@ -20,6 +20,8 @@ typedef TreasureInfo = {
     catelog:TreasureCatelog,
 }
 
+// 名稱可以從這個網址找
+// https://docs.google.com/document/d/1hHM_D2n08EBJGj0jUMyYLrQLS0VdJz3PR3n8nkDCjhY/edit#
 final treasureList:Array<TreasureCatelog> = [
     {
         id:0,

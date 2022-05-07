@@ -43,5 +43,6 @@ class LeaderGridView extends BasicGridView{
         pro_army.value = '${Math.floor(p.army)} (消耗:${Main.getFixNumber(p.armyGrow)})';
         pro_peopleCount.value = p.people.length;
         pro_cityCount.value = p.grids.length;
+        pro_treasureCount.value = p.treasures.length;
     }
 }

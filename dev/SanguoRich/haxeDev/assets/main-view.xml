@@ -36,6 +36,7 @@
                                 <column id="army" text="兵" width="100" />
                                 <column id="cityCount" text="城" width="30" />
                                 <column id="peopleCount" text="將" width="30" />
+                                <column id="treasureCount" text="寶" width="30" />
                             </header>
                             <data>
                             </data>

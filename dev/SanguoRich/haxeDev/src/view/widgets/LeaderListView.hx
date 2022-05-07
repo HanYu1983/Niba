@@ -27,6 +27,7 @@ class LeaderListView extends TableView {
 			clone.army = '${Math.floor(p.army)} (消耗:${Main.getFixNumber(p.armyGrow)})';
 			clone.peopleCount = p.people.length;
 			clone.cityCount = p.grids.length;
+			clone.treasureCount = p.treasures.length;
 			clones.push(clone);
 		}
 		dataSource.data = clones;

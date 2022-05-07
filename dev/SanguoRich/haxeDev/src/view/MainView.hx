@@ -524,6 +524,12 @@ class MainView extends Box {
 		}));
 
 		TweenX.serial(tweens);
+
+		trace('多了找到寶物事件。找到寶物事件一率在事件列表的最後一個');
+		trace('探索時。先檢查有沒有找到寶物，有的話。就找不到人。人和寶物只能有一個');
+		trace('搶奪時。搶完先給搶奪事件、再給升級事件、最後才給找到寶物事件');
+		trace('攻城時找到寶物機率會大減');
+		trace('不管攻城或者探索，一次都最多只能找到一個寶物。被打掉的格子。除了被玩家拿到的以外，都會消失');
 	}
 
 	function syncViewByInfo(gameInfo:GameInfo) {
@@ -576,8 +582,11 @@ class MainView extends Box {
 				case WALK_STOP:
 				case FIND_TREASURE_RESULT:
 					final info:Dynamic = event.value;
-					final treasure:TreasureCatelog = info.treasure;
-					final title = '發現寶物 ${treasure.name}';
+					final treasures:Array<TreasureCatelog> = info.treasures;
+					var title = '發現寶物 ';
+					for(t in treasures){
+						title += '${t.name} ';
+					}
 					var msg = '${title}\n';
 					msg += '是否直接賜予武將?';
 					Dialogs.messageBox(msg, title, MessageBoxType.TYPE_QUESTION, true, (b)->{
@@ -918,6 +927,7 @@ class MainView extends Box {
 			info.army ='${Main.getFixNumber(p.army,0)} (${Main.getFixNumber(p.armyGrow)})';
 			info.peopleCount = p.people.length;
 			info.cityCount = p.grids.length;
+			info.treasureCount = p.treasures.length;
 			tab_allPlayers.dataSource.add(info);
 		}
 		lbl_gameInfo.value = '第${gameInfo.currentTurn+1}回合，${gameInfo.currentPlayer.name}正在行動';
