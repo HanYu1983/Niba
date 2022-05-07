@@ -20,7 +20,7 @@ class ExploreSuccessView extends PopupView{
         fadeIn();
         
         lbl_content.text = '
-        ${info.success ? '探索任務成功' : '探索任務失敗'}\n
+        ${info.success ? '找到人才' : '沒有合適的人才'}\n
         武將:${info.people.name}\n
         體力:${Main.getFixNumber(info.energyBefore,0)} => ${Main.getFixNumber(info.energyAfter,0)}\n
         金錢:${Main.getFixNumber(info.moneyBefore,0)} => ${Main.getFixNumber(info.moneyAfter,0)}\n

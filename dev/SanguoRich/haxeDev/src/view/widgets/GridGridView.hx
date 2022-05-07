@@ -74,5 +74,7 @@ class GridGridView extends BasicGridView{
             }
         }
         pro_strategy.value = strategyString;
+
+        pro_treasureCount.value = grid.treasures.length;
     }
 }

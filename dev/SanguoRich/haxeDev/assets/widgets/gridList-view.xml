@@ -7,12 +7,25 @@
         <column id="building" text="建築物" width="130" sortable="true" style="text-align:center;font-size:12;"/>
         <column id="favor" text="友好" width="60" sortable="true" style="text-align:center;font-size:12;"/>
         <column id="player" text="所有" width="60" sortable="true" style="text-align:center;font-size:12;"/>
-        <column id="peopleCount" text="武將" width="60" sortable="true" style="text-align:center;font-size:12;"/>
+        <column id="peopleCount" text="將" width="40" sortable="true" style="text-align:center;font-size:12;"/>
+        <column id="treasureCount" text="寶" width="40" sortable="true" style="text-align:center;font-size:12;"/>
         <column id="strategy" text="計策" width="100" sortable="true" style="text-align:center;font-size:12;"/>
     </header>
 
     <item-renderer verticalAlign="center">
         <label id="name" textAlign="center" width="100%" />
+    </item-renderer>
+    <item-renderer verticalAlign="center">
+        <label id="building" textAlign="center" width="100%" />
+    </item-renderer>
+    <item-renderer verticalAlign="center">
+        <label id="money" textAlign="center" width="100%" />
+    </item-renderer>
+    <item-renderer verticalAlign="center">
+        <label id="food" textAlign="center" width="100%" />
+    </item-renderer>
+    <item-renderer verticalAlign="center">
+        <label id="army" textAlign="center" width="100%" />
     </item-renderer>
 
     <data>

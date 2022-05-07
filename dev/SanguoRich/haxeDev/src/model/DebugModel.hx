@@ -1,5 +1,6 @@
 package model;
 
+import model.TreasureGenerator.TreasureCatelog;
 import model.GridGenerator.GROWTYPE;
 import model.GridGenerator.BUILDING;
 import model.IModel;
@@ -41,13 +42,19 @@ class DebugModel implements IModel {
 				commands:[
 					ActionInfoID.MOVE,
 					ActionInfoID.STRATEGY,
-					ActionInfoID.BUILD,
-					ActionInfoID.FIRE,
-					ActionInfoID.PK,
-					ActionInfoID.CAMP,
-					ActionInfoID.PAY_FOR_FUN,
-					ActionInfoID.PRACTICE,
+					ActionInfoID.SNATCH,
+					// ActionInfoID.EXPLORE,
+					// ActionInfoID.BUILD,
+					// ActionInfoID.FIRE,
+					// ActionInfoID.PK,
+					// ActionInfoID.CAMP,
+					// ActionInfoID.PAY_FOR_FUN,
+					// ActionInfoID.PRACTICE,
 					ActionInfoID.END,
+				],
+				treasures:[
+					TreasureGenerator.getInst().generator(),
+					TreasureGenerator.getInst().generator(),
 				]
 			}
 		}
@@ -249,7 +256,17 @@ class DebugModel implements IModel {
 		return null;
 	}
 
-	public function takeExplore(playerId:Int, gridInt:Int, p1PeopleId:Int, cb:(gameInfo:GameInfo) -> Void) {}
+	public function takeExplore(playerId:Int, gridInt:Int, p1PeopleId:Int, cb:(gameInfo:GameInfo) -> Void) {
+		info.events = [
+			{
+				id:EventInfoID.FIND_TREASURE_RESULT,
+				value:{
+					treasure:TreasureGenerator.getInst().generator().catelog
+				}
+			}
+		];
+		cb(info);
+	}
 
 	public function getTakeResourcePreview(playerId:Int, gridId:Int, market:MARKET, type:RESOURCE):ResourcePreview {
 		return null;
@@ -328,7 +345,8 @@ class DebugModel implements IModel {
 				}
 			],
 			money: 2,
-			food: 1
+			food: 1,
+			rateForTreasure: .5,
 		}
 	}
 
@@ -466,5 +484,27 @@ class DebugModel implements IModel {
 			}
 		];
 		syncViewByInfo(info);
+	}
+
+	public function getUnEquipResult(p1:People, unequipId:Int):{peopleBefore:People, peopleAfter:People} {
+		return {
+			peopleAfter: PeopleGenerator.getInst().generate(),
+			peopleBefore: PeopleGenerator.getInst().generate(),
+		};
+	}
+
+	public function getEquipResult(p1:People, equipId:Int):{peopleBefore:People, peopleAfter:People} {
+		return {
+			peopleAfter: PeopleGenerator.getInst().generate(),
+			peopleBefore: PeopleGenerator.getInst().generate(),
+		};
+	}
+
+	public function takeEquip(p1:People, equipId:Int, cb:(gameInfo:GameInfo) -> Void) {
+		cb(info);
+	}
+
+	public function takeUnEquip(p1:People, unequipId:Int, cb:(gameInfo:GameInfo) -> Void) {
+		cb(info);
 	}
 }

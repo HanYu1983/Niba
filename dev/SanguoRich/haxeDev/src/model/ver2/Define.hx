@@ -242,7 +242,8 @@ function getPeopleInfo(ctx:Context, people:People):model.PeopleGenerator.People 
 		energy: Std.int(people.energy),
 		gridId: people.position.gridId,
 		exp: people.exp,
-		sleep: false
+		sleep: false,
+		treasures:[]
 	}
 }
 
@@ -264,7 +265,8 @@ function getPlayerInfo(ctx:Context, player:Player):model.IModel.PlayerInfo {
 		maintainArmy: 0.0,
 		armyGrow: 0.0,
 		grids: ctx.grids.filter(g -> getGridBelongPlayerId(ctx, g.id) == player.id).map(g -> getGridInfo(ctx, g)),
-		commands: getPlayerCommand(ctx, player.id)
+		commands: getPlayerCommand(ctx, player.id),
+		treasures: []
 	}
 }
 
@@ -348,7 +350,8 @@ function getGridInfo(ctx:Context, grid:Grid):model.GridGenerator.Grid {
 			for (i in 0...4)
 				// 3代表緩兵計
 				ctx.groundItems.filter(item -> item.belongToPlayerId == i && item.position == grid.id).map(item -> 3)
-		]
+		],
+		treasures: []
 	}
 }
 

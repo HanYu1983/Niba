@@ -39,6 +39,8 @@
             <label id="lbl_warTypeName" text="野戰" style="font-size:24"/>
             <label text="預計獲得:" style="font-size:24"/>
             <label id="lbl_willSnacth" text="10%" style="font-size:24" />
+            <label text="獲得寶物幾率:" style="font-size:24"/>
+            <label id="lbl_rateForTreasure" text="10%" style="font-size:24" />
         </hbox>
     </hbox>
     <hbox horizontalAlign="center">

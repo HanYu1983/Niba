@@ -10,7 +10,8 @@
                 <property id="pro_energy" label="體力" value="100" />
                 <property id="pro_charm" label="魅力" value="1000" />
                 <property id="pro_ability" label="專長加成" value="" />
-                <property id="pro_successRate" label="成功率" value="50%" />
+                <property id="pro_successRate" label="人材成功率" value="50%" />
+                <property id="pro_successRate2" label="寶物成功率" value="50%" />
             </property-group>
         </property-grid>
     </hbox>

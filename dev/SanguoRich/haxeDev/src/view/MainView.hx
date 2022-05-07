@@ -1,5 +1,7 @@
 package view;
 
+import model.TreasureGenerator.TreasureCatelog;
+import view.popup.TreasurePreviewView;
 import view.widgets.PeopleListView;
 import view.popup.PkPreviewView;
 import view.popup.CostForBonusView;
@@ -46,6 +48,7 @@ class MainView extends Box {
 	var gridView:GridGridView;
 	var peopleListView:PeopleListView;
 	var strategyPreviewView:StrategyPreviewView;
+	var treasurePreviewView:TreasurePreviewView;
 	var gridPeopleListView:PeopleListView;
 	var warPreviewView:WarPreviewView;
 	var snatchPreviewView:SnatchPreviewView;
@@ -147,6 +150,10 @@ class MainView extends Box {
 		strategyPreviewView = new StrategyPreviewView();
 		strategyPreviewView.hide();
 		box_popup.addComponent(strategyPreviewView);
+
+		treasurePreviewView = new TreasurePreviewView();
+		treasurePreviewView.hide();
+		box_popup.addComponent(treasurePreviewView);
 
 		costForBonusView = new CostForBonusView();
 		costForBonusView.hide();
@@ -482,6 +489,11 @@ class MainView extends Box {
 		Main.model.playerEnd(syncView);
 	}
 
+	@:bind(btn_showTreasure, MouseEvent.CLICK)
+	function onBtnShowTreasureClick(e:MouseEvent) {
+		treasurePreviewView.showPopup(null);
+	}
+
 	@:bind(btn_showStrategy, MouseEvent.CLICK)
 	function onBtnShowStrategyClick(e:MouseEvent) {
 		final gameInfo = Main.model.gameInfo();
@@ -497,7 +509,7 @@ class MainView extends Box {
 		return offsetPlayerPos(pid, grid.left, grid.top);
 	}
 
-	function syncView() {
+	public function syncView() {
 		var gameInfo = Main.model.gameInfo();
 
 		// ui可以直接更新
@@ -562,6 +574,17 @@ class MainView extends Box {
 			var event = events.shift();
 			switch (event.id) {
 				case WALK_STOP:
+				case FIND_TREASURE_RESULT:
+					final info:Dynamic = event.value;
+					final treasure:TreasureCatelog = info.treasure;
+					final title = '發現寶物 ${treasure.name}';
+					var msg = '${title}\n';
+					msg += '是否直接賜予武將?';
+					Dialogs.messageBox(msg, title, MessageBoxType.TYPE_QUESTION, true, (b)->{
+						if(b == DialogButton.YES){
+							onBtnShowTreasureClick(null);
+						}
+					});
 				case GRID_BORN_EVENT:
 					final info:Dynamic = event.value;
 					final grid:Grid = info.grid;
@@ -773,6 +796,7 @@ class MainView extends Box {
 
 	function disabledAllCommands() {
 		btn_go.hide();
+		btn_showTreasure.hide();
 		btn_showStrategy.hide();
 		btn_firePeople.hide();
 		btn_negotiate.hide();
@@ -810,6 +834,8 @@ class MainView extends Box {
 			switch(cmd){
 				case MOVE:
 					btn_go.show();
+				case TREASURE:
+					btn_showTreasure.show();
 				case STRATEGY:
 					btn_showStrategy.show();
 				case FIRE:

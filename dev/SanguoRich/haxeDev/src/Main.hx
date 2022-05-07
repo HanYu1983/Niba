@@ -1,5 +1,7 @@
 package;
 
+import model.debug.TestOccupationModel;
+import model.debug.TestExploreModel;
 import model.GridGenerator.BUILDING;
 import model.PeopleGenerator;
 import js.Syntax;
@@ -25,7 +27,7 @@ class Main {
 			runTest();
 		}
 
-		// model = new DebugModel();
+		// model = new TestOccupationModel();
 		model = new CacheModel(new ModelVer2());
 
 		var app = new HaxeUIApp();
@@ -53,6 +55,14 @@ class Main {
 			if (p.abilities.indexOf(ability) > -1) {
 				abiString += PeopleGenerator.getInst().getAbilityName(ability) + ' ';
 			}
+		}
+		return abiString;
+	}
+
+	public static function abilitiesToString(abilitys:Array<Int>) {
+		var abiString = '';
+		for(ability in abilitys){
+			abiString += PeopleGenerator.getInst().getAbilityName(ability) + ' ';
 		}
 		return abiString;
 	}

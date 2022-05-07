@@ -31,6 +31,7 @@ class ExplorePreviewView extends PopupView {
 
 			pro_energy.value = Main.getEnergyString(result.energyBefore, result.energyAfter, ENERGY_COST_ON_EXPLORE);
 			pro_successRate.value = Main.getRateString(result.successRate);
+			pro_successRate2.value = Main.getRateString(result.successRateOnTreasure);
 		}
 
 		function setOnePeople() {

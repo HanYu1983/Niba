@@ -1,5 +1,6 @@
 package model;
 
+import model.TreasureGenerator.TreasureInfo;
 import model.GridGenerator.BUILDING;
 import model.GridGenerator.Grid;
 import model.PeopleGenerator.People;
@@ -17,14 +18,14 @@ typedef PlayerInfo = {
 	maintainPeople:Float,
 	maintainArmy:Float,
 	armyGrow:Float,
-	commands:Array<ActionInfoID>
-	// enabledCast:Bool,
-	// enabledEnd:Bool
+	commands:Array<ActionInfoID>,
+	treasures:Array<TreasureInfo>
 }
 
 enum ActionInfoID {
 	MOVE;
 	STRATEGY;
+	TREASURE;
 	FIRE;
 
 	NEGOTIATE;
@@ -56,6 +57,7 @@ enum EventInfoID {
 	WALK_STOP;
 	NEGOTIATE_RESULT;
 	EXPLORE_RESULT;
+	FIND_TREASURE_RESULT;
 	HIRE_RESULT;
 	FIRE_RESULT;
 	WAR_RESULT;
@@ -158,6 +160,7 @@ typedef PreResultOnSnatch = {
 	war:Array<PreResultOnWar>,
 	money:Float,
 	food:Float,
+	rateForTreasure:Float,
 }
 
 typedef PreResultOnHire = {
@@ -179,7 +182,8 @@ typedef ExplorePreview = {
 typedef PreResultOnExplore = {
 	energyBefore:Int,
 	energyAfter:Int,
-	successRate:Float
+	successRate:Float,
+	successRateOnTreasure:Float
 }
 
 typedef ResourcePreview = {
@@ -291,6 +295,14 @@ interface IModel {
 		successRate:Float
 	};
 	function takePk(playerId:Int, gridId:Int, p1PeopleId:Int, p2PeopleId:Int, syncViewByInfo:(gameInfo:GameInfo) -> Void):Void;
+
+	function getUnEquipResult(p1:People, unequipId:Int):{peopleBefore:People, peopleAfter:People};
+
+	function getEquipResult(p1:People, equipId:Int):{peopleBefore:People, peopleAfter:People};
+
+	function takeEquip(p1:People, equipId:Int, cb:(gameInfo:GameInfo) -> Void):Void;
+
+	function takeUnEquip(p1:People, unequipId:Int, cb:(gameInfo:GameInfo) -> Void):Void;
 }
 
 final StrategyList:Array<StrategyCatelog> = [
@@ -500,3 +512,15 @@ final BuildingList:Array<BuildingCatelog> = [
 		type: WALL(3)
 	}
 ];
+
+
+
+
+
+
+
+
+
+
+
+

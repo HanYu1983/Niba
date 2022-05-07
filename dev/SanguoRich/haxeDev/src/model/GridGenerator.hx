@@ -2,8 +2,8 @@ package model;
 
 import model.PeopleGenerator.People;
 import libnoise.QualityMode;
-import haxe.ui.components.Rule;
 import libnoise.generator.Perlin;
+import model.TreasureGenerator;
 
 typedef Grid = {
 	id:Int,
@@ -22,7 +22,8 @@ typedef Grid = {
 	armyGrow:Float,
 	people:Array<People>,
 	favor:Array<Int>,
-	strategys:Array<Array<Int>>
+	strategys:Array<Array<Int>>,
+	treasures:Array<TreasureInfo>
 }
 
 enum GROWTYPE {
@@ -69,6 +70,7 @@ class GridGenerator {
 			people: [],
 			favor: [0, 0, 0, 0],
 			strategys: [[], [], [], []],
+			treasures: []
 		};
 	}
 
@@ -97,6 +99,8 @@ class GridGenerator {
 				GROWTYPE.VILLAGE, GROWTYPE.CITY
 			][Math.floor(Math.random() * 10)];
 
+			
+
 			switch (g.buildtype) {
 				case EMPTY:
 				case MARKET:
@@ -115,6 +119,8 @@ class GridGenerator {
 					];
 			}
 
+			for(i in 0...4) if(Math.random() < .3) g.treasures.push(TreasureGenerator.getInst().generator());
+			
 			final basicArmy = getRandomRange(100, 40);
 
 			g.moneyGrow = Math.random() * .01;

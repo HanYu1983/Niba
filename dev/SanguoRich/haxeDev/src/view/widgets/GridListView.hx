@@ -78,6 +78,7 @@ class GridListView extends TableView {
 				}
 			}
 			clone.strategy = strategyString;
+			clone.treasureCount = grid.treasures.length;
 			clones.push(clone);
 		}
 		dataSource.data = clones;

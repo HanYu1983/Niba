@@ -1,5 +1,7 @@
 package model;
 
+import model.TreasureGenerator.TreasureInfo;
+
 enum PeopleType {
 	WENGUAN(level:Int);
 	WUJIANG(level:Int);
@@ -22,6 +24,7 @@ typedef People = {
 	gridId:Int,
 	exp:Float,
 	sleep:Bool,
+	treasures:Array<TreasureInfo>
 }
 
 class PeopleGenerator {
@@ -165,7 +168,10 @@ class PeopleGenerator {
 			energy: Math.floor(Math.random() * 15) + 80,
 			gridId: null,
 			exp: 0,
-			sleep: false
+			sleep: false,
+			treasures:[
+				TreasureGenerator.getInst().generator()
+			]
 		};
 	}
 }

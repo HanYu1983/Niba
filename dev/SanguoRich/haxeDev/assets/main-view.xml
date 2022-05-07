@@ -45,20 +45,21 @@
                 <hbox width="100%">
                     <vbox width="100%">
                         <hbox width="100%">
-                            <hbox id="box_playerView" width="300" />
+                            <hbox id="box_playerView" width="260" />
                             <hbox id="box_playerPeopleList" width="100%" height="100%" />
                         </hbox>
                         <hbox width="100%">
-                            <hbox id="box_gridView" width="300" />
+                            <hbox id="box_gridView" width="260" />
                             <hbox id="box_gridPeopleList" width="100%" height="100%" />
                         </hbox>
                     </vbox>
                     <vbox width="120" height="100%">
                         <button text="游戲開始" width="100%" id="btn_start" />
 
-                        <section-header text="基本" />
+                        <section-header text="君主" />
                         <button text="移動" width="100%" id="btn_go" />
                         <button text="計略" width="100%" id="btn_showStrategy" />
+                        <button text="寶物" width="100%" id="btn_showTreasure" />
                         <button text="解雇" width="100%" id="btn_firePeople" />
                         <button text="結束" width="100%" id="btn_end" />
 

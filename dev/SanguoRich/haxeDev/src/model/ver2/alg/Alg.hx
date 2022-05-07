@@ -340,7 +340,8 @@ function initContext(ctx:Context, option:{}) {
 			armyGrow: 0.01,
 			atGridId: 0,
 			grids: [],
-			commands: []
+			commands: [],
+			treasures: []
 		});
 	}
 }

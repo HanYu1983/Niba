@@ -183,6 +183,7 @@ function _getPreResultOfSnatch(ctx:Context, playerId:Int, gridId:Int, p1PeopleId
 			war: _getPreResultOfWar(ctx, playerId, gridId, p1PeopleId, p2PeopleId, army1, army2, {occupy: true}),
 			money: 0.0,
 			food: 0.0,
+			rateForTreasure:.5
 		}
 		// js.Browser.console.log(preResultOnSnatch);
 		return preResultOnSnatch;
@@ -194,6 +195,7 @@ function _getPreResultOfSnatch(ctx:Context, playerId:Int, gridId:Int, p1PeopleId
 			war: _getPreResultOfWar(ctx, playerId, gridId, p1PeopleId, p2PeopleId, army1, army2, {occupy: false}),
 			money: cost.money,
 			food: cost.food,
+			rateForTreasure:.5
 		}
 		// js.Browser.console.log(preResultOnSnatch);
 		return preResultOnSnatch;

@@ -163,4 +163,16 @@ class ProxyModel implements IModel {
 	public function takePk(playerId:Int, gridId:Int, p1PeopleId:Int, p2PeopleId:Int, syncViewByInfo:(gameInfo:GameInfo) -> Void) {
 		return model.takePk(playerId, gridId, p1PeopleId, p2PeopleId, syncViewByInfo);
 	}
+
+	public function getUnEquipResult(p1:People, unequipId:Int):{peopleBefore:People, peopleAfter:People} {
+		throw new haxe.exceptions.NotImplementedException();
+	}
+	
+	public function getEquipResult(p1:People, equipId:Int):{peopleBefore:People, peopleAfter:People} {
+		throw new haxe.exceptions.NotImplementedException();
+	}
+
+	public function takeEquip(p1:People, equipId:Int, cb:(gameInfo:GameInfo) -> Void) {}
+
+	public function takeUnEquip(p1:People, unequipId:Int, cb:(gameInfo:GameInfo) -> Void) {}
 }

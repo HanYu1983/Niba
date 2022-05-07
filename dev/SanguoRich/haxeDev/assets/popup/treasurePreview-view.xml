@@ -1,0 +1,24 @@
+<vbox width="70%" padding="20" verticalAlign="center" horizontalAlign="center" style="background-color: white;border:1px solid grey;">
+    <hbox id="box_peopleList" width="100%" height="150"></hbox>
+    <hbox id="box_treasureInPeople" width="100%" height="150"></hbox>
+    <button text="沒收" id="btn_unequip" horizontalAlign="center" />
+    <hbox id="box_treasureInStore" width="100%" height="150"></hbox>
+    <button text="賜予" id="btn_equip" horizontalAlign="center" />
+    <hbox horizontalAlign="center">
+        <property-grid width="400">
+            <property-group text="武將">
+                <property id="pro_name" label="武將" value="100" />
+                <property id="pro_energy" label="體力" value="100" />
+                <property id="pro_force" label="武力" value="1000" />
+                <property id="pro_command" label="統率" value="1000" />
+                <property id="pro_intelligence" label="智力" value="1000" />
+                <property id="pro_political" label="政治" value="1000" />
+                <property id="pro_charm" label="魅力" value="1000" />
+                <property id="pro_abilities" label="能力" value="1000" />
+            </property-group>
+        </property-grid>
+    </hbox>
+    <hbox horizontalAlign="center">
+        <button text="離開" id="btn_confirm" />
+    </hbox>
+</vbox>

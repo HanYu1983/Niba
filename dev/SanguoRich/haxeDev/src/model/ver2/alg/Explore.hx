@@ -106,7 +106,8 @@ function _getPreResultOfExplore(ctx:Context, playerId:Int, gridId:Int, peopleId:
 	return {
 		energyBefore: Std.int(p1.energy),
 		energyAfter: Std.int(p1.energy - cost.peopleCost.energy),
-		successRate: cost.successRate
+		successRate: cost.successRate,
+		successRateOnTreasure: .4,
 	}
 }
 

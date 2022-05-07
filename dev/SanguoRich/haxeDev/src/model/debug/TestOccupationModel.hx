@@ -1,5 +1,6 @@
 package model.debug;
 
+import model.IModel.PreResultOnSnatch;
 import model.IModel.PlayerInfo;
 import model.GridGenerator.Grid;
 import model.IModel.EventInfoID;
@@ -9,6 +10,43 @@ import model.IModel.PreResultOnWar;
 import model.IModel.WarPreview;
 
 class TestOccupationModel extends DebugModel {
+
+	override function getPreResultOfSnatch(playerId:Int, gridId:Int, p1:People, p2:People, isOccupation:Bool):PreResultOnSnatch {
+		return {
+			war:getPreResultOfWar(playerId, gridId, p1, p2, 100,100),
+			money:10,
+			food:10,
+			rateForTreasure:.4,
+		}
+	}
+
+	override function takeSnatchOn(playerId:Int, gridId:Int, p1PeopleId:Int, p2PeopleId:Int, isOccupation:Bool, cb:(gameInfo:GameInfo) -> Void) {
+		info.events = [
+			{
+				id:SNATCH_RESULT,
+				value:{
+					success: true,
+					people: PeopleGenerator.getInst().generate(),
+					energyBefore: 100,
+					energyAfter: 50,
+					armyBefore: 200,
+					armyAfter: 300,
+					moneyBefore: 200,
+					moneyAfter: 300,
+					foodBefore: 100,
+					foodAfter: 200
+				}
+			},
+			{
+				id:FIND_TREASURE_RESULT,
+				value:{
+					treasure:TreasureGenerator.getInst().generator().catelog
+				}
+			}
+		];
+		cb(info);
+	}
+
 	override function getPreResultOfWar(playerId:Int, gridId:Int, p1:People, p2:People, army1:Float, army2:Float):Array<PreResultOnWar> {
 		return [
 			{

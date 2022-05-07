@@ -1,5 +1,6 @@
 package model.debug;
 
+import model.GridGenerator.GROWTYPE;
 import model.IModel.PreResultOnExplore;
 import model.IModel.ExplorePreview;
 import model.IModel.PreResultOnHire;
@@ -33,7 +34,7 @@ class TestExploreModel extends DebugModel {
 
 		var g = GridGenerator.getInst().getGrid();
 		g.belongPlayerId = null;
-		g.buildtype = BUILDING.EMPTY;
+		g.buildtype = GROWTYPE.EMPTY;
 		info.events = [
 			{
 				id: EventInfoID.WALK_STOP,
@@ -49,20 +50,26 @@ class TestExploreModel extends DebugModel {
 	override function takeExplore(playerId:Int, gridInt:Int, p1PeopleId:Int, cb:(gameInfo:GameInfo) -> Void) {
 		var info = gameInfo();
 		info.events = [
+			// {
+			// 	id: EventInfoID.EXPLORE_RESULT,
+			// 	value: {
+			// 		success: true,
+			// 		people: PeopleGenerator.getInst().generate(),
+			// 		peopleList: [PeopleGenerator.getInst().generate()],
+			// 		energyBefore: 100,
+			// 		energyAfter: 50,
+			// 		armyBefore: 200,
+			// 		armyAfter: 300,
+			// 		moneyBefore: 200,
+			// 		moneyAfter: 300,
+			// 		foodBefore: 100,
+			// 		foodAfter: 200
+			// 	}
+			// },
 			{
-				id: EventInfoID.EXPLORE_RESULT,
-				value: {
-					success: true,
-					people: PeopleGenerator.getInst().generate(),
-					peopleList: [PeopleGenerator.getInst().generate()],
-					energyBefore: 100,
-					energyAfter: 50,
-					armyBefore: 200,
-					armyAfter: 300,
-					moneyBefore: 200,
-					moneyAfter: 300,
-					foodBefore: 100,
-					foodAfter: 200
+				id:EventInfoID.FIND_TREASURE_RESULT,
+				value:{
+					treasure:TreasureGenerator.getInst().generator().catelog
 				}
 			}
 		];
@@ -79,7 +86,8 @@ class TestExploreModel extends DebugModel {
 		return {
 			energyAfter: 20,
 			energyBefore: 20,
-			successRate: .5
+			successRate: .5,
+			successRateOnTreasure: .4
 		}
 	}
 
