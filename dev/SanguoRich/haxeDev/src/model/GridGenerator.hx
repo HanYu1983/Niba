@@ -121,11 +121,11 @@ class GridGenerator {
 				if (Math.random() < .3)
 					g.treasures.push(TreasureGenerator.getInst().generator());
 
-			final basicArmy = getRandomRange(100, 40);
+			final basicArmy = getRandomRange(100, 70);
 
-			g.moneyGrow = Math.random() * .01 + 0.01;
-			g.foodGrow = Math.random() * .01 + 0.01;
-			g.armyGrow = Math.random() * .01 + 0.01;
+			g.moneyGrow = Math.random() * .01 + 0.005;
+			g.foodGrow = Math.random() * .01 + 0.005;
+			g.armyGrow = Math.random() * .01 + 0.005;
 			g.army = basicArmy;
 
 			switch (g.buildtype) {
@@ -140,18 +140,18 @@ class GridGenerator {
 				case MARKET:
 					g.money = getRandomRange(120, 80);
 					g.food = getRandomRange(60, 50);
-					g.moneyGrow += .02;
+					g.moneyGrow += .015;
 					g.people.push(PeopleGenerator.getInst().generate());
 				case FARM:
 					g.money = getRandomRange(60, 50);
 					g.food = getRandomRange(120, 80);
-					g.foodGrow += .02;
+					g.foodGrow += .015;
 					g.people.push(PeopleGenerator.getInst().generate());
 				case VILLAGE:
 					g.money = getRandomRange(60, 50);
 					g.food = getRandomRange(60, 50);
 					g.army *= 1.5;
-					g.armyGrow += .02;
+					g.armyGrow += .015;
 					g.people.push(PeopleGenerator.getInst().generate());
 				case CITY:
 					g.money = getRandomRange(180, 80);
@@ -164,9 +164,9 @@ class GridGenerator {
 				case _:
 			}
 
-			g.moneyGrow += g.army / 300 * .01;
-			g.foodGrow += g.army / 300 * .01;
-			g.armyGrow += g.army / 300 * .01;
+			g.moneyGrow += g.army / 200 * .01;
+			g.foodGrow += g.army / 200 * .01;
+			g.armyGrow += g.army / 200 * .01;
 
 			g.height = height;
 			grids.push(g);
