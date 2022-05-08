@@ -37,6 +37,7 @@ private function getWarCostImpl(ctx:Context, playerId:Int, gridId:Int, p1PeopleI
 		final atkPeople = getPeopleById(ctx, p1PeopleId);
 		final atkPeopleAbilities = getPeopleAbilities(ctx, atkPeople.id);
 		final defPeople = getPeopleById(ctx, p2PeopleId);
+		final defPeopleAbilities = getPeopleAbilities(ctx, defPeople.id);
 		final currMoney = ctx.players[playerId].money;
 		final currFood = ctx.players[playerId].food;
 		final moneyCost = atkMoneyCost;
@@ -62,9 +63,28 @@ private function getWarCostImpl(ctx:Context, playerId:Int, gridId:Int, p1PeopleI
 		}, 0.0);
 		final factMoney = if (currMoney - moneyCost < 0) (1.0 - (-1 * (currMoney - moneyCost) / moneyCost)) else 1.0;
 		final factFood = if (currFood - foodCost < 0) (1.0 - (-1 * (currFood - foodCost) / foodCost)) else 1.0;
+		final factArmyTypeAtk = if (atkPeopleAbilities.has(0) && defPeopleAbilities.has(2)) {
+			1.5;
+		} else if (atkPeopleAbilities.has(1) && defPeopleAbilities.has(0)) {
+			1.5;
+		} else if (atkPeopleAbilities.has(2) && defPeopleAbilities.has(1)) {
+			1.5;
+		} else {
+			1.0;
+		}
+		final factArmyTypeDef = if (defPeopleAbilities.has(0) && atkPeopleAbilities.has(2)) {
+			1 / 1.5;
+		} else if (defPeopleAbilities.has(1) && atkPeopleAbilities.has(0)) {
+			1 / 1.5;
+		} else if (defPeopleAbilities.has(2) && atkPeopleAbilities.has(1)) {
+			1 / 1.5;
+		} else {
+			1.0;
+		}
 		final base = atkArmy * if (options.occupy) (1 / WAR_DEFFENDER_FACTOR) else 1;
 		final baseDamage = atkArmy * WAR_ARMY_FACTOR;
-		final damage = baseDamage + base * fact0 * fact1 * fact2 * fact3 * fact4 * fact5 * fact6 * fact7 * factMoney * factFood * factWall;
+		final damage = baseDamage
+			+ base * fact0 * fact1 * fact2 * fact3 * fact4 * fact5 * fact6 * fact7 * factMoney * factFood * factWall * factArmyTypeAtk * factArmyTypeDef;
 		atkDamage = damage * WAR_FINAL_DAMAGE_FACTOR;
 		atkEnergyCost = useEnergy * getEnergyFactor(atkArmy);
 	}
