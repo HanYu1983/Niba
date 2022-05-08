@@ -186,6 +186,6 @@ class ProxyModel implements IModel {
 	}
 
 	public function getPeopleById(id:Int):People {
-		return PeopleGenerator.getInst().generate();
+		return model.getPeopleById(id);
 	}
 }

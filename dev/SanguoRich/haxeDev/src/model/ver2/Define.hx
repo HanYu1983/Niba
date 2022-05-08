@@ -257,7 +257,7 @@ function getPeopleInfo(ctx:Context, people:People):model.PeopleGenerator.People 
 		gridId: cast people.position.gridId,
 		exp: people.exp,
 		sleep: false,
-		treasures: ctx.treasures.filter(t -> t.position.peopleId == people.id).map(t -> getTreasureInfo(ctx, t, null))
+		treasures: ctx.treasures.filter(t -> t.position.peopleId == people.id).map(t -> getTreasureInfo(ctx, t))
 	}
 }
 
@@ -280,7 +280,7 @@ function getPlayerInfo(ctx:Context, player:Player):model.IModel.PlayerInfo {
 		armyGrow: 0.0,
 		grids: ctx.grids.filter(g -> getGridBelongPlayerId(ctx, g.id) == player.id).map(g -> getGridInfo(ctx, g)),
 		commands: getPlayerCommand(ctx, player.id),
-		treasures: ctx.treasures.filter(t -> t.belongToPlayerId == player.id).map(t -> getTreasureInfo(ctx, t, null))
+		treasures: ctx.treasures.filter(t -> t.belongToPlayerId == player.id).map(t -> getTreasureInfo(ctx, t))
 	}
 }
 
@@ -365,14 +365,14 @@ function getGridInfo(ctx:Context, grid:Grid):model.GridGenerator.Grid {
 				// 3代表緩兵計
 				ctx.groundItems.filter(item -> item.belongToPlayerId == i && item.position == grid.id).map(item -> 3)
 		],
-		treasures: ctx.treasures.filter(t -> t.position.gridId == grid.id).map(t -> getTreasureInfo(ctx, t, null))
+		treasures: ctx.treasures.filter(t -> t.position.gridId == grid.id).map(t -> getTreasureInfo(ctx, t))
 	}
 }
 
-function getTreasureInfo(ctx:Context, treasure:Treasure, belongToPeopleInfo:Null<model.PeopleGenerator.People>):TreasureInfo {
+function getTreasureInfo(ctx:Context, treasure:Treasure):TreasureInfo {
 	return {
 		id: treasure.id,
-		belongToPeopleId: 0, // 不呼叫getPeopleInfo，避免循環指向
+		belongToPeopleId: cast treasure.position.peopleId,
 		catelog: treasureList[treasure.protoId],
 	}
 }

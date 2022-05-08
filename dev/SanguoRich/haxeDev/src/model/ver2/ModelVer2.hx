@@ -44,6 +44,10 @@ class ModelVer2 extends DebugModel {
 		return info;
 	}
 
+	override function getPeopleById(id:Int):model.PeopleGenerator.People {
+		return Define.getPeopleInfo(context, Define.getPeopleById(context, id));
+	}
+
 	override function playerDice(cb:() -> Void) {
 		doPlayerDice(context);
 		cb();
