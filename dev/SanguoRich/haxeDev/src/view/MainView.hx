@@ -629,9 +629,9 @@ class MainView extends Box {
 				case PK_RESULT:
 					final info:Dynamic = event.value;
 					final title = if(info.success){
-						'單挑獲勝';
+						'成功號召士兵';
 					}else{
-						'單挑失敗';
+						'號召士兵失敗';
 					}
 					var msg = '武將:${info.people.name}\n';
 					msg += '士兵:${Main.getFixNumber(info.armyBefore,0)} => ${Main.getFixNumber(info.armyAfter, 0)} (${Main.getFixNumber(info.armyAfter - info.armyBefore, 0)})';

@@ -38,11 +38,7 @@ class ExplorePreviewView extends PopupView {
 			var p1:People = p1List.selectedItem;
 			pro_name.value = p1.name;
 			pro_charm.value = p1.charm;
-
-			pro_ability.value = '';
-			if (p1.abilities.indexOf(10) > -1) {
-				pro_ability.value = '人脈';
-			}
+			pro_ability.value = Main.getAbilityString(p1, [10, 12]);
 			setRate();
 		}
 

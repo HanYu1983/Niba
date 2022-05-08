@@ -76,7 +76,11 @@ private function getSnatchCost(ctx:Context, playerId:Int, gridId:Int, p1PeopleId
 			} else {
 				if (getTreasureInGrid(ctx, gridId).length > 0) {
 					if (success) {
-						FIND_TREASURE_WHEN_SNATCH_SUCCESS_BASE_RATE;
+						var gainTreasrueBase = gainRate * 2;
+						final atkPeople = getPeopleById(ctx, p1PeopleId);
+						final atkPeopleAbilities = getPeopleAbilities(ctx, atkPeople.id);
+						final fact1 = if (atkPeopleAbilities.has(12)) 2.0 else 1.0;
+						gainTreasrueBase * fact1 * FIND_TREASURE_WHEN_SNATCH_SUCCESS_BASE_RATE;
 					} else {
 						0.0;
 					}
