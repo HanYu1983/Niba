@@ -70,6 +70,7 @@ class TreasurePreviewView extends PopupView {
 	}
 
 	var lastType = 0;
+	var lastPeopleId = 0;
 
 	function refresh(){
 		final gameInfo = Main.model.gameInfo();
@@ -78,6 +79,7 @@ class TreasurePreviewView extends PopupView {
 				return ;
 
 			lastType = type;
+			lastPeopleId = p1List.selectedIndex;
 
 			var p1 = p1List.selectedItem;
 			var result:{peopleBefore:People, peopleAfter:People} = switch(type){
@@ -145,7 +147,7 @@ class TreasurePreviewView extends PopupView {
 			}
 		}
 
-		p1List.selectedIndex = 0;
+		p1List.selectedIndex = lastPeopleId;
 		
 		updateTreasureInPeopleList();
 		treasureInStore.setList(gameInfo.currentPlayer.treasures);
