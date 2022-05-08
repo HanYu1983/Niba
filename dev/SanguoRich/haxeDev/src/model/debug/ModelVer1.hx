@@ -351,7 +351,7 @@ class ModelVer1 extends DebugModel {
 				final base = (useEnergy / 100) + 0.2;
 				final charmFactor = p1.charm / p2.charm;
 				// 人脈加成
-				final abiFactor = p1.abilities.has(10) ? 1.5 : 1;
+				final abiFactor = p1Abilities.has(10) ? 1.5 : 1;
 				final rate = base * charmFactor * abiFactor;
 				return {
 					playerCost: {
@@ -450,7 +450,7 @@ class ModelVer1 extends DebugModel {
 		final base = (useEnergy / 100) + 0.2;
 		final charmFactor = p1.charm / 100;
 		// 人脈加成
-		final abiFactor = p1.abilities.has(10) ? 1.5 : 1;
+		final abiFactor = p1Abilities.has(10) ? 1.5 : 1;
 		final rate = base * charmFactor * abiFactor;
 		return {
 			playerCost: {

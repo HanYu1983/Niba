@@ -11,12 +11,13 @@ using Lambda;
 private function getPkCost(ctx:Context, playerId:Int, gridId:Int, p1PeopleId:Int, p2PeopleId:Int) {
 	final grid = ctx.grids[gridId];
 	final p1 = getPeopleById(ctx, p1PeopleId);
+	final p1Abilities = getPeopleAbilities(ctx, p1.id);
 	final p2 = getPeopleById(ctx, p2PeopleId);
 	final useEnergy = p1.energy / (100 / ENERGY_COST_ON_PK);
 	final base = getBase(useEnergy, ENERGY_COST_ON_PK, 0.0) * BASE_RATE_PK;
 	final fact1 = getPeopleForce(ctx, p1.id) / getPeopleForce(ctx, p2.id);
 	final fact2 = Math.pow(getPeopleIntelligence(ctx, p1.id) / getPeopleIntelligence(ctx, p2.id), 0.5);
-	final fact3 = 1 + p1.abilities.filter(a -> [0, 1, 2, 3].has(a)).length * 0.15;
+	final fact3 = 1 + p1Abilities.filter(a -> [0, 1, 2, 3].has(a)).length * 0.15;
 	final successRate = base * fact1 * fact2 * fact3;
 	final factCharm = Math.min(getPeopleCharm(ctx, p1.id) / getPeopleCharm(ctx, p2.id), 2.0);
 	var gainArmy = Math.min(grid.army, PK_ARMY_BASE_CHANGE * Math.pow(successRate, .7) * factCharm);

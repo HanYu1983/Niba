@@ -12,6 +12,7 @@ using Lambda;
 private function getCostForBonusCost(ctx:Context, playerId:Int, peopleId:Int, costType:Int) {
 	final player = ctx.players[playerId];
 	final people = getPeopleById(ctx, peopleId);
+	final peopleAbilities = getPeopleAbilities(ctx, people.id);
 	final peopleBelongPlayer = ctx.peoples.filter(p -> p.belongToPlayerId == player.id);
 	final useEnergy = people.energy / (100 / ENERGY_COST_ON_COST_FOR_FUN);
 	final base = getBase(useEnergy, ENERGY_COST_ON_COST_FOR_FUN, 0.0) * 1.0;
@@ -29,7 +30,7 @@ private function getCostForBonusCost(ctx:Context, playerId:Int, peopleId:Int, co
 			var recover = base * 0.3;
 			// 使用getPeopleCommand, getPeoplePolitical等取得升級後的數值
 			recover *= 1.0 + (.2 * (getPeopleCommand(ctx, people.id) / 100));
-			recover *= people.abilities.has(6) ? 1.5 : 1.0;
+			recover *= peopleAbilities.has(6) ? 1.5 : 1.0;
 			// 回復縂差距的10%
 			totalLake *= recover;
 
@@ -68,7 +69,7 @@ private function getCostForBonusCost(ctx:Context, playerId:Int, peopleId:Int, co
 			// 基本回復2%
 			var recover = base * 0.3;
 			recover *= 1.0 + (.2 * (getPeopleCommand(ctx, people.id) / 100));
-			recover *= people.abilities.has(6) ? 1.5 : 1.0;
+			recover *= peopleAbilities.has(6) ? 1.5 : 1.0;
 			// 回復縂差距的10%
 			totalLake *= recover;
 
@@ -108,7 +109,7 @@ private function getCostForBonusCost(ctx:Context, playerId:Int, peopleId:Int, co
 			var recover = base * 0.3;
 			// 使用getPeopleCommand, getPeoplePolitical等取得升級後的數值
 			recover *= 1.0 + (.2 * (getPeopleCommand(ctx, people.id) / 100));
-			recover *= people.abilities.has(6) ? 1.5 : 1.0;
+			recover *= peopleAbilities.has(6) ? 1.5 : 1.0;
 
 			// 回復縂差距的10%
 			totalLake *= recover;
