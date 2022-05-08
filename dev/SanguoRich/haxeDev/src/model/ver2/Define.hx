@@ -223,6 +223,9 @@ enum Event {
 	GRID_BORN_EVENT(value:{
 		grid:model.GridGenerator.Grid
 	});
+	FIND_TREASURE_RESULT(value:{
+		treasures:Array<TreasureCatelog>
+	});
 }
 
 typedef Context = {
@@ -249,12 +252,12 @@ function getPeopleInfo(ctx:Context, people:People):model.PeopleGenerator.People 
 		political: Std.int(getPeoplePolitical(ctx, people.id)),
 		charm: Std.int(getPeopleCharm(ctx, people.id)),
 		cost: Std.int(people.cost),
-		abilities: people.abilities,
+		abilities: getPeopleAbilities(ctx, people.id),
 		energy: Std.int(people.energy),
 		gridId: cast people.position.gridId,
 		exp: people.exp,
 		sleep: false,
-		treasures: ctx.treasures.filter(t -> t.position.peopleId == people.id).map(t -> getTreasureInfo(ctx, t))
+		treasures: ctx.treasures.filter(t -> t.position.peopleId == people.id).map(t -> getTreasureInfo(ctx, t, null))
 	}
 }
 
@@ -277,7 +280,7 @@ function getPlayerInfo(ctx:Context, player:Player):model.IModel.PlayerInfo {
 		armyGrow: 0.0,
 		grids: ctx.grids.filter(g -> getGridBelongPlayerId(ctx, g.id) == player.id).map(g -> getGridInfo(ctx, g)),
 		commands: getPlayerCommand(ctx, player.id),
-		treasures: ctx.treasures.filter(t -> t.belongToPlayerId == player.id).map(t -> getTreasureInfo(ctx, t))
+		treasures: ctx.treasures.filter(t -> t.belongToPlayerId == player.id).map(t -> getTreasureInfo(ctx, t, null))
 	}
 }
 
@@ -362,14 +365,14 @@ function getGridInfo(ctx:Context, grid:Grid):model.GridGenerator.Grid {
 				// 3代表緩兵計
 				ctx.groundItems.filter(item -> item.belongToPlayerId == i && item.position == grid.id).map(item -> 3)
 		],
-		treasures: ctx.treasures.filter(t -> t.position.gridId == grid.id).map(t -> getTreasureInfo(ctx, t))
+		treasures: ctx.treasures.filter(t -> t.position.gridId == grid.id).map(t -> getTreasureInfo(ctx, t, null))
 	}
 }
 
-function getTreasureInfo(ctx:Context, treasure:Treasure):TreasureInfo {
+function getTreasureInfo(ctx:Context, treasure:Treasure, belongToPeopleInfo:Null<model.PeopleGenerator.People>):TreasureInfo {
 	return {
 		id: treasure.id,
-		belongToPeople: treasure.position.peopleId == null ? null : getPeopleInfo(ctx, getPeopleById(ctx, treasure.position.peopleId)),
+		belongToPeople: cast belongToPeopleInfo, // treasure.position.peopleId == null ? null : getPeopleInfo(ctx, getPeopleById(ctx, treasure.position.peopleId)),
 		catelog: treasureList[treasure.protoId],
 	}
 }
@@ -504,6 +507,11 @@ function getGameInfo(ctx:Context, root:Bool):GameInfo {
 					id: EventInfoID.GRID_BORN_EVENT,
 					value: value
 				}
+			case FIND_TREASURE_RESULT(value):
+				{
+					id: EventInfoID.FIND_TREASURE_RESULT,
+					value: value
+				}
 		}
 		return eventInfo;
 	}) : [];
@@ -595,7 +603,7 @@ function addGridInfo(ctx:Context, grid:model.GridGenerator.Grid):Void {
 		addAttachInfo(ctx, grid.id, p);
 	}
 	for (p in grid.treasures) {
-		addTreasureInfo(ctx, null, grid.id, p);
+		addTreasureInfo(ctx, null, grid.id, null, p);
 	}
 }
 
@@ -635,7 +643,7 @@ function addPeopleInfo(ctx:Context, belongToPlayerId:Null<Int>, gridId:Null<Int>
 		lastWorkTurn: 0
 	});
 	for (t in p.treasures) {
-		addTreasureInfo(ctx, belongToPlayerId, gridId, t);
+		addTreasureInfo(ctx, belongToPlayerId, gridId, p.id, t);
 	}
 }
 
@@ -660,14 +668,14 @@ function addPlayerInfo(ctx:Context, player:model.IModel.PlayerInfo):Void {
 	}
 }
 
-function addTreasureInfo(ctx:Context, belongToPlayerId:Null<Int>, gridId:Null<Int>, treasure:TreasureInfo):Void {
+function addTreasureInfo(ctx:Context, belongToPlayerId:Null<Int>, gridId:Null<Int>, peopleId:Null<Int>, treasure:TreasureInfo):Void {
 	ctx.treasures.push({
 		id: treasure.id,
 		protoId: treasure.catelog.id,
 		belongToPlayerId: belongToPlayerId,
 		position: {
 			gridId: gridId,
-			peopleId: null,
+			peopleId: peopleId,
 		}
 	});
 }
@@ -698,6 +706,14 @@ function getPeopleById(ctx:Context, id:Int):People {
 	final find = ctx.peoples.filter(p -> p.id == id);
 	if (find.length == 0) {
 		throw new haxe.Exception('people not found: ${id}');
+	}
+	return find[0];
+}
+
+function getTreasureById(ctx:Context, id:Int):Treasure {
+	final find = ctx.treasures.filter(p -> p.id == id);
+	if (find.length == 0) {
+		throw new haxe.Exception('treasure not found: ${id}');
 	}
 	return find[0];
 }
@@ -742,54 +758,95 @@ function getPeopleMaintainCost(ctx:Context, peopleId):Float {
 
 function getPeopleForce(ctx:Context, peopleId):Float {
 	final people = getPeopleById(ctx, peopleId);
-	return switch getPeopleType(ctx, peopleId) {
+	final treasureCates = ctx.treasures.filter(t -> t.position.peopleId == peopleId).map(t -> treasureList[t.protoId]);
+	final totalTreasureBonus = treasureCates.fold((c, a:Float) -> {
+		return a + c.force;
+	}, 0.0);
+	final expLevelBonus = switch getPeopleType(ctx, peopleId) {
 		case WUJIANG(level):
-			people.force + EXP_LEVEL_ABI_EXT[level];
+			EXP_LEVEL_ABI_EXT[level];
 		case _:
-			people.force;
+			0.0;
 	}
+	return people.force + totalTreasureBonus + expLevelBonus;
 }
 
 function getPeopleIntelligence(ctx:Context, peopleId):Float {
 	final people = getPeopleById(ctx, peopleId);
-	return switch getPeopleType(ctx, peopleId) {
+	final treasureCates = ctx.treasures.filter(t -> t.position.peopleId == peopleId).map(t -> treasureList[t.protoId]);
+	final totalTreasureBonus = treasureCates.fold((c, a:Float) -> {
+		return a + c.intelligence;
+	}, 0.0);
+	final expLevelBonus = switch getPeopleType(ctx, peopleId) {
 		case WENGUAN(level):
-			people.intelligence + EXP_LEVEL_ABI_EXT[level];
+			EXP_LEVEL_ABI_EXT[level];
 		case _:
-			people.intelligence;
+			0.0;
 	}
+	return people.intelligence + totalTreasureBonus + expLevelBonus;
 }
 
 function getPeoplePolitical(ctx:Context, peopleId):Float {
 	final people = getPeopleById(ctx, peopleId);
-	return switch getPeopleType(ctx, peopleId) {
+	final treasureCates = ctx.treasures.filter(t -> t.position.peopleId == peopleId).map(t -> treasureList[t.protoId]);
+	final totalTreasureBonus = treasureCates.fold((c, a:Float) -> {
+		return a + c.political;
+	}, 0.0);
+	final expLevelBonus = switch getPeopleType(ctx, peopleId) {
 		case WENGUAN(level):
-			people.political + EXP_LEVEL_ABI_EXT[level];
+			EXP_LEVEL_ABI_EXT[level];
 		case _:
-			people.political;
+			0.0;
 	}
+	return people.political + totalTreasureBonus + expLevelBonus;
 }
 
 function getPeopleCharm(ctx:Context, peopleId):Float {
 	final people = getPeopleById(ctx, peopleId);
-	return switch getPeopleType(ctx, peopleId) {
+	final treasureCates = ctx.treasures.filter(t -> t.position.peopleId == peopleId).map(t -> treasureList[t.protoId]);
+	final totalTreasureBonus = treasureCates.fold((c, a:Float) -> {
+		return a + c.charm;
+	}, 0.0);
+	final expLevelBonus = switch getPeopleType(ctx, peopleId) {
 		case WENGUAN(level):
-			people.charm + EXP_LEVEL_ABI_EXT[level];
+			EXP_LEVEL_ABI_EXT[level];
 		case WUJIANG(level):
-			people.charm + EXP_LEVEL_ABI_EXT[level];
+			EXP_LEVEL_ABI_EXT[level];
 		case _:
-			people.charm;
+			0.0;
 	}
+	return people.charm + totalTreasureBonus + expLevelBonus;
 }
 
 function getPeopleCommand(ctx:Context, peopleId):Float {
 	final people = getPeopleById(ctx, peopleId);
-	return switch getPeopleType(ctx, peopleId) {
+	final treasureCates = ctx.treasures.filter(t -> t.position.peopleId == peopleId).map(t -> treasureList[t.protoId]);
+	final totalTreasureBonus = treasureCates.fold((c, a:Float) -> {
+		return a + c.command;
+	}, 0.0);
+	final expLevelBonus = switch getPeopleType(ctx, peopleId) {
 		case WUJIANG(level):
-			people.command + EXP_LEVEL_ABI_EXT[level];
+			EXP_LEVEL_ABI_EXT[level];
 		case _:
-			people.command;
+			0.0;
 	}
+	return people.command + totalTreasureBonus + expLevelBonus;
+}
+
+function getPeopleAbilities(ctx:Context, peopleId):Array<Int> {
+	final people = getPeopleById(ctx, peopleId);
+	final treasureCates = ctx.treasures.filter(t -> t.position.peopleId == peopleId).map(t -> treasureList[t.protoId]);
+	final totalTreasureBonus = treasureCates.fold((c, a) -> {
+		return a.concat(c.abilities);
+	}, ([] : Array<Int>));
+	// TODO
+	final expLevelBonus = switch getPeopleType(ctx, peopleId) {
+		case WUJIANG(level):
+			[];
+		case _:
+			[];
+	}
+	return people.abilities.concat(totalTreasureBonus).concat(expLevelBonus);
 }
 
 function getPlayerCommand(ctx:Context, playerId:Int):Array<ActionInfoID> {

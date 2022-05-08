@@ -175,3 +175,6 @@ final EVENT_GRID_BORN_RATE = 1 / 15.0;
 
 // 異軍突起的資源數量
 final EVENT_GRID_BORN_RESOURCE_AMOUNT = 50.0;
+
+// 探索時寶物出現機率
+final FIND_TREASURE_WHEN_SUCCESS_RATE = 1;

@@ -243,7 +243,7 @@ class ModelVer2 extends DebugModel {
 	}
 
 	override function takeUnEquip(p1:model.PeopleGenerator.People, unequipId:Int, cb:(gameInfo:GameInfo) -> Void) {
-		_takeEquip(context, p1, unequipId);
+		_takeUnEquip(context, p1, unequipId);
 		cb(gameInfo());
 	}
 }
