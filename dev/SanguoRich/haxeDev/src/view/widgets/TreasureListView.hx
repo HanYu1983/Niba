@@ -29,9 +29,12 @@ class TreasureListView extends TableView{
             }
             info.nameView = info.name;
             
-            info.equip = switch(t.belongToPeople){
+            final belongId:Int = t.belongToPeopleId;
+            info.equip = switch(belongId){
                 case null: '無';
-                case _: t.belongToPeople.name;
+                case other: 
+                    final equipPeople = Main.model.getPeopleById(other);
+                    equipPeople.name;
             }
             info.id = t.id;
             clones.push(info);

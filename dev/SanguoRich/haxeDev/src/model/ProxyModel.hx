@@ -184,4 +184,8 @@ class ProxyModel implements IModel {
 	public function takeUnEquip(p1:People, unequipId:Int, cb:(gameInfo:GameInfo) -> Void) {
 		return model.takeUnEquip(p1, unequipId, cb);
 	}
+
+	public function getPeopleById(id:Int):People {
+		return PeopleGenerator.getInst().generate();
+	}
 }

@@ -372,7 +372,7 @@ function getGridInfo(ctx:Context, grid:Grid):model.GridGenerator.Grid {
 function getTreasureInfo(ctx:Context, treasure:Treasure, belongToPeopleInfo:Null<model.PeopleGenerator.People>):TreasureInfo {
 	return {
 		id: treasure.id,
-		belongToPeople: cast belongToPeopleInfo, // 不呼叫getPeopleInfo，避免循環指向
+		belongToPeopleId: 0, // 不呼叫getPeopleInfo，避免循環指向
 		catelog: treasureList[treasure.protoId],
 	}
 }

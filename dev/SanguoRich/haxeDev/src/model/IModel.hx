@@ -303,6 +303,8 @@ interface IModel {
 	function takeEquip(p1:People, equipId:Int, cb:(gameInfo:GameInfo) -> Void):Void;
 
 	function takeUnEquip(p1:People, unequipId:Int, cb:(gameInfo:GameInfo) -> Void):Void;
+
+	function getPeopleById(id:Int):People;
 }
 
 final StrategyList:Array<StrategyCatelog> = [
