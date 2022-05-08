@@ -18,6 +18,7 @@ import model.ver2.alg.Building;
 import model.ver2.alg.CostForBonus;
 import model.ver2.alg.SaveLoad;
 import model.ver2.alg.Pk;
+import model.ver2.alg.Equip;
 
 class ModelVer2 extends DebugModel {
 	var context:Context = {
@@ -223,5 +224,25 @@ class ModelVer2 extends DebugModel {
 	override function takePk(playerId:Int, gridId:Int, p1PeopleId:Int, p2PeopleId:Int, syncViewByInfo:(gameInfo:GameInfo) -> Void) {
 		_takePk(context, playerId, gridId, p1PeopleId, p2PeopleId);
 		syncViewByInfo(gameInfo());
+	}
+
+	override function getUnEquipResult(p1:model.PeopleGenerator.People,
+			unequipId:Int):{peopleBefore:model.PeopleGenerator.People, peopleAfter:model.PeopleGenerator.People} {
+		return _getUnEquipResult(context, p1, unequipId);
+	}
+
+	override function getEquipResult(p1:model.PeopleGenerator.People,
+			equipId:Int):{peopleBefore:model.PeopleGenerator.People, peopleAfter:model.PeopleGenerator.People} {
+		return _getEquipResult(context, p1, equipId);
+	}
+
+	override function takeEquip(p1:model.PeopleGenerator.People, equipId:Int, cb:(gameInfo:GameInfo) -> Void) {
+		_takeEquip(context, p1, equipId);
+		cb(gameInfo());
+	}
+
+	override function takeUnEquip(p1:model.PeopleGenerator.People, unequipId:Int, cb:(gameInfo:GameInfo) -> Void) {
+		_takeEquip(context, p1, unequipId);
+		cb(gameInfo());
 	}
 }

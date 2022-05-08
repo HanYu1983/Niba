@@ -243,7 +243,7 @@ function getPeopleInfo(ctx:Context, people:People):model.PeopleGenerator.People 
 		gridId: people.position.gridId,
 		exp: people.exp,
 		sleep: false,
-		treasures:[]
+		treasures: []
 	}
 }
 
@@ -765,6 +765,7 @@ function getPlayerCommand(ctx:Context, playerId:Int):Array<ActionInfoID> {
 		if (player.memory.hasStrategy == false) {
 			ret.push(ActionInfoID.STRATEGY);
 		}
+		ret.push(ActionInfoID.TREASURE);
 		ret.push(ActionInfoID.FIRE);
 	} else {
 		if (gridInfo.belongPlayerId == null) {

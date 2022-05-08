@@ -135,7 +135,12 @@ class ProxyModel implements IModel {
 		return model.takeBuilding(p1PeopleId, gridId, peopleId, current, to, cb);
 	}
 
-	public function getResultOfCost(p1Player:PlayerInfo, p1People:People, costType:Int):{costFood:Float, costMoney:Float, gainExp:Float, gainEnergy:Float} {
+	public function getResultOfCost(p1Player:PlayerInfo, p1People:People, costType:Int):{
+		costFood:Float,
+		costMoney:Float,
+		gainExp:Float,
+		gainEnergy:Float
+	} {
 		return model.getResultOfCost(p1Player, p1People, costType);
 	}
 
@@ -165,14 +170,18 @@ class ProxyModel implements IModel {
 	}
 
 	public function getUnEquipResult(p1:People, unequipId:Int):{peopleBefore:People, peopleAfter:People} {
-		throw new haxe.exceptions.NotImplementedException();
+		return model.getUnEquipResult(p1, unequipId);
 	}
-	
+
 	public function getEquipResult(p1:People, equipId:Int):{peopleBefore:People, peopleAfter:People} {
-		throw new haxe.exceptions.NotImplementedException();
+		return model.getEquipResult(p1, equipId);
 	}
 
-	public function takeEquip(p1:People, equipId:Int, cb:(gameInfo:GameInfo) -> Void) {}
+	public function takeEquip(p1:People, equipId:Int, cb:(gameInfo:GameInfo) -> Void) {
+		return model.takeEquip(p1, equipId, cb);
+	}
 
-	public function takeUnEquip(p1:People, unequipId:Int, cb:(gameInfo:GameInfo) -> Void) {}
+	public function takeUnEquip(p1:People, unequipId:Int, cb:(gameInfo:GameInfo) -> Void) {
+		return model.takeUnEquip(p1, unequipId, cb);
+	}
 }
