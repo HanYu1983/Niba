@@ -137,4 +137,8 @@ class Main {
 		final catelog = StrategyList.filter((catelog) -> catelog.id == sid );
 		return catelog[0];
 	}
+
+	public static function getCompareString(before:Float, after:Float, count:Int = 0) {
+		return '${Main.getFixNumber(before,count)} => ${Main.getFixNumber(after,count)} (${Main.getFixNumber(after - before)})';
+	}
 }

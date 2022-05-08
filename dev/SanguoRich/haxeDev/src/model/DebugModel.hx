@@ -507,4 +507,8 @@ class DebugModel implements IModel {
 	public function takeUnEquip(p1:People, unequipId:Int, cb:(gameInfo:GameInfo) -> Void) {
 		cb(info);
 	}
+
+	public function getPeopleById(id:Int):People {
+		throw new haxe.exceptions.NotImplementedException();
+	}
 }

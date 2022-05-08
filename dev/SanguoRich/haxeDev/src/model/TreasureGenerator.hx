@@ -16,7 +16,7 @@ typedef TreasureCatelog = {
 
 typedef TreasureInfo = {
 	id:Int,
-	belongToPeople:People,
+	belongToPeopleId:Int,
 	catelog:TreasureCatelog,
 }
 
@@ -260,7 +260,7 @@ class TreasureGenerator {
 		var catelog = treasureList[id % treasureList.length];
 		return {
 			id: id,
-			belongToPeople: null,
+			belongToPeopleId: 0,
 			catelog: catelog
 		};
 	}
