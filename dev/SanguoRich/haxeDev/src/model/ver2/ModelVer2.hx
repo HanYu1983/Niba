@@ -30,6 +30,7 @@ class ModelVer2 extends DebugModel {
 		actions: [],
 		events: [],
 		groundItems: [],
+		treasures: [],
 		turn: 0
 	}
 

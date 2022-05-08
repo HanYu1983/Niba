@@ -7,6 +7,7 @@
 -lib hxSet
 -lib tweenx
 --macro nullSafety("model.ver2.ModelVer2")
+--macro nullSafety("model.ver2.Define")
 -D debug
 
 -js public/Main.js

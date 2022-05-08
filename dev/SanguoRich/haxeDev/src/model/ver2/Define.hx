@@ -2,6 +2,7 @@ package model.ver2;
 
 import model.PeopleGenerator;
 import model.GridGenerator;
+import model.TreasureGenerator;
 import model.IModel;
 import model.Config;
 import haxe.Serializer;
@@ -61,6 +62,14 @@ typedef Player = {
 	position:Int,
 	memory:{
 		hasDice:Bool, hasStrategy:Bool, hasCommand:Bool, hasBuild:Bool
+	},
+}
+
+typedef Treasure = {
+	id:Int,
+	protoId:Int,
+	position:{
+		gridId:Null<Int>, peopleId:Null<Int>
 	},
 }
 
@@ -224,6 +233,7 @@ typedef Context = {
 	actions:Array<Action>,
 	events:Array<Event>,
 	groundItems:Array<GroundItem>,
+	treasures:Array<Treasure>,
 	turn:Int
 }
 
@@ -240,7 +250,7 @@ function getPeopleInfo(ctx:Context, people:People):model.PeopleGenerator.People 
 		cost: Std.int(people.cost),
 		abilities: people.abilities,
 		energy: Std.int(people.energy),
-		gridId: people.position.gridId,
+		gridId: cast people.position.gridId,
 		exp: people.exp,
 		sleep: false,
 		treasures: []
@@ -351,7 +361,15 @@ function getGridInfo(ctx:Context, grid:Grid):model.GridGenerator.Grid {
 				// 3代表緩兵計
 				ctx.groundItems.filter(item -> item.belongToPlayerId == i && item.position == grid.id).map(item -> 3)
 		],
-		treasures: []
+		treasures: ctx.treasures.map(t -> getTreasureInfo(ctx, t))
+	}
+}
+
+function getTreasureInfo(ctx:Context, treasure:Treasure):TreasureInfo {
+	return {
+		id: treasure.id,
+		belongToPeople: treasure.position.peopleId == null ? null : getPeopleInfo(ctx, getPeopleById(ctx, treasure.position.peopleId)),
+		catelog: treasureList[treasure.protoId],
 	}
 }
 
@@ -388,7 +406,7 @@ private function calcGrids(ctx:Context):Array<model.IModel.PlayerInfo> {
 private function calcTotals(ctx:Context):Array<model.IModel.PlayerInfo> {
 	return ctx.players.map(p -> {
 		final playerInfo = getPlayerInfo(ctx, p);
-		final total = calcGridsByPlayerInfo(ctx, Reflect.copy(playerInfo));
+		final total = calcGridsByPlayerInfo(ctx, deepCopy(playerInfo));
 		playerInfo.food = playerInfo.food + total.food;
 		playerInfo.money = playerInfo.money + total.money;
 		playerInfo.army = playerInfo.army + total.army;
@@ -575,6 +593,9 @@ function addGridInfo(ctx:Context, grid:model.GridGenerator.Grid):Void {
 	for (p in grid.attachs) {
 		addAttachInfo(ctx, grid.id, p);
 	}
+	for (p in grid.treasures) {
+		addTreasureInfo(ctx, grid.id, p);
+	}
 }
 
 private var _id = 0;
@@ -633,6 +654,17 @@ function addPlayerInfo(ctx:Context, player:model.IModel.PlayerInfo):Void {
 	for (p in player.people) {
 		addPeopleInfo(ctx, player.id, null, p);
 	}
+}
+
+function addTreasureInfo(ctx:Context, gridId:Null<Int>, treasure:TreasureInfo):Void {
+	ctx.treasures.push({
+		id: treasure.id,
+		protoId: treasure.catelog.id,
+		position: {
+			gridId: gridId,
+			peopleId: null,
+		}
+	});
 }
 
 function getMaintainPeople(ctx:Context, playerId:Int):Float {
