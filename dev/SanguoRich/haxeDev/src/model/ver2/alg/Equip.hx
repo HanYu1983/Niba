@@ -40,17 +40,27 @@ function _takeEquip(ctx:Context, people1:model.PeopleGenerator.People, equipId:I
 	final t = getTreasureById(ctx, equipId);
 	final p1 = getPeopleById(ctx, people1.id);
 	if (t.belongToPlayerId != null && t.belongToPlayerId != p1.belongToPlayerId) {
-		throw new haxe.Exception('寶物(${t.id})是玩家${t.belongToPlayerId}不是你的');
+		trace('寶物(${t.id})是玩家${t.belongToPlayerId}不是你的');
+		return;
+	}
+	if (t.position.peopleId != null) {
+		trace('不能拆除');
+		return;
 	}
 	t.position.peopleId = p1.id;
 }
 
 function _takeUnEquip(ctx:Context, people1:model.PeopleGenerator.People, unequipId:Int) {
 	ctx.events = [];
+	if (true) {
+		trace('不能拆除');
+		return;
+	}
 	final t = getTreasureById(ctx, unequipId);
 	final p1 = getPeopleById(ctx, people1.id);
 	if (t.belongToPlayerId != null && t.belongToPlayerId != p1.belongToPlayerId) {
-		throw new haxe.Exception('寶物(${t.id})是玩家${t.belongToPlayerId}不是你的');
+		trace('寶物(${t.id})是玩家${t.belongToPlayerId}不是你的');
+		return;
 	}
 	t.position.peopleId = null;
 }

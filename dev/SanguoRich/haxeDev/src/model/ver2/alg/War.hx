@@ -23,7 +23,7 @@ private function getWarCostImpl(ctx:Context, playerId:Int, gridId:Int, p1PeopleI
 		final atkPeopleAbilities = getPeopleAbilities(ctx, atkPeople.id);
 		final fact1 = if (atkPeopleAbilities.has(6)) WAR_BACK_ABILITY_FACTOR else 1.0;
 		final fact2 = if (atkPeopleAbilities.has(7)) WAR_BACK_ABILITY_FACTOR else 1.0;
-		final fact3 = getPeopleIntelligence(ctx, atkPeople.id) / 100;
+		final fact3 = Math.pow(1.0 - Math.min(1, getPeopleIntelligence(ctx, atkPeople.id) / 100), 0.25);
 		final base = atkArmy;
 		final cost = base * fact1 * fact2 * fact3;
 		atkMoneyCost = cost * WAR_MONEY_COST_FACTOR;
@@ -96,7 +96,7 @@ private function getWarCostImpl(ctx:Context, playerId:Int, gridId:Int, p1PeopleI
 		final atkPeopleAbilities = getPeopleAbilities(ctx, atkPeople.id);
 		final fact1 = if (atkPeopleAbilities.has(6)) WAR_BACK_ABILITY_FACTOR else 1.0;
 		final fact2 = if (atkPeopleAbilities.has(7)) WAR_BACK_ABILITY_FACTOR else 1.0;
-		final fact3 = getPeopleIntelligence(ctx, atkPeople.id) / 100;
+		final fact3 = Math.pow(1.0 - Math.min(1, getPeopleIntelligence(ctx, atkPeople.id) / 100), 0.25);
 		final base = atkArmy;
 		final cost = base * fact1 * fact2 * fact3;
 		defMoneyCost = cost * WAR_MONEY_COST_FACTOR;

@@ -165,10 +165,10 @@ final BASE_RATE_EXPLORE = 1.2;
 final GRID_RESOURCE_MAX = 500.0;
 
 // 每回合每個城加糧事件機率(暫時通用在錢和兵)
-final EVENT_GROW_FOOD_RATE = 0.01;
+final EVENT_GROW_FOOD_RATE = 0.005;
 
 // 每回合每個城加糧事件的糧食數量(暫時通用在錢和兵)
-final EVENT_GROW_FOOD_AMOUNT = 50;
+final EVENT_GROW_FOOD_AMOUNT = 20;
 
 // 每回合異軍突起的機率
 final EVENT_GRID_BORN_RATE = 1 / 15.0;

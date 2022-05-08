@@ -201,8 +201,8 @@ function _getTakeSnatchPreview(ctx:Context, playerId:Int, gridId:Int):SnatchPrev
 	return {
 		p1ValidPeople: warPreview.p1ValidPeople,
 		p2ValidPeople: warPreview.p2ValidPeople,
-		isP1ArmyValid: ctx.players[playerId].army >= SNATCH_ARMY_AT_LEAST,
-		isP2ArmyValid: ctx.grids[gridId].army >= SNATCH_ARMY_AT_LEAST,
+		isP1ArmyValid: ctx.players[playerId].army >= 0, // SNATCH_ARMY_AT_LEAST,
+		isP2ArmyValid: ctx.grids[gridId].army >= 0 // SNATCH_ARMY_AT_LEAST,
 	};
 }
 

@@ -154,18 +154,18 @@ function doPlayerEnd(ctx:Context) {
 					final earnArmy = grid.army * PLAYER_EARN_FROM_CITY_BY_TURN_PERSENT;
 					final earnFood = grid.food * PLAYER_EARN_FROM_CITY_BY_TURN_PERSENT;
 					final earnMoney = grid.money * PLAYER_EARN_FROM_CITY_BY_TURN_PERSENT;
-					grid.army -= earnArmy;
-					if (grid.army < 0) {
-						grid.army = 0;
-					}
-					grid.food -= earnFood;
-					if (grid.food < 0) {
-						grid.food = 0;
-					}
-					grid.money -= earnMoney;
-					if (grid.money < 0) {
-						grid.money = 0;
-					}
+					// grid.army -= earnArmy;
+					// if (grid.army < 0) {
+					// 	grid.army = 0;
+					// }
+					// grid.food -= earnFood;
+					// if (grid.food < 0) {
+					// 	grid.food = 0;
+					// }
+					// grid.money -= earnMoney;
+					// if (grid.money < 0) {
+					// 	grid.money = 0;
+					// }
 					player.army += earnArmy;
 					player.food += earnFood;
 					player.money += earnMoney;
@@ -330,9 +330,9 @@ function initContext(ctx:Context, option:{}) {
 		addPlayerInfo(ctx, {
 			id: i++,
 			name: name,
-			money: 500.0,
-			army: 500.0,
-			food: 500.0,
+			money: 800.0,
+			army: 800.0,
+			food: 800.0,
 			strategy: 300.0,
 			people: [
 				model.PeopleGenerator.getInst().generate(),

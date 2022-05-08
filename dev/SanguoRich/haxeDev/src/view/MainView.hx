@@ -245,18 +245,18 @@ class MainView extends Box {
 	}
 
 	@:bind(btn_save, MouseEvent.CLICK)
-	function onBtnSaveClick(e){
-		Main.model.save((success:Bool)->{
+	function onBtnSaveClick(e) {
+		Main.model.save((success:Bool) -> {
 			final msg = success ? '成功記錄' : '記錄失敗';
 			Dialogs.messageBox(msg, msg, MessageBoxType.TYPE_INFO);
 		});
 	}
 
 	@:bind(btn_load, MouseEvent.CLICK)
-	function onBtnLoadClick(e){
-		Main.model.load((success:Bool, gameInfo:GameInfo)->{
+	function onBtnLoadClick(e) {
+		Main.model.load((success:Bool, gameInfo:GameInfo) -> {
 			final msg = success ? '成功讀取' : '讀取失敗';
-			if(success) {
+			if (success) {
 				syncViewByInfo(gameInfo);
 			}
 			Dialogs.messageBox(msg, msg, MessageBoxType.TYPE_INFO);
@@ -266,8 +266,8 @@ class MainView extends Box {
 	@:bind(btn_pk, MouseEvent.CLICK)
 	function onBtnPKClick(e:MouseEvent) {
 		final gameInfo:GameInfo = Main.model.gameInfo();
-		switch(gameInfo.currentPlayer){
-			case {atGridId : gameInfo.grids[_].people.length == 0 => true}:
+		switch (gameInfo.currentPlayer) {
+			case {atGridId: gameInfo.grids[_].people.length == 0 => true}:
 				Dialogs.messageBox('對方沒有武將可以單挑', '', MessageBoxType.TYPE_INFO);
 			case {people: _.length == 0 => true}:
 				Dialogs.messageBox('沒有武將可以單挑', '', MessageBoxType.TYPE_INFO);
@@ -282,18 +282,18 @@ class MainView extends Box {
 	}
 
 	@:bind(btn_payForFun, MouseEvent.CLICK)
-	function onBtnPayForFunClick(e){
-		costForBonusView.showPopup({type:2});
+	function onBtnPayForFunClick(e) {
+		costForBonusView.showPopup({type: 2});
 	}
 
 	@:bind(btn_camp, MouseEvent.CLICK)
-	function onBtnCampClick(e){
-		costForBonusView.showPopup({type:0});
+	function onBtnCampClick(e) {
+		costForBonusView.showPopup({type: 0});
 	}
 
 	@:bind(btn_practice, MouseEvent.CLICK)
-	function onBtnPracticeClick(e){
-		costForBonusView.showPopup({type:1});
+	function onBtnPracticeClick(e) {
+		costForBonusView.showPopup({type: 1});
 	}
 
 	@:bind(btn_firePeople, MouseEvent.CLICK)
@@ -319,7 +319,7 @@ class MainView extends Box {
 	function onBtnBuyFoodClick(e) {
 		var player = Main.model.gameInfo().currentPlayer;
 		if (player.money < 1.0) {
-			Dialogs.messageBox('你沒有足夠的金錢哦!', '主公啊…', MessageBoxType.TYPE_WARNING );
+			Dialogs.messageBox('你沒有足夠的金錢哦!', '主公啊…', MessageBoxType.TYPE_WARNING);
 			return;
 		}
 		final market = model.IModel.MARKET.BUY;
@@ -334,7 +334,7 @@ class MainView extends Box {
 	function onBtnBuyArmyClick(e) {
 		var player = Main.model.gameInfo().currentPlayer;
 		if (player.money < 1.0) {
-			Dialogs.messageBox('你沒有足夠的金錢哦!', '主公啊…', MessageBoxType.TYPE_WARNING );
+			Dialogs.messageBox('你沒有足夠的金錢哦!', '主公啊…', MessageBoxType.TYPE_WARNING);
 			return;
 		}
 		final market = model.IModel.MARKET.BUY;
@@ -349,7 +349,7 @@ class MainView extends Box {
 	function onBtnSellFoodClick(e) {
 		var player = Main.model.gameInfo().currentPlayer;
 		if (player.food < 1.0) {
-			Dialogs.messageBox('你沒有足夠的糧食哦!', '主公啊…', MessageBoxType.TYPE_WARNING );
+			Dialogs.messageBox('你沒有足夠的糧食哦!', '主公啊…', MessageBoxType.TYPE_WARNING);
 			return;
 		}
 		final market = model.IModel.MARKET.SELL;
@@ -364,7 +364,7 @@ class MainView extends Box {
 	function onBtnSellArmyClick(e) {
 		var player = Main.model.gameInfo().currentPlayer;
 		if (player.army < 1.0) {
-			Dialogs.messageBox('你沒有足夠的士兵哦!', '主公啊…', MessageBoxType.TYPE_WARNING );
+			Dialogs.messageBox('你沒有足夠的士兵哦!', '主公啊…', MessageBoxType.TYPE_WARNING);
 			return;
 		}
 		final market = model.IModel.MARKET.SELL;
@@ -389,7 +389,7 @@ class MainView extends Box {
 	function onBtnNegotiateClick(e:MouseEvent) {
 		var player = Main.model.gameInfo().currentPlayer;
 		var previewInfo = Main.model.getTakeNegoPreview(player.id, player.atGridId);
-		switch (previewInfo){
+		switch (previewInfo) {
 			case {p1ValidPeople: _.length < 1 => true}:
 				Dialogs.messageBox('沒有武將可以執行', '主公啊…', MessageBoxType.TYPE_INFO);
 			case {p2ValidPeople: _.length < 1 => true}:
@@ -421,8 +421,8 @@ class MainView extends Box {
 			case {isP1ArmyValid: _ => false}
 				| {isP2ArmyValid: _ => false}:
 				if (!isOccupation) {
-					Dialogs.messageBox('搶奪條件（雙方兵力至少都要有${SNATCH_ARMY_AT_LEAST}）不足，是否進入攻城模式', '主公啊…', MessageBoxType.TYPE_QUESTION, true, (target)->{
-						if(target == DialogButton.YES){
+					Dialogs.messageBox('搶奪條件（雙方兵力至少都要有${SNATCH_ARMY_AT_LEAST}）不足，是否進入攻城模式', '主公啊…', MessageBoxType.TYPE_QUESTION, true, (target) -> {
+						if (target == DialogButton.YES) {
 							Reflect.setField(previewInfo, 'isOccupation', true);
 							snatchPreviewView.showPopup(previewInfo);
 						}
@@ -471,12 +471,12 @@ class MainView extends Box {
 	function onBtnStartClick(e:MouseEvent) {
 		Main.model.gameStart(() -> {
 			for (index => player in Main.model.gameInfo().players) {
-				if(index < players.length){
+				if (index < players.length) {
 					players[index].name = player.name.substr(0, 1);
 				}
 			}
 
-			tab_whichInfo.onChange = function(e){
+			tab_whichInfo.onChange = function(e) {
 				syncGameInfo(Main.model.gameInfo());
 			}
 
@@ -497,7 +497,7 @@ class MainView extends Box {
 	@:bind(btn_showStrategy, MouseEvent.CLICK)
 	function onBtnShowStrategyClick(e:MouseEvent) {
 		final gameInfo = Main.model.gameInfo();
-		if(gameInfo.currentPlayer.people.length == 0){
+		if (gameInfo.currentPlayer.people.length == 0) {
 			Dialogs.messageBox('沒有武將可以使用', '', MessageBoxType.TYPE_INFO);
 			return;
 		}
@@ -584,13 +584,13 @@ class MainView extends Box {
 					final info:Dynamic = event.value;
 					final treasures:Array<TreasureCatelog> = info.treasures;
 					var title = '發現寶物 ';
-					for(t in treasures){
+					for (t in treasures) {
 						title += '${t.name} ';
 					}
 					var msg = '${title}\n';
 					msg += '是否直接賜予武將?';
-					Dialogs.messageBox(msg, title, MessageBoxType.TYPE_QUESTION, true, (b)->{
-						if(b == DialogButton.YES){
+					Dialogs.messageBox(msg, title, MessageBoxType.TYPE_QUESTION, true, (b) -> {
+						if (b == DialogButton.YES) {
 							onBtnShowTreasureClick(null);
 						}
 					});
@@ -600,7 +600,7 @@ class MainView extends Box {
 					final title = '異軍突起';
 					var msg = '${title}\n';
 					msg += '地點:${grid.name}';
-					Dialogs.messageBox(msg, title, MessageBoxType.TYPE_INFO, true, (b)->{
+					Dialogs.messageBox(msg, title, MessageBoxType.TYPE_INFO, true, (b) -> {
 						doOneEvent(gameInfo);
 					});
 				case GRID_RESOURCE_EVENT:
@@ -609,10 +609,10 @@ class MainView extends Box {
 					final grids:Array<{gridBefore:Grid, gridAfter:Grid}> = info.grids;
 					final title = info.describtion;
 					var msg = '${title}\n\n';
-					for(result in grids){
+					for (result in grids) {
 						final before = result.gridBefore;
 						final after = result.gridAfter;
-						final owner = switch(before.belongPlayerId){
+						final owner = switch (before.belongPlayerId) {
 							case null: '無';
 							case _: gameInfo.players[before.belongPlayerId].name;
 						}
@@ -623,24 +623,24 @@ class MainView extends Box {
 						msg += '士兵:${Main.getCompareString(before.army, after.army, 0)} \n';
 						msg += '\n';
 					}
-					Dialogs.messageBox(msg, title, MessageBoxType.TYPE_INFO, true, (b)->{
+					Dialogs.messageBox(msg, title, MessageBoxType.TYPE_INFO, true, (b) -> {
 						doOneEvent(gameInfo);
 					});
 				case PK_RESULT:
 					final info:Dynamic = event.value;
-					final title = if(info.success){
+					final title = if (info.success) {
 						'成功號召士兵';
-					}else{
+					} else {
 						'號召士兵失敗';
 					}
 					var msg = '武將:${info.people.name}\n';
-					msg += '士兵:${Main.getFixNumber(info.armyBefore,0)} => ${Main.getFixNumber(info.armyAfter, 0)} (${Main.getFixNumber(info.armyAfter - info.armyBefore, 0)})';
-					Dialogs.messageBox(msg, title, MessageBoxType.TYPE_INFO, true, (b)->{
+					msg += '士兵:${Main.getFixNumber(info.armyBefore, 0)} => ${Main.getFixNumber(info.armyAfter, 0)} (${Main.getFixNumber(info.armyAfter - info.armyBefore, 0)})';
+					Dialogs.messageBox(msg, title, MessageBoxType.TYPE_INFO, true, (b) -> {
 						doOneEvent(gameInfo);
 					});
 				case COST_FOR_BONUS_RESULT:
 					final info:Dynamic = event.value;
-					final title = switch( info.costType ){
+					final title = switch (info.costType) {
 						case 0: '札營完畢！ 武將們回復體力';
 						case 1: '練兵完畢! 武將們提高功績';
 						case 2: '作樂完畢！ 武將們回復體力';
@@ -649,21 +649,21 @@ class MainView extends Box {
 
 					final pBefore:Array<People> = info.peopleBefore;
 					var msg = '';
-					for( index => peopleBefore in pBefore){
+					for (index => peopleBefore in pBefore) {
 						final peopleAfter = info.peopleAfter[index];
-						final recoverType = switch( info.costType ){
-							case 0|2: '體力';
+						final recoverType = switch (info.costType) {
+							case 0 | 2: '體力';
 							case 1: '功績';
 							case _: '';
 						};
-						final recover = switch( info.costType ){
-							case 0|2: Main.getFixNumber(peopleAfter.energy - peopleBefore.energy);
+						final recover = switch (info.costType) {
+							case 0 | 2: Main.getFixNumber(peopleAfter.energy - peopleBefore.energy);
 							case 1: Main.getFixNumber(peopleAfter.exp - peopleBefore.exp);
 							case _: 0;
 						};
 						msg += '${peopleAfter.name} ${recoverType} 上升 ${recover}\n';
 					}
-					Dialogs.messageBox(msg, title, MessageBoxType.TYPE_INFO, true, (b)->{
+					Dialogs.messageBox(msg, title, MessageBoxType.TYPE_INFO, true, (b) -> {
 						doOneEvent(gameInfo);
 					});
 
@@ -675,17 +675,17 @@ class MainView extends Box {
 					msg += '金錢:${Main.getFixNumber(info.moneyBefore, 0)} => ${Main.getFixNumber(info.moneyAfter, 0)}\n';
 					msg += '糧草:${Main.getFixNumber(info.foodBefore, 0)} => ${Main.getFixNumber(info.foodAfter, 0)}\n';
 					msg += '士兵:${Main.getFixNumber(info.armyBefore, 0)} => ${Main.getFixNumber(info.armyAfter, 0)}\n';
-					Dialogs.messageBox(msg, title, MessageBoxType.TYPE_INFO, true, (b)->{
+					Dialogs.messageBox(msg, title, MessageBoxType.TYPE_INFO, true, (b) -> {
 						doOneEvent(gameInfo);
 					});
 
 				case FIRE_RESULT:
 					final info:Dynamic = event.value;
 					var people:Array<People> = info.people;
-					var msg = '解雇:${people.map((p)->p.name).join(',')}\n';
+					var msg = '解雇:${people.map((p) -> p.name).join(',')}\n';
 					msg += '薪俸:${Main.getFixNumber(info.maintainMoneyBefore, 2)} => ${Main.getFixNumber(info.maintainMoneyAfter, 2)}\n';
-                    
-					Dialogs.messageBox(msg, '解雇完成', MessageBoxType.TYPE_INFO, true, (b)->{
+
+					Dialogs.messageBox(msg, '解雇完成', MessageBoxType.TYPE_INFO, true, (b) -> {
 						doOneEvent(gameInfo);
 					});
 
@@ -698,7 +698,7 @@ class MainView extends Box {
 					msg += '糧草:${Main.getFixNumber(info.foodBefore, 0)} => ${Main.getFixNumber(info.foodAfter, 0)}\n';
 					msg += '士兵:${Main.getFixNumber(info.armyBefore, 0)} => ${Main.getFixNumber(info.armyAfter, 0)}\n';
 					msg += '友好:${Main.getFavorString(info.favorBefore)} => ${Main.getFavorString(info.favorAfter)}\n';
-					Dialogs.messageBox(msg, title, MessageBoxType.TYPE_INFO, true, (b)->{
+					Dialogs.messageBox(msg, title, MessageBoxType.TYPE_INFO, true, (b) -> {
 						doOneEvent(gameInfo);
 					});
 
@@ -713,11 +713,11 @@ class MainView extends Box {
 					msg += '糧草:${Main.getFixNumber(info.foodBefore, 0)} => ${Main.getFixNumber(info.foodAfter, 0)}\n';
 					msg += '士兵:${Main.getFixNumber(info.armyBefore, 0)} => ${Main.getFixNumber(info.armyAfter, 0)}\n';
 					if (info.success) {
-						Dialogs.messageBox(msg, '占領成功', MessageBoxType.TYPE_INFO, true, (target)->{
+						Dialogs.messageBox(msg, '占領成功', MessageBoxType.TYPE_INFO, true, (target) -> {
 							transferPreview.showPopup(null);
 						});
 					} else {
-						Dialogs.messageBox(msg, '占領失敗', MessageBoxType.TYPE_INFO, true, (b)->{
+						Dialogs.messageBox(msg, '占領失敗', MessageBoxType.TYPE_INFO, true, (b) -> {
 							doOneEvent(gameInfo);
 						});
 					}
@@ -730,7 +730,7 @@ class MainView extends Box {
 					msg += '金錢:${Main.getFixNumber(info.moneyBefore, 0)} => ${Main.getFixNumber(info.moneyAfter, 0)}\n';
 					msg += '糧草:${Main.getFixNumber(info.foodBefore, 0)} => ${Main.getFixNumber(info.foodAfter, 0)}\n';
 					msg += '士兵:${Main.getFixNumber(info.armyBefore, 0)} => ${Main.getFixNumber(info.armyAfter, 0)}\n';
-					Dialogs.messageBox(msg, title, MessageBoxType.TYPE_INFO, true, (b)->{
+					Dialogs.messageBox(msg, title, MessageBoxType.TYPE_INFO, true, (b) -> {
 						doOneEvent(gameInfo);
 					});
 
@@ -741,10 +741,10 @@ class MainView extends Box {
 					msg += '金錢:${Main.getFixNumber(info.moneyBefore, 0)} => ${Main.getFixNumber(info.moneyAfter, 0)}\n';
 					msg += '糧草:${Main.getFixNumber(info.foodBefore, 0)} => ${Main.getFixNumber(info.foodAfter, 0)}\n';
 					msg += '士兵:${Main.getFixNumber(info.armyBefore, 0)} => ${Main.getFixNumber(info.armyAfter, 0)}\n';
-					Dialogs.messageBox(msg, '交易完成', MessageBoxType.TYPE_INFO, true, (b)->{
+					Dialogs.messageBox(msg, '交易完成', MessageBoxType.TYPE_INFO, true, (b) -> {
 						doOneEvent(gameInfo);
 					});
-					
+
 				case STRATEGY_RESULT:
 					final info:Dynamic = event.value;
 					final title = info.success ? '計策成功' : '計策失敗';
@@ -752,19 +752,19 @@ class MainView extends Box {
 					msg += '武將:${info.people ? info.people.name : ""}\n';
 					msg += '計策:${info.strategy ? info.strategy.name : ""}\n';
 					msg += '體力:${Main.getFixNumber(info.energyBefore, 0)} => ${Main.getFixNumber(info.energyAfter, 0)}\n';
-					Dialogs.messageBox(msg, title, MessageBoxType.TYPE_INFO, true, (b)->{
+					Dialogs.messageBox(msg, title, MessageBoxType.TYPE_INFO, true, (b) -> {
 						doOneEvent(gameInfo);
 					});
 				case BUILDING_RESULT:
 					final info:Dynamic = event.value;
 					final catelog = Main.getBuildingCatelog(info.building);
-					var msg = '武將:${info.people.name : ""}\n';
+					var msg = '武將:${info.people.name:""}\n';
 					msg += '已擴建 ${catelog.name}\n';
-					Dialogs.messageBox(msg, '擴建完畢', MessageBoxType.TYPE_INFO, true, (b)->{
+					Dialogs.messageBox(msg, '擴建完畢', MessageBoxType.TYPE_INFO, true, (b) -> {
 						doOneEvent(gameInfo);
 					});
 				case WORLD_EVENT:
-					growView.showPopup(event.value, ()->{
+					growView.showPopup(event.value, () -> {
 						doOneEvent(gameInfo);
 					});
 				case PEOPLE_LEVEL_UP_EVENT:
@@ -774,8 +774,8 @@ class MainView extends Box {
 					final p2:People = info.peopleAfter;
 					var msg = '將領:${p1.name}\n';
 					msg += '職等:${PeopleGenerator.getInst().getPeopleTypeName(p1.type)} => ${PeopleGenerator.getInst().getPeopleTypeName(p2.type)}\n';
-					switch (p2.type){
-						case WENGUAN(level): 
+					switch (p2.type) {
+						case WENGUAN(level):
 							msg += '智力:${p1.intelligence} => ${p2.intelligence}\n';
 							msg += '政治:${p1.political} => ${p2.political}\n';
 						case WUJIANG(level):
@@ -785,10 +785,10 @@ class MainView extends Box {
 					}
 					msg += '魅力:${p1.charm} => ${p2.charm}\n';
 					msg += '體力:${p1.energy} => ${p2.energy}\n';
-					Dialogs.messageBox(msg, title, MessageBoxType.TYPE_INFO, true, (b)->{
+					Dialogs.messageBox(msg, title, MessageBoxType.TYPE_INFO, true, (b) -> {
 						doOneEvent(gameInfo);
 					});
-				
+
 				case PAY_FOR_OVER_ENEMY_GRID:
 					final info:Dynamic = event.value;
 					final title = '走到其他主公的領地，過路費…';
@@ -796,7 +796,7 @@ class MainView extends Box {
 					msg += '金錢:${Main.getFixNumber(info.moneyBefore, 0)} => ${Main.getFixNumber(info.moneyAfter, 0)}\n';
 					msg += '糧草:${Main.getFixNumber(info.foodBefore, 0)} => ${Main.getFixNumber(info.foodAfter, 0)}\n';
 					msg += '士兵:${Main.getFixNumber(info.armyBefore, 0)} => ${Main.getFixNumber(info.armyAfter, 0)}\n';
-					Dialogs.messageBox(msg, title, MessageBoxType.TYPE_INFO, true, (b)->{
+					Dialogs.messageBox(msg, title, MessageBoxType.TYPE_INFO, true, (b) -> {
 						doOneEvent(gameInfo);
 					});
 			}
@@ -835,12 +835,12 @@ class MainView extends Box {
 
 	function syncUI(gameInfo:GameInfo) {
 		gameInfo.isPlaying ? btn_start.hide() : btn_start.show();
-		
+
 		disabledAllCommands();
 
 		var currentPlayer = gameInfo.currentPlayer;
-		for(cmd in currentPlayer.commands){
-			switch(cmd){
+		for (cmd in currentPlayer.commands) {
+			switch (cmd) {
 				case MOVE:
 					btn_go.show();
 				case TREASURE:
@@ -855,29 +855,29 @@ class MainView extends Box {
 					btn_pk.show();
 				case SNATCH:
 					btn_snatch.show();
-				case OCCUPATION: 
+				case OCCUPATION:
 					btn_occupation.show();
-				case HIRE: 
+				case HIRE:
 					btn_hire.show();
-				case EXPLORE: 
+				case EXPLORE:
 					btn_explore.show();
 				case PAY_FOR_FUN:
 					btn_payForFun.show();
-				case EARN_MONEY: 
+				case EARN_MONEY:
 					btn_earnMoney.show();
-				case BUY_FOOD: 
+				case BUY_FOOD:
 					btn_buyFood.show();
-				case SELL_FOOD: 
+				case SELL_FOOD:
 					btn_sellFood.show();
-				case BUY_ARMY: 
+				case BUY_ARMY:
 					btn_buyArmy.show();
-				case SELL_ARMY: 
+				case SELL_ARMY:
 					btn_sellArmy.show();
-				case TRANSFER: 
+				case TRANSFER:
 					btn_transfer.show();
-				case BUILD: 
+				case BUILD:
 					btn_build.show();
-				case END: 
+				case END:
 					btn_end.show();
 				case CAMP:
 					btn_camp.show();
@@ -910,27 +910,26 @@ class MainView extends Box {
 		}
 	}
 
-	function syncGameInfo(gameInfo:GameInfo){
-
-		final playerInfos = switch(tab_whichInfo.selectedIndex){
-			case 0:gameInfo.playerTotals;
-			case 1:gameInfo.players;
-			case 2:gameInfo.playerGrids;
-			case _:throw new Exception("no type");
+	function syncGameInfo(gameInfo:GameInfo) {
+		final playerInfos = switch (tab_whichInfo.selectedIndex) {
+			case 0: gameInfo.playerTotals;
+			case 1: gameInfo.players;
+			case 2: gameInfo.playerGrids;
+			case _: throw new Exception("no type");
 		}
 
 		tab_allPlayers.dataSource.clear();
-		for(p in playerInfos){
+		for (p in playerInfos) {
 			var info:Dynamic = Main.cloneObject(p);
-			info.money = '${Main.getFixNumber(p.money,0)} (${Main.getFixNumber(p.maintainPeople)})';
-			info.food = '${Main.getFixNumber(p.food,0)} (${Main.getFixNumber(p.maintainArmy)})';
-			info.army ='${Main.getFixNumber(p.army,0)} (${Main.getFixNumber(p.armyGrow)})';
+			info.money = '${Main.getFixNumber(p.money, 0)} (${Main.getFixNumber(p.maintainPeople)})';
+			info.food = '${Main.getFixNumber(p.food, 0)} (${Main.getFixNumber(p.maintainArmy)})';
+			info.army = '${Main.getFixNumber(p.army, 0)} (${Main.getFixNumber(p.armyGrow)})';
 			info.peopleCount = p.people.length;
 			info.cityCount = p.grids.length;
 			info.treasureCount = p.treasures.length;
 			tab_allPlayers.dataSource.add(info);
 		}
-		lbl_gameInfo.value = '第${gameInfo.currentTurn+1}回合，${gameInfo.currentPlayer.name}正在行動';
+		lbl_gameInfo.value = '第${gameInfo.currentTurn + 1}回合，${gameInfo.currentPlayer.name}正在行動';
 	}
 
 	function syncPlayerInfo(id:Int) {
@@ -953,7 +952,7 @@ class MainView extends Box {
 
 	function syncGridViews(gameInfo:GameInfo) {
 		for (index => info in gameInfo.grids) {
-			if(index < grids.length){
+			if (index < grids.length) {
 				var grid = grids[index];
 				grid.setInfo(info);
 			}
@@ -962,14 +961,13 @@ class MainView extends Box {
 
 	function syncPlayerViews(gameInfo:GameInfo) {
 		for (index => playerInfo in gameInfo.players) {
-			if(index < players.length){
+			if (index < players.length) {
 				var playerView = players[index];
 
 				var pos = getGridPositionByGridId(playerInfo.id, playerInfo.atGridId);
 				playerView.left = pos[0];
 				playerView.top = pos[1];
 			}
-			
 		}
 	}
 

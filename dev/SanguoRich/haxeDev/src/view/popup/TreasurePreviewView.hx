@@ -19,7 +19,7 @@ import haxe.ui.events.MouseEvent;
 @:build(haxe.ui.ComponentBuilder.build("assets/popup/treasurePreview-view.xml"))
 class TreasurePreviewView extends PopupView {
 	var p1List:PeopleListView;
-	var treasureInPeople:TreasureListView;
+	// var treasureInPeople:TreasureListView;
 	var treasureInStore:TreasureListView;
 
 	public function new() {
@@ -28,8 +28,8 @@ class TreasurePreviewView extends PopupView {
 		p1List = new PeopleListView();
 		box_peopleList.addComponent(p1List);
 
-		treasureInPeople = new TreasureListView();
-		box_treasureInPeople.addComponent(treasureInPeople);
+		// treasureInPeople = new TreasureListView();
+		// box_treasureInPeople.addComponent(treasureInPeople);
 
 		treasureInStore = new TreasureListView();
 		box_treasureInStore.addComponent(treasureInStore);
@@ -40,28 +40,28 @@ class TreasurePreviewView extends PopupView {
 		var p1 = p1List.selectedItem;
 		final equip = treasureInStore.selectedItem;
 
-		if(p1 == null) return;
-		if(equip == null ) return;
+		if (p1 == null)
+			return;
+		if (equip == null)
+			return;
 
-		Main.model.takeEquip(p1, equip.id, (gameInfo:GameInfo)->{
+		Main.model.takeEquip(p1, equip.id, (gameInfo:GameInfo) -> {
 			Dialogs.messageBox('賜予完畢', '賜予完畢', MessageBoxType.TYPE_INFO);
 			refresh();
 		});
 	}
 
-	@:bind(btn_unequip, MouseEvent.CLICK)
-	function onBtnUnEquipClick(e:MouseEvent) {
-		var p1 = p1List.selectedItem;
-		final unequip = treasureInPeople.selectedItem;
-
-		if(p1 == null) return;
-		if(unequip == null ) return;
-
-		Main.model.takeUnEquip(p1, unequip.id, (gameInfo:GameInfo)->{
-			Dialogs.messageBox('沒收完畢', '沒收完畢', MessageBoxType.TYPE_INFO);
-			refresh();
-		});
-	}
+	// @:bind(btn_unequip, MouseEvent.CLICK)
+	// function onBtnUnEquipClick(e:MouseEvent) {
+	// 	var p1 = p1List.selectedItem;
+	// 	final unequip = treasureInPeople.selectedItem;
+	// 	if(p1 == null) return;
+	// 	if(unequip == null ) return;
+	// 	Main.model.takeUnEquip(p1, unequip.id, (gameInfo:GameInfo)->{
+	// 		Dialogs.messageBox('沒收完畢', '沒收完畢', MessageBoxType.TYPE_INFO);
+	// 		refresh();
+	// 	});
+	// }
 
 	@:bind(btn_confirm, MouseEvent.CLICK)
 	function onBtnConfirmClick(e:MouseEvent) {
@@ -72,29 +72,30 @@ class TreasurePreviewView extends PopupView {
 	var lastType = 0;
 	var lastPeopleId = 0;
 
-	function refresh(){
+	function refresh() {
 		final gameInfo = Main.model.gameInfo();
 		function setRate(type:Int) {
 			if (p1List.selectedItem == null)
-				return ;
+				return;
 
 			lastType = type;
 			lastPeopleId = p1List.selectedIndex;
 
 			var p1 = p1List.selectedItem;
-			var result:{peopleBefore:People, peopleAfter:People} = switch(type){
-				case 0: 
-					final unequip = treasureInPeople.selectedItem;
-					if(unequip == null ) return;
-					Main.model.getUnEquipResult(p1, unequip.id);
-				case 1: 
+			var result:{peopleBefore:People, peopleAfter:People} = switch (type) {
+				// case 0:
+				// final unequip = treasureInPeople.selectedItem;
+				// if(unequip == null ) return;
+				// Main.model.getUnEquipResult(p1, unequip.id);
+				case 1:
 					final equip = treasureInStore.selectedItem;
-					if(equip == null ) return;
+					if (equip == null)
+						return;
 					Main.model.getEquipResult(p1, equip.id);
 				case _: null;
 			}
 
-			if(result != null){
+			if (result != null) {
 				final before = result.peopleBefore;
 				final after = result.peopleAfter;
 				pro_force.value = '${Main.getCompareString(before.force, after.force)}';
@@ -106,10 +107,10 @@ class TreasurePreviewView extends PopupView {
 			}
 		}
 
-		function updateTreasureInPeopleList(){
-			final p:People = p1List.selectedItem;
-			treasureInPeople.setList(p.treasures);
-		}
+		// function updateTreasureInPeopleList(){
+		// 	final p:People = p1List.selectedItem;
+		// 	treasureInPeople.setList(p.treasures);
+		// }
 
 		function setOnePeople(p:People) {
 			pro_name.value = p.name;
@@ -124,14 +125,14 @@ class TreasurePreviewView extends PopupView {
 			// treasureInPeople.selectedIndex = -1;
 		}
 
-		treasureInPeople.onChange = function(e){
-			var t:Dynamic = treasureInPeople.selectedItem;
-			if (t) {
-				setRate(0);
-			}
-		}
+		// treasureInPeople.onChange = function(e){
+		// 	var t:Dynamic = treasureInPeople.selectedItem;
+		// 	if (t) {
+		// 		setRate(0);
+		// 	}
+		// }
 
-		treasureInStore.onChange = function(e){
+		treasureInStore.onChange = function(e) {
 			var t:Dynamic = treasureInStore.selectedItem;
 			if (t) {
 				setRate(1);
@@ -143,17 +144,17 @@ class TreasurePreviewView extends PopupView {
 			var p:Dynamic = p1List.selectedItem;
 			if (p) {
 				setOnePeople(p);
-				updateTreasureInPeopleList();
+				// updateTreasureInPeopleList();
 			}
 		}
 
 		p1List.selectedIndex = lastPeopleId;
-		
-		updateTreasureInPeopleList();
+
+		// updateTreasureInPeopleList();
 		treasureInStore.setList(gameInfo.currentPlayer.treasures);
 	}
 
-	override function showPopup(info:Dynamic, cb:()->Void = null) {
+	override function showPopup(info:Dynamic, cb:() -> Void = null) {
 		super.showPopup(info, cb);
 		refresh();
 	}

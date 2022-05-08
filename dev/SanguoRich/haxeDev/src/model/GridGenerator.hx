@@ -90,7 +90,7 @@ class GridGenerator {
 		for (i in 0...count) {
 			var height = getHeight(i);
 			var g = getGrid();
-			
+
 			g.id = i;
 			g.name = g.id + gridNames[(i + randomStart) % gridNames.length];
 			g.landType = [0, 0, 1, 1, 1, 1, 2, 2, 3, 3][Math.floor(height * 10)];
@@ -98,8 +98,6 @@ class GridGenerator {
 				GROWTYPE.EMPTY, GROWTYPE.EMPTY, GROWTYPE.EMPTY, GROWTYPE.FARM, GROWTYPE.MARKET, GROWTYPE.VILLAGE, GROWTYPE.FARM, GROWTYPE.MARKET,
 				GROWTYPE.VILLAGE, GROWTYPE.CITY
 			][Math.floor(Math.random() * 10)];
-
-			
 
 			switch (g.buildtype) {
 				case EMPTY:
@@ -119,13 +117,15 @@ class GridGenerator {
 					];
 			}
 
-			for(i in 0...4) if(Math.random() < .3) g.treasures.push(TreasureGenerator.getInst().generator());
-			
+			for (i in 0...4)
+				if (Math.random() < .3)
+					g.treasures.push(TreasureGenerator.getInst().generator());
+
 			final basicArmy = getRandomRange(100, 40);
 
-			g.moneyGrow = Math.random() * .01;
-			g.foodGrow = Math.random() * .01;
-			g.armyGrow = Math.random() * .01;
+			g.moneyGrow = Math.random() * .01 + 0.01;
+			g.foodGrow = Math.random() * .01 + 0.01;
+			g.armyGrow = Math.random() * .01 + 0.01;
 			g.army = basicArmy;
 
 			switch (g.buildtype) {

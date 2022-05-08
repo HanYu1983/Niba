@@ -886,8 +886,10 @@ function getPlayerCommand(ctx:Context, playerId:Int):Array<ActionInfoID> {
 	final gridInfo = getGridInfo(ctx, ctx.grids[player.position]);
 	if (player.memory.hasDice == false) {
 		ret.push(ActionInfoID.MOVE);
-		if (player.memory.hasStrategy == false) {
-			ret.push(ActionInfoID.STRATEGY);
+		if (ctx.turn > 0) {
+			if (player.memory.hasStrategy == false) {
+				ret.push(ActionInfoID.STRATEGY);
+			}
 		}
 		ret.push(ActionInfoID.TREASURE);
 		ret.push(ActionInfoID.FIRE);
