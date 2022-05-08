@@ -93,12 +93,14 @@ class TreasurePreviewView extends PopupView {
 			}
 
 			if(result != null){
-				pro_force.value = '${result.peopleBefore.force} => ${result.peopleAfter.force} (${ result.peopleAfter.force - result.peopleBefore.force})';
-				pro_command.value = '${result.peopleBefore.command} => ${result.peopleAfter.command} (${ result.peopleAfter.command - result.peopleBefore.command})';
-				pro_intelligence.value = '${result.peopleBefore.intelligence} => ${result.peopleAfter.intelligence} (${ result.peopleAfter.intelligence - result.peopleBefore.intelligence})';
-				pro_political.value = '${result.peopleBefore.political} => ${result.peopleAfter.political} (${ result.peopleAfter.political - result.peopleBefore.political})';
-				pro_charm.value = '${result.peopleBefore.charm} => ${result.peopleAfter.charm} (${ result.peopleAfter.charm - result.peopleBefore.charm})';
-				pro_abilities.value = '${Main.abilitiesToString(result.peopleBefore.abilities)}=> ${Main.abilitiesToString(result.peopleAfter.abilities)}';
+				final before = result.peopleBefore;
+				final after = result.peopleAfter;
+				pro_force.value = '${Main.getCompareString(before.force, after.force)})';
+				pro_command.value = '${Main.getCompareString(before.command, after.command)})';
+				pro_intelligence.value = '${Main.getCompareString(before.intelligence, after.intelligence)})';
+				pro_political.value = '${Main.getCompareString(before.political, after.political)})';
+				pro_charm.value = '${Main.getCompareString(before.charm, after.charm)})';
+				pro_abilities.value = '${Main.abilitiesToString(result.peopleBefore.abilities)} => ${Main.abilitiesToString(result.peopleAfter.abilities)}';
 			}
 		}
 

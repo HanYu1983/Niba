@@ -526,7 +526,6 @@ class MainView extends Box {
 		TweenX.serial(tweens);
 
 		trace('多了找到寶物事件。找到寶物事件一率在事件列表的最後一個');
-		trace('初始格子的寶物參數要接');
 		trace('探索時。先檢查有沒有找到寶物，有的話。就找不到人。人和寶物只能有一個');
 		trace('搶奪時。搶完先給搶奪事件、再給升級事件、最後才給找到寶物事件');
 		trace('攻城時找到寶物機率會大減');
@@ -619,9 +618,9 @@ class MainView extends Box {
 						}
 						msg += '地點:${before.name}\n';
 						msg += '所有:${owner}\n';
-						msg += '金錢:${Main.getFixNumber(before.money,0)} => ${Main.getFixNumber(after.money,0)} \n';
-						msg += '糧草:${Main.getFixNumber(before.food,0)} => ${Main.getFixNumber(after.food,0)} \n';
-						msg += '士兵:${Main.getFixNumber(before.army,0)} => ${Main.getFixNumber(after.army,0)} \n';
+						msg += '金錢:${Main.getCompareString(before.money, after.money, 0)} \n';
+						msg += '糧草:${Main.getCompareString(before.food, after.food, 0)} \n';
+						msg += '士兵:${Main.getCompareString(before.army, after.army, 0)} \n';
 						msg += '\n';
 					}
 					Dialogs.messageBox(msg, title, MessageBoxType.TYPE_INFO, true, (b)->{
