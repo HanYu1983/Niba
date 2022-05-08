@@ -68,6 +68,7 @@ typedef Player = {
 typedef Treasure = {
 	id:Int,
 	protoId:Int,
+	belongToPlayerId:Null<Int>,
 	position:{
 		gridId:Null<Int>, peopleId:Null<Int>
 	},
@@ -253,7 +254,7 @@ function getPeopleInfo(ctx:Context, people:People):model.PeopleGenerator.People 
 		gridId: cast people.position.gridId,
 		exp: people.exp,
 		sleep: false,
-		treasures: []
+		treasures: ctx.treasures.filter(t -> t.position.peopleId == people.id).map(t -> getTreasureInfo(ctx, t))
 	}
 }
 
@@ -276,7 +277,7 @@ function getPlayerInfo(ctx:Context, player:Player):model.IModel.PlayerInfo {
 		armyGrow: 0.0,
 		grids: ctx.grids.filter(g -> getGridBelongPlayerId(ctx, g.id) == player.id).map(g -> getGridInfo(ctx, g)),
 		commands: getPlayerCommand(ctx, player.id),
-		treasures: []
+		treasures: ctx.treasures.filter(t -> t.belongToPlayerId == player.id).map(t -> getTreasureInfo(ctx, t))
 	}
 }
 
@@ -361,7 +362,7 @@ function getGridInfo(ctx:Context, grid:Grid):model.GridGenerator.Grid {
 				// 3代表緩兵計
 				ctx.groundItems.filter(item -> item.belongToPlayerId == i && item.position == grid.id).map(item -> 3)
 		],
-		treasures: ctx.treasures.map(t -> getTreasureInfo(ctx, t))
+		treasures: ctx.treasures.filter(t -> t.position.gridId == grid.id).map(t -> getTreasureInfo(ctx, t))
 	}
 }
 
@@ -594,7 +595,7 @@ function addGridInfo(ctx:Context, grid:model.GridGenerator.Grid):Void {
 		addAttachInfo(ctx, grid.id, p);
 	}
 	for (p in grid.treasures) {
-		addTreasureInfo(ctx, grid.id, p);
+		addTreasureInfo(ctx, null, grid.id, p);
 	}
 }
 
@@ -633,6 +634,9 @@ function addPeopleInfo(ctx:Context, belongToPlayerId:Null<Int>, gridId:Null<Int>
 		exp: p.exp,
 		lastWorkTurn: 0
 	});
+	for (t in p.treasures) {
+		addTreasureInfo(ctx, belongToPlayerId, gridId, t);
+	}
 }
 
 function addPlayerInfo(ctx:Context, player:model.IModel.PlayerInfo):Void {
@@ -656,10 +660,11 @@ function addPlayerInfo(ctx:Context, player:model.IModel.PlayerInfo):Void {
 	}
 }
 
-function addTreasureInfo(ctx:Context, gridId:Null<Int>, treasure:TreasureInfo):Void {
+function addTreasureInfo(ctx:Context, belongToPlayerId:Null<Int>, gridId:Null<Int>, treasure:TreasureInfo):Void {
 	ctx.treasures.push({
 		id: treasure.id,
 		protoId: treasure.catelog.id,
+		belongToPlayerId: belongToPlayerId,
 		position: {
 			gridId: gridId,
 			peopleId: null,
