@@ -67,14 +67,14 @@ private function getCostForBonusCost(ctx:Context, playerId:Int, peopleId:Int, co
 			}
 
 			// 基本回復2%
-			var recover = base * 0.3;
+			var recover = base * 0.03;
 			recover *= 1.0 + (.2 * (getPeopleCommand(ctx, people.id) / 100));
 			recover *= peopleAbilities.has(6) ? 1.5 : 1.0;
 			// 回復縂差距的10%
 			totalLake *= recover;
 
 			// 縂花食物量
-			var food = totalLake * 0.03;
+			var food = totalLake * 0.3;
 
 			if (player.food < food) {
 				recover *= player.food / food;

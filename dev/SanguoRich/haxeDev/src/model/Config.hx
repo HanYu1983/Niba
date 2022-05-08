@@ -155,14 +155,14 @@ function getExpAdd(p:Float, max:Float):Float {
 // 體力產生的基本值成數
 // 1代表支付所有體力時, 機率為1
 final BASE_RATE_STRATEGY = 0.8;
-final BASE_RATE_RESOURCE = 1.0;
+final BASE_RATE_RESOURCE = 1.2;
 final BASE_RATE_PK = 0.7;
 final BASE_RATE_NEGO = 1.0;
 final BASE_RATE_HIRE = 1.0;
 final BASE_RATE_EXPLORE = 1.2;
 
 // 格子資源上限
-final GRID_RESOURCE_MAX = 500.0;
+final GRID_RESOURCE_MAX = 600.0;
 
 // 每回合每個城加糧事件機率(暫時通用在錢和兵)
 final EVENT_GROW_FOOD_RATE = 0.005;
@@ -177,10 +177,10 @@ final EVENT_GRID_BORN_RATE = 1 / 15.0;
 final EVENT_GRID_BORN_RESOURCE_AMOUNT = 70.0;
 
 // 探索時寶物出現機率
-final FIND_TREASURE_WHEN_SUCCESS_BASE_RATE = 0.2;
+final FIND_TREASURE_WHEN_SUCCESS_BASE_RATE = 0.3;
 
 // 搶劫時寶物出現機率基礎
-final FIND_TREASURE_WHEN_SNATCH_SUCCESS_BASE_RATE = 0.4;
+final FIND_TREASURE_WHEN_SNATCH_SUCCESS_BASE_RATE = 0.5;
 
 // 攻城時寶物出現機率基礎(未使用)
 final FIND_TREASURE_WHEN_WAR_SUCCESS_BASE_RATE = 0.0;
