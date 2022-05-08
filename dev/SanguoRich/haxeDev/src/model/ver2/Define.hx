@@ -365,8 +365,12 @@ function getGridInfo(ctx:Context, grid:Grid):model.GridGenerator.Grid {
 				// 3代表緩兵計
 				ctx.groundItems.filter(item -> item.belongToPlayerId == i && item.position == grid.id).map(item -> 3)
 		],
-		treasures: ctx.treasures.filter(t -> t.position.gridId == grid.id).map(t -> getTreasureInfo(ctx, t))
+		treasures: getTreasureInGrid(ctx, grid.id).map(t -> getTreasureInfo(ctx, t))
 	}
+}
+
+function getTreasureInGrid(ctx:Context, gridId:Int):Array<Treasure> {
+	return ctx.treasures.filter(t -> t.position.gridId == gridId);
 }
 
 function getTreasureInfo(ctx:Context, treasure:Treasure):TreasureInfo {

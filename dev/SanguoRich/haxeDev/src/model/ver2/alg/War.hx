@@ -124,7 +124,19 @@ private function getWarCostImpl(ctx:Context, playerId:Int, gridId:Int, p1PeopleI
 		defEnergyCost = useEnergy * getEnergyFactor(atkArmy);
 	}
 	final success = (ctx.grids[gridId].army - atkDamage) <= 0 && ctx.players[playerId].army - defDamage >= 0;
-	final findTreasureRate = options.occupy ? (success ? FIND_TREASURE_WHEN_WAR_SUCCESS_BASE_RATE : 0.0) : 0.0;
+	final findTreasureRate = if (options.occupy == false) {
+		0.0;
+	} else {
+		if (getTreasureInGrid(ctx, gridId).length > 0) {
+			if (success) {
+				FIND_TREASURE_WHEN_WAR_SUCCESS_BASE_RATE;
+			} else {
+				0.0;
+			}
+		} else {
+			0.0;
+		}
+	}
 	return {
 		playerCost: [
 			{
@@ -252,11 +264,22 @@ private function onWarCostImpl(ctx:Context, playerId:Int, gridId:Int, p1PeopleId
 				if (success) {
 					// 寶物只處理攻城部分
 					if (options.occupy) {
-						final isFindTreasure = Math.random() < findTreasureRate;
-						if (isFindTreasure) {
-							final treasure = TreasureGenerator.getInst().generator();
-							onFindTreasure(ctx, playerId, treasure);
+						// 先不吃findTreasureRate
+						if (false) {
+							final isFindTreasure = Math.random() < findTreasureRate;
+							if (isFindTreasure) {
+								final treasureInGrid = getTreasureInGrid(ctx, gridId);
+								if (treasureInGrid.length == 0) {
+									throw new haxe.Exception("城裡必須有寶物");
+								}
+								final takeId = Math.floor(Math.random() * treasureInGrid.length);
+								final treasure = treasureInGrid[takeId];
+								onFindTreasure(ctx, playerId, treasure);
+							}
 						}
+						// 先把所有寶物移除
+						final treasureIdInGrid = getTreasureInGrid(ctx, gridId).map(t -> t.id);
+						ctx.treasures = ctx.treasures.filter(t -> treasureIdInGrid.has(t.id) == false);
 					}
 					// 功績
 					onPeopleExpAdd(ctx, people1.id, getExpAdd(1, peopleCost1.energy));
