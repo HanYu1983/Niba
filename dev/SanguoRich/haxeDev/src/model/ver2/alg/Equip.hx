@@ -36,6 +36,7 @@ function _getEquipResult(ctx:Context, p1:model.PeopleGenerator.People,
 }
 
 function _takeEquip(ctx:Context, people1:model.PeopleGenerator.People, equipId:Int) {
+	ctx.events = [];
 	final t = getTreasureById(ctx, equipId);
 	final p1 = getPeopleById(ctx, people1.id);
 	if (t.belongToPlayerId != null && t.belongToPlayerId != p1.belongToPlayerId) {
@@ -45,7 +46,7 @@ function _takeEquip(ctx:Context, people1:model.PeopleGenerator.People, equipId:I
 }
 
 function _takeUnEquip(ctx:Context, people1:model.PeopleGenerator.People, unequipId:Int) {
-	trace(unequipId);
+	ctx.events = [];
 	final t = getTreasureById(ctx, unequipId);
 	final p1 = getPeopleById(ctx, people1.id);
 	if (t.belongToPlayerId != null && t.belongToPlayerId != p1.belongToPlayerId) {

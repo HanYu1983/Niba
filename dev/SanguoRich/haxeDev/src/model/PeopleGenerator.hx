@@ -69,7 +69,7 @@ class PeopleGenerator {
 		'charm': '魅力'
 	};
 
-	private var abiMaps:Array<Dynamic> = [
+	private var abiMaps:Array<Array<Int>> = [
 		[0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12],
 		[0, 1, 2, 6, 8, 9, 10, 11],
 		[3, 4, 5, 7, 10, 11, 12],
@@ -81,6 +81,10 @@ class PeopleGenerator {
 		var high = map[1];
 		var diff = high - low;
 		return Math.floor(Math.random() * diff + low);
+	}
+
+	public function getAbiMap():Array<Array<Int>> {
+		return abiMaps;
 	}
 
 	public function getAbilityName(id:Int) {
@@ -169,7 +173,7 @@ class PeopleGenerator {
 			gridId: null,
 			exp: 0,
 			sleep: false,
-			treasures:[
+			treasures: [
 				// TreasureGenerator.getInst().generator()
 			]
 		};

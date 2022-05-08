@@ -748,7 +748,7 @@ function getPeopleType(ctx:Context, peopleId:Int):PeopleType {
 	}
 }
 
-function getPeopleMaintainCost(ctx:Context, peopleId):Float {
+function getPeopleMaintainCost(ctx:Context, peopleId:Int):Float {
 	final people = getPeopleById(ctx, peopleId);
 	return switch getPeopleType(ctx, peopleId) {
 		case WENGUAN(level):
@@ -760,7 +760,7 @@ function getPeopleMaintainCost(ctx:Context, peopleId):Float {
 	}
 }
 
-function getPeopleForce(ctx:Context, peopleId):Float {
+function getPeopleForce(ctx:Context, peopleId:Int):Float {
 	final people = getPeopleById(ctx, peopleId);
 	final treasureCates = ctx.treasures.filter(t -> t.position.peopleId == peopleId).map(t -> treasureList[t.protoId]);
 	final totalTreasureBonus = treasureCates.fold((c, a:Float) -> {
@@ -775,7 +775,7 @@ function getPeopleForce(ctx:Context, peopleId):Float {
 	return people.force + totalTreasureBonus + expLevelBonus;
 }
 
-function getPeopleIntelligence(ctx:Context, peopleId):Float {
+function getPeopleIntelligence(ctx:Context, peopleId:Int):Float {
 	final people = getPeopleById(ctx, peopleId);
 	final treasureCates = ctx.treasures.filter(t -> t.position.peopleId == peopleId).map(t -> treasureList[t.protoId]);
 	final totalTreasureBonus = treasureCates.fold((c, a:Float) -> {
@@ -790,7 +790,7 @@ function getPeopleIntelligence(ctx:Context, peopleId):Float {
 	return people.intelligence + totalTreasureBonus + expLevelBonus;
 }
 
-function getPeoplePolitical(ctx:Context, peopleId):Float {
+function getPeoplePolitical(ctx:Context, peopleId:Int):Float {
 	final people = getPeopleById(ctx, peopleId);
 	final treasureCates = ctx.treasures.filter(t -> t.position.peopleId == peopleId).map(t -> treasureList[t.protoId]);
 	final totalTreasureBonus = treasureCates.fold((c, a:Float) -> {
@@ -805,7 +805,7 @@ function getPeoplePolitical(ctx:Context, peopleId):Float {
 	return people.political + totalTreasureBonus + expLevelBonus;
 }
 
-function getPeopleCharm(ctx:Context, peopleId):Float {
+function getPeopleCharm(ctx:Context, peopleId:Int):Float {
 	final people = getPeopleById(ctx, peopleId);
 	final treasureCates = ctx.treasures.filter(t -> t.position.peopleId == peopleId).map(t -> treasureList[t.protoId]);
 	final totalTreasureBonus = treasureCates.fold((c, a:Float) -> {
@@ -822,7 +822,7 @@ function getPeopleCharm(ctx:Context, peopleId):Float {
 	return people.charm + totalTreasureBonus + expLevelBonus;
 }
 
-function getPeopleCommand(ctx:Context, peopleId):Float {
+function getPeopleCommand(ctx:Context, peopleId:Int):Float {
 	final people = getPeopleById(ctx, peopleId);
 	final treasureCates = ctx.treasures.filter(t -> t.position.peopleId == peopleId).map(t -> treasureList[t.protoId]);
 	final totalTreasureBonus = treasureCates.fold((c, a:Float) -> {
@@ -837,20 +837,46 @@ function getPeopleCommand(ctx:Context, peopleId):Float {
 	return people.command + totalTreasureBonus + expLevelBonus;
 }
 
-function getPeopleAbilities(ctx:Context, peopleId):Array<Int> {
+function getPeopleAbilities(ctx:Context, peopleId:Int):Array<Int> {
 	final people = getPeopleById(ctx, peopleId);
 	final treasureCates = ctx.treasures.filter(t -> t.position.peopleId == peopleId).map(t -> treasureList[t.protoId]);
 	final totalTreasureBonus = treasureCates.fold((c, a) -> {
 		return a.concat(c.abilities);
 	}, ([] : Array<Int>));
-	// TODO
 	final expLevelBonus = switch getPeopleType(ctx, peopleId) {
+		case WENGUAN(level):
+			final cnt = Std.int(level / 3);
+			final abiMap = PeopleGenerator.getInst().getAbiMap()[2];
+			[
+				for (i in 0...cnt) {
+					final selectId = (peopleId * cnt) % abiMap.length;
+					abiMap[selectId];
+				}
+			];
 		case WUJIANG(level):
-			[];
+			final cnt = Std.int(level / 3);
+			final abiMap = PeopleGenerator.getInst().getAbiMap()[1];
+			[
+				for (i in 0...cnt) {
+					final selectId = (peopleId * cnt) % abiMap.length;
+					abiMap[selectId];
+				}
+			];
 		case _:
 			[];
 	}
-	return people.abilities.concat(totalTreasureBonus).concat(expLevelBonus);
+	final allAbis = people.abilities.concat(totalTreasureBonus).concat(expLevelBonus);
+	// 去掉重復
+	final abiSet = new Set<Int>();
+	for (abi in allAbis) {
+		abiSet.add(abi);
+	}
+	var ret:Array<Int> = [];
+	var iter = abiSet.iterator();
+	while (iter.hasNext()) {
+		ret.push(iter.next());
+	}
+	return ret;
 }
 
 function getPlayerCommand(ctx:Context, playerId:Int):Array<ActionInfoID> {
