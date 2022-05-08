@@ -33,6 +33,7 @@ private function getExploreCost(ctx:Context, playerId:Int, gridId:Int, p1SelectI
 			// 人脈加成
 			final abiFactor = p1Abilities.has(10) ? 1.5 : 1;
 			final rate = base * charmFactor * abiFactor;
+			final findTreasureRate = FIND_TREASURE_WHEN_SUCCESS_BASE_RATE;
 			return {
 				playerCost: {
 					id: playerId,
@@ -41,7 +42,8 @@ private function getExploreCost(ctx:Context, playerId:Int, gridId:Int, p1SelectI
 					id: p1.id,
 					energy: useEnergy,
 				},
-				successRate: rate
+				successRate: rate,
+				findTreasureRate: findTreasureRate
 			};
 		case _:
 			throw new haxe.Exception("not impl");
@@ -51,7 +53,6 @@ private function getExploreCost(ctx:Context, playerId:Int, gridId:Int, p1SelectI
 private function onExploreCost(ctx:Context, playerId:Int, gridId:Int, p1SelectId:Int) {
 	final p1 = getPeopleById(ctx, p1SelectId);
 	final player = ctx.players[playerId];
-
 	final negoCost = getExploreCost(ctx, playerId, gridId, p1SelectId);
 	// 無論成功或失敗武將先消體力
 	if (p1.energy < negoCost.peopleCost.energy) {
@@ -62,42 +63,42 @@ private function onExploreCost(ctx:Context, playerId:Int, gridId:Int, p1SelectId
 		p1.energy = 0;
 	}
 	//
-	final success = random() < negoCost.successRate;
-	if (success) {
-		final isTreasure = random() < FIND_TREASURE_WHEN_SUCCESS_RATE;
-		if (isTreasure) {
-			final treasure = TreasureGenerator.getInst().generator();
-			onFindTreasure(ctx, playerId, treasure);
-		} else {
-			final resultValue = {
-				success: false,
-				people: getPeopleInfo(ctx, p1),
-				peopleList: ([] : Array<model.PeopleGenerator.People>),
-				energyBefore: p1.energy,
-				energyAfter: p1.energy,
-				armyBefore: player.army,
-				armyAfter: player.army,
-				moneyBefore: player.money,
-				moneyAfter: player.money,
-				foodBefore: player.food,
-				foodAfter: player.food,
-			}
-			final newPeopleIds = {
-				// 功績
-				onPeopleExpAdd(ctx, p1.id, getExpAdd(Math.min(1, negoCost.successRate), model.Config.ENERGY_COST_ON_EXPLORE));
-				final newPeople = PeopleGenerator.getInst().generate();
-				addPeopleInfo(ctx, null, gridId, newPeople);
-				[newPeople.id];
-			}
-			resultValue.success = newPeopleIds.length > 0;
-			resultValue.peopleList = newPeopleIds.map(id -> getPeopleById(ctx, id)).map(p -> getPeopleInfo(ctx, p));
-			resultValue.energyAfter = p1.energy;
-			resultValue.armyAfter = player.army;
-			resultValue.moneyAfter = player.money;
-			resultValue.foodAfter = player.food;
-			ctx.events.push(Event.EXPLORE_RESULT(resultValue));
-		}
+	final isTreasureSuccess = random() < negoCost.findTreasureRate;
+	if (isTreasureSuccess) {
+		final treasure = TreasureGenerator.getInst().generator();
+		onFindTreasure(ctx, playerId, treasure);
+		return;
 	}
+	final resultValue = {
+		success: false,
+		people: getPeopleInfo(ctx, p1),
+		peopleList: ([] : Array<model.PeopleGenerator.People>),
+		energyBefore: p1.energy,
+		energyAfter: p1.energy,
+		armyBefore: player.army,
+		armyAfter: player.army,
+		moneyBefore: player.money,
+		moneyAfter: player.money,
+		foodBefore: player.food,
+		foodAfter: player.food,
+	}
+	final success = random() < negoCost.successRate;
+	final newPeopleIds = if (success) {
+		// 功績
+		onPeopleExpAdd(ctx, p1.id, getExpAdd(Math.min(1, negoCost.successRate), model.Config.ENERGY_COST_ON_EXPLORE));
+		final newPeople = PeopleGenerator.getInst().generate();
+		addPeopleInfo(ctx, null, gridId, newPeople);
+		[newPeople.id];
+	} else {
+		[];
+	}
+	resultValue.success = newPeopleIds.length > 0;
+	resultValue.peopleList = newPeopleIds.map(id -> getPeopleById(ctx, id)).map(p -> getPeopleInfo(ctx, p));
+	resultValue.energyAfter = p1.energy;
+	resultValue.armyAfter = player.army;
+	resultValue.moneyAfter = player.money;
+	resultValue.foodAfter = player.food;
+	ctx.events.push(Event.EXPLORE_RESULT(resultValue));
 }
 
 function _getTakeExplorePreview(ctx:Context, playerId:Int, gridId:Int):ExplorePreview {
@@ -113,7 +114,7 @@ function _getPreResultOfExplore(ctx:Context, playerId:Int, gridId:Int, peopleId:
 		energyBefore: Std.int(p1.energy),
 		energyAfter: Std.int(p1.energy - cost.peopleCost.energy),
 		successRate: cost.successRate,
-		successRateOnTreasure: .4,
+		successRateOnTreasure: cost.findTreasureRate,
 	}
 }
 
