@@ -43,6 +43,7 @@ class DebugModel implements IModel {
 					ActionInfoID.MOVE,
 					ActionInfoID.STRATEGY,
 					ActionInfoID.SNATCH,
+					ActionInfoID.TREASURE,
 					// ActionInfoID.EXPLORE,
 					// ActionInfoID.BUILD,
 					// ActionInfoID.FIRE,
@@ -509,6 +510,8 @@ class DebugModel implements IModel {
 	}
 
 	public function getPeopleById(id:Int):People {
-		throw new haxe.exceptions.NotImplementedException();
+		return PeopleGenerator.getInst().generate();
 	}
+
+	public function refresh(cb:() -> Void) { cb(); }
 }

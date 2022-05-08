@@ -37,6 +37,7 @@ class TreasureListView extends TableView{
                     equipPeople.name;
             }
             info.id = t.id;
+            info.belongToPeopleId = t.belongToPeopleId;
             clones.push(info);
         }
         dataSource.data = clones;

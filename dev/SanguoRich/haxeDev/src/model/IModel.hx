@@ -305,6 +305,8 @@ interface IModel {
 	function takeUnEquip(p1:People, unequipId:Int, cb:(gameInfo:GameInfo) -> Void):Void;
 
 	function getPeopleById(id:Int):People;
+
+	function refresh(cb:() -> Void):Void;
 }
 
 final StrategyList:Array<StrategyCatelog> = [
@@ -514,6 +516,7 @@ final BuildingList:Array<BuildingCatelog> = [
 		type: WALL(3)
 	}
 ];
+
 
 
 

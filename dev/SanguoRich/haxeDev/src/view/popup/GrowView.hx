@@ -30,9 +30,9 @@ class GrowView extends PopupView{
 
     function setInfo(view:LeaderGridView, before:PlayerInfo, after:PlayerInfo){
         view.pro_name.value = before.name;
-        view.pro_money.value = '${Main.getFixNumber(before.money, 2)} => ${Main.getFixNumber(after.money, 2)}';
-        view.pro_food.value = '${Main.getFixNumber(before.food, 2)} => ${Main.getFixNumber(after.food, 2)}';
-        view.pro_army.value = '${Main.getFixNumber(before.army, 2)} => ${Main.getFixNumber(after.army, 2)}';
+        view.pro_money.value = '${Main.getCompareString(before.money, after.money, 2)}';
+        view.pro_food.value = '${Main.getCompareString(before.food, after.food, 2)}';
+        view.pro_army.value = '${Main.getCompareString(before.army, after.army, 2)}';
         view.pro_peopleCount.value = before.people.length;
         view.pro_cityCount.value = "0";
     }
