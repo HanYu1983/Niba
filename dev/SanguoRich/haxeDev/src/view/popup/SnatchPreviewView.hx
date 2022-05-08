@@ -71,7 +71,7 @@ class SnatchPreviewView extends PopupView {
 				pro_army1.value = '${Main.getFixNumber(warResult[0].armyBefore, 0)} => ${Main.getFixNumber(warResult[0].armyAfter, 0)} (${Main.getFixNumber(warResult[0].armyAfter - warResult[0].armyBefore)})';
 				pro_army2.value = '${Main.getFixNumber(warResult[1].armyBefore, 0)} => ${Main.getFixNumber(warResult[1].armyAfter, 0)} (${Main.getFixNumber(warResult[1].armyAfter - warResult[1].armyBefore)})';
 				lbl_willSnacth.value = warResult[1].armyAfter < 1 ? '占領成功' : '占領失敗';
-				lbl_rateForTreasure.value = '攻城成功時會破壞';
+				lbl_rateForTreasure.value = '佔領時可以得到城內所有寶物';
 			} else {
 				pro_army1.value = '${Main.getFixNumber(SNATCH_ARMY_AT_LEAST, 0)} => ${Main.getFixNumber(army1_remain, 0)} (${Main.getFixNumber(army1_remain - SNATCH_ARMY_AT_LEAST)})';
 				pro_army2.value = '${Main.getFixNumber(SNATCH_ARMY_AT_LEAST, 0)} => ${Main.getFixNumber(army2_remain, 0)} (${Main.getFixNumber(army2_remain - SNATCH_ARMY_AT_LEAST)})';

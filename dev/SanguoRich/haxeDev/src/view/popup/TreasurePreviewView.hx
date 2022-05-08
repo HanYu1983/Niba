@@ -33,22 +33,28 @@ class TreasurePreviewView extends PopupView {
 	@:bind(btn_equip, MouseEvent.CLICK)
 	function onBtnEquipClick(e:MouseEvent) {
 		var p1 = p1List.selectedItem;
-		final equip = treasureInStore.selectedItem;
+		final equip:Dynamic = treasureInStore.selectedItem;
 
 		if (p1 == null)
 			return;
 		if (equip == null)
 			return;
 
+		function takeEquip(){
+			Main.model.takeEquip(p1, equip.id, (gameInfo:GameInfo) -> {
+				Dialogs.messageBox('賜予完畢', '賜予完畢', MessageBoxType.TYPE_INFO);
+				refresh();
+			});
+		}
+
 		if (equip.belongToPeopleId != null) {
 			Dialogs.messageBox('會從其他武將沒收這個寶物，被沒收的武將因為失望會損失一半的體力。\n確定執行嗎?', '', MessageBoxType.TYPE_QUESTION, true, (b) -> {
 				if (b == DialogButton.YES) {
-					Main.model.takeEquip(p1, equip.id, (gameInfo:GameInfo) -> {
-						Dialogs.messageBox('賜予完畢', '賜予完畢', MessageBoxType.TYPE_INFO);
-						refresh();
-					});
+					takeEquip();
 				}
 			});
+		}else{
+			takeEquip();
 		}
 	}
 
@@ -73,10 +79,13 @@ class TreasurePreviewView extends PopupView {
 
 	@:bind(btn_confirm, MouseEvent.CLICK)
 	function onBtnConfirmClick(e:MouseEvent) {
-		Main.model.refresh(()->{
-			Main.view.syncView();
-			fadeOut();
-		});
+		Main.view.syncView();
+		fadeOut();
+
+		// Main.model.refresh(()->{
+		// 	Main.view.syncView();
+		// 	fadeOut();
+		// });
 	}
 
 	var lastType = 0;

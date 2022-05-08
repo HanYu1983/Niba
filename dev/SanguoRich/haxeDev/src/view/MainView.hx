@@ -526,7 +526,7 @@ class MainView extends Box {
 		TweenX.serial(tweens);
 
 		trace('被沒收寶物的武將會扣一半的體力');
-		trace('model多一個refresh方法。是前端叫model清理掉所有的event和action用的');
+		trace('被打爆的城裡的所有寶物都歸打爆者所有，現在可以給佔領事件(最後給，因為玩家要操作)跟寶物一起給了。因為得到寶物前端不能立刻裝備了。');
 	}
 
 	function syncViewByInfo(gameInfo:GameInfo) {
@@ -584,13 +584,18 @@ class MainView extends Box {
 					for (t in treasures) {
 						title += '${t.name} ';
 					}
-					var msg = '${title}\n';
-					msg += '是否直接賜予武將?';
-					Dialogs.messageBox(msg, title, MessageBoxType.TYPE_QUESTION, true, (b) -> {
-						if (b == DialogButton.YES) {
-							onBtnShowTreasureClick(null);
-						}
+
+					Dialogs.messageBox(title, '發現寶物', MessageBoxType.TYPE_INFO, true, (b) -> {
+						doOneEvent(gameInfo);
 					});
+
+					// var msg = '${title}\n';
+					// msg += '是否直接賜予武將?';
+					// Dialogs.messageBox(msg, title, MessageBoxType.TYPE_QUESTION, true, (b) -> {
+					// 	if (b == DialogButton.YES) {
+					// 		onBtnShowTreasureClick(null);
+					// 	}
+					// });
 				case GRID_BORN_EVENT:
 					final info:Dynamic = event.value;
 					final grid:Grid = info.grid;
