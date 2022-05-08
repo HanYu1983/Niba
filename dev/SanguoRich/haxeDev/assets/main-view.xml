@@ -10,8 +10,8 @@
             <menuitem text="讀取" />
         </menu>
     </menubar> -->
-    <box width="1280" height="900" horizontalAlign="center" verticalAlign="center">
-        <hbox width="100%" height="100%" padding="20">
+    <box width="1400" height="900" horizontalAlign="center" verticalAlign="center">
+        <hbox width="100%" height="100%" padding="0">
             <vbox width="100%" height="100%">
                 <label id="lbl_gameInfo" text="測試" style="font-size:14"/>
                 <hbox width="100%" height="240">
@@ -54,7 +54,7 @@
                             <hbox id="box_gridPeopleList" width="100%" height="100%" />
                         </hbox>
                     </vbox>
-                    <vbox width="120" height="100%">
+                    <!-- <vbox width="120" height="100%">
                         <button text="游戲開始" width="100%" id="btn_start" />
 
                         <section-header text="君主" />
@@ -92,8 +92,47 @@
                         <button text="記錄" width="100%" id="btn_save" />
                         <button text="讀取" width="100%" id="btn_load" />
 
-                    </vbox>
+                    </vbox> -->
                 </hbox>
+            </vbox>
+            <vbox width="120" height="100%">
+                <button text="游戲開始" width="100%" id="btn_start" />
+
+                <section-header text="君主" />
+                <button text="移動" width="100%" id="btn_go" />
+                <button text="計略" width="100%" id="btn_showStrategy" />
+                <button text="寶物" width="100%" id="btn_showTreasure" />
+                <button text="解雇" width="100%" id="btn_firePeople" />
+                <button text="結束" width="100%" id="btn_end" />
+
+                <section-header text="外交" />
+                <button text="交涉" width="100%" id="btn_negotiate" />
+                <button text="號召" width="100%" id="btn_pk" />
+                <button text="搶奪" width="100%" id="btn_snatch" />
+                <button text="攻城" width="100%" id="btn_occupation" />
+                
+                <section-header text="交易" />
+                <button text="經商" width="100%" id="btn_earnMoney" />
+                <button text="買糧" width="100%" id="btn_buyFood" />
+                <button text="賣糧" width="100%" id="btn_sellFood" />
+                <button text="徵兵" width="100%" id="btn_buyArmy" />
+                <button text="裁兵" width="100%" id="btn_sellArmy" />
+
+                <section-header text="武將" />
+                <button text="作樂" width="100%" id="btn_payForFun" />
+                <button text="札營" width="100%" id="btn_camp" />
+                <button text="練兵" width="100%" id="btn_practice" />
+                <button text="探索" width="100%" id="btn_explore" />
+                <button text="聘用" width="100%" id="btn_hire" />
+
+                <section-header text="内政" />
+                <button text="調度" width="100%" id="btn_transfer" />
+                <button text="擴建" width="100%" id="btn_build" />
+
+                <section-header text="系統" />
+                <button text="記錄" width="100%" id="btn_save" />
+                <button text="讀取" width="100%" id="btn_load" />
+
             </vbox>
         </hbox>
         <box id="box_popup" width="100%" height="100%" style="background-color: grey;border:1px solid grey;background-opacity: .3">

@@ -139,6 +139,6 @@ class Main {
 	}
 
 	public static function getCompareString(before:Float, after:Float, count:Int = 0) {
-		return '${Main.getFixNumber(before,count)} => ${Main.getFixNumber(after,count)} (${Main.getFixNumber(after - before)})';
+		return '${Main.getFixNumber(before,count)} => ${Main.getFixNumber(after,count)} (${Main.getFixNumber(after - before, count)})';
 	}
 }
