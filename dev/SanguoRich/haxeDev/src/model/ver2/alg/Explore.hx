@@ -33,7 +33,11 @@ private function getExploreCost(ctx:Context, playerId:Int, gridId:Int, p1SelectI
 			// 人脈加成
 			final abiFactor = p1Abilities.has(10) ? 1.5 : 1;
 			final rate = base * charmFactor * abiFactor;
-			final findTreasureRate = FIND_TREASURE_WHEN_SUCCESS_BASE_RATE;
+			final findTreasureRate = if (getTreasureInGrid(ctx, gridId).length > 0) {
+				FIND_TREASURE_WHEN_SUCCESS_BASE_RATE;
+			} else {
+				0.0;
+			}
 			return {
 				playerCost: {
 					id: playerId,
@@ -63,11 +67,15 @@ private function onExploreCost(ctx:Context, playerId:Int, gridId:Int, p1SelectId
 		p1.energy = 0;
 	}
 	//
-	final isTreasureSuccess = random() < negoCost.findTreasureRate;
-	if (isTreasureSuccess) {
-		final treasure = TreasureGenerator.getInst().generator();
+	final isFindTreasure = random() < negoCost.findTreasureRate;
+	if (isFindTreasure) {
+		final treasureInGrid = getTreasureInGrid(ctx, gridId);
+		if (treasureInGrid.length == 0) {
+			throw new haxe.Exception("城裡必須有寶物");
+		}
+		final takeId = Math.floor(Math.random() * treasureInGrid.length);
+		final treasure = treasureInGrid[takeId];
 		onFindTreasure(ctx, playerId, treasure);
-		return;
 	}
 	final resultValue = {
 		success: false,

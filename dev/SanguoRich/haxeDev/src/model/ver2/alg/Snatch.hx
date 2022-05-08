@@ -71,12 +71,25 @@ private function getSnatchCost(ctx:Context, playerId:Int, gridId:Int, p1PeopleId
 			final gainFood = foodAfterWar * gainRate;
 			// 這個計算結果代表攻擊方有留下兵就能搶到資源
 			final success = gainRate > 0;
+			final findTreasureRate = if (isOccupation) {
+				warCost.findTreasureRate;
+			} else {
+				if (getTreasureInGrid(ctx, gridId).length > 0) {
+					if (success) {
+						FIND_TREASURE_WHEN_SNATCH_SUCCESS_BASE_RATE;
+					} else {
+						0.0;
+					}
+				} else {
+					0.0;
+				}
+			}
 			{
 				warCost: warCost,
 				money: success ? gainMoney : 0.0,
 				food: success ? gainFood : 0.0,
 				success: success,
-				findTreasureRate: isOccupation ? warCost.findTreasureRate : (success ? FIND_TREASURE_WHEN_SNATCH_SUCCESS_BASE_RATE : 0.0),
+				findTreasureRate: findTreasureRate,
 			}
 		case _:
 			throw new haxe.Exception("未知的實作");
@@ -139,7 +152,12 @@ private function onSnatchCost(ctx:Context, playerId:Int, gridId:Int, p1PeopleId:
 			if (cost.success) {
 				final isFindTreasure = Math.random() < cost.findTreasureRate;
 				if (isFindTreasure) {
-					final treasure = TreasureGenerator.getInst().generator();
+					final treasureInGrid = getTreasureInGrid(ctx, gridId);
+					if (treasureInGrid.length == 0) {
+						throw new haxe.Exception("城裡必須有寶物");
+					}
+					final takeId = Math.floor(Math.random() * treasureInGrid.length);
+					final treasure = treasureInGrid[takeId];
 					onFindTreasure(ctx, playerId, treasure);
 				}
 			}

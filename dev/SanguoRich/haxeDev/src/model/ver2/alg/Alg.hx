@@ -399,9 +399,10 @@ function onPayTaxToGrid(ctx:Context, playerId:Int, gridId:Int) {
 	});
 }
 
-function onFindTreasure(ctx:Context, playerId:Int, treasure:TreasureInfo) {
-	addTreasureInfo(ctx, playerId, null, null, treasure);
+function onFindTreasure(ctx:Context, playerId:Int, treasure:Treasure) {
+	final treasureInfo = getTreasureInfo(ctx, treasure);
+	addTreasureInfo(ctx, playerId, null, null, treasureInfo);
 	ctx.events.push(Event.FIND_TREASURE_RESULT({
-		treasures: [treasure.catelog]
+		treasures: [treasureInfo.catelog]
 	}));
 }
