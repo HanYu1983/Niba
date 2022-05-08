@@ -69,11 +69,15 @@ class TreasurePreviewView extends PopupView {
 		fadeOut();
 	}
 
+	var lastType = 0;
+
 	function refresh(){
 		final gameInfo = Main.model.gameInfo();
 		function setRate(type:Int) {
 			if (p1List.selectedItem == null)
 				return ;
+
+			lastType = type;
 
 			var p1 = p1List.selectedItem;
 			var result:{peopleBefore:People, peopleAfter:People} = switch(type){
@@ -89,11 +93,11 @@ class TreasurePreviewView extends PopupView {
 			}
 
 			if(result != null){
-				pro_force.value = '${result.peopleBefore.force} => ${result.peopleAfter.force}';
-				pro_command.value = '${result.peopleBefore.command} => ${result.peopleAfter.command}';
-				pro_intelligence.value = '${result.peopleBefore.intelligence} => ${result.peopleAfter.intelligence}';
-				pro_political.value = '${result.peopleBefore.political} => ${result.peopleAfter.political}';
-				pro_charm.value = '${result.peopleBefore.charm} => ${result.peopleAfter.charm}';
+				pro_force.value = '${result.peopleBefore.force} => ${result.peopleAfter.force} (${ result.peopleAfter.force - result.peopleBefore.force})';
+				pro_command.value = '${result.peopleBefore.command} => ${result.peopleAfter.command} (${ result.peopleAfter.command - result.peopleBefore.command})';
+				pro_intelligence.value = '${result.peopleBefore.intelligence} => ${result.peopleAfter.intelligence} (${ result.peopleAfter.intelligence - result.peopleBefore.intelligence})';
+				pro_political.value = '${result.peopleBefore.political} => ${result.peopleAfter.political} (${ result.peopleAfter.political - result.peopleBefore.political})';
+				pro_charm.value = '${result.peopleBefore.charm} => ${result.peopleAfter.charm} (${ result.peopleAfter.charm - result.peopleBefore.charm})';
 				pro_abilities.value = '${Main.abilitiesToString(result.peopleBefore.abilities)}=> ${Main.abilitiesToString(result.peopleAfter.abilities)}';
 			}
 		}
@@ -112,7 +116,8 @@ class TreasurePreviewView extends PopupView {
 			pro_charm.value = p.charm;
 			pro_abilities.value = Main.abilitiesToString(p.abilities);
 
-			treasureInPeople.selectedIndex = -1;
+			setRate(lastType);
+			// treasureInPeople.selectedIndex = -1;
 		}
 
 		treasureInPeople.onChange = function(e){

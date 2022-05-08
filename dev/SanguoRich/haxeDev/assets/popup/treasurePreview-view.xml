@@ -4,8 +4,8 @@
     <button text="沒收" id="btn_unequip" horizontalAlign="center" />
     <hbox id="box_treasureInStore" width="100%" height="150"></hbox>
     <button text="賜予" id="btn_equip" horizontalAlign="center" />
-    <hbox horizontalAlign="center">
-        <property-grid width="400">
+    <hbox horizontalAlign="center" width="100%">
+        <property-grid width="100%">
             <property-group text="武將">
                 <property id="pro_name" label="武將" value="100" />
                 <property id="pro_energy" label="體力" value="100" />
