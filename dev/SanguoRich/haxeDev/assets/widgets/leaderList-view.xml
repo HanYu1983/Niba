@@ -6,7 +6,7 @@
         <column id="army" text="士兵" width="150" sortable="true" style="text-align:center;font-size:12;"/>
         <column id="peopleCount" text="武將數" width="60" sortable="true" style="text-align:center;font-size:12;"/>
         <column id="cityCount" text="城池數" width="60" sortable="true" style="text-align:center;font-size:12;"/>
-        <column id="treasureCount" text="寶物數" width="40" sortable="true" style="text-align:center;font-size:12;"/>
+        <column id="treasureCount" text="寶物數" width="60" sortable="true" style="text-align:center;font-size:12;"/>
     </header>
 
     <item-renderer verticalAlign="center">

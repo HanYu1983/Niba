@@ -37,9 +37,9 @@
         <hbox>
             <button id="btn_isOccupation" text="攻城模式" toggle="true" selected="false" />
             <label id="lbl_warTypeName" text="野戰" style="font-size:24"/>
-            <label text="預計獲得:" style="font-size:24"/>
+            <label text="預計獲得:" verticalAlign="bottom" style="font-size:14"/>
             <label id="lbl_willSnacth" text="10%" style="font-size:24" />
-            <label text="獲得寶物幾率:" style="font-size:24"/>
+            <label text="獲得寶物幾率:" verticalAlign="bottom" style="font-size:14"/>
             <label id="lbl_rateForTreasure" text="10%" style="font-size:24" />
         </hbox>
     </hbox>

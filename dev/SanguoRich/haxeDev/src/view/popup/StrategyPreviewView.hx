@@ -99,7 +99,7 @@ class StrategyPreviewView extends PopupView {
 			var targetGrid = gridList.selectedItem.id;
 			var result:{energyBefore:Int, energyAfter:Int, rate:Float} = Main.model.getStrategyRate(p1, s, targetPlayer, targetPeople, targetGrid);
 
-			pro_energy.value = '${Main.getCompareString(result.energyBefore, result.energyAfter)})';
+			pro_energy.value = '${Main.getCompareString(result.energyBefore, result.energyAfter)}';
 			lbl_rate.value = Main.getRateString(result.rate);
 		}
 

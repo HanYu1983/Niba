@@ -16,9 +16,9 @@
         </property-grid>
     </hbox>
     <hbox horizontalAlign="center">
-        <label text="計策:"  style="font-size:14" />
+        <label text="計策:" verticalAlign="bottom" style="font-size:14"/>
         <label id="lbl_usingStrategy" text="" style="font-size:24" />
-        <label text="成功率:"  style="font-size:14" />
+        <label text="成功率:" verticalAlign="bottom" style="font-size:14"/>
         <label id="lbl_rate" text="" style="font-size:24" />
     </hbox>
     <hbox horizontalAlign="center">
