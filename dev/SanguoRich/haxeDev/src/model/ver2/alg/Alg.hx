@@ -201,7 +201,8 @@ function doPlayerEnd(ctx:Context) {
 					if (gridsWillGrow.length > 0) {
 						final gridsBefore = gridsWillGrow.map(g -> getGridInfo(ctx, g));
 						for (grid in gridsWillGrow) {
-							grid.food = Math.min(GRID_RESOURCE_MAX, grid.food + EVENT_GROW_FOOD_AMOUNT);
+							final gain = EVENT_GROW_FOOD_AMOUNT * (Math.random() * .4 + .8);
+							grid.food = Math.min(GRID_RESOURCE_MAX, grid.food + gain);
 						}
 						final gridsAfter = gridsWillGrow.map(g -> getGridInfo(ctx, g));
 						ctx.events.push(GRID_RESOURCE_EVENT({
@@ -222,7 +223,8 @@ function doPlayerEnd(ctx:Context) {
 					if (gridsWillGrow.length > 0) {
 						final gridsBefore = gridsWillGrow.map(g -> getGridInfo(ctx, g));
 						for (grid in gridsWillGrow) {
-							grid.money = Math.min(GRID_RESOURCE_MAX, grid.money + EVENT_GROW_FOOD_AMOUNT);
+							final gain = EVENT_GROW_FOOD_AMOUNT * (Math.random() * .4 + .8);
+							grid.money = Math.min(GRID_RESOURCE_MAX, grid.money + gain);
 						}
 						final gridsAfter = gridsWillGrow.map(g -> getGridInfo(ctx, g));
 						ctx.events.push(GRID_RESOURCE_EVENT({
@@ -243,7 +245,8 @@ function doPlayerEnd(ctx:Context) {
 					if (gridsWillGrow.length > 0) {
 						final gridsBefore = gridsWillGrow.map(g -> getGridInfo(ctx, g));
 						for (grid in gridsWillGrow) {
-							grid.army = Math.min(GRID_RESOURCE_MAX, grid.army + EVENT_GROW_FOOD_AMOUNT);
+							final gain = EVENT_GROW_FOOD_AMOUNT * (Math.random() * .4 + .8);
+							grid.army = Math.min(GRID_RESOURCE_MAX, grid.army + gain);
 						}
 						final gridsAfter = gridsWillGrow.map(g -> getGridInfo(ctx, g));
 						ctx.events.push(GRID_RESOURCE_EVENT({
