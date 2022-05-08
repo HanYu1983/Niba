@@ -31,6 +31,7 @@ private function getNegoCost(ctx:Context, playerId:Int, gridId:Int, p1SelectId:I
 			final fightPeople = [p1SelectId, p2SelectId].map(id -> getPeopleById(ctx, id));
 			return switch fightPeople {
 				case [p1, p2]:
+					final p1Abilities = getPeopleAbilities(ctx, p1.id);
 					// 用掉1/5的體力(最多20)
 					// 體力越少效率越低
 					final useEnergy = p1.energy / (100 / ENERGY_COST_ON_NEGO);
@@ -45,7 +46,7 @@ private function getNegoCost(ctx:Context, playerId:Int, gridId:Int, p1SelectId:I
 					rate = Math.min(rate, 1.2);
 
 					// 良官加成，rate最高可以突破1.2
-					final abiFactor = p1.abilities.has(7) ? 1.5 : 1;
+					final abiFactor = p1Abilities.has(7) ? 1.5 : 1;
 					rate *= abiFactor;
 
 					// 根據友好度決定基本%數
@@ -67,9 +68,9 @@ private function getNegoCost(ctx:Context, playerId:Int, gridId:Int, p1SelectId:I
 					{
 						playerCost: {
 							id: playerId,
-							army: ENABLE_NEGO_ARMY ? grid.army * (gainRate + (p1.abilities.has(11) ? .05 : 0)) : 0.0,
-							money: grid.money * (gainRate + (p1.abilities.has(4) ? .05 : 0)),
-							food: grid.food * (gainRate + (p1.abilities.has(5) ? .05 : 0))
+							army: ENABLE_NEGO_ARMY ? grid.army * (gainRate + (p1Abilities.has(11) ? .05 : 0)) : 0.0,
+							money: grid.money * (gainRate + (p1Abilities.has(4) ? .05 : 0)),
+							food: grid.food * (gainRate + (p1Abilities.has(5) ? .05 : 0))
 						},
 						peopleCost: {
 							id: p1.id,

@@ -20,8 +20,9 @@ private function getWarCostImpl(ctx:Context, playerId:Int, gridId:Int, p1PeopleI
 	{
 		final atkArmy = army1;
 		final atkPeople = getPeopleById(ctx, p1PeopleId);
-		final fact1 = if (atkPeople.abilities.has(6)) WAR_BACK_ABILITY_FACTOR else 1.0;
-		final fact2 = if (atkPeople.abilities.has(7)) WAR_BACK_ABILITY_FACTOR else 1.0;
+		final atkPeopleAbilities = getPeopleAbilities(ctx, atkPeople.id);
+		final fact1 = if (atkPeopleAbilities.has(6)) WAR_BACK_ABILITY_FACTOR else 1.0;
+		final fact2 = if (atkPeopleAbilities.has(7)) WAR_BACK_ABILITY_FACTOR else 1.0;
 		final fact3 = getPeopleIntelligence(ctx, atkPeople.id) / 100;
 		final base = atkArmy;
 		final cost = base * fact1 * fact2 * fact3;
@@ -34,6 +35,7 @@ private function getWarCostImpl(ctx:Context, playerId:Int, gridId:Int, p1PeopleI
 		final atkArmy = army1;
 		final defArmy = army2;
 		final atkPeople = getPeopleById(ctx, p1PeopleId);
+		final atkPeopleAbilities = getPeopleAbilities(ctx, atkPeople.id);
 		final defPeople = getPeopleById(ctx, p2PeopleId);
 		final currMoney = ctx.players[playerId].money;
 		final currFood = ctx.players[playerId].food;
@@ -42,10 +44,10 @@ private function getWarCostImpl(ctx:Context, playerId:Int, gridId:Int, p1PeopleI
 		final useEnergy = atkPeople.energy / (100 / ENERGY_COST_ON_WAR);
 		final fact0 = useEnergy / ENERGY_COST_ON_WAR;
 		final fact1 = (atkArmy + defArmy * WAR_HIGH_LOW_FACTOR) / (defArmy + defArmy * WAR_HIGH_LOW_FACTOR);
-		final fact2 = if (atkPeople.abilities.has(0)) WAR_FRONT_ABILITY_FACTOR else 1.0;
-		final fact3 = if (atkPeople.abilities.has(1)) WAR_FRONT_ABILITY_FACTOR else 1.0;
-		final fact4 = if (atkPeople.abilities.has(2)) WAR_FRONT_ABILITY_FACTOR else 1.0;
-		var fact5 = if (atkPeople.abilities.has(3)) WAR_FRONT_ABILITY_FACTOR else 1.0;
+		final fact2 = if (atkPeopleAbilities.has(0)) WAR_FRONT_ABILITY_FACTOR else 1.0;
+		final fact3 = if (atkPeopleAbilities.has(1)) WAR_FRONT_ABILITY_FACTOR else 1.0;
+		final fact4 = if (atkPeopleAbilities.has(2)) WAR_FRONT_ABILITY_FACTOR else 1.0;
+		var fact5 = if (atkPeopleAbilities.has(3)) WAR_FRONT_ABILITY_FACTOR else 1.0;
 		fact5 = 1.0;
 		final fact6 = getPeopleForce(ctx, atkPeople.id) / getPeopleCommand(ctx, defPeople.id);
 		var fact7 = getPeopleIntelligence(ctx, atkPeople.id) / getPeopleIntelligence(ctx, defPeople.id);
@@ -71,8 +73,9 @@ private function getWarCostImpl(ctx:Context, playerId:Int, gridId:Int, p1PeopleI
 	{
 		final atkArmy = army2;
 		final atkPeople = getPeopleById(ctx, p2PeopleId);
-		final fact1 = if (atkPeople.abilities.has(6)) WAR_BACK_ABILITY_FACTOR else 1.0;
-		final fact2 = if (atkPeople.abilities.has(7)) WAR_BACK_ABILITY_FACTOR else 1.0;
+		final atkPeopleAbilities = getPeopleAbilities(ctx, atkPeople.id);
+		final fact1 = if (atkPeopleAbilities.has(6)) WAR_BACK_ABILITY_FACTOR else 1.0;
+		final fact2 = if (atkPeopleAbilities.has(7)) WAR_BACK_ABILITY_FACTOR else 1.0;
 		final fact3 = getPeopleIntelligence(ctx, atkPeople.id) / 100;
 		final base = atkArmy;
 		final cost = base * fact1 * fact2 * fact3;
@@ -85,6 +88,7 @@ private function getWarCostImpl(ctx:Context, playerId:Int, gridId:Int, p1PeopleI
 		final atkArmy = army2;
 		final defArmy = army1;
 		final atkPeople = getPeopleById(ctx, p2PeopleId);
+		final atkPeopleAbilities = getPeopleAbilities(ctx, atkPeople.id);
 		final defPeople = getPeopleById(ctx, p1PeopleId);
 		final currMoney = ctx.grids[gridId].money;
 		final currFood = ctx.grids[gridId].food;
@@ -93,13 +97,13 @@ private function getWarCostImpl(ctx:Context, playerId:Int, gridId:Int, p1PeopleI
 		final useEnergy = atkPeople.energy / (100 / ENERGY_COST_ON_WAR);
 		final fact0 = useEnergy / ENERGY_COST_ON_WAR;
 		final fact1 = (atkArmy + defArmy * WAR_HIGH_LOW_FACTOR) / (defArmy + defArmy * WAR_HIGH_LOW_FACTOR);
-		final fact2 = if (atkPeople.abilities.has(0)) WAR_FRONT_ABILITY_FACTOR else 1.0;
-		final fact3 = if (atkPeople.abilities.has(1)) WAR_FRONT_ABILITY_FACTOR else 1.0;
-		final fact4 = if (atkPeople.abilities.has(2)) WAR_FRONT_ABILITY_FACTOR else 1.0;
-		var fact5 = if (atkPeople.abilities.has(3)) WAR_FRONT_ABILITY_FACTOR else 1.0;
+		final fact2 = if (atkPeopleAbilities.has(0)) WAR_FRONT_ABILITY_FACTOR else 1.0;
+		final fact3 = if (atkPeopleAbilities.has(1)) WAR_FRONT_ABILITY_FACTOR else 1.0;
+		final fact4 = if (atkPeopleAbilities.has(2)) WAR_FRONT_ABILITY_FACTOR else 1.0;
+		var fact5 = if (atkPeopleAbilities.has(3)) WAR_FRONT_ABILITY_FACTOR else 1.0;
 		fact5 = 1.0;
-		final fact6 = if (options.occupy && atkPeople.abilities.has(8)) WAR_FRONT_ABILITY_FACTOR else 1.0;
-		final fact7 = if (options.occupy && atkPeople.abilities.has(9)) WAR_FRONT_ABILITY_FACTOR else 1.0;
+		final fact6 = if (options.occupy && atkPeopleAbilities.has(8)) WAR_FRONT_ABILITY_FACTOR else 1.0;
+		final fact7 = if (options.occupy && atkPeopleAbilities.has(9)) WAR_FRONT_ABILITY_FACTOR else 1.0;
 		final fact8 = getPeopleCommand(ctx, atkPeople.id) / getPeopleForce(ctx, defPeople.id);
 		var fact9 = getPeopleIntelligence(ctx, atkPeople.id) / getPeopleIntelligence(ctx, defPeople.id);
 		fact9 = 1.0;
@@ -119,6 +123,8 @@ private function getWarCostImpl(ctx:Context, playerId:Int, gridId:Int, p1PeopleI
 		defDamage = damage * WAR_FINAL_DAMAGE_FACTOR;
 		defEnergyCost = useEnergy * getEnergyFactor(atkArmy);
 	}
+	final success = (ctx.grids[gridId].army - atkDamage) <= 0 && ctx.players[playerId].army - defDamage >= 0;
+	final findTreasureRate = options.occupy ? (success ? FIND_TREASURE_WHEN_WAR_SUCCESS_BASE_RATE : 0.0) : 0.0;
 	return {
 		playerCost: [
 			{
@@ -144,7 +150,8 @@ private function getWarCostImpl(ctx:Context, playerId:Int, gridId:Int, p1PeopleI
 				energy: defEnergyCost,
 			}
 		],
-		success: (ctx.grids[gridId].army - atkDamage) <= 0 && ctx.players[playerId].army - defDamage >= 0,
+		success: success,
+		findTreasureRate: findTreasureRate,
 	}
 }
 
@@ -167,7 +174,12 @@ private function onWarCostImpl(ctx:Context, playerId:Int, gridId:Int, p1PeopleId
 	}
 	final success = {
 		switch getWarCostImpl(ctx, playerId, gridId, p1PeopleId, p2PeopleId, army1, army2, options) {
-			case {playerCost: [playerCost1, playerCost2], peopleCost: [peopleCost1, peopleCost2], success: success}:
+			case {
+				playerCost: [playerCost1, playerCost2],
+				peopleCost: [peopleCost1, peopleCost2],
+				success: success,
+				findTreasureRate: findTreasureRate
+			}:
 				// 無論成功或失敗武將先消體力
 				if (people1.energy < peopleCost1.energy) {
 					throw new haxe.Exception('people.energy ${people1.energy} < ${peopleCost1.energy}');
@@ -238,6 +250,14 @@ private function onWarCostImpl(ctx:Context, playerId:Int, gridId:Int, p1PeopleId
 					}
 				}
 				if (success) {
+					// 寶物只處理攻城部分
+					if (options.occupy) {
+						final isFindTreasure = Math.random() < findTreasureRate;
+						if (isFindTreasure) {
+							final treasure = TreasureGenerator.getInst().generator();
+							onFindTreasure(ctx, playerId, treasure);
+						}
+					}
 					// 功績
 					onPeopleExpAdd(ctx, people1.id, getExpAdd(1, peopleCost1.energy));
 				}

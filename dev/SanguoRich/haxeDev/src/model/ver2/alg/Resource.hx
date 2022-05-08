@@ -29,13 +29,14 @@ private function getResourceCost(ctx:Context, playerId:Int, gridId:Int, p1Select
 		case 0:
 			final grid = ctx.grids[gridId];
 			final p1 = getPeopleById(ctx, p1SelectId);
+			final p1Abilities = getPeopleAbilities(ctx, p1.id);
 			final useEnergy = p1.energy / (100 / ENERGY_COST_ON_RESOURCE);
 			final base = getBase(useEnergy, ENERGY_COST_ON_RESOURCE, 0.0) * BASE_RATE_RESOURCE;
-			final abiFactor:Float = if (type == RESOURCE.MONEY && (p1.abilities.has(4))) {
+			final abiFactor:Float = if (type == RESOURCE.MONEY && (p1Abilities.has(4))) {
 				1.5;
-			} else if (type == RESOURCE.ARMY && (p1.abilities.has(11))) {
+			} else if (type == RESOURCE.ARMY && (p1Abilities.has(11))) {
 				1.5;
-			} else if (type == RESOURCE.FOOD && (p1.abilities.has(5))) {
+			} else if (type == RESOURCE.FOOD && (p1Abilities.has(5))) {
 				1.5;
 			} else {
 				1;

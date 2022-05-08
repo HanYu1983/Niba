@@ -18,6 +18,7 @@ private function getHireCost(ctx:Context, playerId:Int, gridId:Int, p1SelectId:I
 			final fightPeople = [p1SelectId, p2SelectId].map(p -> getPeopleById(ctx, p));
 			return switch fightPeople {
 				case [p1, p2]:
+					final p1Abilities = getPeopleAbilities(ctx, p1.id);
 					final hireCost = p2.cost * PEOPLE_HIRE_COST_FACTOR;
 					final hireMoneyOffset = player.money - hireCost;
 					final useEnergy = p1.energy / (100 / ENERGY_COST_ON_HIRE);
@@ -35,7 +36,7 @@ private function getHireCost(ctx:Context, playerId:Int, gridId:Int, p1SelectId:I
 					final vsCharm = (p2.cost / 1200) * 80 + 20;
 					final charmFactor = (getPeopleCharm(ctx, p1.id) + charmExt) / vsCharm;
 					// 人脈加成
-					final abiFactor = p1.abilities.has(10) ? 1.5 : 1;
+					final abiFactor = p1Abilities.has(10) ? 1.5 : 1;
 					// 越不夠錢減成
 					// 完全付不出來的話, 這個系數為1
 					final hireCostFactor = hireMoneyOffset >= 0 ? 0 : Math.min(1, -1 * hireMoneyOffset / hireCost);

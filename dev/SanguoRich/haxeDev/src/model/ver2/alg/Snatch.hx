@@ -6,6 +6,7 @@ import model.Config;
 import model.ver2.Define;
 import model.ver2.alg.Nego;
 import model.ver2.alg.War;
+import model.ver2.alg.Alg;
 
 using Lambda;
 
@@ -29,7 +30,8 @@ private function getSnatchCost(ctx:Context, playerId:Int, gridId:Int, p1PeopleId
 				warCost: warCost,
 				money: success ? grid.money * base : 0.0,
 				food: success ? grid.food * base : 0.0,
-				success: success
+				success: success,
+				findTreasureRate: success ? warCost.findTreasureRate : 0.0,
 			}
 		case 1:
 			final warCost = getWarCost(ctx, playerId, gridId, p1PeopleId, p2PeopleId, army1, army2, {occupy: isOccupation});
@@ -40,7 +42,8 @@ private function getSnatchCost(ctx:Context, playerId:Int, gridId:Int, p1PeopleId
 					warCost: warCost,
 					money: grid.money,
 					food: grid.food,
-					success: true
+					success: true,
+					findTreasureRate: 1,
 				}
 			}
 			// 基本搶劫成數為守方派出的兵佔城裡總兵的成數
@@ -72,7 +75,8 @@ private function getSnatchCost(ctx:Context, playerId:Int, gridId:Int, p1PeopleId
 				warCost: warCost,
 				money: success ? gainMoney : 0.0,
 				food: success ? gainFood : 0.0,
-				success: success
+				success: success,
+				findTreasureRate: isOccupation ? warCost.findTreasureRate : (success ? FIND_TREASURE_WHEN_SNATCH_SUCCESS_BASE_RATE : 0.0),
 			}
 		case _:
 			throw new haxe.Exception("未知的實作");
@@ -130,10 +134,18 @@ private function onSnatchCost(ctx:Context, playerId:Int, gridId:Int, p1PeopleId:
 			final warArmy2 = ctx.grids[gridId].army;
 			onWarCost(ctx, playerId, gridId, p1PeopleId, p2PeopleId, warArmy1, warArmy2, {occupy: true, warEvent: false});
 		} else {
+			final cost = getSnatchCost(ctx, playerId, gridId, p1PeopleId, p2PeopleId, army1, army2, isOccupation);
+			// 先找寶, 因為寶物事件要放最後
+			if (cost.success) {
+				final isFindTreasure = Math.random() < cost.findTreasureRate;
+				if (isFindTreasure) {
+					final treasure = TreasureGenerator.getInst().generator();
+					onFindTreasure(ctx, playerId, treasure);
+				}
+			}
 			// 處理搶奪中的戰爭部分
 			onWarCost(ctx, playerId, gridId, p1PeopleId, p2PeopleId, army1, army2, {occupy: false, warEvent: false});
 			// 處理搶奪中的搶資源部分
-			final cost = getSnatchCost(ctx, playerId, gridId, p1PeopleId, p2PeopleId, army1, army2, isOccupation);
 			if (cost.success) {
 				final grid = ctx.grids[gridId];
 				grid.money -= cost.money;
@@ -179,11 +191,12 @@ function _getPreResultOfSnatch(ctx:Context, playerId:Int, gridId:Int, p1PeopleId
 				army;
 		}
 		final army2 = ctx.grids[gridId].army;
+		final warCost = getWarCost(ctx, playerId, gridId, p1PeopleId, p2PeopleId, army1, army2, {occupy: isOccupation});
 		final preResultOnSnatch = {
 			war: _getPreResultOfWar(ctx, playerId, gridId, p1PeopleId, p2PeopleId, army1, army2, {occupy: true}),
 			money: 0.0,
 			food: 0.0,
-			rateForTreasure:.5
+			rateForTreasure: warCost.findTreasureRate
 		}
 		// js.Browser.console.log(preResultOnSnatch);
 		return preResultOnSnatch;
@@ -195,7 +208,7 @@ function _getPreResultOfSnatch(ctx:Context, playerId:Int, gridId:Int, p1PeopleId
 			war: _getPreResultOfWar(ctx, playerId, gridId, p1PeopleId, p2PeopleId, army1, army2, {occupy: false}),
 			money: cost.money,
 			food: cost.food,
-			rateForTreasure:.5
+			rateForTreasure: cost.findTreasureRate
 		}
 		// js.Browser.console.log(preResultOnSnatch);
 		return preResultOnSnatch;

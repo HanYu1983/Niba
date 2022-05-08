@@ -1,5 +1,6 @@
 package model.ver2.alg;
 
+import model.TreasureGenerator;
 import model.GridGenerator;
 import model.IModel;
 import model.Config;
@@ -396,4 +397,11 @@ function onPayTaxToGrid(ctx:Context, playerId:Int, gridId:Int) {
 	ctx.events.push({
 		Event.PAY_FOR_OVER_ENEMY_GRID(eventValue);
 	});
+}
+
+function onFindTreasure(ctx:Context, playerId:Int, treasure:TreasureInfo) {
+	addTreasureInfo(ctx, playerId, null, null, treasure);
+	ctx.events.push(Event.FIND_TREASURE_RESULT({
+		treasures: [treasure.catelog]
+	}));
 }

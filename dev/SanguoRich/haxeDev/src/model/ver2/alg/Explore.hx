@@ -18,6 +18,7 @@ private function getExploreCost(ctx:Context, playerId:Int, gridId:Int, p1SelectI
 		case 0:
 			final grid = ctx.grids[gridId];
 			final p1 = getPeopleById(ctx, p1SelectId);
+			final p1Abilities = getPeopleAbilities(ctx, p1.id);
 			final useEnergy = p1.energy / (100 / ENERGY_COST_ON_EXPLORE);
 			final base = getBase(useEnergy, ENERGY_COST_ON_EXPLORE, 0.0) * BASE_RATE_EXPLORE;
 			final charmExt = ctx.attachments.filter(a -> a.belongToGridId == gridId).fold((p, a) -> {
@@ -30,7 +31,7 @@ private function getExploreCost(ctx:Context, playerId:Int, gridId:Int, p1SelectI
 			}, 0);
 			final charmFactor = (getPeopleCharm(ctx, p1.id) + charmExt) / 100;
 			// 人脈加成
-			final abiFactor = p1.abilities.has(10) ? 1.5 : 1;
+			final abiFactor = p1Abilities.has(10) ? 1.5 : 1;
 			final rate = base * charmFactor * abiFactor;
 			return {
 				playerCost: {
@@ -66,10 +67,7 @@ private function onExploreCost(ctx:Context, playerId:Int, gridId:Int, p1SelectId
 		final isTreasure = random() < FIND_TREASURE_WHEN_SUCCESS_RATE;
 		if (isTreasure) {
 			final treasure = TreasureGenerator.getInst().generator();
-			addTreasureInfo(ctx, playerId, null, null, treasure);
-			ctx.events.push(Event.FIND_TREASURE_RESULT({
-				treasures: [treasure.catelog]
-			}));
+			onFindTreasure(ctx, playerId, treasure);
 		} else {
 			final resultValue = {
 				success: false,

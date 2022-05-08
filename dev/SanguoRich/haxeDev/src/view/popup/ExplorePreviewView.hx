@@ -18,7 +18,7 @@ class ExplorePreviewView extends PopupView {
 		box_peopleList1.addComponent(p1List);
 	}
 
-	override function showPopup(info:Dynamic, cb:()->Void = null) {
+	override function showPopup(info:Dynamic, cb:() -> Void = null) {
 		super.showPopup(info, cb);
 
 		var info:ExplorePreview = info;
