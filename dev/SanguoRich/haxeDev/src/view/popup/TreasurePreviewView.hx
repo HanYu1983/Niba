@@ -48,11 +48,12 @@ class TreasurePreviewView extends PopupView {
 		}
 
 		if (equip.belongToPeopleId != null) {
-			Dialogs.messageBox('會從其他武將沒收這個寶物，被沒收的武將因為失望會損失一半的體力。\n確定執行嗎?', '', MessageBoxType.TYPE_QUESTION, true, (b) -> {
-				if (b == DialogButton.YES) {
-					takeEquip();
-				}
-			});
+			Dialogs.messageBox('這個寶物在別的武將身上，請先沒收再賜予', '這個寶物在別的武將身上，請先沒收再賜予', MessageBoxType.TYPE_INFO);
+			// Dialogs.messageBox('會從其他武將沒收這個寶物，被沒收的武將因為失望會損失一半的體力。\n確定執行嗎?', '', MessageBoxType.TYPE_QUESTION, true, (b) -> {
+			// 	if (b == DialogButton.YES) {
+			// 		takeEquip();
+			// 	}
+			// });
 		}else{
 			takeEquip();
 		}
@@ -67,7 +68,7 @@ class TreasurePreviewView extends PopupView {
 		if (unequip == null)
 			return;
 
-		Dialogs.messageBox('沒收這個寶物，被沒收的武將因為失望會損失一半的體力。\n確定執行嗎?', '', MessageBoxType.TYPE_QUESTION, true, (b) -> {
+		Dialogs.messageBox('沒收這個寶物，被沒收的武將因為失望會損失一點體力。\n確定執行嗎?', '', MessageBoxType.TYPE_QUESTION, true, (b) -> {
 			if (b == DialogButton.YES) {
 				Main.model.takeUnEquip(p1, unequip.id, (gameInfo:GameInfo) -> {
 					Dialogs.messageBox('沒收完畢', '沒收完畢', MessageBoxType.TYPE_INFO);
@@ -81,15 +82,11 @@ class TreasurePreviewView extends PopupView {
 	function onBtnConfirmClick(e:MouseEvent) {
 		Main.view.syncView();
 		fadeOut();
-
-		// Main.model.refresh(()->{
-		// 	Main.view.syncView();
-		// 	fadeOut();
-		// });
 	}
 
 	var lastType = 0;
 	var lastPeopleId = 0;
+	var currentGiveType = 0;
 
 	function refresh() {
 		final gameInfo = Main.model.gameInfo();
@@ -172,10 +169,26 @@ class TreasurePreviewView extends PopupView {
 
 		updateTreasureInPeopleList();
 		treasureInStore.setList(gameInfo.currentPlayer.treasures);
+
+		// 分賜與跟沒收兩個介面
+		box_treasureInPeople.hide();
+		box_treasureInStore.hide();
+		btn_unequip.hide();
+		btn_equip.hide();
+		switch(currentGiveType){
+			case 0:
+				box_treasureInStore.show();
+				btn_equip.show();
+			case 1:
+				box_treasureInPeople.show();
+				btn_unequip.show();
+			case _:
+		}
 	}
 
 	override function showPopup(info:Dynamic, cb:() -> Void = null) {
 		super.showPopup(info, cb);
+		currentGiveType = info.giveType;
 		refresh();
 	}
 }

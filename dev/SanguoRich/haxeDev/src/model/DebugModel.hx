@@ -44,6 +44,7 @@ class DebugModel implements IModel {
 					ActionInfoID.STRATEGY,
 					ActionInfoID.SNATCH,
 					ActionInfoID.TREASURE,
+					ActionInfoID.TREASURE_TAKE,
 					// ActionInfoID.EXPLORE,
 					// ActionInfoID.BUILD,
 					// ActionInfoID.FIRE,
