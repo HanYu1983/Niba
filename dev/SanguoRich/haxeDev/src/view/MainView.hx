@@ -489,9 +489,14 @@ class MainView extends Box {
 		Main.model.playerEnd(syncView);
 	}
 
-	@:bind(btn_showTreasure, MouseEvent.CLICK)
-	function onBtnShowTreasureClick(e:MouseEvent) {
-		treasurePreviewView.showPopup(null);
+	@:bind(btn_giveTreasure, MouseEvent.CLICK)
+	function onBtnGiveTreasureClick(e:MouseEvent) {
+		treasurePreviewView.showPopup({giveType:0});
+	}
+
+	@:bind(btn_takeTreasure, MouseEvent.CLICK)
+	function onBtnTakeTreasureClick(e:MouseEvent) {
+		treasurePreviewView.showPopup({giveType:1});
 	}
 
 	@:bind(btn_showStrategy, MouseEvent.CLICK)
@@ -525,8 +530,10 @@ class MainView extends Box {
 
 		TweenX.serial(tweens);
 
-		trace('被沒收寶物的武將會扣一半的體力');
-		trace('被打爆的城裡的所有寶物都歸打爆者所有，現在可以給佔領事件(最後給，因為玩家要操作)跟寶物一起給了。因為得到寶物前端不能立刻裝備了。');
+		trace('改用另一種方法解決顯示問題，現在可以沒收寶物了');
+		trace('方法是:前端得到寶物時不能立刻裝備。所以拿寶的事件可以跟升級一樣先給了。不用留到最後');
+		trace('被沒收寶物的武將會扣一半的體力，這樣就不會想拆拆裝裝');
+		trace('被打爆的城裡的所有寶物都歸打爆者所有，現在可以給佔領事件(最後給，因為玩家要操作)跟寶物一起給了。');
 	}
 
 	function syncViewByInfo(gameInfo:GameInfo) {
@@ -807,7 +814,8 @@ class MainView extends Box {
 
 	function disabledAllCommands() {
 		btn_go.hide();
-		btn_showTreasure.hide();
+		btn_giveTreasure.hide();
+		btn_takeTreasure.hide();
 		btn_showStrategy.hide();
 		btn_firePeople.hide();
 		btn_negotiate.hide();
@@ -846,7 +854,9 @@ class MainView extends Box {
 				case MOVE:
 					btn_go.show();
 				case TREASURE:
-					btn_showTreasure.show();
+					btn_giveTreasure.show();
+				case TREASURE_TAKE:
+					btn_takeTreasure.show();
 				case STRATEGY:
 					btn_showStrategy.show();
 				case FIRE:

@@ -101,7 +101,8 @@
                 <section-header text="君主" />
                 <button text="移動" width="100%" id="btn_go" />
                 <button text="計略" width="100%" id="btn_showStrategy" />
-                <button text="寶物" width="100%" id="btn_showTreasure" />
+                <button text="賜予" width="100%" id="btn_giveTreasure" />
+                <button text="沒收" width="100%" id="btn_takeTreasure" />
                 <button text="解雇" width="100%" id="btn_firePeople" />
                 <button text="結束" width="100%" id="btn_end" />
 

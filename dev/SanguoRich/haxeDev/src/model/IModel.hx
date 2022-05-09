@@ -26,6 +26,7 @@ enum ActionInfoID {
 	MOVE;
 	STRATEGY;
 	TREASURE;
+	TREASURE_TAKE;
 	FIRE;
 
 	NEGOTIATE;
