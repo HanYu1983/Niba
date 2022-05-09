@@ -64,7 +64,7 @@ function _takeUnEquip(ctx:Context, people1:model.PeopleGenerator.People, unequip
 	}
 	t.position.peopleId = null;
 	// 扣體(忠誠)
-	p1.energy /= 2.0;
+	p1.energy = Math.max(0, p1.energy - p1.energy * ENERGY_RATE_FOR_TREASURE_TAKE);
 	// 用掉裝備次數
 	player.memory.hasEquip = true;
 }
