@@ -68,9 +68,9 @@ function doGridGrow(ctx:Context) {
 			continue;
 		}
 		// 城池成長
-		final gainMoney = grid.money * getGridMoneyGrow(ctx, grid.id) + BASIC_GROW_MONEY;
-		final gainFood = grid.food * getGridFoodGrow(ctx, grid.id) + BASIC_GROW_FOOD;
-		final gainArmy = grid.army * getGridArmyGrow(ctx, grid.id) + BASIC_GROW_ARMY;
+		final gainMoney = grid.money * getGridMoneyGrow(ctx, grid.id);
+		final gainFood = grid.food * getGridFoodGrow(ctx, grid.id);
+		final gainArmy = grid.army * getGridArmyGrow(ctx, grid.id);
 		grid.money = Math.min(GRID_RESOURCE_MAX, grid.money + gainMoney);
 		grid.food = Math.min(GRID_RESOURCE_MAX, grid.food + gainFood);
 		grid.army = Math.min(GRID_RESOURCE_MAX, grid.army + gainArmy);
@@ -244,12 +244,11 @@ function doPlayerEnd(ctx:Context) {
 						final chooseId = Std.int(Math.random() * emptyGrids.length);
 						final chooseGrid = emptyGrids[chooseId];
 						// 隨機生成類型
-						// TODO: 重復的要過濾
-						addAttachInfo(ctx, chooseGrid.id, MARKET(1));
-						addAttachInfo(ctx, chooseGrid.id, FARM(1));
+						addAttachInfo(ctx, chooseGrid.id, MARKET(0));
+						addAttachInfo(ctx, chooseGrid.id, FARM(0));
 						addAttachInfo(ctx, chooseGrid.id, BARRACKS(1));
-						addAttachInfo(ctx, chooseGrid.id, EXPLORE(1));
-						addAttachInfo(ctx, chooseGrid.id, WALL(1));
+						addAttachInfo(ctx, chooseGrid.id, EXPLORE(0));
+						addAttachInfo(ctx, chooseGrid.id, WALL(0));
 						chooseGrid.money = EVENT_GRID_BORN_RESOURCE_AMOUNT;
 						chooseGrid.army = EVENT_GRID_BORN_RESOURCE_AMOUNT;
 						chooseGrid.food = EVENT_GRID_BORN_RESOURCE_AMOUNT;

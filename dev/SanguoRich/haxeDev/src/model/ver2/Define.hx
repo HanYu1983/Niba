@@ -20,9 +20,9 @@ typedef Grid = {
 	money:Float,
 	food:Float,
 	army:Float,
-	defaultMoneyGrow:Float,
-	defaultFoodGrow:Float,
-	defaultArmyGrow:Float,
+	// defaultMoneyGrow:Float,
+	// defaultFoodGrow:Float,
+	// defaultArmyGrow:Float,
 	favor:Array<Int>,
 }
 
@@ -296,15 +296,15 @@ function getGridMoneyGrow(ctx:Context, gridId:Int):Float {
 		return 0.0;
 	}
 	final grid = ctx.grids[gridId];
-	final factAttachment = 1 + ctx.attachments.filter(a -> a.belongToGridId == grid.id).fold((p, a) -> {
+	final attachmentRate = ctx.attachments.filter(a -> a.belongToGridId == grid.id).fold((p, a) -> {
 		return a + switch p.type {
 			case MARKET(level):
-				return [0.05, 0.09, 0.12, 0.14][level];
+				return [0.0, 0.05, 0.9, 0.12][level];
 			case _:
 				0;
 		}
 	}, 0);
-	return grid.defaultMoneyGrow * factAttachment;
+	return BASIC_GROW_MONEY_RATE + attachmentRate;
 }
 
 function getGridFoodGrow(ctx:Context, gridId:Int):Float {
@@ -314,15 +314,15 @@ function getGridFoodGrow(ctx:Context, gridId:Int):Float {
 		return 0.0;
 	}
 	final grid = ctx.grids[gridId];
-	final factAttachment = 1 + ctx.attachments.filter(a -> a.belongToGridId == grid.id).fold((p, a) -> {
+	final attachmentRate = ctx.attachments.filter(a -> a.belongToGridId == grid.id).fold((p, a) -> {
 		return a + switch p.type {
 			case FARM(level):
-				return [0.05, 0.09, 0.12, 0.14][level];
+				return [0.0, 0.05, 0.9, 0.12][level];
 			case _:
 				0;
 		}
 	}, 0);
-	return grid.defaultFoodGrow * factAttachment;
+	return BASIC_GROW_FOOD_RATE + attachmentRate;
 }
 
 function getGridArmyGrow(ctx:Context, gridId:Int):Float {
@@ -332,15 +332,15 @@ function getGridArmyGrow(ctx:Context, gridId:Int):Float {
 		return 0.0;
 	}
 	final grid = ctx.grids[gridId];
-	final factAttachment = 1 + ctx.attachments.filter(a -> a.belongToGridId == grid.id).fold((p, a) -> {
+	final attachmentRate = ctx.attachments.filter(a -> a.belongToGridId == grid.id).fold((p, a) -> {
 		return a + switch p.type {
 			case BARRACKS(level):
-				return [0.05, 0.09, 0.12, 0.14][level];
+				return [0.0, 0.05, 0.9, 0.12][level];
 			case _:
 				0;
 		}
 	}, 0);
-	return grid.defaultArmyGrow * factAttachment;
+	return BASIC_GROW_ARMY_RATE + attachmentRate;
 }
 
 function getGridBuildType(ctx:Context, gridId:Int):GROWTYPE {
@@ -655,9 +655,9 @@ function addGridInfo(ctx:Context, grid:model.GridGenerator.Grid):Void {
 		money: grid.money,
 		food: grid.food,
 		army: grid.army,
-		defaultMoneyGrow: grid.moneyGrow,
-		defaultFoodGrow: grid.foodGrow,
-		defaultArmyGrow: grid.armyGrow,
+		// defaultMoneyGrow: 0.0,
+		// defaultFoodGrow: 0.0,
+		// defaultArmyGrow: 0.0,
 		favor: grid.favor,
 	});
 	for (p in grid.people) {
@@ -677,11 +677,20 @@ function getNextId():Int {
 	return _id++;
 }
 
-function addAttachInfo(ctx:Context, belongToGridId:Int, attach:BUILDING) {
+function addAttachInfo(ctx:Context, belongToGridId:Int, type:BUILDING) {
+	final hasOne = ctx.attachments.filter(a -> a.belongToGridId == belongToGridId && switch [a.type, type] {
+		case [MARKET(_), MARKET(_)] | [FARM(_), FARM(_)] | [BARRACKS(_), BARRACKS(_)] | [EXPLORE(_), EXPLORE(_)] | [WALL(_), WALL(_)]:
+			true;
+		case _:
+			false;
+	}).length > 0;
+	if (hasOne) {
+		return;
+	}
 	ctx.attachments.push({
 		id: getNextId(),
 		belongToGridId: belongToGridId,
-		type: attach
+		type: type
 	});
 }
 

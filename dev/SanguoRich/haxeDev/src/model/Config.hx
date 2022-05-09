@@ -24,9 +24,9 @@ final PEOPLE_HIRE_COST_FACTOR = .1;
 final GRID_EARN_PER_TURN = 1;
 
 // 格子的基本保底成長
-final BASIC_GROW_MONEY = 0;
-final BASIC_GROW_FOOD = 0;
-final BASIC_GROW_ARMY = 0;
+final BASIC_GROW_MONEY_RATE = 0.01;
+final BASIC_GROW_FOOD_RATE = 0.01;
+final BASIC_GROW_ARMY_RATE = 0.01;
 
 // 幾個回合收稅(4人走完算1回合)
 // 作用中
