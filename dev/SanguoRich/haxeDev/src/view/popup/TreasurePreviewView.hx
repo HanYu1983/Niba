@@ -43,7 +43,7 @@ class TreasurePreviewView extends PopupView {
 		function takeEquip(){
 			Main.model.takeEquip(p1, equip.id, (gameInfo:GameInfo) -> {
 				Dialogs.messageBox('賜予完畢', '賜予完畢', MessageBoxType.TYPE_INFO);
-				fadeOut();
+				refresh();
 			});
 		}
 
@@ -72,7 +72,7 @@ class TreasurePreviewView extends PopupView {
 			if (b == DialogButton.YES) {
 				Main.model.takeUnEquip(p1, unequip.id, (gameInfo:GameInfo) -> {
 					Dialogs.messageBox('沒收完畢', '沒收完畢', MessageBoxType.TYPE_INFO);
-					refresh();
+					fadeOut();
 				});
 			}
 		});
