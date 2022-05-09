@@ -52,15 +52,19 @@ function _takeEquip(ctx:Context, people1:model.PeopleGenerator.People, equipId:I
 
 function _takeUnEquip(ctx:Context, people1:model.PeopleGenerator.People, unequipId:Int) {
 	ctx.events = [];
-	if (true) {
-		trace('不能拆除');
-		return;
-	}
 	final t = getTreasureById(ctx, unequipId);
 	final p1 = getPeopleById(ctx, people1.id);
+	if (p1.belongToPlayerId == null) {
+		throw new haxe.Exception("belongToPlayerId not found");
+	}
+	final player = ctx.players[p1.belongToPlayerId];
 	if (t.belongToPlayerId != null && t.belongToPlayerId != p1.belongToPlayerId) {
 		trace('寶物(${t.id})是玩家${t.belongToPlayerId}不是你的');
 		return;
 	}
 	t.position.peopleId = null;
+	// 扣體(忠誠)
+	p1.energy /= 2.0;
+	// 用掉裝備次數
+	player.memory.hasEquip = true;
 }
