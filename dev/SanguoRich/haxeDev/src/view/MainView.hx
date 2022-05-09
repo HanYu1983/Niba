@@ -227,6 +227,7 @@ class MainView extends Box {
 			grid.top = Math.floor(index / 10) * gridSize;
 		}
 
+		btn_takeTreasure.text = '${btn_takeTreasure.text}(${Main.getFixNumber(ENERGY_RATE_FOR_TREASURE_TAKE * 100, 0)})';
 		btn_camp.text = '${btn_camp.text}(${ENERGY_COST_ON_COST_FOR_FUN})';
 		btn_practice.text = '${btn_practice.text}(${ENERGY_COST_ON_COST_FOR_FUN})';
 		btn_payForFun.text = '${btn_payForFun.text}(${ENERGY_COST_ON_COST_FOR_FUN})';
@@ -529,11 +530,6 @@ class MainView extends Box {
 		}));
 
 		TweenX.serial(tweens);
-
-		trace('改用另一種方法解決顯示問題，現在可以沒收寶物了');
-		trace('方法是:前端得到寶物時不能立刻裝備。所以拿寶的事件可以跟升級一樣先給了。不用留到最後');
-		trace('被沒收寶物的武將會扣一半的體力，這樣就不會想拆拆裝裝');
-		trace('被打爆的城裡的所有寶物都歸打爆者所有，現在可以給佔領事件(最後給，因為玩家要操作)跟寶物一起給了。');
 	}
 
 	function syncViewByInfo(gameInfo:GameInfo) {

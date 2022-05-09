@@ -43,7 +43,7 @@ class TreasurePreviewView extends PopupView {
 		function takeEquip(){
 			Main.model.takeEquip(p1, equip.id, (gameInfo:GameInfo) -> {
 				Dialogs.messageBox('賜予完畢', '賜予完畢', MessageBoxType.TYPE_INFO);
-				refresh();
+				fadeOut();
 			});
 		}
 
