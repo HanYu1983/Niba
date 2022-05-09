@@ -61,7 +61,7 @@ typedef Player = {
 	strategy:Float,
 	position:Int,
 	memory:{
-		hasDice:Bool, hasStrategy:Bool, hasCommand:Bool, hasBuild:Bool
+		hasDice:Bool, hasStrategy:Bool, hasCommand:Bool, hasBuild:Bool, hasEquip:Bool,
 	},
 }
 
@@ -665,6 +665,7 @@ function addPlayerInfo(ctx:Context, player:model.IModel.PlayerInfo):Void {
 			hasStrategy: false,
 			hasCommand: false,
 			hasBuild: false,
+			hasEquip: false,
 		}
 	});
 	for (p in player.people) {
@@ -891,7 +892,9 @@ function getPlayerCommand(ctx:Context, playerId:Int):Array<ActionInfoID> {
 				ret.push(ActionInfoID.STRATEGY);
 			}
 		}
-		ret.push(ActionInfoID.TREASURE);
+		if (player.memory.hasEquip == false) {
+			ret.push(ActionInfoID.TREASURE);
+		}
 		ret.push(ActionInfoID.FIRE);
 	} else {
 		if (gridInfo.belongPlayerId == null) {
@@ -1052,6 +1055,7 @@ function clearMemory(ctx:Context) {
 		player.memory.hasStrategy = false;
 		player.memory.hasCommand = false;
 		player.memory.hasBuild = false;
+		player.memory.hasEquip = false;
 	}
 }
 
