@@ -297,7 +297,7 @@ function getGridMoneyGrow(ctx:Context, gridId:Int):Float {
 	}
 	final grid = ctx.grids[gridId];
 	final totalPeoplePolitical = peopleInGrid.fold((p, a) -> {
-		return a + p.political;
+		return a + getPeoplePolitical(ctx, p.id);
 	}, 0.0);
 	final factor1 = 2 / (peopleInGrid.length * 100);
 	return grid.defaultMoneyGrow * (totalPeoplePolitical * factor1);
@@ -311,7 +311,7 @@ function getGridFoodGrow(ctx:Context, gridId:Int):Float {
 	}
 	final grid = ctx.grids[gridId];
 	final totalPeopleIntelligence = peopleInGrid.fold((p, a) -> {
-		return a + p.intelligence;
+		return a + getPeopleIntelligence(ctx, p.id);
 	}, 0.0);
 	final factor1 = 2 / (peopleInGrid.length * 100);
 	return grid.defaultFoodGrow * (totalPeopleIntelligence * factor1);
@@ -325,7 +325,7 @@ function getGridArmyGrow(ctx:Context, gridId:Int):Float {
 	}
 	final grid = ctx.grids[gridId];
 	final totalPeoplecharm = peopleInGrid.fold((p, a) -> {
-		return a + p.charm;
+		return a + getPeopleCharm(ctx, p.id);
 	}, 0.0);
 	final factor1 = 2 / (peopleInGrid.length * 100);
 	return grid.defaultArmyGrow * (totalPeoplecharm * factor1);
