@@ -67,34 +67,10 @@ function doGridGrow(ctx:Context) {
 		if (peopleInGrid.length == 0) {
 			continue;
 		}
-		final extMoney = ctx.attachments.filter(a -> a.belongToGridId == grid.id).fold((p, a) -> {
-			return a + switch p.type {
-				case MARKET(level):
-					return [0, 2, 3, 4][level];
-				case _:
-					0;
-			}
-		}, 0);
-		final extFood = ctx.attachments.filter(a -> a.belongToGridId == grid.id).fold((p, a) -> {
-			return a + switch p.type {
-				case FARM(level):
-					return [0, 2, 3, 4][level];
-				case _:
-					0;
-			}
-		}, 0);
-		final extArmy = ctx.attachments.filter(a -> a.belongToGridId == grid.id).fold((p, a) -> {
-			return a + switch p.type {
-				case BARRACKS(level):
-					return [0, 2, 3, 4][level];
-				case _:
-					0;
-			}
-		}, 0);
 		// 城池成長
-		final gainMoney = grid.money * getGridMoneyGrow(ctx, grid.id) + BASIC_GROW_MONEY + extMoney;
-		final gainFood = grid.food * getGridFoodGrow(ctx, grid.id) + BASIC_GROW_FOOD + extFood;
-		final gainArmy = grid.army * getGridArmyGrow(ctx, grid.id) + BASIC_GROW_ARMY + extArmy;
+		final gainMoney = grid.money * getGridMoneyGrow(ctx, grid.id) + BASIC_GROW_MONEY;
+		final gainFood = grid.food * getGridFoodGrow(ctx, grid.id) + BASIC_GROW_FOOD;
+		final gainArmy = grid.army * getGridArmyGrow(ctx, grid.id) + BASIC_GROW_ARMY;
 		grid.money = Math.min(GRID_RESOURCE_MAX, grid.money + gainMoney);
 		grid.food = Math.min(GRID_RESOURCE_MAX, grid.food + gainFood);
 		grid.army = Math.min(GRID_RESOURCE_MAX, grid.army + gainArmy);
@@ -330,9 +306,9 @@ function initContext(ctx:Context, option:{}) {
 		addPlayerInfo(ctx, {
 			id: i++,
 			name: name,
-			money: 800.0,
-			army: 800.0,
-			food: 800.0,
+			money: 1200.0,
+			army: 1200.0,
+			food: 1200.0,
 			strategy: 300.0,
 			people: [
 				model.PeopleGenerator.getInst().generate(),

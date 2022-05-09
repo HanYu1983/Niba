@@ -322,7 +322,7 @@ private function onWarCostImpl(ctx:Context, playerId:Int, gridId:Int, p1PeopleId
 
 function _getTakeWarPreview(ctx:Context, playerId:Int, gridId:Int):WarPreview {
 	final grid = ctx.grids[gridId];
-	if (grid.buildtype == GROWTYPE.EMPTY) {
+	if (getGridBuildType(ctx, grid.id) == GROWTYPE.EMPTY) {
 		throw new haxe.Exception("空地不能攻擊");
 	}
 	final gridBelongPlayerId = getGridBelongPlayerId(ctx, gridId);

@@ -296,11 +296,15 @@ function getGridMoneyGrow(ctx:Context, gridId:Int):Float {
 		return 0.0;
 	}
 	final grid = ctx.grids[gridId];
-	final totalPeoplePolitical = peopleInGrid.fold((p, a) -> {
-		return a + getPeoplePolitical(ctx, p.id);
-	}, 0.0);
-	final factor1 = 2 / (peopleInGrid.length * 100);
-	return grid.defaultMoneyGrow * (totalPeoplePolitical * factor1);
+	final factAttachment = 1 + ctx.attachments.filter(a -> a.belongToGridId == grid.id).fold((p, a) -> {
+		return a + switch p.type {
+			case MARKET(level):
+				return [0.05, 0.09, 0.12, 0.14][level];
+			case _:
+				0;
+		}
+	}, 0);
+	return grid.defaultMoneyGrow * factAttachment;
 }
 
 function getGridFoodGrow(ctx:Context, gridId:Int):Float {
@@ -310,11 +314,15 @@ function getGridFoodGrow(ctx:Context, gridId:Int):Float {
 		return 0.0;
 	}
 	final grid = ctx.grids[gridId];
-	final totalPeopleIntelligence = peopleInGrid.fold((p, a) -> {
-		return a + getPeopleIntelligence(ctx, p.id);
-	}, 0.0);
-	final factor1 = 2 / (peopleInGrid.length * 100);
-	return grid.defaultFoodGrow * (totalPeopleIntelligence * factor1);
+	final factAttachment = 1 + ctx.attachments.filter(a -> a.belongToGridId == grid.id).fold((p, a) -> {
+		return a + switch p.type {
+			case FARM(level):
+				return [0.05, 0.09, 0.12, 0.14][level];
+			case _:
+				0;
+		}
+	}, 0);
+	return grid.defaultFoodGrow * factAttachment;
 }
 
 function getGridArmyGrow(ctx:Context, gridId:Int):Float {
@@ -324,11 +332,15 @@ function getGridArmyGrow(ctx:Context, gridId:Int):Float {
 		return 0.0;
 	}
 	final grid = ctx.grids[gridId];
-	final totalPeoplecharm = peopleInGrid.fold((p, a) -> {
-		return a + getPeopleCharm(ctx, p.id);
-	}, 0.0);
-	final factor1 = 2 / (peopleInGrid.length * 100);
-	return grid.defaultArmyGrow * (totalPeoplecharm * factor1);
+	final factAttachment = 1 + ctx.attachments.filter(a -> a.belongToGridId == grid.id).fold((p, a) -> {
+		return a + switch p.type {
+			case BARRACKS(level):
+				return [0.05, 0.09, 0.12, 0.14][level];
+			case _:
+				0;
+		}
+	}, 0);
+	return grid.defaultArmyGrow * factAttachment;
 }
 
 function getGridBuildType(ctx:Context, gridId:Int):GROWTYPE {
@@ -336,7 +348,45 @@ function getGridBuildType(ctx:Context, gridId:Int):GROWTYPE {
 	final peopleInGrid = ctx.peoples.filter(p -> p.position.gridId == grid.id);
 	final belongPlayerId = getGridBelongPlayerId(ctx, grid.id);
 	final isEmpty = belongPlayerId == null && peopleInGrid.length == 0;
-	return isEmpty ? GROWTYPE.EMPTY : grid.buildtype;
+	if (isEmpty) {
+		return EMPTY;
+	}
+	final attachmentInGrid = ctx.attachments.filter(a -> a.belongToGridId == gridId);
+	if (attachmentInGrid.length == 0) {
+		return EMPTY;
+	}
+	final moneyCnt = attachmentInGrid.map(a -> switch a.type {
+		case MARKET(level):
+			level;
+		case _:
+			0;
+	}).fold((c, a) -> c + a, 0);
+	final foodCnt = attachmentInGrid.map(a -> switch a.type {
+		case FARM(level):
+			level;
+		case _:
+			0;
+	}).fold((c, a) -> c + a, 0);
+	final armyCnt = attachmentInGrid.map(a -> switch a.type {
+		case BARRACKS(level):
+			level;
+		case _:
+			0;
+	}).fold((c, a) -> c + a, 0);
+	if (moneyCnt > 0 && foodCnt > 0 && armyCnt > 0) {
+		return CITY;
+	}
+	final maxV = Math.max(moneyCnt, Math.max(foodCnt, armyCnt));
+	if (maxV == moneyCnt) {
+		return MARKET;
+	}
+	if (maxV == foodCnt) {
+		return FARM;
+	}
+	if (maxV == armyCnt) {
+		return VILLAGE;
+	}
+	throw new haxe.Exception("必須是一個類型, 請檢查GridGenerator, 非空地請確保每個類型都至少一個建物");
 }
 
 function getGridInfo(ctx:Context, grid:Grid):model.GridGenerator.Grid {
