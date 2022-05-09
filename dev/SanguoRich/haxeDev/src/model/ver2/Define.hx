@@ -902,8 +902,9 @@ function getPlayerCommand(ctx:Context, playerId:Int):Array<ActionInfoID> {
 				ret.push(ActionInfoID.STRATEGY);
 			}
 		}
+		ret.push(ActionInfoID.TREASURE);
 		if (player.memory.hasEquip == false) {
-			ret.push(ActionInfoID.TREASURE);
+			ret.push(ActionInfoID.TREASURE_TAKE);
 		}
 		ret.push(ActionInfoID.FIRE);
 	} else {
