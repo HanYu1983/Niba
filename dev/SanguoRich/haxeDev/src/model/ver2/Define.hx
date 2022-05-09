@@ -423,7 +423,19 @@ private function calcTotals(ctx:Context):Array<model.IModel.PlayerInfo> {
 }
 
 function getGameInfo(ctx:Context, root:Bool):GameInfo {
-	final events:Array<model.IModel.EventInfo> = root ? ctx.events.map(e -> {
+	final eventCopy = root ? deepCopy(ctx.events) : [];
+	// 先進後出
+	eventCopy.reverse();
+	// 探索和攻城事件排最後
+	eventCopy.sort((a, b) -> {
+		return switch a {
+			case WAR_RESULT({success: true}) | EXPLORE_RESULT({success: true}):
+				-1;
+			case _:
+				0;
+		}
+	});
+	final events:Array<model.IModel.EventInfo> = eventCopy.map(e -> {
 		// 顯式使用類型(EventInfo), 這裡不能依靠類型推理, 不然會編譯錯誤
 		final eventInfo:model.IModel.EventInfo = switch e {
 			case WORLD_EVENT(value):
@@ -518,9 +530,7 @@ function getGameInfo(ctx:Context, root:Bool):GameInfo {
 				}
 		}
 		return eventInfo;
-	}) : [];
-	// 先進後出
-	events.reverse();
+	});
 
 	// 不管週期, 直接計算下一次的結果
 	final nextCtx = deepCopy(ctx); // _cloner.clone(ctx);
