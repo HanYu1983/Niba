@@ -71,8 +71,8 @@ class TreasurePreviewView extends PopupView {
 		Dialogs.messageBox('沒收這個寶物，被沒收的武將因為失望會損失一點體力。\n確定執行嗎?', '', MessageBoxType.TYPE_QUESTION, true, (b) -> {
 			if (b == DialogButton.YES) {
 				Main.model.takeUnEquip(p1, unequip.id, (gameInfo:GameInfo) -> {
-					Dialogs.messageBox('沒收完畢', '沒收完畢', MessageBoxType.TYPE_INFO);
-					fadeOut();
+					// Dialogs.messageBox('沒收完畢', '沒收完畢', MessageBoxType.TYPE_INFO);
+					onBtnConfirmClick(null);
 				});
 			}
 		});
