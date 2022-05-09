@@ -72,7 +72,7 @@ class TreasurePreviewView extends PopupView {
 			if (b == DialogButton.YES) {
 				Main.model.takeUnEquip(p1, unequip.id, (gameInfo:GameInfo) -> {
 					Dialogs.messageBox('沒收完畢', '沒收完畢', MessageBoxType.TYPE_INFO);
-					refresh();
+					fadeOut();
 				});
 			}
 		});
