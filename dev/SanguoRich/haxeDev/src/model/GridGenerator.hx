@@ -138,6 +138,10 @@ class GridGenerator {
 				if (Math.random() < .3)
 					g.treasures.push(TreasureGenerator.getInst().generator());
 
+			g.moneyGrow = 0.025;
+			g.foodGrow = 0.025;
+			g.armyGrow = 0.025;
+
 			final basicArmy = getRandomRange(100, 70);
 
 			g.army = basicArmy;

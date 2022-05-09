@@ -185,6 +185,7 @@ private function onStrategyCost(ctx:Context, p1PeopleId:Int, strategyId:Int, tar
 				// 按兵不动
 				p1.energy = Math.max(0, p1.energy - cost.peopleCost.energy);
 				if (success) {
+					onPlayerGoToPosition(ctx, player.id, player.position);
 					player.memory.hasDice = true;
 					onPeopleExpAdd(ctx, p1.id, getExpAdd(cost.successRate, ENERGY_COST_ON_STRATEGY));
 				}

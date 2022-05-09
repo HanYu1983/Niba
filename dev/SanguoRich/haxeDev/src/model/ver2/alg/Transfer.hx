@@ -57,11 +57,11 @@ function _checkValidTransfer(ctx:Context, playerId:Int, gridId:Int, playerInfo:m
 
 	for (people in gridInfo.people) {
 		final originPeople = getPeopleById(ctx, people.id);
-		final isNotMyGrid = gridBelongPlayerId != originPeople.belongToPlayerId;
-		if (isNotMyGrid) {
-			trace("ModelVer2", "_checkValidTransfer", 'people(${people.id})無法進入非自己的城池');
-			return false;
-		}
+		// final isNotMyGrid = gridBelongPlayerId != originPeople.belongToPlayerId;
+		// if (isNotMyGrid) {
+		// 	trace("ModelVer2", "_checkValidTransfer", 'people(${people.id})無法進入非自己的城池');
+		// 	return false;
+		// }
 		if (originPeople.position.gridId != null && originPeople.position.gridId != gridId) {
 			trace("ModelVer2", "_checkValidTransfer", 'people(${people.id})已經被派駐在grid(${originPeople.position.gridId})');
 			return false;

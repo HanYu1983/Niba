@@ -14,10 +14,17 @@ private function onFire(ctx:Context, playerId:Int, peopleIds:Array<Int>) {
 		maintainMoneyAfter: 0.0,
 		maintainMoneyBefore: getMaintainPeople(ctx, playerId),
 	}
+	final gridId = ctx.players[playerId].position;
+	final gridBelongPlayerId = getGridBelongPlayerId(ctx, gridId);
 	for (peopleId in peopleIds) {
 		final people = getPeopleById(ctx, peopleId);
 		people.belongToPlayerId = null;
-		people.position.gridId = ctx.players[playerId].position;
+		final isNotMyGrid = gridBelongPlayerId != people.belongToPlayerId;
+		if (isNotMyGrid) {
+			people.position.gridId = null;
+		} else {
+			people.position.gridId = ctx.players[playerId].position;
+		}
 	}
 	resultValue.maintainMoneyAfter = getMaintainPeople(ctx, playerId);
 	ctx.events.push(Event.FIRE_RESULT(resultValue));

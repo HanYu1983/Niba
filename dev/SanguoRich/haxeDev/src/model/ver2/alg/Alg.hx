@@ -244,10 +244,16 @@ function doPlayerEnd(ctx:Context) {
 						final chooseId = Std.int(Math.random() * emptyGrids.length);
 						final chooseGrid = emptyGrids[chooseId];
 						// 隨機生成類型
-						chooseGrid.buildtype = [GROWTYPE.FARM, GROWTYPE.MARKET, GROWTYPE.VILLAGE, GROWTYPE.CITY][Math.floor(Math.random() * 4)];
+						// TODO: 重復的要過濾
+						addAttachInfo(ctx, chooseGrid.id, MARKET(1));
+						addAttachInfo(ctx, chooseGrid.id, FARM(1));
+						addAttachInfo(ctx, chooseGrid.id, BARRACKS(1));
+						addAttachInfo(ctx, chooseGrid.id, EXPLORE(1));
+						addAttachInfo(ctx, chooseGrid.id, WALL(1));
 						chooseGrid.money = EVENT_GRID_BORN_RESOURCE_AMOUNT;
 						chooseGrid.army = EVENT_GRID_BORN_RESOURCE_AMOUNT;
 						chooseGrid.food = EVENT_GRID_BORN_RESOURCE_AMOUNT;
+
 						// 加入武將
 						addPeopleInfo(ctx, null, chooseGrid.id, model.PeopleGenerator.getInst().generate());
 						ctx.events.push(GRID_BORN_EVENT({

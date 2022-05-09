@@ -753,9 +753,9 @@ function getMaintainPeople(ctx:Context, playerId:Int):Float {
 }
 
 function getMaintainArmy(ctx:Context, playerId:Int):Float {
-	final totalArmy = ctx.grids.filter(g -> getGridBelongPlayerId(ctx, g.id) == playerId).fold((p, a) -> {
+	final totalArmy = /*ctx.grids.filter(g -> getGridBelongPlayerId(ctx, g.id) == playerId).fold((p, a) -> {
 		return a + p.army;
-	}, 0.0) + ctx.players[playerId].army;
+	}, 0.0) +*/ ctx.players[playerId].army;
 	return getMaintainArmyPure(totalArmy);
 }
 

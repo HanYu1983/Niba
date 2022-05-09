@@ -9,7 +9,7 @@ final SHOW_POPUP_WHEN_EARN = false;
 final CAN_CHANGE_FAVOR = 0;
 
 // 主公支付的薪水為主公所有武將的價值參數(cost)總合的%數
-final PLAYER_SPEND_MONEY_FOR_PEOPLE_PER_TURN_PERSENT = 0.005;
+final PLAYER_SPEND_MONEY_FOR_PEOPLE_PER_TURN_PERSENT = 0.0025;
 
 // 主公支付的食物為所有格子上以及身上的士兵的數量的%數
 final PLAYER_SPEND_FOOD_FOR_ARMY_PER_TURN_PERSENT = 0.01;
@@ -30,12 +30,12 @@ final BASIC_GROW_ARMY = 0;
 
 // 幾個回合收稅(4人走完算1回合)
 // 作用中
-final PLAYER_EARN_FROM_CITY_PER_TURN = 10;
+final PLAYER_EARN_FROM_CITY_PER_TURN = 5;
 
 // 收稅:主公身上的資源增加，依據所有城池的金錢、食物、士兵、策略點(?)個別合計之後的%數
 // 實作成會從城中扣掉加到主公身上
 // 作用中
-final PLAYER_EARN_FROM_CITY_BY_TURN_PERSENT = .1;
+final PLAYER_EARN_FROM_CITY_BY_TURN_PERSENT = .05;
 
 // 基本一單買糧買兵的的金錢
 // 作用中
@@ -56,10 +56,10 @@ final WAR_FRONT_ABILITY_FACTOR = 1.4;
 final WAR_BACK_ABILITY_FACTOR = .7;
 
 // 戰鬥支付金錢整體調整
-final WAR_MONEY_COST_FACTOR = .05;
+final WAR_MONEY_COST_FACTOR = .1;
 
 // 戰鬥支付食物整體調整
-final WAR_FOOD_COST_FACTOR = 1.4;
+final WAR_FOOD_COST_FACTOR = 0.7;
 
 // 戰鬥防守方士兵加成
 final WAR_DEFFENDER_FACTOR = 3.0;
@@ -162,7 +162,7 @@ final BASE_RATE_HIRE = 1.0;
 final BASE_RATE_EXPLORE = 1.2;
 
 // 格子資源上限
-final GRID_RESOURCE_MAX = 600.0;
+final GRID_RESOURCE_MAX = 1000.0;
 
 // 每回合每個城加糧事件機率(暫時通用在錢和兵)
 final EVENT_GROW_FOOD_RATE = 0.005;
