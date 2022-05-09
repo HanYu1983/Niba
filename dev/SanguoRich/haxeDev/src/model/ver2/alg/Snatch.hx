@@ -162,7 +162,7 @@ private function onSnatchCost(ctx:Context, playerId:Int, gridId:Int, p1PeopleId:
 					}
 					final takeId = Math.floor(Math.random() * treasureInGrid.length);
 					final treasure = treasureInGrid[takeId];
-					onFindTreasure(ctx, playerId, treasure);
+					onFindTreasure(ctx, playerId, [treasure]);
 				}
 			}
 			// 處理搶奪中的戰爭部分

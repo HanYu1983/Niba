@@ -428,7 +428,7 @@ function getGameInfo(ctx:Context, root:Bool):GameInfo {
 	eventCopy.reverse();
 	// 探索和攻城事件排最後
 	eventCopy.sort((a, b) -> {
-		return switch a {
+		return switch b {
 			case WAR_RESULT({success: true}) | EXPLORE_RESULT({success: true}):
 				-1;
 			case _:

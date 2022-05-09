@@ -78,7 +78,7 @@ private function onExploreCost(ctx:Context, playerId:Int, gridId:Int, p1SelectId
 		}
 		final takeId = Math.floor(Math.random() * treasureInGrid.length);
 		final treasure = treasureInGrid[takeId];
-		onFindTreasure(ctx, playerId, treasure);
+		onFindTreasure(ctx, playerId, [treasure]);
 		return;
 	}
 	final resultValue = {

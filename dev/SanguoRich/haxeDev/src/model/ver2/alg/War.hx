@@ -294,15 +294,12 @@ private function onWarCostImpl(ctx:Context, playerId:Int, gridId:Int, p1PeopleId
 								}
 								final takeId = Math.floor(Math.random() * treasureInGrid.length);
 								final treasure = treasureInGrid[takeId];
-								onFindTreasure(ctx, playerId, treasure);
+								onFindTreasure(ctx, playerId, [treasure]);
 							}
 						}
 						// 先把所有寶物移到攻城者身上
-						final treasureIdInGrid = getTreasureInGrid(ctx, gridId);
-						for (treasure in treasureIdInGrid) {
-							treasure.position.gridId = null;
-							treasure.belongToPlayerId = playerId;
-						}
+						final treasureInGrid = getTreasureInGrid(ctx, gridId);
+						onFindTreasure(ctx, playerId, treasureInGrid);
 					}
 					// 功績
 					onPeopleExpAdd(ctx, people1.id, getExpAdd(1, peopleCost1.energy));

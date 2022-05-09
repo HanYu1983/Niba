@@ -402,11 +402,12 @@ function onPayTaxToGrid(ctx:Context, playerId:Int, gridId:Int) {
 	});
 }
 
-function onFindTreasure(ctx:Context, playerId:Int, treasure:Treasure) {
-	treasure.position.gridId = null;
-	treasure.belongToPlayerId = playerId;
-	final treasureInfo = getTreasureInfo(ctx, treasure);
+function onFindTreasure(ctx:Context, playerId:Int, treasures:Array<Treasure>) {
+	for (treasure in treasures) {
+		treasure.position.gridId = null;
+		treasure.belongToPlayerId = playerId;
+	}
 	ctx.events.push(Event.FIND_TREASURE_RESULT({
-		treasures: [treasureInfo.catelog]
+		treasures: treasures.map(t -> getTreasureInfo(ctx, t).catelog)
 	}));
 }
