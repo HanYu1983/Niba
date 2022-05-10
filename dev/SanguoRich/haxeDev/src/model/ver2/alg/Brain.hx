@@ -37,6 +37,7 @@ function doBrain(ctx, playerId:Int) {
 		switch cmd {
 			case END:
 				onPlayerEnd(ctx, playerId);
+				// 結束回圈
 				done = true;
 				// 如果下一個玩家又是AI
 				final nextPlayer = ctx.players[ctx.currentPlayerId];
