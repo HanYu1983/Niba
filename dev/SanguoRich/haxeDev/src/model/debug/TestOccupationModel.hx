@@ -35,7 +35,8 @@ class TestOccupationModel extends DebugModel {
 					moneyAfter: 300,
 					foodBefore: 100,
 					foodAfter: 200
-				}
+				},
+				gameInfo: info,
 			},
 			{
 				id:FIND_TREASURE_RESULT,
@@ -44,7 +45,8 @@ class TestOccupationModel extends DebugModel {
 						TreasureGenerator.getInst().generator().catelog,
 						TreasureGenerator.getInst().generator().catelog,
 					]
-				}
+				},
+				gameInfo: info,
 			}
 		];
 		cb(info);
@@ -97,7 +99,8 @@ class TestOccupationModel extends DebugModel {
 					moneyAfter: 300,
 					foodBefore: 100,
 					foodAfter: 200
-				}
+				},
+				gameInfo: info,
 			}
 		];
 		cb(info);
@@ -139,7 +142,8 @@ class TestOccupationModel extends DebugModel {
 					moneyAfter: 300,
 					foodBefore: 100,
 					foodAfter: 200
-				}
+				},
+				gameInfo: info,
 			}
 		];
 		cb(info);
