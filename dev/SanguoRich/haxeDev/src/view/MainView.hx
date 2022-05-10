@@ -805,6 +805,10 @@ class MainView extends Box {
 						doOneEvent(gameInfo);
 					});
 			}
+		}else{
+			Main.model.refresh(()->{
+				trace('清除後端事件');
+			});
 		}
 	}
 
