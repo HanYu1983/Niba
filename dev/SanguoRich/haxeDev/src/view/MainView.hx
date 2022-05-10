@@ -550,22 +550,22 @@ class MainView extends Box {
 		syncPlayerViews(gameInfo);
 	}
 
-	function playBeforeSync(gameInfo:GameInfo, tweens:Array<TweenX>) {
-		playActions(gameInfo.actions, tweens);
-	}
+	// function playBeforeSync(gameInfo:GameInfo, tweens:Array<TweenX>) {
+	// 	playActions(gameInfo.actions, tweens);
+	// }
 
-	function playActions(actions:Array<ActionInfo>, tweens:Array<TweenX>) {
-		for (id => action in actions) {
-			switch (action.id) {
-				case ActionInfoID.MOVE:
-					var pv = players[action.value.playerId];
-					var toPos = getGridPositionByGridId(action.value.playerId, action.value.toGridId);
+	// function playActions(actions:Array<ActionInfo>, tweens:Array<TweenX>) {
+	// 	for (id => action in actions) {
+	// 		switch (action.id) {
+	// 			case ActionInfoID.MOVE:
+	// 				var pv = players[action.value.playerId];
+	// 				var toPos = getGridPositionByGridId(action.value.playerId, action.value.toGridId);
 
-					tweens.push(TweenX.to(pv, {"left": toPos[0], "top": toPos[1]}));
-				case _:
-			}
-		}
-	}
+	// 				tweens.push(TweenX.to(pv, {"left": toPos[0], "top": toPos[1]}));
+	// 			case _:
+	// 		}
+	// 	}
+	// }
 
 	function offsetPlayerPos(pid:Int, x:Float, y:Float) {
 		var newPos = switch (pid) {
@@ -588,10 +588,16 @@ class MainView extends Box {
 	function doOneEvent() {
 		if (events.length > 0) {
 			final event = events.shift();
+			final info:Dynamic = event.value;
 			final gameInfo = event.gameInfo;
 			switch (event.id) {
+				case MESSAGE_EVENT:
+					syncViewByInfo(gameInfo);
+					Dialogs.messageBox(info.msg, info.title, MessageBoxType.TYPE_INFO, true, (b)->{
+						doOneEvent();
+					});
 				case ANIMATION_EVENT:
-					final info:Dynamic = event.value;
+
 					switch(info.id){
 						case ActionInfoID.MOVE:
 							var pv = players[info.value.playerId];
@@ -606,7 +612,6 @@ class MainView extends Box {
 				case FIND_TREASURE_RESULT:
 					syncViewByInfo(gameInfo);
 
-					final info:Dynamic = event.value;
 					final treasures:Array<TreasureCatelog> = info.treasures;
 					var title = '發現寶物 ';
 					for (t in treasures) {
@@ -627,7 +632,6 @@ class MainView extends Box {
 				case GRID_BORN_EVENT:
 					syncViewByInfo(gameInfo);
 
-					final info:Dynamic = event.value;
 					final grid:Grid = info.grid;
 					final title = '異軍突起';
 					var msg = '${title}\n';
@@ -638,7 +642,6 @@ class MainView extends Box {
 				case GRID_RESOURCE_EVENT:
 					syncViewByInfo(gameInfo);
 
-					final info:Dynamic = event.value;
 					final grids:Array<{gridBefore:Grid, gridAfter:Grid}> = info.grids;
 					final title = info.describtion;
 					var msg = '${title}\n\n';
@@ -662,7 +665,6 @@ class MainView extends Box {
 				case PK_RESULT:
 					syncViewByInfo(gameInfo);
 
-					final info:Dynamic = event.value;
 					final title = if (info.success) {
 						'成功號召士兵';
 					} else {
@@ -676,7 +678,6 @@ class MainView extends Box {
 				case COST_FOR_BONUS_RESULT:
 					syncViewByInfo(gameInfo);
 
-					final info:Dynamic = event.value;
 					final title = switch (info.costType) {
 						case 0: '札營完畢！ 武將們回復體力';
 						case 1: '練兵完畢! 武將們提高功績';
@@ -707,7 +708,6 @@ class MainView extends Box {
 				case HIRE_RESULT:
 					syncViewByInfo(gameInfo);
 
-					final info:Dynamic = event.value;
 					final title = info.success ? '雇用任務成功' : '雇用任務失敗';
 					var msg = '武將:${info.people.name}\n';
 					msg += '體力:${Main.getFixNumber(info.energyBefore, 0)} => ${Main.getFixNumber(info.energyAfter, 0)}\n';
@@ -721,7 +721,6 @@ class MainView extends Box {
 				case FIRE_RESULT:
 					syncViewByInfo(gameInfo);
 
-					final info:Dynamic = event.value;
 					var people:Array<People> = info.people;
 					var msg = '解雇:${people.map((p) -> p.name).join(',')}\n';
 					msg += '薪俸:${Main.getFixNumber(info.maintainMoneyBefore, 2)} => ${Main.getFixNumber(info.maintainMoneyAfter, 2)}\n';
@@ -734,7 +733,6 @@ class MainView extends Box {
 				case NEGOTIATE_RESULT:
 					syncViewByInfo(gameInfo);
 
-					final info:Dynamic = event.value;
 					final title = info.success ? '交涉任務成功' : '交涉任務失敗';
 					var msg = '武將:${info.people.name}\n';
 					msg += '體力:${Main.getFixNumber(info.energyBefore, 0)} => ${Main.getFixNumber(info.energyAfter, 0)}\n';
@@ -754,7 +752,6 @@ class MainView extends Box {
 				case WAR_RESULT:
 					syncViewByInfo(gameInfo);
 
-					final info:Dynamic = event.value;
 					var msg = '武將:${info.people.name}\n';
 					msg += '體力:${Main.getFixNumber(info.energyBefore, 0)} => ${Main.getFixNumber(info.energyAfter, 0)}\n';
 					msg += '金錢:${Main.getFixNumber(info.moneyBefore, 0)} => ${Main.getFixNumber(info.moneyAfter, 0)}\n';
@@ -774,7 +771,6 @@ class MainView extends Box {
 				case SNATCH_RESULT:
 					syncViewByInfo(gameInfo);
 
-					final info:Dynamic = event.value;
 					final title = info.success ? '搶奪成功' : '搶奪失敗';
 					var msg = '武將:${info.people.name}\n';
 					msg += '體力:${Main.getFixNumber(info.energyBefore, 0)} => ${Main.getFixNumber(info.energyAfter, 0)}\n';
@@ -788,7 +784,6 @@ class MainView extends Box {
 				case RESOURCE_RESULT:
 					syncViewByInfo(gameInfo);
 
-					final info:Dynamic = event.value;
 					var msg = '武將:${info.people ? info.people.name : ""}\n';
 					msg += '體力:${Main.getFixNumber(info.energyBefore, 0)} => ${Main.getFixNumber(info.energyAfter, 0)}\n';
 					msg += '金錢:${Main.getFixNumber(info.moneyBefore, 0)} => ${Main.getFixNumber(info.moneyAfter, 0)}\n';
@@ -801,7 +796,6 @@ class MainView extends Box {
 				case STRATEGY_RESULT:
 					syncViewByInfo(gameInfo);
 
-					final info:Dynamic = event.value;
 					final title = info.success ? '計策成功' : '計策失敗';
 					var msg = title;
 					msg += '武將:${info.people ? info.people.name : ""}\n';
@@ -813,7 +807,6 @@ class MainView extends Box {
 				case BUILDING_RESULT:
 					syncViewByInfo(gameInfo);
 
-					final info:Dynamic = event.value;
 					final catelog = Main.getBuildingCatelog(info.building);
 					var msg = '武將:${info.people.name:""}\n';
 					msg += '已擴建 ${catelog.name}\n';
@@ -829,7 +822,6 @@ class MainView extends Box {
 				case PEOPLE_LEVEL_UP_EVENT:
 					syncViewByInfo(gameInfo);
 
-					final info:Dynamic = event.value;
 					final title = '功績到達，職位升等!';
 					final p1:People = info.peopleBefore;
 					final p2:People = info.peopleAfter;
@@ -853,7 +845,6 @@ class MainView extends Box {
 				case PAY_FOR_OVER_ENEMY_GRID:
 					syncViewByInfo(gameInfo);
 
-					final info:Dynamic = event.value;
 					final title = '走到其他主公的領地，過路費…';
 					var msg = '走到其他主公的領地，過路費…\n';
 					msg += '金錢:${Main.getFixNumber(info.moneyBefore, 0)} => ${Main.getFixNumber(info.moneyAfter, 0)}\n';

@@ -150,6 +150,14 @@ class DebugModel implements IModel {
 					grid:g,
 				},
 				gameInfo: info,
+			},
+			{
+				id:EventInfoID.MESSAGE_EVENT,
+				value:{
+					title:'aaff',
+					msg:'asdfsfd'
+				},
+				gameInfo: info,
 			}
 		];
 		cb();

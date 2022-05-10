@@ -76,6 +76,8 @@ enum EventInfoID {
 	PAY_FOR_OVER_ENEMY_GRID;
 
 	ANIMATION_EVENT;
+
+	MESSAGE_EVENT;
 }
 
 enum MARKET {
