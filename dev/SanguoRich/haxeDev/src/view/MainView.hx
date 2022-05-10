@@ -851,6 +851,9 @@ class MainView extends Box {
 					btn_go.show();
 				case TREASURE:
 					btn_giveTreasure.show();
+
+					final freeTreasures = currentPlayer.treasures.filter((t)->t.belongToPeopleId == null);
+					btn_giveTreasure.text = '賜予(${freeTreasures.length})';
 				case TREASURE_TAKE:
 					btn_takeTreasure.show();
 				case STRATEGY:

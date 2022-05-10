@@ -2,6 +2,7 @@
     <header width="100%">
         <column id="chk_sel" text="指派" width="40" style="text-align:center;font-size:12;" />
         <column id="gridIdView" text="駐" width="70" sortable="true" style="text-align:center;font-size:12;"/>
+        <column id="treasureCount" text="寶" width="100" sortable="true" style="text-align:center;font-size:12;"/>
         <column id="nameView" text="名" width="100%" sortable="false" style="text-align:center;font-size:12;"/>
         <column id="energy" text="體" width="40" sortable="true" style="text-align:center;font-size:12;"/>
         <column id="command" text="統" width="40" sortable="true" style="text-align:center;font-size:12;"/>
@@ -14,7 +15,6 @@
         <column id="ability2" text="能二" width="60" sortable="true" style="text-align:center;font-size:12;"/>
         <column id="ability3" text="能三" width="60" sortable="true" style="text-align:center;font-size:12;"/>
         <column id="typeView" text="職務" width="70" sortable="true" style="text-align:center;font-size:12;"/>
-        <column id="treasureCount" text="寶" width="40" sortable="true" style="text-align:center;font-size:12;"/>
         <column id="expView" text="功" width="40" sortable="true" style="text-align:center;font-size:12;"/>
     </header>
 
@@ -26,6 +26,9 @@
     </item-renderer>
     <item-renderer verticalAlign="center">
         <label id="gridId" textAlign="center" width="100%" />
+    </item-renderer>
+    <item-renderer verticalAlign="center">
+        <label id="treasureCount" textAlign="center" width="100%" />
     </item-renderer>
     <item-renderer>
         <label id="command" width="100%" />

@@ -1,6 +1,9 @@
 package view.widgets;
+import model.TreasureGenerator.TreasureInfo;
 import model.PeopleGenerator;
 import haxe.ui.containers.TableView;
+
+using Lambda;
 
 @:build(haxe.ui.ComponentBuilder.build("assets/widgets/peopleList-view.xml"))
 class PeopleListView extends TableView{
@@ -40,7 +43,14 @@ class PeopleListView extends TableView{
             info.typeView = PeopleGenerator.getInst().getPeopleTypeName(p.type);
             info.expView = Main.getFixNumber(p.exp, 0);
             info.nameView = p.name;
-            info.treasureCount = p.treasures.length;
+            // info.treasureCount = p.treasures.length;
+
+            info.treasureCount = '無';
+            if(p.treasures.length > 0){
+                final ts:Array<TreasureInfo> = p.treasures;
+                info.treasureCount = ts.fold((cur, total) -> return total += '${cur.catelog.name.substr(0,2)},', '' );
+            }
+            
             if(p.sleep) info.nameView += '(休)';
 
             clones.push(info);
