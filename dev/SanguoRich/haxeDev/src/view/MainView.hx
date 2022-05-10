@@ -75,7 +75,7 @@ class MainView extends Box {
 			grids.push(grid);
 		}
 
-		for (i in 0...2) {
+		for (i in 0...4) {
 			var p = new PlayerView(20, 20);
 			switch (i) {
 				case 0:
