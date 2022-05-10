@@ -80,7 +80,7 @@ class TreasurePreviewView extends PopupView {
 
 	@:bind(btn_confirm, MouseEvent.CLICK)
 	function onBtnConfirmClick(e:MouseEvent) {
-		Main.view.checkEventAndDoIt();
+		Main.view.syncViewWithEvents();
 		fadeOut();
 	}
 
