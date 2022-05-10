@@ -152,7 +152,7 @@ function onPeopleExpAdd(ctx:Context, peopleId:Int, exp:Float) {
 	final isLevelUp = getExpLevel(people.exp) > originLevel;
 	if (isLevelUp) {
 		eventValue.peopleAfter = getPeopleInfo(ctx, people);
-		ctx.events.push(Event.PEOPLE_LEVEL_UP_EVENT(eventValue));
+		ctx.events.push(PEOPLE_LEVEL_UP_EVENT(eventValue, getGameInfo(ctx, false)));
 	}
 }
 
@@ -189,7 +189,7 @@ function onPayTaxToGrid(ctx:Context, playerId:Int, gridId:Int) {
 	eventValue.moneyAfter = player.money;
 	eventValue.foodAfter = player.food;
 	ctx.events.push({
-		Event.PAY_FOR_OVER_ENEMY_GRID(eventValue);
+		PAY_FOR_OVER_ENEMY_GRID(eventValue, getGameInfo(ctx, false));
 	});
 }
 
@@ -201,9 +201,9 @@ function onFindTreasure(ctx:Context, playerId:Int, treasures:Array<Treasure>) {
 		treasure.position.gridId = null;
 		treasure.belongToPlayerId = playerId;
 	}
-	ctx.events.push(Event.FIND_TREASURE_RESULT({
+	ctx.events.push(FIND_TREASURE_RESULT({
 		treasures: treasures.map(t -> getTreasureInfo(ctx, t).catelog)
-	}));
+	}, getGameInfo(ctx, false)));
 }
 
 // 玩家回合結束
@@ -228,7 +228,7 @@ function onPlayerEnd(ctx:Context, playerId:Int) {
 				worldEventValue.playerAfter = ctx.players.map(p -> getPlayerInfo(ctx, p));
 				worldEventValue.gridAfter = ctx.grids.map(g -> getGridInfo(ctx, g));
 				if (SHOW_POPUP_WHEN_EARN) {
-					ctx.events.push(Event.WORLD_EVENT(worldEventValue));
+					ctx.events.push(WORLD_EVENT(worldEventValue, getGameInfo(ctx, false)));
 				}
 			}
 		}
@@ -278,7 +278,7 @@ function onPlayerEnd(ctx:Context, playerId:Int) {
 				}
 				worldEventValue.playerAfter = ctx.players.map(p -> getPlayerInfo(ctx, p));
 				worldEventValue.gridAfter = ctx.grids.map(g -> getGridInfo(ctx, g));
-				ctx.events.push(Event.WORLD_EVENT(worldEventValue));
+				ctx.events.push(WORLD_EVENT(worldEventValue, getGameInfo(ctx, false)));
 			}
 			// 收稅時計算友好度
 			if (enable) {
@@ -320,7 +320,7 @@ function onPlayerEnd(ctx:Context, playerId:Int) {
 									}
 							],
 							describtion: "大豐收"
-						}));
+						}, getGameInfo(ctx, false)));
 					}
 				}
 				if (true) {
@@ -342,7 +342,7 @@ function onPlayerEnd(ctx:Context, playerId:Int) {
 									}
 							],
 							describtion: "大發利市"
-						}));
+						}, getGameInfo(ctx, false)));
 					}
 				}
 				if (true) {
@@ -364,7 +364,7 @@ function onPlayerEnd(ctx:Context, playerId:Int) {
 									}
 							],
 							describtion: "接收民兵"
-						}));
+						}, getGameInfo(ctx, false)));
 					}
 				}
 				final isBorn = Math.random() < EVENT_GRID_BORN_RATE;
@@ -387,7 +387,7 @@ function onPlayerEnd(ctx:Context, playerId:Int) {
 						addPeopleInfo(ctx, null, chooseGrid.id, model.PeopleGenerator.getInst().generate());
 						ctx.events.push(GRID_BORN_EVENT({
 							grid: getGridInfo(ctx, chooseGrid)
-						}));
+						}, getGameInfo(ctx, false)));
 					}
 				}
 			}
@@ -429,7 +429,6 @@ function onPlayerDice(ctx:Context, playerId:Int) {
 			playerId: playerId,
 			fromGridId: fromGridId,
 			toGridId: toGridId
-		},
-		gameInfo: getGameInfo(ctx, false)
-	}));
+		}
+	}, getGameInfo(ctx, false)));
 }

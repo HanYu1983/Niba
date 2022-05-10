@@ -190,9 +190,9 @@ private function onSnatchCost(ctx:Context, playerId:Int, gridId:Int, p1PeopleId:
 	resultValue.moneyAfter = player.money;
 	resultValue.foodAfter = player.food;
 	ctx.events.push(if (isOccupation) {
-		Event.WAR_RESULT(resultValue);
+		WAR_RESULT(resultValue, getGameInfo(ctx, false));
 	} else {
-		Event.SNATCH_RESULT(resultValue);
+		SNATCH_RESULT(resultValue, getGameInfo(ctx, false));
 	});
 }
 

@@ -318,7 +318,7 @@ private function onWarCostImpl(ctx:Context, playerId:Int, gridId:Int, p1PeopleId
 		resultValue.armyAfter = player.army;
 		resultValue.moneyAfter = player.money;
 		resultValue.foodAfter = player.food;
-		ctx.events.push(Event.WAR_RESULT(resultValue));
+		ctx.events.push(WAR_RESULT(resultValue, getGameInfo(ctx, false)));
 	}
 	return success;
 }

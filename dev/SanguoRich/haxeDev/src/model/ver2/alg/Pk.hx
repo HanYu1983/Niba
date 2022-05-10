@@ -82,7 +82,7 @@ private function onTakePk(ctx:Context, playerId:Int, gridId:Int, p1PeopleId:Int,
 			throw new haxe.Exception("getPkCost not found");
 	}
 	eventValue.armyAfter = player.army;
-	ctx.events.push(PK_RESULT(eventValue));
+	ctx.events.push(PK_RESULT(eventValue, getGameInfo(ctx, false)));
 }
 
 function _getPreResultOfPk(ctx:Context, playerId:Int, gridId:Int, p1PeopleId:Int, p2PeopleId:Int):{

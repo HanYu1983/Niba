@@ -179,7 +179,7 @@ private function onNegoCost(ctx:Context, playerId:Int, gridId:Int, p1SelectId:In
 	resultValue.moneyAfter = player.money;
 	resultValue.foodAfter = player.food;
 	resultValue.favorAfter = grid.favor[playerId];
-	ctx.events.push(Event.NEGOTIATE_RESULT(resultValue));
+	ctx.events.push(NEGOTIATE_RESULT(resultValue, getGameInfo(ctx, false)));
 }
 
 function doGetTakeNegoPreview(ctx:Context, playerId:Int, gridId:Int):NegoPreview {

@@ -39,11 +39,11 @@ private function onBuildingCost(ctx:Context, playerId:Int, gridId:Int, peopleId:
 		// 功績
 		onPeopleExpAdd(ctx, peopleId, getExpAdd(0.3, ENERGY_COST_ON_BUILDING));
 	}
-	ctx.events.push(Event.BUILDING_RESULT({
+	ctx.events.push(BUILDING_RESULT({
 		success: success,
 		people: getPeopleInfo(ctx, people),
 		building: toBuilding,
-	}));
+	}, getGameInfo(ctx, false)));
 }
 
 function _takeBuilding(ctx:Context, playerId:Int, gridId:Int, peopleId:Int, current:Dynamic, to:Dynamic) {

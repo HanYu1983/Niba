@@ -27,7 +27,7 @@ private function onFire(ctx:Context, playerId:Int, peopleIds:Array<Int>) {
 		}
 	}
 	resultValue.maintainMoneyAfter = getMaintainPeople(ctx, playerId);
-	ctx.events.push(Event.FIRE_RESULT(resultValue));
+	ctx.events.push(FIRE_RESULT(resultValue, getGameInfo(ctx, false)));
 }
 
 function _getPreResultOfFire(ctx:Context, playerId:Int, peopleIds:Array<Int>):PreResultOnFire {

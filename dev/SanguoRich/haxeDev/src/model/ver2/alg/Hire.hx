@@ -112,7 +112,7 @@ private function onHireCost(ctx:Context, playerId:Int, gridId:Int, p1SelectId:In
 	resultValue.armyAfter = player.army;
 	resultValue.moneyAfter = player.money;
 	resultValue.foodAfter = player.food;
-	ctx.events.push(Event.HIRE_RESULT(resultValue));
+	ctx.events.push(HIRE_RESULT(resultValue, getGameInfo(ctx, false)));
 }
 
 function doGetTakeHirePreview(ctx:Context, playerId:Int, gridId:Int):HirePreview {

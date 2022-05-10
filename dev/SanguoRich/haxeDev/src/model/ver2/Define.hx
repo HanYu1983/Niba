@@ -89,10 +89,10 @@ enum Event {
 		playerAfter:Array<model.IModel.PlayerInfo>,
 		gridBefore:Array<model.GridGenerator.Grid>,
 		gridAfter:Array<model.GridGenerator.Grid>
-	});
+	}, gameInfo:GameInfo);
 	WALK_STOP(value:{
 		grid:model.GridGenerator.Grid
-	});
+	}, gameInfo:GameInfo);
 	NEGOTIATE_RESULT(value:{
 		success:Bool,
 		people:model.PeopleGenerator.People,
@@ -104,7 +104,7 @@ enum Event {
 		moneyAfter:Float,
 		foodBefore:Float,
 		foodAfter:Float,
-	});
+	}, gameInfo:GameInfo);
 	EXPLORE_RESULT(value:{
 		success:Bool,
 		people:model.PeopleGenerator.People,
@@ -117,7 +117,7 @@ enum Event {
 		moneyAfter:Float,
 		foodBefore:Float,
 		foodAfter:Float,
-	});
+	}, gameInfo:GameInfo);
 	HIRE_RESULT(value:{
 		success:Bool,
 		people:model.PeopleGenerator.People,
@@ -129,7 +129,7 @@ enum Event {
 		moneyAfter:Float,
 		foodBefore:Float,
 		foodAfter:Float,
-	});
+	}, gameInfo:GameInfo);
 	WAR_RESULT(value:{
 		success:Bool,
 		people:model.PeopleGenerator.People,
@@ -141,7 +141,7 @@ enum Event {
 		moneyAfter:Float,
 		foodBefore:Float,
 		foodAfter:Float,
-	});
+	}, gameInfo:GameInfo);
 	SNATCH_RESULT(value:{
 		success:Bool,
 		people:model.PeopleGenerator.People,
@@ -153,7 +153,7 @@ enum Event {
 		moneyAfter:Float,
 		foodBefore:Float,
 		foodAfter:Float,
-	});
+	}, gameInfo:GameInfo);
 	RESOURCE_RESULT(value:{
 		success:Bool,
 		people:Null<model.PeopleGenerator.People>,
@@ -165,25 +165,25 @@ enum Event {
 		moneyAfter:Float,
 		foodBefore:Float,
 		foodAfter:Float,
-	});
+	}, gameInfo:GameInfo);
 	FIRE_RESULT(value:{
 		success:Bool,
 		people:Array<model.PeopleGenerator.People>,
 		maintainMoneyAfter:Float,
 		maintainMoneyBefore:Float,
-	});
+	}, gameInfo:GameInfo);
 	STRATEGY_RESULT(value:{
 		success:Bool,
 		people:model.PeopleGenerator.People,
 		strategy:StrategyCatelog,
 		energyBefore:Float,
 		energyAfter:Float,
-	});
+	}, gameInfo:GameInfo);
 	BUILDING_RESULT(value:{
 		success:Bool,
 		people:model.PeopleGenerator.People,
 		building:BUILDING,
-	});
+	}, gameInfo:GameInfo);
 	PAY_FOR_OVER_ENEMY_GRID(value:{
 		armyBefore:Float,
 		armyAfter:Float,
@@ -191,45 +191,44 @@ enum Event {
 		moneyAfter:Float,
 		foodBefore:Float,
 		foodAfter:Float,
-	});
+	}, gameInfo:GameInfo);
 	PEOPLE_LEVEL_UP_EVENT(value:{
 		peopleBefore:model.PeopleGenerator.People,
 		peopleAfter:model.PeopleGenerator.People,
-	});
+	}, gameInfo:GameInfo);
 	COST_FOR_BONUS_RESULT(value:{
 		costType:Int,
 		people:model.PeopleGenerator.People,
 		peopleBefore:Array<model.PeopleGenerator.People>,
 		peopleAfter:Array<model.PeopleGenerator.People>
-	});
+	}, gameInfo:GameInfo);
 	PK_RESULT(value:{
 		success:Bool,
 		people:model.PeopleGenerator.People,
 		armyBefore:Float,
 		armyAfter:Float,
-	});
+	}, gameInfo:GameInfo);
 	GRID_RESOURCE_EVENT(value:{
 		grids:Array<{
 			gridBefore:model.GridGenerator.Grid,
 			gridAfter:model.GridGenerator.Grid,
 		}>,
 		describtion:String
-	});
+	}, gameInfo:GameInfo);
 	GRID_BORN_EVENT(value:{
 		grid:model.GridGenerator.Grid
-	});
+	}, gameInfo:GameInfo);
 	FIND_TREASURE_RESULT(value:{
 		treasures:Array<TreasureCatelog>
-	});
+	}, gameInfo:GameInfo);
 	ANIMATION_EVENT(value:{
 		id:ActionInfoID,
 		value:{
 			playerId:Int,
 			fromGridId:Int,
 			toGridId:Int
-		},
-		gameInfo:GameInfo
-	});
+		}
+	}, gameInfo:GameInfo);
 }
 
 typedef Context = {
@@ -477,119 +476,119 @@ private function calcTotals(ctx:Context):Array<model.IModel.PlayerInfo> {
 
 function getEventInfo(e:Event):EventInfo {
 	return switch e {
-		case WORLD_EVENT(value):
+		case WORLD_EVENT(value, gameInfo):
 			{
 				id: EventInfoID.WORLD_EVENT,
 				value: value,
-				gameInfo: null,
+				gameInfo: gameInfo,
 			}
-		case WALK_STOP(value):
+		case WALK_STOP(value, gameInfo):
 			{
 				id: EventInfoID.WALK_STOP,
 				value: value,
-				gameInfo: null,
+				gameInfo: gameInfo,
 			}
-		case NEGOTIATE_RESULT(value):
+		case NEGOTIATE_RESULT(value, gameInfo):
 			{
 				id: EventInfoID.NEGOTIATE_RESULT,
 				value: value,
-				gameInfo: null,
+				gameInfo: gameInfo,
 			}
-		case EXPLORE_RESULT(value):
+		case EXPLORE_RESULT(value, gameInfo):
 			{
 				id: EventInfoID.EXPLORE_RESULT,
 				value: value,
-				gameInfo: null,
+				gameInfo: gameInfo,
 			}
-		case HIRE_RESULT(value):
+		case HIRE_RESULT(value, gameInfo):
 			{
 				id: EventInfoID.HIRE_RESULT,
 				value: value,
-				gameInfo: null,
+				gameInfo: gameInfo,
 			}
-		case WAR_RESULT(value):
+		case WAR_RESULT(value, gameInfo):
 			{
 				id: EventInfoID.WAR_RESULT,
 				value: value,
-				gameInfo: null,
+				gameInfo: gameInfo,
 			}
-		case RESOURCE_RESULT(value):
+		case RESOURCE_RESULT(value, gameInfo):
 			{
 				id: EventInfoID.RESOURCE_RESULT,
 				value: value,
-				gameInfo: null,
+				gameInfo: gameInfo,
 			}
-		case FIRE_RESULT(value):
+		case FIRE_RESULT(value, gameInfo):
 			{
 				id: EventInfoID.FIRE_RESULT,
 				value: value,
-				gameInfo: null,
+				gameInfo: gameInfo,
 			}
-		case SNATCH_RESULT(value):
+		case SNATCH_RESULT(value, gameInfo):
 			{
 				id: EventInfoID.SNATCH_RESULT,
 				value: value,
-				gameInfo: null,
+				gameInfo: gameInfo,
 			}
-		case STRATEGY_RESULT(value):
+		case STRATEGY_RESULT(value, gameInfo):
 			{
 				id: EventInfoID.STRATEGY_RESULT,
 				value: value,
-				gameInfo: null,
+				gameInfo: gameInfo,
 			}
-		case BUILDING_RESULT(value):
+		case BUILDING_RESULT(value, gameInfo):
 			{
 				id: EventInfoID.BUILDING_RESULT,
 				value: value,
-				gameInfo: null,
+				gameInfo: gameInfo,
 			}
-		case PAY_FOR_OVER_ENEMY_GRID(value):
+		case PAY_FOR_OVER_ENEMY_GRID(value, gameInfo):
 			{
 				id: EventInfoID.PAY_FOR_OVER_ENEMY_GRID,
 				value: value,
-				gameInfo: null,
+				gameInfo: gameInfo,
 			}
-		case PEOPLE_LEVEL_UP_EVENT(value):
+		case PEOPLE_LEVEL_UP_EVENT(value, gameInfo):
 			{
 				id: EventInfoID.PEOPLE_LEVEL_UP_EVENT,
 				value: value,
-				gameInfo: null,
+				gameInfo: gameInfo,
 			}
-		case COST_FOR_BONUS_RESULT(value):
+		case COST_FOR_BONUS_RESULT(value, gameInfo):
 			{
 				id: EventInfoID.COST_FOR_BONUS_RESULT,
 				value: value,
-				gameInfo: null,
+				gameInfo: gameInfo,
 			}
-		case PK_RESULT(value):
+		case PK_RESULT(value, gameInfo):
 			{
 				id: EventInfoID.PK_RESULT,
 				value: value,
-				gameInfo: null,
+				gameInfo: gameInfo,
 			}
-		case GRID_RESOURCE_EVENT(value):
+		case GRID_RESOURCE_EVENT(value, gameInfo):
 			{
 				id: EventInfoID.GRID_RESOURCE_EVENT,
 				value: value,
-				gameInfo: null,
+				gameInfo: gameInfo,
 			}
-		case GRID_BORN_EVENT(value):
+		case GRID_BORN_EVENT(value, gameInfo):
 			{
 				id: EventInfoID.GRID_BORN_EVENT,
 				value: value,
-				gameInfo: null,
+				gameInfo: gameInfo,
 			}
-		case FIND_TREASURE_RESULT(value):
+		case FIND_TREASURE_RESULT(value, gameInfo):
 			{
 				id: EventInfoID.FIND_TREASURE_RESULT,
 				value: value,
-				gameInfo: null,
+				gameInfo: gameInfo,
 			}
-		case ANIMATION_EVENT(value):
+		case ANIMATION_EVENT(value, gameInfo):
 			{
 				id: EventInfoID.ANIMATION_EVENT,
 				value: value,
-				gameInfo: null,
+				gameInfo: gameInfo,
 			}
 	}
 }
@@ -602,7 +601,7 @@ function getGameInfo(ctx:Context, root:Bool):GameInfo {
 		// 探索和攻城事件排最後
 		eventCopy.sort((a, b) -> {
 			return switch b {
-				case WAR_RESULT({success: true}) | EXPLORE_RESULT({success: true}):
+				case WAR_RESULT({success: true}, _) | EXPLORE_RESULT({success: true}, _):
 					-1;
 				case _:
 					0;
@@ -1075,68 +1074,6 @@ function getPlayerCommand(ctx:Context, playerId:Int):Array<ActionInfoID> {
 			}
 			ret.push(ActionInfoID.END);
 		}
-
-		// ========================
-		// if (player.memory.hasCommand == false) {
-		// 	if (gridInfo.belongPlayerId == null) {
-		// 		// 中立的
-		// 		switch gridInfo.buildtype {
-		// 			case EMPTY:
-		// 				ret.push(ActionInfoID.EXPLORE);
-		// 			case _:
-		// 		}
-		// 		if (gridInfo.people.length > 0) {
-		// 			// 有人的
-		// 			switch gridInfo.buildtype {
-		// 				case EMPTY:
-		// 					ret.push(ActionInfoID.HIRE);
-		// 				case _:
-		// 					if (gridInfo.favor[playerId] >= 1) {
-		// 						// 好感的
-		// 						switch gridInfo.buildtype {
-		// 							case MARKET:
-		// 								ret.push(ActionInfoID.EARN_MONEY);
-		// 							case FARM:
-		// 								ret.push(ActionInfoID.BUY_FOOD);
-		// 								ret.push(ActionInfoID.SELL_FOOD);
-		// 							case VILLAGE:
-		// 								ret.push(ActionInfoID.BUY_ARMY);
-		// 								ret.push(ActionInfoID.SELL_ARMY);
-		// 							case CITY:
-		// 								ret.push(ActionInfoID.EARN_MONEY);
-		// 								ret.push(ActionInfoID.BUY_FOOD);
-		// 								ret.push(ActionInfoID.SELL_FOOD);
-		// 								ret.push(ActionInfoID.BUY_ARMY);
-		// 								ret.push(ActionInfoID.SELL_ARMY);
-		// 							case _:
-		// 						}
-		// 					} else {
-		// 						// 討厭的
-		// 						switch gridInfo.buildtype {
-		// 							case MARKET | FARM | VILLAGE | CITY:
-		// 								ret.push(ActionInfoID.NEGOTIATE);
-		// 								ret.push(ActionInfoID.SNATCH);
-		// 								ret.push(ActionInfoID.OCCUPATION);
-		// 							case _:
-		// 						}
-		// 					}
-		// 			}
-		// 		}
-		// 		ret.push(ActionInfoID.END);
-		// 	} else if (gridInfo.belongPlayerId != playerId) {
-		// 		// 敵人的
-		// 		ret.push(ActionInfoID.SNATCH);
-		// 		ret.push(ActionInfoID.OCCUPATION);
-		// 		ret.push(ActionInfoID.END);
-		// 	} else {
-		// 		// 自己的
-		// 		ret.push(ActionInfoID.TRANSFER);
-		// 		ret.push(ActionInfoID.BUILD);
-		// 		ret.push(ActionInfoID.END);
-		// 	}
-		// } else {
-		// 	ret.push(ActionInfoID.END);
-		// }
 	}
 	return ret;
 }
@@ -1190,7 +1127,7 @@ function wrapResourceResultEvent(ctx:Context, playerId:Int, p1SelectId:Int, fn:(
 	resultValue.armyAfter = player.army;
 	resultValue.moneyAfter = player.money;
 	resultValue.foodAfter = player.food;
-	ctx.events.push(Event.RESOURCE_RESULT(resultValue));
+	ctx.events.push(RESOURCE_RESULT(resultValue, getGameInfo(ctx, false)));
 	return resultValue.success;
 }
 
@@ -1208,6 +1145,6 @@ function wrapStrategyEvent(ctx:Context, playerId:Int, peopleId:Int, strategyId:I
 	strategyResultValue.success = fn();
 	strategyResultValue.people = getPeopleInfo(ctx, p1);
 	strategyResultValue.energyAfter = p1.energy;
-	ctx.events.push(Event.STRATEGY_RESULT(strategyResultValue));
+	ctx.events.push(STRATEGY_RESULT(strategyResultValue, getGameInfo(ctx, false)));
 	return strategyResultValue.success;
 }

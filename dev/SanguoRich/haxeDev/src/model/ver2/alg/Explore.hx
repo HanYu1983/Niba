@@ -110,7 +110,7 @@ private function onExploreCost(ctx:Context, playerId:Int, gridId:Int, p1SelectId
 	resultValue.armyAfter = player.army;
 	resultValue.moneyAfter = player.money;
 	resultValue.foodAfter = player.food;
-	ctx.events.push(Event.EXPLORE_RESULT(resultValue));
+	ctx.events.push(EXPLORE_RESULT(resultValue, getGameInfo(ctx, false)));
 }
 
 function _getTakeExplorePreview(ctx:Context, playerId:Int, gridId:Int):ExplorePreview {

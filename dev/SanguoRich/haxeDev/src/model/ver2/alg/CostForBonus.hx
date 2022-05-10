@@ -188,7 +188,7 @@ private function onCostForBonusCost(ctx:Context, playerId:Int, peopleId:Int, cos
 				onPeopleExpAdd(ctx, p1.id, getExpAdd(Math.min(1, successRate), model.Config.ENERGY_COST_ON_EXPLORE));
 			}
 			eventValue.peopleAfter = getPlayerInfo(ctx, player).people;
-			ctx.events.push(COST_FOR_BONUS_RESULT(eventValue));
+			ctx.events.push(COST_FOR_BONUS_RESULT(eventValue, getGameInfo(ctx, false)));
 	}
 }
 

@@ -46,7 +46,7 @@ private function onTransfer(ctx:Context, playerId:Int, gridId:Int, playerInfo:mo
 	resultValue.armyAfter = player.army;
 	resultValue.moneyAfter = player.money;
 	resultValue.foodAfter = player.food;
-	ctx.events.push(Event.RESOURCE_RESULT(resultValue));
+	ctx.events.push(RESOURCE_RESULT(resultValue, getGameInfo(ctx, false)));
 }
 
 // 可能不成的情況是
