@@ -7,6 +7,7 @@ import model.Config;
 import model.ver2.Define;
 import model.ver2.alg.Nego;
 import model.ver2.alg.War;
+import model.ver2.alg.Brain;
 
 using Lambda;
 
@@ -98,6 +99,118 @@ function doGridGrow(ctx:Context) {
 
 // 玩家回合結束
 function doPlayerEnd(ctx:Context) {
+	onPlayerEnd(ctx, ctx.currentPlayerId);
+	final nextPlayer = ctx.players[ctx.currentPlayerId];
+	if (nextPlayer.brain != null) {
+		doBrain(ctx, nextPlayer.id);
+	}
+}
+
+function doPlayerDice(ctx:Context) {
+	onPlayerDice(ctx, ctx.currentPlayerId);
+}
+
+function initContext(ctx:Context, option:{}) {
+	final genGrids = model.GridGenerator.getInst().getGrids(20);
+	for (grid in genGrids) {
+		addGridInfo(ctx, grid);
+	}
+	var i = 0;
+	for (name in ["劉備", "曹操", "孫權", "劉表"]) {
+		addPlayerInfo(ctx, {
+			id: i,
+			name: name,
+			money: 1200.0,
+			army: 1200.0,
+			food: 1200.0,
+			strategy: 300.0,
+			people: [
+				model.PeopleGenerator.getInst().generate(),
+				model.PeopleGenerator.getInst().generate(),
+				model.PeopleGenerator.getInst().generate()
+			],
+			maintainPeople: 0,
+			maintainArmy: 0,
+			armyGrow: 0.01,
+			atGridId: 0,
+			grids: [],
+			commands: [],
+			treasures: []
+		}, i >= 2);
+		++i;
+	}
+}
+
+function onPeopleExpAdd(ctx:Context, peopleId:Int, exp:Float) {
+	final people = getPeopleById(ctx, peopleId);
+	final eventValue = {
+		peopleBefore: getPeopleInfo(ctx, people),
+		peopleAfter: getPeopleInfo(ctx, people),
+	}
+	final originLevel = getExpLevel(people.exp);
+	people.exp += exp;
+	final isLevelUp = getExpLevel(people.exp) > originLevel;
+	if (isLevelUp) {
+		eventValue.peopleAfter = getPeopleInfo(ctx, people);
+		ctx.events.push(Event.PEOPLE_LEVEL_UP_EVENT(eventValue));
+	}
+}
+
+function onPlayerGoToPosition(ctx:Context, playerId:Int, toGridId:Int) {
+	final player = ctx.players[playerId];
+	final toGrid = ctx.grids[toGridId];
+	final toGridBelongPlayerId = getGridBelongPlayerId(ctx, toGrid.id);
+	final isStopAtEnemyGrid = toGridBelongPlayerId != null && toGridBelongPlayerId != player.id;
+	if (isStopAtEnemyGrid) {
+		onPayTaxToGrid(ctx, player.id, toGrid.id);
+	}
+	player.position = toGridId;
+}
+
+function onPayTaxToGrid(ctx:Context, playerId:Int, gridId:Int) {
+	final player = ctx.players[playerId];
+	final eventValue = {
+		armyBefore: player.army,
+		armyAfter: player.army,
+		moneyBefore: player.money,
+		moneyAfter: player.money,
+		foodBefore: player.food,
+		foodAfter: player.food,
+	}
+	{
+		final grid = ctx.grids[gridId];
+		final taxMoney = grid.money * GRID_TAX;
+		final taxFood = grid.food * GRID_TAX;
+		player.money = Math.max(0, player.money - taxMoney);
+		player.food = Math.max(0, player.food - taxFood);
+		grid.money += taxMoney;
+		grid.food += taxFood;
+	}
+	eventValue.moneyAfter = player.money;
+	eventValue.foodAfter = player.food;
+	ctx.events.push({
+		Event.PAY_FOR_OVER_ENEMY_GRID(eventValue);
+	});
+}
+
+function onFindTreasure(ctx:Context, playerId:Int, treasures:Array<Treasure>) {
+	if (treasures.length == 0) {
+		return;
+	}
+	for (treasure in treasures) {
+		treasure.position.gridId = null;
+		treasure.belongToPlayerId = playerId;
+	}
+	ctx.events.push(Event.FIND_TREASURE_RESULT({
+		treasures: treasures.map(t -> getTreasureInfo(ctx, t).catelog)
+	}));
+}
+
+// 玩家回合結束
+function onPlayerEnd(ctx:Context, playerId:Int) {
+	if (playerId != ctx.currentPlayerId) {
+		throw new haxe.Exception("現在不是你的回合，不能呼叫end");
+	}
 	// 四個玩家走完後才計算回合
 	final isTurnEnd = ctx.currentPlayerId == (ctx.players.length - 1);
 	if (isTurnEnd) {
@@ -288,16 +401,18 @@ function doPlayerEnd(ctx:Context) {
 	clearMemory(ctx);
 }
 
-function doPlayerDice(ctx:Context) {
-	final activePlayerId = ctx.currentPlayerId;
-	final player = ctx.players[activePlayerId];
+function onPlayerDice(ctx:Context, playerId:Int) {
+	if (playerId != ctx.currentPlayerId) {
+		throw new haxe.Exception("現在不是你的回合,不能呼叫end");
+	}
+	final player = ctx.players[playerId];
 	final fromGridId = player.position;
 	final moveStep = Math.floor(Math.random() * 6) + 1;
 	var toGridId = (fromGridId + moveStep) % ctx.grids.length;
 	{
 		// 計算路障
 		final everyStep = [for (i in 1...(moveStep + 1)) player.position + i].map(s -> s % ctx.grids.length);
-		final findGroundItem = ctx.groundItems.filter(item -> everyStep.has(item.position) && item.belongToPlayerId != activePlayerId);
+		final findGroundItem = ctx.groundItems.filter(item -> everyStep.has(item.position) && item.belongToPlayerId != playerId);
 		if (findGroundItem.length > 0) {
 			final stopItem = findGroundItem[0];
 			// 停住
@@ -306,111 +421,15 @@ function doPlayerDice(ctx:Context) {
 			ctx.groundItems = ctx.groundItems.filter(item -> item.id != stopItem.id);
 		}
 	}
-	onPlayerGoToPosition(ctx, activePlayerId, toGridId);
+	onPlayerGoToPosition(ctx, playerId, toGridId);
 	player.memory.hasDice = true;
 	ctx.events.push(ANIMATION_EVENT({
 		id: MOVE,
 		value: {
-			playerId: activePlayerId,
+			playerId: playerId,
 			fromGridId: fromGridId,
 			toGridId: toGridId
 		},
 		gameInfo: getGameInfo(ctx, false)
-	}));
-}
-
-function initContext(ctx:Context, option:{}) {
-	final genGrids = model.GridGenerator.getInst().getGrids(20);
-	for (grid in genGrids) {
-		addGridInfo(ctx, grid);
-	}
-	var i = 0;
-	// for (name in ["vic", "han", "xiao", "any"]) {
-	for (name in ["劉備", "曹操"]) {
-		addPlayerInfo(ctx, {
-			id: i++,
-			name: name,
-			money: 1200.0,
-			army: 1200.0,
-			food: 1200.0,
-			strategy: 300.0,
-			people: [
-				model.PeopleGenerator.getInst().generate(),
-				model.PeopleGenerator.getInst().generate(),
-				model.PeopleGenerator.getInst().generate()
-			],
-			maintainPeople: 0,
-			maintainArmy: 0,
-			armyGrow: 0.01,
-			atGridId: 0,
-			grids: [],
-			commands: [],
-			treasures: []
-		});
-	}
-}
-
-function onPeopleExpAdd(ctx:Context, peopleId:Int, exp:Float) {
-	final people = getPeopleById(ctx, peopleId);
-	final eventValue = {
-		peopleBefore: getPeopleInfo(ctx, people),
-		peopleAfter: getPeopleInfo(ctx, people),
-	}
-	final originLevel = getExpLevel(people.exp);
-	people.exp += exp;
-	final isLevelUp = getExpLevel(people.exp) > originLevel;
-	if (isLevelUp) {
-		eventValue.peopleAfter = getPeopleInfo(ctx, people);
-		ctx.events.push(Event.PEOPLE_LEVEL_UP_EVENT(eventValue));
-	}
-}
-
-function onPlayerGoToPosition(ctx:Context, playerId:Int, toGridId:Int) {
-	final player = ctx.players[playerId];
-	final toGrid = ctx.grids[toGridId];
-	final toGridBelongPlayerId = getGridBelongPlayerId(ctx, toGrid.id);
-	final isStopAtEnemyGrid = toGridBelongPlayerId != null && toGridBelongPlayerId != player.id;
-	if (isStopAtEnemyGrid) {
-		onPayTaxToGrid(ctx, player.id, toGrid.id);
-	}
-	player.position = toGridId;
-}
-
-function onPayTaxToGrid(ctx:Context, playerId:Int, gridId:Int) {
-	final player = ctx.players[playerId];
-	final eventValue = {
-		armyBefore: player.army,
-		armyAfter: player.army,
-		moneyBefore: player.money,
-		moneyAfter: player.money,
-		foodBefore: player.food,
-		foodAfter: player.food,
-	}
-	{
-		final grid = ctx.grids[gridId];
-		final taxMoney = grid.money * GRID_TAX;
-		final taxFood = grid.food * GRID_TAX;
-		player.money = Math.max(0, player.money - taxMoney);
-		player.food = Math.max(0, player.food - taxFood);
-		grid.money += taxMoney;
-		grid.food += taxFood;
-	}
-	eventValue.moneyAfter = player.money;
-	eventValue.foodAfter = player.food;
-	ctx.events.push({
-		Event.PAY_FOR_OVER_ENEMY_GRID(eventValue);
-	});
-}
-
-function onFindTreasure(ctx:Context, playerId:Int, treasures:Array<Treasure>) {
-	if (treasures.length == 0) {
-		return;
-	}
-	for (treasure in treasures) {
-		treasure.position.gridId = null;
-		treasure.belongToPlayerId = playerId;
-	}
-	ctx.events.push(Event.FIND_TREASURE_RESULT({
-		treasures: treasures.map(t -> getTreasureInfo(ctx, t).catelog)
 	}));
 }
