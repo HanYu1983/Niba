@@ -55,13 +55,12 @@ function doBrain(ctx, playerId:Int) {
 			case FIRE:
 			case HIRE:
 			case NEGOTIATE:
-			case OCCUPATION:
 			case PAY_FOR_FUN:
 			case PK:
 			case PRACTICE:
 			case SELL_ARMY:
 			case SELL_FOOD:
-			case SNATCH:
+			case SNATCH | OCCUPATION:
 				if (peopleInPlayer.length <= 0) {
 					throw new haxe.Exception("你沒有人, 不能搶劫");
 				}
@@ -70,7 +69,7 @@ function doBrain(ctx, playerId:Int) {
 				}
 				final p1 = peopleInPlayer[0];
 				final p2 = peopleInGrid[0];
-				_takeSnatchOn(ctx, playerId, gridId, p1.id, p2.id, false);
+				_takeSnatchOn(ctx, playerId, gridId, p1.id, p2.id, cmd == OCCUPATION);
 			case STRATEGY:
 			case TRANSFER:
 			case TREASURE:
