@@ -472,166 +472,189 @@ private function calcTotals(ctx:Context):Array<model.IModel.PlayerInfo> {
 	});
 }
 
+function getEventInfo(e:Event):EventInfo {
+	return switch e {
+		case WORLD_EVENT(value):
+			{
+				id: EventInfoID.WORLD_EVENT,
+				value: value,
+			}
+		case WALK_STOP(value):
+			{
+				id: EventInfoID.WALK_STOP,
+				value: value
+			}
+		case NEGOTIATE_RESULT(value):
+			{
+				id: EventInfoID.NEGOTIATE_RESULT,
+				value: value
+			}
+		case EXPLORE_RESULT(value):
+			{
+				id: EventInfoID.EXPLORE_RESULT,
+				value: value
+			}
+		case HIRE_RESULT(value):
+			{
+				id: EventInfoID.HIRE_RESULT,
+				value: value
+			}
+		case WAR_RESULT(value):
+			{
+				id: EventInfoID.WAR_RESULT,
+				value: value
+			}
+		case RESOURCE_RESULT(value):
+			{
+				id: EventInfoID.RESOURCE_RESULT,
+				value: value
+			}
+		case FIRE_RESULT(value):
+			{
+				id: EventInfoID.FIRE_RESULT,
+				value: value
+			}
+		case SNATCH_RESULT(value):
+			{
+				id: EventInfoID.SNATCH_RESULT,
+				value: value
+			}
+		case STRATEGY_RESULT(value):
+			{
+				id: EventInfoID.STRATEGY_RESULT,
+				value: value
+			}
+		case BUILDING_RESULT(value):
+			{
+				id: EventInfoID.BUILDING_RESULT,
+				value: value
+			}
+		case PAY_FOR_OVER_ENEMY_GRID(value):
+			{
+				id: EventInfoID.PAY_FOR_OVER_ENEMY_GRID,
+				value: value
+			}
+		case PEOPLE_LEVEL_UP_EVENT(value):
+			{
+				id: EventInfoID.PEOPLE_LEVEL_UP_EVENT,
+				value: value
+			}
+		case COST_FOR_BONUS_RESULT(value):
+			{
+				id: EventInfoID.COST_FOR_BONUS_RESULT,
+				value: value
+			}
+		case PK_RESULT(value):
+			{
+				id: EventInfoID.PK_RESULT,
+				value: value
+			}
+		case GRID_RESOURCE_EVENT(value):
+			{
+				id: EventInfoID.GRID_RESOURCE_EVENT,
+				value: value
+			}
+		case GRID_BORN_EVENT(value):
+			{
+				id: EventInfoID.GRID_BORN_EVENT,
+				value: value
+			}
+		case FIND_TREASURE_RESULT(value):
+			{
+				id: EventInfoID.FIND_TREASURE_RESULT,
+				value: value
+			}
+		case ANIMATION_EVENT(value):
+			{
+				id: EventInfoID.ANIMATION_EVENT,
+				value: value
+			}
+	}
+}
+
 function getGameInfo(ctx:Context, root:Bool):GameInfo {
-	final eventCopy = root ? deepCopy(ctx.events) : [];
-	// 先進後出
-	eventCopy.reverse();
-	// 探索和攻城事件排最後
-	eventCopy.sort((a, b) -> {
-		return switch b {
-			case WAR_RESULT({success: true}) | EXPLORE_RESULT({success: true}):
-				-1;
-			case _:
-				0;
-		}
-	});
-	final events:Array<model.IModel.EventInfo> = eventCopy.map(e -> {
-		// 顯式使用類型(EventInfo), 這裡不能依靠類型推理, 不然會編譯錯誤
-		final eventInfo:model.IModel.EventInfo = switch e {
-			case WORLD_EVENT(value):
-				{
-					id: EventInfoID.WORLD_EVENT,
-					value: value,
-				}
-			case WALK_STOP(value):
-				{
-					id: EventInfoID.WALK_STOP,
-					value: value
-				}
-			case NEGOTIATE_RESULT(value):
-				{
-					id: EventInfoID.NEGOTIATE_RESULT,
-					value: value
-				}
-			case EXPLORE_RESULT(value):
-				{
-					id: EventInfoID.EXPLORE_RESULT,
-					value: value
-				}
-			case HIRE_RESULT(value):
-				{
-					id: EventInfoID.HIRE_RESULT,
-					value: value
-				}
-			case WAR_RESULT(value):
-				{
-					id: EventInfoID.WAR_RESULT,
-					value: value
-				}
-			case RESOURCE_RESULT(value):
-				{
-					id: EventInfoID.RESOURCE_RESULT,
-					value: value
-				}
-			case FIRE_RESULT(value):
-				{
-					id: EventInfoID.FIRE_RESULT,
-					value: value
-				}
-			case SNATCH_RESULT(value):
-				{
-					id: EventInfoID.SNATCH_RESULT,
-					value: value
-				}
-			case STRATEGY_RESULT(value):
-				{
-					id: EventInfoID.STRATEGY_RESULT,
-					value: value
-				}
-			case BUILDING_RESULT(value):
-				{
-					id: EventInfoID.BUILDING_RESULT,
-					value: value
-				}
-			case PAY_FOR_OVER_ENEMY_GRID(value):
-				{
-					id: EventInfoID.PAY_FOR_OVER_ENEMY_GRID,
-					value: value
-				}
-			case PEOPLE_LEVEL_UP_EVENT(value):
-				{
-					id: EventInfoID.PEOPLE_LEVEL_UP_EVENT,
-					value: value
-				}
-			case COST_FOR_BONUS_RESULT(value):
-				{
-					id: EventInfoID.COST_FOR_BONUS_RESULT,
-					value: value
-				}
-			case PK_RESULT(value):
-				{
-					id: EventInfoID.PK_RESULT,
-					value: value
-				}
-			case GRID_RESOURCE_EVENT(value):
-				{
-					id: EventInfoID.GRID_RESOURCE_EVENT,
-					value: value
-				}
-			case GRID_BORN_EVENT(value):
-				{
-					id: EventInfoID.GRID_BORN_EVENT,
-					value: value
-				}
-			case FIND_TREASURE_RESULT(value):
-				{
-					id: EventInfoID.FIND_TREASURE_RESULT,
-					value: value
-				}
-			case ANIMATION_EVENT(value):
-				{
-					id: EventInfoID.ANIMATION_EVENT,
-					value: value
-				}
-		}
-		return eventInfo;
-	});
-
+	final events = if (root) {
+		final eventCopy = deepCopy(ctx.events);
+		// 先進後出
+		eventCopy.reverse();
+		// 探索和攻城事件排最後
+		eventCopy.sort((a, b) -> {
+			return switch b {
+				case WAR_RESULT({success: true}) | EXPLORE_RESULT({success: true}):
+					-1;
+				case _:
+					0;
+			}
+		});
+		eventCopy.map(getEventInfo);
+	} else {
+		[];
+	}
 	// 不管週期, 直接計算下一次的結果
-	final nextCtx = deepCopy(ctx); // _cloner.clone(ctx);
-	model.ver2.alg.Alg.doPeopleMaintain(nextCtx);
-	model.ver2.alg.Alg.doGridGrow(nextCtx);
-
+	final nextCtx = if (root) {
+		final copy = deepCopy(ctx);
+		model.ver2.alg.Alg.doPeopleMaintain(copy);
+		model.ver2.alg.Alg.doGridGrow(copy);
+		copy;
+	} else {
+		ctx;
+	}
 	return {
 		players: ctx.players.map(p -> getPlayerInfo(ctx, p)).map(p -> {
-			// 計算下次結算後的差額
-			final nextP = nextCtx.players[p.id];
-			p.maintainPeople = nextP.money - p.money;
-			p.maintainArmy = nextP.food - p.food;
-			p.armyGrow = nextP.army - p.army;
-			return p;
+			return if (root) {
+				// 計算下次結算後的差額
+				final nextP = nextCtx.players[p.id];
+				p.maintainPeople = nextP.money - p.money;
+				p.maintainArmy = nextP.food - p.food;
+				p.armyGrow = nextP.army - p.army;
+				p;
+			} else {
+				p;
+			}
 		}),
 		playerGrids: {
-			final curr = calcGrids(ctx);
-			final next = calcGrids(nextCtx);
-			for (i in 0...curr.length) {
-				final p = curr[i];
-				final nextP = next[i];
-				p.maintainPeople = nextP.money - p.money;
-				p.maintainArmy = nextP.food - p.food;
-				p.armyGrow = nextP.army - p.army;
+			if (root) {
+				final curr = calcGrids(ctx);
+				final next = calcGrids(nextCtx);
+				for (i in 0...curr.length) {
+					final p = curr[i];
+					final nextP = next[i];
+					p.maintainPeople = nextP.money - p.money;
+					p.maintainArmy = nextP.food - p.food;
+					p.armyGrow = nextP.army - p.army;
+				}
+				curr;
+			} else {
+				ctx.players.map(p -> getPlayerInfo(ctx, p));
 			}
-			curr;
 		},
 		playerTotals: {
-			final curr = calcTotals(ctx);
-			final next = calcTotals(nextCtx);
-			for (i in 0...curr.length) {
-				final p = curr[i];
-				final nextP = next[i];
-				p.maintainPeople = nextP.money - p.money;
-				p.maintainArmy = nextP.food - p.food;
-				p.armyGrow = nextP.army - p.army;
+			if (root) {
+				final curr = calcTotals(ctx);
+				final next = calcTotals(nextCtx);
+				for (i in 0...curr.length) {
+					final p = curr[i];
+					final nextP = next[i];
+					p.maintainPeople = nextP.money - p.money;
+					p.maintainArmy = nextP.food - p.food;
+					p.armyGrow = nextP.army - p.army;
+				}
+				curr;
+			} else {
+				ctx.players.map(p -> getPlayerInfo(ctx, p));
 			}
-			curr;
 		},
 		grids: ctx.grids.map(p -> getGridInfo(ctx, p)).map(p -> {
-			// 計算下次結算後的差額
-			final nextP = nextCtx.grids[p.id];
-			p.moneyGrow = nextP.money - p.money;
-			p.armyGrow = nextP.army - p.army;
-			p.foodGrow = nextP.food - p.food;
-			return p;
+			if (root) {
+				// 計算下次結算後的差額
+				final nextP = nextCtx.grids[p.id];
+				p.moneyGrow = nextP.money - p.money;
+				p.armyGrow = nextP.army - p.army;
+				p.foodGrow = nextP.food - p.food;
+				p;
+			} else {
+				p;
+			}
 		}),
 		isPlayerTurn: true,
 		currentPlayer: getPlayerInfo(ctx, ctx.players[ctx.currentPlayerId]),
