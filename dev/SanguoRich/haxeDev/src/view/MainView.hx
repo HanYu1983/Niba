@@ -856,6 +856,7 @@ class MainView extends Box {
 			}
 		}else{
 			Main.model.refresh(()->{
+				syncViewByInfo(Main.model.gameInfo());
 				trace('清除後端事件');
 			});
 		}
@@ -893,6 +894,8 @@ class MainView extends Box {
 	}
 
 	function syncUI(gameInfo:GameInfo) {
+
+		
 		gameInfo.isPlaying ? btn_start.hide() : btn_start.show();
 
 		disabledAllCommands();
