@@ -92,7 +92,8 @@ enum RESOURCE {
 
 typedef EventInfo = {
 	id:EventInfoID,
-	value:Dynamic
+	value:Dynamic,
+	gameInfo:GameInfo,
 }
 
 typedef GameInfo = {

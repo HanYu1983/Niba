@@ -478,96 +478,115 @@ function getEventInfo(e:Event):EventInfo {
 			{
 				id: EventInfoID.WORLD_EVENT,
 				value: value,
+				gameInfo: null,
 			}
 		case WALK_STOP(value):
 			{
 				id: EventInfoID.WALK_STOP,
-				value: value
+				value: value,
+				gameInfo: null,
 			}
 		case NEGOTIATE_RESULT(value):
 			{
 				id: EventInfoID.NEGOTIATE_RESULT,
-				value: value
+				value: value,
+				gameInfo: null,
 			}
 		case EXPLORE_RESULT(value):
 			{
 				id: EventInfoID.EXPLORE_RESULT,
-				value: value
+				value: value,
+				gameInfo: null,
 			}
 		case HIRE_RESULT(value):
 			{
 				id: EventInfoID.HIRE_RESULT,
-				value: value
+				value: value,
+				gameInfo: null,
 			}
 		case WAR_RESULT(value):
 			{
 				id: EventInfoID.WAR_RESULT,
-				value: value
+				value: value,
+				gameInfo: null,
 			}
 		case RESOURCE_RESULT(value):
 			{
 				id: EventInfoID.RESOURCE_RESULT,
-				value: value
+				value: value,
+				gameInfo: null,
 			}
 		case FIRE_RESULT(value):
 			{
 				id: EventInfoID.FIRE_RESULT,
-				value: value
+				value: value,
+				gameInfo: null,
 			}
 		case SNATCH_RESULT(value):
 			{
 				id: EventInfoID.SNATCH_RESULT,
-				value: value
+				value: value,
+				gameInfo: null,
 			}
 		case STRATEGY_RESULT(value):
 			{
 				id: EventInfoID.STRATEGY_RESULT,
-				value: value
+				value: value,
+				gameInfo: null,
 			}
 		case BUILDING_RESULT(value):
 			{
 				id: EventInfoID.BUILDING_RESULT,
-				value: value
+				value: value,
+				gameInfo: null,
 			}
 		case PAY_FOR_OVER_ENEMY_GRID(value):
 			{
 				id: EventInfoID.PAY_FOR_OVER_ENEMY_GRID,
-				value: value
+				value: value,
+				gameInfo: null,
 			}
 		case PEOPLE_LEVEL_UP_EVENT(value):
 			{
 				id: EventInfoID.PEOPLE_LEVEL_UP_EVENT,
-				value: value
+				value: value,
+				gameInfo: null,
 			}
 		case COST_FOR_BONUS_RESULT(value):
 			{
 				id: EventInfoID.COST_FOR_BONUS_RESULT,
-				value: value
+				value: value,
+				gameInfo: null,
 			}
 		case PK_RESULT(value):
 			{
 				id: EventInfoID.PK_RESULT,
-				value: value
+				value: value,
+				gameInfo: null,
 			}
 		case GRID_RESOURCE_EVENT(value):
 			{
 				id: EventInfoID.GRID_RESOURCE_EVENT,
-				value: value
+				value: value,
+				gameInfo: null,
 			}
 		case GRID_BORN_EVENT(value):
 			{
 				id: EventInfoID.GRID_BORN_EVENT,
-				value: value
+				value: value,
+				gameInfo: null,
 			}
 		case FIND_TREASURE_RESULT(value):
 			{
 				id: EventInfoID.FIND_TREASURE_RESULT,
-				value: value
+				value: value,
+				gameInfo: null,
 			}
 		case ANIMATION_EVENT(value):
 			{
 				id: EventInfoID.ANIMATION_EVENT,
-				value: value
+				value: value,
+				gameInfo: null,
 			}
 	}
 }

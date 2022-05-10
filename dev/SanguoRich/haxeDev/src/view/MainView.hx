@@ -582,12 +582,13 @@ class MainView extends Box {
 
 	function playEvents(gameInfo:GameInfo) {
 		events = gameInfo.events;
-		doOneEvent(gameInfo);
+		doOneEvent();
 	}
 
-	function doOneEvent(gameInfo:GameInfo) {
+	function doOneEvent() {
 		if (events.length > 0) {
-			var event = events.shift();
+			final event = events.shift();
+			final gameInfo = event.gameInfo;
 			switch (event.id) {
 				case ANIMATION_EVENT:
 					final info:Dynamic = event.value;
@@ -596,8 +597,8 @@ class MainView extends Box {
 							var pv = players[info.value.playerId];
 							var toPos = getGridPositionByGridId(info.value.playerId, info.value.toGridId);
 							TweenX.to(pv, {"left": toPos[0], "top": toPos[1]}, .5).onStop(()->{
-								syncViewByInfo(info.gameInfo);
-								doOneEvent(gameInfo);
+								syncViewByInfo(gameInfo);
+								doOneEvent();
 							}).play();
 						case _:
 					}
@@ -613,7 +614,7 @@ class MainView extends Box {
 					}
 
 					Dialogs.messageBox(title, '發現寶物', MessageBoxType.TYPE_INFO, true, (b) -> {
-						doOneEvent(gameInfo);
+						doOneEvent();
 					});
 
 					// var msg = '${title}\n';
@@ -632,7 +633,7 @@ class MainView extends Box {
 					var msg = '${title}\n';
 					msg += '地點:${grid.name}';
 					Dialogs.messageBox(msg, title, MessageBoxType.TYPE_INFO, true, (b) -> {
-						doOneEvent(gameInfo);
+						doOneEvent();
 					});
 				case GRID_RESOURCE_EVENT:
 					syncViewByInfo(gameInfo);
@@ -656,7 +657,7 @@ class MainView extends Box {
 						msg += '\n';
 					}
 					Dialogs.messageBox(msg, title, MessageBoxType.TYPE_INFO, true, (b) -> {
-						doOneEvent(gameInfo);
+						doOneEvent();
 					});
 				case PK_RESULT:
 					syncViewByInfo(gameInfo);
@@ -670,7 +671,7 @@ class MainView extends Box {
 					var msg = '武將:${info.people.name}\n';
 					msg += '士兵:${Main.getFixNumber(info.armyBefore, 0)} => ${Main.getFixNumber(info.armyAfter, 0)} (${Main.getFixNumber(info.armyAfter - info.armyBefore, 0)})';
 					Dialogs.messageBox(msg, title, MessageBoxType.TYPE_INFO, true, (b) -> {
-						doOneEvent(gameInfo);
+						doOneEvent();
 					});
 				case COST_FOR_BONUS_RESULT:
 					syncViewByInfo(gameInfo);
@@ -700,7 +701,7 @@ class MainView extends Box {
 						msg += '${peopleAfter.name} ${recoverType} 上升 ${recover}\n';
 					}
 					Dialogs.messageBox(msg, title, MessageBoxType.TYPE_INFO, true, (b) -> {
-						doOneEvent(gameInfo);
+						doOneEvent();
 					});
 
 				case HIRE_RESULT:
@@ -714,7 +715,7 @@ class MainView extends Box {
 					msg += '糧草:${Main.getFixNumber(info.foodBefore, 0)} => ${Main.getFixNumber(info.foodAfter, 0)}\n';
 					msg += '士兵:${Main.getFixNumber(info.armyBefore, 0)} => ${Main.getFixNumber(info.armyAfter, 0)}\n';
 					Dialogs.messageBox(msg, title, MessageBoxType.TYPE_INFO, true, (b) -> {
-						doOneEvent(gameInfo);
+						doOneEvent();
 					});
 
 				case FIRE_RESULT:
@@ -726,7 +727,7 @@ class MainView extends Box {
 					msg += '薪俸:${Main.getFixNumber(info.maintainMoneyBefore, 2)} => ${Main.getFixNumber(info.maintainMoneyAfter, 2)}\n';
 
 					Dialogs.messageBox(msg, '解雇完成', MessageBoxType.TYPE_INFO, true, (b) -> {
-						doOneEvent(gameInfo);
+						doOneEvent();
 					});
 
 
@@ -742,13 +743,13 @@ class MainView extends Box {
 					msg += '士兵:${Main.getFixNumber(info.armyBefore, 0)} => ${Main.getFixNumber(info.armyAfter, 0)}\n';
 					msg += '友好:${Main.getFavorString(info.favorBefore)} => ${Main.getFavorString(info.favorAfter)}\n';
 					Dialogs.messageBox(msg, title, MessageBoxType.TYPE_INFO, true, (b) -> {
-						doOneEvent(gameInfo);
+						doOneEvent();
 					});
 
 				case EXPLORE_RESULT:
 					syncViewByInfo(gameInfo);
 					exploreSuccessView.showMessage(event.value);
-					doOneEvent(gameInfo);
+					doOneEvent();
 
 				case WAR_RESULT:
 					syncViewByInfo(gameInfo);
@@ -762,11 +763,11 @@ class MainView extends Box {
 					if (info.success) {
 						Dialogs.messageBox(msg, '占領成功', MessageBoxType.TYPE_INFO, true, (target) -> {
 							transferPreview.showPopup(null);
-							doOneEvent(gameInfo);
+							doOneEvent();
 						});
 					} else {
 						Dialogs.messageBox(msg, '占領失敗', MessageBoxType.TYPE_INFO, true, (b) -> {
-							doOneEvent(gameInfo);
+							doOneEvent();
 						});
 					}
 
@@ -781,7 +782,7 @@ class MainView extends Box {
 					msg += '糧草:${Main.getFixNumber(info.foodBefore, 0)} => ${Main.getFixNumber(info.foodAfter, 0)}\n';
 					msg += '士兵:${Main.getFixNumber(info.armyBefore, 0)} => ${Main.getFixNumber(info.armyAfter, 0)}\n';
 					Dialogs.messageBox(msg, title, MessageBoxType.TYPE_INFO, true, (b) -> {
-						doOneEvent(gameInfo);
+						doOneEvent();
 					});
 
 				case RESOURCE_RESULT:
@@ -794,7 +795,7 @@ class MainView extends Box {
 					msg += '糧草:${Main.getFixNumber(info.foodBefore, 0)} => ${Main.getFixNumber(info.foodAfter, 0)}\n';
 					msg += '士兵:${Main.getFixNumber(info.armyBefore, 0)} => ${Main.getFixNumber(info.armyAfter, 0)}\n';
 					Dialogs.messageBox(msg, '交易完成', MessageBoxType.TYPE_INFO, true, (b) -> {
-						doOneEvent(gameInfo);
+						doOneEvent();
 					});
 
 				case STRATEGY_RESULT:
@@ -807,7 +808,7 @@ class MainView extends Box {
 					msg += '計策:${info.strategy ? info.strategy.name : ""}\n';
 					msg += '體力:${Main.getFixNumber(info.energyBefore, 0)} => ${Main.getFixNumber(info.energyAfter, 0)}\n';
 					Dialogs.messageBox(msg, title, MessageBoxType.TYPE_INFO, true, (b) -> {
-						doOneEvent(gameInfo);
+						doOneEvent();
 					});
 				case BUILDING_RESULT:
 					syncViewByInfo(gameInfo);
@@ -817,12 +818,12 @@ class MainView extends Box {
 					var msg = '武將:${info.people.name:""}\n';
 					msg += '已擴建 ${catelog.name}\n';
 					Dialogs.messageBox(msg, '擴建完畢', MessageBoxType.TYPE_INFO, true, (b) -> {
-						doOneEvent(gameInfo);
+						doOneEvent();
 					});
 				case WORLD_EVENT:
 
 					growView.showPopup(event.value, () -> {
-						doOneEvent(gameInfo);
+						doOneEvent();
 						syncViewByInfo(gameInfo);
 					});
 				case PEOPLE_LEVEL_UP_EVENT:
@@ -846,7 +847,7 @@ class MainView extends Box {
 					msg += '魅力:${p1.charm} => ${p2.charm}\n';
 					msg += '體力:${p1.energy} => ${p2.energy}\n';
 					Dialogs.messageBox(msg, title, MessageBoxType.TYPE_INFO, true, (b) -> {
-						doOneEvent(gameInfo);
+						doOneEvent();
 					});
 
 				case PAY_FOR_OVER_ENEMY_GRID:
@@ -859,7 +860,7 @@ class MainView extends Box {
 					msg += '糧草:${Main.getFixNumber(info.foodBefore, 0)} => ${Main.getFixNumber(info.foodAfter, 0)}\n';
 					msg += '士兵:${Main.getFixNumber(info.armyBefore, 0)} => ${Main.getFixNumber(info.armyAfter, 0)}\n';
 					Dialogs.messageBox(msg, title, MessageBoxType.TYPE_INFO, true, (b) -> {
-						doOneEvent(gameInfo);
+						doOneEvent();
 					});
 			}
 		}else{

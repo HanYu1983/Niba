@@ -72,8 +72,8 @@ class DebugModel implements IModel {
 			isPlayerTurn: true,
 			currentPlayer: gp(0, 'vic'),
 			isPlaying: true,
-			actions: [],
 			events: [],
+			actions: [],
 			currentTurn: 0
 		};
 		info.grids[5].belongPlayerId = 2;
@@ -123,8 +123,8 @@ class DebugModel implements IModel {
 						fromGridId: 5,
 						toGridId: 10
 					},
-					gameInfo: gameInfo()
-				}
+				},
+				gameInfo: info,
 			},
 			{
 				id: EventInfoID.GRID_RESOURCE_EVENT,
@@ -142,12 +142,14 @@ class DebugModel implements IModel {
 					],
 					describtion:'aaa'
 				},
+				gameInfo: info,
 			},
 			{
 				id:EventInfoID.GRID_BORN_EVENT,
 				value:{
 					grid:g,
-				}
+				},
+				gameInfo: info,
 			}
 		];
 		cb();
@@ -184,6 +186,7 @@ class DebugModel implements IModel {
 					peopleBefore:PeopleGenerator.getInst().generate(),
 					peopleAfter:PeopleGenerator.getInst().generate(),
 				},
+				gameInfo:null,
 			},
 			{
 				id:EventInfoID.PAY_FOR_OVER_ENEMY_GRID,
@@ -194,7 +197,8 @@ class DebugModel implements IModel {
 					foodAfter:1,
 					armyBefore:0,
 					armyAfter:1
-				}
+				},
+				gameInfo:null,
 			}
 		];
 		cb();
@@ -209,8 +213,9 @@ class DebugModel implements IModel {
 		info.events = [
 			{
 				id: EventInfoID.NEGOTIATE_RESULT,
-				value: null
-			}
+				value: null,
+				gameInfo: info,
+			},
 		];
 		cb(info);
 	}
@@ -235,7 +240,8 @@ class DebugModel implements IModel {
 					moneyAfter: 300,
 					foodBefore: 100,
 					foodAfter: 200
-				}
+				},
+				gameInfo:null,
 			}
 		];
 		cb(info);
@@ -277,7 +283,8 @@ class DebugModel implements IModel {
 				id:EventInfoID.FIND_TREASURE_RESULT,
 				value:{
 					treasure:TreasureGenerator.getInst().generator().catelog
-				}
+				},
+				gameInfo: info,
 			}
 		];
 		cb(info);
@@ -310,7 +317,8 @@ class DebugModel implements IModel {
 					people: PeopleGenerator.getInst().generate(),
 					maintainMoneyAfter: 10,
 					maintainMoneyBefore: 10,
-				}
+				},
+				gameInfo:null,
 			}
 		];
 		cb(info);
@@ -383,7 +391,8 @@ class DebugModel implements IModel {
 					moneyAfter: 300,
 					foodBefore: 100,
 					foodAfter: 200
-				}
+				},
+				gameInfo: info,
 			}
 		];
 		cb(info);
@@ -410,13 +419,15 @@ class DebugModel implements IModel {
 					strategy: StrategyList[0],
 					energyBefore: 0,
 					energyAfter: 1,
-				}
+				},
+				gameInfo:null,
 			},
 			{
 				id: EventInfoID.WALK_STOP,
 				value: {
 					grid: info.grids[0]
-				}
+				},
+				gameInfo:null,
 			}
 		];
 		cb(info);
@@ -431,7 +442,8 @@ class DebugModel implements IModel {
 					success: true,
 					people: PeopleGenerator.getInst().generate(),
 					building: BUILDING.FARM(2),
-				}
+				},
+				gameInfo:null,
 			}
 		];
 		cb(info);
@@ -463,7 +475,8 @@ class DebugModel implements IModel {
 						PeopleGenerator.getInst().generate(),
 						PeopleGenerator.getInst().generate(),
 					]
-				}
+				},
+				gameInfo:null,
 			}
 		];
 		cb(info);
@@ -495,7 +508,8 @@ class DebugModel implements IModel {
 					people: PeopleGenerator.getInst().generate(),
 					armyBefore:0,
 					armyAfter:0,
-				}
+				},
+				gameInfo: null,
 			}
 		];
 		syncViewByInfo(info);

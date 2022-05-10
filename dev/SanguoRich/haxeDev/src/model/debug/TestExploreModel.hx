@@ -41,7 +41,8 @@ class TestExploreModel extends DebugModel {
 				value: {
 					grid: g,
 					commands: []
-				}
+				},
+				gameInfo: info,
 			}
 		];
 		cb();
@@ -73,7 +74,8 @@ class TestExploreModel extends DebugModel {
 						TreasureGenerator.getInst().generator().catelog,
 						TreasureGenerator.getInst().generator().catelog,
 					]
-				}
+				},
+				gameInfo: info,
 			}
 		];
 		cb(info);
@@ -125,7 +127,8 @@ class TestExploreModel extends DebugModel {
 					moneyAfter: 300,
 					foodBefore: 100,
 					foodAfter: 200
-				}
+				},
+				gameInfo: info,
 			}
 		];
 		cb(info);
