@@ -178,42 +178,42 @@ class MainView extends Box {
 		final gameInfo = Main.model.gameInfo();
 		final p:PlayerInfo = data[0];
 		final g:Grid = data[1];
-		Main.model.takeTransfer(gameInfo.currentPlayer.id, gameInfo.currentPlayer.atGridId, p, g, syncViewByInfo);
+		Main.model.takeTransfer(gameInfo.currentPlayer.id, gameInfo.currentPlayer.atGridId, p, g, checkEventAndDoItByGameInfo);
 	}
 
 	public function onNegoPreviewConfirmNegoClick(p1Id:Int, p2Id:Int) {
 		var gameInfo = Main.model.gameInfo();
-		Main.model.takeNegoOn(gameInfo.currentPlayer.id, gameInfo.currentPlayer.atGridId, p1Id, p2Id, syncViewByInfo);
+		Main.model.takeNegoOn(gameInfo.currentPlayer.id, gameInfo.currentPlayer.atGridId, p1Id, p2Id, checkEventAndDoItByGameInfo);
 	}
 
 	public function onExplorePreviewConfirmClick(p1Id:Int) {
 		var gameInfo = Main.model.gameInfo();
-		Main.model.takeExplore(gameInfo.currentPlayer.id, gameInfo.currentPlayer.atGridId, p1Id, syncViewByInfo);
+		Main.model.takeExplore(gameInfo.currentPlayer.id, gameInfo.currentPlayer.atGridId, p1Id, checkEventAndDoItByGameInfo);
 	}
 
 	public function onHirePreviewViewConfirmClick(p1Id:Int, p2Id:Int) {
 		var gameInfo = Main.model.gameInfo();
-		Main.model.takeHire(gameInfo.currentPlayer.id, gameInfo.currentPlayer.atGridId, p1Id, p2Id, syncViewByInfo);
+		Main.model.takeHire(gameInfo.currentPlayer.id, gameInfo.currentPlayer.atGridId, p1Id, p2Id, checkEventAndDoItByGameInfo);
 	}
 
 	public function onFirePreviewViewConfirmClick(pId:Array<Int>) {
 		var gameInfo = Main.model.gameInfo();
-		Main.model.takeFire(gameInfo.currentPlayer.id, pId, syncViewByInfo);
+		Main.model.takeFire(gameInfo.currentPlayer.id, pId, checkEventAndDoItByGameInfo);
 	}
 
 	public function onWarPreviewConfirmClick(p1Id:Int, p2Id:Int, p1Army:Float, p2Army:Float) {
 		var gameInfo = Main.model.gameInfo();
-		Main.model.takeWarOn(gameInfo.currentPlayer.id, gameInfo.currentPlayer.atGridId, p1Id, p2Id, p1Army, p2Army, syncViewByInfo);
+		Main.model.takeWarOn(gameInfo.currentPlayer.id, gameInfo.currentPlayer.atGridId, p1Id, p2Id, p1Army, p2Army, checkEventAndDoItByGameInfo);
 	}
 
 	public function onSnatchPreviewConfirmClick(p1Id:Int, p2Id:Int, isOccupation:Bool) {
 		var gameInfo = Main.model.gameInfo();
-		Main.model.takeSnatchOn(gameInfo.currentPlayer.id, gameInfo.currentPlayer.atGridId, p1Id, p2Id, isOccupation, syncViewByInfo);
+		Main.model.takeSnatchOn(gameInfo.currentPlayer.id, gameInfo.currentPlayer.atGridId, p1Id, p2Id, isOccupation, checkEventAndDoItByGameInfo);
 	}
 
 	public function onResourcePreviewConfirmClick(p1Id:Int, market:model.IModel.MARKET, resource:model.IModel.RESOURCE) {
 		var gameInfo = Main.model.gameInfo();
-		Main.model.takeResource(gameInfo.currentPlayer.id, gameInfo.currentPlayer.atGridId, p1Id, market, resource, syncViewByInfo);
+		Main.model.takeResource(gameInfo.currentPlayer.id, gameInfo.currentPlayer.atGridId, p1Id, market, resource, checkEventAndDoItByGameInfo);
 	}
 
 	public function onExploreSuccessViewConfirmClick() {
@@ -258,7 +258,7 @@ class MainView extends Box {
 		Main.model.load((success:Bool, gameInfo:GameInfo) -> {
 			final msg = success ? '成功讀取' : '讀取失敗';
 			if (success) {
-				syncViewByInfo(gameInfo);
+				checkEventAndDoItByGameInfo(gameInfo);
 			}
 			Dialogs.messageBox(msg, msg, MessageBoxType.TYPE_INFO);
 		});
@@ -516,11 +516,12 @@ class MainView extends Box {
 	}
 
 	public function checkEventAndDoIt() {
-		var gameInfo = Main.model.gameInfo();
+		// var gameInfo = Main.model.gameInfo();
 
 		// ui可以直接更新
-		syncUI(gameInfo);
-		playEvent(gameInfo);
+		checkEventAndDoItByGameInfo(Main.model.gameInfo());
+		// syncUI(gameInfo);
+		// playEvent(gameInfo);
 
 		// syncViewByInfo(gameInfo);
 
@@ -533,6 +534,13 @@ class MainView extends Box {
 		// }));
 
 		// TweenX.serial(tweens);
+	}
+
+	function checkEventAndDoItByGameInfo(gameInfo:GameInfo){
+
+		// ui可以直接更新
+		syncUI(gameInfo);
+		playEvent(gameInfo);
 	}
 
 	function syncViewByInfo(gameInfo:GameInfo) {
@@ -871,9 +879,9 @@ class MainView extends Box {
 					});
 			}
 		}else{
-			// Main.model.refresh(()->{
-			// 	trace('清除後端事件');
-			// });
+			Main.model.refresh(()->{
+				trace('清除後端事件');
+			});
 		}
 	}
 
@@ -1052,21 +1060,21 @@ class MainView extends Box {
 	}
 
 	public function onStrategyPreviewConfirmClick(peopleId:Int, strategyId:Int, targetPlayerId:Int, targetPeopleId:Int, targetGridId:Int) {
-		Main.model.takeStrategy(peopleId, strategyId, targetPlayerId, targetPeopleId, targetGridId, syncViewByInfo);
+		Main.model.takeStrategy(peopleId, strategyId, targetPlayerId, targetPeopleId, targetGridId, checkEventAndDoItByGameInfo);
 	}
 
 	public function onBuildingPreviewConfirmClick(peopleId:Int, current:BUILDING, to:BUILDING) {
 		final gameInfo = Main.model.gameInfo();
-		Main.model.takeBuilding(gameInfo.currentPlayer.id, gameInfo.currentPlayer.atGridId, peopleId, current, to, syncViewByInfo);
+		Main.model.takeBuilding(gameInfo.currentPlayer.id, gameInfo.currentPlayer.atGridId, peopleId, current, to, checkEventAndDoItByGameInfo);
 	}
 
 	public function onCostForBonusConfirmClick(pId:Int, costType:Int) {
 		final gameInfo = Main.model.gameInfo();
-		Main.model.takeCostForBonus(gameInfo.currentPlayer.id, pId, costType, syncViewByInfo);
+		Main.model.takeCostForBonus(gameInfo.currentPlayer.id, pId, costType, checkEventAndDoItByGameInfo);
 	}
 
 	public function onPkPreviewConfirmNegoClick(p1PeopleId:Int, p2PeopleId:Int) {
 		final gameInfo = Main.model.gameInfo();
-		Main.model.takePk(gameInfo.currentPlayer.id, gameInfo.currentPlayer.atGridId, p1PeopleId, p2PeopleId, syncViewByInfo);
+		Main.model.takePk(gameInfo.currentPlayer.id, gameInfo.currentPlayer.atGridId, p1PeopleId, p2PeopleId, checkEventAndDoItByGameInfo);
 	}
 }
