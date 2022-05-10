@@ -299,7 +299,7 @@ function getGridMoneyGrow(ctx:Context, gridId:Int):Float {
 	final attachmentRate = ctx.attachments.filter(a -> a.belongToGridId == grid.id).fold((p, a) -> {
 		return a + switch p.type {
 			case MARKET(level):
-				return [0.0, 0.05, 0.9, 0.12][level];
+				return [0.0, 0.05, 0.09, 0.12][level];
 			case _:
 				0;
 		}
@@ -317,7 +317,7 @@ function getGridFoodGrow(ctx:Context, gridId:Int):Float {
 	final attachmentRate = ctx.attachments.filter(a -> a.belongToGridId == grid.id).fold((p, a) -> {
 		return a + switch p.type {
 			case FARM(level):
-				return [0.0, 0.05, 0.9, 0.12][level];
+				return [0.0, 0.05, 0.09, 0.12][level];
 			case _:
 				0;
 		}
@@ -335,7 +335,7 @@ function getGridArmyGrow(ctx:Context, gridId:Int):Float {
 	final attachmentRate = ctx.attachments.filter(a -> a.belongToGridId == grid.id).fold((p, a) -> {
 		return a + switch p.type {
 			case BARRACKS(level):
-				return [0.0, 0.05, 0.9, 0.12][level];
+				return [0.0, 0.05, 0.09, 0.12][level];
 			case _:
 				0;
 		}
