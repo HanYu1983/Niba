@@ -1,5 +1,6 @@
 package model;
 
+import haxe.macro.Expr.Error;
 import model.TreasureGenerator.TreasureCatelog;
 import model.GridGenerator.GROWTYPE;
 import model.GridGenerator.BUILDING;
@@ -97,22 +98,34 @@ class DebugModel implements IModel {
 		info.players[0].atGridId += Math.floor(Math.random() * 6);
 		info.currentPlayer = info.players[Math.floor(Math.random() * 4)];
 		info.isPlayerTurn = (info.currentPlayer.id == 0);
-		info.actions = [
-			{
-				id: ActionInfoID.MOVE,
-				value: {
-					playerId: 0,
-					fromGridId: 5,
-					toGridId: 10
-				},
-				gameInfo: gameInfo()
-			}
-		];
+		// info.actions = [
+		// 	{
+		// 		id: ActionInfoID.MOVE,
+		// 		value: {
+		// 			playerId: 0,
+		// 			fromGridId: 5,
+		// 			toGridId: 10
+		// 		},
+		// 		gameInfo: gameInfo()
+		// 	}
+		// ];
 
 		var g = GridGenerator.getInst().getGrid();
 		g.belongPlayerId = null;
 		g.buildtype = GROWTYPE.MARKET;
 		info.events = [
+			{
+				id:EventInfoID.ANIMATION_EVENT,
+				value:{
+					id: ActionInfoID.MOVE,
+					value: {
+						playerId: 0,
+						fromGridId: 5,
+						toGridId: 10
+					},
+					gameInfo: gameInfo()
+				}
+			},
 			{
 				id: EventInfoID.GRID_RESOURCE_EVENT,
 				value:{
@@ -144,26 +157,26 @@ class DebugModel implements IModel {
 		info.players[0].atGridId += Math.floor(Math.random() * 6);
 		info.currentPlayer = info.players[Math.floor(Math.random() * 4)];
 		info.isPlayerTurn = (info.currentPlayer.id == 0);
-		info.actions = [
-			{
-				id: ActionInfoID.MOVE,
-				value: {
-					playerId: 0,
-					fromGridId: 8,
-					toGridId: 13
-				},
-				gameInfo: gameInfo()
-			},
-			{
-				id: ActionInfoID.MOVE,
-				value: {
-					playerId: 1,
-					fromGridId: 10,
-					toGridId: 15
-				},
-				gameInfo: gameInfo()
-			}
-		];
+		// info.actions = [
+		// 	{
+		// 		id: ActionInfoID.MOVE,
+		// 		value: {
+		// 			playerId: 0,
+		// 			fromGridId: 8,
+		// 			toGridId: 13
+		// 		},
+		// 		gameInfo: gameInfo()
+		// 	},
+		// 	{
+		// 		id: ActionInfoID.MOVE,
+		// 		value: {
+		// 			playerId: 1,
+		// 			fromGridId: 10,
+		// 			toGridId: 15
+		// 		},
+		// 		gameInfo: gameInfo()
+		// 	}
+		// ];
 		info.events = [
 			{
 				id:EventInfoID.PEOPLE_LEVEL_UP_EVENT,
@@ -515,4 +528,10 @@ class DebugModel implements IModel {
 	}
 
 	public function refresh(cb:() -> Void) { cb(); }
+
+	public function finishOneEvent(syncView:() -> Void) {
+		trace('前端處理好一件事!');
+
+		syncView();
+	}
 }

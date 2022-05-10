@@ -74,6 +74,8 @@ enum EventInfoID {
 	GRID_RESOURCE_EVENT;
 	PEOPLE_LEVEL_UP_EVENT;
 	PAY_FOR_OVER_ENEMY_GRID;
+
+	ANIMATION_EVENT;
 }
 
 enum MARKET {
@@ -308,6 +310,8 @@ interface IModel {
 	function getPeopleById(id:Int):People;
 
 	function refresh(cb:() -> Void):Void;
+
+	function finishOneEvent(syncView:() -> Void):Void;
 }
 
 final StrategyList:Array<StrategyCatelog> = [
@@ -517,3 +521,6 @@ final BuildingList:Array<BuildingCatelog> = [
 		type: WALL(3)
 	}
 ];
+
+
+

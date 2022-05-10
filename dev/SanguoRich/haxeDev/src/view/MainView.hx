@@ -279,7 +279,7 @@ class MainView extends Box {
 
 	@:bind(btn_go, MouseEvent.CLICK)
 	function onBtnGoClick(e:MouseEvent) {
-		Main.model.playerDice(syncView);
+		Main.model.playerDice(checkEventAndDoIt);
 	}
 
 	@:bind(btn_payForFun, MouseEvent.CLICK)
@@ -481,13 +481,13 @@ class MainView extends Box {
 				syncGameInfo(Main.model.gameInfo());
 			}
 
-			syncView();
+			syncViewByInfo(Main.model.gameInfo());
 		});
 	}
 
 	@:bind(btn_end, MouseEvent.CLICK)
 	function onBtnEndClick(e:MouseEvent) {
-		Main.model.playerEnd(syncView);
+		Main.model.playerEnd(checkEventAndDoIt);
 	}
 
 	@:bind(btn_giveTreasure, MouseEvent.CLICK)
@@ -515,21 +515,24 @@ class MainView extends Box {
 		return offsetPlayerPos(pid, grid.left, grid.top);
 	}
 
-	public function syncView() {
+	public function checkEventAndDoIt() {
 		var gameInfo = Main.model.gameInfo();
 
 		// ui可以直接更新
 		syncUI(gameInfo);
+		playEvent(gameInfo);
+
+		// syncViewByInfo(gameInfo);
 
 		// 播放同步前的所有動畫
-		var tweens = [];
-		playBeforeSync(gameInfo, tweens);
+		// var tweens = [];
+		// playBeforeSync(gameInfo, tweens);
 
-		tweens.push(TweenX.func(() -> {
-			syncViewByInfo(gameInfo);
-		}));
+		// tweens.push(TweenX.func(() -> {
+		// 	syncViewByInfo(gameInfo);
+		// }));
 
-		TweenX.serial(tweens);
+		// TweenX.serial(tweens);
 	}
 
 	function syncViewByInfo(gameInfo:GameInfo) {
@@ -537,7 +540,6 @@ class MainView extends Box {
 		syncGameInfo(gameInfo);
 		syncGridViews(gameInfo);
 		syncPlayerViews(gameInfo);
-		playEvents(gameInfo);
 	}
 
 	function playBeforeSync(gameInfo:GameInfo, tweens:Array<TweenX>) {
@@ -570,17 +572,32 @@ class MainView extends Box {
 
 	var events:Array<EventInfo>;
 
-	function playEvents(gameInfo:GameInfo) {
-		events = gameInfo.events;
-		doOneEvent(gameInfo);
-	}
+	// function playEvents(gameInfo:GameInfo) {
+	// 	events = gameInfo.events;
+	// 	doOneEvent(gameInfo);
+	// }
 
-	function doOneEvent(gameInfo:GameInfo) {
+	function playEvent(gameInfo:GameInfo) {
+		final events = gameInfo.events;
 		if (events.length > 0) {
-			var event = events.shift();
+			var event = events[0];
 			switch (event.id) {
+				case ANIMATION_EVENT:
+					final info:Dynamic = event.value;
+					switch(info.id){
+						case ActionInfoID.MOVE:
+							var pv = players[info.value.playerId];
+							var toPos = getGridPositionByGridId(info.value.playerId, info.value.toGridId);
+							TweenX.to(pv, {"left": toPos[0], "top": toPos[1]}, .5).onStop(()->{
+								syncViewByInfo(info.gameInfo);
+								Main.model.finishOneEvent(checkEventAndDoIt);
+							}).play();
+						case _:
+					}
 				case WALK_STOP:
 				case FIND_TREASURE_RESULT:
+					syncViewByInfo(gameInfo);
+
 					final info:Dynamic = event.value;
 					final treasures:Array<TreasureCatelog> = info.treasures;
 					var title = '發現寶物 ';
@@ -589,7 +606,8 @@ class MainView extends Box {
 					}
 
 					Dialogs.messageBox(title, '發現寶物', MessageBoxType.TYPE_INFO, true, (b) -> {
-						doOneEvent(gameInfo);
+						// doOneEvent(gameInfo);
+						Main.model.finishOneEvent(checkEventAndDoIt);
 					});
 
 					// var msg = '${title}\n';
@@ -600,16 +618,20 @@ class MainView extends Box {
 					// 	}
 					// });
 				case GRID_BORN_EVENT:
+					syncViewByInfo(gameInfo);
+
 					final info:Dynamic = event.value;
 					final grid:Grid = info.grid;
 					final title = '異軍突起';
 					var msg = '${title}\n';
 					msg += '地點:${grid.name}';
 					Dialogs.messageBox(msg, title, MessageBoxType.TYPE_INFO, true, (b) -> {
-						doOneEvent(gameInfo);
+						// doOneEvent(gameInfo);
+						Main.model.finishOneEvent(checkEventAndDoIt);
 					});
 				case GRID_RESOURCE_EVENT:
-					final gameInfo = Main.model.gameInfo();
+					syncViewByInfo(gameInfo);
+
 					final info:Dynamic = event.value;
 					final grids:Array<{gridBefore:Grid, gridAfter:Grid}> = info.grids;
 					final title = info.describtion;
@@ -629,9 +651,12 @@ class MainView extends Box {
 						msg += '\n';
 					}
 					Dialogs.messageBox(msg, title, MessageBoxType.TYPE_INFO, true, (b) -> {
-						doOneEvent(gameInfo);
+						// doOneEvent(gameInfo);
+						Main.model.finishOneEvent(checkEventAndDoIt);
 					});
 				case PK_RESULT:
+					syncViewByInfo(gameInfo);
+
 					final info:Dynamic = event.value;
 					final title = if (info.success) {
 						'成功號召士兵';
@@ -641,9 +666,12 @@ class MainView extends Box {
 					var msg = '武將:${info.people.name}\n';
 					msg += '士兵:${Main.getFixNumber(info.armyBefore, 0)} => ${Main.getFixNumber(info.armyAfter, 0)} (${Main.getFixNumber(info.armyAfter - info.armyBefore, 0)})';
 					Dialogs.messageBox(msg, title, MessageBoxType.TYPE_INFO, true, (b) -> {
-						doOneEvent(gameInfo);
+						// doOneEvent(gameInfo);
+						Main.model.finishOneEvent(checkEventAndDoIt);
 					});
 				case COST_FOR_BONUS_RESULT:
+					syncViewByInfo(gameInfo);
+
 					final info:Dynamic = event.value;
 					final title = switch (info.costType) {
 						case 0: '札營完畢！ 武將們回復體力';
@@ -669,10 +697,13 @@ class MainView extends Box {
 						msg += '${peopleAfter.name} ${recoverType} 上升 ${recover}\n';
 					}
 					Dialogs.messageBox(msg, title, MessageBoxType.TYPE_INFO, true, (b) -> {
-						doOneEvent(gameInfo);
+						// doOneEvent(gameInfo);
+						Main.model.finishOneEvent(checkEventAndDoIt);
 					});
 
 				case HIRE_RESULT:
+					syncViewByInfo(gameInfo);
+
 					final info:Dynamic = event.value;
 					final title = info.success ? '雇用任務成功' : '雇用任務失敗';
 					var msg = '武將:${info.people.name}\n';
@@ -681,20 +712,27 @@ class MainView extends Box {
 					msg += '糧草:${Main.getFixNumber(info.foodBefore, 0)} => ${Main.getFixNumber(info.foodAfter, 0)}\n';
 					msg += '士兵:${Main.getFixNumber(info.armyBefore, 0)} => ${Main.getFixNumber(info.armyAfter, 0)}\n';
 					Dialogs.messageBox(msg, title, MessageBoxType.TYPE_INFO, true, (b) -> {
-						doOneEvent(gameInfo);
+						// doOneEvent(gameInfo);
+						Main.model.finishOneEvent(checkEventAndDoIt);
 					});
 
 				case FIRE_RESULT:
+					syncViewByInfo(gameInfo);
+
 					final info:Dynamic = event.value;
 					var people:Array<People> = info.people;
 					var msg = '解雇:${people.map((p) -> p.name).join(',')}\n';
 					msg += '薪俸:${Main.getFixNumber(info.maintainMoneyBefore, 2)} => ${Main.getFixNumber(info.maintainMoneyAfter, 2)}\n';
 
 					Dialogs.messageBox(msg, '解雇完成', MessageBoxType.TYPE_INFO, true, (b) -> {
-						doOneEvent(gameInfo);
+						// doOneEvent(gameInfo);
+						Main.model.finishOneEvent(checkEventAndDoIt);
 					});
 
+
 				case NEGOTIATE_RESULT:
+					syncViewByInfo(gameInfo);
+
 					final info:Dynamic = event.value;
 					final title = info.success ? '交涉任務成功' : '交涉任務失敗';
 					var msg = '武將:${info.people.name}\n';
@@ -704,13 +742,18 @@ class MainView extends Box {
 					msg += '士兵:${Main.getFixNumber(info.armyBefore, 0)} => ${Main.getFixNumber(info.armyAfter, 0)}\n';
 					msg += '友好:${Main.getFavorString(info.favorBefore)} => ${Main.getFavorString(info.favorAfter)}\n';
 					Dialogs.messageBox(msg, title, MessageBoxType.TYPE_INFO, true, (b) -> {
-						doOneEvent(gameInfo);
+						// doOneEvent(gameInfo);
+						Main.model.finishOneEvent(checkEventAndDoIt);
 					});
 
 				case EXPLORE_RESULT:
+					syncViewByInfo(gameInfo);
+
 					exploreSuccessView.showMessage(event.value);
 
 				case WAR_RESULT:
+					syncViewByInfo(gameInfo);
+
 					final info:Dynamic = event.value;
 					var msg = '武將:${info.people.name}\n';
 					msg += '體力:${Main.getFixNumber(info.energyBefore, 0)} => ${Main.getFixNumber(info.energyAfter, 0)}\n';
@@ -723,11 +766,14 @@ class MainView extends Box {
 						});
 					} else {
 						Dialogs.messageBox(msg, '占領失敗', MessageBoxType.TYPE_INFO, true, (b) -> {
-							doOneEvent(gameInfo);
+							// doOneEvent(gameInfo);
+							Main.model.finishOneEvent(checkEventAndDoIt);
 						});
 					}
 
 				case SNATCH_RESULT:
+					syncViewByInfo(gameInfo);
+
 					final info:Dynamic = event.value;
 					final title = info.success ? '搶奪成功' : '搶奪失敗';
 					var msg = '武將:${info.people.name}\n';
@@ -736,10 +782,13 @@ class MainView extends Box {
 					msg += '糧草:${Main.getFixNumber(info.foodBefore, 0)} => ${Main.getFixNumber(info.foodAfter, 0)}\n';
 					msg += '士兵:${Main.getFixNumber(info.armyBefore, 0)} => ${Main.getFixNumber(info.armyAfter, 0)}\n';
 					Dialogs.messageBox(msg, title, MessageBoxType.TYPE_INFO, true, (b) -> {
-						doOneEvent(gameInfo);
+						// doOneEvent(gameInfo);
+						Main.model.finishOneEvent(checkEventAndDoIt);
 					});
 
 				case RESOURCE_RESULT:
+					syncViewByInfo(gameInfo);
+
 					final info:Dynamic = event.value;
 					var msg = '武將:${info.people ? info.people.name : ""}\n';
 					msg += '體力:${Main.getFixNumber(info.energyBefore, 0)} => ${Main.getFixNumber(info.energyAfter, 0)}\n';
@@ -747,10 +796,13 @@ class MainView extends Box {
 					msg += '糧草:${Main.getFixNumber(info.foodBefore, 0)} => ${Main.getFixNumber(info.foodAfter, 0)}\n';
 					msg += '士兵:${Main.getFixNumber(info.armyBefore, 0)} => ${Main.getFixNumber(info.armyAfter, 0)}\n';
 					Dialogs.messageBox(msg, '交易完成', MessageBoxType.TYPE_INFO, true, (b) -> {
-						doOneEvent(gameInfo);
+						// doOneEvent(gameInfo);
+						Main.model.finishOneEvent(checkEventAndDoIt);
 					});
 
 				case STRATEGY_RESULT:
+					syncViewByInfo(gameInfo);
+
 					final info:Dynamic = event.value;
 					final title = info.success ? '計策成功' : '計策失敗';
 					var msg = title;
@@ -758,21 +810,30 @@ class MainView extends Box {
 					msg += '計策:${info.strategy ? info.strategy.name : ""}\n';
 					msg += '體力:${Main.getFixNumber(info.energyBefore, 0)} => ${Main.getFixNumber(info.energyAfter, 0)}\n';
 					Dialogs.messageBox(msg, title, MessageBoxType.TYPE_INFO, true, (b) -> {
-						doOneEvent(gameInfo);
+						// doOneEvent(gameInfo);
+						Main.model.finishOneEvent(checkEventAndDoIt);
 					});
 				case BUILDING_RESULT:
+					syncViewByInfo(gameInfo);
+
 					final info:Dynamic = event.value;
 					final catelog = Main.getBuildingCatelog(info.building);
 					var msg = '武將:${info.people.name:""}\n';
 					msg += '已擴建 ${catelog.name}\n';
 					Dialogs.messageBox(msg, '擴建完畢', MessageBoxType.TYPE_INFO, true, (b) -> {
-						doOneEvent(gameInfo);
+						// doOneEvent(gameInfo);
+						Main.model.finishOneEvent(checkEventAndDoIt);
 					});
 				case WORLD_EVENT:
+
 					growView.showPopup(event.value, () -> {
-						doOneEvent(gameInfo);
+						// doOneEvent(gameInfo);
+						syncViewByInfo(gameInfo);
+						Main.model.finishOneEvent(checkEventAndDoIt);
 					});
 				case PEOPLE_LEVEL_UP_EVENT:
+					syncViewByInfo(gameInfo);
+
 					final info:Dynamic = event.value;
 					final title = '功績到達，職位升等!';
 					final p1:People = info.peopleBefore;
@@ -791,10 +852,13 @@ class MainView extends Box {
 					msg += '魅力:${p1.charm} => ${p2.charm}\n';
 					msg += '體力:${p1.energy} => ${p2.energy}\n';
 					Dialogs.messageBox(msg, title, MessageBoxType.TYPE_INFO, true, (b) -> {
-						doOneEvent(gameInfo);
+						// doOneEvent(gameInfo);
+						Main.model.finishOneEvent(checkEventAndDoIt);
 					});
 
 				case PAY_FOR_OVER_ENEMY_GRID:
+					syncViewByInfo(gameInfo);
+
 					final info:Dynamic = event.value;
 					final title = '走到其他主公的領地，過路費…';
 					var msg = '走到其他主公的領地，過路費…\n';
@@ -802,13 +866,14 @@ class MainView extends Box {
 					msg += '糧草:${Main.getFixNumber(info.foodBefore, 0)} => ${Main.getFixNumber(info.foodAfter, 0)}\n';
 					msg += '士兵:${Main.getFixNumber(info.armyBefore, 0)} => ${Main.getFixNumber(info.armyAfter, 0)}\n';
 					Dialogs.messageBox(msg, title, MessageBoxType.TYPE_INFO, true, (b) -> {
-						doOneEvent(gameInfo);
+						// doOneEvent(gameInfo);
+						Main.model.finishOneEvent(checkEventAndDoIt);
 					});
 			}
 		}else{
-			Main.model.refresh(()->{
-				trace('清除後端事件');
-			});
+			// Main.model.refresh(()->{
+			// 	trace('清除後端事件');
+			// });
 		}
 	}
 
