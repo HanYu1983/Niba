@@ -472,6 +472,106 @@ private function calcTotals(ctx:Context):Array<model.IModel.PlayerInfo> {
 	});
 }
 
+function getEventInfo(e:Event):EventInfo {
+	return switch e {
+		case WORLD_EVENT(value):
+			{
+				id: EventInfoID.WORLD_EVENT,
+				value: value,
+			}
+		case WALK_STOP(value):
+			{
+				id: EventInfoID.WALK_STOP,
+				value: value
+			}
+		case NEGOTIATE_RESULT(value):
+			{
+				id: EventInfoID.NEGOTIATE_RESULT,
+				value: value
+			}
+		case EXPLORE_RESULT(value):
+			{
+				id: EventInfoID.EXPLORE_RESULT,
+				value: value
+			}
+		case HIRE_RESULT(value):
+			{
+				id: EventInfoID.HIRE_RESULT,
+				value: value
+			}
+		case WAR_RESULT(value):
+			{
+				id: EventInfoID.WAR_RESULT,
+				value: value
+			}
+		case RESOURCE_RESULT(value):
+			{
+				id: EventInfoID.RESOURCE_RESULT,
+				value: value
+			}
+		case FIRE_RESULT(value):
+			{
+				id: EventInfoID.FIRE_RESULT,
+				value: value
+			}
+		case SNATCH_RESULT(value):
+			{
+				id: EventInfoID.SNATCH_RESULT,
+				value: value
+			}
+		case STRATEGY_RESULT(value):
+			{
+				id: EventInfoID.STRATEGY_RESULT,
+				value: value
+			}
+		case BUILDING_RESULT(value):
+			{
+				id: EventInfoID.BUILDING_RESULT,
+				value: value
+			}
+		case PAY_FOR_OVER_ENEMY_GRID(value):
+			{
+				id: EventInfoID.PAY_FOR_OVER_ENEMY_GRID,
+				value: value
+			}
+		case PEOPLE_LEVEL_UP_EVENT(value):
+			{
+				id: EventInfoID.PEOPLE_LEVEL_UP_EVENT,
+				value: value
+			}
+		case COST_FOR_BONUS_RESULT(value):
+			{
+				id: EventInfoID.COST_FOR_BONUS_RESULT,
+				value: value
+			}
+		case PK_RESULT(value):
+			{
+				id: EventInfoID.PK_RESULT,
+				value: value
+			}
+		case GRID_RESOURCE_EVENT(value):
+			{
+				id: EventInfoID.GRID_RESOURCE_EVENT,
+				value: value
+			}
+		case GRID_BORN_EVENT(value):
+			{
+				id: EventInfoID.GRID_BORN_EVENT,
+				value: value
+			}
+		case FIND_TREASURE_RESULT(value):
+			{
+				id: EventInfoID.FIND_TREASURE_RESULT,
+				value: value
+			}
+		case ANIMATION_EVENT(value):
+			{
+				id: EventInfoID.ANIMATION_EVENT,
+				value: value
+			}
+	}
+}
+
 function getGameInfo(ctx:Context, root:Bool):GameInfo {
 	final events = if (root) {
 		final eventCopy = deepCopy(ctx.events);
@@ -486,107 +586,7 @@ function getGameInfo(ctx:Context, root:Bool):GameInfo {
 					0;
 			}
 		});
-		eventCopy.map(e -> {
-			// 顯式使用類型(EventInfo), 這裡不能依靠類型推理, 不然會編譯錯誤
-			final eventInfo:model.IModel.EventInfo = switch e {
-				case WORLD_EVENT(value):
-					{
-						id: EventInfoID.WORLD_EVENT,
-						value: value,
-					}
-				case WALK_STOP(value):
-					{
-						id: EventInfoID.WALK_STOP,
-						value: value
-					}
-				case NEGOTIATE_RESULT(value):
-					{
-						id: EventInfoID.NEGOTIATE_RESULT,
-						value: value
-					}
-				case EXPLORE_RESULT(value):
-					{
-						id: EventInfoID.EXPLORE_RESULT,
-						value: value
-					}
-				case HIRE_RESULT(value):
-					{
-						id: EventInfoID.HIRE_RESULT,
-						value: value
-					}
-				case WAR_RESULT(value):
-					{
-						id: EventInfoID.WAR_RESULT,
-						value: value
-					}
-				case RESOURCE_RESULT(value):
-					{
-						id: EventInfoID.RESOURCE_RESULT,
-						value: value
-					}
-				case FIRE_RESULT(value):
-					{
-						id: EventInfoID.FIRE_RESULT,
-						value: value
-					}
-				case SNATCH_RESULT(value):
-					{
-						id: EventInfoID.SNATCH_RESULT,
-						value: value
-					}
-				case STRATEGY_RESULT(value):
-					{
-						id: EventInfoID.STRATEGY_RESULT,
-						value: value
-					}
-				case BUILDING_RESULT(value):
-					{
-						id: EventInfoID.BUILDING_RESULT,
-						value: value
-					}
-				case PAY_FOR_OVER_ENEMY_GRID(value):
-					{
-						id: EventInfoID.PAY_FOR_OVER_ENEMY_GRID,
-						value: value
-					}
-				case PEOPLE_LEVEL_UP_EVENT(value):
-					{
-						id: EventInfoID.PEOPLE_LEVEL_UP_EVENT,
-						value: value
-					}
-				case COST_FOR_BONUS_RESULT(value):
-					{
-						id: EventInfoID.COST_FOR_BONUS_RESULT,
-						value: value
-					}
-				case PK_RESULT(value):
-					{
-						id: EventInfoID.PK_RESULT,
-						value: value
-					}
-				case GRID_RESOURCE_EVENT(value):
-					{
-						id: EventInfoID.GRID_RESOURCE_EVENT,
-						value: value
-					}
-				case GRID_BORN_EVENT(value):
-					{
-						id: EventInfoID.GRID_BORN_EVENT,
-						value: value
-					}
-				case FIND_TREASURE_RESULT(value):
-					{
-						id: EventInfoID.FIND_TREASURE_RESULT,
-						value: value
-					}
-				case ANIMATION_EVENT(value):
-					{
-						id: EventInfoID.ANIMATION_EVENT,
-						value: value
-					}
-			}
-			return eventInfo;
-		});
+		eventCopy.map(getEventInfo);
 	} else {
 		[];
 	}
