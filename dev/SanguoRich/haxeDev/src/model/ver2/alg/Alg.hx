@@ -15,7 +15,26 @@ function doPeopleMaintain(ctx:Context) {
 	for (player in ctx.players) {
 		// 支付武將的薪水
 		{
-			final cost = getMaintainPeople(ctx, player.id);
+			final peopleCost = getMaintainPeople(ctx, player.id);
+			final attachmentsCost = {
+				final myAttachments = ctx.attachments.filter(a -> getGridBelongPlayerId(ctx, a.belongToGridId) == player.id);
+				final levels = myAttachments.fold((c, a:Float) -> {
+					return a + switch c.type {
+						case MARKET(level):
+							level;
+						case FARM(level):
+							level;
+						case BARRACKS(level):
+							level;
+						case EXPLORE(level):
+							level;
+						case WALL(level):
+							level;
+					}
+				}, 0.0);
+				levels * 2.0;
+			}
+			final cost = peopleCost + attachmentsCost;
 			// 計算體力回復率
 			final offset = player.money - cost;
 			// 完全付不出來的話, 這個系數為1
@@ -369,8 +388,8 @@ function onPayTaxToGrid(ctx:Context, playerId:Int, gridId:Int) {
 	}
 	{
 		final grid = ctx.grids[gridId];
-		final taxMoney = grid.money / 5;
-		final taxFood = grid.food / 5;
+		final taxMoney = grid.money * GRID_TAX;
+		final taxFood = grid.food * GRID_TAX;
 		player.money = Math.max(0, player.money - taxMoney);
 		player.food = Math.max(0, player.food - taxFood);
 		grid.money += taxMoney;
@@ -384,6 +403,9 @@ function onPayTaxToGrid(ctx:Context, playerId:Int, gridId:Int) {
 }
 
 function onFindTreasure(ctx:Context, playerId:Int, treasures:Array<Treasure>) {
+	if (treasures.length == 0) {
+		return;
+	}
 	for (treasure in treasures) {
 		treasure.position.gridId = null;
 		treasure.belongToPlayerId = playerId;

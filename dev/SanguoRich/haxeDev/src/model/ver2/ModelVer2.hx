@@ -250,4 +250,9 @@ class ModelVer2 extends DebugModel {
 		_takeUnEquip(context, p1, unequipId);
 		cb(gameInfo());
 	}
+
+	override function refresh(cb:() -> Void) {
+		context.events = [];
+		cb();
+	}
 }

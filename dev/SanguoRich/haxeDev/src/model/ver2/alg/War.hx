@@ -256,15 +256,18 @@ private function onWarCostImpl(ctx:Context, playerId:Int, gridId:Int, p1PeopleId
 				}
 				if (options.occupy) {
 					if (success) {
+						// 城裡的武將副效果
+						final peoplesInGrid = ctx.peoples.filter(p -> p.position.gridId == grid.id);
+						for (peopleInGrid in peoplesInGrid) {
+							// 回到主公身上或解散
+							peopleInGrid.position.gridId = null;
+							// 體力減半
+							peopleInGrid.energy *= 0.5;
+						}
 						// 沒有進駐的話, 自動進駐
 						if (people1.position.gridId == null) {
 							people1.position.gridId = gridId;
 						}
-						// 回到主公身上或解散
-						people2.position.gridId = null;
-
-						// 體力減半
-						people2.energy *= 0.5;
 					}
 				} else {
 					//

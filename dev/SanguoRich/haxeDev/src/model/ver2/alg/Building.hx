@@ -10,9 +10,13 @@ import model.ver2.alg.Alg;
 using Lambda;
 
 private function onBuildingCost(ctx:Context, playerId:Int, gridId:Int, peopleId:Int, current:Dynamic, to:Dynamic) {
-	final costMoney = 20;
 	final currBuilding = (current : BUILDING);
 	final toBuilding = (to : BUILDING);
+	final catelog = BuildingList.filter((catelog) -> Type.enumEq(catelog.type, currBuilding));
+	if (catelog.length == 0) {
+		throw new haxe.Exception("current.catelog找不到");
+	}
+	final costMoney = catelog[0].money;
 	final success = true;
 	final player = ctx.players[playerId];
 	final people = getPeopleById(ctx, peopleId);

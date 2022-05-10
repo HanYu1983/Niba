@@ -187,3 +187,6 @@ final FIND_TREASURE_WHEN_WAR_SUCCESS_BASE_RATE = 0.0;
 
 // 沒收寶物扣的體力成數
 final ENERGY_RATE_FOR_TREASURE_TAKE = 0.3;
+
+// 過路費
+final GRID_TAX = 0.15;

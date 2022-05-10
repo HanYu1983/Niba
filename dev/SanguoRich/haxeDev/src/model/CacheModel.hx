@@ -115,4 +115,9 @@ class CacheModel extends ProxyModel {
 		isDirty = true;
 		return super.takeUnEquip(p1, unequipId, cb);
 	}
+
+	override function refresh(cb:() -> Void) {
+		isDirty = true;
+		return super.refresh(cb);
+	}
 }

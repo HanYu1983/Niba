@@ -189,5 +189,7 @@ class ProxyModel implements IModel {
 		return model.getPeopleById(id);
 	}
 
-	public function refresh(cb:() -> Void) {}
+	public function refresh(cb:() -> Void) {
+		return model.refresh(cb);
+	}
 }

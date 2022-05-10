@@ -366,7 +366,7 @@ final StrategyList:Array<StrategyCatelog> = [
 	{
 		id: 6,
 		name: '按兵不動',
-		intelligence: 40,
+		intelligence: 70,
 		describe: '這回合不移動',
 		targetType: StrategyTargetType.SELF_PLAYER,
 		value: null
@@ -517,16 +517,3 @@ final BuildingList:Array<BuildingCatelog> = [
 		type: WALL(3)
 	}
 ];
-
-
-
-
-
-
-
-
-
-
-
-
-
