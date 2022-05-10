@@ -210,7 +210,6 @@ function _getResultOfCost(ctx:Context, p1Player:PlayerInfo, p1People:model.Peopl
 }
 
 function _takeCostForBonus(ctx:Context, playerId:Int, peopleId:Int, costType:Int) {
-	ctx.events = [];
 	onCostForBonusCost(ctx, playerId, peopleId, costType);
 	{
 		final player = ctx.players[ctx.currentPlayerId];

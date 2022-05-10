@@ -238,7 +238,6 @@ function _getPreResultOfSnatch(ctx:Context, playerId:Int, gridId:Int, p1PeopleId
 }
 
 function _takeSnatchOn(ctx:Context, playerId:Int, gridId:Int, p1PeopleId:Int, p2PeopleId:Int, isOccupation:Bool) {
-	ctx.events = [];
 	final army1 = Math.min(ctx.players[playerId].army, SNATCH_ARMY_AT_LEAST);
 	final army2 = Math.min(ctx.grids[gridId].army, SNATCH_ARMY_AT_LEAST);
 	onSnatchCost(ctx, playerId, gridId, p1PeopleId, p2PeopleId, army1, army2, isOccupation);

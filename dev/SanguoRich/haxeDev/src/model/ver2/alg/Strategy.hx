@@ -235,7 +235,6 @@ function _getStrategyRate(ctx:Context, p1PeopleId:Int, strategyId:Int, targetPla
 }
 
 function _takeStrategy(ctx:Context, p1PeopleId:Int, strategyId:Int, targetPlayerId:Int, targetPeopleId:Int, targetGridId:Int):Void {
-	ctx.events = [];
 	onStrategyCost(ctx, p1PeopleId, strategyId, targetPlayerId, targetPeopleId, targetGridId);
 	{
 		final player = ctx.players[ctx.currentPlayerId];

@@ -44,6 +44,5 @@ function _getPreResultOfFire(ctx:Context, playerId:Int, peopleIds:Array<Int>):Pr
 }
 
 function _takeFire(ctx:Context, playerId:Int, peopleIds:Array<Int>) {
-	ctx.events = [];
 	onFire(ctx, playerId, peopleIds);
 }

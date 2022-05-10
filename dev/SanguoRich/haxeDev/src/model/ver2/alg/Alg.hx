@@ -98,8 +98,6 @@ function doGridGrow(ctx:Context) {
 
 // 玩家回合結束
 function doPlayerEnd(ctx:Context) {
-	ctx.actions = [];
-	ctx.events = [];
 	// 四個玩家走完後才計算回合
 	final isTurnEnd = ctx.currentPlayerId == (ctx.players.length - 1);
 	if (isTurnEnd) {
@@ -291,8 +289,6 @@ function doPlayerEnd(ctx:Context) {
 }
 
 function doPlayerDice(ctx:Context) {
-	ctx.events = [];
-	ctx.actions = [];
 	final activePlayerId = ctx.currentPlayerId;
 	final player = ctx.players[activePlayerId];
 	final fromGridId = player.position;
@@ -312,11 +308,15 @@ function doPlayerDice(ctx:Context) {
 	}
 	onPlayerGoToPosition(ctx, activePlayerId, toGridId);
 	player.memory.hasDice = true;
-	ctx.actions.push(Action.MOVE({
-		playerId: activePlayerId,
-		fromGridId: fromGridId,
-		toGridId: toGridId
-	}, getGameInfo(ctx, false)));
+	ctx.events.push(ANIMATION_EVENT({
+		id: MOVE,
+		value: {
+			playerId: activePlayerId,
+			fromGridId: fromGridId,
+			toGridId: toGridId
+		},
+		gameInfo: getGameInfo(ctx, false)
+	}));
 }
 
 function initContext(ctx:Context, option:{}) {

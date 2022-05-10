@@ -131,7 +131,6 @@ function _getPreResultOfExplore(ctx:Context, playerId:Int, gridId:Int, peopleId:
 }
 
 function _takeExplore(ctx:Context, playerId:Int, gridId:Int, p1SelectId:Int) {
-	ctx.events = [];
 	onExploreCost(ctx, playerId, gridId, p1SelectId);
 	{
 		final player = ctx.players[ctx.currentPlayerId];

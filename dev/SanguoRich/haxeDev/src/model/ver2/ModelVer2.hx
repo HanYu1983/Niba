@@ -27,7 +27,6 @@ class ModelVer2 extends DebugModel {
 		peoples: [],
 		players: [],
 		currentPlayerId: 0,
-		actions: [],
 		events: [],
 		groundItems: [],
 		treasures: [],
@@ -254,5 +253,10 @@ class ModelVer2 extends DebugModel {
 	override function refresh(cb:() -> Void) {
 		context.events = [];
 		cb();
+	}
+
+	override function finishOneEvent(syncView:() -> Void) {
+		context.events.shift();
+		syncView();
 	}
 }

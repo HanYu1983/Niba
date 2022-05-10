@@ -208,7 +208,6 @@ function _getPreResultOfResource(ctx:Context, playerId:Int, gridId:Int, peopleId
 }
 
 function _takeResource(ctx:Context, playerId:Int, gridId:Int, p1SelectId:Int, market:MARKET, type:RESOURCE) {
-	ctx.events = [];
 	onResourceCost(ctx, playerId, gridId, p1SelectId, market, type);
 	{
 		final player = ctx.players[ctx.currentPlayerId];

@@ -102,7 +102,6 @@ function _getPreResultOfPk(ctx:Context, playerId:Int, gridId:Int, p1PeopleId:Int
 }
 
 function _takePk(ctx:Context, playerId:Int, gridId:Int, p1PeopleId:Int, p2PeopleId:Int) {
-	ctx.events = [];
 	onTakePk(ctx, playerId, gridId, p1PeopleId, p2PeopleId);
 	{
 		final player = ctx.players[ctx.currentPlayerId];

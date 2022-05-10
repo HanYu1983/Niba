@@ -47,7 +47,6 @@ private function onBuildingCost(ctx:Context, playerId:Int, gridId:Int, peopleId:
 }
 
 function _takeBuilding(ctx:Context, playerId:Int, gridId:Int, peopleId:Int, current:Dynamic, to:Dynamic) {
-	ctx.events = [];
 	onBuildingCost(ctx, playerId, gridId, peopleId, current, to);
 	{
 		final player = ctx.players[ctx.currentPlayerId];

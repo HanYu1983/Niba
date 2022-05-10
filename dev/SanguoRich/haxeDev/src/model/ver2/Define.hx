@@ -80,14 +80,6 @@ typedef GroundItem = {
 	belongToPlayerId:Null<Int>,
 }
 
-enum Action {
-	MOVE(value:{
-		playerId:Int,
-		fromGridId:Int,
-		toGridId:Int,
-	}, gameInfo:GameInfo);
-}
-
 enum Event {
 	WORLD_EVENT(value:{
 		playerBefore:Array<model.IModel.PlayerInfo>,
@@ -226,6 +218,15 @@ enum Event {
 	FIND_TREASURE_RESULT(value:{
 		treasures:Array<TreasureCatelog>
 	});
+	ANIMATION_EVENT(value:{
+		id:ActionInfoID,
+		value:{
+			playerId:Int,
+			fromGridId:Int,
+			toGridId:Int
+		},
+		gameInfo:GameInfo
+	});
 }
 
 typedef Context = {
@@ -234,7 +235,6 @@ typedef Context = {
 	peoples:Array<People>,
 	players:Array<Player>,
 	currentPlayerId:Int,
-	actions:Array<Action>,
 	events:Array<Event>,
 	groundItems:Array<GroundItem>,
 	treasures:Array<Treasure>,
@@ -578,6 +578,11 @@ function getGameInfo(ctx:Context, root:Bool):GameInfo {
 					id: EventInfoID.FIND_TREASURE_RESULT,
 					value: value
 				}
+			case ANIMATION_EVENT(value):
+				{
+					id: EventInfoID.ANIMATION_EVENT,
+					value: value
+				}
 		}
 		return eventInfo;
 	});
@@ -632,17 +637,7 @@ function getGameInfo(ctx:Context, root:Bool):GameInfo {
 		currentPlayer: getPlayerInfo(ctx, ctx.players[ctx.currentPlayerId]),
 		isPlaying: true,
 		events: events,
-		actions: root ? ctx.actions.map(a -> {
-			final actionInfo:model.IModel.ActionInfo = switch a {
-				case MOVE(value, gameInfo):
-					{
-						id: ActionInfoID.MOVE,
-						value: value,
-						gameInfo: gameInfo
-					}
-			}
-			return actionInfo;
-		}) : [],
+		actions: [],
 		currentTurn: ctx.turn,
 	}
 }

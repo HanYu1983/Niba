@@ -19,14 +19,16 @@ class CacheModel extends ProxyModel {
 	override function gameInfo():GameInfo {
 		if (cache == null) {
 			cache = super.gameInfo();
+			js.Browser.console.log("CacheModel", cache);
 			return cache;
 		}
 		if (isDirty) {
 			cache = super.gameInfo();
+			js.Browser.console.log("CacheModel", cache);
 			isDirty = false;
 			return cache;
 		}
-		js.Browser.console.log("CacheModel", "use cache", cache);
+		// js.Browser.console.log("CacheModel", "use cache", cache);
 		return cache;
 	}
 
@@ -119,5 +121,10 @@ class CacheModel extends ProxyModel {
 	override function refresh(cb:() -> Void) {
 		isDirty = true;
 		return super.refresh(cb);
+	}
+
+	override function finishOneEvent(syncView:() -> Void) {
+		isDirty = true;
+		return super.finishOneEvent(syncView);
 	}
 }

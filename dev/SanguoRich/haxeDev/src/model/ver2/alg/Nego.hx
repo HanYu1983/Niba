@@ -212,7 +212,6 @@ function doGetPreResultOfNego(ctx:Context, playerId:Int, gridId:Int, peopleId:In
 }
 
 function doTakeNegoOn(ctx:Context, playerId:Int, gridId:Int, p1SelectId:Int, p2SelectId:Int) {
-	ctx.events = [];
 	onNegoCost(ctx, playerId, gridId, p1SelectId, p2SelectId);
 	{
 		final player = ctx.players[ctx.currentPlayerId];

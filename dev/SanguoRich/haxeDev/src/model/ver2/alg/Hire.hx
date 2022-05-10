@@ -141,7 +141,6 @@ function doGetPreResultOfHire(ctx:Context, playerId:Int, gridId:Int, peopleId:In
 }
 
 function doTakeHire(ctx:Context, playerId:Int, gridId:Int, p1SelectId:Int, p2SelectId:Int) {
-	ctx.events = [];
 	onHireCost(ctx, playerId, gridId, p1SelectId, p2SelectId);
 	{
 		final player = ctx.players[ctx.currentPlayerId];

@@ -193,5 +193,7 @@ class ProxyModel implements IModel {
 		return model.refresh(cb);
 	}
 
-	public function finishOneEvent(syncView:() -> Void) {}
+	public function finishOneEvent(syncView:() -> Void) {
+		return model.finishOneEvent(syncView);
+	}
 }

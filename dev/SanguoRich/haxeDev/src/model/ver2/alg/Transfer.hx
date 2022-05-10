@@ -71,6 +71,5 @@ function _checkValidTransfer(ctx:Context, playerId:Int, gridId:Int, playerInfo:m
 }
 
 function _takeTransfer(ctx:Context, playerId:Int, gridId:Int, playerInfo:model.IModel.PlayerInfo, gridInfo:model.GridGenerator.Grid) {
-	ctx.events = [];
 	onTransfer(ctx, playerId, gridId, playerInfo, gridInfo);
 }

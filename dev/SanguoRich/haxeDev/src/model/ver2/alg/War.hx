@@ -403,7 +403,6 @@ function _getPreResultOfWar(ctx:Context, playerId:Int, gridId:Int, p1PeopleId:In
 }
 
 function _takeWarOn(ctx:Context, playerId:Int, gridId:Int, p1PeopleId:Int, p2PeopleId:Int, army1:Float, army2:Float) {
-	ctx.events = [];
 	onWarCostImpl(ctx, playerId, gridId, p1PeopleId, p2PeopleId, army1, army2, {occupy: true, warEvent: true});
 	{
 		final player = ctx.players[ctx.currentPlayerId];
