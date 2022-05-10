@@ -597,7 +597,7 @@ function getGameInfo(ctx:Context, root:Bool):GameInfo {
 	final events = if (root) {
 		final eventCopy = deepCopy(ctx.events);
 		// 先進後出
-		eventCopy.reverse();
+		// eventCopy.reverse();
 		// 探索和攻城事件排最後
 		eventCopy.sort((a, b) -> {
 			return switch b {
