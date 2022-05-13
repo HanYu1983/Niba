@@ -57,58 +57,69 @@ function doBrain(ctx, playerId:Int) {
 				}
 			case MOVE:
 				onPlayerDice(ctx, playerId);
+				doEvent(ctx);
 			case BUILD:
 			case BUY_ARMY:
 				if (p1People == null) {
 					throw new haxe.Exception("p1People not found");
 				}
 				_takeResource(ctx, playerId, gridId, p1People.id, BUY, ARMY);
+				doEvent(ctx);
 			case BUY_FOOD:
 				if (p1People == null) {
 					throw new haxe.Exception("p1People not found");
 				}
 				_takeResource(ctx, playerId, gridId, p1People.id, BUY, FOOD);
+				doEvent(ctx);
 			case SELL_ARMY:
 				if (p1People == null) {
 					throw new haxe.Exception("p1People not found");
 				}
 				_takeResource(ctx, playerId, gridId, p1People.id, SELL, ARMY);
+				doEvent(ctx);
 			case SELL_FOOD:
 				if (p1People == null) {
 					throw new haxe.Exception("p1People not found");
 				}
 				_takeResource(ctx, playerId, gridId, p1People.id, SELL, FOOD);
+				doEvent(ctx);
 			case EARN_MONEY:
 				if (p1People == null) {
 					throw new haxe.Exception("p1People not found");
 				}
 				_takeResource(ctx, playerId, gridId, p1People.id, BUY, MONEY);
+				doEvent(ctx);
 			case CAMP:
 				if (p1People == null) {
 					throw new haxe.Exception("p1People not found");
 				}
 				_takeCostForBonus(ctx, playerId, p1People.id, 0);
+				doEvent(ctx);
 			case PRACTICE:
 				if (p1People == null) {
 					throw new haxe.Exception("p1People not found");
 				}
 				_takeCostForBonus(ctx, playerId, p1People.id, 1);
+				doEvent(ctx);
 			case PAY_FOR_FUN:
 				if (p1People == null) {
 					throw new haxe.Exception("p1People not found");
 				}
 				_takeCostForBonus(ctx, playerId, p1People.id, 2);
+				doEvent(ctx);
 			case EXPLORE:
 				if (p1People == null) {
 					throw new haxe.Exception("p1People not found");
 				}
 				_takeExplore(ctx, playerId, gridId, p1People.id);
+				doEvent(ctx);
 			// TODO: hire after explore success
 			case FIRE:
 				if (p1People == null) {
 					throw new haxe.Exception("p1People not found");
 				}
 				_takeFire(ctx, playerId, [p1People.id]);
+				doEvent(ctx);
 			case HIRE:
 				if (p1People == null) {
 					throw new haxe.Exception("p1People not found");
@@ -117,6 +128,7 @@ function doBrain(ctx, playerId:Int) {
 					throw new haxe.Exception("p2GridPeople not found");
 				}
 				doTakeHire(ctx, playerId, gridId, p1People.id, p2GridPeople.id);
+				doEvent(ctx);
 			case NEGOTIATE:
 				if (p1People == null) {
 					throw new haxe.Exception("p1People not found");
@@ -125,6 +137,7 @@ function doBrain(ctx, playerId:Int) {
 					throw new haxe.Exception("p2GridPeople not found");
 				}
 				doTakeNegoOn(ctx, playerId, gridId, p1People.id, p2GridPeople.id);
+				doEvent(ctx);
 			case PK:
 				if (p1People == null) {
 					throw new haxe.Exception("p1People not found");
@@ -133,6 +146,7 @@ function doBrain(ctx, playerId:Int) {
 					throw new haxe.Exception("p2GridPeople not found");
 				}
 				_takePk(ctx, playerId, gridId, p1People.id, p2GridPeople.id);
+				doEvent(ctx);
 			case SNATCH | OCCUPATION:
 				if (peopleInPlayer.length <= 0) {
 					throw new haxe.Exception("你沒有人, 不能搶劫");
@@ -143,10 +157,27 @@ function doBrain(ctx, playerId:Int) {
 				final p1 = peopleInPlayer[0];
 				final p2 = peopleInGrid[0];
 				_takeSnatchOn(ctx, playerId, gridId, p1.id, p2.id, cmd == OCCUPATION);
+				doEvent(ctx);
 			case STRATEGY:
 			case TRANSFER:
 			case TREASURE:
 			case TREASURE_TAKE:
+		}
+	}
+}
+
+private function doEvent(ctx:Context) {
+	final events = ctx.events;
+	ctx.events = [];
+	for (evt in events) {
+		switch evt {
+			case MESSAGE_EVENT(_, _) | GRID_RESOURCE_EVENT(_, _):
+				ctx.events.push(evt);
+			case _:
+				ctx.events.push(MESSAGE_EVENT({
+					title: "ai response",
+					msg: Std.string(evt).substring(0, 20),
+				}, getGameInfo(ctx, false)));
 		}
 	}
 }

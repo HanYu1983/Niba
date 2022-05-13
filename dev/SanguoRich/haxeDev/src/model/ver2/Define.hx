@@ -229,6 +229,10 @@ enum Event {
 			toGridId:Int
 		}
 	}, gameInfo:GameInfo);
+	MESSAGE_EVENT(value:{
+		title:String,
+		msg:String,
+	}, gameInfo:GameInfo);
 }
 
 typedef Context = {
@@ -587,6 +591,12 @@ function getEventInfo(e:Event):EventInfo {
 		case ANIMATION_EVENT(value, gameInfo):
 			{
 				id: EventInfoID.ANIMATION_EVENT,
+				value: value,
+				gameInfo: gameInfo,
+			}
+		case MESSAGE_EVENT(value, gameInfo):
+			{
+				id: EventInfoID.MESSAGE_EVENT,
 				value: value,
 				gameInfo: gameInfo,
 			}
