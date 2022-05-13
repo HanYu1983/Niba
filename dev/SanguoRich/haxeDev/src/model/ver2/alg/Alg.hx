@@ -102,7 +102,11 @@ function doPlayerEnd(ctx:Context) {
 	onPlayerEnd(ctx, ctx.currentPlayerId);
 	final nextPlayer = ctx.players[ctx.currentPlayerId];
 	if (nextPlayer.brain != null) {
-		doBrain(ctx, nextPlayer.id);
+		try {
+			doBrain(ctx, nextPlayer.id);
+		} catch (e:Any) {
+			trace(e);
+		}
 	}
 }
 

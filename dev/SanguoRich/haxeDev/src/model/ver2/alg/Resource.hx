@@ -24,7 +24,6 @@ using Lambda;
 // strategy: ability 3
 // 智力、政治、魅力也會影響最終數值
 private function getResourceCost(ctx:Context, playerId:Int, gridId:Int, p1SelectId:Int, market:MARKET, type:RESOURCE) {
-	trace("MondelVer2", "getResourceCost", market, type);
 	return switch 0 {
 		case 0:
 			final grid = ctx.grids[gridId];

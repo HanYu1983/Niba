@@ -32,8 +32,19 @@ function doBrain(ctx, playerId:Int) {
 			break;
 		}
 		final cmd = getMostGoodCommand(ctx, player.id);
+		trace("doBrain", player.id, i, cmd);
 		final peopleInGrid = ctx.peoples.filter((p:People) -> p.position.gridId == grid.id);
 		final peopleInPlayer = ctx.peoples.filter((p:People) -> p.belongToPlayerId == player.id);
+		final p1People:Null<People> = if (peopleInPlayer.length > 0) {
+			peopleInPlayer[0];
+		} else {
+			null;
+		}
+		final p2GridPeople:Null<People> = if (peopleInGrid.length > 0) {
+			peopleInGrid[0];
+		} else {
+			null;
+		}
 		switch cmd {
 			case END:
 				onPlayerEnd(ctx, playerId);
@@ -48,18 +59,80 @@ function doBrain(ctx, playerId:Int) {
 				onPlayerDice(ctx, playerId);
 			case BUILD:
 			case BUY_ARMY:
+				if (p1People == null) {
+					throw new haxe.Exception("p1People not found");
+				}
+				_takeResource(ctx, playerId, gridId, p1People.id, BUY, ARMY);
 			case BUY_FOOD:
-			case CAMP:
-			case EARN_MONEY:
-			case EXPLORE:
-			case FIRE:
-			case HIRE:
-			case NEGOTIATE:
-			case PAY_FOR_FUN:
-			case PK:
-			case PRACTICE:
+				if (p1People == null) {
+					throw new haxe.Exception("p1People not found");
+				}
+				_takeResource(ctx, playerId, gridId, p1People.id, BUY, FOOD);
 			case SELL_ARMY:
+				if (p1People == null) {
+					throw new haxe.Exception("p1People not found");
+				}
+				_takeResource(ctx, playerId, gridId, p1People.id, SELL, ARMY);
 			case SELL_FOOD:
+				if (p1People == null) {
+					throw new haxe.Exception("p1People not found");
+				}
+				_takeResource(ctx, playerId, gridId, p1People.id, SELL, FOOD);
+			case EARN_MONEY:
+				if (p1People == null) {
+					throw new haxe.Exception("p1People not found");
+				}
+				_takeResource(ctx, playerId, gridId, p1People.id, BUY, MONEY);
+			case CAMP:
+				if (p1People == null) {
+					throw new haxe.Exception("p1People not found");
+				}
+				_takeCostForBonus(ctx, playerId, p1People.id, 0);
+			case PRACTICE:
+				if (p1People == null) {
+					throw new haxe.Exception("p1People not found");
+				}
+				_takeCostForBonus(ctx, playerId, p1People.id, 1);
+			case PAY_FOR_FUN:
+				if (p1People == null) {
+					throw new haxe.Exception("p1People not found");
+				}
+				_takeCostForBonus(ctx, playerId, p1People.id, 2);
+			case EXPLORE:
+				if (p1People == null) {
+					throw new haxe.Exception("p1People not found");
+				}
+				_takeExplore(ctx, playerId, gridId, p1People.id);
+			// TODO: hire after explore success
+			case FIRE:
+				if (p1People == null) {
+					throw new haxe.Exception("p1People not found");
+				}
+				_takeFire(ctx, playerId, [p1People.id]);
+			case HIRE:
+				if (p1People == null) {
+					throw new haxe.Exception("p1People not found");
+				}
+				if (p2GridPeople == null) {
+					throw new haxe.Exception("p2GridPeople not found");
+				}
+				doTakeHire(ctx, playerId, gridId, p1People.id, p2GridPeople.id);
+			case NEGOTIATE:
+				if (p1People == null) {
+					throw new haxe.Exception("p1People not found");
+				}
+				if (p2GridPeople == null) {
+					throw new haxe.Exception("p2GridPeople not found");
+				}
+				doTakeNegoOn(ctx, playerId, gridId, p1People.id, p2GridPeople.id);
+			case PK:
+				if (p1People == null) {
+					throw new haxe.Exception("p1People not found");
+				}
+				if (p2GridPeople == null) {
+					throw new haxe.Exception("p2GridPeople not found");
+				}
+				_takePk(ctx, playerId, gridId, p1People.id, p2GridPeople.id);
 			case SNATCH | OCCUPATION:
 				if (peopleInPlayer.length <= 0) {
 					throw new haxe.Exception("你沒有人, 不能搶劫");
@@ -98,11 +171,17 @@ private function getMostGoodCommand(ctx:Context, playerId:Int):ActionInfoID {
 
 private function getCommandWeight(ctx:Context, playerId:Int, cmd:ActionInfoID):Float {
 	return switch cmd {
-		case END:
-			1;
-		case MOVE:
-			1;
-		case _:
+		case STRATEGY:
 			0;
+		case TRANSFER:
+			0;
+		case TREASURE:
+			0;
+		case TREASURE_TAKE:
+			0;
+		case OCCUPATION:
+			1.2;
+		case _:
+			1;
 	}
 }
