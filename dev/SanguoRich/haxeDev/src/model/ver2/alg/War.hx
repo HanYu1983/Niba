@@ -44,7 +44,11 @@ private function getWarCostImpl(ctx:Context, playerId:Int, gridId:Int, p1PeopleI
 		final foodCost = atkFoodCost;
 		final useEnergy = atkPeople.energy / (100 / ENERGY_COST_ON_WAR);
 		final fact0 = useEnergy / ENERGY_COST_ON_WAR;
-		final fact1 = (atkArmy + defArmy * WAR_HIGH_LOW_FACTOR) / (defArmy + defArmy * WAR_HIGH_LOW_FACTOR);
+		final fact1 = Math.min(3.0, if (defArmy > 0) {
+			(atkArmy + defArmy * WAR_HIGH_LOW_FACTOR) / (defArmy + defArmy * WAR_HIGH_LOW_FACTOR);
+		} else {
+			99999.0;
+		});
 		final fact2 = if (atkPeopleAbilities.has(0)) WAR_FRONT_ABILITY_FACTOR else 1.0;
 		final fact3 = if (atkPeopleAbilities.has(1)) WAR_FRONT_ABILITY_FACTOR else 1.0;
 		final fact4 = if (atkPeopleAbilities.has(2)) WAR_FRONT_ABILITY_FACTOR else 1.0;
@@ -61,8 +65,24 @@ private function getWarCostImpl(ctx:Context, playerId:Int, gridId:Int, p1PeopleI
 					0.0;
 			}
 		}, 0.0);
-		final factMoney = if (currMoney - moneyCost < 0) (1.0 - (-1 * (currMoney - moneyCost) / moneyCost)) else 1.0;
-		final factFood = if (currFood - foodCost < 0) (1.0 - (-1 * (currFood - foodCost) / foodCost)) else 1.0;
+		final factMoney = if (moneyCost > 0) {
+			if (currMoney - moneyCost < 0) {
+				1.0 - (-1 * (currMoney - moneyCost) / moneyCost);
+			} else {
+				1.0;
+			}
+		} else {
+			1.0;
+		}
+		final factFood = if (foodCost > 0) {
+			if (currFood - foodCost < 0) {
+				1.0 - (-1 * (currFood - foodCost) / foodCost);
+			} else {
+				1.0;
+			}
+		} else {
+			1.0;
+		}
 		final factArmyTypeAtk = if (atkPeopleAbilities.has(0) && defPeopleAbilities.has(2)) {
 			1.5;
 		} else if (atkPeopleAbilities.has(1) && defPeopleAbilities.has(0)) {
@@ -116,7 +136,12 @@ private function getWarCostImpl(ctx:Context, playerId:Int, gridId:Int, p1PeopleI
 		final foodCost = defFoodCost;
 		final useEnergy = atkPeople.energy / (100 / ENERGY_COST_ON_WAR);
 		final fact0 = useEnergy / ENERGY_COST_ON_WAR;
-		final fact1 = (atkArmy + defArmy * WAR_HIGH_LOW_FACTOR) / (defArmy + defArmy * WAR_HIGH_LOW_FACTOR);
+		// 放除數的都要注意除零錯誤, 不然會變成NaN(Not A Number)後, 可能之後程式就有卡住的可能
+		final fact1 = Math.min(3.0, if (defArmy > 0) {
+			(atkArmy + defArmy * WAR_HIGH_LOW_FACTOR) / (defArmy + defArmy * WAR_HIGH_LOW_FACTOR);
+		} else {
+			99999.0;
+		});
 		final fact2 = if (atkPeopleAbilities.has(0)) WAR_FRONT_ABILITY_FACTOR else 1.0;
 		final fact3 = if (atkPeopleAbilities.has(1)) WAR_FRONT_ABILITY_FACTOR else 1.0;
 		final fact4 = if (atkPeopleAbilities.has(2)) WAR_FRONT_ABILITY_FACTOR else 1.0;
@@ -135,8 +160,24 @@ private function getWarCostImpl(ctx:Context, playerId:Int, gridId:Int, p1PeopleI
 					0.0;
 			}
 		}, 0.0);
-		final factMoney = if (currMoney - moneyCost < 0) (1.0 - (-1 * (currMoney - moneyCost) / moneyCost)) else 1.0;
-		final factFood = if (currFood - foodCost < 0) (1.0 - (-1 * (currFood - foodCost) / foodCost)) else 1.0;
+		final factMoney = if (moneyCost > 0) {
+			if (currMoney - moneyCost < 0) {
+				1.0 - (-1 * (currMoney - moneyCost) / moneyCost);
+			} else {
+				1.0;
+			}
+		} else {
+			1.0;
+		}
+		final factFood = if (foodCost > 0) {
+			if (currFood - foodCost < 0) {
+				1.0 - (-1 * (currFood - foodCost) / foodCost);
+			} else {
+				1.0;
+			}
+		} else {
+			1.0;
+		}
 		final base = atkArmy * if (options.occupy) WAR_DEFFENDER_FACTOR else 1;
 		final baseDamage = atkArmy * WAR_ARMY_FACTOR;
 		final damage = baseDamage + base * fact0 * fact1 * fact2 * fact3 * fact4 * fact5 * fact6 * fact7 * fact8 * fact9 * factMoney * factFood * factWall;
