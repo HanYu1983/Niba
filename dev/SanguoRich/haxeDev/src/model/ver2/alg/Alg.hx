@@ -164,11 +164,22 @@ function onPlayerGoToPosition(ctx:Context, playerId:Int, toGridId:Int) {
 	final player = ctx.players[playerId];
 	final toGrid = ctx.grids[toGridId];
 	final toGridBelongPlayerId = getGridBelongPlayerId(ctx, toGrid.id);
+	final fromGridId = player.position;
+	player.position = toGridId;
+	// 移動動畫
+	ctx.events.push(ANIMATION_EVENT({
+		id: MOVE,
+		value: {
+			playerId: playerId,
+			fromGridId: fromGridId,
+			toGridId: toGridId
+		}
+	}, getGameInfo(ctx, false)));
+	// 過路費
 	final isStopAtEnemyGrid = toGridBelongPlayerId != null && toGridBelongPlayerId != player.id;
 	if (isStopAtEnemyGrid) {
 		onPayTaxToGrid(ctx, player.id, toGrid.id);
 	}
-	player.position = toGridId;
 }
 
 function onPayTaxToGrid(ctx:Context, playerId:Int, gridId:Int) {
@@ -427,12 +438,4 @@ function onPlayerDice(ctx:Context, playerId:Int) {
 	}
 	onPlayerGoToPosition(ctx, playerId, toGridId);
 	player.memory.hasDice = true;
-	ctx.events.push(ANIMATION_EVENT({
-		id: MOVE,
-		value: {
-			playerId: playerId,
-			fromGridId: fromGridId,
-			toGridId: toGridId
-		}
-	}, getGameInfo(ctx, false)));
 }

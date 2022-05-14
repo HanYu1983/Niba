@@ -23,16 +23,16 @@ import model.ver2.alg.Equip;
 using Lambda;
 
 function doBrain(ctx, playerId:Int) {
-	final player = ctx.players[playerId];
-	final gridId = player.position;
-	final grid = ctx.grids[gridId];
 	var done = false;
 	for (i in 0...100) {
 		if (done) {
 			break;
 		}
-		final cmd = getMostGoodCommand(ctx, player.id);
-		trace("doBrain", player.id, i, cmd);
+		final cmd = getMostGoodCommand(ctx, playerId);
+		trace("doBrain", playerId, i, cmd);
+		final player = ctx.players[playerId];
+		final gridId = player.position;
+		final grid = ctx.grids[gridId];
 		final peopleInGrid = ctx.peoples.filter((p:People) -> p.position.gridId == grid.id);
 		final peopleInPlayer = ctx.peoples.filter((p:People) -> p.belongToPlayerId == player.id);
 		final p1People:Null<People> = if (peopleInPlayer.length > 0) {
@@ -47,9 +47,9 @@ function doBrain(ctx, playerId:Int) {
 		}
 		switch cmd {
 			case END:
-				onPlayerEnd(ctx, playerId);
 				// 結束回圈
 				done = true;
+				onPlayerEnd(ctx, playerId);
 				// 如果下一個玩家又是AI
 				final nextPlayer = ctx.players[ctx.currentPlayerId];
 				if (nextPlayer.brain != null) {
@@ -57,69 +57,68 @@ function doBrain(ctx, playerId:Int) {
 				}
 			case MOVE:
 				onPlayerDice(ctx, playerId);
-				doEvent(ctx);
+				doEvent(ctx, playerId);
 			case BUILD:
 			case BUY_ARMY:
 				if (p1People == null) {
 					throw new haxe.Exception("p1People not found");
 				}
 				_takeResource(ctx, playerId, gridId, p1People.id, BUY, ARMY);
-				doEvent(ctx);
+				doEvent(ctx, playerId);
 			case BUY_FOOD:
 				if (p1People == null) {
 					throw new haxe.Exception("p1People not found");
 				}
 				_takeResource(ctx, playerId, gridId, p1People.id, BUY, FOOD);
-				doEvent(ctx);
+				doEvent(ctx, playerId);
 			case SELL_ARMY:
 				if (p1People == null) {
 					throw new haxe.Exception("p1People not found");
 				}
 				_takeResource(ctx, playerId, gridId, p1People.id, SELL, ARMY);
-				doEvent(ctx);
+				doEvent(ctx, playerId);
 			case SELL_FOOD:
 				if (p1People == null) {
 					throw new haxe.Exception("p1People not found");
 				}
 				_takeResource(ctx, playerId, gridId, p1People.id, SELL, FOOD);
-				doEvent(ctx);
+				doEvent(ctx, playerId);
 			case EARN_MONEY:
 				if (p1People == null) {
 					throw new haxe.Exception("p1People not found");
 				}
 				_takeResource(ctx, playerId, gridId, p1People.id, BUY, MONEY);
-				doEvent(ctx);
+				doEvent(ctx, playerId);
 			case CAMP:
 				if (p1People == null) {
 					throw new haxe.Exception("p1People not found");
 				}
 				_takeCostForBonus(ctx, playerId, p1People.id, 0);
-				doEvent(ctx);
+				doEvent(ctx, playerId);
 			case PRACTICE:
 				if (p1People == null) {
 					throw new haxe.Exception("p1People not found");
 				}
 				_takeCostForBonus(ctx, playerId, p1People.id, 1);
-				doEvent(ctx);
+				doEvent(ctx, playerId);
 			case PAY_FOR_FUN:
 				if (p1People == null) {
 					throw new haxe.Exception("p1People not found");
 				}
 				_takeCostForBonus(ctx, playerId, p1People.id, 2);
-				doEvent(ctx);
+				doEvent(ctx, playerId);
 			case EXPLORE:
 				if (p1People == null) {
 					throw new haxe.Exception("p1People not found");
 				}
 				_takeExplore(ctx, playerId, gridId, p1People.id);
-				doEvent(ctx);
-			// TODO: hire after explore success
+				doEvent(ctx, playerId);
 			case FIRE:
 				if (p1People == null) {
 					throw new haxe.Exception("p1People not found");
 				}
 				_takeFire(ctx, playerId, [p1People.id]);
-				doEvent(ctx);
+				doEvent(ctx, playerId);
 			case HIRE:
 				if (p1People == null) {
 					throw new haxe.Exception("p1People not found");
@@ -128,7 +127,7 @@ function doBrain(ctx, playerId:Int) {
 					throw new haxe.Exception("p2GridPeople not found");
 				}
 				doTakeHire(ctx, playerId, gridId, p1People.id, p2GridPeople.id);
-				doEvent(ctx);
+				doEvent(ctx, playerId);
 			case NEGOTIATE:
 				if (p1People == null) {
 					throw new haxe.Exception("p1People not found");
@@ -137,7 +136,7 @@ function doBrain(ctx, playerId:Int) {
 					throw new haxe.Exception("p2GridPeople not found");
 				}
 				doTakeNegoOn(ctx, playerId, gridId, p1People.id, p2GridPeople.id);
-				doEvent(ctx);
+				doEvent(ctx, playerId);
 			case PK:
 				if (p1People == null) {
 					throw new haxe.Exception("p1People not found");
@@ -146,7 +145,7 @@ function doBrain(ctx, playerId:Int) {
 					throw new haxe.Exception("p2GridPeople not found");
 				}
 				_takePk(ctx, playerId, gridId, p1People.id, p2GridPeople.id);
-				doEvent(ctx);
+				doEvent(ctx, playerId);
 			case SNATCH | OCCUPATION:
 				if (peopleInPlayer.length <= 0) {
 					throw new haxe.Exception("你沒有人, 不能搶劫");
@@ -157,7 +156,7 @@ function doBrain(ctx, playerId:Int) {
 				final p1 = peopleInPlayer[0];
 				final p2 = peopleInGrid[0];
 				_takeSnatchOn(ctx, playerId, gridId, p1.id, p2.id, cmd == OCCUPATION);
-				doEvent(ctx);
+				doEvent(ctx, playerId);
 			case STRATEGY:
 			case TRANSFER:
 			case TREASURE:
@@ -166,20 +165,84 @@ function doBrain(ctx, playerId:Int) {
 	}
 }
 
-private function doEvent(ctx:Context) {
+private function doEvent(ctx:Context, playerId:Int) {
 	final events = ctx.events;
 	ctx.events = [];
 	for (evt in events) {
+		final player = ctx.players[playerId];
+		final gridId = player.position;
+		final grid = ctx.grids[gridId];
+		final peopleInPlayer = ctx.peoples.filter((p:People) -> p.belongToPlayerId == player.id);
+		final p1People:Null<People> = if (peopleInPlayer.length > 0) {
+			peopleInPlayer[0];
+		} else {
+			null;
+		}
 		switch evt {
-			case MESSAGE_EVENT(_, _) | GRID_RESOURCE_EVENT(_, _):
-				ctx.events.push(evt);
+			// case MESSAGE_EVENT(_, _) | GRID_RESOURCE_EVENT(_, _) | WORLD_EVENT(_, _) | WALK_STOP(_, _) | NEGOTIATE_RESULT(_, _) | HIRE_RESULT(_, _) |
+			// 	SNATCH_RESULT(_, _) | RESOURCE_RESULT(_, _) | FIRE_RESULT(_, _) | STRATEGY_RESULT(_, _) | BUILDING_RESULT(_, _):
+			// 	ctx.events.push(evt);
+			case EXPLORE_RESULT(value, _):
+				if (value.success) {
+					if (value.peopleList.length == 0) {
+						throw new haxe.Exception("找到人但是peopleList沒有值");
+					}
+					if (p1People == null) {
+						throw new haxe.Exception("p1People not found");
+					}
+					final firstFindPeopleId = value.peopleList[0].id;
+					doTakeHire(ctx, playerId, gridId, p1People.id, firstFindPeopleId);
+					doEvent(ctx, playerId);
+				} else {
+					ctx.events.push(evt);
+				}
+			case WAR_RESULT(value, gameInfo):
+				if (value.success) {
+					final tmpPlayer = getPlayerInfo(ctx, player);
+					final tmpGrid = getGridInfo(ctx, grid);
+					final putMoney = tmpPlayer.money / 3;
+					final putFood = tmpPlayer.food / 3;
+					final putArmy = tmpPlayer.army / 3;
+					tmpPlayer.money -= putMoney;
+					tmpPlayer.food -= putFood;
+					tmpPlayer.army -= putArmy;
+					tmpGrid.money += putMoney;
+					tmpGrid.food += putFood;
+					tmpGrid.army += putArmy;
+					if (tmpGrid.people.length == 0) {
+						final peopleNotGrid = tmpPlayer.people.filter(p -> p.gridId == null);
+						if (peopleNotGrid.length > 0) {
+							final willEnterPeople = peopleNotGrid[0];
+							tmpPlayer.people = tmpPlayer.people.filter(p -> p.id == willEnterPeople.id);
+							tmpGrid.people = [willEnterPeople];
+							_takeTransfer(ctx, playerId, gridId, tmpPlayer, tmpGrid);
+							doEvent(ctx, playerId);
+							ctx.events.push(MESSAGE_EVENT({
+								title: 'AI',
+								msg: '${player.name}佔領${grid.name}',
+							}, gameInfo));
+						} else {
+							ctx.events.push(MESSAGE_EVENT({
+								title: 'AI',
+								msg: '${player.name}想佔領${grid.name}卻沒有空閒的人',
+							}, gameInfo));
+						}
+					} else {
+						_takeTransfer(ctx, playerId, gridId, tmpPlayer, tmpGrid);
+						doEvent(ctx, playerId);
+						ctx.events.push(MESSAGE_EVENT({
+							title: 'AI',
+							msg: '${player.name}佔領${grid.name}',
+						}, gameInfo));
+					}
+				} else {
+					ctx.events.push(evt);
+				}
 			case _:
-				ctx.events.push(MESSAGE_EVENT({
-					title: "ai response",
-					msg: Std.string(evt).substring(0, 20),
-				}, getGameInfo(ctx, false)));
+				ctx.events.push(evt);
 		}
 	}
+	// js.Browser.console.log("doEvent", ctx.events);
 }
 
 private function getMostGoodCommand(ctx:Context, playerId:Int):ActionInfoID {
