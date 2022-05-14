@@ -37,7 +37,7 @@
     
     <box id='box_playerCover' width='100%' height='100%' style="background-color: white;border:1px solid gray;background-opacity: .3"/>
 
-    <box id='box_showAnimation' width='100%' height='100%' style="background-color: white;border:1px solid gray;background-opacity: 1.0">
+    <box id='box_showAnimation' width='100%' height='100%' style="background-color: white;border:1px solid gray;background-opacity: .7">
         <box verticalAlign="center" horizontalAlign="center" >
             <label id="lbl_action" text=""/>
         </box>

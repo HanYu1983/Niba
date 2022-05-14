@@ -644,14 +644,20 @@ class MainView extends Box {
 					msg += '地點:${grid.name}';
 
 					final showGrids = [grid.id];
-					GridView.showGridsAnimation(grids, showGrids, '突起', 1.0, ()->{
-						Dialogs.messageBox(msg, title, MessageBoxType.TYPE_INFO, true, (b) -> {
-							syncViewByInfo(gameInfo);
-							doOneEvent();
-						});
+					GridView.showGridsAnimation(grids, showGrids, title, 2.0, ()->{
+						syncViewByInfo(gameInfo);
+						doOneEvent();
+
+						// Dialogs.messageBox(msg, title, MessageBoxType.TYPE_INFO, true, (b) -> {
+						// 	syncViewByInfo(gameInfo);
+						// 	doOneEvent();
+						// });
 					});
 
 				case GRID_RESOURCE_EVENT:
+
+					disabledAllCommands();
+					
 					final gridChanges:Array<{gridBefore:Grid, gridAfter:Grid}> = info.grids;
 					final title = info.describtion;
 					var msg = '${title}\n\n';
@@ -671,11 +677,14 @@ class MainView extends Box {
 					}
 
 					final showGrids = gridChanges.map((grid)->grid.gridBefore.id);
-					GridView.showGridsAnimation(grids, showGrids, '變動', 1.0, ()->{
-						Dialogs.messageBox(msg, title, MessageBoxType.TYPE_INFO, true, (b) -> {
-							syncViewByInfo(gameInfo);
-							doOneEvent();
-						});
+					GridView.showGridsAnimation(grids, showGrids, title, 2.0, ()->{
+						syncViewByInfo(gameInfo);
+						doOneEvent();
+
+						// Dialogs.messageBox(msg, title, MessageBoxType.TYPE_INFO, true, (b) -> {
+						// 	syncViewByInfo(gameInfo);
+						// 	doOneEvent();
+						// });
 					});
 					
 				case PK_RESULT:
