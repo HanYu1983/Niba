@@ -606,21 +606,15 @@ class MainView extends Box {
 								syncViewByInfo(gameInfo);
 								doOneEvent();
 							}).play();
-						// case ActionInfoID.NEGOTIATE | ActionInfoID.PK | ActionInfoID.SNATCH | ActionInfoID.CAMP | ActionInfoID.PRACTICE | ActionInfoID.
-						case _:
+						case ActionInfoID.SNATCH:
 							final gridIds:Array<Int> = info.value.gridIds;
 							final msg = info.value.msg;
 							final duration = info.value.duration;
-
-							var count = gridIds.length;
-							for(gridId in gridIds){
-								grids[gridId].showAnimation(msg, duration, ()->{
-									if(--count == 0 ){
-										syncViewByInfo(gameInfo);
-										doOneEvent();
-									}
-								});
-							}
+							GridView.showGridsAnimation(grids, gridIds, msg, duration, ()->{
+								syncViewByInfo(gameInfo);
+								doOneEvent();
+							});
+						case _:
 					}
 				case WALK_STOP:
 				case FIND_TREASURE_RESULT:
@@ -644,22 +638,24 @@ class MainView extends Box {
 					// 	}
 					// });
 				case GRID_BORN_EVENT:
-					syncViewByInfo(gameInfo);
-
 					final grid:Grid = info.grid;
 					final title = '異軍突起';
 					var msg = '${title}\n';
 					msg += '地點:${grid.name}';
-					Dialogs.messageBox(msg, title, MessageBoxType.TYPE_INFO, true, (b) -> {
-						doOneEvent();
-					});
-				case GRID_RESOURCE_EVENT:
-					syncViewByInfo(gameInfo);
 
-					final grids:Array<{gridBefore:Grid, gridAfter:Grid}> = info.grids;
+					final showGrids = [grid.id];
+					GridView.showGridsAnimation(grids, showGrids, '突起', 1.0, ()->{
+						Dialogs.messageBox(msg, title, MessageBoxType.TYPE_INFO, true, (b) -> {
+							syncViewByInfo(gameInfo);
+							doOneEvent();
+						});
+					});
+
+				case GRID_RESOURCE_EVENT:
+					final gridChanges:Array<{gridBefore:Grid, gridAfter:Grid}> = info.grids;
 					final title = info.describtion;
 					var msg = '${title}\n\n';
-					for (result in grids) {
+					for (result in gridChanges) {
 						final before = result.gridBefore;
 						final after = result.gridAfter;
 						final owner = switch (before.belongPlayerId) {
@@ -673,9 +669,15 @@ class MainView extends Box {
 						msg += '士兵:${Main.getCompareString(before.army, after.army, 0)} \n';
 						msg += '\n';
 					}
-					Dialogs.messageBox(msg, title, MessageBoxType.TYPE_INFO, true, (b) -> {
-						doOneEvent();
+
+					final showGrids = gridChanges.map((grid)->grid.gridBefore.id);
+					GridView.showGridsAnimation(grids, showGrids, '變動', 1.0, ()->{
+						Dialogs.messageBox(msg, title, MessageBoxType.TYPE_INFO, true, (b) -> {
+							syncViewByInfo(gameInfo);
+							doOneEvent();
+						});
 					});
+					
 				case PK_RESULT:
 					syncViewByInfo(gameInfo);
 

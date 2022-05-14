@@ -78,7 +78,7 @@ class GridView extends Box {
 	public function showAnimation(text:String, duration:Float = 1.0, cb:()->Void){
 		box_showAnimation.show();
 		lbl_action.value = text;
-		
+
 		final tweens = [];
 		tweens.push(TweenX.wait(duration));
 		tweens.push(TweenX.func(()->{
@@ -112,6 +112,17 @@ class GridView extends Box {
 			lbl_favor.show();
 		} else {
 			lbl_favor.hide();
+		}
+	}
+
+	public static function showGridsAnimation(grids:Array<GridView>, gridIds:Array<Int>, msg, duration, cb:()->Void) {
+		var count = gridIds.length;
+		for(gridId in gridIds){
+			grids[gridId].showAnimation(msg, duration, ()->{
+				if(--count == 0 ){
+					cb();
+				}
+			});
 		}
 	}
 }
