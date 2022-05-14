@@ -8,13 +8,14 @@ import model.ver2.Define;
 using Lambda;
 
 private function onFire(ctx:Context, playerId:Int, peopleIds:Array<Int>) {
+	final gridId = ctx.players[playerId].position;
 	final resultValue = {
 		success: true,
 		people: peopleIds.map(id -> getPeopleById(ctx, id)).map(p -> getPeopleInfo(ctx, p)),
 		maintainMoneyAfter: 0.0,
 		maintainMoneyBefore: getMaintainPeople(ctx, playerId),
+		gridId: gridId,
 	}
-	final gridId = ctx.players[playerId].position;
 	final gridBelongPlayerId = getGridBelongPlayerId(ctx, gridId);
 	for (peopleId in peopleIds) {
 		final people = getPeopleById(ctx, peopleId);

@@ -244,6 +244,7 @@ private function onWarCostImpl(ctx:Context, playerId:Int, gridId:Int, p1PeopleId
 		moneyAfter: player.money,
 		foodBefore: player.food,
 		foodAfter: player.food,
+		gridId: gridId,
 	}
 	final success = {
 		switch getWarCostImpl(ctx, playerId, gridId, p1PeopleId, p2PeopleId, army1, army2, options) {

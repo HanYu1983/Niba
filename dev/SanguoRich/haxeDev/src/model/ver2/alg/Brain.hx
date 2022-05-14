@@ -46,6 +46,7 @@ function doBrain(ctx, playerId:Int) {
 		} else {
 			null;
 		}
+		final gameInfo = getGameInfo(ctx, false);
 		switch cmd {
 			case END:
 				// 結束回圈
@@ -202,9 +203,6 @@ private function doEvent(ctx:Context, playerId:Int) {
 			null;
 		}
 		switch evt {
-			// case MESSAGE_EVENT(_, _) | GRID_RESOURCE_EVENT(_, _) | WORLD_EVENT(_, _) | WALK_STOP(_, _) | NEGOTIATE_RESULT(_, _) | HIRE_RESULT(_, _) |
-			// 	SNATCH_RESULT(_, _) | RESOURCE_RESULT(_, _) | FIRE_RESULT(_, _) | STRATEGY_RESULT(_, _) | BUILDING_RESULT(_, _):
-			// 	ctx.events.push(evt);
 			case EXPLORE_RESULT(value, gameInfo):
 				if (value.success) {
 					if (value.peopleList.length == 0) {
@@ -216,11 +214,6 @@ private function doEvent(ctx:Context, playerId:Int) {
 					final firstFindPeopleId = value.peopleList[0].id;
 					doTakeHire(ctx, playerId, gridId, p1People.id, firstFindPeopleId);
 					doEvent(ctx, playerId);
-				} else {
-					ctx.events.push(MESSAGE_EVENT({
-						title: 'AI',
-						msg: '${player.name}探索${grid.name}失敗',
-					}, gameInfo));
 				}
 			case WAR_RESULT(value, gameInfo):
 				if (value.success) {
@@ -243,10 +236,6 @@ private function doEvent(ctx:Context, playerId:Int) {
 							tmpGrid.people = [willEnterPeople];
 							_takeTransfer(ctx, playerId, gridId, tmpPlayer, tmpGrid);
 							doEvent(ctx, playerId);
-							ctx.events.push(MESSAGE_EVENT({
-								title: 'AI',
-								msg: '${player.name}佔領${grid.name}',
-							}, gameInfo));
 						} else {
 							ctx.events.push(MESSAGE_EVENT({
 								title: 'AI',
@@ -256,16 +245,12 @@ private function doEvent(ctx:Context, playerId:Int) {
 					} else {
 						_takeTransfer(ctx, playerId, gridId, tmpPlayer, tmpGrid);
 						doEvent(ctx, playerId);
-						ctx.events.push(MESSAGE_EVENT({
-							title: 'AI',
-							msg: '${player.name}佔領${grid.name}',
-						}, gameInfo));
 					}
 				} else {
-					ctx.events.push(evt);
+					ctx.events.push(getAnimationEventFromEvent(evt));
 				}
 			case _:
-				ctx.events.push(evt);
+				ctx.events.push(getAnimationEventFromEvent(evt));
 		}
 	}
 	// js.Browser.console.log("doEvent", ctx.events);

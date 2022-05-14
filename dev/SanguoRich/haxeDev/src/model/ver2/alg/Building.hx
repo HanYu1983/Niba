@@ -43,6 +43,7 @@ private function onBuildingCost(ctx:Context, playerId:Int, gridId:Int, peopleId:
 		success: success,
 		people: getPeopleInfo(ctx, people),
 		building: toBuilding,
+		gridId: gridId,
 	}, getGameInfo(ctx, false)));
 }
 

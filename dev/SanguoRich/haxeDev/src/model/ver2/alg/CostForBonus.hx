@@ -152,11 +152,13 @@ private function onCostForBonusCost(ctx:Context, playerId:Int, peopleId:Int, cos
 		}:
 			final p1 = getPeopleById(ctx, peopleId);
 			final player = ctx.players[playerId];
+			final grid = ctx.grids[player.position];
 			final eventValue = {
 				costType: costType,
 				people: getPeopleInfo(ctx, p1),
 				peopleBefore: getPlayerInfo(ctx, player).people,
 				peopleAfter: getPlayerInfo(ctx, player).people,
+				gridId: grid.id,
 			}
 			{
 				p1.energy = Math.max(0, p1.energy - costEnergy);
@@ -177,7 +179,6 @@ private function onCostForBonusCost(ctx:Context, playerId:Int, peopleId:Int, cos
 						}
 					case 2:
 						// 作樂會將錢付給格子
-						final grid = ctx.grids[player.position];
 						grid.money += costMoney;
 						// 回體
 						for (people in peopleBelongPlayer) {

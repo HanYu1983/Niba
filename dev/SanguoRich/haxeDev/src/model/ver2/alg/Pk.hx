@@ -52,6 +52,7 @@ private function onTakePk(ctx:Context, playerId:Int, gridId:Int, p1PeopleId:Int,
 		people: getPeopleInfo(ctx, p1),
 		armyBefore: player.army,
 		armyAfter: 0.0,
+		gridId: gridId,
 	};
 	switch getPkCost(ctx, playerId, gridId, p1PeopleId, p2PeopleId) {
 		case {peopleCost: [p1Cost, p2Cost], gainArmy: gainArmy, successRate: successRate}:

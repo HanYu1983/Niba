@@ -152,6 +152,7 @@ function onPeopleExpAdd(ctx:Context, peopleId:Int, exp:Float) {
 	final eventValue = {
 		peopleBefore: getPeopleInfo(ctx, people),
 		peopleAfter: getPeopleInfo(ctx, people),
+		gridId: people.position.gridId,
 	}
 	final originLevel = getExpLevel(people.exp);
 	people.exp += exp;
@@ -169,13 +170,10 @@ function onPlayerGoToPosition(ctx:Context, playerId:Int, toGridId:Int) {
 	final fromGridId = player.position;
 	player.position = toGridId;
 	// 移動動畫
-	ctx.events.push(ANIMATION_EVENT({
-		id: MOVE,
-		value: {
-			playerId: playerId,
-			fromGridId: fromGridId,
-			toGridId: toGridId
-		}
+	ctx.events.push(ANIMATION_EVENT_MOVE({
+		playerId: playerId,
+		fromGridId: fromGridId,
+		toGridId: toGridId
 	}, getGameInfo(ctx, false)));
 	// 過路費
 	final isStopAtEnemyGrid = toGridBelongPlayerId != null && toGridBelongPlayerId != player.id;
@@ -193,6 +191,7 @@ function onPayTaxToGrid(ctx:Context, playerId:Int, gridId:Int) {
 		moneyAfter: player.money,
 		foodBefore: player.food,
 		foodAfter: player.food,
+		gridId: gridId,
 	}
 	{
 		final grid = ctx.grids[gridId];
@@ -218,8 +217,10 @@ function onFindTreasure(ctx:Context, playerId:Int, treasures:Array<Treasure>) {
 		treasure.position.gridId = null;
 		treasure.belongToPlayerId = playerId;
 	}
+	final gridId = ctx.players[playerId].position;
 	ctx.events.push(FIND_TREASURE_RESULT({
-		treasures: treasures.map(t -> getTreasureInfo(ctx, t).catelog)
+		treasures: treasures.map(t -> getTreasureInfo(ctx, t).catelog),
+		gridId: gridId,
 	}, getGameInfo(ctx, false)));
 }
 

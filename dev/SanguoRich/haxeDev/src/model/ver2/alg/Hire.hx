@@ -75,6 +75,7 @@ private function onHireCost(ctx:Context, playerId:Int, gridId:Int, p1SelectId:In
 		moneyAfter: player.money,
 		foodBefore: player.food,
 		foodAfter: player.food,
+		gridId: gridId,
 	}
 	final success = {
 		final negoCost = getHireCost(ctx, playerId, gridId, p1SelectId, p2SelectId);

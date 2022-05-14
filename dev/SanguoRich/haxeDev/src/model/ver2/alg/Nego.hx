@@ -119,6 +119,7 @@ private function onNegoCost(ctx:Context, playerId:Int, gridId:Int, p1SelectId:In
 		foodAfter: player.food,
 		favorBefore: grid.favor[playerId],
 		favorAfter: grid.favor[playerId],
+		gridId: gridId,
 	}
 	final success = {
 		final negoCost = getNegoCost(ctx, playerId, gridId, p1SelectId, p2SelectId);

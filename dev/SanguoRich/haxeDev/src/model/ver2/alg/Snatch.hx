@@ -141,6 +141,7 @@ private function onSnatchCost(ctx:Context, playerId:Int, gridId:Int, p1PeopleId:
 		moneyAfter: player.money,
 		foodBefore: player.food,
 		foodAfter: player.food,
+		gridId: gridId,
 	};
 	final success = {
 		if (isOccupation) {

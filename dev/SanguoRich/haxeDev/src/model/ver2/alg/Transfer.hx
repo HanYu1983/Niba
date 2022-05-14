@@ -21,6 +21,7 @@ private function onTransfer(ctx:Context, playerId:Int, gridId:Int, playerInfo:mo
 		moneyAfter: player.money,
 		foodBefore: player.food,
 		foodAfter: player.food,
+		gridId: gridId,
 	}
 	{
 		final grid = ctx.grids[gridId];

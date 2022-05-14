@@ -104,6 +104,7 @@ enum Event {
 		moneyAfter:Float,
 		foodBefore:Float,
 		foodAfter:Float,
+		gridId:Int,
 	}, gameInfo:GameInfo);
 	EXPLORE_RESULT(value:{
 		success:Bool,
@@ -117,6 +118,7 @@ enum Event {
 		moneyAfter:Float,
 		foodBefore:Float,
 		foodAfter:Float,
+		gridId:Int,
 	}, gameInfo:GameInfo);
 	HIRE_RESULT(value:{
 		success:Bool,
@@ -129,6 +131,7 @@ enum Event {
 		moneyAfter:Float,
 		foodBefore:Float,
 		foodAfter:Float,
+		gridId:Int,
 	}, gameInfo:GameInfo);
 	WAR_RESULT(value:{
 		success:Bool,
@@ -141,6 +144,7 @@ enum Event {
 		moneyAfter:Float,
 		foodBefore:Float,
 		foodAfter:Float,
+		gridId:Int,
 	}, gameInfo:GameInfo);
 	SNATCH_RESULT(value:{
 		success:Bool,
@@ -153,6 +157,7 @@ enum Event {
 		moneyAfter:Float,
 		foodBefore:Float,
 		foodAfter:Float,
+		gridId:Int,
 	}, gameInfo:GameInfo);
 	RESOURCE_RESULT(value:{
 		success:Bool,
@@ -165,12 +170,14 @@ enum Event {
 		moneyAfter:Float,
 		foodBefore:Float,
 		foodAfter:Float,
+		gridId:Int,
 	}, gameInfo:GameInfo);
 	FIRE_RESULT(value:{
 		success:Bool,
 		people:Array<model.PeopleGenerator.People>,
 		maintainMoneyAfter:Float,
 		maintainMoneyBefore:Float,
+		gridId:Int,
 	}, gameInfo:GameInfo);
 	STRATEGY_RESULT(value:{
 		success:Bool,
@@ -178,11 +185,13 @@ enum Event {
 		strategy:StrategyCatelog,
 		energyBefore:Float,
 		energyAfter:Float,
+		gridId:Int,
 	}, gameInfo:GameInfo);
 	BUILDING_RESULT(value:{
 		success:Bool,
 		people:model.PeopleGenerator.People,
 		building:BUILDING,
+		gridId:Int,
 	}, gameInfo:GameInfo);
 	PAY_FOR_OVER_ENEMY_GRID(value:{
 		armyBefore:Float,
@@ -191,22 +200,26 @@ enum Event {
 		moneyAfter:Float,
 		foodBefore:Float,
 		foodAfter:Float,
+		gridId:Int,
 	}, gameInfo:GameInfo);
 	PEOPLE_LEVEL_UP_EVENT(value:{
 		peopleBefore:model.PeopleGenerator.People,
 		peopleAfter:model.PeopleGenerator.People,
+		gridId:Int,
 	}, gameInfo:GameInfo);
 	COST_FOR_BONUS_RESULT(value:{
 		costType:Int,
 		people:model.PeopleGenerator.People,
 		peopleBefore:Array<model.PeopleGenerator.People>,
-		peopleAfter:Array<model.PeopleGenerator.People>
+		peopleAfter:Array<model.PeopleGenerator.People>,
+		gridId:Int,
 	}, gameInfo:GameInfo);
 	PK_RESULT(value:{
 		success:Bool,
 		people:model.PeopleGenerator.People,
 		armyBefore:Float,
 		armyAfter:Float,
+		gridId:Int,
 	}, gameInfo:GameInfo);
 	GRID_RESOURCE_EVENT(value:{
 		grids:Array<{
@@ -219,15 +232,18 @@ enum Event {
 		grid:model.GridGenerator.Grid
 	}, gameInfo:GameInfo);
 	FIND_TREASURE_RESULT(value:{
-		treasures:Array<TreasureCatelog>
+		treasures:Array<TreasureCatelog>,
+		gridId:Int,
 	}, gameInfo:GameInfo);
-	ANIMATION_EVENT(value:{
-		id:ActionInfoID,
-		value:{
-			playerId:Int,
-			fromGridId:Int,
-			toGridId:Int
-		}
+	ANIMATION_EVENT_MOVE(value:{
+		playerId:Int,
+		fromGridId:Int,
+		toGridId:Int
+	}, gameInfo:GameInfo);
+	ANIMATION_EVENT_SNATCH(value:{
+		gridIds:Array<Int>,
+		duration:Float,
+		msg:String,
 	}, gameInfo:GameInfo);
 	MESSAGE_EVENT(value:{
 		title:String,
@@ -478,6 +494,98 @@ private function calcTotals(ctx:Context):Array<model.IModel.PlayerInfo> {
 	});
 }
 
+function getAnimationEventFromEvent(e:Event):Event {
+	final ANIMATION_DURATION = 1.0;
+	return switch e {
+		case NEGOTIATE_RESULT(value, gameInfo):
+			ANIMATION_EVENT_SNATCH({
+				gridIds: [value.gridId],
+				duration: ANIMATION_DURATION,
+				msg: "交涉",
+			}, gameInfo);
+		case EXPLORE_RESULT(value, gameInfo):
+			ANIMATION_EVENT_SNATCH({
+				gridIds: [value.gridId],
+				duration: ANIMATION_DURATION,
+				msg: "探索",
+			}, gameInfo);
+		case HIRE_RESULT(value, gameInfo):
+			ANIMATION_EVENT_SNATCH({
+				gridIds: [value.gridId],
+				duration: ANIMATION_DURATION,
+				msg: "雇用",
+			}, gameInfo);
+		case WAR_RESULT(value, gameInfo):
+			ANIMATION_EVENT_SNATCH({
+				gridIds: [value.gridId],
+				duration: ANIMATION_DURATION,
+				msg: "攻城",
+			}, gameInfo);
+		case RESOURCE_RESULT(value, gameInfo):
+			ANIMATION_EVENT_SNATCH({
+				gridIds: [value.gridId],
+				duration: ANIMATION_DURATION,
+				msg: "調度",
+			}, gameInfo);
+		case FIRE_RESULT(value, gameInfo):
+			ANIMATION_EVENT_SNATCH({
+				gridIds: [value.gridId],
+				duration: ANIMATION_DURATION,
+				msg: "解雇",
+			}, gameInfo);
+		case SNATCH_RESULT(value, gameInfo):
+			ANIMATION_EVENT_SNATCH({
+				gridIds: [value.gridId],
+				duration: ANIMATION_DURATION,
+				msg: "戰鬥",
+			}, gameInfo);
+		case STRATEGY_RESULT(value, gameInfo):
+			ANIMATION_EVENT_SNATCH({
+				gridIds: [value.gridId],
+				duration: ANIMATION_DURATION,
+				msg: "計策",
+			}, gameInfo);
+		case BUILDING_RESULT(value, gameInfo):
+			ANIMATION_EVENT_SNATCH({
+				gridIds: [value.gridId],
+				duration: ANIMATION_DURATION,
+				msg: "建築",
+			}, gameInfo);
+		// case PAY_FOR_OVER_ENEMY_GRID(value, gameInfo):
+		// 	ANIMATION_EVENT_SNATCH({
+		// 		gridIds: [value.gridId],
+		// 		duration: ANIMATION_DURATION,
+		// 		msg: "過路費",
+		// 	}, gameInfo);
+		case PEOPLE_LEVEL_UP_EVENT(value, gameInfo):
+			ANIMATION_EVENT_SNATCH({
+				gridIds: [value.gridId],
+				duration: ANIMATION_DURATION,
+				msg: "升級",
+			}, gameInfo);
+		case COST_FOR_BONUS_RESULT(value, gameInfo):
+			ANIMATION_EVENT_SNATCH({
+				gridIds: [value.gridId],
+				duration: ANIMATION_DURATION,
+				msg: "作樂",
+			}, gameInfo);
+		case PK_RESULT(value, gameInfo):
+			ANIMATION_EVENT_SNATCH({
+				gridIds: [value.gridId],
+				duration: ANIMATION_DURATION,
+				msg: "號召",
+			}, gameInfo);
+		case FIND_TREASURE_RESULT(value, gameInfo):
+			ANIMATION_EVENT_SNATCH({
+				gridIds: [value.gridId],
+				duration: ANIMATION_DURATION,
+				msg: "找寶",
+			}, gameInfo);
+		case _:
+			e;
+	}
+}
+
 function getEventInfo(e:Event):EventInfo {
 	return switch e {
 		case WORLD_EVENT(value, gameInfo):
@@ -588,10 +696,22 @@ function getEventInfo(e:Event):EventInfo {
 				value: value,
 				gameInfo: gameInfo,
 			}
-		case ANIMATION_EVENT(value, gameInfo):
+		case ANIMATION_EVENT_MOVE(value, gameInfo):
 			{
 				id: EventInfoID.ANIMATION_EVENT,
-				value: value,
+				value: {
+					id: MOVE,
+					value: value
+				},
+				gameInfo: gameInfo,
+			}
+		case ANIMATION_EVENT_SNATCH(value, gameInfo):
+			{
+				id: EventInfoID.ANIMATION_EVENT,
+				value: {
+					id: SNATCH,
+					value: value
+				},
 				gameInfo: gameInfo,
 			}
 		case MESSAGE_EVENT(value, gameInfo):
@@ -1133,6 +1253,7 @@ function wrapResourceResultEvent(ctx:Context, playerId:Int, p1SelectId:Int, fn:(
 		moneyAfter: player.money,
 		foodBefore: player.food,
 		foodAfter: player.food,
+		gridId: player.position,
 	}
 	resultValue.success = fn();
 	resultValue.energyAfter = p1.energy;
@@ -1153,6 +1274,7 @@ function wrapStrategyEvent(ctx:Context, playerId:Int, peopleId:Int, strategyId:I
 		strategy: strategy,
 		energyBefore: p1.energy,
 		energyAfter: 0.0,
+		gridId: player.position,
 	}
 	strategyResultValue.success = fn();
 	strategyResultValue.people = getPeopleInfo(ctx, p1);

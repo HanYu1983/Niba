@@ -93,6 +93,7 @@ private function onExploreCost(ctx:Context, playerId:Int, gridId:Int, p1SelectId
 		moneyAfter: player.money,
 		foodBefore: player.food,
 		foodAfter: player.food,
+		gridId: gridId,
 	}
 	final success = random() < negoCost.successRate;
 	final newPeopleIds = if (success) {
