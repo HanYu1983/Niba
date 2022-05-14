@@ -99,6 +99,7 @@ function doGridGrow(ctx:Context) {
 
 // 玩家回合結束
 function doPlayerEnd(ctx:Context) {
+	trace("doPlayerEnd", "start");
 	onPlayerEnd(ctx, ctx.currentPlayerId);
 	final nextPlayer = ctx.players[ctx.currentPlayerId];
 	if (nextPlayer.brain != null) {
@@ -108,6 +109,7 @@ function doPlayerEnd(ctx:Context) {
 			trace(e);
 		}
 	}
+	trace("doPlayerEnd", "finished");
 }
 
 function doPlayerDice(ctx:Context) {

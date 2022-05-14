@@ -23,6 +23,7 @@ import model.ver2.alg.Equip;
 using Lambda;
 
 function doBrain(ctx, playerId:Int) {
+	trace("doBrain", "start", playerId);
 	var done = false;
 	for (i in 0...100) {
 		if (done) {
@@ -59,6 +60,27 @@ function doBrain(ctx, playerId:Int) {
 				onPlayerDice(ctx, playerId);
 				doEvent(ctx, playerId);
 			case BUILD:
+				if (p1People == null) {
+					throw new haxe.Exception("p1People not found");
+				}
+				final buildingsInGrid = ctx.attachments.filter(a -> a.belongToGridId == gridId);
+				if (buildingsInGrid.length > 0) {
+					final firstBuilding = buildingsInGrid[0].type;
+					final toBuilding:BUILDING = switch firstBuilding {
+						case MARKET(level):
+							MARKET(Std.int(Math.min(3, level + 1)));
+						case FARM(level):
+							FARM(Std.int(Math.min(3, level + 1)));
+						case BARRACKS(level):
+							BARRACKS(Std.int(Math.min(3, level + 1)));
+						case WALL(level):
+							WALL(Std.int(Math.min(3, level + 1)));
+						case EXPLORE(level):
+							EXPLORE(Std.int(Math.min(3, level + 1)));
+					}
+					_takeBuilding(ctx, playerId, gridId, p1People.id, firstBuilding, toBuilding);
+					doEvent(ctx, playerId);
+				}
 			case BUY_ARMY:
 				if (p1People == null) {
 					throw new haxe.Exception("p1People not found");
@@ -163,6 +185,7 @@ function doBrain(ctx, playerId:Int) {
 			case TREASURE_TAKE:
 		}
 	}
+	trace("doBrain", "finished", playerId);
 }
 
 private function doEvent(ctx:Context, playerId:Int) {
