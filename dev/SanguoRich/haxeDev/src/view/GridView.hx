@@ -1,5 +1,6 @@
 package view;
 
+import tweenx909.TweenX;
 import model.GridGenerator.GROWTYPE;
 import model.GridGenerator.Grid;
 import model.GridGenerator.BUILDING;
@@ -70,6 +71,21 @@ class GridView extends Box {
 
 	public function new() {
 		super();
+
+		box_showAnimation.hide();
+	}
+
+	public function showAnimation(text:String, duration:Float = 1.0, cb:()->Void){
+		box_showAnimation.show();
+		lbl_action.value = text;
+		
+		final tweens = [];
+		tweens.push(TweenX.wait(duration));
+		tweens.push(TweenX.func(()->{
+			box_showAnimation.hide();
+			cb();
+		}));
+		TweenX.serial(tweens);
 	}
 
 	public function setInfo(grid:Grid) {

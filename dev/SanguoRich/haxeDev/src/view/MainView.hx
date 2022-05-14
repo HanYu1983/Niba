@@ -600,13 +600,21 @@ class MainView extends Box {
 
 					switch(info.id){
 						case ActionInfoID.MOVE:
-							var pv = players[info.value.playerId];
-							var toPos = getGridPositionByGridId(info.value.playerId, info.value.toGridId);
+							final pv = players[info.value.playerId];
+							final toPos = getGridPositionByGridId(info.value.playerId, info.value.toGridId);
 							TweenX.to(pv, {"left": toPos[0], "top": toPos[1]}, .5).onStop(()->{
 								syncViewByInfo(gameInfo);
 								doOneEvent();
 							}).play();
+						// case ActionInfoID.NEGOTIATE | ActionInfoID.PK | ActionInfoID.SNATCH | ActionInfoID.CAMP | ActionInfoID.PRACTICE | ActionInfoID.
 						case _:
+							final gridId = info.value.gridId;
+							final msg = info.value.msg;
+							final duration = info.value.duration;
+							grids[gridId].showAnimation(msg, duration, ()->{
+								syncViewByInfo(gameInfo);
+								doOneEvent();
+							});
 					}
 				case WALK_STOP:
 				case FIND_TREASURE_RESULT:

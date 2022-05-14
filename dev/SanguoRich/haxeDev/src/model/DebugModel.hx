@@ -127,6 +127,18 @@ class DebugModel implements IModel {
 				gameInfo: info,
 			},
 			{
+				id:EventInfoID.ANIMATION_EVENT,
+				value:{
+					id: ActionInfoID.SNATCH,
+					value: {
+						gridId: 12,
+						duration: 1.5,
+						msg: '戰爭'
+					},
+				},
+				gameInfo: info,
+			},
+			{
 				id: EventInfoID.GRID_RESOURCE_EVENT,
 				value:{
 					grids:[
@@ -141,6 +153,30 @@ class DebugModel implements IModel {
 						}
 					],
 					describtion:'aaa'
+				},
+				gameInfo: info,
+			},
+			{
+				id:EventInfoID.ANIMATION_EVENT,
+				value:{
+					id: ActionInfoID.MOVE,
+					value: {
+						playerId: 0,
+						fromGridId: 5,
+						toGridId: 10
+					},
+				},
+				gameInfo: info,
+			},
+			{
+				id:EventInfoID.ANIMATION_EVENT,
+				value:{
+					id: ActionInfoID.PRACTICE,
+					value: {
+						gridId: 15,
+						duration: 1.5,
+						msg: '練兵'
+					},
 				},
 				gameInfo: info,
 			},
