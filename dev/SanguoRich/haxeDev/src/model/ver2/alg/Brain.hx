@@ -182,7 +182,7 @@ private function doEvent(ctx:Context, playerId:Int) {
 			// case MESSAGE_EVENT(_, _) | GRID_RESOURCE_EVENT(_, _) | WORLD_EVENT(_, _) | WALK_STOP(_, _) | NEGOTIATE_RESULT(_, _) | HIRE_RESULT(_, _) |
 			// 	SNATCH_RESULT(_, _) | RESOURCE_RESULT(_, _) | FIRE_RESULT(_, _) | STRATEGY_RESULT(_, _) | BUILDING_RESULT(_, _):
 			// 	ctx.events.push(evt);
-			case EXPLORE_RESULT(value, _):
+			case EXPLORE_RESULT(value, gameInfo):
 				if (value.success) {
 					if (value.peopleList.length == 0) {
 						throw new haxe.Exception("找到人但是peopleList沒有值");
@@ -194,7 +194,10 @@ private function doEvent(ctx:Context, playerId:Int) {
 					doTakeHire(ctx, playerId, gridId, p1People.id, firstFindPeopleId);
 					doEvent(ctx, playerId);
 				} else {
-					ctx.events.push(evt);
+					ctx.events.push(MESSAGE_EVENT({
+						title: 'AI',
+						msg: '${player.name}探索${grid.name}失敗',
+					}, gameInfo));
 				}
 			case WAR_RESULT(value, gameInfo):
 				if (value.success) {
