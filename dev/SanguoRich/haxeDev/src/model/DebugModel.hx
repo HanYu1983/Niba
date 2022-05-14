@@ -131,7 +131,7 @@ class DebugModel implements IModel {
 				value:{
 					id: ActionInfoID.SNATCH,
 					value: {
-						gridId: 12,
+						gridIds: [12, 15, 4],
 						duration: 1.5,
 						msg: '戰爭'
 					},
@@ -164,18 +164,6 @@ class DebugModel implements IModel {
 						playerId: 0,
 						fromGridId: 5,
 						toGridId: 10
-					},
-				},
-				gameInfo: info,
-			},
-			{
-				id:EventInfoID.ANIMATION_EVENT,
-				value:{
-					id: ActionInfoID.PRACTICE,
-					value: {
-						gridId: 15,
-						duration: 1.5,
-						msg: '練兵'
 					},
 				},
 				gameInfo: info,

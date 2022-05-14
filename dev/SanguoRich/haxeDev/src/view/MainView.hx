@@ -608,13 +608,19 @@ class MainView extends Box {
 							}).play();
 						// case ActionInfoID.NEGOTIATE | ActionInfoID.PK | ActionInfoID.SNATCH | ActionInfoID.CAMP | ActionInfoID.PRACTICE | ActionInfoID.
 						case _:
-							final gridId = info.value.gridId;
+							final gridIds:Array<Int> = info.value.gridIds;
 							final msg = info.value.msg;
 							final duration = info.value.duration;
-							grids[gridId].showAnimation(msg, duration, ()->{
-								syncViewByInfo(gameInfo);
-								doOneEvent();
-							});
+
+							var count = gridIds.length;
+							for(gridId in gridIds){
+								grids[gridId].showAnimation(msg, duration, ()->{
+									if(--count == 0 ){
+										syncViewByInfo(gameInfo);
+										doOneEvent();
+									}
+								});
+							}
 					}
 				case WALK_STOP:
 				case FIND_TREASURE_RESULT:
