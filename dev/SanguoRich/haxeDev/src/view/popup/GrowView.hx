@@ -34,7 +34,7 @@ class GrowView extends PopupView{
         view.pro_food.value = '${Main.getCompareString(before.food, after.food, 2)}';
         view.pro_army.value = '${Main.getCompareString(before.army, after.army, 2)}';
         view.pro_peopleCount.value = before.people.length;
-        view.pro_cityCount.value = "0";
+        view.pro_cityCount.value = before.grids.length;
     }
 
     override function showPopup(info:Dynamic, cb:()->Void = null) {
