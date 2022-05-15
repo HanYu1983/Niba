@@ -597,7 +597,8 @@ class MainView extends Box {
 						doOneEvent();
 					});
 				case ANIMATION_EVENT:
-
+					disabledAllCommands();
+					
 					switch(info.id){
 						case ActionInfoID.MOVE:
 							final pv = players[info.value.playerId];
