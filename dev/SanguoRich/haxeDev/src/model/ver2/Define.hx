@@ -559,12 +559,12 @@ function getAnimationEventFromEvent(e:Event):Event {
 		// 		duration: ANIMATION_DURATION,
 		// 		msg: "過路費",
 		// 	}, gameInfo);
-		case PEOPLE_LEVEL_UP_EVENT(value, gameInfo):
-			ANIMATION_EVENT_SNATCH({
-				gridIds: [value.gridId],
-				duration: ANIMATION_DURATION,
-				msg: "升級",
-			}, gameInfo);
+		// case PEOPLE_LEVEL_UP_EVENT(value, gameInfo):
+		// 	ANIMATION_EVENT_SNATCH({
+		// 		gridIds: [value.gridId],
+		// 		duration: ANIMATION_DURATION,
+		// 		msg: "升級",
+		// 	}, gameInfo);
 		case COST_FOR_BONUS_RESULT(value, gameInfo):
 			ANIMATION_EVENT_SNATCH({
 				gridIds: [value.gridId],
