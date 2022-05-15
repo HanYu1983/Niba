@@ -517,10 +517,11 @@ class MainView extends Box {
 
 	public function syncViewWithEvents() {
 		final gameInfo = Main.model.gameInfo();
+		syncViewWithEventsByGameInfo(gameInfo);
 
 		// ui可以直接更新
-		syncUI(gameInfo);
-		playEvents(gameInfo);
+		// syncUI(gameInfo);
+		// playEvents(gameInfo);
 
 		// checkEventAndDoItByGameInfo(Main.model.gameInfo());
 		// syncUI(gameInfo);
@@ -540,6 +541,7 @@ class MainView extends Box {
 	}
 
 	function syncViewWithEventsByGameInfo(gameInfo:GameInfo){
+		syncUI(gameInfo);
 		playEvents(gameInfo);
 	}
 
