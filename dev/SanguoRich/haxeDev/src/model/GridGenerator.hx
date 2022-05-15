@@ -134,7 +134,7 @@ class GridGenerator {
 					];
 			}
 
-			for (i in 0...5)
+			for (i in 0...3)
 				if (Math.random() < .3)
 					g.treasures.push(TreasureGenerator.getInst().generator());
 

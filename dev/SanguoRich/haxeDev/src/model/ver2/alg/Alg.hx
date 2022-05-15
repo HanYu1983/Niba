@@ -298,7 +298,10 @@ function onPlayerEnd(ctx:Context, playerId:Int) {
 				worldEventValue.gridAfter = ctx.grids.map(g -> getGridInfo(ctx, g));
 				ctx.events.push(WORLD_EVENT(worldEventValue, getGameInfo(ctx, false)));
 			}
-			// 收稅時計算友好度
+		}
+		{
+			//
+			final enable = (ctx.turn + 1) % FAVER_SLOW_PER_TURN == 0;
 			if (enable) {
 				for (grid in ctx.grids) {
 					for (playerId in 0...ctx.players.length) {

@@ -273,6 +273,8 @@ private function doEvent(ctx:Context, playerId:Int) {
 			null;
 		}
 		switch evt {
+			case PEOPLE_LEVEL_UP_EVENT(_, _):
+			// do nothing
 			case EXPLORE_RESULT(value, gameInfo):
 				if (value.success) {
 					if (value.peopleList.length == 0) {
@@ -703,20 +705,25 @@ private function getCommandWeight(ctx:Context, playerId:Int, gridId:Int, cmd:Act
 					final p1PeopleId = p.id;
 					switch _getPreResultOfSnatch(ctx, playerId, gridId, p1PeopleId, p2PeopleId, false) {
 						case {war: [result1, result2], money: money, food: food}:
-							final armyCost = result1.armyAfter - result1.armyBefore;
-							final moneyCost = result1.moneyAfter - result1.moneyBefore;
-							final foodCost = result1.foodAfter - result1.foodBefore;
+							final armyCost = result1.armyBefore - result1.armyAfter;
+							final moneyCost = result1.moneyBefore - result1.moneyAfter;
+							final foodCost = result1.foodBefore - result1.foodAfter;
 							final totalCost = moneyCost + foodCost + armyCost;
+							final totalEarn = money + food;
+							trace("getCommandWeight", playerId, cmd, "totalCost:", totalCost);
 							// 得到比失去多, 越多越好
+							// 如果沒有成本, 就搶
 							final fact1 = if (totalCost <= 0) {
 								1.0;
 							} else {
-								final tmp = (money + food) / totalCost;
+								final tmp = totalEarn / totalCost;
+								trace("getCommandWeight", playerId, cmd, "tmp:", tmp, "=", totalEarn, totalCost);
 								// 基本上獲利必須大於成本
-								if (tmp > 1.0) {
+								if (tmp >= 1.0) {
 									1.0;
 								} else {
 									final p2PlayerId = getGridBelongPlayerId(ctx, gridId);
+									trace("對象為中立玩家就不搶p2PlayerId:", p2PlayerId);
 									if (p2PlayerId == null) {
 										// 對象為中立玩家就不搶, 反正也搶了也只是幫削兵
 										0.0;
@@ -736,14 +743,14 @@ private function getCommandWeight(ctx:Context, playerId:Int, gridId:Int, cmd:Act
 							final fact3 = {
 								final gridCnt = ctx.grids.filter(g -> getGridBelongPlayerId(ctx, g.id) == playerId).length;
 								if (gridCnt < 3) {
-									0.7;
+									0.5;
 								} else {
 									1.0;
 								}
 							}
 							final score = 1.0 * fact1 * fact2 * fact3;
-							final isBestScore = score > tmpMaxScore;
-							if (isBestScore) {
+							trace("getCommandWeight", playerId, cmd, "score:", score, "=", fact1, fact2, fact3);
+							if (score > tmpMaxScore) {
 								tmpMaxScore = score;
 								brainMemory.war.peopleId = p1PeopleId;
 							}
@@ -774,12 +781,12 @@ private function getCommandWeight(ctx:Context, playerId:Int, gridId:Int, cmd:Act
 							final fact2 = Math.pow(result1.energyAfter / 100.0, 0.5);
 							// 成本佔死兵越少越好
 							final fact3 = {
-								final armyCost = result1.armyAfter - result1.armyBefore;
+								final armyCost = result1.armyBefore - result1.armyAfter;
 								if (armyCost <= 0) {
 									1.0;
 								} else {
-									final moneyCost = result1.moneyAfter - result1.moneyBefore;
-									final foodCost = result1.foodAfter - result1.foodBefore;
+									final moneyCost = result1.moneyBefore - result1.moneyAfter;
+									final foodCost = result1.foodBefore - result1.foodAfter;
 									switch (moneyCost + foodCost) / armyCost {
 										case rate if (rate >= 3):
 											0.1;
