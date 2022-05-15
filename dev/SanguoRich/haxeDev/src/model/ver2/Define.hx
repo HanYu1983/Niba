@@ -527,7 +527,7 @@ function getAnimationEventFromEvent(e:Event):Event {
 			ANIMATION_EVENT_SNATCH({
 				gridIds: [value.gridId],
 				duration: ANIMATION_DURATION,
-				msg: "調度",
+				msg: '買賣或調度',
 			}, gameInfo);
 		case FIRE_RESULT(value, gameInfo):
 			ANIMATION_EVENT_SNATCH({

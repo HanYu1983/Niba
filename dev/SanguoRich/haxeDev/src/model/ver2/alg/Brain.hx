@@ -29,6 +29,15 @@ typedef BrainMemory = {
 	transfer:{
 		food:Float, money:Float, army:Float,
 	},
+	buySell:{
+		peopleId:Null<Int>
+	},
+	explore:{
+		peopleId:Null<Int>
+	},
+	hire:{
+		peopleId:Null<Int>, inviteId:Null<Int>
+	},
 	hasTransfer:Bool
 }
 
@@ -52,6 +61,16 @@ function doBrain(ctx, playerId:Int) {
 					food: 0,
 					money: 0,
 					army: 0,
+				},
+				buySell: {
+					peopleId: null
+				},
+				explore: {
+					peopleId: null
+				},
+				hire: {
+					peopleId: null,
+					inviteId: null
 				},
 				hasTransfer: false
 			} : BrainMemory);
@@ -114,34 +133,39 @@ function doBrain(ctx, playerId:Int) {
 					doEvent(ctx, playerId);
 				}
 			case BUY_ARMY:
-				if (p1People == null) {
-					throw new haxe.Exception("p1People not found");
+				if (brainMemory.buySell.peopleId == null) {
+					throw new haxe.Exception("brainMemory.buySell.peopleId not found");
 				}
-				_takeResource(ctx, playerId, gridId, p1People.id, BUY, ARMY);
+				final p1Id = brainMemory.buySell.peopleId;
+				_takeResource(ctx, playerId, gridId, p1Id, BUY, ARMY);
 				doEvent(ctx, playerId);
 			case BUY_FOOD:
-				if (p1People == null) {
-					throw new haxe.Exception("p1People not found");
+				if (brainMemory.buySell.peopleId == null) {
+					throw new haxe.Exception("brainMemory.buySell.peopleId not found");
 				}
-				_takeResource(ctx, playerId, gridId, p1People.id, BUY, FOOD);
+				final p1Id = brainMemory.buySell.peopleId;
+				_takeResource(ctx, playerId, gridId, p1Id, BUY, FOOD);
 				doEvent(ctx, playerId);
 			case SELL_ARMY:
-				if (p1People == null) {
-					throw new haxe.Exception("p1People not found");
+				if (brainMemory.buySell.peopleId == null) {
+					throw new haxe.Exception("brainMemory.buySell.peopleId not found");
 				}
-				_takeResource(ctx, playerId, gridId, p1People.id, SELL, ARMY);
+				final p1Id = brainMemory.buySell.peopleId;
+				_takeResource(ctx, playerId, gridId, p1Id, SELL, ARMY);
 				doEvent(ctx, playerId);
 			case SELL_FOOD:
-				if (p1People == null) {
-					throw new haxe.Exception("p1People not found");
+				if (brainMemory.buySell.peopleId == null) {
+					throw new haxe.Exception("brainMemory.buySell.peopleId not found");
 				}
-				_takeResource(ctx, playerId, gridId, p1People.id, SELL, FOOD);
+				final p1Id = brainMemory.buySell.peopleId;
+				_takeResource(ctx, playerId, gridId, p1Id, SELL, FOOD);
 				doEvent(ctx, playerId);
 			case EARN_MONEY:
-				if (p1People == null) {
-					throw new haxe.Exception("p1People not found");
+				if (brainMemory.buySell.peopleId == null) {
+					throw new haxe.Exception("brainMemory.buySell.peopleId not found");
 				}
-				_takeResource(ctx, playerId, gridId, p1People.id, BUY, MONEY);
+				final p1Id = brainMemory.buySell.peopleId;
+				_takeResource(ctx, playerId, gridId, p1Id, BUY, MONEY);
 				doEvent(ctx, playerId);
 			case CAMP:
 				if (p1People == null) {
@@ -162,10 +186,10 @@ function doBrain(ctx, playerId:Int) {
 				_takeCostForBonus(ctx, playerId, p1People.id, 2);
 				doEvent(ctx, playerId);
 			case EXPLORE:
-				if (p1People == null) {
-					throw new haxe.Exception("p1People not found");
+				if (brainMemory.explore.peopleId == null) {
+					throw new haxe.Exception("brainMemory.explore.peopleId not found");
 				}
-				_takeExplore(ctx, playerId, gridId, p1People.id);
+				_takeExplore(ctx, playerId, gridId, brainMemory.explore.peopleId);
 				doEvent(ctx, playerId);
 			case FIRE:
 				if (p1People == null) {
@@ -174,13 +198,13 @@ function doBrain(ctx, playerId:Int) {
 				_takeFire(ctx, playerId, [p1People.id]);
 				doEvent(ctx, playerId);
 			case HIRE:
-				if (p1People == null) {
-					throw new haxe.Exception("p1People not found");
+				if (brainMemory.hire.peopleId == null) {
+					throw new haxe.Exception("brainMemory.hire.peopleId not found");
 				}
-				if (p2GridPeople == null) {
-					throw new haxe.Exception("p2GridPeople not found");
+				if (brainMemory.hire.inviteId == null) {
+					throw new haxe.Exception("brainMemory.hire.inviteId not found");
 				}
-				doTakeHire(ctx, playerId, gridId, p1People.id, p2GridPeople.id);
+				doTakeHire(ctx, playerId, gridId, brainMemory.hire.peopleId, brainMemory.hire.inviteId);
 				doEvent(ctx, playerId);
 			case NEGOTIATE:
 				if (p1People == null) {
@@ -334,43 +358,264 @@ private function getCommandWeight(ctx:Context, playerId:Int, gridId:Int, cmd:Act
 	final peopleInPlayer = ctx.peoples.filter((p:People) -> p.belongToPlayerId == player.id);
 	return switch cmd {
 		case STRATEGY:
-			0;
+			0.0;
+		case TREASURE:
+			0.0;
+		case TREASURE_TAKE:
+			0.0;
+		case FIRE:
+			final fact1 = if (player.money <= 0) {
+				1.0;
+			} else {
+				// 維護費佔金錢的10分之1就覺得要裁員了
+				final mainPeople = getMaintainPeople(ctx, playerId);
+				Math.min(1.0, (mainPeople / player.money) / 0.1);
+			}
+			// 小於4人不裁
+			// 越多人越想裁
+			final fact2 = switch peopleInPlayer.length {
+				case len if (len <= 4):
+					0.2;
+				case len:
+					Math.pow(Math.min(1, len - 4 / 10.0), 0.5);
+			}
+			final score = 1.0 * fact1 * fact2;
+			trace("getCommandWeight", playerId, cmd, score);
+			score;
+		case EXPLORE:
+			// 小於3人時想拿人, 越多人越不想拿
+			// 超過10人就不拿
+			final fact1 = switch peopleInPlayer.length {
+				case len if (len <= 3):
+					1.0;
+				case len:
+					1.0 - Math.min(1, len - 3 / 10.0);
+			}
+			// 機率越大
+			final fact2 = {
+				var maxScore = 0.0;
+				for (p1 in peopleInPlayer) {
+					final result = _getPreResultOfExplore(ctx, playerId, gridId, p1.id);
+					// 成功率
+					final fact1 = result.successRate;
+					// 找寶率0.5就很高了
+					final fact2 = Math.min(1, result.successRateOnTreasure / 0.5);
+					// 體力剩下越多越好
+					final fact3 = Math.pow(result.energyAfter / 100.0, 0.5);
+					final score = 1.0 * fact1 * fact2 * fact3;
+					if (score > maxScore) {
+						maxScore = score;
+						brainMemory.explore.peopleId = p1.id;
+					}
+				}
+				maxScore;
+			}
+			final score = 1.0 * fact1 * fact2;
+			trace("getCommandWeight", playerId, cmd, score);
+			score;
+		case HIRE:
+			// 小於3人時想拿人, 越多人越不想拿
+			// 超過10人就不拿
+			final fact1 = switch peopleInPlayer.length {
+				case len if (len <= 3):
+					1.0;
+				case len:
+					1.0 - Math.min(1, len - 3 / 10.0);
+			}
+			// 機率越大
+			final fact2 = {
+				var maxScore = 0.0;
+				for (p1 in peopleInPlayer) {
+					for (p2 in peopleInGrid) {
+						final result = doGetPreResultOfHire(ctx, playerId, gridId, p1.id, p2.id);
+						// 成功率
+						final fact1 = result.successRate;
+						// 體力剩下越多越好
+						final fact2 = Math.pow(result.energyAfter / 100.0, 0.5);
+						final score = 1.0 * fact1 * fact2;
+						if (score > maxScore) {
+							maxScore = score;
+							brainMemory.hire.peopleId = p1.id;
+							brainMemory.hire.inviteId = p2.id;
+						}
+					}
+				}
+				maxScore;
+			}
+			final score = 1.0 * fact1 * fact2;
+			trace("getCommandWeight", playerId, cmd, score);
+			score;
+		case BUY_ARMY:
+			// 錢佔比越大
+			final fact1 = if (player.money <= MONEY_PER_DEAL) {
+				0.0;
+			} else {
+				1.0 - Math.min(1, (player.army / (player.money - MONEY_PER_DEAL)));
+			}
+			// 利益越大
+			final fact2 = {
+				var maxScore = 0.0;
+				for (p1 in peopleInPlayer) {
+					// 利益越大越好
+					final result = _getPreResultOfResource(ctx, playerId, gridId, p1.id, BUY, ARMY);
+					final earn = result.armyAfter - result.armyBefore;
+					final cost = result.moneyAfter - result.moneyBefore;
+					final fact1 = if (earn <= 0) {
+						0.0;
+					} else {
+						1.0 - Math.min(1, (cost / earn * 2));
+					}
+					// 體力剩下越多越好
+					final fact2 = Math.pow(result.energyAfter / 100.0, 0.5);
+					final score = 1.0 * fact1 * fact2;
+					if (score > maxScore) {
+						maxScore = score;
+						brainMemory.buySell.peopleId = p1.id;
+					}
+				}
+				maxScore;
+			}
+			final score = 1.0 * fact1 * fact2;
+			trace("getCommandWeight", playerId, cmd, score);
+			score;
+		case BUY_FOOD:
+			final fact1 = if (player.money <= MONEY_PER_DEAL) {
+				0.0;
+			} else {
+				1.0 - Math.min(1, (player.food / (player.money - MONEY_PER_DEAL)));
+			}
+			// 利益越大
+			final fact2 = {
+				var maxScore = 0.0;
+				for (p1 in peopleInPlayer) {
+					// 利益越大越好
+					final result = _getPreResultOfResource(ctx, playerId, gridId, p1.id, BUY, ARMY);
+					final earn = result.foodAfter - result.foodBefore;
+					final cost = result.moneyAfter - result.moneyBefore;
+					final fact1 = if (earn <= 0) {
+						0.0;
+					} else {
+						1.0 - Math.min(1, (cost / earn * 2));
+					}
+					// 體力剩下越多越好
+					final fact2 = Math.pow(result.energyAfter / 100.0, 0.5);
+					final score = 1.0 * fact1 * fact2;
+					if (score > maxScore) {
+						maxScore = score;
+						brainMemory.buySell.peopleId = p1.id;
+					}
+				}
+				maxScore;
+			}
+			final score = 1.0 * fact1 * fact2;
+			trace("getCommandWeight", playerId, cmd, score);
+			score;
+		case SELL_ARMY:
+			final fact1 = if (player.army <= ARMY_PER_DEAL) {
+				0.0;
+			} else {
+				1.0 - Math.min(1, (player.money / (player.army - ARMY_PER_DEAL)));
+			}
+			// 利益越大
+			final fact2 = {
+				var maxScore = 0.0;
+				for (p1 in peopleInPlayer) {
+					// 利益越大越好
+					final result = _getPreResultOfResource(ctx, playerId, gridId, p1.id, BUY, ARMY);
+					final earn = result.moneyAfter - result.moneyBefore;
+					final cost = result.armyAfter - result.armyBefore;
+					final fact1 = if (earn <= 0) {
+						0.0;
+					} else {
+						1.0 - Math.min(1, (cost / earn * 2));
+					}
+					// 體力剩下越多越好
+					final fact2 = Math.pow(result.energyAfter / 100.0, 0.5);
+					final score = 1.0 * fact1 * fact2;
+					if (score > maxScore) {
+						maxScore = score;
+						brainMemory.buySell.peopleId = p1.id;
+					}
+				}
+				maxScore;
+			}
+			final score = 1.0 * fact1 * fact2;
+			trace("getCommandWeight", playerId, cmd, score);
+			score;
+		case SELL_FOOD:
+			final fact1 = if (player.food <= FOOD_PER_DEAL) {
+				0.0;
+			} else {
+				1.0 - Math.min(1, (player.money / (player.food - FOOD_PER_DEAL)));
+			}
+			// 利益越大
+			final fact2 = {
+				var maxScore = 0.0;
+				for (p1 in peopleInPlayer) {
+					// 利益越大越好
+					final result = _getPreResultOfResource(ctx, playerId, gridId, p1.id, BUY, ARMY);
+					final earn = result.moneyAfter - result.moneyBefore;
+					final cost = result.foodAfter - result.foodBefore;
+					final fact1 = if (earn <= 0) {
+						0.0;
+					} else {
+						1.0 - Math.min(1, (cost / earn * 2));
+					}
+					// 體力剩下越多越好
+					final fact2 = Math.pow(result.energyAfter / 100.0, 0.5);
+					final score = 1.0 * fact1 * fact2;
+					if (score > maxScore) {
+						maxScore = score;
+						brainMemory.buySell.peopleId = p1.id;
+					}
+				}
+				maxScore;
+			}
+			final score = 1.0 * fact1 * fact2;
+			trace("getCommandWeight", playerId, cmd, score);
+			score;
+		case EARN_MONEY:
+			final fact1 = {
+				var maxScore = 0.0;
+				for (p1 in peopleInPlayer) {
+					final result = _getPreResultOfResource(ctx, playerId, gridId, p1.id, BUY, MONEY);
+					final earn = result.moneyAfter - result.moneyBefore;
+					final cost = 10;
+					final fact1 = if (earn <= 0) {
+						0.0;
+					} else {
+						1.0 - Math.min(1, (cost / earn * 2));
+					}
+					// 體力剩下越多越好
+					final fact1 = Math.pow(result.energyAfter / 100.0, 0.5);
+					final score = 1.0 * fact1;
+					if (score > maxScore) {
+						maxScore = score;
+						brainMemory.buySell.peopleId = p1.id;
+					}
+				}
+				maxScore;
+			}
+			final score = 0.6 * fact1;
+			trace("getCommandWeight", playerId, cmd, score);
+			score;
 		case TRANSFER:
 			var maxScore = 0.0;
-			{
-				// 少於200就一定要拿兵, 越多兵就越不拿
-				final armyRate = Math.min(1, Math.max(0, player.army - 200) / INIT_RESOURCE);
-				// 食物小於兵就要拿食物
-				final foodRate = if (player.food == 0) {
-					1.0;
-				} else {
-					1.0 - (player.army / player.food);
-				};
-				// 少於200就一定要拿錢, 越多錢就越不拿
-				final moneyRate = Math.min(1, Math.max(0, player.money - 200) / INIT_RESOURCE);
-				final score = 1.0 * armyRate * foodRate * moneyRate;
-				if (score > maxScore) {
-					maxScore = score;
-					brainMemory.transfer.food = -Math.min(grid.food, foodRate * 1.8 * grid.food);
-					brainMemory.transfer.money = -Math.min(grid.money, moneyRate * 1.8 * grid.money);
-					brainMemory.transfer.army = -Math.min(grid.army, armyRate * 1.8 * grid.army);
-				}
-			}
 			{
 				final foodRate = if (grid.food <= 0) {
 					0.0;
 				} else {
-					player.food / grid.food;
+					1.0 - Math.min(1, grid.food / player.food);
 				}
 				final moneyRate = if (grid.money <= 0) {
 					0.0;
 				} else {
-					player.money / grid.money;
+					1.0 - Math.min(1, grid.money / player.money);
 				}
 				final armyRate = if (grid.army <= 0) {
 					0.0;
 				} else {
-					player.army / grid.army;
+					1.0 - Math.min(1, grid.army / player.army);
 				}
 				// 少於3個城之前不想給城
 				final fact1 = {
@@ -384,18 +629,49 @@ private function getCommandWeight(ctx:Context, playerId:Int, gridId:Int, cmd:Act
 				final score = 1.0 * fact1 * armyRate * foodRate * moneyRate;
 				if (score > maxScore) {
 					maxScore = score;
-					brainMemory.transfer.food = Math.min(player.food, foodRate * 0.3 * grid.food);
-					brainMemory.transfer.money = Math.min(player.money, moneyRate * 0.3 * grid.money);
-					brainMemory.transfer.army = Math.min(player.army, armyRate * 0.3 * grid.army);
+					brainMemory.transfer.food = Math.min(player.food, foodRate * 0.8 * player.food);
+					brainMemory.transfer.money = Math.min(player.money, moneyRate * 0.8 * player.money);
+					brainMemory.transfer.army = Math.min(player.army, armyRate * 0.8 * player.army);
+				}
+			}
+			{
+				// 少於200就一定要拿兵, 越多兵就越不拿
+				final armyRate = Math.min(1, Math.max(0, player.army - 200) / INIT_RESOURCE);
+				// 食物小於兵就要拿食物
+				final foodRate = if (player.food == 0) {
+					1.0;
+				} else {
+					1.0 - Math.min(1, (player.army / player.food));
+				};
+				// 少於200就一定要拿錢, 越多錢就越不拿
+				final moneyRate = Math.min(1, Math.max(0, player.money - 200) / INIT_RESOURCE);
+				final score = 1.0 * armyRate * foodRate * moneyRate;
+				if (score > maxScore) {
+					maxScore = score;
+					brainMemory.transfer.food = -Math.min(grid.food, foodRate * 1.8 * grid.food);
+					brainMemory.transfer.money = -Math.min(grid.money, moneyRate * 1.8 * grid.money);
+					brainMemory.transfer.army = -Math.min(grid.army, armyRate * 1.8 * grid.army);
 				}
 			}
 			final score = brainMemory.hasTransfer ? 0.0 : maxScore;
 			trace("getCommandWeight", playerId, cmd, score);
 			score;
-		case TREASURE:
-			0;
-		case TREASURE_TAKE:
-			0;
+		case PRACTICE:
+			if (peopleInPlayer.length == 0) {
+				0.0;
+			} else {
+				final totalEnergy = peopleInPlayer.fold((p, a) -> {
+					return a + p.energy;
+				}, 0.0);
+				final score = switch totalEnergy / (peopleInPlayer.length * 100) {
+					case p if (p >= 0.8):
+						0.8;
+					case _:
+						0.0;
+				}
+				trace("getCommandWeight", playerId, cmd, score);
+				score;
+			}
 		case CAMP | PAY_FOR_FUN:
 			if (peopleInPlayer.length == 0) {
 				0.0;
@@ -403,7 +679,7 @@ private function getCommandWeight(ctx:Context, playerId:Int, gridId:Int, cmd:Act
 				final totalEnergy = peopleInPlayer.fold((p, a) -> {
 					return a + p.energy;
 				}, 0.0);
-				final score = switch 1 - totalEnergy / (peopleInPlayer.length * 100) {
+				final score = switch totalEnergy / (peopleInPlayer.length * 100) {
 					// 有足夠的體力, 不休息
 					case p if (p >= 0.8):
 						0.1;
@@ -550,6 +826,8 @@ private function getCommandWeight(ctx:Context, playerId:Int, gridId:Int, cmd:Act
 			trace("getCommandWeight", playerId, cmd, score);
 			score;
 		case _:
-			0.5;
+			final score = Math.random() * 0.5;
+			trace("getCommandWeight", playerId, cmd, score);
+			score;
 	}
 }
