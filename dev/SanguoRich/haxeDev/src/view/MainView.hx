@@ -611,12 +611,20 @@ class MainView extends Box {
 							}).play();
 						case ActionInfoID.SNATCH:
 							final gridIds:Array<Int> = info.value.gridIds;
-							final msg = info.value.msg;
-							final duration = info.value.duration;
-							GridView.showGridsAnimation(grids, gridIds, msg, duration, ()->{
-								syncViewByInfo(gameInfo);
-								doOneEvent();
-							});
+							switch(gridIds){
+								case [null]:
+									trace('info.value.gridIds不應為[null]，略過此動畫; gridIds:', gridIds);
+									syncViewByInfo(gameInfo);
+									doOneEvent();
+								case _:
+									final msg = info.value.msg;
+									final duration = info.value.duration;
+									
+									GridView.showGridsAnimation(grids, gridIds, msg, duration, ()->{
+										syncViewByInfo(gameInfo);
+										doOneEvent();
+									});
+							}
 						case _:
 							throw new haxe.Exception('目前沒有接收這裡的事件');
 					}
