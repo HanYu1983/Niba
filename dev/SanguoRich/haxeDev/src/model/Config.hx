@@ -193,3 +193,6 @@ final GRID_TAX = 0.15;
 
 // 初始資源
 final INIT_RESOURCE = 1200.0;
+
+// 格子數
+final INIT_GRID_COUNT = 30;

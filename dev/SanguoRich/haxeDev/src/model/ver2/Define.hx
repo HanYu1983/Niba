@@ -521,7 +521,7 @@ function getAnimationEventFromEvent(e:Event):Event {
 			ANIMATION_EVENT_SNATCH({
 				gridIds: [value.gridId],
 				duration: ANIMATION_DURATION,
-				msg: "攻城",
+				msg: '攻城${value.success ? "成功" : "失敗"}',
 			}, gameInfo);
 		case RESOURCE_RESULT(value, gameInfo):
 			ANIMATION_EVENT_SNATCH({
@@ -539,7 +539,7 @@ function getAnimationEventFromEvent(e:Event):Event {
 			ANIMATION_EVENT_SNATCH({
 				gridIds: [value.gridId],
 				duration: ANIMATION_DURATION,
-				msg: "戰鬥",
+				msg: '搶奪${value.success ? "成功" : "不利"}',
 			}, gameInfo);
 		case STRATEGY_RESULT(value, gameInfo):
 			ANIMATION_EVENT_SNATCH({

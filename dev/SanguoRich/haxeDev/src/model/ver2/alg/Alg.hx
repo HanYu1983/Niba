@@ -117,7 +117,7 @@ function doPlayerDice(ctx:Context) {
 }
 
 function initContext(ctx:Context, option:{}) {
-	final genGrids = model.GridGenerator.getInst().getGrids(20);
+	final genGrids = model.GridGenerator.getInst().getGrids(INIT_GRID_COUNT);
 	for (grid in genGrids) {
 		addGridInfo(ctx, grid);
 	}
