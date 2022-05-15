@@ -497,7 +497,7 @@ private function calcTotals(ctx:Context):Array<model.IModel.PlayerInfo> {
 }
 
 function getAnimationEventFromEvent(e:Event):Event {
-	final ANIMATION_DURATION = 1.0;
+	final ANIMATION_DURATION = 2.0;
 	return switch e {
 		case NEGOTIATE_RESULT(value, gameInfo):
 			ANIMATION_EVENT_SNATCH({
