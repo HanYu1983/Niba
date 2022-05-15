@@ -258,6 +258,7 @@ class MainView extends Box {
 		Main.model.load((success:Bool, gameInfo:GameInfo) -> {
 			final msg = success ? '成功讀取' : '讀取失敗';
 			if (success) {
+				syncViewByInfo(gameInfo);
 				syncViewWithEventsByGameInfo(gameInfo);
 			}
 			Dialogs.messageBox(msg, msg, MessageBoxType.TYPE_INFO);
@@ -541,7 +542,7 @@ class MainView extends Box {
 	}
 
 	function syncViewWithEventsByGameInfo(gameInfo:GameInfo){
-		syncViewByInfo(gameInfo);
+		syncUI(gameInfo);
 		playEvents(gameInfo);
 	}
 
