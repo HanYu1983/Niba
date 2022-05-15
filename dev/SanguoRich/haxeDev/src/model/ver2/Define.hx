@@ -52,7 +52,9 @@ typedef People = {
 	lastWorkTurn:Int
 }
 
-typedef Brain = {}
+typedef Brain = {
+	memory:Null<Dynamic>
+}
 
 typedef Player = {
 	id:Int,
@@ -905,7 +907,9 @@ function addPlayerInfo(ctx:Context, player:model.IModel.PlayerInfo, isAI:Bool):V
 			hasBuild: false,
 			hasEquip: false,
 		},
-		brain: isAI ? {} : null,
+		brain: isAI ? {
+			memory: null
+		} : null,
 	});
 	for (p in player.people) {
 		addPeopleInfo(ctx, player.id, null, p);

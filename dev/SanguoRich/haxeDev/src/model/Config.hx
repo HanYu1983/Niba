@@ -190,3 +190,6 @@ final ENERGY_RATE_FOR_TREASURE_TAKE = 0.3;
 
 // 過路費
 final GRID_TAX = 0.15;
+
+// 初始資源
+final INIT_RESOURCE = 1200.0;

@@ -22,6 +22,12 @@ import model.ver2.alg.Equip;
 
 using Lambda;
 
+typedef BrainMemory = {
+	war:{
+		peopleId:Null<Int>
+	}
+}
+
 function doBrain(ctx, playerId:Int) {
 	trace("doBrain", "start", playerId);
 	var done = false;
@@ -29,11 +35,25 @@ function doBrain(ctx, playerId:Int) {
 		if (done) {
 			break;
 		}
-		final cmd = getMostGoodCommand(ctx, playerId);
-		trace("doBrain", playerId, i, cmd);
 		final player = ctx.players[playerId];
+		if (player.brain == null) {
+			throw new haxe.Exception("必須有Brain");
+		}
+		if (player.brain.memory == null) {
+			player.brain.memory = ({
+				war: {
+					peopleId: null
+				}
+			} : BrainMemory);
+		}
+		final brainMemory:Null<BrainMemory> = player.brain.memory;
+		if (brainMemory == null) {
+			throw new haxe.Exception("必須有Brain.memory");
+		}
 		final gridId = player.position;
 		final grid = ctx.grids[gridId];
+		final cmd = getMostGoodCommand(ctx, player.id, grid.id);
+		trace("doBrain", playerId, i, cmd);
 		final peopleInGrid = ctx.peoples.filter((p:People) -> p.position.gridId == grid.id);
 		final peopleInPlayer = ctx.peoples.filter((p:People) -> p.belongToPlayerId == player.id);
 		final p1People:Null<People> = if (peopleInPlayer.length > 0) {
@@ -170,15 +190,15 @@ function doBrain(ctx, playerId:Int) {
 				_takePk(ctx, playerId, gridId, p1People.id, p2GridPeople.id);
 				doEvent(ctx, playerId);
 			case SNATCH | OCCUPATION:
-				if (peopleInPlayer.length <= 0) {
-					throw new haxe.Exception("你沒有人, 不能搶劫");
+				if (brainMemory.war.peopleId == null) {
+					throw new haxe.Exception("player.memory.war.peopleId not found, 不能搶劫");
 				}
 				if (peopleInGrid.length <= 0) {
 					throw new haxe.Exception("格子沒有人, 不能搶劫");
 				}
-				final p1 = peopleInPlayer[0];
+				final p1Id = brainMemory.war.peopleId;
 				final p2 = peopleInGrid[0];
-				_takeSnatchOn(ctx, playerId, gridId, p1.id, p2.id, cmd == OCCUPATION);
+				_takeSnatchOn(ctx, playerId, gridId, p1Id, p2.id, cmd == OCCUPATION);
 				doEvent(ctx, playerId);
 			case STRATEGY:
 			case TRANSFER:
@@ -256,12 +276,12 @@ private function doEvent(ctx:Context, playerId:Int) {
 	// js.Browser.console.log("doEvent", ctx.events);
 }
 
-private function getMostGoodCommand(ctx:Context, playerId:Int):ActionInfoID {
+private function getMostGoodCommand(ctx:Context, playerId:Int, gridId:Int):ActionInfoID {
 	final commands = getPlayerCommand(ctx, playerId);
 	if (commands.length == 0) {
 		throw new haxe.Exception("不該沒有指令");
 	}
-	final cmdWeights = commands.map(c -> {cmd: c, weight: getCommandWeight(ctx, playerId, c)});
+	final cmdWeights = commands.map(c -> {cmd: c, weight: getCommandWeight(ctx, playerId, gridId, c)});
 	cmdWeights.sort((a, b) -> {
 		return switch [a, b] {
 			case [{weight: w1}, {weight: w2}]:
@@ -274,7 +294,18 @@ private function getMostGoodCommand(ctx:Context, playerId:Int):ActionInfoID {
 	return chooseOne;
 }
 
-private function getCommandWeight(ctx:Context, playerId:Int, cmd:ActionInfoID):Float {
+private function getCommandWeight(ctx:Context, playerId:Int, gridId:Int, cmd:ActionInfoID):Float {
+	final player = ctx.players[playerId];
+	if (player.brain == null) {
+		throw new haxe.Exception("必須有Brain");
+	}
+	final brainMemory:Null<BrainMemory> = player.brain.memory;
+	if (brainMemory == null) {
+		throw new haxe.Exception("必須有Brain.memory");
+	}
+	final grid = ctx.grids[gridId];
+	final peopleInGrid = ctx.peoples.filter((p:People) -> p.position.gridId == grid.id);
+	final peopleInPlayer = ctx.peoples.filter((p:People) -> p.belongToPlayerId == player.id);
 	return switch cmd {
 		case STRATEGY:
 			0;
@@ -284,9 +315,141 @@ private function getCommandWeight(ctx:Context, playerId:Int, cmd:ActionInfoID):F
 			0;
 		case TREASURE_TAKE:
 			0;
+		case SNATCH:
+			// 沒人在城裡
+			if (peopleInGrid.length == 0) {
+				return 0.0;
+			}
+			final p2PeopleId = peopleInGrid[0].id;
+			final score = {
+				var tmpMaxScore = 0.0;
+				for (p in peopleInPlayer) {
+					final p1PeopleId = p.id;
+					switch _getPreResultOfSnatch(ctx, playerId, gridId, p1PeopleId, p2PeopleId, false) {
+						case {war: [result1, result2], money: money, food: food}:
+							final armyCost = result1.armyAfter - result1.armyBefore;
+							final moneyCost = result1.moneyAfter - result1.moneyBefore;
+							final foodCost = result1.foodAfter - result1.foodBefore;
+							final totalCost = moneyCost + foodCost + armyCost;
+							// 得到比失去多, 越多越好
+							final fact1 = if (totalCost <= 0) {
+								1.0;
+							} else {
+								final tmp = (money + food) / totalCost;
+								// 基本上獲利必須大於成本
+								if (tmp > 1.0) {
+									1.0;
+								} else {
+									final p2PlayerId = getGridBelongPlayerId(ctx, gridId);
+									if (p2PlayerId == null) {
+										// 對象為中立玩家就不搶, 反正也搶了也只是幫削兵
+										0.0;
+									} else {
+										final armyCost2 = result2.armyAfter - result2.armyBefore;
+										final moneyCost2 = result2.moneyAfter - result2.moneyBefore;
+										final foodCost2 = result2.foodAfter - result2.foodBefore;
+										final totalCost2 = moneyCost + foodCost + armyCost;
+										// 敵人必須損失比我多
+										Math.min(1.0, totalCost2 / totalCost);
+									}
+								}
+							}
+							// 體力剩下越多越好
+							final fact2 = Math.pow(result1.energyAfter / 100.0, 0.5);
+							// 少於3個城之前不想搶劫
+							final fact3 = {
+								final gridCnt = ctx.grids.filter(g -> getGridBelongPlayerId(ctx, g.id) == playerId).length;
+								if (gridCnt < 3) {
+									0.7;
+								} else {
+									1.0;
+								}
+							}
+							final score = 1.0 * fact1 * fact2 * fact3;
+							final isBestScore = score > tmpMaxScore;
+							if (isBestScore) {
+								tmpMaxScore = score;
+								brainMemory.war.peopleId = p1PeopleId;
+							}
+						case _:
+							throw new haxe.Exception("_getPreResultOfSnatch not found");
+					}
+				}
+				tmpMaxScore;
+			}
+			trace("getCommandWeight", playerId, cmd, score);
+			score;
 		case OCCUPATION:
-			1.2;
+			// 沒人在城裡, 不需攻城
+			if (peopleInGrid.length == 0) {
+				return 0.0;
+			}
+			final p2PeopleId = peopleInGrid[0].id;
+			final score = {
+				var tmpMaxScore = 0.0;
+				for (p in peopleInPlayer) {
+					final p1PeopleId = p.id;
+					switch _getPreResultOfSnatch(ctx, playerId, gridId, p1PeopleId, p2PeopleId, true) {
+						case {war: [result1, result2]}:
+							final successOccupy = result2.armyAfter <= 0;
+							// 佔領是一切
+							final fact1 = successOccupy ? 1.0 : 0.0;
+							// 體力剩下越多越好
+							final fact2 = Math.pow(result1.energyAfter / 100.0, 0.5);
+							// 成本佔死兵越少越好
+							final fact3 = {
+								final armyCost = result1.armyAfter - result1.armyBefore;
+								if (armyCost <= 0) {
+									1.0;
+								} else {
+									final moneyCost = result1.moneyAfter - result1.moneyBefore;
+									final foodCost = result1.foodAfter - result1.foodBefore;
+									switch (moneyCost + foodCost) / armyCost {
+										case rate if (rate >= 3):
+											0.1;
+										case rate if (rate >= 2):
+											0.2;
+										case rate if (rate >= 1):
+											0.5;
+										case rate if (rate >= 0.5):
+											0.8;
+										case _:
+											1.0;
+									}
+								}
+							}
+							final fact4 = {
+								final gridCnt = ctx.grids.filter(g -> getGridBelongPlayerId(ctx, g.id) == playerId).length;
+								if (gridCnt < 3) {
+									switch result1.foodAfter / INIT_RESOURCE {
+										case p if (p >= 0.8):
+											1.0;
+										case p if (p >= 0.5):
+											0.75;
+										case p if (p >= 0.3):
+											0.5;
+										case _:
+											0.1;
+									}
+								} else {
+									1.0;
+								}
+							}
+							final score = 1.0 * fact1 * fact2 * fact3 * fact4;
+							final isBestScore = score > tmpMaxScore;
+							if (isBestScore) {
+								tmpMaxScore = score;
+								brainMemory.war.peopleId = p1PeopleId;
+							}
+						case _:
+							throw new haxe.Exception("_getPreResultOfSnatch not found");
+					}
+				}
+				tmpMaxScore;
+			}
+			trace("getCommandWeight", playerId, cmd, score);
+			score;
 		case _:
-			1;
+			0.5;
 	}
 }
