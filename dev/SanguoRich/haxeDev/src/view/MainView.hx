@@ -650,6 +650,8 @@ class MainView extends Box {
 					// 	}
 					// });
 				case GRID_BORN_EVENT:
+					disabledAllCommands();
+					
 					final grid:Grid = info.grid;
 					final title = '異軍突起';
 					var msg = '${title}\n';
