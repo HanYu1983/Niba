@@ -25,7 +25,11 @@ using Lambda;
 typedef BrainMemory = {
 	war:{
 		peopleId:Null<Int>
-	}
+	},
+	transfer:{
+		food:Float, money:Float, army:Float,
+	},
+	hasTransfer:Bool
 }
 
 function doBrain(ctx, playerId:Int) {
@@ -43,7 +47,13 @@ function doBrain(ctx, playerId:Int) {
 			player.brain.memory = ({
 				war: {
 					peopleId: null
-				}
+				},
+				transfer: {
+					food: 0,
+					money: 0,
+					army: 0,
+				},
+				hasTransfer: false
 			} : BrainMemory);
 		}
 		final brainMemory:Null<BrainMemory> = player.brain.memory;
@@ -72,6 +82,7 @@ function doBrain(ctx, playerId:Int) {
 				// 結束回圈
 				done = true;
 				onPlayerEnd(ctx, playerId);
+				brainMemory.hasTransfer = false;
 				// 如果下一個玩家又是AI
 				final nextPlayer = ctx.players[ctx.currentPlayerId];
 				if (nextPlayer.brain != null) {
@@ -202,6 +213,21 @@ function doBrain(ctx, playerId:Int) {
 				doEvent(ctx, playerId);
 			case STRATEGY:
 			case TRANSFER:
+				final tmpPlayer = getPlayerInfo(ctx, player);
+				final tmpGrid = getGridInfo(ctx, grid);
+				// 正數是給, 負數是拿
+				final putMoney = brainMemory.transfer.food;
+				final putFood = brainMemory.transfer.food;
+				final putArmy = brainMemory.transfer.food;
+				tmpPlayer.money -= putMoney;
+				tmpPlayer.food -= putFood;
+				tmpPlayer.army -= putArmy;
+				tmpGrid.money += putMoney;
+				tmpGrid.food += putFood;
+				tmpGrid.army += putArmy;
+				_takeTransfer(ctx, playerId, gridId, tmpPlayer, tmpGrid);
+				doEvent(ctx, playerId);
+				brainMemory.hasTransfer = true;
 			case TREASURE:
 			case TREASURE_TAKE:
 		}
@@ -310,11 +336,85 @@ private function getCommandWeight(ctx:Context, playerId:Int, gridId:Int, cmd:Act
 		case STRATEGY:
 			0;
 		case TRANSFER:
-			0;
+			var maxScore = 0.0;
+			{
+				// 少於200就一定要拿兵, 越多兵就越不拿
+				final armyRate = Math.min(1, Math.max(0, player.army - 200) / INIT_RESOURCE);
+				// 食物小於兵就要拿食物
+				final foodRate = if (player.food == 0) {
+					1.0;
+				} else {
+					1.0 - (player.army / player.food);
+				};
+				// 少於200就一定要拿錢, 越多錢就越不拿
+				final moneyRate = Math.min(1, Math.max(0, player.money - 200) / INIT_RESOURCE);
+				final score = 1.0 * armyRate * foodRate * moneyRate;
+				if (score > maxScore) {
+					maxScore = score;
+					brainMemory.transfer.food = -Math.min(grid.food, foodRate * 1.8 * grid.food);
+					brainMemory.transfer.money = -Math.min(grid.money, moneyRate * 1.8 * grid.money);
+					brainMemory.transfer.army = -Math.min(grid.army, armyRate * 1.8 * grid.army);
+				}
+			}
+			{
+				final foodRate = if (grid.food <= 0) {
+					0.0;
+				} else {
+					player.food / grid.food;
+				}
+				final moneyRate = if (grid.money <= 0) {
+					0.0;
+				} else {
+					player.money / grid.money;
+				}
+				final armyRate = if (grid.army <= 0) {
+					0.0;
+				} else {
+					player.army / grid.army;
+				}
+				// 少於3個城之前不想給城
+				final fact1 = {
+					final gridCnt = ctx.grids.filter(g -> getGridBelongPlayerId(ctx, g.id) == playerId).length;
+					if (gridCnt < 3) {
+						0.0;
+					} else {
+						0.7;
+					}
+				}
+				final score = 1.0 * fact1 * armyRate * foodRate * moneyRate;
+				if (score > maxScore) {
+					maxScore = score;
+					brainMemory.transfer.food = Math.min(player.food, foodRate * 0.3 * grid.food);
+					brainMemory.transfer.money = Math.min(player.money, moneyRate * 0.3 * grid.money);
+					brainMemory.transfer.army = Math.min(player.army, armyRate * 0.3 * grid.army);
+				}
+			}
+			final score = brainMemory.hasTransfer ? 0.0 : maxScore;
+			trace("getCommandWeight", playerId, cmd, score);
+			score;
 		case TREASURE:
 			0;
 		case TREASURE_TAKE:
 			0;
+		case CAMP | PAY_FOR_FUN:
+			if (peopleInPlayer.length == 0) {
+				0.0;
+			} else {
+				final totalEnergy = peopleInPlayer.fold((p, a) -> {
+					return a + p.energy;
+				}, 0.0);
+				final score = switch 1 - totalEnergy / (peopleInPlayer.length * 100) {
+					// 有足夠的體力, 不休息
+					case p if (p >= 0.8):
+						0.1;
+					case p if (p >= 0.6):
+						0.5;
+					case p:
+						p;
+				}
+				trace("getCommandWeight", playerId, cmd, score);
+				score;
+			}
 		case SNATCH:
 			// 沒人在城裡
 			if (peopleInGrid.length == 0) {

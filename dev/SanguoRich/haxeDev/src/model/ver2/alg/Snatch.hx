@@ -25,7 +25,6 @@ private function getSnatchCost(ctx:Context, playerId:Int, gridId:Int, p1PeopleId
 			var base = 0.3 + (warCost.playerCost[1].army / warCost.playerCost[0].army - 1.0) * .3;
 			base += maxPercent * .2;
 			final success = warCost.playerCost[1].army > warCost.playerCost[0].army;
-			trace(success, base);
 			return {
 				warCost: warCost,
 				money: success ? grid.money * base : 0.0,
