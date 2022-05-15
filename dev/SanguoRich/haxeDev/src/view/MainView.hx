@@ -582,7 +582,9 @@ class MainView extends Box {
 
 	function playEvents(gameInfo:GameInfo) {
 		events = gameInfo.events;
-		doOneEvent();
+		if(events.length > 0){
+			doOneEvent();
+		}
 	}
 
 	function doOneEvent() {
@@ -616,6 +618,7 @@ class MainView extends Box {
 								doOneEvent();
 							});
 						case _:
+							throw new haxe.Exception('目前沒有接收這裡的事件');
 					}
 				case WALK_STOP:
 				case FIND_TREASURE_RESULT:
@@ -842,8 +845,8 @@ class MainView extends Box {
 				case WORLD_EVENT:
 
 					growView.showPopup(event.value, () -> {
-						doOneEvent();
 						syncViewByInfo(gameInfo);
+						doOneEvent();
 					});
 				case PEOPLE_LEVEL_UP_EVENT:
 					syncViewByInfo(gameInfo);
@@ -882,8 +885,9 @@ class MainView extends Box {
 			}
 		}else{
 			Main.model.refresh(()->{
-				syncViewByInfo(Main.model.gameInfo());
-				trace('清除後端事件');
+				final newInfo = Main.model.gameInfo();
+				syncViewByInfo(newInfo);
+				
 			});
 		}
 	}
