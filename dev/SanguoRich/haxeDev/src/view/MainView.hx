@@ -541,7 +541,7 @@ class MainView extends Box {
 	}
 
 	function syncViewWithEventsByGameInfo(gameInfo:GameInfo){
-		syncUI(gameInfo);
+		syncViewByInfo(gameInfo);
 		playEvents(gameInfo);
 	}
 
