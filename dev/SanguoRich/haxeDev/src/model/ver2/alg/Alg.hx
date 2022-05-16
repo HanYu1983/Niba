@@ -116,16 +116,25 @@ function doPlayerDice(ctx:Context) {
 	onPlayerDice(ctx, ctx.currentPlayerId);
 }
 
-function initContext(ctx:Context, option:{}) {
-	final genGrids = model.GridGenerator.getInst().getGrids(INIT_GRID_COUNT);
+function initContext(ctx:Context, options:GameSetting) {
+	trace(options);
+	trace("第一個玩家不能是AI");
+	final genGrids = model.GridGenerator.getInst().getGrids(options.gridCount == null ? INIT_GRID_COUNT : options.gridCount);
 	for (grid in genGrids) {
 		addGridInfo(ctx, grid);
 	}
+	final names = ["劉備", "曹操", "孫權", "董卓"];
 	var i = 0;
-	for (name in ["劉備", "曹操", "孫權", "劉表"]) {
+	for (playerConfig in options.players) {
+		final isClose = playerConfig.type == 2;
+		if (isClose) {
+			continue;
+		}
+		final mustBePlayer = i == 0;
+		final isAI = mustBePlayer == false && playerConfig.type == 1;
 		addPlayerInfo(ctx, {
 			id: i,
-			name: name,
+			name: names[i],
 			money: INIT_RESOURCE,
 			army: INIT_RESOURCE,
 			food: INIT_RESOURCE,
@@ -142,7 +151,7 @@ function initContext(ctx:Context, option:{}) {
 			grids: [],
 			commands: [],
 			treasures: []
-		}, i >= 1);
+		}, isAI);
 		++i;
 	}
 }

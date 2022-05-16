@@ -34,7 +34,7 @@ class ModelVer2 extends DebugModel {
 	}
 
 	override function gameStart(setting:GameSetting, cb:Void->Void):Void {
-		initContext(context, {});
+		initContext(context, setting);
 		cb();
 	}
 
