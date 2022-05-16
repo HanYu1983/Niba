@@ -68,6 +68,13 @@
                         <button text="高" />
                     </button-bar>
                 </hbox>
+                <hbox>
+                    <label text='限制建築'/>
+                    <button-bar id="grp_limitBuilding" allowUnselection="true">
+                        <button text="是" />
+                        <button text="否" />
+                    </button-bar>
+                </hbox>
             </vbox>
         </frame>
     </hbox>

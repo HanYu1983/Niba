@@ -249,7 +249,8 @@ typedef GameSetting = {
 	players:Array<{type:Int}>,
 	gridCount: Int,
     growSpeed: Int,
-    resource: Int
+    resource: Int,
+	limitBuilding: Bool
 }
 
 interface IModel {
