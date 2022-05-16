@@ -623,9 +623,10 @@ class MainView extends Box {
 			switch (event.id) {
 				case MESSAGE_EVENT:
 					syncViewByInfo(gameInfo);
-					Dialogs.messageBox(info.msg, info.title, MessageBoxType.TYPE_INFO, true, (b)->{
-						doOneEvent();
-					});
+					// Dialogs.messageBox(info.msg, info.title, MessageBoxType.TYPE_INFO, true, (b)->{
+					// 	doOneEvent();
+					// });
+					checkAutoPlay(autoPlay, info.title, info.msg);
 				case ANIMATION_EVENT:
 					disabledAllCommands();
 					
