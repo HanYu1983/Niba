@@ -569,7 +569,7 @@ function getAnimationEventFromEvent(e:Event):Event {
 			ANIMATION_EVENT_SNATCH({
 				gridIds: [value.gridId],
 				duration: ANIMATION_DURATION,
-				msg: "作樂",
+				msg: "塔營或訓練或作樂",
 			}, gameInfo);
 		case PK_RESULT(value, gameInfo):
 			ANIMATION_EVENT_SNATCH({

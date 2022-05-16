@@ -142,7 +142,7 @@ function initContext(ctx:Context, option:{}) {
 			grids: [],
 			commands: [],
 			treasures: []
-		}, i >= 2);
+		}, i >= 1);
 		++i;
 	}
 }

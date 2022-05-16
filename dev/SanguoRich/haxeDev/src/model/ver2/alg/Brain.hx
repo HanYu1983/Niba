@@ -240,9 +240,9 @@ function doBrain(ctx, playerId:Int) {
 				final tmpPlayer = getPlayerInfo(ctx, player);
 				final tmpGrid = getGridInfo(ctx, grid);
 				// 正數是給, 負數是拿
-				final putMoney = brainMemory.transfer.food;
+				final putMoney = brainMemory.transfer.money;
 				final putFood = brainMemory.transfer.food;
-				final putArmy = brainMemory.transfer.food;
+				final putArmy = brainMemory.transfer.army;
 				tmpPlayer.money -= putMoney;
 				tmpPlayer.food -= putFood;
 				tmpPlayer.army -= putArmy;
@@ -291,9 +291,9 @@ private function doEvent(ctx:Context, playerId:Int) {
 				if (value.success) {
 					final tmpPlayer = getPlayerInfo(ctx, player);
 					final tmpGrid = getGridInfo(ctx, grid);
-					final putMoney = tmpPlayer.money / 3;
-					final putFood = tmpPlayer.food / 3;
-					final putArmy = tmpPlayer.army / 3;
+					final putArmy = Math.min(tmpPlayer.food, tmpPlayer.army) / 3;
+					final putMoney = Math.min(tmpPlayer.money, putArmy);
+					final putFood = Math.min(tmpPlayer.food, putArmy);
 					tmpPlayer.money -= putMoney;
 					tmpPlayer.food -= putFood;
 					tmpPlayer.army -= putArmy;
@@ -311,8 +311,18 @@ private function doEvent(ctx:Context, playerId:Int) {
 						} else {
 							ctx.events.push(MESSAGE_EVENT({
 								title: 'AI',
-								msg: '${player.name}想佔領${grid.name}卻沒有空閒的人',
+								msg: '${player.name}想佔領${grid.name}卻沒有空閒的人, 拿走所有物資',
 							}, gameInfo));
+							final tmpPlayer = getPlayerInfo(ctx, player);
+							final tmpGrid = getGridInfo(ctx, grid);
+							tmpPlayer.money += tmpGrid.money;
+							tmpPlayer.food += tmpGrid.food;
+							tmpPlayer.army += tmpGrid.army;
+							tmpGrid.money = 0;
+							tmpGrid.food = 0;
+							tmpGrid.army = 0;
+							_takeTransfer(ctx, playerId, gridId, tmpPlayer, tmpGrid);
+							doEvent(ctx, playerId);
 						}
 					} else {
 						_takeTransfer(ctx, playerId, gridId, tmpPlayer, tmpGrid);
@@ -385,13 +395,12 @@ private function getCommandWeight(ctx:Context, playerId:Int, gridId:Int, cmd:Act
 			trace("getCommandWeight", playerId, cmd, score);
 			score;
 		case EXPLORE:
-			// 小於3人時想拿人, 越多人越不想拿
-			// 超過10人就不拿
+			// 小於5人時想拿人, 越多人越不想拿
 			final fact1 = switch peopleInPlayer.length {
-				case len if (len <= 3):
+				case len if (len < 5):
 					1.0;
 				case len:
-					1.0 - Math.min(1, len - 3 / 10.0);
+					1.0 - Math.min(1, (len - 5) / 10.0);
 			}
 			// 機率越大
 			final fact2 = {
@@ -400,8 +409,8 @@ private function getCommandWeight(ctx:Context, playerId:Int, gridId:Int, cmd:Act
 					final result = _getPreResultOfExplore(ctx, playerId, gridId, p1.id);
 					// 成功率
 					final fact1 = result.successRate;
-					// 找寶率0.5就很高了
-					final fact2 = Math.min(1, result.successRateOnTreasure / 0.5);
+					// 找寶率0.3就很高了
+					final fact2 = 1 + result.successRateOnTreasure * 0.2;
 					// 體力剩下越多越好
 					final fact3 = Math.pow(result.energyAfter / 100.0, 0.5);
 					final score = 1.0 * fact1 * fact2 * fact3;
@@ -413,16 +422,16 @@ private function getCommandWeight(ctx:Context, playerId:Int, gridId:Int, cmd:Act
 				maxScore;
 			}
 			final score = 1.0 * fact1 * fact2;
-			trace("getCommandWeight", playerId, cmd, score);
+			trace("getCommandWeight", playerId, cmd, score, "=", fact1, fact2);
 			score;
 		case HIRE:
 			// 小於3人時想拿人, 越多人越不想拿
 			// 超過10人就不拿
 			final fact1 = switch peopleInPlayer.length {
-				case len if (len <= 3):
+				case len if (len <= 5):
 					1.0;
 				case len:
-					1.0 - Math.min(1, len - 3 / 10.0);
+					1.0 - Math.min(1, len - 5 / 10.0);
 			}
 			// 機率越大
 			final fact2 = {
@@ -461,11 +470,11 @@ private function getCommandWeight(ctx:Context, playerId:Int, gridId:Int, cmd:Act
 					// 利益越大越好
 					final result = _getPreResultOfResource(ctx, playerId, gridId, p1.id, BUY, ARMY);
 					final earn = result.armyAfter - result.armyBefore;
-					final cost = result.moneyAfter - result.moneyBefore;
+					final cost = MONEY_PER_DEAL;
 					final fact1 = if (earn <= 0) {
 						0.0;
 					} else {
-						1.0 - Math.min(1, (cost / earn * 2));
+						1.0 - Math.min(1, (cost / earn * 5));
 					}
 					// 體力剩下越多越好
 					final fact2 = Math.pow(result.energyAfter / 100.0, 0.5);
@@ -481,6 +490,7 @@ private function getCommandWeight(ctx:Context, playerId:Int, gridId:Int, cmd:Act
 			trace("getCommandWeight", playerId, cmd, score);
 			score;
 		case BUY_FOOD:
+			// 食少錢多
 			final fact1 = if (player.money <= MONEY_PER_DEAL) {
 				0.0;
 			} else {
@@ -491,13 +501,13 @@ private function getCommandWeight(ctx:Context, playerId:Int, gridId:Int, cmd:Act
 				var maxScore = 0.0;
 				for (p1 in peopleInPlayer) {
 					// 利益越大越好
-					final result = _getPreResultOfResource(ctx, playerId, gridId, p1.id, BUY, ARMY);
+					final result = _getPreResultOfResource(ctx, playerId, gridId, p1.id, BUY, FOOD);
 					final earn = result.foodAfter - result.foodBefore;
-					final cost = result.moneyAfter - result.moneyBefore;
+					final cost = MONEY_PER_DEAL;
 					final fact1 = if (earn <= 0) {
 						0.0;
 					} else {
-						1.0 - Math.min(1, (cost / earn * 2));
+						1.0 - Math.min(1, (cost / earn * 5));
 					}
 					// 體力剩下越多越好
 					final fact2 = Math.pow(result.energyAfter / 100.0, 0.5);
@@ -525,11 +535,11 @@ private function getCommandWeight(ctx:Context, playerId:Int, gridId:Int, cmd:Act
 					// 利益越大越好
 					final result = _getPreResultOfResource(ctx, playerId, gridId, p1.id, BUY, ARMY);
 					final earn = result.moneyAfter - result.moneyBefore;
-					final cost = result.armyAfter - result.armyBefore;
+					final cost = ARMY_PER_DEAL;
 					final fact1 = if (earn <= 0) {
 						0.0;
 					} else {
-						1.0 - Math.min(1, (cost / earn * 2));
+						1.0 - Math.min(1, (cost / earn * 5));
 					}
 					// 體力剩下越多越好
 					final fact2 = Math.pow(result.energyAfter / 100.0, 0.5);
@@ -555,13 +565,13 @@ private function getCommandWeight(ctx:Context, playerId:Int, gridId:Int, cmd:Act
 				var maxScore = 0.0;
 				for (p1 in peopleInPlayer) {
 					// 利益越大越好
-					final result = _getPreResultOfResource(ctx, playerId, gridId, p1.id, BUY, ARMY);
+					final result = _getPreResultOfResource(ctx, playerId, gridId, p1.id, BUY, FOOD);
 					final earn = result.moneyAfter - result.moneyBefore;
-					final cost = result.foodAfter - result.foodBefore;
+					final cost = FOOD_PER_DEAL;
 					final fact1 = if (earn <= 0) {
 						0.0;
 					} else {
-						1.0 - Math.min(1, (cost / earn * 2));
+						1.0 - Math.min(1, (cost / earn * 5));
 					}
 					// 體力剩下越多越好
 					final fact2 = Math.pow(result.energyAfter / 100.0, 0.5);
@@ -586,7 +596,7 @@ private function getCommandWeight(ctx:Context, playerId:Int, gridId:Int, cmd:Act
 					final fact1 = if (earn <= 0) {
 						0.0;
 					} else {
-						1.0 - Math.min(1, (cost / earn * 2));
+						1.0 - Math.min(1, (cost / earn * 5));
 					}
 					// 體力剩下越多越好
 					final fact1 = Math.pow(result.energyAfter / 100.0, 0.5);
@@ -598,23 +608,23 @@ private function getCommandWeight(ctx:Context, playerId:Int, gridId:Int, cmd:Act
 				}
 				maxScore;
 			}
-			final score = 0.6 * fact1;
+			final score = 0.1 * fact1;
 			trace("getCommandWeight", playerId, cmd, score);
 			score;
 		case TRANSFER:
 			var maxScore = 0.0;
 			{
-				final foodRate = if (grid.food <= 0) {
+				final foodRate = if (player.food <= 0) {
 					0.0;
 				} else {
 					1.0 - Math.min(1, grid.food / player.food);
 				}
-				final moneyRate = if (grid.money <= 0) {
+				final moneyRate = if (player.money <= 0) {
 					0.0;
 				} else {
 					1.0 - Math.min(1, grid.money / player.money);
 				}
-				final armyRate = if (grid.army <= 0) {
+				final armyRate = if (player.army <= 0) {
 					0.0;
 				} else {
 					1.0 - Math.min(1, grid.army / player.army);
@@ -638,15 +648,15 @@ private function getCommandWeight(ctx:Context, playerId:Int, gridId:Int, cmd:Act
 			}
 			{
 				// 少於200就一定要拿兵, 越多兵就越不拿
-				final armyRate = Math.min(1, Math.max(0, player.army - 200) / INIT_RESOURCE);
+				final armyRate = 1.0 - Math.min(1, Math.max(0, player.army - 200) / INIT_RESOURCE);
 				// 食物小於兵就要拿食物
 				final foodRate = if (player.food == 0) {
 					1.0;
 				} else {
-					1.0 - Math.min(1, (player.army / player.food));
+					1.0 - Math.min(1, player.food / player.army);
 				};
 				// 少於200就一定要拿錢, 越多錢就越不拿
-				final moneyRate = Math.min(1, Math.max(0, player.money - 200) / INIT_RESOURCE);
+				final moneyRate = 1.0 - Math.min(1, Math.max(0, player.money - 200) / INIT_RESOURCE);
 				final score = 1.0 * armyRate * foodRate * moneyRate;
 				if (score > maxScore) {
 					maxScore = score;
@@ -655,7 +665,42 @@ private function getCommandWeight(ctx:Context, playerId:Int, gridId:Int, cmd:Act
 					brainMemory.transfer.army = -Math.min(grid.army, armyRate * 1.8 * grid.army);
 				}
 			}
-			final score = brainMemory.hasTransfer ? 0.0 : maxScore;
+			{
+				final armyRate = grid.army / GRID_RESOURCE_MAX;
+				final foodRate = grid.food / GRID_RESOURCE_MAX;
+				final moneyRate = grid.money / GRID_RESOURCE_MAX;
+				final maxRate = Math.max(armyRate, Math.max(foodRate, moneyRate));
+				// 有其中一個資源超過8成再拿
+				final fact1 = maxRate > 0.8 ? maxRate : 0.0;
+				final score = 1.0 * fact1;
+				if (score > maxScore) {
+					maxScore = score;
+					brainMemory.transfer.food = -Math.min(grid.food, foodRate * 400);
+					brainMemory.transfer.money = -Math.min(grid.money, moneyRate * 400);
+					brainMemory.transfer.army = -Math.min(grid.army, armyRate * 400);
+				}
+			}
+			{
+				final needArmyRate = if (grid.army <= 0) {
+					1.5;
+				} else {
+					grid.food / grid.army;
+				}
+				final needArmyRate2 = if (grid.army <= 0) {
+					1.5;
+				} else {
+					grid.money / grid.army;
+				}
+				final maxNeedArmyRate = Math.max(needArmyRate, needArmyRate2);
+				final score = maxNeedArmyRate > 1.3 ? 999.0 : 0.0;
+				if (score > maxScore) {
+					maxScore = score;
+					brainMemory.transfer.food = 0;
+					brainMemory.transfer.money = -Math.min(grid.money, Math.max(0, grid.money - grid.army) / 2);
+					brainMemory.transfer.army = Math.min(player.army, Math.max(0, grid.food - grid.army));
+				}
+			}
+			final score = brainMemory.hasTransfer ? -1 : maxScore;
 			trace("getCommandWeight", playerId, cmd, score);
 			score;
 		case PRACTICE:
@@ -667,7 +712,7 @@ private function getCommandWeight(ctx:Context, playerId:Int, gridId:Int, cmd:Act
 				}, 0.0);
 				final score = switch totalEnergy / (peopleInPlayer.length * 100) {
 					case p if (p >= 0.8):
-						0.8;
+						0.7;
 					case _:
 						0.0;
 				}
@@ -710,20 +755,17 @@ private function getCommandWeight(ctx:Context, playerId:Int, gridId:Int, cmd:Act
 							final foodCost = result1.foodBefore - result1.foodAfter;
 							final totalCost = moneyCost + foodCost + armyCost;
 							final totalEarn = money + food;
-							trace("getCommandWeight", playerId, cmd, "totalCost:", totalCost);
 							// 得到比失去多, 越多越好
 							// 如果沒有成本, 就搶
 							final fact1 = if (totalCost <= 0) {
 								1.0;
 							} else {
 								final tmp = totalEarn / totalCost;
-								trace("getCommandWeight", playerId, cmd, "tmp:", tmp, "=", totalEarn, totalCost);
 								// 基本上獲利必須大於成本
 								if (tmp >= 1.0) {
 									1.0;
 								} else {
 									final p2PlayerId = getGridBelongPlayerId(ctx, gridId);
-									trace("對象為中立玩家就不搶p2PlayerId:", p2PlayerId);
 									if (p2PlayerId == null) {
 										// 對象為中立玩家就不搶, 反正也搶了也只是幫削兵
 										0.0;
@@ -743,13 +785,12 @@ private function getCommandWeight(ctx:Context, playerId:Int, gridId:Int, cmd:Act
 							final fact3 = {
 								final gridCnt = ctx.grids.filter(g -> getGridBelongPlayerId(ctx, g.id) == playerId).length;
 								if (gridCnt < 3) {
-									0.5;
+									0.1;
 								} else {
 									1.0;
 								}
 							}
 							final score = 1.0 * fact1 * fact2 * fact3;
-							trace("getCommandWeight", playerId, cmd, "score:", score, "=", fact1, fact2, fact3);
 							if (score > tmpMaxScore) {
 								tmpMaxScore = score;
 								brainMemory.war.peopleId = p1PeopleId;
@@ -801,6 +842,8 @@ private function getCommandWeight(ctx:Context, playerId:Int, gridId:Int, cmd:Act
 									}
 								}
 							}
+							// 3個城以下時, 食物越足夠越想打
+							// 超過3個城時就不在乎身上食物
 							final fact4 = {
 								final gridCnt = ctx.grids.filter(g -> getGridBelongPlayerId(ctx, g.id) == playerId).length;
 								if (gridCnt < 3) {
@@ -818,7 +861,11 @@ private function getCommandWeight(ctx:Context, playerId:Int, gridId:Int, cmd:Act
 									1.0;
 								}
 							}
-							final score = 1.0 * fact1 * fact2 * fact3 * fact4;
+							// 錢越多
+							final fact5 = Math.pow(1 + (result2.moneyAfter / GRID_RESOURCE_MAX), 2);
+							// 糧越多
+							final fact6 = Math.pow(1 + (result2.foodAfter / GRID_RESOURCE_MAX), 2);
+							final score = 1.0 * fact1 * fact2 * fact3 * fact4 * fact5 * fact6;
 							final isBestScore = score > tmpMaxScore;
 							if (isBestScore) {
 								tmpMaxScore = score;
@@ -833,7 +880,7 @@ private function getCommandWeight(ctx:Context, playerId:Int, gridId:Int, cmd:Act
 			trace("getCommandWeight", playerId, cmd, score);
 			score;
 		case _:
-			final score = Math.random() * 0.5;
+			final score = Math.random() * 0.6;
 			trace("getCommandWeight", playerId, cmd, score);
 			score;
 	}
