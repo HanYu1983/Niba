@@ -119,7 +119,7 @@ function doPlayerDice(ctx:Context) {
 function initContext(ctx:Context, options:GameSetting) {
 	trace(options);
 	trace("第一個玩家不能是AI");
-	final genGrids = model.GridGenerator.getInst().getGrids(options.gridCount == null ? INIT_GRID_COUNT : options.gridCount);
+	final genGrids = model.GridGenerator.getInst().getGrids(options.gridCount != null ? options.gridCount : INIT_GRID_COUNT);
 	for (grid in genGrids) {
 		addGridInfo(ctx, grid);
 	}
@@ -132,12 +132,13 @@ function initContext(ctx:Context, options:GameSetting) {
 		}
 		final mustBePlayer = i == 0;
 		final isAI = mustBePlayer == false && playerConfig.type == 1;
+		final resource = options.resource != null ? options.resource : INIT_RESOURCE;
 		addPlayerInfo(ctx, {
 			id: i,
 			name: names[i],
-			money: INIT_RESOURCE,
-			army: INIT_RESOURCE,
-			food: INIT_RESOURCE,
+			money: resource,
+			army: resource,
+			food: resource,
 			strategy: 300.0,
 			people: [
 				model.PeopleGenerator.getInst().generate(),
@@ -233,10 +234,40 @@ function onFindTreasure(ctx:Context, playerId:Int, treasures:Array<Treasure>) {
 	}, getGameInfo(ctx, false)));
 }
 
+function getPlayerScore(ctx:Context, playerId:Int):Float {
+	final info = getCalcTotalsByPlayerId(ctx, playerId);
+	final score = info.army + info.food + info.money;
+	return score;
+}
+
 // 玩家回合結束
 function onPlayerEnd(ctx:Context, playerId:Int) {
 	if (playerId != ctx.currentPlayerId) {
 		throw new haxe.Exception("現在不是你的回合，不能呼叫end");
+	}
+	// 算分, 判定勝負
+	final player = ctx.players[playerId];
+	if (player.isLose == false) {
+		player.score = getPlayerScore(ctx, player.id);
+		player.isLose = {
+			final playerScores = ctx.players.map(p -> p.score);
+			final myScore = playerScores[playerId];
+			playerScores.sort((a, b) -> Std.int(b * 100) - Std.int(a * 100));
+			final maxScore = playerScores[0];
+			myScore <= (maxScore / 10.0);
+		}
+		if (player.isLose) {
+			ctx.events.push(PLAYER_LOSE({
+				player: getPlayerInfo(ctx, player),
+			}, getGameInfo(ctx, false), {duration: 3}));
+			final winPlayers = ctx.players.filter(p -> p.isLose == false);
+			if (winPlayers.length == 1) {
+				final winPlayer = winPlayers[0];
+				ctx.events.push(PLAYER_WIN({
+					player: getPlayerInfo(ctx, winPlayer),
+				}, getGameInfo(ctx, false), {duration: 3}));
+			}
+		}
 	}
 	// 四個玩家走完後才計算回合
 	final isTurnEnd = ctx.currentPlayerId == (ctx.players.length - 1);
@@ -426,7 +457,14 @@ function onPlayerEnd(ctx:Context, playerId:Int) {
 		ctx.turn += 1;
 	}
 	// 下一個玩家
-	ctx.currentPlayerId = (ctx.currentPlayerId + 1) % ctx.players.length;
+	for (i in 0...ctx.players.length) {
+		ctx.currentPlayerId = (ctx.currentPlayerId + 1) % ctx.players.length;
+		final tmpPlyr = ctx.players[ctx.currentPlayerId];
+		if (tmpPlyr.isLose) {
+			continue;
+		}
+		break;
+	}
 	// clear memory
 	clearMemory(ctx);
 }

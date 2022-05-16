@@ -67,7 +67,9 @@ typedef Player = {
 	memory:{
 		hasDice:Bool, hasStrategy:Bool, hasCommand:Bool, hasBuild:Bool, hasEquip:Bool,
 	},
-	brain:Null<Brain>
+	brain:Null<Brain>,
+	score:Float,
+	isLose:Bool,
 }
 
 typedef Treasure = {
@@ -251,6 +253,12 @@ enum Event {
 		title:String,
 		msg:String,
 	}, gameInfo:GameInfo);
+	PLAYER_LOSE(value:{
+		player:model.IModel.PlayerInfo,
+	}, gameInfo:GameInfo, autoplay:Null<{duration:Float}>);
+	PLAYER_WIN(value:{
+		player:model.IModel.PlayerInfo,
+	}, gameInfo:GameInfo, autoplay:Null<{duration:Float}>);
 }
 
 typedef Context = {
@@ -485,16 +493,21 @@ private function calcGrids(ctx:Context):Array<model.IModel.PlayerInfo> {
 	return ctx.players.map(p -> getPlayerInfo(ctx, p)).map(p -> calcGridsByPlayerInfo(ctx, p));
 }
 
-private function calcTotals(ctx:Context):Array<model.IModel.PlayerInfo> {
-	return ctx.players.map(p -> {
-		final playerInfo = getPlayerInfo(ctx, p);
-		final total = calcGridsByPlayerInfo(ctx, deepCopy(playerInfo));
-		playerInfo.food = playerInfo.food + total.food;
-		playerInfo.money = playerInfo.money + total.money;
-		playerInfo.army = playerInfo.army + total.army;
-		return playerInfo;
-	});
+private function calcTotalsByPlayerId(ctx:Context, playerId:Int):model.IModel.PlayerInfo {
+	final p = ctx.players[playerId];
+	final playerInfo = getPlayerInfo(ctx, p);
+	final total = calcGridsByPlayerInfo(ctx, deepCopy(playerInfo));
+	playerInfo.food = playerInfo.food + total.food;
+	playerInfo.money = playerInfo.money + total.money;
+	playerInfo.army = playerInfo.army + total.army;
+	return playerInfo;
 }
+
+private function calcTotals(ctx:Context):Array<model.IModel.PlayerInfo> {
+	return ctx.players.map(p -> calcTotalsByPlayerId(ctx, p.id));
+}
+
+final getCalcTotalsByPlayerId = calcTotalsByPlayerId;
 
 function getAnimationEventFromEvent(e:Event):Event {
 	final ANIMATION_DURATION = 2.0;
@@ -743,6 +756,20 @@ function getEventInfo(e:Event):EventInfo {
 				gameInfo: gameInfo,
 				autoplay: null,
 			}
+		case PLAYER_LOSE(value, gameInfo, autoplay):
+			{
+				id: EventInfoID.PLAYER_LOSE,
+				value: value,
+				gameInfo: gameInfo,
+				autoplay: autoplay,
+			}
+		case PLAYER_WIN(value, gameInfo, autoplay):
+			{
+				id: EventInfoID.PLAYER_WIN,
+				value: value,
+				gameInfo: gameInfo,
+				autoplay: autoplay,
+			}
 	}
 }
 
@@ -931,6 +958,8 @@ function addPlayerInfo(ctx:Context, player:model.IModel.PlayerInfo, isAI:Bool):V
 		brain: isAI ? {
 			memory: null
 		} : null,
+		score: 0.0,
+		isLose: false,
 	});
 	for (p in player.people) {
 		addPeopleInfo(ctx, player.id, null, p);
