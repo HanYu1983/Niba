@@ -247,9 +247,17 @@ typedef BuildingCatelog = {
 
 typedef GameSetting = {
 	players:Array<{type:Int}>,
+
+	// 格子數量
 	gridCount: Int,
+	// 格子成長速度等級
     growSpeed: Int,
-    resource: Int
+	// 初始資源
+    resource: Int,
+	// 是否格子只能依據類型蓋房子
+	limitBuilding: Bool,
+	// AI難度，初期可以先影響AI的初始資源量(x1.5, x2, x2.5)
+	aiLevel:Int
 }
 
 interface IModel {
