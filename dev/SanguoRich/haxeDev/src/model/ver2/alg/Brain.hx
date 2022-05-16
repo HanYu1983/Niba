@@ -469,12 +469,13 @@ private function getCommandWeight(ctx:Context, playerId:Int, gridId:Int, cmd:Act
 				for (p1 in peopleInPlayer) {
 					// 利益越大越好
 					final result = _getPreResultOfResource(ctx, playerId, gridId, p1.id, BUY, ARMY);
+					trace(result);
 					final earn = result.armyAfter - result.armyBefore;
 					final cost = MONEY_PER_DEAL;
 					final fact1 = if (earn <= 0) {
 						0.0;
 					} else {
-						1.0 - Math.min(1, (cost / earn * 5));
+						1.0 - Math.min(1, (cost / (earn * 5)));
 					}
 					// 體力剩下越多越好
 					final fact2 = Math.pow(result.energyAfter / 100.0, 0.5);
@@ -487,7 +488,7 @@ private function getCommandWeight(ctx:Context, playerId:Int, gridId:Int, cmd:Act
 				maxScore;
 			}
 			final score = 1.0 * fact1 * fact2;
-			trace("getCommandWeight", playerId, cmd, score);
+			trace("getCommandWeight", playerId, cmd, "score:", score, "=", fact1, fact2);
 			score;
 		case BUY_FOOD:
 			// 食少錢多
@@ -507,7 +508,7 @@ private function getCommandWeight(ctx:Context, playerId:Int, gridId:Int, cmd:Act
 					final fact1 = if (earn <= 0) {
 						0.0;
 					} else {
-						1.0 - Math.min(1, (cost / earn * 5));
+						1.0 - Math.min(1, (cost / (earn * 5)));
 					}
 					// 體力剩下越多越好
 					final fact2 = Math.pow(result.energyAfter / 100.0, 0.5);
@@ -533,13 +534,13 @@ private function getCommandWeight(ctx:Context, playerId:Int, gridId:Int, cmd:Act
 				var maxScore = 0.0;
 				for (p1 in peopleInPlayer) {
 					// 利益越大越好
-					final result = _getPreResultOfResource(ctx, playerId, gridId, p1.id, BUY, ARMY);
+					final result = _getPreResultOfResource(ctx, playerId, gridId, p1.id, SELL, ARMY);
 					final earn = result.moneyAfter - result.moneyBefore;
 					final cost = ARMY_PER_DEAL;
 					final fact1 = if (earn <= 0) {
 						0.0;
 					} else {
-						1.0 - Math.min(1, (cost / earn * 5));
+						1.0 - Math.min(1, (cost / (earn * 5)));
 					}
 					// 體力剩下越多越好
 					final fact2 = Math.pow(result.energyAfter / 100.0, 0.5);
@@ -565,13 +566,13 @@ private function getCommandWeight(ctx:Context, playerId:Int, gridId:Int, cmd:Act
 				var maxScore = 0.0;
 				for (p1 in peopleInPlayer) {
 					// 利益越大越好
-					final result = _getPreResultOfResource(ctx, playerId, gridId, p1.id, BUY, FOOD);
+					final result = _getPreResultOfResource(ctx, playerId, gridId, p1.id, SELL, FOOD);
 					final earn = result.moneyAfter - result.moneyBefore;
 					final cost = FOOD_PER_DEAL;
 					final fact1 = if (earn <= 0) {
 						0.0;
 					} else {
-						1.0 - Math.min(1, (cost / earn * 5));
+						1.0 - Math.min(1, (cost / (earn * 5)));
 					}
 					// 體力剩下越多越好
 					final fact2 = Math.pow(result.energyAfter / 100.0, 0.5);
@@ -596,7 +597,7 @@ private function getCommandWeight(ctx:Context, playerId:Int, gridId:Int, cmd:Act
 					final fact1 = if (earn <= 0) {
 						0.0;
 					} else {
-						1.0 - Math.min(1, (cost / earn * 5));
+						1.0 - Math.min(1, (cost / (earn * 5)));
 					}
 					// 體力剩下越多越好
 					final fact1 = Math.pow(result.energyAfter / 100.0, 0.5);
@@ -728,9 +729,9 @@ private function getCommandWeight(ctx:Context, playerId:Int, gridId:Int, cmd:Act
 				}, 0.0);
 				final score = switch totalEnergy / (peopleInPlayer.length * 100) {
 					// 有足夠的體力, 不休息
-					case p if (p >= 0.8):
-						0.1;
 					case p if (p >= 0.6):
+						0.1;
+					case p if (p >= 0.3):
 						0.5;
 					case p:
 						p;
@@ -880,7 +881,7 @@ private function getCommandWeight(ctx:Context, playerId:Int, gridId:Int, cmd:Act
 			trace("getCommandWeight", playerId, cmd, score);
 			score;
 		case _:
-			final score = Math.random() * 0.6;
+			final score = Math.random() * 0.3;
 			trace("getCommandWeight", playerId, cmd, score);
 			score;
 	}
