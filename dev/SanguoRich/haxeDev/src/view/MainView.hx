@@ -235,9 +235,15 @@ class MainView extends Box {
 
 	public function onGameTitleStartClick(value:GameSetting){
 		Main.model.gameStart(value, () -> {
+
+			for(pv in players){
+				pv.hide();
+			}
+
 			for (index => player in Main.model.gameInfo().players) {
 				if (index < players.length) {
 					players[index].name = player.name.substr(0, 1);
+					players[index].show();
 				}
 			}
 

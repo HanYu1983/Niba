@@ -21,6 +21,8 @@ class GameTitleView extends PopupView{
         grp_gridCount.selectedIndex = 1;
         grp_growSpeed.selectedIndex = 2;
         grp_resource.selectedIndex = 2;
+
+        grp_p0.disabled = true;
     }
 
 
