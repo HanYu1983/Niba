@@ -78,6 +78,9 @@ enum EventInfoID {
 	ANIMATION_EVENT;
 
 	MESSAGE_EVENT;
+
+	PLAYER_LOSE;
+	PLAYER_WIN;
 }
 
 enum MARKET {

@@ -664,6 +664,13 @@ class MainView extends Box {
 			final gameInfo = event.gameInfo;
 			final autoPlay = event.autoplay;
 			switch (event.id) {
+				case PLAYER_LOSE:
+					final msg = '${info.player.name}敗北!';
+					checkAutoPlay(autoPlay, msg, msg);
+				case PLAYER_WIN:
+					Dialogs.messageBox('玩家勝利!', '玩家勝利', MessageBoxType.TYPE_INFO, true, (b)->{
+						gameTitleView.showPopup(null);
+					});
 				case MESSAGE_EVENT:
 					syncViewByInfo(gameInfo);
 					// Dialogs.messageBox(info.msg, info.title, MessageBoxType.TYPE_INFO, true, (b)->{

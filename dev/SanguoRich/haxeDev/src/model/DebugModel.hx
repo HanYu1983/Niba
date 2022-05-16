@@ -190,6 +190,22 @@ class DebugModel implements IModel {
 				autoplay: {
 					duration: 2
 				},
+			},
+			{
+				id:EventInfoID.PLAYER_LOSE,
+				value:{
+					player: info.players[0]
+				},
+				gameInfo: info,
+				autoplay: null
+			},
+			{
+				id:EventInfoID.PLAYER_WIN,
+				value:{
+					player: info.players[0]
+				},
+				gameInfo: info,
+				autoplay: null
 			}
 		];
 		cb();
