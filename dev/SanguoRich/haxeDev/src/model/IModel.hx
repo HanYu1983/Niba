@@ -242,8 +242,15 @@ typedef BuildingCatelog = {
 	type:BUILDING,
 }
 
+typedef GameSetting = {
+	players:Array<{type:Int}>,
+	gridCount: Int,
+    growSpeed: Int,
+    resource: Int
+}
+
 interface IModel {
-	function gameStart(cb:Void->Void):Void;
+	function gameStart(setting:GameSetting, cb:Void->Void):Void;
 	function gameInfo():GameInfo;
 	function getPeople(count:Int):Array<People>;
 	function playerDice(cb:Void->Void):Void;

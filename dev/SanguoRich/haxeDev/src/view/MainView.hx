@@ -1,5 +1,7 @@
 package view;
 
+import model.IModel.GameSetting;
+import view.popup.GameTitleView;
 import view.popup.MessageView;
 import model.TreasureGenerator.TreasureCatelog;
 import view.popup.TreasurePreviewView;
@@ -65,6 +67,7 @@ class MainView extends Box {
 	var transferPreview:TransferPreview;
 	var buildingPreview:BuildPreview;
 	var growView:GrowView;
+	var gameTitleView:GameTitleView;
 
 	var gridSize = 80;
 
@@ -165,6 +168,10 @@ class MainView extends Box {
 		messageView.hide();
 		box_popup.addComponent(messageView);
 
+		gameTitleView = new GameTitleView();
+		gameTitleView.hide();
+		box_popup.addComponent(gameTitleView);
+
 		peopleListView = new PeopleListView();
 		box_playerPeopleList.addComponent(peopleListView);
 
@@ -226,6 +233,40 @@ class MainView extends Box {
 		onBtnHireClick(null);
 	}
 
+	public function onGameTitleStartClick(value:GameSetting){
+		Main.model.gameStart(value, () -> {
+			for (index => player in Main.model.gameInfo().players) {
+				if (index < players.length) {
+					players[index].name = player.name.substr(0, 1);
+				}
+			}
+
+			tab_whichInfo.onChange = function(e) {
+				syncGameInfo(Main.model.gameInfo());
+			}
+
+			syncViewByInfo(Main.model.gameInfo());
+		});
+	}
+
+	// public function onGameTitleSaveClick(){
+	// 	Main.model.save((success:Bool) -> {
+	// 		final msg = success ? '成功記錄' : '記錄失敗';
+	// 		Dialogs.messageBox(msg, msg, MessageBoxType.TYPE_INFO);
+	// 	});
+	// }
+
+	// public function onGameTitleLoadClick(){
+	// 	Main.model.load((success:Bool, gameInfo:GameInfo) -> {
+	// 		final msg = success ? '成功讀取' : '讀取失敗';
+	// 		if (success) {
+	// 			syncViewByInfo(gameInfo);
+	// 			syncViewWithEventsByGameInfo(gameInfo);
+	// 		}
+	// 		Dialogs.messageBox(msg, msg, MessageBoxType.TYPE_INFO);
+	// 	});
+	// }
+
 	@:bind(this, UIEvent.READY)
 	function onUIReady(e:UIEvent) {
 		for (index => grid in grids) {
@@ -249,6 +290,8 @@ class MainView extends Box {
 		btn_earnMoney.text = '${btn_earnMoney.text}(${ENERGY_COST_ON_RESOURCE})';
 		btn_sellArmy.text = '${btn_sellArmy.text}(${ENERGY_COST_ON_RESOURCE})';
 		btn_sellFood.text = '${btn_sellFood.text}(${ENERGY_COST_ON_RESOURCE})';
+
+		gameTitleView.showPopup(null);
 	}
 
 	@:bind(btn_save, MouseEvent.CLICK)
@@ -475,22 +518,22 @@ class MainView extends Box {
 		}
 	}
 
-	@:bind(btn_start, MouseEvent.CLICK)
-	function onBtnStartClick(e:MouseEvent) {
-		Main.model.gameStart(() -> {
-			for (index => player in Main.model.gameInfo().players) {
-				if (index < players.length) {
-					players[index].name = player.name.substr(0, 1);
-				}
-			}
+	// @:bind(btn_start, MouseEvent.CLICK)
+	// function onBtnStartClick(e:MouseEvent) {
+	// 	Main.model.gameStart(() -> {
+	// 		for (index => player in Main.model.gameInfo().players) {
+	// 			if (index < players.length) {
+	// 				players[index].name = player.name.substr(0, 1);
+	// 			}
+	// 		}
 
-			tab_whichInfo.onChange = function(e) {
-				syncGameInfo(Main.model.gameInfo());
-			}
+	// 		tab_whichInfo.onChange = function(e) {
+	// 			syncGameInfo(Main.model.gameInfo());
+	// 		}
 
-			syncViewByInfo(Main.model.gameInfo());
-		});
-	}
+	// 		syncViewByInfo(Main.model.gameInfo());
+	// 	});
+	// }
 
 	@:bind(btn_end, MouseEvent.CLICK)
 	function onBtnEndClick(e:MouseEvent) {
@@ -972,9 +1015,6 @@ class MainView extends Box {
 	}
 
 	function syncUI(gameInfo:GameInfo) {
-
-		
-		gameInfo.isPlaying ? btn_start.hide() : btn_start.show();
 
 		disabledAllCommands();
 

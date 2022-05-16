@@ -17,8 +17,8 @@ class ProxyModel implements IModel {
 		return model.getPeople(count);
 	}
 
-	public function gameStart(cb:Void->Void):Void {
-		return model.gameStart(cb);
+	public function gameStart(setting:GameSetting, cb:Void->Void):Void {
+		return model.gameStart(setting, cb);
 	}
 
 	public function gameInfo():GameInfo {

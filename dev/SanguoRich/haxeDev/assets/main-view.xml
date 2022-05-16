@@ -96,7 +96,7 @@
                 </hbox>
             </vbox>
             <vbox width="120" height="100%">
-                <button text="游戲開始" width="100%" id="btn_start" />
+                <!-- <button text="游戲開始" width="100%" id="btn_start" /> -->
 
                 <section-header text="君主" />
                 <button text="移動" width="100%" id="btn_go" />

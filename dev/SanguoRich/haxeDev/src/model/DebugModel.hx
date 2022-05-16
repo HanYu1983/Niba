@@ -63,7 +63,7 @@ class DebugModel implements IModel {
 		}
 	}
 
-	public function gameStart(cb:Void->Void):Void {
+	public function gameStart(setting:GameSetting, cb:Void->Void):Void {
 		info = {
 			players: [gp(0, 'vic'), gp(1, 'han'), gp(2, 'xiao'), gp(3, 'any')],
 			playerGrids: [gp(0, 'vic'), gp(1, 'han'), gp(2, 'xiao'), gp(3, 'any')],
