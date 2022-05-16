@@ -1,6 +1,6 @@
 <vbox padding="20" verticalAlign="center" horizontalAlign="center" style="background-color: white;border:1px solid grey;">
     <style>
-    .button {
+    .button-bar .button {
         width:60
     }
     </style>
