@@ -43,6 +43,7 @@ class TestExploreModel extends DebugModel {
 					commands: []
 				},
 				gameInfo: info,
+				autoplay: null,
 			}
 		];
 		cb();
@@ -76,6 +77,7 @@ class TestExploreModel extends DebugModel {
 					]
 				},
 				gameInfo: info,
+				autoplay: null,
 			}
 		];
 		cb(info);
@@ -129,6 +131,7 @@ class TestExploreModel extends DebugModel {
 					foodAfter: 200
 				},
 				gameInfo: info,
+				autoplay: null,
 			}
 		];
 		cb(info);

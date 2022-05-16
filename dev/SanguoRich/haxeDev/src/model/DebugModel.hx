@@ -114,67 +114,72 @@ class DebugModel implements IModel {
 		g.belongPlayerId = null;
 		g.buildtype = GROWTYPE.MARKET;
 		info.events = [
-			{
-				id:EventInfoID.ANIMATION_EVENT,
-				value:{
-					id: ActionInfoID.MOVE,
-					value: {
-						playerId: 0,
-						fromGridId: 5,
-						toGridId: 10
-					},
-				},
-				gameInfo: info,
-			},
-			{
-				id:EventInfoID.ANIMATION_EVENT,
-				value:{
-					id: ActionInfoID.SNATCH,
-					value: {
-						gridIds: [12, 15, 4],
-						duration: 1.5,
-						msg: '戰爭'
-					},
-				},
-				gameInfo: info,
-			},
-			{
-				id: EventInfoID.GRID_RESOURCE_EVENT,
-				value:{
-					grids:[
-						{
-							gridBefore: g,
-							gridAfter: g,
+			// {
+			// 	id:EventInfoID.ANIMATION_EVENT,
+			// 	value:{
+			// 		id: ActionInfoID.MOVE,
+			// 		value: {
+			// 			playerId: 0,
+			// 			fromGridId: 5,
+			// 			toGridId: 10
+			// 		},
+			// 	},
+			// 	gameInfo: info,
+			// 	autoplay: null,
+			// },
+			// {
+			// 	id:EventInfoID.ANIMATION_EVENT,
+			// 	value:{
+			// 		id: ActionInfoID.SNATCH,
+			// 		value: {
+			// 			gridIds: [12, 15, 4],
+			// 			duration: 1.5,
+			// 			msg: '戰爭'
+			// 		},
+			// 	},
+			// 	gameInfo: info,
+			// 	autoplay: null,
+			// },
+			// {
+			// 	id: EventInfoID.GRID_RESOURCE_EVENT,
+			// 	value:{
+			// 		grids:[
+			// 			{
+			// 				gridBefore: g,
+			// 				gridAfter: g,
 							
-						},
-						{
-							gridBefore: g,
-							gridAfter: g,
-						}
-					],
-					describtion:'aaa'
-				},
-				gameInfo: info,
-			},
-			{
-				id:EventInfoID.ANIMATION_EVENT,
-				value:{
-					id: ActionInfoID.MOVE,
-					value: {
-						playerId: 0,
-						fromGridId: 5,
-						toGridId: 10
-					},
-				},
-				gameInfo: info,
-			},
-			{
-				id:EventInfoID.GRID_BORN_EVENT,
-				value:{
-					grid:g,
-				},
-				gameInfo: info,
-			},
+			// 			},
+			// 			{
+			// 				gridBefore: g,
+			// 				gridAfter: g,
+			// 			}
+			// 		],
+			// 		describtion:'aaa'
+			// 	},
+			// 	gameInfo: info,
+			// 	autoplay: null,
+			// },
+			// {
+			// 	id:EventInfoID.ANIMATION_EVENT,
+			// 	value:{
+			// 		id: ActionInfoID.MOVE,
+			// 		value: {
+			// 			playerId: 0,
+			// 			fromGridId: 5,
+			// 			toGridId: 10
+			// 		},
+			// 	},
+			// 	gameInfo: info,
+			// 	autoplay: null,
+			// },
+			// {
+			// 	id:EventInfoID.GRID_BORN_EVENT,
+			// 	value:{
+			// 		grid:g,
+			// 	},
+			// 	gameInfo: info,
+			// 	autoplay: null,
+			// },
 			{
 				id:EventInfoID.MESSAGE_EVENT,
 				value:{
@@ -182,6 +187,9 @@ class DebugModel implements IModel {
 					msg:'asdfsfd'
 				},
 				gameInfo: info,
+				autoplay: {
+					duration: 2
+				},
 			}
 		];
 		cb();
@@ -219,6 +227,7 @@ class DebugModel implements IModel {
 					peopleAfter:PeopleGenerator.getInst().generate(),
 				},
 				gameInfo:null,
+				autoplay: null,
 			},
 			{
 				id:EventInfoID.PAY_FOR_OVER_ENEMY_GRID,
@@ -231,6 +240,7 @@ class DebugModel implements IModel {
 					armyAfter:1
 				},
 				gameInfo:null,
+				autoplay: null,
 			}
 		];
 		cb();
@@ -247,6 +257,7 @@ class DebugModel implements IModel {
 				id: EventInfoID.NEGOTIATE_RESULT,
 				value: null,
 				gameInfo: info,
+				autoplay: null,
 			},
 		];
 		cb(info);
@@ -274,6 +285,7 @@ class DebugModel implements IModel {
 					foodAfter: 200
 				},
 				gameInfo:null,
+				autoplay: null,
 			}
 		];
 		cb(info);
@@ -317,6 +329,7 @@ class DebugModel implements IModel {
 					treasure:TreasureGenerator.getInst().generator().catelog
 				},
 				gameInfo: info,
+				autoplay: null,
 			}
 		];
 		cb(info);
@@ -351,6 +364,7 @@ class DebugModel implements IModel {
 					maintainMoneyBefore: 10,
 				},
 				gameInfo:null,
+				autoplay: null,
 			}
 		];
 		cb(info);
@@ -425,6 +439,7 @@ class DebugModel implements IModel {
 					foodAfter: 200
 				},
 				gameInfo: info,
+				autoplay: null,
 			}
 		];
 		cb(info);
@@ -453,6 +468,7 @@ class DebugModel implements IModel {
 					energyAfter: 1,
 				},
 				gameInfo:null,
+				autoplay: null,
 			},
 			{
 				id: EventInfoID.WALK_STOP,
@@ -460,6 +476,7 @@ class DebugModel implements IModel {
 					grid: info.grids[0]
 				},
 				gameInfo:null,
+				autoplay: null,
 			}
 		];
 		cb(info);
@@ -476,6 +493,7 @@ class DebugModel implements IModel {
 					building: BUILDING.FARM(2),
 				},
 				gameInfo:null,
+				autoplay: null,
 			}
 		];
 		cb(info);
@@ -509,6 +527,7 @@ class DebugModel implements IModel {
 					]
 				},
 				gameInfo:null,
+				autoplay: null,
 			}
 		];
 		cb(info);
@@ -542,6 +561,7 @@ class DebugModel implements IModel {
 					armyAfter:0,
 				},
 				gameInfo: null,
+				autoplay: null,
 			}
 		];
 		syncViewByInfo(info);

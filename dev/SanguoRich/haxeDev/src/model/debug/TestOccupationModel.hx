@@ -37,6 +37,7 @@ class TestOccupationModel extends DebugModel {
 					foodAfter: 200
 				},
 				gameInfo: info,
+				autoplay: {duration: 2},
 			},
 			{
 				id:FIND_TREASURE_RESULT,
@@ -47,6 +48,7 @@ class TestOccupationModel extends DebugModel {
 					]
 				},
 				gameInfo: info,
+				autoplay:{duration: 2},
 			}
 		];
 		cb(info);
@@ -101,6 +103,7 @@ class TestOccupationModel extends DebugModel {
 					foodAfter: 200
 				},
 				gameInfo: info,
+				autoplay: null,
 			}
 		];
 		cb(info);
@@ -144,6 +147,7 @@ class TestOccupationModel extends DebugModel {
 					foodAfter: 200
 				},
 				gameInfo: info,
+				autoplay: null,
 			}
 		];
 		cb(info);

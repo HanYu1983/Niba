@@ -96,6 +96,7 @@ typedef EventInfo = {
 	id:EventInfoID,
 	value:Dynamic,
 	gameInfo:GameInfo,
+	autoplay:Null<{duration:Float}>,
 }
 
 typedef GameInfo = {

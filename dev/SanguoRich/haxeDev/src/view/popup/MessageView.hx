@@ -18,44 +18,15 @@ class MessageView extends PopupView{
         return content;
     }
 
-    var pList:PeopleListView;
-
     public function new() {
         super();
-
-        pList = new PeopleListView();
-        box_peopleList.addComponent(pList);
     }
-    
-    var confirmMethod:()->Void = null;
 
-    public function showMessage(title:String, info:String, list:Array<People> = null, confirm:()->Void = null){
+    public function showMessage(title:String, info:String){
         fadeIn();
 
         this.title = title;
         this.content = info;
-
-        box_peopleList.hide();
-        if(list != null && list.length > 0){
-            box_peopleList.show();
-            pList.setPeopleList(list);
-        }
-        
-        confirmMethod = confirm;
-        confirmMethod == null ? btn_cancel.show() : btn_cancel.hide();
     }
 
-    @:bind(btn_cancel, MouseEvent.CLICK)
-    function onBtnCancelClick(e:MouseEvent){
-        fadeOut();
-        if(confirmMethod != null) confirmMethod();
-        confirmMethod = null;
-    }
-
-    @:bind(btn_confirm, MouseEvent.CLICK)
-    function onBtnComfirmClick(e:MouseEvent){
-        fadeOut();
-        if(confirmMethod != null) confirmMethod();
-        confirmMethod = null;
-    }
 }

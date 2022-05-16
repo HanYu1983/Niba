@@ -595,108 +595,126 @@ function getEventInfo(e:Event):EventInfo {
 				id: EventInfoID.WORLD_EVENT,
 				value: value,
 				gameInfo: gameInfo,
+				autoplay: null,
 			}
 		case WALK_STOP(value, gameInfo):
 			{
 				id: EventInfoID.WALK_STOP,
 				value: value,
 				gameInfo: gameInfo,
+				autoplay: null,
 			}
 		case NEGOTIATE_RESULT(value, gameInfo):
 			{
 				id: EventInfoID.NEGOTIATE_RESULT,
 				value: value,
 				gameInfo: gameInfo,
+				autoplay: null,
 			}
 		case EXPLORE_RESULT(value, gameInfo):
 			{
 				id: EventInfoID.EXPLORE_RESULT,
 				value: value,
 				gameInfo: gameInfo,
+				autoplay: null,
 			}
 		case HIRE_RESULT(value, gameInfo):
 			{
 				id: EventInfoID.HIRE_RESULT,
 				value: value,
 				gameInfo: gameInfo,
+				autoplay: null,
 			}
 		case WAR_RESULT(value, gameInfo):
 			{
 				id: EventInfoID.WAR_RESULT,
 				value: value,
 				gameInfo: gameInfo,
+				autoplay: null,
 			}
 		case RESOURCE_RESULT(value, gameInfo):
 			{
 				id: EventInfoID.RESOURCE_RESULT,
 				value: value,
 				gameInfo: gameInfo,
+				autoplay: null,
 			}
 		case FIRE_RESULT(value, gameInfo):
 			{
 				id: EventInfoID.FIRE_RESULT,
 				value: value,
 				gameInfo: gameInfo,
+				autoplay: null,
 			}
 		case SNATCH_RESULT(value, gameInfo):
 			{
 				id: EventInfoID.SNATCH_RESULT,
 				value: value,
 				gameInfo: gameInfo,
+				autoplay: null,
 			}
 		case STRATEGY_RESULT(value, gameInfo):
 			{
 				id: EventInfoID.STRATEGY_RESULT,
 				value: value,
 				gameInfo: gameInfo,
+				autoplay: null,
 			}
 		case BUILDING_RESULT(value, gameInfo):
 			{
 				id: EventInfoID.BUILDING_RESULT,
 				value: value,
 				gameInfo: gameInfo,
+				autoplay: null,
 			}
 		case PAY_FOR_OVER_ENEMY_GRID(value, gameInfo):
 			{
 				id: EventInfoID.PAY_FOR_OVER_ENEMY_GRID,
 				value: value,
 				gameInfo: gameInfo,
+				autoplay: null,
 			}
 		case PEOPLE_LEVEL_UP_EVENT(value, gameInfo):
 			{
 				id: EventInfoID.PEOPLE_LEVEL_UP_EVENT,
 				value: value,
 				gameInfo: gameInfo,
+				autoplay: null,
 			}
 		case COST_FOR_BONUS_RESULT(value, gameInfo):
 			{
 				id: EventInfoID.COST_FOR_BONUS_RESULT,
 				value: value,
 				gameInfo: gameInfo,
+				autoplay: null,
 			}
 		case PK_RESULT(value, gameInfo):
 			{
 				id: EventInfoID.PK_RESULT,
 				value: value,
 				gameInfo: gameInfo,
+				autoplay: null,
 			}
 		case GRID_RESOURCE_EVENT(value, gameInfo):
 			{
 				id: EventInfoID.GRID_RESOURCE_EVENT,
 				value: value,
 				gameInfo: gameInfo,
+				autoplay: null,
 			}
 		case GRID_BORN_EVENT(value, gameInfo):
 			{
 				id: EventInfoID.GRID_BORN_EVENT,
 				value: value,
 				gameInfo: gameInfo,
+				autoplay: null,
 			}
 		case FIND_TREASURE_RESULT(value, gameInfo):
 			{
 				id: EventInfoID.FIND_TREASURE_RESULT,
 				value: value,
 				gameInfo: gameInfo,
+				autoplay: null,
 			}
 		case ANIMATION_EVENT_MOVE(value, gameInfo):
 			{
@@ -706,6 +724,7 @@ function getEventInfo(e:Event):EventInfo {
 					value: value
 				},
 				gameInfo: gameInfo,
+				autoplay: null,
 			}
 		case ANIMATION_EVENT_SNATCH(value, gameInfo):
 			{
@@ -715,12 +734,14 @@ function getEventInfo(e:Event):EventInfo {
 					value: value
 				},
 				gameInfo: gameInfo,
+				autoplay: null,
 			}
 		case MESSAGE_EVENT(value, gameInfo):
 			{
 				id: EventInfoID.MESSAGE_EVENT,
 				value: value,
 				gameInfo: gameInfo,
+				autoplay: null,
 			}
 	}
 }

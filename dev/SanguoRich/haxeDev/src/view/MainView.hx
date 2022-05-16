@@ -1,5 +1,6 @@
 package view;
 
+import view.popup.MessageView;
 import model.TreasureGenerator.TreasureCatelog;
 import view.popup.TreasurePreviewView;
 import view.widgets.PeopleListView;
@@ -55,6 +56,7 @@ class MainView extends Box {
 	var negoPreviewView:NegoPreviewView;
 	var pkPrevieView:PkPreviewView;
 	var hirePreviewView:HirePreviewView;
+	var messageView:MessageView;
 	var costForBonusView:CostForBonusView;
 	var explorePreviewView:ExplorePreviewView;
 	var exploreSuccessView:ExploreSuccessView;
@@ -158,6 +160,10 @@ class MainView extends Box {
 		costForBonusView = new CostForBonusView();
 		costForBonusView.hide();
 		box_popup.addComponent(costForBonusView);
+
+		messageView = new MessageView();
+		messageView.hide();
+		box_popup.addComponent(messageView);
 
 		peopleListView = new PeopleListView();
 		box_playerPeopleList.addComponent(peopleListView);
@@ -591,10 +597,29 @@ class MainView extends Box {
 	}
 
 	function doOneEvent() {
+
+		function checkAutoPlay(autoPlay:Dynamic, title, msg){
+			if(autoPlay != null){
+				messageView.showMessage(title, msg);
+				TweenX.serial([
+					TweenX.wait(autoPlay.duration),
+					TweenX.func(()->{
+						messageView.fadeOut();
+						doOneEvent();
+					})
+				]);
+			}else{
+				Dialogs.messageBox(msg, title, MessageBoxType.TYPE_INFO, true, (b) -> {
+					doOneEvent();
+				});
+			}
+		}
+
 		if (events.length > 0) {
 			final event = events.shift();
 			final info:Dynamic = event.value;
 			final gameInfo = event.gameInfo;
+			final autoPlay = event.autoplay;
 			switch (event.id) {
 				case MESSAGE_EVENT:
 					syncViewByInfo(gameInfo);
@@ -641,9 +666,11 @@ class MainView extends Box {
 						title += '${t.name} ';
 					}
 
-					Dialogs.messageBox(title, '發現寶物', MessageBoxType.TYPE_INFO, true, (b) -> {
-						doOneEvent();
-					});
+					checkAutoPlay(autoPlay, '發現寶物', title);
+
+					// Dialogs.messageBox(title, '發現寶物', MessageBoxType.TYPE_INFO, true, (b) -> {
+					// 	doOneEvent();
+					// });
 
 					// var msg = '${title}\n';
 					// msg += '是否直接賜予武將?';
@@ -714,9 +741,11 @@ class MainView extends Box {
 					}
 					var msg = '武將:${info.people.name}\n';
 					msg += '士兵:${Main.getFixNumber(info.armyBefore, 0)} => ${Main.getFixNumber(info.armyAfter, 0)} (${Main.getFixNumber(info.armyAfter - info.armyBefore, 0)})';
-					Dialogs.messageBox(msg, title, MessageBoxType.TYPE_INFO, true, (b) -> {
-						doOneEvent();
-					});
+					// Dialogs.messageBox(msg, title, MessageBoxType.TYPE_INFO, true, (b) -> {
+					// 	doOneEvent();
+					// });
+
+					checkAutoPlay(autoPlay, title, msg);
 				case COST_FOR_BONUS_RESULT:
 					syncViewByInfo(gameInfo);
 
@@ -743,9 +772,10 @@ class MainView extends Box {
 						};
 						msg += '${peopleAfter.name} ${recoverType} 上升 ${recover}\n';
 					}
-					Dialogs.messageBox(msg, title, MessageBoxType.TYPE_INFO, true, (b) -> {
-						doOneEvent();
-					});
+					// Dialogs.messageBox(msg, title, MessageBoxType.TYPE_INFO, true, (b) -> {
+					// 	doOneEvent();
+					// });
+					checkAutoPlay(autoPlay, title, msg);
 
 				case HIRE_RESULT:
 					syncViewByInfo(gameInfo);
@@ -756,10 +786,10 @@ class MainView extends Box {
 					msg += '金錢:${Main.getFixNumber(info.moneyBefore, 0)} => ${Main.getFixNumber(info.moneyAfter, 0)}\n';
 					msg += '糧草:${Main.getFixNumber(info.foodBefore, 0)} => ${Main.getFixNumber(info.foodAfter, 0)}\n';
 					msg += '士兵:${Main.getFixNumber(info.armyBefore, 0)} => ${Main.getFixNumber(info.armyAfter, 0)}\n';
-					Dialogs.messageBox(msg, title, MessageBoxType.TYPE_INFO, true, (b) -> {
-						doOneEvent();
-					});
-
+					// Dialogs.messageBox(msg, title, MessageBoxType.TYPE_INFO, true, (b) -> {
+					// 	doOneEvent();
+					// });
+					checkAutoPlay(autoPlay, title, msg);
 				case FIRE_RESULT:
 					syncViewByInfo(gameInfo);
 
@@ -767,10 +797,10 @@ class MainView extends Box {
 					var msg = '解雇:${people.map((p) -> p.name).join(',')}\n';
 					msg += '薪俸:${Main.getFixNumber(info.maintainMoneyBefore, 2)} => ${Main.getFixNumber(info.maintainMoneyAfter, 2)}\n';
 
-					Dialogs.messageBox(msg, '解雇完成', MessageBoxType.TYPE_INFO, true, (b) -> {
-						doOneEvent();
-					});
-
+					// Dialogs.messageBox(msg, '解雇完成', MessageBoxType.TYPE_INFO, true, (b) -> {
+					// 	doOneEvent();
+					// });
+					checkAutoPlay(autoPlay, '解雇完成', msg);
 
 				case NEGOTIATE_RESULT:
 					syncViewByInfo(gameInfo);
@@ -782,9 +812,10 @@ class MainView extends Box {
 					msg += '糧草:${Main.getFixNumber(info.foodBefore, 0)} => ${Main.getFixNumber(info.foodAfter, 0)}\n';
 					msg += '士兵:${Main.getFixNumber(info.armyBefore, 0)} => ${Main.getFixNumber(info.armyAfter, 0)}\n';
 					msg += '友好:${Main.getFavorString(info.favorBefore)} => ${Main.getFavorString(info.favorAfter)}\n';
-					Dialogs.messageBox(msg, title, MessageBoxType.TYPE_INFO, true, (b) -> {
-						doOneEvent();
-					});
+					// Dialogs.messageBox(msg, title, MessageBoxType.TYPE_INFO, true, (b) -> {
+					// 	doOneEvent();
+					// });
+					checkAutoPlay(autoPlay, title, msg);
 
 				case EXPLORE_RESULT:
 					syncViewByInfo(gameInfo);
@@ -819,10 +850,10 @@ class MainView extends Box {
 					msg += '金錢:${Main.getFixNumber(info.moneyBefore, 0)} => ${Main.getFixNumber(info.moneyAfter, 0)}\n';
 					msg += '糧草:${Main.getFixNumber(info.foodBefore, 0)} => ${Main.getFixNumber(info.foodAfter, 0)}\n';
 					msg += '士兵:${Main.getFixNumber(info.armyBefore, 0)} => ${Main.getFixNumber(info.armyAfter, 0)}\n';
-					Dialogs.messageBox(msg, title, MessageBoxType.TYPE_INFO, true, (b) -> {
-						doOneEvent();
-					});
-
+					// Dialogs.messageBox(msg, title, MessageBoxType.TYPE_INFO, true, (b) -> {
+					// 	doOneEvent();
+					// });
+					checkAutoPlay(autoPlay, title, msg);
 				case RESOURCE_RESULT:
 					syncViewByInfo(gameInfo);
 
@@ -831,10 +862,10 @@ class MainView extends Box {
 					msg += '金錢:${Main.getFixNumber(info.moneyBefore, 0)} => ${Main.getFixNumber(info.moneyAfter, 0)}\n';
 					msg += '糧草:${Main.getFixNumber(info.foodBefore, 0)} => ${Main.getFixNumber(info.foodAfter, 0)}\n';
 					msg += '士兵:${Main.getFixNumber(info.armyBefore, 0)} => ${Main.getFixNumber(info.armyAfter, 0)}\n';
-					Dialogs.messageBox(msg, '交易完成', MessageBoxType.TYPE_INFO, true, (b) -> {
-						doOneEvent();
-					});
-
+					// Dialogs.messageBox(msg, '交易完成', MessageBoxType.TYPE_INFO, true, (b) -> {
+					// 	doOneEvent();
+					// });
+					checkAutoPlay(autoPlay, '交易完成', msg);
 				case STRATEGY_RESULT:
 					syncViewByInfo(gameInfo);
 
@@ -843,18 +874,20 @@ class MainView extends Box {
 					msg += '武將:${info.people ? info.people.name : ""}\n';
 					msg += '計策:${info.strategy ? info.strategy.name : ""}\n';
 					msg += '體力:${Main.getFixNumber(info.energyBefore, 0)} => ${Main.getFixNumber(info.energyAfter, 0)}\n';
-					Dialogs.messageBox(msg, title, MessageBoxType.TYPE_INFO, true, (b) -> {
-						doOneEvent();
-					});
+					// Dialogs.messageBox(msg, title, MessageBoxType.TYPE_INFO, true, (b) -> {
+					// 	doOneEvent();
+					// });
+					checkAutoPlay(autoPlay, title, msg);
 				case BUILDING_RESULT:
 					syncViewByInfo(gameInfo);
 
 					final catelog = Main.getBuildingCatelog(info.building);
 					var msg = '武將:${info.people.name:""}\n';
 					msg += '已擴建 ${catelog.name}\n';
-					Dialogs.messageBox(msg, '擴建完畢', MessageBoxType.TYPE_INFO, true, (b) -> {
-						doOneEvent();
-					});
+					// Dialogs.messageBox(msg, '擴建完畢', MessageBoxType.TYPE_INFO, true, (b) -> {
+					// 	doOneEvent();
+					// });
+					checkAutoPlay(autoPlay, '擴建完畢', msg);
 				case WORLD_EVENT:
 
 					growView.showPopup(event.value, () -> {
@@ -880,10 +913,10 @@ class MainView extends Box {
 					}
 					msg += '魅力:${p1.charm} => ${p2.charm}\n';
 					msg += '體力:${p1.energy} => ${p2.energy}\n';
-					Dialogs.messageBox(msg, title, MessageBoxType.TYPE_INFO, true, (b) -> {
-						doOneEvent();
-					});
-
+					// Dialogs.messageBox(msg, title, MessageBoxType.TYPE_INFO, true, (b) -> {
+					// 	doOneEvent();
+					// });
+					checkAutoPlay(autoPlay, title, msg);
 				case PAY_FOR_OVER_ENEMY_GRID:
 					syncViewByInfo(gameInfo);
 
@@ -892,9 +925,10 @@ class MainView extends Box {
 					msg += '金錢:${Main.getFixNumber(info.moneyBefore, 0)} => ${Main.getFixNumber(info.moneyAfter, 0)}\n';
 					msg += '糧草:${Main.getFixNumber(info.foodBefore, 0)} => ${Main.getFixNumber(info.foodAfter, 0)}\n';
 					msg += '士兵:${Main.getFixNumber(info.armyBefore, 0)} => ${Main.getFixNumber(info.armyAfter, 0)}\n';
-					Dialogs.messageBox(msg, title, MessageBoxType.TYPE_INFO, true, (b) -> {
-						doOneEvent();
-					});
+					// Dialogs.messageBox(msg, title, MessageBoxType.TYPE_INFO, true, (b) -> {
+					// 	doOneEvent();
+					// });
+					checkAutoPlay(autoPlay, title, msg);
 			}
 		}else{
 			Main.model.refresh(()->{
