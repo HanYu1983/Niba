@@ -235,24 +235,25 @@ class MainView extends Box {
 
 	public function onGameTitleStartClick(value:GameSetting){
 		Main.model.gameStart(value, () -> {
-
-			for(pv in players){
-				pv.hide();
-			}
-
-			for (index => player in Main.model.gameInfo().players) {
-				if (index < players.length) {
-					players[index].name = player.name.substr(0, 1);
-					players[index].show();
-				}
-			}
-
 			tab_whichInfo.onChange = function(e) {
 				syncGameInfo(Main.model.gameInfo());
 			}
 
-			syncViewByInfo(Main.model.gameInfo());
+			final gameInfo = Main.model.gameInfo();
+			showPlayerChess(gameInfo);
+			syncViewByInfo(gameInfo);
 		});
+	}
+
+	function showPlayerChess(gameInfo:GameInfo){
+		for (index => player in gameInfo.players) {
+			if (index < players.length) {
+				players[index].name = player.name.substr(0, 1);
+				players[index].show();
+			}else{
+				players[index].hide();
+			}
+		}
 	}
 
 	// public function onGameTitleSaveClick(){
@@ -313,6 +314,7 @@ class MainView extends Box {
 		Main.model.load((success:Bool, gameInfo:GameInfo) -> {
 			final msg = success ? '成功讀取' : '讀取失敗';
 			if (success) {
+				showPlayerChess(gameInfo);
 				syncViewByInfo(gameInfo);
 				syncViewWithEventsByGameInfo(gameInfo);
 			}
@@ -1160,6 +1162,7 @@ class MainView extends Box {
 
 	function syncPlayerViews(gameInfo:GameInfo) {
 		for (index => playerInfo in gameInfo.players) {
+
 			if (index < players.length) {
 				var playerView = players[index];
 
