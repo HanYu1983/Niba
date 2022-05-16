@@ -41,7 +41,7 @@
                 </hbox>
                 <hbox>
                     <label text='難度'/>
-                    <button-bar id="grp_ai_level" allowUnselection="true">
+                    <button-bar id="grp_ai_level" tooltip="目前會影響AI的初始資源量" allowUnselection="true">
                         <button text="簡單" />
                         <button text="普通" />
                         <button text="困難" />
@@ -77,7 +77,7 @@
                 </hbox>
                 <hbox>
                     <label text='限制建築'/>
-                    <button-bar id="grp_limitBuilding" allowUnselection="true">
+                    <button-bar id="grp_limitBuilding" tooltip="不同類型的格子能蓋的東西不一樣。關閉的話，就是什麼都可以蓋。" allowUnselection="true">
                         <button text="是" />
                         <button text="否" />
                     </button-bar>
