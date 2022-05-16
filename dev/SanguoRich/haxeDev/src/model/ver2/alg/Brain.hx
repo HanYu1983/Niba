@@ -38,6 +38,15 @@ typedef BrainMemory = {
 	hire:{
 		peopleId:Null<Int>, inviteId:Null<Int>
 	},
+	fire:{
+		peopleId:Null<Int>
+	},
+	pk:{
+		peopleId:Null<Int>
+	},
+	nego:{
+		peopleId:Null<Int>
+	},
 	hasTransfer:Bool
 }
 
@@ -71,6 +80,15 @@ function doBrain(ctx, playerId:Int) {
 				hire: {
 					peopleId: null,
 					inviteId: null
+				},
+				fire: {
+					peopleId: null
+				},
+				pk: {
+					peopleId: null
+				},
+				nego: {
+					peopleId: null
 				},
 				hasTransfer: false
 			} : BrainMemory);
@@ -116,7 +134,9 @@ function doBrain(ctx, playerId:Int) {
 				}
 				final buildingsInGrid = ctx.attachments.filter(a -> a.belongToGridId == gridId);
 				if (buildingsInGrid.length > 0) {
-					final firstBuilding = buildingsInGrid[0].type;
+					// 隨機建造
+					final chooseId = Std.int(Math.random() * buildingsInGrid.length);
+					final firstBuilding = buildingsInGrid[chooseId].type;
 					final toBuilding:BUILDING = switch firstBuilding {
 						case MARKET(level):
 							MARKET(Std.int(Math.min(3, level + 1)));
@@ -192,10 +212,10 @@ function doBrain(ctx, playerId:Int) {
 				_takeExplore(ctx, playerId, gridId, brainMemory.explore.peopleId);
 				doEvent(ctx, playerId);
 			case FIRE:
-				if (p1People == null) {
-					throw new haxe.Exception("p1People not found");
+				if (brainMemory.fire.peopleId == null) {
+					throw new haxe.Exception("brainMemory.fire.peopleId not found");
 				}
-				_takeFire(ctx, playerId, [p1People.id]);
+				_takeFire(ctx, playerId, [brainMemory.fire.peopleId]);
 				doEvent(ctx, playerId);
 			case HIRE:
 				if (brainMemory.hire.peopleId == null) {
@@ -207,22 +227,22 @@ function doBrain(ctx, playerId:Int) {
 				doTakeHire(ctx, playerId, gridId, brainMemory.hire.peopleId, brainMemory.hire.inviteId);
 				doEvent(ctx, playerId);
 			case NEGOTIATE:
-				if (p1People == null) {
-					throw new haxe.Exception("p1People not found");
+				if (brainMemory.nego.peopleId == null) {
+					throw new haxe.Exception("brainMemory.nego.peopleId not found");
 				}
 				if (p2GridPeople == null) {
 					throw new haxe.Exception("p2GridPeople not found");
 				}
-				doTakeNegoOn(ctx, playerId, gridId, p1People.id, p2GridPeople.id);
+				doTakeNegoOn(ctx, playerId, gridId, brainMemory.nego.peopleId, p2GridPeople.id);
 				doEvent(ctx, playerId);
 			case PK:
-				if (p1People == null) {
-					throw new haxe.Exception("p1People not found");
+				if (brainMemory.pk.peopleId == null) {
+					throw new haxe.Exception("brainMemory.pk.peopleId not found");
 				}
 				if (p2GridPeople == null) {
 					throw new haxe.Exception("p2GridPeople not found");
 				}
-				_takePk(ctx, playerId, gridId, p1People.id, p2GridPeople.id);
+				_takePk(ctx, playerId, gridId, brainMemory.pk.peopleId, p2GridPeople.id);
 				doEvent(ctx, playerId);
 			case SNATCH | OCCUPATION:
 				if (brainMemory.war.peopleId == null) {
@@ -387,11 +407,32 @@ private function getCommandWeight(ctx:Context, playerId:Int, gridId:Int, cmd:Act
 			// 越多人越想裁
 			final fact2 = switch peopleInPlayer.length {
 				case len if (len <= 4):
-					0.2;
+					-1.0;
 				case len:
 					Math.pow(Math.min(1, len - 4 / 10.0), 0.5);
 			}
-			final score = 1.0 * fact1 * fact2;
+			// 要裁誰
+			final fact3 = {
+				var maxScore = 0.0;
+				for (p1 in peopleInPlayer) {
+					// 佔城的不能解雇
+					if (p1.position.gridId != null) {
+						continue;
+					}
+					final score = 10000 - p1.exp;
+					if (score > maxScore) {
+						maxScore = score;
+						brainMemory.fire.peopleId = p1.id;
+					}
+				}
+				if (maxScore == 0) {
+					// 無人可裁
+					- 1.0;
+				} else {
+					1.0;
+				}
+			}
+			final score = 1.0 * fact1 * fact2 * fact3;
 			trace("getCommandWeight", playerId, cmd, score);
 			score;
 		case EXPLORE:
@@ -739,6 +780,82 @@ private function getCommandWeight(ctx:Context, playerId:Int, gridId:Int, cmd:Act
 				trace("getCommandWeight", playerId, cmd, score);
 				score;
 			}
+		case NEGOTIATE:
+			// 沒人在城裡
+			if (peopleInGrid.length == 0) {
+				return 0.0;
+			}
+			final p2PeopleId = peopleInGrid[0].id;
+			final fact1 = {
+				var tmpMaxScore = -1.0;
+				for (p in peopleInPlayer) {
+					final p1PeopleId = p.id;
+					switch doGetPreResultOfNego(ctx, playerId, gridId, p1PeopleId, p2PeopleId) {
+						case {
+							energyAfter: energyAfter,
+							energyBefore: energyBefore,
+							armyBefore: armyBefore,
+							armyAfter: armyAfter,
+							moneyBefore: moneyBefore,
+							moneyAfter: moneyAfter,
+							foodBefore: foodBefore,
+							foodAfter: foodAfter,
+							successRate: successRate
+						}:
+							final fact1 = successRate;
+							// 體力剩下越多越好
+							final fact2 = Math.pow(energyAfter / 100.0, 0.5);
+							// 拿越多越好
+							final fact3 = {
+								final earn = (armyAfter - armyBefore) + (moneyAfter - moneyBefore) + (foodAfter - foodBefore);
+								earn / 100.0;
+							}
+							final score = 1.0 * fact1 * fact2 * fact3;
+							if (score > tmpMaxScore) {
+								tmpMaxScore = score;
+								brainMemory.nego.peopleId = p1PeopleId;
+							}
+					}
+				}
+				tmpMaxScore;
+			}
+			final score = 1.0 * fact1;
+			trace("getCommandWeight", playerId, cmd, score);
+			score;
+		case PK:
+			// 沒人在城裡
+			if (peopleInGrid.length == 0) {
+				return 0.0;
+			}
+			final p2PeopleId = peopleInGrid[0].id;
+			final fact1 = {
+				var tmpMaxScore = -1.0;
+				for (p in peopleInPlayer) {
+					final p1PeopleId = p.id;
+					switch _getPreResultOfPk(ctx, playerId, gridId, p1PeopleId, p2PeopleId) {
+						case {
+							energyAfter: energyAfter,
+							energyBefore: energyBefore,
+							armyChange: armyChange,
+							successRate: successRate
+						}:
+							final fact1 = successRate;
+							// 體力剩下越多越好
+							final fact2 = Math.pow(energyAfter / 100.0, 0.5);
+							// 拿越多越好
+							final fact3 = armyChange / 100.0;
+							final score = 1.0 * fact1 * fact2 * fact3;
+							if (score > tmpMaxScore) {
+								tmpMaxScore = score;
+								brainMemory.pk.peopleId = p1PeopleId;
+							}
+					}
+				}
+				tmpMaxScore;
+			}
+			final score = 1.0 * fact1;
+			trace("getCommandWeight", playerId, cmd, score);
+			score;
 		case SNATCH:
 			// 沒人在城裡
 			if (peopleInGrid.length == 0) {

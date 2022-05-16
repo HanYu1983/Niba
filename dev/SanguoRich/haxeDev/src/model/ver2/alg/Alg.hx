@@ -106,7 +106,7 @@ function doPlayerEnd(ctx:Context) {
 		try {
 			doBrain(ctx, nextPlayer.id);
 		} catch (e:Any) {
-			trace(e);
+			trace("doPlayerEnd catch:", e);
 		}
 	}
 	trace("doPlayerEnd", "finished");
