@@ -47,6 +47,9 @@ typedef BrainMemory = {
 	nego:{
 		peopleId:Null<Int>
 	},
+	strategy:{
+		strategyId:Null<Int>, peopleId:Null<Int>, targetPeopleId:Null<Int>, targetGridId:Null<Int>, targetPlayerId:Null<Int>,
+	},
 	hasTransfer:Bool
 }
 
@@ -89,6 +92,13 @@ function doBrain(ctx, playerId:Int) {
 				},
 				nego: {
 					peopleId: null
+				},
+				strategy: {
+					strategyId: null,
+					targetPeopleId: null,
+					peopleId: null,
+					targetGridId: null,
+					targetPlayerId: null,
 				},
 				hasTransfer: false
 			} : BrainMemory);
@@ -258,6 +268,17 @@ function doBrain(ctx, playerId:Int) {
 				_takeSnatchOn(ctx, playerId, gridId, p1Id, p2.id, cmd == OCCUPATION);
 				doEvent(ctx, playerId);
 			case STRATEGY:
+				if (brainMemory.strategy.peopleId == null) {
+					throw new haxe.Exception("player.memory.strategy.peopleId not found");
+				}
+				if (brainMemory.strategy.strategyId == null) {
+					throw new haxe.Exception("player.memory.strategy.strategyId not found");
+				}
+				final targetPlayerId = brainMemory.strategy.targetPlayerId != null ? brainMemory.strategy.targetPlayerId : 0;
+				final targetGridId = brainMemory.strategy.targetGridId != null ? brainMemory.strategy.targetGridId : 0;
+				final targetPeopleId = brainMemory.strategy.targetPeopleId != null ? brainMemory.strategy.targetPeopleId : 0;
+				_takeStrategy(ctx, brainMemory.strategy.peopleId, brainMemory.strategy.strategyId, targetPlayerId, targetPeopleId, targetGridId);
+				doEvent(ctx, playerId);
 			case TRANSFER:
 				final tmpPlayer = getPlayerInfo(ctx, player);
 				final tmpGrid = getGridInfo(ctx, grid);
@@ -398,10 +419,89 @@ private function getCommandWeight(ctx:Context, playerId:Int, gridId:Int, cmd:Act
 	final peopleInGrid = ctx.peoples.filter((p:People) -> p.position.gridId == grid.id);
 	final peopleInPlayer = ctx.peoples.filter((p:People) -> p.belongToPlayerId == player.id);
 	return switch cmd {
-		case STRATEGY:
-			0.0;
 		case TREASURE_TAKE:
 			0.0;
+		case STRATEGY:
+			final fact1 = {
+				var maxScore = -1.0;
+				for (strategy in StrategyList) {
+					switch strategy.id {
+						case 0:
+							// 暗渡陳艙
+							final steps:Array<Int> = try {
+								cast(strategy.value.valid : Array<Int>);
+							} catch (e) {
+								throw new haxe.Exception("strategy.value.valid必須是Array");
+							}
+							for (s in steps) {
+								final nextPosition = (player.position + s) % ctx.grids.length;
+								final nextGrid = ctx.grids[nextPosition];
+								final isMyGrid = getGridBelongPlayerId(ctx, nextGrid.id) == player.id;
+								final fact1 = isMyGrid ? 1.0 : 0.0;
+								for (p1 in peopleInPlayer) {
+									final result = _getStrategyRate(ctx, p1.id, strategy.id, 0, 0, nextGrid.id);
+									// 成功率
+									final fact1 = result.rate;
+									// 體力剩下越多越好
+									final fact2 = Math.pow(result.energyAfter / 100.0, 0.5);
+									final score = 1.0 * fact1 * fact2;
+									if (score > maxScore) {
+										maxScore = score;
+										brainMemory.strategy.peopleId = p1.id;
+										brainMemory.strategy.strategyId = strategy.id;
+										brainMemory.strategy.targetGridId = nextGrid.id;
+									}
+								}
+							}
+						case 1:
+							// 步步為營
+							if (peopleInPlayer.length == 0) {
+								0.0;
+							} else {
+								final peopleEnergyIsLow = peopleInPlayer.copy();
+								peopleEnergyIsLow.sort((a, b) -> Std.int(a.energy) - Std.int(b.energy));
+								final firstLowPeople = peopleEnergyIsLow[0];
+								final fact1 = if (firstLowPeople.energy < 50) {
+									1 - ((firstLowPeople.energy - 50) / 50.0);
+								} else {
+									0.1;
+								}
+								for (p1 in peopleInPlayer) {
+									final result = _getStrategyRate(ctx, p1.id, strategy.id, 0, firstLowPeople.id, 0);
+									// 成功率
+									final fact2 = result.rate;
+									// 體力剩下越多越好
+									final fact3 = Math.pow(result.energyAfter / 100.0, 0.5);
+									final score = 1.0 * fact1 * fact2 * fact3;
+									if (score > maxScore) {
+										maxScore = score;
+										brainMemory.strategy.peopleId = p1.id;
+										brainMemory.strategy.strategyId = strategy.id;
+										brainMemory.strategy.targetPeopleId = firstLowPeople.id;
+									}
+								}
+							}
+						case 2:
+						// 遠交近攻
+						case 3:
+						// 緩兵之計
+						case 4:
+						// 火中取栗
+						case 5:
+						// 趁虛而入
+						case 6:
+						// 按兵不動
+						case 7:
+						// 急功近利
+						case 8:
+							// 五穀豐登
+					}
+				}
+				maxScore;
+			}
+			final score = 1.0 * fact1;
+			trace("getCommandWeight", playerId, cmd, score);
+			score;
 		case TREASURE:
 			final myUnEquipTreasures = ctx.treasures.filter(t -> t.belongToPlayerId == player.id).filter(t -> t.position.peopleId == null);
 			// 有未裝備的寶物
