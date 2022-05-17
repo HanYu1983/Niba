@@ -31,7 +31,7 @@ class GameTitleView extends PopupView{
     @:bind(btn_start, MouseEvent.CLICK)
     function onBtnConfirmClick(e:MouseEvent) {
         fadeOut();
-
+        
         Main.view.onGameTitleStartClick({
             players:[
                 {type:grp_p0.selectedIndex},
@@ -39,9 +39,9 @@ class GameTitleView extends PopupView{
                 {type:grp_p2.selectedIndex},
                 {type:grp_p3.selectedIndex}
             ],
-            gridCount: Std.parseInt(grp_gridCount.text),
+            gridCount: Std.parseInt(grp_gridCount.selectedButton.text),
             growSpeed: grp_growSpeed.selectedIndex,
-            resource: Std.parseInt(grp_resource.text),
+            resource: Std.parseInt(grp_resource.selectedButton.text),
             limitBuilding: (grp_limitBuilding.selectedIndex == 0),
             aiLevel: grp_ai_level.selectedIndex,
         });
