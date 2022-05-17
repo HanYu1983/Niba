@@ -35,7 +35,8 @@ class PeopleListView extends TableView {
 		dataSource.clear();
 		for (p in people) {
 			var info:Dynamic = Main.cloneObject(p);
-            info.chk_sel = false;
+            // info.chk_sel = false;
+
 			for (i in 0...3) {
 				var abi = "";
 				if (i < p.abilities.length) {
