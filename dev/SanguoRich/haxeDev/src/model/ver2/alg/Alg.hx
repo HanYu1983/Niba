@@ -139,9 +139,9 @@ function initContext(ctx:Context, options:GameSetting) {
 		addPlayerInfo(ctx, {
 			id: i,
 			name: names[i],
-			money: isLose ? 0.0 : resource,
-			army: isLose ? 0.0 : resource,
-			food: isLose ? 0.0 : resource,
+			money: /*i == 0 ? 0.0 :*/ isLose ? 0.0 : resource,
+			army: /*i == 0 ? 0.0 :*/ isLose ? 0.0 : resource,
+			food: /*i == 0 ? 0.0 :*/ isLose ? 0.0 : resource,
 			strategy: isLose ? 0.0 : 300.0,
 			people: isLose ? [] : [
 				model.PeopleGenerator.getInst().generate(-1),
@@ -269,6 +269,15 @@ function onPlayerEnd(ctx:Context, playerId:Int) {
 				ctx.events.push(PLAYER_WIN({
 					player: getPlayerInfo(ctx, winPlayer),
 				}, getGameInfo(ctx, false), {duration: 3}));
+				return;
+			}
+			final playerNotAI = ctx.players.filter(p -> p.brain == null);
+			if (playerNotAI.length == 0) {
+				final winPlayer = winPlayers[0];
+				ctx.events.push(PLAYER_WIN({
+					player: null,
+				}, getGameInfo(ctx, false), {duration: 3}));
+				return;
 			}
 		}
 	}
@@ -311,7 +320,6 @@ function onPlayerEnd(ctx:Context, playerId:Int) {
 		{
 			final enable = (ctx.turn + 1) % PLAYER_EARN_FROM_CITY_PER_TURN == 0;
 			if (enable) {
-				trace("ModelVer2", "doPlayerEnd", "收稅");
 				final worldEventValue = {
 					playerBefore: ctx.players.map(p -> getPlayerInfo(ctx, p)),
 					playerAfter: ([] : Array<model.IModel.PlayerInfo>),
