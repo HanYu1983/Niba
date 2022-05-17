@@ -432,7 +432,7 @@ private function getCommandWeight(ctx:Context, playerId:Int, gridId:Int, cmd:Act
 			case END:
 				1.0;
 			case _:
-				-1.0;
+				0.0;
 		}
 	}
 	return switch cmd {
@@ -458,7 +458,7 @@ private function getCommandWeight(ctx:Context, playerId:Int, gridId:Int, cmd:Act
 					}
 				});
 				if (buildingNotMax.length == 0) {
-					-1.0;
+					0.0;
 				} else {
 					final chooseId = Std.int(Math.random() * buildingNotMax.length);
 					final attachment = buildingNotMax[chooseId];
@@ -467,13 +467,13 @@ private function getCommandWeight(ctx:Context, playerId:Int, gridId:Int, cmd:Act
 					1.0;
 				}
 			} else {
-				-1.0;
+				0.0;
 			}
 			trace("getCommandWeight", playerId, cmd, score);
 			score;
 		case STRATEGY:
 			final fact1 = {
-				var maxScore = -1.0;
+				var maxScore = 0.0;
 				for (strategy in StrategyList) {
 					switch strategy.id {
 						case 0:
@@ -514,7 +514,7 @@ private function getCommandWeight(ctx:Context, playerId:Int, gridId:Int, cmd:Act
 								final fact1 = if (firstLowPeople.energy < 40) {
 									1 - ((firstLowPeople.energy - 40) / 40.0);
 								} else {
-									-1.0;
+									0.0;
 								}
 								for (p1 in peopleInPlayer) {
 									final result = _getStrategyRate(ctx, p1.id, strategy.id, 0, firstLowPeople.id, 0);
@@ -555,7 +555,7 @@ private function getCommandWeight(ctx:Context, playerId:Int, gridId:Int, cmd:Act
 		case TREASURE:
 			final myUnEquipTreasures = ctx.treasures.filter(t -> t.belongToPlayerId == player.id).filter(t -> t.position.peopleId == null);
 			// 有未裝備的寶物
-			final fact1 = myUnEquipTreasures.length == 0 ? -1.0 : 1.0;
+			final fact1 = myUnEquipTreasures.length == 0 ? 0.0 : 1.0;
 			final score = 1.0 * fact1;
 			trace("getCommandWeight", playerId, cmd, score);
 			score;
@@ -565,13 +565,17 @@ private function getCommandWeight(ctx:Context, playerId:Int, gridId:Int, cmd:Act
 			} else {
 				// 維護費佔金錢的10分之1就覺得要裁員了
 				final mainPeople = getMaintainPeople(ctx, playerId);
-				Math.min(1.0, (mainPeople / player.money) / 0.1);
+				if (mainPeople > (player.money * 0.1)) {
+					0.8;
+				} else {
+					0.0;
+				}
 			}
 			// 小於4人不裁
 			// 越多人越想裁
 			final fact2 = switch peopleInPlayer.length {
 				case len if (len <= 4):
-					-1.0;
+					0.0;
 				case len:
 					Math.pow(Math.min(1, len - 4 / 10.0), 0.5);
 			}
@@ -591,13 +595,13 @@ private function getCommandWeight(ctx:Context, playerId:Int, gridId:Int, cmd:Act
 				}
 				if (maxScore == 0) {
 					// 無人可裁
-					- 1.0;
+					0.0;
 				} else {
 					1.0;
 				}
 			}
 			final score = 1.0 * fact1 * fact2 * fact3;
-			trace("getCommandWeight", playerId, cmd, score);
+			trace("getCommandWeight", playerId, cmd, "score:", score, "=", fact1, fact2, fact3);
 			score;
 		case EXPLORE:
 			// 小於5人時想拿人, 越多人越不想拿
@@ -950,7 +954,7 @@ private function getCommandWeight(ctx:Context, playerId:Int, gridId:Int, cmd:Act
 			}
 			final p2PeopleId = peopleInGrid[0].id;
 			final fact1 = {
-				var tmpMaxScore = -1.0;
+				var tmpMaxScore = -0.0;
 				for (p in peopleInPlayer) {
 					final p1PeopleId = p.id;
 					switch doGetPreResultOfNego(ctx, playerId, gridId, p1PeopleId, p2PeopleId) {
@@ -992,7 +996,7 @@ private function getCommandWeight(ctx:Context, playerId:Int, gridId:Int, cmd:Act
 			}
 			final p2PeopleId = peopleInGrid[0].id;
 			final fact1 = {
-				var tmpMaxScore = -1.0;
+				var tmpMaxScore = 0.0;
 				for (p in peopleInPlayer) {
 					final p1PeopleId = p.id;
 					switch _getPreResultOfPk(ctx, playerId, gridId, p1PeopleId, p2PeopleId) {
@@ -1161,7 +1165,8 @@ private function getCommandWeight(ctx:Context, playerId:Int, gridId:Int, cmd:Act
 			trace("getCommandWeight", playerId, cmd, score);
 			score;
 		case _:
-			final score = Math.random() * 0.3;
+			// 最少要0.1
+			final score = Math.random() * 0.2 + 0.1;
 			trace("getCommandWeight", playerId, cmd, score);
 			score;
 	}
