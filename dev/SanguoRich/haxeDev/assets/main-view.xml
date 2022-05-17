@@ -10,7 +10,7 @@
             <menuitem text="讀取" />
         </menu>
     </menubar> -->
-    <box width="1400" height="900" horizontalAlign="center" verticalAlign="center">
+    <box width="1440" height="900" horizontalAlign="center" verticalAlign="center">
         <hbox width="100%" height="100%" padding="0">
             <vbox width="100%" height="100%">
                 <label id="lbl_gameInfo" text="測試" style="font-size:24"/>
@@ -30,6 +30,7 @@
                         </tabbar>
                         <tableview id="tab_allPlayers" width="100%" height="100%">
                             <header width="100%">
+                                <column id="score" text="分" width="30" />
                                 <column id="name" text="名" width="100%" />
                                 <column id="money" text="金" width="100" />
                                 <column id="food" text="糧" width="100" />

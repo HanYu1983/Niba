@@ -27,9 +27,9 @@ class GridGridView extends BasicGridView{
         final gainFood = Main.getFixNumber(grid.foodGrow);
         final gainArmy = Main.getFixNumber(grid.armyGrow);
         
-        pro_money.value = '${Math.floor(grid.money)} (成長:${gainMoney})';
-        pro_food.value = '${Math.floor(grid.food)} (成長:${gainFood})';
-        pro_army.value = '${Math.floor(grid.army)} (成長:${gainArmy})';
+        pro_money.value = '${Math.floor(grid.money)}/${grid.maxMoney} (${gainMoney})';
+        pro_food.value = '${Math.floor(grid.food)}/${grid.maxFood} (${gainFood})';
+        pro_army.value = '${Math.floor(grid.army)}/${grid.maxArmy} (${gainArmy})';
         pro_peopleCount.value = grid.people.length;
         
         pro_player.value = "無";

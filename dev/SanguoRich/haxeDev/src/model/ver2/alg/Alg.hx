@@ -154,7 +154,8 @@ function initContext(ctx:Context, options:GameSetting) {
 			atGridId: 0,
 			grids: [],
 			commands: [],
-			treasures: []
+			treasures: [],
+			score: 0.0,
 		}, isAI, isLose);
 		++i;
 	}

@@ -58,7 +58,8 @@ class DebugModel implements IModel {
 				treasures: [
 					// TreasureGenerator.getInst().generator(),
 					// TreasureGenerator.getInst().generator(),
-				]
+				],
+				score:0.0,
 			}
 		}
 	}

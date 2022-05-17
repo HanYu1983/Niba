@@ -1,6 +1,7 @@
 <property-grid width="100%">
     <property-group id="pro_leader" text="君主資料">
         <property id="pro_name" label="名稱" value="1000" />
+        <property id="pro_score" label="總分" value="1000" />
         <property id="pro_money" label="金錢" value="1000" />
         <property id="pro_food" label="糧草" value="1000" />
         <property id="pro_army" label="士兵" value="1000" />

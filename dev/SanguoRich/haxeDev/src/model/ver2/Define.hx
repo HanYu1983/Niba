@@ -316,7 +316,8 @@ function getPlayerInfo(ctx:Context, player:Player):model.IModel.PlayerInfo {
 		armyGrow: 0.0,
 		grids: ctx.grids.filter(g -> getGridBelongPlayerId(ctx, g.id) == player.id).map(g -> getGridInfo(ctx, g)),
 		commands: getPlayerCommand(ctx, player.id),
-		treasures: ctx.treasures.filter(t -> t.belongToPlayerId == player.id).map(t -> getTreasureInfo(ctx, t))
+		treasures: ctx.treasures.filter(t -> t.belongToPlayerId == player.id).map(t -> getTreasureInfo(ctx, t)),
+		score:0.0,
 	}
 }
 
