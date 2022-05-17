@@ -16,6 +16,8 @@ class GridGridView extends BasicGridView{
     }
 
     override function setInfo(info:Dynamic) {
+        if(info == null) return;
+
         super.setInfo(info);
 
         final gameInfo = Main.model.gameInfo();
