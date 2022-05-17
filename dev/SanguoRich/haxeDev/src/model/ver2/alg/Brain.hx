@@ -50,6 +50,9 @@ typedef BrainMemory = {
 	strategy:{
 		strategyId:Null<Int>, peopleId:Null<Int>, targetPeopleId:Null<Int>, targetGridId:Null<Int>, targetPlayerId:Null<Int>,
 	},
+	build:{
+		peopleId:Null<Int>, attachmentId:Null<Int>
+	},
 	hasTransfer:Bool
 }
 
@@ -100,6 +103,10 @@ function doBrain(ctx, playerId:Int) {
 					targetGridId: null,
 					targetPlayerId: null,
 				},
+				build: {
+					peopleId: null,
+					attachmentId: null,
+				},
 				hasTransfer: false
 			} : BrainMemory);
 		}
@@ -141,29 +148,31 @@ function doBrain(ctx, playerId:Int) {
 				onPlayerDice(ctx, playerId);
 				doEvent(ctx, playerId);
 			case BUILD:
-				if (p1People == null) {
-					throw new haxe.Exception("p1People not found");
+				if (brainMemory.build.peopleId == null) {
+					throw new haxe.Exception("brainMemory.buySell.peopleId not found");
 				}
-				final buildingsInGrid = ctx.attachments.filter(a -> a.belongToGridId == gridId);
-				if (buildingsInGrid.length > 0) {
-					// 隨機建造
-					final chooseId = Std.int(Math.random() * buildingsInGrid.length);
-					final firstBuilding = buildingsInGrid[chooseId].type;
-					final toBuilding:BUILDING = switch firstBuilding {
-						case MARKET(level):
-							MARKET(Std.int(Math.min(3, level + 1)));
-						case FARM(level):
-							FARM(Std.int(Math.min(3, level + 1)));
-						case BARRACKS(level):
-							BARRACKS(Std.int(Math.min(3, level + 1)));
-						case WALL(level):
-							WALL(Std.int(Math.min(3, level + 1)));
-						case EXPLORE(level):
-							EXPLORE(Std.int(Math.min(3, level + 1)));
-					}
-					_takeBuilding(ctx, playerId, gridId, p1People.id, firstBuilding, toBuilding);
-					doEvent(ctx, playerId);
+				if (brainMemory.build.attachmentId == null) {
+					throw new haxe.Exception("brainMemory.buySell.peopleId not found");
 				}
+				final findAttachment = ctx.attachments.filter(a -> a.id == brainMemory.build.attachmentId);
+				if (findAttachment.length == 0) {
+					throw new haxe.Exception("findAttachment not found");
+				}
+				final firstBuilding = findAttachment[0].type;
+				final toBuilding:BUILDING = switch firstBuilding {
+					case MARKET(level):
+						MARKET(Std.int(Math.min(3, level + 1)));
+					case FARM(level):
+						FARM(Std.int(Math.min(3, level + 1)));
+					case BARRACKS(level):
+						BARRACKS(Std.int(Math.min(3, level + 1)));
+					case WALL(level):
+						WALL(Std.int(Math.min(3, level + 1)));
+					case EXPLORE(level):
+						EXPLORE(Std.int(Math.min(3, level + 1)));
+				}
+				_takeBuilding(ctx, playerId, gridId, brainMemory.build.peopleId, firstBuilding, toBuilding);
+				doEvent(ctx, playerId);
 			case BUY_ARMY:
 				if (brainMemory.buySell.peopleId == null) {
 					throw new haxe.Exception("brainMemory.buySell.peopleId not found");
@@ -418,9 +427,50 @@ private function getCommandWeight(ctx:Context, playerId:Int, gridId:Int, cmd:Act
 	final grid = ctx.grids[gridId];
 	final peopleInGrid = ctx.peoples.filter((p:People) -> p.position.gridId == grid.id);
 	final peopleInPlayer = ctx.peoples.filter((p:People) -> p.belongToPlayerId == player.id);
+	if (peopleInPlayer.length == 0) {
+		return switch cmd {
+			case END:
+				1.0;
+			case _:
+				-1.0;
+		}
+	}
 	return switch cmd {
 		case TREASURE_TAKE:
 			0.0;
+		case BUILD:
+			final buildingsInGrid = ctx.attachments.filter(a -> a.belongToGridId == gridId);
+			final score = if (buildingsInGrid.length > 0) {
+				final buildingNotMax = buildingsInGrid.filter(b -> {
+					return switch b.type {
+						case MARKET(level) if (level < 3):
+							true;
+						case FARM(level) if (level < 3):
+							true;
+						case BARRACKS(level) if (level < 3):
+							true;
+						case WALL(level) if (level < 3):
+							true;
+						case EXPLORE(level) if (level < 3):
+							true;
+						case _:
+							false;
+					}
+				});
+				if (buildingNotMax.length == 0) {
+					-1.0;
+				} else {
+					final chooseId = Std.int(Math.random() * buildingNotMax.length);
+					final attachment = buildingNotMax[chooseId];
+					brainMemory.build.attachmentId = attachment.id;
+					brainMemory.build.peopleId = peopleInPlayer[0].id;
+					1.0;
+				}
+			} else {
+				-1.0;
+			}
+			trace("getCommandWeight", playerId, cmd, score);
+			score;
 		case STRATEGY:
 			final fact1 = {
 				var maxScore = -1.0;
