@@ -1070,14 +1070,14 @@ private function getCommandWeight(ctx:Context, playerId:Int, gridId:Int, cmd:Act
 				final foodRate = grid.food / getGridMaxFood(ctx, grid.id);
 				final moneyRate = grid.money / getGridMaxMoney(ctx, grid.id);
 				final maxRate = Math.max(armyRate, Math.max(foodRate, moneyRate));
-				// 有其中一個資源超過8成再拿
+				// 有其中一個資源超過9成再拿
 				final fact1 = maxRate > 0.8 ? maxRate : 0.0;
-				final score = 1.5 * fact1;
+				final score = 1.2 * fact1;
 				if (score > maxScore) {
 					maxScore = score;
-					brainMemory.transfer.food = -Math.min(grid.food, foodRate * 400);
-					brainMemory.transfer.money = -Math.min(grid.money, moneyRate * 400);
-					brainMemory.transfer.army = -Math.min(grid.army, armyRate * 400);
+					brainMemory.transfer.food = -Math.min(grid.food, 0.3 * grid.food);
+					brainMemory.transfer.money = -Math.min(grid.money, 0.3 * grid.money);
+					brainMemory.transfer.army = -Math.min(grid.army, 0.3 * grid.army);
 				}
 			}
 			{
@@ -1093,7 +1093,7 @@ private function getCommandWeight(ctx:Context, playerId:Int, gridId:Int, cmd:Act
 					grid.money / grid.army;
 				}
 				final maxNeedArmyRate = Math.max(needArmyRate, needArmyRate2);
-				final fact2 = maxNeedArmyRate > 1.3 ? 999.0 : 0.0;
+				final fact2 = maxNeedArmyRate > 1.3 ? 3.0 : 0.0;
 				final score = 1.0 * fact1 * fact2;
 				if (score > maxScore) {
 					maxScore = score;
