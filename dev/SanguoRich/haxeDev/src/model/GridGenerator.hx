@@ -43,9 +43,7 @@ enum BUILDING {
 
 	FARM(level:Int);
 	BARN(level:Int);
-
 	BARRACKS(level:Int);
-
 	WALL(level:Int);
 	EXPLORE(level:Int);
 }
@@ -81,7 +79,7 @@ class GridGenerator {
 			treasures: [],
 			maxMoney: 0,
 			maxFood: 0,
-			maxArmy:0,
+			maxArmy: 0,
 		};
 	}
 
@@ -178,7 +176,7 @@ class GridGenerator {
 			}
 
 			for (i in 0...3)
-				if (Math.random() < .3)
+				if (Math.random() < .1)
 					g.treasures.push(TreasureGenerator.getInst().generator());
 
 			final basicArmy = getRandomRange(180, 80);
