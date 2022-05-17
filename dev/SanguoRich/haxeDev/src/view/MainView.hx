@@ -1100,9 +1100,11 @@ class MainView extends Box {
 
 	function syncGridInfo(gridId:Int) {
 		var gameInfo = Main.model.gameInfo();
+		if(gridId > gameInfo.grids.length - 1 ){
+			return;
+		}
 		var grid:Grid = gameInfo.grids[gridId];
 		gridView.setInfo(grid);
-
 		gridPeopleListView.setPeopleList(grid.people);
 	}
 
