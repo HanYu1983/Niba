@@ -645,7 +645,7 @@ private function getCommandWeight(ctx:Context, playerId:Int, gridId:Int, cmd:Act
 								final fact2 = if (nextGrid.army == 0) {
 									0.0;
 								} else {
-									1 - Math.min(1, (player.army / 3) / nextGrid.army);
+									1 - Math.min(1, (player.army / 10) / nextGrid.army);
 								}
 								for (p1 in peopleInPlayer) {
 									final result = _getStrategyRate(ctx, p1.id, strategy.id, 0, 0, nextGrid.id);
