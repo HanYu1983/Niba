@@ -19,11 +19,14 @@ class PeopleListView extends TableView {
 			if (selectedItem != null && selectedItem.chk_sel != null) {
 				selectedItem.chk_sel = !selectedItem.chk_sel;
 			}
-
-			var list:Array<Dynamic> = dataSource.data;
-			updateList(list.slice(0));
+            refresh();
 		}
 	}
+
+    function refresh() {
+        final currentData = dataSource.data;
+        dataSource.data = currentData;
+    }
 
 	function updateList(people:Array<Dynamic>) {
 		final gameInfo = Main.model.gameInfo();
@@ -32,7 +35,7 @@ class PeopleListView extends TableView {
 		dataSource.clear();
 		for (p in people) {
 			var info:Dynamic = Main.cloneObject(p);
-
+            info.chk_sel = false;
 			for (i in 0...3) {
 				var abi = "";
 				if (i < p.abilities.length) {
