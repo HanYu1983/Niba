@@ -175,9 +175,7 @@ class GridGenerator {
 					g.maxArmy = g.maxFood = g.maxMoney = 600;
 			}
 
-			for (i in 0...3)
-				if (Math.random() < .1)
-					g.treasures.push(TreasureGenerator.getInst().generator());
+			
 
 			final basicArmy = getRandomRange(180, 80);
 
@@ -192,6 +190,9 @@ class GridGenerator {
 					g.foodGrow = 0;
 					g.armyGrow = 0;
 					g.people.push(PeopleGenerator.getInst().generate(-1));
+					for (i in 0...5)
+						if (Math.random() < .3)
+							g.treasures.push(TreasureGenerator.getInst().generator());
 				case MARKET:
 					g.money = getRandomRange(180, 80);
 					g.food = getRandomRange(180, 80);
