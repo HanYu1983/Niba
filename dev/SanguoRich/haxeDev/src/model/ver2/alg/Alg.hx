@@ -269,7 +269,14 @@ function onPlayerEnd(ctx:Context, playerId:Int) {
 		}
 	}
 	// 四個玩家走完後才計算回合
-	final isTurnEnd = ctx.currentPlayerId == (ctx.players.length - 1);
+	final lastPlayer = {
+		final playerStillLive = ctx.players.filter(p -> p.isLose == false);
+		if (playerStillLive.length == 0) {
+			throw new haxe.Exception("應該最少有一個玩家isLose == false");
+		}
+		playerStillLive[0];
+	}
+	final isTurnEnd = ctx.currentPlayerId == lastPlayer.id;
 	if (isTurnEnd) {
 		// 支付薪水
 		{
