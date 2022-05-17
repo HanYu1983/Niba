@@ -339,12 +339,12 @@ function getGridMoneyGrow(ctx:Context, gridId:Int):Float {
 	final attachmentRate = ctx.attachments.filter(a -> a.belongToGridId == grid.id).fold((p, a) -> {
 		return a + switch p.type {
 			case MARKET(level):
-				[0.0, 0.03, 0.05, 0.06][level];
+				[0.0, 0.02, 0.03, 0.04][level];
 			case _:
 				0;
 		}
 	}, 0);
-	return BASIC_GROW_MONEY_RATE + getGrowFormGameSettings(ctx) + attachmentRate;
+	return getGrowFormGameSettings(ctx) * (BASIC_GROW_MONEY_RATE + attachmentRate);
 }
 
 function getGridFoodGrow(ctx:Context, gridId:Int):Float {
@@ -357,12 +357,12 @@ function getGridFoodGrow(ctx:Context, gridId:Int):Float {
 	final attachmentRate = ctx.attachments.filter(a -> a.belongToGridId == grid.id).fold((p, a) -> {
 		return a + switch p.type {
 			case FARM(level):
-				[0.0, 0.03, 0.05, 0.06][level];
+				[0.0, 0.02, 0.03, 0.04][level];
 			case _:
 				0;
 		}
 	}, 0);
-	return BASIC_GROW_FOOD_RATE + getGrowFormGameSettings(ctx) + attachmentRate;
+	return getGrowFormGameSettings(ctx) * (BASIC_GROW_FOOD_RATE + attachmentRate);
 }
 
 function getGridArmyGrow(ctx:Context, gridId:Int):Float {
@@ -375,12 +375,12 @@ function getGridArmyGrow(ctx:Context, gridId:Int):Float {
 	final attachmentRate = ctx.attachments.filter(a -> a.belongToGridId == grid.id).fold((p, a) -> {
 		return a + switch p.type {
 			case BARRACKS(level):
-				[0.0, 0.03, 0.05, 0.06][level];
+				[0.0, 0.02, 0.03, 0.04][level];
 			case _:
 				0;
 		}
 	}, 0);
-	return BASIC_GROW_ARMY_RATE + getGrowFormGameSettings(ctx) + attachmentRate;
+	return getGrowFormGameSettings(ctx) * (BASIC_GROW_ARMY_RATE + attachmentRate);
 }
 
 function getGridBuildType(ctx:Context, gridId:Int):GROWTYPE {
