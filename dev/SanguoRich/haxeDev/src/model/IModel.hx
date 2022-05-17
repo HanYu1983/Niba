@@ -19,7 +19,8 @@ typedef PlayerInfo = {
 	maintainArmy:Float,
 	armyGrow:Float,
 	commands:Array<ActionInfoID>,
-	treasures:Array<TreasureInfo>
+	treasures:Array<TreasureInfo>,
+	score:Float,
 }
 
 enum ActionInfoID {

@@ -389,7 +389,8 @@ function _getTakeWarPreview(ctx:Context, playerId:Int, gridId:Int):WarPreview {
 					armyGrow: 0.0,
 					grids: [],
 					commands: [],
-					treasures: []
+					treasures: [],
+					score:0.0,
 				},
 				p1ValidPeople: getPlayerInfo(ctx, ctx.players[playerId]).people,
 				p2ValidPeople: getGridInfo(ctx, ctx.grids[gridId]).people

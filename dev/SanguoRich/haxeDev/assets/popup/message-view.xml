@@ -1,8 +1,8 @@
 <vbox width="400" padding="20" verticalAlign="center" horizontalAlign="center" style="background-color: white;border:1px solid grey;">
     <hbox horizontalAlign="center">
-        <label text="標題" id="lbl_title" style="font-size:24; color:red;" />
+        <label text="標題" id="lbl_title" style="font-size:28; color:red;" />
     </hbox>
     <frame text="訊息" width="100%" horizontalAlign="center">
-        <label id="lbl_content" width="100%" textAlign="center"></label>
+        <label id="lbl_content" width="100%" textAlign="center" style="font-size:24;"></label>
     </frame>
 </vbox>
