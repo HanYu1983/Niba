@@ -44,6 +44,6 @@ class LeaderGridView extends BasicGridView{
         pro_peopleCount.value = p.people.length;
         pro_cityCount.value = p.grids.length;
         pro_treasureCount.value = p.treasures.length;
-        pro_score.value = p.score;
+        pro_score.value = Math.floor(p.score);
     }
 }
