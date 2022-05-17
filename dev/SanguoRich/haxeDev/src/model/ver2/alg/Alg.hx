@@ -118,6 +118,7 @@ function doPlayerDice(ctx:Context) {
 
 function initContext(ctx:Context, options:GameSetting) {
 	trace(options);
+	ctx.settings = options;
 	trace("第一個玩家不能是AI");
 	final genGrids = model.GridGenerator.getInst().getGrids(options.gridCount != null ? options.gridCount : INIT_GRID_COUNT, options.limitBuilding);
 	for (grid in genGrids) {
