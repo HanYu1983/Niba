@@ -128,32 +128,30 @@ function initContext(ctx:Context, options:GameSetting) {
 	var i = 0;
 	for (playerConfig in options.players) {
 		final isClose = playerConfig.type == 2;
-		if (isClose) {
-			continue;
-		}
+		final isLose = isClose;
 		final mustBePlayer = i == 0;
 		final isAI = mustBePlayer == false && playerConfig.type == 1;
 		final resource = options.resource != null ? options.resource : INIT_RESOURCE;
 		addPlayerInfo(ctx, {
 			id: i,
 			name: names[i],
-			money: resource,
-			army: resource,
-			food: resource,
-			strategy: 300.0,
-			people: [
+			money: isLose ? 0.0 : resource,
+			army: isLose ? 0.0 : resource,
+			food: isLose ? 0.0 : resource,
+			strategy: isLose ? 0.0 : 300.0,
+			people: isLose ? [] : [
 				model.PeopleGenerator.getInst().generate(),
 				model.PeopleGenerator.getInst().generate(),
 				model.PeopleGenerator.getInst().generate()
 			],
 			maintainPeople: 0,
 			maintainArmy: 0,
-			armyGrow: 0.01,
+			armyGrow: 0.0,
 			atGridId: 0,
 			grids: [],
 			commands: [],
 			treasures: []
-		}, isAI);
+		}, isAI, isLose);
 		++i;
 	}
 }
