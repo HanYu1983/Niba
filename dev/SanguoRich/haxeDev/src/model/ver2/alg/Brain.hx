@@ -868,7 +868,7 @@ private function getCommandWeight(ctx:Context, playerId:Int, gridId:Int, cmd:Act
 				};
 				// 少於200就一定要拿錢, 越多錢就越不拿
 				final moneyRate = 1.0 - Math.min(1, Math.max(0, player.money - 200) / INIT_RESOURCE);
-				final score = 1.5 * Math.max(Math.max(Math.max(armyRate * gridArmyRate), foodRate), moneyRate);
+				final score = 1.5 * Math.max(Math.max(armyRate * gridArmyRate, foodRate), moneyRate);
 				if (score > maxScore) {
 					maxScore = score;
 					brainMemory.transfer.food = -Math.min(grid.food, foodRate * 1.8 * grid.food);
