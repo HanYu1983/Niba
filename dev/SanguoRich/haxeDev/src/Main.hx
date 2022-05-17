@@ -40,6 +40,7 @@ class Main {
 	}
 
 	public static function getFixNumber(number:Float, count:Int = 2):Float {
+		if(number == null) return 0.0;
 		var round = Syntax.code('Number.prototype.toFixed');
 		return round.call(number, count);
 	}
