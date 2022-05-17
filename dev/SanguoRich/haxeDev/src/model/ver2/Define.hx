@@ -1322,6 +1322,7 @@ function wrapResourceResultEvent(ctx:Context, playerId:Int, p1SelectId:Int, fn:(
 	resultValue.armyAfter = player.army;
 	resultValue.moneyAfter = player.money;
 	resultValue.foodAfter = player.food;
+	resultValue.gridId = player.position;
 	ctx.events.push(RESOURCE_RESULT(resultValue, getGameInfo(ctx, false)));
 	return resultValue.success;
 }
