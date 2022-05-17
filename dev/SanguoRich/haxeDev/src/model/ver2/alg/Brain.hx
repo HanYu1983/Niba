@@ -417,6 +417,9 @@ private function getMostGoodCommand(ctx:Context, playerId:Int, gridId:Int):Actio
 
 private function getCommandWeight(ctx:Context, playerId:Int, gridId:Int, cmd:ActionInfoID):Float {
 	final player = ctx.players[playerId];
+	if (player == null) {
+		throw new haxe.Exception('player not found:${playerId}');
+	}
 	if (player.brain == null) {
 		throw new haxe.Exception("必須有Brain");
 	}
@@ -425,6 +428,9 @@ private function getCommandWeight(ctx:Context, playerId:Int, gridId:Int, cmd:Act
 		throw new haxe.Exception("必須有Brain.memory");
 	}
 	final grid = ctx.grids[gridId];
+	if (grid == null) {
+		throw new haxe.Exception("grid not found");
+	}
 	final peopleInGrid = ctx.peoples.filter((p:People) -> p.position.gridId == grid.id);
 	final peopleInPlayer = ctx.peoples.filter((p:People) -> p.belongToPlayerId == player.id);
 	if (peopleInPlayer.length == 0) {
@@ -484,8 +490,11 @@ private function getCommandWeight(ctx:Context, playerId:Int, gridId:Int, cmd:Act
 								throw new haxe.Exception("strategy.value.valid必須是Array");
 							}
 							for (s in steps) {
-								final nextPosition = (player.position + s) % ctx.grids.length;
+								final nextPosition = ((player.position + s) + ctx.grids.length) % ctx.grids.length;
 								final nextGrid = ctx.grids[nextPosition];
+								if (nextGrid == null) {
+									throw new haxe.Exception('nextGrid not found: ${nextPosition}');
+								}
 								final isMyGrid = getGridBelongPlayerId(ctx, nextGrid.id) == player.id;
 								final fact1 = isMyGrid ? 1.0 : 0.0;
 								for (p1 in peopleInPlayer) {
@@ -520,7 +529,6 @@ private function getCommandWeight(ctx:Context, playerId:Int, gridId:Int, cmd:Act
 									final result = _getStrategyRate(ctx, p1.id, strategy.id, 0, firstLowPeople.id, 0);
 									// 成功率
 									final fact2 = result.rate;
-									// 體力剩下越多越好
 									final fact3 = result.energyAfter > 65 ? 1.0 : 0.0;
 									final score = 1.0 * fact1 * fact2 * fact3;
 									if (score > maxScore) {
@@ -532,19 +540,131 @@ private function getCommandWeight(ctx:Context, playerId:Int, gridId:Int, cmd:Act
 								}
 							}
 						case 2:
-						// 遠交近攻
+							// 遠交近攻
+							// 在中立格
+							final fact1 = getGridBelongPlayerId(ctx, grid.id) == null ? 1.0 : 0.0;
+							// 有人在
+							final fact2 = peopleInGrid.length > 0 ? 1.0 : 0.0;
+							final fact3 = {
+								final totalResource = grid.money + grid.food + grid.army;
+								totalResource > 500 ? Math.min(1, totalResource - 500 / 1000.0) : 0.0;
+							}
+							for (p1 in peopleInPlayer) {
+								final result = _getStrategyRate(ctx, p1.id, strategy.id, 0, 0, 0);
+								// 成功率
+								final fact4 = result.rate;
+								// 體力剩下越多越好
+								final fact5 = Math.pow(result.energyAfter / 100.0, 0.5);
+								final score = 1.0 * fact1 * fact2 * fact3 * fact4 * fact5;
+								if (score > maxScore) {
+									maxScore = score;
+									brainMemory.strategy.strategyId = strategy.id;
+									brainMemory.strategy.peopleId = p1.id;
+								}
+							}
 						case 3:
-						// 緩兵之計
+							// 緩兵之計
+							final steps:Array<Int> = try {
+								cast(strategy.value.valid : Array<Int>);
+							} catch (e) {
+								throw new haxe.Exception("strategy.value.valid必須是Array");
+							}
+							for (s in steps) {
+								final nextPosition = ((player.position + s) + ctx.grids.length) % ctx.grids.length;
+								final nextGrid = ctx.grids[nextPosition];
+								if (nextGrid == null) {
+									throw new haxe.Exception('nextGrid not found: ${nextPosition}');
+								}
+								final isMyGrid = getGridBelongPlayerId(ctx, nextGrid.id) == player.id;
+								// 是我的格子
+								final fact1 = isMyGrid ? 1.0 : 0.0;
+								// 沒有放路障
+								final fact2 = {
+									final myItems = ctx.groundItems.filter(i -> i.position == nextGrid.id && i.belongToPlayerId == player.id);
+									myItems.length == 0.0 ? 1.0 : 0.0;
+								}
+								// 總資源數大於600
+								final fact3 = {
+									final totalResource = nextGrid.money + nextGrid.food + nextGrid.army;
+									totalResource > 600 ? 1.0 : 0.0;
+								}
+								for (p1 in peopleInPlayer) {
+									final result = _getStrategyRate(ctx, p1.id, strategy.id, 0, 0, nextGrid.id);
+									// 成功率
+									final fact4 = result.rate;
+									// 體力剩下越多越好
+									final fact5 = Math.pow(result.energyAfter / 100.0, 0.5);
+									final score = 1.0 * fact1 * fact2 * fact3 * fact4 * fact5;
+									if (score > maxScore) {
+										maxScore = score;
+										brainMemory.strategy.peopleId = p1.id;
+										brainMemory.strategy.strategyId = strategy.id;
+										brainMemory.strategy.targetGridId = nextGrid.id;
+									}
+								}
+							}
 						case 4:
 						// 火中取栗
 						case 5:
-						// 趁虛而入
+							// 趁虛而入
+							// 只針對非AI玩家使用
+							final peopleInRealPlayer = ctx.peoples.filter(p -> p.belongToPlayerId != null
+								&& ctx.players[p.belongToPlayerId].brain == null);
+							for (p2 in peopleInRealPlayer) {
+								final fact1 = 1 - (p2.energy / 100.0);
+								for (p1 in peopleInPlayer) {
+									final result = _getStrategyRate(ctx, p1.id, strategy.id, 0, p2.id, 0);
+									// 成功率
+									final fact2 = result.rate;
+									// 體力剩下越多越好
+									final fact3 = Math.pow(result.energyAfter / 100.0, 0.5);
+									final score = 1.0 * fact1 * fact2 * fact3;
+									if (score > maxScore) {
+										maxScore = score;
+										brainMemory.strategy.peopleId = p1.id;
+										brainMemory.strategy.strategyId = strategy.id;
+										brainMemory.strategy.targetPeopleId = p2.id;
+									}
+								}
+							}
 						case 6:
-						// 按兵不動
+							// 按兵不動
+							// 在自己格
+							final fact1 = getGridBelongPlayerId(ctx, grid.id) == player.id ? 1.0 : 0.0;
+							for (p1 in peopleInPlayer) {
+								final result = _getStrategyRate(ctx, p1.id, strategy.id, 0, 0, 0);
+								// 成功率
+								final fact4 = result.rate;
+								// 體力剩下越多越好
+								final fact5 = Math.pow(result.energyAfter / 100.0, 0.5);
+								final score = 1.0 * fact1 * fact4 * fact5;
+								if (score > maxScore) {
+									maxScore = score;
+									brainMemory.strategy.strategyId = strategy.id;
+									brainMemory.strategy.peopleId = p1.id;
+								}
+							}
 						case 7:
 						// 急功近利
 						case 8:
 							// 五穀豐登
+							final fact1 = {
+								final myGrid = ctx.grids.filter(g -> getGridBelongPlayerId(ctx, g.id) == player.id);
+								myGrid.length > 3 ? Math.min(1, (myGrid.length - 3) / 5.0) : 0.0;
+							}
+							for (p1 in peopleInPlayer) {
+								final result = _getStrategyRate(ctx, p1.id, strategy.id, 0, 0, 0);
+								// 成功率
+								final fact2 = result.rate;
+								// 體力剩下越多越好
+								final fact3 = Math.pow(result.energyAfter / 100.0, 0.5);
+								final score = 1.0 * fact1 * fact2 * fact3;
+								if (score > maxScore) {
+									maxScore = score;
+									brainMemory.strategy.strategyId = strategy.id;
+									brainMemory.strategy.peopleId = p1.id;
+								}
+							}
 					}
 				}
 				maxScore;
