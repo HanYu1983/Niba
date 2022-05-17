@@ -574,7 +574,7 @@ class MainView extends Box {
 	}
 
 	function getGridPositionByGridId(pid:Int, gridId:Int) {
-		if(gridId > grids.length - 1) return [0.0,0.0];
+		if(gridId > grids.length - 1 || gridId < 0) return [0.0,0.0];
 		var grid = grids[gridId];
 		return offsetPlayerPos(pid, grid.left, grid.top);
 	}
