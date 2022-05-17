@@ -31,6 +31,10 @@ function doPeopleMaintain(ctx:Context) {
 							level;
 						case WALL(level):
 							level;
+						case BANK(level):
+							level;
+						case BARN(level):
+							level;
 					}
 				}, 0.0);
 				levels * 2.0;

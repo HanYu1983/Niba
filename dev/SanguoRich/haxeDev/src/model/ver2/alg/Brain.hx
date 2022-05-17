@@ -170,6 +170,10 @@ function doBrain(ctx, playerId:Int) {
 						WALL(Std.int(Math.min(3, level + 1)));
 					case EXPLORE(level):
 						EXPLORE(Std.int(Math.min(3, level + 1)));
+					case BANK(level):
+						BANK(Std.int(Math.min(3, level + 1)));
+					case BARN(level):
+						BARN(Std.int(Math.min(3, level + 1)));
 				}
 				_takeBuilding(ctx, playerId, gridId, brainMemory.build.peopleId, firstBuilding, toBuilding);
 				doEvent(ctx, playerId);

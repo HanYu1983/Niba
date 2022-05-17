@@ -243,6 +243,7 @@ typedef BuildingCatelog = {
 	money:Float,
 	describe:String,
 	type:BUILDING,
+	depends:Array<BUILDING>
 }
 
 typedef GameSetting = {
@@ -421,127 +422,209 @@ final BuildingList:Array<BuildingCatelog> = [
 		name: '農田(未建)',
 		money: 50,
 		describe: '糧食每回合+0',
-		type: FARM(0)
+		type: FARM(0),
+		depends: []
 	},
 	{
 		id: 1,
 		name: '農田(小)',
-		money: 20,
+		money: 30,
 		describe: '糧食每回合+2',
-		type: FARM(1)
+		type: FARM(1),
+		depends: []
 	},
 	{
 		id: 2,
 		name: '農田(中)',
-		money: 20,
+		money: 30,
 		describe: '糧食每回合+3',
-		type: FARM(2)
+		type: FARM(2),
+		depends: []
 	},
 	{
 		id: 3,
 		name: '農田(大)',
-		money: 0,
+		money: 30,
 		describe: '糧食每回合+4',
-		type: FARM(3)
+		type: FARM(3),
+		depends: []
 	},
 	{
 		id: 4,
 		name: '市集(未建)',
 		money: 50,
 		describe: '金錢每回合+0',
-		type: MARKET(0)
+		type: MARKET(0),
+		depends: []
 	},
 	{
 		id: 5,
 		name: '市集(小)',
-		money: 20,
+		money: 30,
 		describe: '金錢每回合+2',
-		type: MARKET(1)
+		type: MARKET(1),
+		depends: []
 	},
 	{
 		id: 6,
 		name: '市集(中)',
-		money: 20,
+		money: 30,
 		describe: '金錢每回合+3',
-		type: MARKET(2)
+		type: MARKET(2),
+		depends: []
 	},
 	{
 		id: 7,
 		name: '市集(大)',
-		money: 0,
+		money: 30,
 		describe: '金錢每回合+4',
-		type: MARKET(3)
+		type: MARKET(3),
+		depends: []
 	},
 	{
 		id: 8,
 		name: '兵營(未建)',
-		money: 50,
-		describe: '士兵每回合+0',
-		type: BARRACKS(0)
+		money: 100,
+		describe: '士兵最大值+0。士兵每回合+0',
+		type: BARRACKS(0),
+		depends: []
 	},
 	{
 		id: 9,
 		name: '兵營(小)',
-		money: 20,
-		describe: '士兵每回合+1',
-		type: BARRACKS(1)
+		money: 80,
+		describe: '士兵最大值+100。士兵每回合+2%',
+		type: BARRACKS(1),
+		depends: []
 	},
 	{
 		id: 10,
 		name: '兵營(中)',
-		money: 20,
-		describe: '士兵每回合+2',
-		type: BARRACKS(2)
+		money: 80,
+		describe: '士兵最大值+150。士兵每回合+3%',
+		type: BARRACKS(2),
+		depends: []
 	},
 	{
 		id: 11,
 		name: '兵營(大)',
 		money: 0,
-		describe: '士兵每回合+3',
-		type: BARRACKS(3)
+		describe: '士兵最大值+200。士兵每回合+4%',
+		type: BARRACKS(3),
+		depends: []
 	},
 	{
 		id: 12,
 		name: '人材所(未建)',
-		money: 50,
-		describe: '提高武將在探索計算時的魅力(+0)及聘用計算時的魅力(+0)',
-		type: EXPLORE(0)
+		money: 150,
+		describe: '提高武將在探索計算時的魅力(+0)及聘用計算時的魅力(+0)。所有武將的薪資不減少。並且聘用金錢不減少',
+		type: EXPLORE(0),
+		depends: []
 	},
 	{
 		id: 13,
 		name: '人材所',
 		money: 0,
-		describe: '提高武將在探索計算時的魅力(+5)及聘用計算時的魅力(+5)',
-		type: EXPLORE(1)
+		describe: '提高武將在探索計算時的魅力(+15)及聘用計算時的魅力(+15)。所有武將的薪資減少為1/3。並且聘用金錢減少為1/5',
+		type: EXPLORE(1),
+		depends: []
 	},
 	{
 		id: 14,
 		name: '城墻(未建)',
 		money: 50,
 		describe: '此格子防禦方的加成提高。(+0%)',
-		type: WALL(0)
+		type: WALL(0),
+		depends: []
 	},
 	{
 		id: 15,
 		name: '城墻(弱)',
-		money: 20,
-		describe: '此格子防禦方的加成提高。(+15%)',
-		type: WALL(1)
+		money: 50,
+		describe: '此格子防禦方的加成提高。(+20%)',
+		type: WALL(1),
+		depends: []
 	},
 	{
 		id: 16,
 		name: '城墻(中)',
-		money: 20,
+		money: 50,
 		describe: '此格子防禦方的加成提高。(+30%)',
-		type: WALL(2)
+		type: WALL(2),
+		depends: []
 	},
 	{
 		id: 17,
 		name: '城墻(強)',
 		money: 0,
 		describe: '此格子防禦方的加成提高。(+50%)',
-		type: WALL(3)
-	}
+		type: WALL(3),
+		depends: []
+	},
+	{
+		id: 18,
+		name: '金庫(未建)',
+		money: 100,
+		describe: '金錢最大值+0。金錢每回合+0%',
+		type: BANK(0),
+		depends: []
+	},
+	{
+		id: 19,
+		name: '金庫(小)',
+		money: 70,
+		describe: '金錢最大值+200。金錢每回合+2%',
+		type: BANK(1),
+		depends: []
+	},
+	{
+		id: 20,
+		name: '金庫(中)',
+		money: 70,
+		describe: '金錢最大值+300。金錢每回合+3%',
+		type: BANK(2),
+		depends: []
+	},
+	{
+		id: 21,
+		name: '金庫(大)',
+		money: 0,
+		describe: '金錢最大值+400。金錢每回合+4%',
+		type: BANK(3),
+		depends: []
+	},
+	{
+		id: 22,
+		name: '穀倉(未建)',
+		money: 100,
+		describe: '糧草最大值+0。糧草每回合+0%',
+		type: BARN(0),
+		depends: []
+	},
+	{
+		id: 23,
+		name: '穀倉(小)',
+		money: 70,
+		describe: '糧草最大值+200。糧草每回合+2%',
+		type: BARN(1),
+		depends: []
+	},
+	{
+		id: 24,
+		name: '穀倉(中)',
+		money: 70,
+		describe: '糧草最大值+300。糧草每回合+3%',
+		type: BARN(2),
+		depends: []
+	},
+	{
+		id: 25,
+		name: '穀倉(大)',
+		money: 0,
+		describe: '糧草最大值+400。糧草每回合+4%',
+		type: BARN(3),
+		depends: []
+	},
 ];
 
 

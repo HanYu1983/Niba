@@ -23,7 +23,10 @@ typedef Grid = {
 	people:Array<People>,
 	favor:Array<Int>,
 	strategys:Array<Array<Int>>,
-	treasures:Array<TreasureInfo>
+	treasures:Array<TreasureInfo>,
+	maxMoney:Float,
+	maxFood:Float,
+	maxArmy:Float,
 }
 
 enum GROWTYPE {
@@ -36,8 +39,13 @@ enum GROWTYPE {
 
 enum BUILDING {
 	MARKET(level:Int);
+	BANK(level:Int);
+
 	FARM(level:Int);
+	BARN(level:Int);
+
 	BARRACKS(level:Int);
+
 	WALL(level:Int);
 	EXPLORE(level:Int);
 }
@@ -70,7 +78,10 @@ class GridGenerator {
 			people: [],
 			favor: [0, 0, 0, 0],
 			strategys: [[], [], [], []],
-			treasures: []
+			treasures: [],
+			maxMoney: 0,
+			maxFood: 0,
+			maxArmy:0,
 		};
 	}
 
@@ -102,49 +113,68 @@ class GridGenerator {
 				case EMPTY:
 				case MARKET:
 					if (isLimitBuilding) {
-						g.attachs = [BUILDING.MARKET(1), BUILDING.WALL(0),];
+						g.attachs = [BUILDING.MARKET(1), BUILDING.BANK(0), BUILDING.WALL(0),];
 					} else {
 						g.attachs = [
 							BUILDING.MARKET(1),
+							BUILDING.BANK(0),
+
 							BUILDING.FARM(0),
+							BUILDING.BARN(0),
+
 							BUILDING.BARRACKS(0),
 							BUILDING.EXPLORE(0),
 							BUILDING.WALL(0),
 						];
 					}
+					g.maxArmy = g.maxFood = g.maxMoney = 300;
 				case FARM:
 					if (isLimitBuilding) {
-						g.attachs = [BUILDING.FARM(1), BUILDING.WALL(0),];
+						g.attachs = [BUILDING.FARM(1), BUILDING.BARN(0), BUILDING.WALL(0),];
 					} else {
 						g.attachs = [
 							BUILDING.MARKET(0),
+							BUILDING.BANK(0),
+
 							BUILDING.FARM(1),
+							BUILDING.BARN(0),
+
 							BUILDING.BARRACKS(0),
 							BUILDING.EXPLORE(0),
 							BUILDING.WALL(0),
 						];
 					}
+					g.maxArmy = g.maxFood = g.maxMoney = 300;
 				case VILLAGE:
 					if (isLimitBuilding) {
 						g.attachs = [BUILDING.BARRACKS(1), BUILDING.WALL(0),];
 					} else {
 						g.attachs = [
 							BUILDING.MARKET(0),
+							BUILDING.BANK(0),
+
 							BUILDING.FARM(0),
+							BUILDING.BARN(0),
+
 							BUILDING.BARRACKS(1),
 							BUILDING.EXPLORE(0),
 							BUILDING.WALL(0),
 						];
 					}
-
+					g.maxArmy = g.maxFood = g.maxMoney = 300;
 				case CITY:
 					g.attachs = [
-						BUILDING.MARKET(1),
-						BUILDING.FARM(1),
+						BUILDING.MARKET(0),
+						BUILDING.BANK(0),
+
+						BUILDING.FARM(0),
+						BUILDING.BARN(0),
+
 						BUILDING.BARRACKS(1),
 						BUILDING.EXPLORE(0),
-						BUILDING.WALL(1),
+						BUILDING.WALL(0),
 					];
+					g.maxArmy = g.maxFood = g.maxMoney = 500;
 			}
 
 			for (i in 0...3)
@@ -163,25 +193,25 @@ class GridGenerator {
 					g.moneyGrow = 0;
 					g.foodGrow = 0;
 					g.armyGrow = 0;
-					g.people.push(PeopleGenerator.getInst().generate());
+					g.people.push(PeopleGenerator.getInst().generate(-1));
 				case MARKET:
 					g.money = getRandomRange(180, 80);
 					g.food = getRandomRange(180, 80);
-					g.people.push(PeopleGenerator.getInst().generate());
+					g.people.push(PeopleGenerator.getInst().generate(-1));
 				case FARM:
 					g.money = getRandomRange(180, 80);
 					g.food = getRandomRange(180, 80);
-					g.people.push(PeopleGenerator.getInst().generate());
+					g.people.push(PeopleGenerator.getInst().generate(-1));
 				case VILLAGE:
 					g.money = getRandomRange(180, 80);
 					g.food = getRandomRange(180, 80);
 					g.army *= 1.5;
-					g.people.push(PeopleGenerator.getInst().generate());
+					g.people.push(PeopleGenerator.getInst().generate(-1));
 				case CITY:
 					g.money = getRandomRange(180, 80);
 					g.army *= 2;
 					g.food = getRandomRange(180, 80);
-					g.people.push(PeopleGenerator.getInst().generate());
+					g.people.push(PeopleGenerator.getInst().generate(2));
 				case _:
 			}
 

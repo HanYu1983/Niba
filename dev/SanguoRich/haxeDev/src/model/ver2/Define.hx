@@ -455,7 +455,10 @@ function getGridInfo(ctx:Context, grid:Grid):model.GridGenerator.Grid {
 				// 3代表緩兵計
 				ctx.groundItems.filter(item -> item.belongToPlayerId == i && item.position == grid.id).map(item -> 3)
 		],
-		treasures: getTreasureInGrid(ctx, grid.id).map(t -> getTreasureInfo(ctx, t))
+		treasures: getTreasureInGrid(ctx, grid.id).map(t -> getTreasureInfo(ctx, t)),
+		maxMoney: 0,
+		maxFood: 0,
+		maxArmy:0,
 	}
 }
 

@@ -54,6 +54,12 @@ class BuildPreview extends PopupView{
             case WALL(level):
                 if(level < 3) BUILDING.WALL(level+1);
                 else BUILDING.WALL(1);
+            case BANK(level):
+                if(level < 3) BUILDING.BANK(level+1);
+                else BUILDING.BANK(1);
+            case BARN(level):
+                if(level < 3) BUILDING.BARN(level+1);
+                else BUILDING.BARN(1);
         }
 
         if(Type.enumEq(current, to)) return;

@@ -56,7 +56,10 @@ class GridGridView extends BasicGridView{
                     building += '牆${level}';
                 case EXPLORE(level):
                     building += '人${level}';
-                case _:
+                case BANK(level):
+                    building += '庫${level}';
+                case BARN(level):
+                    building += '倉${level}';
             }
         }
         pro_building.value = building;
