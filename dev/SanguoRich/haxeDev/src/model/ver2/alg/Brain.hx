@@ -604,7 +604,35 @@ private function getCommandWeight(ctx:Context, playerId:Int, gridId:Int, cmd:Act
 								}
 							}
 						case 4:
-						// 火中取栗
+							// 火中取栗
+							for (s in 0...7) {
+								final nextPosition = ((player.position + s) + ctx.grids.length) % ctx.grids.length;
+								final nextGrid = ctx.grids[nextPosition];
+								if (nextGrid == null) {
+									throw new haxe.Exception('nextGrid not found: ${nextPosition}');
+								}
+								// 是敵人的路障
+								final fact1 = {
+									final notMyItems = ctx.groundItems.filter(i -> i.position == nextGrid.id && i.belongToPlayerId != player.id);
+									notMyItems.length == 0.0 ? 1.0 : 0.0;
+								}
+								// 對方兵越多
+								final fact2 = 1 - Math.min(1, (player.army / 3) / nextGrid.army);
+								for (p1 in peopleInPlayer) {
+									final result = _getStrategyRate(ctx, p1.id, strategy.id, 0, 0, nextGrid.id);
+									// 成功率
+									final fact3 = result.rate;
+									// 體力剩下越多越好
+									final fact4 = Math.pow(result.energyAfter / 100.0, 0.5);
+									final score = 1.5 * fact1 * fact2 * fact3 * fact4;
+									if (score > maxScore) {
+										maxScore = score;
+										brainMemory.strategy.peopleId = p1.id;
+										brainMemory.strategy.strategyId = strategy.id;
+										brainMemory.strategy.targetGridId = nextGrid.id;
+									}
+								}
+							}
 						case 5:
 							// 趁虛而入
 							// 只針對非AI玩家使用
@@ -631,13 +659,17 @@ private function getCommandWeight(ctx:Context, playerId:Int, gridId:Int, cmd:Act
 							// 按兵不動
 							// 在自己格
 							final fact1 = getGridBelongPlayerId(ctx, grid.id) == player.id ? 1.0 : 0.0;
+							final fact2 = {
+								final totalResource = grid.money + grid.food + grid.army;
+								totalResource > 200 ? Math.min(1, totalResource - 200 / 1000.0) : 0.0;
+							}
 							for (p1 in peopleInPlayer) {
 								final result = _getStrategyRate(ctx, p1.id, strategy.id, 0, 0, 0);
 								// 成功率
-								final fact4 = result.rate;
+								final fact3 = result.rate;
 								// 體力剩下越多越好
-								final fact5 = Math.pow(result.energyAfter / 100.0, 0.5);
-								final score = 1.0 * fact1 * fact4 * fact5;
+								final fact4 = Math.pow(result.energyAfter / 100.0, 0.5);
+								final score = 0.7 * fact1 * fact2 * fact3 * fact4;
 								if (score > maxScore) {
 									maxScore = score;
 									brainMemory.strategy.strategyId = strategy.id;
