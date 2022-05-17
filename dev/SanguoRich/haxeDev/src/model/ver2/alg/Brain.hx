@@ -858,6 +858,8 @@ private function getCommandWeight(ctx:Context, playerId:Int, gridId:Int, cmd:Act
 			{
 				// 少於200就一定要拿兵, 越多兵就越不拿
 				final armyRate = 1.0 - Math.min(1, Math.max(0, player.army - 200) / INIT_RESOURCE);
+				// 城兵比我多越多
+				final gridArmyRate = grid.army / player.army;
 				// 食物小於兵就要拿食物
 				final foodRate = if (player.food == 0) {
 					1.0;
@@ -866,7 +868,7 @@ private function getCommandWeight(ctx:Context, playerId:Int, gridId:Int, cmd:Act
 				};
 				// 少於200就一定要拿錢, 越多錢就越不拿
 				final moneyRate = 1.0 - Math.min(1, Math.max(0, player.money - 200) / INIT_RESOURCE);
-				final score = 1.0 * armyRate * foodRate * moneyRate;
+				final score = 1.5 * Math.max(Math.max(Math.max(armyRate * gridArmyRate), foodRate), moneyRate);
 				if (score > maxScore) {
 					maxScore = score;
 					brainMemory.transfer.food = -Math.min(grid.food, foodRate * 1.8 * grid.food);
@@ -890,6 +892,7 @@ private function getCommandWeight(ctx:Context, playerId:Int, gridId:Int, cmd:Act
 				}
 			}
 			{
+				final fact1 = player.army > 200 ? 1.0 : 0.0;
 				final needArmyRate = if (grid.army <= 0) {
 					1.5;
 				} else {
@@ -901,7 +904,8 @@ private function getCommandWeight(ctx:Context, playerId:Int, gridId:Int, cmd:Act
 					grid.money / grid.army;
 				}
 				final maxNeedArmyRate = Math.max(needArmyRate, needArmyRate2);
-				final score = maxNeedArmyRate > 1.3 ? 999.0 : 0.0;
+				final fact2 = maxNeedArmyRate > 1.3 ? 999.0 : 0.0;
+				final score = 1.0 * fact1 * fact2;
 				if (score > maxScore) {
 					maxScore = score;
 					brainMemory.transfer.food = 0;
