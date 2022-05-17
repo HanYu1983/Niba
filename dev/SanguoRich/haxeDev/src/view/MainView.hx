@@ -1081,7 +1081,7 @@ class MainView extends Box {
 			info.peopleCount = p.people.length;
 			info.cityCount = p.grids.length;
 			info.treasureCount = p.treasures.length;
-			info.score = p.score;
+			info.score = Math.floor(p.score);
 			tab_allPlayers.dataSource.add(info);
 		}
 		lbl_gameInfo.value = '第${gameInfo.currentTurn + 1}回合，${gameInfo.currentPlayer.name}正在行動';

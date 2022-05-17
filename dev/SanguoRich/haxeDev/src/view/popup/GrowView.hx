@@ -27,22 +27,13 @@ class GrowView extends PopupView{
         p4Info = new LeaderGridView();
         box_p4.addComponent(p4Info);
     }
-
-    function setInfo(view:LeaderGridView, before:PlayerInfo, after:PlayerInfo){
-        view.pro_name.value = before.name;
-        view.pro_money.value = '${Main.getCompareString(before.money, after.money, 2)}';
-        view.pro_food.value = '${Main.getCompareString(before.food, after.food, 2)}';
-        view.pro_army.value = '${Main.getCompareString(before.army, after.army, 2)}';
-        view.pro_peopleCount.value = before.people.length;
-        view.pro_cityCount.value = before.grids.length;
-    }
-
+    
     override function showPopup(info:Dynamic, cb:()->Void = null) {
         super.showPopup(info, cb);
 
         final gameInfo = Main.model.gameInfo();
         for( index => p in gameInfo.players){
-            setInfo([p1Info, p2Info, p3Info, p4Info][index], info.playerBefore[index], info.playerAfter[index]);
+            [p1Info, p2Info, p3Info, p4Info][index].setInfo(p);
         }
     }
 

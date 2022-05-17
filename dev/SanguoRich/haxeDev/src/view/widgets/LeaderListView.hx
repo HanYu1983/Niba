@@ -28,6 +28,7 @@ class LeaderListView extends TableView {
 			clone.peopleCount = p.people.length;
 			clone.cityCount = p.grids.length;
 			clone.treasureCount = p.treasures.length;
+			clone.score = Math.floor(p.score);
 			clones.push(clone);
 		}
 		dataSource.data = clones;
