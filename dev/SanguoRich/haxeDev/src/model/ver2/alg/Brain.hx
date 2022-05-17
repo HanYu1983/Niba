@@ -1035,7 +1035,7 @@ private function getCommandWeight(ctx:Context, playerId:Int, gridId:Int, cmd:Act
 				final maxRate = Math.max(armyRate, Math.max(foodRate, moneyRate));
 				// 有其中一個資源超過8成再拿
 				final fact1 = maxRate > 0.8 ? maxRate : 0.0;
-				final score = 1.0 * fact1;
+				final score = 1.5 * fact1;
 				if (score > maxScore) {
 					maxScore = score;
 					brainMemory.transfer.food = -Math.min(grid.food, foodRate * 400);
