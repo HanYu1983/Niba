@@ -20,8 +20,8 @@ class GameTitleView extends PopupView{
         grp_p3.selectedIndex = 2;
         grp_ai_level.selectedIndex = 0;
         grp_gridCount.selectedIndex = 1;
-        grp_growSpeed.pos = 1.0;
-        grp_resource.pos = 1200;
+        grp_growSpeed.selectedIndex = 1;
+        grp_resource.selectedIndex = 1;
         grp_limitBuilding.selectedIndex = 1;
 
         grp_p0.disabled = true;
@@ -40,8 +40,8 @@ class GameTitleView extends PopupView{
                 {type:grp_p3.selectedIndex}
             ],
             gridCount: Std.parseInt(grp_gridCount.selectedButton.text),
-            growSpeed: grp_growSpeed.pos,
-            resource: grp_resource.pos,
+            growSpeed: Std.parseFloat(grp_growSpeed.selectedButton.text),
+            resource: Std.parseFloat(grp_resource.selectedButton.text),
             limitBuilding: (grp_limitBuilding.selectedIndex == 0),
             aiLevel: grp_ai_level.selectedIndex,
         });
