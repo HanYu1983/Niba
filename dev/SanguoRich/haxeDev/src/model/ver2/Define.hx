@@ -544,9 +544,9 @@ function getGridInfo(ctx:Context, grid:Grid):model.GridGenerator.Grid {
 				ctx.groundItems.filter(item -> item.belongToPlayerId == i && item.position == grid.id).map(item -> 3)
 		],
 		treasures: getTreasureInGrid(ctx, grid.id).map(t -> getTreasureInfo(ctx, t)),
-		maxMoney: 0,
-		maxFood: 0,
-		maxArmy: 0,
+		maxMoney: getGridMaxMoney(ctx, grid.id),
+		maxFood: getGridMaxFood(ctx, grid.id),
+		maxArmy: getGridMaxArmy(ctx, grid.id),
 	}
 }
 
