@@ -162,20 +162,18 @@ class GridGenerator {
 					g.maxArmy = g.maxFood = g.maxMoney = 400;
 				case CITY:
 					g.attachs = [
-						BUILDING.MARKET(0),
+						BUILDING.MARKET(1),
 						BUILDING.BANK(0),
 
-						BUILDING.FARM(0),
+						BUILDING.FARM(1),
 						BUILDING.BARN(0),
 
 						BUILDING.BARRACKS(0),
-						BUILDING.EXPLORE(1),
-						BUILDING.WALL(0),
+						BUILDING.EXPLORE(0),
+						BUILDING.WALL(1),
 					];
 					g.maxArmy = g.maxFood = g.maxMoney = 600;
 			}
-
-			
 
 			final basicArmy = getRandomRange(180, 80);
 
