@@ -355,7 +355,14 @@ private function doEvent(ctx:Context, playerId:Int) {
 				if (value.success) {
 					final tmpPlayer = getPlayerInfo(ctx, player);
 					final tmpGrid = getGridInfo(ctx, grid);
-					final putArmy = tmpPlayer.army / 3;
+					// 先清空
+					tmpPlayer.money += tmpGrid.money;
+					tmpPlayer.food += tmpGrid.food;
+					tmpPlayer.army += tmpGrid.army;
+					tmpGrid.money = 0;
+					tmpGrid.food = 0;
+					tmpGrid.army = 0;
+					final putArmy = Math.min(getGridMaxMoney(ctx, gridId) * 0.7, tmpPlayer.army / 3);
 					if (putArmy <= 0) {
 						ctx.events.push(MESSAGE_EVENT({
 							title: 'AI',
@@ -529,7 +536,7 @@ private function getCommandWeight(ctx:Context, playerId:Int, gridId:Int, cmd:Act
 								for (p1 in peopleInPlayer) {
 									final result = _getStrategyRate(ctx, p1.id, strategy.id, 0, 0, nextGrid.id);
 									// 成功率
-									final fact2 = result.rate;
+									final fact2 = result.rate > 0.7 ? result.rate : 0.0;
 									// 體力剩下越多越好
 									final fact3 = Math.pow(result.energyAfter / 100.0, 0.5);
 									final score = 1.0 * fact1 * fact2 * fact3;
@@ -557,7 +564,7 @@ private function getCommandWeight(ctx:Context, playerId:Int, gridId:Int, cmd:Act
 								for (p1 in peopleInPlayer) {
 									final result = _getStrategyRate(ctx, p1.id, strategy.id, 0, firstLowPeople.id, 0);
 									// 成功率
-									final fact2 = result.rate;
+									final fact2 = result.rate > 0.7 ? result.rate : 0.0;
 									final fact3 = result.energyAfter > 65 ? 1.0 : 0.0;
 									final score = 1.0 * fact1 * fact2 * fact3;
 									if (score > maxScore) {
@@ -581,7 +588,7 @@ private function getCommandWeight(ctx:Context, playerId:Int, gridId:Int, cmd:Act
 							for (p1 in peopleInPlayer) {
 								final result = _getStrategyRate(ctx, p1.id, strategy.id, 0, 0, 0);
 								// 成功率
-								final fact4 = result.rate;
+								final fact4 = result.rate > 0.7 ? result.rate : 0.0;
 								// 體力剩下越多越好
 								final fact5 = Math.pow(result.energyAfter / 100.0, 0.5);
 								final score = 0.7 * fact1 * fact2 * fact3 * fact4 * fact5;
@@ -620,7 +627,7 @@ private function getCommandWeight(ctx:Context, playerId:Int, gridId:Int, cmd:Act
 								for (p1 in peopleInPlayer) {
 									final result = _getStrategyRate(ctx, p1.id, strategy.id, 0, 0, nextGrid.id);
 									// 成功率
-									final fact4 = result.rate;
+									final fact4 = result.rate > 0.7 ? result.rate : 0.0;
 									// 體力剩下越多越好
 									final fact5 = Math.pow(result.energyAfter / 100.0, 0.5);
 									final score = 0.8 * fact1 * fact2 * fact3 * fact4 * fact5;
@@ -654,7 +661,7 @@ private function getCommandWeight(ctx:Context, playerId:Int, gridId:Int, cmd:Act
 								for (p1 in peopleInPlayer) {
 									final result = _getStrategyRate(ctx, p1.id, strategy.id, 0, 0, nextGrid.id);
 									// 成功率
-									final fact3 = result.rate;
+									final fact3 = result.rate > 0.7 ? result.rate : 0.0;
 									// 體力剩下越多越好
 									final fact4 = Math.pow(result.energyAfter / 100.0, 0.5);
 									final score = 1.5 * fact1 * fact2 * fact3 * fact4;
@@ -678,7 +685,7 @@ private function getCommandWeight(ctx:Context, playerId:Int, gridId:Int, cmd:Act
 								for (p1 in peopleInPlayer) {
 									final result = _getStrategyRate(ctx, p1.id, strategy.id, 0, p2.id, 0);
 									// 成功率
-									final fact2 = result.rate;
+									final fact2 = result.rate > 0.7 ? result.rate : 0.0;
 									// 體力剩下越多越好
 									final fact3 = Math.pow(result.energyAfter / 100.0, 0.5);
 									final fact4 = p2.energy > 50.0 ? 1.0 : 0.0;
@@ -703,7 +710,7 @@ private function getCommandWeight(ctx:Context, playerId:Int, gridId:Int, cmd:Act
 							for (p1 in peopleInPlayer) {
 								final result = _getStrategyRate(ctx, p1.id, strategy.id, 0, 0, 0);
 								// 成功率
-								final fact3 = result.rate;
+								final fact3 = result.rate > 0.7 ? result.rate : 0.0;
 								// 體力剩下越多越好
 								final fact4 = Math.pow(result.energyAfter / 100.0, 0.5);
 								final score = 0.7 * fact1 * fact2 * fact3 * fact4;
@@ -724,7 +731,7 @@ private function getCommandWeight(ctx:Context, playerId:Int, gridId:Int, cmd:Act
 							for (p1 in peopleInPlayer) {
 								final result = _getStrategyRate(ctx, p1.id, strategy.id, 0, 0, 0);
 								// 成功率
-								final fact2 = result.rate;
+								final fact2 = result.rate > 0.7 ? result.rate : 0.0;
 								// 體力剩下越多越好
 								final fact3 = Math.pow(result.energyAfter / 100.0, 0.5);
 								final score = 1.0 * fact1 * fact2 * fact3;
@@ -1061,9 +1068,9 @@ private function getCommandWeight(ctx:Context, playerId:Int, gridId:Int, cmd:Act
 				final score = 1.5 * Math.max(Math.max(armyRate * gridArmyRate, foodRate), moneyRate);
 				if (score > maxScore) {
 					maxScore = score;
-					brainMemory.transfer.food = -Math.min(grid.food, foodRate * 1.8 * grid.food);
-					brainMemory.transfer.money = -Math.min(grid.money, moneyRate * 1.8 * grid.money);
-					brainMemory.transfer.army = -Math.min(grid.army, armyRate * 1.8 * grid.army);
+					brainMemory.transfer.food = -Math.min(grid.food, Math.max(foodRate, armyRate) * grid.food);
+					brainMemory.transfer.money = -Math.min(grid.money, Math.max(moneyRate, armyRate) * grid.money);
+					brainMemory.transfer.army = -Math.min(grid.army, armyRate * grid.army);
 				}
 			}
 			{

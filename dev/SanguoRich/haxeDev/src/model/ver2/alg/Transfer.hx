@@ -31,6 +31,22 @@ private function onTransfer(ctx:Context, playerId:Int, gridId:Int, playerInfo:mo
 		grid.food = gridInfo.food;
 		grid.army = gridInfo.army;
 		grid.money = gridInfo.money;
+		// 超過的部分拿回來
+		final offsetMoney = grid.money - getGridMaxMoney(ctx, grid.id);
+		if (offsetMoney > 0) {
+			player.money += offsetMoney;
+			grid.money = getGridMaxMoney(ctx, grid.id);
+		}
+		final offsetFood = grid.food - getGridMaxFood(ctx, grid.id);
+		if (offsetFood > 0) {
+			player.food += offsetMoney;
+			grid.food = getGridMaxFood(ctx, grid.id);
+		}
+		final offsetArmy = grid.army - getGridMaxArmy(ctx, grid.id);
+		if (offsetArmy > 0) {
+			player.army += offsetArmy;
+			grid.army = getGridMaxArmy(ctx, grid.id);
+		}
 		// 在同一格的情況, 離開城池
 		for (people in playerInfo.people) {
 			final originPeople = getPeopleById(ctx, people.id);
