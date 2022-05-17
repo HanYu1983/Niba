@@ -22,6 +22,7 @@ import model.ver2.alg.Equip;
 
 class ModelVer2 extends DebugModel {
 	var context:Context = {
+		settings: null,
 		grids: [],
 		attachments: [],
 		peoples: [],

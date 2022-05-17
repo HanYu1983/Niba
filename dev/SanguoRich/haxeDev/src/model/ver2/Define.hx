@@ -262,6 +262,7 @@ enum Event {
 }
 
 typedef Context = {
+	settings:Null<GameSetting>,
 	grids:Array<Grid>,
 	attachments:Array<Attachment>,
 	peoples:Array<People>,
@@ -321,6 +322,18 @@ function getGridBelongPlayerId(ctx:Context, gridId:Int):Null<Int> {
 	return peopleInGrid.length > 0 ? peopleInGrid[0].belongToPlayerId : null;
 }
 
+function getGrowFormGameSettings(ctx:Context):Float {
+	if (ctx.settings == null) {
+		throw new haxe.Exception("settings not found");
+	}
+	final settingGrow = try {
+		[0.05, 0.1, 0.15][ctx.settings.growSpeed];
+	} catch (e) {
+		throw new haxe.Exception('growSpeed的值必須為0~2: ${ctx.settings.growSpeed}');
+	}
+	return settingGrow;
+}
+
 function getGridMoneyGrow(ctx:Context, gridId:Int):Float {
 	final peopleInGrid = ctx.peoples.filter(p -> p.position.gridId == gridId);
 	// 沒武將的格子不成長
@@ -336,7 +349,7 @@ function getGridMoneyGrow(ctx:Context, gridId:Int):Float {
 				0;
 		}
 	}, 0);
-	return BASIC_GROW_MONEY_RATE + attachmentRate;
+	return BASIC_GROW_MONEY_RATE + getGrowFormGameSettings(ctx) + attachmentRate;
 }
 
 function getGridFoodGrow(ctx:Context, gridId:Int):Float {
@@ -354,7 +367,7 @@ function getGridFoodGrow(ctx:Context, gridId:Int):Float {
 				0;
 		}
 	}, 0);
-	return BASIC_GROW_FOOD_RATE + attachmentRate;
+	return BASIC_GROW_FOOD_RATE + getGrowFormGameSettings(ctx) + attachmentRate;
 }
 
 function getGridArmyGrow(ctx:Context, gridId:Int):Float {
@@ -372,7 +385,7 @@ function getGridArmyGrow(ctx:Context, gridId:Int):Float {
 				0;
 		}
 	}, 0);
-	return BASIC_GROW_ARMY_RATE + attachmentRate;
+	return BASIC_GROW_ARMY_RATE + getGrowFormGameSettings(ctx) + attachmentRate;
 }
 
 function getGridBuildType(ctx:Context, gridId:Int):GROWTYPE {
