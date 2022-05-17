@@ -141,7 +141,6 @@ class StrategyPreviewView extends PopupView {
 						final currentId = gameInfo.currentPlayer.atGridId;
 						function remapId(i){
 							final remapId = i + currentId;
-							trace('remapId', remapId);
 							if(remapId > gameInfo.grids.length - 1){
 								return remapId - gameInfo.grids.length;
 							}else if( remapId < 0 ){
@@ -153,8 +152,6 @@ class StrategyPreviewView extends PopupView {
 						if(s.value != null){
 							final rangeSetting:Array<Int> = s.value.valid;
 							final canGo = rangeSetting.map(remapId).map((i)->gameInfo.grids[i]);
-
-							trace( 'rangeSetting', rangeSetting, 'canGo', rangeSetting.map(remapId) );
 
 							updateGridList(canGo);
 						}else{
