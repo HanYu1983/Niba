@@ -224,6 +224,7 @@ function onPayTaxToGrid(ctx:Context, playerId:Int, gridId:Int) {
 	}
 	eventValue.moneyAfter = player.money;
 	eventValue.foodAfter = player.food;
+	eventValue.armyAfter = player.army;
 	ctx.events.push({
 		PAY_FOR_OVER_ENEMY_GRID(eventValue, getGameInfo(ctx, false));
 	});
@@ -253,7 +254,9 @@ function getPlayerScore(ctx:Context, playerId:Int):Float {
 	final peopleScore = ctx.peoples.filter(p -> p.belongToPlayerId == playerId).fold((p, a:Float) -> {
 		return a + p.cost;
 	}, 0.0);
-	return resourceScore * 3.0 + treasureScore + peopleScore;
+	final gridScore = ctx.grids.filter(g -> getGridBelongPlayerId(ctx, g.id) == playerId).length * 1000;
+	final attachScore = ctx.attachments.filter(a -> getGridBelongPlayerId(ctx, a.belongToGridId) == playerId).length * 300;
+	return resourceScore * 3.0 + treasureScore + peopleScore + gridScore + attachScore;
 }
 
 // 玩家回合結束

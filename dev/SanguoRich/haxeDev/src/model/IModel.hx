@@ -75,11 +75,8 @@ enum EventInfoID {
 	GRID_RESOURCE_EVENT;
 	PEOPLE_LEVEL_UP_EVENT;
 	PAY_FOR_OVER_ENEMY_GRID;
-
 	ANIMATION_EVENT;
-
 	MESSAGE_EVENT;
-
 	PLAYER_LOSE;
 	PLAYER_WIN;
 }
@@ -251,13 +248,13 @@ typedef GameSetting = {
 	players:Array<{type:Int}>,
 
 	// 格子數量
-	gridCount: Int,
+	gridCount:Int,
 	// 格子成長速度等級
-    growSpeed: Float,
+	growSpeed:Float,
 	// 初始資源
-    resource: Float,
+	resource:Float,
 	// 是否格子只能依據類型蓋房子
-	limitBuilding: Bool,
+	limitBuilding:Bool,
 	// AI難度，初期可以先影響AI的初始資源量(x1.5, x2, x2.5)
 	aiLevel:Int
 }
@@ -386,7 +383,7 @@ final StrategyList:Array<StrategyCatelog> = [
 	{
 		id: 5,
 		name: '趁虛而入',
-		intelligence: 60,
+		intelligence: 70,
 		describe: '指定武將體力-20',
 		targetType: StrategyTargetType.TARGET_PEOPLE,
 		value: null
@@ -627,6 +624,3 @@ final BuildingList:Array<BuildingCatelog> = [
 		depends: []
 	},
 ];
-
-
-

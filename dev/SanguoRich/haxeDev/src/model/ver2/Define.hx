@@ -337,12 +337,24 @@ function getPlayerCharmAddByAttachment(ctx:Context, playerId:Int):Float {
 	final charmExt = ctx.attachments.filter(a -> getGridBelongPlayerId(ctx, a.belongToGridId) == playerId).fold((p, a) -> {
 		return a + switch p.type {
 			case EXPLORE(level):
-				return [0, 15][level];
+				return [0, 5][level];
 			case _:
 				0;
 		}
 	}, 0);
 	return charmExt;
+}
+
+function getPlayerHireCostRate(ctx:Context, playerId:Int):Float {
+	final rate = ctx.attachments.filter(a -> getGridBelongPlayerId(ctx, a.belongToGridId) == playerId).fold((p, a) -> {
+		return a * switch p.type {
+			case EXPLORE(level):
+				return [1.0, 0.8][level];
+			case _:
+				0;
+		}
+	}, 1.0);
+	return rate;
 }
 
 function getGridMoneyGrow(ctx:Context, gridId:Int):Float {
@@ -436,21 +448,22 @@ function getGridMoneyAdd(ctx:Context, gridId:Int):Float {
 }
 
 function getGridArmyAdd(ctx:Context, gridId:Int):Float {
-	final peopleInGrid = ctx.peoples.filter(p -> p.position.gridId == gridId);
-	// 沒武將的格子不成長
-	if (peopleInGrid.length == 0) {
-		return 0.0;
-	}
-	final grid = ctx.grids[gridId];
-	final attachmentRate = ctx.attachments.filter(a -> a.belongToGridId == grid.id).fold((p, a) -> {
-		return a + switch p.type {
-			case BARRACKS(level):
-				[0, 2, 3, 4][level];
-			case _:
-				0;
-		}
-	}, 0);
-	return attachmentRate;
+	// final peopleInGrid = ctx.peoples.filter(p -> p.position.gridId == gridId);
+	// // 沒武將的格子不成長
+	// if (peopleInGrid.length == 0) {
+	// 	return 0.0;
+	// }
+	// final grid = ctx.grids[gridId];
+	// final attachmentRate = ctx.attachments.filter(a -> a.belongToGridId == grid.id).fold((p, a) -> {
+	// 	return a + switch p.type {
+	// 		case BARRACKS(level):
+	// 			[0, 2, 3, 4][level];
+	// 		case _:
+	// 			0;
+	// 	}
+	// }, 0);
+	// return attachmentRate;
+	return 0.0;
 }
 
 function getGridMaxFood(ctx:Context, gridId:Int):Float {
@@ -515,6 +528,8 @@ function getGridBuildType(ctx:Context, gridId:Int):GROWTYPE {
 	}).fold((c, a) -> c + a, 0);
 	final armyCnt = attachmentInGrid.map(a -> switch a.type {
 		case BARRACKS(level):
+			level;
+		case WALL(level):
 			level;
 		case _:
 			0;
