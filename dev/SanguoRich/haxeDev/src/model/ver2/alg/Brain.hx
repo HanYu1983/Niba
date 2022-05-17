@@ -594,7 +594,7 @@ private function getCommandWeight(ctx:Context, playerId:Int, gridId:Int, cmd:Act
 									final fact4 = result.rate;
 									// 體力剩下越多越好
 									final fact5 = Math.pow(result.energyAfter / 100.0, 0.5);
-									final score = 1.0 * fact1 * fact2 * fact3 * fact4 * fact5;
+									final score = 0.8 * fact1 * fact2 * fact3 * fact4 * fact5;
 									if (score > maxScore) {
 										maxScore = score;
 										brainMemory.strategy.peopleId = p1.id;
@@ -630,6 +630,7 @@ private function getCommandWeight(ctx:Context, playerId:Int, gridId:Int, cmd:Act
 										brainMemory.strategy.peopleId = p1.id;
 										brainMemory.strategy.strategyId = strategy.id;
 										brainMemory.strategy.targetGridId = nextGrid.id;
+										trace("火中取栗", result);
 									}
 								}
 							}
