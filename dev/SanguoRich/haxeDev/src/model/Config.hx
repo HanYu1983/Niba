@@ -12,7 +12,7 @@ final CAN_CHANGE_FAVOR = 0;
 final PLAYER_SPEND_MONEY_FOR_PEOPLE_PER_TURN_PERSENT = 0.0025;
 
 // 主公支付的食物為所有格子上以及身上的士兵的數量的%數
-final PLAYER_SPEND_FOOD_FOR_ARMY_PER_TURN_PERSENT = 0.01;
+final PLAYER_SPEND_FOOD_FOR_ARMY_PER_TURN_PERSENT = 0.04;
 
 // 武將聘用價格%數
 final PEOPLE_HIRE_COST_FACTOR = .1;
@@ -62,7 +62,7 @@ final WAR_BACK_ABILITY_FACTOR = .7;
 final WAR_MONEY_COST_FACTOR = .1;
 
 // 戰鬥支付食物整體調整
-final WAR_FOOD_COST_FACTOR = 0.7;
+final WAR_FOOD_COST_FACTOR = 0.3;
 
 // 戰鬥防守方士兵加成
 final WAR_DEFFENDER_FACTOR = 3.0;
@@ -171,7 +171,7 @@ final GRID_RESOURCE_MAX = 1000.0;
 final EVENT_GROW_FOOD_RATE = 0.005;
 
 // 每回合每個城加糧事件的糧食數量(暫時通用在錢和兵)
-final EVENT_GROW_FOOD_AMOUNT = 20;
+final EVENT_GROW_FOOD_AMOUNT = 50;
 
 // 每回合異軍突起的機率
 final EVENT_GRID_BORN_RATE = 1 / 15.0;

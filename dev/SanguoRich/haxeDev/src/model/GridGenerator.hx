@@ -127,7 +127,7 @@ class GridGenerator {
 							BUILDING.WALL(0),
 						];
 					}
-					g.maxArmy = g.maxFood = g.maxMoney = 300;
+					g.maxArmy = g.maxFood = g.maxMoney = 400;
 				case FARM:
 					if (isLimitBuilding) {
 						g.attachs = [BUILDING.FARM(1), BUILDING.BARN(0), BUILDING.WALL(0),];
@@ -144,7 +144,7 @@ class GridGenerator {
 							BUILDING.WALL(0),
 						];
 					}
-					g.maxArmy = g.maxFood = g.maxMoney = 300;
+					g.maxArmy = g.maxFood = g.maxMoney = 400;
 				case VILLAGE:
 					if (isLimitBuilding) {
 						g.attachs = [BUILDING.BARRACKS(1), BUILDING.WALL(0),];
@@ -161,7 +161,7 @@ class GridGenerator {
 							BUILDING.WALL(0),
 						];
 					}
-					g.maxArmy = g.maxFood = g.maxMoney = 300;
+					g.maxArmy = g.maxFood = g.maxMoney = 400;
 				case CITY:
 					g.attachs = [
 						BUILDING.MARKET(0),
@@ -174,7 +174,7 @@ class GridGenerator {
 						BUILDING.EXPLORE(0),
 						BUILDING.WALL(0),
 					];
-					g.maxArmy = g.maxFood = g.maxMoney = 500;
+					g.maxArmy = g.maxFood = g.maxMoney = 600;
 			}
 
 			for (i in 0...3)
@@ -197,10 +197,12 @@ class GridGenerator {
 				case MARKET:
 					g.money = getRandomRange(180, 80);
 					g.food = getRandomRange(180, 80);
+					g.money *= 1.5;
 					g.people.push(PeopleGenerator.getInst().generate(-1));
 				case FARM:
 					g.money = getRandomRange(180, 80);
 					g.food = getRandomRange(180, 80);
+					g.food *= 1.5;
 					g.people.push(PeopleGenerator.getInst().generate(-1));
 				case VILLAGE:
 					g.money = getRandomRange(180, 80);
@@ -209,8 +211,10 @@ class GridGenerator {
 					g.people.push(PeopleGenerator.getInst().generate(-1));
 				case CITY:
 					g.money = getRandomRange(180, 80);
-					g.army *= 2;
 					g.food = getRandomRange(180, 80);
+					g.money *= 1.5;
+					g.food *= 1.5;
+					g.army *= 1.5;
 					g.people.push(PeopleGenerator.getInst().generate(2));
 				case _:
 			}
