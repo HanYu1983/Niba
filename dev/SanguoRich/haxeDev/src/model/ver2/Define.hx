@@ -24,6 +24,9 @@ typedef Grid = {
 	// defaultFoodGrow:Float,
 	// defaultArmyGrow:Float,
 	favor:Array<Int>,
+	defaultMaxFood:Float,
+	defaultMaxMoney:Float,
+	defaultMaxArmy:Float,
 }
 
 typedef Attachment = {
@@ -329,6 +332,18 @@ function getGrowFormGameSettings(ctx:Context):Float {
 	return ctx.settings.growSpeed;
 }
 
+function getPlayerCharmAddByAttachment(ctx:Context, playerId:Int):Float {
+	final charmExt = ctx.attachments.filter(a -> getGridBelongPlayerId(ctx, a.belongToGridId) == playerId).fold((p, a) -> {
+		return a + switch p.type {
+			case EXPLORE(level):
+				return [0, 5, 10, 15][level];
+			case _:
+				0;
+		}
+	}, 0);
+	return charmExt;
+}
+
 function getGridMoneyGrow(ctx:Context, gridId:Int):Float {
 	final peopleInGrid = ctx.peoples.filter(p -> p.position.gridId == gridId);
 	// 沒武將的格子不成長
@@ -338,7 +353,7 @@ function getGridMoneyGrow(ctx:Context, gridId:Int):Float {
 	final grid = ctx.grids[gridId];
 	final attachmentRate = ctx.attachments.filter(a -> a.belongToGridId == grid.id).fold((p, a) -> {
 		return a + switch p.type {
-			case MARKET(level):
+			case BANK(level):
 				[0.0, 0.02, 0.03, 0.04][level];
 			case _:
 				0;
@@ -356,7 +371,7 @@ function getGridFoodGrow(ctx:Context, gridId:Int):Float {
 	final grid = ctx.grids[gridId];
 	final attachmentRate = ctx.attachments.filter(a -> a.belongToGridId == grid.id).fold((p, a) -> {
 		return a + switch p.type {
-			case FARM(level):
+			case BARN(level):
 				[0.0, 0.02, 0.03, 0.04][level];
 			case _:
 				0;
@@ -381,6 +396,78 @@ function getGridArmyGrow(ctx:Context, gridId:Int):Float {
 		}
 	}, 0);
 	return getGrowFormGameSettings(ctx) * (BASIC_GROW_ARMY_RATE + attachmentRate);
+}
+
+function getGridFoodAdd(ctx:Context, gridId:Int):Float {
+	final peopleInGrid = ctx.peoples.filter(p -> p.position.gridId == gridId);
+	// 沒武將的格子不成長
+	if (peopleInGrid.length == 0) {
+		return 0.0;
+	}
+	final grid = ctx.grids[gridId];
+	final attachmentRate = ctx.attachments.filter(a -> a.belongToGridId == grid.id).fold((p, a) -> {
+		return a + switch p.type {
+			case FARM(level):
+				[0, 2, 3, 4][level];
+			case _:
+				0;
+		}
+	}, 0);
+	return attachmentRate;
+}
+
+function getGridMoneyAdd(ctx:Context, gridId:Int):Float {
+	final peopleInGrid = ctx.peoples.filter(p -> p.position.gridId == gridId);
+	// 沒武將的格子不成長
+	if (peopleInGrid.length == 0) {
+		return 0.0;
+	}
+	final grid = ctx.grids[gridId];
+	final attachmentRate = ctx.attachments.filter(a -> a.belongToGridId == grid.id).fold((p, a) -> {
+		return a + switch p.type {
+			case MARKET(level):
+				[0, 2, 3, 4][level];
+			case _:
+				0;
+		}
+	}, 0);
+	return attachmentRate;
+}
+
+function getGridMaxFood(ctx:Context, gridId:Int):Float {
+	final grid = ctx.grids[gridId];
+	final attachmentInGrid = ctx.attachments.filter(a -> a.belongToGridId == gridId);
+	final addExt = attachmentInGrid.map(a -> switch a.type {
+		case BARN(level):
+			level;
+		case _:
+			0;
+	}).fold((c, a) -> c + a, 0) * 200;
+	return grid.defaultMaxFood + addExt;
+}
+
+function getGridMaxMoney(ctx:Context, gridId:Int):Float {
+	final grid = ctx.grids[gridId];
+	final attachmentInGrid = ctx.attachments.filter(a -> a.belongToGridId == gridId);
+	final addExt = attachmentInGrid.map(a -> switch a.type {
+		case BANK(level):
+			level;
+		case _:
+			0;
+	}).fold((c, a) -> c + a, 0) * 200;
+	return grid.defaultMaxMoney + addExt;
+}
+
+function getGridMaxArmy(ctx:Context, gridId:Int):Float {
+	final grid = ctx.grids[gridId];
+	final attachmentInGrid = ctx.attachments.filter(a -> a.belongToGridId == gridId);
+	final addExt = attachmentInGrid.map(a -> switch a.type {
+		case BARRACKS(level):
+			level;
+		case _:
+			0;
+	}).fold((c, a) -> c + a, 0) * 200;
+	return grid.defaultMaxMoney + addExt;
 }
 
 function getGridBuildType(ctx:Context, gridId:Int):GROWTYPE {
@@ -458,7 +545,7 @@ function getGridInfo(ctx:Context, grid:Grid):model.GridGenerator.Grid {
 		treasures: getTreasureInGrid(ctx, grid.id).map(t -> getTreasureInfo(ctx, t)),
 		maxMoney: 0,
 		maxFood: 0,
-		maxArmy:0,
+		maxArmy: 0,
 	}
 }
 
@@ -886,6 +973,9 @@ function addGridInfo(ctx:Context, grid:model.GridGenerator.Grid):Void {
 		// defaultFoodGrow: 0.0,
 		// defaultArmyGrow: 0.0,
 		favor: grid.favor,
+		defaultMaxMoney: grid.maxMoney,
+		defaultMaxFood: grid.maxFood,
+		defaultMaxArmy: grid.maxArmy,
 	});
 	for (p in grid.people) {
 		addPeopleInfo(ctx, null, grid.id, p);

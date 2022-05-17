@@ -92,12 +92,12 @@ function doGridGrow(ctx:Context) {
 			continue;
 		}
 		// 城池成長
-		final gainMoney = grid.money * getGridMoneyGrow(ctx, grid.id);
-		final gainFood = grid.food * getGridFoodGrow(ctx, grid.id);
+		final gainMoney = grid.money * getGridMoneyGrow(ctx, grid.id) + getGridMoneyAdd(ctx, grid.id);
+		final gainFood = grid.food * getGridFoodGrow(ctx, grid.id) + getGridFoodAdd(ctx, grid.id);
 		final gainArmy = grid.army * getGridArmyGrow(ctx, grid.id);
-		grid.money = Math.min(GRID_RESOURCE_MAX, grid.money + gainMoney);
-		grid.food = Math.min(GRID_RESOURCE_MAX, grid.food + gainFood);
-		grid.army = Math.min(GRID_RESOURCE_MAX, grid.army + gainArmy);
+		grid.money = Math.min(getGridMaxMoney(ctx, grid.id), grid.money + gainMoney);
+		grid.food = Math.min(getGridMaxFood(ctx, grid.id), grid.food + gainFood);
+		grid.army = Math.min(getGridMaxArmy(ctx, grid.id), grid.army + gainArmy);
 	}
 }
 
@@ -379,7 +379,7 @@ function onPlayerEnd(ctx:Context, playerId:Int) {
 						final gridsBefore = gridsWillGrow.map(g -> getGridInfo(ctx, g));
 						for (grid in gridsWillGrow) {
 							final gain = EVENT_GROW_FOOD_AMOUNT * (Math.random() * .4 + .8);
-							grid.food = Math.min(GRID_RESOURCE_MAX, grid.food + gain);
+							grid.food = Math.min(getGridMaxFood(ctx, grid.id), grid.food + gain);
 						}
 						final gridsAfter = gridsWillGrow.map(g -> getGridInfo(ctx, g));
 						ctx.events.push(GRID_RESOURCE_EVENT({
@@ -401,7 +401,7 @@ function onPlayerEnd(ctx:Context, playerId:Int) {
 						final gridsBefore = gridsWillGrow.map(g -> getGridInfo(ctx, g));
 						for (grid in gridsWillGrow) {
 							final gain = EVENT_GROW_FOOD_AMOUNT * (Math.random() * .4 + .8);
-							grid.money = Math.min(GRID_RESOURCE_MAX, grid.money + gain);
+							grid.money = Math.min(getGridMaxMoney(ctx, grid.id), grid.money + gain);
 						}
 						final gridsAfter = gridsWillGrow.map(g -> getGridInfo(ctx, g));
 						ctx.events.push(GRID_RESOURCE_EVENT({
@@ -423,7 +423,7 @@ function onPlayerEnd(ctx:Context, playerId:Int) {
 						final gridsBefore = gridsWillGrow.map(g -> getGridInfo(ctx, g));
 						for (grid in gridsWillGrow) {
 							final gain = EVENT_GROW_FOOD_AMOUNT * (Math.random() * .4 + .8);
-							grid.army = Math.min(GRID_RESOURCE_MAX, grid.army + gain);
+							grid.army = Math.min(getGridMaxArmy(ctx, grid.id), grid.army + gain);
 						}
 						final gridsAfter = gridsWillGrow.map(g -> getGridInfo(ctx, g));
 						ctx.events.push(GRID_RESOURCE_EVENT({

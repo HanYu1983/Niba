@@ -155,7 +155,7 @@ private function getWarCostImpl(ctx:Context, playerId:Int, gridId:Int, p1PeopleI
 		final factWall = 1.0 + ctx.attachments.filter(a -> a.belongToGridId == gridId).fold((p, a) -> {
 			return a + switch p.type {
 				case WALL(level):
-					return [0.0, 0.15, 0.35, 0.5][level];
+					return [0.0, 0.2, 0.3, 0.5][level];
 				case _:
 					0.0;
 			}

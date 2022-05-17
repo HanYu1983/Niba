@@ -486,7 +486,7 @@ private function getCommandWeight(ctx:Context, playerId:Int, gridId:Int, cmd:Act
 							true;
 						case WALL(level) if (level < 3):
 							true;
-						case EXPLORE(level) if (level < 3):
+						case EXPLORE(level) if (level < 1):
 							true;
 						case _:
 							false;
@@ -1066,9 +1066,9 @@ private function getCommandWeight(ctx:Context, playerId:Int, gridId:Int, cmd:Act
 				}
 			}
 			{
-				final armyRate = grid.army / GRID_RESOURCE_MAX;
-				final foodRate = grid.food / GRID_RESOURCE_MAX;
-				final moneyRate = grid.money / GRID_RESOURCE_MAX;
+				final armyRate = grid.army / getGridMaxArmy(ctx, grid.id);
+				final foodRate = grid.food / getGridMaxFood(ctx, grid.id);
+				final moneyRate = grid.money / getGridMaxMoney(ctx, grid.id);
 				final maxRate = Math.max(armyRate, Math.max(foodRate, moneyRate));
 				// 有其中一個資源超過8成再拿
 				final fact1 = maxRate > 0.8 ? maxRate : 0.0;
@@ -1346,9 +1346,9 @@ private function getCommandWeight(ctx:Context, playerId:Int, gridId:Int, cmd:Act
 								}
 							}
 							// 錢越多
-							final fact5 = Math.pow(1 + (result2.moneyAfter / GRID_RESOURCE_MAX), 2);
+							final fact5 = Math.pow(1 + (result2.moneyAfter / getGridMaxMoney(ctx, grid.id)), 2);
 							// 糧越多
-							final fact6 = Math.pow(1 + (result2.foodAfter / GRID_RESOURCE_MAX), 2);
+							final fact6 = Math.pow(1 + (result2.foodAfter / getGridMaxFood(ctx, grid.id)), 2);
 							final score = 1.0 * fact1 * fact2 * fact3 * fact4 * fact5 * fact6;
 							final isBestScore = score > tmpMaxScore;
 							if (isBestScore) {
