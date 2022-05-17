@@ -26,7 +26,7 @@ private function getExploreCost(ctx:Context, playerId:Int, gridId:Int, p1SelectI
 			// 人脈加成
 			final abiFactor = p1Abilities.has(10) ? 1.5 : 1;
 			// 鑑定
-			final abi2Factor = p1Abilities.has(12) ? 2.0 : 1;
+			final abi2Factor = p1Abilities.has(12) ? 2.0 : 0.0;
 			//
 			final rate = base * charmFactor * abiFactor;
 			final findTreasureRate = if (getTreasureInGrid(ctx, gridId).length > 0) {
