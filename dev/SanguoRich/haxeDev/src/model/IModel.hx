@@ -517,7 +517,7 @@ final BuildingList:Array<BuildingCatelog> = [
 	{
 		id: 12,
 		name: '人材所(未建)',
-		money: 150,
+		money: 50,
 		describe: '提高武將在探索計算時的魅力(+0)及聘用計算時的魅力(+0)。所有武將的薪資不減少。並且聘用金錢不減少',
 		type: EXPLORE(0),
 		depends: []
@@ -526,7 +526,7 @@ final BuildingList:Array<BuildingCatelog> = [
 		id: 13,
 		name: '人材所',
 		money: 0,
-		describe: '提高武將在探索計算時的魅力(+15)及聘用計算時的魅力(+15)。所有武將的薪資減少為1/3。並且聘用金錢減少為1/5',
+		describe: '提高武將在探索計算時的魅力(+5)及聘用計算時的魅力(+5)。所有武將的薪資減為*0.8。並且聘用金錢減為*0.8',
 		type: EXPLORE(1),
 		depends: []
 	},
