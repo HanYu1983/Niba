@@ -784,7 +784,8 @@ private function getCommandWeight(ctx:Context, playerId:Int, gridId:Int, cmd:Act
 					1.0;
 				}
 			}
-			final score = 1.0 * fact1 * fact2 * fact3;
+			// 先不裁，權重不好計算
+			final score = 0.0 * fact1 * fact2 * fact3;
 			trace("getCommandWeight", playerId, cmd, "score:", score, "=", fact1, fact2, fact3);
 			score;
 		case EXPLORE:
