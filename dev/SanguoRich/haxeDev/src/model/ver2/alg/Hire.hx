@@ -19,19 +19,11 @@ private function getHireCost(ctx:Context, playerId:Int, gridId:Int, p1SelectId:I
 			return switch fightPeople {
 				case [p1, p2]:
 					final p1Abilities = getPeopleAbilities(ctx, p1.id);
-					final hireCost = p2.cost * PEOPLE_HIRE_COST_FACTOR;
+					final hireCost = p2.cost * PEOPLE_HIRE_COST_FACTOR * getPlayerHireCostRate(ctx, playerId);
 					final hireMoneyOffset = player.money - hireCost;
 					final useEnergy = p1.energy / (100 / ENERGY_COST_ON_HIRE);
 					final base = getBase(useEnergy, ENERGY_COST_ON_HIRE, 0.0) * BASE_RATE_HIRE;
-					final charmExt = ctx.attachments.filter(a -> a.belongToGridId == gridId).fold((p, a) -> {
-						return a + switch p.type {
-							case EXPLORE(level):
-								return [0, 5, 10, 15][level];
-							case _:
-								0;
-						}
-					}, 0);
-
+					final charmExt = getPlayerCharmAddByAttachment(ctx, playerId);
 					// 改爲用敵人的cost為基準難度(1200大概爲最强武將了)
 					final vsCharm = (p2.cost / 1200) * 80 + 20;
 					final charmFactor = (getPeopleCharm(ctx, p1.id) + charmExt) / vsCharm;
