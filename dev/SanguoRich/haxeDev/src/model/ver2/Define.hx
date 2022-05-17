@@ -1354,10 +1354,20 @@ function getPlayerCommand(ctx:Context, playerId:Int):Array<ActionInfoID> {
 								switch gridInfo.buildtype {
 									case MARKET:
 										ret.push(ActionInfoID.EARN_MONEY);
-									case FARM:
 										ret.push(ActionInfoID.BUY_FOOD);
 										ret.push(ActionInfoID.SELL_FOOD);
+										ret.push(ActionInfoID.BUY_ARMY);
+										ret.push(ActionInfoID.SELL_ARMY);
+									case FARM:
+										ret.push(ActionInfoID.EARN_MONEY);
+										ret.push(ActionInfoID.BUY_FOOD);
+										ret.push(ActionInfoID.SELL_FOOD);
+										ret.push(ActionInfoID.BUY_ARMY);
+										ret.push(ActionInfoID.SELL_ARMY);
 									case VILLAGE:
+										ret.push(ActionInfoID.EARN_MONEY);
+										ret.push(ActionInfoID.BUY_FOOD);
+										ret.push(ActionInfoID.SELL_FOOD);
 										ret.push(ActionInfoID.BUY_ARMY);
 										ret.push(ActionInfoID.SELL_ARMY);
 									case CITY:

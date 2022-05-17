@@ -256,6 +256,7 @@ function getPlayerScore(ctx:Context, playerId:Int):Float {
 	}, 0.0);
 	final gridScore = ctx.grids.filter(g -> getGridBelongPlayerId(ctx, g.id) == playerId).length * 1000;
 	final attachScore = ctx.attachments.filter(a -> getGridBelongPlayerId(ctx, a.belongToGridId) == playerId).length * 300;
+	trace("getPlayerScore", resourceScore, treasureScore, peopleScore, gridScore, attachScore);
 	return resourceScore * 3.0 + treasureScore + peopleScore + gridScore + attachScore;
 }
 

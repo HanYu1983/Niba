@@ -1131,9 +1131,9 @@ private function getCommandWeight(ctx:Context, playerId:Int, gridId:Int, cmd:Act
 				}, 0.0);
 				final score = switch totalEnergy / (peopleInPlayer.length * 100) {
 					// 有足夠的體力, 不休息
-					case p if (p >= 0.6):
+					case p if (p >= 0.4):
 						0.1;
-					case p if (p >= 0.3):
+					case p if (p >= 0.2):
 						0.5;
 					case p:
 						p;

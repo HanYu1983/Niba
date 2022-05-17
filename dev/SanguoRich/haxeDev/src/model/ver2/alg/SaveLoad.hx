@@ -4,6 +4,7 @@ import model.GridGenerator;
 import model.IModel;
 import model.Config;
 import model.ver2.Define;
+import model.ver2.alg.Alg;
 
 private final FILE_NAME = "SanguoRichSave.txt";
 private final _storage = js.Browser.getLocalStorage();
@@ -18,5 +19,9 @@ function _load():Null<Context> {
 	if (memonto == null) {
 		return null;
 	}
-	return getConetxtByMemonto(memonto);
+	final ctx = getConetxtByMemonto(memonto);
+	for (player in ctx.players) {
+		player.score = getPlayerScore(ctx, player.id);
+	}
+	return ctx;
 }
