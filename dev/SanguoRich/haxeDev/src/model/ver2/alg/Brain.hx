@@ -276,6 +276,7 @@ function doBrain(ctx, playerId:Int) {
 				final p2 = peopleInGrid[0];
 				_takeSnatchOn(ctx, playerId, gridId, p1Id, p2.id, cmd == OCCUPATION);
 				doEvent(ctx, playerId);
+				brainMemory.hasTransfer = true;
 			case STRATEGY:
 				if (brainMemory.strategy.peopleId == null) {
 					throw new haxe.Exception("player.memory.strategy.peopleId not found");
@@ -350,42 +351,66 @@ private function doEvent(ctx:Context, playerId:Int) {
 				if (value.success) {
 					final tmpPlayer = getPlayerInfo(ctx, player);
 					final tmpGrid = getGridInfo(ctx, grid);
-					final putArmy = Math.min(tmpPlayer.food, tmpPlayer.army) / 3;
-					final putMoney = Math.min(tmpPlayer.money, putArmy);
-					final putFood = Math.min(tmpPlayer.food, putArmy);
-					tmpPlayer.money -= putMoney;
-					tmpPlayer.food -= putFood;
-					tmpPlayer.army -= putArmy;
-					tmpGrid.money += putMoney;
-					tmpGrid.food += putFood;
-					tmpGrid.army += putArmy;
-					if (tmpGrid.people.length == 0) {
-						final peopleNotGrid = tmpPlayer.people.filter(p -> p.gridId == null);
-						if (peopleNotGrid.length > 0) {
-							final willEnterPeople = peopleNotGrid[0];
-							tmpPlayer.people = tmpPlayer.people.filter(p -> p.id == willEnterPeople.id);
-							tmpGrid.people = [willEnterPeople];
-							_takeTransfer(ctx, playerId, gridId, tmpPlayer, tmpGrid);
-							doEvent(ctx, playerId);
+					final putArmy = tmpPlayer.army / 3;
+					if (putArmy <= 0) {
+						ctx.events.push(MESSAGE_EVENT({
+							title: 'AI',
+							msg: '${player.name}想佔領${grid.name}卻沒有兵, 拿走所有物資',
+						}, gameInfo));
+						// 收回攻城的人
+						tmpPlayer.people = tmpPlayer.people.concat(tmpGrid.people);
+						tmpPlayer.money += tmpGrid.money;
+						tmpPlayer.food += tmpGrid.food;
+						tmpPlayer.army += tmpGrid.army;
+						tmpGrid.people = [];
+						tmpGrid.money = 0;
+						tmpGrid.food = 0;
+						tmpGrid.army = 0;
+						_takeTransfer(ctx, playerId, gridId, tmpPlayer, tmpGrid);
+						doEvent(ctx, playerId);
+					} else {
+						if (tmpGrid.people.length == 0) {
+							final peopleNotGrid = tmpPlayer.people.filter(p -> p.gridId == null);
+							if (peopleNotGrid.length > 0) {
+								final willEnterPeople = peopleNotGrid[0];
+								tmpPlayer.people = tmpPlayer.people.filter(p -> p.id == willEnterPeople.id);
+								tmpGrid.people = [willEnterPeople];
+								final putMoney = Math.min(tmpPlayer.money, putArmy);
+								final putFood = Math.min(tmpPlayer.food, putArmy);
+								tmpPlayer.money -= putMoney;
+								tmpPlayer.food -= putFood;
+								tmpPlayer.army -= putArmy;
+								tmpGrid.money += putMoney;
+								tmpGrid.food += putFood;
+								tmpGrid.army += putArmy;
+								_takeTransfer(ctx, playerId, gridId, tmpPlayer, tmpGrid);
+								doEvent(ctx, playerId);
+							} else {
+								ctx.events.push(MESSAGE_EVENT({
+									title: 'AI',
+									msg: '${player.name}想佔領${grid.name}卻沒有空閒的人, 拿走所有物資',
+								}, gameInfo));
+								tmpPlayer.money += tmpGrid.money;
+								tmpPlayer.food += tmpGrid.food;
+								tmpPlayer.army += tmpGrid.army;
+								tmpGrid.money = 0;
+								tmpGrid.food = 0;
+								tmpGrid.army = 0;
+								_takeTransfer(ctx, playerId, gridId, tmpPlayer, tmpGrid);
+								doEvent(ctx, playerId);
+							}
 						} else {
-							ctx.events.push(MESSAGE_EVENT({
-								title: 'AI',
-								msg: '${player.name}想佔領${grid.name}卻沒有空閒的人, 拿走所有物資',
-							}, gameInfo));
-							final tmpPlayer = getPlayerInfo(ctx, player);
-							final tmpGrid = getGridInfo(ctx, grid);
-							tmpPlayer.money += tmpGrid.money;
-							tmpPlayer.food += tmpGrid.food;
-							tmpPlayer.army += tmpGrid.army;
-							tmpGrid.money = 0;
-							tmpGrid.food = 0;
-							tmpGrid.army = 0;
+							final putMoney = Math.min(tmpPlayer.money, putArmy);
+							final putFood = Math.min(tmpPlayer.food, putArmy);
+							tmpPlayer.money -= putMoney;
+							tmpPlayer.food -= putFood;
+							tmpPlayer.army -= putArmy;
+							tmpGrid.money += putMoney;
+							tmpGrid.food += putFood;
+							tmpGrid.army += putArmy;
 							_takeTransfer(ctx, playerId, gridId, tmpPlayer, tmpGrid);
 							doEvent(ctx, playerId);
 						}
-					} else {
-						_takeTransfer(ctx, playerId, gridId, tmpPlayer, tmpGrid);
-						doEvent(ctx, playerId);
 					}
 				} else {
 					ctx.events.push(getAnimationEventFromEvent(evt));
@@ -555,7 +580,7 @@ private function getCommandWeight(ctx:Context, playerId:Int, gridId:Int, cmd:Act
 								final fact4 = result.rate;
 								// 體力剩下越多越好
 								final fact5 = Math.pow(result.energyAfter / 100.0, 0.5);
-								final score = 1.0 * fact1 * fact2 * fact3 * fact4 * fact5;
+								final score = 0.7 * fact1 * fact2 * fact3 * fact4 * fact5;
 								if (score > maxScore) {
 									maxScore = score;
 									brainMemory.strategy.strategyId = strategy.id;
@@ -605,7 +630,7 @@ private function getCommandWeight(ctx:Context, playerId:Int, gridId:Int, cmd:Act
 							}
 						case 4:
 							// 火中取栗
-							for (s in 0...7) {
+							for (s in 1...7) {
 								final nextPosition = ((player.position + s) + ctx.grids.length) % ctx.grids.length;
 								final nextGrid = ctx.grids[nextPosition];
 								if (nextGrid == null) {
@@ -614,10 +639,14 @@ private function getCommandWeight(ctx:Context, playerId:Int, gridId:Int, cmd:Act
 								// 是敵人的路障
 								final fact1 = {
 									final notMyItems = ctx.groundItems.filter(i -> i.position == nextGrid.id && i.belongToPlayerId != player.id);
-									notMyItems.length == 0.0 ? 1.0 : 0.0;
+									notMyItems.length > 0 ? 1.0 : 0.0;
 								}
 								// 對方兵越多
-								final fact2 = 1 - Math.min(1, (player.army / 3) / nextGrid.army);
+								final fact2 = if (nextGrid.army == 0) {
+									0.0;
+								} else {
+									1 - Math.min(1, (player.army / 3) / nextGrid.army);
+								}
 								for (p1 in peopleInPlayer) {
 									final result = _getStrategyRate(ctx, p1.id, strategy.id, 0, 0, nextGrid.id);
 									// 成功率
@@ -625,12 +654,14 @@ private function getCommandWeight(ctx:Context, playerId:Int, gridId:Int, cmd:Act
 									// 體力剩下越多越好
 									final fact4 = Math.pow(result.energyAfter / 100.0, 0.5);
 									final score = 1.5 * fact1 * fact2 * fact3 * fact4;
+									if (fact1 > 0) {
+										trace("火中取栗", score, "=", fact1, fact2, fact3, fact4, result);
+									}
 									if (score > maxScore) {
 										maxScore = score;
 										brainMemory.strategy.peopleId = p1.id;
 										brainMemory.strategy.strategyId = strategy.id;
 										brainMemory.strategy.targetGridId = nextGrid.id;
-										trace("火中取栗", result);
 									}
 								}
 							}
@@ -1207,18 +1238,24 @@ private function getCommandWeight(ctx:Context, playerId:Int, gridId:Int, cmd:Act
 								if (tmp >= 1.0) {
 									1.0;
 								} else {
-									final p2PlayerId = getGridBelongPlayerId(ctx, gridId);
-									if (p2PlayerId == null) {
-										// 對象為中立玩家就不搶, 反正也搶了也只是幫削兵
-										0.0;
-									} else {
-										final armyCost2 = result2.armyAfter - result2.armyBefore;
-										final moneyCost2 = result2.moneyAfter - result2.moneyBefore;
-										final foodCost2 = result2.foodAfter - result2.foodBefore;
-										final totalCost2 = moneyCost + foodCost + armyCost;
-										// 敵人必須損失比我多
-										Math.min(1.0, totalCost2 / totalCost);
-									}
+									// final p2PlayerId = getGridBelongPlayerId(ctx, gridId);
+									// if (p2PlayerId == null) {
+									// 	// 對象為中立玩家就不搶, 反正也搶了也只是幫削兵
+									// 	0.0;
+									// } else {
+									// 	final armyCost2 = result2.armyAfter - result2.armyBefore;
+									// 	final moneyCost2 = result2.moneyAfter - result2.moneyBefore;
+									// 	final foodCost2 = result2.foodAfter - result2.foodBefore;
+									// 	final totalCost2 = moneyCost + foodCost + armyCost;
+									// 	// 敵人必須損失比我多
+									// 	Math.min(1.0, totalCost2 / totalCost);
+									// }
+									final armyCost2 = result2.armyAfter - result2.armyBefore;
+									final moneyCost2 = result2.moneyAfter - result2.moneyBefore;
+									final foodCost2 = result2.foodAfter - result2.foodBefore;
+									final totalCost2 = moneyCost + foodCost + armyCost;
+									// 敵人必須損失比我多
+									Math.min(1.0, totalCost2 / totalCost);
 								}
 							}
 							// 體力剩下越多越好
@@ -1317,7 +1354,7 @@ private function getCommandWeight(ctx:Context, playerId:Int, gridId:Int, cmd:Act
 							throw new haxe.Exception("_getPreResultOfSnatch not found");
 					}
 				}
-				tmpMaxScore;
+				grid.army == 0 ? 1.0 : tmpMaxScore;
 			}
 			trace("getCommandWeight", playerId, cmd, score);
 			score;

@@ -190,7 +190,7 @@ enum Event {
 		energyBefore:Float,
 		energyAfter:Float,
 		gridId:Int,
-	}, gameInfo:GameInfo);
+	}, gameInfo:GameInfo, autoplay:Null<{duration:Float}>);
 	BUILDING_RESULT(value:{
 		success:Bool,
 		people:model.PeopleGenerator.People,
@@ -520,6 +520,25 @@ final getCalcTotalsByPlayerId = calcTotalsByPlayerId;
 function getAnimationEventFromEvent(e:Event):Event {
 	final ANIMATION_DURATION = 2.0;
 	return switch e {
+		// case PAY_FOR_OVER_ENEMY_GRID(value, gameInfo):
+		// 	ANIMATION_EVENT_SNATCH({
+		// 		gridIds: [value.gridId],
+		// 		duration: ANIMATION_DURATION,
+		// 		msg: "過路費",
+		// 	}, gameInfo);
+		// case PEOPLE_LEVEL_UP_EVENT(value, gameInfo):
+		// 	ANIMATION_EVENT_SNATCH({
+		// 		gridIds: [value.gridId],
+		// 		duration: ANIMATION_DURATION,
+		// 		msg: "升級",
+		// 	}, gameInfo);
+		case WAR_RESULT(value, gameInfo):
+			// 不會出現在這
+			ANIMATION_EVENT_SNATCH({
+				gridIds: [value.gridId],
+				duration: ANIMATION_DURATION,
+				msg: '攻城${value.success ? "成功" : "失敗"}',
+			}, gameInfo);
 		case NEGOTIATE_RESULT(value, gameInfo):
 			ANIMATION_EVENT_SNATCH({
 				gridIds: [value.gridId],
@@ -537,12 +556,6 @@ function getAnimationEventFromEvent(e:Event):Event {
 				gridIds: [value.gridId],
 				duration: ANIMATION_DURATION,
 				msg: "雇用",
-			}, gameInfo);
-		case WAR_RESULT(value, gameInfo):
-			ANIMATION_EVENT_SNATCH({
-				gridIds: [value.gridId],
-				duration: ANIMATION_DURATION,
-				msg: '攻城${value.success ? "成功" : "失敗"}',
 			}, gameInfo);
 		case RESOURCE_RESULT(value, gameInfo):
 			ANIMATION_EVENT_SNATCH({
@@ -562,30 +575,14 @@ function getAnimationEventFromEvent(e:Event):Event {
 				duration: ANIMATION_DURATION,
 				msg: '搶奪${value.success ? "成功" : "不利"}',
 			}, gameInfo);
-		case STRATEGY_RESULT(value, gameInfo):
-			ANIMATION_EVENT_SNATCH({
-				gridIds: [value.gridId],
-				duration: ANIMATION_DURATION,
-				msg: "計策",
-			}, gameInfo);
+		case STRATEGY_RESULT(value, gameInfo, _):
+			STRATEGY_RESULT(value, gameInfo, {duration: ANIMATION_DURATION});
 		case BUILDING_RESULT(value, gameInfo):
 			ANIMATION_EVENT_SNATCH({
 				gridIds: [value.gridId],
 				duration: ANIMATION_DURATION,
 				msg: "建築",
 			}, gameInfo);
-		// case PAY_FOR_OVER_ENEMY_GRID(value, gameInfo):
-		// 	ANIMATION_EVENT_SNATCH({
-		// 		gridIds: [value.gridId],
-		// 		duration: ANIMATION_DURATION,
-		// 		msg: "過路費",
-		// 	}, gameInfo);
-		// case PEOPLE_LEVEL_UP_EVENT(value, gameInfo):
-		// 	ANIMATION_EVENT_SNATCH({
-		// 		gridIds: [value.gridId],
-		// 		duration: ANIMATION_DURATION,
-		// 		msg: "升級",
-		// 	}, gameInfo);
 		case COST_FOR_BONUS_RESULT(value, gameInfo):
 			ANIMATION_EVENT_SNATCH({
 				gridIds: [value.gridId],
@@ -674,12 +671,12 @@ function getEventInfo(e:Event):EventInfo {
 				gameInfo: gameInfo,
 				autoplay: null,
 			}
-		case STRATEGY_RESULT(value, gameInfo):
+		case STRATEGY_RESULT(value, gameInfo, autoplay):
 			{
 				id: EventInfoID.STRATEGY_RESULT,
 				value: value,
 				gameInfo: gameInfo,
-				autoplay: null,
+				autoplay: autoplay,
 			}
 		case BUILDING_RESULT(value, gameInfo):
 			{
@@ -1342,6 +1339,6 @@ function wrapStrategyEvent(ctx:Context, playerId:Int, peopleId:Int, strategyId:I
 	strategyResultValue.success = fn();
 	strategyResultValue.people = getPeopleInfo(ctx, p1);
 	strategyResultValue.energyAfter = p1.energy;
-	ctx.events.push(STRATEGY_RESULT(strategyResultValue, getGameInfo(ctx, false)));
+	ctx.events.push(STRATEGY_RESULT(strategyResultValue, getGameInfo(ctx, false), null));
 	return strategyResultValue.success;
 }

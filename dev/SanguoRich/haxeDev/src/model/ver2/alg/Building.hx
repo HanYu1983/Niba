@@ -14,7 +14,7 @@ private function onBuildingCost(ctx:Context, playerId:Int, gridId:Int, peopleId:
 	final toBuilding = (to : BUILDING);
 	final catelog = BuildingList.filter((catelog) -> Type.enumEq(catelog.type, currBuilding));
 	if (catelog.length == 0) {
-		throw new haxe.Exception("current.catelog找不到");
+		throw new haxe.Exception('current.catelog找不到:${currBuilding}');
 	}
 	final costMoney = catelog[0].money;
 	final success = true;
