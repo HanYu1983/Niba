@@ -161,7 +161,7 @@ final BASE_RATE_STRATEGY = 0.8;
 final BASE_RATE_RESOURCE = 1.2;
 final BASE_RATE_PK = 0.7;
 final BASE_RATE_NEGO = 1.0;
-final BASE_RATE_HIRE = 1.0;
+final BASE_RATE_HIRE = .8;
 final BASE_RATE_EXPLORE = 1.2;
 
 // 格子資源上限
