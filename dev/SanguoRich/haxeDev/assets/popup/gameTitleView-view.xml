@@ -61,19 +61,11 @@
                 </hbox>
                 <hbox>
                     <label text='初始資源'/>
-                    <button-bar id="grp_resource" allowUnselection="true">
-                        <button text="400" />
-                        <button text="800" />
-                        <button text="1200" />
-                    </button-bar>
+                    <number-stepper id="grp_resource" pos="1200" step="100" min="0" max="2000" precision="0" />
                 </hbox>
                 <hbox>
                     <label text='成長速度'/>
-                    <button-bar id="grp_growSpeed" allowUnselection="true">
-                        <button text="低" />
-                        <button text="中" />
-                        <button text="高" />
-                    </button-bar>
+                    <number-stepper id="grp_growSpeed" pos="1.0" step=".1" min="0.0" max="2.0" precision="1" />
                 </hbox>
                 <hbox>
                     <label text='限制建築'/>
