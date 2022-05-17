@@ -275,6 +275,13 @@ function doBrain(ctx, playerId:Int) {
 				doEvent(ctx, playerId);
 				brainMemory.hasTransfer = true;
 			case TREASURE:
+				// 將未裝備的寶隨機裝備
+				final myUnEquipTreasures = ctx.treasures.filter(t -> t.belongToPlayerId == player.id).filter(t -> t.position.peopleId == null);
+				for (t in myUnEquipTreasures) {
+					final choosePeopleId = Std.int(Math.random() * peopleInPlayer.length);
+					final choosePeople = peopleInPlayer[choosePeopleId];
+					t.position.peopleId = choosePeople.id;
+				}
 			case TREASURE_TAKE:
 		}
 	}
@@ -393,10 +400,15 @@ private function getCommandWeight(ctx:Context, playerId:Int, gridId:Int, cmd:Act
 	return switch cmd {
 		case STRATEGY:
 			0.0;
-		case TREASURE:
-			0.0;
 		case TREASURE_TAKE:
 			0.0;
+		case TREASURE:
+			final myUnEquipTreasures = ctx.treasures.filter(t -> t.belongToPlayerId == player.id).filter(t -> t.position.peopleId == null);
+			// 有未裝備的寶物
+			final fact1 = myUnEquipTreasures.length == 0 ? -1.0 : 1.0;
+			final score = 1.0 * fact1;
+			trace("getCommandWeight", playerId, cmd, score);
+			score;
 		case FIRE:
 			final fact1 = if (player.money <= 0) {
 				1.0;
