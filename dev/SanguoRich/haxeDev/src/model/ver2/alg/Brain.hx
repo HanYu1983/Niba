@@ -672,17 +672,18 @@ private function getCommandWeight(ctx:Context, playerId:Int, gridId:Int, cmd:Act
 						case 5:
 							// 趁虛而入
 							// 只針對非AI玩家使用
-							final peopleInRealPlayer = ctx.peoples.filter(p -> p.belongToPlayerId != null
-								&& ctx.players[p.belongToPlayerId].brain == null);
+							final peopleInRealPlayer = ctx.peoples.filter(p -> p.belongToPlayerId != null /*&& ctx.players[p.belongToPlayerId].brain == null*/);
 							for (p2 in peopleInRealPlayer) {
-								final fact1 = 1 - (p2.energy / 100.0);
+								final fact1 = Math.pow(1 - (p2.energy / 100.0), 0.5);
 								for (p1 in peopleInPlayer) {
 									final result = _getStrategyRate(ctx, p1.id, strategy.id, 0, p2.id, 0);
 									// 成功率
 									final fact2 = result.rate;
 									// 體力剩下越多越好
 									final fact3 = Math.pow(result.energyAfter / 100.0, 0.5);
-									final score = 1.0 * fact1 * fact2 * fact3;
+									final fact4 = p2.energy > 50.0 ? 1.0 : 0.0;
+									final fact5 = Math.pow(Math.random(), 0.8);
+									final score = 0.7 * fact1 * fact2 * fact3 * fact4 * fact5;
 									if (score > maxScore) {
 										maxScore = score;
 										brainMemory.strategy.peopleId = p1.id;
