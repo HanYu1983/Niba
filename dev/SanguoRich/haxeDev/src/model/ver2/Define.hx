@@ -326,12 +326,7 @@ function getGrowFormGameSettings(ctx:Context):Float {
 	if (ctx.settings == null) {
 		throw new haxe.Exception("settings not found");
 	}
-	final settingGrow = try {
-		[0.05, 0.1, 0.15][ctx.settings.growSpeed];
-	} catch (e) {
-		throw new haxe.Exception('growSpeed的值必須為0~2: ${ctx.settings.growSpeed}');
-	}
-	return settingGrow;
+	return ctx.settings.growSpeed;
 }
 
 function getGridMoneyGrow(ctx:Context, gridId:Int):Float {
