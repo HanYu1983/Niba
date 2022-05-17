@@ -947,7 +947,7 @@ function addPeopleInfo(ctx:Context, belongToPlayerId:Null<Int>, gridId:Null<Int>
 	}
 }
 
-function addPlayerInfo(ctx:Context, player:model.IModel.PlayerInfo, isAI:Bool):Void {
+function addPlayerInfo(ctx:Context, player:model.IModel.PlayerInfo, isAI:Bool, isLose:Bool):Void {
 	ctx.players.push({
 		id: player.id,
 		name: player.name,
@@ -967,7 +967,7 @@ function addPlayerInfo(ctx:Context, player:model.IModel.PlayerInfo, isAI:Bool):V
 			memory: null
 		} : null,
 		score: 0.0,
-		isLose: false,
+		isLose: isLose,
 	});
 	for (p in player.people) {
 		addPeopleInfo(ctx, player.id, null, p);
