@@ -159,6 +159,9 @@ function initContext(ctx:Context, options:GameSetting) {
 		}, isAI, isLose);
 		++i;
 	}
+	for (player in ctx.players) {
+		player.score = getPlayerScore(ctx, player.id);
+	}
 }
 
 function onPeopleExpAdd(ctx:Context, peopleId:Int, exp:Float) {
@@ -240,8 +243,14 @@ function onFindTreasure(ctx:Context, playerId:Int, treasures:Array<Treasure>) {
 
 function getPlayerScore(ctx:Context, playerId:Int):Float {
 	final info = getCalcTotalsByPlayerId(ctx, playerId);
-	final score = info.army + info.food + info.money;
-	return score;
+	final resourceScore = info.army + info.food + info.money;
+	final treasureScore = ctx.treasures.filter(t -> t.belongToPlayerId == playerId).map(t -> getTreasureInfo(ctx, t)).fold((p, a:Float) -> {
+		return a + p.catelog.cost;
+	}, 0.0);
+	final peopleScore = ctx.peoples.filter(p -> p.belongToPlayerId == playerId).fold((p, a:Float) -> {
+		return a + p.cost;
+	}, 0.0);
+	return resourceScore * 3.0 + treasureScore + peopleScore;
 }
 
 // 玩家回合結束
