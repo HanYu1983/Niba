@@ -301,6 +301,11 @@ class MainView extends Box {
 		gameTitleView.showPopup(null);
 	}
 
+	@:bind(tab_allPlayers, MouseEvent.CLICK)
+	function onTabAllPlayersClick(e){
+		syncPlayerInfo(tab_allPlayers.selectedIndex);
+	}
+
 	@:bind(btn_save, MouseEvent.CLICK)
 	function onBtnSaveClick(e) {
 		Main.model.save((success:Bool) -> {
@@ -569,6 +574,7 @@ class MainView extends Box {
 	}
 
 	function getGridPositionByGridId(pid:Int, gridId:Int) {
+		if(gridId > grids.length - 1) return [0.0,0.0];
 		var grid = grids[gridId];
 		return offsetPlayerPos(pid, grid.left, grid.top);
 	}
