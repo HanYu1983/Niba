@@ -122,7 +122,9 @@ function doBrain(ctx, playerId:Int) {
 				brainMemory.hasTransfer = false;
 				// 如果下一個玩家又是AI
 				final nextPlayer = ctx.players[ctx.currentPlayerId];
-				if (nextPlayer.brain != null) {
+				// 如果又回到自己, 代表遊戲結束了
+				final isLoop = nextPlayer.id == playerId;
+				if (isLoop == false && nextPlayer.brain != null) {
 					doBrain(ctx, nextPlayer.id);
 				}
 			case MOVE:
