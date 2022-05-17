@@ -125,7 +125,7 @@ class PeopleGenerator {
 
 	var randomStart = Math.floor(Math.random() * 100);
 
-	public function generate(getType:Int = 0):People {
+	public function generate(getType:Int = -1):People {
 		var peopleId = Math.floor(Date.now().getTime() + Math.random() * 9999);
 		var name = this.names[(peopleId + randomStart) % this.names.length];
 		var type = ( getType == -1 ) ? [0, 0, 0, 0, 0, 1, 1, 2, 2, 3][(Math.floor(Math.random() * 10))] : getType;
