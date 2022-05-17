@@ -14,7 +14,7 @@ class DebugModel implements IModel {
 	private var info:GameInfo;
 
 	public function getGrids(count:Int):Array<Grid> {
-		return GridGenerator.getInst().getGrids(count);
+		return GridGenerator.getInst().getGrids(count, false);
 	}
 
 	public function getPeople(count:Int):Array<People> {
@@ -40,7 +40,7 @@ class DebugModel implements IModel {
 				maintainArmy: -1.1,
 				armyGrow: 0.01,
 				atGridId: 0,
-				commands:[
+				commands: [
 					ActionInfoID.MOVE,
 					ActionInfoID.STRATEGY,
 					ActionInfoID.SNATCH,
@@ -55,7 +55,7 @@ class DebugModel implements IModel {
 					// ActionInfoID.PRACTICE,
 					ActionInfoID.END,
 				],
-				treasures:[
+				treasures: [
 					// TreasureGenerator.getInst().generator(),
 					// TreasureGenerator.getInst().generator(),
 				]
@@ -147,7 +147,7 @@ class DebugModel implements IModel {
 			// 			{
 			// 				gridBefore: g,
 			// 				gridAfter: g,
-							
+
 			// 			},
 			// 			{
 			// 				gridBefore: g,
@@ -181,10 +181,10 @@ class DebugModel implements IModel {
 			// 	autoplay: null,
 			// },
 			{
-				id:EventInfoID.MESSAGE_EVENT,
-				value:{
-					title:'aaff',
-					msg:'asdfsfd'
+				id: EventInfoID.MESSAGE_EVENT,
+				value: {
+					title: 'aaff',
+					msg: 'asdfsfd'
 				},
 				gameInfo: info,
 				autoplay: {
@@ -192,16 +192,16 @@ class DebugModel implements IModel {
 				},
 			},
 			{
-				id:EventInfoID.PLAYER_LOSE,
-				value:{
+				id: EventInfoID.PLAYER_LOSE,
+				value: {
 					player: info.players[0]
 				},
 				gameInfo: info,
 				autoplay: null
 			},
 			{
-				id:EventInfoID.PLAYER_WIN,
-				value:{
+				id: EventInfoID.PLAYER_WIN,
+				value: {
 					player: info.players[0]
 				},
 				gameInfo: info,
@@ -237,25 +237,25 @@ class DebugModel implements IModel {
 		// ];
 		info.events = [
 			{
-				id:EventInfoID.PEOPLE_LEVEL_UP_EVENT,
-				value:{
-					peopleBefore:PeopleGenerator.getInst().generate(),
-					peopleAfter:PeopleGenerator.getInst().generate(),
+				id: EventInfoID.PEOPLE_LEVEL_UP_EVENT,
+				value: {
+					peopleBefore: PeopleGenerator.getInst().generate(),
+					peopleAfter: PeopleGenerator.getInst().generate(),
 				},
-				gameInfo:null,
+				gameInfo: null,
 				autoplay: null,
 			},
 			{
-				id:EventInfoID.PAY_FOR_OVER_ENEMY_GRID,
-				value:{
-					moneyBefore:0,
-					moneyAfter:1,
-					foodBefore:1,
-					foodAfter:1,
-					armyBefore:0,
-					armyAfter:1
+				id: EventInfoID.PAY_FOR_OVER_ENEMY_GRID,
+				value: {
+					moneyBefore: 0,
+					moneyAfter: 1,
+					foodBefore: 1,
+					foodAfter: 1,
+					armyBefore: 0,
+					armyAfter: 1
 				},
-				gameInfo:null,
+				gameInfo: null,
 				autoplay: null,
 			}
 		];
@@ -300,7 +300,7 @@ class DebugModel implements IModel {
 					foodBefore: 100,
 					foodAfter: 200
 				},
-				gameInfo:null,
+				gameInfo: null,
 				autoplay: null,
 			}
 		];
@@ -340,9 +340,9 @@ class DebugModel implements IModel {
 	public function takeExplore(playerId:Int, gridInt:Int, p1PeopleId:Int, cb:(gameInfo:GameInfo) -> Void) {
 		info.events = [
 			{
-				id:EventInfoID.FIND_TREASURE_RESULT,
-				value:{
-					treasure:TreasureGenerator.getInst().generator().catelog
+				id: EventInfoID.FIND_TREASURE_RESULT,
+				value: {
+					treasure: TreasureGenerator.getInst().generator().catelog
 				},
 				gameInfo: info,
 				autoplay: null,
@@ -379,7 +379,7 @@ class DebugModel implements IModel {
 					maintainMoneyAfter: 10,
 					maintainMoneyBefore: 10,
 				},
-				gameInfo:null,
+				gameInfo: null,
 				autoplay: null,
 			}
 		];
@@ -483,7 +483,7 @@ class DebugModel implements IModel {
 					energyBefore: 0,
 					energyAfter: 1,
 				},
-				gameInfo:null,
+				gameInfo: null,
 				autoplay: null,
 			},
 			{
@@ -491,7 +491,7 @@ class DebugModel implements IModel {
 				value: {
 					grid: info.grids[0]
 				},
-				gameInfo:null,
+				gameInfo: null,
 				autoplay: null,
 			}
 		];
@@ -508,16 +508,19 @@ class DebugModel implements IModel {
 					people: PeopleGenerator.getInst().generate(),
 					building: BUILDING.FARM(2),
 				},
-				gameInfo:null,
+				gameInfo: null,
 				autoplay: null,
 			}
 		];
 		cb(info);
 	}
 
-	
-
-	public function getResultOfCost(p1Player:PlayerInfo, p1People:People, costType:Int):{costFood:Float, costMoney:Float, gainExp:Float, gainEnergy:Float} {
+	public function getResultOfCost(p1Player:PlayerInfo, p1People:People, costType:Int):{
+		costFood:Float,
+		costMoney:Float,
+		gainExp:Float,
+		gainEnergy:Float
+	} {
 		return {
 			costFood: 1,
 			costMoney: 1.0,
@@ -529,20 +532,14 @@ class DebugModel implements IModel {
 	public function takeCostForBonus(playerId:Int, peopleId:Int, costType:Int, cb:(gameInfo:GameInfo) -> Void) {
 		info.events = [
 			{
-				id:COST_FOR_BONUS_RESULT,
-				value:{
-					costType:costType,
-					people:PeopleGenerator.getInst().generate(),
-					peopleBefore:[
-						PeopleGenerator.getInst().generate(),
-						PeopleGenerator.getInst().generate(),
-					],
-					peopleAfter:[
-						PeopleGenerator.getInst().generate(),
-						PeopleGenerator.getInst().generate(),
-					]
+				id: COST_FOR_BONUS_RESULT,
+				value: {
+					costType: costType,
+					people: PeopleGenerator.getInst().generate(),
+					peopleBefore: [PeopleGenerator.getInst().generate(), PeopleGenerator.getInst().generate(),],
+					peopleAfter: [PeopleGenerator.getInst().generate(), PeopleGenerator.getInst().generate(),]
 				},
-				gameInfo:null,
+				gameInfo: null,
 				autoplay: null,
 			}
 		];
@@ -557,7 +554,12 @@ class DebugModel implements IModel {
 		cb(true, info);
 	}
 
-	public function getPreResultOfPk(playerId:Int, gridId:Int, p1PeopleId:Int, p2PeopleId:Int):{energyBefore:Int, energyAfter:Int, armyChange:Int, successRate:Float} {
+	public function getPreResultOfPk(playerId:Int, gridId:Int, p1PeopleId:Int, p2PeopleId:Int):{
+		energyBefore:Int,
+		energyAfter:Int,
+		armyChange:Int,
+		successRate:Float
+	} {
 		return {
 			energyAfter: 1,
 			energyBefore: 1,
@@ -569,12 +571,12 @@ class DebugModel implements IModel {
 	public function takePk(playerId:Int, gridId:Int, p1PeopleId:Int, p2PeopleId:Int, syncViewByInfo:(gameInfo:GameInfo) -> Void) {
 		info.events = [
 			{
-				id:PK_RESULT,
-				value:{
-					success:true,
+				id: PK_RESULT,
+				value: {
+					success: true,
 					people: PeopleGenerator.getInst().generate(),
-					armyBefore:0,
-					armyAfter:0,
+					armyBefore: 0,
+					armyAfter: 0,
 				},
 				gameInfo: null,
 				autoplay: null,
@@ -609,7 +611,9 @@ class DebugModel implements IModel {
 		return PeopleGenerator.getInst().generate();
 	}
 
-	public function refresh(cb:() -> Void) { cb(); }
+	public function refresh(cb:() -> Void) {
+		cb();
+	}
 
 	public function finishOneEvent(syncView:() -> Void) {
 		trace('前端處理好一件事!');

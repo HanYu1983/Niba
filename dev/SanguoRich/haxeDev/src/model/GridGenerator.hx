@@ -80,7 +80,7 @@ class GridGenerator {
 		'醬觀', '拌鎮', '殼湖', '致谷', '扇崖', '信坊', '竿島', '徒鎮', '務港', '廳鄉'
 	];
 
-	public function getGrids(count:Int):Array<Grid> {
+	public function getGrids(count:Int, isLimitBuilding:Bool):Array<Grid> {
 		function getRandomRange(range:Float, offset:Float) {
 			return Math.random() * range + offset;
 		}
@@ -101,29 +101,42 @@ class GridGenerator {
 			switch (buildtype) {
 				case EMPTY:
 				case MARKET:
-					g.attachs = [
-						BUILDING.MARKET(1),
-						BUILDING.FARM(0),
-						BUILDING.BARRACKS(0),
-						BUILDING.EXPLORE(0),
-						BUILDING.WALL(0),
-					];
+					if (isLimitBuilding) {
+						g.attachs = [BUILDING.MARKET(1), BUILDING.WALL(0),];
+					} else {
+						g.attachs = [
+							BUILDING.MARKET(1),
+							BUILDING.FARM(0),
+							BUILDING.BARRACKS(0),
+							BUILDING.EXPLORE(0),
+							BUILDING.WALL(0),
+						];
+					}
 				case FARM:
-					g.attachs = [
-						BUILDING.MARKET(0),
-						BUILDING.FARM(1),
-						BUILDING.BARRACKS(0),
-						BUILDING.EXPLORE(0),
-						BUILDING.WALL(0),
-					];
+					if (isLimitBuilding) {
+						g.attachs = [BUILDING.FARM(1), BUILDING.WALL(0),];
+					} else {
+						g.attachs = [
+							BUILDING.MARKET(0),
+							BUILDING.FARM(1),
+							BUILDING.BARRACKS(0),
+							BUILDING.EXPLORE(0),
+							BUILDING.WALL(0),
+						];
+					}
 				case VILLAGE:
-					g.attachs = [
-						BUILDING.MARKET(0),
-						BUILDING.FARM(0),
-						BUILDING.BARRACKS(1),
-						BUILDING.EXPLORE(0),
-						BUILDING.WALL(0),
-					];
+					if (isLimitBuilding) {
+						g.attachs = [BUILDING.BARRACKS(1), BUILDING.WALL(0),];
+					} else {
+						g.attachs = [
+							BUILDING.MARKET(0),
+							BUILDING.FARM(0),
+							BUILDING.BARRACKS(1),
+							BUILDING.EXPLORE(0),
+							BUILDING.WALL(0),
+						];
+					}
+
 				case CITY:
 					g.attachs = [
 						BUILDING.MARKET(1),
