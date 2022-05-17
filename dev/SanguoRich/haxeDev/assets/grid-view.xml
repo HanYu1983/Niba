@@ -14,6 +14,13 @@
         height:100%;
     }
     </style>
+
+    <box width="80" height="100%">
+        <box id="box_maxMoney" styleName="resource_bar" style="background-color: white;"/>
+        <box id="box_maxFood" horizontalAlign="center" styleName="resource_bar" style="background-color: white;"/>
+        <box id="box_maxArmy" horizontalAlign="right" styleName="resource_bar" style="background-color: white;"/>
+    </box>
+
     <box width="80" height="100%">
         <box id="box_money" styleName="resource_bar" style="background-color: yellow;"/>
         <box id="box_food" horizontalAlign="center" styleName="resource_bar" style="background-color: green;"/>

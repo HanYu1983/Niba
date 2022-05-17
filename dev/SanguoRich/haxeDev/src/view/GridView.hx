@@ -99,6 +99,10 @@ class GridView extends Box {
 		box_food.percentHeight = Math.max(Main.clamp(grid.food / GRID_RESOURCE_MAX) * 100, .1);
 		box_army.percentHeight = Math.max(Main.clamp(grid.army / GRID_RESOURCE_MAX) * 100, .1);
 
+		box_maxMoney.percentHeight = Math.max(Main.clamp(grid.maxMoney / GRID_RESOURCE_MAX) * 100, .1);
+		box_maxFood.percentHeight = Math.max(Main.clamp(grid.maxFood / GRID_RESOURCE_MAX) * 100, .1);
+		box_maxArmy.percentHeight = Math.max(Main.clamp(grid.maxArmy / GRID_RESOURCE_MAX) * 100, .1);
+
 		final strategyViews = [box_s0, box_s1, box_s2, box_s3];
 		for (index => ary in grid.strategys) {
 			ary.length > 0 ? strategyViews[index].show() : strategyViews[index].hide();

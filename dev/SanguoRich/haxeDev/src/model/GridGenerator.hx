@@ -154,9 +154,9 @@ class GridGenerator {
 							BUILDING.FARM(0),
 							BUILDING.BARN(0),
 
-							BUILDING.BARRACKS(1),
+							BUILDING.BARRACKS(0),
 							BUILDING.EXPLORE(0),
-							BUILDING.WALL(0),
+							BUILDING.WALL(1),
 						];
 					}
 					g.maxArmy = g.maxFood = g.maxMoney = 400;
@@ -168,8 +168,8 @@ class GridGenerator {
 						BUILDING.FARM(0),
 						BUILDING.BARN(0),
 
-						BUILDING.BARRACKS(1),
-						BUILDING.EXPLORE(0),
+						BUILDING.BARRACKS(0),
+						BUILDING.EXPLORE(1),
 						BUILDING.WALL(0),
 					];
 					g.maxArmy = g.maxFood = g.maxMoney = 600;
