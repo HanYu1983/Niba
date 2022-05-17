@@ -64,8 +64,8 @@
                     <!-- <number-stepper id="grp_resource" pos="1200" step="100" min="0" max="2000" precision="0" /> -->
                     <button-bar id="grp_resource" allowUnselection="true">
                         <button text="500" />
-                        <button text="800" />
-                        <button text="1200" />
+                        <button text="1000" />
+                        <button text="2000" />
                     </button-bar>
                 </hbox>
                 <hbox>
