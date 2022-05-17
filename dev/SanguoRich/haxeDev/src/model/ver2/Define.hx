@@ -337,7 +337,7 @@ function getPlayerCharmAddByAttachment(ctx:Context, playerId:Int):Float {
 	final charmExt = ctx.attachments.filter(a -> getGridBelongPlayerId(ctx, a.belongToGridId) == playerId).fold((p, a) -> {
 		return a + switch p.type {
 			case EXPLORE(level):
-				return [0, 5, 10, 15][level];
+				return [0, 15][level];
 			case _:
 				0;
 		}
@@ -427,6 +427,24 @@ function getGridMoneyAdd(ctx:Context, gridId:Int):Float {
 	final attachmentRate = ctx.attachments.filter(a -> a.belongToGridId == grid.id).fold((p, a) -> {
 		return a + switch p.type {
 			case MARKET(level):
+				[0, 2, 3, 4][level];
+			case _:
+				0;
+		}
+	}, 0);
+	return attachmentRate;
+}
+
+function getGridArmyAdd(ctx:Context, gridId:Int):Float {
+	final peopleInGrid = ctx.peoples.filter(p -> p.position.gridId == gridId);
+	// 沒武將的格子不成長
+	if (peopleInGrid.length == 0) {
+		return 0.0;
+	}
+	final grid = ctx.grids[gridId];
+	final attachmentRate = ctx.attachments.filter(a -> a.belongToGridId == grid.id).fold((p, a) -> {
+		return a + switch p.type {
+			case BARRACKS(level):
 				[0, 2, 3, 4][level];
 			case _:
 				0;
@@ -1143,7 +1161,15 @@ function getPeopleType(ctx:Context, peopleId:Int):PeopleType {
 
 function getPeopleMaintainCost(ctx:Context, peopleId:Int):Float {
 	final people = getPeopleById(ctx, peopleId);
-	return switch getPeopleType(ctx, peopleId) {
+	final attachmentRate = ctx.attachments.filter(a -> getGridBelongPlayerId(ctx, a.belongToGridId) == people.belongToPlayerId).fold((p, a:Float) -> {
+		return a * switch p.type {
+			case EXPLORE(level):
+				[0.0, 0.8][level];
+			case _:
+				0;
+		}
+	}, 1.0);
+	final cost = switch getPeopleType(ctx, peopleId) {
 		case WENGUAN(level):
 			people.cost * (1 + EXP_LEVEL_COST_EXT[level]);
 		case WUJIANG(level):
@@ -1151,6 +1177,7 @@ function getPeopleMaintainCost(ctx:Context, peopleId:Int):Float {
 		case _:
 			people.cost;
 	}
+	return cost + attachmentRate;
 }
 
 function getPeopleForce(ctx:Context, peopleId:Int):Float {

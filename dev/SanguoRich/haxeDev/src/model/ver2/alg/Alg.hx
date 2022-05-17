@@ -94,7 +94,7 @@ function doGridGrow(ctx:Context) {
 		// 城池成長
 		final gainMoney = grid.money * getGridMoneyGrow(ctx, grid.id) + getGridMoneyAdd(ctx, grid.id);
 		final gainFood = grid.food * getGridFoodGrow(ctx, grid.id) + getGridFoodAdd(ctx, grid.id);
-		final gainArmy = grid.army * getGridArmyGrow(ctx, grid.id);
+		final gainArmy = grid.army * getGridArmyGrow(ctx, grid.id) + getGridArmyAdd(ctx, grid.id);
 		grid.money = Math.min(getGridMaxMoney(ctx, grid.id), grid.money + gainMoney);
 		grid.food = Math.min(getGridMaxFood(ctx, grid.id), grid.food + gainFood);
 		grid.army = Math.min(getGridMaxArmy(ctx, grid.id), grid.army + gainArmy);
@@ -214,10 +214,13 @@ function onPayTaxToGrid(ctx:Context, playerId:Int, gridId:Int) {
 		final grid = ctx.grids[gridId];
 		final taxMoney = grid.money * GRID_TAX;
 		final taxFood = grid.food * GRID_TAX;
+		final taxArmy = grid.army * GRID_TAX;
 		player.money = Math.max(0, player.money - taxMoney);
 		player.food = Math.max(0, player.food - taxFood);
+		player.army = Math.max(0, player.army - taxArmy);
 		grid.money += taxMoney;
 		grid.food += taxFood;
+		grid.army += taxArmy;
 	}
 	eventValue.moneyAfter = player.money;
 	eventValue.foodAfter = player.food;
