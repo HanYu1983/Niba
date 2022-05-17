@@ -274,7 +274,7 @@ function onPlayerEnd(ctx:Context, playerId:Int) {
 		if (playerStillLive.length == 0) {
 			throw new haxe.Exception("應該最少有一個玩家isLose == false");
 		}
-		playerStillLive[0];
+		playerStillLive[playerStillLive.length - 1];
 	}
 	final isTurnEnd = ctx.currentPlayerId == lastPlayer.id;
 	if (isTurnEnd) {
