@@ -365,7 +365,7 @@ private function doEvent(ctx:Context, playerId:Int) {
 					tmpGrid.money = 0;
 					tmpGrid.food = 0;
 					tmpGrid.army = 0;
-					final putArmy = Math.min(getGridMaxArmy(ctx, gridId) * 0.8, Math.max(200, tmpPlayer.army / 3));
+					final putArmy = Math.min(getGridMaxArmy(ctx, gridId) * 0.65, Math.max(200, tmpPlayer.army / 3));
 					if (tmpPlayer.army < putArmy) {
 						ctx.events.push(MESSAGE_EVENT({
 							title: 'AI',
@@ -383,8 +383,8 @@ private function doEvent(ctx:Context, playerId:Int) {
 								final willEnterPeople = peopleNotGrid[0];
 								tmpPlayer.people = tmpPlayer.people.filter(p -> p.id == willEnterPeople.id);
 								tmpGrid.people = [willEnterPeople];
-								final putMoney = Math.min(tmpPlayer.money, putArmy);
-								final putFood = Math.min(tmpPlayer.food, putArmy);
+								final putMoney = Math.min(tmpPlayer.money, putArmy) * 0.8;
+								final putFood = Math.min(tmpPlayer.food, putArmy) * 0.8;
 								tmpPlayer.money -= putMoney;
 								tmpPlayer.food -= putFood;
 								tmpPlayer.army -= putArmy;
@@ -402,8 +402,8 @@ private function doEvent(ctx:Context, playerId:Int) {
 								doEvent(ctx, playerId);
 							}
 						} else {
-							final putMoney = Math.min(tmpPlayer.money, putArmy);
-							final putFood = Math.min(tmpPlayer.food, putArmy);
+							final putMoney = Math.min(tmpPlayer.money, putArmy) * 0.8;
+							final putFood = Math.min(tmpPlayer.food, putArmy) * 0.8;
 							tmpPlayer.money -= putMoney;
 							tmpPlayer.food -= putFood;
 							tmpPlayer.army -= putArmy;

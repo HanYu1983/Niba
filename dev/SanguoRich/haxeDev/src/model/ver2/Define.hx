@@ -502,6 +502,30 @@ function getGridMaxArmy(ctx:Context, gridId:Int):Float {
 	return grid.defaultMaxMoney + addExt;
 }
 
+function getGridTaxRate(ctx:Context, gridId:Int) {
+	final grid = ctx.grids[gridId];
+	final attachmentInGrid = ctx.attachments.filter(a -> a.belongToGridId == gridId);
+	final levelRate = attachmentInGrid.map(a -> switch a.type {
+		case MARKET(level):
+			level;
+		case BANK(level):
+			level;
+		case FARM(level):
+			level;
+		case BARN(level):
+			level;
+		case BARRACKS(level):
+			level;
+		case WALL(level):
+			level;
+		case EXPLORE(level):
+			level;
+		case _:
+			0;
+	}).fold((c, a:Float) -> c + a, 0.0) * 0.01;
+	return GRID_TAX + levelRate;
+}
+
 function getGridBuildType(ctx:Context, gridId:Int):GROWTYPE {
 	final grid = ctx.grids[gridId];
 	final peopleInGrid = ctx.peoples.filter(p -> p.position.gridId == grid.id);

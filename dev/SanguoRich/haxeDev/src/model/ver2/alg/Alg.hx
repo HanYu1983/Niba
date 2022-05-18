@@ -215,9 +215,10 @@ function onPayTaxToGrid(ctx:Context, playerId:Int, gridId:Int) {
 	{
 		final grid = ctx.grids[gridId];
 		// 過路費
-		final taxMoney = grid.money * GRID_TAX;
-		final taxFood = grid.food * GRID_TAX;
-		final taxArmy = grid.army * GRID_TAX;
+		final taxRate = getGridTaxRate(ctx, grid.id);
+		final taxMoney = grid.money * taxRate;
+		final taxFood = grid.food * taxRate;
+		final taxArmy = grid.army * taxRate;
 		switch 1 {
 			case 0:
 				// 支付

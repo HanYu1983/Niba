@@ -102,7 +102,7 @@ final ENERGY_COST_ON_PK = 15;
 final ENERGY_COST_ON_COST_FOR_FUN = 15;
 
 // 最低搶奪所需兵力
-final SNATCH_ARMY_AT_LEAST = 50;
+final SNATCH_ARMY_AT_LEAST = 30;
 
 // 單挑的士兵變化基本量
 final PK_ARMY_BASE_CHANGE = 30;
