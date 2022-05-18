@@ -151,22 +151,9 @@ private function onSnatchCost(ctx:Context, playerId:Int, gridId:Int, p1PeopleId:
 			final warArmy2 = ctx.grids[gridId].army;
 			onWarCost(ctx, playerId, gridId, p1PeopleId, p2PeopleId, warArmy1, warArmy2, {occupy: true, warEvent: false});
 		} else {
-			final cost = getSnatchCost(ctx, playerId, gridId, p1PeopleId, p2PeopleId, army1, army2, isOccupation);
-			// 先找寶, 因為寶物事件要放最後
-			if (cost.success) {
-				final isFindTreasure = Math.random() < cost.findTreasureRate;
-				if (isFindTreasure) {
-					final treasureInGrid = getTreasureInGrid(ctx, gridId);
-					if (treasureInGrid.length == 0) {
-						throw new haxe.Exception("城裡必須有寶物");
-					}
-					final takeId = Math.floor(Math.random() * treasureInGrid.length);
-					final treasure = treasureInGrid[takeId];
-					onFindTreasure(ctx, playerId, [treasure]);
-				}
-			}
 			// 處理搶奪中的戰爭部分
 			onWarCost(ctx, playerId, gridId, p1PeopleId, p2PeopleId, army1, army2, {occupy: false, warEvent: false});
+			final cost = getSnatchCost(ctx, playerId, gridId, p1PeopleId, p2PeopleId, army1, army2, isOccupation);
 			// 處理搶奪中的搶資源部分
 			if (cost.success) {
 				final grid = ctx.grids[gridId];
@@ -180,6 +167,19 @@ private function onSnatchCost(ctx:Context, playerId:Int, gridId:Int, p1PeopleId:
 				}
 				player.money += cost.money;
 				player.food += cost.food;
+			}
+			// 寶物事件要放最後
+			if (cost.success) {
+				final isFindTreasure = Math.random() < cost.findTreasureRate;
+				if (isFindTreasure) {
+					final treasureInGrid = getTreasureInGrid(ctx, gridId);
+					if (treasureInGrid.length == 0) {
+						throw new haxe.Exception("城裡必須有寶物");
+					}
+					final takeId = Math.floor(Math.random() * treasureInGrid.length);
+					final treasure = treasureInGrid[takeId];
+					onFindTreasure(ctx, playerId, [treasure]);
+				}
 			}
 			cost.success;
 		}
