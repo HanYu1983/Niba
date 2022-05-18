@@ -32,6 +32,11 @@ class CacheModel extends ProxyModel {
 		return cache;
 	}
 
+	override function gameStart(setting:GameSetting, cb:Void->Void):Void {
+		isDirty = true;
+		return super.gameStart(setting, cb);
+	}
+
 	override function playerDice(cb:() -> Void) {
 		isDirty = true;
 		return super.playerDice(cb);
