@@ -219,7 +219,7 @@ function _getPreResultOfSnatch(ctx:Context, playerId:Int, gridId:Int, p1PeopleId
 			money: 0.0,
 			food: 0.0,
 			rateForTreasure: warCost.findTreasureRate,
-			success:false
+			success: warCost.success
 		}
 		// js.Browser.console.log(preResultOnSnatch);
 		return preResultOnSnatch;
@@ -232,7 +232,7 @@ function _getPreResultOfSnatch(ctx:Context, playerId:Int, gridId:Int, p1PeopleId
 			money: cost.money,
 			food: cost.food,
 			rateForTreasure: cost.findTreasureRate,
-			success:false,
+			success: cost.success
 		}
 		// js.Browser.console.log(preResultOnSnatch);
 		return preResultOnSnatch;
