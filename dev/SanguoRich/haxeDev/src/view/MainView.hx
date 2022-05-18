@@ -622,6 +622,8 @@ class MainView extends Box {
 		syncGameInfo(gameInfo);
 		syncGridViews(gameInfo);
 		syncPlayerViews(gameInfo);
+
+		trace('格子爆倉希望可以調整為超過的一樣可以拿到，不成長就行');
 	}
 
 	// function playBeforeSync(gameInfo:GameInfo, tweens:Array<TweenX>) {
