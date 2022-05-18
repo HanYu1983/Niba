@@ -308,7 +308,6 @@ function getPlayerScore(ctx:Context, playerId:Int):Float {
 		return a + p;
 	}, 0.0);
 	final attachScore = ctx.attachments.filter(a -> getGridBelongPlayerId(ctx, a.belongToGridId) == playerId).length * 300;
-	trace("getPlayerScore", resourceScore, treasureScore, peopleScore, gridScore, attachScore);
 	return (resourceScore + gridResourceScore) * 3.0 + treasureScore + peopleScore + gridScore + attachScore;
 }
 
@@ -417,9 +416,10 @@ function onPlayerEnd(ctx:Context, playerId:Int):Bool {
 					if (grid.money < 0) {
 						grid.money = 0;
 					}
-					player.army += earnArmy;
-					player.food += earnFood;
-					player.money += earnMoney;
+					// 收到的有紅利
+					player.army += earnArmy * 2;
+					player.food += earnFood * 2;
+					player.money += earnMoney * 2;
 				}
 				worldEventValue.playerAfter = ctx.players.map(p -> getPlayerInfo(ctx, p));
 				worldEventValue.gridAfter = ctx.grids.map(g -> getGridInfo(ctx, g));

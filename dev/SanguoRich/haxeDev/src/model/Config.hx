@@ -38,7 +38,7 @@ final FAVER_SLOW_PER_TURN = 20;
 // 收稅:主公身上的資源增加，依據所有城池的金錢、食物、士兵、策略點(?)個別合計之後的%數
 // 實作成會從城中扣掉加到主公身上
 // 作用中
-final PLAYER_EARN_FROM_CITY_BY_TURN_PERSENT = .03;
+final PLAYER_EARN_FROM_CITY_BY_TURN_PERSENT = .025;
 
 // 基本一單買糧買兵的的金錢
 // 作用中
