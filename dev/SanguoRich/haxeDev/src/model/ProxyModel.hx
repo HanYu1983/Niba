@@ -61,8 +61,8 @@ class ProxyModel implements IModel {
 		return model.getPreResultOfNego(playerId, gridId, people, invite);
 	}
 
-	public function getPreResultOfHire(playerId:Int, gridId:Int, people:People, invite:People, moreMoney:Float = 0):PreResultOnHire {
-		return model.getPreResultOfHire(playerId, gridId, people, invite);
+	public function getPreResultOfHire(playerId:Int, gridId:Int, people:People, invite:People, moreMoney:Float):PreResultOnHire {
+		return model.getPreResultOfHire(playerId, gridId, people, invite, moreMoney);
 	}
 
 	public function getPreResultOfWar(playerId:Int, gridId:Int, p1:People, p2:People, army1:Float, army2:Float):Array<PreResultOnWar> {
