@@ -329,7 +329,7 @@ function getPlayerScore(ctx:Context, playerId:Int):Float {
 		return a + p.catelog.cost;
 	}, 0.0);
 	final peopleScore = ctx.peoples.filter(p -> p.belongToPlayerId == playerId).fold((p, a:Float) -> {
-		return a + p.cost;
+		return a + p.cost + p.exp * 10;
 	}, 0.0);
 	final gridScore = ctx.grids.filter(g -> getGridBelongPlayerId(ctx, g.id) == playerId).length * 1000;
 	final gridResourceScore = ctx.grids.filter(g -> getGridBelongPlayerId(ctx, g.id) == playerId).map(g -> {
