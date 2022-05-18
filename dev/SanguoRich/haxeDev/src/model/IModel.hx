@@ -169,6 +169,7 @@ typedef PreResultOnSnatch = {
 	money:Float,
 	food:Float,
 	rateForTreasure:Float,
+	success:Bool,
 }
 
 typedef PreResultOnHire = {

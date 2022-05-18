@@ -72,7 +72,8 @@ class SnatchPreviewView extends PopupView {
 				pro_army1.value = '${Main.getFixNumber(warResult[0].armyBefore, 0)} => ${Main.getFixNumber(warResult[0].armyAfter, 0)} (${Main.getFixNumber(warResult[0].armyAfter - warResult[0].armyBefore)})';
 				pro_army2.value = '${Main.getFixNumber(warResult[1].armyBefore, 0)} => ${Main.getFixNumber(warResult[1].armyAfter, 0)} (${Main.getFixNumber(warResult[1].armyAfter - warResult[1].armyBefore)})';
 
-				final isWin = warResult[1].armyAfter < 1;
+				
+				final isWin = result.success;
 				lbl_willSnacth.value = isWin ? '占領成功' : '占領失敗';
 				lbl_rateForTreasure.value = isWin ? '預計獲得${grid.treasures.length}個寶物' : '無';
 			} else {

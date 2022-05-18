@@ -434,6 +434,7 @@ class DebugModel implements IModel {
 			money: 2,
 			food: 1,
 			rateForTreasure: .5,
+			success: false
 		}
 	}
 
