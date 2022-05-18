@@ -76,7 +76,7 @@ class ModelVer2 extends DebugModel {
 	}
 
 	override function getPreResultOfHire(playerId:Int, gridId:Int, people:model.PeopleGenerator.People, invite:model.PeopleGenerator.People,
-			moreMoney:Float = 0):PreResultOnHire {
+			moreMoney:Float):PreResultOnHire {
 		return doGetPreResultOfHire(context, playerId, gridId, people.id, invite.id, moreMoney);
 	}
 

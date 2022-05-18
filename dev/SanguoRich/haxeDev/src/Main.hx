@@ -1,7 +1,5 @@
 package;
 
-import model.debug.TestOccupationModel;
-import model.debug.TestExploreModel;
 import model.GridGenerator.BUILDING;
 import model.PeopleGenerator;
 import js.Syntax;
@@ -40,7 +38,8 @@ class Main {
 	}
 
 	public static function getFixNumber(number:Float, count:Int = 2):Float {
-		if(number == null) return 0.0;
+		if (number == null)
+			return 0.0;
 		var round = Syntax.code('Number.prototype.toFixed');
 		return round.call(number, count);
 	}
@@ -62,7 +61,7 @@ class Main {
 
 	public static function abilitiesToString(abilitys:Array<Int>) {
 		var abiString = '';
-		for(ability in abilitys){
+		for (ability in abilitys) {
 			abiString += PeopleGenerator.getInst().getAbilityName(ability) + ' ';
 		}
 		return abiString;
@@ -134,12 +133,12 @@ class Main {
 		return catelog[0];
 	}
 
-	public static function getStrategyCatelog(sid:Int){
-		final catelog = StrategyList.filter((catelog) -> catelog.id == sid );
+	public static function getStrategyCatelog(sid:Int) {
+		final catelog = StrategyList.filter((catelog) -> catelog.id == sid);
 		return catelog[0];
 	}
 
 	public static function getCompareString(before:Float, after:Float, count:Int = 0) {
-		return '${Main.getFixNumber(before,count)} => ${Main.getFixNumber(after,count)} (${Main.getFixNumber(after - before, count)})';
+		return '${Main.getFixNumber(before, count)} => ${Main.getFixNumber(after, count)} (${Main.getFixNumber(after - before, count)})';
 	}
 }

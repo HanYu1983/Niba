@@ -60,7 +60,7 @@ class DebugModel implements IModel {
 					// TreasureGenerator.getInst().generator(),
 					// TreasureGenerator.getInst().generator(),
 				],
-				score:0.0,
+				score: 0.0,
 			}
 		}
 	}
@@ -323,7 +323,7 @@ class DebugModel implements IModel {
 		return null;
 	}
 
-	public function getPreResultOfHire(playerId:Int, gridId:Int, people:People, invite:People, moreMoney:Float = 0):PreResultOnHire {
+	public function getPreResultOfHire(playerId:Int, gridId:Int, people:People, invite:People, moreMoney:Float):PreResultOnHire {
 		return null;
 	}
 

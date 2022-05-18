@@ -32,7 +32,7 @@ private function getHireCost(ctx:Context, playerId:Int, gridId:Int, p1SelectId:I
 					// 越不夠錢減成
 					// 完全付不出來的話, 這個系數為1
 					final hireCostFactor = hireMoneyOffset >= 0 ? 0 : Math.min(1, -1 * hireMoneyOffset / hireCost);
-					final moreMoneyExt = moreMoney / 10;
+					final moreMoneyExt = moreMoney / 1000.0;
 					final rate = Math.min(1, base * charmFactor * abiFactor * (1 - hireCostFactor) + moreMoneyExt);
 					{
 						playerCost: {

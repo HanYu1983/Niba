@@ -282,7 +282,7 @@ interface IModel {
 	function takeNegoOn(playerId:Int, gridId:Int, p1PeopleId:Int, p2PeopleId:Int, cb:(gameInfo:GameInfo) -> Void):Void;
 
 	function getTakeHirePreview(playerId:Int, gridId:Int):HirePreview;
-	function getPreResultOfHire(playerId:Int, gridId:Int, p1:People, p2:People, moreMoney:Float = 0):PreResultOnHire;
+	function getPreResultOfHire(playerId:Int, gridId:Int, p1:People, p2:People, moreMoney:Float):PreResultOnHire;
 	function takeHire(playerId:Int, gridId:Int, p1PeopleId:Int, p2PeopleId:Int, moreMoney:Float, cb:(gameInfo:GameInfo) -> Void):Void;
 
 	function getTakeExplorePreview(playerId:Int, gridId:Int):ExplorePreview;
