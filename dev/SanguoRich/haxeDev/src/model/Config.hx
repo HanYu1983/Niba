@@ -65,10 +65,10 @@ final WAR_MONEY_COST_FACTOR = .1;
 final WAR_FOOD_COST_FACTOR = 0.3;
 
 // 戰鬥防守方士兵加成
-final WAR_DEFFENDER_FACTOR = 3.0;
+final WAR_DEFFENDER_FACTOR = 2.0;
 
 // 兵數量差優勢, 越高代表影響越小
-final WAR_HIGH_LOW_FACTOR = 1.5;
+final WAR_HIGH_LOW_FACTOR = 1.2;
 
 // 保底傷害, 1的話代表派100兵最少打100
 final WAR_ARMY_FACTOR = 0.0;
