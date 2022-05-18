@@ -419,7 +419,7 @@ final BuildingList:Array<BuildingCatelog> = [
 	{
 		id: 0,
 		name: '農田(未建)',
-		money: 50,
+		money: 70,
 		describe: '糧食每回合+0',
 		type: FARM(0),
 		depends: []
@@ -427,31 +427,31 @@ final BuildingList:Array<BuildingCatelog> = [
 	{
 		id: 1,
 		name: '農田(小)',
-		money: 30,
-		describe: '糧食每回合+2',
+		money: 50,
+		describe: '糧食每回合+3',
 		type: FARM(1),
 		depends: []
 	},
 	{
 		id: 2,
 		name: '農田(中)',
-		money: 30,
-		describe: '糧食每回合+3',
+		money: 50,
+		describe: '糧食每回合+5',
 		type: FARM(2),
 		depends: []
 	},
 	{
 		id: 3,
 		name: '農田(大)',
-		money: 30,
-		describe: '糧食每回合+4',
+		money: 0,
+		describe: '糧食每回合+7',
 		type: FARM(3),
 		depends: []
 	},
 	{
 		id: 4,
 		name: '市集(未建)',
-		money: 50,
+		money: 70,
 		describe: '金錢每回合+0',
 		type: MARKET(0),
 		depends: []
@@ -459,24 +459,24 @@ final BuildingList:Array<BuildingCatelog> = [
 	{
 		id: 5,
 		name: '市集(小)',
-		money: 30,
-		describe: '金錢每回合+2',
+		money: 50,
+		describe: '金錢每回合+3',
 		type: MARKET(1),
 		depends: []
 	},
 	{
 		id: 6,
 		name: '市集(中)',
-		money: 30,
-		describe: '金錢每回合+3',
+		money: 50,
+		describe: '金錢每回合+5',
 		type: MARKET(2),
 		depends: []
 	},
 	{
 		id: 7,
 		name: '市集(大)',
-		money: 30,
-		describe: '金錢每回合+4',
+		money: 0,
+		describe: '金錢每回合+7',
 		type: MARKET(3),
 		depends: []
 	},
