@@ -125,7 +125,7 @@ class GridGenerator {
 							BUILDING.WALL(0),
 						];
 					}
-					g.maxArmy = g.maxFood = g.maxMoney = 400;
+					g.maxArmy = g.maxFood = g.maxMoney = 500;
 				case FARM:
 					if (isLimitBuilding) {
 						g.attachs = [BUILDING.FARM(1), BUILDING.BARN(0), BUILDING.WALL(0),];
@@ -142,7 +142,7 @@ class GridGenerator {
 							BUILDING.WALL(0),
 						];
 					}
-					g.maxArmy = g.maxFood = g.maxMoney = 400;
+					g.maxArmy = g.maxFood = g.maxMoney = 500;
 				case VILLAGE:
 					if (isLimitBuilding) {
 						g.attachs = [BUILDING.BARRACKS(1), BUILDING.WALL(0),];
@@ -159,7 +159,7 @@ class GridGenerator {
 							BUILDING.WALL(1),
 						];
 					}
-					g.maxArmy = g.maxFood = g.maxMoney = 400;
+					g.maxArmy = g.maxFood = g.maxMoney = 500;
 				case CITY:
 					g.attachs = [
 						BUILDING.MARKET(1),
@@ -172,7 +172,7 @@ class GridGenerator {
 						BUILDING.EXPLORE(0),
 						BUILDING.WALL(1),
 					];
-					g.maxArmy = g.maxFood = g.maxMoney = 600;
+					g.maxArmy = g.maxFood = g.maxMoney = 700;
 			}
 
 			final basicArmy = getRandomRange(180, 80);

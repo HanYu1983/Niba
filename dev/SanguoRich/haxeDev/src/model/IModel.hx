@@ -491,7 +491,7 @@ final BuildingList:Array<BuildingCatelog> = [
 		id: 9,
 		name: '兵營(小)',
 		money: 100,
-		describe: '士兵最大值+100。士兵每回合+2%',
+		describe: '士兵最大值+100。士兵每回合+1%',
 		type: BARRACKS(1),
 		depends: []
 	},
@@ -499,7 +499,7 @@ final BuildingList:Array<BuildingCatelog> = [
 		id: 10,
 		name: '兵營(中)',
 		money: 100,
-		describe: '士兵最大值+150。士兵每回合+3%',
+		describe: '士兵最大值+150。士兵每回合+2%',
 		type: BARRACKS(2),
 		depends: []
 	},
@@ -507,7 +507,7 @@ final BuildingList:Array<BuildingCatelog> = [
 		id: 11,
 		name: '兵營(大)',
 		money: 0,
-		describe: '士兵最大值+200。士兵每回合+4%',
+		describe: '士兵最大值+200。士兵每回合+3%',
 		type: BARRACKS(3),
 		depends: []
 	},
@@ -547,7 +547,7 @@ final BuildingList:Array<BuildingCatelog> = [
 		id: 16,
 		name: '城墻(中)',
 		money: 50,
-		describe: '此格子防禦方的加成提高。(+30%)',
+		describe: '此格子防禦方的加成提高。(+35%)',
 		type: WALL(2),
 		depends: []
 	},
@@ -571,7 +571,7 @@ final BuildingList:Array<BuildingCatelog> = [
 		id: 19,
 		name: '金庫(小)',
 		money: 100,
-		describe: '金錢最大值+200。金錢每回合+2%',
+		describe: '金錢最大值+200。金錢每回合+1%',
 		type: BANK(1),
 		depends: []
 	},
@@ -579,7 +579,7 @@ final BuildingList:Array<BuildingCatelog> = [
 		id: 20,
 		name: '金庫(中)',
 		money: 100,
-		describe: '金錢最大值+300。金錢每回合+3%',
+		describe: '金錢最大值+300。金錢每回合+2%',
 		type: BANK(2),
 		depends: []
 	},
@@ -587,7 +587,7 @@ final BuildingList:Array<BuildingCatelog> = [
 		id: 21,
 		name: '金庫(大)',
 		money: 0,
-		describe: '金錢最大值+400。金錢每回合+4%',
+		describe: '金錢最大值+400。金錢每回合+3%',
 		type: BANK(3),
 		depends: []
 	},
@@ -603,7 +603,7 @@ final BuildingList:Array<BuildingCatelog> = [
 		id: 23,
 		name: '穀倉(小)',
 		money: 100,
-		describe: '糧草最大值+200。糧草每回合+2%',
+		describe: '糧草最大值+200。糧草每回合+1%',
 		type: BARN(1),
 		depends: []
 	},
@@ -611,7 +611,7 @@ final BuildingList:Array<BuildingCatelog> = [
 		id: 24,
 		name: '穀倉(中)',
 		money: 100,
-		describe: '糧草最大值+300。糧草每回合+3%',
+		describe: '糧草最大值+300。糧草每回合+2%',
 		type: BARN(2),
 		depends: []
 	},
@@ -619,7 +619,7 @@ final BuildingList:Array<BuildingCatelog> = [
 		id: 25,
 		name: '穀倉(大)',
 		money: 0,
-		describe: '糧草最大值+400。糧草每回合+4%',
+		describe: '糧草最大值+400。糧草每回合+3%',
 		type: BARN(3),
 		depends: []
 	},

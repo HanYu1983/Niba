@@ -37,7 +37,7 @@ function doPeopleMaintain(ctx:Context) {
 							level;
 					}
 				}, 0.0);
-				levels * 2.0;
+				levels * .1;
 			}
 			final cost = peopleCost + attachmentsCost;
 			// 計算體力回復率
@@ -507,6 +507,9 @@ function onPlayerEnd(ctx:Context, playerId:Int):Bool {
 						chooseGrid.money = EVENT_GRID_BORN_RESOURCE_AMOUNT;
 						chooseGrid.army = EVENT_GRID_BORN_RESOURCE_AMOUNT;
 						chooseGrid.food = EVENT_GRID_BORN_RESOURCE_AMOUNT;
+						chooseGrid.defaultMaxMoney = 500;
+						chooseGrid.defaultMaxFood = 500;
+						chooseGrid.defaultMaxArmy = 500;
 
 						// 加入武將
 						addPeopleInfo(ctx, null, chooseGrid.id, model.PeopleGenerator.getInst().generate());

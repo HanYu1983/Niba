@@ -67,8 +67,10 @@ class BuildPreview extends PopupView{
         final people = plist.selectedItem;
         var catelog = tab_buildingList.selectedItem;
         var toCatelog = Main.getBuildingCatelog(to);
-
-        var msg = '確定要讓 ${people.name} 擴建 ${catelog.name} 成 ${toCatelog.name} 嗎?';
+        
+        var msg = '確定要讓 ${people.name} 擴建 ${catelog.name} 成 ${toCatelog.name} 嗎?\n';
+        msg += '費用:${catelog.money}\n';
+        msg += '功能:${toCatelog.describe}';
 
         Dialogs.messageBox(msg, '主公啊…', MessageBoxType.TYPE_QUESTION, true, (e)->{
             if( e == DialogButton.YES){
