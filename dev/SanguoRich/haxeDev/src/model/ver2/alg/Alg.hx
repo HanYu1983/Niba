@@ -37,7 +37,7 @@ function doPeopleMaintain(ctx:Context) {
 							level;
 					}
 				}, 0.0);
-				levels * 2.0;
+				levels * .1;
 			}
 			final cost = peopleCost + attachmentsCost;
 			// 計算體力回復率
