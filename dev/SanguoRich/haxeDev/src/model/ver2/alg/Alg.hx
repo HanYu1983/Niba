@@ -218,37 +218,55 @@ function onPayTaxToGrid(ctx:Context, playerId:Int, gridId:Int) {
 		final taxMoney = grid.money * GRID_TAX;
 		final taxFood = grid.food * GRID_TAX;
 		final taxArmy = grid.army * GRID_TAX;
-		// 支付
-		player.money = Math.max(0, player.money - taxMoney);
-		player.food = Math.max(0, player.food - taxFood);
-		player.army = Math.max(0, player.army - taxArmy);
-		grid.money += taxMoney;
-		grid.food += taxFood;
-		grid.army += taxArmy;
-		// 計算超過格子資源上限的支付給主公
-		final maxMoney = getGridMaxMoney(ctx, grid.id);
-		final maxFood = getGridMaxFood(ctx, grid.id);
-		final maxArmy = getGridMaxArmy(ctx, grid.id);
-		final offsetMoney = grid.money - maxMoney;
-		final offsetFood = grid.food - maxFood;
-		final offsetArmy = grid.army - maxArmy;
-		// 中立國沒主公就不管了
-		final targetPlayerId = getGridBelongPlayerId(ctx, grid.id);
-		if (targetPlayerId != null) {
-			final targetPlayer = ctx.players[targetPlayerId];
-			// 超過的部分支付給主公
-			if (offsetMoney > 0) {
-				targetPlayer.money += offsetMoney;
-				grid.money = maxMoney;
-			}
-			if (offsetFood > 0) {
-				targetPlayer.food += offsetFood;
-				grid.food = maxFood;
-			}
-			if (offsetArmy > 0) {
-				targetPlayer.army += offsetArmy;
-				grid.army = maxArmy;
-			}
+		switch 1 {
+			case 0:
+				// 支付
+				player.money = Math.max(0, player.money - taxMoney);
+				player.food = Math.max(0, player.food - taxFood);
+				player.army = Math.max(0, player.army - taxArmy);
+				grid.money += taxMoney;
+				grid.food += taxFood;
+				grid.army += taxArmy;
+				// 計算超過格子資源上限的支付給主公
+				final maxMoney = getGridMaxMoney(ctx, grid.id);
+				final maxFood = getGridMaxFood(ctx, grid.id);
+				final maxArmy = getGridMaxArmy(ctx, grid.id);
+				final offsetMoney = grid.money - maxMoney;
+				final offsetFood = grid.food - maxFood;
+				final offsetArmy = grid.army - maxArmy;
+				// 中立國沒主公就不管了
+				final targetPlayerId = getGridBelongPlayerId(ctx, grid.id);
+				if (targetPlayerId != null) {
+					final targetPlayer = ctx.players[targetPlayerId];
+					// 超過的部分支付給主公
+					if (offsetMoney > 0) {
+						targetPlayer.money += offsetMoney;
+						grid.money = maxMoney;
+					}
+					if (offsetFood > 0) {
+						targetPlayer.food += offsetFood;
+						grid.food = maxFood;
+					}
+					if (offsetArmy > 0) {
+						targetPlayer.army += offsetArmy;
+						grid.army = maxArmy;
+					}
+				}
+			case 1:
+				player.money = Math.max(0, player.money - taxMoney);
+				player.food = Math.max(0, player.food - taxFood);
+				player.army = Math.max(0, player.army - taxArmy);
+				final targetPlayerId = getGridBelongPlayerId(ctx, grid.id);
+				if (targetPlayerId != null) {
+					final targetPlayer = ctx.players[targetPlayerId];
+					targetPlayer.money += taxMoney;
+					targetPlayer.food += taxFood;
+					targetPlayer.army += taxArmy;
+				} else {
+					grid.money += taxMoney;
+					grid.food += taxFood;
+					grid.army += taxArmy;
+				}
 		}
 	}
 	eventValue.moneyAfter = player.money;
@@ -284,9 +302,14 @@ function getPlayerScore(ctx:Context, playerId:Int):Float {
 		return a + p.cost;
 	}, 0.0);
 	final gridScore = ctx.grids.filter(g -> getGridBelongPlayerId(ctx, g.id) == playerId).length * 1000;
+	final gridResourceScore = ctx.grids.filter(g -> getGridBelongPlayerId(ctx, g.id) == playerId).map(g -> {
+		return g.army + g.food + g.money;
+	}).fold((p, a:Float) -> {
+		return a + p;
+	}, 0.0);
 	final attachScore = ctx.attachments.filter(a -> getGridBelongPlayerId(ctx, a.belongToGridId) == playerId).length * 300;
 	trace("getPlayerScore", resourceScore, treasureScore, peopleScore, gridScore, attachScore);
-	return resourceScore * 3.0 + treasureScore + peopleScore + gridScore + attachScore;
+	return (resourceScore + gridResourceScore) * 3.0 + treasureScore + peopleScore + gridScore + attachScore;
 }
 
 // 玩家回合結束
@@ -382,18 +405,18 @@ function onPlayerEnd(ctx:Context, playerId:Int):Bool {
 					final earnArmy = grid.army * PLAYER_EARN_FROM_CITY_BY_TURN_PERSENT;
 					final earnFood = grid.food * PLAYER_EARN_FROM_CITY_BY_TURN_PERSENT;
 					final earnMoney = grid.money * PLAYER_EARN_FROM_CITY_BY_TURN_PERSENT;
-					// grid.army -= earnArmy;
-					// if (grid.army < 0) {
-					// 	grid.army = 0;
-					// }
-					// grid.food -= earnFood;
-					// if (grid.food < 0) {
-					// 	grid.food = 0;
-					// }
-					// grid.money -= earnMoney;
-					// if (grid.money < 0) {
-					// 	grid.money = 0;
-					// }
+					grid.army -= earnArmy;
+					if (grid.army < 0) {
+						grid.army = 0;
+					}
+					grid.food -= earnFood;
+					if (grid.food < 0) {
+						grid.food = 0;
+					}
+					grid.money -= earnMoney;
+					if (grid.money < 0) {
+						grid.money = 0;
+					}
 					player.army += earnArmy;
 					player.food += earnFood;
 					player.money += earnMoney;

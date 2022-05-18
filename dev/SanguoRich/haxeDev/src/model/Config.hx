@@ -26,7 +26,7 @@ final GRID_EARN_PER_TURN = 1;
 // 格子的基本保底成長
 final BASIC_GROW_MONEY_RATE = 0.01;
 final BASIC_GROW_FOOD_RATE = 0.01;
-final BASIC_GROW_ARMY_RATE = 0.03;
+final BASIC_GROW_ARMY_RATE = 0.025;
 
 // 幾個回合收稅(4人走完算1回合)
 // 作用中
@@ -38,7 +38,7 @@ final FAVER_SLOW_PER_TURN = 20;
 // 收稅:主公身上的資源增加，依據所有城池的金錢、食物、士兵、策略點(?)個別合計之後的%數
 // 實作成會從城中扣掉加到主公身上
 // 作用中
-final PLAYER_EARN_FROM_CITY_BY_TURN_PERSENT = .05;
+final PLAYER_EARN_FROM_CITY_BY_TURN_PERSENT = .03;
 
 // 基本一單買糧買兵的的金錢
 // 作用中
@@ -171,7 +171,7 @@ final GRID_RESOURCE_MAX = 1000.0;
 final EVENT_GROW_FOOD_RATE = 0.005;
 
 // 每回合每個城加糧事件的糧食數量(暫時通用在錢和兵)
-final EVENT_GROW_FOOD_AMOUNT = 50;
+final EVENT_GROW_FOOD_AMOUNT = 100;
 
 // 每回合異軍突起的機率
 final EVENT_GRID_BORN_RATE = 1 / 15.0;

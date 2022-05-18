@@ -365,8 +365,7 @@ private function doEvent(ctx:Context, playerId:Int) {
 					tmpGrid.money = 0;
 					tmpGrid.food = 0;
 					tmpGrid.army = 0;
-					final putArmy = Math.min(getGridMaxArmy(ctx, gridId) * 0.8, Math.min(200, tmpPlayer.army / 3));
-					trace("doEvent", evt, "putArmy", putArmy, tmpPlayer.army);
+					final putArmy = Math.min(getGridMaxArmy(ctx, gridId) * 0.8, Math.max(200, tmpPlayer.army / 3));
 					if (tmpPlayer.army < putArmy) {
 						ctx.events.push(MESSAGE_EVENT({
 							title: 'AI',
@@ -657,9 +656,9 @@ private function getCommandWeight(ctx:Context, playerId:Int, gridId:Int, cmd:Act
 									// 體力剩下越多越好
 									final fact4 = Math.pow(result.energyAfter / 100.0, 0.5);
 									final score = 1.5 * fact1 * fact2 * fact3 * fact4;
-									if (fact1 > 0) {
-										trace("火中取栗", score, "=", fact1, fact2, fact3, fact4, result);
-									}
+									// if (fact1 > 0) {
+									// 	trace("火中取栗", score, "=", fact1, fact2, fact3, fact4, result);
+									// }
 									if (score > maxScore) {
 										maxScore = score;
 										brainMemory.strategy.peopleId = p1.id;
@@ -806,7 +805,7 @@ private function getCommandWeight(ctx:Context, playerId:Int, gridId:Int, cmd:Act
 				for (p1 in peopleInPlayer) {
 					final result = _getPreResultOfExplore(ctx, playerId, gridId, p1.id);
 					// 成功率
-					final fact1 = result.successRate;
+					final fact1 = result.successRate > 0.7 ? result.successRate : 0.0;
 					// 找寶率0.3就很高了
 					final fact2 = 1 + result.successRateOnTreasure * 0.2;
 					// 體力剩下越多越好
@@ -838,7 +837,7 @@ private function getCommandWeight(ctx:Context, playerId:Int, gridId:Int, cmd:Act
 					for (p2 in peopleInGrid) {
 						final result = doGetPreResultOfHire(ctx, playerId, gridId, p1.id, p2.id, 0);
 						// 成功率
-						final fact1 = result.successRate;
+						final fact1 = result.successRate > 0.7 ? result.successRate : 0.0;
 						// 體力剩下越多越好
 						final fact2 = Math.pow(result.energyAfter / 100.0, 0.5);
 						final score = 1.0 * fact1 * fact2;
@@ -1070,14 +1069,14 @@ private function getCommandWeight(ctx:Context, playerId:Int, gridId:Int, cmd:Act
 							foodAfter: foodAfter,
 							successRate: successRate
 						}:
-							final fact1 = successRate;
+							final fact1 = successRate > 0.7 ? successRate : 0.0;
 							// 體力剩下越多越好
 							final fact2 = Math.pow(energyAfter / 100.0, 0.5);
 							// 拿越多越好
-							final fact3 = {
+							final fact3 = Math.min(1, {
 								final earn = (armyAfter - armyBefore) + (moneyAfter - moneyBefore) + (foodAfter - foodBefore);
-								earn / 100.0;
-							}
+								(earn / 100.0) * 0.75;
+							});
 							final score = 1.0 * fact1 * fact2 * fact3;
 							if (score > tmpMaxScore) {
 								tmpMaxScore = score;
@@ -1087,7 +1086,7 @@ private function getCommandWeight(ctx:Context, playerId:Int, gridId:Int, cmd:Act
 				}
 				tmpMaxScore;
 			}
-			final score = 1.0 * fact1;
+			final score = 0.9 * fact1;
 			trace("getCommandWeight", playerId, cmd, score);
 			score;
 		case PK:
@@ -1107,7 +1106,7 @@ private function getCommandWeight(ctx:Context, playerId:Int, gridId:Int, cmd:Act
 							armyChange: armyChange,
 							successRate: successRate
 						}:
-							final fact1 = successRate;
+							final fact1 = successRate > 0.7 ? successRate : 0.0;
 							// 體力剩下越多越好
 							final fact2 = Math.pow(energyAfter / 100.0, 0.5);
 							// 拿越多越好
@@ -1182,7 +1181,7 @@ private function getCommandWeight(ctx:Context, playerId:Int, gridId:Int, cmd:Act
 									1.0;
 								}
 							}
-							final score = 1.0 * fact1 * fact2 * fact3;
+							final score = 0.7 * fact1 * fact2 * fact3;
 							if (score > tmpMaxScore) {
 								tmpMaxScore = score;
 								brainMemory.war.peopleId = p1PeopleId;
@@ -1407,7 +1406,7 @@ private function getTransferWeightV2(ctx:Context, playerId:Int, gridId:Int):Floa
 	{
 		// 放在主公的成數
 		final playerResourceWeight = {
-			final gridTotal = grid.army + grid.food + grid.money;
+			final gridTotal = grid.army /*+ grid.food + grid.money*/;
 			switch gridTotal {
 				case total if (total > 1600):
 					1 / 1.5;
