@@ -478,6 +478,9 @@ function onPlayerEnd(ctx:Context, playerId:Int) {
 						chooseGrid.money = EVENT_GRID_BORN_RESOURCE_AMOUNT;
 						chooseGrid.army = EVENT_GRID_BORN_RESOURCE_AMOUNT;
 						chooseGrid.food = EVENT_GRID_BORN_RESOURCE_AMOUNT;
+						chooseGrid.defaultMaxMoney = 500;
+						chooseGrid.defaultMaxFood = 500;
+						chooseGrid.defaultMaxArmy = 500;
 
 						// 加入武將
 						addPeopleInfo(ctx, null, chooseGrid.id, model.PeopleGenerator.getInst().generate());
