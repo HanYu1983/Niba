@@ -10,7 +10,7 @@ using Lambda;
 
 //
 // 雇用計算
-private function getHireCost(ctx:Context, playerId:Int, gridId:Int, p1SelectId:Int, p2SelectId:Int) {
+private function getHireCost(ctx:Context, playerId:Int, gridId:Int, p1SelectId:Int, p2SelectId:Int, moreMoney:Float) {
 	return switch 0 {
 		case 0:
 			final player = ctx.players[playerId];
@@ -32,11 +32,12 @@ private function getHireCost(ctx:Context, playerId:Int, gridId:Int, p1SelectId:I
 					// 越不夠錢減成
 					// 完全付不出來的話, 這個系數為1
 					final hireCostFactor = hireMoneyOffset >= 0 ? 0 : Math.min(1, -1 * hireMoneyOffset / hireCost);
-					final rate = base * charmFactor * abiFactor * (1 - hireCostFactor);
+					final moreMoneyExt = moreMoney / 10;
+					final rate = Math.min(1, base * charmFactor * abiFactor * (1 - hireCostFactor) + moreMoneyExt);
 					{
 						playerCost: {
 							id: playerId,
-							money: hireCost
+							money: hireCost + moreMoney
 						},
 						peopleCost: {
 							id: p1.id,
@@ -70,7 +71,7 @@ private function onHireCost(ctx:Context, playerId:Int, gridId:Int, p1SelectId:In
 		gridId: gridId,
 	}
 	final success = {
-		final negoCost = getHireCost(ctx, playerId, gridId, p1SelectId, p2SelectId);
+		final negoCost = getHireCost(ctx, playerId, gridId, p1SelectId, p2SelectId, moreMoney);
 		// 無論成功或失敗武將先消體力
 		if (p1.energy < negoCost.peopleCost.energy) {
 			throw new haxe.Exception('people.energy ${p1.energy} < ${negoCost.peopleCost.energy}');
@@ -115,13 +116,14 @@ function doGetTakeHirePreview(ctx:Context, playerId:Int, gridId:Int):HirePreview
 	};
 }
 
-function doGetPreResultOfHire(ctx:Context, playerId:Int, gridId:Int, peopleId:Int, inviteId:Int):PreResultOnHire {
+function doGetPreResultOfHire(ctx:Context, playerId:Int, gridId:Int, peopleId:Int, inviteId:Int, moreMoney:Float):PreResultOnHire {
 	final player = ctx.players[playerId];
-	final cost = getHireCost(ctx, playerId, gridId, peopleId, inviteId);
+	final cost = getHireCost(ctx, playerId, gridId, peopleId, inviteId, moreMoney);
 	final p1 = getPeopleById(ctx, peopleId);
 	final totalPeopleCost = ctx.peoples.filter(p -> p.belongToPlayerId == playerId).fold((p, a) -> {
 		return a + getPeopleMaintainCost(ctx, p.id);
 	}, 0.0) + getPeopleMaintainCost(ctx, p1.id);
+	trace(moreMoney, cost.successRate);
 	return {
 		energyBefore: Std.int(p1.energy),
 		energyAfter: Std.int(p1.energy - cost.peopleCost.energy),

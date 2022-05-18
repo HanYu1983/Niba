@@ -844,7 +844,7 @@ private function getCommandWeight(ctx:Context, playerId:Int, gridId:Int, cmd:Act
 				var maxScore = 0.0;
 				for (p1 in peopleInPlayer) {
 					for (p2 in peopleInGrid) {
-						final result = doGetPreResultOfHire(ctx, playerId, gridId, p1.id, p2.id);
+						final result = doGetPreResultOfHire(ctx, playerId, gridId, p1.id, p2.id, 0);
 						// 成功率
 						final fact1 = result.successRate;
 						// 體力剩下越多越好

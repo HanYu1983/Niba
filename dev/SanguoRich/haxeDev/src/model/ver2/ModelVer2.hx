@@ -75,8 +75,9 @@ class ModelVer2 extends DebugModel {
 		return doGetTakeHirePreview(context, playerId, gridId);
 	}
 
-	override function getPreResultOfHire(playerId:Int, gridId:Int, people:model.PeopleGenerator.People, invite:model.PeopleGenerator.People, moreMoney:Float = 0):PreResultOnHire {
-		return doGetPreResultOfHire(context, playerId, gridId, people.id, invite.id);
+	override function getPreResultOfHire(playerId:Int, gridId:Int, people:model.PeopleGenerator.People, invite:model.PeopleGenerator.People,
+			moreMoney:Float = 0):PreResultOnHire {
+		return doGetPreResultOfHire(context, playerId, gridId, people.id, invite.id, moreMoney);
 	}
 
 	override function takeHire(playerId:Int, gridId:Int, p1SelectId:Int, p2SelectId:Int, moreMoney:Float, cb:(gameInfo:GameInfo) -> Void) {
