@@ -104,13 +104,15 @@ function doGridGrow(ctx:Context) {
 // 玩家回合結束
 function doPlayerEnd(ctx:Context) {
 	trace("doPlayerEnd", "start");
-	onPlayerEnd(ctx, ctx.currentPlayerId);
-	final nextPlayer = ctx.players[ctx.currentPlayerId];
-	if (nextPlayer.brain != null) {
-		try {
-			doBrain(ctx, nextPlayer.id);
-		} catch (e:Any) {
-			trace("doPlayerEnd catch:", e);
+	final isContinue = onPlayerEnd(ctx, ctx.currentPlayerId);
+	if (isContinue) {
+		final nextPlayer = ctx.players[ctx.currentPlayerId];
+		if (nextPlayer.brain != null) {
+			try {
+				doBrain(ctx, nextPlayer.id);
+			} catch (e:Any) {
+				trace("doPlayerEnd catch:", e);
+			}
 		}
 	}
 	trace("doPlayerEnd", "finished");
@@ -212,15 +214,42 @@ function onPayTaxToGrid(ctx:Context, playerId:Int, gridId:Int) {
 	}
 	{
 		final grid = ctx.grids[gridId];
+		// 過路費
 		final taxMoney = grid.money * GRID_TAX;
 		final taxFood = grid.food * GRID_TAX;
 		final taxArmy = grid.army * GRID_TAX;
+		// 支付
 		player.money = Math.max(0, player.money - taxMoney);
 		player.food = Math.max(0, player.food - taxFood);
 		player.army = Math.max(0, player.army - taxArmy);
 		grid.money += taxMoney;
 		grid.food += taxFood;
 		grid.army += taxArmy;
+		// 計算超過格子資源上限的支付給主公
+		final maxMoney = getGridMaxMoney(ctx, grid.id);
+		final maxFood = getGridMaxFood(ctx, grid.id);
+		final maxArmy = getGridMaxArmy(ctx, grid.id);
+		final offsetMoney = grid.money - maxMoney;
+		final offsetFood = grid.food - maxFood;
+		final offsetArmy = grid.army - maxArmy;
+		// 中立國沒主公就不管了
+		final targetPlayerId = getGridBelongPlayerId(ctx, grid.id);
+		if (targetPlayerId != null) {
+			final targetPlayer = ctx.players[targetPlayerId];
+			// 超過的部分支付給主公
+			if (offsetMoney > 0) {
+				targetPlayer.money += offsetMoney;
+				grid.money = maxMoney;
+			}
+			if (offsetFood > 0) {
+				targetPlayer.food += offsetFood;
+				grid.food = maxFood;
+			}
+			if (offsetArmy > 0) {
+				targetPlayer.army += offsetArmy;
+				grid.army = maxArmy;
+			}
+		}
 	}
 	eventValue.moneyAfter = player.money;
 	eventValue.foodAfter = player.food;
@@ -261,7 +290,7 @@ function getPlayerScore(ctx:Context, playerId:Int):Float {
 }
 
 // 玩家回合結束
-function onPlayerEnd(ctx:Context, playerId:Int) {
+function onPlayerEnd(ctx:Context, playerId:Int):Bool {
 	if (playerId != ctx.currentPlayerId) {
 		throw new haxe.Exception("現在不是你的回合，不能呼叫end");
 	}
@@ -286,15 +315,15 @@ function onPlayerEnd(ctx:Context, playerId:Int) {
 				ctx.events.push(PLAYER_WIN({
 					player: getPlayerInfo(ctx, winPlayer),
 				}, getGameInfo(ctx, false), {duration: 3}));
-				return;
+				return false;
 			}
-			final playerNotAI = ctx.players.filter(p -> p.brain == null);
-			if (playerNotAI.length == 0) {
+			final playerLiveButNotAI = ctx.players.filter(p -> p.brain == null && p.isLose == false);
+			if (playerLiveButNotAI.length == 0) {
 				final winPlayer = winPlayers[0];
 				ctx.events.push(PLAYER_WIN({
 					player: null,
 				}, getGameInfo(ctx, false), {duration: 3}));
-				return;
+				return false;
 			}
 		}
 	}
@@ -502,6 +531,7 @@ function onPlayerEnd(ctx:Context, playerId:Int) {
 	}
 	// clear memory
 	clearMemory(ctx);
+	return true;
 }
 
 function onPlayerDice(ctx:Context, playerId:Int) {
@@ -522,6 +552,7 @@ function onPlayerDice(ctx:Context, playerId:Int) {
 			toGridId = stopItem.position;
 			// 移除路障
 			ctx.groundItems = ctx.groundItems.filter(item -> item.id != stopItem.id);
+			trace("onPlayerDice", "路障!!!", "grid", toGridId);
 		}
 	}
 	onPlayerGoToPosition(ctx, playerId, toGridId);

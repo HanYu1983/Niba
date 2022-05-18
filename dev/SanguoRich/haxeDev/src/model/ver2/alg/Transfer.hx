@@ -39,7 +39,7 @@ private function onTransfer(ctx:Context, playerId:Int, gridId:Int, playerInfo:mo
 		}
 		final offsetFood = grid.food - getGridMaxFood(ctx, grid.id);
 		if (offsetFood > 0) {
-			player.food += offsetMoney;
+			player.food += offsetFood;
 			grid.food = getGridMaxFood(ctx, grid.id);
 		}
 		final offsetArmy = grid.army - getGridMaxArmy(ctx, grid.id);

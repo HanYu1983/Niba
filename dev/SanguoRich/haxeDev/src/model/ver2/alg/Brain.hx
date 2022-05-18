@@ -135,14 +135,17 @@ function doBrain(ctx, playerId:Int) {
 			case END:
 				// 結束回圈
 				done = true;
-				onPlayerEnd(ctx, playerId);
-				brainMemory.hasTransfer = false;
-				// 如果下一個玩家又是AI
-				final nextPlayer = ctx.players[ctx.currentPlayerId];
-				// 如果又回到自己, 代表遊戲結束了
-				final isLoop = nextPlayer.id == playerId;
-				if (isLoop == false && nextPlayer.brain != null) {
-					doBrain(ctx, nextPlayer.id);
+				final isContinue = onPlayerEnd(ctx, playerId);
+				if (isContinue) {
+					// reset memory
+					brainMemory.hasTransfer = false;
+					// 如果下一個玩家又是AI
+					final nextPlayer = ctx.players[ctx.currentPlayerId];
+					// 如果又回到自己, 代表遊戲結束了
+					final isLoop = nextPlayer.id == playerId;
+					if (isLoop == false && nextPlayer.brain != null) {
+						doBrain(ctx, nextPlayer.id);
+					}
 				}
 			case MOVE:
 				onPlayerDice(ctx, playerId);
@@ -362,7 +365,7 @@ private function doEvent(ctx:Context, playerId:Int) {
 					tmpGrid.money = 0;
 					tmpGrid.food = 0;
 					tmpGrid.army = 0;
-					final putArmy = Math.min(getGridMaxMoney(ctx, gridId) * 0.7, tmpPlayer.army / 3);
+					final putArmy = Math.min(getGridMaxArmy(ctx, gridId) * 0.8, tmpPlayer.army / 3);
 					if (putArmy <= 0) {
 						ctx.events.push(MESSAGE_EVENT({
 							title: 'AI',
@@ -370,13 +373,7 @@ private function doEvent(ctx:Context, playerId:Int) {
 						}, gameInfo));
 						// 收回攻城的人
 						tmpPlayer.people = tmpPlayer.people.concat(tmpGrid.people);
-						tmpPlayer.money += tmpGrid.money;
-						tmpPlayer.food += tmpGrid.food;
-						tmpPlayer.army += tmpGrid.army;
 						tmpGrid.people = [];
-						tmpGrid.money = 0;
-						tmpGrid.food = 0;
-						tmpGrid.army = 0;
 						_takeTransfer(ctx, playerId, gridId, tmpPlayer, tmpGrid);
 						doEvent(ctx, playerId);
 					} else {
@@ -401,12 +398,6 @@ private function doEvent(ctx:Context, playerId:Int) {
 									title: 'AI',
 									msg: '${player.name}想佔領${grid.name}卻沒有空閒的人, 拿走所有物資',
 								}, gameInfo));
-								tmpPlayer.money += tmpGrid.money;
-								tmpPlayer.food += tmpGrid.food;
-								tmpPlayer.army += tmpGrid.army;
-								tmpGrid.money = 0;
-								tmpGrid.food = 0;
-								tmpGrid.army = 0;
 								_takeTransfer(ctx, playerId, gridId, tmpPlayer, tmpGrid);
 								doEvent(ctx, playerId);
 							}
@@ -1018,99 +1009,7 @@ private function getCommandWeight(ctx:Context, playerId:Int, gridId:Int, cmd:Act
 			trace("getCommandWeight", playerId, cmd, score);
 			score;
 		case TRANSFER:
-			var maxScore = 0.0;
-			{
-				final foodRate = if (player.food <= 0) {
-					0.0;
-				} else {
-					1.0 - Math.min(1, grid.food / player.food);
-				}
-				final moneyRate = if (player.money <= 0) {
-					0.0;
-				} else {
-					1.0 - Math.min(1, grid.money / player.money);
-				}
-				final armyRate = if (player.army <= 0) {
-					0.0;
-				} else {
-					1.0 - Math.min(1, grid.army / player.army);
-				}
-				// 少於3個城之前不想給城
-				final fact1 = {
-					final gridCnt = ctx.grids.filter(g -> getGridBelongPlayerId(ctx, g.id) == playerId).length;
-					if (gridCnt < 3) {
-						0.0;
-					} else {
-						0.7;
-					}
-				}
-				final score = 1.0 * fact1 * armyRate * foodRate * moneyRate;
-				if (score > maxScore) {
-					maxScore = score;
-					brainMemory.transfer.food = Math.min(player.food, foodRate * 0.8 * player.food);
-					brainMemory.transfer.money = Math.min(player.money, moneyRate * 0.8 * player.money);
-					brainMemory.transfer.army = Math.min(player.army, armyRate * 0.8 * player.army);
-				}
-			}
-			{
-				// 少於200就一定要拿兵, 越多兵就越不拿
-				final armyRate = 1.0 - Math.min(1, Math.max(0, player.army - 200) / INIT_RESOURCE);
-				// 城兵比我多越多
-				final gridArmyRate = grid.army / player.army;
-				// 食物小於兵就要拿食物
-				final foodRate = if (player.food == 0) {
-					1.0;
-				} else {
-					1.0 - Math.min(1, player.food / player.army);
-				};
-				// 少於200就一定要拿錢, 越多錢就越不拿
-				final moneyRate = 1.0 - Math.min(1, Math.max(0, player.money - 200) / INIT_RESOURCE);
-				final score = 1.5 * Math.max(Math.max(armyRate * gridArmyRate, foodRate), moneyRate);
-				if (score > maxScore) {
-					maxScore = score;
-					brainMemory.transfer.food = -Math.min(grid.food, Math.max(foodRate, armyRate) * grid.food);
-					brainMemory.transfer.money = -Math.min(grid.money, Math.max(moneyRate, armyRate) * grid.money);
-					brainMemory.transfer.army = -Math.min(grid.army, armyRate * grid.army);
-				}
-			}
-			{
-				final armyRate = grid.army / getGridMaxArmy(ctx, grid.id);
-				final foodRate = grid.food / getGridMaxFood(ctx, grid.id);
-				final moneyRate = grid.money / getGridMaxMoney(ctx, grid.id);
-				final maxRate = Math.max(armyRate, Math.max(foodRate, moneyRate));
-				// 有其中一個資源超過9成再拿
-				final fact1 = maxRate > 0.8 ? maxRate : 0.0;
-				final score = 1.2 * fact1;
-				if (score > maxScore) {
-					maxScore = score;
-					brainMemory.transfer.food = -Math.min(grid.food, 0.3 * grid.food);
-					brainMemory.transfer.money = -Math.min(grid.money, 0.3 * grid.money);
-					brainMemory.transfer.army = -Math.min(grid.army, 0.3 * grid.army);
-				}
-			}
-			{
-				final fact1 = player.army > 200 ? 1.0 : 0.0;
-				final needArmyRate = if (grid.army <= 0) {
-					1.5;
-				} else {
-					grid.food / grid.army;
-				}
-				final needArmyRate2 = if (grid.army <= 0) {
-					1.5;
-				} else {
-					grid.money / grid.army;
-				}
-				final maxNeedArmyRate = Math.max(needArmyRate, needArmyRate2);
-				final fact2 = maxNeedArmyRate > 1.3 ? 3.0 : 0.0;
-				final score = 1.0 * fact1 * fact2;
-				if (score > maxScore) {
-					maxScore = score;
-					brainMemory.transfer.food = 0;
-					brainMemory.transfer.money = -Math.min(grid.money, Math.max(0, grid.money - grid.army) / 2);
-					brainMemory.transfer.army = Math.min(player.army, Math.max(0, grid.food - grid.army));
-				}
-			}
-			final score = brainMemory.hasTransfer ? -1 : maxScore;
+			final score = getTransferWeightV2(ctx, playerId, gridId);
 			trace("getCommandWeight", playerId, cmd, score);
 			score;
 		case PRACTICE:
@@ -1320,18 +1219,11 @@ private function getCommandWeight(ctx:Context, playerId:Int, gridId:Int, cmd:Act
 								} else {
 									final moneyCost = result1.moneyBefore - result1.moneyAfter;
 									final foodCost = result1.foodBefore - result1.foodAfter;
-									switch (moneyCost + foodCost) / armyCost {
-										case rate if (rate >= 3):
-											0.1;
-										case rate if (rate >= 2):
-											0.2;
-										case rate if (rate >= 1):
-											0.5;
-										case rate if (rate >= 0.5):
-											0.8;
-										case _:
-											1.0;
-									}
+									final totalCost = moneyCost + foodCost + armyCost;
+									final moneyEarn = result2.moneyAfter;
+									final foodEarn = result2.foodAfter;
+									final totalEarn = moneyEarn + foodEarn;
+									totalEarn > totalCost ? 1.0 : 0.0;
 								}
 							}
 							// 3個城以下時, 食物越足夠越想打
@@ -1377,4 +1269,172 @@ private function getCommandWeight(ctx:Context, playerId:Int, gridId:Int, cmd:Act
 			trace("getCommandWeight", playerId, cmd, score);
 			score;
 	}
+}
+
+private function getTransferWeightV1(ctx:Context, playerId:Int, gridId:Int):Float {
+	final player = ctx.players[playerId];
+	if (player == null) {
+		throw new haxe.Exception('player not found:${playerId}');
+	}
+	if (player.brain == null) {
+		throw new haxe.Exception("必須有Brain");
+	}
+	final brainMemory:Null<BrainMemory> = player.brain.memory;
+	if (brainMemory == null) {
+		throw new haxe.Exception("必須有Brain.memory");
+	}
+	final grid = ctx.grids[gridId];
+	if (grid == null) {
+		throw new haxe.Exception("grid not found");
+	}
+	var maxScore = 0.0;
+	{
+		final foodRate = if (player.food <= 0) {
+			0.0;
+		} else {
+			1.0 - Math.min(1, grid.food / player.food);
+		}
+		final moneyRate = if (player.money <= 0) {
+			0.0;
+		} else {
+			1.0 - Math.min(1, grid.money / player.money);
+		}
+		final armyRate = if (player.army <= 0) {
+			0.0;
+		} else {
+			1.0 - Math.min(1, grid.army / player.army);
+		}
+		// 少於3個城之前不想給城
+		final fact1 = {
+			final gridCnt = ctx.grids.filter(g -> getGridBelongPlayerId(ctx, g.id) == playerId).length;
+			if (gridCnt < 3) {
+				0.0;
+			} else {
+				0.7;
+			}
+		}
+		final score = 1.0 * fact1 * armyRate * foodRate * moneyRate;
+		if (score > maxScore) {
+			maxScore = score;
+			brainMemory.transfer.food = Math.min(player.food, foodRate * 0.8 * player.food);
+			brainMemory.transfer.money = Math.min(player.money, moneyRate * 0.8 * player.money);
+			brainMemory.transfer.army = Math.min(player.army, armyRate * 0.8 * player.army);
+		}
+	}
+	{
+		// 少於200就一定要拿兵, 越多兵就越不拿
+		final armyRate = 1.0 - Math.min(1, Math.max(0, player.army - 200) / INIT_RESOURCE);
+		// 城兵比我多越多
+		final gridArmyRate = grid.army / player.army;
+		// 食物小於兵就要拿食物
+		final foodRate = if (player.food == 0) {
+			1.0;
+		} else {
+			1.0 - Math.min(1, player.food / player.army);
+		};
+		// 少於200就一定要拿錢, 越多錢就越不拿
+		final moneyRate = 1.0 - Math.min(1, Math.max(0, player.money - 200) / INIT_RESOURCE);
+		final score = 1.5 * Math.max(Math.max(armyRate * gridArmyRate, foodRate), moneyRate);
+		if (score > maxScore) {
+			maxScore = score;
+			brainMemory.transfer.food = -Math.min(grid.food, Math.max(foodRate, armyRate) * grid.food);
+			brainMemory.transfer.money = -Math.min(grid.money, Math.max(moneyRate, armyRate) * grid.money);
+			brainMemory.transfer.army = -Math.min(grid.army, armyRate * grid.army);
+		}
+	}
+	{
+		final armyRate = grid.army / getGridMaxArmy(ctx, grid.id);
+		final foodRate = grid.food / getGridMaxFood(ctx, grid.id);
+		final moneyRate = grid.money / getGridMaxMoney(ctx, grid.id);
+		final maxRate = Math.max(armyRate, Math.max(foodRate, moneyRate));
+		// 有其中一個資源超過9成再拿
+		final fact1 = maxRate > 0.8 ? maxRate : 0.0;
+		final score = 1.2 * fact1;
+		if (score > maxScore) {
+			maxScore = score;
+			brainMemory.transfer.food = -Math.min(grid.food, 0.3 * grid.food);
+			brainMemory.transfer.money = -Math.min(grid.money, 0.3 * grid.money);
+			brainMemory.transfer.army = -Math.min(grid.army, 0.3 * grid.army);
+		}
+	}
+	{
+		final fact1 = player.army > 200 ? 1.0 : 0.0;
+		final needArmyRate = if (grid.army <= 0) {
+			1.5;
+		} else {
+			grid.food / grid.army;
+		}
+		final needArmyRate2 = if (grid.army <= 0) {
+			1.5;
+		} else {
+			grid.money / grid.army;
+		}
+		final maxNeedArmyRate = Math.max(needArmyRate, needArmyRate2);
+		final fact2 = maxNeedArmyRate > 1.3 ? 3.0 : 0.0;
+		final score = 1.0 * fact1 * fact2;
+		if (score > maxScore) {
+			maxScore = score;
+			brainMemory.transfer.food = 0;
+			brainMemory.transfer.money = -Math.min(grid.money, Math.max(0, grid.money - grid.army) / 2);
+			brainMemory.transfer.army = Math.min(player.army, Math.max(0, grid.food - grid.army));
+		}
+	}
+	final score = brainMemory.hasTransfer ? -1 : maxScore;
+	return score;
+}
+
+private function getTransferWeightV2(ctx:Context, playerId:Int, gridId:Int):Float {
+	final player = ctx.players[playerId];
+	if (player == null) {
+		throw new haxe.Exception('player not found:${playerId}');
+	}
+	if (player.brain == null) {
+		throw new haxe.Exception("必須有Brain");
+	}
+	final brainMemory:Null<BrainMemory> = player.brain.memory;
+	if (brainMemory == null) {
+		throw new haxe.Exception("必須有Brain.memory");
+	}
+	if (brainMemory.hasTransfer) {
+		return 0.0;
+	}
+	final grid = ctx.grids[gridId];
+	if (grid == null) {
+		throw new haxe.Exception("grid not found");
+	}
+	var maxScore = 0.0;
+	{
+		// 放在主公的成數
+		final playerResourceWeight = {
+			final gridTotal = grid.army + grid.food + grid.money;
+			switch gridTotal {
+				case total if (total > 1600):
+					1 / 1.5;
+				case total if (total > 1200):
+					1 / 1.75;
+				case total if (total > 800):
+					1 / 2.0;
+				case total if (total > 400):
+					1 / 2.25;
+				case _:
+					1 / 2.5;
+			}
+		}
+		final midArmy = Math.min(getGridMaxArmy(ctx, grid.id) * 0.8, (grid.army + player.army) * playerResourceWeight);
+		final midFood = Math.min(getGridMaxFood(ctx, grid.id) * 0.8, (grid.food + player.food) * playerResourceWeight);
+		final midMoney = Math.min(getGridMaxMoney(ctx, grid.id) * 0.8, (grid.money + player.money) * playerResourceWeight);
+		final offsetArmy = midArmy - grid.army;
+		final offsetFood = midFood - grid.food;
+		final offsetMoney = midMoney - grid.money;
+		trace("getTransferWeightV2", "offsetArmy", offsetArmy, midArmy, playerResourceWeight);
+		trace("getTransferWeightV2", "offsetFood", offsetFood, midFood, playerResourceWeight);
+		trace("getTransferWeightV2", "offsetMoney", offsetMoney, midMoney, playerResourceWeight);
+		brainMemory.transfer.food = offsetFood;
+		brainMemory.transfer.money = offsetMoney;
+		brainMemory.transfer.army = offsetArmy;
+		// 先讓給蓋建物(1.0)
+		maxScore = 0.9;
+	}
+	final score = maxScore;
+	return score;
 }
