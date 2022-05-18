@@ -8,10 +8,7 @@ import model.Config;
 import haxe.Serializer;
 import haxe.Unserializer;
 
-// import cloner.Cloner;
 using Lambda;
-
-// private var _cloner = new Cloner();
 
 typedef Grid = {
 	id:Int,
@@ -68,7 +65,7 @@ typedef Player = {
 	strategy:Float,
 	position:Int,
 	memory:{
-		hasDice:Bool, hasStrategy:Bool, hasCommand:Bool, hasBuild:Bool, hasEquip:Bool,
+		hasDice:Bool, hasStrategy:Bool, hasCommand:Bool, hasBuild:Bool, hasEquip:Bool
 	},
 	brain:Null<Brain>,
 	score:Float,
@@ -351,7 +348,7 @@ function getPlayerHireCostRate(ctx:Context, playerId:Int):Float {
 			case EXPLORE(level):
 				return [1.0, 0.8][level];
 			case _:
-				0;
+				1.0;
 		}
 	}, 1.0);
 	return rate;
@@ -1340,100 +1337,99 @@ function getPeopleAbilities(ctx:Context, peopleId:Int):Array<Int> {
 
 function getPlayerCommand(ctx:Context, playerId:Int):Array<ActionInfoID> {
 	final ret:Array<ActionInfoID> = [];
-	// ret.push(ActionInfoID.BUILD);
 	final player = ctx.players[playerId];
 	final gridInfo = getGridInfo(ctx, ctx.grids[player.position]);
 	if (player.memory.hasDice == false) {
-		ret.push(ActionInfoID.MOVE);
+		ret.push(MOVE);
 		if (ctx.turn > 0) {
 			if (player.memory.hasStrategy == false) {
-				ret.push(ActionInfoID.STRATEGY);
+				ret.push(STRATEGY);
 			}
 		}
-		ret.push(ActionInfoID.TREASURE);
+		ret.push(TREASURE);
 		if (player.memory.hasEquip == false) {
-			ret.push(ActionInfoID.TREASURE_TAKE);
+			ret.push(TREASURE_TAKE);
 		}
-		ret.push(ActionInfoID.FIRE);
+		ret.push(FIRE);
 	} else {
 		if (gridInfo.belongPlayerId == null) {
 			// 中立的
 			if (player.memory.hasCommand == false) {
 				switch gridInfo.buildtype {
 					case EMPTY:
-						ret.push(ActionInfoID.EXPLORE);
-						ret.push(ActionInfoID.CAMP);
-						ret.push(ActionInfoID.PRACTICE);
+						ret.push(EXPLORE);
+						ret.push(CAMP);
+						ret.push(PRACTICE);
 					case _:
 				}
 				if (gridInfo.people.length > 0) {
 					// 有人的
 					switch gridInfo.buildtype {
 						case EMPTY:
-							ret.push(ActionInfoID.HIRE);
+							ret.push(HIRE);
 						case _:
 							if (gridInfo.favor[playerId] >= CAN_CHANGE_FAVOR) {
 								// 好感的
-								ret.push(ActionInfoID.PAY_FOR_FUN);
+								ret.push(PAY_FOR_FUN);
 								switch gridInfo.buildtype {
 									case MARKET:
-										ret.push(ActionInfoID.EARN_MONEY);
-										ret.push(ActionInfoID.BUY_FOOD);
-										ret.push(ActionInfoID.SELL_FOOD);
-										ret.push(ActionInfoID.BUY_ARMY);
-										ret.push(ActionInfoID.SELL_ARMY);
+										ret.push(EARN_MONEY);
+										ret.push(BUY_FOOD);
+										ret.push(SELL_FOOD);
+										ret.push(BUY_ARMY);
+										ret.push(SELL_ARMY);
 									case FARM:
-										ret.push(ActionInfoID.EARN_MONEY);
-										ret.push(ActionInfoID.BUY_FOOD);
-										ret.push(ActionInfoID.SELL_FOOD);
-										ret.push(ActionInfoID.BUY_ARMY);
-										ret.push(ActionInfoID.SELL_ARMY);
+										ret.push(EARN_MONEY);
+										ret.push(BUY_FOOD);
+										ret.push(SELL_FOOD);
+										ret.push(BUY_ARMY);
+										ret.push(SELL_ARMY);
 									case VILLAGE:
-										ret.push(ActionInfoID.EARN_MONEY);
-										ret.push(ActionInfoID.BUY_FOOD);
-										ret.push(ActionInfoID.SELL_FOOD);
-										ret.push(ActionInfoID.BUY_ARMY);
-										ret.push(ActionInfoID.SELL_ARMY);
+										ret.push(EARN_MONEY);
+										ret.push(BUY_FOOD);
+										ret.push(SELL_FOOD);
+										ret.push(BUY_ARMY);
+										ret.push(SELL_ARMY);
 									case CITY:
-										ret.push(ActionInfoID.EARN_MONEY);
-										ret.push(ActionInfoID.BUY_FOOD);
-										ret.push(ActionInfoID.SELL_FOOD);
-										ret.push(ActionInfoID.BUY_ARMY);
-										ret.push(ActionInfoID.SELL_ARMY);
+										ret.push(EARN_MONEY);
+										ret.push(BUY_FOOD);
+										ret.push(SELL_FOOD);
+										ret.push(BUY_ARMY);
+										ret.push(SELL_ARMY);
 									case _:
 								}
 							}
 							switch gridInfo.buildtype {
 								case MARKET | FARM | VILLAGE | CITY:
-									ret.push(ActionInfoID.NEGOTIATE);
-									ret.push(ActionInfoID.PK);
-									ret.push(ActionInfoID.SNATCH);
-									ret.push(ActionInfoID.OCCUPATION);
+									ret.push(NEGOTIATE);
+									ret.push(PK);
+									ret.push(SNATCH);
+									ret.push(OCCUPATION);
 								case _:
 							}
 					}
 				}
 			}
-			ret.push(ActionInfoID.END);
+			ret.push(END);
 		} else if (gridInfo.belongPlayerId != playerId) {
 			// 敵人的
 			if (player.memory.hasCommand == false) {
 				// 人打人不能單挑
-				// ret.push(ActionInfoID.PK);
-				ret.push(ActionInfoID.SNATCH);
-				ret.push(ActionInfoID.OCCUPATION);
+				// ret.push(PK);
+				ret.push(SNATCH);
+				ret.push(OCCUPATION);
 			}
-			ret.push(ActionInfoID.END);
+			ret.push(END);
 		} else {
 			// 自己的
-			ret.push(ActionInfoID.TRANSFER);
+			ret.push(TRANSFER);
 			if (player.memory.hasBuild == false) {
-				ret.push(ActionInfoID.BUILD);
+				ret.push(BUILD);
 			}
 			if (player.memory.hasCommand == false) {
-				ret.push(ActionInfoID.PAY_FOR_FUN);
+				ret.push(PAY_FOR_FUN);
 			}
-			ret.push(ActionInfoID.END);
+			ret.push(END);
 		}
 	}
 	return ret;
