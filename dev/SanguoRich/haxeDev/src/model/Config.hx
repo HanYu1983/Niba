@@ -9,10 +9,10 @@ final SHOW_POPUP_WHEN_EARN = false;
 final CAN_CHANGE_FAVOR = -3;
 
 // 主公支付的薪水為主公所有武將的價值參數(cost)總合的%數
-final PLAYER_SPEND_MONEY_FOR_PEOPLE_PER_TURN_PERSENT = 0.01;
+final PLAYER_SPEND_MONEY_FOR_PEOPLE_PER_TURN_PERSENT = 0.005;
 
 // 主公支付的食物為所有格子上以及身上的士兵的數量的%數
-final PLAYER_SPEND_FOOD_FOR_ARMY_PER_TURN_PERSENT = 0.04;
+final PLAYER_SPEND_FOOD_FOR_ARMY_PER_TURN_PERSENT = 0.05;
 
 // 武將聘用價格%數
 final PEOPLE_HIRE_COST_FACTOR = .1;
@@ -24,9 +24,9 @@ final PEOPLE_HIRE_COST_FACTOR = .1;
 final GRID_EARN_PER_TURN = 1;
 
 // 格子的基本保底成長
-final BASIC_GROW_MONEY_RATE = 0.01;
-final BASIC_GROW_FOOD_RATE = 0.01;
-final BASIC_GROW_ARMY_RATE = 0.025;
+final BASIC_GROW_MONEY_RATE = 0.02;
+final BASIC_GROW_FOOD_RATE = 0.02;
+final BASIC_GROW_ARMY_RATE = 0.02;
 
 // 幾個回合收稅(4人走完算1回合)
 // 作用中
