@@ -123,7 +123,6 @@ function doGetPreResultOfHire(ctx:Context, playerId:Int, gridId:Int, peopleId:In
 	final totalPeopleCost = ctx.peoples.filter(p -> p.belongToPlayerId == playerId).fold((p, a) -> {
 		return a + getPeopleMaintainCost(ctx, p.id);
 	}, 0.0) + getPeopleMaintainCost(ctx, p1.id);
-	trace(moreMoney, cost.successRate);
 	return {
 		energyBefore: Std.int(p1.energy),
 		energyAfter: Std.int(p1.energy - cost.peopleCost.energy),

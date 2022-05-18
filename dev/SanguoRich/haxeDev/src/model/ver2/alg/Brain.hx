@@ -366,6 +366,7 @@ private function doEvent(ctx:Context, playerId:Int) {
 					tmpGrid.food = 0;
 					tmpGrid.army = 0;
 					final putArmy = Math.min(getGridMaxArmy(ctx, gridId) * 0.8, Math.min(200, tmpPlayer.army / 3));
+					trace("doEvent", evt, "putArmy", putArmy, tmpPlayer.army);
 					if (tmpPlayer.army < putArmy) {
 						ctx.events.push(MESSAGE_EVENT({
 							title: 'AI',
@@ -883,7 +884,7 @@ private function getCommandWeight(ctx:Context, playerId:Int, gridId:Int, cmd:Act
 				}
 				maxScore;
 			}
-			final score = 1.0 * fact1 * fact2;
+			final score = 2.0 * fact1 * fact2;
 			trace("getCommandWeight", playerId, cmd, "score:", score, "=", fact1, fact2);
 			score;
 		case BUY_FOOD:

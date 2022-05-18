@@ -153,7 +153,7 @@ function initContext(ctx:Context, options:GameSetting) {
 			maintainPeople: 0,
 			maintainArmy: 0,
 			armyGrow: 0.0,
-			atGridId: 0,
+			atGridId: Std.int(Math.random() * genGrids.length),
 			grids: [],
 			commands: [],
 			treasures: [],
