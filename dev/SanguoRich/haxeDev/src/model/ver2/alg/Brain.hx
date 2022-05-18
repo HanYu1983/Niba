@@ -365,11 +365,11 @@ private function doEvent(ctx:Context, playerId:Int) {
 					tmpGrid.money = 0;
 					tmpGrid.food = 0;
 					tmpGrid.army = 0;
-					final putArmy = Math.min(getGridMaxArmy(ctx, gridId) * 0.8, tmpPlayer.army / 3);
-					if (putArmy <= 0) {
+					final putArmy = Math.min(getGridMaxArmy(ctx, gridId) * 0.8, Math.min(200, tmpPlayer.army / 3));
+					if (tmpPlayer.army < putArmy) {
 						ctx.events.push(MESSAGE_EVENT({
 							title: 'AI',
-							msg: '${player.name}想佔領${grid.name}卻沒有兵, 拿走所有物資',
+							msg: '${player.name}想佔領${grid.name}卻沒有足夠兵源, 拿走所有物資',
 						}, gameInfo));
 						// 收回攻城的人
 						tmpPlayer.people = tmpPlayer.people.concat(tmpGrid.people);
@@ -1223,7 +1223,7 @@ private function getCommandWeight(ctx:Context, playerId:Int, gridId:Int, cmd:Act
 									final moneyEarn = result2.moneyAfter;
 									final foodEarn = result2.foodAfter;
 									final totalEarn = moneyEarn + foodEarn;
-									totalEarn > totalCost ? 1.0 : 0.0;
+									((totalEarn / totalCost) * 0.8);
 								}
 							}
 							// 3個城以下時, 食物越足夠越想打
@@ -1421,14 +1421,11 @@ private function getTransferWeightV2(ctx:Context, playerId:Int, gridId:Int):Floa
 			}
 		}
 		final midArmy = Math.min(getGridMaxArmy(ctx, grid.id) * 0.8, (grid.army + player.army) * playerResourceWeight);
-		final midFood = Math.min(getGridMaxFood(ctx, grid.id) * 0.8, (grid.food + player.food) * playerResourceWeight);
-		final midMoney = Math.min(getGridMaxMoney(ctx, grid.id) * 0.8, (grid.money + player.money) * playerResourceWeight);
+		// final midFood = Math.min(getGridMaxFood(ctx, grid.id) * 0.8, (grid.food + player.food) * playerResourceWeight);
+		// final midMoney = Math.min(getGridMaxMoney(ctx, grid.id) * 0.8, (grid.money + player.money) * playerResourceWeight);
 		final offsetArmy = midArmy - grid.army;
-		final offsetFood = midFood - grid.food;
-		final offsetMoney = midMoney - grid.money;
-		trace("getTransferWeightV2", "offsetArmy", offsetArmy, midArmy, playerResourceWeight);
-		trace("getTransferWeightV2", "offsetFood", offsetFood, midFood, playerResourceWeight);
-		trace("getTransferWeightV2", "offsetMoney", offsetMoney, midMoney, playerResourceWeight);
+		final offsetFood = midArmy - grid.food;
+		final offsetMoney = midArmy - grid.money;
 		brainMemory.transfer.food = offsetFood;
 		brainMemory.transfer.money = offsetMoney;
 		brainMemory.transfer.army = offsetArmy;
