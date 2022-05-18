@@ -9,7 +9,7 @@ final SHOW_POPUP_WHEN_EARN = false;
 final CAN_CHANGE_FAVOR = 0;
 
 // 主公支付的薪水為主公所有武將的價值參數(cost)總合的%數
-final PLAYER_SPEND_MONEY_FOR_PEOPLE_PER_TURN_PERSENT = 0.0025;
+final PLAYER_SPEND_MONEY_FOR_PEOPLE_PER_TURN_PERSENT = 0.01;
 
 // 主公支付的食物為所有格子上以及身上的士兵的數量的%數
 final PLAYER_SPEND_FOOD_FOR_ARMY_PER_TURN_PERSENT = 0.04;
