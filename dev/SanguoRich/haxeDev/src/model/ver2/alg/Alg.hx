@@ -254,9 +254,38 @@ function onPayTaxToGrid(ctx:Context, playerId:Int, gridId:Int) {
 					}
 				}
 			case 1:
-				player.money = Math.max(0, player.money - taxMoney);
-				player.food = Math.max(0, player.food - taxFood);
-				player.army = Math.max(0, player.army - taxArmy);
+				player.money -= taxMoney;
+				player.food -= taxFood;
+				player.army -= taxArmy;
+
+				if (player.money < 0 || player.food < 0 || player.army < 0) {
+					final playerGrids = ctx.grids.filter(g -> getGridBelongPlayerId(ctx, g.id) == player.id);
+					// 從小城開始賣
+					playerGrids.sort((a, b) -> {
+						final ac = a.food + a.money + a.army;
+						final bc = b.food + b.money + b.army;
+						return Std.int(ac) - Std.int(bc);
+					});
+					for (g in playerGrids) {
+						player.money += g.money / 2;
+						player.army += g.army / 2;
+						player.food += g.food / 2;
+						g.money = 0;
+						g.army = 0;
+						g.food = 0;
+						final peopleInGrid = ctx.peoples.filter(p -> p.position.gridId == g.id);
+						for (p in peopleInGrid) {
+							p.position.gridId = null;
+						}
+						ctx.events.push(MESSAGE_EVENT({
+							title: '${player.name}沒有資源, 不得不變賣格子',
+							msg: '${g.name}被賣掉了'
+						}, getGameInfo(ctx, false)));
+						if (player.money >= 0 && player.food >= 0 && player.army >= 0) {
+							break;
+						}
+					}
+				}
 				final targetPlayerId = getGridBelongPlayerId(ctx, grid.id);
 				if (targetPlayerId != null) {
 					final targetPlayer = ctx.players[targetPlayerId];
@@ -329,6 +358,11 @@ function onPlayerEnd(ctx:Context, playerId:Int):Bool {
 			myScore <= (maxScore / 10.0);
 		}
 		if (player.isLose) {
+			// 所有武將退出格子
+			final peopleInLosePlayer = ctx.peoples.filter(p -> p.belongToPlayerId == player.id);
+			for (p in peopleInLosePlayer) {
+				p.position.gridId = null;
+			}
 			ctx.events.push(PLAYER_LOSE({
 				player: getPlayerInfo(ctx, player),
 			}, getGameInfo(ctx, false), {duration: 3}));
@@ -591,6 +625,7 @@ function onPlayerDice(ctx:Context, playerId:Int) {
 				// 移除路障
 				ctx.groundItems = ctx.groundItems.filter(item -> item.id != stopItem.id);
 				trace("onPlayerDice", "路障!!!", "grid", toGridId);
+				break;
 			}
 		}
 	}
