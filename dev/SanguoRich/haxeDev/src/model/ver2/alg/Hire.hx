@@ -52,7 +52,7 @@ private function getHireCost(ctx:Context, playerId:Int, gridId:Int, p1SelectId:I
 	}
 }
 
-private function onHireCost(ctx:Context, playerId:Int, gridId:Int, p1SelectId:Int, p2SelectId:Int) {
+private function onHireCost(ctx:Context, playerId:Int, gridId:Int, p1SelectId:Int, p2SelectId:Int, moreMoney:Float) {
 	final p1 = getPeopleById(ctx, p1SelectId);
 	final p2 = getPeopleById(ctx, p2SelectId);
 	final player = ctx.players[playerId];
@@ -133,8 +133,8 @@ function doGetPreResultOfHire(ctx:Context, playerId:Int, gridId:Int, peopleId:In
 	}
 }
 
-function doTakeHire(ctx:Context, playerId:Int, gridId:Int, p1SelectId:Int, p2SelectId:Int) {
-	onHireCost(ctx, playerId, gridId, p1SelectId, p2SelectId);
+function doTakeHire(ctx:Context, playerId:Int, gridId:Int, p1SelectId:Int, p2SelectId:Int, moreMoney:Float) {
+	onHireCost(ctx, playerId, gridId, p1SelectId, p2SelectId, moreMoney);
 	{
 		final player = ctx.players[ctx.currentPlayerId];
 		player.memory.hasCommand = true;

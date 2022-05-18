@@ -282,8 +282,8 @@ interface IModel {
 	function takeNegoOn(playerId:Int, gridId:Int, p1PeopleId:Int, p2PeopleId:Int, cb:(gameInfo:GameInfo) -> Void):Void;
 
 	function getTakeHirePreview(playerId:Int, gridId:Int):HirePreview;
-	function getPreResultOfHire(playerId:Int, gridId:Int, p1:People, p2:People):PreResultOnHire;
-	function takeHire(playerId:Int, gridId:Int, p1PeopleId:Int, p2PeopleId:Int, cb:(gameInfo:GameInfo) -> Void):Void;
+	function getPreResultOfHire(playerId:Int, gridId:Int, p1:People, p2:People, moreMoney:Float = 0):PreResultOnHire;
+	function takeHire(playerId:Int, gridId:Int, p1PeopleId:Int, p2PeopleId:Int, moreMoney:Float, cb:(gameInfo:GameInfo) -> Void):Void;
 
 	function getTakeExplorePreview(playerId:Int, gridId:Int):ExplorePreview;
 	function getPreResultOfExplore(playerId:Int, gridId:Int, p1:People):PreResultOnExplore;
@@ -482,7 +482,7 @@ final BuildingList:Array<BuildingCatelog> = [
 	{
 		id: 8,
 		name: '兵營(未建)',
-		money: 100,
+		money: 200,
 		describe: '士兵最大值+0。士兵每回合+0',
 		type: BARRACKS(0),
 		depends: []
@@ -490,7 +490,7 @@ final BuildingList:Array<BuildingCatelog> = [
 	{
 		id: 9,
 		name: '兵營(小)',
-		money: 80,
+		money: 100,
 		describe: '士兵最大值+100。士兵每回合+2%',
 		type: BARRACKS(1),
 		depends: []
@@ -498,7 +498,7 @@ final BuildingList:Array<BuildingCatelog> = [
 	{
 		id: 10,
 		name: '兵營(中)',
-		money: 80,
+		money: 100,
 		describe: '士兵最大值+150。士兵每回合+3%',
 		type: BARRACKS(2),
 		depends: []
@@ -562,7 +562,7 @@ final BuildingList:Array<BuildingCatelog> = [
 	{
 		id: 18,
 		name: '金庫(未建)',
-		money: 100,
+		money: 200,
 		describe: '金錢最大值+0。金錢每回合+0%',
 		type: BANK(0),
 		depends: []
@@ -570,7 +570,7 @@ final BuildingList:Array<BuildingCatelog> = [
 	{
 		id: 19,
 		name: '金庫(小)',
-		money: 70,
+		money: 100,
 		describe: '金錢最大值+200。金錢每回合+2%',
 		type: BANK(1),
 		depends: []
@@ -578,7 +578,7 @@ final BuildingList:Array<BuildingCatelog> = [
 	{
 		id: 20,
 		name: '金庫(中)',
-		money: 70,
+		money: 100,
 		describe: '金錢最大值+300。金錢每回合+3%',
 		type: BANK(2),
 		depends: []
@@ -594,7 +594,7 @@ final BuildingList:Array<BuildingCatelog> = [
 	{
 		id: 22,
 		name: '穀倉(未建)',
-		money: 100,
+		money: 200,
 		describe: '糧草最大值+0。糧草每回合+0%',
 		type: BARN(0),
 		depends: []
@@ -602,7 +602,7 @@ final BuildingList:Array<BuildingCatelog> = [
 	{
 		id: 23,
 		name: '穀倉(小)',
-		money: 70,
+		money: 100,
 		describe: '糧草最大值+200。糧草每回合+2%',
 		type: BARN(1),
 		depends: []
@@ -610,7 +610,7 @@ final BuildingList:Array<BuildingCatelog> = [
 	{
 		id: 24,
 		name: '穀倉(中)',
-		money: 70,
+		money: 100,
 		describe: '糧草最大值+300。糧草每回合+3%',
 		type: BARN(2),
 		depends: []

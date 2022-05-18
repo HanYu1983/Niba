@@ -17,6 +17,15 @@
         </property-grid>
     </hbox>
     <hbox horizontalAlign="center">
+        <label text='額外聘金'/>
+        <button-bar id="grp_moneyMore" allowUnselection="true">
+            <button text="0" />
+            <button text="50" />
+            <button text="100" />
+            <button text="200" />
+        </button-bar>
+    </hbox>
+    <hbox horizontalAlign="center">
         <button text="取消" id="btn_cancel" />
         <button text="確定" id="btn_confirm" />
     </hbox>

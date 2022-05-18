@@ -113,7 +113,7 @@ class TestExploreModel extends DebugModel {
 		}
 	}
 
-	override function takeHire(playerId:Int, gridInt:Int, p1SelectId:Int, exploreId:Int, cb:(gameInfo:GameInfo) -> Void) {
+	override function takeHire(playerId:Int, gridInt:Int, p1SelectId:Int, exploreId:Int, moreMoney:Float, cb:(gameInfo:GameInfo) -> Void) {
 		var info = gameInfo();
 		info.events = [
 			{
@@ -137,7 +137,7 @@ class TestExploreModel extends DebugModel {
 		cb(info);
 	}
 
-	override function getPreResultOfHire(playerId:Int, gridId:Int, people:People, invite:People):PreResultOnHire {
+	override function getPreResultOfHire(playerId:Int, gridId:Int, people:People, invite:People, moreMoney:Float = 0):PreResultOnHire {
 		return {
 			energyBefore: 20,
 			energyAfter: 20,

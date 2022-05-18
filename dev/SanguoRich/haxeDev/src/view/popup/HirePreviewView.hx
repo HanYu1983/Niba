@@ -31,13 +31,19 @@ class HirePreviewView extends PopupView {
 		var info:HirePreview = info;
 
 		function setRate() {
-			var p1 = p1List.selectedItem;
-			var p2 = p2List.selectedItem;
+			if(p1List.selectedItem == null) return;
+			if(p2List.selectedItem == null) return;
+			if(grp_moneyMore.selectedButton == null) return;
 
-			var gameInfo = Main.model.gameInfo();
-			var result:PreResultOnHire = Main.model.getPreResultOfHire(gameInfo.currentPlayer.id, gameInfo.currentPlayer.atGridId, p1, p2);
+			final p1 = p1List.selectedItem;
+			final p2 = p2List.selectedItem;
+			final moneyMore = Std.parseFloat( grp_moneyMore.selectedButton.text );
+			final gameInfo = Main.model.gameInfo();
+			final result:PreResultOnHire = Main.model.getPreResultOfHire(gameInfo.currentPlayer.id, gameInfo.currentPlayer.atGridId, p1, p2, moneyMore);
 
 			isValidHire = result.moneyAfter >= 0;
+			btn_confirm.disabled = !isValidHire;
+			
 			pro_energy.value = Main.getEnergyString(result.energyBefore, result.energyAfter, ENERGY_COST_ON_HIRE);
 			pro_money.value = '${Main.getFixNumber(result.moneyBefore)} => ${Main.getFixNumber(result.moneyAfter)} ${!isValidHire ? "金錢不夠" : ""}';
 			pro_maintainMoney.value = '${Main.getFixNumber(result.maintainMoneyBefore, 2)} => ${Main.getFixNumber(result.maintainMoneyAfter, 2)}';
@@ -69,6 +75,11 @@ class HirePreviewView extends PopupView {
 			}
 		}
 		p2List.selectedIndex = 0;
+
+		grp_moneyMore.onChange = function(e){
+			setRate();
+		}
+		grp_moneyMore.selectedIndex = 0;
 	}
 
 	@:bind(btn_cancel, MouseEvent.CLICK)
@@ -80,7 +91,9 @@ class HirePreviewView extends PopupView {
 	function onBtnConfirm(e:MouseEvent) {
 		if (isValidHire) {
 			fadeOut();
-			Main.view.onHirePreviewViewConfirmClick(p1List.selectedItem.id, p2List.selectedItem.id);
+
+			final moneyMore = Std.parseFloat( grp_moneyMore.selectedButton.text );
+			Main.view.onHirePreviewViewConfirmClick(p1List.selectedItem.id, p2List.selectedItem.id, moneyMore);
 		}
 	}
 }

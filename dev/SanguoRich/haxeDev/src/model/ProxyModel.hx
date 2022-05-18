@@ -53,15 +53,15 @@ class ProxyModel implements IModel {
 		return model.getTakeHirePreview(playerId, gridId);
 	}
 
-	public function takeHire(playerId:Int, gridInt:Int, p1SelectId:Int, exploreId:Int, cb:(gameInfo:GameInfo) -> Void) {
-		return model.takeHire(playerId, gridInt, p1SelectId, exploreId, cb);
+	public function takeHire(playerId:Int, gridInt:Int, p1SelectId:Int, exploreId:Int, moreMoney:Float, cb:(gameInfo:GameInfo) -> Void) {
+		return model.takeHire(playerId, gridInt, p1SelectId, exploreId, moreMoney, cb);
 	}
 
 	public function getPreResultOfNego(playerId:Int, gridId:Int, people:People, invite:People):PreResultOnNego {
 		return model.getPreResultOfNego(playerId, gridId, people, invite);
 	}
 
-	public function getPreResultOfHire(playerId:Int, gridId:Int, people:People, invite:People):PreResultOnHire {
+	public function getPreResultOfHire(playerId:Int, gridId:Int, people:People, invite:People, moreMoney:Float = 0):PreResultOnHire {
 		return model.getPreResultOfHire(playerId, gridId, people, invite);
 	}
 

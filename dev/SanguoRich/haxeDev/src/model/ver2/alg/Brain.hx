@@ -249,7 +249,7 @@ function doBrain(ctx, playerId:Int) {
 				if (brainMemory.hire.inviteId == null) {
 					throw new haxe.Exception("brainMemory.hire.inviteId not found");
 				}
-				doTakeHire(ctx, playerId, gridId, brainMemory.hire.peopleId, brainMemory.hire.inviteId);
+				doTakeHire(ctx, playerId, gridId, brainMemory.hire.peopleId, brainMemory.hire.inviteId, 0);
 				doEvent(ctx, playerId);
 			case NEGOTIATE:
 				if (brainMemory.nego.peopleId == null) {
@@ -348,7 +348,7 @@ private function doEvent(ctx:Context, playerId:Int) {
 						throw new haxe.Exception("p1People not found");
 					}
 					final firstFindPeopleId = value.peopleList[0].id;
-					doTakeHire(ctx, playerId, gridId, p1People.id, firstFindPeopleId);
+					doTakeHire(ctx, playerId, gridId, p1People.id, firstFindPeopleId, 0);
 					doEvent(ctx, playerId);
 				}
 			case WAR_RESULT(value, gameInfo):

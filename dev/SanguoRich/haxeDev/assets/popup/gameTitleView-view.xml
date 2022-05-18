@@ -61,7 +61,6 @@
                 </hbox>
                 <hbox>
                     <label text='初始資源'/>
-                    <!-- <number-stepper id="grp_resource" pos="1200" step="100" min="0" max="2000" precision="0" /> -->
                     <button-bar id="grp_resource" allowUnselection="true">
                         <button text="500" />
                         <button text="1000" />
@@ -70,7 +69,6 @@
                 </hbox>
                 <hbox>
                     <label text='成長速度'/>
-                    <!-- <number-stepper id="grp_growSpeed" pos="1.0" step=".1" min="0.0" max="2.0" precision="1" /> -->
                     <button-bar id="grp_growSpeed" allowUnselection="true">
                         <button text="0.5" />
                         <button text="1.0" />

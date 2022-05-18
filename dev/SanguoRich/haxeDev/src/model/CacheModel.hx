@@ -52,9 +52,9 @@ class CacheModel extends ProxyModel {
 		return super.takeNegoOn(playerId, gridId, p1SelectId, p2SelectId, cb);
 	}
 
-	override function takeHire(playerId:Int, gridInt:Int, p1SelectId:Int, exploreId:Int, cb:(gameInfo:GameInfo) -> Void) {
+	override function takeHire(playerId:Int, gridInt:Int, p1SelectId:Int, exploreId:Int, moreMoney:Float, cb:(gameInfo:GameInfo) -> Void) {
 		isDirty = true;
-		return super.takeHire(playerId, gridInt, p1SelectId, exploreId, cb);
+		return super.takeHire(playerId, gridInt, p1SelectId, exploreId, moreMoney, cb);
 	}
 
 	override function takeExplore(playerId:Int, gridId:Int, p1PeopleId:Int, cb:(gameInfo:GameInfo) -> Void) {

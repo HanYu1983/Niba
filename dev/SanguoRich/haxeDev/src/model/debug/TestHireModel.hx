@@ -1,5 +1,6 @@
 package model.debug;
 
+import model.GridGenerator.GROWTYPE;
 import model.IModel.PreResultOnHire;
 import model.IModel.HirePreview;
 import model.GridGenerator.BUILDING;
@@ -31,16 +32,7 @@ class TestHireModel extends DebugModel {
 
 		var g = GridGenerator.getInst().getGrid();
 		g.belongPlayerId = null;
-		g.buildtype = BUILDING.EMPTY;
-		info.events = [
-			{
-				id: EventInfoID.WALK_STOP,
-				value: {
-					grid: g,
-					commands: []
-				}
-			}
-		];
+		g.buildtype = GROWTYPE.EMPTY;
 		cb();
 	}
 
@@ -59,7 +51,7 @@ class TestHireModel extends DebugModel {
 		}
 	}
 
-	override function takeHire(playerId:Int, gridInt:Int, p1SelectId:Int, exploreId:Int, cb:(gameInfo:GameInfo) -> Void) {
+	override function takeHire(playerId:Int, gridInt:Int, p1SelectId:Int, exploreId:Int, moreMoney:Float, cb:(gameInfo:GameInfo) -> Void) {
 		var info = gameInfo();
 		info.events = [
 			{
@@ -75,19 +67,24 @@ class TestHireModel extends DebugModel {
 					moneyAfter: 300,
 					foodBefore: 100,
 					foodAfter: 200
-				}
+				},
+				autoplay: null,
+				gameInfo: info,
+
 			}
 		];
 		cb(info);
 	}
 
-	override function getPreResultOfHire(playerId:Int, gridId:Int, people:People, invite:People):PreResultOnHire {
+	override function getPreResultOfHire(playerId:Int, gridId:Int, people:People, invite:People, moneyMore:Float = 0):PreResultOnHire {
 		return {
 			energyBefore: 20,
 			energyAfter: 20,
 			moneyBefore: 10,
 			moneyAfter: 10,
-			successRate: .2
+			successRate: .2,
+			maintainMoneyAfter: 0,
+			maintainMoneyBefore: 0,
 		}
 	}
 }

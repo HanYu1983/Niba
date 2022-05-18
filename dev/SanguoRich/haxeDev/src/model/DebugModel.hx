@@ -48,7 +48,8 @@ class DebugModel implements IModel {
 					ActionInfoID.TREASURE_TAKE,
 					// ActionInfoID.EXPLORE,
 					// ActionInfoID.BUILD,
-					// ActionInfoID.FIRE,
+					ActionInfoID.FIRE,
+					ActionInfoID.HIRE,
 					// ActionInfoID.PK,
 					// ActionInfoID.CAMP,
 					// ActionInfoID.PAY_FOR_FUN,
@@ -312,7 +313,7 @@ class DebugModel implements IModel {
 		return null;
 	}
 
-	public function takeHire(playerId:Int, gridInt:Int, p1SelectId:Int, exploreId:Int, cb:(gameInfo:GameInfo) -> Void) {}
+	public function takeHire(playerId:Int, gridInt:Int, p1SelectId:Int, exploreId:Int, moreMoney:Float, cb:(gameInfo:GameInfo) -> Void) {}
 
 	public function getRateOfInvitePeople(people:People, invite:People):Float {
 		return .5;
@@ -322,7 +323,7 @@ class DebugModel implements IModel {
 		return null;
 	}
 
-	public function getPreResultOfHire(playerId:Int, gridId:Int, people:People, invite:People):PreResultOnHire {
+	public function getPreResultOfHire(playerId:Int, gridId:Int, people:People, invite:People, moreMoney:Float = 0):PreResultOnHire {
 		return null;
 	}
 

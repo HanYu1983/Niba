@@ -204,9 +204,9 @@ class MainView extends Box {
 		Main.model.takeExplore(gameInfo.currentPlayer.id, gameInfo.currentPlayer.atGridId, p1Id, syncViewWithEventsByGameInfo);
 	}
 
-	public function onHirePreviewViewConfirmClick(p1Id:Int, p2Id:Int) {
+	public function onHirePreviewViewConfirmClick(p1Id:Int, p2Id:Int, moneyMore:Float) {
 		var gameInfo = Main.model.gameInfo();
-		Main.model.takeHire(gameInfo.currentPlayer.id, gameInfo.currentPlayer.atGridId, p1Id, p2Id, syncViewWithEventsByGameInfo);
+		Main.model.takeHire(gameInfo.currentPlayer.id, gameInfo.currentPlayer.atGridId, p1Id, p2Id, moneyMore, syncViewWithEventsByGameInfo);
 	}
 
 	public function onFirePreviewViewConfirmClick(pId:Array<Int>) {
@@ -582,8 +582,8 @@ class MainView extends Box {
 	}
 
 	function getGridPositionByGridId(pid:Int, gridId:Int) {
-		if(gridId > grids.length - 1 || gridId < 0) return [0.0,0.0];
 		var grid = grids[gridId];
+		if(grid == null) return [0.0,0.0,0.0,0.0];
 		return offsetPlayerPos(pid, grid.left, grid.top);
 	}
 
@@ -1052,7 +1052,12 @@ class MainView extends Box {
 				var gx = Math.floor(e.localX / gridSize);
 				var gy = Math.floor(e.localY / gridSize);
 				var gridId = gx + gy * 10;
-				gridId = Math.floor(Math.min(gridId, gameInfo.grids.length - 1));
+
+				if(gridId > gameInfo.grids.length - 1){
+					gridId = gameInfo.grids.length - 1;
+				}
+				if(gridId < 0) gridId = 0;
+
 				moveCursorToGrid(gridId);
 				syncGridInfo(gridId);
 			});
@@ -1100,10 +1105,14 @@ class MainView extends Box {
 
 	function syncGridInfo(gridId:Int) {
 		var gameInfo = Main.model.gameInfo();
-		if(gridId > gameInfo.grids.length - 1 ){
+		var grid:Grid = gameInfo.grids[gridId];
+
+		// why still would be null?
+		if(grid == null) {
+			throw new haxe.Exception('爲什麽會是null？gridId:${gridId}, grid: ${grid}');
 			return;
 		}
-		var grid:Grid = gameInfo.grids[gridId];
+
 		gridView.setInfo(grid);
 		gridPeopleListView.setPeopleList(grid.people);
 	}
