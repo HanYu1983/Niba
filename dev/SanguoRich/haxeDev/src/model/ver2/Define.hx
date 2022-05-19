@@ -922,21 +922,36 @@ function getEventInfo(e:Event):EventInfo {
 	}
 }
 
+function getEventSortWeight(e:Event):Int {
+	return switch e {
+		case WAR_RESULT(value, gameInfo):
+			999;
+		case SNATCH_RESULT(value, gameInfo):
+			999;
+		case STRATEGY_RESULT(value, gameInfo, autoplay):
+			-1;
+		case ANIMATION_EVENT_MOVE(value, gameInfo):
+			-2;
+		case _:
+			0;
+	}
+}
+
 function getGameInfo(ctx:Context, root:Bool):GameInfo {
 	final events = if (root) {
-		final eventCopy = deepCopy(ctx.events);
-		// 先進後出
-		// eventCopy.reverse();
-		// 探索和攻城事件排最後
-		eventCopy.sort((a, b) -> {
-			return switch b {
-				case WAR_RESULT({success: true}, _) | EXPLORE_RESULT({success: true}, _):
-					-1;
-				case _:
-					0;
-			}
-		});
-		eventCopy.map(getEventInfo);
+		final player = ctx.players[ctx.currentPlayerId];
+		final isRealPlayer = player.brain == null;
+		// 如果是玩家的事件就排序, 而不管狀態順序
+		if (isRealPlayer) {
+			final eventCopy = deepCopy(ctx.events);
+			// 探索和攻城事件排最後
+			eventCopy.sort((a, b) -> {
+				return getEventSortWeight(a) - getEventSortWeight(b);
+			});
+			eventCopy.map(getEventInfo);
+		} else {
+			ctx.events.map(getEventInfo);
+		}
 	} else {
 		[];
 	}
@@ -1336,6 +1351,9 @@ function getPeopleAbilities(ctx:Context, peopleId:Int):Array<Int> {
 
 function getPlayerCommand(ctx:Context, playerId:Int):Array<ActionInfoID> {
 	final ret:Array<ActionInfoID> = [];
+	// ret.push(BREAK);
+	// ret.push(CUTPATH);
+	// ret.push(SETTLE);
 	final player = ctx.players[playerId];
 	final gridInfo = getGridInfo(ctx, ctx.grids[player.position]);
 	if (player.memory.hasDice == false) {
