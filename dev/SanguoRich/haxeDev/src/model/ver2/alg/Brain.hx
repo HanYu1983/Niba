@@ -30,7 +30,7 @@ typedef BrainMemory = {
 		food:Float, money:Float, army:Float,
 	},
 	buySell:{
-		peopleId:Null<Int>
+		peopleId:Null<Int>, moneyBase:Null<Float>,
 	},
 	explore:{
 		peopleId:Null<Int>
@@ -78,7 +78,8 @@ function doBrain(ctx, playerId:Int) {
 					army: 0,
 				},
 				buySell: {
-					peopleId: null
+					peopleId: null,
+					moneyBase: null,
 				},
 				explore: {
 					peopleId: null
@@ -152,10 +153,10 @@ function doBrain(ctx, playerId:Int) {
 				doEvent(ctx, playerId);
 			case BUILD:
 				if (brainMemory.build.peopleId == null) {
-					throw new haxe.Exception("brainMemory.buySell.peopleId not found");
+					throw new haxe.Exception("brainMemory.build.peopleId not found");
 				}
 				if (brainMemory.build.attachmentId == null) {
-					throw new haxe.Exception("brainMemory.buySell.peopleId not found");
+					throw new haxe.Exception("brainMemory.build.attachmentId not found");
 				}
 				final findAttachment = ctx.attachments.filter(a -> a.id == brainMemory.build.attachmentId);
 				if (findAttachment.length == 0) {
@@ -184,36 +185,56 @@ function doBrain(ctx, playerId:Int) {
 				if (brainMemory.buySell.peopleId == null) {
 					throw new haxe.Exception("brainMemory.buySell.peopleId not found");
 				}
+				if (brainMemory.buySell.moneyBase == null) {
+					throw new haxe.Exception("brainMemory.buySell.moneyBase not found");
+				}
 				final p1Id = brainMemory.buySell.peopleId;
-				_takeResource(ctx, playerId, gridId, p1Id, BUY, ARMY);
+				final moneyBase = brainMemory.buySell.moneyBase;
+				_takeResource(ctx, playerId, gridId, p1Id, moneyBase, BUY, ARMY);
 				doEvent(ctx, playerId);
 			case BUY_FOOD:
 				if (brainMemory.buySell.peopleId == null) {
 					throw new haxe.Exception("brainMemory.buySell.peopleId not found");
 				}
+				if (brainMemory.buySell.moneyBase == null) {
+					throw new haxe.Exception("brainMemory.buySell.moneyBase not found");
+				}
 				final p1Id = brainMemory.buySell.peopleId;
-				_takeResource(ctx, playerId, gridId, p1Id, BUY, FOOD);
+				final moneyBase = brainMemory.buySell.moneyBase;
+				_takeResource(ctx, playerId, gridId, p1Id, moneyBase, BUY, FOOD);
 				doEvent(ctx, playerId);
 			case SELL_ARMY:
 				if (brainMemory.buySell.peopleId == null) {
 					throw new haxe.Exception("brainMemory.buySell.peopleId not found");
 				}
+				if (brainMemory.buySell.moneyBase == null) {
+					throw new haxe.Exception("brainMemory.buySell.moneyBase not found");
+				}
 				final p1Id = brainMemory.buySell.peopleId;
-				_takeResource(ctx, playerId, gridId, p1Id, SELL, ARMY);
+				final moneyBase = brainMemory.buySell.moneyBase;
+				_takeResource(ctx, playerId, gridId, p1Id, moneyBase, SELL, ARMY);
 				doEvent(ctx, playerId);
 			case SELL_FOOD:
 				if (brainMemory.buySell.peopleId == null) {
 					throw new haxe.Exception("brainMemory.buySell.peopleId not found");
 				}
+				if (brainMemory.buySell.moneyBase == null) {
+					throw new haxe.Exception("brainMemory.buySell.moneyBase not found");
+				}
 				final p1Id = brainMemory.buySell.peopleId;
-				_takeResource(ctx, playerId, gridId, p1Id, SELL, FOOD);
+				final moneyBase = brainMemory.buySell.moneyBase;
+				_takeResource(ctx, playerId, gridId, p1Id, moneyBase, SELL, FOOD);
 				doEvent(ctx, playerId);
 			case EARN_MONEY:
 				if (brainMemory.buySell.peopleId == null) {
 					throw new haxe.Exception("brainMemory.buySell.peopleId not found");
 				}
+				if (brainMemory.buySell.moneyBase == null) {
+					throw new haxe.Exception("brainMemory.buySell.moneyBase not found");
+				}
 				final p1Id = brainMemory.buySell.peopleId;
-				_takeResource(ctx, playerId, gridId, p1Id, BUY, MONEY);
+				final moneyBase = brainMemory.buySell.moneyBase;
+				_takeResource(ctx, playerId, gridId, p1Id, moneyBase, BUY, MONEY);
 				doEvent(ctx, playerId);
 			case CAMP:
 				if (p1People == null) {
@@ -478,7 +499,11 @@ private function getCommandWeight(ctx:Context, playerId:Int, gridId:Int, cmd:Act
 					return switch b.type {
 						case MARKET(level) if (level < 3):
 							true;
+						case BANK(level) if (level < 3):
+							true;
 						case FARM(level) if (level < 3):
+							true;
+						case BARN(level) if (level < 3):
 							true;
 						case BARRACKS(level) if (level < 3):
 							true;
@@ -493,11 +518,23 @@ private function getCommandWeight(ctx:Context, playerId:Int, gridId:Int, cmd:Act
 				if (buildingNotMax.length == 0) {
 					0.0;
 				} else {
-					final chooseId = Std.int(Math.random() * buildingNotMax.length);
-					final attachment = buildingNotMax[chooseId];
-					brainMemory.build.attachmentId = attachment.id;
-					brainMemory.build.peopleId = peopleInPlayer[0].id;
-					1.0;
+					var score = 0.0;
+					for (i in 0...buildingNotMax.length) {
+						// 隨機挑一個錢夠的, 運氣不好就買不到
+						final chooseId = Std.int(Math.random() * buildingNotMax.length);
+						final attachment = buildingNotMax[chooseId];
+						final findBuildingCatelog = BuildingList.filter((catelog) -> Type.enumEq(catelog.type, attachment.type));
+						if (findBuildingCatelog.length == 0) {
+							throw new haxe.Exception('findBuildingCatelog找不到:${attachment.type}');
+						}
+						final costMoney = findBuildingCatelog[0].money;
+						if (player.money > costMoney) {
+							score = 1.0;
+							brainMemory.build.attachmentId = attachment.id;
+							brainMemory.build.peopleId = peopleInPlayer[0].id;
+						}
+					}
+					score;
 				}
 			} else {
 				0.0;
@@ -865,9 +902,10 @@ private function getCommandWeight(ctx:Context, playerId:Int, gridId:Int, cmd:Act
 				var maxScore = 0.0;
 				for (p1 in peopleInPlayer) {
 					// 利益越大越好
-					final result = _getPreResultOfResource(ctx, playerId, gridId, p1.id, BUY, ARMY);
+					final moneyBase = 100;
+					final result = _getPreResultOfResource(ctx, playerId, gridId, p1.id, moneyBase, BUY, ARMY);
 					final earn = result.armyAfter - result.armyBefore;
-					final cost = MONEY_PER_DEAL;
+					final cost = moneyBase;
 					final fact1 = if (earn <= 0) {
 						0.0;
 					} else {
@@ -879,6 +917,7 @@ private function getCommandWeight(ctx:Context, playerId:Int, gridId:Int, cmd:Act
 					if (score > maxScore) {
 						maxScore = score;
 						brainMemory.buySell.peopleId = p1.id;
+						brainMemory.buySell.moneyBase = moneyBase;
 					}
 				}
 				maxScore;
@@ -898,9 +937,10 @@ private function getCommandWeight(ctx:Context, playerId:Int, gridId:Int, cmd:Act
 				var maxScore = 0.0;
 				for (p1 in peopleInPlayer) {
 					// 利益越大越好
-					final result = _getPreResultOfResource(ctx, playerId, gridId, p1.id, BUY, FOOD);
+					final moneyBase = 100;
+					final result = _getPreResultOfResource(ctx, playerId, gridId, p1.id, moneyBase, BUY, FOOD);
 					final earn = result.foodAfter - result.foodBefore;
-					final cost = MONEY_PER_DEAL;
+					final cost = moneyBase;
 					final fact1 = if (earn <= 0) {
 						0.0;
 					} else {
@@ -912,6 +952,7 @@ private function getCommandWeight(ctx:Context, playerId:Int, gridId:Int, cmd:Act
 					if (score > maxScore) {
 						maxScore = score;
 						brainMemory.buySell.peopleId = p1.id;
+						brainMemory.buySell.moneyBase = moneyBase;
 					}
 				}
 				maxScore;
@@ -930,9 +971,10 @@ private function getCommandWeight(ctx:Context, playerId:Int, gridId:Int, cmd:Act
 				var maxScore = 0.0;
 				for (p1 in peopleInPlayer) {
 					// 利益越大越好
-					final result = _getPreResultOfResource(ctx, playerId, gridId, p1.id, SELL, ARMY);
+					final moneyBase = 100;
+					final result = _getPreResultOfResource(ctx, playerId, gridId, p1.id, moneyBase, SELL, ARMY);
 					final earn = result.moneyAfter - result.moneyBefore;
-					final cost = ARMY_PER_DEAL;
+					final cost = moneyBase;
 					final fact1 = if (earn <= 0) {
 						0.0;
 					} else {
@@ -944,6 +986,7 @@ private function getCommandWeight(ctx:Context, playerId:Int, gridId:Int, cmd:Act
 					if (score > maxScore) {
 						maxScore = score;
 						brainMemory.buySell.peopleId = p1.id;
+						brainMemory.buySell.moneyBase = moneyBase;
 					}
 				}
 				maxScore;
@@ -962,9 +1005,10 @@ private function getCommandWeight(ctx:Context, playerId:Int, gridId:Int, cmd:Act
 				var maxScore = 0.0;
 				for (p1 in peopleInPlayer) {
 					// 利益越大越好
-					final result = _getPreResultOfResource(ctx, playerId, gridId, p1.id, SELL, FOOD);
+					final moneyBase = 100;
+					final result = _getPreResultOfResource(ctx, playerId, gridId, p1.id, moneyBase, SELL, FOOD);
 					final earn = result.moneyAfter - result.moneyBefore;
-					final cost = FOOD_PER_DEAL;
+					final cost = moneyBase;
 					final fact1 = if (earn <= 0) {
 						0.0;
 					} else {
@@ -976,6 +1020,7 @@ private function getCommandWeight(ctx:Context, playerId:Int, gridId:Int, cmd:Act
 					if (score > maxScore) {
 						maxScore = score;
 						brainMemory.buySell.peopleId = p1.id;
+						brainMemory.buySell.moneyBase = moneyBase;
 					}
 				}
 				maxScore;
@@ -987,9 +1032,10 @@ private function getCommandWeight(ctx:Context, playerId:Int, gridId:Int, cmd:Act
 			final fact1 = {
 				var maxScore = 0.0;
 				for (p1 in peopleInPlayer) {
-					final result = _getPreResultOfResource(ctx, playerId, gridId, p1.id, BUY, MONEY);
+					final moneyBase = 100;
+					final result = _getPreResultOfResource(ctx, playerId, gridId, p1.id, moneyBase, BUY, MONEY);
 					final earn = result.moneyAfter - result.moneyBefore;
-					final cost = 10;
+					final cost = moneyBase;
 					final fact1 = if (earn <= 0) {
 						0.0;
 					} else {
@@ -1001,6 +1047,7 @@ private function getCommandWeight(ctx:Context, playerId:Int, gridId:Int, cmd:Act
 					if (score > maxScore) {
 						maxScore = score;
 						brainMemory.buySell.peopleId = p1.id;
+						brainMemory.buySell.moneyBase = moneyBase;
 					}
 				}
 				maxScore;

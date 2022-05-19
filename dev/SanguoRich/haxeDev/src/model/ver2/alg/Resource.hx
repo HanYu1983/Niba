@@ -23,7 +23,7 @@ using Lambda;
 // army:     ability 11
 // strategy: ability 3
 // 智力、政治、魅力也會影響最終數值
-private function getResourceCost(ctx:Context, playerId:Int, gridId:Int, p1SelectId:Int, market:MARKET, type:RESOURCE) {
+private function getResourceCost(ctx:Context, playerId:Int, gridId:Int, p1SelectId:Int, moneyBase:Float, market:MARKET, type:RESOURCE) {
 	return switch 0 {
 		case 0:
 			final grid = ctx.grids[gridId];
@@ -70,42 +70,55 @@ private function getResourceCost(ctx:Context, playerId:Int, gridId:Int, p1Select
 			};
 
 			// 依據友好度來決定自己願意給出多少
-			// -3 ~ 3
-			var limitFactor:Float = grid.favor[playerId];
-			// 0 ~ 6
+			final favar = {
+				final tmp = grid.favor[playerId];
+				// 付越多錢容忍度越高
+				final ext = switch moneyBase {
+					case m if (m >= 400):
+						2;
+					case m if (m >= 200):
+						1;
+					case _:
+						0;
+				}
+				tmp + ext;
+			}
+			// -3 ~ 5 (+2 by moneyBase)
+			var limitFactor:Float = favar;
+			// 0 ~ 8
 			limitFactor += 3;
 			// 0 ~ 1
-			limitFactor /= 6;
+			limitFactor /= 8;
 			// 0.3 ~ 0.8
 			limitFactor *= .5 + .3;
 
 			switch [type, market] {
 				case [MONEY, _]:
-					final moneyCost = MONEY_PER_DEAL * 0.5;
+					final moneyCost = moneyBase * 0.5;
 					final totalGain = moneyCost * rate;
 					limitFactor *= .5;
 					final gain = Math.min(totalGain, grid.money * limitFactor);
 					returnInfo.playerCost.money = -gain;
 				case [ARMY, SELL]:
-					final sellArmyCount = ARMY_PER_DEAL;
+					final sellArmyCount = moneyBase;
 					final totalgain = sellArmyCount * rate;
 					final gain = Math.min(totalgain, grid.money * limitFactor);
 					returnInfo.playerCost.money = -gain;
 					returnInfo.playerCost.army = sellArmyCount * gain / totalgain; // 依據少拿的部分返還錢
 				case [FOOD, SELL]:
-					final sellFoodCount = FOOD_PER_DEAL;
+					final sellFoodCount = moneyBase;
 					final totalgain = sellFoodCount * rate;
 					final gain = Math.min(totalgain, grid.money * limitFactor);
 					returnInfo.playerCost.money = -gain;
 					returnInfo.playerCost.food = sellFoodCount * gain / totalgain; // 依據少拿的部分返還錢
 				case [ARMY, BUY]:
-					final moneyCost = MONEY_PER_DEAL;
+					final moneyCost = moneyBase;
 					final totalGain = moneyCost * rate;
 					final gain = Math.min(totalGain, grid.army * limitFactor);
 					returnInfo.playerCost.money = moneyCost * gain / totalGain; // 依據少拿的部分返還錢
 					returnInfo.playerCost.army = -gain;
 				case [FOOD, BUY]:
-					final moneyCost = MONEY_PER_DEAL;
+					final moneyCost = moneyBase;
 					final totalGain = moneyCost * rate;
 					final gain = Math.min(totalGain, grid.food * limitFactor);
 					returnInfo.playerCost.money = moneyCost * gain / totalGain; // 依據少拿的部分返還錢
@@ -119,9 +132,9 @@ private function getResourceCost(ctx:Context, playerId:Int, gridId:Int, p1Select
 	}
 }
 
-private function onResourceCost(ctx:Context, playerId:Int, gridId:Int, p1SelectId:Int, market:MARKET, type:RESOURCE) {
+private function onResourceCost(ctx:Context, playerId:Int, gridId:Int, p1SelectId:Int, moneyBase:Float, market:MARKET, type:RESOURCE) {
 	wrapResourceResultEvent(ctx, playerId, p1SelectId, () -> {
-		final negoCost = getResourceCost(ctx, playerId, gridId, p1SelectId, market, type);
+		final negoCost = getResourceCost(ctx, playerId, gridId, p1SelectId, moneyBase, market, type);
 		// 無論成功或失敗武將先消體力
 		final people = getPeopleById(ctx, p1SelectId);
 		if (people.energy < negoCost.peopleCost.energy) {
@@ -188,9 +201,10 @@ function _getTakeResourcePreview(ctx:Context, playerId:Int, gridId:Int, market:M
 	};
 }
 
-function _getPreResultOfResource(ctx:Context, playerId:Int, gridId:Int, peopleId:Int, market:MARKET, type:RESOURCE):PreResultOnResource {
+function _getPreResultOfResource(ctx:Context, playerId:Int, gridId:Int, peopleId:Int, moneyBase:Float, market:MARKET, type:RESOURCE):PreResultOnResource {
+	trace("_getPreResultOfResource", "moneyBase", moneyBase);
 	final player = ctx.players[playerId];
-	final cost = getResourceCost(ctx, playerId, gridId, peopleId, market, type);
+	final cost = getResourceCost(ctx, playerId, gridId, peopleId, moneyBase, market, type);
 	final p1 = getPeopleById(ctx, peopleId);
 	return {
 		energyBefore: Std.int(p1.energy),
@@ -206,8 +220,8 @@ function _getPreResultOfResource(ctx:Context, playerId:Int, gridId:Int, peopleId
 	}
 }
 
-function _takeResource(ctx:Context, playerId:Int, gridId:Int, p1SelectId:Int, market:MARKET, type:RESOURCE) {
-	onResourceCost(ctx, playerId, gridId, p1SelectId, market, type);
+function _takeResource(ctx:Context, playerId:Int, gridId:Int, p1SelectId:Int, moneyBase:Float, market:MARKET, type:RESOURCE) {
+	onResourceCost(ctx, playerId, gridId, p1SelectId, moneyBase, market, type);
 	{
 		final player = ctx.players[ctx.currentPlayerId];
 		player.memory.hasCommand = true;
