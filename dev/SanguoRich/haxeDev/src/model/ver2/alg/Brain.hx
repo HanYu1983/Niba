@@ -171,6 +171,8 @@ function doBrain(ctx, playerId:Int) {
 						MARKET(Std.int(Math.min(3, level + 1)));
 					case FARM(level):
 						FARM(Std.int(Math.min(3, level + 1)));
+					case HOME(level):
+						HOME(Std.int(Math.min(3, level + 1)));
 					case BARRACKS(level):
 						BARRACKS(Std.int(Math.min(3, level + 1)));
 					case WALL(level):

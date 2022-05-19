@@ -489,24 +489,24 @@ final BuildingList:Array<BuildingCatelog> = [
 	{
 		id: 8,
 		name: '兵營(未建)',
-		money: 200,
-		describe: '士兵最大值+0。士兵每回合+0',
+		money: 70,
+		describe: '士兵每回合+0',
 		type: BARRACKS(0),
 		depends: []
 	},
 	{
 		id: 9,
 		name: '兵營(小)',
-		money: 100,
-		describe: '士兵最大值+100。士兵每回合+1%',
+		money: 50,
+		describe: '士兵每回合+3',
 		type: BARRACKS(1),
 		depends: []
 	},
 	{
 		id: 10,
 		name: '兵營(中)',
-		money: 100,
-		describe: '士兵最大值+150。士兵每回合+2%',
+		money: 50,
+		describe: '士兵每回合+5',
 		type: BARRACKS(2),
 		depends: []
 	},
@@ -514,7 +514,7 @@ final BuildingList:Array<BuildingCatelog> = [
 		id: 11,
 		name: '兵營(大)',
 		money: 0,
-		describe: '士兵最大值+200。士兵每回合+3%',
+		describe: '士兵每回合+7',
 		type: BARRACKS(3),
 		depends: []
 	},
@@ -628,6 +628,38 @@ final BuildingList:Array<BuildingCatelog> = [
 		money: 0,
 		describe: '糧草最大值+400。糧草每回合+3%',
 		type: BARN(3),
+		depends: []
+	},
+	{
+		id: 26,
+		name: '住房(未建)',
+		money: 200,
+		describe: '士兵最大值+0。士兵每回合+0%',
+		type: HOME(0),
+		depends: []
+	},
+	{
+		id: 27,
+		name: '住房(小)',
+		money: 100,
+		describe: '士兵最大值+200。士兵每回合+1%',
+		type: HOME(1),
+		depends: []
+	},
+	{
+		id: 28,
+		name: '住房(中)',
+		money: 100,
+		describe: '士兵最大值+300。士兵每回合+2%',
+		type: HOME(2),
+		depends: []
+	},
+	{
+		id: 29,
+		name: '住房(大)',
+		money: 0,
+		describe: '士兵最大值+400。士兵每回合+3%',
+		type: HOME(3),
 		depends: []
 	},
 ];

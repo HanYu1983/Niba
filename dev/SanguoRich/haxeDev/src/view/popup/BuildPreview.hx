@@ -48,6 +48,9 @@ class BuildPreview extends PopupView{
             case BARRACKS(level):
                 if(level < 3) BUILDING.BARRACKS(level+1);
                 else BUILDING.BARRACKS(3);
+            case HOME(level):
+                if(level < 3) BUILDING.HOME(level+1);
+                else BUILDING.HOME(3);
             case EXPLORE(level):
                 if(level < 1) BUILDING.EXPLORE(level+1);
                 else BUILDING.EXPLORE(1);

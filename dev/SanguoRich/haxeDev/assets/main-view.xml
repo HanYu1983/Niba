@@ -47,11 +47,11 @@
                 <hbox width="100%">
                     <vbox width="100%">
                         <hbox width="100%">
-                            <hbox id="box_playerView" width="340" />
+                            <hbox id="box_playerView" width="380" />
                             <hbox id="box_playerPeopleList" width="100%" height="100%" />
                         </hbox>
                         <hbox width="100%">
-                            <hbox id="box_gridView" width="340" />
+                            <hbox id="box_gridView" width="380" />
                             <hbox id="box_gridPeopleList" width="100%" height="100%" />
                         </hbox>
                     </vbox>

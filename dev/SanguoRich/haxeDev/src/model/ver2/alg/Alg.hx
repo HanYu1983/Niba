@@ -25,6 +25,8 @@ function doPeopleMaintain(ctx:Context) {
 							level;
 						case FARM(level):
 							level;
+						case HOME(level):
+							level;
 						case BARRACKS(level):
 							level;
 						case EXPLORE(level):

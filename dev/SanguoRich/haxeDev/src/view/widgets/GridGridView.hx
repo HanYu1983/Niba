@@ -54,6 +54,8 @@ class GridGridView extends BasicGridView{
                     building += '農${level}';
                 case BARRACKS(level):
                     building += '兵${level}';
+                case HOME(level):
+                    building += '房${level}';
                 case WALL(level):
                     building += '牆${level}';
                 case EXPLORE(level):

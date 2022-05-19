@@ -44,6 +44,7 @@ enum BUILDING {
 	FARM(level:Int);
 	BARN(level:Int);
 	BARRACKS(level:Int);
+	HOME(level:Int);
 	WALL(level:Int);
 	EXPLORE(level:Int);
 }
@@ -121,6 +122,8 @@ class GridGenerator {
 							BUILDING.BARN(0),
 
 							BUILDING.BARRACKS(0),
+							BUILDING.HOME(0),
+
 							BUILDING.EXPLORE(0),
 							BUILDING.WALL(0),
 						];
@@ -138,6 +141,8 @@ class GridGenerator {
 							BUILDING.BARN(0),
 
 							BUILDING.BARRACKS(0),
+							BUILDING.HOME(0),
+
 							BUILDING.EXPLORE(0),
 							BUILDING.WALL(0),
 						];
@@ -145,7 +150,7 @@ class GridGenerator {
 					g.maxArmy = g.maxFood = g.maxMoney = 500;
 				case VILLAGE:
 					if (isLimitBuilding) {
-						g.attachs = [BUILDING.BARRACKS(1), BUILDING.WALL(0),];
+						g.attachs = [BUILDING.BARRACKS(1), BUILDING.HOME(0), BUILDING.WALL(0),];
 					} else {
 						g.attachs = [
 							BUILDING.MARKET(0),
@@ -154,9 +159,11 @@ class GridGenerator {
 							BUILDING.FARM(0),
 							BUILDING.BARN(0),
 
-							BUILDING.BARRACKS(0),
+							BUILDING.BARRACKS(1),
+							BUILDING.HOME(0),
+
 							BUILDING.EXPLORE(0),
-							BUILDING.WALL(1),
+							BUILDING.WALL(0),
 						];
 					}
 					g.maxArmy = g.maxFood = g.maxMoney = 500;
@@ -168,9 +175,11 @@ class GridGenerator {
 						BUILDING.FARM(1),
 						BUILDING.BARN(0),
 
-						BUILDING.BARRACKS(0),
+						BUILDING.BARRACKS(1),
+						BUILDING.HOME(0),
+
 						BUILDING.EXPLORE(0),
-						BUILDING.WALL(1),
+						BUILDING.WALL(0),
 					];
 					g.maxArmy = g.maxFood = g.maxMoney = 700;
 			}

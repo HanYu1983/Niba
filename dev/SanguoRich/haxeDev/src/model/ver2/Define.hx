@@ -399,7 +399,7 @@ function getGridArmyGrow(ctx:Context, gridId:Int):Float {
 	final grid = ctx.grids[gridId];
 	final attachmentRate = ctx.attachments.filter(a -> a.belongToGridId == grid.id).fold((p, a) -> {
 		return a + switch p.type {
-			case BARRACKS(level):
+			case HOME(level):
 				[0.0, 0.01, 0.02, 0.03][level];
 			case _:
 				0;
@@ -423,7 +423,7 @@ function getGridFoodAdd(ctx:Context, gridId:Int):Float {
 				0;
 		}
 	}, 0);
-	return attachmentRate;
+	return attachmentRate + BASIC_GROW_FOOD_ADD;
 }
 
 function getGridMoneyAdd(ctx:Context, gridId:Int):Float {
@@ -441,26 +441,25 @@ function getGridMoneyAdd(ctx:Context, gridId:Int):Float {
 				0;
 		}
 	}, 0);
-	return attachmentRate;
+	return attachmentRate + BASIC_GROW_MONEY_ADD;
 }
 
 function getGridArmyAdd(ctx:Context, gridId:Int):Float {
-	// final peopleInGrid = ctx.peoples.filter(p -> p.position.gridId == gridId);
-	// // 沒武將的格子不成長
-	// if (peopleInGrid.length == 0) {
-	// 	return 0.0;
-	// }
-	// final grid = ctx.grids[gridId];
-	// final attachmentRate = ctx.attachments.filter(a -> a.belongToGridId == grid.id).fold((p, a) -> {
-	// 	return a + switch p.type {
-	// 		case BARRACKS(level):
-	// 			[0, 2, 3, 4][level];
-	// 		case _:
-	// 			0;
-	// 	}
-	// }, 0);
-	// return attachmentRate;
-	return 0.0;
+	final peopleInGrid = ctx.peoples.filter(p -> p.position.gridId == gridId);
+	// 沒武將的格子不成長
+	if (peopleInGrid.length == 0) {
+		return 0.0;
+	}
+	final grid = ctx.grids[gridId];
+	final attachmentRate = ctx.attachments.filter(a -> a.belongToGridId == grid.id).fold((p, a) -> {
+		return a + switch p.type {
+			case BARRACKS(level):
+				[0, 3, 5, 7][level];
+			case _:
+				0;
+		}
+	}, 0);
+	return attachmentRate + BASIC_GROW_ARMY_ADD;
 }
 
 function getGridMaxFood(ctx:Context, gridId:Int):Float {
@@ -491,7 +490,7 @@ function getGridMaxArmy(ctx:Context, gridId:Int):Float {
 	final grid = ctx.grids[gridId];
 	final attachmentInGrid = ctx.attachments.filter(a -> a.belongToGridId == gridId);
 	final addExt = attachmentInGrid.map(a -> switch a.type {
-		case BARRACKS(level):
+		case HOME(level):
 			level;
 		case _:
 			0;
