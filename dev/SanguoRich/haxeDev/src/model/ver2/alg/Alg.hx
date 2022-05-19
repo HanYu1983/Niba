@@ -560,12 +560,12 @@ function onPlayerEnd(ctx:Context, playerId:Int):Bool {
 						final chooseGrid = emptyGrids[chooseId];
 						// 移除原有建物
 						ctx.attachments = ctx.attachments.filter(a -> a.belongToGridId != chooseGrid.id);
-						// 隨機生成類型
 						addAttachInfo(ctx, chooseGrid.id, MARKET(0));
 						addAttachInfo(ctx, chooseGrid.id, BANK(0));
 						addAttachInfo(ctx, chooseGrid.id, FARM(0));
 						addAttachInfo(ctx, chooseGrid.id, BARN(0));
 						addAttachInfo(ctx, chooseGrid.id, BARRACKS(1));
+						addAttachInfo(ctx, chooseGrid.id, HOME(0));
 						addAttachInfo(ctx, chooseGrid.id, EXPLORE(0));
 						addAttachInfo(ctx, chooseGrid.id, WALL(0));
 						chooseGrid.money = EVENT_GRID_BORN_RESOURCE_AMOUNT;
