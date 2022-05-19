@@ -512,6 +512,8 @@ private function getCommandWeight(ctx:Context, playerId:Int, gridId:Int, cmd:Act
 							true;
 						case BARRACKS(level) if (level < 3):
 							true;
+						case HOME(level) if (level < 3):
+							true;
 						case WALL(level) if (level < 3):
 							true;
 						case EXPLORE(level) if (level < 1):
@@ -537,6 +539,7 @@ private function getCommandWeight(ctx:Context, playerId:Int, gridId:Int, cmd:Act
 							score = 1.0;
 							brainMemory.build.attachmentId = attachment.id;
 							brainMemory.build.peopleId = peopleInPlayer[0].id;
+							break;
 						}
 					}
 					score;
