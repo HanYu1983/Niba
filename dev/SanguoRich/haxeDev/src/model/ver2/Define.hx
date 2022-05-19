@@ -922,16 +922,20 @@ function getEventInfo(e:Event):EventInfo {
 	}
 }
 
+// 事件排序, 數值越小越先
+// 注意, 只有在非AI玩家時才排序, 因為這裡假設了玩家不在意正確的狀態順序
 function getEventSortWeight(e:Event):Int {
 	return switch e {
 		case WAR_RESULT(value, gameInfo):
 			999;
 		case SNATCH_RESULT(value, gameInfo):
 			999;
-		case STRATEGY_RESULT(value, gameInfo, autoplay):
+		case RESOURCE_RESULT(value, gameInfo):
 			-1;
 		case ANIMATION_EVENT_MOVE(value, gameInfo):
 			-2;
+		case STRATEGY_RESULT(value, gameInfo, autoplay):
+			-3;
 		case _:
 			0;
 	}
