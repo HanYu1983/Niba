@@ -626,4 +626,22 @@ class DebugModel implements IModel {
 
 		syncView();
 	}
+
+	public function getPreResultOfSettle(playerId:Int, peopleId:Int, gridId:Int, settleType:Int):Grid {
+		return GridGenerator.getInst().getGrid();
+	}
+
+	public function takeSettle(playerId:Int, gridId:Int, peopleId:Int, settleType:Int, syncViewWithEventsByGameInfo:(gameInfo:GameInfo) -> Void) {
+		info.events = [
+			{
+				id:SETTLE_RESULT,
+				value: {
+					grid: GridGenerator.getInst().getGrid()
+				},
+				autoplay: null,
+				gameInfo: info,
+			}
+		];
+		syncViewWithEventsByGameInfo(info);
+	}
 }

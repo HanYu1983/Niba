@@ -196,4 +196,10 @@ class ProxyModel implements IModel {
 	public function finishOneEvent(syncView:() -> Void) {
 		return model.finishOneEvent(syncView);
 	}
+
+	public function getPreResultOfSettle(playerId:Int, peopleId:Int, gridId:Int, settleType:Int):Grid {
+		throw new haxe.exceptions.NotImplementedException();
+	}
+
+	public function takeSettle(playerId:Int, gridId:Int, peopleId:Int, settleType:Int, syncViewWithEventsByGameInfo:(gameInfo:GameInfo) -> Void) {}
 }

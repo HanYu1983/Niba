@@ -85,6 +85,7 @@ enum EventInfoID {
 	MESSAGE_EVENT;
 	PLAYER_LOSE;
 	PLAYER_WIN;
+	SETTLE_RESULT;
 }
 
 enum MARKET {
@@ -340,6 +341,10 @@ interface IModel {
 	function refresh(cb:() -> Void):Void;
 
 	function finishOneEvent(syncView:() -> Void):Void;
+
+	function getPreResultOfSettle(playerId:Int, peopleId:Int, gridId:Int, settleType:Int):Grid;
+
+	function takeSettle(playerId:Int, gridId:Int, peopleId:Int, settleType:Int, syncViewWithEventsByGameInfo:(gameInfo:GameInfo) -> Void):Void;
 }
 
 final StrategyList:Array<StrategyCatelog> = [
@@ -663,3 +668,8 @@ final BuildingList:Array<BuildingCatelog> = [
 		depends: []
 	},
 ];
+
+
+
+
+

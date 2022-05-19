@@ -681,6 +681,10 @@ class MainView extends Box {
 			final gameInfo = event.gameInfo;
 			final autoPlay = event.autoplay;
 			switch (event.id) {
+				case SETTLE_RESULT:
+					Dialogs.messageBox('開拓成功', '開拓成功', MessageBoxType.TYPE_INFO, true, (target) -> {
+						transferPreview.showPopup(null);
+					});
 				case PLAYER_LOSE:
 					final msg = '${info.player.name}敗北!';
 					checkAutoPlay(autoPlay, msg, msg);
@@ -1160,5 +1164,10 @@ class MainView extends Box {
 	public function onPkPreviewConfirmNegoClick(p1PeopleId:Int, p2PeopleId:Int) {
 		final gameInfo = Main.model.gameInfo();
 		Main.model.takePk(gameInfo.currentPlayer.id, gameInfo.currentPlayer.atGridId, p1PeopleId, p2PeopleId, syncViewWithEventsByGameInfo);
+	}
+
+	public function onSettleViewClickConfirm(peopleId:Int, settleType:Int) {
+		final gameInfo = Main.model.gameInfo();
+		Main.model.takeSettle(gameInfo.currentPlayer.id, gameInfo.currentPlayer.atGridId, peopleId, settleType, syncViewWithEventsByGameInfo);
 	}
 }
