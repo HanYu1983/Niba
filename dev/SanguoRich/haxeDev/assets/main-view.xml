@@ -69,6 +69,8 @@
                 <section-header text="外交" />
                 <button text="交涉" width="100%" id="btn_negotiate" />
                 <button text="號召" width="100%" id="btn_pk" />
+                <button text="破壞" width="100%" id="btn_break" />
+                <button text="圍城" width="100%" id="btn_cutPath" />
                 <button text="搶奪" width="100%" id="btn_snatch" />
                 <button text="攻城" width="100%" id="btn_occupation" />
                 
@@ -80,6 +82,7 @@
                 <button text="裁兵" width="100%" id="btn_sellArmy" />
 
                 <section-header text="武將" />
+                <button text="開拓" width="100%" id="btn_settle" />
                 <button text="作樂" width="100%" id="btn_payForFun" />
                 <button text="札營" width="100%" id="btn_camp" />
                 <button text="練兵" width="100%" id="btn_practice" />

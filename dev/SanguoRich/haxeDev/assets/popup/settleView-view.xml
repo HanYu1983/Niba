@@ -1,0 +1,27 @@
+<vbox width="70%" padding="20" verticalAlign="center" horizontalAlign="center" style="background-color: white;border:1px solid grey;">
+    <style>
+    #grp_settleType .button{
+        width:100
+    }
+    </style>
+    <hbox horizontalAlign="center">
+        <label text="開拓"/>
+    </hbox>
+    <hbox id="box_peopleList1" width="100%" height="150"></hbox>
+    <hbox width="100%">
+        <box id="box_gridViewBefore" width="50%"/>
+        <box id="box_gridViewAfter" width="50%"/>
+    </hbox>
+    <hbox horizontalAlign="center">
+        <button-bar id="grp_settleType" allowUnselection="true">
+            <button text="市場(200)" />
+            <button text="農田(200)" />
+            <button text="村落(200)" />
+            <button text="城市(500)" />
+        </button-bar>
+    </hbox>
+    <hbox horizontalAlign="center">
+        <button text="取消" id="btn_cancel" />
+        <button text="確定" id="btn_confirm" />
+    </hbox>
+</vbox>

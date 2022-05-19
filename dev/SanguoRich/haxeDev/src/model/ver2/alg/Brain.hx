@@ -133,6 +133,9 @@ function doBrain(ctx, playerId:Int) {
 		}
 		final gameInfo = getGameInfo(ctx, false);
 		switch cmd {
+			case CUTPATH:
+			case BREAK:
+			case SETTLE:
 			case END:
 				// 結束回圈
 				done = true;

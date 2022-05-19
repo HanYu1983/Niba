@@ -1,5 +1,6 @@
 package view;
 
+import view.popup.SettleView;
 import model.IModel.GameSetting;
 import view.popup.GameTitleView;
 import view.popup.MessageView;
@@ -68,6 +69,7 @@ class MainView extends Box {
 	var buildingPreview:BuildPreview;
 	var growView:GrowView;
 	var gameTitleView:GameTitleView;
+	var settleView:SettleView;
 
 	var gridSize = 80;
 
@@ -172,6 +174,10 @@ class MainView extends Box {
 		gameTitleView.hide();
 		box_popup.addComponent(gameTitleView);
 
+		settleView = new SettleView();
+		settleView.hide();
+		box_popup.addComponent(settleView);
+
 		peopleListView = new PeopleListView();
 		box_playerPeopleList.addComponent(peopleListView);
 
@@ -256,24 +262,6 @@ class MainView extends Box {
 		}
 	}
 
-	// public function onGameTitleSaveClick(){
-	// 	Main.model.save((success:Bool) -> {
-	// 		final msg = success ? '成功記錄' : '記錄失敗';
-	// 		Dialogs.messageBox(msg, msg, MessageBoxType.TYPE_INFO);
-	// 	});
-	// }
-
-	// public function onGameTitleLoadClick(){
-	// 	Main.model.load((success:Bool, gameInfo:GameInfo) -> {
-	// 		final msg = success ? '成功讀取' : '讀取失敗';
-	// 		if (success) {
-	// 			syncViewByInfo(gameInfo);
-	// 			syncViewWithEventsByGameInfo(gameInfo);
-	// 		}
-	// 		Dialogs.messageBox(msg, msg, MessageBoxType.TYPE_INFO);
-	// 	});
-	// }
-
 	@:bind(this, UIEvent.READY)
 	function onUIReady(e:UIEvent) {
 		for (index => grid in grids) {
@@ -299,6 +287,11 @@ class MainView extends Box {
 		btn_sellFood.text = '${btn_sellFood.text}(${ENERGY_COST_ON_RESOURCE})';
 
 		gameTitleView.showPopup(null);
+	}
+
+	@:bind(btn_settle, MouseEvent.CLICK)
+	function onBtnSettleClick(e){
+		settleView.showPopup(null);
 	}
 
 	@:bind(tab_allPlayers, MouseEvent.CLICK)
@@ -955,6 +948,9 @@ class MainView extends Box {
 	}
 
 	function disabledAllCommands() {
+		btn_cutPath.hide();
+		btn_break.hide();
+		btn_settle.hide();
 		btn_go.hide();
 		btn_giveTreasure.hide();
 		btn_takeTreasure.hide();
@@ -992,6 +988,12 @@ class MainView extends Box {
 		var currentPlayer = gameInfo.currentPlayer;
 		for (cmd in currentPlayer.commands) {
 			switch (cmd) {
+				case CUTPATH:
+					btn_cutPath.show();
+				case BREAK:
+					btn_break.show();
+				case SETTLE:
+					btn_settle.show();
 				case MOVE:
 					btn_go.show();
 				case TREASURE:
