@@ -40,17 +40,10 @@ final FAVER_SLOW_PER_TURN = 20;
 // 作用中
 final PLAYER_EARN_FROM_CITY_BY_TURN_PERSENT = .025;
 
-// 基本一單買糧買兵的的金錢
+// 基本一單交易量的最低限, 前端在傳入moneyBase時不能小於這個值
+// 這個值共用於所有買賣
 // 作用中
 final MONEY_PER_DEAL = 100;
-
-// 基本一單賣糧的數目
-// 作用中
-final FOOD_PER_DEAL = 100;
-
-// 基本一單賣兵的數目
-// 作用中
-final ARMY_PER_DEAL = 100;
 
 // 戰鬥能力影響倍率
 final WAR_FRONT_ABILITY_FACTOR = 1.4;

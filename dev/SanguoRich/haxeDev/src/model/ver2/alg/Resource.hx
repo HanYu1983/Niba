@@ -70,25 +70,27 @@ private function getResourceCost(ctx:Context, playerId:Int, gridId:Int, p1Select
 			};
 
 			// 依據友好度來決定自己願意給出多少
-			final favar = {
+			final favar:Float = {
 				final tmp = grid.favor[playerId];
 				// 付越多錢容忍度越高
 				final ext = switch moneyBase {
+					// 付400升1級
 					case m if (m >= 400):
-						2;
+						1.0;
+					// 付200升0.5級
 					case m if (m >= 200):
-						1;
+						0.5;
 					case _:
 						0;
 				}
 				tmp + ext;
 			}
-			// -3 ~ 5 (+2 by moneyBase)
+			// -3 ~ 4 (+1 by moneyBase)
 			var limitFactor:Float = favar;
-			// 0 ~ 8
+			// 0 ~ 7
 			limitFactor += 3;
 			// 0 ~ 1
-			limitFactor /= 8;
+			limitFactor /= 7;
 			// 0.3 ~ 0.8
 			limitFactor *= .5 + .3;
 
@@ -202,7 +204,9 @@ function _getTakeResourcePreview(ctx:Context, playerId:Int, gridId:Int, market:M
 }
 
 function _getPreResultOfResource(ctx:Context, playerId:Int, gridId:Int, peopleId:Int, moneyBase:Float, market:MARKET, type:RESOURCE):PreResultOnResource {
-	trace("_getPreResultOfResource", "moneyBase", moneyBase);
+	if (moneyBase < MONEY_PER_DEAL) {
+		throw new haxe.Exception("moneyBase < MONEY_PER_DEAL");
+	}
 	final player = ctx.players[playerId];
 	final cost = getResourceCost(ctx, playerId, gridId, peopleId, moneyBase, market, type);
 	final p1 = getPeopleById(ctx, peopleId);
@@ -221,6 +225,9 @@ function _getPreResultOfResource(ctx:Context, playerId:Int, gridId:Int, peopleId
 }
 
 function _takeResource(ctx:Context, playerId:Int, gridId:Int, p1SelectId:Int, moneyBase:Float, market:MARKET, type:RESOURCE) {
+	if (moneyBase < MONEY_PER_DEAL) {
+		throw new haxe.Exception("moneyBase < MONEY_PER_DEAL");
+	}
 	onResourceCost(ctx, playerId, gridId, p1SelectId, moneyBase, market, type);
 	{
 		final player = ctx.players[ctx.currentPlayerId];
