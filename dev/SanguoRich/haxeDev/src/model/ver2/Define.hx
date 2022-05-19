@@ -7,6 +7,7 @@ import model.IModel;
 import model.Config;
 import haxe.Serializer;
 import haxe.Unserializer;
+import model.tool.Fact;
 
 using Lambda;
 
@@ -1530,4 +1531,8 @@ function wrapStrategyEvent(ctx:Context, playerId:Int, peopleId:Int, strategyId:I
 	strategyResultValue.energyAfter = p1.energy;
 	ctx.events.push(STRATEGY_RESULT(strategyResultValue, getGameInfo(ctx, false), null));
 	return strategyResultValue.success;
+}
+
+function getNormalizeZeroOne(v:Float):Float {
+	return zeroOneSymbol(v, [0.3, 0.4, 0.5, 0.525, 0.55]);
 }

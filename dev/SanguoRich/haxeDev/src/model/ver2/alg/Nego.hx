@@ -5,6 +5,7 @@ import model.IModel;
 import model.Config;
 import model.ver2.Define;
 import model.ver2.alg.Alg;
+import model.tool.Fact;
 
 using Lambda;
 
@@ -36,35 +37,36 @@ private function getNegoCost(ctx:Context, playerId:Int, gridId:Int, p1SelectId:I
 					// 體力越少效率越低
 					final useEnergy = p1.energy / (100 / ENERGY_COST_ON_NEGO);
 					// 使用20體力的情況下基礎值為0.5
-					final base = getBase(useEnergy, ENERGY_COST_ON_NEGO, 0.0) * BASE_RATE_NEGO;
-					final intelligenceFactor = Math.pow(getPeopleIntelligence(ctx, p1.id) / getPeopleIntelligence(ctx, p2.id), 0.25);
-					final politicalFactor = getPeoplePolitical(ctx, p1.id) / getPeoplePolitical(ctx, p2.id);
-					final charmFactor = Math.pow(getPeopleCharm(ctx, p1.id) / getPeopleCharm(ctx, p2.id), 0.5);
-
-					// 沒有良官的時候，rate最高限制在1.2
-					var rate = base * intelligenceFactor * politicalFactor * charmFactor;
-					rate = Math.min(rate, 1.2);
-
-					// 良官加成，rate最高可以突破1.2
-					final abiFactor = p1Abilities.has(7) ? 1.5 : 1;
-					rate *= abiFactor;
-
-					// 根據友好度決定基本%數
-					final favor = grid.favor[playerId];
-					final basePersent = if (favor <= -2) {
-						0.06;
-					} else if (favor <= -1) {
-						0.08;
-					} else if (favor <= 0) {
-						0.1;
-					} else if (favor <= 1) {
-						0.12;
-					} else {
-						0.14;
-					}
-
+					final base = fact(getBase(useEnergy, ENERGY_COST_ON_NEGO, 0.0) * BASE_RATE_NEGO, FACT_TIMES);
+					final intelligenceFactor = fact(getPeopleIntelligence(ctx, p1.id) / getPeopleIntelligence(ctx, p2.id), FACT_TIMES);
+					final politicalFactor = fact(getPeoplePolitical(ctx, p1.id) / getPeoplePolitical(ctx, p2.id), FACT_TIMES);
+					final charmFactor = fact(getPeopleCharm(ctx, p1.id) / getPeopleCharm(ctx, p2.id), FACT_TIMES);
+					final rate = {
+						var tmp = factAverage([[base, 1], [intelligenceFactor, 1.25], [politicalFactor, 1], [charmFactor, 2]]);
+						// 沒有良官的時候，rate最高限制在1.2
+						tmp = Math.min(tmp, 1.2);
+						// 良官加成，rate最高可以突破1.2
+						final abiFactor = fact(p1Abilities.has(7) ? 1.5 : 1, FACT_TIMES);
+						tmp = factAverage([[tmp, 1], [abiFactor, 1]]);
+						getNormalizeZeroOne(zeroOneFromFact(tmp, FACT_TIMES));
+					};
+					final gainRate = {
+						// 根據友好度決定基本%數
+						final favor = grid.favor[playerId];
+						final basePersent = if (favor <= -2) {
+							0.06;
+						} else if (favor <= -1) {
+							0.08;
+						} else if (favor <= 0) {
+							0.1;
+						} else if (favor <= 1) {
+							0.12;
+						} else {
+							0.14;
+						}
+						basePersent + rate / 30;
+					};
 					// 商才，務農，徵兵分別可以提高獲得數量（rate些微影響獲得的數量）
-					final gainRate = basePersent + rate / 30;
 					{
 						playerCost: {
 							id: playerId,

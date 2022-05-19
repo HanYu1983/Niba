@@ -6,16 +6,31 @@ function fact(v:Float, times:Float):Float {
 	return Math.max(1.0 / times, Math.min(times, v));
 }
 
-function factAdd(v:Array<Float>):Float {
-	return v.fold((c, a:Float) -> c * a, 1.0);
-}
-
-function factDivid(v:Float, times:Int):Float {
-	return Math.pow(v, 1.0 / times);
-}
-
-function factAverage(v:Array<Float>):Float {
-	return factDivid(factAdd(v), v.length);
+function factAverage(pairs:Array<Array<Float>>):Float {
+	final total = pairs.fold((c, a:Float) -> {
+		return switch c {
+			case [_, f]:
+				a + f;
+			case _:
+				throw new haxe.Exception("factAverage: not match");
+		}
+	}, 0.0);
+	if (total == 0) {
+		throw new haxe.Exception("factAverage: total == 0");
+	}
+	final v = pairs.fold((c, a:Float) -> {
+		return switch c {
+			case [v, f]:
+				if (f == 1) {
+					a * v;
+				} else {
+					a * Math.pow(v, f);
+				}
+			case _:
+				throw new haxe.Exception("factAverage: not match");
+		}
+	}, 1.0);
+	return Math.pow(v, 1.0 / total);
 }
 
 // 0~1 -> 1~times
@@ -72,16 +87,4 @@ function zeroOneOr(fs:Array<Float>):Float {
 
 function zeroOneOn(f:Float, g:Float):Float {
 	return f >= g ? 1.0 : 0.0;
-}
-
-function factVery(f:Float, fact:Float):Float {
-	return Math.pow(f, fact);
-}
-
-function factFast(f:Float):Float {
-	return factVery(f, 2);
-}
-
-function factSlow(f:Float):Float {
-	return factVery(f, 1 / 2.0);
 }
