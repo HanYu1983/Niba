@@ -1,33 +1,33 @@
 package view.popup;
 
+import view.widgets.GridGridView;
 import view.widgets.PeopleListView;
 import model.Config;
 import model.IModel.RESOURCE;
-import model.IModel.MARKET;
 import model.IModel.ResourcePreview;
 import model.IModel.PreResultOnResource;
-import model.IModel.PreResultOnExplore;
-import model.IModel.ExplorePreview;
-import model.IModel.PreResultOnHire;
 import haxe.ui.events.MouseEvent;
 import model.PeopleGenerator.People;
-import haxe.ui.events.UIEvent;
-import model.IModel.HirePreview;
 
 @:build(haxe.ui.ComponentBuilder.build("assets/popup/resourcePreview-view.xml"))
 class ResourcePreviewView extends PopupView {
 	var p1List:PeopleListView;
+	var gridView:GridGridView;
 
 	public function new() {
 		super();
 
 		p1List = new PeopleListView();
 		box_peopleList1.addComponent(p1List);
+
+		gridView = new GridGridView();
+		box_gridView.addComponent(gridView);
 	}
 
 	override function showPopup(info:Dynamic, cb:()->Void = null) {
 		super.showPopup(info, cb);
 
+		final gameInfo = Main.model.gameInfo();
 		var previewInfo:ResourcePreview = info;
 
 		function setRate() {
@@ -71,6 +71,9 @@ class ResourcePreviewView extends PopupView {
 			}
 		}
 		p1List.selectedIndex = 0;
+
+		final grid = gameInfo.grids[gameInfo.currentPlayer.atGridId];
+		gridView.setInfo(grid);
 
 		grp_moneyBase.onChange = function(e){
 			setRate();
