@@ -5,6 +5,7 @@ import model.IModel;
 import model.Config;
 import model.ver2.Define;
 import model.ver2.alg.Alg;
+import model.tool.Fact;
 
 using Lambda;
 
@@ -22,18 +23,19 @@ private function getHireCost(ctx:Context, playerId:Int, gridId:Int, p1SelectId:I
 					final hireCost = p2.cost * PEOPLE_HIRE_COST_FACTOR * getPlayerHireCostRate(ctx, playerId);
 					final hireMoneyOffset = player.money - hireCost;
 					final useEnergy = p1.energy / (100 / ENERGY_COST_ON_HIRE);
-					final base = getBase(useEnergy, ENERGY_COST_ON_HIRE, 0.0) * BASE_RATE_HIRE;
+					final base = fact(getBase(useEnergy, ENERGY_COST_ON_HIRE, 0.0) * BASE_RATE_HIRE, FACT_TIMES);
 					final charmExt = getPlayerCharmAddByAttachment(ctx, playerId);
 					// 改爲用敵人的cost為基準難度(1200大概爲最强武將了)
 					final vsCharm = (p2.cost / 1200) * 80 + 20;
-					final charmFactor = (getPeopleCharm(ctx, p1.id) + charmExt) / vsCharm;
+					final charmFactor = fact((getPeopleCharm(ctx, p1.id) + charmExt) / vsCharm, FACT_TIMES);
 					// 人脈加成
-					final abiFactor = p1Abilities.has(10) ? 1.5 : 1;
+					final abiFactor = fact(p1Abilities.has(10) ? 1.5 : 1, FACT_TIMES);
 					// 越不夠錢減成
-					// 完全付不出來的話, 這個系數為1
-					final hireCostFactor = hireMoneyOffset >= 0 ? 0 : Math.min(1, -1 * hireMoneyOffset / hireCost);
+					// 完全付不出來的話, 這個系數為0
+					final hireCostReduceRate = hireCost == 0 ? 1 : zeroOneNot(zeroOne((-1 * hireMoneyOffset) / hireCost));
+					final finalFact = factFromZeroOne(zeroOneFromFact(factAverage([charmFactor, abiFactor]), FACT_TIMES) * hireCostReduceRate, FACT_TIMES);
 					final moreMoneyExt = moreMoney / 1000.0;
-					final rate = Math.min(1, base * charmFactor * abiFactor * (1 - hireCostFactor) + moreMoneyExt);
+					final rate = zeroOneFromFact(factVery(factAverage([base, finalFact]), 3), FACT_TIMES) + moreMoneyExt;
 					{
 						playerCost: {
 							id: playerId,
