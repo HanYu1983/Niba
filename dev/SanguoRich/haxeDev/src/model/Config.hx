@@ -24,9 +24,9 @@ final PEOPLE_HIRE_COST_FACTOR = .1;
 final GRID_EARN_PER_TURN = 1;
 
 // 格子的基本保底成長
-final BASIC_GROW_MONEY_RATE = 0.005;
-final BASIC_GROW_FOOD_RATE = 0.005;
-final BASIC_GROW_ARMY_RATE = 0.005;
+final BASIC_GROW_MONEY_RATE = 0.01;
+final BASIC_GROW_FOOD_RATE = 0.01;
+final BASIC_GROW_ARMY_RATE = 0.01;
 
 final BASIC_GROW_MONEY_ADD = 4;
 final BASIC_GROW_FOOD_ADD = 4;
@@ -56,7 +56,7 @@ final WAR_FRONT_ABILITY_FACTOR = 1.4;
 final WAR_BACK_ABILITY_FACTOR = .7;
 
 // 戰鬥支付金錢整體調整
-final WAR_MONEY_COST_FACTOR = .1;
+final WAR_MONEY_COST_FACTOR = 0.2;
 
 // 戰鬥支付食物整體調整
 final WAR_FOOD_COST_FACTOR = 0.3;
@@ -65,7 +65,7 @@ final WAR_FOOD_COST_FACTOR = 0.3;
 final WAR_DEFFENDER_FACTOR = 2.0;
 
 // 兵數量差優勢, 越高代表影響越小
-final WAR_HIGH_LOW_FACTOR = 1.2;
+final WAR_HIGH_LOW_FACTOR = 1.1;
 
 // 保底傷害, 1的話代表派100兵最少打100
 final WAR_ARMY_FACTOR = 0.0;
@@ -74,7 +74,7 @@ final WAR_ARMY_FACTOR = 0.0;
 final WAR_FINAL_DAMAGE_FACTOR = 0.75;
 
 // 每回合基本回體力
-final PEOPLE_ENERGY_SUPPLY_BASE = 1;
+final PEOPLE_ENERGY_SUPPLY_BASE = 0;
 
 // 每回合額外回復％數體力(體力越多回越快)
 final PEOPLE_ENERGY_SUPPLY_SAVE_FACTOR = 0.05;
