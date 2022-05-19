@@ -904,8 +904,7 @@ class MainView extends Box {
 					syncViewByInfo(gameInfo);
 
 					final catelog = Main.getBuildingCatelog(info.building);
-					var msg = '武將:${info.people.name:""}\n';
-					msg += '已擴建 ${catelog.name}\n';
+					var msg = '已擴建 ${catelog.name}\n';
 					checkAutoPlay(autoPlay, '擴建完畢', msg);
 				case WORLD_EVENT:
 
