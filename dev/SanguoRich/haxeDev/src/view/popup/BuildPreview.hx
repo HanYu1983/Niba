@@ -1,5 +1,6 @@
 package view.popup;
 
+import model.IModel.GameInfo;
 import view.widgets.PeopleListView;
 import haxe.ui.containers.dialogs.Dialog.DialogButton;
 import haxe.ui.containers.dialogs.MessageBox.MessageBoxType;
@@ -22,6 +23,7 @@ class BuildPreview extends PopupView{
 
         plist = new PeopleListView();
         box_plist.addComponent(plist);
+        box_plist.hide();
 
         gridView = new GridGridView();
         box_grid.addComponent(gridView);
@@ -70,12 +72,18 @@ class BuildPreview extends PopupView{
         final people = plist.selectedItem;
         var catelog = tab_buildingList.selectedItem;
         var toCatelog = Main.getBuildingCatelog(to);
+
+        final gameInfo = Main.model.gameInfo();
+        if(gameInfo.currentPlayer.money < catelog.money){
+            Dialogs.messageBox('金錢不足', '金錢不足', MessageBoxType.TYPE_INFO);
+            return;
+        }
         
-        var msg = '確定要讓 ${people.name} 擴建 ${catelog.name} 成 ${toCatelog.name} 嗎?\n';
-        msg += '費用:${catelog.money}\n';
+        var title = '確定要擴建 ${catelog.name} 成 ${toCatelog.name} 嗎?';
+        var msg = '金錢:${Main.getCompareString(gameInfo.currentPlayer.money, gameInfo.currentPlayer.money - catelog.money)}\n';
         msg += '功能:${toCatelog.describe}';
 
-        Dialogs.messageBox(msg, '主公啊…', MessageBoxType.TYPE_QUESTION, true, (e)->{
+        Dialogs.messageBox(msg, title, MessageBoxType.TYPE_QUESTION, true, (e)->{
             if( e == DialogButton.YES){
                 fadeOut();
                 Main.view.onBuildingPreviewConfirmClick(people.id, current, to);

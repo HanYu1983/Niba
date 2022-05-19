@@ -101,7 +101,7 @@ final ENERGY_COST_ON_COST_FOR_FUN = 15;
 final SNATCH_ARMY_AT_LEAST = 30;
 
 // 單挑的士兵變化基本量
-final PK_ARMY_BASE_CHANGE = 30;
+final PK_ARMY_BASE_CHANGE = 40;
 
 // 最低友好度
 final MIN_GRID_FAVOR = -3;
@@ -155,7 +155,7 @@ function getExpAdd(p:Float, max:Float):Float {
 // 1代表支付所有體力時, 機率為1
 final BASE_RATE_STRATEGY = 0.8;
 final BASE_RATE_RESOURCE = 1.2;
-final BASE_RATE_PK = 0.7;
+final BASE_RATE_PK = 0.9;
 final BASE_RATE_NEGO = 1.0;
 final BASE_RATE_HIRE = .8;
 final BASE_RATE_EXPLORE = 1.2;
