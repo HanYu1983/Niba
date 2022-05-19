@@ -224,9 +224,9 @@ class MainView extends Box {
 		Main.model.takeSnatchOn(gameInfo.currentPlayer.id, gameInfo.currentPlayer.atGridId, p1Id, p2Id, isOccupation, syncViewWithEventsByGameInfo);
 	}
 
-	public function onResourcePreviewConfirmClick(p1Id:Int, market:model.IModel.MARKET, resource:model.IModel.RESOURCE) {
+	public function onResourcePreviewConfirmClick(p1Id:Int, moneyBase:Float, market:model.IModel.MARKET, resource:model.IModel.RESOURCE) {
 		var gameInfo = Main.model.gameInfo();
-		Main.model.takeResource(gameInfo.currentPlayer.id, gameInfo.currentPlayer.atGridId, p1Id, market, resource, syncViewWithEventsByGameInfo);
+		Main.model.takeResource(gameInfo.currentPlayer.id, gameInfo.currentPlayer.atGridId, p1Id, moneyBase, market, resource, syncViewWithEventsByGameInfo);
 	}
 
 	public function onExploreSuccessViewConfirmClick() {

@@ -85,12 +85,12 @@ class ProxyModel implements IModel {
 		return model.getTakeResourcePreview(playerId, gridId, market, type);
 	}
 
-	public function getPreResultOfResource(playerId:Int, gridId:Int, p1:People, market:MARKET, type:RESOURCE):PreResultOnResource {
-		return model.getPreResultOfResource(playerId, gridId, p1, market, type);
+	public function getPreResultOfResource(playerId:Int, gridId:Int, p1:People, moneyBase:Float, market:MARKET, type:RESOURCE):PreResultOnResource {
+		return model.getPreResultOfResource(playerId, gridId, p1, moneyBase, market, type);
 	}
 
-	public function takeResource(playerId:Int, gridId:Int, p1PeopleId:Int, market:MARKET, type:RESOURCE, cb:(gameInfo:GameInfo) -> Void) {
-		return model.takeResource(playerId, gridId, p1PeopleId, market, type, cb);
+	public function takeResource(playerId:Int, gridId:Int, p1PeopleId:Int, moneyBase:Float, market:MARKET, type:RESOURCE, cb:(gameInfo:GameInfo) -> Void) {
+		return model.takeResource(playerId, gridId, p1PeopleId, moneyBase, market, type, cb);
 	}
 
 	public function getPreResultOfFire(playerId:Int, p1PeopleId:Array<Int>):PreResultOnFire {

@@ -31,10 +31,14 @@ class ResourcePreviewView extends PopupView {
 		var previewInfo:ResourcePreview = info;
 
 		function setRate() {
+			if(p1List.selectedItem == null) return;
+			if(grp_moneyBase.selectedButton == null) return;
+
 			var p1 = p1List.selectedItem;
+			var moneyBase = Std.parseFloat( grp_moneyBase.selectedButton.text );
 
 			var gameInfo = Main.model.gameInfo();
-			var result:PreResultOnResource = Main.model.getPreResultOfResource(gameInfo.currentPlayer.id, gameInfo.currentPlayer.atGridId, p1, info.market,
+			var result:PreResultOnResource = Main.model.getPreResultOfResource(gameInfo.currentPlayer.id, gameInfo.currentPlayer.atGridId, p1, moneyBase, info.market,
 				info.resource);
 
 			pro_energy.value = Main.getEnergyString(result.energyBefore, result.energyAfter, ENERGY_COST_ON_RESOURCE);
@@ -68,9 +72,16 @@ class ResourcePreviewView extends PopupView {
 		}
 		p1List.selectedIndex = 0;
 
+		grp_moneyBase.onChange = function(e){
+			setRate();
+		}
+		grp_moneyBase.selectedIndex = 0;
+
 		btn_confirm.onClick = function(e) {
 			fadeOut();
-			Main.view.onResourcePreviewConfirmClick(p1List.selectedItem.id, info.market, info.resource);
+
+			var moneyBase = Std.parseFloat( grp_moneyBase.selectedButton.text );
+			Main.view.onResourcePreviewConfirmClick(p1List.selectedItem.id, moneyBase, info.market, info.resource);
 		}
 	}
 

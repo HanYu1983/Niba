@@ -357,11 +357,11 @@ class DebugModel implements IModel {
 		return null;
 	}
 
-	public function getPreResultOfResource(playerId:Int, gridId:Int, p1:People, market:MARKET, type:RESOURCE):PreResultOnResource {
+	public function getPreResultOfResource(playerId:Int, gridId:Int, p1:People, moneyBase:Float, market:MARKET, type:RESOURCE):PreResultOnResource {
 		return null;
 	}
 
-	public function takeResource(playerId:Int, gridInt:Int, p1PeopleId:Int, market:MARKET, type:RESOURCE, cb:(gameInfo:GameInfo) -> Void) {}
+	public function takeResource(playerId:Int, gridInt:Int, p1PeopleId:Int, moneyBase:Float, market:MARKET, type:RESOURCE, cb:(gameInfo:GameInfo) -> Void) {}
 
 	public function getPreResultOfFire(playerId:Int, p1PeopleId:Array<Int>):PreResultOnFire {
 		return {

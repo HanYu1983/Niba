@@ -20,6 +20,14 @@
         </property-grid>
     </hbox>
     <hbox horizontalAlign="center">
+        <label text='交易基礎量'/>
+        <button-bar id="grp_moneyBase" allowUnselection="true">
+            <button text="100" />
+            <button text="200" />
+            <button text="400" />
+        </button-bar>
+    </hbox>
+    <hbox horizontalAlign="center">
         <button text="取消" id="btn_cancel" />
         <button text="確定" id="btn_confirm" />
     </hbox>

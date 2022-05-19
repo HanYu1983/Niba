@@ -67,9 +67,9 @@ class CacheModel extends ProxyModel {
 		return super.takeExplore(playerId, gridId, p1PeopleId, cb);
 	}
 
-	override function takeResource(playerId:Int, gridId:Int, p1PeopleId:Int, market:MARKET, type:RESOURCE, cb:(gameInfo:GameInfo) -> Void) {
+	override function takeResource(playerId:Int, gridId:Int, p1PeopleId:Int, moneyBase:Float, market:MARKET, type:RESOURCE, cb:(gameInfo:GameInfo) -> Void) {
 		isDirty = true;
-		return super.takeResource(playerId, gridId, p1PeopleId, market, type, cb);
+		return super.takeResource(playerId, gridId, p1PeopleId, moneyBase, market, type, cb);
 	}
 
 	override function takeFire(playerId:Int, p1PeopleId:Array<Int>, cb:(gameInfo:GameInfo) -> Void) {

@@ -116,11 +116,11 @@ class ModelVer2 extends DebugModel {
 		return _getTakeResourcePreview(context, playerId, gridId, market, type);
 	}
 
-	override function getPreResultOfResource(playerId:Int, gridId:Int, p1:model.PeopleGenerator.People, market:MARKET, type:RESOURCE):PreResultOnResource {
+	override function getPreResultOfResource(playerId:Int, gridId:Int, p1:model.PeopleGenerator.People, moneyBase:Float, market:MARKET, type:RESOURCE):PreResultOnResource {
 		return _getPreResultOfResource(context, playerId, gridId, p1.id, market, type);
 	}
 
-	override function takeResource(playerId:Int, gridId:Int, p1PeopleId:Int, market:MARKET, type:RESOURCE, cb:(gameInfo:GameInfo) -> Void) {
+	override function takeResource(playerId:Int, gridId:Int, p1PeopleId:Int, moneyBase:Float, market:MARKET, type:RESOURCE, cb:(gameInfo:GameInfo) -> Void) {
 		_takeResource(context, playerId, gridId, p1PeopleId, market, type);
 		cb(gameInfo());
 	}
