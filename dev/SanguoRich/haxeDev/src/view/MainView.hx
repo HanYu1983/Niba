@@ -684,6 +684,7 @@ class MainView extends Box {
 				case SETTLE_RESULT:
 					Dialogs.messageBox('開拓成功', '開拓成功', MessageBoxType.TYPE_INFO, true, (target) -> {
 						transferPreview.showPopup(null);
+						doOneEvent();
 					});
 				case PLAYER_LOSE:
 					final msg = '${info.player.name}敗北!';
@@ -787,7 +788,7 @@ class MainView extends Box {
 						'號召士兵失敗';
 					}
 					var msg = '武將:${info.people.name}\n';
-					msg += '士兵:${Main.getFixNumber(info.armyBefore, 0)} => ${Main.getFixNumber(info.armyAfter, 0)} (${Main.getFixNumber(info.armyAfter - info.armyBefore, 0)})';
+					msg += '士兵:${Main.getCompareString(info.armyBefore, info.armyAfter)}\n';
 					checkAutoPlay(autoPlay, title, msg);
 				case COST_FOR_BONUS_RESULT:
 					syncViewByInfo(gameInfo);
@@ -822,17 +823,17 @@ class MainView extends Box {
 
 					final title = info.success ? '雇用任務成功' : '雇用任務失敗';
 					var msg = '武將:${info.people.name}\n';
-					msg += '體力:${Main.getFixNumber(info.energyBefore, 0)} => ${Main.getFixNumber(info.energyAfter, 0)}\n';
-					msg += '金錢:${Main.getFixNumber(info.moneyBefore, 0)} => ${Main.getFixNumber(info.moneyAfter, 0)}\n';
-					msg += '糧草:${Main.getFixNumber(info.foodBefore, 0)} => ${Main.getFixNumber(info.foodAfter, 0)}\n';
-					msg += '士兵:${Main.getFixNumber(info.armyBefore, 0)} => ${Main.getFixNumber(info.armyAfter, 0)}\n';
+					msg += '體力:${Main.getCompareString(info.energyBefore, info.energyAfter)}\n';
+					msg += '金錢:${Main.getCompareString(info.moneyBefore, info.moneyAfter)}\n';
+					msg += '糧草:${Main.getCompareString(info.foodBefore, info.foodAfter)}\n';
+					msg += '士兵:${Main.getCompareString(info.armyBefore, info.armyAfter)}\n';
 					checkAutoPlay(autoPlay, title, msg);
 				case FIRE_RESULT:
 					syncViewByInfo(gameInfo);
 
 					var people:Array<People> = info.people;
 					var msg = '解雇:${people.map((p) -> p.name).join(',')}\n';
-					msg += '薪俸:${Main.getFixNumber(info.maintainMoneyBefore, 2)} => ${Main.getFixNumber(info.maintainMoneyAfter, 2)}\n';
+					msg += '薪俸:${Main.getCompareString(info.maintainMoneyBefore, info.maintainMoneyAfter)}\n';
 					checkAutoPlay(autoPlay, '解雇完成', msg);
 
 				case NEGOTIATE_RESULT:
@@ -840,10 +841,10 @@ class MainView extends Box {
 
 					final title = info.success ? '交涉任務成功' : '交涉任務失敗';
 					var msg = '武將:${info.people.name}\n';
-					msg += '體力:${Main.getFixNumber(info.energyBefore, 0)} => ${Main.getFixNumber(info.energyAfter, 0)}\n';
-					msg += '金錢:${Main.getFixNumber(info.moneyBefore, 0)} => ${Main.getFixNumber(info.moneyAfter, 0)}\n';
-					msg += '糧草:${Main.getFixNumber(info.foodBefore, 0)} => ${Main.getFixNumber(info.foodAfter, 0)}\n';
-					msg += '士兵:${Main.getFixNumber(info.armyBefore, 0)} => ${Main.getFixNumber(info.armyAfter, 0)}\n';
+					msg += '體力:${Main.getCompareString(info.energyBefore, info.energyAfter)}\n';
+					msg += '金錢:${Main.getCompareString(info.moneyBefore, info.moneyAfter)}\n';
+					msg += '糧草:${Main.getCompareString(info.foodBefore, info.foodAfter)}\n';
+					msg += '士兵:${Main.getCompareString(info.armyBefore, info.armyAfter)}\n';
 					msg += '友好:${Main.getFavorString(info.favorBefore)} => ${Main.getFavorString(info.favorAfter)}\n';
 					checkAutoPlay(autoPlay, title, msg);
 
@@ -856,10 +857,10 @@ class MainView extends Box {
 					syncViewByInfo(gameInfo);
 
 					var msg = '武將:${info.people.name}\n';
-					msg += '體力:${Main.getFixNumber(info.energyBefore, 0)} => ${Main.getFixNumber(info.energyAfter, 0)}\n';
-					msg += '金錢:${Main.getFixNumber(info.moneyBefore, 0)} => ${Main.getFixNumber(info.moneyAfter, 0)}\n';
-					msg += '糧草:${Main.getFixNumber(info.foodBefore, 0)} => ${Main.getFixNumber(info.foodAfter, 0)}\n';
-					msg += '士兵:${Main.getFixNumber(info.armyBefore, 0)} => ${Main.getFixNumber(info.armyAfter, 0)}\n';
+					msg += '體力:${Main.getCompareString(info.energyBefore, info.energyAfter)}\n';
+					msg += '金錢:${Main.getCompareString(info.moneyBefore, info.moneyAfter)}\n';
+					msg += '糧草:${Main.getCompareString(info.foodBefore, info.foodAfter)}\n';
+					msg += '士兵:${Main.getCompareString(info.armyBefore, info.armyAfter)}\n';
 					if (info.success) {
 						Dialogs.messageBox(msg, '占領成功', MessageBoxType.TYPE_INFO, true, (target) -> {
 							transferPreview.showPopup(null);
@@ -876,20 +877,20 @@ class MainView extends Box {
 
 					final title = info.success ? '搶奪成功' : '搶奪失敗';
 					var msg = '武將:${info.people.name}\n';
-					msg += '體力:${Main.getFixNumber(info.energyBefore, 0)} => ${Main.getFixNumber(info.energyAfter, 0)}\n';
-					msg += '金錢:${Main.getFixNumber(info.moneyBefore, 0)} => ${Main.getFixNumber(info.moneyAfter, 0)}\n';
-					msg += '糧草:${Main.getFixNumber(info.foodBefore, 0)} => ${Main.getFixNumber(info.foodAfter, 0)}\n';
-					msg += '士兵:${Main.getFixNumber(info.armyBefore, 0)} => ${Main.getFixNumber(info.armyAfter, 0)}\n';
+					msg += '體力:${Main.getCompareString(info.energyBefore, info.energyAfter)}\n';
+					msg += '金錢:${Main.getCompareString(info.moneyBefore, info.moneyAfter)}\n';
+					msg += '糧草:${Main.getCompareString(info.foodBefore, info.foodAfter)}\n';
+					msg += '士兵:${Main.getCompareString(info.armyBefore, info.armyAfter)}\n';
 					checkAutoPlay(autoPlay, title, msg);
 				case RESOURCE_RESULT:
 					syncViewByInfo(gameInfo);
 
 					var msg = '武將:${info.people ? info.people.name : ""}\n';
-					msg += '體力:${Main.getFixNumber(info.energyBefore, 0)} => ${Main.getFixNumber(info.energyAfter, 0)}\n';
-					msg += '金錢:${Main.getFixNumber(info.moneyBefore, 0)} => ${Main.getFixNumber(info.moneyAfter, 0)}\n';
-					msg += '糧草:${Main.getFixNumber(info.foodBefore, 0)} => ${Main.getFixNumber(info.foodAfter, 0)}\n';
-					msg += '士兵:${Main.getFixNumber(info.armyBefore, 0)} => ${Main.getFixNumber(info.armyAfter, 0)}\n';
-					checkAutoPlay(autoPlay, '交易完成', msg);
+					msg += '體力:${Main.getCompareString(info.energyBefore, info.energyAfter)}\n';
+					msg += '金錢:${Main.getCompareString(info.moneyBefore, info.moneyAfter)}\n';
+					msg += '糧草:${Main.getCompareString(info.foodBefore, info.foodAfter)}\n';
+					msg += '士兵:${Main.getCompareString(info.armyBefore, info.armyAfter)}\n';
+					checkAutoPlay(autoPlay, '資源變更', msg);
 				case STRATEGY_RESULT:
 					syncViewByInfo(gameInfo);
 
@@ -897,7 +898,7 @@ class MainView extends Box {
 					var msg = title;
 					msg += '武將:${info.people ? info.people.name : ""}\n';
 					msg += '計策:${info.strategy ? info.strategy.name : ""}\n';
-					msg += '體力:${Main.getFixNumber(info.energyBefore, 0)} => ${Main.getFixNumber(info.energyAfter, 0)}\n';
+					msg += '體力:${Main.getCompareString(info.energyBefore, info.energyAfter)}\n';
 					checkAutoPlay(autoPlay, title, msg);
 				case BUILDING_RESULT:
 					syncViewByInfo(gameInfo);
@@ -922,24 +923,25 @@ class MainView extends Box {
 					msg += '職等:${PeopleGenerator.getInst().getPeopleTypeName(p1.type)} => ${PeopleGenerator.getInst().getPeopleTypeName(p2.type)}\n';
 					switch (p2.type) {
 						case WENGUAN(level):
-							msg += '智力:${p1.intelligence} => ${p2.intelligence}\n';
-							msg += '政治:${p1.political} => ${p2.political}\n';
+							
+							msg += '智力:${Main.getCompareString(p1.intelligence, p2.intelligence)}\n';
+							msg += '政治:${Main.getCompareString(p1.political, p2.political)}\n';
 						case WUJIANG(level):
-							msg += '智力:${p1.force} => ${p2.force}\n';
-							msg += '政治:${p1.command} => ${p2.command}\n';
+							msg += '智力:${Main.getCompareString(p1.force, p2.force)}\n';
+							msg += '政治:${Main.getCompareString(p1.command, p2.command)}\n';
 						case _:
 					}
-					msg += '魅力:${p1.charm} => ${p2.charm}\n';
-					msg += '體力:${p1.energy} => ${p2.energy}\n';
+					msg += '魅力:${Main.getCompareString(p1.charm, p2.charm)}\n';
+					msg += '體力:${Main.getCompareString(p1.energy, p2.energy)}\n';
 					checkAutoPlay(autoPlay, title, msg);
 				case PAY_FOR_OVER_ENEMY_GRID:
 					syncViewByInfo(gameInfo);
 
 					final title = '走到其他主公的領地，過路費…';
 					var msg = '走到其他主公的領地，過路費…\n';
-					msg += '金錢:${Main.getFixNumber(info.moneyBefore, 0)} => ${Main.getFixNumber(info.moneyAfter, 0)}\n';
-					msg += '糧草:${Main.getFixNumber(info.foodBefore, 0)} => ${Main.getFixNumber(info.foodAfter, 0)}\n';
-					msg += '士兵:${Main.getFixNumber(info.armyBefore, 0)} => ${Main.getFixNumber(info.armyAfter, 0)}\n';
+					msg += '金錢:${Main.getCompareString(info.moneyBefore, info.moneyAfter)}\n';
+					msg += '糧草:${Main.getCompareString(info.foodBefore, info.foodAfter)}\n';
+					msg += '士兵:${Main.getCompareString(info.armyBefore, info.armyAfter)}\n';
 					checkAutoPlay(autoPlay, title, msg);
 			}
 		}else{
@@ -1090,7 +1092,7 @@ class MainView extends Box {
 			var info:Dynamic = Main.cloneObject(p);
 			info.money = '${Main.getFixNumber(p.money, 0)} (${Main.getFixNumber(p.maintainPeople)})';
 			info.food = '${Main.getFixNumber(p.food, 0)} (${Main.getFixNumber(p.maintainArmy)})';
-			info.army = '${Main.getFixNumber(p.army, 0)} (${Main.getFixNumber(p.armyGrow)})';
+			info.army = '${Main.getFixNumber(p.army, 0)} (${Main.getFixNumber(p.armyGrow)})';			
 			info.peopleCount = p.people.length;
 			info.cityCount = p.grids.length;
 			info.treasureCount = p.treasures.length;
