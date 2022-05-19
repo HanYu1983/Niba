@@ -27,7 +27,6 @@ final GRID_EARN_PER_TURN = 1;
 final BASIC_GROW_MONEY_RATE = 0.01;
 final BASIC_GROW_FOOD_RATE = 0.01;
 final BASIC_GROW_ARMY_RATE = 0.01;
-
 final BASIC_GROW_MONEY_ADD = 4;
 final BASIC_GROW_FOOD_ADD = 4;
 final BASIC_GROW_ARMY_ADD = 4;
@@ -196,3 +195,6 @@ final INIT_RESOURCE = 1200.0;
 
 // 格子數
 final INIT_GRID_COUNT = 30;
+
+// 對非AI事件做排序
+final SORT_EVENT_WHEN_REAL_PLAYER = true;

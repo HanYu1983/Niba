@@ -924,7 +924,7 @@ function getEventInfo(e:Event):EventInfo {
 
 // 事件排序, 數值越小越先
 // 注意, 只有在非AI玩家時才排序, 因為這裡假設了玩家不在意正確的狀態順序
-function getEventSortWeight(e:Event):Int {
+private function getEventSortWeight(e:Event):Int {
 	return switch e {
 		case WAR_RESULT(value, gameInfo):
 			999;
@@ -941,21 +941,23 @@ function getEventSortWeight(e:Event):Int {
 	}
 }
 
+function sortEventWhenRealPlayer(ctx:Context) {
+	if (SORT_EVENT_WHEN_REAL_PLAYER == false) {
+		return;
+	}
+	final player = ctx.players[ctx.currentPlayerId];
+	final isRealPlayer = player.brain == null;
+	if (isRealPlayer == false) {
+		return;
+	}
+	ctx.events.sort((a, b) -> {
+		return getEventSortWeight(a) - getEventSortWeight(b);
+	});
+}
+
 function getGameInfo(ctx:Context, root:Bool):GameInfo {
 	final events = if (root) {
-		final player = ctx.players[ctx.currentPlayerId];
-		final isRealPlayer = player.brain == null;
-		// 如果是玩家的事件就排序, 而不管狀態順序
-		if (isRealPlayer) {
-			final eventCopy = deepCopy(ctx.events);
-			// 探索和攻城事件排最後
-			eventCopy.sort((a, b) -> {
-				return getEventSortWeight(a) - getEventSortWeight(b);
-			});
-			eventCopy.map(getEventInfo);
-		} else {
-			ctx.events.map(getEventInfo);
-		}
+		ctx.events.map(getEventInfo);
 	} else {
 		[];
 	}

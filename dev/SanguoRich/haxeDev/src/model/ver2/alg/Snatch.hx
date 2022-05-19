@@ -249,4 +249,5 @@ function _takeSnatchOn(ctx:Context, playerId:Int, gridId:Int, p1PeopleId:Int, p2
 		// 剛打完不能擴建
 		player.memory.hasBuild = true;
 	}
+	sortEventWhenRealPlayer(ctx);
 }

@@ -233,4 +233,5 @@ function _takeResource(ctx:Context, playerId:Int, gridId:Int, p1SelectId:Int, mo
 		final player = ctx.players[ctx.currentPlayerId];
 		player.memory.hasCommand = true;
 	}
+	sortEventWhenRealPlayer(ctx);
 }

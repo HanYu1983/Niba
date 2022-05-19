@@ -218,4 +218,5 @@ function doTakeNegoOn(ctx:Context, playerId:Int, gridId:Int, p1SelectId:Int, p2S
 		final player = ctx.players[ctx.currentPlayerId];
 		player.memory.hasCommand = true;
 	}
+	sortEventWhenRealPlayer(ctx);
 }

@@ -89,4 +89,5 @@ function _checkValidTransfer(ctx:Context, playerId:Int, gridId:Int, playerInfo:m
 
 function _takeTransfer(ctx:Context, playerId:Int, gridId:Int, playerInfo:model.IModel.PlayerInfo, gridInfo:model.GridGenerator.Grid) {
 	onTransfer(ctx, playerId, gridId, playerInfo, gridInfo);
+	sortEventWhenRealPlayer(ctx);
 }

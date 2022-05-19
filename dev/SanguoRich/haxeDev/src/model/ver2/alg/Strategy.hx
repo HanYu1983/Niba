@@ -240,4 +240,5 @@ function _takeStrategy(ctx:Context, p1PeopleId:Int, strategyId:Int, targetPlayer
 		final player = ctx.players[ctx.currentPlayerId];
 		player.memory.hasStrategy = true;
 	}
+	sortEventWhenRealPlayer(ctx);
 }

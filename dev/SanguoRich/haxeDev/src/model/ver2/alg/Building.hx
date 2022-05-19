@@ -53,4 +53,5 @@ function _takeBuilding(ctx:Context, playerId:Int, gridId:Int, peopleId:Int, curr
 		final player = ctx.players[ctx.currentPlayerId];
 		player.memory.hasBuild = true;
 	}
+	sortEventWhenRealPlayer(ctx);
 }

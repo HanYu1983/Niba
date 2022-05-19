@@ -216,4 +216,5 @@ function _takeCostForBonus(ctx:Context, playerId:Int, peopleId:Int, costType:Int
 		final player = ctx.players[ctx.currentPlayerId];
 		player.memory.hasCommand = true;
 	}
+	sortEventWhenRealPlayer(ctx);
 }

@@ -47,6 +47,7 @@ function _takeEquip(ctx:Context, people1:model.PeopleGenerator.People, equipId:I
 		return;
 	}
 	t.position.peopleId = p1.id;
+	sortEventWhenRealPlayer(ctx);
 }
 
 function _takeUnEquip(ctx:Context, people1:model.PeopleGenerator.People, unequipId:Int) {
@@ -65,4 +66,5 @@ function _takeUnEquip(ctx:Context, people1:model.PeopleGenerator.People, unequip
 	p1.energy = Math.max(0, p1.energy - p1.energy * ENERGY_RATE_FOR_TREASURE_TAKE);
 	// 用掉裝備次數
 	player.memory.hasEquip = true;
+	sortEventWhenRealPlayer(ctx);
 }

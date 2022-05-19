@@ -140,4 +140,5 @@ function doTakeHire(ctx:Context, playerId:Int, gridId:Int, p1SelectId:Int, p2Sel
 		final player = ctx.players[ctx.currentPlayerId];
 		player.memory.hasCommand = true;
 	}
+	sortEventWhenRealPlayer(ctx);
 }

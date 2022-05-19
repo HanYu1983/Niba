@@ -108,4 +108,5 @@ function _takePk(ctx:Context, playerId:Int, gridId:Int, p1PeopleId:Int, p2People
 		final player = ctx.players[ctx.currentPlayerId];
 		player.memory.hasCommand = true;
 	}
+	sortEventWhenRealPlayer(ctx);
 }

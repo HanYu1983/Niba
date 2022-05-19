@@ -53,4 +53,5 @@ function _getPreResultOfFire(ctx:Context, playerId:Int, peopleIds:Array<Int>):Pr
 
 function _takeFire(ctx:Context, playerId:Int, peopleIds:Array<Int>) {
 	onFire(ctx, playerId, peopleIds);
+	sortEventWhenRealPlayer(ctx);
 }
