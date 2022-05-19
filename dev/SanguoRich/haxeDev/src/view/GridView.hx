@@ -77,8 +77,8 @@ class GridView extends Box {
 
 	public function showAnimation(text:String, duration:Float = 1.0, cb:()->Void){
 		box_showAnimation.show();
-		lbl_action.value = text;
-
+		lbl_action.value = text.substr(0,5);
+		
 		final tweens = [];
 		tweens.push(TweenX.wait(duration));
 		tweens.push(TweenX.func(()->{
@@ -108,14 +108,23 @@ class GridView extends Box {
 			ary.length > 0 ? strategyViews[index].show() : strategyViews[index].hide();
 		}
 
-		if (grid.buildtype != GROWTYPE.EMPTY && grid.belongPlayerId == null) {
-			final gameInfo = Main.model.gameInfo();
-			var favor = grid.favor[gameInfo.currentPlayer.id];
-			lbl_favor.text = Main.getFavorString(favor);
-
-			lbl_favor.show();
-		} else {
-			lbl_favor.hide();
+		switch(grid.buildtype){
+			case EMPTY:
+				box_maxMoney.hide();
+				box_maxFood.hide();
+				box_maxArmy.hide();
+				lbl_favor.hide();
+			case _:
+				box_maxMoney.show();
+				box_maxFood.show();
+				box_maxArmy.show();
+				lbl_favor.hide();
+				if( grid.belongPlayerId == null){
+					final gameInfo = Main.model.gameInfo();
+					var favor = grid.favor[gameInfo.currentPlayer.id];
+					lbl_favor.text = Main.getFavorString(favor);
+					lbl_favor.show();
+				}
 		}
 	}
 

@@ -8,4 +8,8 @@ class BasicGridView extends PropertyGrid{
     public function setInfo(info:Dynamic) {
         
     }
+
+    public function setCompareInfo(infoBefore:Dynamic, infoAfter:Dynamic) {
+        
+    }
 }

@@ -10,27 +10,6 @@ class LeaderGridView extends BasicGridView{
 
     public function new() {
         super();
-
-        // addComponent(leaderGroup);
-        // var map = [
-        //     "武將",
-        //     "體力",
-        //     "武力",
-        //     "統率",
-        //     "智力",
-        //     "政治",
-        //     "魅力",
-        //     "金錢",
-        //     "糧草",
-        //     "士兵",
-        //     "計略",
-        // ];
-        // for(key in map){
-        //     var pro = new Property();
-        //     pro.label = key;
-        //     pro.value = "abc";
-        //     leaderGroup.addComponent(pro);
-        // }
     }
 
     override function setInfo(info:Dynamic) {
@@ -41,6 +20,20 @@ class LeaderGridView extends BasicGridView{
         pro_money.value = '${Math.floor(p.money)} (薪俸:${Main.getFixNumber(p.maintainPeople)})';
         pro_food.value = '${Math.floor(p.food)} (消耗:${Main.getFixNumber(p.maintainArmy)})';
         pro_army.value = '${Math.floor(p.army)} (消耗:${Main.getFixNumber(p.armyGrow)})';
+        pro_peopleCount.value = p.people.length;
+        pro_cityCount.value = p.grids.length;
+        pro_treasureCount.value = p.treasures.length;
+        pro_score.value = Math.floor(p.score);
+    }
+
+    override function setCompareInfo(infoBefore:Dynamic, infoAfter:Dynamic) {
+        super.setCompareInfo(infoBefore, infoAfter);
+
+        var p:PlayerInfo = infoBefore;
+        pro_name.value = p.name;
+        pro_money.value = '${Main.getCompareString(infoBefore.money, infoAfter.money)}';
+        pro_food.value = '${Main.getCompareString(infoBefore.food, infoAfter.food)}';
+        pro_army.value = '${Main.getCompareString(infoBefore.army, infoAfter.army)}';
         pro_peopleCount.value = p.people.length;
         pro_cityCount.value = p.grids.length;
         pro_treasureCount.value = p.treasures.length;
