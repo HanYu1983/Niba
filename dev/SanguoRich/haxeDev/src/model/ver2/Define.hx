@@ -1534,7 +1534,3 @@ function wrapStrategyEvent(ctx:Context, playerId:Int, peopleId:Int, strategyId:I
 	ctx.events.push(STRATEGY_RESULT(strategyResultValue, getGameInfo(ctx, false), null));
 	return strategyResultValue.success;
 }
-
-function getNormalizeZeroOne(v:Float):Float {
-	return zeroOneSymbol(v, [0.3, 0.4, 0.5, 0.525, 0.55]);
-}

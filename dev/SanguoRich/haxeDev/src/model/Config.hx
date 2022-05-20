@@ -1,6 +1,28 @@
 package model;
 
-final FACT_TIMES = 2.0;
+import model.tool.Fact;
+
+private final FACT_TIMES = 2.0;
+
+function getNormalizeZeroOne(v:Float):Float {
+	return zeroOneSymbol(v, [0.3, 0.4, 0.5, 0.525, 0.55]);
+}
+
+function getNormalizeZeroOneFromFact(v:Float):Float {
+	return getNormalizeZeroOne(zeroOneFromFact(v, FACT_TIMES));
+}
+
+function getZeroOneFromFact(v:Float):Float {
+	return zeroOneFromFact(v, FACT_TIMES);
+}
+
+function getFact(v:Float):Float {
+	return fact(v, FACT_TIMES);
+}
+
+function getFactFromZeroOne(v:Float):Float {
+	return factFromZeroOne(v, FACT_TIMES);
+}
 
 // 幾個回合加成(4人走完算1回合)
 // 作用中

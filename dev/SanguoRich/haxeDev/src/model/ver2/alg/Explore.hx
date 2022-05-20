@@ -21,18 +21,17 @@ private function getExploreCost(ctx:Context, playerId:Int, gridId:Int, p1SelectI
 			final p1 = getPeopleById(ctx, p1SelectId);
 			final p1Abilities = getPeopleAbilities(ctx, p1.id);
 			final useEnergy = p1.energy / (100 / ENERGY_COST_ON_EXPLORE);
-			final base = fact(getBase(useEnergy, ENERGY_COST_ON_EXPLORE, 0.0) * BASE_RATE_EXPLORE, FACT_TIMES);
+			final base = getFact(getBase(useEnergy, ENERGY_COST_ON_EXPLORE, 0.0) * BASE_RATE_EXPLORE);
 			final charmExt = getPlayerCharmAddByAttachment(ctx, playerId);
-			final charmFactor = fact((getPeopleCharm(ctx, p1.id) + charmExt) / 50, FACT_TIMES);
+			final charmFactor = getFact((getPeopleCharm(ctx, p1.id) + charmExt) / 50);
 			// 人脈加成
-			final abiFactor = fact(p1Abilities.has(10) ? 1.5 : 1, FACT_TIMES);
+			final abiFactor = getFact(p1Abilities.has(10) ? 1.5 : 1);
 			// 鑑定
 			final abi2ZeroOne = p1Abilities.has(12) ? 1.0 : 0.0;
 			//
-			final rate = getNormalizeZeroOne(zeroOneFromFact(factAverage([[base, 1], [charmFactor, 1], [abiFactor, 1]]), FACT_TIMES));
+			final rate = getNormalizeZeroOneFromFact(factAverage([[base, 1], [charmFactor, 1], [abiFactor, 1]]));
 			final findTreasureZeroOne = if (getTreasureInGrid(ctx, gridId).length > 0) {
-				getNormalizeZeroOne(zeroOneFromFact(factAverage([[FIND_TREASURE_WHEN_SUCCESS_BASE_RATE, 1], [charmFactor, 1], [abiFactor, 1]]),
-					FACT_TIMES) * abi2ZeroOne);
+				getNormalizeZeroOne(getZeroOneFromFact(factAverage([[FIND_TREASURE_WHEN_SUCCESS_BASE_RATE, 1], [charmFactor, 1], [abiFactor, 1]])) * abi2ZeroOne);
 			} else {
 				0.0;
 			}

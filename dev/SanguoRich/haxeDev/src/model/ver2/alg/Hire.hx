@@ -23,20 +23,19 @@ private function getHireCost(ctx:Context, playerId:Int, gridId:Int, p1SelectId:I
 					final hireCost = p2.cost * PEOPLE_HIRE_COST_FACTOR * getPlayerHireCostRate(ctx, playerId);
 					final hireMoneyOffset = player.money - hireCost;
 					final useEnergy = p1.energy / (100 / ENERGY_COST_ON_HIRE);
-					final base = fact(getBase(useEnergy, ENERGY_COST_ON_HIRE, 0.0) * BASE_RATE_HIRE, FACT_TIMES);
+					final base = getFact(getBase(useEnergy, ENERGY_COST_ON_HIRE, 0.0) * BASE_RATE_HIRE);
 					final charmExt = getPlayerCharmAddByAttachment(ctx, playerId);
 					// 改爲用敵人的cost為基準難度(1200大概爲最强武將了)
 					final vsCharm = (p2.cost / 1200) * 80 + 20;
-					final charmFactor = fact((getPeopleCharm(ctx, p1.id) + charmExt) / vsCharm, FACT_TIMES);
+					final charmFactor = getFact((getPeopleCharm(ctx, p1.id) + charmExt) / vsCharm);
 					// 人脈加成
-					final abiFactor = fact(p1Abilities.has(10) ? 1.5 : 1, FACT_TIMES);
+					final abiFactor = getFact(p1Abilities.has(10) ? 1.5 : 1);
 					// 越不夠錢減成
 					// 完全付不出來的話, 這個系數為0
 					final hireCostReduceRate = hireCost == 0 ? 1 : zeroOneNot(zeroOne((-1 * hireMoneyOffset) / hireCost));
-					final finalFact = factFromZeroOne(zeroOneFromFact(factAverage([[charmFactor, 1], [abiFactor, 1]]), FACT_TIMES) * hireCostReduceRate,
-						FACT_TIMES);
+					final finalFact = getFactFromZeroOne(getZeroOneFromFact(factAverage([[charmFactor, 1], [abiFactor, 1]])) * hireCostReduceRate);
 					final moreMoneyExt = moreMoney / 1000.0;
-					final rate = getNormalizeZeroOne(zeroOneFromFact(factAverage([[base, 1], [finalFact, 1]]), FACT_TIMES)) + moreMoneyExt;
+					final rate = getNormalizeZeroOneFromFact(factAverage([[base, 1], [finalFact, 1]])) + moreMoneyExt;
 					{
 						playerCost: {
 							id: playerId,
