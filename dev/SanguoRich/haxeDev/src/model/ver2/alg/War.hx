@@ -5,6 +5,7 @@ import model.IModel;
 import model.Config;
 import model.ver2.Define;
 import model.ver2.alg.Alg;
+import model.tool.Fact;
 
 using Lambda;
 
@@ -21,11 +22,11 @@ private function getWarCostImpl(ctx:Context, playerId:Int, gridId:Int, p1PeopleI
 		final atkArmy = army1;
 		final atkPeople = getPeopleById(ctx, p1PeopleId);
 		final atkPeopleAbilities = getPeopleAbilities(ctx, atkPeople.id);
-		final fact1 = if (atkPeopleAbilities.has(6)) WAR_BACK_ABILITY_FACTOR else 1.0;
-		final fact2 = if (atkPeopleAbilities.has(7)) WAR_BACK_ABILITY_FACTOR else 1.0;
-		final fact3 = Math.pow(1.0 - Math.min(1, getPeopleIntelligence(ctx, atkPeople.id) / 100), 0.25);
+		final fact1 = getFact(if (atkPeopleAbilities.has(6)) WAR_BACK_ABILITY_FACTOR else 1.0);
+		final fact2 = getFact(if (atkPeopleAbilities.has(7)) WAR_BACK_ABILITY_FACTOR else 1.0);
+		final zeroOne3 = zeroOneNot(zeroOne(getPeopleIntelligence(ctx, atkPeople.id) / 100));
 		final base = atkArmy;
-		final cost = base * fact1 * fact2 * fact3;
+		final cost = getNormalizeZeroOneFromFact(factAverage([[base, 1], [fact1, 1], [fact2, 1]])) * zeroOne3;
 		atkMoneyCost = cost * WAR_MONEY_COST_FACTOR;
 		atkFoodCost = cost * WAR_FOOD_COST_FACTOR;
 	}
@@ -43,47 +44,65 @@ private function getWarCostImpl(ctx:Context, playerId:Int, gridId:Int, p1PeopleI
 		final moneyCost = atkMoneyCost;
 		final foodCost = atkFoodCost;
 		final useEnergy = atkPeople.energy / (100 / ENERGY_COST_ON_WAR);
-		final fact0 = useEnergy / ENERGY_COST_ON_WAR;
-		final fact1 = Math.min(3.0, if (defArmy > 0) {
+		final fact0 = getFact(useEnergy / ENERGY_COST_ON_WAR);
+		final fact1 = getFact(if (defArmy > 0) {
 			(atkArmy + defArmy * WAR_HIGH_LOW_FACTOR) / (defArmy + defArmy * WAR_HIGH_LOW_FACTOR);
 		} else {
 			99999.0;
 		});
-		final fact2 = if (atkPeopleAbilities.has(0)) WAR_FRONT_ABILITY_FACTOR else 1.0;
-		final fact3 = if (atkPeopleAbilities.has(1)) WAR_FRONT_ABILITY_FACTOR else 1.0;
-		final fact4 = if (atkPeopleAbilities.has(2)) WAR_FRONT_ABILITY_FACTOR else 1.0;
-		var fact5 = if (atkPeopleAbilities.has(3)) WAR_FRONT_ABILITY_FACTOR else 1.0;
-		fact5 = 1.0;
-		final fact6 = getPeopleForce(ctx, atkPeople.id) / getPeopleCommand(ctx, defPeople.id);
-		var fact7 = getPeopleIntelligence(ctx, atkPeople.id) / getPeopleIntelligence(ctx, defPeople.id);
-		fact7 = 1.0;
-		final factWall = 1.0 - ctx.attachments.filter(a -> a.belongToGridId == gridId).fold((p, a) -> {
+		final fact2 = getFact(if (atkPeopleAbilities.has(0)) WAR_FRONT_ABILITY_FACTOR else 1.0);
+		final fact3 = getFact(if (atkPeopleAbilities.has(1)) WAR_FRONT_ABILITY_FACTOR else 1.0);
+		final fact4 = getFact(if (atkPeopleAbilities.has(2)) WAR_FRONT_ABILITY_FACTOR else 1.0);
+		final fact5 = getFact({
+			if (false) {
+				if (atkPeopleAbilities.has(3)) {
+					WAR_FRONT_ABILITY_FACTOR;
+				} else {
+					1.0;
+				};
+			} else {
+				1.0;
+			}
+		});
+		final fact6 = getFact(getPeopleForce(ctx, atkPeople.id) / getPeopleCommand(ctx, defPeople.id));
+		final fact7 = getFact({
+			if (false) {
+				getPeopleIntelligence(ctx, atkPeople.id) / getPeopleIntelligence(ctx, defPeople.id);
+			} else {
+				1.0;
+			}
+		});
+		final zeroOneWall = zeroOne(1.0 - ctx.attachments.filter(a -> a.belongToGridId == gridId).fold((p, a) -> {
 			return a + switch p.type {
 				case WALL(level):
 					return [0.0, 0.15, 0.35, 0.5][level];
 				case _:
 					0.0;
 			}
-		}, 0.0);
-		final factMoney = if (moneyCost > 0) {
-			if (currMoney - moneyCost < 0) {
-				1.0 - (-1 * (currMoney - moneyCost) / moneyCost);
+		}, 0.0));
+		final zeroOneMoney = zeroOne({
+			if (moneyCost > 0) {
+				if (currMoney - moneyCost < 0) {
+					1.0 - (-1 * (currMoney - moneyCost) / moneyCost);
+				} else {
+					1.0;
+				}
 			} else {
 				1.0;
 			}
-		} else {
-			1.0;
-		}
-		final factFood = if (foodCost > 0) {
-			if (currFood - foodCost < 0) {
-				1.0 - (-1 * (currFood - foodCost) / foodCost);
+		});
+		final zeroOneFood = zeroOne({
+			if (foodCost > 0) {
+				if (currFood - foodCost < 0) {
+					1.0 - (-1 * (currFood - foodCost) / foodCost);
+				} else {
+					1.0;
+				}
 			} else {
 				1.0;
 			}
-		} else {
-			1.0;
-		}
-		final factArmyTypeAtk = if (atkPeopleAbilities.has(0) && defPeopleAbilities.has(2)) {
+		});
+		final factArmyTypeAtk = getFact(if (atkPeopleAbilities.has(0) && defPeopleAbilities.has(2)) {
 			1.5;
 		} else if (atkPeopleAbilities.has(1) && defPeopleAbilities.has(0)) {
 			1.5;
@@ -91,8 +110,8 @@ private function getWarCostImpl(ctx:Context, playerId:Int, gridId:Int, p1PeopleI
 			1.5;
 		} else {
 			1.0;
-		}
-		final factArmyTypeDef = if (defPeopleAbilities.has(0) && atkPeopleAbilities.has(2)) {
+		});
+		final factArmyTypeDef = getFact(if (defPeopleAbilities.has(0) && atkPeopleAbilities.has(2)) {
 			1 / 1.5;
 		} else if (defPeopleAbilities.has(1) && atkPeopleAbilities.has(0)) {
 			1 / 1.5;
@@ -100,11 +119,13 @@ private function getWarCostImpl(ctx:Context, playerId:Int, gridId:Int, p1PeopleI
 			1 / 1.5;
 		} else {
 			1.0;
-		}
+		});
 		final base = atkArmy * if (options.occupy) (1 / WAR_DEFFENDER_FACTOR) else 1;
 		final baseDamage = atkArmy * WAR_ARMY_FACTOR;
-		final damage = baseDamage
-			+ base * fact0 * fact1 * fact2 * fact3 * fact4 * fact5 * fact6 * fact7 * factMoney * factFood * factWall * factArmyTypeAtk * factArmyTypeDef;
+		final damageRate = getNormalizeZeroOneFromFact(factAverage([
+			[fact0, 1], [fact1, 1], [fact2, 1], [fact3, 1], [fact4, 1], [fact5, 1], [fact6, 1], [fact7, 1], [factArmyTypeAtk, 1],
+			[factArmyTypeDef, 1]])) * zeroOneMoney * zeroOneFood * zeroOneWall;
+		final damage = baseDamage + base * damageRate;
 		atkDamage = damage * WAR_FINAL_DAMAGE_FACTOR;
 		atkEnergyCost = useEnergy * getEnergyFactor(atkArmy);
 	}
@@ -114,11 +135,11 @@ private function getWarCostImpl(ctx:Context, playerId:Int, gridId:Int, p1PeopleI
 		final atkArmy = army2;
 		final atkPeople = getPeopleById(ctx, p2PeopleId);
 		final atkPeopleAbilities = getPeopleAbilities(ctx, atkPeople.id);
-		final fact1 = if (atkPeopleAbilities.has(6)) WAR_BACK_ABILITY_FACTOR else 1.0;
-		final fact2 = if (atkPeopleAbilities.has(7)) WAR_BACK_ABILITY_FACTOR else 1.0;
-		final fact3 = Math.pow(1.0 - Math.min(1, getPeopleIntelligence(ctx, atkPeople.id) / 100), 0.25);
+		final fact1 = getFact(if (atkPeopleAbilities.has(6)) WAR_BACK_ABILITY_FACTOR else 1.0);
+		final fact2 = getFact(if (atkPeopleAbilities.has(7)) WAR_BACK_ABILITY_FACTOR else 1.0);
+		final zeroOne3 = zeroOneNot(zeroOne(getPeopleIntelligence(ctx, atkPeople.id) / 100));
 		final base = atkArmy;
-		final cost = base * fact1 * fact2 * fact3;
+		final cost = getNormalizeZeroOneFromFact(factAverage([[base, 1], [fact1, 1], [fact2, 1]])) * zeroOne3;
 		defMoneyCost = cost * WAR_MONEY_COST_FACTOR;
 		defFoodCost = cost * WAR_FOOD_COST_FACTOR;
 	}
@@ -135,52 +156,75 @@ private function getWarCostImpl(ctx:Context, playerId:Int, gridId:Int, p1PeopleI
 		final moneyCost = defMoneyCost;
 		final foodCost = defFoodCost;
 		final useEnergy = atkPeople.energy / (100 / ENERGY_COST_ON_WAR);
-		final fact0 = useEnergy / ENERGY_COST_ON_WAR;
+		final fact0 = getFact(useEnergy / ENERGY_COST_ON_WAR);
 		// 放除數的都要注意除零錯誤, 不然會變成NaN(Not A Number)後, 可能之後程式就有卡住的可能
-		final fact1 = Math.min(3.0, if (defArmy > 0) {
-			(atkArmy + defArmy * WAR_HIGH_LOW_FACTOR) / (defArmy + defArmy * WAR_HIGH_LOW_FACTOR);
-		} else {
-			99999.0;
+		final fact1 = getFact({
+			if (defArmy > 0) {
+				(atkArmy + defArmy * WAR_HIGH_LOW_FACTOR) / (defArmy + defArmy * WAR_HIGH_LOW_FACTOR);
+			} else {
+				99999.0;
+			}
 		});
-		final fact2 = if (atkPeopleAbilities.has(0)) WAR_FRONT_ABILITY_FACTOR else 1.0;
-		final fact3 = if (atkPeopleAbilities.has(1)) WAR_FRONT_ABILITY_FACTOR else 1.0;
-		final fact4 = if (atkPeopleAbilities.has(2)) WAR_FRONT_ABILITY_FACTOR else 1.0;
-		var fact5 = if (atkPeopleAbilities.has(3)) WAR_FRONT_ABILITY_FACTOR else 1.0;
-		fact5 = 1.0;
-		final fact6 = if (options.occupy && atkPeopleAbilities.has(8)) WAR_FRONT_ABILITY_FACTOR else 1.0;
-		final fact7 = if (options.occupy && atkPeopleAbilities.has(9)) WAR_FRONT_ABILITY_FACTOR else 1.0;
-		final fact8 = getPeopleCommand(ctx, atkPeople.id) / getPeopleForce(ctx, defPeople.id);
-		var fact9 = getPeopleIntelligence(ctx, atkPeople.id) / getPeopleIntelligence(ctx, defPeople.id);
-		fact9 = 1.0;
-		final factWall = 1.0 + ctx.attachments.filter(a -> a.belongToGridId == gridId).fold((p, a) -> {
+		final fact2 = getFact(if (atkPeopleAbilities.has(0)) WAR_FRONT_ABILITY_FACTOR else 1.0);
+		final fact3 = getFact(if (atkPeopleAbilities.has(1)) WAR_FRONT_ABILITY_FACTOR else 1.0);
+		final fact4 = getFact(if (atkPeopleAbilities.has(2)) WAR_FRONT_ABILITY_FACTOR else 1.0);
+		final fact5 = getFact({
+			if (false) {
+				if (atkPeopleAbilities.has(3)) {
+					WAR_FRONT_ABILITY_FACTOR;
+				} else {
+					1.0;
+				};
+			} else {
+				1.0;
+			}
+		});
+		final fact6 = getFact(if (options.occupy && atkPeopleAbilities.has(8)) WAR_FRONT_ABILITY_FACTOR else 1.0);
+		final fact7 = getFact(if (options.occupy && atkPeopleAbilities.has(9)) WAR_FRONT_ABILITY_FACTOR else 1.0);
+		final fact8 = getFact(getPeopleCommand(ctx, atkPeople.id) / getPeopleForce(ctx, defPeople.id));
+		final fact9 = getFact({
+			if (false) {
+				getPeopleIntelligence(ctx, atkPeople.id) / getPeopleIntelligence(ctx, defPeople.id);
+			} else {
+				1.0;
+			}
+		});
+		final factWall = getFact(1 + zeroOne(1.0 - ctx.attachments.filter(a -> a.belongToGridId == gridId).fold((p, a) -> {
 			return a + switch p.type {
 				case WALL(level):
-					return [0.0, 0.2, 0.3, 0.5][level];
+					return [0.0, 0.15, 0.35, 0.5][level];
 				case _:
 					0.0;
 			}
-		}, 0.0);
-		final factMoney = if (moneyCost > 0) {
-			if (currMoney - moneyCost < 0) {
-				1.0 - (-1 * (currMoney - moneyCost) / moneyCost);
+		}, 0.0)));
+		final zeroOneMoney = zeroOne({
+			if (moneyCost > 0) {
+				if (currMoney - moneyCost < 0) {
+					1.0 - (-1 * (currMoney - moneyCost) / moneyCost);
+				} else {
+					1.0;
+				}
 			} else {
 				1.0;
 			}
-		} else {
-			1.0;
-		}
-		final factFood = if (foodCost > 0) {
-			if (currFood - foodCost < 0) {
-				1.0 - (-1 * (currFood - foodCost) / foodCost);
+		});
+		final zeroOneFood = zeroOne({
+			if (foodCost > 0) {
+				if (currFood - foodCost < 0) {
+					1.0 - (-1 * (currFood - foodCost) / foodCost);
+				} else {
+					1.0;
+				}
 			} else {
 				1.0;
 			}
-		} else {
-			1.0;
-		}
+		});
 		final base = atkArmy * if (options.occupy) WAR_DEFFENDER_FACTOR else 1;
 		final baseDamage = atkArmy * WAR_ARMY_FACTOR;
-		final damage = baseDamage + base * fact0 * fact1 * fact2 * fact3 * fact4 * fact5 * fact6 * fact7 * fact8 * fact9 * factMoney * factFood * factWall;
+		final damageRate = getNormalizeZeroOneFromFact(factAverage([
+			[fact0, 1], [fact1, 1], [fact2, 1], [fact3, 1], [fact4, 1], [fact5, 1], [fact6, 1], [fact7, 1], [fact8, 1], [fact9, 1],
+			[factWall, 1]])) * zeroOneMoney * zeroOneFood;
+		final damage = baseDamage + base * damageRate;
 		defDamage = damage * WAR_FINAL_DAMAGE_FACTOR;
 		defEnergyCost = useEnergy * getEnergyFactor(atkArmy);
 	}
