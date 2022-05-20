@@ -391,6 +391,9 @@ private function doEvent(ctx:Context, playerId:Int) {
 					tmpGrid.money = 0;
 					tmpGrid.food = 0;
 					tmpGrid.army = 0;
+					// 收回攻城的人
+					tmpPlayer.people = tmpPlayer.people.concat(tmpGrid.people);
+					tmpGrid.people = [];
 					final putArmy = Math.min(getGridMaxArmy(ctx, gridId) * 0.65, Math.max(200, tmpPlayer.army / 3));
 					if (tmpPlayer.army < putArmy) {
 						ctx.events.push(MESSAGE_EVENT({
@@ -398,16 +401,20 @@ private function doEvent(ctx:Context, playerId:Int) {
 							msg: '${player.name}想佔領${grid.name}卻沒有足夠兵源, 拿走所有物資',
 						}, gameInfo));
 						// 收回攻城的人
-						tmpPlayer.people = tmpPlayer.people.concat(tmpGrid.people);
-						tmpGrid.people = [];
+						// tmpPlayer.people = tmpPlayer.people.concat(tmpGrid.people);
+						// tmpGrid.people = [];
 						_takeTransfer(ctx, playerId, gridId, tmpPlayer, tmpGrid);
 						doEvent(ctx, playerId);
 					} else {
 						if (tmpGrid.people.length == 0) {
 							final peopleNotGrid = tmpPlayer.people.filter(p -> p.gridId == null);
 							if (peopleNotGrid.length > 0) {
-								final willEnterPeople = peopleNotGrid[0];
-								tmpPlayer.people = tmpPlayer.people.filter(p -> p.id == willEnterPeople.id);
+								final mostCommandPeople = peopleNotGrid.copy();
+								mostCommandPeople.sort((a, b) -> {
+									return Std.int(getPeopleCommand(ctx, b.id)) - Std.int(getPeopleCommand(ctx, a.id));
+								});
+								final willEnterPeople = mostCommandPeople[0];
+								tmpPlayer.people = tmpPlayer.people.filter(p -> p.id != willEnterPeople.id);
 								tmpGrid.people = [willEnterPeople];
 								final putMoney = Math.min(tmpPlayer.money, putArmy) * 0.8;
 								final putFood = Math.min(tmpPlayer.food, putArmy) * 0.8;
@@ -428,16 +435,17 @@ private function doEvent(ctx:Context, playerId:Int) {
 								doEvent(ctx, playerId);
 							}
 						} else {
-							final putMoney = Math.min(tmpPlayer.money, putArmy) * 0.8;
-							final putFood = Math.min(tmpPlayer.food, putArmy) * 0.8;
-							tmpPlayer.money -= putMoney;
-							tmpPlayer.food -= putFood;
-							tmpPlayer.army -= putArmy;
-							tmpGrid.money += putMoney;
-							tmpGrid.food += putFood;
-							tmpGrid.army += putArmy;
-							_takeTransfer(ctx, playerId, gridId, tmpPlayer, tmpGrid);
-							doEvent(ctx, playerId);
+							throw new haxe.Exception("不該跑到這裡");
+							// final putMoney = Math.min(tmpPlayer.money, putArmy) * 0.8;
+							// final putFood = Math.min(tmpPlayer.food, putArmy) * 0.8;
+							// tmpPlayer.money -= putMoney;
+							// tmpPlayer.food -= putFood;
+							// tmpPlayer.army -= putArmy;
+							// tmpGrid.money += putMoney;
+							// tmpGrid.food += putFood;
+							// tmpGrid.army += putArmy;
+							// _takeTransfer(ctx, playerId, gridId, tmpPlayer, tmpGrid);
+							// doEvent(ctx, playerId);
 						}
 					}
 				} else {
