@@ -1,0 +1,12 @@
+<vbox width="70%" padding="20" verticalAlign="center" horizontalAlign="center" style="background-color: white;border:1px solid grey;">
+    <hbox id="box_peopleList" width="100%" height="150"></hbox>
+    <hbox id="box_peopleList2" width="100%" height="150"></hbox>
+    <hbox width="100%" horizontalAlign="center">
+        <box id="box_playerView" width="50%"/>
+        <box id="box_gridView" width="50%"/>
+    </hbox>
+    <hbox horizontalAlign="center">
+        <button text="取消" id="btn_cancel" />
+        <button text="確定" id="btn_confirm" />
+    </hbox>
+</vbox>
