@@ -937,6 +937,8 @@ private function getEventSortWeight(e:Event):Int {
 			-2;
 		case STRATEGY_RESULT(value, gameInfo, autoplay):
 			-3;
+		case PEOPLE_LEVEL_UP_EVENT(value, gameInfo):
+			1;
 		case _:
 			0;
 	}
