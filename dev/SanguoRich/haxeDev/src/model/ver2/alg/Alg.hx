@@ -298,7 +298,7 @@ function onPayTaxToGrid(ctx:Context, playerId:Int, gridId:Int) {
 						return Std.int(ac) - Std.int(bc);
 					});
 					for (p in playerPeople) {
-						final value = p.cost;
+						final value = p.cost / 2;
 						player.money += value;
 						player.army += value;
 						player.food += value;
