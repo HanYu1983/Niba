@@ -178,9 +178,9 @@ function getExpAdd(p:Float, max:Float):Float {
 
 // 體力產生的基本值成數
 // 1代表支付所有體力時, 機率為1
-final BASE_RATE_STRATEGY = 0.8;
-final BASE_RATE_RESOURCE = 1.2;
-final BASE_RATE_PK = 0.9;
+final BASE_RATE_STRATEGY = 1.0;
+final BASE_RATE_RESOURCE = 1.0;
+final BASE_RATE_PK = 1.0;
 final BASE_RATE_NEGO = 1.0;
 final BASE_RATE_HIRE = 1.0;
 final BASE_RATE_EXPLORE = 1.0;
