@@ -351,7 +351,7 @@ final StrategyList:Array<StrategyCatelog> = [
 	{
 		id: 0,
 		name: '暗渡陳艙',
-		intelligence: 75,
+		intelligence: 80,
 		describe: '可以指定移動1~3格數(無視路障)',
 		targetType: StrategyTargetType.TARGET_GRID,
 		value: {
@@ -377,18 +377,18 @@ final StrategyList:Array<StrategyCatelog> = [
 	{
 		id: 3,
 		name: '緩兵之計',
-		intelligence: 50,
-		describe: '指定自己前後5格當中的其中一格設置路障。走到那個格子的所以玩家會自動停下。然後路障消失',
+		intelligence: 60,
+		describe: '指定自己前後3格當中的其中一格設置路障。走到那個格子的所以玩家會自動停下。然後路障消失',
 		targetType: StrategyTargetType.TARGET_GRID,
 		value: {
-			valid: [-5, -4, -3, -2, -1, 0, 1, 2, 3, 4, 5]
+			valid: [-3, -2, -1, 0, 1, 2, 3]
 		}
 	},
 	{
 		id: 4,
 		name: '火中取栗',
-		intelligence: 60,
-		describe: '拆除指定路障，如果那個路障是別的玩家，拿取那個玩家10金',
+		intelligence: 65,
+		describe: '拆除指定自己後6格路障，如果那個路障是別的玩家，拿取那個玩家10金',
 		targetType: StrategyTargetType.TARGET_GRID,
 		value: {
 			valid: [1, 2, 3, 4, 5, 6]
@@ -413,7 +413,7 @@ final StrategyList:Array<StrategyCatelog> = [
 	{
 		id: 7,
 		name: '急功近利',
-		intelligence: 50,
+		intelligence: 40,
 		describe: '指定玩家變賣20糧獲得20錢',
 		targetType: StrategyTargetType.TARGET_PLAYER,
 		value: null
