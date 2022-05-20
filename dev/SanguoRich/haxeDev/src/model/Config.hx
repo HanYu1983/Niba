@@ -161,7 +161,7 @@ final BASE_RATE_RESOURCE = 1.2;
 final BASE_RATE_PK = 0.9;
 final BASE_RATE_NEGO = 1.0;
 final BASE_RATE_HIRE = 1.0;
-final BASE_RATE_EXPLORE = 1.2;
+final BASE_RATE_EXPLORE = 1.0;
 
 // 格子資源上限
 final GRID_RESOURCE_MAX = 1000.0;

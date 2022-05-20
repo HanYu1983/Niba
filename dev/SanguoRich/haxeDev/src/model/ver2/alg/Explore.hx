@@ -6,6 +6,7 @@ import model.Config;
 import model.ver2.Define;
 import model.ver2.Mock;
 import model.ver2.alg.Alg;
+import model.tool.Fact;
 
 using Lambda;
 
@@ -20,17 +21,18 @@ private function getExploreCost(ctx:Context, playerId:Int, gridId:Int, p1SelectI
 			final p1 = getPeopleById(ctx, p1SelectId);
 			final p1Abilities = getPeopleAbilities(ctx, p1.id);
 			final useEnergy = p1.energy / (100 / ENERGY_COST_ON_EXPLORE);
-			final base = getBase(useEnergy, ENERGY_COST_ON_EXPLORE, 0.0) * BASE_RATE_EXPLORE;
+			final base = fact(getBase(useEnergy, ENERGY_COST_ON_EXPLORE, 0.0) * BASE_RATE_EXPLORE, FACT_TIMES);
 			final charmExt = getPlayerCharmAddByAttachment(ctx, playerId);
-			final charmFactor = (getPeopleCharm(ctx, p1.id) + charmExt) / 100;
+			final charmFactor = fact((getPeopleCharm(ctx, p1.id) + charmExt) / 50, FACT_TIMES);
 			// 人脈加成
-			final abiFactor = p1Abilities.has(10) ? 1.5 : 1;
+			final abiFactor = fact(p1Abilities.has(10) ? 1.5 : 1, FACT_TIMES);
 			// 鑑定
-			final abi2Factor = p1Abilities.has(12) ? 1.0 : 0.0;
+			final abi2ZeroOne = p1Abilities.has(12) ? 1.0 : 0.0;
 			//
-			final rate = base * charmFactor * abiFactor;
-			final findTreasureRate = if (getTreasureInGrid(ctx, gridId).length > 0) {
-				FIND_TREASURE_WHEN_SUCCESS_BASE_RATE * charmFactor * abiFactor * abi2Factor;
+			final rate = getNormalizeZeroOne(zeroOneFromFact(factAverage([[base, 1], [charmFactor, 1], [abiFactor, 1]]), FACT_TIMES));
+			final findTreasureZeroOne = if (getTreasureInGrid(ctx, gridId).length > 0) {
+				getNormalizeZeroOne(zeroOneFromFact(factAverage([[FIND_TREASURE_WHEN_SUCCESS_BASE_RATE, 1], [charmFactor, 1], [abiFactor, 1]]),
+					FACT_TIMES) * abi2ZeroOne);
 			} else {
 				0.0;
 			}
@@ -43,7 +45,7 @@ private function getExploreCost(ctx:Context, playerId:Int, gridId:Int, p1SelectI
 					energy: useEnergy,
 				},
 				successRate: rate,
-				findTreasureRate: findTreasureRate
+				findTreasureRate: findTreasureZeroOne
 			};
 		case _:
 			throw new haxe.Exception("not impl");
