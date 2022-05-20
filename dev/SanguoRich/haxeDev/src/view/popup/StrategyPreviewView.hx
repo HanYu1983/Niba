@@ -106,6 +106,9 @@ class StrategyPreviewView extends PopupView {
 				return;
 			if (p2List.selectedItem == null)
 				return;
+			if(selectGridId == -1) 
+				return;
+
 			// if (gridList.selectedItem == null)
 			// 	return;
 
@@ -115,7 +118,7 @@ class StrategyPreviewView extends PopupView {
 			var targetPlayer = leaderList.selectedItem.id;
 			var targetPeople = p2List.selectedItem.id;
 			// var targetGrid = gridList.selectedItem.id;
-			var result:{energyBefore:Int, energyAfter:Int, rate:Float} = Main.model.getStrategyRate(p1, s, targetPlayer, targetPeople, 0);
+			var result:{energyBefore:Int, energyAfter:Int, rate:Float} = Main.model.getStrategyRate(p1, s, targetPlayer, targetPeople, selectGridId);
 
 			pro_energy.value = '${Main.getCompareString(result.energyBefore, result.energyAfter)}';
 			lbl_rate.value = Main.getRateString(result.rate);

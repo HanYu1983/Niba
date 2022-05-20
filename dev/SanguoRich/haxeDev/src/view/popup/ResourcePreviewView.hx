@@ -24,21 +24,29 @@ class ResourcePreviewView extends PopupView {
 		box_gridView.addComponent(gridView);
 	}
 
+	function getMoneyBase(){
+		return switch( grp_moneyBase.selectedIndex ){
+			case 0: 100;
+			case 1: 200;
+			case 2: 400;
+			case _: 100;
+		};
+	}
+
 	override function showPopup(info:Dynamic, cb:()->Void = null) {
 		super.showPopup(info, cb);
 
 		final gameInfo = Main.model.gameInfo();
-		var previewInfo:ResourcePreview = info;
+		final previewInfo:ResourcePreview = info;
 
 		function setRate() {
 			if(p1List.selectedItem == null) return;
 			if(grp_moneyBase.selectedButton == null) return;
 
-			var p1 = p1List.selectedItem;
-			var moneyBase = Std.parseFloat( grp_moneyBase.selectedButton.text );
-
-			var gameInfo = Main.model.gameInfo();
-			var result:PreResultOnResource = Main.model.getPreResultOfResource(gameInfo.currentPlayer.id, gameInfo.currentPlayer.atGridId, p1, moneyBase, info.market,
+			final p1 = p1List.selectedItem;
+			final moneyBase = getMoneyBase();
+			final gameInfo = Main.model.gameInfo();
+			final result:PreResultOnResource = Main.model.getPreResultOfResource(gameInfo.currentPlayer.id, gameInfo.currentPlayer.atGridId, p1, moneyBase, info.market,
 				info.resource);
 
 			pro_energy.value = Main.getEnergyString(result.energyBefore, result.energyAfter, ENERGY_COST_ON_RESOURCE);
@@ -49,7 +57,7 @@ class ResourcePreviewView extends PopupView {
 		}
 
 		function setOnePeople() {
-			var p1:People = p1List.selectedItem;
+			final p1:People = p1List.selectedItem;
 			pro_name.value = p1.name;
 			pro_charm.value = p1.charm;
 			pro_political.value = p1.political;
@@ -80,10 +88,16 @@ class ResourcePreviewView extends PopupView {
 		}
 		grp_moneyBase.selectedIndex = 0;
 
+		if(cast(info.resource, RESOURCE) == MONEY){
+			grp_moneyBase.hide();
+		}else{
+			grp_moneyBase.show();
+		}
+
 		btn_confirm.onClick = function(e) {
 			fadeOut();
 
-			var moneyBase = Std.parseFloat( grp_moneyBase.selectedButton.text );
+			final moneyBase = getMoneyBase();
 			Main.view.onResourcePreviewConfirmClick(p1List.selectedItem.id, moneyBase, info.market, info.resource);
 		}
 	}
@@ -93,9 +107,4 @@ class ResourcePreviewView extends PopupView {
 		fadeOut();
 	}
 
-	// @:bind(btn_confirm, MouseEvent.CLICK)
-	// function onBtnConfirm(e:MouseEvent) {
-	//     fadeOut();
-	//     Main.view.onResourcePreviewConfirmClick(p1List.selectedItem.id, );
-	// }
 }

@@ -14,7 +14,6 @@
                 <property id="pro_money1" label="金錢" value="1000" />
                 <property id="pro_food1" label="糧草" value="1000" />
                 <property id="pro_army1" label="士兵" value="1000" />
-                <!-- <property id="pro_strategy1" label="計略" value="1000" />    -->
             </property-group>
         </property-grid>
         <property-grid id="grid_leader2" width="50%">
@@ -29,7 +28,6 @@
                 <property id="pro_money2" label="金錢" value="1000" />
                 <property id="pro_food2" label="糧草" value="1000" />
                 <property id="pro_army2" label="士兵" value="1000" />
-                <!-- <property id="pro_strategy2" label="計略" value="1000" />    -->
             </property-group>
         </property-grid>
     </hbox>

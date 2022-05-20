@@ -361,15 +361,15 @@ final StrategyList:Array<StrategyCatelog> = [
 	{
 		id: 1,
 		name: '步步為營',
-		intelligence: 50,
-		describe: '指定武將回復30體力（可以恢復自己）',
+		intelligence: 40,
+		describe: '指定武將回復30體力',
 		targetType: StrategyTargetType.SELF_PEOPLE,
 		value: null
 	},
 	{
 		id: 2,
 		name: '遠交近攻',
-		intelligence: 75,
+		intelligence: 70,
 		describe: '直接獲取該格子的10%資源。並且友好度上升1',
 		targetType: StrategyTargetType.SELF_GRID,
 		value: null
@@ -387,10 +387,12 @@ final StrategyList:Array<StrategyCatelog> = [
 	{
 		id: 4,
 		name: '火中取栗',
-		intelligence: 75,
+		intelligence: 60,
 		describe: '拆除指定路障，如果那個路障是別的玩家，拿取那個玩家10金',
 		targetType: StrategyTargetType.TARGET_GRID,
-		value: null
+		value: {
+			valid: [1, 2, 3, 4, 5, 6]
+		}
 	},
 	{
 		id: 5,
@@ -411,7 +413,7 @@ final StrategyList:Array<StrategyCatelog> = [
 	{
 		id: 7,
 		name: '急功近利',
-		intelligence: 80,
+		intelligence: 50,
 		describe: '指定玩家變賣20糧獲得20錢',
 		targetType: StrategyTargetType.TARGET_PLAYER,
 		value: null
@@ -419,7 +421,7 @@ final StrategyList:Array<StrategyCatelog> = [
 	{
 		id: 8,
 		name: '五穀豐登',
-		intelligence: 90,
+		intelligence: 70,
 		describe: '所有自己城池的糧食+5%',
 		targetType: StrategyTargetType.SELF_PLAYER,
 		value: null
