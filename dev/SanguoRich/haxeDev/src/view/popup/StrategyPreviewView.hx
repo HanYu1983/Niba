@@ -62,6 +62,7 @@ class StrategyPreviewView extends PopupView {
 	@:bind(btn_cancel, MouseEvent.CLICK)
 	function onBtnCancelClick(e:MouseEvent) {
 		fadeOut();
+		Main.view.switchStageToNormal();
 	}
 
 	@:bind(btn_confirm, MouseEvent.CLICK)
@@ -88,6 +89,7 @@ class StrategyPreviewView extends PopupView {
 					return;
 				}
 		}
+		Main.view.switchStageToNormal();
 		Main.view.onStrategyPreviewConfirmClick(p1List.selectedItem.id, strategyList.selectedItem.id, targetPlayer, targetPeople, selectGridId);
 	}
 

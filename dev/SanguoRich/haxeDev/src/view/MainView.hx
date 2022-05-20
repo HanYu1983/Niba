@@ -1,5 +1,6 @@
 package view;
 
+import model.IModel.EventInfoID;
 import view.popup.SettleView;
 import model.IModel.GameSetting;
 import view.popup.GameTitleView;
@@ -1053,24 +1054,20 @@ class MainView extends Box {
 		syncGameInfo(gameInfo);
 
 		moveCursorToGrid(currentPlayer.atGridId);
+		switchStageToNormal();
+		// stage.unregisterEvents();
+		// if (gameInfo.isPlayerTurn) {
+		// 	stage.registerEvent(MouseEvent.MOUSE_MOVE, function(e:MouseEvent) {
+		// 		final gridId = getGridIdFromPosition(e.localX, e.localY);
+		// 		moveCursorToGrid(gridId);
+		// 		syncGridInfo(gridId);
+		// 	});
 
-		stage.unregisterEvents();
-		if (gameInfo.isPlayerTurn) {
-			stage.registerEvent(MouseEvent.MOUSE_MOVE, function(e:MouseEvent) {
-				final gx = Math.floor(e.localX / gridSize);
-				final gy = Math.floor(e.localY / gridSize);
-				var gridId = gx + gy * 10;
-				gridId = Main.clampInt(gridId, 0, gameInfo.grids.length - 1);
-
-				moveCursorToGrid(gridId);
-				syncGridInfo(gridId);
-			});
-
-			stage.registerEvent(MouseEvent.MOUSE_OUT, function(e:MouseEvent) {
-				syncGridInfo(currentPlayer.atGridId);
-				moveCursorToGrid(currentPlayer.atGridId);
-			});
-		}
+		// 	stage.registerEvent(MouseEvent.MOUSE_OUT, function(e:MouseEvent) {
+		// 		syncGridInfo(currentPlayer.atGridId);
+		// 		moveCursorToGrid(currentPlayer.atGridId);
+		// 	});
+		// }
 	}
 
 	function syncGameInfo(gameInfo:GameInfo) {
@@ -1168,13 +1165,35 @@ class MainView extends Box {
 	}
 
 	public function onStrategyPreviewSelectGridClick(gridInfos:Array<Grid>, cb:(gridId:Int) -> Void) {
+		switchStageToSelectGrid(gridInfos, cb);
+	}
+
+	public function switchStageToNormal(){
+		final gameInfo = Main.model.gameInfo();
+		final currentPlayer = gameInfo.currentPlayer;
+
+		stage.unregisterEvents();
+		if (gameInfo.isPlayerTurn) {
+			stage.registerEvent(MouseEvent.MOUSE_MOVE, function(e:MouseEvent) {
+				final gridId = getGridIdFromPosition(e.localX, e.localY);
+				moveCursorToGrid(gridId);
+				syncGridInfo(gridId);
+			});
+
+			stage.registerEvent(MouseEvent.MOUSE_OUT, function(e:MouseEvent) {
+				syncGridInfo(currentPlayer.atGridId);
+				moveCursorToGrid(currentPlayer.atGridId);
+			});
+		}
+	}
+
+	function switchStageToSelectGrid(gridInfos:Array<Grid>, cb:(gridId:Int) -> Void){
 		final gameInfo = Main.model.gameInfo();
 		final currentPlayer = gameInfo.currentPlayer;
 
 		for(g in grids){ g.showSelectable(false);}
 
 		for(g in gridInfos){
-			trace(g.id);
 			grids[g.id].showSelectable(true);
 		}
 
@@ -1195,6 +1214,7 @@ class MainView extends Box {
 			stage.onClick = function(e){
 				final gridId = getGridIdFromPosition(e.localX, e.localY);
 				if(grids[gridId].isSelectable){
+					switchStageToNormal();
 					for(g in grids){ g.showSelectable(false);}
 					cb(gridId);
 				}
