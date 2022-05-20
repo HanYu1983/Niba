@@ -271,7 +271,7 @@ class MainView extends Box {
 		}
 		
 		btn_settle.text = '${btn_settle.text}(${ENERGY_COST_ON_SETTLE})';
-		btn_build.text = '${btn_settle.text}(${ENERGY_COST_ON_BUILDING})';
+		btn_build.text = '${btn_build.text}(${ENERGY_COST_ON_BUILDING})';
 		btn_takeTreasure.text = '${btn_takeTreasure.text}(${Main.getFixNumber(ENERGY_RATE_FOR_TREASURE_TAKE * 100, 0)})';
 		btn_camp.text = '${btn_camp.text}(${ENERGY_COST_ON_COST_FOR_FUN})';
 		btn_practice.text = '${btn_practice.text}(${ENERGY_COST_ON_COST_FOR_FUN})';

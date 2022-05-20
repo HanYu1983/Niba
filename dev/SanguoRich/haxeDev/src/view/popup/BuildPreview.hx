@@ -23,7 +23,6 @@ class BuildPreview extends PopupView{
 
         plist = new PeopleListView();
         box_plist.addComponent(plist);
-        box_plist.hide();
 
         gridView = new GridGridView();
         box_grid.addComponent(gridView);
