@@ -17,11 +17,11 @@ private function getPkCost(ctx:Context, playerId:Int, gridId:Int, p1PeopleId:Int
 	final p2 = getPeopleById(ctx, p2PeopleId);
 	final useEnergy = p1.energy / (100 / ENERGY_COST_ON_PK);
 	final successRate = {
-		final base = getFact(getBase(useEnergy, ENERGY_COST_ON_PK, 0.0) * BASE_RATE_PK);
+		final base = getBase(useEnergy, ENERGY_COST_ON_PK, 0.0) * BASE_RATE_PK;
 		final fact1 = getFact(getPeopleForce(ctx, p1.id) / getPeopleForce(ctx, p2.id));
 		final fact2 = getFact(getPeopleIntelligence(ctx, p1.id) / getPeopleIntelligence(ctx, p2.id));
 		final fact3 = getFact(1 + p1Abilities.filter(a -> [0, 1, 2, 3].has(a)).length * 0.15);
-		getNormalizeZeroOneFromFact(factAverage([[base, 1], [fact1, 1], [fact2, 1], [fact3, 1]]));
+		base * getNormalizeZeroOneFromFact(factAverage([[fact1, 1], [fact2, 1], [fact3, 1]]));
 	}
 	final gainArmy = {
 		final fact1 = getFact(getPeopleCharm(ctx, p1.id) / getPeopleCharm(ctx, p2.id));

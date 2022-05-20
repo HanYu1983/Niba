@@ -5,10 +5,12 @@ import model.tool.Fact;
 private final FACT_TIMES = 2.0;
 
 function getNormalizeZeroOne(v:Float):Float {
+	// trace("getNormalizeZeroOne:", v);
 	return zeroOneSymbol(v, [0.3, 0.4, 0.5, 0.525, 0.55]);
 }
 
 function getNormalizeZeroOneFromFact(v:Float):Float {
+	// trace("getNormalizeZeroOneFromFact:", v, zeroOneFromFact(v, FACT_TIMES));
 	return getNormalizeZeroOne(zeroOneFromFact(v, FACT_TIMES));
 }
 
@@ -182,7 +184,7 @@ function getExpAdd(p:Float, max:Float):Float {
 // 體力產生的基本值成數
 // 1代表支付所有體力時, 機率為1
 final BASE_RATE_STRATEGY = 1.0;
-final BASE_RATE_RESOURCE = 1.0;
+final BASE_RATE_RESOURCE = 1.5;
 final BASE_RATE_PK = 1.0;
 final BASE_RATE_NEGO = 1.0;
 final BASE_RATE_HIRE = 1.0;

@@ -14,12 +14,12 @@ private function getStrategyCost(ctx:Context, p1PeopleId:Int, strategyId:Int, ta
 	final p1 = getPeopleById(ctx, p1PeopleId);
 	final strategy = StrategyList[strategyId];
 	final useEnergy = p1.energy / (100 / ENERGY_COST_ON_STRATEGY);
-	final base = getFact(getBase(useEnergy, ENERGY_COST_ON_STRATEGY, 0.0) * BASE_RATE_STRATEGY);
+	final base = getBase(useEnergy, ENERGY_COST_ON_STRATEGY, 0.0) * BASE_RATE_STRATEGY;
 	final fact1 = getFact(getPeopleIntelligence(ctx, p1.id) / Math.max(strategy.intelligence, 1.0));
 	final fact2 = getFact(switch strategy.targetType {
 		case TARGET_PEOPLE:
 			final p2 = getPeopleById(ctx, targetPeopleId);
-			Math.pow(getPeopleIntelligence(ctx, p1.id) / getPeopleIntelligence(ctx, p2.id), 0.20);
+			getFact(getPeopleIntelligence(ctx, p1.id) / getPeopleIntelligence(ctx, p2.id));
 		case _:
 			1.0;
 	});
@@ -42,7 +42,7 @@ private function getStrategyCost(ctx:Context, p1PeopleId:Int, strategyId:Int, ta
 		case _:
 			1;
 	};
-	final rate = getNormalizeZeroOneFromFact(factAverage([[base, 1], [fact1, 1], [fact2, 1]])) * zeroOne3;
+	final rate = base * getNormalizeZeroOneFromFact(factAverage([[fact1, 1], [fact2, 0.25]])) * zeroOne3;
 	return {
 		peopleCost: {
 			id: p1.id,

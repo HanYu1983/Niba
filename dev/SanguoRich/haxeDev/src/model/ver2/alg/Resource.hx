@@ -31,7 +31,7 @@ private function getResourceCost(ctx:Context, playerId:Int, gridId:Int, p1Select
 			final p1 = getPeopleById(ctx, p1SelectId);
 			final p1Abilities = getPeopleAbilities(ctx, p1.id);
 			final useEnergy = p1.energy / (100 / ENERGY_COST_ON_RESOURCE);
-			final base = getFact(getBase(useEnergy, ENERGY_COST_ON_RESOURCE, 0.0) * BASE_RATE_RESOURCE);
+			final base = getBase(useEnergy, ENERGY_COST_ON_RESOURCE, 0.0) * BASE_RATE_RESOURCE;
 			final abiFactor:Float = getFact(if (type == RESOURCE.MONEY && (p1Abilities.has(4))) {
 				1.5;
 			} else if (type == RESOURCE.ARMY && (p1Abilities.has(11))) {
@@ -42,7 +42,7 @@ private function getResourceCost(ctx:Context, playerId:Int, gridId:Int, p1Select
 				1;
 			});
 
-			final top = 70;
+			final top = 50;
 			final attrFactor:Float = getFact(if (type == RESOURCE.MONEY) {
 				(getPeoplePolitical(ctx, p1.id) / top) * .7 + (getPeopleIntelligence(ctx, p1.id) / top) * .1 + (getPeopleCharm(ctx, p1.id) / top) * .1
 					+ (grid.money / 300) * .1;
@@ -55,7 +55,10 @@ private function getResourceCost(ctx:Context, playerId:Int, gridId:Int, p1Select
 			} else {
 				1.0;
 			});
-			final rate = getNormalizeZeroOneFromFact(factAverage([[base, 1], [attrFactor, 1], [abiFactor, 1]]));
+			final rate = getNormalizeZeroOneFromFact(factAverage([[attrFactor, 1], [abiFactor, 1]]));
+			// trace("rate", rate, "=", factAverage([[attrFactor, 1], [abiFactor, 1]]), attrFactor, abiFactor);
+			final gainRate = base * rate;
+			// trace("gainRate", gainRate, "base", base);
 			final returnInfo = {
 				playerCost: {
 					id: playerId,
@@ -98,31 +101,31 @@ private function getResourceCost(ctx:Context, playerId:Int, gridId:Int, p1Select
 			switch [type, market] {
 				case [MONEY, _]:
 					final moneyCost = moneyBase * 0.5;
-					final totalGain = moneyCost * rate;
+					final totalGain = moneyCost * gainRate;
 					limitFactor *= .5;
 					final gain = Math.min(totalGain, grid.money * limitFactor);
 					returnInfo.playerCost.money = -gain;
 				case [ARMY, SELL]:
 					final sellArmyCount = moneyBase;
-					final totalgain = sellArmyCount * rate;
+					final totalgain = sellArmyCount * gainRate;
 					final gain = Math.min(totalgain, grid.money * limitFactor);
 					returnInfo.playerCost.money = -gain;
 					returnInfo.playerCost.army = sellArmyCount * gain / totalgain; // 依據少拿的部分返還錢
 				case [FOOD, SELL]:
 					final sellFoodCount = moneyBase;
-					final totalgain = sellFoodCount * rate;
+					final totalgain = sellFoodCount * gainRate;
 					final gain = Math.min(totalgain, grid.money * limitFactor);
 					returnInfo.playerCost.money = -gain;
 					returnInfo.playerCost.food = sellFoodCount * gain / totalgain; // 依據少拿的部分返還錢
 				case [ARMY, BUY]:
 					final moneyCost = moneyBase;
-					final totalGain = moneyCost * rate;
+					final totalGain = moneyCost * gainRate;
 					final gain = Math.min(totalGain, grid.army * limitFactor);
 					returnInfo.playerCost.money = moneyCost * gain / totalGain; // 依據少拿的部分返還錢
 					returnInfo.playerCost.army = -gain;
 				case [FOOD, BUY]:
 					final moneyCost = moneyBase;
-					final totalGain = moneyCost * rate;
+					final totalGain = moneyCost * gainRate;
 					final gain = Math.min(totalGain, grid.food * limitFactor);
 					returnInfo.playerCost.money = moneyCost * gain / totalGain; // 依據少拿的部分返還錢
 					returnInfo.playerCost.food = -gain;

@@ -37,12 +37,12 @@ private function getNegoCost(ctx:Context, playerId:Int, gridId:Int, p1SelectId:I
 					// 體力越少效率越低
 					final useEnergy = p1.energy / (100 / ENERGY_COST_ON_NEGO);
 					// 使用20體力的情況下基礎值為0.5
-					final base = getFact(getBase(useEnergy, ENERGY_COST_ON_NEGO, 0.0) * BASE_RATE_NEGO);
+					final base = getBase(useEnergy, ENERGY_COST_ON_NEGO, 0.0) * BASE_RATE_NEGO;
 					final intelligenceFactor = getFact(getPeopleIntelligence(ctx, p1.id) / getPeopleIntelligence(ctx, p2.id));
 					final politicalFactor = getFact(getPeoplePolitical(ctx, p1.id) / getPeoplePolitical(ctx, p2.id));
 					final charmFactor = getFact(getPeopleCharm(ctx, p1.id) / getPeopleCharm(ctx, p2.id));
 					final rate = {
-						var tmp = factAverage([[base, 1], [intelligenceFactor, 1.25], [politicalFactor, 1], [charmFactor, 2]]);
+						var tmp = base * factAverage([[intelligenceFactor, 1.25], [politicalFactor, 1], [charmFactor, 2]]);
 						// 沒有良官的時候，rate最高限制在1.2
 						tmp = Math.min(tmp, 1.2);
 						// 良官加成，rate最高可以突破1.2
