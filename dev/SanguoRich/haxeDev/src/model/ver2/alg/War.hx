@@ -26,7 +26,7 @@ private function getWarCostImpl(ctx:Context, playerId:Int, gridId:Int, p1PeopleI
 		final fact2 = getFact(if (atkPeopleAbilities.has(7)) WAR_BACK_ABILITY_FACTOR else 1.0);
 		final zeroOne3 = zeroOneNot(zeroOne(getPeopleIntelligence(ctx, atkPeople.id) / 100));
 		final base = atkArmy;
-		final cost = getNormalizeZeroOneFromFact(factAverage([[base, 1], [fact1, 1], [fact2, 1]])) * zeroOne3;
+		final cost = base * getNormalizeZeroOneFromFact(factAverage([[fact1, 1], [fact2, 1]])) * zeroOne3;
 		atkMoneyCost = cost * WAR_MONEY_COST_FACTOR;
 		atkFoodCost = cost * WAR_FOOD_COST_FACTOR;
 	}
@@ -139,7 +139,7 @@ private function getWarCostImpl(ctx:Context, playerId:Int, gridId:Int, p1PeopleI
 		final fact2 = getFact(if (atkPeopleAbilities.has(7)) WAR_BACK_ABILITY_FACTOR else 1.0);
 		final zeroOne3 = zeroOneNot(zeroOne(getPeopleIntelligence(ctx, atkPeople.id) / 100));
 		final base = atkArmy;
-		final cost = getNormalizeZeroOneFromFact(factAverage([[base, 1], [fact1, 1], [fact2, 1]])) * zeroOne3;
+		final cost = base * getNormalizeZeroOneFromFact(factAverage([[fact1, 1], [fact2, 1]])) * zeroOne3;
 		defMoneyCost = cost * WAR_MONEY_COST_FACTOR;
 		defFoodCost = cost * WAR_FOOD_COST_FACTOR;
 	}
