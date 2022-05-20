@@ -2,7 +2,7 @@ package model;
 
 import model.tool.Fact;
 
-private final FACT_TIMES = 2.0;
+private final FACT_TIMES = 3.0;
 
 function getNormalizeZeroOne(v:Float):Float {
 	// trace("getNormalizeZeroOne:", v);
@@ -53,9 +53,9 @@ final PEOPLE_HIRE_COST_FACTOR = .1;
 final GRID_EARN_PER_TURN = 1;
 
 // 格子的基本保底成長
-final BASIC_GROW_MONEY_RATE = 0.01;
-final BASIC_GROW_FOOD_RATE = 0.01;
-final BASIC_GROW_ARMY_RATE = 0.01;
+final BASIC_GROW_MONEY_RATE = 0.005;
+final BASIC_GROW_FOOD_RATE = 0.005;
+final BASIC_GROW_ARMY_RATE = 0.005;
 final BASIC_GROW_MONEY_ADD = 4;
 final BASIC_GROW_FOOD_ADD = 4;
 final BASIC_GROW_ARMY_ADD = 4;
@@ -99,7 +99,7 @@ final WAR_HIGH_LOW_FACTOR = 1.2;
 final WAR_ARMY_FACTOR = 0.0;
 
 // 戰爭最後係數
-final WAR_FINAL_DAMAGE_FACTOR = 0.75;
+final WAR_FINAL_DAMAGE_FACTOR = 1.0;
 
 // 每回合基本回體力
 final PEOPLE_ENERGY_SUPPLY_BASE = 0;
@@ -183,7 +183,7 @@ function getExpAdd(p:Float, max:Float):Float {
 
 // 體力產生的基本值成數
 // 1代表支付所有體力時, 機率為1
-final BASE_RATE_STRATEGY = 1.0;
+final BASE_RATE_STRATEGY = 1.5;
 final BASE_RATE_RESOURCE = 1.5;
 final BASE_RATE_PK = 1.0;
 final BASE_RATE_NEGO = 1.0;

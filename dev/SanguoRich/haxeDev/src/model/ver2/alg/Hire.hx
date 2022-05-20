@@ -34,7 +34,7 @@ private function getHireCost(ctx:Context, playerId:Int, gridId:Int, p1SelectId:I
 					// 完全付不出來的話, 這個系數為0
 					final hireCostReduceRate = hireCost == 0 ? 1 : zeroOneNot(zeroOne((-1 * hireMoneyOffset) / hireCost));
 					final finalFact = getFactFromZeroOne(getZeroOneFromFact(factAverage([[charmFactor, 1], [abiFactor, 1]])) * hireCostReduceRate);
-					final moreMoneyExt = moreMoney / 1000.0;
+					final moreMoneyExt = moreMoney / 500.0;
 					final rate = base * getNormalizeZeroOneFromFact(factAverage([[finalFact, 1]])) + moreMoneyExt;
 					{
 						playerCost: {

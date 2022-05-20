@@ -18,9 +18,9 @@ typedef Grid = {
 	money:Float,
 	food:Float,
 	army:Float,
-	// defaultMoneyGrow:Float,
-	// defaultFoodGrow:Float,
-	// defaultArmyGrow:Float,
+	defaultMoneyGrow:Float,
+	defaultFoodGrow:Float,
+	defaultArmyGrow:Float,
 	favor:Array<Int>,
 	defaultMaxFood:Float,
 	defaultMaxMoney:Float,
@@ -370,7 +370,7 @@ function getGridMoneyGrow(ctx:Context, gridId:Int):Float {
 				0;
 		}
 	}, 0);
-	return getGrowFormGameSettings(ctx) * (BASIC_GROW_MONEY_RATE + attachmentRate);
+	return getGrowFormGameSettings(ctx) * (BASIC_GROW_MONEY_RATE + attachmentRate + grid.defaultMoneyGrow);
 }
 
 function getGridFoodGrow(ctx:Context, gridId:Int):Float {
@@ -388,7 +388,7 @@ function getGridFoodGrow(ctx:Context, gridId:Int):Float {
 				0;
 		}
 	}, 0);
-	return getGrowFormGameSettings(ctx) * (BASIC_GROW_FOOD_RATE + attachmentRate);
+	return getGrowFormGameSettings(ctx) * (BASIC_GROW_FOOD_RATE + attachmentRate + grid.defaultFoodGrow);
 }
 
 function getGridArmyGrow(ctx:Context, gridId:Int):Float {
@@ -406,7 +406,7 @@ function getGridArmyGrow(ctx:Context, gridId:Int):Float {
 				0;
 		}
 	}, 0);
-	return getGrowFormGameSettings(ctx) * (BASIC_GROW_ARMY_RATE + attachmentRate);
+	return getGrowFormGameSettings(ctx) * (BASIC_GROW_ARMY_RATE + attachmentRate + grid.defaultArmyGrow);
 }
 
 function getGridFoodAdd(ctx:Context, gridId:Int):Float {
@@ -1047,9 +1047,9 @@ function addGridInfo(ctx:Context, grid:model.GridGenerator.Grid):Void {
 		money: grid.money,
 		food: grid.food,
 		army: grid.army,
-		// defaultMoneyGrow: 0.0,
-		// defaultFoodGrow: 0.0,
-		// defaultArmyGrow: 0.0,
+		defaultMoneyGrow: grid.moneyGrow,
+		defaultFoodGrow: grid.foodGrow,
+		defaultArmyGrow: grid.armyGrow,
 		favor: grid.favor,
 		defaultMaxMoney: grid.maxMoney,
 		defaultMaxFood: grid.maxFood,

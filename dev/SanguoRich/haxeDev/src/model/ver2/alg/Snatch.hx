@@ -110,7 +110,7 @@ private function guessArmy(ctx:Context, playerId:Int, gridId:Int, p1PeopleId:Int
 		army1 = (s + e) / 2;
 		final warCost = getWarCost(ctx, playerId, gridId, p1PeopleId, p2PeopleId, army1, army2, {occupy: true});
 		switch warCost.playerCost[1].army {
-			case costArmy if (costArmy >= army2):
+			case enemyLoseArmy if (enemyLoseArmy >= army2):
 				e = army1;
 				successArmy = army1;
 			case _:

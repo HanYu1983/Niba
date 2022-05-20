@@ -185,7 +185,9 @@ class GridGenerator {
 			}
 
 			final basicArmy = getRandomRange(180, 80);
-
+			g.moneyGrow = Math.random() * 0.01;
+			g.foodGrow = Math.random() * 0.01;
+			g.armyGrow = Math.random() * 0.01;
 			g.army = basicArmy;
 
 			switch (buildtype) {
@@ -224,7 +226,6 @@ class GridGenerator {
 					g.people.push(PeopleGenerator.getInst().generate(2));
 				case _:
 			}
-
 			g.height = height;
 			grids.push(g);
 		}
