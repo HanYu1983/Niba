@@ -280,8 +280,33 @@ function onPayTaxToGrid(ctx:Context, playerId:Int, gridId:Int) {
 							p.position.gridId = null;
 						}
 						ctx.events.push(MESSAGE_EVENT({
-							title: '${player.name}沒有資源, 不得不變賣格子',
+							title: '${player.name}沒有資源, 不得不賣格子',
 							msg: '${g.name}被賣掉了'
+						}, getGameInfo(ctx, false)));
+						if (player.money >= 0 && player.food >= 0 && player.army >= 0) {
+							break;
+						}
+					}
+				}
+
+				if (player.money < 0 || player.food < 0 || player.army < 0) {
+					final playerPeople = ctx.peoples.filter(p -> p.belongToPlayerId == player.id);
+					// 從小開始賣
+					playerPeople.sort((a, b) -> {
+						final ac = a.cost * a.exp;
+						final bc = b.cost * b.exp;
+						return Std.int(ac) - Std.int(bc);
+					});
+					for (p in playerPeople) {
+						final value = p.cost;
+						player.money += value;
+						player.army += value;
+						player.food += value;
+						p.belongToPlayerId = null;
+						p.position.gridId = null;
+						ctx.events.push(MESSAGE_EVENT({
+							title: '${player.name}沒有資源, 不能不賣武將',
+							msg: '${p.name}被賣掉了'
 						}, getGameInfo(ctx, false)));
 						if (player.money >= 0 && player.food >= 0 && player.army >= 0) {
 							break;
