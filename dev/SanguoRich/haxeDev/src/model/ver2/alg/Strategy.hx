@@ -6,6 +6,7 @@ import model.IModel;
 import model.Config;
 import model.ver2.Define;
 import model.ver2.alg.Alg;
+import model.tool.Fact;
 
 using Lambda;
 
@@ -13,17 +14,16 @@ private function getStrategyCost(ctx:Context, p1PeopleId:Int, strategyId:Int, ta
 	final p1 = getPeopleById(ctx, p1PeopleId);
 	final strategy = StrategyList[strategyId];
 	final useEnergy = p1.energy / (100 / ENERGY_COST_ON_STRATEGY);
-	// 基本值最高0.5
-	final base = getBase(useEnergy, ENERGY_COST_ON_STRATEGY, 0.0) * BASE_RATE_STRATEGY;
-	final fact1 = Math.pow(getPeopleIntelligence(ctx, p1.id) / Math.max(strategy.intelligence, 1.0), 0.75);
-	final fact2 = switch strategy.targetType {
+	final base = getFact(getBase(useEnergy, ENERGY_COST_ON_STRATEGY, 0.0) * BASE_RATE_STRATEGY);
+	final fact1 = getFact(getPeopleIntelligence(ctx, p1.id) / Math.max(strategy.intelligence, 1.0));
+	final fact2 = getFact(switch strategy.targetType {
 		case TARGET_PEOPLE:
 			final p2 = getPeopleById(ctx, targetPeopleId);
 			Math.pow(getPeopleIntelligence(ctx, p1.id) / getPeopleIntelligence(ctx, p2.id), 0.20);
 		case _:
 			1.0;
-	}
-	final fact3 = switch strategyId {
+	});
+	final zeroOne3 = switch strategyId {
 		case 2:
 			// 遠交近攻對空地沒有作用
 			if (p1.belongToPlayerId == null) {
@@ -41,19 +41,8 @@ private function getStrategyCost(ctx:Context, p1PeopleId:Int, strategyId:Int, ta
 			itemWillRemoved.length <= 0 ? 0.0 : 1;
 		case _:
 			1;
-	}
-	// final fact4 = switch strategy.targetType {
-	// 	case TARGET_PLAYER:
-	// 		//
-	// 		if(p1.belongToPlayerId == targetPlayerId){
-	// 			0.0;
-	// 		} else {
-	// 			1.0;
-	// 		}
-	// 	case _:
-	// 		1.0;
-	// }
-	final rate = base * fact1 * fact2 * fact3;
+	};
+	final rate = getNormalizeZeroOneFromFact(factAverage([[base, 1], [fact1, 1], [fact2, 1]])) * zeroOne3;
 	return {
 		peopleCost: {
 			id: p1.id,

@@ -5,6 +5,7 @@ import model.IModel;
 import model.Config;
 import model.ver2.Define;
 import model.ver2.alg.Alg;
+import model.tool.Fact;
 
 using Lambda;
 
@@ -30,8 +31,8 @@ private function getResourceCost(ctx:Context, playerId:Int, gridId:Int, p1Select
 			final p1 = getPeopleById(ctx, p1SelectId);
 			final p1Abilities = getPeopleAbilities(ctx, p1.id);
 			final useEnergy = p1.energy / (100 / ENERGY_COST_ON_RESOURCE);
-			final base = getBase(useEnergy, ENERGY_COST_ON_RESOURCE, 0.0) * BASE_RATE_RESOURCE;
-			final abiFactor:Float = if (type == RESOURCE.MONEY && (p1Abilities.has(4))) {
+			final base = getFact(getBase(useEnergy, ENERGY_COST_ON_RESOURCE, 0.0) * BASE_RATE_RESOURCE);
+			final abiFactor:Float = getFact(if (type == RESOURCE.MONEY && (p1Abilities.has(4))) {
 				1.5;
 			} else if (type == RESOURCE.ARMY && (p1Abilities.has(11))) {
 				1.5;
@@ -39,10 +40,10 @@ private function getResourceCost(ctx:Context, playerId:Int, gridId:Int, p1Select
 				1.5;
 			} else {
 				1;
-			};
+			});
 
 			final top = 70;
-			final attrFactor:Float = if (type == RESOURCE.MONEY) {
+			final attrFactor:Float = getFact(if (type == RESOURCE.MONEY) {
 				(getPeoplePolitical(ctx, p1.id) / top) * .7 + (getPeopleIntelligence(ctx, p1.id) / top) * .1 + (getPeopleCharm(ctx, p1.id) / top) * .1
 					+ (grid.money / 300) * .1;
 			} else if (type == RESOURCE.ARMY) {
@@ -52,9 +53,9 @@ private function getResourceCost(ctx:Context, playerId:Int, gridId:Int, p1Select
 				(getPeoplePolitical(ctx, p1.id) / top) * .1 + (getPeopleIntelligence(ctx, p1.id) / top) * .7 + (getPeopleCharm(ctx, p1.id) / top) * .1
 					+ (grid.food / 300) * .1;
 			} else {
-				0;
-			};
-			final rate = base * attrFactor * abiFactor;
+				1.0;
+			});
+			final rate = getNormalizeZeroOneFromFact(factAverage([[base, 1], [attrFactor, 1], [abiFactor, 1]]));
 			final returnInfo = {
 				playerCost: {
 					id: playerId,

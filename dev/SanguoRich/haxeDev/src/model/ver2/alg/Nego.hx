@@ -37,18 +37,18 @@ private function getNegoCost(ctx:Context, playerId:Int, gridId:Int, p1SelectId:I
 					// 體力越少效率越低
 					final useEnergy = p1.energy / (100 / ENERGY_COST_ON_NEGO);
 					// 使用20體力的情況下基礎值為0.5
-					final base = fact(getBase(useEnergy, ENERGY_COST_ON_NEGO, 0.0) * BASE_RATE_NEGO, FACT_TIMES);
-					final intelligenceFactor = fact(getPeopleIntelligence(ctx, p1.id) / getPeopleIntelligence(ctx, p2.id), FACT_TIMES);
-					final politicalFactor = fact(getPeoplePolitical(ctx, p1.id) / getPeoplePolitical(ctx, p2.id), FACT_TIMES);
-					final charmFactor = fact(getPeopleCharm(ctx, p1.id) / getPeopleCharm(ctx, p2.id), FACT_TIMES);
+					final base = getFact(getBase(useEnergy, ENERGY_COST_ON_NEGO, 0.0) * BASE_RATE_NEGO);
+					final intelligenceFactor = getFact(getPeopleIntelligence(ctx, p1.id) / getPeopleIntelligence(ctx, p2.id));
+					final politicalFactor = getFact(getPeoplePolitical(ctx, p1.id) / getPeoplePolitical(ctx, p2.id));
+					final charmFactor = getFact(getPeopleCharm(ctx, p1.id) / getPeopleCharm(ctx, p2.id));
 					final rate = {
 						var tmp = factAverage([[base, 1], [intelligenceFactor, 1.25], [politicalFactor, 1], [charmFactor, 2]]);
 						// 沒有良官的時候，rate最高限制在1.2
 						tmp = Math.min(tmp, 1.2);
 						// 良官加成，rate最高可以突破1.2
-						final abiFactor = fact(p1Abilities.has(7) ? 1.5 : 1, FACT_TIMES);
+						final abiFactor = getFact(p1Abilities.has(7) ? 1.5 : 1);
 						tmp = factAverage([[tmp, 1], [abiFactor, 1]]);
-						getNormalizeZeroOne(zeroOneFromFact(tmp, FACT_TIMES));
+						getNormalizeZeroOneFromFact(tmp);
 					};
 					final gainRate = {
 						// 根據友好度決定基本%數
