@@ -21,7 +21,7 @@ class StrategyPreviewView extends PopupView {
 	var strategyList:StrategyListView;
 
 	var leaderList:LeaderListView;
-	var gridList:GridListView;
+	// var gridList:GridListView;
 
 	public function new() {
 		super();
@@ -35,13 +35,28 @@ class StrategyPreviewView extends PopupView {
 		leaderList = new LeaderListView();
 		box_leaderList.addComponent(leaderList);
 
-		gridList = new GridListView();
-		box_gridList.addComponent(gridList);
+		// gridList = new GridListView();
+		// box_gridList.addComponent(gridList);
 
 		strategyList = new StrategyListView();
 		strategyList.setList(StrategyList);
 
 		box_strategyList.addComponent(strategyList);
+	}
+
+	var showGrids:Array<Grid>;
+	var selectGridId:Int = -1;
+
+	@:bind(btn_selectGrid, MouseEvent.CLICK)
+	function onBtnSelectGridClick(e){
+		fadeOut();
+		Main.view.onStrategyPreviewSelectGridClick(showGrids, (gridId:Int)->{
+			fadeIn();
+
+			final gameInfo = Main.model.gameInfo();
+			selectGridId = gridId;
+			btn_selectGrid.text = gameInfo.grids[gridId].name;
+		});
 	}
 
 	@:bind(btn_cancel, MouseEvent.CLICK)
@@ -55,24 +70,25 @@ class StrategyPreviewView extends PopupView {
 
 		if(leaderList.selectedItem == null) return;
 		if(p2List.selectedItem == null) return;
-		if(gridList.selectedItem == null) return;
+		if(selectGridId == -1) return;
+		// if(gridList.selectedItem == null) return;
 
 		final gameInfo = Main.model.gameInfo();
 		var targetPlayer = leaderList.selectedItem.id;
 		var targetPeople = p2List.selectedItem.id;
-		var targetGrid = gridList.selectedItem.id;
+		// var targetGrid = gridList.selectedItem.id;
 		var strategy = strategyList.selectedItem.id;
 		
 		switch(strategy.id){
 			// 遠交近攻
 			case 2:
-				final grid = gameInfo.grids[targetGrid];
+				final grid = gameInfo.grids[selectGridId];
 				if(grid.belongPlayerId != null){
 					Dialogs.messageBox('這個計策只能用在中立格子哦', '', MessageBoxType.TYPE_INFO);
 					return;
 				}
 		}
-		Main.view.onStrategyPreviewConfirmClick(p1List.selectedItem.id, strategyList.selectedItem.id, targetPlayer, targetPeople, targetGrid);
+		Main.view.onStrategyPreviewConfirmClick(p1List.selectedItem.id, strategyList.selectedItem.id, targetPlayer, targetPeople, selectGridId);
 	}
 
 	override function showPopup(info:Dynamic, cb:()->Void = null) {
@@ -88,16 +104,16 @@ class StrategyPreviewView extends PopupView {
 				return;
 			if (p2List.selectedItem == null)
 				return;
-			if (gridList.selectedItem == null)
-				return;
+			// if (gridList.selectedItem == null)
+			// 	return;
 
 			var p1 = p1List.selectedItem;
 			var s = strategyList.selectedItem;
 
 			var targetPlayer = leaderList.selectedItem.id;
 			var targetPeople = p2List.selectedItem.id;
-			var targetGrid = gridList.selectedItem.id;
-			var result:{energyBefore:Int, energyAfter:Int, rate:Float} = Main.model.getStrategyRate(p1, s, targetPlayer, targetPeople, targetGrid);
+			// var targetGrid = gridList.selectedItem.id;
+			var result:{energyBefore:Int, energyAfter:Int, rate:Float} = Main.model.getStrategyRate(p1, s, targetPlayer, targetPeople, 0);
 
 			pro_energy.value = '${Main.getCompareString(result.energyBefore, result.energyAfter)}';
 			lbl_rate.value = Main.getRateString(result.rate);
@@ -122,8 +138,10 @@ class StrategyPreviewView extends PopupView {
 		p1List.selectedIndex = 0;
 
 		function updateGridList(grids:Array<Grid>) {
-			gridList.setList(grids);
-			gridList.selectedIndex = 0;
+			btn_selectGrid.text = '選擇格子';
+			showGrids = grids;
+			// gridList.setList(grids);
+			// gridList.selectedIndex = 0;
 		}
 
 		strategyList.onChange = function(e) {
@@ -133,10 +151,13 @@ class StrategyPreviewView extends PopupView {
 
 				box_leaderList.hide();
 				box_peopleList2.hide();
-				box_gridList.hide();
+				btn_selectGrid.hide();
+				// box_gridList.hide();
 				switch (s.targetType) {
 					case TARGET_GRID:
-						box_gridList.show();
+						// box_gridList.show();
+						btn_selectGrid.show();
+						btn_selectGrid.disabled = false;
 
 						final currentId = gameInfo.currentPlayer.atGridId;
 						function remapId(i){
@@ -164,10 +185,14 @@ class StrategyPreviewView extends PopupView {
 						box_leaderList.show();
 						box_peopleList2.show();
 					case SELF_GRID:
-						box_gridList.show();
+						// box_gridList.show();
+						btn_selectGrid.show();
+						btn_selectGrid.disabled = true;
 						
 						final grid = gameInfo.grids[gameInfo.currentPlayer.atGridId];
-						updateGridList([grid]);
+						btn_selectGrid.text = grid.name;
+
+						// updateGridList([grid]);
 					case SELF_PEOPLE:
 						leaderList.selectedIndex = gameInfo.currentPlayer.id;
 						box_peopleList2.show();
@@ -197,9 +222,9 @@ class StrategyPreviewView extends PopupView {
 			setRate();
 		}
 
-		gridList.onChange = function(e){
-			setRate();
-		}
+		// gridList.onChange = function(e){
+		// 	setRate();
+		// }
 
 		updatePlayerList();
 		updatePeopleList(gameInfo.currentPlayer.people);

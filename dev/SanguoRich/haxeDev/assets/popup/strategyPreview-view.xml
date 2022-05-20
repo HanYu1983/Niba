@@ -3,8 +3,8 @@
     <hbox id="box_peopleList" width="100%" height="150"></hbox>
     <hbox id="box_leaderList" width="100%" height="150"></hbox>
     <hbox id="box_peopleList2" width="100%" height="150"></hbox>
-    <hbox id="box_gridList" width="100%" height="150"></hbox>
-    
+    <!-- <hbox id="box_gridList" width="100%" height="150"></hbox> -->
+    <button horizontalAlign="center" id="btn_selectGrid" text="選擇格子"/>
     <hbox horizontalAlign="center">
         <property-grid width="400">
             <property-group text="武將">

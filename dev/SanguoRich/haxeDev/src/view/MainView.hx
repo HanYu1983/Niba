@@ -1166,4 +1166,46 @@ class MainView extends Box {
 		final gameInfo = Main.model.gameInfo();
 		Main.model.takeSettle(gameInfo.currentPlayer.id, gameInfo.currentPlayer.atGridId, peopleId, settleType, syncViewWithEventsByGameInfo);
 	}
+
+	public function onStrategyPreviewSelectGridClick(gridInfos:Array<Grid>, cb:(gridId:Int) -> Void) {
+		final gameInfo = Main.model.gameInfo();
+		final currentPlayer = gameInfo.currentPlayer;
+
+		for(g in grids){ g.showSelectable(false);}
+
+		for(g in gridInfos){
+			trace(g.id);
+			grids[g.id].showSelectable(true);
+		}
+
+		stage.unregisterEvents();
+		if (gameInfo.isPlayerTurn) {
+
+			stage.registerEvent(MouseEvent.MOUSE_MOVE, function(e:MouseEvent) {
+				final gridId = getGridIdFromPosition(e.localX, e.localY);
+				moveCursorToGrid(gridId);
+				syncGridInfo(gridId);
+			});
+
+			stage.registerEvent(MouseEvent.MOUSE_OUT, function(e:MouseEvent) {
+				syncGridInfo(currentPlayer.atGridId);
+				moveCursorToGrid(currentPlayer.atGridId);
+			});
+
+			stage.onClick = function(e){
+				final gridId = getGridIdFromPosition(e.localX, e.localY);
+				if(grids[gridId].isSelectable){
+					for(g in grids){ g.showSelectable(false);}
+					cb(gridId);
+				}
+			}
+		}
+	}
+
+	function getGridIdFromPosition(x:Float, y:Float){
+		final gameInfo = Main.model.gameInfo();
+		final gx = Math.floor(x / gridSize);
+		final gy = Math.floor(y / gridSize);
+		return Main.clampInt((gx + gy * 10), 0, gameInfo.grids.length - 1);
+	}
 }

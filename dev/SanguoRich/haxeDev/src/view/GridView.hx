@@ -75,6 +75,18 @@ class GridView extends Box {
 		box_showAnimation.hide();
 	}
 
+	public var isSelectable(default, null) = false;
+	public function showSelectable(show:Bool) {
+		if(show){
+			box_showAnimation.show();
+			lbl_action.value = '可選';
+		}else{
+			box_showAnimation.hide();
+			lbl_action.value = '';
+		}
+		isSelectable = show;
+	}
+
 	public function showAnimation(text:String, duration:Float = 1.0, cb:()->Void){
 		box_showAnimation.show();
 		lbl_action.value = text.substr(0,5);
