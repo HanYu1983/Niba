@@ -88,16 +88,17 @@ function getEnergyFactor(atkArmy:Float) {
 	return (Math.min(atkArmy / 500, 1) * .3 + .7);
 }
 
-final ENERGY_COST_ON_STRATEGY = 30;
+final ENERGY_COST_ON_STRATEGY = 35;
 final ENERGY_COST_ON_HIRE = 10;
 final ENERGY_COST_ON_NEGO = 20;
-final ENERGY_COST_ON_RESOURCE = 10;
+final ENERGY_COST_ON_RESOURCE = 15;
 final ENERGY_COST_ON_EXPLORE = 10;
-final ENERGY_COST_ON_BUILDING = 10;
+final ENERGY_COST_ON_BUILDING = 20;
 final ENERGY_COST_ON_SNATCH = 15;
 final ENERGY_COST_ON_WAR = 30;
 final ENERGY_COST_ON_PK = 15;
 final ENERGY_COST_ON_COST_FOR_FUN = 15;
+final ENERGY_COST_ON_SETTLE = 50;
 
 // 最低搶奪所需兵力
 final SNATCH_ARMY_AT_LEAST = 30;

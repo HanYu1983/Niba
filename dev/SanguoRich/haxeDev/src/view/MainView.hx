@@ -201,37 +201,37 @@ class MainView extends Box {
 	}
 
 	public function onNegoPreviewConfirmNegoClick(p1Id:Int, p2Id:Int) {
-		var gameInfo = Main.model.gameInfo();
+		final gameInfo = Main.model.gameInfo();
 		Main.model.takeNegoOn(gameInfo.currentPlayer.id, gameInfo.currentPlayer.atGridId, p1Id, p2Id, syncViewWithEventsByGameInfo);
 	}
 
 	public function onExplorePreviewConfirmClick(p1Id:Int) {
-		var gameInfo = Main.model.gameInfo();
+		final gameInfo = Main.model.gameInfo();
 		Main.model.takeExplore(gameInfo.currentPlayer.id, gameInfo.currentPlayer.atGridId, p1Id, syncViewWithEventsByGameInfo);
 	}
 
 	public function onHirePreviewViewConfirmClick(p1Id:Int, p2Id:Int, moneyMore:Float) {
-		var gameInfo = Main.model.gameInfo();
+		final gameInfo = Main.model.gameInfo();
 		Main.model.takeHire(gameInfo.currentPlayer.id, gameInfo.currentPlayer.atGridId, p1Id, p2Id, moneyMore, syncViewWithEventsByGameInfo);
 	}
 
 	public function onFirePreviewViewConfirmClick(pId:Array<Int>) {
-		var gameInfo = Main.model.gameInfo();
+		final gameInfo = Main.model.gameInfo();
 		Main.model.takeFire(gameInfo.currentPlayer.id, pId, syncViewWithEventsByGameInfo);
 	}
 
 	public function onWarPreviewConfirmClick(p1Id:Int, p2Id:Int, p1Army:Float, p2Army:Float) {
-		var gameInfo = Main.model.gameInfo();
+		final gameInfo = Main.model.gameInfo();
 		Main.model.takeWarOn(gameInfo.currentPlayer.id, gameInfo.currentPlayer.atGridId, p1Id, p2Id, p1Army, p2Army, syncViewWithEventsByGameInfo);
 	}
 
 	public function onSnatchPreviewConfirmClick(p1Id:Int, p2Id:Int, isOccupation:Bool) {
-		var gameInfo = Main.model.gameInfo();
+		final gameInfo = Main.model.gameInfo();
 		Main.model.takeSnatchOn(gameInfo.currentPlayer.id, gameInfo.currentPlayer.atGridId, p1Id, p2Id, isOccupation, syncViewWithEventsByGameInfo);
 	}
 
 	public function onResourcePreviewConfirmClick(p1Id:Int, moneyBase:Float, market:model.IModel.MARKET, resource:model.IModel.RESOURCE) {
-		var gameInfo = Main.model.gameInfo();
+		final gameInfo = Main.model.gameInfo();
 		Main.model.takeResource(gameInfo.currentPlayer.id, gameInfo.currentPlayer.atGridId, p1Id, moneyBase, market, resource, syncViewWithEventsByGameInfo);
 	}
 
@@ -268,7 +268,9 @@ class MainView extends Box {
 			grid.left = (index % 10) * gridSize;
 			grid.top = Math.floor(index / 10) * gridSize;
 		}
-
+		
+		btn_settle.text = '${btn_settle.text}(${ENERGY_COST_ON_SETTLE})';
+		btn_build.text = '${btn_settle.text}(${ENERGY_COST_ON_BUILDING})';
 		btn_takeTreasure.text = '${btn_takeTreasure.text}(${Main.getFixNumber(ENERGY_RATE_FOR_TREASURE_TAKE * 100, 0)})';
 		btn_camp.text = '${btn_camp.text}(${ENERGY_COST_ON_COST_FOR_FUN})';
 		btn_practice.text = '${btn_practice.text}(${ENERGY_COST_ON_COST_FOR_FUN})';
@@ -507,7 +509,7 @@ class MainView extends Box {
 
 	@:bind(btn_explore, MouseEvent.CLICK)
 	function onBtnExploreClick(e:MouseEvent) {
-		var gameInfo = Main.model.gameInfo();
+		final gameInfo = Main.model.gameInfo();
 		var previewInfo = Main.model.getTakeExplorePreview(gameInfo.currentPlayer.id, gameInfo.currentPlayer.atGridId);
 		if (previewInfo.p1ValidPeople.length < 1) {
 			Dialogs.messageBox('沒有武將可以執行', '主公啊…', MessageBoxType.TYPE_WARNING);
@@ -518,7 +520,7 @@ class MainView extends Box {
 
 	@:bind(btn_hire, MouseEvent.CLICK)
 	function onBtnHireClick(e:MouseEvent) {
-		var gameInfo = Main.model.gameInfo();
+		final gameInfo = Main.model.gameInfo();
 		var previewInfo = Main.model.getTakeHirePreview(gameInfo.currentPlayer.id, gameInfo.currentPlayer.atGridId);
 		if (previewInfo.p1ValidPeople.length < 1) {
 			Dialogs.messageBox('沒有武將可以執行', '主公啊…', MessageBoxType.TYPE_WARNING);
@@ -615,8 +617,6 @@ class MainView extends Box {
 		syncGameInfo(gameInfo);
 		syncGridViews(gameInfo);
 		syncPlayerViews(gameInfo);
-
-		trace('格子爆倉希望可以調整為超過的一樣可以拿到，不成長就行');
 	}
 
 	// function playBeforeSync(gameInfo:GameInfo, tweens:Array<TweenX>) {
@@ -922,7 +922,6 @@ class MainView extends Box {
 					msg += '職等:${PeopleGenerator.getInst().getPeopleTypeName(p1.type)} => ${PeopleGenerator.getInst().getPeopleTypeName(p2.type)}\n';
 					switch (p2.type) {
 						case WENGUAN(level):
-							
 							msg += '智力:${Main.getCompareString(p1.intelligence, p2.intelligence)}\n';
 							msg += '政治:${Main.getCompareString(p1.political, p2.political)}\n';
 						case WUJIANG(level):
@@ -1058,14 +1057,10 @@ class MainView extends Box {
 		stage.unregisterEvents();
 		if (gameInfo.isPlayerTurn) {
 			stage.registerEvent(MouseEvent.MOUSE_MOVE, function(e:MouseEvent) {
-				var gx = Math.floor(e.localX / gridSize);
-				var gy = Math.floor(e.localY / gridSize);
+				final gx = Math.floor(e.localX / gridSize);
+				final gy = Math.floor(e.localY / gridSize);
 				var gridId = gx + gy * 10;
-
-				if(gridId > gameInfo.grids.length - 1){
-					gridId = gameInfo.grids.length - 1;
-				}
-				if(gridId < 0) gridId = 0;
+				gridId = Main.clampInt(gridId, 0, gameInfo.grids.length - 1);
 
 				moveCursorToGrid(gridId);
 				syncGridInfo(gridId);
@@ -1103,7 +1098,7 @@ class MainView extends Box {
 	}
 
 	function syncPlayerInfo(id:Int) {
-		var gameInfo = Main.model.gameInfo();
+		final gameInfo = Main.model.gameInfo();
 		var p = gameInfo.players[id];
 
 		leaderView.setInfo(p);
@@ -1113,7 +1108,7 @@ class MainView extends Box {
 	}
 
 	function syncGridInfo(gridId:Int) {
-		var gameInfo = Main.model.gameInfo();
+		final gameInfo = Main.model.gameInfo();
 		var grid:Grid = gameInfo.grids[gridId];
 
 		// why still would be null?

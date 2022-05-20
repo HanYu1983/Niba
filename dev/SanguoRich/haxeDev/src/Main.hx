@@ -73,6 +73,12 @@ class Main {
 		return value;
 	}
 
+	public static function clampInt(value:Int, min:Int = 0, max:Int = 1):Int {
+		if(value < min) return min;
+		if(value > max) return max;
+		return value;
+	}
+
 	public static function getVSString(p1Value:Float, p2Value:Float):String {
 		final symbol:String = if (p1Value / p2Value > 2.0) {
 			"OOO";
