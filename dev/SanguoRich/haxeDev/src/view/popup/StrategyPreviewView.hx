@@ -143,8 +143,9 @@ class StrategyPreviewView extends PopupView {
 		p1List.selectedIndex = 0;
 
 		function updateGridList(grids:Array<Grid>) {
-			btn_selectGrid.text = '選擇格子';
 			showGrids = grids;
+			btn_selectGrid.text = showGrids[0].name;
+			selectGridId = showGrids[0].id;
 			// gridList.setList(grids);
 			// gridList.selectedIndex = 0;
 		}
@@ -193,8 +194,10 @@ class StrategyPreviewView extends PopupView {
 						// box_gridList.show();
 						btn_selectGrid.show();
 						btn_selectGrid.disabled = true;
+
 						
 						final grid = gameInfo.grids[gameInfo.currentPlayer.atGridId];
+						selectGridId = grid.id;
 						btn_selectGrid.text = grid.name;
 
 						// updateGridList([grid]);
