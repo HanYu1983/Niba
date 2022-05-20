@@ -38,6 +38,9 @@ final PLAYER_SPEND_MONEY_FOR_PEOPLE_PER_TURN_PERSENT = 0.01;
 // 主公支付的食物為所有格子上以及身上的士兵的數量的%數
 final PLAYER_SPEND_FOOD_FOR_ARMY_PER_TURN_PERSENT = 0.07;
 
+// 依據建築物等級的維護費
+final BASIC_BUILDING_MAINTAIN_FACTOR = .5;
+
 // 武將聘用價格%數
 final PEOPLE_HIRE_COST_FACTOR = .1;
 
