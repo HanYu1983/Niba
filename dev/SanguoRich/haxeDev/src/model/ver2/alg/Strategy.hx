@@ -198,7 +198,7 @@ private function onStrategyCost(ctx:Context, p1PeopleId:Int, strategyId:Int, tar
 				if (success) {
 					final myGrids = ctx.grids.filter(g -> getGridBelongPlayerId(ctx, g.id) == p1.belongToPlayerId);
 					for (grid in myGrids) {
-						grid.food = Math.min(getGridMaxFood(ctx, grid.id), grid.food + grid.food * 0.05);
+						grid.food = Math.min(getGridMaxFood(ctx, grid.id), grid.food + grid.food * 0.10);
 					}
 					onPeopleExpAdd(ctx, p1.id, getExpAdd(cost.successRate, ENERGY_COST_ON_STRATEGY));
 				}

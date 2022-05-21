@@ -237,6 +237,7 @@ enum StrategyTargetType {
 typedef StrategyCatelog = {
 	id:Int,
 	name:String,
+	money:Int,
 	intelligence:Float,
 	describe:String,
 	targetType:StrategyTargetType,
@@ -351,7 +352,8 @@ final StrategyList:Array<StrategyCatelog> = [
 	{
 		id: 0,
 		name: '暗渡陳艙',
-		intelligence: 80,
+		money: 50,
+		intelligence: 60,
 		describe: '可以指定移動1~3格數(無視路障)',
 		targetType: StrategyTargetType.TARGET_GRID,
 		value: {
@@ -361,7 +363,8 @@ final StrategyList:Array<StrategyCatelog> = [
 	{
 		id: 1,
 		name: '步步為營',
-		intelligence: 40,
+		money: 30,
+		intelligence: 20,
 		describe: '指定武將回復30體力',
 		targetType: StrategyTargetType.SELF_PEOPLE,
 		value: null
@@ -369,7 +372,8 @@ final StrategyList:Array<StrategyCatelog> = [
 	{
 		id: 2,
 		name: '遠交近攻',
-		intelligence: 70,
+		money: 60,
+		intelligence: 40,
 		describe: '直接獲取該格子的10%資源。並且友好度上升1',
 		targetType: StrategyTargetType.SELF_GRID,
 		value: null
@@ -377,7 +381,8 @@ final StrategyList:Array<StrategyCatelog> = [
 	{
 		id: 3,
 		name: '緩兵之計',
-		intelligence: 60,
+		money: 60,
+		intelligence: 30,
 		describe: '指定自己前後3格當中的其中一格設置路障。走到那個格子的所以玩家會自動停下。然後路障消失',
 		targetType: StrategyTargetType.TARGET_GRID,
 		value: {
@@ -387,7 +392,8 @@ final StrategyList:Array<StrategyCatelog> = [
 	{
 		id: 4,
 		name: '火中取栗',
-		intelligence: 65,
+		money: 10,
+		intelligence: 50,
 		describe: '拆除指定自己後6格路障，如果那個路障是別的玩家，拿取那個玩家10金',
 		targetType: StrategyTargetType.TARGET_GRID,
 		value: {
@@ -397,6 +403,7 @@ final StrategyList:Array<StrategyCatelog> = [
 	{
 		id: 5,
 		name: '趁虛而入',
+		money: 10,
 		intelligence: 70,
 		describe: '指定武將體力-20',
 		targetType: StrategyTargetType.TARGET_PEOPLE,
@@ -405,7 +412,8 @@ final StrategyList:Array<StrategyCatelog> = [
 	{
 		id: 6,
 		name: '按兵不動',
-		intelligence: 70,
+		money: 50,
+		intelligence: 50,
 		describe: '這回合不移動',
 		targetType: StrategyTargetType.SELF_PLAYER,
 		value: null
@@ -413,7 +421,8 @@ final StrategyList:Array<StrategyCatelog> = [
 	{
 		id: 7,
 		name: '急功近利',
-		intelligence: 40,
+		money: 10,
+		intelligence: 30,
 		describe: '指定玩家變賣20糧獲得20錢',
 		targetType: StrategyTargetType.TARGET_PLAYER,
 		value: null
@@ -421,8 +430,9 @@ final StrategyList:Array<StrategyCatelog> = [
 	{
 		id: 8,
 		name: '五穀豐登',
-		intelligence: 70,
-		describe: '所有自己城池的糧食+5%',
+		money: 100,
+		intelligence: 60,
+		describe: '所有自己城池的糧食+10%',
 		targetType: StrategyTargetType.SELF_PLAYER,
 		value: null
 	},

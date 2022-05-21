@@ -21,7 +21,6 @@ class StrategyPreviewView extends PopupView {
 	var strategyList:StrategyListView;
 
 	var leaderList:LeaderListView;
-	// var gridList:GridListView;
 
 	public function new() {
 		super();
@@ -34,9 +33,6 @@ class StrategyPreviewView extends PopupView {
 
 		leaderList = new LeaderListView();
 		box_leaderList.addComponent(leaderList);
-
-		// gridList = new GridListView();
-		// box_gridList.addComponent(gridList);
 
 		strategyList = new StrategyListView();
 		strategyList.setList(StrategyList);
@@ -72,12 +68,10 @@ class StrategyPreviewView extends PopupView {
 		if(leaderList.selectedItem == null) return;
 		if(p2List.selectedItem == null) return;
 		if(selectGridId == -1) return;
-		// if(gridList.selectedItem == null) return;
 
 		final gameInfo = Main.model.gameInfo();
 		var targetPlayer = leaderList.selectedItem.id;
 		var targetPeople = p2List.selectedItem.id;
-		// var targetGrid = gridList.selectedItem.id;
 		var strategy = strategyList.selectedItem.id;
 		
 		switch(strategy.id){
@@ -109,15 +103,11 @@ class StrategyPreviewView extends PopupView {
 			if(selectGridId == -1) 
 				return;
 
-			// if (gridList.selectedItem == null)
-			// 	return;
-
 			var p1 = p1List.selectedItem;
 			var s = strategyList.selectedItem;
 
 			var targetPlayer = leaderList.selectedItem.id;
 			var targetPeople = p2List.selectedItem.id;
-			// var targetGrid = gridList.selectedItem.id;
 			var result:{energyBefore:Int, energyAfter:Int, rate:Float} = Main.model.getStrategyRate(p1, s, targetPlayer, targetPeople, selectGridId);
 
 			pro_energy.value = '${Main.getCompareString(result.energyBefore, result.energyAfter)}';
@@ -146,22 +136,20 @@ class StrategyPreviewView extends PopupView {
 			showGrids = grids;
 			btn_selectGrid.text = showGrids[0].name;
 			selectGridId = showGrids[0].id;
-			// gridList.setList(grids);
-			// gridList.selectedIndex = 0;
 		}
 
 		strategyList.onChange = function(e) {
 			var s:StrategyCatelog = strategyList.selectedItem;
 			if (s != null) {
 				lbl_usingStrategy.value = s.name;
-
+				lbl_money.value = s.money;
+				
 				box_leaderList.hide();
 				box_peopleList2.hide();
 				btn_selectGrid.hide();
-				// box_gridList.hide();
+
 				switch (s.targetType) {
 					case TARGET_GRID:
-						// box_gridList.show();
 						btn_selectGrid.show();
 						btn_selectGrid.disabled = false;
 
@@ -191,16 +179,13 @@ class StrategyPreviewView extends PopupView {
 						box_leaderList.show();
 						box_peopleList2.show();
 					case SELF_GRID:
-						// box_gridList.show();
 						btn_selectGrid.show();
 						btn_selectGrid.disabled = true;
 
-						
 						final grid = gameInfo.grids[gameInfo.currentPlayer.atGridId];
 						selectGridId = grid.id;
 						btn_selectGrid.text = grid.name;
 
-						// updateGridList([grid]);
 					case SELF_PEOPLE:
 						leaderList.selectedIndex = gameInfo.currentPlayer.id;
 						box_peopleList2.show();
@@ -229,10 +214,6 @@ class StrategyPreviewView extends PopupView {
 		p2List.onChange = function(e){
 			setRate();
 		}
-
-		// gridList.onChange = function(e){
-		// 	setRate();
-		// }
 
 		updatePlayerList();
 		updatePeopleList(gameInfo.currentPlayer.people);

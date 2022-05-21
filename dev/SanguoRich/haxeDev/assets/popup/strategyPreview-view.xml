@@ -3,7 +3,6 @@
     <hbox id="box_peopleList" width="100%" height="150"></hbox>
     <hbox id="box_leaderList" width="100%" height="150"></hbox>
     <hbox id="box_peopleList2" width="100%" height="150"></hbox>
-    <!-- <hbox id="box_gridList" width="100%" height="150"></hbox> -->
     <button horizontalAlign="center" id="btn_selectGrid" text="選擇格子"/>
     <hbox horizontalAlign="center">
         <property-grid width="400">
@@ -16,6 +15,8 @@
         </property-grid>
     </hbox>
     <hbox horizontalAlign="center">
+        <label text="花費:" verticalAlign="bottom" style="font-size:14"/>
+        <label id="lbl_money" text="" style="font-size:24" />
         <label text="計策:" verticalAlign="bottom" style="font-size:14"/>
         <label id="lbl_usingStrategy" text="" style="font-size:24" />
         <label text="成功率:" verticalAlign="bottom" style="font-size:14"/>
