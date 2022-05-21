@@ -55,10 +55,8 @@ private function getResourceCost(ctx:Context, playerId:Int, gridId:Int, p1Select
 			} else {
 				1.0;
 			});
-			final rate = getNormalizeZeroOneFromFact(factAverage([[attrFactor, 1], [abiFactor, 1]]));
-			// trace("rate", rate, "=", factAverage([[attrFactor, 1], [abiFactor, 1]]), attrFactor, abiFactor);
+			final rate = getZeroOneFromFact(attrFactor * abiFactor);
 			final gainRate = base * rate;
-			// trace("gainRate", gainRate, "base", base);
 			final returnInfo = {
 				playerCost: {
 					id: playerId,

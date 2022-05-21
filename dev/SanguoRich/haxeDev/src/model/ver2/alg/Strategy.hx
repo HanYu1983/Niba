@@ -16,13 +16,13 @@ private function getStrategyCost(ctx:Context, p1PeopleId:Int, strategyId:Int, ta
 	final useEnergy = p1.energy / (100 / ENERGY_COST_ON_STRATEGY);
 	final base = getBase(useEnergy, ENERGY_COST_ON_STRATEGY, 0.0) * BASE_RATE_STRATEGY;
 	final fact1 = getFact(getPeopleIntelligence(ctx, p1.id) / Math.max(strategy.intelligence, 1.0));
-	final fact2 = getFact(switch strategy.targetType {
+	final fact2 = switch strategy.targetType {
 		case TARGET_PEOPLE:
 			final p2 = getPeopleById(ctx, targetPeopleId);
-			getFact(getPeopleIntelligence(ctx, p1.id) / getPeopleIntelligence(ctx, p2.id));
+			factVery(getFact(getPeopleIntelligence(ctx, p1.id) / getPeopleIntelligence(ctx, p2.id)), 0.25);
 		case _:
 			1.0;
-	});
+	};
 	final zeroOne3 = switch strategyId {
 		case 2:
 			// 遠交近攻對空地沒有作用
@@ -42,7 +42,7 @@ private function getStrategyCost(ctx:Context, p1PeopleId:Int, strategyId:Int, ta
 		case _:
 			1;
 	};
-	final rate = base * getNormalizeZeroOneFromFact(factAverage([[fact1, 1], [fact2, 0.25]])) * zeroOne3;
+	final rate = base * getZeroOneFromFact(fact1 * fact2) * zeroOne3;
 	return {
 		peopleCost: {
 			id: p1.id,

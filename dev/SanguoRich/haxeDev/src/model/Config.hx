@@ -4,27 +4,18 @@ import model.tool.Fact;
 
 private final FACT_TIMES = 3.0;
 
-function getNormalizeZeroOne(v:Float):Float {
-	// trace("getNormalizeZeroOne:", v);
-	// return zeroOneSymbol(v, [0.3, 0.4, 0.5, 0.525, 0.55]);
-	return v;
-}
-
-function getNormalizeZeroOneFromFact(v:Float):Float {
-	return getNormalizeZeroOne(getZeroOneFromFact(v));
-}
-
 function getFact(v:Float):Float {
 	return fact(v, FACT_TIMES);
 }
 
+// 無論fact怎麼乘, 轉換成0~1前, 要把超過指定值域的值切除
+// 指定的值域為 1/FACT_TIMES ~ FACT_TIMES
 function getZeroOneFromFact(v:Float):Float {
-	return v / 2;
+	return Math.max(0, Math.min(1, getFact(v) / 2));
 }
 
 function getFactFromZeroOne(v:Float):Float {
-	// return factFromZeroOne(v, FACT_TIMES);
-	return v * 2;
+	return Math.max(0, Math.min(1, v)) * 2;
 }
 
 // 幾個回合加成(4人走完算1回合)
@@ -183,14 +174,14 @@ function getExpAdd(p:Float, max:Float):Float {
 }
 
 // 體力產生的基本值成數
-// 1代表支付所有體力時, 機率為1
-final BASE_RATE_STRATEGY = 2.5;
-final BASE_RATE_RESOURCE = 2.5;
-final BASE_RATE_PK = 2.5;
-final BASE_RATE_NEGO = 2.5;
-final BASE_RATE_HIRE = 4.0;
-final BASE_RATE_EXPLORE = 3.0;
-final BASE_RATE_SETTLE = 2.5;
+// 1代表支付所有體力時, 機率為0.5
+final BASE_RATE_STRATEGY = 2.0;
+final BASE_RATE_RESOURCE = 2.0;
+final BASE_RATE_PK = 2.0;
+final BASE_RATE_NEGO = 2.0;
+final BASE_RATE_HIRE = 2.0;
+final BASE_RATE_EXPLORE = 2.0;
+final BASE_RATE_SETTLE = 2.0;
 
 // 格子資源上限
 final GRID_RESOURCE_MAX = 1000.0;

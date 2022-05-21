@@ -21,12 +21,12 @@ private function getPkCost(ctx:Context, playerId:Int, gridId:Int, p1PeopleId:Int
 		final fact1 = getFact(getPeopleForce(ctx, p1.id) / getPeopleForce(ctx, p2.id));
 		final fact2 = getFact(getPeopleIntelligence(ctx, p1.id) / getPeopleIntelligence(ctx, p2.id));
 		final fact3 = getFact(1 + p1Abilities.filter(a -> [0, 1, 2, 3].has(a)).length * 0.15);
-		base * getNormalizeZeroOneFromFact(factAverage([[fact1, 1], [fact2, 1], [fact3, 1]]));
+		base * getZeroOneFromFact(fact1 * fact2 * fact3);
 	}
 	final gainArmy = {
 		final fact1 = getFact(getPeopleCharm(ctx, p1.id) / getPeopleCharm(ctx, p2.id));
-		final fact2 = getFactFromZeroOne(successRate);
-		Math.min(player.army, Math.min(grid.army, PK_ARMY_BASE_CHANGE * getNormalizeZeroOneFromFact(factAverage([[fact1, 1], [fact2, 0.7]]))));
+		final fact2 = factVery(getFactFromZeroOne(successRate), 0.7);
+		Math.min(player.army, Math.min(grid.army, PK_ARMY_BASE_CHANGE * getZeroOneFromFact(fact1 * fact2)));
 	}
 	return {
 		peopleCost: [

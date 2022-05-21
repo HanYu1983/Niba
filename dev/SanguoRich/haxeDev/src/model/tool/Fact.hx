@@ -29,7 +29,7 @@ function factVery(f:Float, e:Float):Float {
 	return Math.pow(f, e);
 }
 
-function factAverage(pairs:Array<Array<Float>>):Float {
+private function factAverage(pairs:Array<Array<Float>>):Float {
 	final total = pairs.fold((c, a:Float) -> {
 		return switch c {
 			case [_, f]:
