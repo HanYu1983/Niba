@@ -139,7 +139,8 @@ function initContext(ctx:Context, options:GameSetting) {
 		final isLose = isClose;
 		final mustBePlayer = i == 0;
 		final isAI = mustBePlayer == false && playerConfig.type == 1;
-		final resource = options.resource != null ? options.resource : INIT_RESOURCE;
+		final resourceFact = isAI ? [1.0, 1.5, 2.0][options.aiLevel] : 1.0;
+		final resource = (options.resource != null ? options.resource : INIT_RESOURCE) * resourceFact;
 		addPlayerInfo(ctx, {
 			id: i,
 			name: names[i],

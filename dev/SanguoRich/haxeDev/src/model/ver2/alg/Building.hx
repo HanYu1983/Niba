@@ -21,6 +21,8 @@ private function onBuildingCost(ctx:Context, playerId:Int, gridId:Int, peopleId:
 	final player = ctx.players[playerId];
 	final people = getPeopleById(ctx, peopleId);
 	if (success) {
+		final useEnergy = people.energy / (100 / ENERGY_COST_ON_BUILDING);
+		people.energy -= useEnergy;
 		player.money = Math.max(0, player.money - costMoney);
 		var checked = false;
 		ctx.attachments = ctx.attachments.map(a -> {
