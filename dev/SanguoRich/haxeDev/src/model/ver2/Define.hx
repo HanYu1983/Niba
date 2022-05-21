@@ -260,6 +260,9 @@ enum Event {
 	PLAYER_WIN(value:{
 		player:model.IModel.PlayerInfo,
 	}, gameInfo:GameInfo, autoplay:Null<{duration:Float}>);
+	SETTLE_RESULT(value:{
+		grid:model.GridGenerator.Grid
+	}, gameInfo:GameInfo, autoplay:Null<{duration:Float}>);
 }
 
 typedef Context = {
@@ -920,6 +923,13 @@ function getEventInfo(e:Event):EventInfo {
 				gameInfo: gameInfo,
 				autoplay: autoplay,
 			}
+		case SETTLE_RESULT(value, gameInfo, autoplay):
+			{
+				id: EventInfoID.SETTLE_RESULT,
+				value: value,
+				gameInfo: gameInfo,
+				autoplay: autoplay,
+			}
 	}
 }
 
@@ -1386,6 +1396,7 @@ function getPlayerCommand(ctx:Context, playerId:Int):Array<ActionInfoID> {
 						ret.push(EXPLORE);
 						ret.push(CAMP);
 						ret.push(PRACTICE);
+						ret.push(SETTLE);
 					case _:
 				}
 				if (gridInfo.people.length > 0) {

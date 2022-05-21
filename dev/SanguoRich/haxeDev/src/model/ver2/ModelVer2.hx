@@ -19,6 +19,7 @@ import model.ver2.alg.CostForBonus;
 import model.ver2.alg.SaveLoad;
 import model.ver2.alg.Pk;
 import model.ver2.alg.Equip;
+import model.ver2.alg.Settle;
 
 class ModelVer2 extends DebugModel {
 	var context:Context = {
@@ -261,5 +262,14 @@ class ModelVer2 extends DebugModel {
 	override function finishOneEvent(syncView:() -> Void) {
 		context.events.shift();
 		syncView();
+	}
+
+	override function getPreResultOfSettle(playerId:Int, peopleId:Int, gridId:Int, settleType:Int):GridGenerator.Grid {
+		return _getPreResultOfSettle(context, playerId, peopleId, gridId, settleType);
+	}
+
+	override function takeSettle(playerId:Int, peopleId:Int, gridId:Int, settleType:Int, syncViewWithEventsByGameInfo:(gameInfo:GameInfo) -> Void) {
+		_takeSettle(context, playerId, peopleId, gridId, settleType);
+		syncViewWithEventsByGameInfo(gameInfo());
 	}
 }

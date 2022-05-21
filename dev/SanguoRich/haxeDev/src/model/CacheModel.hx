@@ -132,4 +132,9 @@ class CacheModel extends ProxyModel {
 		isDirty = true;
 		return super.finishOneEvent(syncView);
 	}
+
+	override function takeSettle(playerId:Int, peopleId:Int, gridId:Int, settleType:Int, syncViewWithEventsByGameInfo:(gameInfo:GameInfo) -> Void) {
+		isDirty = true;
+		return super.takeSettle(playerId, peopleId, gridId, settleType, syncViewWithEventsByGameInfo);
+	}
 }
