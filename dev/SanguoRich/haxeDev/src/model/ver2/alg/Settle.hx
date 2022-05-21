@@ -109,6 +109,10 @@ function _getPreResultOfSettle(ctx:Context, playerId:Int, peopleId:Int, gridId:I
 }
 
 function _takeSettle(ctx:Context, playerId:Int, gridId:Int, peopleId:Int, settleType:Int) {
+	final playerInGrid = ctx.peoples.filter(a -> a.position.gridId == gridId);
+	if (playerInGrid.length > 0) {
+		throw new haxe.Exception("playerInGrid.length > 0. 有人在時不能開拓");
+	}
 	if (_tmpCtx == null) {
 		throw new haxe.Exception("_tmpCtx == null. 你必須先呼叫_getPreResultOfSettle");
 	}

@@ -15,7 +15,8 @@ using Lambda;
 // 攻擊方主要參數為【武力】及【智力】  	防守方主要參數為【統率】及【智力】
 // 攻擊方影響能力[0,1,2,3]         	 防守方影響能力[0,1,2,3,8,9];
 // =================================
-private function getWarCostImpl(ctx:Context, playerId:Int, gridId:Int, p1PeopleId:Int, p2PeopleId:Int, army1:Float, army2:Float, options:{occupy:Bool}) {
+private function getWarCostImpl(ctx:Context, playerId:Int, gridId:Int, p1PeopleId:Int, p2PeopleId:Int, army1:Float, army2:Float,
+		options:{occupy:Bool, debug:Bool}) {
 	trace("getWarCostImpl===============", army1, army2);
 	var atkMoneyCost = 0.0;
 	var atkFoodCost = 0.0;
@@ -126,12 +127,17 @@ private function getWarCostImpl(ctx:Context, playerId:Int, gridId:Int, p1PeopleI
 		final damageRate = getNormalizeZeroOneFromFact(factAverage([
 			[fact0, 1], [fact1, 3.0], [fact2, 1.5], [fact3, 1.5], [fact4, 1.5], [fact5, 1], [fact6, 10.0], [fact7, 1], [factArmyTypeAtk, 1],
 			[factArmyTypeDef, 1]])) * zeroOneMoney * zeroOneFood * zeroOneWall;
-		trace("damageRate", damageRate, "fact0", fact0, fact1, fact2, fact3, fact4, "fact5", fact5, fact6, fact7, "factArmyTypeAtk", factArmyTypeAtk,
-			factArmyTypeDef, "zeroOneMoney", zeroOneMoney, zeroOneFood, zeroOneWall);
 		final damage = baseDamage + base * damageRate * WAR_FINAL_DAMAGE_FACTOR;
-		trace("damage", damage, "baseDamage", baseDamage, base, damageRate, WAR_FINAL_DAMAGE_FACTOR);
 		atkDamage = damage;
 		atkEnergyCost = useEnergy * getEnergyFactor(atkArmy);
+		if (options.debug) {
+			trace("attack =================");
+			trace("fact0", fact0, fact1, fact2, fact3, fact4);
+			trace("fact5", fact5, fact6, fact7);
+			trace("factArmyTypeAtk", factArmyTypeAtk, factArmyTypeDef);
+			trace("zeroOneMoney", zeroOneMoney, zeroOneFood, zeroOneWall);
+			trace("damage", damage, "baseDamage", baseDamage, base, damageRate, WAR_FINAL_DAMAGE_FACTOR);
+		}
 	}
 	var defMoneyCost = 0.0;
 	var defFoodCost = 0.0;
@@ -231,6 +237,14 @@ private function getWarCostImpl(ctx:Context, playerId:Int, gridId:Int, p1PeopleI
 		final damage = baseDamage + base * damageRate * WAR_FINAL_DAMAGE_FACTOR;
 		defDamage = damage;
 		defEnergyCost = useEnergy * getEnergyFactor(atkArmy);
+		if (options.debug) {
+			trace("def =================");
+			trace("fact0", fact0, fact1, fact2, fact3, fact4);
+			trace("fact5", fact5, fact6, fact7, fact8, fact9);
+			trace("zeroOneMoney", zeroOneMoney, zeroOneFood);
+			trace("factWall", factWall);
+			trace("damage", damage, "baseDamage", baseDamage, base, damageRate, WAR_FINAL_DAMAGE_FACTOR);
+		}
 	}
 	final success = (ctx.grids[gridId].army - atkDamage) <= 0 && ctx.players[playerId].army - defDamage >= 0;
 	final findTreasureRate = if (options.occupy == false) {
@@ -297,7 +311,7 @@ private function onWarCostImpl(ctx:Context, playerId:Int, gridId:Int, p1PeopleId
 		gridId: gridId,
 	}
 	final success = {
-		switch getWarCostImpl(ctx, playerId, gridId, p1PeopleId, p2PeopleId, army1, army2, options) {
+		switch getWarCostImpl(ctx, playerId, gridId, p1PeopleId, p2PeopleId, army1, army2, {occupy: options.occupy, debug: true}) {
 			case {
 				playerCost: [playerCost1, playerCost2],
 				peopleCost: [peopleCost1, peopleCost2],
@@ -458,7 +472,7 @@ function _getTakeWarPreview(ctx:Context, playerId:Int, gridId:Int):WarPreview {
 
 function _getPreResultOfWar(ctx:Context, playerId:Int, gridId:Int, p1PeopleId:Int, p2PeopleId:Int, army1:Float, army2:Float,
 		options:{occupy:Bool}):Array<PreResultOnWar> {
-	return switch getWarCostImpl(ctx, playerId, gridId, p1PeopleId, p2PeopleId, army1, army2, options) {
+	return switch getWarCostImpl(ctx, playerId, gridId, p1PeopleId, p2PeopleId, army1, army2, {occupy: options.occupy, debug: true}) {
 		case {playerCost: [playerCost1, playerCost2], peopleCost: [peopleCost1, peopleCost2]}:
 			final player1 = ctx.players[playerId];
 			final grid = ctx.grids[gridId];

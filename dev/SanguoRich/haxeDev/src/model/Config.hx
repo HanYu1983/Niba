@@ -6,7 +6,8 @@ private final FACT_TIMES = 3.0;
 
 function getNormalizeZeroOne(v:Float):Float {
 	// trace("getNormalizeZeroOne:", v);
-	return zeroOneSymbol(v, [0.3, 0.4, 0.5, 0.525, 0.55]);
+	// return zeroOneSymbol(v, [0.3, 0.4, 0.5, 0.525, 0.55]);
+	return v;
 }
 
 function getNormalizeZeroOneFromFact(v:Float):Float {
@@ -183,13 +184,13 @@ function getExpAdd(p:Float, max:Float):Float {
 
 // 體力產生的基本值成數
 // 1代表支付所有體力時, 機率為1
-final BASE_RATE_STRATEGY = 1.5;
-final BASE_RATE_RESOURCE = 1.5;
-final BASE_RATE_PK = 1.0;
-final BASE_RATE_NEGO = 1.0;
-final BASE_RATE_HIRE = 1.0;
-final BASE_RATE_EXPLORE = 1.0;
-final BASE_RATE_SETTLE = 1.0;
+final BASE_RATE_STRATEGY = 2.5;
+final BASE_RATE_RESOURCE = 2.5;
+final BASE_RATE_PK = 2.5;
+final BASE_RATE_NEGO = 2.5;
+final BASE_RATE_HIRE = 4.0;
+final BASE_RATE_EXPLORE = 3.0;
+final BASE_RATE_SETTLE = 2.5;
 
 // 格子資源上限
 final GRID_RESOURCE_MAX = 1000.0;

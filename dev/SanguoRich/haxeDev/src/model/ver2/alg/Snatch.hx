@@ -13,7 +13,7 @@ using Lambda;
 private function getSnatchCost(ctx:Context, playerId:Int, gridId:Int, p1PeopleId:Int, p2PeopleId:Int, army1:Float, army2:Float, isOccupation:Bool) {
 	return switch 1 {
 		case 0:
-			final warCost = getWarCost(ctx, playerId, gridId, p1PeopleId, p2PeopleId, army1, army2, {occupy: isOccupation});
+			final warCost = getWarCost(ctx, playerId, gridId, p1PeopleId, p2PeopleId, army1, army2, {occupy: isOccupation, debug: false});
 			final grid = ctx.grids[gridId];
 			var maxPercent = grid.favor[playerId] + 3.0;
 			// -3~3 => 0~1
@@ -33,7 +33,7 @@ private function getSnatchCost(ctx:Context, playerId:Int, gridId:Int, p1PeopleId
 				findTreasureRate: success ? warCost.findTreasureRate : 0.0,
 			}
 		case 1:
-			final warCost = getWarCost(ctx, playerId, gridId, p1PeopleId, p2PeopleId, army1, army2, {occupy: isOccupation});
+			final warCost = getWarCost(ctx, playerId, gridId, p1PeopleId, p2PeopleId, army1, army2, {occupy: isOccupation, debug: true});
 			final grid = ctx.grids[gridId];
 			if (grid.army == 0) {
 				trace("Snatch", "getSnatchCost", "防守方城池為0兵");
@@ -108,7 +108,7 @@ private function guessArmy(ctx:Context, playerId:Int, gridId:Int, p1PeopleId:Int
 	var successArmy = 0.0;
 	for (i in 0...10) {
 		army1 = (s + e) / 2;
-		final warCost = getWarCost(ctx, playerId, gridId, p1PeopleId, p2PeopleId, army1, army2, {occupy: true});
+		final warCost = getWarCost(ctx, playerId, gridId, p1PeopleId, p2PeopleId, army1, army2, {occupy: true, debug: false});
 		switch warCost.playerCost[1].army {
 			case enemyLoseArmy if (enemyLoseArmy >= army2):
 				e = army1;
@@ -117,7 +117,7 @@ private function guessArmy(ctx:Context, playerId:Int, gridId:Int, p1PeopleId:Int
 				s = army1;
 		}
 	}
-	final warCost = getWarCost(ctx, playerId, gridId, p1PeopleId, p2PeopleId, successArmy, army2, {occupy: true});
+	final warCost = getWarCost(ctx, playerId, gridId, p1PeopleId, p2PeopleId, successArmy, army2, {occupy: true, debug: false});
 	final success = warCost.playerCost[1].army >= army2;
 	return {
 		success: success,
@@ -207,13 +207,14 @@ function _getTakeSnatchPreview(ctx:Context, playerId:Int, gridId:Int):SnatchPrev
 }
 
 function _getPreResultOfSnatch(ctx:Context, playerId:Int, gridId:Int, p1PeopleId:Int, p2PeopleId:Int, isOccupation:Bool):PreResultOnSnatch {
+	trace("_getPreResultOfSnatch", playerId, p1PeopleId);
 	if (isOccupation) {
 		final army1 = switch guessArmy(ctx, playerId, gridId, p1PeopleId, p2PeopleId) {
 			case {army: army}:
 				army;
 		}
 		final army2 = ctx.grids[gridId].army;
-		final warCost = getWarCost(ctx, playerId, gridId, p1PeopleId, p2PeopleId, army1, army2, {occupy: isOccupation});
+		final warCost = getWarCost(ctx, playerId, gridId, p1PeopleId, p2PeopleId, army1, army2, {occupy: isOccupation, debug: true});
 		final preResultOnSnatch = {
 			war: _getPreResultOfWar(ctx, playerId, gridId, p1PeopleId, p2PeopleId, army1, army2, {occupy: true}),
 			money: 0.0,
@@ -222,6 +223,7 @@ function _getPreResultOfSnatch(ctx:Context, playerId:Int, gridId:Int, p1PeopleId
 			success: warCost.success
 		}
 		// js.Browser.console.log(preResultOnSnatch);
+		trace("_getPreResultOfSnatch", playerId, p1PeopleId, "end");
 		return preResultOnSnatch;
 	} else {
 		final army1 = Math.min(ctx.players[playerId].army, SNATCH_ARMY_AT_LEAST);
@@ -235,6 +237,7 @@ function _getPreResultOfSnatch(ctx:Context, playerId:Int, gridId:Int, p1PeopleId
 			success: cost.success
 		}
 		// js.Browser.console.log(preResultOnSnatch);
+		trace("_getPreResultOfSnatch", playerId, p1PeopleId, "end");
 		return preResultOnSnatch;
 	}
 }

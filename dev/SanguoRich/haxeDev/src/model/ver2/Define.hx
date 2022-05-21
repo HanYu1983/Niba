@@ -1396,7 +1396,6 @@ function getPlayerCommand(ctx:Context, playerId:Int):Array<ActionInfoID> {
 						ret.push(EXPLORE);
 						ret.push(CAMP);
 						ret.push(PRACTICE);
-						ret.push(SETTLE);
 					case _:
 				}
 				if (gridInfo.people.length > 0) {
@@ -1444,6 +1443,13 @@ function getPlayerCommand(ctx:Context, playerId:Int):Array<ActionInfoID> {
 									ret.push(OCCUPATION);
 								case _:
 							}
+					}
+				} else {
+					switch gridInfo.buildtype {
+						case EMPTY:
+							// 中立並沒人才有開拓
+							ret.push(SETTLE);
+						case _:
 					}
 				}
 			}
