@@ -198,7 +198,7 @@ class GridGenerator {
 					g.moneyGrow = 0;
 					g.foodGrow = 0;
 					g.armyGrow = 0;
-					g.people.push(PeopleGenerator.getInst().generate(-1));
+					g.people.push(PeopleGenerator.getInst().generate(0));
 					for (i in 0...5)
 						if (Math.random() < .3)
 							g.treasures.push(TreasureGenerator.getInst().generator());
@@ -206,24 +206,24 @@ class GridGenerator {
 					g.money = getRandomRange(180, 80);
 					g.food = getRandomRange(180, 80);
 					g.money *= 1.5;
-					g.people.push(PeopleGenerator.getInst().generate(-1));
+					g.people.push(PeopleGenerator.getInst().generate(0));
 				case FARM:
 					g.money = getRandomRange(180, 80);
 					g.food = getRandomRange(180, 80);
 					g.food *= 1.5;
-					g.people.push(PeopleGenerator.getInst().generate(-1));
+					g.people.push(PeopleGenerator.getInst().generate(0));
 				case VILLAGE:
 					g.money = getRandomRange(180, 80);
 					g.food = getRandomRange(180, 80);
 					g.army *= 1.5;
-					g.people.push(PeopleGenerator.getInst().generate(-1));
+					g.people.push(PeopleGenerator.getInst().generate(0));
 				case CITY:
 					g.money = getRandomRange(180, 80);
 					g.food = getRandomRange(180, 80);
 					g.money *= 1.5;
 					g.food *= 1.5;
 					g.army *= 1.5;
-					g.people.push(PeopleGenerator.getInst().generate(2));
+					g.people.push(PeopleGenerator.getInst().generate(0));
 				case _:
 			}
 			g.height = height;

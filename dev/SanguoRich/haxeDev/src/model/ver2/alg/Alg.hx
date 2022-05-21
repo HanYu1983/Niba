@@ -149,7 +149,8 @@ function initContext(ctx:Context, options:GameSetting) {
 			food: /*i == 0 ? 0.0 :*/ isLose ? 0.0 : resource,
 			strategy: isLose ? 0.0 : 300.0,
 			people: isLose ? [] : [
-				model.PeopleGenerator.getInst().generate(-1),
+				model.PeopleGenerator.getInst().generate(0),
+				model.PeopleGenerator.getInst().generate(0),
 				model.PeopleGenerator.getInst().generate(0),
 				model.PeopleGenerator.getInst().generate(0)
 			],
