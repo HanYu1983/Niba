@@ -20,6 +20,15 @@
         <slider id="sli_army" width="100%" pos="0" />
     </hbox>
     <hbox horizontalAlign="center">
+        <button-bar id="grp_auto" allowUnselection="true">
+            <button text="手動" />
+            <button text="0%" />
+            <button text="25%" />
+            <button text="50%" />
+            <button text="75%" />
+        </button-bar>
+    </hbox>
+    <hbox horizontalAlign="center">
         <button text="取消" id="btn_cancel" />
         <button text="確定" id="btn_confirm" />
     </hbox>

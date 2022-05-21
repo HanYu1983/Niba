@@ -618,6 +618,10 @@ class MainView extends Box {
 		syncGameInfo(gameInfo);
 		syncGridViews(gameInfo);
 		syncPlayerViews(gameInfo);
+
+		trace('新增計策');
+		trace('交涉及號召改成一定成功，本來成功率變為友好增加率');
+		trace('爆倉的部分要留著，只是不能成長。');
 	}
 
 	// function playBeforeSync(gameInfo:GameInfo, tweens:Array<TweenX>) {

@@ -99,18 +99,16 @@ class TransferPreview extends PopupView{
 
         updateView(player, grid);
 
-        final totalMoney = player.money + grid.money;
-        final totalFood = player.food + grid.food;
-        final totalArmy = player.army + grid.army;
+        // 先算出如果儘可能把所有的資源都給格子的話，格子的資源量。
+        // 如果資源充足，就是格子的最大量；如果資源不夠，就是玩家身上的資源加上格子目前的資源
+        final maxGiveMoney = Math.min((grid.money + player.money), grid.maxMoney);
+        final maxGiveFood = Math.min((grid.food + player.food), grid.maxFood);
+        final maxGiveArmy = Math.min((grid.army + player.army), grid.maxArmy);
 
-        var percent = player.money / totalMoney;
-        sli_money.pos = (1 - percent) * 100;
-
-        percent = player.food / totalFood;
-        sli_food.pos = (1 - percent) * 100;
-
-        percent = player.army / totalArmy;
-        sli_army.pos = (1 - percent) * 100;
+        // 算出格子目前的資源佔所有能給出的占比
+        sli_money.pos = (grid.money / maxGiveMoney) * 100;
+        sli_food.pos = (grid.food / maxGiveFood) * 100;
+        sli_army.pos = (grid.army / maxGiveArmy) * 100;
 
         var tempPlayer:Dynamic = {};
         for(key in Reflect.fields(player)){
@@ -123,21 +121,34 @@ class TransferPreview extends PopupView{
         }
 
         sli_money.onChange = function(e){
-            tempPlayer.money = (100 - sli_money.value) * .01 * totalMoney;
-            tempGrid.money = totalMoney - tempPlayer.money;
+            // 算出格子目前的資源量（包含原本有的）
+            tempGrid.money = sli_money.value * .01 * maxGiveMoney;
+            // 因爲格子本身有資源，所以玩家扣除的量等於算出的量減掉格子本身的量
+            tempPlayer.money = player.money - (tempGrid.money - grid.money);
             updateView(tempPlayer, tempGrid);
         }
 
         sli_food.onChange = function(e){
-            tempPlayer.food = (100 - sli_food.value) * .01 * totalFood;
-            tempGrid.food = totalFood - tempPlayer.food;
+            tempGrid.food = sli_food.value * .01 * maxGiveFood;
+            tempPlayer.food = player.food - (tempGrid.food - grid.food);
             updateView(tempPlayer, tempGrid);
         }
 
         sli_army.onChange = function(e){
-            tempPlayer.army = (100 - sli_army.value) * .01 * totalArmy;
-            tempGrid.army = totalArmy - tempPlayer.army;
+            tempGrid.army = sli_army.value * .01 * maxGiveArmy;
+            tempPlayer.army = player.army - (tempGrid.army - grid.army);
             updateView(tempPlayer, tempGrid);
         }
+
+        grp_auto.onChange = function(e){
+            switch(grp_auto.selectedIndex){
+                case 0: 
+                case other: 
+                    sli_money.pos = (other - 1) * 25;
+                    sli_food.pos = (other - 1) * 25;
+                    sli_army.pos = (other - 1) * 25;
+            }
+        }
+        grp_auto.selectedIndex = 0;
     }
 }

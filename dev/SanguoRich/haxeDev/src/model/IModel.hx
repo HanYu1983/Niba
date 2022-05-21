@@ -436,6 +436,55 @@ final StrategyList:Array<StrategyCatelog> = [
 		targetType: StrategyTargetType.SELF_PLAYER,
 		value: null
 	},
+	{
+		id: 9,
+		name: '無中生有',
+		money: 50,
+		intelligence: 30,
+		describe: '糧草，士兵中較低的一個項目增加40~60',
+		targetType: StrategyTargetType.SELF_PLAYER,
+		value: null
+	},
+	{
+		id: 10,
+		name: '三顧茅廬',
+		money: 500,
+		intelligence: 50,
+		describe: '需要有人脈的武將才可以使用這個計策。隨機獲得一個武將或者文官。',
+		targetType: StrategyTargetType.SELF_PLAYER,
+		value: null
+	},
+	{
+		id: 11,
+		name: '草船借箭',
+		money: 500,
+		intelligence: 50,
+		describe: '需要有鑒別的武將才可以使用這個計策。隨機獲得一個寶物。',
+		targetType: StrategyTargetType.SELF_PLAYER,
+		value: null
+	},
+	{
+		id: 12,
+		name: '火計',
+		money: 100,
+		intelligence: 50,
+		describe: '指定一個格子，那個格子的所有資源-10%。',
+		targetType: StrategyTargetType.TARGET_GRID,
+		value: {
+			valid: [-1,0,1]
+		}
+	},
+	{
+		id: 13,
+		name: '時來運轉',
+		money: 50,
+		intelligence: 60,
+		describe: '指定一個格子，那個格子的所有資源+10%。',
+		targetType: StrategyTargetType.TARGET_GRID,
+		value: {
+			valid: [-1,0,1]
+		}
+	},
 ];
 
 final BuildingList:Array<BuildingCatelog> = [
