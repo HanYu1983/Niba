@@ -175,13 +175,14 @@ function getExpAdd(p:Float, max:Float):Float {
 
 // 體力產生的基本值成數
 // 1代表支付所有體力時, 機率為0.5
-final BASE_RATE_STRATEGY = 2.0;
-final BASE_RATE_RESOURCE = 2.0;
-final BASE_RATE_PK = 2.0;
-final BASE_RATE_NEGO = 2.0;
-final BASE_RATE_HIRE = 2.0;
-final BASE_RATE_EXPLORE = 2.0;
-final BASE_RATE_SETTLE = 2.0;
+// ex. 1.3代表讓機率稍為偏向成功(讓值域中大於0.5的部分佔一半以上)
+final BASE_RATE_STRATEGY = 1.3;
+final BASE_RATE_RESOURCE = 1.3;
+final BASE_RATE_PK = 1.3;
+final BASE_RATE_NEGO = 1.3;
+final BASE_RATE_HIRE = 1.3;
+final BASE_RATE_EXPLORE = 1.3;
+final BASE_RATE_SETTLE = 1.3;
 
 // 格子資源上限
 final GRID_RESOURCE_MAX = 1000.0;
