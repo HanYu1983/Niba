@@ -6,6 +6,29 @@ function fact(v:Float, times:Float):Float {
 	return Math.max(1.0 / times, Math.min(times, v));
 }
 
+function factNot(f:Float):Float {
+	if (f == 0) {
+		throw new haxe.Exception("f == 0");
+	}
+	return 1 / f;
+}
+
+function factAnd(fs:Array<Float>):Float {
+	return fs.fold((c, a) -> {
+		return Math.min(c, a);
+	}, 99999.0);
+}
+
+function factOr(fs:Array<Float>):Float {
+	return fs.fold((c, a) -> {
+		return Math.max(c, a);
+	}, 99999.0);
+}
+
+function factVery(f:Float, e:Float):Float {
+	return Math.pow(f, e);
+}
+
 function factAverage(pairs:Array<Array<Float>>):Float {
 	final total = pairs.fold((c, a:Float) -> {
 		return switch c {
@@ -34,12 +57,12 @@ function factAverage(pairs:Array<Array<Float>>):Float {
 }
 
 // 0~1 -> 1~times
-function factFromZeroOne(v:Float, times:Float):Float {
+private function factFromZeroOne(v:Float, times:Float):Float {
 	return v * times;
 }
 
 // 1~times -> 0~1
-function zeroOneFromFact(v:Float, times:Float):Float {
+private function zeroOneFromFact(v:Float, times:Float):Float {
 	return v / times;
 }
 

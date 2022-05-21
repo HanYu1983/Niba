@@ -11,20 +11,20 @@ function getNormalizeZeroOne(v:Float):Float {
 }
 
 function getNormalizeZeroOneFromFact(v:Float):Float {
-	// trace("getNormalizeZeroOneFromFact:", v, zeroOneFromFact(v, FACT_TIMES));
-	return getNormalizeZeroOne(zeroOneFromFact(v, FACT_TIMES));
-}
-
-function getZeroOneFromFact(v:Float):Float {
-	return zeroOneFromFact(v, FACT_TIMES);
+	return getNormalizeZeroOne(getZeroOneFromFact(v));
 }
 
 function getFact(v:Float):Float {
 	return fact(v, FACT_TIMES);
 }
 
+function getZeroOneFromFact(v:Float):Float {
+	return v / 2;
+}
+
 function getFactFromZeroOne(v:Float):Float {
-	return factFromZeroOne(v, FACT_TIMES);
+	// return factFromZeroOne(v, FACT_TIMES);
+	return v * 2;
 }
 
 // 幾個回合加成(4人走完算1回合)

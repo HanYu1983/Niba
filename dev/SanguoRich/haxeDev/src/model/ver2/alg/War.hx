@@ -28,7 +28,7 @@ private function getWarCostImpl(ctx:Context, playerId:Int, gridId:Int, p1PeopleI
 		final fact2 = getFact(if (atkPeopleAbilities.has(7)) WAR_BACK_ABILITY_FACTOR else 1.0);
 		final zeroOne3 = zeroOneNot(zeroOne(getPeopleIntelligence(ctx, atkPeople.id) / 100));
 		final base = atkArmy;
-		final cost = base * getNormalizeZeroOneFromFact(factAverage([[fact1, 1], [fact2, 1]])) * zeroOne3;
+		final cost = base * getZeroOneFromFact(getFact(fact1 * fact2)) * zeroOne3;
 		atkMoneyCost = cost * WAR_MONEY_COST_FACTOR;
 		atkFoodCost = cost * WAR_FOOD_COST_FACTOR;
 	}
@@ -124,20 +124,17 @@ private function getWarCostImpl(ctx:Context, playerId:Int, gridId:Int, p1PeopleI
 		});
 		final base = atkArmy * if (options.occupy) (1 / WAR_DEFFENDER_FACTOR) else 1;
 		final baseDamage = atkArmy * WAR_ARMY_FACTOR;
-		final damageRate = getNormalizeZeroOneFromFact(factAverage([
-			[fact0, 1], [fact1, 3.0], [fact2, 1.5], [fact3, 1.5], [fact4, 1.5], [fact5, 1], [fact6, 10.0], [fact7, 1], [factArmyTypeAtk, 1],
-			[factArmyTypeDef, 1]])) * zeroOneMoney * zeroOneFood * zeroOneWall;
+		final damageFact = getFact(fact0 * fact1 * fact2 * fact3 * fact4 * fact5 * fact6 * fact7 * factArmyTypeAtk * factArmyTypeDef);
+		final damageRate = getZeroOneFromFact(damageFact) * zeroOneMoney * zeroOneFood * zeroOneWall;
 		final damage = baseDamage + base * damageRate * WAR_FINAL_DAMAGE_FACTOR;
-		atkDamage = damage;
-		atkEnergyCost = useEnergy * getEnergyFactor(atkArmy);
 		if (options.debug) {
 			trace("attack =================");
-			trace("fact0", fact0, fact1, fact2, fact3, fact4);
-			trace("fact5", fact5, fact6, fact7);
-			trace("factArmyTypeAtk", factArmyTypeAtk, factArmyTypeDef);
-			trace("zeroOneMoney", zeroOneMoney, zeroOneFood, zeroOneWall);
-			trace("damage", damage, "baseDamage", baseDamage, base, damageRate, WAR_FINAL_DAMAGE_FACTOR);
+			trace("damageFact", damageFact, "=", fact0, fact1, fact2, fact3, fact4, fact5, fact6, fact7, factArmyTypeAtk, factArmyTypeDef);
+			trace("damageRate", damageRate, "=", damageFact, zeroOneMoney, zeroOneFood, zeroOneWall);
+			trace("damage", damage, "=", baseDamage, "+", base, "*", damageRate, WAR_FINAL_DAMAGE_FACTOR);
 		}
+		atkDamage = damage;
+		atkEnergyCost = useEnergy * getEnergyFactor(atkArmy);
 	}
 	var defMoneyCost = 0.0;
 	var defFoodCost = 0.0;
@@ -149,7 +146,7 @@ private function getWarCostImpl(ctx:Context, playerId:Int, gridId:Int, p1PeopleI
 		final fact2 = getFact(if (atkPeopleAbilities.has(7)) WAR_BACK_ABILITY_FACTOR else 1.0);
 		final zeroOne3 = zeroOneNot(zeroOne(getPeopleIntelligence(ctx, atkPeople.id) / 100));
 		final base = atkArmy;
-		final cost = base * getNormalizeZeroOneFromFact(factAverage([[fact1, 1], [fact2, 1]])) * zeroOne3;
+		final cost = base * getZeroOneFromFact(getFact(fact1 * fact2)) * zeroOne3;
 		defMoneyCost = cost * WAR_MONEY_COST_FACTOR;
 		defFoodCost = cost * WAR_FOOD_COST_FACTOR;
 	}
@@ -231,20 +228,17 @@ private function getWarCostImpl(ctx:Context, playerId:Int, gridId:Int, p1PeopleI
 		});
 		final base = atkArmy * if (options.occupy) WAR_DEFFENDER_FACTOR else 1;
 		final baseDamage = atkArmy * WAR_ARMY_FACTOR;
-		final damageRate = getNormalizeZeroOneFromFact(factAverage([
-			[fact0, 1], [fact1, 3], [fact2, 1], [fact3, 1.5], [fact4, 1.5], [fact5, 1.5], [fact6, 1.5], [fact7, 1.5], [fact8, 3], [fact9, 1],
-			[factWall, 1]])) * zeroOneMoney * zeroOneFood;
+		final damageFact = getFact(fact0 * fact1 * fact2 * fact3 * fact4 * fact5 * fact6 * fact7 * fact8 * fact9 * factWall);
+		final damageRate = getZeroOneFromFact(damageFact) * zeroOneMoney * zeroOneFood;
 		final damage = baseDamage + base * damageRate * WAR_FINAL_DAMAGE_FACTOR;
+		if (options.debug) {
+			trace("defend =================");
+			trace("damageFact", damageFact, "=", fact0, fact1, fact2, fact3, fact4, fact5, fact6, fact7, fact8, fact9, factWall);
+			trace("damageRate", damageRate, "=", damageFact, zeroOneMoney, zeroOneFood);
+			trace("damage", damage, "=", baseDamage, "+", base, "*", damageRate, WAR_FINAL_DAMAGE_FACTOR);
+		}
 		defDamage = damage;
 		defEnergyCost = useEnergy * getEnergyFactor(atkArmy);
-		if (options.debug) {
-			trace("def =================");
-			trace("fact0", fact0, fact1, fact2, fact3, fact4);
-			trace("fact5", fact5, fact6, fact7, fact8, fact9);
-			trace("zeroOneMoney", zeroOneMoney, zeroOneFood);
-			trace("factWall", factWall);
-			trace("damage", damage, "baseDamage", baseDamage, base, damageRate, WAR_FINAL_DAMAGE_FACTOR);
-		}
 	}
 	final success = (ctx.grids[gridId].army - atkDamage) <= 0 && ctx.players[playerId].army - defDamage >= 0;
 	final findTreasureRate = if (options.occupy == false) {
