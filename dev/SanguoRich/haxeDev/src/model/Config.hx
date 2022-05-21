@@ -30,10 +30,10 @@ final CAN_CHANGE_FAVOR = -3;
 final PLAYER_SPEND_MONEY_FOR_PEOPLE_PER_TURN_PERSENT = 0.01;
 
 // 主公支付的食物為所有格子上以及身上的士兵的數量的%數
-final PLAYER_SPEND_FOOD_FOR_ARMY_PER_TURN_PERSENT = 0.07;
+final PLAYER_SPEND_FOOD_FOR_ARMY_PER_TURN_PERSENT = 0.1;
 
 // 依據建築物等級的維護費
-final BASIC_BUILDING_MAINTAIN_FACTOR = .5;
+final BASIC_BUILDING_MAINTAIN_FACTOR = 1.0;
 
 // 武將聘用價格%數
 final PEOPLE_HIRE_COST_FACTOR = .1;
@@ -76,10 +76,10 @@ final WAR_FRONT_ABILITY_FACTOR = 1.4;
 final WAR_BACK_ABILITY_FACTOR = .7;
 
 // 戰鬥支付金錢整體調整
-final WAR_MONEY_COST_FACTOR = 0.3;
+final WAR_MONEY_COST_FACTOR = 0.5;
 
 // 戰鬥支付食物整體調整
-final WAR_FOOD_COST_FACTOR = 0.4;
+final WAR_FOOD_COST_FACTOR = 1.0;
 
 // 戰鬥防守方士兵加成
 final WAR_DEFFENDER_FACTOR = 2.2;
