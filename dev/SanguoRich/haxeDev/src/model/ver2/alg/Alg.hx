@@ -127,7 +127,8 @@ function doPlayerDice(ctx:Context) {
 function initContext(ctx:Context, options:GameSetting) {
 	trace(options);
 	ctx.settings = options;
-	final genGrids = model.GridGenerator.getInst().getGrids(options.gridCount != null ? options.gridCount : INIT_GRID_COUNT, options.limitBuilding);
+	final genGrids = model.GridGenerator.getInst()
+		.getGrids(options.gridCount != null ? options.gridCount : INIT_GRID_COUNT, options.limitBuilding, options.putong ? 0 : -1);
 	for (grid in genGrids) {
 		addGridInfo(ctx, grid);
 	}
@@ -148,10 +149,10 @@ function initContext(ctx:Context, options:GameSetting) {
 			food: isLose ? 0.0 : resource,
 			strategy: isLose ? 0.0 : 300.0,
 			people: isLose ? [] : [
-				model.PeopleGenerator.getInst().generate(options.putong ? 0 : Std.int(Math.random() * 4)),
-				model.PeopleGenerator.getInst().generate(options.putong ? 0 : Std.int(Math.random() * 4)),
-				model.PeopleGenerator.getInst().generate(options.putong ? 0 : Std.int(Math.random() * 4)),
-				// model.PeopleGenerator.getInst().generate(options.putong ? 0 : Std.int(Math.random() * 4))
+				model.PeopleGenerator.getInst().generate(options.putong ? 0 : -1),
+				model.PeopleGenerator.getInst().generate(options.putong ? 0 : -1),
+				model.PeopleGenerator.getInst().generate(options.putong ? 0 : -1),
+				// model.PeopleGenerator.getInst().generate(options.putong ? 0 : -1),
 			],
 			maintainPeople: 0,
 			maintainArmy: 0,

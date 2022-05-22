@@ -1500,10 +1500,16 @@ private function getCommandWeight(ctx:Context, playerId:Int, gridId:Int, cmd:Act
 								}
 							}
 							// 錢越多
-							final fact5 = Math.pow(1 + (result2.moneyAfter / getGridMaxMoney(ctx, grid.id)), 2);
+							final fact5 = Math.pow((result2.moneyAfter / getGridMaxMoney(ctx, grid.id)), 2);
 							// 糧越多
-							final fact6 = Math.pow(1 + (result2.foodAfter / getGridMaxFood(ctx, grid.id)), 2);
-							final score = 1.0 * fact1 * fact2 * fact3 * fact4 * fact5 * fact6;
+							final fact6 = Math.pow((result2.foodAfter / getGridMaxFood(ctx, grid.id)), 2);
+							// 本身資源留下越多
+							final fact7 = zeroOneAnd([
+								zeroOneVery(zeroOne(result1.moneyAfter / 1000), 0.5),
+								zeroOne(result1.foodAfter / 1000),
+								zeroOne(result1.armyAfter / 1000)
+							]);
+							final score = 1.0 * fact1 * fact2 * fact3 * fact4 * fact5 * fact6 * fact7;
 							final isBestScore = score > tmpMaxScore;
 							if (isBestScore) {
 								tmpMaxScore = score;

@@ -218,7 +218,7 @@ private function onNegoCost(ctx:Context, playerId:Int, gridId:Int, p1SelectId:In
 					}
 				}
 			} else {
-				grid.favor[playerId] = Std.int(Math.max(grid.favor[playerId] - 1, MIN_GRID_FAVOR));
+				// grid.favor[playerId] = Std.int(Math.max(grid.favor[playerId] - 1, MIN_GRID_FAVOR));
 			}
 			true;
 		case _:
