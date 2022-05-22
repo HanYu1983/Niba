@@ -17,7 +17,6 @@ using Lambda;
 // =================================
 private function getWarCostImpl(ctx:Context, playerId:Int, gridId:Int, p1PeopleId:Int, p2PeopleId:Int, army1:Float, army2:Float,
 		options:{occupy:Bool, debug:Bool}) {
-	trace("getWarCostImpl===============", army1, army2);
 	var atkMoneyCost = 0.0;
 	var atkFoodCost = 0.0;
 	{
@@ -129,10 +128,10 @@ private function getWarCostImpl(ctx:Context, playerId:Int, gridId:Int, p1PeopleI
 		final damageRate = getZeroOneFromFact(damageFact) * zeroOneMoney * zeroOneFood * zeroOneWall;
 		final damage = baseDamage + base * damageRate * WAR_FINAL_DAMAGE_FACTOR;
 		if (options.debug) {
-			trace("attack =================");
-			trace("damageFact", damageFact, "=", fact0, fact1, fact2, fact3, fact4, fact5, fact6, fact7, factArmyTypeAtk, factArmyTypeDef);
-			trace("damageRate", damageRate, "=", damageFact, zeroOneMoney, zeroOneFood, zeroOneWall);
-			trace("damage", damage, "=", baseDamage, "+", base, "*", damageRate, WAR_FINAL_DAMAGE_FACTOR);
+			// trace("attack =================");
+			// trace("damageFact", damageFact, "=", fact0, fact1, fact2, fact3, fact4, fact5, fact6, fact7, factArmyTypeAtk, factArmyTypeDef);
+			// trace("damageRate", damageRate, "=", damageFact, zeroOneMoney, zeroOneFood, zeroOneWall);
+			// trace("damage", damage, "=", baseDamage, "+", base, "*", damageRate, WAR_FINAL_DAMAGE_FACTOR);
 		}
 		atkDamage = damage;
 		atkEnergyCost = useEnergy * getEnergyFactor(atkArmy);
@@ -227,10 +226,10 @@ private function getWarCostImpl(ctx:Context, playerId:Int, gridId:Int, p1PeopleI
 		final damageRate = getZeroOneFromFact(damageFact) * zeroOneMoney * zeroOneFood;
 		final damage = baseDamage + base * damageRate * WAR_FINAL_DAMAGE_FACTOR;
 		if (options.debug) {
-			trace("defend =================");
-			trace("damageFact", damageFact, "=", fact0, fact1, fact2, fact3, fact4, fact5, fact6, fact7, fact8, fact9, factWall);
-			trace("damageRate", damageRate, "=", damageFact, zeroOneMoney, zeroOneFood);
-			trace("damage", damage, "=", baseDamage, "+", base, "*", damageRate, WAR_FINAL_DAMAGE_FACTOR);
+			// trace("defend =================");
+			// trace("damageFact", damageFact, "=", fact0, fact1, fact2, fact3, fact4, fact5, fact6, fact7, fact8, fact9, factWall);
+			// trace("damageRate", damageRate, "=", damageFact, zeroOneMoney, zeroOneFood);
+			// trace("damage", damage, "=", baseDamage, "+", base, "*", damageRate, WAR_FINAL_DAMAGE_FACTOR);
 		}
 		defDamage = damage;
 		defEnergyCost = useEnergy * getEnergyFactor(atkArmy);
@@ -249,7 +248,6 @@ private function getWarCostImpl(ctx:Context, playerId:Int, gridId:Int, p1PeopleI
 			0.0;
 		}
 	}
-	trace("getWarCostImpl end");
 	return {
 		playerCost: [
 			{

@@ -105,7 +105,7 @@ function zeroOneAnd(fs:Array<Float>):Float {
 function zeroOneOr(fs:Array<Float>):Float {
 	return fs.fold((c, a) -> {
 		return Math.max(c, a);
-	}, 99999.0);
+	}, 0);
 }
 
 function zeroOneOn(f:Float, g:Float):Float {

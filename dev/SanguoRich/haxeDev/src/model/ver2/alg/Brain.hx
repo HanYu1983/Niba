@@ -563,7 +563,7 @@ private function getCommandWeight(ctx:Context, playerId:Int, gridId:Int, cmd:Act
 			final fact1 = {
 				var maxScore = 0.0;
 				for (strategy in StrategyList) {
-					final factCanPayMoney = strategy.money >= player.money;
+					final factCanPayMoney = player.money >= strategy.money;
 					if (factCanPayMoney == false) {
 						continue;
 					}
@@ -793,10 +793,10 @@ private function getCommandWeight(ctx:Context, playerId:Int, gridId:Int, cmd:Act
 							}
 						case 9:
 							// 無中生有
-							final factFood = zeroOneNot(zeroOne(player.food / 1000.0));
-							final factArmy = zeroOneNot(zeroOne(player.army / 1000.0));
-							// 其中一個資源很低
-							final resourceFact = zeroOneOr([factFood, factArmy]);
+							final factFood = zeroOneNot(zeroOne(player.food / 100.0));
+							final factArmy = zeroOneNot(zeroOne(player.army / 100.0));
+							// 二個資源都少於100
+							final resourceFact = zeroOneAnd([factFood, factArmy]);
 							for (p1 in peopleInPlayer) {
 								final result = _getStrategyRate(ctx, p1.id, strategy.id, 0, 0, 0);
 								// 成功率

@@ -207,7 +207,6 @@ function _getTakeSnatchPreview(ctx:Context, playerId:Int, gridId:Int):SnatchPrev
 }
 
 function _getPreResultOfSnatch(ctx:Context, playerId:Int, gridId:Int, p1PeopleId:Int, p2PeopleId:Int, isOccupation:Bool):PreResultOnSnatch {
-	trace("_getPreResultOfSnatch", playerId, p1PeopleId);
 	if (isOccupation) {
 		final army1 = switch guessArmy(ctx, playerId, gridId, p1PeopleId, p2PeopleId) {
 			case {army: army}:
@@ -222,8 +221,6 @@ function _getPreResultOfSnatch(ctx:Context, playerId:Int, gridId:Int, p1PeopleId
 			rateForTreasure: warCost.findTreasureRate,
 			success: warCost.success
 		}
-		// js.Browser.console.log(preResultOnSnatch);
-		trace("_getPreResultOfSnatch", playerId, p1PeopleId, "end");
 		return preResultOnSnatch;
 	} else {
 		final army1 = Math.min(ctx.players[playerId].army, SNATCH_ARMY_AT_LEAST);
@@ -236,8 +233,6 @@ function _getPreResultOfSnatch(ctx:Context, playerId:Int, gridId:Int, p1PeopleId
 			rateForTreasure: cost.findTreasureRate,
 			success: cost.success
 		}
-		// js.Browser.console.log(preResultOnSnatch);
-		trace("_getPreResultOfSnatch", playerId, p1PeopleId, "end");
 		return preResultOnSnatch;
 	}
 }
