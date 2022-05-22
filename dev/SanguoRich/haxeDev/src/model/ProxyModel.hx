@@ -122,7 +122,7 @@ class ProxyModel implements IModel {
 	}
 
 	public function getStrategyRate(p1People:People, strategy:StrategyCatelog, targetPlayerId:Int, targetPeopleId:Int,
-			targetGridId:Int):{energyBefore:Int, energyAfter:Int, rate:Float} {
+			targetGridId:Int):PreResultOfStrategy {
 		return model.getStrategyRate(p1People, strategy, targetPlayerId, targetPeopleId, targetGridId);
 	}
 

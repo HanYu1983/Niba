@@ -346,16 +346,14 @@ private function onStrategyCost(ctx:Context, p1PeopleId:Int, strategyId:Int, tar
 	});
 }
 
-function _getStrategyRate(ctx:Context, p1PeopleId:Int, strategyId:Int, targetPlayerId:Int, targetPeopleId:Int, targetGridId:Int):{
-	energyBefore:Int,
-	energyAfter:Int,
-	rate:Float
-} {
+function _getStrategyRate(ctx:Context, p1PeopleId:Int, strategyId:Int, targetPlayerId:Int, targetPeopleId:Int, targetGridId:Int):PreResultOfStrategy {
 	final p1 = getPeopleById(ctx, p1PeopleId);
 	final cost = getStrategyCost(ctx, p1PeopleId, strategyId, targetPlayerId, targetPeopleId, targetGridId);
 	return {
 		energyAfter: Std.int(Math.max(0, p1.energy - cost.peopleCost.energy)),
 		energyBefore: Std.int(p1.energy),
+		moneyBefore: 5,
+		moneyAfter: 10,
 		rate: cost.successRate
 	}
 }

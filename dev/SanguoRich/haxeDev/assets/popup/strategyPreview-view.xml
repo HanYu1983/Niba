@@ -6,6 +6,9 @@
     <button horizontalAlign="center" id="btn_selectGrid" text="選擇格子"/>
     <hbox horizontalAlign="center">
         <property-grid width="400">
+            <property-group text="主公">
+                <property id="pro_money" label="金錢" value="100" />
+            </property-group>
             <property-group text="武將">
                 <property id="pro_name" label="武將" value="100" />
                 <property id="pro_energy" label="體力" value="100" />
@@ -15,7 +18,7 @@
         </property-grid>
     </hbox>
     <hbox horizontalAlign="center">
-        <label text="花費:" verticalAlign="bottom" style="font-size:14"/>
+        <label text="預計花費/失敗花費:" verticalAlign="bottom" style="font-size:14"/>
         <label id="lbl_money" text="" style="font-size:24" />
         <label text="計策:" verticalAlign="bottom" style="font-size:14"/>
         <label id="lbl_usingStrategy" text="" style="font-size:24" />

@@ -162,11 +162,7 @@ class ModelVer2 extends DebugModel {
 	}
 
 	override function getStrategyRate(p1People:model.PeopleGenerator.People, strategy:StrategyCatelog, targetPlayerId:Int, targetPeopleId:Int,
-			targetGridId:Int):{
-		energyBefore:Int,
-		energyAfter:Int,
-		rate:Float
-	} {
+			targetGridId:Int):PreResultOfStrategy {
 		return _getStrategyRate(context, p1People.id, strategy.id, targetPlayerId, targetPeopleId, targetGridId);
 	}
 

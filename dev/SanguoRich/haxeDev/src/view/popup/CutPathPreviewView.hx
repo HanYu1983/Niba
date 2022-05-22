@@ -1,5 +1,6 @@
 package view.popup;
 
+import model.IModel.PreResultOfStrategy;
 import view.widgets.GridGridView;
 import view.widgets.LeaderGridView;
 import haxe.ui.containers.dialogs.Dialogs;
@@ -114,7 +115,7 @@ class CutPathPreviewView extends PopupView {
 			var targetPlayer = leaderList.selectedItem.id;
 			var targetPeople = p2List.selectedItem.id;
 			// var targetGrid = gridList.selectedItem.id;
-			var result:{energyBefore:Int, energyAfter:Int, rate:Float} = Main.model.getStrategyRate(p1, s, targetPlayer, targetPeople, 0);
+			var result:PreResultOfStrategy = Main.model.getStrategyRate(p1, s, targetPlayer, targetPeople, 0);
 
 			pro_energy.value = '${Main.getCompareString(result.energyBefore, result.energyAfter)}';
 			lbl_rate.value = Main.getRateString(result.rate);

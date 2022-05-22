@@ -243,6 +243,14 @@ typedef StrategyCatelog = {
 	},
 }
 
+typedef PreResultOfStrategy = {
+	moneyBefore:Int, 
+	moneyAfter:Int, 
+	energyBefore:Int, 
+	energyAfter:Int, 
+	rate:Float,
+}
+
 typedef BuildingCatelog = {
 	id:Int,
 	name:String,
@@ -304,8 +312,7 @@ interface IModel {
 	function checkValidTransfer(playerId:Int, gridId:Int, playerInfo:PlayerInfo, gridInfo:Grid):Bool;
 	function takeTransfer(playerId:Int, gridId:Int, playerInfo:PlayerInfo, gridInfo:Grid, cb:(gameInfo:GameInfo) -> Void):Void;
 
-	function getStrategyRate(p1People:People, strategy:StrategyCatelog, targetPlayerId:Int, targetPeopleId:Int,
-		targetGridId:Int):{energyBefore:Int, energyAfter:Int, rate:Float};
+	function getStrategyRate(p1People:People, strategy:StrategyCatelog, targetPlayerId:Int, targetPeopleId:Int, targetGridId:Int):PreResultOfStrategy;
 	function takeStrategy(p1PeopleId:Int, strategyId:Int, targetPlayerId:Int, targetPeopleId:Int, targetGridId:Int, cb:(gameInfo:GameInfo) -> Void):Void;
 	function takeBuilding(p1PeopleId:Int, gridId:Int, peopleId:Int, current:Dynamic, to:Dynamic, cb:(gameInfo:GameInfo) -> Void):Void;
 

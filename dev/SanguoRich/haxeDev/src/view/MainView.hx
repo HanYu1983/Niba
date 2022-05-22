@@ -619,8 +619,6 @@ class MainView extends Box {
 		syncGridViews(gameInfo);
 		syncPlayerViews(gameInfo);
 
-		trace('新增計策');
-		trace('交涉及號召改成一定成功，本來成功率變為友好增加率');
 		trace('爆倉的部分要留著，只是不能成長。');
 	}
 
@@ -794,6 +792,7 @@ class MainView extends Box {
 					}
 					var msg = '武將:${info.people.name}\n';
 					msg += '士兵:${Main.getCompareString(info.armyBefore, info.armyAfter)}\n';
+					msg += '友好:${Main.getFavorString(info.favorBefore)} => ${Main.getFavorString(info.favorAfter)}\n';
 					checkAutoPlay(autoPlay, title, msg);
 				case COST_FOR_BONUS_RESULT:
 					syncViewByInfo(gameInfo);
@@ -849,7 +848,6 @@ class MainView extends Box {
 					msg += '體力:${Main.getCompareString(info.energyBefore, info.energyAfter)}\n';
 					msg += '金錢:${Main.getCompareString(info.moneyBefore, info.moneyAfter)}\n';
 					msg += '糧草:${Main.getCompareString(info.foodBefore, info.foodAfter)}\n';
-					msg += '士兵:${Main.getCompareString(info.armyBefore, info.armyAfter)}\n';
 					msg += '友好:${Main.getFavorString(info.favorBefore)} => ${Main.getFavorString(info.favorAfter)}\n';
 					checkAutoPlay(autoPlay, title, msg);
 

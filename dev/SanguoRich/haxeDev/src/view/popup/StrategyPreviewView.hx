@@ -1,5 +1,6 @@
 package view.popup;
 
+import model.IModel.PreResultOfStrategy;
 import haxe.ui.containers.dialogs.Dialogs;
 import haxe.ui.containers.dialogs.MessageBox;
 import view.widgets.GridListView;
@@ -108,9 +109,10 @@ class StrategyPreviewView extends PopupView {
 
 			var targetPlayer = leaderList.selectedItem.id;
 			var targetPeople = p2List.selectedItem.id;
-			var result:{energyBefore:Int, energyAfter:Int, rate:Float} = Main.model.getStrategyRate(p1, s, targetPlayer, targetPeople, selectGridId);
+			var result:PreResultOfStrategy = Main.model.getStrategyRate(p1, s, targetPlayer, targetPeople, selectGridId);
 
 			pro_energy.value = '${Main.getCompareString(result.energyBefore, result.energyAfter)}';
+			pro_money.value = '${Main.getCompareString(result.moneyBefore, result.moneyAfter)}';
 			lbl_rate.value = Main.getRateString(result.rate);
 		}
 
@@ -142,7 +144,7 @@ class StrategyPreviewView extends PopupView {
 			var s:StrategyCatelog = strategyList.selectedItem;
 			if (s != null) {
 				lbl_usingStrategy.value = s.name;
-				lbl_money.value = s.money;
+				lbl_money.value = '${s.money}/${Math.round(s.money / 5)}';
 				
 				box_leaderList.hide();
 				box_peopleList2.hide();
