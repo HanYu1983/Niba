@@ -26,10 +26,9 @@ private function getWarCostImpl(ctx:Context, playerId:Int, gridId:Int, p1PeopleI
 		final fact1 = getFact(if (atkPeopleAbilities.has(6)) WAR_BACK_ABILITY_FACTOR else 1.0);
 		final fact2 = getFact(if (atkPeopleAbilities.has(7)) WAR_BACK_ABILITY_FACTOR else 1.0);
 		final zeroOne3 = zeroOneNot(zeroOne(getPeopleIntelligence(ctx, atkPeople.id) / 100));
-		final base = atkArmy;
-		final cost = base * getZeroOneFromFact(getFact(fact1 * fact2)) * zeroOne3;
-		atkMoneyCost = cost * WAR_MONEY_COST_FACTOR;
-		atkFoodCost = cost * WAR_FOOD_COST_FACTOR;
+		final rate = getZeroOneFromFact(fact1 * fact2) * zeroOne3;
+		atkMoneyCost = atkArmy * WAR_MONEY_COST_FACTOR * rate;
+		atkFoodCost = atkArmy * WAR_FOOD_COST_FACTOR * rate;
 	}
 	var atkDamage = 0.0;
 	var atkEnergyCost = 0.0;
@@ -145,10 +144,9 @@ private function getWarCostImpl(ctx:Context, playerId:Int, gridId:Int, p1PeopleI
 		final fact1 = getFact(if (atkPeopleAbilities.has(6)) WAR_BACK_ABILITY_FACTOR else 1.0);
 		final fact2 = getFact(if (atkPeopleAbilities.has(7)) WAR_BACK_ABILITY_FACTOR else 1.0);
 		final zeroOne3 = zeroOneNot(zeroOne(getPeopleIntelligence(ctx, atkPeople.id) / 100));
-		final base = atkArmy;
-		final cost = base * getZeroOneFromFact(getFact(fact1 * fact2)) * zeroOne3;
-		defMoneyCost = cost * WAR_MONEY_COST_FACTOR;
-		defFoodCost = cost * WAR_FOOD_COST_FACTOR;
+		final rate = getZeroOneFromFact(fact1 * fact2) * zeroOne3;
+		defMoneyCost = atkArmy * WAR_MONEY_COST_FACTOR * rate;
+		defFoodCost = atkArmy * WAR_FOOD_COST_FACTOR * rate;
 	}
 	var defDamage = 0.0;
 	var defEnergyCost = 0.0;
@@ -280,7 +278,6 @@ private function getWarCostImpl(ctx:Context, playerId:Int, gridId:Int, p1PeopleI
 
 private function onWarCostImpl(ctx:Context, playerId:Int, gridId:Int, p1PeopleId:Int, p2PeopleId:Int, army1:Float, army2:Float,
 		options:{occupy:Bool, warEvent:Bool}):Bool {
-	trace("onWarCostImpl");
 	final people1 = getPeopleById(ctx, p1PeopleId);
 	final people2 = getPeopleById(ctx, p2PeopleId);
 	final player = ctx.players[playerId];
@@ -361,6 +358,10 @@ private function onWarCostImpl(ctx:Context, playerId:Int, gridId:Int, p1PeopleId
 						if (people1.position.gridId == null) {
 							people1.position.gridId = gridId;
 						}
+						//  佔領後資源的損失
+						grid.money /= 2;
+						grid.food /= 2;
+						grid.army /= 2;
 					}
 				} else {
 					//

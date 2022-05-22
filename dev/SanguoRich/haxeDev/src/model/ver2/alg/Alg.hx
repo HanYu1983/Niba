@@ -143,15 +143,15 @@ function initContext(ctx:Context, options:GameSetting) {
 		addPlayerInfo(ctx, {
 			id: i,
 			name: names[i],
-			money: /*i == 0 ? 0.0 :*/ isLose ? 0.0 : resource,
-			army: /*i == 0 ? 0.0 :*/ isLose ? 0.0 : resource,
-			food: /*i == 0 ? 0.0 :*/ isLose ? 0.0 : resource,
+			money: isLose ? 0.0 : resource,
+			army: isLose ? 0.0 : resource,
+			food: isLose ? 0.0 : resource,
 			strategy: isLose ? 0.0 : 300.0,
 			people: isLose ? [] : [
 				model.PeopleGenerator.getInst().generate(options.putong ? 0 : Std.int(Math.random() * 4)),
 				model.PeopleGenerator.getInst().generate(options.putong ? 0 : Std.int(Math.random() * 4)),
 				model.PeopleGenerator.getInst().generate(options.putong ? 0 : Std.int(Math.random() * 4)),
-				model.PeopleGenerator.getInst().generate(options.putong ? 0 : Std.int(Math.random() * 4))
+				// model.PeopleGenerator.getInst().generate(options.putong ? 0 : Std.int(Math.random() * 4))
 			],
 			maintainPeople: 0,
 			maintainArmy: 0,
