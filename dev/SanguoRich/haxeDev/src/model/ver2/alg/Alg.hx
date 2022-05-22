@@ -127,7 +127,6 @@ function doPlayerDice(ctx:Context) {
 function initContext(ctx:Context, options:GameSetting) {
 	trace(options);
 	ctx.settings = options;
-	trace("第一個玩家不能是AI");
 	final genGrids = model.GridGenerator.getInst().getGrids(options.gridCount != null ? options.gridCount : INIT_GRID_COUNT, options.limitBuilding);
 	for (grid in genGrids) {
 		addGridInfo(ctx, grid);
@@ -149,10 +148,10 @@ function initContext(ctx:Context, options:GameSetting) {
 			food: /*i == 0 ? 0.0 :*/ isLose ? 0.0 : resource,
 			strategy: isLose ? 0.0 : 300.0,
 			people: isLose ? [] : [
-				model.PeopleGenerator.getInst().generate(0),
-				model.PeopleGenerator.getInst().generate(0),
-				model.PeopleGenerator.getInst().generate(0),
-				model.PeopleGenerator.getInst().generate(0)
+				model.PeopleGenerator.getInst().generate(options.putong ? 0 : Std.int(Math.random() * 4)),
+				model.PeopleGenerator.getInst().generate(options.putong ? 0 : Std.int(Math.random() * 4)),
+				model.PeopleGenerator.getInst().generate(options.putong ? 0 : Std.int(Math.random() * 4)),
+				model.PeopleGenerator.getInst().generate(options.putong ? 0 : Std.int(Math.random() * 4))
 			],
 			maintainPeople: 0,
 			maintainArmy: 0,
