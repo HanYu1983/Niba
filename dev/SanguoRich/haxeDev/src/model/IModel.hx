@@ -36,20 +36,17 @@ enum ActionInfoID {
 	PK;
 	SNATCH;
 	OCCUPATION;
-
 	SETTLE;
 	CAMP;
 	PRACTICE;
 	HIRE;
 	EXPLORE;
 	PAY_FOR_FUN;
-
 	EARN_MONEY;
 	BUY_FOOD;
 	SELL_FOOD;
 	BUY_ARMY;
 	SELL_ARMY;
-
 	TRANSFER;
 	BUILD;
 	END;
@@ -241,7 +238,9 @@ typedef StrategyCatelog = {
 	intelligence:Float,
 	describe:String,
 	targetType:StrategyTargetType,
-	value:Dynamic,
+	value:{
+		valid:Array<Int>, float:Array<Float>
+	},
 }
 
 typedef BuildingCatelog = {
@@ -357,7 +356,8 @@ final StrategyList:Array<StrategyCatelog> = [
 		describe: '可以指定移動1~3格數(無視路障)',
 		targetType: StrategyTargetType.TARGET_GRID,
 		value: {
-			valid: [1, 2, 3]
+			valid: [1, 2, 3],
+			float: []
 		}
 	},
 	{
@@ -367,7 +367,10 @@ final StrategyList:Array<StrategyCatelog> = [
 		intelligence: 20,
 		describe: '指定武將回復30體力',
 		targetType: StrategyTargetType.SELF_PEOPLE,
-		value: null
+		value: {
+			valid: [],
+			float: [30]
+		}
 	},
 	{
 		id: 2,
@@ -376,7 +379,10 @@ final StrategyList:Array<StrategyCatelog> = [
 		intelligence: 40,
 		describe: '直接獲取該格子的10%資源。並且友好度上升1',
 		targetType: StrategyTargetType.SELF_GRID,
-		value: null
+		value: {
+			valid: [],
+			float: [0.1, 1]
+		}
 	},
 	{
 		id: 3,
@@ -386,7 +392,8 @@ final StrategyList:Array<StrategyCatelog> = [
 		describe: '指定自己前後3格當中的其中一格設置路障。走到那個格子的所以玩家會自動停下。然後路障消失',
 		targetType: StrategyTargetType.TARGET_GRID,
 		value: {
-			valid: [-3, -2, -1, 0, 1, 2, 3]
+			valid: [-3, -2, -1, 0, 1, 2, 3],
+			float: []
 		}
 	},
 	{
@@ -397,7 +404,8 @@ final StrategyList:Array<StrategyCatelog> = [
 		describe: '拆除指定自己後6格路障，如果那個路障是別的玩家，拿取那個玩家10金',
 		targetType: StrategyTargetType.TARGET_GRID,
 		value: {
-			valid: [1, 2, 3, 4, 5, 6]
+			valid: [1, 2, 3, 4, 5, 6],
+			float: [10]
 		}
 	},
 	{
@@ -407,7 +415,10 @@ final StrategyList:Array<StrategyCatelog> = [
 		intelligence: 70,
 		describe: '指定武將體力-20',
 		targetType: StrategyTargetType.TARGET_PEOPLE,
-		value: null
+		value: {
+			valid: [],
+			float: [-20],
+		}
 	},
 	{
 		id: 6,
@@ -416,7 +427,10 @@ final StrategyList:Array<StrategyCatelog> = [
 		intelligence: 50,
 		describe: '這回合不移動',
 		targetType: StrategyTargetType.SELF_PLAYER,
-		value: null
+		value: {
+			valid: [],
+			float: [],
+		}
 	},
 	{
 		id: 7,
@@ -425,7 +439,10 @@ final StrategyList:Array<StrategyCatelog> = [
 		intelligence: 30,
 		describe: '指定玩家變賣20糧獲得20錢',
 		targetType: StrategyTargetType.TARGET_PLAYER,
-		value: null
+		value: {
+			valid: [],
+			float: [-20, 20],
+		}
 	},
 	{
 		id: 8,
@@ -434,7 +451,10 @@ final StrategyList:Array<StrategyCatelog> = [
 		intelligence: 60,
 		describe: '所有自己城池的糧食+10%',
 		targetType: StrategyTargetType.SELF_PLAYER,
-		value: null
+		value: {
+			valid: [],
+			float: [0.1],
+		}
 	},
 	{
 		id: 9,
@@ -443,7 +463,10 @@ final StrategyList:Array<StrategyCatelog> = [
 		intelligence: 30,
 		describe: '糧草，士兵中較低的一個項目增加40~60',
 		targetType: StrategyTargetType.SELF_PLAYER,
-		value: null
+		value: {
+			valid: [],
+			float: [40, 60]
+		}
 	},
 	{
 		id: 10,
@@ -452,7 +475,10 @@ final StrategyList:Array<StrategyCatelog> = [
 		intelligence: 50,
 		describe: '需要有人脈的武將才可以使用這個計策。隨機獲得一個武將或者文官。',
 		targetType: StrategyTargetType.SELF_PLAYER,
-		value: null
+		value: {
+			valid: [],
+			float: [1]
+		}
 	},
 	{
 		id: 11,
@@ -461,7 +487,10 @@ final StrategyList:Array<StrategyCatelog> = [
 		intelligence: 50,
 		describe: '需要有鑒別的武將才可以使用這個計策。隨機獲得一個寶物。',
 		targetType: StrategyTargetType.SELF_PLAYER,
-		value: null
+		value: {
+			valid: [],
+			float: [1]
+		}
 	},
 	{
 		id: 12,
@@ -471,7 +500,8 @@ final StrategyList:Array<StrategyCatelog> = [
 		describe: '指定一個格子，那個格子的所有資源-10%。',
 		targetType: StrategyTargetType.TARGET_GRID,
 		value: {
-			valid: [-1,0,1]
+			valid: [-1, 0, 1],
+			float: [-0.1]
 		}
 	},
 	{
@@ -482,7 +512,8 @@ final StrategyList:Array<StrategyCatelog> = [
 		describe: '指定一個格子，那個格子的所有資源+10%。',
 		targetType: StrategyTargetType.TARGET_GRID,
 		value: {
-			valid: [-1,0,1]
+			valid: [-1, 0, 1],
+			float: [0.1]
 		}
 	},
 ];
@@ -729,8 +760,3 @@ final BuildingList:Array<BuildingCatelog> = [
 		depends: []
 	},
 ];
-
-
-
-
-
