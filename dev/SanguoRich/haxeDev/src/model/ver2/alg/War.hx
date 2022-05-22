@@ -65,7 +65,7 @@ private function getWarCostImpl(ctx:Context, playerId:Int, gridId:Int, p1PeopleI
 				1.0;
 			}
 		});
-		final fact6 = factVery(getFact(getPeopleForce(ctx, atkPeople.id) / getPeopleCommand(ctx, defPeople.id)), 1.5);
+		final fact6 = factVery(getFact(getPeopleForce(ctx, atkPeople.id) / getPeopleCommand(ctx, defPeople.id)), 3);
 		final fact7 = getFact({
 			if (false) {
 				getPeopleIntelligence(ctx, atkPeople.id) / getPeopleIntelligence(ctx, defPeople.id);
@@ -180,7 +180,7 @@ private function getWarCostImpl(ctx:Context, playerId:Int, gridId:Int, p1PeopleI
 		});
 		final fact6 = getFact(if (options.occupy && atkPeopleAbilities.has(8)) WAR_FRONT_ABILITY_FACTOR else 1.0);
 		final fact7 = getFact(if (options.occupy && atkPeopleAbilities.has(9)) WAR_FRONT_ABILITY_FACTOR else 1.0);
-		final fact8 = factVery(getFact(getPeopleCommand(ctx, atkPeople.id) / getPeopleForce(ctx, defPeople.id)), 1.5);
+		final fact8 = factVery(getFact(getPeopleCommand(ctx, atkPeople.id) / getPeopleForce(ctx, defPeople.id)), 3);
 		final fact9 = getFact({
 			if (false) {
 				getPeopleIntelligence(ctx, atkPeople.id) / getPeopleIntelligence(ctx, defPeople.id);
