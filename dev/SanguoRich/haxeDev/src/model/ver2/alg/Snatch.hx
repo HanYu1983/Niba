@@ -100,8 +100,8 @@ private function getSnatchCost(ctx:Context, playerId:Int, gridId:Int, p1PeopleId
 }
 
 private function guessArmy(ctx:Context, playerId:Int, gridId:Int, p1PeopleId:Int, p2PeopleId:Int) {
-	final army2 = ctx.grids[gridId].army;
-	final totalArmy = ctx.players[playerId].army;
+	final army2 = Math.min(ctx.grids[gridId].army, getPeopleMaxArmy(ctx, p2PeopleId));
+	final totalArmy = Math.min(ctx.players[playerId].army, getPeopleMaxArmy(ctx, p1PeopleId));
 	var s = 0.0;
 	var e = totalArmy;
 	var army1 = 0.0;
@@ -121,7 +121,8 @@ private function guessArmy(ctx:Context, playerId:Int, gridId:Int, p1PeopleId:Int
 	final success = warCost.playerCost[1].army >= army2;
 	return {
 		success: success,
-		army: success ? successArmy : totalArmy
+		army1: success ? successArmy : totalArmy,
+		army2: army2
 	}
 }
 
@@ -144,12 +145,7 @@ private function onSnatchCost(ctx:Context, playerId:Int, gridId:Int, p1PeopleId:
 	};
 	final success = {
 		if (isOccupation) {
-			final warArmy1 = switch guessArmy(ctx, playerId, gridId, p1PeopleId, p2PeopleId) {
-				case {army: army}:
-					army;
-			}
-			final warArmy2 = ctx.grids[gridId].army;
-			onWarCost(ctx, playerId, gridId, p1PeopleId, p2PeopleId, warArmy1, warArmy2, {occupy: true, warEvent: false});
+			onWarCost(ctx, playerId, gridId, p1PeopleId, p2PeopleId, army1, army2, {occupy: true, warEvent: false});
 		} else {
 			// 處理搶奪中的戰爭部分
 			onWarCost(ctx, playerId, gridId, p1PeopleId, p2PeopleId, army1, army2, {occupy: false, warEvent: false});
@@ -207,24 +203,22 @@ function _getTakeSnatchPreview(ctx:Context, playerId:Int, gridId:Int):SnatchPrev
 }
 
 function _getPreResultOfSnatch(ctx:Context, playerId:Int, gridId:Int, p1PeopleId:Int, p2PeopleId:Int, isOccupation:Bool):PreResultOnSnatch {
-	if (isOccupation) {
-		final army1 = switch guessArmy(ctx, playerId, gridId, p1PeopleId, p2PeopleId) {
-			case {army: army}:
-				army;
+	return if (isOccupation) {
+		switch guessArmy(ctx, playerId, gridId, p1PeopleId, p2PeopleId) {
+			case {army1: army1, army2: army2}:
+				final warCost = getWarCost(ctx, playerId, gridId, p1PeopleId, p2PeopleId, army1, army2, {occupy: isOccupation, debug: true});
+				final preResultOnSnatch = {
+					war: _getPreResultOfWar(ctx, playerId, gridId, p1PeopleId, p2PeopleId, army1, army2, {occupy: true}),
+					money: 0.0,
+					food: 0.0,
+					rateForTreasure: warCost.findTreasureRate,
+					success: warCost.success
+				}
+				preResultOnSnatch;
 		}
-		final army2 = ctx.grids[gridId].army;
-		final warCost = getWarCost(ctx, playerId, gridId, p1PeopleId, p2PeopleId, army1, army2, {occupy: isOccupation, debug: true});
-		final preResultOnSnatch = {
-			war: _getPreResultOfWar(ctx, playerId, gridId, p1PeopleId, p2PeopleId, army1, army2, {occupy: true}),
-			money: 0.0,
-			food: 0.0,
-			rateForTreasure: warCost.findTreasureRate,
-			success: warCost.success
-		}
-		return preResultOnSnatch;
 	} else {
-		final army1 = Math.min(ctx.players[playerId].army, SNATCH_ARMY_AT_LEAST);
-		final army2 = Math.min(ctx.grids[gridId].army, SNATCH_ARMY_AT_LEAST);
+		final army1 = Math.min(Math.min(getPeopleMaxArmy(ctx, p1PeopleId), ctx.players[playerId].army), SNATCH_ARMY_AT_LEAST);
+		final army2 = Math.min(Math.min(getPeopleMaxArmy(ctx, p2PeopleId), ctx.grids[gridId].army), SNATCH_ARMY_AT_LEAST);
 		final cost = getSnatchCost(ctx, playerId, gridId, p1PeopleId, p2PeopleId, army1, army2, false);
 		final preResultOnSnatch = {
 			war: _getPreResultOfWar(ctx, playerId, gridId, p1PeopleId, p2PeopleId, army1, army2, {occupy: false}),
@@ -233,14 +227,21 @@ function _getPreResultOfSnatch(ctx:Context, playerId:Int, gridId:Int, p1PeopleId
 			rateForTreasure: cost.findTreasureRate,
 			success: cost.success
 		}
-		return preResultOnSnatch;
+		preResultOnSnatch;
 	}
 }
 
 function _takeSnatchOn(ctx:Context, playerId:Int, gridId:Int, p1PeopleId:Int, p2PeopleId:Int, isOccupation:Bool) {
-	final army1 = Math.min(ctx.players[playerId].army, SNATCH_ARMY_AT_LEAST);
-	final army2 = Math.min(ctx.grids[gridId].army, SNATCH_ARMY_AT_LEAST);
-	onSnatchCost(ctx, playerId, gridId, p1PeopleId, p2PeopleId, army1, army2, isOccupation);
+	if (isOccupation) {
+		switch guessArmy(ctx, playerId, gridId, p1PeopleId, p2PeopleId) {
+			case {army1: army1, army2: army2}:
+				onSnatchCost(ctx, playerId, gridId, p1PeopleId, p2PeopleId, army1, army2, isOccupation);
+		}
+	} else {
+		final army1 = Math.min(Math.min(getPeopleMaxArmy(ctx, p1PeopleId), ctx.players[playerId].army), SNATCH_ARMY_AT_LEAST);
+		final army2 = Math.min(Math.min(getPeopleMaxArmy(ctx, p2PeopleId), ctx.grids[gridId].army), SNATCH_ARMY_AT_LEAST);
+		onSnatchCost(ctx, playerId, gridId, p1PeopleId, p2PeopleId, army1, army2, isOccupation);
+	}
 	{
 		final player = ctx.players[ctx.currentPlayerId];
 		player.memory.hasCommand = true;
