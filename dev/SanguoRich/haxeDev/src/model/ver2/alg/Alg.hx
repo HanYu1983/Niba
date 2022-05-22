@@ -141,6 +141,7 @@ function initContext(ctx:Context, options:GameSetting) {
 		final isAI = mustBePlayer == false && playerConfig.type == 1;
 		final resourceFact = isAI ? [1.0, 1.5, 2.0][options.aiLevel] : 1.0;
 		final resource = (options.resource != null ? options.resource : INIT_RESOURCE) * resourceFact;
+		final atGridId = Std.int(Math.random() * genGrids.length);
 		addPlayerInfo(ctx, {
 			id: i,
 			name: names[i],
@@ -152,20 +153,43 @@ function initContext(ctx:Context, options:GameSetting) {
 				model.PeopleGenerator.getInst().generate(options.putong ? 0 : -1),
 				model.PeopleGenerator.getInst().generate(options.putong ? 0 : -1),
 				model.PeopleGenerator.getInst().generate(options.putong ? 0 : -1),
-				model.PeopleGenerator.getInst().generate(options.putong ? 0 : -1),
 			],
 			maintainPeople: 0,
 			maintainArmy: 0,
 			armyGrow: 0.0,
-			atGridId: Std.int(Math.random() * genGrids.length),
+			atGridId: atGridId,
 			grids: [],
 			commands: [],
 			treasures: [],
 			score: 0.0,
 		}, isAI, isLose);
-		++i;
+		i++;
 	}
 	for (player in ctx.players) {
+		// 移除原有建物
+		ctx.attachments = ctx.attachments.filter(a -> a.belongToGridId != player.position);
+		addAttachInfo(ctx, player.position, MARKET(1));
+		addAttachInfo(ctx, player.position, BANK(0));
+		addAttachInfo(ctx, player.position, FARM(1));
+		addAttachInfo(ctx, player.position, BARN(0));
+		addAttachInfo(ctx, player.position, BARRACKS(1));
+		addAttachInfo(ctx, player.position, HOME(0));
+		addAttachInfo(ctx, player.position, EXPLORE(0));
+		addAttachInfo(ctx, player.position, WALL(1));
+		ctx.grids[player.position].defaultMoneyGrow = Math.random() * 0.01;
+		ctx.grids[player.position].defaultFoodGrow = Math.random() * 0.01;
+		ctx.grids[player.position].defaultArmyGrow = Math.random() * 0.01;
+		ctx.grids[player.position].defaultMaxMoney = 600;
+		ctx.grids[player.position].defaultMaxFood = 600;
+		ctx.grids[player.position].defaultMaxArmy = 600;
+		ctx.grids[player.position].money = 350;
+		ctx.grids[player.position].food = 350;
+		ctx.grids[player.position].army = 350;
+		final peopleInGrid = ctx.peoples.filter(p -> p.position.gridId == player.position);
+		for (people in peopleInGrid) {
+			people.position.player = true;
+			people.belongToPlayerId = player.id;
+		}
 		player.score = getPlayerScore(ctx, player.id);
 	}
 }

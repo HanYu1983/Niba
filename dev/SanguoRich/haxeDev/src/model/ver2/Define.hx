@@ -1335,7 +1335,7 @@ function getPeopleCommand(ctx:Context, peopleId:Int):Float {
 
 function getPeopleMaxArmy(ctx:Context, peopleId:Int):Float {
 	final people = getPeopleById(ctx, peopleId);
-	return Math.pow(getExpLevel(people.exp), 0.90) * 200 + 500;
+	return Math.pow(getExpLevel(people.exp), 0.80) * 200 + 600;
 }
 
 function getPeopleAbilities(ctx:Context, peopleId:Int):Array<Int> {

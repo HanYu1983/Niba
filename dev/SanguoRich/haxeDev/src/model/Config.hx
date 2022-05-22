@@ -2,7 +2,7 @@ package model;
 
 import model.tool.Fact;
 
-private final FACT_TIMES = 2.0;
+private final FACT_TIMES = 10.0;
 
 function getFact(v:Float):Float {
 	return fact(v, FACT_TIMES);
@@ -30,7 +30,7 @@ final CAN_CHANGE_FAVOR = -3;
 final PLAYER_SPEND_MONEY_FOR_PEOPLE_PER_TURN_PERSENT = 0.01;
 
 // 主公支付的食物為所有格子上以及身上的士兵的數量的%數
-final PLAYER_SPEND_FOOD_FOR_ARMY_PER_TURN_PERSENT = 0.08;
+final PLAYER_SPEND_FOOD_FOR_ARMY_PER_TURN_PERSENT = 0.05;
 
 // 依據建築物等級的維護費
 final BASIC_BUILDING_MAINTAIN_FACTOR = 1.0;
@@ -76,10 +76,10 @@ final WAR_FRONT_ABILITY_FACTOR = 1.4;
 final WAR_BACK_ABILITY_FACTOR = .7;
 
 // 戰鬥支付金錢整體調整
-final WAR_MONEY_COST_FACTOR = 0.5;
+final WAR_MONEY_COST_FACTOR = 0.325;
 
 // 戰鬥支付食物整體調整
-final WAR_FOOD_COST_FACTOR = 0.7;
+final WAR_FOOD_COST_FACTOR = 0.75;
 
 // 戰鬥防守方士兵加成
 final WAR_DEFFENDER_FACTOR = 2.2;
@@ -123,7 +123,7 @@ final ENERGY_COST_ON_SETTLE = 50;
 final SNATCH_ARMY_AT_LEAST = 40;
 
 // 單挑的士兵變化基本量
-final PK_ARMY_BASE_CHANGE = 80;
+final PK_ARMY_BASE_CHANGE = 50;
 
 // 最低友好度
 final MIN_GRID_FAVOR = -3;

@@ -25,7 +25,8 @@ private function getWarCostImpl(ctx:Context, playerId:Int, gridId:Int, p1PeopleI
 		final atkPeopleAbilities = getPeopleAbilities(ctx, atkPeople.id);
 		final fact1 = zeroOne(if (atkPeopleAbilities.has(6)) WAR_BACK_ABILITY_FACTOR else 1.0);
 		final fact2 = zeroOne(if (atkPeopleAbilities.has(7)) WAR_BACK_ABILITY_FACTOR else 1.0);
-		final rate = fact1 * fact2;
+		final fact3 = zeroOneVery(zeroOneNot(zeroOne(getPeopleIntelligence(ctx, atkPeople.id) / 100.0)), 0.125);
+		final rate = fact1 * fact2 * fact3;
 		atkMoneyCost = atkArmy * WAR_MONEY_COST_FACTOR * rate;
 		atkFoodCost = atkArmy * WAR_FOOD_COST_FACTOR * rate;
 	}
@@ -64,7 +65,7 @@ private function getWarCostImpl(ctx:Context, playerId:Int, gridId:Int, p1PeopleI
 				1.0;
 			}
 		});
-		final fact6 = factVery(getFact(getPeopleForce(ctx, atkPeople.id) / getPeopleCommand(ctx, defPeople.id)), 3);
+		final fact6 = factVery(getFact(getPeopleForce(ctx, atkPeople.id) / getPeopleCommand(ctx, defPeople.id)), 1.5);
 		final fact7 = getFact({
 			if (false) {
 				getPeopleIntelligence(ctx, atkPeople.id) / getPeopleIntelligence(ctx, defPeople.id);
@@ -142,7 +143,8 @@ private function getWarCostImpl(ctx:Context, playerId:Int, gridId:Int, p1PeopleI
 		final atkPeopleAbilities = getPeopleAbilities(ctx, atkPeople.id);
 		final fact1 = getFact(if (atkPeopleAbilities.has(6)) WAR_BACK_ABILITY_FACTOR else 1.0);
 		final fact2 = getFact(if (atkPeopleAbilities.has(7)) WAR_BACK_ABILITY_FACTOR else 1.0);
-		final rate = fact1 * fact2;
+		final fact3 = zeroOneVery(zeroOneNot(zeroOne(getPeopleIntelligence(ctx, atkPeople.id) / 100.0)), 0.125);
+		final rate = fact1 * fact2 * fact3;
 		defMoneyCost = atkArmy * WAR_MONEY_COST_FACTOR * rate;
 		defFoodCost = atkArmy * WAR_FOOD_COST_FACTOR * rate;
 	}
@@ -178,7 +180,7 @@ private function getWarCostImpl(ctx:Context, playerId:Int, gridId:Int, p1PeopleI
 		});
 		final fact6 = getFact(if (options.occupy && atkPeopleAbilities.has(8)) WAR_FRONT_ABILITY_FACTOR else 1.0);
 		final fact7 = getFact(if (options.occupy && atkPeopleAbilities.has(9)) WAR_FRONT_ABILITY_FACTOR else 1.0);
-		final fact8 = factVery(getFact(getPeopleCommand(ctx, atkPeople.id) / getPeopleForce(ctx, defPeople.id)), 3);
+		final fact8 = factVery(getFact(getPeopleCommand(ctx, atkPeople.id) / getPeopleForce(ctx, defPeople.id)), 1.5);
 		final fact9 = getFact({
 			if (false) {
 				getPeopleIntelligence(ctx, atkPeople.id) / getPeopleIntelligence(ctx, defPeople.id);
