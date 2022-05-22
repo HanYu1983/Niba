@@ -25,7 +25,7 @@ private function getWarCostImpl(ctx:Context, playerId:Int, gridId:Int, p1PeopleI
 		final atkPeopleAbilities = getPeopleAbilities(ctx, atkPeople.id);
 		final fact1 = zeroOne(if (atkPeopleAbilities.has(6)) WAR_BACK_ABILITY_FACTOR else 1.0);
 		final fact2 = zeroOne(if (atkPeopleAbilities.has(7)) WAR_BACK_ABILITY_FACTOR else 1.0);
-		final zeroOne3 = zeroOneVery(zeroOneNot(zeroOne(getPeopleIntelligence(ctx, atkPeople.id) / 100)), 0.5);
+		final zeroOne3 = zeroOneVery(zeroOneNot(zeroOne(getPeopleIntelligence(ctx, atkPeople.id) / 100)), 0.125);
 		final rate = fact1 * fact2 * zeroOne3;
 		atkMoneyCost = atkArmy * WAR_MONEY_COST_FACTOR * rate;
 		atkFoodCost = atkArmy * WAR_FOOD_COST_FACTOR * rate;
