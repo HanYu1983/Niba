@@ -123,25 +123,68 @@ private function onNegoCost(ctx:Context, playerId:Int, gridId:Int, p1SelectId:In
 		favorAfter: grid.favor[playerId],
 		gridId: gridId,
 	}
-	final success = {
-		final negoCost = getNegoCost(ctx, playerId, gridId, p1SelectId, p2SelectId);
-		// 無論成功或失敗武將先消體力
-		if (p1.energy < negoCost.peopleCost.energy) {
-			throw new haxe.Exception('people.energy ${p1.energy} < ${negoCost.peopleCost.energy}');
-		}
-		final grid = ctx.grids[gridId];
-		p1.energy -= Std.int(negoCost.peopleCost.energy);
-		//
-		final success = Math.random() < negoCost.successRate;
-		if (success == false) {
-			// 降低友好度
-			final isHateYou = Math.random() < NEGO_HATE_RATE;
-			if (isHateYou) {
-				grid.favor[playerId] = Std.int(Math.max(grid.favor[playerId] - 1, MIN_GRID_FAVOR));
+	final success:Bool = switch 1 {
+		case 0:
+			final negoCost = getNegoCost(ctx, playerId, gridId, p1SelectId, p2SelectId);
+			// 無論成功或失敗武將先消體力
+			if (p1.energy < negoCost.peopleCost.energy) {
+				throw new haxe.Exception('people.energy ${p1.energy} < ${negoCost.peopleCost.energy}');
 			}
-		} else {
-			// 功績
-			onPeopleExpAdd(ctx, p1.id, getExpAdd(Math.min(1, negoCost.successRate), ENERGY_COST_ON_NEGO));
+			final grid = ctx.grids[gridId];
+			p1.energy -= Std.int(negoCost.peopleCost.energy);
+			//
+			final success = Math.random() < negoCost.successRate;
+			if (success == false) {
+				// 降低友好度
+				final isHateYou = Math.random() < NEGO_HATE_RATE;
+				if (isHateYou) {
+					grid.favor[playerId] = Std.int(Math.max(grid.favor[playerId] - 1, MIN_GRID_FAVOR));
+				}
+			} else {
+				// 城池被搶奪
+				grid.army -= negoCost.playerCost.army;
+				if (grid.army < 0) {
+					grid.army = 0;
+				}
+				grid.money -= negoCost.playerCost.money;
+				if (grid.money < 0) {
+					grid.money = 0;
+				}
+				grid.food -= negoCost.playerCost.food;
+				if (grid.food < 0) {
+					grid.food = 0;
+				}
+				// 玩家搶奪
+				final player = ctx.players[playerId];
+				player.army += negoCost.playerCost.army;
+				player.money += negoCost.playerCost.money;
+				player.food += negoCost.playerCost.food;
+				// 提升友好度
+				final isLikeYou = Math.random() < NEGO_LIKE_RATE;
+				if (isLikeYou) {
+					for (targetPlayerId in 0...grid.favor.length) {
+						if (targetPlayerId == playerId) {
+							// 對你提升友好
+							grid.favor[targetPlayerId] = Std.int(Math.min(MAX_GRID_FAVOR, grid.favor[targetPlayerId] + 1));
+						} else {
+							// 對其它人降低友好
+							grid.favor[targetPlayerId] = Std.int(Math.max(MIN_GRID_FAVOR, grid.favor[targetPlayerId] - 1));
+						}
+					}
+				}
+				// 功績
+				onPeopleExpAdd(ctx, p1.id, getExpAdd(Math.min(1, negoCost.successRate), ENERGY_COST_ON_NEGO));
+			}
+			success;
+		case 1:
+			final negoCost = getNegoCost(ctx, playerId, gridId, p1SelectId, p2SelectId);
+			// 無論成功或失敗武將先消體力
+			if (p1.energy < negoCost.peopleCost.energy) {
+				throw new haxe.Exception('people.energy ${p1.energy} < ${negoCost.peopleCost.energy}');
+			}
+			final grid = ctx.grids[gridId];
+			p1.energy -= Std.int(negoCost.peopleCost.energy);
+			//
 			// 城池被搶奪
 			grid.army -= negoCost.playerCost.army;
 			if (grid.army < 0) {
@@ -160,8 +203,10 @@ private function onNegoCost(ctx:Context, playerId:Int, gridId:Int, p1SelectId:In
 			player.army += negoCost.playerCost.army;
 			player.money += negoCost.playerCost.money;
 			player.food += negoCost.playerCost.food;
+			// 功績
+			onPeopleExpAdd(ctx, p1.id, getExpAdd(Math.min(1, negoCost.successRate), ENERGY_COST_ON_NEGO));
 			// 提升友好度
-			final isLikeYou = Math.random() < NEGO_LIKE_RATE;
+			final isLikeYou = Math.random() < negoCost.successRate;
 			if (isLikeYou) {
 				for (targetPlayerId in 0...grid.favor.length) {
 					if (targetPlayerId == playerId) {
@@ -172,9 +217,12 @@ private function onNegoCost(ctx:Context, playerId:Int, gridId:Int, p1SelectId:In
 						grid.favor[targetPlayerId] = Std.int(Math.max(MIN_GRID_FAVOR, grid.favor[targetPlayerId] - 1));
 					}
 				}
+			} else {
+				grid.favor[playerId] = Std.int(Math.max(grid.favor[playerId] - 1, MIN_GRID_FAVOR));
 			}
-		}
-		success;
+			true;
+		case _:
+			false;
 	}
 	resultValue.success = success;
 	resultValue.energyAfter = p1.energy;

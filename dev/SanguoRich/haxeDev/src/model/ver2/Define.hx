@@ -109,6 +109,8 @@ enum Event {
 		moneyAfter:Float,
 		foodBefore:Float,
 		foodAfter:Float,
+		favorBefore:Int,
+		favorAfter:Int,
 		gridId:Int,
 	}, gameInfo:GameInfo);
 	EXPLORE_RESULT(value:{
@@ -225,6 +227,8 @@ enum Event {
 		armyBefore:Float,
 		armyAfter:Float,
 		gridId:Int,
+		favorBefore:Int,
+		favorAfter:Int,
 	}, gameInfo:GameInfo);
 	GRID_RESOURCE_EVENT(value:{
 		grids:Array<{
