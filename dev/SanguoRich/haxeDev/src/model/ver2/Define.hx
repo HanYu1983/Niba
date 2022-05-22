@@ -289,6 +289,7 @@ function getPeopleInfo(ctx:Context, people:People):model.PeopleGenerator.People 
 		id: people.id,
 		type: getPeopleType(ctx, people.id),
 		name: people.name,
+		commandArmy: 100,
 		command: Std.int(getPeopleCommand(ctx, people.id)),
 		force: Std.int(getPeopleForce(ctx, people.id)),
 		intelligence: Std.int(getPeopleIntelligence(ctx, people.id)),

@@ -935,6 +935,7 @@ class MainView extends Box {
 					}
 					msg += '魅力:${Main.getCompareString(p1.charm, p2.charm)}\n';
 					msg += '體力:${Main.getCompareString(p1.energy, p2.energy)}\n';
+					msg += '指揮:${Main.getCompareString(p1.commandArmy, p2.commandArmy)}\n';
 					checkAutoPlay(autoPlay, title, msg);
 				case PAY_FOR_OVER_ENEMY_GRID:
 					syncViewByInfo(gameInfo);

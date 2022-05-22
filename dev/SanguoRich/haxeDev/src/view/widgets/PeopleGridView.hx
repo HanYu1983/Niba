@@ -20,6 +20,7 @@ class PeopleGridView extends BasicGridView{
         var p:People = info;
         pro_name.value = p.name;
         pro_force.value = p.force;
+        pro_commandArmy = p.commandArmy;
         pro_intelligence.value = p.intelligence;
     }
 }

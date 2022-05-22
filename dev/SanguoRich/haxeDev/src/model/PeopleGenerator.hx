@@ -13,6 +13,7 @@ typedef People = {
 	id:Int,
 	type:PeopleType,
 	name:String,
+	commandArmy:Int,
 	command:Int,
 	force:Int,
 	intelligence:Int,
@@ -163,6 +164,7 @@ class PeopleGenerator {
 				case _: PeopleType.PUTONG;
 			},
 			name: name,
+			commandArmy: 100,
 			command: command,
 			force: force,
 			intelligence: intelligence,
