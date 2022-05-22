@@ -19,6 +19,7 @@ import model.ver2.alg.CostForBonus;
 import model.ver2.alg.SaveLoad;
 import model.ver2.alg.Pk;
 import model.ver2.alg.Equip;
+import model.tool.Fact;
 
 using Lambda;
 
@@ -494,6 +495,7 @@ private function getCommandWeight(ctx:Context, playerId:Int, gridId:Int, cmd:Act
 	}
 	final peopleInGrid = ctx.peoples.filter((p:People) -> p.position.gridId == grid.id);
 	final peopleInPlayer = ctx.peoples.filter((p:People) -> p.belongToPlayerId == player.id);
+	final treasureInPlayer = ctx.treasures.filter((p) -> p.belongToPlayerId == player.id);
 	if (peopleInPlayer.length == 0) {
 		return switch cmd {
 			case END:
@@ -561,6 +563,10 @@ private function getCommandWeight(ctx:Context, playerId:Int, gridId:Int, cmd:Act
 			final fact1 = {
 				var maxScore = 0.0;
 				for (strategy in StrategyList) {
+					final factCanPayMoney = strategy.money >= player.money;
+					if (factCanPayMoney == false) {
+						continue;
+					}
 					switch strategy.id {
 						case 0:
 							// 暗渡陳艙
@@ -783,6 +789,154 @@ private function getCommandWeight(ctx:Context, playerId:Int, gridId:Int, cmd:Act
 									maxScore = score;
 									brainMemory.strategy.strategyId = strategy.id;
 									brainMemory.strategy.peopleId = p1.id;
+								}
+							}
+						case 9:
+							// 無中生有
+							final factFood = zeroOneNot(zeroOne(player.food / 1000.0));
+							final factArmy = zeroOneNot(zeroOne(player.army / 1000.0));
+							// 其中一個資源很低
+							final resourceFact = zeroOneOr([factFood, factArmy]);
+							for (p1 in peopleInPlayer) {
+								final result = _getStrategyRate(ctx, p1.id, strategy.id, 0, 0, 0);
+								// 成功率
+								final fact1 = result.rate > 0.7 ? result.rate : 0.0;
+								// 體力剩下越多越好
+								final fact2 = Math.pow(result.energyAfter / 100.0, 0.5);
+								final score = 1.0 * fact1 * fact2 * resourceFact;
+								if (score > maxScore) {
+									maxScore = score;
+									brainMemory.strategy.strategyId = strategy.id;
+									brainMemory.strategy.peopleId = p1.id;
+								}
+							}
+						case 10:
+							// 三顧茅廬
+							if (peopleInPlayer.length < 10) {
+								final factPeople = zeroOne(peopleInPlayer.length / 20);
+								for (p1 in peopleInPlayer) {
+									final result = _getStrategyRate(ctx, p1.id, strategy.id, 0, 0, 0);
+									// 成功率
+									final fact1 = result.rate > 0.7 ? result.rate : 0.0;
+									// 體力剩下越多越好
+									final fact2 = Math.pow(result.energyAfter / 100.0, 0.5);
+									final score = 1.0 * fact1 * fact2 * factPeople;
+									if (score > maxScore) {
+										maxScore = score;
+										brainMemory.strategy.strategyId = strategy.id;
+										brainMemory.strategy.peopleId = p1.id;
+									}
+								}
+							}
+						case 11:
+							// 草船借箭
+							if (treasureInPlayer.length < 6) {
+								final factTreasure = zeroOne(treasureInPlayer.length / 12);
+								for (p1 in peopleInPlayer) {
+									final result = _getStrategyRate(ctx, p1.id, strategy.id, 0, 0, 0);
+									// 成功率
+									final fact1 = result.rate > 0.7 ? result.rate : 0.0;
+									// 體力剩下越多越好
+									final fact2 = Math.pow(result.energyAfter / 100.0, 0.5);
+									final score = 1.0 * fact1 * fact2 * factTreasure;
+									if (score > maxScore) {
+										maxScore = score;
+										brainMemory.strategy.strategyId = strategy.id;
+										brainMemory.strategy.peopleId = p1.id;
+									}
+								}
+							}
+						case 12:
+							// 火計
+							final steps:Array<Int> = try {
+								cast(strategy.value.valid : Array<Int>);
+							} catch (e) {
+								throw new haxe.Exception("strategy.value.valid必須是Array");
+							}
+							for (s in steps) {
+								final nextPosition = ((player.position + s) + ctx.grids.length) % ctx.grids.length;
+								final nextGrid = ctx.grids[nextPosition];
+								if (nextGrid == null) {
+									throw new haxe.Exception('nextGrid not found: ${nextPosition}');
+								}
+								// 是敵人
+								final factIsEnemy = switch getGridBelongPlayerId(ctx, nextGrid.id) {
+									case null: 0.0;
+									case nextGridBelongPlayerId if (nextGridBelongPlayerId != player.id):
+										1.0;
+									case _: 0.0;
+								}
+								// 對方兵越多
+								final factEnemyArmy = if (nextGrid.army == 0) {
+									0.0;
+								} else {
+									zeroOneNot(zeroOne(player.army / nextGrid.army));
+								}
+								for (p1 in peopleInPlayer) {
+									final result = _getStrategyRate(ctx, p1.id, strategy.id, 0, 0, nextGrid.id);
+									// 成功率
+									final fact1 = result.rate > 0.7 ? result.rate : 0.0;
+									// 體力剩下越多越好
+									final fact2 = Math.pow(result.energyAfter / 100.0, 0.5);
+									final score = 1.5 * fact1 * fact2 * factIsEnemy * factEnemyArmy;
+									if (score > maxScore) {
+										maxScore = score;
+										brainMemory.strategy.peopleId = p1.id;
+										brainMemory.strategy.strategyId = strategy.id;
+										brainMemory.strategy.targetGridId = nextGrid.id;
+									}
+								}
+							}
+						case 13:
+							// 時來運轉
+							final steps:Array<Int> = try {
+								cast(strategy.value.valid : Array<Int>);
+							} catch (e) {
+								throw new haxe.Exception("strategy.value.valid必須是Array");
+							}
+							for (s in steps) {
+								final nextPosition = ((player.position + s) + ctx.grids.length) % ctx.grids.length;
+								final nextGrid = ctx.grids[nextPosition];
+								if (nextGrid == null) {
+									throw new haxe.Exception('nextGrid not found: ${nextPosition}');
+								}
+								// 是我的
+								final factIsMy = switch getGridBelongPlayerId(ctx, nextGrid.id) {
+									case null: 0.0;
+									case nextGridBelongPlayerId if (nextGridBelongPlayerId == player.id):
+										1.0;
+									case _: 0.0;
+								}
+								// 資源越多, 但又不能太多
+								final factResource = {
+									// 其中一個很低
+									var tmp = zeroOneAnd([
+										zeroOne(nextGrid.money / 1000.0),
+										zeroOne(nextGrid.food / 1000.0),
+										zeroOne(nextGrid.army / 1000.0)
+									]);
+									// , 機率就越高
+									tmp = zeroOneNot(tmp);
+									if (tmp > 0.9) {
+										// 但又不能太高
+										0.0;
+									} else {
+										tmp;
+									}
+								}
+								for (p1 in peopleInPlayer) {
+									final result = _getStrategyRate(ctx, p1.id, strategy.id, 0, 0, nextGrid.id);
+									// 成功率
+									final fact1 = result.rate > 0.7 ? result.rate : 0.0;
+									// 體力剩下越多越好
+									final fact2 = Math.pow(result.energyAfter / 100.0, 0.5);
+									final score = 1.5 * fact1 * fact2 * factIsMy * factResource;
+									if (score > maxScore) {
+										maxScore = score;
+										brainMemory.strategy.peopleId = p1.id;
+										brainMemory.strategy.strategyId = strategy.id;
+										brainMemory.strategy.targetGridId = nextGrid.id;
+									}
 								}
 							}
 					}
@@ -1243,24 +1397,30 @@ private function getCommandWeight(ctx:Context, playerId:Int, gridId:Int, cmd:Act
 								if (tmp >= 1.0) {
 									1.0;
 								} else {
-									// final p2PlayerId = getGridBelongPlayerId(ctx, gridId);
-									// if (p2PlayerId == null) {
-									// 	// 對象為中立玩家就不搶, 反正也搶了也只是幫削兵
-									// 	0.0;
-									// } else {
-									// 	final armyCost2 = result2.armyAfter - result2.armyBefore;
-									// 	final moneyCost2 = result2.moneyAfter - result2.moneyBefore;
-									// 	final foodCost2 = result2.foodAfter - result2.foodBefore;
-									// 	final totalCost2 = moneyCost + foodCost + armyCost;
-									// 	// 敵人必須損失比我多
-									// 	Math.min(1.0, totalCost2 / totalCost);
-									// }
-									final armyCost2 = result2.armyAfter - result2.armyBefore;
-									final moneyCost2 = result2.moneyAfter - result2.moneyBefore;
-									final foodCost2 = result2.foodAfter - result2.foodBefore;
-									final totalCost2 = moneyCost + foodCost + armyCost;
-									// 敵人必須損失比我多
-									Math.min(1.0, totalCost2 / totalCost);
+									switch 1 {
+										case 0:
+											final p2PlayerId = getGridBelongPlayerId(ctx, gridId);
+											if (p2PlayerId == null) {
+												// 對象為中立玩家就不搶, 反正也搶了也只是幫削兵
+												0.0;
+											} else {
+												final armyCost2 = result2.armyAfter - result2.armyBefore;
+												final moneyCost2 = result2.moneyAfter - result2.moneyBefore;
+												final foodCost2 = result2.foodAfter - result2.foodBefore;
+												final totalCost2 = moneyCost + foodCost + armyCost;
+												// 敵人必須損失比我多
+												Math.min(1.0, totalCost2 / totalCost);
+											}
+										case 1:
+											final armyCost2 = result2.armyAfter - result2.armyBefore;
+											final moneyCost2 = result2.moneyAfter - result2.moneyBefore;
+											final foodCost2 = result2.foodAfter - result2.foodBefore;
+											final totalCost2 = moneyCost + foodCost + armyCost;
+											// 敵人必須損失比我多
+											Math.min(1.0, totalCost2 / totalCost);
+										case _:
+											0.0;
+									}
 								}
 							}
 							// 體力剩下越多越好
