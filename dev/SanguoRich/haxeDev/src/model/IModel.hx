@@ -272,7 +272,9 @@ typedef GameSetting = {
 	// 是否格子只能依據類型蓋房子
 	limitBuilding:Bool,
 	// AI難度，初期可以先影響AI的初始資源量(x1.5, x2, x2.5)
-	aiLevel:Int
+	aiLevel:Int,
+	// 初始是否都是普通武將
+	putong:Bool,
 }
 
 interface IModel {

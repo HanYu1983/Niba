@@ -82,6 +82,13 @@
                         <button text="否" />
                     </button-bar>
                 </hbox>
+                <hbox>
+                    <label text='普通起手'/>
+                    <button-bar id="grp_putong" tooltip="打開的話運氣成分會小一點，因為大家武將都一樣爛。" allowUnselection="true">
+                        <button text="是" />
+                        <button text="否" />
+                    </button-bar>
+                </hbox>
             </vbox>
         </frame>
     </hbox>
