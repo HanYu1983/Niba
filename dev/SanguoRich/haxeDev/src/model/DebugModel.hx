@@ -490,6 +490,8 @@ class DebugModel implements IModel {
 					strategy: StrategyList[0],
 					energyBefore: 0,
 					energyAfter: 1,
+					moneyBefore:0,
+					moneyAfter:0,
 				},
 				gameInfo: null,
 				autoplay: null,

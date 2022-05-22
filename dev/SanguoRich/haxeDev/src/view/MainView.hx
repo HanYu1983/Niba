@@ -902,6 +902,7 @@ class MainView extends Box {
 					msg += '武將:${info.people ? info.people.name : ""}\n';
 					msg += '計策:${info.strategy ? info.strategy.name : ""}\n';
 					msg += '體力:${Main.getCompareString(info.energyBefore, info.energyAfter)}\n';
+					msg += '金錢:${Main.getCompareString(info.moneyBefore, info.moneyAfter)}\n';
 					checkAutoPlay(autoPlay, title, msg);
 				case BUILDING_RESULT:
 					syncViewByInfo(gameInfo);
