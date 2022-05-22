@@ -476,7 +476,7 @@ function _getPreResultOfWar(ctx:Context, playerId:Int, gridId:Int, p1PeopleId:In
 					foodAfter: Std.int(player1.food - playerCost1.food),
 					maintainFoodBefore: 0,
 					maintainFoodAfter: 0,
-					armyFight: 1,
+					armyFight: army1,
 				},
 				{
 					energyBefore: Std.int(people2.energy),
@@ -489,7 +489,7 @@ function _getPreResultOfWar(ctx:Context, playerId:Int, gridId:Int, p1PeopleId:In
 					foodAfter: Std.int(grid.food - playerCost2.food),
 					maintainFoodBefore: 0,
 					maintainFoodAfter: 0,
-					armyFight: 1,
+					armyFight: army2,
 				}
 			];
 		case _:
