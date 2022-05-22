@@ -53,6 +53,9 @@ private function getStrategyCost(ctx:Context, p1PeopleId:Int, strategyId:Int, ta
 	};
 	final rate = base * getZeroOneFromFact(fact1 * fact2) * zeroOne3;
 	return {
+		playerCost: {
+			money: strategy.money
+		},
 		peopleCost: {
 			id: p1.id,
 			energy: useEnergy,
@@ -75,13 +78,15 @@ private function onStrategyCost(ctx:Context, p1PeopleId:Int, strategyId:Int, tar
 			case 0:
 				// 暗渡陳艙
 				switch strategy {
-					case {money: moneyCost}:
-						player.money = Math.max(0, player.money - moneyCost);
+					case {money: _}:
 						p1.energy = Math.max(0, p1.energy - cost.peopleCost.energy);
 						if (success) {
+							player.money = Math.max(0, player.money - cost.playerCost.money);
 							onPlayerGoToPosition(ctx, player.id, targetGridId);
 							player.memory.hasDice = true;
 							onPeopleExpAdd(ctx, p1.id, getExpAdd(cost.successRate, ENERGY_COST_ON_STRATEGY));
+						} else {
+							player.money = Math.max(0, player.money - cost.playerCost.money * 0.2);
 						}
 						success;
 					case _:
@@ -90,13 +95,15 @@ private function onStrategyCost(ctx:Context, p1PeopleId:Int, strategyId:Int, tar
 			case 1:
 				// 步步為營
 				switch strategy {
-					case {value: {float: [gainEnergy]}, money: moneyCost}:
-						player.money = Math.max(0, player.money - moneyCost);
+					case {value: {float: [gainEnergy]}, money: _}:
 						p1.energy = Math.max(0, p1.energy - cost.peopleCost.energy);
 						if (success) {
+							player.money = Math.max(0, player.money - cost.playerCost.money);
 							final p2 = getPeopleById(ctx, targetPeopleId);
 							p2.energy = Math.min(100, p2.energy + gainEnergy);
 							onPeopleExpAdd(ctx, p1.id, getExpAdd(cost.successRate, ENERGY_COST_ON_STRATEGY));
+						} else {
+							player.money = Math.max(0, player.money - cost.playerCost.money * 0.2);
 						}
 						success;
 					case _:
@@ -105,9 +112,8 @@ private function onStrategyCost(ctx:Context, p1PeopleId:Int, strategyId:Int, tar
 			case 2:
 				// 遠交近攻
 				switch strategy {
-					case {value: {float: [gainResourceRate, gainFavor]}, money: moneyCost}:
+					case {value: {float: [gainResourceRate, gainFavor]}, money: _}:
 						wrapResourceResultEvent(ctx, p1.belongToPlayerId, p1.id, () -> {
-							player.money = Math.max(0, player.money - moneyCost);
 							p1.energy = Math.max(0, p1.energy - cost.peopleCost.energy);
 							if (success) {
 								final grid = ctx.grids[player.position];
@@ -115,6 +121,7 @@ private function onStrategyCost(ctx:Context, p1PeopleId:Int, strategyId:Int, tar
 								if (isEmpty) {
 									throw new Exception("這是空地, 搶了沒資源");
 								}
+								player.money = Math.max(0, player.money - cost.playerCost.money);
 								final gainRate = gainResourceRate;
 								final gainFood = grid.food * gainRate;
 								final gainMoney = grid.money * gainRate;
@@ -135,6 +142,8 @@ private function onStrategyCost(ctx:Context, p1PeopleId:Int, strategyId:Int, tar
 									}
 								}
 								onPeopleExpAdd(ctx, p1.id, getExpAdd(cost.successRate, ENERGY_COST_ON_STRATEGY));
+							} else {
+								player.money = Math.max(0, player.money - cost.playerCost.money * 0.2);
 							}
 							success;
 						});
@@ -144,16 +153,18 @@ private function onStrategyCost(ctx:Context, p1PeopleId:Int, strategyId:Int, tar
 			case 3:
 				// 緩兵之計
 				switch strategy {
-					case {money: moneyCost}:
-						player.money = Math.max(0, player.money - moneyCost);
+					case {money: _}:
 						p1.energy = Math.max(0, p1.energy - cost.peopleCost.energy);
 						if (success) {
+							player.money = Math.max(0, player.money - cost.playerCost.money);
 							ctx.groundItems.push({
 								id: getNextId(),
 								belongToPlayerId: p1.belongToPlayerId,
 								position: targetGridId
 							});
 							onPeopleExpAdd(ctx, p1.id, getExpAdd(cost.successRate, ENERGY_COST_ON_STRATEGY));
+						} else {
+							player.money = Math.max(0, player.money - cost.playerCost.money * 0.2);
 						}
 						success;
 					case _:
@@ -162,11 +173,11 @@ private function onStrategyCost(ctx:Context, p1PeopleId:Int, strategyId:Int, tar
 			case 4:
 				// 火中取栗
 				switch strategy {
-					case {value: {float: [getMoney]}, money: moneyCost}:
+					case {value: {float: [getMoney]}, money: _}:
 						wrapResourceResultEvent(ctx, p1.belongToPlayerId, p1.id, () -> {
-							player.money = Math.max(0, player.money - moneyCost);
 							p1.energy = Math.max(0, p1.energy - cost.peopleCost.energy);
 							if (success) {
+								player.money = Math.max(0, player.money - cost.playerCost.money);
 								// 格子裡將移除的路障
 								final itemWillRemoved = ctx.groundItems.filter(i -> i.position == targetGridId);
 								// , 當中是我的路障
@@ -195,6 +206,8 @@ private function onStrategyCost(ctx:Context, p1PeopleId:Int, strategyId:Int, tar
 								}
 
 								onPeopleExpAdd(ctx, p1.id, getExpAdd(cost.successRate, ENERGY_COST_ON_STRATEGY));
+							} else {
+								player.money = Math.max(0, player.money - cost.playerCost.money * 0.2);
 							}
 							success;
 						});
@@ -204,14 +217,16 @@ private function onStrategyCost(ctx:Context, p1PeopleId:Int, strategyId:Int, tar
 			case 5:
 				// 趁虛而入
 				switch strategy {
-					case {value: {float: [moneyOffset]}, money: moneyCost}:
+					case {value: {float: [moneyOffset]}, money: _}:
 						wrapResourceResultEvent(ctx, p1.belongToPlayerId, p1.id, () -> {
-							player.money = Math.max(0, player.money - moneyCost);
 							p1.energy = Math.max(0, p1.energy - cost.peopleCost.energy);
 							if (success) {
+								player.money = Math.max(0, player.money - cost.playerCost.money);
 								final p2 = getPeopleById(ctx, targetPeopleId);
 								p2.energy = Math.max(0, p2.energy + moneyOffset);
 								onPeopleExpAdd(ctx, p1.id, getExpAdd(cost.successRate, ENERGY_COST_ON_STRATEGY));
+							} else {
+								player.money = Math.max(0, player.money - cost.playerCost.money * 0.2);
 							}
 							success;
 						});
@@ -221,13 +236,15 @@ private function onStrategyCost(ctx:Context, p1PeopleId:Int, strategyId:Int, tar
 			case 6:
 				// 按兵不动
 				switch strategy {
-					case {money: moneyCost}:
-						player.money = Math.max(0, player.money - moneyCost);
+					case {money: _}:
 						p1.energy = Math.max(0, p1.energy - cost.peopleCost.energy);
 						if (success) {
+							player.money = Math.max(0, player.money - cost.playerCost.money);
 							onPlayerGoToPosition(ctx, player.id, player.position);
 							player.memory.hasDice = true;
 							onPeopleExpAdd(ctx, p1.id, getExpAdd(cost.successRate, ENERGY_COST_ON_STRATEGY));
+						} else {
+							player.money = Math.max(0, player.money - cost.playerCost.money * 0.2);
 						}
 						success;
 					case _:
@@ -236,15 +253,17 @@ private function onStrategyCost(ctx:Context, p1PeopleId:Int, strategyId:Int, tar
 			case 7:
 				// 急功近利
 				switch strategy {
-					case {value: {float: [foodOffset, moneyOffset]}, money: moneyCost}:
+					case {value: {float: [foodOffset, moneyOffset]}, money: _}:
 						wrapResourceResultEvent(ctx, targetPlayerId, p1.id, () -> {
-							player.money = Math.max(0, player.money - moneyCost);
 							p1.energy = Math.max(0, p1.energy - cost.peopleCost.energy);
 							if (success) {
+								player.money = Math.max(0, player.money - cost.playerCost.money);
 								final targetPlayer = ctx.players[targetPlayerId];
 								targetPlayer.food = Math.max(0, targetPlayer.food + foodOffset);
 								targetPlayer.money = Math.max(0, targetPlayer.money + moneyOffset);
 								onPeopleExpAdd(ctx, p1.id, getExpAdd(cost.successRate, ENERGY_COST_ON_STRATEGY));
+							} else {
+								player.money = Math.max(0, player.money - cost.playerCost.money * 0.2);
 							}
 							success;
 						});
@@ -254,8 +273,8 @@ private function onStrategyCost(ctx:Context, p1PeopleId:Int, strategyId:Int, tar
 			case 8:
 				// 五穀豐登
 				switch strategy {
-					case {value: {float: [gainRate]}, money: moneyCost}:
-						player.money = Math.max(0, player.money - moneyCost);
+					case {value: {float: [gainRate]}, money: _}:
+						player.money = Math.max(0, player.money - cost.playerCost.money);
 						p1.energy = Math.max(0, p1.energy - cost.peopleCost.energy);
 						if (success) {
 							final myGrids = ctx.grids.filter(g -> getGridBelongPlayerId(ctx, g.id) == p1.belongToPlayerId);
@@ -271,11 +290,11 @@ private function onStrategyCost(ctx:Context, p1PeopleId:Int, strategyId:Int, tar
 			case 9:
 				// 無中生有
 				switch strategy {
-					case {value: {float: [minAmount, maxAmount]}, money: moneyCost}:
+					case {value: {float: [minAmount, maxAmount]}, money: _}:
 						wrapResourceResultEvent(ctx, player.id, p1.id, () -> {
-							player.money = Math.max(0, player.money - moneyCost);
 							p1.energy = Math.max(0, p1.energy - cost.peopleCost.energy);
 							if (success) {
+								player.money = Math.max(0, player.money - cost.playerCost.money);
 								final gainAmount = Math.random() * (maxAmount - minAmount) + minAmount;
 								switch Math.min(player.food, player.army) {
 									case which if (which == player.food):
@@ -285,6 +304,8 @@ private function onStrategyCost(ctx:Context, p1PeopleId:Int, strategyId:Int, tar
 									case _:
 										throw new haxe.Exception("Math.min(player.food, player.army) not found");
 								}
+							} else {
+								player.money = Math.max(0, player.money - cost.playerCost.money * 0.2);
 							}
 							success;
 						});
@@ -294,14 +315,16 @@ private function onStrategyCost(ctx:Context, p1PeopleId:Int, strategyId:Int, tar
 			case 10:
 				// 三顧茅廬
 				switch strategy {
-					case {value: {float: [count]}, money: moneyCost}:
-						player.money = Math.max(0, player.money - moneyCost);
+					case {value: {float: [count]}, money: _}:
 						p1.energy = Math.max(0, p1.energy - cost.peopleCost.energy);
 						if (success) {
+							player.money = Math.max(0, player.money - cost.playerCost.money);
 							for (i in 0...Std.int(count)) {
 								final newPeople = PeopleGenerator.getInst().generate(Math.random() < 0.5 ? 1 : 2);
 								addPeopleInfo(ctx, player.id, null, newPeople);
 							}
+						} else {
+							player.money = Math.max(0, player.money - cost.playerCost.money * 0.2);
 						}
 						success;
 					case _:
@@ -310,14 +333,16 @@ private function onStrategyCost(ctx:Context, p1PeopleId:Int, strategyId:Int, tar
 			case 11:
 				// 草船借箭
 				switch strategy {
-					case {value: {float: [count]}, money: moneyCost}:
-						player.money = Math.max(0, player.money - moneyCost);
+					case {value: {float: [count]}, money: _}:
 						p1.energy = Math.max(0, p1.energy - cost.peopleCost.energy);
 						if (success) {
+							player.money = Math.max(0, player.money - cost.playerCost.money);
 							for (i in 0...Std.int(count)) {
 								final newItem = TreasureGenerator.getInst().generator();
 								addTreasureInfo(ctx, player.id, null, null, newItem);
 							}
+						} else {
+							player.money = Math.max(0, player.money - cost.playerCost.money * 0.2);
 						}
 						success;
 					case _:
@@ -326,15 +351,17 @@ private function onStrategyCost(ctx:Context, p1PeopleId:Int, strategyId:Int, tar
 			case 12 | 13:
 				// 火計 | 時來運轉
 				switch strategy {
-					case {value: {float: [resourceOffsetRate]}, money: moneyCost}:
-						player.money = Math.max(0, player.money - moneyCost);
+					case {value: {float: [resourceOffsetRate]}, money: _}:
 						p1.energy = Math.max(0, p1.energy - cost.peopleCost.energy);
 						if (success) {
+							player.money = Math.max(0, player.money - cost.playerCost.money);
 							final targetGrid = ctx.grids[targetGridId];
 							targetGrid.money = Math.max(0,
 								Math.min(getGridMaxMoney(ctx, targetGridId), targetGrid.money + targetGrid.money * resourceOffsetRate));
 							targetGrid.food = Math.max(0, Math.min(getGridMaxFood(ctx, targetGridId), targetGrid.food + targetGrid.food * resourceOffsetRate));
 							targetGrid.army = Math.max(0, Math.min(getGridMaxArmy(ctx, targetGridId), targetGrid.army + targetGrid.army * resourceOffsetRate));
+						} else {
+							player.money = Math.max(0, player.money - cost.playerCost.money * 0.2);
 						}
 						success;
 					case _:
@@ -348,12 +375,13 @@ private function onStrategyCost(ctx:Context, p1PeopleId:Int, strategyId:Int, tar
 
 function _getStrategyRate(ctx:Context, p1PeopleId:Int, strategyId:Int, targetPlayerId:Int, targetPeopleId:Int, targetGridId:Int):PreResultOfStrategy {
 	final p1 = getPeopleById(ctx, p1PeopleId);
+	final player = ctx.players[p1.belongToPlayerId];
 	final cost = getStrategyCost(ctx, p1PeopleId, strategyId, targetPlayerId, targetPeopleId, targetGridId);
 	return {
-		energyAfter: Std.int(Math.max(0, p1.energy - cost.peopleCost.energy)),
 		energyBefore: Std.int(p1.energy),
-		moneyBefore: 5,
-		moneyAfter: 10,
+		energyAfter: Std.int(Math.max(0, p1.energy - cost.peopleCost.energy)),
+		moneyBefore: Std.int(player.money),
+		moneyAfter: Std.int(Math.max(0, player.money - cost.playerCost.money)),
 		rate: cost.successRate
 	}
 }
