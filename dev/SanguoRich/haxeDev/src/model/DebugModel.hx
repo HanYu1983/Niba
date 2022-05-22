@@ -418,6 +418,7 @@ class DebugModel implements IModel {
 					moneyAfter: 1,
 					foodBefore: 1,
 					foodAfter: 1,
+					armyFight: 1,
 					maintainFoodBefore: 1,
 					maintainFoodAfter: 1,
 				},
@@ -430,6 +431,7 @@ class DebugModel implements IModel {
 					moneyAfter: 1,
 					foodBefore: 1,
 					foodAfter: 1,
+					armyFight: 1,
 					maintainFoodBefore: 1,
 					maintainFoodAfter: 1,
 				}
