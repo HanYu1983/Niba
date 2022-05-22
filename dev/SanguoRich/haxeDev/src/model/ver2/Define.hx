@@ -1549,13 +1549,14 @@ function wrapStrategyEvent(ctx:Context, playerId:Int, peopleId:Int, strategyId:I
 		strategy: strategy,
 		energyBefore: p1.energy,
 		energyAfter: 0.0,
-		moneyBefore:0.0,
-		moneyAfter:0.0,
+		moneyBefore: player.money,
+		moneyAfter: 0.0,
 		gridId: player.position,
 	}
 	strategyResultValue.success = fn();
 	strategyResultValue.people = getPeopleInfo(ctx, p1);
 	strategyResultValue.energyAfter = p1.energy;
+	strategyResultValue.moneyAfter = player.money;
 	ctx.events.push(STRATEGY_RESULT(strategyResultValue, getGameInfo(ctx, false), null));
 	return strategyResultValue.success;
 }
