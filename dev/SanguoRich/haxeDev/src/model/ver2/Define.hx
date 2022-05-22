@@ -1333,6 +1333,11 @@ function getPeopleCommand(ctx:Context, peopleId:Int):Float {
 	return people.command + totalTreasureBonus + expLevelBonus;
 }
 
+function getPeopleMaxArmy(ctx:Context, peopleId:Int):Float {
+	final people = getPeopleById(ctx, peopleId);
+	return (Math.pow(getExpLevel(people.exp), 0.5) + 1) * 400;
+}
+
 function getPeopleAbilities(ctx:Context, peopleId:Int):Array<Int> {
 	final people = getPeopleById(ctx, peopleId);
 	final treasureCates = ctx.treasures.filter(t -> t.position.peopleId == peopleId).map(t -> treasureList[t.protoId]);

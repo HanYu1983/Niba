@@ -152,7 +152,7 @@ function initContext(ctx:Context, options:GameSetting) {
 				model.PeopleGenerator.getInst().generate(options.putong ? 0 : -1),
 				model.PeopleGenerator.getInst().generate(options.putong ? 0 : -1),
 				model.PeopleGenerator.getInst().generate(options.putong ? 0 : -1),
-				// model.PeopleGenerator.getInst().generate(options.putong ? 0 : -1),
+				model.PeopleGenerator.getInst().generate(options.putong ? 0 : -1),
 			],
 			maintainPeople: 0,
 			maintainArmy: 0,
