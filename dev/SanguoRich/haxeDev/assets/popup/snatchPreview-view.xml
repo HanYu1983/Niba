@@ -13,6 +13,7 @@
             <property-group text="攻擊方">
                 <property id="pro_money1" label="金錢" value="1000" />
                 <property id="pro_food1" label="糧草" value="1000" />
+                <property id="pro_armyFight1" label="戰鬥總兵力" value="1000" />
                 <property id="pro_army1" label="士兵" value="1000" />
             </property-group>
         </property-grid>
@@ -27,6 +28,7 @@
             <property-group text="防守方">
                 <property id="pro_money2" label="金錢" value="1000" />
                 <property id="pro_food2" label="糧草" value="1000" />
+                <property id="pro_armyFight2" label="戰鬥總兵力" value="1000" />
                 <property id="pro_army2" label="士兵" value="1000" />
             </property-group>
         </property-grid>

@@ -67,12 +67,14 @@ class SnatchPreviewView extends PopupView {
 			final army2_dead = warResult[1].armyBefore - warResult[1].armyAfter;
 			final army2_remain = Math.max(SNATCH_ARMY_AT_LEAST - army2_dead, 0);
 
+			pro_armyFight1.value = '${warResult[0].armyFight} => ${warResult[0].armyFight - army1_dead} (${army1_dead})';
+			pro_armyFight2.value = '${warResult[1].armyFight} => ${warResult[1].armyFight - army2_dead} (${army2_dead})';
+
 			final grid = gameInfo.grids[gameInfo.currentPlayer.atGridId];
 			if (isOccupation) {
 				pro_army1.value = '${Main.getFixNumber(warResult[0].armyBefore, 0)} => ${Main.getFixNumber(warResult[0].armyAfter, 0)} (${Main.getFixNumber(warResult[0].armyAfter - warResult[0].armyBefore)})';
 				pro_army2.value = '${Main.getFixNumber(warResult[1].armyBefore, 0)} => ${Main.getFixNumber(warResult[1].armyAfter, 0)} (${Main.getFixNumber(warResult[1].armyAfter - warResult[1].armyBefore)})';
 
-				
 				final isWin = result.success;
 				lbl_willSnacth.value = isWin ? '占領成功' : '占領失敗';
 				lbl_rateForTreasure.value = isWin ? '預計獲得${grid.treasures.length}個寶物' : '無';

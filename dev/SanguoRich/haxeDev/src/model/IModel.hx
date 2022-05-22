@@ -164,6 +164,7 @@ typedef PreResultOnWar = {
 	moneyAfter:Int,
 	foodBefore:Int,
 	foodAfter:Int,
+	armyFight:Int,
 	maintainFoodBefore:Float,
 	maintainFoodAfter:Float,
 }
