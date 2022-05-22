@@ -92,6 +92,10 @@ function zeroOneSymbol(v:Float, g:Array<Float>):Float {
 	return 1;
 }
 
+function zeroVery(f:Float, e:Float):Float {
+	return Math.pow(f, e);
+}
+
 function zeroOneNot(f:Float):Float {
 	return 1 - f;
 }
