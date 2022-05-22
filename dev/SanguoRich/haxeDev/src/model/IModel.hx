@@ -245,10 +245,10 @@ typedef StrategyCatelog = {
 }
 
 typedef PreResultOfStrategy = {
-	moneyBefore:Int, 
-	moneyAfter:Int, 
-	energyBefore:Int, 
-	energyAfter:Int, 
+	moneyBefore:Int,
+	moneyAfter:Int,
+	energyBefore:Int,
+	energyAfter:Int,
 	rate:Float,
 }
 
@@ -385,8 +385,8 @@ final StrategyList:Array<StrategyCatelog> = [
 	{
 		id: 2,
 		name: '遠交近攻',
-		money: 60,
-		intelligence: 40,
+		money: 30,
+		intelligence: 50,
 		describe: '直接獲取該格子的10%資源。並且友好度上升1',
 		targetType: StrategyTargetType.SELF_GRID,
 		value: {
@@ -397,8 +397,8 @@ final StrategyList:Array<StrategyCatelog> = [
 	{
 		id: 3,
 		name: '緩兵之計',
-		money: 60,
-		intelligence: 30,
+		money: 30,
+		intelligence: 40,
 		describe: '指定自己前後3格當中的其中一格設置路障。走到那個格子的所以玩家會自動停下。然後路障消失',
 		targetType: StrategyTargetType.TARGET_GRID,
 		value: {
@@ -445,20 +445,20 @@ final StrategyList:Array<StrategyCatelog> = [
 	{
 		id: 7,
 		name: '急功近利',
-		money: 10,
-		intelligence: 30,
-		describe: '指定玩家變賣20糧獲得20錢',
+		money: 0,
+		intelligence: 40,
+		describe: '指定玩家變賣50糧獲得50錢',
 		targetType: StrategyTargetType.TARGET_PLAYER,
 		value: {
 			valid: [],
-			float: [-20, 20],
+			float: [-50, 50],
 		}
 	},
 	{
 		id: 8,
 		name: '五穀豐登',
-		money: 100,
-		intelligence: 60,
+		money: 50,
+		intelligence: 70,
 		describe: '所有自己城池的糧食+10%',
 		targetType: StrategyTargetType.SELF_PLAYER,
 		value: {
@@ -481,7 +481,7 @@ final StrategyList:Array<StrategyCatelog> = [
 	{
 		id: 10,
 		name: '三顧茅廬',
-		money: 500,
+		money: 400,
 		intelligence: 50,
 		describe: '需要有人脈的武將才可以使用這個計策。隨機獲得一個武將或者文官。',
 		targetType: StrategyTargetType.SELF_PLAYER,
@@ -493,7 +493,7 @@ final StrategyList:Array<StrategyCatelog> = [
 	{
 		id: 11,
 		name: '草船借箭',
-		money: 500,
+		money: 400,
 		intelligence: 50,
 		describe: '需要有鑒別的武將才可以使用這個計策。隨機獲得一個寶物。',
 		targetType: StrategyTargetType.SELF_PLAYER,
@@ -505,13 +505,13 @@ final StrategyList:Array<StrategyCatelog> = [
 	{
 		id: 12,
 		name: '火計',
-		money: 100,
+		money: 80,
 		intelligence: 50,
-		describe: '指定一個格子，那個格子的所有資源-10%。',
+		describe: '指定一個格子，那個格子的糧食資源-30%。',
 		targetType: StrategyTargetType.TARGET_GRID,
 		value: {
 			valid: [-1, 0, 1],
-			float: [-0.1]
+			float: [-0.3]
 		}
 	},
 	{

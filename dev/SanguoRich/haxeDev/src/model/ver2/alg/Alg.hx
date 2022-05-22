@@ -134,6 +134,7 @@ function initContext(ctx:Context, options:GameSetting) {
 	}
 	final names = ["劉備", "曹操", "孫權", "董卓"];
 	var i = 0;
+	final playerPosSet:Array<Int> = [];
 	for (playerConfig in options.players) {
 		final isClose = playerConfig.type == 2;
 		final isLose = isClose;
@@ -141,13 +142,23 @@ function initContext(ctx:Context, options:GameSetting) {
 		final isAI = mustBePlayer == false && playerConfig.type == 1;
 		final resourceFact = isAI ? [1.0, 1.5, 2.0][options.aiLevel] : 1.0;
 		final resource = (options.resource != null ? options.resource : INIT_RESOURCE) * resourceFact;
-		final atGridId = Std.int(Math.random() * genGrids.length);
+		final atGridId = {
+			var pos = Std.int(Math.random() * genGrids.length);
+			for (i in 0...10) {
+				if (playerPosSet.has(pos) == false) {
+					break;
+				}
+				pos = Std.int(Math.random() * genGrids.length);
+			};
+			pos;
+		}
+		playerPosSet.push(atGridId);
 		addPlayerInfo(ctx, {
 			id: i,
 			name: names[i],
-			money: isLose ? 0.0 : resource,
+			money: isLose ? 0.0 : resource * 2,
 			army: isLose ? 0.0 : resource,
-			food: isLose ? 0.0 : resource,
+			food: isLose ? 0.0 : resource * 2,
 			strategy: isLose ? 0.0 : 300.0,
 			people: isLose ? [] : [
 				model.PeopleGenerator.getInst().generate(options.putong ? 0 : -1),
@@ -166,6 +177,9 @@ function initContext(ctx:Context, options:GameSetting) {
 		i++;
 	}
 	for (player in ctx.players) {
+		if (player.isLose) {
+			continue;
+		}
 		// 移除原有建物
 		ctx.attachments = ctx.attachments.filter(a -> a.belongToGridId != player.position);
 		addAttachInfo(ctx, player.position, MARKET(1));

@@ -55,21 +55,55 @@ private function genNewGrid(ctx:Context, playerId:Int, peopleId:Int, gridId:Int,
 		case 0:
 			// 市場
 			addAttachInfo(tmpCtx, grid.id, MARKET(1));
+			addAttachInfo(tmpCtx, grid.id, BANK(0));
+			// addAttachInfo(tmpCtx, grid.id, FARM(0));
+			// addAttachInfo(tmpCtx, grid.id, BARN(0));
+			// addAttachInfo(tmpCtx, grid.id, BARRACKS(0));
+			// addAttachInfo(tmpCtx, grid.id, HOME(0));
 			addAttachInfo(tmpCtx, grid.id, WALL(0));
+			// addAttachInfo(tmpCtx, grid.id, EXPLORE(0));
+			grid.defaultMaxMoney = 500;
+			grid.defaultMaxFood = 500;
+			grid.defaultMaxArmy = 500;
 		case 1:
 			// 農田
+			// addAttachInfo(tmpCtx, grid.id, MARKET(0));
+			// addAttachInfo(tmpCtx, grid.id, BANK(0));
 			addAttachInfo(tmpCtx, grid.id, FARM(1));
+			addAttachInfo(tmpCtx, grid.id, BARN(0));
+			// addAttachInfo(tmpCtx, grid.id, BARRACKS(0));
+			// addAttachInfo(tmpCtx, grid.id, HOME(0));
 			addAttachInfo(tmpCtx, grid.id, WALL(0));
+			// addAttachInfo(tmpCtx, grid.id, EXPLORE(0));
+			grid.defaultMaxMoney = 500;
+			grid.defaultMaxFood = 500;
+			grid.defaultMaxArmy = 500;
 		case 2:
 			// 村落
+			// addAttachInfo(tmpCtx, grid.id, MARKET(0));
+			// addAttachInfo(tmpCtx, grid.id, BANK(0));
+			// addAttachInfo(tmpCtx, grid.id, FARM(0));
+			// addAttachInfo(tmpCtx, grid.id, BARN(0));
 			addAttachInfo(tmpCtx, grid.id, BARRACKS(1));
+			addAttachInfo(tmpCtx, grid.id, HOME(0));
 			addAttachInfo(tmpCtx, grid.id, WALL(0));
+			// addAttachInfo(tmpCtx, grid.id, EXPLORE(0));
+			grid.defaultMaxMoney = 500;
+			grid.defaultMaxFood = 500;
+			grid.defaultMaxArmy = 500;
 		case 3:
 			// 城市
 			addAttachInfo(tmpCtx, grid.id, MARKET(1));
+			addAttachInfo(tmpCtx, grid.id, BANK(0));
 			addAttachInfo(tmpCtx, grid.id, FARM(1));
+			addAttachInfo(tmpCtx, grid.id, BARN(0));
 			addAttachInfo(tmpCtx, grid.id, BARRACKS(1));
+			addAttachInfo(tmpCtx, grid.id, HOME(0));
 			addAttachInfo(tmpCtx, grid.id, WALL(0));
+			addAttachInfo(tmpCtx, grid.id, EXPLORE(0));
+			grid.defaultMaxMoney = 700;
+			grid.defaultMaxFood = 700;
+			grid.defaultMaxArmy = 700;
 		case _:
 			throw new haxe.Exception('settleType not found:${settleType}');
 	}
@@ -82,9 +116,6 @@ private function genNewGrid(ctx:Context, playerId:Int, peopleId:Int, gridId:Int,
 	grid.defaultMoneyGrow = Math.random() * 0.01;
 	grid.defaultFoodGrow = Math.random() * 0.01;
 	grid.defaultArmyGrow = Math.random() * 0.01;
-	grid.defaultMaxMoney = 400;
-	grid.defaultMaxFood = 400;
-	grid.defaultMaxArmy = 400;
 	// 這回合的資料
 	final gridInfo = getGridInfo(tmpCtx, grid);
 	// 下回合的資料
@@ -129,6 +160,11 @@ function _takeSettle(ctx:Context, playerId:Int, gridId:Int, peopleId:Int, settle
 	ctx.attachments = _tmpCtx.attachments;
 	ctx.peoples = _tmpCtx.peoples;
 	ctx.treasures = _tmpCtx.treasures;
+	{
+		final player = ctx.players[ctx.currentPlayerId];
+		player.memory.hasBuild = true;
+		player.memory.hasCommand = true;
+	}
 	// 事件
 	final grid = ctx.grids[gridId];
 	ctx.events.push(SETTLE_RESULT({
