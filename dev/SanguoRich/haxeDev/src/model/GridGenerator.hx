@@ -90,7 +90,7 @@ class GridGenerator {
 		'醬觀', '拌鎮', '殼湖', '致谷', '扇崖', '信坊', '竿島', '徒鎮', '務港', '廳鄉'
 	];
 
-	public function getGrids(count:Int, isLimitBuilding:Bool):Array<Grid> {
+	public function getGrids(count:Int, isLimitBuilding:Bool, type:Int):Array<Grid> {
 		function getRandomRange(range:Float, offset:Float) {
 			return Math.random() * range + offset;
 		}
@@ -198,7 +198,7 @@ class GridGenerator {
 					g.moneyGrow = 0;
 					g.foodGrow = 0;
 					g.armyGrow = 0;
-					g.people.push(PeopleGenerator.getInst().generate(0));
+					g.people.push(PeopleGenerator.getInst().generate(type));
 					for (i in 0...5)
 						if (Math.random() < .3)
 							g.treasures.push(TreasureGenerator.getInst().generator());
@@ -206,24 +206,24 @@ class GridGenerator {
 					g.money = getRandomRange(180, 80);
 					g.food = getRandomRange(180, 80);
 					g.money *= 1.5;
-					g.people.push(PeopleGenerator.getInst().generate(0));
+					g.people.push(PeopleGenerator.getInst().generate(type));
 				case FARM:
 					g.money = getRandomRange(180, 80);
 					g.food = getRandomRange(180, 80);
 					g.food *= 1.5;
-					g.people.push(PeopleGenerator.getInst().generate(0));
+					g.people.push(PeopleGenerator.getInst().generate(type));
 				case VILLAGE:
 					g.money = getRandomRange(180, 80);
 					g.food = getRandomRange(180, 80);
 					g.army *= 1.5;
-					g.people.push(PeopleGenerator.getInst().generate(0));
+					g.people.push(PeopleGenerator.getInst().generate(type));
 				case CITY:
 					g.money = getRandomRange(180, 80);
 					g.food = getRandomRange(180, 80);
 					g.money *= 1.5;
 					g.food *= 1.5;
 					g.army *= 1.5;
-					g.people.push(PeopleGenerator.getInst().generate(0));
+					g.people.push(PeopleGenerator.getInst().generate(type));
 				case _:
 			}
 			g.height = height;

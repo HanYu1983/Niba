@@ -30,7 +30,7 @@ final CAN_CHANGE_FAVOR = -3;
 final PLAYER_SPEND_MONEY_FOR_PEOPLE_PER_TURN_PERSENT = 0.01;
 
 // 主公支付的食物為所有格子上以及身上的士兵的數量的%數
-final PLAYER_SPEND_FOOD_FOR_ARMY_PER_TURN_PERSENT = 0.1;
+final PLAYER_SPEND_FOOD_FOR_ARMY_PER_TURN_PERSENT = 0.08;
 
 // 依據建築物等級的維護費
 final BASIC_BUILDING_MAINTAIN_FACTOR = 1.0;
@@ -79,7 +79,7 @@ final WAR_BACK_ABILITY_FACTOR = .7;
 final WAR_MONEY_COST_FACTOR = 0.5;
 
 // 戰鬥支付食物整體調整
-final WAR_FOOD_COST_FACTOR = 1.0;
+final WAR_FOOD_COST_FACTOR = 0.8;
 
 // 戰鬥防守方士兵加成
 final WAR_DEFFENDER_FACTOR = 2.2;
@@ -177,7 +177,7 @@ function getExpAdd(p:Float, max:Float):Float {
 // 1代表支付所有體力時, 機率為0.5
 // ex. 1.3代表讓機率稍為偏向成功(讓值域中大於0.5的部分佔一半以上)
 final BASE_RATE_STRATEGY = 1.3;
-final BASE_RATE_RESOURCE = 1.3;
+final BASE_RATE_RESOURCE = 2.0;
 final BASE_RATE_PK = 1.3;
 final BASE_RATE_NEGO = 1.3;
 final BASE_RATE_HIRE = 1.3;

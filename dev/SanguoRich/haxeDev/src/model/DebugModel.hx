@@ -14,7 +14,7 @@ class DebugModel implements IModel {
 	private var info:GameInfo;
 
 	public function getGrids(count:Int):Array<Grid> {
-		return GridGenerator.getInst().getGrids(count, false);
+		return GridGenerator.getInst().getGrids(count, false, -1);
 	}
 
 	public function getPeople(count:Int):Array<People> {
@@ -467,8 +467,7 @@ class DebugModel implements IModel {
 		cb(info);
 	}
 
-	public function getStrategyRate(p1People:People, strategy:StrategyCatelog, targetPlayerId:Int, targetPeopleId:Int,
-			targetGridId:Int):PreResultOfStrategy {
+	public function getStrategyRate(p1People:People, strategy:StrategyCatelog, targetPlayerId:Int, targetPeopleId:Int, targetGridId:Int):PreResultOfStrategy {
 		return {
 			energyAfter: 10,
 			energyBefore: 5,
@@ -490,8 +489,8 @@ class DebugModel implements IModel {
 					strategy: StrategyList[0],
 					energyBefore: 0,
 					energyAfter: 1,
-					moneyBefore:0,
-					moneyAfter:0,
+					moneyBefore: 0,
+					moneyAfter: 0,
 				},
 				gameInfo: null,
 				autoplay: null,
@@ -638,7 +637,7 @@ class DebugModel implements IModel {
 	public function takeSettle(playerId:Int, gridId:Int, peopleId:Int, settleType:Int, syncViewWithEventsByGameInfo:(gameInfo:GameInfo) -> Void) {
 		info.events = [
 			{
-				id:SETTLE_RESULT,
+				id: SETTLE_RESULT,
 				value: {
 					grid: GridGenerator.getInst().getGrid()
 				},
