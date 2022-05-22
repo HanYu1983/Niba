@@ -715,7 +715,7 @@ private function getCommandWeight(ctx:Context, playerId:Int, gridId:Int, cmd:Act
 									final fact3 = result.rate > 0.7 ? result.rate : 0.0;
 									// 體力剩下越多越好
 									final fact4 = Math.pow(result.energyAfter / 100.0, 0.5);
-									final score = 1.5 * fact1 * fact2 * fact3 * fact4 * factMoney;
+									final score = 1.5 * fact1 * fact2 * fact3 * fact4;
 									// if (fact1 > 0) {
 									// 	trace("火中取栗", score, "=", fact1, fact2, fact3, fact4, result);
 									// }
