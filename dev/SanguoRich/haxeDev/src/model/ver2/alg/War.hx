@@ -47,6 +47,7 @@ private function getWarCostImpl(ctx:Context, playerId:Int, gridId:Int, p1PeopleI
 		final foodCost = atkFoodCost;
 		final useEnergy = atkPeople.energy / (100 / ENERGY_COST_ON_WAR);
 		final fact0 = getFact(useEnergy / ENERGY_COST_ON_WAR);
+		// 包圍係數
 		final fact1 = getFact(if (defArmy > 0) {
 			(atkArmy + defArmy * WAR_HIGH_LOW_FACTOR) / (defArmy + defArmy * WAR_HIGH_LOW_FACTOR);
 		} else {
@@ -164,14 +165,8 @@ private function getWarCostImpl(ctx:Context, playerId:Int, gridId:Int, p1PeopleI
 		final foodCost = defFoodCost;
 		final useEnergy = atkPeople.energy / (100 / ENERGY_COST_ON_WAR);
 		final fact0 = getFact(useEnergy / ENERGY_COST_ON_WAR);
-		// 放除數的都要注意除零錯誤, 不然會變成NaN(Not A Number)後, 可能之後程式就有卡住的可能
-		final fact1 = getFact({
-			if (defArmy > 0) {
-				(atkArmy + defArmy * WAR_HIGH_LOW_FACTOR) / (defArmy + defArmy * WAR_HIGH_LOW_FACTOR);
-			} else {
-				99999.0;
-			}
-		});
+		// 防守方不計算包圍係數
+		final fact1 = 1.0;
 		final fact2 = getFact(if (atkPeopleAbilities.has(0)) WAR_FRONT_ABILITY_FACTOR else 1.0);
 		final fact3 = getFact(if (atkPeopleAbilities.has(1)) WAR_FRONT_ABILITY_FACTOR else 1.0);
 		final fact4 = getFact(if (atkPeopleAbilities.has(2)) WAR_FRONT_ABILITY_FACTOR else 1.0);

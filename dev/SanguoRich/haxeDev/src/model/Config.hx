@@ -2,7 +2,7 @@ package model;
 
 import model.tool.Fact;
 
-private final FACT_TIMES = 3.0;
+private final FACT_TIMES = 2.0;
 
 function getFact(v:Float):Float {
 	return fact(v, FACT_TIMES);
