@@ -45,11 +45,11 @@ private function getWarCostImpl(ctx:Context, playerId:Int, gridId:Int, p1PeopleI
 		final useEnergy = atkPeople.energy / (100 / ENERGY_COST_ON_WAR);
 		final fact0 = getFact(useEnergy / ENERGY_COST_ON_WAR);
 		// 包圍係數
-		final fact1 = getFact(if (defArmy > 0) {
+		final fact1 = factVery(getFact(if (defArmy > 0) {
 			(atkArmy + defArmy * WAR_HIGH_LOW_FACTOR) / (defArmy + defArmy * WAR_HIGH_LOW_FACTOR);
 		} else {
 			99999.0;
-		});
+		}), 3);
 		final fact2 = getFact(if (atkPeopleAbilities.has(0)) WAR_FRONT_ABILITY_FACTOR else 1.0);
 		final fact3 = getFact(if (atkPeopleAbilities.has(1)) WAR_FRONT_ABILITY_FACTOR else 1.0);
 		final fact4 = getFact(if (atkPeopleAbilities.has(2)) WAR_FRONT_ABILITY_FACTOR else 1.0);
@@ -64,7 +64,7 @@ private function getWarCostImpl(ctx:Context, playerId:Int, gridId:Int, p1PeopleI
 				1.0;
 			}
 		});
-		final fact6 = getFact(getPeopleForce(ctx, atkPeople.id) / getPeopleCommand(ctx, defPeople.id));
+		final fact6 = factVery(getFact(getPeopleForce(ctx, atkPeople.id) / getPeopleCommand(ctx, defPeople.id)), 3);
 		final fact7 = getFact({
 			if (false) {
 				getPeopleIntelligence(ctx, atkPeople.id) / getPeopleIntelligence(ctx, defPeople.id);
@@ -178,7 +178,7 @@ private function getWarCostImpl(ctx:Context, playerId:Int, gridId:Int, p1PeopleI
 		});
 		final fact6 = getFact(if (options.occupy && atkPeopleAbilities.has(8)) WAR_FRONT_ABILITY_FACTOR else 1.0);
 		final fact7 = getFact(if (options.occupy && atkPeopleAbilities.has(9)) WAR_FRONT_ABILITY_FACTOR else 1.0);
-		final fact8 = getFact(getPeopleCommand(ctx, atkPeople.id) / getPeopleForce(ctx, defPeople.id));
+		final fact8 = factVery(getFact(getPeopleCommand(ctx, atkPeople.id) / getPeopleForce(ctx, defPeople.id)), 3);
 		final fact9 = getFact({
 			if (false) {
 				getPeopleIntelligence(ctx, atkPeople.id) / getPeopleIntelligence(ctx, defPeople.id);

@@ -79,13 +79,13 @@ final WAR_BACK_ABILITY_FACTOR = .7;
 final WAR_MONEY_COST_FACTOR = 0.5;
 
 // 戰鬥支付食物整體調整
-final WAR_FOOD_COST_FACTOR = 0.8;
+final WAR_FOOD_COST_FACTOR = 0.7;
 
 // 戰鬥防守方士兵加成
 final WAR_DEFFENDER_FACTOR = 2.2;
 
 // 兵數量差優勢, 越高代表影響越小
-final WAR_HIGH_LOW_FACTOR = 1.2;
+final WAR_HIGH_LOW_FACTOR = 1.0;
 
 // 保底傷害, 1的話代表派100兵最少打100
 final WAR_ARMY_FACTOR = 0.0;
@@ -120,10 +120,10 @@ final ENERGY_COST_ON_COST_FOR_FUN = 15;
 final ENERGY_COST_ON_SETTLE = 50;
 
 // 最低搶奪所需兵力
-final SNATCH_ARMY_AT_LEAST = 30;
+final SNATCH_ARMY_AT_LEAST = 40;
 
 // 單挑的士兵變化基本量
-final PK_ARMY_BASE_CHANGE = 40;
+final PK_ARMY_BASE_CHANGE = 80;
 
 // 最低友好度
 final MIN_GRID_FAVOR = -3;
