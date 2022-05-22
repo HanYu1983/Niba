@@ -192,6 +192,8 @@ enum Event {
 		strategy:StrategyCatelog,
 		energyBefore:Float,
 		energyAfter:Float,
+		moneyBefore:Float,
+		moneyAfter:Float,
 		gridId:Int,
 	}, gameInfo:GameInfo, autoplay:Null<{duration:Float}>);
 	BUILDING_RESULT(value:{
@@ -1547,6 +1549,8 @@ function wrapStrategyEvent(ctx:Context, playerId:Int, peopleId:Int, strategyId:I
 		strategy: strategy,
 		energyBefore: p1.energy,
 		energyAfter: 0.0,
+		moneyBefore:0.0,
+		moneyAfter:0.0,
 		gridId: player.position,
 	}
 	strategyResultValue.success = fn();
