@@ -294,11 +294,13 @@ private function onStrategyCost(ctx:Context, p1PeopleId:Int, strategyId:Int, tar
 							if (success) {
 								player.money = Math.max(0, player.money - cost.playerCost.money);
 								final gainAmount = Math.random() * (maxAmount - minAmount) + minAmount;
-								switch Math.min(player.food, player.army) {
+								switch Math.min(player.money, Math.min(player.food, player.army)) {
 									case which if (which == player.food):
 										player.food += gainAmount;
 									case which if (which == player.army):
 										player.army += gainAmount;
+									case which if (which == player.money):
+										player.money += gainAmount;
 									case _:
 										throw new haxe.Exception("Math.min(player.food, player.army) not found");
 								}

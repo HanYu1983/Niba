@@ -779,8 +779,7 @@ private function getCommandWeight(ctx:Context, playerId:Int, gridId:Int, cmd:Act
 										0.5) * factOn(fact1, 1.0) * factOn(fact2, 1 / (FACT_TIMES * 0.8));
 									// trace("getCommandWeight", "strategy", strategy.id, p1.id, nextGrid.id);
 									// trace("score", score, "=", fact1, fact2, factSuccessRate, factEnergy, "on", factOn(factSuccessRate, 0.5),
-									factOn(fact1, 1.0),
-									factOn(fact2, 1 / (FACT_TIMES * 0.8)));
+									// 	factOn(fact1, 1.0), factOn(fact2, 1 / (FACT_TIMES * 0.8)));
 									if (score > maxScore) {
 										maxScore = score;
 										brainMemory.strategy.peopleId = p1.id;
