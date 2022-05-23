@@ -1,0 +1,13 @@
+-cp src
+-main MainCalculator
+
+-lib haxeui-core
+-lib haxeui-html5
+-lib libnoise
+-lib hxSet
+--macro nullSafety("model.ver2.ModelVer2")
+--macro nullSafety("model.ver2.Define")
+--macro nullSafety("model.ver2.alg.Brain")
+-D debug
+
+-js public/MainCalculator.js
