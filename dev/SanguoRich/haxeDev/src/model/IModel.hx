@@ -361,8 +361,8 @@ final StrategyList:Array<StrategyCatelog> = [
 	{
 		id: 0,
 		name: '暗渡陳艙',
-		money: 50,
-		intelligence: 60,
+		money: 5,
+		intelligence: 70,
 		describe: '可以指定移動1~3格數(無視路障)',
 		targetType: StrategyTargetType.TARGET_GRID,
 		value: {
@@ -373,8 +373,8 @@ final StrategyList:Array<StrategyCatelog> = [
 	{
 		id: 1,
 		name: '步步為營',
-		money: 30,
-		intelligence: 20,
+		money: 5,
+		intelligence: 40,
 		describe: '指定武將回復30體力',
 		targetType: StrategyTargetType.SELF_PEOPLE,
 		value: {
@@ -385,8 +385,8 @@ final StrategyList:Array<StrategyCatelog> = [
 	{
 		id: 2,
 		name: '遠交近攻',
-		money: 30,
-		intelligence: 50,
+		money: 5,
+		intelligence: 65,
 		describe: '直接獲取該格子的10%資源。並且友好度上升1',
 		targetType: StrategyTargetType.SELF_GRID,
 		value: {
@@ -397,8 +397,8 @@ final StrategyList:Array<StrategyCatelog> = [
 	{
 		id: 3,
 		name: '緩兵之計',
-		money: 30,
-		intelligence: 40,
+		money: 50,
+		intelligence: 30,
 		describe: '指定自己前後3格當中的其中一格設置路障。走到那個格子的所以玩家會自動停下。然後路障消失',
 		targetType: StrategyTargetType.TARGET_GRID,
 		value: {
@@ -421,8 +421,8 @@ final StrategyList:Array<StrategyCatelog> = [
 	{
 		id: 5,
 		name: '趁虛而入',
-		money: 10,
-		intelligence: 70,
+		money: 20,
+		intelligence: 50,
 		describe: '指定武將體力-20',
 		targetType: StrategyTargetType.TARGET_PEOPLE,
 		value: {
@@ -433,8 +433,8 @@ final StrategyList:Array<StrategyCatelog> = [
 	{
 		id: 6,
 		name: '按兵不動',
-		money: 50,
-		intelligence: 50,
+		money: 5,
+		intelligence: 60,
 		describe: '這回合不移動',
 		targetType: StrategyTargetType.SELF_PLAYER,
 		value: {
@@ -445,7 +445,7 @@ final StrategyList:Array<StrategyCatelog> = [
 	{
 		id: 7,
 		name: '急功近利',
-		money: 0,
+		money: 30,
 		intelligence: 40,
 		describe: '指定玩家變賣50糧獲得50錢',
 		targetType: StrategyTargetType.TARGET_PLAYER,
@@ -457,7 +457,7 @@ final StrategyList:Array<StrategyCatelog> = [
 	{
 		id: 8,
 		name: '五穀豐登',
-		money: 50,
+		money: 40,
 		intelligence: 70,
 		describe: '所有自己城池的糧食+10%',
 		targetType: StrategyTargetType.SELF_PLAYER,
@@ -505,7 +505,7 @@ final StrategyList:Array<StrategyCatelog> = [
 	{
 		id: 12,
 		name: '火計',
-		money: 80,
+		money: 50,
 		intelligence: 50,
 		describe: '指定一個格子，那個格子的糧食資源-30%。',
 		targetType: StrategyTargetType.TARGET_GRID,
@@ -517,7 +517,7 @@ final StrategyList:Array<StrategyCatelog> = [
 	{
 		id: 13,
 		name: '時來運轉',
-		money: 50,
+		money: 100,
 		intelligence: 60,
 		describe: '指定一個格子，那個格子的所有資源+10%。',
 		targetType: StrategyTargetType.TARGET_GRID,
