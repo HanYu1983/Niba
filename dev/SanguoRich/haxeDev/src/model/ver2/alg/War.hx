@@ -73,36 +73,24 @@ private function getWarCostImpl(ctx:Context, playerId:Int, gridId:Int, p1PeopleI
 				1.0;
 			}
 		});
-		final zeroOneWall = zeroOne(1.0 - ctx.attachments.filter(a -> a.belongToGridId == gridId).fold((p, a) -> {
-			return a + switch p.type {
+		final factWall = factNot(getFact(ctx.attachments.filter(a -> a.belongToGridId == gridId).fold((p, a) -> {
+			return a * switch p.type {
 				case WALL(level):
-					return [0.0, 0.15, 0.35, 0.5][level];
+					return [1.0, 1.15, 1.35, 1.5][level];
 				case _:
-					0.0;
-			}
-		}, 0.0));
-		final zeroOneMoney = zeroOne({
-			if (moneyCost > 0) {
-				if (currMoney - moneyCost < 0) {
-					1.0 - (-1 * (currMoney - moneyCost) / moneyCost);
-				} else {
 					1.0;
-				}
-			} else {
-				1.0;
 			}
-		});
-		final zeroOneFood = zeroOne({
-			if (foodCost > 0) {
-				if (currFood - foodCost < 0) {
-					1.0 - (-1 * (currFood - foodCost) / foodCost);
-				} else {
-					1.0;
-				}
-			} else {
-				1.0;
-			}
-		});
+		}, 1.0)));
+		final factMoney = factVery(if (moneyCost == 0) {
+			1.0;
+		} else {
+			Math.min(1, getFact(currMoney / moneyCost));
+		}, 3.0);
+		final factFood = factVery(if (foodCost == 0) {
+			1.0;
+		} else {
+			Math.min(1, getFact(currFood / foodCost));
+		}, 3.0);
 		final factArmyTypeAtk = getFact(if (atkPeopleAbilities.has(0) && defPeopleAbilities.has(2)) {
 			1.5;
 		} else if (atkPeopleAbilities.has(1) && defPeopleAbilities.has(0)) {
@@ -123,9 +111,9 @@ private function getWarCostImpl(ctx:Context, playerId:Int, gridId:Int, p1PeopleI
 		});
 		final base = atkArmy * if (options.occupy) (1 / WAR_DEFFENDER_FACTOR) else 1;
 		final baseDamage = atkArmy * WAR_ARMY_FACTOR;
-		final damageFact = getFact(fact0 * fact1 * fact2 * fact3 * fact4 * fact5 * fact6 * fact7 * factArmyTypeAtk * factArmyTypeDef);
-		final damageRate = getZeroOneFromFact(damageFact) * zeroOneMoney * zeroOneFood * zeroOneWall;
-		final damage = baseDamage + base * damageRate * WAR_FINAL_DAMAGE_FACTOR;
+		final damageFact = getFact(fact0 * fact1 * fact2 * fact3 * fact4 * fact5 * fact6 * fact7 * factArmyTypeAtk * factArmyTypeDef * factWall * factMoney * factFood * WAR_FINAL_DAMAGE_FACTOR);
+		final damageRate = damageFact;
+		final damage = baseDamage + base * getZeroOneFromFact(damageRate);
 		if (options.debug) {
 			// trace("attack =================");
 			// trace("damageFact", damageFact, "=", fact0, fact1, fact2, fact3, fact4, fact5, fact6, fact7, factArmyTypeAtk, factArmyTypeDef);
@@ -188,41 +176,29 @@ private function getWarCostImpl(ctx:Context, playerId:Int, gridId:Int, p1PeopleI
 				1.0;
 			}
 		});
-		final factWall = getFact(1 + zeroOne(1.0 - ctx.attachments.filter(a -> a.belongToGridId == gridId).fold((p, a) -> {
-			return a + switch p.type {
+		final factWall = getFact(ctx.attachments.filter(a -> a.belongToGridId == gridId).fold((p, a) -> {
+			return a * switch p.type {
 				case WALL(level):
-					return [0.0, 0.15, 0.35, 0.5][level];
+					return [1.0, 1.15, 1.35, 1.5][level];
 				case _:
-					0.0;
-			}
-		}, 0.0)));
-		final zeroOneMoney = zeroOne({
-			if (moneyCost > 0) {
-				if (currMoney - moneyCost < 0) {
-					1.0 - (-1 * (currMoney - moneyCost) / moneyCost);
-				} else {
 					1.0;
-				}
-			} else {
-				1.0;
 			}
-		});
-		final zeroOneFood = zeroOne({
-			if (foodCost > 0) {
-				if (currFood - foodCost < 0) {
-					1.0 - (-1 * (currFood - foodCost) / foodCost);
-				} else {
-					1.0;
-				}
-			} else {
-				1.0;
-			}
-		});
+		}, 1.0));
+		final factMoney = factVery(if (moneyCost == 0) {
+			1.0;
+		} else {
+			Math.min(1, getFact(currMoney / moneyCost));
+		}, 3.0);
+		final factFood = factVery(if (foodCost == 0) {
+			1.0;
+		} else {
+			Math.min(1, getFact(currFood / foodCost));
+		}, 3.0);
 		final base = atkArmy * if (options.occupy) WAR_DEFFENDER_FACTOR else 1;
 		final baseDamage = atkArmy * WAR_ARMY_FACTOR;
-		final damageFact = getFact(fact0 * fact1 * fact2 * fact3 * fact4 * fact5 * fact6 * fact7 * fact8 * fact9 * factWall);
-		final damageRate = getZeroOneFromFact(damageFact) * zeroOneMoney * zeroOneFood;
-		final damage = baseDamage + base * damageRate * WAR_FINAL_DAMAGE_FACTOR;
+		final damageFact = getFact(fact0 * fact1 * fact2 * fact3 * fact4 * fact5 * fact6 * fact7 * fact8 * fact9 * factWall * factMoney * factFood * WAR_FINAL_DAMAGE_FACTOR);
+		final damageRate = damageFact;
+		final damage = baseDamage + base * getZeroOneFromFact(damageRate);
 		if (options.debug) {
 			// trace("defend =================");
 			// trace("damageFact", damageFact, "=", fact0, fact1, fact2, fact3, fact4, fact5, fact6, fact7, fact8, fact9, factWall);

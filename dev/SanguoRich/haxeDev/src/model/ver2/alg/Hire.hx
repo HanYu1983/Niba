@@ -32,9 +32,9 @@ private function getHireCost(ctx:Context, playerId:Int, gridId:Int, p1SelectId:I
 					final abiFactor = getFact(p1Abilities.has(10) ? 1.5 : 1);
 					// 越不夠錢減成
 					// 完全付不出來的話, 這個系數為0
-					final hireCostReduceRate = hireCost == 0 ? 1 : zeroOneNot(zeroOne((-1 * hireMoneyOffset) / hireCost));
+					final hireCostReduceRate = hireCost == 0 ? 1 : Math.min(1, getFact(player.money / hireCost));
 					final moreMoneyExt = moreMoney / 500.0;
-					final rate = base * getZeroOneFromFact(charmFactor * abiFactor) * hireCostReduceRate + moreMoneyExt;
+					final rate = base * getFact(charmFactor * abiFactor * hireCostReduceRate) * factOn(hireCostReduceRate, 0.51) + moreMoneyExt;
 					{
 						playerCost: {
 							id: playerId,

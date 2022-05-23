@@ -29,6 +29,10 @@ function factVery(f:Float, e:Float):Float {
 	return Math.pow(f, e);
 }
 
+function factOn(f:Float, g:Float):Float {
+	return f > g ? 1.0 : 0.0;
+}
+
 private function factAverage(pairs:Array<Array<Float>>):Float {
 	final total = pairs.fold((c, a:Float) -> {
 		return switch c {
@@ -112,6 +116,6 @@ function zeroOneOr(fs:Array<Float>):Float {
 	}, 0);
 }
 
-function zeroOneOn(f:Float, g:Float):Float {
-	return f >= g ? 1.0 : 0.0;
+private function zeroOneOn(f:Float, g:Float):Float {
+	return f > g ? 1.0 : 0.0;
 }

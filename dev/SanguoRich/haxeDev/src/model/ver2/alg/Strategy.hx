@@ -24,7 +24,7 @@ private function getStrategyCost(ctx:Context, p1PeopleId:Int, strategyId:Int, ta
 		case _:
 			1.0;
 	};
-	final zeroOne3 = switch strategyId {
+	final fact3 = getFact(switch strategyId {
 		case 2:
 			// 遠交近攻對空地沒有作用
 			if (p1.belongToPlayerId == null) {
@@ -50,8 +50,8 @@ private function getStrategyCost(ctx:Context, p1PeopleId:Int, strategyId:Int, ta
 			p1Abilities.has(12) == false ? 0.0 : 1.0;
 		case _:
 			1;
-	};
-	final rate = base * getZeroOneFromFact(fact1 * fact2) * zeroOne3;
+	});
+	final rate = base * getFact(fact1 * fact2) * factOn(fact3, 0.5);
 	return {
 		playerCost: {
 			money: strategy.money

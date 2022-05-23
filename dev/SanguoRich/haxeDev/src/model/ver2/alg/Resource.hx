@@ -55,7 +55,7 @@ private function getResourceCost(ctx:Context, playerId:Int, gridId:Int, p1Select
 			} else {
 				1.0;
 			});
-			final rate = getZeroOneFromFact(attrFactor * abiFactor);
+			final rate = getFact(attrFactor * abiFactor);
 			final gainRate = base * rate;
 			final returnInfo = {
 				playerCost: {

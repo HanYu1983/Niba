@@ -42,7 +42,7 @@ private function getNegoCost(ctx:Context, playerId:Int, gridId:Int, p1SelectId:I
 					final politicalFactor = getFact(getPeoplePolitical(ctx, p1.id) / getPeoplePolitical(ctx, p2.id));
 					final charmFactor = factVery(getFact(getPeopleCharm(ctx, p1.id) / getPeopleCharm(ctx, p2.id)), 2);
 					final rate = {
-						var tmp = base * getZeroOneFromFact(intelligenceFactor * politicalFactor * charmFactor);
+						var tmp = base * getFact(intelligenceFactor * politicalFactor * charmFactor);
 						// 沒有良官的時候，rate最高限制在1.2
 						tmp = Math.min(tmp, 1.2);
 						// 良官加成，rate最高可以突破1.2
