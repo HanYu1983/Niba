@@ -30,7 +30,7 @@ function factVery(f:Float, e:Float):Float {
 }
 
 function factOn(f:Float, g:Float):Float {
-	return f > g ? 1.0 : 0.0;
+	return f >= g ? 1.0 : 0.0;
 }
 
 private function factAverage(pairs:Array<Array<Float>>):Float {
@@ -114,8 +114,4 @@ function zeroOneOr(fs:Array<Float>):Float {
 	return fs.fold((c, a) -> {
 		return Math.max(c, a);
 	}, 0);
-}
-
-private function zeroOneOn(f:Float, g:Float):Float {
-	return f > g ? 1.0 : 0.0;
 }
