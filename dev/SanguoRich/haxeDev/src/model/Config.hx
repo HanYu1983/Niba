@@ -2,7 +2,7 @@ package model;
 
 import model.tool.Fact;
 
-final FACT_TIMES = 3.0;
+final FACT_TIMES = 2.0;
 
 function getFact(v:Float):Float {
 	return fact(v, FACT_TIMES);
@@ -94,7 +94,7 @@ final WAR_ARMY_FACTOR = 0.0;
 final WAR_FINAL_DAMAGE_FACTOR = 1.0;
 
 // 每回合基本回體力
-final PEOPLE_ENERGY_SUPPLY_BASE = 0;
+final PEOPLE_ENERGY_SUPPLY_BASE = 1;
 
 // 每回合額外回復％數體力(體力越多回越快)
 final PEOPLE_ENERGY_SUPPLY_SAVE_FACTOR = 0.05;
@@ -107,7 +107,7 @@ function getEnergyFactor(atkArmy:Float) {
 	return (Math.min(atkArmy / 500, 1) * .3 + .7);
 }
 
-final ENERGY_COST_ON_STRATEGY = 35;
+final ENERGY_COST_ON_STRATEGY = 30;
 final ENERGY_COST_ON_HIRE = 10;
 final ENERGY_COST_ON_NEGO = 20;
 final ENERGY_COST_ON_RESOURCE = 15;
@@ -175,12 +175,12 @@ function getExpAdd(p:Float, max:Float):Float {
 
 // 體力產生的基本值成數
 // 1代表支付所有體力時, 機率為1
-final BASE_RATE_STRATEGY = 1.0;
+final BASE_RATE_STRATEGY = 0.8;
 final BASE_RATE_RESOURCE = 1.0;
-final BASE_RATE_PK = 1.0;
-final BASE_RATE_NEGO = 1.0;
-final BASE_RATE_HIRE = 1.0;
-final BASE_RATE_EXPLORE = 1.0;
+final BASE_RATE_PK = 0.5;
+final BASE_RATE_NEGO = 0.5;
+final BASE_RATE_HIRE = 0.75;
+final BASE_RATE_EXPLORE = 0.55;
 final BASE_RATE_SETTLE = 1.0;
 
 // 格子資源上限

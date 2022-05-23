@@ -26,11 +26,11 @@ private function getExploreCost(ctx:Context, playerId:Int, gridId:Int, p1SelectI
 			final charmFactor = getFact((getPeopleCharm(ctx, p1.id) + charmExt) / 50);
 			// 人脈加成
 			final abiFactor = getFact(p1Abilities.has(10) ? 1.5 : 1);
-			final rate = base * getZeroOneFromFact(charmFactor * abiFactor);
+			final rate = base * getFact(charmFactor * abiFactor);
 			final findTreasureZeroOne = if (getTreasureInGrid(ctx, gridId).length > 0) {
 				// 鑑定
 				final abi2Fact = getFact(p1Abilities.has(12) ? 1.0 : 0.0);
-				FIND_TREASURE_WHEN_SUCCESS_BASE_RATE * getFact(charmFactor * abiFactor) * factOn(abi2Fact, 0.5);
+				FIND_TREASURE_WHEN_SUCCESS_BASE_RATE * getFact(charmFactor * abiFactor) * factOn(abi2Fact, 1);
 			} else {
 				0.0;
 			}

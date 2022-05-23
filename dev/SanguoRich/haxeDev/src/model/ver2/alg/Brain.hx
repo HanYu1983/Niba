@@ -594,7 +594,7 @@ private function getCommandWeight(ctx:Context, playerId:Int, gridId:Int, cmd:Act
 					if (factCanPayMoney == false) {
 						continue;
 					}
-					final factMoney = getFact((player.money - 100) / 500.0);
+					final factNowMoney = getFact((player.money - 400) / 2000.0);
 					switch strategy.id {
 						case 0:
 							// 暗渡陳艙
@@ -633,10 +633,10 @@ private function getCommandWeight(ctx:Context, playerId:Int, gridId:Int, cmd:Act
 									final factSuccessRate = getFact(result.rate);
 									// 體力剩下越多越好
 									final factEnergy = factVery(getFact(result.energyAfter / 100.0), 0.5);
-									final score = 1.3 * getFact(factMyBig * factNotEnemyBig * factSuccessRate * factEnergy * factMoney * factPassGroundItem) * factOn(factSuccessRate,
+									final score = 1.3 * getFact(factMyBig * factNotEnemyBig * factSuccessRate * factEnergy * factNowMoney * factPassGroundItem) * factOn(factSuccessRate,
 										0.75) * factOn(factNot(factIsEnemy), 1.0);
 									// trace("getCommandWeight", "strategy", strategy.id, p1.id);
-									// trace("score", score, "=", factMyBig, factNotEnemyBig, factSuccessRate, factEnergy, factMoney, factNotEnemyBig, factPassGroundItem);
+									// trace("score", score, "=", factMyBig, factNotEnemyBig, factSuccessRate, factEnergy, factNowMoney, factNotEnemyBig, factPassGroundItem);
 									if (score > maxScore) {
 										maxScore = score;
 										brainMemory.strategy.peopleId = p1.id;
@@ -667,10 +667,10 @@ private function getCommandWeight(ctx:Context, playerId:Int, gridId:Int, cmd:Act
 									// 成功率
 									final factSuccessRate = getFact(result.rate);
 									final factEnergy = factVery(getFact(result.energyAfter / 100.0), 0.5);
-									final score = 1.0 * getFact(fact1 * fact2 * fact3 * factSuccessRate * factEnergy * factMoney) * factOn(factSuccessRate,
+									final score = 1.0 * getFact(fact1 * fact2 * fact3 * factSuccessRate * factEnergy * factNowMoney) * factOn(factSuccessRate,
 										0.75) * factOn(fact1, 1);
 									// trace("getCommandWeight", "strategy", strategy.id, p1.id);
-									// trace("score", score, "=", fact1, factSuccessRate, factEnergy, factMoney);
+									// trace("score", score, "=", fact1, factSuccessRate, factEnergy, factNowMoney);
 									if (score > maxScore) {
 										maxScore = score;
 										brainMemory.strategy.strategyId = strategy.id;
@@ -696,10 +696,10 @@ private function getCommandWeight(ctx:Context, playerId:Int, gridId:Int, cmd:Act
 								final factSuccessRate = getFact(result.rate);
 								// 體力剩下越多越好
 								final factEnergy = factVery(getFact(result.energyAfter / 100.0), 0.5);
-								final score = 1.0 * getFact(fact1 * fact2 * fact3 * factSuccessRate * factEnergy * factMoney) * factOn(factSuccessRate,
+								final score = 1.0 * getFact(fact1 * fact2 * fact3 * factSuccessRate * factEnergy * factNowMoney) * factOn(factSuccessRate,
 									0.75) * factOn(fact2, 1) * factOn(fact3, 1);
 								// trace("getCommandWeight", "strategy", strategy.id, p1.id);
-								// trace("score", score, "=", fact1, fact2, fact3, factSuccessRate, factEnergy, factMoney);
+								// trace("score", score, "=", fact1, fact2, fact3, factSuccessRate, factEnergy, factNowMoney);
 								if (score > maxScore) {
 									maxScore = score;
 									brainMemory.strategy.strategyId = strategy.id;
@@ -738,10 +738,10 @@ private function getCommandWeight(ctx:Context, playerId:Int, gridId:Int, cmd:Act
 									final factSuccessRate = getFact(result.rate);
 									// 體力剩下越多越好
 									final factEnergy = factVery(getFact(result.energyAfter / 100.0), 0.5);
-									final score = 0.6 * getFact(fact1 * fact2 * fact3 * factSuccessRate * factEnergy * factMoney) * factOn(factSuccessRate,
+									final score = 0.6 * getFact(fact1 * fact2 * fact3 * factSuccessRate * factEnergy * factNowMoney) * factOn(factSuccessRate,
 										0.75) * factOn(fact1, 1) * factOn(fact2, 1) * factOn(fact3, 1);
 									// trace("getCommandWeight", "strategy", strategy.id, p1.id);
-									// trace("score", score, "=", fact1, fact2, fact3, factSuccessRate, factEnergy, factMoney);
+									// trace("score", score, "=", fact1, fact2, fact3, factSuccessRate, factEnergy, factNowMoney);
 									if (score > maxScore) {
 										maxScore = score;
 										brainMemory.strategy.peopleId = p1.id;
@@ -801,10 +801,10 @@ private function getCommandWeight(ctx:Context, playerId:Int, gridId:Int, cmd:Act
 									// 體力剩下越多越好
 									final factEnergy = factVery(getFact(result.energyAfter / 100.0), 0.5);
 									final factTargetPeopleEnergy = getFact((p2.energy - 50) / 50);
-									final score = 1.0 * getFact(fact1 * factSuccessRate * factEnergy * factTargetPeopleEnergy * factMoney) * factOn(factSuccessRate,
+									final score = 0.0 * getFact(fact1 * factSuccessRate * factEnergy * factTargetPeopleEnergy * factNowMoney) * factOn(factSuccessRate,
 										0.75);
 									// trace("getCommandWeight", "strategy", strategy.id, p1.id);
-									// trace("score", score, "=", fact1, factSuccessRate, factEnergy, factTargetPeopleEnergy, factMoney);
+									// trace("score", score, "=", fact1, factSuccessRate, factEnergy, factTargetPeopleEnergy, factNowMoney);
 									if (score > maxScore) {
 										maxScore = score;
 										brainMemory.strategy.peopleId = p1.id;
@@ -827,9 +827,9 @@ private function getCommandWeight(ctx:Context, playerId:Int, gridId:Int, cmd:Act
 								final factSuccessRate = getFact(result.rate);
 								// 體力剩下越多越好
 								final factEnergy = factVery(getFact(result.energyAfter / 100.0), 0.5);
-								final score = 1.0 * getFact(fact1 * fact2 * factSuccessRate * factEnergy * factMoney) * factOn(factSuccessRate, 0.75);
+								final score = 1.0 * getFact(fact1 * fact2 * factSuccessRate * factEnergy * factNowMoney) * factOn(factSuccessRate, 0.75);
 								// trace("getCommandWeight", "strategy", strategy.id, p1.id);
-								// trace("score", score, "=", fact1, fact2, factSuccessRate, factEnergy, factMoney);
+								// trace("score", score, "=", fact1, fact2, factSuccessRate, factEnergy, factNowMoney);
 								if (score > maxScore) {
 									maxScore = score;
 									brainMemory.strategy.strategyId = strategy.id;
@@ -850,9 +850,9 @@ private function getCommandWeight(ctx:Context, playerId:Int, gridId:Int, cmd:Act
 								final factSuccessRate = getFact(result.rate);
 								// 體力剩下越多越好
 								final factEnergy = factVery(getFact(result.energyAfter / 100.0), 0.5);
-								final score = 1.2 * getFact(factSuccessRate * factEnergy * fact1 * factMoney) * factOn(factSuccessRate, 0.75);
+								final score = 1.2 * getFact(factSuccessRate * factEnergy * fact1 * factNowMoney) * factOn(factSuccessRate, 0.75);
 								// trace("getCommandWeight", "strategy", strategy.id, p1.id);
-								// trace("score", score, "=", factSuccessRate, factEnergy, fact1, factMoney);
+								// trace("score", score, "=", factSuccessRate, factEnergy, fact1, factNowMoney);
 								if (score > maxScore) {
 									maxScore = score;
 									brainMemory.strategy.strategyId = strategy.id;
@@ -861,19 +861,21 @@ private function getCommandWeight(ctx:Context, playerId:Int, gridId:Int, cmd:Act
 							}
 						case 9:
 							// 無中生有
-							final factFood = factNot(getFact(player.food / 100.0));
-							final factArmy = factNot(getFact(player.army / 100.0));
+							final factFood = factNot(getFact(player.food / 200.0));
+							final factArmy = factNot(getFact(player.army / 200.0));
+							final factMoney = factNot(getFact(player.money / 200.0));
 							// 二個資源都少於100
-							final resourceFact = factAnd([factFood, factArmy]);
+							final resourceFact = factAnd([factFood, factArmy, factMoney]);
 							for (p1 in peopleInPlayer) {
 								final result = _getStrategyRate(ctx, p1.id, strategy.id, 0, 0, 0);
 								// 成功率
 								final factSuccessRate = getFact(result.rate);
 								// 體力剩下越多越好
 								final factEnergy = factVery(getFact(result.energyAfter / 100.0), 0.5);
-								final score = 1.2 * getFact(factSuccessRate * factEnergy * resourceFact * factMoney) * factOn(factSuccessRate, 0.75);
+								final score = 1.2 * getFact(factSuccessRate * factEnergy * resourceFact * factMoney * factNowMoney) * factOn(factSuccessRate,
+									0.75);
 								// trace("getCommandWeight", "strategy", strategy.id, p1.id);
-								// trace("score", score, "=", factSuccessRate, factEnergy, resourceFact, factMoney);
+								// trace("score", score, "=", factSuccessRate, factEnergy, resourceFact, factMoney*factNowMoney);
 								if (score > maxScore) {
 									maxScore = score;
 									brainMemory.strategy.strategyId = strategy.id;
@@ -883,16 +885,16 @@ private function getCommandWeight(ctx:Context, playerId:Int, gridId:Int, cmd:Act
 						case 10:
 							// 三顧茅廬
 							if (peopleInPlayer.length < 10) {
-								final factPeople = factNot(getFact(peopleInPlayer.length / 10));
+								final factPeople = factNot(getFact(peopleInPlayer.length / 5));
 								for (p1 in peopleInPlayer) {
 									final result = _getStrategyRate(ctx, p1.id, strategy.id, 0, 0, 0);
 									// 成功率
 									final factSuccessRate = getFact(result.rate);
 									// 體力剩下越多越好
 									final factEnergy = factVery(getFact(result.energyAfter / 100.0), 0.5);
-									final score = 1.0 * getFact(factSuccessRate * factEnergy * factPeople * factMoney) * factOn(factSuccessRate, 0.75);
+									final score = 0.8 * getFact(factSuccessRate * factEnergy * factPeople * factNowMoney) * factOn(factSuccessRate, 0.75);
 									// trace("getCommandWeight", "strategy", strategy.id, p1.id);
-									// trace("score", score, "=", factSuccessRate, factEnergy, factPeople, factMoney);
+									// trace("score", score, "=", factSuccessRate, factEnergy, factPeople, factNowMoney);
 									if (score > maxScore) {
 										maxScore = score;
 										brainMemory.strategy.strategyId = strategy.id;
@@ -903,16 +905,16 @@ private function getCommandWeight(ctx:Context, playerId:Int, gridId:Int, cmd:Act
 						case 11:
 							// 草船借箭
 							if (treasureInPlayer.length < 6) {
-								final factTreasure = factNot(getFact(treasureInPlayer.length / 12.0));
+								final factTreasure = factNot(getFact(treasureInPlayer.length / 3.0));
 								for (p1 in peopleInPlayer) {
 									final result = _getStrategyRate(ctx, p1.id, strategy.id, 0, 0, 0);
 									// 成功率
 									final factSuccessRate = getFact(result.rate);
 									// 體力剩下越多越好
 									final factEnergy = factVery(getFact(result.energyAfter / 100.0), 0.5);
-									final score = 1.0 * getFact(factSuccessRate * factEnergy * factTreasure * factMoney) * factOn(factSuccessRate, 0.75);
+									final score = 0.8 * getFact(factSuccessRate * factEnergy * factTreasure * factNowMoney) * factOn(factSuccessRate, 0.75);
 									// trace("getCommandWeight", "strategy", strategy.id, p1.id);
-									// trace("score", score, "=", factSuccessRate, factEnergy, factTreasure, factMoney);
+									// trace("score", score, "=", factSuccessRate, factEnergy, factTreasure, factNowMoney);
 									if (score > maxScore) {
 										maxScore = score;
 										brainMemory.strategy.strategyId = strategy.id;
@@ -948,10 +950,10 @@ private function getCommandWeight(ctx:Context, playerId:Int, gridId:Int, cmd:Act
 									final factSuccessRate = getFact(result.rate);
 									// 體力剩下越多越好
 									final factEnergy = factVery(getFact(result.energyAfter / 100.0), 0.5);
-									final score = 1.0 * getFact(factSuccessRate * factEnergy * factIsEnemy * factEnemyFood * factMoney) * factOn(factSuccessRate,
+									final score = 1.0 * getFact(factSuccessRate * factEnergy * factIsEnemy * factEnemyFood * factNowMoney) * factOn(factSuccessRate,
 										0.75) * factOn(factIsEnemy, 1);
 									// trace("getCommandWeight", "strategy", strategy.id, p1.id);
-									// trace("score", score, "=", factSuccessRate, factEnergy, factIsEnemy, factEnemyFood, factMoney);
+									// trace("score", score, "=", factSuccessRate, factEnergy, factIsEnemy, factEnemyFood, factNowMoney);
 									if (score > maxScore) {
 										maxScore = score;
 										brainMemory.strategy.peopleId = p1.id;
@@ -998,10 +1000,10 @@ private function getCommandWeight(ctx:Context, playerId:Int, gridId:Int, cmd:Act
 									final factSuccessRate = getFact(result.rate);
 									// 體力剩下越多越好
 									final factEnergy = factVery(getFact(result.energyAfter / 100.0), 0.5);
-									final score = 1.0 * getFact(factSuccessRate * factEnergy * factIsMy * factResource * factMoney) * factOn(factSuccessRate,
+									final score = 1.0 * getFact(factSuccessRate * factEnergy * factIsMy * factResource * factNowMoney) * factOn(factSuccessRate,
 										0.75) * factOn(factNot(factResource), FACT_TIMES * 0.9) * factOn(factIsMy, 1.0);
 									// trace("getCommandWeight", "strategy", strategy.id, p1.id);
-									// trace("score", score, "=", factSuccessRate, factEnergy, factIsMy, factResource, factMoney);
+									// trace("score", score, "=", factSuccessRate, factEnergy, factIsMy, factResource, factNowMoney);
 									if (score > maxScore) {
 										maxScore = score;
 										brainMemory.strategy.peopleId = p1.id;
@@ -1171,7 +1173,7 @@ private function getCommandWeight(ctx:Context, playerId:Int, gridId:Int, cmd:Act
 				}
 				maxScore;
 			}
-			final score = 1.5 * fact1 * fact2;
+			final score = 1.0 * fact1 * fact2;
 			trace("getCommandWeight", playerId, cmd, "score:", score, "=", fact1, fact2);
 			score;
 		case BUY_FOOD:
@@ -1323,7 +1325,7 @@ private function getCommandWeight(ctx:Context, playerId:Int, gridId:Int, cmd:Act
 				}
 				maxScore;
 			}
-			final score = 0.1 * fact1;
+			final score = 1.0 * fact1;
 			trace("getCommandWeight", playerId, cmd, score);
 			score;
 		case TRANSFER:
@@ -1533,10 +1535,9 @@ private function getCommandWeight(ctx:Context, playerId:Int, gridId:Int, cmd:Act
 					for (p in peopleInPlayer) {
 						final p1PeopleId = p.id;
 						switch _getPreResultOfSnatch(ctx, playerId, gridId, p1PeopleId, p2PeopleId, true) {
-							case {war: [result1, result2]}:
-								final successOccupy = result2.armyAfter <= 0;
+							case {war: [result1, result2], success: success}:
 								// 佔領是一切
-								final fact1 = successOccupy ? 1.0 : 0.0;
+								final fact1 = success ? 1.0 : 0.0;
 								// 體力剩下越多越好
 								final fact2 = Math.pow(result1.energyAfter / 100.0, 0.5);
 								// 成本佔死兵越少越好
@@ -1583,7 +1584,7 @@ private function getCommandWeight(ctx:Context, playerId:Int, gridId:Int, cmd:Act
 									zeroOne(result1.foodAfter / 1000),
 									zeroOne(result1.armyAfter / 1000)
 								]);
-								final score = 3 * Math.pow(fact1 * fact2 * fact3 * fact4 * fact5 * fact6 * fact7 * emptyArmyFact, 1 / 8.0);
+								final score = 1.5 * Math.pow(fact1 * fact2 * fact3 * fact4 * fact5 * fact6 * fact7 * emptyArmyFact, 1 / 8.0);
 								trace("cmd", cmd, "score", score, "=", fact1, fact2, fact3, fact4, fact5, fact6, fact7, emptyArmyFact);
 								final isBestScore = score > tmpMaxScore;
 								if (isBestScore) {

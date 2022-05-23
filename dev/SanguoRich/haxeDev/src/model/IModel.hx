@@ -433,7 +433,7 @@ final StrategyList:Array<StrategyCatelog> = [
 	{
 		id: 6,
 		name: '按兵不動',
-		money: 5,
+		money: 25,
 		intelligence: 60,
 		describe: '這回合不移動',
 		targetType: StrategyTargetType.SELF_PLAYER,
@@ -505,8 +505,8 @@ final StrategyList:Array<StrategyCatelog> = [
 	{
 		id: 12,
 		name: '火計',
-		money: 100,
-		intelligence: 40,
+		money: 50,
+		intelligence: 80,
 		describe: '指定一個格子，那個格子的糧食資源-30%。',
 		targetType: StrategyTargetType.TARGET_GRID,
 		value: {
@@ -534,7 +534,7 @@ final StrategyList:Array<StrategyCatelog> = [
 		describe: '指定后三格中的有敵人城池的一個格子，角色會移動到那裏，并且獲得自己所有城池的20%資源。',
 		targetType: StrategyTargetType.TARGET_GRID,
 		value: {
-			valid: [1,2,3],
+			valid: [1, 2, 3],
 			float: [0.2]
 		}
 	}

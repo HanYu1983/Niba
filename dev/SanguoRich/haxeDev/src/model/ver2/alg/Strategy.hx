@@ -51,7 +51,7 @@ private function getStrategyCost(ctx:Context, p1PeopleId:Int, strategyId:Int, ta
 		case _:
 			1;
 	});
-	final rate = base * getFact(fact1 * fact2) * factOn(fact3, 0.5);
+	final rate = base * getFact(fact1 * fact2) * factOn(fact3, 1);
 	return {
 		playerCost: {
 			money: strategy.money
@@ -352,24 +352,38 @@ private function onStrategyCost(ctx:Context, p1PeopleId:Int, strategyId:Int, tar
 				// 火計 | 時來運轉
 				switch strategy {
 					case {value: {float: [resourceOffsetRate]}, money: _}:
-						p1.energy = Math.max(0, p1.energy - cost.peopleCost.energy);
-						if (success) {
-							player.money = Math.max(0, player.money - cost.playerCost.money);
-							final targetGrid = ctx.grids[targetGridId];
-							switch strategy.id {
-								case 12:
-									targetGrid.food = Math.max(0,
-										Math.min(getGridMaxFood(ctx, targetGridId), targetGrid.food + targetGrid.food * resourceOffsetRate));
-								case 13:
-									targetGrid.money = Math.max(0,
-										Math.min(getGridMaxMoney(ctx, targetGridId), targetGrid.money + targetGrid.money * resourceOffsetRate));
-									targetGrid.food = Math.max(0,
-										Math.min(getGridMaxFood(ctx, targetGridId), targetGrid.food + targetGrid.food * resourceOffsetRate));
-									targetGrid.army = Math.max(0,
-										Math.min(getGridMaxArmy(ctx, targetGridId), targetGrid.army + targetGrid.army * resourceOffsetRate));
+						final success = wrapResourceResultEvent(ctx, p1.belongToPlayerId, p1.id, () -> {
+							p1.energy = Math.max(0, p1.energy - cost.peopleCost.energy);
+							if (success) {
+								player.money = Math.max(0, player.money - cost.playerCost.money);
+								final targetGrid = ctx.grids[targetGridId];
+								switch strategy.id {
+									case 12:
+										targetGrid.food = Math.max(0,
+											Math.min(getGridMaxFood(ctx, targetGridId), targetGrid.food + targetGrid.food * resourceOffsetRate));
+									case 13:
+										targetGrid.money = Math.max(0,
+											Math.min(getGridMaxMoney(ctx, targetGridId), targetGrid.money + targetGrid.money * resourceOffsetRate));
+										targetGrid.food = Math.max(0,
+											Math.min(getGridMaxFood(ctx, targetGridId), targetGrid.food + targetGrid.food * resourceOffsetRate));
+										targetGrid.army = Math.max(0,
+											Math.min(getGridMaxArmy(ctx, targetGridId), targetGrid.army + targetGrid.army * resourceOffsetRate));
+								}
+							} else {
+								player.money = Math.max(0, player.money - cost.playerCost.money * 0.2);
 							}
-						} else {
-							player.money = Math.max(0, player.money - cost.playerCost.money * 0.2);
+							success;
+						});
+						if (success) {
+							ctx.events.push(GRID_RESOURCE_EVENT({
+								grids: [
+									{
+										gridBefore: getGridInfo(ctx, ctx.grids[targetGridId]),
+										gridAfter: getGridInfo(ctx, ctx.grids[targetGridId]),
+									}
+								],
+								describtion: "火計"
+							}, getGameInfo(ctx, false)));
 						}
 						success;
 					case _:
