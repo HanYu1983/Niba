@@ -373,8 +373,8 @@ final StrategyList:Array<StrategyCatelog> = [
 	{
 		id: 1,
 		name: '步步為營',
-		money: 5,
-		intelligence: 40,
+		money: 30,
+		intelligence: 30,
 		describe: '指定武將回復30體力',
 		targetType: StrategyTargetType.SELF_PEOPLE,
 		value: {
@@ -397,7 +397,7 @@ final StrategyList:Array<StrategyCatelog> = [
 	{
 		id: 3,
 		name: '緩兵之計',
-		money: 50,
+		money: 40,
 		intelligence: 30,
 		describe: '指定自己前後3格當中的其中一格設置路障。走到那個格子的所以玩家會自動停下。然後路障消失',
 		targetType: StrategyTargetType.TARGET_GRID,
@@ -421,7 +421,7 @@ final StrategyList:Array<StrategyCatelog> = [
 	{
 		id: 5,
 		name: '趁虛而入',
-		money: 20,
+		money: 40,
 		intelligence: 50,
 		describe: '指定武將體力-20',
 		targetType: StrategyTargetType.TARGET_PEOPLE,
@@ -457,8 +457,8 @@ final StrategyList:Array<StrategyCatelog> = [
 	{
 		id: 8,
 		name: '五穀豐登',
-		money: 40,
-		intelligence: 70,
+		money: 5,
+		intelligence: 90,
 		describe: '所有自己城池的糧食+10%',
 		targetType: StrategyTargetType.SELF_PLAYER,
 		value: {
@@ -469,9 +469,9 @@ final StrategyList:Array<StrategyCatelog> = [
 	{
 		id: 9,
 		name: '無中生有',
-		money: 50,
-		intelligence: 30,
-		describe: '糧草，士兵中較低的一個項目增加40~60',
+		money: 5,
+		intelligence: 75,
+		describe: '金錢，糧草，士兵中較低的一個項目增加40~60',
 		targetType: StrategyTargetType.SELF_PLAYER,
 		value: {
 			valid: [],
@@ -505,8 +505,8 @@ final StrategyList:Array<StrategyCatelog> = [
 	{
 		id: 12,
 		name: '火計',
-		money: 50,
-		intelligence: 50,
+		money: 100,
+		intelligence: 40,
 		describe: '指定一個格子，那個格子的糧食資源-30%。',
 		targetType: StrategyTargetType.TARGET_GRID,
 		value: {
@@ -517,8 +517,8 @@ final StrategyList:Array<StrategyCatelog> = [
 	{
 		id: 13,
 		name: '時來運轉',
-		money: 100,
-		intelligence: 60,
+		money: 5,
+		intelligence: 80,
 		describe: '指定一個格子，那個格子的所有資源+10%。',
 		targetType: StrategyTargetType.TARGET_GRID,
 		value: {
@@ -526,6 +526,18 @@ final StrategyList:Array<StrategyCatelog> = [
 			float: [0.1]
 		}
 	},
+	{
+		id: 14,
+		name: '攻其不備',
+		money: 300,
+		intelligence: 75,
+		describe: '指定后三格中的有敵人城池的一個格子，角色會移動到那裏，并且獲得自己所有城池的20%資源。',
+		targetType: StrategyTargetType.TARGET_GRID,
+		value: {
+			valid: [1,2,3],
+			float: [0.2]
+		}
+	}
 ];
 
 final BuildingList:Array<BuildingCatelog> = [
