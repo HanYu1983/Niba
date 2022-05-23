@@ -218,18 +218,16 @@ private function onStrategyCost(ctx:Context, p1PeopleId:Int, strategyId:Int, tar
 				// 趁虛而入
 				switch strategy {
 					case {value: {float: [moneyOffset]}, money: _}:
-						wrapResourceResultEvent(ctx, p1.belongToPlayerId, p1.id, () -> {
-							p1.energy = Math.max(0, p1.energy - cost.peopleCost.energy);
-							if (success) {
-								player.money = Math.max(0, player.money - cost.playerCost.money);
-								final p2 = getPeopleById(ctx, targetPeopleId);
-								p2.energy = Math.max(0, p2.energy + moneyOffset);
-								onPeopleExpAdd(ctx, p1.id, getExpAdd(cost.successRate, ENERGY_COST_ON_STRATEGY));
-							} else {
-								player.money = Math.max(0, player.money - cost.playerCost.money * 0.2);
-							}
-							success;
-						});
+						p1.energy = Math.max(0, p1.energy - cost.peopleCost.energy);
+						if (success) {
+							player.money = Math.max(0, player.money - cost.playerCost.money);
+							final p2 = getPeopleById(ctx, targetPeopleId);
+							p2.energy = Math.max(0, p2.energy + moneyOffset);
+							onPeopleExpAdd(ctx, p1.id, getExpAdd(cost.successRate, ENERGY_COST_ON_STRATEGY));
+						} else {
+							player.money = Math.max(0, player.money - cost.playerCost.money * 0.2);
+						}
+						success;
 					case _:
 						throw new haxe.Exception('strategy value not found:${strategy}');
 				}
