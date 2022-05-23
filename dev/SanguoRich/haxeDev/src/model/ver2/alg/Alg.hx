@@ -309,12 +309,68 @@ function onPayTaxToGrid(ctx:Context, playerId:Int, gridId:Int) {
 						return Std.int(ac) - Std.int(bc);
 					});
 					for (g in playerGrids) {
-						player.money += g.money / 2;
-						player.army += g.army / 2;
-						player.food += g.food / 2;
+						// 計算建物的賣價
+						final attachInGrid = ctx.attachments.filter(a -> a.belongToGridId == g.id);
+						final attachSellValue = attachInGrid.flatMap(a -> {
+							final ret:Array<BUILDING> = switch a.type {
+								case MARKET(level):
+									[for (i in 0...level + 1) MARKET(i)];
+								case BANK(level):
+									[for (i in 0...level + 1) BANK(i)];
+								case FARM(level):
+									[for (i in 0...level + 1) FARM(i)];
+								case BARN(level):
+									[for (i in 0...level + 1) BARN(i)];
+								case BARRACKS(level):
+									[for (i in 0...level + 1) BARRACKS(i)];
+								case HOME(level):
+									[for (i in 0...level + 1) HOME(i)];
+								case EXPLORE(level):
+									[for (i in 0...level + 1) EXPLORE(i)];
+								case WALL(level):
+									[for (i in 0...level + 1) WALL(i)];
+							}
+							return ret;
+						}).map(type -> {
+							final catelog = BuildingList.filter((catelog) -> Type.enumEq(catelog.type, type));
+							if (catelog.length == 0) {
+								throw new haxe.Exception('current.catelog找不到:${type}');
+							}
+							return catelog[0];
+						}).fold((catelog, acc) -> {
+							return catelog.money + acc;
+						}, 0.0);
+						// 賣掉建物
+						for (a in attachInGrid) {
+							final resetBuild:BUILDING = switch a.type {
+								case MARKET(_):
+									MARKET(0);
+								case BANK(_):
+									BANK(0);
+								case FARM(_):
+									FARM(0);
+								case BARN(_):
+									BARN(0);
+								case BARRACKS(_):
+									BARRACKS(0);
+								case HOME(_):
+									HOME(0);
+								case EXPLORE(_):
+									EXPLORE(0);
+								case WALL(_):
+									WALL(0);
+							}
+							a.type = resetBuild;
+						}
+						player.money += attachSellValue;
+						// 收回資源格子資源
+						player.money += g.money;
+						player.army += g.army;
+						player.food += g.food;
 						g.money = 0;
 						g.army = 0;
 						g.food = 0;
+						// 抽離武將
 						final peopleInGrid = ctx.peoples.filter(p -> p.position.gridId == g.id);
 						for (p in peopleInGrid) {
 							p.position.gridId = null;
