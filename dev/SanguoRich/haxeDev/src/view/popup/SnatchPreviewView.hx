@@ -38,7 +38,7 @@ class SnatchPreviewView extends PopupView {
 		Main.view.onSnatchPreviewConfirmClick(p1List.selectedItem.id, p2List.selectedItem.id, btn_isOccupation.selected);
 	}
 
-	override function showPopup(info:Dynamic, cb:()->Void = null) {
+	override function showPopup(info:Dynamic, cb:() -> Void = null) {
 		super.showPopup(info, cb);
 
 		var warInfo:SnatchPreview = info;
@@ -55,11 +55,11 @@ class SnatchPreviewView extends PopupView {
 			pro_force1.value = p1.force;
 			pro_command2.value = p2.command;
 
-			pro_money1.value = '${warResult[0].moneyBefore} => ${warResult[0].moneyAfter} (${warResult[0].moneyAfter-warResult[0].moneyBefore})';
-			pro_money2.value = '${warResult[1].moneyBefore} => ${warResult[1].moneyAfter} (${warResult[1].moneyAfter-warResult[1].moneyBefore})';
+			pro_money1.value = '${Main.getCompareString(warResult[0].moneyBefore, warResult[0].moneyAfter)} ${warResult[0].moneyAfter <= 0 ? "戰力下降!" : ""}';
+			pro_money2.value = '${Main.getCompareString(warResult[1].moneyBefore, warResult[1].moneyAfter)} ${warResult[1].moneyAfter <= 0 ? "戰力下降!" : ""}';
 
-			pro_food1.value = '${warResult[0].foodBefore} => ${warResult[0].foodAfter} (${warResult[0].foodAfter-warResult[0].foodBefore})';
-			pro_food2.value = '${warResult[1].foodBefore} => ${warResult[1].foodAfter} (${warResult[1].foodAfter-warResult[1].foodBefore})';
+			pro_food1.value = '${Main.getCompareString(warResult[0].foodBefore, warResult[0].foodAfter)} ${warResult[0].foodAfter <= 0 ? "戰力下降!" : ""}';
+			pro_food2.value = '${Main.getCompareString(warResult[1].foodBefore, warResult[1].foodAfter)} ${warResult[1].foodAfter <= 0 ? "戰力下降!" : ""}';
 
 			final army1_dead = warResult[0].armyBefore - warResult[0].armyAfter;
 			final army1_remain = Math.max(SNATCH_ARMY_AT_LEAST - army1_dead, 0);
@@ -84,7 +84,6 @@ class SnatchPreviewView extends PopupView {
 				lbl_willSnacth.value = '金錢:${Main.getFixNumber(result.money, 0)}及糧草:${Main.getFixNumber(result.food, 0)}';
 				lbl_rateForTreasure.value = Main.getRateString(result.rateForTreasure);
 			}
-			
 		}
 
 		function setOnePeople(id:Int, p:People) {
