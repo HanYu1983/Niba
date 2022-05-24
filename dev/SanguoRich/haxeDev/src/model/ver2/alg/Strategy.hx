@@ -30,14 +30,14 @@ private function getStrategyCost(ctx:Context, p1PeopleId:Int, strategyId:Int, ta
 			if (p1.belongToPlayerId == null) {
 				throw new Exception("belongToPlayerId not found");
 			}
-			final player = ctx.players[p1.belongToPlayerId];
+			final player = getPlayerById(ctx, p1.belongToPlayerId);
 			final grid = ctx.grids[player.position];
 			final isEmpty = getGridInfo(ctx, grid).buildtype == GROWTYPE.EMPTY;
 			isEmpty ? 0.0 : 1;
 		case 4:
 			// 火中取栗
 			// 對沒路障的地沒有作用
-			final player = ctx.players[p1.belongToPlayerId];
+			final player = getPlayerById(ctx, p1.belongToPlayerId);
 			final itemWillRemoved = ctx.groundItems.filter(i -> i.position == targetGridId /* && i.belongToPlayerId != player.id*/);
 			itemWillRemoved.length <= 0 ? 0.0 : 1;
 		case 10:
@@ -69,7 +69,7 @@ private function onStrategyCost(ctx:Context, p1PeopleId:Int, strategyId:Int, tar
 	if (p1.belongToPlayerId == null) {
 		throw new Exception("belongToPlayerId not found");
 	}
-	final player = ctx.players[p1.belongToPlayerId];
+	final player = getPlayerById(ctx, p1.belongToPlayerId);
 	final strategy = StrategyList[strategyId];
 	final cost = getStrategyCost(ctx, p1PeopleId, strategyId, targetPlayerId, targetPeopleId, targetGridId);
 	final success = Math.random() < cost.successRate;
@@ -209,8 +209,10 @@ private function onStrategyCost(ctx:Context, p1PeopleId:Int, strategyId:Int, tar
 									}
 									// 拆除
 									ctx.groundItems = ctx.groundItems.filter(i -> i.id != item.id);
+									// hate you
+									final targetPlayer = getPlayerById(ctx, item.belongToPlayerId);
+									targetPlayer.hate.push(player.id);
 								}
-
 								onPeopleExpAdd(ctx, p1.id, getExpAdd(cost.successRate, ENERGY_COST_ON_STRATEGY));
 							} else {
 								player.money = Math.max(0, player.money - cost.playerCost.money * 0.2);
@@ -229,6 +231,9 @@ private function onStrategyCost(ctx:Context, p1PeopleId:Int, strategyId:Int, tar
 							player.money = Math.max(0, player.money - cost.playerCost.money);
 							final p2 = getPeopleById(ctx, targetPeopleId);
 							p2.energy = Math.max(0, p2.energy + moneyOffset);
+							// hate you
+							final targetPlayer = getPlayerById(ctx, p2.belongToPlayerId);
+							targetPlayer.hate.push(player.id);
 							onPeopleExpAdd(ctx, p1.id, getExpAdd(cost.successRate, ENERGY_COST_ON_STRATEGY));
 						} else {
 							player.money = Math.max(0, player.money - cost.playerCost.money * 0.2);
@@ -265,6 +270,8 @@ private function onStrategyCost(ctx:Context, p1PeopleId:Int, strategyId:Int, tar
 								final targetPlayer = ctx.players[targetPlayerId];
 								targetPlayer.food = Math.max(0, targetPlayer.food + foodOffset);
 								targetPlayer.money = Math.max(0, targetPlayer.money + moneyOffset);
+								// hate you
+								targetPlayer.hate.push(player.id);
 								onPeopleExpAdd(ctx, p1.id, getExpAdd(cost.successRate, ENERGY_COST_ON_STRATEGY));
 							} else {
 								player.money = Math.max(0, player.money - cost.playerCost.money * 0.2);
@@ -360,13 +367,20 @@ private function onStrategyCost(ctx:Context, p1PeopleId:Int, strategyId:Int, tar
 					case {value: {float: [resourceOffsetRate]}, money: _}:
 						final success = wrapResourceResultEvent(ctx, p1.belongToPlayerId, p1.id, () -> {
 							p1.energy = Math.max(0, p1.energy - cost.peopleCost.energy);
+							final targetGrid = ctx.grids[targetGridId];
+							final targetGridBelongPlayerId = getGridBelongPlayerId(ctx, targetGrid.id);
 							if (success) {
 								player.money = Math.max(0, player.money - cost.playerCost.money);
-								final targetGrid = ctx.grids[targetGridId];
 								switch strategy.id {
 									case 12:
 										targetGrid.food = Math.max(0,
 											Math.min(getGridMaxFood(ctx, targetGridId), targetGrid.food + targetGrid.food * resourceOffsetRate));
+										if (targetGridBelongPlayerId != null) {
+											// hate you
+											final targetPlayer = getPlayerById(ctx, targetGridBelongPlayerId);
+											targetPlayer.hate.push(player.id);
+											targetPlayer.hate.push(player.id);
+										}
 									case 13:
 										targetGrid.money = Math.max(0,
 											Math.min(getGridMaxMoney(ctx, targetGridId), targetGrid.money + targetGrid.money * resourceOffsetRate));
@@ -403,7 +417,7 @@ private function onStrategyCost(ctx:Context, p1PeopleId:Int, strategyId:Int, tar
 
 function _getStrategyRate(ctx:Context, p1PeopleId:Int, strategyId:Int, targetPlayerId:Int, targetPeopleId:Int, targetGridId:Int):PreResultOfStrategy {
 	final p1 = getPeopleById(ctx, p1PeopleId);
-	final player = ctx.players[p1.belongToPlayerId];
+	final player = getPlayerById(ctx, p1.belongToPlayerId);
 	final cost = getStrategyCost(ctx, p1PeopleId, strategyId, targetPlayerId, targetPeopleId, targetGridId);
 	return {
 		energyBefore: Std.int(p1.energy),

@@ -117,6 +117,7 @@ typedef Player = {
 	brain:Null<Brain>,
 	score:Float,
 	isLose:Bool,
+	hate:Array<Int>
 }
 
 function getDefaultPlayer():Player {
@@ -138,6 +139,7 @@ function getDefaultPlayer():Player {
 		brain: null,
 		score: 0,
 		isLose: false,
+		hate: []
 	}
 }
 
@@ -1246,6 +1248,7 @@ function addPlayerInfo(ctx:Context, player:model.IModel.PlayerInfo, isAI:Bool, i
 		} : null,
 		score: 0.0,
 		isLose: isLose,
+		hate: [],
 	});
 	for (p in player.people) {
 		addPeopleInfo(ctx, player.id, null, p);

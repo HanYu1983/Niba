@@ -56,7 +56,7 @@ function _takeUnEquip(ctx:Context, people1:model.PeopleGenerator.People, unequip
 	if (p1.belongToPlayerId == null) {
 		throw new haxe.Exception("belongToPlayerId not found");
 	}
-	final player = ctx.players[p1.belongToPlayerId];
+	final player = getPlayerById(ctx, p1.belongToPlayerId);
 	if (t.belongToPlayerId != null && t.belongToPlayerId != p1.belongToPlayerId) {
 		trace('寶物(${t.id})是玩家${t.belongToPlayerId}不是你的');
 		return;

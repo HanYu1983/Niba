@@ -50,6 +50,7 @@ private function onTakePk(ctx:Context, playerId:Int, gridId:Int, p1PeopleId:Int,
 	final grid = ctx.grids[gridId];
 	final p1 = getPeopleById(ctx, p1PeopleId);
 	final p2 = getPeopleById(ctx, p2PeopleId);
+	final targetPlayer = getPlayerById(ctx, p2.belongToPlayerId);
 	final eventValue = {
 		success: true,
 		people: getPeopleInfo(ctx, p1),
@@ -106,6 +107,7 @@ private function onTakePk(ctx:Context, playerId:Int, gridId:Int, p1PeopleId:Int,
 							}
 						}
 					}
+					targetPlayer.hate.push(playerId);
 					true;
 				case _:
 					false;

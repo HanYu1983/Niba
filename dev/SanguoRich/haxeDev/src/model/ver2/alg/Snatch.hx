@@ -130,6 +130,7 @@ private function onSnatchCost(ctx:Context, playerId:Int, gridId:Int, p1PeopleId:
 	final people1 = getPeopleById(ctx, p1PeopleId);
 	final people2 = getPeopleById(ctx, p2PeopleId);
 	final player = getPlayerById(ctx, playerId);
+	final targetPlayer = getPlayerById(ctx, people2.belongToPlayerId);
 	final resultValue = {
 		success: false,
 		people: getPeopleInfo(ctx, people1),
@@ -179,6 +180,9 @@ private function onSnatchCost(ctx:Context, playerId:Int, gridId:Int, p1PeopleId:
 			}
 			cost.success;
 		}
+	}
+	if (isOccupation == false) {
+		targetPlayer.hate.push(playerId);
 	}
 	resultValue.success = success;
 	resultValue.energyAfter = people1.energy;

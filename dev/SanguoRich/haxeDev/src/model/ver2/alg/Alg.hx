@@ -247,6 +247,11 @@ function onPlayerGoToPosition(ctx:Context, playerId:Int, toGridId:Int) {
 }
 
 function onPayTaxToGrid(ctx:Context, playerId:Int, gridId:Int) {
+	final grid = ctx.grids[gridId];
+	final gridBelongPlayerId = getGridBelongPlayerId(ctx, grid.id);
+	if (gridBelongPlayerId == null) {
+		throw new haxe.Exception("這裡不該是付給中立格子");
+	}
 	final player = getPlayerById(ctx, playerId);
 	final eventValue = {
 		armyBefore: player.army,
@@ -258,12 +263,17 @@ function onPayTaxToGrid(ctx:Context, playerId:Int, gridId:Int) {
 		gridId: gridId,
 	}
 	{
-		final grid = ctx.grids[gridId];
 		// 過路費
 		final taxRate = getGridTaxRate(ctx, grid.id);
 		final taxMoney = Math.max(0, grid.money * taxRate);
 		final taxFood = Math.max(0, grid.food * taxRate);
 		final taxArmy = Math.max(0, grid.army * taxRate);
+		{
+			final hateRate = Std.int((taxMoney + taxFood + taxArmy) / 100);
+			for (i in 0...hateRate + 1) {
+				player.hate.push(gridBelongPlayerId);
+			}
+		}
 		// trace("onPayTaxToGrid", "player.name", player.name);
 		// trace("onPayTaxToGrid", "taxRate", taxRate);
 		// trace("onPayTaxToGrid", "taxMoney", taxMoney);
@@ -732,6 +742,13 @@ function onPlayerEnd(ctx:Context, playerId:Int):Bool {
 						}, getGameInfo(ctx, false)));
 					}
 				}
+			}
+		}
+		// 討厭度減輕
+		for (player in ctx.players) {
+			player.hate.shift();
+			while (player.hate.length > 20) {
+				player.hate.shift();
 			}
 		}
 		// 下一回合
