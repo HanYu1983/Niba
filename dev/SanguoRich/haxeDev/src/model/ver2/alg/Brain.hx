@@ -182,6 +182,10 @@ function doBrain(ctx, playerId:Int) {
 						WALL(Std.int(Math.min(3, level + 1)));
 					case EXPLORE(level):
 						EXPLORE(Std.int(Math.min(1, level + 1)));
+					case CITYATTACKER(level):
+						CITYATTACKER(Std.int(Math.min(1, level + 1)));
+					case EXPADDER(level):
+						EXPADDER(Std.int(Math.min(1, level + 1)));
 					case BANK(level):
 						BANK(Std.int(Math.min(3, level + 1)));
 					case BARN(level):

@@ -48,22 +48,26 @@ class GridGridView extends BasicGridView{
         for(b in grid.attachs){
             final catelog = Main.getBuildingCatelog(b);
             switch(catelog.type){
+                case EXPADDER(level):
+                    if( level > 0 ) building += '戰${level}';
+                case CITYATTACKER(level):
+                    if( level > 0 ) building += '攻${level}';
                 case MARKET(level):
-                    building += '市${level}';
+                    if( level > 0 ) building += '市${level}';
                 case FARM(level):
-                    building += '農${level}';
+                    if( level > 0 ) building += '農${level}';
                 case BARRACKS(level):
-                    building += '兵${level}';
+                    if( level > 0 ) building += '兵${level}';
                 case HOME(level):
-                    building += '房${level}';
+                    if( level > 0 ) building += '房${level}';
                 case WALL(level):
-                    building += '牆${level}';
+                    if( level > 0 ) building += '牆${level}';
                 case EXPLORE(level):
-                    building += '人${level}';
+                    if( level > 0 ) building += '人${level}';
                 case BANK(level):
-                    building += '庫${level}';
+                    if( level > 0 ) building += '庫${level}';
                 case BARN(level):
-                    building += '倉${level}';
+                    if( level > 0 ) building += '倉${level}';
             }
         }
         pro_building.value = building;

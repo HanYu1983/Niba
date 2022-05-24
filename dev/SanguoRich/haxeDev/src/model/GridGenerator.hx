@@ -47,6 +47,9 @@ enum BUILDING {
 	HOME(level:Int);
 	WALL(level:Int);
 	EXPLORE(level:Int);
+
+	CITYATTACKER(level:Int);
+	EXPADDER(level:Int);
 }
 
 class GridGenerator {

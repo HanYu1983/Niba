@@ -411,7 +411,7 @@ function getPlayerInfo(ctx:Context, player:Player):model.IModel.PlayerInfo {
 		money: player.money,
 		food: player.food,
 		army: player.army,
-		strategy: player.strategy,
+		strategys: [],
 		people: ctx.peoples.filter(p -> p.belongToPlayerId == player.id).map(p -> getPeopleInfo(ctx, p)),
 		atGridId: player.position,
 		maintainPeople: 0.0,
@@ -1232,7 +1232,7 @@ function addPlayerInfo(ctx:Context, player:model.IModel.PlayerInfo, isAI:Bool, i
 		money: player.money,
 		food: player.food,
 		army: player.army,
-		strategy: player.strategy,
+		strategy: 0,
 		position: player.atGridId,
 		memory: {
 			hasDice: false,

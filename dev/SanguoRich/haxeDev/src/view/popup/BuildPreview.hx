@@ -55,6 +55,12 @@ class BuildPreview extends PopupView{
             case EXPLORE(level):
                 if(level < 1) BUILDING.EXPLORE(level+1);
                 else BUILDING.EXPLORE(1);
+            case CITYATTACKER(level):
+                if(level < 1) BUILDING.CITYATTACKER(level+1);
+                else BUILDING.CITYATTACKER(1);
+            case EXPADDER(level):
+                if(level < 1) BUILDING.EXPADDER(level+1);
+                else BUILDING.EXPADDER(1);
             case WALL(level):
                 if(level < 3) BUILDING.WALL(level+1);
                 else BUILDING.WALL(1);
