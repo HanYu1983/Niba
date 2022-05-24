@@ -147,14 +147,6 @@ function _takeSettle(ctx:Context, playerId:Int, gridId:Int, peopleId:Int, settle
 	if (_tmpCtx == null) {
 		throw new haxe.Exception("_tmpCtx == null. 你必須先呼叫_getPreResultOfSettle");
 	}
-	final player = getPlayerById(ctx, playerId);
-	final p1 = getPeopleById(ctx, peopleId);
-	final cost = getSettleCost(ctx, playerId, peopleId, gridId, settleType);
-	player.food -= cost.player.food;
-	player.money -= cost.player.money;
-	player.army -= cost.player.army;
-	p1.energy -= cost.people.energy;
-	onPeopleExpAdd(ctx, p1.id, getExpAdd(cost.successRate, ENERGY_COST_ON_SETTLE));
 	// 套用新格子
 	ctx.grids = _tmpCtx.grids;
 	ctx.attachments = _tmpCtx.attachments;
@@ -165,6 +157,14 @@ function _takeSettle(ctx:Context, playerId:Int, gridId:Int, peopleId:Int, settle
 		player.memory.hasBuild = true;
 		player.memory.hasCommand = true;
 	}
+	final player = getPlayerById(ctx, playerId);
+	final p1 = getPeopleById(ctx, peopleId);
+	final cost = getSettleCost(ctx, playerId, peopleId, gridId, settleType);
+	player.food -= cost.player.food;
+	player.money -= cost.player.money;
+	player.army -= cost.player.army;
+	p1.energy -= cost.people.energy;
+	onPeopleExpAdd(ctx, p1.id, getExpAdd(cost.successRate, ENERGY_COST_ON_SETTLE));
 	// 事件
 	final grid = ctx.grids[gridId];
 	ctx.events.push(SETTLE_RESULT({

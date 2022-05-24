@@ -121,8 +121,7 @@ class ProxyModel implements IModel {
 		return model.takeSnatchOn(playerId, gridId, p1PeopleId, p2PeopleId, isOccupation, cb);
 	}
 
-	public function getStrategyRate(p1People:People, strategy:StrategyCatelog, targetPlayerId:Int, targetPeopleId:Int,
-			targetGridId:Int):PreResultOfStrategy {
+	public function getStrategyRate(p1People:People, strategy:StrategyCatelog, targetPlayerId:Int, targetPeopleId:Int, targetGridId:Int):PreResultOfStrategy {
 		return model.getStrategyRate(p1People, strategy, targetPlayerId, targetPeopleId, targetGridId);
 	}
 
@@ -138,6 +137,7 @@ class ProxyModel implements IModel {
 	public function getResultOfCost(p1Player:PlayerInfo, p1People:People, costType:Int):{
 		costFood:Float,
 		costMoney:Float,
+		costArmy:Float,
 		gainExp:Float,
 		gainEnergy:Float
 	} {

@@ -27,7 +27,7 @@ class CostForBonusView extends PopupView {
 		Main.view.onCostForBonusConfirmClick(p.id, btnbr_ops.selectedIndex);
 	}
 
-	override function showPopup(info:Dynamic, cb:()->Void = null) {
+	override function showPopup(info:Dynamic, cb:() -> Void = null) {
 		super.showPopup(info, cb);
 
 		final costType = info.type;
@@ -35,11 +35,11 @@ class CostForBonusView extends PopupView {
 
 		btnbr_ops.selectedIndex = costType;
 
-		for( btn in [btn_camp, btn_practice, btn_payForFun] ){
+		for (btn in [btn_camp, btn_practice, btn_payForFun]) {
 			btn.disabled = false;
 		}
-		switch(costType){
-			case 0 | 1: 
+		switch (costType) {
+			case 0 | 1:
 				btn_payForFun.disabled = true;
 			case 2:
 				btn_camp.disabled = true;
@@ -51,27 +51,33 @@ class CostForBonusView extends PopupView {
 
 		function setRate() {
 			final p = p1List.selectedItem;
-			final result:{costFood:Float, costMoney:Float, gainExp:Float, gainEnergy:Float} = Main.model.getResultOfCost(gameInfo.currentPlayer, p, btnbr_ops.selectedIndex);
+			final result:{
+				costArmy:Float,
+				costFood:Float,
+				costMoney:Float,
+				gainExp:Float,
+				gainEnergy:Float
+			} = Main.model.getResultOfCost(gameInfo.currentPlayer, p, btnbr_ops.selectedIndex);
 			final costName = btnbr_ops.selectedButton.text;
 			var resultStr = '讓 ${p.name} 領導 ${costName} 嗎?\n';
 
-			final costType = switch(btnbr_ops.selectedIndex){
-				case 0|1: '糧草';
+			final costType = switch (btnbr_ops.selectedIndex) {
+				case 0 | 1: '士兵';
 				case 2: '金錢';
 				case _: '';
 			}
-			final gain = switch(btnbr_ops.selectedIndex){
-				case 0|2: result.gainEnergy;
+			final gain = switch (btnbr_ops.selectedIndex) {
+				case 0 | 2: result.gainEnergy;
 				case 1: result.gainExp;
 				case _: 0;
 			}
-			final recoverName = switch(btnbr_ops.selectedIndex){
-				case 0|2: '體力';
+			final recoverName = switch (btnbr_ops.selectedIndex) {
+				case 0 | 2: '體力';
 				case 1: '功績';
 				case _: '';
 			}
-			final cost = switch(btnbr_ops.selectedIndex){
-				case 0|1: Main.getFixNumber(result.costFood);
+			final cost = switch (btnbr_ops.selectedIndex) {
+				case 0 | 1: Main.getFixNumber(result.costArmy);
 				case 2: Main.getFixNumber(result.costMoney);
 				case _: 0;
 			}
@@ -79,7 +85,7 @@ class CostForBonusView extends PopupView {
 			lbl_result.value = resultStr;
 		}
 
-		btnbr_ops.onChange = function(e){
+		btnbr_ops.onChange = function(e) {
 			setRate();
 		}
 

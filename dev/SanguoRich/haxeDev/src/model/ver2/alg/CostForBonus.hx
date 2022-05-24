@@ -46,7 +46,8 @@ private function getCostForBonusCost(ctx:Context, playerId:Int, peopleId:Int, co
 			return {
 				playerCost: {
 					food: food,
-					money: 0.0
+					money: 0.0,
+					army: 0.0,
 				},
 				peopleGain: {
 					energy: recover,
@@ -84,8 +85,9 @@ private function getCostForBonusCost(ctx:Context, playerId:Int, peopleId:Int, co
 
 			{
 				playerCost: {
-					food: food,
-					money: 0.0
+					food: 0.0,
+					money: 0.0,
+					army: food
 				},
 				peopleGain: {
 					energy: 0.0,
@@ -126,7 +128,8 @@ private function getCostForBonusCost(ctx:Context, playerId:Int, peopleId:Int, co
 			return {
 				playerCost: {
 					food: 0.0,
-					money: money
+					money: money,
+					army: 0.0,
 				},
 				peopleGain: {
 					energy: recover,
@@ -145,7 +148,7 @@ private function getCostForBonusCost(ctx:Context, playerId:Int, peopleId:Int, co
 private function onCostForBonusCost(ctx:Context, playerId:Int, peopleId:Int, costType:Int) {
 	switch getCostForBonusCost(ctx, playerId, peopleId, costType) {
 		case {
-			playerCost: {food: costFood, money: costMoney},
+			playerCost: {food: costFood, money: costMoney, army: costArmy},
 			peopleCost: {energy: costEnergy},
 			peopleGain: {energy: gainEnergy, exp: gainExp},
 			successRate: successRate
@@ -162,6 +165,7 @@ private function onCostForBonusCost(ctx:Context, playerId:Int, peopleId:Int, cos
 			}
 			{
 				p1.energy = Math.max(0, p1.energy - costEnergy);
+				player.army = Math.max(0, player.army - costArmy);
 				player.food = Math.max(0, player.food - costFood);
 				player.money = Math.max(0, player.money - costMoney);
 				final peopleBelongPlayer = ctx.peoples.filter(p -> p.belongToPlayerId == player.id);
@@ -196,14 +200,16 @@ private function onCostForBonusCost(ctx:Context, playerId:Int, peopleId:Int, cos
 function _getResultOfCost(ctx:Context, p1Player:PlayerInfo, p1People:model.PeopleGenerator.People, costType:Int):{
 	costFood:Float,
 	costMoney:Float,
+	costArmy:Float,
 	gainExp:Float,
 	gainEnergy:Float
 } {
 	return switch getCostForBonusCost(ctx, p1Player.id, p1People.id, costType) {
-		case {playerCost: {food: costFood, money: costMoney}, peopleGain: {energy: gainEnergy, exp: gainExp}, successRate: successRate}:
+		case {playerCost: {food: costFood, money: costMoney, army: costArmy}, peopleGain: {energy: gainEnergy, exp: gainExp}, successRate: successRate}:
 			return {
 				costFood: costFood,
 				costMoney: costMoney,
+				costArmy: costArmy,
 				gainEnergy: gainEnergy,
 				gainExp: gainExp,
 			}

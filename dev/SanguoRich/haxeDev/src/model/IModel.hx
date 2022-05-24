@@ -322,6 +322,7 @@ interface IModel {
 	function getResultOfCost(p1Player:PlayerInfo, p1People:People, costType:Int):{
 		costFood:Float,
 		costMoney:Float,
+		costArmy:Float,
 		gainExp:Float,
 		gainEnergy:Float
 	};
@@ -362,7 +363,7 @@ final StrategyList:Array<StrategyCatelog> = [
 		id: 0,
 		name: '暗渡陳艙',
 		money: 5,
-		intelligence: 70,
+		intelligence: 80,
 		describe: '可以指定移動1~3格數(無視路障)',
 		targetType: StrategyTargetType.TARGET_GRID,
 		value: {
@@ -387,11 +388,11 @@ final StrategyList:Array<StrategyCatelog> = [
 		name: '遠交近攻',
 		money: 5,
 		intelligence: 65,
-		describe: '直接獲取該格子的10%資源。並且友好度上升1',
+		describe: '直接獲取該格子的15%資源。並且友好度上升1',
 		targetType: StrategyTargetType.SELF_GRID,
 		value: {
 			valid: [],
-			float: [0.1, 1]
+			float: [0.15, 1]
 		}
 	},
 	{
@@ -459,11 +460,11 @@ final StrategyList:Array<StrategyCatelog> = [
 		name: '五穀豐登',
 		money: 5,
 		intelligence: 90,
-		describe: '所有自己城池的糧食+10%',
+		describe: '所有自己城池的糧食+20%',
 		targetType: StrategyTargetType.SELF_PLAYER,
 		value: {
 			valid: [],
-			float: [0.1],
+			float: [0.20],
 		}
 	},
 	{
@@ -505,13 +506,13 @@ final StrategyList:Array<StrategyCatelog> = [
 	{
 		id: 12,
 		name: '火計',
-		money: 50,
-		intelligence: 80,
-		describe: '指定一個格子，那個格子的糧食資源-30%。',
+		money: 40,
+		intelligence: 75,
+		describe: '指定一個格子，那個格子的糧食資源-20%。',
 		targetType: StrategyTargetType.TARGET_GRID,
 		value: {
 			valid: [-1, 0, 1],
-			float: [-0.3]
+			float: [-0.2]
 		}
 	},
 	{
@@ -553,7 +554,7 @@ final BuildingList:Array<BuildingCatelog> = [
 		id: 1,
 		name: '農田(小)',
 		money: 50,
-		describe: '糧食每回合+3',
+		describe: '糧食每回合+5',
 		type: FARM(1),
 		depends: []
 	},
@@ -561,7 +562,7 @@ final BuildingList:Array<BuildingCatelog> = [
 		id: 2,
 		name: '農田(中)',
 		money: 50,
-		describe: '糧食每回合+5',
+		describe: '糧食每回合+9',
 		type: FARM(2),
 		depends: []
 	},
@@ -569,7 +570,7 @@ final BuildingList:Array<BuildingCatelog> = [
 		id: 3,
 		name: '農田(大)',
 		money: 0,
-		describe: '糧食每回合+7',
+		describe: '糧食每回合+13',
 		type: FARM(3),
 		depends: []
 	},
@@ -585,7 +586,7 @@ final BuildingList:Array<BuildingCatelog> = [
 		id: 5,
 		name: '市集(小)',
 		money: 50,
-		describe: '金錢每回合+3',
+		describe: '金錢每回合+5',
 		type: MARKET(1),
 		depends: []
 	},
@@ -593,7 +594,7 @@ final BuildingList:Array<BuildingCatelog> = [
 		id: 6,
 		name: '市集(中)',
 		money: 50,
-		describe: '金錢每回合+5',
+		describe: '金錢每回合+9',
 		type: MARKET(2),
 		depends: []
 	},
@@ -601,7 +602,7 @@ final BuildingList:Array<BuildingCatelog> = [
 		id: 7,
 		name: '市集(大)',
 		money: 0,
-		describe: '金錢每回合+7',
+		describe: '金錢每回合+13',
 		type: MARKET(3),
 		depends: []
 	},
@@ -617,7 +618,7 @@ final BuildingList:Array<BuildingCatelog> = [
 		id: 9,
 		name: '兵營(小)',
 		money: 50,
-		describe: '士兵每回合+3',
+		describe: '士兵每回合+5',
 		type: BARRACKS(1),
 		depends: []
 	},
@@ -625,7 +626,7 @@ final BuildingList:Array<BuildingCatelog> = [
 		id: 10,
 		name: '兵營(中)',
 		money: 50,
-		describe: '士兵每回合+5',
+		describe: '士兵每回合+9',
 		type: BARRACKS(2),
 		depends: []
 	},
@@ -633,7 +634,7 @@ final BuildingList:Array<BuildingCatelog> = [
 		id: 11,
 		name: '兵營(大)',
 		money: 0,
-		describe: '士兵每回合+7',
+		describe: '士兵每回合+13',
 		type: BARRACKS(3),
 		depends: []
 	},
@@ -697,7 +698,7 @@ final BuildingList:Array<BuildingCatelog> = [
 		id: 19,
 		name: '金庫(小)',
 		money: 100,
-		describe: '金錢最大值+200。金錢每回合+1%',
+		describe: '金錢最大值+200。金錢每回合+2%',
 		type: BANK(1),
 		depends: []
 	},
@@ -705,7 +706,7 @@ final BuildingList:Array<BuildingCatelog> = [
 		id: 20,
 		name: '金庫(中)',
 		money: 100,
-		describe: '金錢最大值+300。金錢每回合+2%',
+		describe: '金錢最大值+300。金錢每回合+3%',
 		type: BANK(2),
 		depends: []
 	},
@@ -713,7 +714,7 @@ final BuildingList:Array<BuildingCatelog> = [
 		id: 21,
 		name: '金庫(大)',
 		money: 0,
-		describe: '金錢最大值+400。金錢每回合+3%',
+		describe: '金錢最大值+400。金錢每回合+4%',
 		type: BANK(3),
 		depends: []
 	},
@@ -729,7 +730,7 @@ final BuildingList:Array<BuildingCatelog> = [
 		id: 23,
 		name: '穀倉(小)',
 		money: 100,
-		describe: '糧草最大值+200。糧草每回合+1%',
+		describe: '糧草最大值+200。糧草每回合+2%',
 		type: BARN(1),
 		depends: []
 	},
@@ -737,7 +738,7 @@ final BuildingList:Array<BuildingCatelog> = [
 		id: 24,
 		name: '穀倉(中)',
 		money: 100,
-		describe: '糧草最大值+300。糧草每回合+2%',
+		describe: '糧草最大值+300。糧草每回合+3%',
 		type: BARN(2),
 		depends: []
 	},
@@ -745,7 +746,7 @@ final BuildingList:Array<BuildingCatelog> = [
 		id: 25,
 		name: '穀倉(大)',
 		money: 0,
-		describe: '糧草最大值+400。糧草每回合+3%',
+		describe: '糧草最大值+400。糧草每回合+4%',
 		type: BARN(3),
 		depends: []
 	},
@@ -761,7 +762,7 @@ final BuildingList:Array<BuildingCatelog> = [
 		id: 27,
 		name: '住房(小)',
 		money: 100,
-		describe: '士兵最大值+200。士兵每回合+1%',
+		describe: '士兵最大值+200。士兵每回合+2%',
 		type: HOME(1),
 		depends: []
 	},
@@ -769,7 +770,7 @@ final BuildingList:Array<BuildingCatelog> = [
 		id: 28,
 		name: '住房(中)',
 		money: 100,
-		describe: '士兵最大值+300。士兵每回合+2%',
+		describe: '士兵最大值+300。士兵每回合+3%',
 		type: HOME(2),
 		depends: []
 	},
@@ -777,7 +778,7 @@ final BuildingList:Array<BuildingCatelog> = [
 		id: 29,
 		name: '住房(大)',
 		money: 0,
-		describe: '士兵最大值+400。士兵每回合+3%',
+		describe: '士兵最大值+400。士兵每回合+4%',
 		type: HOME(3),
 		depends: []
 	},

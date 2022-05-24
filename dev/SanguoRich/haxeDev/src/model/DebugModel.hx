@@ -530,13 +530,15 @@ class DebugModel implements IModel {
 		costFood:Float,
 		costMoney:Float,
 		gainExp:Float,
-		gainEnergy:Float
+		gainEnergy:Float,
+		costArmy:Float,
 	} {
 		return {
 			costFood: 1,
 			costMoney: 1.0,
 			gainEnergy: 3,
 			gainExp: 5,
+			costArmy: 0,
 		}
 	}
 

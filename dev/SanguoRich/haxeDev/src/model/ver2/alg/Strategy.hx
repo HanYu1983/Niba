@@ -126,12 +126,18 @@ private function onStrategyCost(ctx:Context, p1PeopleId:Int, strategyId:Int, tar
 								final gainFood = grid.food * gainRate;
 								final gainMoney = grid.money * gainRate;
 								final gainArmy = grid.army * gainRate;
+								trace("gainFood", gainFood);
+								trace("gainMoney", gainMoney);
+								trace("gainArmy", gainArmy);
 								grid.food -= gainFood;
 								grid.money -= gainMoney;
 								grid.army -= gainArmy;
 								player.food += gainFood;
 								player.money += gainMoney;
 								player.army += gainArmy;
+								trace("player.food", player.food);
+								trace("player.money ", player.money);
+								trace("player.army", player.army);
 								for (targetPlayerId in 0...grid.favor.length) {
 									if (targetPlayerId == player.id) {
 										// 對你提升友好
@@ -198,7 +204,7 @@ private function onStrategyCost(ctx:Context, p1PeopleId:Int, strategyId:Int, tar
 									if (item.belongToPlayerId != player.id) {
 										final targetPlayer = ctx.players[item.belongToPlayerId];
 										final tax = getMoney;
-										targetPlayer.money = Math.max(0, player.money - tax);
+										targetPlayer.money = Math.max(0, targetPlayer.money - tax);
 										player.money += tax;
 									}
 									// 拆除

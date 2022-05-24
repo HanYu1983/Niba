@@ -470,7 +470,7 @@ function getGridMoneyGrow(ctx:Context, gridId:Int):Float {
 	final attachmentRate = ctx.attachments.filter(a -> a.belongToGridId == grid.id).fold((p, a) -> {
 		return a + switch p.type {
 			case BANK(level):
-				[0.0, 0.01, 0.02, 0.03][level];
+				[0.0, 0.02, 0.03, 0.04][level];
 			case _:
 				0;
 		}
@@ -488,7 +488,7 @@ function getGridFoodGrow(ctx:Context, gridId:Int):Float {
 	final attachmentRate = ctx.attachments.filter(a -> a.belongToGridId == grid.id).fold((p, a) -> {
 		return a + switch p.type {
 			case BARN(level):
-				[0.0, 0.01, 0.02, 0.03][level];
+				[0.0, 0.02, 0.03, 0.04][level];
 			case _:
 				0;
 		}
@@ -506,7 +506,7 @@ function getGridArmyGrow(ctx:Context, gridId:Int):Float {
 	final attachmentRate = ctx.attachments.filter(a -> a.belongToGridId == grid.id).fold((p, a) -> {
 		return a + switch p.type {
 			case HOME(level):
-				[0.0, 0.01, 0.02, 0.03][level];
+				[0.0, 0.02, 0.03, 0.04][level];
 			case _:
 				0;
 		}
@@ -524,7 +524,7 @@ function getGridFoodAdd(ctx:Context, gridId:Int):Float {
 	final attachmentRate = ctx.attachments.filter(a -> a.belongToGridId == grid.id).fold((p, a) -> {
 		return a + switch p.type {
 			case FARM(level):
-				[0, 3, 5, 7][level];
+				[0, 5, 9, 12][level];
 			case _:
 				0;
 		}
@@ -542,7 +542,7 @@ function getGridMoneyAdd(ctx:Context, gridId:Int):Float {
 	final attachmentRate = ctx.attachments.filter(a -> a.belongToGridId == grid.id).fold((p, a) -> {
 		return a + switch p.type {
 			case MARKET(level):
-				[0, 3, 5, 7][level];
+				[0, 5, 9, 12][level];
 			case _:
 				0;
 		}
@@ -560,7 +560,7 @@ function getGridArmyAdd(ctx:Context, gridId:Int):Float {
 	final attachmentRate = ctx.attachments.filter(a -> a.belongToGridId == grid.id).fold((p, a) -> {
 		return a + switch p.type {
 			case BARRACKS(level):
-				[0, 3, 5, 7][level];
+				[0, 5, 9, 12][level];
 			case _:
 				0;
 		}
@@ -1333,9 +1333,9 @@ function getPeopleMaintainCost(ctx:Context, peopleId:Int):Float {
 	final attachmentRate = ctx.attachments.filter(a -> getGridBelongPlayerId(ctx, a.belongToGridId) == people.belongToPlayerId).fold((p, a:Float) -> {
 		return a * switch p.type {
 			case EXPLORE(level):
-				[0.0, 0.8][level];
+				[1.0, 0.8][level];
 			case _:
-				0;
+				1.0;
 		}
 	}, 1.0);
 	final cost = switch getPeopleType(ctx, peopleId) {
@@ -1346,7 +1346,7 @@ function getPeopleMaintainCost(ctx:Context, peopleId:Int):Float {
 		case _:
 			people.cost;
 	}
-	return cost + attachmentRate;
+	return cost * attachmentRate;
 }
 
 function getPeopleForce(ctx:Context, peopleId:Int):Float {

@@ -366,11 +366,11 @@ function onPayTaxToGrid(ctx:Context, playerId:Int, gridId:Int) {
 							}
 							a.type = resetBuild;
 						}
-						player.money += attachSellValue;
+						player.money += attachSellValue * 0.8;
 						// 收回資源格子資源
-						player.money += g.money;
-						player.army += g.army;
-						player.food += g.food;
+						player.money += g.money * 0.8;
+						player.army += g.army * 0.8;
+						player.food += g.food * 0.8;
 						g.money = 0;
 						g.army = 0;
 						g.food = 0;
