@@ -382,7 +382,7 @@ private function onStrategyCost(ctx:Context, p1PeopleId:Int, strategyId:Int, tar
 										gridAfter: getGridInfo(ctx, ctx.grids[targetGridId]),
 									}
 								],
-								describtion: "火計"
+								describtion: strategy.name
 							}, getGameInfo(ctx, false)));
 						}
 						success;
