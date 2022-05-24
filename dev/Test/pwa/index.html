@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <title>PWA Demo</title>
+  </head>
+  <body>
+    <p>\{^_^}/ hi! This's PWA Demo.</p>
+    <ul id="list"></ul>
+    <p>\{^_^}/ hi! This's PWA Demo.</p>
+    <ul id="list2"></ul>
+    <script>
+      if ("serviceWorker" in navigator) {
+        navigator.serviceWorker
+          .register("/sw2.js")
+          .then((reg) => console.log("SW registered!", reg))
+          .catch((err) => console.log("Error!", err));
+      } else {
+        throw new Error("serviceWorker not found");
+      }
+    </script>
+    <script>
+      const list = document.getElementById("list");
+      // 接著發送 request
+      fetch("people.json")
+        .then((res) => {
+          return res.json();
+        })
+        .then((json) => {
+          list.innerHTML = json.map((item) => `<li>${item.name}</li>`).join("");
+        });
+    </script>
+    <script>
+      const list2 = document.getElementById("list2");
+      // 接著發送 request
+      fetch("people2.json")
+        .then((res) => {
+          return res.json();
+        })
+        .then((json) => {
+          list2.innerHTML = json
+            .map((item) => `<li>${item.name}</li>`)
+            .join("");
+        });
+    </script>
+  </body>
+</html>
