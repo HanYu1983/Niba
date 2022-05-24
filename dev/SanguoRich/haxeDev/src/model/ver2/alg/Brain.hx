@@ -816,18 +816,19 @@ private function getCommandWeight(ctx:Context, playerId:Int, gridId:Int, cmd:Act
 						case 6:
 							// 按兵不動
 							// 在自己格
-							final fact1 = getGridBelongPlayerId(ctx, grid.id) == player.id ? 1.0 : 0.0;
-							final fact2 = {
+							final fact1 = getFact(getGridBelongPlayerId(ctx, grid.id) == player.id ? 1.0 : 0.0);
+							final fact2 = getFact({
 								final totalResource = grid.money + grid.food + grid.army;
-								totalResource > 200 ? Math.min(1, totalResource - 200 / 1000.0) : 0.0;
-							}
+								totalResource / 600.0;
+							});
 							for (p1 in peopleInPlayer) {
 								final result = _getStrategyRate(ctx, p1.id, strategy.id, 0, 0, 0);
 								// 成功率
 								final factSuccessRate = getFact(result.rate);
 								// 體力剩下越多越好
 								final factEnergy = factVery(getFact(result.energyAfter / 100.0), 0.5);
-								final score = 1.0 * getFact(fact1 * fact2 * factSuccessRate * factEnergy * factNowMoney) * factOn(factSuccessRate, 0.75);
+								final score = 1.0 * getFact(fact1 * fact2 * factSuccessRate * factEnergy * factNowMoney) * factOn(factSuccessRate,
+									0.75) * factOn(fact1, 1) * factOn(fact2, 1);
 								// trace("getCommandWeight", "strategy", strategy.id, p1.id);
 								// trace("score", score, "=", fact1, fact2, factSuccessRate, factEnergy, factNowMoney);
 								if (score > maxScore) {
@@ -842,7 +843,7 @@ private function getCommandWeight(ctx:Context, playerId:Int, gridId:Int, cmd:Act
 							// 五穀豐登
 							final fact1 = {
 								final myGrid = ctx.grids.filter(g -> getGridBelongPlayerId(ctx, g.id) == player.id);
-								myGrid.length > 3 ? Math.min(1, (myGrid.length - 3) / 5.0) : 0.0;
+								myGrid.length / 3.0;
 							}
 							for (p1 in peopleInPlayer) {
 								final result = _getStrategyRate(ctx, p1.id, strategy.id, 0, 0, 0);
@@ -850,7 +851,8 @@ private function getCommandWeight(ctx:Context, playerId:Int, gridId:Int, cmd:Act
 								final factSuccessRate = getFact(result.rate);
 								// 體力剩下越多越好
 								final factEnergy = factVery(getFact(result.energyAfter / 100.0), 0.5);
-								final score = 1.2 * getFact(factSuccessRate * factEnergy * fact1 * factNowMoney) * factOn(factSuccessRate, 0.75);
+								final score = 1.2 * getFact(factSuccessRate * factEnergy * fact1 * factNowMoney) * factOn(factSuccessRate,
+									0.75) * factOn(fact1, 1);
 								// trace("getCommandWeight", "strategy", strategy.id, p1.id);
 								// trace("score", score, "=", factSuccessRate, factEnergy, fact1, factNowMoney);
 								if (score > maxScore) {
