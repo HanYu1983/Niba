@@ -93,8 +93,6 @@ private function onHireCost(ctx:Context, playerId:Int, gridId:Int, p1SelectId:In
 			}
 			// 將人變成主公的
 			hirePeople.belongToPlayerId = playerId;
-			// 將人移到玩家上
-			hirePeople.position.player = true;
 			// 從格子上移除人
 			hirePeople.position.gridId = null;
 			// 功績

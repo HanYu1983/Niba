@@ -55,7 +55,7 @@ typedef People = {
 	id:Int,
 	belongToPlayerId:Null<Int>,
 	position:{
-		gridId:Null<Int>, player:Bool
+		gridId:Null<Int>
 	},
 	name:String,
 	force:Float,
@@ -67,8 +67,7 @@ typedef People = {
 	abilities:Array<Int>,
 	energy:Float,
 	defaultType:PeopleType,
-	exp:Float,
-	lastWorkTurn:Int
+	exp:Float
 }
 
 function getDefaultPeople():People {
@@ -76,8 +75,7 @@ function getDefaultPeople():People {
 		id: 0,
 		belongToPlayerId: null,
 		position: {
-			gridId: null,
-			player: true
+			gridId: null
 		},
 		name: "",
 		force: 0.0,
@@ -89,8 +87,7 @@ function getDefaultPeople():People {
 		abilities: [],
 		energy: 100.0,
 		defaultType: PeopleType.PUTONG,
-		exp: 0.0,
-		lastWorkTurn: 0
+		exp: 0.0
 	}
 }
 
@@ -407,7 +404,7 @@ function getPlayerInfo(ctx:Context, player:Player):model.IModel.PlayerInfo {
 		food: player.food,
 		army: player.army,
 		strategy: player.strategy,
-		people: ctx.peoples.filter(p -> p.position.player == true && p.belongToPlayerId == player.id).map(p -> getPeopleInfo(ctx, p)),
+		people: ctx.peoples.filter(p -> p.belongToPlayerId == player.id).map(p -> getPeopleInfo(ctx, p)),
 		atGridId: player.position,
 		maintainPeople: 0.0,
 		maintainArmy: 0.0,
@@ -1201,8 +1198,7 @@ function addPeopleInfo(ctx:Context, belongToPlayerId:Null<Int>, gridId:Null<Int>
 		id: p.id,
 		belongToPlayerId: belongToPlayerId,
 		position: {
-			gridId: gridId,
-			player: belongToPlayerId != null
+			gridId: gridId
 		},
 		name: p.name,
 		force: p.force,
@@ -1214,8 +1210,7 @@ function addPeopleInfo(ctx:Context, belongToPlayerId:Null<Int>, gridId:Null<Int>
 		command: p.command,
 		energy: p.energy,
 		defaultType: p.type,
-		exp: p.exp,
-		lastWorkTurn: 0
+		exp: p.exp
 	});
 	for (t in p.treasures) {
 		addTreasureInfo(ctx, belongToPlayerId, gridId, p.id, t);

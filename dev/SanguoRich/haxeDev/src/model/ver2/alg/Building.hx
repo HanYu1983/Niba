@@ -9,12 +9,10 @@ import model.ver2.alg.Alg;
 
 using Lambda;
 
-private function onBuildingCost(ctx:Context, playerId:Int, gridId:Int, peopleId:Int, current:Dynamic, to:Dynamic) {
-	final currBuilding = (current : BUILDING);
-	final toBuilding = (to : BUILDING);
-	final catelog = BuildingList.filter((catelog) -> Type.enumEq(catelog.type, currBuilding));
+private function onBuildingCost(ctx:Context, playerId:Int, gridId:Int, peopleId:Int, current:BUILDING, to:BUILDING) {
+	final catelog = BuildingList.filter((catelog) -> Type.enumEq(catelog.type, current));
 	if (catelog.length == 0) {
-		throw new haxe.Exception('current.catelog找不到:${currBuilding}');
+		throw new haxe.Exception('current.catelog找不到:${current}');
 	}
 	final costMoney = catelog[0].money;
 	final success = true;
@@ -29,8 +27,8 @@ private function onBuildingCost(ctx:Context, playerId:Int, gridId:Int, peopleId:
 			if (a.belongToGridId != gridId) {
 				return a;
 			}
-			if (a.type.equals(currBuilding)) {
-				a.type = toBuilding;
+			if (a.type.equals(current)) {
+				a.type = to;
 				checked = true;
 			}
 			return a;
@@ -44,12 +42,12 @@ private function onBuildingCost(ctx:Context, playerId:Int, gridId:Int, peopleId:
 	ctx.events.push(BUILDING_RESULT({
 		success: success,
 		people: getPeopleInfo(ctx, people),
-		building: toBuilding,
+		building: to,
 		gridId: gridId,
 	}, getGameInfo(ctx, false)));
 }
 
-function _takeBuilding(ctx:Context, playerId:Int, gridId:Int, peopleId:Int, current:Dynamic, to:Dynamic) {
+function _takeBuilding(ctx:Context, playerId:Int, gridId:Int, peopleId:Int, current:BUILDING, to:BUILDING) {
 	onBuildingCost(ctx, playerId, gridId, peopleId, current, to);
 	{
 		final player = ctx.players[ctx.currentPlayerId];

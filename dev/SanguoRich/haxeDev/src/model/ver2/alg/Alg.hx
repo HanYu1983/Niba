@@ -201,7 +201,6 @@ function initContext(ctx:Context, options:GameSetting) {
 		ctx.grids[player.position].army = 350;
 		final peopleInGrid = ctx.peoples.filter(p -> p.position.gridId == player.position);
 		for (people in peopleInGrid) {
-			people.position.player = true;
 			people.belongToPlayerId = player.id;
 		}
 		player.score = getPlayerScore(ctx, player.id);
