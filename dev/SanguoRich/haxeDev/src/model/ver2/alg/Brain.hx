@@ -1470,15 +1470,16 @@ private function getCommandWeight(ctx:Context, playerId:Int, gridId:Int, cmd:Act
 							});
 							// 本身資源留下越多
 							final factResourceAfter = factAnd([
-								getFact((result1.moneyAfter + (result2.moneyAfter / 2.0)) / 200),
-								getFact((result1.foodAfter + (result2.foodAfter / 2.0)) / 200),
-								getFact(result1.armyAfter / 200)
+								getFact((result1.moneyAfter + (result2.moneyAfter / 2.0)) / 300.0),
+								getFact((result1.foodAfter + (result2.foodAfter / 2.0)) / 300.0),
+								getFact(result1.armyAfter / 300.0)
 							]);
 							final score = 1.0 * getFact(factSuccess * factEnergy * factEarn * factResourceAfter) * factOn(factSuccess,
 								1) * factOn(factResourceAfter, 1);
-							// trace("getCommandWeight", playerId, cmd, "score", score, "=", factSuccess, factEnergy, factEarn, factResourceAfter, "on",
-							// 	factSuccess, factResourceAfter);
+
 							if (score > maxScore) {
+								trace("getCommandWeight", playerId, cmd, "score", score, "=", factSuccess, factEnergy, factEarn, factResourceAfter, "on",
+									factSuccess, factResourceAfter);
 								maxScore = score;
 								brainMemory.war.peopleId = p1PeopleId;
 							}
