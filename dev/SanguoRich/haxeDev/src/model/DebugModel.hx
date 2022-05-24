@@ -33,7 +33,7 @@ class DebugModel implements IModel {
 				money: 1000.0,
 				army: 100.0,
 				food: 100.0,
-				strategy: 10.0,
+				strategys:[],
 				people: [PeopleGenerator.getInst().generate(), PeopleGenerator.getInst().generate()],
 				grids: [],
 				maintainPeople: -1.2,

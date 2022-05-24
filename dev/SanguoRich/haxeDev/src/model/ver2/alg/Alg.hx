@@ -37,6 +37,10 @@ function doPeopleMaintain(ctx:Context) {
 							level;
 						case BARN(level):
 							level;
+						case CITYATTACKER(level):
+							level;
+						case EXPADDER(level):
+							level;
 					}
 				}, 0.0);
 				levels * BASIC_BUILDING_MAINTAIN_FACTOR;
@@ -159,7 +163,7 @@ function initContext(ctx:Context, options:GameSetting) {
 			money: isLose ? 0.0 : resource * 2,
 			army: isLose ? 0.0 : resource,
 			food: isLose ? 0.0 : resource * 2,
-			strategy: isLose ? 0.0 : 300.0,
+			strategys: [],
 			people: isLose ? [] : [
 				model.PeopleGenerator.getInst().generate(options.putong ? 0 : -1),
 				model.PeopleGenerator.getInst().generate(options.putong ? 0 : -1),
@@ -333,6 +337,10 @@ function onPayTaxToGrid(ctx:Context, playerId:Int, gridId:Int) {
 									[for (i in 0...level + 1) EXPLORE(i)];
 								case WALL(level):
 									[for (i in 0...level + 1) WALL(i)];
+								case CITYATTACKER(level):
+									[for (i in 0...level + 1) CITYATTACKER(i)];
+								case EXPADDER(level):
+									[for (i in 0...level + 1) EXPADDER(i)];
 							}
 							return ret;
 						}).map(type -> {
@@ -363,6 +371,10 @@ function onPayTaxToGrid(ctx:Context, playerId:Int, gridId:Int) {
 									EXPLORE(0);
 								case WALL(_):
 									WALL(0);
+								case CITYATTACKER(_):
+									CITYATTACKER(0);
+								case EXPADDER(_):
+									EXPADDER(0);
 							}
 							a.type = resetBuild;
 						}

@@ -409,7 +409,7 @@ function _getTakeWarPreview(ctx:Context, playerId:Int, gridId:Int):WarPreview {
 					money: grid.money,
 					food: grid.food,
 					army: grid.army,
-					strategy: 0,
+					strategys:[],
 					people: ctx.peoples.filter(p -> p.position.gridId == gridId).map(p -> getPeopleInfo(ctx, p)),
 					atGridId: gridId,
 					maintainArmy: 0.0,
