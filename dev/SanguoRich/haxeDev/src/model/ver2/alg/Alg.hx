@@ -746,10 +746,10 @@ function onPlayerEnd(ctx:Context, playerId:Int):Bool {
 		}
 		// 討厭度減輕
 		for (player in ctx.players) {
-			player.hate.shift();
-			while (player.hate.length > 20) {
+			while (player.hate.length > 10) {
 				player.hate.shift();
 			}
+			trace("doPlayerEnd", player.name, player.hate);
 		}
 		// 下一回合
 		ctx.turn += 1;

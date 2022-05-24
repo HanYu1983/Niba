@@ -257,7 +257,6 @@ private function onWarCostImpl(ctx:Context, playerId:Int, gridId:Int, p1PeopleId
 	final people1 = getPeopleById(ctx, p1PeopleId);
 	final people2 = getPeopleById(ctx, p2PeopleId);
 	final player = getPlayerById(ctx, playerId);
-	final targetPlayer = getPlayerById(ctx, people2.belongToPlayerId);
 	final resultValue = {
 		success: false,
 		people: getPeopleInfo(ctx, people1),
@@ -378,17 +377,20 @@ private function onWarCostImpl(ctx:Context, playerId:Int, gridId:Int, p1PeopleId
 					// 功績
 					onPeopleExpAdd(ctx, people1.id, getExpAdd(1, peopleCost1.energy));
 				}
-				if (success) {
-					// hate you
-					targetPlayer.hate.push(playerId);
-					targetPlayer.hate.push(playerId);
-					targetPlayer.hate.push(playerId);
-					targetPlayer.hate.push(playerId);
-					targetPlayer.hate.push(playerId);
-				} else {
-					// hate you
-					targetPlayer.hate.push(playerId);
-					targetPlayer.hate.push(playerId);
+				if (people2.belongToPlayerId != null) {
+					final targetPlayer = getPlayerById(ctx, people2.belongToPlayerId);
+					if (success) {
+						// hate you
+						targetPlayer.hate.push(playerId);
+						targetPlayer.hate.push(playerId);
+						targetPlayer.hate.push(playerId);
+						targetPlayer.hate.push(playerId);
+						targetPlayer.hate.push(playerId);
+					} else {
+						// hate you
+						targetPlayer.hate.push(playerId);
+						targetPlayer.hate.push(playerId);
+					}
 				}
 				success;
 			case _:
