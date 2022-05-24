@@ -257,9 +257,14 @@ function onPayTaxToGrid(ctx:Context, playerId:Int, gridId:Int) {
 		final grid = ctx.grids[gridId];
 		// 過路費
 		final taxRate = getGridTaxRate(ctx, grid.id);
-		final taxMoney = grid.money * taxRate;
-		final taxFood = grid.food * taxRate;
-		final taxArmy = grid.army * taxRate;
+		final taxMoney = Math.max(0, grid.money * taxRate);
+		final taxFood = Math.max(0, grid.food * taxRate);
+		final taxArmy = Math.max(0, grid.army * taxRate);
+		trace("onPayTaxToGrid", "player.name", player.name);
+		trace("onPayTaxToGrid", "taxRate", taxRate);
+		trace("onPayTaxToGrid", "taxMoney", taxMoney);
+		trace("onPayTaxToGrid", "taxFood", taxFood);
+		trace("onPayTaxToGrid", "taxArmy", taxArmy);
 		switch 1 {
 			case 0:
 				// 支付
@@ -411,9 +416,18 @@ function onPayTaxToGrid(ctx:Context, playerId:Int, gridId:Int) {
 				final targetPlayerId = getGridBelongPlayerId(ctx, grid.id);
 				if (targetPlayerId != null) {
 					final targetPlayer = ctx.players[targetPlayerId];
+					trace("onPayTaxToGrid", "targetPlayer.name", targetPlayer.name);
+					trace("onPayTaxToGrid", "targetPlayer.money", targetPlayer.money);
+					trace("onPayTaxToGrid", "targetPlayer.food", targetPlayer.food);
+					trace("onPayTaxToGrid", "targetPlayer.army", targetPlayer.army);
+					trace("onPayTaxToGrid", "================");
 					targetPlayer.money += taxMoney;
 					targetPlayer.food += taxFood;
 					targetPlayer.army += taxArmy;
+					trace("onPayTaxToGrid", "targetPlayer.name", targetPlayer.name);
+					trace("onPayTaxToGrid", "targetPlayer.money", targetPlayer.money);
+					trace("onPayTaxToGrid", "targetPlayer.food", targetPlayer.food);
+					trace("onPayTaxToGrid", "targetPlayer.army", targetPlayer.army);
 				} else {
 					grid.money += taxMoney;
 					grid.food += taxFood;

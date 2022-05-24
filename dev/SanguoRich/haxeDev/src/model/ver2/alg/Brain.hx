@@ -1476,7 +1476,6 @@ private function getCommandWeight(ctx:Context, playerId:Int, gridId:Int, cmd:Act
 							]);
 							final score = 1.0 * getFact(factSuccess * factEnergy * factEarn * factResourceAfter) * factOn(factSuccess,
 								1) * factOn(factResourceAfter, 1);
-
 							if (score > maxScore) {
 								trace("getCommandWeight", playerId, cmd, "score", score, "=", factSuccess, factEnergy, factEarn, factResourceAfter, "on",
 									factSuccess, factResourceAfter);
