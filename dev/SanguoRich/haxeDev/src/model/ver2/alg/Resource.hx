@@ -151,7 +151,7 @@ private function onResourceCost(ctx:Context, playerId:Int, gridId:Int, p1SelectI
 			people.energy = 0;
 		}
 		// 增加資源
-		final player = ctx.players[playerId];
+		final player = getPlayerById(ctx, playerId);
 		player.money -= negoCost.playerCost.money;
 		if (player.money < 0) {
 			player.money = 0;
@@ -209,7 +209,7 @@ function _getPreResultOfResource(ctx:Context, playerId:Int, gridId:Int, peopleId
 	if (moneyBase < MONEY_PER_DEAL) {
 		throw new haxe.Exception("moneyBase < MONEY_PER_DEAL");
 	}
-	final player = ctx.players[playerId];
+	final player = getPlayerById(ctx, playerId);
 	final cost = getResourceCost(ctx, playerId, gridId, peopleId, moneyBase, market, type);
 	final p1 = getPeopleById(ctx, peopleId);
 	return {

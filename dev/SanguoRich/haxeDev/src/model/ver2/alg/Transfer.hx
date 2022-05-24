@@ -8,7 +8,7 @@ import model.ver2.Define;
 using Lambda;
 
 private function onTransfer(ctx:Context, playerId:Int, gridId:Int, playerInfo:model.IModel.PlayerInfo, gridInfo:model.GridGenerator.Grid) {
-	final player = ctx.players[playerId];
+	final player = getPlayerById(ctx, playerId);
 	final resultValue = {
 		success: false,
 		// 轉型後才能編譯器才知道要檢查null

@@ -10,7 +10,7 @@ import model.ver2.alg.Alg;
 using Lambda;
 
 private function getCostForBonusCost(ctx:Context, playerId:Int, peopleId:Int, costType:Int) {
-	final player = ctx.players[playerId];
+	final player = getPlayerById(ctx, playerId);
 	final people = getPeopleById(ctx, peopleId);
 	final peopleAbilities = getPeopleAbilities(ctx, people.id);
 	final peopleBelongPlayer = ctx.peoples.filter(p -> p.belongToPlayerId == player.id);
@@ -151,7 +151,7 @@ private function onCostForBonusCost(ctx:Context, playerId:Int, peopleId:Int, cos
 			successRate: successRate
 		}:
 			final p1 = getPeopleById(ctx, peopleId);
-			final player = ctx.players[playerId];
+			final player = getPlayerById(ctx, playerId);
 			final grid = ctx.grids[player.position];
 			final eventValue = {
 				costType: costType,

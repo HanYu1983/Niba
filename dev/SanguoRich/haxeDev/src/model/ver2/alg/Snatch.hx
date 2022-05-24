@@ -129,7 +129,7 @@ private function guessArmy(ctx:Context, playerId:Int, gridId:Int, p1PeopleId:Int
 private function onSnatchCost(ctx:Context, playerId:Int, gridId:Int, p1PeopleId:Int, p2PeopleId:Int, army1:Float, army2:Float, isOccupation:Bool) {
 	final people1 = getPeopleById(ctx, p1PeopleId);
 	final people2 = getPeopleById(ctx, p2PeopleId);
-	final player = ctx.players[playerId];
+	final player = getPlayerById(ctx, playerId);
 	final resultValue = {
 		success: false,
 		people: getPeopleInfo(ctx, people1),

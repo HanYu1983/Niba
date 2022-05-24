@@ -9,4 +9,5 @@ import model.ver2.Mock;
 
 function test() {
 	model.ver2.alg.Explore.test();
+	model.ver2.alg.Building.test();
 }

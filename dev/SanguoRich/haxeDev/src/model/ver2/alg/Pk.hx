@@ -11,7 +11,7 @@ using Lambda;
 
 private function getPkCost(ctx:Context, playerId:Int, gridId:Int, p1PeopleId:Int, p2PeopleId:Int) {
 	final grid = ctx.grids[gridId];
-	final player = ctx.players[playerId];
+	final player = getPlayerById(ctx, playerId);
 	final p1 = getPeopleById(ctx, p1PeopleId);
 	final p1Abilities = getPeopleAbilities(ctx, p1.id);
 	final p2 = getPeopleById(ctx, p2PeopleId);
@@ -46,7 +46,7 @@ private function getPkCost(ctx:Context, playerId:Int, gridId:Int, p1PeopleId:Int
 }
 
 private function onTakePk(ctx:Context, playerId:Int, gridId:Int, p1PeopleId:Int, p2PeopleId:Int) {
-	final player = ctx.players[playerId];
+	final player = getPlayerById(ctx, playerId);
 	final grid = ctx.grids[gridId];
 	final p1 = getPeopleById(ctx, p1PeopleId);
 	final p2 = getPeopleById(ctx, p2PeopleId);

@@ -14,7 +14,7 @@ using Lambda;
 private function getHireCost(ctx:Context, playerId:Int, gridId:Int, p1SelectId:Int, p2SelectId:Int, moreMoney:Float) {
 	return switch 0 {
 		case 0:
-			final player = ctx.players[playerId];
+			final player = getPlayerById(ctx, playerId);
 			final grid = ctx.grids[gridId];
 			final fightPeople = [p1SelectId, p2SelectId].map(p -> getPeopleById(ctx, p));
 			return switch fightPeople {
@@ -57,7 +57,7 @@ private function getHireCost(ctx:Context, playerId:Int, gridId:Int, p1SelectId:I
 private function onHireCost(ctx:Context, playerId:Int, gridId:Int, p1SelectId:Int, p2SelectId:Int, moreMoney:Float) {
 	final p1 = getPeopleById(ctx, p1SelectId);
 	final p2 = getPeopleById(ctx, p2SelectId);
-	final player = ctx.players[playerId];
+	final player = getPlayerById(ctx, playerId);
 	final resultValue = {
 		success: false,
 		people: getPeopleInfo(ctx, p1),
@@ -85,7 +85,7 @@ private function onHireCost(ctx:Context, playerId:Int, gridId:Int, p1SelectId:In
 		final success = Math.random() < negoCost.successRate;
 		if (success) {
 			final hirePeople = getPeopleById(ctx, p2SelectId);
-			final player = ctx.players[playerId];
+			final player = getPlayerById(ctx, playerId);
 			// 支付雇用費
 			player.money -= negoCost.playerCost.money;
 			if (player.money < 0) {
@@ -116,7 +116,7 @@ function doGetTakeHirePreview(ctx:Context, playerId:Int, gridId:Int):HirePreview
 }
 
 function doGetPreResultOfHire(ctx:Context, playerId:Int, gridId:Int, peopleId:Int, inviteId:Int, moreMoney:Float):PreResultOnHire {
-	final player = ctx.players[playerId];
+	final player = getPlayerById(ctx, playerId);
 	final cost = getHireCost(ctx, playerId, gridId, peopleId, inviteId, moreMoney);
 	final p1 = getPeopleById(ctx, peopleId);
 	final totalPeopleCost = ctx.peoples.filter(p -> p.belongToPlayerId == playerId).fold((p, a) -> {

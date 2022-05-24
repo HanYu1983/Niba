@@ -64,7 +64,7 @@ function doBrain(ctx, playerId:Int) {
 		if (done) {
 			break;
 		}
-		final player = ctx.players[playerId];
+		final player = getPlayerById(ctx, playerId);
 		if (player.brain == null) {
 			throw new haxe.Exception("必須有Brain");
 		}
@@ -357,7 +357,7 @@ private function doEvent(ctx:Context, playerId:Int) {
 	final events = ctx.events;
 	ctx.events = [];
 	for (evt in events) {
-		final player = ctx.players[playerId];
+		final player = getPlayerById(ctx, playerId);
 		final gridId = player.position;
 		final grid = ctx.grids[gridId];
 		final peopleInPlayer = ctx.peoples.filter((p:People) -> p.belongToPlayerId == player.id);
@@ -505,7 +505,7 @@ private function getMostGoodCommand(ctx:Context, playerId:Int, gridId:Int):Actio
 
 private function getCommandWeight(ctx:Context, playerId:Int, gridId:Int, cmd:ActionInfoID):Float {
 	// trace("getCommandWeight============", playerId, gridId, cmd);
-	final player = ctx.players[playerId];
+	final player = getPlayerById(ctx, playerId);
 	if (player == null) {
 		throw new haxe.Exception('player not found:${playerId}');
 	}
@@ -1609,7 +1609,7 @@ private function getCommandWeight(ctx:Context, playerId:Int, gridId:Int, cmd:Act
 }
 
 private function getTransferWeightV1(ctx:Context, playerId:Int, gridId:Int):Float {
-	final player = ctx.players[playerId];
+	final player = getPlayerById(ctx, playerId);
 	if (player == null) {
 		throw new haxe.Exception('player not found:${playerId}');
 	}
@@ -1721,7 +1721,7 @@ private function getTransferWeightV1(ctx:Context, playerId:Int, gridId:Int):Floa
 }
 
 private function getTransferWeightV2(ctx:Context, playerId:Int, gridId:Int):Float {
-	final player = ctx.players[playerId];
+	final player = getPlayerById(ctx, playerId);
 	if (player == null) {
 		throw new haxe.Exception('player not found:${playerId}');
 	}

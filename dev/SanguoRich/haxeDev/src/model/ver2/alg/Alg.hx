@@ -224,7 +224,7 @@ function onPeopleExpAdd(ctx:Context, peopleId:Int, exp:Float) {
 }
 
 function onPlayerGoToPosition(ctx:Context, playerId:Int, toGridId:Int) {
-	final player = ctx.players[playerId];
+	final player = getPlayerById(ctx, playerId);
 	final toGrid = ctx.grids[toGridId];
 	final toGridBelongPlayerId = getGridBelongPlayerId(ctx, toGrid.id);
 	final fromGridId = player.position;
@@ -243,7 +243,7 @@ function onPlayerGoToPosition(ctx:Context, playerId:Int, toGridId:Int) {
 }
 
 function onPayTaxToGrid(ctx:Context, playerId:Int, gridId:Int) {
-	final player = ctx.players[playerId];
+	final player = getPlayerById(ctx, playerId);
 	final eventValue = {
 		armyBefore: player.army,
 		armyAfter: player.army,
@@ -469,7 +469,7 @@ function onPlayerEnd(ctx:Context, playerId:Int):Bool {
 		throw new haxe.Exception("現在不是你的回合，不能呼叫end");
 	}
 	// 算分, 判定勝負
-	final player = ctx.players[playerId];
+	final player = getPlayerById(ctx, playerId);
 	if (player.isLose == false) {
 		player.score = getPlayerScore(ctx, player.id);
 		player.isLose = {
@@ -725,7 +725,7 @@ function onPlayerDice(ctx:Context, playerId:Int) {
 	if (playerId != ctx.currentPlayerId) {
 		throw new haxe.Exception("現在不是你的回合,不能呼叫end");
 	}
-	final player = ctx.players[playerId];
+	final player = getPlayerById(ctx, playerId);
 	final fromGridId = player.position;
 	final moveStep = Math.floor(Math.random() * 6) + 1;
 	var toGridId = (fromGridId + moveStep) % ctx.grids.length;

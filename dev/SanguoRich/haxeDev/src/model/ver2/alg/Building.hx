@@ -4,6 +4,7 @@ import haxe.Exception;
 import model.GridGenerator;
 import model.IModel;
 import model.Config;
+import model.ver2.Mock;
 import model.ver2.Define;
 import model.ver2.alg.Alg;
 
@@ -16,7 +17,7 @@ private function onBuildingCost(ctx:Context, playerId:Int, gridId:Int, peopleId:
 	}
 	final costMoney = catelog[0].money;
 	final success = true;
-	final player = ctx.players[playerId];
+	final player = getPlayerById(ctx, playerId);
 	final people = getPeopleById(ctx, peopleId);
 	if (success) {
 		final useEnergy = people.energy / (100 / ENERGY_COST_ON_BUILDING);
@@ -54,4 +55,44 @@ function _takeBuilding(ctx:Context, playerId:Int, gridId:Int, peopleId:Int, curr
 		player.memory.hasBuild = true;
 	}
 	sortEventWhenRealPlayer(ctx);
+}
+
+function test() {
+	final ctx:Context = getDefaultContext();
+	ctx.grids.push({
+		final grid = getDefaultGrid();
+		grid;
+	});
+	ctx.players.push({
+		final player = getDefaultPlayer();
+		player;
+	});
+	ctx.peoples = [
+		{
+			final people = getDefaultPeople();
+			people.energy = 100;
+			people;
+		}
+	];
+	final firstAttachment = {
+		final attach = getDefaultAttachment();
+		attach.belongToGridId = 0;
+		attach.type = MARKET(0);
+		attach;
+	};
+	ctx.attachments = [firstAttachment];
+	try {
+		onBuildingCost(ctx, 0, 0, 0, FARM(0), FARM(1));
+	} catch (e) {
+		if (e.message != "current傳錯了, 沒有這個building") {
+			throw new haxe.Exception("必須回傳[current傳錯了, 沒有這個building]");
+		}
+	}
+	onBuildingCost(ctx, 0, 0, 0, MARKET(0), FARM(1));
+	switch firstAttachment.type {
+		case FARM(1):
+		case _:
+			throw new haxe.Exception("必須變成FARM(1)");
+	}
+	assertRandomMockFinish();
 }

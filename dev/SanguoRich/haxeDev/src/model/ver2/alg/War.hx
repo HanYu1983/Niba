@@ -256,7 +256,7 @@ private function onWarCostImpl(ctx:Context, playerId:Int, gridId:Int, p1PeopleId
 		options:{occupy:Bool, warEvent:Bool}):Bool {
 	final people1 = getPeopleById(ctx, p1PeopleId);
 	final people2 = getPeopleById(ctx, p2PeopleId);
-	final player = ctx.players[playerId];
+	final player = getPlayerById(ctx, playerId);
 	final resultValue = {
 		success: false,
 		people: getPeopleInfo(ctx, people1),
@@ -438,7 +438,7 @@ function _getPreResultOfWar(ctx:Context, playerId:Int, gridId:Int, p1PeopleId:In
 		options:{occupy:Bool}):Array<PreResultOnWar> {
 	return switch getWarCostImpl(ctx, playerId, gridId, p1PeopleId, p2PeopleId, army1, army2, {occupy: options.occupy, debug: true}) {
 		case {playerCost: [playerCost1, playerCost2], peopleCost: [peopleCost1, peopleCost2]}:
-			final player1 = ctx.players[playerId];
+			final player1 = getPlayerById(ctx, playerId);
 			final grid = ctx.grids[gridId];
 			final people1 = getPeopleById(ctx, p1PeopleId);
 			final people2 = getPeopleById(ctx, p2PeopleId);

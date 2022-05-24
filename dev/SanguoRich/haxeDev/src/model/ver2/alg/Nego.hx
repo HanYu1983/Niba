@@ -106,7 +106,7 @@ private function getNegoCost(ctx:Context, playerId:Int, gridId:Int, p1SelectId:I
 private function onNegoCost(ctx:Context, playerId:Int, gridId:Int, p1SelectId:Int, p2SelectId:Int) {
 	final p1 = getPeopleById(ctx, p1SelectId);
 	final p2 = getPeopleById(ctx, p2SelectId);
-	final player = ctx.players[playerId];
+	final player = getPlayerById(ctx, playerId);
 	final grid = ctx.grids[gridId];
 	final resultValue = {
 		success: false,
@@ -155,7 +155,7 @@ private function onNegoCost(ctx:Context, playerId:Int, gridId:Int, p1SelectId:In
 					grid.food = 0;
 				}
 				// 玩家搶奪
-				final player = ctx.players[playerId];
+				final player = getPlayerById(ctx, playerId);
 				player.army += negoCost.playerCost.army;
 				player.money += negoCost.playerCost.money;
 				player.food += negoCost.playerCost.food;
@@ -199,7 +199,7 @@ private function onNegoCost(ctx:Context, playerId:Int, gridId:Int, p1SelectId:In
 				grid.food = 0;
 			}
 			// 玩家搶奪
-			final player = ctx.players[playerId];
+			final player = getPlayerById(ctx, playerId);
 			player.army += negoCost.playerCost.army;
 			player.money += negoCost.playerCost.money;
 			player.food += negoCost.playerCost.food;
@@ -241,7 +241,7 @@ function doGetTakeNegoPreview(ctx:Context, playerId:Int, gridId:Int):NegoPreview
 }
 
 function doGetPreResultOfNego(ctx:Context, playerId:Int, gridId:Int, peopleId:Int, inviteId:Int):PreResultOnNego {
-	final player = ctx.players[playerId];
+	final player = getPlayerById(ctx, playerId);
 	final people = getPeopleById(ctx, peopleId);
 	final negoCost = getNegoCost(ctx, playerId, gridId, peopleId, inviteId);
 	final totalArmy = ctx.grids.filter(g -> getGridBelongPlayerId(ctx, g.id) == playerId).fold((p, a) -> {

@@ -10,7 +10,7 @@ import model.tool.Fact;
 using Lambda;
 
 function getSettleCost(ctx:Context, playerId:Int, peopleId:Int, gridId:Int, settleType:Int) {
-	final player = ctx.players[playerId];
+	final player = getPlayerById(ctx, playerId);
 	final p1 = getPeopleById(ctx, peopleId);
 	final useEnergy = p1.energy / (100 / ENERGY_COST_ON_SETTLE);
 	final base = getBase(useEnergy, ENERGY_COST_ON_SETTLE, 0.0) * BASE_RATE_SETTLE;
@@ -147,7 +147,7 @@ function _takeSettle(ctx:Context, playerId:Int, gridId:Int, peopleId:Int, settle
 	if (_tmpCtx == null) {
 		throw new haxe.Exception("_tmpCtx == null. 你必須先呼叫_getPreResultOfSettle");
 	}
-	final player = ctx.players[playerId];
+	final player = getPlayerById(ctx, playerId);
 	final p1 = getPeopleById(ctx, peopleId);
 	final cost = getSettleCost(ctx, playerId, peopleId, gridId, settleType);
 	player.food -= cost.player.food;

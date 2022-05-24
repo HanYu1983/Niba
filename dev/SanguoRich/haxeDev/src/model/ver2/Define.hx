@@ -51,6 +51,14 @@ typedef Attachment = {
 	type:BUILDING,
 }
 
+function getDefaultAttachment():Attachment {
+	return {
+		id: 0,
+		belongToGridId: 0,
+		type: MARKET(0),
+	}
+}
+
 typedef People = {
 	id:Int,
 	belongToPlayerId:Null<Int>,
@@ -744,7 +752,7 @@ private function calcGrids(ctx:Context):Array<model.IModel.PlayerInfo> {
 }
 
 private function calcTotalsByPlayerId(ctx:Context, playerId:Int):model.IModel.PlayerInfo {
-	final p = ctx.players[playerId];
+	final p = getPlayerById(ctx, playerId);
 	final playerInfo = getPlayerInfo(ctx, p);
 	final total = calcGridsByPlayerInfo(ctx, deepCopy(playerInfo));
 	playerInfo.food = playerInfo.food + total.food;
@@ -1470,7 +1478,7 @@ function getPlayerCommand(ctx:Context, playerId:Int):Array<ActionInfoID> {
 	// ret.push(BREAK);
 	// ret.push(CUTPATH);
 	// ret.push(SETTLE);
-	final player = ctx.players[playerId];
+	final player = getPlayerById(ctx, playerId);
 	final gridInfo = getGridInfo(ctx, ctx.grids[player.position]);
 	if (player.memory.hasDice == false) {
 		ret.push(MOVE);
@@ -1606,7 +1614,7 @@ function clearMemory(ctx:Context) {
 
 function wrapResourceResultEvent(ctx:Context, playerId:Int, p1SelectId:Int, fn:() -> Bool):Bool {
 	final p1 = getPeopleById(ctx, p1SelectId);
-	final player = ctx.players[playerId];
+	final player = getPlayerById(ctx, playerId);
 	final resultValue = {
 		success: false,
 		people: getPeopleInfo(ctx, p1),
@@ -1632,7 +1640,7 @@ function wrapResourceResultEvent(ctx:Context, playerId:Int, p1SelectId:Int, fn:(
 
 function wrapStrategyEvent(ctx:Context, playerId:Int, peopleId:Int, strategyId:Int, fn:() -> Bool):Bool {
 	final p1 = getPeopleById(ctx, peopleId);
-	final player = ctx.players[playerId];
+	final player = getPlayerById(ctx, playerId);
 	final strategy = StrategyList[strategyId];
 	final strategyResultValue = {
 		success: false,
