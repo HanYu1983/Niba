@@ -284,6 +284,44 @@ typedef Context = {
 	turn:Int
 }
 
+function getDefaultPeople():People {
+	return {
+		id: 0,
+		belongToPlayerId: null,
+		position: {
+			gridId: null,
+			player: true
+		},
+		name: "",
+		force: 0.0,
+		intelligence: 0.0,
+		political: 0.0,
+		charm: 0.0,
+		cost: 0.0,
+		command: 0.0,
+		abilities: [],
+		energy: 100.0,
+		defaultType: PeopleType.PUTONG,
+		exp: 0.0,
+		lastWorkTurn: 0
+	}
+}
+
+function getDefaultContext():Context {
+	return {
+		settings: null,
+		grids: [],
+		attachments: [],
+		peoples: [],
+		players: [],
+		currentPlayerId: 0,
+		events: [],
+		groundItems: [],
+		treasures: [],
+		turn: 0
+	}
+}
+
 function getPeopleInfo(ctx:Context, people:People):model.PeopleGenerator.People {
 	return {
 		id: people.id,

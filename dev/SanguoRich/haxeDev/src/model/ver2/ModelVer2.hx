@@ -22,18 +22,7 @@ import model.ver2.alg.Equip;
 import model.ver2.alg.Settle;
 
 class ModelVer2 extends DebugModel {
-	var context:Context = {
-		settings: null,
-		grids: [],
-		attachments: [],
-		peoples: [],
-		players: [],
-		currentPlayerId: 0,
-		events: [],
-		groundItems: [],
-		treasures: [],
-		turn: 0
-	}
+	var context:Context = getDefaultContext();
 
 	override function gameStart(setting:GameSetting, cb:Void->Void):Void {
 		initContext(context, setting);

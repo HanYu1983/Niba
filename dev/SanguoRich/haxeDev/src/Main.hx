@@ -21,7 +21,7 @@ class Main {
 	public static function main() {
 		// 跑測試
 		// 只開發前台時可以關掉
-		if (false) {
+		if (true) {
 			runTest();
 		}
 
@@ -74,8 +74,10 @@ class Main {
 	}
 
 	public static function clampInt(value:Int, min:Int = 0, max:Int = 1):Int {
-		if(value < min) return min;
-		if(value > max) return max;
+		if (value < min)
+			return min;
+		if (value > max)
+			return max;
 		return value;
 	}
 

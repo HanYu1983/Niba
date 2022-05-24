@@ -1,5 +1,6 @@
 package model.ver2.alg;
 
+import haxe.Exception;
 import model.GridGenerator;
 import model.IModel;
 import model.Config;
@@ -50,13 +51,13 @@ private function getExploreCost(ctx:Context, playerId:Int, gridId:Int, p1SelectI
 	}
 }
 
-private function onExploreCost(ctx:Context, playerId:Int, gridId:Int, p1SelectId:Int) {
+private function onExploreCost(ctx:Context, playerId:Int, gridId:Int, p1SelectId:Int):{isFindTreasure:Bool, isFindPeople:Bool} {
 	final p1 = getPeopleById(ctx, p1SelectId);
 	final player = ctx.players[playerId];
 	final negoCost = getExploreCost(ctx, playerId, gridId, p1SelectId);
 	// 無論成功或失敗武將先消體力
 	if (p1.energy < negoCost.peopleCost.energy) {
-		throw new haxe.Exception('people.energy ${p1.energy} < ${negoCost.peopleCost.energy}');
+		throw new Exception('people.energy ${p1.energy} < ${negoCost.peopleCost.energy}');
 	}
 	p1.energy -= negoCost.peopleCost.energy;
 	if (p1.energy < 0) {
@@ -67,12 +68,15 @@ private function onExploreCost(ctx:Context, playerId:Int, gridId:Int, p1SelectId
 	if (isFindTreasure) {
 		final treasureInGrid = getTreasureInGrid(ctx, gridId);
 		if (treasureInGrid.length == 0) {
-			throw new haxe.Exception("城裡必須有寶物");
+			throw new Exception("城裡必須有寶物");
 		}
-		final takeId = Math.floor(Math.random() * treasureInGrid.length);
+		final takeId = Math.floor(random() * treasureInGrid.length);
 		final treasure = treasureInGrid[takeId];
 		onFindTreasure(ctx, playerId, [treasure]);
-		return;
+		return {
+			isFindTreasure: true,
+			isFindPeople: false
+		};
 	}
 	final resultValue = {
 		success: false,
@@ -105,6 +109,10 @@ private function onExploreCost(ctx:Context, playerId:Int, gridId:Int, p1SelectId
 	resultValue.moneyAfter = player.money;
 	resultValue.foodAfter = player.food;
 	ctx.events.push(EXPLORE_RESULT(resultValue, getGameInfo(ctx, false)));
+	return {
+		isFindTreasure: false,
+		isFindPeople: resultValue.success
+	};
 }
 
 function _getTakeExplorePreview(ctx:Context, playerId:Int, gridId:Int):ExplorePreview {
@@ -131,4 +139,24 @@ function _takeExplore(ctx:Context, playerId:Int, gridId:Int, p1SelectId:Int) {
 		player.memory.hasCommand = true;
 	}
 	sortEventWhenRealPlayer(ctx);
+}
+
+function test() {
+	final ctx:Context = getDefaultContext();
+	ctx.peoples.push({
+		final people = getDefaultPeople();
+		people.energy = 100;
+		people;
+	});
+	final cost = getExploreCost(ctx, 0, 0, 0);
+	if (cost.successRate <= 0) {
+		throw new Exception("success must > 0");
+	}
+	setRandomMock([cost.successRate / 2]);
+	switch onExploreCost(ctx, 0, 0, 0) {
+		case {isFindPeople: isFindPeople}:
+			if (isFindPeople == false) {
+				throw new Exception("必須找到人");
+			}
+	}
 }
