@@ -27,6 +27,24 @@ typedef Grid = {
 	defaultMaxArmy:Float,
 }
 
+function getDefaultGrid():Grid {
+	return {
+		id: 0,
+		name: "",
+		buildtype: GROWTYPE.MARKET,
+		money: 0,
+		food: 0,
+		army: 0,
+		defaultMoneyGrow: 0,
+		defaultFoodGrow: 0,
+		defaultArmyGrow: 0,
+		favor: [],
+		defaultMaxFood: 0,
+		defaultMaxMoney: 0,
+		defaultMaxArmy: 0,
+	}
+}
+
 typedef Attachment = {
 	id:Int,
 	belongToGridId:Int,
@@ -53,6 +71,29 @@ typedef People = {
 	lastWorkTurn:Int
 }
 
+function getDefaultPeople():People {
+	return {
+		id: 0,
+		belongToPlayerId: null,
+		position: {
+			gridId: null,
+			player: true
+		},
+		name: "",
+		force: 0.0,
+		intelligence: 0.0,
+		political: 0.0,
+		charm: 0.0,
+		cost: 0.0,
+		command: 0.0,
+		abilities: [],
+		energy: 100.0,
+		defaultType: PeopleType.PUTONG,
+		exp: 0.0,
+		lastWorkTurn: 0
+	}
+}
+
 typedef Brain = {
 	memory:Null<Dynamic>
 }
@@ -73,6 +114,28 @@ typedef Player = {
 	isLose:Bool,
 }
 
+function getDefaultPlayer():Player {
+	return {
+		id: 0,
+		name: "",
+		money: 0,
+		food: 0,
+		army: 0,
+		strategy: 0,
+		position: 0,
+		memory: {
+			hasDice: false,
+			hasStrategy: false,
+			hasCommand: false,
+			hasBuild: false,
+			hasEquip: false
+		},
+		brain: null,
+		score: 0,
+		isLose: false,
+	}
+}
+
 typedef Treasure = {
 	id:Int,
 	protoId:Int,
@@ -80,6 +143,18 @@ typedef Treasure = {
 	position:{
 		gridId:Null<Int>, peopleId:Null<Int>
 	},
+}
+
+function getDefaultTreasure():Treasure {
+	return {
+		id: 0,
+		protoId: 0,
+		belongToPlayerId: null,
+		position: {
+			gridId: null,
+			peopleId: null,
+		},
+	}
 }
 
 typedef GroundItem = {
@@ -282,29 +357,6 @@ typedef Context = {
 	groundItems:Array<GroundItem>,
 	treasures:Array<Treasure>,
 	turn:Int
-}
-
-function getDefaultPeople():People {
-	return {
-		id: 0,
-		belongToPlayerId: null,
-		position: {
-			gridId: null,
-			player: true
-		},
-		name: "",
-		force: 0.0,
-		intelligence: 0.0,
-		political: 0.0,
-		charm: 0.0,
-		cost: 0.0,
-		command: 0.0,
-		abilities: [],
-		energy: 100.0,
-		defaultType: PeopleType.PUTONG,
-		exp: 0.0,
-		lastWorkTurn: 0
-	}
 }
 
 function getDefaultContext():Context {
@@ -1603,4 +1655,20 @@ function wrapStrategyEvent(ctx:Context, playerId:Int, peopleId:Int, strategyId:I
 	strategyResultValue.moneyAfter = player.money;
 	ctx.events.push(STRATEGY_RESULT(strategyResultValue, getGameInfo(ctx, false), null));
 	return strategyResultValue.success;
+}
+
+function getGridById(ctx:Context, gridId:Int):Grid {
+	final findGrid = ctx.grids.filter(g -> g.id == gridId);
+	if (findGrid.length == 0) {
+		throw new haxe.Exception('gridId not found:${gridId}');
+	}
+	return findGrid[0];
+}
+
+function getPlayerById(ctx:Context, playerId:Int):Player {
+	final find = ctx.players.filter(g -> g.id == playerId);
+	if (find.length == 0) {
+		throw new haxe.Exception('playerId not found:${playerId}');
+	}
+	return find[0];
 }

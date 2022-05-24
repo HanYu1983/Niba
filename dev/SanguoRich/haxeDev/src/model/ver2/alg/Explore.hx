@@ -18,7 +18,7 @@ using Lambda;
 private function getExploreCost(ctx:Context, playerId:Int, gridId:Int, p1SelectId:Int) {
 	return switch 0 {
 		case 0:
-			final grid = ctx.grids[gridId];
+			final grid = getGridById(ctx, gridId);
 			final p1 = getPeopleById(ctx, p1SelectId);
 			final p1Abilities = getPeopleAbilities(ctx, p1.id);
 			final useEnergy = p1.energy / (100 / ENERGY_COST_ON_EXPLORE);
@@ -53,7 +53,7 @@ private function getExploreCost(ctx:Context, playerId:Int, gridId:Int, p1SelectI
 
 private function onExploreCost(ctx:Context, playerId:Int, gridId:Int, p1SelectId:Int):{isFindTreasure:Bool, isFindPeople:Bool} {
 	final p1 = getPeopleById(ctx, p1SelectId);
-	final player = ctx.players[playerId];
+	final player = getPlayerById(ctx, playerId);
 	final negoCost = getExploreCost(ctx, playerId, gridId, p1SelectId);
 	// 無論成功或失敗武將先消體力
 	if (p1.energy < negoCost.peopleCost.energy) {
@@ -143,20 +143,69 @@ function _takeExplore(ctx:Context, playerId:Int, gridId:Int, p1SelectId:Int) {
 
 function test() {
 	final ctx:Context = getDefaultContext();
-	ctx.peoples.push({
-		final people = getDefaultPeople();
-		people.energy = 100;
-		people;
+	ctx.grids.push({
+		final grid = getDefaultGrid();
+		grid;
 	});
-	final cost = getExploreCost(ctx, 0, 0, 0);
-	if (cost.successRate <= 0) {
-		throw new Exception("success must > 0");
-	}
-	setRandomMock([cost.successRate / 2]);
-	switch onExploreCost(ctx, 0, 0, 0) {
-		case {isFindPeople: isFindPeople}:
-			if (isFindPeople == false) {
-				throw new Exception("必須找到人");
+	ctx.players.push({
+		final player = getDefaultPlayer();
+		player;
+	});
+	{
+		ctx.peoples = [
+			{
+				final people = getDefaultPeople();
+				people.energy = 100;
+				people;
 			}
+		];
+		final cost = getExploreCost(ctx, 0, 0, 0);
+		if (cost.successRate <= 0) {
+			throw new Exception("success must > 0");
+		}
+		// random: [treasure, people]
+		setRandomMock([0, cost.successRate / 2]);
+		switch onExploreCost(ctx, 0, 0, 0) {
+			case {isFindPeople: true, isFindTreasure: false}:
+			case ret:
+				trace(ret);
+				throw new Exception("必須找到人, 並且不能找到寶");
+		}
 	}
+	ctx.treasures.push(getDefaultTreasure());
+	{
+		trace("加入有鑑別能力的人");
+		ctx.peoples = [
+			{
+				final people = getDefaultPeople();
+				people.energy = 100;
+				people.abilities = [12];
+				people;
+			}
+		];
+		final cost = getExploreCost(ctx, 0, 0, 0);
+		if (cost.findTreasureRate != 0) {
+			throw new haxe.Exception("沒有寶物的情況, 找寶率必須是0");
+		}
+		trace("放寶");
+		ctx.treasures = [
+			{
+				final t = getDefaultTreasure();
+				t.position.gridId = 0;
+				t;
+			}
+		];
+		final cost = getExploreCost(ctx, 0, 0, 0);
+		if (cost.findTreasureRate == 0) {
+			throw new haxe.Exception("有寶物的情況, 找寶率必須>0");
+		}
+		setRandomMock([cost.findTreasureRate / 2]);
+		switch onExploreCost(ctx, 0, 0, 0) {
+			case {isFindPeople: false, isFindTreasure: true}:
+			case ret:
+				trace(ret);
+				throw new Exception("必須找到寶, 並且不能找到人");
+		}
+	}
+	assertRandomMockFinish();
 }
