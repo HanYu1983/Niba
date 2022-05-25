@@ -6,7 +6,7 @@ import model.IModel.StrategyCatelog;
 import model.PeopleGenerator;
 import haxe.ui.containers.TableView;
 
-@:build(haxe.ui.ComponentBuilder.build("assets/widgets/gridList-view.xml"))
+@:build(haxe.ui.ComponentBuilder.build("assets/widgets/leaderGrid-view.xml"))
 class GridListView extends TableView {
 	public function new() {
 		super();
@@ -64,20 +64,8 @@ class GridListView extends TableView {
 				}
 			}
 			clone.building = building;
-
-			var strategyString = '';
-			for( index => strategys in grid.strategys){
-				if(index < gameInfo.playerGrids.length){
-					if( strategys.length > 0){
-						strategyString += '${gameInfo.players[index].name.substr(0,1)}:';
-						for( sid in strategys){
-							final s = Main.getStrategyCatelog(sid);
-							strategyString += '${s.name.substr(0,1)} ';
-						}
-					}
-				}
-			}
-			clone.strategy = strategyString;
+			
+			clone.strategy = Main.getStrategyString(grid.strategys);
 			clone.treasureCount = grid.treasures.length;
 			clones.push(clone);
 		}

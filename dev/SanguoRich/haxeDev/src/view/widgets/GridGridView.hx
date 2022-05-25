@@ -71,21 +71,7 @@ class GridGridView extends BasicGridView{
             }
         }
         pro_building.value = building;
-
-        var strategyString = '';
-        for( index => strategys in grid.strategys){
-            if(index < gameInfo.playerGrids.length){
-                if( strategys.length > 0){
-                    strategyString += '${gameInfo.players[index].name.substr(0,1)}:';
-                    for( sid in strategys){
-                        final s = Main.getStrategyCatelog(sid);
-                        strategyString += '${s.name.substr(0,1)} ';
-                    }
-                }
-            }
-        }
-        pro_strategy.value = strategyString;
-
+        pro_strategy.value = Main.getStrategyString(grid.strategys);
         pro_treasureCount.value = grid.treasures.length;
     }
 }

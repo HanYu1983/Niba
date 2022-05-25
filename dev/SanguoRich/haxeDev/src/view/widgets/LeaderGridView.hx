@@ -5,7 +5,7 @@ import haxe.ui.containers.properties.Property;
 import haxe.ui.containers.properties.PropertyGroup;
 import haxe.ui.containers.properties.PropertyGrid;
 
-@:build(haxe.ui.ComponentBuilder.build("assets/widgets/gridLeader-view.xml"))
+@:build(haxe.ui.ComponentBuilder.build("assets/widgets/leaderGrid-view.xml"))
 class LeaderGridView extends BasicGridView{
 
     public function new() {
@@ -24,6 +24,7 @@ class LeaderGridView extends BasicGridView{
         pro_cityCount.value = p.grids.length;
         pro_treasureCount.value = p.treasures.length;
         pro_score.value = Math.floor(p.score);
+        pro_strategy.value = Main.getStrategyString(p.strategys);
     }
 
     override function setCompareInfo(infoBefore:Dynamic, infoAfter:Dynamic) {

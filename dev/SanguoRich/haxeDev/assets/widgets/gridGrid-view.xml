@@ -8,7 +8,7 @@
         <property id="pro_building" label="建築物" value="" />
         <property id="pro_favor" label="友好度" value="空地" />
         <property id="pro_peopleCount" label="武將數" value="" />
-        <property id="pro_strategy" label="計策" value="" />
         <property id="pro_treasureCount" label="寶物數" value="" />
+        <property id="pro_strategy" label="計策" value="" />
     </property-group>
 </property-grid>

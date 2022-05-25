@@ -29,6 +29,7 @@ class LeaderListView extends TableView {
 			clone.cityCount = p.grids.length;
 			clone.treasureCount = p.treasures.length;
 			clone.score = Math.floor(p.score);
+			clone.strategy = Main.getStrategyString(p.strategys);
 			clones.push(clone);
 		}
 		dataSource.data = clones;
