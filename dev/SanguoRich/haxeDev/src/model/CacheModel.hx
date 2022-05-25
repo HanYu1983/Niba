@@ -5,6 +5,7 @@ import model.GridGenerator.BUILDING;
 import model.IModel;
 import model.GridGenerator.Grid;
 import model.PeopleGenerator.People;
+import model.tool.Debug;
 
 // 快取用Model
 // 注意: 在任何有副作用的方法都要覆寫isDirty = true
@@ -19,16 +20,15 @@ class CacheModel extends ProxyModel {
 	override function gameInfo():GameInfo {
 		if (cache == null) {
 			cache = super.gameInfo();
-			js.Browser.console.log("CacheModel", cache);
+			info("CacheModel", cache);
 			return cache;
 		}
 		if (isDirty) {
 			cache = super.gameInfo();
-			js.Browser.console.log("CacheModel", cache);
+			info("CacheModel", cache);
 			isDirty = false;
 			return cache;
 		}
-		// js.Browser.console.log("CacheModel", "use cache", cache);
 		return cache;
 	}
 

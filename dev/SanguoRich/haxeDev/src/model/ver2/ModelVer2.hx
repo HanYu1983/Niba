@@ -3,6 +3,7 @@ package model.ver2;
 import model.GridGenerator;
 import model.IModel;
 import model.Config;
+import model.tool.Debug;
 import model.ver2.Define;
 import model.ver2.alg.Alg;
 import model.ver2.alg.Nego;
@@ -126,7 +127,6 @@ class ModelVer2 extends DebugModel {
 	}
 
 	override function checkValidTransfer(playerId:Int, gridId:Int, playerInfo:model.IModel.PlayerInfo, gridInfo:model.GridGenerator.Grid):Bool {
-		js.Browser.console.log(playerInfo, gridInfo);
 		return _checkValidTransfer(context, playerId, gridId, playerInfo, gridInfo);
 	}
 
@@ -187,7 +187,7 @@ class ModelVer2 extends DebugModel {
 			_save(context);
 			cb(true);
 		} catch (e:haxe.Exception) {
-			js.Browser.console.log("ModelVer2", "save", e);
+			warn("ModelVer2", ["save", e]);
 			cb(false);
 		}
 	}
@@ -201,7 +201,7 @@ class ModelVer2 extends DebugModel {
 			context = loadCtx;
 			cb(true, gameInfo());
 		} catch (e:haxe.Exception) {
-			js.Browser.console.log("ModelVer2", "load", e);
+			warn("ModelVer2", ["load", e]);
 			cb(false, gameInfo());
 		}
 	}

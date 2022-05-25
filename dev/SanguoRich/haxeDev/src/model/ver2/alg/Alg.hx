@@ -8,6 +8,7 @@ import model.ver2.Define;
 import model.ver2.alg.Nego;
 import model.ver2.alg.War;
 import model.ver2.alg.Brain;
+import model.tool.Debug;
 
 using Lambda;
 
@@ -109,7 +110,7 @@ function doGridGrow(ctx:Context) {
 
 // 玩家回合結束
 function doPlayerEnd(ctx:Context) {
-	trace("doPlayerEnd", "start");
+	info("Alg", ["doPlayerEnd", "start"]);
 	final isContinue = onPlayerEnd(ctx, ctx.currentPlayerId);
 	if (isContinue) {
 		final nextPlayer = ctx.players[ctx.currentPlayerId];
@@ -117,11 +118,11 @@ function doPlayerEnd(ctx:Context) {
 			try {
 				doBrain(ctx, nextPlayer.id);
 			} catch (e:Any) {
-				trace("doPlayerEnd catch:", e);
+				warn("Alg", ["doPlayerEnd catch", e]);
 			}
 		}
 	}
-	trace("doPlayerEnd", "finished");
+	info("Alg", ["doPlayerEnd", "done"]);
 }
 
 function doPlayerDice(ctx:Context) {
@@ -129,7 +130,7 @@ function doPlayerDice(ctx:Context) {
 }
 
 function initContext(ctx:Context, options:GameSetting) {
-	trace(options);
+	info("Alg", ["initContext", options]);
 	ctx.settings = options;
 	final genGrids = model.GridGenerator.getInst()
 		.getGrids(options.gridCount != null ? options.gridCount : INIT_GRID_COUNT, options.limitBuilding, options.putong ? 0 : -1);
@@ -274,11 +275,11 @@ function onPayTaxToGrid(ctx:Context, playerId:Int, gridId:Int) {
 				player.hate.push(gridBelongPlayerId);
 			}
 		}
-		// trace("onPayTaxToGrid", "player.name", player.name);
-		// trace("onPayTaxToGrid", "taxRate", taxRate);
-		// trace("onPayTaxToGrid", "taxMoney", taxMoney);
-		// trace("onPayTaxToGrid", "taxFood", taxFood);
-		// trace("onPayTaxToGrid", "taxArmy", taxArmy);
+		// info("onPayTaxToGrid", "player.name", player.name);
+		// info("onPayTaxToGrid", "taxRate", taxRate);
+		// info("onPayTaxToGrid", "taxMoney", taxMoney);
+		// info("onPayTaxToGrid", "taxFood", taxFood);
+		// info("onPayTaxToGrid", "taxArmy", taxArmy);
 		switch 1 {
 			case 0:
 				// 支付
@@ -438,18 +439,18 @@ function onPayTaxToGrid(ctx:Context, playerId:Int, gridId:Int) {
 				final targetPlayerId = getGridBelongPlayerId(ctx, grid.id);
 				if (targetPlayerId != null) {
 					final targetPlayer = ctx.players[targetPlayerId];
-					// trace("onPayTaxToGrid", "targetPlayer.name", targetPlayer.name);
-					// trace("onPayTaxToGrid", "targetPlayer.money", targetPlayer.money);
-					// trace("onPayTaxToGrid", "targetPlayer.food", targetPlayer.food);
-					// trace("onPayTaxToGrid", "targetPlayer.army", targetPlayer.army);
-					// trace("onPayTaxToGrid", "================");
+					// info("onPayTaxToGrid", "targetPlayer.name", targetPlayer.name);
+					// info("onPayTaxToGrid", "targetPlayer.money", targetPlayer.money);
+					// info("onPayTaxToGrid", "targetPlayer.food", targetPlayer.food);
+					// info("onPayTaxToGrid", "targetPlayer.army", targetPlayer.army);
+					// info("onPayTaxToGrid", "================");
 					targetPlayer.money += taxMoney;
 					targetPlayer.food += taxFood;
 					targetPlayer.army += taxArmy;
-					// trace("onPayTaxToGrid", "targetPlayer.name", targetPlayer.name);
-					// trace("onPayTaxToGrid", "targetPlayer.money", targetPlayer.money);
-					// trace("onPayTaxToGrid", "targetPlayer.food", targetPlayer.food);
-					// trace("onPayTaxToGrid", "targetPlayer.army", targetPlayer.army);
+					// info("onPayTaxToGrid", "targetPlayer.name", targetPlayer.name);
+					// info("onPayTaxToGrid", "targetPlayer.money", targetPlayer.money);
+					// info("onPayTaxToGrid", "targetPlayer.food", targetPlayer.food);
+					// info("onPayTaxToGrid", "targetPlayer.army", targetPlayer.army);
 				} else {
 					grid.money += taxMoney;
 					grid.food += taxFood;
@@ -749,7 +750,7 @@ function onPlayerEnd(ctx:Context, playerId:Int):Bool {
 			while (player.hate.length > 10) {
 				player.hate.shift();
 			}
-			trace("doPlayerEnd", player.name, player.hate);
+			info("Alg", ["onPlayerEnd", "hate", player.name, player.hate]);
 		}
 		// 下一回合
 		ctx.turn += 1;
@@ -786,7 +787,7 @@ function onPlayerDice(ctx:Context, playerId:Int) {
 		// 	toGridId = stopItem.position;
 		// 	// 移除路障
 		// 	ctx.groundItems = ctx.groundItems.filter(item -> item.id != stopItem.id);
-		// 	trace("onPlayerDice", "路障!!!", "grid", toGridId);
+		// 	info("onPlayerDice", "路障!!!", "grid", toGridId);
 		// }
 		for (s in 1...(moveStep + 1)) {
 			final nextPosition = (player.position + s) % ctx.grids.length;
@@ -797,7 +798,7 @@ function onPlayerDice(ctx:Context, playerId:Int) {
 				toGridId = stopItem.position;
 				// 移除路障
 				ctx.groundItems = ctx.groundItems.filter(item -> item.id != stopItem.id);
-				trace("onPlayerDice", "路障!!!", "grid", toGridId);
+				info("onPlayerDice", ["路障!!!", "grid", toGridId]);
 				break;
 			}
 		}
