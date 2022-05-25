@@ -292,7 +292,7 @@ enum Event {
 		foodBefore:Float,
 		foodAfter:Float,
 		gridId:Int,
-	}, gameInfo:GameInfo);
+	}, gameInfo:GameInfo, autoplay:Null<{duration:Float}>);
 	PEOPLE_LEVEL_UP_EVENT(value:{
 		peopleBefore:model.PeopleGenerator.People,
 		peopleAfter:model.PeopleGenerator.People,
@@ -937,12 +937,10 @@ final getCalcTotalsByPlayerId = calcTotalsByPlayerId;
 function getAnimationEventFromEvent(e:Event):Event {
 	final ANIMATION_DURATION = 2.0;
 	return switch e {
-		// case PAY_FOR_OVER_ENEMY_GRID(value, gameInfo):
-		// 	ANIMATION_EVENT_SNATCH({
-		// 		gridIds: [value.gridId],
-		// 		duration: ANIMATION_DURATION,
-		// 		msg: "過路費",
-		// 	}, gameInfo);
+		case PAY_FOR_OVER_ENEMY_GRID(value, gameInfo, _):
+			PAY_FOR_OVER_ENEMY_GRID(value, gameInfo, {
+				duration: ANIMATION_DURATION
+			});
 		// case PEOPLE_LEVEL_UP_EVENT(value, gameInfo):
 		// 	ANIMATION_EVENT_SNATCH({
 		// 		gridIds: [value.gridId],
@@ -1102,12 +1100,12 @@ function getEventInfo(e:Event):EventInfo {
 				gameInfo: gameInfo,
 				autoplay: null,
 			}
-		case PAY_FOR_OVER_ENEMY_GRID(value, gameInfo):
+		case PAY_FOR_OVER_ENEMY_GRID(value, gameInfo, autoplay):
 			{
 				id: EventInfoID.PAY_FOR_OVER_ENEMY_GRID,
 				value: value,
 				gameInfo: gameInfo,
-				autoplay: null,
+				autoplay: autoplay,
 			}
 		case PEOPLE_LEVEL_UP_EVENT(value, gameInfo):
 			{

@@ -491,7 +491,7 @@ function onPayTaxToGrid(ctx:Context, playerId:Int, gridId:Int) {
 	eventValue.foodAfter = player.food;
 	eventValue.armyAfter = player.army;
 	ctx.events.push({
-		PAY_FOR_OVER_ENEMY_GRID(eventValue, getGameInfo(ctx, false));
+		PAY_FOR_OVER_ENEMY_GRID(eventValue, getGameInfo(ctx, false), null);
 	});
 }
 
