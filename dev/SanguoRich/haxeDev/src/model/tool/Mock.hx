@@ -1,4 +1,4 @@
-package model.ver2;
+package model.tool;
 
 private var _randomMock:Array<Float> = [];
 

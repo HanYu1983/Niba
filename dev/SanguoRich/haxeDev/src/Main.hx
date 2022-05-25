@@ -109,17 +109,17 @@ class Main {
 	public static function getStrategyString(strategysAllPlayer:Array<Array<Int>>) {
 		final gameInfo = model.gameInfo();
 		var strategyString = '';
-        for( index => strategys in strategysAllPlayer){
-            if(index < gameInfo.playerGrids.length){
-                if( strategys.length > 0){
-                    strategyString += '${gameInfo.players[index].name.substr(0,1)}:';
-                    for( sid in strategys){
-                        final s = Main.getStrategyCatelog(sid);
-                        strategyString += '${s.name.substr(0,1)} ';
-                    }
-                }
-            }
-        }
+		for (index => strategys in strategysAllPlayer) {
+			if (index < gameInfo.playerGrids.length) {
+				if (strategys.length > 0) {
+					strategyString += '${gameInfo.players[index].name.substr(0, 1)}:';
+					for (sid in strategys) {
+						final s = Main.getStrategyCatelog(sid);
+						strategyString += '${s.name.substr(0, 1)} ';
+					}
+				}
+			}
+		}
 		return strategyString;
 	}
 

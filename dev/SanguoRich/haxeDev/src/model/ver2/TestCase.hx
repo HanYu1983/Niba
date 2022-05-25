@@ -5,7 +5,7 @@ import model.IModel;
 import model.GridGenerator;
 import model.PeopleGenerator;
 import model.ver2.Define;
-import model.ver2.Mock;
+import model.tool.Mock;
 import model.ver2.alg.Alg;
 import model.ver2.alg.Brain;
 

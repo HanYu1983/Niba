@@ -9,7 +9,7 @@ private enum LogLevel {
 }
 
 private final filterLevel:Array<LogLevel> = [Info, Warn, Err];
-private final filterCategory:Array<String> = [];
+private final filterCategory:Array<String> = ["Brain"];
 
 function info(category:String, msg:Dynamic) {
 	if (filterLevel.has(Info) == false) {
