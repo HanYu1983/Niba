@@ -528,7 +528,7 @@ class MainView extends Box {
 			return;
 		}
 		if (previewInfo.p2ValidPeople.length < 1) {
-			Dialogs.messageBox('主公啊…', '沒有武將可以聘用', MessageBoxType.TYPE_WARNING);
+			Dialogs.messageBox('沒有武將可以聘用', '主公啊…', MessageBoxType.TYPE_WARNING);
 			return;
 		} else {
 			hirePreviewView.showPopup(previewInfo);
@@ -872,12 +872,12 @@ class MainView extends Box {
 					msg += '糧草:${Main.getCompareString(info.foodBefore, info.foodAfter)}\n';
 					msg += '士兵:${Main.getCompareString(info.armyBefore, info.armyAfter)}\n';
 					if (info.success) {
-						Dialogs.messageBox(title, '占領成功', MessageBoxType.TYPE_INFO, true, (target) -> {
+						Dialogs.messageBox(msg, title, MessageBoxType.TYPE_INFO, true, (target) -> {
 							transferPreview.showPopup(null);
 							doOneEvent();
 						});
 					} else {
-						Dialogs.messageBox(title, '占領失敗', MessageBoxType.TYPE_INFO, true, (b) -> {
+						Dialogs.messageBox(msg, title, MessageBoxType.TYPE_INFO, true, (b) -> {
 							doOneEvent();
 						});
 					}
