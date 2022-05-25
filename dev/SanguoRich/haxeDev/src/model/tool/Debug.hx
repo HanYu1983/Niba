@@ -3,13 +3,24 @@ package model.tool;
 using Lambda;
 
 private enum LogLevel {
+	Verbose;
 	Info;
 	Warn;
 	Err;
 }
 
-private final filterLevel:Array<LogLevel> = [Info, Warn, Err];
-private final filterCategory:Array<String> = ["Brain"];
+private final filterLevel:Array<LogLevel> = [Verbose, Info, Warn, Err];
+private final filterCategory:Array<String> = ["getCommandWeight"];
+
+function verbose(category:String, msg:Dynamic) {
+	if (filterLevel.has(Verbose) == false) {
+		return;
+	}
+	if (filterCategory.has(category) == false) {
+		return;
+	}
+	js.Browser.console.log('[Verbose][${category}]', msg);
+}
 
 function info(category:String, msg:Dynamic) {
 	if (filterLevel.has(Info) == false) {

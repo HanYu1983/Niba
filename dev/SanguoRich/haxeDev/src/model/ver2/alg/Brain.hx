@@ -6,6 +6,7 @@ import model.Config;
 import model.tool.Fact;
 import model.tool.Debug;
 import model.ver2.Define;
+import model.ver2.BrainTool;
 import model.ver2.alg.Alg;
 import model.ver2.alg.Nego;
 import model.ver2.alg.Hire;
@@ -30,7 +31,7 @@ final privateExport = {
 }
 
 function doBrain(ctx, playerId:Int) {
-	info("Brain", ["doBrain", "start", playerId]);
+	info("doBrain", ["start", playerId]);
 	var done = false;
 	for (i in 0...100) {
 		if (done) {
@@ -50,7 +51,7 @@ function doBrain(ctx, playerId:Int) {
 		final gridId = player.position;
 		final grid = ctx.grids[gridId];
 		final cmd = getMostGoodCommand(ctx, player.id, grid.id);
-		info("Brain", ["doBrain", playerId, i, cmd]);
+		info("doBrain", [playerId, i, cmd]);
 		final peopleInGrid = ctx.peoples.filter((p:People) -> p.position.gridId == grid.id);
 		final peopleInPlayer = ctx.peoples.filter((p:People) -> p.belongToPlayerId == player.id);
 		final p1People:Null<People> = if (peopleInPlayer.length > 0) {
@@ -289,7 +290,7 @@ function doBrain(ctx, playerId:Int) {
 			case TREASURE_TAKE:
 		}
 	}
-	info("Brain", ["doBrain", "finished", playerId]);
+	info("doBrain", ["finished", playerId]);
 }
 
 private typedef BrainMemory = {
@@ -542,6 +543,7 @@ private function getCommandWeight(ctx:Context, playerId:Int, gridId:Int, cmd:Act
 	final peopleInPlayer = ctx.peoples.filter((p:People) -> p.belongToPlayerId == player.id);
 	final treasureInPlayer = ctx.treasures.filter((p) -> p.belongToPlayerId == player.id);
 	if (peopleInPlayer.length == 0) {
+		warn("getCommandWeight", [cmd, "peopleInPlayer.length == 0"]);
 		return switch cmd {
 			case END:
 				1.0;
@@ -612,11 +614,12 @@ private function getCommandWeight(ctx:Context, playerId:Int, gridId:Int, cmd:Act
 			for (strategy in StrategyList) {
 				final factCanPayMoney = player.money >= strategy.money;
 				if (factCanPayMoney == false) {
+					warn("getCommandWeight", ["factCanPayMoney == false; continue", strategy]);
 					continue;
 				}
 				final factNowMoney = getFact(player.money / (strategy.money * 3));
 				final factUseTimeLowerThen2 = factVery(factNot(getFact(brainMemory.strategyHistory.filter(sid -> sid == strategy.id).length / 2.0)), 3);
-				info("getCommandWeight", [
+				verbose("getCommandWeight", [
 					playerId,
 					cmd,
 					strategy.id,
@@ -633,7 +636,9 @@ private function getCommandWeight(ctx:Context, playerId:Int, gridId:Int, cmd:Act
 						} catch (e) {
 							throw new haxe.Exception("strategy.value.valid必須是Array");
 						}
+						verbose("getCommandWeight", "s in steps");
 						for (s in steps) {
+							verbose("getCommandWeight", ["==", "s in steps", s]);
 							final nextPosition = ((player.position + s) + ctx.grids.length) % ctx.grids.length;
 							final nextGrid = ctx.grids[nextPosition];
 							if (nextGrid == null) {
@@ -649,21 +654,32 @@ private function getCommandWeight(ctx:Context, playerId:Int, gridId:Int, cmd:Act
 							});
 							// 如果是中立大城可以去
 							final factHasPeople = peopleInGrid.length > 0 ? 1.0 : 0.0;
+							verbose("getCommandWeight", ["factHasPeople", factHasPeople]);
 							final factNotEnemyBig = getFact(isNotEnemyButNotMe ? factBigGrid : 1.0);
+							verbose("getCommandWeight", ["factNotEnemyBig", factNotEnemyBig]);
 							final factMyBig = getFact(isMyGrid ? factBigGrid : 1.0);
+							verbose("getCommandWeight", ["factMyBig", factMyBig]);
 							// 越過路障
 							final factPassGroundItem = getFact({
 								final passedGrids = [for (i in 0...s) player.position + i % ctx.grids.length];
 								final enemyItems = ctx.groundItems.filter(i -> passedGrids.has(i.position) && i.belongToPlayerId != player.id);
 								enemyItems.length > 0 ? enemyItems.length * 2 : 1.0;
 							});
+							verbose("getCommandWeight", ["factPassGroundItem", factPassGroundItem]);
 							final factIsEnemy = getFact(isEnemyGrid ? 9999 : 0.0);
+							verbose("getCommandWeight", ["factIsEnemy", factIsEnemy]);
 							final factIsEnemySmall = getFact(isEnemyGrid ? factNot(factBigGrid) : 0.0);
+							verbose("getCommandWeight", ["factIsEnemySmall", factIsEnemySmall]);
 							final factIcanOccupy = getFact({
 								final myRes = player.food + player.army * 2;
 								final enemyRes = nextGrid.food + nextGrid.army * 2;
-								getFact(myRes / (enemyRes * 2));
+								if (enemyRes == 0) {
+									99999;
+								} else {
+									myRes / (enemyRes * 2);
+								}
 							});
+							verbose("getCommandWeight", ["factIcanOccupy", factIcanOccupy]);
 							final factHateYou = getFact({
 								final gridBelongPlayerId = getGridBelongPlayerId(ctx, nextGrid.id);
 								if (gridBelongPlayerId == null) {
@@ -673,23 +689,27 @@ private function getCommandWeight(ctx:Context, playerId:Int, gridId:Int, cmd:Act
 									0.5 + hateYouCnt * 0.5;
 								}
 							});
+							verbose("getCommandWeight", ["factHateYou", factHateYou]);
+							verbose("getCommandWeight", "p1 in peopleInPlayer");
 							for (p1 in peopleInPlayer) {
+								verbose("getCommandWeight", ["==", "p1 in peopleInPlayer", "p1.name", p1.name]);
 								final result = _getStrategyRate(ctx, p1.id, strategy.id, 0, 0, nextGrid.id);
 								// 成功率
 								final factSuccessRate = getFact(result.rate / 0.8);
 								// 體力剩下越多越好
 								final factEnergy = factVery(getFact(result.energyAfter / 100.0), 2);
 								// 走中立格或自己格
-								final score1 = 1.0 * getFact(factUseTimeLowerThen2 * factMyBig * factNotEnemyBig * factSuccessRate * factEnergy * factNowMoney * factPassGroundItem) * factOn(factNot(factIsEnemy),
+								final score1 = 1.0 * getFact(factUseTimeLowerThen2 * factSuccessRate * factEnergy * factNowMoney * factMyBig * factNotEnemyBig * factPassGroundItem) * factOn(factNot(factIsEnemy),
 									1.0) * factOn(factHasPeople, 1);
+								verbose("getCommandWeight", ["score1", score1]);
 								// 走敵人格
-								final score2 = 1.0 * getFact(factUseTimeLowerThen2 * factIsEnemySmall * factIcanOccupy * factHateYou) * factOn(factIsEnemy,
+								final score2 = 1.0 * getFact(factUseTimeLowerThen2 * factSuccessRate * factEnergy * factNowMoney * factIsEnemySmall * factIcanOccupy * factHateYou) * factOn(factIsEnemy,
 									1) * factOn(factIcanOccupy, 1.5);
+								verbose("getCommandWeight", ["score2", score2]);
 								final score = Math.max(score1, score2) * factOn(factSuccessRate, 0.9) * factOn(factNowMoney, 1);
+								verbose("getCommandWeight", ["score", score]);
 								if (score > maxScore) {
-									// info("getCommandWeight", "strategy", strategy.id, p1.id, "score", score, "=", factUseTimeLowerThen2, factMyBig,
-									// 	factNotEnemyBig, factSuccessRate, factEnergy, factNowMoney, factPassGroundItem, "on", factSuccessRate, factIsEnemy);
-									// info("XXX SuccessRate:", result.rate, player.name, p1.name, p1.intelligence);
+									verbose("getCommandWeight", ["score > maxScore", score]);
 									maxScore = score;
 									brainMemory.strategy.peopleId = p1.id;
 									brainMemory.strategy.strategyId = strategy.id;

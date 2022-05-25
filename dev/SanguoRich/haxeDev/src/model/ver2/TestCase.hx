@@ -9,7 +9,11 @@ import model.tool.Mock;
 import model.ver2.alg.Alg;
 import model.ver2.alg.Brain;
 
+final getDefaultBrainMemory = model.ver2.alg.Brain.privateExport.getDefaultBrainMemory;
+final getCommandWeight = model.ver2.alg.Brain.privateExport.getCommandWeight;
+
 function test() {
+	model.ver2.BrainTool.test();
 	model.ver2.alg.Explore.test();
 	model.ver2.alg.Building.test();
 	testPayTax();
@@ -61,8 +65,9 @@ function testBrainCommandWeight() {
 		final player = getDefaultPlayer();
 		player.id = 0;
 		player.brain = {
-			memory: model.ver2.alg.Brain.privateExport.getDefaultBrainMemory()
+			memory: getDefaultBrainMemory()
 		}
+		player.money = 1000;
 		player;
 	};
 	ctx.players = [player0];
@@ -75,6 +80,6 @@ function testBrainCommandWeight() {
 			people;
 		}
 	];
-	final w = model.ver2.alg.Brain.privateExport.getCommandWeight(ctx, player0.id, 0, MOVE);
+	final w = getCommandWeight(ctx, player0.id, 0, STRATEGY);
 	trace(w);
 }
