@@ -54,53 +54,138 @@ private function genNewGrid(ctx:Context, playerId:Int, peopleId:Int, gridId:Int,
 	switch settleType {
 		case 0:
 			// 市場
-			addAttachInfo(tmpCtx, grid.id, MARKET(1));
-			addAttachInfo(tmpCtx, grid.id, BANK(0));
-			// addAttachInfo(tmpCtx, grid.id, FARM(0));
-			// addAttachInfo(tmpCtx, grid.id, BARN(0));
-			// addAttachInfo(tmpCtx, grid.id, BARRACKS(0));
-			// addAttachInfo(tmpCtx, grid.id, HOME(0));
-			addAttachInfo(tmpCtx, grid.id, WALL(0));
-			// addAttachInfo(tmpCtx, grid.id, EXPLORE(0));
+			final buildings = BuildingList.filter(catelog -> {
+				// 不使用
+				// case _:
+				// 強迫編譯器檢查
+				return switch catelog.type {
+					case MARKET(level):
+						level == 1;
+					case BANK(level):
+						level == 0;
+					case FARM(level):
+						false;
+					case BARN(level):
+						false;
+					case BARRACKS(level):
+						false;
+					case HOME(level):
+						false;
+					case EXPLORE(level):
+						false;
+					case WALL(level):
+						level == 0;
+					case SIEGEFACTORY(level):
+						false;
+					case ACADEMY(level):
+						false;
+				}
+			}).map(catelog -> catelog.type);
+			for (building in buildings) {
+				addAttachInfo(tmpCtx, grid.id, building);
+			}
 			grid.defaultMaxMoney = 500;
 			grid.defaultMaxFood = 500;
 			grid.defaultMaxArmy = 500;
 		case 1:
 			// 農田
-			// addAttachInfo(tmpCtx, grid.id, MARKET(0));
-			// addAttachInfo(tmpCtx, grid.id, BANK(0));
-			addAttachInfo(tmpCtx, grid.id, FARM(1));
-			addAttachInfo(tmpCtx, grid.id, BARN(0));
-			// addAttachInfo(tmpCtx, grid.id, BARRACKS(0));
-			// addAttachInfo(tmpCtx, grid.id, HOME(0));
-			addAttachInfo(tmpCtx, grid.id, WALL(0));
-			// addAttachInfo(tmpCtx, grid.id, EXPLORE(0));
+			final buildings = BuildingList.filter(catelog -> {
+				// 不使用
+				// case _:
+				// 強迫編譯器檢查
+				return switch catelog.type {
+					case MARKET(level):
+						false;
+					case BANK(level):
+						false;
+					case FARM(level):
+						level == 1;
+					case BARN(level):
+						level == 0;
+					case BARRACKS(level):
+						false;
+					case HOME(level):
+						false;
+					case EXPLORE(level):
+						false;
+					case WALL(level):
+						level == 0;
+					case SIEGEFACTORY(level):
+						false;
+					case ACADEMY(level):
+						false;
+				}
+			}).map(catelog -> catelog.type);
+			for (building in buildings) {
+				addAttachInfo(tmpCtx, grid.id, building);
+			}
 			grid.defaultMaxMoney = 500;
 			grid.defaultMaxFood = 500;
 			grid.defaultMaxArmy = 500;
 		case 2:
 			// 村落
-			// addAttachInfo(tmpCtx, grid.id, MARKET(0));
-			// addAttachInfo(tmpCtx, grid.id, BANK(0));
-			// addAttachInfo(tmpCtx, grid.id, FARM(0));
-			// addAttachInfo(tmpCtx, grid.id, BARN(0));
-			addAttachInfo(tmpCtx, grid.id, BARRACKS(1));
-			addAttachInfo(tmpCtx, grid.id, HOME(0));
-			addAttachInfo(tmpCtx, grid.id, WALL(0));
-			// addAttachInfo(tmpCtx, grid.id, EXPLORE(0));
+			final buildings = BuildingList.filter(catelog -> {
+				// 不使用
+				// case _:
+				// 強迫編譯器檢查
+				return switch catelog.type {
+					case MARKET(level):
+						false;
+					case BANK(level):
+						false;
+					case FARM(level):
+						false;
+					case BARN(level):
+						false;
+					case BARRACKS(level):
+						level == 1;
+					case HOME(level):
+						level == 0;
+					case EXPLORE(level):
+						false;
+					case WALL(level):
+						level == 0;
+					case SIEGEFACTORY(level):
+						level == 0;
+					case ACADEMY(level):
+						level == 0;
+				}
+			}).map(catelog -> catelog.type);
+			for (building in buildings) {
+				addAttachInfo(tmpCtx, grid.id, building);
+			}
 			grid.defaultMaxMoney = 500;
 			grid.defaultMaxFood = 500;
 			grid.defaultMaxArmy = 500;
 		case 3:
 			// 城市
-			addAttachInfo(tmpCtx, grid.id, MARKET(1));
-			addAttachInfo(tmpCtx, grid.id, BANK(0));
-			addAttachInfo(tmpCtx, grid.id, FARM(1));
-			addAttachInfo(tmpCtx, grid.id, BARN(0));
-			addAttachInfo(tmpCtx, grid.id, BARRACKS(1));
-			addAttachInfo(tmpCtx, grid.id, HOME(0));
-			addAttachInfo(tmpCtx, grid.id, WALL(0));
-			addAttachInfo(tmpCtx, grid.id, EXPLORE(0));
+			final buildings = BuildingList.filter(catelog -> {
+				return switch catelog.type {
+					case MARKET(level):
+						level == 1;
+					case BANK(level):
+						level == 0;
+					case FARM(level):
+						level == 1;
+					case BARN(level):
+						level == 0;
+					case BARRACKS(level):
+						level == 1;
+					case HOME(level):
+						level == 0;
+					case EXPLORE(level):
+						level == 0;
+					case WALL(level):
+						level == 0;
+					case SIEGEFACTORY(level):
+						level == 0;
+					case ACADEMY(level):
+						level == 0;
+				}
+			}).map(catelog -> catelog.type);
+			for (building in buildings) {
+				addAttachInfo(tmpCtx, grid.id, building);
+			}
 			grid.defaultMaxMoney = 500;
 			grid.defaultMaxFood = 500;
 			grid.defaultMaxArmy = 500;

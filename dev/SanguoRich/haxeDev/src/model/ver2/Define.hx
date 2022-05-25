@@ -296,7 +296,7 @@ enum Event {
 	PEOPLE_LEVEL_UP_EVENT(value:{
 		peopleBefore:model.PeopleGenerator.People,
 		peopleAfter:model.PeopleGenerator.People,
-		gridId:Int,
+		gridId:Null<Int>,
 	}, gameInfo:GameInfo);
 	COST_FOR_BONUS_RESULT(value:{
 		costType:Int,
@@ -346,7 +346,7 @@ enum Event {
 		player:model.IModel.PlayerInfo,
 	}, gameInfo:GameInfo, autoplay:Null<{duration:Float}>);
 	PLAYER_WIN(value:{
-		player:model.IModel.PlayerInfo,
+		player:Null<model.IModel.PlayerInfo>,
 	}, gameInfo:GameInfo, autoplay:Null<{duration:Float}>);
 	SETTLE_RESULT(value:{
 		grid:model.GridGenerator.Grid
@@ -438,11 +438,83 @@ function getGrowFormGameSettings(ctx:Context):Float {
 	return ctx.settings.growSpeed;
 }
 
+function getExpRateByAttachment(ctx:Context, playerId:Int):Float {
+	final rate = ctx.attachments.filter(a -> getGridBelongPlayerId(ctx, a.belongToGridId) == playerId).fold((p, a:Float) -> {
+		return a * switch p.type {
+			case ACADEMY(level):
+				final catelog = BuildingList.filter((catelog) -> Type.enumEq(catelog.type, p.type));
+				if (catelog.length == 0) {
+					throw new haxe.Exception('current.catelog找不到:${p.type}');
+				}
+				switch catelog[0].value {
+					case {float: [rate]}:
+						rate;
+					case _:
+						throw new haxe.Exception("catelog[0].value not found");
+				}
+			case _:
+				1.0;
+		}
+	}, 1.0);
+	return rate;
+}
+
+function getWarFoodCostRateByAttachment(ctx:Context, playerId:Int):Float {
+	final rate = ctx.attachments.filter(a -> getGridBelongPlayerId(ctx, a.belongToGridId) == playerId).fold((p, a:Float) -> {
+		return a * switch p.type {
+			case SIEGEFACTORY(level):
+				final catelog = BuildingList.filter((catelog) -> Type.enumEq(catelog.type, p.type));
+				if (catelog.length == 0) {
+					throw new haxe.Exception('current.catelog找不到:${p.type}');
+				}
+				switch catelog[0].value {
+					case {float: [rate, _]}:
+						rate;
+					case _:
+						throw new haxe.Exception("catelog[0].value not found");
+				}
+			case _:
+				1.0;
+		}
+	}, 1.0);
+	return rate;
+}
+
+function getWarDamageRateByAttachment(ctx:Context, playerId:Int):Float {
+	final rate = ctx.attachments.filter(a -> getGridBelongPlayerId(ctx, a.belongToGridId) == playerId).fold((p, a:Float) -> {
+		return a * switch p.type {
+			case SIEGEFACTORY(level):
+				final catelog = BuildingList.filter((catelog) -> Type.enumEq(catelog.type, p.type));
+				if (catelog.length == 0) {
+					throw new haxe.Exception('current.catelog找不到:${p.type}');
+				}
+				switch catelog[0].value {
+					case {float: [_, rate]}:
+						rate;
+					case _:
+						throw new haxe.Exception("catelog[0].value not found");
+				}
+			case _:
+				1.0;
+		}
+	}, 1.0);
+	return rate;
+}
+
 function getPlayerCharmAddByAttachment(ctx:Context, playerId:Int):Float {
 	final charmExt = ctx.attachments.filter(a -> getGridBelongPlayerId(ctx, a.belongToGridId) == playerId).fold((p, a) -> {
 		return a + switch p.type {
 			case EXPLORE(level):
-				return [0, 5][level];
+				final catelog = BuildingList.filter((catelog) -> Type.enumEq(catelog.type, p.type));
+				if (catelog.length == 0) {
+					throw new haxe.Exception('current.catelog找不到:${p.type}');
+				}
+				switch catelog[0].value {
+					case {float: [rate, _]}:
+						rate;
+					case _:
+						throw new haxe.Exception("catelog[0].value not found");
+				}
 			case _:
 				0;
 		}
@@ -451,10 +523,19 @@ function getPlayerCharmAddByAttachment(ctx:Context, playerId:Int):Float {
 }
 
 function getPlayerHireCostRate(ctx:Context, playerId:Int):Float {
-	final rate = ctx.attachments.filter(a -> getGridBelongPlayerId(ctx, a.belongToGridId) == playerId).fold((p, a) -> {
+	final rate = ctx.attachments.filter(a -> getGridBelongPlayerId(ctx, a.belongToGridId) == playerId).fold((p, a:Float) -> {
 		return a * switch p.type {
 			case EXPLORE(level):
-				return [1.0, 0.8][level];
+				final catelog = BuildingList.filter((catelog) -> Type.enumEq(catelog.type, p.type));
+				if (catelog.length == 0) {
+					throw new haxe.Exception('current.catelog找不到:${p.type}');
+				}
+				switch catelog[0].value {
+					case {float: [_, rate]}:
+						rate;
+					case _:
+						throw new haxe.Exception("catelog[0].value not found");
+				}
 			case _:
 				1.0;
 		}
@@ -472,7 +553,16 @@ function getGridMoneyGrow(ctx:Context, gridId:Int):Float {
 	final attachmentRate = ctx.attachments.filter(a -> a.belongToGridId == grid.id).fold((p, a) -> {
 		return a + switch p.type {
 			case BANK(level):
-				[0.0, 0.02, 0.03, 0.04][level];
+				final catelog = BuildingList.filter((catelog) -> Type.enumEq(catelog.type, p.type));
+				if (catelog.length == 0) {
+					throw new haxe.Exception('current.catelog找不到:${p.type}');
+				}
+				switch catelog[0].value {
+					case {float: [_, rate]}:
+						rate;
+					case _:
+						throw new haxe.Exception("catelog[0].value not found");
+				}
 			case _:
 				0;
 		}
@@ -489,8 +579,17 @@ function getGridFoodGrow(ctx:Context, gridId:Int):Float {
 	final grid = ctx.grids[gridId];
 	final attachmentRate = ctx.attachments.filter(a -> a.belongToGridId == grid.id).fold((p, a) -> {
 		return a + switch p.type {
-			case BARN(level):
-				[0.0, 0.02, 0.03, 0.04][level];
+			case BARN(_):
+				final catelog = BuildingList.filter((catelog) -> Type.enumEq(catelog.type, p.type));
+				if (catelog.length == 0) {
+					throw new haxe.Exception('current.catelog找不到:${p.type}');
+				}
+				switch catelog[0].value {
+					case {float: [_, rate]}:
+						rate;
+					case _:
+						throw new haxe.Exception("catelog[0].value not found");
+				}
 			case _:
 				0;
 		}
@@ -508,7 +607,16 @@ function getGridArmyGrow(ctx:Context, gridId:Int):Float {
 	final attachmentRate = ctx.attachments.filter(a -> a.belongToGridId == grid.id).fold((p, a) -> {
 		return a + switch p.type {
 			case HOME(level):
-				[0.0, 0.02, 0.03, 0.04][level];
+				final catelog = BuildingList.filter((catelog) -> Type.enumEq(catelog.type, p.type));
+				if (catelog.length == 0) {
+					throw new haxe.Exception('current.catelog找不到:${p.type}');
+				}
+				switch catelog[0].value {
+					case {float: [_, rate]}:
+						rate;
+					case _:
+						throw new haxe.Exception("catelog[0].value not found");
+				}
 			case _:
 				0;
 		}
@@ -526,7 +634,16 @@ function getGridFoodAdd(ctx:Context, gridId:Int):Float {
 	final attachmentRate = ctx.attachments.filter(a -> a.belongToGridId == grid.id).fold((p, a) -> {
 		return a + switch p.type {
 			case FARM(level):
-				[0, 5, 9, 12][level];
+				final catelog = BuildingList.filter((catelog) -> Type.enumEq(catelog.type, p.type));
+				if (catelog.length == 0) {
+					throw new haxe.Exception('current.catelog找不到:${p.type}');
+				}
+				switch catelog[0].value {
+					case {float: [v]}:
+						v;
+					case _:
+						throw new haxe.Exception("catelog[0].value not found");
+				}
 			case _:
 				0;
 		}
@@ -544,7 +661,16 @@ function getGridMoneyAdd(ctx:Context, gridId:Int):Float {
 	final attachmentRate = ctx.attachments.filter(a -> a.belongToGridId == grid.id).fold((p, a) -> {
 		return a + switch p.type {
 			case MARKET(level):
-				[0, 5, 9, 12][level];
+				final catelog = BuildingList.filter((catelog) -> Type.enumEq(catelog.type, p.type));
+				if (catelog.length == 0) {
+					throw new haxe.Exception('current.catelog找不到:${p.type}');
+				}
+				switch catelog[0].value {
+					case {float: [v]}:
+						v;
+					case _:
+						throw new haxe.Exception("catelog[0].value not found");
+				}
 			case _:
 				0;
 		}
@@ -562,7 +688,16 @@ function getGridArmyAdd(ctx:Context, gridId:Int):Float {
 	final attachmentRate = ctx.attachments.filter(a -> a.belongToGridId == grid.id).fold((p, a) -> {
 		return a + switch p.type {
 			case BARRACKS(level):
-				[0, 5, 9, 12][level];
+				final catelog = BuildingList.filter((catelog) -> Type.enumEq(catelog.type, p.type));
+				if (catelog.length == 0) {
+					throw new haxe.Exception('current.catelog找不到:${p.type}');
+				}
+				switch catelog[0].value {
+					case {float: [v]}:
+						v;
+					case _:
+						throw new haxe.Exception("catelog[0].value not found");
+				}
 			case _:
 				0;
 		}
@@ -572,37 +707,67 @@ function getGridArmyAdd(ctx:Context, gridId:Int):Float {
 
 function getGridMaxFood(ctx:Context, gridId:Int):Float {
 	final grid = ctx.grids[gridId];
-	final attachmentInGrid = ctx.attachments.filter(a -> a.belongToGridId == gridId);
-	final addExt = attachmentInGrid.map(a -> switch a.type {
-		case BARN(level):
-			level;
-		case _:
-			0;
-	}).fold((c, a) -> c + a, 0) * 200;
+	final addExt = ctx.attachments.filter(a -> a.belongToGridId == grid.id).fold((p, a) -> {
+		return a + switch p.type {
+			case BARN(level):
+				final catelog = BuildingList.filter((catelog) -> Type.enumEq(catelog.type, p.type));
+				if (catelog.length == 0) {
+					throw new haxe.Exception('current.catelog找不到:${p.type}');
+				}
+				switch catelog[0].value {
+					case {float: [v, _]}:
+						v;
+					case _:
+						throw new haxe.Exception("catelog[0].value not found");
+				}
+			case _:
+				0;
+		}
+	}, 0);
 	return grid.defaultMaxFood + addExt;
 }
 
 function getGridMaxMoney(ctx:Context, gridId:Int):Float {
 	final grid = ctx.grids[gridId];
-	final attachmentInGrid = ctx.attachments.filter(a -> a.belongToGridId == gridId);
-	final addExt = attachmentInGrid.map(a -> switch a.type {
-		case BANK(level):
-			level;
-		case _:
-			0;
-	}).fold((c, a) -> c + a, 0) * 200;
+	final addExt = ctx.attachments.filter(a -> a.belongToGridId == grid.id).fold((p, a) -> {
+		return a + switch p.type {
+			case BANK(level):
+				final catelog = BuildingList.filter((catelog) -> Type.enumEq(catelog.type, p.type));
+				if (catelog.length == 0) {
+					throw new haxe.Exception('current.catelog找不到:${p.type}');
+				}
+				switch catelog[0].value {
+					case {float: [v, _]}:
+						v;
+					case _:
+						throw new haxe.Exception("catelog[0].value not found");
+				}
+			case _:
+				0;
+		}
+	}, 0);
 	return grid.defaultMaxMoney + addExt;
 }
 
 function getGridMaxArmy(ctx:Context, gridId:Int):Float {
 	final grid = ctx.grids[gridId];
-	final attachmentInGrid = ctx.attachments.filter(a -> a.belongToGridId == gridId);
-	final addExt = attachmentInGrid.map(a -> switch a.type {
-		case HOME(level):
-			level;
-		case _:
-			0;
-	}).fold((c, a) -> c + a, 0) * 200;
+	final addExt = ctx.attachments.filter(a -> a.belongToGridId == grid.id).fold((p, a) -> {
+		return a + switch p.type {
+			case HOME(level):
+				final catelog = BuildingList.filter((catelog) -> Type.enumEq(catelog.type, p.type));
+				if (catelog.length == 0) {
+					throw new haxe.Exception('current.catelog找不到:${p.type}');
+				}
+				switch catelog[0].value {
+					case {float: [v, _]}:
+						v;
+					case _:
+						throw new haxe.Exception("catelog[0].value not found");
+				}
+			case _:
+				0;
+		}
+	}, 0);
 	return grid.defaultMaxMoney + addExt;
 }
 

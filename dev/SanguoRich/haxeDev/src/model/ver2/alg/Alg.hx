@@ -187,14 +187,37 @@ function initContext(ctx:Context, options:GameSetting) {
 		}
 		// 移除原有建物
 		ctx.attachments = ctx.attachments.filter(a -> a.belongToGridId != player.position);
-		addAttachInfo(ctx, player.position, MARKET(0));
-		addAttachInfo(ctx, player.position, BANK(1));
-		addAttachInfo(ctx, player.position, FARM(0));
-		addAttachInfo(ctx, player.position, BARN(1));
-		addAttachInfo(ctx, player.position, BARRACKS(0));
-		addAttachInfo(ctx, player.position, HOME(1));
-		addAttachInfo(ctx, player.position, EXPLORE(0));
-		addAttachInfo(ctx, player.position, WALL(1));
+		// 蓋總城建物
+		final buildings = BuildingList.filter(catelog -> {
+			// 不使用
+			// case _:
+			// 強迫編譯器檢查
+			return switch catelog.type {
+				case MARKET(level):
+					level == 0;
+				case BANK(level):
+					level == 1;
+				case FARM(level):
+					level == 0;
+				case BARN(level):
+					level == 1;
+				case BARRACKS(level):
+					level == 0;
+				case HOME(level):
+					level == 1;
+				case EXPLORE(level):
+					level == 0;
+				case WALL(level):
+					level == 1;
+				case SIEGEFACTORY(level):
+					level == 0;
+				case ACADEMY(level):
+					level == 0;
+			}
+		}).map(catelog -> catelog.type);
+		for (building in buildings) {
+			addAttachInfo(ctx, player.position, building);
+		}
 		ctx.grids[player.position].defaultMoneyGrow = Math.random() * 0.01;
 		ctx.grids[player.position].defaultFoodGrow = Math.random() * 0.01;
 		ctx.grids[player.position].defaultArmyGrow = Math.random() * 0.01;
@@ -220,7 +243,13 @@ function onPeopleExpAdd(ctx:Context, peopleId:Int, exp:Float) {
 		gridId: people.position.gridId,
 	}
 	final originLevel = getExpLevel(people.exp);
-	people.exp += exp;
+	final expRate = if (people.belongToPlayerId == null) {
+		1.0;
+	} else {
+		getExpRateByAttachment(ctx, people.belongToPlayerId);
+	}
+	final gainExp = exp * expRate;
+	people.exp += gainExp;
 	final isLevelUp = getExpLevel(people.exp) > originLevel;
 	if (isLevelUp) {
 		eventValue.peopleAfter = getPeopleInfo(ctx, people);
@@ -721,21 +750,43 @@ function onPlayerEnd(ctx:Context, playerId:Int):Bool {
 						final chooseGrid = emptyGrids[chooseId];
 						// 移除原有建物
 						ctx.attachments = ctx.attachments.filter(a -> a.belongToGridId != chooseGrid.id);
-						addAttachInfo(ctx, chooseGrid.id, MARKET(0));
-						addAttachInfo(ctx, chooseGrid.id, BANK(0));
-						addAttachInfo(ctx, chooseGrid.id, FARM(0));
-						addAttachInfo(ctx, chooseGrid.id, BARN(0));
-						addAttachInfo(ctx, chooseGrid.id, BARRACKS(1));
-						addAttachInfo(ctx, chooseGrid.id, HOME(0));
-						addAttachInfo(ctx, chooseGrid.id, EXPLORE(0));
-						addAttachInfo(ctx, chooseGrid.id, WALL(0));
+						//
+						final buildings = BuildingList.filter(catelog -> {
+							// 不使用
+							// case _:
+							// 強迫編譯器檢查
+							return switch catelog.type {
+								case MARKET(level):
+									level == 0;
+								case BANK(level):
+									level == 0;
+								case FARM(level):
+									level == 0;
+								case BARN(level):
+									level == 0;
+								case BARRACKS(level):
+									level == 1;
+								case HOME(level):
+									level == 0;
+								case EXPLORE(level):
+									level == 0;
+								case WALL(level):
+									level == 0;
+								case SIEGEFACTORY(level):
+									level == 0;
+								case ACADEMY(level):
+									level == 0;
+							}
+						}).map(catelog -> catelog.type);
+						for (building in buildings) {
+							addAttachInfo(ctx, chooseGrid.id, building);
+						}
 						chooseGrid.money = EVENT_GRID_BORN_RESOURCE_AMOUNT;
 						chooseGrid.army = EVENT_GRID_BORN_RESOURCE_AMOUNT;
 						chooseGrid.food = EVENT_GRID_BORN_RESOURCE_AMOUNT;
 						chooseGrid.defaultMaxMoney = 500;
 						chooseGrid.defaultMaxFood = 500;
 						chooseGrid.defaultMaxArmy = 500;
-
 						// 加入武將
 						addPeopleInfo(ctx, null, chooseGrid.id, model.PeopleGenerator.getInst().generate());
 						ctx.events.push(GRID_BORN_EVENT({

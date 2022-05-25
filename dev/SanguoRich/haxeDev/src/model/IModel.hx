@@ -576,9 +576,9 @@ final BuildingList:Array<BuildingCatelog> = [
 		describe: '糧食每回合+0',
 		type: FARM(0),
 		depends: [],
-		value:{
+		value: {
 			valid: [],
-			float: []
+			float: [0]
 		}
 	},
 	{
@@ -588,7 +588,7 @@ final BuildingList:Array<BuildingCatelog> = [
 		describe: '糧食每回合+4',
 		type: FARM(1),
 		depends: [],
-		value:{
+		value: {
 			valid: [],
 			float: [4.0]
 		}
@@ -600,7 +600,7 @@ final BuildingList:Array<BuildingCatelog> = [
 		describe: '糧食每回合+8',
 		type: FARM(2),
 		depends: [],
-		value:{
+		value: {
 			valid: [],
 			float: [8.0]
 		}
@@ -612,7 +612,7 @@ final BuildingList:Array<BuildingCatelog> = [
 		describe: '糧食每回合+12',
 		type: FARM(3),
 		depends: [],
-		value:{
+		value: {
 			valid: [],
 			float: [12.0]
 		}
@@ -624,9 +624,9 @@ final BuildingList:Array<BuildingCatelog> = [
 		describe: '金錢每回合+0',
 		type: MARKET(0),
 		depends: [],
-		value:{
+		value: {
 			valid: [],
-			float: []
+			float: [0]
 		}
 	},
 	{
@@ -636,7 +636,7 @@ final BuildingList:Array<BuildingCatelog> = [
 		describe: '金錢每回合+4',
 		type: MARKET(1),
 		depends: [],
-		value:{
+		value: {
 			valid: [],
 			float: [4.0]
 		}
@@ -648,7 +648,7 @@ final BuildingList:Array<BuildingCatelog> = [
 		describe: '金錢每回合+8',
 		type: MARKET(2),
 		depends: [],
-		value:{
+		value: {
 			valid: [],
 			float: [8.0]
 		}
@@ -660,7 +660,7 @@ final BuildingList:Array<BuildingCatelog> = [
 		describe: '金錢每回合+12',
 		type: MARKET(3),
 		depends: [],
-		value:{
+		value: {
 			valid: [],
 			float: [12.0]
 		}
@@ -672,9 +672,9 @@ final BuildingList:Array<BuildingCatelog> = [
 		describe: '士兵每回合+0',
 		type: BARRACKS(0),
 		depends: [],
-		value:{
+		value: {
 			valid: [],
-			float: []
+			float: [0]
 		}
 	},
 	{
@@ -684,7 +684,7 @@ final BuildingList:Array<BuildingCatelog> = [
 		describe: '士兵每回合+4',
 		type: BARRACKS(1),
 		depends: [],
-		value:{
+		value: {
 			valid: [],
 			float: [4.0]
 		}
@@ -696,7 +696,7 @@ final BuildingList:Array<BuildingCatelog> = [
 		describe: '士兵每回合+8',
 		type: BARRACKS(2),
 		depends: [],
-		value:{
+		value: {
 			valid: [],
 			float: [8.0]
 		}
@@ -708,7 +708,7 @@ final BuildingList:Array<BuildingCatelog> = [
 		describe: '士兵每回合+12',
 		type: BARRACKS(3),
 		depends: [],
-		value:{
+		value: {
 			valid: [],
 			float: [12.0]
 		}
@@ -720,9 +720,9 @@ final BuildingList:Array<BuildingCatelog> = [
 		describe: '提高武將在探索計算時的魅力(+0)及聘用計算時的魅力(+0)。所有武將的薪資不減少。並且聘用金錢不減少',
 		type: EXPLORE(0),
 		depends: [],
-		value:{
+		value: {
 			valid: [],
-			float: []
+			float: [0, 1]
 		}
 	},
 	{
@@ -732,9 +732,9 @@ final BuildingList:Array<BuildingCatelog> = [
 		describe: '提高武將在探索計算時的魅力(+5)及聘用計算時的魅力(+5)。所有武將的薪資減為*0.8。並且聘用金錢減為*0.8',
 		type: EXPLORE(1),
 		depends: [],
-		value:{
+		value: {
 			valid: [],
-			float: [5]
+			float: [5, 0.8]
 		}
 	},
 	{
@@ -744,9 +744,9 @@ final BuildingList:Array<BuildingCatelog> = [
 		describe: '此格子防禦方的加成提高。(+0%)',
 		type: WALL(0),
 		depends: [],
-		value:{
+		value: {
 			valid: [],
-			float: []
+			float: [1.0]
 		}
 	},
 	{
@@ -756,7 +756,7 @@ final BuildingList:Array<BuildingCatelog> = [
 		describe: '此格子防禦方的加成提高。(+15%)',
 		type: WALL(1),
 		depends: [],
-		value:{
+		value: {
 			valid: [],
 			float: [1.15]
 		}
@@ -768,7 +768,7 @@ final BuildingList:Array<BuildingCatelog> = [
 		describe: '此格子防禦方的加成提高。(+30%)',
 		type: WALL(2),
 		depends: [],
-		value:{
+		value: {
 			valid: [],
 			float: [1.30]
 		}
@@ -780,7 +780,7 @@ final BuildingList:Array<BuildingCatelog> = [
 		describe: '此格子防禦方的加成提高。(+45%)',
 		type: WALL(3),
 		depends: [],
-		value:{
+		value: {
 			valid: [],
 			float: [1.45]
 		}
@@ -792,9 +792,9 @@ final BuildingList:Array<BuildingCatelog> = [
 		describe: '金錢最大值+0。金錢每回合+0%',
 		type: BANK(0),
 		depends: [],
-		value:{
+		value: {
 			valid: [],
-			float: []
+			float: [0, 0]
 		}
 	},
 	{
@@ -804,7 +804,7 @@ final BuildingList:Array<BuildingCatelog> = [
 		describe: '金錢最大值+200。金錢每回合+1%',
 		type: BANK(1),
 		depends: [],
-		value:{
+		value: {
 			valid: [],
 			float: [200.0, .01]
 		}
@@ -816,7 +816,7 @@ final BuildingList:Array<BuildingCatelog> = [
 		describe: '金錢最大值+400。金錢每回合+2%',
 		type: BANK(2),
 		depends: [],
-		value:{
+		value: {
 			valid: [],
 			float: [400.0, 0.02]
 		}
@@ -828,7 +828,7 @@ final BuildingList:Array<BuildingCatelog> = [
 		describe: '金錢最大值+600。金錢每回合+3%',
 		type: BANK(3),
 		depends: [],
-		value:{
+		value: {
 			valid: [],
 			float: [600.0, 0.03]
 		}
@@ -840,9 +840,9 @@ final BuildingList:Array<BuildingCatelog> = [
 		describe: '糧草最大值+0。糧草每回合+0%',
 		type: BARN(0),
 		depends: [],
-		value:{
+		value: {
 			valid: [],
-			float: []
+			float: [0, 0]
 		}
 	},
 	{
@@ -852,7 +852,7 @@ final BuildingList:Array<BuildingCatelog> = [
 		describe: '糧草最大值+200。糧草每回合+1%',
 		type: BARN(1),
 		depends: [],
-		value:{
+		value: {
 			valid: [],
 			float: [200.0, 0.01]
 		}
@@ -864,7 +864,7 @@ final BuildingList:Array<BuildingCatelog> = [
 		describe: '糧草最大值+400。糧草每回合+2%',
 		type: BARN(2),
 		depends: [],
-		value:{
+		value: {
 			valid: [],
 			float: [400.0, 0.02]
 		}
@@ -876,7 +876,7 @@ final BuildingList:Array<BuildingCatelog> = [
 		describe: '糧草最大值+600。糧草每回合+3%',
 		type: BARN(3),
 		depends: [],
-		value:{
+		value: {
 			valid: [],
 			float: [600.0, 0.03]
 		}
@@ -888,9 +888,9 @@ final BuildingList:Array<BuildingCatelog> = [
 		describe: '士兵最大值+0。士兵每回合+0%',
 		type: HOME(0),
 		depends: [],
-		value:{
+		value: {
 			valid: [],
-			float: []
+			float: [0, 0]
 		}
 	},
 	{
@@ -900,7 +900,7 @@ final BuildingList:Array<BuildingCatelog> = [
 		describe: '士兵最大值+200。士兵每回合+1%',
 		type: HOME(1),
 		depends: [],
-		value:{
+		value: {
 			valid: [],
 			float: [200.0, 0.01]
 		}
@@ -912,7 +912,7 @@ final BuildingList:Array<BuildingCatelog> = [
 		describe: '士兵最大值+400。士兵每回合+2%',
 		type: HOME(2),
 		depends: [],
-		value:{
+		value: {
 			valid: [],
 			float: [400.0, 0.02]
 		}
@@ -924,7 +924,7 @@ final BuildingList:Array<BuildingCatelog> = [
 		describe: '士兵最大值+600。士兵每回合+3%',
 		type: HOME(3),
 		depends: [],
-		value:{
+		value: {
 			valid: [],
 			float: [600.0, 0.03]
 		}
@@ -936,9 +936,9 @@ final BuildingList:Array<BuildingCatelog> = [
 		describe: '攻城時糧食消耗減少0%，攻擊力+0%',
 		type: SIEGEFACTORY(0),
 		depends: [],
-		value:{
+		value: {
 			valid: [],
-			float: []
+			float: [1, 1]
 		}
 	},
 	{
@@ -948,7 +948,7 @@ final BuildingList:Array<BuildingCatelog> = [
 		describe: '攻城時糧食消耗減少10%，攻擊力+10%',
 		type: SIEGEFACTORY(1),
 		depends: [],
-		value:{
+		value: {
 			valid: [],
 			float: [0.9, 1.1]
 		}
@@ -960,9 +960,9 @@ final BuildingList:Array<BuildingCatelog> = [
 		describe: '所有功績增加的時候，增加量+0%',
 		type: ACADEMY(0),
 		depends: [],
-		value:{
+		value: {
 			valid: [],
-			float: []
+			float: [1]
 		}
 	},
 	{
@@ -972,7 +972,7 @@ final BuildingList:Array<BuildingCatelog> = [
 		describe: '所有功績增加的時候，增加量+10%',
 		type: ACADEMY(1),
 		depends: [],
-		value:{
+		value: {
 			valid: [],
 			float: [1.1]
 		}

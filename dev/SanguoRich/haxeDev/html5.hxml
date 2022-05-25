@@ -8,6 +8,7 @@
 -lib tweenx
 --macro nullSafety("model.ver2.ModelVer2")
 --macro nullSafety("model.ver2.Define")
+--macro nullSafety("model.ver2.alg.Alg")
 --macro nullSafety("model.ver2.alg.Brain")
 --macro nullSafety("model.ver2.alg.War")
 --macro nullSafety("model.ver2.alg.Snatch")

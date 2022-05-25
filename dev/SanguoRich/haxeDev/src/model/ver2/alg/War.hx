@@ -26,9 +26,9 @@ private function getWarCostImpl(ctx:Context, playerId:Int, gridId:Int, p1PeopleI
 		final fact1 = getFact(if (atkPeopleAbilities.has(6)) WAR_BACK_ABILITY_FACTOR else 1.0);
 		final fact2 = getFact(if (atkPeopleAbilities.has(7)) WAR_BACK_ABILITY_FACTOR else 1.0);
 		final fact3 = factVery(factNot(getFact(getPeopleIntelligence(ctx, atkPeople.id) / 100.0)), 0.125);
-		final rate = fact1 * fact2 * fact3;
+		final rate = getFact(fact1 * fact2 * fact3);
 		atkMoneyCost = atkArmy * WAR_MONEY_COST_FACTOR * rate;
-		atkFoodCost = atkArmy * WAR_FOOD_COST_FACTOR * rate;
+		atkFoodCost = atkArmy * WAR_FOOD_COST_FACTOR * rate * getWarFoodCostRateByAttachment(ctx, playerId);
 	}
 	var atkDamage = 0.0;
 	var atkEnergyCost = 0.0;
@@ -113,7 +113,7 @@ private function getWarCostImpl(ctx:Context, playerId:Int, gridId:Int, p1PeopleI
 		final baseDamage = atkArmy * WAR_ARMY_FACTOR;
 		final damageFact = getFact(fact0 * fact1 * fact2 * fact3 * fact4 * fact5 * fact6 * fact7 * factArmyTypeAtk * factArmyTypeDef * factWall * factMoney * factFood * WAR_FINAL_DAMAGE_FACTOR);
 		final damageRate = damageFact;
-		final damage = baseDamage + base * getZeroOneFromFact(damageRate);
+		final damage = baseDamage + base * getZeroOneFromFact(damageRate) * getWarDamageRateByAttachment(ctx, playerId);
 		if (options.debug) {
 			// trace("attack =================");
 			// trace("damageFact", damageFact, "=", fact0, fact1, fact2, fact3, fact4, fact5, fact6, fact7, factArmyTypeAtk, factArmyTypeDef);
