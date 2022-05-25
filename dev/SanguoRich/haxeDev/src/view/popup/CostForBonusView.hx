@@ -61,8 +61,10 @@ class CostForBonusView extends PopupView {
 			final costName = btnbr_ops.selectedButton.text;
 			var resultStr = '讓 ${p.name} 領導 ${costName} 嗎?\n';
 
+			// 0: 札營 1: 練兵 2:作樂
 			final costType = switch (btnbr_ops.selectedIndex) {
-				case 0 | 1: '士兵';
+				case 0: '糧草';
+				case 1: '士兵';
 				case 2: '金錢';
 				case _: '';
 			}
@@ -77,7 +79,8 @@ class CostForBonusView extends PopupView {
 				case _: '';
 			}
 			final cost = switch (btnbr_ops.selectedIndex) {
-				case 0 | 1: Main.getFixNumber(result.costArmy);
+				case 0: Main.getFixNumber(result.costFood);
+				case 1: Main.getFixNumber(result.costArmy);
 				case 2: Main.getFixNumber(result.costMoney);
 				case _: 0;
 			}
