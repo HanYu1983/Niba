@@ -955,7 +955,7 @@ final BuildingList:Array<BuildingCatelog> = [
 	},
 	{
 		id: 32,
-		name: '戰術理論研究所(未建)',
+		name: '軍事學院(未建)',
 		money: 70,
 		describe: '所有功績增加的時候，增加量+0%',
 		type: ACADEMY(0),
@@ -967,7 +967,7 @@ final BuildingList:Array<BuildingCatelog> = [
 	},
 	{
 		id: 33,
-		name: '戰術理論研究所',
+		name: '軍事學院',
 		money: 0,
 		describe: '所有功績增加的時候，增加量+10%',
 		type: ACADEMY(1),
