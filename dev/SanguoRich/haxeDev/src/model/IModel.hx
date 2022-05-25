@@ -572,7 +572,7 @@ final BuildingList:Array<BuildingCatelog> = [
 	{
 		id: 0,
 		name: '農田(未建)',
-		money: 50,
+		money: 40,
 		describe: '糧食每回合+0',
 		type: FARM(0),
 		depends: [],
@@ -585,42 +585,42 @@ final BuildingList:Array<BuildingCatelog> = [
 		id: 1,
 		name: '農田(小)',
 		money: 40,
-		describe: '糧食每回合+5',
+		describe: '糧食每回合+4',
 		type: FARM(1),
 		depends: [],
 		value:{
 			valid: [],
-			float: [5.0]
+			float: [4.0]
 		}
 	},
 	{
 		id: 2,
 		name: '農田(中)',
 		money: 40,
-		describe: '糧食每回合+9',
+		describe: '糧食每回合+8',
 		type: FARM(2),
 		depends: [],
 		value:{
 			valid: [],
-			float: [9.0]
+			float: [8.0]
 		}
 	},
 	{
 		id: 3,
 		name: '農田(大)',
 		money: 0,
-		describe: '糧食每回合+13',
+		describe: '糧食每回合+12',
 		type: FARM(3),
 		depends: [],
 		value:{
 			valid: [],
-			float: [13.0]
+			float: [12.0]
 		}
 	},
 	{
 		id: 4,
 		name: '市集(未建)',
-		money: 50,
+		money: 40,
 		describe: '金錢每回合+0',
 		type: MARKET(0),
 		depends: [],
@@ -633,42 +633,42 @@ final BuildingList:Array<BuildingCatelog> = [
 		id: 5,
 		name: '市集(小)',
 		money: 40,
-		describe: '金錢每回合+5',
+		describe: '金錢每回合+4',
 		type: MARKET(1),
 		depends: [],
 		value:{
 			valid: [],
-			float: [5.0]
+			float: [4.0]
 		}
 	},
 	{
 		id: 6,
 		name: '市集(中)',
 		money: 40,
-		describe: '金錢每回合+9',
+		describe: '金錢每回合+8',
 		type: MARKET(2),
 		depends: [],
 		value:{
 			valid: [],
-			float: [9.0]
+			float: [8.0]
 		}
 	},
 	{
 		id: 7,
 		name: '市集(大)',
 		money: 0,
-		describe: '金錢每回合+13',
+		describe: '金錢每回合+12',
 		type: MARKET(3),
 		depends: [],
 		value:{
 			valid: [],
-			float: [13.0]
+			float: [12.0]
 		}
 	},
 	{
 		id: 8,
 		name: '兵營(未建)',
-		money: 50,
+		money: 40,
 		describe: '士兵每回合+0',
 		type: BARRACKS(0),
 		depends: [],
@@ -681,42 +681,42 @@ final BuildingList:Array<BuildingCatelog> = [
 		id: 9,
 		name: '兵營(小)',
 		money: 40,
-		describe: '士兵每回合+5',
+		describe: '士兵每回合+4',
 		type: BARRACKS(1),
 		depends: [],
 		value:{
 			valid: [],
-			float: [5.0]
+			float: [4.0]
 		}
 	},
 	{
 		id: 10,
 		name: '兵營(中)',
 		money: 40,
-		describe: '士兵每回合+9',
+		describe: '士兵每回合+8',
 		type: BARRACKS(2),
 		depends: [],
 		value:{
 			valid: [],
-			float: [9.0]
+			float: [8.0]
 		}
 	},
 	{
 		id: 11,
 		name: '兵營(大)',
 		money: 0,
-		describe: '士兵每回合+13',
+		describe: '士兵每回合+12',
 		type: BARRACKS(3),
 		depends: [],
 		value:{
 			valid: [],
-			float: [13.0]
+			float: [12.0]
 		}
 	},
 	{
 		id: 12,
 		name: '人材所(未建)',
-		money: 50,
+		money: 80,
 		describe: '提高武將在探索計算時的魅力(+0)及聘用計算時的魅力(+0)。所有武將的薪資不減少。並且聘用金錢不減少',
 		type: EXPLORE(0),
 		depends: [],
@@ -753,42 +753,42 @@ final BuildingList:Array<BuildingCatelog> = [
 		id: 15,
 		name: '城墻(弱)',
 		money: 30,
-		describe: '此格子防禦方的加成提高。(+20%)',
+		describe: '此格子防禦方的加成提高。(+15%)',
 		type: WALL(1),
 		depends: [],
 		value:{
 			valid: [],
-			float: [1.2]
+			float: [1.15]
 		}
 	},
 	{
 		id: 16,
 		name: '城墻(中)',
 		money: 30,
-		describe: '此格子防禦方的加成提高。(+35%)',
+		describe: '此格子防禦方的加成提高。(+30%)',
 		type: WALL(2),
 		depends: [],
 		value:{
 			valid: [],
-			float: [1.35]
+			float: [1.30]
 		}
 	},
 	{
 		id: 17,
 		name: '城墻(強)',
 		money: 0,
-		describe: '此格子防禦方的加成提高。(+50%)',
+		describe: '此格子防禦方的加成提高。(+45%)',
 		type: WALL(3),
 		depends: [],
 		value:{
 			valid: [],
-			float: [1.5]
+			float: [1.45]
 		}
 	},
 	{
 		id: 18,
 		name: '金庫(未建)',
-		money: 120,
+		money: 100,
 		describe: '金錢最大值+0。金錢每回合+0%',
 		type: BANK(0),
 		depends: [],
@@ -800,43 +800,43 @@ final BuildingList:Array<BuildingCatelog> = [
 	{
 		id: 19,
 		name: '金庫(小)',
-		money: 80,
-		describe: '金錢最大值+200。金錢每回合+2%',
+		money: 100,
+		describe: '金錢最大值+200。金錢每回合+1%',
 		type: BANK(1),
 		depends: [],
 		value:{
 			valid: [],
-			float: [200.0, .02]
+			float: [200.0, .01]
 		}
 	},
 	{
 		id: 20,
 		name: '金庫(中)',
-		money: 80,
-		describe: '金錢最大值+300。金錢每回合+3%',
+		money: 100,
+		describe: '金錢最大值+400。金錢每回合+2%',
 		type: BANK(2),
 		depends: [],
 		value:{
 			valid: [],
-			float: [300.0, 0.03]
+			float: [400.0, 0.02]
 		}
 	},
 	{
 		id: 21,
 		name: '金庫(大)',
 		money: 0,
-		describe: '金錢最大值+400。金錢每回合+4%',
+		describe: '金錢最大值+600。金錢每回合+3%',
 		type: BANK(3),
 		depends: [],
 		value:{
 			valid: [],
-			float: [400.0, 0.04]
+			float: [600.0, 0.03]
 		}
 	},
 	{
 		id: 22,
 		name: '穀倉(未建)',
-		money: 120,
+		money: 100,
 		describe: '糧草最大值+0。糧草每回合+0%',
 		type: BARN(0),
 		depends: [],
@@ -848,43 +848,43 @@ final BuildingList:Array<BuildingCatelog> = [
 	{
 		id: 23,
 		name: '穀倉(小)',
-		money: 80,
-		describe: '糧草最大值+200。糧草每回合+2%',
+		money: 100,
+		describe: '糧草最大值+200。糧草每回合+1%',
 		type: BARN(1),
 		depends: [],
 		value:{
 			valid: [],
-			float: [200.0, 0.02]
+			float: [200.0, 0.01]
 		}
 	},
 	{
 		id: 24,
 		name: '穀倉(中)',
-		money: 80,
-		describe: '糧草最大值+300。糧草每回合+3%',
+		money: 100,
+		describe: '糧草最大值+400。糧草每回合+2%',
 		type: BARN(2),
 		depends: [],
 		value:{
 			valid: [],
-			float: [300.0, 0.03]
+			float: [400.0, 0.02]
 		}
 	},
 	{
 		id: 25,
 		name: '穀倉(大)',
 		money: 0,
-		describe: '糧草最大值+400。糧草每回合+4%',
+		describe: '糧草最大值+600。糧草每回合+3%',
 		type: BARN(3),
 		depends: [],
 		value:{
 			valid: [],
-			float: [400.0, 0.04]
+			float: [600.0, 0.03]
 		}
 	},
 	{
 		id: 26,
 		name: '住房(未建)',
-		money: 120,
+		money: 100,
 		describe: '士兵最大值+0。士兵每回合+0%',
 		type: HOME(0),
 		depends: [],
@@ -896,43 +896,43 @@ final BuildingList:Array<BuildingCatelog> = [
 	{
 		id: 27,
 		name: '住房(小)',
-		money: 80,
-		describe: '士兵最大值+200。士兵每回合+2%',
+		money: 100,
+		describe: '士兵最大值+200。士兵每回合+1%',
 		type: HOME(1),
 		depends: [],
 		value:{
 			valid: [],
-			float: [200.0, 0.02]
+			float: [200.0, 0.01]
 		}
 	},
 	{
 		id: 28,
 		name: '住房(中)',
-		money: 80,
-		describe: '士兵最大值+300。士兵每回合+3%',
+		money: 100,
+		describe: '士兵最大值+400。士兵每回合+2%',
 		type: HOME(2),
 		depends: [],
 		value:{
 			valid: [],
-			float: [300.0, 0.03]
+			float: [400.0, 0.02]
 		}
 	},
 	{
 		id: 29,
 		name: '住房(大)',
 		money: 0,
-		describe: '士兵最大值+400。士兵每回合+4%',
+		describe: '士兵最大值+600。士兵每回合+3%',
 		type: HOME(3),
 		depends: [],
 		value:{
 			valid: [],
-			float: [400.0, 0.04]
+			float: [600.0, 0.03]
 		}
 	},
 	{
 		id: 30,
 		name: '攻城器製造所(未建)',
-		money: 50,
+		money: 70,
 		describe: '攻城時糧食消耗減少0%，攻擊力+0%',
 		type: SIEGEFACTORY(0),
 		depends: [],
@@ -956,7 +956,7 @@ final BuildingList:Array<BuildingCatelog> = [
 	{
 		id: 32,
 		name: '戰術理論研究所(未建)',
-		money: 50,
+		money: 70,
 		describe: '所有功績增加的時候，增加量+0%',
 		type: ACADEMY(0),
 		depends: [],
