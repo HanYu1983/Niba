@@ -48,8 +48,8 @@ enum BUILDING {
 	WALL(level:Int);
 	EXPLORE(level:Int);
 
-	CITYATTACKER(level:Int);
-	EXPADDER(level:Int);
+	SIEGEFACTORY(level:Int);
+	ACADEMY(level:Int);
 }
 
 class GridGenerator {

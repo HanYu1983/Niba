@@ -37,9 +37,9 @@ function doPeopleMaintain(ctx:Context) {
 							level;
 						case BARN(level):
 							level;
-						case CITYATTACKER(level):
+						case SIEGEFACTORY(level):
 							level;
-						case EXPADDER(level):
+						case ACADEMY(level):
 							level;
 					}
 				}, 0.0);
@@ -347,10 +347,10 @@ function onPayTaxToGrid(ctx:Context, playerId:Int, gridId:Int) {
 									[for (i in 0...level + 1) EXPLORE(i)];
 								case WALL(level):
 									[for (i in 0...level + 1) WALL(i)];
-								case CITYATTACKER(level):
-									[for (i in 0...level + 1) CITYATTACKER(i)];
-								case EXPADDER(level):
-									[for (i in 0...level + 1) EXPADDER(i)];
+								case SIEGEFACTORY(level):
+									[for (i in 0...level + 1) SIEGEFACTORY(i)];
+								case ACADEMY(level):
+									[for (i in 0...level + 1) ACADEMY(i)];
 							}
 							return ret;
 						}).map(type -> {
@@ -381,10 +381,10 @@ function onPayTaxToGrid(ctx:Context, playerId:Int, gridId:Int) {
 									EXPLORE(0);
 								case WALL(_):
 									WALL(0);
-								case CITYATTACKER(_):
-									CITYATTACKER(0);
-								case EXPADDER(_):
-									EXPADDER(0);
+								case SIEGEFACTORY(_):
+									SIEGEFACTORY(0);
+								case ACADEMY(_):
+									ACADEMY(0);
 							}
 							a.type = resetBuild;
 						}

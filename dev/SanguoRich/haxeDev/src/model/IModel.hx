@@ -934,7 +934,7 @@ final BuildingList:Array<BuildingCatelog> = [
 		name: '攻城器製造所(未建)',
 		money: 50,
 		describe: '攻城時糧食消耗減少0%，攻擊力+0%',
-		type: CITYATTACKER(0),
+		type: SIEGEFACTORY(0),
 		depends: [],
 		value:{
 			valid: [],
@@ -946,7 +946,7 @@ final BuildingList:Array<BuildingCatelog> = [
 		name: '攻城器製造所',
 		money: 0,
 		describe: '攻城時糧食消耗減少10%，攻擊力+10%',
-		type: CITYATTACKER(1),
+		type: SIEGEFACTORY(1),
 		depends: [],
 		value:{
 			valid: [],
@@ -958,7 +958,7 @@ final BuildingList:Array<BuildingCatelog> = [
 		name: '戰術理論研究所(未建)',
 		money: 50,
 		describe: '所有功績增加的時候，增加量+0%',
-		type: EXPADDER(0),
+		type: ACADEMY(0),
 		depends: [],
 		value:{
 			valid: [],
@@ -970,7 +970,7 @@ final BuildingList:Array<BuildingCatelog> = [
 		name: '戰術理論研究所',
 		money: 0,
 		describe: '所有功績增加的時候，增加量+10%',
-		type: EXPADDER(1),
+		type: ACADEMY(1),
 		depends: [],
 		value:{
 			valid: [],

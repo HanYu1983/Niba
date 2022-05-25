@@ -48,9 +48,9 @@ class GridGridView extends BasicGridView{
         for(b in grid.attachs){
             final catelog = Main.getBuildingCatelog(b);
             switch(catelog.type){
-                case EXPADDER(level):
-                    if( level > 0 ) building += '戰${level}';
-                case CITYATTACKER(level):
+                case ACADEMY(level):
+                    if( level > 0 ) building += '學${level}';
+                case SIEGEFACTORY(level):
                     if( level > 0 ) building += '攻${level}';
                 case MARKET(level):
                     if( level > 0 ) building += '市${level}';
