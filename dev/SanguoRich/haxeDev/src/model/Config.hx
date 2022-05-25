@@ -76,10 +76,10 @@ final WAR_FRONT_ABILITY_FACTOR = 1.4;
 final WAR_BACK_ABILITY_FACTOR = .7;
 
 // 戰鬥支付金錢整體調整
-final WAR_MONEY_COST_FACTOR = 0.0;
+final WAR_MONEY_COST_FACTOR = 0.05;
 
 // 戰鬥支付食物整體調整
-final WAR_FOOD_COST_FACTOR = 0.35;
+final WAR_FOOD_COST_FACTOR = 0.5;
 
 // 戰鬥防守方士兵加成
 final WAR_DEFFENDER_FACTOR = 2.2;
