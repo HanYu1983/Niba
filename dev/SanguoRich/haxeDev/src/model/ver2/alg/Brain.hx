@@ -23,39 +23,9 @@ import model.tool.Fact;
 
 using Lambda;
 
-typedef BrainMemory = {
-	war:{
-		peopleId:Null<Int>
-	},
-	transfer:{
-		food:Float, money:Float, army:Float,
-	},
-	buySell:{
-		peopleId:Null<Int>, moneyBase:Null<Float>,
-	},
-	explore:{
-		peopleId:Null<Int>
-	},
-	hire:{
-		peopleId:Null<Int>, inviteId:Null<Int>
-	},
-	fire:{
-		peopleId:Null<Int>
-	},
-	pk:{
-		peopleId:Null<Int>
-	},
-	nego:{
-		peopleId:Null<Int>
-	},
-	strategy:{
-		strategyId:Null<Int>, peopleId:Null<Int>, targetPeopleId:Null<Int>, targetGridId:Null<Int>, targetPlayerId:Null<Int>,
-	},
-	build:{
-		peopleId:Null<Int>, attachmentId:Null<Int>
-	},
-	hasTransfer:Bool,
-	strategyHistory:Array<Int>,
+final privateExport = {
+	getCommandWeight: getCommandWeight,
+	getDefaultBrainMemory: getDefaultBrainMemory
 }
 
 function doBrain(ctx, playerId:Int) {
@@ -70,49 +40,7 @@ function doBrain(ctx, playerId:Int) {
 			throw new haxe.Exception("必須有Brain");
 		}
 		if (player.brain.memory == null) {
-			player.brain.memory = ({
-				war: {
-					peopleId: null
-				},
-				transfer: {
-					food: 0,
-					money: 0,
-					army: 0,
-				},
-				buySell: {
-					peopleId: null,
-					moneyBase: null,
-				},
-				explore: {
-					peopleId: null
-				},
-				hire: {
-					peopleId: null,
-					inviteId: null
-				},
-				fire: {
-					peopleId: null
-				},
-				pk: {
-					peopleId: null
-				},
-				nego: {
-					peopleId: null
-				},
-				strategy: {
-					strategyId: null,
-					targetPeopleId: null,
-					peopleId: null,
-					targetGridId: null,
-					targetPlayerId: null,
-				},
-				build: {
-					peopleId: null,
-					attachmentId: null,
-				},
-				hasTransfer: false,
-				strategyHistory: []
-			} : BrainMemory);
+			player.brain.memory = getDefaultBrainMemory();
 		}
 		final brainMemory:Null<BrainMemory> = player.brain.memory;
 		if (brainMemory == null) {
@@ -361,6 +289,87 @@ function doBrain(ctx, playerId:Int) {
 		}
 	}
 	trace("doBrain", "finished", playerId);
+}
+
+private typedef BrainMemory = {
+	war:{
+		peopleId:Null<Int>
+	},
+	transfer:{
+		food:Float, money:Float, army:Float,
+	},
+	buySell:{
+		peopleId:Null<Int>, moneyBase:Null<Float>,
+	},
+	explore:{
+		peopleId:Null<Int>
+	},
+	hire:{
+		peopleId:Null<Int>, inviteId:Null<Int>
+	},
+	fire:{
+		peopleId:Null<Int>
+	},
+	pk:{
+		peopleId:Null<Int>
+	},
+	nego:{
+		peopleId:Null<Int>
+	},
+	strategy:{
+		strategyId:Null<Int>, peopleId:Null<Int>, targetPeopleId:Null<Int>, targetGridId:Null<Int>, targetPlayerId:Null<Int>,
+	},
+	build:{
+		peopleId:Null<Int>, attachmentId:Null<Int>
+	},
+	hasTransfer:Bool,
+	strategyHistory:Array<Int>,
+}
+
+private function getDefaultBrainMemory():BrainMemory {
+	return {
+		war: {
+			peopleId: null
+		},
+		transfer: {
+			food: 0,
+			money: 0,
+			army: 0,
+		},
+		buySell: {
+			peopleId: null,
+			moneyBase: null,
+		},
+		explore: {
+			peopleId: null
+		},
+		hire: {
+			peopleId: null,
+			inviteId: null
+		},
+		fire: {
+			peopleId: null
+		},
+		pk: {
+			peopleId: null
+		},
+		nego: {
+			peopleId: null
+		},
+		strategy: {
+			strategyId: null,
+			targetPeopleId: null,
+			peopleId: null,
+			targetGridId: null,
+			targetPlayerId: null,
+		},
+		build: {
+			peopleId: null,
+			attachmentId: null,
+		},
+		hasTransfer: false,
+		strategyHistory: []
+	}
 }
 
 private function doEvent(ctx:Context, playerId:Int) {
