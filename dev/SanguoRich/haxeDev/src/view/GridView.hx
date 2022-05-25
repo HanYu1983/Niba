@@ -34,6 +34,7 @@ class GridView extends Box {
 	public var building(default, set):GROWTYPE;
 
 	function set_building(type:GROWTYPE) {
+
 		lbl_building.text = switch (type) {
 			case MARKET: "市";
 			case FARM: "田";

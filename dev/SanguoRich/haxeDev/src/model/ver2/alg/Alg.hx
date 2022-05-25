@@ -186,20 +186,20 @@ function initContext(ctx:Context, options:GameSetting) {
 		}
 		// 移除原有建物
 		ctx.attachments = ctx.attachments.filter(a -> a.belongToGridId != player.position);
-		addAttachInfo(ctx, player.position, MARKET(1));
-		addAttachInfo(ctx, player.position, BANK(0));
-		addAttachInfo(ctx, player.position, FARM(1));
-		addAttachInfo(ctx, player.position, BARN(0));
-		addAttachInfo(ctx, player.position, BARRACKS(1));
-		addAttachInfo(ctx, player.position, HOME(0));
+		addAttachInfo(ctx, player.position, MARKET(0));
+		addAttachInfo(ctx, player.position, BANK(1));
+		addAttachInfo(ctx, player.position, FARM(0));
+		addAttachInfo(ctx, player.position, BARN(1));
+		addAttachInfo(ctx, player.position, BARRACKS(0));
+		addAttachInfo(ctx, player.position, HOME(1));
 		addAttachInfo(ctx, player.position, EXPLORE(0));
 		addAttachInfo(ctx, player.position, WALL(1));
 		ctx.grids[player.position].defaultMoneyGrow = Math.random() * 0.01;
 		ctx.grids[player.position].defaultFoodGrow = Math.random() * 0.01;
 		ctx.grids[player.position].defaultArmyGrow = Math.random() * 0.01;
-		ctx.grids[player.position].defaultMaxMoney = 600;
-		ctx.grids[player.position].defaultMaxFood = 600;
-		ctx.grids[player.position].defaultMaxArmy = 600;
+		ctx.grids[player.position].defaultMaxMoney = 500;
+		ctx.grids[player.position].defaultMaxFood = 500;
+		ctx.grids[player.position].defaultMaxArmy = 500;
 		ctx.grids[player.position].money = 350;
 		ctx.grids[player.position].food = 350;
 		ctx.grids[player.position].army = 350;

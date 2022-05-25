@@ -47,7 +47,6 @@ enum BUILDING {
 	HOME(level:Int);
 	WALL(level:Int);
 	EXPLORE(level:Int);
-
 	SIEGEFACTORY(level:Int);
 	ACADEMY(level:Int);
 }
@@ -111,15 +110,23 @@ class GridGenerator {
 				GROWTYPE.EMPTY, GROWTYPE.EMPTY, GROWTYPE.EMPTY, GROWTYPE.FARM, GROWTYPE.MARKET, GROWTYPE.VILLAGE, GROWTYPE.FARM, GROWTYPE.MARKET,
 				GROWTYPE.VILLAGE, GROWTYPE.CITY
 			][Math.floor(Math.random() * 10)];
+			
+			g.maxArmy = 500;
+			g.maxFood = 500;
+			g.maxMoney = 500;
+
 			switch (buildtype) {
 				case EMPTY:
+					g.maxArmy = 0;
+					g.maxFood = 0;
+					g.maxMoney = 0;
 				case MARKET:
 					if (isLimitBuilding) {
-						g.attachs = [BUILDING.MARKET(1), BUILDING.BANK(0), BUILDING.WALL(0),];
+						g.attachs = [BUILDING.MARKET(0), BUILDING.BANK(1), BUILDING.WALL(0),];
 					} else {
 						g.attachs = [
-							BUILDING.MARKET(1),
-							BUILDING.BANK(0),
+							BUILDING.MARKET(0),
+							BUILDING.BANK(1),
 
 							BUILDING.FARM(0),
 							BUILDING.BARN(0),
@@ -129,31 +136,35 @@ class GridGenerator {
 
 							BUILDING.EXPLORE(0),
 							BUILDING.WALL(0),
+
+							BUILDING.SIEGEFACTORY(0),
+							BUILDING.ACADEMY(0),
 						];
 					}
-					g.maxArmy = g.maxFood = g.maxMoney = 500;
 				case FARM:
 					if (isLimitBuilding) {
-						g.attachs = [BUILDING.FARM(1), BUILDING.BARN(0), BUILDING.WALL(0),];
+						g.attachs = [BUILDING.FARM(0), BUILDING.BARN(1), BUILDING.WALL(0),];
 					} else {
 						g.attachs = [
 							BUILDING.MARKET(0),
 							BUILDING.BANK(0),
 
-							BUILDING.FARM(1),
-							BUILDING.BARN(0),
+							BUILDING.FARM(0),
+							BUILDING.BARN(1),
 
 							BUILDING.BARRACKS(0),
 							BUILDING.HOME(0),
 
 							BUILDING.EXPLORE(0),
 							BUILDING.WALL(0),
+
+							BUILDING.SIEGEFACTORY(0),
+							BUILDING.ACADEMY(0),
 						];
 					}
-					g.maxArmy = g.maxFood = g.maxMoney = 500;
 				case VILLAGE:
 					if (isLimitBuilding) {
-						g.attachs = [BUILDING.BARRACKS(1), BUILDING.HOME(0), BUILDING.WALL(0),];
+						g.attachs = [BUILDING.BARRACKS(0), BUILDING.HOME(1), BUILDING.WALL(0),];
 					} else {
 						g.attachs = [
 							BUILDING.MARKET(0),
@@ -162,29 +173,33 @@ class GridGenerator {
 							BUILDING.FARM(0),
 							BUILDING.BARN(0),
 
-							BUILDING.BARRACKS(1),
-							BUILDING.HOME(0),
+							BUILDING.BARRACKS(0),
+							BUILDING.HOME(1),
 
 							BUILDING.EXPLORE(0),
 							BUILDING.WALL(0),
+
+							BUILDING.SIEGEFACTORY(0),
+							BUILDING.ACADEMY(0),
 						];
 					}
-					g.maxArmy = g.maxFood = g.maxMoney = 500;
 				case CITY:
 					g.attachs = [
-						BUILDING.MARKET(1),
-						BUILDING.BANK(0),
+						BUILDING.MARKET(0),
+						BUILDING.BANK(1),
 
-						BUILDING.FARM(1),
-						BUILDING.BARN(0),
+						BUILDING.FARM(0),
+						BUILDING.BARN(1),
 
-						BUILDING.BARRACKS(1),
-						BUILDING.HOME(0),
+						BUILDING.BARRACKS(0),
+						BUILDING.HOME(1),
 
 						BUILDING.EXPLORE(0),
 						BUILDING.WALL(0),
+
+						BUILDING.SIEGEFACTORY(0),
+						BUILDING.ACADEMY(0)
 					];
-					g.maxArmy = g.maxFood = g.maxMoney = 700;
 			}
 
 			final basicArmy = getRandomRange(180, 80);

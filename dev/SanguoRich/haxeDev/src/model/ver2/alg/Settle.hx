@@ -101,9 +101,9 @@ private function genNewGrid(ctx:Context, playerId:Int, peopleId:Int, gridId:Int,
 			addAttachInfo(tmpCtx, grid.id, HOME(0));
 			addAttachInfo(tmpCtx, grid.id, WALL(0));
 			addAttachInfo(tmpCtx, grid.id, EXPLORE(0));
-			grid.defaultMaxMoney = 700;
-			grid.defaultMaxFood = 700;
-			grid.defaultMaxArmy = 700;
+			grid.defaultMaxMoney = 500;
+			grid.defaultMaxFood = 500;
+			grid.defaultMaxArmy = 500;
 		case _:
 			throw new haxe.Exception('settleType not found:${settleType}');
 	}
