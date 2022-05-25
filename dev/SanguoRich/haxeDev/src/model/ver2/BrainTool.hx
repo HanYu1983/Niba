@@ -19,6 +19,15 @@ function factIsEnemyGrid(ctx:Context, playerId:Int, gridId:Int):Float {
 	});
 }
 
+function factIsNullGrid(ctx:Context, playerId:Int, gridId:Int):Float {
+	return getFact(switch getGridBelongPlayerId(ctx, gridId) {
+		case null:
+			9999;
+		case _:
+			0;
+	});
+}
+
 function factGridPeopleMoreThen(ctx:Context, gridId:Int, v:Int):Float {
 	final peopleInGrid = ctx.peoples.filter(p -> p.position.gridId == gridId);
 	return getFact(if (v == 0) {
@@ -93,9 +102,18 @@ function test() {
 		player.money = 1000;
 		player;
 	};
-	ctx.players = [player0];
+	final player1 = {
+		final player = getDefaultPlayer();
+		player.id = 1;
+		player.money = 1000;
+		player;
+	};
+	ctx.players = [player0, player1];
 	if (factOn(factIsMyGrid(ctx, player0.id, 0), 1) != 0) {
 		throw new haxe.Exception("factOn(factIsMyGrid(ctx, player0.id, 0), 1) != 0");
+	}
+	if (factOn(factIsNullGrid(ctx, player0.id, 0), 1) != 1) {
+		throw new haxe.Exception("factOn(factIsNullGrid(ctx, player0.id, 0), 1) != 1");
 	}
 	ctx.peoples = [
 		{
@@ -109,17 +127,66 @@ function test() {
 	if (factOn(factIsMyGrid(ctx, player0.id, 0), 1) != 1) {
 		throw new haxe.Exception("factOn(factIsMyGrid(ctx, player0.id, 0), 1) != 1");
 	}
-	if (factOn(factGridMoneyMoreThen(ctx, player0.id, 300), 1) != 0) {
+	if (factOn(factIsEnemyGrid(ctx, player0.id, 0), 1) != 0) {
+		throw new haxe.Exception("factOn(factIsEnemyGrid(ctx, player0.id, 0), 1) != 0");
+	}
+	if (factOn(factIsNullGrid(ctx, player0.id, 0), 1) != 0) {
+		throw new haxe.Exception("factOn(factIsNullGrid(ctx, player0.id, 0), 1) != 0");
+	}
+	ctx.peoples = [
+		{
+			final people = getDefaultPeople();
+			people.belongToPlayerId = player1.id;
+			people.position.gridId = 0;
+			people.energy = 100;
+			people;
+		}
+	];
+	if (factOn(factIsMyGrid(ctx, player0.id, 0), 1) != 0) {
+		throw new haxe.Exception("factOn(factIsMyGrid(ctx, player0.id, 0), 1) != 0");
+	}
+	if (factOn(factIsEnemyGrid(ctx, player0.id, 0), 1) != 1) {
+		throw new haxe.Exception("factOn(factIsEnemyGrid(ctx, player0.id, 0), 1) != 1");
+	}
+	if (factOn(factGridMoneyMoreThen(ctx, 0, 300), 1) != 0) {
 		throw new haxe.Exception("factOn(factGridMoneyMoreThen(ctx, player0.id, 300), 1) != 0");
+	}
+	if (factOn(factGridArmyMoreThen(ctx, 0, 300), 1) != 0) {
+		throw new haxe.Exception("factOn(factGridArmyMoreThen(ctx, player0.id, 300), 1) != 0");
+	}
+	if (factOn(factGridFoodMoreThen(ctx, 0, 300), 1) != 0) {
+		throw new haxe.Exception("factOn(factGridFoodMoreThen(ctx, player0.id, 300), 1) != 0");
 	}
 	ctx.grids = [
 		{
 			final grid = getDefaultGrid();
 			grid.money = 300;
+			grid.army = 300;
 			grid;
 		}
 	];
-	if (factOn(factGridMoneyMoreThen(ctx, player0.id, 300), 1) != 1) {
+	if (factOn(factGridMoneyMoreThen(ctx, 0, 300), 1) != 1) {
 		throw new haxe.Exception("factOn(factGridMoneyMoreThen(ctx, player0.id, 300), 1) != 1");
+	}
+	if (factOn(factGridArmyMoreThen(ctx, 0, 300), 1) != 1) {
+		throw new haxe.Exception("factOn(factGridArmyMoreThen(ctx, player0.id, 300), 1) != 1");
+	}
+	if (factOn(factGridIsBig(ctx, 0), 1) != 0) {
+		throw new haxe.Exception("factOn(factGridIsBig(ctx, 0), 1) != 0");
+	}
+	ctx.grids = [
+		{
+			final grid = getDefaultGrid();
+			grid.money = 300;
+			grid.army = 300;
+			grid.food = 300;
+			grid;
+		}
+	];
+	if (factOn(factGridFoodMoreThen(ctx, 0, 300), 1) != 1) {
+		throw new haxe.Exception("factOn(factGridFoodMoreThen(ctx, player0.id, 300), 1) != 1");
+	}
+	if (factOn(factGridIsBig(ctx, 0), 1) != 1) {
+		throw new haxe.Exception("factOn(factGridIsBig(ctx, 0), 1) != 1");
 	}
 }
