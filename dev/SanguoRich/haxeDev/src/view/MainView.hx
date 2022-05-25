@@ -1,5 +1,6 @@
 package view;
 
+import model.IModel.StrategyCatelog;
 import model.IModel.EventInfoID;
 import view.popup.SettleView;
 import model.IModel.GameSetting;
@@ -683,6 +684,7 @@ class MainView extends Box {
 			final info:Dynamic = event.value;
 			final gameInfo = event.gameInfo;
 			final autoPlay = event.autoplay;
+			final currentPlayer = gameInfo.currentPlayer;
 			switch (event.id) {
 				case SETTLE_RESULT:
 					Dialogs.messageBox('開拓成功', '開拓成功', MessageBoxType.TYPE_INFO, true, (target) -> {
@@ -791,7 +793,7 @@ class MainView extends Box {
 					} else {
 						'號召士兵失敗';
 					}
-					var msg = '${title}\n';
+					var msg = '${currentPlayer.name} ${title}\n';
 					msg += '武將:${info.people.name}\n';
 					msg += '士兵:${Main.getCompareString(info.armyBefore, info.armyAfter)}\n';
 					msg += '友好:${Main.getFavorString(info.favorBefore)} => ${Main.getFavorString(info.favorAfter)}\n';
@@ -807,7 +809,7 @@ class MainView extends Box {
 					}
 
 					final pBefore:Array<People> = info.peopleBefore;
-					var msg = '${title}\n';
+					var msg = '${currentPlayer.name} ${title}\n';
 					for (index => peopleBefore in pBefore) {
 						final peopleAfter = info.peopleAfter[index];
 						final recoverType = switch (info.costType) {
@@ -828,8 +830,8 @@ class MainView extends Box {
 					syncViewByInfo(gameInfo);
 
 					final title = info.success ? '雇用任務成功' : '雇用任務失敗';
-					var msg = '${title}\n';
-					msg += '武將:${info.people.name}\n';
+					var msg = '${currentPlayer.name} 將領 ${info.people.name} ${title}\n';
+					msg += '將領:${info.people.name}\n';
 					msg += '體力:${Main.getCompareString(info.energyBefore, info.energyAfter)}\n';
 					msg += '金錢:${Main.getCompareString(info.moneyBefore, info.moneyAfter)}\n';
 					msg += '糧草:${Main.getCompareString(info.foodBefore, info.foodAfter)}\n';
@@ -840,7 +842,7 @@ class MainView extends Box {
 
 					var people:Array<People> = info.people;
 					final title = '解雇完成';
-					var msg = '${title}\n';
+					var msg = '${currentPlayer.name} ${title}\n';
 					msg += '解雇:${people.map((p) -> p.name).join(',')}\n';
 					msg += '薪俸:${Main.getCompareString(info.maintainMoneyBefore, info.maintainMoneyAfter)}\n';
 					checkAutoPlay(autoPlay, title, msg);
@@ -849,7 +851,8 @@ class MainView extends Box {
 					syncViewByInfo(gameInfo);
 
 					final title = info.success ? '交涉任務成功' : '交涉任務失敗';
-					var msg = '武將:${info.people.name}\n';
+					var msg = '${currentPlayer.name} 將領 ${info.people.name} ${title}\n';
+					msg += '將領:${info.people.name}\n';
 					msg += '體力:${Main.getCompareString(info.energyBefore, info.energyAfter)}\n';
 					msg += '金錢:${Main.getCompareString(info.moneyBefore, info.moneyAfter)}\n';
 					msg += '糧草:${Main.getCompareString(info.foodBefore, info.foodAfter)}\n';
@@ -865,8 +868,8 @@ class MainView extends Box {
 					syncViewByInfo(gameInfo);
 
 					var title = '${info.success ? '占領成功' : '占領失敗'}\n';
-					var msg = '${title}\n';
-					msg += '武將:${info.people.name}\n';
+					var msg = '${currentPlayer.name} 將領 ${info.people.name} ${title}\n';
+					msg += '將領:${info.people.name}\n';
 					msg += '體力:${Main.getCompareString(info.energyBefore, info.energyAfter)}\n';
 					msg += '金錢:${Main.getCompareString(info.moneyBefore, info.moneyAfter)}\n';
 					msg += '糧草:${Main.getCompareString(info.foodBefore, info.foodAfter)}\n';
@@ -886,7 +889,7 @@ class MainView extends Box {
 					syncViewByInfo(gameInfo);
 
 					final title = info.success ? '搶奪成功' : '搶奪失敗';
-					var msg = '${title}\n';
+					var msg = '${currentPlayer.name} ${title}\n';
 					msg += '武將:${info.people.name}\n';
 					msg += '體力:${Main.getCompareString(info.energyBefore, info.energyAfter)}\n';
 					msg += '金錢:${Main.getCompareString(info.moneyBefore, info.moneyAfter)}\n';
@@ -897,8 +900,8 @@ class MainView extends Box {
 					syncViewByInfo(gameInfo);
 
 					final title = '資源變更';
-					var msg = '${title}\n';
-					msg += '武將:${info.people ? info.people.name : ""}\n';
+					var msg = '${currentPlayer.name} ${title}\n';
+					// msg += '武將:${info.people ? info.people.name : ""}\n';
 					msg += '體力:${Main.getCompareString(info.energyBefore, info.energyAfter)}\n';
 					msg += '金錢:${Main.getCompareString(info.moneyBefore, info.moneyAfter)}\n';
 					msg += '糧草:${Main.getCompareString(info.foodBefore, info.foodAfter)}\n';
@@ -907,10 +910,12 @@ class MainView extends Box {
 				case STRATEGY_RESULT:
 					syncViewByInfo(gameInfo);
 
-					final title = info.success ? '計策成功' : '計策失敗';
-					var msg = title;
-					msg += '武將:${info.people ? info.people.name : ""}\n';
-					msg += '計策:${info.strategy ? info.strategy.name : ""}\n';
+					final strategy:StrategyCatelog = info.strategy;
+					final people = info.people;
+					final successString = info.success ? '成功' : '失敗';
+					final title = '${currentPlayer.name} 將領 ${people.name} 使用 ${strategy.name} ${successString}';
+					var msg = '${title}\n';
+					msg += '將領:${people.name}\n';
 					msg += '體力:${Main.getCompareString(info.energyBefore, info.energyAfter)}\n';
 					msg += '金錢:${Main.getCompareString(info.moneyBefore, info.moneyAfter)}\n';
 					checkAutoPlay(autoPlay, title, msg);
@@ -918,8 +923,10 @@ class MainView extends Box {
 					syncViewByInfo(gameInfo);
 
 					final catelog = Main.getBuildingCatelog(info.building);
-					var msg = '已擴建 ${catelog.name}\n';
-					checkAutoPlay(autoPlay, '擴建完畢', msg);
+					final title = '擴建完畢';
+					var msg = '${currentPlayer.name} ${title}\n';
+					msg += '已擴建 ${catelog.name}\n';
+					checkAutoPlay(autoPlay, title, msg);
 				case WORLD_EVENT:
 
 					growView.showPopup(event.value, () -> {
@@ -932,7 +939,7 @@ class MainView extends Box {
 					final title = '功績到達，職位升等!';
 					final p1:People = info.peopleBefore;
 					final p2:People = info.peopleAfter;
-					var msg = '${title}\n';
+					var msg = '${currentPlayer.name} 將領 ${p1.name} ${title}\n';
 					msg += '將領:${p1.name}\n';
 					msg += '職等:${PeopleGenerator.getInst().getPeopleTypeName(p1.type)} => ${PeopleGenerator.getInst().getPeopleTypeName(p2.type)}\n';
 					switch (p2.type) {
@@ -953,7 +960,7 @@ class MainView extends Box {
 
 					final grid:Grid = gameInfo.grids[info.gridId];
 					final stopOn = gameInfo.players[grid.belongPlayerId];
-					final title = '走到${stopOn.name}的領地，支付貢奉金...';
+					final title = '${currentPlayer.name} 走到 ${stopOn.name} 的領地，支付貢奉金...';
 					var msg = '${title}\n';
 					msg += '金錢:${Main.getCompareString(info.moneyBefore, info.moneyAfter)}\n';
 					msg += '糧草:${Main.getCompareString(info.foodBefore, info.foodAfter)}\n';
