@@ -694,7 +694,7 @@ class MainView extends Box {
 					checkAutoPlay(autoPlay, msg, msg);
 				case PLAYER_WIN:
 					Dialogs.messageBox('玩家勝利!', '玩家勝利', MessageBoxType.TYPE_INFO, true, (b)->{
-						gameTitleView.showPopup(null);
+						// gameTitleView.showPopup(null);
 					});
 				case MESSAGE_EVENT:
 					syncViewByInfo(gameInfo);
@@ -735,11 +735,12 @@ class MainView extends Box {
 
 					final treasures:Array<TreasureCatelog> = info.treasures;
 					var title = '發現寶物 ';
+					var msg = '${title}\n';
 					for (t in treasures) {
-						title += '${t.name} ';
+						msg += '${t.name} ';
 					}
 
-					checkAutoPlay(autoPlay, '發現寶物', title);
+					checkAutoPlay(autoPlay, title, msg);
 				case GRID_BORN_EVENT:
 					disabledAllCommands();
 					
@@ -790,7 +791,8 @@ class MainView extends Box {
 					} else {
 						'號召士兵失敗';
 					}
-					var msg = '武將:${info.people.name}\n';
+					var msg = '${title}\n';
+					msg += '武將:${info.people.name}\n';
 					msg += '士兵:${Main.getCompareString(info.armyBefore, info.armyAfter)}\n';
 					msg += '友好:${Main.getFavorString(info.favorBefore)} => ${Main.getFavorString(info.favorAfter)}\n';
 					checkAutoPlay(autoPlay, title, msg);
@@ -805,7 +807,7 @@ class MainView extends Box {
 					}
 
 					final pBefore:Array<People> = info.peopleBefore;
-					var msg = '';
+					var msg = '${title}\n';
 					for (index => peopleBefore in pBefore) {
 						final peopleAfter = info.peopleAfter[index];
 						final recoverType = switch (info.costType) {
@@ -826,7 +828,8 @@ class MainView extends Box {
 					syncViewByInfo(gameInfo);
 
 					final title = info.success ? '雇用任務成功' : '雇用任務失敗';
-					var msg = '武將:${info.people.name}\n';
+					var msg = '${title}\n';
+					msg += '武將:${info.people.name}\n';
 					msg += '體力:${Main.getCompareString(info.energyBefore, info.energyAfter)}\n';
 					msg += '金錢:${Main.getCompareString(info.moneyBefore, info.moneyAfter)}\n';
 					msg += '糧草:${Main.getCompareString(info.foodBefore, info.foodAfter)}\n';
@@ -836,9 +839,11 @@ class MainView extends Box {
 					syncViewByInfo(gameInfo);
 
 					var people:Array<People> = info.people;
-					var msg = '解雇:${people.map((p) -> p.name).join(',')}\n';
+					final title = '解雇完成';
+					var msg = '${title}\n';
+					msg += '解雇:${people.map((p) -> p.name).join(',')}\n';
 					msg += '薪俸:${Main.getCompareString(info.maintainMoneyBefore, info.maintainMoneyAfter)}\n';
-					checkAutoPlay(autoPlay, '解雇完成', msg);
+					checkAutoPlay(autoPlay, title, msg);
 
 				case NEGOTIATE_RESULT:
 					syncViewByInfo(gameInfo);
@@ -859,18 +864,20 @@ class MainView extends Box {
 				case WAR_RESULT:
 					syncViewByInfo(gameInfo);
 
-					var msg = '武將:${info.people.name}\n';
+					var title = '${info.success ? '占領成功' : '占領失敗'}\n';
+					var msg = '${title}\n';
+					msg += '武將:${info.people.name}\n';
 					msg += '體力:${Main.getCompareString(info.energyBefore, info.energyAfter)}\n';
 					msg += '金錢:${Main.getCompareString(info.moneyBefore, info.moneyAfter)}\n';
 					msg += '糧草:${Main.getCompareString(info.foodBefore, info.foodAfter)}\n';
 					msg += '士兵:${Main.getCompareString(info.armyBefore, info.armyAfter)}\n';
 					if (info.success) {
-						Dialogs.messageBox(msg, '占領成功', MessageBoxType.TYPE_INFO, true, (target) -> {
+						Dialogs.messageBox(title, '占領成功', MessageBoxType.TYPE_INFO, true, (target) -> {
 							transferPreview.showPopup(null);
 							doOneEvent();
 						});
 					} else {
-						Dialogs.messageBox(msg, '占領失敗', MessageBoxType.TYPE_INFO, true, (b) -> {
+						Dialogs.messageBox(title, '占領失敗', MessageBoxType.TYPE_INFO, true, (b) -> {
 							doOneEvent();
 						});
 					}
@@ -879,7 +886,8 @@ class MainView extends Box {
 					syncViewByInfo(gameInfo);
 
 					final title = info.success ? '搶奪成功' : '搶奪失敗';
-					var msg = '武將:${info.people.name}\n';
+					var msg = '${title}\n';
+					msg += '武將:${info.people.name}\n';
 					msg += '體力:${Main.getCompareString(info.energyBefore, info.energyAfter)}\n';
 					msg += '金錢:${Main.getCompareString(info.moneyBefore, info.moneyAfter)}\n';
 					msg += '糧草:${Main.getCompareString(info.foodBefore, info.foodAfter)}\n';
@@ -888,12 +896,14 @@ class MainView extends Box {
 				case RESOURCE_RESULT:
 					syncViewByInfo(gameInfo);
 
-					var msg = '武將:${info.people ? info.people.name : ""}\n';
+					final title = '資源變更';
+					var msg = '${title}\n';
+					msg += '武將:${info.people ? info.people.name : ""}\n';
 					msg += '體力:${Main.getCompareString(info.energyBefore, info.energyAfter)}\n';
 					msg += '金錢:${Main.getCompareString(info.moneyBefore, info.moneyAfter)}\n';
 					msg += '糧草:${Main.getCompareString(info.foodBefore, info.foodAfter)}\n';
 					msg += '士兵:${Main.getCompareString(info.armyBefore, info.armyAfter)}\n';
-					checkAutoPlay(autoPlay, '資源變更', msg);
+					checkAutoPlay(autoPlay, title, msg);
 				case STRATEGY_RESULT:
 					syncViewByInfo(gameInfo);
 
@@ -922,7 +932,8 @@ class MainView extends Box {
 					final title = '功績到達，職位升等!';
 					final p1:People = info.peopleBefore;
 					final p2:People = info.peopleAfter;
-					var msg = '將領:${p1.name}\n';
+					var msg = '${title}\n';
+					msg += '將領:${p1.name}\n';
 					msg += '職等:${PeopleGenerator.getInst().getPeopleTypeName(p1.type)} => ${PeopleGenerator.getInst().getPeopleTypeName(p2.type)}\n';
 					switch (p2.type) {
 						case WENGUAN(level):
@@ -940,8 +951,10 @@ class MainView extends Box {
 				case PAY_FOR_OVER_ENEMY_GRID:
 					syncViewByInfo(gameInfo);
 
-					final title = '走到其他主公的領地，過路費…';
-					var msg = '走到其他主公的領地，過路費…\n';
+					final grid:Grid = gameInfo.grids[info.gridId];
+					final stopOn = gameInfo.players[grid.belongPlayerId];
+					final title = '走到${stopOn.name}的領地，支付貢奉金...';
+					var msg = '${title}\n';
 					msg += '金錢:${Main.getCompareString(info.moneyBefore, info.moneyAfter)}\n';
 					msg += '糧草:${Main.getCompareString(info.foodBefore, info.foodAfter)}\n';
 					msg += '士兵:${Main.getCompareString(info.armyBefore, info.armyAfter)}\n';
