@@ -258,7 +258,10 @@ typedef BuildingCatelog = {
 	money:Float,
 	describe:String,
 	type:BUILDING,
-	depends:Array<BUILDING>
+	depends:Array<BUILDING>,
+	value:{
+		valid:Array<Int>, float:Array<Float>
+	}
 }
 
 typedef GameSetting = {
@@ -375,7 +378,7 @@ final StrategyList:Array<StrategyCatelog> = [
 		id: 1,
 		name: '步步為營',
 		money: 30,
-		intelligence: 30,
+		intelligence: 40,
 		describe: '指定武將回復30體力',
 		targetType: StrategyTargetType.SELF_PEOPLE,
 		value: {
@@ -398,8 +401,8 @@ final StrategyList:Array<StrategyCatelog> = [
 	{
 		id: 3,
 		name: '緩兵之計',
-		money: 40,
-		intelligence: 30,
+		money: 50,
+		intelligence: 40,
 		describe: '指定自己前後3格當中的其中一格設置路障。走到那個格子的所以玩家會自動停下。然後路障消失',
 		targetType: StrategyTargetType.TARGET_GRID,
 		value: {
@@ -411,7 +414,7 @@ final StrategyList:Array<StrategyCatelog> = [
 		id: 4,
 		name: '火中取栗',
 		money: 10,
-		intelligence: 50,
+		intelligence: 60,
 		describe: '拆除指定自己後6格路障，如果那個路障是別的玩家，拿取那個玩家10金',
 		targetType: StrategyTargetType.TARGET_GRID,
 		value: {
@@ -424,11 +427,11 @@ final StrategyList:Array<StrategyCatelog> = [
 		name: '趁虛而入',
 		money: 40,
 		intelligence: 50,
-		describe: '指定武將體力-20',
+		describe: '指定武將體力-30',
 		targetType: StrategyTargetType.TARGET_PEOPLE,
 		value: {
 			valid: [],
-			float: [-20],
+			float: [-30],
 		}
 	},
 	{
@@ -446,8 +449,8 @@ final StrategyList:Array<StrategyCatelog> = [
 	{
 		id: 7,
 		name: '急功近利',
-		money: 30,
-		intelligence: 40,
+		money: 10,
+		intelligence: 60,
 		describe: '指定玩家變賣50糧獲得50錢',
 		targetType: StrategyTargetType.TARGET_PLAYER,
 		value: {
@@ -460,11 +463,11 @@ final StrategyList:Array<StrategyCatelog> = [
 		name: '五穀豐登',
 		money: 5,
 		intelligence: 90,
-		describe: '所有自己城池的糧食+20%',
+		describe: '所有自己城池的糧食+15%',
 		targetType: StrategyTargetType.SELF_PLAYER,
 		value: {
 			valid: [],
-			float: [0.20],
+			float: [0.15],
 		}
 	},
 	{
@@ -530,9 +533,9 @@ final StrategyList:Array<StrategyCatelog> = [
 	{
 		id: 14,
 		name: '攻其不備',
-		money: 300,
+		money: 50,
 		intelligence: 75,
-		describe: '指定后三格中的有敵人城池的一個格子，角色會移動到那裏，并且獲得自己所有城池的10%資源。',
+		describe: '指定后三格中的有敵人城池的一個格子，角色會移動到那裏，并且轉移所有城池的10%資源到自己身上。',
 		targetType: StrategyTargetType.TARGET_GRID,
 		value: {
 			valid: [1, 2, 3],
@@ -554,9 +557,9 @@ final StrategyList:Array<StrategyCatelog> = [
 	{
 		id: 16,
 		name: '減免貢奉金',
-		money: 0,
+		money: 5,
 		intelligence: 70,
-		describe: '自己的下一次過路費可以減為1/4',
+		describe: '這個回合自己不需要支付貢奉金',
 		targetType: StrategyTargetType.SELF_PLAYER,
 		value: {
 			valid: [],
@@ -572,7 +575,11 @@ final BuildingList:Array<BuildingCatelog> = [
 		money: 50,
 		describe: '糧食每回合+0',
 		type: FARM(0),
-		depends: []
+		depends: [],
+		value:{
+			valid: [],
+			float: []
+		}
 	},
 	{
 		id: 1,
@@ -580,7 +587,11 @@ final BuildingList:Array<BuildingCatelog> = [
 		money: 40,
 		describe: '糧食每回合+5',
 		type: FARM(1),
-		depends: []
+		depends: [],
+		value:{
+			valid: [],
+			float: [5.0]
+		}
 	},
 	{
 		id: 2,
@@ -588,7 +599,11 @@ final BuildingList:Array<BuildingCatelog> = [
 		money: 40,
 		describe: '糧食每回合+9',
 		type: FARM(2),
-		depends: []
+		depends: [],
+		value:{
+			valid: [],
+			float: [9.0]
+		}
 	},
 	{
 		id: 3,
@@ -596,7 +611,11 @@ final BuildingList:Array<BuildingCatelog> = [
 		money: 0,
 		describe: '糧食每回合+13',
 		type: FARM(3),
-		depends: []
+		depends: [],
+		value:{
+			valid: [],
+			float: [13.0]
+		}
 	},
 	{
 		id: 4,
@@ -604,7 +623,11 @@ final BuildingList:Array<BuildingCatelog> = [
 		money: 50,
 		describe: '金錢每回合+0',
 		type: MARKET(0),
-		depends: []
+		depends: [],
+		value:{
+			valid: [],
+			float: []
+		}
 	},
 	{
 		id: 5,
@@ -612,7 +635,11 @@ final BuildingList:Array<BuildingCatelog> = [
 		money: 40,
 		describe: '金錢每回合+5',
 		type: MARKET(1),
-		depends: []
+		depends: [],
+		value:{
+			valid: [],
+			float: [5.0]
+		}
 	},
 	{
 		id: 6,
@@ -620,7 +647,11 @@ final BuildingList:Array<BuildingCatelog> = [
 		money: 40,
 		describe: '金錢每回合+9',
 		type: MARKET(2),
-		depends: []
+		depends: [],
+		value:{
+			valid: [],
+			float: [9.0]
+		}
 	},
 	{
 		id: 7,
@@ -628,7 +659,11 @@ final BuildingList:Array<BuildingCatelog> = [
 		money: 0,
 		describe: '金錢每回合+13',
 		type: MARKET(3),
-		depends: []
+		depends: [],
+		value:{
+			valid: [],
+			float: [13.0]
+		}
 	},
 	{
 		id: 8,
@@ -636,7 +671,11 @@ final BuildingList:Array<BuildingCatelog> = [
 		money: 50,
 		describe: '士兵每回合+0',
 		type: BARRACKS(0),
-		depends: []
+		depends: [],
+		value:{
+			valid: [],
+			float: []
+		}
 	},
 	{
 		id: 9,
@@ -644,7 +683,11 @@ final BuildingList:Array<BuildingCatelog> = [
 		money: 40,
 		describe: '士兵每回合+5',
 		type: BARRACKS(1),
-		depends: []
+		depends: [],
+		value:{
+			valid: [],
+			float: [5.0]
+		}
 	},
 	{
 		id: 10,
@@ -652,7 +695,11 @@ final BuildingList:Array<BuildingCatelog> = [
 		money: 40,
 		describe: '士兵每回合+9',
 		type: BARRACKS(2),
-		depends: []
+		depends: [],
+		value:{
+			valid: [],
+			float: [9.0]
+		}
 	},
 	{
 		id: 11,
@@ -660,7 +707,11 @@ final BuildingList:Array<BuildingCatelog> = [
 		money: 0,
 		describe: '士兵每回合+13',
 		type: BARRACKS(3),
-		depends: []
+		depends: [],
+		value:{
+			valid: [],
+			float: [13.0]
+		}
 	},
 	{
 		id: 12,
@@ -668,7 +719,11 @@ final BuildingList:Array<BuildingCatelog> = [
 		money: 50,
 		describe: '提高武將在探索計算時的魅力(+0)及聘用計算時的魅力(+0)。所有武將的薪資不減少。並且聘用金錢不減少',
 		type: EXPLORE(0),
-		depends: []
+		depends: [],
+		value:{
+			valid: [],
+			float: []
+		}
 	},
 	{
 		id: 13,
@@ -676,7 +731,11 @@ final BuildingList:Array<BuildingCatelog> = [
 		money: 0,
 		describe: '提高武將在探索計算時的魅力(+5)及聘用計算時的魅力(+5)。所有武將的薪資減為*0.8。並且聘用金錢減為*0.8',
 		type: EXPLORE(1),
-		depends: []
+		depends: [],
+		value:{
+			valid: [],
+			float: [5]
+		}
 	},
 	{
 		id: 14,
@@ -684,7 +743,11 @@ final BuildingList:Array<BuildingCatelog> = [
 		money: 30,
 		describe: '此格子防禦方的加成提高。(+0%)',
 		type: WALL(0),
-		depends: []
+		depends: [],
+		value:{
+			valid: [],
+			float: []
+		}
 	},
 	{
 		id: 15,
@@ -692,7 +755,11 @@ final BuildingList:Array<BuildingCatelog> = [
 		money: 30,
 		describe: '此格子防禦方的加成提高。(+20%)',
 		type: WALL(1),
-		depends: []
+		depends: [],
+		value:{
+			valid: [],
+			float: [1.2]
+		}
 	},
 	{
 		id: 16,
@@ -700,7 +767,11 @@ final BuildingList:Array<BuildingCatelog> = [
 		money: 30,
 		describe: '此格子防禦方的加成提高。(+35%)',
 		type: WALL(2),
-		depends: []
+		depends: [],
+		value:{
+			valid: [],
+			float: [1.35]
+		}
 	},
 	{
 		id: 17,
@@ -708,7 +779,11 @@ final BuildingList:Array<BuildingCatelog> = [
 		money: 0,
 		describe: '此格子防禦方的加成提高。(+50%)',
 		type: WALL(3),
-		depends: []
+		depends: [],
+		value:{
+			valid: [],
+			float: [1.5]
+		}
 	},
 	{
 		id: 18,
@@ -716,7 +791,11 @@ final BuildingList:Array<BuildingCatelog> = [
 		money: 120,
 		describe: '金錢最大值+0。金錢每回合+0%',
 		type: BANK(0),
-		depends: []
+		depends: [],
+		value:{
+			valid: [],
+			float: []
+		}
 	},
 	{
 		id: 19,
@@ -724,7 +803,11 @@ final BuildingList:Array<BuildingCatelog> = [
 		money: 80,
 		describe: '金錢最大值+200。金錢每回合+2%',
 		type: BANK(1),
-		depends: []
+		depends: [],
+		value:{
+			valid: [],
+			float: [200.0, .02]
+		}
 	},
 	{
 		id: 20,
@@ -732,7 +815,11 @@ final BuildingList:Array<BuildingCatelog> = [
 		money: 80,
 		describe: '金錢最大值+300。金錢每回合+3%',
 		type: BANK(2),
-		depends: []
+		depends: [],
+		value:{
+			valid: [],
+			float: [300.0, 0.03]
+		}
 	},
 	{
 		id: 21,
@@ -740,7 +827,11 @@ final BuildingList:Array<BuildingCatelog> = [
 		money: 0,
 		describe: '金錢最大值+400。金錢每回合+4%',
 		type: BANK(3),
-		depends: []
+		depends: [],
+		value:{
+			valid: [],
+			float: [400.0, 0.04]
+		}
 	},
 	{
 		id: 22,
@@ -748,7 +839,11 @@ final BuildingList:Array<BuildingCatelog> = [
 		money: 120,
 		describe: '糧草最大值+0。糧草每回合+0%',
 		type: BARN(0),
-		depends: []
+		depends: [],
+		value:{
+			valid: [],
+			float: []
+		}
 	},
 	{
 		id: 23,
@@ -756,7 +851,11 @@ final BuildingList:Array<BuildingCatelog> = [
 		money: 80,
 		describe: '糧草最大值+200。糧草每回合+2%',
 		type: BARN(1),
-		depends: []
+		depends: [],
+		value:{
+			valid: [],
+			float: [200.0, 0.02]
+		}
 	},
 	{
 		id: 24,
@@ -764,7 +863,11 @@ final BuildingList:Array<BuildingCatelog> = [
 		money: 80,
 		describe: '糧草最大值+300。糧草每回合+3%',
 		type: BARN(2),
-		depends: []
+		depends: [],
+		value:{
+			valid: [],
+			float: [300.0, 0.03]
+		}
 	},
 	{
 		id: 25,
@@ -772,7 +875,11 @@ final BuildingList:Array<BuildingCatelog> = [
 		money: 0,
 		describe: '糧草最大值+400。糧草每回合+4%',
 		type: BARN(3),
-		depends: []
+		depends: [],
+		value:{
+			valid: [],
+			float: [400.0, 0.04]
+		}
 	},
 	{
 		id: 26,
@@ -780,7 +887,11 @@ final BuildingList:Array<BuildingCatelog> = [
 		money: 120,
 		describe: '士兵最大值+0。士兵每回合+0%',
 		type: HOME(0),
-		depends: []
+		depends: [],
+		value:{
+			valid: [],
+			float: []
+		}
 	},
 	{
 		id: 27,
@@ -788,7 +899,11 @@ final BuildingList:Array<BuildingCatelog> = [
 		money: 80,
 		describe: '士兵最大值+200。士兵每回合+2%',
 		type: HOME(1),
-		depends: []
+		depends: [],
+		value:{
+			valid: [],
+			float: [200.0, 0.02]
+		}
 	},
 	{
 		id: 28,
@@ -796,7 +911,11 @@ final BuildingList:Array<BuildingCatelog> = [
 		money: 80,
 		describe: '士兵最大值+300。士兵每回合+3%',
 		type: HOME(2),
-		depends: []
+		depends: [],
+		value:{
+			valid: [],
+			float: [300.0, 0.03]
+		}
 	},
 	{
 		id: 29,
@@ -804,7 +923,11 @@ final BuildingList:Array<BuildingCatelog> = [
 		money: 0,
 		describe: '士兵最大值+400。士兵每回合+4%',
 		type: HOME(3),
-		depends: []
+		depends: [],
+		value:{
+			valid: [],
+			float: [400.0, 0.04]
+		}
 	},
 	{
 		id: 30,
@@ -812,7 +935,11 @@ final BuildingList:Array<BuildingCatelog> = [
 		money: 50,
 		describe: '攻城時糧食消耗減少0%，攻擊力+0%',
 		type: CITYATTACKER(0),
-		depends: []
+		depends: [],
+		value:{
+			valid: [],
+			float: []
+		}
 	},
 	{
 		id: 31,
@@ -820,7 +947,11 @@ final BuildingList:Array<BuildingCatelog> = [
 		money: 0,
 		describe: '攻城時糧食消耗減少10%，攻擊力+10%',
 		type: CITYATTACKER(1),
-		depends: []
+		depends: [],
+		value:{
+			valid: [],
+			float: [0.9, 1.1]
+		}
 	},
 	{
 		id: 32,
@@ -828,7 +959,11 @@ final BuildingList:Array<BuildingCatelog> = [
 		money: 50,
 		describe: '所有功績增加的時候，增加量+0%',
 		type: EXPADDER(0),
-		depends: []
+		depends: [],
+		value:{
+			valid: [],
+			float: []
+		}
 	},
 	{
 		id: 33,
@@ -836,6 +971,10 @@ final BuildingList:Array<BuildingCatelog> = [
 		money: 0,
 		describe: '所有功績增加的時候，增加量+10%',
 		type: EXPADDER(1),
-		depends: []
+		depends: [],
+		value:{
+			valid: [],
+			float: [1.1]
+		}
 	},
 ];
