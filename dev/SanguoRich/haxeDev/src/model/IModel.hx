@@ -367,10 +367,10 @@ final StrategyList:Array<StrategyCatelog> = [
 		name: '暗渡陳艙',
 		money: 5,
 		intelligence: 80,
-		describe: '可以指定移動1~3格數(無視路障)',
+		describe: '可以指定移動1~2格數(無視路障)',
 		targetType: StrategyTargetType.TARGET_GRID,
 		value: {
-			valid: [1, 2, 3],
+			valid: [1, 2],
 			float: []
 		}
 	},
@@ -463,11 +463,11 @@ final StrategyList:Array<StrategyCatelog> = [
 		name: '五穀豐登',
 		money: 5,
 		intelligence: 90,
-		describe: '所有自己城池的糧食+15%',
+		describe: '所有自己城池的糧食+10%',
 		targetType: StrategyTargetType.SELF_PLAYER,
 		value: {
 			valid: [],
-			float: [0.15],
+			float: [0.10],
 		}
 	},
 	{

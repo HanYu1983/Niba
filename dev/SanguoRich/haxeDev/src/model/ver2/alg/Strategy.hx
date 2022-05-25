@@ -32,8 +32,14 @@ private function getStrategyCost(ctx:Context, p1PeopleId:Int, strategyId:Int, ta
 			}
 			final player = getPlayerById(ctx, p1.belongToPlayerId);
 			final grid = ctx.grids[player.position];
-			final isEmpty = getGridInfo(ctx, grid).buildtype == GROWTYPE.EMPTY;
-			isEmpty ? 0.0 : 1;
+			final gridBelongPlayerId = getGridBelongPlayerId(ctx, grid.id);
+			final isEnemyGrid = gridBelongPlayerId != null && gridBelongPlayerId != player.id;
+			if (isEnemyGrid) {
+				0.0;
+			} else {
+				final isEmpty = getGridInfo(ctx, grid).buildtype == GROWTYPE.EMPTY;
+				isEmpty ? 0.0 : 1;
+			}
 		case 4:
 			// 火中取栗
 			// 對沒路障的地沒有作用
@@ -409,6 +415,17 @@ private function onStrategyCost(ctx:Context, p1PeopleId:Int, strategyId:Int, tar
 					case _:
 						throw new haxe.Exception('strategy value not found:${strategy}');
 				}
+			// case 14:
+			// // 攻其不備
+			// case 15:
+			// // 破壞
+			// case 16:
+			// 	// 減免貢奉金
+			// 	switch strategy {
+			// 		case {value: {float: [count]}, money: _}:
+			// 		case _:
+			// 			throw new haxe.Exception('strategy value not found:${strategy}');
+			// 	}
 			case _:
 				throw new haxe.Exception('unknown strategyId:${strategyId}');
 		}
