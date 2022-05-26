@@ -5,7 +5,7 @@ import model.GridGenerator.BUILDING;
 import model.IModel;
 import model.GridGenerator.Grid;
 import model.PeopleGenerator.People;
-import model.tool.Debug;
+import tool.Debug;
 
 // 快取用Model
 // 注意: 在任何有副作用的方法都要覆寫isDirty = true

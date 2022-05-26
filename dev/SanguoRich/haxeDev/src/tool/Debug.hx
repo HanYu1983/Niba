@@ -1,4 +1,4 @@
-package model.tool;
+package tool;
 
 using Lambda;
 

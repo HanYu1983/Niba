@@ -8,7 +8,7 @@ import model.ver2.Define;
 import model.ver2.alg.Nego;
 import model.ver2.alg.War;
 import model.ver2.alg.Brain;
-import model.tool.Debug;
+import tool.Debug;
 
 using Lambda;
 

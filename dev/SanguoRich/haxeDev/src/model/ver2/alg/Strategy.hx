@@ -4,7 +4,7 @@ import haxe.Exception;
 import model.GridGenerator;
 import model.IModel;
 import model.Config;
-import model.tool.Debug;
+import tool.Debug;
 import model.tool.Fact;
 import model.ver2.Define;
 import model.ver2.alg.Alg;

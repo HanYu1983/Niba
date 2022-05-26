@@ -1,6 +1,6 @@
 package model;
 
-import model.tool.Debug.warn;
+import tool.Debug.warn;
 import model.PeopleGenerator.People;
 import libnoise.QualityMode;
 import libnoise.generator.Perlin;
@@ -68,7 +68,6 @@ enum BUILDING {
 	EXPLORE(level:Int);
 	SIEGEFACTORY(level:Int);
 	ACADEMY(level:Int);
-
 	FISHING(level:Int);
 	HUNTING(level:Int);
 	MINE(level:Int);
@@ -134,7 +133,7 @@ class GridGenerator {
 		growTotal = growTotal.concat([for (i in 0...2) GROWTYPE.VILLAGE]);
 		growTotal = growTotal.concat([for (i in 0...2) GROWTYPE.FARM]);
 		growTotal = growTotal.concat([for (i in 0...1) GROWTYPE.CITY]);
-		
+
 		var landTotal = [];
 		landTotal = landTotal.concat([for (i in 0...getRandomInt(10, 10)) LANDTYPE.SHALLOW]);
 		landTotal = landTotal.concat([for (i in 0...getRandomInt(10, 5)) LANDTYPE.PLAIN]);
@@ -153,119 +152,74 @@ class GridGenerator {
 			g.landType = landTotal[Math.floor(height * (landTotal.length - 1))];
 			g.buildtype = growTotal[getRandomInt(growTotal.length)];
 			warn("GridGenerator", 'should not be null, g.landType: ${g.landType}, g.buildtype:${g.buildtype}');
-		
+
 			g.moneyGrow = Math.random() * 0.01;
 			g.foodGrow = Math.random() * 0.01;
 			g.armyGrow = Math.random() * 0.01;
-			
+
 			g.maxArmy = 500;
 			g.maxFood = 500;
 			g.maxMoney = 500;
 
 			switch ([g.landType, g.buildtype]) {
 				case [SHALLOW, MARKET]:
-					g.attachs = [
-						BUILDING.MARKET(0),
-						BUILDING.BANK(1),
-						BUILDING.FISHING(0),
-						BUILDING.WALL(0),
-					];
+					g.attachs = [BUILDING.MARKET(0), BUILDING.BANK(1), BUILDING.FISHING(0), BUILDING.WALL(0),];
 					g.army = getRandomFloat(180, 80);
 					g.money = getRandomFloat(180, 80);
 					g.food = getRandomFloat(180, 80);
 					g.money *= 1.5;
 					g.people.push(PeopleGenerator.getInst().generate(type));
 				case [PLAIN, MARKET]:
-					g.attachs = [
-						BUILDING.MARKET(0),
-						BUILDING.BANK(1),
-						BUILDING.WALL(0),
-						BUILDING.EXPLORE(0),
-					];
+					g.attachs = [BUILDING.MARKET(0), BUILDING.BANK(1), BUILDING.WALL(0), BUILDING.EXPLORE(0),];
 					g.army = getRandomFloat(180, 80);
 					g.money = getRandomFloat(180, 80);
 					g.food = getRandomFloat(180, 80);
 					g.money *= 1.5;
 					g.people.push(PeopleGenerator.getInst().generate(type));
 				case [HILL, MARKET]:
-					g.attachs = [
-						BUILDING.MARKET(0),
-						BUILDING.BANK(1),
-						BUILDING.MINE(0),
-						BUILDING.WALL(0),
-					];
+					g.attachs = [BUILDING.MARKET(0), BUILDING.BANK(1), BUILDING.MINE(0), BUILDING.WALL(0),];
 					g.army = getRandomFloat(180, 80);
 					g.money = getRandomFloat(180, 80);
 					g.food = getRandomFloat(180, 80);
 					g.money *= 1.5;
 					g.people.push(PeopleGenerator.getInst().generate(type));
 				case [MOUNTAIN, MARKET]:
-					g.attachs = [
-						BUILDING.MARKET(0),
-						BUILDING.BANK(1),
-						BUILDING.HUNTING(0),
-						BUILDING.WALL(0),
-					];
+					g.attachs = [BUILDING.MARKET(0), BUILDING.BANK(1), BUILDING.HUNTING(0), BUILDING.WALL(0),];
 					g.army = getRandomFloat(180, 80);
 					g.money = getRandomFloat(180, 80);
 					g.food = getRandomFloat(180, 80);
 					g.money *= 1.5;
 					g.people.push(PeopleGenerator.getInst().generate(type));
 				case [SHALLOW, FARM]:
-					g.attachs = [
-						BUILDING.FARM(0),
-						BUILDING.BARN(1),
-						BUILDING.FISHING(0),
-						BUILDING.WALL(0),
-					];
+					g.attachs = [BUILDING.FARM(0), BUILDING.BARN(1), BUILDING.FISHING(0), BUILDING.WALL(0),];
 					g.army = getRandomFloat(180, 80);
 					g.money = getRandomFloat(180, 80);
 					g.food = getRandomFloat(180, 80);
 					g.food *= 1.5;
 					g.people.push(PeopleGenerator.getInst().generate(type));
 				case [PLAIN, FARM]:
-					g.attachs = [
-						BUILDING.FARM(0),
-						BUILDING.BARN(1),
-						BUILDING.WALL(0),
-						BUILDING.EXPLORE(0),
-					];
+					g.attachs = [BUILDING.FARM(0), BUILDING.BARN(1), BUILDING.WALL(0), BUILDING.EXPLORE(0),];
 					g.army = getRandomFloat(180, 80);
 					g.money = getRandomFloat(180, 80);
 					g.food = getRandomFloat(180, 80);
 					g.food *= 1.5;
 					g.people.push(PeopleGenerator.getInst().generate(type));
 				case [HILL, FARM]:
-					g.attachs = [
-						BUILDING.FARM(0),
-						BUILDING.BARN(1),
-						BUILDING.MINE(0),
-						BUILDING.WALL(0),
-					];
+					g.attachs = [BUILDING.FARM(0), BUILDING.BARN(1), BUILDING.MINE(0), BUILDING.WALL(0),];
 					g.army = getRandomFloat(180, 80);
 					g.money = getRandomFloat(180, 80);
 					g.food = getRandomFloat(180, 80);
 					g.food *= 1.5;
 					g.people.push(PeopleGenerator.getInst().generate(type));
 				case [MOUNTAIN, FARM]:
-					g.attachs = [
-						BUILDING.FARM(0),
-						BUILDING.BARN(1),
-						BUILDING.HUNTING(0),
-						BUILDING.WALL(0),
-					];
+					g.attachs = [BUILDING.FARM(0), BUILDING.BARN(1), BUILDING.HUNTING(0), BUILDING.WALL(0),];
 					g.army = getRandomFloat(180, 80);
 					g.money = getRandomFloat(180, 80);
 					g.food = getRandomFloat(180, 80);
 					g.food *= 1.5;
 					g.people.push(PeopleGenerator.getInst().generate(type));
 				case [SHALLOW, VILLAGE]:
-					g.attachs = [
-						BUILDING.BARRACKS(0),
-						BUILDING.HOME(1),
-						BUILDING.FISHING(0),
-						BUILDING.WALL(0),
-					];
+					g.attachs = [BUILDING.BARRACKS(0), BUILDING.HOME(1), BUILDING.FISHING(0), BUILDING.WALL(0),];
 					g.army = getRandomFloat(180, 80);
 					g.money = getRandomFloat(180, 80);
 					g.food = getRandomFloat(180, 80);
@@ -285,24 +239,14 @@ class GridGenerator {
 					g.army *= 1.5;
 					g.people.push(PeopleGenerator.getInst().generate(type));
 				case [HILL, VILLAGE]:
-					g.attachs = [
-						BUILDING.BARRACKS(0),
-						BUILDING.HOME(1),
-						BUILDING.MINE(0),
-						BUILDING.WALL(0),
-					];
+					g.attachs = [BUILDING.BARRACKS(0), BUILDING.HOME(1), BUILDING.MINE(0), BUILDING.WALL(0),];
 					g.army = getRandomFloat(180, 80);
 					g.money = getRandomFloat(180, 80);
 					g.food = getRandomFloat(180, 80);
 					g.army *= 1.5;
 					g.people.push(PeopleGenerator.getInst().generate(type));
 				case [MOUNTAIN, VILLAGE]:
-					g.attachs = [
-						BUILDING.BARRACKS(0),
-						BUILDING.HOME(1),
-						BUILDING.HUNTING(0),
-						BUILDING.WALL(0),
-					];
+					g.attachs = [BUILDING.BARRACKS(0), BUILDING.HOME(1), BUILDING.HUNTING(0), BUILDING.WALL(0),];
 					g.army = getRandomFloat(180, 80);
 					g.money = getRandomFloat(180, 80);
 					g.food = getRandomFloat(180, 80);
@@ -310,16 +254,8 @@ class GridGenerator {
 					g.people.push(PeopleGenerator.getInst().generate(type));
 				case [PLAIN, CITY]:
 					g.attachs = [
-						BUILDING.MARKET(0),
-						BUILDING.BANK(1),
-						BUILDING.FARM(0),
-						BUILDING.BARN(1),
-						BUILDING.BARRACKS(0),
-						BUILDING.HOME(1),
-						BUILDING.EXPLORE(0),
-						BUILDING.SIEGEFACTORY(0),
-						BUILDING.ACADEMY(0),
-						BUILDING.WALL(0),
+						BUILDING.MARKET(0), BUILDING.BANK(1), BUILDING.FARM(0), BUILDING.BARN(1), BUILDING.BARRACKS(0), BUILDING.HOME(1), BUILDING.EXPLORE(0),
+						BUILDING.SIEGEFACTORY(0), BUILDING.ACADEMY(0), BUILDING.WALL(0),
 					];
 					g.army = getRandomFloat(180, 80);
 					g.money = getRandomFloat(180, 80);
@@ -330,17 +266,8 @@ class GridGenerator {
 					g.people.push(PeopleGenerator.getInst().generate(type));
 				case [MOUNTAIN, CITY]:
 					g.attachs = [
-						BUILDING.MARKET(0),
-						BUILDING.BANK(1),
-						BUILDING.FARM(0),
-						BUILDING.BARN(1),
-						BUILDING.BARRACKS(0),
-						BUILDING.HOME(1),
-						BUILDING.EXPLORE(0),
-						BUILDING.SIEGEFACTORY(0),
-						BUILDING.ACADEMY(0),
-						BUILDING.HUNTING(0),
-						BUILDING.WALL(0),
+						BUILDING.MARKET(0), BUILDING.BANK(1), BUILDING.FARM(0), BUILDING.BARN(1), BUILDING.BARRACKS(0), BUILDING.HOME(1), BUILDING.EXPLORE(0),
+						BUILDING.SIEGEFACTORY(0), BUILDING.ACADEMY(0), BUILDING.HUNTING(0), BUILDING.WALL(0),
 					];
 					g.army = getRandomFloat(180, 80);
 					g.money = getRandomFloat(180, 80);
@@ -379,8 +306,10 @@ class GridGenerator {
 
 	private function getHeight(x:Float = 0, y:Float = 0, z:Float = 0) {
 		final value = (noise.getValue(x, y, z) + 1.0) / 2.0;
-		if(value < 0) return 0.0;
-		if(value > 1) return 1.0;
+		if (value < 0)
+			return 0.0;
+		if (value > 1)
+			return 1.0;
 		return value;
 	}
 }

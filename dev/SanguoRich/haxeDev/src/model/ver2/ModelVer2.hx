@@ -3,7 +3,7 @@ package model.ver2;
 import model.GridGenerator;
 import model.IModel;
 import model.Config;
-import model.tool.Debug;
+import tool.Debug;
 import model.ver2.Define;
 import model.ver2.alg.Alg;
 import model.ver2.alg.Nego;
