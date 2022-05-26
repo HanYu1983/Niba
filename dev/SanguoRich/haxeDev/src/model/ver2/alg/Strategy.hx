@@ -4,9 +4,10 @@ import haxe.Exception;
 import model.GridGenerator;
 import model.IModel;
 import model.Config;
+import model.tool.Debug;
+import model.tool.Fact;
 import model.ver2.Define;
 import model.ver2.alg.Alg;
-import model.tool.Fact;
 
 using Lambda;
 
@@ -54,6 +55,17 @@ private function getStrategyCost(ctx:Context, p1PeopleId:Int, strategyId:Int, ta
 			// 草船借箭
 			// 需要有鑒別
 			p1Abilities.has(12) == false ? 0.0 : 1.0;
+		case 16:
+			if (p1.belongToPlayerId == null) {
+				throw new Exception("belongToPlayerId not found");
+			}
+			final effectStrategy16 = ctx.effects.filter(e -> e.belongToPlayerId == p1.belongToPlayerId).filter(e -> switch e.proto {
+				case Strategy({id: 16}):
+					true;
+				case _:
+					false;
+			});
+			effectStrategy16.length > 0 ? 0.0 : 1.0;
 		case _:
 			1;
 	});
@@ -170,7 +182,7 @@ private function onStrategyCost(ctx:Context, p1PeopleId:Int, strategyId:Int, tar
 						if (success) {
 							player.money = Math.max(0, player.money - cost.playerCost.money);
 							ctx.groundItems.push({
-								id: getNextId(),
+								id: ctx.idSeq++,
 								belongToPlayerId: p1.belongToPlayerId,
 								position: targetGridId
 							});
@@ -323,6 +335,7 @@ private function onStrategyCost(ctx:Context, p1PeopleId:Int, strategyId:Int, tar
 									case _:
 										throw new haxe.Exception("Math.min(player.food, player.army) not found");
 								}
+								onPeopleExpAdd(ctx, p1.id, getExpAdd(cost.successRate, ENERGY_COST_ON_STRATEGY));
 							} else {
 								player.money = Math.max(0, player.money - cost.playerCost.money * 0.2);
 							}
@@ -342,6 +355,7 @@ private function onStrategyCost(ctx:Context, p1PeopleId:Int, strategyId:Int, tar
 								final newPeople = PeopleGenerator.getInst().generate(Math.random() < 0.5 ? 1 : 2);
 								addPeopleInfo(ctx, player.id, null, newPeople);
 							}
+							onPeopleExpAdd(ctx, p1.id, getExpAdd(cost.successRate, ENERGY_COST_ON_STRATEGY));
 						} else {
 							player.money = Math.max(0, player.money - cost.playerCost.money * 0.2);
 						}
@@ -360,6 +374,7 @@ private function onStrategyCost(ctx:Context, p1PeopleId:Int, strategyId:Int, tar
 								final newItem = TreasureGenerator.getInst().generator();
 								addTreasureInfo(ctx, player.id, null, null, newItem);
 							}
+							onPeopleExpAdd(ctx, p1.id, getExpAdd(cost.successRate, ENERGY_COST_ON_STRATEGY));
 						} else {
 							player.money = Math.max(0, player.money - cost.playerCost.money * 0.2);
 						}
@@ -371,7 +386,7 @@ private function onStrategyCost(ctx:Context, p1PeopleId:Int, strategyId:Int, tar
 				// 火計 | 時來運轉
 				switch strategy {
 					case {value: {float: [resourceOffsetRate]}, money: _}:
-						final success = wrapResourceResultEvent(ctx, p1.belongToPlayerId, p1.id, () -> {
+						wrapResourceResultEvent(ctx, p1.belongToPlayerId, p1.id, () -> {
 							p1.energy = Math.max(0, p1.energy - cost.peopleCost.energy);
 							final targetGrid = ctx.grids[targetGridId];
 							final targetGridBelongPlayerId = getGridBelongPlayerId(ctx, targetGrid.id);
@@ -395,6 +410,7 @@ private function onStrategyCost(ctx:Context, p1PeopleId:Int, strategyId:Int, tar
 										targetGrid.army = Math.max(0,
 											Math.min(getGridMaxArmy(ctx, targetGridId), targetGrid.army + targetGrid.army * resourceOffsetRate));
 								}
+								onPeopleExpAdd(ctx, p1.id, getExpAdd(cost.successRate, ENERGY_COST_ON_STRATEGY));
 							} else {
 								player.money = Math.max(0, player.money - cost.playerCost.money * 0.2);
 							}
@@ -419,13 +435,29 @@ private function onStrategyCost(ctx:Context, p1PeopleId:Int, strategyId:Int, tar
 			// // 攻其不備
 			// case 15:
 			// // 破壞
-			// case 16:
-			// 	// 減免貢奉金
-			// 	switch strategy {
-			// 		case {value: {float: [count]}, money: _}:
-			// 		case _:
-			// 			throw new haxe.Exception('strategy value not found:${strategy}');
-			// 	}
+			case 16:
+				// 減免貢奉金
+				switch strategy {
+					case {value: _, money: _}:
+						p1.energy = Math.max(0, p1.energy - cost.peopleCost.energy);
+						if (success) {
+							final effect = {
+								final tmp = getDefaultEffect();
+								tmp.id = ctx.idSeq++;
+								tmp.proto = Strategy({id: strategy.id, fromPlayerId: player.id});
+								tmp.belongToPlayerId = player.id;
+								tmp.expireTurn = ctx.turn;
+								tmp;
+							}
+							ctx.effects.push(effect);
+							onPeopleExpAdd(ctx, p1.id, getExpAdd(cost.successRate, ENERGY_COST_ON_STRATEGY));
+						} else {
+							player.money = Math.max(0, player.money - cost.playerCost.money * 0.2);
+						}
+					case _:
+						throw new haxe.Exception('strategy value not found:${strategy}');
+				}
+				success;
 			case _:
 				throw new haxe.Exception('unknown strategyId:${strategyId}');
 		}
@@ -446,7 +478,9 @@ function _getStrategyRate(ctx:Context, p1PeopleId:Int, strategyId:Int, targetPla
 }
 
 function _takeStrategy(ctx:Context, p1PeopleId:Int, strategyId:Int, targetPlayerId:Int, targetPeopleId:Int, targetGridId:Int):Void {
+	verbose("_takeStrategy", ["before", ctx]);
 	onStrategyCost(ctx, p1PeopleId, strategyId, targetPlayerId, targetPeopleId, targetGridId);
+	verbose("_takeStrategy", ["after", ctx]);
 	{
 		final player = ctx.players[ctx.currentPlayerId];
 		player.memory.hasStrategy = true;
