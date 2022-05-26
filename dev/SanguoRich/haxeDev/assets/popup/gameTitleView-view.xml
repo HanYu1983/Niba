@@ -54,9 +54,9 @@
                 <hbox>
                     <label text='格子數量'/>
                     <button-bar id="grp_gridCount" allowUnselection="true">
-                        <button text="10" />
-                        <button text="20" />
-                        <button text="30" />
+                        <button text="13" />
+                        <button text="26" />
+                        <button text="39" />
                     </button-bar>
                 </hbox>
                 <hbox>

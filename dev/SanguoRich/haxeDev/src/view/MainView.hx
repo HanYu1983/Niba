@@ -48,43 +48,46 @@ import haxe.ui.events.MouseEvent;
 
 @:build(haxe.ui.ComponentBuilder.build("assets/main-view.xml"))
 class MainView extends Box {
-	var grids:Array<GridView> = [];
-	var players:Array<PlayerView> = [];
-	var leaderView:LeaderGridView;
-	var gridView:GridGridView;
-	var peopleListView:PeopleListView;
-	var strategyPreviewView:StrategyPreviewView;
-	var treasurePreviewView:TreasurePreviewView;
-	var gridPeopleListView:PeopleListView;
-	var warPreviewView:WarPreviewView;
-	var snatchPreviewView:SnatchPreviewView;
-	var negoPreviewView:NegoPreviewView;
-	var pkPrevieView:PkPreviewView;
-	var hirePreviewView:HirePreviewView;
-	var messageView:MessageView;
-	var costForBonusView:CostForBonusView;
-	var explorePreviewView:ExplorePreviewView;
-	var exploreSuccessView:ExploreSuccessView;
-	var resourcePreviewView:ResourcePreviewView;
-	var firePreviewView:FirePreviewView;
-	var transferPreview:TransferPreview;
-	var buildingPreview:BuildPreview;
-	var growView:GrowView;
-	var gameTitleView:GameTitleView;
-	var settleView:SettleView;
+	final grids:Array<GridView> = [];
+	final players:Array<PlayerView> = [];
+	final leaderView:LeaderGridView;
+	final gridView:GridGridView;
+	final peopleListView:PeopleListView;
+	final strategyPreviewView:StrategyPreviewView;
+	final treasurePreviewView:TreasurePreviewView;
+	final gridPeopleListView:PeopleListView;
+	final warPreviewView:WarPreviewView;
+	final snatchPreviewView:SnatchPreviewView;
+	final negoPreviewView:NegoPreviewView;
+	final pkPrevieView:PkPreviewView;
+	final hirePreviewView:HirePreviewView;
+	final messageView:MessageView;
+	final costForBonusView:CostForBonusView;
+	final explorePreviewView:ExplorePreviewView;
+	final exploreSuccessView:ExploreSuccessView;
+	final resourcePreviewView:ResourcePreviewView;
+	final firePreviewView:FirePreviewView;
+	final transferPreview:TransferPreview;
+	final buildingPreview:BuildPreview;
+	final growView:GrowView;
+	final gameTitleView:GameTitleView;
+	final settleView:SettleView;
 
-	var gridSize = 80;
+	final gridSize = 80;
+	final gridCount = 39;
+	final gridHorizonCount = 13;
+	final playerCount = 4;
 
 	public function new() {
 		super();
 
-		for (i in 0...30) {
-			var grid = new GridView();
+		for (i in 0...gridCount) {
+			final grid = new GridView();
 			box_grids.addComponent(grid);
 			grids.push(grid);
 		}
 
-		for (i in 0...4) {
+		for (i in 0...playerCount) {
 			var p = new PlayerView(20, 20);
 			switch (i) {
 				case 0:
@@ -241,7 +244,7 @@ class MainView extends Box {
 		onBtnHireClick(null);
 	}
 
-	public function onGameTitleStartClick(value:GameSetting){
+	public function onGameTitleStartClick(value:GameSetting) {
 		Main.model.gameStart(value, () -> {
 			tab_whichInfo.onChange = function(e) {
 				syncGameInfo(Main.model.gameInfo());
@@ -253,12 +256,12 @@ class MainView extends Box {
 		});
 	}
 
-	function showPlayerChess(gameInfo:GameInfo){
+	function showPlayerChess(gameInfo:GameInfo) {
 		for (index => player in gameInfo.players) {
 			if (index < players.length) {
 				players[index].name = player.name.substr(0, 1);
 				players[index].show();
-			}else{
+			} else {
 				players[index].hide();
 			}
 		}
@@ -267,10 +270,10 @@ class MainView extends Box {
 	@:bind(this, UIEvent.READY)
 	function onUIReady(e:UIEvent) {
 		for (index => grid in grids) {
-			grid.left = (index % 10) * gridSize;
-			grid.top = Math.floor(index / 10) * gridSize;
+			grid.left = (index % gridHorizonCount) * gridSize;
+			grid.top = Math.floor(index / gridHorizonCount) * gridSize;
 		}
-		
+
 		btn_settle.text = '${btn_settle.text}(${ENERGY_COST_ON_SETTLE})';
 		btn_build.text = '${btn_build.text}(${ENERGY_COST_ON_BUILDING})';
 		btn_takeTreasure.text = '${btn_takeTreasure.text}(${Main.getFixNumber(ENERGY_RATE_FOR_TREASURE_TAKE * 100, 0)})';
@@ -294,12 +297,12 @@ class MainView extends Box {
 	}
 
 	@:bind(btn_settle, MouseEvent.CLICK)
-	function onBtnSettleClick(e){
+	function onBtnSettleClick(e) {
 		settleView.showPopup(null);
 	}
 
 	@:bind(tab_allPlayers, MouseEvent.CLICK)
-	function onTabAllPlayersClick(e){
+	function onTabAllPlayersClick(e) {
 		syncPlayerInfo(tab_allPlayers.selectedIndex);
 	}
 
@@ -316,7 +319,6 @@ class MainView extends Box {
 		Main.model.load((success:Bool, gameInfo:GameInfo) -> {
 			final msg = success ? '成功讀取' : '讀取失敗';
 			if (success) {
-
 				// for(g in grids){
 				// 	g.hide();
 				// }
@@ -544,11 +546,9 @@ class MainView extends Box {
 	// 				players[index].name = player.name.substr(0, 1);
 	// 			}
 	// 		}
-
 	// 		tab_whichInfo.onChange = function(e) {
 	// 			syncGameInfo(Main.model.gameInfo());
 	// 		}
-
 	// 		syncViewByInfo(Main.model.gameInfo());
 	// 	});
 	// }
@@ -560,12 +560,12 @@ class MainView extends Box {
 
 	@:bind(btn_giveTreasure, MouseEvent.CLICK)
 	function onBtnGiveTreasureClick(e:MouseEvent) {
-		treasurePreviewView.showPopup({giveType:0});
+		treasurePreviewView.showPopup({giveType: 0});
 	}
 
 	@:bind(btn_takeTreasure, MouseEvent.CLICK)
 	function onBtnTakeTreasureClick(e:MouseEvent) {
-		treasurePreviewView.showPopup({giveType:1});
+		treasurePreviewView.showPopup({giveType: 1});
 	}
 
 	@:bind(btn_showStrategy, MouseEvent.CLICK)
@@ -580,7 +580,8 @@ class MainView extends Box {
 
 	function getGridPositionByGridId(pid:Int, gridId:Int) {
 		var grid = grids[gridId];
-		if(grid == null) return [0.0,0.0,0.0,0.0];
+		if (grid == null)
+			return [0.0, 0.0, 0.0, 0.0];
 		return offsetPlayerPos(pid, grid.left, grid.top);
 	}
 
@@ -609,7 +610,7 @@ class MainView extends Box {
 		// TweenX.serial(tweens);
 	}
 
-	function syncViewWithEventsByGameInfo(gameInfo:GameInfo){
+	function syncViewWithEventsByGameInfo(gameInfo:GameInfo) {
 		syncUI(gameInfo);
 		playEvents(gameInfo);
 	}
@@ -626,14 +627,12 @@ class MainView extends Box {
 	// function playBeforeSync(gameInfo:GameInfo, tweens:Array<TweenX>) {
 	// 	playActions(gameInfo.actions, tweens);
 	// }
-
 	// function playActions(actions:Array<ActionInfo>, tweens:Array<TweenX>) {
 	// 	for (id => action in actions) {
 	// 		switch (action.id) {
 	// 			case ActionInfoID.MOVE:
 	// 				var pv = players[action.value.playerId];
 	// 				var toPos = getGridPositionByGridId(action.value.playerId, action.value.toGridId);
-
 	// 				tweens.push(TweenX.to(pv, {"left": toPos[0], "top": toPos[1]}));
 	// 			case _:
 	// 		}
@@ -655,24 +654,23 @@ class MainView extends Box {
 
 	function playEvents(gameInfo:GameInfo) {
 		events = gameInfo.events;
-		if(events.length > 0){
+		if (events.length > 0) {
 			doOneEvent();
 		}
 	}
 
 	function doOneEvent() {
-
-		function checkAutoPlay(autoPlay:Dynamic, title, msg){
-			if(autoPlay != null){
+		function checkAutoPlay(autoPlay:Dynamic, title, msg) {
+			if (autoPlay != null) {
 				messageView.showMessage(title, msg);
 				TweenX.serial([
 					TweenX.wait(autoPlay.duration),
-					TweenX.func(()->{
+					TweenX.func(() -> {
 						messageView.fadeOut();
 						doOneEvent();
 					})
 				]);
-			}else{
+			} else {
 				Dialogs.messageBox(msg, title, MessageBoxType.TYPE_INFO, true, (b) -> {
 					doOneEvent();
 				});
@@ -695,7 +693,7 @@ class MainView extends Box {
 					final msg = '${info.player.name}敗北!';
 					checkAutoPlay(autoPlay, msg, msg);
 				case PLAYER_WIN:
-					Dialogs.messageBox('玩家勝利!', '玩家勝利', MessageBoxType.TYPE_INFO, true, (b)->{
+					Dialogs.messageBox('玩家勝利!', '玩家勝利', MessageBoxType.TYPE_INFO, true, (b) -> {
 						// gameTitleView.showPopup(null);
 					});
 				case MESSAGE_EVENT:
@@ -703,18 +701,18 @@ class MainView extends Box {
 					checkAutoPlay(autoPlay, info.title, info.msg);
 				case ANIMATION_EVENT:
 					disabledAllCommands();
-					
-					switch(info.id){
+
+					switch (info.id) {
 						case ActionInfoID.MOVE:
 							final pv = players[info.value.playerId];
 							final toPos = getGridPositionByGridId(info.value.playerId, info.value.toGridId);
-							TweenX.to(pv, {"left": toPos[0], "top": toPos[1]}, .5).onStop(()->{
+							TweenX.to(pv, {"left": toPos[0], "top": toPos[1]}, .5).onStop(() -> {
 								syncViewByInfo(gameInfo);
 								doOneEvent();
 							}).play();
 						case ActionInfoID.SNATCH:
 							final gridIds:Array<Int> = info.value.gridIds;
-							switch(gridIds){
+							switch (gridIds) {
 								case [null]:
 									trace('info.value.gridIds不應為[null]，略過此動畫; gridIds:', gridIds);
 									syncViewByInfo(gameInfo);
@@ -722,8 +720,8 @@ class MainView extends Box {
 								case _:
 									final msg = info.value.msg;
 									final duration = info.value.duration;
-									
-									GridView.showGridsAnimation(grids, gridIds, msg, duration, ()->{
+
+									GridView.showGridsAnimation(grids, gridIds, msg, duration, () -> {
 										syncViewByInfo(gameInfo);
 										doOneEvent();
 									});
@@ -745,22 +743,21 @@ class MainView extends Box {
 					checkAutoPlay(autoPlay, title, msg);
 				case GRID_BORN_EVENT:
 					disabledAllCommands();
-					
+
 					final grid:Grid = info.grid;
 					final title = '異軍突起';
 					var msg = '${title}\n';
 					msg += '地點:${grid.name}';
 
 					final showGrids = [grid.id];
-					GridView.showGridsAnimation(grids, showGrids, title, 2.0, ()->{
+					GridView.showGridsAnimation(grids, showGrids, title, 2.0, () -> {
 						syncViewByInfo(gameInfo);
 						doOneEvent();
 					});
 
 				case GRID_RESOURCE_EVENT:
-
 					disabledAllCommands();
-					
+
 					final gridChanges:Array<{gridBefore:Grid, gridAfter:Grid}> = info.grids;
 					final title = info.describtion;
 					var msg = '${title}\n\n';
@@ -779,12 +776,12 @@ class MainView extends Box {
 						msg += '\n';
 					}
 
-					final showGrids = gridChanges.map((grid)->grid.gridBefore.id);
-					GridView.showGridsAnimation(grids, showGrids, title, 2.0, ()->{
+					final showGrids = gridChanges.map((grid) -> grid.gridBefore.id);
+					GridView.showGridsAnimation(grids, showGrids, title, 2.0, () -> {
 						syncViewByInfo(gameInfo);
 						doOneEvent();
 					});
-					
+
 				case PK_RESULT:
 					syncViewByInfo(gameInfo);
 
@@ -928,7 +925,6 @@ class MainView extends Box {
 					msg += '已擴建 ${catelog.name}\n';
 					checkAutoPlay(autoPlay, title, msg);
 				case WORLD_EVENT:
-
 					growView.showPopup(event.value, () -> {
 						syncViewByInfo(gameInfo);
 						doOneEvent();
@@ -967,11 +963,10 @@ class MainView extends Box {
 					msg += '士兵:${Main.getCompareString(info.armyBefore, info.armyAfter)}\n';
 					checkAutoPlay(autoPlay, title, msg);
 			}
-		}else{
-			Main.model.refresh(()->{
+		} else {
+			Main.model.refresh(() -> {
 				final newInfo = Main.model.gameInfo();
 				syncViewByInfo(newInfo);
-				
 			});
 		}
 	}
@@ -1011,7 +1006,6 @@ class MainView extends Box {
 	}
 
 	function syncUI(gameInfo:GameInfo) {
-
 		disabledAllCommands();
 
 		var currentPlayer = gameInfo.currentPlayer;
@@ -1028,7 +1022,7 @@ class MainView extends Box {
 				case TREASURE:
 					btn_giveTreasure.show();
 
-					final freeTreasures = currentPlayer.treasures.filter((t)->t.belongToPeopleId == null);
+					final freeTreasures = currentPlayer.treasures.filter((t) -> t.belongToPeopleId == null);
 					btn_giveTreasure.text = '賜予(${freeTreasures.length})';
 				case TREASURE_TAKE:
 					btn_takeTreasure.show();
@@ -1107,7 +1101,7 @@ class MainView extends Box {
 			var info:Dynamic = Main.cloneObject(p);
 			info.money = '${Main.getFixNumber(p.money, 0)} (${Main.getFixNumber(p.maintainPeople)})';
 			info.food = '${Main.getFixNumber(p.food, 0)} (${Main.getFixNumber(p.maintainArmy)})';
-			info.army = '${Main.getFixNumber(p.army, 0)} (${Main.getFixNumber(p.armyGrow)})';			
+			info.army = '${Main.getFixNumber(p.army, 0)} (${Main.getFixNumber(p.armyGrow)})';
 			info.peopleCount = p.people.length;
 			info.cityCount = p.grids.length;
 			info.treasureCount = p.treasures.length;
@@ -1133,7 +1127,7 @@ class MainView extends Box {
 		var grid:Grid = gameInfo.grids[gridId];
 
 		// why still would be null?
-		if(grid == null) {
+		if (grid == null) {
 			throw new haxe.Exception('爲什麽會是null？gridId:${gridId}, grid: ${grid}');
 			return;
 		}
@@ -1153,7 +1147,6 @@ class MainView extends Box {
 
 	function syncPlayerViews(gameInfo:GameInfo) {
 		for (index => playerInfo in gameInfo.players) {
-
 			if (index < players.length) {
 				var playerView = players[index];
 
@@ -1192,7 +1185,7 @@ class MainView extends Box {
 		switchStageToSelectGrid(gridInfos, cb);
 	}
 
-	public function switchStageToNormal(){
+	public function switchStageToNormal() {
 		final gameInfo = Main.model.gameInfo();
 		final currentPlayer = gameInfo.currentPlayer;
 
@@ -1211,19 +1204,20 @@ class MainView extends Box {
 		}
 	}
 
-	function switchStageToSelectGrid(gridInfos:Array<Grid>, cb:(gridId:Int) -> Void){
+	function switchStageToSelectGrid(gridInfos:Array<Grid>, cb:(gridId:Int) -> Void) {
 		final gameInfo = Main.model.gameInfo();
 		final currentPlayer = gameInfo.currentPlayer;
 
-		for(g in grids){ g.showSelectable(false);}
+		for (g in grids) {
+			g.showSelectable(false);
+		}
 
-		for(g in gridInfos){
+		for (g in gridInfos) {
 			grids[g.id].showSelectable(true);
 		}
 
 		stage.unregisterEvents();
 		if (gameInfo.isPlayerTurn) {
-
 			stage.registerEvent(MouseEvent.MOUSE_MOVE, function(e:MouseEvent) {
 				final gridId = getGridIdFromPosition(e.localX, e.localY);
 				moveCursorToGrid(gridId);
@@ -1235,21 +1229,23 @@ class MainView extends Box {
 				moveCursorToGrid(currentPlayer.atGridId);
 			});
 
-			stage.onClick = function(e){
+			stage.onClick = function(e) {
 				final gridId = getGridIdFromPosition(e.localX, e.localY);
-				if(grids[gridId].isSelectable){
+				if (grids[gridId].isSelectable) {
 					switchStageToNormal();
-					for(g in grids){ g.showSelectable(false);}
+					for (g in grids) {
+						g.showSelectable(false);
+					}
 					cb(gridId);
 				}
 			}
 		}
 	}
 
-	function getGridIdFromPosition(x:Float, y:Float){
+	function getGridIdFromPosition(x:Float, y:Float) {
 		final gameInfo = Main.model.gameInfo();
 		final gx = Math.floor(x / gridSize);
 		final gy = Math.floor(y / gridSize);
-		return Main.clampInt((gx + gy * 10), 0, gameInfo.grids.length - 1);
+		return Main.clampInt((gx + gy * gridHorizonCount), 0, gameInfo.grids.length - 1);
 	}
 }

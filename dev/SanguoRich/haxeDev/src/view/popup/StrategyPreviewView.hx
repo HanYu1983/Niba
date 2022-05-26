@@ -45,9 +45,9 @@ class StrategyPreviewView extends PopupView {
 	var selectGridId:Int = -1;
 
 	@:bind(btn_selectGrid, MouseEvent.CLICK)
-	function onBtnSelectGridClick(e){
+	function onBtnSelectGridClick(e) {
 		fadeOut();
-		Main.view.onStrategyPreviewSelectGridClick(showGrids, (gridId:Int)->{
+		Main.view.onStrategyPreviewSelectGridClick(showGrids, (gridId:Int) -> {
 			fadeIn();
 
 			final gameInfo = Main.model.gameInfo();
@@ -66,20 +66,23 @@ class StrategyPreviewView extends PopupView {
 	function onBtnConfirmClick(e:MouseEvent) {
 		fadeOut();
 
-		if(leaderList.selectedItem == null) return;
-		if(p2List.selectedItem == null) return;
-		if(selectGridId == -1) return;
+		if (leaderList.selectedItem == null)
+			return;
+		if (p2List.selectedItem == null)
+			return;
+		if (selectGridId == -1)
+			return;
 
 		final gameInfo = Main.model.gameInfo();
 		var targetPlayer = leaderList.selectedItem.id;
 		var targetPeople = p2List.selectedItem.id;
 		var strategy = strategyList.selectedItem.id;
-		
-		switch(strategy.id){
+
+		switch (strategy.id) {
 			// 遠交近攻
 			case 2:
 				final grid = gameInfo.grids[selectGridId];
-				if(grid.belongPlayerId != null){
+				if (grid.belongPlayerId != null) {
 					Dialogs.messageBox('這個計策只能用在中立格子哦', '', MessageBoxType.TYPE_INFO);
 					return;
 				}
@@ -88,20 +91,20 @@ class StrategyPreviewView extends PopupView {
 		Main.view.onStrategyPreviewConfirmClick(p1List.selectedItem.id, strategyList.selectedItem.id, targetPlayer, targetPeople, selectGridId);
 	}
 
-	override function showPopup(info:Dynamic, cb:()->Void = null) {
+	override function showPopup(info:Dynamic, cb:() -> Void = null) {
 		super.showPopup(info, cb);
 
 		final gameInfo = Main.model.gameInfo();
 		function setRate() {
 			if (p1List.selectedItem == null)
-				return ;
+				return;
 			if (strategyList.selectedItem == null)
 				return;
 			if (leaderList.selectedItem == null)
 				return;
 			if (p2List.selectedItem == null)
 				return;
-			if(selectGridId == -1) 
+			if (selectGridId == -1)
 				return;
 
 			var p1 = p1List.selectedItem;
@@ -145,43 +148,42 @@ class StrategyPreviewView extends PopupView {
 			if (s != null) {
 				lbl_usingStrategy.value = s.name;
 				lbl_money.value = '${s.money}/${Math.round(s.money / 5)}';
-				
-				box_leaderList.hide();
-				box_peopleList2.hide();
-				btn_selectGrid.hide();
+
+				box_leaderList.disabled = true;
+				box_peopleList2.disabled = true;
+				btn_selectGrid.disabled = true;
 
 				switch (s.targetType) {
 					case TARGET_GRID:
-						btn_selectGrid.show();
 						btn_selectGrid.disabled = false;
 
 						final currentId = gameInfo.currentPlayer.atGridId;
-						function remapId(i){
+						function remapId(i) {
 							final remapId = i + currentId;
-							if(remapId > gameInfo.grids.length - 1){
+							if (remapId > gameInfo.grids.length - 1) {
 								return remapId - gameInfo.grids.length;
-							}else if( remapId < 0 ){
+							} else if (remapId < 0) {
 								return gameInfo.grids.length + remapId;
-							}else{
+							} else {
 								return remapId;
 							}
 						}
-						if(s.value != null){
+						if (s.value != null) {
 							final rangeSetting:Array<Int> = s.value.valid;
-							final canGo = rangeSetting.map(remapId).map((i)->gameInfo.grids[i]);
+							final canGo = rangeSetting.map(remapId).map((i) -> gameInfo.grids[i]);
 
 							updateGridList(canGo);
-						}else{
+						} else {
 							updateGridList(gameInfo.grids);
 						}
-						
+
 					case TARGET_PLAYER:
-						box_leaderList.show();
+						box_leaderList.disabled = false;
 					case TARGET_PEOPLE:
-						box_leaderList.show();
-						box_peopleList2.show();
+						box_leaderList.disabled = false;
+						box_peopleList2.disabled = false;
 					case SELF_GRID:
-						btn_selectGrid.show();
+						btn_selectGrid.disabled = false;
 						btn_selectGrid.disabled = true;
 
 						final grid = gameInfo.grids[gameInfo.currentPlayer.atGridId];
@@ -190,13 +192,12 @@ class StrategyPreviewView extends PopupView {
 
 					case SELF_PEOPLE:
 						leaderList.selectedIndex = gameInfo.currentPlayer.id;
-						box_peopleList2.show();
+						box_peopleList2.disabled = false;
 					case SELF_PLAYER:
 				}
 				setRate();
 			}
 		}
-		
 
 		function updatePlayerList() {
 			leaderList.setList(gameInfo.players);
@@ -212,8 +213,8 @@ class StrategyPreviewView extends PopupView {
 			updatePeopleList(gameInfo.players[leaderList.selectedItem.id].people);
 			setRate();
 		}
-		
-		p2List.onChange = function(e){
+
+		p2List.onChange = function(e) {
 			setRate();
 		}
 
