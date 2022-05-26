@@ -267,6 +267,8 @@ typedef BuildingCatelog = {
 typedef GameSetting = {
 	players:Array<{type:Int}>,
 
+	// 是否一開始就有一個城市
+	startCity:Bool,
 	// 格子數量
 	gridCount:Int,
 	// 格子成長速度等級
