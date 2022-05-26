@@ -126,9 +126,9 @@ class GridGenerator {
 		}
 
 		var growTotal = [];
-		growTotal = growTotal.concat([for (i in 0...10) GROWTYPE.EMPTY]);
-		growTotal = growTotal.concat([for (i in 0...2) GROWTYPE.DESTINY]);
-		growTotal = growTotal.concat([for (i in 0...2) GROWTYPE.CHANCE]);
+		growTotal = growTotal.concat([for (i in 0...8) GROWTYPE.EMPTY]);
+		growTotal = growTotal.concat([for (i in 0...1) GROWTYPE.DESTINY]);
+		growTotal = growTotal.concat([for (i in 0...1) GROWTYPE.CHANCE]);
 		growTotal = growTotal.concat([for (i in 0...2) GROWTYPE.MARKET]);
 		growTotal = growTotal.concat([for (i in 0...2) GROWTYPE.FARM]);
 		growTotal = growTotal.concat([for (i in 0...2) GROWTYPE.VILLAGE]);
@@ -136,10 +136,10 @@ class GridGenerator {
 		growTotal = growTotal.concat([for (i in 0...1) GROWTYPE.CITY]);
 
 		var landTotal = [];
-		landTotal = landTotal.concat([for (i in 0...getRandomInt(10, 10)) LANDTYPE.SHALLOW]);
-		landTotal = landTotal.concat([for (i in 0...getRandomInt(10, 5)) LANDTYPE.PLAIN]);
-		landTotal = landTotal.concat([for (i in 0...getRandomInt(10, 5)) LANDTYPE.HILL]);
-		landTotal = landTotal.concat([for (i in 0...getRandomInt(10, 10)) LANDTYPE.MOUNTAIN]);
+		landTotal = landTotal.concat([for (i in 0...getRandomInt(3, 2)) LANDTYPE.SHALLOW]);
+		landTotal = landTotal.concat([for (i in 0...getRandomInt(2, 1)) LANDTYPE.PLAIN]);
+		landTotal = landTotal.concat([for (i in 0...getRandomInt(2, 1)) LANDTYPE.HILL]);
+		landTotal = landTotal.concat([for (i in 0...getRandomInt(3, 2)) LANDTYPE.MOUNTAIN]);
 
 		final randomStart = Math.round(Math.random() * 9999999);
 		final grids = [];

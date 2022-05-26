@@ -28,6 +28,15 @@ class GridView extends Box {
 		    case MOUNTAIN: "高";
 		    case _: "未";
 		};
+
+		// https://htmlcolorcodes.com/color-names/
+		box_land.backgroundColor = switch(type){
+			case SHALLOW: "#40E0D0";
+		    case PLAIN: "#3CB371";
+		    case HILL: "#FFA500";
+		    case MOUNTAIN: "#FF4500";
+		    case _: "未";
+		}
 		return type;
 	}
 
@@ -43,6 +52,14 @@ class GridView extends Box {
 			case CHANCE: "機";
 			case DESTINY: "命";
 			case EMPTY: "";
+		}
+
+		box_build.backgroundColor = switch (type) {
+			case MARKET: "#FFD700";
+			case FARM: "#228B22";
+			case VILLAGE: "#B0C4DE";
+			case CITY: "gray";
+			case _: "gray";
 		}
 
 		box_chanceCover.hide();

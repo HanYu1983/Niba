@@ -476,7 +476,7 @@ final StrategyList:Array<StrategyCatelog> = [
 		id: 9,
 		name: '無中生有',
 		money: 5,
-		intelligence: 75,
+		intelligence: 70,
 		describe: '金錢，糧草，士兵中較低的一個項目增加40~60',
 		targetType: StrategyTargetType.SELF_PLAYER,
 		value: {
@@ -513,11 +513,11 @@ final StrategyList:Array<StrategyCatelog> = [
 		name: '火計',
 		money: 40,
 		intelligence: 75,
-		describe: '指定一個格子，那個格子的糧食資源-20%。',
+		describe: '指定一個格子，那個格子的糧食資源-25%。',
 		targetType: StrategyTargetType.TARGET_GRID,
 		value: {
 			valid: [-1, 0, 1],
-			float: [-0.2]
+			float: [-0.25]
 		}
 	},
 	{
@@ -525,11 +525,11 @@ final StrategyList:Array<StrategyCatelog> = [
 		name: '時來運轉',
 		money: 5,
 		intelligence: 80,
-		describe: '指定一個格子，那個格子的所有資源+10%。',
+		describe: '指定一個格子，那個格子的所有資源+20%。',
 		targetType: StrategyTargetType.TARGET_GRID,
 		value: {
 			valid: [-1, 0, 1],
-			float: [0.1]
+			float: [0.2]
 		}
 	},
 	{
@@ -585,11 +585,11 @@ final StrategyList:Array<StrategyCatelog> = [
 		name: '萬劍齊發',
 		money: 70,
 		intelligence: 50,
-		describe: '需要有弓將的將領才可以使用這個計策。指定格子士兵-10%',
+		describe: '需要有弓將的將領才可以使用這個計策。指定格子士兵-15%',
 		targetType: StrategyTargetType.TARGET_GRID,
 		value: {
 			valid: [-1,0,1],
-			float: [-0.10]
+			float: [-0.15]
 		}
 	}
 ];

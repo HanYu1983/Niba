@@ -53,13 +53,13 @@
         </box>
     </box>
 
-    <box id='box_chanceCover' width='100%' height='100%' style="background-color: yellow;border:1px solid gray;background-opacity: 1.0">
+    <box id='box_chanceCover' width='100%' height='100%' style="background-color: #90EE90;border:1px solid gray;background-opacity: 1.0">
         <box verticalAlign="center" horizontalAlign="center" >
             <label text="機會" style="font-size:24; "/>
         </box>
     </box>
 
-    <box id='box_destinyCover' width='100%' height='100%' style="background-color: purple;border:1px solid gray;background-opacity: 1.0">
+    <box id='box_destinyCover' width='100%' height='100%' style="background-color: #E9967A;border:1px solid gray;background-opacity: 1.0">
         <box verticalAlign="center" horizontalAlign="center" >
             <label text="命運" style="font-size:24; "/>
         </box>
