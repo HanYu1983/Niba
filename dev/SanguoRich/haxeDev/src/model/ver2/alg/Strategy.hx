@@ -27,19 +27,24 @@ private function getStrategyCost(ctx:Context, p1PeopleId:Int, strategyId:Int, ta
 	};
 	final fact3 = getFact(switch strategyId {
 		case 2:
-			// 遠交近攻對空地沒有作用
+			// 遠交近攻
 			if (p1.belongToPlayerId == null) {
 				throw new Exception("belongToPlayerId not found");
 			}
 			final player = getPlayerById(ctx, p1.belongToPlayerId);
 			final grid = ctx.grids[player.position];
-			final gridBelongPlayerId = getGridBelongPlayerId(ctx, grid.id);
-			final isEnemyGrid = gridBelongPlayerId != null && gridBelongPlayerId != player.id;
-			if (isEnemyGrid) {
+			final peopleInGrid = ctx.peoples.filter(p -> p.position.gridId == grid.id);
+			// 必須有人
+			if (peopleInGrid.length == 0) {
 				0.0;
 			} else {
-				final isEmpty = getGridInfo(ctx, grid).buildtype == GROWTYPE.EMPTY;
-				isEmpty ? 0.0 : 1;
+				// 必須不是主公的城
+				final gridBelongPlayerId = getGridBelongPlayerId(ctx, grid.id);
+				if (gridBelongPlayerId != null) {
+					0.0;
+				} else {
+					1.0;
+				}
 			}
 		case 4:
 			// 火中取栗
@@ -55,8 +60,8 @@ private function getStrategyCost(ctx:Context, p1PeopleId:Int, strategyId:Int, ta
 			// 草船借箭
 			// 需要有鑒別
 			p1Abilities.has(12) == false ? 0.0 : 1.0;
-		case 14:
-			// 攻其不備
+		case 12 | 14 | 18:
+			// 火計 | 攻其不備 | 萬箭齊發
 			if (p1.belongToPlayerId == null) {
 				throw new Exception("belongToPlayerId not found");
 			}
@@ -80,7 +85,18 @@ private function getStrategyCost(ctx:Context, p1PeopleId:Int, strategyId:Int, ta
 				}
 			].has(true);
 			// 範圍內必須有敵城
-			hasEnemyGrid == false ? 0.0 : 1.0;
+			if (hasEnemyGrid == false) {
+				0.0;
+			} else {
+				switch strategyId {
+					case 18:
+						// 萬箭齊發
+						// 需要有弓將
+						p1Abilities.has(1) == false ? 0.0 : 1.0;
+					case _:
+						1.0;
+				}
+			}
 		case 15:
 			// 破壞
 			// 需要有槍將
@@ -113,6 +129,9 @@ private function getStrategyCost(ctx:Context, p1PeopleId:Int, strategyId:Int, ta
 					false;
 			});
 			effectStrategy16.length > 0 ? 0.0 : 1.0;
+		case 17:
+			// 需要有騎將
+			p1Abilities.has(10) == false ? 0.0 : 1.0;
 		case _:
 			1;
 	});
@@ -191,18 +210,18 @@ private function onStrategyCost(ctx:Context, p1PeopleId:Int, strategyId:Int, tar
 								final gainFood = grid.food * gainRate;
 								final gainMoney = grid.money * gainRate;
 								final gainArmy = grid.army * gainRate;
-								trace("gainFood", gainFood);
-								trace("gainMoney", gainMoney);
-								trace("gainArmy", gainArmy);
+								verbose("onStrategyCost", ["gainFood", gainFood]);
+								verbose("onStrategyCost", ["gainMoney", gainMoney]);
+								verbose("onStrategyCost", ["gainArmy", gainArmy]);
 								grid.food -= gainFood;
 								grid.money -= gainMoney;
 								grid.army -= gainArmy;
 								player.food += gainFood;
 								player.money += gainMoney;
 								player.army += gainArmy;
-								trace("player.food", player.food);
-								trace("player.money ", player.money);
-								trace("player.army", player.army);
+								verbose("onStrategyCost", ["player.food", player.food]);
+								verbose("onStrategyCost", ["player.money ", player.money]);
+								verbose("onStrategyCost", ["player.army", player.army]);
 								for (targetPlayerId in 0...grid.favor.length) {
 									if (targetPlayerId == player.id) {
 										// 對你提升友好
@@ -429,8 +448,8 @@ private function onStrategyCost(ctx:Context, p1PeopleId:Int, strategyId:Int, tar
 					case _:
 						throw new haxe.Exception('strategy value not found:${strategy}');
 				}
-			case 12 | 13:
-				// 火計 | 時來運轉
+			case 12 | 13 | 18:
+				// 火計 | 時來運轉 | 萬劍齊發
 				switch strategy {
 					case {value: {float: [resourceOffsetRate]}, money: _}:
 						wrapResourceResultEvent(ctx, p1.belongToPlayerId, p1.id, () -> {
@@ -456,6 +475,15 @@ private function onStrategyCost(ctx:Context, p1PeopleId:Int, strategyId:Int, tar
 											Math.min(getGridMaxFood(ctx, targetGridId), targetGrid.food + targetGrid.food * resourceOffsetRate));
 										targetGrid.army = Math.max(0,
 											Math.min(getGridMaxArmy(ctx, targetGridId), targetGrid.army + targetGrid.army * resourceOffsetRate));
+									case 18:
+										targetGrid.army = Math.max(0,
+											Math.min(getGridMaxFood(ctx, targetGridId), targetGrid.army + targetGrid.army * resourceOffsetRate));
+										if (targetGridBelongPlayerId != null) {
+											// hate you
+											final targetPlayer = getPlayerById(ctx, targetGridBelongPlayerId);
+											targetPlayer.hate.push(player.id);
+											targetPlayer.hate.push(player.id);
+										}
 								}
 								onPeopleExpAdd(ctx, p1.id, getExpAdd(cost.successRate, ENERGY_COST_ON_STRATEGY));
 							} else {
@@ -643,6 +671,25 @@ private function onStrategyCost(ctx:Context, p1PeopleId:Int, strategyId:Int, tar
 								tmp;
 							}
 							ctx.effects.push(effect);
+							onPeopleExpAdd(ctx, p1.id, getExpAdd(cost.successRate, ENERGY_COST_ON_STRATEGY));
+						} else {
+							player.money = Math.max(0, player.money - cost.playerCost.money * 0.2);
+						}
+					case _:
+						throw new haxe.Exception('strategy value not found:${strategy}');
+				}
+				success;
+			case 17:
+				// 千里奔襲
+				switch strategy {
+					case {value: {valid: valid}, money: _}:
+						p1.energy = Math.max(0, p1.energy - cost.peopleCost.energy);
+						if (success) {
+							final randomId = Std.int(Math.random() * valid.length);
+							final step = valid[randomId];
+							final nextPosition = (player.position + step) % ctx.grids.length;
+							onPlayerGoToPosition(ctx, player.id, nextPosition);
+							player.memory.hasDice = true;
 							onPeopleExpAdd(ctx, p1.id, getExpAdd(cost.successRate, ENERGY_COST_ON_STRATEGY));
 						} else {
 							player.money = Math.max(0, player.money - cost.playerCost.money * 0.2);

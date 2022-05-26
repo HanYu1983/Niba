@@ -1034,7 +1034,7 @@ private function getCommandWeight(ctx:Context, playerId:Int, gridId:Int, cmd:Act
 								case _: 0.0;
 							});
 							// 對方糧越多
-							final factEnemyFood = getFact(nextGrid.food / 600);
+							final factEnemyFood = getFact(nextGrid.food / 300);
 							// hate you
 							final factHateYou = getFact({
 								final gridBelongPlayerId = getGridBelongPlayerId(ctx, nextGrid.id);
@@ -1164,7 +1164,14 @@ private function getCommandWeight(ctx:Context, playerId:Int, gridId:Int, cmd:Act
 						final factIsEnemyGrid = factIsEnemyGrid(ctx, player.id, player.position);
 						verbose("getCommandWeight", ["factIsEnemyGrid", factIsEnemyGrid]);
 						// hate you
-						final factHateYou = factHateYou(ctx, player.id, player.position);
+						final factHateYou = getFact({
+							final gridBelongPlayerId = getGridBelongPlayerId(ctx, grid.id);
+							if (gridBelongPlayerId == null) {
+								1.0;
+							} else {
+								factHateYou(ctx, player.id, gridBelongPlayerId);
+							}
+						});
 						verbose("getCommandWeight", ["factHateYou", factHateYou]);
 						for (p1 in peopleInPlayer) {
 							final result = _getStrategyRate(ctx, p1.id, strategy.id, 0, 0, 0);
@@ -1214,6 +1221,86 @@ private function getCommandWeight(ctx:Context, playerId:Int, gridId:Int, cmd:Act
 									maxScore = score;
 									brainMemory.strategy.peopleId = p1.id;
 									brainMemory.strategy.strategyId = strategy.id;
+								}
+							}
+						}
+					case 17:
+						// 千里奔襲
+						for (s in 1...4) {
+							final nextPosition = ((player.position + s) + ctx.grids.length) % ctx.grids.length;
+							final nextGrid = ctx.grids[nextPosition];
+							if (nextGrid == null) {
+								throw new haxe.Exception('nextGrid not found: ${nextPosition}');
+							}
+							// 是敵人的路障
+							final fact1 = getFact({
+								final notMyItems = ctx.groundItems.filter(i -> i.position == nextGrid.id && i.belongToPlayerId != player.id);
+								notMyItems.length > 0 ? 9999 : 0.0;
+							});
+							// 對方兵越多
+							final fact2 = getFact(if (player.army == 0) {
+								9999.9;
+							} else {
+								nextGrid.army / player.army;
+							});
+							for (p1 in peopleInPlayer) {
+								final result = _getStrategyRate(ctx, p1.id, strategy.id, 0, 0, nextGrid.id);
+								// 成功率
+								final factSuccessRate = getFact(result.rate / 0.8);
+								// 體力剩下越多越好
+								final factEnergy = factVery(getFact(result.energyAfter / 100.0), 2);
+								final score = 1.0 * getFact(factUseTimeLowerThen2 * fact1 * fact2 * factSuccessRate * factEnergy) * factOn(fact1,
+									1.0) * factOn(fact2, 1 / (FACT_TIMES * 0.8)) * factOn(factSuccessRate, 0.9) * factOn(factNowMoney, 1);
+								if (score > maxScore) {
+									maxScore = score;
+									brainMemory.strategy.peopleId = p1.id;
+									brainMemory.strategy.strategyId = strategy.id;
+								}
+							}
+						}
+					case 18:
+						final steps:Array<Int> = try {
+							cast(strategy.value.valid : Array<Int>);
+						} catch (e) {
+							throw new haxe.Exception("strategy.value.valid必須是Array");
+						}
+						for (s in steps) {
+							final nextPosition = ((player.position + s) + ctx.grids.length) % ctx.grids.length;
+							final nextGrid = ctx.grids[nextPosition];
+							if (nextGrid == null) {
+								throw new haxe.Exception('nextGrid not found: ${nextPosition}');
+							}
+							// 是敵人
+							final factIsEnemy = getFact(switch getGridBelongPlayerId(ctx, nextGrid.id) {
+								case null: 0.0;
+								case nextGridBelongPlayerId if (nextGridBelongPlayerId != player.id):
+									999;
+								case _: 0.0;
+							});
+							// 對方兵越多
+							final factEnemyArmy = getFact(nextGrid.army / 300);
+							// hate you
+							final factHateYou = getFact({
+								final gridBelongPlayerId = getGridBelongPlayerId(ctx, nextGrid.id);
+								if (gridBelongPlayerId == null) {
+									1.0;
+								} else {
+									factHateYou(ctx, player.id, gridBelongPlayerId);
+								}
+							});
+							for (p1 in peopleInPlayer) {
+								final result = _getStrategyRate(ctx, p1.id, strategy.id, 0, 0, nextGrid.id);
+								// 成功率
+								final factSuccessRate = getFact(result.rate / 0.8);
+								// 體力剩下越多越好
+								final factEnergy = factVery(getFact(result.energyAfter / 100.0), 2);
+								final score = 1.0 * getFact(factUseTimeLowerThen2 * factSuccessRate * factEnergy * factIsEnemy * factEnemyArmy * factNowMoney * factHateYou) * factOn(factIsEnemy,
+									1) * factOn(factSuccessRate, 0.9) * factOn(factNowMoney, 1);
+								if (score > maxScore) {
+									maxScore = score;
+									brainMemory.strategy.peopleId = p1.id;
+									brainMemory.strategy.strategyId = strategy.id;
+									brainMemory.strategy.targetGridId = nextGrid.id;
 								}
 							}
 						}
