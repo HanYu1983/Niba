@@ -170,6 +170,27 @@ typedef GroundItem = {
 	belongToPlayerId:Null<Int>,
 }
 
+enum EffectProto {
+	Pending;
+	Strategy(value:{id:Int, fromPlayerId:Int});
+}
+
+typedef Effect = {
+	id:Int,
+	belongToPlayerId:Null<Int>,
+	expireTurn:Null<Int>,
+	proto:EffectProto
+}
+
+function getDefaultEffect():Effect {
+	return {
+		id: 0,
+		belongToPlayerId: null,
+		proto: Pending,
+		expireTurn: null
+	}
+}
+
 enum Event {
 	WORLD_EVENT(value:{
 		playerBefore:Array<model.IModel.PlayerInfo>,
@@ -363,7 +384,9 @@ typedef Context = {
 	events:Array<Event>,
 	groundItems:Array<GroundItem>,
 	treasures:Array<Treasure>,
-	turn:Int
+	effects:Array<Effect>,
+	turn:Int,
+	idSeq:Int
 }
 
 function getDefaultContext():Context {
@@ -377,7 +400,9 @@ function getDefaultContext():Context {
 		events: [],
 		groundItems: [],
 		treasures: [],
-		turn: 0
+		effects: [],
+		turn: 0,
+		idSeq: 0
 	}
 }
 
@@ -413,7 +438,25 @@ function getPlayerInfo(ctx:Context, player:Player):model.IModel.PlayerInfo {
 		money: player.money,
 		food: player.food,
 		army: player.army,
-		strategys: [],
+		strategys: [
+			for (fromPlayerId in 0...4) {
+				ctx.effects.filter(e -> e.belongToPlayerId == player.id).filter(e -> {
+					switch e.proto {
+						case Strategy(value):
+							fromPlayerId == value.fromPlayerId;
+						case _:
+							false;
+					}
+				}).map(e -> {
+					switch e.proto {
+						case Strategy(value):
+							value.id;
+						case _:
+							throw new haxe.Exception("不支援strategy以外的");
+					}
+				});
+			}
+		],
 		people: ctx.peoples.filter(p -> p.belongToPlayerId == player.id).map(p -> getPeopleInfo(ctx, p)),
 		atGridId: player.position,
 		maintainPeople: 0.0,
@@ -1344,12 +1387,6 @@ function addGridInfo(ctx:Context, grid:model.GridGenerator.Grid):Void {
 	}
 }
 
-private var _id = 0;
-
-function getNextId():Int {
-	return _id++;
-}
-
 function addAttachInfo(ctx:Context, belongToGridId:Int, type:BUILDING) {
 	final hasOne = ctx.attachments.filter(a -> a.belongToGridId == belongToGridId && switch [a.type, type] {
 		case [MARKET(_), MARKET(_)] | [FARM(_), FARM(_)] | [BARRACKS(_), BARRACKS(_)] | [EXPLORE(_), EXPLORE(_)] | [WALL(_), WALL(_)]:
@@ -1361,7 +1398,7 @@ function addAttachInfo(ctx:Context, belongToGridId:Int, type:BUILDING) {
 		return;
 	}
 	ctx.attachments.push({
-		id: getNextId(),
+		id: ctx.idSeq++,
 		belongToGridId: belongToGridId,
 		type: type
 	});

@@ -295,6 +295,24 @@ function onPayTaxToGrid(ctx:Context, playerId:Int, gridId:Int) {
 		throw new haxe.Exception("這裡不該是付給中立格子");
 	}
 	final player = getPlayerById(ctx, playerId);
+	// 是否有減免效果
+	{
+		final effectStrategy16 = ctx.effects.filter(e -> e.belongToPlayerId == playerId).filter(e -> switch e.proto {
+			case Strategy({id: 16}):
+				true;
+			case _:
+				false;
+		});
+		if (effectStrategy16.length > 0) {
+			ctx.events.push(MESSAGE_EVENT({
+				title: '${player.name}有減免效果',
+				msg: "不用支付貢奉金"
+			}, getGameInfo(ctx, false)));
+			// 移除效果
+			ctx.effects = ctx.effects.filter(e -> e.id != effectStrategy16[0].id);
+			return;
+		}
+	}
 	final eventValue = {
 		armyBefore: player.army,
 		armyAfter: player.army,
@@ -833,6 +851,16 @@ function onPlayerEnd(ctx:Context, playerId:Int):Bool {
 			}
 			info("Alg", ["onPlayerEnd", "hate", player.name, player.hate]);
 		}
+		// 效果過期
+		for (effect in ctx.effects) {
+			if (effect.expireTurn == null) {
+				continue;
+			}
+			ctx.effects = ctx.effects.filter(e -> {
+				return effect.expireTurn > ctx.turn;
+			});
+		}
+
 		// 下一回合
 		ctx.turn += 1;
 	}

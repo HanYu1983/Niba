@@ -9,8 +9,13 @@ private enum LogLevel {
 	Err;
 }
 
-private final filterLevel:Array<LogLevel> = [/*Verbose,*/ Info, Warn, Err];
-private final filterCategory:Array<String> = ["getCommandWeight", "CacheModel"];
+private final filterLevel:Array<LogLevel> = [Verbose, Info, Warn, Err];
+
+private final filterCategory:Array<String> = [
+	// "getCommandWeight",
+	// "CacheModel",
+	"_takeStrategy"
+];
 
 function verbose(category:String, msg:Dynamic) {
 	if (filterLevel.has(Verbose) == false) {
