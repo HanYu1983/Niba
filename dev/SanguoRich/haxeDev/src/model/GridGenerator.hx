@@ -126,9 +126,9 @@ class GridGenerator {
 		}
 
 		var growTotal = [];
-		growTotal = growTotal.concat([for (i in 0...10) GROWTYPE.EMPTY]);
-		growTotal = growTotal.concat([for (i in 0...2) GROWTYPE.DESTINY]);
-		growTotal = growTotal.concat([for (i in 0...2) GROWTYPE.CHANCE]);
+		growTotal = growTotal.concat([for (i in 0...8) GROWTYPE.EMPTY]);
+		growTotal = growTotal.concat([for (i in 0...1) GROWTYPE.DESTINY]);
+		growTotal = growTotal.concat([for (i in 0...1) GROWTYPE.CHANCE]);
 		growTotal = growTotal.concat([for (i in 0...2) GROWTYPE.MARKET]);
 		growTotal = growTotal.concat([for (i in 0...2) GROWTYPE.FARM]);
 		growTotal = growTotal.concat([for (i in 0...2) GROWTYPE.VILLAGE]);
