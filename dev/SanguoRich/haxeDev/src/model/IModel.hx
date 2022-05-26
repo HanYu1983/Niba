@@ -957,7 +957,7 @@ final BuildingList:Array<BuildingCatelog> = [
 		id: 32,
 		name: '軍事學院(未建)',
 		money: 70,
-		describe: '所有功績增加的時候，增加量+0%',
+		describe: '所有功績增加的時候，增加量+0%；練兵的消耗-10%',
 		type: ACADEMY(0),
 		depends: [],
 		value: {
@@ -969,12 +969,84 @@ final BuildingList:Array<BuildingCatelog> = [
 		id: 33,
 		name: '軍事學院',
 		money: 0,
-		describe: '所有功績增加的時候，增加量+10%',
+		describe: '所有功績增加的時候，增加量+10%；練兵的消耗-10%',
 		type: ACADEMY(1),
 		depends: [],
 		value: {
 			valid: [],
-			float: [1.1]
+			float: [1.1, 0.9]
 		}
 	},
+	{
+		id: 34,
+		name: '漁獵場(未建)',
+		money: 100,
+		describe: '這個格子每一個回合有0%幾率大量收穫糧草，每一次收穫量為50 + 當前糧草的5%',
+		type: FISHING(0),
+		depends: [],
+		value: {
+			valid: [],
+			float: []
+		}
+	},
+	{
+		id: 35,
+		name: '漁獵場',
+		money: 0,
+		describe: '這個格子每一個回合有10%幾率大量收穫糧草，每一次收穫量為50 + 當前糧草的5%',
+		type: FISHING(1),
+		depends: [],
+		value: {
+			valid: [],
+			float: [0.1, 50, 0.05]
+		}
+	},
+	{
+		id: 36,
+		name: '狩獵場(未建)',
+		money: 100,
+		describe: '每一個回合自身所有的將領幾率0%增加5功績',
+		type: HUNTING(0),
+		depends: [],
+		value: {
+			valid: [],
+			float: [0]
+		}
+	},
+	{
+		id: 37,
+		name: '狩獵場',
+		money: 0,
+		describe: '每一個回合自身所有的將領幾率50%增加5功績',
+		type: HUNTING(1),
+		depends: [],
+		value: {
+			valid: [],
+			float: [0.05, 5]
+		}
+	},
+	{
+		id: 38,
+		name: '礦場(未建)',
+		money: 100,
+		describe: '這個格子每一個回合有0%幾率大量收穫金錢，每一次收穫量為50 + 當前金錢的5%',
+		type: MINE(0),
+		depends: [],
+		value: {
+			valid: [],
+			float: [0]
+		}
+	},
+	{
+		id: 39,
+		name: '礦場',
+		money: 0,
+		describe: '這個格子每一個回合有10%幾率大量收穫金錢，每一次收穫量為50 + 當前金錢的5%',
+		type: MINE(1),
+		depends: [],
+		value: {
+			valid: [],
+			float: [0.1, 50, 0.05]
+		}
+	}
 ];

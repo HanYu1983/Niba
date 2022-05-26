@@ -47,7 +47,16 @@ class GridGridView extends BasicGridView{
         var building = "";
         for(b in grid.attachs){
             final catelog = Main.getBuildingCatelog(b);
+            if( catelog == null ){
+                throw new haxe.Exception('不能是null,type:${b}');
+            }
             switch(catelog.type){
+                case FISHING(level):
+                    if( level > 0 ) building += '漁${level}';
+                case HUNTING(level):
+                    if( level > 0 ) building += '獵${level}';
+                case MINE(level):
+                    if( level > 0 ) building += '礦${level}';
                 case ACADEMY(level):
                     if( level > 0 ) building += '學${level}';
                 case SIEGEFACTORY(level):

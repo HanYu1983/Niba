@@ -59,10 +59,16 @@ private function genNewGrid(ctx:Context, playerId:Int, peopleId:Int, gridId:Int,
 				// case _:
 				// 強迫編譯器檢查
 				return switch catelog.type {
+					case HUNTING(level):
+						false;
+					case FISHING(level):
+						false;
+					case MINE(level):
+						false;
 					case MARKET(level):
-						level == 1;
+						false;
 					case BANK(level):
-						level == 0;
+						false;
 					case FARM(level):
 						false;
 					case BARN(level):
@@ -94,6 +100,12 @@ private function genNewGrid(ctx:Context, playerId:Int, peopleId:Int, gridId:Int,
 				// case _:
 				// 強迫編譯器檢查
 				return switch catelog.type {
+					case HUNTING(level):
+						false;
+					case FISHING(level):
+						false;
+					case MINE(level):
+						false;
 					case MARKET(level):
 						false;
 					case BANK(level):
@@ -129,6 +141,12 @@ private function genNewGrid(ctx:Context, playerId:Int, peopleId:Int, gridId:Int,
 				// case _:
 				// 強迫編譯器檢查
 				return switch catelog.type {
+					case HUNTING(level):
+						false;
+					case FISHING(level):
+						false;
+					case MINE(level):
+						false;
 					case MARKET(level):
 						false;
 					case BANK(level):
@@ -161,6 +179,12 @@ private function genNewGrid(ctx:Context, playerId:Int, peopleId:Int, gridId:Int,
 			// 城市
 			final buildings = BuildingList.filter(catelog -> {
 				return switch catelog.type {
+					case HUNTING(level):
+						level == 1;
+					case FISHING(level):
+						level == 1;
+					case MINE(level):
+						level == 1;
 					case MARKET(level):
 						level == 1;
 					case BANK(level):

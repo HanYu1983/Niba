@@ -22,6 +22,12 @@ function doPeopleMaintain(ctx:Context) {
 				final myAttachments = ctx.attachments.filter(a -> getGridBelongPlayerId(ctx, a.belongToGridId) == player.id);
 				final levels = myAttachments.fold((c, a:Float) -> {
 					return a + switch c.type {
+						case FISHING(level):
+							level;
+						case HUNTING(level):
+							level;
+						case MINE(level):
+							level;
 						case MARKET(level):
 							level;
 						case FARM(level):
@@ -193,6 +199,12 @@ function initContext(ctx:Context, options:GameSetting) {
 			// case _:
 			// 強迫編譯器檢查
 			return switch catelog.type {
+				case FISHING(level):
+					level == 0;
+				case HUNTING(level):
+					level == 0;
+				case MINE(level):
+					level == 0;
 				case MARKET(level):
 					level == 0;
 				case BANK(level):
@@ -379,6 +391,12 @@ function onPayTaxToGrid(ctx:Context, playerId:Int, gridId:Int) {
 						final attachInGrid = ctx.attachments.filter(a -> a.belongToGridId == g.id);
 						final attachSellValue = attachInGrid.flatMap(a -> {
 							final ret:Array<BUILDING> = switch a.type {
+								case FISHING(level):
+									[for (i in 0...level + 1) FISHING(i)];
+								case HUNTING(level):
+									[for (i in 0...level + 1) HUNTING(i)];
+								case MINE(level):
+									[for (i in 0...level + 1) MINE(i)];
 								case MARKET(level):
 									[for (i in 0...level + 1) MARKET(i)];
 								case BANK(level):
@@ -413,6 +431,12 @@ function onPayTaxToGrid(ctx:Context, playerId:Int, gridId:Int) {
 						// 賣掉建物
 						for (a in attachInGrid) {
 							final resetBuild:BUILDING = switch a.type {
+								case FISHING(_):
+									FISHING(0);
+								case HUNTING(_):
+									HUNTING(0);
+								case MINE(_):
+									MINE(0);
 								case MARKET(_):
 									MARKET(0);
 								case BANK(_):
@@ -774,6 +798,12 @@ function onPlayerEnd(ctx:Context, playerId:Int):Bool {
 							// case _:
 							// 強迫編譯器檢查
 							return switch catelog.type {
+								case FISHING(level):
+									level == 0;
+								case HUNTING(level):
+									level == 0;
+								case MINE(level):
+									level == 0;
 								case MARKET(level):
 									level == 0;
 								case BANK(level):
