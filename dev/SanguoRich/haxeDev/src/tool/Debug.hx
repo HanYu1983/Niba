@@ -17,6 +17,7 @@ private final filterCategory:Array<String> = [
 	"doBrain",
 	"CacheModel",
 	"_takeStrategy",
+	"initContext",
 	// "GridGenerator"
 ];
 

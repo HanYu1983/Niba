@@ -116,7 +116,7 @@ function doGridGrow(ctx:Context) {
 
 // 玩家回合結束
 function doPlayerEnd(ctx:Context) {
-	info("Alg", ["doPlayerEnd", "start"]);
+	info("doPlayerEnd", "start");
 	final isContinue = onPlayerEnd(ctx, ctx.currentPlayerId);
 	if (isContinue) {
 		final nextPlayer = ctx.players[ctx.currentPlayerId];
@@ -124,11 +124,11 @@ function doPlayerEnd(ctx:Context) {
 			try {
 				doBrain(ctx, nextPlayer.id);
 			} catch (e:Any) {
-				warn("Alg", ["doPlayerEnd catch", e]);
+				warn("doPlayerEnd", ["doPlayerEnd catch", e]);
 			}
 		}
 	}
-	info("Alg", ["doPlayerEnd", "done"]);
+	info("doPlayerEnd", "done");
 }
 
 function doPlayerDice(ctx:Context) {
@@ -136,7 +136,7 @@ function doPlayerDice(ctx:Context) {
 }
 
 function initContext(ctx:Context, options:GameSetting) {
-	info("Alg", ["initContext", options]);
+	info("initContext", options);
 	ctx.settings = options;
 	final genGrids = model.GridGenerator.getInst()
 		.getGrids(options.gridCount != null ? options.gridCount : INIT_GRID_COUNT, options.limitBuilding, options.putong ? 0 : -1);
@@ -158,6 +158,11 @@ function initContext(ctx:Context, options:GameSetting) {
 			for (i in 0...10) {
 				if (playerPosSet.has(pos) == false) {
 					break;
+				}
+				switch ctx.grids[pos].buildtype {
+					case CHANCE | DESTINY:
+						continue;
+					case _:
 				}
 				pos = Std.int(Math.random() * genGrids.length);
 			};
@@ -187,61 +192,71 @@ function initContext(ctx:Context, options:GameSetting) {
 		}, isAI, isLose);
 		i++;
 	}
+	// 建立總城
+	if (options.startCity) {
+		for (player in ctx.players) {
+			if (player.isLose) {
+				continue;
+			}
+			// 移除原有建物
+			ctx.attachments = ctx.attachments.filter(a -> a.belongToGridId != player.position);
+			// 蓋總城建物
+			final buildings = BuildingList.filter(catelog -> {
+				// 不使用
+				// case _:
+				// 強迫編譯器檢查
+				return switch catelog.type {
+					case FISHING(level):
+						level == 0;
+					case HUNTING(level):
+						level == 0;
+					case MINE(level):
+						level == 0;
+					case MARKET(level):
+						level == 0;
+					case BANK(level):
+						level == 1;
+					case FARM(level):
+						level == 0;
+					case BARN(level):
+						level == 1;
+					case BARRACKS(level):
+						level == 0;
+					case HOME(level):
+						level == 1;
+					case EXPLORE(level):
+						level == 0;
+					case WALL(level):
+						level == 1;
+					case SIEGEFACTORY(level):
+						level == 0;
+					case ACADEMY(level):
+						level == 0;
+				}
+			}).map(catelog -> catelog.type);
+			for (building in buildings) {
+				addAttachInfo(ctx, player.position, building);
+			}
+			ctx.grids[player.position].defaultMoneyGrow = Math.random() * 0.01;
+			ctx.grids[player.position].defaultFoodGrow = Math.random() * 0.01;
+			ctx.grids[player.position].defaultArmyGrow = Math.random() * 0.01;
+			ctx.grids[player.position].defaultMaxMoney = 500;
+			ctx.grids[player.position].defaultMaxFood = 500;
+			ctx.grids[player.position].defaultMaxArmy = 500;
+			ctx.grids[player.position].money = 350;
+			ctx.grids[player.position].food = 350;
+			ctx.grids[player.position].army = 350;
+			final peopleInGrid = ctx.peoples.filter(p -> p.position.gridId == player.position);
+			for (people in peopleInGrid) {
+				people.belongToPlayerId = player.id;
+			}
+		}
+	}
+
+	// 算分
 	for (player in ctx.players) {
 		if (player.isLose) {
 			continue;
-		}
-		// 移除原有建物
-		ctx.attachments = ctx.attachments.filter(a -> a.belongToGridId != player.position);
-		// 蓋總城建物
-		final buildings = BuildingList.filter(catelog -> {
-			// 不使用
-			// case _:
-			// 強迫編譯器檢查
-			return switch catelog.type {
-				case FISHING(level):
-					level == 0;
-				case HUNTING(level):
-					level == 0;
-				case MINE(level):
-					level == 0;
-				case MARKET(level):
-					level == 0;
-				case BANK(level):
-					level == 1;
-				case FARM(level):
-					level == 0;
-				case BARN(level):
-					level == 1;
-				case BARRACKS(level):
-					level == 0;
-				case HOME(level):
-					level == 1;
-				case EXPLORE(level):
-					level == 0;
-				case WALL(level):
-					level == 1;
-				case SIEGEFACTORY(level):
-					level == 0;
-				case ACADEMY(level):
-					level == 0;
-			}
-		}).map(catelog -> catelog.type);
-		for (building in buildings) {
-			addAttachInfo(ctx, player.position, building);
-		}
-		ctx.grids[player.position].defaultMoneyGrow = Math.random() * 0.01;
-		ctx.grids[player.position].defaultFoodGrow = Math.random() * 0.01;
-		ctx.grids[player.position].defaultArmyGrow = Math.random() * 0.01;
-		ctx.grids[player.position].defaultMaxMoney = 500;
-		ctx.grids[player.position].defaultMaxFood = 500;
-		ctx.grids[player.position].defaultMaxArmy = 500;
-		ctx.grids[player.position].money = 350;
-		ctx.grids[player.position].food = 350;
-		ctx.grids[player.position].army = 350;
-		final peopleInGrid = ctx.peoples.filter(p -> p.position.gridId == player.position);
-		for (people in peopleInGrid) {
-			people.belongToPlayerId = player.id;
 		}
 		player.score = getPlayerScore(ctx, player.id);
 	}
@@ -849,7 +864,7 @@ function onPlayerEnd(ctx:Context, playerId:Int):Bool {
 			while (player.hate.length > 10) {
 				player.hate.shift();
 			}
-			info("Alg", ["onPlayerEnd", "hate", player.name, player.hate]);
+			info("onPlayerEnd", ["hate", player.name, player.hate]);
 		}
 		// 效果過期
 		for (effect in ctx.effects) {

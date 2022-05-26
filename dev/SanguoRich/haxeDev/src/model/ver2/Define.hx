@@ -843,50 +843,51 @@ function getGridTaxRate(ctx:Context, gridId:Int) {
 
 function getGridBuildType(ctx:Context, gridId:Int):GROWTYPE {
 	final grid = ctx.grids[gridId];
-	final peopleInGrid = ctx.peoples.filter(p -> p.position.gridId == grid.id);
-	final belongPlayerId = getGridBelongPlayerId(ctx, grid.id);
-	final isEmpty = belongPlayerId == null && peopleInGrid.length == 0;
-	if (isEmpty) {
-		return EMPTY;
-	}
-	final attachmentInGrid = ctx.attachments.filter(a -> a.belongToGridId == gridId);
-	if (attachmentInGrid.length == 0) {
-		return EMPTY;
-	}
-	final moneyCnt = attachmentInGrid.map(a -> switch a.type {
-		case MARKET(level):
-			level;
-		case _:
-			0;
-	}).fold((c, a) -> c + a, 0);
-	final foodCnt = attachmentInGrid.map(a -> switch a.type {
-		case FARM(level):
-			level;
-		case _:
-			0;
-	}).fold((c, a) -> c + a, 0);
-	final armyCnt = attachmentInGrid.map(a -> switch a.type {
-		case BARRACKS(level):
-			level;
-		case WALL(level):
-			level;
-		case _:
-			0;
-	}).fold((c, a) -> c + a, 0);
-	if (moneyCnt > 0 && foodCnt > 0 && armyCnt > 0) {
-		return CITY;
-	}
-	final maxV = Math.max(moneyCnt, Math.max(foodCnt, armyCnt));
-	if (maxV == moneyCnt) {
-		return MARKET;
-	}
-	if (maxV == foodCnt) {
-		return FARM;
-	}
-	if (maxV == armyCnt) {
-		return VILLAGE;
-	}
-	throw new haxe.Exception("必須是一個類型, 請檢查GridGenerator, 非空地請確保每個類型都至少一個建物");
+	return grid.buildtype;
+	// final peopleInGrid = ctx.peoples.filter(p -> p.position.gridId == grid.id);
+	// final belongPlayerId = getGridBelongPlayerId(ctx, grid.id);
+	// final isEmpty = belongPlayerId == null && peopleInGrid.length == 0;
+	// if (isEmpty) {
+	// 	return EMPTY;
+	// }
+	// final attachmentInGrid = ctx.attachments.filter(a -> a.belongToGridId == gridId);
+	// if (attachmentInGrid.length == 0) {
+	// 	return EMPTY;
+	// }
+	// final moneyCnt = attachmentInGrid.map(a -> switch a.type {
+	// 	case MARKET(level):
+	// 		level;
+	// 	case _:
+	// 		0;
+	// }).fold((c, a) -> c + a, 0);
+	// final foodCnt = attachmentInGrid.map(a -> switch a.type {
+	// 	case FARM(level):
+	// 		level;
+	// 	case _:
+	// 		0;
+	// }).fold((c, a) -> c + a, 0);
+	// final armyCnt = attachmentInGrid.map(a -> switch a.type {
+	// 	case BARRACKS(level):
+	// 		level;
+	// 	case WALL(level):
+	// 		level;
+	// 	case _:
+	// 		0;
+	// }).fold((c, a) -> c + a, 0);
+	// if (moneyCnt > 0 && foodCnt > 0 && armyCnt > 0) {
+	// 	return CITY;
+	// }
+	// final maxV = Math.max(moneyCnt, Math.max(foodCnt, armyCnt));
+	// if (maxV == moneyCnt) {
+	// 	return MARKET;
+	// }
+	// if (maxV == foodCnt) {
+	// 	return FARM;
+	// }
+	// if (maxV == armyCnt) {
+	// 	return VILLAGE;
+	// }
+	// throw new haxe.Exception("必須是一個類型, 請檢查GridGenerator, 非空地請確保每個類型都至少一個建物");
 }
 
 function getGridInfo(ctx:Context, grid:Grid):model.GridGenerator.Grid {
