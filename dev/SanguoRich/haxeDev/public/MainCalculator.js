@@ -555,11 +555,17 @@ haxe_Exception.prototype = $extend(Error.prototype,{
 	__skipStack: null
 	,__nativeException: null
 	,__previousException: null
+	,toString: function() {
+		return this.get_message();
+	}
+	,get_message: function() {
+		return this.message;
+	}
 	,get_native: function() {
 		return this.__nativeException;
 	}
 	,__class__: haxe_Exception
-	,__properties__: {get_native:"get_native"}
+	,__properties__: {get_native:"get_native",get_message:"get_message"}
 });
 var haxe_Log = function() { };
 $hxClasses["haxe.Log"] = haxe_Log;
@@ -27052,14 +27058,31 @@ libnoise_generator_Perlin.prototype = $extend(libnoise_ModuleBase.prototype,{
 	}
 	,__class__: libnoise_generator_Perlin
 });
+var model_LANDTYPE = $hxEnums["model.LANDTYPE"] = { __ename__:true,__constructs__:null
+	,SHALLOW: {_hx_name:"SHALLOW",_hx_index:0,__enum__:"model.LANDTYPE",toString:$estr}
+	,PLAIN: {_hx_name:"PLAIN",_hx_index:1,__enum__:"model.LANDTYPE",toString:$estr}
+	,HILL: {_hx_name:"HILL",_hx_index:2,__enum__:"model.LANDTYPE",toString:$estr}
+	,MOUNTAIN: {_hx_name:"MOUNTAIN",_hx_index:3,__enum__:"model.LANDTYPE",toString:$estr}
+};
+model_LANDTYPE.__constructs__ = [model_LANDTYPE.SHALLOW,model_LANDTYPE.PLAIN,model_LANDTYPE.HILL,model_LANDTYPE.MOUNTAIN];
+var model_LANDATTACHMENT = $hxEnums["model.LANDATTACHMENT"] = { __ename__:true,__constructs__:null
+	,TREE: {_hx_name:"TREE",_hx_index:0,__enum__:"model.LANDATTACHMENT",toString:$estr}
+	,GOLDEN: {_hx_name:"GOLDEN",_hx_index:1,__enum__:"model.LANDATTACHMENT",toString:$estr}
+	,WHEAT: {_hx_name:"WHEAT",_hx_index:2,__enum__:"model.LANDATTACHMENT",toString:$estr}
+	,ANIMAL: {_hx_name:"ANIMAL",_hx_index:3,__enum__:"model.LANDATTACHMENT",toString:$estr}
+	,FISH: {_hx_name:"FISH",_hx_index:4,__enum__:"model.LANDATTACHMENT",toString:$estr}
+};
+model_LANDATTACHMENT.__constructs__ = [model_LANDATTACHMENT.TREE,model_LANDATTACHMENT.GOLDEN,model_LANDATTACHMENT.WHEAT,model_LANDATTACHMENT.ANIMAL,model_LANDATTACHMENT.FISH];
 var model_GROWTYPE = $hxEnums["model.GROWTYPE"] = { __ename__:true,__constructs__:null
 	,EMPTY: {_hx_name:"EMPTY",_hx_index:0,__enum__:"model.GROWTYPE",toString:$estr}
-	,MARKET: {_hx_name:"MARKET",_hx_index:1,__enum__:"model.GROWTYPE",toString:$estr}
-	,FARM: {_hx_name:"FARM",_hx_index:2,__enum__:"model.GROWTYPE",toString:$estr}
-	,VILLAGE: {_hx_name:"VILLAGE",_hx_index:3,__enum__:"model.GROWTYPE",toString:$estr}
-	,CITY: {_hx_name:"CITY",_hx_index:4,__enum__:"model.GROWTYPE",toString:$estr}
+	,CHANCE: {_hx_name:"CHANCE",_hx_index:1,__enum__:"model.GROWTYPE",toString:$estr}
+	,DESTINY: {_hx_name:"DESTINY",_hx_index:2,__enum__:"model.GROWTYPE",toString:$estr}
+	,MARKET: {_hx_name:"MARKET",_hx_index:3,__enum__:"model.GROWTYPE",toString:$estr}
+	,FARM: {_hx_name:"FARM",_hx_index:4,__enum__:"model.GROWTYPE",toString:$estr}
+	,VILLAGE: {_hx_name:"VILLAGE",_hx_index:5,__enum__:"model.GROWTYPE",toString:$estr}
+	,CITY: {_hx_name:"CITY",_hx_index:6,__enum__:"model.GROWTYPE",toString:$estr}
 };
-model_GROWTYPE.__constructs__ = [model_GROWTYPE.EMPTY,model_GROWTYPE.MARKET,model_GROWTYPE.FARM,model_GROWTYPE.VILLAGE,model_GROWTYPE.CITY];
+model_GROWTYPE.__constructs__ = [model_GROWTYPE.EMPTY,model_GROWTYPE.CHANCE,model_GROWTYPE.DESTINY,model_GROWTYPE.MARKET,model_GROWTYPE.FARM,model_GROWTYPE.VILLAGE,model_GROWTYPE.CITY];
 var model_BUILDING = $hxEnums["model.BUILDING"] = { __ename__:true,__constructs__:null
 	,MARKET: ($_=function(level) { return {_hx_index:0,level:level,__enum__:"model.BUILDING",toString:$estr}; },$_._hx_name="MARKET",$_.__params__ = ["level"],$_)
 	,BANK: ($_=function(level) { return {_hx_index:1,level:level,__enum__:"model.BUILDING",toString:$estr}; },$_._hx_name="BANK",$_.__params__ = ["level"],$_)
@@ -27069,9 +27092,15 @@ var model_BUILDING = $hxEnums["model.BUILDING"] = { __ename__:true,__constructs_
 	,HOME: ($_=function(level) { return {_hx_index:5,level:level,__enum__:"model.BUILDING",toString:$estr}; },$_._hx_name="HOME",$_.__params__ = ["level"],$_)
 	,WALL: ($_=function(level) { return {_hx_index:6,level:level,__enum__:"model.BUILDING",toString:$estr}; },$_._hx_name="WALL",$_.__params__ = ["level"],$_)
 	,EXPLORE: ($_=function(level) { return {_hx_index:7,level:level,__enum__:"model.BUILDING",toString:$estr}; },$_._hx_name="EXPLORE",$_.__params__ = ["level"],$_)
+	,SIEGEFACTORY: ($_=function(level) { return {_hx_index:8,level:level,__enum__:"model.BUILDING",toString:$estr}; },$_._hx_name="SIEGEFACTORY",$_.__params__ = ["level"],$_)
+	,ACADEMY: ($_=function(level) { return {_hx_index:9,level:level,__enum__:"model.BUILDING",toString:$estr}; },$_._hx_name="ACADEMY",$_.__params__ = ["level"],$_)
+	,FISHING: ($_=function(level) { return {_hx_index:10,level:level,__enum__:"model.BUILDING",toString:$estr}; },$_._hx_name="FISHING",$_.__params__ = ["level"],$_)
+	,HUNTING: ($_=function(level) { return {_hx_index:11,level:level,__enum__:"model.BUILDING",toString:$estr}; },$_._hx_name="HUNTING",$_.__params__ = ["level"],$_)
+	,MINE: ($_=function(level) { return {_hx_index:12,level:level,__enum__:"model.BUILDING",toString:$estr}; },$_._hx_name="MINE",$_.__params__ = ["level"],$_)
 };
-model_BUILDING.__constructs__ = [model_BUILDING.MARKET,model_BUILDING.BANK,model_BUILDING.FARM,model_BUILDING.BARN,model_BUILDING.BARRACKS,model_BUILDING.HOME,model_BUILDING.WALL,model_BUILDING.EXPLORE];
+model_BUILDING.__constructs__ = [model_BUILDING.MARKET,model_BUILDING.BANK,model_BUILDING.FARM,model_BUILDING.BARN,model_BUILDING.BARRACKS,model_BUILDING.HOME,model_BUILDING.WALL,model_BUILDING.EXPLORE,model_BUILDING.SIEGEFACTORY,model_BUILDING.ACADEMY,model_BUILDING.FISHING,model_BUILDING.HUNTING,model_BUILDING.MINE];
 var model_GridGenerator = function() {
+	this.noise = new libnoise_generator_Perlin(10.0,2,.5,16,0,libnoise_QualityMode.HIGH);
 	this.gridNames = ["滴島","通河","貸鄉","樹莊","商區","富州","翅坊","東鎮","蹄堡","雷省","扔山","握港","通鄉","佩府","乏坡","社觀","誕壩","鐮莊","綱莊","悠路","緒港","客湖","喚坊","啄山","組省","震村","山山","嫁河","寸壩","暢縣","鴉峰","乏州","壓村","灑島","忍崖","睬觀","斥城","波峰","溫郡","驟鎮","療省","喝省","生道","緞坊","半鄉","蒼崖","棵島","序巷","岔島","遙鎮","醬觀","拌鎮","殼湖","致谷","扇崖","信坊","竿島","徒鎮","務港","廳鄉"];
 };
 $hxClasses["model.GridGenerator"] = model_GridGenerator;
@@ -27081,119 +27110,370 @@ model_GridGenerator.getInst = function() {
 };
 model_GridGenerator.prototype = {
 	getGrid: function() {
-		return { id : 0, name : "", landType : 0, buildtype : model_GROWTYPE.EMPTY, height : 0, attachs : [], belongPlayerId : null, value : 0, money : 100, moneyGrow : 0.0, food : 100, foodGrow : 0.0, army : 100, armyGrow : 0.0, people : [], favor : [0,0,0,0], strategys : [[],[],[],[]], treasures : [], maxMoney : 0, maxFood : 0, maxArmy : 0};
+		return { id : 0, name : "", landType : model_LANDTYPE.HILL, landAttachment : [], buildtype : model_GROWTYPE.EMPTY, height : 0, attachs : [], belongPlayerId : null, value : 0, money : 0, moneyGrow : 0.0, food : 0, foodGrow : 0.0, army : 0, armyGrow : 0.0, people : [], favor : [0,0,0,0], strategys : [[],[],[],[]], treasures : [], maxMoney : 0, maxFood : 0, maxArmy : 0};
 	}
 	,gridNames: null
 	,getGrids: function(count,isLimitBuilding,type) {
-		var getRandomRange = function(range,offset) {
+		var getRandomFloat = function(range,offset) {
+			if(offset == null) {
+				offset = 0.0;
+			}
 			return Math.random() * range + offset;
 		};
-		var randomStart = Math.floor(Math.random() * 100);
+		var getRandomInt = function(range,offset) {
+			if(offset == null) {
+				offset = 0.0;
+			}
+			return Math.floor(getRandomFloat(range,offset));
+		};
+		var growTotal = [];
+		var _g = [];
+		_g.push(model_GROWTYPE.EMPTY);
+		_g.push(model_GROWTYPE.EMPTY);
+		_g.push(model_GROWTYPE.EMPTY);
+		growTotal = growTotal.concat(_g);
+		var _g = [];
+		_g.push(model_GROWTYPE.DESTINY);
+		growTotal = growTotal.concat(_g);
+		var _g = [];
+		_g.push(model_GROWTYPE.CHANCE);
+		growTotal = growTotal.concat(_g);
+		var _g = [];
+		_g.push(model_GROWTYPE.MARKET);
+		_g.push(model_GROWTYPE.MARKET);
+		growTotal = growTotal.concat(_g);
+		var _g = [];
+		_g.push(model_GROWTYPE.FARM);
+		_g.push(model_GROWTYPE.FARM);
+		growTotal = growTotal.concat(_g);
+		var _g = [];
+		_g.push(model_GROWTYPE.VILLAGE);
+		_g.push(model_GROWTYPE.VILLAGE);
+		growTotal = growTotal.concat(_g);
+		var _g = [];
+		_g.push(model_GROWTYPE.FARM);
+		_g.push(model_GROWTYPE.FARM);
+		growTotal = growTotal.concat(_g);
+		var _g = [];
+		_g.push(model_GROWTYPE.CITY);
+		growTotal = growTotal.concat(_g);
+		var landTotal = [];
+		var _g = [];
+		var _g1 = 0;
+		var _g2 = getRandomInt(10,10);
+		while(_g1 < _g2) {
+			var i = _g1++;
+			_g.push(model_LANDTYPE.SHALLOW);
+		}
+		landTotal = landTotal.concat(_g);
+		var _g = [];
+		var _g1 = 0;
+		var _g2 = getRandomInt(10,5);
+		while(_g1 < _g2) {
+			var i = _g1++;
+			_g.push(model_LANDTYPE.PLAIN);
+		}
+		landTotal = landTotal.concat(_g);
+		var _g = [];
+		var _g1 = 0;
+		var _g2 = getRandomInt(10,5);
+		while(_g1 < _g2) {
+			var i = _g1++;
+			_g.push(model_LANDTYPE.HILL);
+		}
+		landTotal = landTotal.concat(_g);
+		var _g = [];
+		var _g1 = 0;
+		var _g2 = getRandomInt(10,10);
+		while(_g1 < _g2) {
+			var i = _g1++;
+			_g.push(model_LANDTYPE.MOUNTAIN);
+		}
+		landTotal = landTotal.concat(_g);
+		var randomStart = Math.round(Math.random() * 9999999);
 		var grids = [];
 		var _g = 0;
 		var _g1 = count;
 		while(_g < _g1) {
 			var i = _g++;
-			var height = this.getHeight(i);
+			var height = this.getHeight((randomStart + i) / 100.0);
 			var g = this.getGrid();
 			g.id = i;
+			g.height = height;
 			g.name = g.id + this.gridNames[(i + randomStart) % this.gridNames.length];
-			g.landType = [0,0,1,1,1,1,2,2,3,3][Math.floor(height * 10)];
-			var buildtype = [model_GROWTYPE.EMPTY,model_GROWTYPE.EMPTY,model_GROWTYPE.EMPTY,model_GROWTYPE.FARM,model_GROWTYPE.MARKET,model_GROWTYPE.VILLAGE,model_GROWTYPE.FARM,model_GROWTYPE.MARKET,model_GROWTYPE.VILLAGE,model_GROWTYPE.CITY][Math.floor(Math.random() * 10)];
-			switch(buildtype._hx_index) {
-			case 0:
-				break;
-			case 1:
-				if(isLimitBuilding) {
-					g.attachs = [model_BUILDING.MARKET(1),model_BUILDING.BANK(0),model_BUILDING.WALL(0)];
-				} else {
-					g.attachs = [model_BUILDING.MARKET(1),model_BUILDING.BANK(0),model_BUILDING.FARM(0),model_BUILDING.BARN(0),model_BUILDING.BARRACKS(0),model_BUILDING.HOME(0),model_BUILDING.EXPLORE(0),model_BUILDING.WALL(0)];
-				}
-				g.maxArmy = g.maxFood = g.maxMoney = 500;
-				break;
-			case 2:
-				if(isLimitBuilding) {
-					g.attachs = [model_BUILDING.FARM(1),model_BUILDING.BARN(0),model_BUILDING.WALL(0)];
-				} else {
-					g.attachs = [model_BUILDING.MARKET(0),model_BUILDING.BANK(0),model_BUILDING.FARM(1),model_BUILDING.BARN(0),model_BUILDING.BARRACKS(0),model_BUILDING.HOME(0),model_BUILDING.EXPLORE(0),model_BUILDING.WALL(0)];
-				}
-				g.maxArmy = g.maxFood = g.maxMoney = 500;
-				break;
-			case 3:
-				if(isLimitBuilding) {
-					g.attachs = [model_BUILDING.BARRACKS(1),model_BUILDING.HOME(0),model_BUILDING.WALL(0)];
-				} else {
-					g.attachs = [model_BUILDING.MARKET(0),model_BUILDING.BANK(0),model_BUILDING.FARM(0),model_BUILDING.BARN(0),model_BUILDING.BARRACKS(1),model_BUILDING.HOME(0),model_BUILDING.EXPLORE(0),model_BUILDING.WALL(0)];
-				}
-				g.maxArmy = g.maxFood = g.maxMoney = 500;
-				break;
-			case 4:
-				g.attachs = [model_BUILDING.MARKET(1),model_BUILDING.BANK(0),model_BUILDING.FARM(1),model_BUILDING.BARN(0),model_BUILDING.BARRACKS(1),model_BUILDING.HOME(0),model_BUILDING.EXPLORE(0),model_BUILDING.WALL(0)];
-				g.maxArmy = g.maxFood = g.maxMoney = 700;
-				break;
-			}
-			var basicArmy = getRandomRange(180,80);
+			g.landType = landTotal[Math.floor(height * (landTotal.length - 1))];
+			g.buildtype = growTotal[getRandomInt(growTotal.length)];
+			model_tool_Debug_warn("GridGenerator","should not be null, g.landType: " + Std.string(g.landType) + ", g.buildtype:" + Std.string(g.buildtype));
 			g.moneyGrow = Math.random() * 0.01;
 			g.foodGrow = Math.random() * 0.01;
 			g.armyGrow = Math.random() * 0.01;
-			g.army = basicArmy;
-			switch(buildtype._hx_index) {
+			g.maxArmy = 500;
+			g.maxFood = 500;
+			g.maxMoney = 500;
+			var _g2 = g.buildtype;
+			switch(g.landType._hx_index) {
 			case 0:
-				g.money = 0;
-				g.army = 0;
-				g.food = 0;
-				g.moneyGrow = 0;
-				g.foodGrow = 0;
-				g.armyGrow = 0;
-				g.people.push(model_PeopleGenerator.getInst().generate(type));
-				if(Math.random() < .3) {
-					g.treasures.push(model_TreasureGenerator.getInst().generator());
-				}
-				if(Math.random() < .3) {
-					g.treasures.push(model_TreasureGenerator.getInst().generator());
-				}
-				if(Math.random() < .3) {
-					g.treasures.push(model_TreasureGenerator.getInst().generator());
-				}
-				if(Math.random() < .3) {
-					g.treasures.push(model_TreasureGenerator.getInst().generator());
-				}
-				if(Math.random() < .3) {
-					g.treasures.push(model_TreasureGenerator.getInst().generator());
+				switch(_g2._hx_index) {
+				case 0:
+					g.maxArmy = 0;
+					g.maxFood = 0;
+					g.maxMoney = 0;
+					g.moneyGrow = 0;
+					g.foodGrow = 0;
+					g.armyGrow = 0;
+					g.people.push(model_PeopleGenerator.getInst().generate(type));
+					if(Math.random() < .3) {
+						g.treasures.push(model_TreasureGenerator.getInst().generator());
+					}
+					if(Math.random() < .3) {
+						g.treasures.push(model_TreasureGenerator.getInst().generator());
+					}
+					if(Math.random() < .3) {
+						g.treasures.push(model_TreasureGenerator.getInst().generator());
+					}
+					if(Math.random() < .3) {
+						g.treasures.push(model_TreasureGenerator.getInst().generator());
+					}
+					if(Math.random() < .3) {
+						g.treasures.push(model_TreasureGenerator.getInst().generator());
+					}
+					break;
+				case 3:
+					g.attachs = [model_BUILDING.MARKET(0),model_BUILDING.BANK(1),model_BUILDING.FISHING(0),model_BUILDING.WALL(0)];
+					g.army = getRandomFloat(180,80);
+					g.money = getRandomFloat(180,80);
+					g.food = getRandomFloat(180,80);
+					g.money *= 1.5;
+					g.people.push(model_PeopleGenerator.getInst().generate(type));
+					break;
+				case 4:
+					g.attachs = [model_BUILDING.FARM(0),model_BUILDING.BARN(1),model_BUILDING.FISHING(0),model_BUILDING.WALL(0)];
+					g.army = getRandomFloat(180,80);
+					g.money = getRandomFloat(180,80);
+					g.food = getRandomFloat(180,80);
+					g.food *= 1.5;
+					g.people.push(model_PeopleGenerator.getInst().generate(type));
+					break;
+				case 5:
+					g.attachs = [model_BUILDING.BARRACKS(0),model_BUILDING.HOME(1),model_BUILDING.FISHING(0),model_BUILDING.WALL(0)];
+					g.army = getRandomFloat(180,80);
+					g.money = getRandomFloat(180,80);
+					g.food = getRandomFloat(180,80);
+					g.army *= 1.5;
+					g.people.push(model_PeopleGenerator.getInst().generate(type));
+					break;
+				default:
+					g.maxArmy = 0;
+					g.maxFood = 0;
+					g.maxMoney = 0;
+					g.moneyGrow = 0;
+					g.foodGrow = 0;
+					g.armyGrow = 0;
 				}
 				break;
 			case 1:
-				g.money = getRandomRange(180,80);
-				g.food = getRandomRange(180,80);
-				g.money *= 1.5;
-				g.people.push(model_PeopleGenerator.getInst().generate(type));
+				switch(_g2._hx_index) {
+				case 0:
+					g.maxArmy = 0;
+					g.maxFood = 0;
+					g.maxMoney = 0;
+					g.moneyGrow = 0;
+					g.foodGrow = 0;
+					g.armyGrow = 0;
+					g.people.push(model_PeopleGenerator.getInst().generate(type));
+					if(Math.random() < .3) {
+						g.treasures.push(model_TreasureGenerator.getInst().generator());
+					}
+					if(Math.random() < .3) {
+						g.treasures.push(model_TreasureGenerator.getInst().generator());
+					}
+					if(Math.random() < .3) {
+						g.treasures.push(model_TreasureGenerator.getInst().generator());
+					}
+					if(Math.random() < .3) {
+						g.treasures.push(model_TreasureGenerator.getInst().generator());
+					}
+					if(Math.random() < .3) {
+						g.treasures.push(model_TreasureGenerator.getInst().generator());
+					}
+					break;
+				case 3:
+					g.attachs = [model_BUILDING.MARKET(0),model_BUILDING.BANK(1),model_BUILDING.WALL(0),model_BUILDING.EXPLORE(0)];
+					g.army = getRandomFloat(180,80);
+					g.money = getRandomFloat(180,80);
+					g.food = getRandomFloat(180,80);
+					g.money *= 1.5;
+					g.people.push(model_PeopleGenerator.getInst().generate(type));
+					break;
+				case 4:
+					g.attachs = [model_BUILDING.FARM(0),model_BUILDING.BARN(1),model_BUILDING.WALL(0),model_BUILDING.EXPLORE(0)];
+					g.army = getRandomFloat(180,80);
+					g.money = getRandomFloat(180,80);
+					g.food = getRandomFloat(180,80);
+					g.food *= 1.5;
+					g.people.push(model_PeopleGenerator.getInst().generate(type));
+					break;
+				case 5:
+					g.attachs = [model_BUILDING.BARRACKS(0),model_BUILDING.HOME(1),model_BUILDING.ACADEMY(0),model_BUILDING.SIEGEFACTORY(0),model_BUILDING.WALL(0)];
+					g.army = getRandomFloat(180,80);
+					g.money = getRandomFloat(180,80);
+					g.food = getRandomFloat(180,80);
+					g.army *= 1.5;
+					g.people.push(model_PeopleGenerator.getInst().generate(type));
+					break;
+				case 6:
+					g.attachs = [model_BUILDING.MARKET(0),model_BUILDING.BANK(1),model_BUILDING.FARM(0),model_BUILDING.BARN(1),model_BUILDING.BARRACKS(0),model_BUILDING.HOME(1),model_BUILDING.EXPLORE(0),model_BUILDING.SIEGEFACTORY(0),model_BUILDING.ACADEMY(0),model_BUILDING.WALL(0)];
+					g.army = getRandomFloat(180,80);
+					g.money = getRandomFloat(180,80);
+					g.food = getRandomFloat(180,80);
+					g.money *= 1.5;
+					g.food *= 1.5;
+					g.army *= 1.5;
+					g.people.push(model_PeopleGenerator.getInst().generate(type));
+					break;
+				default:
+					g.maxArmy = 0;
+					g.maxFood = 0;
+					g.maxMoney = 0;
+					g.moneyGrow = 0;
+					g.foodGrow = 0;
+					g.armyGrow = 0;
+				}
 				break;
 			case 2:
-				g.money = getRandomRange(180,80);
-				g.food = getRandomRange(180,80);
-				g.food *= 1.5;
-				g.people.push(model_PeopleGenerator.getInst().generate(type));
+				switch(_g2._hx_index) {
+				case 0:
+					g.maxArmy = 0;
+					g.maxFood = 0;
+					g.maxMoney = 0;
+					g.moneyGrow = 0;
+					g.foodGrow = 0;
+					g.armyGrow = 0;
+					g.people.push(model_PeopleGenerator.getInst().generate(type));
+					if(Math.random() < .3) {
+						g.treasures.push(model_TreasureGenerator.getInst().generator());
+					}
+					if(Math.random() < .3) {
+						g.treasures.push(model_TreasureGenerator.getInst().generator());
+					}
+					if(Math.random() < .3) {
+						g.treasures.push(model_TreasureGenerator.getInst().generator());
+					}
+					if(Math.random() < .3) {
+						g.treasures.push(model_TreasureGenerator.getInst().generator());
+					}
+					if(Math.random() < .3) {
+						g.treasures.push(model_TreasureGenerator.getInst().generator());
+					}
+					break;
+				case 3:
+					g.attachs = [model_BUILDING.MARKET(0),model_BUILDING.BANK(1),model_BUILDING.MINE(0),model_BUILDING.WALL(0)];
+					g.army = getRandomFloat(180,80);
+					g.money = getRandomFloat(180,80);
+					g.food = getRandomFloat(180,80);
+					g.money *= 1.5;
+					g.people.push(model_PeopleGenerator.getInst().generate(type));
+					break;
+				case 4:
+					g.attachs = [model_BUILDING.FARM(0),model_BUILDING.BARN(1),model_BUILDING.MINE(0),model_BUILDING.WALL(0)];
+					g.army = getRandomFloat(180,80);
+					g.money = getRandomFloat(180,80);
+					g.food = getRandomFloat(180,80);
+					g.food *= 1.5;
+					g.people.push(model_PeopleGenerator.getInst().generate(type));
+					break;
+				case 5:
+					g.attachs = [model_BUILDING.BARRACKS(0),model_BUILDING.HOME(1),model_BUILDING.MINE(0),model_BUILDING.WALL(0)];
+					g.army = getRandomFloat(180,80);
+					g.money = getRandomFloat(180,80);
+					g.food = getRandomFloat(180,80);
+					g.army *= 1.5;
+					g.people.push(model_PeopleGenerator.getInst().generate(type));
+					break;
+				default:
+					g.maxArmy = 0;
+					g.maxFood = 0;
+					g.maxMoney = 0;
+					g.moneyGrow = 0;
+					g.foodGrow = 0;
+					g.armyGrow = 0;
+				}
 				break;
 			case 3:
-				g.money = getRandomRange(180,80);
-				g.food = getRandomRange(180,80);
-				g.army *= 1.5;
-				g.people.push(model_PeopleGenerator.getInst().generate(type));
-				break;
-			case 4:
-				g.money = getRandomRange(180,80);
-				g.food = getRandomRange(180,80);
-				g.money *= 1.5;
-				g.food *= 1.5;
-				g.army *= 1.5;
-				g.people.push(model_PeopleGenerator.getInst().generate(type));
+				switch(_g2._hx_index) {
+				case 0:
+					g.maxArmy = 0;
+					g.maxFood = 0;
+					g.maxMoney = 0;
+					g.moneyGrow = 0;
+					g.foodGrow = 0;
+					g.armyGrow = 0;
+					g.people.push(model_PeopleGenerator.getInst().generate(type));
+					if(Math.random() < .3) {
+						g.treasures.push(model_TreasureGenerator.getInst().generator());
+					}
+					if(Math.random() < .3) {
+						g.treasures.push(model_TreasureGenerator.getInst().generator());
+					}
+					if(Math.random() < .3) {
+						g.treasures.push(model_TreasureGenerator.getInst().generator());
+					}
+					if(Math.random() < .3) {
+						g.treasures.push(model_TreasureGenerator.getInst().generator());
+					}
+					if(Math.random() < .3) {
+						g.treasures.push(model_TreasureGenerator.getInst().generator());
+					}
+					break;
+				case 3:
+					g.attachs = [model_BUILDING.MARKET(0),model_BUILDING.BANK(1),model_BUILDING.HUNTING(0),model_BUILDING.WALL(0)];
+					g.army = getRandomFloat(180,80);
+					g.money = getRandomFloat(180,80);
+					g.food = getRandomFloat(180,80);
+					g.money *= 1.5;
+					g.people.push(model_PeopleGenerator.getInst().generate(type));
+					break;
+				case 4:
+					g.attachs = [model_BUILDING.FARM(0),model_BUILDING.BARN(1),model_BUILDING.HUNTING(0),model_BUILDING.WALL(0)];
+					g.army = getRandomFloat(180,80);
+					g.money = getRandomFloat(180,80);
+					g.food = getRandomFloat(180,80);
+					g.food *= 1.5;
+					g.people.push(model_PeopleGenerator.getInst().generate(type));
+					break;
+				case 5:
+					g.attachs = [model_BUILDING.BARRACKS(0),model_BUILDING.HOME(1),model_BUILDING.HUNTING(0),model_BUILDING.WALL(0)];
+					g.army = getRandomFloat(180,80);
+					g.money = getRandomFloat(180,80);
+					g.food = getRandomFloat(180,80);
+					g.army *= 1.5;
+					g.people.push(model_PeopleGenerator.getInst().generate(type));
+					break;
+				case 6:
+					g.attachs = [model_BUILDING.MARKET(0),model_BUILDING.BANK(1),model_BUILDING.FARM(0),model_BUILDING.BARN(1),model_BUILDING.BARRACKS(0),model_BUILDING.HOME(1),model_BUILDING.EXPLORE(0),model_BUILDING.SIEGEFACTORY(0),model_BUILDING.ACADEMY(0),model_BUILDING.HUNTING(0),model_BUILDING.WALL(0)];
+					g.army = getRandomFloat(180,80);
+					g.money = getRandomFloat(180,80);
+					g.food = getRandomFloat(180,80);
+					g.money *= 1.5;
+					g.food *= 1.5;
+					g.army *= 1.5;
+					g.people.push(model_PeopleGenerator.getInst().generate(type));
+					break;
+				default:
+					g.maxArmy = 0;
+					g.maxFood = 0;
+					g.maxMoney = 0;
+					g.moneyGrow = 0;
+					g.foodGrow = 0;
+					g.armyGrow = 0;
+				}
 				break;
 			}
-			g.height = height;
 			grids.push(g);
 		}
 		return grids;
 	}
+	,noise: null
 	,getHeight: function(x,y,z) {
 		if(z == null) {
 			z = 0;
@@ -27204,8 +27484,14 @@ model_GridGenerator.prototype = {
 		if(x == null) {
 			x = 0;
 		}
-		var noise = new libnoise_generator_Perlin(.1,2,.5,16,0,libnoise_QualityMode.HIGH);
-		return (noise.getValue(x,y,z) + 1) / 2;
+		var value = (this.noise.getValue(x,y,z) + 1.0) / 2.0;
+		if(value < 0) {
+			return 0.0;
+		}
+		if(value > 1) {
+			return 1.0;
+		}
+		return value;
 	}
 	,__class__: model_GridGenerator
 };
@@ -27499,6 +27785,50 @@ model_TreasureGenerator.prototype = {
 	}
 	,__class__: model_TreasureGenerator
 };
+var model_tool__$Debug_LogLevel = $hxEnums["model.tool._Debug.LogLevel"] = { __ename__:true,__constructs__:null
+	,Verbose: {_hx_name:"Verbose",_hx_index:0,__enum__:"model.tool._Debug.LogLevel",toString:$estr}
+	,Info: {_hx_name:"Info",_hx_index:1,__enum__:"model.tool._Debug.LogLevel",toString:$estr}
+	,Warn: {_hx_name:"Warn",_hx_index:2,__enum__:"model.tool._Debug.LogLevel",toString:$estr}
+	,Err: {_hx_name:"Err",_hx_index:3,__enum__:"model.tool._Debug.LogLevel",toString:$estr}
+};
+model_tool__$Debug_LogLevel.__constructs__ = [model_tool__$Debug_LogLevel.Verbose,model_tool__$Debug_LogLevel.Info,model_tool__$Debug_LogLevel.Warn,model_tool__$Debug_LogLevel.Err];
+function model_tool_Debug_verbose(category,msg) {
+	if(Lambda.has(model_tool_Debug_filterLevel,model_tool__$Debug_LogLevel.Verbose) == false) {
+		return;
+	}
+	if(Lambda.has(model_tool_Debug_filterCategory,category) == false) {
+		return;
+	}
+	$global.console.log("[Verbose][" + category + "]",msg);
+}
+function model_tool_Debug_info(category,msg) {
+	if(Lambda.has(model_tool_Debug_filterLevel,model_tool__$Debug_LogLevel.Info) == false) {
+		return;
+	}
+	if(Lambda.has(model_tool_Debug_filterCategory,category) == false) {
+		return;
+	}
+	$global.console.log("[" + category + "]",msg);
+}
+function model_tool_Debug_warn(category,msg) {
+	if(Lambda.has(model_tool_Debug_filterLevel,model_tool__$Debug_LogLevel.Warn) == false) {
+		return;
+	}
+	if(Lambda.has(model_tool_Debug_filterCategory,category) == false) {
+		return;
+	}
+	$global.console.warn("[" + category + "]",msg);
+}
+function model_tool_Debug_err(category,msg) {
+	if(Lambda.has(model_tool_Debug_filterLevel,model_tool__$Debug_LogLevel.Err) == false) {
+		return;
+	}
+	if(Lambda.has(model_tool_Debug_filterCategory,category) == false) {
+		return;
+	}
+	$global.console.error("[" + category + "]",msg);
+	throw new haxe_Exception(msg);
+}
 var view_MainCalculatorView = function() {
 	haxe_ui_containers_Box.call(this);
 	haxe_ui_Toolkit.styleSheet.parse("\r\n        .button {\r\n            font-size: 14px;\r\n        }\r\n    ","user");
@@ -28090,9 +28420,11 @@ libnoise_Utils.GeneratorSeed = 1013;
 libnoise_Utils.GeneratorShift = 8;
 libnoise_Utils.Randoms = [-0.763874,-0.596439,-0.246489,0.0,0.396055,0.904518,-0.158073,0.0,-0.499004,-0.8665,-0.0131631,0.0,0.468724,-0.824756,0.316346,0.0,0.829598,0.43195,0.353816,0.0,-0.454473,0.629497,-0.630228,0.0,-0.162349,-0.869962,-0.465628,0.0,0.932805,0.253451,0.256198,0.0,-0.345419,0.927299,-0.144227,0.0,-0.715026,-0.293698,-0.634413,0.0,-0.245997,0.717467,-0.651711,0.0,-0.967409,-0.250435,-0.037451,0.0,0.901729,0.397108,-0.170852,0.0,0.892657,-0.0720622,-0.444938,0.0,0.0260084,-0.0361701,0.999007,0.0,0.949107,-0.19486,0.247439,0.0,0.471803,-0.807064,-0.355036,0.0,0.879737,0.141845,0.453809,0.0,0.570747,0.696415,0.435033,0.0,-0.141751,-0.988233,-0.0574584,0.0,-0.58219,-0.0303005,0.812488,0.0,-0.60922,0.239482,-0.755975,0.0,0.299394,-0.197066,-0.933557,0.0,-0.851615,-0.220702,-0.47544,0.0,0.848886,0.341829,-0.403169,0.0,-0.156129,-0.687241,0.709453,0.0,-0.665651,0.626724,0.405124,0.0,0.595914,-0.674582,0.43569,0.0,0.171025,-0.509292,0.843428,0.0,0.78605,0.536414,-0.307222,0.0,0.18905,-0.791613,0.581042,0.0,-0.294916,0.844994,0.446105,0.0,0.342031,-0.58736,-0.7335,0.0,0.57155,0.7869,0.232635,0.0,0.885026,-0.408223,0.223791,0.0,-0.789518,0.571645,0.223347,0.0,0.774571,0.31566,0.548087,0.0,-0.79695,-0.0433603,-0.602487,0.0,-0.142425,-0.473249,-0.869339,0.0,-0.0698838,0.170442,0.982886,0.0,0.687815,-0.484748,0.540306,0.0,0.543703,-0.534446,-0.647112,0.0,0.97186,0.184391,-0.146588,0.0,0.707084,0.485713,-0.513921,0.0,0.942302,0.331945,0.043348,0.0,0.499084,0.599922,0.625307,0.0,-0.289203,0.211107,0.9337,0.0,0.412433,-0.71667,-0.56239,0.0,0.87721,-0.082816,0.47291,0.0,-0.420685,-0.214278,0.881538,0.0,0.752558,-0.0391579,0.657361,0.0,0.0765725,-0.996789,0.0234082,0.0,-0.544312,-0.309435,-0.779727,0.0,-0.455358,-0.415572,0.787368,0.0,-0.874586,0.483746,0.0330131,0.0,0.245172,-0.0838623,0.965846,0.0,0.382293,-0.432813,0.81641,0.0,-0.287735,-0.905514,0.311853,0.0,-0.667704,0.704955,-0.239186,0.0,0.717885,-0.464002,-0.518983,0.0,0.976342,-0.214895,0.0240053,0.0,-0.0733096,-0.921136,0.382276,0.0,-0.986284,0.151224,-0.0661379,0.0,-0.899319,-0.429671,0.0812908,0.0,0.652102,-0.724625,0.222893,0.0,0.203761,0.458023,-0.865272,0.0,-0.030396,0.698724,-0.714745,0.0,-0.460232,0.839138,0.289887,0.0,-0.0898602,0.837894,0.538386,0.0,-0.731595,0.0793784,0.677102,0.0,-0.447236,-0.788397,0.422386,0.0,0.186481,0.645855,-0.740335,0.0,-0.259006,0.935463,0.240467,0.0,0.445839,0.819655,-0.359712,0.0,0.349962,0.755022,-0.554499,0.0,-0.997078,-0.0359577,0.0673977,0.0,-0.431163,-0.147516,-0.890133,0.0,0.299648,-0.63914,0.708316,0.0,0.397043,0.566526,-0.722084,0.0,-0.502489,0.438308,-0.745246,0.0,0.0687235,0.354097,0.93268,0.0,-0.0476651,-0.462597,0.885286,0.0,-0.221934,0.900739,-0.373383,0.0,-0.956107,-0.225676,0.186893,0.0,-0.187627,0.391487,-0.900852,0.0,-0.224209,-0.315405,0.92209,0.0,-0.730807,-0.537068,0.421283,0.0,-0.0353135,-0.816748,0.575913,0.0,-0.941391,0.176991,-0.287153,0.0,-0.154174,0.390458,0.90762,0.0,-0.283847,0.533842,0.796519,0.0,-0.482737,-0.850448,0.209052,0.0,-0.649175,0.477748,0.591886,0.0,0.885373,-0.405387,-0.227543,0.0,-0.147261,0.181623,-0.972279,0.0,0.0959236,-0.115847,-0.988624,0.0,-0.89724,-0.191348,0.397928,0.0,0.903553,-0.428461,-0.00350461,0.0,0.849072,-0.295807,-0.437693,0.0,0.65551,0.741754,-0.141804,0.0,0.61598,-0.178669,0.767232,0.0,0.0112967,0.932256,-0.361623,0.0,-0.793031,0.258012,0.551845,0.0,0.421933,0.454311,0.784585,0.0,-0.319993,0.0401618,-0.946568,0.0,-0.81571,0.551307,-0.175151,0.0,-0.377644,0.00322313,0.925945,0.0,0.129759,-0.666581,-0.734052,0.0,0.601901,-0.654237,-0.457919,0.0,-0.927463,-0.0343576,-0.372334,0.0,-0.438663,-0.868301,-0.231578,0.0,-0.648845,-0.749138,-0.133387,0.0,0.507393,-0.588294,0.629653,0.0,0.726958,0.623665,0.287358,0.0,0.411159,0.367614,-0.834151,0.0,0.806333,0.585117,-0.0864016,0.0,0.263935,-0.880876,0.392932,0.0,0.421546,-0.201336,0.884174,0.0,-0.683198,-0.569557,-0.456996,0.0,-0.117116,-0.0406654,-0.992285,0.0,-0.643679,-0.109196,-0.757465,0.0,-0.561559,-0.62989,0.536554,0.0,0.0628422,0.104677,-0.992519,0.0,0.480759,-0.2867,-0.828658,0.0,-0.228559,-0.228965,-0.946222,0.0,-0.10194,-0.65706,-0.746914,0.0,0.0689193,-0.678236,0.731605,0.0,0.401019,-0.754026,0.52022,0.0,-0.742141,0.547083,-0.387203,0.0,-0.00210603,-0.796417,-0.604745,0.0,0.296725,-0.409909,-0.862513,0.0,-0.260932,-0.798201,0.542945,0.0,-0.641628,0.742379,0.192838,0.0,-0.186009,-0.101514,0.97729,0.0,0.106711,-0.962067,0.251079,0.0,-0.743499,0.30988,-0.592607,0.0,-0.795853,-0.605066,-0.0226607,0.0,-0.828661,-0.419471,-0.370628,0.0,0.0847218,-0.489815,-0.8677,0.0,-0.381405,0.788019,-0.483276,0.0,0.282042,-0.953394,0.107205,0.0,0.530774,0.847413,0.0130696,0.0,0.0515397,0.922524,0.382484,0.0,-0.631467,-0.709046,0.313852,0.0,0.688248,0.517273,0.508668,0.0,0.646689,-0.333782,-0.685845,0.0,-0.932528,-0.247532,-0.262906,0.0,0.630609,0.68757,-0.359973,0.0,0.577805,-0.394189,0.714673,0.0,-0.887833,-0.437301,-0.14325,0.0,0.690982,0.174003,0.701617,0.0,-0.866701,0.0118182,0.498689,0.0,-0.482876,0.727143,0.487949,0.0,-0.577567,0.682593,-0.447752,0.0,0.373768,0.0982991,0.922299,0.0,0.170744,0.964243,-0.202687,0.0,0.993654,-0.035791,-0.106632,0.0,0.587065,0.4143,-0.695493,0.0,-0.396509,0.26509,-0.878924,0.0,-0.0866853,0.83553,-0.542563,0.0,0.923193,0.133398,-0.360443,0.0,0.00379108,-0.258618,0.965972,0.0,0.239144,0.245154,-0.939526,0.0,0.758731,-0.555871,0.33961,0.0,0.295355,0.309513,0.903862,0.0,0.0531222,-0.91003,-0.411124,0.0,0.270452,0.0229439,-0.96246,0.0,0.563634,0.0324352,0.825387,0.0,0.156326,0.147392,0.976646,0.0,-0.0410141,0.981824,0.185309,0.0,-0.385562,-0.576343,-0.720535,0.0,0.388281,0.904441,0.176702,0.0,0.945561,-0.192859,-0.262146,0.0,0.844504,0.520193,0.127325,0.0,0.0330893,0.999121,-0.0257505,0.0,-0.592616,-0.482475,-0.644999,0.0,0.539471,0.631024,-0.557476,0.0,0.655851,-0.027319,-0.754396,0.0,0.274465,0.887659,0.369772,0.0,-0.123419,0.975177,-0.183842,0.0,-0.223429,0.708045,0.66989,0.0,-0.908654,0.196302,0.368528,0.0,-0.95759,-0.00863708,0.288005,0.0,0.960535,0.030592,0.276472,0.0,-0.413146,0.907537,0.0754161,0.0,-0.847992,0.350849,-0.397259,0.0,0.614736,0.395841,0.68221,0.0,-0.503504,-0.666128,-0.550234,0.0,-0.268833,-0.738524,-0.618314,0.0,0.792737,-0.60001,-0.107502,0.0,-0.637582,0.508144,-0.579032,0.0,0.750105,0.282165,-0.598101,0.0,-0.351199,-0.392294,-0.850155,0.0,0.250126,-0.960993,-0.118025,0.0,-0.732341,0.680909,-0.0063274,0.0,-0.760674,-0.141009,0.633634,0.0,0.222823,-0.304012,0.926243,0.0,0.209178,0.505671,0.836984,0.0,0.757914,-0.56629,-0.323857,0.0,-0.782926,-0.339196,0.52151,0.0,-0.462952,0.585565,0.665424,0.0,0.61879,0.194119,-0.761194,0.0,0.741388,-0.276743,0.611357,0.0,0.707571,0.702621,0.0752872,0.0,0.156562,0.819977,0.550569,0.0,-0.793606,0.440216,0.42,0.0,0.234547,0.885309,-0.401517,0.0,0.132598,0.80115,-0.58359,0.0,-0.377899,-0.639179,0.669808,0.0,-0.865993,-0.396465,0.304748,0.0,-0.624815,-0.44283,0.643046,0.0,-0.485705,0.825614,-0.287146,0.0,-0.971788,0.175535,0.157529,0.0,-0.456027,0.392629,0.798675,0.0,-0.0104443,0.521623,-0.853112,0.0,-0.660575,-0.74519,0.091282,0.0,-0.0157698,-0.307475,-0.951425,0.0,-0.603467,-0.250192,0.757121,0.0,0.506876,0.25006,0.824952,0.0,0.255404,0.966794,0.00884498,0.0,0.466764,-0.874228,-0.133625,0.0,0.475077,-0.0682351,-0.877295,0.0,-0.224967,-0.938972,-0.260233,0.0,-0.377929,-0.814757,-0.439705,0.0,-0.305847,0.542333,-0.782517,0.0,0.26658,-0.902905,-0.337191,0.0,0.0275773,0.322158,-0.946284,0.0,0.0185422,0.716349,0.697496,0.0,-0.20483,0.978416,0.0273371,0.0,-0.898276,0.373969,0.230752,0.0,-0.00909378,0.546594,0.837349,0.0,0.6602,-0.751089,0.000959236,0.0,0.855301,-0.303056,0.420259,0.0,0.797138,0.0623013,-0.600574,0.0,0.48947,-0.866813,0.0951509,0.0,0.251142,0.674531,0.694216,0.0,-0.578422,-0.737373,-0.348867,0.0,-0.254689,-0.514807,0.818601,0.0,0.374972,0.761612,0.528529,0.0,0.640303,-0.734271,-0.225517,0.0,-0.638076,0.285527,0.715075,0.0,0.772956,-0.15984,-0.613995,0.0,0.798217,-0.590628,0.118356,0.0,-0.986276,-0.0578337,-0.154644,0.0,-0.312988,-0.94549,0.0899272,0.0,-0.497338,0.178325,0.849032,0.0,-0.101136,-0.981014,0.165477,0.0,-0.521688,0.0553434,-0.851339,0.0,-0.786182,-0.583814,0.202678,0.0,-0.565191,0.821858,-0.0714658,0.0,0.437895,0.152598,-0.885981,0.0,-0.92394,0.353436,-0.14635,0.0,0.212189,-0.815162,-0.538969,0.0,-0.859262,0.143405,-0.491024,0.0,0.991353,0.112814,0.0670273,0.0,0.0337884,-0.979891,-0.196654,0.0];
 model_GridGenerator.inst = new model_GridGenerator();
-var model_IModel_StrategyList = [{ id : 0, name : "暗渡陳艙", money : 5, intelligence : 70, describe : "可以指定移動1~3格數(無視路障)", targetType : model_StrategyTargetType.TARGET_GRID, value : { valid : [1,2,3], float : []}},{ id : 1, name : "步步為營", money : 30, intelligence : 30, describe : "指定武將回復30體力", targetType : model_StrategyTargetType.SELF_PEOPLE, value : { valid : [], float : [30]}},{ id : 2, name : "遠交近攻", money : 5, intelligence : 65, describe : "直接獲取該格子的10%資源。並且友好度上升1", targetType : model_StrategyTargetType.SELF_GRID, value : { valid : [], float : [0.1,1]}},{ id : 3, name : "緩兵之計", money : 40, intelligence : 30, describe : "指定自己前後3格當中的其中一格設置路障。走到那個格子的所以玩家會自動停下。然後路障消失", targetType : model_StrategyTargetType.TARGET_GRID, value : { valid : [-3,-2,-1,0,1,2,3], float : []}},{ id : 4, name : "火中取栗", money : 10, intelligence : 50, describe : "拆除指定自己後6格路障，如果那個路障是別的玩家，拿取那個玩家10金", targetType : model_StrategyTargetType.TARGET_GRID, value : { valid : [1,2,3,4,5,6], float : [10]}},{ id : 5, name : "趁虛而入", money : 40, intelligence : 50, describe : "指定武將體力-20", targetType : model_StrategyTargetType.TARGET_PEOPLE, value : { valid : [], float : [-20]}},{ id : 6, name : "按兵不動", money : 5, intelligence : 60, describe : "這回合不移動", targetType : model_StrategyTargetType.SELF_PLAYER, value : { valid : [], float : []}},{ id : 7, name : "急功近利", money : 30, intelligence : 40, describe : "指定玩家變賣50糧獲得50錢", targetType : model_StrategyTargetType.TARGET_PLAYER, value : { valid : [], float : [-50,50]}},{ id : 8, name : "五穀豐登", money : 5, intelligence : 90, describe : "所有自己城池的糧食+10%", targetType : model_StrategyTargetType.SELF_PLAYER, value : { valid : [], float : [0.1]}},{ id : 9, name : "無中生有", money : 5, intelligence : 75, describe : "金錢，糧草，士兵中較低的一個項目增加40~60", targetType : model_StrategyTargetType.SELF_PLAYER, value : { valid : [], float : [40,60]}},{ id : 10, name : "三顧茅廬", money : 400, intelligence : 50, describe : "需要有人脈的武將才可以使用這個計策。隨機獲得一個武將或者文官。", targetType : model_StrategyTargetType.SELF_PLAYER, value : { valid : [], float : [1]}},{ id : 11, name : "草船借箭", money : 400, intelligence : 50, describe : "需要有鑒別的武將才可以使用這個計策。隨機獲得一個寶物。", targetType : model_StrategyTargetType.SELF_PLAYER, value : { valid : [], float : [1]}},{ id : 12, name : "火計", money : 100, intelligence : 40, describe : "指定一個格子，那個格子的糧食資源-30%。", targetType : model_StrategyTargetType.TARGET_GRID, value : { valid : [-1,0,1], float : [-0.3]}},{ id : 13, name : "時來運轉", money : 5, intelligence : 80, describe : "指定一個格子，那個格子的所有資源+10%。", targetType : model_StrategyTargetType.TARGET_GRID, value : { valid : [-1,0,1], float : [0.1]}},{ id : 14, name : "攻其不備", money : 300, intelligence : 75, describe : "指定后三格中的有敵人城池的一個格子，角色會移動到那裏，并且獲得自己所有城池的20%資源。", targetType : model_StrategyTargetType.TARGET_GRID, value : { valid : [1,2,3], float : [0.2]}}];
-var model_IModel_BuildingList = [{ id : 0, name : "農田(未建)", money : 70, describe : "糧食每回合+0", type : model_BUILDING.FARM(0), depends : []},{ id : 1, name : "農田(小)", money : 50, describe : "糧食每回合+3", type : model_BUILDING.FARM(1), depends : []},{ id : 2, name : "農田(中)", money : 50, describe : "糧食每回合+5", type : model_BUILDING.FARM(2), depends : []},{ id : 3, name : "農田(大)", money : 0, describe : "糧食每回合+7", type : model_BUILDING.FARM(3), depends : []},{ id : 4, name : "市集(未建)", money : 70, describe : "金錢每回合+0", type : model_BUILDING.MARKET(0), depends : []},{ id : 5, name : "市集(小)", money : 50, describe : "金錢每回合+3", type : model_BUILDING.MARKET(1), depends : []},{ id : 6, name : "市集(中)", money : 50, describe : "金錢每回合+5", type : model_BUILDING.MARKET(2), depends : []},{ id : 7, name : "市集(大)", money : 0, describe : "金錢每回合+7", type : model_BUILDING.MARKET(3), depends : []},{ id : 8, name : "兵營(未建)", money : 70, describe : "士兵每回合+0", type : model_BUILDING.BARRACKS(0), depends : []},{ id : 9, name : "兵營(小)", money : 50, describe : "士兵每回合+3", type : model_BUILDING.BARRACKS(1), depends : []},{ id : 10, name : "兵營(中)", money : 50, describe : "士兵每回合+5", type : model_BUILDING.BARRACKS(2), depends : []},{ id : 11, name : "兵營(大)", money : 0, describe : "士兵每回合+7", type : model_BUILDING.BARRACKS(3), depends : []},{ id : 12, name : "人材所(未建)", money : 50, describe : "提高武將在探索計算時的魅力(+0)及聘用計算時的魅力(+0)。所有武將的薪資不減少。並且聘用金錢不減少", type : model_BUILDING.EXPLORE(0), depends : []},{ id : 13, name : "人材所", money : 0, describe : "提高武將在探索計算時的魅力(+5)及聘用計算時的魅力(+5)。所有武將的薪資減為*0.8。並且聘用金錢減為*0.8", type : model_BUILDING.EXPLORE(1), depends : []},{ id : 14, name : "城墻(未建)", money : 50, describe : "此格子防禦方的加成提高。(+0%)", type : model_BUILDING.WALL(0), depends : []},{ id : 15, name : "城墻(弱)", money : 50, describe : "此格子防禦方的加成提高。(+20%)", type : model_BUILDING.WALL(1), depends : []},{ id : 16, name : "城墻(中)", money : 50, describe : "此格子防禦方的加成提高。(+35%)", type : model_BUILDING.WALL(2), depends : []},{ id : 17, name : "城墻(強)", money : 0, describe : "此格子防禦方的加成提高。(+50%)", type : model_BUILDING.WALL(3), depends : []},{ id : 18, name : "金庫(未建)", money : 200, describe : "金錢最大值+0。金錢每回合+0%", type : model_BUILDING.BANK(0), depends : []},{ id : 19, name : "金庫(小)", money : 100, describe : "金錢最大值+200。金錢每回合+1%", type : model_BUILDING.BANK(1), depends : []},{ id : 20, name : "金庫(中)", money : 100, describe : "金錢最大值+300。金錢每回合+2%", type : model_BUILDING.BANK(2), depends : []},{ id : 21, name : "金庫(大)", money : 0, describe : "金錢最大值+400。金錢每回合+3%", type : model_BUILDING.BANK(3), depends : []},{ id : 22, name : "穀倉(未建)", money : 200, describe : "糧草最大值+0。糧草每回合+0%", type : model_BUILDING.BARN(0), depends : []},{ id : 23, name : "穀倉(小)", money : 100, describe : "糧草最大值+200。糧草每回合+1%", type : model_BUILDING.BARN(1), depends : []},{ id : 24, name : "穀倉(中)", money : 100, describe : "糧草最大值+300。糧草每回合+2%", type : model_BUILDING.BARN(2), depends : []},{ id : 25, name : "穀倉(大)", money : 0, describe : "糧草最大值+400。糧草每回合+3%", type : model_BUILDING.BARN(3), depends : []},{ id : 26, name : "住房(未建)", money : 200, describe : "士兵最大值+0。士兵每回合+0%", type : model_BUILDING.HOME(0), depends : []},{ id : 27, name : "住房(小)", money : 100, describe : "士兵最大值+200。士兵每回合+1%", type : model_BUILDING.HOME(1), depends : []},{ id : 28, name : "住房(中)", money : 100, describe : "士兵最大值+300。士兵每回合+2%", type : model_BUILDING.HOME(2), depends : []},{ id : 29, name : "住房(大)", money : 0, describe : "士兵最大值+400。士兵每回合+3%", type : model_BUILDING.HOME(3), depends : []}];
+var model_IModel_StrategyList = [{ id : 0, name : "暗渡陳艙", money : 5, intelligence : 80, describe : "可以指定移動1~2格數(無視路障)", targetType : model_StrategyTargetType.TARGET_GRID, value : { valid : [1,2], float : []}},{ id : 1, name : "步步為營", money : 30, intelligence : 40, describe : "指定武將回復30體力", targetType : model_StrategyTargetType.SELF_PEOPLE, value : { valid : [], float : [30]}},{ id : 2, name : "遠交近攻", money : 5, intelligence : 65, describe : "直接獲取該格子的15%資源。並且友好度上升1", targetType : model_StrategyTargetType.SELF_GRID, value : { valid : [], float : [0.15,1]}},{ id : 3, name : "緩兵之計", money : 50, intelligence : 40, describe : "指定自己前後3格當中的其中一格設置路障。走到那個格子的所以玩家會自動停下。然後路障消失", targetType : model_StrategyTargetType.TARGET_GRID, value : { valid : [-3,-2,-1,0,1,2,3], float : []}},{ id : 4, name : "火中取栗", money : 10, intelligence : 60, describe : "拆除指定自己後6格路障，如果那個路障是別的玩家，拿取那個玩家10金", targetType : model_StrategyTargetType.TARGET_GRID, value : { valid : [1,2,3,4,5,6], float : [10]}},{ id : 5, name : "趁虛而入", money : 40, intelligence : 50, describe : "指定武將體力-30", targetType : model_StrategyTargetType.TARGET_PEOPLE, value : { valid : [], float : [-30]}},{ id : 6, name : "按兵不動", money : 25, intelligence : 60, describe : "這回合不移動", targetType : model_StrategyTargetType.SELF_PLAYER, value : { valid : [], float : []}},{ id : 7, name : "急功近利", money : 10, intelligence : 60, describe : "指定玩家變賣50糧獲得50錢", targetType : model_StrategyTargetType.TARGET_PLAYER, value : { valid : [], float : [-50,50]}},{ id : 8, name : "五穀豐登", money : 5, intelligence : 90, describe : "所有自己城池的糧食+10%", targetType : model_StrategyTargetType.SELF_PLAYER, value : { valid : [], float : [0.10]}},{ id : 9, name : "無中生有", money : 5, intelligence : 75, describe : "金錢，糧草，士兵中較低的一個項目增加40~60", targetType : model_StrategyTargetType.SELF_PLAYER, value : { valid : [], float : [40,60]}},{ id : 10, name : "三顧茅廬", money : 400, intelligence : 50, describe : "需要有人脈的武將才可以使用這個計策。隨機獲得一個武將或者文官。", targetType : model_StrategyTargetType.SELF_PLAYER, value : { valid : [], float : [1]}},{ id : 11, name : "草船借箭", money : 400, intelligence : 50, describe : "需要有鑒別的武將才可以使用這個計策。隨機獲得一個寶物。", targetType : model_StrategyTargetType.SELF_PLAYER, value : { valid : [], float : [1]}},{ id : 12, name : "火計", money : 40, intelligence : 75, describe : "指定一個格子，那個格子的糧食資源-20%。", targetType : model_StrategyTargetType.TARGET_GRID, value : { valid : [-1,0,1], float : [-0.2]}},{ id : 13, name : "時來運轉", money : 5, intelligence : 80, describe : "指定一個格子，那個格子的所有資源+10%。", targetType : model_StrategyTargetType.TARGET_GRID, value : { valid : [-1,0,1], float : [0.1]}},{ id : 14, name : "攻其不備", money : 50, intelligence : 75, describe : "指定后三格中的有敵人城池的一個格子，角色會移動到那裏，并且轉移所有城池的10%資源到自己身上。", targetType : model_StrategyTargetType.TARGET_GRID, value : { valid : [1,2,3], float : [0.1]}},{ id : 15, name : "破壞", money : 60, intelligence : 50, describe : "需要有槍將的武將才可以使用這個計策。當前格子的隨機一個建築物降一級，沒有等級時破壞", targetType : model_StrategyTargetType.SELF_GRID, value : { valid : [], float : []}},{ id : 16, name : "減免貢奉金", money : 5, intelligence : 70, describe : "這個回合自己不需要支付貢奉金", targetType : model_StrategyTargetType.SELF_PLAYER, value : { valid : [], float : []}}];
+var model_IModel_BuildingList = [{ id : 0, name : "農田(未建)", money : 40, describe : "糧食每回合+0", type : model_BUILDING.FARM(0), depends : [], value : { valid : [], float : [0]}},{ id : 1, name : "農田(小)", money : 40, describe : "糧食每回合+4", type : model_BUILDING.FARM(1), depends : [], value : { valid : [], float : [4.0]}},{ id : 2, name : "農田(中)", money : 40, describe : "糧食每回合+8", type : model_BUILDING.FARM(2), depends : [], value : { valid : [], float : [8.0]}},{ id : 3, name : "農田(大)", money : 0, describe : "糧食每回合+12", type : model_BUILDING.FARM(3), depends : [], value : { valid : [], float : [12.0]}},{ id : 4, name : "市集(未建)", money : 40, describe : "金錢每回合+0", type : model_BUILDING.MARKET(0), depends : [], value : { valid : [], float : [0]}},{ id : 5, name : "市集(小)", money : 40, describe : "金錢每回合+4", type : model_BUILDING.MARKET(1), depends : [], value : { valid : [], float : [4.0]}},{ id : 6, name : "市集(中)", money : 40, describe : "金錢每回合+8", type : model_BUILDING.MARKET(2), depends : [], value : { valid : [], float : [8.0]}},{ id : 7, name : "市集(大)", money : 0, describe : "金錢每回合+12", type : model_BUILDING.MARKET(3), depends : [], value : { valid : [], float : [12.0]}},{ id : 8, name : "兵營(未建)", money : 40, describe : "士兵每回合+0", type : model_BUILDING.BARRACKS(0), depends : [], value : { valid : [], float : [0]}},{ id : 9, name : "兵營(小)", money : 40, describe : "士兵每回合+4", type : model_BUILDING.BARRACKS(1), depends : [], value : { valid : [], float : [4.0]}},{ id : 10, name : "兵營(中)", money : 40, describe : "士兵每回合+8", type : model_BUILDING.BARRACKS(2), depends : [], value : { valid : [], float : [8.0]}},{ id : 11, name : "兵營(大)", money : 0, describe : "士兵每回合+12", type : model_BUILDING.BARRACKS(3), depends : [], value : { valid : [], float : [12.0]}},{ id : 12, name : "人材所(未建)", money : 80, describe : "提高武將在探索計算時的魅力(+0)及聘用計算時的魅力(+0)。所有武將的薪資不減少。並且聘用金錢不減少", type : model_BUILDING.EXPLORE(0), depends : [], value : { valid : [], float : [0,1]}},{ id : 13, name : "人材所", money : 0, describe : "提高武將在探索計算時的魅力(+5)及聘用計算時的魅力(+5)。所有武將的薪資減為*0.8。並且聘用金錢減為*0.8", type : model_BUILDING.EXPLORE(1), depends : [], value : { valid : [], float : [5,0.8]}},{ id : 14, name : "城墻(未建)", money : 30, describe : "此格子防禦方的加成提高。(+0%)", type : model_BUILDING.WALL(0), depends : [], value : { valid : [], float : [1.0]}},{ id : 15, name : "城墻(弱)", money : 30, describe : "此格子防禦方的加成提高。(+15%)", type : model_BUILDING.WALL(1), depends : [], value : { valid : [], float : [1.15]}},{ id : 16, name : "城墻(中)", money : 30, describe : "此格子防禦方的加成提高。(+30%)", type : model_BUILDING.WALL(2), depends : [], value : { valid : [], float : [1.30]}},{ id : 17, name : "城墻(強)", money : 0, describe : "此格子防禦方的加成提高。(+45%)", type : model_BUILDING.WALL(3), depends : [], value : { valid : [], float : [1.45]}},{ id : 18, name : "金庫(未建)", money : 100, describe : "金錢最大值+0。金錢每回合+0%", type : model_BUILDING.BANK(0), depends : [], value : { valid : [], float : [0,0]}},{ id : 19, name : "金庫(小)", money : 100, describe : "金錢最大值+200。金錢每回合+1%", type : model_BUILDING.BANK(1), depends : [], value : { valid : [], float : [200.0,.01]}},{ id : 20, name : "金庫(中)", money : 100, describe : "金錢最大值+400。金錢每回合+2%", type : model_BUILDING.BANK(2), depends : [], value : { valid : [], float : [400.0,0.02]}},{ id : 21, name : "金庫(大)", money : 0, describe : "金錢最大值+600。金錢每回合+3%", type : model_BUILDING.BANK(3), depends : [], value : { valid : [], float : [600.0,0.03]}},{ id : 22, name : "穀倉(未建)", money : 100, describe : "糧草最大值+0。糧草每回合+0%", type : model_BUILDING.BARN(0), depends : [], value : { valid : [], float : [0,0]}},{ id : 23, name : "穀倉(小)", money : 100, describe : "糧草最大值+200。糧草每回合+1%", type : model_BUILDING.BARN(1), depends : [], value : { valid : [], float : [200.0,0.01]}},{ id : 24, name : "穀倉(中)", money : 100, describe : "糧草最大值+400。糧草每回合+2%", type : model_BUILDING.BARN(2), depends : [], value : { valid : [], float : [400.0,0.02]}},{ id : 25, name : "穀倉(大)", money : 0, describe : "糧草最大值+600。糧草每回合+3%", type : model_BUILDING.BARN(3), depends : [], value : { valid : [], float : [600.0,0.03]}},{ id : 26, name : "住房(未建)", money : 100, describe : "士兵最大值+0。士兵每回合+0%", type : model_BUILDING.HOME(0), depends : [], value : { valid : [], float : [0,0]}},{ id : 27, name : "住房(小)", money : 100, describe : "士兵最大值+200。士兵每回合+1%", type : model_BUILDING.HOME(1), depends : [], value : { valid : [], float : [200.0,0.01]}},{ id : 28, name : "住房(中)", money : 100, describe : "士兵最大值+400。士兵每回合+2%", type : model_BUILDING.HOME(2), depends : [], value : { valid : [], float : [400.0,0.02]}},{ id : 29, name : "住房(大)", money : 0, describe : "士兵最大值+600。士兵每回合+3%", type : model_BUILDING.HOME(3), depends : [], value : { valid : [], float : [600.0,0.03]}},{ id : 30, name : "攻城器製造所(未建)", money : 70, describe : "攻城時糧食消耗減少0%，攻擊力+0%", type : model_BUILDING.SIEGEFACTORY(0), depends : [], value : { valid : [], float : [1,1]}},{ id : 31, name : "攻城器製造所", money : 0, describe : "攻城時糧食消耗減少10%，攻擊力+10%", type : model_BUILDING.SIEGEFACTORY(1), depends : [], value : { valid : [], float : [0.9,1.1]}},{ id : 32, name : "軍事學院(未建)", money : 70, describe : "所有功績增加的時候，增加量+0%；練兵的消耗-10%", type : model_BUILDING.ACADEMY(0), depends : [], value : { valid : [], float : [1]}},{ id : 33, name : "軍事學院", money : 0, describe : "所有功績增加的時候，增加量+10%；練兵的消耗-10%", type : model_BUILDING.ACADEMY(1), depends : [], value : { valid : [], float : [1.1,0.9]}},{ id : 34, name : "漁獵場(未建)", money : 100, describe : "這個格子每一個回合有0%幾率大量收穫糧草，每一次收穫量為50 + 當前糧草的5%", type : model_BUILDING.FISHING(0), depends : [], value : { valid : [], float : []}},{ id : 35, name : "漁獵場", money : 0, describe : "這個格子每一個回合有10%幾率大量收穫糧草，每一次收穫量為50 + 當前糧草的5%", type : model_BUILDING.FISHING(1), depends : [], value : { valid : [], float : [0.1,50,0.05]}},{ id : 36, name : "狩獵場(未建)", money : 100, describe : "每一個回合自身所有的將領幾率0%增加5功績", type : model_BUILDING.HUNTING(0), depends : [], value : { valid : [], float : [0]}},{ id : 37, name : "狩獵場", money : 0, describe : "每一個回合自身所有的將領幾率50%增加5功績", type : model_BUILDING.HUNTING(1), depends : [], value : { valid : [], float : [0.05,5]}},{ id : 38, name : "礦場(未建)", money : 100, describe : "這個格子每一個回合有0%幾率大量收穫金錢，每一次收穫量為50 + 當前金錢的5%", type : model_BUILDING.MINE(0), depends : [], value : { valid : [], float : [0]}},{ id : 39, name : "礦場", money : 0, describe : "這個格子每一個回合有10%幾率大量收穫金錢，每一次收穫量為50 + 當前金錢的5%", type : model_BUILDING.MINE(1), depends : [], value : { valid : [], float : [0.1,50,0.05]}}];
 model_TreasureGenerator.inst = new model_TreasureGenerator();
 var model_TreasureGenerator_treasureList = [{ id : 0, name : "七星寶刀", command : 10, force : 5, intelligence : 0, political : 0, charm : 10, abilities : [], cost : 25},{ id : 1, name : "方天畫戟", command : 0, force : 10, intelligence : 0, political : 0, charm : 5, abilities : [0], cost : 25},{ id : 2, name : "青龍偃月刀", command : 0, force : 10, intelligence : 0, political : 0, charm : 5, abilities : [2], cost : 25},{ id : 3, name : "倚天之劍", command : 0, force : 10, intelligence : 0, political : 0, charm : 10, abilities : [], cost : 20},{ id : 4, name : "青釭之劍", command : 10, force : 0, intelligence : 0, political : 0, charm : 10, abilities : [], cost : 20},{ id : 5, name : "鐵脊蛇矛", command : 0, force : 10, intelligence : 0, political : 0, charm : 5, abilities : [], cost : 15},{ id : 6, name : "古錠刀", command : 5, force : 5, intelligence : 0, political : 0, charm : 5, abilities : [], cost : 15},{ id : 7, name : "鐵蒺藜骨朵", command : 0, force : 5, intelligence : 0, political : 0, charm : 5, abilities : [], cost : 10},{ id : 8, name : "眉尖刀", command : 5, force : 0, intelligence : 0, political : 0, charm : 5, abilities : [], cost : 10},{ id : 9, name : "飛刀", command : 0, force : 5, intelligence : 0, political : 0, charm : 0, abilities : [], cost : 5},{ id : 10, name : "袖箭", command : 5, force : 0, intelligence : 0, political : 0, charm : 0, abilities : [], cost : 5},{ id : 11, name : "西蜀地形圖", command : 0, force : 0, intelligence : 0, political : 0, charm : 15, abilities : [10], cost : 25},{ id : 12, name : "太平清領道", command : 5, force : 0, intelligence : 0, political : 0, charm : 10, abilities : [6], cost : 25},{ id : 13, name : "青囊書", command : 0, force : 0, intelligence : 5, political : 5, charm : 10, abilities : [], cost : 20},{ id : 14, name : "遁甲天書", command : 0, force : 0, intelligence : 10, political : 0, charm : 5, abilities : [3], cost : 25},{ id : 15, name : "孫子之兵法書", command : 10, force : 10, intelligence : 0, political : 0, charm : 5, abilities : [], cost : 25},{ id : 16, name : "兵法二十四編", command : 0, force : 0, intelligence : 5, political : 5, charm : 5, abilities : [0], cost : 25},{ id : 17, name : "詩經", command : 0, force : 0, intelligence : 5, political : 0, charm : 5, abilities : [], cost : 10},{ id : 18, name : "羅綺香囊", command : 0, force : 0, intelligence : 0, political : 0, charm : 15, abilities : [], cost : 15},{ id : 19, name : "青釉穀倉罐", command : 0, force : 0, intelligence : 5, political : 0, charm : 5, abilities : [5], cost : 20}];
+var model_tool_Debug_filterLevel = [model_tool__$Debug_LogLevel.Verbose,model_tool__$Debug_LogLevel.Info,model_tool__$Debug_LogLevel.Warn,model_tool__$Debug_LogLevel.Err];
+var model_tool_Debug_filterCategory = ["_takeStrategy"];
 MainCalculator.main();
 })(typeof window != "undefined" ? window : typeof global != "undefined" ? global : typeof self != "undefined" ? self : this);

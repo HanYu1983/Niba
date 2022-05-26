@@ -14,7 +14,8 @@ private final filterLevel:Array<LogLevel> = [Verbose, Info, Warn, Err];
 private final filterCategory:Array<String> = [
 	// "getCommandWeight",
 	// "CacheModel",
-	"_takeStrategy"
+	"_takeStrategy",
+	// "GridGenerator"
 ];
 
 function verbose(category:String, msg:Dynamic) {
