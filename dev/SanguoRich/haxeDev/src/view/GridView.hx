@@ -1,5 +1,6 @@
 package view;
 
+import model.GridGenerator.LANDTYPE;
 import tweenx909.TweenX;
 import model.GridGenerator.GROWTYPE;
 import model.GridGenerator.Grid;
@@ -18,16 +19,16 @@ class GridView extends Box {
 		return name;
 	}
 
-	public var type(default, set):Int;
-
-	function set_type(type:Int) {
-		// lbl_type.text = switch(type){
-		//     case 0: "低地";
-		//     case 1: "平地";
-		//     case 2: "山丘";
-		//     case 3: "高地";
-		//     case _: "未定義";
-		// };
+	public var type(default, set):LANDTYPE;
+	function set_type(type:LANDTYPE) {
+		trace('type', type);
+		lbl_type.text = switch(type){
+		    case SHALLOW: "河";
+		    case PLAIN: "原";
+		    case HILL: "丘";
+		    case MOUNTAIN: "高";
+		    case _: "未";
+		};
 		return type;
 	}
 

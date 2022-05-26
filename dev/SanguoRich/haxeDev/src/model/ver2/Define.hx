@@ -850,7 +850,8 @@ function getGridInfo(ctx:Context, grid:Grid):model.GridGenerator.Grid {
 	return {
 		id: grid.id,
 		name: grid.name,
-		landType: 0,
+		landType: LANDTYPE.PLAIN,
+		landAttachment: [],
 		buildtype: getGridBuildType(ctx, grid.id),
 		height: 0,
 		attachs: ctx.attachments.filter(a -> a.belongToGridId == grid.id).map(a -> a.type),

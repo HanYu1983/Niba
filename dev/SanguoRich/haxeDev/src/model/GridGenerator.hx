@@ -8,7 +8,8 @@ import model.TreasureGenerator;
 typedef Grid = {
 	id:Int,
 	name:String,
-	landType:Int,
+	landType:LANDTYPE,
+	landAttachment:Array<LANDATTACHMENT>,
 	buildtype:GROWTYPE,
 	height:Float,
 	attachs:Array<BUILDING>,
@@ -29,8 +30,25 @@ typedef Grid = {
 	maxArmy:Float,
 }
 
+enum LANDTYPE {
+	SHALLOW;
+	PLAIN;
+	HILL;
+	MOUNTAIN;
+}
+
+enum LANDATTACHMENT {
+	TREE;
+	GOLDEN;
+	WHEAT;
+	ANIMAL;
+	FISH;
+}
+
 enum GROWTYPE {
 	EMPTY;
+	CHANCE;
+	DESTINY;
 	MARKET;
 	FARM;
 	VILLAGE;
@@ -64,7 +82,8 @@ class GridGenerator {
 		return {
 			id: 0,
 			name: '',
-			landType: 0,
+			landType: LANDTYPE.HILL,
+			landAttachment: [],
 			buildtype: GROWTYPE.EMPTY,
 			height: 0,
 			attachs: [],
@@ -93,122 +112,126 @@ class GridGenerator {
 	];
 
 	public function getGrids(count:Int, isLimitBuilding:Bool, type:Int):Array<Grid> {
-		function getRandomRange(range:Float, offset:Float) {
+		function getRandomFloat(range:Float, offset:Float = 0.0) {
 			return Math.random() * range + offset;
 		}
 
-		final randomStart = Math.floor(Math.random() * 100);
-		var grids = [];
-		for (i in 0...count) {
-			var height = getHeight(i);
-			var g = getGrid();
+		function getRandomInt(range:Float, offset:Float = 0.0) {
+			return Math.round(getRandomFloat(range, offset));
+		}
 
+		var growTotal = [];
+		growTotal = growTotal.concat([for (i in 0...10) GROWTYPE.EMPTY]);
+		growTotal = growTotal.concat([for (i in 0...10) GROWTYPE.DESTINY]);
+		growTotal = growTotal.concat([for (i in 0...10) GROWTYPE.CHANCE]);
+		growTotal = growTotal.concat([for (i in 0...20) GROWTYPE.MARKET]);
+		growTotal = growTotal.concat([for (i in 0...20) GROWTYPE.FARM]);
+		growTotal = growTotal.concat([for (i in 0...20) GROWTYPE.VILLAGE]);
+		growTotal = growTotal.concat([for (i in 0...20) GROWTYPE.FARM]);
+		growTotal = growTotal.concat([for (i in 0...10) GROWTYPE.CITY]);
+
+		var landTotal = [];
+		landTotal = landTotal.concat([for (i in 0...getRandomInt(10, 10)) LANDTYPE.SHALLOW]);
+		landTotal = landTotal.concat([for (i in 0...getRandomInt(10, 5)) LANDTYPE.PLAIN]);
+		landTotal = landTotal.concat([for (i in 0...getRandomInt(10, 5)) LANDTYPE.HILL]);
+		landTotal = landTotal.concat([for (i in 0...getRandomInt(10, 10)) LANDTYPE.MOUNTAIN]);
+
+		final randomStart = Math.round(Math.random() * 9999999);
+		final grids = [];
+		for (i in 0...count) {
+			final height = getHeight((randomStart + i) / 100.0);
+
+			var g = getGrid();
 			g.id = i;
 			g.name = g.id + gridNames[(i + randomStart) % gridNames.length];
-			g.landType = [0, 0, 1, 1, 1, 1, 2, 2, 3, 3][Math.floor(height * 10)];
-			final buildtype = [
-				GROWTYPE.EMPTY, GROWTYPE.EMPTY, GROWTYPE.EMPTY, GROWTYPE.FARM, GROWTYPE.MARKET, GROWTYPE.VILLAGE, GROWTYPE.FARM, GROWTYPE.MARKET,
-				GROWTYPE.VILLAGE, GROWTYPE.CITY
-			][Math.floor(Math.random() * 10)];
-			
+			g.landType = landTotal[Math.floor(height * landTotal.length)];
+			g.buildtype = growTotal[Math.floor(Math.random() * growTotal.length)];
+		
 			g.maxArmy = 500;
 			g.maxFood = 500;
 			g.maxMoney = 500;
 
-			switch (buildtype) {
-				case EMPTY:
+			switch ([g.landType, g.buildtype]) {
+				// case [_, EMPTY] | [_, CHANCE] | [_, DESTINY]:
+
+				case [SHALLOW, MARKET]:
+					// g.attachs = [
+				case [PLAIN, MARKET]:
+				case [HILL, MARKET]:
+				case [MOUNTAIN, MARKET]:
+
+				case [SHALLOW, FARM]:
+				case [PLAIN, FARM]:
+				case [HILL, FARM]:
+				case [MOUNTAIN, FARM]:
+
+				case [SHALLOW, VILLAGE]:
+				case [PLAIN, VILLAGE]:
+				case [HILL, VILLAGE]:
+				case [MOUNTAIN, VILLAGE]:
+
+				case [PLAIN, CITY]:
+				case [MOUNTAIN, CITY]:
+
+				case _:
 					g.maxArmy = 0;
 					g.maxFood = 0;
 					g.maxMoney = 0;
-				case MARKET:
-					if (isLimitBuilding) {
-						g.attachs = [BUILDING.MARKET(0), BUILDING.BANK(1), BUILDING.WALL(0),];
-					} else {
-						g.attachs = [
-							BUILDING.MARKET(0),
-							BUILDING.BANK(1),
-
-							BUILDING.FARM(0),
-							BUILDING.BARN(0),
-
-							BUILDING.BARRACKS(0),
-							BUILDING.HOME(0),
-
-							BUILDING.EXPLORE(0),
-							BUILDING.WALL(0),
-
-							BUILDING.SIEGEFACTORY(0),
-							BUILDING.ACADEMY(0),
-						];
-					}
-				case FARM:
-					if (isLimitBuilding) {
-						g.attachs = [BUILDING.FARM(0), BUILDING.BARN(1), BUILDING.WALL(0),];
-					} else {
-						g.attachs = [
-							BUILDING.MARKET(0),
-							BUILDING.BANK(0),
-
-							BUILDING.FARM(0),
-							BUILDING.BARN(1),
-
-							BUILDING.BARRACKS(0),
-							BUILDING.HOME(0),
-
-							BUILDING.EXPLORE(0),
-							BUILDING.WALL(0),
-
-							BUILDING.SIEGEFACTORY(0),
-							BUILDING.ACADEMY(0),
-						];
-					}
-				case VILLAGE:
-					if (isLimitBuilding) {
-						g.attachs = [BUILDING.BARRACKS(0), BUILDING.HOME(1), BUILDING.WALL(0),];
-					} else {
-						g.attachs = [
-							BUILDING.MARKET(0),
-							BUILDING.BANK(0),
-
-							BUILDING.FARM(0),
-							BUILDING.BARN(0),
-
-							BUILDING.BARRACKS(0),
-							BUILDING.HOME(1),
-
-							BUILDING.EXPLORE(0),
-							BUILDING.WALL(0),
-
-							BUILDING.SIEGEFACTORY(0),
-							BUILDING.ACADEMY(0),
-						];
-					}
-				case CITY:
-					g.attachs = [
-						BUILDING.MARKET(0),
-						BUILDING.BANK(1),
-
-						BUILDING.FARM(0),
-						BUILDING.BARN(1),
-
-						BUILDING.BARRACKS(0),
-						BUILDING.HOME(1),
-
-						BUILDING.EXPLORE(0),
-						BUILDING.WALL(0),
-
-						BUILDING.SIEGEFACTORY(0),
-						BUILDING.ACADEMY(0)
-					];
 			}
 
-			final basicArmy = getRandomRange(180, 80);
+			// switch (buildtype) {
+			// 	case EMPTY | CHANCE | DESTINY:
+			// 		g.maxArmy = 0;
+			// 		g.maxFood = 0;
+			// 		g.maxMoney = 0;
+			// 	case MARKET:
+			// 		if (isLimitBuilding) {
+			// 			g.attachs = [BUILDING.MARKET(0), BUILDING.BANK(1), BUILDING.WALL(0),];
+			// 		} else {
+			// 			g.attachs = [
+			// 				BUILDING.MARKET(0), BUILDING.BANK(1), BUILDING.FARM(0), BUILDING.BARN(0), BUILDING.BARRACKS(0), BUILDING.HOME(0),
+
+			// 				BUILDING.EXPLORE(0), BUILDING.WALL(0), BUILDING.SIEGEFACTORY(0), BUILDING.ACADEMY(0),
+
+			// 			];
+			// 		}
+			// 	case FARM:
+			// 		if (isLimitBuilding) {
+			// 			g.attachs = [BUILDING.FARM(0), BUILDING.BARN(1), BUILDING.WALL(0),];
+			// 		} else {
+			// 			g.attachs = [
+			// 				BUILDING.MARKET(0), BUILDING.BANK(0), BUILDING.FARM(0), BUILDING.BARN(1), BUILDING.BARRACKS(0), BUILDING.HOME(0),
+
+			// 				BUILDING.EXPLORE(0), BUILDING.WALL(0), BUILDING.SIEGEFACTORY(0), BUILDING.ACADEMY(0),
+
+			// 			];
+			// 		}
+			// 	case VILLAGE:
+			// 		if (isLimitBuilding) {
+			// 			g.attachs = [BUILDING.BARRACKS(0), BUILDING.HOME(1), BUILDING.WALL(0),];
+			// 		} else {
+			// 			g.attachs = [
+			// 				BUILDING.MARKET(0), BUILDING.BANK(0), BUILDING.FARM(0), BUILDING.BARN(0), BUILDING.BARRACKS(0), BUILDING.HOME(1),
+
+			// 				BUILDING.EXPLORE(0), BUILDING.WALL(0), BUILDING.SIEGEFACTORY(0), BUILDING.ACADEMY(0),
+
+			// 			];
+			// 		}
+			// 	case CITY:
+			// 		g.attachs = [
+			// 			BUILDING.MARKET(0), BUILDING.BANK(1), BUILDING.FARM(0), BUILDING.BARN(1), BUILDING.BARRACKS(0), BUILDING.HOME(1), BUILDING.EXPLORE(0),
+
+			// 			BUILDING.WALL(0), BUILDING.SIEGEFACTORY(0), BUILDING.ACADEMY(0)];
+
+			// }
+
+			final basicArmy = getRandomFloat(180, 80);
 			g.moneyGrow = Math.random() * 0.01;
 			g.foodGrow = Math.random() * 0.01;
 			g.armyGrow = Math.random() * 0.01;
 			g.army = basicArmy;
 
-			switch (buildtype) {
+			switch (g.buildtype) {
 				case EMPTY:
 					g.money = 0;
 					g.army = 0;
@@ -221,23 +244,23 @@ class GridGenerator {
 						if (Math.random() < .3)
 							g.treasures.push(TreasureGenerator.getInst().generator());
 				case MARKET:
-					g.money = getRandomRange(180, 80);
-					g.food = getRandomRange(180, 80);
+					g.money = getRandomFloat(180, 80);
+					g.food = getRandomFloat(180, 80);
 					g.money *= 1.5;
 					g.people.push(PeopleGenerator.getInst().generate(type));
 				case FARM:
-					g.money = getRandomRange(180, 80);
-					g.food = getRandomRange(180, 80);
+					g.money = getRandomFloat(180, 80);
+					g.food = getRandomFloat(180, 80);
 					g.food *= 1.5;
 					g.people.push(PeopleGenerator.getInst().generate(type));
 				case VILLAGE:
-					g.money = getRandomRange(180, 80);
-					g.food = getRandomRange(180, 80);
+					g.money = getRandomFloat(180, 80);
+					g.food = getRandomFloat(180, 80);
 					g.army *= 1.5;
 					g.people.push(PeopleGenerator.getInst().generate(type));
 				case CITY:
-					g.money = getRandomRange(180, 80);
-					g.food = getRandomRange(180, 80);
+					g.money = getRandomFloat(180, 80);
+					g.food = getRandomFloat(180, 80);
 					g.money *= 1.5;
 					g.food *= 1.5;
 					g.army *= 1.5;
@@ -250,8 +273,9 @@ class GridGenerator {
 		return grids;
 	}
 
-	private function getHeight(x:Int = 0, y:Int = 0, z:Int = 0) {
-		var noise = new Perlin(.1, 2, .5, 16, 0, QualityMode.HIGH);
-		return (noise.getValue(x, y, z) + 1) / 2;
+	final noise = new Perlin(10.0, 2, .5, 16, 0, QualityMode.HIGH);
+
+	private function getHeight(x:Float = 0, y:Float = 0, z:Float = 0) {
+		return (noise.getValue(x, y, z) + 1.0) / 2.0;
 	}
 }

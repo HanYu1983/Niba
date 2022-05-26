@@ -73,7 +73,7 @@ class DebugModel implements IModel {
 			players: [gp(0, 'vic'), gp(1, 'han'), gp(2, 'xiao'), gp(3, 'any')],
 			playerGrids: [gp(0, 'vic'), gp(1, 'han'), gp(2, 'xiao'), gp(3, 'any')],
 			playerTotals: [gp(0, 'vic'), gp(1, 'han'), gp(2, 'xiao'), gp(3, 'any')],
-			grids: getGrids(100),
+			grids: getGrids(39),
 			isPlayerTurn: true,
 			currentPlayer: gp(0, 'vic'),
 			isPlaying: true,
