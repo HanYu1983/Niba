@@ -55,6 +55,32 @@ private function getStrategyCost(ctx:Context, p1PeopleId:Int, strategyId:Int, ta
 			// 草船借箭
 			// 需要有鑒別
 			p1Abilities.has(12) == false ? 0.0 : 1.0;
+		case 14:
+			// 攻其不備
+			if (p1.belongToPlayerId == null) {
+				throw new Exception("belongToPlayerId not found");
+			}
+			final player = getPlayerById(ctx, p1.belongToPlayerId);
+			final steps:Array<Int> = try {
+				cast(strategy.value.valid : Array<Int>);
+			} catch (e) {
+				throw new haxe.Exception("strategy.value.valid必須是Array");
+			}
+			final hasEnemyGrid = [
+				for (s in steps) {
+					final nextPosition = ((player.position + s) + ctx.grids.length) % ctx.grids.length;
+					switch getGridBelongPlayerId(ctx, nextPosition) {
+						case null:
+							false;
+						case gridBelongPlayerId if (gridBelongPlayerId != player.id):
+							true;
+						case _:
+							false;
+					}
+				}
+			].has(true);
+			// 範圍內必須有敵城
+			hasEnemyGrid == false ? 0.0 : 1.0;
 		case 15:
 			// 破壞
 			// 需要有槍將
@@ -452,14 +478,45 @@ private function onStrategyCost(ctx:Context, p1PeopleId:Int, strategyId:Int, tar
 					case _:
 						throw new haxe.Exception('strategy value not found:${strategy}');
 				}
-			// case 14:
-			// 攻其不備
+			case 14:
+				// 攻其不備
+				switch strategy {
+					case {value: {float: [rate]}}:
+						p1.energy = Math.max(0, p1.energy - cost.peopleCost.energy);
+						if (success) {
+							player.money = Math.max(0, player.money - cost.playerCost.money);
+							wrapResourceResultEvent(ctx, p1.belongToPlayerId, p1.id, () -> {
+								final gridInPlayer = ctx.grids.filter(g -> getGridBelongPlayerId(ctx, g.id) == player.id);
+								for (g in gridInPlayer) {
+									final getFood = g.food * rate;
+									final getArmy = g.army * rate;
+									final getMoney = g.money * rate;
+									g.food -= getFood;
+									g.army -= getArmy;
+									g.money -= getMoney;
+									player.food += getFood;
+									player.army += getArmy;
+									player.money += getMoney;
+								}
+								true;
+							});
+							onPlayerGoToPosition(ctx, player.id, targetGridId);
+							player.memory.hasDice = true;
+							onPeopleExpAdd(ctx, p1.id, getExpAdd(cost.successRate, ENERGY_COST_ON_STRATEGY));
+						} else {
+							player.money = Math.max(0, player.money - cost.playerCost.money * 0.2);
+						}
+						success;
+					case _:
+						throw new haxe.Exception('strategy value not found:${strategy}');
+				}
 			case 15:
 				// 破壞
 				switch strategy {
 					case {value: _, money: _}:
 						p1.energy = Math.max(0, p1.energy - cost.peopleCost.energy);
 						if (success) {
+							player.money = Math.max(0, player.money - cost.playerCost.money);
 							final attachInGrid = ctx.attachments.filter(a -> a.belongToGridId == player.position);
 							if (attachInGrid.length > 0) {
 								final chooseId = Std.int(Math.random() * attachInGrid.length);
@@ -576,6 +633,7 @@ private function onStrategyCost(ctx:Context, p1PeopleId:Int, strategyId:Int, tar
 					case {value: _, money: _}:
 						p1.energy = Math.max(0, p1.energy - cost.peopleCost.energy);
 						if (success) {
+							player.money = Math.max(0, player.money - cost.playerCost.money);
 							final effect = {
 								final tmp = getDefaultEffect();
 								tmp.id = ctx.idSeq++;
