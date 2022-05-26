@@ -48,10 +48,11 @@ class GridView extends Box {
 		box_chanceCover.hide();
 		box_destinyCover.hide();
 		box_build.hide();
-
+		// box_land.hide();
 		switch (type) {
 			case MARKET | FARM | VILLAGE | CITY:
 				box_build.show();
+				// box_land.show();
 			case DESTINY:
 				box_destinyCover.show();
 			case CHANCE:

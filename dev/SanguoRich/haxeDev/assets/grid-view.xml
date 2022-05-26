@@ -38,7 +38,7 @@
     <box id="box_build" width="18" height="18" verticalAlign="bottom" horizontalAlign="right" style="background-color: #FF6666;border:1px solid red;background-opacity: 1">
         <label id="lbl_building" text="" textAlign="center" width="100%" height="100%" style="color: black; font-size:12px;"/>
     </box>
-    <box width="18" height="18" verticalAlign="bottom" horizontalAlign="left" style="background-color: #6666FF;border:1px solid red;background-opacity: 1">
+    <box id="box_land" width="18" height="18" verticalAlign="top" horizontalAlign="right" style="background-color: #6666FF;border:1px solid red;background-opacity: 1">
         <label id="lbl_type" text="" textAlign="center" width="100%" height="100%" style="color: black; font-size:12px;"/>
     </box>
     <box verticalAlign="center" horizontalAlign="center" >
