@@ -279,7 +279,7 @@ typedef GameSetting = {
 	limitBuilding:Bool,
 	// AI難度，初期可以先影響AI的初始資源量(x1.5, x2, x2.5)
 	aiLevel:Int,
-	// 初始是否都是普通武將
+	// 初始是否都是普通將領
 	putong:Bool,
 }
 
@@ -381,7 +381,7 @@ final StrategyList:Array<StrategyCatelog> = [
 		name: '步步為營',
 		money: 30,
 		intelligence: 40,
-		describe: '指定武將回復30體力',
+		describe: '指定將領回復30體力',
 		targetType: StrategyTargetType.SELF_PEOPLE,
 		value: {
 			valid: [],
@@ -429,7 +429,7 @@ final StrategyList:Array<StrategyCatelog> = [
 		name: '趁虛而入',
 		money: 40,
 		intelligence: 50,
-		describe: '指定武將體力-30',
+		describe: '指定將領體力-30',
 		targetType: StrategyTargetType.TARGET_PEOPLE,
 		value: {
 			valid: [],
@@ -489,7 +489,7 @@ final StrategyList:Array<StrategyCatelog> = [
 		name: '三顧茅廬',
 		money: 400,
 		intelligence: 50,
-		describe: '需要有人脈的武將才可以使用這個計策。隨機獲得一個武將或者文官。',
+		describe: '需要有人脈的將領才可以使用這個計策。隨機獲得一個將領或者文官。',
 		targetType: StrategyTargetType.SELF_PLAYER,
 		value: {
 			valid: [],
@@ -501,7 +501,7 @@ final StrategyList:Array<StrategyCatelog> = [
 		name: '草船借箭',
 		money: 400,
 		intelligence: 50,
-		describe: '需要有鑒別的武將才可以使用這個計策。隨機獲得一個寶物。',
+		describe: '需要有鑒別的將領才可以使用這個計策。隨機獲得一個寶物。',
 		targetType: StrategyTargetType.SELF_PLAYER,
 		value: {
 			valid: [],
@@ -549,7 +549,7 @@ final StrategyList:Array<StrategyCatelog> = [
 		name: '破壞',
 		money: 60,
 		intelligence: 50,
-		describe: '需要有槍將的武將才可以使用這個計策。當前格子的隨機一個建築物降一級，沒有等級時破壞',
+		describe: '需要有槍將的將領才可以使用這個計策。當前格子的隨機一個建築物降一級，沒有等級時破壞',
 		targetType: StrategyTargetType.SELF_GRID,
 		value: {
 			valid: [],
@@ -566,6 +566,30 @@ final StrategyList:Array<StrategyCatelog> = [
 		value: {
 			valid: [],
 			float: []
+		}
+	},
+	{
+		id: 17,
+		name: '千里奔襲',
+		money: 30,
+		intelligence: 50,
+		describe: '需要有騎將的將領才可以使用這個計策。隨機移動3~9格。這3~9格當中，會被路障擋住',
+		targetType: StrategyTargetType.SELF_PLAYER,
+		value: {
+			valid: [3,4,5,6,7,8,9],
+			float: []
+		}
+	},
+	{
+		id: 18,
+		name: '萬劍齊發',
+		money: 70,
+		intelligence: 50,
+		describe: '需要有弓將的將領才可以使用這個計策。指定格子士兵-10%',
+		targetType: StrategyTargetType.TARGET_GRID,
+		value: {
+			valid: [-1,0,1],
+			float: [-0.10]
 		}
 	}
 ];
@@ -719,7 +743,7 @@ final BuildingList:Array<BuildingCatelog> = [
 		id: 12,
 		name: '人材所(未建)',
 		money: 80,
-		describe: '提高武將在探索計算時的魅力(+0)及聘用計算時的魅力(+0)。所有武將的薪資不減少。並且聘用金錢不減少',
+		describe: '提高將領在探索計算時的魅力(+0)及聘用計算時的魅力(+0)。所有將領的薪資不減少。並且聘用金錢不減少',
 		type: EXPLORE(0),
 		depends: [],
 		value: {
@@ -731,7 +755,7 @@ final BuildingList:Array<BuildingCatelog> = [
 		id: 13,
 		name: '人材所',
 		money: 0,
-		describe: '提高武將在探索計算時的魅力(+5)及聘用計算時的魅力(+5)。所有武將的薪資減為*0.8。並且聘用金錢減為*0.8',
+		describe: '提高將領在探索計算時的魅力(+5)及聘用計算時的魅力(+5)。所有將領的薪資減為*0.8。並且聘用金錢減為*0.8',
 		type: EXPLORE(1),
 		depends: [],
 		value: {
