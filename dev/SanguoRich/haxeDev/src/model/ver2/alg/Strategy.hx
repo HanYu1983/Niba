@@ -55,7 +55,28 @@ private function getStrategyCost(ctx:Context, p1PeopleId:Int, strategyId:Int, ta
 			// 草船借箭
 			// 需要有鑒別
 			p1Abilities.has(12) == false ? 0.0 : 1.0;
+		case 15:
+			// 破壞
+			// 需要有槍將
+			if (p1Abilities.has(0) == false) {
+				0.0;
+			} else {
+				if (p1.belongToPlayerId == null) {
+					throw new Exception("belongToPlayerId not found");
+				}
+				final player = getPlayerById(ctx, p1.belongToPlayerId);
+				final attachInGrid = ctx.attachments.filter(a -> a.belongToGridId == player.position);
+				// 需有建物
+				final isNoAttach = attachInGrid.length == 0;
+				if (isNoAttach) {
+					0.0;
+				} else {
+					1.0;
+				}
+			}
 		case 16:
+			// 減免貢奉金
+			// 効果不必重復
 			if (p1.belongToPlayerId == null) {
 				throw new Exception("belongToPlayerId not found");
 			}
@@ -432,9 +453,105 @@ private function onStrategyCost(ctx:Context, p1PeopleId:Int, strategyId:Int, tar
 						throw new haxe.Exception('strategy value not found:${strategy}');
 				}
 			// case 14:
-			// // 攻其不備
-			// case 15:
-			// // 破壞
+			// 攻其不備
+			case 15:
+				// 破壞
+				switch strategy {
+					case {value: _, money: _}:
+						p1.energy = Math.max(0, p1.energy - cost.peopleCost.energy);
+						if (success) {
+							final attachInGrid = ctx.attachments.filter(a -> a.belongToGridId == player.position);
+							if (attachInGrid.length > 0) {
+								final chooseId = Std.int(Math.random() * attachInGrid.length);
+								final chooseOne = attachInGrid[chooseId];
+								// 移除0級的建物
+								ctx.attachments = ctx.attachments.filter(a -> {
+									if (a.id != chooseOne.id) {
+										return true;
+									}
+									return switch a.type {
+										case MARKET(level): level > 0;
+										case BANK(level): level > 0;
+										case FARM(level): level > 0;
+										case BARN(level): level > 0;
+										case BARRACKS(level): level > 0;
+										case HOME(level): level > 0;
+										case EXPLORE(level): level > 0;
+										case WALL(level): level > 0;
+										case SIEGEFACTORY(level): level > 0;
+										case ACADEMY(level): level > 0;
+									}
+								});
+								// 若非0級, 就降級
+								ctx.attachments = ctx.attachments.map(a -> {
+									if (a.id != chooseOne.id) {
+										return a;
+									}
+									a.type = switch a.type {
+										case MARKET(level):
+											if (level == 0) {
+												throw new haxe.Exception("這時不該為0級");
+											}
+											MARKET(level - 1);
+										case BANK(level):
+											if (level == 0) {
+												throw new haxe.Exception("這時不該為0級");
+											}
+											BANK(level - 1);
+										case FARM(level):
+											if (level == 0) {
+												throw new haxe.Exception("這時不該為0級");
+											}
+											FARM(level - 1);
+										case BARN(level):
+											if (level == 0) {
+												throw new haxe.Exception("這時不該為0級");
+											}
+											BARN(level - 1);
+										case BARRACKS(level):
+											if (level == 0) {
+												throw new haxe.Exception("這時不該為0級");
+											}
+											BARRACKS(level - 1);
+										case HOME(level):
+											if (level == 0) {
+												throw new haxe.Exception("這時不該為0級");
+											}
+											HOME(level - 1);
+										case EXPLORE(level):
+											if (level == 0) {
+												throw new haxe.Exception("這時不該為0級");
+											}
+											EXPLORE(level - 1);
+										case WALL(level):
+											if (level == 0) {
+												throw new haxe.Exception("這時不該為0級");
+											}
+											WALL(level - 1);
+										case SIEGEFACTORY(level):
+											if (level == 0) {
+												throw new haxe.Exception("這時不該為0級");
+											}
+											SIEGEFACTORY(level - 1);
+										case ACADEMY(level):
+											if (level == 0) {
+												throw new haxe.Exception("這時不該為0級");
+											}
+											ACADEMY(level - 1);
+									}
+									return a;
+								});
+								onPeopleExpAdd(ctx, p1.id, getExpAdd(cost.successRate, ENERGY_COST_ON_STRATEGY));
+							} else {
+								warn("onStrategyCost", '沒有任何建物存在:${targetGridId}');
+							}
+						} else {
+							player.money = Math.max(0, player.money - cost.playerCost.money * 0.2);
+						}
+					case _:
+						throw new haxe.Exception('strategy value not found:${strategy}');
+				}
+				success;
 			case 16:
 				// 減免貢奉金
 				switch strategy {
