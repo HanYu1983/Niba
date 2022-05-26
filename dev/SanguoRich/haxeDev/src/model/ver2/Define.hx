@@ -370,7 +370,8 @@ enum Event {
 		player:Null<model.IModel.PlayerInfo>,
 	}, gameInfo:GameInfo, autoplay:Null<{duration:Float}>);
 	SETTLE_RESULT(value:{
-		grid:model.GridGenerator.Grid
+		grid:model.GridGenerator.Grid,
+		gridId:Int,
 	}, gameInfo:GameInfo, autoplay:Null<{duration:Float}>);
 }
 
@@ -985,6 +986,12 @@ function getAnimationEventFromEvent(e:Event):Event {
 			PAY_FOR_OVER_ENEMY_GRID(value, gameInfo, {
 				duration: ANIMATION_DURATION
 			});
+		case SETTLE_RESULT(value, gameInfo, _):
+			ANIMATION_EVENT_SNATCH({
+				gridIds: [value.gridId],
+				duration: ANIMATION_DURATION,
+				msg: '開拓成功',
+			}, gameInfo);
 		// case PEOPLE_LEVEL_UP_EVENT(value, gameInfo):
 		// 	ANIMATION_EVENT_SNATCH({
 		// 		gridIds: [value.gridId],

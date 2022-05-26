@@ -12,8 +12,10 @@ private enum LogLevel {
 private final filterLevel:Array<LogLevel> = [Verbose, Info, Warn, Err];
 
 private final filterCategory:Array<String> = [
-	// "getCommandWeight",
-	// "CacheModel",
+	//
+	"getCommandWeight",
+	"doBrain",
+	"CacheModel",
 	"_takeStrategy"
 ];
 
@@ -41,9 +43,9 @@ function warn(category:String, msg:Dynamic) {
 	if (filterLevel.has(Warn) == false) {
 		return;
 	}
-	if (filterCategory.has(category) == false) {
-		return;
-	}
+	// if (filterCategory.has(category) == false) {
+	// 	return;
+	// }
 	js.Browser.console.warn('[${category}]', msg);
 }
 
@@ -51,9 +53,9 @@ function err(category:String, msg:Dynamic) {
 	if (filterLevel.has(Err) == false) {
 		return;
 	}
-	if (filterCategory.has(category) == false) {
-		return;
-	}
+	// if (filterCategory.has(category) == false) {
+	// 	return;
+	// }
 	js.Browser.console.error('[${category}]', msg);
 	throw new haxe.Exception(msg);
 }

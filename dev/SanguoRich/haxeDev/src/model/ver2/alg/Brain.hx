@@ -22,6 +22,7 @@ import model.ver2.alg.CostForBonus;
 import model.ver2.alg.SaveLoad;
 import model.ver2.alg.Pk;
 import model.ver2.alg.Equip;
+import model.ver2.alg.Settle;
 
 using Lambda;
 
@@ -68,7 +69,6 @@ function doBrain(ctx, playerId:Int) {
 		switch cmd {
 			case CUTPATH:
 			case BREAK:
-			case SETTLE:
 			case END:
 				// 結束回圈
 				done = true;
@@ -294,6 +294,30 @@ function doBrain(ctx, playerId:Int) {
 					t.position.peopleId = choosePeople.id;
 				}
 			case TREASURE_TAKE:
+			case SETTLE:
+				if (brainMemory.settle.peopleId == null) {
+					throw new haxe.Exception("player.memory.settle.peopleId not found");
+				}
+				if (brainMemory.settle.settlePeopleId == null) {
+					throw new haxe.Exception("player.memory.settle.strategyId not found");
+				}
+				final putMoney = brainMemory.settle.money;
+				final putFood = brainMemory.settle.food;
+				final putArmy = brainMemory.settle.army;
+				_getPreResultOfSettle(ctx, playerId, brainMemory.settle.peopleId, gridId, brainMemory.settle.settleType);
+				_takeSettle(ctx, playerId, brainMemory.settle.peopleId, gridId, brainMemory.settle.settleType);
+				// 必須拿新的格子, 因為被settle替換了
+				final newGrid = ctx.grids[gridId];
+				// 調度資源
+				newGrid.money += putMoney;
+				newGrid.food += putFood;
+				newGrid.army += putArmy;
+				player.money -= putMoney;
+				player.food -= putFood;
+				player.army -= putArmy;
+				// 武將進城
+				final peopleWillEnter = getPeopleById(ctx, brainMemory.settle.settlePeopleId);
+				peopleWillEnter.position.gridId = grid.id;
 		}
 	}
 	info("doBrain", ["finished", playerId]);
@@ -329,6 +353,9 @@ private typedef BrainMemory = {
 	},
 	build:{
 		peopleId:Null<Int>, attachmentId:Null<Int>
+	},
+	settle:{
+		peopleId:Null<Int>, money:Float, food:Float, army:Float, settlePeopleId:Null<Int>, settleType:Int
 	},
 	hasTransfer:Bool,
 	strategyHistory:Array<Int>,
@@ -374,6 +401,14 @@ private function getDefaultBrainMemory():BrainMemory {
 		build: {
 			peopleId: null,
 			attachmentId: null,
+		},
+		settle: {
+			peopleId: null,
+			money: 0,
+			food: 0,
+			army: 0,
+			settlePeopleId: null,
+			settleType: 0
 		},
 		hasTransfer: false,
 		strategyHistory: []
@@ -899,7 +934,6 @@ private function getCommandWeight(ctx:Context, playerId:Int, gridId:Int, cmd:Act
 								}
 							}
 						}
-
 					case 6:
 						// 按兵不動
 						// 在自己格
@@ -1634,7 +1668,38 @@ private function getCommandWeight(ctx:Context, playerId:Int, gridId:Int, cmd:Act
 				maxScore;
 			}
 		case SETTLE:
-			0.0;
+			final playerPeopleNotInGrid = getPlayerPeopleNotInGrid(ctx, player.id);
+			final score = if (playerPeopleNotInGrid.length == 0) {
+				0.0;
+			} else {
+				var maxScore = 0.0;
+				for (p in peopleInPlayer) {
+					// 體力剩下越多越好
+					final factEnergyMoreThen50 = getFact(p.energy / 50.0);
+					final factMyMoneyMoreThen800 = factPlayerMoneyMoreThen(ctx, playerId, 800);
+					final factMyResMoreThen500 = factPlayerIsBigThen(ctx, playerId, 500);
+					final factMyPeopleNotInGrid = factPlayerPeopleNoInGridLengthMoreThen(ctx, playerId, 1);
+					final score = 1.0 * getFact(factEnergyMoreThen50 * factMyMoneyMoreThen800 * factMyResMoreThen500 * factMyPeopleNotInGrid) * factOn(factMyResMoreThen500,
+						1) * factOn(factMyPeopleNotInGrid, 1) * factOn(factEnergyMoreThen50, 1) * factOn(factMyMoneyMoreThen800, 1);
+					if (score > maxScore) {
+						maxScore = score;
+						brainMemory.settle.peopleId = p.id;
+						brainMemory.settle.settlePeopleId = playerPeopleNotInGrid[0].id;
+						brainMemory.settle.money = player.money * 0.5;
+						brainMemory.settle.army = player.army * 0.5;
+						brainMemory.settle.food = player.food * 0.5;
+						brainMemory.settle.settleType = switch factMyMoneyMoreThen800 {
+							case f if (f > 1):
+								3;
+							case _:
+								Std.int(Math.random() * 3);
+						}
+					}
+				}
+				maxScore;
+			}
+			info("getCommandWeight", [playerId, cmd, score]);
+			score;
 		case _:
 			// 最少要0.01
 			final score = 0.5;

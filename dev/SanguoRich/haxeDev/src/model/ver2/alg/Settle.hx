@@ -248,7 +248,7 @@ function _getPreResultOfSettle(ctx:Context, playerId:Int, peopleId:Int, gridId:I
 	return genNewGrid(ctx, playerId, peopleId, gridId, settleType);
 }
 
-function _takeSettle(ctx:Context, playerId:Int, gridId:Int, peopleId:Int, settleType:Int) {
+function _takeSettle(ctx:Context, playerId:Int, peopleId:Int, gridId:Int, settleType:Int) {
 	final playerInGrid = ctx.peoples.filter(a -> a.position.gridId == gridId);
 	if (playerInGrid.length > 0) {
 		throw new haxe.Exception("playerInGrid.length > 0. 有人在時不能開拓");
@@ -261,11 +261,7 @@ function _takeSettle(ctx:Context, playerId:Int, gridId:Int, peopleId:Int, settle
 	ctx.attachments = _tmpCtx.attachments;
 	ctx.peoples = _tmpCtx.peoples;
 	ctx.treasures = _tmpCtx.treasures;
-	{
-		final player = ctx.players[ctx.currentPlayerId];
-		player.memory.hasBuild = true;
-		player.memory.hasCommand = true;
-	}
+	//
 	final player = getPlayerById(ctx, playerId);
 	final p1 = getPeopleById(ctx, peopleId);
 	final cost = getSettleCost(ctx, playerId, peopleId, gridId, settleType);
@@ -274,9 +270,15 @@ function _takeSettle(ctx:Context, playerId:Int, gridId:Int, peopleId:Int, settle
 	player.army -= cost.player.army;
 	p1.energy -= cost.people.energy;
 	onPeopleExpAdd(ctx, p1.id, getExpAdd(cost.successRate, ENERGY_COST_ON_SETTLE));
+	{
+		final player = ctx.players[ctx.currentPlayerId];
+		player.memory.hasBuild = true;
+		player.memory.hasCommand = true;
+	}
 	// 事件
 	final grid = ctx.grids[gridId];
 	ctx.events.push(SETTLE_RESULT({
-		grid: getGridInfo(ctx, grid)
+		grid: getGridInfo(ctx, grid),
+		gridId: grid.id
 	}, getGameInfo(ctx, false), null));
 }
