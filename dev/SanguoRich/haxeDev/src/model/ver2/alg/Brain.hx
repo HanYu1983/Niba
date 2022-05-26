@@ -593,63 +593,6 @@ private function getCommandWeight(ctx:Context, playerId:Int, gridId:Int, cmd:Act
 		}
 	}
 	return switch cmd {
-		case TREASURE_TAKE:
-			0.0;
-		case BUILD:
-			final buildingsInGrid = ctx.attachments.filter(a -> a.belongToGridId == gridId);
-			final score = if (buildingsInGrid.length > 0) {
-				final buildingNotMax = buildingsInGrid.filter(b -> {
-					return switch b.type {
-						case MARKET(level) if (level < 3):
-							true;
-						case BANK(level) if (level < 3):
-							true;
-						case FARM(level) if (level < 3):
-							true;
-						case BARN(level) if (level < 3):
-							true;
-						case BARRACKS(level) if (level < 3):
-							true;
-						case HOME(level) if (level < 3):
-							true;
-						case WALL(level) if (level < 3):
-							true;
-						case EXPLORE(level) if (level < 1):
-							true;
-						case _:
-							false;
-					}
-				});
-				if (buildingNotMax.length == 0) {
-					0.0;
-				} else {
-					var score = 0.0;
-					for (i in 0...buildingNotMax.length) {
-						// 隨機挑一個錢夠的, 運氣不好就買不到
-						final chooseId = Std.int(Math.random() * buildingNotMax.length);
-						final attachment = buildingNotMax[chooseId];
-						final findBuildingCatelog = BuildingList.filter((catelog) -> Type.enumEq(catelog.type, attachment.type));
-						if (findBuildingCatelog.length == 0) {
-							throw new haxe.Exception('findBuildingCatelog找不到:${attachment.type}');
-						}
-						final costMoney = findBuildingCatelog[0].money;
-						if (player.money >= costMoney) {
-							score = 1.0;
-							// 最多體力的
-							final peopleEnergyIsHigh = peopleInPlayer.copy();
-							peopleEnergyIsHigh.sort((a, b) -> Std.int(b.energy) - Std.int(a.energy));
-							brainMemory.build.attachmentId = attachment.id;
-							brainMemory.build.peopleId = peopleEnergyIsHigh[0].id;
-							break;
-						}
-					}
-					score;
-				}
-			} else {
-				0.0;
-			}
-			info("getCommandWeight", [playerId, cmd, score, brainMemory.build]);
-			score;
 		case STRATEGY:
 			var maxScore = 0.0;
 			for (strategy in StrategyList) {
@@ -660,15 +603,9 @@ private function getCommandWeight(ctx:Context, playerId:Int, gridId:Int, cmd:Act
 				}
 				final factNowMoney = getFact(player.money / (strategy.money * 3));
 				final factUseTimeLowerThen2 = factVery(factNot(getFact(brainMemory.strategyHistory.filter(sid -> sid == strategy.id).length / 2.0)), 3);
-				verbose("getCommandWeight", [
-					playerId,
-					cmd,
-					strategy.id,
-					"factUseTimeLowerThen2",
-					factUseTimeLowerThen2,
-					"factNowMoney",
-					factNowMoney
-				]);
+				verbose("getCommandWeight", "================strategy in StrategyList==================");
+				verbose("getCommandWeight", ["playerId", playerId]);
+				verbose("getCommandWeight", ["strategy.id", strategy.id]);
 				switch strategy.id {
 					case 0:
 						// 暗渡陳艙
@@ -1104,8 +1041,7 @@ private function getCommandWeight(ctx:Context, playerId:Int, gridId:Int, cmd:Act
 								if (gridBelongPlayerId == null) {
 									1.0;
 								} else {
-									final hateYouCnt = player.hate.filter(i -> i == gridBelongPlayerId).length;
-									0.5 + hateYouCnt * 0.5;
+									factHateYou(ctx, player.id, gridBelongPlayerId);
 								}
 							});
 							for (p1 in peopleInPlayer) {
@@ -1176,10 +1112,172 @@ private function getCommandWeight(ctx:Context, playerId:Int, gridId:Int, cmd:Act
 								}
 							}
 						}
+					case 14:
+						// 攻其不備
+						final steps:Array<Int> = try {
+							cast(strategy.value.valid : Array<Int>);
+						} catch (e) {
+							throw new haxe.Exception("strategy.value.valid必須是Array");
+						}
+						for (s in steps) {
+							final nextPosition = ((player.position + s) + ctx.grids.length) % ctx.grids.length;
+							final nextGrid = ctx.grids[nextPosition];
+							if (nextGrid == null) {
+								throw new haxe.Exception('nextGrid not found: ${nextPosition}');
+							}
+							final factIsEmptyGrid = factIsEnemyGrid(ctx, player.id, nextGrid.id);
+							if (factIsEmptyGrid < 1) {
+								continue;
+							}
+							verbose("getCommandWeight", ["factIsEmptyGrid", factIsEmptyGrid]);
+							// hate you
+							final factHateYou = getFact({
+								final gridBelongPlayerId = getGridBelongPlayerId(ctx, nextGrid.id);
+								if (gridBelongPlayerId == null) {
+									1.0;
+								} else {
+									factHateYou(ctx, player.id, gridBelongPlayerId);
+								}
+							});
+							final factArmyMore2Times = factPlayerIsBigThen(ctx, player.id, nextGrid.army * 2);
+							for (p1 in peopleInPlayer) {
+								final result = _getStrategyRate(ctx, p1.id, strategy.id, 0, 0, nextGrid.id);
+								// 成功率
+								final factSuccessRate = getFact(result.rate / 0.85);
+								verbose("getCommandWeight", ["factSuccessRate", factSuccessRate]);
+								// 體力剩下越多越好
+								final factEnergy = factVery(getFact(result.energyAfter / 100.0), 2);
+								verbose("getCommandWeight", ["factEnergy", factEnergy]);
+								final score = 1.0 * getFact(factUseTimeLowerThen2 * factSuccessRate * factEnergy * factHateYou * factArmyMore2Times * factNowMoney) * factOn(factSuccessRate,
+									1) * factOn(factArmyMore2Times, 1) * factOn(factNowMoney, 1);
+								verbose("getCommandWeight", ["score", score]);
+								if (score > maxScore) {
+									maxScore = score;
+									brainMemory.strategy.peopleId = p1.id;
+									brainMemory.strategy.strategyId = strategy.id;
+									brainMemory.strategy.targetGridId = nextGrid.id;
+								}
+							}
+						}
+					case 15:
+						// 破壞
+						final factIsEnemyGrid = factIsEnemyGrid(ctx, player.id, player.position);
+						verbose("getCommandWeight", ["factIsEnemyGrid", factIsEnemyGrid]);
+						// hate you
+						final factHateYou = factHateYou(ctx, player.id, player.position);
+						verbose("getCommandWeight", ["factHateYou", factHateYou]);
+						for (p1 in peopleInPlayer) {
+							final result = _getStrategyRate(ctx, p1.id, strategy.id, 0, 0, 0);
+							// 成功率
+							final factSuccessRate = getFact(result.rate / 0.8);
+							verbose("getCommandWeight", ["factSuccessRate", factSuccessRate]);
+							// 體力剩下越多越好
+							final factEnergy = factVery(getFact(result.energyAfter / 100.0), 2);
+							verbose("getCommandWeight", ["factEnergy", factEnergy]);
+							final score = 1.0 * getFact(factUseTimeLowerThen2 * factIsEnemyGrid * factSuccessRate * factEnergy * factNowMoney * factHateYou) * factOn(factIsEnemyGrid,
+								1) * factOn(factSuccessRate, 0.9) * factOn(factNowMoney, 1);
+							verbose("getCommandWeight", ["score", score]);
+							if (score > maxScore) {
+								maxScore = score;
+								brainMemory.strategy.strategyId = strategy.id;
+								brainMemory.strategy.peopleId = p1.id;
+							}
+						}
+					case 16:
+						// 減免貢奉金
+						for (s in 1...7) {
+							final nextPosition = ((player.position + s) + ctx.grids.length) % ctx.grids.length;
+							final nextGrid = ctx.grids[nextPosition];
+							if (nextGrid == null) {
+								throw new haxe.Exception('nextGrid not found: ${nextPosition}');
+							}
+							// 是敵人的路障
+							final fact1 = getFact({
+								final notMyItems = ctx.groundItems.filter(i -> i.position == nextGrid.id && i.belongToPlayerId != player.id);
+								notMyItems.length > 0 ? 9999 : 0.0;
+							});
+							// 對方兵越多
+							final fact2 = getFact(if (player.army == 0) {
+								9999.9;
+							} else {
+								nextGrid.army / player.army;
+							});
+							for (p1 in peopleInPlayer) {
+								final result = _getStrategyRate(ctx, p1.id, strategy.id, 0, 0, nextGrid.id);
+								// 成功率
+								final factSuccessRate = getFact(result.rate / 0.8);
+								// 體力剩下越多越好
+								final factEnergy = factVery(getFact(result.energyAfter / 100.0), 2);
+								final score = 1.0 * getFact(factUseTimeLowerThen2 * fact1 * fact2 * factSuccessRate * factEnergy) * factOn(fact1,
+									1.0) * factOn(fact2, 1 / (FACT_TIMES * 0.8)) * factOn(factSuccessRate, 0.9) * factOn(factNowMoney, 1);
+								if (score > maxScore) {
+									maxScore = score;
+									brainMemory.strategy.peopleId = p1.id;
+									brainMemory.strategy.strategyId = strategy.id;
+								}
+							}
+						}
 				}
 			}
 			info("getCommandWeight", [playerId, cmd, maxScore, brainMemory.strategy]);
 			maxScore;
+		case TREASURE_TAKE:
+			0.0;
+		case BUILD:
+			final buildingsInGrid = ctx.attachments.filter(a -> a.belongToGridId == gridId);
+			final score = if (buildingsInGrid.length > 0) {
+				final buildingNotMax = buildingsInGrid.filter(b -> {
+					return switch b.type {
+						case MARKET(level) if (level < 3):
+							true;
+						case BANK(level) if (level < 3):
+							true;
+						case FARM(level) if (level < 3):
+							true;
+						case BARN(level) if (level < 3):
+							true;
+						case BARRACKS(level) if (level < 3):
+							true;
+						case HOME(level) if (level < 3):
+							true;
+						case WALL(level) if (level < 3):
+							true;
+						case EXPLORE(level) if (level < 1):
+							true;
+						case _:
+							false;
+					}
+				});
+				if (buildingNotMax.length == 0) {
+					0.0;
+				} else {
+					var score = 0.0;
+					for (i in 0...buildingNotMax.length) {
+						// 隨機挑一個錢夠的, 運氣不好就買不到
+						final chooseId = Std.int(Math.random() * buildingNotMax.length);
+						final attachment = buildingNotMax[chooseId];
+						final findBuildingCatelog = BuildingList.filter((catelog) -> Type.enumEq(catelog.type, attachment.type));
+						if (findBuildingCatelog.length == 0) {
+							throw new haxe.Exception('findBuildingCatelog找不到:${attachment.type}');
+						}
+						final costMoney = findBuildingCatelog[0].money;
+						if (player.money >= costMoney) {
+							score = 1.0;
+							// 最多體力的
+							final peopleEnergyIsHigh = peopleInPlayer.copy();
+							peopleEnergyIsHigh.sort((a, b) -> Std.int(b.energy) - Std.int(a.energy));
+							brainMemory.build.attachmentId = attachment.id;
+							brainMemory.build.peopleId = peopleEnergyIsHigh[0].id;
+							break;
+						}
+					}
+					score;
+				}
+			} else {
+				0.0;
+			}
+			info("getCommandWeight", [playerId, cmd, score, brainMemory.build]);
+			score;
 		case TREASURE:
 			final myUnEquipTreasures = ctx.treasures.filter(t -> t.belongToPlayerId == player.id).filter(t -> t.position.peopleId == null);
 			// 有未裝備的寶物
