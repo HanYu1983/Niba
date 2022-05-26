@@ -480,6 +480,9 @@ private function onStrategyCost(ctx:Context, p1PeopleId:Int, strategyId:Int, tar
 										case WALL(level): level > 0;
 										case SIEGEFACTORY(level): level > 0;
 										case ACADEMY(level): level > 0;
+										case FISHING(level): level > 0;
+										case HUNTING(level): level > 0;
+										case MINE(level): level > 0;
 									}
 								});
 								// 若非0級, 就降級
@@ -538,6 +541,21 @@ private function onStrategyCost(ctx:Context, p1PeopleId:Int, strategyId:Int, tar
 												throw new haxe.Exception("這時不該為0級");
 											}
 											ACADEMY(level - 1);
+										case FISHING(level):
+											if (level == 0) {
+												throw new haxe.Exception("這時不該為0級");
+											}
+											FISHING(level - 1);
+										case HUNTING(level):
+											if (level == 0) {
+												throw new haxe.Exception("這時不該為0級");
+											}
+											HUNTING(level - 1);
+										case MINE(level):
+											if (level == 0) {
+												throw new haxe.Exception("這時不該為0級");
+											}
+											MINE(level - 1);
 									}
 									return a;
 								});
