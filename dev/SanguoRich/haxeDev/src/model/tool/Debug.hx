@@ -16,7 +16,8 @@ private final filterCategory:Array<String> = [
 	"getCommandWeight",
 	"doBrain",
 	"CacheModel",
-	"_takeStrategy"
+	"_takeStrategy",
+	// "GridGenerator"
 ];
 
 function verbose(category:String, msg:Dynamic) {

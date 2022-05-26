@@ -89,6 +89,13 @@
                         <button text="否" />
                     </button-bar>
                 </hbox>
+                <hbox>
+                    <label text='初始城市'/>
+                    <button-bar id="grp_startCity" allowUnselection="true">
+                        <button text="是" />
+                        <button text="否" />
+                    </button-bar>
+                </hbox>
             </vbox>
         </frame>
     </hbox>

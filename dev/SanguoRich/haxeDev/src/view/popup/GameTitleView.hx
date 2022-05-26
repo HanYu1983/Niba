@@ -18,6 +18,7 @@ class GameTitleView extends PopupView{
         grp_p1.selectedIndex = 1;
         grp_p2.selectedIndex = 2;
         grp_p3.selectedIndex = 2;
+        grp_startCity.selectedIndex = 0;
         grp_ai_level.selectedIndex = 0;
         grp_gridCount.selectedIndex = 1;
         grp_growSpeed.selectedIndex = 1;
@@ -39,6 +40,7 @@ class GameTitleView extends PopupView{
                 {type:grp_p2.selectedIndex},
                 {type:grp_p3.selectedIndex}
             ],
+            startCity: (grp_startCity.selectedIndex == 0),
             gridCount: Std.parseInt(grp_gridCount.selectedButton.text),
             growSpeed: Std.parseFloat(grp_growSpeed.selectedButton.text),
             resource: Std.parseFloat(grp_resource.selectedButton.text),

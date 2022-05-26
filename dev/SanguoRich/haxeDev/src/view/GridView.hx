@@ -21,7 +21,6 @@ class GridView extends Box {
 
 	public var type(default, set):LANDTYPE;
 	function set_type(type:LANDTYPE) {
-		trace('type', type);
 		lbl_type.text = switch(type){
 		    case SHALLOW: "河";
 		    case PLAIN: "原";

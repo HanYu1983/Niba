@@ -1,5 +1,6 @@
 package model;
 
+import model.tool.Debug.warn;
 import model.PeopleGenerator.People;
 import libnoise.QualityMode;
 import libnoise.generator.Perlin;
@@ -93,11 +94,11 @@ class GridGenerator {
 			attachs: [],
 			belongPlayerId: null,
 			value: 0,
-			money: 100,
+			money: 0,
 			moneyGrow: 0.0,
-			food: 100,
+			food: 0,
 			foodGrow: 0.0,
-			army: 100,
+			army: 0,
 			armyGrow: 0.0,
 			people: [],
 			favor: [0, 0, 0, 0],
@@ -149,15 +150,14 @@ class GridGenerator {
 			g.id = i;
 			g.height = height;
 			g.name = g.id + gridNames[(i + randomStart) % gridNames.length];
-			g.landType = landTotal[Math.floor(height * landTotal.length)];
+			g.landType = landTotal[Math.floor(height * (landTotal.length - 1))];
 			g.buildtype = growTotal[getRandomInt(growTotal.length)];
+			warn("GridGenerator", 'should not be null, g.landType: ${g.landType}, g.buildtype:${g.buildtype}');
 		
-			final basicArmy = getRandomFloat(180, 80);
 			g.moneyGrow = Math.random() * 0.01;
 			g.foodGrow = Math.random() * 0.01;
 			g.armyGrow = Math.random() * 0.01;
-			g.army = basicArmy;
-
+			
 			g.maxArmy = 500;
 			g.maxFood = 500;
 			g.maxMoney = 500;
@@ -170,6 +170,7 @@ class GridGenerator {
 						BUILDING.FISHING(0),
 						BUILDING.WALL(0),
 					];
+					g.army = getRandomFloat(180, 80);
 					g.money = getRandomFloat(180, 80);
 					g.food = getRandomFloat(180, 80);
 					g.money *= 1.5;
@@ -181,7 +182,7 @@ class GridGenerator {
 						BUILDING.WALL(0),
 						BUILDING.EXPLORE(0),
 					];
-
+					g.army = getRandomFloat(180, 80);
 					g.money = getRandomFloat(180, 80);
 					g.food = getRandomFloat(180, 80);
 					g.money *= 1.5;
@@ -193,7 +194,7 @@ class GridGenerator {
 						BUILDING.MINE(0),
 						BUILDING.WALL(0),
 					];
-
+					g.army = getRandomFloat(180, 80);
 					g.money = getRandomFloat(180, 80);
 					g.food = getRandomFloat(180, 80);
 					g.money *= 1.5;
@@ -205,7 +206,7 @@ class GridGenerator {
 						BUILDING.HUNTING(0),
 						BUILDING.WALL(0),
 					];
-
+					g.army = getRandomFloat(180, 80);
 					g.money = getRandomFloat(180, 80);
 					g.food = getRandomFloat(180, 80);
 					g.money *= 1.5;
@@ -217,7 +218,7 @@ class GridGenerator {
 						BUILDING.FISHING(0),
 						BUILDING.WALL(0),
 					];
-
+					g.army = getRandomFloat(180, 80);
 					g.money = getRandomFloat(180, 80);
 					g.food = getRandomFloat(180, 80);
 					g.food *= 1.5;
@@ -229,7 +230,7 @@ class GridGenerator {
 						BUILDING.WALL(0),
 						BUILDING.EXPLORE(0),
 					];
-
+					g.army = getRandomFloat(180, 80);
 					g.money = getRandomFloat(180, 80);
 					g.food = getRandomFloat(180, 80);
 					g.food *= 1.5;
@@ -241,7 +242,7 @@ class GridGenerator {
 						BUILDING.MINE(0),
 						BUILDING.WALL(0),
 					];
-
+					g.army = getRandomFloat(180, 80);
 					g.money = getRandomFloat(180, 80);
 					g.food = getRandomFloat(180, 80);
 					g.food *= 1.5;
@@ -253,7 +254,7 @@ class GridGenerator {
 						BUILDING.HUNTING(0),
 						BUILDING.WALL(0),
 					];
-
+					g.army = getRandomFloat(180, 80);
 					g.money = getRandomFloat(180, 80);
 					g.food = getRandomFloat(180, 80);
 					g.food *= 1.5;
@@ -265,7 +266,7 @@ class GridGenerator {
 						BUILDING.FISHING(0),
 						BUILDING.WALL(0),
 					];
-
+					g.army = getRandomFloat(180, 80);
 					g.money = getRandomFloat(180, 80);
 					g.food = getRandomFloat(180, 80);
 					g.army *= 1.5;
@@ -278,7 +279,7 @@ class GridGenerator {
 						BUILDING.SIEGEFACTORY(0),
 						BUILDING.WALL(0),
 					];
-					
+					g.army = getRandomFloat(180, 80);
 					g.money = getRandomFloat(180, 80);
 					g.food = getRandomFloat(180, 80);
 					g.army *= 1.5;
@@ -290,7 +291,7 @@ class GridGenerator {
 						BUILDING.MINE(0),
 						BUILDING.WALL(0),
 					];
-
+					g.army = getRandomFloat(180, 80);
 					g.money = getRandomFloat(180, 80);
 					g.food = getRandomFloat(180, 80);
 					g.army *= 1.5;
@@ -302,7 +303,7 @@ class GridGenerator {
 						BUILDING.HUNTING(0),
 						BUILDING.WALL(0),
 					];
-					
+					g.army = getRandomFloat(180, 80);
 					g.money = getRandomFloat(180, 80);
 					g.food = getRandomFloat(180, 80);
 					g.army *= 1.5;
@@ -320,7 +321,7 @@ class GridGenerator {
 						BUILDING.ACADEMY(0),
 						BUILDING.WALL(0),
 					];
-
+					g.army = getRandomFloat(180, 80);
 					g.money = getRandomFloat(180, 80);
 					g.food = getRandomFloat(180, 80);
 					g.money *= 1.5;
@@ -341,7 +342,7 @@ class GridGenerator {
 						BUILDING.HUNTING(0),
 						BUILDING.WALL(0),
 					];
-
+					g.army = getRandomFloat(180, 80);
 					g.money = getRandomFloat(180, 80);
 					g.food = getRandomFloat(180, 80);
 					g.money *= 1.5;
