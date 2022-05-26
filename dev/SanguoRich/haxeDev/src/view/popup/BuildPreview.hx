@@ -40,6 +40,15 @@ class BuildPreview extends PopupView{
         
         final current:BUILDING = tab_buildingList.selectedItem.type;
         final to = switch(current){
+            case FISHING(level):
+                if(level < 1) BUILDING.FISHING(level+1);
+                else BUILDING.FISHING(1);
+            case HUNTING(level):
+                if(level < 1) BUILDING.HUNTING(level+1);
+                else BUILDING.HUNTING(1);
+            case MINE(level):
+                if(level < 1) BUILDING.MINE(level+1);
+                else BUILDING.MINE(1);
             case MARKET(level):
                 if(level < 3) BUILDING.MARKET(level+1);
                 else BUILDING.MARKET(3);

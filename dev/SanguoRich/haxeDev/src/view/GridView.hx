@@ -41,13 +41,23 @@ class GridView extends Box {
 			case FARM: "田";
 			case VILLAGE: "村";
 			case CITY: "城";
-			case _: "";
+			case CHANCE: "機";
+			case DESTINY: "命";
+			case EMPTY: "";
 		}
+
+		box_chanceCover.hide();
+		box_destinyCover.hide();
+		box_build.hide();
+
 		switch (type) {
-			case EMPTY:
-				box_build.hide();
-			case _:
+			case MARKET | FARM | VILLAGE | CITY:
 				box_build.show();
+			case DESTINY:
+				box_destinyCover.show();
+			case CHANCE:
+				box_chanceCover.show();
+			case _:
 		}
 		return type;
 	}

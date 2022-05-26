@@ -38,7 +38,7 @@
     <box id="box_build" width="18" height="18" verticalAlign="bottom" horizontalAlign="right" style="background-color: #FF6666;border:1px solid red;background-opacity: 1">
         <label id="lbl_building" text="" textAlign="center" width="100%" height="100%" style="color: black; font-size:12px;"/>
     </box>
-    <box width="18" height="18" verticalAlign="bottom" horizontalAlign="left" style="background-color: #FF6666;border:1px solid red;background-opacity: 1">
+    <box width="18" height="18" verticalAlign="bottom" horizontalAlign="left" style="background-color: #6666FF;border:1px solid red;background-opacity: 1">
         <label id="lbl_type" text="" textAlign="center" width="100%" height="100%" style="color: black; font-size:12px;"/>
     </box>
     <box verticalAlign="center" horizontalAlign="center" >
@@ -50,6 +50,18 @@
     <box id='box_showAnimation' width='100%' height='100%' style="background-color: white;border:1px solid gray;background-opacity: .7">
         <box verticalAlign="center" horizontalAlign="center" >
             <label id="lbl_action" text=""/>
+        </box>
+    </box>
+
+    <box id='box_chanceCover' width='100%' height='100%' style="background-color: yellow;border:1px solid gray;background-opacity: 1.0">
+        <box verticalAlign="center" horizontalAlign="center" >
+            <label text="機會" style="font-size:24; "/>
+        </box>
+    </box>
+
+    <box id='box_destinyCover' width='100%' height='100%' style="background-color: purple;border:1px solid gray;background-opacity: 1.0">
+        <box verticalAlign="center" horizontalAlign="center" >
+            <label text="命運" style="font-size:24; "/>
         </box>
     </box>
 </box>

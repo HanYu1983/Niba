@@ -100,6 +100,12 @@ function doBrain(ctx, playerId:Int) {
 				}
 				final firstBuilding = findAttachment[0].type;
 				final toBuilding:BUILDING = switch firstBuilding {
+					case FISHING(level):
+						FISHING(Std.int(Math.min(1, level + 1)));
+					case HUNTING(level):
+						HUNTING(Std.int(Math.min(1, level + 1)));
+					case MINE(level):
+						MINE(Std.int(Math.min(1, level + 1)));
 					case MARKET(level):
 						MARKET(Std.int(Math.min(3, level + 1)));
 					case FARM(level):
