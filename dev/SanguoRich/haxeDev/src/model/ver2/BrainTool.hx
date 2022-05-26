@@ -158,6 +158,15 @@ function factPlayerPeopleNoInGridLengthMoreThen(ctx:Context, playerId:Int, amoun
 	});
 }
 
+function factHateYou(ctx:Context, playerId:Int, targetPlayerId:Int):Float {
+	final targetPlayer = getPlayerById(ctx, targetPlayerId);
+	final factHateYou = getFact({
+		final hateYouCnt = targetPlayer.hate.filter(i -> i == playerId).length;
+		0.5 + hateYouCnt * 0.5;
+	});
+	return factHateYou;
+}
+
 function test() {
 	final ctx:Context = getDefaultContext();
 	ctx.grids = [
