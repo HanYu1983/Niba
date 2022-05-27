@@ -1,13 +1,14 @@
 package model.ver2;
 
+import haxe.Serializer;
+import haxe.Unserializer;
+import tool.Debug;
+import model.tool.Fact;
 import model.PeopleGenerator;
 import model.GridGenerator;
 import model.TreasureGenerator;
 import model.IModel;
 import model.Config;
-import haxe.Serializer;
-import haxe.Unserializer;
-import model.tool.Fact;
 
 using Lambda;
 
@@ -493,10 +494,10 @@ function getExpRateByAttachment(ctx:Context, playerId:Int):Float {
 					throw new haxe.Exception('current.catelog找不到:${p.type}');
 				}
 				switch catelog[0].value {
-					case {float: [rate]}:
+					case {float: [rate, _]}:
 						rate;
 					case _:
-						throw new haxe.Exception("catelog[0].value not found");
+						throw new haxe.Exception("[getExpRateByAttachment]catelog[0].value not found");
 				}
 			case _:
 				1.0;
@@ -517,7 +518,7 @@ function getWarFoodCostRateByAttachment(ctx:Context, playerId:Int):Float {
 					case {float: [rate, _]}:
 						rate;
 					case _:
-						throw new haxe.Exception("catelog[0].value not found");
+						throw new haxe.Exception("[getWarFoodCostRateByAttachment]catelog[0].value not found");
 				}
 			case _:
 				1.0;
@@ -538,7 +539,7 @@ function getWarDamageRateByAttachment(ctx:Context, playerId:Int):Float {
 					case {float: [_, rate]}:
 						rate;
 					case _:
-						throw new haxe.Exception("catelog[0].value not found");
+						throw new haxe.Exception("[getWarDamageRateByAttachment]catelog[0].value not found");
 				}
 			case _:
 				1.0;
@@ -559,13 +560,34 @@ function getPlayerCharmAddByAttachment(ctx:Context, playerId:Int):Float {
 					case {float: [rate, _]}:
 						rate;
 					case _:
-						throw new haxe.Exception("catelog[0].value not found");
+						throw new haxe.Exception("[getPlayerCharmAddByAttachment]catelog[0].value not found");
 				}
 			case _:
 				0;
 		}
 	}, 0);
 	return charmExt;
+}
+
+function getPracticeCostRateByAttachment(ctx:Context, playerId:Int):Float {
+	final rate = ctx.attachments.filter(a -> getGridBelongPlayerId(ctx, a.belongToGridId) == playerId).fold((p, a:Float) -> {
+		return a * switch p.type {
+			case ACADEMY(level):
+				final catelog = BuildingList.filter((catelog) -> Type.enumEq(catelog.type, p.type));
+				if (catelog.length == 0) {
+					throw new haxe.Exception('current.catelog找不到:${p.type}');
+				}
+				switch catelog[0].value {
+					case {float: [_, rate]}:
+						rate;
+					case _:
+						throw new haxe.Exception("[getPracticeCostRateByAttachment]catelog[0].value not found");
+				}
+			case _:
+				1.0;
+		}
+	}, 1.0);
+	return rate;
 }
 
 function getPlayerHireCostRate(ctx:Context, playerId:Int):Float {
@@ -580,7 +602,7 @@ function getPlayerHireCostRate(ctx:Context, playerId:Int):Float {
 					case {float: [_, rate]}:
 						rate;
 					case _:
-						throw new haxe.Exception("catelog[0].value not found");
+						throw new haxe.Exception("[getPlayerHireCostRate]catelog[0].value not found");
 				}
 			case _:
 				1.0;
@@ -607,7 +629,7 @@ function getGridMoneyGrow(ctx:Context, gridId:Int):Float {
 					case {float: [_, rate]}:
 						rate;
 					case _:
-						throw new haxe.Exception("catelog[0].value not found");
+						throw new haxe.Exception("[getGridMoneyGrow]catelog[0].value not found");
 				}
 			case _:
 				0;
@@ -634,7 +656,7 @@ function getGridFoodGrow(ctx:Context, gridId:Int):Float {
 					case {float: [_, rate]}:
 						rate;
 					case _:
-						throw new haxe.Exception("catelog[0].value not found");
+						throw new haxe.Exception("[getGridFoodGrow]catelog[0].value not found");
 				}
 			case _:
 				0;
@@ -661,7 +683,7 @@ function getGridArmyGrow(ctx:Context, gridId:Int):Float {
 					case {float: [_, rate]}:
 						rate;
 					case _:
-						throw new haxe.Exception("catelog[0].value not found");
+						throw new haxe.Exception("[getGridArmyGrow]catelog[0].value not found");
 				}
 			case _:
 				0;
@@ -688,7 +710,7 @@ function getGridFoodAdd(ctx:Context, gridId:Int):Float {
 					case {float: [v]}:
 						v;
 					case _:
-						throw new haxe.Exception("catelog[0].value not found");
+						throw new haxe.Exception("[getGridFoodAdd]catelog[0].value not found");
 				}
 			case _:
 				0;
@@ -715,7 +737,7 @@ function getGridMoneyAdd(ctx:Context, gridId:Int):Float {
 					case {float: [v]}:
 						v;
 					case _:
-						throw new haxe.Exception("catelog[0].value not found");
+						throw new haxe.Exception("[getGridMoneyAdd]catelog[0].value not found");
 				}
 			case _:
 				0;
@@ -742,7 +764,7 @@ function getGridArmyAdd(ctx:Context, gridId:Int):Float {
 					case {float: [v]}:
 						v;
 					case _:
-						throw new haxe.Exception("catelog[0].value not found");
+						throw new haxe.Exception("[getGridArmyAdd]catelog[0].value not found");
 				}
 			case _:
 				0;
@@ -764,7 +786,7 @@ function getGridMaxFood(ctx:Context, gridId:Int):Float {
 					case {float: [v, _]}:
 						v;
 					case _:
-						throw new haxe.Exception("catelog[0].value not found");
+						throw new haxe.Exception("[getGridMaxFood]catelog[0].value not found");
 				}
 			case _:
 				0;
@@ -786,7 +808,7 @@ function getGridMaxMoney(ctx:Context, gridId:Int):Float {
 					case {float: [v, _]}:
 						v;
 					case _:
-						throw new haxe.Exception("catelog[0].value not found");
+						throw new haxe.Exception("[getGridMaxMoney]catelog[0].value not found");
 				}
 			case _:
 				0;
@@ -808,7 +830,7 @@ function getGridMaxArmy(ctx:Context, gridId:Int):Float {
 					case {float: [v, _]}:
 						v;
 					case _:
-						throw new haxe.Exception("catelog[0].value not found");
+						throw new haxe.Exception("[getGridMaxArmy]catelog[0].value not found");
 				}
 			case _:
 				0;

@@ -123,11 +123,12 @@ function doPlayerEnd(ctx:Context) {
 	if (isContinue) {
 		final nextPlayer = ctx.players[ctx.currentPlayerId];
 		if (nextPlayer.brain != null) {
-			try {
-				doBrain(ctx, nextPlayer.id);
-			} catch (e:Any) {
-				warn("doPlayerEnd", ["doPlayerEnd catch", e]);
-			}
+			doBrain(ctx, nextPlayer.id);
+			// try {
+			// 	doBrain(ctx, nextPlayer.id);
+			// } catch (e:Any) {
+			// 	warn("doPlayerEnd", ["doPlayerEnd catch", e]);
+			// }
 		}
 	}
 	info("doPlayerEnd", "done");
@@ -867,6 +868,138 @@ function onPlayerEnd(ctx:Context, playerId:Int):Bool {
 						}, getGameInfo(ctx, false)));
 					}
 				}
+			}
+		}
+		// 漁場, 獵場, 礦山, 寶物買賣事件
+		{
+			switch ([FISHING(1), HUNTING(1), MINE(1), TREASURE(1)] : Array<BUILDING>).map(type -> {
+				final catelog = BuildingList.filter((catelog) -> Type.enumEq(catelog.type, type));
+				if (catelog.length == 0) {
+					throw new haxe.Exception('current.catelog找不到:${type}');
+				}
+				return catelog[0];
+			}) {
+				case [fishingCate, huntingCate, mineCate, treasureCate]:
+					{
+						final gridsBefore:Array<GridGenerator.Grid> = [];
+						final gridsAfter:Array<GridGenerator.Grid> = [];
+						for (attach in ctx.attachments) {
+							switch attach.type {
+								case FISHING(1):
+									switch fishingCate.value {
+										case {float: [successRate, gainAdd, gainRate]}:
+											final success = Math.random() < successRate;
+											if (success) {
+												final grid = ctx.grids[attach.belongToGridId];
+												final gainFood = gainAdd + grid.food * gainRate;
+												gridsBefore.push(getGridInfo(ctx, grid));
+												grid.food = Math.min(getGridMaxFood(ctx, grid.id), grid.food + gainFood);
+												gridsAfter.push(getGridInfo(ctx, grid));
+											}
+										case _:
+											throw new haxe.Exception("fishingCate.value not found");
+									}
+								case _:
+									continue;
+							}
+						}
+						if (gridsBefore.length > 0) {
+							ctx.events.push(GRID_RESOURCE_EVENT({
+								grids: [
+									for (i in 0...gridsBefore.length)
+										{
+											gridBefore: gridsBefore[i],
+											gridAfter: gridsAfter[i]
+										}
+								],
+								describtion: "漁場大量收穫糧草"
+							}, getGameInfo(ctx, false)));
+						}
+					}
+					{
+						final gridsBefore:Array<GridGenerator.Grid> = [];
+						final gridsAfter:Array<GridGenerator.Grid> = [];
+						for (attach in ctx.attachments) {
+							switch attach.type {
+								case HUNTING(1):
+									switch huntingCate.value {
+										case {float: [successRate, gainAdd]}:
+											final belongToPlayerId = getGridBelongPlayerId(ctx, attach.belongToGridId);
+											if (belongToPlayerId != null) {
+												final peopleInPlayer = ctx.peoples.filter(p -> p.belongToPlayerId == belongToPlayerId);
+												var hasSuccess = false;
+												for (p in peopleInPlayer) {
+													final success = Math.random() < successRate;
+													if (success) {
+														hasSuccess = success;
+														p.exp += gainAdd;
+													}
+												}
+												// 象徵性回傳
+												if (hasSuccess) {
+													final grid = ctx.grids[attach.belongToGridId];
+													gridsBefore.push(getGridInfo(ctx, grid));
+													gridsAfter.push(getGridInfo(ctx, grid));
+												}
+											} else {
+												warn("onPlayerEnd", ["正在計算打獵, 但格子沒有主公", attach.belongToGridId]);
+											}
+										case _:
+											throw new haxe.Exception("fishingCate.value not found");
+									}
+								case _:
+									continue;
+							}
+						}
+						if (gridsBefore.length > 0) {
+							ctx.events.push(GRID_RESOURCE_EVENT({
+								grids: [
+									for (i in 0...gridsBefore.length)
+										{
+											gridBefore: gridsBefore[i],
+											gridAfter: gridsAfter[i]
+										}
+								],
+								describtion: "狩獵成功"
+							}, getGameInfo(ctx, false)));
+						}
+					}
+					{
+						final gridsBefore:Array<GridGenerator.Grid> = [];
+						final gridsAfter:Array<GridGenerator.Grid> = [];
+						for (attach in ctx.attachments) {
+							switch attach.type {
+								case MINE(1):
+									switch mineCate.value {
+										case {float: [successRate, gainAdd, gainRate]}:
+											final success = Math.random() < successRate;
+											if (success) {
+												final grid = ctx.grids[attach.belongToGridId];
+												final gainMoney = gainAdd + grid.food * gainRate;
+												gridsBefore.push(getGridInfo(ctx, grid));
+												grid.money = Math.min(getGridMaxMoney(ctx, grid.id), grid.money + gainMoney);
+												gridsAfter.push(getGridInfo(ctx, grid));
+											}
+										case _:
+											throw new haxe.Exception("mineCate.value not found");
+									}
+								case _:
+									continue;
+							}
+						}
+						if (gridsBefore.length > 0) {
+							ctx.events.push(GRID_RESOURCE_EVENT({
+								grids: [
+									for (i in 0...gridsBefore.length)
+										{
+											gridBefore: gridsBefore[i],
+											gridAfter: gridsAfter[i]
+										}
+								],
+								describtion: "採礦成功"
+							}, getGameInfo(ctx, false)));
+						}
+					}
 			}
 		}
 		// 討厭度減輕

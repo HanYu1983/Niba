@@ -82,6 +82,7 @@ private function getCostForBonusCost(ctx:Context, playerId:Int, peopleId:Int, co
 				food = player.food;
 			}
 			food *= .8 + (.2 * (1 - (getPeopleIntelligence(ctx, people.id) / 100)));
+			food *= getPracticeCostRateByAttachment(ctx, player.id);
 
 			{
 				playerCost: {

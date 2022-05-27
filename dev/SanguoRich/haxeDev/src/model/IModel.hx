@@ -581,7 +581,7 @@ final StrategyList:Array<StrategyCatelog> = [
 		describe: '需要有騎將的將領才可以使用這個計策。隨機移動3~9格。這3~9格當中，會被路障擋住',
 		targetType: StrategyTargetType.SELF_PLAYER,
 		value: {
-			valid: [3,4,5,6,7,8,9],
+			valid: [3, 4, 5, 6, 7, 8, 9],
 			float: []
 		}
 	},
@@ -593,7 +593,7 @@ final StrategyList:Array<StrategyCatelog> = [
 		describe: '需要有弓將的將領才可以使用這個計策。指定格子士兵-15%',
 		targetType: StrategyTargetType.TARGET_GRID,
 		value: {
-			valid: [-1,0,1],
+			valid: [-1, 0, 1],
 			float: [-0.15]
 		}
 	}
@@ -993,7 +993,7 @@ final BuildingList:Array<BuildingCatelog> = [
 		depends: [],
 		value: {
 			valid: [],
-			float: []
+			float: [1, 1]
 		}
 	},
 	{
@@ -1017,7 +1017,7 @@ final BuildingList:Array<BuildingCatelog> = [
 		depends: [],
 		value: {
 			valid: [],
-			float: []
+			float: [0, 0, 0]
 		}
 	},
 	{
@@ -1041,7 +1041,7 @@ final BuildingList:Array<BuildingCatelog> = [
 		depends: [],
 		value: {
 			valid: [],
-			float: [0]
+			float: [0, 0]
 		}
 	},
 	{
@@ -1065,7 +1065,7 @@ final BuildingList:Array<BuildingCatelog> = [
 		depends: [],
 		value: {
 			valid: [],
-			float: [0]
+			float: [0, 0, 0]
 		}
 	},
 	{
@@ -1089,7 +1089,7 @@ final BuildingList:Array<BuildingCatelog> = [
 		depends: [],
 		value: {
 			valid: [],
-			float: []
+			float: [0, 5]
 		}
 	},
 	{
@@ -1101,9 +1101,7 @@ final BuildingList:Array<BuildingCatelog> = [
 		depends: [],
 		value: {
 			valid: [],
-			float: []
+			float: [0.1, 5]
 		}
 	}
 ];
-
-
