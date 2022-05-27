@@ -255,7 +255,7 @@ class ModelVer2 extends DebugModel {
 		return _getPreResultOfSettle(context, playerId, peopleId, gridId, settleType);
 	}
 
-	override function takeSettle(playerId:Int, peopleId:Int, gridId:Int, settleType:Int, syncViewWithEventsByGameInfo:(gameInfo:GameInfo) -> Void) {
+	override function takeSettle(playerId:Int, gridId:Int , peopleId:Int, settleType:Int, syncViewWithEventsByGameInfo:(gameInfo:GameInfo) -> Void) {
 		_takeSettle(context, playerId, peopleId, gridId, settleType);
 		syncViewWithEventsByGameInfo(gameInfo());
 	}

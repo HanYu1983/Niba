@@ -131,7 +131,7 @@ private function getStrategyCost(ctx:Context, p1PeopleId:Int, strategyId:Int, ta
 			effectStrategy16.length > 0 ? 0.0 : 1.0;
 		case 17:
 			// 需要有騎將
-			p1Abilities.has(10) == false ? 0.0 : 1.0;
+			p1Abilities.has(2) == false ? 0.0 : 1.0;
 		case _:
 			1;
 	});
