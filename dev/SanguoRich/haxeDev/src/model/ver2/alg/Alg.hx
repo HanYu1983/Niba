@@ -1000,6 +1000,51 @@ function onPlayerEnd(ctx:Context, playerId:Int):Bool {
 							}, getGameInfo(ctx, false)));
 						}
 					}
+					{
+						final gridsBefore:Array<GridGenerator.Grid> = [];
+						final gridsAfter:Array<GridGenerator.Grid> = [];
+						for (attach in ctx.attachments) {
+							switch attach.type {
+								case TREASURE(1):
+									switch mineCate.value {
+										case {float: [successRate, maxCount]}:
+											final success = Math.random() < successRate;
+											if (success) {
+												final grid = ctx.grids[attach.belongToGridId];
+												final treasuresInGrid = ctx.treasures.filter(t -> t.position.gridId == attach.belongToGridId);
+												if (treasuresInGrid.length < maxCount) {
+													final belongToPlayerId = getGridBelongPlayerId(ctx, attach.belongToGridId);
+													if (belongToPlayerId != null) {
+														gridsBefore.push(getGridInfo(ctx, grid));
+														addTreasureInfo(ctx, belongToPlayerId, grid.id, null, TreasureGenerator.getInst().generator());
+														gridsAfter.push(getGridInfo(ctx, grid));
+													} else {
+														warn("onPlayerEnd", ["寶物所要將要產寶,但格子沒有主公", attach.belongToGridId]);
+													}
+												} else {
+													warn("onPlayerEnd", ["寶物所要將要產寶, 但寶物數量已達上限", attach.belongToGridId]);
+												}
+											}
+										case _:
+											throw new haxe.Exception("mineCate.value not found");
+									}
+								case _:
+									continue;
+							}
+						}
+						if (gridsBefore.length > 0) {
+							ctx.events.push(GRID_RESOURCE_EVENT({
+								grids: [
+									for (i in 0...gridsBefore.length)
+										{
+											gridBefore: gridsBefore[i],
+											gridAfter: gridsAfter[i]
+										}
+								],
+								describtion: "挖寶成功"
+							}, getGameInfo(ctx, false)));
+						}
+					}
 			}
 		}
 		// 討厭度減輕
