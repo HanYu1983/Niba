@@ -22,6 +22,8 @@ function doPeopleMaintain(ctx:Context) {
 				final myAttachments = ctx.attachments.filter(a -> getGridBelongPlayerId(ctx, a.belongToGridId) == player.id);
 				final levels = myAttachments.fold((c, a:Float) -> {
 					return a + switch c.type {
+						case TREASURE(level):
+							level;
 						case FISHING(level):
 							level;
 						case HUNTING(level):
@@ -206,6 +208,8 @@ function initContext(ctx:Context, options:GameSetting) {
 				// case _:
 				// 強迫編譯器檢查
 				return switch catelog.type {
+					case TREASURE(level):
+						level == 0;
 					case FISHING(level):
 						level == 0;
 					case HUNTING(level):
@@ -406,6 +410,8 @@ function onPayTaxToGrid(ctx:Context, playerId:Int, gridId:Int) {
 						final attachInGrid = ctx.attachments.filter(a -> a.belongToGridId == g.id);
 						final attachSellValue = attachInGrid.flatMap(a -> {
 							final ret:Array<BUILDING> = switch a.type {
+								case TREASURE(level):
+									[for (i in 0...level + 1) TREASURE(i)];
 								case FISHING(level):
 									[for (i in 0...level + 1) FISHING(i)];
 								case HUNTING(level):
@@ -446,6 +452,8 @@ function onPayTaxToGrid(ctx:Context, playerId:Int, gridId:Int) {
 						// 賣掉建物
 						for (a in attachInGrid) {
 							final resetBuild:BUILDING = switch a.type {
+								case TREASURE(_):
+									TREASURE(0);
 								case FISHING(_):
 									FISHING(0);
 								case HUNTING(_):
@@ -813,6 +821,8 @@ function onPlayerEnd(ctx:Context, playerId:Int):Bool {
 							// case _:
 							// 強迫編譯器檢查
 							return switch catelog.type {
+								case TREASURE(level):
+									level == 0;
 								case FISHING(level):
 									level == 0;
 								case HUNTING(level):

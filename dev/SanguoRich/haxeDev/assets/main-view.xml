@@ -80,6 +80,7 @@
                 <button text="賣糧" width="100%" id="btn_sellFood" />
                 <button text="徵兵" width="100%" id="btn_buyArmy" />
                 <button text="裁兵" width="100%" id="btn_sellArmy" />
+                <button text="寶物" width="100%" id="btn_treasureMarket" />
 
                 <section-header text="武將" />
                 <button text="開拓" width="100%" id="btn_settle" />

@@ -1,5 +1,6 @@
 package view;
 
+import view.popup.TreasureMarketPreviewView;
 import model.IModel.StrategyCatelog;
 import model.IModel.EventInfoID;
 import view.popup.SettleView;
@@ -55,6 +56,7 @@ class MainView extends Box {
 	final peopleListView:PeopleListView;
 	final strategyPreviewView:StrategyPreviewView;
 	final treasurePreviewView:TreasurePreviewView;
+	final treasureMarketPreviewView:TreasureMarketPreviewView;
 	final gridPeopleListView:PeopleListView;
 	final warPreviewView:WarPreviewView;
 	final snatchPreviewView:SnatchPreviewView;
@@ -166,6 +168,10 @@ class MainView extends Box {
 		treasurePreviewView = new TreasurePreviewView();
 		treasurePreviewView.hide();
 		box_popup.addComponent(treasurePreviewView);
+
+		treasureMarketPreviewView = new TreasureMarketPreviewView();
+		treasureMarketPreviewView.hide();
+		box_popup.addComponent(treasureMarketPreviewView);
 
 		costForBonusView = new CostForBonusView();
 		costForBonusView.hide();
@@ -294,6 +300,11 @@ class MainView extends Box {
 		btn_sellFood.text = '${btn_sellFood.text}(${ENERGY_COST_ON_RESOURCE})';
 
 		gameTitleView.showPopup(null);
+	}
+
+	@:bind(btn_treasureMarket, MouseEvent.CLICK)
+	function onBtnTreasureMarketClick(e) {
+		treasureMarketPreviewView.showPopup(null);
 	}
 
 	@:bind(btn_settle, MouseEvent.CLICK)
@@ -972,6 +983,7 @@ class MainView extends Box {
 	}
 
 	function disabledAllCommands() {
+		btn_treasureMarket.hide();
 		btn_cutPath.hide();
 		btn_break.hide();
 		btn_settle.hide();
@@ -1011,6 +1023,8 @@ class MainView extends Box {
 		var currentPlayer = gameInfo.currentPlayer;
 		for (cmd in currentPlayer.commands) {
 			switch (cmd) {
+				case TREASURE_MARKET:
+					btn_treasureMarket.show();
 				case CUTPATH:
 					btn_cutPath.show();
 				case BREAK:
@@ -1185,6 +1199,16 @@ class MainView extends Box {
 		switchStageToSelectGrid(gridInfos, cb);
 	}
 
+	public function onTreasureMarketPreviewSellClick(sellId:Int) {
+		final gameInfo = Main.model.gameInfo();
+		Main.model.sellTreasure(gameInfo.currentPlayer.id, gameInfo.currentPlayer.atGridId, sellId, syncViewWithEventsByGameInfo);
+	}
+
+	public function onTreasureMarketPreviewBuyClick(buyId:Int) {
+		final gameInfo = Main.model.gameInfo();
+		Main.model.buyTreasure(gameInfo.currentPlayer.id, gameInfo.currentPlayer.atGridId, buyId, syncViewWithEventsByGameInfo);
+	}
+
 	public function switchStageToNormal() {
 		final gameInfo = Main.model.gameInfo();
 		final currentPlayer = gameInfo.currentPlayer;
@@ -1248,4 +1272,6 @@ class MainView extends Box {
 		final gy = Math.floor(y / gridSize);
 		return Main.clampInt((gx + gy * gridHorizonCount), 0, gameInfo.grids.length - 1);
 	}
+
+	
 }

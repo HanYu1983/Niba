@@ -28,6 +28,7 @@ enum ActionInfoID {
 	STRATEGY;
 	TREASURE;
 	TREASURE_TAKE;
+	TREASURE_MARKET;
 	FIRE;
 
 	BREAK;
@@ -361,6 +362,10 @@ interface IModel {
 	function getPreResultOfSettle(playerId:Int, peopleId:Int, gridId:Int, settleType:Int):Grid;
 
 	function takeSettle(playerId:Int, gridId:Int, peopleId:Int, settleType:Int, syncViewWithEventsByGameInfo:(gameInfo:GameInfo) -> Void):Void;
+
+	function sellTreasure(playerId:Int, gridId:Int, sellId:Int, syncViewWithEventsByGameInfo:(gameInfo:GameInfo) -> Void):Void;
+
+	function buyTreasure(playerId:Int, gridId:Int, buyId:Int, syncViewWithEventsByGameInfo:(gameInfo:GameInfo) -> Void):Void;
 }
 
 final StrategyList:Array<StrategyCatelog> = [
@@ -983,12 +988,12 @@ final BuildingList:Array<BuildingCatelog> = [
 		id: 32,
 		name: '軍事學院(未建)',
 		money: 70,
-		describe: '所有功績增加的時候，增加量+0%；練兵的消耗-10%',
+		describe: '所有功績增加的時候，增加量+0%；練兵的消耗-0%',
 		type: ACADEMY(0),
 		depends: [],
 		value: {
 			valid: [],
-			float: [1]
+			float: []
 		}
 	},
 	{
@@ -1074,5 +1079,31 @@ final BuildingList:Array<BuildingCatelog> = [
 			valid: [],
 			float: [0.1, 50, 0.05]
 		}
+	},
+	{
+		id: 40,
+		name: '寶物店鋪(未建)',
+		money: 100,
+		describe: '商人收集寶物買賣的地方。每一個回合有0%幾率新增一個隨機寶物到格子上，最多5個。在這個格子上的任何主公都會新增指令【寶物買賣】。可以花錢(店鋪持有者免費)把格子上的寶物買出去，也可以把寶物賣到這個格子上來。每一次交易僅限一個寶物',
+		type: TREASURE(0),
+		depends: [],
+		value: {
+			valid: [],
+			float: []
+		}
+	},
+	{
+		id: 41,
+		name: '寶物店鋪',
+		money: 0,
+		describe: '商人收集寶物買賣的地方。每一個回合有10%幾率新增一個隨機寶物到格子上，最多5個。在這個格子上的任何主公都會新增指令【寶物買賣】。可以花錢(店鋪持有者免費)把格子上的寶物買出去，也可以把寶物賣到這個格子上來。每一次交易僅限一個寶物',
+		type: TREASURE(1),
+		depends: [],
+		value: {
+			valid: [],
+			float: []
+		}
 	}
 ];
+
+

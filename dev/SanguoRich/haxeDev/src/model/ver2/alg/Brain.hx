@@ -67,6 +67,7 @@ function doBrain(ctx, playerId:Int) {
 		}
 		final gameInfo = getGameInfo(ctx, false);
 		switch cmd {
+			case TREASURE_MARKET:
 			case CUTPATH:
 			case BREAK:
 			case END:
@@ -100,6 +101,8 @@ function doBrain(ctx, playerId:Int) {
 				}
 				final firstBuilding = findAttachment[0].type;
 				final toBuilding:BUILDING = switch firstBuilding {
+					case TREASURE(level):
+						TREASURE(Std.int(Math.min(1, level + 1)));
 					case FISHING(level):
 						FISHING(Std.int(Math.min(1, level + 1)));
 					case HUNTING(level):

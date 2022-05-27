@@ -49,6 +49,7 @@ class DebugModel implements IModel {
 					ActionInfoID.BREAK,
 					ActionInfoID.CUTPATH,
 					ActionInfoID.SETTLE,
+					ActionInfoID.TREASURE_MARKET,
 					// ActionInfoID.EXPLORE,
 					// ActionInfoID.BUILD,
 					ActionInfoID.FIRE,
@@ -60,8 +61,8 @@ class DebugModel implements IModel {
 					ActionInfoID.END,
 				],
 				treasures: [
-					// TreasureGenerator.getInst().generator(),
-					// TreasureGenerator.getInst().generator(),
+					TreasureGenerator.getInst().generator(),
+					TreasureGenerator.getInst().generator(),
 				],
 				score: 0.0,
 			}
@@ -644,6 +645,36 @@ class DebugModel implements IModel {
 				id: SETTLE_RESULT,
 				value: {
 					grid: GridGenerator.getInst().getGrid()
+				},
+				autoplay: null,
+				gameInfo: info,
+			}
+		];
+		syncViewWithEventsByGameInfo(info);
+	}
+
+	public function sellTreasure(playerId:Int, gridId:Int, sellId:Int, syncViewWithEventsByGameInfo:(gameInfo:GameInfo) -> Void) {
+		info.events = [
+			{
+				id: MESSAGE_EVENT,
+				value: {
+					title: 'sell item!',
+					msg: 'sell item!',
+				},
+				autoplay: null,
+				gameInfo: info,
+			}
+		];
+		syncViewWithEventsByGameInfo(info);
+	}
+
+	public function buyTreasure(playerId:Int, gridId:Int, buyId:Int, syncViewWithEventsByGameInfo:(gameInfo:GameInfo) -> Void) {
+		info.events = [
+			{
+				id: MESSAGE_EVENT,
+				value: {
+					title: 'buy item!',
+					msg: 'buy item!',
 				},
 				autoplay: null,
 				gameInfo: info,

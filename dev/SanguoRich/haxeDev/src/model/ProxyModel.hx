@@ -204,4 +204,8 @@ class ProxyModel implements IModel {
 	public function takeSettle(playerId:Int, peopleId:Int, gridId:Int, settleType:Int, syncViewWithEventsByGameInfo:(gameInfo:GameInfo) -> Void) {
 		return model.takeSettle(playerId, peopleId, gridId, settleType, syncViewWithEventsByGameInfo);
 	}
+
+	public function sellTreasure(playerId:Int, gridId:Int, sellId:Int, syncViewWithEventsByGameInfo:(gameInfo:GameInfo) -> Void) {}
+
+	public function buyTreasure(playerId:Int, gridId:Int, buyId:Int, syncViewWithEventsByGameInfo:(gameInfo:GameInfo) -> Void) {}
 }
