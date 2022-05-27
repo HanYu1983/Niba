@@ -19,6 +19,7 @@ private final filterCategory:Array<String> = [
 	"_takeStrategy",
 	"initContext",
 	"_buyTreasure",
+	"onPlayerGoToPosition",
 	// "GridGenerator"
 ];
 
