@@ -16,6 +16,7 @@ final getCommandWeight = model.ver2.alg.Brain.privateExport.getCommandWeight;
 
 function test() {
 	model.ver2.BrainTool.test();
+	model.ver2.alg.TreasureBuySell.test();
 	model.ver2.alg.Explore.test();
 	model.ver2.alg.Building.test();
 	testPayTax();

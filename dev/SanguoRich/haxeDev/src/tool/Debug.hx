@@ -18,6 +18,7 @@ private final filterCategory:Array<String> = [
 	"CacheModel",
 	"_takeStrategy",
 	"initContext",
+	"_buyTreasure",
 	// "GridGenerator"
 ];
 
