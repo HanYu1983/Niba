@@ -157,17 +157,20 @@ function initContext(ctx:Context, options:GameSetting) {
 		final resourceFact = isAI ? [1.0, 1.5, 2.0][options.aiLevel] : 1.0;
 		final resource = (options.resource != null ? options.resource : INIT_RESOURCE) * resourceFact;
 		final atGridId = {
-			var pos = Std.int(Math.random() * genGrids.length);
+			var pos = 0;
 			for (i in 0...10) {
-				if (playerPosSet.has(pos) == false) {
-					break;
+				pos = Std.int(Math.random() * genGrids.length);
+				// 不重疊玩家
+				if (playerPosSet.has(pos)) {
+					continue;
 				}
+				// 避開機會與命運
 				switch ctx.grids[pos].buildtype {
 					case CHANCE | DESTINY:
 						continue;
 					case _:
 				}
-				pos = Std.int(Math.random() * genGrids.length);
+				break;
 			};
 			pos;
 		}
@@ -305,6 +308,18 @@ function onPlayerGoToPosition(ctx:Context, playerId:Int, toGridId:Int) {
 	final isStopAtEnemyGrid = toGridBelongPlayerId != null && toGridBelongPlayerId != player.id;
 	if (isStopAtEnemyGrid) {
 		onPayTaxToGrid(ctx, player.id, toGrid.id);
+	}
+	switch toGrid.buildtype {
+		case CHANCE:
+			// 機會就是跳類似大發利市，民兵等
+			verbose("onPlayerGoToPosition", '${player.name}走到機會');
+
+		case DESTINY:
+			// 命運可以跳類似某個武將+體力，-體力，+功績，-功績之類的
+			// 或者主公掉錢，意外之財等
+			verbose("onPlayerGoToPosition", '${player.name}走到命運');
+
+		case _:
 	}
 }
 
