@@ -1006,7 +1006,7 @@ function onPlayerEnd(ctx:Context, playerId:Int):Bool {
 						for (attach in ctx.attachments) {
 							switch attach.type {
 								case TREASURE(1):
-									switch mineCate.value {
+									switch treasureCate.value {
 										case {float: [successRate, maxCount]}:
 											final success = Math.random() < successRate;
 											if (success) {
