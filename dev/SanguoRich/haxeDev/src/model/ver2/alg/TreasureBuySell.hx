@@ -123,7 +123,7 @@ private function testSell() {
 	if (treasure0.belongToPlayerId != null) {
 		throw new haxe.Exception("寶物必須變成中立");
 	}
-	if (treasure0.position.gridId != 0) {
+	if (treasure0.position.gridId != grid0.id) {
 		throw new haxe.Exception("寶物必須在格子裡");
 	}
 }
