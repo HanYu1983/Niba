@@ -164,6 +164,9 @@ private function testBuy() {
 	}
 	ctx.treasures = [treasure0];
 	_buyTreasure(ctx, player0.id, grid0.id, treasure0.id);
+	if (player0.money == 1000) {
+		throw new haxe.Exception("player0主公的錢必須減少");
+	}
 	if (player1.money == 0) {
 		throw new haxe.Exception("player1主公必須得到錢");
 	}
