@@ -1816,6 +1816,18 @@ function getPlayerCommand(ctx:Context, playerId:Int):Array<ActionInfoID> {
 			}
 			ret.push(END);
 		}
+		// 如果走到寶物所
+		final hasTreasureMarket = ctx.attachments.filter(a -> a.belongToGridId == player.position).filter(a -> {
+			switch a.type {
+				case TREASURE(_):
+					true;
+				case _:
+					false;
+			}
+		}).length > 0;
+		if (hasTreasureMarket) {
+			ret.push(TREASURE_MARKET);
+		}
 	}
 	return ret;
 }

@@ -21,6 +21,7 @@ import model.ver2.alg.SaveLoad;
 import model.ver2.alg.Pk;
 import model.ver2.alg.Equip;
 import model.ver2.alg.Settle;
+import model.ver2.alg.TreasureBuySell;
 
 class ModelVer2 extends DebugModel {
 	var context:Context = getDefaultContext();
@@ -256,6 +257,16 @@ class ModelVer2 extends DebugModel {
 
 	override function takeSettle(playerId:Int, peopleId:Int, gridId:Int, settleType:Int, syncViewWithEventsByGameInfo:(gameInfo:GameInfo) -> Void) {
 		_takeSettle(context, playerId, peopleId, gridId, settleType);
+		syncViewWithEventsByGameInfo(gameInfo());
+	}
+
+	override function sellTreasure(playerId:Int, gridId:Int, sellId:Int, syncViewWithEventsByGameInfo:(gameInfo:GameInfo) -> Void) {
+		_sellTreasure(context, playerId, gridId, sellId);
+		syncViewWithEventsByGameInfo(gameInfo());
+	}
+
+	override function buyTreasure(playerId:Int, gridId:Int, buyId:Int, syncViewWithEventsByGameInfo:(gameInfo:GameInfo) -> Void) {
+		_buyTreasure(context, playerId, gridId, buyId);
 		syncViewWithEventsByGameInfo(gameInfo());
 	}
 }
