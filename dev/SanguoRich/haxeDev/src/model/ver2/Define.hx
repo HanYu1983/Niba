@@ -1819,7 +1819,7 @@ function getPlayerCommand(ctx:Context, playerId:Int):Array<ActionInfoID> {
 		// 如果走到寶物所
 		final hasTreasureMarket = ctx.attachments.filter(a -> a.belongToGridId == player.position).filter(a -> {
 			switch a.type {
-				case TREASURE(_):
+				case TREASURE(1):
 					true;
 				case _:
 					false;
