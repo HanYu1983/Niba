@@ -44,197 +44,27 @@ private function genNewGrid(ctx:Context, playerId:Int, peopleId:Int, gridId:Int,
 	final cost = getSettleCost(ctx, playerId, peopleId, gridId, settleType);
 	// 修改遊戲資料的副本
 	final tmpCtx = deepCopy(ctx);
-	final grid = tmpCtx.grids[gridId];
 	// 移除原有建物
-	tmpCtx.attachments = tmpCtx.attachments.filter(a -> a.belongToGridId != grid.id);
+	tmpCtx.attachments = tmpCtx.attachments.filter(a -> a.belongToGridId != gridId);
 	// 移除原住民
-	tmpCtx.peoples = tmpCtx.peoples.filter(a -> a.position.gridId != grid.id);
+	tmpCtx.peoples = tmpCtx.peoples.filter(a -> a.position.gridId != gridId);
 	// 移除寶物
-	tmpCtx.treasures = tmpCtx.treasures.filter(a -> a.position.gridId != grid.id);
-	switch settleType {
-		case 0:
-			// 市場
-			final buildings = BuildingList.filter(catelog -> {
-				// 不使用
-				// case _:
-				// 強迫編譯器檢查
-				return switch catelog.type {
-					case TREASURE(level):
-						false;
-					case HUNTING(level):
-						false;
-					case FISHING(level):
-						false;
-					case MINE(level):
-						false;
-					case MARKET(level):
-						false;
-					case BANK(level):
-						false;
-					case FARM(level):
-						false;
-					case BARN(level):
-						false;
-					case BARRACKS(level):
-						false;
-					case HOME(level):
-						false;
-					case EXPLORE(level):
-						false;
-					case WALL(level):
-						level == 0;
-					case SIEGEFACTORY(level):
-						false;
-					case ACADEMY(level):
-						false;
-				}
-			}).map(catelog -> catelog.type);
-			for (building in buildings) {
-				addAttachInfo(tmpCtx, grid.id, building);
-			}
-			grid.defaultMaxMoney = 500;
-			grid.defaultMaxFood = 500;
-			grid.defaultMaxArmy = 500;
-		case 1:
-			// 農田
-			final buildings = BuildingList.filter(catelog -> {
-				// 不使用
-				// case _:
-				// 強迫編譯器檢查
-				return switch catelog.type {
-					case TREASURE(level):
-						false;
-					case HUNTING(level):
-						false;
-					case FISHING(level):
-						false;
-					case MINE(level):
-						false;
-					case MARKET(level):
-						false;
-					case BANK(level):
-						false;
-					case FARM(level):
-						level == 1;
-					case BARN(level):
-						level == 0;
-					case BARRACKS(level):
-						false;
-					case HOME(level):
-						false;
-					case EXPLORE(level):
-						false;
-					case WALL(level):
-						level == 0;
-					case SIEGEFACTORY(level):
-						false;
-					case ACADEMY(level):
-						false;
-				}
-			}).map(catelog -> catelog.type);
-			for (building in buildings) {
-				addAttachInfo(tmpCtx, grid.id, building);
-			}
-			grid.defaultMaxMoney = 500;
-			grid.defaultMaxFood = 500;
-			grid.defaultMaxArmy = 500;
-		case 2:
-			// 村落
-			final buildings = BuildingList.filter(catelog -> {
-				// 不使用
-				// case _:
-				// 強迫編譯器檢查
-				return switch catelog.type {
-					case TREASURE(level):
-						false;
-					case HUNTING(level):
-						false;
-					case FISHING(level):
-						false;
-					case MINE(level):
-						false;
-					case MARKET(level):
-						false;
-					case BANK(level):
-						false;
-					case FARM(level):
-						false;
-					case BARN(level):
-						false;
-					case BARRACKS(level):
-						level == 1;
-					case HOME(level):
-						level == 0;
-					case EXPLORE(level):
-						false;
-					case WALL(level):
-						level == 0;
-					case SIEGEFACTORY(level):
-						level == 0;
-					case ACADEMY(level):
-						level == 0;
-				}
-			}).map(catelog -> catelog.type);
-			for (building in buildings) {
-				addAttachInfo(tmpCtx, grid.id, building);
-			}
-			grid.defaultMaxMoney = 500;
-			grid.defaultMaxFood = 500;
-			grid.defaultMaxArmy = 500;
-		case 3:
-			// 城市
-			final buildings = BuildingList.filter(catelog -> {
-				return switch catelog.type {
-					case TREASURE(level):
-						level == 0;
-					case HUNTING(level):
-						level == 0;
-					case FISHING(level):
-						level == 0;
-					case MINE(level):
-						level == 0;
-					case MARKET(level):
-						level == 1;
-					case BANK(level):
-						level == 0;
-					case FARM(level):
-						level == 1;
-					case BARN(level):
-						level == 0;
-					case BARRACKS(level):
-						level == 1;
-					case HOME(level):
-						level == 0;
-					case EXPLORE(level):
-						level == 0;
-					case WALL(level):
-						level == 0;
-					case SIEGEFACTORY(level):
-						level == 0;
-					case ACADEMY(level):
-						level == 0;
-				}
-			}).map(catelog -> catelog.type);
-			for (building in buildings) {
-				addAttachInfo(tmpCtx, grid.id, building);
-			}
-			grid.defaultMaxMoney = 500;
-			grid.defaultMaxFood = 500;
-			grid.defaultMaxArmy = 500;
-		case _:
-			throw new haxe.Exception('settleType not found:${settleType}');
-	}
-	final putMoney = cost.genGrid.money;
-	final putArmy = cost.genGrid.army;
-	final putFood = cost.genGrid.food;
-	grid.money = putMoney;
-	grid.army = putArmy;
-	grid.food = putFood;
-	grid.defaultMoneyGrow = Math.random() * 0.01;
-	grid.defaultFoodGrow = Math.random() * 0.01;
-	grid.defaultArmyGrow = Math.random() * 0.01;
+	tmpCtx.treasures = tmpCtx.treasures.filter(a -> a.position.gridId != gridId);
 	// 這回合的資料
-	final gridInfo = getGridInfo(tmpCtx, grid);
+	final newGridInfo = {
+		final tmp = GridGenerator.getInst().getGrids(1, ctx.settings.limitBuilding, -1)[0];
+		// 同步id
+		tmp.id = gridId;
+		// 放進來的資源
+		tmp.money = cost.genGrid.money;
+		tmp.army = cost.genGrid.army;
+		tmp.food = cost.genGrid.food;
+		// 清空本來的武將
+		tmp.people = [];
+		tmp;
+	}
+	addGridInfo(tmpCtx, newGridInfo, true);
+	final gridInfo = deepCopy(newGridInfo);
 	// 下回合的資料
 	final nextGridInfo = {
 		final nextTmpCtx2 = deepCopy(tmpCtx);
@@ -289,4 +119,6 @@ function _takeSettle(ctx:Context, playerId:Int, peopleId:Int, gridId:Int, settle
 		grid: getGridInfo(ctx, grid),
 		gridId: grid.id
 	}, getGameInfo(ctx, false), null));
+	// 清空暫存
+	_tmpCtx = null;
 }

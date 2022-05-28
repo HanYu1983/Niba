@@ -1392,8 +1392,8 @@ function getGameInfo(ctx:Context, root:Bool):GameInfo {
 	}
 }
 
-function addGridInfo(ctx:Context, grid:model.GridGenerator.Grid):Void {
-	ctx.grids.push({
+function addGridInfo(ctx:Context, grid:model.GridGenerator.Grid, replaceGrid:Bool):Void {
+	final willAddGrid:Grid = {
 		id: grid.id,
 		name: grid.name,
 		landType: grid.landType,
@@ -1408,7 +1408,12 @@ function addGridInfo(ctx:Context, grid:model.GridGenerator.Grid):Void {
 		defaultMaxMoney: grid.maxMoney,
 		defaultMaxFood: grid.maxFood,
 		defaultMaxArmy: grid.maxArmy,
-	});
+	}
+	if (replaceGrid) {
+		ctx.grids[willAddGrid.id] = willAddGrid;
+	} else {
+		ctx.grids.push(willAddGrid);
+	}
 	for (p in grid.people) {
 		addPeopleInfo(ctx, null, grid.id, p);
 	}

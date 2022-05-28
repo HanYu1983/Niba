@@ -722,7 +722,7 @@ private function getCommandWeight(ctx:Context, playerId:Int, gridId:Int, cmd:Act
 								final factEnergy = factVery(getFact(result.energyAfter / 100.0), 2);
 								final score = 1.0 * getFact(factUseTimeLowerThen2 * fact1 * fact2 * fact3 * factSuccessRate * factEnergy * factNowMoney) * factOn(fact1,
 									1) * factOn(factSuccessRate, 0.9) * factOn(factNowMoney, 1);
-								// info("getCommandWeight", "strategy", strategy.id, p1.id);
+								// verbose("getCommandWeight", "strategy", strategy.id, p1.id);
 								// info("score", score, "=", fact1, factSuccessRate, factEnergy, factNowMoney);
 								if (score > maxScore) {
 									maxScore = score;
@@ -751,7 +751,7 @@ private function getCommandWeight(ctx:Context, playerId:Int, gridId:Int, cmd:Act
 							final factEnergy = factVery(getFact(result.energyAfter / 100.0), 2);
 							final score = 1.0 * getFact(factUseTimeLowerThen2 * fact1 * fact2 * fact3 * factSuccessRate * factEnergy * factNowMoney) * factOn(factSuccessRate,
 								0.6) * factOn(fact2, 1) * factOn(fact3, 0.8) * factOn(factSuccessRate, 1) * factOn(factNowMoney, 1);
-							// info("getCommandWeight", "strategy", strategy.id, p1.id);
+							// verbose("getCommandWeight", "strategy", strategy.id, p1.id);
 							// info("score", score, "=", fact1, fact2, fact3, factSuccessRate, factEnergy, factNowMoney);
 							if (score > maxScore) {
 								maxScore = score;
@@ -793,7 +793,7 @@ private function getCommandWeight(ctx:Context, playerId:Int, gridId:Int, cmd:Act
 								final factEnergy = factVery(getFact(result.energyAfter / 100.0), 2);
 								final score = 1.0 * getFact(factUseTimeLowerThen2 * fact1 * fact2 * fact3 * factSuccessRate * factEnergy * factNowMoney) * factOn(fact1,
 									1) * factOn(fact2, 1) * factOn(fact3, 1) * factOn(factSuccessRate, 0.9) * factOn(factNowMoney, 1);
-								// info("getCommandWeight", "strategy", strategy.id, p1.id);
+								// verbose("getCommandWeight", "strategy", strategy.id, p1.id);
 								// info("score", score, "=", fact1, fact2, fact3, factSuccessRate, factEnergy, factNowMoney);
 								if (score > maxScore) {
 									maxScore = score;
@@ -830,7 +830,7 @@ private function getCommandWeight(ctx:Context, playerId:Int, gridId:Int, cmd:Act
 								final factEnergy = factVery(getFact(result.energyAfter / 100.0), 2);
 								final score = 1.0 * getFact(factUseTimeLowerThen2 * fact1 * fact2 * factSuccessRate * factEnergy) * factOn(fact1,
 									1.0) * factOn(fact2, 1 / (FACT_TIMES * 0.8)) * factOn(factSuccessRate, 0.9) * factOn(factNowMoney, 1);
-								// info("getCommandWeight", "strategy", strategy.id, p1.id, nextGrid.id);
+								// verbose("getCommandWeight", "strategy", strategy.id, p1.id, nextGrid.id);
 								// info("score", score, "=", fact1, fact2, factSuccessRate, factEnergy, "on", factOn(factSuccessRate, 0.5),
 								// 	factOn(fact1, 1.0), factOn(fact2, 1 / (FACT_TIMES * 0.8)));
 								if (score > maxScore) {
@@ -863,7 +863,7 @@ private function getCommandWeight(ctx:Context, playerId:Int, gridId:Int, cmd:Act
 									final factEnergy = factVery(getFact(result.energyAfter / 100.0), 2);
 									final score = 0.0 * getFact(factUseTimeLowerThen2 * factSuccessRate * factTargetEnergy * factSuccessRate * factEnergy * factNowMoney * factHateYou) * factOn(factSuccessRate,
 										0.9) * factOn(factNowMoney, 1) * factOn(factHateYou, 1.5);
-									// info("getCommandWeight", "strategy", strategy.id, p1.id);
+									// verbose("getCommandWeight", "strategy", strategy.id, p1.id);
 									// info("score", score, "=", factTargetEnergy, factSuccessRate, factEnergy, factNowMoney);
 									if (score > maxScore) {
 										maxScore = score;
@@ -890,7 +890,7 @@ private function getCommandWeight(ctx:Context, playerId:Int, gridId:Int, cmd:Act
 							final factEnergy = factVery(getFact(result.energyAfter / 100.0), 2);
 							final score = 1.0 * getFact(factUseTimeLowerThen2 * fact1 * fact2 * factSuccessRate * factEnergy * factNowMoney) * factOn(fact1,
 								1) * factOn(fact2, 1) * factOn(factSuccessRate, 0.9) * factOn(factNowMoney, 1);
-							// info("getCommandWeight", "strategy", strategy.id, p1.id);
+							// verbose("getCommandWeight", "strategy", strategy.id, p1.id);
 							// info("score", score, "=", fact1, fact2, factSuccessRate, factEnergy, factNowMoney);
 							if (score > maxScore) {
 								maxScore = score;
@@ -943,7 +943,7 @@ private function getCommandWeight(ctx:Context, playerId:Int, gridId:Int, cmd:Act
 							final factEnergy = factVery(getFact(result.energyAfter / 100.0), 2);
 							final score = 1.0 * getFact(factUseTimeLowerThen2 * factSuccessRate * factEnergy * fact1 * factNowMoney) * factOn(fact1,
 								1) * factOn(factSuccessRate, 0.9) * factOn(factNowMoney, 1);
-							// info("getCommandWeight", "strategy", strategy.id, p1.id);
+							// verbose("getCommandWeight", "strategy", strategy.id, p1.id);
 							// info("score", score, "=", factSuccessRate, factEnergy, fact1, factNowMoney);
 							if (score > maxScore) {
 								maxScore = score;
@@ -966,7 +966,7 @@ private function getCommandWeight(ctx:Context, playerId:Int, gridId:Int, cmd:Act
 							final factEnergy = factVery(getFact(result.energyAfter / 100.0), 2);
 							final score = 1.0 * getFact(factUseTimeLowerThen2 * factSuccessRate * factEnergy * resourceFact * factMoney * factNowMoney) * factOn(factSuccessRate,
 								0.9) * factOn(factNowMoney, 1);
-							// info("getCommandWeight", "strategy", strategy.id, p1.id);
+							// verbose("getCommandWeight", "strategy", strategy.id, p1.id);
 							// info("score", score, "=", factSuccessRate, factEnergy, resourceFact, factMoney*factNowMoney);
 							if (score > maxScore) {
 								maxScore = score;
@@ -986,7 +986,7 @@ private function getCommandWeight(ctx:Context, playerId:Int, gridId:Int, cmd:Act
 								final factEnergy = factVery(getFact(result.energyAfter / 100.0), 2);
 								final score = 1.0 * getFact(factUseTimeLowerThen2 * factSuccessRate * factEnergy * factPeople * factNowMoney) * factOn(factSuccessRate,
 									0.9) * factOn(factNowMoney, 1);
-								// info("getCommandWeight", "strategy", strategy.id, p1.id);
+								// verbose("getCommandWeight", "strategy", strategy.id, p1.id);
 								// info("score", score, "=", factSuccessRate, factEnergy, factPeople, factNowMoney);
 								if (score > maxScore) {
 									maxScore = score;
@@ -1007,7 +1007,7 @@ private function getCommandWeight(ctx:Context, playerId:Int, gridId:Int, cmd:Act
 								final factEnergy = factVery(getFact(result.energyAfter / 100.0), 2);
 								final score = 1.0 * getFact(factUseTimeLowerThen2 * factSuccessRate * factEnergy * factTreasure * factNowMoney) * factOn(factSuccessRate,
 									1) * factOn(factNowMoney, 1);
-								// info("getCommandWeight", "strategy", strategy.id, p1.id);
+								// verbose("getCommandWeight", "strategy", strategy.id, p1.id);
 								// info("score", score, "=", factSuccessRate, factEnergy, factTreasure, factNowMoney);
 								if (score > maxScore) {
 									maxScore = score;
@@ -1055,7 +1055,7 @@ private function getCommandWeight(ctx:Context, playerId:Int, gridId:Int, cmd:Act
 								final factEnergy = factVery(getFact(result.energyAfter / 100.0), 2);
 								final score = 1.0 * getFact(factUseTimeLowerThen2 * factSuccessRate * factEnergy * factIsEnemy * factEnemyFood * factNowMoney * factHateYou) * factOn(factIsEnemy,
 									1) * factOn(factSuccessRate, 0.9) * factOn(factNowMoney, 1);
-								// info("getCommandWeight", "strategy", strategy.id, p1.id);
+								// verbose("getCommandWeight", "strategy", strategy.id, p1.id);
 								// info("score", score, "=", factSuccessRate, factEnergy, factIsEnemy, factEnemyFood, factNowMoney);
 								if (score > maxScore) {
 									maxScore = score;
@@ -1105,7 +1105,7 @@ private function getCommandWeight(ctx:Context, playerId:Int, gridId:Int, cmd:Act
 								final factEnergy = factVery(getFact(result.energyAfter / 100.0), 2);
 								final score = 1.0 * getFact(factUseTimeLowerThen2 * factSuccessRate * factEnergy * factIsMy * factResource * factNowMoney) * factOn(factNot(factResource),
 									FACT_TIMES * 0.9) * factOn(factIsMy, 1.0) * factOn(factSuccessRate, 1) * factOn(factNowMoney, 1);
-								// info("getCommandWeight", "strategy", strategy.id, p1.id);
+								// verbose("getCommandWeight", "strategy", strategy.id, p1.id);
 								// info("score", score, "=", factSuccessRate, factEnergy, factIsMy, factResource, factNowMoney);
 								if (score > maxScore) {
 									maxScore = score;
@@ -1309,7 +1309,7 @@ private function getCommandWeight(ctx:Context, playerId:Int, gridId:Int, cmd:Act
 						}
 				}
 			}
-			info("getCommandWeight", [playerId, cmd, maxScore, brainMemory.strategy]);
+			verbose("getCommandWeight", [playerId, cmd, maxScore, brainMemory.strategy]);
 			maxScore;
 		case TREASURE_TAKE:
 			0.0;
@@ -1366,14 +1366,14 @@ private function getCommandWeight(ctx:Context, playerId:Int, gridId:Int, cmd:Act
 			} else {
 				0.0;
 			}
-			info("getCommandWeight", [playerId, cmd, score, brainMemory.build]);
+			verbose("getCommandWeight", [playerId, cmd, score, brainMemory.build]);
 			score;
 		case TREASURE:
 			final myUnEquipTreasures = ctx.treasures.filter(t -> t.belongToPlayerId == player.id).filter(t -> t.position.peopleId == null);
 			// 有未裝備的寶物
 			final fact1 = getFact(myUnEquipTreasures.length == 0 ? 0.0 : 1.0);
 			final score = 1.0 * factOn(fact1, 1);
-			info("getCommandWeight", [playerId, cmd, score]);
+			verbose("getCommandWeight", [playerId, cmd, score]);
 			score;
 		case FIRE:
 			final fact1 = if (player.money <= 0) {
@@ -1418,7 +1418,7 @@ private function getCommandWeight(ctx:Context, playerId:Int, gridId:Int, cmd:Act
 			}
 			// 先不裁，權重不好計算
 			final score = 0.0 * fact1 * fact2 * fact3;
-			info("getCommandWeight", [playerId, cmd, "score:", score, "=", fact1, fact2, fact3]);
+			verbose("getCommandWeight", [playerId, cmd, "score:", score, "=", fact1, fact2, fact3]);
 			score;
 		case EXPLORE:
 			var maxScore = 0.0;
@@ -1439,7 +1439,7 @@ private function getCommandWeight(ctx:Context, playerId:Int, gridId:Int, cmd:Act
 					brainMemory.explore.peopleId = p1.id;
 				}
 			}
-			info("getCommandWeight", [playerId, cmd, maxScore]);
+			verbose("getCommandWeight", [playerId, cmd, maxScore]);
 			maxScore;
 		case HIRE:
 			// 小於7人時想拿人, 越多人越不想拿
@@ -1462,7 +1462,7 @@ private function getCommandWeight(ctx:Context, playerId:Int, gridId:Int, cmd:Act
 					}
 				}
 			}
-			info("getCommandWeight", [playerId, cmd, maxScore]);
+			verbose("getCommandWeight", [playerId, cmd, maxScore]);
 			maxScore;
 		case BUY_ARMY:
 			// 錢佔比越大
@@ -1501,7 +1501,7 @@ private function getCommandWeight(ctx:Context, playerId:Int, gridId:Int, cmd:Act
 					brainMemory.buySell.moneyBase = moneyBase;
 				}
 			}
-			info("getCommandWeight", [playerId, cmd, "score:", maxScore]);
+			verbose("getCommandWeight", [playerId, cmd, "score:", maxScore]);
 			maxScore;
 		case BUY_FOOD:
 			// 食少錢多
@@ -1539,7 +1539,7 @@ private function getCommandWeight(ctx:Context, playerId:Int, gridId:Int, cmd:Act
 					brainMemory.buySell.moneyBase = moneyBase;
 				}
 			}
-			info("getCommandWeight", [playerId, cmd, maxScore]);
+			verbose("getCommandWeight", [playerId, cmd, maxScore]);
 			maxScore;
 		case SELL_ARMY:
 			final factMoney = getFact(if (player.money == 0) {
@@ -1576,7 +1576,7 @@ private function getCommandWeight(ctx:Context, playerId:Int, gridId:Int, cmd:Act
 					brainMemory.buySell.moneyBase = moneyBase;
 				}
 			}
-			info("getCommandWeight", [playerId, cmd, maxScore]);
+			verbose("getCommandWeight", [playerId, cmd, maxScore]);
 			maxScore;
 		case SELL_FOOD:
 			final factMoney = getFact(if (player.money == 0) {
@@ -1613,7 +1613,7 @@ private function getCommandWeight(ctx:Context, playerId:Int, gridId:Int, cmd:Act
 					brainMemory.buySell.moneyBase = moneyBase;
 				}
 			}
-			info("getCommandWeight", [playerId, cmd, maxScore]);
+			verbose("getCommandWeight", [playerId, cmd, maxScore]);
 			maxScore;
 		case EARN_MONEY:
 			final factMoney = 1.0;
@@ -1638,11 +1638,11 @@ private function getCommandWeight(ctx:Context, playerId:Int, gridId:Int, cmd:Act
 					brainMemory.buySell.moneyBase = moneyBase;
 				}
 			}
-			info("getCommandWeight", [playerId, cmd, maxScore]);
+			verbose("getCommandWeight", [playerId, cmd, maxScore]);
 			maxScore;
 		case TRANSFER:
 			final score = getTransferWeightV2(ctx, playerId, gridId);
-			info("getCommandWeight", [playerId, cmd, score]);
+			verbose("getCommandWeight", [playerId, cmd, score]);
 			score;
 		case PRACTICE:
 			if (peopleInPlayer.length == 0) {
@@ -1653,7 +1653,7 @@ private function getCommandWeight(ctx:Context, playerId:Int, gridId:Int, cmd:Act
 				}, 0.0);
 				final factEnergyMoreThen80percent = getFact(totalEnergy / (peopleInPlayer.length * 80));
 				final score = 1.0 * getFact(factEnergyMoreThen80percent) * factOn(factEnergyMoreThen80percent, 1);
-				info("getCommandWeight", [playerId, cmd, score]);
+				verbose("getCommandWeight", [playerId, cmd, score]);
 				score;
 			}
 		case CAMP | PAY_FOR_FUN:
@@ -1665,7 +1665,7 @@ private function getCommandWeight(ctx:Context, playerId:Int, gridId:Int, cmd:Act
 				}, 0.0);
 				final factEnergyLowerThen50percent = factNot(getFact(totalEnergy / (peopleInPlayer.length * 30)));
 				final score = 1.3 * getFact(factEnergyLowerThen50percent) * factOn(factEnergyLowerThen50percent, 1);
-				info("getCommandWeight", [playerId, cmd, score]);
+				verbose("getCommandWeight", [playerId, cmd, score]);
 				score;
 			}
 		case NEGOTIATE:
@@ -1704,7 +1704,7 @@ private function getCommandWeight(ctx:Context, playerId:Int, gridId:Int, cmd:Act
 							}
 					}
 				}
-				info("getCommandWeight", [playerId, cmd, maxScore]);
+				verbose("getCommandWeight", [playerId, cmd, maxScore]);
 				maxScore;
 			}
 		case PK:
@@ -1744,7 +1744,7 @@ private function getCommandWeight(ctx:Context, playerId:Int, gridId:Int, cmd:Act
 							}
 					}
 				}
-				info("getCommandWeight", [playerId, cmd, maxScore]);
+				verbose("getCommandWeight", [playerId, cmd, maxScore]);
 				maxScore;
 			}
 		case SNATCH:
@@ -1793,7 +1793,7 @@ private function getCommandWeight(ctx:Context, playerId:Int, gridId:Int, cmd:Act
 							throw new haxe.Exception("_getPreResultOfSnatch not found");
 					}
 				}
-				info("getCommandWeight", [playerId, cmd, maxScore]);
+				verbose("getCommandWeight", [playerId, cmd, maxScore]);
 				maxScore;
 			}
 		case OCCUPATION:
@@ -1841,7 +1841,7 @@ private function getCommandWeight(ctx:Context, playerId:Int, gridId:Int, cmd:Act
 							final score = 1.0 * getFact(factSuccess * factEnergy * factEarn * factResourceAfter * factHateYou) * factOn(factSuccess,
 								1) * factOn(factResourceAfter, 1) * factOn(factHasIdlePeople, 1);
 							if (score > maxScore) {
-								info("getCommandWeight", [
+								verbose("getCommandWeight", [
 									playerId, cmd, "score", score, "=", factSuccess, factEnergy, factEarn, factResourceAfter, "on", factSuccess,
 									factResourceAfter
 								]);
@@ -1852,7 +1852,7 @@ private function getCommandWeight(ctx:Context, playerId:Int, gridId:Int, cmd:Act
 							throw new haxe.Exception("_getPreResultOfSnatch not found");
 					}
 				}
-				info("getCommandWeight", [playerId, cmd, maxScore]);
+				verbose("getCommandWeight", [playerId, cmd, maxScore]);
 				maxScore;
 			}
 		case SETTLE:
@@ -1886,12 +1886,12 @@ private function getCommandWeight(ctx:Context, playerId:Int, gridId:Int, cmd:Act
 				}
 				maxScore;
 			}
-			info("getCommandWeight", [playerId, cmd, score]);
+			verbose("getCommandWeight", [playerId, cmd, score]);
 			score;
 		case _:
 			// 最少要0.01
 			final score = 0.5;
-			info("getCommandWeight", [playerId, cmd, score]);
+			verbose("getCommandWeight", [playerId, cmd, score]);
 			score;
 	}
 }

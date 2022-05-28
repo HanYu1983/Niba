@@ -144,7 +144,7 @@ function initContext(ctx:Context, options:GameSetting) {
 	final genGrids = model.GridGenerator.getInst()
 		.getGrids(options.gridCount != null ? options.gridCount : INIT_GRID_COUNT, options.limitBuilding, options.putong ? 0 : -1);
 	for (grid in genGrids) {
-		addGridInfo(ctx, grid);
+		addGridInfo(ctx, grid, false);
 	}
 	final names = ["劉備", "曹操", "孫權", "董卓"];
 	var i = 0;
@@ -313,7 +313,39 @@ function onPlayerGoToPosition(ctx:Context, playerId:Int, toGridId:Int) {
 		case CHANCE:
 			// 機會就是跳類似大發利市，民兵等
 			verbose("onPlayerGoToPosition", '${player.name}走到機會');
-
+			switch Math.random() {
+				case v if (v < 0.9):
+					verbose("onPlayerGoToPosition", '發生量產事件');
+					final gridsWillGrow = ctx.grids.filter(g -> getGridBuildType(ctx, g.id) != EMPTY);
+					if (gridsWillGrow.length > 0) {
+						final chooseId = Std.int(Math.random() * gridsWillGrow.length);
+						final chooseGrid = gridsWillGrow[chooseId];
+						switch Math.random() {
+							case v if (v < 0.333):
+								verbose("onPlayerGoToPosition", '產糧在${chooseGrid.name}');
+								onGridGainFoodEvent(ctx, [chooseGrid]);
+							case v if (v < 0.666):
+								verbose("onPlayerGoToPosition", '產錢在${chooseGrid.name}');
+								onGridGainMoneyEvent(ctx, [chooseGrid]);
+							case _:
+								verbose("onPlayerGoToPosition", '產兵在${chooseGrid.name}');
+								onGridGainArmyEvent(ctx, [chooseGrid]);
+						}
+					} else {
+						warn("onPlayerGoToPosition", '發生量產事件, 但沒有可以對應的格子');
+					}
+				case _:
+					verbose("onPlayerGoToPosition", '發生異軍突起事件');
+					final emptyGrids = ctx.grids.filter(g -> getGridBuildType(ctx, g.id) == EMPTY);
+					if (emptyGrids.length > 0) {
+						final chooseId = Std.int(Math.random() * emptyGrids.length);
+						final chooseGrid = emptyGrids[chooseId];
+						verbose("onPlayerGoToPosition", '異軍突起在${chooseGrid.name}');
+						onGridBornEvent(ctx, chooseGrid.id);
+					} else {
+						warn("onPlayerGoToPosition", '發生異軍突起事件, 但沒有可以對應的格子');
+					}
+			}
 		case DESTINY:
 			// 命運可以跳類似某個武將+體力，-體力，+功績，-功績之類的
 			// 或者主公掉錢，意外之財等
@@ -612,6 +644,120 @@ function getPlayerScore(ctx:Context, playerId:Int):Float {
 	return base * ((resourceScore + gridResourceScore) * 3.0 + treasureScore + peopleScore + gridScore + attachScore);
 }
 
+function onGridGainFoodEvent(ctx:Context, gridsWillGrow:Array<Grid>) {
+	final gridsBefore = gridsWillGrow.map(g -> getGridInfo(ctx, g));
+	for (grid in gridsWillGrow) {
+		final gain = EVENT_GROW_FOOD_AMOUNT * (Math.random() * .4 + .8);
+		grid.food = Math.min(getGridMaxFood(ctx, grid.id), grid.food + gain);
+	}
+	final gridsAfter = gridsWillGrow.map(g -> getGridInfo(ctx, g));
+	ctx.events.push(GRID_RESOURCE_EVENT({
+		grids: [
+			for (i in 0...gridsWillGrow.length)
+				{
+					gridBefore: gridsBefore[i],
+					gridAfter: gridsAfter[i]
+				}
+		],
+		describtion: "大豐收"
+	}, getGameInfo(ctx, false)));
+}
+
+function onGridGainMoneyEvent(ctx:Context, gridsWillGrow:Array<Grid>) {
+	final gridsBefore = gridsWillGrow.map(g -> getGridInfo(ctx, g));
+	for (grid in gridsWillGrow) {
+		final gain = EVENT_GROW_FOOD_AMOUNT * (Math.random() * .4 + .8);
+		grid.money = Math.min(getGridMaxMoney(ctx, grid.id), grid.money + gain);
+	}
+	final gridsAfter = gridsWillGrow.map(g -> getGridInfo(ctx, g));
+	ctx.events.push(GRID_RESOURCE_EVENT({
+		grids: [
+			for (i in 0...gridsWillGrow.length)
+				{
+					gridBefore: gridsBefore[i],
+					gridAfter: gridsAfter[i]
+				}
+		],
+		describtion: "大發利市"
+	}, getGameInfo(ctx, false)));
+}
+
+function onGridGainArmyEvent(ctx:Context, gridsWillGrow:Array<Grid>) {
+	final gridsBefore = gridsWillGrow.map(g -> getGridInfo(ctx, g));
+	for (grid in gridsWillGrow) {
+		final gain = EVENT_GROW_FOOD_AMOUNT * (Math.random() * .4 + .8);
+		grid.army = Math.min(getGridMaxArmy(ctx, grid.id), grid.army + gain);
+	}
+	final gridsAfter = gridsWillGrow.map(g -> getGridInfo(ctx, g));
+	ctx.events.push(GRID_RESOURCE_EVENT({
+		grids: [
+			for (i in 0...gridsWillGrow.length)
+				{
+					gridBefore: gridsBefore[i],
+					gridAfter: gridsAfter[i]
+				}
+		],
+		describtion: "接收民兵"
+	}, getGameInfo(ctx, false)));
+}
+
+function onGridBornEvent(ctx:Context, gridId:Int) {
+	final chooseId = gridId;
+	final chooseGrid = ctx.grids[chooseId];
+	// 移除原有建物
+	ctx.attachments = ctx.attachments.filter(a -> a.belongToGridId != chooseGrid.id);
+	//
+	final buildings = BuildingList.filter(catelog -> {
+		// 不使用
+		// case _:
+		// 強迫編譯器檢查
+		return switch catelog.type {
+			case TREASURE(level):
+				level == 0;
+			case FISHING(level):
+				level == 0;
+			case HUNTING(level):
+				level == 0;
+			case MINE(level):
+				level == 0;
+			case MARKET(level):
+				level == 0;
+			case BANK(level):
+				level == 0;
+			case FARM(level):
+				level == 0;
+			case BARN(level):
+				level == 0;
+			case BARRACKS(level):
+				level == 1;
+			case HOME(level):
+				level == 0;
+			case EXPLORE(level):
+				level == 0;
+			case WALL(level):
+				level == 0;
+			case SIEGEFACTORY(level):
+				level == 0;
+			case ACADEMY(level):
+				level == 0;
+		}
+	}).map(catelog -> catelog.type);
+	for (building in buildings) {
+		addAttachInfo(ctx, chooseGrid.id, building);
+	}
+	chooseGrid.money = EVENT_GRID_BORN_RESOURCE_AMOUNT;
+	chooseGrid.army = EVENT_GRID_BORN_RESOURCE_AMOUNT;
+	chooseGrid.food = EVENT_GRID_BORN_RESOURCE_AMOUNT;
+	chooseGrid.defaultMaxMoney = 500;
+	chooseGrid.defaultMaxFood = 500;
+	chooseGrid.defaultMaxArmy = 500;
+	// 加入武將
+	addPeopleInfo(ctx, null, chooseGrid.id, model.PeopleGenerator.getInst().generate());
+	ctx.events.push(GRID_BORN_EVENT({
+		grid: getGridInfo(ctx, chooseGrid)
+	}, getGameInfo(ctx, false)));
+}
+
 // 玩家回合結束
 function onPlayerEnd(ctx:Context, playerId:Int):Bool {
 	if (playerId != ctx.currentPlayerId) {
@@ -734,8 +880,8 @@ function onPlayerEnd(ctx:Context, playerId:Int):Bool {
 				ctx.events.push(WORLD_EVENT(worldEventValue, getGameInfo(ctx, false)));
 			}
 		}
+		// 友好度減輕
 		{
-			//
 			final enable = (ctx.turn + 1) % FAVER_SLOW_PER_TURN == 0;
 			if (enable) {
 				for (grid in ctx.grids) {
@@ -754,74 +900,23 @@ function onPlayerEnd(ctx:Context, playerId:Int):Bool {
 		}
 		// 事件
 		{
-			final enable = (ctx.turn + 1) % 1 == 0;
+			final enable = false; // (ctx.turn + 1) % 1 == 0;
 			if (enable) {
 				//
 				if (true) {
 					final gridsWillGrow = ctx.grids.filter(g -> getGridBuildType(ctx, g.id) != EMPTY
 						&& Math.random() < EVENT_GROW_FOOD_RATE);
-					if (gridsWillGrow.length > 0) {
-						final gridsBefore = gridsWillGrow.map(g -> getGridInfo(ctx, g));
-						for (grid in gridsWillGrow) {
-							final gain = EVENT_GROW_FOOD_AMOUNT * (Math.random() * .4 + .8);
-							grid.food = Math.min(getGridMaxFood(ctx, grid.id), grid.food + gain);
-						}
-						final gridsAfter = gridsWillGrow.map(g -> getGridInfo(ctx, g));
-						ctx.events.push(GRID_RESOURCE_EVENT({
-							grids: [
-								for (i in 0...gridsWillGrow.length)
-									{
-										gridBefore: gridsBefore[i],
-										gridAfter: gridsAfter[i]
-									}
-							],
-							describtion: "大豐收"
-						}, getGameInfo(ctx, false)));
-					}
+					onGridGainFoodEvent(ctx, gridsWillGrow);
 				}
 				if (true) {
 					final gridsWillGrow = ctx.grids.filter(g -> getGridBuildType(ctx, g.id) != EMPTY
 						&& Math.random() < EVENT_GROW_FOOD_RATE);
-					if (gridsWillGrow.length > 0) {
-						final gridsBefore = gridsWillGrow.map(g -> getGridInfo(ctx, g));
-						for (grid in gridsWillGrow) {
-							final gain = EVENT_GROW_FOOD_AMOUNT * (Math.random() * .4 + .8);
-							grid.money = Math.min(getGridMaxMoney(ctx, grid.id), grid.money + gain);
-						}
-						final gridsAfter = gridsWillGrow.map(g -> getGridInfo(ctx, g));
-						ctx.events.push(GRID_RESOURCE_EVENT({
-							grids: [
-								for (i in 0...gridsWillGrow.length)
-									{
-										gridBefore: gridsBefore[i],
-										gridAfter: gridsAfter[i]
-									}
-							],
-							describtion: "大發利市"
-						}, getGameInfo(ctx, false)));
-					}
+					onGridGainMoneyEvent(ctx, gridsWillGrow);
 				}
 				if (true) {
 					final gridsWillGrow = ctx.grids.filter(g -> getGridBuildType(ctx, g.id) != EMPTY
 						&& Math.random() < EVENT_GROW_FOOD_RATE);
-					if (gridsWillGrow.length > 0) {
-						final gridsBefore = gridsWillGrow.map(g -> getGridInfo(ctx, g));
-						for (grid in gridsWillGrow) {
-							final gain = EVENT_GROW_FOOD_AMOUNT * (Math.random() * .4 + .8);
-							grid.army = Math.min(getGridMaxArmy(ctx, grid.id), grid.army + gain);
-						}
-						final gridsAfter = gridsWillGrow.map(g -> getGridInfo(ctx, g));
-						ctx.events.push(GRID_RESOURCE_EVENT({
-							grids: [
-								for (i in 0...gridsWillGrow.length)
-									{
-										gridBefore: gridsBefore[i],
-										gridAfter: gridsAfter[i]
-									}
-							],
-							describtion: "接收民兵"
-						}, getGameInfo(ctx, false)));
-					}
+					onGridGainArmyEvent(ctx, gridsWillGrow);
 				}
 				final isBorn = Math.random() < EVENT_GRID_BORN_RATE;
 				if (isBorn) {
@@ -829,58 +924,7 @@ function onPlayerEnd(ctx:Context, playerId:Int):Bool {
 					if (emptyGrids.length > 0) {
 						final chooseId = Std.int(Math.random() * emptyGrids.length);
 						final chooseGrid = emptyGrids[chooseId];
-						// 移除原有建物
-						ctx.attachments = ctx.attachments.filter(a -> a.belongToGridId != chooseGrid.id);
-						//
-						final buildings = BuildingList.filter(catelog -> {
-							// 不使用
-							// case _:
-							// 強迫編譯器檢查
-							return switch catelog.type {
-								case TREASURE(level):
-									level == 0;
-								case FISHING(level):
-									level == 0;
-								case HUNTING(level):
-									level == 0;
-								case MINE(level):
-									level == 0;
-								case MARKET(level):
-									level == 0;
-								case BANK(level):
-									level == 0;
-								case FARM(level):
-									level == 0;
-								case BARN(level):
-									level == 0;
-								case BARRACKS(level):
-									level == 1;
-								case HOME(level):
-									level == 0;
-								case EXPLORE(level):
-									level == 0;
-								case WALL(level):
-									level == 0;
-								case SIEGEFACTORY(level):
-									level == 0;
-								case ACADEMY(level):
-									level == 0;
-							}
-						}).map(catelog -> catelog.type);
-						for (building in buildings) {
-							addAttachInfo(ctx, chooseGrid.id, building);
-						}
-						chooseGrid.money = EVENT_GRID_BORN_RESOURCE_AMOUNT;
-						chooseGrid.army = EVENT_GRID_BORN_RESOURCE_AMOUNT;
-						chooseGrid.food = EVENT_GRID_BORN_RESOURCE_AMOUNT;
-						chooseGrid.defaultMaxMoney = 500;
-						chooseGrid.defaultMaxFood = 500;
-						chooseGrid.defaultMaxArmy = 500;
-						// 加入武將
-						addPeopleInfo(ctx, null, chooseGrid.id, model.PeopleGenerator.getInst().generate());
-						ctx.events.push(GRID_BORN_EVENT({
-							grid: getGridInfo(ctx, chooseGrid)
-						}, getGameInfo(ctx, false)));
+						onGridBornEvent(ctx, chooseGrid.id);
 					}
 				}
 			}
