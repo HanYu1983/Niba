@@ -708,7 +708,16 @@ class MainView extends Box {
 						// gameTitleView.showPopup(null);
 					});
 				case MESSAGE_EVENT:
-					syncViewByInfo(gameInfo);
+					// 如果下一次的事件是移動，這次的message事件就先不更新畫面，不然會把例如移動之類的計策會移到的地方直接更新了
+					// 等移動完再更新就好
+					final nextEvent = events[0];
+					var needSyncNow = true;
+					if(nextEvent != null){
+						if(nextEvent.id == ANIMATION_EVENT && nextEvent.value.id == ActionInfoID.MOVE){
+							needSyncNow = false;
+						}
+					}
+					if(needSyncNow) syncViewByInfo(gameInfo);
 					checkAutoPlay(autoPlay, info.title, info.msg);
 				case ANIMATION_EVENT:
 					disabledAllCommands();
@@ -717,7 +726,7 @@ class MainView extends Box {
 						case ActionInfoID.MOVE:
 							final pv = players[info.value.playerId];
 							final toPos = getGridPositionByGridId(info.value.playerId, info.value.toGridId);
-							TweenX.to(pv, {"left": toPos[0], "top": toPos[1]}, .5).onStop(() -> {
+							TweenX.to(pv, {"left": toPos[0], "top": toPos[1]}, 1).onStop(() -> {
 								syncViewByInfo(gameInfo);
 								doOneEvent();
 							}).play();

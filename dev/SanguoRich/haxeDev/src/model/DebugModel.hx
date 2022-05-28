@@ -198,6 +198,19 @@ class DebugModel implements IModel {
 				},
 			},
 			{
+				id:EventInfoID.ANIMATION_EVENT,
+				value:{
+					id: ActionInfoID.MOVE,
+					value: {
+						playerId: 0,
+						fromGridId: 5,
+						toGridId: 10
+					},
+				},
+				gameInfo: info,
+				autoplay: null,
+			},
+			{
 				id: EventInfoID.PLAYER_LOSE,
 				value: {
 					player: info.players[0]
