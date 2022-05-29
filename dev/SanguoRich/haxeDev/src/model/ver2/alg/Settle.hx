@@ -54,13 +54,28 @@ private function genNewGrid(ctx:Context, playerId:Int, peopleId:Int, gridId:Int,
 	// 移除寶物
 	tmpCtx.treasures = tmpCtx.treasures.filter(a -> a.position.gridId != gridId);
 	// 這回合的資料
-	final newGridInfo = {
+	final newGridInfo:GridGenerator.Grid = {
 		final limitBuilding = if (ctx.settings == null) {
 			true;
 		} else {
 			ctx.settings.limitBuilding;
 		}
-		final tmp = GridGenerator.getInst().getGrids(1, limitBuilding, -1)[0];
+		var tmp:Null<GridGenerator.Grid> = null;
+		// 只跑100次, 這裡假設不可能在次數內還無法隨機非建物地
+		for (i in 0...100) {
+			tmp = GridGenerator.getInst().getGrids(1, limitBuilding, -1)[0];
+			switch tmp.buildtype {
+				case CHANCE | DESTINY | EMPTY:
+					// 不開拓出無建物的地
+					continue;
+				case MARKET | FARM | VILLAGE | CITY:
+					// 只開出有建物的地
+			}
+			break;
+		}
+		if (tmp == null) {
+			throw new haxe.Exception("次數內還無法隨機非建物地, 請檢查產生算法");
+		}
 		// 同步id
 		tmp.id = gridId;
 		// 放進來的資源
@@ -158,6 +173,11 @@ function test() {
 		case [100, 100, 100]:
 		case _:
 			throw new haxe.Exception("格子必須有資源各100");
+	}
+	switch [player0.money, player0.food, player0.army] {
+		case [700, 900, 900]:
+		case _:
+			throw new haxe.Exception("玩家必須支付200錢和放入的各100資源");
 	}
 	final attachInGrid = ctx.attachments.filter(a -> a.belongToGridId == grid0.id);
 	if (attachInGrid.length == 0) {

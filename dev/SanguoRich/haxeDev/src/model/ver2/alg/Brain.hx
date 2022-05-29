@@ -53,7 +53,7 @@ function doBrain(ctx, playerId:Int) {
 		final gridId = player.position;
 		final grid = ctx.grids[gridId];
 		final cmd = getMostGoodCommand(ctx, player.id, grid.id);
-		info("doBrain", [playerId, i, cmd]);
+		info("doBrain", '${player.name}執行${cmd}');
 		final peopleInGrid = ctx.peoples.filter((p:People) -> p.position.gridId == grid.id);
 		final peopleInPlayer = ctx.peoples.filter((p:People) -> p.belongToPlayerId == player.id);
 		final p1People:Null<People> = if (peopleInPlayer.length > 0) {
@@ -312,6 +312,7 @@ function doBrain(ctx, playerId:Int) {
 				_takeSettle(ctx, playerId, brainMemory.settle.peopleId, gridId, brainMemory.settle.settleType);
 				// 必須拿新的格子, 因為被settle替換了
 				final newGrid = ctx.grids[gridId];
+				verbose("doBrain", ["新格子", newGrid]);
 				// 調度資源
 				newGrid.money += putMoney;
 				newGrid.food += putFood;
@@ -319,6 +320,7 @@ function doBrain(ctx, playerId:Int) {
 				player.money -= putMoney;
 				player.food -= putFood;
 				player.army -= putArmy;
+				verbose("doBrain", ["新格子調度後", newGrid]);
 				// 武將進城
 				final peopleWillEnter = getPeopleById(ctx, brainMemory.settle.settlePeopleId);
 				peopleWillEnter.position.gridId = grid.id;
@@ -2060,4 +2062,62 @@ private function getTransferWeightV2(ctx:Context, playerId:Int, gridId:Int):Floa
 	}
 	final score = maxScore;
 	return score;
+}
+
+function test() {
+	testAISettle();
+}
+
+function testAISettle() {
+	final ctx = getDefaultContext();
+	var grid0 = {
+		final tmp = getDefaultGrid();
+		tmp.buildtype = EMPTY;
+		tmp;
+	}
+	ctx.grids = [grid0];
+	final player0 = {
+		final tmp = getDefaultPlayer();
+		tmp.brain = {
+			memory: getDefaultBrainMemory()
+		};
+		tmp.memory.hasDice = true;
+		tmp.money = 1000;
+		tmp.food = 1000;
+		tmp.army = 1000;
+		tmp;
+	}
+	ctx.players = [player0];
+	final people0 = {
+		final tmp = getDefaultPeople();
+		tmp.belongToPlayerId = 0;
+		tmp;
+	}
+	ctx.peoples = [people0];
+	if (grid0.buildtype != EMPTY) {
+		throw new haxe.Exception("玩家必須在空地, 不然沒有開拓指令");
+	}
+	if (player0.memory.hasDice == false) {
+		throw new haxe.Exception("玩家必須已經移動, 不然沒有開拓指令");
+	}
+	final cmds = getPlayerCommand(ctx, player0.id);
+	if (cmds.has(SETTLE) == false) {
+		throw new haxe.Exception("必須有開拓指令, 不然AI選不到");
+	}
+	doBrain(ctx, player0.id);
+	grid0 = ctx.grids[0];
+	switch [grid0.money, grid0.food, grid0.army] {
+		case [0, 0, 0]:
+			throw new haxe.Exception("格子必須有資源");
+		case _:
+	}
+	switch [player0.money, player0.food, player0.army] {
+		case [1000, 1000, 1000]:
+			throw new haxe.Exception("玩家必須支付資源");
+		case _:
+	}
+	final attachInGrid = ctx.attachments.filter(a -> a.belongToGridId == grid0.id);
+	if (attachInGrid.length == 0) {
+		throw new haxe.Exception("必須蓋出建物");
+	}
 }

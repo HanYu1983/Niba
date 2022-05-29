@@ -35,7 +35,7 @@ function getDefaultGrid():Grid {
 	return {
 		id: 0,
 		name: "",
-		buildtype: GROWTYPE.MARKET,
+		buildtype: GROWTYPE.EMPTY,
 		landType: LANDTYPE.PLAIN,
 		money: 0,
 		food: 0,
