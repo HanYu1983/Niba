@@ -58,7 +58,7 @@ class SettleView extends PopupView{
 
             switch(settleType){
                 case 0 | 1 | 2: btn_confirm.disabled == (player.money < 200) && (player.food < 200);
-                case 3: btn_confirm.disabled == (player.money < 500) && (player.money < 200);
+                case 3: btn_confirm.disabled == (player.money < 500) && (player.food < 500);
             }
 
             final result:Grid = Main.model.getPreResultOfSettle(gameInfo.currentPlayer.id, p.id, grid.id, settleType);
