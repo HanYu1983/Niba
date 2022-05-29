@@ -5,6 +5,7 @@ import model.IModel;
 import model.Config;
 import model.ver2.Define;
 import model.ver2.alg.Alg;
+import model.ver2.alg.AlgPlayer;
 
 private final FILE_NAME = "SanguoRichSave.txt";
 private final _storage = js.Browser.getLocalStorage();

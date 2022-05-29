@@ -3,9 +3,12 @@ package model.ver2.alg;
 import model.GridGenerator;
 import model.IModel;
 import model.Config;
+import model.tool.Fact;
 import model.ver2.Define;
 import model.ver2.alg.Alg;
-import model.tool.Fact;
+import model.ver2.alg.AlgPlayer;
+import model.ver2.alg.AlgGrid;
+import model.ver2.alg.AlgPeople;
 
 using Lambda;
 
@@ -71,7 +74,7 @@ private function genNewGrid(ctx:Context, playerId:Int, peopleId:Int, gridId:Int,
 		// 將人移到城中(有人才會計算格子成長)
 		final p1 = getPeopleById(nextTmpCtx2, peopleId);
 		p1.position.gridId = gridId;
-		model.ver2.alg.Alg.doGridGrow(nextTmpCtx2);
+		doGridGrow(nextTmpCtx2);
 		nextTmpCtx2.grids[gridId];
 	}
 	gridInfo.moneyGrow = nextGridInfo.money - gridInfo.money;

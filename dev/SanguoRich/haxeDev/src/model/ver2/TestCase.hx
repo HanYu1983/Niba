@@ -8,6 +8,7 @@ import model.ver2.Define;
 import model.tool.Mock;
 import model.ver2.alg.Alg;
 import model.ver2.alg.Brain;
+import model.ver2.alg.AlgPlayer;
 
 using Lambda;
 

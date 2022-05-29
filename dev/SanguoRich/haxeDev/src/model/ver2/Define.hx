@@ -9,6 +9,8 @@ import model.GridGenerator;
 import model.TreasureGenerator;
 import model.IModel;
 import model.Config;
+import model.ver2.alg.AlgGrid;
+import model.ver2.alg.AlgPeople;
 
 using Lambda;
 
@@ -1320,8 +1322,8 @@ function getGameInfo(ctx:Context, root:Bool):GameInfo {
 	// 不管週期, 直接計算下一次的結果
 	final nextCtx = if (root) {
 		final copy = deepCopy(ctx);
-		model.ver2.alg.Alg.doPeopleMaintain(copy);
-		model.ver2.alg.Alg.doGridGrow(copy);
+		doPeopleMaintain(copy);
+		doGridGrow(copy);
 		copy;
 	} else {
 		ctx;

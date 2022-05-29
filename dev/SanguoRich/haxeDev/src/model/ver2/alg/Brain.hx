@@ -23,6 +23,7 @@ import model.ver2.alg.SaveLoad;
 import model.ver2.alg.Pk;
 import model.ver2.alg.Equip;
 import model.ver2.alg.Settle;
+import model.ver2.alg.AlgPlayer;
 
 using Lambda;
 

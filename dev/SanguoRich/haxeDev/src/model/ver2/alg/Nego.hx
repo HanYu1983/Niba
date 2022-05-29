@@ -5,6 +5,9 @@ import model.IModel;
 import model.Config;
 import model.ver2.Define;
 import model.ver2.alg.Alg;
+import model.ver2.alg.AlgPlayer;
+import model.ver2.alg.AlgGrid;
+import model.ver2.alg.AlgPeople;
 import model.tool.Fact;
 
 using Lambda;

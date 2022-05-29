@@ -4,10 +4,13 @@ import haxe.Exception;
 import model.GridGenerator;
 import model.IModel;
 import model.Config;
-import model.ver2.Define;
-import model.tool.Mock;
-import model.ver2.alg.Alg;
 import model.tool.Fact;
+import model.tool.Mock;
+import model.ver2.Define;
+import model.ver2.alg.Alg;
+import model.ver2.alg.AlgPlayer;
+import model.ver2.alg.AlgGrid;
+import model.ver2.alg.AlgPeople;
 
 using Lambda;
 
