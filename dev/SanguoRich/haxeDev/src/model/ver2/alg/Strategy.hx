@@ -121,8 +121,8 @@ private function getStrategyCost(ctx:Context, p1PeopleId:Int, strategyId:Int, ta
 			}
 		case 16:
 			// 減免貢奉金
-			// 必須有教導
-			if (p1Abilities.has(6) == false) {
+			// 必須有人脈
+			if (p1Abilities.has(10) == false) {
 				0.0;
 			} else {
 				// 効果不能重復

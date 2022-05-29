@@ -60,10 +60,11 @@ private function genNewGrid(ctx:Context, playerId:Int, peopleId:Int, gridId:Int,
 		} else {
 			ctx.settings.limitBuilding;
 		}
+		final originGrid = ctx.grids[gridId];
 		var tmp:Null<GridGenerator.Grid> = null;
 		// 只跑100次, 這裡假設不可能在次數內還無法隨機非建物地
 		for (i in 0...100) {
-			tmp = GridGenerator.getInst().getGrids(1, limitBuilding, -1)[0];
+			tmp = GridGenerator.getInst().getGrids(1, limitBuilding, -1, originGrid.landType, originGrid.buildtype)[0];
 			switch tmp.buildtype {
 				case CHANCE | DESTINY | EMPTY:
 					// 不開拓出無建物的地
@@ -106,6 +107,10 @@ private function genNewGrid(ctx:Context, playerId:Int, peopleId:Int, gridId:Int,
 }
 
 function _getPreResultOfSettle(ctx:Context, playerId:Int, peopleId:Int, gridId:Int, settleType:Int):GridGenerator.Grid {
+	if (_tmpCtx != null) {
+		final grid = _tmpCtx.grids[gridId];
+		return getGridInfo(ctx, grid);
+	}
 	return genNewGrid(ctx, playerId, peopleId, gridId, settleType);
 }
 
@@ -175,7 +180,7 @@ function test() {
 			throw new haxe.Exception("格子必須有資源各100");
 	}
 	switch [player0.money, player0.food, player0.army] {
-		case [700, 900, 900]:
+		case [700, 700, 900]:
 		case _:
 			throw new haxe.Exception("玩家必須支付200錢和放入的各100資源");
 	}

@@ -118,6 +118,7 @@ function initContext(ctx:Context, options:GameSetting) {
 			for (building in buildings) {
 				addAttachInfo(ctx, player.position, building);
 			}
+			ctx.grids[player.position].buildtype = CITY;
 			ctx.grids[player.position].defaultMoneyGrow = Math.random() * 0.01;
 			ctx.grids[player.position].defaultFoodGrow = Math.random() * 0.01;
 			ctx.grids[player.position].defaultArmyGrow = Math.random() * 0.01;
