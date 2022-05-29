@@ -20,11 +20,11 @@ function getSettleCost(ctx:Context, playerId:Int, peopleId:Int, gridId:Int, sett
 	final settleMoneyCost = [200.0, 200, 200, 500][settleType];
 	final putMoney = Math.max(0, Math.min(100, player.money - settleMoneyCost));
 	final putArmy = Math.min(100, player.army);
-	final putFood = Math.min(100, player.food);
+	final putFood = Math.max(0, Math.min(100, player.food - settleMoneyCost));
 	return {
 		player: {
 			money: putMoney + settleMoneyCost,
-			food: putFood,
+			food: putFood + settleMoneyCost,
 			army: putArmy
 		},
 		people: {
