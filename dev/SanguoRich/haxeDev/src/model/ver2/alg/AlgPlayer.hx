@@ -133,12 +133,27 @@ function onPlayerGoToPosition(ctx:Context, playerId:Int, toGridId:Int) {
 			// 命運可以跳類似某個武將+體力，-體力，+功績，-功績之類的
 			// 或者主公掉錢，意外之財等
 			verbose("onPlayerGoToPosition", '${player.name}走到命運');
-
+			switch Math.random() {
+				case v if (v < 0.5):
+					final value = 50;
+					player.money = Math.max(0, player.money - value);
+					ctx.events.push(MESSAGE_EVENT({
+						title: "命運",
+						msg: '${player.name}不小心掉了錢包, 損失${value}錢'
+					}, getGameInfo(ctx, false)));
+				case _:
+					final value = 50;
+					player.money = player.money + value;
+					ctx.events.push(MESSAGE_EVENT({
+						title: "命運",
+						msg: '${player.name}撿到錢, 得到${value}錢'
+					}, getGameInfo(ctx, false)));
+			}
 		case _:
 	}
 }
 
-private function testOnPlayerGoToPosition() {
+private function testOnPlayerGoToPositionChanceAndDestiny() {
 	final ctx = getDefaultContext();
 	final grid0 = {
 		final tmp = getDefaultGrid();
@@ -151,6 +166,12 @@ private function testOnPlayerGoToPosition() {
 		tmp;
 	}
 	ctx.players = [player0];
+	onPlayerGoToPosition(ctx, player0.id, grid0.id);
+	if (ctx.events.length == 0) {
+		throw new haxe.Exception("踩到機會必須有事件");
+	}
+	ctx.events = [];
+	grid0.buildtype = DESTINY;
 	onPlayerGoToPosition(ctx, player0.id, grid0.id);
 	if (ctx.events.length == 0) {
 		throw new haxe.Exception("踩到機會必須有事件");
@@ -814,5 +835,5 @@ function onPlayerEnd(ctx:Context, playerId:Int):Bool {
 }
 
 function test() {
-	testOnPlayerGoToPosition();
+	testOnPlayerGoToPositionChanceAndDestiny();
 }

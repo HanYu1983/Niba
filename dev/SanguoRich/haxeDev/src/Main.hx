@@ -21,14 +21,14 @@ class Main {
 	public static function main() {
 		// 跑測試
 		// 只開發前台時可以關掉
-		if (false) {
-			try {
-				runTest();
-			} catch (e) {
-				trace(e);
-				throw e;
-			}
-			return;
+		if (true) {
+			runTest();
+			// try {
+			// 	runTest();
+			// } catch (e) {
+			// 	trace(e);
+			// 	throw e;
+			// }
 		}
 
 		// model = new DebugModel();
