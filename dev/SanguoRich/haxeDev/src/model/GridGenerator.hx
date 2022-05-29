@@ -117,7 +117,7 @@ class GridGenerator {
 		'醬觀', '拌鎮', '殼湖', '致谷', '扇崖', '信坊', '竿島', '徒鎮', '務港', '廳鄉'
 	];
 
-	public function getGrids(count:Int, isLimitBuilding:Bool, type:Int):Array<Grid> {
+	public function getGrids(count:Int, isLimitBuilding:Bool, type:Int, landType:Null<LANDTYPE> = null, buildType:Null<GROWTYPE> = null):Array<Grid> {
 		function getRandomFloat(range:Float, offset:Float = 0.0) {
 			return Math.random() * range + offset;
 		}
@@ -151,8 +151,8 @@ class GridGenerator {
 			g.id = i;
 			g.height = height;
 			g.name = g.id + gridNames[(i + randomStart) % gridNames.length];
-			g.landType = landTotal[Math.floor(height * (landTotal.length - 1))];
-			g.buildtype = growTotal[getRandomInt(growTotal.length)];
+			g.landType = (landType != null) ? landType : landTotal[Math.floor(height * (landTotal.length - 1))];
+			g.buildtype = (buildType != null)  ? buildType : growTotal[getRandomInt(growTotal.length)];
 
 			switch ([g.landType, g.buildtype]) {
 				case [null, _] | [_, null]:
