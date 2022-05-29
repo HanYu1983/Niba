@@ -712,11 +712,11 @@ class MainView extends Box {
 					// 等移動完再更新就好
 					final nextEvent = events[0];
 					var needSyncNow = true;
-					if(nextEvent != null){
-						if(nextEvent.id == ANIMATION_EVENT && nextEvent.value.id == ActionInfoID.MOVE){
-							needSyncNow = false;
-						}
-					}
+					// if(nextEvent != null){
+					// 	if(nextEvent.id == ANIMATION_EVENT && nextEvent.value.id == ActionInfoID.MOVE){
+					// 		needSyncNow = false;
+					// 	}
+					// }
 					if(needSyncNow) syncViewByInfo(gameInfo);
 					checkAutoPlay(autoPlay, info.title, info.msg);
 				case ANIMATION_EVENT:
