@@ -126,7 +126,7 @@ private function onNegoCost(ctx:Context, playerId:Int, gridId:Int, p1SelectId:In
 		favorAfter: grid.favor[playerId],
 		gridId: gridId,
 	}
-	final success:Bool = switch 1 {
+	final success:Bool = switch 0 {
 		case 0:
 			final negoCost = getNegoCost(ctx, playerId, gridId, p1SelectId, p2SelectId);
 			// 無論成功或失敗武將先消體力

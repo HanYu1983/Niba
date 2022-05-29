@@ -64,7 +64,7 @@ private function onTakePk(ctx:Context, playerId:Int, gridId:Int, p1PeopleId:Int,
 	};
 	eventValue.success = switch getPkCost(ctx, playerId, gridId, p1PeopleId, p2PeopleId) {
 		case {peopleCost: [p1Cost, p2Cost], gainArmy: gainArmy, successRate: successRate}:
-			switch 1 {
+			switch 0 {
 				case 0:
 					final success = Math.random() < successRate;
 					if (success) {
