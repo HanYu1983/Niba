@@ -18,10 +18,13 @@ private function onBuildingCost(ctx:Context, playerId:Int, gridId:Int, peopleId:
 	if (catelog.length == 0) {
 		throw new haxe.Exception('current.catelog找不到:${current}');
 	}
-	final costMoney = catelog[0].money;
-	final success = true;
 	final player = getPlayerById(ctx, playerId);
 	final people = getPeopleById(ctx, peopleId);
+	final peopleAbilities = getPeopleAbilities(ctx, peopleId);
+	// 有修補可以減少成本
+	final costRate = peopleAbilities.has(9) ? 0.5 : 1.0;
+	final costMoney = catelog[0].money * costRate;
+	final success = true;
 	if (success) {
 		final useEnergy = people.energy / (100 / ENERGY_COST_ON_BUILDING);
 		people.energy -= useEnergy;

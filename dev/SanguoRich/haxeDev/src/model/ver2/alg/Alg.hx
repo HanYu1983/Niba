@@ -39,7 +39,7 @@ function initContext(ctx:Context, options:GameSetting) {
 				}
 				// 避開機會與命運
 				switch ctx.grids[pos].buildtype {
-					case CHANCE | DESTINY:
+					case CHANCE | DESTINY | EMPTY:
 						continue;
 					case _:
 				}

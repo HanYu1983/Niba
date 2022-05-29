@@ -121,17 +121,22 @@ private function getStrategyCost(ctx:Context, p1PeopleId:Int, strategyId:Int, ta
 			}
 		case 16:
 			// 減免貢奉金
-			// 効果不必重復
-			if (p1.belongToPlayerId == null) {
-				throw new Exception("belongToPlayerId not found");
+			// 必須有教導
+			if (p1Abilities.has(6) == false) {
+				0.0;
+			} else {
+				// 効果不能重復
+				if (p1.belongToPlayerId == null) {
+					throw new Exception("belongToPlayerId not found");
+				}
+				final effectStrategy16 = ctx.effects.filter(e -> e.belongToPlayerId == p1.belongToPlayerId).filter(e -> switch e.proto {
+					case Strategy({id: 16}):
+						true;
+					case _:
+						false;
+				});
+				effectStrategy16.length > 0 ? 0.0 : 1.0;
 			}
-			final effectStrategy16 = ctx.effects.filter(e -> e.belongToPlayerId == p1.belongToPlayerId).filter(e -> switch e.proto {
-				case Strategy({id: 16}):
-					true;
-				case _:
-					false;
-			});
-			effectStrategy16.length > 0 ? 0.0 : 1.0;
 		case 17:
 			// 需要有騎將
 			p1Abilities.has(2) == false ? 0.0 : 1.0;

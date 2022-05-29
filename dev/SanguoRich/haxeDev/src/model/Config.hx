@@ -220,4 +220,4 @@ final INIT_RESOURCE = 1200.0;
 final INIT_GRID_COUNT = 30;
 
 // 對非AI事件做排序
-final SORT_EVENT_WHEN_REAL_PLAYER = true;
+final SORT_EVENT_WHEN_REAL_PLAYER = false;
