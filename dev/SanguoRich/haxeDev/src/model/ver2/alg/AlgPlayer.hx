@@ -35,18 +35,58 @@ function doPlayerDice(ctx:Context) {
 	onPlayerDice(ctx, ctx.currentPlayerId);
 }
 
+function onPlayerDice(ctx:Context, playerId:Int) {
+	if (playerId != ctx.currentPlayerId) {
+		throw new haxe.Exception("現在不是你的回合,不能呼叫end");
+	}
+	final player = getPlayerById(ctx, playerId);
+	final fromGridId = player.position;
+	final moveStep = Math.floor(Math.random() * 6) + 1;
+	var toGridId = (fromGridId + moveStep) % ctx.grids.length;
+	{
+		// 計算路障
+		// final everyStep = [for (i in 1...(moveStep + 1)) player.position + i].map(s -> s % ctx.grids.length);
+		// final findGroundItem = ctx.groundItems.filter(item -> everyStep.has(item.position) && item.belongToPlayerId != playerId);
+		// if (findGroundItem.length > 0) {
+		// 	final stopItem = findGroundItem[0];
+		// 	// 停住
+		// 	toGridId = stopItem.position;
+		// 	// 移除路障
+		// 	ctx.groundItems = ctx.groundItems.filter(item -> item.id != stopItem.id);
+		// 	info("onPlayerDice", "路障!!!", "grid", toGridId);
+		// }
+		for (s in 1...(moveStep + 1)) {
+			final nextPosition = (player.position + s) % ctx.grids.length;
+			final findGroundItem = ctx.groundItems.filter(item -> item.position == nextPosition && item.belongToPlayerId != playerId);
+			if (findGroundItem.length > 0) {
+				final stopItem = findGroundItem[0];
+				// 停住
+				toGridId = stopItem.position;
+				// 移除路障
+				ctx.groundItems = ctx.groundItems.filter(item -> item.id != stopItem.id);
+				info("onPlayerDice", ["路障!!!", "grid", toGridId]);
+				break;
+			}
+		}
+	}
+	onPlayerGoToPosition(ctx, playerId, toGridId);
+	player.memory.hasDice = true;
+}
+
 function onPlayerGoToPosition(ctx:Context, playerId:Int, toGridId:Int) {
 	final player = getPlayerById(ctx, playerId);
 	final toGrid = ctx.grids[toGridId];
 	final toGridBelongPlayerId = getGridBelongPlayerId(ctx, toGrid.id);
 	final fromGridId = player.position;
 	player.position = toGridId;
-	// 移動動畫
-	ctx.events.push(ANIMATION_EVENT_MOVE({
-		playerId: playerId,
-		fromGridId: fromGridId,
-		toGridId: toGridId
-	}, getGameInfo(ctx, false)));
+	if (fromGridId != toGridId) {
+		// 移動動畫
+		ctx.events.push(ANIMATION_EVENT_MOVE({
+			playerId: playerId,
+			fromGridId: fromGridId,
+			toGridId: toGridId
+		}, getGameInfo(ctx, false)));
+	}
 	// 過路費
 	final isStopAtEnemyGrid = toGridBelongPlayerId != null && toGridBelongPlayerId != player.id;
 	if (isStopAtEnemyGrid) {
@@ -95,6 +135,25 @@ function onPlayerGoToPosition(ctx:Context, playerId:Int, toGridId:Int) {
 			verbose("onPlayerGoToPosition", '${player.name}走到命運');
 
 		case _:
+	}
+}
+
+private function testOnPlayerGoToPosition() {
+	final ctx = getDefaultContext();
+	final grid0 = {
+		final tmp = getDefaultGrid();
+		tmp.buildtype = CHANCE;
+		tmp;
+	}
+	ctx.grids = [grid0];
+	final player0 = {
+		final tmp = getDefaultPlayer();
+		tmp;
+	}
+	ctx.players = [player0];
+	onPlayerGoToPosition(ctx, player0.id, grid0.id);
+	if (ctx.events.length == 0) {
+		throw new haxe.Exception("踩到機會必須有事件");
 	}
 }
 
@@ -754,40 +813,6 @@ function onPlayerEnd(ctx:Context, playerId:Int):Bool {
 	return true;
 }
 
-function onPlayerDice(ctx:Context, playerId:Int) {
-	if (playerId != ctx.currentPlayerId) {
-		throw new haxe.Exception("現在不是你的回合,不能呼叫end");
-	}
-	final player = getPlayerById(ctx, playerId);
-	final fromGridId = player.position;
-	final moveStep = Math.floor(Math.random() * 6) + 1;
-	var toGridId = (fromGridId + moveStep) % ctx.grids.length;
-	{
-		// 計算路障
-		// final everyStep = [for (i in 1...(moveStep + 1)) player.position + i].map(s -> s % ctx.grids.length);
-		// final findGroundItem = ctx.groundItems.filter(item -> everyStep.has(item.position) && item.belongToPlayerId != playerId);
-		// if (findGroundItem.length > 0) {
-		// 	final stopItem = findGroundItem[0];
-		// 	// 停住
-		// 	toGridId = stopItem.position;
-		// 	// 移除路障
-		// 	ctx.groundItems = ctx.groundItems.filter(item -> item.id != stopItem.id);
-		// 	info("onPlayerDice", "路障!!!", "grid", toGridId);
-		// }
-		for (s in 1...(moveStep + 1)) {
-			final nextPosition = (player.position + s) % ctx.grids.length;
-			final findGroundItem = ctx.groundItems.filter(item -> item.position == nextPosition && item.belongToPlayerId != playerId);
-			if (findGroundItem.length > 0) {
-				final stopItem = findGroundItem[0];
-				// 停住
-				toGridId = stopItem.position;
-				// 移除路障
-				ctx.groundItems = ctx.groundItems.filter(item -> item.id != stopItem.id);
-				info("onPlayerDice", ["路障!!!", "grid", toGridId]);
-				break;
-			}
-		}
-	}
-	onPlayerGoToPosition(ctx, playerId, toGridId);
-	player.memory.hasDice = true;
+function test() {
+	testOnPlayerGoToPosition();
 }

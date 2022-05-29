@@ -16,6 +16,7 @@ final getDefaultBrainMemory = model.ver2.alg.Brain.privateExport.getDefaultBrain
 final getCommandWeight = model.ver2.alg.Brain.privateExport.getCommandWeight;
 
 function test() {
+	model.ver2.alg.AlgPlayer.test();
 	model.ver2.alg.Brain.test();
 	model.ver2.alg.Settle.test();
 	model.ver2.BrainTool.test();
