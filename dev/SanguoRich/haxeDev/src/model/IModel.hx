@@ -566,7 +566,7 @@ final StrategyList:Array<StrategyCatelog> = [
 		name: '減免貢奉金',
 		money: 5,
 		intelligence: 70,
-		describe: '需要有妙計的將領才可以使用這個計策。這個回合自己不需要支付貢奉金',
+		describe: '需要有教導的將領才可以使用這個計策。這個回合自己不需要支付貢奉金',
 		targetType: StrategyTargetType.SELF_PLAYER,
 		value: {
 			valid: [],
