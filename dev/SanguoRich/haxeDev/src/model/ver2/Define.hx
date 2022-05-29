@@ -482,7 +482,8 @@ function getGridBelongPlayerId(ctx:Context, gridId:Int):Null<Int> {
 
 function getGrowFormGameSettings(ctx:Context):Float {
 	if (ctx.settings == null) {
-		throw new haxe.Exception("settings not found");
+		warn("getGrowFormGameSettings", "settings not found");
+		return 0.0;
 	}
 	return ctx.settings.growSpeed;
 }

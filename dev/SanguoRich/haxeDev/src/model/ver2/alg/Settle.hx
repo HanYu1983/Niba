@@ -55,7 +55,12 @@ private function genNewGrid(ctx:Context, playerId:Int, peopleId:Int, gridId:Int,
 	tmpCtx.treasures = tmpCtx.treasures.filter(a -> a.position.gridId != gridId);
 	// 這回合的資料
 	final newGridInfo = {
-		final tmp = GridGenerator.getInst().getGrids(1, ctx.settings.limitBuilding, -1)[0];
+		final limitBuilding = if (ctx.settings == null) {
+			true;
+		} else {
+			ctx.settings.limitBuilding;
+		}
+		final tmp = GridGenerator.getInst().getGrids(1, limitBuilding, -1)[0];
 		// 同步id
 		tmp.id = gridId;
 		// 放進來的資源
@@ -124,4 +129,38 @@ function _takeSettle(ctx:Context, playerId:Int, peopleId:Int, gridId:Int, settle
 	}, getGameInfo(ctx, false), null));
 	// 清空暫存
 	_tmpCtx = null;
+}
+
+function test() {
+	final ctx = getDefaultContext();
+	var grid0 = {
+		final tmp = getDefaultGrid();
+		tmp;
+	}
+	ctx.grids = [grid0];
+	final player0 = {
+		final tmp = getDefaultPlayer();
+		tmp.money = 1000;
+		tmp.food = 1000;
+		tmp.army = 1000;
+		tmp;
+	}
+	ctx.players = [player0];
+	final people0 = {
+		final tmp = getDefaultPeople();
+		tmp;
+	}
+	ctx.peoples = [people0];
+	_getPreResultOfSettle(ctx, player0.id, people0.id, grid0.id, 0);
+	_takeSettle(ctx, player0.id, people0.id, grid0.id, 0);
+	grid0 = ctx.grids[0];
+	switch [grid0.money, grid0.food, grid0.army] {
+		case [100, 100, 100]:
+		case _:
+			throw new haxe.Exception("格子必須有資源各100");
+	}
+	final attachInGrid = ctx.attachments.filter(a -> a.belongToGridId == grid0.id);
+	if (attachInGrid.length == 0) {
+		throw new haxe.Exception("必須蓋出建物");
+	}
 }
