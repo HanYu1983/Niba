@@ -140,14 +140,14 @@ function onPlayerGoToPosition(ctx:Context, playerId:Int, toGridId:Int) {
 					ctx.events.push(MESSAGE_EVENT({
 						title: "命運",
 						msg: '${player.name}不小心掉了錢包, 損失${value}錢'
-					}, getGameInfo(ctx, false)));
+					}, getGameInfo(ctx, false), null));
 				case _:
 					final value = 50;
 					player.money = player.money + value;
 					ctx.events.push(MESSAGE_EVENT({
 						title: "命運",
 						msg: '${player.name}撿到錢, 得到${value}錢'
-					}, getGameInfo(ctx, false)));
+					}, getGameInfo(ctx, false), null));
 			}
 		case _:
 	}
@@ -197,7 +197,7 @@ function onPayTaxToGrid(ctx:Context, playerId:Int, gridId:Int) {
 			ctx.events.push(MESSAGE_EVENT({
 				title: '${player.name}有減免效果',
 				msg: "不用支付貢奉金"
-			}, getGameInfo(ctx, false)));
+			}, getGameInfo(ctx, false), null));
 			// 移除效果
 			ctx.effects = ctx.effects.filter(e -> e.id != effectStrategy16[0].id);
 			return;
@@ -370,7 +370,7 @@ function onPayTaxToGrid(ctx:Context, playerId:Int, gridId:Int) {
 						ctx.events.push(MESSAGE_EVENT({
 							title: '${player.name}沒有資源, 不得不賣格子',
 							msg: '${g.name}被賣掉了'
-						}, getGameInfo(ctx, false)));
+						}, getGameInfo(ctx, false), null));
 						if (player.money >= 0 && player.food >= 0 && player.army >= 0) {
 							break;
 						}
@@ -395,7 +395,7 @@ function onPayTaxToGrid(ctx:Context, playerId:Int, gridId:Int) {
 						ctx.events.push(MESSAGE_EVENT({
 							title: '${player.name}沒有資源, 不能不賣武將',
 							msg: '${p.name}被賣掉了'
-						}, getGameInfo(ctx, false)));
+						}, getGameInfo(ctx, false), null));
 						if (player.money >= 0 && player.food >= 0 && player.army >= 0) {
 							break;
 						}

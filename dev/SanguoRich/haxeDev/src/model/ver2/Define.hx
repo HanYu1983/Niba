@@ -367,7 +367,7 @@ enum Event {
 	MESSAGE_EVENT(value:{
 		title:String,
 		msg:String,
-	}, gameInfo:GameInfo);
+	}, gameInfo:GameInfo, autoplay:Null<{duration:Float}>);
 	PLAYER_LOSE(value:{
 		player:model.IModel.PlayerInfo,
 	}, gameInfo:GameInfo, autoplay:Null<{duration:Float}>);
@@ -1020,6 +1020,10 @@ function getAnimationEventFromEvent(e:Event):Event {
 				duration: ANIMATION_DURATION,
 				msg: '開拓成功',
 			}, gameInfo);
+		case MESSAGE_EVENT(value, gameInfo, _):
+			MESSAGE_EVENT(value, gameInfo, {
+				duration: ANIMATION_DURATION
+			});
 		// case PEOPLE_LEVEL_UP_EVENT(value, gameInfo):
 		// 	ANIMATION_EVENT_SNATCH({
 		// 		gridIds: [value.gridId],
@@ -1248,12 +1252,12 @@ function getEventInfo(e:Event):EventInfo {
 				gameInfo: gameInfo,
 				autoplay: null,
 			}
-		case MESSAGE_EVENT(value, gameInfo):
+		case MESSAGE_EVENT(value, gameInfo, autoplay):
 			{
 				id: EventInfoID.MESSAGE_EVENT,
 				value: value,
 				gameInfo: gameInfo,
-				autoplay: null,
+				autoplay: autoplay,
 			}
 		case PLAYER_LOSE(value, gameInfo, autoplay):
 			{

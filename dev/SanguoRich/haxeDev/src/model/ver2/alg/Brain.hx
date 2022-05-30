@@ -472,7 +472,7 @@ private function doEvent(ctx:Context, playerId:Int) {
 						ctx.events.push(MESSAGE_EVENT({
 							title: 'AI',
 							msg: '${player.name}想佔領${grid.name}卻沒有足夠兵源, 拿走所有物資',
-						}, gameInfo));
+						}, gameInfo, null));
 						// 收回攻城的人
 						tmpPlayer.people = tmpPlayer.people.concat(tmpGrid.people);
 						tmpGrid.people = [];
@@ -503,7 +503,7 @@ private function doEvent(ctx:Context, playerId:Int) {
 								ctx.events.push(MESSAGE_EVENT({
 									title: 'AI',
 									msg: '${player.name}想佔領${grid.name}卻沒有空閒的人, 拿走所有物資',
-								}, gameInfo));
+								}, gameInfo, null));
 								_takeTransfer(ctx, playerId, gridId, tmpPlayer, tmpGrid);
 								doEvent(ctx, playerId);
 							}
