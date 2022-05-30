@@ -20,7 +20,7 @@ function doPlayerEnd(ctx:Context) {
 	if (isContinue) {
 		final nextPlayer = ctx.players[ctx.currentPlayerId];
 		if (nextPlayer.brain != null) {
-			doBrain(ctx, nextPlayer.id);
+			doBrain(ctx, nextPlayer.id, nextPlayer.id);
 			// try {
 			// 	doBrain(ctx, nextPlayer.id);
 			// } catch (e:Any) {

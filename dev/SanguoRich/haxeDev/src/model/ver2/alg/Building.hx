@@ -1,6 +1,7 @@
 package model.ver2.alg;
 
 import haxe.Exception;
+import tool.Debug;
 import model.GridGenerator;
 import model.IModel;
 import model.Config;
@@ -25,22 +26,22 @@ private function onBuildingCost(ctx:Context, playerId:Int, gridId:Int, peopleId:
 	final costRate = peopleAbilities.has(9) ? 0.5 : 1.0;
 	final costMoney = catelog[0].money * costRate;
 	final success = true;
+	info("onBuildingCost", '${player.name}在grid${gridId}從${current}建造${to}. 金錢${costMoney}/${player.money}');
 	if (success) {
 		final useEnergy = people.energy / (100 / ENERGY_COST_ON_BUILDING);
 		people.energy -= useEnergy;
 		player.money = Math.max(0, player.money - costMoney);
 		var checked = false;
-		ctx.attachments = ctx.attachments.map(a -> {
-			if (a.belongToGridId != gridId) {
-				return a;
-			}
-			if (a.type.equals(current)) {
-				a.type = to;
+		final attachInGrid = ctx.attachments.filter(a -> a.belongToGridId == gridId);
+		info("onBuildingCost", 'grid${gridId}的建物有${attachInGrid.map(a -> a.type)}');
+		for (attach in attachInGrid) {
+			if (attach.type.equals(current)) {
+				attach.type = to;
 				checked = true;
 			}
-			return a;
-		});
+		}
 		if (checked == false) {
+			js.Browser.console.log(ctx);
 			throw new Exception("current傳錯了, 沒有這個building");
 		}
 		// 功績

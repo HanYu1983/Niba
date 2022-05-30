@@ -60,11 +60,18 @@ private function genNewGrid(ctx:Context, playerId:Int, peopleId:Int, gridId:Int,
 		} else {
 			ctx.settings.limitBuilding;
 		}
-		final originGrid = ctx.grids[gridId];
+		final landType = ctx.grids[gridId].landType;
+		final buildtype:GROWTYPE = switch settleType {
+			case 0: MARKET;
+			case 1: FARM;
+			case 2: VILLAGE;
+			case 3: CITY;
+			case _: throw new haxe.Exception('unknown settleType: ${settleType}');
+		}
 		var tmp:Null<GridGenerator.Grid> = null;
 		// 只跑100次, 這裡假設不可能在次數內還無法隨機非建物地
 		for (i in 0...100) {
-			tmp = GridGenerator.getInst().getGrids(1, limitBuilding, -1, originGrid.landType, originGrid.buildtype)[0];
+			tmp = GridGenerator.getInst().getGrids(1, limitBuilding, -1, landType, buildtype)[0];
 			switch tmp.buildtype {
 				case CHANCE | DESTINY | EMPTY:
 					// 不開拓出無建物的地
@@ -79,6 +86,8 @@ private function genNewGrid(ctx:Context, playerId:Int, peopleId:Int, gridId:Int,
 		}
 		// 同步id
 		tmp.id = gridId;
+		// 同步名字
+		tmp.name = ctx.grids[gridId].name;
 		// 放進來的資源
 		tmp.money = cost.genGrid.money;
 		tmp.army = cost.genGrid.army;
@@ -127,6 +136,8 @@ function _takeSettle(ctx:Context, playerId:Int, peopleId:Int, gridId:Int, settle
 	ctx.attachments = _tmpCtx.attachments;
 	ctx.peoples = _tmpCtx.peoples;
 	ctx.treasures = _tmpCtx.treasures;
+	// 套用idSeq!!
+	ctx.idSeq = _tmpCtx.idSeq;
 	//
 	final player = getPlayerById(ctx, playerId);
 	final p1 = getPeopleById(ctx, peopleId);

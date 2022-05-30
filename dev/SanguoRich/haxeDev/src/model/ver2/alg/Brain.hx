@@ -32,8 +32,8 @@ final privateExport = {
 	getDefaultBrainMemory: getDefaultBrainMemory
 }
 
-function doBrain(ctx, playerId:Int) {
-	info("doBrain", ["start", playerId]);
+function doBrain(ctx, playerId:Int, stopPlayerId:Int) {
+	info("doBrain", 'player${playerId}開始AI行為');
 	var done = false;
 	for (i in 0...100) {
 		if (done) {
@@ -80,10 +80,14 @@ function doBrain(ctx, playerId:Int) {
 					brainMemory.hasTransfer = false;
 					// 如果下一個玩家又是AI
 					final nextPlayer = ctx.players[ctx.currentPlayerId];
-					// 如果又回到自己, 代表遊戲結束了
-					final isLoop = nextPlayer.id == playerId;
-					if (isLoop == false && nextPlayer.brain != null) {
-						doBrain(ctx, nextPlayer.id);
+					// 輪了一圈就結束
+					final isStop = nextPlayer.id == stopPlayerId;
+					if (isStop == false) {
+						// 如果下一個玩家就是自己, 代表其它玩家都失敗了
+						final isLoop = nextPlayer.id == playerId;
+						if (isLoop == false && nextPlayer.brain != null) {
+							doBrain(ctx, nextPlayer.id, stopPlayerId);
+						}
 					}
 				}
 			case MOVE:
@@ -326,7 +330,7 @@ function doBrain(ctx, playerId:Int) {
 				peopleWillEnter.position.gridId = grid.id;
 		}
 	}
-	info("doBrain", ["finished", playerId]);
+	info("doBrain", 'player${playerId}結束AI行為');
 }
 
 private typedef BrainMemory = {
@@ -604,7 +608,7 @@ private function getCommandWeight(ctx:Context, playerId:Int, gridId:Int, cmd:Act
 			for (strategy in StrategyList) {
 				final factCanPayMoney = player.money >= strategy.money;
 				if (factCanPayMoney == false) {
-					warn("getCommandWeight", ["factCanPayMoney == false; continue", strategy]);
+					verbose("getCommandWeight", ["factCanPayMoney == false; continue", strategy]);
 					continue;
 				}
 				final factNowMoney = getFact(player.money / (strategy.money * 3));
@@ -1321,32 +1325,42 @@ private function getCommandWeight(ctx:Context, playerId:Int, gridId:Int, cmd:Act
 			final score = if (buildingsInGrid.length > 0) {
 				final buildingNotMax = buildingsInGrid.filter(b -> {
 					return switch b.type {
-						case MARKET(level) if (level < 3):
-							true;
-						case BANK(level) if (level < 3):
-							true;
-						case FARM(level) if (level < 3):
-							true;
-						case BARN(level) if (level < 3):
-							true;
-						case BARRACKS(level) if (level < 3):
-							true;
-						case HOME(level) if (level < 3):
-							true;
-						case WALL(level) if (level < 3):
-							true;
-						case EXPLORE(level) if (level < 1):
-							true;
-						case _:
-							false;
+						case MARKET(level):
+							if (level < 3) true else false;
+						case BANK(level):
+							if (level < 3) true else false;
+						case FARM(level):
+							if (level < 3) true else false;
+						case BARN(level):
+							if (level < 3) true else false;
+						case BARRACKS(level):
+							if (level < 3) true else false;
+						case HOME(level):
+							if (level < 3) true else false;
+						case WALL(level):
+							if (level < 3) true else false;
+						case EXPLORE(level):
+							if (level < 1) true else false;
+						case TREASURE(level):
+							if (level < 1) true else false;
+						case FISHING(level):
+							if (level < 1) true else false;
+						case HUNTING(level):
+							if (level < 1) true else false;
+						case MINE(level):
+							if (level < 1) true else false;
+						case SIEGEFACTORY(level):
+							if (level < 1) true else false;
+						case ACADEMY(level):
+							if (level < 1) true else false;
 					}
 				});
 				if (buildingNotMax.length == 0) {
 					0.0;
 				} else {
 					var score = 0.0;
+					// 隨機挑一個錢夠的, 運氣不好就買不到
 					for (i in 0...buildingNotMax.length) {
-						// 隨機挑一個錢夠的, 運氣不好就買不到
 						final chooseId = Std.int(Math.random() * buildingNotMax.length);
 						final attachment = buildingNotMax[chooseId];
 						final findBuildingCatelog = BuildingList.filter((catelog) -> Type.enumEq(catelog.type, attachment.type));
@@ -1361,6 +1375,7 @@ private function getCommandWeight(ctx:Context, playerId:Int, gridId:Int, cmd:Act
 							peopleEnergyIsHigh.sort((a, b) -> Std.int(b.energy) - Std.int(a.energy));
 							brainMemory.build.attachmentId = attachment.id;
 							brainMemory.build.peopleId = peopleEnergyIsHigh[0].id;
+							info("getCommandWeight", '${player.name}可能在${grid.name}升級${attachment.type}(attachment${attachment.id})');
 							break;
 						}
 					}
@@ -1457,7 +1472,10 @@ private function getCommandWeight(ctx:Context, playerId:Int, gridId:Int, cmd:Act
 					final factSuccessRate = getFact(result.successRate / 0.8);
 					// 體力剩下越多越好
 					final factEnergy = factVery(getFact(result.energyAfter / 100.0), 2);
-					final score = 1.0 * getFact(factLowerThen7 * factEnergy * factSuccessRate) * factOn(factSuccessRate, 0.6) * moreThen10Switch;
+					// 錢必須剩下超過200
+					final factMoneyMoreThen200 = getFact(result.moneyAfter / 200.0);
+					final score = 1.0 * getFact(factLowerThen7 * factEnergy * factSuccessRate * factMoneyMoreThen200) * factOn(factSuccessRate,
+						0.6) * factOn(factMoneyMoreThen200, 1) * moreThen10Switch;
 					if (score > maxScore) {
 						maxScore = score;
 						brainMemory.hire.peopleId = p1.id;
@@ -1517,9 +1535,9 @@ private function getCommandWeight(ctx:Context, playerId:Int, gridId:Int, cmd:Act
 			var maxScore = 0.0;
 			// 差距越大交易量越大
 			final moneyBase = switch getZeroOneFromFact(factMoney) {
-				case v if (v > 0.7):
+				case v if (v > 0.7 && player.money > 300):
 					400;
-				case v if (v > 0.5):
+				case v if (v > 0.5 && player.money > 150):
 					200;
 				case _:
 					100;
@@ -1554,9 +1572,9 @@ private function getCommandWeight(ctx:Context, playerId:Int, gridId:Int, cmd:Act
 			var maxScore = 0.0;
 			// 差距越大交易量越大
 			final moneyBase = switch getZeroOneFromFact(factMoney) {
-				case v if (v > 0.7):
+				case v if (v > 0.7 && player.army > 300):
 					400;
-				case v if (v > 0.5):
+				case v if (v > 0.5 && player.army > 150):
 					200;
 				case _:
 					100;
@@ -1591,9 +1609,9 @@ private function getCommandWeight(ctx:Context, playerId:Int, gridId:Int, cmd:Act
 			var maxScore = 0.0;
 			// 差距越大交易量越大
 			final moneyBase = switch getZeroOneFromFact(factMoney) {
-				case v if (v > 0.7):
+				case v if (v > 0.7 && player.food > 300):
 					400;
-				case v if (v > 0.5):
+				case v if (v > 0.5 && player.food > 150):
 					200;
 				case _:
 					100;
@@ -1644,7 +1662,7 @@ private function getCommandWeight(ctx:Context, playerId:Int, gridId:Int, cmd:Act
 			verbose("getCommandWeight", [playerId, cmd, maxScore]);
 			maxScore;
 		case TRANSFER:
-			final score = getTransferWeightV2(ctx, playerId, gridId);
+			final score = getTransferWeightV3(ctx, playerId, gridId);
 			verbose("getCommandWeight", [playerId, cmd, score]);
 			score;
 		case PRACTICE:
@@ -2048,12 +2066,78 @@ private function getTransferWeightV2(ctx:Context, playerId:Int, gridId:Int):Floa
 					1 / 2.5;
 			}
 		}
+		verbose("getTransferWeightV2", ["playerResourceWeight", playerResourceWeight]);
+		verbose("getTransferWeightV2", ["grid.army", grid.army]);
+		verbose("getTransferWeightV2", ["player.army", player.army]);
 		final midArmy = Math.min(getGridMaxArmy(ctx, grid.id) * 0.8, (grid.army + player.army) * playerResourceWeight);
+		verbose("getTransferWeightV2", ["midArmy", midArmy]);
 		// final midFood = Math.min(getGridMaxFood(ctx, grid.id) * 0.8, (grid.food + player.food) * playerResourceWeight);
 		// final midMoney = Math.min(getGridMaxMoney(ctx, grid.id) * 0.8, (grid.money + player.money) * playerResourceWeight);
 		final offsetArmy = midArmy - grid.army;
 		final offsetFood = midArmy - grid.food;
 		final offsetMoney = midArmy - grid.money;
+		verbose("getTransferWeightV2", ["offsetArmy", offsetArmy]);
+		verbose("getTransferWeightV2", ["offsetFood", offsetFood]);
+		verbose("getTransferWeightV2", ["offsetMoney", offsetMoney]);
+		brainMemory.transfer.food = offsetFood;
+		brainMemory.transfer.money = offsetMoney;
+		brainMemory.transfer.army = offsetArmy;
+		// 先讓給蓋建物(1.0)
+		maxScore = 0.9;
+	}
+	final score = maxScore;
+	return score;
+}
+
+private function getTransferWeightV3(ctx:Context, playerId:Int, gridId:Int):Float {
+	final player = getPlayerById(ctx, playerId);
+	if (player == null) {
+		throw new haxe.Exception('player not found:${playerId}');
+	}
+	if (player.brain == null) {
+		throw new haxe.Exception("必須有Brain");
+	}
+	final brainMemory:Null<BrainMemory> = player.brain.memory;
+	if (brainMemory == null) {
+		throw new haxe.Exception("必須有Brain.memory");
+	}
+	if (brainMemory.hasTransfer) {
+		return -1;
+	}
+	final grid = ctx.grids[gridId];
+	if (grid == null) {
+		throw new haxe.Exception("grid not found");
+	}
+	var maxScore = 0.0;
+	{
+		// 放在主公的成數
+		final playerResourceWeight = {
+			final gridTotal = grid.army /*+ grid.food + grid.money*/;
+			switch gridTotal {
+				case total if (total > 1600):
+					1 / 1.5;
+				case total if (total > 1200):
+					1 / 1.75;
+				case total if (total > 800):
+					1 / 2.0;
+				case total if (total > 400):
+					1 / 2.25;
+				case _:
+					1 / 2.5;
+			}
+		}
+		verbose("getTransferWeightV3", ["playerResourceWeight", playerResourceWeight]);
+		verbose("getTransferWeightV3", ["grid.army", grid.army]);
+		verbose("getTransferWeightV3", ["player.army", player.army]);
+		final midArmy = Math.min(getGridMaxArmy(ctx, grid.id) * 0.8, (grid.army + player.army) * playerResourceWeight);
+		final midFood = Math.min(getGridMaxFood(ctx, grid.id) * 0.8, (grid.food + player.food) * playerResourceWeight);
+		final midMoney = Math.min(getGridMaxMoney(ctx, grid.id) * 0.8, (grid.money + player.money) * playerResourceWeight);
+		final offsetArmy = midArmy - grid.army;
+		final offsetFood = Math.min(midArmy, midFood) - grid.food;
+		final offsetMoney = Math.min(midArmy, midMoney) - grid.money;
+		verbose("getTransferWeightV3", ["offsetArmy", offsetArmy]);
+		verbose("getTransferWeightV3", ["offsetFood", offsetFood]);
+		verbose("getTransferWeightV3", ["offsetMoney", offsetMoney]);
 		brainMemory.transfer.food = offsetFood;
 		brainMemory.transfer.money = offsetMoney;
 		brainMemory.transfer.army = offsetArmy;
@@ -2066,6 +2150,7 @@ private function getTransferWeightV2(ctx:Context, playerId:Int, gridId:Int):Floa
 
 function test() {
 	testAISettle();
+	testRunGame();
 }
 
 function testAISettle() {
@@ -2104,7 +2189,7 @@ function testAISettle() {
 	if (cmds.has(SETTLE) == false) {
 		throw new haxe.Exception("必須有開拓指令, 不然AI選不到");
 	}
-	doBrain(ctx, player0.id);
+	doBrain(ctx, player0.id, player0.id);
 	grid0 = ctx.grids[0];
 	switch [grid0.money, grid0.food, grid0.army] {
 		case [0, 0, 0]:
@@ -2120,4 +2205,95 @@ function testAISettle() {
 	if (attachInGrid.length == 0) {
 		throw new haxe.Exception("必須蓋出建物");
 	}
+}
+
+function testRunGame() {
+	final ctx = getDefaultContext();
+	initContext(ctx, {
+		players: [{type: 1}, {type: 1}, {type: 1}, {type: 1}],
+		startCity: true,
+		gridCount: 39,
+		growSpeed: 0,
+		resource: 1000,
+		limitBuilding: true,
+		aiLevel: 0,
+		putong: false,
+	});
+	ctx.players[0].brain = {
+		memory: getDefaultBrainMemory()
+	};
+	for (i in 0...100) {
+		trace('============第${i}回合開始============');
+		ctx.events = [];
+		doBrain(ctx, 0, 0);
+		trace('事件數量為${ctx.events.length}');
+		var isGameOver = {
+			var tmp = false;
+			for (e in ctx.events) {
+				switch e {
+					case PLAYER_WIN({player: player}, _, _):
+						tmp = true;
+						trace('${player == null ? "unknown" : player.name} WIN!!');
+					case _:
+				}
+			}
+			tmp;
+		}
+		for (player in ctx.players) {
+			trace('====${player.name}====');
+			trace('score: ${player.score}');
+			trace('money: ${player.money}');
+			trace('food: ${player.food}');
+			trace('army: ${player.army}');
+			if (player.money == 0 || player.food == 0 || player.army == 0) {
+				// isGameOver = true;
+			}
+		}
+		for (grid in ctx.grids) {
+			switch grid.buildtype {
+				case EMPTY | CHANCE | DESTINY:
+					final belongPlayerId = getGridBelongPlayerId(ctx, grid.id);
+					if (belongPlayerId != null) {
+						js.Browser.console.log("grid", grid);
+						js.Browser.console.log("belongPlayerId", belongPlayerId);
+						js.Browser.console.log("peoples", ctx.peoples.filter(p -> p.position.gridId == grid.id));
+						js.Browser.console.log(ctx);
+						throw new haxe.Exception("grid為空地的情況, 不可能可以有主公");
+					}
+				case _:
+			}
+		}
+		for (people in ctx.peoples) {
+			final sameId = ctx.peoples.filter(a -> a.id == people.id);
+			if (sameId.length > 1) {
+				trace('sameId: ${sameId.map(a -> a.id)}');
+				trace('sameId: ${sameId.map(a -> a.name)}');
+				js.Browser.console.log(ctx);
+				throw new haxe.Exception("people有重復ID");
+			}
+		}
+		for (treasure in ctx.treasures) {
+			final sameId = ctx.treasures.filter(a -> a.id == treasure.id);
+			if (sameId.length > 1) {
+				trace('sameId: ${sameId.map(a -> a.id)}');
+				js.Browser.console.log(ctx);
+				throw new haxe.Exception("treasure有重復ID");
+			}
+		}
+		for (attach in ctx.attachments) {
+			final attachInSameId = ctx.attachments.filter(a -> a.id == attach.id);
+			if (attachInSameId.length > 1) {
+				trace('attachInSameId: ${attachInSameId.map(a -> a.id)}');
+				trace('attachInSameId在: ${attachInSameId.map(a -> a.belongToGridId)}');
+				js.Browser.console.log(ctx);
+				throw new haxe.Exception("attachment有重復ID");
+			}
+		}
+
+		if (isGameOver) {
+			js.Browser.console.log(ctx);
+			break;
+		}
+	}
+	trace("遊戲結束");
 }

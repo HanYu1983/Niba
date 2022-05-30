@@ -14,6 +14,7 @@
 --macro nullSafety("model.ver2.alg.Snatch")
 --macro nullSafety("model.ver2.alg.Pk")
 --macro nullSafety("model.ver2.alg.Settle")
+--macro nullSafety("model.ver2.alg.Strategy")
 -D debug
 
 -js public/Main.js

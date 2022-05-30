@@ -41,13 +41,25 @@ private function getStrategyCost(ctx:Context, p1PeopleId:Int, strategyId:Int, ta
 			if (peopleInGrid.length == 0) {
 				0.0;
 			} else {
-				// 必須不是主公的城
-				final gridBelongPlayerId = getGridBelongPlayerId(ctx, grid.id);
-				if (gridBelongPlayerId != null) {
+				// 必須不是空地
+				final isEmpty = switch getGridInfo(ctx, grid).buildtype {
+					case EMPTY | CHANCE | DESTINY:
+						true;
+					case _:
+						false;
+				}
+				if (isEmpty) {
 					0.0;
 				} else {
 					1.0;
 				}
+				// // 必須不是主公的城
+				// final gridBelongPlayerId = getGridBelongPlayerId(ctx, grid.id);
+				// if (gridBelongPlayerId != null) {
+				// 	0.0;
+				// } else {
+				// 	1.0;
+				// }
 			}
 		case 4:
 			// 火中取栗
@@ -165,6 +177,7 @@ private function onStrategyCost(ctx:Context, p1PeopleId:Int, strategyId:Int, tar
 	final strategy = StrategyList[strategyId];
 	final cost = getStrategyCost(ctx, p1PeopleId, strategyId, targetPlayerId, targetPeopleId, targetGridId);
 	final success = Math.random() < cost.successRate;
+	info("onStrategyCost", '${player.name}使用計策${strategy.name}${success ? "成功" : "失敗"}, 目標是[${targetPlayerId}, ${targetPeopleId}, ${targetGridId}]');
 	wrapStrategyEvent(ctx, player.id, p1.id, strategyId, () -> {
 		return switch strategyId {
 			case 0:
@@ -209,7 +222,12 @@ private function onStrategyCost(ctx:Context, p1PeopleId:Int, strategyId:Int, tar
 							p1.energy = Math.max(0, p1.energy - cost.peopleCost.energy);
 							if (success) {
 								final grid = ctx.grids[player.position];
-								final isEmpty = getGridInfo(ctx, grid).buildtype == GROWTYPE.EMPTY;
+								final isEmpty = switch getGridInfo(ctx, grid).buildtype {
+									case EMPTY | CHANCE | DESTINY:
+										true;
+									case _:
+										false;
+								}
 								if (isEmpty) {
 									throw new Exception("這是空地, 搶了沒資源");
 								}
@@ -323,9 +341,11 @@ private function onStrategyCost(ctx:Context, p1PeopleId:Int, strategyId:Int, tar
 							player.money = Math.max(0, player.money - cost.playerCost.money);
 							final p2 = getPeopleById(ctx, targetPeopleId);
 							p2.energy = Math.max(0, p2.energy + moneyOffset);
-							// hate you
-							final targetPlayer = getPlayerById(ctx, p2.belongToPlayerId);
-							targetPlayer.hate.push(player.id);
+							if (p2.belongToPlayerId != null) {
+								// hate you
+								final targetPlayer = getPlayerById(ctx, p2.belongToPlayerId);
+								targetPlayer.hate.push(player.id);
+							}
 							onPeopleExpAdd(ctx, p1.id, getExpAdd(cost.successRate, ENERGY_COST_ON_STRATEGY));
 						} else {
 							player.money = Math.max(0, player.money - cost.playerCost.money * 0.2);
@@ -720,13 +740,28 @@ private function onStrategyCost(ctx:Context, p1PeopleId:Int, strategyId:Int, tar
 
 function _getStrategyRate(ctx:Context, p1PeopleId:Int, strategyId:Int, targetPlayerId:Int, targetPeopleId:Int, targetGridId:Int):PreResultOfStrategy {
 	final p1 = getPeopleById(ctx, p1PeopleId);
-	final player = getPlayerById(ctx, p1.belongToPlayerId);
 	final cost = getStrategyCost(ctx, p1PeopleId, strategyId, targetPlayerId, targetPeopleId, targetGridId);
 	return {
 		energyBefore: Std.int(p1.energy),
 		energyAfter: Std.int(Math.max(0, p1.energy - cost.peopleCost.energy)),
-		moneyBefore: Std.int(player.money),
-		moneyAfter: Std.int(Math.max(0, player.money - cost.playerCost.money)),
+		moneyBefore: {
+			if (p1.belongToPlayerId == null) {
+				warn("_getStrategyRate", "p1.belongToPlayerId == null");
+				0;
+			} else {
+				final player = getPlayerById(ctx, p1.belongToPlayerId);
+				Std.int(player.money);
+			}
+		},
+		moneyAfter: {
+			if (p1.belongToPlayerId == null) {
+				warn("_getStrategyRate", "p1.belongToPlayerId == null");
+				0;
+			} else {
+				final player = getPlayerById(ctx, p1.belongToPlayerId);
+				Std.int(Math.max(0, player.money - cost.playerCost.money));
+			}
+		},
 		rate: cost.successRate
 	}
 }

@@ -9,18 +9,27 @@ private enum LogLevel {
 	Err;
 }
 
-private final filterLevel:Array<LogLevel> = [Verbose, Info, Warn, Err];
+private final filterLevel:Array<LogLevel> = [
+	//
+	// Verbose,
+	Info,
+	Warn,
+	Err
+];
 
 private final filterCategory:Array<String> = [
 	//
-	"getCommandWeight",
+	// "CacheModel",
+	// "initContext",
+	// "_buyTreasure",
+	// "onPlayerGoToPosition",
+	// "GridGenerator",
 	"doBrain",
-	"CacheModel",
+	"getTransferWeightV3",
+	"onStrategyCost",
 	"_takeStrategy",
-	"initContext",
-	"_buyTreasure",
-	"onPlayerGoToPosition",
-	// "GridGenerator"
+	"onBuildingCost",
+	"getCommandWeight",
 ];
 
 function verbose(category:String, msg:Dynamic) {
