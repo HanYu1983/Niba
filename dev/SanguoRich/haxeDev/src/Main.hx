@@ -21,7 +21,7 @@ class Main {
 	public static function main() {
 		// 跑測試
 		// 只開發前台時可以關掉
-		if (true) {
+		if (false) {
 			runTest();
 			// try {
 			// 	runTest();
@@ -31,8 +31,8 @@ class Main {
 			// }
 		}
 
-		// model = new DebugModel();
-		model = new CacheModel(new ModelVer2());
+		model = new DebugModel();
+		// model = new CacheModel(new ModelVer2());
 
 		var app = new HaxeUIApp();
 		app.ready(function() {

@@ -50,9 +50,11 @@ class StrategyPreviewView extends PopupView {
 		Main.view.onStrategyPreviewSelectGridClick(showGrids, (gridId:Int) -> {
 			fadeIn();
 
-			final gameInfo = Main.model.gameInfo();
-			selectGridId = gridId;
-			btn_selectGrid.text = gameInfo.grids[gridId].name;
+			if (gridId != null) {
+				final gameInfo = Main.model.gameInfo();
+				selectGridId = gridId;
+				btn_selectGrid.text = gameInfo.grids[gridId].name;
+			}
 		});
 	}
 

@@ -710,14 +710,16 @@ class MainView extends Box {
 				case MESSAGE_EVENT:
 					// 如果下一次的事件是移動，這次的message事件就先不更新畫面，不然會把例如移動之類的計策會移到的地方直接更新了
 					// 等移動完再更新就好
-					final nextEvent = events[0];
-					var needSyncNow = true;
+					// final nextEvent = events[0];
+					// var needSyncNow = true;
 					// if(nextEvent != null){
 					// 	if(nextEvent.id == ANIMATION_EVENT && nextEvent.value.id == ActionInfoID.MOVE){
 					// 		needSyncNow = false;
 					// 	}
 					// }
-					if(needSyncNow) syncViewByInfo(gameInfo);
+					// if(needSyncNow) syncViewByInfo(gameInfo);
+
+					syncViewByInfo(gameInfo);
 					checkAutoPlay(autoPlay, info.title, info.msg);
 				case ANIMATION_EVENT:
 					disabledAllCommands();
@@ -1205,6 +1207,7 @@ class MainView extends Box {
 	}
 
 	public function onStrategyPreviewSelectGridClick(gridInfos:Array<Grid>, cb:(gridId:Int) -> Void) {
+		disabledAllCommands();
 		switchStageToSelectGrid(gridInfos, cb);
 	}
 
@@ -1238,6 +1241,8 @@ class MainView extends Box {
 	}
 
 	function switchStageToSelectGrid(gridInfos:Array<Grid>, cb:(gridId:Int) -> Void) {
+
+		lbl_gameInfo.text = '請選擇要使用的格子，或者點選其它的格子回到計策介面';
 		final gameInfo = Main.model.gameInfo();
 		final currentPlayer = gameInfo.currentPlayer;
 
@@ -1263,13 +1268,18 @@ class MainView extends Box {
 			});
 
 			stage.onClick = function(e) {
+				syncUI(gameInfo);
+				syncGameInfo(gameInfo);
+				switchStageToNormal();
+
 				final gridId = getGridIdFromPosition(e.localX, e.localY);
 				if (grids[gridId].isSelectable) {
-					switchStageToNormal();
 					for (g in grids) {
 						g.showSelectable(false);
 					}
 					cb(gridId);
+				}else{
+					cb(null);
 				}
 			}
 		}
