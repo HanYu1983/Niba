@@ -137,4 +137,14 @@ class CacheModel extends ProxyModel {
 		isDirty = true;
 		return super.takeSettle(playerId, peopleId, gridId, settleType, syncViewWithEventsByGameInfo);
 	}
+
+	override function sellTreasure(playerId:Int, gridId:Int, sellId:Int, syncViewWithEventsByGameInfo:(gameInfo:GameInfo) -> Void) {
+		isDirty = true;
+		return super.sellTreasure(playerId, gridId, sellId, syncViewWithEventsByGameInfo);
+	}
+
+	override function buyTreasure(playerId:Int, gridId:Int, buyId:Int, syncViewWithEventsByGameInfo:(gameInfo:GameInfo) -> Void) {
+		isDirty = true;
+		return super.buyTreasure(playerId, gridId, buyId, syncViewWithEventsByGameInfo);
+	}
 }

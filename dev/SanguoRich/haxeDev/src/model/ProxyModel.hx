@@ -205,11 +205,15 @@ class ProxyModel implements IModel {
 		return model.takeSettle(playerId, peopleId, gridId, settleType, syncViewWithEventsByGameInfo);
 	}
 
-	public function sellTreasure(playerId:Int, gridId:Int, sellId:Int, syncViewWithEventsByGameInfo:(gameInfo:GameInfo) -> Void) {}
+	public function sellTreasure(playerId:Int, gridId:Int, sellId:Int, syncViewWithEventsByGameInfo:(gameInfo:GameInfo) -> Void) {
+		return model.sellTreasure(playerId, gridId, sellId, syncViewWithEventsByGameInfo);
+	}
 
-	public function buyTreasure(playerId:Int, gridId:Int, buyId:Int, syncViewWithEventsByGameInfo:(gameInfo:GameInfo) -> Void) {}
+	public function buyTreasure(playerId:Int, gridId:Int, buyId:Int, syncViewWithEventsByGameInfo:(gameInfo:GameInfo) -> Void) {
+		return model.buyTreasure(playerId, gridId, buyId, syncViewWithEventsByGameInfo);
+	}
 
 	public function getPreResultOfBuilding(playerId:Int, gridId:Int, peopleId:Int, current:BUILDING, to:BUILDING):PreResultOnBuilding {
-		throw new haxe.exceptions.NotImplementedException();
+		return model.getPreResultOfBuilding(playerId, gridId, peopleId, current, to);
 	}
 }

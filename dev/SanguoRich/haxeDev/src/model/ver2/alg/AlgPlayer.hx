@@ -766,14 +766,15 @@ function onPlayerEnd(ctx:Context, playerId:Int):Bool {
 												final grid = ctx.grids[attach.belongToGridId];
 												final treasuresInGrid = ctx.treasures.filter(t -> t.position.gridId == attach.belongToGridId);
 												if (treasuresInGrid.length < maxCount) {
-													final belongToPlayerId = getGridBelongPlayerId(ctx, attach.belongToGridId);
-													if (belongToPlayerId != null) {
-														gridsBefore.push(getGridInfo(ctx, grid));
-														addTreasureInfo(ctx, belongToPlayerId, grid.id, null, TreasureGenerator.getInst().generator());
-														gridsAfter.push(getGridInfo(ctx, grid));
-													} else {
-														warn("onPlayerEnd", ["寶物所要將要產寶,但格子沒有主公", attach.belongToGridId]);
-													}
+													addTreasureInfo(ctx, null, grid.id, null, TreasureGenerator.getInst().generator());
+													// final belongToPlayerId = getGridBelongPlayerId(ctx, attach.belongToGridId);
+													// if (belongToPlayerId != null) {
+													// 	gridsBefore.push(getGridInfo(ctx, grid));
+													// 	addTreasureInfo(ctx, belongToPlayerId, grid.id, null, TreasureGenerator.getInst().generator());
+													// 	gridsAfter.push(getGridInfo(ctx, grid));
+													// } else {
+													// 	warn("onPlayerEnd", ["寶物所要將要產寶,但格子沒有主公", attach.belongToGridId]);
+													// }
 												} else {
 													warn("onPlayerEnd", ["寶物所要將要產寶, 但寶物數量已達上限", attach.belongToGridId]);
 												}

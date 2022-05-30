@@ -11,7 +11,7 @@ private enum LogLevel {
 
 private final filterLevel:Array<LogLevel> = [
 	//
-	// Verbose,
+	Verbose,
 	Info,
 	Warn,
 	Err
@@ -21,7 +21,7 @@ private final filterCategory:Array<String> = [
 	//
 	// "CacheModel",
 	// "initContext",
-	// "_buyTreasure",
+	"_buyTreasure",
 	// "onPlayerGoToPosition",
 	// "GridGenerator",
 	"doBrain",

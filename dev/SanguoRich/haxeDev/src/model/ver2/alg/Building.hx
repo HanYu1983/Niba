@@ -55,6 +55,22 @@ private function onBuildingCost(ctx:Context, playerId:Int, gridId:Int, peopleId:
 	}, getGameInfo(ctx, false)));
 }
 
+function _getPreResultOfBuilding(ctx:Context, playerId:Int, gridId:Int, peopleId:Int, current:BUILDING, to:BUILDING):PreResultOnBuilding {
+	final tmpCtx = deepCopy(ctx);
+	final player = getPlayerById(tmpCtx, playerId);
+	final grid = tmpCtx.grids[gridId];
+	final ret = {
+		playerBefore: getPlayerInfo(tmpCtx, player),
+		playerAfter: getPlayerInfo(tmpCtx, player),
+		gridBefore: getGridInfo(tmpCtx, grid),
+		gridAfter: getGridInfo(tmpCtx, grid),
+	};
+	onBuildingCost(tmpCtx, playerId, gridId, peopleId, current, to);
+	ret.playerAfter = getPlayerInfo(tmpCtx, player);
+	ret.gridAfter = getGridInfo(tmpCtx, grid);
+	return ret;
+}
+
 function _takeBuilding(ctx:Context, playerId:Int, gridId:Int, peopleId:Int, current:BUILDING, to:BUILDING) {
 	onBuildingCost(ctx, playerId, gridId, peopleId, current, to);
 	{

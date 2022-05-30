@@ -270,4 +270,8 @@ class ModelVer2 extends DebugModel {
 		_buyTreasure(context, playerId, gridId, buyId);
 		syncViewWithEventsByGameInfo(gameInfo());
 	}
+
+	override function getPreResultOfBuilding(playerId:Int, gridId:Int, peopleId:Int, current:BUILDING, to:BUILDING):PreResultOnBuilding {
+		return _getPreResultOfBuilding(context, playerId, gridId, peopleId, current, to);
+	}
 }
