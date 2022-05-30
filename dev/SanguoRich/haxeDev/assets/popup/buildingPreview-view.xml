@@ -10,8 +10,10 @@
             <label id="name" textAlign="center" width="100%" />
         </item-renderer>
     </tableview>
-    <hbox id="box_grid" width="400" horizontalAlign="center"/>
-    
+    <hbox width="100%">
+        <hbox id="box_grid" width="50%" horizontalAlign="center"/>
+        <hbox id="box_player" width="50%" horizontalAlign="center"/>
+    </hbox>
     <hbox horizontalAlign="center">
         <button text="取消" id="btn_cancel" />
         <button text="確定" id="btn_confirm" />

@@ -253,6 +253,13 @@ typedef PreResultOfStrategy = {
 	rate:Float,
 }
 
+typedef PreResultOnBuilding = {
+	playerBefore:PlayerInfo,
+	playerAfter:PlayerInfo,
+	gridBefore:Grid,
+	gridAfter:Grid,
+}
+
 typedef BuildingCatelog = {
 	id:Int,
 	name:String,
@@ -366,6 +373,8 @@ interface IModel {
 	function sellTreasure(playerId:Int, gridId:Int, sellId:Int, syncViewWithEventsByGameInfo:(gameInfo:GameInfo) -> Void):Void;
 
 	function buyTreasure(playerId:Int, gridId:Int, buyId:Int, syncViewWithEventsByGameInfo:(gameInfo:GameInfo) -> Void):Void;
+
+	function getPreResultOfBuilding(playerId:Int, gridId:Int, peopleId:Int, current:BUILDING, to:BUILDING):PreResultOnBuilding;
 }
 
 final StrategyList:Array<StrategyCatelog> = [

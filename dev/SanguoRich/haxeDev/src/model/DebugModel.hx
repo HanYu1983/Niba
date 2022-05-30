@@ -51,7 +51,7 @@ class DebugModel implements IModel {
 					ActionInfoID.SETTLE,
 					ActionInfoID.TREASURE_MARKET,
 					// ActionInfoID.EXPLORE,
-					// ActionInfoID.BUILD,
+					ActionInfoID.BUILD,
 					ActionInfoID.FIRE,
 					ActionInfoID.HIRE,
 					// ActionInfoID.PK,
@@ -694,5 +694,14 @@ class DebugModel implements IModel {
 			}
 		];
 		syncViewWithEventsByGameInfo(info);
+	}
+
+	public function getPreResultOfBuilding(playerId:Int, gridId:Int, peopleId:Int, current:BUILDING, to:BUILDING):PreResultOnBuilding {
+		return {
+			playerBefore: info.players[0],
+			playerAfter: info.players[1],
+			gridBefore: info.grids[0],
+			gridAfter: info.grids[1],
+		}
 	}
 }
