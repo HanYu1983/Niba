@@ -670,17 +670,21 @@ class MainView extends Box {
 		}
 	}
 
+	function autoPlayMessage(title, msg, autoPlay, cb) {
+		messageView.showMessage(title, msg);
+		TweenX.serial([
+			TweenX.wait(autoPlay.duration),
+			TweenX.func(() -> {
+				messageView.fadeOut();
+				cb();
+			})
+		]);
+	}
+
 	function doOneEvent() {
 		function checkAutoPlay(autoPlay:Dynamic, title, msg) {
 			if (autoPlay != null) {
-				messageView.showMessage(title, msg);
-				TweenX.serial([
-					TweenX.wait(autoPlay.duration),
-					TweenX.func(() -> {
-						messageView.fadeOut();
-						doOneEvent();
-					})
-				]);
+				autoPlayMessage(title, msg, autoPlay, doOneEvent);
 			} else {
 				Dialogs.messageBox(msg, title, MessageBoxType.TYPE_INFO, true, (b) -> {
 					doOneEvent();
@@ -782,7 +786,7 @@ class MainView extends Box {
 
 					final gridChanges:Array<{gridBefore:Grid, gridAfter:Grid}> = info.grids;
 					final title = info.describtion;
-					var msg = '${title}\n\n';
+					var msg = '${title}\n';
 					for (result in gridChanges) {
 						final before = result.gridBefore;
 						final after = result.gridAfter;
@@ -798,8 +802,10 @@ class MainView extends Box {
 						msg += '\n';
 					}
 
+					autoPlayMessage(title, msg, {duration: 2.5}, () -> {});
+
 					final showGrids = gridChanges.map((grid) -> grid.gridBefore.id);
-					GridView.showGridsAnimation(grids, showGrids, title, 2.0, () -> {
+					GridView.showGridsAnimation(grids, showGrids, title, 2.5, () -> {
 						syncViewByInfo(gameInfo);
 						doOneEvent();
 					});
@@ -1241,7 +1247,6 @@ class MainView extends Box {
 	}
 
 	function switchStageToSelectGrid(gridInfos:Array<Grid>, cb:(gridId:Int) -> Void) {
-
 		lbl_gameInfo.text = '請選擇要使用的格子，或者點選其它的格子回到計策介面';
 		final gameInfo = Main.model.gameInfo();
 		final currentPlayer = gameInfo.currentPlayer;
@@ -1278,7 +1283,7 @@ class MainView extends Box {
 						g.showSelectable(false);
 					}
 					cb(gridId);
-				}else{
+				} else {
 					cb(null);
 				}
 			}
@@ -1291,6 +1296,4 @@ class MainView extends Box {
 		final gy = Math.floor(y / gridSize);
 		return Main.clampInt((gx + gy * gridHorizonCount), 0, gameInfo.grids.length - 1);
 	}
-
-	
 }

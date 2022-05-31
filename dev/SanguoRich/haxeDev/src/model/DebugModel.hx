@@ -116,7 +116,7 @@ class DebugModel implements IModel {
 		// 	}
 		// ];
 
-		var g = GridGenerator.getInst().getGrid();
+		var g = info.grids[4];
 		g.belongPlayerId = null;
 		g.buildtype = GROWTYPE.MARKET;
 		info.events = [
@@ -146,25 +146,25 @@ class DebugModel implements IModel {
 			// 	gameInfo: info,
 			// 	autoplay: null,
 			// },
-			// {
-			// 	id: EventInfoID.GRID_RESOURCE_EVENT,
-			// 	value:{
-			// 		grids:[
-			// 			{
-			// 				gridBefore: g,
-			// 				gridAfter: g,
+			{
+				id: EventInfoID.GRID_RESOURCE_EVENT,
+				value:{
+					grids:[
+						{
+							gridBefore: g,
+							gridAfter: g,
 
-			// 			},
-			// 			{
-			// 				gridBefore: g,
-			// 				gridAfter: g,
-			// 			}
-			// 		],
-			// 		describtion:'aaa'
-			// 	},
-			// 	gameInfo: info,
-			// 	autoplay: null,
-			// },
+						},
+						// {
+						// 	gridBefore: g,
+						// 	gridAfter: g,
+						// }
+					],
+					describtion:'aaa'
+				},
+				gameInfo: info,
+				autoplay: null,
+			},
 			// {
 			// 	id:EventInfoID.ANIMATION_EVENT,
 			// 	value:{
@@ -186,46 +186,46 @@ class DebugModel implements IModel {
 			// 	gameInfo: info,
 			// 	autoplay: null,
 			// },
-			{
-				id: EventInfoID.MESSAGE_EVENT,
-				value: {
-					title: 'aaff',
-					msg: 'asdfsfd'
-				},
-				gameInfo: info,
-				autoplay: {
-					duration: 2
-				},
-			},
-			{
-				id:EventInfoID.ANIMATION_EVENT,
-				value:{
-					id: ActionInfoID.MOVE,
-					value: {
-						playerId: 0,
-						fromGridId: 5,
-						toGridId: 10
-					},
-				},
-				gameInfo: info,
-				autoplay: null,
-			},
-			{
-				id: EventInfoID.PLAYER_LOSE,
-				value: {
-					player: info.players[0]
-				},
-				gameInfo: info,
-				autoplay: null
-			},
-			{
-				id: EventInfoID.PLAYER_WIN,
-				value: {
-					player: info.players[0]
-				},
-				gameInfo: info,
-				autoplay: null
-			}
+			// {
+			// 	id: EventInfoID.MESSAGE_EVENT,
+			// 	value: {
+			// 		title: 'aaff',
+			// 		msg: 'asdfsfd'
+			// 	},
+			// 	gameInfo: info,
+			// 	autoplay: {
+			// 		duration: 2
+			// 	},
+			// },
+			// {
+			// 	id:EventInfoID.ANIMATION_EVENT,
+			// 	value:{
+			// 		id: ActionInfoID.MOVE,
+			// 		value: {
+			// 			playerId: 0,
+			// 			fromGridId: 5,
+			// 			toGridId: 10
+			// 		},
+			// 	},
+			// 	gameInfo: info,
+			// 	autoplay: null,
+			// },
+			// {
+			// 	id: EventInfoID.PLAYER_LOSE,
+			// 	value: {
+			// 		player: info.players[0]
+			// 	},
+			// 	gameInfo: info,
+			// 	autoplay: null
+			// },
+			// {
+			// 	id: EventInfoID.PLAYER_WIN,
+			// 	value: {
+			// 		player: info.players[0]
+			// 	},
+			// 	gameInfo: info,
+			// 	autoplay: null
+			// }
 		];
 		cb();
 	}
