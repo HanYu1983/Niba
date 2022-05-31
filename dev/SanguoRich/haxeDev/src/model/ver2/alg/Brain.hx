@@ -24,6 +24,7 @@ import model.ver2.alg.Pk;
 import model.ver2.alg.Equip;
 import model.ver2.alg.Settle;
 import model.ver2.alg.AlgPlayer;
+import model.ver2.alg.TreasureBuySell;
 
 using Lambda;
 
@@ -302,6 +303,11 @@ function doBrain(ctx, playerId:Int, stopPlayerId:Int) {
 					t.position.peopleId = choosePeople.id;
 				}
 			case TREASURE_TAKE:
+			case TREASURE_MARKET:
+				if (brainMemory.treasureMarket.treasureId == null) {
+					throw new haxe.Exception("brainMemory.treasureMarket.treasureId not found");
+				}
+				_buyTreasure(ctx, playerId, gridId, brainMemory.treasureMarket.treasureId);
 			case SETTLE:
 				if (brainMemory.settle.peopleId == null) {
 					throw new haxe.Exception("player.memory.settle.peopleId not found");
@@ -367,6 +373,9 @@ private typedef BrainMemory = {
 	settle:{
 		peopleId:Null<Int>, money:Float, food:Float, army:Float, settlePeopleId:Null<Int>, settleType:Int
 	},
+	treasureMarket:{
+		treasureId:Null<Int>,
+	},
 	hasTransfer:Bool,
 	strategyHistory:Array<Int>,
 }
@@ -419,6 +428,9 @@ private function getDefaultBrainMemory():BrainMemory {
 			army: 0,
 			settlePeopleId: null,
 			settleType: 0
+		},
+		treasureMarket: {
+			treasureId: null,
 		},
 		hasTransfer: false,
 		strategyHistory: []
@@ -1906,6 +1918,18 @@ private function getCommandWeight(ctx:Context, playerId:Int, gridId:Int, cmd:Act
 					}
 				}
 				maxScore;
+			}
+			verbose("getCommandWeight", [playerId, cmd, score]);
+			score;
+		case TREASURE_MARKET:
+			final treasureInGrid = ctx.treasures.filter(t -> t.position.gridId == grid.id);
+			final score = if (treasureInGrid.length == 0) {
+				0.0;
+			} else {
+				final chooseId = Std.int(Math.random() * treasureInGrid.length);
+				final chooseOne = treasureInGrid[chooseId];
+				brainMemory.treasureMarket.treasureId = chooseOne.id;
+				1.0;
 			}
 			verbose("getCommandWeight", [playerId, cmd, score]);
 			score;
