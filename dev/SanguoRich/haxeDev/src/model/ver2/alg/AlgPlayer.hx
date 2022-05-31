@@ -766,7 +766,9 @@ function onPlayerEnd(ctx:Context, playerId:Int):Bool {
 												final grid = ctx.grids[attach.belongToGridId];
 												final treasuresInGrid = ctx.treasures.filter(t -> t.position.gridId == attach.belongToGridId);
 												if (treasuresInGrid.length < maxCount) {
+													gridsBefore.push(getGridInfo(ctx, grid));
 													addTreasureInfo(ctx, null, grid.id, null, TreasureGenerator.getInst().generator());
+													gridsAfter.push(getGridInfo(ctx, grid));
 													// final belongToPlayerId = getGridBelongPlayerId(ctx, attach.belongToGridId);
 													// if (belongToPlayerId != null) {
 													// 	gridsBefore.push(getGridInfo(ctx, grid));
