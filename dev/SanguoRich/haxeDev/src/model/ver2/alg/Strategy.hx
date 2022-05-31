@@ -755,7 +755,12 @@ private function onStrategyCost(ctx:Context, p1PeopleId:Int, strategyId:Int, tar
 						p1.energy = Math.max(0, p1.energy - cost.peopleCost.energy);
 						if (success) {
 							player.money = Math.max(0, player.money - cost.playerCost.money);
-							final myGrid = ctx.grids.filter(g -> getGridBelongPlayerId(ctx, g.id) == player.id);
+							final myGrid = ctx.grids.filter(g -> getGridBelongPlayerId(ctx, g.id) == player.id).filter(g -> {
+								// 如果沒有我的路障才要
+								final myGroundItemInGrid = ctx.groundItems.filter(item -> item.position == g.id && item.strategyId == 3
+									&& item.belongToPlayerId == player.id);
+								return myGroundItemInGrid.length == 0;
+							});
 							myGrid.sort((a, b) -> {
 								return Std.int(Math.random() * 10) - 5;
 							});
