@@ -2,6 +2,7 @@ package view;
 
 import model.GridGenerator.LANDTYPE;
 import tweenx909.TweenX;
+import tweenx909.EaseX;
 import model.GridGenerator.GROWTYPE;
 import model.GridGenerator.Grid;
 import model.GridGenerator.BUILDING;
@@ -119,9 +120,14 @@ class GridView extends Box {
 	public function showAnimation(text:String, duration:Float = 1.0, cb:()->Void){
 		box_showAnimation.show();
 		lbl_action.value = text.substr(0,5);
+
+		box_showAnimation.percentHeight = 0.01;
+
+		final halfTime:Float = duration / 2.0;
+		final tweens:Array<Dynamic> = [];
 		
-		final tweens = [];
-		tweens.push(TweenX.wait(duration));
+		tweens.push(TweenX.to(box_showAnimation, {"percentHeight": 100.0}, halfTime).ease(EaseX.bounceOut));
+		tweens.push(TweenX.wait(halfTime));
 		tweens.push(TweenX.func(()->{
 			box_showAnimation.hide();
 			cb();
