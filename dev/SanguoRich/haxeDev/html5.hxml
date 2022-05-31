@@ -15,6 +15,7 @@
 --macro nullSafety("model.ver2.alg.Pk")
 --macro nullSafety("model.ver2.alg.Settle")
 --macro nullSafety("model.ver2.alg.Strategy")
+--macro nullSafety("model.ver2.alg.AlgPlayer")
 -D debug
 
 -js public/Main.js

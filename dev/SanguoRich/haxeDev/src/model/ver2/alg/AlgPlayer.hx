@@ -1,5 +1,6 @@
 package model.ver2.alg;
 
+import haxe.Exception;
 import tool.Debug;
 import model.TreasureGenerator;
 import model.GridGenerator;
@@ -60,6 +61,10 @@ function onPlayerDice(ctx:Context, playerId:Int) {
 			final findGroundItem = ctx.groundItems.filter(item -> item.position == nextPosition && item.belongToPlayerId != playerId);
 			if (findGroundItem.length > 0) {
 				final stopItem = findGroundItem[0];
+				// 3是路障
+				if (stopItem.strategyId != 3) {
+					continue;
+				}
 				// 停住
 				toGridId = stopItem.position;
 				// 移除路障
@@ -91,6 +96,39 @@ function onPlayerGoToPosition(ctx:Context, playerId:Int, toGridId:Int) {
 	final isStopAtEnemyGrid = toGridBelongPlayerId != null && toGridBelongPlayerId != player.id;
 	if (isStopAtEnemyGrid) {
 		onPayTaxToGrid(ctx, player.id, toGrid.id);
+	}
+	// 踩到別人的地上物
+	{
+		final findGroundItem = ctx.groundItems.filter(item -> item.position == toGridId && item.belongToPlayerId != playerId);
+		final groundItemWallRemove:Array<Int> = [];
+		for (groundItem in findGroundItem) {
+			switch groundItem.strategyId {
+				case 20:
+					// 野火種
+					if (groundItem.belongToPlayerId == null) {
+						throw new haxe.Exception("野火種必須有主公");
+					}
+					final targetPlayer = getPlayerById(ctx, groundItem.belongToPlayerId);
+					final strategy = StrategyList[groundItem.strategyId];
+					switch strategy {
+						case {value: {float: [rate]}}:
+							final loseFood = player.food * rate;
+							final loseArmy = player.army * rate;
+							player.food = Math.max(0, player.food - loseFood);
+							player.army = Math.max(0, player.army - loseArmy);
+							ctx.events.push(MESSAGE_EVENT({
+								title: "踩到野火種",
+								msg: '${player.name}踩到${targetPlayer.name}的野火種, 損失糧食${loseFood}和士兵${loseArmy}'
+							}, getGameInfo(ctx, false), null));
+						case _:
+							throw new haxe.Exception("strategyCate not found");
+					}
+					groundItemWallRemove.push(groundItem.id);
+				case _:
+			}
+		}
+		// 移除用掉的item
+		ctx.groundItems = ctx.groundItems.filter(item -> groundItemWallRemove.has(item.id) == false);
 	}
 	switch toGrid.buildtype {
 		case CHANCE:

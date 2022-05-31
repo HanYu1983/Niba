@@ -174,6 +174,7 @@ typedef GroundItem = {
 	id:Int,
 	position:Int,
 	belongToPlayerId:Null<Int>,
+	strategyId:Int,
 }
 
 enum EffectProto {
@@ -940,8 +941,7 @@ function getGridInfo(ctx:Context, grid:Grid):model.GridGenerator.Grid {
 		favor: grid.favor,
 		strategys: [
 			for (i in 0...4)
-				// 3代表緩兵計
-				ctx.groundItems.filter(item -> item.belongToPlayerId == i && item.position == grid.id).map(item -> 3)
+				ctx.groundItems.filter(item -> item.belongToPlayerId == i && item.position == grid.id).map(item -> item.strategyId)
 		],
 		treasures: getTreasureInGrid(ctx, grid.id).map(t -> getTreasureInfo(ctx, t)),
 		maxMoney: getGridMaxMoney(ctx, grid.id),

@@ -153,6 +153,19 @@ private function getStrategyCost(ctx:Context, p1PeopleId:Int, strategyId:Int, ta
 		case 17:
 			// 需要有騎將
 			p1Abilities.has(2) == false ? 0.0 : 1.0;
+		case 20:
+			// 野火種
+			if (p1.belongToPlayerId == null) {
+				throw new Exception("belongToPlayerId not found");
+			}
+			final player = getPlayerById(ctx, p1.belongToPlayerId);
+			final grid = ctx.grids[player.position];
+			switch grid.buildtype {
+				case CHANCE | DESTINY:
+					0.0;
+				case _:
+					1.0;
+			}
 		case _:
 			1;
 	});
@@ -277,7 +290,8 @@ private function onStrategyCost(ctx:Context, p1PeopleId:Int, strategyId:Int, tar
 							ctx.groundItems.push({
 								id: ctx.idSeq++,
 								belongToPlayerId: p1.belongToPlayerId,
-								position: targetGridId
+								position: targetGridId,
+								strategyId: strategyId
 							});
 							onPeopleExpAdd(ctx, p1.id, getExpAdd(cost.successRate, ENERGY_COST_ON_STRATEGY));
 						} else {
@@ -720,11 +734,89 @@ private function onStrategyCost(ctx:Context, p1PeopleId:Int, strategyId:Int, tar
 					case {value: {valid: valid}, money: _}:
 						p1.energy = Math.max(0, p1.energy - cost.peopleCost.energy);
 						if (success) {
+							player.money = Math.max(0, player.money - cost.playerCost.money);
 							final randomId = Std.int(random() * valid.length);
 							final step = valid[randomId];
 							final nextPosition = (player.position + step) % ctx.grids.length;
 							onPlayerGoToPosition(ctx, player.id, nextPosition);
 							player.memory.hasDice = true;
+							onPeopleExpAdd(ctx, p1.id, getExpAdd(cost.successRate, ENERGY_COST_ON_STRATEGY));
+						} else {
+							player.money = Math.max(0, player.money - cost.playerCost.money * 0.2);
+						}
+					case _:
+						throw new haxe.Exception('strategy value not found:${strategy}');
+				}
+				success;
+			case 19:
+				// 強妨害
+				switch strategy {
+					case {value: {float: [cnt]}, money: _}:
+						p1.energy = Math.max(0, p1.energy - cost.peopleCost.energy);
+						if (success) {
+							player.money = Math.max(0, player.money - cost.playerCost.money);
+							final myGrid = ctx.grids.filter(g -> getGridBelongPlayerId(ctx, g.id) == player.id);
+							myGrid.sort((a, b) -> {
+								return Std.int(Math.random() * 10) - 5;
+							});
+							final chooseGrid = myGrid.slice(0, Std.int(cnt));
+							for (g in chooseGrid) {
+								ctx.groundItems.push({
+									id: ctx.idSeq++,
+									belongToPlayerId: player.id,
+									position: g.id,
+									strategyId: strategyId
+								});
+							}
+							onPeopleExpAdd(ctx, p1.id, getExpAdd(cost.successRate, ENERGY_COST_ON_STRATEGY));
+						} else {
+							player.money = Math.max(0, player.money - cost.playerCost.money * 0.2);
+						}
+					case _:
+						throw new haxe.Exception('strategy value not found:${strategy}');
+				}
+				success;
+			case 20:
+				// 野火種
+				final grid = ctx.grids[player.position];
+				switch grid.buildtype {
+					case CHANCE | DESTINY:
+						throw new haxe.Exception("機會命運不能用野火種");
+					case _:
+				}
+				switch strategy {
+					case {value: _, money: _}:
+						p1.energy = Math.max(0, p1.energy - cost.peopleCost.energy);
+						if (success) {
+							player.money = Math.max(0, player.money - cost.playerCost.money);
+							// 放野火種
+							ctx.groundItems.push({
+								id: ctx.idSeq++,
+								belongToPlayerId: player.id,
+								position: grid.id,
+								strategyId: strategyId
+							});
+							onPeopleExpAdd(ctx, p1.id, getExpAdd(cost.successRate, ENERGY_COST_ON_STRATEGY));
+						} else {
+							player.money = Math.max(0, player.money - cost.playerCost.money * 0.2);
+						}
+					case _:
+						throw new haxe.Exception('strategy value not found:${strategy}');
+				}
+				success;
+			case 21:
+				// 糧草徵收令
+				switch strategy {
+					case {value: {float: [rate]}, money: _}:
+						p1.energy = Math.max(0, p1.energy - cost.peopleCost.energy);
+						if (success) {
+							player.money = Math.max(0, player.money - cost.playerCost.money);
+							final myGrid = ctx.grids.filter(g -> getGridBelongPlayerId(ctx, g.id) == player.id);
+							for (g in myGrid) {
+								final getFood = g.food * rate;
+								g.food -= getFood;
+								player.food += getFood;
+							}
 							onPeopleExpAdd(ctx, p1.id, getExpAdd(cost.successRate, ENERGY_COST_ON_STRATEGY));
 						} else {
 							player.money = Math.max(0, player.money - cost.playerCost.money * 0.2);
