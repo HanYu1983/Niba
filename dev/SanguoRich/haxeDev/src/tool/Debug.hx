@@ -29,7 +29,7 @@ private final filterCategory:Array<String> = [
 	"onStrategyCost",
 	"_takeStrategy",
 	"onBuildingCost",
-	"getCommandWeight",
+	// "getCommandWeight",
 ];
 
 function verbose(category:String, msg:Dynamic) {
