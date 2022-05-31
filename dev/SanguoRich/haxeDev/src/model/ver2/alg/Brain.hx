@@ -2260,6 +2260,13 @@ function testRunGame() {
 						js.Browser.console.log(ctx);
 						throw new haxe.Exception("grid為空地的情況, 不可能可以有主公");
 					}
+					if (grid.money > 0 || grid.food > 0 || grid.army > 0) {
+						js.Browser.console.log("grid", grid);
+						js.Browser.console.log(ctx);
+						throw new haxe.Exception("grid為空地的情況, 不該有資源");
+					}
+				// final peopleInGrid = ctx.peoples.filter(p->p.position.gridId == grid.id);
+				// if(peopleInGrid)
 				case _:
 			}
 		}

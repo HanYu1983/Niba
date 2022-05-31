@@ -117,7 +117,7 @@ typedef Player = {
 	strategy:Float,
 	position:Int,
 	memory:{
-		hasDice:Bool, hasStrategy:Bool, hasCommand:Bool, hasBuild:Bool, hasEquip:Bool
+		hasDice:Bool, hasStrategy:Bool, hasCommand:Bool, hasBuild:Bool, hasEquip:Bool, hasTreasureBuySell:Bool
 	},
 	brain:Null<Brain>,
 	score:Float,
@@ -139,7 +139,8 @@ function getDefaultPlayer():Player {
 			hasStrategy: false,
 			hasCommand: false,
 			hasBuild: false,
-			hasEquip: false
+			hasEquip: false,
+			hasTreasureBuySell: false,
 		},
 		brain: null,
 		score: 0,
@@ -1475,26 +1476,18 @@ function addPeopleInfo(ctx:Context, belongToPlayerId:Null<Int>, gridId:Null<Int>
 
 function addPlayerInfo(ctx:Context, player:model.IModel.PlayerInfo, isAI:Bool, isLose:Bool):Void {
 	ctx.players.push({
-		id: player.id,
-		name: player.name,
-		money: player.money,
-		food: player.food,
-		army: player.army,
-		strategy: 0,
-		position: player.atGridId,
-		memory: {
-			hasDice: false,
-			hasStrategy: false,
-			hasCommand: false,
-			hasBuild: false,
-			hasEquip: false,
-		},
-		brain: isAI ? {
+		final tmp = getDefaultPlayer();
+		tmp.id = player.id;
+		tmp.name = player.name;
+		tmp.money = player.money;
+		tmp.food = player.food;
+		tmp.army = player.army;
+		tmp.position = player.atGridId;
+		tmp.brain = isAI ? {
 			memory: null
-		} : null,
-		score: 0.0,
-		isLose: isLose,
-		hate: [],
+		} : null;
+		tmp.isLose = isLose;
+		tmp;
 	});
 	for (p in player.people) {
 		addPeopleInfo(ctx, player.id, null, p);
@@ -1828,17 +1821,19 @@ function getPlayerCommand(ctx:Context, playerId:Int):Array<ActionInfoID> {
 			}
 			ret.push(END);
 		}
-		// 如果走到寶物所
-		final hasTreasureMarket = ctx.attachments.filter(a -> a.belongToGridId == player.position).filter(a -> {
-			switch a.type {
-				case TREASURE(1):
-					true;
-				case _:
-					false;
+		if (player.memory.hasTreasureBuySell == false) {
+			// 如果走到寶物所
+			final hasTreasureMarket = ctx.attachments.filter(a -> a.belongToGridId == player.position).filter(a -> {
+				switch a.type {
+					case TREASURE(1):
+						true;
+					case _:
+						false;
+				}
+			}).length > 0;
+			if (hasTreasureMarket) {
+				ret.push(TREASURE_MARKET);
 			}
-		}).length > 0;
-		if (hasTreasureMarket) {
-			ret.push(TREASURE_MARKET);
 		}
 	}
 	return ret;
@@ -1870,6 +1865,7 @@ function clearMemory(ctx:Context) {
 		player.memory.hasCommand = false;
 		player.memory.hasBuild = false;
 		player.memory.hasEquip = false;
+		player.memory.hasTreasureBuySell = false;
 	}
 }
 

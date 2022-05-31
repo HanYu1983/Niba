@@ -33,6 +33,8 @@ function _sellTreasure(ctx:Context, playerId:Int, gridId:Int, sellId:Int) {
 	// 將寶變成中立
 	treasure.belongToPlayerId = null;
 	treasure.position.gridId = grid.id;
+	//
+	player.memory.hasTreasureBuySell = true;
 	ctx.events.push(MESSAGE_EVENT({
 		title: '賣出寶物',
 		msg: '${player.name}賣出${findCatelog[0].name}',
@@ -81,6 +83,8 @@ function _buyTreasure(ctx:Context, playerId:Int, gridId:Int, buyId:Int) {
 	// 將寶拿走
 	treasure.position.gridId = null;
 	treasure.belongToPlayerId = playerId;
+	//
+	player.memory.hasTreasureBuySell = true;
 	ctx.events.push(MESSAGE_EVENT({
 		title: '買寶物',
 		msg: '${player.name}買入${findCatelog[0].name}',

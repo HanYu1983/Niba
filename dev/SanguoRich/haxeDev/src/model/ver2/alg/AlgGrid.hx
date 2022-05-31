@@ -129,6 +129,8 @@ function onGridBornEvent(ctx:Context, gridId:Int) {
 	for (building in buildings) {
 		addAttachInfo(ctx, chooseGrid.id, building);
 	}
+	// 記得加入buildtype!
+	chooseGrid.buildtype = VILLAGE;
 	chooseGrid.money = EVENT_GRID_BORN_RESOURCE_AMOUNT;
 	chooseGrid.army = EVENT_GRID_BORN_RESOURCE_AMOUNT;
 	chooseGrid.food = EVENT_GRID_BORN_RESOURCE_AMOUNT;
