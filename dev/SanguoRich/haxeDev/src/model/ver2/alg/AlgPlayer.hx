@@ -565,9 +565,9 @@ function onPlayerEnd(ctx:Context, playerId:Int):Bool {
 						grid.money = 0;
 					}
 					// 收到的有紅利
-					player.army += earnArmy * 2;
-					player.food += earnFood * 2;
-					player.money += earnMoney * 2;
+					player.army += earnArmy * PLAYER_EARN_FROM_CITY_BONUS_RATE;
+					player.food += earnFood * PLAYER_EARN_FROM_CITY_BONUS_RATE;
+					player.money += earnMoney * PLAYER_EARN_FROM_CITY_BONUS_RATE;
 				}
 				worldEventValue.playerAfter = ctx.players.map(p -> getPlayerInfo(ctx, p));
 				worldEventValue.gridAfter = ctx.grids.map(g -> getGridInfo(ctx, g));

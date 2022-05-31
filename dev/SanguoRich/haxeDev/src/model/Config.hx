@@ -64,6 +64,10 @@ final FAVER_SLOW_PER_TURN = 20;
 // 作用中
 final PLAYER_EARN_FROM_CITY_BY_TURN_PERSENT = .025;
 
+// 收稅紅利
+// 抽回稅後額外額加的抽回數量的係數(現在是額外2倍)
+final PLAYER_EARN_FROM_CITY_BONUS_RATE = 2;
+
 // 基本一單交易量的最低限, 前端在傳入moneyBase時不能小於這個值
 // 這個值共用於所有買賣
 // 作用中
