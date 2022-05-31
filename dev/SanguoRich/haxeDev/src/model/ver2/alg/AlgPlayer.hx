@@ -121,7 +121,7 @@ function onPlayerGoToPosition(ctx:Context, playerId:Int, toGridId:Int) {
 							player.army = Math.max(0, player.army - loseArmy);
 							ctx.events.push(MESSAGE_EVENT({
 								title: "踩到野火種",
-								msg: '${player.name}踩到${targetPlayer.name}的野火種, 損失糧食${loseFood}和士兵${loseArmy}'
+								msg: '${player.name}踩到${targetPlayer.name}的野火種, 損失糧食${Std.int(loseFood)}和士兵${Std.int(loseArmy)}'
 							}, getGameInfo(ctx, false), null));
 						case _:
 							throw new haxe.Exception("strategyCate not found");
@@ -140,7 +140,12 @@ function onPlayerGoToPosition(ctx:Context, playerId:Int, toGridId:Int) {
 			switch Math.random() {
 				case v if (v < 0.9):
 					info("onPlayerGoToPosition", '發生量產事件');
-					final gridsWillGrow = ctx.grids.filter(g -> getGridBuildType(ctx, g.id) != EMPTY);
+					final gridsWillGrow = ctx.grids.filter(g -> switch getGridBuildType(ctx, g.id) {
+						case EMPTY | CHANCE | DESTINY:
+							false;
+						case _:
+							true;
+					});
 					if (gridsWillGrow.length > 0) {
 						final chooseId = Std.int(Math.random() * gridsWillGrow.length);
 						final chooseGrid = gridsWillGrow[chooseId];

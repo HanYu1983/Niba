@@ -525,7 +525,7 @@ final StrategyList:Array<StrategyCatelog> = [
 	{
 		id: 12,
 		name: '火計',
-		money: 80,
+		money: 40,
 		intelligence: 75,
 		describe: '指定一個格子，那個格子的糧食資源-25%。',
 		targetType: StrategyTargetType.TARGET_GRID,
@@ -597,7 +597,7 @@ final StrategyList:Array<StrategyCatelog> = [
 	{
 		id: 18,
 		name: '萬箭齊發',
-		money: 70,
+		money: 20,
 		intelligence: 50,
 		describe: '需要有弓將的將領才可以使用這個計策。指定格子士兵-15%',
 		targetType: StrategyTargetType.TARGET_GRID,
@@ -609,7 +609,7 @@ final StrategyList:Array<StrategyCatelog> = [
 	{
 		id: 19,
 		name: '強妨害',
-		money: 500,
+		money: 350,
 		intelligence: 90,
 		describe: '給自己最多隨機5個沒有路障的城市添加路障',
 		targetType: StrategyTargetType.SELF_PLAYER,
@@ -621,7 +621,7 @@ final StrategyList:Array<StrategyCatelog> = [
 	{
 		id: 20,
 		name: '野火種',
-		money: 100,
+		money: 30,
 		intelligence: 50,
 		describe: '當前格子如果不是機會和命運可以使用。添加火種。其他的主公踩到時，火種爆發。該主公身上糧草及士兵-15%。一個格子上只能有一個自己的火種',
 		targetType: StrategyTargetType.SELF_GRID,
@@ -633,7 +633,7 @@ final StrategyList:Array<StrategyCatelog> = [
 	{
 		id: 21,
 		name: '糧草徵收令',
-		money: 500,
+		money: 200,
 		intelligence: 50,
 		describe: '立刻從所有自己的格子扣30%的糧草加到自己身上',
 		targetType: StrategyTargetType.SELF_PLAYER,
