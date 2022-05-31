@@ -105,6 +105,7 @@ function onPlayerGoToPosition(ctx:Context, playerId:Int, toGridId:Int) {
 			switch groundItem.strategyId {
 				case 20:
 					// 野火種
+					info("onPlayerGoToPosition", '${player.name}踩到野火種');
 					if (groundItem.belongToPlayerId == null) {
 						throw new haxe.Exception("野火種必須有主公");
 					}
@@ -133,35 +134,35 @@ function onPlayerGoToPosition(ctx:Context, playerId:Int, toGridId:Int) {
 	switch toGrid.buildtype {
 		case CHANCE:
 			// 機會就是跳類似大發利市，民兵等
-			verbose("onPlayerGoToPosition", '${player.name}走到機會');
+			info("onPlayerGoToPosition", '${player.name}走到機會');
 			switch Math.random() {
 				case v if (v < 0.9):
-					verbose("onPlayerGoToPosition", '發生量產事件');
+					info("onPlayerGoToPosition", '發生量產事件');
 					final gridsWillGrow = ctx.grids.filter(g -> getGridBuildType(ctx, g.id) != EMPTY);
 					if (gridsWillGrow.length > 0) {
 						final chooseId = Std.int(Math.random() * gridsWillGrow.length);
 						final chooseGrid = gridsWillGrow[chooseId];
 						switch Math.random() {
 							case v if (v < 0.333):
-								verbose("onPlayerGoToPosition", '產糧在${chooseGrid.name}');
+								info("onPlayerGoToPosition", '產糧在${chooseGrid.name}');
 								onGridGainFoodEvent(ctx, [chooseGrid]);
 							case v if (v < 0.666):
-								verbose("onPlayerGoToPosition", '產錢在${chooseGrid.name}');
+								info("onPlayerGoToPosition", '產錢在${chooseGrid.name}');
 								onGridGainMoneyEvent(ctx, [chooseGrid]);
 							case _:
-								verbose("onPlayerGoToPosition", '產兵在${chooseGrid.name}');
+								info("onPlayerGoToPosition", '產兵在${chooseGrid.name}');
 								onGridGainArmyEvent(ctx, [chooseGrid]);
 						}
 					} else {
 						warn("onPlayerGoToPosition", '發生量產事件, 但沒有可以對應的格子');
 					}
 				case _:
-					verbose("onPlayerGoToPosition", '發生異軍突起事件');
+					info("onPlayerGoToPosition", '發生異軍突起事件');
 					final emptyGrids = ctx.grids.filter(g -> getGridBuildType(ctx, g.id) == EMPTY);
 					if (emptyGrids.length > 0) {
 						final chooseId = Std.int(Math.random() * emptyGrids.length);
 						final chooseGrid = emptyGrids[chooseId];
-						verbose("onPlayerGoToPosition", '異軍突起在${chooseGrid.name}');
+						info("onPlayerGoToPosition", '異軍突起在${chooseGrid.name}');
 						onGridBornEvent(ctx, chooseGrid.id);
 					} else {
 						warn("onPlayerGoToPosition", '發生異軍突起事件, 但沒有可以對應的格子');
@@ -170,7 +171,7 @@ function onPlayerGoToPosition(ctx:Context, playerId:Int, toGridId:Int) {
 		case DESTINY:
 			// 命運可以跳類似某個武將+體力，-體力，+功績，-功績之類的
 			// 或者主公掉錢，意外之財等
-			verbose("onPlayerGoToPosition", '${player.name}走到命運');
+			info("onPlayerGoToPosition", '${player.name}走到命運');
 			switch Math.random() {
 				case v if (v < 0.5):
 					final value = 50;
