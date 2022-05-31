@@ -490,18 +490,18 @@ final StrategyList:Array<StrategyCatelog> = [
 		id: 9,
 		name: '無中生有',
 		money: 5,
-		intelligence: 70,
-		describe: '金錢，糧草，士兵中較低的一個項目增加40~60',
+		intelligence: 80,
+		describe: '金錢，糧草，士兵中較低的一個項目增加80~120',
 		targetType: StrategyTargetType.SELF_PLAYER,
 		value: {
 			valid: [],
-			float: [40, 60]
+			float: [80, 120]
 		}
 	},
 	{
 		id: 10,
 		name: '三顧茅廬',
-		money: 400,
+		money: 500,
 		intelligence: 50,
 		describe: '需要有人脈的將領才可以使用這個計策。隨機獲得一個將領或者文官。',
 		targetType: StrategyTargetType.SELF_PLAYER,
@@ -513,7 +513,7 @@ final StrategyList:Array<StrategyCatelog> = [
 	{
 		id: 11,
 		name: '草船借箭',
-		money: 400,
+		money: 500,
 		intelligence: 50,
 		describe: '需要有鑒別的將領才可以使用這個計策。隨機獲得一個寶物。',
 		targetType: StrategyTargetType.SELF_PLAYER,
@@ -525,7 +525,7 @@ final StrategyList:Array<StrategyCatelog> = [
 	{
 		id: 12,
 		name: '火計',
-		money: 40,
+		money: 80,
 		intelligence: 75,
 		describe: '指定一個格子，那個格子的糧食資源-25%。',
 		targetType: StrategyTargetType.TARGET_GRID,
@@ -538,7 +538,7 @@ final StrategyList:Array<StrategyCatelog> = [
 		id: 13,
 		name: '時來運轉',
 		money: 5,
-		intelligence: 80,
+		intelligence: 85,
 		describe: '指定一個格子，那個格子的所有資源+20%。',
 		targetType: StrategyTargetType.TARGET_GRID,
 		value: {
@@ -549,13 +549,13 @@ final StrategyList:Array<StrategyCatelog> = [
 	{
 		id: 14,
 		name: '攻其不備',
-		money: 50,
+		money: 300,
 		intelligence: 75,
-		describe: '指定后三格中的有敵人城池的一個格子，角色會移動到那裏，并且轉移所有城池的10%資源到自己身上。',
+		describe: '指定后三格中的有敵人城池的一個格子，角色會移動到那裏，并且轉移所有城池的20%資源到自己身上。',
 		targetType: StrategyTargetType.TARGET_GRID,
 		value: {
 			valid: [1, 2, 3],
-			float: [0.1]
+			float: [0.2]
 		}
 	},
 	{
@@ -605,6 +605,42 @@ final StrategyList:Array<StrategyCatelog> = [
 			valid: [-1, 0, 1],
 			float: [-0.15]
 		}
+	},
+	{
+		id: 19,
+		name: '強妨害',
+		money: 500,
+		intelligence: 90,
+		describe: '給自己最多隨機5個沒有路障的城市添加路障',
+		targetType: StrategyTargetType.SELF_PLAYER,
+		value: {
+			valid: [],
+			float: [5]
+		}
+	},
+	{
+		id: 20,
+		name: '野火種',
+		money: 100,
+		intelligence: 50,
+		describe: '當前格子如果不是機會和命運可以使用。添加火種。其他的主公踩到時，火種爆發。該主公身上糧草及士兵-15%。一個格子上只能有一個自己的火種',
+		targetType: StrategyTargetType.SELF_GRID,
+		value: {
+			valid: [],
+			float: [0.15]
+		}
+	},
+	{
+		id: 21,
+		name: '糧草徵收令',
+		money: 500,
+		intelligence: 50,
+		describe: '立刻從所有自己的格子扣30%的糧草加到自己身上',
+		targetType: StrategyTargetType.SELF_PLAYER,
+		value: {
+			valid: [],
+			float: [0.3]
+		}
 	}
 ];
 
@@ -624,7 +660,7 @@ final BuildingList:Array<BuildingCatelog> = [
 	{
 		id: 1,
 		name: '農田(小)',
-		money: 40,
+		money: 80,
 		describe: '糧食每回合+4',
 		type: FARM(1),
 		depends: [],
@@ -636,7 +672,7 @@ final BuildingList:Array<BuildingCatelog> = [
 	{
 		id: 2,
 		name: '農田(中)',
-		money: 40,
+		money: 120,
 		describe: '糧食每回合+8',
 		type: FARM(2),
 		depends: [],
@@ -672,7 +708,7 @@ final BuildingList:Array<BuildingCatelog> = [
 	{
 		id: 5,
 		name: '市集(小)',
-		money: 40,
+		money: 80,
 		describe: '金錢每回合+4',
 		type: MARKET(1),
 		depends: [],
@@ -684,7 +720,7 @@ final BuildingList:Array<BuildingCatelog> = [
 	{
 		id: 6,
 		name: '市集(中)',
-		money: 40,
+		money: 120,
 		describe: '金錢每回合+8',
 		type: MARKET(2),
 		depends: [],
@@ -720,7 +756,7 @@ final BuildingList:Array<BuildingCatelog> = [
 	{
 		id: 9,
 		name: '兵營(小)',
-		money: 40,
+		money: 80,
 		describe: '士兵每回合+4',
 		type: BARRACKS(1),
 		depends: [],
@@ -732,7 +768,7 @@ final BuildingList:Array<BuildingCatelog> = [
 	{
 		id: 10,
 		name: '兵營(中)',
-		money: 40,
+		money: 120,
 		describe: '士兵每回合+8',
 		type: BARRACKS(2),
 		depends: [],
@@ -756,8 +792,8 @@ final BuildingList:Array<BuildingCatelog> = [
 	{
 		id: 12,
 		name: '人材所(未建)',
-		money: 80,
-		describe: '提高將領在探索計算時的魅力(+0)及聘用計算時的魅力(+0)。所有將領的薪資不減少。並且聘用金錢不減少',
+		money: 200,
+		describe: '提高將領在探索計算時的魅力(+0)及聘用計算時的魅力(+0)。所有將領的薪資減為*1.0。並且聘用金錢減為*1.0',
 		type: EXPLORE(0),
 		depends: [],
 		value: {
@@ -769,18 +805,18 @@ final BuildingList:Array<BuildingCatelog> = [
 		id: 13,
 		name: '人材所',
 		money: 0,
-		describe: '提高將領在探索計算時的魅力(+5)及聘用計算時的魅力(+5)。所有將領的薪資減為*0.8。並且聘用金錢減為*0.8',
+		describe: '提高將領在探索計算時的魅力(+5)及聘用計算時的魅力(+5)。所有將領的薪資減為*0.5。並且聘用金錢減為*0.5',
 		type: EXPLORE(1),
 		depends: [],
 		value: {
 			valid: [],
-			float: [5, 0.8]
+			float: [5, 0.5]
 		}
 	},
 	{
 		id: 14,
 		name: '城墻(未建)',
-		money: 30,
+		money: 40,
 		describe: '此格子防禦方的加成提高。(+0%)',
 		type: WALL(0),
 		depends: [],
@@ -792,7 +828,7 @@ final BuildingList:Array<BuildingCatelog> = [
 	{
 		id: 15,
 		name: '城墻(弱)',
-		money: 30,
+		money: 80,
 		describe: '此格子防禦方的加成提高。(+15%)',
 		type: WALL(1),
 		depends: [],
@@ -804,7 +840,7 @@ final BuildingList:Array<BuildingCatelog> = [
 	{
 		id: 16,
 		name: '城墻(中)',
-		money: 30,
+		money: 120,
 		describe: '此格子防禦方的加成提高。(+30%)',
 		type: WALL(2),
 		depends: [],
@@ -840,7 +876,7 @@ final BuildingList:Array<BuildingCatelog> = [
 	{
 		id: 19,
 		name: '金庫(小)',
-		money: 100,
+		money: 200,
 		describe: '金錢最大值+200。金錢每回合+1%',
 		type: BANK(1),
 		depends: [],
@@ -852,7 +888,7 @@ final BuildingList:Array<BuildingCatelog> = [
 	{
 		id: 20,
 		name: '金庫(中)',
-		money: 100,
+		money: 300,
 		describe: '金錢最大值+400。金錢每回合+2%',
 		type: BANK(2),
 		depends: [],
@@ -888,7 +924,7 @@ final BuildingList:Array<BuildingCatelog> = [
 	{
 		id: 23,
 		name: '穀倉(小)',
-		money: 100,
+		money: 200,
 		describe: '糧草最大值+200。糧草每回合+1%',
 		type: BARN(1),
 		depends: [],
@@ -900,7 +936,7 @@ final BuildingList:Array<BuildingCatelog> = [
 	{
 		id: 24,
 		name: '穀倉(中)',
-		money: 100,
+		money: 300,
 		describe: '糧草最大值+400。糧草每回合+2%',
 		type: BARN(2),
 		depends: [],
@@ -936,7 +972,7 @@ final BuildingList:Array<BuildingCatelog> = [
 	{
 		id: 27,
 		name: '住房(小)',
-		money: 100,
+		money: 200,
 		describe: '士兵最大值+200。士兵每回合+1%',
 		type: HOME(1),
 		depends: [],
@@ -948,7 +984,7 @@ final BuildingList:Array<BuildingCatelog> = [
 	{
 		id: 28,
 		name: '住房(中)',
-		money: 100,
+		money: 300,
 		describe: '士兵最大值+400。士兵每回合+2%',
 		type: HOME(2),
 		depends: [],
@@ -972,7 +1008,7 @@ final BuildingList:Array<BuildingCatelog> = [
 	{
 		id: 30,
 		name: '攻城器製造所(未建)',
-		money: 70,
+		money: 200,
 		describe: '攻城時糧食消耗減少0%，攻擊力+0%',
 		type: SIEGEFACTORY(0),
 		depends: [],
@@ -985,18 +1021,18 @@ final BuildingList:Array<BuildingCatelog> = [
 		id: 31,
 		name: '攻城器製造所',
 		money: 0,
-		describe: '攻城時糧食消耗減少10%，攻擊力+10%',
+		describe: '攻城時糧食消耗減少15%，攻擊力+15%',
 		type: SIEGEFACTORY(1),
 		depends: [],
 		value: {
 			valid: [],
-			float: [0.9, 1.1]
+			float: [0.85, 1.15]
 		}
 	},
 	{
 		id: 32,
 		name: '軍事學院(未建)',
-		money: 70,
+		money: 200,
 		describe: '所有功績增加的時候，增加量+0%；練兵的消耗-0%',
 		type: ACADEMY(0),
 		depends: [],
@@ -1009,18 +1045,18 @@ final BuildingList:Array<BuildingCatelog> = [
 		id: 33,
 		name: '軍事學院',
 		money: 0,
-		describe: '所有功績增加的時候，增加量+10%；練兵的消耗-10%',
+		describe: '所有功績增加的時候，增加量+15%；練兵的消耗-15%',
 		type: ACADEMY(1),
 		depends: [],
 		value: {
 			valid: [],
-			float: [1.1, 0.9]
+			float: [1.15, 0.85]
 		}
 	},
 	{
 		id: 34,
 		name: '漁獵場(未建)',
-		money: 100,
+		money: 200,
 		describe: '這個格子每一個回合有0%幾率大量收穫糧草，每一次收穫量為50 + 當前糧草的5%',
 		type: FISHING(0),
 		depends: [],
@@ -1044,7 +1080,7 @@ final BuildingList:Array<BuildingCatelog> = [
 	{
 		id: 36,
 		name: '狩獵場(未建)',
-		money: 100,
+		money: 200,
 		describe: '每一個回合自身所有的將領幾率0%增加5功績',
 		type: HUNTING(0),
 		depends: [],
@@ -1062,13 +1098,13 @@ final BuildingList:Array<BuildingCatelog> = [
 		depends: [],
 		value: {
 			valid: [],
-			float: [0.05, 5]
+			float: [0.5, 5]
 		}
 	},
 	{
 		id: 38,
 		name: '礦場(未建)',
-		money: 100,
+		money: 200,
 		describe: '這個格子每一個回合有0%幾率大量收穫金錢，每一次收穫量為50 + 當前金錢的5%',
 		type: MINE(0),
 		depends: [],
@@ -1093,24 +1129,24 @@ final BuildingList:Array<BuildingCatelog> = [
 		id: 40,
 		name: '寶物店鋪(未建)',
 		money: 100,
-		describe: '商人收集寶物買賣的地方。每一個回合有0%幾率新增一個隨機寶物到格子上，最多5個。在這個格子上的任何主公都會新增指令【寶物買賣】。可以花錢(店鋪持有者免費)把格子上的寶物買出去，也可以把寶物賣到這個格子上來。每一次交易僅限一個寶物',
+		describe: '商人收集寶物買賣的地方。每一個回合有0%幾率新增一個隨機寶物到格子上，最多3個。在這個格子上的任何主公都會新增指令【寶物買賣】。可以花錢(店鋪持有者免費)把格子上的寶物買出去，也可以把寶物賣到這個格子上來。每一次交易僅限一個寶物',
 		type: TREASURE(0),
 		depends: [],
 		value: {
 			valid: [],
-			float: [0, 5]
+			float: [0, 3]
 		}
 	},
 	{
 		id: 41,
 		name: '寶物店鋪',
 		money: 0,
-		describe: '商人收集寶物買賣的地方。每一個回合有10%幾率新增一個隨機寶物到格子上，最多5個。在這個格子上的任何主公都會新增指令【寶物買賣】。可以花錢(店鋪持有者免費)把格子上的寶物買出去，也可以把寶物賣到這個格子上來。每一次交易僅限一個寶物',
+		describe: '商人收集寶物買賣的地方。每一個回合有10%幾率新增一個隨機寶物到格子上，最多3個。在這個格子上的任何主公都會新增指令【寶物買賣】。可以花錢(店鋪持有者免費)把格子上的寶物買出去，也可以把寶物賣到這個格子上來。每一次交易僅限一個寶物',
 		type: TREASURE(1),
 		depends: [],
 		value: {
 			valid: [],
-			float: [0.1, 5]
+			float: [0.1, 3]
 		}
 	}
 ];
