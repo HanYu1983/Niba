@@ -6,6 +6,7 @@ import model.IModel;
 import model.Config;
 import tool.Debug;
 import model.tool.Fact;
+import model.tool.Mock;
 import model.ver2.Define;
 import model.ver2.alg.Alg;
 import model.ver2.alg.AlgPlayer;
@@ -176,7 +177,7 @@ private function onStrategyCost(ctx:Context, p1PeopleId:Int, strategyId:Int, tar
 	final player = getPlayerById(ctx, p1.belongToPlayerId);
 	final strategy = StrategyList[strategyId];
 	final cost = getStrategyCost(ctx, p1PeopleId, strategyId, targetPlayerId, targetPeopleId, targetGridId);
-	final success = Math.random() < cost.successRate;
+	final success = random() < cost.successRate;
 	info("onStrategyCost", '${player.name}使用計策${strategy.name}${success ? "成功" : "失敗"}, 目標是[${targetPlayerId}, ${targetPeopleId}, ${targetGridId}]');
 	wrapStrategyEvent(ctx, player.id, p1.id, strategyId, () -> {
 		return switch strategyId {
@@ -418,7 +419,7 @@ private function onStrategyCost(ctx:Context, p1PeopleId:Int, strategyId:Int, tar
 							p1.energy = Math.max(0, p1.energy - cost.peopleCost.energy);
 							if (success) {
 								player.money = Math.max(0, player.money - cost.playerCost.money);
-								final gainAmount = Math.random() * (maxAmount - minAmount) + minAmount;
+								final gainAmount = random() * (maxAmount - minAmount) + minAmount;
 								switch Math.min(player.money, Math.min(player.food, player.army)) {
 									case which if (which == player.food):
 										player.food += gainAmount;
@@ -446,7 +447,7 @@ private function onStrategyCost(ctx:Context, p1PeopleId:Int, strategyId:Int, tar
 						if (success) {
 							player.money = Math.max(0, player.money - cost.playerCost.money);
 							for (i in 0...Std.int(count)) {
-								final newPeople = PeopleGenerator.getInst().generate(Math.random() < 0.5 ? 1 : 2);
+								final newPeople = PeopleGenerator.getInst().generate(random() < 0.5 ? 1 : 2);
 								addPeopleInfo(ctx, player.id, null, newPeople);
 							}
 							onPeopleExpAdd(ctx, p1.id, getExpAdd(cost.successRate, ENERGY_COST_ON_STRATEGY));
@@ -575,7 +576,7 @@ private function onStrategyCost(ctx:Context, p1PeopleId:Int, strategyId:Int, tar
 							player.money = Math.max(0, player.money - cost.playerCost.money);
 							final attachInGrid = ctx.attachments.filter(a -> a.belongToGridId == player.position);
 							if (attachInGrid.length > 0) {
-								final chooseId = Std.int(Math.random() * attachInGrid.length);
+								final chooseId = Std.int(random() * attachInGrid.length);
 								final chooseOne = attachInGrid[chooseId];
 								// 移除0級的建物
 								ctx.attachments = ctx.attachments.filter(a -> {
@@ -609,7 +610,7 @@ private function onStrategyCost(ctx:Context, p1PeopleId:Int, strategyId:Int, tar
 											if (level == 0) {
 												throw new haxe.Exception("這時不該為0級");
 											}
-											MARKET(level - 1);
+											TREASURE(level - 1);
 										case MARKET(level):
 											if (level == 0) {
 												throw new haxe.Exception("這時不該為0級");
@@ -719,7 +720,7 @@ private function onStrategyCost(ctx:Context, p1PeopleId:Int, strategyId:Int, tar
 					case {value: {valid: valid}, money: _}:
 						p1.energy = Math.max(0, p1.energy - cost.peopleCost.energy);
 						if (success) {
-							final randomId = Std.int(Math.random() * valid.length);
+							final randomId = Std.int(random() * valid.length);
 							final step = valid[randomId];
 							final nextPosition = (player.position + step) % ctx.grids.length;
 							onPlayerGoToPosition(ctx, player.id, nextPosition);
@@ -767,12 +768,63 @@ function _getStrategyRate(ctx:Context, p1PeopleId:Int, strategyId:Int, targetPla
 }
 
 function _takeStrategy(ctx:Context, p1PeopleId:Int, strategyId:Int, targetPlayerId:Int, targetPeopleId:Int, targetGridId:Int):Void {
-	verbose("_takeStrategy", ["before", ctx]);
 	onStrategyCost(ctx, p1PeopleId, strategyId, targetPlayerId, targetPeopleId, targetGridId);
-	verbose("_takeStrategy", ["after", ctx]);
 	{
 		final player = ctx.players[ctx.currentPlayerId];
 		player.memory.hasStrategy = true;
 	}
 	sortEventWhenRealPlayer(ctx);
+}
+
+function test() {
+	testStrategy15();
+}
+
+private function testStrategy15() {
+	final ctx = getDefaultContext();
+	ctx.grids.push({
+		final grid = getDefaultGrid();
+		grid;
+	});
+	ctx.players.push({
+		final player = getDefaultPlayer();
+		player;
+	});
+	ctx.peoples = [
+		{
+			final people = getDefaultPeople();
+			people.belongToPlayerId = 0;
+			people.energy = 100;
+			people;
+		}
+	];
+	ctx.attachments = [
+		{
+			final attach = getDefaultAttachment();
+			attach.belongToGridId = 0;
+			attach.type = MARKET(0);
+			attach;
+		}
+	];
+	setRandomMock([-1]);
+	_takeStrategy(ctx, 0, 15, 0, 0, 0);
+	{
+		final attachInGrid = ctx.attachments.filter(a -> a.belongToGridId == 0);
+		if (attachInGrid.length != 0) {
+			throw new haxe.Exception("建物必須被移除");
+		}
+	}
+	final attach0 = {
+		final attach = getDefaultAttachment();
+		attach.belongToGridId = 0;
+		attach.type = MARKET(1);
+		attach;
+	};
+	ctx.attachments = [attach0];
+	setRandomMock([-1]);
+	_takeStrategy(ctx, 0, 15, 0, 0, 0);
+	if (attach0.type.equals(MARKET(0)) == false) {
+		throw new haxe.Exception("建物必須被降級");
+	}
+	assertRandomMockFinish();
 }
