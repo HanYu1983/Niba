@@ -23,9 +23,9 @@
     <hbox horizontalAlign="center">
         <label text='交易基礎量'/>
         <button-bar id="grp_moneyBase" allowUnselection="true">
-            <button text="低量" />
-            <button text="中量" />
-            <button text="高量" />
+            <button id="btn_low" text="低量" />
+            <button id="btn_middle" text="中量" />
+            <button id="btn_high" text="高量" />
         </button-bar>
     </hbox>
     <hbox horizontalAlign="center">

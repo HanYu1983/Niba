@@ -45,7 +45,6 @@ class NegoPreviewView extends PopupView {
 			pro_money.value = '${result.moneyBefore} => ${result.moneyAfter} (${result.moneyAfter - result.moneyBefore})';
 			pro_food.value = '${result.foodBefore} => ${result.foodAfter} (${result.foodAfter - result.foodBefore})';
 			pro_army.value = '${result.armyBefore} => ${result.armyAfter} (${result.armyAfter - result.armyBefore})';
-			// pro_maintainFood.value = '${Main.getFixNumber(result.maintainFoodBefore, 2)} => ${Main.getFixNumber(result.maintainFoodAfter, 2)}';
 			pro_successRate.value = Main.getRateString(result.successRate);
 		}
 

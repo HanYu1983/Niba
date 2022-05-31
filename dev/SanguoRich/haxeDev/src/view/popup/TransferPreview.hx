@@ -140,15 +140,28 @@ class TransferPreview extends PopupView {
 			updateView(tempPlayer, tempGrid);
 		}
 
-		grp_auto.onChange = function(e) {
-			switch (grp_auto.selectedIndex) {
-				case 0:
-				case other:
-					sli_money.pos = (other - 1) * 25;
-					sli_food.pos = (other - 1) * 25;
-					sli_army.pos = (other - 1) * 25;
-			}
+		btn_l1.onClick = function(e) {
+			sli_money.pos = 0;
+			sli_food.pos = 0;
+			sli_army.pos = 0;
 		}
-		grp_auto.selectedIndex = 0;
+
+		btn_l2.onClick = function(e) {
+			sli_money.pos = 25;
+			sli_food.pos = 25;
+			sli_army.pos = 25;
+		}
+
+		btn_l3.onClick = function(e) {
+			sli_money.pos = 50;
+			sli_food.pos = 50;
+			sli_army.pos = 50;
+		}
+
+		btn_l4.onClick = function(e) {
+			sli_money.pos = 75;
+			sli_food.pos = 75;
+			sli_army.pos = 75;
+		}
 	}
 }

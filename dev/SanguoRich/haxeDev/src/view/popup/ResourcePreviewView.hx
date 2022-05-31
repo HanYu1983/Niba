@@ -24,8 +24,8 @@ class ResourcePreviewView extends PopupView {
 		box_gridView.addComponent(gridView);
 	}
 
-	function getMoneyBase(){
-		return switch( grp_moneyBase.selectedIndex ){
+	function getMoneyBase() {
+		return switch (grp_moneyBase.selectedIndex) {
 			case 0: 100;
 			case 1: 200;
 			case 2: 400;
@@ -33,21 +33,23 @@ class ResourcePreviewView extends PopupView {
 		};
 	}
 
-	override function showPopup(info:Dynamic, cb:()->Void = null) {
+	override function showPopup(info:Dynamic, cb:() -> Void = null) {
 		super.showPopup(info, cb);
 
 		final gameInfo = Main.model.gameInfo();
 		final previewInfo:ResourcePreview = info;
 
 		function setRate() {
-			if(p1List.selectedItem == null) return;
-			if(grp_moneyBase.selectedButton == null) return;
+			if (p1List.selectedItem == null)
+				return;
+			if (grp_moneyBase.selectedButton == null)
+				return;
 
 			final p1 = p1List.selectedItem;
 			final moneyBase = getMoneyBase();
 			final gameInfo = Main.model.gameInfo();
-			final result:PreResultOnResource = Main.model.getPreResultOfResource(gameInfo.currentPlayer.id, gameInfo.currentPlayer.atGridId, p1, moneyBase, info.market,
-				info.resource);
+			final result:PreResultOnResource = Main.model.getPreResultOfResource(gameInfo.currentPlayer.id, gameInfo.currentPlayer.atGridId, p1, moneyBase,
+				info.market, info.resource);
 
 			pro_energy.value = Main.getEnergyString(result.energyBefore, result.energyAfter, ENERGY_COST_ON_RESOURCE);
 			pro_money.value = '${result.moneyBefore} => ${result.moneyAfter} (${result.moneyAfter - result.moneyBefore})';
@@ -83,14 +85,31 @@ class ResourcePreviewView extends PopupView {
 		final grid = gameInfo.grids[gameInfo.currentPlayer.atGridId];
 		gridView.setInfo(grid);
 
-		grp_moneyBase.onChange = function(e){
+		// btn_low.disabled = true;
+		btn_middle.disabled = true;
+		btn_high.disabled = true;
+
+		final favor = grid.favor[gameInfo.currentPlayer.id];
+		switch (favor) {
+			case favor if (favor >= 2):
+				// btn_low.disabled = false;
+				btn_middle.disabled = false;
+				btn_high.disabled = false;
+			case favor if (favor >= 1):
+				// btn_low.disabled = false;
+				btn_middle.disabled = false;
+			case favor if (favor >= -1):
+				// btn_low.disabled = false;
+			case _:
+		}
+		grp_moneyBase.onChange = function(e) {
 			setRate();
 		}
 		grp_moneyBase.selectedIndex = 0;
 
-		if(cast(info.resource, RESOURCE) == MONEY){
+		if (cast(info.resource, RESOURCE) == MONEY) {
 			grp_moneyBase.hide();
-		}else{
+		} else {
 			grp_moneyBase.show();
 		}
 
@@ -106,5 +125,4 @@ class ResourcePreviewView extends PopupView {
 	function onBtnCancel(e:MouseEvent) {
 		fadeOut();
 	}
-
 }
