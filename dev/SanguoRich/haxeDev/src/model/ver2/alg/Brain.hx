@@ -69,7 +69,6 @@ function doBrain(ctx, playerId:Int, stopPlayerId:Int) {
 		}
 		final gameInfo = getGameInfo(ctx, false);
 		switch cmd {
-			case TREASURE_MARKET:
 			case CUTPATH:
 			case BREAK:
 			case END:
@@ -1281,6 +1280,7 @@ private function getCommandWeight(ctx:Context, playerId:Int, gridId:Int, cmd:Act
 							}
 						}
 					case 18:
+						// 萬箭齊發
 						final steps:Array<Int> = try {
 							cast(strategy.value.valid : Array<Int>);
 						} catch (e) {
@@ -1324,6 +1324,57 @@ private function getCommandWeight(ctx:Context, playerId:Int, gridId:Int, cmd:Act
 									brainMemory.strategy.strategyId = strategy.id;
 									brainMemory.strategy.targetGridId = nextGrid.id;
 								}
+							}
+						}
+					case 19:
+						// 強妨害
+						final gridLengthMoreThen5 = factPlayerGridLengthMoreThen(ctx, player.id, 5);
+						for (p1 in peopleInPlayer) {
+							final result = _getStrategyRate(ctx, p1.id, strategy.id, 0, 0, 0);
+							// 成功率
+							final factSuccessRate = getFact(result.rate / 0.8);
+							// 體力剩下越多越好
+							final factEnergy = factVery(getFact(result.energyAfter / 100.0), 2);
+							final score = 1.0 * getFact(factUseTimeLowerThen2 * factNowMoney * factSuccessRate * factEnergy * gridLengthMoreThen5) * factOn(gridLengthMoreThen5,
+								1) * factOn(factSuccessRate, 0.9) * factOn(factNowMoney, 1);
+							if (score > maxScore) {
+								maxScore = score;
+								brainMemory.strategy.peopleId = p1.id;
+								brainMemory.strategy.strategyId = strategy.id;
+							}
+						}
+					case 20:
+						// 野火種
+						for (p1 in peopleInPlayer) {
+							final result = _getStrategyRate(ctx, p1.id, strategy.id, 0, 0, 0);
+							// 成功率
+							final factSuccessRate = getFact(result.rate / 0.8);
+							// 體力剩下越多越好
+							final factEnergy = factVery(getFact(result.energyAfter / 100.0), 2);
+							final score = 0.7 * getFact(factUseTimeLowerThen2 * factNowMoney * factSuccessRate * factEnergy) * factOn(factSuccessRate,
+								0.9) * factOn(factNowMoney, 1);
+							if (score > maxScore) {
+								maxScore = score;
+								brainMemory.strategy.peopleId = p1.id;
+								brainMemory.strategy.strategyId = strategy.id;
+							}
+						}
+					case 21:
+						// 糧草徵收令
+						final playerFoodLowerThen = factNot(factPlayerFoodMoreThen(ctx, player.id, 200));
+						final gridLengthMoreThen5 = factPlayerGridLengthMoreThen(ctx, player.id, 5);
+						for (p1 in peopleInPlayer) {
+							final result = _getStrategyRate(ctx, p1.id, strategy.id, 0, 0, 0);
+							// 成功率
+							final factSuccessRate = getFact(result.rate / 0.8);
+							// 體力剩下越多越好
+							final factEnergy = factVery(getFact(result.energyAfter / 100.0), 2);
+							final score = 1.0 * getFact(factUseTimeLowerThen2 * factNowMoney * factSuccessRate * factEnergy * playerFoodLowerThen * gridLengthMoreThen5) * factOn(playerFoodLowerThen,
+								1) * factOn(factSuccessRate, 0.9) * factOn(factNowMoney, 1);
+							if (score > maxScore) {
+								maxScore = score;
+								brainMemory.strategy.peopleId = p1.id;
+								brainMemory.strategy.strategyId = strategy.id;
 							}
 						}
 				}

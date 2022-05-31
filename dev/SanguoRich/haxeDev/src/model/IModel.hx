@@ -596,7 +596,7 @@ final StrategyList:Array<StrategyCatelog> = [
 	},
 	{
 		id: 18,
-		name: '萬劍齊發',
+		name: '萬箭齊發',
 		money: 70,
 		intelligence: 50,
 		describe: '需要有弓將的將領才可以使用這個計策。指定格子士兵-15%',

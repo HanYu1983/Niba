@@ -37,8 +37,10 @@ function doPlayerDice(ctx:Context) {
 }
 
 function onPlayerDice(ctx:Context, playerId:Int) {
+	info("onPlayerDice", 'player${playerId}呼叫移動');
 	if (playerId != ctx.currentPlayerId) {
-		throw new haxe.Exception("現在不是你的回合,不能呼叫end");
+		err("onPlayerDice", ctx);
+		throw new haxe.Exception("現在不是你的回合,不能呼叫onPlayerDice");
 	}
 	final player = getPlayerById(ctx, playerId);
 	final fromGridId = player.position;
@@ -199,7 +201,13 @@ private function testOnPlayerGoToPositionChanceAndDestiny() {
 		tmp.buildtype = CHANCE;
 		tmp;
 	}
-	ctx.grids = [grid0];
+	// 留給異軍突起的空地，為了確保測試通過
+	final grid1 = {
+		final tmp = getDefaultGrid();
+		tmp.buildtype = EMPTY;
+		tmp;
+	}
+	ctx.grids = [grid0, grid1];
 	final player0 = {
 		final tmp = getDefaultPlayer();
 		tmp;
@@ -213,7 +221,7 @@ private function testOnPlayerGoToPositionChanceAndDestiny() {
 	grid0.buildtype = DESTINY;
 	onPlayerGoToPosition(ctx, player0.id, grid0.id);
 	if (ctx.events.length == 0) {
-		throw new haxe.Exception("踩到機會必須有事件");
+		throw new haxe.Exception("踩到命運必須有事件");
 	}
 }
 

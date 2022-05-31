@@ -70,5 +70,4 @@ function err(category:String, msg:Dynamic) {
 	// 	return;
 	// }
 	js.Browser.console.error('[${category}]', msg);
-	throw new haxe.Exception(msg);
 }

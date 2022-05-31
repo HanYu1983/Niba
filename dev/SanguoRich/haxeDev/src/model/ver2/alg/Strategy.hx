@@ -62,6 +62,21 @@ private function getStrategyCost(ctx:Context, p1PeopleId:Int, strategyId:Int, ta
 				// 	1.0;
 				// }
 			}
+		case 3:
+			// 緩兵之計
+			if (p1.belongToPlayerId == null) {
+				throw new Exception("belongToPlayerId not found");
+			}
+			final player = getPlayerById(ctx, p1.belongToPlayerId);
+			final position = targetGridId;
+			final myGroundItemInGrid = ctx.groundItems.filter(item -> item.position == position && item.strategyId == strategyId
+				&& item.belongToPlayerId == player.id);
+			// 不能重復放置
+			if (myGroundItemInGrid.length > 0) {
+				0.0;
+			} else {
+				1.0;
+			}
 		case 4:
 			// 火中取栗
 			// 對沒路障的地沒有作用
@@ -162,9 +177,18 @@ private function getStrategyCost(ctx:Context, p1PeopleId:Int, strategyId:Int, ta
 			final grid = ctx.grids[player.position];
 			switch grid.buildtype {
 				case CHANCE | DESTINY:
+					// 不能放在機會命運
 					0.0;
 				case _:
-					1.0;
+					final position = grid.id;
+					final myGroundItemInGrid = ctx.groundItems.filter(item -> item.position == position && item.strategyId == strategyId
+						&& item.belongToPlayerId == player.id);
+					// 不能重復放置
+					if (myGroundItemInGrid.length > 0) {
+						0.0;
+					} else {
+						1.0;
+					}
 			}
 		case _:
 			1;
@@ -282,6 +306,11 @@ private function onStrategyCost(ctx:Context, p1PeopleId:Int, strategyId:Int, tar
 				}
 			case 3:
 				// 緩兵之計
+				final myGroundItemInGrid = ctx.groundItems.filter(item -> item.position == targetGridId && item.strategyId == strategyId
+					&& item.belongToPlayerId == player.id);
+				if (myGroundItemInGrid.length > 0) {
+					throw new haxe.Exception("已經存在我的緩兵之計");
+				}
 				switch strategy {
 					case {money: _}:
 						p1.energy = Math.max(0, p1.energy - cost.peopleCost.energy);
@@ -492,7 +521,7 @@ private function onStrategyCost(ctx:Context, p1PeopleId:Int, strategyId:Int, tar
 						throw new haxe.Exception('strategy value not found:${strategy}');
 				}
 			case 12 | 13 | 18:
-				// 火計 | 時來運轉 | 萬劍齊發
+				// 火計 | 時來運轉 | 萬箭齊發
 				switch strategy {
 					case {value: {float: [resourceOffsetRate]}, money: _}:
 						wrapResourceResultEvent(ctx, p1.belongToPlayerId, p1.id, () -> {
@@ -788,6 +817,11 @@ private function onStrategyCost(ctx:Context, p1PeopleId:Int, strategyId:Int, tar
 					case CHANCE | DESTINY:
 						throw new haxe.Exception("機會命運不能用野火種");
 					case _:
+				}
+				final myGroundItemInGrid = ctx.groundItems.filter(item -> item.position == grid.id && item.strategyId == strategyId
+					&& item.belongToPlayerId == player.id);
+				if (myGroundItemInGrid.length > 0) {
+					throw new haxe.Exception("已經存在我的野火種");
 				}
 				switch strategy {
 					case {value: _, money: _}:
