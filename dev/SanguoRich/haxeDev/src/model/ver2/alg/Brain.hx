@@ -1370,7 +1370,7 @@ private function getCommandWeight(ctx:Context, playerId:Int, gridId:Int, cmd:Act
 							// 體力剩下越多越好
 							final factEnergy = factVery(getFact(result.energyAfter / 100.0), 2);
 							final score = 1.0 * getFact(factUseTimeLowerThen2 * factNowMoney * factSuccessRate * factEnergy * playerFoodLowerThen * gridLengthMoreThen5) * factOn(playerFoodLowerThen,
-								1) * factOn(factSuccessRate, 0.9) * factOn(factNowMoney, 1);
+								1) * factOn(factSuccessRate, 0.9) * factOn(factNowMoney, 1) * factOn(gridLengthMoreThen5, 0.8);
 							if (score > maxScore) {
 								maxScore = score;
 								brainMemory.strategy.peopleId = p1.id;
