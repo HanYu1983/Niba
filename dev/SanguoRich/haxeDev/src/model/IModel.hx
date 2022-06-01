@@ -1093,12 +1093,12 @@ final BuildingList:Array<BuildingCatelog> = [
 		id: 37,
 		name: '狩獵場',
 		money: 0,
-		describe: '每一個回合自身所有的將領幾率50%增加5功績',
+		describe: '每一個回合自身所有的將領幾率2.5%增加50功績',
 		type: HUNTING(1),
 		depends: [],
 		value: {
 			valid: [],
-			float: [0.5, 5]
+			float: [0.025, 50]
 		}
 	},
 	{
