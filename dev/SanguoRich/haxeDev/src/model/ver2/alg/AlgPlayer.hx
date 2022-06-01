@@ -33,10 +33,11 @@ function doPlayerEnd(ctx:Context) {
 }
 
 function doPlayerDice(ctx:Context) {
-	onPlayerDice(ctx, ctx.currentPlayerId);
+	final moveStep = Math.floor(Math.random() * 6) + 1;
+	onPlayerDice(ctx, ctx.currentPlayerId, moveStep);
 }
 
-function onPlayerDice(ctx:Context, playerId:Int) {
+function onPlayerDice(ctx:Context, playerId:Int, moveStep:Int) {
 	info("onPlayerDice", 'player${playerId}呼叫移動');
 	if (playerId != ctx.currentPlayerId) {
 		err("onPlayerDice", ctx);
@@ -44,7 +45,6 @@ function onPlayerDice(ctx:Context, playerId:Int) {
 	}
 	final player = getPlayerById(ctx, playerId);
 	final fromGridId = player.position;
-	final moveStep = Math.floor(Math.random() * 6) + 1;
 	var toGridId = (fromGridId + moveStep) % ctx.grids.length;
 	{
 		// 計算路障
@@ -209,10 +209,18 @@ private function testOnPlayerGoToPositionChanceAndDestiny() {
 	// 留給異軍突起的空地，為了確保測試通過
 	final grid1 = {
 		final tmp = getDefaultGrid();
+		tmp.id = 1;
 		tmp.buildtype = EMPTY;
 		tmp;
 	}
-	ctx.grids = [grid0, grid1];
+	// 留給量產事件，為了確保測試通過
+	final grid2 = {
+		final tmp = getDefaultGrid();
+		tmp.id = 2;
+		tmp.buildtype = CITY;
+		tmp;
+	}
+	ctx.grids = [grid0, grid1, grid2];
 	final player0 = {
 		final tmp = getDefaultPlayer();
 		tmp;

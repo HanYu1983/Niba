@@ -91,7 +91,8 @@ function doBrain(ctx, playerId:Int, stopPlayerId:Int) {
 					}
 				}
 			case MOVE:
-				onPlayerDice(ctx, playerId);
+				final moveStep = Math.floor(Math.random() * 6) + 1;
+				onPlayerDice(ctx, playerId, moveStep);
 				doEvent(ctx, playerId);
 			case BUILD:
 				if (brainMemory.build.peopleId == null) {

@@ -765,10 +765,8 @@ private function onStrategyCost(ctx:Context, p1PeopleId:Int, strategyId:Int, tar
 						if (success) {
 							player.money = Math.max(0, player.money - cost.playerCost.money);
 							final randomId = Std.int(random() * valid.length);
-							final step = valid[randomId];
-							final nextPosition = (player.position + step) % ctx.grids.length;
-							onPlayerGoToPosition(ctx, player.id, nextPosition);
-							player.memory.hasDice = true;
+							final moveStep = valid[randomId];
+							onPlayerDice(ctx, player.id, moveStep);
 							onPeopleExpAdd(ctx, p1.id, getExpAdd(cost.successRate, ENERGY_COST_ON_STRATEGY));
 						} else {
 							player.money = Math.max(0, player.money - cost.playerCost.money * 0.2);
