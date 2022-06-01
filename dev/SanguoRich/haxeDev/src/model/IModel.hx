@@ -1150,3 +1150,22 @@ final BuildingList:Array<BuildingCatelog> = [
 		}
 	}
 ];
+
+// 命運定義檔
+// 可以只寫描述, 算法我來寫
+// 目前只支援修改玩家自己
+function getDestinyConfig(player:PlayerInfo):String {
+	return switch Math.random() {
+		// 直接寫死機率
+		case v if (v < 0.5):
+			final value = 50;
+			player.money = Math.max(0, player.money - value);
+			'${player.name}不小心掉了錢包, 損失${value}錢';
+		case v if (v < 0.99):
+			final value = 50;
+			player.money = player.money + value;
+			'${player.name}撿到錢, 得到${value}錢';
+		case _:
+			'${player.name}新增事件';
+	}
+}
