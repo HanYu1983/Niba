@@ -52,15 +52,14 @@ private function getStrategyCost(ctx:Context, p1PeopleId:Int, strategyId:Int, ta
 				if (isEmpty) {
 					0.0;
 				} else {
-					1.0;
+					// 必須不是主公的城
+					final gridBelongPlayerId = getGridBelongPlayerId(ctx, grid.id);
+					if (gridBelongPlayerId != null) {
+						0.0;
+					} else {
+						1.0;
+					}
 				}
-				// // 必須不是主公的城
-				// final gridBelongPlayerId = getGridBelongPlayerId(ctx, grid.id);
-				// if (gridBelongPlayerId != null) {
-				// 	0.0;
-				// } else {
-				// 	1.0;
-				// }
 			}
 		case 3:
 			// 緩兵之計
