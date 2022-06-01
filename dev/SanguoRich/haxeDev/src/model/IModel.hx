@@ -501,7 +501,7 @@ final StrategyList:Array<StrategyCatelog> = [
 	{
 		id: 10,
 		name: '三顧茅廬',
-		money: 500,
+		money: 300,
 		intelligence: 50,
 		describe: '需要有人脈的將領才可以使用這個計策。隨機獲得一個將領或者文官。',
 		targetType: StrategyTargetType.SELF_PLAYER,
@@ -513,7 +513,7 @@ final StrategyList:Array<StrategyCatelog> = [
 	{
 		id: 11,
 		name: '草船借箭',
-		money: 500,
+		money: 300,
 		intelligence: 50,
 		describe: '需要有鑒別的將領才可以使用這個計策。隨機獲得一個寶物。',
 		targetType: StrategyTargetType.SELF_PLAYER,
