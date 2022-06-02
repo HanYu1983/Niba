@@ -107,6 +107,8 @@ function doBrain(ctx, playerId:Int, stopPlayerId:Int) {
 				}
 				final firstBuilding = findAttachment[0].type;
 				final toBuilding:BUILDING = switch firstBuilding {
+					case PUB(level):
+						PUB(Std.int(Math.min(1, level + 1)));
 					case TREASURE(level):
 						TREASURE(Std.int(Math.min(1, level + 1)));
 					case FISHING(level):
@@ -1389,6 +1391,8 @@ private function getCommandWeight(ctx:Context, playerId:Int, gridId:Int, cmd:Act
 			final score = if (buildingsInGrid.length > 0) {
 				final buildingNotMax = buildingsInGrid.filter(b -> {
 					return switch b.type {
+						case PUB(level):
+							if (level < 1) true else false;
 						case MARKET(level):
 							if (level < 3) true else false;
 						case BANK(level):

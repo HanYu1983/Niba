@@ -51,6 +51,8 @@ class GridGridView extends BasicGridView{
                 throw new haxe.Exception('不能是null,type:${b}');
             }
             switch(catelog.type){
+                case PUB(level):
+                    if( level > 0 ) building += '酒${level}';
                 case TREASURE(level):
                     if( level > 0 ) building += '寳${level}';
                 case FISHING(level):
@@ -114,6 +116,8 @@ class GridGridView extends BasicGridView{
                 throw new haxe.Exception('不能是null,type:${b}');
             }
             switch(catelog.type){
+                case PUB(level):
+                    if( level > 0 ) building += '酒${level}';
                 case TREASURE(level):
                     if( level > 0 ) building += '寳${level}';
                 case FISHING(level):

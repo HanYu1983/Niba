@@ -1148,6 +1148,30 @@ final BuildingList:Array<BuildingCatelog> = [
 			valid: [],
 			float: [0.1, 3]
 		}
+	},
+	{
+		id: 42,
+		name: '酒館(未建)',
+		money: 100,
+		describe: '走到的主公可以使用作樂指令，付費回復將領體力。自己主公則免費',
+		type: PUB(0),
+		depends: [],
+		value: {
+			valid: [],
+			float: []
+		}
+	},
+	{
+		id: 43,
+		name: '酒館',
+		money: 0,
+		describe: '走到的主公可以使用作樂指令，付費回復將領體力。自己主公則免費',
+		type: PUB(1),
+		depends: [],
+		value: {
+			valid: [],
+			float: []
+		}
 	}
 ];
 

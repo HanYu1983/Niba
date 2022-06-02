@@ -73,6 +73,7 @@ enum BUILDING {
 	HUNTING(level:Int);
 	MINE(level:Int);
 	TREASURE(level:Int);
+	PUB(level:Int);
 }
 
 class GridGenerator {

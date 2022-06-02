@@ -96,6 +96,8 @@ function onGridBornEvent(ctx:Context, gridId:Int) {
 		// case _:
 		// 強迫編譯器檢查
 		return switch catelog.type {
+			case PUB(level):
+				level == 0;
 			case TREASURE(level):
 				level == 0;
 			case FISHING(level):

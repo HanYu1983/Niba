@@ -36,6 +36,8 @@ class BuildPreview extends PopupView {
 
     function getNextLevelBuilding(current:BUILDING) {
         return switch (current) {
+			case PUB(level):
+				if (level < 1) BUILDING.PUB(level + 1); else BUILDING.PUB(1);
 			case TREASURE(level):
 				if (level < 1) BUILDING.TREASURE(level + 1); else BUILDING.TREASURE(1);
 			case FISHING(level):

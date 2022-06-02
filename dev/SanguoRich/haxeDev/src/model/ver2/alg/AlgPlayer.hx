@@ -341,6 +341,8 @@ function onPayTaxToGrid(ctx:Context, playerId:Int, gridId:Int) {
 						final attachInGrid = ctx.attachments.filter(a -> a.belongToGridId == g.id);
 						final attachSellValue = attachInGrid.flatMap(a -> {
 							final ret:Array<BUILDING> = switch a.type {
+								case PUB(level):
+									[for (i in 0...level + 1) PUB(i)];
 								case TREASURE(level):
 									[for (i in 0...level + 1) TREASURE(i)];
 								case FISHING(level):
@@ -383,6 +385,8 @@ function onPayTaxToGrid(ctx:Context, playerId:Int, gridId:Int) {
 						// 賣掉建物
 						for (a in attachInGrid) {
 							final resetBuild:BUILDING = switch a.type {
+								case PUB(_):
+									PUB(0);
 								case TREASURE(_):
 									TREASURE(0);
 								case FISHING(_):
