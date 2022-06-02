@@ -21,7 +21,7 @@ function _sellTreasure(ctx:Context, playerId:Int, gridId:Int, sellId:Int) {
 	if (findCatelog.length == 0) {
 		throw new haxe.Exception('[_sellTreasure]findCatelog not found: ${treasure.protoId}');
 	}
-	final sellMoney = findCatelog[0].cost;
+	final sellMoney = findCatelog[0].cost * TREASURE_COST_MULTI;
 	final player = getPlayerById(ctx, playerId);
 	final grid = ctx.grids[gridId];
 	if (sellMoney >= grid.money) {
@@ -53,7 +53,7 @@ function _buyTreasure(ctx:Context, playerId:Int, gridId:Int, buyId:Int) {
 	if (findCatelog.length == 0) {
 		throw new haxe.Exception('[_buyTreasure]findCatelog not found: ${treasure.protoId}');
 	}
-	final buyMoney = findCatelog[0].cost;
+	final buyMoney = findCatelog[0].cost * TREASURE_COST_MULTI;
 	final player = getPlayerById(ctx, playerId);
 	final grid = ctx.grids[gridId];
 	final gridBelongPlayerId = getGridBelongPlayerId(ctx, grid.id);
