@@ -805,12 +805,12 @@ final BuildingList:Array<BuildingCatelog> = [
 		id: 13,
 		name: '人材所',
 		money: 0,
-		describe: '提高將領在探索計算時的魅力(+5)及聘用計算時的魅力(+5)。所有將領的薪資減為*0.5。並且聘用金錢減為*0.5',
+		describe: '提高將領在探索計算時的魅力(+5)及聘用計算時的魅力(+5)。所有將領的薪資減為*0.7。並且聘用金錢減為*0.7',
 		type: EXPLORE(1),
 		depends: [],
 		value: {
 			valid: [],
-			float: [5, 0.5]
+			float: [5, 0.7]
 		}
 	},
 	{
@@ -1157,14 +1157,30 @@ final BuildingList:Array<BuildingCatelog> = [
 function getDestinyConfig(player:PlayerInfo):String {
 	return switch Math.random() {
 		// 直接寫死機率
-		case v if (v < 0.5):
+		case v if (v < 1.0 / 6.0):
 			final value = 50;
 			player.money = Math.max(0, player.money - value);
 			'${player.name}不小心掉了錢包, 損失${value}錢';
-		case v if (v < 0.99):
+		case v if (v < 2.0 / 6.0):
 			final value = 50;
 			player.money = player.money + value;
 			'${player.name}撿到錢, 得到${value}錢';
+		case v if (v < 3.0 / 6.0):
+			final value = 50;
+			player.food = Math.max(0, player.food - value);
+			'糧草被害蟲吃了,${player.name}損失${value}糧草';
+		case v if (v < 4.0 / 6.0):
+			final value = 50;
+			player.food = player.food + value;
+			'${player.name}收割小麥, 得到${value}糧草';
+		case v if (v < 5.0 / 6.0):
+			final value = 50;
+			player.army = Math.max(0, player.army - value);
+			'士兵不滿，${player.name}發生逃兵, 損失${value}士兵';
+		case v if (v < 1.0):
+			final value = 50;
+			player.army = player.army + value;
+			'義勇兵加入,${player.name}得到${value}士兵';
 		case _:
 			'${player.name}新增事件';
 	}
