@@ -1,5 +1,6 @@
 package view.popup;
 
+import model.Config.TREASURE_COST_MULTI;
 import haxe.ui.containers.dialogs.Dialog.DialogButton;
 import model.IModel.PlayerInfo;
 import view.widgets.GridGridView;
@@ -61,7 +62,7 @@ class TreasureMarketPreviewView extends PopupView {
 			return;
 		}
 
-		final msg = '確定用${sell.cost * 30}價格賣掉${sell.name}寶物嗎?';
+		final msg = '確定用${sell.cost * TREASURE_COST_MULTI}價格賣掉${sell.name}寶物嗎?';
 		Dialogs.messageBox(msg, msg, MessageBoxType.TYPE_QUESTION, true, (b) -> {
 			if (b == DialogButton.YES) {
 				Main.view.onTreasureMarketPreviewSellClick(sell.id);
@@ -77,7 +78,7 @@ class TreasureMarketPreviewView extends PopupView {
 		if (buy == null)
 			return;
 
-		final msg = '確定花費${buy.cost * 30}購買${buy.name}寶物嗎?';
+		final msg = '確定花費${buy.cost * TREASURE_COST_MULTI}購買${buy.name}寶物嗎?';
 		Dialogs.messageBox(msg, msg, MessageBoxType.TYPE_QUESTION, true, (b) -> {
 			if (b == DialogButton.YES) {
 				Main.view.onTreasureMarketPreviewBuyClick(buy.id);
@@ -106,22 +107,22 @@ class TreasureMarketPreviewView extends PopupView {
 			switch(type){
 				case 0:
 					final playerAfter:PlayerInfo = Main.cloneObject( player );
-					playerAfter.money = player.money + t.cost * 30;
+					playerAfter.money = player.money + t.cost * TREASURE_COST_MULTI;
 					playerGrid.setCompareInfo(player, playerAfter);
 
 					final gridAfter = Main.cloneObject( grid );
-					gridAfter.money = grid.money - t.cost * 30;
+					gridAfter.money = grid.money - t.cost * TREASURE_COST_MULTI;
 					gridGrid.setCompareInfo(grid, gridAfter);
 
 					btn_sellMyTreasure.disabled = !(gridAfter.money > 0);
 					btn_sellMyTreasure.text = (gridAfter.money > 0) ? '賣掉這個寶物' : '對方錢不夠';
 				case 1:
 					final playerAfter = Main.cloneObject( player );
-					playerAfter.money = player.money - t.cost * 30;
+					playerAfter.money = player.money - t.cost * TREASURE_COST_MULTI;
 					playerGrid.setCompareInfo(player, playerAfter);
 
 					final gridAfter = Main.cloneObject( grid );
-					gridAfter.money = grid.money + t.cost * 30;
+					gridAfter.money = grid.money + t.cost * TREASURE_COST_MULTI;
 					gridGrid.setCompareInfo(grid, gridAfter);
 
 					btn_buyTreasure.disabled = !(playerAfter.money > 0);

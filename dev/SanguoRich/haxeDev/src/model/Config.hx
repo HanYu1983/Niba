@@ -225,3 +225,6 @@ final INIT_GRID_COUNT = 30;
 
 // 對非AI事件做排序
 final SORT_EVENT_WHEN_REAL_PLAYER = false;
+
+// 寶物價格cost的倍率
+final TREASURE_COST_MULTI = 20.0;
