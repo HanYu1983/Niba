@@ -14,10 +14,10 @@
     </hbox>
     <hbox horizontalAlign="center">
         <button-bar id="grp_settleType" allowUnselection="true">
-            <button text="市場(200)" />
-            <button text="農田(200)" />
-            <button text="村落(200)" />
-            <button text="城市(500)" />
+            <button id="btn_market" text="市場" />
+            <button id="btn_farm" text="農田" />
+            <button id="btn_village" text="村落" />
+            <button id="btn_city" text="城市" />
         </button-bar>
     </hbox>
     <hbox horizontalAlign="center">

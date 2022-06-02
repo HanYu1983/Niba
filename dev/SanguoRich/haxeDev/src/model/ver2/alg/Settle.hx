@@ -17,7 +17,7 @@ function getSettleCost(ctx:Context, playerId:Int, peopleId:Int, gridId:Int, sett
 	final p1 = getPeopleById(ctx, peopleId);
 	final useEnergy = p1.energy / (100 / ENERGY_COST_ON_SETTLE);
 	final base = getBase(useEnergy, ENERGY_COST_ON_SETTLE, 0.0) * BASE_RATE_SETTLE;
-	final settleMoneyCost = [200.0, 200, 200, 500][settleType];
+	final settleMoneyCost = [SETTLE_MARKET_COST, SETTLE_FARM_COST, SETTLE_VILLAGE_COST, SETTLE_CITY_COST][settleType];
 	final putMoney = Math.max(0, Math.min(100, player.money - settleMoneyCost));
 	final putArmy = Math.min(100, player.army);
 	final putFood = Math.max(0, Math.min(100, player.food - settleMoneyCost));
