@@ -13,6 +13,50 @@ using Lambda;
 
 function initContext(ctx:Context, options:GameSetting) {
 	info("initContext", options);
+	if (false) {
+		// 測試買寶
+		final grid0:Grid = {
+			final grid = getDefaultGrid();
+			grid.defaultMaxMoney = 1000;
+			grid;
+		}
+		ctx.grids = [grid0];
+		final player0 = {
+			final player = getDefaultPlayer();
+			player.memory.hasDice = true;
+			player.money = 1000;
+			player;
+		};
+		final player1 = {
+			final player = getDefaultPlayer();
+			player.id = 1;
+			player;
+		};
+		ctx.players = [player0, player1];
+		final people0 = {
+			final tmp = getDefaultPeople();
+			tmp.belongToPlayerId = player1.id;
+			tmp.position.gridId = grid0.id;
+			tmp;
+		}
+		ctx.peoples = [people0];
+		final treasure0 = {
+			final tmp = getDefaultTreasure();
+			tmp.belongToPlayerId = null;
+			tmp.position.gridId = 0;
+			tmp;
+		}
+		ctx.treasures = [treasure0];
+		final firstAttachment = {
+			final attach = getDefaultAttachment();
+			attach.belongToGridId = 0;
+			attach.type = TREASURE(1);
+			attach;
+		};
+		ctx.attachments = [firstAttachment];
+		return;
+	}
+
 	ctx.settings = options;
 	final genGrids = model.GridGenerator.getInst()
 		.getGrids(options.gridCount != null ? options.gridCount : INIT_GRID_COUNT, options.limitBuilding, options.putong ? 0 : -1);
