@@ -444,9 +444,12 @@ private function onStrategyCost(ctx:Context, p1PeopleId:Int, strategyId:Int, tar
 						p1.energy = Math.max(0, p1.energy - cost.peopleCost.energy);
 						if (success) {
 							final myGrids = ctx.grids.filter(g -> getGridBelongPlayerId(ctx, g.id) == p1.belongToPlayerId);
-							for (grid in myGrids) {
-								grid.food = Math.min(getGridMaxFood(ctx, grid.id), grid.food + grid.food * gainRate);
-							}
+							wrapGridResourceEvent(ctx, myGrids, strategy.name, () -> {
+								for (grid in myGrids) {
+									grid.food = Math.min(getGridMaxFood(ctx, grid.id), grid.food + grid.food * gainRate);
+								}
+								true;
+							});
 							onPeopleExpAdd(ctx, p1.id, getExpAdd(cost.successRate, ENERGY_COST_ON_STRATEGY));
 						}
 						success;
@@ -529,50 +532,42 @@ private function onStrategyCost(ctx:Context, p1PeopleId:Int, strategyId:Int, tar
 							final targetGridBelongPlayerId = getGridBelongPlayerId(ctx, targetGrid.id);
 							if (success) {
 								player.money = Math.max(0, player.money - cost.playerCost.money);
-								switch strategy.id {
-									case 12:
-										targetGrid.food = Math.max(0,
-											Math.min(getGridMaxFood(ctx, targetGridId), targetGrid.food + targetGrid.food * resourceOffsetRate));
-										if (targetGridBelongPlayerId != null) {
-											// hate you
-											final targetPlayer = getPlayerById(ctx, targetGridBelongPlayerId);
-											targetPlayer.hate.push(player.id);
-											targetPlayer.hate.push(player.id);
-										}
-									case 13:
-										targetGrid.money = Math.max(0,
-											Math.min(getGridMaxMoney(ctx, targetGridId), targetGrid.money + targetGrid.money * resourceOffsetRate));
-										targetGrid.food = Math.max(0,
-											Math.min(getGridMaxFood(ctx, targetGridId), targetGrid.food + targetGrid.food * resourceOffsetRate));
-										targetGrid.army = Math.max(0,
-											Math.min(getGridMaxArmy(ctx, targetGridId), targetGrid.army + targetGrid.army * resourceOffsetRate));
-									case 18:
-										targetGrid.army = Math.max(0,
-											Math.min(getGridMaxFood(ctx, targetGridId), targetGrid.army + targetGrid.army * resourceOffsetRate));
-										if (targetGridBelongPlayerId != null) {
-											// hate you
-											final targetPlayer = getPlayerById(ctx, targetGridBelongPlayerId);
-											targetPlayer.hate.push(player.id);
-											targetPlayer.hate.push(player.id);
-										}
-								}
+								wrapGridResourceEvent(ctx, [targetGrid], strategy.name, () -> {
+									switch strategy.id {
+										case 12:
+											targetGrid.food = Math.max(0,
+												Math.min(getGridMaxFood(ctx, targetGridId), targetGrid.food + targetGrid.food * resourceOffsetRate));
+											if (targetGridBelongPlayerId != null) {
+												// hate you
+												final targetPlayer = getPlayerById(ctx, targetGridBelongPlayerId);
+												targetPlayer.hate.push(player.id);
+												targetPlayer.hate.push(player.id);
+											}
+										case 13:
+											targetGrid.money = Math.max(0,
+												Math.min(getGridMaxMoney(ctx, targetGridId), targetGrid.money + targetGrid.money * resourceOffsetRate));
+											targetGrid.food = Math.max(0,
+												Math.min(getGridMaxFood(ctx, targetGridId), targetGrid.food + targetGrid.food * resourceOffsetRate));
+											targetGrid.army = Math.max(0,
+												Math.min(getGridMaxArmy(ctx, targetGridId), targetGrid.army + targetGrid.army * resourceOffsetRate));
+										case 18:
+											targetGrid.army = Math.max(0,
+												Math.min(getGridMaxFood(ctx, targetGridId), targetGrid.army + targetGrid.army * resourceOffsetRate));
+											if (targetGridBelongPlayerId != null) {
+												// hate you
+												final targetPlayer = getPlayerById(ctx, targetGridBelongPlayerId);
+												targetPlayer.hate.push(player.id);
+												targetPlayer.hate.push(player.id);
+											}
+									}
+									true;
+								});
 								onPeopleExpAdd(ctx, p1.id, getExpAdd(cost.successRate, ENERGY_COST_ON_STRATEGY));
 							} else {
 								player.money = Math.max(0, player.money - cost.playerCost.money * 0.2);
 							}
 							success;
 						});
-						if (success) {
-							ctx.events.push(GRID_RESOURCE_EVENT({
-								grids: [
-									{
-										gridBefore: getGridInfo(ctx, ctx.grids[targetGridId]),
-										gridAfter: getGridInfo(ctx, ctx.grids[targetGridId]),
-									}
-								],
-								describtion: strategy.name
-							}, getGameInfo(ctx, false)));
-						}
 						success;
 					case _:
 						throw new haxe.Exception('strategy value not found:${strategy}');
@@ -856,11 +851,14 @@ private function onStrategyCost(ctx:Context, p1PeopleId:Int, strategyId:Int, tar
 						if (success) {
 							player.money = Math.max(0, player.money - cost.playerCost.money);
 							final myGrid = ctx.grids.filter(g -> getGridBelongPlayerId(ctx, g.id) == player.id);
-							for (g in myGrid) {
-								final getFood = g.food * rate;
-								g.food -= getFood;
-								player.food += getFood;
-							}
+							wrapGridResourceEvent(ctx, myGrid, strategy.name, () -> {
+								for (g in myGrid) {
+									final getFood = g.food * rate;
+									g.food -= getFood;
+									player.food += getFood;
+								}
+								true;
+							});
 							onPeopleExpAdd(ctx, p1.id, getExpAdd(cost.successRate, ENERGY_COST_ON_STRATEGY));
 						} else {
 							player.money = Math.max(0, player.money - cost.playerCost.money * 0.2);
