@@ -94,6 +94,7 @@ function _buyTreasure(ctx:Context, playerId:Int, gridId:Int, buyId:Int) {
 function test() {
 	testSell();
 	testBuy();
+	testBuy2();
 }
 
 private function testSell() {
@@ -173,6 +174,55 @@ private function testBuy() {
 	}
 	if (player1.money == 0) {
 		throw new haxe.Exception("player1主公必須得到錢");
+	}
+	if (treasure0.belongToPlayerId != player0.id) {
+		throw new haxe.Exception("寶物必須變成player0的");
+	}
+	if (treasure0.position.gridId != null) {
+		throw new haxe.Exception("寶物必須敵開格子");
+	}
+}
+
+private function testBuy2() {
+	final ctx:Context = getDefaultContext();
+	final grid0:Grid = {
+		final grid = getDefaultGrid();
+		grid.defaultMaxMoney = 1000;
+		grid;
+	}
+	ctx.grids = [grid0];
+	final player0 = {
+		final player = getDefaultPlayer();
+		trace("送給主公1000錢");
+		player.money = 1000;
+		player;
+	};
+	final player1 = {
+		final player = getDefaultPlayer();
+		player.id = 1;
+		player;
+	};
+	ctx.players = [player0, player1];
+	final people0 = {
+		final tmp = getDefaultPeople();
+		tmp.belongToPlayerId = player1.id;
+		tmp.position.gridId = grid0.id;
+		tmp;
+	}
+	ctx.peoples = [people0];
+	final treasure0 = {
+		final tmp = getDefaultTreasure();
+		tmp.belongToPlayerId = null;
+		tmp.position.gridId = 0;
+		tmp;
+	}
+	ctx.treasures = [treasure0];
+	_buyTreasure(ctx, player0.id, grid0.id, treasure0.id);
+	if (player0.money == 1000) {
+		throw new haxe.Exception("player0主公的錢必須減少");
+	}
+	if (grid0.money == 0) {
+		throw new haxe.Exception("grid0必須得到錢");
 	}
 	if (treasure0.belongToPlayerId != player0.id) {
 		throw new haxe.Exception("寶物必須變成player0的");

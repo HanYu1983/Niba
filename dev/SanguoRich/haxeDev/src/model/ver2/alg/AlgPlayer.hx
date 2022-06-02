@@ -219,6 +219,13 @@ private function testOnPlayerGoToPositionChanceAndDestiny() {
 		tmp;
 	}
 	ctx.players = [player0];
+	trace("把人放進格子裡, 不然沒人的話會判斷成空地, 而不能發生事件");
+	final people0 = {
+		final tmp = getDefaultPeople();
+		tmp.position.gridId = grid2.id;
+		tmp;
+	}
+	ctx.peoples = [people0];
 	onPlayerGoToPosition(ctx, player0.id, grid0.id);
 	if (ctx.events.length == 0) {
 		throw new haxe.Exception("踩到機會必須有事件");
