@@ -870,7 +870,18 @@ function getGridTaxRate(ctx:Context, gridId:Int) {
 
 function getGridBuildType(ctx:Context, gridId:Int):GROWTYPE {
 	final grid = ctx.grids[gridId];
-	return grid.buildtype;
+	return switch grid.buildtype {
+		case CHANCE | DESTINY | EMPTY:
+			grid.buildtype;
+		case _:
+			final peopleInGrid = ctx.peoples.filter(p -> p.position.gridId == grid.id);
+			final belongPlayerId = getGridBelongPlayerId(ctx, grid.id);
+			final isEmpty = belongPlayerId == null && peopleInGrid.length == 0;
+			if (isEmpty) {
+				return EMPTY;
+			}
+			grid.buildtype;
+	}
 	// final peopleInGrid = ctx.peoples.filter(p -> p.position.gridId == grid.id);
 	// final belongPlayerId = getGridBelongPlayerId(ctx, grid.id);
 	// final isEmpty = belongPlayerId == null && peopleInGrid.length == 0;
@@ -917,6 +928,35 @@ function getGridBuildType(ctx:Context, gridId:Int):GROWTYPE {
 	// throw new haxe.Exception("必須是一個類型, 請檢查GridGenerator, 非空地請確保每個類型都至少一個建物");
 }
 
+private function testGetBuildType() {
+	final ctx:Context = getDefaultContext();
+	final grid0:Grid = {
+		final grid = getDefaultGrid();
+		grid.buildtype = CITY;
+		grid;
+	}
+	ctx.grids = [grid0];
+	final player0 = {
+		final player = getDefaultPlayer();
+		player;
+	};
+	ctx.players = [player0];
+	final people0 = {
+		final tmp = getDefaultPeople();
+		tmp.belongToPlayerId = player0.id;
+		tmp.position.gridId = grid0.id;
+		tmp;
+	}
+	ctx.peoples = [people0];
+	if (getGridBuildType(ctx, grid0.id) != CITY) {
+		throw new haxe.Exception("一開始是CITY");
+	}
+	people0.position.gridId = null;
+	if (getGridBuildType(ctx, grid0.id) != EMPTY) {
+		throw new haxe.Exception("把人抽走後要變成EMPTY");
+	}
+}
+
 function getGridInfo(ctx:Context, grid:Grid):model.GridGenerator.Grid {
 	final peopleInGrid = ctx.peoples.filter(p -> p.position.gridId == grid.id);
 	final belongPlayerId = getGridBelongPlayerId(ctx, grid.id);
@@ -926,7 +966,7 @@ function getGridInfo(ctx:Context, grid:Grid):model.GridGenerator.Grid {
 		name: grid.name,
 		landType: grid.landType,
 		landAttachment: [],
-		buildtype: grid.buildtype,
+		buildtype: getGridBuildType(ctx, grid.id),
 		height: 0,
 		attachs: ctx.attachments.filter(a -> a.belongToGridId == grid.id).map(a -> a.type),
 		belongPlayerId: cast belongPlayerId,
@@ -1931,4 +1971,8 @@ function getPlayerById(ctx:Context, playerId:Int):Player {
 		throw new haxe.Exception('playerId not found:${playerId}');
 	}
 	return find[0];
+}
+
+function test() {
+	testGetBuildType();
 }
