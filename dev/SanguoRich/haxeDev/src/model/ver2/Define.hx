@@ -1935,6 +1935,25 @@ function wrapResourceResultEvent(ctx:Context, playerId:Int, p1SelectId:Int, fn:(
 	return resultValue.success;
 }
 
+function wrapGridResourceEvent(ctx:Context, grids:Array<Grid>, description:String, fn:() -> Bool):Bool {
+	final gridBefore = grids.map(g -> getGridInfo(ctx, g));
+	final success = fn();
+	if (success) {
+		final gridAfter = grids.map(g -> getGridInfo(ctx, g));
+		ctx.events.push(GRID_RESOURCE_EVENT({
+			grids: [
+				for (i in 0...gridBefore.length)
+					{
+						gridBefore: gridBefore[i],
+						gridAfter: gridAfter[i]
+					}
+			],
+			describtion: description
+		}, getGameInfo(ctx, false)));
+	}
+	return success;
+}
+
 function wrapStrategyEvent(ctx:Context, playerId:Int, peopleId:Int, strategyId:Int, fn:() -> Bool):Bool {
 	final p1 = getPeopleById(ctx, peopleId);
 	final player = getPlayerById(ctx, playerId);
