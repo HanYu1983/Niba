@@ -1793,7 +1793,7 @@ function getPlayerCommand(ctx:Context, playerId:Int):Array<ActionInfoID> {
 						case _:
 							if (gridInfo.favor[playerId] >= CAN_CHANGE_FAVOR) {
 								// 好感的
-								ret.push(PAY_FOR_FUN);
+								// ret.push(PAY_FOR_FUN);
 								switch gridInfo.buildtype {
 									case MARKET:
 										ret.push(EARN_MONEY);
@@ -1856,9 +1856,9 @@ function getPlayerCommand(ctx:Context, playerId:Int):Array<ActionInfoID> {
 			if (player.memory.hasBuild == false) {
 				ret.push(BUILD);
 			}
-			if (player.memory.hasCommand == false) {
-				ret.push(PAY_FOR_FUN);
-			}
+			// if (player.memory.hasCommand == false) {
+			// 	ret.push(PAY_FOR_FUN);
+			// }
 			ret.push(END);
 		}
 		if (player.memory.hasTreasureBuySell == false) {
@@ -1873,6 +1873,20 @@ function getPlayerCommand(ctx:Context, playerId:Int):Array<ActionInfoID> {
 			}).length > 0;
 			if (hasTreasureMarket) {
 				ret.push(TREASURE_MARKET);
+			}
+		}
+		if (player.memory.hasCommand == false) {
+			// 如果走到酒店
+			final hasPub = ctx.attachments.filter(a -> a.belongToGridId == player.position).filter(a -> {
+				switch a.type {
+					case PUB(1):
+						true;
+					case _:
+						false;
+				}
+			}).length > 0;
+			if (hasPub) {
+				ret.push(PAY_FOR_FUN);
 			}
 		}
 	}
