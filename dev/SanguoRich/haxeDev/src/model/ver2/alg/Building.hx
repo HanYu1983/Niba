@@ -23,7 +23,7 @@ private function onBuildingCost(ctx:Context, playerId:Int, gridId:Int, peopleId:
 	final people = getPeopleById(ctx, peopleId);
 	final peopleAbilities = getPeopleAbilities(ctx, peopleId);
 	// 有修補可以減少成本
-	final costRate = peopleAbilities.has(9) ? 0.5 : 1.0;
+	final costRate = peopleAbilities.has(9) ? 0.8 : 1.0;
 	final costMoney = catelog[0].money * costRate;
 	final success = true;
 	info("onBuildingCost", '${player.name}在grid${gridId}從${current}建造${to}. 金錢${costMoney}/${player.money}');
