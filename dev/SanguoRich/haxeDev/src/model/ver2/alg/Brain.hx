@@ -1953,8 +1953,8 @@ private function getCommandWeight(ctx:Context, playerId:Int, gridId:Int, cmd:Act
 				for (p in peopleInPlayer) {
 					// 體力剩下越多越好
 					final factEnergyMoreThen50 = getFact(p.energy / 50.0);
-					final factMyMoneyMoreThen800 = factPlayerMoneyMoreThen(ctx, playerId, 800);
-					final factMyResMoreThen500 = factPlayerIsBigThen(ctx, playerId, 500);
+					final factMyMoneyMoreThen800 = factPlayerMoneyMoreThen(ctx, playerId, SETTLE_CITY_COST + 200);
+					final factMyResMoreThen500 = factPlayerIsBigThen(ctx, playerId, SETTLE_MARKET_COST + 200);
 					final factMyPeopleNotInGrid = factPlayerPeopleNoInGridLengthMoreThen(ctx, playerId, 1);
 					final score = 1.0 * getFact(factEnergyMoreThen50 * factMyMoneyMoreThen800 * factMyResMoreThen500 * factMyPeopleNotInGrid) * factOn(factMyResMoreThen500,
 						1) * factOn(factMyPeopleNotInGrid, 1) * factOn(factEnergyMoreThen50, 1) * factOn(factMyMoneyMoreThen800, 1);
