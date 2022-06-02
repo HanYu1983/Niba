@@ -646,6 +646,7 @@ private function getCommandWeight(ctx:Context, playerId:Int, gridId:Int, cmd:Act
 							if (nextGrid == null) {
 								throw new haxe.Exception('nextGrid not found: ${nextPosition}');
 							}
+							final peopleInNextGrid = ctx.peoples.filter((p:People) -> p.position.gridId == nextGrid.id);
 							final gridBelongPlayerId = getGridBelongPlayerId(ctx, nextGrid.id);
 							final isMyGrid = gridBelongPlayerId == player.id;
 							final isNotEnemyButNotMe = gridBelongPlayerId == null;
@@ -655,15 +656,15 @@ private function getCommandWeight(ctx:Context, playerId:Int, gridId:Int, cmd:Act
 								getFact(totalRes / 400);
 							});
 							// 如果是中立大城可以去
-							final factHasPeople = peopleInGrid.length > 0 ? 1.0 : 0.0;
+							final factHasPeople = getFact(peopleInNextGrid.length > 0 ? 1.0 : 0.0);
 							verbose("getCommandWeight", ["factHasPeople", factHasPeople]);
-							final factNotEnemyBig = getFact(isNotEnemyButNotMe ? factBigGrid : 1.0);
+							final factNotEnemyBig = getFact(isNotEnemyButNotMe ? factBigGrid : 0.0);
 							verbose("getCommandWeight", ["factNotEnemyBig", factNotEnemyBig]);
-							final factMyBig = getFact(isMyGrid ? factBigGrid : 1.0);
+							final factMyBig = getFact(isMyGrid ? factBigGrid : 0.0);
 							verbose("getCommandWeight", ["factMyBig", factMyBig]);
 							// 越過路障
 							final factPassGroundItem = getFact({
-								final passedGrids = [for (i in 0...s) player.position + i % ctx.grids.length];
+								final passedGrids = [for (i in 1...s) player.position + i % ctx.grids.length];
 								final enemyItems = ctx.groundItems.filter(i -> passedGrids.has(i.position) && i.belongToPlayerId != player.id);
 								enemyItems.length > 0 ? enemyItems.length * 2 : 1.0;
 							});
@@ -673,19 +674,26 @@ private function getCommandWeight(ctx:Context, playerId:Int, gridId:Int, cmd:Act
 							final factIsEnemySmall = getFact(isEnemyGrid ? factNot(factBigGrid) : 0.0);
 							verbose("getCommandWeight", ["factIsEnemySmall", factIsEnemySmall]);
 							final factIcanOccupy = getFact({
-								final myRes = player.food + player.army * 2;
-								final enemyRes = nextGrid.food + nextGrid.army * 2;
-								if (enemyRes == 0) {
-									99999;
+								if (gridBelongPlayerId == null) {
+									0.0;
+								} else if (gridBelongPlayerId == player.id) {
+									0.0;
 								} else {
-									myRes / (enemyRes * 2);
+									final myRes = player.food + player.army * 2;
+									final enemyRes = nextGrid.food + nextGrid.army * 2;
+									if (enemyRes == 0) {
+										99999;
+									} else {
+										myRes / (enemyRes * 2);
+									}
 								}
 							});
 							verbose("getCommandWeight", ["factIcanOccupy", factIcanOccupy]);
 							final factHateYou = getFact({
-								final gridBelongPlayerId = getGridBelongPlayerId(ctx, nextGrid.id);
 								if (gridBelongPlayerId == null) {
 									1.0;
+								} else if (gridBelongPlayerId == player.id) {
+									0.0;
 								} else {
 									final hateYouCnt = player.hate.filter(i -> i == gridBelongPlayerId).length;
 									0.5 + hateYouCnt * 0.5;
@@ -1063,7 +1071,9 @@ private function getCommandWeight(ctx:Context, playerId:Int, gridId:Int, cmd:Act
 							final factHateYou = getFact({
 								final gridBelongPlayerId = getGridBelongPlayerId(ctx, nextGrid.id);
 								if (gridBelongPlayerId == null) {
-									1.0;
+									0.0;
+								} else if (gridBelongPlayerId == player.id) {
+									0.0;
 								} else {
 									factHateYou(ctx, player.id, gridBelongPlayerId);
 								}
@@ -1158,7 +1168,9 @@ private function getCommandWeight(ctx:Context, playerId:Int, gridId:Int, cmd:Act
 							final factHateYou = getFact({
 								final gridBelongPlayerId = getGridBelongPlayerId(ctx, nextGrid.id);
 								if (gridBelongPlayerId == null) {
-									1.0;
+									0.0;
+								} else if (gridBelongPlayerId == player.id) {
+									0.0;
 								} else {
 									factHateYou(ctx, player.id, gridBelongPlayerId);
 								}
@@ -1191,7 +1203,9 @@ private function getCommandWeight(ctx:Context, playerId:Int, gridId:Int, cmd:Act
 						final factHateYou = getFact({
 							final gridBelongPlayerId = getGridBelongPlayerId(ctx, grid.id);
 							if (gridBelongPlayerId == null) {
-								1.0;
+								0.0;
+							} else if (gridBelongPlayerId == player.id) {
+								0.0;
 							} else {
 								factHateYou(ctx, player.id, gridBelongPlayerId);
 							}
@@ -1308,7 +1322,9 @@ private function getCommandWeight(ctx:Context, playerId:Int, gridId:Int, cmd:Act
 							final factHateYou = getFact({
 								final gridBelongPlayerId = getGridBelongPlayerId(ctx, nextGrid.id);
 								if (gridBelongPlayerId == null) {
-									1.0;
+									0.0;
+								} else if (gridBelongPlayerId == player.id) {
+									0.0;
 								} else {
 									factHateYou(ctx, player.id, gridBelongPlayerId);
 								}
@@ -1805,7 +1821,9 @@ private function getCommandWeight(ctx:Context, playerId:Int, gridId:Int, cmd:Act
 				final factHateYou = getFact({
 					final gridBelongPlayerId = getGridBelongPlayerId(ctx, grid.id);
 					if (gridBelongPlayerId == null) {
-						1.0;
+						0.0;
+					} else if (gridBelongPlayerId == player.id) {
+						0.0;
 					} else {
 						final hateYouCnt = player.hate.filter(i -> i == gridBelongPlayerId).length;
 						0.5 + hateYouCnt * 0.5;
@@ -1845,7 +1863,9 @@ private function getCommandWeight(ctx:Context, playerId:Int, gridId:Int, cmd:Act
 				final factHateYou = getFact({
 					final gridBelongPlayerId = getGridBelongPlayerId(ctx, grid.id);
 					if (gridBelongPlayerId == null) {
-						1.0;
+						0.0;
+					} else if (gridBelongPlayerId == player.id) {
+						0.0;
 					} else {
 						final hateYouCnt = player.hate.filter(i -> i == gridBelongPlayerId).length;
 						0.5 + hateYouCnt * 0.5;
@@ -1893,7 +1913,9 @@ private function getCommandWeight(ctx:Context, playerId:Int, gridId:Int, cmd:Act
 				final factHateYou = getFact({
 					final gridBelongPlayerId = getGridBelongPlayerId(ctx, grid.id);
 					if (gridBelongPlayerId == null) {
-						1.0;
+						0.0;
+					} else if (gridBelongPlayerId == player.id) {
+						0.0;
 					} else {
 						final hateYouCnt = player.hate.filter(i -> i == gridBelongPlayerId).length;
 						0.5 + hateYouCnt * 0.5;
@@ -1984,8 +2006,13 @@ private function getCommandWeight(ctx:Context, playerId:Int, gridId:Int, cmd:Act
 			} else {
 				final chooseId = Std.int(Math.random() * treasureInGrid.length);
 				final chooseOne = treasureInGrid[chooseId];
-				brainMemory.treasureMarket.treasureId = chooseOne.id;
-				1.0;
+				final moneyCost = getTreasureCost(ctx, chooseOne.id);
+				if (player.money <= moneyCost) {
+					0.0;
+				} else {
+					brainMemory.treasureMarket.treasureId = chooseOne.id;
+					1.0;
+				}
 			}
 			verbose("getCommandWeight", [playerId, cmd, score]);
 			score;
@@ -2247,9 +2274,9 @@ function testAISettle() {
 			memory: getDefaultBrainMemory()
 		};
 		tmp.memory.hasDice = true;
-		tmp.money = 1000;
-		tmp.food = 1000;
-		tmp.army = 1000;
+		tmp.money = 2000;
+		tmp.food = 2000;
+		tmp.army = 2000;
 		tmp;
 	}
 	ctx.players = [player0];
@@ -2277,7 +2304,7 @@ function testAISettle() {
 		case _:
 	}
 	switch [player0.money, player0.food, player0.army] {
-		case [1000, 1000, 1000]:
+		case [2000, 2000, 2000]:
 			throw new haxe.Exception("玩家必須支付資源");
 		case _:
 	}

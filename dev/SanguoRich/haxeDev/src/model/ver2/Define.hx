@@ -1755,6 +1755,15 @@ function getPeopleAbilities(ctx:Context, peopleId:Int):Array<Int> {
 	return ret;
 }
 
+function getTreasureCost(ctx:Context, tid:Int):Float {
+	final treasure = getTreasureById(ctx, tid);
+	final findCatelog = treasureList.filter(t -> t.id == treasure.protoId);
+	if (findCatelog.length == 0) {
+		throw new haxe.Exception('[getTreasureCost]findCatelog not found: ${treasure.protoId}');
+	}
+	return findCatelog[0].cost * TREASURE_COST_MULTI;
+}
+
 function getPlayerCommand(ctx:Context, playerId:Int):Array<ActionInfoID> {
 	final ret:Array<ActionInfoID> = [];
 	// ret.push(BREAK);

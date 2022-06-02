@@ -159,6 +159,9 @@ function factPlayerPeopleNoInGridLengthMoreThen(ctx:Context, playerId:Int, amoun
 }
 
 function factHateYou(ctx:Context, playerId:Int, targetPlayerId:Int):Float {
+	if (playerId == targetPlayerId) {
+		return 0.0;
+	}
 	final targetPlayer = getPlayerById(ctx, targetPlayerId);
 	final factHateYou = getFact({
 		final hateYouCnt = targetPlayer.hate.filter(i -> i == playerId).length;

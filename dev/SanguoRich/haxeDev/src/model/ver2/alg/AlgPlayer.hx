@@ -329,6 +329,72 @@ function onPayTaxToGrid(ctx:Context, playerId:Int, gridId:Int) {
 				player.army -= taxArmy;
 
 				if (player.money < 0 || player.food < 0 || player.army < 0) {
+					// 賣寶物
+					final playerTreasures = ctx.treasures.filter(t -> t.belongToPlayerId == player.id);
+					// 從不貴重的開始
+					playerTreasures.sort((a, b) -> {
+						return Std.int(getTreasureCost(ctx, a.id)) - Std.int(getTreasureCost(ctx, b.id));
+					});
+					for (treasure in playerTreasures) {
+						final sellRes = getTreasureCost(ctx, treasure.id) / 3.0;
+						player.money += sellRes * 0.8;
+						player.army += sellRes * 0.8;
+						player.food += sellRes * 0.8;
+						// 寶物掉在原地
+						treasure.belongToPlayerId = null;
+						treasure.position.gridId = player.position;
+						if (player.money >= 0 && player.food >= 0 && player.army >= 0) {
+							break;
+						}
+					}
+					// 賣建物
+					final playerAttachs = ctx.attachments.filter(a -> getGridBelongPlayerId(ctx, a.belongToGridId) == player.id);
+					for (attach in playerAttachs) {
+						final catelog = BuildingList.filter((catelog) -> Type.enumEq(catelog.type, attach.type));
+						if (catelog.length == 0) {
+							throw new haxe.Exception('current.catelog找不到:${attach.type}');
+						}
+						final sellRes = catelog[0].money / 3.0;
+						player.money += sellRes * 0.8;
+						player.army += sellRes * 0.8;
+						player.food += sellRes * 0.8;
+						final resetBuild:BUILDING = switch attach.type {
+							case PUB(_):
+								PUB(0);
+							case TREASURE(_):
+								TREASURE(0);
+							case FISHING(_):
+								FISHING(0);
+							case HUNTING(_):
+								HUNTING(0);
+							case MINE(_):
+								MINE(0);
+							case MARKET(_):
+								MARKET(0);
+							case BANK(_):
+								BANK(0);
+							case FARM(_):
+								FARM(0);
+							case BARN(_):
+								BARN(0);
+							case BARRACKS(_):
+								BARRACKS(0);
+							case HOME(_):
+								HOME(0);
+							case EXPLORE(_):
+								EXPLORE(0);
+							case WALL(_):
+								WALL(0);
+							case SIEGEFACTORY(_):
+								SIEGEFACTORY(0);
+							case ACADEMY(_):
+								ACADEMY(0);
+						}
+						attach.type = resetBuild;
+						if (player.money >= 0 && player.food >= 0 && player.army >= 0) {
+							break;
+						}
+					}
 					final playerGrids = ctx.grids.filter(g -> getGridBelongPlayerId(ctx, g.id) == player.id);
 					// 從小城開始賣
 					playerGrids.sort((a, b) -> {
@@ -418,7 +484,11 @@ function onPayTaxToGrid(ctx:Context, playerId:Int, gridId:Int) {
 							}
 							a.type = resetBuild;
 						}
-						player.money += attachSellValue * 0.8;
+						// 賣出建物
+						final sellRes = attachSellValue / 3.0;
+						player.money += sellRes * 0.8;
+						player.army += sellRes * 0.8;
+						player.food += sellRes * 0.8;
 						// 收回資源格子資源
 						player.money += g.money * 0.8;
 						player.army += g.army * 0.8;
