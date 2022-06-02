@@ -787,16 +787,18 @@ private function onStrategyCost(ctx:Context, p1PeopleId:Int, strategyId:Int, tar
 									&& item.belongToPlayerId == player.id);
 								return myGroundItemInGrid.length == 0;
 							});
+							info("onStrategyCost", '${strategy.name}找到的格子${myGrid.map(g -> g.id)}');
 							myGrid.sort((a, b) -> {
-								return Std.int(Math.random() * 10) - 5;
+								return Std.int(random() * 10) - 5;
 							});
 							final chooseGrid = myGrid.slice(0, Std.int(cnt));
+							info("onStrategyCost", '${strategy.name}選擇隨機的前5個${chooseGrid.map(g -> g.id)}');
 							for (g in chooseGrid) {
 								ctx.groundItems.push({
 									id: ctx.idSeq++,
 									belongToPlayerId: player.id,
 									position: g.id,
-									strategyId: strategyId
+									strategyId: 3
 								});
 							}
 							onPeopleExpAdd(ctx, p1.id, getExpAdd(cost.successRate, ENERGY_COST_ON_STRATEGY));
@@ -906,6 +908,7 @@ function _takeStrategy(ctx:Context, p1PeopleId:Int, strategyId:Int, targetPlayer
 
 function test() {
 	testStrategy15();
+	testStrategy19();
 }
 
 private function testStrategy15() {
@@ -954,5 +957,66 @@ private function testStrategy15() {
 	if (attach0.type.equals(MARKET(0)) == false) {
 		throw new haxe.Exception("建物必須被降級");
 	}
+	assertRandomMockFinish();
+}
+
+private function testStrategy19() {
+	final ctx:Context = getDefaultContext();
+	final grid0:Grid = {
+		final grid = getDefaultGrid();
+		grid.buildtype = CITY;
+		grid;
+	}
+	final grid1:Grid = {
+		final grid = getDefaultGrid();
+		grid.id = 1;
+		grid.buildtype = CITY;
+		grid;
+	}
+	ctx.grids = [grid0, grid1];
+	final player0 = {
+		final player = getDefaultPlayer();
+		player;
+	};
+	final player1 = {
+		final player = getDefaultPlayer();
+		player.id = 1;
+		player;
+	};
+	ctx.players = [player0, player1];
+	final people0 = {
+		final tmp = getDefaultPeople();
+		tmp.belongToPlayerId = player0.id;
+		tmp.position.gridId = grid0.id;
+		tmp;
+	}
+	final people1 = {
+		final tmp = getDefaultPeople();
+		tmp.id = 1;
+		tmp.belongToPlayerId = player0.id;
+		tmp.position.gridId = grid1.id;
+		tmp;
+	}
+	ctx.peoples = [people0, people1];
+	setRandomMock([-1, 0, 0, 0, 0, 0]);
+	_takeStrategy(ctx, people0.id, 19, 0, 0, 0);
+	trace(ctx.groundItems);
+	if (ctx.groundItems.length != 2) {
+		throw new haxe.Exception("必須有2個路障");
+	}
+	if (ctx.groundItems[0].position != 1) {
+		throw new haxe.Exception("第一個路障在格子1");
+	}
+	if (ctx.groundItems[1].position != 0) {
+		throw new haxe.Exception("第二個路障在格子0");
+	}
+	trace("切換目前玩家為玩家1");
+	ctx.currentPlayerId = player1.id;
+	trace("玩家1走5格");
+	onPlayerDice(ctx, player1.id, 5);
+	if (player1.position != 1) {
+		throw new haxe.Exception("玩家1必須被擋在格子1");
+	}
+	clearRandomMock();
 	assertRandomMockFinish();
 }

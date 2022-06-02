@@ -15,6 +15,10 @@ function random():Float {
 	return Math.random();
 }
 
+function clearRandomMock() {
+	_randomMock = [];
+}
+
 function assertRandomMockFinish() {
 	if (_randomMock.length > 0) {
 		throw new haxe.Exception("randomMock must clear");
