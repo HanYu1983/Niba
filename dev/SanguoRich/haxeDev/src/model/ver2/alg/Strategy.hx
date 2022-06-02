@@ -626,6 +626,7 @@ private function onStrategyCost(ctx:Context, p1PeopleId:Int, strategyId:Int, tar
 										return true;
 									}
 									return switch a.type {
+										case PUB(level): level > 0;
 										case TREASURE(level): level > 0;
 										case MARKET(level): level > 0;
 										case BANK(level): level > 0;
@@ -648,6 +649,11 @@ private function onStrategyCost(ctx:Context, p1PeopleId:Int, strategyId:Int, tar
 										return a;
 									}
 									a.type = switch a.type {
+										case PUB(level):
+											if (level == 0) {
+												throw new haxe.Exception("這時不該為0級");
+											}
+											PUB(level - 1);
 										case TREASURE(level):
 											if (level == 0) {
 												throw new haxe.Exception("這時不該為0級");

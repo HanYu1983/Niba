@@ -21,6 +21,8 @@ function doPeopleMaintain(ctx:Context) {
 				final myAttachments = ctx.attachments.filter(a -> getGridBelongPlayerId(ctx, a.belongToGridId) == player.id);
 				final levels = myAttachments.fold((c, a:Float) -> {
 					return a + switch c.type {
+						case PUB(level):
+							level;
 						case TREASURE(level):
 							level;
 						case FISHING(level):
