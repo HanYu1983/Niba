@@ -32,16 +32,12 @@ class Model extends DefaultModel {
 
 	public function new() {}
 
-	public function addRobot():IRobotGetter {
-		final tmp = new Robot(this, '${_id++}');
-		_robots.push(tmp);
-		return tmp;
+	public function createRobot():IRobotGetter {
+		return new Robot(this, '${_id++}');
 	}
 
-	public function addPilot():IPilotGetter {
-		final tmp = new Pilot(this, '${_id++}');
-		_pilots.push(tmp);
-		return tmp;
+	public function createPilot():IPilotGetter {
+		return new Pilot(this, '${_id++}');
 	}
 
 	public function getMap():IMapGetter {

@@ -18,9 +18,12 @@ class Main {
 	public static function main() {
 		final model = new Model();
 		{
-			final robot1 = model.addRobot();
-			final robot2 = model.addRobot();
-			final pilot1 = model.addPilot();
+			final robot1 = model.createRobot();
+			model.addObject(robot1);
+			final robot2 = model.createRobot();
+			model.addObject(robot2);
+			final pilot1 = model.createPilot();
+			model.addObject(pilot1);
 			model.setPilot(robot1, pilot1);
 			model.setPilot(robot2, pilot1);
 		}
@@ -37,9 +40,12 @@ class Main {
 			trace(robot1.getPilot() == pilot1);
 		}
 		{
-			final robot1 = model2.addRobot();
-			final robot2 = model2.addRobot();
-			final pilot1 = model2.addPilot();
+			final robot1 = model.createRobot();
+			model.addObject(robot1);
+			final robot2 = model.createRobot();
+			model.addObject(robot2);
+			final pilot1 = model.createPilot();
+			model.addObject(pilot1);
 			model2.setPilot(robot1, pilot1);
 			model2.setPilot(robot2, pilot1);
 		}

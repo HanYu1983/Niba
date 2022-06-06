@@ -76,15 +76,16 @@ abstract class DefaultMap implements IMap {
 }
 
 interface IModelGetter {
+	function createRobot():IRobotGetter;
+	function createPilot():IPilotGetter;
 	function getRobots():Array<IRobotGetter>;
 	function getPilots():Array<IPilotGetter>;
 	function getMap():IMapGetter;
 }
 
 interface IModel extends IModelGetter {
-	function addRobot():IRobotGetter;
-	function addPilot():IPilotGetter;
 	function setPilot(robot:IRobotGetter, pilot:IPilotGetter):IRobotGetter;
+	function addObject(obj:Any):Void;
 }
 
 abstract class DefaultModel implements IModel {
@@ -110,5 +111,14 @@ abstract class DefaultModel implements IModel {
 			cast(pilot, IPilot).setRobot(robot);
 		}
 		return robotWriter;
+	}
+
+	public function addObject(obj:Any):Void {
+		if (Std.isOfType(obj, IRobot)) {
+			_robots.push(obj);
+		}
+		if (Std.isOfType(obj, IPilot)) {
+			_pilots.push(obj);
+		}
 	}
 }

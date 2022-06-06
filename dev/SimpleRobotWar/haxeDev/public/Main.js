@@ -78,27 +78,33 @@ Main.checkType = function(a) {
 };
 Main.main = function() {
 	var model = new han_Model();
-	var robot1 = model.addRobot();
-	var robot2 = model.addRobot();
-	var pilot1 = model.addPilot();
+	var robot1 = model.createRobot();
+	model.addObject(robot1);
+	var robot2 = model.createRobot();
+	model.addObject(robot2);
+	var pilot1 = model.createPilot();
+	model.addObject(pilot1);
 	model.setPilot(robot1,pilot1);
 	model.setPilot(robot2,pilot1);
 	haxe_Serializer.USE_CACHE = true;
 	var s = haxe_Serializer.run(model);
-	console.log("src/Main.hx:29:",s);
+	console.log("src/Main.hx:32:",s);
 	var model2 = haxe_Unserializer.run(s);
-	console.log("src/Main.hx:31:",model2);
+	console.log("src/Main.hx:34:",model2);
 	var robot1 = model.getRobots()[0];
 	var robot2 = model.getRobots()[1];
 	var pilot1 = model.getPilots()[0];
-	console.log("src/Main.hx:36:",robot1.getPilot() == robot2.getPilot());
-	console.log("src/Main.hx:37:",robot1.getPilot() == pilot1);
-	var robot1 = model2.addRobot();
-	var robot2 = model2.addRobot();
-	var pilot1 = model2.addPilot();
+	console.log("src/Main.hx:39:",robot1.getPilot() == robot2.getPilot());
+	console.log("src/Main.hx:40:",robot1.getPilot() == pilot1);
+	var robot1 = model.createRobot();
+	model.addObject(robot1);
+	var robot2 = model.createRobot();
+	model.addObject(robot2);
+	var pilot1 = model.createPilot();
+	model.addObject(pilot1);
 	model2.setPilot(robot1,pilot1);
 	model2.setPilot(robot2,pilot1);
-	console.log("src/Main.hx:46:",model2);
+	console.log("src/Main.hx:52:",model2);
 };
 var Mat2 = {};
 Mat2._new = function(a00,a01,a10,a11) {
@@ -3471,6 +3477,14 @@ common_DefaultModel.prototype = {
 		}
 		return robotWriter;
 	}
+	,addObject: function(obj) {
+		if(js_Boot.__implements(obj,common_IRobot)) {
+			this._robots.push(obj);
+		}
+		if(js_Boot.__implements(obj,common_IPilot)) {
+			this._pilots.push(obj);
+		}
+	}
 	,__class__: common_DefaultModel
 };
 var han_Robot = function(model,id) {
@@ -3512,15 +3526,11 @@ $hxClasses["han.Model"] = han_Model;
 han_Model.__name__ = "han.Model";
 han_Model.__super__ = common_DefaultModel;
 han_Model.prototype = $extend(common_DefaultModel.prototype,{
-	addRobot: function() {
-		var tmp = new han_Robot(this,"" + this._id++);
-		this._robots.push(tmp);
-		return tmp;
+	createRobot: function() {
+		return new han_Robot(this,"" + this._id++);
 	}
-	,addPilot: function() {
-		var tmp = new han_Pilot(this,"" + this._id++);
-		this._pilots.push(tmp);
-		return tmp;
+	,createPilot: function() {
+		return new han_Pilot(this,"" + this._id++);
 	}
 	,getMap: function() {
 		return this._map;
@@ -4518,6 +4528,9 @@ js_Boot.__downcastCheck = function(o,cl) {
 	} else {
 		return true;
 	}
+};
+js_Boot.__implements = function(o,iface) {
+	return js_Boot.__interfLoop(js_Boot.getClass(o),iface);
 };
 js_Boot.__cast = function(o,t) {
 	if(o == null || js_Boot.__instanceof(o,t)) {
