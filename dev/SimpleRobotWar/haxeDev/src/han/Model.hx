@@ -22,8 +22,13 @@ class Pilot extends DefaultPilot {
 	}
 }
 
+class Map extends DefaultMap {
+	public function new() {}
+}
+
 class Model extends DefaultModel {
-	var _id:Int = 0;
+	var _id = 0;
+	final _map = new Map();
 
 	public function new() {}
 
@@ -37,5 +42,9 @@ class Model extends DefaultModel {
 		final tmp = new Pilot(this, '${_id++}');
 		_pilots.push(tmp);
 		return tmp;
+	}
+
+	public function getMap():IMapGetter {
+		return _map;
 	}
 }

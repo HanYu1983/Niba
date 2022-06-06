@@ -7,7 +7,7 @@
 -lib hxSet
 -lib tweenx
 -lib haxe-injection
-
+-lib vector-math
 --macro nullSafety("Main")
 --macro nullSafety("common.Define")
 

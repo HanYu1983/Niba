@@ -1,15 +1,20 @@
 package common;
 
+import VectorMath;
+
 interface IRobotGetter {
 	function getPilot():Null<IPilotGetter>;
+	function getPosition():Vec2;
 }
 
 interface IRobot extends IRobotGetter {
 	function setPilot(pilot:Null<IPilotGetter>):Void;
+	function setPosition(v:Vec2):Void;
 }
 
 abstract class DefaultRobot implements IRobot {
 	var _pilot:Null<IPilotGetter>;
+	var _pos:Vec2 = vec2(0, 0);
 
 	public function getPilot():Null<IPilotGetter> {
 		return _pilot;
@@ -17,6 +22,14 @@ abstract class DefaultRobot implements IRobot {
 
 	public function setPilot(pilot:Null<IPilotGetter>) {
 		_pilot = pilot;
+	}
+
+	public function getPosition():Vec2 {
+		return _pos;
+	}
+
+	public function setPosition(v:Vec2):Void {
+		_pos = v;
 	}
 }
 
@@ -40,9 +53,31 @@ abstract class DefaultPilot implements IPilot {
 	}
 }
 
+interface IMapGridGetter {}
+
+interface IMapGetter {
+	function getGrid(pos:Vec2):IMapGridGetter;
+	function getPath(s:Vec2, e:Vec2):Array<IMapGridGetter>;
+}
+
+interface IMap extends IMapGetter {}
+
+abstract class DefaultMap implements IMap {
+	final _grids = new Array<IMapGridGetter>();
+
+	public function getGrid(pos:Vec2):IMapGridGetter {
+		return _grids[0];
+	}
+
+	public function getPath(s:Vec2, e:Vec2):Array<IMapGridGetter> {
+		return [];
+	}
+}
+
 interface IModelGetter {
 	function getRobots():Array<IRobotGetter>;
 	function getPilots():Array<IPilotGetter>;
+	function getMap():IMapGetter;
 }
 
 interface IModel extends IModelGetter {

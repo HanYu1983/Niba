@@ -6,6 +6,15 @@ import haxe.Serializer;
 import haxe.Unserializer;
 
 class Main {
+	static function checkType(a) {
+		trace(switch (Type.typeof(a)) {
+			case TInt: "Int";
+			case TBool: "Bool";
+			case TClass(cls): cls + "";
+			case other: throw "unhandled type " + other;
+		});
+	}
+
 	public static function main() {
 		final model = new Model();
 		{
