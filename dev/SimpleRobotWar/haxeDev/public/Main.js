@@ -57,25 +57,22 @@ var Main = function() { };
 $hxClasses["Main"] = Main;
 Main.__name__ = "Main";
 Main.main = function() {
-	console.log("src/Main.hx:12:","Start");
-	var collection = new hx_injection_ServiceCollection();
-	var serviceName = common_TestController.__name__;
-	var implementationName = hx_injection_ServiceType.Singleton(common_TestController.__name__);
-	collection._requestedServices.h[serviceName] = implementationName;
-	var serviceName = common_IModel.__name__;
-	var implementationName = hx_injection_ServiceType.Singleton(han_Model.__name__);
-	collection._requestedServices.h[serviceName] = implementationName;
-	var provider = collection.createProvider();
-	var ctr = provider.getService(common_TestController);
-	ctr.doIt();
-	console.log("src/Main.hx:20:",ctr);
+	var model = new han_Model();
+	var robot1 = model.addRobot();
+	var robot2 = model.addRobot();
+	var pilot1 = model.addPilot();
+	model.setPilot(robot1,pilot1);
+	model.setPilot(robot2,pilot1);
 	haxe_Serializer.USE_CACHE = true;
-	var s = haxe_Serializer.run(ctr);
-	console.log("src/Main.hx:24:",s);
-	var ctr2 = haxe_Unserializer.run(s);
-	ctr2.doIt();
-	ctr2.doIt();
-	console.log("src/Main.hx:28:",ctr2);
+	var s = haxe_Serializer.run(model);
+	console.log("src/Main.hx:20:",s);
+	var model2 = haxe_Unserializer.run(s);
+	console.log("src/Main.hx:22:",model2);
+	var robot1 = model.getRobots()[0];
+	var robot2 = model.getRobots()[1];
+	var pilot1 = model.getPilots()[0];
+	console.log("src/Main.hx:27:",robot1.getPilot() == robot2.getPilot());
+	console.log("src/Main.hx:28:",robot1.getPilot() == pilot1);
 };
 Math.__name__ = "Math";
 var Reflect = function() { };
@@ -143,10 +140,6 @@ ValueType.__constructs__ = [ValueType.TNull,ValueType.TInt,ValueType.TFloat,Valu
 var Type = function() { };
 $hxClasses["Type"] = Type;
 Type.__name__ = "Type";
-Type.createInstance = function(cl,args) {
-	var ctor = Function.prototype.bind.apply(cl,[null].concat(args));
-	return new (ctor);
-};
 Type.createEnum = function(e,constr,params) {
 	var f = Reflect.field(e,constr);
 	if(f == null) {
@@ -214,59 +207,144 @@ Type.enumParameters = function(e) {
 		return [];
 	}
 };
-var hx_injection_Service = function() { };
-$hxClasses["hx.injection.Service"] = hx_injection_Service;
-hx_injection_Service.__name__ = "hx.injection.Service";
-hx_injection_Service.__isInterface__ = true;
-hx_injection_Service.prototype = {
-	__class__: hx_injection_Service
+var common_IRobotGetter = function() { };
+$hxClasses["common.IRobotGetter"] = common_IRobotGetter;
+common_IRobotGetter.__name__ = "common.IRobotGetter";
+common_IRobotGetter.__isInterface__ = true;
+common_IRobotGetter.prototype = {
+	__class__: common_IRobotGetter
+};
+var common_IRobot = function() { };
+$hxClasses["common.IRobot"] = common_IRobot;
+common_IRobot.__name__ = "common.IRobot";
+common_IRobot.__isInterface__ = true;
+common_IRobot.__interfaces__ = [common_IRobotGetter];
+common_IRobot.prototype = {
+	__class__: common_IRobot
+};
+var common_DefaultRobot = function() {
+};
+$hxClasses["common.DefaultRobot"] = common_DefaultRobot;
+common_DefaultRobot.__name__ = "common.DefaultRobot";
+common_DefaultRobot.__interfaces__ = [common_IRobot];
+common_DefaultRobot.prototype = {
+	getPilot: function() {
+		return this._pilot;
+	}
+	,setPilot: function(pilot) {
+		this._pilot = pilot;
+	}
+	,__class__: common_DefaultRobot
+};
+var common_IPilotGetter = function() { };
+$hxClasses["common.IPilotGetter"] = common_IPilotGetter;
+common_IPilotGetter.__name__ = "common.IPilotGetter";
+common_IPilotGetter.__isInterface__ = true;
+common_IPilotGetter.prototype = {
+	__class__: common_IPilotGetter
+};
+var common_IPilot = function() { };
+$hxClasses["common.IPilot"] = common_IPilot;
+common_IPilot.__name__ = "common.IPilot";
+common_IPilot.__isInterface__ = true;
+common_IPilot.__interfaces__ = [common_IPilotGetter];
+common_IPilot.prototype = {
+	__class__: common_IPilot
+};
+var common_DefaultPilot = function() {
+};
+$hxClasses["common.DefaultPilot"] = common_DefaultPilot;
+common_DefaultPilot.__name__ = "common.DefaultPilot";
+common_DefaultPilot.__interfaces__ = [common_IPilot];
+common_DefaultPilot.prototype = {
+	getRobot: function() {
+		return this._robot;
+	}
+	,setRobot: function(robot) {
+		this._robot = robot;
+	}
+	,__class__: common_DefaultPilot
+};
+var common_IModelGetter = function() { };
+$hxClasses["common.IModelGetter"] = common_IModelGetter;
+common_IModelGetter.__name__ = "common.IModelGetter";
+common_IModelGetter.__isInterface__ = true;
+common_IModelGetter.prototype = {
+	__class__: common_IModelGetter
 };
 var common_IModel = function() { };
 $hxClasses["common.IModel"] = common_IModel;
 common_IModel.__name__ = "common.IModel";
 common_IModel.__isInterface__ = true;
-common_IModel.__interfaces__ = [hx_injection_Service];
+common_IModel.__interfaces__ = [common_IModelGetter];
 common_IModel.prototype = {
 	__class__: common_IModel
 };
-var common_TestController = function(model,model2) {
-	this._model = model;
-	this._model2 = model2;
-	this._model3 = new han_Model();
+var common_DefaultModel = function() {
+	this._robots = [];
+	this._pilots = [];
 };
-$hxClasses["common.TestController"] = common_TestController;
-common_TestController.__name__ = "common.TestController";
-common_TestController.__interfaces__ = [hx_injection_Service];
-common_TestController.prototype = {
-	doIt: function() {
-		this._model.doIt();
-		this._model2.doIt();
-		this._model3.doIt();
-		console.log("src/common/TestController.hx:22:",this._model == this._model2);
-		console.log("src/common/TestController.hx:23:",this._model2 == this._model3);
+$hxClasses["common.DefaultModel"] = common_DefaultModel;
+common_DefaultModel.__name__ = "common.DefaultModel";
+common_DefaultModel.__interfaces__ = [common_IModel];
+common_DefaultModel.prototype = {
+	getRobots: function() {
+		return this._robots;
 	}
-	,getConstructorArgs: function() {
-		return ["common.IModel","common.IModel"];
+	,getPilots: function() {
+		return this._pilots;
 	}
-	,__class__: common_TestController
+	,setPilot: function(robot,pilot) {
+		var robotWriter = js_Boot.__cast(robot , common_IRobot);
+		var originPilot = robotWriter.getPilot();
+		if(originPilot != null) {
+			(js_Boot.__cast(originPilot , common_IPilot)).setRobot(null);
+		}
+		robotWriter.setPilot(pilot);
+		if(pilot != null) {
+			(js_Boot.__cast(pilot , common_IPilot)).setRobot(robot);
+		}
+		return robotWriter;
+	}
+	,__class__: common_DefaultModel
 };
+var han_Robot = function() {
+	common_DefaultRobot.call(this);
+};
+$hxClasses["han.Robot"] = han_Robot;
+han_Robot.__name__ = "han.Robot";
+han_Robot.__super__ = common_DefaultRobot;
+han_Robot.prototype = $extend(common_DefaultRobot.prototype,{
+	__class__: han_Robot
+});
+var han_Pilot = function() {
+	common_DefaultPilot.call(this);
+};
+$hxClasses["han.Pilot"] = han_Pilot;
+han_Pilot.__name__ = "han.Pilot";
+han_Pilot.__super__ = common_DefaultPilot;
+han_Pilot.prototype = $extend(common_DefaultPilot.prototype,{
+	__class__: han_Pilot
+});
 var han_Model = function() {
-	this._id = 0;
-	console.log("src/han/Model.hx:9:","Model new");
+	common_DefaultModel.call(this);
 };
 $hxClasses["han.Model"] = han_Model;
 han_Model.__name__ = "han.Model";
-han_Model.__interfaces__ = [common_IModel];
-han_Model.prototype = {
-	doIt: function() {
-		this._id++;
-		console.log("src/han/Model.hx:14:",this._id);
+han_Model.__super__ = common_DefaultModel;
+han_Model.prototype = $extend(common_DefaultModel.prototype,{
+	addRobot: function() {
+		var tmp = new han_Robot();
+		this._robots.push(tmp);
+		return tmp;
 	}
-	,getConstructorArgs: function() {
-		return [];
+	,addPilot: function() {
+		var tmp = new han_Pilot();
+		this._pilots.push(tmp);
+		return tmp;
 	}
 	,__class__: han_Model
-};
+});
 var haxe_IMap = function() { };
 $hxClasses["haxe.IMap"] = haxe_IMap;
 haxe_IMap.__name__ = "haxe.IMap";
@@ -291,13 +369,7 @@ haxe_Exception.thrown = function(value) {
 };
 haxe_Exception.__super__ = Error;
 haxe_Exception.prototype = $extend(Error.prototype,{
-	toString: function() {
-		return this.get_message();
-	}
-	,get_message: function() {
-		return this.message;
-	}
-	,get_native: function() {
+	get_native: function() {
 		return this.__nativeException;
 	}
 	,__class__: haxe_Exception
@@ -1070,126 +1142,6 @@ haxe_iterators_ArrayIterator.prototype = {
 	}
 	,__class__: haxe_iterators_ArrayIterator
 };
-var hx_injection_ServiceCollection = function() {
-	this._configs = new haxe_ds_StringMap();
-	this._requestedServices = new haxe_ds_StringMap();
-};
-$hxClasses["hx.injection.ServiceCollection"] = hx_injection_ServiceCollection;
-hx_injection_ServiceCollection.__name__ = "hx.injection.ServiceCollection";
-hx_injection_ServiceCollection.prototype = {
-	addConfig: function(config) {
-		var this1 = this._configs;
-		var c = js_Boot.getClass(config);
-		var key = c.__name__;
-		this1.h[key] = config;
-	}
-	,createProvider: function() {
-		var provider = new hx_injection_ServiceProvider(this._configs,this._requestedServices);
-		return provider;
-	}
-	,configExists: function(arg) {
-		return this._configs.h[arg] != null;
-	}
-	,toString: function() {
-		var string = "\nApplication services:- \n";
-		var h = this._requestedServices.h;
-		var service_h = h;
-		var service_keys = Object.keys(h);
-		var service_length = service_keys.length;
-		var service_current = 0;
-		while(service_current < service_length) {
-			var service = service_h[service_keys[service_current++]];
-			string += "\t" + Std.string(service) + "\n";
-		}
-		return string;
-	}
-	,__class__: hx_injection_ServiceCollection
-};
-var hx_injection_ServiceProvider = function(configs,services) {
-	this._requestedConfigs = configs;
-	this._requestedServices = services;
-	this._services = new haxe_ds_StringMap();
-};
-$hxClasses["hx.injection.ServiceProvider"] = hx_injection_ServiceProvider;
-hx_injection_ServiceProvider.__name__ = "hx.injection.ServiceProvider";
-hx_injection_ServiceProvider.prototype = {
-	getService: function(service) {
-		var serviceName = service.__name__;
-		var requestedService = this._requestedServices.h[serviceName];
-		if(requestedService == null) {
-			throw new haxe_Exception("Service of type " + Std.string(service) + " not found.");
-		}
-		var implementation = this.handleServiceRequest(serviceName,requestedService);
-		if(js_Boot.__downcastCheck(implementation,service)) {
-			return implementation;
-		} else {
-			return null;
-		}
-	}
-	,handleServiceRequest: function(serviceName,service) {
-		switch(service._hx_index) {
-		case 0:
-			var service1 = service.service;
-			return this.handleSingletonService(serviceName,service1);
-		case 1:
-			var service1 = service.service;
-			return this.handleTransientService(serviceName,service1);
-		}
-	}
-	,handleSingletonService: function(serviceName,service) {
-		var instance = this.getHandled(serviceName);
-		if(instance == null) {
-			instance = this.buildDependencyTree(service);
-			this._services.h[serviceName] = instance;
-		}
-		return instance;
-	}
-	,handleTransientService: function(serviceName,service) {
-		return this.buildDependencyTree(service);
-	}
-	,buildDependencyTree: function(service) {
-		var dependencies = [];
-		var args = this.getServiceArgs(service);
-		var _g = 0;
-		while(_g < args.length) {
-			var arg = args[_g];
-			++_g;
-			var dependency = this.getRequestedService(arg);
-			if(dependency != null) {
-				var serviceInstance = this.handleServiceRequest(arg,dependency);
-				dependencies.push(serviceInstance);
-				continue;
-			}
-			var config = this.getRequestedConfig(arg);
-			if(config != null) {
-				dependencies.push(config);
-				continue;
-			}
-			throw new haxe_Exception("Dependency " + arg + " for " + service + " is missing. Did you add it to the collection?");
-		}
-		return Type.createInstance($hxClasses[service],dependencies);
-	}
-	,getServiceArgs: function(service) {
-		var type = $hxClasses[service];
-		var instance = Object.create(type.prototype);
-		return instance.getConstructorArgs();
-	}
-	,getHandled: function(serviceName) {
-		return this._services.h[serviceName];
-	}
-	,getRequestedConfig: function(config) {
-		return this._requestedConfigs.h[config];
-	}
-	,getRequestedService: function(serviceName) {
-		return this._requestedServices.h[serviceName];
-	}
-	,__class__: hx_injection_ServiceProvider
-};
-var hx_injection_ServiceType = $hxEnums["hx.injection.ServiceType"] = { __ename__:"hx.injection.ServiceType",__constructs__:null
-	,Singleton: ($_=function(service) { return {_hx_index:0,service:service,__enum__:"hx.injection.ServiceType",toString:$estr}; },$_._hx_name="Singleton",$_.__params__ = ["service"],$_)
-	,Transient: ($_=function(service) { return {_hx_index:1,service:service,__enum__:"hx.injection.ServiceType",toString:$estr}; },$_._hx_name="Transient",$_.__params__ = ["service"],$_)
-};
-hx_injection_ServiceType.__constructs__ = [hx_injection_ServiceType.Singleton,hx_injection_ServiceType.Transient];
 var js_Boot = function() { };
 $hxClasses["js.Boot"] = js_Boot;
 js_Boot.__name__ = "js.Boot";
@@ -1377,6 +1329,13 @@ js_Boot.__downcastCheck = function(o,cl) {
 		}
 	} else {
 		return true;
+	}
+};
+js_Boot.__cast = function(o,t) {
+	if(o == null || js_Boot.__instanceof(o,t)) {
+		return o;
+	} else {
+		throw haxe_Exception.thrown("Cannot cast " + Std.string(o) + " to " + Std.string(t));
 	}
 };
 js_Boot.__nativeClassName = function(o) {
