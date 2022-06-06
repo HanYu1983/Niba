@@ -3423,10 +3423,10 @@ common_DefaultMap.__name__ = "common.DefaultMap";
 common_DefaultMap.__interfaces__ = [common_IMap];
 common_DefaultMap.prototype = {
 	getGrid: function(pos) {
-		return this._grids[0];
+		throw new haxe_Exception("not impl");
 	}
 	,getPath: function(s,e) {
-		return [];
+		throw new haxe_Exception("not impl");
 	}
 	,__class__: common_DefaultMap
 };
@@ -3551,7 +3551,13 @@ haxe_Exception.thrown = function(value) {
 };
 haxe_Exception.__super__ = Error;
 haxe_Exception.prototype = $extend(Error.prototype,{
-	get_native: function() {
+	toString: function() {
+		return this.get_message();
+	}
+	,get_message: function() {
+		return this.message;
+	}
+	,get_native: function() {
 		return this.__nativeException;
 	}
 	,__class__: haxe_Exception

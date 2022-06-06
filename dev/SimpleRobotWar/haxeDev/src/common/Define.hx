@@ -1,5 +1,6 @@
 package common;
 
+import haxe.Exception;
 import VectorMath;
 
 interface IRobotGetter {
@@ -66,11 +67,11 @@ abstract class DefaultMap implements IMap {
 	final _grids = new Array<IMapGridGetter>();
 
 	public function getGrid(pos:Vec2):IMapGridGetter {
-		return _grids[0];
+		throw new haxe.Exception("not impl");
 	}
 
 	public function getPath(s:Vec2, e:Vec2):Array<IMapGridGetter> {
-		return [];
+		throw new haxe.Exception("not impl");
 	}
 }
 
