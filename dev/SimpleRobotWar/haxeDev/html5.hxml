@@ -1,0 +1,16 @@
+-cp src
+-main Main
+
+-lib haxeui-core
+-lib haxeui-html5
+-lib libnoise
+-lib hxSet
+-lib tweenx
+-lib haxe-injection
+
+--macro nullSafety("Main")
+--macro nullSafety("common.TestController")
+
+-D debug
+
+-js public/Main.js
