@@ -3,30 +3,38 @@ package han;
 import common.Define;
 
 class Robot extends DefaultRobot {
-	public function new() {
-		super();
+	final _model:IModelGetter;
+	final _id:String;
+
+	public function new(model:IModelGetter, id:String) {
+		_model = model;
+		_id = id;
 	}
 }
 
 class Pilot extends DefaultPilot {
-	public function new() {
-		super();
+	final _model:IModelGetter;
+	final _id:String;
+
+	public function new(model:IModelGetter, id:String) {
+		_model = model;
+		_id = id;
 	}
 }
 
 class Model extends DefaultModel {
-	public function new() {
-		super();
-	}
+	var _id:Int = 0;
+
+	public function new() {}
 
 	public function addRobot():IRobotGetter {
-		final tmp = new Robot();
+		final tmp = new Robot(this, '${_id++}');
 		_robots.push(tmp);
 		return tmp;
 	}
 
 	public function addPilot():IPilotGetter {
-		final tmp = new Pilot();
+		final tmp = new Pilot(this, '${_id++}');
 		_pilots.push(tmp);
 		return tmp;
 	}

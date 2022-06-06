@@ -73,6 +73,12 @@ Main.main = function() {
 	var pilot1 = model.getPilots()[0];
 	console.log("src/Main.hx:27:",robot1.getPilot() == robot2.getPilot());
 	console.log("src/Main.hx:28:",robot1.getPilot() == pilot1);
+	var robot1 = model2.addRobot();
+	var robot2 = model2.addRobot();
+	var pilot1 = model2.addPilot();
+	model2.setPilot(robot1,pilot1);
+	model2.setPilot(robot2,pilot1);
+	console.log("src/Main.hx:37:",model2);
 };
 Math.__name__ = "Math";
 var Reflect = function() { };
@@ -222,8 +228,7 @@ common_IRobot.__interfaces__ = [common_IRobotGetter];
 common_IRobot.prototype = {
 	__class__: common_IRobot
 };
-var common_DefaultRobot = function() {
-};
+var common_DefaultRobot = function() { };
 $hxClasses["common.DefaultRobot"] = common_DefaultRobot;
 common_DefaultRobot.__name__ = "common.DefaultRobot";
 common_DefaultRobot.__interfaces__ = [common_IRobot];
@@ -251,8 +256,7 @@ common_IPilot.__interfaces__ = [common_IPilotGetter];
 common_IPilot.prototype = {
 	__class__: common_IPilot
 };
-var common_DefaultPilot = function() {
-};
+var common_DefaultPilot = function() { };
 $hxClasses["common.DefaultPilot"] = common_DefaultPilot;
 common_DefaultPilot.__name__ = "common.DefaultPilot";
 common_DefaultPilot.__interfaces__ = [common_IPilot];
@@ -281,8 +285,8 @@ common_IModel.prototype = {
 	__class__: common_IModel
 };
 var common_DefaultModel = function() {
-	this._robots = [];
 	this._pilots = [];
+	this._robots = [];
 };
 $hxClasses["common.DefaultModel"] = common_DefaultModel;
 common_DefaultModel.__name__ = "common.DefaultModel";
@@ -308,8 +312,9 @@ common_DefaultModel.prototype = {
 	}
 	,__class__: common_DefaultModel
 };
-var han_Robot = function() {
-	common_DefaultRobot.call(this);
+var han_Robot = function(model,id) {
+	this._model = model;
+	this._id = id;
 };
 $hxClasses["han.Robot"] = han_Robot;
 han_Robot.__name__ = "han.Robot";
@@ -317,8 +322,9 @@ han_Robot.__super__ = common_DefaultRobot;
 han_Robot.prototype = $extend(common_DefaultRobot.prototype,{
 	__class__: han_Robot
 });
-var han_Pilot = function() {
-	common_DefaultPilot.call(this);
+var han_Pilot = function(model,id) {
+	this._model = model;
+	this._id = id;
 };
 $hxClasses["han.Pilot"] = han_Pilot;
 han_Pilot.__name__ = "han.Pilot";
@@ -327,6 +333,7 @@ han_Pilot.prototype = $extend(common_DefaultPilot.prototype,{
 	__class__: han_Pilot
 });
 var han_Model = function() {
+	this._id = 0;
 	common_DefaultModel.call(this);
 };
 $hxClasses["han.Model"] = han_Model;
@@ -334,12 +341,12 @@ han_Model.__name__ = "han.Model";
 han_Model.__super__ = common_DefaultModel;
 han_Model.prototype = $extend(common_DefaultModel.prototype,{
 	addRobot: function() {
-		var tmp = new han_Robot();
+		var tmp = new han_Robot(this,"" + this._id++);
 		this._robots.push(tmp);
 		return tmp;
 	}
 	,addPilot: function() {
-		var tmp = new han_Pilot();
+		var tmp = new han_Pilot(this,"" + this._id++);
 		this._pilots.push(tmp);
 		return tmp;
 	}

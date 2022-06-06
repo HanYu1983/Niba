@@ -27,5 +27,13 @@ class Main {
 			trace(robot1.getPilot() == robot2.getPilot());
 			trace(robot1.getPilot() == pilot1);
 		}
+		{
+			final robot1 = model2.addRobot();
+			final robot2 = model2.addRobot();
+			final pilot1 = model2.addPilot();
+			model2.setPilot(robot1, pilot1);
+			model2.setPilot(robot2, pilot1);
+		}
+		trace(model2);
 	}
 }

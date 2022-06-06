@@ -9,8 +9,6 @@ interface IRobot extends IRobotGetter {
 }
 
 abstract class DefaultRobot implements IRobot {
-	function new() {}
-
 	var _pilot:Null<IPilotGetter>;
 
 	public function getPilot():Null<IPilotGetter> {
@@ -31,8 +29,6 @@ interface IPilot extends IPilotGetter {
 }
 
 abstract class DefaultPilot implements IPilot {
-	function new() {}
-
 	var _robot:Null<IRobotGetter>;
 
 	public function getRobot():Null<IRobotGetter> {
@@ -56,13 +52,8 @@ interface IModel extends IModelGetter {
 }
 
 abstract class DefaultModel implements IModel {
-	private final _robots:Array<IRobotGetter>;
-	private final _pilots:Array<IPilotGetter>;
-
-	function new() {
-		_robots = new Array<IRobotGetter>();
-		_pilots = new Array<IPilotGetter>();
-	}
+	final _robots:Array<IRobotGetter> = [];
+	final _pilots:Array<IPilotGetter> = [];
 
 	public function getRobots():Array<IRobotGetter> {
 		return _robots;
