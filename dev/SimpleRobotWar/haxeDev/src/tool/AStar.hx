@@ -129,7 +129,6 @@ class AStarSolution implements ISolution {
 
 function test() {
 	final firstNode = new AStarSolution([0, 0], null, 0, 9999999, false);
-	final end = [20, 20];
 	final tree = getAStar(node -> {
 		final tmp = cast(node, AStarSolution);
 		if (tmp.cost >= 100) {
