@@ -14,12 +14,15 @@ class Solution {
 	public final estimate:Int;
 	public final payload:Any;
 
+	final key:String;
+
 	public function new(id:String, parentId:String, cost:Int, estimate:Int, payload:Any) {
 		this.id = id;
 		this.parentId = parentId;
 		this.cost = cost;
 		this.estimate = estimate;
 		this.payload = payload;
+		key = Std.string(getScore()).lpad("0", 5) + "_" + id;
 	}
 
 	public function getScore():Int {
@@ -27,9 +30,10 @@ class Solution {
 	}
 
 	public function compare(other:Solution):Int {
-		final key1 = Std.string(getScore()).lpad("0", 5) + "_" + id;
-		final key2 = Std.string(other.getScore()).lpad("0", 5) + "_" + other.id;
-		return Reflect.compare(key1, key2);
+		// 只有自己和自己比才會回傳0
+		// 回傳0才能表找到自己
+		// https://github.com/HaxeFoundation/haxe/blob/4.2.1/std/haxe/ds/BalancedTree.hx
+		return Reflect.compare(this.key, other.key);
 	}
 }
 

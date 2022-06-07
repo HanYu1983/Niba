@@ -3392,65 +3392,35 @@ common_IModel.__isInterface__ = true;
 common_IModel.prototype = {
 	__class__: common_IModel
 };
-var common_IEntityContainer = function() { };
-$hxClasses["common.IEntityContainer"] = common_IEntityContainer;
-common_IEntityContainer.__name__ = "common.IEntityContainer";
-common_IEntityContainer.__isInterface__ = true;
-common_IEntityContainer.prototype = {
-	__class__: common_IEntityContainer
+var tool_IEntityContainer = function() { };
+$hxClasses["tool.IEntityContainer"] = tool_IEntityContainer;
+tool_IEntityContainer.__name__ = "tool.IEntityContainer";
+tool_IEntityContainer.__isInterface__ = true;
+tool_IEntityContainer.prototype = {
+	__class__: tool_IEntityContainer
 };
-var common_CompositeContainer = function() {
+var tool_DefaultContainer = function() {
 	this._list = [];
 };
-$hxClasses["common.CompositeContainer"] = common_CompositeContainer;
-common_CompositeContainer.__name__ = "common.CompositeContainer";
-common_CompositeContainer.__interfaces__ = [common_IEntityContainer];
-common_CompositeContainer.prototype = {
-	addContainer: function(c) {
-		this._list.push(c);
-	}
-	,push: function(obj) {
-		var _g = 0;
-		var _g1 = this._list;
-		while(_g < _g1.length) {
-			var c = _g1[_g];
-			++_g;
-			c.push(obj);
-		}
-	}
-	,remove: function(obj) {
-		var _g = 0;
-		var _g1 = this._list;
-		while(_g < _g1.length) {
-			var c = _g1[_g];
-			++_g;
-			c.remove(obj);
-		}
-	}
-	,__class__: common_CompositeContainer
-};
-var common_DefaultContainer = function() {
-	this._list = [];
-};
-$hxClasses["common.DefaultContainer"] = common_DefaultContainer;
-common_DefaultContainer.__name__ = "common.DefaultContainer";
-common_DefaultContainer.__interfaces__ = [common_IEntityContainer];
-common_DefaultContainer.prototype = {
+$hxClasses["tool.DefaultContainer"] = tool_DefaultContainer;
+tool_DefaultContainer.__name__ = "tool.DefaultContainer";
+tool_DefaultContainer.__interfaces__ = [tool_IEntityContainer];
+tool_DefaultContainer.prototype = {
 	remove: function(obj) {
 		HxOverrides.remove(this._list,obj);
 	}
 	,getList: function() {
 		return this._list;
 	}
-	,__class__: common_DefaultContainer
+	,__class__: tool_DefaultContainer
 };
 var han_RobotContainer = function() {
-	common_DefaultContainer.call(this);
+	tool_DefaultContainer.call(this);
 };
 $hxClasses["han.RobotContainer"] = han_RobotContainer;
 han_RobotContainer.__name__ = "han.RobotContainer";
-han_RobotContainer.__super__ = common_DefaultContainer;
-han_RobotContainer.prototype = $extend(common_DefaultContainer.prototype,{
+han_RobotContainer.__super__ = tool_DefaultContainer;
+han_RobotContainer.prototype = $extend(tool_DefaultContainer.prototype,{
 	push: function(obj) {
 		if(js_Boot.__implements(obj,common_IRobot) == false) {
 			return;
@@ -3460,12 +3430,12 @@ han_RobotContainer.prototype = $extend(common_DefaultContainer.prototype,{
 	,__class__: han_RobotContainer
 });
 var han_PilotContainer = function() {
-	common_DefaultContainer.call(this);
+	tool_DefaultContainer.call(this);
 };
 $hxClasses["han.PilotContainer"] = han_PilotContainer;
 han_PilotContainer.__name__ = "han.PilotContainer";
-han_PilotContainer.__super__ = common_DefaultContainer;
-han_PilotContainer.prototype = $extend(common_DefaultContainer.prototype,{
+han_PilotContainer.__super__ = tool_DefaultContainer;
+han_PilotContainer.prototype = $extend(tool_DefaultContainer.prototype,{
 	push: function(obj) {
 		if(js_Boot.__implements(obj,common_IPilot) == false) {
 			return;
@@ -3475,12 +3445,12 @@ han_PilotContainer.prototype = $extend(common_DefaultContainer.prototype,{
 	,__class__: han_PilotContainer
 });
 var han_MapContainer = function() {
-	common_DefaultContainer.call(this);
+	tool_DefaultContainer.call(this);
 };
 $hxClasses["han.MapContainer"] = han_MapContainer;
 han_MapContainer.__name__ = "han.MapContainer";
-han_MapContainer.__super__ = common_DefaultContainer;
-han_MapContainer.prototype = $extend(common_DefaultContainer.prototype,{
+han_MapContainer.__super__ = tool_DefaultContainer;
+han_MapContainer.prototype = $extend(tool_DefaultContainer.prototype,{
 	push: function(obj) {
 		if(js_Boot.__implements(obj,common_IMapObject) == false) {
 			return;
@@ -3520,13 +3490,43 @@ han_Pilot.prototype = {
 	}
 	,__class__: han_Pilot
 };
+var tool_CompositeContainer = function() {
+	this._list = [];
+};
+$hxClasses["tool.CompositeContainer"] = tool_CompositeContainer;
+tool_CompositeContainer.__name__ = "tool.CompositeContainer";
+tool_CompositeContainer.__interfaces__ = [tool_IEntityContainer];
+tool_CompositeContainer.prototype = {
+	addContainer: function(c) {
+		this._list.push(c);
+	}
+	,push: function(obj) {
+		var _g = 0;
+		var _g1 = this._list;
+		while(_g < _g1.length) {
+			var c = _g1[_g];
+			++_g;
+			c.push(obj);
+		}
+	}
+	,remove: function(obj) {
+		var _g = 0;
+		var _g1 = this._list;
+		while(_g < _g1.length) {
+			var c = _g1[_g];
+			++_g;
+			c.remove(obj);
+		}
+	}
+	,__class__: tool_CompositeContainer
+};
 var han_Model = function() {
 	this._robotToPilot = new haxe_ds_ObjectMap();
 	this._pilotToRobot = new haxe_ds_ObjectMap();
 	this._pilots = new han_PilotContainer();
 	this._robots = new han_RobotContainer();
 	this._mapObjects = new han_MapContainer();
-	common_CompositeContainer.call(this);
+	tool_CompositeContainer.call(this);
 	this.addContainer(this._robots);
 	this.addContainer(this._pilots);
 	this.addContainer(this._mapObjects);
@@ -3534,8 +3534,8 @@ var han_Model = function() {
 $hxClasses["han.Model"] = han_Model;
 han_Model.__name__ = "han.Model";
 han_Model.__interfaces__ = [common_IModel];
-han_Model.__super__ = common_CompositeContainer;
-han_Model.prototype = $extend(common_CompositeContainer.prototype,{
+han_Model.__super__ = tool_CompositeContainer;
+han_Model.prototype = $extend(tool_CompositeContainer.prototype,{
 	createRobot: function() {
 		return new han_Robot(this);
 	}
@@ -4733,6 +4733,7 @@ var tool_Solution = function(id,parentId,cost,estimate,payload) {
 	this.cost = cost;
 	this.estimate = estimate;
 	this.payload = payload;
+	this.key = StringTools.lpad(Std.string(this.getScore()),"0",5) + "_" + id;
 };
 $hxClasses["tool.Solution"] = tool_Solution;
 tool_Solution.__name__ = "tool.Solution";
@@ -4741,9 +4742,7 @@ tool_Solution.prototype = {
 		return this.cost + this.estimate;
 	}
 	,compare: function(other) {
-		var key1 = StringTools.lpad(Std.string(this.getScore()),"0",5) + "_" + this.id;
-		var key2 = StringTools.lpad(Std.string(other.getScore()),"0",5) + "_" + other.id;
-		return Reflect.compare(key1,key2);
+		return Reflect.compare(this.key,other.key);
 	}
 	,__class__: tool_Solution
 };

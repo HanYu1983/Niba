@@ -2,6 +2,7 @@ package han;
 
 import haxe.ds.ObjectMap;
 import VectorMath;
+import tool.EntityContainer;
 import common.Define;
 
 class RobotContainer extends DefaultContainer<IRobot> {
