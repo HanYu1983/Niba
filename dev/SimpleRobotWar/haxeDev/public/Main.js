@@ -50,61 +50,39 @@ HxOverrides.substr = function(s,pos,len) {
 	}
 	return s.substr(pos,len);
 };
+HxOverrides.remove = function(a,obj) {
+	var i = a.indexOf(obj);
+	if(i == -1) {
+		return false;
+	}
+	a.splice(i,1);
+	return true;
+};
 HxOverrides.now = function() {
 	return Date.now();
 };
 var Main = function() { };
 $hxClasses["Main"] = Main;
 Main.__name__ = "Main";
-Main.checkType = function(a) {
-	var _g = Type.typeof(a);
-	var tmp;
-	switch(_g._hx_index) {
-	case 1:
-		tmp = "Int";
-		break;
-	case 3:
-		tmp = "Bool";
-		break;
-	case 6:
-		var cls = _g.c;
-		tmp = Std.string(cls) + "";
-		break;
-	default:
-		var other = _g;
-		throw haxe_Exception.thrown("unhandled type " + Std.string(other));
-	}
-	console.log("src/Main.hx:10:",tmp);
-};
 Main.main = function() {
 	var model = new han_Model();
 	var robot1 = model.createRobot();
-	model.addObject(robot1);
+	model.push(robot1);
 	var robot2 = model.createRobot();
-	model.addObject(robot2);
+	model.push(robot2);
 	var pilot1 = model.createPilot();
-	model.addObject(pilot1);
-	model.setPilot(robot1,pilot1);
-	model.setPilot(robot2,pilot1);
+	model.push(pilot1);
+	model.setPilotRobot(pilot1,robot1);
 	haxe_Serializer.USE_CACHE = true;
 	var s = haxe_Serializer.run(model);
-	console.log("src/Main.hx:32:",s);
+	console.log("src/Main.hx:22:",s);
 	var model2 = haxe_Unserializer.run(s);
-	console.log("src/Main.hx:34:",model2);
+	console.log("src/Main.hx:24:",model2);
 	var robot1 = model.getRobots()[0];
 	var robot2 = model.getRobots()[1];
 	var pilot1 = model.getPilots()[0];
-	console.log("src/Main.hx:39:",robot1.getPilot() == robot2.getPilot());
-	console.log("src/Main.hx:40:",robot1.getPilot() == pilot1);
-	var robot1 = model.createRobot();
-	model.addObject(robot1);
-	var robot2 = model.createRobot();
-	model.addObject(robot2);
-	var pilot1 = model.createPilot();
-	model.addObject(pilot1);
-	model2.setPilot(robot1,pilot1);
-	model2.setPilot(robot2,pilot1);
-	console.log("src/Main.hx:52:",model2);
+	console.log("src/Main.hx:29:",robot1.getPilot() == robot2.getPilot());
+	console.log("src/Main.hx:30:",robot1.getPilot() == pilot1);
 };
 var Mat2 = {};
 Mat2._new = function(a00,a01,a10,a11) {
@@ -3340,200 +3318,220 @@ function VectorMath_log2f(v) {
 		return l2;
 	}
 }
-var common_IRobotGetter = function() { };
-$hxClasses["common.IRobotGetter"] = common_IRobotGetter;
-common_IRobotGetter.__name__ = "common.IRobotGetter";
-common_IRobotGetter.__isInterface__ = true;
-common_IRobotGetter.prototype = {
-	__class__: common_IRobotGetter
+var common_IGetPosition = function() { };
+$hxClasses["common.IGetPosition"] = common_IGetPosition;
+common_IGetPosition.__name__ = "common.IGetPosition";
+common_IGetPosition.__isInterface__ = true;
+common_IGetPosition.prototype = {
+	__class__: common_IGetPosition
+};
+var common_IWeapon = function() { };
+$hxClasses["common.IWeapon"] = common_IWeapon;
+common_IWeapon.__name__ = "common.IWeapon";
+common_IWeapon.__isInterface__ = true;
+var common_IGetWeapon = function() { };
+$hxClasses["common.IGetWeapon"] = common_IGetWeapon;
+common_IGetWeapon.__name__ = "common.IGetWeapon";
+common_IGetWeapon.__isInterface__ = true;
+common_IGetWeapon.prototype = {
+	__class__: common_IGetWeapon
+};
+var common_IMapObject = function() { };
+$hxClasses["common.IMapObject"] = common_IMapObject;
+common_IMapObject.__name__ = "common.IMapObject";
+common_IMapObject.__isInterface__ = true;
+common_IMapObject.__interfaces__ = [common_IGetPosition];
+var common_IItemBox = function() { };
+$hxClasses["common.IItemBox"] = common_IItemBox;
+common_IItemBox.__name__ = "common.IItemBox";
+common_IItemBox.__isInterface__ = true;
+common_IItemBox.__interfaces__ = [common_IMapObject];
+var common_IPilot = function() { };
+$hxClasses["common.IPilot"] = common_IPilot;
+common_IPilot.__name__ = "common.IPilot";
+common_IPilot.__isInterface__ = true;
+common_IPilot.__interfaces__ = [common_IMapObject];
+var common_IGetPilot = function() { };
+$hxClasses["common.IGetPilot"] = common_IGetPilot;
+common_IGetPilot.__name__ = "common.IGetPilot";
+common_IGetPilot.__isInterface__ = true;
+common_IGetPilot.prototype = {
+	__class__: common_IGetPilot
 };
 var common_IRobot = function() { };
 $hxClasses["common.IRobot"] = common_IRobot;
 common_IRobot.__name__ = "common.IRobot";
 common_IRobot.__isInterface__ = true;
-common_IRobot.__interfaces__ = [common_IRobotGetter];
-common_IRobot.prototype = {
-	__class__: common_IRobot
-};
-var common_DefaultRobot = function() {
-	var this1 = new Vec2Data(0,0);
-	this._pos = this1;
-};
-$hxClasses["common.DefaultRobot"] = common_DefaultRobot;
-common_DefaultRobot.__name__ = "common.DefaultRobot";
-common_DefaultRobot.__interfaces__ = [common_IRobot];
-common_DefaultRobot.prototype = {
-	getPilot: function() {
-		return this._pilot;
-	}
-	,setPilot: function(pilot) {
-		this._pilot = pilot;
-	}
-	,getPosition: function() {
-		return this._pos;
-	}
-	,setPosition: function(v) {
-		this._pos = v;
-	}
-	,__class__: common_DefaultRobot
-};
-var common_IPilotGetter = function() { };
-$hxClasses["common.IPilotGetter"] = common_IPilotGetter;
-common_IPilotGetter.__name__ = "common.IPilotGetter";
-common_IPilotGetter.__isInterface__ = true;
-common_IPilotGetter.prototype = {
-	__class__: common_IPilotGetter
-};
-var common_IPilot = function() { };
-$hxClasses["common.IPilot"] = common_IPilot;
-common_IPilot.__name__ = "common.IPilot";
-common_IPilot.__isInterface__ = true;
-common_IPilot.__interfaces__ = [common_IPilotGetter];
-common_IPilot.prototype = {
-	__class__: common_IPilot
-};
-var common_DefaultPilot = function() { };
-$hxClasses["common.DefaultPilot"] = common_DefaultPilot;
-common_DefaultPilot.__name__ = "common.DefaultPilot";
-common_DefaultPilot.__interfaces__ = [common_IPilot];
-common_DefaultPilot.prototype = {
-	getRobot: function() {
-		return this._robot;
-	}
-	,setRobot: function(robot) {
-		this._robot = robot;
-	}
-	,__class__: common_DefaultPilot
-};
-var common_IMapGridGetter = function() { };
-$hxClasses["common.IMapGridGetter"] = common_IMapGridGetter;
-common_IMapGridGetter.__name__ = "common.IMapGridGetter";
-common_IMapGridGetter.__isInterface__ = true;
-var common_IMapGetter = function() { };
-$hxClasses["common.IMapGetter"] = common_IMapGetter;
-common_IMapGetter.__name__ = "common.IMapGetter";
-common_IMapGetter.__isInterface__ = true;
-common_IMapGetter.prototype = {
-	__class__: common_IMapGetter
-};
-var common_IMap = function() { };
-$hxClasses["common.IMap"] = common_IMap;
-common_IMap.__name__ = "common.IMap";
-common_IMap.__isInterface__ = true;
-common_IMap.__interfaces__ = [common_IMapGetter];
-var common_DefaultMap = function() {
-	this._grids = [];
-};
-$hxClasses["common.DefaultMap"] = common_DefaultMap;
-common_DefaultMap.__name__ = "common.DefaultMap";
-common_DefaultMap.__interfaces__ = [common_IMap];
-common_DefaultMap.prototype = {
-	getGrid: function(pos) {
-		throw new haxe_Exception("not impl");
-	}
-	,getPath: function(s,e) {
-		throw new haxe_Exception("not impl");
-	}
-	,__class__: common_DefaultMap
-};
-var common_IModelGetter = function() { };
-$hxClasses["common.IModelGetter"] = common_IModelGetter;
-common_IModelGetter.__name__ = "common.IModelGetter";
-common_IModelGetter.__isInterface__ = true;
-common_IModelGetter.prototype = {
-	__class__: common_IModelGetter
-};
+common_IRobot.__interfaces__ = [common_IGetPilot,common_IGetWeapon,common_IMapObject];
 var common_IModel = function() { };
 $hxClasses["common.IModel"] = common_IModel;
 common_IModel.__name__ = "common.IModel";
 common_IModel.__isInterface__ = true;
-common_IModel.__interfaces__ = [common_IModelGetter];
 common_IModel.prototype = {
 	__class__: common_IModel
 };
-var common_DefaultModel = function() {
-	this._pilots = [];
-	this._robots = [];
+var common_IEntityContainer = function() { };
+$hxClasses["common.IEntityContainer"] = common_IEntityContainer;
+common_IEntityContainer.__name__ = "common.IEntityContainer";
+common_IEntityContainer.__isInterface__ = true;
+common_IEntityContainer.prototype = {
+	__class__: common_IEntityContainer
 };
-$hxClasses["common.DefaultModel"] = common_DefaultModel;
-common_DefaultModel.__name__ = "common.DefaultModel";
-common_DefaultModel.__interfaces__ = [common_IModel];
-common_DefaultModel.prototype = {
-	getRobots: function() {
-		return this._robots;
-	}
-	,getPilots: function() {
-		return this._pilots;
-	}
-	,setPilot: function(robot,pilot) {
-		var robotWriter = js_Boot.__cast(robot , common_IRobot);
-		var originPilot = robotWriter.getPilot();
-		if(originPilot != null) {
-			(js_Boot.__cast(originPilot , common_IPilot)).setRobot(null);
-		}
-		robotWriter.setPilot(pilot);
-		if(pilot != null) {
-			(js_Boot.__cast(pilot , common_IPilot)).setRobot(robot);
-		}
-		return robotWriter;
-	}
-	,addObject: function(obj) {
-		if(js_Boot.__implements(obj,common_IRobot)) {
-			this._robots.push(obj);
-		}
-		if(js_Boot.__implements(obj,common_IPilot)) {
-			this._pilots.push(obj);
-		}
-	}
-	,__class__: common_DefaultModel
+var common_CompositeContainer = function() {
+	this._list = [];
 };
-var han_Robot = function(model,id) {
-	common_DefaultRobot.call(this);
+$hxClasses["common.CompositeContainer"] = common_CompositeContainer;
+common_CompositeContainer.__name__ = "common.CompositeContainer";
+common_CompositeContainer.__interfaces__ = [common_IEntityContainer];
+common_CompositeContainer.prototype = {
+	addContainer: function(c) {
+		this._list.push(c);
+	}
+	,push: function(obj) {
+		var _g = 0;
+		var _g1 = this._list;
+		while(_g < _g1.length) {
+			var c = _g1[_g];
+			++_g;
+			c.push(obj);
+		}
+	}
+	,remove: function(obj) {
+		var _g = 0;
+		var _g1 = this._list;
+		while(_g < _g1.length) {
+			var c = _g1[_g];
+			++_g;
+			c.remove(obj);
+		}
+	}
+	,__class__: common_CompositeContainer
+};
+var common_DefaultContainer = function() {
+	this._list = [];
+};
+$hxClasses["common.DefaultContainer"] = common_DefaultContainer;
+common_DefaultContainer.__name__ = "common.DefaultContainer";
+common_DefaultContainer.__interfaces__ = [common_IEntityContainer];
+common_DefaultContainer.prototype = {
+	remove: function(obj) {
+		HxOverrides.remove(this._list,obj);
+	}
+	,getList: function() {
+		return this._list;
+	}
+	,__class__: common_DefaultContainer
+};
+var han_RobotContainer = function() {
+	common_DefaultContainer.call(this);
+};
+$hxClasses["han.RobotContainer"] = han_RobotContainer;
+han_RobotContainer.__name__ = "han.RobotContainer";
+han_RobotContainer.__super__ = common_DefaultContainer;
+han_RobotContainer.prototype = $extend(common_DefaultContainer.prototype,{
+	push: function(obj) {
+		if(js_Boot.__implements(obj,common_IRobot) == false) {
+			return;
+		}
+		this._list.push(obj);
+	}
+	,__class__: han_RobotContainer
+});
+var han_PilotContainer = function() {
+	common_DefaultContainer.call(this);
+};
+$hxClasses["han.PilotContainer"] = han_PilotContainer;
+han_PilotContainer.__name__ = "han.PilotContainer";
+han_PilotContainer.__super__ = common_DefaultContainer;
+han_PilotContainer.prototype = $extend(common_DefaultContainer.prototype,{
+	push: function(obj) {
+		if(js_Boot.__implements(obj,common_IPilot) == false) {
+			return;
+		}
+		this._list.push(obj);
+	}
+	,__class__: han_PilotContainer
+});
+var han_MapContainer = function() {
+	common_DefaultContainer.call(this);
+};
+$hxClasses["han.MapContainer"] = han_MapContainer;
+han_MapContainer.__name__ = "han.MapContainer";
+han_MapContainer.__super__ = common_DefaultContainer;
+han_MapContainer.prototype = $extend(common_DefaultContainer.prototype,{
+	push: function(obj) {
+		if(js_Boot.__implements(obj,common_IMapObject) == false) {
+			return;
+		}
+		this._list.push(obj);
+	}
+	,__class__: han_MapContainer
+});
+var han_Robot = function(model) {
 	this._model = model;
-	this._id = id;
 };
 $hxClasses["han.Robot"] = han_Robot;
 han_Robot.__name__ = "han.Robot";
-han_Robot.__super__ = common_DefaultRobot;
-han_Robot.prototype = $extend(common_DefaultRobot.prototype,{
-	__class__: han_Robot
-});
-var han_Pilot = function(model,id) {
-	this._model = model;
-	this._id = id;
+han_Robot.__interfaces__ = [common_IRobot];
+han_Robot.prototype = {
+	getPosition: function() {
+		var this1 = new Vec2Data(0,0);
+		return this1;
+	}
+	,getWeapons: function() {
+		return [];
+	}
+	,getPilot: function() {
+		return this._model.getRobotPilot(this);
+	}
+	,__class__: han_Robot
+};
+var han_Pilot = function() {
 };
 $hxClasses["han.Pilot"] = han_Pilot;
 han_Pilot.__name__ = "han.Pilot";
-han_Pilot.__super__ = common_DefaultPilot;
-han_Pilot.prototype = $extend(common_DefaultPilot.prototype,{
-	__class__: han_Pilot
-});
-var han_Map = function() {
-	common_DefaultMap.call(this);
+han_Pilot.__interfaces__ = [common_IPilot];
+han_Pilot.prototype = {
+	getPosition: function() {
+		var this1 = new Vec2Data(0,0);
+		return this1;
+	}
+	,__class__: han_Pilot
 };
-$hxClasses["han.Map"] = han_Map;
-han_Map.__name__ = "han.Map";
-han_Map.__super__ = common_DefaultMap;
-han_Map.prototype = $extend(common_DefaultMap.prototype,{
-	__class__: han_Map
-});
 var han_Model = function() {
-	this._map = new han_Map();
-	this._id = 0;
-	common_DefaultModel.call(this);
+	this._robotToPilot = new haxe_ds_ObjectMap();
+	this._pilotToRobot = new haxe_ds_ObjectMap();
+	this._pilots = new han_PilotContainer();
+	this._robots = new han_RobotContainer();
+	this._mapObjects = new han_MapContainer();
+	common_CompositeContainer.call(this);
+	this.addContainer(this._robots);
+	this.addContainer(this._pilots);
+	this.addContainer(this._mapObjects);
 };
 $hxClasses["han.Model"] = han_Model;
 han_Model.__name__ = "han.Model";
-han_Model.__super__ = common_DefaultModel;
-han_Model.prototype = $extend(common_DefaultModel.prototype,{
+han_Model.__interfaces__ = [common_IModel];
+han_Model.__super__ = common_CompositeContainer;
+han_Model.prototype = $extend(common_CompositeContainer.prototype,{
 	createRobot: function() {
-		return new han_Robot(this,"" + this._id++);
+		return new han_Robot(this);
 	}
 	,createPilot: function() {
-		return new han_Pilot(this,"" + this._id++);
+		return new han_Pilot();
 	}
-	,getMap: function() {
-		return this._map;
+	,getRobots: function() {
+		return this._robots.getList();
+	}
+	,getPilots: function() {
+		return this._pilots.getList();
+	}
+	,setPilotRobot: function(pilot,robot) {
+		this._pilotToRobot.set(pilot,robot);
+		this._robotToPilot.set(robot,pilot);
+	}
+	,getRobotPilot: function(robot) {
+		return this._robotToPilot.h[robot.__id__];
 	}
 	,__class__: han_Model
 });
@@ -3561,13 +3559,7 @@ haxe_Exception.thrown = function(value) {
 };
 haxe_Exception.__super__ = Error;
 haxe_Exception.prototype = $extend(Error.prototype,{
-	toString: function() {
-		return this.get_message();
-	}
-	,get_message: function() {
-		return this.message;
-	}
-	,get_native: function() {
+	get_native: function() {
 		return this.__nativeException;
 	}
 	,__class__: haxe_Exception
@@ -4531,13 +4523,6 @@ js_Boot.__downcastCheck = function(o,cl) {
 };
 js_Boot.__implements = function(o,iface) {
 	return js_Boot.__interfLoop(js_Boot.getClass(o),iface);
-};
-js_Boot.__cast = function(o,t) {
-	if(o == null || js_Boot.__instanceof(o,t)) {
-		return o;
-	} else {
-		throw haxe_Exception.thrown("Cannot cast " + Std.string(o) + " to " + Std.string(t));
-	}
 };
 js_Boot.__nativeClassName = function(o) {
 	var name = js_Boot.__toStr.call(o).slice(8,-1);

@@ -6,26 +6,16 @@ import haxe.Serializer;
 import haxe.Unserializer;
 
 class Main {
-	static function checkType(a) {
-		trace(switch (Type.typeof(a)) {
-			case TInt: "Int";
-			case TBool: "Bool";
-			case TClass(cls): cls + "";
-			case other: throw "unhandled type " + other;
-		});
-	}
-
 	public static function main() {
-		final model = new Model();
+		final model:IModel = new Model();
 		{
 			final robot1 = model.createRobot();
-			model.addObject(robot1);
+			model.push(robot1);
 			final robot2 = model.createRobot();
-			model.addObject(robot2);
+			model.push(robot2);
 			final pilot1 = model.createPilot();
-			model.addObject(pilot1);
-			model.setPilot(robot1, pilot1);
-			model.setPilot(robot2, pilot1);
+			model.push(pilot1);
+			model.setPilotRobot(pilot1, robot1);
 		}
 		Serializer.USE_CACHE = true;
 		final s = Serializer.run(model);
@@ -39,16 +29,16 @@ class Main {
 			trace(robot1.getPilot() == robot2.getPilot());
 			trace(robot1.getPilot() == pilot1);
 		}
-		{
-			final robot1 = model.createRobot();
-			model.addObject(robot1);
-			final robot2 = model.createRobot();
-			model.addObject(robot2);
-			final pilot1 = model.createPilot();
-			model.addObject(pilot1);
-			model2.setPilot(robot1, pilot1);
-			model2.setPilot(robot2, pilot1);
-		}
-		trace(model2);
+		// {
+		// 	final robot1 = model.createRobot();
+		// 	model.addObject(robot1);
+		// 	final robot2 = model.createRobot();
+		// 	model.addObject(robot2);
+		// 	final pilot1 = model.createPilot();
+		// 	model.addObject(pilot1);
+		// 	model2.setPilot(robot1, pilot1);
+		// 	model2.setPilot(robot2, pilot1);
+		// }
+		// trace(model2);
 	}
 }
