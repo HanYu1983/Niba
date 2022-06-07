@@ -60,7 +60,7 @@ private class TestSolution extends DefaultSolution {
 
 function test() {
 	final firstSolution = new TestSolution(getPosition(0, 0), null, 0, 9999999, false);
-	final tree = getAStar(firstSolution, false);
+	final tree = getAStar(firstSolution, {exitWhenFind: true});
 	// trace(tree);
 	final path = getPath(tree, getPosition(1000, 1000));
 	trace(path.length);

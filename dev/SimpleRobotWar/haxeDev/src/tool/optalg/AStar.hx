@@ -10,7 +10,7 @@ import tool.optalg.Define;
 
 using StringTools;
 
-function getAStar(s:ISolution, isContinueWhenFind:Bool):ObjectMap<Dynamic, ISolution> {
+function getAStar(s:ISolution, options:{exitWhenFind:Bool}):ObjectMap<Dynamic, ISolution> {
 	// ObjectMap的key是認物件地址
 	final close = new ObjectMap<Dynamic, ISolution>();
 	final open = new BalancedTree<String, ISolution>();
@@ -29,7 +29,7 @@ function getAStar(s:ISolution, isContinueWhenFind:Bool):ObjectMap<Dynamic, ISolu
 			open.remove(top.getSortKey());
 			openMapping.remove(top.getId());
 			close.set(top.getId(), top);
-			if (isContinueWhenFind == false) {
+			if (options.exitWhenFind) {
 				if (top.isGoal()) {
 					trace("Goal!");
 					break;

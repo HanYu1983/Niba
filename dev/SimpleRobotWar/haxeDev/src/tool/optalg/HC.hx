@@ -10,7 +10,7 @@ import tool.optalg.Define;
 
 using StringTools;
 
-function getHillClimbing(s:ISolution, isContinueWhenFind:Bool):ObjectMap<Dynamic, ISolution> {
+function getHillClimbing(s:ISolution, options:{exitWhenFind:Bool}):ObjectMap<Dynamic, ISolution> {
 	// ObjectMap的key是認物件地址
 	final close = new ObjectMap<Dynamic, ISolution>();
 	var top = s;
@@ -21,7 +21,7 @@ function getHillClimbing(s:ISolution, isContinueWhenFind:Bool):ObjectMap<Dynamic
 			break;
 		}
 		close.set(top.getId(), top);
-		if (isContinueWhenFind == false) {
+		if (options.exitWhenFind) {
 			if (top.isGoal()) {
 				trace("Goal!");
 				break;
