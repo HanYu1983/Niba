@@ -1,13 +1,13 @@
 {
-  "ver": "4.0.21",
+  "ver": "4.0.23",
   "importer": "typescript",
   "imported": true,
   "uuid": "d79b8381-745a-4bd2-a8eb-bcdaeab3ff29",
   "files": [],
   "subMetas": {},
   "userData": {
-    "importAsPlugin": false,
     "moduleId": "project:///assets/vic/scripts/assocRobotPilotPage/AssocRPMyPilotList.js",
-    "importerSettings": 7
+    "importerSettings": 7,
+    "simulateGlobals": []
   }
 }

@@ -1,13 +1,13 @@
 {
-  "ver": "4.0.21",
+  "ver": "4.0.23",
   "importer": "typescript",
   "imported": true,
   "uuid": "c95e5bd9-dca9-441a-94cf-a5ef8910fbf2",
   "files": [],
   "subMetas": {},
   "userData": {
-    "importAsPlugin": false,
     "moduleId": "project:///assets/vic/scripts/assocComponentRobotPage/AssocCRMyComponentListButton.js",
-    "importerSettings": 7
+    "importerSettings": 7,
+    "simulateGlobals": []
   }
 }

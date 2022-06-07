@@ -1,13 +1,13 @@
 {
-  "ver": "4.0.21",
+  "ver": "4.0.23",
   "importer": "typescript",
   "imported": true,
   "uuid": "77bae726-37e3-451b-bb9d-2fba0e9ea976",
   "files": [],
   "subMetas": {},
   "userData": {
-    "importAsPlugin": false,
     "moduleId": "project:///assets/vic/scripts/gamePage/UnitInfo.js",
-    "importerSettings": 7
+    "importerSettings": 7,
+    "simulateGlobals": []
   }
 }

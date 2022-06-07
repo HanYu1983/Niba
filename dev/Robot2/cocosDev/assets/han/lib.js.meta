@@ -1,5 +1,5 @@
 {
-  "ver": "4.0.21",
+  "ver": "4.0.23",
   "importer": "javascript",
   "imported": true,
   "uuid": "cb7f02fd-a23b-437c-81ff-f50c165d07af",
@@ -8,12 +8,12 @@
   ],
   "subMetas": {},
   "userData": {
-    "importAsPlugin": true,
     "moduleId": "project:///assets/han/lib.js",
     "importerSettings": 7,
     "isPlugin": true,
     "loadPluginInWeb": true,
     "loadPluginInNative": false,
-    "loadPluginInEditor": false
+    "loadPluginInEditor": false,
+    "simulateGlobals": []
   }
 }
