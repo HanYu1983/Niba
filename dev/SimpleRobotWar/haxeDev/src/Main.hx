@@ -8,7 +8,7 @@ import haxe.Unserializer;
 
 class Main {
 	public static function main() {
-		tool.AStar.test();
+		tool.AStarTest.test();
 
 		// final model:IModel = new Model();
 		// {
