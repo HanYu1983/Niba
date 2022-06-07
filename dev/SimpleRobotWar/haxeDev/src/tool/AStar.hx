@@ -9,6 +9,15 @@ import haxe.ds.ObjectMap;
 
 using StringTools;
 
+// type IGene interface {
+// 	CalcFitness() (IGene, error)
+// 	GetFitness() float64
+// 	Mutate() (IGene, error)
+// 	Crossover(IGene) (IGene, error)
+// }
+// interface IGene {
+// }
+
 interface ISolution {
 	function getId():Dynamic;
 	function getParentId():Null<Dynamic>;
@@ -61,6 +70,43 @@ function getAStar(getNextSolution:ISolution->Array<ISolution>, isContinueWhenFin
 			}
 			hasProcess = true;
 			break;
+		}
+		if (hasProcess == false) {
+			trace("hasProcess == false");
+			break;
+		}
+	}
+	trace(i);
+	return close;
+}
+
+function getHillClimbing(getNextSolution:ISolution->Array<ISolution>, isContinueWhenFind:Bool, s:ISolution):ObjectMap<Dynamic, ISolution> {
+	// ObjectMap的key是認物件地址
+	final close = new ObjectMap<Dynamic, ISolution>();
+	var top = s;
+	var i = 0;
+	while (true) {
+		if (++i > 20000) {
+			trace("loop done");
+			break;
+		}
+		close.set(top.getId(), top);
+		if (isContinueWhenFind == false) {
+			if (top.isGoal()) {
+				trace("Goal!");
+				break;
+			}
+		}
+		var hasProcess = false;
+		final nextNodes = getNextSolution(top);
+		for (nextNode in nextNodes) {
+			if (close.exists(nextNode.getId())) {
+				continue;
+			}
+			if (nextNode.getSortKey() < top.getSortKey()) {
+				hasProcess = true;
+				top = nextNode;
+			}
 		}
 		if (hasProcess == false) {
 			trace("hasProcess == false");
@@ -144,7 +190,7 @@ function test() {
 		return ret;
 	};
 	final firstNode = new AStarSolution(getPosition(0, 0), null, 0, 9999999, false);
-	final tree = getAStar(node -> {
+	final tree = getHillClimbing(node -> {
 		// if (tmp.cost >= 100) {
 		// 	return [];
 		// }
@@ -177,6 +223,6 @@ function test() {
 		}
 	}, false, firstNode);
 	// trace(tree);
-	// final path = getPath(tree, getPosition(100, 100));
-	// trace(path.length);
+	final path = getPath(tree, getPosition(1000, 1000));
+	trace(path.length);
 }
