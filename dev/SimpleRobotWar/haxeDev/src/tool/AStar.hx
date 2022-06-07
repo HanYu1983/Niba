@@ -33,6 +33,7 @@ class Solution {
 		// 只有自己和自己比才會回傳0
 		// 回傳0才能表找到自己
 		// https://github.com/HaxeFoundation/haxe/blob/4.2.1/std/haxe/ds/BalancedTree.hx
+		// https://shubo.io/iterative-binary-tree-traversal/
 		return Reflect.compare(this.key, other.key);
 	}
 }
