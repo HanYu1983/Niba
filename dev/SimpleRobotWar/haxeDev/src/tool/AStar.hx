@@ -22,27 +22,28 @@ function getAStar(getNextSolution:ISolution->Array<ISolution>, isContinueWhenFin
 	final openMapping = new ObjectMap<Dynamic, ISolution>();
 	open.set(s.getSortKey(), s);
 	openMapping.set(s.getId(), s);
-	var isDone = false;
-	for (i in 0...100) {
-		trace(i);
-		if (isDone) {
+	var i = 0;
+	while (true) {
+		if (++i > 20000) {
+			trace("loop done");
 			break;
 		}
 		var hasProcess = false;
 		for (top in open.iterator()) {
+			// trace(i, top.getId());
 			open.remove(top.getSortKey());
 			openMapping.remove(top.getId());
 			close.set(top.getId(), top);
 			if (isContinueWhenFind == false) {
 				if (top.isGoal()) {
-					isDone = true;
+					trace("Goal!");
 					break;
 				}
 			}
 			final nextNodes = getNextSolution(top);
 			for (nextNode in nextNodes) {
 				if (close.exists(nextNode.getId())) {
-					trace("XX");
+					// trace("ignore", nextNode.getId());
 					continue;
 				}
 				final origin = openMapping.get(nextNode.getId());
@@ -60,33 +61,31 @@ function getAStar(getNextSolution:ISolution->Array<ISolution>, isContinueWhenFin
 			hasProcess = true;
 			break;
 		}
-		// 樹為空就退出
 		if (hasProcess == false) {
+			trace("hasProcess == false");
 			break;
 		}
 	}
+	trace(i);
 	return close;
 }
 
-function getPath(tree:ObjectMap<Dynamic, ISolution>, isGoal:ISolution->Bool):Array<Dynamic> {
-	final ret:Array<Dynamic> = [];
-	for (solution in tree.iterator()) {
-		if (solution.isGoal() || isGoal(solution)) {
-			ret.push(solution.getId());
-			var curr:Null<ISolution> = solution;
-			while (true) {
-				final parentId = curr.getParentId();
-				if (parentId == null) {
-					break;
-				}
-				curr = tree.get(parentId);
-				if (curr == null) {
-					throw new Exception("goal not found");
-				}
-				ret.push(curr.getId());
-			}
+function getPath(tree:ObjectMap<Dynamic, ISolution>, goal:Dynamic):Array<Dynamic> {
+	final ret:Array<Dynamic> = [goal];
+	var curr:Null<ISolution> = tree.get(goal);
+	if (curr == null) {
+		throw new Exception("goal not found");
+	}
+	while (true) {
+		final parentId = curr.getParentId();
+		if (parentId == null) {
 			break;
 		}
+		curr = tree.get(parentId);
+		if (curr == null) {
+			throw new Exception("goal not found");
+		}
+		ret.push(curr.getId());
 	}
 	ret.reverse();
 	return ret;
@@ -107,7 +106,7 @@ class AStarSolution implements ISolution {
 		this.cost = cost;
 		this.estimate = estimate;
 		this._isGoal = isGoal;
-		key = Std.string(cost + estimate).lpad("0", 5) + "_" + id;
+		key = '${cost + estimate}'.lpad("0", 20) + "_" + id;
 	}
 
 	public function getId():Dynamic {
@@ -128,27 +127,45 @@ class AStarSolution implements ISolution {
 }
 
 function test() {
-	final firstNode = new AStarSolution([0, 0], null, 0, 9999999, false);
-	final tree = getAStar(node -> {
-		final tmp = cast(node, AStarSolution);
-		if (tmp.cost >= 100) {
-			return [];
+	final tmp = new StringMap<Array<Int>>();
+	// ObjectMap的key是認物件地址
+	final getPosition:(Int, Int) -> Array<Int> = (x, y) -> {
+		final key = '${x}_${y}';
+		if (tmp.exists(key)) {
+			final ret = tmp.get(key);
+			if (ret == null) {
+				throw new Exception("must not null");
+			}
+			return ret;
 		}
-		return switch tmp.id {
+		final ret:Array<Int> = [x, y];
+		tmp.set(key, ret);
+		return ret;
+	};
+	final firstNode = new AStarSolution(getPosition(0, 0), null, 0, 9999999, false);
+	final tree = getAStar(node -> {
+		// if (tmp.cost >= 100) {
+		// 	return [];
+		// }
+		return switch node.getId() {
 			case [x, y]:
+				final fixDot = 10.0;
+				final tmp = cast(node, AStarSolution);
 				[
 					for (next in [[0, -1], [0, 1], [-1, 0], [1, 0]]) {
 						switch next {
 							case [ox, oy]:
 								final nx = x + ox;
 								final ny = y + oy;
-								final cost = tmp.cost + 1;
-								final ex = 10;
-								final ey = 10;
-								final estimate = Std.int(Math.pow(ex - nx, 2) + Math.pow(ey - ny, 2));
+								// 本身COST只是拿來和其和COST比較, 這個值要盡量小, 有比較的意義就可以了
+								// 不然, ASTAR要多找指數上升的NODE
+								final cost = Std.int(((tmp.cost / fixDot) + 0.1) * fixDot);
+								final ex = 1000;
+								final ey = 1000;
+								// 這個值要比COST的比重還大, 因為最短徑看的就是離終點的距離
+								final estimate = Std.int(Math.sqrt(Math.pow(ex - nx, 2) + Math.pow(ey - ny, 2)) * fixDot);
 								final isGoal = nx == ex && ny == ey;
-								// trace(nx, ny, isGoal);
-								new AStarSolution([nx, ny], tmp.getId(), cost, estimate, isGoal);
+								new AStarSolution(getPosition(nx, ny), tmp.getId(), cost, estimate, isGoal);
 							case _:
 								throw new Exception("next not found");
 						}
@@ -158,14 +175,7 @@ function test() {
 				throw new Exception("payload not found");
 		}
 	}, false, firstNode);
-	trace(tree);
-	final path = getPath(tree, solution -> {
-		return switch solution.getId() {
-			case [x, y] if (x == 2 && y == 3):
-				true;
-			case _:
-				false;
-		}
-	});
-	trace(path);
+	// trace(tree);
+	// final path = getPath(tree, getPosition(100, 100));
+	// trace(path.length);
 }
