@@ -11,6 +11,7 @@ using StringTools;
 
 interface ISolution {
 	function getId():Dynamic;
+	function getParentId():Null<Dynamic>;
 	function getSortKey():String;
 	function isGoal():Bool;
 }
@@ -41,6 +42,7 @@ function getAStar(getNextSolution:ISolution->Array<ISolution>, isContinueWhenFin
 			final nextNodes = getNextSolution(top);
 			for (nextNode in nextNodes) {
 				if (close.exists(nextNode.getId())) {
+					trace("XX");
 					continue;
 				}
 				final origin = openMapping.get(nextNode.getId());
@@ -66,16 +68,40 @@ function getAStar(getNextSolution:ISolution->Array<ISolution>, isContinueWhenFin
 	return close;
 }
 
+function getPath(tree:ObjectMap<Dynamic, ISolution>, isGoal:ISolution->Bool):Array<Dynamic> {
+	final ret:Array<Dynamic> = [];
+	for (solution in tree.iterator()) {
+		if (solution.isGoal() || isGoal(solution)) {
+			ret.push(solution.getId());
+			var curr:Null<ISolution> = solution;
+			while (true) {
+				final parentId = curr.getParentId();
+				if (parentId == null) {
+					break;
+				}
+				curr = tree.get(parentId);
+				if (curr == null) {
+					throw new Exception("goal not found");
+				}
+				ret.push(curr.getId());
+			}
+			break;
+		}
+	}
+	ret.reverse();
+	return ret;
+}
+
 class AStarSolution implements ISolution {
 	public final id:Dynamic;
-	public final parentId:Null<String>;
+	public final parentId:Null<Dynamic>;
 	public final cost:Int;
 	public final estimate:Int;
 	public final _isGoal:Bool;
 
 	final key:String;
 
-	public function new(id:Dynamic, parentId:Null<String>, cost:Int, estimate:Int, isGoal:Bool) {
+	public function new(id:Dynamic, parentId:Null<Dynamic>, cost:Int, estimate:Int, isGoal:Bool) {
 		this.id = id;
 		this.parentId = parentId;
 		this.cost = cost;
@@ -86,6 +112,10 @@ class AStarSolution implements ISolution {
 
 	public function getId():Dynamic {
 		return id;
+	}
+
+	public function getParentId():Null<Dynamic> {
+		return parentId;
 	}
 
 	public function getSortKey():String {
@@ -99,6 +129,7 @@ class AStarSolution implements ISolution {
 
 function test() {
 	final firstNode = new AStarSolution([0, 0], null, 0, 9999999, false);
+	final end = [20, 20];
 	final tree = getAStar(node -> {
 		final tmp = cast(node, AStarSolution);
 		if (tmp.cost >= 100) {
@@ -129,15 +160,13 @@ function test() {
 		}
 	}, false, firstNode);
 	trace(tree);
-	for (pos in tree.keys()) {
-		// trace(pos);
-		switch cast(pos, Array<Dynamic>) {
-			case [2, 2]:
-				trace("OK");
-			case [x, y]:
-				trace(x, y);
+	final path = getPath(tree, solution -> {
+		return switch solution.getId() {
+			case [x, y] if (x == 2 && y == 3):
+				true;
 			case _:
-				trace("-");
+				false;
 		}
-	}
+	});
+	trace(path);
 }

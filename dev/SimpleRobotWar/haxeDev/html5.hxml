@@ -10,6 +10,7 @@
 -lib vector-math
 --macro nullSafety("Main")
 --macro nullSafety("common.Define")
+--macro nullSafety("tool.AStar")
 
 -D debug
 
