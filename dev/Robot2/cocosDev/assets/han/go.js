@@ -23031,6 +23031,7 @@ $packages["tool/astar"] = (function() {
 	};
 	$pkg.BuildPath = BuildPath;
 	ShortedPathTree = function(from, isGoal, pathNeighbors, pathEstimatedCost) {
+		// return [false, false];
 		var Cost, _i, _r, _r$1, _r$2, _r$3, _r$4, _ref, _tmp, _tmp$1, _tmp$2, _tmp$3, current, found, from, fromNode, isFind, isGoal, neighbor, neighborNode, nm, nq, pathEstimatedCost, pathNeighbors, tree, $s, $r;
 		/* */ $s = 0; var $f, $c = false; if (this !== undefined && this.$blk !== undefined) { $f = this; $c = true; Cost = $f.Cost; _i = $f._i; _r = $f._r; _r$1 = $f._r$1; _r$2 = $f._r$2; _r$3 = $f._r$3; _r$4 = $f._r$4; _ref = $f._ref; _tmp = $f._tmp; _tmp$1 = $f._tmp$1; _tmp$2 = $f._tmp$2; _tmp$3 = $f._tmp$3; current = $f.current; found = $f.found; from = $f.from; fromNode = $f.fromNode; isFind = $f.isFind; isGoal = $f.isGoal; neighbor = $f.neighbor; neighborNode = $f.neighborNode; nm = $f.nm; nq = $f.nq; pathEstimatedCost = $f.pathEstimatedCost; pathNeighbors = $f.pathNeighbors; tree = $f.tree; $s = $f.$s; $r = $f.$r; } s: while (true) { switch ($s) { case 0:
 		tree = false;
