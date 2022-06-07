@@ -1,8 +1,10 @@
-package tool;
+package tool.optalg;
 
 import haxe.Exception;
 import haxe.ds.StringMap;
-import tool.AStar;
+import tool.optalg.Define;
+import tool.optalg.AStar;
+import tool.optalg.HC;
 
 private final tmp = new StringMap<Array<Int>>();
 
@@ -21,7 +23,7 @@ private function getPosition(x:Int, y:Int):Array<Int> {
 	return ret;
 };
 
-class TestSolution extends DefaultSolution {
+private class TestSolution extends DefaultSolution {
 	public function new(id:Dynamic, parentId:Null<Dynamic>, cost:Int, estimate:Int, isGoal:Bool) {
 		super(id, parentId, cost, estimate, isGoal);
 	}
@@ -58,7 +60,7 @@ class TestSolution extends DefaultSolution {
 
 function test() {
 	final firstSolution = new TestSolution(getPosition(0, 0), null, 0, 9999999, false);
-	final tree = getHillClimbing(firstSolution, false);
+	final tree = getAStar(firstSolution, false);
 	// trace(tree);
 	final path = getPath(tree, getPosition(1000, 1000));
 	trace(path.length);

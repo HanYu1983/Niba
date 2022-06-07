@@ -1,14 +1,13 @@
 package;
 
 import common.Define;
-import tool.AStar;
 import han.Model;
 import haxe.Serializer;
 import haxe.Unserializer;
 
 class Main {
 	public static function main() {
-		tool.AStarTest.test();
+		tool.optalg.AStarTest.test();
 
 		// final model:IModel = new Model();
 		// {
