@@ -75,14 +75,14 @@ Main.main = function() {
 	model.setPilotRobot(pilot1,robot1);
 	haxe_Serializer.USE_CACHE = true;
 	var s = haxe_Serializer.run(model);
-	console.log("src/Main.hx:22:",s);
+	console.log("src/Main.hx:23:",s);
 	var model2 = haxe_Unserializer.run(s);
-	console.log("src/Main.hx:24:",model2);
+	console.log("src/Main.hx:25:",model2);
 	var robot1 = model.getRobots()[0];
 	var robot2 = model.getRobots()[1];
 	var pilot1 = model.getPilots()[0];
-	console.log("src/Main.hx:29:",robot1.getPilot() == robot2.getPilot());
-	console.log("src/Main.hx:30:",robot1.getPilot() == pilot1);
+	console.log("src/Main.hx:30:",robot1.getPilot() == robot2.getPilot());
+	console.log("src/Main.hx:31:",robot1.getPilot() == pilot1);
 };
 var Mat2 = {};
 Mat2._new = function(a00,a01,a10,a11) {
@@ -1893,6 +1893,15 @@ Reflect.isFunction = function(f) {
 		return false;
 	}
 };
+Reflect.compare = function(a,b) {
+	if(a == b) {
+		return 0;
+	} else if(a > b) {
+		return 1;
+	} else {
+		return -1;
+	}
+};
 Reflect.deleteField = function(o,field) {
 	if(!Object.prototype.hasOwnProperty.call(o,field)) {
 		return false;
@@ -1913,6 +1922,19 @@ $hxClasses["StringBuf"] = StringBuf;
 StringBuf.__name__ = "StringBuf";
 StringBuf.prototype = {
 	__class__: StringBuf
+};
+var StringTools = function() { };
+$hxClasses["StringTools"] = StringTools;
+StringTools.__name__ = "StringTools";
+StringTools.lpad = function(s,c,l) {
+	if(c.length <= 0) {
+		return s;
+	}
+	var buf_b = "";
+	l -= s.length;
+	while(buf_b.length < l) buf_b += c == null ? "null" : "" + c;
+	buf_b += s == null ? "null" : "" + s;
+	return buf_b;
 };
 var ValueType = $hxEnums["ValueType"] = { __ename__:"ValueType",__constructs__:null
 	,TNull: {_hx_name:"TNull",_hx_index:0,__enum__:"ValueType",toString:$estr}
@@ -3547,6 +3569,15 @@ var haxe_Exception = function(message,previous,native) {
 };
 $hxClasses["haxe.Exception"] = haxe_Exception;
 haxe_Exception.__name__ = "haxe.Exception";
+haxe_Exception.caught = function(value) {
+	if(((value) instanceof haxe_Exception)) {
+		return value;
+	} else if(((value) instanceof Error)) {
+		return new haxe_Exception(value.message,null,value);
+	} else {
+		return new haxe_ValueException(value,null,value);
+	}
+};
 haxe_Exception.thrown = function(value) {
 	if(((value) instanceof haxe_Exception)) {
 		return value.get_native();
@@ -3559,7 +3590,10 @@ haxe_Exception.thrown = function(value) {
 };
 haxe_Exception.__super__ = Error;
 haxe_Exception.prototype = $extend(Error.prototype,{
-	get_native: function() {
+	unwrap: function() {
+		return this.__nativeException;
+	}
+	,get_native: function() {
 		return this.__nativeException;
 	}
 	,__class__: haxe_Exception
@@ -4227,8 +4261,155 @@ $hxClasses["haxe.ValueException"] = haxe_ValueException;
 haxe_ValueException.__name__ = "haxe.ValueException";
 haxe_ValueException.__super__ = haxe_Exception;
 haxe_ValueException.prototype = $extend(haxe_Exception.prototype,{
-	__class__: haxe_ValueException
+	unwrap: function() {
+		return this.value;
+	}
+	,__class__: haxe_ValueException
 });
+var haxe_ds_BalancedTree = function() {
+};
+$hxClasses["haxe.ds.BalancedTree"] = haxe_ds_BalancedTree;
+haxe_ds_BalancedTree.__name__ = "haxe.ds.BalancedTree";
+haxe_ds_BalancedTree.__interfaces__ = [haxe_IMap];
+haxe_ds_BalancedTree.iteratorLoop = function(node,acc) {
+	if(node != null) {
+		haxe_ds_BalancedTree.iteratorLoop(node.left,acc);
+		acc.push(node.value);
+		haxe_ds_BalancedTree.iteratorLoop(node.right,acc);
+	}
+};
+haxe_ds_BalancedTree.prototype = {
+	set: function(key,value) {
+		this.root = this.setLoop(key,value,this.root);
+	}
+	,remove: function(key) {
+		try {
+			this.root = this.removeLoop(key,this.root);
+			return true;
+		} catch( _g ) {
+			if(typeof(haxe_Exception.caught(_g).unwrap()) == "string") {
+				return false;
+			} else {
+				throw _g;
+			}
+		}
+	}
+	,iterator: function() {
+		var ret = [];
+		haxe_ds_BalancedTree.iteratorLoop(this.root,ret);
+		return new haxe_iterators_ArrayIterator(ret);
+	}
+	,setLoop: function(k,v,node) {
+		if(node == null) {
+			return new haxe_ds_TreeNode(null,k,v,null);
+		}
+		var c = this.compare(k,node.key);
+		if(c == 0) {
+			return new haxe_ds_TreeNode(node.left,k,v,node.right,node == null ? 0 : node._height);
+		} else if(c < 0) {
+			var nl = this.setLoop(k,v,node.left);
+			return this.balance(nl,node.key,node.value,node.right);
+		} else {
+			var nr = this.setLoop(k,v,node.right);
+			return this.balance(node.left,node.key,node.value,nr);
+		}
+	}
+	,removeLoop: function(k,node) {
+		if(node == null) {
+			throw haxe_Exception.thrown("Not_found");
+		}
+		var c = this.compare(k,node.key);
+		if(c == 0) {
+			return this.merge(node.left,node.right);
+		} else if(c < 0) {
+			return this.balance(this.removeLoop(k,node.left),node.key,node.value,node.right);
+		} else {
+			return this.balance(node.left,node.key,node.value,this.removeLoop(k,node.right));
+		}
+	}
+	,merge: function(t1,t2) {
+		if(t1 == null) {
+			return t2;
+		}
+		if(t2 == null) {
+			return t1;
+		}
+		var t = this.minBinding(t2);
+		return this.balance(t1,t.key,t.value,this.removeMinBinding(t2));
+	}
+	,minBinding: function(t) {
+		if(t == null) {
+			throw haxe_Exception.thrown("Not_found");
+		} else if(t.left == null) {
+			return t;
+		} else {
+			return this.minBinding(t.left);
+		}
+	}
+	,removeMinBinding: function(t) {
+		if(t.left == null) {
+			return t.right;
+		} else {
+			return this.balance(this.removeMinBinding(t.left),t.key,t.value,t.right);
+		}
+	}
+	,balance: function(l,k,v,r) {
+		var hl = l == null ? 0 : l._height;
+		var hr = r == null ? 0 : r._height;
+		if(hl > hr + 2) {
+			var _this = l.left;
+			var _this1 = l.right;
+			if((_this == null ? 0 : _this._height) >= (_this1 == null ? 0 : _this1._height)) {
+				return new haxe_ds_TreeNode(l.left,l.key,l.value,new haxe_ds_TreeNode(l.right,k,v,r));
+			} else {
+				return new haxe_ds_TreeNode(new haxe_ds_TreeNode(l.left,l.key,l.value,l.right.left),l.right.key,l.right.value,new haxe_ds_TreeNode(l.right.right,k,v,r));
+			}
+		} else if(hr > hl + 2) {
+			var _this = r.right;
+			var _this1 = r.left;
+			if((_this == null ? 0 : _this._height) > (_this1 == null ? 0 : _this1._height)) {
+				return new haxe_ds_TreeNode(new haxe_ds_TreeNode(l,k,v,r.left),r.key,r.value,r.right);
+			} else {
+				return new haxe_ds_TreeNode(new haxe_ds_TreeNode(l,k,v,r.left.left),r.left.key,r.left.value,new haxe_ds_TreeNode(r.left.right,r.key,r.value,r.right));
+			}
+		} else {
+			return new haxe_ds_TreeNode(l,k,v,r,(hl > hr ? hl : hr) + 1);
+		}
+	}
+	,compare: function(k1,k2) {
+		return Reflect.compare(k1,k2);
+	}
+	,__class__: haxe_ds_BalancedTree
+};
+var haxe_ds_TreeNode = function(l,k,v,r,h) {
+	if(h == null) {
+		h = -1;
+	}
+	this.left = l;
+	this.key = k;
+	this.value = v;
+	this.right = r;
+	if(h == -1) {
+		var tmp;
+		var _this = this.left;
+		var _this1 = this.right;
+		if((_this == null ? 0 : _this._height) > (_this1 == null ? 0 : _this1._height)) {
+			var _this = this.left;
+			tmp = _this == null ? 0 : _this._height;
+		} else {
+			var _this = this.right;
+			tmp = _this == null ? 0 : _this._height;
+		}
+		this._height = tmp + 1;
+	} else {
+		this._height = h;
+	}
+};
+$hxClasses["haxe.ds.TreeNode"] = haxe_ds_TreeNode;
+haxe_ds_TreeNode.__name__ = "haxe.ds.TreeNode";
+haxe_ds_TreeNode.prototype = {
+	__class__: haxe_ds_TreeNode
+};
 var haxe_ds_IntMap = function() {
 	this.h = { };
 };
@@ -4284,6 +4465,15 @@ haxe_ds_ObjectMap.prototype = {
 		}
 		this.h[id] = value;
 		this.h.__keys__[id] = key;
+	}
+	,remove: function(key) {
+		var id = key.__id__;
+		if(this.h.__keys__[id] == null) {
+			return false;
+		}
+		delete(this.h[id]);
+		delete(this.h.__keys__[id]);
+		return true;
 	}
 	,keys: function() {
 		var a = [];
@@ -4537,6 +4727,69 @@ js_Boot.__isNativeObj = function(o) {
 js_Boot.__resolveNativeClass = function(name) {
 	return $global[name];
 };
+var tool_Solution = function(id,parentId,cost,estimate,payload) {
+	this.id = id;
+	this.parentId = parentId;
+	this.cost = cost;
+	this.estimate = estimate;
+	this.payload = payload;
+};
+$hxClasses["tool.Solution"] = tool_Solution;
+tool_Solution.__name__ = "tool.Solution";
+tool_Solution.prototype = {
+	getScore: function() {
+		return this.cost + this.estimate;
+	}
+	,compare: function(other) {
+		var key1 = StringTools.lpad(Std.string(this.getScore()),"0",5) + "_" + this.id;
+		var key2 = StringTools.lpad(Std.string(other.getScore()),"0",5) + "_" + other.id;
+		return Reflect.compare(key1,key2);
+	}
+	,__class__: tool_Solution
+};
+function tool_AStar_getAStar(getNextNode,s) {
+	var close = new haxe_ds_ObjectMap();
+	var open = new haxe_ds_BalancedTree();
+	var openMapping = new haxe_ds_ObjectMap();
+	open.set(s,s);
+	openMapping.set(s.id,s);
+	var _g = 0;
+	while(_g < 1000) {
+		var i = _g++;
+		var hasProcess = false;
+		var top = open.iterator();
+		while(top.hasNext()) {
+			var top1 = top.next();
+			var nextNodes = getNextNode(top1);
+			var _g1 = 0;
+			while(_g1 < nextNodes.length) {
+				var nextNode = nextNodes[_g1];
+				++_g1;
+				if(close.h.__keys__[nextNode.id.__id__] != null) {
+					continue;
+				}
+				var origin = openMapping.h[nextNode.id.__id__];
+				if(origin == null) {
+					open.set(nextNode,nextNode);
+					openMapping.set(nextNode.id,nextNode);
+				} else if(nextNode.getScore() < origin.getScore()) {
+					open.remove(origin);
+					open.set(nextNode,nextNode);
+					openMapping.set(nextNode.id,nextNode);
+				}
+			}
+			open.remove(top1);
+			openMapping.remove(top1.id);
+			close.set(top1.id,top1);
+			hasProcess = true;
+			break;
+		}
+		if(hasProcess == false) {
+			break;
+		}
+	}
+	return close;
+}
 $global.$haxeUID |= 0;
 if(typeof(performance) != "undefined" ? typeof(performance.now) == "function" : false) {
 	HxOverrides.now = performance.now.bind(performance);

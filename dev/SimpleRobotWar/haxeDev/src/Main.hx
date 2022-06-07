@@ -1,6 +1,7 @@
 package;
 
 import common.Define;
+import tool.AStar;
 import han.Model;
 import haxe.Serializer;
 import haxe.Unserializer;
