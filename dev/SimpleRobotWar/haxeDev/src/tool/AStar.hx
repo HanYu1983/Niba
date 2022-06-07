@@ -17,6 +17,7 @@ interface ISolution {
 }
 
 function getAStar(getNextSolution:ISolution->Array<ISolution>, isContinueWhenFind:Bool, s:ISolution):ObjectMap<Dynamic, ISolution> {
+	// ObjectMap的key是認物件地址
 	final close = new ObjectMap<Dynamic, ISolution>();
 	final open = new BalancedTree<String, ISolution>();
 	final openMapping = new ObjectMap<Dynamic, ISolution>();
