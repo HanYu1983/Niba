@@ -24,7 +24,7 @@ private function getPosition(x:Int, y:Int):Array<Int> {
 };
 
 private class TestSolution extends DefaultSolution {
-	public function new(id:Dynamic, parentId:Null<Dynamic>, cost:Int, estimate:Int, isGoal:Bool) {
+	public function new(id:Array<Int>, parentId:Null<Dynamic>, cost:Int, estimate:Int, isGoal:Bool) {
 		super(id, parentId, cost, estimate, isGoal);
 	}
 

@@ -1,5 +1,6 @@
 package;
 
+import common.Data;
 import common.Define;
 import han.Model;
 import haxe.Serializer;
