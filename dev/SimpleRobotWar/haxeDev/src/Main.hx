@@ -1,10 +1,15 @@
 package;
 
+import han.Controller;
+import han.Controller;
+import han.Controller;
+import han.Controller;
 import common.Data;
-import han.Define;
+import common.Define;
+import han.Controller;
 
 class Main {
 	public static function main() {
-		tool.EntityContainerTest.test();
+		final ctr = new Controller(new DefaultView());
 	}
 }

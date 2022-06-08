@@ -113,7 +113,7 @@ typedef Player = {
 
 typedef Context = {
 	players:StringMap<Player>,
-	currentPlayerId:String,
+	currentPlayerId:Null<String>,
 	turn:Int,
 	pilots:StringMap<Pilot>,
 	robots:StringMap<Robot>,
@@ -121,6 +121,20 @@ typedef Context = {
 	pilotToRobot:StringMap<String>,
 	weaponToRobot:StringMap<String>,
 	robotToPlayer:StringMap<String>
+}
+
+function getDefaultContext():Context {
+	return {
+		players: new StringMap<Player>(),
+		currentPlayerId: null,
+		turn: 0,
+		pilots: new StringMap<Pilot>(),
+		robots: new StringMap<Robot>(),
+		weapons: new StringMap<Weapon>(),
+		pilotToRobot: new StringMap<String>(),
+		weaponToRobot: new StringMap<String>(),
+		robotToPlayer: new StringMap<String>(),
+	}
 }
 
 function getPlayer(ctx:Context, playerId:String):Player {
