@@ -1,17 +1,5 @@
 package common;
 
-typedef ComponentData = {
-	title:String
-}
-
-typedef WeaponShootType = {
-	title:String
-}
-
-typedef RobotData = {
-	title:String
-}
-
 enum AttackCost {
 	ENERGY(v:Float);
 	BULLET(v:Int);
@@ -23,12 +11,12 @@ typedef Position = {
 	y:Int
 }
 
-enum AttackRange {
-	DOT;
+enum AttachShape {
+	DOT(min:Int, max:Int);
 	LINE(min:Int, max:Int);
-	BOX(w:Int, h:Int);
+	CIRCLE(min:Int, max:Int, w:Int);
 	SHAPE(pos:Array<Position>);
-	SELECT(w:Int, h:Int, cnt:Int);
+	SELECT(min:Int, max:Int, w:Int);
 }
 
 enum Damage {
@@ -46,22 +34,24 @@ enum AttackFlag {
 typedef AttackData = {
 	title:String,
 	cost:Array<AttackCost>,
-	range:AttackRange,
+	attackShape:AttachShape,
 	times:Int,
 	hitRate:Float,
 	damage:Array<Damage>,
-	flag:Array<AttackFlag>
+	attackFlag:Array<AttackFlag>,
+	isMelee:Bool,
 }
 
 function getDefaultAttack():AttackData {
 	return {
 		title: "未命名",
 		cost: [],
-		range: DOT,
+		attackShape: DOT(0, 0),
 		times: 0,
 		hitRate: 0,
 		damage: [],
-		flag: []
+		attackFlag: [],
+		isMelee: false,
 	}
 }
 
@@ -74,8 +64,9 @@ typedef GuardData = {
 	title:String,
 	cost:Array<AttackCost>,
 	successRate:Float,
-	guardFlag:Array<AttackFlag>,
+	attackFlag:Array<AttackFlag>,
 	guardResult:GuardResult,
+	isMelee:Bool,
 }
 
 function getDefaultGuard():GuardData {
@@ -83,16 +74,24 @@ function getDefaultGuard():GuardData {
 		title: "未命名",
 		cost: [],
 		successRate: 0,
-		guardFlag: [],
-		guardResult: CANCEL
+		attackFlag: [],
+		guardResult: CANCEL,
+		isMelee: false,
 	}
+}
+
+typedef ShieldData = {
+	title:String,
+	cost:Array<AttackCost>,
+	damage:Array<Damage>,
 }
 
 typedef WeaponData = {
 	title:String,
 	bullet:Int,
 	attack:Array<AttackData>,
-	guard:Array<GuardData>
+	guard:Array<GuardData>,
+	shield:Array<ShieldData>
 }
 
 function getDefaultWeapon():WeaponData {
@@ -101,8 +100,51 @@ function getDefaultWeapon():WeaponData {
 		bullet: 0,
 		attack: [],
 		guard: [],
+		shield: []
 	}
 }
+
+typedef RobotData = {
+	title:String,
+	hp:Int,
+	energy:Int,
+	action:Int,
+	damage:Array<Damage>,
+}
+
+typedef PilotData = {
+	title:String,
+	// 格鬥技術
+	// 主要影響格鬥相關發動機率, 命中率, 爆擊率
+	// 次要影響格鬥相關攻擊力
+	melee:Int,
+	// 射擊技術
+	// 主要影響射擊相關發動機率, 命中率, 爆擊率
+	// 次要影響射擊相關攻擊力
+	range:Int,
+	// 攻擊技術
+	// 主要影響武器傷害
+	// 次要影響武器攻擊相關發動機率, 命中率, 爆擊率
+	attack:Int,
+	// 防禦技術
+	// 主要影響shield的防禦傷害
+	// 次要影響武器防禦相關發動機率, 命中率
+	guard:Int,
+	// 運氣
+	// 主要影響獲得金錢, 掉寶率
+	// 次要影響爆擊率
+	lucky:Int
+}
+
+final ROBOTS:Map<String, RobotData> = [
+	"量產型" => {
+		title: "量產型",
+		hp: 1000,
+		energy: 200,
+		action: 10,
+		damage: [PHYSICS(100), EXPLODE(100), BEAM(100), FIRE(100)]
+	}
+];
 
 final WEAPONS:Map<String, WeaponData> = [
 	"實體刀" => {
@@ -112,11 +154,12 @@ final WEAPONS:Map<String, WeaponData> = [
 			{
 				title: "斬擊",
 				cost: [ACTION(2)],
-				range: DOT,
+				attackShape: DOT(1, 1),
 				times: 2,
 				hitRate: 0.9,
 				damage: [PHYSICS(100)],
-				flag: [MELEE(100)]
+				attackFlag: [MELEE(100)],
+				isMelee: true,
 			}
 		],
 		guard: [
@@ -124,10 +167,12 @@ final WEAPONS:Map<String, WeaponData> = [
 				title: "斬落飛彈",
 				cost: [ACTION(2)],
 				successRate: 0.7,
-				guardFlag: [MELEE(100), MISSILE(100)],
-				guardResult: REDUCE(0.2)
+				attackFlag: [MELEE(100), MISSILE(100)],
+				guardResult: REDUCE(0.2),
+				isMelee: true,
 			}
 		],
+		shield: [],
 	},
 	"實體光束刀" => {
 		title: "實體光束刀",
@@ -136,14 +181,16 @@ final WEAPONS:Map<String, WeaponData> = [
 			{
 				title: "斬擊",
 				cost: [ACTION(2), ENERGY(10)],
-				range: DOT,
+				attackShape: DOT(1, 1),
 				times: 2,
 				hitRate: 0.9,
 				damage: [PHYSICS(50), BEAM(50)],
-				flag: [],
+				attackFlag: [],
+				isMelee: true,
 			}
 		],
 		guard: [],
+		shield: [],
 	},
 	"火神砲" => {
 		title: "火神砲",
@@ -152,11 +199,12 @@ final WEAPONS:Map<String, WeaponData> = [
 			{
 				title: "",
 				cost: [BULLET(100)],
-				range: DOT,
+				attackShape: DOT(1, 1),
 				times: 10,
 				hitRate: 0.9,
 				damage: [PHYSICS(2)],
-				flag: [],
+				attackFlag: [],
+				isMelee: true,
 			}
 		],
 		guard: [
@@ -164,10 +212,12 @@ final WEAPONS:Map<String, WeaponData> = [
 				title: "擊落飛彈",
 				cost: [ACTION(2), BULLET(100)],
 				successRate: 0.2,
-				guardFlag: [MELEE(10), MISSILE(100)],
-				guardResult: REDUCE(0.2)
+				attackFlag: [MELEE(10), MISSILE(100)],
+				guardResult: REDUCE(0.2),
+				isMelee: true,
 			}
 		],
+		shield: [],
 	},
 	"飛彈發射器" => {
 		title: "飛彈發射器",
@@ -176,14 +226,16 @@ final WEAPONS:Map<String, WeaponData> = [
 			{
 				title: "發射飛彈",
 				cost: [ACTION(2), BULLET(4)],
-				range: SELECT(3, 3, 4),
+				attackShape: SELECT(1, 6, 3),
 				times: 4,
 				hitRate: 0.3,
 				damage: [EXPLODE(100)],
-				flag: [MISSILE(100)],
+				attackFlag: [MISSILE(100)],
+				isMelee: false,
 			}
 		],
 		guard: [],
+		shield: [],
 	},
 	"實體盾牌" => {
 		title: "實體盾牌",
@@ -192,11 +244,12 @@ final WEAPONS:Map<String, WeaponData> = [
 			{
 				title: "撞擊",
 				cost: [ACTION(2)],
-				range: DOT,
+				attackShape: DOT(1, 1),
 				times: 2,
 				hitRate: 0.9,
 				damage: [PHYSICS(50)],
-				flag: [MELEE(100)]
+				attackFlag: [MELEE(100)],
+				isMelee: true,
 			}
 		],
 		guard: [
@@ -204,11 +257,24 @@ final WEAPONS:Map<String, WeaponData> = [
 				title: "盾牌防禦",
 				cost: [ACTION(2)],
 				successRate: 0.7,
-				guardFlag: [MELEE(100), MISSILE(100)],
-				guardResult: REDUCE(0.5)
+				attackFlag: [MELEE(100), MISSILE(100)],
+				guardResult: REDUCE(0.5),
+				isMelee: true,
 			}
-		]
+		],
+		shield: [],
+	},
+	"重裝甲" => {
+		title: "重裝甲",
+		bullet: 0,
+		attack: [],
+		guard: [],
+		shield: [
+			{
+				title: "重裝保護",
+				cost: [ACTION(1)],
+				damage: [PHYSICS(100), BEAM(10), EXPLODE(10)],
+			}
+		],
 	}
 ];
-
-final COMPONENTS:Map<String, ComponentData> = [];
