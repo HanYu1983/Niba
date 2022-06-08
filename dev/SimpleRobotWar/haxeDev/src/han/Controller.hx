@@ -12,7 +12,6 @@ class Controller implements IController {
 	public function new(view:IView) {
 		_view = view;
 		_view.startLobby(this);
-		_view.startBattle(this);
 	}
 
 	var _ctx:Context = getDefaultContext();
@@ -40,4 +39,12 @@ class Controller implements IController {
 	public function save() {}
 
 	public function load() {}
+
+	public function gotoBattle(options:Dynamic):Void {
+		_view.startBattle(this);
+	}
+
+	public function gotoLobby():Void {
+		_view.startLobby(this);
+	}
 }

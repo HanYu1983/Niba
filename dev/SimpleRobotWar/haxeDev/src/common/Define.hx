@@ -18,10 +18,12 @@ interface IBaseController {
 
 interface IBattleController extends IBaseController {
 	function getMap(x:Int, y:Int, w:Int, h:Int):Array<IGrid>;
+	function gotoLobby():Void;
 }
 
 interface ILobbyController extends IBaseController {
 	function getLobbyInfo():ILobbyInfo;
+	function gotoBattle(options:Dynamic):Void;
 }
 
 interface IView {
