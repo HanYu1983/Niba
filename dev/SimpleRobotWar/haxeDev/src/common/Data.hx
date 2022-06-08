@@ -114,7 +114,7 @@ function getDefaultWeapon():WeaponData {
 	}
 }
 
-final WEAPONS:StringMap<WeaponData> = [
+private final WEAPONS:StringMap<WeaponData> = [
 	"實體刀" => {
 		title: "實體刀",
 		cost: 0,
@@ -270,6 +270,14 @@ final WEAPONS:StringMap<WeaponData> = [
 	}
 ];
 
+function getWeaponData(id:String):WeaponData {
+	final data = WEAPONS.get(id);
+	if (data == null) {
+		throw new Exception('weaponData not found:${id}');
+	}
+	return data;
+}
+
 // ======================================================
 // DEFINE
 // ======================================================
@@ -368,21 +376,29 @@ function createWeapon(id:String):Weapon {
 	}
 }
 
+typedef WeaponAttack = {
+	id:String,
+	weaponId:String,
+	enable:Bool,
+	attackData:AttackData
+}
+
 typedef Player = {
 	id:String,
 	brain:Null<Dynamic>,
 	fraction:Int,
-	pilots:StringMap<Pilot>,
-	robots:StringMap<Robot>,
-	weapons:StringMap<Weapon>,
-	pilotToRobot:StringMap<String>,
-	weaponToRobot:StringMap<String>,
 }
 
 typedef Context = {
 	players:StringMap<Player>,
 	currentPlayerId:String,
-	turn:Int
+	turn:Int,
+	pilots:StringMap<Pilot>,
+	robots:StringMap<Robot>,
+	weapons:StringMap<Weapon>,
+	pilotToRobot:StringMap<String>,
+	weaponToRobot:StringMap<String>,
+	robotToPlayer:StringMap<String>
 }
 
 function getPlayer(ctx:Context, playerId:String):Player {
@@ -393,29 +409,26 @@ function getPlayer(ctx:Context, playerId:String):Player {
 	return player;
 }
 
-function getRobot(ctx:Context, playerId:String, robotId:String):Robot {
-	final player = getPlayer(ctx, playerId);
-	final robot = player.robots.get(robotId);
+function getRobot(ctx:Context, robotId:String):Robot {
+	final robot = ctx.robots.get(robotId);
 	if (robot == null) {
 		throw new Exception('robot not found:${robotId}');
 	}
 	return robot;
 }
 
-function getWeapon(ctx:Context, playerId:String, weaponId:String):Weapon {
-	final player = getPlayer(ctx, playerId);
-	final weapon = player.weapons.get(weaponId);
+function getWeapon(ctx:Context, weaponId:String):Weapon {
+	final weapon = ctx.weapons.get(weaponId);
 	if (weapon == null) {
 		throw new Exception('weapon not found:${weaponId}');
 	}
 	return weapon;
 }
 
-function getRobotPilot(ctx:Context, playerId:String, robotId:String):Null<Pilot> {
-	final player = getPlayer(ctx, playerId);
-	final robot = getRobot(ctx, playerId, robotId);
+function getRobotPilot(ctx:Context, robotId:String):Null<Pilot> {
+	final robot = getRobot(ctx, robotId);
 	final ids = [
-		for (kv in player.pilotToRobot.keyValueIterator()) {
+		for (kv in ctx.pilotToRobot.keyValueIterator()) {
 			final filter = switch kv {
 				case {key: key, value: value} if (value == robotId):
 					true;
@@ -431,14 +444,13 @@ function getRobotPilot(ctx:Context, playerId:String, robotId:String):Null<Pilot>
 		return null;
 	}
 	final id = ids[0];
-	return player.pilots.get(id);
+	return ctx.pilots.get(id);
 }
 
-function getRobotWeapons(ctx:Context, playerId:String, robotId:String):Array<Weapon> {
-	final player = getPlayer(ctx, playerId);
-	final robot = getRobot(ctx, playerId, robotId);
+function getRobotWeapons(ctx:Context, robotId:String):Array<Weapon> {
+	final robot = getRobot(ctx, robotId);
 	final weaponIds = [
-		for (kv in player.weaponToRobot.keyValueIterator()) {
+		for (kv in ctx.weaponToRobot.keyValueIterator()) {
 			final filter = switch kv {
 				case {key: key, value: value} if (value == robotId):
 					true;
@@ -451,7 +463,7 @@ function getRobotWeapons(ctx:Context, playerId:String, robotId:String):Array<Wea
 		}
 	];
 	return weaponIds.map(id -> {
-		final weapon = player.weapons.get(id);
+		final weapon = ctx.weapons.get(id);
 		if (weapon == null) {
 			throw new Exception('weapon not found:${id}');
 		}
@@ -459,14 +471,62 @@ function getRobotWeapons(ctx:Context, playerId:String, robotId:String):Array<Wea
 	});
 }
 
-function getBattleResult(ctx:Context, playerId:String, robotId:String, weaponId:String, targets:Array<{playerId:String, robotId:String}>) {
-	final player = getPlayer(ctx, playerId);
-	final robot = getRobot(ctx, playerId, robotId);
-	final weapon = getWeapon(ctx, playerId, weaponId);
-	final pilot = getRobotPilot(ctx, playerId, robotId);
-	for (target in targets) {
-		final targetPlayer = getPlayer(ctx, target.playerId);
-		final targetRobot = getRobot(ctx, target.playerId, target.robotId);
-		final targetPilot = getRobotPilot(ctx, target.playerId, target.robotId);
+function getRobotAttacks(ctx:Context, robotId:String):Array<WeaponAttack> {
+	final weapons = getRobotWeapons(ctx, robotId);
+	final weaponDatas = weapons.map(weapon -> getWeaponData(weapon.id));
+	var seqId = 0;
+	return [
+		for (i in 0...weapons.length) {
+			final weapon = weapons[i];
+			final data = weaponDatas[i];
+			for (attack in data.attack) {
+				{
+					id: '${robotId}_${seqId}',
+					weaponId: weapon.id,
+					enable: false,
+					attackData: attack
+				}
+			}
+		}
+	];
+}
+
+function getRobotAttack(ctx:Context, robotId:String, attackId:String):WeaponAttack {
+	final attacks = getRobotAttacks(ctx, robotId);
+	final find = attacks.filter(a -> a.id == attackId);
+	if (find.length == 0) {
+		throw new Exception('attackId not found:${attackId}');
+	}
+	return find[0];
+}
+
+function getBattleResult(ctx:Context, robotId:String, attackId:String, targetRobotIds:Array<String>) {
+	final robot = getRobot(ctx, robotId);
+	final attack = getRobotAttack(ctx, robotId, attackId);
+	final attackData = attack.attackData;
+	final weapon = getWeapon(ctx, attack.weaponId);
+	final weaponData = getWeaponData(weapon.dataId);
+	final pilot = getRobotPilot(ctx, robotId);
+	for (targetRobotId in targetRobotIds) {
+		final targetRobot = getRobot(ctx, targetRobotId);
+		final targetPilot = getRobotPilot(ctx, targetRobotId);
+
+		final isMelee = attackData.isMelee;
+		// cost
+		for (c in attackData.cost) {}
+		// hitRate
+		final hitRate = attackData.hitRate;
+
+		// damage
+		for (time in 0...attackData.times) {
+			for (damage in attackData.damage) {
+				switch damage {
+					case PHYSICS(v):
+					case BEAM(v):
+					case EXPLODE(v):
+					case FIRE(v):
+				}
+			}
+		}
 	}
 }
