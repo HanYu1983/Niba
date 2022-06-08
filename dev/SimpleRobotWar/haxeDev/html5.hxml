@@ -9,10 +9,11 @@
 -lib haxe-injection
 -lib vector-math
 --macro nullSafety("Main")
+--macro nullSafety("tool.AStar")
 --macro nullSafety("common.Data")
 --macro nullSafety("common.Define")
---macro nullSafety("tool.AStar")
 --macro nullSafety("han.Controller")
+--macro nullSafety("han.Define")
 
 -D debug
 
