@@ -1,7 +1,7 @@
 package;
 
 import common.Data;
-import common.Define;
+import han.Define;
 
 class Main {
 	public static function main() {
