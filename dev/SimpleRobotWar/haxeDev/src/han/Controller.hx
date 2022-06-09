@@ -91,7 +91,7 @@ class Controller implements IController {
 		];
 	}
 
-	public function getMap(x:Int, y:Int, w:Int, h:Int):Array<IGrid> {
+	public function getMap(x:Int, y:Int, w:Int, h:Int):Array<GridView> {
 		return [];
 	}
 

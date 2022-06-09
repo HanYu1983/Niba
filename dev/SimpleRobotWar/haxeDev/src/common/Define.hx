@@ -19,11 +19,6 @@ enum ViewEvent {
 	ON_CLICK_ROBOT_VIEW_CANCEL;
 }
 
-interface IEntityBase {
-	function getId():String;
-	function getTitle():String;
-}
-
 typedef RobotView = {
 	id:String,
 	title:String,
@@ -43,8 +38,8 @@ typedef WeaponView = {
 	robotId:Null<String>
 }
 
+typedef GridView = {}
 interface ILobbyInfo {}
-interface IGrid {}
 
 interface IBaseController {
 	function getRobots():Map<String, RobotView>;
@@ -54,7 +49,7 @@ interface IBaseController {
 }
 
 interface IBattleController extends IBaseController {
-	function getMap(x:Int, y:Int, w:Int, h:Int):Array<IGrid>;
+	function getMap(x:Int, y:Int, w:Int, h:Int):Array<GridView>;
 }
 
 interface ILobbyController extends IBaseController {
