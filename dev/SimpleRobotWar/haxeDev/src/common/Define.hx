@@ -32,8 +32,6 @@ interface IBaseController {
 	function getRobots():Map<String, IRobot>;
 	function getPilots():Map<String, IPilot>;
 	function getWeapons():Map<String, IWeapon>;
-	function save():Void;
-	function load():Void;
 	function onEvent(action:ViewEvent):Void;
 }
 

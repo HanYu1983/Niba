@@ -58,10 +58,6 @@ class Controller implements IController {
 		return [];
 	}
 
-	public function save() {}
-
-	public function load() {}
-
 	public function onEvent(action:ViewEvent):Void {
 		switch action {
 			case ON_CLICK_GOTO_LOBBY:
