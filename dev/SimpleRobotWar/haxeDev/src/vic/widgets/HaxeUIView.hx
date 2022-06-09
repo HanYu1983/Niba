@@ -36,10 +36,6 @@ class HaxeUIView extends Box implements IView {
 		pilotPage.hide();
 	}
 
-	public function getImpl() {
-		return _impl;
-	}
-
 	public function getLobbyController():ILobbyController {
 		return _impl.getLobbyController();
 	}
