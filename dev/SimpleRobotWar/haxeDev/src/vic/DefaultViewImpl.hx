@@ -25,8 +25,8 @@ class DefaultViewImpl extends DefaultView {
 
 	// 關閉所有其它頁, 打開大廳頁
 	// 左側顯示按鈕列表
-	//  機體檢視
-	//  駕駛員檢視
+	//  機體檢視 ON_CLICK_GOTO_ROBOT_VIEW
+	//  駕駛員檢視 ON_CLICK_GOTO_PILOT_VIEW
 	//
 	// 假設按了到去戰鬥
 	// getLobbyController().onEvent(ON_CLICK_GOTO_BATTLE("參數之後再想"));
