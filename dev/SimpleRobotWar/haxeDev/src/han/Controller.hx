@@ -40,11 +40,11 @@ class Controller implements IController {
 
 	public function load() {}
 
-	public function onAction(action:ViewAction):Void {
+	public function onEvent(action:ViewEvent):Void {
 		switch action {
-			case GOTO_LOBBY_ACTION:
+			case ON_CLICK_GOTO_LOBBY:
 				_view.startLobby(this);
-			case GOTO_BATTLE_ACTION:
+			case ON_CLICK_GOTO_BATTLE(options):
 				_view.startBattle(this);
 		}
 	}

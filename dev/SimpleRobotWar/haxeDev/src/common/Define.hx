@@ -2,9 +2,9 @@ package common;
 
 import haxe.ds.StringMap;
 
-enum ViewAction {
-	GOTO_LOBBY_ACTION;
-	GOTO_BATTLE_ACTION;
+enum ViewEvent {
+	ON_CLICK_GOTO_LOBBY;
+	ON_CLICK_GOTO_BATTLE(options:Dynamic);
 }
 
 interface IRobot {}
@@ -19,7 +19,7 @@ interface IBaseController {
 	function getWeapons():StringMap<IWeapon>;
 	function save():Void;
 	function load():Void;
-	function onAction(action:ViewAction):Void;
+	function onEvent(action:ViewEvent):Void;
 }
 
 interface IBattleController extends IBaseController {
