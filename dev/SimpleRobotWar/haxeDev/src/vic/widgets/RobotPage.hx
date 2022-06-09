@@ -1,6 +1,6 @@
 package vic.widgets;
 
-import common.Define.IRobot;
+import common.Define;
 import haxe.ui.events.MouseEvent;
 import haxe.ui.containers.Box;
 import tool.Debug;
@@ -14,20 +14,20 @@ class RobotPage extends Box {
 	override function show() {
 		super.show();
 
-		function updateDetail(info:IRobot){
-			pro_robotTitle.value = info.getTitle();
+		function updateDetail(info:RobotView) {
+			pro_robotTitle.value = info.title;
 		}
 
 		final robots = Main.view.getLobbyController().getRobots();
 		tab_robots.dataSource.clear();
 
 		for (key => value in robots) {
-			final info = Reflect.field(value, '_info');
+			final info = value;
 			tab_robots.dataSource.add(info);
 		}
 
-		tab_robots.onClick = function(e){
-			if(tab_robots.selectedItem){
+		tab_robots.onClick = function(e) {
+			if (tab_robots.selectedItem) {
 				final robotInfo = robots.get(tab_robots.selectedItem.id);
 				updateDetail(robotInfo);
 			}

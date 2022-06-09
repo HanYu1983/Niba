@@ -1,22 +1,18 @@
 package han;
 
+import haxe.Exception;
 import haxe.ds.StringMap;
 import common.Define;
 import han.Define;
 
-private class RobotView implements IRobot {
-	final _info:Robot;
-
-	public function new(info:Robot) {
-		_info = info;
+private function getRobotView(ctx:Context, robotId:String):RobotView {
+	final robot = ctx.robots.get(robotId);
+	if (robot == null) {
+		throw new Exception('robot not found:${robotId}');
 	}
-
-	public function getId():String {
-		return _info.id;
-	}
-
-	public function getTitle():String {
-		return _info.title;
+	return {
+		id: robot.id,
+		title: robot.title
 	}
 }
 
@@ -38,20 +34,20 @@ class Controller implements IController {
 		return this;
 	}
 
-	public function getRobots():Map<String, IRobot> {
+	public function getRobots():Map<String, RobotView> {
 		return [
 			for (info in _ctx.robots) {
-				info.id => (new RobotView(info) : IRobot);
+				info.id => getRobotView(_ctx, info.id);
 			}
 		];
 	}
 
-	public function getPilots():Map<String, IPilot> {
-		return new Map<String, IPilot>();
+	public function getPilots():Map<String, PilotView> {
+		return new Map<String, PilotView>();
 	}
 
-	public function getWeapons():Map<String, IWeapon> {
-		return new Map<String, IWeapon>();
+	public function getWeapons():Map<String, WeaponView> {
+		return new Map<String, WeaponView>();
 	}
 
 	public function getMap(x:Int, y:Int, w:Int, h:Int):Array<IGrid> {

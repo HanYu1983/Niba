@@ -24,16 +24,20 @@ interface IEntityBase {
 	function getTitle():String;
 }
 
-interface IRobot extends IEntityBase {}
-interface IPilot extends IEntityBase {}
-interface IWeapon extends IEntityBase {}
+typedef RobotView = {
+	id:String,
+	title:String
+}
+
+typedef PilotView = {}
+typedef WeaponView = {}
 interface ILobbyInfo {}
 interface IGrid {}
 
 interface IBaseController {
-	function getRobots():Map<String, IRobot>;
-	function getPilots():Map<String, IPilot>;
-	function getWeapons():Map<String, IWeapon>;
+	function getRobots():Map<String, RobotView>;
+	function getPilots():Map<String, PilotView>;
+	function getWeapons():Map<String, WeaponView>;
 	function onEvent(action:ViewEvent):Void;
 }
 
