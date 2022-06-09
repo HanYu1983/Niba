@@ -22,20 +22,44 @@ enum ViewEvent {
 typedef RobotView = {
 	id:String,
 	title:String,
+	// null代表沒有駕駛
 	pilotId:Null<String>,
 	weaponIds:Array<String>,
+	hp:Int,
+	energy:Int,
+	// 行動力
+	action:Int,
+	maxHp:Int,
+	maxEnergy:Int,
+	maxAction:Int,
 }
 
 typedef PilotView = {
 	id:String,
 	title:String,
-	robotId:Null<String>
+	// null代表沒有駕機體
+	robotId:Null<String>,
+	// 格鬥技術
+	melee:Int,
+	// 射擊技術
+	range:Int,
+	// 攻擊技術
+	attack:Int,
+	// 防禦技術
+	guard:Int,
+	// 運氣
+	lucky:Int
 }
 
 typedef WeaponView = {
 	id:String,
 	title:String,
-	robotId:Null<String>
+	// null代表沒有設置
+	robotId:Null<String>,
+	// 等級
+	level:Int,
+	// 彈藥數
+	bullet:Int
 }
 
 typedef GridView = {}

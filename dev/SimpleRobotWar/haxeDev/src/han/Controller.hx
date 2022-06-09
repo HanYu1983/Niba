@@ -15,6 +15,12 @@ private function getRobotView(ctx:Context, robotId:String):RobotView {
 		title: robot.title,
 		pilotId: pilot != null ? pilot.id : null,
 		weaponIds: weapons.map(w -> w.id),
+		hp: robot.hp,
+		energy: robot.energy,
+		action: robot.action,
+		maxHp: robot.maxHp,
+		maxEnergy: robot.maxEnergy,
+		maxAction: robot.maxAction,
 	}
 }
 
@@ -24,7 +30,12 @@ private function getPilotView(ctx:Context, id:String):PilotView {
 	return {
 		id: pilot.id,
 		title: pilot.title,
-		robotId: robotId
+		robotId: robotId,
+		melee: pilot.melee,
+		range: pilot.range,
+		attack: pilot.attack,
+		guard: pilot.guard,
+		lucky: pilot.lucky,
 	}
 }
 
@@ -35,7 +46,9 @@ private function getWeaponView(ctx:Context, id:String):WeaponView {
 	return {
 		id: weapon.id,
 		title: weaponData.title,
-		robotId: robotId
+		robotId: robotId,
+		level: weapon.level,
+		bullet: weapon.bullet,
 	}
 }
 
