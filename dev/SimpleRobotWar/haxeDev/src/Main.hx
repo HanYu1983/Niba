@@ -1,25 +1,23 @@
 package;
 
-import vic.widgets.HaxeUIView;
-import common.DefaultView;
+import haxe.Exception;
 import haxe.ui.core.Component;
 import haxe.ui.HaxeUIApp;
+import common.Define;
+import common.DefaultView;
 import han.Controller;
 import vic.DefaultViewImpl;
+import vic.widgets.HaxeUIView;
 
 class Main {
+	public static var view:HaxeUIView;
 
-	public static var haxeUIView:Null<Component>;
-	public static var defaultView:Null<DefaultView>;
 	public static function main() {
-		
 		final app = new HaxeUIApp();
-		app.ready(()->{
-			haxeUIView = new HaxeUIView();
-			app.addComponent(haxeUIView);
-
-			defaultView = new DefaultViewImpl();
-			final ctr = new Controller(defaultView);
+		app.ready(() -> {
+			view = new HaxeUIView();
+			app.addComponent(view);
+			final ctr = new Controller(view);
 		});
 	}
 }

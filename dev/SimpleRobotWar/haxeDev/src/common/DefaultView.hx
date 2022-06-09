@@ -19,20 +19,6 @@ abstract class DefaultView implements IView {
 		openBattlePage();
 	}
 
-	public function getLobbyController():ILobbyController {
-		if (_lobbyCtr == null) {
-			throw new Exception("your must call startLobby first");
-		}
-		return _lobbyCtr;
-	}
-
-	public function getBattleController():IBattleController {
-		if (_battleCtr == null) {
-			throw new Exception("your must call startBattle first");
-		}
-		return _battleCtr;
-	}
-
 	public function onEvent(action:ViewEvent):Void {
 		switch action {
 			case ON_CLICK_GOTO_ROBOT_VIEW:
@@ -42,6 +28,20 @@ abstract class DefaultView implements IView {
 			case ON_CLICK_GOTO_ROBOT_BUY(_):
 			case _:
 		}
+	}
+
+	private function getLobbyController():ILobbyController {
+		if (_lobbyCtr == null) {
+			throw new Exception("your must call startLobby first");
+		}
+		return _lobbyCtr;
+	}
+
+	private function getBattleController():IBattleController {
+		if (_battleCtr == null) {
+			throw new Exception("your must call startBattle first");
+		}
+		return _battleCtr;
 	}
 
 	abstract function openLobbyPage():Void;

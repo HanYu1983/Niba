@@ -8,7 +8,6 @@
 -lib tweenx
 -lib haxe-injection
 -lib vector-math
---macro nullSafety("Main")
 --macro nullSafety("tool.AStar")
 --macro nullSafety("common.Data")
 --macro nullSafety("common.Define")

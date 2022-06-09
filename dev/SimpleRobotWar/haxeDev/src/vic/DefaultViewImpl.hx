@@ -1,21 +1,31 @@
 package vic;
 
+import common.Define;
+import common.DefaultView;
 import vic.widgets.GamePage;
 import vic.widgets.LobbyPage;
-import common.DefaultView;
+import vic.widgets.HaxeUIView;
 
 class DefaultViewImpl extends DefaultView {
 	var lobbyPage:LobbyPage;
 	var gamePage:GamePage;
 
-	public function new() {
+	public function new(haxeUIView:HaxeUIView) {
 		super();
 
 		lobbyPage = new LobbyPage();
-		Main.haxeUIView.addComponent(lobbyPage);
+		haxeUIView.addComponent(lobbyPage);
 
 		gamePage = new GamePage();
-		Main.haxeUIView.addComponent(gamePage);
+		haxeUIView.addComponent(gamePage);
+	}
+
+	public override function getLobbyController():ILobbyController {
+		return super.getLobbyController();
+	}
+
+	public override function getBattleController():IBattleController {
+		return super.getBattleController();
 	}
 
 	function closeAllPages() {
