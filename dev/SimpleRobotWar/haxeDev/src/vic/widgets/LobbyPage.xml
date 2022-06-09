@@ -1,4 +1,8 @@
 <box width="100%" height="100%">
-    <label text='lobby'/>
-    <button id='btn_game' text='游戲頁面'/>
+    <vbox>
+        <button id='btn_robotPage' text='機體'/>
+        <button id='btn_pilotPage' text='駕駛'/>
+        <!-- <button id='btn_game' text='游戲頁面'/> -->
+    </vbox>
+
 </box>

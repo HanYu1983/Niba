@@ -1,3 +1,18 @@
 <box width="100%" height="100%">
+    <style>
+    .hfull{
+        width:100%;
+    }
+    .vfull{
+        height:100%;
+    }
+    .full{
+        width:100%;
+        height:100%;
+    }
+    .debug{
+        backgroundColor:red;
+    }
+    </style>
     <box id="box_pages" width="100%" height="100%"/>
 </box>

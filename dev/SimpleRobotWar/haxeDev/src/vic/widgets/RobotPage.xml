@@ -1,0 +1,42 @@
+<box styleName='full'>
+    <hbox styleName='full'>
+        <vbox width='30%' styleName='vfull'>
+            <tableview id="tab_robots" styleName='full' contentWidth="100%">
+                <header styleName='hfull'>
+                    <column id="robot" text="機體" width='100' />
+                    <column id="pilot" text="駕駛" width='100%'  />
+                </header>
+                <data>
+                    <item robot="測試機體" pilot="測試駕駛" />
+                </data>
+            </tableview>
+        </vbox>
+        <vbox width='70%' styleName='vfull'>
+            <property-grid id="prop_pilot" styleName='hfull' >
+                <property-group text="">
+                    <property id="name" label="駕駛員" value="龍馬" />
+                    <property id="melee" label="格鬥" value="100" />
+                    <property id="range" label="射擊" value="100" />
+                </property-group>
+            </property-grid>
+            <tableview id="tab_weapons" styleName='full' contentWidth="100%">
+                <header styleName='hfull'>
+                    <column id="name" text="武器" width='100' />
+                    <column id="power" text="攻擊力" width='100' />
+                    <column id="range" text="射程" width='100' />
+                    <column id="en" text="能量" width='100' />
+                    <column id="bullet" text="彈藥" width='100%' />
+                </header>
+                <data>
+                    <item name="斧頭" power="3000" range='1~3' en='10' bullet='4' />
+                </data>
+            </tableview>
+            <box height='100' styleName='hfull'>
+                <hbox horizontalAlign="center" styleName='vfull'>
+                    <button id='btn_equipOrMarket' text='裝備與買賣' icon="haxeui-core/styles/default/haxeui_small.png" iconPosition="bottom" width='200' styleName='vfull'/>
+                    <button id='btn_pilotSetting' text='設定駕駛' icon="haxeui-core/styles/default/haxeui_small.png" iconPosition="bottom" width='200' styleName='vfull'/>
+                </hbox>
+            </box>
+        </vbox>
+    </hbox>
+</box>

@@ -1,5 +1,7 @@
 package vic;
 
+import vic.widgets.PilotPage;
+import vic.widgets.RobotPage;
 import common.Define;
 import han.view.ver1.DefaultView;
 import vic.widgets.GamePage;
@@ -9,6 +11,8 @@ import vic.widgets.HaxeUIView;
 class DefaultViewImpl extends DefaultView {
 	var lobbyPage:LobbyPage;
 	var gamePage:GamePage;
+	var robotPage:RobotPage;
+	var pilotPage:PilotPage;
 
 	public function new(haxeUIView:HaxeUIView) {
 		super();
@@ -18,6 +22,12 @@ class DefaultViewImpl extends DefaultView {
 
 		gamePage = new GamePage();
 		haxeUIView.addComponent(gamePage);
+
+		robotPage = new RobotPage();
+		haxeUIView.addComponent(robotPage);
+
+		pilotPage = new PilotPage();
+		haxeUIView.addComponent(pilotPage);
 	}
 
 	public override function getLobbyController():ILobbyController {
@@ -31,6 +41,8 @@ class DefaultViewImpl extends DefaultView {
 	function closeAllPages() {
 		lobbyPage.hide();
 		gamePage.hide();
+		robotPage.hide();
+		pilotPage.hide();
 	}
 
 	// 關閉所有其它頁, 打開大廳頁
@@ -65,6 +77,9 @@ class DefaultViewImpl extends DefaultView {
 	//   設定駕駛
 	public function openRobotViewPage():Void {
 		trace("openRobotViewPage");
+
+		closeAllPages();
+		robotPage.fadeIn();
 	}
 
 	// 打開機體檢視頁
@@ -78,5 +93,8 @@ class DefaultViewImpl extends DefaultView {
 	//   設定機體
 	public function openPilotViewPage():Void {
 		trace("openPilotViewPage");
+
+		closeAllPages();
+		pilotPage.fadeIn();
 	}
 }
