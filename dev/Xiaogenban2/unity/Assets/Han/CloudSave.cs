@@ -14,13 +14,13 @@ public class CloudSave : MonoBehaviour {
         SetPersistentDataPath(Application.persistentDataPath);
         LoadMeta();
     }
-
-    public string fileNameToSave = "save.json";
-    private string metaFileName = "cloudSave.json";
-
     private const string cloudHost = "https://particle-979.appspot.com/nightmarketssistentdbfile2";
-    public string cloudPath = "/root/xiaogenban/{id}/save.json";
-    public string id;
+    private string metaFileName = "cloudSave.json";
+    private string cloudFolder = "/root/xiaogenban/{0}/";
+
+    private string cloudPath = "/root/xiaogenban/{0}/save{1}.json";
+    
+    private string id;
     private string persistentDataPath;
 
     private void SetPersistentDataPath(string path)
@@ -38,6 +38,11 @@ public class CloudSave : MonoBehaviour {
         return id;
     }
 
+    public string GetPath(string id, string postfix)
+    {
+        return cloudHost + string.Format(cloudPath, id, postfix);
+    }
+
     private struct OnlyError
     {
         public string Error;
@@ -47,11 +52,18 @@ public class CloudSave : MonoBehaviour {
     {
         if (error != null)
         {
-            throw new Exception(error);
+            throw error;
         }
     }
 
-    public IEnumerator SaveToCloud()
+    public Exception GetError()
+    {
+        return error;
+    }
+
+    private Regex fileNameFormat = new Regex("earns(\\d+).json");
+
+    public IEnumerator SaveToCloud(int triggerId)
     {
         error = null;
         yield return null;
@@ -60,19 +72,47 @@ public class CloudSave : MonoBehaviour {
             Debug.LogFormat("id not generat yet!");
             yield break;
         }
+        // save other.json
+        var otherFilePath = $"{persistentDataPath}/other.json";
+        Debug.LogFormat("read file {0}", otherFilePath);
+        var otherContent = File.ReadAllText(otherFilePath);
+        var otherCloudPath = cloudHost + string.Format(cloudFolder, id) + "other.json";
+        Debug.LogFormat("save to {0}", otherCloudPath);
+        yield return SaveToCloud(otherCloudPath, otherContent);
 
-        var filePath = persistentDataPath + "/" + fileNameToSave;
-        Debug.LogFormat("use file {0}", filePath);
-
-        if(File.Exists(filePath) == false)
+        // save earns.json
+        var bucketSize = Config.BucketSize;
+        var triggerBucketId = triggerId / bucketSize;
+        var info = new DirectoryInfo(persistentDataPath);
+        foreach (var file in info.GetFiles())
         {
-            error = "file "+filePath+" not found. ignore save to cloud";
-            Debug.Log(error);
-            yield break;
+            var match = fileNameFormat.Match(file.Name);
+            if(match.Success == false)
+            {
+                continue;
+            }
+            var bucketId = 0;
+            if (int.TryParse(match.Groups[1].Captures[0].Value, out bucketId) == false)
+            {
+                Debug.Log(string.Format("invalid file: {0}", file.Name));
+                continue;
+            }
+            if (triggerBucketId > 0 && triggerBucketId != bucketId)
+            {
+                continue;
+            }
+            var earnsFilePath = $"{persistentDataPath}/{file.Name}";
+            Debug.LogFormat("read file {0}", earnsFilePath);
+            var earnsContent = File.ReadAllText(earnsFilePath);
+            var earnsCloudPath = cloudHost + string.Format(cloudFolder, id) + file.Name;
+            Debug.LogFormat("save to {0}", earnsCloudPath);
+            yield return SaveToCloud(earnsCloudPath, earnsContent);
         }
+    }
 
-        var content = File.ReadAllText(filePath);
-        string path = cloudHost + cloudPath.Replace("{id}", id);
+    public IEnumerator SaveToCloud(string path, string content)
+    {
+        error = null;
         Debug.LogFormat("save to {0}", path);
 
         WWWForm form = new WWWForm();
@@ -89,16 +129,16 @@ public class CloudSave : MonoBehaviour {
 
         if (request.isNetworkError || request.isHttpError)
         {
-            error = request.error;
+            error = new Exception(request.error);
             Debug.Log(error);
             yield break;
         }
 
         var content2 = request.downloadHandler.text;
         var errRes = JsonUtility.FromJson<OnlyError>(content2);
-        if (string.IsNullOrEmpty(errRes.Error)==false)
+        if (string.IsNullOrEmpty(errRes.Error) == false)
         {
-            error = errRes.Error;
+            error = new Exception(errRes.Error);
             Debug.Log(error);
             yield break;
         }
@@ -128,6 +168,19 @@ public class CloudSave : MonoBehaviour {
         id = temp.id;
     }
 
+    [Serializable]
+    public class NameTime
+    {
+        public string Name;
+        public string Time;
+    }
+
+    public class ListResponse
+    {
+        public string Error;
+        public List<NameTime> Info;
+    }
+
     public IEnumerator LoadFromCloud(string targetId)
     {
         error = null;
@@ -136,30 +189,88 @@ public class CloudSave : MonoBehaviour {
             yield return LoadFromOld();
             yield break;
         }
+        
+        var content = "";
+        // load others
+        var otherCloudPath = cloudHost + string.Format(cloudFolder, targetId) + "other.json";
+        Debug.Log("load:"+ otherCloudPath);
+        yield return HttpGet(otherCloudPath, (err, str) =>
+        {
+            error = err;
+            content = str;
+        });
+        Debug.Log(content);
+        if (error != null)
+        {
+            Debug.Log(error);
+            yield break;
+        }
+        var memonto = JsonUtility.FromJson<Memonto>(content);
+        // 
+        memonto.triggerId = 0;
+        // load earns
+        var earnFolderPath = cloudHost + string.Format(cloudFolder, targetId);
+        Debug.Log("load:" + earnFolderPath);
+        yield return HttpGet(earnFolderPath, (err, str) =>
+        {
+            error = err;
+            content = str;
+        });
+        if(error != null)
+        {
+            Debug.Log(error);
+            yield break;
+        }
+        var response = JsonUtility.FromJson<ListResponse>(content);
+        if (string.IsNullOrEmpty(response.Error) == false)
+        {
+            error = new Exception(response.Error);
+            yield break;
+        }
+        foreach (var nameTime in response.Info)
+        {
+            var fileName = Path.GetFileName(nameTime.Name);
+            var match = fileNameFormat.Match(fileName);
+            if (match.Success == false)
+            {
+                continue;
+            }
+            var earnCloudPath = $"{cloudHost}/{nameTime.Name}";
+            Debug.Log("load:" + earnCloudPath);
+            yield return HttpGet(earnCloudPath, (err, str) =>
+            {
+                error = err;
+                content = str;
+            });
+            if (error != null)
+            {
+                Debug.Log(error);
+                yield break;
+            }
+            var earnsMemonto = JsonUtility.FromJson<Memonto>(content);
+            memonto.earns.AddRange(earnsMemonto.earns);
+        }
+        SetModelMemonto(memonto);
+    }
 
-        string path = cloudHost + cloudPath.Replace("{id}", targetId);
-        Debug.LogFormat("load from {0}", path);
-
+    private static IEnumerator HttpGet(string path, Action<Exception, string> callback)
+    {
         UnityWebRequest www = UnityWebRequest.Get(path);
         yield return www.SendWebRequest();
 
         if (www.isNetworkError || www.isHttpError)
         {
-            error = www.error;
-            Debug.Log(error);
+            callback(new Exception(www.error), null);
             yield break;
         }
 
         var content = www.downloadHandler.text;
         if (content == "file not found")
         {
-            error = path+" file not found";
-            Debug.Log(error);
+            callback(new Exception(path + " file not found"), null);
             yield break;
         }
-
-        var memonto = JsonUtility.FromJson<Memonto>(content);
-        SetModelMemonto(memonto);
+        callback(null, content);
     }
 
     [Serializable]
@@ -229,14 +340,14 @@ public class CloudSave : MonoBehaviour {
         return earn;
     }
 
-    private Memonto modelMemonto = Memonto.empty;
-    private string error = null;
+    private Memonto modelMemonto;
+    private Exception error = null;
 
     public Memonto GetModelMemonto()
     {
         if (error != null)
         {
-            throw new Exception(error);
+            throw error;
         }
         return modelMemonto;
     }
@@ -265,7 +376,7 @@ public class CloudSave : MonoBehaviour {
 
         if (www.isNetworkError || www.isHttpError)
         {
-            error = www.error;
+            error = new Exception(www.error);
             Debug.Log(www.error);
             yield break;
         }
@@ -273,14 +384,14 @@ public class CloudSave : MonoBehaviour {
         var content = www.downloadHandler.text;
         if (content == "file not found")
         {
-            error = "file not found";
+            error = new Exception("file not found");
             yield break;
         }
 
         var res = JsonUtility.FromJson<DB2Response>(content);
         if (string.IsNullOrEmpty(res.Error) == false)
         {
-            error = res.Error;
+            error = new Exception(res.Error);
             Debug.Log(error);
             yield break;
         }
@@ -296,7 +407,7 @@ public class CloudSave : MonoBehaviour {
 
             if (getEarn.isNetworkError || getEarn.isHttpError)
             {
-                error = getEarn.error;
+                error = new Exception(getEarn.error);
                 Debug.Log(error);
                 yield break;
             }

@@ -1,0 +1,258 @@
+[
+  {
+    "type": "data",
+    "width": 50,
+    "height": 75,
+    "pos": [
+      100,
+      100
+    ],
+    "back": true,
+    "lock": false,
+    "count": 3,
+    "extra": [
+      "<div style='overflow:hidden;background-color:red; width:100%; height:100%; left:0; top:0; text-align:right'>鉄刀<br>重2<br>斬擊-單 5 2<br>劈砍<br>斬-出血7 近招 斬0/1/2</div>",
+      "外功+0/2/4。"
+    ]
+  },
+  {
+    "type": "data",
+    "width": 50,
+    "height": 75,
+    "pos": [
+      100,
+      100
+    ],
+    "back": true,
+    "lock": false,
+    "count": 3,
+    "extra": [
+      "<div style='overflow:hidden;background-color:green; width:100%; height:100%; left:0; top:0; text-align:right'>鉄刀<br>重2<br>斬擊-單 5 2<br>架刀<br> 防招 斬0/1/2</div>",
+      "外功+4/6/8。"
+    ]
+  },
+  {
+    "type": "data",
+    "width": 50,
+    "height": 75,
+    "pos": [
+      100,
+      100
+    ],
+    "back": true,
+    "lock": false,
+    "count": 3,
+    "extra": [
+      "<div style='overflow:hidden;background-color:red; width:100%; height:100%; left:0; top:0; text-align:right'>忍刀<br>重2<br>斬擊-單 5 2<br>偷襲<br>斬-出血7 近招 斬0</div>",
+      "外功+0. 打人判定成功時，那個傷害+2."
+    ]
+  },
+  {
+    "type": "data",
+    "width": 50,
+    "height": 75,
+    "pos": [
+      100,
+      100
+    ],
+    "back": true,
+    "lock": false,
+    "count": 3,
+    "extra": [
+      "<div style='overflow:hidden;background-color:red; width:100%; height:100%; left:0; top:0; text-align:right'>鉄刀<br>重2<br>斬擊-單 5 2<br>强力劈砍<br>斬-出血7 近招 斬格0/1/2</div>",
+      "外功+0/2/4。"
+    ]
+  },
+  {
+    "type": "data",
+    "width": 50,
+    "height": 75,
+    "pos": [
+      100,
+      100
+    ],
+    "back": true,
+    "lock": false,
+    "count": 3,
+    "extra": [
+      "<div style='overflow:hidden;background-color:red; width:100%; height:100%; left:0; top:0; text-align:right'>忍刀<br>重2<br>斬擊-單 5 2<br>背刺<br>刺-點打3 近招 斬0</div>",
+      "外功+0. 打人判定成功時，機率5那個傷害+4."
+    ]
+  },
+  {
+    "type": "data",
+    "width": 50,
+    "height": 75,
+    "pos": [
+      100,
+      100
+    ],
+    "back": true,
+    "lock": false,
+    "count": 3,
+    "extra": [
+      "<div style='overflow:hidden;background-color:red; width:100%; height:100%; left:0; top:0; text-align:right'>青龍刀<br>重2<br>斬擊-單 5 2<br>龍牙四斬<br>斬-出血7 近招 單格0/1/2</div>",
+      "外功+0/2/4.新增一個【斬：這場游戲中，自己宣告單或斬的近招時，可以廢棄。那個時候。那個招式外功+1】的指示物。"
+    ]
+  },
+  {
+    "type": "data",
+    "width": 50,
+    "height": 75,
+    "pos": [
+      100,
+      100
+    ],
+    "back": true,
+    "lock": false,
+    "count": 3,
+    "extra": [
+      "<div style='overflow:hidden;background-color:red; width:100%; height:100%; left:0; top:0; text-align:right'>功夫鞋<br>重1<br>格鬥-腿 3 1<br>二起腳<br>打-昏眩5 近招 腿腿0/1/2</div>",
+      "外功+0/2/4.交戰成功時，對手-1氣。"
+    ]
+  },
+  {
+    "type": "data",
+    "width": 50,
+    "height": 75,
+    "pos": [
+      100,
+      100
+    ],
+    "back": true,
+    "lock": false,
+    "count": 3,
+    "extra": [
+      "<div style='overflow:hidden;background-color:red; width:100%; height:100%; left:0; top:0; text-align:right'>功夫鞋<br>重1<br>格鬥-腿 3 1<br>斧刃腳<br>斬-出血7 近招 腿0/1/2</div>",
+      "外功+0/2/4"
+    ]
+  },
+  {
+    "type": "data",
+    "width": 50,
+    "height": 75,
+    "pos": [
+      100,
+      100
+    ],
+    "back": true,
+    "lock": false,
+    "count": 3,
+    "extra": [
+      "<div style='overflow:hidden;background-color:green; width:100%; height:100%; left:0; top:0; text-align:right'>功夫鞋<br>重1<br>格鬥-腿 3 1<br>前掃腿<br>無 防招 腿0/1/2</div>",
+      "外功+4/6/8"
+    ]
+  },
+  {
+    "type": "data",
+    "width": 50,
+    "height": 75,
+    "pos": [
+      100,
+      100
+    ],
+    "back": true,
+    "lock": false,
+    "count": 3,
+    "extra": [
+      "<div style='overflow:hidden;background-color:Fuchsia; width:100%; height:100%; left:0; top:0; text-align:right'>道服<br>重1<br>防具-衣 2 0<br>衝擊反擊<br>無 反應 1</div>",
+      "自己有穿防具時可以使用。機率x對方一個武器脫手。x為自己防具外功值的總合的2倍。"
+    ]
+  },
+  {
+    "type": "data",
+    "width": 50,
+    "height": 75,
+    "pos": [
+      100,
+      100
+    ],
+    "back": true,
+    "lock": false,
+    "count": 3,
+    "extra": [
+      "<div style='overflow:hidden;background-color:Fuchsia; width:100%; height:100%; left:0; top:0; text-align:right'>鬼疱丁<br>重2<br>斬擊-單 4 3<br>驚鬼符<br>無 反應 1</div>",
+      "機率5指定對方一個武器脫手。如果指定武器為重量3以上。前項機率變為3。"
+    ]
+  },
+  {
+    "type": "data",
+    "width": 50,
+    "height": 75,
+    "pos": [
+      100,
+      100
+    ],
+    "back": true,
+    "lock": false,
+    "count": 3,
+    "extra": [
+      "<div style='overflow:hidden;background-color:white; width:100%; height:100%; left:0; top:0; text-align:right'>佛學書<br>重1<br>防具-飾 0 4<br>心經<br>無 氣功 _1/2</div>",
+      "回復1/2體力."
+    ]
+  },
+  {
+    "type": "data",
+    "width": 50,
+    "height": 75,
+    "pos": [
+      100,
+      100
+    ],
+    "back": true,
+    "lock": false,
+    "count": 3,
+    "extra": [
+      "<div style='overflow:hidden;background-color:LightGray; width:100%; height:100%; left:0; top:0; text-align:right'>騎士胸甲<br>重1<br>防具-衣 2 0<br>強防禦<br>無 氣場 2</div>",
+      "自己武器在判定時對抗值+4，直到變招為止。自回合結束時1氣。"
+    ]
+  },
+  {
+    "type": "data",
+    "width": 50,
+    "height": 75,
+    "pos": [
+      100,
+      100
+    ],
+    "back": true,
+    "lock": false,
+    "count": 3,
+    "extra": [
+      "<div style='overflow:hidden;background-color:white; width:100%; height:100%; left:0; top:0; text-align:right'>道服<br>重1<br>防具-衣 2 0<br>運氣<br>無 氣功 3</div>",
+      "回復6氣."
+    ]
+  },
+  {
+    "type": "data",
+    "width": 50,
+    "height": 75,
+    "pos": [
+      100,
+      100
+    ],
+    "back": true,
+    "lock": false,
+    "count": 3,
+    "extra": [
+      "<div style='overflow:hidden;background-color:Fuchsia; width:100%; height:100%; left:0; top:0; text-align:right'>忍刀<br>重2<br>斬擊-單 5 2<br>濳伏<br>無 反應 2</div>",
+      "這回合剩下的所有敵人的打人判定都失效. 自己得到[潛伏][2回合結束時移除. 自己不能成為出擊的對象. 出擊時移除]狀態指示物."
+    ]
+  },
+  {
+    "type": "data",
+    "width": 50,
+    "height": 75,
+    "pos": [
+      100,
+      100
+    ],
+    "back": true,
+    "lock": false,
+    "count": 3,
+    "extra": [
+      "<div style='overflow:hidden;background-color:Fuchsia; width:100%; height:100%; left:0; top:0; text-align:right'>黑風衣<br>重1<br>防具-衣 2 0<br>快速反應<br>無 反應 2</div>",
+      "這次的傷害-3。使自己重置重量為對方出擊武器以下的武器"
+    ]
+  }
+]

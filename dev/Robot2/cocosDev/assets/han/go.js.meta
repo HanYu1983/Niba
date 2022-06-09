@@ -1,0 +1,22 @@
+{
+  "ver": "4.0.23",
+  "importer": "javascript",
+  "imported": true,
+  "uuid": "285ea526-41e0-4009-8a0c-ed8a5ba27b1e",
+  "files": [
+    ".js"
+  ],
+  "subMetas": {},
+  "userData": {
+    "moduleId": "project:///assets/han/go.js",
+    "importerSettings": 7,
+    "isPlugin": true,
+    "loadPluginInWeb": true,
+    "loadPluginInNative": true,
+    "loadPluginInEditor": false,
+    "dependencies": [
+      "cb7f02fd-a23b-437c-81ff-f50c165d07af"
+    ],
+    "simulateGlobals": []
+  }
+}

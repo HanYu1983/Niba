@@ -7,6 +7,7 @@ public class EarnRow : MonoBehaviour
 {
     public Button Btn_note;
     public Button Btn_edit;
+    public Button Btn_editTime;
     public Button Btn_delete;
 
     public int id;
@@ -17,14 +18,14 @@ public class EarnRow : MonoBehaviour
     public void ScrollCellIndex(int idx)
     {
         if (idx < 0) return;
-        List<Item> list = View.Model.GetItemListCache();
+        List<Item> list = View.ModelInst.GetItemListCache();
         if (idx >= list.Count)
         {
             return;
         }
 
         int itemId = list[idx].Id;
-        Item item = View.Model.GetItemCacheById(itemId);
+        Item item = View.ModelInst.GetItemCacheById(itemId);
         money.text = item.Money.ToString();
         memo.text = item.Memo.ToString();
         
@@ -43,6 +44,12 @@ public class EarnRow : MonoBehaviour
             View.Instance.OnMainPageItemEditClick(itemId);
         });
 
+        Btn_editTime.onClick.RemoveAllListeners();
+        Btn_editTime.onClick.AddListener(delegate ()
+        {
+            View.Instance.OnMainPageItemEditTimeClick(itemId);
+        });
+
         Btn_note.onClick.RemoveAllListeners();
         Btn_note.onClick.AddListener(delegate ()
         {
@@ -50,6 +57,7 @@ public class EarnRow : MonoBehaviour
         });
 
         Btn_edit.interactable = View.Instance.EnableMemoMoney();
+        Btn_editTime.interactable = View.Instance.EnableMemoMoney();
         Btn_delete.interactable = View.Instance.EnableFeature();
         Btn_note.interactable = View.Instance.EnableMemoMoney();
     }

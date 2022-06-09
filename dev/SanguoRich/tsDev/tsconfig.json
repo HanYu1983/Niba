@@ -1,0 +1,16 @@
+{
+  "compilerOptions": {
+    "sourceMap": true,
+    "module": "commonjs",
+    "esModuleInterop": true,
+    "resolveJsonModule": true,
+    "experimentalDecorators": true,
+    "strict": true,
+    "downlevelIteration": true,
+    //"declaration": true,
+    // "declarationDir": "types",
+    "outDir": "../haxeDev/public/ts"
+  },
+  "include": ["src"],
+  "compileOnSave": false
+}

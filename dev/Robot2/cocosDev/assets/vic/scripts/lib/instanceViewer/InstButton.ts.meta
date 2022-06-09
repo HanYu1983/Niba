@@ -1,0 +1,13 @@
+{
+  "ver": "4.0.23",
+  "importer": "typescript",
+  "imported": true,
+  "uuid": "393d39fc-364c-4567-a120-d8cef3f0c906",
+  "files": [],
+  "subMetas": {},
+  "userData": {
+    "moduleId": "project:///assets/vic/scripts/lib/instanceViewer/InstButton.js",
+    "importerSettings": 7,
+    "simulateGlobals": []
+  }
+}

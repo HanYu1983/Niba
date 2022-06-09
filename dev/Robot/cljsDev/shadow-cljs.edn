@@ -3,8 +3,11 @@
  ["src"]
 
  :dependencies
- [[reagent "0.8.1"]
-  [org.clojure/core.async "0.6.532"]]
+ [[org.clojure/test.check "0.10.0"]
+  [org.clojure/core.async "0.6.532"]
+  [org.clojure/core.match "1.0.0"]
+  [net.mikera/core.matrix "0.62.0"]
+  [tailrecursion/cljs-priority-map "1.2.1"]]
 
  :dev-http {8080 "public/"}
  ; "app" is the build-id, in running "shadow-cljs compile app"
@@ -14,8 +17,19 @@
 
                 ; "main.js" is the name for the bundle entry
                 :modules {:shared {:entries [hook]}
-                          :app {:entries [app.main]
-                                :depends-on #{:shared}}}}
+                          :app {:entries [app4.core]
+                                :depends-on #{:shared}}
+                          :test {:entries [app4.test]
+                                 :depends-on #{:shared}}
+                          :testquadtree {:entries [tool.testquadtree]
+                                         :depends-on #{:shared}}}}
+          :alpha {:target :browser
+                    :output-dir "../cocosDev/assets/Han"
+                    :modules {:app {:entries [app.core]}}
+                    :compiler-options {:optimizations nil
+                                       :source-map true
+                                       :pretty-print true}}
+
           :release {:target :browser
                     :output-dir "../cocosDev/assets/Han"
-                    :modules {:app {:entries [app.main]}}}}}
+                    :modules {:app {:entries [app.core]}}}}}

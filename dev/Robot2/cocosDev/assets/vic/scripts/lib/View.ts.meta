@@ -1,0 +1,13 @@
+{
+  "ver": "4.0.23",
+  "importer": "typescript",
+  "imported": true,
+  "uuid": "7278e3bf-6665-4486-a7a1-6e27a034e2c5",
+  "files": [],
+  "subMetas": {},
+  "userData": {
+    "moduleId": "project:///assets/vic/scripts/lib/View.js",
+    "importerSettings": 7,
+    "simulateGlobals": []
+  }
+}

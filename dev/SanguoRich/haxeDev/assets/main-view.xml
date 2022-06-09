@@ -1,0 +1,107 @@
+<box width="100%" height="100%">
+    <style>
+        .button {
+            font-size: 14px;
+        }
+    </style>
+    <!-- <menubar width="100%">
+        <menu text="系統">
+            <menuitem text="儲存" />
+            <menuitem text="讀取" />
+        </menu>
+    </menubar> -->
+    <box width="1700" height="900" horizontalAlign="center" verticalAlign="center">
+        <hbox width="100%" height="100%" padding="0">
+            <vbox width="100%" height="100%">
+                <label id="lbl_gameInfo" text="測試" style="font-size:24"/>
+                <hbox width="100%" height="240">
+                    <box id="stage" width="1040" height="100%" style="background-color: white;border:1px solid grey;background-opacity: .3">
+                        <box id="box_grids" width="100%" height="100%" />
+                        <box id="box_stageFront" width="100%" height="100%">
+                            <box id="box_cursor" width="80" height="80" style="background-color: purple;border:1px solid black;background-opacity: .5"></box>
+                        </box>
+                        <box id="box_players" width="100%" height="100%" />
+                    </box>
+                    <vbox width="100%" height="100%">
+                        <tabbar id="tab_whichInfo" width="100%">
+                            <button id="btn_totalInfo" text="總資產" icon="haxeui-core/styles/default/haxeui_tiny.png" />
+                            <button id="btn_onlyPlayerInfo" text="自身" icon="haxeui-core/styles/default/haxeui_tiny.png" />
+                            <button id="btn_onlyGridInfo" text="城池" icon="haxeui-core/styles/default/haxeui_tiny.png" />
+                        </tabbar>
+                        <tableview id="tab_allPlayers" width="100%" height="100%">
+                            <header width="100%">
+                                <column id="score" text="分" width="60" />
+                                <column id="name" text="名" width="100%" />
+                                <column id="money" text="金" width="100" />
+                                <column id="food" text="糧" width="100" />
+                                <column id="army" text="兵" width="100" />
+                                <column id="cityCount" text="城" width="30" />
+                                <column id="peopleCount" text="將" width="30" />
+                                <column id="treasureCount" text="寶" width="30" />
+                            </header>
+                            <data>
+                            </data>
+                        </tableview>
+                    </vbox>
+                </hbox>
+                <hbox width="100%">
+                    <vbox width="100%">
+                        <hbox width="100%">
+                            <hbox id="box_playerView" width="380" />
+                            <hbox id="box_playerPeopleList" width="100%" height="100%" />
+                        </hbox>
+                        <hbox width="100%">
+                            <hbox id="box_gridView" width="380" />
+                            <hbox id="box_gridPeopleList" width="100%" height="100%" />
+                        </hbox>
+                    </vbox>
+                </hbox>
+            </vbox>
+            <vbox width="120" height="100%">
+                <section-header text="君主" />
+                <button text="移動" width="100%" id="btn_go" />
+                <button text="計略" width="100%" id="btn_showStrategy" />
+                <button text="賜予" width="100%" id="btn_giveTreasure" />
+                <button text="沒收" width="100%" id="btn_takeTreasure" />
+                <button text="解雇" width="100%" id="btn_firePeople" />
+                <button text="結束" width="100%" id="btn_end" />
+
+                <section-header text="外交" />
+                <button text="交涉" width="100%" id="btn_negotiate" />
+                <button text="號召" width="100%" id="btn_pk" />
+                <button text="破壞" width="100%" id="btn_break" />
+                <button text="圍城" width="100%" id="btn_cutPath" />
+                <button text="搶奪" width="100%" id="btn_snatch" />
+                <button text="攻城" width="100%" id="btn_occupation" />
+                
+                <section-header text="交易" />
+                <button text="經商" width="100%" id="btn_earnMoney" />
+                <button text="買糧" width="100%" id="btn_buyFood" />
+                <button text="賣糧" width="100%" id="btn_sellFood" />
+                <button text="徵兵" width="100%" id="btn_buyArmy" />
+                <button text="裁兵" width="100%" id="btn_sellArmy" />
+                <button text="寶物" width="100%" id="btn_treasureMarket" />
+
+                <section-header text="武將" />
+                <button text="開拓" width="100%" id="btn_settle" />
+                <button text="作樂" width="100%" id="btn_payForFun" />
+                <button text="札營" width="100%" id="btn_camp" />
+                <button text="練兵" width="100%" id="btn_practice" />
+                <button text="探索" width="100%" id="btn_explore" />
+                <button text="聘用" width="100%" id="btn_hire" />
+
+                <section-header text="内政" />
+                <button text="調度" width="100%" id="btn_transfer" />
+                <button text="擴建" width="100%" id="btn_build" />
+
+                <section-header text="系統" />
+                <button text="記錄" width="100%" id="btn_save" />
+                <button text="讀取" width="100%" id="btn_load" />
+
+            </vbox>
+        </hbox>
+        <box id="box_popup" width="100%" height="100%" style="background-color: grey;border:1px solid grey;background-opacity: .3">
+            <!-- by script -->
+        </box>
+    </box>
+</box>

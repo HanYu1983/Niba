@@ -1,0 +1,14 @@
+<vbox width="70%" padding="20" verticalAlign="center" horizontalAlign="center" style="background-color: white;border:1px solid grey;">
+    <hbox id="box_peopleList" width="100%" height="100">
+    </hbox>
+    <frame text="訊息" width="100%" horizontalAlign="center">
+        <hbox width="100%">
+            <label id="lbl_content" width="100%"  textAlign="center">
+            </label>
+        </hbox>
+    </frame>
+    <hbox horizontalAlign="center">
+        <button text="取消聘用" id="btn_cancel" />
+        <button text="嘗試聘用" id="btn_confirm" />
+    </hbox>
+</vbox>

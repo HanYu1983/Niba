@@ -1,0 +1,13 @@
+{
+  "ver": "4.0.23",
+  "importer": "typescript",
+  "imported": true,
+  "uuid": "098227dd-3ba5-4429-bef7-4904f181fec9",
+  "files": [],
+  "subMetas": {},
+  "userData": {
+    "moduleId": "project:///assets/vic/scripts/buyRobotPage/BuyRobotListButton.js",
+    "importerSettings": 7,
+    "simulateGlobals": []
+  }
+}

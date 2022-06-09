@@ -1,0 +1,17 @@
+<vbox width="70%" padding="20" verticalAlign="center" horizontalAlign="center" style="background-color: white;border:1px solid grey;">
+    <hbox horizontalAlign="center">
+        <label text="解雇人才"/>
+    </hbox>
+    <hbox id="box_peopleList1" width="100%" height="150"></hbox>
+    <hbox width="100%">
+        <property-grid id="pg_playerInfo" width="100%">
+            <property-group text="君主資料">
+                <property id="pro_maintainMoney" label="薪俸" value="100" />
+            </property-group>
+        </property-grid>
+    </hbox>
+    <hbox horizontalAlign="center">
+        <button text="取消" id="btn_cancel" />
+        <button text="確定" id="btn_confirm" />
+    </hbox>
+</vbox>

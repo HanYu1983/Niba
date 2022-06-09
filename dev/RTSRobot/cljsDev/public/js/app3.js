@@ -1,0 +1,1 @@
+SHADOW_ENV.load({}, ["tool.planck.js","app3.gameplay.tool.js","app3.gameplay.emitter.js","app3.gameplay.spec.js","app3.gameplay.system.basic.js","app3.gameplay.system.collide.js","app3.gameplay.system.player.js","app3.gameplay.system.view.js","app3.gameplay.core.js","app3.core.js","shadow.module.app3.append.js"]);

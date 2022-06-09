@@ -1,0 +1,283 @@
+<div
+  id="input"
+  style="border: 1px solid black; display: flex; flex-wrap: wrap"
+></div>
+<div id="output"></div>
+<script
+  src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"
+  integrity="sha512-BNaRQnYJYiPSqHHDb58B0yaPfCu+Wgds8Gp/gU33kqBtgNS4tSPHuGibyoeqMV/TJlSKda6FXzoEyYGjTe+vXA=="
+  crossorigin="anonymous"
+  referrerpolicy="no-referrer"
+></script>
+<script
+  src="https://code.jquery.com/jquery-3.6.0.min.js"
+  integrity="sha256-/xUj+3OJU5yExlq6GSYGSHk7tPXikynS7ogEvDej/m4="
+  crossorigin="anonymous"
+></script>
+<script
+  src="https://cdnjs.cloudflare.com/ajax/libs/datalib/1.9.3/datalib.min.js"
+  integrity="sha512-0Wxch7yEHpq8eszzwYYczf6VJxBz9pDsx/K2LirpZ05WgDaoo7BK6uap/osDV21OO1KGNFhKJ2ujZXm0vk18pg=="
+  crossorigin="anonymous"
+  referrerpolicy="no-referrer"
+></script>
+<script
+  src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.7.1/jszip.min.js"
+  integrity="sha512-xQBQYt9UcgblF6aCMrwU1NkVA7HCXaSN2oq0so80KO+y68M+n64FOcqgav4igHe6D5ObBLIf68DWv+gfBowczg=="
+  crossorigin="anonymous"
+  referrerpolicy="no-referrer"
+></script>
+
+<script>
+  //   function weightView() {
+  //     return `<div style="flex: 1; background: white; border: 2px solid black"></div>`;
+  //   }
+  //   function cardView({
+  //     id,
+  //     title,
+  //     weight,
+  //     attackType,
+  //     outsidePower,
+  //     insidePower,
+  //     skillType,
+  //     skillCost,
+  //     skillName,
+  //     skillText,
+  //     skillMana,
+  //     color,
+  //   }) {
+  //     const W = 260 * 0.8;
+  //     const H = 390 * 0.8;
+  //     return `
+  // <div style="width: ${W}px; height: ${H}px; background:${color};">
+  //   <div>
+  //     <div style="height: 60px; overflow: hidden; font-size: 50px; text-align: center">${skillName}</div>
+  //   </div>
+  //   <div style="display:flex; justify-content: center; align-items: center;">
+  //     <div style="flex: 1; background: white">
+  //       <div style="font-size: 60px">${outsidePower}</div>
+  //     </div>
+  //     <div style="flex: 3; background: yellow">
+  //       <div style="display:flex; height: 10px">
+  //         ${[...new Array(weight).keys()].map(weightView).join("")}
+  //       </div>
+  //       <div style="display:flex; justify-content: center">
+  //         <img src="images/blade.png" style="height: ${150 * 0.8}px">
+  //         <div>
+  //           <div style="font-size: 3px;">${id}</div>
+  //           <div style="font-size: 6px;">${title}</div>
+  //           <div style="font-size: 6px;">${skillName}</div>
+  //         </div>
+  //       </div>
+  //       <div style="display:flex; height: 10px">
+  //         ${[...new Array(weight).keys()].map(weightView).join("")}
+  //       </div>
+  //     </div>
+  //     <div style="flex: 1; background: white">
+  //       <div style="font-size: 60px; text-align: center">${insidePower}</div>
+  //     </div>
+  //   </div>
+  //   <div style="display:flex">
+  //     <div style="flex: 1">
+  //       <div style="font-size: 12px; text-align: center">${skillCost}</div>
+  //     </div>
+  //     <div style="flex: 1">
+  //       <div style="font-size: 12px; text-align: center">${skillMana}</div>
+  //     </div>
+  //   </div>
+  //   <div style="font-size: 10px; text-align: center">${skillText}</div>
+  // </div>
+  // `;
+  //   }
+
+  function weightView2() {
+    return `<div style="flex: 1; background: #ff9800; border: 2px solid black"></div>`;
+  }
+
+  const imageMaps = {
+    "斬擊-大": "wea_bigSword.png",
+    "打擊-鎚": "wea_bigHummer.png",
+    "斬擊-刀": "wea_bigBlade.png",
+    "打擊-棍": "wea_longstick.png",
+    "刺擊-槍": "wea_spear.png",
+    "打擊-弓": "wea_bow.png",
+    "打擊-短": "wea_stick.png",
+    "打擊-包": "wea_backpack.png",
+    "盾擊-盾": "def_shield.png",
+    "斬擊-單": "wea_blade.png",
+    "刺擊-劍": "wea_sword.png",
+    "刺擊-匕": "wea_knife.png",
+    "格鬥-拳": "wea_hand.png",
+    "格鬥-腿": "wea_shoe.png",
+    "防具-衣": "def_cloth.png",
+    "防具-飾": "def_ring.png",
+    "防具-褲": "def_pant.png",
+    "防具-頭": "def_head.png",
+    "防具-盾": "def_shield.png",
+  };
+  const colorMapping = {
+    近招: "red",
+    遠招: "yellow",
+    氣功: "white",
+    氣場: "LightGray",
+    防招: "green",
+    反應: "Fuchsia",
+  };
+  function getManaColor(skillMana) {
+    const mapping = {
+      無: null,
+      雷: "#F4D03F",
+      暗: "#76448A",
+      毒: "#1E8449",
+      火: "red",
+      水: "#3498DB",
+      風: "#58D68D",
+      光: "#FCF3CF",
+      地: "#DC7633",
+      刺: "#D4E6F1",
+      斬: "#C0392B",
+      打: "#EBDEF0",
+    };
+    return mapping[skillMana?.[0]];
+  }
+
+  function getAtkImage(atkType) {
+    if (imageMaps[atkType]) {
+      return imageMaps[atkType];
+    }
+    return "wea_bigSword.png";
+  }
+  function cardView2({
+    id,
+    title,
+    weight,
+    attackType,
+    outsidePower,
+    insidePower,
+    skillType,
+    skillCost,
+    skillName,
+    skillText,
+    skillMana,
+  }) {
+    const scale = 0.8;
+    const W = 260 * scale;
+    const H = 390 * scale;
+    const fontSize = 64 * scale;
+    const fontSize2 = 10 * scale;
+    const color = colorMapping[skillType];
+    const manaColor = getManaColor(skillMana);
+    return `
+  <div style="position:relative; width:${W}px; height:${H}px; background:${color}">
+    <div style="position:relative; width:100%; height:20%; outline:solid; outline-width:1px;">
+      <div style="position:relative; width:100%; height:100%; left:0; top:0; text-align:center; font-size:${fontSize}px; overflow:hidden">${skillName}</div>
+    </div>
+    <div style="position:relative; width:100%; height:60%; outline:solid; outline-width:1px;">
+      <div style="position:relative; width:100%; height:50%; outline:solid; outline-width:1px;">
+        <div style="position:relative; width:20%; height:100%; outline:solid; outline-width:1px; float:left; background:white">
+          <div style="position:relative; width:100%; height:100%; left:0; top:19px; text-align:center; font-size:${fontSize}px; overflow:hidden">${outsidePower}</div>
+        </div>
+        <div style="position:relative; width:60%; height:100%; outline:solid; outline-width:1px; float:left; background:${manaColor}">
+          <div style="position:relative; width:100%; height:90%; outline:solid; outline-width:1px;">
+            <img src="images/${getAtkImage(
+              attackType
+            )}" style="position:relative; left:2.5%; top:2.5%; width:95%; height:95%;">
+          </div>
+          <div style="position:relative; width:100%; height:10%; outline:solid; outline-width:1px;">
+            <div style="position:relative; display:flex; height: 100%; ">
+              ${[...new Array(weight).keys()].map(weightView2).join("")}
+            </div>
+          </div>
+        </div>
+        <div style="position:relative; width:20%; height:100%; outline:solid; outline-width:1px; float:left; background:white">
+          <div style="position:relative; width:100%; height:100%; left:0; top:19px; text-align:center; font-size:${fontSize}px; overflow:hidden">${insidePower}</div>
+        </div>
+      </div>
+      <div style="position:relative; width:100%; height:50%; outline:solid; outline-width:1px;">
+        <div style="position:relative; width:95%; height:95%; left:2.5%; top:2.5%; font-size:${fontSize2}px; overflow:hidden;">
+          ${skillText}
+        </div>
+        <div style="position:absolute; right:2px; bottom:2px; font-size:${fontSize2}px">
+          ID${id} ${title} ${attackType} ${skillType} ${skillCost} ${skillMana}
+        </div>
+      </div>
+    </div>
+    <div style="position:relative; width:100%; height:20%; outline:solid; outline-width:1px;">
+      <div style="position:relative; width:100%; height:100%; left:0; top:0; text-align:center; font-size:${fontSize}px; overflow:hidden">${title}</div>
+    </div>
+  </div>
+  `;
+  }
+
+  function getInfo(row) {
+    const id = row["id/int"];
+    const title = row["title/string"];
+    const weight = row["weight/int"];
+    const attackType = row["attackType/string"];
+    const outsidePower = row["outsidePower/int"];
+    const insidePower = row["insidePower/int"];
+    const skillType = row["skillType/string"];
+    const skillCost = row["skillCost/string"];
+    const skillName = row["skillName/string"];
+    const skillText = row["skillText/string"];
+    const skillMana = row["skillMana/string"];
+    return {
+      id,
+      title,
+      weight,
+      attackType,
+      outsidePower,
+      insidePower,
+      skillType,
+      skillCost,
+      skillName,
+      skillText,
+      skillMana,
+    };
+  }
+
+  function draw(rows) {
+    rows.map(getInfo).forEach((info) => {
+      $("#input").append($(cardView2(info)));
+    });
+  }
+
+  async function buildBlob(doms, rows) {
+    const zip = new JSZip();
+    for (const i in doms) {
+      console.log(`process ${i}...`);
+      const dom = doms[i];
+      const row = rows[i];
+      const img = await html2canvas(dom);
+      const id = row["id/int"];
+      const imgData = img.toDataURL();
+      const imgB64 = imgData.substring(imgData.indexOf(",") + 1);
+      zip.file(`${id}.png`, imgB64, { base64: true });
+      console.log(`process ${i} ok`);
+    }
+    const content = await zip.generateAsync({
+      type: "blob", // 壓縮型別
+      compression: "DEFLATE", // STORE：預設不壓縮 DEFLATE：需要壓縮
+      compressionOptions: {
+        level: 9, // 壓縮等級1~9    1壓縮速度最快，9最優壓縮方式
+        // [使用一張圖片測試之後1和9壓縮的力度不大，相差100K左右]
+      },
+    });
+    return content;
+  }
+
+  async function main() {
+    const rows = dl.tsv("格鬥風雲錄2 - main.tsv");
+    draw(rows);
+    const doms = $("#input").children().toArray();
+    console.log(doms);
+    const blob = await buildBlob(doms, rows);
+    $(document.body).append(
+      `<a href=${URL.createObjectURL(blob)} download=build.zip>build.zip</a>`
+    );
+    console.log("ok");
+  }
+
+  main().catch((e) => {
+    console.error(e);
+  });
+</script>

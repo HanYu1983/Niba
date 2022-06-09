@@ -189,4 +189,67 @@ public class DebugModel : MonoBehaviour, IModel
     {
         callback(true);
     }
+
+    public List<MemoItem> DeleteMemo()
+    {
+        List<MemoItem> items = new List<MemoItem>();
+        for (int i = 0; i < 30; ++i)
+        {
+            items.Add(new MemoItem("tag_delete_" + i, (Random.Range(0, 10) > 5)));
+        }
+        return items;
+    }
+
+    public List<MemoItem> EditMemo(string memo, bool removeOld)
+    {
+        List<MemoItem> items = new List<MemoItem>();
+        for (int i = 0; i < 30; ++i)
+        {
+            items.Add(new MemoItem("tag_edit_" + i, (Random.Range(0, 10) > 5)));
+        }
+        return items;
+    }
+
+    public void ChangeItem(int id, Item item, UnityAction<object, List<Item>> callback)
+    {
+
+    }
+
+    public bool IsCloudSaveDirty()
+    {
+        return true;
+    }
+
+    public bool IsPendingDirty()
+    {
+        return false;
+    }
+    public SaveWorkerState GetSaveWorkerState()
+    {
+        return SaveWorkerState.Pending;
+    }
+    public void ManuallySave()
+    {
+
+    }
+    public bool IsDiskSaveDirty()
+    {
+        return true;
+    }
+    public void SetDebug(bool v)
+    {
+        
+    }
+    public bool IsDebug()
+    {
+        return true;
+    }
+    public void InvokeArchive(UnityAction<object, List<Item>> callback)
+    {
+
+    }
+    public bool IsArchiving()
+    {
+        return false;
+    }
 }

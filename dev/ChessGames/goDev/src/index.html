@@ -1,0 +1,32 @@
+<html>
+
+<body>
+    <div id="canvas"></div>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/p5.js/1.0.0/p5.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/planck-js/0.2.7/planck.min.js"></script>
+    <script>
+        View = {
+            Alert: function(msg){
+                console.error(msg)
+            },
+            AskCommand: function(player, answer){
+                console.log("AskCommand")
+                console.log(arguments)
+                answer.CmdMoveChess(0, 0, 1, 1)
+            },
+            MoveChess: function(gameplay, chess, from, to, done){
+                console.log("MoveChess")
+                console.log(arguments)
+                done()
+            },
+        }
+    </script>
+    <script src="..js"></script>
+    <script>
+        App.StartGame()
+        console.log(QueryModel.Query())
+        console.log(QueryModel.QueryMoveRange(0, 1))
+    </script>
+</body>
+
+</html>

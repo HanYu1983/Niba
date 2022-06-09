@@ -1,0 +1,13 @@
+{
+  "ver": "4.0.23",
+  "importer": "typescript",
+  "imported": true,
+  "uuid": "66ea05e7-4b41-4eeb-8228-621a394610cf",
+  "files": [],
+  "subMetas": {},
+  "userData": {
+    "moduleId": "project:///assets/vic/scripts/lib/Pool2.js",
+    "importerSettings": 7,
+    "simulateGlobals": []
+  }
+}

@@ -1,0 +1,13 @@
+{
+  "ver": "4.0.23",
+  "importer": "typescript",
+  "imported": true,
+  "uuid": "632d2ba1-b0f7-4474-9234-2eec0ed09013",
+  "files": [],
+  "subMetas": {},
+  "userData": {
+    "moduleId": "project:///assets/vic/scripts/buyPilotPage/BuyPilotListButton.js",
+    "importerSettings": 7,
+    "simulateGlobals": []
+  }
+}

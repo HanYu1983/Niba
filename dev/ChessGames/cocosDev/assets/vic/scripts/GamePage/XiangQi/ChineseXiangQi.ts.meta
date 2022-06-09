@@ -1,0 +1,17 @@
+{
+  "ver": "4.0.9",
+  "importer": "typescript",
+  "imported": true,
+  "uuid": "f49c6ff7-b5af-4d09-b742-b3ba005c26b9",
+  "files": [
+    ".js",
+    "editor.js",
+    ".trans"
+  ],
+  "subMetas": {},
+  "userData": {
+    "importAsPlugin": false,
+    "moduleId": "project:///assets/vic/scripts/GamePage/XiangQi/ChineseXiangQi.js",
+    "importerSettings": 7
+  }
+}

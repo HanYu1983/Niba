@@ -1,8 +1,5 @@
-﻿using System;
-using System.Collections;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using UnityEngine;
-using UnityEngine.Events;
 using UnityEngine.UI;
 
 [RequireComponent(typeof(MoneyCar))]
@@ -11,9 +8,10 @@ public class MainPage : Page, IHasMoneyCar
     public Text ShowType;
     public Text ShowCountType;
     public Text Money;
+    public Text State;
+    public Image StateColor;
     public LoopVerticalScrollRect ItemScroller;
-    public GameObject EarnRow;
-    public GameObject EarnList;
+    public ChartGraph Chart;
     public int MaxRow = 10;
 
     public Button BtnEarn;
@@ -54,7 +52,12 @@ public class MainPage : Page, IHasMoneyCar
         ECount.THIRTY,
         ECount.HUNDRED
     };
-    //int currentCountType = 0;
+
+    public void ToggleChartGraph()
+    {
+        this.Chart.gameObject.SetActive(!this.Chart.gameObject.active);
+        UpdateChart();
+    }
 
     public void ChangeShowType()
     {
@@ -64,13 +67,48 @@ public class MainPage : Page, IHasMoneyCar
         ItemListToTop();
     }
 
-    //public void ChangeCountType()
+    //public int SetSaveState(SaveWorkerState state, bool isPending, bool isDiskSave, bool isCloudSave)
     //{
-    //    if (++currentCountType > countTypes.Length - 1) currentCountType = 0;
-    //    ShowCountType.text = ((int)countTypes[currentCountType]).ToString();
+    //    if (isPending)
+    //    {
+    //        StateColor.color = Color.red;
+    //        this.State.text = "等待儲存";
+    //        return 0;
+    //    }
+    //    else
+    //    {
+    //        StateColor.color = Color.green;
+    //        switch (state)
+    //        {
+    //            case SaveWorkerState.Saved:
+    //                if(!isPending && !isDiskSave && !isCloudSave)
+    //                {
+    //                    this.State.text = "儲存完畢";
+    //                    return 0;
+    //                }
+    //                else
+    //                {
+    //                    this.State.text = "狀況不對";
+    //                    return 1;
+    //                }
+    //            case SaveWorkerState.Starting:
+    //                this.State.text = "初使化";
+    //                return 0;
+    //            case SaveWorkerState.Checking:
+    //                this.State.text = "小跟班";
+    //                return 0;
+    //            case SaveWorkerState.Pending:
+    //                this.State.text = "等待中";
+    //                return 0;
+    //            case SaveWorkerState.Saving:
+    //                this.State.text = "儲存中";
+    //                StateColor.color = Color.yellow;
+    //                return 0;
+    //            default:
+    //                return 2;
+    //        }
+    //    }
         
-    //    RefreshList(true);
-    //    ItemListToTop();
     //}
 
     public void Buy()
@@ -146,12 +184,30 @@ public class MainPage : Page, IHasMoneyCar
         {
             ItemScroller.RefreshCells();
         }
+        UpdateChart();
         UpdateBtn();
     }
 
     public void ItemListToTop()
     {
         ItemScroller.SrollToCell(0, 20000);
+    }
+
+    public void OpenCompareChart()
+    {
+        if (this.Chart.gameObject.active) 
+        {
+            this.Chart.UpdateChartMonth(Model.GetItemListCache(), currentTimeType);
+        }
+    }
+
+    void UpdateChart()
+    {
+        if (this.Chart.gameObject.active)
+        {
+            this.Chart.UpdateChart(Model.GetItemListCache());
+            this.Chart.UpdateBtnCompare(currentTimeType);
+        }
     }
 
     void UpdateBtn()

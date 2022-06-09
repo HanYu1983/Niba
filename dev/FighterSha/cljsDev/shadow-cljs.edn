@@ -1,0 +1,30 @@
+;; shadow-cljs configuration
+{:source-paths
+ ["src"]
+
+ :dependencies
+ [[org.clojure/test.check "0.10.0"]
+  [org.clojure/core.async "0.6.532"]]
+
+ :dev-http {8080 "public/"}
+ ; "app" is the build-id, in running "shadow-cljs compile app"
+ :builds {:app {:target :browser ; compile code that loads in a browser
+                :output-dir "public/js"
+                :asset-path "./js" ; assets loaded from index.html are based on path "/js"
+
+                ; "main.js" is the name for the bundle entry
+                :modules {:shared {:entries [hook]}
+                          :app {:entries [app2.core]
+                                :depends-on #{:shared}}
+                          :recipe {:entries [app3.recipe2.core]
+                                   :depends-on #{:shared}}}}
+
+          :alpha {:target :browser
+                  :output-dir "../cocosDev/assets/scripts/han"
+                  :modules {:app {:entries [app.core]}}
+                  :compiler-options {:optimizations nil
+                                     :source-map true
+                                     :pretty-print true}}
+          :release {:target :browser
+                    :output-dir "../cocosDev/assets/scripts/han"
+                    :modules {:app {:entries [app.core]}}}}}

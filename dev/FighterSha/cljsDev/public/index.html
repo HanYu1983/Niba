@@ -1,0 +1,43 @@
+<html>
+
+<head>
+    <meta charset="UTF-8">
+</head>
+
+<body>
+    <div id="canvas"></div>
+    <script>
+        View = {
+            AskOneHandCard: function (player, cardStack, cb) {
+                console.log(cardStack)
+                cb(null)
+            },
+            AskCommand: function (player, answer) {
+                console.log(player, answer)
+                answer.CmdUseCard("0")
+            },
+            AskOnePlayer: function (player, players, cb) {
+                console.log(player, players)
+                cb("A")
+            },
+            Render: function (gameplay) {
+                console.log(gameplay)
+            },
+            RenderPlayerTurnStart: function (gameplay, player, cb) {
+                console.log(player)
+                cb()
+            },
+            RenderCardMove: function (gameplay, from, to, cards, cb) {
+                console.log(from, to, cards)
+                cb()
+            }
+        }
+    </script>
+    <script src="js/shared.js"></script>
+    <script src="js/app.js"></script>
+    <script>
+        Model.StartGameplay()
+    </script>
+</body>
+
+</html>

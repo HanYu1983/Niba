@@ -1,0 +1,29 @@
+<html>
+
+<body>
+    <div id="canvas"></div>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/p5.js/1.0.0/p5.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/planck-js/0.2.7/planck.min.js"></script>
+    <script src="./lib.js"></script>
+    <script>
+        View = {
+            Render: (ui) => {
+                console.log(ui)
+            },
+            RenderRobotMove: (robotID, path, cb) => {
+                cb()
+            },
+            RenderRobotBattle: (result, cb) => {
+                cb()
+            },
+            RenderTurnStart: (playe, cb) => {
+                cb()
+            },
+            Alert: () => {
+            },
+        }
+    </script>
+    <script src="./go.js"></script>
+</body>
+
+</html>

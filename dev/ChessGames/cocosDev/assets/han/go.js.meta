@@ -1,0 +1,17 @@
+{
+  "ver": "4.0.9",
+  "importer": "javascript",
+  "imported": true,
+  "uuid": "15067ce2-2eec-4902-b648-7cb97ea89d76",
+  "files": [
+    ".js",
+    "editor.js",
+    ".trans"
+  ],
+  "subMetas": {},
+  "userData": {
+    "importAsPlugin": false,
+    "moduleId": "project:///assets/han/go.js",
+    "importerSettings": 7
+  }
+}

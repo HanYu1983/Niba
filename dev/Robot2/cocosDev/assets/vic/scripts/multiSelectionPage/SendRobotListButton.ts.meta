@@ -1,0 +1,13 @@
+{
+  "ver": "4.0.23",
+  "importer": "typescript",
+  "imported": true,
+  "uuid": "1e72d856-7caf-473f-8e99-830801ef28d4",
+  "files": [],
+  "subMetas": {},
+  "userData": {
+    "moduleId": "project:///assets/vic/scripts/multiSelectionPage/SendRobotListButton.js",
+    "importerSettings": 7,
+    "simulateGlobals": []
+  }
+}

@@ -1,0 +1,13 @@
+{
+  "ver": "4.0.23",
+  "importer": "typescript",
+  "imported": true,
+  "uuid": "e0e3672a-aaa8-4638-97cb-8274dd0328cb",
+  "files": [],
+  "subMetas": {},
+  "userData": {
+    "moduleId": "project:///assets/vic/scripts/lib/BasicViewer.js",
+    "importerSettings": 7,
+    "simulateGlobals": []
+  }
+}

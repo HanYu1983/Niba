@@ -1,0 +1,108 @@
+<vbox padding="20" verticalAlign="center" horizontalAlign="center" style="background-color: white;border:1px solid grey;">
+    <style>
+    .button-bar .button {
+        width:60
+    }
+    </style>
+    <hbox>
+        <frame text="玩家設定">
+            <vbox horizontalAlign="center" verticalAlign="center">
+                <hbox>
+                    <label text='劉備'/>
+                    <button-bar id="grp_p0" allowUnselection="true">
+                        <button text="玩家" />
+                        <button text="電腦" />
+                        <button text="關閉" />
+                    </button-bar>
+                </hbox>
+                <hbox>
+                    <label text='曹操'/>
+                    <button-bar id="grp_p1" allowUnselection="true">
+                        <button text="玩家" />
+                        <button text="電腦" />
+                        <button text="關閉" />
+                    </button-bar>
+                </hbox>
+                <hbox>
+                    <label text='孫權'/>
+                    <button-bar id="grp_p2" allowUnselection="true">
+                        <button text="玩家" />
+                        <button text="電腦" />
+                        <button text="關閉" />
+                    </button-bar>
+                </hbox>
+                <hbox>
+                    <label text='董卓'/>
+                    <button-bar id="grp_p3" allowUnselection="true">
+                        <button text="玩家" />
+                        <button text="電腦" />
+                        <button text="關閉" />
+                    </button-bar>
+                </hbox>
+                <hbox>
+                    <label text='難度'/>
+                    <button-bar id="grp_ai_level" tooltip="目前會影響AI的初始資源量" allowUnselection="true">
+                        <button text="簡單" />
+                        <button text="普通" />
+                        <button text="困難" />
+                    </button-bar>
+                </hbox>
+            </vbox>
+        </frame>
+        <frame text="環境設定">
+            <vbox>
+                <hbox>
+                    <label text='格子數量'/>
+                    <button-bar id="grp_gridCount" allowUnselection="true">
+                        <button text="13" />
+                        <button text="26" />
+                        <button text="39" />
+                    </button-bar>
+                </hbox>
+                <hbox>
+                    <label text='初始資源'/>
+                    <button-bar id="grp_resource" allowUnselection="true">
+                        <button text="500" />
+                        <button text="1000" />
+                        <button text="2000" />
+                    </button-bar>
+                </hbox>
+                <hbox>
+                    <label text='成長速度'/>
+                    <button-bar id="grp_growSpeed" allowUnselection="true">
+                        <button text="0.5" />
+                        <button text="1.0" />
+                        <button text="1.5" />
+                    </button-bar>
+                </hbox>
+                <hbox>
+                    <label text='限制建築'/>
+                    <button-bar id="grp_limitBuilding" tooltip="不同類型的格子能蓋的東西不一樣。關閉的話，就是什麼都可以蓋。" allowUnselection="true">
+                        <button text="是" />
+                        <button text="否" />
+                    </button-bar>
+                </hbox>
+                <hbox>
+                    <label text='普通起手'/>
+                    <button-bar id="grp_putong" tooltip="打開的話運氣成分會小一點，因為大家武將都一樣爛。" allowUnselection="true">
+                        <button text="是" />
+                        <button text="否" />
+                    </button-bar>
+                </hbox>
+                <hbox>
+                    <label text='初始城市'/>
+                    <button-bar id="grp_startCity" allowUnselection="true">
+                        <button text="是" />
+                        <button text="否" />
+                    </button-bar>
+                </hbox>
+            </vbox>
+        </frame>
+    </hbox>
+
+    <hbox horizontalAlign="center">
+        <button id="btn_start" text="遊戲開始"/>
+        <!-- <button text="記錄" width="100%" id="btn_save" />
+        <button text="讀取" width="100%" id="btn_load" /> -->
+    </hbox>
+</vbox>

@@ -1,0 +1,16 @@
+{
+  "__type__": "cc.Material",
+  "_name": "ScaleMat",
+  "_objFlags": 0,
+  "_native": "",
+  "_effectAsset": {
+    "__uuid__": "8c60e70c-f983-43d7-9176-0a13f6d1b802"
+  },
+  "_techniqueData": {
+    "0": {
+      "defines": {
+        "USE_TEXTURE": true
+      }
+    }
+  }
+}

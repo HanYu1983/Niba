@@ -1,0 +1,13 @@
+{
+  "ver": "4.0.23",
+  "importer": "typescript",
+  "imported": true,
+  "uuid": "134ea43b-ffeb-4b7a-8526-dc8c5b916902",
+  "files": [],
+  "subMetas": {},
+  "userData": {
+    "moduleId": "project:///assets/vic/scripts/buyWeaponPage/BuyWeaponListButton.js",
+    "importerSettings": 7,
+    "simulateGlobals": []
+  }
+}

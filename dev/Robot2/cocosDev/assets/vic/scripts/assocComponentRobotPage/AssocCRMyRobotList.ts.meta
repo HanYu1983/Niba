@@ -1,0 +1,13 @@
+{
+  "ver": "4.0.23",
+  "importer": "typescript",
+  "imported": true,
+  "uuid": "8891ced9-4a37-4ac4-a653-eb8791725c4c",
+  "files": [],
+  "subMetas": {},
+  "userData": {
+    "moduleId": "project:///assets/vic/scripts/assocComponentRobotPage/AssocCRMyRobotList.js",
+    "importerSettings": 7,
+    "simulateGlobals": []
+  }
+}

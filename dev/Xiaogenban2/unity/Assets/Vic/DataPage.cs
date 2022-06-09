@@ -1,14 +1,12 @@
-﻿using System.Collections;
-using System.Collections.Generic;
-using UnityEngine;
-using UnityEngine.Events;
-using UnityEngine.UI;
+﻿using UnityEngine.UI;
 
 public class DataPage : Page
 {
     public Text TxtID;
     public Text TxtShowID;
     public InputField TxtInput;
+    public Button BtnSave;
+    public Button BtnArchive;
 
     public string ID
     {
@@ -47,5 +45,15 @@ public class DataPage : Page
     {
         base.Open();
         ID = Model.GetUserID();
+    }
+
+    public void SetSaveEnable(bool enable)
+    {
+        BtnSave.interactable = enable;
+    }
+
+    public void SetArchiveEnable(bool enable)
+    {
+        BtnArchive.interactable = enable;
     }
 }

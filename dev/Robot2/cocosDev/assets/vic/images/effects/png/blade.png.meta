@@ -1,0 +1,69 @@
+{
+  "ver": "1.0.23",
+  "importer": "image",
+  "imported": true,
+  "uuid": "cf70b0ec-3d3a-4a9a-8909-b14088a490ce",
+  "files": [
+    ".png",
+    ".json"
+  ],
+  "subMetas": {
+    "blade": {
+      "ver": "1.0.4",
+      "uuid": "5ec8e8d6-92ef-4f5d-aea9-1a9431e59a54",
+      "rawTextureUuid": "cf70b0ec-3d3a-4a9a-8909-b14088a490ce",
+      "trimType": "auto",
+      "trimThreshold": 1,
+      "rotated": false,
+      "offsetX": 0,
+      "offsetY": 0,
+      "trimX": 0,
+      "trimY": 10,
+      "width": 32,
+      "height": 12,
+      "rawWidth": 32,
+      "rawHeight": 32,
+      "borderTop": 0,
+      "borderBottom": 0,
+      "borderLeft": 0,
+      "borderRight": 0,
+      "subMetas": {},
+      "importer": "*",
+      "imported": false,
+      "files": [],
+      "userData": {},
+      "displayName": "",
+      "id": "",
+      "name": ""
+    },
+    "6c48a": {
+      "importer": "texture",
+      "uuid": "cf70b0ec-3d3a-4a9a-8909-b14088a490ce@6c48a",
+      "displayName": "blade",
+      "id": "6c48a",
+      "name": "texture",
+      "userData": {
+        "wrapModeS": "repeat",
+        "wrapModeT": "repeat",
+        "minfilter": "linear",
+        "magfilter": "linear",
+        "mipfilter": "none",
+        "anisotropy": 0,
+        "isUuid": true,
+        "imageUuidOrDatabaseUri": "cf70b0ec-3d3a-4a9a-8909-b14088a490ce"
+      },
+      "ver": "1.0.21",
+      "imported": true,
+      "files": [
+        ".json"
+      ],
+      "subMetas": {}
+    }
+  },
+  "userData": {
+    "hasAlpha": true,
+    "type": "texture",
+    "redirect": "cf70b0ec-3d3a-4a9a-8909-b14088a490ce@6c48a",
+    "fixAlphaTransparencyArtifacts": false
+  }
+}

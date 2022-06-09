@@ -1,0 +1,32 @@
+<vbox width="70%" padding="20" verticalAlign="center" horizontalAlign="center" style="background-color: white;border:1px solid grey;">
+    <hbox horizontalAlign="center">
+        <label text="調度資源"/>
+    </hbox>
+    <hbox id='box_plist' width="100%" height="200"/>
+    <hbox width="100%">
+        <hbox id="box_leader" width="100%"/>
+        <hbox id="box_grid" width="100%"/>
+    </hbox>
+    <hbox width="100%">
+        <label text="金錢數量"/>
+        <slider id="sli_money" width="100%" pos="0" />
+    </hbox>
+    <hbox width="100%">
+        <label text="糧草數量"/>
+        <slider id="sli_food" width="100%" pos="0" />
+    </hbox>
+    <hbox width="100%">
+        <label text="士兵數量"/>
+        <slider id="sli_army" width="100%" pos="0" />
+    </hbox>
+    <hbox horizontalAlign="center">
+        <button id="btn_l1" text="0%" />
+        <button id="btn_l2" text="25%" />
+        <button id="btn_l3" text="50%" />
+        <button id="btn_l4" text="75%" />
+    </hbox>
+    <hbox horizontalAlign="center">
+        <button text="取消" id="btn_cancel" />
+        <button text="確定" id="btn_confirm" />
+    </hbox>
+</vbox>

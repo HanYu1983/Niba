@@ -1,0 +1,1 @@
+browserify index.js --outfile ..\cocosDev\assets\han\lib.js
