@@ -26,6 +26,8 @@ abstract class DefaultView implements IView {
 			case ON_CLICK_GOTO_PILOT_VIEW:
 				openPilotViewPage();
 			case ON_CLICK_GOTO_ROBOT_BUY(_):
+			case ON_CLICK_ROBOT_VIEW_CANCEL:
+				openLobbyPage();
 			case _:
 		}
 	}
