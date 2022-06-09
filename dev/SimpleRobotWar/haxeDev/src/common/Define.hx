@@ -15,6 +15,8 @@ enum ViewEvent {
 	ON_CLICK_GOTO_ROBOT_BUY(v:{robotId:String});
 	// 當點擊去確定購買按鈕
 	ON_CLICK_ROBOT_BUY_WEAPON(v:{robotId:String, weaponId:String});
+	// 當點擊機體檢視頁的取消按鈕
+	ON_CLICK_ROBOT_VIEW_CANCEL;
 }
 
 interface IEntityBase {

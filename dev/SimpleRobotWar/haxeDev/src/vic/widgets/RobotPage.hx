@@ -3,6 +3,7 @@ package vic.widgets;
 import common.Define.IRobot;
 import haxe.ui.events.MouseEvent;
 import haxe.ui.containers.Box;
+import tool.Debug;
 
 @:build(haxe.ui.ComponentBuilder.build('vic/widgets/RobotPage.xml'))
 class RobotPage extends Box {
@@ -31,6 +32,7 @@ class RobotPage extends Box {
 				updateDetail(robotInfo);
 			}
 		}
+		verbose("RobotPage", 'vic get robots:${robots}');
 	}
 
 	@:bind(btn_equipOrMarket, MouseEvent.CLICK)
@@ -38,7 +40,7 @@ class RobotPage extends Box {
 		final send = {
 			robotId: tab_robots.selectedItem.id
 		};
-		trace('vic send ON_CLICK_GOTO_ROBOT_BUY,${send}');
+		info("RobotPage", 'vic send ON_CLICK_GOTO_ROBOT_BUY,${send}');
 		Main.view.getLobbyController().onEvent(ON_CLICK_GOTO_ROBOT_BUY(send));
 	}
 }
