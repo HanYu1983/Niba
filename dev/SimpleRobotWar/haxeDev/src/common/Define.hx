@@ -26,11 +26,23 @@ interface IEntityBase {
 
 typedef RobotView = {
 	id:String,
-	title:String
+	title:String,
+	pilotId:Null<String>,
+	weaponIds:Array<String>,
 }
 
-typedef PilotView = {}
-typedef WeaponView = {}
+typedef PilotView = {
+	id:String,
+	title:String,
+	robotId:Null<String>
+}
+
+typedef WeaponView = {
+	id:String,
+	title:String,
+	robotId:Null<String>
+}
+
 interface ILobbyInfo {}
 interface IGrid {}
 

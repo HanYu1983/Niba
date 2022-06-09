@@ -3,16 +3,39 @@ package han;
 import haxe.Exception;
 import haxe.ds.StringMap;
 import common.Define;
+import common.Data;
 import han.Define;
 
 private function getRobotView(ctx:Context, robotId:String):RobotView {
-	final robot = ctx.robots.get(robotId);
-	if (robot == null) {
-		throw new Exception('robot not found:${robotId}');
-	}
+	final robot = getRobot(ctx, robotId);
+	final pilot = getRobotPilot(ctx, robotId);
+	final weapons = getRobotWeapons(ctx, robotId);
 	return {
 		id: robot.id,
-		title: robot.title
+		title: robot.title,
+		pilotId: pilot != null ? pilot.id : null,
+		weaponIds: weapons.map(w -> w.id),
+	}
+}
+
+private function getPilotView(ctx:Context, id:String):PilotView {
+	final pilot = getPilot(ctx, id);
+	final robotId = ctx.pilotToRobot.get(id);
+	return {
+		id: pilot.id,
+		title: pilot.title,
+		robotId: robotId
+	}
+}
+
+private function getWeaponView(ctx:Context, id:String):WeaponView {
+	final weapon = getWeapon(ctx, id);
+	final weaponData = getWeaponData(weapon.dataId);
+	final robotId = ctx.weaponToRobot.get(id);
+	return {
+		id: weapon.id,
+		title: weaponData.title,
+		robotId: robotId
 	}
 }
 
@@ -25,8 +48,18 @@ class Controller implements IController {
 
 	public function new(view:IView) {
 		_view = view;
-		final tmp = createRobot("0");
-		_ctx.robots.set(tmp.id, tmp);
+		{
+			final robot = createRobot('${_ctx.idSeq++}');
+			_ctx.robots.set(robot.id, robot);
+
+			final pilot = createPilot('${_ctx.idSeq++}');
+			_ctx.pilots.set(pilot.id, pilot);
+			_ctx.pilotToRobot.set(pilot.id, robot.id);
+
+			final weapon = createWeapon('${_ctx.idSeq++}');
+			_ctx.weapons.set(weapon.id, weapon);
+			_ctx.weaponToRobot.set(weapon.id, robot.id);
+		}
 		_view.startLobby(this);
 	}
 
@@ -43,11 +76,19 @@ class Controller implements IController {
 	}
 
 	public function getPilots():Map<String, PilotView> {
-		return new Map<String, PilotView>();
+		return [
+			for (info in _ctx.pilots) {
+				info.id => getPilotView(_ctx, info.id);
+			}
+		];
 	}
 
 	public function getWeapons():Map<String, WeaponView> {
-		return new Map<String, WeaponView>();
+		return [
+			for (info in _ctx.weapons) {
+				info.id => getWeaponView(_ctx, info.id);
+			}
+		];
 	}
 
 	public function getMap(x:Int, y:Int, w:Int, h:Int):Array<IGrid> {

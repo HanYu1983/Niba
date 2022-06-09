@@ -120,7 +120,8 @@ typedef Context = {
 	weapons:StringMap<Weapon>,
 	pilotToRobot:StringMap<String>,
 	weaponToRobot:StringMap<String>,
-	robotToPlayer:StringMap<String>
+	robotToPlayer:StringMap<String>,
+	idSeq:Int,
 }
 
 function getDefaultContext():Context {
@@ -134,6 +135,7 @@ function getDefaultContext():Context {
 		pilotToRobot: new StringMap<String>(),
 		weaponToRobot: new StringMap<String>(),
 		robotToPlayer: new StringMap<String>(),
+		idSeq: 0,
 	}
 }
 
@@ -143,6 +145,14 @@ function getPlayer(ctx:Context, playerId:String):Player {
 		throw new Exception('player not found:${playerId}');
 	}
 	return player;
+}
+
+function getPilot(ctx:Context, pilotId:String):Pilot {
+	final pilot = ctx.pilots.get(pilotId);
+	if (pilot == null) {
+		throw new Exception('pilot not found:${pilotId}');
+	}
+	return pilot;
 }
 
 function getRobot(ctx:Context, robotId:String):Robot {
