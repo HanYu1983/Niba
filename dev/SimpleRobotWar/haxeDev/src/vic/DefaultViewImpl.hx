@@ -9,8 +9,7 @@ import vic.widgets.LobbyPage;
 import vic.widgets.HaxeUIView;
 
 class DefaultViewImpl extends DefaultView {
-
-	public function new(haxeUIView:HaxeUIView) {
+	public function new() {
 		super();
 	}
 
@@ -50,6 +49,7 @@ class DefaultViewImpl extends DefaultView {
 	// 動作按鈕為
 	//   裝備與買賣 ON_CLICK_GOTO_ROBOT_BUY
 	//   設定駕駛
+	//   回上頁 ON_CLICK_ROBOT_VIEW_CANCEL
 	public function openRobotViewPage():Void {
 		Main.view.closeAllPages();
 		Main.view.robotPage.fadeIn();

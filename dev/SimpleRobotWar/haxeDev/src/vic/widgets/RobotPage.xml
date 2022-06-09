@@ -3,20 +3,26 @@
         <vbox width='30%' styleName='vfull'>
             <tableview id="tab_robots" styleName='full' contentWidth="100%">
                 <header styleName='hfull'>
-                    <column id="robot" text="機體" width='100' />
-                    <column id="pilot" text="駕駛" width='100%'  />
+                    <column id="title" text="機體" width='100%' />
+                    <column id="maxHp" text="最大耐久" width='100'  />
+                    <column id="maxEnergy" text="最大能量" width='100'  />
                 </header>
                 <data>
-                    <item robot="測試機體" pilot="測試駕駛" />
+                    <!-- <item robot="測試機體" pilot="測試駕駛" /> -->
                 </data>
             </tableview>
         </vbox>
         <vbox width='70%' styleName='vfull'>
             <property-grid id="prop_pilot" styleName='hfull' >
-                <property-group text="">
-                    <property id="name" label="駕駛員" value="龍馬" />
-                    <property id="melee" label="格鬥" value="100" />
-                    <property id="range" label="射擊" value="100" />
+                <property-group text="機體">
+                    <property id="pro_robotTitle" label="機體" value="龍馬" />
+                    <property id="pro_robotHp" label="耐久" value="100" />
+                    <property id="pro_robotEnergy" label="能量" value="100" />
+                </property-group>
+                <property-group text="駕駛">
+                    <property id="pro_pilotName" label="駕駛員" value="龍馬" />
+                    <property id="pro_pilotMelee" label="格鬥" value="100" />
+                    <property id="pro_pilotRange" label="射擊" value="100" />
                 </property-group>
             </property-grid>
             <tableview id="tab_weapons" styleName='full' contentWidth="100%">
@@ -35,6 +41,7 @@
                 <hbox horizontalAlign="center" styleName='vfull'>
                     <button id='btn_equipOrMarket' text='裝備與買賣' icon="haxeui-core/styles/default/haxeui_small.png" iconPosition="bottom" width='200' styleName='vfull'/>
                     <button id='btn_pilotSetting' text='設定駕駛' icon="haxeui-core/styles/default/haxeui_small.png" iconPosition="bottom" width='200' styleName='vfull'/>
+                    <button id='btn_backToLobby' text='回到整備室' icon="haxeui-core/styles/default/haxeui_small.png" iconPosition="bottom" width='200' styleName='vfull'/>
                 </hbox>
             </box>
         </vbox>
