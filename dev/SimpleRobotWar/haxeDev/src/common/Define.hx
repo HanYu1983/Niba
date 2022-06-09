@@ -30,11 +30,3 @@ interface IView {
 	function startLobby(ctr:ILobbyController):Void;
 	function startBattle(ctr:IBattleController):Void;
 }
-
-class DefaultView implements IView {
-	public function new() {}
-
-	public function startLobby(ctr:ILobbyController):Void {}
-
-	public function startBattle(ctr:IBattleController):Void {}
-}
