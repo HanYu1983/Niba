@@ -11,7 +11,7 @@ class DefaultViewImpl extends DefaultView {
 		trace("openLobbyPage");
 		// 關閉所有其它頁, 打開大廳頁
 		// 假設按了到去戰鬥
-		getLobbyController().gotoBattle(null);
+		getLobbyController().onAction(GOTO_BATTLE_ACTION);
 	}
 
 	public function openBattlePage():Void {

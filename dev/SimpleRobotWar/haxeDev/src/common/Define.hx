@@ -2,6 +2,11 @@ package common;
 
 import haxe.ds.StringMap;
 
+enum ViewAction {
+	GOTO_LOBBY_ACTION;
+	GOTO_BATTLE_ACTION;
+}
+
 interface IRobot {}
 interface IPilot {}
 interface IWeapon {}
@@ -14,16 +19,15 @@ interface IBaseController {
 	function getWeapons():StringMap<IWeapon>;
 	function save():Void;
 	function load():Void;
+	function onAction(action:ViewAction):Void;
 }
 
 interface IBattleController extends IBaseController {
 	function getMap(x:Int, y:Int, w:Int, h:Int):Array<IGrid>;
-	function gotoLobby():Void;
 }
 
 interface ILobbyController extends IBaseController {
 	function getLobbyInfo():ILobbyInfo;
-	function gotoBattle(options:Dynamic):Void;
 }
 
 interface IView {
