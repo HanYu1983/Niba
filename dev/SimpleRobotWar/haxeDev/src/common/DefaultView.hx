@@ -33,7 +33,22 @@ abstract class DefaultView implements IView {
 		return _battleCtr;
 	}
 
+	public function onEvent(action:ViewEvent):Void {
+		switch action {
+			case ON_CLICK_GOTO_ROBOT_VIEW:
+				openRobotViewPage();
+			case ON_CLICK_GOTO_PILOT_VIEW:
+				openPilotViewPage();
+			case ON_CLICK_GOTO_ROBOT_BUY(_):
+			case _:
+		}
+	}
+
 	abstract function openLobbyPage():Void;
 
 	abstract function openBattlePage():Void;
+
+	abstract function openRobotViewPage():Void;
+
+	abstract function openPilotViewPage():Void;
 }

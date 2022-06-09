@@ -3,8 +3,18 @@ package common;
 import haxe.ds.StringMap;
 
 enum ViewEvent {
+	// 當點擊回大廳按鈕
 	ON_CLICK_GOTO_LOBBY;
+	// 當點擊去戰鬥按鈕
 	ON_CLICK_GOTO_BATTLE(options:Dynamic);
+	// 當點擊去機體檢視按鈕
+	ON_CLICK_GOTO_ROBOT_VIEW;
+	// 當點擊去駕駛檢視按鈕
+	ON_CLICK_GOTO_PILOT_VIEW;
+	// 當點擊去機體改裝按鈕
+	ON_CLICK_GOTO_ROBOT_BUY(v:{robotId:String});
+	// 當點擊去確定購買按鈕
+	ON_CLICK_ROBOT_BUY_WEAPON(v:{robotId:String, weaponId:String});
 }
 
 interface IRobot {}
@@ -33,4 +43,5 @@ interface ILobbyController extends IBaseController {
 interface IView {
 	function startLobby(ctr:ILobbyController):Void;
 	function startBattle(ctr:IBattleController):Void;
+	function onEvent(action:ViewEvent):Void;
 }

@@ -46,6 +46,9 @@ class Controller implements IController {
 				_view.startLobby(this);
 			case ON_CLICK_GOTO_BATTLE(options):
 				_view.startBattle(this);
+			case ON_CLICK_ROBOT_BUY_WEAPON({robotId: robotId, weaponId: weaponId}):
+			case _:
+				_view.onEvent(action);
 		}
 	}
 }
