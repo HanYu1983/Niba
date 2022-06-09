@@ -7,13 +7,33 @@ import common.Define;
 class HaxeUIView extends Box implements IView {
 	final _impl:DefaultViewImpl;
 
+	public final lobbyPage:LobbyPage;
+	public final gamePage:GamePage;
+	public final robotPage:RobotPage;
+	public final pilotPage:PilotPage;
+
 	public function new() {
 		super();
 		_impl = new DefaultViewImpl(this);
+
+		lobbyPage = new LobbyPage();
+		addComponent(lobbyPage);
+
+		gamePage = new GamePage();
+		addComponent(gamePage);
+
+		robotPage = new RobotPage();
+		addComponent(robotPage);
+
+		pilotPage = new PilotPage();
+		addComponent(pilotPage);
 	}
 
-	public function getImpl() {
-		return _impl;
+	public function closeAllPages() {
+		lobbyPage.hide();
+		gamePage.hide();
+		robotPage.hide();
+		pilotPage.hide();
 	}
 
 	public function getLobbyController():ILobbyController {

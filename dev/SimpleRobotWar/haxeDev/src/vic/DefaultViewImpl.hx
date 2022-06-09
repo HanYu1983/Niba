@@ -9,25 +9,9 @@ import vic.widgets.LobbyPage;
 import vic.widgets.HaxeUIView;
 
 class DefaultViewImpl extends DefaultView {
-	var lobbyPage:LobbyPage;
-	var gamePage:GamePage;
-	var robotPage:RobotPage;
-	var pilotPage:PilotPage;
 
 	public function new(haxeUIView:HaxeUIView) {
 		super();
-
-		lobbyPage = new LobbyPage();
-		haxeUIView.addComponent(lobbyPage);
-
-		gamePage = new GamePage();
-		haxeUIView.addComponent(gamePage);
-
-		robotPage = new RobotPage();
-		haxeUIView.addComponent(robotPage);
-
-		pilotPage = new PilotPage();
-		haxeUIView.addComponent(pilotPage);
 	}
 
 	public override function getLobbyController():ILobbyController {
@@ -38,13 +22,6 @@ class DefaultViewImpl extends DefaultView {
 		return super.getBattleController();
 	}
 
-	function closeAllPages() {
-		lobbyPage.hide();
-		gamePage.hide();
-		robotPage.hide();
-		pilotPage.hide();
-	}
-
 	// 關閉所有其它頁, 打開大廳頁
 	// 左側顯示按鈕列表
 	//  機體檢視 ON_CLICK_GOTO_ROBOT_VIEW
@@ -53,15 +30,13 @@ class DefaultViewImpl extends DefaultView {
 	// 假設按了到去戰鬥
 	// getLobbyController().onEvent(ON_CLICK_GOTO_BATTLE("參數之後再想"));
 	public function openLobbyPage():Void {
-		closeAllPages();
-		lobbyPage.fadeIn();
-		// 機體列表假資料, robot的getter方法只開了id, title
-		trace("機體列表:", getLobbyController().getRobots());
+		Main.view.closeAllPages();
+		Main.view.lobbyPage.fadeIn();
 	}
 
 	public function openBattlePage():Void {
-		closeAllPages();
-		gamePage.fadeIn();
+		Main.view.closeAllPages();
+		Main.view.gamePage.fadeIn();
 	}
 
 	// 打開機體檢視頁
@@ -76,10 +51,8 @@ class DefaultViewImpl extends DefaultView {
 	//   裝備與買賣 ON_CLICK_GOTO_ROBOT_BUY
 	//   設定駕駛
 	public function openRobotViewPage():Void {
-		trace("openRobotViewPage");
-
-		closeAllPages();
-		robotPage.fadeIn();
+		Main.view.closeAllPages();
+		Main.view.robotPage.fadeIn();
 	}
 
 	// 打開機體檢視頁
@@ -92,9 +65,7 @@ class DefaultViewImpl extends DefaultView {
 	// 動作按鈕為
 	//   設定機體
 	public function openPilotViewPage():Void {
-		trace("openPilotViewPage");
-
-		closeAllPages();
-		pilotPage.fadeIn();
+		Main.view.closeAllPages();
+		Main.view.pilotPage.fadeIn();
 	}
 }
