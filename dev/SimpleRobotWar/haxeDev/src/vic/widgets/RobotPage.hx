@@ -43,4 +43,9 @@ class RobotPage extends Box {
 		info("RobotPage", 'vic send ON_CLICK_GOTO_ROBOT_BUY,${send}');
 		Main.view.getLobbyController().onEvent(ON_CLICK_GOTO_ROBOT_BUY(send));
 	}
+
+	@:bind(btn_backToLobby, MouseEvent.CLICK)
+	function onBtnBackClick(e) {
+		Main.view.getLobbyController().onEvent(ON_CLICK_GOTO_LOBBY);
+	}
 }

@@ -41,6 +41,7 @@
                 <hbox horizontalAlign="center" styleName='vfull'>
                     <button id='btn_equipOrMarket' text='裝備與買賣' icon="haxeui-core/styles/default/haxeui_small.png" iconPosition="bottom" width='200' styleName='vfull'/>
                     <button id='btn_pilotSetting' text='設定駕駛' icon="haxeui-core/styles/default/haxeui_small.png" iconPosition="bottom" width='200' styleName='vfull'/>
+                    <button id='btn_backToLobby' text='回到整備室' icon="haxeui-core/styles/default/haxeui_small.png" iconPosition="bottom" width='200' styleName='vfull'/>
                 </hbox>
             </box>
         </vbox>
