@@ -4,32 +4,54 @@ import haxe.ds.StringMap;
 import common.Define;
 import han.Define;
 
+private class RobotView implements IRobot {
+	final _info:Robot;
+
+	public function new(info:Robot) {
+		_info = info;
+	}
+
+	public function getId():String {
+		return _info.id;
+	}
+
+	public function getTitle():String {
+		return _info.title;
+	}
+}
+
 private interface IController extends ILobbyController extends IBattleController extends ILobbyInfo {}
 
 class Controller implements IController {
 	final _view:IView;
 
+	var _ctx:Context = getDefaultContext();
+
 	public function new(view:IView) {
 		_view = view;
+		final tmp = createRobot("0");
+		_ctx.robots.set(tmp.id, tmp);
 		_view.startLobby(this);
 	}
-
-	var _ctx:Context = getDefaultContext();
 
 	public function getLobbyInfo():ILobbyInfo {
 		return this;
 	}
 
-	public function getRobots():StringMap<IRobot> {
-		return new StringMap<IRobot>();
+	public function getRobots():Map<String, IRobot> {
+		return [
+			for (info in _ctx.robots) {
+				info.id => (new RobotView(info) : IRobot);
+			}
+		];
 	}
 
-	public function getPilots():StringMap<IPilot> {
-		return new StringMap<IPilot>();
+	public function getPilots():Map<String, IPilot> {
+		return new Map<String, IPilot>();
 	}
 
-	public function getWeapons():StringMap<IWeapon> {
-		return new StringMap<IWeapon>();
+	public function getWeapons():Map<String, IWeapon> {
+		return new Map<String, IWeapon>();
 	}
 
 	public function getMap(x:Int, y:Int, w:Int, h:Int):Array<IGrid> {

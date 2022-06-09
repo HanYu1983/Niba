@@ -3,10 +3,7 @@ package;
 import haxe.Exception;
 import haxe.ui.core.Component;
 import haxe.ui.HaxeUIApp;
-import common.Define;
-import common.DefaultView;
 import han.Controller;
-import vic.DefaultViewImpl;
 import vic.widgets.HaxeUIView;
 
 class Main {

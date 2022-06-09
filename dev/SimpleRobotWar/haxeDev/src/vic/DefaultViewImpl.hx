@@ -1,7 +1,7 @@
 package vic;
 
 import common.Define;
-import common.DefaultView;
+import han.view.ver1.DefaultView;
 import vic.widgets.GamePage;
 import vic.widgets.LobbyPage;
 import vic.widgets.HaxeUIView;
@@ -43,6 +43,8 @@ class DefaultViewImpl extends DefaultView {
 	public function openLobbyPage():Void {
 		closeAllPages();
 		lobbyPage.fadeIn();
+		// 機體列表假資料, robot的getter方法只開了id, title
+		trace("機體列表:", getLobbyController().getRobots());
 	}
 
 	public function openBattlePage():Void {
