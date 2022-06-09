@@ -5,20 +5,14 @@ import common.Define;
 
 @:build(haxe.ui.ComponentBuilder.build('vic/widgets/HaxeUIView.xml'))
 class HaxeUIView extends Box implements IView {
-	public static var _inst:HaxeUIView = null;
 	final _impl:DefaultViewImpl;
-
-	public static function getInst(){
-		return _inst;
-	}
 
 	public function new() {
 		super();
-		_inst = this;
 		_impl = new DefaultViewImpl(this);
 	}
 
-	public function getImpl(){
+	public function getImpl() {
 		return _impl;
 	}
 

@@ -14,13 +14,13 @@ class LobbyPage extends Box {
 	// 	Main.view.getLobbyController().onEvent(ON_CLICK_GOTO_BATTLE("參數之後再想"));
 	// }
 
-    @:bind(btn_robotPage, MouseEvent.CLICK)
-    function onBtnRobotPageClick(e) {
-        HaxeUIView.getInst().getImpl().getLobbyController().onEvent(ON_CLICK_GOTO_ROBOT_VIEW);
-    }
+	@:bind(btn_robotPage, MouseEvent.CLICK)
+	function onBtnRobotPageClick(e) {
+		Main.view.getLobbyController().onEvent(ON_CLICK_GOTO_ROBOT_VIEW);
+	}
 
-    @:bind(btn_pilotPage, MouseEvent.CLICK)
-    function onBtnPilotPageClick(e) {
-        HaxeUIView.getInst().getImpl().getLobbyController().onEvent(ON_CLICK_GOTO_PILOT_VIEW);
-    }
+	@:bind(btn_pilotPage, MouseEvent.CLICK)
+	function onBtnPilotPageClick(e) {
+		Main.view.getLobbyController().onEvent(ON_CLICK_GOTO_PILOT_VIEW);
+	}
 }

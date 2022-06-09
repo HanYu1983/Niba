@@ -12,14 +12,14 @@ class RobotPage extends Box {
 	override function show() {
 		super.show();
 
-		final robots = HaxeUIView.getInst().getImpl().getLobbyController().getRobots();
+		final robots = Main.view.getLobbyController().getRobots();
 		trace('vic get robots:${robots}');
 	}
 
 	@:bind(btn_equipOrMarket, MouseEvent.CLICK)
-	function onBtnEquipOrMarketClick(e){
-		final send = {robotId:'0'};
+	function onBtnEquipOrMarketClick(e) {
+		final send = {robotId: '0'};
 		trace('vic send ON_CLICK_GOTO_ROBOT_BUY,${send}');
-		HaxeUIView.getInst().getImpl().getLobbyController().onEvent(ON_CLICK_GOTO_ROBOT_BUY(send));
+		Main.view.getLobbyController().onEvent(ON_CLICK_GOTO_ROBOT_BUY(send));
 	}
 }

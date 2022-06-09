@@ -12,8 +12,7 @@ class PilotPage extends Box {
 	override function show() {
 		super.show();
 
-		final pilots = HaxeUIView.getInst().getImpl().getLobbyController().getPilots();
+		final pilots = Main.view.getLobbyController().getPilots();
 		trace('vic get pilots:${pilots}');
 	}
-
 }
