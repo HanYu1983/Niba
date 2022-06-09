@@ -14,7 +14,7 @@ class HaxeUIView extends Box implements IView {
 
 	public function new() {
 		super();
-		_impl = new DefaultViewImpl(this);
+		_impl = new DefaultViewImpl();
 
 		lobbyPage = new LobbyPage();
 		addComponent(lobbyPage);

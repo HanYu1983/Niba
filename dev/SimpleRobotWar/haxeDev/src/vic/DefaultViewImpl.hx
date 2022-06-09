@@ -9,7 +9,7 @@ import vic.widgets.LobbyPage;
 import vic.widgets.HaxeUIView;
 
 class DefaultViewImpl extends DefaultView {
-	public function new(haxeUIView:HaxeUIView) {
+	public function new() {
 		super();
 	}
 
