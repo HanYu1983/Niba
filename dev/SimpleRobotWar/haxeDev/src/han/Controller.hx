@@ -5,6 +5,7 @@ import haxe.ds.StringMap;
 import common.Define;
 import common.Data;
 import han.Define;
+import han.alg.Define;
 
 private function getRobotView(ctx:Context, robotId:String):RobotView {
 	final robot = getRobot(ctx, robotId);

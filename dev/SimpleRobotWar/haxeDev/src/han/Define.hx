@@ -1,6 +1,7 @@
 package han;
 
 import haxe.ds.StringMap;
+import haxe.ds.ObjectMap;
 import haxe.Exception;
 import common.Data;
 
@@ -62,7 +63,8 @@ typedef Robot = {
 	maxEnergy:Int,
 	maxAction:Int,
 	damage:Array<Damage>,
-	position:Null<Position>
+	position:Null<Position>,
+	terrian:Array<Float>
 }
 
 function createRobot(id:String):Robot {
@@ -78,7 +80,8 @@ function createRobot(id:String):Robot {
 		maxEnergy: 0,
 		maxAction: 0,
 		damage: [],
-		position: null
+		position: null,
+		terrian: [1, 1, 1, 1]
 	}
 }
 
@@ -111,7 +114,25 @@ typedef Player = {
 	fraction:Int,
 }
 
+typedef Grid = {
+	terrianId:Int
+}
+
+function getRandomMap(w:Int, h:Int):ObjectMap<Position, Grid> {
+	return [
+		for (cw in 0...w) {
+			for (ch in 0...h) {
+				{x: cw, y: ch}
+				=> {
+					terrianId: Std.int(Math.random() * TERRIANS.length)
+				}
+			}
+		}
+	];
+}
+
 typedef Context = {
+	grids:ObjectMap<Position, Grid>,
 	players:StringMap<Player>,
 	currentPlayerId:Null<String>,
 	turn:Int,
@@ -126,6 +147,7 @@ typedef Context = {
 
 function getDefaultContext():Context {
 	return {
+		grids: new ObjectMap<Position, Grid>(),
 		players: new StringMap<Player>(),
 		currentPlayerId: null,
 		turn: 0,
