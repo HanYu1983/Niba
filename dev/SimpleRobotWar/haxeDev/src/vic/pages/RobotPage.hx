@@ -3,7 +3,7 @@ package vic.pages;
 import vic.widgets.RobotListWidget;
 import vic.widgets.RobotPilotGridWidget;
 import vic.widgets.WeaponListWidget;
-import common.Define;
+import common.IDefine;
 import haxe.ui.events.MouseEvent;
 import haxe.ui.containers.Box;
 import tool.Debug;
@@ -31,7 +31,7 @@ class RobotPage extends Box {
 
 		function updateDetail(info:RobotView) {
 			final pilot = pilots.get(info.pilotId);
-			robotPilotGrid.setInfo({r:info, p:pilot});
+			robotPilotGrid.setInfo({r: info, p: pilot});
 			weaponList.setInfo(info);
 		}
 

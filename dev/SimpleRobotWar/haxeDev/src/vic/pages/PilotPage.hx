@@ -1,7 +1,7 @@
 package vic.pages;
 
 import tool.Debug.info;
-import common.Define.PilotView;
+import common.IDefine.PilotView;
 import vic.widgets.PilotListWidget;
 import vic.widgets.RobotListWidget;
 import vic.widgets.RobotPilotGridWidget;
@@ -33,7 +33,7 @@ class PilotPage extends Box {
 		function updateDetail(info:PilotView) {
 			final robot = robots.get(info.robotId);
 			robotPilotGrid.setInfo({r: robot, p: info});
-			
+
 			final robot = robots.get(info.robotId);
 			if (robot != null) {
 				weaponList.setInfo(robot);

@@ -2,9 +2,9 @@ package han;
 
 import haxe.Exception;
 import haxe.ds.StringMap;
-import common.Define;
-import common.Data;
-import han.Define;
+import common.IDefine;
+import common.IData;
+import han.IDefine;
 import han.alg.Define;
 
 private function getRobotView(ctx:Context, robotId:String):RobotView {

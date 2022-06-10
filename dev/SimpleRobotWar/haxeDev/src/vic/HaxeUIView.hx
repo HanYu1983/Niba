@@ -5,7 +5,7 @@ import vic.pages.RobotPage;
 import vic.pages.GamePage;
 import vic.pages.LobbyPage;
 import haxe.ui.containers.Box;
-import common.Define;
+import common.IDefine;
 
 @:build(haxe.ui.ComponentBuilder.build('vic/HaxeUIView.xml'))
 class HaxeUIView extends Box implements IView {

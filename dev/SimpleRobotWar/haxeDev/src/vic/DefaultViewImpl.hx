@@ -2,7 +2,7 @@ package vic;
 
 import vic.pages.PilotPage;
 import vic.pages.RobotPage;
-import common.Define;
+import common.IDefine;
 import han.view.ver1.DefaultView;
 import vic.pages.GamePage;
 import vic.pages.LobbyPage;

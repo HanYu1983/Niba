@@ -1,7 +1,7 @@
 package vic.widgets;
 
-import common.Define.PilotView;
-import common.Define.RobotView;
+import common.IDefine.PilotView;
+import common.IDefine.RobotView;
 
 @:build(haxe.ui.ComponentBuilder.build('vic/widgets/PilotListWidget.xml'))
 class PilotListWidget extends BasicListWidget {

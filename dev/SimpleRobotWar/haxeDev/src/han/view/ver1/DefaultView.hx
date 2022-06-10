@@ -1,7 +1,7 @@
 package han.view.ver1;
 
 import haxe.Exception;
-import common.Define;
+import common.IDefine;
 
 abstract class DefaultView implements IView {
 	public function new() {}

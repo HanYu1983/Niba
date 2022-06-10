@@ -1,7 +1,7 @@
 package vic.widgets;
 
-import common.Define.PilotView;
-import common.Define.RobotView;
+import common.IDefine.PilotView;
+import common.IDefine.RobotView;
 
 @:build(haxe.ui.ComponentBuilder.build('vic/widgets/RobotPilotGridWidget.xml'))
 class RobotPilotGridWidget extends BasicGridWidget {
@@ -40,6 +40,6 @@ class RobotPilotGridWidget extends BasicGridWidget {
 			pro_pilotAttack.value = pilot.attack;
 			pro_pilotGuard.value = pilot.guard;
 			pro_pilotLucky.value = pilot.lucky;
-		} 
+		}
 	}
 }

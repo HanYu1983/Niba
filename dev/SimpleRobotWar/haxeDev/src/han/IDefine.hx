@@ -3,7 +3,7 @@ package han;
 import haxe.ds.StringMap;
 import haxe.ds.ObjectMap;
 import haxe.Exception;
-import common.Data;
+import common.IData;
 
 typedef Pilot = {
 	id:String,
