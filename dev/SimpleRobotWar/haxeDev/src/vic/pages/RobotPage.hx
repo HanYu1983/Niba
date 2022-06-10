@@ -1,5 +1,6 @@
 package vic.pages;
 
+import vic.widgets.WeaponListWidget;
 import common.Define;
 import haxe.ui.events.MouseEvent;
 import haxe.ui.containers.Box;
@@ -7,18 +8,28 @@ import tool.Debug;
 
 @:build(haxe.ui.ComponentBuilder.build('vic/pages/RobotPage.xml'))
 class RobotPage extends Box {
+	final weaponList:WeaponListWidget;
+
 	public function new() {
 		super();
+
+		weaponList = new WeaponListWidget();
+		box_weapons.addComponent(weaponList);
 	}
 
 	override function show() {
 		super.show();
 
+		final robots = Main.view.getLobbyController().getRobots();
+
 		function updateDetail(info:RobotView) {
 			pro_robotTitle.value = info.title;
+			pro_robotHp.value = info.maxHp;
+			pro_robotEnergy.value = info.maxEnergy;
+
+			weaponList.setInfo(info);
 		}
 
-		final robots = Main.view.getLobbyController().getRobots();
 		tab_robots.dataSource.clear();
 
 		for (key => value in robots) {
@@ -26,17 +37,22 @@ class RobotPage extends Box {
 			tab_robots.dataSource.add(info);
 		}
 
-		tab_robots.onClick = function(e) {
+		tab_robots.onChange = function(e) {
 			if (tab_robots.selectedItem) {
 				final robotInfo = robots.get(tab_robots.selectedItem.id);
 				updateDetail(robotInfo);
 			}
 		}
+
+		tab_robots.selectedIndex = 0;
+
 		verbose("RobotPage", 'vic get robots:${robots}');
 	}
 
 	@:bind(btn_equipOrMarket, MouseEvent.CLICK)
 	function onBtnEquipOrMarketClick(e) {
+		if (tab_robots.selectedItem == null)
+			return;
 		final send = {
 			robotId: tab_robots.selectedItem.id
 		};
