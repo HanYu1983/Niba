@@ -1,12 +1,12 @@
 <tableview styleName='full' contentWidth="100%">
     <header styleName='hfull'>
-        <column id="title" text="機體" width='100%' />
-        <column id="robotTitle" text="駕駛" width='60'  />
+        <column id="title" text="駕駛" width='100%' />
         <column id="melee" text="格鬥" width='60'  />
         <column id="range" text="射擊" width='60'  />
         <column id="attack" text="攻擊" width='60'  />
         <column id="guard" text="防禦" width='60'  />
         <column id="lucky" text="幸運" width='60'  />
+        <column id="robotTitle" text="機體" width='60'  />
     </header>
     <data>
         <!-- <item robot="測試機體" pilot="測試駕駛" /> -->
