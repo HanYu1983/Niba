@@ -16,7 +16,7 @@ function getGridMoveFactor(ctx:Context, id:Position):Array<Float> {
 	if (grid == null) {
 		throw new Exception('grid not found:${id}');
 	}
-	final terrian = TERRIANS[grid.terrianId];
+	final terrian = getTerrianData(grid.terrianId);
 	return terrian.moveFactor;
 }
 

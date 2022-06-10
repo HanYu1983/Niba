@@ -110,7 +110,7 @@ function getDefaultWeapon():WeaponData {
 	}
 }
 
-typedef Terrian = {
+typedef TerrianData = {
 	title:String,
 	// 移動成本係數
 	moveFactor:Array<Float>,

@@ -99,7 +99,7 @@ class Controller implements IController {
 	public function getGrids():EnumValueMap<Position, GridView> {
 		return [
 			for (pos => grid in _ctx.grids) {
-				final terrian = TERRIANS[grid.terrianId];
+				final terrian = getTerrianData(grid.terrianId);
 				pos => {
 					terrianId: grid.terrianId,
 					title: terrian.title,

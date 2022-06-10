@@ -1,8 +1,9 @@
 package common;
 
+import haxe.Exception;
 import common.IDefine;
 
-final TERRIANS:Array<Terrian> = [
+final TERRIANS:Array<TerrianData> = [
 	{
 		title: "海",
 		moveFactor: [1, 1.25, 1.5, 2],
@@ -28,3 +29,11 @@ final TERRIANS:Array<Terrian> = [
 		def: 2
 	}
 ];
+
+function getTerrianData(id:Int):TerrianData {
+	if (TERRIANS.length >= id) {
+		throw new Exception('TerrianData not found:${id}');
+	}
+	final data = TERRIANS[id];
+	return data;
+}
