@@ -31,7 +31,7 @@ final TERRIANS:Array<TerrianData> = [
 ];
 
 function getTerrianData(id:Int):TerrianData {
-	if (TERRIANS.length >= id) {
+	if (TERRIANS.length <= id) {
 		throw new Exception('TerrianData not found:${id}');
 	}
 	final data = TERRIANS[id];
