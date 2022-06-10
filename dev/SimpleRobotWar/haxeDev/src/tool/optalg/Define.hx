@@ -30,6 +30,7 @@ class DefaultSolution<T:EnumValue> implements ISolution<T> {
 		this.cost = cost;
 		this.estimate = estimate;
 		this._isGoal = isGoal;
+		// 這個key是給BalancedTree使用的, 每個物件必須有唯一的key, 並且有排序的能力
 		key = '${getSortScore()}'.lpad("0", 20) + "_" + id;
 	}
 
