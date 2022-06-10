@@ -33,9 +33,12 @@ class PilotPage extends Box {
 		function updateDetail(info:PilotView) {
 			final robot = robots.get(info.robotId);
 			robotPilotGrid.setInfo({r: robot, p: info});
+			
 			final robot = robots.get(info.robotId);
 			if (robot != null) {
 				weaponList.setInfo(robot);
+			} else {
+				weaponList.dataSource.clear();
 			}
 		}
 

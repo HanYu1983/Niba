@@ -11,8 +11,6 @@ class WeaponListWidget extends BasicListWidget {
 	override public function setInfo(info:Dynamic) {
 		super.setInfo(info);
 
-        trace(info);
-
         final weapons = Main.view.getLobbyController().getWeapons();
 		final robot:RobotView = info;
 
