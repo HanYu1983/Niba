@@ -1,6 +1,7 @@
 <property-grid styleName='hfull' >
     <property-group text="機體">
         <property id="pro_robotTitle" label="機體" value="龍馬" />
+        <property id="pro_robotAction" label="行動力" value="100" />
         <property id="pro_robotHp" label="耐久" value="100" />
         <property id="pro_robotEnergy" label="能量" value="100" />
     </property-group>

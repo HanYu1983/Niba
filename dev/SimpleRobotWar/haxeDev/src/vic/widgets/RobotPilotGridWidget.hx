@@ -15,6 +15,7 @@ class RobotPilotGridWidget extends BasicGridWidget {
 		pro_robotTitle.value = robot.title;
 		pro_robotHp.value = robot.maxHp;
 		pro_robotEnergy.value = robot.maxEnergy;
+        pro_robotAction.value = robot.maxAction;
 
 		final pilots = Main.view.getLobbyController().getPilots();
 		final pilot = pilots.get(robot.pilotId);
