@@ -1,11 +1,11 @@
-package vic.widgets;
+package vic.pages;
 
 import common.Define;
 import haxe.ui.events.MouseEvent;
 import haxe.ui.containers.Box;
 import tool.Debug;
 
-@:build(haxe.ui.ComponentBuilder.build('vic/widgets/RobotPage.xml'))
+@:build(haxe.ui.ComponentBuilder.build('vic/pages/RobotPage.xml'))
 class RobotPage extends Box {
 	public function new() {
 		super();

@@ -1,9 +1,13 @@
-package vic.widgets;
+package vic;
 
+import vic.pages.PilotPage;
+import vic.pages.RobotPage;
+import vic.pages.GamePage;
+import vic.pages.LobbyPage;
 import haxe.ui.containers.Box;
 import common.Define;
 
-@:build(haxe.ui.ComponentBuilder.build('vic/widgets/HaxeUIView.xml'))
+@:build(haxe.ui.ComponentBuilder.build('vic/HaxeUIView.xml'))
 class HaxeUIView extends Box implements IView {
 	final _impl:DefaultViewImpl;
 

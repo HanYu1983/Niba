@@ -1,12 +1,11 @@
 package vic;
 
-import vic.widgets.PilotPage;
-import vic.widgets.RobotPage;
+import vic.pages.PilotPage;
+import vic.pages.RobotPage;
 import common.Define;
 import han.view.ver1.DefaultView;
-import vic.widgets.GamePage;
-import vic.widgets.LobbyPage;
-import vic.widgets.HaxeUIView;
+import vic.pages.GamePage;
+import vic.pages.LobbyPage;
 
 class DefaultViewImpl extends DefaultView {
 	public function new() {

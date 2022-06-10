@@ -1,9 +1,9 @@
-package vic.widgets;
+package vic.pages;
 
 import haxe.ui.events.MouseEvent;
 import haxe.ui.containers.Box;
 
-@:build(haxe.ui.ComponentBuilder.build('vic/widgets/LobbyPage.xml'))
+@:build(haxe.ui.ComponentBuilder.build('vic/pages/LobbyPage.xml'))
 class LobbyPage extends Box {
 	public function new() {
 		super();

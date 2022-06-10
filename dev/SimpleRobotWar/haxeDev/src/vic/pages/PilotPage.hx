@@ -1,9 +1,9 @@
-package vic.widgets;
+package vic.pages;
 
 import haxe.ui.events.MouseEvent;
 import haxe.ui.containers.Box;
 
-@:build(haxe.ui.ComponentBuilder.build('vic/widgets/PilotPage.xml'))
+@:build(haxe.ui.ComponentBuilder.build('vic/pages/PilotPage.xml'))
 class PilotPage extends Box {
 	public function new() {
 		super();

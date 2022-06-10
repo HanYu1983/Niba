@@ -4,7 +4,7 @@ import haxe.Exception;
 import haxe.ui.core.Component;
 import haxe.ui.HaxeUIApp;
 import han.Controller;
-import vic.widgets.HaxeUIView;
+import vic.HaxeUIView;
 
 class Main {
 	public static var view:HaxeUIView;
