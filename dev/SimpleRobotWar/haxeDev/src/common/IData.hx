@@ -15,7 +15,7 @@ enum AttackCost {
 }
 
 enum Position {
-	POS2(x:Int, y:Int);
+	POS(x:Int, y:Int);
 }
 
 enum AttachShape {

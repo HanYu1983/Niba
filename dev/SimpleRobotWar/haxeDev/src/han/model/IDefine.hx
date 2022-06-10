@@ -122,7 +122,7 @@ function getRandomMap(w:Int, h:Int):EnumValueMap<Position, Grid> {
 	return [
 		for (x in 0...w) {
 			for (y in 0...h) {
-				POS2(x, y) => {
+				POS(x, y) => {
 					terrianId: Std.int(Math.random() * TERRIANS.length)
 				}
 			}
