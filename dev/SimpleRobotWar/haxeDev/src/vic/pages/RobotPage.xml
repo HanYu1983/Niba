@@ -1,15 +1,6 @@
 <box styleName='full'>
     <hbox styleName='full'>
         <vbox width='30%' styleName='vfull'>
-            <!-- <tableview id="tab_robots" styleName='full' contentWidth="100%">
-                <header styleName='hfull'>
-                    <column id="title" text="機體" width='100%' />
-                    <column id="maxHp" text="最大耐久" width='100'  />
-                    <column id="maxEnergy" text="最大能量" width='100'  />
-                </header>
-                <data>
-                </data>
-            </tableview> -->
             <box id='box_robotPilotList' styleName='full'/>
         </vbox>
         <vbox width='70%' styleName='vfull'>

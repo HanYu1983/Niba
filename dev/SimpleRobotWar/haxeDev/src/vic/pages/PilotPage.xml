@@ -1,3 +1,17 @@
-<box width="100%" height="100%">
-    <label text='pilot'/>
+<box styleName='full'>
+    <hbox styleName='full'>
+        <vbox width='30%' styleName='vfull'>
+            <box id='box_robotPilotList' styleName='full'/>
+        </vbox>
+        <vbox width='70%' styleName='vfull'>
+            <box id='box_robotPilot' styleName='hfull'/>
+            <box id='box_weapons' styleName='full'/>
+            <box height='100' styleName='hfull'>
+                <hbox horizontalAlign="center" styleName='vfull'>
+                    <button id='btn_robotSetting' text='設定機體' icon="haxeui-core/styles/default/haxeui_small.png" iconPosition="bottom" width='200' styleName='vfull'/>
+                    <button id='btn_backToLobby' text='回到整備室' icon="haxeui-core/styles/default/haxeui_small.png" iconPosition="bottom" width='200' styleName='vfull'/>
+                </hbox>
+            </box>
+        </vbox>
+    </hbox>
 </box>

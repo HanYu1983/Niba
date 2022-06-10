@@ -1,6 +1,6 @@
 package vic.pages;
 
-import vic.widgets.RobotPilotListWidget;
+import vic.widgets.RobotListWidget;
 import vic.widgets.RobotPilotGridWidget;
 import vic.widgets.WeaponListWidget;
 import common.Define;
@@ -10,40 +10,30 @@ import tool.Debug;
 
 @:build(haxe.ui.ComponentBuilder.build('vic/pages/RobotPage.xml'))
 class RobotPage extends Box {
-	final weaponList:WeaponListWidget;
-	final robotPilotGrid:RobotPilotGridWidget;
-	final robotPilotList:RobotPilotListWidget = new RobotPilotListWidget();
+	final weaponList:WeaponListWidget = new WeaponListWidget();
+	final robotPilotGrid:RobotPilotGridWidget = new RobotPilotGridWidget();
+	final robotPilotList:RobotListWidget = new RobotListWidget();
 
 	public function new() {
 		super();
 
-		weaponList = new WeaponListWidget();
 		box_weapons.addComponent(weaponList);
-
-		robotPilotGrid = new RobotPilotGridWidget();
 		box_robotPilot.addComponent(robotPilotGrid);
-
 		box_robotPilotList.addComponent(robotPilotList);
-		// robotPilotList = new RobotPilotListWidget();
 	}
 
 	override function show() {
 		super.show();
 
 		final robots = Main.view.getLobbyController().getRobots();
+		final pilots = Main.view.getLobbyController().getPilots();
 		robotPilotList.setInfo(robots);
 
 		function updateDetail(info:RobotView) {
-			robotPilotGrid.setInfo(info);
+			final pilot = pilots.get(info.pilotId);
+			robotPilotGrid.setInfo({r:info, p:pilot});
 			weaponList.setInfo(info);
 		}
-
-		// tab_robots.dataSource.clear();
-
-		// for (key => value in robots) {
-		// 	final info = value;
-		// 	tab_robots.dataSource.add(info);
-		// }
 
 		robotPilotList.onChange = function(e) {
 			if (robotPilotList.selectedItem) {

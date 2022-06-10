@@ -3,8 +3,8 @@ package vic.widgets;
 import haxe.ui.data.DataSource;
 import common.Define.RobotView;
 
-@:build(haxe.ui.ComponentBuilder.build('vic/widgets/RobotPilotListWidget.xml'))
-class RobotPilotListWidget extends BasicListWidget {
+@:build(haxe.ui.ComponentBuilder.build('vic/widgets/RobotListWidget.xml'))
+class RobotListWidget extends BasicListWidget {
 	public function new() {
 		super();
 	}

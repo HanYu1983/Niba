@@ -11,6 +11,8 @@ class WeaponListWidget extends BasicListWidget {
 	override public function setInfo(info:Dynamic) {
 		super.setInfo(info);
 
+        trace(info);
+
         final weapons = Main.view.getLobbyController().getWeapons();
 		final robot:RobotView = info;
 
@@ -18,8 +20,6 @@ class WeaponListWidget extends BasicListWidget {
         for(wid in robot.weaponIds){
             final weapon = weapons.get(wid);
             dataSource.add(weapon);
-
-            trace(weapon);
         }
 	}
 }
