@@ -4,6 +4,7 @@ import haxe.macro.Context;
 import haxe.Serializer;
 import haxe.Unserializer;
 import haxe.Exception;
+import common.IDefine;
 import common.IData;
 import han.alg.IDefine;
 import han.model.IDefine;

@@ -2,7 +2,10 @@ package common;
 
 import haxe.ds.StringMap;
 import haxe.ds.EnumValueMap;
-import common.IData;
+
+enum Position {
+	POS(x:Int, y:Int);
+}
 
 enum ViewEvent {
 	// 當點擊回大廳按鈕

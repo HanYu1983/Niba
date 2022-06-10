@@ -3,6 +3,7 @@ package han.model;
 import haxe.ds.StringMap;
 import haxe.ds.EnumValueMap;
 import haxe.Exception;
+import common.IDefine;
 import common.IData;
 
 typedef Pilot = {

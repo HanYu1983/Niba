@@ -5,6 +5,7 @@ package common;
 import haxe.Exception;
 import haxe.ds.StringMap;
 import haxe.ds.IntMap;
+import common.IDefine;
 
 using Lambda;
 
@@ -12,10 +13,6 @@ enum AttackCost {
 	ENERGY(v:Float);
 	BULLET(v:Int);
 	ACTION(v:Int);
-}
-
-enum Position {
-	POS(x:Int, y:Int);
 }
 
 enum AttachShape {
