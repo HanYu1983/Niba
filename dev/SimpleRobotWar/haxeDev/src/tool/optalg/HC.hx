@@ -5,14 +5,13 @@ import haxe.ds.List;
 import haxe.ds.ListSort;
 import haxe.ds.StringMap;
 import haxe.ds.BalancedTree;
-import haxe.ds.ObjectMap;
+import haxe.ds.EnumValueMap;
 import tool.optalg.Define;
 
 using StringTools;
 
-function getHillClimbing(s:ISolution, options:{exitWhenFind:Bool}):ObjectMap<Dynamic, ISolution> {
-	// ObjectMap的key是認物件地址
-	final close = new ObjectMap<Dynamic, ISolution>();
+function getHillClimbing<T:EnumValue>(s:ISolution<T>, options:{exitWhenFind:Bool}):EnumValueMap<T, ISolution<T>> {
+	final close = new EnumValueMap<T, ISolution<T>>();
 	var top = s;
 	var i = 0;
 	while (true) {

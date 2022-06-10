@@ -5,16 +5,16 @@ import haxe.ds.List;
 import haxe.ds.ListSort;
 import haxe.ds.StringMap;
 import haxe.ds.BalancedTree;
-import haxe.ds.ObjectMap;
+import haxe.ds.EnumValueMap;
 import tool.optalg.Define;
 
 using StringTools;
 
-function getAStar(s:ISolution, options:{exitWhenFind:Bool}):ObjectMap<Dynamic, ISolution> {
-	// ObjectMap的key是認物件地址
-	final close = new ObjectMap<Dynamic, ISolution>();
-	final open = new BalancedTree<String, ISolution>();
-	final openMapping = new ObjectMap<Dynamic, ISolution>();
+// https://github.com/HaxeFoundation/haxe/blob/4.2.1/std/haxe/ds/EnumValueMap.hx
+function getAStar<T:EnumValue>(s:ISolution<T>, options:{exitWhenFind:Bool}):EnumValueMap<T, ISolution<T>> {
+	final close = new EnumValueMap<T, ISolution<T>>();
+	final open = new BalancedTree<String, ISolution<T>>();
+	final openMapping = new EnumValueMap<T, ISolution<T>>();
 	open.set(s.getSortKey(), s);
 	openMapping.set(s.getId(), s);
 	var i = 0;

@@ -12,6 +12,9 @@ class Main {
 	public static var view:HaxeUIView;
 
 	public static function main() {
+		if (true) {
+			han.ITest.test();
+		}
 		final app = new HaxeUIApp();
 		app.ready(() -> {
 			view = new HaxeUIView();

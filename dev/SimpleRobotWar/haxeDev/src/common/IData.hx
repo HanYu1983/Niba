@@ -14,9 +14,8 @@ enum AttackCost {
 	ACTION(v:Int);
 }
 
-typedef Position = {
-	x:Int,
-	y:Int
+enum Position {
+	POS2(x:Int, y:Int);
 }
 
 enum AttachShape {

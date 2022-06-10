@@ -1,22 +1,22 @@
 package tool.optalg;
 
 import haxe.Exception;
-import haxe.ds.ObjectMap;
+import haxe.ds.EnumValueMap;
 
 using StringTools;
 
-interface ISolution {
-	function getId():Dynamic;
-	function getParentId():Null<Dynamic>;
+interface ISolution<T:EnumValue> {
+	function getId():T;
+	function getParentId():Null<T>;
 	function getSortKey():String;
 	function getSortScore():Int;
 	function isGoal():Bool;
-	function getNextSolution():Array<ISolution>;
+	function getNextSolution():Array<ISolution<T>>;
 }
 
-abstract class DefaultSolution implements ISolution {
-	public final id:Dynamic;
-	public final parentId:Null<Dynamic>;
+class DefaultSolution<T:EnumValue> implements ISolution<T> {
+	public final id:T;
+	public final parentId:Null<T>;
 	public final cost:Int;
 	public final estimate:Int;
 
@@ -24,7 +24,7 @@ abstract class DefaultSolution implements ISolution {
 
 	final key:String;
 
-	public function new(id:Dynamic, parentId:Null<Dynamic>, cost:Int, estimate:Int, isGoal:Bool) {
+	public function new(id:T, parentId:Null<T>, cost:Int, estimate:Int, isGoal:Bool) {
 		this.id = id;
 		this.parentId = parentId;
 		this.cost = cost;
@@ -33,11 +33,11 @@ abstract class DefaultSolution implements ISolution {
 		key = '${getSortScore()}'.lpad("0", 20) + "_" + id;
 	}
 
-	public function getId():Dynamic {
+	public function getId():T {
 		return id;
 	}
 
-	public function getParentId():Null<Dynamic> {
+	public function getParentId():Null<T> {
 		return parentId;
 	}
 
@@ -52,11 +52,15 @@ abstract class DefaultSolution implements ISolution {
 	public function isGoal():Bool {
 		return _isGoal;
 	}
+
+	public function getNextSolution():Array<ISolution<T>> {
+		return [];
+	}
 }
 
-function getPath(tree:ObjectMap<Dynamic, ISolution>, goal:Dynamic):Array<Dynamic> {
-	final ret:Array<Dynamic> = [goal];
-	var curr:Null<ISolution> = tree.get(goal);
+function getPath<T:EnumValue>(tree:EnumValueMap<T, ISolution<T>>, goal:T):Array<T> {
+	final ret:Array<T> = [goal];
+	var curr:Null<ISolution<T>> = tree.get(goal);
 	if (curr == null) {
 		throw new Exception("goal not found");
 	}

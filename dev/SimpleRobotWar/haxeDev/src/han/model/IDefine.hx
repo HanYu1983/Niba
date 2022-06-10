@@ -1,7 +1,7 @@
 package han.model;
 
 import haxe.ds.StringMap;
-import haxe.ds.ObjectMap;
+import haxe.ds.EnumValueMap;
 import haxe.Exception;
 import common.IData;
 
@@ -118,12 +118,11 @@ typedef Grid = {
 	terrianId:Int
 }
 
-function getRandomMap(w:Int, h:Int):ObjectMap<Position, Grid> {
+function getRandomMap(w:Int, h:Int):EnumValueMap<Position, Grid> {
 	return [
-		for (cw in 0...w) {
-			for (ch in 0...h) {
-				{x: cw, y: ch}
-				=> {
+		for (x in 0...w) {
+			for (y in 0...h) {
+				POS2(x, y) => {
 					terrianId: Std.int(Math.random() * TERRIANS.length)
 				}
 			}
@@ -132,7 +131,7 @@ function getRandomMap(w:Int, h:Int):ObjectMap<Position, Grid> {
 }
 
 typedef Context = {
-	grids:ObjectMap<Position, Grid>,
+	grids:EnumValueMap<Position, Grid>,
 	players:StringMap<Player>,
 	currentPlayerId:Null<String>,
 	turn:Int,
@@ -147,7 +146,7 @@ typedef Context = {
 
 function getDefaultContext():Context {
 	return {
-		grids: new ObjectMap<Position, Grid>(),
+		grids: new EnumValueMap<Position, Grid>(),
 		players: new StringMap<Player>(),
 		currentPlayerId: null,
 		turn: 0,
