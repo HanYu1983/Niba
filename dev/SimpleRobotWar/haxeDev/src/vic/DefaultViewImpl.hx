@@ -24,9 +24,7 @@ class DefaultViewImpl extends DefaultView {
 	// 左側顯示按鈕列表
 	//  機體檢視 ON_CLICK_GOTO_ROBOT_VIEW
 	//  駕駛員檢視 ON_CLICK_GOTO_PILOT_VIEW
-	//
-	// 假設按了到去戰鬥
-	// getLobbyController().onEvent(ON_CLICK_GOTO_BATTLE("參數之後再想"));
+	//  戰鬥 ON_CLICK_GOTO_BATTLE("")
 	public function openLobbyPage():Void {
 		Main.view.closeAllPages();
 		Main.view.lobbyPage.fadeIn();
@@ -49,9 +47,12 @@ class DefaultViewImpl extends DefaultView {
 	//     syncGrid(x,y,grid);
 	//   }
 	// }
+	// 點擊格子 ON_CLICK_BATTLE_POS(Position)
 	public function openBattlePage():Void {
 		Main.view.closeAllPages();
 		Main.view.gamePage.fadeIn();
+		trace("顯示格子");
+		trace("綁定格字點擊事件到ON_CLICK_BATTLE_POS(Position)");
 	}
 
 	// 打開機體檢視頁
@@ -83,5 +84,12 @@ class DefaultViewImpl extends DefaultView {
 	public function openPilotViewPage():Void {
 		Main.view.closeAllPages();
 		Main.view.pilotPage.fadeIn();
+	}
+
+	// 打開機體菜單頁
+	// 顯示菜單 getBattleController().getUnitMenuItems()
+	// 菜單格式尚不確定, 不知道是不是也要像1代那樣每個選項還能左右的子選項
+	public function openUnitMenu():Void {
+		trace("顯示菜單 getBattleController().getUnitMenuItems()");
 	}
 }

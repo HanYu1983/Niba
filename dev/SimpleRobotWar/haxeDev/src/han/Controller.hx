@@ -100,6 +100,7 @@ class Controller implements IController {
 			for (pos => grid in _ctx.grids) {
 				final terrian = TERRIANS[grid.terrianId];
 				pos => {
+					terrianId: grid.terrianId,
 					title: terrian.title,
 					defRate: terrian.def,
 					evadeRate: terrian.evade,

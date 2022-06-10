@@ -67,6 +67,7 @@ typedef WeaponView = {
 }
 
 typedef GridView = {
+	terrianId:Int,
 	title:String,
 	// 防禦系數
 	defRate:Float,

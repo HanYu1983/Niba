@@ -21,6 +21,7 @@ abstract class DefaultView implements IView {
 
 	public function onEvent(action:ViewEvent):Void {
 		switch action {
+			// lobby
 			case ON_CLICK_GOTO_ROBOT_VIEW:
 				openRobotViewPage();
 			case ON_CLICK_GOTO_PILOT_VIEW:
@@ -28,6 +29,15 @@ abstract class DefaultView implements IView {
 			case ON_CLICK_GOTO_ROBOT_BUY(_):
 			case ON_CLICK_ROBOT_VIEW_CANCEL:
 				openLobbyPage();
+			// battle
+			case ON_CLICK_BATTLE_POS(pos):
+				switch getBattleController().getUnitMenuState() {
+					case NORMAL:
+						openUnitMenu();
+					// TODO: set to UNIT_MENU
+					case UNIT_MENU:
+					case UNIT_SELECT_MOVE_POSITION:
+				}
 			case _:
 		}
 	}
@@ -53,4 +63,6 @@ abstract class DefaultView implements IView {
 	abstract function openRobotViewPage():Void;
 
 	abstract function openPilotViewPage():Void;
+
+	abstract function openUnitMenu():Void;
 }
