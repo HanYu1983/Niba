@@ -32,6 +32,23 @@ class DefaultViewImpl extends DefaultView {
 		Main.view.lobbyPage.fadeIn();
 	}
 
+	// 打開戰鬥頁
+	// 左邊顯示地圖格子(MAP_W x MAP_H)
+	// getBattleController().getGrids()
+	// ex.
+	// for(pos => grid in gridsFromController) {
+	//   switch pos {
+	//     case {x:x, y:y}:
+	//	     syncGrid(x, y, grid);
+	// 	 }
+	// }
+	// or
+	// for(x in 0...MAP_W) {
+	//   for(y in 0...MAP_H) {
+	//     final grid = gridsFromController.get(POS(x,y));
+	//     syncGrid(x,y,grid);
+	//   }
+	// }
 	public function openBattlePage():Void {
 		Main.view.closeAllPages();
 		Main.view.gamePage.fadeIn();

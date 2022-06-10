@@ -1,6 +1,8 @@
 package common;
 
 import haxe.ds.StringMap;
+import haxe.ds.EnumValueMap;
+import common.IData;
 
 enum ViewEvent {
 	// 當點擊回大廳按鈕
@@ -17,6 +19,8 @@ enum ViewEvent {
 	ON_CLICK_ROBOT_BUY_WEAPON(v:{robotId:String, weaponId:String});
 	// 當點擊機體檢視頁的取消按鈕
 	ON_CLICK_ROBOT_VIEW_CANCEL;
+	// 當點擊地圖格子
+	ON_CLICK_BATTLE_POS(pos:Position);
 }
 
 typedef RobotView = {
@@ -62,7 +66,16 @@ typedef WeaponView = {
 	bullet:Int
 }
 
-typedef GridView = {}
+typedef GridView = {
+	title:String,
+	// 防禦系數
+	defRate:Float,
+	// 回避系數
+	evadeRate:Float,
+	// 格子上的機體, null代表沒有
+	robotId:Null<String>,
+}
+
 interface ILobbyInfo {}
 
 interface IBaseController {
@@ -72,8 +85,18 @@ interface IBaseController {
 	function onEvent(action:ViewEvent):Void;
 }
 
+enum UnitMenuState {
+	NORMAL;
+	UNIT_MENU;
+	UNIT_SELECT_MOVE_POSITION;
+}
+
+enum UnitMenuItem {}
+
 interface IBattleController extends IBaseController {
-	function getMap(x:Int, y:Int, w:Int, h:Int):Array<GridView>;
+	function getUnitMenuState():UnitMenuState;
+	function getUnitMenuItems():Array<UnitMenuItem>;
+	function getGrids():EnumValueMap<Position, GridView>;
 }
 
 interface ILobbyController extends IBaseController {

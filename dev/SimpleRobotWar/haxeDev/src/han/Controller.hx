@@ -2,6 +2,7 @@ package han;
 
 import haxe.Exception;
 import haxe.ds.StringMap;
+import haxe.ds.EnumValueMap;
 import common.IDefine;
 import common.IData;
 import han.alg.IDefine;
@@ -94,7 +95,25 @@ class Controller implements IController {
 		];
 	}
 
-	public function getMap(x:Int, y:Int, w:Int, h:Int):Array<GridView> {
+	public function getGrids():EnumValueMap<Position, GridView> {
+		return [
+			for (pos => grid in _ctx.grids) {
+				final terrian = TERRIANS[grid.terrianId];
+				pos => {
+					title: terrian.title,
+					defRate: terrian.def,
+					evadeRate: terrian.evade,
+					robotId: null,
+				}
+			}
+		];
+	}
+
+	public function getUnitMenuState():UnitMenuState {
+		return NORMAL;
+	}
+
+	public function getUnitMenuItems():Array<UnitMenuItem> {
 		return [];
 	}
 
