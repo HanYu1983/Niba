@@ -4,7 +4,8 @@ import haxe.ds.StringMap;
 import haxe.ds.EnumValueMap;
 import haxe.Exception;
 import common.IDefine;
-import common.IData;
+import common.WeaponData;
+import common.TerrianData;
 
 typedef Pilot = {
 	id:String,

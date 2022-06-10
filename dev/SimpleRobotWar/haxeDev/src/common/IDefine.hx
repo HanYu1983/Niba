@@ -1,10 +1,123 @@
 package common;
 
+import haxe.Exception;
 import haxe.ds.StringMap;
 import haxe.ds.EnumValueMap;
 
 enum Position {
 	POS(x:Int, y:Int);
+}
+
+enum AttackCost {
+	ENERGY(v:Float);
+	BULLET(v:Int);
+	ACTION(v:Int);
+}
+
+enum AttachShape {
+	DOT(min:Int, max:Int);
+	LINE(min:Int, max:Int);
+	CIRCLE(min:Int, max:Int, w:Int);
+	SHAPE(pos:Array<Position>);
+	SELECT(min:Int, max:Int, w:Int);
+}
+
+enum Damage {
+	PHYSICS(v:Int);
+	BEAM(v:Int);
+	FIRE(v:Int);
+	EXPLODE(v:Int);
+}
+
+enum AttackFlag {
+	MELEE;
+	BEAM;
+	MISSILE;
+}
+
+typedef AttackData = {
+	title:String,
+	cost:Array<AttackCost>,
+	attackShape:AttachShape,
+	times:Int,
+	hitRate:Float,
+	damage:Array<Damage>,
+	attackFlag:Array<AttackFlag>,
+	isMelee:Bool,
+}
+
+function getDefaultAttack():AttackData {
+	return {
+		title: "未命名",
+		cost: [],
+		attackShape: DOT(0, 0),
+		times: 0,
+		hitRate: 0,
+		damage: [],
+		attackFlag: [],
+		isMelee: false,
+	}
+}
+
+enum GuardResult {
+	REDUCE(v:Int);
+	CANCEL();
+}
+
+typedef GuardData = {
+	title:String,
+	cost:Array<AttackCost>,
+	successRate:Float,
+	attackFlag:Array<AttackFlag>,
+	guardResult:GuardResult,
+	isMelee:Bool,
+}
+
+function getDefaultGuard():GuardData {
+	return {
+		title: "未命名",
+		cost: [],
+		successRate: 0,
+		attackFlag: [],
+		guardResult: CANCEL,
+		isMelee: false,
+	}
+}
+
+typedef ShieldData = {
+	title:String,
+	cost:Array<AttackCost>,
+	damage:Array<Damage>,
+}
+
+typedef WeaponData = {
+	title:String,
+	bullet:Int,
+	attack:Array<AttackData>,
+	guard:Array<GuardData>,
+	shield:Array<ShieldData>,
+	cost:Int
+}
+
+function getDefaultWeapon():WeaponData {
+	return {
+		title: "未命名",
+		bullet: 0,
+		attack: [],
+		guard: [],
+		shield: [],
+		cost: 0,
+	}
+}
+
+typedef Terrian = {
+	title:String,
+	// 移動成本係數
+	moveFactor:Array<Float>,
+	// 防守方回避系數
+	evade:Float,
+	// 防守方防禦系數
+	def:Float
 }
 
 enum ViewEvent {

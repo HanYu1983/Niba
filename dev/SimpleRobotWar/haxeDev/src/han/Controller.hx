@@ -4,7 +4,8 @@ import haxe.Exception;
 import haxe.ds.StringMap;
 import haxe.ds.EnumValueMap;
 import common.IDefine;
-import common.IData;
+import common.WeaponData;
+import common.TerrianData;
 import han.alg.IDefine;
 import han.model.IDefine;
 

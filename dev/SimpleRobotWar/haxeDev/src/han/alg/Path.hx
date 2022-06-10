@@ -5,7 +5,7 @@ import haxe.Serializer;
 import haxe.Unserializer;
 import haxe.Exception;
 import common.IDefine;
-import common.IData;
+import common.TerrianData;
 import han.alg.IDefine;
 import han.model.IDefine;
 import tool.optalg.Define;
