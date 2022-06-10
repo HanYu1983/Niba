@@ -1,5 +1,6 @@
 package vic.pages;
 
+import vic.widgets.RobotPilotGridWidget;
 import vic.widgets.WeaponListWidget;
 import common.Define;
 import haxe.ui.events.MouseEvent;
@@ -9,12 +10,16 @@ import tool.Debug;
 @:build(haxe.ui.ComponentBuilder.build('vic/pages/RobotPage.xml'))
 class RobotPage extends Box {
 	final weaponList:WeaponListWidget;
+	final robotPilotGrid:RobotPilotGridWidget;
 
 	public function new() {
 		super();
 
 		weaponList = new WeaponListWidget();
 		box_weapons.addComponent(weaponList);
+
+		robotPilotGrid = new RobotPilotGridWidget();
+		box_robotPilot.addComponent(robotPilotGrid);
 	}
 
 	override function show() {
@@ -23,10 +28,7 @@ class RobotPage extends Box {
 		final robots = Main.view.getLobbyController().getRobots();
 
 		function updateDetail(info:RobotView) {
-			pro_robotTitle.value = info.title;
-			pro_robotHp.value = info.maxHp;
-			pro_robotEnergy.value = info.maxEnergy;
-
+			robotPilotGrid.setInfo(info);
 			weaponList.setInfo(info);
 		}
 

@@ -1,4 +1,4 @@
-<tableview id="tab_weapons" styleName='full' contentWidth="100%">
+<tableview styleName='full' contentWidth="100%">
     <header styleName='hfull'>
         <column id="title" text="武器" width='100' />
         <column id="level" text="等級" width='100' />
