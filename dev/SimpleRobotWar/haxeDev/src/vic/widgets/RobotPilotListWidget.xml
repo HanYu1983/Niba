@@ -1,0 +1,11 @@
+<tableview styleName='full' contentWidth="100%">
+    <header styleName='hfull'>
+        <column id="title" text="機體" width='100%' />
+        <column id="pilotTitle" text="駕駛" width='100'  />
+        <column id="maxHp" text="最大耐久" width='100'  />
+        <column id="maxEnergy" text="最大能量" width='100'  />
+    </header>
+    <data>
+        <!-- <item robot="測試機體" pilot="測試駕駛" /> -->
+    </data>
+</tableview>

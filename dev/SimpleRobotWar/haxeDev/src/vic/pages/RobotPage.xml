@@ -1,30 +1,18 @@
 <box styleName='full'>
     <hbox styleName='full'>
         <vbox width='30%' styleName='vfull'>
-            <tableview id="tab_robots" styleName='full' contentWidth="100%">
+            <!-- <tableview id="tab_robots" styleName='full' contentWidth="100%">
                 <header styleName='hfull'>
                     <column id="title" text="機體" width='100%' />
                     <column id="maxHp" text="最大耐久" width='100'  />
                     <column id="maxEnergy" text="最大能量" width='100'  />
                 </header>
                 <data>
-                    <!-- <item robot="測試機體" pilot="測試駕駛" /> -->
                 </data>
-            </tableview>
+            </tableview> -->
+            <box id='box_robotPilotList' styleName='full'/>
         </vbox>
         <vbox width='70%' styleName='vfull'>
-            <!-- <property-grid id="prop_pilot" styleName='hfull' >
-                <property-group text="機體">
-                    <property id="pro_robotTitle" label="機體" value="龍馬" />
-                    <property id="pro_robotHp" label="耐久" value="100" />
-                    <property id="pro_robotEnergy" label="能量" value="100" />
-                </property-group>
-                <property-group text="駕駛">
-                    <property id="pro_pilotName" label="駕駛員" value="龍馬" />
-                    <property id="pro_pilotMelee" label="格鬥" value="100" />
-                    <property id="pro_pilotRange" label="射擊" value="100" />
-                </property-group>
-            </property-grid> -->
             <box id='box_robotPilot' styleName='hfull'/>
             <box id='box_weapons' styleName='full'/>
             <box height='100' styleName='hfull'>
