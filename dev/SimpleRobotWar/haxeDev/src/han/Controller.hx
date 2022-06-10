@@ -4,8 +4,8 @@ import haxe.Exception;
 import haxe.ds.StringMap;
 import common.IDefine;
 import common.IData;
-import han.IDefine;
-import han.alg.Define;
+import han.alg.IDefine;
+import han.model.IDefine;
 
 private function getRobotView(ctx:Context, robotId:String):RobotView {
 	final robot = getRobot(ctx, robotId);
@@ -62,18 +62,7 @@ class Controller implements IController {
 
 	public function new(view:IView) {
 		_view = view;
-		{
-			final robot = createRobot('${_ctx.idSeq++}');
-			_ctx.robots.set(robot.id, robot);
-
-			final pilot = createPilot('${_ctx.idSeq++}');
-			_ctx.pilots.set(pilot.id, pilot);
-			_ctx.pilotToRobot.set(pilot.id, robot.id);
-
-			final weapon = createWeapon('${_ctx.idSeq++}');
-			_ctx.weapons.set(weapon.id, weapon);
-			_ctx.weaponToRobot.set(weapon.id, robot.id);
-		}
+		initContext(_ctx);
 		_view.startLobby(this);
 	}
 

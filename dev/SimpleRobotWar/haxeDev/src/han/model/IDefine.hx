@@ -1,4 +1,4 @@
-package han;
+package han.model;
 
 import haxe.ds.StringMap;
 import haxe.ds.ObjectMap;
