@@ -6,7 +6,6 @@
 -lib libnoise
 -lib hxSet
 -lib tweenx
--lib haxe-injection
 -lib vector-math
 --macro nullSafety("tool.AStar")
 --macro nullSafety("common.Data")

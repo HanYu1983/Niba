@@ -1,0 +1,1 @@
+docker run --rm -ti -v /Users/hanyu/Documents/home/Niba/dev/SimpleRobotWar/haxeDev:/haxeDev -w /haxeDev haxe_cmd haxe html5.hxml
