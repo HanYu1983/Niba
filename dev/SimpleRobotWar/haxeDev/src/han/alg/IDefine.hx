@@ -1,9 +1,10 @@
 package han.alg;
 
+import common.IConfig;
 import han.model.IDefine;
 
 function initContext(ctx:Context) {
-	ctx.grids = getRandomMap(10, 10);
+	ctx.grids = getRandomMap(MAP_W, MAP_H);
 	final robot = createRobot('${ctx.idSeq++}');
 	ctx.robots.set(robot.id, robot);
 

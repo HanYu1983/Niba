@@ -1,9 +1,9 @@
 package han.alg;
 
-import haxe.macro.Context;
 import haxe.Serializer;
 import haxe.Unserializer;
 import haxe.Exception;
+import common.IConfig;
 import common.IDefine;
 import common.TerrianData;
 import han.alg.IDefine;
@@ -48,7 +48,7 @@ private class PathSolution extends DefaultSolution<Position> {
 							case _:
 								throw new Exception("next not found");
 						};
-						if (nx >= 0 && ny >= 0 && nx < 10 && ny < 10) {
+						if (nx >= 0 && ny >= 0 && nx < MAP_W && ny < MAP_H) {
 							final remainX:Int = Std.int(Math.abs(ex - nx));
 							final remainY:Int = Std.int(Math.abs(ey - ny));
 							final estimate = (remainX + remainY) << 3;
@@ -89,7 +89,7 @@ private class ShortestTreeSolution extends DefaultSolution<Position> {
 						case [ox, oy]:
 							final nx = x + ox;
 							final ny = y + oy;
-							if (nx >= 0 && ny >= 0 && nx < 10 && ny < 10) {
+							if (nx >= 0 && ny >= 0 && nx < MAP_W && ny < MAP_H) {
 								final moveCost = switch getGridMoveFactor(_ctx, POS(nx, ny)) {
 									case [sea, ground, forest, mountain]:
 										Std.int(4 * sea);
