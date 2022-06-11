@@ -1,6 +1,7 @@
 package han;
 
 import haxe.Exception;
+import haxe.Constraints;
 import haxe.ds.StringMap;
 import haxe.ds.EnumValueMap;
 import common.IDefine;
@@ -72,7 +73,8 @@ class Controller implements IController {
 		return this;
 	}
 
-	public function getRobots():Map<String, RobotView> {
+	public function getRobots():IMap<String, RobotView> {
+		// 使用String當key的話, 它應會自動判斷成StringMap
 		return [
 			for (info in _ctx.robots) {
 				info.id => getRobotView(_ctx, info.id);
@@ -80,7 +82,8 @@ class Controller implements IController {
 		];
 	}
 
-	public function getPilots():Map<String, PilotView> {
+	public function getPilots():IMap<String, PilotView> {
+		// 使用String當key的話, 它應會自動判斷成StringMap
 		return [
 			for (info in _ctx.pilots) {
 				info.id => getPilotView(_ctx, info.id);
@@ -88,7 +91,8 @@ class Controller implements IController {
 		];
 	}
 
-	public function getWeapons():Map<String, WeaponView> {
+	public function getWeapons():IMap<String, WeaponView> {
+		// 使用String當key的話, 它應會自動判斷成StringMap
 		return [
 			for (info in _ctx.weapons) {
 				info.id => getWeaponView(_ctx, info.id);
@@ -96,7 +100,8 @@ class Controller implements IController {
 		];
 	}
 
-	public function getGrids():EnumValueMap<Position, GridView> {
+	public function getGrids():IMap<Position, GridView> {
+		// 使用enum當key的話, 它確定會自動判斷成EnumValueMap
 		return [
 			for (pos => grid in _ctx.grids) {
 				final terrian = getTerrianData(grid.terrianId);

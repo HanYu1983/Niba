@@ -119,7 +119,7 @@ function test() {
 
 private function testPath() {
 	final _ctx = getDefaultContext();
-	_ctx.grids = getRandomMap(10, 10);
+	_ctx.grids = getRandomMap(MAP_W, MAP_H);
 	final robot = createRobot('${_ctx.idSeq++}');
 	_ctx.robots.set(robot.id, robot);
 	final s = Serializer.run(_ctx);

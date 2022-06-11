@@ -3,6 +3,7 @@ package common;
 import haxe.Exception;
 import haxe.ds.StringMap;
 import haxe.ds.EnumValueMap;
+import haxe.Constraints;
 
 enum Position {
 	POS(x:Int, y:Int);
@@ -196,9 +197,9 @@ typedef GridView = {
 interface ILobbyInfo {}
 
 interface IBaseController {
-	function getRobots():Map<String, RobotView>;
-	function getPilots():Map<String, PilotView>;
-	function getWeapons():Map<String, WeaponView>;
+	function getRobots():IMap<String, RobotView>;
+	function getPilots():IMap<String, PilotView>;
+	function getWeapons():IMap<String, WeaponView>;
 	function onEvent(action:ViewEvent):Void;
 }
 
@@ -213,7 +214,7 @@ enum UnitMenuItem {}
 interface IBattleController extends IBaseController {
 	function getUnitMenuState():UnitMenuState;
 	function getUnitMenuItems():Array<UnitMenuItem>;
-	function getGrids():EnumValueMap<Position, GridView>;
+	function getGrids():IMap<Position, GridView>;
 }
 
 interface ILobbyController extends IBaseController {
