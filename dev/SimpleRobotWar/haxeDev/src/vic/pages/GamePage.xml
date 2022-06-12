@@ -3,4 +3,7 @@
     <box id='box_stages' width='800' height='800' horizontalAlign='center' verticalAlign='center'>
         <absolute id='box_grids' styleName='full'/>
     </box>
+    <vbox id='box_left' horizontalAlign='left' verticalAlign='center'>
+        
+    </vbox>
 </box>
