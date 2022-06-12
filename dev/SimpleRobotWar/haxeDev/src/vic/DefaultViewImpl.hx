@@ -25,7 +25,7 @@ class DefaultViewImpl extends DefaultView {
 	//  機體檢視 ON_CLICK_GOTO_ROBOT_VIEW
 	//  駕駛員檢視 ON_CLICK_GOTO_PILOT_VIEW
 	//  戰鬥 ON_CLICK_GOTO_BATTLE("")
-	public function openLobbyPage(op:SyncViewOperation):Void {
+	function openLobbyPage(op:SyncViewOperation):Void {
 		switch op {
 			case OPEN:
 				Main.view.closeAllPages();
@@ -53,7 +53,7 @@ class DefaultViewImpl extends DefaultView {
 	//   }
 	// }
 	// 點擊格子 ON_CLICK_BATTLE_POS(Position)
-	public function openBattlePage(op:SyncViewOperation):Void {
+	function openBattlePage(op:SyncViewOperation):Void {
 		switch op {
 			case OPEN:
 				Main.view.closeAllPages();
@@ -77,7 +77,7 @@ class DefaultViewImpl extends DefaultView {
 	//   裝備與買賣 ON_CLICK_GOTO_ROBOT_BUY
 	//   設定駕駛
 	//   回上頁 ON_CLICK_ROBOT_VIEW_CANCEL
-	public function openRobotViewPage(op:SyncViewOperation):Void {
+	function openRobotViewPage(op:SyncViewOperation):Void {
 		switch op {
 			case OPEN:
 				Main.view.closeAllPages();
@@ -96,7 +96,7 @@ class DefaultViewImpl extends DefaultView {
 	// 右邊資料下方有動作按鈕
 	// 動作按鈕為
 	//   設定機體
-	public function openPilotViewPage(op:SyncViewOperation):Void {
+	function openPilotViewPage(op:SyncViewOperation):Void {
 		switch op {
 			case OPEN:
 				Main.view.closeAllPages();
@@ -109,7 +109,7 @@ class DefaultViewImpl extends DefaultView {
 	// 打開機體菜單頁
 	// 顯示菜單 getBattleController().getRobotMenuItems()
 	// 菜單格式尚不確定, 不知道是不是也要像1代那樣每個選項還能左右的子選項
-	public function renderRobotMenu(op:SyncViewOperation):Void {
+	function renderRobotMenu(op:SyncViewOperation):Void {
 		trace("顯示菜單 getBattleController().getRobotMenuItems()");
 		switch op {
 			case OPEN:
@@ -121,10 +121,18 @@ class DefaultViewImpl extends DefaultView {
 		}
 	}
 
-	public function renderMoveRange(op:SyncViewOperation):Void {
+	function renderMoveRange(op:SyncViewOperation):Void {
 		switch op {
 			case OPEN:
 				trace(getBattleController().getRobotMoveRangeByPosition(getActivePosition()));
+			case CLOSE:
+			case UPDATE:
+		}
+	}
+	// 系統菜單
+	function renderSystemMenu(op:SyncViewOperation):Void {
+		switch op {
+			case OPEN:
 			case CLOSE:
 			case UPDATE:
 		}

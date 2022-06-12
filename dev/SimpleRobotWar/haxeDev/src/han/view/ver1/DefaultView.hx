@@ -11,15 +11,15 @@ enum SyncViewOperation {
 	UPDATE;
 }
 
-private enum UnitMenuState {
+private enum RobotMenuState {
 	NORMAL;
-	UNIT_MENU;
-	UNIT_SELECT_MOVE_POSITION;
+	ROBOT_MENU;
+	ROBOT_SELECT_MOVE_POSITION;
 }
 
 private typedef BattleControlMemory = {
 	activePosition:Null<Position>,
-	unitMenuState:UnitMenuState
+	robotMenuState:RobotMenuState
 }
 
 @:nullSafety
@@ -40,12 +40,12 @@ abstract class DefaultView implements IView {
 	}
 
 	final _battleControlMemory:BattleControlMemory = {
-		unitMenuState: NORMAL,
+		robotMenuState: NORMAL,
 		activePosition: null,
 	};
 
-	function changeUnitMenuState(state:UnitMenuState) {
-		_battleControlMemory.unitMenuState = state;
+	function changeUnitMenuState(state:RobotMenuState) {
+		_battleControlMemory.robotMenuState = state;
 	}
 
 	function getActivePosition():Position{
@@ -68,7 +68,7 @@ abstract class DefaultView implements IView {
 				openLobbyPage(OPEN);
 			// battle
 			case ON_CLICK_BATTLE_POS(pos):
-				switch _battleControlMemory.unitMenuState {
+				switch _battleControlMemory.robotMenuState {
 					case NORMAL:
 						final robotId = getBattleController().getRobotIdByPosition(pos);
 						if (robotId == null) {
@@ -77,20 +77,20 @@ abstract class DefaultView implements IView {
 							// 單位菜單
 							_battleControlMemory.activePosition = pos;
 							renderRobotMenu(OPEN);
-							changeUnitMenuState(UNIT_MENU);
+							changeUnitMenuState(ROBOT_MENU);
 						}
-					case UNIT_MENU:
+					case ROBOT_MENU:
 						renderMoveRange(OPEN);
-					case UNIT_SELECT_MOVE_POSITION:
+					case ROBOT_SELECT_MOVE_POSITION:
 				}
 			case ON_CLICK_CANCEL:
-				switch _battleControlMemory.unitMenuState {
+				switch _battleControlMemory.robotMenuState {
 					case NORMAL:
-					case UNIT_MENU:
+					case ROBOT_MENU:
 						renderRobotMenu(CLOSE);
 						renderMoveRange(CLOSE);
 						changeUnitMenuState(NORMAL);
-					case UNIT_SELECT_MOVE_POSITION:
+					case ROBOT_SELECT_MOVE_POSITION:
 				}
 			case _:
 		}
@@ -121,4 +121,6 @@ abstract class DefaultView implements IView {
 	abstract function renderRobotMenu(op:SyncViewOperation):Void;
 
 	abstract function renderMoveRange(op:SyncViewOperation):Void;
+
+	abstract function renderSystemMenu(op:SyncViewOperation):Void;
 }
