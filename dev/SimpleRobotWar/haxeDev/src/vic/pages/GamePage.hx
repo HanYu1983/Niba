@@ -1,5 +1,6 @@
 package vic.pages;
 
+import common.IConfig;
 import common.IDefine.GridView;
 import vic.widgets.GridDetail;
 import VectorMath.floor;
@@ -14,17 +15,19 @@ using Lambda;
 class GamePage extends Box {
 	final grids:Array<Grid> = [];
 	final gridDetail = new GridDetail();
+	final gridSize = 40;
 
 	public function new() {
 		super();
 
-		for (i in 0...400) {
+		final totalCount = MAP_W * MAP_H;
+		for (i in 0...totalCount) {
 			final g = new Grid();
-			final px = i % 20;
-			final py = Math.floor(i / 20);
+			final px = i % MAP_W;
+			final py = Math.floor(i / MAP_W);
 			g.pos = Position.POS(px, py);
-			g.left = px * 40;
-			g.top = py * 40;
+			g.left = px * gridSize;
+			g.top = py * gridSize;
 			box_grids.addComponent(g);
 
 			grids.push(g);
@@ -53,8 +56,8 @@ class GamePage extends Box {
 	}
 
 	function getPosEnumByLocalPos(x:Float, y:Float) {
-		final px = Math.floor(x / 40.0);
-		final py = Math.floor(y / 40.0);
+		final px = Math.floor(x / gridSize);
+		final py = Math.floor(y / gridSize);
 		return Position.POS(px, py);
 	}
 
@@ -67,6 +70,12 @@ class GamePage extends Box {
 		box_grids.onMouseOver = function(e) {
 			final pos = getPosEnumByLocalPos(e.localX, e.localY);
 			final gridInfo = gridInfos.get(pos);
+			switch (pos) {
+				case POS(x, y):
+					box_cursor.left = x * gridSize;
+					box_cursor.top = y * gridSize;
+				case _:
+			}
 			updateGridDetail(gridInfo);
 		}
 
