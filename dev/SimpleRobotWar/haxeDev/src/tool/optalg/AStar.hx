@@ -48,6 +48,7 @@ function getAStar<T:EnumValue>(s:ISolution<T>, options:{exitWhenFind:Bool}):Enum
 				} else {
 					if (nextNode.getSortKey() < origin.getSortKey()) {
 						open.remove(origin.getSortKey());
+						openMapping.remove(origin.getId());
 						open.set(nextNode.getSortKey(), nextNode);
 						openMapping.set(nextNode.getId(), nextNode);
 					}
