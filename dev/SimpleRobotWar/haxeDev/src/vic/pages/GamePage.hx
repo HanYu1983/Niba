@@ -1,5 +1,6 @@
 package vic.pages;
 
+import han.view.ver1.DefaultView.SyncViewOperation;
 import common.IConfig;
 import common.IDefine.GridView;
 import vic.widgets.GridDetail;
@@ -10,6 +11,11 @@ import tool.Debug.verbose;
 import haxe.ui.containers.Box;
 
 using Lambda;
+
+enum STAGE_STATE {
+	NORMAL;
+	ROBOT_MENU;
+}
 
 @:build(haxe.ui.ComponentBuilder.build('vic/pages/GamePage.xml'))
 class GamePage extends Box {
@@ -50,7 +56,7 @@ class GamePage extends Box {
 
 	function updateGridDetail(info:Null<GridView>) {
 		if (info != null) {
-			verbose('GamePage', 'grid info ${info}');
+			// verbose('GamePage', 'grid info ${info}');
 			gridDetail.setInfo(info);
 		}
 	}
@@ -61,29 +67,69 @@ class GamePage extends Box {
 		return Position.POS(px, py);
 	}
 
+	function name() {}
+
+	public function updateRobotMenu(op:SyncViewOperation) {
+		final robotMenu = Main.view.getBattleController().getRobotMenuItems();
+		verbose('GamePage', 'robot menu ${robotMenu} state:${op}');
+
+		btn_move.hide();
+		btn_attack.hide();
+		btn_end.hide();
+
+		for (m in robotMenu) {
+			switch (m) {
+				case MOVE:
+					btn_move.show();
+				case ATTACK:
+					btn_attack.show();
+				case DONE:
+					btn_end.show();
+			}
+		}
+
+		switch (op) {
+			case OPEN:
+				switchStageState(ROBOT_MENU);
+			case CLOSE:
+				switchStageState(NORMAL);
+			case UPDATE:
+				switchStageState(ROBOT_MENU);
+		}
+	}
+
+	function switchStageState(state:STAGE_STATE) {
+		box_stages.onMouseOver = null;
+		box_stages.onClick = null;
+		switch (state) {
+			case NORMAL:
+				final gridInfos = Main.view.getBattleController().getGrids();
+				box_stages.onMouseOver = function(e) {
+					final pos = getPosEnumByLocalPos(e.localX, e.localY);
+					final gridInfo = gridInfos.get(pos);
+					switch (pos) {
+						case POS(x, y):
+							box_cursor.left = x * gridSize;
+							box_cursor.top = y * gridSize;
+						case _:
+					}
+					updateGridDetail(gridInfo);
+				}
+
+				box_stages.onClick = function(e) {
+					final pos = getPosEnumByLocalPos(e.localX, e.localY);
+					verbose('GamePage', 'mouse click pos:(${e.localX})(${e.localY}) enum:(${pos})');
+
+					Main.view.getBattleController().onEvent(ON_CLICK_BATTLE_POS(pos));
+				}
+			case ROBOT_MENU:
+		}
+	}
+
 	override function show() {
 		super.show();
 
 		updateGrids();
-
-		final gridInfos = Main.view.getBattleController().getGrids();
-		box_stages.onMouseOver = function(e) {
-			final pos = getPosEnumByLocalPos(e.localX, e.localY);
-			final gridInfo = gridInfos.get(pos);
-			switch (pos) {
-				case POS(x, y):
-					box_cursor.left = x * gridSize;
-					box_cursor.top = y * gridSize;
-				case _:
-			}
-			updateGridDetail(gridInfo);
-		}
-
-		box_stages.onClick = function(e) {
-			final pos = getPosEnumByLocalPos(e.localX, e.localY);
-			verbose('GamePage', 'mouse click pos:(${e.localX})(${e.localY}) enum:(${pos})');
-
-			Main.view.getBattleController().onEvent(ON_CLICK_BATTLE_POS(pos));
-		}
+		switchStageState(NORMAL);
 	}
 }
