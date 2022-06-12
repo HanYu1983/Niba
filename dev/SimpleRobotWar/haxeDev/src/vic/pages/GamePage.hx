@@ -100,17 +100,14 @@ class GamePage extends Box {
 		}
 
 		btn_move.onClick = function(e) {
-			closeRobotMenu();
 			Main.view.getBattleController().onEvent(ON_CLICK_ROBOT_MENU_ITEM(MOVE));
 		}
 
 		btn_attack.onClick = function(e) {
-			closeRobotMenu();
 			Main.view.getBattleController().onEvent(ON_CLICK_ROBOT_MENU_ITEM(ATTACK));
 		}
 
 		btn_end.onClick = function(e) {
-			closeRobotMenu();
 			Main.view.getBattleController().onEvent(ON_CLICK_ROBOT_MENU_ITEM(DONE));
 		}
 	}
