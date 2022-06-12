@@ -63,7 +63,8 @@ class Controller implements _IController {
 				_baseController = _lobbyController;
 				_view.startLobby(this);
 			case ON_CLICK_GOTO_BATTLE(options):
-				_baseController = new BattleController(_lobbyController.getContext(), _view);
+				_battleController = new BattleController(_lobbyController.getContext(), _view);
+				_baseController = _lobbyController;
 				_view.startBattle(this);
 			case _:
 				_baseController.onEvent(action);
