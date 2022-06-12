@@ -2,18 +2,19 @@
     <vbox id='box_left' horizontalAlign='left' verticalAlign='center'>
 
     </vbox>
-    <absolute id='box_stages' width='800' height='800' horizontalAlign='center' verticalAlign='center'>
+    <absolute width='800' height='800' horizontalAlign='center' verticalAlign='center'>
         <absolute id='box_grids' styleName='full'/>
         <absolute id='box_moveRanges' styleName='full'/>
         <absolute id='box_robots' styleName='full'/>
         <box id='box_cursor' width='40' height='40' backgroundColor='white' opacity='0.7' style='border:3px solid red' />
+        <absolute id='box_stages' styleName='full'/>
         <vbox id='box_robotMenu' backgroundColor='gray' width='100'>
             <button id='btn_move' text='移動' styleName='hfull' />
             <button id='btn_attack' text='攻擊' styleName='hfull' />
             <button id='btn_end' text='結束' styleName='hfull' />
         </vbox>
         <vbox id='box_systemMenu' backgroundColor='gray' width='100'>
-            <button id='btn_move' text='結束回合' styleName='hfull' />
+            <button id='btn_endPhase' text='結束回合' styleName='hfull' />
         </vbox>
     </absolute>
 

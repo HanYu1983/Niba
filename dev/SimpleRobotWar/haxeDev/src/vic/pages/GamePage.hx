@@ -1,5 +1,6 @@
 package vic.pages;
 
+import common.IDefine.ViewEvent;
 import haxe.ui.events.MouseEvent;
 import vic.widgets.Robot;
 import common.IConfig;
@@ -97,6 +98,21 @@ class GamePage extends Box {
 					btn_end.show();
 			}
 		}
+
+		btn_move.onClick = function(e) {
+			closeRobotMenu();
+			Main.view.getBattleController().onEvent(ON_CLICK_ROBOT_MENU_ITEM(MOVE));
+		}
+
+		btn_attack.onClick = function(e) {
+			closeRobotMenu();
+			Main.view.getBattleController().onEvent(ON_CLICK_ROBOT_MENU_ITEM(ATTACK));
+		}
+
+		btn_end.onClick = function(e) {
+			closeRobotMenu();
+			Main.view.getBattleController().onEvent(ON_CLICK_ROBOT_MENU_ITEM(DONE));
+		}
 	}
 
 	var lastClickPos = [0.0, 0.0];
@@ -127,7 +143,12 @@ class GamePage extends Box {
 					Main.view.getBattleController().onEvent(ON_CLICK_BATTLE_POS(pos));
 				});
 			case ROBOT_MENU:
+				box_stages.registerEvent(MouseEvent.CLICK, (e:MouseEvent) -> {
+					Main.view.getBattleController().onEvent(ON_CLICK_CANCEL);
+					switchStageState();
+				});
 			case ROBOT_SELECT_MOVE_POSITION:
+				trace('ROBOT_SELECT_MOVE_POSITION');
 		}
 	}
 
@@ -145,6 +166,7 @@ class GamePage extends Box {
 		box_systemMenu.show();
 		box_systemMenu.left = lastClickPos[0] + gridSize;
 		box_systemMenu.top = lastClickPos[1];
+		switchStageState();
 	}
 
 	public function closeSystemMenu() {
@@ -154,10 +176,7 @@ class GamePage extends Box {
 	public function updateSystemMenu() {}
 
 	public function updateMoveRange() {
-		for (g in gridMoveRange) {
-			box_moveRanges.removeComponent(g);
-		}
-		gridMoveRange.empty();
+		closeMoveRange();
 
 		final moveRangeInfos = Main.view.getBattleController().getRobotMoveRangeByPosition(Main.view.getActivePosition());
 		for (pos in moveRangeInfos) {
@@ -175,7 +194,12 @@ class GamePage extends Box {
 		}
 	}
 
-	public function closeMoveRange() {}
+	public function closeMoveRange() {
+		for (g in gridMoveRange) {
+			box_moveRanges.removeComponent(g);
+		}
+		gridMoveRange.empty();
+	}
 
 	public function openMoveRange() {
 		updateMoveRange();
