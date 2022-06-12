@@ -1,0 +1,5 @@
+<box width='40' height='40' >
+    <box id='box_center' width='30' height='30' backgroundColor='white' horizontalAlign='center' verticalAlign='center' style='border:1px solid black'>\
+        <label id='lbl_title' color='black' opacity='.5' />
+    </box>
+</box>

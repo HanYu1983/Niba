@@ -18,7 +18,7 @@ class DefaultViewImpl extends DefaultView {
 		_view = new HaxeUIView();
 	}
 
-	public function getComponent():Component{
+	public function getComponent():Component {
 		return _view;
 	}
 
@@ -71,11 +71,10 @@ class DefaultViewImpl extends DefaultView {
 			case OPEN:
 				_view.closeAllPages();
 				_view.gamePage.fadeIn();
-				trace("顯示格子");
-				trace("綁定格字點擊事件到ON_CLICK_BATTLE_POS(Position)");
-				trace("robots", getBattleController().getRobots());
 			case CLOSE:
+				_view.gamePage.fadeOut();
 			case UPDATE:
+				_view.gamePage.updateGamePage();
 		}
 	}
 
@@ -127,14 +126,14 @@ class DefaultViewImpl extends DefaultView {
 		verbose("DefaultViewImpl", "renderRobotMenu");
 		switch op {
 			case OPEN:
-				_view.gamePage.updateRobotMenu(op);
+				// _view.gamePage.openRobotMenu();
 			// 打開頁面
 			case CLOSE:
-				_view.gamePage.updateRobotMenu(op);
+				_view.gamePage.closeRobotMenu();
 			// 關閉頁面
 			case UPDATE:
 				// 更新頁面
-				_view.gamePage.updateRobotMenu(op);
+				_view.gamePage.updateRobotMenu();
 		}
 	}
 
@@ -142,19 +141,25 @@ class DefaultViewImpl extends DefaultView {
 		verbose("DefaultViewImpl", "renderMoveRange");
 		switch op {
 			case OPEN:
-				trace(getBattleController().getRobotMoveRangeByPosition(getActivePosition()));
+				_view.gamePage.openMoveRange();
 			case CLOSE:
+				_view.gamePage.closeMoveRange();
 			case UPDATE:
+				_view.gamePage.updateMoveRange();
 		}
 	}
+
 	// 系統菜單
 	// 顯示菜單 (未定義)
 	function renderSystemMenu(op:SyncViewOperation):Void {
 		verbose("DefaultViewImpl", "renderSystemMenu");
 		switch op {
 			case OPEN:
+				// _view.gamePage.openSystemMenu();
 			case CLOSE:
+				_view.gamePage.closeSystemMenu();
 			case UPDATE:
+				_view.gamePage.updateSystemMenu();
 		}
 	}
 }
