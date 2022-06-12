@@ -49,7 +49,7 @@ class Controller implements _IController {
 		return _battleController.getGrids();
 	}
 
-	public function getRobotMenuItems():Array<UnitMenuItem> {
+	public function getRobotMenuItems():Array<RobotMenuItem> {
 		return _battleController.getRobotMenuItems();
 	}
 
