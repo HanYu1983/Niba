@@ -91,6 +91,7 @@ abstract class DefaultView implements IView {
 						renderMoveRange(CLOSE);
 						changeUnitMenuState(NORMAL);
 					case ROBOT_SELECT_MOVE_POSITION:
+						changeUnitMenuState(ROBOT_MENU);
 				}
 			case _:
 		}
