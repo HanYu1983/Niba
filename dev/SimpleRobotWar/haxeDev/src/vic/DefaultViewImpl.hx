@@ -10,6 +10,7 @@ import vic.pages.GamePage;
 import vic.pages.LobbyPage;
 import tool.Debug;
 
+// 所有頁面都可以綁定esc到ON_CLICK_CANCEL
 class DefaultViewImpl extends DefaultView {
 	final _view:HaxeUIView;
 
