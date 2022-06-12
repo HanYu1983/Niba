@@ -5,7 +5,7 @@ import haxe.ui.themes.ThemeManager;
 import haxe.Exception;
 import haxe.ui.core.Component;
 import haxe.ui.HaxeUIApp;
-import han.Controller;
+import han.controller.Controller;
 import vic.HaxeUIView;
 
 class Main {
