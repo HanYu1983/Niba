@@ -65,7 +65,6 @@ typedef Robot = {
 	maxEnergy:Int,
 	maxAction:Int,
 	damage:Array<Damage>,
-	position:Null<Position>,
 	terrian:Array<Float>
 }
 
@@ -82,7 +81,6 @@ function createRobot(id:String):Robot {
 		maxEnergy: 0,
 		maxAction: 0,
 		damage: [],
-		position: null,
 		terrian: [1, 1, 1, 1]
 	}
 }
@@ -143,6 +141,7 @@ typedef Context = {
 	pilotToRobot:StringMap<String>,
 	weaponToRobot:StringMap<String>,
 	robotToPlayer:StringMap<String>,
+	positionToRobot:EnumValueMap<Position, String>,
 	idSeq:Int,
 }
 
@@ -158,6 +157,7 @@ function getDefaultContext():Context {
 		pilotToRobot: new StringMap<String>(),
 		weaponToRobot: new StringMap<String>(),
 		robotToPlayer: new StringMap<String>(),
+		positionToRobot: new EnumValueMap<Position, String>(),
 		idSeq: 0,
 	}
 }

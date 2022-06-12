@@ -3,6 +3,8 @@ package han.view.ver1;
 import haxe.Exception;
 import common.IDefine;
 
+using Lambda;
+
 enum SyncViewOperation {
 	OPEN;
 	CLOSE;
@@ -16,9 +18,11 @@ private enum UnitMenuState {
 }
 
 private typedef BattleControlMemory = {
+	activeRobotId:Null<String>,
 	unitMenuState:UnitMenuState
 }
 
+@:nullSafety
 abstract class DefaultView implements IView {
 	public function new() {}
 
@@ -36,7 +40,8 @@ abstract class DefaultView implements IView {
 	}
 
 	final _battleControlMemory:BattleControlMemory = {
-		unitMenuState: NORMAL
+		unitMenuState: NORMAL,
+		activeRobotId: null,
 	};
 
 	function changeUnitMenuState(state:UnitMenuState) {
@@ -58,9 +63,17 @@ abstract class DefaultView implements IView {
 			case ON_CLICK_BATTLE_POS(pos):
 				switch _battleControlMemory.unitMenuState {
 					case NORMAL:
-						openUnitMenu(OPEN);
-						changeUnitMenuState(UNIT_MENU);
+						final robotId = getBattleController().getRobotIdByPosition(pos);
+						if (robotId == null) {
+							// 系統菜單
+						} else {
+							// 單位菜單
+							_battleControlMemory.activeRobotId = robotId;
+							openUnitMenu(OPEN);
+							changeUnitMenuState(UNIT_MENU);
+						}
 					case UNIT_MENU:
+						renderMoveRange(OPEN);
 					case UNIT_SELECT_MOVE_POSITION:
 				}
 			case ON_CLICK_CANCEL:
@@ -68,6 +81,7 @@ abstract class DefaultView implements IView {
 					case NORMAL:
 					case UNIT_MENU:
 						openUnitMenu(CLOSE);
+						renderMoveRange(CLOSE);
 						changeUnitMenuState(NORMAL);
 					case UNIT_SELECT_MOVE_POSITION:
 				}
@@ -98,4 +112,6 @@ abstract class DefaultView implements IView {
 	abstract function openPilotViewPage(op:SyncViewOperation):Void;
 
 	abstract function openUnitMenu(op:SyncViewOperation):Void;
+
+	abstract function renderMoveRange(op:SyncViewOperation):Void;
 }

@@ -53,6 +53,14 @@ class Controller implements _IController {
 		return _battleController.getUnitMenuItems();
 	}
 
+	public function getUnitMoveRange(pos:Position):Array<Position>{
+		return _battleController.getUnitMoveRange(pos);
+	}
+
+	public function getRobotIdByPosition(pos:Position):Null<String> {
+		return _battleController.getRobotIdByPosition(pos);
+	}
+
 	public function onEvent(action:ViewEvent):Void {
 		switch action {
 			case ON_CLICK_GOTO_LOBBY:

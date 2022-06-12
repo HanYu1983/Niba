@@ -8,6 +8,7 @@ import common.IDefine;
 import common.WeaponData;
 import common.TerrianData;
 import han.alg.IDefine;
+import han.alg.Path;
 import han.model.IDefine;
 import han.controller.common.IDefine;
 
@@ -25,10 +26,8 @@ class BattleController implements _IBattleController {
 	public function getRobots():IMap<String, RobotView> {
 		// 使用String當key的話, 它應會自動判斷成StringMap
 		return [
-			for (info in _ctx.robots) {
-				if (info.position != null) {
-					info.id => getRobotView(_ctx, info.id);
-				}
+			for (pos => robotId in _ctx.positionToRobot) {
+				robotId => getRobotView(_ctx, robotId);
 			}
 		];
 	}
@@ -69,6 +68,14 @@ class BattleController implements _IBattleController {
 
 	public function getUnitMenuItems():Array<UnitMenuItem> {
 		return [];
+	}
+
+	public function getUnitMoveRange(pos:Position):Array<Position> {
+		return han.alg.Path.getUnitMoveRange(_ctx, pos);
+	}
+
+	public function getRobotIdByPosition(pos:Position):Null<String> {
+		return _ctx.positionToRobot.get(pos);
 	}
 
 	public function onEvent(action:ViewEvent):Void {

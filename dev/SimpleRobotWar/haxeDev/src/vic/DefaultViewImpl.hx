@@ -120,4 +120,12 @@ class DefaultViewImpl extends DefaultView {
 				// 更新頁面
 		}
 	}
+
+	public function renderMoveRange(op:SyncViewOperation):Void{
+		switch op {
+			case OPEN:
+			case CLOSE:
+			case UPDATE:
+		}
+	}
 }

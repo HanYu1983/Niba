@@ -11,6 +11,7 @@ import han.model.IDefine;
 import tool.optalg.Define;
 import tool.optalg.AStar;
 
+@:nullSafety
 function getGridMoveFactor(ctx:Context, id:Position):Array<Float> {
 	final grid = ctx.grids.get(id);
 	if (grid == null) {
@@ -20,6 +21,7 @@ function getGridMoveFactor(ctx:Context, id:Position):Array<Float> {
 	return terrian.moveFactor;
 }
 
+@:nullSafety
 private class PathSolution extends DefaultSolution<Position> {
 	final _ctx:Context;
 	final _targetPos:Position;
@@ -70,7 +72,8 @@ private class PathSolution extends DefaultSolution<Position> {
 	}
 }
 
-private class ShortestTreeSolution extends DefaultSolution<Position> {
+@:nullSafety
+private class ShortestPathTreeSolution extends DefaultSolution<Position> {
 	final _ctx:Context;
 	final _energy:Int;
 
@@ -98,7 +101,7 @@ private class ShortestTreeSolution extends DefaultSolution<Position> {
 								}
 								final cost = this.cost + moveCost;
 								if (cost < _energy) {
-									final nextSolution = new ShortestTreeSolution(_ctx, POS(nx, ny), _energy, getId(), cost, 0, false);
+									final nextSolution = new ShortestPathTreeSolution(_ctx, POS(nx, ny), _energy, getId(), cost, 0, false);
 									ret.push(nextSolution);
 								}
 							}
@@ -111,6 +114,22 @@ private class ShortestTreeSolution extends DefaultSolution<Position> {
 				throw new Exception("payload not found");
 		}
 	}
+}
+
+@:nullSafety
+function getUnitMoveRange(ctx:Context, pos:Position):Array<Position> {
+	final robotId = ctx.positionToRobot.get(pos);
+	if (robotId == null) {
+		return [];
+	}
+	final robot = getRobot(ctx, robotId);
+	final moveEnergy = 20;
+	final tree = getAStar(new ShortestPathTreeSolution(ctx, pos, moveEnergy), {exitWhenFind: true});
+	return [
+		for (pos => solution in tree) {
+			pos;
+		}
+	];
 }
 
 function test() {
@@ -131,7 +150,7 @@ private function testPath() {
 		trace(path);
 	}
 	{
-		final tree = getAStar(new ShortestTreeSolution(ctx, POS(4, 4), 20), {exitWhenFind: true});
+		final tree = getAStar(new ShortestPathTreeSolution(ctx, POS(4, 4), 20), {exitWhenFind: true});
 		for (pos => solution in tree) {
 			trace(pos, solution.getSortScore());
 		}
