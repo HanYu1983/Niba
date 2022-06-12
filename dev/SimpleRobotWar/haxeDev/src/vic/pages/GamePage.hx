@@ -67,7 +67,7 @@ class GamePage extends Box {
 		updateGrids();
 
 		final gridInfos = Main.view.getBattleController().getGrids();
-		box_grids.onMouseOver = function(e) {
+		box_stages.onMouseOver = function(e) {
 			final pos = getPosEnumByLocalPos(e.localX, e.localY);
 			final gridInfo = gridInfos.get(pos);
 			switch (pos) {
@@ -79,7 +79,7 @@ class GamePage extends Box {
 			updateGridDetail(gridInfo);
 		}
 
-		box_grids.onClick = function(e) {
+		box_stages.onClick = function(e) {
 			final pos = getPosEnumByLocalPos(e.localX, e.localY);
 			verbose('GamePage', 'mouse click pos:(${e.localX})(${e.localY}) enum:(${pos})');
 
