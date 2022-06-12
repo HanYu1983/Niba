@@ -1,5 +1,6 @@
 package vic;
 
+import js.Syntax;
 import vic.pages.PilotPage;
 import vic.pages.RobotPage;
 import vic.pages.GamePage;
@@ -38,6 +39,17 @@ class HaxeUIView extends Box implements IView {
 		gamePage.hide();
 		robotPage.hide();
 		pilotPage.hide();
+	}
+
+	public function getFixNumber(number:Float, count:Int = 0):Float {
+		if (number == null)
+			return 0.0;
+		var round = Syntax.code('Number.prototype.toFixed');
+		return round.call(number, count);
+	}
+
+	public function getRateString(rate:Float, count:Int = 0):String {
+		return getFixNumber(rate * 100, count) + '%';
 	}
 
 	public function getLobbyController():ILobbyController {
