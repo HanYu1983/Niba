@@ -6,6 +6,7 @@ import common.IDefine;
 import han.view.ver1.DefaultView;
 import vic.pages.GamePage;
 import vic.pages.LobbyPage;
+import tool.Debug;
 
 class DefaultViewImpl extends DefaultView {
 	public function new() {
@@ -111,7 +112,7 @@ class DefaultViewImpl extends DefaultView {
 	// 顯示菜單 getBattleController().getRobotMenuItems()
 	// 菜單格式尚不確定, 不知道是不是也要像1代那樣每個選項還能左右的子選項
 	function renderRobotMenu(op:SyncViewOperation):Void {
-		trace("顯示菜單 getBattleController().getRobotMenuItems()");
+		verbose("DefaultViewImpl", "renderRobotMenu");
 		switch op {
 			case OPEN:
 			// 打開頁面
@@ -123,6 +124,7 @@ class DefaultViewImpl extends DefaultView {
 	}
 
 	function renderMoveRange(op:SyncViewOperation):Void {
+		verbose("DefaultViewImpl", "renderMoveRange");
 		switch op {
 			case OPEN:
 				trace(getBattleController().getRobotMoveRangeByPosition(getActivePosition()));
@@ -132,6 +134,7 @@ class DefaultViewImpl extends DefaultView {
 	}
 	// 系統菜單
 	function renderSystemMenu(op:SyncViewOperation):Void {
+		verbose("DefaultViewImpl", "renderSystemMenu");
 		switch op {
 			case OPEN:
 			case CLOSE:

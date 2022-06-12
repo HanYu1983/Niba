@@ -73,6 +73,7 @@ abstract class DefaultView implements IView {
 						final robotId = getBattleController().getRobotIdByPosition(pos);
 						if (robotId == null) {
 							// 系統菜單
+							renderSystemMenu(OPEN);
 						} else {
 							// 單位菜單
 							_battleControlMemory.activePosition = pos;

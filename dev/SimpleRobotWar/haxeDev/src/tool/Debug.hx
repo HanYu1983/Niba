@@ -20,7 +20,8 @@ private final filterLevel:Array<LogLevel> = [
 private final filterCategory:Array<String> = [
 	//
 	"RobotPage",
-	"GamePage"
+	"GamePage",
+	"DefaultViewImpl"
 ];
 
 function verbose(category:String, msg:Dynamic) {
