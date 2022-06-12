@@ -19,7 +19,8 @@ private final filterLevel:Array<LogLevel> = [
 
 private final filterCategory:Array<String> = [
 	//
-	"RobotPage"
+	"RobotPage",
+	"GamePage"
 ];
 
 function verbose(category:String, msg:Dynamic) {

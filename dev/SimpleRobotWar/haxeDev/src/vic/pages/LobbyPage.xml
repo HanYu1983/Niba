@@ -2,6 +2,6 @@
     <hbox horizontalAlign="center" verticalAlign='center' height='200'>
         <button id='btn_robotPage' text='機體' icon="haxeui-core/styles/default/haxeui_small.png" iconPosition="bottom" width='200' styleName='vfull'/>
         <button id='btn_pilotPage' text='駕駛' icon="haxeui-core/styles/default/haxeui_small.png" iconPosition="bottom" width='200' styleName='vfull'/>
-        <!-- <button id='btn_game' text='游戲頁面'/> -->
+        <button id='btn_game' text='進攻' icon="haxeui-core/styles/default/haxeui_small.png" iconPosition="bottom" width='200' styleName='vfull'/>
     </hbox>
 </box>

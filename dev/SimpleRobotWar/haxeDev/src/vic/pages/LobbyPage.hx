@@ -9,10 +9,10 @@ class LobbyPage extends Box {
 		super();
 	}
 
-	// @:bind(btn_game, MouseEvent.CLICK)
-	// function onBtnGameClick(e) {
-	// 	Main.view.getLobbyController().onEvent(ON_CLICK_GOTO_BATTLE("參數之後再想"));
-	// }
+	@:bind(btn_game, MouseEvent.CLICK)
+	function onBtnGameClick(e) {
+		Main.view.getLobbyController().onEvent(ON_CLICK_GOTO_BATTLE("參數之後再想"));
+	}
 
 	@:bind(btn_robotPage, MouseEvent.CLICK)
 	function onBtnRobotPageClick(e) {
