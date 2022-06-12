@@ -1,5 +1,6 @@
 package vic.pages;
 
+import vic.widgets.Robot;
 import common.IConfig;
 import common.IDefine.GridView;
 import common.view.ver1.DefaultView.SyncViewOperation;
@@ -12,14 +13,11 @@ import haxe.ui.containers.Box;
 
 using Lambda;
 
-enum STAGE_STATE {
-	NORMAL;
-	ROBOT_MENU;
-}
-
 @:build(haxe.ui.ComponentBuilder.build('vic/pages/GamePage.xml'))
 class GamePage extends Box {
 	final grids:Array<Grid> = [];
+	final gridMoveRange:Array<Grid> = [];
+	final robots:Array<Robot> = [];
 	final gridDetail = new GridDetail();
 	final gridSize = 40;
 
@@ -43,20 +41,34 @@ class GamePage extends Box {
 
 	function updateGrids() {
 		final gridInfos = Main.view.getBattleController().getGrids();
-		final robots = Main.view.getBattleController().getRobots();
+		final robotInfos = Main.view.getBattleController().getRobots();
 		verbose('GamePage', 'grid count ${Lambda.count(grids)}');
 		verbose('GamePage', 'grid ${gridInfos}');
 		verbose('GamePage', 'robots ${robots}');
 
+		for (r in robots) {
+			box_robots.removeComponent(r);
+		}
+		robots.empty();
+
 		for (g in grids) {
-			final info = gridInfos.get(g.pos);
-			g.title = info.title;
+			final gridInfo = gridInfos.get(g.pos);
+			g.title = gridInfo.title;
+
+			final robotInfo = robotInfos.get(gridInfo.robotId);
+			if (robotInfo != null) {
+				final r = new Robot();
+				r.title = robotInfo.title;
+				box_robots.addComponent(r);
+
+				robots.push(r);
+			}
 		}
 	}
 
 	function updateGridDetail(info:Null<GridView>) {
 		if (info != null) {
-			// verbose('GamePage', 'grid info ${info}');
+			verbose('GamePage', 'grid info ${info}');
 			gridDetail.setInfo(info);
 		}
 	}
@@ -66,8 +78,6 @@ class GamePage extends Box {
 		final py = Math.floor(y / gridSize);
 		return Position.POS(px, py);
 	}
-
-	function name() {}
 
 	public function updateRobotMenu() {
 		final robotMenu = Main.view.getBattleController().getRobotMenuItems();
@@ -87,6 +97,8 @@ class GamePage extends Box {
 			}
 		}
 	}
+
+	var lastClickPos = [0.0, 0.0];
 
 	function switchStageState() {
 		box_stages.onMouseOver = null;
@@ -108,6 +120,8 @@ class GamePage extends Box {
 
 				box_stages.onClick = function(e) {
 					final pos = getPosEnumByLocalPos(e.localX, e.localY);
+					lastClickPos[0] = e.localX;
+					lastClickPos[1] = e.localY;
 					verbose('GamePage', 'mouse click pos:(${e.localX})(${e.localY}) enum:(${pos})');
 
 					Main.view.getBattleController().onEvent(ON_CLICK_BATTLE_POS(pos));
@@ -127,26 +141,57 @@ class GamePage extends Box {
 		closeSystemMenu();
 	}
 
-	public function openSystemMenu() {}
+	public function openSystemMenu() {
+		box_systemMenu.show();
+		box_systemMenu.left = lastClickPos[0] + gridSize;
+		box_systemMenu.top = lastClickPos[1];
+	}
 
-	public function closeSystemMenu() {}
+	public function closeSystemMenu() {
+		box_systemMenu.hide();
+	}
 
 	public function updateSystemMenu() {}
 
-	public function updateMoveRange() {}
+	public function updateMoveRange() {
+		for (g in gridMoveRange) {
+			box_moveRanges.removeComponent(g);
+		}
+		gridMoveRange.empty();
+
+		final moveRangeInfos = Main.view.getBattleController().getRobotMoveRangeByPosition(Main.view.getActivePosition());
+		for (pos in moveRangeInfos) {
+			final g = new Grid();
+			g.title = '';
+
+			switch (pos) {
+				case POS(x, y):
+					g.left = x * gridSize;
+					g.top = y * gridSize;
+			}
+
+			box_moveRanges.addComponent(g);
+			gridMoveRange.push(g);
+		}
+	}
 
 	public function closeMoveRange() {}
 
-	public function openMoveRange() {}
+	public function openMoveRange() {
+		updateMoveRange();
+	}
 
 	public function openRobotMenu() {
-
 		box_robotMenu.show();
+		box_robotMenu.left = lastClickPos[0] + gridSize;
+		box_robotMenu.top = lastClickPos[1];
 		updateRobotMenu();
 		switchStageState();
 	}
 
-	public function closeRobotMenu() {}
+	public function closeRobotMenu() {
+		box_robotMenu.hide();
+	}
 
 	public function updateGamePage() {}
 }
