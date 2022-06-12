@@ -53,8 +53,8 @@ class Controller implements _IController {
 		return _battleController.getUnitMenuItems();
 	}
 
-	public function getUnitMoveRange(pos:Position):Array<Position>{
-		return _battleController.getUnitMoveRange(pos);
+	public function getRobotMoveRangeByPosition(pos:Position):Array<Position>{
+		return _battleController.getRobotMoveRangeByPosition(pos);
 	}
 
 	public function getRobotIdByPosition(pos:Position):Null<String> {

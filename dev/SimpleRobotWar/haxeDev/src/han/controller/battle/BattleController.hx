@@ -70,8 +70,8 @@ class BattleController implements _IBattleController {
 		return [];
 	}
 
-	public function getUnitMoveRange(pos:Position):Array<Position> {
-		return han.alg.Path.getUnitMoveRange(_ctx, pos);
+	public function getRobotMoveRangeByPosition(pos:Position):Array<Position> {
+		return han.alg.Path.getRobotMoveRangeByPosition(_ctx, pos);
 	}
 
 	public function getRobotIdByPosition(pos:Position):Null<String> {

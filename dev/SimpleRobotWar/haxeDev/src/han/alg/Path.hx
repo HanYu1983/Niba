@@ -117,7 +117,7 @@ private class ShortestPathTreeSolution extends DefaultSolution<Position> {
 }
 
 @:nullSafety
-function getUnitMoveRange(ctx:Context, pos:Position):Array<Position> {
+function getRobotMoveRangeByPosition(ctx:Context, pos:Position):Array<Position> {
 	final robotId = ctx.positionToRobot.get(pos);
 	if (robotId == null) {
 		return [];
