@@ -133,6 +133,7 @@ class DefaultViewImpl extends DefaultView {
 		}
 	}
 	// 系統菜單
+	// 顯示菜單 (未定義)
 	function renderSystemMenu(op:SyncViewOperation):Void {
 		verbose("DefaultViewImpl", "renderSystemMenu");
 		switch op {
