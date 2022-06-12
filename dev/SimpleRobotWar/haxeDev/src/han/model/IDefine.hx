@@ -81,7 +81,7 @@ function createRobot(id:String):Robot {
 		maxEnergy: 0,
 		maxAction: 0,
 		damage: [],
-		terrian: [0, 0, 0, 1]
+		terrian: [0.5, 0, 0, 0.5]
 	}
 }
 

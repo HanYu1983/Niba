@@ -17,7 +17,7 @@ final TERRIANS:Array<TerrianData> = [
 	},
 	{
 		title: "平原",
-		moveFactor: [NORMAL, GOOD, NORMAL, BAD],
+		moveFactor: [NORMAL, GOOD, BAD, VERY_BAD],
 		evade: 1,
 		def: 1
 	},
