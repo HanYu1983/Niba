@@ -400,7 +400,7 @@ export default class GamePage extends BasicViewer {
         this.sceneMenu.close();
     }
 
-    openUnitMenu(pos: number[], menus: any, cursors: any[], cb?: (key: string) => {}) {
+    renderRobotMenu(pos: number[], menus: any, cursors: any[], cb?: (key: string) => {}) {
         const [menu, weaponInfo] = menus;
 
         this.closeUnitMenu();

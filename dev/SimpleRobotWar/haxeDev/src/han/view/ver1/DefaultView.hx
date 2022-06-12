@@ -18,7 +18,7 @@ private enum UnitMenuState {
 }
 
 private typedef BattleControlMemory = {
-	activeRobotId:Null<String>,
+	activePosition:Null<Position>,
 	unitMenuState:UnitMenuState
 }
 
@@ -41,11 +41,18 @@ abstract class DefaultView implements IView {
 
 	final _battleControlMemory:BattleControlMemory = {
 		unitMenuState: NORMAL,
-		activeRobotId: null,
+		activePosition: null,
 	};
 
 	function changeUnitMenuState(state:UnitMenuState) {
 		_battleControlMemory.unitMenuState = state;
+	}
+
+	function getActivePosition():Position{
+		if(_battleControlMemory.activePosition == null){
+			throw new Exception("activePosition == null");
+		}
+		return _battleControlMemory.activePosition;
 	}
 
 	public function onEvent(action:ViewEvent):Void {
@@ -68,8 +75,8 @@ abstract class DefaultView implements IView {
 							// 系統菜單
 						} else {
 							// 單位菜單
-							_battleControlMemory.activeRobotId = robotId;
-							openUnitMenu(OPEN);
+							_battleControlMemory.activePosition = pos;
+							renderRobotMenu(OPEN);
 							changeUnitMenuState(UNIT_MENU);
 						}
 					case UNIT_MENU:
@@ -80,7 +87,7 @@ abstract class DefaultView implements IView {
 				switch _battleControlMemory.unitMenuState {
 					case NORMAL:
 					case UNIT_MENU:
-						openUnitMenu(CLOSE);
+						renderRobotMenu(CLOSE);
 						renderMoveRange(CLOSE);
 						changeUnitMenuState(NORMAL);
 					case UNIT_SELECT_MOVE_POSITION:
@@ -111,7 +118,7 @@ abstract class DefaultView implements IView {
 
 	abstract function openPilotViewPage(op:SyncViewOperation):Void;
 
-	abstract function openUnitMenu(op:SyncViewOperation):Void;
+	abstract function renderRobotMenu(op:SyncViewOperation):Void;
 
 	abstract function renderMoveRange(op:SyncViewOperation):Void;
 }

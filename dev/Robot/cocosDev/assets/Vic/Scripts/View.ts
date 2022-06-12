@@ -186,7 +186,7 @@ export default class View extends cc.Component {
     }
 
     private createOrUpdateUnitMenu(pos: number[], menu: any, info: any, cursor: number, subcursor: number[]) {
-        this.getGamePage().openUnitMenu(pos, [menu, info], [cursor, subcursor]);
+        this.getGamePage().renderRobotMenu(pos, [menu, info], [cursor, subcursor]);
     }
 
     private createOrUpdateSystemMenu(menu: any, info: any, cursor: number, subcursor: number[]) {
