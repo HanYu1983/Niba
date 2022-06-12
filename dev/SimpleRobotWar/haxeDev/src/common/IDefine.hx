@@ -205,7 +205,14 @@ interface IBaseController {
 	function onEvent(action:ViewEvent):Void;
 }
 
-enum UnitMenuItem {}
+enum UnitMenuItem {
+	// 移動
+	MOVE;
+	// 攻擊
+	ATTACK;
+	// 終了
+	DONE;
+}
 
 interface IBattleController extends IBaseController {
 	function getUnitMenuItems():Array<UnitMenuItem>;
