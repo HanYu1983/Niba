@@ -7,6 +7,7 @@ function initContext(ctx:Context) {
 	ctx.grids = getRandomMap(MAP_W, MAP_H);
 	final robot = createRobot('${ctx.idSeq++}');
 	ctx.robots.set(robot.id, robot);
+	ctx.positionToRobot.set(POS(0,0), robot.id);
 
 	final pilot = createPilot('${ctx.idSeq++}');
 	ctx.pilots.set(pilot.id, pilot);

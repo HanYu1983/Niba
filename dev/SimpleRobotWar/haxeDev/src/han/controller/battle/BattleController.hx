@@ -60,14 +60,14 @@ class BattleController implements _IBattleController {
 					title: terrian.title,
 					defRate: terrian.def,
 					evadeRate: terrian.evade,
-					robotId: null,
+					robotId: _ctx.positionToRobot.get(pos),
 				}
 			}
 		];
 	}
 
 	public function getRobotMenuItems():Array<UnitMenuItem> {
-		return [];
+		return [MOVE, DONE];
 	}
 
 	public function getRobotMoveRangeByPosition(pos:Position):Array<Position> {
