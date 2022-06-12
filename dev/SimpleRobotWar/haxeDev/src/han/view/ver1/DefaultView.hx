@@ -48,7 +48,7 @@ abstract class DefaultView implements IView {
 		_battleControlMemory.robotMenuState = state;
 	}
 
-	function getActivePosition():Position{
+	public function getActivePosition():Position{
 		if(_battleControlMemory.activePosition == null){
 			throw new Exception("activePosition == null");
 		}
