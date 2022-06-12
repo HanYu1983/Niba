@@ -6,10 +6,10 @@ import haxe.Exception;
 import haxe.ui.core.Component;
 import haxe.ui.HaxeUIApp;
 import han.controller.Controller;
-import vic.HaxeUIView;
+import vic.DefaultViewImpl;
 
 class Main {
-	public static var view:HaxeUIView;
+	public static var view:DefaultViewImpl;
 
 	public static function main() {
 		if (true) {
@@ -17,8 +17,8 @@ class Main {
 		}
 		final app = new HaxeUIApp();
 		app.ready(() -> {
-			view = new HaxeUIView();
-			app.addComponent(view);
+			view = new DefaultViewImpl();
+			app.addComponent(view.getComponent());
 			final ctr = new Controller(view);
 
 			ThemeManager.instance.applyTheme(Theme.DARK);

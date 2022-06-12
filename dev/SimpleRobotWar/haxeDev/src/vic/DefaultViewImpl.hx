@@ -1,5 +1,7 @@
 package vic;
 
+import js.Syntax;
+import haxe.ui.core.Component;
 import vic.pages.PilotPage;
 import vic.pages.RobotPage;
 import common.IDefine;
@@ -9,16 +11,26 @@ import vic.pages.LobbyPage;
 import tool.Debug;
 
 class DefaultViewImpl extends DefaultView {
+	final _view:HaxeUIView;
+
 	public function new() {
 		super();
+		_view = new HaxeUIView();
 	}
 
-	public override function getLobbyController():ILobbyController {
-		return super.getLobbyController();
+	public function getComponent():Component{
+		return _view;
 	}
 
-	public override function getBattleController():IBattleController {
-		return super.getBattleController();
+	public function getFixNumber(number:Float, count:Int = 0):Float {
+		if (number == null)
+			return 0.0;
+		var round = Syntax.code('Number.prototype.toFixed');
+		return round.call(number, count);
+	}
+
+	public function getRateString(rate:Float, count:Int = 0):String {
+		return getFixNumber(rate * 100, count) + '%';
 	}
 
 	// 關閉所有其它頁, 打開大廳頁
@@ -29,8 +41,8 @@ class DefaultViewImpl extends DefaultView {
 	function openLobbyPage(op:SyncViewOperation):Void {
 		switch op {
 			case OPEN:
-				Main.view.closeAllPages();
-				Main.view.lobbyPage.fadeIn();
+				_view.closeAllPages();
+				_view.lobbyPage.fadeIn();
 			case CLOSE:
 			case UPDATE:
 		}
@@ -57,8 +69,8 @@ class DefaultViewImpl extends DefaultView {
 	function openBattlePage(op:SyncViewOperation):Void {
 		switch op {
 			case OPEN:
-				Main.view.closeAllPages();
-				Main.view.gamePage.fadeIn();
+				_view.closeAllPages();
+				_view.gamePage.fadeIn();
 				trace("顯示格子");
 				trace("綁定格字點擊事件到ON_CLICK_BATTLE_POS(Position)");
 				trace("robots", getBattleController().getRobots());
@@ -82,8 +94,8 @@ class DefaultViewImpl extends DefaultView {
 	function openRobotViewPage(op:SyncViewOperation):Void {
 		switch op {
 			case OPEN:
-				Main.view.closeAllPages();
-				Main.view.robotPage.fadeIn();
+				_view.closeAllPages();
+				_view.robotPage.fadeIn();
 			case CLOSE:
 			case UPDATE:
 		}
@@ -101,8 +113,8 @@ class DefaultViewImpl extends DefaultView {
 	function openPilotViewPage(op:SyncViewOperation):Void {
 		switch op {
 			case OPEN:
-				Main.view.closeAllPages();
-				Main.view.pilotPage.fadeIn();
+				_view.closeAllPages();
+				_view.pilotPage.fadeIn();
 			case CLOSE:
 			case UPDATE:
 		}
@@ -115,14 +127,14 @@ class DefaultViewImpl extends DefaultView {
 		verbose("DefaultViewImpl", "renderRobotMenu");
 		switch op {
 			case OPEN:
-				Main.view.gamePage.updateRobotMenu(op);
+				_view.gamePage.updateRobotMenu(op);
 			// 打開頁面
 			case CLOSE:
-				Main.view.gamePage.updateRobotMenu(op);
+				_view.gamePage.updateRobotMenu(op);
 			// 關閉頁面
 			case UPDATE:
 				// 更新頁面
-				Main.view.gamePage.updateRobotMenu(op);
+				_view.gamePage.updateRobotMenu(op);
 		}
 	}
 

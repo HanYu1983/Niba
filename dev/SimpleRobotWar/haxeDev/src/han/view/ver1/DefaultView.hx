@@ -98,14 +98,14 @@ abstract class DefaultView implements IView {
 		}
 	}
 
-	private function getLobbyController():ILobbyController {
+	public function getLobbyController():ILobbyController {
 		if (_lobbyCtr == null) {
 			throw new Exception("your must call startLobby first");
 		}
 		return _lobbyCtr;
 	}
 
-	private function getBattleController():IBattleController {
+	public function getBattleController():IBattleController {
 		if (_battleCtr == null) {
 			throw new Exception("your must call startBattle first");
 		}
