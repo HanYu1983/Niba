@@ -49,10 +49,6 @@ class Controller implements _IController {
 		return _battleController.getGrids();
 	}
 
-	public function getUnitMenuState():UnitMenuState {
-		return _battleController.getUnitMenuState();
-	}
-
 	public function getUnitMenuItems():Array<UnitMenuItem> {
 		return _battleController.getUnitMenuItems();
 	}

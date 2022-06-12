@@ -65,10 +65,6 @@ class BattleController implements _IBattleController{
 		];
 	}
 
-	public function getUnitMenuState():UnitMenuState {
-		return NORMAL;
-	}
-
 	public function getUnitMenuItems():Array<UnitMenuItem> {
 		return [];
 	}

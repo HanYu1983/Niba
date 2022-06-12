@@ -3,6 +3,22 @@ package han.view.ver1;
 import haxe.Exception;
 import common.IDefine;
 
+enum UnitMenuState {
+	NORMAL;
+	UNIT_MENU;
+	UNIT_SELECT_MOVE_POSITION;
+}
+
+typedef BattleControlMemory = {
+	unitMenuState:UnitMenuState
+}
+
+enum SyncViewOperation {
+	OPEN;
+	CLOSE;
+	UPDATE;
+}
+
 abstract class DefaultView implements IView {
 	public function new() {}
 
@@ -11,31 +27,47 @@ abstract class DefaultView implements IView {
 
 	public function startLobby(ctr:ILobbyController):Void {
 		_lobbyCtr = ctr;
-		openLobbyPage();
+		openLobbyPage(OPEN);
 	}
 
 	public function startBattle(ctr:IBattleController):Void {
 		_battleCtr = ctr;
-		openBattlePage();
+		openBattlePage(OPEN);
+	}
+
+	final _battleControlMemory:BattleControlMemory = {
+		unitMenuState: NORMAL
+	};
+
+	function changeUnitMenuState(state:UnitMenuState) {
+		_battleControlMemory.unitMenuState = state;
 	}
 
 	public function onEvent(action:ViewEvent):Void {
 		switch action {
 			// lobby
 			case ON_CLICK_GOTO_ROBOT_VIEW:
-				openRobotViewPage();
+				openRobotViewPage(OPEN);
 			case ON_CLICK_GOTO_PILOT_VIEW:
-				openPilotViewPage();
+				openPilotViewPage(OPEN);
 			case ON_CLICK_GOTO_ROBOT_BUY(_):
 			case ON_CLICK_ROBOT_VIEW_CANCEL:
-				openLobbyPage();
+				openLobbyPage(OPEN);
 			// battle
 			case ON_CLICK_BATTLE_POS(pos):
-				switch getBattleController().getUnitMenuState() {
+				switch _battleControlMemory.unitMenuState {
 					case NORMAL:
-						openUnitMenu();
-					// TODO: set to UNIT_MENU
+						openUnitMenu(OPEN);
+						changeUnitMenuState(UNIT_MENU);
 					case UNIT_MENU:
+					case UNIT_SELECT_MOVE_POSITION:
+				}
+			case ON_CLICK_CANCEL:
+				switch _battleControlMemory.unitMenuState {
+					case NORMAL:
+					case UNIT_MENU:
+						openUnitMenu(CLOSE);
+						changeUnitMenuState(NORMAL);
 					case UNIT_SELECT_MOVE_POSITION:
 				}
 			case _:
@@ -56,13 +88,13 @@ abstract class DefaultView implements IView {
 		return _battleCtr;
 	}
 
-	abstract function openLobbyPage():Void;
+	abstract function openLobbyPage(op:SyncViewOperation):Void;
 
-	abstract function openBattlePage():Void;
+	abstract function openBattlePage(op:SyncViewOperation):Void;
 
-	abstract function openRobotViewPage():Void;
+	abstract function openRobotViewPage(op:SyncViewOperation):Void;
 
-	abstract function openPilotViewPage():Void;
+	abstract function openPilotViewPage(op:SyncViewOperation):Void;
 
-	abstract function openUnitMenu():Void;
+	abstract function openUnitMenu(op:SyncViewOperation):Void;
 }

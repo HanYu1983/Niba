@@ -138,6 +138,8 @@ enum ViewEvent {
 	ON_CLICK_ROBOT_VIEW_CANCEL;
 	// 當點擊地圖格子
 	ON_CLICK_BATTLE_POS(pos:Position);
+	// 當點擊取消
+	ON_CLICK_CANCEL;
 }
 
 typedef RobotView = {
@@ -203,16 +205,9 @@ interface IBaseController {
 	function onEvent(action:ViewEvent):Void;
 }
 
-enum UnitMenuState {
-	NORMAL;
-	UNIT_MENU;
-	UNIT_SELECT_MOVE_POSITION;
-}
-
 enum UnitMenuItem {}
 
 interface IBattleController extends IBaseController {
-	function getUnitMenuState():UnitMenuState;
 	function getUnitMenuItems():Array<UnitMenuItem>;
 	function getGrids():IMap<Position, GridView>;
 }
