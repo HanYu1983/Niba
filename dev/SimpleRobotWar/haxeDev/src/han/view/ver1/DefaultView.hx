@@ -45,7 +45,23 @@ abstract class DefaultView implements IView {
 	};
 
 	function changeUnitMenuState(state:RobotMenuState) {
+		final originState = _battleControlMemory.robotMenuState;
+		if(originState == state){
+			return;	
+		}
 		_battleControlMemory.robotMenuState = state;
+		switch originState {
+			case ROBOT_MENU:
+				renderRobotMenu(CLOSE);
+				renderMoveRange(CLOSE);
+			case _:
+		}
+		switch state {
+			case ROBOT_MENU:
+				renderRobotMenu(OPEN);
+				renderMoveRange(OPEN);
+			case _:
+		}
 	}
 
 	public function getActivePosition():Position{
@@ -77,19 +93,15 @@ abstract class DefaultView implements IView {
 						} else {
 							// 單位菜單
 							_battleControlMemory.activePosition = pos;
-							renderRobotMenu(OPEN);
 							changeUnitMenuState(ROBOT_MENU);
 						}
 					case ROBOT_MENU:
-						renderMoveRange(OPEN);
 					case ROBOT_SELECT_MOVE_POSITION:
 				}
 			case ON_CLICK_CANCEL:
 				switch _battleControlMemory.robotMenuState {
 					case NORMAL:
 					case ROBOT_MENU:
-						renderRobotMenu(CLOSE);
-						renderMoveRange(CLOSE);
 						changeUnitMenuState(NORMAL);
 					case ROBOT_SELECT_MOVE_POSITION:
 						changeUnitMenuState(ROBOT_MENU);
