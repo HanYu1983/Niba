@@ -1,4 +1,4 @@
-package han.view.ver1;
+package common.view.ver1;
 
 import haxe.Exception;
 import common.IDefine;
@@ -12,6 +12,12 @@ enum RobotMenuState {
 	ROBOT_MENU;
 	// 選擇移動位置時
 	ROBOT_SELECT_MOVE_POSITION;
+}
+
+enum SyncViewOperation {
+	OPEN;
+	CLOSE;
+	UPDATE;
 }
 
 private typedef BattleControlMemory = {

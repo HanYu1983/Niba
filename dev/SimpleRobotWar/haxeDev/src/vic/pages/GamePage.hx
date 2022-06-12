@@ -2,7 +2,7 @@ package vic.pages;
 
 import common.IConfig;
 import common.IDefine.GridView;
-import common.IDefine.SyncViewOperation;
+import common.view.ver1.DefaultView.SyncViewOperation;
 import vic.widgets.GridDetail;
 import VectorMath.floor;
 import common.IDefine.Position;
