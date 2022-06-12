@@ -134,7 +134,7 @@ class GamePage extends Box {
 	override function show() {
 		super.show();
 
-		updateGrids();
+		updateGamePage();
 		switchStageState();
 
 		closeRobotMenu();
@@ -193,5 +193,7 @@ class GamePage extends Box {
 		box_robotMenu.hide();
 	}
 
-	public function updateGamePage() {}
+	public function updateGamePage() {
+		updateGrids();
+	}
 }

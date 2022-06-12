@@ -1,5 +1,7 @@
 <box width="100%" height="100%">
-    <label text='game'/>
+    <vbox id='box_left' horizontalAlign='left' verticalAlign='center'>
+
+    </vbox>
     <absolute id='box_stages' width='800' height='800' horizontalAlign='center' verticalAlign='center'>
         <absolute id='box_grids' styleName='full'/>
         <absolute id='box_moveRanges' styleName='full'/>
@@ -16,7 +18,5 @@
     </absolute>
 
 
-    <vbox id='box_left' horizontalAlign='left' verticalAlign='center'>
 
-    </vbox>
 </box>
