@@ -215,7 +215,7 @@ enum UnitMenuItem {
 }
 
 interface IBattleController extends IBaseController {
-	function getUnitMenuItems():Array<UnitMenuItem>;
+	function getRobotMenuItems():Array<UnitMenuItem>;
 	function getRobotMoveRangeByPosition(pos:Position):Array<Position>;
 	function getRobotIdByPosition(pos:Position):Null<String>;
 	function getGrids():IMap<Position, GridView>;

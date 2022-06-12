@@ -66,7 +66,7 @@ class BattleController implements _IBattleController {
 		];
 	}
 
-	public function getUnitMenuItems():Array<UnitMenuItem> {
+	public function getRobotMenuItems():Array<UnitMenuItem> {
 		return [];
 	}
 

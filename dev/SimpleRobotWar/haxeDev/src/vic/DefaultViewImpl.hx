@@ -107,10 +107,10 @@ class DefaultViewImpl extends DefaultView {
 	}
 
 	// 打開機體菜單頁
-	// 顯示菜單 getBattleController().getUnitMenuItems()
+	// 顯示菜單 getBattleController().getRobotMenuItems()
 	// 菜單格式尚不確定, 不知道是不是也要像1代那樣每個選項還能左右的子選項
 	public function openUnitMenu(op:SyncViewOperation):Void {
-		trace("顯示菜單 getBattleController().getUnitMenuItems()");
+		trace("顯示菜單 getBattleController().getRobotMenuItems()");
 		switch op {
 			case OPEN:
 			// 打開頁面
