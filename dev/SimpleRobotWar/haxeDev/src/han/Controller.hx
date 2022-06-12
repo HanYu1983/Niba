@@ -56,21 +56,69 @@ private function getWeaponView(ctx:Context, id:String):WeaponView {
 	}
 }
 
-private interface IController extends ILobbyController extends IBattleController extends ILobbyInfo {}
+private interface _ILobbyController extends ILobbyController extends ILobbyInfo {}
 
-class Controller implements IController {
+class LobbyController implements _ILobbyController {
 	final _view:IView;
-
 	var _ctx:Context = getDefaultContext();
 
 	public function new(view:IView) {
 		_view = view;
-		initContext(_ctx);
-		_view.startLobby(this);
+	}
+
+	public function getContext():Context{
+		return _ctx;
 	}
 
 	public function getLobbyInfo():ILobbyInfo {
 		return this;
+	}
+
+	public function getRobots():IMap<String, RobotView> {
+		// 使用String當key的話, 它應會自動判斷成StringMap
+		return [
+			for (info in _ctx.robots) {
+				info.id => getRobotView(_ctx, info.id);
+			}
+		];
+	}
+
+	public function getPilots():IMap<String, PilotView> {
+		// 使用String當key的話, 它應會自動判斷成StringMap
+		return [
+			for (info in _ctx.pilots) {
+				info.id => getPilotView(_ctx, info.id);
+			}
+		];
+	}
+
+	public function getWeapons():IMap<String, WeaponView> {
+		// 使用String當key的話, 它應會自動判斷成StringMap
+		return [
+			for (info in _ctx.weapons) {
+				info.id => getWeaponView(_ctx, info.id);
+			}
+		];
+	}
+
+	public function onEvent(action:ViewEvent):Void {
+		switch action {
+			case ON_CLICK_ROBOT_BUY_WEAPON({robotId: robotId, weaponId: weaponId}):
+			case _:
+				_view.onEvent(action);
+		}
+	}
+}
+
+private interface _IBattleController extends IBattleController {}
+
+class BattleController implements _IBattleController{
+	final _view:IView;
+	final _ctx:Context;
+
+	public function new(ctx:Context, view:IView) {
+		_ctx =ctx;
+		_view = view;
 	}
 
 	public function getRobots():IMap<String, RobotView> {
@@ -126,13 +174,69 @@ class Controller implements IController {
 
 	public function onEvent(action:ViewEvent):Void {
 		switch action {
-			case ON_CLICK_GOTO_LOBBY:
-				_view.startLobby(this);
-			case ON_CLICK_GOTO_BATTLE(options):
-				_view.startBattle(this);
-			case ON_CLICK_ROBOT_BUY_WEAPON({robotId: robotId, weaponId: weaponId}):
 			case _:
 				_view.onEvent(action);
+		}
+	}
+}
+
+private interface IController extends ILobbyController extends IBattleController extends ILobbyInfo {}
+
+class Controller implements IController {
+	final _view:IView;
+	final _lobbyController:LobbyController;
+	var _battleController:BattleController;
+	var _baseController:IBaseController;
+
+	public function new(view:IView) {
+		_view = view;
+		_lobbyController = new LobbyController(view);
+		_battleController = new BattleController(_lobbyController.getContext(), _view);
+
+		initContext(_lobbyController.getContext());
+
+		_baseController = _lobbyController;
+		_view.startLobby(this);
+	}
+
+	public function getLobbyInfo():ILobbyInfo {
+		return _lobbyController;
+	}
+
+	public function getRobots():IMap<String, RobotView> {
+		return _baseController.getRobots();
+	}
+
+	public function getPilots():IMap<String, PilotView> {
+		return _baseController.getPilots();
+	}
+
+	public function getWeapons():IMap<String, WeaponView> {
+		return _baseController.getWeapons();
+	}
+
+	public function getGrids():IMap<Position, GridView> {
+		return _battleController.getGrids();
+	}
+
+	public function getUnitMenuState():UnitMenuState {
+		return _battleController.getUnitMenuState();
+	}
+
+	public function getUnitMenuItems():Array<UnitMenuItem> {
+		return _battleController.getUnitMenuItems();
+	}
+
+	public function onEvent(action:ViewEvent):Void {
+		switch action {
+			case ON_CLICK_GOTO_LOBBY:
+				_baseController = _lobbyController;
+				_view.startLobby(this);
+			case ON_CLICK_GOTO_BATTLE(options):
+				_baseController = _battleController;
+				_view.startBattle(this);
+			case _:
+				_baseController.onEvent(action);
 		}
 	}
 }

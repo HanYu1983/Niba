@@ -1,0 +1,1 @@
+docker run --rm -ti -v /Users/hanyu/Documents/home/Niba/dev/SimpleRobotWar/haxeDev/public:/public -p 8081:8081 node_cmd http-server -c-1 -p 8081 public
