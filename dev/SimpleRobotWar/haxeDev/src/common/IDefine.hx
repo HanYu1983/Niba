@@ -234,3 +234,9 @@ interface IView {
 	function startBattle(ctr:IBattleController):Void;
 	function onEvent(action:ViewEvent):Void;
 }
+
+enum SyncViewOperation {
+	OPEN;
+	CLOSE;
+	UPDATE;
+}

@@ -1,8 +1,8 @@
 package vic.pages;
 
-import han.view.ver1.DefaultView.SyncViewOperation;
 import common.IConfig;
 import common.IDefine.GridView;
+import common.IDefine.SyncViewOperation;
 import vic.widgets.GridDetail;
 import VectorMath.floor;
 import common.IDefine.Position;
@@ -87,6 +87,8 @@ class GamePage extends Box {
 					btn_end.show();
 			}
 		}
+
+		trace("switchStageState可以改用Main.view.getRobotMenuState()", Main.view.getRobotMenuState());
 
 		switch (op) {
 			case OPEN:

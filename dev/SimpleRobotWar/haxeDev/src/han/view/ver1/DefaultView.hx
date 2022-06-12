@@ -5,15 +5,12 @@ import common.IDefine;
 
 using Lambda;
 
-enum SyncViewOperation {
-	OPEN;
-	CLOSE;
-	UPDATE;
-}
-
-private enum RobotMenuState {
+enum RobotMenuState {
+	// 沒開狀態
 	NORMAL;
+	// 打開菜單
 	ROBOT_MENU;
+	// 選擇移動位置時
 	ROBOT_SELECT_MOVE_POSITION;
 }
 
@@ -46,8 +43,8 @@ abstract class DefaultView implements IView {
 
 	function changeUnitMenuState(state:RobotMenuState) {
 		final originState = _battleControlMemory.robotMenuState;
-		if(originState == state){
-			return;	
+		if (originState == state) {
+			return;
 		}
 		_battleControlMemory.robotMenuState = state;
 		switch originState {
@@ -64,8 +61,12 @@ abstract class DefaultView implements IView {
 		}
 	}
 
-	public function getActivePosition():Position{
-		if(_battleControlMemory.activePosition == null){
+	public function getRobotMenuState():RobotMenuState {
+		return _battleControlMemory.robotMenuState;
+	}
+
+	public function getActivePosition():Position {
+		if (_battleControlMemory.activePosition == null) {
 			throw new Exception("activePosition == null");
 		}
 		return _battleControlMemory.activePosition;
