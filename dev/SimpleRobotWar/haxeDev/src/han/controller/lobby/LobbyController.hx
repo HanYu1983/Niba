@@ -58,7 +58,6 @@ class LobbyController implements _ILobbyController {
 
 	public function onEvent(action:ViewEvent):Void {
 		switch action {
-			case ON_CLICK_ROBOT_BUY_WEAPON({robotId: robotId, weaponId: weaponId}):
 			case _:
 				_view.onEvent(action);
 		}

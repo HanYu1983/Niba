@@ -26,8 +26,13 @@ class DefaultViewImpl extends DefaultView {
 	//  駕駛員檢視 ON_CLICK_GOTO_PILOT_VIEW
 	//  戰鬥 ON_CLICK_GOTO_BATTLE("")
 	public function openLobbyPage(op:SyncViewOperation):Void {
-		Main.view.closeAllPages();
-		Main.view.lobbyPage.fadeIn();
+		switch op {
+			case OPEN:
+				Main.view.closeAllPages();
+				Main.view.lobbyPage.fadeIn();
+			case CLOSE:
+			case UPDATE:
+		}
 	}
 
 	// 打開戰鬥頁
@@ -49,10 +54,15 @@ class DefaultViewImpl extends DefaultView {
 	// }
 	// 點擊格子 ON_CLICK_BATTLE_POS(Position)
 	public function openBattlePage(op:SyncViewOperation):Void {
-		Main.view.closeAllPages();
-		Main.view.gamePage.fadeIn();
-		trace("顯示格子");
-		trace("綁定格字點擊事件到ON_CLICK_BATTLE_POS(Position)");
+		switch op {
+			case OPEN:
+				Main.view.closeAllPages();
+				Main.view.gamePage.fadeIn();
+				trace("顯示格子");
+				trace("綁定格字點擊事件到ON_CLICK_BATTLE_POS(Position)");
+			case CLOSE:
+			case UPDATE:
+		}
 	}
 
 	// 打開機體檢視頁
@@ -68,8 +78,13 @@ class DefaultViewImpl extends DefaultView {
 	//   設定駕駛
 	//   回上頁 ON_CLICK_ROBOT_VIEW_CANCEL
 	public function openRobotViewPage(op:SyncViewOperation):Void {
-		Main.view.closeAllPages();
-		Main.view.robotPage.fadeIn();
+		switch op {
+			case OPEN:
+				Main.view.closeAllPages();
+				Main.view.robotPage.fadeIn();
+			case CLOSE:
+			case UPDATE:
+		}
 	}
 
 	// 打開機體檢視頁
@@ -82,8 +97,13 @@ class DefaultViewImpl extends DefaultView {
 	// 動作按鈕為
 	//   設定機體
 	public function openPilotViewPage(op:SyncViewOperation):Void {
-		Main.view.closeAllPages();
-		Main.view.pilotPage.fadeIn();
+		switch op {
+			case OPEN:
+				Main.view.closeAllPages();
+				Main.view.pilotPage.fadeIn();
+			case CLOSE:
+			case UPDATE:
+		}
 	}
 
 	// 打開機體菜單頁
@@ -93,9 +113,9 @@ class DefaultViewImpl extends DefaultView {
 		trace("顯示菜單 getBattleController().getUnitMenuItems()");
 		switch op {
 			case OPEN:
-				// 打發頁面
+			// 打開頁面
 			case CLOSE:
-				// 關閉頁面
+			// 關閉頁面
 			case UPDATE:
 				// 更新頁面
 		}

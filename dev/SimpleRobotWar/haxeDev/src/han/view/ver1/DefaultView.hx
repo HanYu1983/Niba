@@ -3,20 +3,20 @@ package han.view.ver1;
 import haxe.Exception;
 import common.IDefine;
 
-enum UnitMenuState {
+enum SyncViewOperation {
+	OPEN;
+	CLOSE;
+	UPDATE;
+}
+
+private enum UnitMenuState {
 	NORMAL;
 	UNIT_MENU;
 	UNIT_SELECT_MOVE_POSITION;
 }
 
-typedef BattleControlMemory = {
+private typedef BattleControlMemory = {
 	unitMenuState:UnitMenuState
-}
-
-enum SyncViewOperation {
-	OPEN;
-	CLOSE;
-	UPDATE;
 }
 
 abstract class DefaultView implements IView {
@@ -51,6 +51,7 @@ abstract class DefaultView implements IView {
 			case ON_CLICK_GOTO_PILOT_VIEW:
 				openPilotViewPage(OPEN);
 			case ON_CLICK_GOTO_ROBOT_BUY(_):
+			case ON_CLICK_ROBOT_BUY_WEAPON({robotId: robotId, weaponId: weaponId}):
 			case ON_CLICK_ROBOT_VIEW_CANCEL:
 				openLobbyPage(OPEN);
 			// battle

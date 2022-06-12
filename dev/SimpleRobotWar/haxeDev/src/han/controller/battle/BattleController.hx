@@ -13,12 +13,12 @@ import han.controller.common.IDefine;
 
 private interface _IBattleController extends IBattleController {}
 
-class BattleController implements _IBattleController{
+class BattleController implements _IBattleController {
 	final _view:IView;
 	final _ctx:Context;
 
 	public function new(ctx:Context, view:IView) {
-		_ctx =ctx;
+		_ctx = ctx;
 		_view = view;
 	}
 
@@ -26,7 +26,9 @@ class BattleController implements _IBattleController{
 		// 使用String當key的話, 它應會自動判斷成StringMap
 		return [
 			for (info in _ctx.robots) {
-				info.id => getRobotView(_ctx, info.id);
+				if (info.position != null) {
+					info.id => getRobotView(_ctx, info.id);
+				}
 			}
 		];
 	}
