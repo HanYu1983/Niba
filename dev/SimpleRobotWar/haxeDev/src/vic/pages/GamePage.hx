@@ -69,9 +69,8 @@ class GamePage extends Box {
 
 	function name() {}
 
-	public function updateRobotMenu(op:SyncViewOperation) {
+	public function updateRobotMenu() {
 		final robotMenu = Main.view.getBattleController().getRobotMenuItems();
-		verbose('GamePage', 'robot menu ${robotMenu} state:${op}');
 
 		btn_move.hide();
 		btn_attack.hide();
@@ -87,23 +86,12 @@ class GamePage extends Box {
 					btn_end.show();
 			}
 		}
-
-		trace("switchStageState可以改用Main.view.getRobotMenuState()", Main.view.getRobotMenuState());
-
-		switch (op) {
-			case OPEN:
-				switchStageState(ROBOT_MENU);
-			case CLOSE:
-				switchStageState(NORMAL);
-			case UPDATE:
-				switchStageState(ROBOT_MENU);
-		}
 	}
 
-	function switchStageState(state:STAGE_STATE) {
+	function switchStageState() {
 		box_stages.onMouseOver = null;
 		box_stages.onClick = null;
-		switch (state) {
+		switch (Main.view.getRobotMenuState()) {
 			case NORMAL:
 				final gridInfos = Main.view.getBattleController().getGrids();
 				box_stages.onMouseOver = function(e) {
@@ -125,6 +113,7 @@ class GamePage extends Box {
 					Main.view.getBattleController().onEvent(ON_CLICK_BATTLE_POS(pos));
 				}
 			case ROBOT_MENU:
+			case ROBOT_SELECT_MOVE_POSITION:
 		}
 	}
 
@@ -132,6 +121,32 @@ class GamePage extends Box {
 		super.show();
 
 		updateGrids();
-		switchStageState(NORMAL);
+		switchStageState();
+
+		closeRobotMenu();
+		closeSystemMenu();
 	}
+
+	public function openSystemMenu() {}
+
+	public function closeSystemMenu() {}
+
+	public function updateSystemMenu() {}
+
+	public function updateMoveRange() {}
+
+	public function closeMoveRange() {}
+
+	public function openMoveRange() {}
+
+	public function openRobotMenu() {
+
+		box_robotMenu.show();
+		updateRobotMenu();
+		switchStageState();
+	}
+
+	public function closeRobotMenu() {}
+
+	public function updateGamePage() {}
 }

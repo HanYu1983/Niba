@@ -128,7 +128,7 @@ class DefaultViewImpl extends DefaultView {
 		verbose("DefaultViewImpl", "renderRobotMenu");
 		switch op {
 			case OPEN:
-				// _view.gamePage.openRobotMenu();
+				_view.gamePage.openRobotMenu();
 			// 打開頁面
 			case CLOSE:
 				_view.gamePage.closeRobotMenu();
@@ -157,7 +157,7 @@ class DefaultViewImpl extends DefaultView {
 		verbose("DefaultViewImpl", "renderSystemMenu");
 		switch op {
 			case OPEN:
-				// _view.gamePage.openSystemMenu();
+				_view.gamePage.openSystemMenu();
 			case CLOSE:
 				_view.gamePage.closeSystemMenu();
 			case UPDATE:
