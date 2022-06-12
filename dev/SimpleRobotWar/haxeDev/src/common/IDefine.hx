@@ -121,6 +121,15 @@ typedef TerrianData = {
 	def:Float
 }
 
+enum RobotMenuItem {
+	// 移動
+	MOVE;
+	// 攻擊
+	ATTACK;
+	// 終了
+	DONE;
+}
+
 enum ViewEvent {
 	// 當點擊回大廳按鈕
 	ON_CLICK_GOTO_LOBBY;
@@ -140,6 +149,8 @@ enum ViewEvent {
 	ON_CLICK_BATTLE_POS(pos:Position);
 	// 當點擊取消
 	ON_CLICK_CANCEL;
+	// 當點擊機體菜單
+	ON_CLICK_ROBOT_MENU_ITEM(item:RobotMenuItem);
 }
 
 typedef RobotView = {
@@ -205,17 +216,10 @@ interface IBaseController {
 	function onEvent(action:ViewEvent):Void;
 }
 
-enum UnitMenuItem {
-	// 移動
-	MOVE;
-	// 攻擊
-	ATTACK;
-	// 終了
-	DONE;
-}
+
 
 interface IBattleController extends IBaseController {
-	function getRobotMenuItems():Array<UnitMenuItem>;
+	function getRobotMenuItems():Array<RobotMenuItem>;
 	function getRobotMoveRangeByPosition(pos:Position):Array<Position>;
 	function getRobotIdByPosition(pos:Position):Null<String>;
 	function getGrids():IMap<Position, GridView>;

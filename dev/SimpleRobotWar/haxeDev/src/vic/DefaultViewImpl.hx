@@ -5,11 +5,12 @@ import haxe.ui.core.Component;
 import vic.pages.PilotPage;
 import vic.pages.RobotPage;
 import common.IDefine;
-import han.view.ver1.DefaultView;
+import common.view.ver1.DefaultView;
 import vic.pages.GamePage;
 import vic.pages.LobbyPage;
 import tool.Debug;
 
+// 所有頁面都可以綁定esc到ON_CLICK_CANCEL
 class DefaultViewImpl extends DefaultView {
 	final _view:HaxeUIView;
 
@@ -121,7 +122,8 @@ class DefaultViewImpl extends DefaultView {
 
 	// 打開機體菜單頁
 	// 顯示菜單 getBattleController().getRobotMenuItems()
-	// 菜單格式尚不確定, 不知道是不是也要像1代那樣每個選項還能左右的子選項
+	// 動作
+	//   點擊菜單選項 ON_CLICK_ROBOT_MENU_ITEM(item)
 	function renderRobotMenu(op:SyncViewOperation):Void {
 		verbose("DefaultViewImpl", "renderRobotMenu");
 		switch op {

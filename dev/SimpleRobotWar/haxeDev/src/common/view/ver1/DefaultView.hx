@@ -1,20 +1,23 @@
-package han.view.ver1;
+package common.view.ver1;
 
 import haxe.Exception;
 import common.IDefine;
 
 using Lambda;
 
+enum RobotMenuState {
+	// 沒開狀態
+	NORMAL;
+	// 打開菜單
+	ROBOT_MENU;
+	// 選擇移動位置時
+	ROBOT_SELECT_MOVE_POSITION;
+}
+
 enum SyncViewOperation {
 	OPEN;
 	CLOSE;
 	UPDATE;
-}
-
-private enum RobotMenuState {
-	NORMAL;
-	ROBOT_MENU;
-	ROBOT_SELECT_MOVE_POSITION;
 }
 
 private typedef BattleControlMemory = {
@@ -46,8 +49,8 @@ abstract class DefaultView implements IView {
 
 	function changeUnitMenuState(state:RobotMenuState) {
 		final originState = _battleControlMemory.robotMenuState;
-		if(originState == state){
-			return;	
+		if (originState == state) {
+			return;
 		}
 		_battleControlMemory.robotMenuState = state;
 		switch originState {
@@ -64,8 +67,12 @@ abstract class DefaultView implements IView {
 		}
 	}
 
-	public function getActivePosition():Position{
-		if(_battleControlMemory.activePosition == null){
+	public function getRobotMenuState():RobotMenuState {
+		return _battleControlMemory.robotMenuState;
+	}
+
+	public function getActivePosition():Position {
+		if (_battleControlMemory.activePosition == null) {
 			throw new Exception("activePosition == null");
 		}
 		return _battleControlMemory.activePosition;
