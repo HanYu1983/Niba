@@ -3,28 +3,33 @@ package common;
 import haxe.Exception;
 import common.IDefine;
 
+private final GOOD = 1;
+private final NORMAL = 2;
+private final BAD = 4;
+private final VERY_BAD = 8;
+
 final TERRIANS:Array<TerrianData> = [
 	{
 		title: "海",
-		moveFactor: [1, 1.25, 1.5, 2],
+		moveFactor: [GOOD, VERY_BAD, VERY_BAD, BAD],
 		evade: 2,
 		def: 1
 	},
 	{
 		title: "平原",
-		moveFactor: [2, 1, 1.25, 1.5],
+		moveFactor: [NORMAL, GOOD, NORMAL, BAD],
 		evade: 1,
 		def: 1
 	},
 	{
 		title: "森林",
-		moveFactor: [1.5, 1.25, 1, 1.25],
+		moveFactor: [BAD, NORMAL, GOOD, NORMAL],
 		evade: 1.5,
 		def: 1.5
 	},
 	{
 		title: "山",
-		moveFactor: [2, 1.5, 1.25, 1],
+		moveFactor: [VERY_BAD, BAD, NORMAL, GOOD],
 		evade: 1.5,
 		def: 2
 	}

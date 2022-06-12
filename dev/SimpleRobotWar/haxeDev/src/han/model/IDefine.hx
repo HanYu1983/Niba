@@ -81,7 +81,7 @@ function createRobot(id:String):Robot {
 		maxEnergy: 0,
 		maxAction: 0,
 		damage: [],
-		terrian: [1, 1, 1, 1]
+		terrian: [0, 0, 0, 1]
 	}
 }
 
@@ -160,6 +160,14 @@ function getDefaultContext():Context {
 		positionToRobot: new EnumValueMap<Position, String>(),
 		idSeq: 0,
 	}
+}
+
+function getGrid(ctx:Context, gridId:Position):Grid {
+	final grid = ctx.grids.get(gridId);
+	if (grid == null) {
+		throw new Exception('grid not found:${gridId}');
+	}
+	return grid;
 }
 
 function getPlayer(ctx:Context, playerId:String):Player {

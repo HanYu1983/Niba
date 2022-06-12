@@ -75,33 +75,41 @@ private class PathSolution extends DefaultSolution<Position> {
 @:nullSafety
 private class ShortestPathTreeSolution extends DefaultSolution<Position> {
 	final _ctx:Context;
-	final _energy:Int;
+	final _robotId:String;
 
-	public function new(ctx:Context, id:Position, energy:Int, parentId:Null<Position> = null, cost:Int = 0, estimate:Int = 0, isGoal:Bool = false) {
+	public function new(ctx:Context, id:Position, robotId:String, parentId:Null<Position> = null, cost:Int = 0, estimate:Int = 0, isGoal:Bool = false) {
 		super(id, parentId, cost, estimate, isGoal);
 		_ctx = ctx;
-		_energy = energy;
+		_robotId = robotId;
 	}
 
 	override function getNextSolution():Array<ISolution<Position>> {
 		return switch getId() {
-			case Position.POS(x, y):
+			case POS(x, y):
 				final ret:Array<ISolution<Position>> = [];
+				final robot = getRobot(_ctx, _robotId);
 				for (next in [[0, -1], [0, 1], [-1, 0], [1, 0]]) {
 					switch next {
 						case [ox, oy]:
 							final nx = x + ox;
 							final ny = y + oy;
 							if (nx >= 0 && ny >= 0 && nx < MAP_W && ny < MAP_H) {
-								final moveCost = switch getGridMoveFactor(_ctx, POS(nx, ny)) {
+								final nextPos = POS(nx, ny);
+								final grid = getGrid(_ctx, nextPos);
+								final moveCost = switch getGridMoveFactor(_ctx, nextPos) {
 									case [sea, ground, forest, mountain]:
-										Std.int(4 * sea);
+										switch robot.terrian {
+											case [sea2, ground2, forest2, mountain2]:
+												Std.int(4 * (sea * sea2 + ground * ground2 + forest * forest2 + mountain * mountain2));
+											case _:
+												throw new Exception("robot.terrian not found");
+										}
 									case _:
 										throw new Exception("getGridMoveFactor not found");
 								}
 								final cost = this.cost + moveCost;
-								if (cost < _energy) {
-									final nextSolution = new ShortestPathTreeSolution(_ctx, POS(nx, ny), _energy, getId(), cost, 0, false);
+								if (cost < 40) {
+									final nextSolution = new ShortestPathTreeSolution(_ctx, nextPos, _robotId, getId(), cost, 0, false);
 									ret.push(nextSolution);
 								}
 							}
@@ -124,7 +132,7 @@ function getRobotMoveRangeByPosition(ctx:Context, pos:Position):Array<Position> 
 	}
 	final robot = getRobot(ctx, robotId);
 	final moveEnergy = 20;
-	final tree = getAStar(new ShortestPathTreeSolution(ctx, pos, moveEnergy), {exitWhenFind: true});
+	final tree = getAStar(new ShortestPathTreeSolution(ctx, pos, robotId), {exitWhenFind: true});
 	return [
 		for (pos => solution in tree) {
 			pos;
@@ -150,7 +158,7 @@ private function testPath() {
 		trace(path);
 	}
 	{
-		final tree = getAStar(new ShortestPathTreeSolution(ctx, POS(4, 4), 20), {exitWhenFind: true});
+		final tree = getAStar(new ShortestPathTreeSolution(ctx, POS(4, 4), robot.id), {exitWhenFind: true});
 		for (pos => solution in tree) {
 			trace(pos, solution.getSortScore());
 		}
