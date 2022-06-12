@@ -60,6 +60,7 @@ class DefaultViewImpl extends DefaultView {
 				Main.view.gamePage.fadeIn();
 				trace("顯示格子");
 				trace("綁定格字點擊事件到ON_CLICK_BATTLE_POS(Position)");
+				trace("robots", getBattleController().getRobots());
 			case CLOSE:
 			case UPDATE:
 		}
