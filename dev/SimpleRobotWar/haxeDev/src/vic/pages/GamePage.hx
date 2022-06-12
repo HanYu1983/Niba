@@ -1,5 +1,6 @@
 package vic.pages;
 
+import haxe.ui.events.MouseEvent;
 import vic.widgets.Robot;
 import common.IConfig;
 import common.IDefine.GridView;
@@ -101,12 +102,11 @@ class GamePage extends Box {
 	var lastClickPos = [0.0, 0.0];
 
 	function switchStageState() {
-		box_stages.onMouseOver = null;
-		box_stages.onClick = null;
+		box_stages.unregisterEvents();
 		switch (Main.view.getRobotMenuState()) {
 			case NORMAL:
 				final gridInfos = Main.view.getBattleController().getGrids();
-				box_stages.onMouseOver = function(e) {
+				box_stages.registerEvent(MouseEvent.MOUSE_MOVE, (e:MouseEvent) -> {
 					final pos = getPosEnumByLocalPos(e.localX, e.localY);
 					final gridInfo = gridInfos.get(pos);
 					switch (pos) {
@@ -116,16 +116,16 @@ class GamePage extends Box {
 						case _:
 					}
 					updateGridDetail(gridInfo);
-				}
+				});
 
-				box_stages.onClick = function(e) {
+				box_stages.registerEvent(MouseEvent.CLICK, (e:MouseEvent) -> {
 					final pos = getPosEnumByLocalPos(e.localX, e.localY);
 					lastClickPos[0] = e.localX;
 					lastClickPos[1] = e.localY;
 					verbose('GamePage', 'mouse click pos:(${e.localX})(${e.localY}) enum:(${pos})');
 
 					Main.view.getBattleController().onEvent(ON_CLICK_BATTLE_POS(pos));
-				}
+				});
 			case ROBOT_MENU:
 			case ROBOT_SELECT_MOVE_POSITION:
 		}
