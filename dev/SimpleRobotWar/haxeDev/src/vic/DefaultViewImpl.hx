@@ -39,14 +39,16 @@ class DefaultViewImpl extends DefaultView {
 	//  機體檢視 ON_CLICK_GOTO_ROBOT_VIEW
 	//  駕駛員檢視 ON_CLICK_GOTO_PILOT_VIEW
 	//  戰鬥 ON_CLICK_GOTO_BATTLE("")
-	function openLobbyPage(op:SyncViewOperation):Void {
-		switch op {
-			case OPEN:
-				_view.closeAllPages();
-				_view.lobbyPage.fadeIn();
-			case CLOSE:
-			case UPDATE:
-		}
+	function openLobbyPage():Void {
+		_view.closeAllPages();
+		_view.lobbyPage.fadeIn();
+		// switch op {
+		// 	case OPEN:
+		// 		_view.closeAllPages();
+		// 		_view.lobbyPage.fadeIn();
+		// 	case CLOSE:
+		// 	case UPDATE:
+		// }
 	}
 
 	// 打開戰鬥頁
@@ -67,16 +69,18 @@ class DefaultViewImpl extends DefaultView {
 	//   }
 	// }
 	// 點擊格子 ON_CLICK_BATTLE_POS(Position)
-	function openBattlePage(op:SyncViewOperation):Void {
-		switch op {
-			case OPEN:
-				_view.closeAllPages();
-				_view.gamePage.fadeIn();
-			case CLOSE:
-				_view.gamePage.fadeOut();
-			case UPDATE:
-				_view.gamePage.updateGamePage();
-		}
+	function openBattlePage():Void {
+		_view.closeAllPages();
+		_view.gamePage.fadeIn();
+		// switch op {
+		// 	case OPEN:
+		// 		_view.closeAllPages();
+		// 		_view.gamePage.fadeIn();
+		// 	case CLOSE:
+		// 		_view.gamePage.fadeOut();
+		// 	case UPDATE:
+		// 		_view.gamePage.updateGamePage();
+		// }
 	}
 
 	// 打開機體檢視頁
@@ -91,14 +95,16 @@ class DefaultViewImpl extends DefaultView {
 	//   裝備與買賣 ON_CLICK_GOTO_ROBOT_BUY
 	//   設定駕駛
 	//   回上頁 ON_CLICK_ROBOT_VIEW_CANCEL
-	function openRobotViewPage(op:SyncViewOperation):Void {
-		switch op {
-			case OPEN:
-				_view.closeAllPages();
-				_view.robotPage.fadeIn();
-			case CLOSE:
-			case UPDATE:
-		}
+	function openRobotViewPage():Void {
+		_view.closeAllPages();
+		_view.robotPage.fadeIn();
+		// switch op {
+		// 	case OPEN:
+		// 		_view.closeAllPages();
+		// 		_view.robotPage.fadeIn();
+		// 	case CLOSE:
+		// 	case UPDATE:
+		// }
 	}
 
 	// 打開機體檢視頁
@@ -110,14 +116,16 @@ class DefaultViewImpl extends DefaultView {
 	// 右邊資料下方有動作按鈕
 	// 動作按鈕為
 	//   設定機體
-	function openPilotViewPage(op:SyncViewOperation):Void {
-		switch op {
-			case OPEN:
-				_view.closeAllPages();
-				_view.pilotPage.fadeIn();
-			case CLOSE:
-			case UPDATE:
-		}
+	function openPilotViewPage():Void {
+		_view.closeAllPages();
+		_view.pilotPage.fadeIn();
+		// switch op {
+		// 	case OPEN:
+		// 		_view.closeAllPages();
+		// 		_view.pilotPage.fadeIn();
+		// 	case CLOSE:
+		// 	case UPDATE:
+		// }
 	}
 
 	// 打開機體菜單頁
@@ -140,22 +148,23 @@ class DefaultViewImpl extends DefaultView {
 		_view.gamePage.updateRobotMenu();
 	}
 
-	function renderMoveRange(op:SyncViewOperation):Void {
+	function renderMoveRange():Void {
 		info("DefaultViewImpl", 'renderMoveRange');
-		switch op {
-			case OPEN:
-				_view.gamePage.openMoveRange();
-			case CLOSE:
-				_view.gamePage.closeMoveRange();
-			case UPDATE:
-				_view.gamePage.updateMoveRange();
-		}
+		_view.gamePage.updateMoveRange();
+		// switch op {
+		// 	case OPEN:
+		// 		_view.gamePage.openMoveRange();
+		// 	case CLOSE:
+		// 		_view.gamePage.closeMoveRange();
+		// 	case UPDATE:
+		// 		_view.gamePage.updateMoveRange();
+		// }
 	}
 
 	// 系統菜單
 	// 顯示菜單 Main.view.getSystemMenuView()
 	function renderSystemMenu():Void {
-		info("DefaultViewImpl",  'renderSystemMenu: ${Main.view.getSystemMenuView()}');
+		info("DefaultViewImpl", 'renderSystemMenu: ${Main.view.getSystemMenuView()}');
 		_view.gamePage.updateSystemMenu();
 	}
 }

@@ -5,7 +5,6 @@ import haxe.ui.events.MouseEvent;
 import vic.widgets.Robot;
 import common.IConfig;
 import common.IDefine.GridView;
-import common.view.ver1.DefaultView.SyncViewOperation;
 import vic.widgets.GridDetail;
 import VectorMath.floor;
 import common.IDefine.Position;

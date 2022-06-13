@@ -16,12 +16,6 @@ enum RobotMenuState {
 	SYSTEM_MENU;
 }
 
-enum SyncViewOperation {
-	OPEN;
-	CLOSE;
-	UPDATE;
-}
-
 typedef RobotMenuView = {
 	menuItems:Array<RobotMenuItem>
 }
@@ -44,12 +38,12 @@ abstract class DefaultView implements IView {
 
 	public function startLobby(ctr:ILobbyController):Void {
 		_lobbyCtr = ctr;
-		openLobbyPage(OPEN);
+		openLobbyPage();
 	}
 
 	public function startBattle(ctr:IBattleController):Void {
 		_battleCtr = ctr;
-		openBattlePage(OPEN);
+		openBattlePage();
 	}
 
 	final _battleControlMemory:BattleControlMemory = {
@@ -104,13 +98,13 @@ abstract class DefaultView implements IView {
 		switch action {
 			// lobby
 			case ON_CLICK_GOTO_ROBOT_VIEW:
-				openRobotViewPage(OPEN);
+				openRobotViewPage();
 			case ON_CLICK_GOTO_PILOT_VIEW:
-				openPilotViewPage(OPEN);
+				openPilotViewPage();
 			case ON_CLICK_GOTO_ROBOT_BUY(_):
 			case ON_CLICK_ROBOT_BUY_WEAPON({robotId: robotId, weaponId: weaponId}):
 			case ON_CLICK_ROBOT_VIEW_CANCEL:
-				openLobbyPage(OPEN);
+				openLobbyPage();
 			// battle
 			case ON_CLICK_BATTLE_POS(pos):
 				switch _battleControlMemory.robotMenuState {
@@ -163,17 +157,17 @@ abstract class DefaultView implements IView {
 		return _battleCtr;
 	}
 
-	abstract function openLobbyPage(op:SyncViewOperation):Void;
+	abstract function openLobbyPage():Void;
 
-	abstract function openBattlePage(op:SyncViewOperation):Void;
+	abstract function openBattlePage():Void;
 
-	abstract function openRobotViewPage(op:SyncViewOperation):Void;
+	abstract function openRobotViewPage():Void;
 
-	abstract function openPilotViewPage(op:SyncViewOperation):Void;
+	abstract function openPilotViewPage():Void;
 
 	abstract function renderRobotMenu():Void;
 
-	abstract function renderMoveRange(op:SyncViewOperation):Void;
+	abstract function renderMoveRange():Void;
 
 	abstract function renderSystemMenu():Void;
 }
