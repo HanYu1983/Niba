@@ -40,6 +40,7 @@ class DefaultViewImpl extends DefaultView {
 	//  駕駛員檢視 ON_CLICK_GOTO_PILOT_VIEW
 	//  戰鬥 ON_CLICK_GOTO_BATTLE("")
 	function openLobbyPage():Void {
+		// 只要是Page就統一關全部再打開指定Page
 		_view.closeAllPages();
 		_view.lobbyPage.fadeIn();
 		// switch op {
@@ -70,6 +71,7 @@ class DefaultViewImpl extends DefaultView {
 	// }
 	// 點擊格子 ON_CLICK_BATTLE_POS(Position)
 	function openBattlePage():Void {
+		// 只要是Page就統一關全部再打開指定Page
 		_view.closeAllPages();
 		_view.gamePage.fadeIn();
 		// switch op {
@@ -96,6 +98,7 @@ class DefaultViewImpl extends DefaultView {
 	//   設定駕駛
 	//   回上頁 ON_CLICK_ROBOT_VIEW_CANCEL
 	function openRobotViewPage():Void {
+		// 只要是Page就統一關全部再打開指定Page
 		_view.closeAllPages();
 		_view.robotPage.fadeIn();
 		// switch op {
@@ -117,6 +120,7 @@ class DefaultViewImpl extends DefaultView {
 	// 動作按鈕為
 	//   設定機體
 	function openPilotViewPage():Void {
+		// 只要是Page就統一關全部再打開指定Page
 		_view.closeAllPages();
 		_view.pilotPage.fadeIn();
 		// switch op {
