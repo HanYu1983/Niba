@@ -7,7 +7,7 @@ import common.WeaponData;
 import common.TerrianData;
 import han.model.IDefine;
 
-function getRobotView(ctx:Context, robotId:String):RobotView {
+function getRobotView(ctx:Context, robotId:String, position:Null<Position>):RobotView {
 	final robot = getRobot(ctx, robotId);
 	final pilot = getRobotPilot(ctx, robotId);
 	final weapons = getRobotWeapons(ctx, robotId);
@@ -22,6 +22,7 @@ function getRobotView(ctx:Context, robotId:String):RobotView {
 		maxHp: robot.maxHp,
 		maxEnergy: robot.maxEnergy,
 		maxAction: robot.maxAction,
+		position: position
 	}
 }
 

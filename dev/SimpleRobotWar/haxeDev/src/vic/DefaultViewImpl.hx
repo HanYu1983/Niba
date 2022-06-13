@@ -133,6 +133,7 @@ class DefaultViewImpl extends DefaultView {
 	}
 
 	function renderBattlePage(){
+		trace(getBattleController().getRobots());
 		_view.gamePage.updateGamePage();
 	}
 

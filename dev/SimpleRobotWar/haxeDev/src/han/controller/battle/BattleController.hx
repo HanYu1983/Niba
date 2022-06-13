@@ -30,7 +30,7 @@ class BattleController implements _IBattleController {
 		// 使用String當key的話, 它應會自動判斷成StringMap
 		return [
 			for (pos => robotId in _ctx.positionToRobot) {
-				robotId => getRobotView(_ctx, robotId);
+				robotId => getRobotView(_ctx, robotId, pos);
 			}
 		];
 	}

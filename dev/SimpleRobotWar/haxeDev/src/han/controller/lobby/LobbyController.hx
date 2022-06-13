@@ -33,7 +33,7 @@ class LobbyController implements _ILobbyController {
 		// 使用String當key的話, 它應會自動判斷成StringMap
 		return [
 			for (info in _ctx.robots) {
-				info.id => getRobotView(_ctx, info.id);
+				info.id => getRobotView(_ctx, info.id, null);
 			}
 		];
 	}

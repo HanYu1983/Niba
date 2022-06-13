@@ -168,6 +168,7 @@ typedef RobotView = {
 	maxHp:Int,
 	maxEnergy:Int,
 	maxAction:Int,
+	position: Null<Position>
 }
 
 typedef PilotView = {
@@ -217,8 +218,6 @@ interface IBaseController {
 	function getWeapons():IMap<String, WeaponView>;
 	function onEvent(action:ViewEvent):Void;
 }
-
-
 
 interface IBattleController extends IBaseController {
 	function getRobotMenuItems(robotId:String):Array<RobotMenuItem>;
