@@ -61,6 +61,14 @@ class Controller implements _IController {
 		return _battleController.getRobotIdByPosition(pos);
 	}
 
+	public function doRobotMove(robotId:String, from:Position, to:Position):Void{
+		return _battleController.doRobotMove(robotId, from,to);
+	}
+
+	public function doRobotDone(robotId:String):Void{
+		return _battleController.doRobotDone(robotId);
+	}
+
 	public function onEvent(action:ViewEvent):Void {
 		switch action {
 			case ON_CLICK_GOTO_LOBBY:

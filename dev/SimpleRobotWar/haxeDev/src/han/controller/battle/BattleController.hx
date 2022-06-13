@@ -12,6 +12,8 @@ import han.alg.Path;
 import han.model.IDefine;
 import han.controller.common.IDefine;
 
+using Lambda;
+
 private interface _IBattleController extends IBattleController {}
 
 class BattleController implements _IBattleController {
@@ -67,7 +69,25 @@ class BattleController implements _IBattleController {
 	}
 
 	public function getRobotMenuItemsByPosition(pos:Position):Array<RobotMenuItem> {
-		return [MOVE, DONE];
+		final robotId = _ctx.positionToRobot.get(pos);
+		if (robotId == null) {
+			throw new Exception("要打開機體菜單卻沒有選到有機體的格子");
+		}
+		final robot = getRobot(_ctx, robotId);
+		final hasDone = robot.flags.has(HAS_DONE);
+		if (hasDone) {
+			return [STATUS];
+		}
+		final ret:Array<RobotMenuItem> = [];
+		{
+			final hasMove = robot.flags.has(HAS_MOVE);
+			if (hasMove == false) {
+				ret.push(MOVE);
+			}
+		}
+		ret.push(STATUS);
+		ret.push(DONE);
+		return ret;
 	}
 
 	public function getRobotMoveRangeByPosition(pos:Position):Array<Position> {
@@ -76,6 +96,21 @@ class BattleController implements _IBattleController {
 
 	public function getRobotIdByPosition(pos:Position):Null<String> {
 		return _ctx.positionToRobot.get(pos);
+	}
+
+	public function doRobotMove(robotId:String, from:Position, to:Position):Void {
+		if(_ctx.positionToRobot.get(from) != robotId){
+			throw new Exception('機體不在格子上: robotId(${robotId}) pos:${from}');
+		}
+		final robot = getRobot(_ctx, robotId);
+		robot.flags.push(HAS_MOVE);
+		_ctx.positionToRobot.remove(from);
+		_ctx.positionToRobot.set(to, robotId);
+	}
+
+	public function doRobotDone(robotId:String):Void{
+		final robot = getRobot(_ctx, robotId);
+		robot.flags.push(HAS_DONE);
 	}
 
 	public function onEvent(action:ViewEvent):Void {

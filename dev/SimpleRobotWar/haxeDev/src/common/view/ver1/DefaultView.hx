@@ -23,11 +23,15 @@ typedef RobotMenuView = {
 typedef SystemMenuView = {}
 
 typedef MoveRangeView = {
-	pos: Array<Position>
+	pos:Array<Position>
 }
 
 private typedef BattleControlMemory = {
-	activePosition:Null<Position>,
+	activeMovePosition:Null<Position>,
+	originActiveRobotState: Null<{
+		robotId:String,
+		position:Position
+	}>,
 	robotMenuState:RobotMenuState,
 	robotMenuView:Null<RobotMenuView>,
 	systemMenuView:Null<SystemMenuView>,
@@ -53,7 +57,8 @@ abstract class DefaultView implements IView {
 
 	final _battleControlMemory:BattleControlMemory = {
 		robotMenuState: NORMAL,
-		activePosition: null,
+		originActiveRobotState: null,
+		activeMovePosition: null,
 		robotMenuView: null,
 		systemMenuView: null,
 		moveRangeView: null,
@@ -102,13 +107,6 @@ abstract class DefaultView implements IView {
 		}
 	}
 
-	function getActivePosition():Position {
-		if (_battleControlMemory.activePosition == null) {
-			throw new Exception("activePosition == null");
-		}
-		return _battleControlMemory.activePosition;
-	}
-
 	public function onEvent(action:ViewEvent):Void {
 		info("DefaultView", 'onEvent ${action}');
 		switch action {
@@ -132,7 +130,10 @@ abstract class DefaultView implements IView {
 							changeUnitMenuState(SYSTEM_MENU);
 						} else {
 							// 單位菜單
-							_battleControlMemory.activePosition = pos;
+							_battleControlMemory.originActiveRobotState = {
+								robotId: robotId,
+								position: pos
+							};
 							_battleControlMemory.robotMenuView = {
 								menuItems: getBattleController().getRobotMenuItemsByPosition(pos)
 							};
@@ -143,7 +144,16 @@ abstract class DefaultView implements IView {
 						}
 					case ROBOT_MENU:
 					case ROBOT_SELECT_MOVE_POSITION:
-						verbose("DefaultView", '處理移動');
+						if(_battleControlMemory.originActiveRobotState == null){
+							throw new Exception("即將要移動，但卻沒有找到originActiveRobotState");
+						}
+						final fromPos = _battleControlMemory.originActiveRobotState.position;
+						final robotId = _battleControlMemory.originActiveRobotState.robotId;
+						verbose("DefaultView", '假裝播放移動動畫:${robotId} from ${fromPos} to ${pos}');
+						getBattleController().doRobotMove(robotId, fromPos, pos);
+						_battleControlMemory.activeMovePosition = pos;
+						changeUnitMenuState(ROBOT_MENU);
+						//renderBattlePage();
 					case SYSTEM_MENU:
 				}
 			case ON_CLICK_CANCEL:
@@ -152,6 +162,7 @@ abstract class DefaultView implements IView {
 					case ROBOT_MENU:
 						changeUnitMenuState(NORMAL);
 					case ROBOT_SELECT_MOVE_POSITION:
+						_battleControlMemory.activeMovePosition = null;
 						changeUnitMenuState(ROBOT_MENU);
 					case SYSTEM_MENU:
 						changeUnitMenuState(NORMAL);
@@ -161,7 +172,16 @@ abstract class DefaultView implements IView {
 					case MOVE:
 						changeUnitMenuState(ROBOT_SELECT_MOVE_POSITION);
 					case ATTACK:
+					case STATUS:
 					case DONE:
+						if(_battleControlMemory.originActiveRobotState == null){
+							throw new Exception("即將要結束菜單，但卻沒有找到originActiveRobotState");
+						}
+						final robotId = _battleControlMemory.originActiveRobotState.robotId;
+						if (robotId == null) {
+							throw new Exception("即將要結束菜單，但卻沒有找到作用中的機體robotId");
+						}
+						getBattleController().doRobotDone(robotId);
 						changeUnitMenuState(NORMAL);
 				}
 			case _:
@@ -189,6 +209,8 @@ abstract class DefaultView implements IView {
 	abstract function openRobotViewPage():Void;
 
 	abstract function openPilotViewPage():Void;
+
+	abstract function renderBattlePage():Void;
 
 	abstract function renderRobotMenu():Void;
 

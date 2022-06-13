@@ -117,6 +117,8 @@ class GamePage extends Box {
 					btn_move.show();
 				case ATTACK:
 					btn_attack.show();
+				case STATUS:
+					// 狀態
 				case DONE:
 					btn_end.show();
 			}

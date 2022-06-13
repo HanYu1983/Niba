@@ -55,6 +55,12 @@ function createPilot(id:String):Pilot {
 	}
 }
 
+enum RobotFlag {
+	HAS_MOVE;
+	HAS_ATTACK;
+	HAS_DONE;
+}
+
 typedef Robot = {
 	id:String,
 	title:String,
@@ -65,7 +71,8 @@ typedef Robot = {
 	maxEnergy:Int,
 	maxAction:Int,
 	damage:Array<Damage>,
-	terrian:Array<Float>
+	terrian:Array<Float>,
+	flags:Array<RobotFlag>
 }
 
 function createRobot(id:String):Robot {
@@ -81,7 +88,8 @@ function createRobot(id:String):Robot {
 		maxEnergy: 0,
 		maxAction: 0,
 		damage: [],
-		terrian: [0.5, 0, 0, 0.5]
+		terrian: [0.5, 0, 0, 0.5],
+		flags: []
 	}
 }
 

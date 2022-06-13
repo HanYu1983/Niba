@@ -126,6 +126,8 @@ enum RobotMenuItem {
 	MOVE;
 	// 攻擊
 	ATTACK;
+	// 狀態
+	STATUS;
 	// 終了
 	DONE;
 }
@@ -222,7 +224,8 @@ interface IBattleController extends IBaseController {
 	function getRobotMenuItemsByPosition(pos:Position):Array<RobotMenuItem>;
 	function getRobotMoveRangeByPosition(pos:Position):Array<Position>;
 	function getRobotIdByPosition(pos:Position):Null<String>;
-	//function doRobotMove(robotId:String, pos:Position);
+	function doRobotMove(robotId:String, from:Position, to:Position):Void;
+	function doRobotDone(robotId:String):Void;
 	function getGrids():IMap<Position, GridView>;
 }
 

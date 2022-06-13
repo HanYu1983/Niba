@@ -18,15 +18,15 @@ private final filterLevel:Array<LogLevel> = [
 ];
 
 private final filterCategoryLevel = [
-	"RobotPage" => Info,
-	"GamePage" => Verbose,
-	"DefaultViewImpl" => Info,
-	"DefaultView" => Info,
+	"RobotPage" => [Info],
+	"GamePage" => [Verbose],
+	"DefaultViewImpl" => [Info],
+	"DefaultView" => [Verbose, Info],
 ];
 
 function verbose(category:String, msg:Dynamic) {
 	switch filterCategoryLevel.get(category) {
-		case level if (level.equals(Verbose) == false):
+		case levels if (levels.has(Verbose) == false):
 			return;
 	}
 	if (filterLevel.has(Verbose) == false) {
@@ -37,7 +37,7 @@ function verbose(category:String, msg:Dynamic) {
 
 function info(category:String, msg:Dynamic) {
 	switch filterCategoryLevel.get(category) {
-		case level if (level.equals(Info) == false):
+		case levels if (levels.has(Info) == false):
 			return;
 	}
 	if (filterLevel.has(Info) == false) {

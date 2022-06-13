@@ -132,6 +132,11 @@ class DefaultViewImpl extends DefaultView {
 		// }
 	}
 
+	function renderBattlePage(){
+		// 會造成無限迴圈
+		// _view.gamePage.updateGamePage();
+	}
+
 	// 打開機體菜單頁
 	// 顯示菜單 Main.view.getRobotMenuView()
 	// 動作
