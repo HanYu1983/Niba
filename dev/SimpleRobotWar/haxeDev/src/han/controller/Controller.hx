@@ -49,12 +49,12 @@ class Controller implements _IController {
 		return _battleController.getGrids();
 	}
 
-	public function getRobotMenuItemsByPosition(pos:Position):Array<RobotMenuItem> {
-		return _battleController.getRobotMenuItemsByPosition(pos);
+	public function getRobotMenuItems(robotId:String):Array<RobotMenuItem> {
+		return _battleController.getRobotMenuItems(robotId);
 	}
 
-	public function getRobotMoveRangeByPosition(pos:Position):Array<Position>{
-		return _battleController.getRobotMoveRangeByPosition(pos);
+	public function getRobotMoveRange(robotId:String):Array<Position>{
+		return _battleController.getRobotMoveRange(robotId);
 	}
 
 	public function getRobotIdByPosition(pos:Position):Null<String> {

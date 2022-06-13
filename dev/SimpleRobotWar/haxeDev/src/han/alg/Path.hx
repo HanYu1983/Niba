@@ -125,19 +125,20 @@ private class ShortestPathTreeSolution extends DefaultSolution<Position> {
 }
 
 @:nullSafety
-function getRobotMoveRangeByPosition(ctx:Context, pos:Position):Array<Position> {
-	final robotId = ctx.positionToRobot.get(pos);
-	if (robotId == null) {
-		return [];
-	}
-	final robot = getRobot(ctx, robotId);
-	final moveEnergy = 20;
-	final tree = getAStar(new ShortestPathTreeSolution(ctx, pos, robotId), {exitWhenFind: true});
-	return [
-		for (pos => solution in tree) {
-			pos;
+function getRobotMoveRange(ctx:Context, robotId:String):Array<Position> {
+	for (pos => findRobotId in ctx.positionToRobot) {
+		if (findRobotId == robotId) {
+			final robot = getRobot(ctx, robotId);
+			final moveEnergy = 20;
+			final tree = getAStar(new ShortestPathTreeSolution(ctx, pos, robotId), {exitWhenFind: true});
+			return [
+				for (pos => solution in tree) {
+					pos;
+				}
+			];
 		}
-	];
+	}
+	throw new Exception('getRobotMoveRange 找不到robotId的位置:${robotId}');
 }
 
 function test() {

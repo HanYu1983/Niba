@@ -27,7 +27,6 @@ typedef MoveRangeView = {
 }
 
 private typedef BattleControlMemory = {
-	activeMovePosition:Null<Position>,
 	originActiveRobotState: Null<{
 		robotId:String,
 		position:Position
@@ -58,7 +57,6 @@ abstract class DefaultView implements IView {
 	final _battleControlMemory:BattleControlMemory = {
 		robotMenuState: NORMAL,
 		originActiveRobotState: null,
-		activeMovePosition: null,
 		robotMenuView: null,
 		systemMenuView: null,
 		moveRangeView: null,
@@ -135,10 +133,10 @@ abstract class DefaultView implements IView {
 								position: pos
 							};
 							_battleControlMemory.robotMenuView = {
-								menuItems: getBattleController().getRobotMenuItemsByPosition(pos)
+								menuItems: getBattleController().getRobotMenuItems(robotId)
 							};
 							_battleControlMemory.moveRangeView = {
-								pos: getBattleController().getRobotMoveRangeByPosition(pos)
+								pos: getBattleController().getRobotMoveRange(robotId)
 							};
 							changeUnitMenuState(ROBOT_MENU);
 						}
@@ -151,7 +149,9 @@ abstract class DefaultView implements IView {
 						final robotId = _battleControlMemory.originActiveRobotState.robotId;
 						verbose("DefaultView", '假裝播放移動動畫:${robotId} from ${fromPos} to ${pos}');
 						getBattleController().doRobotMove(robotId, fromPos, pos);
-						_battleControlMemory.activeMovePosition = pos;
+						_battleControlMemory.robotMenuView = {
+							menuItems: getBattleController().getRobotMenuItems(robotId)
+						};
 						changeUnitMenuState(ROBOT_MENU);
 						//renderBattlePage();
 					case SYSTEM_MENU:
@@ -162,7 +162,6 @@ abstract class DefaultView implements IView {
 					case ROBOT_MENU:
 						changeUnitMenuState(NORMAL);
 					case ROBOT_SELECT_MOVE_POSITION:
-						_battleControlMemory.activeMovePosition = null;
 						changeUnitMenuState(ROBOT_MENU);
 					case SYSTEM_MENU:
 						changeUnitMenuState(NORMAL);

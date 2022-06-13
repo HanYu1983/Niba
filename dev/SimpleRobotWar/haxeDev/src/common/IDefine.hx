@@ -221,8 +221,8 @@ interface IBaseController {
 
 
 interface IBattleController extends IBaseController {
-	function getRobotMenuItemsByPosition(pos:Position):Array<RobotMenuItem>;
-	function getRobotMoveRangeByPosition(pos:Position):Array<Position>;
+	function getRobotMenuItems(robotId:String):Array<RobotMenuItem>;
+	function getRobotMoveRange(robotId:String):Array<Position>;
 	function getRobotIdByPosition(pos:Position):Null<String>;
 	function doRobotMove(robotId:String, from:Position, to:Position):Void;
 	function doRobotDone(robotId:String):Void;

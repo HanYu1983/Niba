@@ -11,6 +11,7 @@ import han.alg.IDefine;
 import han.alg.Path;
 import han.model.IDefine;
 import han.controller.common.IDefine;
+import tool.Debug;
 
 using Lambda;
 
@@ -68,12 +69,10 @@ class BattleController implements _IBattleController {
 		];
 	}
 
-	public function getRobotMenuItemsByPosition(pos:Position):Array<RobotMenuItem> {
-		final robotId = _ctx.positionToRobot.get(pos);
-		if (robotId == null) {
-			throw new Exception("要打開機體菜單卻沒有選到有機體的格子");
-		}
+	public function getRobotMenuItems(robotId:String):Array<RobotMenuItem> {
+		info("BattleController", 'getRobotMenuItems ${robotId}');
 		final robot = getRobot(_ctx, robotId);
+		trace(robot);
 		final hasDone = robot.flags.has(HAS_DONE);
 		if (hasDone) {
 			return [STATUS];
@@ -90,8 +89,8 @@ class BattleController implements _IBattleController {
 		return ret;
 	}
 
-	public function getRobotMoveRangeByPosition(pos:Position):Array<Position> {
-		return han.alg.Path.getRobotMoveRangeByPosition(_ctx, pos);
+	public function getRobotMoveRange(robotId:String):Array<Position> {
+		return han.alg.Path.getRobotMoveRange(_ctx, robotId);
 	}
 
 	public function getRobotIdByPosition(pos:Position):Null<String> {
@@ -99,6 +98,7 @@ class BattleController implements _IBattleController {
 	}
 
 	public function doRobotMove(robotId:String, from:Position, to:Position):Void {
+		info("BattleController", 'doRobotMove ${robotId} from ${from} to ${to}');
 		if(_ctx.positionToRobot.get(from) != robotId){
 			throw new Exception('機體不在格子上: robotId(${robotId}) pos:${from}');
 		}
@@ -106,6 +106,7 @@ class BattleController implements _IBattleController {
 		robot.flags.push(HAS_MOVE);
 		_ctx.positionToRobot.remove(from);
 		_ctx.positionToRobot.set(to, robotId);
+		info("BattleController", 'robot ${robot}');
 	}
 
 	public function doRobotDone(robotId:String):Void{

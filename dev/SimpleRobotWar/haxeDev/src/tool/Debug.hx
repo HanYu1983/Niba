@@ -22,6 +22,7 @@ private final filterCategoryLevel = [
 	"GamePage" => [Verbose],
 	"DefaultViewImpl" => [Info],
 	"DefaultView" => [Verbose, Info],
+	"BattleController" => [Verbose, Info],
 ];
 
 function verbose(category:String, msg:Dynamic) {
