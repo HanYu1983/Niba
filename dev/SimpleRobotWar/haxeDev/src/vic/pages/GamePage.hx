@@ -1,5 +1,6 @@
 package vic.pages;
 
+import haxe.ui.events.KeyboardEvent;
 import tool.Debug.info;
 import haxe.Exception;
 import common.IDefine.ViewEvent;
@@ -88,7 +89,7 @@ class GamePage extends Box {
 			return;
 		}
 		box_systemMenu.show();
-		box_systemMenu.left = lastClickPos[0] + gridSize;
+		box_systemMenu.left = lastClickPos[0];
 		box_systemMenu.top = lastClickPos[1];
 	}
 
@@ -99,8 +100,9 @@ class GamePage extends Box {
 			// 關閉頁面
 			return;
 		}
+
 		box_robotMenu.show();
-		box_robotMenu.left = lastClickPos[0] + gridSize;
+		box_robotMenu.left = lastClickPos[0];
 		box_robotMenu.top = lastClickPos[1];
 
 		// 打開並同步
@@ -145,9 +147,9 @@ class GamePage extends Box {
 				});
 
 				box_stages.registerEvent(MouseEvent.CLICK, (e:MouseEvent) -> {
-					final pos = getPosEnumByLocalPos(e.localX, e.localY);
 					lastClickPos[0] = e.localX;
 					lastClickPos[1] = e.localY;
+					final pos = getPosEnumByLocalPos(e.localX, e.localY);
 					verbose('GamePage', 'mouse click pos:(${e.localX})(${e.localY}) enum:(${pos})');
 
 					Main.view.getBattleController().onEvent(ON_CLICK_BATTLE_POS(pos));
@@ -171,6 +173,8 @@ class GamePage extends Box {
 				});
 
 				box_stages.registerEvent(MouseEvent.CLICK, (e:MouseEvent) -> {
+					lastClickPos[0] = e.localX;
+					lastClickPos[1] = e.localY;
 					final pos = getPosEnumByLocalPos(e.localX, e.localY);
 					verbose('GamePage', '點選了目的:(${e.localX})(${e.localY}) enum:(${pos})');
 
@@ -192,7 +196,7 @@ class GamePage extends Box {
 			Main.view.getBattleController().onEvent(ON_CLICK_ROBOT_MENU_ITEM(ATTACK));
 		}
 
-		btn_state.onClick = function(e){
+		btn_state.onClick = function(e) {
 			Main.view.getBattleController().onEvent(ON_CLICK_ROBOT_MENU_ITEM(STATUS));
 		}
 
