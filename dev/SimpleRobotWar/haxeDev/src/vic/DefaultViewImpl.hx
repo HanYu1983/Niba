@@ -133,8 +133,7 @@ class DefaultViewImpl extends DefaultView {
 	}
 
 	function renderBattlePage(){
-		trace("renderBattlePage 會造成無限迴圈");
-		// _view.gamePage.updateGamePage();
+		_view.gamePage.updateGamePage();
 	}
 
 	// 打開機體菜單頁

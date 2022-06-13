@@ -45,9 +45,6 @@ class GamePage extends Box {
 	function updateGrids() {
 		final gridInfos = Main.view.getBattleController().getGrids();
 		final robotInfos = Main.view.getBattleController().getRobots();
-		verbose('GamePage', 'grid count ${Lambda.count(grids)}');
-		verbose('GamePage', 'grid ${gridInfos}');
-		verbose('GamePage', 'robots ${robots}');
 
 		for (r in robots) {
 			box_robots.removeComponent(r);
@@ -110,6 +107,7 @@ class GamePage extends Box {
 		btn_move.hide();
 		btn_attack.hide();
 		btn_end.hide();
+		btn_state.hide();
 
 		for (m in robotMenu) {
 			switch (m) {
@@ -118,7 +116,7 @@ class GamePage extends Box {
 				case ATTACK:
 					btn_attack.show();
 				case STATUS:
-					// 狀態
+					btn_state.show();
 				case DONE:
 					btn_end.show();
 			}
@@ -127,7 +125,7 @@ class GamePage extends Box {
 
 	var lastClickPos = [0.0, 0.0];
 
-	function switchStageState() {
+	function updateStageListener() {
 		box_stages.unregisterEvents();
 		switch (Main.view.getRobotMenuState()) {
 			case NORMAL:
@@ -231,6 +229,8 @@ class GamePage extends Box {
 		updateMoveRange();
 		updateRobotMenu();
 		updateSystemMenu();
-		switchStageState();
+		updateStageListener();
+
+		info('GamePage', 'updateGamePage');
 	}
 }

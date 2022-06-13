@@ -19,7 +19,7 @@ private final filterLevel:Array<LogLevel> = [
 
 private final filterCategoryLevel = [
 	"RobotPage" => [Info],
-	"GamePage" => [Verbose],
+	"GamePage" => [Info],
 	"DefaultViewImpl" => [Info],
 	"DefaultView" => [Verbose, Info],
 	"BattleController" => [Verbose, Info],
