@@ -150,29 +150,4 @@ class DefaultViewImpl extends DefaultView {
 	// ROBOT_SELECT_MOVE_POSITION
 	//   ON_CLICK_BATTLE_POS
 	//   ON_CLICK_CANCEL
-	function renderRobotMenu():Void {
-		info("DefaultViewImpl", 'renderRobotMenu: ${Main.view.getRobotMenuView()}');
-		// 在update中判斷是否要打開頁面還是關閉
-		_view.gamePage.updateRobotMenu();
-	}
-
-	function renderMoveRange():Void {
-		info("DefaultViewImpl", 'renderMoveRange');
-		_view.gamePage.updateMoveRange();
-		// switch op {
-		// 	case OPEN:
-		// 		_view.gamePage.openMoveRange();
-		// 	case CLOSE:
-		// 		_view.gamePage.closeMoveRange();
-		// 	case UPDATE:
-		// 		_view.gamePage.updateMoveRange();
-		// }
-	}
-
-	// 系統菜單
-	// 顯示菜單 Main.view.getSystemMenuView()
-	function renderSystemMenu():Void {
-		info("DefaultViewImpl", 'renderSystemMenu: ${Main.view.getSystemMenuView()}');
-		_view.gamePage.updateSystemMenu();
-	}
 }

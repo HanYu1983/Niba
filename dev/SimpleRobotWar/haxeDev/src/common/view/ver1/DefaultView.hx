@@ -69,13 +69,7 @@ abstract class DefaultView implements IView {
 			return;
 		}
 		_battleControlMemory.robotMenuState = state;
-		if (true) {
-			renderBattlePage();
-		} else {
-			renderRobotMenu();
-			renderSystemMenu();
-			renderMoveRange();
-		}
+		renderBattlePage();
 	}
 
 	public function getRobotMenuState():RobotMenuState {
@@ -214,10 +208,4 @@ abstract class DefaultView implements IView {
 	abstract function openPilotViewPage():Void;
 
 	abstract function renderBattlePage():Void;
-
-	abstract function renderRobotMenu():Void;
-
-	abstract function renderMoveRange():Void;
-
-	abstract function renderSystemMenu():Void;
 }
