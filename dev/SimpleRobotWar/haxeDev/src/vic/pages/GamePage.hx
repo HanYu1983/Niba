@@ -1,5 +1,7 @@
 package vic.pages;
 
+import tool.Debug.info;
+import haxe.Exception;
 import common.IDefine.ViewEvent;
 import haxe.ui.events.MouseEvent;
 import vic.widgets.Robot;
@@ -193,7 +195,17 @@ class GamePage extends Box {
 	}
 
 	public function updateMoveRange() {
-		closeMoveRange();
+		for (g in gridMoveRange) {
+			box_moveRanges.removeComponent(g);
+		}
+		gridMoveRange.empty();
+
+		try {
+			Main.view.getActivePosition();
+		} catch (e:Exception) {
+			info('GamePage', '沒有取到active position的時候，就不用顯示移動範圍');
+			return;
+		}
 
 		final moveRangeInfos = Main.view.getBattleController().getRobotMoveRangeByPosition(Main.view.getActivePosition());
 		for (pos in moveRangeInfos) {
@@ -211,19 +223,9 @@ class GamePage extends Box {
 		}
 	}
 
-	public function closeMoveRange() {
-		for (g in gridMoveRange) {
-			box_moveRanges.removeComponent(g);
-		}
-		gridMoveRange.empty();
-	}
-
-	public function openMoveRange() {
-		updateMoveRange();
-	}
-
 	public function updateGamePage() {
 		updateGrids();
+		updateMoveRange();
 		updateRobotMenu();
 		updateSystemMenu();
 		switchStageState();
