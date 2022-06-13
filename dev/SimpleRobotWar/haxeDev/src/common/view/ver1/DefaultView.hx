@@ -2,6 +2,7 @@ package common.view.ver1;
 
 import haxe.Exception;
 import common.IDefine;
+import tool.Debug;
 
 using Lambda;
 
@@ -48,19 +49,19 @@ abstract class DefaultView implements IView {
 	};
 
 	function changeUnitMenuState(state:RobotMenuState) {
+		info("DefaultView", 'changeUnitMenuState ${_battleControlMemory.robotMenuState} to ${state}');
 		final originState = _battleControlMemory.robotMenuState;
 		if (originState == state) {
 			return;
 		}
 		_battleControlMemory.robotMenuState = state;
-		switch originState {
-			case ROBOT_MENU:
+		switch [originState, state] {
+			case [ROBOT_MENU, ROBOT_SELECT_MOVE_POSITION]:
+				renderRobotMenu(CLOSE);
+			case [ROBOT_MENU, _]:
 				renderRobotMenu(CLOSE);
 				renderMoveRange(CLOSE);
-			case _:
-		}
-		switch state {
-			case ROBOT_MENU:
+			case [_, ROBOT_MENU]:
 				renderRobotMenu(OPEN);
 				renderMoveRange(OPEN);
 			case _:
@@ -113,6 +114,8 @@ abstract class DefaultView implements IView {
 					case ROBOT_SELECT_MOVE_POSITION:
 						changeUnitMenuState(ROBOT_MENU);
 				}
+			case ON_CLICK_ROBOT_MENU_ITEM(item):
+				changeUnitMenuState(ROBOT_SELECT_MOVE_POSITION);
 			case _:
 		}
 	}

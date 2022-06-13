@@ -17,28 +17,30 @@ private final filterLevel:Array<LogLevel> = [
 	Err
 ];
 
-private final filterCategory:Array<String> = [
-	//
-	"RobotPage",
-	"GamePage",
-	"DefaultViewImpl"
+private final filterCategoryLevel = [
+	"RobotPage" => Info,
+	"GamePage" => Verbose,
+	"DefaultViewImpl" => Info,
+	"DefaultView" => Info,
 ];
 
 function verbose(category:String, msg:Dynamic) {
-	if (filterLevel.has(Verbose) == false) {
-		return;
+	switch filterCategoryLevel.get(category) {
+		case level if (level.equals(Verbose) == false):
+			return;
 	}
-	if (filterCategory.has(category) == false) {
+	if (filterLevel.has(Verbose) == false) {
 		return;
 	}
 	js.Browser.console.log('[Verbose][${category}]', msg);
 }
 
 function info(category:String, msg:Dynamic) {
-	if (filterLevel.has(Info) == false) {
-		return;
+	switch filterCategoryLevel.get(category) {
+		case level if (level.equals(Info) == false):
+			return;
 	}
-	if (filterCategory.has(category) == false) {
+	if (filterLevel.has(Info) == false) {
 		return;
 	}
 	js.Browser.console.log('[${category}]', msg);
