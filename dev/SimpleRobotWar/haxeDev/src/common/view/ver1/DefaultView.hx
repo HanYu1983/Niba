@@ -22,11 +22,16 @@ typedef RobotMenuView = {
 
 typedef SystemMenuView = {}
 
+typedef MoveRangeView = {
+	pos: Array<Position>
+}
+
 private typedef BattleControlMemory = {
 	activePosition:Null<Position>,
 	robotMenuState:RobotMenuState,
 	robotMenuView:Null<RobotMenuView>,
-	systemMenuView:Null<SystemMenuView>
+	systemMenuView:Null<SystemMenuView>,
+	moveRangeView:Null<MoveRangeView>
 }
 
 @:nullSafety
@@ -51,6 +56,7 @@ abstract class DefaultView implements IView {
 		activePosition: null,
 		robotMenuView: null,
 		systemMenuView: null,
+		moveRangeView: null,
 	};
 
 	function changeUnitMenuState(state:RobotMenuState) {
@@ -62,6 +68,7 @@ abstract class DefaultView implements IView {
 		_battleControlMemory.robotMenuState = state;
 		renderRobotMenu();
 		renderSystemMenu();
+		renderMoveRange();
 	}
 
 	public function getRobotMenuState():RobotMenuState {
@@ -86,7 +93,16 @@ abstract class DefaultView implements IView {
 		}
 	}
 
-	public function getActivePosition():Position {
+	public function getMoveRangeView():Null<MoveRangeView> {
+		return switch _battleControlMemory.robotMenuState {
+			case ROBOT_MENU | ROBOT_SELECT_MOVE_POSITION:
+				_battleControlMemory.moveRangeView;
+			case _:
+				null;
+		}
+	}
+
+	function getActivePosition():Position {
 		if (_battleControlMemory.activePosition == null) {
 			throw new Exception("activePosition == null");
 		}
@@ -120,6 +136,9 @@ abstract class DefaultView implements IView {
 							_battleControlMemory.robotMenuView = {
 								menuItems: getBattleController().getRobotMenuItemsByPosition(pos)
 							};
+							_battleControlMemory.moveRangeView = {
+								pos: getBattleController().getRobotMoveRangeByPosition(pos)
+							};
 							changeUnitMenuState(ROBOT_MENU);
 						}
 					case ROBOT_MENU:
@@ -138,7 +157,13 @@ abstract class DefaultView implements IView {
 						changeUnitMenuState(NORMAL);
 				}
 			case ON_CLICK_ROBOT_MENU_ITEM(item):
-				changeUnitMenuState(ROBOT_SELECT_MOVE_POSITION);
+				switch item {
+					case MOVE:
+						changeUnitMenuState(ROBOT_SELECT_MOVE_POSITION);
+					case ATTACK:
+					case DONE:
+						changeUnitMenuState(NORMAL);
+				}
 			case _:
 		}
 	}

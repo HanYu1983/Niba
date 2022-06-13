@@ -194,8 +194,11 @@ class GamePage extends Box {
 
 	public function updateMoveRange() {
 		closeMoveRange();
-
-		final moveRangeInfos = Main.view.getBattleController().getRobotMoveRangeByPosition(Main.view.getActivePosition());
+		final moveRangeView = Main.view.getMoveRangeView();
+		if(moveRangeView  == null){
+			return;
+		}
+		final moveRangeInfos = moveRangeView.pos;
 		for (pos in moveRangeInfos) {
 			final g = new Grid();
 			g.title = '';
