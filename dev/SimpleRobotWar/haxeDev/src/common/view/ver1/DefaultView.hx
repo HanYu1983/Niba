@@ -62,6 +62,7 @@ abstract class DefaultView implements IView {
 				renderRobotMenu(CLOSE);
 				renderMoveRange(CLOSE);
 			case [_, ROBOT_MENU]:
+				renderSystemMenu(CLOSE);
 				renderRobotMenu(OPEN);
 				renderMoveRange(OPEN);
 			case _:
@@ -80,6 +81,7 @@ abstract class DefaultView implements IView {
 	}
 
 	public function onEvent(action:ViewEvent):Void {
+		info("DefaultView", 'onEvent ${action}');
 		switch action {
 			// lobby
 			case ON_CLICK_GOTO_ROBOT_VIEW:
@@ -105,6 +107,7 @@ abstract class DefaultView implements IView {
 						}
 					case ROBOT_MENU:
 					case ROBOT_SELECT_MOVE_POSITION:
+
 				}
 			case ON_CLICK_CANCEL:
 				switch _battleControlMemory.robotMenuState {
