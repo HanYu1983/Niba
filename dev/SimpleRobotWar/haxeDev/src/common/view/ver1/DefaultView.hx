@@ -107,7 +107,7 @@ abstract class DefaultView implements IView {
 						}
 					case ROBOT_MENU:
 					case ROBOT_SELECT_MOVE_POSITION:
-
+						verbose("DefaultView",'處理移動');
 				}
 			case ON_CLICK_CANCEL:
 				switch _battleControlMemory.robotMenuState {
