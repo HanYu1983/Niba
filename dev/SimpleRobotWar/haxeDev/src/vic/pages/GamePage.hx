@@ -101,17 +101,14 @@ class GamePage extends Box {
 
 		btn_move.onClick = function(e) {
 			Main.view.getBattleController().onEvent(ON_CLICK_ROBOT_MENU_ITEM(MOVE));
-			switchStageState();
 		}
 
 		btn_attack.onClick = function(e) {
 			Main.view.getBattleController().onEvent(ON_CLICK_ROBOT_MENU_ITEM(ATTACK));
-			switchStageState();
 		}
 
 		btn_end.onClick = function(e) {
 			Main.view.getBattleController().onEvent(ON_CLICK_ROBOT_MENU_ITEM(DONE));
-			switchStageState();
 		}
 	}
 
@@ -210,6 +207,7 @@ class GamePage extends Box {
 			box_moveRanges.addComponent(g);
 			gridMoveRange.push(g);
 		}
+
 	}
 
 	public function closeMoveRange() {
@@ -221,6 +219,7 @@ class GamePage extends Box {
 
 	public function openMoveRange() {
 		updateMoveRange();
+		switchStageState();
 	}
 
 	public function openRobotMenu() {
