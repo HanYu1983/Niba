@@ -72,7 +72,6 @@ class BattleController implements _IBattleController {
 	public function getRobotMenuItems(robotId:String):Array<RobotMenuItem> {
 		info("BattleController", 'getRobotMenuItems ${robotId}');
 		final robot = getRobot(_ctx, robotId);
-		trace(robot);
 		final hasDone = robot.flags.has(HAS_DONE);
 		if (hasDone) {
 			return [STATUS];
