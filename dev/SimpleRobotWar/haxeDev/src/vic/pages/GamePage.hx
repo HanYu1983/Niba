@@ -1,5 +1,7 @@
 package vic.pages;
 
+import tool.Debug.info;
+import haxe.Exception;
 import common.IDefine.ViewEvent;
 import haxe.ui.events.MouseEvent;
 import vic.widgets.Robot;
@@ -193,7 +195,10 @@ class GamePage extends Box {
 	}
 
 	public function updateMoveRange() {
-		closeMoveRange();
+		for (g in gridMoveRange) {
+			box_moveRanges.removeComponent(g);
+		}
+		gridMoveRange.empty();
 		final moveRangeView = Main.view.getMoveRangeView();
 		if(moveRangeView  == null){
 			return;
@@ -214,19 +219,9 @@ class GamePage extends Box {
 		}
 	}
 
-	public function closeMoveRange() {
-		for (g in gridMoveRange) {
-			box_moveRanges.removeComponent(g);
-		}
-		gridMoveRange.empty();
-	}
-
-	public function openMoveRange() {
-		updateMoveRange();
-	}
-
 	public function updateGamePage() {
 		updateGrids();
+		updateMoveRange();
 		updateRobotMenu();
 		updateSystemMenu();
 		switchStageState();
