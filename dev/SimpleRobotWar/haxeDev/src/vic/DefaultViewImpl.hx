@@ -133,7 +133,7 @@ class DefaultViewImpl extends DefaultView {
 	}
 
 	function renderBattlePage(){
-		// 會造成無限迴圈
+		trace("renderBattlePage 會造成無限迴圈");
 		// _view.gamePage.updateGamePage();
 	}
 
