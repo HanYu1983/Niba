@@ -33,7 +33,7 @@ function verbose(category:String, msg:Dynamic) {
 	if (filterLevel.has(Verbose) == false) {
 		return;
 	}
-	js.Browser.console.log('[Verbose][${category}]', msg);
+	js.Browser.console.log('[${category}][Verbose]', msg);
 }
 
 function info(category:String, msg:Dynamic) {
