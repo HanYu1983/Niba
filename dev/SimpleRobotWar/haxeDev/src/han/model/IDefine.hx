@@ -76,7 +76,7 @@ typedef Robot = {
 }
 
 function createRobot(id:String):Robot {
-	final names:Array<String> = ['鋼彈'];
+	final names:Array<String> = ['鋼彈','怪獸'];
 	final name = names[Std.int(Math.random() * names.length)];
 	return {
 		id: id,
@@ -88,7 +88,7 @@ function createRobot(id:String):Robot {
 		maxEnergy: 0,
 		maxAction: 0,
 		damage: [],
-		terrian: [0.5, 0, 0, 0.5],
+		terrian: [0, 1, 0, 0],
 		flags: []
 	}
 }
