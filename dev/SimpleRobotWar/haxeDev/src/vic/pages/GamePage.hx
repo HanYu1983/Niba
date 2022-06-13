@@ -82,7 +82,13 @@ class GamePage extends Box {
 	}
 
 	public function updateRobotMenu() {
-		final robotMenu = Main.view.getBattleController().getRobotMenuItems();
+		final robotMenuView = Main.view.getRobotMenuView();
+		if(robotMenuView == null){
+			// 關閉頁面
+			return;
+		}
+		// 打開並同步
+		final robotMenu = robotMenuView.menuItems;
 
 		btn_move.hide();
 		btn_attack.hide();
@@ -164,6 +170,8 @@ class GamePage extends Box {
 
 					Main.view.getBattleController().onEvent(ON_CLICK_BATTLE_POS(pos));
 				});
+			case SYSTEM_MENU:
+				
 		}
 	}
 

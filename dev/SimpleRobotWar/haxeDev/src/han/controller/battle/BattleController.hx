@@ -66,7 +66,7 @@ class BattleController implements _IBattleController {
 		];
 	}
 
-	public function getRobotMenuItems():Array<RobotMenuItem> {
+	public function getRobotMenuItemsByPosition(pos:Position):Array<RobotMenuItem> {
 		return [MOVE, DONE];
 	}
 

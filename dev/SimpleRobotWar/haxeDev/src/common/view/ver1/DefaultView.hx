@@ -13,6 +13,7 @@ enum RobotMenuState {
 	ROBOT_MENU;
 	// 選擇移動位置時
 	ROBOT_SELECT_MOVE_POSITION;
+	SYSTEM_MENU;
 }
 
 enum SyncViewOperation {
@@ -21,9 +22,17 @@ enum SyncViewOperation {
 	UPDATE;
 }
 
+typedef RobotMenuView = {
+	menuItems:Array<RobotMenuItem>
+}
+
+typedef SystemMenuView = {}
+
 private typedef BattleControlMemory = {
 	activePosition:Null<Position>,
-	robotMenuState:RobotMenuState
+	robotMenuState:RobotMenuState,
+	robotMenuView:Null<RobotMenuView>,
+	systemMenuView:Null<SystemMenuView>
 }
 
 @:nullSafety
@@ -46,6 +55,8 @@ abstract class DefaultView implements IView {
 	final _battleControlMemory:BattleControlMemory = {
 		robotMenuState: NORMAL,
 		activePosition: null,
+		robotMenuView: null,
+		systemMenuView: null,
 	};
 
 	function changeUnitMenuState(state:RobotMenuState) {
@@ -55,22 +66,30 @@ abstract class DefaultView implements IView {
 			return;
 		}
 		_battleControlMemory.robotMenuState = state;
-		switch [originState, state] {
-			case [ROBOT_MENU, ROBOT_SELECT_MOVE_POSITION]:
-				renderRobotMenu(CLOSE);
-			case [ROBOT_MENU, _]:
-				renderRobotMenu(CLOSE);
-				renderMoveRange(CLOSE);
-			case [_, ROBOT_MENU]:
-				renderSystemMenu(CLOSE);
-				renderRobotMenu(OPEN);
-				renderMoveRange(OPEN);
-			case _:
-		}
+		renderRobotMenu();
+		renderSystemMenu();
 	}
 
 	public function getRobotMenuState():RobotMenuState {
 		return _battleControlMemory.robotMenuState;
+	}
+
+	public function getRobotMenuView():Null<RobotMenuView> {
+		return switch _battleControlMemory.robotMenuState {
+			case ROBOT_MENU:
+				_battleControlMemory.robotMenuView;
+			case _:
+				null;
+		}
+	}
+
+	public function getSystemMenuView():Null<SystemMenuView> {
+		return switch _battleControlMemory.robotMenuState {
+			case SYSTEM_MENU:
+				_battleControlMemory.systemMenuView;
+			case _:
+				null;
+		}
 	}
 
 	public function getActivePosition():Position {
@@ -98,16 +117,21 @@ abstract class DefaultView implements IView {
 					case NORMAL:
 						final robotId = getBattleController().getRobotIdByPosition(pos);
 						if (robotId == null) {
+							_battleControlMemory.systemMenuView = {};
 							// 系統菜單
-							renderSystemMenu(OPEN);
+							changeUnitMenuState(SYSTEM_MENU);
 						} else {
 							// 單位菜單
 							_battleControlMemory.activePosition = pos;
+							_battleControlMemory.robotMenuView = {
+								menuItems: getBattleController().getRobotMenuItemsByPosition(pos)
+							};
 							changeUnitMenuState(ROBOT_MENU);
 						}
 					case ROBOT_MENU:
 					case ROBOT_SELECT_MOVE_POSITION:
-						verbose("DefaultView",'處理移動');
+						verbose("DefaultView", '處理移動');
+					case SYSTEM_MENU:
 				}
 			case ON_CLICK_CANCEL:
 				switch _battleControlMemory.robotMenuState {
@@ -116,6 +140,8 @@ abstract class DefaultView implements IView {
 						changeUnitMenuState(NORMAL);
 					case ROBOT_SELECT_MOVE_POSITION:
 						changeUnitMenuState(ROBOT_MENU);
+					case SYSTEM_MENU:
+						changeUnitMenuState(NORMAL);
 				}
 			case ON_CLICK_ROBOT_MENU_ITEM(item):
 				changeUnitMenuState(ROBOT_SELECT_MOVE_POSITION);
@@ -145,9 +171,9 @@ abstract class DefaultView implements IView {
 
 	abstract function openPilotViewPage(op:SyncViewOperation):Void;
 
-	abstract function renderRobotMenu(op:SyncViewOperation):Void;
+	abstract function renderRobotMenu():Void;
 
 	abstract function renderMoveRange(op:SyncViewOperation):Void;
 
-	abstract function renderSystemMenu(op:SyncViewOperation):Void;
+	abstract function renderSystemMenu():Void;
 }

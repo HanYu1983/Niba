@@ -121,7 +121,7 @@ class DefaultViewImpl extends DefaultView {
 	}
 
 	// 打開機體菜單頁
-	// 顯示菜單 getBattleController().getRobotMenuItems()
+	// 顯示菜單 Main.view.getRobotMenuView()
 	// 動作
 	//   點擊菜單選項 ON_CLICK_ROBOT_MENU_ITEM(item)
 	// 菜單狀態 getRobotMenuState
@@ -134,23 +134,14 @@ class DefaultViewImpl extends DefaultView {
 	// ROBOT_SELECT_MOVE_POSITION
 	//   ON_CLICK_BATTLE_POS
 	//   ON_CLICK_CANCEL
-	function renderRobotMenu(op:SyncViewOperation):Void {
-		verbose("DefaultViewImpl", "renderRobotMenu");
-		switch op {
-			case OPEN:
-				_view.gamePage.openRobotMenu();
-			// 打開頁面
-			case CLOSE:
-				_view.gamePage.closeRobotMenu();
-			// 關閉頁面
-			case UPDATE:
-				// 更新頁面
-				_view.gamePage.updateRobotMenu();
-		}
+	function renderRobotMenu():Void {
+		info("DefaultViewImpl", 'renderRobotMenu: ${Main.view.getRobotMenuView()}');
+		// 在update中判斷是否要打開頁面還是關閉
+		_view.gamePage.updateRobotMenu();
 	}
 
 	function renderMoveRange(op:SyncViewOperation):Void {
-		verbose("DefaultViewImpl", "renderMoveRange");
+		info("DefaultViewImpl", 'renderMoveRange');
 		switch op {
 			case OPEN:
 				_view.gamePage.openMoveRange();
@@ -162,16 +153,9 @@ class DefaultViewImpl extends DefaultView {
 	}
 
 	// 系統菜單
-	// 顯示菜單 (未定義)
-	function renderSystemMenu(op:SyncViewOperation):Void {
-		verbose("DefaultViewImpl", "renderSystemMenu");
-		switch op {
-			case OPEN:
-				_view.gamePage.openSystemMenu();
-			case CLOSE:
-				_view.gamePage.closeSystemMenu();
-			case UPDATE:
-				_view.gamePage.updateSystemMenu();
-		}
+	// 顯示菜單 Main.view.getSystemMenuView()
+	function renderSystemMenu():Void {
+		info("DefaultViewImpl",  'renderSystemMenu: ${Main.view.getSystemMenuView()}');
+		_view.gamePage.updateSystemMenu();
 	}
 }
