@@ -81,12 +81,28 @@ class GamePage extends Box {
 		return Position.POS(px, py);
 	}
 
+	public function updateSystemMenu() {
+		final systemMenuView = Main.view.getSystemMenuView();
+		if (systemMenuView == null) {
+			box_systemMenu.hide();
+			return;
+		}
+		box_systemMenu.show();
+		box_systemMenu.left = lastClickPos[0] + gridSize;
+		box_systemMenu.top = lastClickPos[1];
+	}
+
 	public function updateRobotMenu() {
 		final robotMenuView = Main.view.getRobotMenuView();
-		if(robotMenuView == null){
+		if (robotMenuView == null) {
+			box_robotMenu.hide();
 			// 關閉頁面
 			return;
 		}
+		box_robotMenu.show();
+		box_robotMenu.left = lastClickPos[0] + gridSize;
+		box_robotMenu.top = lastClickPos[1];
+
 		// 打開並同步
 		final robotMenu = robotMenuView.menuItems;
 
@@ -145,10 +161,9 @@ class GamePage extends Box {
 
 					Main.view.getBattleController().onEvent(ON_CLICK_BATTLE_POS(pos));
 				});
-			case ROBOT_MENU:
+			case ROBOT_MENU | SYSTEM_MENU:
 				box_stages.registerEvent(MouseEvent.CLICK, (e:MouseEvent) -> {
 					Main.view.getBattleController().onEvent(ON_CLICK_CANCEL);
-					switchStageState();
 				});
 			case ROBOT_SELECT_MOVE_POSITION:
 				final gridInfos = Main.view.getBattleController().getGrids();
@@ -170,33 +185,13 @@ class GamePage extends Box {
 
 					Main.view.getBattleController().onEvent(ON_CLICK_BATTLE_POS(pos));
 				});
-			case SYSTEM_MENU:
-				
 		}
 	}
 
 	override function show() {
 		super.show();
-
 		updateGamePage();
-		switchStageState();
-
-		closeRobotMenu();
-		closeSystemMenu();
 	}
-
-	public function openSystemMenu() {
-		box_systemMenu.show();
-		box_systemMenu.left = lastClickPos[0] + gridSize;
-		box_systemMenu.top = lastClickPos[1];
-		switchStageState();
-	}
-
-	public function closeSystemMenu() {
-		box_systemMenu.hide();
-	}
-
-	public function updateSystemMenu() {}
 
 	public function updateMoveRange() {
 		closeMoveRange();
@@ -215,7 +210,6 @@ class GamePage extends Box {
 			box_moveRanges.addComponent(g);
 			gridMoveRange.push(g);
 		}
-
 	}
 
 	public function closeMoveRange() {
@@ -227,22 +221,12 @@ class GamePage extends Box {
 
 	public function openMoveRange() {
 		updateMoveRange();
-		switchStageState();
-	}
-
-	public function openRobotMenu() {
-		box_robotMenu.show();
-		box_robotMenu.left = lastClickPos[0] + gridSize;
-		box_robotMenu.top = lastClickPos[1];
-		updateRobotMenu();
-		switchStageState();
-	}
-
-	public function closeRobotMenu() {
-		box_robotMenu.hide();
 	}
 
 	public function updateGamePage() {
 		updateGrids();
+		updateRobotMenu();
+		updateSystemMenu();
+		switchStageState();
 	}
 }
