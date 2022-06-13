@@ -101,14 +101,17 @@ class GamePage extends Box {
 
 		btn_move.onClick = function(e) {
 			Main.view.getBattleController().onEvent(ON_CLICK_ROBOT_MENU_ITEM(MOVE));
+			switchStageState();
 		}
 
 		btn_attack.onClick = function(e) {
 			Main.view.getBattleController().onEvent(ON_CLICK_ROBOT_MENU_ITEM(ATTACK));
+			switchStageState();
 		}
 
 		btn_end.onClick = function(e) {
 			Main.view.getBattleController().onEvent(ON_CLICK_ROBOT_MENU_ITEM(DONE));
+			switchStageState();
 		}
 	}
 
@@ -145,7 +148,25 @@ class GamePage extends Box {
 					switchStageState();
 				});
 			case ROBOT_SELECT_MOVE_POSITION:
-				trace('ROBOT_SELECT_MOVE_POSITION');
+				final gridInfos = Main.view.getBattleController().getGrids();
+				box_stages.registerEvent(MouseEvent.MOUSE_MOVE, (e:MouseEvent) -> {
+					final pos = getPosEnumByLocalPos(e.localX, e.localY);
+					final gridInfo = gridInfos.get(pos);
+					switch (pos) {
+						case POS(x, y):
+							box_cursor.left = x * gridSize;
+							box_cursor.top = y * gridSize;
+						case _:
+					}
+					updateGridDetail(gridInfo);
+				});
+
+				box_stages.registerEvent(MouseEvent.CLICK, (e:MouseEvent) -> {
+					final pos = getPosEnumByLocalPos(e.localX, e.localY);
+					verbose('GamePage', '點選了目的:(${e.localX})(${e.localY}) enum:(${pos})');
+
+					Main.view.getBattleController().onEvent(ON_CLICK_BATTLE_POS(pos));
+				});
 		}
 	}
 
