@@ -124,6 +124,16 @@ class DefaultViewImpl extends DefaultView {
 	// 顯示菜單 getBattleController().getRobotMenuItems()
 	// 動作
 	//   點擊菜單選項 ON_CLICK_ROBOT_MENU_ITEM(item)
+	// 菜單狀態 getRobotMenuState
+	// 下方列出各個狀態的事件需求，但基本上任何狀態都能傳任何事件，我這裡會判斷狀態做處理
+	// NORMAL
+	//   ON_CLICK_BATTLE_POS
+	// ROBOT_MENU
+	//   ON_CLICK_ROBOT_MENU_ITEM
+	//   ON_CLICK_CANCEL
+	// ROBOT_SELECT_MOVE_POSITION
+	//   ON_CLICK_BATTLE_POS
+	//   ON_CLICK_CANCEL
 	function renderRobotMenu(op:SyncViewOperation):Void {
 		verbose("DefaultViewImpl", "renderRobotMenu");
 		switch op {
