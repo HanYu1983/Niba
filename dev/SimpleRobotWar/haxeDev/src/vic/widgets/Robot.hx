@@ -10,13 +10,7 @@ class Robot extends Box{
 
     public var title(get, set):String;
     function set_title(title:String){
-        lbl_title.value = title;
-        // switch title{
-        //     case '平原':backgroundColor = 'yellow';
-        //     case '海':backgroundColor = 'blue';
-        //     case '山':backgroundColor = 'orange';
-        //     case '森林':backgroundColor = 'green';
-        // }
+        lbl_title.value = title.substring(0,2);
         return title;
     }
 

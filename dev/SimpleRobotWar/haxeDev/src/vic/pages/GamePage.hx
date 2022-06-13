@@ -59,6 +59,8 @@ class GamePage extends Box {
 			if (robotInfo != null) {
 				final r = new Robot();
 				r.title = robotInfo.title;
+				r.left = g.left;
+				r.top = g.top;
 				box_robots.addComponent(r);
 
 				robots.push(r);
@@ -190,12 +192,17 @@ class GamePage extends Box {
 			Main.view.getBattleController().onEvent(ON_CLICK_ROBOT_MENU_ITEM(ATTACK));
 		}
 
+		btn_state.onClick = function(e){
+			Main.view.getBattleController().onEvent(ON_CLICK_ROBOT_MENU_ITEM(STATUS));
+		}
+
 		btn_end.onClick = function(e) {
 			Main.view.getBattleController().onEvent(ON_CLICK_ROBOT_MENU_ITEM(DONE));
 		}
 
-		btn_endPhase.onClick = function(e){
-			Main.view.getBattleController().onEvent(ON_CLICK_ROBOT_MENU_ITEM(DONE));
+		btn_endPhase.onClick = function(e) {
+			info('GamePage', '跳過這個回合，還沒有指令可以呼叫');
+			// Main.view.getBattleController().onEvent(ON_CLICK_ROBOT_MENU_ITEM(DONE));
 		}
 	}
 
@@ -205,7 +212,7 @@ class GamePage extends Box {
 		}
 		gridMoveRange.empty();
 		final moveRangeView = Main.view.getMoveRangeView();
-		if(moveRangeView  == null){
+		if (moveRangeView == null) {
 			return;
 		}
 		final moveRangeInfos = moveRangeView.pos;
