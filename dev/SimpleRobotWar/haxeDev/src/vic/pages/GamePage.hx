@@ -121,18 +121,6 @@ class GamePage extends Box {
 					btn_end.show();
 			}
 		}
-
-		btn_move.onClick = function(e) {
-			Main.view.getBattleController().onEvent(ON_CLICK_ROBOT_MENU_ITEM(MOVE));
-		}
-
-		btn_attack.onClick = function(e) {
-			Main.view.getBattleController().onEvent(ON_CLICK_ROBOT_MENU_ITEM(ATTACK));
-		}
-
-		btn_end.onClick = function(e) {
-			Main.view.getBattleController().onEvent(ON_CLICK_ROBOT_MENU_ITEM(DONE));
-		}
 	}
 
 	var lastClickPos = [0.0, 0.0];
@@ -192,6 +180,23 @@ class GamePage extends Box {
 	override function show() {
 		super.show();
 		updateGamePage();
+
+		// 只要注冊一次就好
+		btn_move.onClick = function(e) {
+			Main.view.getBattleController().onEvent(ON_CLICK_ROBOT_MENU_ITEM(MOVE));
+		}
+
+		btn_attack.onClick = function(e) {
+			Main.view.getBattleController().onEvent(ON_CLICK_ROBOT_MENU_ITEM(ATTACK));
+		}
+
+		btn_end.onClick = function(e) {
+			Main.view.getBattleController().onEvent(ON_CLICK_ROBOT_MENU_ITEM(DONE));
+		}
+
+		btn_endPhase.onClick = function(e){
+			Main.view.getBattleController().onEvent(ON_CLICK_ROBOT_MENU_ITEM(DONE));
+		}
 	}
 
 	public function updateMoveRange() {
