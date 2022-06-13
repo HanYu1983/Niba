@@ -1,5 +1,6 @@
 package vic.pages;
 
+import haxe.ds.EnumValueMap;
 import haxe.ui.events.KeyboardEvent;
 import tool.Debug.info;
 import haxe.Exception;
@@ -19,15 +20,14 @@ using Lambda;
 
 @:build(haxe.ui.ComponentBuilder.build('vic/pages/GamePage.xml'))
 class GamePage extends Box {
-	final grids:Array<Grid> = [];
-	final gridMoveRange:Array<Grid> = [];
+	final grids:EnumValueMap<Position, Grid> = new EnumValueMap<Position, Grid>();
 	final robots:Array<Robot> = [];
 	final gridDetail = new GridDetail();
 	final gridSize = 40;
 
 	public function new() {
 		super();
-
+		
 		final totalCount = MAP_W * MAP_H;
 		for (i in 0...totalCount) {
 			final g = new Grid();
@@ -38,7 +38,7 @@ class GamePage extends Box {
 			g.top = py * gridSize;
 			box_grids.addComponent(g);
 
-			grids.push(g);
+			grids.set(g.pos, g);
 		}
 		box_left.addComponent(gridDetail);
 	}
@@ -211,27 +211,16 @@ class GamePage extends Box {
 	}
 
 	public function updateMoveRange() {
-		for (g in gridMoveRange) {
-			box_moveRanges.removeComponent(g);
-		}
-		gridMoveRange.empty();
+
 		final moveRangeView = Main.view.getMoveRangeView();
 		if (moveRangeView == null) {
 			return;
 		}
+
 		final moveRangeInfos = moveRangeView.pos;
 		for (pos in moveRangeInfos) {
-			final g = new Grid();
-			g.title = '';
-
-			switch (pos) {
-				case POS(x, y):
-					g.left = x * gridSize;
-					g.top = y * gridSize;
-			}
-
-			box_moveRanges.addComponent(g);
-			gridMoveRange.push(g);
+			final g = grids.get(pos);
+			g.showMoveRange();
 		}
 	}
 

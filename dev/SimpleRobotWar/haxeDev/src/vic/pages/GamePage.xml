@@ -4,7 +4,6 @@
     </vbox>
     <absolute width='800' height='800' horizontalAlign='center' verticalAlign='center'>
         <absolute id='box_grids' styleName='full'/>
-        <absolute id='box_moveRanges' styleName='full'/>
         <absolute id='box_robots' styleName='full'/>
         <box id='box_cursor' width='40' height='40' backgroundColor='white' opacity='0.7' style='border:3px solid red' />
         <absolute id='box_stages' styleName='full'/>
