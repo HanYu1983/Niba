@@ -27,12 +27,12 @@ class RobotPage extends Box {
 
 		final robots = Main.view.getLobbyController().getRobots();
 		final pilots = Main.view.getLobbyController().getPilots();
-		robotPilotList.setInfo(robots);
+		robotPilotList.showWithData(robots);
 
 		function updateDetail(info:RobotView) {
 			final pilot = pilots.get(info.pilotId);
-			robotPilotGrid.setInfo({r: info, p: pilot});
-			weaponList.setInfo(info);
+			robotPilotGrid.showWithData({r: info, p: pilot});
+			weaponList.showWithData(info.weaponIds);
 		}
 
 		robotPilotList.onChange = function(e) {

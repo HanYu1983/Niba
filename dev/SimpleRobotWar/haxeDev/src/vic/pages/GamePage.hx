@@ -32,6 +32,7 @@ class GamePage extends Box {
 	final gridSize = 40;
 
 	final battleWeaponListWidget = new BattleWeaponListWidget();
+	final robotStatusPage = new RobotStatePage();
 
 	public function new() {
 		super();
@@ -50,10 +51,11 @@ class GamePage extends Box {
 		}
 		box_left.addComponent(gridDetail);
 
-		battleWeaponListWidget.hide();
+		box_selectWeaponMenu.hide();
 		box_weaponList.addComponent(battleWeaponListWidget);
 
-		box_front.hide();
+		box_robotStatePage.hide();
+		box_robotStatePage.addComponent(robotStatusPage);
 	}
 
 	function updateGrids() {
@@ -260,13 +262,11 @@ class GamePage extends Box {
 	function updateAttackList() {
 		final weaponList = Main.view.getWeaponAttackListView();
 		if (weaponList == null) {
-			box_front.hide();
-			battleWeaponListWidget.hide();
+			box_selectWeaponMenu.hide();
 			return;
 		}
 
-		box_front.fadeIn();
-		battleWeaponListWidget.fadeIn();
+		box_selectWeaponMenu.fadeIn();
 		battleWeaponListWidget.setInfo(weaponList.weaponAttacks);
 		battleWeaponListWidget.onChange = function(e) {
 			final weapon:WeaponAttackView = battleWeaponListWidget.selectedItem;
@@ -279,10 +279,22 @@ class GamePage extends Box {
 		updateGrids();
 		updateMoveRange();
 		updateRobotMenu();
+		updateRobotState();
 		updateAttackList();
 		updateSystemMenu();
 		updateStageListener();
 
 		info('GamePage', 'updateGamePage');
+	}
+
+	function updateRobotState() {
+		final robotState = Main.view.getRobotStatusView();
+		if (robotState == null) {
+			box_robotStatePage.hide();
+			return;
+		}
+
+		box_robotStatePage.show();
+		robotStatusPage.fadeInWithData(robotState);
 	}
 }

@@ -1,0 +1,16 @@
+<box styleName='full'>
+    <hbox styleName='full'>
+        <vbox width='30%' styleName='vfull'>
+            <box id='box_robotPilot' styleName='hfull'/>
+        </vbox>
+        <vbox width='70%' styleName='vfull'>
+            <box id='box_weapons' height='300' styleName='hfull'/>
+            <box id='box_attackWeapons' height='100%' styleName='full'/>
+            <box height='100' styleName='hfull'>
+                <hbox horizontalAlign="center" styleName='vfull'>
+                    <button id='btn_confirm' text='確定' icon="haxeui-core/styles/default/haxeui_small.png" iconPosition="bottom" width='200' styleName='vfull'/>
+                </hbox>
+            </box>
+        </vbox>
+    </hbox>
+</box>

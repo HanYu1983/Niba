@@ -15,7 +15,15 @@
             <button id='btn_endPhase' text='結束回合' styleName='hfull' />
         </vbox>
     </absolute>
-    <box id='box_front' horizontalAlign='center' verticalAlign='center' styleName='full'>
+    <vbox id='box_selectWeaponMenu' backgroundColor='gray' padding='5' horizontalAlign='center' verticalAlign='bottom'>
+        <box id='box_weaponList' width='800' height='200'/>
+        <hbox horizontalAlign='center' >
+            <button id='btn_cancelSelectWeaponMenu' text='取消'/>
+            <button id='btn_confirmSelectWeaponMenu' text='確定'/>
+        </hbox>
+    </vbox>
+    <vbox id='box_robotStatePage' backgroundColor='gray' padding='5' styleName='full' />
+    <!-- <box id='box_front' horizontalAlign='center' verticalAlign='center' styleName='full'>
         <vbox id='box_selectWeaponMenu' backgroundColor='gray' padding='5' horizontalAlign='center' verticalAlign='bottom'>
             <box id='box_weaponList' width='800' height='200'/>
             <hbox horizontalAlign='center' >
@@ -23,5 +31,6 @@
                 <button id='btn_confirmSelectWeaponMenu' text='確定'/>
             </hbox>
         </vbox>
-    </box>
+        <vbox id='box_robotStatePage' backgroundColor='gray' padding='5' styleName='full' />
+    </box> -->
 </box>

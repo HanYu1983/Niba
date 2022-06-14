@@ -12,10 +12,10 @@ class WeaponListWidget extends BasicListWidget {
 		super.setInfo(info);
 
 		final weapons = Main.view.getLobbyController().getWeapons();
-		final robot:RobotView = info;
+		final weaponIds:Array<String> = info;
 
 		dataSource.clear();
-		for (wid in robot.weaponIds) {
+		for (wid in weaponIds) {
 			final weapon = weapons.get(wid);
 			dataSource.add(weapon);
 		}
