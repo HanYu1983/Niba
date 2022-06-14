@@ -18,12 +18,10 @@ class Robot extends Box {
 		return lbl_title.value;
 	}
 
-	@:isVar
 	public var isDone(null, set):Bool;
 
 	function set_isDone(done:Bool) {
-		isDone = done;
-		isDone ? box_doneCover.show() : box_doneCover.hide();
+		done ? box_doneCover.show() : box_doneCover.hide();
 		return done;
 	}
 
