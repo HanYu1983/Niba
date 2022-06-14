@@ -69,6 +69,54 @@ class BattleController implements _IBattleController {
 		];
 	}
 
+	public function getAttacks(robotId:String):Array<AttackView> {
+		return [
+			for (attack in getRobotAttacks(_ctx, robotId)) {
+				{
+					id: attack.id,
+					title: attack.title,
+					cost: attack.cost.map(cost -> {
+						return switch cost {
+							case ACTION(v):
+								'行動力${v}';
+							case BULLET(v):
+								'彈藥${v}';
+							case ENERGY(v):
+								'能量${v}';
+						};
+					}).join(","),
+					attackShape: switch attack.attackShape {
+						case DOT(min, max):
+							'單體(距${min}~${max})';
+						case _:
+							'待補上';
+					},
+					times: attack.times,
+					hitRate: attack.hitRate,
+					damage: attack.damage.map(damage -> switch damage {
+						case PHYSICS(v):
+							'物理(${v})';
+						case BEAM(v):
+							'光束(${v})';
+						case EXPLODE(v):
+							'爆炸(${v})';
+						case FIRE(v):
+							'火燒(${v})';
+					}).join(","),
+					attackFlag: attack.attackFlag.map(flag-> switch flag {
+						case BEAM:
+							'光束';
+						case MELEE:
+							'近戰';
+						case MISSILE:
+							'飛彈';
+					}).join(","),
+					isMelee: attack.isMelee,
+				}
+			}
+		];
+	}
+
 	public function getRobotMenuItems(robotId:String):Array<RobotMenuItem> {
 		info("BattleController", 'getRobotMenuItems ${robotId}');
 		final robot = getRobot(_ctx, robotId);
@@ -98,7 +146,7 @@ class BattleController implements _IBattleController {
 
 	public function doRobotMove(robotId:String, from:Position, to:Position):Void {
 		info("BattleController", 'doRobotMove ${robotId} from ${from} to ${to}');
-		if(_ctx.positionToRobot.get(from) != robotId){
+		if (_ctx.positionToRobot.get(from) != robotId) {
 			throw new Exception('機體不在格子上: robotId(${robotId}) pos:${from}');
 		}
 		final robot = getRobot(_ctx, robotId);
@@ -108,7 +156,7 @@ class BattleController implements _IBattleController {
 		info("BattleController", 'robot ${robot}');
 	}
 
-	public function doRobotDone(robotId:String):Void{
+	public function doRobotDone(robotId:String):Void {
 		final robot = getRobot(_ctx, robotId);
 		robot.flags.push(HAS_DONE);
 	}

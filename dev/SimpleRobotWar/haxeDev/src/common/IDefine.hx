@@ -168,7 +168,7 @@ typedef RobotView = {
 	maxHp:Int,
 	maxEnergy:Int,
 	maxAction:Int,
-	position: Null<Position>
+	position:Null<Position>
 }
 
 typedef PilotView = {
@@ -210,12 +210,42 @@ typedef GridView = {
 	robotId:Null<String>,
 }
 
+typedef AttackView = {
+	id:String,
+	title:String,
+	cost:String,
+	// 攻擊形狀
+	attackShape:String,
+	// 攻擊次數
+	times:Int,
+	// 基本命中率
+	hitRate:Float,
+	// 傷害類型
+	damage:String,
+	// 標記
+	attackFlag:String,
+	// 是否近戰
+	isMelee:Bool,
+}
+
+typedef GuardView = {
+	id:String,
+	title:String,
+	// 成功率
+	successRate:Float,
+	// 標記
+	attackFlag:String,
+	// 是否近戰
+	isMelee:Bool,
+}
+
 interface ILobbyInfo {}
 
 interface IBaseController {
 	function getRobots():IMap<String, RobotView>;
 	function getPilots():IMap<String, PilotView>;
 	function getWeapons():IMap<String, WeaponView>;
+	function getAttacks(robotId:String):Array<AttackView>;
 	function onEvent(action:ViewEvent):Void;
 }
 

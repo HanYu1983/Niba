@@ -21,7 +21,7 @@ class LobbyController implements _ILobbyController {
 		_view = view;
 	}
 
-	public function getContext():Context{
+	public function getContext():Context {
 		return _ctx;
 	}
 
@@ -54,6 +54,10 @@ class LobbyController implements _ILobbyController {
 				info.id => getWeaponView(_ctx, info.id);
 			}
 		];
+	}
+
+	public function getAttacks(robotId:String):Array<AttackView> {
+		return [];
 	}
 
 	public function onEvent(action:ViewEvent):Void {

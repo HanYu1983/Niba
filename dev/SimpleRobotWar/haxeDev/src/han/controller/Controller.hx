@@ -45,6 +45,10 @@ class Controller implements _IController {
 		return _baseController.getWeapons();
 	}
 
+	public function getAttacks(robotId:String):Array<AttackView>{
+		return _baseController.getAttacks(robotId);
+	}
+
 	public function getGrids():IMap<Position, GridView> {
 		return _battleController.getGrids();
 	}

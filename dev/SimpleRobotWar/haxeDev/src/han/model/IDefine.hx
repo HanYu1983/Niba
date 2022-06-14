@@ -112,8 +112,14 @@ function createWeapon(id:String):Weapon {
 typedef WeaponAttack = {
 	id:String,
 	weaponId:String,
-	enable:Bool,
-	attackData:AttackData
+	title:String,
+	cost:Array<AttackCost>,
+	attackShape:AttachShape,
+	times:Int,
+	hitRate:Float,
+	damage:Array<Damage>,
+	attackFlag:Array<AttackFlag>,
+	isMelee:Bool,
 }
 
 typedef Player = {
@@ -268,8 +274,14 @@ function getRobotAttacks(ctx:Context, robotId:String):Array<WeaponAttack> {
 				{
 					id: '${robotId}_${seqId}',
 					weaponId: weapon.id,
-					enable: false,
-					attackData: attack
+					title: attack.title,
+					cost: attack.cost,
+					attackShape: attack.attackShape,
+					times: attack.times,
+					hitRate: attack.hitRate,
+					damage: attack.damage,
+					attackFlag: attack.attackFlag,
+					isMelee: attack.isMelee,
 				}
 			}
 		}
@@ -288,7 +300,6 @@ function getRobotAttack(ctx:Context, robotId:String, attackId:String):WeaponAtta
 function getBattleResult(ctx:Context, robotId:String, attackId:String, targetRobotIds:Array<String>) {
 	final robot = getRobot(ctx, robotId);
 	final attack = getRobotAttack(ctx, robotId, attackId);
-	final attackData = attack.attackData;
 	final weapon = getWeapon(ctx, attack.weaponId);
 	final weaponData = getWeaponData(weapon.dataId);
 	final pilot = getRobotPilot(ctx, robotId);
@@ -296,15 +307,15 @@ function getBattleResult(ctx:Context, robotId:String, attackId:String, targetRob
 		final targetRobot = getRobot(ctx, targetRobotId);
 		final targetPilot = getRobotPilot(ctx, targetRobotId);
 
-		final isMelee = attackData.isMelee;
+		final isMelee = attack.isMelee;
 		// cost
-		for (c in attackData.cost) {}
+		for (c in attack.cost) {}
 		// hitRate
-		final hitRate = attackData.hitRate;
+		final hitRate = attack.hitRate;
 
 		// damage
-		for (time in 0...attackData.times) {
-			for (damage in attackData.damage) {
+		for (time in 0...attack.times) {
+			for (damage in attack.damage) {
 				switch damage {
 					case PHYSICS(v):
 					case BEAM(v):
