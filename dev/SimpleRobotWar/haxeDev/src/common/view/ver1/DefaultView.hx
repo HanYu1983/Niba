@@ -255,7 +255,6 @@ abstract class DefaultView implements IView {
 							robotId: robotId,
 							weaponAttacks: getBattleController().getAttacks(robotId)
 						};
-						pushRobotMenuState(NORMAL);
 						renderBattlePage();
 					case DONE:
 						if (_battleControlMemory.originActiveRobotState == null) {
