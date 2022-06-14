@@ -153,8 +153,10 @@ enum ViewEvent {
 	ON_CLICK_CANCEL;
 	// 當點擊機體菜單
 	ON_CLICK_ROBOT_MENU_ITEM(item:RobotMenuItem);
-	// 當點擊武器攻擊時
+	// 當點擊武器攻擊時(顯示攻擊範圍)
 	ON_CLICK_ROBOT_WEAPON_ATTACK(value:{attackId:String, robotId:String});
+	// 當點擊武器攻擊確認時(確定選擇武器後轉移到選取目標的狀態)
+	ON_CLICK_ROBOT_WEAPON_ATTACK_CONFIRM(value:{attackId:String, robotId:String});
 }
 
 typedef RobotView = {
