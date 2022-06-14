@@ -177,6 +177,7 @@ abstract class DefaultView implements IView {
 						final fromPos = _battleControlMemory.originActiveRobotState.position;
 						final robotId = _battleControlMemory.originActiveRobotState.robotId;
 						verbose("DefaultView", '假裝播放移動動畫:${robotId} from ${fromPos} to ${pos}');
+						// 暫存狀態後移動
 						getBattleController().pushState();
 						getBattleController().doRobotMove(robotId, fromPos, pos);
 						_battleControlMemory.hasMove = true;
@@ -196,6 +197,7 @@ abstract class DefaultView implements IView {
 					switch _battleControlMemory.robotMenuState {
 						case NORMAL:
 						case ROBOT_MENU:
+							// 若移動過，回到之前的狀態
 							if (_battleControlMemory.hasMove) {
 								_battleControlMemory.hasMove = false;
 								getBattleController().popState();
