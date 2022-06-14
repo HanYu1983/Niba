@@ -1,5 +1,8 @@
 package vic.pages;
 
+import js.html.KeyEvent;
+import js.Browser;
+import js.html.Document;
 import common.IDefine.WeaponAttackView;
 import vic.widgets.WeaponListWidget;
 import vic.widgets.BattleWeaponListWidget;
@@ -194,9 +197,20 @@ class GamePage extends Box {
 		}
 	}
 
+	function onKeydownEvent(e:js.html.KeyboardEvent) {
+		switch (e.keyCode) {
+			case KeyEvent.DOM_VK_ESCAPE:
+				Main.view.getBattleController().onEvent(ON_CLICK_CANCEL);
+			case _:
+		}
+	}
+
 	override function show() {
 		super.show();
 		updateGamePage();
+
+		Browser.document.removeEventListener('keydown', onKeydownEvent);
+		Browser.document.addEventListener('keydown', onKeydownEvent);
 
 		// 只要注冊一次就好
 		btn_move.onClick = function(e) {
