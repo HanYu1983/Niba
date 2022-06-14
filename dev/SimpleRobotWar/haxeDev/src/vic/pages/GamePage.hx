@@ -1,5 +1,8 @@
 package vic.pages;
 
+import common.IDefine.WeaponAttackView;
+import vic.widgets.WeaponListWidget;
+import vic.widgets.BattleWeaponListWidget;
 import haxe.ds.EnumValueMap;
 import haxe.ui.events.KeyboardEvent;
 import tool.Debug.info;
@@ -25,9 +28,11 @@ class GamePage extends Box {
 	final gridDetail = new GridDetail();
 	final gridSize = 40;
 
+	final battleWeaponListWidget = new BattleWeaponListWidget();
+
 	public function new() {
 		super();
-		
+
 		final totalCount = MAP_W * MAP_H;
 		for (i in 0...totalCount) {
 			final g = new Grid();
@@ -41,6 +46,11 @@ class GamePage extends Box {
 			grids.set(g.pos, g);
 		}
 		box_left.addComponent(gridDetail);
+
+		battleWeaponListWidget.hide();
+		box_weaponList.addComponent(battleWeaponListWidget);
+
+		box_front.hide();
 	}
 
 	function updateGrids() {
@@ -130,11 +140,11 @@ class GamePage extends Box {
 	var lastClickPos = [0.0, 0.0];
 
 	function updateStageListener() {
-		box_stages.unregisterEvents();
+		box_listener.unregisterEvents();
 		switch (Main.view.getRobotMenuState()) {
 			case NORMAL:
 				final gridInfos = Main.view.getBattleController().getGrids();
-				box_stages.registerEvent(MouseEvent.MOUSE_MOVE, (e:MouseEvent) -> {
+				box_listener.registerEvent(MouseEvent.MOUSE_MOVE, (e:MouseEvent) -> {
 					final pos = getPosEnumByLocalPos(e.localX, e.localY);
 					final gridInfo = gridInfos.get(pos);
 					switch (pos) {
@@ -146,7 +156,7 @@ class GamePage extends Box {
 					updateGridDetail(gridInfo);
 				});
 
-				box_stages.registerEvent(MouseEvent.CLICK, (e:MouseEvent) -> {
+				box_listener.registerEvent(MouseEvent.CLICK, (e:MouseEvent) -> {
 					lastClickPos[0] = e.localX;
 					lastClickPos[1] = e.localY;
 					final pos = getPosEnumByLocalPos(e.localX, e.localY);
@@ -155,12 +165,12 @@ class GamePage extends Box {
 					Main.view.getBattleController().onEvent(ON_CLICK_BATTLE_POS(pos));
 				});
 			case ROBOT_MENU | SYSTEM_MENU:
-				box_stages.registerEvent(MouseEvent.CLICK, (e:MouseEvent) -> {
+				box_listener.registerEvent(MouseEvent.CLICK, (e:MouseEvent) -> {
 					Main.view.getBattleController().onEvent(ON_CLICK_CANCEL);
 				});
 			case ROBOT_SELECT_MOVE_POSITION:
 				final gridInfos = Main.view.getBattleController().getGrids();
-				box_stages.registerEvent(MouseEvent.MOUSE_MOVE, (e:MouseEvent) -> {
+				box_listener.registerEvent(MouseEvent.MOUSE_MOVE, (e:MouseEvent) -> {
 					final pos = getPosEnumByLocalPos(e.localX, e.localY);
 					final gridInfo = gridInfos.get(pos);
 					switch (pos) {
@@ -172,7 +182,7 @@ class GamePage extends Box {
 					updateGridDetail(gridInfo);
 				});
 
-				box_stages.registerEvent(MouseEvent.CLICK, (e:MouseEvent) -> {
+				box_listener.registerEvent(MouseEvent.CLICK, (e:MouseEvent) -> {
 					lastClickPos[0] = e.localX;
 					lastClickPos[1] = e.localY;
 					final pos = getPosEnumByLocalPos(e.localX, e.localY);
@@ -209,10 +219,18 @@ class GamePage extends Box {
 			info('GamePage', '跳過這個回合，還沒有指令可以呼叫');
 			// Main.view.getBattleController().onEvent(ON_CLICK_ROBOT_MENU_ITEM(DONE));
 		}
+
+		btn_confirmSelectWeaponMenu.onClick = function(e) {
+			final weapon:WeaponAttackView = battleWeaponListWidget.selectedItem;
+			Main.view.getBattleController().onEvent(ON_CLICK_ROBOT_WEAPON_ATTACK_CONFIRM({attackId: weapon.id, robotId: weapon.robotId}));
+		}
+
+		btn_cancelSelectWeaponMenu.onClick = function(e) {
+			Main.view.getBattleController().onEvent(ON_CLICK_CANCEL);
+		}
 	}
 
 	public function updateMoveRange() {
-
 		final moveRangeView = Main.view.getMoveRangeView();
 		if (moveRangeView == null) {
 			return;
@@ -225,10 +243,29 @@ class GamePage extends Box {
 		}
 	}
 
+	function updateAttackList() {
+		final weaponList = Main.view.getWeaponAttackListView();
+		if (weaponList == null) {
+			box_front.hide();
+			battleWeaponListWidget.hide();
+			return;
+		}
+
+		box_front.fadeIn();
+		battleWeaponListWidget.fadeIn();
+		battleWeaponListWidget.setInfo(weaponList.weaponAttacks);
+		battleWeaponListWidget.onChange = function(e) {
+			final weapon:WeaponAttackView = battleWeaponListWidget.selectedItem;
+			Main.view.getBattleController().onEvent(ON_CLICK_ROBOT_WEAPON_ATTACK({attackId: weapon.id, robotId: weapon.robotId}));
+		}
+		battleWeaponListWidget.selectedIndex = 0;
+	}
+
 	public function updateGamePage() {
 		updateGrids();
 		updateMoveRange();
 		updateRobotMenu();
+		updateAttackList();
 		updateSystemMenu();
 		updateStageListener();
 

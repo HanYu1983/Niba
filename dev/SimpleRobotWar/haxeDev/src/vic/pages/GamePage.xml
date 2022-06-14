@@ -1,12 +1,10 @@
 <box width="100%" height="100%">
-    <vbox id='box_left' horizontalAlign='left' verticalAlign='center'>
-
-    </vbox>
+    <vbox id='box_left' horizontalAlign='left' verticalAlign='center'/>
     <absolute width='800' height='800' horizontalAlign='center' verticalAlign='center'>
         <absolute id='box_grids' styleName='full'/>
         <absolute id='box_robots' styleName='full'/>
         <box id='box_cursor' width='40' height='40' backgroundColor='white' opacity='0.7' style='border:3px solid red' />
-        <absolute id='box_stages' styleName='full'/>
+        <absolute id='box_listener' styleName='full'/>
         <vbox id='box_robotMenu' backgroundColor='gray' padding='5' width='100'>
             <button id='btn_move' text='移動' styleName='hfull' />
             <button id='btn_attack' text='攻擊' styleName='hfull' />
@@ -17,7 +15,13 @@
             <button id='btn_endPhase' text='結束回合' styleName='hfull' />
         </vbox>
     </absolute>
-
-
-
+    <box id='box_front' horizontalAlign='center' verticalAlign='center' styleName='full'>
+        <vbox id='box_selectWeaponMenu' backgroundColor='gray' padding='5' horizontalAlign='center' verticalAlign='bottom'>
+            <box id='box_weaponList' width='800' height='200'/>
+            <hbox horizontalAlign='center' >
+                <button id='btn_cancelSelectWeaponMenu' text='取消'/>
+                <button id='btn_confirmSelectWeaponMenu' text='確定'/>
+            </hbox>
+        </vbox>
+    </box>
 </box>

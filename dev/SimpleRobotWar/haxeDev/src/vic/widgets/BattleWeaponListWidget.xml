@@ -1,0 +1,14 @@
+<tableview styleName='full' contentWidth="100%">
+    <header styleName='hfull'>
+        <column id="title" text="武器" width='100%' />
+        <column id="cost" text="消耗" width='150' />
+        <column id="attackShape" text="攻擊範圍" width='120' />
+        <column id="times" text="次數" width='40' />
+        <column id="hitRate" text="命中" width='60' />
+        <column id="damage" text="破壞力" width='150' />
+        <column id="attackFlag" text="類型" width='60' />
+    </header>
+    <data>
+        <!-- <item name="斧頭" power="3000" range='1~3' en='10' bullet='4' /> -->
+    </data>
+</tableview>
