@@ -172,7 +172,8 @@ typedef RobotView = {
 	maxHp:Int,
 	maxEnergy:Int,
 	maxAction:Int,
-	position:Null<Position>
+	position:Null<Position>,
+	isDone:Bool
 }
 
 typedef PilotView = {
