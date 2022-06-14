@@ -146,12 +146,15 @@ class DefaultViewImpl extends DefaultView {
 	// ROBOT_SELECT_MOVE_POSITION
 	//   ON_CLICK_BATTLE_POS
 	//   ON_CLICK_CANCEL
-
+	//
 	// 打開選武器攻擊頁 Main.view.getWeaponAttackListView()
 	// 動作
 	//   點擊選項 ON_CLICK_ROBOT_WEAPON_ATTACK(value:{attackId:String, robotId:String});
 	//   點擊確定，代入目前選到的資料 ON_CLICK_ROBOT_WEAPON_ATTACK_CONFIRM(value:{attackId:String, robotId:String});
-	function renderBattlePage(){
+	//
+	// 打開機體狀態頁 Main.view.getRobotStatusView()
+	// 版面參考: 左方機體與駕駛詳細, 右上方武器列表, 右下方攻擊列表
+	function renderBattlePage() {
 		_view.gamePage.updateGamePage();
 	}
 }
