@@ -77,6 +77,7 @@ class GamePage extends Box {
 				r.title = robotInfo.title;
 				r.left = g.left;
 				r.top = g.top;
+				r.isDone = robotInfo.isDone;
 				box_robots.addComponent(r);
 
 				robots.push(r);
