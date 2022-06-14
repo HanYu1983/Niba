@@ -153,6 +153,8 @@ enum ViewEvent {
 	ON_CLICK_CANCEL;
 	// 當點擊機體菜單
 	ON_CLICK_ROBOT_MENU_ITEM(item:RobotMenuItem);
+	// 當點擊武器攻擊時
+	ON_CLICK_ROBOT_WEAPON_ATTACK(value:{attackId:String, robotId:String});
 }
 
 typedef RobotView = {
@@ -210,8 +212,10 @@ typedef GridView = {
 	robotId:Null<String>,
 }
 
-typedef AttackView = {
+typedef WeaponAttackView = {
 	id:String,
+	weaponId:String,
+	robotId:String,
 	title:String,
 	cost:String,
 	// 攻擊形狀
@@ -245,7 +249,7 @@ interface IBaseController {
 	function getRobots():IMap<String, RobotView>;
 	function getPilots():IMap<String, PilotView>;
 	function getWeapons():IMap<String, WeaponView>;
-	function getAttacks(robotId:String):Array<AttackView>;
+	function getAttacks(robotId:String):Array<WeaponAttackView>;
 	function onEvent(action:ViewEvent):Void;
 }
 

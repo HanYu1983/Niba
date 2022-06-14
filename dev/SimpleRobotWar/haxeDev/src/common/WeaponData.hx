@@ -4,7 +4,7 @@ import haxe.Exception;
 import haxe.ds.StringMap;
 import common.IDefine;
 
-private final WEAPONS:StringMap<WeaponData> = [
+private final WEAPON_DATAS:StringMap<WeaponData> = [
 	"實體刀" => {
 		title: "實體刀",
 		cost: 0,
@@ -45,7 +45,7 @@ private final WEAPONS:StringMap<WeaponData> = [
 				times: 2,
 				hitRate: 0.9,
 				damage: [PHYSICS(50), BEAM(50)],
-				attackFlag: [],
+				attackFlag: [MELEE],
 				isMelee: true,
 			}
 		],
@@ -161,7 +161,7 @@ private final WEAPONS:StringMap<WeaponData> = [
 ];
 
 function getWeaponData(id:String):WeaponData {
-	final data = WEAPONS.get(id);
+	final data = WEAPON_DATAS.get(id);
 	if (data == null) {
 		throw new Exception('weaponData not found:${id}');
 	}

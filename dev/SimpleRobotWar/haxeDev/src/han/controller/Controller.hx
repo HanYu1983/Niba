@@ -45,7 +45,7 @@ class Controller implements _IController {
 		return _baseController.getWeapons();
 	}
 
-	public function getAttacks(robotId:String):Array<AttackView>{
+	public function getAttacks(robotId:String):Array<WeaponAttackView>{
 		return _baseController.getAttacks(robotId);
 	}
 

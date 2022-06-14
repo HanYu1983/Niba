@@ -69,11 +69,13 @@ class BattleController implements _IBattleController {
 		];
 	}
 
-	public function getAttacks(robotId:String):Array<AttackView> {
+	public function getAttacks(robotId:String):Array<WeaponAttackView> {
 		return [
 			for (attack in getRobotAttacks(_ctx, robotId)) {
 				{
 					id: attack.id,
+					weaponId: attack.weaponId,
+					robotId: attack.robotId,
 					title: attack.title,
 					cost: attack.cost.map(cost -> {
 						return switch cost {
@@ -129,6 +131,12 @@ class BattleController implements _IBattleController {
 			final hasMove = robot.flags.has(HAS_MOVE);
 			if (hasMove == false) {
 				ret.push(MOVE);
+			}
+		}
+		{
+			final hasAttack = getRobotAttacks(_ctx, robotId).length > 0;
+			if(hasAttack){
+				ret.push(ATTACK);
 			}
 		}
 		ret.push(STATUS);

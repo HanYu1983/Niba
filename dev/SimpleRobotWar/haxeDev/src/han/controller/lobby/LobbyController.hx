@@ -56,7 +56,7 @@ class LobbyController implements _ILobbyController {
 		];
 	}
 
-	public function getAttacks(robotId:String):Array<AttackView> {
+	public function getAttacks(robotId:String):Array<WeaponAttackView> {
 		return [];
 	}
 

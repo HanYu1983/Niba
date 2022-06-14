@@ -132,11 +132,6 @@ class DefaultViewImpl extends DefaultView {
 		// }
 	}
 
-	function renderBattlePage(){
-		trace(getBattleController().getRobots());
-		_view.gamePage.updateGamePage();
-	}
-
 	// 打開機體菜單頁
 	// 顯示菜單 Main.view.getRobotMenuView()
 	// 動作
@@ -151,4 +146,12 @@ class DefaultViewImpl extends DefaultView {
 	// ROBOT_SELECT_MOVE_POSITION
 	//   ON_CLICK_BATTLE_POS
 	//   ON_CLICK_CANCEL
+
+	// 打開選武器攻擊頁 Main.view.getWeaponAttackListView()
+	// 動作
+	//   點擊選項 ON_CLICK_ROBOT_WEAPON_ATTACK(value:{attackId:String, robotId:String});
+	function renderBattlePage(){
+		trace("可實作打開選武器攻擊頁", getWeaponAttackListView());
+		_view.gamePage.updateGamePage();
+	}
 }

@@ -111,6 +111,7 @@ function createWeapon(id:String):Weapon {
 
 typedef WeaponAttack = {
 	id:String,
+	robotId:String,
 	weaponId:String,
 	title:String,
 	cost:Array<AttackCost>,
@@ -264,7 +265,7 @@ function getRobotWeapons(ctx:Context, robotId:String):Array<Weapon> {
 
 function getRobotAttacks(ctx:Context, robotId:String):Array<WeaponAttack> {
 	final weapons = getRobotWeapons(ctx, robotId);
-	final weaponDatas = weapons.map(weapon -> getWeaponData(weapon.id));
+	final weaponDatas = weapons.map(weapon -> getWeaponData(weapon.dataId));
 	var seqId = 0;
 	return [
 		for (i in 0...weapons.length) {
@@ -273,6 +274,7 @@ function getRobotAttacks(ctx:Context, robotId:String):Array<WeaponAttack> {
 			for (attack in data.attack) {
 				{
 					id: '${robotId}_${seqId}',
+					robotId: robotId,
 					weaponId: weapon.id,
 					title: attack.title,
 					cost: attack.cost,
