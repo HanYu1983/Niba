@@ -45,7 +45,7 @@ class Controller implements _IController {
 		return _baseController.getWeapons();
 	}
 
-	public function getAttacks(robotId:String):Array<WeaponAttackView>{
+	public function getAttacks(robotId:String):Array<WeaponAttackView> {
 		return _baseController.getAttacks(robotId);
 	}
 
@@ -57,7 +57,7 @@ class Controller implements _IController {
 		return _battleController.getRobotMenuItems(robotId);
 	}
 
-	public function getRobotMoveRange(robotId:String):Array<Position>{
+	public function getRobotMoveRange(robotId:String):Array<Position> {
 		return _battleController.getRobotMoveRange(robotId);
 	}
 
@@ -65,12 +65,24 @@ class Controller implements _IController {
 		return _battleController.getRobotIdByPosition(pos);
 	}
 
-	public function doRobotMove(robotId:String, from:Position, to:Position):Void{
-		return _battleController.doRobotMove(robotId, from,to);
+	public function doRobotMove(robotId:String, from:Position, to:Position):Void {
+		return _battleController.doRobotMove(robotId, from, to);
 	}
 
-	public function doRobotDone(robotId:String):Void{
+	public function doRobotDone(robotId:String):Void {
 		return _battleController.doRobotDone(robotId);
+	}
+
+	public function pushState():Void {
+		return _battleController.pushState();
+	}
+
+	public function popState():Void {
+		return _battleController.popState();
+	}
+
+	public function applyState():Void {
+		return _battleController.applyState();
 	}
 
 	public function onEvent(action:ViewEvent):Void {

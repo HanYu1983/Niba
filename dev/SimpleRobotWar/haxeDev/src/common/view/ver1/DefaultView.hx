@@ -42,6 +42,7 @@ private typedef BattleControlMemory = {
 		robotId:String,
 		position:Position
 	}>,
+	hasMove:Bool,
 	robotMenuState:RobotMenuState,
 	robotMenuView:Null<RobotMenuView>,
 	systemMenuView:Null<SystemMenuView>,
@@ -69,6 +70,7 @@ abstract class DefaultView implements IView {
 
 	final _battleControlMemory:BattleControlMemory = {
 		robotMenuState: NORMAL,
+		hasMove: false,
 		originActiveRobotState: null,
 		robotMenuView: null,
 		systemMenuView: null,
@@ -175,7 +177,9 @@ abstract class DefaultView implements IView {
 						final fromPos = _battleControlMemory.originActiveRobotState.position;
 						final robotId = _battleControlMemory.originActiveRobotState.robotId;
 						verbose("DefaultView", '假裝播放移動動畫:${robotId} from ${fromPos} to ${pos}');
+						getBattleController().pushState();
 						getBattleController().doRobotMove(robotId, fromPos, pos);
+						_battleControlMemory.hasMove = true;
 						// 重抓菜單
 						_battleControlMemory.robotMenuView = {
 							menuItems: getBattleController().getRobotMenuItems(robotId)
@@ -192,6 +196,10 @@ abstract class DefaultView implements IView {
 					switch _battleControlMemory.robotMenuState {
 						case NORMAL:
 						case ROBOT_MENU:
+							if (_battleControlMemory.hasMove) {
+								_battleControlMemory.hasMove = false;
+								getBattleController().popState();
+							}
 							changeUnitMenuState(NORMAL);
 							renderBattlePage();
 						case ROBOT_SELECT_MOVE_POSITION:
@@ -240,6 +248,7 @@ abstract class DefaultView implements IView {
 							throw new Exception("即將要結束菜單，但卻沒有找到作用中的機體robotId");
 						}
 						getBattleController().doRobotDone(robotId);
+						getBattleController().applyState();
 						changeUnitMenuState(NORMAL);
 						renderBattlePage();
 					case _:

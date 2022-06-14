@@ -1,5 +1,7 @@
 package han.controller.battle;
 
+import tool.Helper.deepCopy;
+import tool.Helper.deepCopy;
 import haxe.Exception;
 import haxe.Constraints;
 import haxe.ds.StringMap;
@@ -12,6 +14,7 @@ import han.alg.Path;
 import han.model.IDefine;
 import han.controller.common.IDefine;
 import tool.Debug;
+import tool.Helper;
 
 using Lambda;
 
@@ -19,59 +22,75 @@ private interface _IBattleController extends IBattleController {}
 
 class BattleController implements _IBattleController {
 	final _view:IView;
-	final _ctx:Context;
+	final _ctxStacks:Array<Context> = [];
 
 	public function new(ctx:Context, view:IView) {
-		_ctx = ctx;
 		_view = view;
+		_ctxStacks.push(deepCopy(ctx));
+	}
+
+	public function getContext():Context {
+		if (_ctxStacks.length != 1) {
+			throw new Exception("沒有正確處理上下文堆疊，結束遊戲時應該只有一個");
+		}
+		return _ctxStacks[0];
+	}
+
+	function getTopContext():Context {
+		if (_ctxStacks.length == 0) {
+			throw new Exception("請加入原始上下文");
+		}
+		final topCtx = _ctxStacks[_ctxStacks.length - 1];
+		return topCtx;
 	}
 
 	public function getRobots():IMap<String, RobotView> {
-		// 使用String當key的話, 它應會自動判斷成StringMap
+		final ctx = getTopContext();
 		return [
-			for (pos => robotId in _ctx.positionToRobot) {
-				robotId => getRobotView(_ctx, robotId, pos);
+			for (pos => robotId in ctx.positionToRobot) {
+				robotId => getRobotView(ctx, robotId, pos);
 			}
 		];
 	}
 
 	public function getPilots():IMap<String, PilotView> {
-		// 使用String當key的話, 它應會自動判斷成StringMap
+		final ctx = getTopContext();
 		return [
-			for (info in _ctx.pilots) {
-				info.id => getPilotView(_ctx, info.id);
+			for (info in ctx.pilots) {
+				info.id => getPilotView(ctx, info.id);
 			}
 		];
 	}
 
 	public function getWeapons():IMap<String, WeaponView> {
-		// 使用String當key的話, 它應會自動判斷成StringMap
+		final ctx = getTopContext();
 		return [
-			for (info in _ctx.weapons) {
-				info.id => getWeaponView(_ctx, info.id);
+			for (info in ctx.weapons) {
+				info.id => getWeaponView(ctx, info.id);
 			}
 		];
 	}
 
 	public function getGrids():IMap<Position, GridView> {
-		// 使用enum當key的話, 它確定會自動判斷成EnumValueMap
+		final ctx = getTopContext();
 		return [
-			for (pos => grid in _ctx.grids) {
+			for (pos => grid in ctx.grids) {
 				final terrian = getTerrianData(grid.terrianId);
 				pos => {
 					terrianId: grid.terrianId,
 					title: terrian.title,
 					defRate: terrian.def,
 					evadeRate: terrian.evade,
-					robotId: _ctx.positionToRobot.get(pos),
+					robotId: ctx.positionToRobot.get(pos),
 				}
 			}
 		];
 	}
 
 	public function getAttacks(robotId:String):Array<WeaponAttackView> {
+		final ctx = getTopContext();
 		return [
-			for (attack in getRobotAttacks(_ctx, robotId)) {
+			for (attack in getRobotAttacks(ctx, robotId)) {
 				{
 					id: attack.id,
 					weaponId: attack.weaponId,
@@ -105,7 +124,7 @@ class BattleController implements _IBattleController {
 						case FIRE(v):
 							'火燒(${v})';
 					}).join(","),
-					attackFlag: attack.attackFlag.map(flag-> switch flag {
+					attackFlag: attack.attackFlag.map(flag -> switch flag {
 						case BEAM:
 							'光束';
 						case MELEE:
@@ -121,7 +140,8 @@ class BattleController implements _IBattleController {
 
 	public function getRobotMenuItems(robotId:String):Array<RobotMenuItem> {
 		info("BattleController", 'getRobotMenuItems ${robotId}');
-		final robot = getRobot(_ctx, robotId);
+		final ctx = getTopContext();
+		final robot = getRobot(ctx, robotId);
 		final hasDone = robot.flags.has(HAS_DONE);
 		if (hasDone) {
 			return [STATUS];
@@ -134,8 +154,8 @@ class BattleController implements _IBattleController {
 			}
 		}
 		{
-			final hasAttack = getRobotAttacks(_ctx, robotId).length > 0;
-			if(hasAttack){
+			final hasAttack = getRobotAttacks(ctx, robotId).length > 0;
+			if (hasAttack) {
 				ret.push(ATTACK);
 			}
 		}
@@ -145,28 +165,52 @@ class BattleController implements _IBattleController {
 	}
 
 	public function getRobotMoveRange(robotId:String):Array<Position> {
-		return han.alg.Path.getRobotMoveRange(_ctx, robotId);
+		final ctx = getTopContext();
+		return han.alg.Path.getRobotMoveRange(ctx, robotId);
 	}
 
 	public function getRobotIdByPosition(pos:Position):Null<String> {
-		return _ctx.positionToRobot.get(pos);
+		final ctx = getTopContext();
+		return ctx.positionToRobot.get(pos);
 	}
 
 	public function doRobotMove(robotId:String, from:Position, to:Position):Void {
 		info("BattleController", 'doRobotMove ${robotId} from ${from} to ${to}');
-		if (_ctx.positionToRobot.get(from) != robotId) {
+		final ctx = getTopContext();
+		if (ctx.positionToRobot.get(from) != robotId) {
 			throw new Exception('機體不在格子上: robotId(${robotId}) pos:${from}');
 		}
-		final robot = getRobot(_ctx, robotId);
+		final robot = getRobot(ctx, robotId);
 		robot.flags.push(HAS_MOVE);
-		_ctx.positionToRobot.remove(from);
-		_ctx.positionToRobot.set(to, robotId);
+		ctx.positionToRobot.remove(from);
+		ctx.positionToRobot.set(to, robotId);
 		info("BattleController", 'robot ${robot}');
 	}
 
 	public function doRobotDone(robotId:String):Void {
-		final robot = getRobot(_ctx, robotId);
+		final ctx = getTopContext();
+		final robot = getRobot(ctx, robotId);
 		robot.flags.push(HAS_DONE);
+	}
+
+	public function pushState():Void {
+		final ctx = getTopContext();
+		_ctxStacks.push(deepCopy(ctx));
+	}
+
+	public function popState():Void {
+		if (_ctxStacks.length <= 1) {
+			throw new Exception("不能把原始上下文移除");
+		}
+		_ctxStacks.pop();
+	}
+
+	public function applyState():Void {
+		final ctx = getTopContext();
+		while (_ctxStacks.length > 0) {
+			_ctxStacks.pop();
+		}
+		_ctxStacks.push(ctx);
 	}
 
 	public function onEvent(action:ViewEvent):Void {
