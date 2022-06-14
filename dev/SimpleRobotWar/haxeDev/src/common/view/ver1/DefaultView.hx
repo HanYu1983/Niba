@@ -197,12 +197,22 @@ abstract class DefaultView implements IView {
 					switch _battleControlMemory.robotMenuState {
 						case NORMAL:
 						case ROBOT_MENU:
-							// 若移動過，回到之前的狀態
 							if (_battleControlMemory.hasMove) {
+								// 若移動過，回到之前的狀態
 								_battleControlMemory.hasMove = false;
 								getBattleController().popState();
+								// 重抓菜單
+								if (_battleControlMemory.originActiveRobotState == null) {
+									throw new Exception("沒有找到originActiveRobotState");
+								}
+								final robotId = _battleControlMemory.originActiveRobotState.robotId;
+								_battleControlMemory.robotMenuView = {
+									menuItems: getBattleController().getRobotMenuItems(robotId)
+								};
+								changeUnitMenuState(ROBOT_SELECT_MOVE_POSITION);
+							} else {
+								changeUnitMenuState(NORMAL);
 							}
-							changeUnitMenuState(NORMAL);
 							renderBattlePage();
 						case ROBOT_SELECT_MOVE_POSITION:
 							changeUnitMenuState(ROBOT_MENU);
