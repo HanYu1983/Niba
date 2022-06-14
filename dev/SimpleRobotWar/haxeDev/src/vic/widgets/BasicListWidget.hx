@@ -7,7 +7,7 @@ class BasicListWidget extends TableView implements IShowData {
 		super();
 	}
 
-	function setInfo(info:Dynamic):Void {}
+	private function setInfo(info:Dynamic):Void {}
 
 	public function showWithData(data:Dynamic) {
 		show();

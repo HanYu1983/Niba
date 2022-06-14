@@ -88,7 +88,7 @@ class GamePage extends Box {
 	function updateGridDetail(info:Null<GridView>) {
 		if (info != null) {
 			verbose('GamePage', 'grid info ${info}');
-			gridDetail.setInfo(info);
+			gridDetail.showWithData(info);
 		}
 	}
 

@@ -9,7 +9,7 @@
         <property id="pro_pilotName" label="駕駛員" value="龍馬" />
         <property id="pro_pilotMelee" label="格鬥" value="100" />
         <property id="pro_pilotRange" label="射擊" value="100" />
-        <property id="pro_pilotAttack" label="防禦" value="100" />
+        <property id="pro_pilotAttack" label="攻擊" value="100" />
         <property id="pro_pilotGuard" label="防禦" value="100" />
         <property id="pro_pilotLucky" label="幸運" value="100" />
     </property-group>
