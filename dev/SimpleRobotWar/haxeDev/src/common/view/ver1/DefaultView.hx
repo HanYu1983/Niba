@@ -84,7 +84,6 @@ abstract class DefaultView implements IView {
 			return;
 		}
 		_battleControlMemory.robotMenuState = state;
-		renderBattlePage();
 	}
 
 	public function getRobotMenuState():RobotMenuState {
@@ -152,6 +151,7 @@ abstract class DefaultView implements IView {
 							_battleControlMemory.systemMenuView = {};
 							// 系統菜單
 							changeUnitMenuState(SYSTEM_MENU);
+							renderBattlePage();
 						} else {
 							// 單位菜單
 							_battleControlMemory.originActiveRobotState = {
@@ -165,6 +165,7 @@ abstract class DefaultView implements IView {
 								pos: getBattleController().getRobotMoveRange(robotId)
 							};
 							changeUnitMenuState(ROBOT_MENU);
+							renderBattlePage();
 						}
 					case ROBOT_MENU:
 					case ROBOT_SELECT_MOVE_POSITION:
@@ -180,6 +181,7 @@ abstract class DefaultView implements IView {
 							menuItems: getBattleController().getRobotMenuItems(robotId)
 						};
 						changeUnitMenuState(ROBOT_MENU);
+						renderBattlePage();
 					case _:
 				}
 			case ON_CLICK_CANCEL:
@@ -191,18 +193,23 @@ abstract class DefaultView implements IView {
 						case NORMAL:
 						case ROBOT_MENU:
 							changeUnitMenuState(NORMAL);
+							renderBattlePage();
 						case ROBOT_SELECT_MOVE_POSITION:
 							changeUnitMenuState(ROBOT_MENU);
+							renderBattlePage();
 						case ROBOT_SELECT_WEAPON_ATTACK:
 							changeUnitMenuState(ROBOT_MENU);
+							renderBattlePage();
 						case SYSTEM_MENU:
 							changeUnitMenuState(NORMAL);
+							renderBattlePage();
 					}
 				}
 			case ON_CLICK_ROBOT_MENU_ITEM(item):
 				switch item {
 					case MOVE:
 						changeUnitMenuState(ROBOT_SELECT_MOVE_POSITION);
+						renderBattlePage();
 					case ATTACK:
 						if (_battleControlMemory.originActiveRobotState == null) {
 							throw new Exception("即將要選武器攻擊，但卻沒有找到originActiveRobotState");
@@ -212,6 +219,7 @@ abstract class DefaultView implements IView {
 							weaponAttacks: getBattleController().getAttacks(robotId)
 						};
 						changeUnitMenuState(ROBOT_SELECT_WEAPON_ATTACK);
+						renderBattlePage();
 					case STATUS:
 						if (_battleControlMemory.originActiveRobotState == null) {
 							throw new Exception("即將進入機體狀態頁，但卻沒有找到originActiveRobotState");
@@ -233,6 +241,7 @@ abstract class DefaultView implements IView {
 						}
 						getBattleController().doRobotDone(robotId);
 						changeUnitMenuState(NORMAL);
+						renderBattlePage();
 					case _:
 				}
 			case _:
