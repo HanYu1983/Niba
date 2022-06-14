@@ -3,6 +3,9 @@
         <box horizontalAlign='center' verticalAlign='center'>
             <label id='lbl_title' text='ce' color='black' opacity='.5' />
         </box>
-
+        <box id='box_doneCover' styleName='full'>
+            <box backgroundColor='black' opacity='0.5' styleName='full'/>
+            <label text='E' color='white' horizontalAlign='right' verticalAlign='bottom' style='font-size:8px; font-weight: bold' />
+        </box>
     </box>
 </box>
