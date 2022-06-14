@@ -42,8 +42,7 @@ private typedef BattleControlMemory = {
 		robotId:String,
 		position:Position
 	}>,
-	hasMove:Bool,
-	robotMenuState:RobotMenuState,
+	robotMenuState:Array<RobotMenuState>,
 	robotMenuView:Null<RobotMenuView>,
 	systemMenuView:Null<SystemMenuView>,
 	moveRangeView:Null<MoveRangeView>,
@@ -69,8 +68,7 @@ abstract class DefaultView implements IView {
 	}
 
 	final _battleControlMemory:BattleControlMemory = {
-		robotMenuState: NORMAL,
-		hasMove: false,
+		robotMenuState: [NORMAL],
 		originActiveRobotState: null,
 		robotMenuView: null,
 		systemMenuView: null,
@@ -79,21 +77,31 @@ abstract class DefaultView implements IView {
 		robotStatusView: null,
 	};
 
-	function changeUnitMenuState(state:RobotMenuState) {
-		info("DefaultView", 'changeUnitMenuState ${_battleControlMemory.robotMenuState} to ${state}');
-		final originState = _battleControlMemory.robotMenuState;
+	function pushRobotMenuState(state:RobotMenuState) {
+		info("DefaultView", 'pushRobotMenuState ${_battleControlMemory.robotMenuState} to ${state}');
+		final originState = getRobotMenuState();
 		if (originState == state) {
 			return;
 		}
-		_battleControlMemory.robotMenuState = state;
+		_battleControlMemory.robotMenuState.push(state);
+	}
+
+	function popRobotMenuState(){
+		if(_battleControlMemory.robotMenuState.length <= 1){
+			throw new Exception("robotMenuState必須最少有一個NORMAL狀態");
+		}
+		_battleControlMemory.robotMenuState.pop();
 	}
 
 	public function getRobotMenuState():RobotMenuState {
-		return _battleControlMemory.robotMenuState;
+		if(_battleControlMemory.robotMenuState.length == 0){
+			throw new Exception("robotMenuState必須最少有一個NORMAL狀態");
+		}
+		return _battleControlMemory.robotMenuState[_battleControlMemory.robotMenuState.length - 1];
 	}
 
 	public function getRobotMenuView():Null<RobotMenuView> {
-		return switch _battleControlMemory.robotMenuState {
+		return switch getRobotMenuState() {
 			case ROBOT_MENU:
 				_battleControlMemory.robotMenuView;
 			case _:
@@ -102,7 +110,7 @@ abstract class DefaultView implements IView {
 	}
 
 	public function getSystemMenuView():Null<SystemMenuView> {
-		return switch _battleControlMemory.robotMenuState {
+		return switch getRobotMenuState() {
 			case SYSTEM_MENU:
 				_battleControlMemory.systemMenuView;
 			case _:
@@ -111,7 +119,7 @@ abstract class DefaultView implements IView {
 	}
 
 	public function getMoveRangeView():Null<MoveRangeView> {
-		return switch _battleControlMemory.robotMenuState {
+		return switch getRobotMenuState() {
 			case ROBOT_MENU | ROBOT_SELECT_MOVE_POSITION:
 				_battleControlMemory.moveRangeView;
 			case _:
@@ -120,7 +128,7 @@ abstract class DefaultView implements IView {
 	}
 
 	public function getWeaponAttackListView():Null<WeaponAttackListView> {
-		return switch _battleControlMemory.robotMenuState {
+		return switch getRobotMenuState() {
 			case ROBOT_SELECT_WEAPON_ATTACK:
 				_battleControlMemory.weaponAttackListView;
 			case _:
@@ -146,13 +154,13 @@ abstract class DefaultView implements IView {
 				openLobbyPage();
 			// battle
 			case ON_CLICK_BATTLE_POS(pos):
-				switch _battleControlMemory.robotMenuState {
+				switch getRobotMenuState() {
 					case NORMAL:
 						final robotId = getBattleController().getRobotIdByPosition(pos);
 						if (robotId == null) {
 							_battleControlMemory.systemMenuView = {};
 							// 系統菜單
-							changeUnitMenuState(SYSTEM_MENU);
+							pushRobotMenuState(SYSTEM_MENU);
 							renderBattlePage();
 						} else {
 							// 單位菜單
@@ -166,7 +174,7 @@ abstract class DefaultView implements IView {
 							_battleControlMemory.moveRangeView = {
 								pos: getBattleController().getRobotMoveRange(robotId)
 							};
-							changeUnitMenuState(ROBOT_MENU);
+							pushRobotMenuState(ROBOT_MENU);
 							renderBattlePage();
 						}
 					case ROBOT_MENU:
@@ -180,12 +188,11 @@ abstract class DefaultView implements IView {
 						// 暫存狀態後移動
 						getBattleController().pushState();
 						getBattleController().doRobotMove(robotId, fromPos, pos);
-						_battleControlMemory.hasMove = true;
 						// 重抓菜單
 						_battleControlMemory.robotMenuView = {
 							menuItems: getBattleController().getRobotMenuItems(robotId)
 						};
-						changeUnitMenuState(ROBOT_MENU);
+						pushRobotMenuState(ROBOT_MENU);
 						renderBattlePage();
 					case _:
 				}
@@ -194,41 +201,40 @@ abstract class DefaultView implements IView {
 					_battleControlMemory.robotStatusView = null;
 					renderBattlePage();
 				} else {
-					switch _battleControlMemory.robotMenuState {
+					switch getRobotMenuState() {
 						case NORMAL:
 						case ROBOT_MENU:
-							if (_battleControlMemory.hasMove) {
-								// 若移動過，回到之前的狀態
-								_battleControlMemory.hasMove = false;
-								getBattleController().popState();
-								// 重抓菜單
-								if (_battleControlMemory.originActiveRobotState == null) {
-									throw new Exception("沒有找到originActiveRobotState");
-								}
-								final robotId = _battleControlMemory.originActiveRobotState.robotId;
-								_battleControlMemory.robotMenuView = {
-									menuItems: getBattleController().getRobotMenuItems(robotId)
-								};
-								changeUnitMenuState(ROBOT_SELECT_MOVE_POSITION);
-							} else {
-								changeUnitMenuState(NORMAL);
+							popRobotMenuState();
+							// 如果上一個狀態是選擇移動，將資料回復到移動前
+							switch getRobotMenuState() {
+								case ROBOT_SELECT_MOVE_POSITION:
+									getBattleController().popState();
+									// 重抓菜單
+									if (_battleControlMemory.originActiveRobotState == null) {
+										throw new Exception("沒有找到originActiveRobotState");
+									}
+									final robotId = _battleControlMemory.originActiveRobotState.robotId;
+									_battleControlMemory.robotMenuView = {
+										menuItems: getBattleController().getRobotMenuItems(robotId)
+									};
+								case _:
 							}
 							renderBattlePage();
 						case ROBOT_SELECT_MOVE_POSITION:
-							changeUnitMenuState(ROBOT_MENU);
+							popRobotMenuState();
 							renderBattlePage();
 						case ROBOT_SELECT_WEAPON_ATTACK:
-							changeUnitMenuState(ROBOT_MENU);
+							popRobotMenuState();
 							renderBattlePage();
 						case SYSTEM_MENU:
-							changeUnitMenuState(NORMAL);
+							popRobotMenuState();
 							renderBattlePage();
 					}
 				}
 			case ON_CLICK_ROBOT_MENU_ITEM(item):
 				switch item {
 					case MOVE:
-						changeUnitMenuState(ROBOT_SELECT_MOVE_POSITION);
+						pushRobotMenuState(ROBOT_SELECT_MOVE_POSITION);
 						renderBattlePage();
 					case ATTACK:
 						if (_battleControlMemory.originActiveRobotState == null) {
@@ -238,7 +244,7 @@ abstract class DefaultView implements IView {
 						_battleControlMemory.weaponAttackListView = {
 							weaponAttacks: getBattleController().getAttacks(robotId)
 						};
-						changeUnitMenuState(ROBOT_SELECT_WEAPON_ATTACK);
+						pushRobotMenuState(ROBOT_SELECT_WEAPON_ATTACK);
 						renderBattlePage();
 					case STATUS:
 						if (_battleControlMemory.originActiveRobotState == null) {
@@ -249,7 +255,7 @@ abstract class DefaultView implements IView {
 							robotId: robotId,
 							weaponAttacks: getBattleController().getAttacks(robotId)
 						};
-						changeUnitMenuState(NORMAL);
+						pushRobotMenuState(NORMAL);
 						renderBattlePage();
 					case DONE:
 						if (_battleControlMemory.originActiveRobotState == null) {
@@ -261,7 +267,7 @@ abstract class DefaultView implements IView {
 						}
 						getBattleController().doRobotDone(robotId);
 						getBattleController().applyState();
-						changeUnitMenuState(NORMAL);
+						pushRobotMenuState(NORMAL);
 						renderBattlePage();
 					case _:
 				}
