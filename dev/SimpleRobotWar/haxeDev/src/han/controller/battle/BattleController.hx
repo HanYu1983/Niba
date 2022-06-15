@@ -257,12 +257,21 @@ class BattleController implements _IBattleController {
 						}
 				}
 			case ON_CLICK_SYSTEM_MENU_ITEM(TURN_END):
-				final ctx = getContext();
-				ctx.currentPlayerId = (ctx.currentPlayerId + 1) % ctx.players.length;
+				final ctx = getTopContext();
+				onPlayerEnd(ctx.currentPlayerId);
 				processEnemyTurn();
 			case _:
 				_view.onEvent(action);
 		}
+	}
+
+	function onPlayerEnd(playerId:Int){
+		final ctx = getTopContext();
+		if(ctx.currentPlayerId != playerId){
+			warn("BattleController", "ctx.currentPlayerId != playerId");
+			return;
+		}
+		ctx.currentPlayerId = (ctx.currentPlayerId + 1) % ctx.players.length;
 	}
 
 	function processEnemyTurn() {
