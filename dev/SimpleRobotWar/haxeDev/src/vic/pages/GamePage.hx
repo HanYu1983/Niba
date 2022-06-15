@@ -1,5 +1,7 @@
 package vic.pages;
 
+import haxe.ds.StringMap;
+import tweenx909.TweenX;
 import js.html.KeyEvent;
 import js.Browser;
 import js.html.Document;
@@ -26,8 +28,8 @@ using Lambda;
 
 @:build(haxe.ui.ComponentBuilder.build('vic/pages/GamePage.xml'))
 class GamePage extends Box {
-	final grids:EnumValueMap<Position, Grid> = new EnumValueMap<Position, Grid>();
-	final robots:Array<Robot> = [];
+	final grids = new EnumValueMap<Position, Grid>();
+	final robots = new StringMap<Robot>();
 	final gridDetail = new GridDetail();
 	final gridSize = 40;
 
@@ -62,10 +64,10 @@ class GamePage extends Box {
 		final gridInfos = Main.view.getBattleController().getGrids();
 		final robotInfos = Main.view.getBattleController().getRobots();
 
-		for (r in robots) {
-			box_robots.removeComponent(r);
+		for (key in robots.keys()) {
+			box_robots.removeComponent(robots.get(key));
 		}
-		robots.empty();
+		robots.clear();
 
 		for (g in grids) {
 			final gridInfo = gridInfos.get(g.pos);
@@ -80,7 +82,7 @@ class GamePage extends Box {
 				r.isDone = robotInfo.isDone;
 				box_robots.addComponent(r);
 
-				robots.push(r);
+				robots.set(robotInfo.id, r);
 			}
 		}
 	}
@@ -297,5 +299,19 @@ class GamePage extends Box {
 
 		box_robotStatePage.show();
 		robotStatusPage.fadeInWithData(robotState);
+	}
+
+	public function animateRobotMove(robotId:String, from:Position, to:Position, path:Array<Position>, cb:() -> Void) {
+		final robot = robots.get(robotId);
+		final ts = [];
+
+		for (pos in path) {
+			switch (pos) {
+				case POS(x, y):
+					ts.push(TweenX.to(robot, {left: x * gridSize, top: y * gridSize}, 0.1));
+			}
+		}
+
+		TweenX.serial(ts).onFinish(cb).play();
 	}
 }

@@ -126,8 +126,6 @@ class DefaultViewImpl extends DefaultView {
 	}
 	// 機體移動動畫
 	function animateRobotMove(robotId:String, from:Position, to:Position, path:Array<Position>, cb:()->Void):Void{
-		trace(path);
-		// 假裝播動畫
-		Timer.delay(cb, 1000);
+		_view.gamePage.animateRobotMove(robotId, from, to, path, cb);
 	}
 }
