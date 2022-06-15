@@ -89,6 +89,26 @@ class Controller implements _IController {
 		return _battleController.applyState();
 	}
 
+	public function setOccupyController(ctr:Null<ViewEvent->Void>):Void {
+		return _battleController.setOccupyController(ctr);
+	}
+
+	public function getOccupyController():Null<ViewEvent->Void> {
+		return _battleController.getOccupyController();
+	}
+
+	public function addTask(task:(() -> Void)->Void):Void {
+		return _battleController.addTask(task);
+	}
+
+	public function startTask():Void {
+		return _battleController.startTask();
+	}
+
+	public function setAnimationController(v:IAnimationController):Void{
+		return _battleController.setAnimationController(v);
+	}
+
 	public function onEvent(action:ViewEvent):Void {
 		switch action {
 			case ON_CLICK_GOTO_LOBBY:

@@ -53,8 +53,10 @@ private typedef BattleControlMemory = {
 	robotStatusView:Null<RobotStatusView>
 }
 
+private interface _IDefaultView extends IView extends IAnimationController{}
+
 @:nullSafety
-abstract class DefaultView implements IView {
+abstract class DefaultView implements _IDefaultView {
 	public function new() {}
 
 	var _lobbyCtr:Null<ILobbyController>;
@@ -67,6 +69,7 @@ abstract class DefaultView implements IView {
 
 	public function startBattle(ctr:IBattleController):Void {
 		_battleCtr = ctr;
+		_battleCtr.setAnimationController(this);
 		openBattlePage();
 	}
 
@@ -145,11 +148,6 @@ abstract class DefaultView implements IView {
 
 	public function onEvent(action:ViewEvent):Void {
 		info("DefaultView", 'onEvent ${action}');
-		final occupyCtr = getOccupyController();
-		if (occupyCtr != null) {
-			occupyCtr(action);
-			return;
-		}
 		switch action {
 			// lobby
 			case ON_CLICK_GOTO_ROBOT_VIEW:
@@ -195,11 +193,11 @@ abstract class DefaultView implements IView {
 						final fromPos = _battleControlMemory.originActiveRobotState.position;
 						final robotId = _battleControlMemory.originActiveRobotState.robotId;
 						final path = getBattleController().getRobotMovePath(pos);
-						addTask((cb) -> {
-							setOccupyController((evt) -> {});
-							animateRobotMove(robotId, fromPos, pos, path, cb);
+						getBattleController().setOccupyController((evt) -> {});
+						getBattleController().addTask((cb) -> {
+							animateRobotMove(robotId, path, cb);
 						});
-						addTask((cb) -> {
+						getBattleController().addTask((cb) -> {
 							// 暫存狀態後移動
 							getBattleController().pushState();
 							getBattleController().doRobotMove(robotId, fromPos, pos);
@@ -209,10 +207,10 @@ abstract class DefaultView implements IView {
 							};
 							pushRobotMenuState(ROBOT_MENU);
 							renderBattlePage();
-							setOccupyController(null);
+							getBattleController().setOccupyController(null);
 							cb();
 						});
-						startTask();
+						getBattleController().startTask();
 					case _:
 				}
 			case ON_CLICK_CANCEL:
@@ -308,28 +306,13 @@ abstract class DefaultView implements IView {
 		}
 		return _battleCtr;
 	}
-
-	var _occupyCtr:Null<ViewEvent->Void>;
-
-	function setOccupyController(ctr:Null<ViewEvent->Void>) {
-		_occupyCtr = ctr;
+	
+	public function invalidate():Void{
+		renderBattlePage();
 	}
 
-	function getOccupyController():Null<ViewEvent->Void> {
-		return _occupyCtr;
-	}
-
-	final _tasks:Array<(() -> Void)->Void> = [];
-
-	function addTask(task:(() -> Void)->Void):Void {
-		_tasks.push(task);
-	}
-
-	function startTask() {
-		final task = _tasks.shift();
-		if (task != null) {
-			task(startTask);
-		}
+	public function animateRobotMove(robotId:String,path:Array<Position>, cb:() -> Void):Void{
+		cb();
 	}
 
 	abstract function openLobbyPage():Void;
@@ -341,6 +324,4 @@ abstract class DefaultView implements IView {
 	abstract function openPilotViewPage():Void;
 
 	abstract function renderBattlePage():Void;
-
-	abstract function animateRobotMove(robotId:String, from:Position, to:Position, path:Array<Position>, cb:() -> Void):Void;
 }

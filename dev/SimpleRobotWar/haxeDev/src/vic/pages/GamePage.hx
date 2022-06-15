@@ -301,7 +301,7 @@ class GamePage extends Box {
 		robotStatusPage.fadeInWithData(robotState);
 	}
 
-	public function animateRobotMove(robotId:String, from:Position, to:Position, path:Array<Position>, cb:() -> Void) {
+	public function animateRobotMove(robotId:String, path:Array<Position>, cb:() -> Void) {
 		final robot = robots.get(robotId);
 		if (robot == null) {
 			cb();

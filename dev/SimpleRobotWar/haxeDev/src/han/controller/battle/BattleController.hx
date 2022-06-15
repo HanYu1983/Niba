@@ -2,6 +2,7 @@ package han.controller.battle;
 
 import haxe.Exception;
 import haxe.Constraints;
+import haxe.Timer;
 import haxe.ds.StringMap;
 import haxe.ds.EnumValueMap;
 import tool.Helper;
@@ -230,9 +231,14 @@ class BattleController implements _IBattleController {
 	}
 
 	public function onEvent(action:ViewEvent):Void {
+		final occupyCtr = getOccupyController();
+		if (occupyCtr != null) {
+			occupyCtr(action);
+			return;
+		}
 		switch action {
 			case ON_SYSTEM_ENEMY_TURN(step):
-			//case ON_CLICK_BATTLE_POS(pos):
+			//		 case ON_CLICK_BATTLE_POS(pos):
 				switch (0) {
 					case 0:
 						final ctx = getTopContext();
@@ -247,10 +253,17 @@ class BattleController implements _IBattleController {
 						];
 						if (robotNotDone.length > 0) {
 							final robot = robotNotDone[0];
-							doRobotDone(robot.id);
-							// render
-							_view.onEvent(action);
-							processEnemyTurn();
+							addTask(cb -> {
+								setOccupyController(evt -> {});
+								getAnimationController().animateRobotMove(robot.id, [POS(0,1),POS(0,2)], cb);
+							});
+							addTask(cb -> {
+								doRobotDone(robot.id);
+								getAnimationController().invalidate();
+								setOccupyController(null);
+								processEnemyTurn();
+							});
+							startTask();
 						} else {
 							// 敵人按結束回合
 							onEvent(ON_CLICK_SYSTEM_MENU_ITEM(TURN_END));
@@ -265,9 +278,9 @@ class BattleController implements _IBattleController {
 		}
 	}
 
-	function onPlayerEnd(playerId:Int){
+	function onPlayerEnd(playerId:Int) {
 		final ctx = getTopContext();
-		if(ctx.currentPlayerId != playerId){
+		if (ctx.currentPlayerId != playerId) {
 			warn("BattleController", "ctx.currentPlayerId != playerId");
 			return;
 		}
@@ -282,5 +295,41 @@ class BattleController implements _IBattleController {
 			return;
 		}
 		onEvent(ON_SYSTEM_ENEMY_TURN(0));
+	}
+
+	var _occupyCtr:Null<ViewEvent->Void>;
+
+	public function setOccupyController(ctr:Null<ViewEvent->Void>):Void {
+		_occupyCtr = ctr;
+	}
+
+	public function getOccupyController():Null<ViewEvent->Void> {
+		return _occupyCtr;
+	}
+
+	final _tasks:Array<(() -> Void)->Void> = [];
+
+	public function addTask(task:(() -> Void)->Void):Void {
+		_tasks.push(task);
+	}
+
+	public function startTask():Void {
+		final task = _tasks.shift();
+		if (task != null) {
+			task(startTask);
+		}
+	}
+
+	var _animationCtr: Null<IAnimationController>;
+
+	public function setAnimationController(v:IAnimationController):Void{
+		_animationCtr = v;
+	}
+
+	function getAnimationController():IAnimationController{
+		if(_animationCtr == null){
+			throw new Exception("you must call setAnimationController first");
+		}
+		return _animationCtr;
 	}
 }

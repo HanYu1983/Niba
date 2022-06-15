@@ -265,6 +265,11 @@ interface IBaseController {
 	function onEvent(action:ViewEvent):Void;
 }
 
+interface IAnimationController {
+	function invalidate():Void;
+	function animateRobotMove(robotId:String, path:Array<Position>, cb:Void->Void):Void;
+}
+
 interface IBattleController extends IBaseController {
 	function getRobotMenuItems(robotId:String):Array<RobotMenuItem>;
 	function getRobotMoveRange(robotId:String):Array<Position>;
@@ -273,9 +278,17 @@ interface IBattleController extends IBaseController {
 	function getGrids():IMap<Position, GridView>;
 	function doRobotMove(robotId:String, from:Position, to:Position):Void;
 	function doRobotDone(robotId:String):Void;
+	// 處理暫存狀態回復
 	function pushState():Void;
 	function popState():Void;
 	function applyState():Void;
+	// 處理異步
+	function setOccupyController(ctr:Null<ViewEvent->Void>):Void;
+	function getOccupyController():Null<ViewEvent->Void>;
+	function addTask(task:(() -> Void)->Void):Void;
+	function startTask():Void; 
+	// 動畫
+	function setAnimationController(v:IAnimationController):Void;
 }
 
 interface ILobbyController extends IBaseController {

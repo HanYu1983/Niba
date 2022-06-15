@@ -129,7 +129,7 @@ class DefaultViewImpl extends DefaultView {
 		_view.gamePage.updateGamePage();
 	}
 	// 機體移動動畫
-	function animateRobotMove(robotId:String, from:Position, to:Position, path:Array<Position>, cb:()->Void):Void{
-		_view.gamePage.animateRobotMove(robotId, from, to, path, cb);
+	override function animateRobotMove(robotId:String, path:Array<Position>, cb:()->Void):Void{
+		_view.gamePage.animateRobotMove(robotId, path, cb);
 	}
 }
