@@ -235,8 +235,7 @@ class GamePage extends Box {
 		}
 
 		btn_endPhase.onClick = function(e) {
-			info('GamePage', '跳過這個回合，還沒有指令可以呼叫');
-			// Main.view.getBattleController().onEvent(ON_CLICK_ROBOT_MENU_ITEM(DONE));
+			Main.view.getBattleController().onEvent(ON_CLICK_SYSTEM_MENU_ITEM(TURN_END));
 		}
 
 		btn_confirmSelectWeaponMenu.onClick = function(e) {
