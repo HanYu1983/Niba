@@ -10,3 +10,14 @@ function deepCopy<T>(v:T):T {
 	final unserializer = new Unserializer(memonto);
 	return unserializer.unserialize();
 }
+
+function asyncSerial(fns:Array<(() -> Void)->Void>):Void {
+	switch fns {
+		case []:
+		case _:
+			final top = fns[0];
+			top(()->{
+				asyncSerial(fns.slice(1));
+			});
+	}
+}

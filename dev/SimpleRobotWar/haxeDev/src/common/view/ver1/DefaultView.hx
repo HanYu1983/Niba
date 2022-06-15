@@ -4,6 +4,7 @@ import haxe.Timer;
 import haxe.Exception;
 import common.IDefine;
 import tool.Debug;
+import tool.Helper;
 
 using Lambda;
 
@@ -53,7 +54,7 @@ private typedef BattleControlMemory = {
 	robotStatusView:Null<RobotStatusView>
 }
 
-private interface _IDefaultView extends IView extends IAnimationController{}
+private interface _IDefaultView extends IView extends IAnimationController {}
 
 @:nullSafety
 abstract class DefaultView implements _IDefaultView {
@@ -193,24 +194,43 @@ abstract class DefaultView implements _IDefaultView {
 						final fromPos = _battleControlMemory.originActiveRobotState.position;
 						final robotId = _battleControlMemory.originActiveRobotState.robotId;
 						final path = getBattleController().getRobotMovePath(pos);
-						getBattleController().setOccupyController((evt) -> {});
-						getBattleController().addTask((cb) -> {
-							animateRobotMove(robotId, path, cb);
-						});
-						getBattleController().addTask((cb) -> {
-							// 暫存狀態後移動
-							getBattleController().pushState();
-							getBattleController().doRobotMove(robotId, fromPos, pos);
-							// 重抓菜單
-							_battleControlMemory.robotMenuView = {
-								menuItems: getBattleController().getRobotMenuItems(robotId)
-							};
-							pushRobotMenuState(ROBOT_MENU);
-							renderBattlePage();
-							getBattleController().setOccupyController(null);
-							cb();
-						});
-						getBattleController().startTask();
+						asyncSerial([
+							cb -> {
+								getBattleController().setOccupyController((evt) -> {});
+								animateRobotMove(robotId, path, cb);
+							},
+							cb -> {
+								// 暫存狀態後移動
+								getBattleController().pushState();
+								getBattleController().doRobotMove(robotId, fromPos, pos);
+								// 重抓菜單
+								_battleControlMemory.robotMenuView = {
+									menuItems: getBattleController().getRobotMenuItems(robotId)
+								};
+								pushRobotMenuState(ROBOT_MENU);
+								renderBattlePage();
+								getBattleController().setOccupyController(null);
+								cb();
+							}
+						]);
+						// getBattleController().setOccupyController((evt) -> {});
+						// getBattleController().addTask((cb) -> {
+						// 	animateRobotMove(robotId, path, cb);
+						// });
+						// getBattleController().addTask((cb) -> {
+						// 	// 暫存狀態後移動
+						// 	getBattleController().pushState();
+						// 	getBattleController().doRobotMove(robotId, fromPos, pos);
+						// 	// 重抓菜單
+						// 	_battleControlMemory.robotMenuView = {
+						// 		menuItems: getBattleController().getRobotMenuItems(robotId)
+						// 	};
+						// 	pushRobotMenuState(ROBOT_MENU);
+						// 	renderBattlePage();
+						// 	getBattleController().setOccupyController(null);
+						// 	cb();
+						// });
+						// getBattleController().startTask();
 					case _:
 				}
 			case ON_CLICK_CANCEL:
@@ -306,12 +326,12 @@ abstract class DefaultView implements _IDefaultView {
 		}
 		return _battleCtr;
 	}
-	
-	public function invalidate():Void{
+
+	public function invalidate():Void {
 		renderBattlePage();
 	}
 
-	public function animateRobotMove(robotId:String,path:Array<Position>, cb:() -> Void):Void{
+	public function animateRobotMove(robotId:String, path:Array<Position>, cb:() -> Void):Void {
 		cb();
 	}
 

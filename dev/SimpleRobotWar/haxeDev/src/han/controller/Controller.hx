@@ -97,13 +97,13 @@ class Controller implements _IController {
 		return _battleController.getOccupyController();
 	}
 
-	public function addTask(task:(() -> Void)->Void):Void {
-		return _battleController.addTask(task);
-	}
+	// public function addTask(task:(() -> Void)->Void):Void {
+	// 	return _battleController.addTask(task);
+	// }
 
-	public function startTask():Void {
-		return _battleController.startTask();
-	}
+	// public function startTask():Void {
+	// 	return _battleController.startTask();
+	// }
 
 	public function setAnimationController(v:IAnimationController):Void{
 		return _battleController.setAnimationController(v);

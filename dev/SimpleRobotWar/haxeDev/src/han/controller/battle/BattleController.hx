@@ -5,6 +5,7 @@ import haxe.Constraints;
 import haxe.Timer;
 import haxe.ds.StringMap;
 import haxe.ds.EnumValueMap;
+import tool.Debug;
 import tool.Helper;
 import tool.optalg.Define;
 import common.IDefine;
@@ -14,8 +15,6 @@ import han.alg.IDefine;
 import han.alg.Path;
 import han.model.IDefine;
 import han.controller.common.IDefine;
-import tool.Debug;
-import tool.Helper;
 
 using Lambda;
 
@@ -238,7 +237,7 @@ class BattleController implements _IBattleController {
 		}
 		switch action {
 			case ON_SYSTEM_ENEMY_TURN(step):
-			//		 case ON_CLICK_BATTLE_POS(pos):
+			//			 case ON_CLICK_BATTLE_POS(pos):
 				switch (0) {
 					case 0:
 						final ctx = getTopContext();
@@ -253,17 +252,18 @@ class BattleController implements _IBattleController {
 						];
 						if (robotNotDone.length > 0) {
 							final robot = robotNotDone[0];
-							addTask(cb -> {
-								setOccupyController(evt -> {});
-								getAnimationController().animateRobotMove(robot.id, [POS(0,1),POS(0,2)], cb);
-							});
-							addTask(cb -> {
-								doRobotDone(robot.id);
-								getAnimationController().invalidate();
-								setOccupyController(null);
-								processEnemyTurn();
-							});
-							startTask();
+							asyncSerial([
+								cb -> {
+									setOccupyController(evt -> {});
+									getAnimationController().animateRobotMove(robot.id, [POS(0, 1), POS(0, 2)], cb);
+								},
+								cb -> {
+									doRobotDone(robot.id);
+									getAnimationController().invalidate();
+									setOccupyController(null);
+									processEnemyTurn();
+								}
+							]);
 						} else {
 							// 敵人按結束回合
 							onEvent(ON_CLICK_SYSTEM_MENU_ITEM(TURN_END));
@@ -307,27 +307,27 @@ class BattleController implements _IBattleController {
 		return _occupyCtr;
 	}
 
-	final _tasks:Array<(() -> Void)->Void> = [];
+	// final _tasks:Array<(() -> Void)->Void> = [];
 
-	public function addTask(task:(() -> Void)->Void):Void {
-		_tasks.push(task);
-	}
+	// public function addTask(task:(() -> Void)->Void):Void {
+	// 	_tasks.push(task);
+	// }
 
-	public function startTask():Void {
-		final task = _tasks.shift();
-		if (task != null) {
-			task(startTask);
-		}
-	}
+	// public function startTask():Void {
+	// 	final task = _tasks.shift();
+	// 	if (task != null) {
+	// 		task(startTask);
+	// 	}
+	// }
 
-	var _animationCtr: Null<IAnimationController>;
+	var _animationCtr:Null<IAnimationController>;
 
-	public function setAnimationController(v:IAnimationController):Void{
+	public function setAnimationController(v:IAnimationController):Void {
 		_animationCtr = v;
 	}
 
-	function getAnimationController():IAnimationController{
-		if(_animationCtr == null){
+	function getAnimationController():IAnimationController {
+		if (_animationCtr == null) {
 			throw new Exception("you must call setAnimationController first");
 		}
 		return _animationCtr;

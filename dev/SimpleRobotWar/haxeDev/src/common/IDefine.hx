@@ -285,8 +285,6 @@ interface IBattleController extends IBaseController {
 	// 處理異步
 	function setOccupyController(ctr:Null<ViewEvent->Void>):Void;
 	function getOccupyController():Null<ViewEvent->Void>;
-	function addTask(task:(() -> Void)->Void):Void;
-	function startTask():Void; 
 	// 動畫
 	function setAnimationController(v:IAnimationController):Void;
 }
