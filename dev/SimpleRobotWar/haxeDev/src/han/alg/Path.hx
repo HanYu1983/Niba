@@ -3,6 +3,7 @@ package han.alg;
 import haxe.Serializer;
 import haxe.Unserializer;
 import haxe.Exception;
+import haxe.Constraints;
 import common.IConfig;
 import common.IDefine;
 import common.TerrianData;
@@ -125,17 +126,13 @@ private class ShortestPathTreeSolution extends DefaultSolution<Position> {
 }
 
 @:nullSafety
-function getRobotMoveRange(ctx:Context, robotId:String):Array<Position> {
+function getRobotMoveRange(ctx:Context, robotId:String):IMap<Position, ISolution<Position>> {
 	for (pos => findRobotId in ctx.positionToRobot) {
 		if (findRobotId == robotId) {
 			final robot = getRobot(ctx, robotId);
 			final moveEnergy = 20;
 			final tree = getAStar(new ShortestPathTreeSolution(ctx, pos, robotId), {exitWhenFind: true});
-			return [
-				for (pos => solution in tree) {
-					pos;
-				}
-			];
+			return tree;
 		}
 	}
 	throw new Exception('getRobotMoveRange 找不到robotId的位置:${robotId}');

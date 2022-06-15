@@ -1,6 +1,7 @@
 package tool.optalg;
 
 import haxe.Exception;
+import haxe.Constraints;
 import haxe.ds.List;
 import haxe.ds.ListSort;
 import haxe.ds.StringMap;
@@ -11,7 +12,7 @@ import tool.optalg.Define;
 using StringTools;
 
 // https://github.com/HaxeFoundation/haxe/blob/4.2.1/std/haxe/ds/EnumValueMap.hx
-function getAStar<T:EnumValue>(s:ISolution<T>, options:{exitWhenFind:Bool}):EnumValueMap<T, ISolution<T>> {
+function getAStar<T:EnumValue>(s:ISolution<T>, options:{exitWhenFind:Bool}):IMap<T, ISolution<T>> {
 	final close = new EnumValueMap<T, ISolution<T>>();
 	final open = new BalancedTree<String, ISolution<T>>();
 	final openMapping = new EnumValueMap<T, ISolution<T>>();

@@ -185,6 +185,8 @@ abstract class DefaultView implements IView {
 						final fromPos = _battleControlMemory.originActiveRobotState.position;
 						final robotId = _battleControlMemory.originActiveRobotState.robotId;
 						verbose("DefaultView", '假裝播放移動動畫:${robotId} from ${fromPos} to ${pos}');
+						final path = getBattleController().getRobotMovePath(pos);
+						trace(path);
 						// 暫存狀態後移動
 						getBattleController().pushState();
 						getBattleController().doRobotMove(robotId, fromPos, pos);

@@ -1,7 +1,7 @@
 package han.controller.battle;
 
-import tool.Helper.deepCopy;
-import tool.Helper.deepCopy;
+import tool.Helper;
+import tool.optalg.Define;
 import haxe.Exception;
 import haxe.Constraints;
 import haxe.ds.StringMap;
@@ -20,6 +20,7 @@ using Lambda;
 
 private interface _IBattleController extends IBattleController {}
 
+@:nullSafety
 class BattleController implements _IBattleController {
 	final _view:IView;
 	final _ctxStacks:Array<Context> = [];
@@ -164,9 +165,24 @@ class BattleController implements _IBattleController {
 		return ret;
 	}
 
+	var _tree:Null<IMap<Position, ISolution<Position>>> = null;
+
 	public function getRobotMoveRange(robotId:String):Array<Position> {
 		final ctx = getTopContext();
-		return han.alg.Path.getRobotMoveRange(ctx, robotId);
+		final tree = han.alg.Path.getRobotMoveRange(ctx, robotId);
+		_tree = tree;
+		return [
+			for (pos => solution in tree) {
+				pos;
+			}
+		];
+	}
+
+	public function getRobotMovePath(to:Position):Array<Position> {
+		if (_tree == null) {
+			throw new Exception("你必須先呼叫getRobotMoveRange");
+		}
+		return getPath(_tree, to);
 	}
 
 	public function getRobotIdByPosition(pos:Position):Null<String> {

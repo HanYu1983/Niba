@@ -1,6 +1,7 @@
 package tool.optalg;
 
 import haxe.Exception;
+import haxe.Constraints;
 import haxe.ds.EnumValueMap;
 
 using StringTools;
@@ -59,7 +60,7 @@ class DefaultSolution<T:EnumValue> implements ISolution<T> {
 	}
 }
 
-function getPath<T:EnumValue>(tree:EnumValueMap<T, ISolution<T>>, goal:T):Array<T> {
+function getPath<T:EnumValue>(tree:IMap<T, ISolution<T>>, goal:T):Array<T> {
 	final ret:Array<T> = [goal];
 	var curr:Null<ISolution<T>> = tree.get(goal);
 	if (curr == null) {

@@ -61,6 +61,10 @@ class Controller implements _IController {
 		return _battleController.getRobotMoveRange(robotId);
 	}
 
+	public function getRobotMovePath(to:Position):Array<Position>{
+		return _battleController.getRobotMovePath(to);
+	}
+
 	public function getRobotIdByPosition(pos:Position):Null<String> {
 		return _battleController.getRobotIdByPosition(pos);
 	}
