@@ -303,6 +303,10 @@ class GamePage extends Box {
 
 	public function animateRobotMove(robotId:String, from:Position, to:Position, path:Array<Position>, cb:() -> Void) {
 		final robot = robots.get(robotId);
+		if (robot == null) {
+			cb();
+			return;
+		}
 		final ts = [];
 
 		for (pos in path) {
