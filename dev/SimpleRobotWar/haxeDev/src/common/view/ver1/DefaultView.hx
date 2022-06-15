@@ -1,5 +1,6 @@
 package common.view.ver1;
 
+import haxe.Timer;
 import haxe.Exception;
 import common.IDefine;
 import tool.Debug;
@@ -86,15 +87,15 @@ abstract class DefaultView implements IView {
 		_battleControlMemory.robotMenuState.push(state);
 	}
 
-	function popRobotMenuState(){
-		if(_battleControlMemory.robotMenuState.length <= 1){
+	function popRobotMenuState() {
+		if (_battleControlMemory.robotMenuState.length <= 1) {
 			throw new Exception("robotMenuState必須最少有一個NORMAL狀態");
 		}
 		_battleControlMemory.robotMenuState.pop();
 	}
 
 	public function getRobotMenuState():RobotMenuState {
-		if(_battleControlMemory.robotMenuState.length == 0){
+		if (_battleControlMemory.robotMenuState.length == 0) {
 			throw new Exception("robotMenuState必須最少有一個NORMAL狀態");
 		}
 		return _battleControlMemory.robotMenuState[_battleControlMemory.robotMenuState.length - 1];
@@ -142,6 +143,10 @@ abstract class DefaultView implements IView {
 
 	public function onEvent(action:ViewEvent):Void {
 		info("DefaultView", 'onEvent ${action}');
+		if (hasTask()) {
+			warn("DefaultView", "hasTask, return");
+			return;
+		}
 		switch action {
 			// lobby
 			case ON_CLICK_GOTO_ROBOT_VIEW:
@@ -184,18 +189,23 @@ abstract class DefaultView implements IView {
 						}
 						final fromPos = _battleControlMemory.originActiveRobotState.position;
 						final robotId = _battleControlMemory.originActiveRobotState.robotId;
-						verbose("DefaultView", '假裝播放移動動畫:${robotId} from ${fromPos} to ${pos}');
 						final path = getBattleController().getRobotMovePath(pos);
-						trace(path);
-						// 暫存狀態後移動
-						getBattleController().pushState();
-						getBattleController().doRobotMove(robotId, fromPos, pos);
-						// 重抓菜單
-						_battleControlMemory.robotMenuView = {
-							menuItems: getBattleController().getRobotMenuItems(robotId)
-						};
-						pushRobotMenuState(ROBOT_MENU);
-						renderBattlePage();
+						addTask((cb) -> {
+							animateRobotMove(robotId, fromPos, pos, path, cb);
+						});
+						addTask((cb) -> {
+							// 暫存狀態後移動
+							getBattleController().pushState();
+							getBattleController().doRobotMove(robotId, fromPos, pos);
+							// 重抓菜單
+							_battleControlMemory.robotMenuView = {
+								menuItems: getBattleController().getRobotMenuItems(robotId)
+							};
+							pushRobotMenuState(ROBOT_MENU);
+							renderBattlePage();
+							cb();
+						});
+						startTask();
 					case _:
 				}
 			case ON_CLICK_CANCEL:
@@ -290,6 +300,23 @@ abstract class DefaultView implements IView {
 		return _battleCtr;
 	}
 
+	final _tasks:Array<(() -> Void)->Void> = [];
+
+	function addTask(task:(() -> Void)->Void):Void {
+		_tasks.push(task);
+	}
+
+	function hasTask():Bool {
+		return _tasks.length > 0;
+	}
+
+	function startTask() {
+		final task = _tasks.shift();
+		if (task != null) {
+			task(startTask);
+		}
+	}
+
 	abstract function openLobbyPage():Void;
 
 	abstract function openBattlePage():Void;
@@ -299,4 +326,6 @@ abstract class DefaultView implements IView {
 	abstract function openPilotViewPage():Void;
 
 	abstract function renderBattlePage():Void;
+
+	abstract function animateRobotMove(robotId:String, from:Position, to:Position, path:Array<Position>, cb:()->Void):Void;
 }

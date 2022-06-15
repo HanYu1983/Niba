@@ -1,6 +1,7 @@
 package vic;
 
 import js.Syntax;
+import haxe.Timer;
 import haxe.ui.core.Component;
 import vic.pages.PilotPage;
 import vic.pages.RobotPage;
@@ -122,5 +123,11 @@ class DefaultViewImpl extends DefaultView {
 	// 版面參考: 左方機體與駕駛詳細, 右上方武器列表, 右下方攻擊列表
 	function renderBattlePage() {
 		_view.gamePage.updateGamePage();
+	}
+	// 機體移動動畫
+	function animateRobotMove(robotId:String, from:Position, to:Position, path:Array<Position>, cb:()->Void):Void{
+		trace(path);
+		// 假裝播動畫
+		Timer.delay(cb, 1000);
 	}
 }
