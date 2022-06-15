@@ -143,8 +143,9 @@ abstract class DefaultView implements IView {
 
 	public function onEvent(action:ViewEvent):Void {
 		info("DefaultView", 'onEvent ${action}');
-		if (hasTask()) {
-			warn("DefaultView", "hasTask, return");
+		final occupyCtr = getOccupyController();
+		if (occupyCtr != null) {
+			occupyCtr(action);
 			return;
 		}
 		switch action {
@@ -191,6 +192,7 @@ abstract class DefaultView implements IView {
 						final robotId = _battleControlMemory.originActiveRobotState.robotId;
 						final path = getBattleController().getRobotMovePath(pos);
 						addTask((cb) -> {
+							setOccupyController((evt) -> {});
 							animateRobotMove(robotId, fromPos, pos, path, cb);
 						});
 						addTask((cb) -> {
@@ -203,6 +205,7 @@ abstract class DefaultView implements IView {
 							};
 							pushRobotMenuState(ROBOT_MENU);
 							renderBattlePage();
+							setOccupyController(null);
 							cb();
 						});
 						startTask();
@@ -300,14 +303,20 @@ abstract class DefaultView implements IView {
 		return _battleCtr;
 	}
 
+	var _occupyCtr:Null<ViewEvent->Void>;
+
+	function setOccupyController(ctr:Null<ViewEvent->Void>) {
+		_occupyCtr = ctr;
+	}
+
+	function getOccupyController():Null<ViewEvent->Void> {
+		return _occupyCtr;
+	}
+
 	final _tasks:Array<(() -> Void)->Void> = [];
 
 	function addTask(task:(() -> Void)->Void):Void {
 		_tasks.push(task);
-	}
-
-	function hasTask():Bool {
-		return _tasks.length > 0;
 	}
 
 	function startTask() {
@@ -327,5 +336,5 @@ abstract class DefaultView implements IView {
 
 	abstract function renderBattlePage():Void;
 
-	abstract function animateRobotMove(robotId:String, from:Position, to:Position, path:Array<Position>, cb:()->Void):Void;
+	abstract function animateRobotMove(robotId:String, from:Position, to:Position, path:Array<Position>, cb:() -> Void):Void;
 }
