@@ -23,7 +23,9 @@ typedef RobotMenuView = {
 	menuItems:Array<RobotMenuItem>
 }
 
-typedef SystemMenuView = {}
+typedef SystemMenuView = {
+	menuItems:Array<SystemMenuItem>
+}
 
 typedef MoveRangeView = {
 	pos:Array<Position>
@@ -164,7 +166,9 @@ abstract class DefaultView implements IView {
 					case NORMAL:
 						final robotId = getBattleController().getRobotIdByPosition(pos);
 						if (robotId == null) {
-							_battleControlMemory.systemMenuView = {};
+							_battleControlMemory.systemMenuView = {
+								menuItems: [TURN_END]
+							};
 							// 系統菜單
 							pushRobotMenuState(SYSTEM_MENU);
 							renderBattlePage();
@@ -285,6 +289,8 @@ abstract class DefaultView implements IView {
 						renderBattlePage();
 					case _:
 				}
+			case ON_SYSTEM_ENEMY_TURN(_):
+				renderBattlePage();
 			case _:
 		}
 	}

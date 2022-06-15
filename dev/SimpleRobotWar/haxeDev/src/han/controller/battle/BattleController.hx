@@ -1,11 +1,11 @@
 package han.controller.battle;
 
-import tool.Helper;
-import tool.optalg.Define;
 import haxe.Exception;
 import haxe.Constraints;
 import haxe.ds.StringMap;
 import haxe.ds.EnumValueMap;
+import tool.Helper;
+import tool.optalg.Define;
 import common.IDefine;
 import common.WeaponData;
 import common.TerrianData;
@@ -231,8 +231,47 @@ class BattleController implements _IBattleController {
 
 	public function onEvent(action:ViewEvent):Void {
 		switch action {
+			case ON_SYSTEM_ENEMY_TURN(step):
+			//case ON_CLICK_BATTLE_POS(pos):
+				switch (0) {
+					case 0:
+						final ctx = getTopContext();
+						final robotNotDone = [
+							for (pos => robotId in ctx.positionToRobot) {
+								final robot = getRobot(ctx, robotId);
+								final isDone = getRobot(ctx, robotId).flags.has(HAS_DONE);
+								if (isDone == false) {
+									robot;
+								}
+							}
+						];
+						if (robotNotDone.length > 0) {
+							final robot = robotNotDone[0];
+							doRobotDone(robot.id);
+							// render
+							_view.onEvent(action);
+							processEnemyTurn();
+						} else {
+							// 敵人按結束回合
+							onEvent(ON_CLICK_SYSTEM_MENU_ITEM(TURN_END));
+						}
+				}
+			case ON_CLICK_SYSTEM_MENU_ITEM(TURN_END):
+				final ctx = getContext();
+				ctx.currentPlayerId = (ctx.currentPlayerId + 1) % ctx.players.length;
+				processEnemyTurn();
 			case _:
 				_view.onEvent(action);
 		}
+	}
+
+	function processEnemyTurn() {
+		final ctx = getContext();
+		final plyr = getPlayer(ctx, ctx.currentPlayerId);
+		final isAI = ctx.currentPlayerId != 0;
+		if (isAI == false) {
+			return;
+		}
+		onEvent(ON_SYSTEM_ENEMY_TURN(0));
 	}
 }

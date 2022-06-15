@@ -121,6 +121,10 @@ class DefaultViewImpl extends DefaultView {
 	//
 	// 打開機體狀態頁 Main.view.getRobotStatusView()
 	// 版面參考: 左方機體與駕駛詳細, 右上方武器列表, 右下方攻擊列表
+	//
+	// 打開系統面板 Main.view.getSystemMenuView()
+	// 動作
+	//   點擊菜單選項 ON_CLICK_SYSTEM_MENU_ITEM(item)
 	function renderBattlePage() {
 		_view.gamePage.updateGamePage();
 	}

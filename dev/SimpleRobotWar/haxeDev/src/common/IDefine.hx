@@ -132,6 +132,11 @@ enum RobotMenuItem {
 	DONE;
 }
 
+enum SystemMenuItem {
+	// 回合結束
+	TURN_END;
+}
+
 enum ViewEvent {
 	// 當點擊回大廳按鈕
 	ON_CLICK_GOTO_LOBBY;
@@ -157,6 +162,10 @@ enum ViewEvent {
 	ON_CLICK_ROBOT_WEAPON_ATTACK(value:{attackId:String, robotId:String});
 	// 當點擊武器攻擊確認時(確定選擇武器後轉移到選取目標的狀態)
 	ON_CLICK_ROBOT_WEAPON_ATTACK_CONFIRM(value:{attackId:String, robotId:String});
+	//
+	ON_CLICK_SYSTEM_MENU_ITEM(item:SystemMenuItem);
+	//
+	ON_SYSTEM_ENEMY_TURN(step:Int);
 }
 
 typedef RobotView = {

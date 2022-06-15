@@ -5,6 +5,12 @@ import han.model.IDefine;
 
 function initContext(ctx:Context) {
 	ctx.grids = getRandomMap(MAP_W, MAP_H);
+
+	final player0 = createPlayer(0);
+	ctx.players.push(player0);
+	final player1 = createPlayer(1);
+	ctx.players.push(player1);
+	ctx.currentPlayerId = player0.id;
 	{
 		final robot = createRobot('${ctx.idSeq++}');
 		ctx.robots.set(robot.id, robot);

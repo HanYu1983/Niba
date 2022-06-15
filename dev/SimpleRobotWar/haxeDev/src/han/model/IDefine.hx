@@ -124,9 +124,17 @@ typedef WeaponAttack = {
 }
 
 typedef Player = {
-	id:String,
+	id:Int,
 	brain:Null<Dynamic>,
 	fraction:Int,
+}
+
+function createPlayer(id:Int):Player{
+	return {
+		id: id,
+		brain: null,
+		fraction: 0,
+	}
 }
 
 typedef Grid = {
@@ -147,8 +155,8 @@ function getRandomMap(w:Int, h:Int):EnumValueMap<Position, Grid> {
 
 typedef Context = {
 	grids:EnumValueMap<Position, Grid>,
-	players:StringMap<Player>,
-	currentPlayerId:Null<String>,
+	players:Array<Player>,
+	currentPlayerId:Int,
 	turn:Int,
 	pilots:StringMap<Pilot>,
 	robots:StringMap<Robot>,
@@ -163,8 +171,8 @@ typedef Context = {
 function getDefaultContext():Context {
 	return {
 		grids: new EnumValueMap<Position, Grid>(),
-		players: new StringMap<Player>(),
-		currentPlayerId: null,
+		players: [],
+		currentPlayerId: 0,
 		turn: 0,
 		pilots: new StringMap<Pilot>(),
 		robots: new StringMap<Robot>(),
@@ -185,11 +193,11 @@ function getGrid(ctx:Context, gridId:Position):Grid {
 	return grid;
 }
 
-function getPlayer(ctx:Context, playerId:String):Player {
-	final player = ctx.players.get(playerId);
-	if (player == null) {
+function getPlayer(ctx:Context, playerId:Int):Player {
+	if (ctx.players.length <= playerId) {
 		throw new Exception('player not found:${playerId}');
 	}
+	final player = ctx.players[playerId];
 	return player;
 }
 
