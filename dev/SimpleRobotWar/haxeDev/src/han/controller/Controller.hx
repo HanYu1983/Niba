@@ -25,6 +25,8 @@ class Controller implements _IController {
 		_lobbyController = new LobbyController(view);
 		_battleController = new BattleController(_lobbyController.getContext(), _view);
 		_baseController = _lobbyController;
+		_view.startLobby(this);
+		_view.startBattle(this);
 		initContext(_lobbyController.getContext());
 		onEvent(ON_CLICK_GOTO_LOBBY);
 	}
@@ -113,11 +115,11 @@ class Controller implements _IController {
 		switch action {
 			case ON_CLICK_GOTO_LOBBY:
 				_baseController = _lobbyController;
-				_view.startLobby(this);
+				_view.changePage(LOBBY);
 			case ON_CLICK_GOTO_BATTLE(options):
 				_battleController = new BattleController(_lobbyController.getContext(), _view);
 				_baseController = _battleController;
-				_view.startBattle(this);
+				_view.changePage(BATTLE);
 			case _:
 				_baseController.onEvent(action);
 		}

@@ -293,8 +293,16 @@ interface ILobbyController extends IBaseController {
 	function getLobbyInfo():ILobbyInfo;
 }
 
+enum Page {
+	LOBBY;
+	BATTLE;
+	ROBOT_VIEW;
+	PILOT_VIEW;
+}
+
 interface IView {
 	function startLobby(ctr:ILobbyController):Void;
 	function startBattle(ctr:IBattleController):Void;
+	function changePage(page:Page):Void;
 	function onEvent(action:ViewEvent):Void;
 }

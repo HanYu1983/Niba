@@ -67,13 +67,11 @@ abstract class DefaultView implements _IDefaultView {
 
 	public function startLobby(ctr:ILobbyController):Void {
 		_lobbyCtr = ctr;
-		openLobbyPage();
 	}
 
 	public function startBattle(ctr:IBattleController):Void {
 		_battleCtr = ctr;
 		_battleCtr.setAnimationController(this);
-		openBattlePage();
 	}
 
 	final _battleControlMemory:BattleControlMemory = {
@@ -152,15 +150,6 @@ abstract class DefaultView implements _IDefaultView {
 	public function onEvent(action:ViewEvent):Void {
 		info("DefaultView", 'onEvent ${action}');
 		switch action {
-			// lobby
-			case ON_CLICK_GOTO_ROBOT_VIEW:
-				openRobotViewPage();
-			case ON_CLICK_GOTO_PILOT_VIEW:
-				openPilotViewPage();
-			case ON_CLICK_GOTO_ROBOT_BUY(_):
-			case ON_CLICK_ROBOT_BUY_WEAPON({robotId: robotId, weaponId: weaponId}):
-			case ON_CLICK_ROBOT_VIEW_CANCEL:
-				openLobbyPage();
 			// battle
 			case ON_CLICK_BATTLE_POS(pos):
 				switch getRobotMenuState() {
@@ -339,14 +328,6 @@ abstract class DefaultView implements _IDefaultView {
 	public function animateRobotMove(robotId:String, path:Array<Position>, cb:() -> Void):Void {
 		cb();
 	}
-
-	abstract function openLobbyPage():Void;
-
-	abstract function openBattlePage():Void;
-
-	abstract function openRobotViewPage():Void;
-
-	abstract function openPilotViewPage():Void;
 
 	abstract function renderBattlePage():Void;
 }

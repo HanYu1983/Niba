@@ -35,6 +35,18 @@ class DefaultViewImpl extends DefaultView {
 		return getFixNumber(rate * 100, count) + '%';
 	}
 
+	public function changePage(page:Page):Void{
+		switch page {
+			case LOBBY:
+				openLobbyPage();
+			case BATTLE:
+				openBattlePage();
+			case ROBOT_VIEW:
+				openRobotViewPage();
+			case PILOT_VIEW:
+				openPilotViewPage();
+		}
+	}
 	// 關閉所有其它頁, 打開大廳頁
 	// 左側顯示按鈕列表
 	//  機體檢視 ON_CLICK_GOTO_ROBOT_VIEW

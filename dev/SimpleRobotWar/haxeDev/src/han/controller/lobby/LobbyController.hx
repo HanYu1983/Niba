@@ -62,6 +62,15 @@ class LobbyController implements _ILobbyController {
 
 	public function onEvent(action:ViewEvent):Void {
 		switch action {
+			// lobby
+			case ON_CLICK_GOTO_ROBOT_VIEW:
+				_view.changePage(ROBOT_VIEW);
+			case ON_CLICK_GOTO_PILOT_VIEW:
+				_view.changePage(PILOT_VIEW);
+			case ON_CLICK_GOTO_ROBOT_BUY(_):
+			case ON_CLICK_ROBOT_BUY_WEAPON({robotId: robotId, weaponId: weaponId}):
+			case ON_CLICK_ROBOT_VIEW_CANCEL:
+				_view.changePage(LOBBY);
 			case _:
 				_view.onEvent(action);
 		}
