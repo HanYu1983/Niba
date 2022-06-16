@@ -36,26 +36,10 @@ private interface _IBattleController extends IBattleController {}
 @:nullSafety
 class BattleController implements _IBattleController {
 	final _view:IView;
-	final _ctxStacks:Array<Context> = [];
 
 	public function new(ctx:Context, view:IView) {
 		_view = view;
 		_ctxStacks.push(deepCopy(ctx));
-	}
-
-	public function getContext():Context {
-		if (_ctxStacks.length != 1) {
-			throw new Exception("沒有正確處理上下文堆疊，結束遊戲時應該只有一個");
-		}
-		return _ctxStacks[0];
-	}
-
-	function getTopContext():Context {
-		if (_ctxStacks.length == 0) {
-			throw new Exception("請加入原始上下文");
-		}
-		final topCtx = _ctxStacks[_ctxStacks.length - 1];
-		return topCtx;
 	}
 
 	public function getRobots():IMap<String, RobotView> {
@@ -150,96 +134,6 @@ class BattleController implements _IBattleController {
 				}
 			}
 		];
-	}
-
-	public function getRobotMenuItems(robotId:String):Array<RobotMenuItem> {
-		info("BattleController", 'getRobotMenuItems ${robotId}');
-		final ctx = getTopContext();
-		final robot = getRobot(ctx, robotId);
-		final hasDone = robot.flags.has(HAS_DONE);
-		if (hasDone) {
-			return [STATUS];
-		}
-		final ret:Array<RobotMenuItem> = [];
-		{
-			final hasMove = robot.flags.has(HAS_MOVE);
-			if (hasMove == false) {
-				ret.push(MOVE);
-			}
-		}
-		{
-			final hasAttack = getRobotAttacks(ctx, robotId).length > 0;
-			if (hasAttack) {
-				ret.push(ATTACK);
-			}
-		}
-		ret.push(STATUS);
-		ret.push(DONE);
-		return ret;
-	}
-
-	var _tree:Null<IMap<Position, ISolution<Position>>> = null;
-
-	public function getRobotMoveRange(robotId:String):Array<Position> {
-		final ctx = getTopContext();
-		final tree = han.alg.Path.getRobotMoveRange(ctx, robotId);
-		_tree = tree;
-		return [
-			for (pos => solution in tree) {
-				pos;
-			}
-		];
-	}
-
-	public function getRobotMovePath(to:Position):Array<Position> {
-		if (_tree == null) {
-			throw new Exception("你必須先呼叫getRobotMoveRange");
-		}
-		return getPath(_tree, to);
-	}
-
-	public function getRobotIdByPosition(pos:Position):Null<String> {
-		final ctx = getTopContext();
-		return ctx.positionToRobot.get(pos);
-	}
-
-	public function doRobotMove(robotId:String, from:Position, to:Position):Void {
-		info("BattleController", 'doRobotMove ${robotId} from ${from} to ${to}');
-		final ctx = getTopContext();
-		if (ctx.positionToRobot.get(from) != robotId) {
-			throw new Exception('機體不在格子上: robotId(${robotId}) pos:${from}');
-		}
-		final robot = getRobot(ctx, robotId);
-		robot.flags.push(HAS_MOVE);
-		ctx.positionToRobot.remove(from);
-		ctx.positionToRobot.set(to, robotId);
-		info("BattleController", 'robot ${robot}');
-	}
-
-	public function doRobotDone(robotId:String):Void {
-		final ctx = getTopContext();
-		final robot = getRobot(ctx, robotId);
-		robot.flags.push(HAS_DONE);
-	}
-
-	public function pushState():Void {
-		final ctx = getTopContext();
-		_ctxStacks.push(deepCopy(ctx));
-	}
-
-	public function popState():Void {
-		if (_ctxStacks.length <= 1) {
-			throw new Exception("不能把原始上下文移除");
-		}
-		_ctxStacks.pop();
-	}
-
-	public function applyState():Void {
-		final ctx = getTopContext();
-		while (_ctxStacks.length > 0) {
-			_ctxStacks.pop();
-		}
-		_ctxStacks.push(ctx);
 	}
 
 	public function onEvent(action:ViewEvent):Void {
@@ -376,8 +270,8 @@ class BattleController implements _IBattleController {
 					case _:
 				}
 			case ON_CLICK_ROBOT_WEAPON_ATTACK({attackId: attackId, robotId: robotId}):
-				final findAttack = _battleControlMemory.weaponAttackListView.weaponAttacks.filter(atk->atk.id == attackId);
-				if(findAttack.length == 0){
+				final findAttack = _battleControlMemory.weaponAttackListView.weaponAttacks.filter(atk -> atk.id == attackId);
+				if (findAttack.length == 0) {
 					throw new Exception('attack not found: ${attackId}');
 				}
 				trace(findAttack);
@@ -423,6 +317,76 @@ class BattleController implements _IBattleController {
 		}
 	}
 
+	function getRobotMenuItems(robotId:String):Array<RobotMenuItem> {
+		info("BattleController", 'getRobotMenuItems ${robotId}');
+		final ctx = getTopContext();
+		final robot = getRobot(ctx, robotId);
+		final hasDone = robot.flags.has(HAS_DONE);
+		if (hasDone) {
+			return [STATUS];
+		}
+		final ret:Array<RobotMenuItem> = [];
+		{
+			final hasMove = robot.flags.has(HAS_MOVE);
+			if (hasMove == false) {
+				ret.push(MOVE);
+			}
+		}
+		{
+			final hasAttack = getRobotAttacks(ctx, robotId).length > 0;
+			if (hasAttack) {
+				ret.push(ATTACK);
+			}
+		}
+		ret.push(STATUS);
+		ret.push(DONE);
+		return ret;
+	}
+
+	var _tree:Null<IMap<Position, ISolution<Position>>> = null;
+
+	function getRobotMoveRange(robotId:String):Array<Position> {
+		final ctx = getTopContext();
+		final tree = han.alg.Path.getRobotMoveRange(ctx, robotId);
+		_tree = tree;
+		return [
+			for (pos => solution in tree) {
+				pos;
+			}
+		];
+	}
+
+	function getRobotMovePath(to:Position):Array<Position> {
+		if (_tree == null) {
+			throw new Exception("你必須先呼叫getRobotMoveRange");
+		}
+		return getPath(_tree, to);
+	}
+
+	function getRobotIdByPosition(pos:Position):Null<String> {
+		final ctx = getTopContext();
+		return ctx.positionToRobot.get(pos);
+	}
+
+	function doRobotMove(robotId:String, from:Position, to:Position):Void {
+		info("BattleController", 'doRobotMove ${robotId} from ${from} to ${to}');
+		final ctx = getTopContext();
+		if (ctx.positionToRobot.get(from) != robotId) {
+			throw new Exception('機體不在格子上: robotId(${robotId}) pos:${from}');
+		}
+		final robot = getRobot(ctx, robotId);
+		robot.flags.push(HAS_MOVE);
+		ctx.positionToRobot.remove(from);
+		ctx.positionToRobot.set(to, robotId);
+		info("BattleController", 'robot ${robot}');
+	}
+
+	function doRobotDone(robotId:String):Void {
+		final ctx = getTopContext();
+		final robot = getRobot(ctx, robotId);
+		robot.flags.push(HAS_DONE);
+	}
+
 	function onPlayerEnd(playerId:Int) {
 		final ctx = getTopContext();
 		if (ctx.currentPlayerId != playerId) {
@@ -444,11 +408,11 @@ class BattleController implements _IBattleController {
 
 	var _occupyCtr:Null<ViewEvent->Void>;
 
-	public function setOccupyController(ctr:Null<ViewEvent->Void>):Void {
+	function setOccupyController(ctr:Null<ViewEvent->Void>):Void {
 		_occupyCtr = ctr;
 	}
 
-	public function getOccupyController():Null<ViewEvent->Void> {
+	function getOccupyController():Null<ViewEvent->Void> {
 		return _occupyCtr;
 	}
 
@@ -523,5 +487,43 @@ class BattleController implements _IBattleController {
 
 	public function getRobotStatusView():Null<RobotStatusView> {
 		return _battleControlMemory.robotStatusView;
+	}
+
+
+	final _ctxStacks:Array<Context> = [];
+
+	public function getContext():Context {
+		if (_ctxStacks.length != 1) {
+			throw new Exception("沒有正確處理上下文堆疊，結束遊戲時應該只有一個");
+		}
+		return _ctxStacks[0];
+	}
+
+	function getTopContext():Context {
+		if (_ctxStacks.length == 0) {
+			throw new Exception("請加入原始上下文");
+		}
+		final topCtx = _ctxStacks[_ctxStacks.length - 1];
+		return topCtx;
+	}
+
+	function pushState():Void {
+		final ctx = getTopContext();
+		_ctxStacks.push(deepCopy(ctx));
+	}
+
+	function popState():Void {
+		if (_ctxStacks.length <= 1) {
+			throw new Exception("不能把原始上下文移除");
+		}
+		_ctxStacks.pop();
+	}
+
+	function applyState():Void {
+		final ctx = getTopContext();
+		while (_ctxStacks.length > 0) {
+			_ctxStacks.pop();
+		}
+		_ctxStacks.push(ctx);
 	}
 }

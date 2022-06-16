@@ -48,6 +48,15 @@ class DefaultViewImpl extends DefaultView {
 		}
 	}
 
+	public function invalidate():Void {
+		renderBattlePage();
+	}
+
+	// 機體移動動畫
+	public function animateRobotMove(robotId:String, path:Array<Position>, cb:()->Void):Void{
+		_view.gamePage.animateRobotMove(robotId, path, cb);
+	}
+
 	function openLobbyPage():Void {
 		_view.closeAllPages();
 		_view.lobbyPage.fadeIn();
@@ -71,8 +80,5 @@ class DefaultViewImpl extends DefaultView {
 	function renderBattlePage() {
 		_view.gamePage.updateGamePage();
 	}
-	// 機體移動動畫
-	override function animateRobotMove(robotId:String, path:Array<Position>, cb:()->Void):Void{
-		_view.gamePage.animateRobotMove(robotId, path, cb);
-	}
+	
 }

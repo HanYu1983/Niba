@@ -312,23 +312,7 @@ interface IBattleController extends IBaseController {
 	function getMoveRangeView():Null<MoveRangeView>;
 	function getWeaponAttackListView():Null<WeaponAttackListView>;
 	function getRobotStatusView():Null<RobotStatusView>;
-
-	function getRobotMenuItems(robotId:String):Array<RobotMenuItem>;
-	function getRobotMoveRange(robotId:String):Array<Position>;
-	function getRobotMovePath(to:Position):Array<Position>;
-	function getRobotIdByPosition(pos:Position):Null<String>;
 	function getGrids():IMap<Position, GridView>;
-	function doRobotMove(robotId:String, from:Position, to:Position):Void;
-	function doRobotDone(robotId:String):Void;
-	// 處理暫存狀態回復
-	function pushState():Void;
-	function popState():Void;
-	function applyState():Void;
-	// 處理異步
-	function setOccupyController(ctr:Null<ViewEvent->Void>):Void;
-	function getOccupyController():Null<ViewEvent->Void>;
-	// 動畫
-	//function setAnimationController(v:IAnimationController):Void;
 }
 
 interface ILobbyController extends IBaseController {

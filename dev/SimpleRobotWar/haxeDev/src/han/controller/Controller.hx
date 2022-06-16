@@ -63,50 +63,6 @@ class Controller implements _IController {
 		return _battleController.getGrids();
 	}
 
-	public function getRobotMenuItems(robotId:String):Array<RobotMenuItem> {
-		return _battleController.getRobotMenuItems(robotId);
-	}
-
-	public function getRobotMoveRange(robotId:String):Array<Position> {
-		return _battleController.getRobotMoveRange(robotId);
-	}
-
-	public function getRobotMovePath(to:Position):Array<Position>{
-		return _battleController.getRobotMovePath(to);
-	}
-
-	public function getRobotIdByPosition(pos:Position):Null<String> {
-		return _battleController.getRobotIdByPosition(pos);
-	}
-
-	public function doRobotMove(robotId:String, from:Position, to:Position):Void {
-		return _battleController.doRobotMove(robotId, from, to);
-	}
-
-	public function doRobotDone(robotId:String):Void {
-		return _battleController.doRobotDone(robotId);
-	}
-
-	public function pushState():Void {
-		return _battleController.pushState();
-	}
-
-	public function popState():Void {
-		return _battleController.popState();
-	}
-
-	public function applyState():Void {
-		return _battleController.applyState();
-	}
-
-	public function setOccupyController(ctr:Null<ViewEvent->Void>):Void {
-		return _battleController.setOccupyController(ctr);
-	}
-
-	public function getOccupyController():Null<ViewEvent->Void> {
-		return _battleController.getOccupyController();
-	}
-
 	public function getRobotMenuState():RobotMenuState {
 		return _battleController.getRobotMenuState();
 	}
