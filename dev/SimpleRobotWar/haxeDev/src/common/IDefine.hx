@@ -255,14 +255,18 @@ typedef GuardView = {
 	isMelee:Bool,
 }
 
-interface ILobbyInfo {}
-
 interface IBaseController {
 	function getRobots():IMap<String, RobotView>;
 	function getPilots():IMap<String, PilotView>;
 	function getWeapons():IMap<String, WeaponView>;
 	function getAttacks(robotId:String):Array<WeaponAttackView>;
 	function onEvent(action:ViewEvent):Void;
+}
+
+interface ILobbyInfo {}
+
+interface ILobbyController extends IBaseController {
+	function getLobbyInfo():ILobbyInfo;
 }
 
 enum RobotMenuState {
@@ -308,10 +312,6 @@ interface IBattleController extends IBaseController {
 	function getWeaponAttackListView():Null<WeaponAttackListView>;
 	function getRobotStatusView():Null<RobotStatusView>;
 	function getGrids():IMap<Position, GridView>;
-}
-
-interface ILobbyController extends IBaseController {
-	function getLobbyInfo():ILobbyInfo;
 }
 
 enum Page {
