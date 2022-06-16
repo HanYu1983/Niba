@@ -306,15 +306,18 @@ class GamePage extends Box {
 			cb();
 			return;
 		}
-		final ts = [];
 
+		final ts:Array<Dynamic> = [];
 		for (pos in path) {
 			switch (pos) {
 				case POS(x, y):
 					ts.push(TweenX.to(robot, {left: x * gridSize, top: y * gridSize}, 0.1));
 			}
 		}
+		ts.push(TweenX.func(cb));
+		TweenX.serial(ts).play();
 
-		TweenX.serial(ts).onFinish(cb).play();
+		// 有bug？這裏的finish會呼叫兩次
+		// TweenX.serial(ts).onFinish(cb).play();
 	}
 }
