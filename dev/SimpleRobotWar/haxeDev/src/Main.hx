@@ -6,11 +6,12 @@ import haxe.ui.themes.ThemeManager;
 import haxe.Exception;
 import haxe.ui.core.Component;
 import haxe.ui.HaxeUIApp;
+import common.IDefine;
 import han.controller.Controller;
 import vic.DefaultViewImpl;
 
 class Main {
-	public static var view:Controller;
+	private static var ctr:Controller;
 
 	public static function main() {
 		if (true) {
@@ -18,12 +19,20 @@ class Main {
 		}
 		final app = new HaxeUIApp();
 		app.ready(() -> {
-			final _view = new DefaultViewImpl();
-			app.addComponent(_view.getComponent());
-			view = new Controller(_view);
+			final view = new DefaultViewImpl();
+			app.addComponent(view.getComponent());
+			ctr = new Controller(view);
 
 			ThemeManager.instance.applyTheme(Theme.DARK);
 		});
+	}
+
+	public static function getLobbyController():ILobbyController{
+		return ctr.getLobbyController();
+	}
+
+	public static function getBattleController():IBattleController{
+		return ctr.getBattleController();
 	}
 
 	public static function getFixNumber(number:Float, count:Int = 0):Float {

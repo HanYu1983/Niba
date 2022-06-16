@@ -11,7 +11,7 @@ class GridDetail extends VBox implements IShowData {
 
 	private function setInfo(info:GridView) {
 
-        final robots = Main.view.getBattleController().getRobots();
+        final robots = Main.getBattleController().getRobots();
         final robot = robots.get(info.robotId);
 		
 		var content = '';

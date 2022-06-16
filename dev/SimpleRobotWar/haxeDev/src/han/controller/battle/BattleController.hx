@@ -153,7 +153,7 @@ class BattleController implements _IBattleController {
 							};
 							// 系統菜單
 							pushRobotMenuState(SYSTEM_MENU);
-							_view.invalidate();
+							_view.renderBattlePage();
 						} else {
 							// 單位菜單
 							_battleControlMemory.originActiveRobotState = {
@@ -167,7 +167,7 @@ class BattleController implements _IBattleController {
 								pos: getRobotMoveRange(robotId)
 							};
 							pushRobotMenuState(ROBOT_MENU);
-							_view.invalidate();
+							_view.renderBattlePage();
 						}
 					case ROBOT_MENU:
 					case ROBOT_SELECT_MOVE_POSITION:
@@ -191,7 +191,7 @@ class BattleController implements _IBattleController {
 									menuItems: getRobotMenuItems(robotId)
 								};
 								pushRobotMenuState(ROBOT_MENU);
-								_view.invalidate();
+								_view.renderBattlePage();
 								setOccupyController(null);
 								cb();
 							}
@@ -201,7 +201,7 @@ class BattleController implements _IBattleController {
 			case ON_CLICK_CANCEL:
 				if (_battleControlMemory.robotStatusView != null) {
 					_battleControlMemory.robotStatusView = null;
-					_view.invalidate();
+					_view.renderBattlePage();
 				} else {
 					switch getRobotMenuState() {
 						case NORMAL:
@@ -221,20 +221,20 @@ class BattleController implements _IBattleController {
 									};
 								case _:
 							}
-							_view.invalidate();
+							_view.renderBattlePage();
 						case ROBOT_SELECT_MOVE_POSITION | ROBOT_SELECT_WEAPON_ATTACK | ROBOT_SELECT_WEAPON_ATTACK_TARGET(_):
 							popRobotMenuState();
-							_view.invalidate();
+							_view.renderBattlePage();
 						case SYSTEM_MENU:
 							popRobotMenuState();
-							_view.invalidate();
+							_view.renderBattlePage();
 					}
 				}
 			case ON_CLICK_ROBOT_MENU_ITEM(item):
 				switch item {
 					case MOVE:
 						pushRobotMenuState(ROBOT_SELECT_MOVE_POSITION);
-						_view.invalidate();
+						_view.renderBattlePage();
 					case ATTACK:
 						if (_battleControlMemory.originActiveRobotState == null) {
 							throw new Exception("即將要選武器攻擊，但卻沒有找到originActiveRobotState");
@@ -244,7 +244,7 @@ class BattleController implements _IBattleController {
 							weaponAttacks: getAttacks(robotId)
 						};
 						pushRobotMenuState(ROBOT_SELECT_WEAPON_ATTACK);
-						_view.invalidate();
+						_view.renderBattlePage();
 					case STATUS:
 						if (_battleControlMemory.originActiveRobotState == null) {
 							throw new Exception("即將進入機體狀態頁，但卻沒有找到originActiveRobotState");
@@ -254,7 +254,7 @@ class BattleController implements _IBattleController {
 							robotId: robotId,
 							weaponAttacks: getAttacks(robotId)
 						};
-						_view.invalidate();
+						_view.renderBattlePage();
 					case DONE:
 						if (_battleControlMemory.originActiveRobotState == null) {
 							throw new Exception("即將要結束菜單，但卻沒有找到originActiveRobotState");
@@ -266,7 +266,7 @@ class BattleController implements _IBattleController {
 						doRobotDone(robotId);
 						applyState();
 						pushRobotMenuState(NORMAL);
-						_view.invalidate();
+						_view.renderBattlePage();
 					case _:
 				}
 			case ON_CLICK_ROBOT_WEAPON_ATTACK({attackId: attackId, robotId: robotId}):
@@ -297,7 +297,7 @@ class BattleController implements _IBattleController {
 								},
 								cb -> {
 									doRobotDone(robot.id);
-									_view.invalidate();
+									_view.renderBattlePage();
 									setOccupyController(null);
 									processEnemyTurn();
 									cb();

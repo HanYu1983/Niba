@@ -27,8 +27,8 @@ class RobotStatePage extends Box implements IShowData {
 	function setRobot(robotState:RobotStatusView) {
 		super.show();
 
-		final robots = Main.view.getLobbyController().getRobots();
-		final pilots = Main.view.getLobbyController().getPilots();
+		final robots = Main.getLobbyController().getRobots();
+		final pilots = Main.getLobbyController().getPilots();
 
 		final robot = robots.get(robotState.robotId);
 		final pilot = pilots.get(robot.pilotId);
@@ -37,7 +37,7 @@ class RobotStatePage extends Box implements IShowData {
 		battalWeaponList.showWithData(robotState.weaponAttacks);
 
 		btn_confirm.onClick = function(e) {
-			Main.view.getBattleController().onEvent(ViewEvent.ON_CLICK_CANCEL);
+			Main.getBattleController().onEvent(ViewEvent.ON_CLICK_CANCEL);
 		}
 	}
 

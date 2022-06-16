@@ -61,8 +61,8 @@ class GamePage extends Box {
 	}
 
 	function updateGrids() {
-		final gridInfos = Main.view.getBattleController().getGrids();
-		final robotInfos = Main.view.getBattleController().getRobots();
+		final gridInfos = Main.getBattleController().getGrids();
+		final robotInfos = Main.getBattleController().getRobots();
 
 		for (key in robots.keys()) {
 			box_robots.removeComponent(robots.get(key));
@@ -101,7 +101,7 @@ class GamePage extends Box {
 	}
 
 	public function updateSystemMenu() {
-		final systemMenuView = Main.view.getBattleController().getSystemMenuView();
+		final systemMenuView = Main.getBattleController().getSystemMenuView();
 		if (systemMenuView == null) {
 			box_systemMenu.hide();
 			return;
@@ -112,7 +112,7 @@ class GamePage extends Box {
 	}
 
 	public function updateRobotMenu() {
-		final robotMenuView = Main.view.getBattleController().getRobotMenuView();
+		final robotMenuView = Main.getBattleController().getRobotMenuView();
 		if (robotMenuView == null) {
 			box_robotMenu.hide();
 			// 關閉頁面
@@ -149,9 +149,9 @@ class GamePage extends Box {
 
 	function updateStageListener() {
 		box_listener.unregisterEvents();
-		switch (Main.view.getBattleController().getRobotMenuState()) {
+		switch (Main.getBattleController().getRobotMenuState()) {
 			case NORMAL:
-				final gridInfos = Main.view.getBattleController().getGrids();
+				final gridInfos = Main.getBattleController().getGrids();
 				box_listener.registerEvent(MouseEvent.MOUSE_MOVE, (e:MouseEvent) -> {
 					final pos = getPosEnumByLocalPos(e.localX, e.localY);
 					final gridInfo = gridInfos.get(pos);
@@ -170,14 +170,14 @@ class GamePage extends Box {
 					final pos = getPosEnumByLocalPos(e.localX, e.localY);
 					verbose('GamePage', 'mouse click pos:(${e.localX})(${e.localY}) enum:(${pos})');
 
-					Main.view.getBattleController().onEvent(ON_CLICK_BATTLE_POS(pos));
+					Main.getBattleController().onEvent(ON_CLICK_BATTLE_POS(pos));
 				});
 			case ROBOT_MENU | SYSTEM_MENU:
 				box_listener.registerEvent(MouseEvent.CLICK, (e:MouseEvent) -> {
-					Main.view.getBattleController().onEvent(ON_CLICK_CANCEL);
+					Main.getBattleController().onEvent(ON_CLICK_CANCEL);
 				});
 			case ROBOT_SELECT_MOVE_POSITION:
-				final gridInfos = Main.view.getBattleController().getGrids();
+				final gridInfos = Main.getBattleController().getGrids();
 				box_listener.registerEvent(MouseEvent.MOUSE_MOVE, (e:MouseEvent) -> {
 					final pos = getPosEnumByLocalPos(e.localX, e.localY);
 					final gridInfo = gridInfos.get(pos);
@@ -196,7 +196,7 @@ class GamePage extends Box {
 					final pos = getPosEnumByLocalPos(e.localX, e.localY);
 					verbose('GamePage', '點選了目的:(${e.localX})(${e.localY}) enum:(${pos})');
 
-					Main.view.getBattleController().onEvent(ON_CLICK_BATTLE_POS(pos));
+					Main.getBattleController().onEvent(ON_CLICK_BATTLE_POS(pos));
 				});
 			case ROBOT_SELECT_WEAPON_ATTACK:
 			case ROBOT_SELECT_WEAPON_ATTACK_TARGET(shape):
@@ -206,7 +206,7 @@ class GamePage extends Box {
 	function onKeydownEvent(e:js.html.KeyboardEvent) {
 		switch (e.keyCode) {
 			case KeyEvent.DOM_VK_ESCAPE:
-				Main.view.getBattleController().onEvent(ON_CLICK_CANCEL);
+				Main.getBattleController().onEvent(ON_CLICK_CANCEL);
 			case _:
 		}
 	}
@@ -220,37 +220,37 @@ class GamePage extends Box {
 
 		// 只要注冊一次就好
 		btn_move.onClick = function(e) {
-			Main.view.getBattleController().onEvent(ON_CLICK_ROBOT_MENU_ITEM(MOVE));
+			Main.getBattleController().onEvent(ON_CLICK_ROBOT_MENU_ITEM(MOVE));
 		}
 
 		btn_attack.onClick = function(e) {
-			Main.view.getBattleController().onEvent(ON_CLICK_ROBOT_MENU_ITEM(ATTACK));
+			Main.getBattleController().onEvent(ON_CLICK_ROBOT_MENU_ITEM(ATTACK));
 		}
 
 		btn_state.onClick = function(e) {
-			Main.view.getBattleController().onEvent(ON_CLICK_ROBOT_MENU_ITEM(STATUS));
+			Main.getBattleController().onEvent(ON_CLICK_ROBOT_MENU_ITEM(STATUS));
 		}
 
 		btn_end.onClick = function(e) {
-			Main.view.getBattleController().onEvent(ON_CLICK_ROBOT_MENU_ITEM(DONE));
+			Main.getBattleController().onEvent(ON_CLICK_ROBOT_MENU_ITEM(DONE));
 		}
 
 		btn_endPhase.onClick = function(e) {
-			Main.view.getBattleController().onEvent(ON_CLICK_SYSTEM_MENU_ITEM(TURN_END));
+			Main.getBattleController().onEvent(ON_CLICK_SYSTEM_MENU_ITEM(TURN_END));
 		}
 
 		btn_confirmSelectWeaponMenu.onClick = function(e) {
 			final weapon:WeaponAttackView = battleWeaponListWidget.selectedItem;
-			Main.view.getBattleController().onEvent(ON_CLICK_ROBOT_WEAPON_ATTACK_CONFIRM({attackId: weapon.id, robotId: weapon.robotId}));
+			Main.getBattleController().onEvent(ON_CLICK_ROBOT_WEAPON_ATTACK_CONFIRM({attackId: weapon.id, robotId: weapon.robotId}));
 		}
 
 		btn_cancelSelectWeaponMenu.onClick = function(e) {
-			Main.view.getBattleController().onEvent(ON_CLICK_CANCEL);
+			Main.getBattleController().onEvent(ON_CLICK_CANCEL);
 		}
 	}
 
 	public function updateMoveRange() {
-		final moveRangeView = Main.view.getBattleController().getMoveRangeView();
+		final moveRangeView = Main.getBattleController().getMoveRangeView();
 		if (moveRangeView == null) {
 			return;
 		}
@@ -263,7 +263,7 @@ class GamePage extends Box {
 	}
 
 	function updateAttackList() {
-		final weaponList = Main.view.getBattleController().getWeaponAttackListView();
+		final weaponList = Main.getBattleController().getWeaponAttackListView();
 		if (weaponList == null) {
 			box_selectWeaponMenu.hide();
 			return;
@@ -273,7 +273,7 @@ class GamePage extends Box {
 		battleWeaponListWidget.setInfo(weaponList.weaponAttacks);
 		battleWeaponListWidget.onChange = function(e) {
 			final weapon:WeaponAttackView = battleWeaponListWidget.selectedItem;
-			Main.view.getBattleController().onEvent(ON_CLICK_ROBOT_WEAPON_ATTACK({attackId: weapon.id, robotId: weapon.robotId}));
+			Main.getBattleController().onEvent(ON_CLICK_ROBOT_WEAPON_ATTACK({attackId: weapon.id, robotId: weapon.robotId}));
 		}
 		battleWeaponListWidget.selectedIndex = 0;
 	}
@@ -291,7 +291,7 @@ class GamePage extends Box {
 	}
 
 	function updateRobotState() {
-		final robotState = Main.view.getBattleController().getRobotStatusView();
+		final robotState = Main.getBattleController().getRobotStatusView();
 		if (robotState == null) {
 			box_robotStatePage.hide();
 			return;

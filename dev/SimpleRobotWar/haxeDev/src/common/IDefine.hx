@@ -265,11 +265,6 @@ interface IBaseController {
 	function onEvent(action:ViewEvent):Void;
 }
 
-interface IAnimationController {
-	function invalidate():Void;
-	function animateRobotMove(robotId:String, path:Array<Position>, cb:Void->Void):Void;
-}
-
 enum RobotMenuState {
 	// 沒開狀態
 	NORMAL;
@@ -326,6 +321,8 @@ enum Page {
 	PILOT_VIEW;
 }
 
-interface IView extends IAnimationController {
+interface IView {
 	function changePage(page:Page):Void;
+	function renderBattlePage():Void;
+	function animateRobotMove(robotId:String, path:Array<Position>, cb:Void->Void):Void;
 }

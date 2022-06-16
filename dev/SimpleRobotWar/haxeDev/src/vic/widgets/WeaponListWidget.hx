@@ -11,7 +11,7 @@ class WeaponListWidget extends BasicListWidget {
 	override public function setInfo(info:Dynamic) {
 		super.setInfo(info);
 
-		final weapons = Main.view.getLobbyController().getWeapons();
+		final weapons = Main.getLobbyController().getWeapons();
 		final weaponIds:Array<String> = info;
 
 		dataSource.clear();

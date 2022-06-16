@@ -26,8 +26,8 @@ class PilotPage extends Box {
 	override function show() {
 		super.show();
 
-		final pilots = Main.view.getLobbyController().getPilots();
-		final robots = Main.view.getLobbyController().getRobots();
+		final pilots = Main.getLobbyController().getPilots();
+		final robots = Main.getLobbyController().getRobots();
 		robotPilotList.showWithData(pilots);
 
 		function updateDetail(info:PilotView) {
@@ -60,11 +60,11 @@ class PilotPage extends Box {
 			robotId: robotPilotList.selectedItem.id
 		};
 		info("PilotPage", 'vic send ON_CLICK_GOTO_ROBOT_BUY,${send}');
-		// Main.view.getLobbyController().onEvent(ON_CLICK_GOTO_ROBOT_BUY(send));
+		// Main.getLobbyController().onEvent(ON_CLICK_GOTO_ROBOT_BUY(send));
 	}
 
 	@:bind(btn_backToLobby, MouseEvent.CLICK)
 	function onBtnBackClick(e) {
-		Main.view.getLobbyController().onEvent(ON_CLICK_GOTO_LOBBY);
+		Main.getLobbyController().onEvent(ON_CLICK_GOTO_LOBBY);
 	}
 }

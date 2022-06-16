@@ -13,7 +13,7 @@ class PilotListWidget extends BasicListWidget {
 		super.setInfo(info);
 
 		final pilots:Map<String, PilotView> = info;
-		final robots = Main.view.getLobbyController().getRobots();
+		final robots = Main.getLobbyController().getRobots();
 
 		dataSource.clear();
 		for (key => pilot in pilots) {
