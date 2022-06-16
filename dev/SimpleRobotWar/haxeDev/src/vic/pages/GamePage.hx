@@ -199,6 +199,7 @@ class GamePage extends Box {
 					Main.view.getBattleController().onEvent(ON_CLICK_BATTLE_POS(pos));
 				});
 			case ROBOT_SELECT_WEAPON_ATTACK:
+			case ROBOT_SELECT_WEAPON_ATTACK_TARGET(shape):
 		}
 	}
 

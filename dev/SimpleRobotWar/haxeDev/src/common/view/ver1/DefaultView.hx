@@ -17,6 +17,8 @@ enum RobotMenuState {
 	ROBOT_SELECT_MOVE_POSITION;
 	// 選擇攻擊武器時
 	ROBOT_SELECT_WEAPON_ATTACK;
+	//
+	ROBOT_SELECT_WEAPON_ATTACK_TARGET(shape: AttachShape);
 	SYSTEM_MENU;
 }
 
@@ -257,10 +259,7 @@ abstract class DefaultView implements _IDefaultView {
 								case _:
 							}
 							renderBattlePage();
-						case ROBOT_SELECT_MOVE_POSITION:
-							popRobotMenuState();
-							renderBattlePage();
-						case ROBOT_SELECT_WEAPON_ATTACK:
+						case ROBOT_SELECT_MOVE_POSITION | ROBOT_SELECT_WEAPON_ATTACK | ROBOT_SELECT_WEAPON_ATTACK_TARGET(_):
 							popRobotMenuState();
 							renderBattlePage();
 						case SYSTEM_MENU:
@@ -309,6 +308,12 @@ abstract class DefaultView implements _IDefaultView {
 				}
 			case ON_SYSTEM_ENEMY_TURN(_):
 				renderBattlePage();
+			case ON_CLICK_ROBOT_WEAPON_ATTACK({attackId: attackId, robotId: robotId}):
+				final findAttack = _battleControlMemory.weaponAttackListView.weaponAttacks.filter(atk->atk.id == attackId);
+				if(findAttack.length == 0){
+					throw new Exception('attack not found: ${attackId}');
+				}
+				trace(findAttack);
 			case _:
 		}
 	}

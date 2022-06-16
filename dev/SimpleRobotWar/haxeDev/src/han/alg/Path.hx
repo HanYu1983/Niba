@@ -126,6 +126,41 @@ private class ShortestPathTreeSolution extends DefaultSolution<Position> {
 }
 
 @:nullSafety
+private class RangeSolution extends DefaultSolution<Position> {
+	final _range:Int;
+
+	public function new(id:Position, range:Int, parentId:Null<Position> = null, cost:Int = 0, estimate:Int = 0, isGoal:Bool = false) {
+		super(id, parentId, cost, estimate, isGoal);
+		_range = range;
+	}
+
+	override function getNextSolution():Array<ISolution<Position>> {
+		return switch getId() {
+			case POS(x, y):
+				final ret:Array<ISolution<Position>> = [];
+				for (next in [[0, -1], [0, 1], [-1, 0], [1, 0]]) {
+					switch next {
+						case [ox, oy]:
+							final nx = x + ox;
+							final ny = y + oy;
+							final nextPos = POS(nx, ny);
+							final cost = this.cost + 1;
+							if (cost <= _range) {
+								final nextSolution = new RangeSolution(nextPos, _range, getId(), cost, 0, false);
+								ret.push(nextSolution);
+							}
+						case _:
+							throw new Exception("next not found");
+					}
+				}
+				ret;
+			case _:
+				throw new Exception("payload not found");
+		}
+	}
+}
+
+@:nullSafety
 function getRobotMoveRange(ctx:Context, robotId:String):IMap<Position, ISolution<Position>> {
 	for (pos => findRobotId in ctx.positionToRobot) {
 		if (findRobotId == robotId) {
@@ -138,27 +173,37 @@ function getRobotMoveRange(ctx:Context, robotId:String):IMap<Position, ISolution
 	throw new Exception('getRobotMoveRange 找不到robotId的位置:${robotId}');
 }
 
-function test() {
-	testPath();
-}
-
-private function testPath() {
-	final _ctx = getDefaultContext();
-	_ctx.grids = getRandomMap(MAP_W, MAP_H);
-	final robot = createRobot('${_ctx.idSeq++}');
-	_ctx.robots.set(robot.id, robot);
-	final s = Serializer.run(_ctx);
-	final ctx = Unserializer.run(s);
-	{
-		final tree = getAStar(new PathSolution(ctx, POS(0, 0), POS(9, 9)), {exitWhenFind: true});
-		// trace(tree);
-		final path = getPath(tree, POS(9, 9));
-		trace(path);
-	}
-	{
-		final tree = getAStar(new ShortestPathTreeSolution(ctx, POS(4, 4), robot.id), {exitWhenFind: true});
-		for (pos => solution in tree) {
-			trace(pos, solution.getSortScore());
+function getAttackRange(center:Position, min:Int, max:Int):Array<Position> {
+	final maxTree = getAStar(new RangeSolution(POS(0, 0), max), {exitWhenFind: true});
+	if (min > 1) {
+		final minTree = getAStar(new RangeSolution(POS(0, 0), min-1), {exitWhenFind: true});
+		for(pos => _ in minTree){
+			maxTree.remove(pos);
 		}
 	}
+	final posList = [
+		for (pos => solution in maxTree) {
+			final nx = switch [center, pos] {
+				case [POS(cx, _), POS(x, _)]:
+					cx + x;
+				case _:
+					throw new Exception("[center, pos] not found");
+			}
+			final ny = switch [center, pos] {
+				case [POS(_, cy), POS(_, y)]:
+					cy + y;
+				case _:
+					throw new Exception("[center, pos] not found");
+			}
+			if (nx >= 0 && ny >= 0 && nx < MAP_W && ny < MAP_H) {
+				POS(nx, ny);
+			}
+		}
+	];
+	return posList;
 }
+
+function test() {
+	//trace(getAttackRange(POS(5,5), 2, 4));
+}
+
