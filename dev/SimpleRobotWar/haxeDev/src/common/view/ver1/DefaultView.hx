@@ -8,40 +8,7 @@ import tool.Helper;
 
 using Lambda;
 
-enum RobotMenuState {
-	// 沒開狀態
-	NORMAL;
-	// 打開菜單
-	ROBOT_MENU;
-	// 選擇移動位置時
-	ROBOT_SELECT_MOVE_POSITION;
-	// 選擇攻擊武器時
-	ROBOT_SELECT_WEAPON_ATTACK;
-	//
-	ROBOT_SELECT_WEAPON_ATTACK_TARGET(shape: AttachShape);
-	SYSTEM_MENU;
-}
 
-typedef RobotMenuView = {
-	menuItems:Array<RobotMenuItem>
-}
-
-typedef SystemMenuView = {
-	menuItems:Array<SystemMenuItem>
-}
-
-typedef MoveRangeView = {
-	pos:Array<Position>
-}
-
-typedef WeaponAttackListView = {
-	weaponAttacks:Array<WeaponAttackView>
-}
-
-typedef RobotStatusView = {
-	robotId:String,
-	weaponAttacks:Array<WeaponAttackView>
-}
 
 private typedef BattleControlMemory = {
 	originActiveRobotState:Null<{
@@ -56,7 +23,7 @@ private typedef BattleControlMemory = {
 	robotStatusView:Null<RobotStatusView>
 }
 
-private interface _IDefaultView extends IView extends IAnimationController {}
+private interface _IDefaultView extends IView {}
 
 @:nullSafety
 abstract class DefaultView implements _IDefaultView {
@@ -71,240 +38,35 @@ abstract class DefaultView implements _IDefaultView {
 
 	public function startBattle(ctr:IBattleController):Void {
 		_battleCtr = ctr;
-		_battleCtr.setAnimationController(this);
-	}
-
-	final _battleControlMemory:BattleControlMemory = {
-		robotMenuState: [NORMAL],
-		originActiveRobotState: null,
-		robotMenuView: null,
-		systemMenuView: null,
-		moveRangeView: null,
-		weaponAttackListView: null,
-		robotStatusView: null,
-	};
-
-	function pushRobotMenuState(state:RobotMenuState) {
-		info("DefaultView", 'pushRobotMenuState ${_battleControlMemory.robotMenuState} to ${state}');
-		final originState = getRobotMenuState();
-		if (originState == state) {
-			return;
-		}
-		_battleControlMemory.robotMenuState.push(state);
-	}
-
-	function popRobotMenuState() {
-		if (_battleControlMemory.robotMenuState.length <= 1) {
-			throw new Exception("robotMenuState必須最少有一個NORMAL狀態");
-		}
-		_battleControlMemory.robotMenuState.pop();
 	}
 
 	public function getRobotMenuState():RobotMenuState {
-		if (_battleControlMemory.robotMenuState.length == 0) {
-			throw new Exception("robotMenuState必須最少有一個NORMAL狀態");
-		}
-		return _battleControlMemory.robotMenuState[_battleControlMemory.robotMenuState.length - 1];
+		return getBattleController().getRobotMenuState();
 	}
 
 	public function getRobotMenuView():Null<RobotMenuView> {
-		return switch getRobotMenuState() {
-			case ROBOT_MENU:
-				_battleControlMemory.robotMenuView;
-			case _:
-				null;
-		}
+		return getBattleController().getRobotMenuView();
 	}
 
 	public function getSystemMenuView():Null<SystemMenuView> {
-		return switch getRobotMenuState() {
-			case SYSTEM_MENU:
-				_battleControlMemory.systemMenuView;
-			case _:
-				null;
-		}
+		return getBattleController().getSystemMenuView();
 	}
 
 	public function getMoveRangeView():Null<MoveRangeView> {
-		return switch getRobotMenuState() {
-			case ROBOT_MENU | ROBOT_SELECT_MOVE_POSITION:
-				_battleControlMemory.moveRangeView;
-			case _:
-				null;
-		}
+		return getBattleController().getMoveRangeView();
 	}
 
 	public function getWeaponAttackListView():Null<WeaponAttackListView> {
-		return switch getRobotMenuState() {
-			case ROBOT_SELECT_WEAPON_ATTACK:
-				_battleControlMemory.weaponAttackListView;
-			case _:
-				null;
-		}
+		return getBattleController().getWeaponAttackListView();
 	}
 
 	public function getRobotStatusView():Null<RobotStatusView> {
-		return _battleControlMemory.robotStatusView;
+		return getBattleController().getRobotStatusView();
 	}
+	
 
 	public function onEvent(action:ViewEvent):Void {
-		info("DefaultView", 'onEvent ${action}');
-		switch action {
-			// battle
-			case ON_CLICK_BATTLE_POS(pos):
-				switch getRobotMenuState() {
-					case NORMAL:
-						final robotId = getBattleController().getRobotIdByPosition(pos);
-						if (robotId == null) {
-							_battleControlMemory.systemMenuView = {
-								menuItems: [TURN_END]
-							};
-							// 系統菜單
-							pushRobotMenuState(SYSTEM_MENU);
-							renderBattlePage();
-						} else {
-							// 單位菜單
-							_battleControlMemory.originActiveRobotState = {
-								robotId: robotId,
-								position: pos
-							};
-							_battleControlMemory.robotMenuView = {
-								menuItems: getBattleController().getRobotMenuItems(robotId)
-							};
-							_battleControlMemory.moveRangeView = {
-								pos: getBattleController().getRobotMoveRange(robotId)
-							};
-							pushRobotMenuState(ROBOT_MENU);
-							renderBattlePage();
-						}
-					case ROBOT_MENU:
-					case ROBOT_SELECT_MOVE_POSITION:
-						if (_battleControlMemory.originActiveRobotState == null) {
-							throw new Exception("即將要移動，但卻沒有找到originActiveRobotState");
-						}
-						final fromPos = _battleControlMemory.originActiveRobotState.position;
-						final robotId = _battleControlMemory.originActiveRobotState.robotId;
-						final path = getBattleController().getRobotMovePath(pos);
-						asyncSerial([
-							cb -> {
-								getBattleController().setOccupyController((evt) -> {});
-								animateRobotMove(robotId, path, cb);
-							},
-							cb -> {
-								// 暫存狀態後移動
-								getBattleController().pushState();
-								getBattleController().doRobotMove(robotId, fromPos, pos);
-								// 重抓菜單
-								_battleControlMemory.robotMenuView = {
-									menuItems: getBattleController().getRobotMenuItems(robotId)
-								};
-								pushRobotMenuState(ROBOT_MENU);
-								renderBattlePage();
-								getBattleController().setOccupyController(null);
-								cb();
-							}
-						]);
-						// getBattleController().setOccupyController((evt) -> {});
-						// getBattleController().addTask((cb) -> {
-						// 	animateRobotMove(robotId, path, cb);
-						// });
-						// getBattleController().addTask((cb) -> {
-						// 	// 暫存狀態後移動
-						// 	getBattleController().pushState();
-						// 	getBattleController().doRobotMove(robotId, fromPos, pos);
-						// 	// 重抓菜單
-						// 	_battleControlMemory.robotMenuView = {
-						// 		menuItems: getBattleController().getRobotMenuItems(robotId)
-						// 	};
-						// 	pushRobotMenuState(ROBOT_MENU);
-						// 	renderBattlePage();
-						// 	getBattleController().setOccupyController(null);
-						// 	cb();
-						// });
-						// getBattleController().startTask();
-					case _:
-				}
-			case ON_CLICK_CANCEL:
-				if (_battleControlMemory.robotStatusView != null) {
-					_battleControlMemory.robotStatusView = null;
-					renderBattlePage();
-				} else {
-					switch getRobotMenuState() {
-						case NORMAL:
-						case ROBOT_MENU:
-							popRobotMenuState();
-							// 如果上一個狀態是選擇移動，將資料回復到移動前
-							switch getRobotMenuState() {
-								case ROBOT_SELECT_MOVE_POSITION:
-									getBattleController().popState();
-									// 重抓菜單
-									if (_battleControlMemory.originActiveRobotState == null) {
-										throw new Exception("沒有找到originActiveRobotState");
-									}
-									final robotId = _battleControlMemory.originActiveRobotState.robotId;
-									_battleControlMemory.robotMenuView = {
-										menuItems: getBattleController().getRobotMenuItems(robotId)
-									};
-								case _:
-							}
-							renderBattlePage();
-						case ROBOT_SELECT_MOVE_POSITION | ROBOT_SELECT_WEAPON_ATTACK | ROBOT_SELECT_WEAPON_ATTACK_TARGET(_):
-							popRobotMenuState();
-							renderBattlePage();
-						case SYSTEM_MENU:
-							popRobotMenuState();
-							renderBattlePage();
-					}
-				}
-			case ON_CLICK_ROBOT_MENU_ITEM(item):
-				switch item {
-					case MOVE:
-						pushRobotMenuState(ROBOT_SELECT_MOVE_POSITION);
-						renderBattlePage();
-					case ATTACK:
-						if (_battleControlMemory.originActiveRobotState == null) {
-							throw new Exception("即將要選武器攻擊，但卻沒有找到originActiveRobotState");
-						}
-						final robotId = _battleControlMemory.originActiveRobotState.robotId;
-						_battleControlMemory.weaponAttackListView = {
-							weaponAttacks: getBattleController().getAttacks(robotId)
-						};
-						pushRobotMenuState(ROBOT_SELECT_WEAPON_ATTACK);
-						renderBattlePage();
-					case STATUS:
-						if (_battleControlMemory.originActiveRobotState == null) {
-							throw new Exception("即將進入機體狀態頁，但卻沒有找到originActiveRobotState");
-						}
-						final robotId = _battleControlMemory.originActiveRobotState.robotId;
-						_battleControlMemory.robotStatusView = {
-							robotId: robotId,
-							weaponAttacks: getBattleController().getAttacks(robotId)
-						};
-						renderBattlePage();
-					case DONE:
-						if (_battleControlMemory.originActiveRobotState == null) {
-							throw new Exception("即將要結束菜單，但卻沒有找到originActiveRobotState");
-						}
-						final robotId = _battleControlMemory.originActiveRobotState.robotId;
-						if (robotId == null) {
-							throw new Exception("即將要結束菜單，但卻沒有找到作用中的機體robotId");
-						}
-						getBattleController().doRobotDone(robotId);
-						getBattleController().applyState();
-						pushRobotMenuState(NORMAL);
-						renderBattlePage();
-					case _:
-				}
-			case ON_SYSTEM_ENEMY_TURN(_):
-				renderBattlePage();
-			case ON_CLICK_ROBOT_WEAPON_ATTACK({attackId: attackId, robotId: robotId}):
-				final findAttack = _battleControlMemory.weaponAttackListView.weaponAttacks.filter(atk->atk.id == attackId);
-				if(findAttack.length == 0){
-					throw new Exception('attack not found: ${attackId}');
-				}
-				trace(findAttack);
-			case _:
-		}
+		
 	}
 
 	public function getLobbyController():ILobbyController {

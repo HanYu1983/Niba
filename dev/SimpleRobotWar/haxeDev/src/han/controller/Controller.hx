@@ -31,6 +31,14 @@ class Controller implements _IController {
 		onEvent(ON_CLICK_GOTO_LOBBY);
 	}
 
+	public function getLobbyController():ILobbyController {
+		return _lobbyController;
+	}
+
+	public function getBattleController():IBattleController {
+		return _battleController;
+	}
+
 	public function getLobbyInfo():ILobbyInfo {
 		return _lobbyController;
 	}
@@ -99,16 +107,28 @@ class Controller implements _IController {
 		return _battleController.getOccupyController();
 	}
 
-	// public function addTask(task:(() -> Void)->Void):Void {
-	// 	return _battleController.addTask(task);
-	// }
+	public function getRobotMenuState():RobotMenuState {
+		return _battleController.getRobotMenuState();
+	}
 
-	// public function startTask():Void {
-	// 	return _battleController.startTask();
-	// }
+	public function getRobotMenuView():Null<RobotMenuView> {
+		return _battleController.getRobotMenuView();
+	}
 
-	public function setAnimationController(v:IAnimationController):Void{
-		return _battleController.setAnimationController(v);
+	public function getSystemMenuView():Null<SystemMenuView> {
+		return _battleController.getSystemMenuView();
+	}
+
+	public function getMoveRangeView():Null<MoveRangeView> {
+		return _battleController.getMoveRangeView();
+	}
+
+	public function getWeaponAttackListView():Null<WeaponAttackListView> {
+		return _battleController.getWeaponAttackListView();
+	}
+
+	public function getRobotStatusView():Null<RobotStatusView> {
+		return _battleController.getRobotStatusView();
 	}
 
 	public function onEvent(action:ViewEvent):Void {

@@ -270,7 +270,49 @@ interface IAnimationController {
 	function animateRobotMove(robotId:String, path:Array<Position>, cb:Void->Void):Void;
 }
 
+enum RobotMenuState {
+	// 沒開狀態
+	NORMAL;
+	// 打開菜單
+	ROBOT_MENU;
+	// 選擇移動位置時
+	ROBOT_SELECT_MOVE_POSITION;
+	// 選擇攻擊武器時
+	ROBOT_SELECT_WEAPON_ATTACK;
+	//
+	ROBOT_SELECT_WEAPON_ATTACK_TARGET(shape: AttachShape);
+	SYSTEM_MENU;
+}
+
+typedef RobotMenuView = {
+	menuItems:Array<RobotMenuItem>
+}
+
+typedef SystemMenuView = {
+	menuItems:Array<SystemMenuItem>
+}
+
+typedef MoveRangeView = {
+	pos:Array<Position>
+}
+
+typedef WeaponAttackListView = {
+	weaponAttacks:Array<WeaponAttackView>
+}
+
+typedef RobotStatusView = {
+	robotId:String,
+	weaponAttacks:Array<WeaponAttackView>
+}
+
 interface IBattleController extends IBaseController {
+	function getRobotMenuState():RobotMenuState;
+	function getRobotMenuView():Null<RobotMenuView>;
+	function getSystemMenuView():Null<SystemMenuView>;
+	function getMoveRangeView():Null<MoveRangeView>;
+	function getWeaponAttackListView():Null<WeaponAttackListView>;
+	function getRobotStatusView():Null<RobotStatusView>;
+
 	function getRobotMenuItems(robotId:String):Array<RobotMenuItem>;
 	function getRobotMoveRange(robotId:String):Array<Position>;
 	function getRobotMovePath(to:Position):Array<Position>;
@@ -286,7 +328,7 @@ interface IBattleController extends IBaseController {
 	function setOccupyController(ctr:Null<ViewEvent->Void>):Void;
 	function getOccupyController():Null<ViewEvent->Void>;
 	// 動畫
-	function setAnimationController(v:IAnimationController):Void;
+	//function setAnimationController(v:IAnimationController):Void;
 }
 
 interface ILobbyController extends IBaseController {
@@ -300,7 +342,7 @@ enum Page {
 	PILOT_VIEW;
 }
 
-interface IView {
+interface IView extends IAnimationController {
 	function startLobby(ctr:ILobbyController):Void;
 	function startBattle(ctr:IBattleController):Void;
 	function changePage(page:Page):Void;
