@@ -314,10 +314,6 @@ class GamePage extends Box {
 					ts.push(TweenX.to(robot, {left: x * gridSize, top: y * gridSize}, 0.1));
 			}
 		}
-		ts.push(TweenX.func(cb));
-		TweenX.serial(ts).play();
-
-		// 有bug？這裏的finish會呼叫兩次
-		// TweenX.serial(ts).onFinish(cb).play();
+		TweenX.serial(ts).onFinish(cb);
 	}
 }
