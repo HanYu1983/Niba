@@ -101,7 +101,7 @@ class GamePage extends Box {
 	}
 
 	public function updateSystemMenu() {
-		final systemMenuView = Main.view.getSystemMenuView();
+		final systemMenuView = Main.view.getBattleController().getSystemMenuView();
 		if (systemMenuView == null) {
 			box_systemMenu.hide();
 			return;
@@ -112,7 +112,7 @@ class GamePage extends Box {
 	}
 
 	public function updateRobotMenu() {
-		final robotMenuView = Main.view.getRobotMenuView();
+		final robotMenuView = Main.view.getBattleController().getRobotMenuView();
 		if (robotMenuView == null) {
 			box_robotMenu.hide();
 			// 關閉頁面
@@ -149,7 +149,7 @@ class GamePage extends Box {
 
 	function updateStageListener() {
 		box_listener.unregisterEvents();
-		switch (Main.view.getRobotMenuState()) {
+		switch (Main.view.getBattleController().getRobotMenuState()) {
 			case NORMAL:
 				final gridInfos = Main.view.getBattleController().getGrids();
 				box_listener.registerEvent(MouseEvent.MOUSE_MOVE, (e:MouseEvent) -> {
@@ -250,7 +250,7 @@ class GamePage extends Box {
 	}
 
 	public function updateMoveRange() {
-		final moveRangeView = Main.view.getMoveRangeView();
+		final moveRangeView = Main.view.getBattleController().getMoveRangeView();
 		if (moveRangeView == null) {
 			return;
 		}
@@ -263,7 +263,7 @@ class GamePage extends Box {
 	}
 
 	function updateAttackList() {
-		final weaponList = Main.view.getWeaponAttackListView();
+		final weaponList = Main.view.getBattleController().getWeaponAttackListView();
 		if (weaponList == null) {
 			box_selectWeaponMenu.hide();
 			return;
@@ -291,7 +291,7 @@ class GamePage extends Box {
 	}
 
 	function updateRobotState() {
-		final robotState = Main.view.getRobotStatusView();
+		final robotState = Main.view.getBattleController().getRobotStatusView();
 		if (robotState == null) {
 			box_robotStatePage.hide();
 			return;

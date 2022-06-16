@@ -25,18 +25,18 @@ class Controller implements _IController {
 		_lobbyController = new LobbyController(view);
 		_battleController = new BattleController(_lobbyController.getContext(), _view);
 		_baseController = _lobbyController;
-		_view.startLobby(this);
-		_view.startBattle(this);
 		initContext(_lobbyController.getContext());
 		onEvent(ON_CLICK_GOTO_LOBBY);
 	}
 
 	public function getLobbyController():ILobbyController {
-		return _lobbyController;
+		// 回傳this, 自身作為所有controller的仲介
+		return this;
 	}
 
 	public function getBattleController():IBattleController {
-		return _battleController;
+		// 回傳this, 自身作為所有controller的仲介
+		return this;
 	}
 
 	public function getLobbyInfo():ILobbyInfo {

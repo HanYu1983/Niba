@@ -313,7 +313,6 @@ class BattleController implements _IBattleController {
 				onPlayerEnd(ctx.currentPlayerId);
 				processEnemyTurn();
 			case _:
-				_view.onEvent(action);
 		}
 	}
 

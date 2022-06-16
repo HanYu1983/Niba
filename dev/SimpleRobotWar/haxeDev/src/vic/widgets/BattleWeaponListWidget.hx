@@ -15,7 +15,7 @@ class BattleWeaponListWidget extends BasicListWidget {
 		dataSource.clear();
 		for (weapon in weapons) {
 			final clone:Dynamic = Reflect.copy(weapon);
-			clone.hitRate = Main.view.getRateString(weapon.hitRate);
+			clone.hitRate = Main.getRateString(weapon.hitRate);
 			dataSource.add(clone);
 		}
 	}

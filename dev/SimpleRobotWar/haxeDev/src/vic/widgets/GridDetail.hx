@@ -16,8 +16,8 @@ class GridDetail extends VBox implements IShowData {
 		
 		var content = '';
 		content += '地形:${info.title}\n';
-        content += '防禦:${Main.view.getRateString(info.defRate)}\n';
-        content += '回避:${Main.view.getRateString(info.evadeRate)}\n';
+        content += '防禦:${Main.getRateString(info.defRate)}\n';
+        content += '回避:${Main.getRateString(info.evadeRate)}\n';
         content += '機體:${robot == null ? '--' : robot.title}';
 
         lbl_content.value = content;

@@ -72,7 +72,6 @@ class LobbyController implements _ILobbyController {
 			case ON_CLICK_ROBOT_VIEW_CANCEL:
 				_view.changePage(LOBBY);
 			case _:
-				_view.onEvent(action);
 		}
 	}
 }

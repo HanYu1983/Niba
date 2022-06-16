@@ -327,8 +327,5 @@ enum Page {
 }
 
 interface IView extends IAnimationController {
-	function startLobby(ctr:ILobbyController):Void;
-	function startBattle(ctr:IBattleController):Void;
 	function changePage(page:Page):Void;
-	function onEvent(action:ViewEvent):Void;
 }
