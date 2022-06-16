@@ -262,6 +262,7 @@ class BattleController implements _IBattleController {
 									getAnimationController().invalidate();
 									setOccupyController(null);
 									processEnemyTurn();
+									cb();
 								}
 							]);
 						} else {
