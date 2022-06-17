@@ -6,4 +6,8 @@
         <box backgroundColor='white' opacity='.3' styleName='full' />
         <box style='border:2px solid white' styleName='full' />
     </box>
+    <box id='box_attackBorder' styleName='full' >
+        <box backgroundColor='white' opacity='.3' styleName='full' />
+        <box style='border:2px solid red' styleName='full' />
+    </box>
 </box>

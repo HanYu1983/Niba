@@ -149,57 +149,52 @@ class GamePage extends Box {
 
 	function updateStageListener() {
 		box_listener.unregisterEvents();
+		box_cursor.hide();
+
+		function cursorListener() {
+			box_cursor.show();
+			final gridInfos = Main.getBattleController().getGrids();
+			box_listener.registerEvent(MouseEvent.MOUSE_MOVE, (e:MouseEvent) -> {
+				final pos = getPosEnumByLocalPos(e.localX, e.localY);
+				final gridInfo = gridInfos.get(pos);
+				switch (pos) {
+					case POS(x, y):
+						box_cursor.left = x * gridSize;
+						box_cursor.top = y * gridSize;
+					case _:
+				}
+				updateGridDetail(gridInfo);
+			});
+		}
+
+		function battlePosClickListener() {
+			box_listener.registerEvent(MouseEvent.CLICK, (e:MouseEvent) -> {
+				lastClickPos[0] = e.localX;
+				lastClickPos[1] = e.localY;
+				final pos = getPosEnumByLocalPos(e.localX, e.localY);
+				verbose('GamePage', 'mouse click pos:(${e.localX})(${e.localY}) enum:(${pos})');
+
+				Main.getBattleController().onEvent(ON_CLICK_BATTLE_POS(pos));
+			});
+		}
+
 		switch (Main.getBattleController().getRobotMenuState()) {
 			case NORMAL:
-				final gridInfos = Main.getBattleController().getGrids();
-				box_listener.registerEvent(MouseEvent.MOUSE_MOVE, (e:MouseEvent) -> {
-					final pos = getPosEnumByLocalPos(e.localX, e.localY);
-					final gridInfo = gridInfos.get(pos);
-					switch (pos) {
-						case POS(x, y):
-							box_cursor.left = x * gridSize;
-							box_cursor.top = y * gridSize;
-						case _:
-					}
-					updateGridDetail(gridInfo);
-				});
-
-				box_listener.registerEvent(MouseEvent.CLICK, (e:MouseEvent) -> {
-					lastClickPos[0] = e.localX;
-					lastClickPos[1] = e.localY;
-					final pos = getPosEnumByLocalPos(e.localX, e.localY);
-					verbose('GamePage', 'mouse click pos:(${e.localX})(${e.localY}) enum:(${pos})');
-
-					Main.getBattleController().onEvent(ON_CLICK_BATTLE_POS(pos));
-				});
+				cursorListener();
+				battlePosClickListener();
 			case ROBOT_MENU | SYSTEM_MENU:
 				box_listener.registerEvent(MouseEvent.CLICK, (e:MouseEvent) -> {
 					Main.getBattleController().onEvent(ON_CLICK_CANCEL);
 				});
 			case ROBOT_SELECT_MOVE_POSITION:
-				final gridInfos = Main.getBattleController().getGrids();
-				box_listener.registerEvent(MouseEvent.MOUSE_MOVE, (e:MouseEvent) -> {
-					final pos = getPosEnumByLocalPos(e.localX, e.localY);
-					final gridInfo = gridInfos.get(pos);
-					switch (pos) {
-						case POS(x, y):
-							box_cursor.left = x * gridSize;
-							box_cursor.top = y * gridSize;
-						case _:
-					}
-					updateGridDetail(gridInfo);
-				});
-
-				box_listener.registerEvent(MouseEvent.CLICK, (e:MouseEvent) -> {
-					lastClickPos[0] = e.localX;
-					lastClickPos[1] = e.localY;
-					final pos = getPosEnumByLocalPos(e.localX, e.localY);
-					verbose('GamePage', '點選了目的:(${e.localX})(${e.localY}) enum:(${pos})');
-
-					Main.getBattleController().onEvent(ON_CLICK_BATTLE_POS(pos));
-				});
+				cursorListener();
+				battlePosClickListener();
 			case ROBOT_SELECT_WEAPON_ATTACK:
+				// cursorListener();
+				// battlePosClickListener();
 			case ROBOT_SELECT_WEAPON_ATTACK_TARGET(shape):
+				cursorListener();
+				battlePosClickListener();
 		}
 	}
 
@@ -252,11 +247,11 @@ class GamePage extends Box {
 	public function updateMoveRange() {
 		final moveRangeView = Main.getBattleController().getMoveRangeView();
 		if (moveRangeView == null) {
+			// 這個的關閉在updateGrids時會關閉
 			return;
 		}
 
-		final moveRangeInfos = moveRangeView.pos;
-		for (pos in moveRangeInfos) {
+		for (pos in moveRangeView.pos) {
 			final g = grids.get(pos);
 			g.showMoveRange();
 		}
@@ -269,21 +264,37 @@ class GamePage extends Box {
 			return;
 		}
 
-		box_selectWeaponMenu.fadeIn();
+		box_selectWeaponMenu.show();
 		battleWeaponListWidget.setInfo(weaponList.weaponAttacks);
 		battleWeaponListWidget.onChange = function(e) {
 			final weapon:WeaponAttackView = battleWeaponListWidget.selectedItem;
 			Main.getBattleController().onEvent(ON_CLICK_ROBOT_WEAPON_ATTACK({attackId: weapon.id, robotId: weapon.robotId}));
 		}
+
 		// 如果加了這行，
 		// 在介面被打開始就會自動呼叫onChange而發出ON_CLICK_ROBOT_WEAPON_ATTACK事件，
 		// 這樣導致了render的無限迴圈，這裡要討論一下要怎麼弄
-		//battleWeaponListWidget.selectedIndex = 0;
+		// 先不自動選
+		// battleWeaponListWidget.selectedIndex = 0;
+	}
+
+	function updateAttackRange() {
+		final rangeView = Main.getBattleController().getAttackRangeView();
+		if (rangeView == null) {
+			// 這個的關閉在updateGrids時會關閉
+			return;
+		}
+
+		for (pos in rangeView.pos) {
+			final g = grids.get(pos);
+			g.showAttackRange();
+		}
 	}
 
 	public function updateGamePage() {
 		updateGrids();
 		updateMoveRange();
+		updateAttackRange();
 		updateRobotMenu();
 		updateRobotState();
 		updateAttackList();
@@ -315,7 +326,7 @@ class GamePage extends Box {
 		for (pos in path) {
 			switch (pos) {
 				case POS(x, y):
-					ts.push(TweenX.to(robot, {left: x * gridSize, top: y * gridSize}, 0.1));
+					ts.push(TweenX.to(robot, {left: x * gridSize, top: y * gridSize}, 0.05));
 			}
 		}
 		TweenX.serial(ts).onFinish(cb);

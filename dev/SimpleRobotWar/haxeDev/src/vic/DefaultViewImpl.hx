@@ -43,8 +43,6 @@ class DefaultViewImpl extends DefaultView {
 	}
 
 	public function renderBattlePage():Void {
-		trace("可以新增攻擊範圍view");
-		trace(Main.getBattleController().getAttackRangeView());
 		_view.gamePage.updateGamePage();
 	}
 

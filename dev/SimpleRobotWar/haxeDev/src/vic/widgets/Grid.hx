@@ -12,6 +12,7 @@ class Grid extends Box {
 	function set_title(title:String) {
 		lbl_title.value = title;
 		box_border.hide();
+		box_attackBorder.hide();
 		switch title {
 			case '平原':
 				backgroundColor = 'yellow';
@@ -40,5 +41,9 @@ class Grid extends Box {
 
 	public function showMoveRange() {
 		box_border.show();
+	}
+
+	public function showAttackRange() {
+		box_attackBorder.show();
 	}
 }
