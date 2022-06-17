@@ -225,6 +225,15 @@ function getWeapon(ctx:Context, weaponId:String):Weapon {
 	return weapon;
 }
 
+function getRobotPosition(ctx:Context, robotId:String):Position{
+	for(pos => findRobotId in ctx.positionToRobot){
+		if(findRobotId == robotId){
+			return pos;
+		}
+	}
+	throw new Exception('robot position not found: ${robotId}');
+}
+
 function getRobotPilot(ctx:Context, robotId:String):Null<Pilot> {
 	final robot = getRobot(ctx, robotId);
 	final ids = [

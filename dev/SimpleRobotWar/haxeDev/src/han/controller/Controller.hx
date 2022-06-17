@@ -79,6 +79,14 @@ class Controller implements _IController {
 		return _battleController.getMoveRangeView();
 	}
 
+	public function getAttackRangeView():Null<MoveRangeView> {
+		return _battleController.getAttackRangeView();
+	}
+
+	public function getAttackHitRangeView():Null<MoveRangeView> {
+		return _battleController.getAttackHitRangeView();
+	}
+
 	public function getWeaponAttackListView():Null<WeaponAttackListView> {
 		return _battleController.getWeaponAttackListView();
 	}

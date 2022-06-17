@@ -175,6 +175,7 @@ function getRobotMoveRange(ctx:Context, robotId:String):IMap<Position, ISolution
 
 function getAttackRange(center:Position, min:Int, max:Int):Array<Position> {
 	final maxTree = getAStar(new RangeSolution(POS(0, 0), max), {exitWhenFind: true});
+	maxTree.remove(POS(0,0));
 	if (min > 1) {
 		final minTree = getAStar(new RangeSolution(POS(0, 0), min-1), {exitWhenFind: true});
 		for(pos => _ in minTree){

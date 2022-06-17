@@ -275,7 +275,10 @@ class GamePage extends Box {
 			final weapon:WeaponAttackView = battleWeaponListWidget.selectedItem;
 			Main.getBattleController().onEvent(ON_CLICK_ROBOT_WEAPON_ATTACK({attackId: weapon.id, robotId: weapon.robotId}));
 		}
-		battleWeaponListWidget.selectedIndex = 0;
+		// 如果加了這行，
+		// 在介面被打開始就會自動呼叫onChange而發出ON_CLICK_ROBOT_WEAPON_ATTACK事件，
+		// 這樣導致了render的無限迴圈，這裡要討論一下要怎麼弄
+		//battleWeaponListWidget.selectedIndex = 0;
 	}
 
 	public function updateGamePage() {

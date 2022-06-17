@@ -27,6 +27,8 @@ private typedef BattleControlMemory = {
 	robotMenuView:Null<RobotMenuView>,
 	systemMenuView:Null<SystemMenuView>,
 	moveRangeView:Null<MoveRangeView>,
+	attackRangeView:Null<MoveRangeView>,
+	attackHitRangeView:Null<MoveRangeView>,
 	weaponAttackListView:Null<WeaponAttackListView>,
 	robotStatusView:Null<RobotStatusView>
 }
@@ -137,6 +139,7 @@ class BattleController implements _IBattleController {
 	}
 
 	public function onEvent(action:ViewEvent):Void {
+		info("BattleController", 'onEvent:${action}');
 		final occupyCtr = getOccupyController();
 		if (occupyCtr != null) {
 			occupyCtr(action);
@@ -146,6 +149,10 @@ class BattleController implements _IBattleController {
 			case ON_CLICK_BATTLE_POS(pos):
 				switch getRobotMenuState() {
 					case NORMAL:
+						// init
+						{
+							_battleControlMemory.attackRangeView = null;
+						}
 						final robotId = getRobotIdByPosition(pos);
 						if (robotId == null) {
 							_battleControlMemory.systemMenuView = {
@@ -222,10 +229,7 @@ class BattleController implements _IBattleController {
 								case _:
 							}
 							_view.renderBattlePage();
-						case ROBOT_SELECT_MOVE_POSITION | ROBOT_SELECT_WEAPON_ATTACK | ROBOT_SELECT_WEAPON_ATTACK_TARGET(_):
-							popRobotMenuState();
-							_view.renderBattlePage();
-						case SYSTEM_MENU:
+						case _:
 							popRobotMenuState();
 							_view.renderBattlePage();
 					}
@@ -270,11 +274,25 @@ class BattleController implements _IBattleController {
 					case _:
 				}
 			case ON_CLICK_ROBOT_WEAPON_ATTACK({attackId: attackId, robotId: robotId}):
-				final findAttack = _battleControlMemory.weaponAttackListView.weaponAttacks.filter(atk -> atk.id == attackId);
-				if (findAttack.length == 0) {
-					throw new Exception('attack not found: ${attackId}');
+				final ctx = getTopContext();
+				final robot = getRobot(ctx, robotId);
+				final pos = getRobotPosition(ctx, robotId);
+				final attack = getRobotAttack(ctx, robotId, attackId);
+				switch attack.attackShape {
+					case DOT(min, max):
+						final range = getAttackRange(pos, min, max);
+						_battleControlMemory.attackRangeView = {pos: range};
+					case CIRCLE(_, _, _):
+					case LINE(_, _):
+					case SELECT(_, _, _):
+					case SHAPE(_):
 				}
-				trace(findAttack);
+				_view.renderBattlePage();
+			case ON_CLICK_ROBOT_WEAPON_ATTACK_CONFIRM({attackId: attackId, robotId: robotId}):
+				final ctx = getTopContext();
+				final attack = getRobotAttack(ctx, robotId, attackId);
+				pushRobotMenuState(ROBOT_SELECT_WEAPON_ATTACK_TARGET(attack.attackShape));
+				_view.renderBattlePage();
 			case ON_SYSTEM_ENEMY_TURN(step):
 				switch (0) {
 					case 0:
@@ -421,6 +439,8 @@ class BattleController implements _IBattleController {
 		robotMenuView: null,
 		systemMenuView: null,
 		moveRangeView: null,
+		attackRangeView: null,
+		attackHitRangeView: null,
 		weaponAttackListView: null,
 		robotStatusView: null,
 	};
@@ -475,6 +495,24 @@ class BattleController implements _IBattleController {
 		}
 	}
 
+	public function getAttackRangeView():Null<MoveRangeView> {
+		return switch getRobotMenuState() {
+			case ROBOT_SELECT_WEAPON_ATTACK | ROBOT_SELECT_WEAPON_ATTACK_TARGET(_):
+				_battleControlMemory.attackRangeView;
+			case _:
+				null;
+		}
+	}
+
+	public function getAttackHitRangeView():Null<MoveRangeView> {
+		return switch getRobotMenuState() {
+			case ROBOT_SELECT_WEAPON_ATTACK | ROBOT_SELECT_WEAPON_ATTACK_TARGET(_):
+				_battleControlMemory.attackHitRangeView;
+			case _:
+				null;
+		}
+	}
+
 	public function getWeaponAttackListView():Null<WeaponAttackListView> {
 		return switch getRobotMenuState() {
 			case ROBOT_SELECT_WEAPON_ATTACK:
@@ -487,7 +525,6 @@ class BattleController implements _IBattleController {
 	public function getRobotStatusView():Null<RobotStatusView> {
 		return _battleControlMemory.robotStatusView;
 	}
-
 
 	final _ctxStacks:Array<Context> = [];
 

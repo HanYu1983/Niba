@@ -309,6 +309,8 @@ interface IBattleController extends IBaseController {
 	function getRobotMenuView():Null<RobotMenuView>;
 	function getSystemMenuView():Null<SystemMenuView>;
 	function getMoveRangeView():Null<MoveRangeView>;
+	function getAttackRangeView():Null<MoveRangeView>;
+	function getAttackHitRangeView():Null<MoveRangeView>;
 	function getWeaponAttackListView():Null<WeaponAttackListView>;
 	function getRobotStatusView():Null<RobotStatusView>;
 	function getGrids():IMap<Position, GridView>;
