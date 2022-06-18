@@ -149,10 +149,6 @@ class BattleController implements _IBattleController {
 			case ON_CLICK_BATTLE_POS(pos):
 				switch getRobotMenuState() {
 					case NORMAL:
-						// init
-						{
-							_battleControlMemory.attackRangeView = null;
-						}
 						final robotId = getRobotIdByPosition(pos);
 						if (robotId == null) {
 							_battleControlMemory.systemMenuView = {
@@ -228,6 +224,10 @@ class BattleController implements _IBattleController {
 									};
 								case _:
 							}
+							_view.renderBattlePage();
+						case ROBOT_SELECT_WEAPON_ATTACK:
+							_battleControlMemory.attackRangeView = null;
+							popRobotMenuState();
 							_view.renderBattlePage();
 						case _:
 							popRobotMenuState();
