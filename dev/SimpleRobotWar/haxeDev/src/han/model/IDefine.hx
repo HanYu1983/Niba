@@ -109,20 +109,6 @@ function createWeapon(id:String):Weapon {
 	}
 }
 
-typedef WeaponAttack = {
-	id:String,
-	robotId:String,
-	weaponId:String,
-	data: AttackData,
-}
-
-typedef WeaponGuard = {
-	id: String,
-	robotId: String,
-	weaponId: String,
-	data: GuardData
-}
-
 typedef Player = {
 	id:Int,
 	brain:Null<Dynamic>,
@@ -323,6 +309,26 @@ function getRobotGuards(ctx:Context, robotId:String): Array<WeaponGuard> {
 					robotId: robotId,
 					weaponId: weapon.id,
 					data: guard,
+				}
+			}
+		}
+	];
+}
+
+function getRobotShields(ctx:Context, robotId:String): Array<WeaponShield> {
+	final weapons = getRobotWeapons(ctx, robotId);
+	final weaponDatas = weapons.map(weapon -> getWeaponData(weapon.dataId));
+	var seqId = 0;
+	return [
+		for (i in 0...weapons.length) {
+			final weapon = weapons[i];
+			final data = weaponDatas[i];
+			for (shield in data.shield) {
+				{
+					id: '${robotId}_${seqId++}',
+					robotId: robotId,
+					weaponId: weapon.id,
+					data: shield,
 				}
 			}
 		}

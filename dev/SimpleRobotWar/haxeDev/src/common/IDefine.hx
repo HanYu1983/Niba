@@ -141,3 +141,23 @@ typedef TerrianData = {
 	def:Float
 }
 
+typedef WeaponAttack = {
+	id:String,
+	robotId:String,
+	weaponId:String,
+	data: AttackData,
+}
+
+typedef WeaponGuard = {
+	id: String,
+	robotId: String,
+	weaponId: String,
+	data: GuardData
+}
+
+typedef WeaponShield = {
+	id: String,
+	robotId: String,
+	weaponId: String,
+	data: ShieldData
+}

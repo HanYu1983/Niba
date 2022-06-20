@@ -137,8 +137,10 @@ typedef WeaponAttackView = {
 	isMelee:Bool,
 }
 
-typedef GuardView = {
+typedef WeaponGuardView = {
 	id:String,
+	weaponId:String,
+	robotId:String,
 	title:String,
 	// 成功率
 	successRate:Float,
@@ -146,6 +148,15 @@ typedef GuardView = {
 	attackFlag:String,
 	// 是否近戰
 	isMelee:Bool,
+}
+
+typedef WeaponShieldView = {
+	id:String,
+	weaponId:String,
+	robotId:String,
+	title:String,
+	cost:String,
+	damage:String,
 }
 
 interface IBaseController {
@@ -194,6 +205,14 @@ typedef WeaponAttackListView = {
 	weaponAttacks:Array<WeaponAttackView>
 }
 
+typedef WeaponGuardListView = {
+	weaponGuards: Array<WeaponGuardView>
+}
+
+typedef WeaponShieldListView = {
+	weaponShields: Array<WeaponShieldView>
+}
+
 typedef RobotStatusView = {
 	robotId:String,
 	weaponAttacks:Array<WeaponAttackView>
@@ -206,7 +225,13 @@ typedef RobotBattlePreviewView = {
 		weaponAttackView:WeaponAttackView,
 	},
 	guard:{
-		robotId:String, battleReaction:RobotBattleReaction
+		robotId:String, 
+		// 選擇的戰鬥反應
+		battleReaction:RobotBattleReaction,
+		// 可能的防禦行為
+		weaponGuardListView: WeaponGuardListView,
+		// 護甲
+		weaponShieldListView: WeaponShieldListView,
 	}
 }
 
