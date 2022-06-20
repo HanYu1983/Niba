@@ -290,7 +290,7 @@ function getRobotAttacks(ctx:Context, robotId:String):Array<WeaponAttack> {
 			final data = weaponDatas[i];
 			for (attack in data.attack) {
 				{
-					id: '${robotId}_${seqId}',
+					id: '${robotId}_${seqId++}',
 					robotId: robotId,
 					weaponId: weapon.id,
 					data: attack,
@@ -319,7 +319,7 @@ function getRobotGuards(ctx:Context, robotId:String): Array<WeaponGuard> {
 			final data = weaponDatas[i];
 			for (guard in data.guard) {
 				{
-					id: '${robotId}_${seqId}',
+					id: '${robotId}_${seqId++}',
 					robotId: robotId,
 					weaponId: weapon.id,
 					data: guard,
