@@ -227,4 +227,5 @@ interface IView {
 	function changePage(page:Page):Void;
 	function renderBattlePage():Void;
 	function animateRobotMove(robotId:String, path:Array<Position>, cb:Void->Void):Void;
+	function animateMessage(msg:String):Void;
 }

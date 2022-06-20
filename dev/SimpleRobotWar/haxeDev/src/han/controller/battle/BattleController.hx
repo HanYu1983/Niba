@@ -202,6 +202,11 @@ class BattleController implements _IBattleController {
 							}
 						]);
 					case ROBOT_SELECT_WEAPON_ATTACK_TARGET(shape):
+						final ctx = getTopContext();
+						final targetRobot = ctx.positionToRobot.get(pos);
+						if(targetRobot == null){
+							throw new Exception("你必須選擇目標機體");
+						}
 						pushRobotMenuState(ROBOT_BATTLE_PREVIEW);
 					case _:
 				}

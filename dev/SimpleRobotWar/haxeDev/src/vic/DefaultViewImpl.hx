@@ -42,6 +42,11 @@ class DefaultViewImpl extends DefaultView {
 	public function animateRobotMove(robotId:String, path:Array<Position>, cb:()->Void):Void{
 		_view.gamePage.animateRobotMove(robotId, path, cb);
 	}
+	// 顯示系統訊息
+	// 不佔用任何操作，3秒後消失
+	public function animateMessage(msg:String):Void{
+		trace("顯示訊息", msg);
+	}
 
 	public function renderBattlePage():Void {
 		trace("新增欄位playerId");

@@ -8,6 +8,7 @@ import common.IDefine;
 import common.WeaponData;
 import common.TerrianData;
 import common.IViewModel;
+import tool.Debug;
 import han.alg.IDefine;
 import han.model.IDefine;
 import han.controller.lobby.LobbyController;
@@ -96,21 +97,26 @@ class Controller implements _IController {
 		return _battleController.getRobotStatusView();
 	}
 
-	public function getRobotBattlePreviewView():Null<RobotBattlePreviewView>{
+	public function getRobotBattlePreviewView():Null<RobotBattlePreviewView> {
 		return _battleController.getRobotBattlePreviewView();
 	}
 
 	public function onEvent(action:ViewEvent):Void {
-		switch action {
-			case ON_CLICK_GOTO_LOBBY:
-				_baseController = _lobbyController;
-				_view.changePage(LOBBY);
-			case ON_CLICK_GOTO_BATTLE(options):
-				_battleController = new BattleController(_lobbyController.getContext(), _view);
-				_baseController = _battleController;
-				_view.changePage(BATTLE);
-			case _:
-				_baseController.onEvent(action);
+		try {
+			switch action {
+				case ON_CLICK_GOTO_LOBBY:
+					_baseController = _lobbyController;
+					_view.changePage(LOBBY);
+				case ON_CLICK_GOTO_BATTLE(options):
+					_battleController = new BattleController(_lobbyController.getContext(), _view);
+					_baseController = _battleController;
+					_view.changePage(BATTLE);
+				case _:
+					_baseController.onEvent(action);
+			}
+		} catch (e) {
+			err("Controller", e.message);
+			_view.animateMessage(e.message);
 		}
 	}
 }
