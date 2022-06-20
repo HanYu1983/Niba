@@ -205,7 +205,7 @@ class BattleController implements _IBattleController {
 						final ctx = getTopContext();
 						final targetRobot = ctx.positionToRobot.get(pos);
 						if(targetRobot == null){
-							throw new Exception("你必須選擇目標機體");
+							throw new MessageException("你必須選擇目標機體");
 						}
 						pushRobotMenuState(ROBOT_BATTLE_PREVIEW);
 					case _:

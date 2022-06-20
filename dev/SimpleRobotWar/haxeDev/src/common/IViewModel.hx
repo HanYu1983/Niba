@@ -1,7 +1,16 @@
 package common;
 
-import common.IDefine;
+import haxe.Exception;
 import haxe.Constraints;
+import common.IDefine;
+
+// 顯示UI訊息的例外
+// 其它的例外會中斷程式
+class MessageException extends Exception {
+	public function new(msg:String) {
+		super(msg);
+	}
+}
 
 enum RobotMenuItem {
 	// 移動
@@ -53,7 +62,7 @@ enum ViewEvent {
 typedef RobotView = {
 	id:String,
 	// 勢力
-	playerId: Null<Int>,
+	playerId:Null<Int>,
 	title:String,
 	// null代表沒有駕駛
 	pilotId:Null<String>,
@@ -163,7 +172,7 @@ enum RobotMenuState {
 	// 選擇攻擊武器時
 	ROBOT_SELECT_WEAPON_ATTACK;
 	//
-	ROBOT_SELECT_WEAPON_ATTACK_TARGET(shape: AttachShape);
+	ROBOT_SELECT_WEAPON_ATTACK_TARGET(shape:AttachShape);
 	//
 	ROBOT_BATTLE_PREVIEW;
 	SYSTEM_MENU;
@@ -192,14 +201,12 @@ typedef RobotStatusView = {
 
 typedef RobotBattlePreviewView = {
 	// 攻擊方
-	attack: {
-		robotId:String,
-		// 使用的攻擊行為
-		weaponAttackView: WeaponAttackView,
+	attack:{
+		robotId:String, // 使用的攻擊行為
+		weaponAttackView:WeaponAttackView,
 	},
-	guard: {
-		robotId: String,
-		battleReaction: RobotBattleReaction
+	guard:{
+		robotId:String, battleReaction:RobotBattleReaction
 	}
 }
 

@@ -114,9 +114,12 @@ class Controller implements _IController {
 				case _:
 					_baseController.onEvent(action);
 			}
-		} catch (e) {
+		} catch (e:MessageException) {
 			err("Controller", e.message);
 			_view.animateMessage(e.message);
+		} catch (e:Exception){
+			err("Controller", e.message);
+			throw e;
 		}
 	}
 }
