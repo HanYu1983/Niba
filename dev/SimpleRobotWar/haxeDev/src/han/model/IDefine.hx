@@ -113,14 +113,14 @@ typedef WeaponAttack = {
 	id:String,
 	robotId:String,
 	weaponId:String,
-	title:String,
-	cost:Array<AttackCost>,
-	attackShape:AttachShape,
-	times:Int,
-	hitRate:Float,
-	damage:Array<Damage>,
-	attackFlag:Array<AttackFlag>,
-	isMelee:Bool,
+	data: AttackData,
+}
+
+typedef WeaponGuard = {
+	id: String,
+	robotId: String,
+	weaponId: String,
+	data: GuardData
 }
 
 typedef Player = {
@@ -293,14 +293,7 @@ function getRobotAttacks(ctx:Context, robotId:String):Array<WeaponAttack> {
 					id: '${robotId}_${seqId}',
 					robotId: robotId,
 					weaponId: weapon.id,
-					title: attack.title,
-					cost: attack.cost,
-					attackShape: attack.attackShape,
-					times: attack.times,
-					hitRate: attack.hitRate,
-					damage: attack.damage,
-					attackFlag: attack.attackFlag,
-					isMelee: attack.isMelee,
+					data: attack,
 				}
 			}
 		}
@@ -316,32 +309,22 @@ function getRobotAttack(ctx:Context, robotId:String, attackId:String):WeaponAtta
 	return find[0];
 }
 
-function getBattleResult(ctx:Context, robotId:String, attackId:String, targetRobotIds:Array<String>) {
-	final robot = getRobot(ctx, robotId);
-	final attack = getRobotAttack(ctx, robotId, attackId);
-	final weapon = getWeapon(ctx, attack.weaponId);
-	final weaponData = getWeaponData(weapon.dataId);
-	final pilot = getRobotPilot(ctx, robotId);
-	for (targetRobotId in targetRobotIds) {
-		final targetRobot = getRobot(ctx, targetRobotId);
-		final targetPilot = getRobotPilot(ctx, targetRobotId);
-
-		final isMelee = attack.isMelee;
-		// cost
-		for (c in attack.cost) {}
-		// hitRate
-		final hitRate = attack.hitRate;
-
-		// damage
-		for (time in 0...attack.times) {
-			for (damage in attack.damage) {
-				switch damage {
-					case PHYSICS(v):
-					case BEAM(v):
-					case EXPLODE(v):
-					case FIRE(v):
+function getRobotGuards(ctx:Context, robotId:String): Array<WeaponGuard> {
+	final weapons = getRobotWeapons(ctx, robotId);
+	final weaponDatas = weapons.map(weapon -> getWeaponData(weapon.dataId));
+	var seqId = 0;
+	return [
+		for (i in 0...weapons.length) {
+			final weapon = weapons[i];
+			final data = weaponDatas[i];
+			for (guard in data.guard) {
+				{
+					id: '${robotId}_${seqId}',
+					robotId: robotId,
+					weaponId: weapon.id,
+					data: guard,
 				}
 			}
 		}
-	}
+	];
 }

@@ -97,8 +97,8 @@ class BattleController implements _IBattleController {
 					id: attack.id,
 					weaponId: attack.weaponId,
 					robotId: attack.robotId,
-					title: attack.title,
-					cost: attack.cost.map(cost -> {
+					title: attack.data.title,
+					cost: attack.data.cost.map(cost -> {
 						return switch cost {
 							case ACTION(v):
 								'行動力${v}';
@@ -108,15 +108,15 @@ class BattleController implements _IBattleController {
 								'能量${v}';
 						};
 					}).join(","),
-					attackShape: switch attack.attackShape {
+					attackShape: switch attack.data.attackShape {
 						case DOT(min, max):
 							'單體(距${min}~${max})';
 						case _:
 							'待補上';
 					},
-					times: attack.times,
-					hitRate: attack.hitRate,
-					damage: attack.damage.map(damage -> switch damage {
+					times: attack.data.times,
+					hitRate: attack.data.hitRate,
+					damage: attack.data.damage.map(damage -> switch damage {
 						case PHYSICS(v):
 							'物理(${v})';
 						case BEAM(v):
@@ -126,7 +126,7 @@ class BattleController implements _IBattleController {
 						case FIRE(v):
 							'火燒(${v})';
 					}).join(","),
-					attackFlag: attack.attackFlag.map(flag -> switch flag {
+					attackFlag: attack.data.attackFlag.map(flag -> switch flag {
 						case BEAM:
 							'光束';
 						case MELEE:
@@ -134,7 +134,7 @@ class BattleController implements _IBattleController {
 						case MISSILE:
 							'飛彈';
 					}).join(","),
-					isMelee: attack.isMelee,
+					isMelee: attack.data.isMelee,
 				}
 			}
 		];
@@ -287,7 +287,7 @@ class BattleController implements _IBattleController {
 				final robot = getRobot(ctx, robotId);
 				final pos = getRobotPosition(ctx, robotId);
 				final attack = getRobotAttack(ctx, robotId, attackId);
-				switch attack.attackShape {
+				switch attack.data.attackShape {
 					case DOT(min, max):
 						final range = getAttackRange(pos, min, max);
 						_battleControlMemory.attackRangeView = {pos: range};
@@ -300,7 +300,7 @@ class BattleController implements _IBattleController {
 			case ON_CLICK_ROBOT_WEAPON_ATTACK_CONFIRM({attackId: attackId, robotId: robotId}):
 				final ctx = getTopContext();
 				final attack = getRobotAttack(ctx, robotId, attackId);
-				pushRobotMenuState(ROBOT_SELECT_WEAPON_ATTACK_TARGET(attack.attackShape));
+				pushRobotMenuState(ROBOT_SELECT_WEAPON_ATTACK_TARGET(attack.data.attackShape));
 				_view.renderBattlePage();
 			case ON_SYSTEM_ENEMY_TURN(step):
 				switch (0) {
