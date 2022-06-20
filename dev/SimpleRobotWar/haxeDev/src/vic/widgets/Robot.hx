@@ -7,6 +7,18 @@ import haxe.ui.containers.Box;
 class Robot extends Box {
 	public var pos:Position;
 
+	public var playerId(null, set):Int;
+
+	function set_playerId(id:Int) {
+		box_center.backgroundColor = switch (id) {
+			case 0: '#6495ed';
+			case 1: '#cd5c5c';
+			case 2: '#f0e68c';
+			case _: 'white';
+		}
+		return id;
+	}
+
 	public var title(get, set):String;
 
 	function set_title(title:String) {

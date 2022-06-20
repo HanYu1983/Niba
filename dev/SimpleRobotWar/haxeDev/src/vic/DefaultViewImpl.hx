@@ -49,8 +49,6 @@ class DefaultViewImpl extends DefaultView {
 	}
 
 	public function renderBattlePage():Void {
-		trace("新增欄位playerId");
-		trace(Main.getBattleController().getRobots());
 		_view.gamePage.updateGamePage();
 	}
 
