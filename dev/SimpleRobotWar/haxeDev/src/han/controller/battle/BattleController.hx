@@ -30,7 +30,8 @@ private typedef BattleControlMemory = {
 	attackRangeView:Null<MoveRangeView>,
 	attackHitRangeView:Null<MoveRangeView>,
 	weaponAttackListView:Null<WeaponAttackListView>,
-	robotStatusView:Null<RobotStatusView>
+	robotStatusView:Null<RobotStatusView>,
+	robotBattlePreviewView: Null<RobotBattlePreviewView>,
 }
 
 private interface _IBattleController extends IBattleController {}
@@ -199,6 +200,8 @@ class BattleController implements _IBattleController {
 								cb();
 							}
 						]);
+					case ROBOT_SELECT_WEAPON_ATTACK_TARGET(shape):
+						pushRobotMenuState(ROBOT_BATTLE_PREVIEW);
 					case _:
 				}
 			case ON_CLICK_CANCEL:
@@ -296,7 +299,7 @@ class BattleController implements _IBattleController {
 			case ON_SYSTEM_ENEMY_TURN(step):
 				switch (0) {
 					case 0:
-						final ctx = getTopContext();
+						final ctx = getContext();
 						final robotNotDone = [
 							for (pos => robotId in ctx.positionToRobot) {
 								final robot = getRobot(ctx, robotId);
@@ -443,6 +446,7 @@ class BattleController implements _IBattleController {
 		attackHitRangeView: null,
 		weaponAttackListView: null,
 		robotStatusView: null,
+		robotBattlePreviewView: null,
 	};
 
 	function pushRobotMenuState(state:RobotMenuState) {
@@ -524,6 +528,10 @@ class BattleController implements _IBattleController {
 
 	public function getRobotStatusView():Null<RobotStatusView> {
 		return _battleControlMemory.robotStatusView;
+	}
+
+	public function getRobotBattlePreviewView():Null<RobotBattlePreviewView>{
+		return _battleControlMemory.robotBattlePreviewView;
 	}
 
 	final _ctxStacks:Array<Context> = [];

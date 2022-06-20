@@ -195,6 +195,9 @@ class GamePage extends Box {
 			case ROBOT_SELECT_WEAPON_ATTACK_TARGET(shape):
 				cursorListener();
 				battlePosClickListener();
+			case ROBOT_BATTLE_PREVIEW:
+				// 戰鬥預視
+				// Main.getBattleController().getRobotBattlePreviewView();
 		}
 	}
 

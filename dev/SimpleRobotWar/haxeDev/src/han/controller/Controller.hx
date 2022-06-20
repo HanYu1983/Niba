@@ -95,6 +95,10 @@ class Controller implements _IController {
 		return _battleController.getRobotStatusView();
 	}
 
+	public function getRobotBattlePreviewView():Null<RobotBattlePreviewView>{
+		return _battleController.getRobotBattlePreviewView();
+	}
+
 	public function onEvent(action:ViewEvent):Void {
 		switch action {
 			case ON_CLICK_GOTO_LOBBY:

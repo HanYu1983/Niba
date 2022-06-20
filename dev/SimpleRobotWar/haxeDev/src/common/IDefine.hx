@@ -5,6 +5,23 @@ import haxe.ds.StringMap;
 import haxe.ds.EnumValueMap;
 import haxe.Constraints;
 
+// 機體結束前要選擇在敵人回合時的反應行為
+enum RobotBattleReaction {
+	// 反擊
+	// 有裝備反應武器時才能選，會自動選擇反擊武器
+	// 反擊命中與傷害上升
+	// 被擊中時氣力-1, 擊中對方時氣力+2
+	COUNTER;
+	// 回避
+	// 攻擊方命中率下降
+	// 成功時氣力+2，有裝備反擊武器時有機率反擊
+	EVADE;
+	// 防禦
+	// 防禦方傷害下降
+	// 成功時氣力+2，有裝備反擊武器時有機率反擊
+	GUARD;
+}
+
 enum Position {
 	POS(x:Int, y:Int);
 }
@@ -282,6 +299,8 @@ enum RobotMenuState {
 	ROBOT_SELECT_WEAPON_ATTACK;
 	//
 	ROBOT_SELECT_WEAPON_ATTACK_TARGET(shape: AttachShape);
+	//
+	ROBOT_BATTLE_PREVIEW;
 	SYSTEM_MENU;
 }
 
@@ -306,6 +325,19 @@ typedef RobotStatusView = {
 	weaponAttacks:Array<WeaponAttackView>
 }
 
+typedef RobotBattlePreviewView = {
+	// 攻擊方
+	attack: {
+		robotId:String,
+		// 使用的攻擊行為
+		weaponAttackView: WeaponAttackView,
+	},
+	guard: {
+		robotId: String,
+		battleReaction: RobotBattleReaction
+	}
+}
+
 interface IBattleController extends IBaseController {
 	function getRobotMenuState():RobotMenuState;
 	function getRobotMenuView():Null<RobotMenuView>;
@@ -315,6 +347,7 @@ interface IBattleController extends IBaseController {
 	function getAttackHitRangeView():Null<MoveRangeView>;
 	function getWeaponAttackListView():Null<WeaponAttackListView>;
 	function getRobotStatusView():Null<RobotStatusView>;
+	function getRobotBattlePreviewView():Null<RobotBattlePreviewView>;
 	function getGrids():IMap<Position, GridView>;
 }
 
