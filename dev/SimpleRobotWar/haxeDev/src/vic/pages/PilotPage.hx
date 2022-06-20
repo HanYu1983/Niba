@@ -1,7 +1,7 @@
 package vic.pages;
 
 import tool.Debug.info;
-import common.IDefine.PilotView;
+import common.IViewModel.PilotView;
 import vic.widgets.PilotListWidget;
 import vic.widgets.RobotListWidget;
 import vic.widgets.RobotPilotGridWidget;

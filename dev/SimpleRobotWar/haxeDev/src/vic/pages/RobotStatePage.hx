@@ -1,7 +1,8 @@
 package vic.pages;
 
 import vic.widgets.BattleWeaponListWidget;
-import common.IDefine.RobotStatusView;
+import common.IViewModel.RobotStatusView;
+import common.IViewModel.ViewEvent;
 import vic.widgets.RobotListWidget;
 import vic.widgets.RobotPilotGridWidget;
 import vic.widgets.WeaponListWidget;

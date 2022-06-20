@@ -1,6 +1,6 @@
 package vic.widgets;
 
-import common.IDefine.WeaponAttackView;
+import common.IViewModel.WeaponAttackView;
 
 @:build(haxe.ui.ComponentBuilder.build('vic/widgets/BattleWeaponListWidget.xml'))
 class BattleWeaponListWidget extends BasicListWidget {

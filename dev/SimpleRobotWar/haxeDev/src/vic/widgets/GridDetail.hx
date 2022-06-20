@@ -1,6 +1,6 @@
 package vic.widgets;
 
-import common.IDefine.GridView;
+import common.IViewModel.GridView;
 import haxe.ui.containers.VBox;
 
 @:build(haxe.ui.ComponentBuilder.build('vic/widgets/GridDetail.xml'))

@@ -5,6 +5,7 @@ import haxe.Constraints;
 import common.IDefine;
 import common.WeaponData;
 import common.TerrianData;
+import common.IViewModel;
 import han.model.IDefine;
 
 using Lambda;

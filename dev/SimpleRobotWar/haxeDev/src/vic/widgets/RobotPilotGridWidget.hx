@@ -1,7 +1,7 @@
 package vic.widgets;
 
-import common.IDefine.PilotView;
-import common.IDefine.RobotView;
+import common.IViewModel.PilotView;
+import common.IViewModel.RobotView;
 
 @:build(haxe.ui.ComponentBuilder.build('vic/widgets/RobotPilotGridWidget.xml'))
 class RobotPilotGridWidget extends BasicGridWidget {

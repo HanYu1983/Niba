@@ -1,7 +1,7 @@
 package vic.widgets;
 
 import haxe.ui.data.DataSource;
-import common.IDefine.RobotView;
+import common.IViewModel.RobotView;
 
 @:build(haxe.ui.ComponentBuilder.build('vic/widgets/RobotListWidget.xml'))
 class RobotListWidget extends BasicListWidget {

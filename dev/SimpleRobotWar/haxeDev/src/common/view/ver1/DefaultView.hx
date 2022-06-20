@@ -3,6 +3,7 @@ package common.view.ver1;
 import haxe.Timer;
 import haxe.Exception;
 import common.IDefine;
+import common.IViewModel;
 import tool.Debug;
 import tool.Helper;
 

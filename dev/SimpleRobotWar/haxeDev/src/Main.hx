@@ -7,6 +7,7 @@ import haxe.Exception;
 import haxe.ui.core.Component;
 import haxe.ui.HaxeUIApp;
 import common.IDefine;
+import common.IViewModel;
 import han.controller.Controller;
 import vic.DefaultViewImpl;
 

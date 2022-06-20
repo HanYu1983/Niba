@@ -4,6 +4,7 @@ import vic.widgets.RobotListWidget;
 import vic.widgets.RobotPilotGridWidget;
 import vic.widgets.WeaponListWidget;
 import common.IDefine;
+import common.IViewModel;
 import haxe.ui.events.MouseEvent;
 import haxe.ui.containers.Box;
 import tool.Debug;

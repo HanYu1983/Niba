@@ -7,6 +7,7 @@ import haxe.ds.EnumValueMap;
 import common.IDefine;
 import common.WeaponData;
 import common.TerrianData;
+import common.IViewModel;
 import han.alg.IDefine;
 import han.model.IDefine;
 import han.controller.lobby.LobbyController;

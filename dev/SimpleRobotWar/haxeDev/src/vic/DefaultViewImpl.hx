@@ -6,6 +6,7 @@ import haxe.ui.core.Component;
 import vic.pages.PilotPage;
 import vic.pages.RobotPage;
 import common.IDefine;
+import common.IViewModel;
 import common.view.ver1.DefaultView;
 import vic.pages.GamePage;
 import vic.pages.LobbyPage;

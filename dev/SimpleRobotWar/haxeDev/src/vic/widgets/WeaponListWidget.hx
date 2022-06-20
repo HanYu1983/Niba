@@ -1,6 +1,6 @@
 package vic.widgets;
 
-import common.IDefine.RobotView;
+import common.IViewModel.RobotView;
 
 @:build(haxe.ui.ComponentBuilder.build('vic/widgets/WeaponListWidget.xml'))
 class WeaponListWidget extends BasicListWidget {
