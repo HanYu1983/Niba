@@ -1,5 +1,7 @@
 package vic;
 
+import haxe.ui.containers.dialogs.MessageBox.MessageBoxType;
+import haxe.ui.containers.dialogs.Dialogs;
 import js.Syntax;
 import haxe.Timer;
 import haxe.ui.core.Component;
@@ -44,8 +46,9 @@ class DefaultViewImpl extends DefaultView {
 	}
 	// 顯示系統訊息
 	// 不佔用任何操作，3秒後消失
+	// 目前沒有内建比較方便的可以自動消失的widget，所以先用這個要點擊的看看
 	public function animateMessage(msg:String):Void{
-		trace("顯示訊息", msg);
+		Dialogs.messageBox(msg, '', MessageBoxType.TYPE_WARNING);
 	}
 
 	public function renderBattlePage():Void {
