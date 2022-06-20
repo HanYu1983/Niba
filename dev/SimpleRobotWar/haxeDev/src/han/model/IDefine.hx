@@ -163,7 +163,7 @@ typedef Context = {
 	weapons:StringMap<Weapon>,
 	pilotToRobot:StringMap<String>,
 	weaponToRobot:StringMap<String>,
-	robotToPlayer:StringMap<String>,
+	robotToPlayer:StringMap<Int>,
 	positionToRobot:EnumValueMap<Position, String>,
 	idSeq:Int,
 }
@@ -179,7 +179,7 @@ function getDefaultContext():Context {
 		weapons: new StringMap<Weapon>(),
 		pilotToRobot: new StringMap<String>(),
 		weaponToRobot: new StringMap<String>(),
-		robotToPlayer: new StringMap<String>(),
+		robotToPlayer: new StringMap<Int>(),
 		positionToRobot: new EnumValueMap<Position, String>(),
 		idSeq: 0,
 	}

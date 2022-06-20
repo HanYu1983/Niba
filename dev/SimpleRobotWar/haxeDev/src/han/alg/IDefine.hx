@@ -15,6 +15,7 @@ function initContext(ctx:Context) {
 		final robot = createRobot('${ctx.idSeq++}');
 		ctx.robots.set(robot.id, robot);
 		ctx.positionToRobot.set(POS(0, 0), robot.id);
+		ctx.robotToPlayer.set(robot.id, player0.id);
 
 		final pilot = createPilot('${ctx.idSeq++}');
 		ctx.pilots.set(pilot.id, pilot);
@@ -29,6 +30,17 @@ function initContext(ctx:Context) {
 		final robot = createRobot('${ctx.idSeq++}');
 		ctx.robots.set(robot.id, robot);
 		ctx.positionToRobot.set(POS(3, 3), robot.id);
+		ctx.robotToPlayer.set(robot.id, player1.id);
+
+		final pilot = createPilot('${ctx.idSeq++}');
+		ctx.pilots.set(pilot.id, pilot);
+		ctx.pilotToRobot.set(pilot.id, robot.id);
+	}
+
+	{
+		final robot = createRobot('${ctx.idSeq++}');
+		ctx.robots.set(robot.id, robot);
+		ctx.positionToRobot.set(POS(5, 5), robot.id);
 
 		final pilot = createPilot('${ctx.idSeq++}');
 		ctx.pilots.set(pilot.id, pilot);

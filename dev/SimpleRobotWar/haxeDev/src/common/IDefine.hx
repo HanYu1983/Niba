@@ -170,6 +170,8 @@ enum ViewEvent {
 
 typedef RobotView = {
 	id:String,
+	// 勢力
+	playerId: Null<Int>,
 	title:String,
 	// null代表沒有駕駛
 	pilotId:Null<String>,

@@ -16,6 +16,7 @@ function getRobotView(ctx:Context, robotId:String, position:Null<Position>):Robo
 	return {
 		id: robot.id,
 		title: robot.title,
+		playerId: ctx.robotToPlayer.get(robotId),
 		pilotId: pilot != null ? pilot.id : null,
 		weaponIds: weapons.map(w -> w.id),
 		hp: robot.hp,
