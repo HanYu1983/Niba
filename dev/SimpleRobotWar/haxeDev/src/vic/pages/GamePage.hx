@@ -79,6 +79,7 @@ class GamePage extends Box {
 				r.title = robotInfo.title;
 				r.left = g.left;
 				r.top = g.top;
+				r.playerId = robotInfo.playerId;
 				r.isDone = robotInfo.isDone;
 				box_robots.addComponent(r);
 
@@ -190,14 +191,12 @@ class GamePage extends Box {
 				cursorListener();
 				battlePosClickListener();
 			case ROBOT_SELECT_WEAPON_ATTACK:
-				// cursorListener();
-				// battlePosClickListener();
+			// cursorListener();
+			// battlePosClickListener();
 			case ROBOT_SELECT_WEAPON_ATTACK_TARGET(shape):
 				cursorListener();
 				battlePosClickListener();
 			case ROBOT_BATTLE_PREVIEW:
-				// 戰鬥預視
-				// Main.getBattleController().getRobotBattlePreviewView();
 		}
 	}
 
@@ -294,6 +293,17 @@ class GamePage extends Box {
 		}
 	}
 
+	function updateRobotBattlePreview() {
+		final battlePreview = Main.getBattleController().getRobotBattlePreviewView();
+		if (battlePreview == null) {
+			box_robotBattleReactionMenu.hide();
+			return;
+		}
+		box_robotBattleReactionMenu.fadeIn();
+		box_robotBattleReactionMenu.left = lastClickPos[0];
+		box_robotBattleReactionMenu.top = lastClickPos[1];
+	}
+
 	public function updateGamePage() {
 		updateGrids();
 		updateMoveRange();
@@ -301,6 +311,7 @@ class GamePage extends Box {
 		updateRobotMenu();
 		updateRobotState();
 		updateAttackList();
+		updateRobotBattlePreview();
 		updateSystemMenu();
 		updateStageListener();
 

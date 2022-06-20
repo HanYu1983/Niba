@@ -14,6 +14,13 @@
         <vbox id='box_systemMenu' backgroundColor='gray' padding='5' width='100'>
             <button id='btn_endPhase' text='結束回合' styleName='hfull' />
         </vbox>
+
+        <vbox id='box_robotBattleReactionMenu' backgroundColor='gray' padding='5' width='100'>
+            <button id='btn_counter' text='反擊' styleName='hfull' />
+            <button id='btn_dodge' text='回避' styleName='hfull' />
+            <button id='btn_guard' text='防禦' styleName='hfull' />
+        </vbox>
+
     </absolute>
     <vbox id='box_selectWeaponMenu' backgroundColor='gray' padding='5' horizontalAlign='center' verticalAlign='bottom'>
         <box id='box_weaponList' width='800' height='200'/>
