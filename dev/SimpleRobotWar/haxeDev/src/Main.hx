@@ -8,6 +8,8 @@ import haxe.ui.core.Component;
 import haxe.ui.HaxeUIApp;
 import common.IDefine;
 import common.IViewModel;
+import han.alg.IDefine;
+import han.model.IDefine;
 import han.controller.Controller;
 import vic.DefaultViewImpl;
 
@@ -22,7 +24,9 @@ class Main {
 		app.ready(() -> {
 			final view = new DefaultViewImpl();
 			app.addComponent(view.getComponent());
-			ctr = new Controller(view);
+			final ctx = getDefaultContext();
+			initContext(ctx);
+			ctr = new Controller(ctx, view);
 
 			ThemeManager.instance.applyTheme(Theme.DARK);
 		});

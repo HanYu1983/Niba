@@ -14,11 +14,13 @@ import han.controller.common.IDefine;
 
 private interface _ILobbyController extends ILobbyController extends ILobbyInfo {}
 
+@:nullSafety
 class LobbyController implements _ILobbyController {
 	final _view:IView;
-	var _ctx:Context = getDefaultContext();
+	var _ctx:Context;
 
-	public function new(view:IView) {
+	public function new(ctx:Context, view:IView) {
+		_ctx = ctx;
 		_view = view;
 	}
 

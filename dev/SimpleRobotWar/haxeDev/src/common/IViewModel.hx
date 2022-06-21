@@ -261,3 +261,13 @@ interface IView {
 	function animateRobotMove(robotId:String, path:Array<Position>, cb:Void->Void):Void;
 	function animateMessage(msg:String):Void;
 }
+
+class DefaultView implements IView {
+	public function new(){}
+	public function changePage(page:Page):Void{}
+	public function renderBattlePage():Void{}
+	public function animateRobotMove(robotId:String, path:Array<Position>, cb:Void->Void):Void{
+		cb();
+	}
+	public function animateMessage(msg:String):Void{}
+}
