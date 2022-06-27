@@ -5,6 +5,8 @@ import js.Syntax;
 class WebglMesh {
 	final bufferMap:Map<String, Dynamic> = [];
 
+	public final uniformMap:Map<String, Dynamic> = [];
+
 	public final vao = null;
 
 	var _shader = null;
@@ -15,12 +17,18 @@ class WebglMesh {
 		final gl = WebglEngine.inst.gl;
 		gl.bindVertexArray(vao);
 
-		for (attribute in shader.getLocationMap().keys()) {
-			final location = shader.getLocationMap()[attribute];
+		for (attribute in shader.getAttributeMap().keys()) {
+			final location = shader.getAttributeMap()[attribute];
+			final type = shader.getAttributeType(attribute);
 			final buffer = bufferMap[attribute];
 			gl.bindBuffer(gl.ARRAY_BUFFER, buffer);
 			gl.enableVertexAttribArray(location);
-			gl.vertexAttribPointer(location, 3, gl.FLOAT, false, 0, 0);
+			switch (type) {
+				case 'vec2':
+					gl.vertexAttribPointer(location, 2, gl.FLOAT, false, 0, 0);
+				case 'vec3':
+					gl.vertexAttribPointer(location, 3, gl.FLOAT, false, 0, 0);
+			}
 		}
 		_shader = shader;
 		return shader;
@@ -46,15 +54,25 @@ class WebglMesh {
 		vao = gl.createVertexArray();
 	}
 
-	public function getCount():Int {
-		return Math.floor(getPosition().length / 3);
+	public final function getCount():Int {
+		return Math.floor(getPosition().length / (is2d() ? 2 : 3));
+	}
+
+	function is2d() {
+		return true;
 	}
 
 	function getPosition() {
-		return [0, 0, 0, 0, 0.5, 0, 0.7, 0, 0];
+		return [0, 0, 0, 50, 70, 0];
 	}
 
 	function getColor() {
-		return [1.0, 0, 0, 0, 1.0, 0, 0, 0, 1.0];
+		final c = [];
+		for (i in 0...getCount()) {
+			c.push(0);
+			c.push(0);
+			c.push(0);
+		}
+		return c;
 	}
 }

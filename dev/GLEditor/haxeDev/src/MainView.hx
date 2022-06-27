@@ -1,14 +1,12 @@
 package;
 
+import webgl.meshs.F2dMesh;
+import mme.math.glmatrix.Vec2;
+import mme.math.glmatrix.Mat3;
+import mme.math.glmatrix.Mat3Tools;
+import mme.math.glmatrix.Mat4;
+import webgl.WebglMesh;
 import webgl.WebglEngine;
-import js.Syntax;
-import js.webgl2.Program;
-import js.webgl2.Shader;
-import js.webgl2.constants.ShaderTypeEnum;
-import js.webgl2.RenderingContext2;
-import js.Browser;
-import js.html.CanvasElement;
-import js.webgl2.CanvasHelpers;
 import haxe.ui.containers.VBox;
 
 @:build(haxe.ui.ComponentBuilder.build("assets/main-view.xml"))
@@ -18,95 +16,27 @@ class MainView extends VBox {
 
 		WebglEngine.inst.init('canvas_gl');
 
+		final gl = WebglEngine.inst.gl;
+
+		for (i in 0...10) {
+			final mesh = new F2dMesh();
+			mesh.shader = WebglEngine.inst.shaders[0];
+
+			final pm = Mat3Tools.projection(gl.canvas.width, gl.canvas.height);
+			final tm = Mat3.fromTranslation(Vec2.fromArray([500, 500]));
+			final rm = Mat3.fromRotation(Math.random() * 6.28);
+			final sm = Mat3.fromScaling(Vec2.fromArray([1.0, 1.0]));
+			final om = Mat3.fromTranslation(Vec2.fromArray([-50, -75]));
+			var mat = Mat3Tools.multiply(pm, tm);
+			mat = Mat3Tools.multiply(mat, rm);
+			mat = Mat3Tools.multiply(mat, sm);
+			mat = Mat3Tools.multiply(mat, om);
+
+			mesh.uniformMap.set('u_resolution', [WebglEngine.inst.gl.canvas.width, WebglEngine.inst.gl.canvas.height]);
+			mesh.uniformMap.set('u_color', [Math.random(), Math.random(), Math.random(), 1.0]);
+			mesh.uniformMap.set('u_matrix', mat.toArray());
+			WebglEngine.inst.addMesh(mesh);
+		}
 		WebglEngine.inst.render();
-
-		// final dom_gl = Browser.document.getElementById('canvas_gl');
-		// final gl = CanvasHelpers.getWebGL2(cast(dom_gl, CanvasElement));
-
-		// gl.viewport(0, 0, gl.canvas.width, gl.canvas.height);
-		// gl.clearColor(0.9, .2, .2, 1.0);
-		// gl.clear(gl.COLOR_BUFFER_BIT);
-
-		// // shader start
-
-		// final vss = '#version 300 es
-		// in vec4 a_position;
-		// in vec4 a_color;
-		// out vec4 o_color;
-		// void main(){
-		//     gl_Position = a_position;
-		//     o_color = a_color;
-		// }
-		// ';
-
-		// final fss = '#version 300 es
-		// precision highp float;
-		// in vec4 o_color;
-		// out vec4 outColor;
-		// void main(){
-		//     outColor = vec4(o_color.xyz, 1);
-		// }
-		// ';
-
-		// final vs = createShader(gl, gl.VERTEX_SHADER, vss);
-		// final fs = createShader(gl, gl.FRAGMENT_SHADER, fss);
-		// final program = createProgram(gl, vs, fs);
-		// final posAttriLoc = gl.getAttribLocation(program, 'a_position');
-		// final colorAttriLoc = gl.getAttribLocation(program, 'a_color');
-
-		// // shader end
-
-		// // mesh start
-		// gl.bindBuffer(gl.ARRAY_BUFFER, gl.createBuffer());
-
-		// final pos = [0, 0, 0, 0.5, 0.7, 0];
-		// gl.bufferData(gl.ARRAY_BUFFER, Syntax.code('new Float32Array')(pos), gl.STATIC_DRAW);
-
-		// final vao = gl.createVertexArray();
-		// gl.bindVertexArray(vao);
-		// gl.enableVertexAttribArray(posAttriLoc);
-		// gl.vertexAttribPointer(posAttriLoc, 2, gl.FLOAT, false, 0, 0);
-
-		// gl.bindBuffer(gl.ARRAY_BUFFER, gl.createBuffer());
-		// final c = [1.0, 0, 0, 0, 1.0, 0, 0, 0, 1.0];
-		// gl.bufferData(gl.ARRAY_BUFFER, Syntax.code('new Float32Array')(c), gl.STATIC_DRAW);
-		// gl.enableVertexAttribArray(colorAttriLoc);
-		// gl.vertexAttribPointer(colorAttriLoc, 3, gl.FLOAT, false, 0, 0);
-
-		// trace('posAttriLoc', posAttriLoc);
-		// trace('colorAttriLoc', colorAttriLoc);
-
-		// // mesh end
-
-		// gl.useProgram(program);
-		// gl.bindVertexArray(vao);
-		// gl.drawArrays(gl.TRIANGLES, 0, 3);
-	}
-
-	function createShader(gl:RenderingContext2, type:ShaderTypeEnum, source:String):Shader {
-		final shader = gl.createShader(type);
-		gl.shaderSource(shader, source);
-		gl.compileShader(shader);
-		final success = gl.getShaderParameter(shader, gl.COMPILE_STATUS);
-		if (success) {
-			return shader;
-		}
-		gl.getShaderInfoLog(shader);
-		gl.deleteShader(shader);
-		return null;
-	}
-
-	function createProgram(gl:RenderingContext2, vs:Shader, fs:Shader):Program {
-		final p = gl.createProgram();
-		gl.attachShader(p, vs);
-		gl.attachShader(p, fs);
-		gl.linkProgram(p);
-		final success = gl.getProgramParameter(p, gl.LINK_STATUS);
-		if (success) {
-			return p;
-		}
-		trace(gl.getProgramInfoLog(p));
-		gl.deleteProgram(p);
-		return null;
 	}
 }

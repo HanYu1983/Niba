@@ -9,6 +9,8 @@ import js.webgl2.Shader;
 import js.webgl2.constants.ShaderTypeEnum;
 import js.webgl2.RenderingContext2;
 
+using Lambda;
+
 class WebglEngine {
 	public static final inst = new WebglEngine();
 
@@ -23,9 +25,11 @@ class WebglEngine {
 		gl = CanvasHelpers.getWebGL2(cast(dom_gl, CanvasElement));
 
 		shaders.push(new WebglShader());
-		meshs.push(new WebglMesh());
+	}
 
-		meshs[0].shader = shaders[0];
+	public function addMesh(mesh:WebglMesh) {
+		if (!meshs.has(mesh))
+			meshs.push(mesh);
 	}
 
 	public function render() {
@@ -51,6 +55,25 @@ class WebglEngine {
 			final meshsToRender = shaderMap[shader];
 			for (mesh in meshsToRender) {
 				gl.bindVertexArray(mesh.vao);
+
+				for (attri in shader.getUniformMap().keys()) {
+					final pointer = shader.getUniformMap()[attri];
+					final type = shader.getUniformType(attri);
+					final params = mesh.uniformMap.get(attri);
+					if (params != null) {
+						switch (type) {
+							case 'vec2':
+								gl.uniform2fv(pointer, params);
+							case 'vec4':
+								gl.uniform4fv(pointer, params);
+							case 'float':
+								gl.uniform1fv(pointer, params);
+							case 'mat3':
+								gl.uniformMatrix3fv(pointer, false, params);
+						}
+					}
+				}
+				// trace('count',mesh.getCount() );
 				gl.drawArrays(gl.TRIANGLES, 0, mesh.getCount());
 			}
 		}
@@ -64,7 +87,7 @@ class WebglEngine {
 		if (success) {
 			return shader;
 		}
-		gl.getShaderInfoLog(shader);
+		trace(gl.getShaderInfoLog(shader));
 		gl.deleteShader(shader);
 		return null;
 	}
