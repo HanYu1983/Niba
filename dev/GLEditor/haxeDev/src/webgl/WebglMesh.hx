@@ -26,7 +26,7 @@ class WebglMesh {
 			switch (type) {
 				case 'vec2':
 					gl.vertexAttribPointer(location, 2, gl.FLOAT, false, 0, 0);
-				case 'vec3':
+				case 'vec3' | 'vec4':
 					gl.vertexAttribPointer(location, 3, gl.FLOAT, false, 0, 0);
 			}
 		}
@@ -63,7 +63,7 @@ class WebglMesh {
 	}
 
 	function getPosition() {
-		return [0, 0, 0, 50, 70, 0];
+		return [0, 0, 0, 100, 100, 0];
 	}
 
 	function getColor() {

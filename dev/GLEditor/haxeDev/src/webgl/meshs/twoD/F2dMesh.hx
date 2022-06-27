@@ -1,4 +1,4 @@
-package webgl.meshs;
+package webgl.meshs.twoD;
 
 class F2dMesh extends WebglMesh {
 	public function new() {

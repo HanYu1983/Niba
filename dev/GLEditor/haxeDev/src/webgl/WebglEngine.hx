@@ -1,5 +1,7 @@
 package webgl;
 
+import webgl.shaders.threeD.Basic3dShader;
+import webgl.shaders.twoD.Basic2dShader;
 import js.html.SharedWorker;
 import js.html.CanvasElement;
 import js.webgl2.CanvasHelpers;
@@ -24,7 +26,8 @@ class WebglEngine {
 		final dom_gl = Browser.document.getElementById(canvasName);
 		gl = CanvasHelpers.getWebGL2(cast(dom_gl, CanvasElement));
 
-		shaders.push(new WebglShader());
+		// shaders.push(new Basic2dShader());
+		shaders.push(new Basic3dShader());
 	}
 
 	public function addMesh(mesh:WebglMesh) {
@@ -64,16 +67,19 @@ class WebglEngine {
 						switch (type) {
 							case 'vec2':
 								gl.uniform2fv(pointer, params);
+							case 'vec3':
+								gl.uniform3fv(pointer, params);
 							case 'vec4':
 								gl.uniform4fv(pointer, params);
 							case 'float':
 								gl.uniform1fv(pointer, params);
 							case 'mat3':
 								gl.uniformMatrix3fv(pointer, false, params);
+							case 'mat4':
+								gl.uniformMatrix4fv(pointer, false, params);
 						}
 					}
 				}
-				// trace('count',mesh.getCount() );
 				gl.drawArrays(gl.TRIANGLES, 0, mesh.getCount());
 			}
 		}
