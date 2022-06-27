@@ -12,7 +12,7 @@ import js.webgl2.RenderingContext2;
 class WebglEngine {
 	public static final inst = new WebglEngine();
 
-	public var gl = null;
+	public var gl:RenderingContext2 = null;
 	public final shaders:Array<WebglShader> = [];
 	public final meshs:Array<WebglMesh> = [];
 
@@ -30,8 +30,8 @@ class WebglEngine {
 
 	public function render() {
 		gl.viewport(0, 0, gl.canvas.width, gl.canvas.height);
-		gl.clearColor(0.9, .2, .2, 1.0);
-		gl.clear(gl.COLOR_BUFFER_BIT);
+		gl.clearColor(0.7, 0.7, 0.7, 1);
+		gl.clear(gl.COLOR_BUFFER_BIT | gl.DEPTH_BUFFER_BIT);
 
 		final shaderMap:Map<WebglShader, Array<WebglMesh>> = [];
 		for (mesh in meshs) {
@@ -51,7 +51,7 @@ class WebglEngine {
 			final meshsToRender = shaderMap[shader];
 			for (mesh in meshsToRender) {
 				gl.bindVertexArray(mesh.vao);
-				gl.drawArrays(gl.TRIANGLES, 0, 3);
+				gl.drawArrays(gl.TRIANGLES, 0, mesh.getCount());
 			}
 		}
 	}

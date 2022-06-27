@@ -46,6 +46,10 @@ class WebglMesh {
 		vao = gl.createVertexArray();
 	}
 
+	public function getCount():Int {
+		return Math.floor(getPosition().length / 3);
+	}
+
 	function getPosition() {
 		return [0, 0, 0, 0, 0.5, 0, 0.7, 0, 0];
 	}
