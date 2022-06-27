@@ -9,7 +9,7 @@ import js.Syntax;
 class WebglShader {
 	public final program:Program;
 
-	final pointers = [];
+	final locationMap:Map<String, Int> = [];
 
 	public function new() {
 		final gl = WebglEngine.inst.gl;
@@ -19,28 +19,27 @@ class WebglShader {
 		program = WebglEngine.inst.createProgram(gl, vs, fs);
 
 		for (attr in getAttributes()) {
-            final p = gl.getAttribLocation(program, attr);
-			pointers.push(p);
+			final p = gl.getAttribLocation(program, attr);
+			locationMap.set(attr, p);
 		}
 	}
 
+	public function getLocationMap() {
+		return locationMap;
+	}
+
 	function getAttributes() {
-		return ['a_position', 'a_color'];
+		return ['position', 'color'];
 	}
-
-	function getPointers() {
-		return pointers;
-	}
-
+	
 	function getVertexShaderSource():String {
 		return '#version 300 es
-        in vec4 a_color;
-        in vec4 a_position;
-
-        out vec4 o_color;
+        in vec4 position;
+		in vec4 color;
+		out vec4 o_color;
         void main(){
-            gl_Position = a_position;
-            o_color = a_color;
+            gl_Position = position;
+			o_color = color;
         }
         ';
 	};
@@ -48,9 +47,10 @@ class WebglShader {
 	function getFragmentShaderSource():String {
 		return '#version 300 es
         precision highp float;
+		in vec4 o_color;
         out vec4 outColor;
         void main(){
-            outColor = vec4(1,0,0.5, 1);
+            outColor = vec4(o_color.xyz, 1);
         }
         ';
 	}

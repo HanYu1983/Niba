@@ -1,5 +1,6 @@
 package webgl;
 
+import js.html.SharedWorker;
 import js.html.CanvasElement;
 import js.webgl2.CanvasHelpers;
 import js.Browser;
@@ -13,6 +14,7 @@ class WebglEngine {
 
 	public var gl = null;
 	public final shaders:Array<WebglShader> = [];
+	public final meshs:Array<WebglMesh> = [];
 
 	private function new() {}
 
@@ -21,6 +23,37 @@ class WebglEngine {
 		gl = CanvasHelpers.getWebGL2(cast(dom_gl, CanvasElement));
 
 		shaders.push(new WebglShader());
+		meshs.push(new WebglMesh());
+
+		meshs[0].shader = shaders[0];
+	}
+
+	public function render() {
+		gl.viewport(0, 0, gl.canvas.width, gl.canvas.height);
+		gl.clearColor(0.9, .2, .2, 1.0);
+		gl.clear(gl.COLOR_BUFFER_BIT);
+
+		final shaderMap:Map<WebglShader, Array<WebglMesh>> = [];
+		for (mesh in meshs) {
+			if (mesh.shader != null) {
+				if (shaderMap.exists(mesh.shader)) {
+					shaderMap.get(mesh.shader).push(mesh);
+				} else {
+					shaderMap.set(mesh.shader, [mesh]);
+				}
+			}
+		}
+
+		for (shader in shaderMap.keys()) {
+			final program = shader.program;
+			gl.useProgram(program);
+
+			final meshsToRender = shaderMap[shader];
+			for (mesh in meshsToRender) {
+				gl.bindVertexArray(mesh.vao);
+				gl.drawArrays(gl.TRIANGLES, 0, 3);
+			}
+		}
 	}
 
 	public function createShader(gl:RenderingContext2, type:ShaderTypeEnum, source:String):Shader {

@@ -18,6 +18,8 @@ class MainView extends VBox {
 
 		WebglEngine.inst.init('canvas_gl');
 
+		WebglEngine.inst.render();
+
 		// final dom_gl = Browser.document.getElementById('canvas_gl');
 		// final gl = CanvasHelpers.getWebGL2(cast(dom_gl, CanvasElement));
 
