@@ -7,25 +7,47 @@ import js.webgl2.CanvasHelpers;
 import js.Browser;
 import js.Syntax;
 
+@:nullSafety
 class WebglShader {
-	public final program:Program;
+	public var program:Null<Program>;
 
 	final attributeMap:Map<String, Int> = [];
 	final uniformMap:Map<String, UniformLocation> = [];
 
 	public function new() {
+		// final gl = WebglEngine.inst.gl;
+		// if (gl != null) {
+		// 	final vs = WebglEngine.inst.createShader(gl, gl.VERTEX_SHADER, getVertexShaderSource());
+		// 	final fs = WebglEngine.inst.createShader(gl, gl.FRAGMENT_SHADER, getFragmentShaderSource());
+		// 	program = WebglEngine.inst.createProgram(gl, vs, fs);
+
+		// 	for (attr in getAttributes().keys()) {
+		// 		attributeMap.set(attr, gl.getAttribLocation(program, attr));
+		// 	}
+
+		// 	for (attri in getUniforms().keys()) {
+		// 		uniformMap.set(attri, gl.getUniformLocation(program, attri));
+		// 	}
+		// }
+	}
+
+	public function init() {
 		final gl = WebglEngine.inst.gl;
+		if (gl != null) {
+			final vs = WebglEngine.inst.createShader(gl, gl.VERTEX_SHADER, getVertexShaderSource());
+			final fs = WebglEngine.inst.createShader(gl, gl.FRAGMENT_SHADER, getFragmentShaderSource());
+			if (vs != null && fs != null) {
+				program = WebglEngine.inst.createProgram(gl, vs, fs);
+				if (program != null) {
+					for (attr in getAttributes().keys()) {
+						attributeMap.set(attr, gl.getAttribLocation(program, attr));
+					}
 
-		final vs = WebglEngine.inst.createShader(gl, gl.VERTEX_SHADER, getVertexShaderSource());
-		final fs = WebglEngine.inst.createShader(gl, gl.FRAGMENT_SHADER, getFragmentShaderSource());
-		program = WebglEngine.inst.createProgram(gl, vs, fs);
-
-		for (attr in getAttributes().keys()) {
-			attributeMap.set(attr, gl.getAttribLocation(program, attr));
-		}
-
-		for (attri in getUniforms().keys()) {
-			uniformMap.set(attri, gl.getUniformLocation(program, attri));
+					for (attri in getUniforms().keys()) {
+						uniformMap.set(attri, gl.getUniformLocation(program, attri));
+					}
+				}
+			}
 		}
 	}
 

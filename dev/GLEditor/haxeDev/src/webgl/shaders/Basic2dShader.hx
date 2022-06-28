@@ -1,5 +1,6 @@
-package webgl.shaders.twoD;
+package webgl.shaders;
 
+@:nullSafety
 class Basic2dShader extends WebglShader {
 	public function new() {
 		super();

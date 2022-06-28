@@ -1,5 +1,6 @@
-package webgl.shaders.threeD;
+package webgl.shaders;
 
+@:nullSafety
 class Basic3dShader extends WebglShader {
 	public function new() {
 		super();

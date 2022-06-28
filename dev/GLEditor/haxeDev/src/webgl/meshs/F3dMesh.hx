@@ -1,5 +1,6 @@
-package webgl.meshs.threeD;
+package webgl.meshs;
 
+@:nullSafety
 class F3dMesh extends WebglMesh {
 	public function new() {
 		super();

@@ -1,6 +1,7 @@
-package webgl.meshs.twoD;
+package webgl.meshs;
 
-class Rectangle2d extends WebglMesh {
+@:nullSafety
+class Rectangle2dMesh extends WebglMesh {
 	public function new() {
 		super();
 	}

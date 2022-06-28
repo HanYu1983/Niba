@@ -1,7 +1,7 @@
 package webgl;
 
-import webgl.shaders.threeD.Basic3dShader;
-import webgl.shaders.twoD.Basic2dShader;
+import webgl.shaders.Basic3dShader;
+import webgl.shaders.Basic2dShader;
 import js.html.SharedWorker;
 import js.html.CanvasElement;
 import js.webgl2.CanvasHelpers;
@@ -13,10 +13,11 @@ import js.webgl2.RenderingContext2;
 
 using Lambda;
 
+@:nullSafety
 class WebglEngine {
 	public static final inst = new WebglEngine();
 
-	public var gl:RenderingContext2 = null;
+	public var gl:Null<RenderingContext2> = null;
 	public final shaders:Array<WebglShader> = [];
 	public final meshs:Array<WebglMesh> = [];
 
@@ -28,6 +29,10 @@ class WebglEngine {
 
 		// shaders.push(new Basic2dShader());
 		shaders.push(new Basic3dShader());
+
+		for (shader in shaders) {
+			shader.init();
+		}
 	}
 
 	public function addMesh(mesh:WebglMesh) {
@@ -36,34 +41,52 @@ class WebglEngine {
 	}
 
 	public function render() {
+		if (gl == null)
+			return;
+
 		gl.viewport(0, 0, gl.canvas.width, gl.canvas.height);
 		gl.clearColor(0.7, 0.7, 0.7, 1);
 		gl.clear(gl.COLOR_BUFFER_BIT | gl.DEPTH_BUFFER_BIT);
 
-		final shaderMap:Map<WebglShader, Array<WebglMesh>> = [];
+		final shaderMap:Map<Null<WebglShader>, Array<WebglMesh>> = [];
 		for (mesh in meshs) {
-			if (mesh.shader != null) {
-				if (shaderMap.exists(mesh.shader)) {
-					shaderMap.get(mesh.shader).push(mesh);
-				} else {
-					shaderMap.set(mesh.shader, [mesh]);
-				}
+			if (shaderMap.exists(mesh.shader)) {
+				final ary = shaderMap.get(mesh.shader);
+				if (ary != null)
+					ary.push(mesh);
+			} else {
+				shaderMap.set(mesh.shader, [mesh]);
 			}
 		}
 
 		for (shader in shaderMap.keys()) {
+			if (shader == null)
+				continue;
+			if (shader.program == null)
+				continue;
+
 			final program = shader.program;
 			gl.useProgram(program);
 
 			final meshsToRender = shaderMap[shader];
-			for (mesh in meshsToRender) {
-				gl.bindVertexArray(mesh.vao);
+			if (meshsToRender != null) {
+				for (mesh in meshsToRender) {
+					if (mesh.vao == null)
+						continue;
 
-				for (attri in shader.getUniformMap().keys()) {
-					final pointer = shader.getUniformMap()[attri];
-					final type = shader.getUniformType(attri);
-					final params = mesh.uniformMap.get(attri);
-					if (params != null) {
+					gl.bindVertexArray(mesh.vao);
+
+					for (attri in shader.getUniformMap().keys()) {
+						final pointer = shader.getUniformMap()[attri];
+						final type = shader.getUniformType(attri);
+						final params = mesh.uniformMap.get(attri);
+						if (pointer == null)
+							continue;
+						if (type == null)
+							continue;
+						if (params == null)
+							continue;
+						
 						switch (type) {
 							case 'vec2':
 								gl.uniform2fv(pointer, params);
@@ -79,13 +102,13 @@ class WebglEngine {
 								gl.uniformMatrix4fv(pointer, false, params);
 						}
 					}
+					gl.drawArrays(gl.TRIANGLES, 0, mesh.getCount());
 				}
-				gl.drawArrays(gl.TRIANGLES, 0, mesh.getCount());
 			}
 		}
 	}
 
-	public function createShader(gl:RenderingContext2, type:ShaderTypeEnum, source:String):Shader {
+	public function createShader(gl:RenderingContext2, type:ShaderTypeEnum, source:String):Null<Shader> {
 		final shader = gl.createShader(type);
 		gl.shaderSource(shader, source);
 		gl.compileShader(shader);
@@ -98,7 +121,7 @@ class WebglEngine {
 		return null;
 	}
 
-	public function createProgram(gl:RenderingContext2, vs:Shader, fs:Shader):Program {
+	public function createProgram(gl:RenderingContext2, vs:Shader, fs:Shader):Null<Program> {
 		final p = gl.createProgram();
 		gl.attachShader(p, vs);
 		gl.attachShader(p, fs);

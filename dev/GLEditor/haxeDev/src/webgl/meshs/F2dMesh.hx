@@ -1,5 +1,6 @@
-package webgl.meshs.twoD;
+package webgl.meshs;
 
+@:nullSafety
 class F2dMesh extends WebglMesh {
 	public function new() {
 		super();
