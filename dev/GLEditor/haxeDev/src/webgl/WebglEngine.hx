@@ -30,9 +30,6 @@ class WebglEngine {
 		// shaders.push(new Basic2dShader());
 		shaders.push(new Basic3dShader());
 
-		for (shader in shaders) {
-			shader.init();
-		}
 	}
 
 	public function addMesh(mesh:WebglMesh) {
