@@ -6,7 +6,7 @@ import js.Syntax;
 class WebglMesh {
 	final bufferMap:Map<String, Dynamic> = [];
 
-	public final uniformMap:Map<String, Dynamic> = [];
+	public final uniformMap:Array<Map<String, Dynamic>> = [];
 
 	public final vao:Null<Dynamic>;
 

@@ -21,10 +21,12 @@ class MainView extends VBox {
 
 		final gl = WebglEngine.inst.gl;
 		if (gl != null) {
-			for (i in 0...10) {
-				final mesh = new F3dMesh();
-				mesh.shader = WebglEngine.inst.shaders[0];
+			final mesh = new F3dMesh();
+			mesh.shader = WebglEngine.inst.shaders[0];
+			WebglEngine.inst.addMesh(mesh);
 
+			for (i in 0...10) {
+				
 				// 3d version
 				final pm = Mat4Tools.ortho(0, gl.canvas.width, gl.canvas.height, 0, 400, -400);
 
@@ -51,9 +53,12 @@ class MainView extends VBox {
 				// mat = Mat3Tools.multiply(mat, sm);
 				// mat = Mat3Tools.multiply(mat, om);
 
-				mesh.uniformMap.set('u_color', [Math.random(), Math.random(), Math.random(), 1.0]);
-				mesh.uniformMap.set('u_matrix', mat.toArray());
-				WebglEngine.inst.addMesh(mesh);
+				final uniform = [
+					'u_color' => [Math.random(), Math.random(), Math.random(), 1.0],
+					'u_matrix' => mat.toArray()
+				];
+
+				mesh.uniformMap.push(uniform);
 			}
 			WebglEngine.inst.render();
 		}
