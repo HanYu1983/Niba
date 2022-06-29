@@ -1,5 +1,7 @@
 package webgl;
 
+import webgl.meshs.F3dMesh;
+import haxe.ui.geom.Rectangle;
 import webgl.shaders.Basic3dShader;
 import webgl.shaders.Basic2dShader;
 import js.html.SharedWorker;
@@ -18,8 +20,11 @@ class WebglEngine {
 	public static final inst = new WebglEngine();
 
 	public var gl:Null<RenderingContext2> = null;
-	public final shaders:Array<WebglShader> = [];
-	public final meshs:Array<WebglMesh> = [];
+	public final shaders:Map<String, WebglShader> = [];
+	public final meshs:Map<String, WebglMesh> = [];
+	public final materials:Map<String, WebglMaterial> = [];
+	public final geometrys:Map<String, WebglGeometry> = [];
+	public final meshMaterialMap:Map<WebglGeometry, WebglMaterial> = [];
 
 	private function new() {}
 
@@ -28,12 +33,52 @@ class WebglEngine {
 		gl = CanvasHelpers.getWebGL2(cast(dom_gl, CanvasElement));
 
 		// shaders.push(new Basic2dShader());
-		shaders.push(new Basic3dShader());
+		meshs.set('F3dMesh', new F3dMesh());
+		shaders.set('Basic3dShader', new Basic3dShader());
 	}
 
-	public function addMesh(mesh:WebglMesh) {
-		if (!meshs.has(mesh))
-			meshs.push(mesh);
+	public function addMesh(name:String, mesh:WebglMesh) {
+		if (meshs.exists(name))
+			return;
+		meshs.set(name, mesh);
+	}
+
+	public function createMaterial(name:String, shaderName:String):Null<WebglMaterial> {
+		if (materials.exists(name))
+			return materials.get(name);
+
+		final shader = shaders.get(shaderName);
+		if (shader == null)
+			return null;
+
+		final mat = new WebglMaterial(shaderName);
+		materials.set(name, mat);
+
+		shader.instances.push(name);
+
+		return mat;
+	}
+
+	public function createGeometry(name:String, meshId:String, materialName:String):Null<WebglGeometry> {
+		if (geometrys.exists(name))
+			return geometrys.get(name);
+
+		final mesh = meshs.get(meshId);
+		if (mesh == null)
+			return null;
+
+		final material = materials.get(materialName);
+		if (material == null)
+			return null;
+
+		final geometry = new WebglGeometry(meshId);
+		geometry.materialId = materialName;
+
+		geometrys.set(name, geometry);
+
+		material.geometrys.push(name);
+
+		return geometry;
 	}
 
 	public function render() {
@@ -44,91 +89,70 @@ class WebglEngine {
 		gl.clearColor(0.7, 0.7, 0.7, 1);
 		gl.clear(gl.COLOR_BUFFER_BIT | gl.DEPTH_BUFFER_BIT);
 
-		final shaderMap:Map<Null<WebglShader>, Array<WebglMesh>> = [];
-		for (mesh in meshs) {
-			if (shaderMap.exists(mesh.shader)) {
-				final ary = shaderMap.get(mesh.shader);
-				if (ary != null)
-					ary.push(mesh);
-			} else {
-				shaderMap.set(mesh.shader, [mesh]);
-			}
-		}
-
-		for (shader in shaderMap.keys()) {
+		for (shaderId => shader in shaders) {
 			if (shader == null)
 				continue;
 			if (shader.program == null)
 				continue;
+			trace('使用shader: ${shaderId}');
 
 			final program = shader.program;
 			gl.useProgram(program);
 
-			final meshsToRender = shaderMap[shader];
-			if (meshsToRender != null) {
-				for (mesh in meshsToRender) {
+			for (materialId in shader.instances) {
+				// 塞不同的uniform參數給同一個shader
+				final material = materials.get(materialId);
+				if (material == null)
+					continue;
+
+				trace('使用材質:${materialId}');
+
+				for (geometryId in material.geometrys) {
+					final geometry = geometrys.get(geometryId);
+					if (geometry == null)
+						continue;
+					if (geometry.meshId == null)
+						continue;
+
+					final mesh = meshs.get(geometry.meshId);
+					if (mesh == null)
+						continue;
 					if (mesh.vao == null)
 						continue;
 
+					trace('綁定vao:${geometry.meshId}');
 					gl.bindVertexArray(mesh.vao);
 
-					for (uniform in mesh.uniformMap) {
-						for (attri in shader.getUniformMap().keys()) {
-							final pointer = shader.getUniformMap()[attri];
-							final type = shader.getUniformType(attri);
-							final params = uniform.get(attri);
-							if (pointer == null)
-								continue;
-							if (type == null)
-								continue;
-							if (params == null)
-								continue;
+					for (attri in shader.getUniformMap().keys()) {
+						final pointer = shader.getUniformMap()[attri];
+						final type = shader.getUniformType(attri);
+						final params = geometry.uniform.get(attri);
+						if (pointer == null)
+							continue;
+						if (type == null)
+							continue;
+						if (params == null)
+							continue;
 
-							switch (type) {
-								case 'vec2':
-									gl.uniform2fv(pointer, params);
-								case 'vec3':
-									gl.uniform3fv(pointer, params);
-								case 'vec4':
-									gl.uniform4fv(pointer, params);
-								case 'float':
-									gl.uniform1fv(pointer, params);
-								case 'mat3':
-									gl.uniformMatrix3fv(pointer, false, params);
-								case 'mat4':
-									gl.uniformMatrix4fv(pointer, false, params);
-							}
+						trace('設定geometry uniform');
+
+						switch (type) {
+							case 'vec2':
+								gl.uniform2fv(pointer, params);
+							case 'vec3':
+								gl.uniform3fv(pointer, params);
+							case 'vec4':
+								gl.uniform4fv(pointer, params);
+							case 'float':
+								gl.uniform1fv(pointer, params);
+							case 'mat3':
+								gl.uniformMatrix3fv(pointer, false, params);
+							case 'mat4':
+								gl.uniformMatrix4fv(pointer, false, params);
 						}
-						gl.drawArrays(gl.TRIANGLES, 0, mesh.getCount());
 					}
-
-					// for (attri in shader.getUniformMap().keys()) {
-					// 	final pointer = shader.getUniformMap()[attri];
-					// 	final type = shader.getUniformType(attri);
-					// 	final params = mesh.uniformMap.get(attri);
-					// 	if (pointer == null)
-					// 		continue;
-					// 	if (type == null)
-					// 		continue;
-					// 	if (params == null)
-					// 		continue;
-
-					// 	switch (type) {
-					// 		case 'vec2':
-					// 			gl.uniform2fv(pointer, params);
-					// 		case 'vec3':
-					// 			gl.uniform3fv(pointer, params);
-					// 		case 'vec4':
-					// 			gl.uniform4fv(pointer, params);
-					// 		case 'float':
-					// 			gl.uniform1fv(pointer, params);
-					// 		case 'mat3':
-					// 			gl.uniformMatrix3fv(pointer, false, params);
-					// 		case 'mat4':
-					// 			gl.uniformMatrix4fv(pointer, false, params);
-					// 	}
-					// }
-					// gl.drawArrays(gl.TRIANGLES, 0, mesh.getCount());
+					trace('繪製');
+					gl.drawArrays(gl.TRIANGLES, 0, mesh.getCount());
 				}
 			}
 		}

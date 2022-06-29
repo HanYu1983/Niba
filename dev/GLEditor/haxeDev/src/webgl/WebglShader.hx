@@ -14,6 +14,8 @@ class WebglShader {
 	final attributeMap:Map<String, Int> = [];
 	final uniformMap:Map<String, UniformLocation> = [];
 
+	public final instances:Array<String> = [];
+
 	public function new() {
 		final gl = WebglEngine.inst.gl;
 		if (gl != null) {

@@ -6,19 +6,19 @@ import js.Syntax;
 class WebglMesh {
 	final bufferMap:Map<String, Dynamic> = [];
 
-	public final uniformMap:Array<Map<String, Dynamic>> = [];
-
 	public final vao:Null<Dynamic>;
 
 	var _shader:Null<WebglShader> = null;
 
 	public var shader(get, set):Null<WebglShader>;
 
-	function set_shader(shader:WebglShader) {
+	function set_shader(shader:Null<WebglShader>) {
 		final gl = WebglEngine.inst.gl;
 		if (gl == null)
 			return shader;
 		if (vao == null)
+			return shader;
+		if (shader == null)
 			return shader;
 		gl.bindVertexArray(vao);
 

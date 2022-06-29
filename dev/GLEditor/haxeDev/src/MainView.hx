@@ -1,5 +1,7 @@
 package;
 
+import webgl.WebglMaterial;
+import webgl.WebglGeometry;
 import mme.math.glmatrix.Mat4;
 import mme.math.glmatrix.Vec3;
 import mme.math.glmatrix.Mat4Tools;
@@ -21,12 +23,13 @@ class MainView extends VBox {
 
 		final gl = WebglEngine.inst.gl;
 		if (gl != null) {
-			final mesh = new F3dMesh();
-			mesh.shader = WebglEngine.inst.shaders[0];
-			WebglEngine.inst.addMesh(mesh);
+			WebglEngine.inst.createMaterial('mat_1', 'Basic3dShader');
 
 			for (i in 0...10) {
-				
+				final geo = WebglEngine.inst.createGeometry('geo_${i}', 'F3dMesh', 'mat_1');
+				if (geo == null)
+					continue;
+
 				// 3d version
 				final pm = Mat4Tools.ortho(0, gl.canvas.width, gl.canvas.height, 0, 400, -400);
 
@@ -53,12 +56,8 @@ class MainView extends VBox {
 				// mat = Mat3Tools.multiply(mat, sm);
 				// mat = Mat3Tools.multiply(mat, om);
 
-				final uniform = [
-					'u_color' => [Math.random(), Math.random(), Math.random(), 1.0],
-					'u_matrix' => mat.toArray()
-				];
-
-				mesh.uniformMap.push(uniform);
+				geo.uniform.set('u_color', [Math.random(), Math.random(), Math.random(), 1.0]);
+				geo.uniform.set('u_matrix', mat.toArray());
 			}
 			WebglEngine.inst.render();
 		}
