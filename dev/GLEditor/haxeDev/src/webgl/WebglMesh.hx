@@ -79,11 +79,11 @@ class WebglMesh {
 		return true;
 	}
 
-	function getPosition() {
-		return [0, 0, 0, 100, 100, 0];
+	function getPosition():Array<Float> {
+		return [0., 0., 0., 100., 100., 0.];
 	}
 
-	function getColor() {
+	function getColor():Array<Int> {
 		final c = [];
 		for (i in 0...getCount()) {
 			c.push(0);
@@ -93,7 +93,12 @@ class WebglMesh {
 		return c;
 	}
 
-	function getTexcoord() {
-		return [];
+	function getTexcoord():Array<Float> {
+		final c = [];
+		for (i in 0...getCount()) {
+			c.push(0.0);
+			c.push(0.0);
+		}
+		return c;
 	}
 }

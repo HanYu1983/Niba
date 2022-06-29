@@ -1,8 +1,10 @@
 package webgl;
 
+import libnoise.generator.Perlin;
 import js.lib.Uint8Array;
 import js.webgl2.Texture;
 import webgl.meshs.F3dMesh;
+import webgl.meshs.Cube3dMesh;
 import haxe.ui.geom.Rectangle;
 import webgl.shaders.Basic3dShader;
 import webgl.shaders.Basic2dShader;
@@ -37,6 +39,7 @@ class WebglEngine {
 
 		// shaders.push(new Basic2dShader());
 		meshs.set('F3dMesh', new F3dMesh());
+		meshs.set('Cube3dMesh', new Cube3dMesh());
 		shaders.set('Basic3dShader', new Basic3dShader());
 	}
 
@@ -52,15 +55,39 @@ class WebglEngine {
 		final texture = gl.createTexture();
 		gl.bindTexture(gl.TEXTURE_2D, texture);
 
+		// final level = 0;
+		// final internalFormat = gl.R8;
+		// final width = 3;
+		// final height = 2;
+		// final border = 0;
+		// final format = gl.RED;
+		// final type = gl.UNSIGNED_BYTE;
+		// final data = new Uint8Array([128, 64, 128, 0, 192, 0]);
+
 		final level = 0;
-		final internalFormat = gl.R8;
-		final width = 3;
-		final height = 2;
+		final internalFormat = gl.RGB;
+		final width = 64;
+		final height = 64;
 		final border = 0;
-		final format = gl.RED;
+		final format = gl.RGB;
 		final type = gl.UNSIGNED_BYTE;
-		final data = new Uint8Array([128, 64, 128, 0, 192, 0]);
-		gl.pixelStorei(gl.UNPACK_ALIGNMENT, 1);
+
+		final p = new Perlin(1, 1, 1, 1, 0, libnoise.QualityMode.MEDIUM);
+
+		var dataAry = [];
+		for (x in 0...width) {
+			for (y in 0...height) {
+				var v = p.getValue(x / width, y / height, 0);
+				v = Math.floor((v + 1) * .5 * 255);
+				dataAry.push(v);
+				dataAry.push(v);
+				dataAry.push(v);
+			}
+		}
+
+		final data = new Uint8Array(dataAry);
+
+		gl.pixelStorei(gl.UNPACK_ALIGNMENT, 3);
 		gl.texImage2D(gl.TEXTURE_2D, level, internalFormat, width, height, border, format, type, data);
 		gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MIN_FILTER, gl.NEAREST);
 		gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MAG_FILTER, gl.NEAREST);

@@ -6,7 +6,7 @@ class F3dMesh extends WebglMesh {
 		super();
 	}
 
-	override function getPosition():Array<Int> {
+	override function getPosition():Array<Float> {
 		return [
 			// left column front
 			0,
@@ -327,7 +327,9 @@ class F3dMesh extends WebglMesh {
 			0,
 			150,
 			0,
-		];
+		].map((i)->{
+      i + 0.0;
+    });
 	}
 
 	override function is2d():Bool {
@@ -559,6 +561,8 @@ class F3dMesh extends WebglMesh {
 			1,
 			1,
 			0,
-		];
+		].map((i) -> {
+			i + 0.0;
+		});
 	}
 }

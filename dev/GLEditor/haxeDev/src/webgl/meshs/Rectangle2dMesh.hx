@@ -6,7 +6,7 @@ class Rectangle2dMesh extends WebglMesh {
 		super();
 	}
 
-	override function getPosition():Array<Int> {
+	override function getPosition():Array<Float> {
 		return [
 			  0,   0,
 			100,   0,
@@ -14,7 +14,7 @@ class Rectangle2dMesh extends WebglMesh {
 			  0, 100,
 			100,   0,
 			100, 100,
-		];
+		].map((i) -> {i + 0.0;});
 	}
 
 	override function is2d():Bool {
