@@ -1,5 +1,6 @@
 package webgl;
 
+import js.lib.Uint8Array;
 import js.webgl2.Texture;
 import webgl.meshs.F3dMesh;
 import haxe.ui.geom.Rectangle;
@@ -43,6 +44,30 @@ class WebglEngine {
 		if (meshs.exists(name))
 			return;
 		meshs.set(name, mesh);
+	}
+
+	public function createTexture():Null<Texture> {
+		if (gl == null)
+			return null;
+		final texture = gl.createTexture();
+		gl.bindTexture(gl.TEXTURE_2D, texture);
+
+		final level = 0;
+		final internalFormat = gl.R8;
+		final width = 3;
+		final height = 2;
+		final border = 0;
+		final format = gl.RED;
+		final type = gl.UNSIGNED_BYTE;
+		final data = new Uint8Array([128, 64, 128, 0, 192, 0]);
+		gl.pixelStorei(gl.UNPACK_ALIGNMENT, 1);
+		gl.texImage2D(gl.TEXTURE_2D, level, internalFormat, width, height, border, format, type, data);
+		gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MIN_FILTER, gl.NEAREST);
+		gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MAG_FILTER, gl.NEAREST);
+		gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_WRAP_S, gl.CLAMP_TO_EDGE);
+		gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_WRAP_T, gl.CLAMP_TO_EDGE);
+
+		return texture;
 	}
 
 	public function addTexture(name:String, texture:Texture) {

@@ -26,16 +26,18 @@ class MainView extends VBox {
 
 		if (gl != null) {
 			final t = gl.createTexture();
-			// gl.activeTexture(gl.TEXTURE0);
 			gl.bindTexture(gl.TEXTURE_2D, t);
 			gl.texImage2D(gl.TEXTURE_2D, 0, gl.RGBA, 1, 1, 0, gl.RGBA, gl.UNSIGNED_BYTE, new Uint8Array([0, 255, 0, 255]));
 			WebglEngine.inst.addTexture('green', t);
 
 			final t2 = gl.createTexture();
-			// gl.activeTexture(gl.TEXTURE1);
 			gl.bindTexture(gl.TEXTURE_2D, t2);
 			gl.texImage2D(gl.TEXTURE_2D, 0, gl.RGBA, 1, 1, 0, gl.RGBA, gl.UNSIGNED_BYTE, new Uint8Array([255, 0, 0, 255]));
 			WebglEngine.inst.addTexture('red', t2);
+
+			final t3 = WebglEngine.inst.createTexture();
+			if (t3 != null)
+				WebglEngine.inst.addTexture('red8', t3);
 
 			// final image = new Image();
 			// image.src = 'images/flow.jpg';
@@ -51,7 +53,7 @@ class MainView extends VBox {
 			if (mat1 != null)
 				mat1.textures.push('green');
 			if (mat2 != null)
-				mat2.textures.push('red');
+				mat2.textures.push('red8');
 
 			for (i in 0...4) {
 				final geo = WebglEngine.inst.createGeometry('geo_${i}', 'F3dMesh', i % 2 == 0 ? 'mat_1' : 'mat_2');
