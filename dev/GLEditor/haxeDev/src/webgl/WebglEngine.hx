@@ -1,5 +1,6 @@
 package webgl;
 
+import js.webgl2.Texture;
 import webgl.meshs.F3dMesh;
 import haxe.ui.geom.Rectangle;
 import webgl.shaders.Basic3dShader;
@@ -20,11 +21,12 @@ class WebglEngine {
 	public static final inst = new WebglEngine();
 
 	public var gl:Null<RenderingContext2> = null;
+
 	public final shaders:Map<String, WebglShader> = [];
 	public final meshs:Map<String, WebglMesh> = [];
 	public final materials:Map<String, WebglMaterial> = [];
 	public final geometrys:Map<String, WebglGeometry> = [];
-	public final meshMaterialMap:Map<WebglGeometry, WebglMaterial> = [];
+	public final textures:Map<String, Texture> = [];
 
 	private function new() {}
 
@@ -43,6 +45,19 @@ class WebglEngine {
 		meshs.set(name, mesh);
 	}
 
+	public function addTexture(name:String, texture:Texture) {
+		if (textures.exists(name))
+			return;
+
+		textures.set(name, texture);
+	}
+
+	// public function getTexture(name:String):Null<Texture> {
+	// 	return textures.get(name);
+	// }
+	// public function getMaterial(name:) {
+	// }
+
 	public function createMaterial(name:String, shaderName:String):Null<WebglMaterial> {
 		if (materials.exists(name))
 			return materials.get(name);
@@ -58,6 +73,13 @@ class WebglEngine {
 
 		return mat;
 	}
+
+	// public function addTextureToMaterial(textureId:String, materialId:String) {
+	// 	final m = materials.get(materialId);
+	// 	if (m == null)
+	// 		return;
+	// 	m.textures.push(textureId);
+	// }
 
 	public function createGeometry(name:String, meshId:String, materialName:String):Null<WebglGeometry> {
 		if (geometrys.exists(name))
@@ -89,6 +111,9 @@ class WebglEngine {
 		gl.clearColor(0.7, 0.7, 0.7, 1);
 		gl.clear(gl.COLOR_BUFFER_BIT | gl.DEPTH_BUFFER_BIT);
 
+		gl.enable(gl.DEPTH_TEST);
+		gl.enable(gl.CULL_FACE);
+
 		for (shaderId => shader in shaders) {
 			if (shader == null)
 				continue;
@@ -100,11 +125,19 @@ class WebglEngine {
 			gl.useProgram(program);
 
 			for (materialId in shader.instances) {
-				// 塞不同的uniform參數給同一個shader
 				final material = materials.get(materialId);
 				if (material == null)
 					continue;
 
+				for (index => textureId in material.textures) {
+					final t = textures.get(textureId);
+					if (t == null)
+						continue;
+
+					final param = Reflect.field(gl, 'TEXTURE${index}');
+					gl.activeTexture(param);
+					gl.bindTexture(gl.TEXTURE_2D, t);
+				}
 				trace('使用材質:${materialId}');
 
 				for (geometryId in material.geometrys) {
@@ -151,7 +184,6 @@ class WebglEngine {
 								gl.uniformMatrix4fv(pointer, false, params);
 						}
 					}
-					trace('繪製');
 					gl.drawArrays(gl.TRIANGLES, 0, mesh.getCount());
 				}
 			}

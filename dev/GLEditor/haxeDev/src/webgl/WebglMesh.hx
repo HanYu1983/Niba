@@ -62,6 +62,11 @@ class WebglMesh {
 			gl.bufferData(gl.ARRAY_BUFFER, Syntax.code('new Float32Array')(getColor()), gl.STATIC_DRAW);
 			bufferMap.set('color', colorBuffer);
 
+			final texcoordBuffer = gl.createBuffer();
+			gl.bindBuffer(gl.ARRAY_BUFFER, texcoordBuffer);
+			gl.bufferData(gl.ARRAY_BUFFER, Syntax.code('new Float32Array')(getTexcoord()), gl.STATIC_DRAW);
+			bufferMap.set('texcoord', texcoordBuffer);
+
 			vao = gl.createVertexArray();
 		}
 	}
@@ -86,5 +91,9 @@ class WebglMesh {
 			c.push(0);
 		}
 		return c;
+	}
+
+	function getTexcoord() {
+		return [];
 	}
 }

@@ -12,14 +12,19 @@ class Basic3dShader extends WebglShader {
         // an attribute is an input (in) to a vertex shader.
         // It will receive data from a buffer
         in vec4 position;
+        in vec2 texcoord;
         
         // A matrix to transform the positions by
         uniform mat4 u_matrix;
+
+        out vec2 v_texcoord;
         
         // all shaders have a main function
         void main() {
           // Multiply the position by the matrix.
           gl_Position = u_matrix * position;
+
+          v_texcoord = texcoord;
         }
         ';
 
@@ -29,24 +34,28 @@ class Basic3dShader extends WebglShader {
 		return '#version 300 es
 
         precision highp float;
+
+        in vec2 v_texcoord;
         
+        uniform sampler2D u_texture;
         uniform vec4 u_color;
         
         // we need to declare an output for the fragment shader
         out vec4 outColor;
         
         void main() {
-          outColor = u_color;
+          outColor = texture(u_texture, v_texcoord);
+         // outColor = vec4(v_texcoord, 0.0, 1.0);
         }
         ';
 
 	}
 
 	override function getAttributes():haxe.ds.Map<String, String> {
-		return ['position' => 'vec4'];
+		return ['position' => 'vec4', 'texcoord' => 'vec2'];
 	}
 
 	override function getUniforms():haxe.ds.Map<String, String> {
-		return ['u_matrix' => 'mat4', 'u_color' => 'vec4'];
+		return ['u_matrix' => 'mat4', 'u_color' => 'vec4', 'u_texture' => 'sampler2D'];
 	}
 }
