@@ -219,9 +219,11 @@ class WebglEngine {
 						if (params == null)
 							continue;
 
-						trace('設定geometry uniform');
+						trace('設定geometry uniform:${type}');
 
 						switch (type) {
+							case 'sampler2D':
+								gl.uniform1i(pointer, params);
 							case 'vec2':
 								gl.uniform2fv(pointer, params);
 							case 'vec3':

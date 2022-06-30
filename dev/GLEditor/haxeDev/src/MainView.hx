@@ -50,13 +50,17 @@ class MainView extends VBox {
 			final mat1 = WebglEngine.inst.createMaterial('mat_1', 'Basic3dShader');
 			final mat2 = WebglEngine.inst.createMaterial('mat_2', 'Basic3dShader');
 
-			if (mat1 != null)
+			if (mat1 != null) {
 				mat1.textures.push('red8');
-			if (mat2 != null)
+				mat1.textures.push('green');
+			}
+
+			if (mat2 != null) {
 				mat2.textures.push('red8');
+				mat2.textures.push('red');
+			}
 
 			for (i in 0...4) {
-
 				final mesh = i % 2 == 0 ? 'Cube3dMesh' : 'F3dMesh';
 				final mat = i % 2 == 0 ? 'mat_1' : 'mat_2';
 				final geo = WebglEngine.inst.createGeometry('geo_${i}', mesh, mat);
@@ -91,6 +95,7 @@ class MainView extends VBox {
 
 				geo.uniform.set('u_color', [Math.random(), Math.random(), Math.random(), 1.0]);
 				geo.uniform.set('u_matrix', mat.toArray());
+				geo.uniform.set('u_texture', i % 2);
 			}
 			WebglEngine.inst.render();
 		}
