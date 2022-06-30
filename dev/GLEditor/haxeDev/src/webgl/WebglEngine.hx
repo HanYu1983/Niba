@@ -171,7 +171,7 @@ class WebglEngine {
 				continue;
 			if (shader.program == null)
 				continue;
-			trace('使用shader: ${shaderId}');
+			// trace('使用shader: ${shaderId}');
 
 			final program = shader.program;
 			gl.useProgram(program);
@@ -190,7 +190,7 @@ class WebglEngine {
 					gl.activeTexture(param);
 					gl.bindTexture(gl.TEXTURE_2D, t);
 				}
-				trace('使用材質:${materialId}');
+				// trace('使用材質:${materialId}');
 
 				for (geometryId in material.geometrys) {
 					final geometry = geometrys.get(geometryId);
@@ -205,7 +205,7 @@ class WebglEngine {
 					if (mesh.vao == null)
 						continue;
 
-					trace('綁定vao:${geometry.meshId}');
+					// trace('綁定vao:${geometry.meshId}');
 					gl.bindVertexArray(mesh.vao);
 
 					for (attri in shader.getUniformMap().keys()) {
@@ -219,7 +219,7 @@ class WebglEngine {
 						if (params == null)
 							continue;
 
-						trace('設定geometry uniform:${type}');
+						// trace('設定geometry uniform:${type}');
 
 						switch (type) {
 							case 'sampler2D':

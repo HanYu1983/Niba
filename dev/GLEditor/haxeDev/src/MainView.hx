@@ -1,5 +1,6 @@
 package;
 
+import js.Browser;
 import ecs.entities.Camera;
 import ecs.components.MeshRenderer;
 import ecs.Entity;
@@ -41,34 +42,51 @@ class MainView extends VBox {
 				mat1.textures.push('red8');
 			}
 
+			final worldEntity = new Entity('worldEntity');
+
 			final e = new Entity('entity0');
 			e.transform.position.z = -500;
+			worldEntity.addComponent(e);
 
 			final meshRenderer = new MeshRenderer('meshRenderer0', 'Cube3dMesh', 'mat_1');
 			e.addComponent(meshRenderer);
-			
-			final entityMat = e.transform.getMatrix();
+
+			final geo = WebglEngine.inst.geometrys.get(meshRenderer.geometryId);
+			if (geo != null) {
+				geo.uniform.set('u_texture', 0);
+			}
 
 			final camera = new Camera('camera');
 			camera.transform.position.z = 500;
 			camera.transform.position.x = 200;
 
-			final projectMat = camera.getProjectMatrix();
-			final cameraInvertMat = Mat4Tools.invert(camera.transform.getMatrix());
+			var lastRender = 0.0;
+			function render(timestamp:Float) {
+				final progress = timestamp - lastRender;
+				lastRender = timestamp;
 
-			// model -> view -> project
-			var mat = Mat4Tools.identity();
-			mat = Mat4Tools.multiply(mat, projectMat);
-			mat = Mat4Tools.multiply(mat, cameraInvertMat);
-			mat = Mat4Tools.multiply(mat, entityMat);
+				e.transform.rotation.z += .01;
+				final entityMat = e.transform.getMatrix();
 
-			final geo = WebglEngine.inst.geometrys.get(meshRenderer.geometryId);
-			if (geo != null) {
-				geo.uniform.set('u_matrix', mat.toArray());
-				geo.uniform.set('u_texture', 0);
+				final projectMat = camera.getProjectMatrix();
+				final cameraInvertMat = Mat4Tools.invert(camera.transform.getMatrix());
+
+				// model -> view -> project
+				var mat = Mat4Tools.identity();
+				mat = Mat4Tools.multiply(mat, projectMat);
+				mat = Mat4Tools.multiply(mat, cameraInvertMat);
+				mat = Mat4Tools.multiply(mat, entityMat);
+
+				final geo = WebglEngine.inst.geometrys.get(meshRenderer.geometryId);
+				if (geo != null) {
+					geo.uniform.set('u_matrix', mat.toArray());
+				}
+
+				worldEntity.update(lastRender);
+				WebglEngine.inst.render();
+				Browser.window.requestAnimationFrame(render);
 			}
-
-			WebglEngine.inst.render();
+			Browser.window.requestAnimationFrame(render);
 		}
 	}
 
