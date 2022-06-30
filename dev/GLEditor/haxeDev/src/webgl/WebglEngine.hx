@@ -87,7 +87,7 @@ class WebglEngine {
 
 		final data = new Uint8Array(dataAry);
 
-		gl.pixelStorei(gl.UNPACK_ALIGNMENT, 3);
+		gl.pixelStorei(gl.UNPACK_ALIGNMENT, 4);
 		gl.texImage2D(gl.TEXTURE_2D, level, internalFormat, width, height, border, format, type, data);
 		gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MIN_FILTER, gl.NEAREST);
 		gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MAG_FILTER, gl.NEAREST);

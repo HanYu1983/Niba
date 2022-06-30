@@ -1,5 +1,8 @@
 package;
 
+import ecs.entities.Camera;
+import ecs.components.MeshRenderer;
+import ecs.Entity;
 import js.html.Image;
 import js.lib.Uint8Array;
 import webgl.WebglMaterial;
@@ -21,6 +24,55 @@ class MainView extends VBox {
 	public function new() {
 		super();
 
+		methodB();
+	}
+
+	function methodB() {
+		WebglEngine.inst.init('canvas_gl');
+		final gl = WebglEngine.inst.gl;
+
+		if (gl != null) {
+			final t3 = WebglEngine.inst.createTexture();
+			if (t3 != null)
+				WebglEngine.inst.addTexture('red8', t3);
+
+			final mat1 = WebglEngine.inst.createMaterial('mat_1', 'Basic3dShader');
+			if (mat1 != null) {
+				mat1.textures.push('red8');
+			}
+
+			final e = new Entity('entity0');
+			e.transform.position.z = -500;
+
+			final meshRenderer = new MeshRenderer('meshRenderer0', 'Cube3dMesh', 'mat_1');
+			e.addComponent(meshRenderer);
+			
+			final entityMat = e.transform.getMatrix();
+
+			final camera = new Camera('camera');
+			camera.transform.position.z = 500;
+			camera.transform.position.x = 200;
+
+			final projectMat = camera.getProjectMatrix();
+			final cameraInvertMat = Mat4Tools.invert(camera.transform.getMatrix());
+
+			// model -> view -> project
+			var mat = Mat4Tools.identity();
+			mat = Mat4Tools.multiply(mat, projectMat);
+			mat = Mat4Tools.multiply(mat, cameraInvertMat);
+			mat = Mat4Tools.multiply(mat, entityMat);
+
+			final geo = WebglEngine.inst.geometrys.get(meshRenderer.geometryId);
+			if (geo != null) {
+				geo.uniform.set('u_matrix', mat.toArray());
+				geo.uniform.set('u_texture', 0);
+			}
+
+			WebglEngine.inst.render();
+		}
+	}
+
+	function methodA() {
 		WebglEngine.inst.init('canvas_gl');
 		final gl = WebglEngine.inst.gl;
 
