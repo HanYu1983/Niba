@@ -1,6 +1,7 @@
 -cp src
 -main Main
 
+-lib hexlog
 -lib libnoise
 -lib haxe-gl-matrix
 -lib webgl2

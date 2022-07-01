@@ -1,5 +1,6 @@
 package;
 
+import js.html.DirectoryElement;
 import js.Browser;
 import ecs.entities.Camera;
 import ecs.components.MeshRenderer;
@@ -25,70 +26,146 @@ class MainView extends VBox {
 	public function new() {
 		super();
 
-		methodB();
+		// methodA();
+		methodC();
 	}
 
-	function methodB() {
+	function methodC() {
 		WebglEngine.inst.init('canvas_gl');
 		final gl = WebglEngine.inst.gl;
 
 		if (gl != null) {
-			final t3 = WebglEngine.inst.createTexture();
-			if (t3 != null)
-				WebglEngine.inst.addTexture('red8', t3);
+			final world = new Entity('world');
 
-			final mat1 = WebglEngine.inst.createMaterial('mat_1', 'Basic3dShader');
-			if (mat1 != null) {
-				mat1.textures.push('red8');
-			}
+			final renderEntitys:Map<Entity, Null<MeshRenderer>> = [];
+			final camera = Tool.createCameraEntity('camera');
+			camera.transform.position.z = 1000;
 
-			final worldEntity = new Entity('worldEntity');
+			final body = Tool.createMeshEntity('body', DEFAULT_MESH.CUBE3D, 'noiseMaterial');
 
-			final e = new Entity('entity0');
-			e.transform.position.z = -500;
-			worldEntity.addComponent(e);
+			final leftArm = Tool.createMeshEntity('leftArm', DEFAULT_MESH.F3D, 'noiseMaterial');
+			leftArm.transform.position.x = -150;
 
-			final meshRenderer = new MeshRenderer('meshRenderer0', 'Cube3dMesh', 'mat_1');
-			e.addComponent(meshRenderer);
+			final rightArm = Tool.createMeshEntity('rightArm', DEFAULT_MESH.F3D, 'noiseMaterial');
+			rightArm.transform.position.x = 150;
+			rightArm.transform.rotation.y = 3.14;
 
-			final geo = WebglEngine.inst.geometrys.get(meshRenderer.geometryId);
-			if (geo != null) {
-				geo.uniform.set('u_texture', 0);
-			}
+			renderEntitys.set(body, body.getComponent(MeshRenderer));
+			renderEntitys.set(leftArm, leftArm.getComponent(MeshRenderer));
+			renderEntitys.set(rightArm, rightArm.getComponent(MeshRenderer));
 
-			final camera = new Camera('camera');
-			camera.transform.position.z = 500;
-			camera.transform.position.x = 200;
+			world.transform.addChild(camera.transform);
+			world.transform.addChild(body.transform);
+			body.transform.addChild(leftArm.transform);
+			body.transform.addChild(rightArm.transform);
 
 			var lastRender = 0.0;
 			function render(timestamp:Float) {
 				final progress = timestamp - lastRender;
 				lastRender = timestamp;
 
-				e.transform.rotation.z += .01;
-				final entityMat = e.transform.getMatrix();
+				final cameraComponent = camera.getComponent(ecs.components.Camera);
+				if (cameraComponent != null) {
+					body.transform.rotation.y += .01;
 
-				final projectMat = camera.getProjectMatrix();
-				final cameraInvertMat = Mat4Tools.invert(camera.transform.getMatrix());
+					final p = cameraComponent.getProjectMatrix();
+					final v = Mat4Tools.invert(camera.transform.getGlobalMatrix());
+					for (entity => meshRenderer in renderEntitys) {
+						if (meshRenderer == null)
+							continue;
 
-				// model -> view -> project
-				var mat = Mat4Tools.identity();
-				mat = Mat4Tools.multiply(mat, projectMat);
-				mat = Mat4Tools.multiply(mat, cameraInvertMat);
-				mat = Mat4Tools.multiply(mat, entityMat);
+						if (meshRenderer.geometry == null)
+							continue;
 
-				final geo = WebglEngine.inst.geometrys.get(meshRenderer.geometryId);
-				if (geo != null) {
-					geo.uniform.set('u_matrix', mat.toArray());
+						final m = entity.transform.getGlobalMatrix();
+
+						var mvp = Mat4Tools.identity();
+						mvp = Mat4Tools.multiply(mvp, p);
+						mvp = Mat4Tools.multiply(mvp, v);
+						mvp = Mat4Tools.multiply(mvp, m);
+
+						meshRenderer.geometry.uniform.set('u_matrix', mvp.toArray());
+						meshRenderer.geometry.uniform.set('u_texture', 0);
+					}
+
+					world.update(progress);
+					WebglEngine.inst.render();
 				}
 
-				worldEntity.update(lastRender);
-				WebglEngine.inst.render();
 				Browser.window.requestAnimationFrame(render);
 			}
 			Browser.window.requestAnimationFrame(render);
 		}
 	}
+
+	// function methodB() {
+	// 	WebglEngine.inst.init('canvas_gl');
+	// 	final gl = WebglEngine.inst.gl;
+	// 	if (gl != null) {
+	// 		final t3 = WebglEngine.inst.createTexture();
+	// 		if (t3 != null)
+	// 			WebglEngine.inst.addTexture('red8', t3);
+	// 		final mat1 = WebglEngine.inst.createMaterial('mat_1', 'Basic3dShader');
+	// 		if (mat1 != null) {
+	// 			mat1.textures.push('red8');
+	// 		}
+	// 		final worldEntity = new Entity('worldEntity');
+	// 		final body = new Entity('entity0');
+	// 		body.transform.position.z = -500;
+	// 		worldEntity.addComponent(body);
+	// 		final meshRenderer = new MeshRenderer('meshRenderer0', 'Cube3dMesh', 'mat_1');
+	// 		body.addComponent(meshRenderer);
+	// 		final geo = WebglEngine.inst.geometrys.get(meshRenderer.geometryId);
+	// 		if (geo != null) {
+	// 			geo.uniform.set('u_texture', 0);
+	// 		}
+	// 		final leftArm = new Entity('leftArm');
+	// 		leftArm.transform.position.x = 100;
+	// 		body.transform.addChild(leftArm.transform);
+	// 		final meshRenderer1 = new MeshRenderer('meshRenderer1', 'F3dMesh', 'mat_1');
+	// 		leftArm.addComponent(meshRenderer);
+	// 		final geo1 = WebglEngine.inst.geometrys.get(meshRenderer1.geometryId);
+	// 		if (geo1 != null) {
+	// 			geo1.uniform.set('u_texture', 0);
+	// 		}
+	// 		final camera = new Camera('camera');
+	// 		camera.transform.position.z = 500;
+	// 		camera.transform.position.x = 200;
+	// 		var lastRender = 0.0;
+	// 		function render(timestamp:Float) {
+	// 			final progress = timestamp - lastRender;
+	// 			lastRender = timestamp;
+	// 			body.transform.rotation.z += .01;
+	// 			final entityMat = body.transform.getGlobalMatrix();
+	// 			final projectMat = camera.getProjectMatrix();
+	// 			final cameraInvertMat = Mat4Tools.invert(camera.transform.getMatrix());
+	// 			// model -> view -> project
+	// 			var mat = Mat4Tools.identity();
+	// 			mat = Mat4Tools.multiply(mat, projectMat);
+	// 			mat = Mat4Tools.multiply(mat, cameraInvertMat);
+	// 			mat = Mat4Tools.multiply(mat, entityMat);
+	// 			final geo = WebglEngine.inst.geometrys.get(meshRenderer.geometryId);
+	// 			if (geo != null) {
+	// 				geo.uniform.set('u_matrix', mat.toArray());
+	// 			}
+	// 			final leftArmMat = leftArm.transform.getGlobalMatrix();
+	// 			// model -> view -> project
+	// 			mat = Mat4Tools.identity();
+	// 			mat = Mat4Tools.multiply(mat, projectMat);
+	// 			mat = Mat4Tools.multiply(mat, cameraInvertMat);
+	// 			mat = Mat4Tools.multiply(mat, leftArmMat);
+	// 			final geo1 = WebglEngine.inst.geometrys.get(meshRenderer1.geometryId);
+	// 			if (geo1 != null) {
+	// 				geo1.uniform.set('u_matrix', mat.toArray());
+	// 			}
+	// 			leftArm.update(progress);
+	// 			worldEntity.update(progress);
+	// 			WebglEngine.inst.render();
+	// 			Browser.window.requestAnimationFrame(render);
+	// 		}
+	// 		Browser.window.requestAnimationFrame(render);
+	// 	}
+	// }
 
 	function methodA() {
 		WebglEngine.inst.init('canvas_gl');
@@ -131,7 +208,7 @@ class MainView extends VBox {
 			}
 
 			for (i in 0...4) {
-				final mesh = i % 2 == 0 ? 'Cube3dMesh' : 'F3dMesh';
+				final mesh = i % 2 == 0 ? DEFAULT_MESH.CUBE3D : DEFAULT_MESH.F3D;
 				final mat = i % 2 == 0 ? 'mat_1' : 'mat_2';
 				final geo = WebglEngine.inst.createGeometry('geo_${i}', mesh, mat);
 				if (geo == null)

@@ -7,16 +7,29 @@ import webgl.WebglMaterial;
 
 @:nullSafety
 class MeshRenderer extends Component {
-	public final geometryId:String;
-	public final meshId:String;
-	public final materialId:String;
+	public final geometry:Null<WebglGeometry>;
+	public var meshId(default, set):DEFAULT_MESH = DEFAULT_MESH.CUBE3D;
 
-	public function new(name:String, meshId:String, materialId:String) {
+	function set_meshId(id:DEFAULT_MESH) {
+		if (geometry != null) {
+			geometry.meshId = id;
+		}
+		return id;
+	}
+
+	public var materialId(default, set):String = 'noiseMaterial';
+
+	function set_materialId(id:String) {
+		if (geometry != null) {
+			geometry.materialId = id;
+			WebglEngine.inst.changeMaterial(name, id);
+		}
+		return id;
+	}
+
+	public function new(name:String) {
 		super(name);
-		this.meshId = meshId;
-		this.materialId = materialId;
 
-		geometryId = 'geo_${name}';
-		WebglEngine.inst.createGeometry(geometryId, meshId, materialId);
+		geometry = WebglEngine.inst.createGeometry(name, meshId, materialId);
 	}
 }

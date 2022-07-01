@@ -20,6 +20,7 @@ class Entity extends Component {
 		if (components.has(component))
 			return;
 		components.push(component);
+		component.owner = this;
 	}
 
 	public function getComponent<T>(clz:Class<T>):Null<T> {
@@ -37,5 +38,6 @@ class Entity extends Component {
 		for (component in components) {
 			component.update(deltaTime);
 		}
+		transform.update(deltaTime);
 	}
 }
