@@ -52,6 +52,10 @@ class WebglShader {
 		return getUniforms().get(key);
 	}
 
+	public function isInstance() {
+		return false;
+	}
+
 	function getAttributes() {
 		return ['position' => 'vec2', 'color' => 'vec3'];
 	}

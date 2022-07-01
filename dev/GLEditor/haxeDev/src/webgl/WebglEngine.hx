@@ -1,5 +1,7 @@
 package webgl;
 
+import hex.log.LogManager;
+import webgl.shaders.Basic3dInstanceShader;
 import hex.log.HexLog.*;
 import libnoise.generator.Perlin;
 import js.lib.Uint8Array;
@@ -47,6 +49,7 @@ class WebglEngine {
 		meshs.set(DEFAULT_MESH.F3D, new F3dMesh());
 		meshs.set(DEFAULT_MESH.CUBE3D, new Cube3dMesh());
 		shaders.set('Basic3dShader', new Basic3dShader());
+		shaders.set('Basic3dInstanceShader', new Basic3dInstanceShader());
 
 		final noiseTexture = createTexture();
 		if (noiseTexture != null)
@@ -56,6 +59,8 @@ class WebglEngine {
 		if (noiseMaterial != null) {
 			noiseMaterial.textures.push('noise');
 		}
+
+		final instanceMaterial = WebglEngine.inst.createMaterial('instanceMaterial', 'Basic3dInstanceShader');
 	}
 
 	public function addMesh(name:DEFAULT_MESH, mesh:WebglMesh) {
@@ -171,9 +176,12 @@ class WebglEngine {
 	}
 
 	public function changeMaterial(geometryId:String, materialId:String) {
+		LogManager.getLogger('hex').debug('修改材質:${geometryId} ${materialId}');
+
 		final geometry = geometrys.get(geometryId);
 		if (geometry == null)
 			return;
+
 		if (geometry.materialId == materialId)
 			return;
 
@@ -183,10 +191,15 @@ class WebglEngine {
 
 		material.geometrys.push(geometryId);
 
-		if (geometry.materialId == null)
+		final oldMaterialId = geometry.materialId;
+		geometry.materialId = materialId;
+
+		LogManager.getLogger('hex').debug('目前材質${materialId}繪製物件數目:${material.geometrys.length}');
+
+		if (oldMaterialId == null)
 			return;
 
-		final material = materials.get(geometry.materialId);
+		final material = materials.get(oldMaterialId);
 		if (material == null)
 			return;
 
@@ -204,12 +217,13 @@ class WebglEngine {
 		gl.enable(gl.DEPTH_TEST);
 		gl.enable(gl.CULL_FACE);
 
+		var lastVao:Null<Dynamic> = null;
 		for (shaderId => shader in shaders) {
 			if (shader == null)
 				continue;
 			if (shader.program == null)
 				continue;
-			debug('使用shader:${shaderId}');
+			LogManager.getLogger("hex").debug('使用shader:${shaderId}');
 
 			final program = shader.program;
 			gl.useProgram(program);
@@ -227,57 +241,127 @@ class WebglEngine {
 					final param = Reflect.field(gl, 'TEXTURE${index}');
 					gl.activeTexture(param);
 					gl.bindTexture(gl.TEXTURE_2D, t);
-					debug('使用紋理通道:${index}');
+					LogManager.getLogger("hex").debug('使用紋理通道:${index}');
 				}
-				debug('使用材質:${materialId}');
+				LogManager.getLogger("hex").debug('使用材質:${materialId}');
 
-				for (geometryId in material.geometrys) {
-					final geometry = geometrys.get(geometryId);
+				if (shader.isInstance()) {
+					LogManager.getLogger("hex").debug('實例化材質流程:${materialId}');
+					for (geometryId in material.geometrys) {
+						final geometry = geometrys.get(geometryId);
+						if (geometry == null)
+							continue;
+						if (geometry.meshId == null)
+							continue;
+
+						final mesh = meshs.get(geometry.meshId);
+						if (mesh == null)
+							continue;
+						if (mesh.vao == null)
+							continue;
+
+						if (lastVao == null || lastVao != mesh.vao) {
+							gl.bindVertexArray(mesh.vao);
+							debug('綁定vao:${geometry.meshId}');
+						}
+						lastVao = mesh.vao;
+
+						for (attri in shader.getUniformMap().keys()) {
+							final pointer = shader.getUniformMap()[attri];
+							final type = shader.getUniformType(attri);
+							final params = geometry.uniform.get(attri);
+							if (pointer == null)
+								continue;
+							if (type == null)
+								continue;
+							if (params == null)
+								continue;
+
+							LogManager.getLogger("hex").debug('設定uniform:${attri}');
+
+							switch (type) {
+								case 'sampler2D':
+									gl.uniform1i(pointer, params);
+								case 'vec2':
+									gl.uniform2fv(pointer, params);
+								case 'vec3':
+									gl.uniform3fv(pointer, params);
+								case 'vec4':
+									gl.uniform4fv(pointer, params);
+								case 'float':
+									gl.uniform1fv(pointer, params);
+								case 'mat3':
+									gl.uniformMatrix3fv(pointer, false, params);
+								case 'mat4':
+									gl.uniformMatrix4fv(pointer, false, params);
+							}
+						}
+					}
+
+					final geometry = geometrys.get(material.geometrys[0]);
 					if (geometry == null)
 						continue;
 					if (geometry.meshId == null)
+						return;
+
+					final mesh2 = meshs.get(geometry.meshId);
+					if (mesh2 == null)
 						continue;
 
-					final mesh = meshs.get(geometry.meshId);
-					if (mesh == null)
-						continue;
-					if (mesh.vao == null)
-						continue;
-
-					debug('綁定vao:${geometry.meshId}');
-					gl.bindVertexArray(mesh.vao);
-
-					for (attri in shader.getUniformMap().keys()) {
-						final pointer = shader.getUniformMap()[attri];
-						final type = shader.getUniformType(attri);
-						final params = geometry.uniform.get(attri);
-						if (pointer == null)
+					gl.drawArraysInstanced(gl.TRIANGLES, 0, mesh2.getCount(), material.geometrys.length);
+				} else {
+					LogManager.getLogger("hex").debug('普通流程:${materialId}');
+					for (geometryId in material.geometrys) {
+						final geometry = geometrys.get(geometryId);
+						if (geometry == null)
 							continue;
-						if (type == null)
-							continue;
-						if (params == null)
+						if (geometry.meshId == null)
 							continue;
 
-						debug('設定uniform:${attri}');
+						final mesh = meshs.get(geometry.meshId);
+						if (mesh == null)
+							continue;
+						if (mesh.vao == null)
+							continue;
 
-						switch (type) {
-							case 'sampler2D':
-								gl.uniform1i(pointer, params);
-							case 'vec2':
-								gl.uniform2fv(pointer, params);
-							case 'vec3':
-								gl.uniform3fv(pointer, params);
-							case 'vec4':
-								gl.uniform4fv(pointer, params);
-							case 'float':
-								gl.uniform1fv(pointer, params);
-							case 'mat3':
-								gl.uniformMatrix3fv(pointer, false, params);
-							case 'mat4':
-								gl.uniformMatrix4fv(pointer, false, params);
+						if (lastVao == null || lastVao != mesh.vao) {
+							gl.bindVertexArray(mesh.vao);
+							debug('綁定vao:${geometry.meshId}');
 						}
+						lastVao = mesh.vao;
+
+						for (attri in shader.getUniformMap().keys()) {
+							final pointer = shader.getUniformMap()[attri];
+							final type = shader.getUniformType(attri);
+							final params = geometry.uniform.get(attri);
+							if (pointer == null)
+								continue;
+							if (type == null)
+								continue;
+							if (params == null)
+								continue;
+
+							LogManager.getLogger("hex").debug('設定uniform:${attri}');
+
+							switch (type) {
+								case 'sampler2D':
+									gl.uniform1i(pointer, params);
+								case 'vec2':
+									gl.uniform2fv(pointer, params);
+								case 'vec3':
+									gl.uniform3fv(pointer, params);
+								case 'vec4':
+									gl.uniform4fv(pointer, params);
+								case 'float':
+									gl.uniform1fv(pointer, params);
+								case 'mat3':
+									gl.uniformMatrix3fv(pointer, false, params);
+								case 'mat4':
+									gl.uniformMatrix4fv(pointer, false, params);
+							}
+						}
+						gl.drawArrays(gl.TRIANGLES, 0, mesh.getCount());
 					}
-					gl.drawArrays(gl.TRIANGLES, 0, mesh.getCount());
 				}
 			}
 		}
@@ -291,7 +375,7 @@ class WebglEngine {
 		if (success) {
 			return shader;
 		}
-		trace(gl.getShaderInfoLog(shader));
+		debug(gl.getShaderInfoLog(shader));
 		gl.deleteShader(shader);
 		return null;
 	}
@@ -305,7 +389,7 @@ class WebglEngine {
 		if (success) {
 			return p;
 		}
-		trace(gl.getProgramInfoLog(p));
+		debug(gl.getProgramInfoLog(p));
 		gl.deleteProgram(p);
 		return null;
 	}

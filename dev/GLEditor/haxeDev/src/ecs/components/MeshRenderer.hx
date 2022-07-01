@@ -21,7 +21,6 @@ class MeshRenderer extends Component {
 
 	function set_materialId(id:String) {
 		if (geometry != null) {
-			geometry.materialId = id;
 			WebglEngine.inst.changeMaterial(name, id);
 		}
 		return id;

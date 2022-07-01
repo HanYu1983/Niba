@@ -1,6 +1,7 @@
 -cp src
 -main Main
 
+-lib perf.js
 -lib hexlog
 -lib libnoise
 -lib haxe-gl-matrix
