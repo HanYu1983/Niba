@@ -61,6 +61,7 @@ class WebglEngine {
 		}
 
 		final instanceMaterial = WebglEngine.inst.createMaterial('instanceMaterial', 'Basic3dInstanceShader');
+		final instanceMaterial2 = WebglEngine.inst.createMaterial('instanceMaterial2', 'Basic3dInstanceShader');
 	}
 
 	public function addMesh(name:DEFAULT_MESH, mesh:WebglMesh) {
@@ -268,7 +269,7 @@ class WebglEngine {
 
 						final a = geoMap.get(mesh);
 						final params = geometry.uniform.get('u_matrix');
-						// trace('a', a);
+
 						if (a != null && params != null) {
 							a.push(params);
 						}
@@ -324,9 +325,9 @@ class WebglEngine {
 						for (mat in ary) {
 							mesh.setInstanceMatrixBuffer(ary.indexOf(mat), mat);
 						}
+
 						mesh.setInstanceBuffer();
-						trace('ary', ary);
-						gl.drawArraysInstanced(gl.TRIANGLES, 0, mesh.getCount(),ary.length);
+						gl.drawArraysInstanced(gl.TRIANGLES, 0, mesh.getCount(), ary.length);
 					}
 
 					// final geometry = geometrys.get(material.geometrys[0]);

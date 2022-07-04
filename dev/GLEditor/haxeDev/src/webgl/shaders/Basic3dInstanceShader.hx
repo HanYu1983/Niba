@@ -49,8 +49,8 @@ class Basic3dInstanceShader extends WebglShader {
         out vec4 outColor;
         
         void main() {
-          // outColor = texture(u_texture, v_texcoord);
-         outColor = vec4(v_texcoord, 0.0, 1.0);
+          outColor = texture(u_texture, v_texcoord);
+        //  outColor = vec4(v_texcoord, 0.0, 1.0);
         }
         ';
 

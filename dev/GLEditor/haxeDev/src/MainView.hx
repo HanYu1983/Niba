@@ -54,8 +54,6 @@ class MainView extends VBox {
 			rightArm.transform.position.x = 150;
 			rightArm.transform.rotation.y = 3.14;
 
-			final renderInstance:Map<Entity, Null<MeshRenderer>> = [];
-
 			for (i in 0...3) {
 				final ball = Tool.createMeshEntity('ball_${i}', DEFAULT_MESH.CUBE3D, 'instanceMaterial');
 				ball.transform.position.x = Math.random() * 1000 - 500;
@@ -63,13 +61,30 @@ class MainView extends VBox {
 				ball.transform.position.z = Math.random() * 1000 - 500;
 				ball.transform.scale.x = ball.transform.scale.y = ball.transform.scale.z = .05;
 				renderEntitys.set(ball, ball.getComponent(MeshRenderer));
+
+				final f = Tool.createMeshEntity('f_${i}', DEFAULT_MESH.F3D, 'instanceMaterial');
+				f.transform.position.x = Math.random() * 1000 - 500;
+				f.transform.position.y = Math.random() * 1000 - 500;
+				f.transform.position.z = Math.random() * 1000 - 500;
+				f.transform.scale.x = f.transform.scale.y = f.transform.scale.z = .2;
+				renderEntitys.set(f, f.getComponent(MeshRenderer));
 			}
 
-			// final instanceMesh = WebglEngine.inst.meshs.get(DEFAULT_MESH.CUBE3D);
-			// var instanceMatrix:Null<Array<Float32Array>> = null;
-			// if (instanceMesh != null) {
-			// instanceMatrix = instanceMesh.instanceMatrix;
-			// }
+			for (i in 0...3) {
+				final ball = Tool.createMeshEntity('ball2_${i}', DEFAULT_MESH.CUBE3D, 'instanceMaterial2');
+				ball.transform.position.x = Math.random() * 1000 - 500;
+				ball.transform.position.y = Math.random() * 1000 - 500;
+				ball.transform.position.z = Math.random() * 1000 - 500;
+				ball.transform.scale.x = ball.transform.scale.y = ball.transform.scale.z = .05;
+				renderEntitys.set(ball, ball.getComponent(MeshRenderer));
+
+				final f = Tool.createMeshEntity('f2_${i}', DEFAULT_MESH.F3D, 'instanceMaterial2');
+				f.transform.position.x = Math.random() * 1000 - 500;
+				f.transform.position.y = Math.random() * 1000 - 500;
+				f.transform.position.z = Math.random() * 1000 - 500;
+				f.transform.scale.x = f.transform.scale.y = f.transform.scale.z = .2;
+				renderEntitys.set(f, f.getComponent(MeshRenderer));
+			}
 
 			renderEntitys.set(body, body.getComponent(MeshRenderer));
 			renderEntitys.set(leftArm, leftArm.getComponent(MeshRenderer));
@@ -110,31 +125,6 @@ class MainView extends VBox {
 
 						meshRenderer.geometry.uniform.set('u_matrix', mvp.toArray());
 					}
-
-					
-					// if (instanceMesh != null) {
-					// 	var temp = 0;
-					// 	for (entity => meshRenderer in renderInstance) {
-					// 		if (meshRenderer == null)
-					// 			continue;
-
-					// 		if (meshRenderer.geometry == null)
-					// 			continue;
-
-					// 		entity.transform.rotation.x += 0.02;
-					// 		final m = entity.transform.getGlobalMatrix();
-
-					// 		var mvp = Mat4Tools.identity();
-					// 		mvp = Mat4Tools.multiply(mvp, p);
-					// 		mvp = Mat4Tools.multiply(mvp, v);
-					// 		mvp = Mat4Tools.multiply(mvp, m);
-
-					// 		instanceMesh.setInstanceMatrixBuffer(temp, mvp.toArray());
-
-					// 		temp += 1;
-					// 	}
-					// 	instanceMesh.setInstanceBuffer();
-					// }
 
 					// world.update(progress);
 					WebglEngine.inst.render();
