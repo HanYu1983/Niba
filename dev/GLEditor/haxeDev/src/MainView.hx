@@ -56,7 +56,7 @@ class MainView extends VBox {
 
 			final renderInstance:Map<Entity, Null<MeshRenderer>> = [];
 
-			for (i in 0...10000) {
+			for (i in 0...20000) {
 				final ball = Tool.createMeshEntity('ball_${i}', DEFAULT_MESH.CUBE3D, 'instanceMaterial');
 				ball.transform.position.x = Math.random() * 1000 - 500;
 				ball.transform.position.y = Math.random() * 1000 - 500;
