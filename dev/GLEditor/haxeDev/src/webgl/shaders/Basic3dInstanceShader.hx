@@ -17,14 +17,17 @@ class Basic3dInstanceShader extends WebglShader {
         // It will receive data from a buffer
         in vec4 position;
         in vec2 texcoord;
-        in mat4 matrix;
+        in vec4 m1;
+        in vec4 m2;
+        in vec4 m3;
+        in vec4 m4;
 
         out vec2 v_texcoord;
         
         // all shaders have a main function
         void main() {
           // Multiply the position by the matrix.
-          gl_Position = matrix * position;
+          gl_Position = mat4(m1, m2, m3, m4) * position;
 
           v_texcoord = texcoord;
         }
@@ -46,8 +49,8 @@ class Basic3dInstanceShader extends WebglShader {
         out vec4 outColor;
         
         void main() {
-          outColor = texture(u_texture, v_texcoord);
-         // outColor = vec4(v_texcoord, 0.0, 1.0);
+          // outColor = texture(u_texture, v_texcoord);
+         outColor = vec4(v_texcoord, 0.0, 1.0);
         }
         ';
 
