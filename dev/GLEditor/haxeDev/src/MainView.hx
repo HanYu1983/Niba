@@ -56,16 +56,16 @@ class MainView extends VBox {
 
 			final renderInstance:Map<Entity, Null<MeshRenderer>> = [];
 
-			for (i in 0...20000) {
+			for (i in 0...3) {
 				final ball = Tool.createMeshEntity('ball_${i}', DEFAULT_MESH.CUBE3D, 'instanceMaterial');
 				ball.transform.position.x = Math.random() * 1000 - 500;
 				ball.transform.position.y = Math.random() * 1000 - 500;
 				ball.transform.position.z = Math.random() * 1000 - 500;
 				ball.transform.scale.x = ball.transform.scale.y = ball.transform.scale.z = .05;
-				renderInstance.set(ball, ball.getComponent(MeshRenderer));
+				renderEntitys.set(ball, ball.getComponent(MeshRenderer));
 			}
 
-			final instanceMesh = WebglEngine.inst.meshs.get(DEFAULT_MESH.CUBE3D);
+			// final instanceMesh = WebglEngine.inst.meshs.get(DEFAULT_MESH.CUBE3D);
 			// var instanceMatrix:Null<Array<Float32Array>> = null;
 			// if (instanceMesh != null) {
 			// instanceMatrix = instanceMesh.instanceMatrix;
@@ -112,35 +112,35 @@ class MainView extends VBox {
 					}
 
 					
-					if (instanceMesh != null) {
-						var temp = 0;
-						for (entity => meshRenderer in renderInstance) {
-							if (meshRenderer == null)
-								continue;
+					// if (instanceMesh != null) {
+					// 	var temp = 0;
+					// 	for (entity => meshRenderer in renderInstance) {
+					// 		if (meshRenderer == null)
+					// 			continue;
 
-							if (meshRenderer.geometry == null)
-								continue;
+					// 		if (meshRenderer.geometry == null)
+					// 			continue;
 
-							entity.transform.rotation.x += 0.02;
-							final m = entity.transform.getGlobalMatrix();
+					// 		entity.transform.rotation.x += 0.02;
+					// 		final m = entity.transform.getGlobalMatrix();
 
-							var mvp = Mat4Tools.identity();
-							mvp = Mat4Tools.multiply(mvp, p);
-							mvp = Mat4Tools.multiply(mvp, v);
-							mvp = Mat4Tools.multiply(mvp, m);
+					// 		var mvp = Mat4Tools.identity();
+					// 		mvp = Mat4Tools.multiply(mvp, p);
+					// 		mvp = Mat4Tools.multiply(mvp, v);
+					// 		mvp = Mat4Tools.multiply(mvp, m);
 
-							instanceMesh.setInstanceMatrixBuffer(temp, mvp.toArray());
+					// 		instanceMesh.setInstanceMatrixBuffer(temp, mvp.toArray());
 
-							temp += 1;
-						}
-						instanceMesh.setInstanceBuffer();
-					}
+					// 		temp += 1;
+					// 	}
+					// 	instanceMesh.setInstanceBuffer();
+					// }
 
 					// world.update(progress);
 					WebglEngine.inst.render();
 				}
 
-				Browser.window.requestAnimationFrame(render);
+				// Browser.window.requestAnimationFrame(render);
 			}
 			Browser.window.requestAnimationFrame(render);
 		}

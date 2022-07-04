@@ -247,76 +247,107 @@ class WebglEngine {
 
 				if (shader.isInstance()) {
 					LogManager.getLogger("hex").debug('實例化材質流程:${materialId}');
-					// for (geometryId in material.geometrys) {
-					// 	final geometry = geometrys.get(geometryId);
-					// 	if (geometry == null)
-					// 		continue;
-					// 	if (geometry.meshId == null)
-					// 		continue;
 
-					// 	final mesh = meshs.get(geometry.meshId);
-					// 	if (mesh == null)
-					// 		continue;
-					// 	if (mesh.vao == null)
-					// 		continue;
+					final geoMap:Map<WebglMesh, Array<Dynamic>> = [];
+					for (geometryId in material.geometrys) {
+						final geometry = geometrys.get(geometryId);
+						if (geometry == null)
+							continue;
+						if (geometry.meshId == null)
+							continue;
 
-					// 	if (lastVao == null || lastVao != mesh.vao) {
-					// 		gl.bindVertexArray(mesh.vao);
-					// 		debug('綁定vao:${geometry.meshId}');
-					// 	}
-					// 	lastVao = mesh.vao;
+						final mesh = meshs.get(geometry.meshId);
+						if (mesh == null)
+							continue;
+						if (mesh.vao == null)
+							continue;
 
-					// 	for (attri in shader.getUniformMap().keys()) {
-					// 		final pointer = shader.getUniformMap()[attri];
-					// 		final type = shader.getUniformType(attri);
-					// 		final params = geometry.uniform.get(attri);
-					// 		if (pointer == null)
-					// 			continue;
-					// 		if (type == null)
-					// 			continue;
-					// 		if (params == null)
-					// 			continue;
+						if (!geoMap.exists(mesh)) {
+							geoMap.set(mesh, []);
+						}
 
-					// 		LogManager.getLogger("hex").debug('設定uniform:${attri}');
+						final a = geoMap.get(mesh);
+						final params = geometry.uniform.get('u_matrix');
+						// trace('a', a);
+						if (a != null && params != null) {
+							a.push(params);
+						}
 
-					// 		switch (type) {
-					// 			case 'sampler2D':
-					// 				gl.uniform1i(pointer, params);
-					// 			case 'vec2':
-					// 				gl.uniform2fv(pointer, params);
-					// 			case 'vec3':
-					// 				gl.uniform3fv(pointer, params);
-					// 			case 'vec4':
-					// 				gl.uniform4fv(pointer, params);
-					// 			case 'float':
-					// 				gl.uniform1fv(pointer, params);
-					// 			case 'mat3':
-					// 				gl.uniformMatrix3fv(pointer, false, params);
-					// 			case 'mat4':
-					// 				gl.uniformMatrix4fv(pointer, false, params);
-					// 		}
-					// 	}
-					// }
+						// if (lastVao == null || lastVao != mesh.vao) {
+						// 	gl.bindVertexArray(mesh.vao);
+						// 	debug('綁定vao:${geometry.meshId}');
+						// }
+						// lastVao = mesh.vao;
 
-					final geometry = geometrys.get(material.geometrys[0]);
-					if (geometry == null)
-						continue;
-					if (geometry.meshId == null)
-						return;
+						// for (attri in shader.getUniformMap().keys()) {
+						// 	final pointer = shader.getUniformMap()[attri];
+						// 	final type = shader.getUniformType(attri);
+						// 	final params = geometry.uniform.get(attri);
+						// 	if (pointer == null)
+						// 		continue;
+						// 	if (type == null)
+						// 		continue;
+						// 	if (params == null)
+						// 		continue;
 
-					final mesh = meshs.get(geometry.meshId);
-					if (mesh == null)
-						continue;
-					if (mesh.vao == null)
-						continue;
+						// 	LogManager.getLogger("hex").debug('設定uniform:${attri}');
 
-					if (lastVao == null || lastVao != mesh.vao) {
-						gl.bindVertexArray(mesh.vao);
-						debug('綁定vao:${geometry.meshId}');
+						// 	switch (type) {
+						// 		case 'sampler2D':
+						// 			gl.uniform1i(pointer, params);
+						// 		case 'vec2':
+						// 			gl.uniform2fv(pointer, params);
+						// 		case 'vec3':
+						// 			gl.uniform3fv(pointer, params);
+						// 		case 'vec4':
+						// 			gl.uniform4fv(pointer, params);
+						// 		case 'float':
+						// 			gl.uniform1fv(pointer, params);
+						// 		case 'mat3':
+						// 			gl.uniformMatrix3fv(pointer, false, params);
+						// 		case 'mat4':
+						// 			gl.uniformMatrix4fv(pointer, false, params);
+						// 	}
+						// }
 					}
-					lastVao = mesh.vao;
+					// LogManager.getLogger("hex").debug('geoMap:${geoMap.get('')}');
 
-					gl.drawArraysInstanced(gl.TRIANGLES, 0, mesh.getCount(), material.geometrys.length);
+					for (mesh => ary in geoMap) {
+						if (mesh.vao == null)
+							continue;
+						if (lastVao == null || lastVao != mesh.vao) {
+							gl.bindVertexArray(mesh.vao);
+							// debug('綁定vao:${geometry.meshId}');
+						}
+						lastVao = mesh.vao;
+
+						for (mat in ary) {
+							mesh.setInstanceMatrixBuffer(ary.indexOf(mat), mat);
+						}
+						mesh.setInstanceBuffer();
+						trace('ary', ary);
+						gl.drawArraysInstanced(gl.TRIANGLES, 0, mesh.getCount(),ary.length);
+					}
+
+					// final geometry = geometrys.get(material.geometrys[0]);
+					// if (geometry == null)
+					// 	continue;
+					// if (geometry.meshId == null)
+					// 	return;
+
+					// final mesh = meshs.get(geometry.meshId);
+					// if (mesh == null)
+					// 	continue;
+					// if (mesh.vao == null)
+					// 	continue;
+
+					// if (lastVao == null || lastVao != mesh.vao) {
+					// 	gl.bindVertexArray(mesh.vao);
+					// 	debug('綁定vao:${geometry.meshId}');
+					// }
+					// lastVao = mesh.vao;
+
+					// gl.drawArraysInstanced(gl.TRIANGLES, 0, mesh.getCount(), material.geometrys.length);
 				} else {
 					LogManager.getLogger("hex").debug('普通流程:${materialId}');
 					for (geometryId in material.geometrys) {

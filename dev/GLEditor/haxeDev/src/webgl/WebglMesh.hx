@@ -65,7 +65,7 @@ class WebglMesh {
 			gl.bindBuffer(gl.ARRAY_BUFFER, texcoordBuffer);
 			gl.bufferData(gl.ARRAY_BUFFER, Syntax.code('new Float32Array')(getTexcoord()), gl.STATIC_DRAW);
 
-			final numInstances = 20000;
+			final numInstances = 3;
 			matrixData = new Float32Array(numInstances * 16);
 			// final matrices = [];
 			for (i in 0...numInstances) {
