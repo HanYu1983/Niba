@@ -19,6 +19,7 @@ class Basic3dInstanceShader extends WebglShader {
 
         in vec4 position;
         in vec2 texcoord;
+        in vec4 normal;
         in vec4 color;
 
         // 組成modelMatrix的四個vec4
@@ -34,19 +35,25 @@ class Basic3dInstanceShader extends WebglShader {
         out vec2 v_texcoord;
         out vec4 v_color;
         out vec4 v_color2;
+        out vec4 v_normal;
+        out mat4 v_modelMatrix;
         
         // all shaders have a main function
         // 所有的著色器都有main方法
 
         void main() {
 
+          v_modelMatrix = mat4(m1, m2, m3, m4);
+
           // 把矩陣組起來算位置坐標
-          mat4 mvp = u_projectMatrix * inverse(u_viewMatrix) * mat4(m1, m2, m3, m4);
+          mat4 mvp = u_projectMatrix * inverse(u_viewMatrix) * v_modelMatrix;
           gl_Position = mvp * position;
 
           v_texcoord = texcoord;
           v_color = color;
           v_color2 = color2;
+          // v_normal = v_modelMatrix * vec4(normal.xyz, 0);
+          v_normal = normal;
         }
         ';
 
@@ -60,16 +67,26 @@ class Basic3dInstanceShader extends WebglShader {
         in vec2 v_texcoord;
         in vec4 v_color;
         in vec4 v_color2;
+        in vec4 v_normal;
+        in mat4 v_modelMatrix;
         
         uniform sampler2D u_texture;
-        uniform vec4 u_color;
+        uniform vec3 u_reverseLightDirection;
         
         // we need to declare an output for the fragment shader
         out vec4 outColor;
         
         void main() {
-          // outColor = texture(u_texture, v_texcoord);
-          outColor = vec4(v_color2.xyz, 1.0);
+          vec4 c = texture(u_texture, v_texcoord);
+
+          vec3 normal = normalize(v_normal.xyz);
+
+          vec3 worldNormal = (transpose(inverse(v_modelMatrix)) * vec4(normal, 0)).xyz;
+
+          float light = dot(worldNormal, u_reverseLightDirection);
+
+          outColor = v_color2;
+          outColor.rgb *= light;
         }
         ';
 
@@ -84,7 +101,8 @@ class Basic3dInstanceShader extends WebglShader {
 			'u_projectMatrix' => 'mat4',
 			'u_viewMatrix' => 'mat4',
 			'u_color' => 'vec4',
-			'u_texture' => 'sampler2D'
+			'u_texture' => 'sampler2D',
+			'u_reverseLightDirection' => 'vec3',
 		];
 	}
 }

@@ -62,6 +62,17 @@ class WebglMesh {
 
 			locationPointer++;
 
+			// 綁定法綫
+			final normalBuffer = gl.createBuffer();
+			gl.bindBuffer(gl.ARRAY_BUFFER, normalBuffer);
+			gl.bufferData(gl.ARRAY_BUFFER, new Float32Array(getNormal()), gl.STATIC_DRAW);
+			gl.enableVertexAttribArray(locationPointer);
+
+			// 定義參數使用方法，這裏告知gl說，buffer中每兩個值為一組來使用
+			gl.vertexAttribPointer(locationPointer, 3, gl.FLOAT, false, 0, 0);
+
+			locationPointer++;
+
 			// 綁定頂點顔色
 			final colorBuffer = gl.createBuffer();
 			gl.bindBuffer(gl.ARRAY_BUFFER, colorBuffer);
@@ -267,5 +278,9 @@ class WebglMesh {
 			c.push(0.0);
 		}
 		return c;
+	}
+
+	function getNormal():Array<Float> {
+		return getPosition().map((v) -> 0.0);
 	}
 }

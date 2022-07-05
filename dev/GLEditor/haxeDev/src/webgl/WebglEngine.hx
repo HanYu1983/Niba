@@ -66,7 +66,7 @@ class WebglEngine {
 
 		final instanceMaterial = WebglEngine.inst.createMaterial('instanceMaterial', 'Basic3dInstanceShader');
 		if (instanceMaterial != null)
-			instanceMaterial.textures.push('red');
+			instanceMaterial.textures.push('noise');
 
 		final instanceMaterial2 = WebglEngine.inst.createMaterial('instanceMaterial2', 'Basic3dInstanceShader');
 		if (instanceMaterial2 != null)

@@ -13,7 +13,6 @@ class Cube3dMesh extends WebglMesh {
 	// 5 100.0, 100.0, 100.0,
 	// 6 100.0, -100.0, -100.0,
 	// 7 100.0, 100.0, -100.0,
-
 	// 0,4,1,1,4,5
 	// 2,0,3,3,0,1
 	// 6,2,7,7,2,3
@@ -32,19 +31,60 @@ class Cube3dMesh extends WebglMesh {
 	}
 
 	override function getTexcoord():Array<Float> {
-        var out = [];
-        for(i in 0...6){
-            out = out.concat([
-                0.0, 0.0,
-                1.0, 0.0,
-                0.0, 1.0,
-    
-                0.0, 1.0,
-                1.0, 0.0,
-                1.0, 1.0,
-            ]);
-        }
+		var out = [];
+		for (i in 0...6) {
+			out = out.concat([
+				0.0, 0.0,
+				1.0, 0.0,
+				0.0, 1.0,
+
+				0.0, 1.0,
+				1.0, 0.0,
+				1.0, 1.0,
+			]);
+		}
 		return out;
+	}
+
+	override function getNormal():Array<Float> {
+		final normals = [];
+		for (i in 0...6) {
+			normals.push(0.0);
+			normals.push(0.0);
+			normals.push(1.0);
+		}
+
+		for (i in 0...6) {
+			normals.push(-1.0);
+			normals.push(0.0);
+			normals.push(0.0);
+		}
+
+		for (i in 0...6) {
+			normals.push(0.0);
+			normals.push(0.0);
+			normals.push(-1.0);
+		}
+
+		for (i in 0...6) {
+			normals.push(1.0);
+			normals.push(0.0);
+			normals.push(0.0);
+		}
+
+		for (i in 0...6) {
+			normals.push(0.0);
+			normals.push(-1.0);
+			normals.push(0.0);
+		}
+
+		for (i in 0...6) {
+			normals.push(0.0);
+			normals.push(1.0);
+			normals.push(0.0);
+		}
+
+		return normals;
 	}
 
 	override function getColor():Array<Float> {
