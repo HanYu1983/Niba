@@ -26,12 +26,14 @@ class Basic3dInstanceShader extends WebglShader {
         in vec4 m2;
         in vec4 m3;
         in vec4 m4;
+        in vec4 color2;
 
         uniform mat4 u_projectMatrix;
         uniform mat4 u_viewMatrix;
 
         out vec2 v_texcoord;
         out vec4 v_color;
+        out vec4 v_color2;
         
         // all shaders have a main function
         // 所有的著色器都有main方法
@@ -44,6 +46,7 @@ class Basic3dInstanceShader extends WebglShader {
 
           v_texcoord = texcoord;
           v_color = color;
+          v_color2 = color2;
         }
         ';
 
@@ -56,6 +59,7 @@ class Basic3dInstanceShader extends WebglShader {
 
         in vec2 v_texcoord;
         in vec4 v_color;
+        in vec4 v_color2;
         
         uniform sampler2D u_texture;
         uniform vec4 u_color;
@@ -64,8 +68,8 @@ class Basic3dInstanceShader extends WebglShader {
         out vec4 outColor;
         
         void main() {
-          outColor = texture(u_texture, v_texcoord);
-        //  outColor = vec4(v_color.xyz, 1.0);
+          // outColor = texture(u_texture, v_texcoord);
+          outColor = vec4(v_color2.xyz, 1.0);
         }
         ';
 

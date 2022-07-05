@@ -54,12 +54,17 @@ class MainView extends VBox {
 			rightArm.transform.position.x = 150;
 			rightArm.transform.rotation.y = 3.14;
 
-			for (i in 0...3) {
+			for (i in 0...10) {
 				final ball = Tool.createMeshEntity('ball_${i}', DEFAULT_MESH.CUBE3D, 'instanceMaterial');
 				ball.transform.position.x = Math.random() * 1000 - 500;
 				ball.transform.position.y = Math.random() * 1000 - 500;
 				ball.transform.position.z = Math.random() * 1000 - 500;
 				ball.transform.scale.x = ball.transform.scale.y = ball.transform.scale.z = .5;
+				var mr = ball.getComponent(MeshRenderer);
+				if (mr != null && mr.geometry != null) {
+					mr.geometry.uniform.set('u_color', [Math.random(), Math.random(), Math.random(), 1.0]);
+				}
+
 				renderEntitys.set(ball, ball.getComponent(MeshRenderer));
 
 				final f = Tool.createMeshEntity('f_${i}', DEFAULT_MESH.F3D, 'instanceMaterial');
@@ -67,24 +72,28 @@ class MainView extends VBox {
 				f.transform.position.y = Math.random() * 1000 - 500;
 				f.transform.position.z = Math.random() * 1000 - 500;
 				f.transform.scale.x = f.transform.scale.y = f.transform.scale.z = .5;
+				var mr = f.getComponent(MeshRenderer);
+				if (mr != null && mr.geometry != null) {
+					mr.geometry.uniform.set('u_color', [Math.random(), Math.random(), Math.random(), 1.0]);
+				}
 				renderEntitys.set(f, f.getComponent(MeshRenderer));
 			}
 
-			for (i in 0...3) {
-				final ball = Tool.createMeshEntity('ball2_${i}', DEFAULT_MESH.CUBE3D, 'instanceMaterial2');
-				ball.transform.position.x = Math.random() * 1000 - 500;
-				ball.transform.position.y = Math.random() * 1000 - 500;
-				ball.transform.position.z = Math.random() * 1000 - 500;
-				ball.transform.scale.x = ball.transform.scale.y = ball.transform.scale.z = .5;
-				renderEntitys.set(ball, ball.getComponent(MeshRenderer));
+			// for (i in 0...3) {
+			// 	final ball = Tool.createMeshEntity('ball2_${i}', DEFAULT_MESH.CUBE3D, 'instanceMaterial2');
+			// 	ball.transform.position.x = Math.random() * 1000 - 500;
+			// 	ball.transform.position.y = Math.random() * 1000 - 500;
+			// 	ball.transform.position.z = Math.random() * 1000 - 500;
+			// 	ball.transform.scale.x = ball.transform.scale.y = ball.transform.scale.z = .5;
+			// 	renderEntitys.set(ball, ball.getComponent(MeshRenderer));
 
-				final f = Tool.createMeshEntity('f2_${i}', DEFAULT_MESH.F3D, 'instanceMaterial2');
-				f.transform.position.x = Math.random() * 1000 - 500;
-				f.transform.position.y = Math.random() * 1000 - 500;
-				f.transform.position.z = Math.random() * 1000 - 500;
-				f.transform.scale.x = f.transform.scale.y = f.transform.scale.z = .5;
-				renderEntitys.set(f, f.getComponent(MeshRenderer));
-			}
+			// 	final f = Tool.createMeshEntity('f2_${i}', DEFAULT_MESH.F3D, 'instanceMaterial2');
+			// 	f.transform.position.x = Math.random() * 1000 - 500;
+			// 	f.transform.position.y = Math.random() * 1000 - 500;
+			// 	f.transform.position.z = Math.random() * 1000 - 500;
+			// 	f.transform.scale.x = f.transform.scale.y = f.transform.scale.z = .5;
+			// 	renderEntitys.set(f, f.getComponent(MeshRenderer));
+			// }
 
 			renderEntitys.set(body, body.getComponent(MeshRenderer));
 			renderEntitys.set(leftArm, leftArm.getComponent(MeshRenderer));
@@ -108,7 +117,6 @@ class MainView extends VBox {
 					rightArm.transform.position.y = Math.cos(timestamp * 0.001) * 20 - 10;
 
 					final p = cameraComponent.getProjectMatrix();
-					// final v = Mat4Tools.invert(camera.transform.getGlobalMatrix());
 					final v = camera.transform.getGlobalMatrix();
 					for (entity => meshRenderer in renderEntitys) {
 						if (meshRenderer == null)
@@ -119,21 +127,17 @@ class MainView extends VBox {
 
 						final m = entity.transform.getGlobalMatrix();
 
-						// var mvp = Mat4Tools.identity();
-						// mvp = Mat4Tools.multiply(mvp, p);
-						// mvp = Mat4Tools.multiply(mvp, v);
-						// mvp = Mat4Tools.multiply(mvp, m);
-
 						meshRenderer.geometry.uniform.set('u_modelMatrix', m.toArray());
 						meshRenderer.geometry.uniform.set('u_viewMatrix', v.toArray());
 						meshRenderer.geometry.uniform.set('u_projectMatrix', p.toArray());
+						// meshRenderer.geometry.uniform.set('u_color', [Math.sin(timestamp * .001), 0.0, 0.0, 1.0]);
 					}
 
 					// world.update(progress);
 					WebglEngine.inst.render();
 				}
 
-				// Browser.window.requestAnimationFrame(render);
+				Browser.window.requestAnimationFrame(render);
 			}
 			Browser.window.requestAnimationFrame(render);
 		}

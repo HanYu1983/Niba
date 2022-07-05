@@ -20,7 +20,7 @@ class Main {
         
 		// Create a logger config and add targets
 		// (at this point we can also add filters to the configuration etc.)
-		var lc1:LoggerConfig = LoggerConfig.createLogger("hex", LogLevel.ALL, null, null); // Logger will only forward warnings and higher
+		var lc1:LoggerConfig = LoggerConfig.createLogger("hex", LogLevel.OFF, null, null); // Logger will only forward warnings and higher
 		lc1.addLogTarget(traceTarget, LogLevel.ALL, null); // Target will accept every event that arrives (in this case only warnings+ will be forwarded from the logger anyway)
 		configuration.addLogger(lc1.name, lc1); // Add logger config to the configuration
 

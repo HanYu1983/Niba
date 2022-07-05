@@ -126,32 +126,46 @@ class WebglMesh {
 				gl.vertexAttribDivisor(locationPointer, 1);
 				bufferMap.set('m4', m4);
 				bufferDataMap.set('m4data', m4data);
+
+				locationPointer++;
+
+				final color2 = gl.createBuffer();
+				final color2Data = new Float32Array(numInstances * 4);
+				gl.bindBuffer(gl.ARRAY_BUFFER, color2);
+				gl.bufferData(gl.ARRAY_BUFFER, color2Data, gl.DYNAMIC_DRAW);
+				gl.enableVertexAttribArray(locationPointer);
+				gl.vertexAttribPointer(locationPointer, 4, gl.FLOAT, false, 0, 0);
+				gl.vertexAttribDivisor(locationPointer, 1);
+				bufferMap.set('color2', color2);
+				bufferDataMap.set('color2Data', color2Data);
 			}
 		}
 	}
 
-	public function setInstanceModelMatrixData(index, mvpAry) {
-		// 把matrix拿來drawInstance的參考
-		// for (i in 0...16) {
-		// 	instanceMatrix[index][i] = mvpAry[i];
-		// }
+	public function setInstanceBufferData(index:Int, uniforms:Dynamic) {
+		final modelMatrix = uniforms.get('u_modelMatrix');
+		final color2 = uniforms.get('u_color');
 
 		for (i in 0...4) {
 			final m1data = bufferDataMap.get('m1data');
 			if (m1data != null)
-				m1data[index * 4 + i] = mvpAry[i];
+				m1data[index * 4 + i] = modelMatrix[i];
 
 			final m2data = bufferDataMap.get('m2data');
 			if (m2data != null)
-				m2data[index * 4 + i] = mvpAry[i + 4];
+				m2data[index * 4 + i] = modelMatrix[i + 4];
 
 			final m3data = bufferDataMap.get('m3data');
 			if (m3data != null)
-				m3data[index * 4 + i] = mvpAry[i + 8];
+				m3data[index * 4 + i] = modelMatrix[i + 8];
 
 			final m4data = bufferDataMap.get('m4data');
 			if (m4data != null)
-				m4data[index * 4 + i] = mvpAry[i + 12];
+				m4data[index * 4 + i] = modelMatrix[i + 12];
+
+			final color2Data = bufferDataMap.get('color2Data');
+			if (color2Data != null)
+				color2Data[index * 4 + i] = color2[i];
 		}
 	}
 
@@ -182,6 +196,10 @@ class WebglMesh {
 			if (m4data == null)
 				return;
 
+			final color2Data = bufferDataMap.get('color2Data');
+			if (color2Data == null)
+				return;
+
 			final m1 = bufferMap.get('m1');
 			if (m1 == null)
 				return;
@@ -198,6 +216,10 @@ class WebglMesh {
 			if (m4 == null)
 				return;
 
+			final color2 = bufferMap.get('color2');
+			if (color2 == null)
+				return;
+
 			gl.bindBuffer(gl.ARRAY_BUFFER, m1);
 			gl.bufferSubData(gl.ARRAY_BUFFER, 0, m1data);
 
@@ -209,6 +231,9 @@ class WebglMesh {
 
 			gl.bindBuffer(gl.ARRAY_BUFFER, m4);
 			gl.bufferSubData(gl.ARRAY_BUFFER, 0, m4data);
+
+			gl.bindBuffer(gl.ARRAY_BUFFER, color2);
+			gl.bufferSubData(gl.ARRAY_BUFFER, 0, color2Data);
 		}
 	}
 

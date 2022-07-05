@@ -46,8 +46,8 @@ class WebglEngine {
 		gl = CanvasHelpers.getWebGL2(cast(dom_gl, CanvasElement));
 
 		// shaders.push(new Basic2dShader());
-		meshs.set(DEFAULT_MESH.F3D, new F3dMesh(5));
-		meshs.set(DEFAULT_MESH.CUBE3D, new Cube3dMesh(5));
+		meshs.set(DEFAULT_MESH.F3D, new F3dMesh(10));
+		meshs.set(DEFAULT_MESH.CUBE3D, new Cube3dMesh(10));
 		shaders.set('Basic3dShader', new Basic3dShader());
 		shaders.set('Basic3dInstanceShader', new Basic3dInstanceShader());
 
@@ -326,8 +326,7 @@ class WebglEngine {
 					LogManager.getLogger("hex").debug('實例化材質流程:${materialId}');
 
 					// 收集實例化（drawInstance）需要的物件
-					final instanceMap:Map<DEFAULT_MESH, Array<Dynamic>> = [];
-					final instanceMapUniform:Map<DEFAULT_MESH, WebglGeometry> = [];
+					final instanceMapBuffer:Map<DEFAULT_MESH, Array<WebglGeometry>> = [];
 					for (geometryId in material.geometrys) {
 						final geometry = geometrys.get(geometryId);
 						if (geometry == null)
@@ -342,21 +341,18 @@ class WebglEngine {
 							continue;
 
 						final meshId = geometry.meshId;
-						if (!instanceMap.exists(meshId)) {
-							instanceMap.set(meshId, []);
+						if (!instanceMapBuffer.exists(meshId)) {
+							instanceMapBuffer.set(meshId, []);
 						}
-						instanceMapUniform.set(meshId, geometry);
 
-						// 實例化的流程是把所有的matrix一起記下來，然後再一次畫出，減少drawcall
-						final matrixs = instanceMap.get(meshId);
-						final params = geometry.uniform.get('u_modelMatrix');
-
-						if (matrixs != null && params != null) {
-							matrixs.push(params);
+						// 實例化的流程是把所有的uniform一起記下來，然後再一次畫出，減少drawcall
+						final geometryForBuffers = instanceMapBuffer.get(meshId);
+						if (geometryForBuffers != null) {
+							geometryForBuffers.push(geometry);
 						}
 					}
 
-					for (meshId => matrixs in instanceMap) {
+					for (meshId => geometrys in instanceMapBuffer) {
 						final mesh = WebglEngine.inst.meshs.get(meshId);
 						if (mesh == null)
 							continue;
@@ -364,18 +360,20 @@ class WebglEngine {
 							continue;
 
 						setVao(meshId, mesh);
-						final geometry = instanceMapUniform.get(meshId);
+
+						// 取第一個的geometry為主要的uniform參數
+						final geometry = geometrys[0];
 						if (geometry != null) {
 							setUniform(shader, geometry);
 						}
 
-						for (mat in matrixs) {
-							mesh.setInstanceModelMatrixData(matrixs.indexOf(mat), mat);
+						for (geo in geometrys) {
+							mesh.setInstanceBufferData(geometrys.indexOf(geo), geo.uniform);
 						}
 
 						mesh.bindInstanceBufferData();
 
-						gl.drawArraysInstanced(gl.TRIANGLES, 0, mesh.getCount(), matrixs.length);
+						gl.drawArraysInstanced(gl.TRIANGLES, 0, mesh.getCount(), geometrys.length);
 						LogManager.getLogger("hex").debug('實例化渲染執行');
 					}
 				} else {
