@@ -2,8 +2,8 @@ package webgl.meshs;
 
 @:nullSafety
 class Rectangle2dMesh extends WebglMesh {
-	public function new() {
-		super();
+	public function new(numInstances = 0) {
+		super(numInstances);
 	}
 
 	override function getPosition():Array<Float> {

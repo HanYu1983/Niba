@@ -59,14 +59,14 @@ class MainView extends VBox {
 				ball.transform.position.x = Math.random() * 1000 - 500;
 				ball.transform.position.y = Math.random() * 1000 - 500;
 				ball.transform.position.z = Math.random() * 1000 - 500;
-				ball.transform.scale.x = ball.transform.scale.y = ball.transform.scale.z = .05;
+				ball.transform.scale.x = ball.transform.scale.y = ball.transform.scale.z = .5;
 				renderEntitys.set(ball, ball.getComponent(MeshRenderer));
 
 				final f = Tool.createMeshEntity('f_${i}', DEFAULT_MESH.F3D, 'instanceMaterial');
 				f.transform.position.x = Math.random() * 1000 - 500;
 				f.transform.position.y = Math.random() * 1000 - 500;
 				f.transform.position.z = Math.random() * 1000 - 500;
-				f.transform.scale.x = f.transform.scale.y = f.transform.scale.z = .2;
+				f.transform.scale.x = f.transform.scale.y = f.transform.scale.z = .5;
 				renderEntitys.set(f, f.getComponent(MeshRenderer));
 			}
 
@@ -75,14 +75,14 @@ class MainView extends VBox {
 				ball.transform.position.x = Math.random() * 1000 - 500;
 				ball.transform.position.y = Math.random() * 1000 - 500;
 				ball.transform.position.z = Math.random() * 1000 - 500;
-				ball.transform.scale.x = ball.transform.scale.y = ball.transform.scale.z = .05;
+				ball.transform.scale.x = ball.transform.scale.y = ball.transform.scale.z = .5;
 				renderEntitys.set(ball, ball.getComponent(MeshRenderer));
 
 				final f = Tool.createMeshEntity('f2_${i}', DEFAULT_MESH.F3D, 'instanceMaterial2');
 				f.transform.position.x = Math.random() * 1000 - 500;
 				f.transform.position.y = Math.random() * 1000 - 500;
 				f.transform.position.z = Math.random() * 1000 - 500;
-				f.transform.scale.x = f.transform.scale.y = f.transform.scale.z = .2;
+				f.transform.scale.x = f.transform.scale.y = f.transform.scale.z = .5;
 				renderEntitys.set(f, f.getComponent(MeshRenderer));
 			}
 

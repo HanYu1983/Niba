@@ -1,8 +1,8 @@
 package webgl.meshs;
 
 class Cube3dMesh extends WebglMesh {
-	public function new() {
-		super();
+	public function new(numInstances = 0) {
+		super(numInstances);
 	}
 
 	// 0 -100.0, -100.0, 100.0,

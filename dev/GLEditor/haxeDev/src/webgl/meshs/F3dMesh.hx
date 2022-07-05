@@ -2,8 +2,8 @@ package webgl.meshs;
 
 @:nullSafety
 class F3dMesh extends WebglMesh {
-	public function new() {
-		super();
+	public function new(numInstances = 0) {
+		super(numInstances);
 	}
 
 	override function getPosition():Array<Float> {
