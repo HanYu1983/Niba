@@ -13,16 +13,20 @@ class Basic3dShader extends WebglShader {
         // It will receive data from a buffer
         in vec4 position;
         in vec2 texcoord;
+        in vec4 color;
         
         // A matrix to transform the positions by
-        uniform mat4 u_matrix;
+        uniform mat4 u_modelMatrix;
+        uniform mat4 u_projectMatrix;
+        uniform mat4 u_viewMatrix;
 
         out vec2 v_texcoord;
         
         // all shaders have a main function
         void main() {
           // Multiply the position by the matrix.
-          gl_Position = u_matrix * position;
+          mat4 mvp = u_projectMatrix * inverse(u_viewMatrix) * u_modelMatrix;
+          gl_Position = mvp * position;
 
           v_texcoord = texcoord;
         }
@@ -56,6 +60,16 @@ class Basic3dShader extends WebglShader {
 	}
 
 	override function getUniforms():haxe.ds.Map<String, String> {
-		return ['u_matrix' => 'mat4', 'u_color' => 'vec4', 'u_texture' => 'sampler2D'];
+		return return [
+			'u_projectMatrix' => 'mat4',
+			'u_viewMatrix' => 'mat4',
+			'u_modelMatrix' => 'mat4',
+			'u_color' => 'vec4',
+			'u_texture' => 'sampler2D'
+		];
+	}
+
+	override function isInstance():Bool {
+		return false;
 	}
 }

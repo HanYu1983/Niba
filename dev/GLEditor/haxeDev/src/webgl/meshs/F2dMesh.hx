@@ -6,7 +6,7 @@ class F2dMesh extends WebglMesh {
 		super(numInstances);
 	}
 
-    override function getPosition():Array<Int> {
+    override function getPosition():Array<Float> {
         return [
             // left column
             0, 0,

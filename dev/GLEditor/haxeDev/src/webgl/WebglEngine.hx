@@ -244,6 +244,57 @@ class WebglEngine {
 		gl.enable(gl.CULL_FACE);
 
 		var lastVao:Null<Dynamic> = null;
+
+		function setVao(meshId:DEFAULT_MESH, mesh:WebglMesh) {
+			if (gl == null)
+				return;
+
+			if (mesh.vao == null)
+				return;
+
+			if (lastVao == null || lastVao != mesh.vao) {
+				gl.bindVertexArray(mesh.vao);
+				debug('綁定vao:${meshId}');
+			}
+			lastVao = mesh.vao;
+		}
+
+		function setUniform(shader:WebglShader, geometry:WebglGeometry) {
+			if (gl == null)
+				return;
+
+			for (attri in shader.getUniformMap().keys()) {
+				final pointer = shader.getUniformMap()[attri];
+				final type = shader.getUniformType(attri);
+				final params = geometry.uniform.get(attri);
+				if (pointer == null)
+					continue;
+				if (type == null)
+					continue;
+				if (params == null)
+					continue;
+
+				LogManager.getLogger("hex").debug('設定uniform:${attri}');
+
+				switch (type) {
+					case 'sampler2D':
+						gl.uniform1i(pointer, params);
+					case 'vec2':
+						gl.uniform2fv(pointer, params);
+					case 'vec3':
+						gl.uniform3fv(pointer, params);
+					case 'vec4':
+						gl.uniform4fv(pointer, params);
+					case 'float':
+						gl.uniform1fv(pointer, params);
+					case 'mat3':
+						gl.uniformMatrix3fv(pointer, false, params);
+					case 'mat4':
+						gl.uniformMatrix4fv(pointer, false, params);
+				}
+			}
+		}
+
 		for (shaderId => shader in shaders) {
 			if (shader == null)
 				continue;
@@ -276,6 +327,7 @@ class WebglEngine {
 
 					// 收集實例化（drawInstance）需要的物件
 					final instanceMap:Map<DEFAULT_MESH, Array<Dynamic>> = [];
+					final instanceMapUniform:Map<DEFAULT_MESH, WebglGeometry> = [];
 					for (geometryId in material.geometrys) {
 						final geometry = geometrys.get(geometryId);
 						if (geometry == null)
@@ -293,10 +345,11 @@ class WebglEngine {
 						if (!instanceMap.exists(meshId)) {
 							instanceMap.set(meshId, []);
 						}
+						instanceMapUniform.set(meshId, geometry);
 
 						// 實例化的流程是把所有的matrix一起記下來，然後再一次畫出，減少drawcall
 						final matrixs = instanceMap.get(meshId);
-						final params = geometry.uniform.get('u_matrix');
+						final params = geometry.uniform.get('u_modelMatrix');
 
 						if (matrixs != null && params != null) {
 							matrixs.push(params);
@@ -309,18 +362,21 @@ class WebglEngine {
 							continue;
 						if (mesh.vao == null)
 							continue;
-						if (lastVao == null || lastVao != mesh.vao) {
-							gl.bindVertexArray(mesh.vao);
-							debug('綁定vao:${meshId}');
+
+						setVao(meshId, mesh);
+						final geometry = instanceMapUniform.get(meshId);
+						if (geometry != null) {
+							setUniform(shader, geometry);
 						}
-						lastVao = mesh.vao;
 
 						for (mat in matrixs) {
-							mesh.setInstanceMatrixBuffer(matrixs.indexOf(mat), mat);
+							mesh.setInstanceModelMatrixData(matrixs.indexOf(mat), mat);
 						}
 
-						mesh.setInstanceBuffer();
+						mesh.bindInstanceBufferData();
+
 						gl.drawArraysInstanced(gl.TRIANGLES, 0, mesh.getCount(), matrixs.length);
+						LogManager.getLogger("hex").debug('實例化渲染執行');
 					}
 				} else {
 					LogManager.getLogger("hex").debug('普通流程:${materialId}');
@@ -337,43 +393,11 @@ class WebglEngine {
 						if (mesh.vao == null)
 							continue;
 
-						if (lastVao == null || lastVao != mesh.vao) {
-							gl.bindVertexArray(mesh.vao);
-							debug('綁定vao:${geometry.meshId}');
-						}
-						lastVao = mesh.vao;
+						setVao(geometry.meshId, mesh);
+						setUniform(shader, geometry);
 
-						for (attri in shader.getUniformMap().keys()) {
-							final pointer = shader.getUniformMap()[attri];
-							final type = shader.getUniformType(attri);
-							final params = geometry.uniform.get(attri);
-							if (pointer == null)
-								continue;
-							if (type == null)
-								continue;
-							if (params == null)
-								continue;
-
-							LogManager.getLogger("hex").debug('設定uniform:${attri}');
-
-							switch (type) {
-								case 'sampler2D':
-									gl.uniform1i(pointer, params);
-								case 'vec2':
-									gl.uniform2fv(pointer, params);
-								case 'vec3':
-									gl.uniform3fv(pointer, params);
-								case 'vec4':
-									gl.uniform4fv(pointer, params);
-								case 'float':
-									gl.uniform1fv(pointer, params);
-								case 'mat3':
-									gl.uniformMatrix3fv(pointer, false, params);
-								case 'mat4':
-									gl.uniformMatrix4fv(pointer, false, params);
-							}
-						}
 						gl.drawArrays(gl.TRIANGLES, 0, mesh.getCount());
+						LogManager.getLogger("hex").debug('普通渲染執行');
 					}
 				}
 			}
@@ -388,7 +412,7 @@ class WebglEngine {
 		if (success) {
 			return shader;
 		}
-		debug(gl.getShaderInfoLog(shader));
+		LogManager.getLogger('hex').debug(gl.getShaderInfoLog(shader));
 		gl.deleteShader(shader);
 		return null;
 	}
@@ -402,7 +426,7 @@ class WebglEngine {
 		if (success) {
 			return p;
 		}
-		debug(gl.getProgramInfoLog(p));
+		LogManager.getLogger('hex').debug(gl.getProgramInfoLog(p));
 		gl.deleteProgram(p);
 		return null;
 	}

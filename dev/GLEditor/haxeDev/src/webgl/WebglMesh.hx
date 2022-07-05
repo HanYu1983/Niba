@@ -18,9 +18,9 @@ class WebglMesh {
 	public function new(numInstances = 0) {
 		final gl = WebglEngine.inst.gl;
 		if (gl != null) {
-
 			// 把matrix拿來drawInstance的參考
 			// 這裏是用matrix的方法來drawInstance。因爲這個方法比較不好記憶，所以下面改用4個vec4來做，這樣如果也想要別的參數也實例化，就可以直接參考
+			// 如果想寫成矩陣形式可以參考:https://webgl2fundamentals.org/webgl/lessons/zh_cn/webgl-instanced-drawing.html
 			// matrixData = new Float32Array(numInstances * 16);
 			// for (i in 0...numInstances) {
 			// 	final byteOffsetToMatrix = i * 16 * 4;
@@ -30,6 +30,8 @@ class WebglMesh {
 			// matrixBuffer = gl.createBuffer();
 			// gl.bindBuffer(gl.ARRAY_BUFFER, matrixBuffer);
 			// gl.bufferData(gl.ARRAY_BUFFER, matrixData, gl.DYNAMIC_DRAW);
+
+			var locationPointer = 0;
 
 			vao = gl.createVertexArray();
 			gl.bindVertexArray(vao);
@@ -42,24 +44,32 @@ class WebglMesh {
 			gl.bufferData(gl.ARRAY_BUFFER, new Float32Array(getPosition()), gl.STATIC_DRAW);
 
 			// 指定參數位置為0（vertex shader中的第一個in的參數的位置）
-			gl.enableVertexAttribArray(0);
+			gl.enableVertexAttribArray(locationPointer);
 
 			// 定義參數使用方法，這裏告知gl說，buffer中每三個值為一組來使用
-			gl.vertexAttribPointer(0, 3, gl.FLOAT, false, 0, 0);
+			gl.vertexAttribPointer(locationPointer, 3, gl.FLOAT, false, 0, 0);
+
+			locationPointer++;
 
 			// 綁定紋理坐標
 			final texcoordBuffer = gl.createBuffer();
 			gl.bindBuffer(gl.ARRAY_BUFFER, texcoordBuffer);
 			gl.bufferData(gl.ARRAY_BUFFER, new Float32Array(getTexcoord()), gl.STATIC_DRAW);
-			gl.enableVertexAttribArray(1);
+			gl.enableVertexAttribArray(locationPointer);
 
 			// 定義參數使用方法，這裏告知gl說，buffer中每兩個值為一組來使用
-			gl.vertexAttribPointer(1, 2, gl.FLOAT, false, 0, 0);
+			gl.vertexAttribPointer(locationPointer, 2, gl.FLOAT, false, 0, 0);
+
+			locationPointer++;
 
 			// 綁定頂點顔色
 			final colorBuffer = gl.createBuffer();
 			gl.bindBuffer(gl.ARRAY_BUFFER, colorBuffer);
 			gl.bufferData(gl.ARRAY_BUFFER, new Float32Array(getColor()), gl.STATIC_DRAW);
+			gl.enableVertexAttribArray(locationPointer);
+			gl.vertexAttribPointer(locationPointer, 4, gl.FLOAT, false, 0, 0);
+
+			locationPointer++;
 
 			if (numInstances > 0) {
 				// 綁定矩陣第一行，并且因爲是用drawInstance的方法，所以這裏只是先告知gl需要的buffer大小，并沒有實際的值
@@ -71,50 +81,56 @@ class WebglMesh {
 
 				// 只放入空bufferData（這樣gl才知道要借多少空間出來）
 				gl.bufferData(gl.ARRAY_BUFFER, m1data, gl.DYNAMIC_DRAW);
-				gl.enableVertexAttribArray(2);
+				gl.enableVertexAttribArray(locationPointer);
 
 				// 定義參數使用方法，這裏告知gl說，buffer中每四個值為一組來使用
-				gl.vertexAttribPointer(2, 4, gl.FLOAT, false, 0, 0);
+				gl.vertexAttribPointer(locationPointer, 4, gl.FLOAT, false, 0, 0);
 
 				// 定義drawInstance每畫一個物件的時候，這裏的值要換到下一組
-				gl.vertexAttribDivisor(2, 1);
+				gl.vertexAttribDivisor(locationPointer, 1);
 				bufferMap.set('m1', m1);
 				bufferDataMap.set('m1data', m1data);
+
+				locationPointer++;
 
 				final m2 = gl.createBuffer();
 				final m2data = new Float32Array(numInstances * 4);
 				gl.bindBuffer(gl.ARRAY_BUFFER, m2);
 				gl.bufferData(gl.ARRAY_BUFFER, m2data, gl.DYNAMIC_DRAW);
-				gl.enableVertexAttribArray(3);
-				gl.vertexAttribPointer(3, 4, gl.FLOAT, false, 0, 0);
-				gl.vertexAttribDivisor(3, 1);
+				gl.enableVertexAttribArray(locationPointer);
+				gl.vertexAttribPointer(locationPointer, 4, gl.FLOAT, false, 0, 0);
+				gl.vertexAttribDivisor(locationPointer, 1);
 				bufferMap.set('m2', m2);
 				bufferDataMap.set('m2data', m2data);
+
+				locationPointer++;
 
 				final m3 = gl.createBuffer();
 				final m3data = new Float32Array(numInstances * 4);
 				gl.bindBuffer(gl.ARRAY_BUFFER, m3);
 				gl.bufferData(gl.ARRAY_BUFFER, m3data, gl.DYNAMIC_DRAW);
-				gl.enableVertexAttribArray(4);
-				gl.vertexAttribPointer(4, 4, gl.FLOAT, false, 0, 0);
-				gl.vertexAttribDivisor(4, 1);
+				gl.enableVertexAttribArray(locationPointer);
+				gl.vertexAttribPointer(locationPointer, 4, gl.FLOAT, false, 0, 0);
+				gl.vertexAttribDivisor(locationPointer, 1);
 				bufferMap.set('m3', m3);
 				bufferDataMap.set('m3data', m3data);
+
+				locationPointer++;
 
 				final m4 = gl.createBuffer();
 				final m4data = new Float32Array(numInstances * 4);
 				gl.bindBuffer(gl.ARRAY_BUFFER, m4);
 				gl.bufferData(gl.ARRAY_BUFFER, m4data, gl.DYNAMIC_DRAW);
-				gl.enableVertexAttribArray(5);
-				gl.vertexAttribPointer(5, 4, gl.FLOAT, false, 0, 0);
-				gl.vertexAttribDivisor(5, 1);
+				gl.enableVertexAttribArray(locationPointer);
+				gl.vertexAttribPointer(locationPointer, 4, gl.FLOAT, false, 0, 0);
+				gl.vertexAttribDivisor(locationPointer, 1);
 				bufferMap.set('m4', m4);
 				bufferDataMap.set('m4data', m4data);
 			}
 		}
 	}
 
-	public function setInstanceMatrixBuffer(index, mvpAry) {
+	public function setInstanceModelMatrixData(index, mvpAry) {
 		// 把matrix拿來drawInstance的參考
 		// for (i in 0...16) {
 		// 	instanceMatrix[index][i] = mvpAry[i];
@@ -139,7 +155,7 @@ class WebglMesh {
 		}
 	}
 
-	public function setInstanceBuffer() {
+	public function bindInstanceBufferData() {
 		final gl = WebglEngine.inst.gl;
 		if (gl != null) {
 			// 把matrix拿來drawInstance的參考
@@ -208,12 +224,13 @@ class WebglMesh {
 		return [0., 0., 0., 100., 100., 0.];
 	}
 
-	function getColor():Array<Int> {
+	function getColor():Array<Float> {
 		final c = [];
 		for (i in 0...getCount()) {
-			c.push(0);
-			c.push(0);
-			c.push(0);
+			c.push(Math.random());
+			c.push(Math.random());
+			c.push(Math.random());
+			c.push(1.0);
 		}
 		return c;
 	}

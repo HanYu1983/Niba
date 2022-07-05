@@ -6,30 +6,44 @@ class Basic3dInstanceShader extends WebglShader {
 		super();
 	}
 
-  override function isInstance():Bool {
-    return true;
-  }
+	override function isInstance():Bool {
+		return true;
+	}
 
 	override function getVertexShaderSource():String {
 		return '#version 300 es
 
         // an attribute is an input (in) to a vertex shader.
         // It will receive data from a buffer
+        // 從buffer帶入頂點著色器的參數
+
         in vec4 position;
         in vec2 texcoord;
+        in vec4 color;
+
+        // 組成modelMatrix的四個vec4
         in vec4 m1;
         in vec4 m2;
         in vec4 m3;
         in vec4 m4;
 
+        uniform mat4 u_projectMatrix;
+        uniform mat4 u_viewMatrix;
+
         out vec2 v_texcoord;
+        out vec4 v_color;
         
         // all shaders have a main function
+        // 所有的著色器都有main方法
+
         void main() {
-          // Multiply the position by the matrix.
-          gl_Position = mat4(m1, m2, m3, m4) * position;
+
+          // 把矩陣組起來算位置坐標
+          mat4 mvp = u_projectMatrix * inverse(u_viewMatrix) * mat4(m1, m2, m3, m4);
+          gl_Position = mvp * position;
 
           v_texcoord = texcoord;
+          v_color = color;
         }
         ';
 
@@ -41,6 +55,7 @@ class Basic3dInstanceShader extends WebglShader {
         precision highp float;
 
         in vec2 v_texcoord;
+        in vec4 v_color;
         
         uniform sampler2D u_texture;
         uniform vec4 u_color;
@@ -50,7 +65,7 @@ class Basic3dInstanceShader extends WebglShader {
         
         void main() {
           outColor = texture(u_texture, v_texcoord);
-        //  outColor = vec4(v_texcoord, 0.0, 1.0);
+        //  outColor = vec4(v_color.xyz, 1.0);
         }
         ';
 
@@ -61,6 +76,11 @@ class Basic3dInstanceShader extends WebglShader {
 	}
 
 	override function getUniforms():haxe.ds.Map<String, String> {
-		return ['u_matrix' => 'mat4', 'u_color' => 'vec4', 'u_texture' => 'sampler2D'];
+		return [
+			'u_projectMatrix' => 'mat4',
+			'u_viewMatrix' => 'mat4',
+			'u_color' => 'vec4',
+			'u_texture' => 'sampler2D'
+		];
 	}
 }

@@ -47,7 +47,7 @@ class Cube3dMesh extends WebglMesh {
 		return out;
 	}
 
-	override function getColor():Array<Int> {
+	override function getColor():Array<Float> {
 		return super.getColor();
 	}
 }

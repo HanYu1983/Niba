@@ -108,7 +108,8 @@ class MainView extends VBox {
 					rightArm.transform.position.y = Math.cos(timestamp * 0.001) * 20 - 10;
 
 					final p = cameraComponent.getProjectMatrix();
-					final v = Mat4Tools.invert(camera.transform.getGlobalMatrix());
+					// final v = Mat4Tools.invert(camera.transform.getGlobalMatrix());
+					final v = camera.transform.getGlobalMatrix();
 					for (entity => meshRenderer in renderEntitys) {
 						if (meshRenderer == null)
 							continue;
@@ -118,12 +119,14 @@ class MainView extends VBox {
 
 						final m = entity.transform.getGlobalMatrix();
 
-						var mvp = Mat4Tools.identity();
-						mvp = Mat4Tools.multiply(mvp, p);
-						mvp = Mat4Tools.multiply(mvp, v);
-						mvp = Mat4Tools.multiply(mvp, m);
+						// var mvp = Mat4Tools.identity();
+						// mvp = Mat4Tools.multiply(mvp, p);
+						// mvp = Mat4Tools.multiply(mvp, v);
+						// mvp = Mat4Tools.multiply(mvp, m);
 
-						meshRenderer.geometry.uniform.set('u_matrix', mvp.toArray());
+						meshRenderer.geometry.uniform.set('u_modelMatrix', m.toArray());
+						meshRenderer.geometry.uniform.set('u_viewMatrix', v.toArray());
+						meshRenderer.geometry.uniform.set('u_projectMatrix', p.toArray());
 					}
 
 					// world.update(progress);
