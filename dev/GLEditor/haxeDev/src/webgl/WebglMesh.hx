@@ -82,101 +82,59 @@ class WebglMesh {
 
 			locationPointer++;
 
+			// instance buffer用的，這裏除了預設4個buffer給矩陣用之外，還開一個額外的buffer給顔色用
 			if (numInstances > 0) {
-				// 綁定矩陣第一行，并且因爲是用drawInstance的方法，所以這裏只是先告知gl需要的buffer大小，并沒有實際的值
-				final m1 = gl.createBuffer();
+				for (i in 0...5) {
+					// 因爲是用drawInstance的方法，所以這裏只是先告知gl需要的buffer大小，并沒有實際的值
+					final buffer = gl.createBuffer();
 
-				// 定義bufferData的大小(每一個float有 4 bytes)
-				final m1data = new Float32Array(numInstances * 4);
-				gl.bindBuffer(gl.ARRAY_BUFFER, m1);
+					// 定義bufferData的大小(每一個float有 4 bytes)
+					final bufferData = new Float32Array(numInstances * 4);
+					gl.bindBuffer(gl.ARRAY_BUFFER, buffer);
 
-				// 只放入空bufferData（這樣gl才知道要借多少空間出來）
-				gl.bufferData(gl.ARRAY_BUFFER, m1data, gl.DYNAMIC_DRAW);
-				gl.enableVertexAttribArray(locationPointer);
+					// 只放入空bufferData（這樣gl才知道要借多少空間出來）
+					gl.bufferData(gl.ARRAY_BUFFER, bufferData, gl.DYNAMIC_DRAW);
+					gl.enableVertexAttribArray(locationPointer);
 
-				// 定義參數使用方法，這裏告知gl說，buffer中每四個值為一組來使用
-				gl.vertexAttribPointer(locationPointer, 4, gl.FLOAT, false, 0, 0);
+					// 定義參數使用方法，這裏告知gl說，buffer中每四個值為一組來使用
+					gl.vertexAttribPointer(locationPointer, 4, gl.FLOAT, false, 0, 0);
 
-				// 定義drawInstance每畫一個物件的時候，這裏的值要換到下一組
-				gl.vertexAttribDivisor(locationPointer, 1);
-				bufferMap.set('m1', m1);
-				bufferDataMap.set('m1data', m1data);
+					// 定義drawInstance每畫一個物件的時候，這裏的值要換到下一組
+					gl.vertexAttribDivisor(locationPointer, 1);
 
-				locationPointer++;
-
-				final m2 = gl.createBuffer();
-				final m2data = new Float32Array(numInstances * 4);
-				gl.bindBuffer(gl.ARRAY_BUFFER, m2);
-				gl.bufferData(gl.ARRAY_BUFFER, m2data, gl.DYNAMIC_DRAW);
-				gl.enableVertexAttribArray(locationPointer);
-				gl.vertexAttribPointer(locationPointer, 4, gl.FLOAT, false, 0, 0);
-				gl.vertexAttribDivisor(locationPointer, 1);
-				bufferMap.set('m2', m2);
-				bufferDataMap.set('m2data', m2data);
-
-				locationPointer++;
-
-				final m3 = gl.createBuffer();
-				final m3data = new Float32Array(numInstances * 4);
-				gl.bindBuffer(gl.ARRAY_BUFFER, m3);
-				gl.bufferData(gl.ARRAY_BUFFER, m3data, gl.DYNAMIC_DRAW);
-				gl.enableVertexAttribArray(locationPointer);
-				gl.vertexAttribPointer(locationPointer, 4, gl.FLOAT, false, 0, 0);
-				gl.vertexAttribDivisor(locationPointer, 1);
-				bufferMap.set('m3', m3);
-				bufferDataMap.set('m3data', m3data);
-
-				locationPointer++;
-
-				final m4 = gl.createBuffer();
-				final m4data = new Float32Array(numInstances * 4);
-				gl.bindBuffer(gl.ARRAY_BUFFER, m4);
-				gl.bufferData(gl.ARRAY_BUFFER, m4data, gl.DYNAMIC_DRAW);
-				gl.enableVertexAttribArray(locationPointer);
-				gl.vertexAttribPointer(locationPointer, 4, gl.FLOAT, false, 0, 0);
-				gl.vertexAttribDivisor(locationPointer, 1);
-				bufferMap.set('m4', m4);
-				bufferDataMap.set('m4data', m4data);
-
-				locationPointer++;
-
-				final color2 = gl.createBuffer();
-				final color2Data = new Float32Array(numInstances * 4);
-				gl.bindBuffer(gl.ARRAY_BUFFER, color2);
-				gl.bufferData(gl.ARRAY_BUFFER, color2Data, gl.DYNAMIC_DRAW);
-				gl.enableVertexAttribArray(locationPointer);
-				gl.vertexAttribPointer(locationPointer, 4, gl.FLOAT, false, 0, 0);
-				gl.vertexAttribDivisor(locationPointer, 1);
-				bufferMap.set('color2', color2);
-				bufferDataMap.set('color2Data', color2Data);
+					final name = 'm${i + 1}';
+					bufferMap.set(name, buffer);
+					bufferDataMap.set(name, bufferData);
+					locationPointer += 1;
+				}
 			}
 		}
 	}
 
 	public function setInstanceBufferData(index:Int, uniforms:Dynamic) {
 		final modelMatrix = uniforms.get('u_modelMatrix');
-		final color2 = uniforms.get('u_color');
+		final color = uniforms.get('u_color');
 
 		for (i in 0...4) {
-			final m1data = bufferDataMap.get('m1data');
+			final m1data = bufferDataMap.get('m1');
 			if (m1data != null)
 				m1data[index * 4 + i] = modelMatrix[i];
 
-			final m2data = bufferDataMap.get('m2data');
+			final m2data = bufferDataMap.get('m2');
 			if (m2data != null)
 				m2data[index * 4 + i] = modelMatrix[i + 4];
 
-			final m3data = bufferDataMap.get('m3data');
+			final m3data = bufferDataMap.get('m3');
 			if (m3data != null)
 				m3data[index * 4 + i] = modelMatrix[i + 8];
 
-			final m4data = bufferDataMap.get('m4data');
+			final m4data = bufferDataMap.get('m4');
 			if (m4data != null)
 				m4data[index * 4 + i] = modelMatrix[i + 12];
 
-			final color2Data = bufferDataMap.get('color2Data');
-			if (color2Data != null)
-				color2Data[index * 4 + i] = color2[i];
+			final m5Data = bufferDataMap.get('m5');
+			if (m5Data != null)
+				m5Data[index * 4 + i] = color[i];
 		}
 	}
 
@@ -191,60 +149,13 @@ class WebglMesh {
 			// gl.bindBuffer(gl.ARRAY_BUFFER, matrixBuffer);
 			// gl.bufferSubData(gl.ARRAY_BUFFER, 0, matrixData);
 
-			final m1data = bufferDataMap.get('m1data');
-			if (m1data == null)
-				return;
-
-			final m2data = bufferDataMap.get('m2data');
-			if (m2data == null)
-				return;
-
-			final m3data = bufferDataMap.get('m3data');
-			if (m3data == null)
-				return;
-
-			final m4data = bufferDataMap.get('m4data');
-			if (m4data == null)
-				return;
-
-			final color2Data = bufferDataMap.get('color2Data');
-			if (color2Data == null)
-				return;
-
-			final m1 = bufferMap.get('m1');
-			if (m1 == null)
-				return;
-
-			final m2 = bufferMap.get('m2');
-			if (m2 == null)
-				return;
-
-			final m3 = bufferMap.get('m3');
-			if (m3 == null)
-				return;
-
-			final m4 = bufferMap.get('m4');
-			if (m4 == null)
-				return;
-
-			final color2 = bufferMap.get('color2');
-			if (color2 == null)
-				return;
-
-			gl.bindBuffer(gl.ARRAY_BUFFER, m1);
-			gl.bufferSubData(gl.ARRAY_BUFFER, 0, m1data);
-
-			gl.bindBuffer(gl.ARRAY_BUFFER, m2);
-			gl.bufferSubData(gl.ARRAY_BUFFER, 0, m2data);
-
-			gl.bindBuffer(gl.ARRAY_BUFFER, m3);
-			gl.bufferSubData(gl.ARRAY_BUFFER, 0, m3data);
-
-			gl.bindBuffer(gl.ARRAY_BUFFER, m4);
-			gl.bufferSubData(gl.ARRAY_BUFFER, 0, m4data);
-
-			gl.bindBuffer(gl.ARRAY_BUFFER, color2);
-			gl.bufferSubData(gl.ARRAY_BUFFER, 0, color2Data);
+			for (name => buffer in bufferMap) {
+				final bufferData = bufferDataMap.get(name);
+				if (bufferData == null)
+					continue;
+				gl.bindBuffer(gl.ARRAY_BUFFER, buffer);
+				gl.bufferSubData(gl.ARRAY_BUFFER, 0, bufferData);
+			}
 		}
 	}
 

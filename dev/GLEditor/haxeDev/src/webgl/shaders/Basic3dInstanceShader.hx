@@ -27,14 +27,16 @@ class Basic3dInstanceShader extends WebglShader {
         in vec4 m2;
         in vec4 m3;
         in vec4 m4;
-        in vec4 color2;
+
+        // 額外給其他的用途
+        in vec4 m5;
 
         uniform mat4 u_projectMatrix;
         uniform mat4 u_viewMatrix;
 
         out vec2 v_texcoord;
         out vec4 v_color;
-        out vec4 v_color2;
+        out vec4 v_modelColor;
         out vec4 v_normal;
         out mat4 v_modelMatrix;
         
@@ -51,7 +53,7 @@ class Basic3dInstanceShader extends WebglShader {
 
           v_texcoord = texcoord;
           v_color = color;
-          v_color2 = color2;
+          v_modelColor = m5;
           // v_normal = v_modelMatrix * vec4(normal.xyz, 0);
           v_normal = normal;
         }
@@ -66,7 +68,7 @@ class Basic3dInstanceShader extends WebglShader {
 
         in vec2 v_texcoord;
         in vec4 v_color;
-        in vec4 v_color2;
+        in vec4 v_modelColor;
         in vec4 v_normal;
         in mat4 v_modelMatrix;
         
@@ -85,7 +87,7 @@ class Basic3dInstanceShader extends WebglShader {
 
           float light = dot(worldNormal, u_reverseLightDirection);
 
-          outColor = v_color2;
+          outColor = v_modelColor;
           outColor.rgb *= light;
         }
         ';

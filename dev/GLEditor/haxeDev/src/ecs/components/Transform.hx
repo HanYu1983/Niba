@@ -1,5 +1,10 @@
 package ecs.components;
 
+import mme.math.glmatrix.Quat2;
+import mme.math.glmatrix.Quat;
+import mme.math.glmatrix.Vec4Tools;
+import mme.math.glmatrix.Quat2Tools;
+import mme.math.glmatrix.QuatTools;
 import mme.math.glmatrix.Mat4Tools;
 import mme.math.glmatrix.Mat4;
 import mme.math.glmatrix.Vec3Tools;
@@ -17,21 +22,36 @@ class Transform extends Component {
 	final childs:Array<Transform> = [];
 
 	public function getMatrix():Mat4 {
-		final tm = Mat4.fromTranslation(position);
-
-		var rm = Mat4Tools.identity();
-		rm = Mat4Tools.rotateX(rm, rotation.x);
-		rm = Mat4Tools.rotateY(rm, rotation.y);
-		rm = Mat4Tools.rotateZ(rm, rotation.z);
-
-		final sm = Mat4.fromScaling(scale);
-
 		var mat = Mat4Tools.identity();
-		mat = Mat4Tools.multiply(mat, tm);
-		mat = Mat4Tools.multiply(mat, rm);
-		mat = Mat4Tools.multiply(mat, sm);
-
+		mat = Mat4Tools.translate(mat, position);
+		mat = Mat4Tools.rotateX(mat, rotation.x);
+		mat = Mat4Tools.rotateY(mat, rotation.y);
+		mat = Mat4Tools.rotateZ(mat, rotation.z);
+		mat = Mat4Tools.scale(mat, scale);
 		return mat;
+	}
+
+	public function lookAt(lookAt:Vec3, up:Vec3) {
+		// final pos = Mat4Tools.getTranslation(getGlobalMatrix());
+		// final mat = Mat4Tools.lookAt(pos, lookAt, up);
+		// final rot = Tool.getEulerFromQuat(Mat4Tools.getRotation(mat));
+
+		// rotation.x = -rot.x;
+		// rotation.y = -rot.y;
+		// rotation.z = -rot.z;
+
+		// 轉換成local
+		final invertMat = Mat4Tools.invert(getGlobalMatrix());
+		var localLookAt = Mat4Tools.multiplyVec3(invertMat, lookAt);
+		localLookAt = Vec3Tools.normalize(localLookAt);
+
+		final mat = Mat4Tools.lookAt(new Vec3(), localLookAt, up);
+		final rot = Tool.getEulerFromQuat(Mat4Tools.getRotation(mat));
+
+		// 因爲用local計算的關係，所以這裏只能用+=
+		rotation.x += -rot.x;
+		rotation.y += -rot.y;
+		rotation.z += -rot.z;
 	}
 
 	public function getGlobalMatrix() {

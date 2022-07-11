@@ -1,5 +1,6 @@
 package;
 
+import mme.math.glmatrix.Vec3Tools;
 import js.lib.Float32Array;
 import js.html.DirectoryElement;
 import js.Browser;
@@ -43,9 +44,11 @@ class MainView extends VBox {
 
 			final renderEntitys:Map<Entity, Null<MeshRenderer>> = [];
 			final camera = Tool.createCameraEntity('camera');
-			// camera.transform.position.x = 1000;
-			// camera.transform.position.y = 1000;
-			camera.transform.position.z = 500;
+			// camera.transform.position.x = 400;
+			// camera.transform.position.y = 100;
+			camera.transform.position.z = 1000;
+			// camera.transform.lookAt(new Vec3(), Vec3.Y_AXIS);
+			// camera.transform.lookAt(new Vec3(), Vec3.Y_AXIS);
 
 			final light = Tool.createCameraEntity('light');
 			light.transform.position.x = 600;
@@ -55,10 +58,18 @@ class MainView extends VBox {
 			// body.transform.position.x = 160;
 			// body.transform.position.y = 80;
 			// body.transform.position.z = -500;
+			var mr = body.getComponent(MeshRenderer);
+			if (mr != null && mr.geometry != null) {
+				mr.geometry.uniform.set('u_color', [Math.random(), Math.random(), Math.random(), 1.0]);
+			}
 
 			final leftArm = Tool.createMeshEntity('leftArm', DEFAULT_MESH.CUBE3D, 'noiseMaterial');
 			leftArm.transform.scale.x = leftArm.transform.scale.y = leftArm.transform.scale.z = .3;
-			leftArm.transform.position.x = -150;
+			leftArm.transform.position.x = -200;
+
+			final leftArmChild = Tool.createMeshEntity('leftArmChild', DEFAULT_MESH.CUBE3D, 'noiseMaterial');
+			leftArmChild.transform.scale.x = leftArmChild.transform.scale.y = leftArmChild.transform.scale.z = .5;
+			leftArmChild.transform.position.x = -150;
 
 			final rightArm = Tool.createMeshEntity('rightArm', DEFAULT_MESH.CUBE3D, 'noiseMaterial');
 			rightArm.transform.scale.x = rightArm.transform.scale.y = rightArm.transform.scale.z = .3;
@@ -80,16 +91,13 @@ class MainView extends VBox {
 
 				final f = Tool.createMeshEntity('f_${i}', DEFAULT_MESH.CUBE3D, 'instanceMaterial');
 				f.transform.position.x = Math.random() * 1000 - 500;
-				// f.transform.position.x = -500;
 				f.transform.position.y = Math.random() * 1000 - 500;
-				// f.transform.position.y = -400;
 				f.transform.position.z = Math.random() * 1000 - 500;
-				// f.transform.position.z = -500;
 				f.transform.scale.x = f.transform.scale.y = f.transform.scale.z = .3;
 				var mr = f.getComponent(MeshRenderer);
 				if (mr != null && mr.geometry != null) {
-					// mr.geometry.uniform.set('u_color', [Math.random(), Math.random(), Math.random(), 1.0]);
-					mr.geometry.uniform.set('u_color', [.8, .3, .6, 1.0]);
+					mr.geometry.uniform.set('u_color', [Math.random(), Math.random(), Math.random(), 1.0]);
+					// mr.geometry.uniform.set('u_color', [.8, .3, .6, 1.0]);
 				}
 				renderEntitys.set(f, f.getComponent(MeshRenderer));
 			}
@@ -113,11 +121,13 @@ class MainView extends VBox {
 			renderEntitys.set(body, body.getComponent(MeshRenderer));
 			renderEntitys.set(leftArm, leftArm.getComponent(MeshRenderer));
 			renderEntitys.set(rightArm, rightArm.getComponent(MeshRenderer));
+			renderEntitys.set(leftArmChild, leftArmChild.getComponent(MeshRenderer));
 
 			world.transform.addChild(camera.transform);
 			world.transform.addChild(body.transform);
 			body.transform.addChild(leftArm.transform);
 			body.transform.addChild(rightArm.transform);
+			leftArm.transform.addChild(leftArmChild.transform);
 
 			var lastRender = 0.0;
 			function render(timestamp:Float) {
@@ -130,6 +140,15 @@ class MainView extends VBox {
 
 					// leftArm.transform.position.y = Math.sin(timestamp * 0.001) * 20 - 10;
 					// rightArm.transform.position.y = Math.cos(timestamp * 0.001) * 20 - 10;
+
+					// final bodyGlobal = body.transform.getGlobalMatrix();
+					// camera.transform.position.x = Math.cos(timestamp * .001) * 1000;
+					// camera.transform.position.z = Math.sin(timestamp * .001) * 1000;
+					// camera.transform.lookAt(Mat4Tools.getTranslation(bodyGlobal), Vec3.Y_AXIS);
+
+					final bodyGlobal = body.transform.getGlobalMatrix();
+					light.transform.position.x = Math.cos(timestamp * .001) * 1000;
+					light.transform.position.z = Math.sin(timestamp * .001) * 1000;
 
 					final p = cameraComponent.getProjectMatrix();
 					final v = camera.transform.getGlobalMatrix();
@@ -150,9 +169,9 @@ class MainView extends VBox {
 						meshRenderer.geometry.uniform.set('u_viewMatrix', v.toArray());
 						meshRenderer.geometry.uniform.set('u_projectMatrix', p.toArray());
 						meshRenderer.geometry.uniform.set('u_reverseLightDirection', [1.0, 0.0, 0.0]);
-						meshRenderer.geometry.uniform.set('u_color', [.8, .3, .6, 1.0]);
+						// meshRenderer.geometry.uniform.set('u_color', [.8, .3, .6, 1.0]);
 					}
-					
+
 					// world.update(progress);
 					WebglEngine.inst.render();
 				}
