@@ -14,7 +14,20 @@ class Rectangle2dMesh extends WebglMesh {
 			  0, 100,
 			100,   0,
 			100, 100,
-		].map((i) -> {i + 0.0;});
+		].map((i) -> {
+			i + 0.0;
+		});
+	}
+
+	override function getTexcoord():Array<Float> {
+		return [
+			0, 0,
+			1, 0,
+			0, 1,
+			0, 1,
+			1, 0,
+			1, 1,
+		];
 	}
 
 	override function is2d():Bool {

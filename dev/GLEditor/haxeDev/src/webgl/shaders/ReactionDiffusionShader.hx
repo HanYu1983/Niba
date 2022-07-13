@@ -1,7 +1,7 @@
 package webgl.shaders;
 
 @:nullSafety
-class Basic2dShader extends WebglShader {
+class ReactionDiffusionShader extends WebglShader {
 	public function new() {
 		super();
 	}
@@ -15,7 +15,8 @@ class Basic2dShader extends WebglShader {
 			'u_color' => 'vec4',
 			'u_matrix' => 'mat3',
 			'u_modelMatrix' => 'mat3',
-			'u_texture' => 'sampler2D'
+			'u_texture' => 'sampler2D',
+			'u_time' => 'float'
 		];
 	}
 
@@ -47,12 +48,21 @@ class Basic2dShader extends WebglShader {
 
 		in vec2 v_texcoord;
 
-		uniform vec4 u_color;
-		uniform sampler2D u_texture;
+        uniform sampler2D u_texture;
+        uniform float u_time;
 
         out vec4 outColor;
         void main(){
-			outColor = vec4(texture(u_texture, v_texcoord).rgb, 1.0);
+
+            vec3 c = vec3(1,0,0);
+            float t = u_time * .0001;
+            if(t <= 0.05){
+                c.r = c.g = c.b = 1.0 - smoothstep(t, t + .01, length(v_texcoord - vec2(.5, .5)));
+            }else{
+                c.rgb = texture(u_texture, v_texcoord).rgb;
+            }
+
+            outColor = vec4(c, 1);
         }
         ';
 

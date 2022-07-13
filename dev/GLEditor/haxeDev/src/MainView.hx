@@ -1,5 +1,7 @@
 package;
 
+import js.html.KeyboardEvent;
+import webgl.shaders.ReactionDiffusionShader;
 import mme.math.glmatrix.Vec3Tools;
 import js.lib.Float32Array;
 import js.html.DirectoryElement;
@@ -32,7 +34,183 @@ class MainView extends VBox {
 
 		// methodA();
 		// methodC();
-		testInstance();
+		// testInstance();
+		testReactionDiffusion();
+		// testDoubleBuffer();
+		// testRenderTarget();
+	}
+
+	function testDoubleBuffer(){
+		WebglEngine.inst.init('canvas_gl');
+		final gl = WebglEngine.inst.gl;
+		if (gl != null) {
+			WebglEngine.inst.addShader('ReactionDiffusionShader', new ReactionDiffusionShader());
+			WebglEngine.inst.createRenderTarget('rtA', 256, 256);
+			WebglEngine.inst.createRenderTarget('rtB', 256, 256);
+
+			final rectMaterial = WebglEngine.inst.createMaterial('rectMaterial', 'ReactionDiffusionShader');
+			final rect = Tool.createMeshEntity('rect', RECTANGLE2D, 'rectMaterial');
+
+			var lastRender = 0.0;
+			var tickCount = 0.0;
+			function render(timestamp:Float) {
+
+				final progress = timestamp - lastRender;
+				lastRender = timestamp;
+
+				if (rectMaterial != null) {
+					rectMaterial.textures.pop();
+					rectMaterial.textures.push(tickCount % 2 == 0 ? 'rtA' : 'rtB');
+				}
+
+				final mr = rect.getComponent(MeshRenderer);
+				if (mr != null && mr.geometry != null) {
+					final pm = Mat3Tools.projection(gl.canvas.width, gl.canvas.height);
+					final modelMatrix = Mat3.fromScaling(null, Vec2.fromValues(1024.0 / 100.0, 768.0 / 100.0));
+					mr.geometry.uniform.set('u_time', [timestamp]);
+					mr.geometry.uniform.set('u_matrix', pm.toArray());
+					mr.geometry.uniform.set('u_modelMatrix', modelMatrix.toArray());
+				}
+
+				gl.enable(gl.DEPTH_TEST);
+				gl.enable(gl.CULL_FACE);
+
+				WebglEngine.inst.defaultFrameBuffer();
+
+				gl.viewport(0, 0, gl.canvas.width, gl.canvas.height);
+				gl.clearColor(0.7, 0.7, 0.7, 1);
+				gl.clear(gl.COLOR_BUFFER_BIT | gl.DEPTH_BUFFER_BIT);
+
+				WebglEngine.inst.render();
+
+				WebglEngine.inst.bindFrameBuffer(tickCount % 2 == 0 ? 'rtB' : 'rtA');
+
+				gl.viewport(0, 0, 256, 256);
+				gl.clearColor(0.0, 0.0, 1, 1);
+				gl.clear(gl.COLOR_BUFFER_BIT | gl.DEPTH_BUFFER_BIT);
+
+				WebglEngine.inst.render();
+
+				Browser.window.requestAnimationFrame(render);
+				tickCount ++;
+			}
+			Browser.window.requestAnimationFrame(render);
+
+			Browser.document.addEventListener('keydown', (e) -> {
+				tickCount += 1;
+				Browser.window.requestAnimationFrame(render);
+			});
+		}
+	}
+
+	// 反應擴散
+	// https://ciphrd.com/2019/08/24/reaction-diffusion-on-shader/
+	// https://www.shadertoy.com/view/llK3WG
+	function testReactionDiffusion() {
+		WebglEngine.inst.init('canvas_gl');
+		final gl = WebglEngine.inst.gl;
+		if (gl != null) {
+			WebglEngine.inst.addShader('ReactionDiffusionShader', new ReactionDiffusionShader());
+			WebglEngine.inst.createRenderTarget('rtA', 256, 256);
+			WebglEngine.inst.createRenderTarget('rtB', 256, 256);
+
+			final rectMaterial = WebglEngine.inst.createMaterial('rectMaterial', 'ReactionDiffusionShader');
+			final rect = Tool.createMeshEntity('rect', RECTANGLE2D, 'rectMaterial');
+
+			var lastRender = 0.0;
+			var tickCount = 0.0;
+			function render(timestamp:Float) {
+
+				final progress = timestamp - lastRender;
+				lastRender = timestamp;
+
+				if (rectMaterial != null) {
+					rectMaterial.textures.pop();
+					rectMaterial.textures.push(tickCount % 2 == 0 ? 'rtA' : 'rtB');
+				}
+
+				final mr = rect.getComponent(MeshRenderer);
+				if (mr != null && mr.geometry != null) {
+					final pm = Mat3Tools.projection(gl.canvas.width, gl.canvas.height);
+					final modelMatrix = Mat3.fromScaling(null, Vec2.fromValues(1024.0 / 100.0, 768.0 / 100.0));
+					mr.geometry.uniform.set('u_time', [timestamp]);
+					mr.geometry.uniform.set('u_matrix', pm.toArray());
+					mr.geometry.uniform.set('u_modelMatrix', modelMatrix.toArray());
+				}
+
+				gl.enable(gl.DEPTH_TEST);
+				gl.enable(gl.CULL_FACE);
+
+				WebglEngine.inst.defaultFrameBuffer();
+
+				gl.viewport(0, 0, gl.canvas.width, gl.canvas.height);
+				gl.clearColor(0.7, 0.7, 0.7, 1);
+				gl.clear(gl.COLOR_BUFFER_BIT | gl.DEPTH_BUFFER_BIT);
+
+				WebglEngine.inst.render();
+
+				WebglEngine.inst.bindFrameBuffer(tickCount % 2 == 0 ? 'rtB' : 'rtA');
+
+				gl.viewport(0, 0, 256, 256);
+				gl.clearColor(0.0, 0.0, 1, 1);
+				gl.clear(gl.COLOR_BUFFER_BIT | gl.DEPTH_BUFFER_BIT);
+
+				WebglEngine.inst.render();
+
+				Browser.window.requestAnimationFrame(render);
+				tickCount ++;
+			}
+			Browser.window.requestAnimationFrame(render);
+
+			Browser.document.addEventListener('keydown', (e) -> {
+				tickCount += 1;
+				Browser.window.requestAnimationFrame(render);
+			});
+		}
+	}
+
+	function testRenderTarget() {
+		WebglEngine.inst.init('canvas_gl');
+		final gl = WebglEngine.inst.gl;
+		if (gl != null) {
+			WebglEngine.inst.addShader('ReactionDiffusionShader', new ReactionDiffusionShader());
+
+			WebglEngine.inst.createMaterial('rectMaterial', 'ReactionDiffusionShader');
+			WebglEngine.inst.createRenderTarget('rtA', 256, 256);
+
+			final rect = Tool.createMeshEntity('rect', RECTANGLE2D, 'rectMaterial');
+
+			final mr = rect.getComponent(MeshRenderer);
+			if (mr != null && mr.geometry != null) {
+				final pm = Mat3Tools.projection(gl.canvas.width, gl.canvas.height);
+
+				final modelMatrix = Mat3.fromScaling(null, Vec2.fromValues(1024.0 / 100.0, 768.0 / 100.0));
+
+				mr.geometry.uniform.set('u_matrix', pm.toArray());
+				mr.geometry.uniform.set('u_modelMatrix', modelMatrix.toArray());
+			}
+
+			final rectMaterial2 = WebglEngine.inst.createMaterial('rectMaterial2', 'Basic2dShader');
+			if (rectMaterial2 != null) {
+				rectMaterial2.textures.push('rtA');
+			}
+			final rect2 = Tool.createMeshEntity('rect', RECTANGLE2D, 'rectMaterial2');
+
+			final mr = rect2.getComponent(MeshRenderer);
+			if (mr != null && mr.geometry != null) {
+				final pm = Mat3Tools.projection(gl.canvas.width, gl.canvas.height);
+
+				final modelMatrix = Mat3.fromScaling(null, Vec2.fromValues(500.0 / 100.0, 500.0 / 100.0));
+
+				mr.geometry.uniform.set('u_matrix', pm.toArray());
+				mr.geometry.uniform.set('u_modelMatrix', modelMatrix.toArray());
+			}
+
+			WebglEngine.inst.bindFrameBuffer('rtA');
+			WebglEngine.inst.render();
+			WebglEngine.inst.defaultFrameBuffer();
+			WebglEngine.inst.render();
+		}
 	}
 
 	function testInstance() {
@@ -40,6 +218,18 @@ class MainView extends VBox {
 		final gl = WebglEngine.inst.gl;
 
 		if (gl != null) {
+			WebglEngine.inst.createNoiseTexture('noise');
+			WebglEngine.inst.createTexture('red');
+
+			final noiseMaterial = WebglEngine.inst.createMaterial('noiseMaterial', 'Basic3dShader');
+			if (noiseMaterial != null) {
+				noiseMaterial.textures.push('noise');
+			}
+
+			final instanceMaterial = WebglEngine.inst.createMaterial('instanceMaterial', 'Basic3dInstanceShader');
+			if (instanceMaterial != null)
+				instanceMaterial.textures.push('noise');
+
 			final world = new Entity('world');
 
 			final renderEntitys:Map<Entity, Null<MeshRenderer>> = [];
@@ -77,7 +267,7 @@ class MainView extends VBox {
 			// rightArm.transform.rotation.y = 3.14;
 
 			for (i in 0...10) {
-				// final ball = Tool.createMeshEntity('ball_${i}', DEFAULT_MESH.CUBE3D, 'instanceMaterial');
+				// final ball = Tool.createMeshEntity('ball_${i}', DEFAULT_MESH.F3D, 'instanceMaterial');
 				// ball.transform.position.x = Math.random() * 1000 - 500;
 				// ball.transform.position.y = Math.random() * 1000 - 500;
 				// ball.transform.position.z = Math.random() * 1000 - 500;
@@ -86,7 +276,6 @@ class MainView extends VBox {
 				// if (mr != null && mr.geometry != null) {
 				// 	mr.geometry.uniform.set('u_color', [Math.random(), Math.random(), Math.random(), 1.0]);
 				// }
-
 				// renderEntitys.set(ball, ball.getComponent(MeshRenderer));
 
 				final f = Tool.createMeshEntity('f_${i}', DEFAULT_MESH.CUBE3D, 'instanceMaterial');
@@ -97,7 +286,6 @@ class MainView extends VBox {
 				var mr = f.getComponent(MeshRenderer);
 				if (mr != null && mr.geometry != null) {
 					mr.geometry.uniform.set('u_color', [Math.random(), Math.random(), Math.random(), 1.0]);
-					// mr.geometry.uniform.set('u_color', [.8, .3, .6, 1.0]);
 				}
 				renderEntitys.set(f, f.getComponent(MeshRenderer));
 			}
@@ -345,9 +533,7 @@ class MainView extends VBox {
 			gl.texImage2D(gl.TEXTURE_2D, 0, gl.RGBA, 1, 1, 0, gl.RGBA, gl.UNSIGNED_BYTE, new Uint8Array([255, 0, 0, 255]));
 			WebglEngine.inst.addTexture('red', t2);
 
-			final t3 = WebglEngine.inst.createTexture();
-			if (t3 != null)
-				WebglEngine.inst.addTexture('red8', t3);
+			WebglEngine.inst.createTexture('red8');
 
 			// final image = new Image();
 			// image.src = 'images/flow.jpg';

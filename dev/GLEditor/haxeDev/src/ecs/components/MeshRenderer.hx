@@ -26,7 +26,7 @@ class MeshRenderer extends Component {
 		return id;
 	}
 
-	public function new(name:String) {
+	public function new(name:String, meshId:DEFAULT_MESH, materialId:String) {
 		super(name);
 
 		geometry = WebglEngine.inst.createGeometry(name, meshId, materialId);

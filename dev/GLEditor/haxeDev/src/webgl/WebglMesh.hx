@@ -47,7 +47,7 @@ class WebglMesh {
 			gl.enableVertexAttribArray(locationPointer);
 
 			// 定義參數使用方法，這裏告知gl說，buffer中每三個值為一組來使用
-			gl.vertexAttribPointer(locationPointer, 3, gl.FLOAT, false, 0, 0);
+			gl.vertexAttribPointer(locationPointer, is2d() ? 2 : 3, gl.FLOAT, false, 0, 0);
 
 			locationPointer++;
 

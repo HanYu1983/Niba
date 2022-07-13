@@ -1,5 +1,8 @@
 package webgl;
 
+import js.webgl2.Framebuffer;
+import webgl.meshs.F2dMesh;
+import webgl.meshs.Rectangle2dMesh;
 import hex.log.LogManager;
 import webgl.shaders.Basic3dInstanceShader;
 import hex.log.HexLog.*;
@@ -8,10 +11,8 @@ import js.lib.Uint8Array;
 import js.webgl2.Texture;
 import webgl.meshs.F3dMesh;
 import webgl.meshs.Cube3dMesh;
-import haxe.ui.geom.Rectangle;
 import webgl.shaders.Basic3dShader;
 import webgl.shaders.Basic2dShader;
-import js.html.SharedWorker;
 import js.html.CanvasElement;
 import js.webgl2.CanvasHelpers;
 import js.Browser;
@@ -25,9 +26,11 @@ using Lambda;
 enum DEFAULT_MESH {
 	F3D;
 	CUBE3D;
+
+	F2D;
+	RECTANGLE2D;
 }
 
-@:nullSafety
 class WebglEngine {
 	public static final inst = new WebglEngine();
 
@@ -39,38 +42,22 @@ class WebglEngine {
 	public final geometrys:Map<String, WebglGeometry> = [];
 	public final textures:Map<String, Texture> = [];
 
+	public final frameBuffer:Map<String, Framebuffer> = [];
+
 	private function new() {}
 
 	public function init(canvasName) {
 		final dom_gl = Browser.document.getElementById(canvasName);
 		gl = CanvasHelpers.getWebGL2(cast(dom_gl, CanvasElement));
 
-		// shaders.push(new Basic2dShader());
-		meshs.set(DEFAULT_MESH.F3D, new F3dMesh(10));
-		meshs.set(DEFAULT_MESH.CUBE3D, new Cube3dMesh(10));
+		meshs.set(F2D, new F2dMesh());
+		meshs.set(RECTANGLE2D, new Rectangle2dMesh());
+		meshs.set(F3D, new F3dMesh(10));
+		meshs.set(CUBE3D, new Cube3dMesh(10));
+		shaders.set('Basic2dShader', new Basic2dShader());
 		shaders.set('Basic3dShader', new Basic3dShader());
 		shaders.set('Basic3dInstanceShader', new Basic3dInstanceShader());
-
-		final noiseTexture = createNoiseTexture();
-		if (noiseTexture != null)
-			addTexture('noise', noiseTexture);
-
-		final redTexture = createTexture();
-		if (redTexture != null)
-			addTexture('red', redTexture);
-
-		final noiseMaterial = WebglEngine.inst.createMaterial('noiseMaterial', 'Basic3dShader');
-		if (noiseMaterial != null) {
-			noiseMaterial.textures.push('noise');
-		}
-
-		final instanceMaterial = WebglEngine.inst.createMaterial('instanceMaterial', 'Basic3dInstanceShader');
-		if (instanceMaterial != null)
-			instanceMaterial.textures.push('noise');
-
-		final instanceMaterial2 = WebglEngine.inst.createMaterial('instanceMaterial2', 'Basic3dInstanceShader');
-		if (instanceMaterial2 != null)
-			instanceMaterial2.textures.push('noise');
+		WebglEngine.inst.createNoiseTexture('noise');
 	}
 
 	public function addMesh(name:DEFAULT_MESH, mesh:WebglMesh) {
@@ -79,7 +66,77 @@ class WebglEngine {
 		meshs.set(name, mesh);
 	}
 
-	public function createNoiseTexture(width = 32, height = 32, scale = 1):Null<Texture> {
+	var currentFrameBuffer:String = '';
+
+	public function bindFrameBuffer(name:String) {
+		if (gl == null) {
+			return;
+		}
+		final fb = frameBuffer.get(name);
+		final t = textures.get(name);
+		if (fb == null)
+			return;
+		if (t == null)
+			return;
+
+		LogManager.getLogger('hex').debug('修改frameBuffer:${name}');
+		gl.bindFramebuffer(gl.FRAMEBUFFER, fb);
+		gl.bindTexture(gl.TEXTURE_2D, t);
+
+		currentFrameBuffer = name;
+	}
+
+	public function defaultFrameBuffer() {
+		if (gl == null) {
+			return;
+		}
+		LogManager.getLogger('hex').debug('預設frameBuffer');
+		gl.bindFramebuffer(gl.FRAMEBUFFER, null);
+		gl.bindTexture(gl.TEXTURE_2D, null);
+
+		currentFrameBuffer = '';
+	}
+
+	public function createRenderTarget(name:String, width:Int, height:Int):Null<Texture> {
+		if (gl == null) {
+			return null;
+		}
+		final texture = gl.createTexture();
+		gl.bindTexture(gl.TEXTURE_2D, texture);
+
+		final level = 0;
+		final internalFormat = gl.RGBA;
+		final border = 0;
+		final format = gl.RGBA;
+		final type = gl.UNSIGNED_BYTE;
+
+		var dataAry = [];
+		for (i in 0...width * height) {
+			dataAry.push(1);
+			dataAry.push(0);
+			dataAry.push(0);
+			dataAry.push(1);
+		}
+		final data = new Uint8Array(dataAry);
+
+		gl.texImage2D(gl.TEXTURE_2D, level, internalFormat, width, height, border, format, type, data);
+		gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MIN_FILTER, gl.LINEAR);
+		gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_WRAP_S, gl.CLAMP_TO_EDGE);
+		gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_WRAP_T, gl.CLAMP_TO_EDGE);
+
+		final fb = gl.createFramebuffer();
+		gl.bindFramebuffer(gl.FRAMEBUFFER, fb);
+		gl.framebufferTexture2D(gl.FRAMEBUFFER, gl.COLOR_ATTACHMENT0, gl.TEXTURE_2D, texture, level);
+
+		addTexture(name, texture);
+		addFrameBuffer(name, fb);
+
+		gl.bindFramebuffer(gl.FRAMEBUFFER, null);
+		gl.bindTexture(gl.TEXTURE_2D, null);
+		return texture;
+	}
+
+	public function createNoiseTexture(name:String, width = 32, height = 32, scale = 1):Null<Texture> {
 		if (gl == null)
 			return null;
 		final texture = gl.createTexture();
@@ -115,10 +172,12 @@ class WebglEngine {
 		gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_WRAP_S, gl.CLAMP_TO_EDGE);
 		gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_WRAP_T, gl.CLAMP_TO_EDGE);
 
+		addTexture(name, texture);
+		gl.bindTexture(gl.TEXTURE_2D, null);
 		return texture;
 	}
 
-	public function createTexture():Null<Texture> {
+	public function createTexture(name:String):Null<Texture> {
 		if (gl == null)
 			return null;
 		final texture = gl.createTexture();
@@ -133,6 +192,7 @@ class WebglEngine {
 		final type = gl.UNSIGNED_BYTE;
 		final data = new Uint8Array([128, 64, 128, 0, 192, 0]);
 
+		// 這個參數是語句format的來設置，可以上網查
 		gl.pixelStorei(gl.UNPACK_ALIGNMENT, 1);
 		gl.texImage2D(gl.TEXTURE_2D, level, internalFormat, width, height, border, format, type, data);
 		gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MIN_FILTER, gl.NEAREST);
@@ -140,14 +200,28 @@ class WebglEngine {
 		gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_WRAP_S, gl.CLAMP_TO_EDGE);
 		gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_WRAP_T, gl.CLAMP_TO_EDGE);
 
+		addTexture(name, texture);
+		gl.bindTexture(gl.TEXTURE_2D, null);
 		return texture;
+	}
+
+	public function addShader(name:String, shader:WebglShader) {
+		if (shaders.exists(name))
+			return;
+		LogManager.getLogger('hex').info('新增著色器${name}');
+		shaders.set(name, shader);
 	}
 
 	public function addTexture(name:String, texture:Texture) {
 		if (textures.exists(name))
 			return;
-
 		textures.set(name, texture);
+	}
+
+	public function addFrameBuffer(name:String, buffer:Framebuffer) {
+		if (frameBuffer.exists(name))
+			return;
+		frameBuffer.set(name, buffer);
 	}
 
 	// public function getTexture(name:String):Null<Texture> {
@@ -168,6 +242,8 @@ class WebglEngine {
 		materials.set(name, mat);
 
 		shader.instances.push(name);
+
+		LogManager.getLogger('hex').info('新增材質${name}');
 
 		return mat;
 	}
@@ -195,6 +271,7 @@ class WebglEngine {
 		geometry.materialId = materialName;
 
 		geometrys.set(name, geometry);
+		LogManager.getLogger('hex').info('新增幾何體${name}');
 
 		material.geometrys.push(name);
 
@@ -202,7 +279,7 @@ class WebglEngine {
 	}
 
 	public function changeMaterial(geometryId:String, materialId:String) {
-		LogManager.getLogger('hex').debug('修改材質:${geometryId} ${materialId}');
+		LogManager.getLogger('hex').info('修改材質:${geometryId} ${materialId}');
 
 		final geometry = geometrys.get(geometryId);
 		if (geometry == null)
@@ -220,7 +297,7 @@ class WebglEngine {
 		final oldMaterialId = geometry.materialId;
 		geometry.materialId = materialId;
 
-		LogManager.getLogger('hex').debug('目前材質${materialId}繪製物件數目:${material.geometrys.length}');
+		LogManager.getLogger('hex').info('目前材質${materialId}繪製物件數目:${material.geometrys.length}');
 
 		if (oldMaterialId == null)
 			return;
@@ -236,12 +313,12 @@ class WebglEngine {
 		if (gl == null)
 			return;
 
-		gl.viewport(0, 0, gl.canvas.width, gl.canvas.height);
-		gl.clearColor(0.7, 0.7, 0.7, 1);
-		gl.clear(gl.COLOR_BUFFER_BIT | gl.DEPTH_BUFFER_BIT);
+		// gl.viewport(0, 0, gl.canvas.width, gl.canvas.height);
+		// gl.clearColor(0.7, 0.7, 0.7, 1);
+		// gl.clear(gl.COLOR_BUFFER_BIT | gl.DEPTH_BUFFER_BIT);
 
-		gl.enable(gl.DEPTH_TEST);
-		gl.enable(gl.CULL_FACE);
+		// gl.enable(gl.DEPTH_TEST);
+		// gl.enable(gl.CULL_FACE);
 
 		var lastVao:Null<Dynamic> = null;
 
@@ -254,7 +331,7 @@ class WebglEngine {
 
 			if (lastVao == null || lastVao != mesh.vao) {
 				gl.bindVertexArray(mesh.vao);
-				debug('綁定vao:${meshId}');
+				LogManager.getLogger("hex").debug('綁定vao:${meshId}');
 			}
 			lastVao = mesh.vao;
 		}
@@ -310,7 +387,11 @@ class WebglEngine {
 				if (material == null)
 					continue;
 
+				gl.bindTexture(gl.TEXTURE_2D, null);
 				for (index => textureId in material.textures) {
+					if (currentFrameBuffer == textureId)
+						continue;
+
 					final t = textures.get(textureId);
 					if (t == null)
 						continue;
@@ -318,12 +399,12 @@ class WebglEngine {
 					final param = Reflect.field(gl, 'TEXTURE${index}');
 					gl.activeTexture(param);
 					gl.bindTexture(gl.TEXTURE_2D, t);
-					LogManager.getLogger("hex").debug('使用紋理通道:${index}');
+					LogManager.getLogger("hex").debug('使用紋理通道:${index}，紋理為:${textureId}');
 				}
 				LogManager.getLogger("hex").debug('使用材質:${materialId}');
 
 				if (shader.isInstance()) {
-					LogManager.getLogger("hex").debug('實例化材質流程:${materialId}');
+					LogManager.getLogger("hex").debug('[實例化材質流程]:${materialId}');
 
 					// 收集實例化（drawInstance）需要的物件
 					final instanceMapBuffer:Map<DEFAULT_MESH, Array<WebglGeometry>> = [];
@@ -374,10 +455,10 @@ class WebglEngine {
 						mesh.bindInstanceBufferData();
 
 						gl.drawArraysInstanced(gl.TRIANGLES, 0, mesh.getCount(), geometrys.length);
-						LogManager.getLogger("hex").debug('實例化渲染執行');
+						LogManager.getLogger("hex").debug('[實例化渲染執行]');
 					}
 				} else {
-					LogManager.getLogger("hex").debug('普通流程:${materialId}');
+					LogManager.getLogger("hex").debug('[普通流程]:${materialId}');
 					for (geometryId in material.geometrys) {
 						final geometry = geometrys.get(geometryId);
 						if (geometry == null)
@@ -395,7 +476,7 @@ class WebglEngine {
 						setUniform(shader, geometry);
 
 						gl.drawArrays(gl.TRIANGLES, 0, mesh.getCount());
-						LogManager.getLogger("hex").debug('普通渲染執行');
+						LogManager.getLogger("hex").debug('[普通渲染執行]${geometryId}');
 					}
 				}
 			}
@@ -410,7 +491,7 @@ class WebglEngine {
 		if (success) {
 			return shader;
 		}
-		LogManager.getLogger('hex').debug(gl.getShaderInfoLog(shader));
+		LogManager.getLogger('hex').info(gl.getShaderInfoLog(shader));
 		gl.deleteShader(shader);
 		return null;
 	}
@@ -424,7 +505,7 @@ class WebglEngine {
 		if (success) {
 			return p;
 		}
-		LogManager.getLogger('hex').debug(gl.getProgramInfoLog(p));
+		LogManager.getLogger('hex').info(gl.getProgramInfoLog(p));
 		gl.deleteProgram(p);
 		return null;
 	}

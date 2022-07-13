@@ -32,9 +32,7 @@ class Tool {
 	public static function createMeshEntity(name:String, meshId, materialId) {
 		final componentName = '${name}_meshRenderer';
 		final entity = new Entity(name);
-		final meshComponent = new MeshRenderer(componentName);
-		meshComponent.meshId = meshId;
-		meshComponent.materialId = materialId;
+		final meshComponent = new MeshRenderer(componentName, meshId, materialId);
 		entity.addComponent(meshComponent);
 		return entity;
 	}
