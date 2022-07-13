@@ -57,13 +57,12 @@ class ReactionDiffusionShader extends WebglShader {
 
             vec3 c = vec3(1,0,0);
             vec2 scale = vec2(1024.0,768.0);
-            float t = u_time * .01;
             float A = 0.;
             float B = 0.;
 
-            if(t <= 10.0){
+            if(u_time <= 1000.0){
                 A = 1.0;
-                B = 1.0 - smoothstep(0.02, 0.02, length(v_texcoord - vec2(.5, .5)));
+                B = 1.0 - smoothstep(0.05, 0.051, length(v_texcoord - vec2(.5, .5)));
             }else{
                 
                 vec3 sample0 = texture(u_texture, v_texcoord - vec2(-1. , -1.) / scale.xx).xyz;
@@ -91,7 +90,7 @@ class ReactionDiffusionShader extends WebglShader {
                 float f = 0.055; // feed rate
                 float k = 0.062; // kill rate
                 
-                if(mod(t * .5, 16.) < 8.0) {
+                if(mod(u_time, 16.) < 8.0) {
                     f = 0.04;
                     k = 0.06;
                 }
