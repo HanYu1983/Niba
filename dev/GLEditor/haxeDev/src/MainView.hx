@@ -110,9 +110,12 @@ class MainView extends VBox {
 		WebglEngine.inst.init('canvas_gl');
 		final gl = WebglEngine.inst.gl;
 		if (gl != null) {
+
+			final textureSize = 512;
+
 			WebglEngine.inst.addShader('ReactionDiffusionShader', new ReactionDiffusionShader());
-			WebglEngine.inst.createRenderTarget('rtA', 256, 256);
-			WebglEngine.inst.createRenderTarget('rtB', 256, 256);
+			WebglEngine.inst.createRenderTarget('rtA', textureSize, textureSize);
+			WebglEngine.inst.createRenderTarget('rtB', textureSize, textureSize);
 
 			final rectMaterial = WebglEngine.inst.createMaterial('rectMaterial', 'ReactionDiffusionShader');
 			final rect = Tool.createMeshEntity('rect', RECTANGLE2D, 'rectMaterial');
@@ -151,7 +154,7 @@ class MainView extends VBox {
 
 				WebglEngine.inst.bindFrameBuffer(tickCount % 2 == 0 ? 'rtB' : 'rtA');
 
-				gl.viewport(0, 0, 256, 256);
+				gl.viewport(0, 0, textureSize, textureSize);
 				gl.clearColor(0.0, 0.0, 1, 1);
 				gl.clear(gl.COLOR_BUFFER_BIT | gl.DEPTH_BUFFER_BIT);
 

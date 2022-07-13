@@ -52,17 +52,55 @@ class ReactionDiffusionShader extends WebglShader {
         uniform float u_time;
 
         out vec4 outColor;
+
         void main(){
 
             vec3 c = vec3(1,0,0);
-            float t = u_time * .0001;
-            if(t <= 0.05){
-                c.r = c.g = c.b = 1.0 - smoothstep(t, t + .01, length(v_texcoord - vec2(.5, .5)));
+            vec2 scale = vec2(1024.0,768.0);
+            float t = u_time * .01;
+            float A = 0.;
+            float B = 0.;
+
+            if(t <= 10.0){
+                A = 1.0;
+                B = 1.0 - smoothstep(0.02, 0.02, length(v_texcoord - vec2(.5, .5)));
             }else{
-                c.rgb = texture(u_texture, v_texcoord).rgb;
+                
+                vec3 sample0 = texture(u_texture, v_texcoord - vec2(-1. , -1.) / scale.xx).xyz;
+                vec3 sample1 = texture(u_texture, v_texcoord - vec2( 0. , -1.) / scale.xx).xyz;
+                vec3 sample2 = texture(u_texture, v_texcoord - vec2( 1. , -1.) / scale.xx).xyz;
+                
+                vec3 sample3 = texture(u_texture, v_texcoord - vec2(-1. , 0.) / scale.xx).xyz;
+                vec3 sample4 = texture(u_texture, v_texcoord - vec2( 0. , 0.) / scale.xx).xyz;
+                vec3 sample5 = texture(u_texture, v_texcoord - vec2( 1. , 0.) / scale.xx).xyz;
+                
+                vec3 sample6 = texture(u_texture, v_texcoord - vec2(-1. , 1.) / scale.xx).xyz;
+                vec3 sample7 = texture(u_texture, v_texcoord - vec2( 0. , 1.) / scale.xx).xyz;
+                vec3 sample8 = texture(u_texture, v_texcoord - vec2( 1. , 1.) / scale.xx).xyz;
+
+                float a = sample4.x;
+                float b = sample4.y;
+
+                vec2 corners = (sample0 + sample2 + sample6 + sample8).xy;
+                vec2 edges   = (sample1 + sample3 + sample5 + sample7).xy;
+
+                vec2 L2 = 0.05 * corners + 0.2 * edges - sample4.xy;
+
+                float D_A = 0.99; // Diffusion of A
+                float D_B = 0.5; // Diffusion of B
+                float f = 0.055; // feed rate
+                float k = 0.062; // kill rate
+                
+                if(mod(t * .5, 16.) < 8.0) {
+                    f = 0.04;
+                    k = 0.06;
+                }
+
+                A = a + (D_A * L2.x - a*b*b + f * (1.0 - a));
+                B = b + (D_B * L2.y + a*b*b - (k + f) * b);
             }
 
-            outColor = vec4(c, 1);
+            outColor = vec4(A, B, 0., 1.0);
         }
         ';
 
