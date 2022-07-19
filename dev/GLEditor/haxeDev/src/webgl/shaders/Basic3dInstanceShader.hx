@@ -16,10 +16,9 @@ class Basic3dInstanceShader extends WebglShader {
         // an attribute is an input (in) to a vertex shader.
         // It will receive data from a buffer
         // 從buffer帶入頂點著色器的參數
-
         in vec4 position;
         in vec2 texcoord;
-        in vec4 normal;
+        in vec3 normal;
         in vec4 color;
 
         // 組成modelMatrix的四個vec4
@@ -35,27 +34,23 @@ class Basic3dInstanceShader extends WebglShader {
         uniform mat4 u_viewMatrix;
 
         out vec2 v_texcoord;
-        out vec4 v_color;
-        out vec4 v_modelColor;
-        out vec4 v_normal;
-        out mat4 v_modelMatrix;
+        out vec3 v_worldNormal;
+        out vec4 v_worldPos;
         
         // all shaders have a main function
         // 所有的著色器都有main方法
 
         void main() {
 
-          v_modelMatrix = mat4(m1, m2, m3, m4);
+          mat4 modelMatrix = mat4(m1, m2, m3, m4);
 
           // 把矩陣組起來算位置坐標
-          mat4 mvp = u_projectMatrix * inverse(u_viewMatrix) * v_modelMatrix;
+          mat4 mvp = u_projectMatrix * inverse(u_viewMatrix) * modelMatrix;
           gl_Position = mvp * position;
 
           v_texcoord = texcoord;
-          v_color = color;
-          v_modelColor = m5;
-          // v_normal = v_modelMatrix * vec4(normal.xyz, 0);
-          v_normal = normal;
+          v_worldNormal = mat3(modelMatrix) * normal;
+          v_worldPos = modelMatrix * position;
         }
         ';
 
@@ -67,28 +62,36 @@ class Basic3dInstanceShader extends WebglShader {
         precision highp float;
 
         in vec2 v_texcoord;
-        in vec4 v_color;
-        in vec4 v_modelColor;
-        in vec4 v_normal;
-        in mat4 v_modelMatrix;
+        in vec3 v_worldNormal;
+        in vec4 v_worldPos;
         
         uniform sampler2D u_texture;
-        uniform vec3 u_reverseLightDirection;
+
+        uniform mat4 u_viewMatrix;
+        uniform vec3 u_worldSpaceLightPos;
+        uniform vec3 u_lightColor;
+        uniform vec3 u_diffuseColor;
+        uniform vec3 u_specularColor;
+        uniform float u_gloss;
         
         // we need to declare an output for the fragment shader
         out vec4 outColor;
         
         void main() {
-          vec4 c = texture(u_texture, v_texcoord);
+          vec3 worldCameraPos = vec3(u_viewMatrix[3][0], u_viewMatrix[3][1], u_viewMatrix[3][2]);
+          vec3 viewDir = normalize(worldCameraPos - v_worldPos.xyz);
+          vec3 ambient = vec3(.1, .1, .1);
 
-          vec3 normal = normalize(v_normal.xyz);
+          vec3 worldNormal = normalize(v_worldNormal);
+          vec3 worldLightDir = normalize(u_worldSpaceLightPos - v_worldPos.xyz);
+          float halfLambert = dot(worldNormal, worldLightDir) * .5 + .5;
+          vec3 diffuse = u_lightColor * u_diffuseColor * halfLambert;
 
-          vec3 worldNormal = (transpose(inverse(v_modelMatrix)) * vec4(normal, 0)).xyz;
-
-          float light = dot(worldNormal, u_reverseLightDirection);
-
-          outColor = v_modelColor;
-          outColor.rgb *= light;
+          vec3 halfDir = normalize(worldLightDir + viewDir);
+          vec3 specular = u_lightColor * u_specularColor * pow(max(0., dot(worldNormal, halfDir)), u_gloss);
+          
+          vec3 color = ambient + diffuse + specular;
+          outColor = vec4(color, 1.0);
         }
         ';
 
@@ -104,7 +107,11 @@ class Basic3dInstanceShader extends WebglShader {
 			'u_viewMatrix' => 'mat4',
 			'u_color' => 'vec4',
 			'u_texture' => 'sampler2D',
-			'u_reverseLightDirection' => 'vec3',
+			'u_worldSpaceLightPos' => 'vec3',
+      'u_lightColor' => 'vec3',
+      'u_diffuseColor' => 'vec3',
+      'u_specularColor' => 'vec3',
+      'u_gloss' => 'float',
 		];
 	}
 }

@@ -1,5 +1,7 @@
 package webgl;
 
+import webgl.meshs.Sphere3dMesh;
+import mme.math.glmatrix.Vec3;
 import js.webgl2.Framebuffer;
 import webgl.meshs.F2dMesh;
 import webgl.meshs.Rectangle2dMesh;
@@ -26,6 +28,7 @@ using Lambda;
 enum DEFAULT_MESH {
 	F3D;
 	CUBE3D;
+	SPHERE3D;
 
 	F2D;
 	RECTANGLE2D;
@@ -52,8 +55,9 @@ class WebglEngine {
 
 		meshs.set(F2D, new F2dMesh());
 		meshs.set(RECTANGLE2D, new Rectangle2dMesh());
-		meshs.set(F3D, new F3dMesh(10));
-		meshs.set(CUBE3D, new Cube3dMesh(10));
+		meshs.set(F3D, new F3dMesh(20));
+		meshs.set(CUBE3D, new Cube3dMesh(20));
+		meshs.set(SPHERE3D, new Sphere3dMesh(20));
 		shaders.set('Basic2dShader', new Basic2dShader());
 		shaders.set('Basic3dShader', new Basic3dShader());
 		shaders.set('Basic3dInstanceShader', new Basic3dInstanceShader());
@@ -309,16 +313,21 @@ class WebglEngine {
 		material.geometrys.remove(geometryId);
 	}
 
-	public function render() {
+	public function render(width:Null<Int> = null, height:Null<Int> = null, color:Null<Vec3> = null) {
 		if (gl == null)
 			return;
 
-		// gl.viewport(0, 0, gl.canvas.width, gl.canvas.height);
-		// gl.clearColor(0.7, 0.7, 0.7, 1);
-		// gl.clear(gl.COLOR_BUFFER_BIT | gl.DEPTH_BUFFER_BIT);
+		gl.viewport(0, 0, (width != null) ? width : gl.canvas.width, (height != null) ? height : gl.canvas.height);
+		if (color != null) {
+			gl.clearColor(color.x, color.y, color.z, 1);
+		} else {
+			gl.clearColor(0.7, 0.7, 0.7, 1);
+		}
 
-		// gl.enable(gl.DEPTH_TEST);
-		// gl.enable(gl.CULL_FACE);
+		gl.clear(gl.COLOR_BUFFER_BIT | gl.DEPTH_BUFFER_BIT);
+
+		gl.enable(gl.DEPTH_TEST);
+		gl.enable(gl.CULL_FACE);
 
 		var lastVao:Null<Dynamic> = null;
 

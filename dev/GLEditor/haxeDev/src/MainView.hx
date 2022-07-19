@@ -1,5 +1,10 @@
 package;
 
+import webgl.shaders.ShaderToyStorm;
+import mme.math.glmatrix.Vec2Tools;
+import js.html.MouseEvent;
+import webgl.shaders.ShaderToy;
+import webgl.shaders.NoiseShader;
 import js.html.KeyboardEvent;
 import webgl.shaders.ReactionDiffusionShader;
 import mme.math.glmatrix.Vec3Tools;
@@ -34,13 +39,84 @@ class MainView extends VBox {
 
 		// methodA();
 		// methodC();
-		// testInstance();
-		testReactionDiffusion();
+		testInstance();
+		// testReactionDiffusion();
 		// testDoubleBuffer();
 		// testRenderTarget();
+		// testNoiseShader();
+		// testShaderToy();
 	}
 
-	function testDoubleBuffer(){
+	function testShaderToy() {
+		WebglEngine.inst.init('canvas_gl');
+		final gl = WebglEngine.inst.gl;
+		if (gl != null) {
+			final mousePos = Vec2.fromValues(0, 0);
+			Browser.window.addEventListener('mousemove', (e:MouseEvent) -> {
+				mousePos.x = e.pageX;
+				mousePos.y = e.pageY;
+			});
+
+			WebglEngine.inst.addShader('ShaderToy', new ShaderToyStorm());
+			WebglEngine.inst.createMaterial('rectMaterial', 'ShaderToy');
+			final rect = Tool.createMeshEntity('rect', RECTANGLE2D, 'rectMaterial');
+
+			final mr = rect.getComponent(MeshRenderer);
+			var lastRender = 0.0;
+			function render(timestamp:Float) {
+				final progress = timestamp - lastRender;
+				lastRender = timestamp;
+
+				if (mr != null && mr.geometry != null) {
+					final pm = Mat3Tools.projection(gl.canvas.width, gl.canvas.height);
+					final modelMatrix = Mat3.fromScaling(null, Vec2.fromValues(1024.0 / 100.0, 768.0 / 100.0));
+					mr.geometry.uniform.set('iTime', [timestamp * 0.001]);
+					mr.geometry.uniform.set('iMouse', [mousePos.x, -mousePos.y]);
+					mr.geometry.uniform.set('iResolution', [gl.canvas.width, gl.canvas.height]);
+					mr.geometry.uniform.set('u_matrix', pm.toArray());
+					mr.geometry.uniform.set('u_modelMatrix', modelMatrix.toArray());
+				}
+
+				WebglEngine.inst.render();
+
+				Browser.window.requestAnimationFrame(render);
+			}
+			Browser.window.requestAnimationFrame(render);
+		}
+	}
+
+	function testNoiseShader() {
+		WebglEngine.inst.init('canvas_gl');
+		final gl = WebglEngine.inst.gl;
+		if (gl != null) {
+			WebglEngine.inst.addShader('NoiseShader', new NoiseShader());
+			WebglEngine.inst.createMaterial('rectMaterial', 'NoiseShader');
+			final rect = Tool.createMeshEntity('rect', RECTANGLE2D, 'rectMaterial');
+
+			final mr = rect.getComponent(MeshRenderer);
+
+			var lastRender = 0.0;
+			function render(timestamp:Float) {
+				final progress = timestamp - lastRender;
+				lastRender = timestamp;
+
+				if (mr != null && mr.geometry != null) {
+					final pm = Mat3Tools.projection(gl.canvas.width, gl.canvas.height);
+					final modelMatrix = Mat3.fromScaling(null, Vec2.fromValues(1024.0 / 100.0, 768.0 / 100.0));
+					mr.geometry.uniform.set('u_time', [timestamp]);
+					mr.geometry.uniform.set('u_matrix', pm.toArray());
+					mr.geometry.uniform.set('u_modelMatrix', modelMatrix.toArray());
+				}
+
+				WebglEngine.inst.render();
+
+				Browser.window.requestAnimationFrame(render);
+			}
+			Browser.window.requestAnimationFrame(render);
+		}
+	}
+
+	function testDoubleBuffer() {
 		WebglEngine.inst.init('canvas_gl');
 		final gl = WebglEngine.inst.gl;
 		if (gl != null) {
@@ -54,7 +130,6 @@ class MainView extends VBox {
 			var lastRender = 0.0;
 			var tickCount = 0.0;
 			function render(timestamp:Float) {
-
 				final progress = timestamp - lastRender;
 				lastRender = timestamp;
 
@@ -77,22 +152,14 @@ class MainView extends VBox {
 
 				WebglEngine.inst.defaultFrameBuffer();
 
-				gl.viewport(0, 0, gl.canvas.width, gl.canvas.height);
-				gl.clearColor(0.7, 0.7, 0.7, 1);
-				gl.clear(gl.COLOR_BUFFER_BIT | gl.DEPTH_BUFFER_BIT);
-
-				WebglEngine.inst.render();
+				WebglEngine.inst.render(gl.canvas.width, gl.canvas.height, Vec3.fromValues(0.7, 0.7, 0.7));
 
 				WebglEngine.inst.bindFrameBuffer(tickCount % 2 == 0 ? 'rtB' : 'rtA');
 
-				gl.viewport(0, 0, 256, 256);
-				gl.clearColor(0.0, 0.0, 1, 1);
-				gl.clear(gl.COLOR_BUFFER_BIT | gl.DEPTH_BUFFER_BIT);
-
-				WebglEngine.inst.render();
+				WebglEngine.inst.render(256, 256, Vec3.fromValues(0.0, 0.0, 1));
 
 				Browser.window.requestAnimationFrame(render);
-				tickCount ++;
+				tickCount++;
 			}
 			Browser.window.requestAnimationFrame(render);
 
@@ -110,7 +177,6 @@ class MainView extends VBox {
 		WebglEngine.inst.init('canvas_gl');
 		final gl = WebglEngine.inst.gl;
 		if (gl != null) {
-
 			final textureSize = 512;
 
 			WebglEngine.inst.addShader('ReactionDiffusionShader', new ReactionDiffusionShader());
@@ -123,10 +189,12 @@ class MainView extends VBox {
 			var lastRender = 0.0;
 			var tickCount = 0.0;
 			function render(timestamp:Float) {
-
 				final progress = timestamp - lastRender;
 				lastRender = timestamp;
 
+				// render target的double buffer
+				// 輸入A render target的貼圖時，把結果畫在B render target上
+				// 這時先把A render target當作貼圖輸入給shader
 				if (rectMaterial != null) {
 					rectMaterial.textures.pop();
 					rectMaterial.textures.push(tickCount % 2 == 0 ? 'rtA' : 'rtB');
@@ -146,22 +214,17 @@ class MainView extends VBox {
 
 				WebglEngine.inst.defaultFrameBuffer();
 
-				gl.viewport(0, 0, gl.canvas.width, gl.canvas.height);
-				gl.clearColor(0.7, 0.7, 0.7, 1);
-				gl.clear(gl.COLOR_BUFFER_BIT | gl.DEPTH_BUFFER_BIT);
+				WebglEngine.inst.render(gl.canvas.width, gl.canvas.height, Vec3.fromValues(0.7, 0.7, 0.7));
 
-				WebglEngine.inst.render();
-
+				// render target的double buffer
+				// 輸入A render target的貼圖時，把結果畫在B render target上
+				// 這時再把結果畫在B render target上
 				WebglEngine.inst.bindFrameBuffer(tickCount % 2 == 0 ? 'rtB' : 'rtA');
 
-				gl.viewport(0, 0, textureSize, textureSize);
-				gl.clearColor(0.0, 0.0, 1, 1);
-				gl.clear(gl.COLOR_BUFFER_BIT | gl.DEPTH_BUFFER_BIT);
-
-				WebglEngine.inst.render();
+				WebglEngine.inst.render(textureSize, textureSize, Vec3.fromValues(0.7, 0.7, 0.7));
 
 				Browser.window.requestAnimationFrame(render);
-				tickCount ++;
+				tickCount++;
 			}
 			Browser.window.requestAnimationFrame(render);
 
@@ -245,9 +308,9 @@ class MainView extends VBox {
 
 			final light = Tool.createCameraEntity('light');
 			light.transform.position.x = 600;
-			light.transform.position.y = 600;
+			// light.transform.position.y = 600;
 
-			final body = Tool.createMeshEntity('body', DEFAULT_MESH.CUBE3D, 'noiseMaterial');
+			final body = Tool.createMeshEntity('body', DEFAULT_MESH.SPHERE3D, 'noiseMaterial');
 			// body.transform.position.x = 160;
 			// body.transform.position.y = 80;
 			// body.transform.position.z = -500;
@@ -266,20 +329,20 @@ class MainView extends VBox {
 
 			final rightArm = Tool.createMeshEntity('rightArm', DEFAULT_MESH.CUBE3D, 'noiseMaterial');
 			rightArm.transform.scale.x = rightArm.transform.scale.y = rightArm.transform.scale.z = .3;
-			rightArm.transform.position.x = 150;
+			rightArm.transform.position.x = 200;
 			// rightArm.transform.rotation.y = 3.14;
 
 			for (i in 0...10) {
-				// final ball = Tool.createMeshEntity('ball_${i}', DEFAULT_MESH.F3D, 'instanceMaterial');
-				// ball.transform.position.x = Math.random() * 1000 - 500;
-				// ball.transform.position.y = Math.random() * 1000 - 500;
-				// ball.transform.position.z = Math.random() * 1000 - 500;
-				// ball.transform.scale.x = ball.transform.scale.y = ball.transform.scale.z = .5;
-				// var mr = ball.getComponent(MeshRenderer);
-				// if (mr != null && mr.geometry != null) {
-				// 	mr.geometry.uniform.set('u_color', [Math.random(), Math.random(), Math.random(), 1.0]);
-				// }
-				// renderEntitys.set(ball, ball.getComponent(MeshRenderer));
+				final ball = Tool.createMeshEntity('ball_${i}', DEFAULT_MESH.SPHERE3D, 'instanceMaterial');
+				ball.transform.position.x = Math.random() * 1000 - 500;
+				ball.transform.position.y = Math.random() * 1000 - 500;
+				ball.transform.position.z = Math.random() * 1000 - 500;
+				ball.transform.scale.x = ball.transform.scale.y = ball.transform.scale.z = .5;
+				var mr = ball.getComponent(MeshRenderer);
+				if (mr != null && mr.geometry != null) {
+					mr.geometry.uniform.set('u_color', [Math.random(), Math.random(), Math.random(), 1.0]);
+				}
+				renderEntitys.set(ball, ball.getComponent(MeshRenderer));
 
 				final f = Tool.createMeshEntity('f_${i}', DEFAULT_MESH.CUBE3D, 'instanceMaterial');
 				f.transform.position.x = Math.random() * 1000 - 500;
@@ -338,12 +401,13 @@ class MainView extends VBox {
 					// camera.transform.lookAt(Mat4Tools.getTranslation(bodyGlobal), Vec3.Y_AXIS);
 
 					final bodyGlobal = body.transform.getGlobalMatrix();
-					light.transform.position.x = Math.cos(timestamp * .001) * 1000;
-					light.transform.position.z = Math.sin(timestamp * .001) * 1000;
+					light.transform.position.x = Math.cos(timestamp * .001) * 200;
+					light.transform.position.z = Math.sin(timestamp * .001) * 200;
 
 					final p = cameraComponent.getProjectMatrix();
 					final v = camera.transform.getGlobalMatrix();
 					final l = light.transform.getGlobalMatrix();
+					final lightPos = Mat4Tools.getTranslation(l);
 					for (entity => meshRenderer in renderEntitys) {
 						if (meshRenderer == null)
 							continue;
@@ -351,15 +415,20 @@ class MainView extends VBox {
 						if (meshRenderer.geometry == null)
 							continue;
 
-						// entity.transform.rotation.x += .01;
-						entity.transform.rotation.y += .012;
+						entity.transform.rotation.x += .01;
+						entity.transform.rotation.y += .005;
 						// entity.transform.rotation.z += .015;
 						final m = entity.transform.getGlobalMatrix();
 
 						meshRenderer.geometry.uniform.set('u_modelMatrix', m.toArray());
 						meshRenderer.geometry.uniform.set('u_viewMatrix', v.toArray());
 						meshRenderer.geometry.uniform.set('u_projectMatrix', p.toArray());
-						meshRenderer.geometry.uniform.set('u_reverseLightDirection', [1.0, 0.0, 0.0]);
+						meshRenderer.geometry.uniform.set('u_worldSpaceLightPos', lightPos.toArray());
+						meshRenderer.geometry.uniform.set('u_lightColor', [1., 1., 1.]);
+						meshRenderer.geometry.uniform.set('u_diffuseColor', [.5, 0., 0.]);
+						meshRenderer.geometry.uniform.set('u_specularColor', [1., 1., 1.]);
+						meshRenderer.geometry.uniform.set('u_gloss', [3.]);
+						
 						// meshRenderer.geometry.uniform.set('u_color', [.8, .3, .6, 1.0]);
 					}
 
