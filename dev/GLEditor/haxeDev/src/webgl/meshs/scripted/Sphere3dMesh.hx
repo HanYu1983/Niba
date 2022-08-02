@@ -1,21 +1,31 @@
-package webgl.meshs;
+package webgl.meshs.scripted;
 
 import mme.math.glmatrix.Vec3Tools;
 import mme.math.glmatrix.Mat3Tools;
 import mme.math.glmatrix.Vec3;
 
-class Sphere3dMesh extends WebglMesh {
-	final position = [];
-	final indices = [];
+class Sphere3dMesh extends ScriptedMesh {
+	final rowCount:Int;
+	final coloumnCount:Int;
+	final radius:Float;
 
 	public function new(numInstances = 0, rowCount:Int = 12, coloumnCount:Int = 8, radius:Float = 100) {
-		final gap:Float = (Math.PI * 2) / rowCount;
-		final gap2:Float = Math.PI / coloumnCount;
+		this.rowCount = rowCount;
+		this.coloumnCount = coloumnCount;
+		this.radius = radius;
+		super(numInstances);
+	}
+
+	override function generateMesh() {
+		super.generateMesh();
+
+		final rowGap:Float = (Math.PI * 2) / rowCount;
+		final columnGap:Float = Math.PI / coloumnCount;
 		final lastVid = rowCount * (coloumnCount - 1) + 1;
 
 		position.push(Vec3.fromValues(0, radius, 0));
 		for (j in 1...coloumnCount) {
-			final theta2 = j * gap2;
+			final theta2 = j * columnGap;
 			final z = Math.cos(theta2);
 			final sxy = Math.sin(theta2);
 
@@ -63,7 +73,7 @@ class Sphere3dMesh extends WebglMesh {
 					}
 				}
 
-				final theta = i * gap;
+				final theta = i * rowGap;
 
 				final x = Math.cos(theta) * sxy;
 				final y = Math.sin(theta) * sxy;
@@ -78,7 +88,6 @@ class Sphere3dMesh extends WebglMesh {
 			}
 		}
 		position.push(Vec3.fromValues(0, -radius, 0));
-		super(numInstances);
 	}
 
 	override function getNormal():Array<Float> {
@@ -89,17 +98,6 @@ class Sphere3dMesh extends WebglMesh {
 			pos.push(normal.x);
 			pos.push(normal.y);
 			pos.push(normal.z);
-		}
-		return pos;
-	}
-
-	override function getPosition():Array<Float> {
-		final pos = [];
-		for (id in indices) {
-			final vert = position[id];
-			pos.push(vert.x);
-			pos.push(vert.y);
-			pos.push(vert.z);
 		}
 		return pos;
 	}

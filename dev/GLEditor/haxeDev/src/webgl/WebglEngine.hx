@@ -1,6 +1,13 @@
 package webgl;
 
-import webgl.meshs.Sphere3dMesh;
+import js.lib.Uint16Array;
+import js.lib.Float32Array;
+import webgl.meshs.scripted.Sphere3dMesh;
+import js.html.Image;
+import js.webgl2.constants.Texture2DBindingTypeEnum;
+import js.Syntax;
+import js.lib.Error.SyntaxError;
+import webgl.meshs.scripted.Plane3dMesh;
 import mme.math.glmatrix.Vec3;
 import js.webgl2.Framebuffer;
 import webgl.meshs.F2dMesh;
@@ -29,6 +36,7 @@ enum DEFAULT_MESH {
 	F3D;
 	CUBE3D;
 	SPHERE3D;
+	PLANE3D;
 
 	F2D;
 	RECTANGLE2D;
@@ -43,7 +51,7 @@ class WebglEngine {
 	public final meshs:Map<DEFAULT_MESH, WebglMesh> = [];
 	public final materials:Map<String, WebglMaterial> = [];
 	public final geometrys:Map<String, WebglGeometry> = [];
-	public final textures:Map<String, Texture> = [];
+	public final textures:Map<String, {type:Texture2DBindingTypeEnum, texture:Texture}> = [];
 
 	public final frameBuffer:Map<String, Framebuffer> = [];
 
@@ -53,11 +61,21 @@ class WebglEngine {
 		final dom_gl = Browser.document.getElementById(canvasName);
 		gl = CanvasHelpers.getWebGL2(cast(dom_gl, CanvasElement));
 
+		// 允許RGBA32F的紋理給予framebuffer
+		gl.getExtension('OES_texture_float_linear');
+		gl.getExtension('OES_texture_half_float_linear');
+		gl.getExtension('EXT_texture_filter_anisotropic');
+		gl.getExtension('EXT_color_buffer_float');
+		gl.getExtension('WEBGL_debug_shaders');
+		gl.getExtension('KHR_parallel_shader_compile');
+
 		meshs.set(F2D, new F2dMesh());
 		meshs.set(RECTANGLE2D, new Rectangle2dMesh());
 		meshs.set(F3D, new F3dMesh(20));
 		meshs.set(CUBE3D, new Cube3dMesh(20));
 		meshs.set(SPHERE3D, new Sphere3dMesh(20));
+		meshs.set(PLANE3D, new Plane3dMesh(20));
+
 		shaders.set('Basic2dShader', new Basic2dShader());
 		shaders.set('Basic3dShader', new Basic3dShader());
 		shaders.set('Basic3dInstanceShader', new Basic3dInstanceShader());
@@ -77,7 +95,7 @@ class WebglEngine {
 			return;
 		}
 		final fb = frameBuffer.get(name);
-		final t = textures.get(name);
+		final t = textures.get(name).texture;
 		if (fb == null)
 			return;
 		if (t == null)
@@ -101,6 +119,166 @@ class WebglEngine {
 		currentFrameBuffer = '';
 	}
 
+	public function createCubeMapByURL(name:String, width = 512, height = 512) {
+		if (gl == null) {
+			return null;
+		}
+
+		final texture = gl.createTexture();
+		gl.activeTexture(gl.TEXTURE0);
+		gl.bindTexture(gl.TEXTURE_CUBE_MAP, texture);
+
+		function generateFace(ctx, faceColor, textColor, text) {
+			final width = ctx.canvas.width;
+			final height = ctx.canvas.height;
+			ctx.fillStyle = faceColor;
+			ctx.fillRect(0, 0, width, height);
+			ctx.font = '${width * 0.7}px sans-serif';
+			ctx.textAlign = 'center';
+			ctx.textBaseline = 'middle';
+			ctx.fillStyle = textColor;
+			ctx.fillText(text, width / 2, height / 2);
+		}
+
+		final canvas:Dynamic = Browser.document.createElement("canvas");
+		final ctx:Dynamic = canvas.getContext('2d');
+
+		ctx.canvas.width = width;
+		ctx.canvas.height = height;
+
+		final faceInfos = [
+			{
+				target: gl.TEXTURE_CUBE_MAP_POSITIVE_X,
+				url: 'images/enviroment/001/pos-x.jpg',
+			},
+			{
+				target: gl.TEXTURE_CUBE_MAP_NEGATIVE_X,
+				url: 'images/enviroment/001/neg-x.jpg',
+			},
+			{
+				target: gl.TEXTURE_CUBE_MAP_POSITIVE_Y,
+				url: 'images/enviroment/001/pos-y.jpg',
+			},
+			{
+				target: gl.TEXTURE_CUBE_MAP_NEGATIVE_Y,
+				url: 'images/enviroment/001/neg-y.jpg',
+			},
+			{
+				target: gl.TEXTURE_CUBE_MAP_POSITIVE_Z,
+				url: 'images/enviroment/001/pos-z.jpg',
+			},
+			{
+				target: gl.TEXTURE_CUBE_MAP_NEGATIVE_Z,
+				url: 'images/enviroment/001/neg-z.jpg',
+			},
+		];
+		for (faceInfo in faceInfos) {
+			final level = 0;
+			final internalFormat = gl.RGBA;
+			final border = 0;
+			final format = gl.RGBA;
+			final type = gl.UNSIGNED_BYTE;
+			gl.texImage2D(faceInfo.target, level, internalFormat, width, height, border, format, type, null);
+
+			final image = new Image();
+			image.src = faceInfo.url;
+			image.addEventListener('load', function() {
+				// 图片加载完成将其拷贝到纹理
+				gl.bindTexture(gl.TEXTURE_CUBE_MAP, texture);
+				gl.texImage2D(faceInfo.target, level, internalFormat, width, height, border, format, type, image);
+				gl.generateMipmap(gl.TEXTURE_CUBE_MAP);
+			});
+		}
+		gl.generateMipmap(gl.TEXTURE_CUBE_MAP);
+		gl.texParameteri(gl.TEXTURE_CUBE_MAP, gl.TEXTURE_MIN_FILTER, gl.LINEAR_MIPMAP_LINEAR);
+
+		addTexture(name, gl.TEXTURE_CUBE_MAP, texture);
+		return texture;
+	}
+
+	public function createCubeMap(name:String, width = 128, height = 128) {
+		if (gl == null) {
+			return null;
+		}
+
+		final texture = gl.createTexture();
+		gl.activeTexture(gl.TEXTURE0);
+		gl.bindTexture(gl.TEXTURE_CUBE_MAP, texture);
+
+		function generateFace(ctx, faceColor, textColor, text) {
+			final width = ctx.canvas.width;
+			final height = ctx.canvas.height;
+			ctx.fillStyle = faceColor;
+			ctx.fillRect(0, 0, width, height);
+			ctx.font = '${width * 0.7}px sans-serif';
+			ctx.textAlign = 'center';
+			ctx.textBaseline = 'middle';
+			ctx.fillStyle = textColor;
+			ctx.fillText(text, width / 2, height / 2);
+		}
+
+		final canvas:Dynamic = Browser.document.createElement("canvas");
+		final ctx:Dynamic = canvas.getContext('2d');
+
+		ctx.canvas.width = width;
+		ctx.canvas.height = height;
+
+		final faceInfos = [
+			{
+				target: gl.TEXTURE_CUBE_MAP_POSITIVE_X,
+				faceColor: '#F00',
+				textColor: '#0FF',
+				text: '+X'
+			},
+			{
+				target: gl.TEXTURE_CUBE_MAP_NEGATIVE_X,
+				faceColor: '#FF0',
+				textColor: '#00F',
+				text: '-X'
+			},
+			{
+				target: gl.TEXTURE_CUBE_MAP_POSITIVE_Y,
+				faceColor: '#0F0',
+				textColor: '#F0F',
+				text: '+Y'
+			},
+			{
+				target: gl.TEXTURE_CUBE_MAP_NEGATIVE_Y,
+				faceColor: '#0FF',
+				textColor: '#F00',
+				text: '-Y'
+			},
+			{
+				target: gl.TEXTURE_CUBE_MAP_POSITIVE_Z,
+				faceColor: '#00F',
+				textColor: '#FF0',
+				text: '+Z'
+			},
+			{
+				target: gl.TEXTURE_CUBE_MAP_NEGATIVE_Z,
+				faceColor: '#F0F',
+				textColor: '#0F0',
+				text: '-Z'
+			},
+		];
+		for (faceInfo in faceInfos) {
+			generateFace(ctx, faceInfo.faceColor, faceInfo.textColor, faceInfo.text);
+
+			final level = 0;
+			final internalFormat = gl.RGBA;
+			final border = 0;
+			final format = gl.RGBA;
+			final type = gl.UNSIGNED_BYTE;
+			// gl.texImage2D(faceInfo.target, level, internalFormat, width, height, border, format, type, ctx.canvas);
+			Reflect.callMethod(null, gl.texImage2D, [faceInfo.target, level, internalFormat, format, type, ctx.canvas]);
+		}
+		gl.generateMipmap(gl.TEXTURE_CUBE_MAP);
+		gl.texParameteri(gl.TEXTURE_CUBE_MAP, gl.TEXTURE_MIN_FILTER, gl.LINEAR_MIPMAP_LINEAR);
+
+		addTexture(name, gl.TEXTURE_CUBE_MAP, texture);
+		return texture;
+	}
+
 	public function createRenderTarget(name:String, width:Int, height:Int):Null<Texture> {
 		if (gl == null) {
 			return null;
@@ -109,19 +287,12 @@ class WebglEngine {
 		gl.bindTexture(gl.TEXTURE_2D, texture);
 
 		final level = 0;
-		final internalFormat = gl.RGBA;
+		final internalFormat = gl.RGBA32F;
 		final border = 0;
 		final format = gl.RGBA;
-		final type = gl.UNSIGNED_BYTE;
+		final type = gl.FLOAT;
 
-		var dataAry = [];
-		for (i in 0...width * height) {
-			dataAry.push(1);
-			dataAry.push(0);
-			dataAry.push(0);
-			dataAry.push(1);
-		}
-		final data = new Uint8Array(dataAry);
+		final data = new Float32Array(width * height * 8);
 
 		gl.texImage2D(gl.TEXTURE_2D, level, internalFormat, width, height, border, format, type, data);
 		gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MIN_FILTER, gl.LINEAR);
@@ -132,7 +303,7 @@ class WebglEngine {
 		gl.bindFramebuffer(gl.FRAMEBUFFER, fb);
 		gl.framebufferTexture2D(gl.FRAMEBUFFER, gl.COLOR_ATTACHMENT0, gl.TEXTURE_2D, texture, level);
 
-		addTexture(name, texture);
+		addTexture(name, gl.TEXTURE_2D, texture);
 		addFrameBuffer(name, fb);
 
 		gl.bindFramebuffer(gl.FRAMEBUFFER, null);
@@ -176,7 +347,7 @@ class WebglEngine {
 		gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_WRAP_S, gl.CLAMP_TO_EDGE);
 		gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_WRAP_T, gl.CLAMP_TO_EDGE);
 
-		addTexture(name, texture);
+		addTexture(name, gl.TEXTURE_2D, texture);
 		gl.bindTexture(gl.TEXTURE_2D, null);
 		return texture;
 	}
@@ -204,7 +375,7 @@ class WebglEngine {
 		gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_WRAP_S, gl.CLAMP_TO_EDGE);
 		gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_WRAP_T, gl.CLAMP_TO_EDGE);
 
-		addTexture(name, texture);
+		addTexture(name, gl.TEXTURE_2D, texture);
 		gl.bindTexture(gl.TEXTURE_2D, null);
 		return texture;
 	}
@@ -212,20 +383,22 @@ class WebglEngine {
 	public function addShader(name:String, shader:WebglShader) {
 		if (shaders.exists(name))
 			return;
-		LogManager.getLogger('hex').info('新增著色器${name}');
+		LogManager.getLogger('hex').info('新增著色器:${name}');
 		shaders.set(name, shader);
 	}
 
-	public function addTexture(name:String, texture:Texture) {
+	public function addTexture(name:String, type:Texture2DBindingTypeEnum, texture:Texture) {
 		if (textures.exists(name))
 			return;
-		textures.set(name, texture);
+		textures.set(name, {type: type, texture: texture});
+		LogManager.getLogger('hex').info('新增紋理:${name}');
 	}
 
 	public function addFrameBuffer(name:String, buffer:Framebuffer) {
 		if (frameBuffer.exists(name))
 			return;
 		frameBuffer.set(name, buffer);
+		LogManager.getLogger('hex').info('新增buffer:${name}');
 	}
 
 	// public function getTexture(name:String):Null<Texture> {
@@ -247,17 +420,10 @@ class WebglEngine {
 
 		shader.instances.push(name);
 
-		LogManager.getLogger('hex').info('新增材質${name}');
+		LogManager.getLogger('hex').info('新增材質:${name}');
 
 		return mat;
 	}
-
-	// public function addTextureToMaterial(textureId:String, materialId:String) {
-	// 	final m = materials.get(materialId);
-	// 	if (m == null)
-	// 		return;
-	// 	m.textures.push(textureId);
-	// }
 
 	public function createGeometry(name:String, meshId:DEFAULT_MESH, materialName:String):Null<WebglGeometry> {
 		if (geometrys.exists(name))
@@ -275,12 +441,32 @@ class WebglEngine {
 		geometry.materialId = materialName;
 
 		geometrys.set(name, geometry);
-		LogManager.getLogger('hex').info('新增幾何體${name}');
+		LogManager.getLogger('hex').info('新增幾何體:${name}');
 
 		material.geometrys.push(name);
 
 		return geometry;
 	}
+
+	// public function addTextureToMaterial(materialName:String, uniformName:String, textureName:String) {
+	// 	final material = materials.get(materialName);
+	// 	final texture = textures.get(textureName);
+	// 	if (material != null && texture != null) {
+	// 		material.textures.push(textureName);
+	// 		for (geo in material.geometrys) {
+	// 			final geometry = geometrys.get(geo);
+	// 			if (geometry != null) {
+	// 				geometry.uniform.set(uniformName, texture);
+	// 			}
+	// 		}
+	// 	}
+	// 	jacobiMaterial.textures.push('DivergenceCalculator');
+	// 			jacobiMaterial.textures.push('PressureCalculatorB');
+	// 			jacobiMaterial.textures.push('VelocityCalculatorB');
+	// 			jacobiMaterial.uniform.set('DivergenceTexture', 0);
+	// 			jacobiMaterial.uniform.set('PressureTexture', 1);
+	// 			jacobiMaterial.uniform.set('VelocityTexture', 2);
+	// }
 
 	public function changeMaterial(geometryId:String, materialId:String) {
 		LogManager.getLogger('hex').info('修改材質:${geometryId} ${materialId}');
@@ -345,7 +531,7 @@ class WebglEngine {
 			lastVao = mesh.vao;
 		}
 
-		function setUniform(shader:WebglShader, geometry:WebglGeometry) {
+		function setUniform(shader:WebglShader, geometry:WebglGeometry, material:WebglMaterial) {
 			if (gl == null)
 				return;
 
@@ -353,18 +539,19 @@ class WebglEngine {
 				final pointer = shader.getUniformMap()[attri];
 				final type = shader.getUniformType(attri);
 				final params = geometry.uniform.get(attri);
+				final materialParams = material.uniform.get(attri);
 				if (pointer == null)
 					continue;
 				if (type == null)
 					continue;
-				if (params == null)
+				if (params == null && materialParams == null)
 					continue;
 
 				LogManager.getLogger("hex").debug('設定uniform:${attri}');
 
 				switch (type) {
-					case 'sampler2D':
-						gl.uniform1i(pointer, params);
+					case 'sampler2D' | 'samplerCube':
+						gl.uniform1i(pointer, materialParams);
 					case 'vec2':
 						gl.uniform2fv(pointer, params);
 					case 'vec3':
@@ -396,8 +583,8 @@ class WebglEngine {
 				if (material == null)
 					continue;
 
-				gl.bindTexture(gl.TEXTURE_2D, null);
 				for (index => textureId in material.textures) {
+					// 作爲framebuffer的紋理無法同時給予shader，這是webgl的限制
 					if (currentFrameBuffer == textureId)
 						continue;
 
@@ -407,7 +594,7 @@ class WebglEngine {
 
 					final param = Reflect.field(gl, 'TEXTURE${index}');
 					gl.activeTexture(param);
-					gl.bindTexture(gl.TEXTURE_2D, t);
+					gl.bindTexture(t.type, t.texture);
 					LogManager.getLogger("hex").debug('使用紋理通道:${index}，紋理為:${textureId}');
 				}
 				LogManager.getLogger("hex").debug('使用材質:${materialId}');
@@ -454,7 +641,7 @@ class WebglEngine {
 						// 取第一個的geometry為主要的uniform參數
 						final geometry = geometrys[0];
 						if (geometry != null) {
-							setUniform(shader, geometry);
+							setUniform(shader, geometry, material);
 						}
 
 						for (geo in geometrys) {
@@ -482,9 +669,10 @@ class WebglEngine {
 							continue;
 
 						setVao(geometry.meshId, mesh);
-						setUniform(shader, geometry);
+						setUniform(shader, geometry, material);
 
 						gl.drawArrays(gl.TRIANGLES, 0, mesh.getCount());
+
 						LogManager.getLogger("hex").debug('[普通渲染執行]${geometryId}');
 					}
 				}

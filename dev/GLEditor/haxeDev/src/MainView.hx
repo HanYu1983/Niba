@@ -1,5 +1,15 @@
 package;
 
+import webgl.shaders.navierStokes2d.Combine;
+import webgl.shaders.navierStokes2d.VelocityAfterCalculator;
+import webgl.shaders.navierStokes2d.VelocityCalculator;
+import webgl.shaders.navierStokes2d.PressureCalculator;
+import webgl.shaders.navierStokes2d.DivergenceCalculator;
+import webgl.shaders.BasicEnviromentShader;
+import webgl.shaders.BasicCubeMapShader;
+import js.html.URL;
+import js.Syntax;
+import js.webgl2.CanvasHelpers;
 import webgl.shaders.ShaderToyStorm;
 import mme.math.glmatrix.Vec2Tools;
 import js.html.MouseEvent;
@@ -37,14 +47,247 @@ class MainView extends VBox {
 
 		var stats = new Perf();
 
+		// createCubeMap();
 		// methodA();
 		// methodC();
-		testInstance();
+		// testInstance();
 		// testReactionDiffusion();
 		// testDoubleBuffer();
 		// testRenderTarget();
 		// testNoiseShader();
+		test2DNavierStokes();
+		// testMultiTexture();
 		// testShaderToy();
+		// testCubeMap();
+		// testEnviromentMap();
+	}
+
+	function createCubeMap() {
+		function generateFace(ctx, faceColor, textColor, text) {
+			final width = ctx.canvas.width;
+			final height = ctx.canvas.height;
+			ctx.fillStyle = faceColor;
+			ctx.fillRect(0, 0, width, height);
+			ctx.font = '${width * 0.7}px sans-serif';
+			ctx.textAlign = 'center';
+			ctx.textBaseline = 'middle';
+			ctx.fillStyle = textColor;
+			ctx.fillText(text, width / 2, height / 2);
+		}
+
+		// gl = CanvasHelpers.getWebGL2(cast(dom_gl, CanvasElement));
+		final canvas:Dynamic = Browser.document.createElement("canvas");
+		final ctx:Dynamic = canvas.getContext('2d');
+
+		ctx.canvas.width = 128;
+		ctx.canvas.height = 128;
+
+		final faceInfos = [
+			{faceColor: '#F00', textColor: '#0FF', text: '+X'},
+			{faceColor: '#FF0', textColor: '#00F', text: '-X'},
+			{faceColor: '#0F0', textColor: '#F0F', text: '+Y'},
+			{faceColor: '#0FF', textColor: '#F00', text: '-Y'},
+			{faceColor: '#00F', textColor: '#FF0', text: '+Z'},
+			{faceColor: '#F0F', textColor: '#0F0', text: '-Z'},
+		];
+		for (faceInfo in faceInfos) {
+			generateFace(ctx, faceInfo.faceColor, faceInfo.textColor, faceInfo.text);
+
+			// show the result
+			ctx.canvas.toBlob((blob) -> {
+				final img = new Image();
+				img.src = URL.createObjectURL(blob);
+				Browser.document.body.appendChild(img);
+			});
+		}
+	}
+
+	function testMultiTexture() {
+		WebglEngine.inst.init('canvas_gl');
+		final gl = WebglEngine.inst.gl;
+		if (gl != null) {
+			WebglEngine.inst.addShader('DivergenceCalculator', new DivergenceCalculator());
+			WebglEngine.inst.addShader('PressureCalculator', new PressureCalculator());
+			WebglEngine.inst.addShader('VelocityCalculator', new VelocityCalculator());
+			WebglEngine.inst.addShader('VelocityAfterCalculator', new VelocityAfterCalculator());
+			WebglEngine.inst.addShader('Combine', new Combine());
+
+			WebglEngine.inst.createRenderTarget('DivergenceCalculator', 256, 256);
+			WebglEngine.inst.createRenderTarget('PressureCalculatorA', 256, 256);
+			WebglEngine.inst.createRenderTarget('PressureCalculatorB', 256, 256);
+			WebglEngine.inst.createRenderTarget('VelocityCalculatorA', 256, 256);
+			WebglEngine.inst.createRenderTarget('VelocityCalculatorB', 256, 256);
+
+			// bufferA
+			final velocityMaterial = WebglEngine.inst.createMaterial('velocityMaterial', 'VelocityCalculator');
+			if (velocityMaterial != null) {
+				velocityMaterial.uniform.set('VelocityTexture', 0);
+				velocityMaterial.textures.push('VelocityCalculatorB');
+			}
+
+			// bufferB
+			final divergenceMaterial = WebglEngine.inst.createMaterial('divergenceMaterial', 'DivergenceCalculator');
+			if (divergenceMaterial != null) {
+				divergenceMaterial.uniform.set('VelocityTexture', 0);
+				divergenceMaterial.textures.push('VelocityCalculatorA');
+			}
+
+			// bufferC
+			final pressureMaterial = WebglEngine.inst.createMaterial('pressureMaterial', 'PressureCalculator');
+			if (pressureMaterial != null) {
+				pressureMaterial.uniform.set('VelocityTexture', 0);
+				pressureMaterial.uniform.set('DivergenceTexture', 1);
+				pressureMaterial.uniform.set('PressureTexture', 2);
+				pressureMaterial.textures.push('VelocityCalculatorA');
+				pressureMaterial.textures.push('DivergenceCalculator');
+			}
+
+			// bufferD
+			final velocityBMaterial = WebglEngine.inst.createMaterial('velocityBMaterial', 'VelocityAfterCalculator');
+			if (velocityBMaterial != null) {
+				velocityBMaterial.uniform.set('PressureTexture', 0);
+				velocityBMaterial.uniform.set('VelocityTexture', 1);
+				velocityBMaterial.textures.push('PressureCalculatorA');
+				velocityBMaterial.textures.push('VelocityCalculatorA');
+			}
+
+			// combine
+			final combineMaterial = WebglEngine.inst.createMaterial('combineMaterial', 'Combine');
+			if (combineMaterial != null) {
+				combineMaterial.uniform.set('u_velocity', 0);
+				combineMaterial.uniform.set('u_pressure', 1);
+				combineMaterial.uniform.set('u_divergence', 2);
+				combineMaterial.textures.push('VelocityCalculatorB');
+				combineMaterial.textures.push('PressureCalculatorA');
+				combineMaterial.textures.push('DivergenceCalculator');
+			}
+
+			// WebglEngine.inst.addShader('Combine', new Combine());
+			WebglEngine.inst.createNoiseTexture('ta');
+			WebglEngine.inst.createTexture('tb');
+
+			WebglEngine.inst.createRenderTarget('rt', 256, 256);
+
+			// final combineMaterial = WebglEngine.inst.createMaterial('combineMaterial', 'Combine');
+			// if (combineMaterial != null) {
+			// 	combineMaterial.uniform.set('u_velocity', 0);
+			// 	combineMaterial.uniform.set('u_pressure', 1);
+			// 	combineMaterial.uniform.set('u_divergence', 2);
+			// 	combineMaterial.textures.push('ta');
+			// 	combineMaterial.textures.push('tb');
+			// }
+			final rect = Tool.createMeshEntity('rect', DEFAULT_MESH.RECTANGLE2D, 'combineMaterial');
+
+			var lastRender = 0.0;
+			function render(timestamp:Float) {
+				final progress = timestamp - lastRender;
+				lastRender = timestamp;
+
+				final mr = rect.getComponent(MeshRenderer);
+				if (mr != null && mr.geometry != null) {
+					final pm = Mat3Tools.projection(gl.canvas.width, gl.canvas.height);
+					final modelMatrix = Mat3.fromScaling(null, Vec2.fromValues(1024.0 / 100.0, 768.0 / 100.0));
+					mr.geometry.uniform.set('u_time', [timestamp]);
+					mr.geometry.uniform.set('u_matrix', pm.toArray());
+					mr.geometry.uniform.set('u_modelMatrix', modelMatrix.toArray());
+				}
+
+				WebglEngine.inst.defaultFrameBuffer();
+
+				WebglEngine.inst.render();
+
+				WebglEngine.inst.bindFrameBuffer('rt');
+
+				WebglEngine.inst.render();
+
+				// Browser.window.requestAnimationFrame(render);
+			}
+			Browser.window.requestAnimationFrame(render);
+		}
+	}
+
+	function testEnviromentMap() {
+		WebglEngine.inst.init('canvas_gl');
+		final gl = WebglEngine.inst.gl;
+		if (gl != null) {
+			WebglEngine.inst.createCubeMap('cubemapTexture');
+
+			WebglEngine.inst.addShader('BasicEnviromentShader', new BasicEnviromentShader());
+
+			final cubeMaterial = WebglEngine.inst.createMaterial('cubeMaterial', 'BasicEnviromentShader');
+			if (cubeMaterial != null) {
+				cubeMaterial.textures.push('cubemapTexture');
+			}
+			final cube = Tool.createMeshEntity('cube', CUBE3D, 'cubeMaterial');
+
+			final camera = Tool.createCameraEntity('camera');
+			camera.transform.position.z = 1000;
+
+			final cameraComponent = camera.getComponent(ecs.components.Camera);
+
+			final mr = cube.getComponent(MeshRenderer);
+
+			var lastRender = 0.0;
+			function render(timestamp:Float) {
+				final progress = timestamp - lastRender;
+				lastRender = timestamp;
+
+				cube.transform.rotation.x += 0.01;
+				cube.transform.rotation.y += 0.01;
+
+				if (mr != null && mr.geometry != null && cameraComponent != null) {
+					mr.geometry.uniform.set('u_projectMatrix', cameraComponent.getProjectMatrix().toArray());
+					mr.geometry.uniform.set('u_viewMatrix', camera.transform.getGlobalMatrix().toArray());
+					mr.geometry.uniform.set('u_modelMatrix', cube.transform.getGlobalMatrix().toArray());
+				}
+
+				WebglEngine.inst.render();
+				Browser.window.requestAnimationFrame(render);
+			}
+			Browser.window.requestAnimationFrame(render);
+		}
+	}
+
+	function testCubeMap() {
+		WebglEngine.inst.init('canvas_gl');
+		final gl = WebglEngine.inst.gl;
+		if (gl != null) {
+			WebglEngine.inst.createCubeMap('cubemapTexture');
+
+			WebglEngine.inst.addShader('BasicCubeMapShader', new BasicCubeMapShader());
+
+			final cubeMaterial = WebglEngine.inst.createMaterial('cubeMaterial', 'BasicCubeMapShader');
+			if (cubeMaterial != null) {
+				cubeMaterial.textures.push('cubemapTexture');
+			}
+			final cube = Tool.createMeshEntity('cube', CUBE3D, 'cubeMaterial');
+
+			final camera = Tool.createCameraEntity('camera');
+			camera.transform.position.z = 1000;
+
+			final cameraComponent = camera.getComponent(ecs.components.Camera);
+
+			final mr = cube.getComponent(MeshRenderer);
+
+			var lastRender = 0.0;
+			function render(timestamp:Float) {
+				final progress = timestamp - lastRender;
+				lastRender = timestamp;
+
+				cube.transform.rotation.x += 0.01;
+				cube.transform.rotation.y += 0.01;
+
+				if (mr != null && mr.geometry != null && cameraComponent != null) {
+					mr.geometry.uniform.set('u_projectMatrix', cameraComponent.getProjectMatrix().toArray());
+					mr.geometry.uniform.set('u_viewMatrix', camera.transform.getGlobalMatrix().toArray());
+					mr.geometry.uniform.set('u_modelMatrix', cube.transform.getGlobalMatrix().toArray());
+				}
+
+				WebglEngine.inst.render();
+				Browser.window.requestAnimationFrame(render);
+			}
+			Browser.window.requestAnimationFrame(render);
+		}
 	}
 
 	function testShaderToy() {
@@ -113,6 +356,172 @@ class MainView extends VBox {
 				Browser.window.requestAnimationFrame(render);
 			}
 			Browser.window.requestAnimationFrame(render);
+		}
+	}
+
+	function test2DNavierStokes() {
+		WebglEngine.inst.init('canvas_gl');
+		final gl = WebglEngine.inst.gl;
+		if (gl != null) {
+			WebglEngine.inst.addShader('DivergenceCalculator', new DivergenceCalculator());
+			WebglEngine.inst.addShader('PressureCalculator', new PressureCalculator());
+			WebglEngine.inst.addShader('VelocityCalculator', new VelocityCalculator());
+			WebglEngine.inst.addShader('VelocityAfterCalculator', new VelocityAfterCalculator());
+			WebglEngine.inst.addShader('Combine', new Combine());
+
+			final textureSize = 1024;
+
+			WebglEngine.inst.createRenderTarget('DivergenceCalculatorA', textureSize, textureSize);
+			WebglEngine.inst.createRenderTarget('PressureCalculatorA', textureSize, textureSize);
+			WebglEngine.inst.createRenderTarget('PressureCalculatorB', textureSize, textureSize);
+			WebglEngine.inst.createRenderTarget('VelocityCalculatorA', textureSize, textureSize);
+			WebglEngine.inst.createRenderTarget('VelocityCalculatorB', textureSize, textureSize);
+
+			// bufferA
+			final velocityMaterial = WebglEngine.inst.createMaterial('velocityMaterial', 'VelocityCalculator');
+			if (velocityMaterial != null) {
+				velocityMaterial.uniform.set('u_velocityAfter', 0);
+				velocityMaterial.textures.push('VelocityCalculatorB');
+			}
+
+			// bufferB
+			final divergenceMaterial = WebglEngine.inst.createMaterial('divergenceMaterial', 'DivergenceCalculator');
+			if (divergenceMaterial != null) {
+				divergenceMaterial.uniform.set('u_velocity', 0);
+				divergenceMaterial.textures.push('VelocityCalculatorA');
+			}
+
+			// bufferC
+			final pressureMaterial = WebglEngine.inst.createMaterial('pressureMaterial', 'PressureCalculator');
+			if (pressureMaterial != null) {
+				pressureMaterial.uniform.set('u_velocity', 0);
+				pressureMaterial.uniform.set('u_divergence', 1);
+				pressureMaterial.uniform.set('u_pressure', 2);
+				pressureMaterial.textures.push('VelocityCalculatorA');
+				pressureMaterial.textures.push('DivergenceCalculatorA');
+				pressureMaterial.textures.push('PressureCalculatorB');
+			}
+
+			// bufferD
+			final velocityBMaterial = WebglEngine.inst.createMaterial('velocityBMaterial', 'VelocityAfterCalculator');
+			if (velocityBMaterial != null) {
+				velocityBMaterial.uniform.set('u_pressure', 0);
+				velocityBMaterial.uniform.set('u_velocity', 1);
+				velocityBMaterial.textures.push('PressureCalculatorA');
+				velocityBMaterial.textures.push('VelocityCalculatorA');
+			}
+
+			// combine
+			final combineMaterial = WebglEngine.inst.createMaterial('combineMaterial', 'Combine');
+			if (combineMaterial != null) {
+				combineMaterial.uniform.set('u_velocity', 0);
+				combineMaterial.uniform.set('u_pressure', 1);
+				combineMaterial.uniform.set('u_divergence', 2);
+				combineMaterial.textures.push('VelocityCalculatorA');
+				combineMaterial.textures.push('PressureCalculatorA');
+				combineMaterial.textures.push('DivergenceCalculatorA');
+			}
+
+			final rect = Tool.createMeshEntity('rect', RECTANGLE2D, 'combineMaterial');
+
+			var lastRender = 0.0;
+			var tickCount = 0.0;
+			function render(timestamp:Float) {
+				final progress = timestamp - lastRender;
+				lastRender = timestamp;
+
+				final mr = rect.getComponent(MeshRenderer);
+				if (mr != null && mr.geometry != null) {
+					final pm = Mat3Tools.projection(gl.canvas.width, gl.canvas.height);
+					final modelMatrix = Mat3.fromScaling(null, Vec2.fromValues(1024.0 / 100.0, 768.0 / 100.0));
+					mr.geometry.uniform.set('u_time', [timestamp]);
+					mr.geometry.uniform.set('u_matrix', pm.toArray());
+					mr.geometry.uniform.set('u_modelMatrix', modelMatrix.toArray());
+				}
+
+				// bufferA
+				{
+					final mr = rect.getComponent(MeshRenderer);
+					if (mr != null && mr.geometry != null) {
+						WebglEngine.inst.changeMaterial(mr.name, 'velocityMaterial');
+					}
+					// 指定新的不顯示的畫布
+					WebglEngine.inst.bindFrameBuffer('VelocityCalculatorA');
+
+					// 畫在指定的不顯示的畫布上
+					WebglEngine.inst.render(textureSize, textureSize, Vec3.fromValues(0.0, 0.0, 0.0));
+				}
+
+				// return;
+
+				// bufferB
+				{
+					final mr = rect.getComponent(MeshRenderer);
+					if (mr != null && mr.geometry != null) {
+						WebglEngine.inst.changeMaterial(mr.name, 'divergenceMaterial');
+					}
+
+					// 指定新的不顯示的畫布
+					WebglEngine.inst.bindFrameBuffer('DivergenceCalculatorA');
+
+					// 畫在指定的不顯示的畫布上
+					WebglEngine.inst.render(textureSize, textureSize, Vec3.fromValues(0.0, 0.0, 1));
+				}
+
+				// bufferC
+				{
+					final mr = rect.getComponent(MeshRenderer);
+					if (mr != null && mr.geometry != null) {
+						WebglEngine.inst.changeMaterial(mr.name, 'pressureMaterial');
+					}
+
+					if (pressureMaterial != null && pressureMaterial.textures.length > 2) {
+						pressureMaterial.textures.pop();
+						pressureMaterial.textures.push(tickCount % 2 == 0 ? 'PressureCalculatorA' : 'PressureCalculatorB');
+					}
+					// 指定新的不顯示的畫布
+					WebglEngine.inst.bindFrameBuffer(tickCount % 2 == 0 ? 'PressureCalculatorB' : 'PressureCalculatorA');
+
+					// 畫在指定的不顯示的畫布上
+					WebglEngine.inst.render(textureSize, textureSize, Vec3.fromValues(0.0, 0.0, 1));
+				}
+
+				// bufferD
+				{
+					final mr = rect.getComponent(MeshRenderer);
+					if (mr != null && mr.geometry != null) {
+						WebglEngine.inst.changeMaterial(mr.name, 'velocityBMaterial');
+					}
+					// 指定新的不顯示的畫布
+					WebglEngine.inst.bindFrameBuffer('VelocityCalculatorB');
+
+					// 畫在指定的不顯示的畫布上
+					WebglEngine.inst.render(textureSize, textureSize, Vec3.fromValues(0.0, 0.0, 1));
+				}
+
+				// combine
+				{
+					final mr = rect.getComponent(MeshRenderer);
+					if (mr != null && mr.geometry != null) {
+						WebglEngine.inst.changeMaterial(mr.name, 'combineMaterial');
+						// WebglEngine.inst.changeMaterial(mr.name, 'velocityMaterial');
+					}
+
+					WebglEngine.inst.defaultFrameBuffer();
+
+					// 畫在當前的顯示畫布
+					WebglEngine.inst.render(gl.canvas.width, gl.canvas.height, Vec3.fromValues(0.7, 0.7, 0.7));
+				}
+
+				// Browser.window.requestAnimationFrame(render);
+				tickCount += 1;
+			}
+			Browser.window.requestAnimationFrame(render);
+
+			Browser.document.addEventListener('keydown', (e) -> {
+				
+				Browser.window.requestAnimationFrame(render);
+			});
 		}
 	}
 
@@ -333,7 +742,7 @@ class MainView extends VBox {
 			// rightArm.transform.rotation.y = 3.14;
 
 			for (i in 0...10) {
-				final ball = Tool.createMeshEntity('ball_${i}', DEFAULT_MESH.SPHERE3D, 'instanceMaterial');
+				final ball = Tool.createMeshEntity('ball_${i}', DEFAULT_MESH.PLANE3D, 'instanceMaterial');
 				ball.transform.position.x = Math.random() * 1000 - 500;
 				ball.transform.position.y = Math.random() * 1000 - 500;
 				ball.transform.position.z = Math.random() * 1000 - 500;
@@ -428,7 +837,7 @@ class MainView extends VBox {
 						meshRenderer.geometry.uniform.set('u_diffuseColor', [.5, 0., 0.]);
 						meshRenderer.geometry.uniform.set('u_specularColor', [1., 1., 1.]);
 						meshRenderer.geometry.uniform.set('u_gloss', [3.]);
-						
+
 						// meshRenderer.geometry.uniform.set('u_color', [.8, .3, .6, 1.0]);
 					}
 
@@ -598,12 +1007,12 @@ class MainView extends VBox {
 			final t = gl.createTexture();
 			gl.bindTexture(gl.TEXTURE_2D, t);
 			gl.texImage2D(gl.TEXTURE_2D, 0, gl.RGBA, 1, 1, 0, gl.RGBA, gl.UNSIGNED_BYTE, new Uint8Array([0, 255, 0, 255]));
-			WebglEngine.inst.addTexture('green', t);
+			WebglEngine.inst.addTexture('green', gl.TEXTURE_2D, t);
 
 			final t2 = gl.createTexture();
 			gl.bindTexture(gl.TEXTURE_2D, t2);
 			gl.texImage2D(gl.TEXTURE_2D, 0, gl.RGBA, 1, 1, 0, gl.RGBA, gl.UNSIGNED_BYTE, new Uint8Array([255, 0, 0, 255]));
-			WebglEngine.inst.addTexture('red', t2);
+			WebglEngine.inst.addTexture('red', gl.TEXTURE_2D, t2);
 
 			WebglEngine.inst.createTexture('red8');
 
