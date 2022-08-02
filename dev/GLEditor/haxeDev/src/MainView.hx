@@ -369,13 +369,14 @@ class MainView extends VBox {
 			WebglEngine.inst.addShader('VelocityAfterCalculator', new VelocityAfterCalculator());
 			WebglEngine.inst.addShader('Combine', new Combine());
 
-			final textureSize = 1024;
+			final tw = 1024;
+			final th = 768;
 
-			WebglEngine.inst.createRenderTarget('DivergenceCalculatorA', textureSize, textureSize);
-			WebglEngine.inst.createRenderTarget('PressureCalculatorA', textureSize, textureSize);
-			WebglEngine.inst.createRenderTarget('PressureCalculatorB', textureSize, textureSize);
-			WebglEngine.inst.createRenderTarget('VelocityCalculatorA', textureSize, textureSize);
-			WebglEngine.inst.createRenderTarget('VelocityCalculatorB', textureSize, textureSize);
+			WebglEngine.inst.createRenderTarget('DivergenceCalculatorA', tw, th);
+			WebglEngine.inst.createRenderTarget('PressureCalculatorA', tw, th);
+			WebglEngine.inst.createRenderTarget('PressureCalculatorB', tw, th);
+			WebglEngine.inst.createRenderTarget('VelocityCalculatorA', tw, th);
+			WebglEngine.inst.createRenderTarget('VelocityCalculatorB', tw, th);
 
 			// bufferA
 			final velocityMaterial = WebglEngine.inst.createMaterial('velocityMaterial', 'VelocityCalculator');
@@ -430,11 +431,13 @@ class MainView extends VBox {
 				final progress = timestamp - lastRender;
 				lastRender = timestamp;
 
+				// trace( 'timestamp', timestamp, tickCount );
+
 				final mr = rect.getComponent(MeshRenderer);
 				if (mr != null && mr.geometry != null) {
 					final pm = Mat3Tools.projection(gl.canvas.width, gl.canvas.height);
 					final modelMatrix = Mat3.fromScaling(null, Vec2.fromValues(1024.0 / 100.0, 768.0 / 100.0));
-					mr.geometry.uniform.set('u_time', [timestamp]);
+					mr.geometry.uniform.set('u_time', [lastRender * .001]);
 					mr.geometry.uniform.set('u_matrix', pm.toArray());
 					mr.geometry.uniform.set('u_modelMatrix', modelMatrix.toArray());
 				}
@@ -449,7 +452,7 @@ class MainView extends VBox {
 					WebglEngine.inst.bindFrameBuffer('VelocityCalculatorA');
 
 					// 畫在指定的不顯示的畫布上
-					WebglEngine.inst.render(textureSize, textureSize, Vec3.fromValues(0.0, 0.0, 0.0));
+					WebglEngine.inst.render(tw, th, Vec3.fromValues(0.0, 0.0, 0.0));
 				}
 
 				// return;
@@ -465,8 +468,12 @@ class MainView extends VBox {
 					WebglEngine.inst.bindFrameBuffer('DivergenceCalculatorA');
 
 					// 畫在指定的不顯示的畫布上
-					WebglEngine.inst.render(textureSize, textureSize, Vec3.fromValues(0.0, 0.0, 1));
+					WebglEngine.inst.render(tw, th, Vec3.fromValues(0.0, 0.0, 1));
 				}
+
+				// gl.enable(gl.BLEND);
+				// gl.blendEquationSeparate(gl.FUNC_ADD, gl.FUNC_ADD);
+				// gl.blendFuncSeparate(gl.SRC_ALPHA, gl.ONE_MINUS_SRC_ALPHA, gl.ONE, gl.ONE_MINUS_SRC_ALPHA);
 
 				// bufferC
 				{
@@ -483,8 +490,10 @@ class MainView extends VBox {
 					WebglEngine.inst.bindFrameBuffer(tickCount % 2 == 0 ? 'PressureCalculatorB' : 'PressureCalculatorA');
 
 					// 畫在指定的不顯示的畫布上
-					WebglEngine.inst.render(textureSize, textureSize, Vec3.fromValues(0.0, 0.0, 1));
+					WebglEngine.inst.render(tw, th, Vec3.fromValues(0.0, 0.0, 1));
 				}
+
+				// gl.disable(gl.BLEND);
 
 				// bufferD
 				{
@@ -496,8 +505,10 @@ class MainView extends VBox {
 					WebglEngine.inst.bindFrameBuffer('VelocityCalculatorB');
 
 					// 畫在指定的不顯示的畫布上
-					WebglEngine.inst.render(textureSize, textureSize, Vec3.fromValues(0.0, 0.0, 1));
+					WebglEngine.inst.render(tw, th, Vec3.fromValues(0.0, 0.0, 1));
 				}
+
+				
 
 				// combine
 				{
@@ -513,13 +524,12 @@ class MainView extends VBox {
 					WebglEngine.inst.render(gl.canvas.width, gl.canvas.height, Vec3.fromValues(0.7, 0.7, 0.7));
 				}
 
-				// Browser.window.requestAnimationFrame(render);
+				Browser.window.requestAnimationFrame(render);
 				tickCount += 1;
 			}
 			Browser.window.requestAnimationFrame(render);
 
 			Browser.document.addEventListener('keydown', (e) -> {
-				
 				Browser.window.requestAnimationFrame(render);
 			});
 		}

@@ -69,8 +69,9 @@ class VelocityAfterCalculator extends WebglShader {
 			vec2 pressureGradient = vec2(x1, y1) - vec2(x0, y0) * 0.5;
 			vec2 oldV = texture(u_velocity, v_texcoord).xy;
 
-            //outColor = vec4(oldV - pressureGradient, 0.0, 0.0);
-			outColor = vec4(oldV - x0 * .1, 0.0, 0.0);
+            outColor = vec4(oldV - pressureGradient, 0.0, 0.0);
+			//outColor = vec4(oldV - x0 * .1, 0.0, 0.0);
+			// outColor = vec4(oldV, 0.0, 0.0);
         }
         ';
 

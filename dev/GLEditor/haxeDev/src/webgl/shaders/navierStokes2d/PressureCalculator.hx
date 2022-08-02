@@ -59,15 +59,41 @@ class PressureCalculator extends WebglShader {
 
         out vec4 outColor;
 
+		float samplePressure(vec2 pos)
+		{
+			// Obstacle?
+			if(texture(u_velocity, pos).z > 0.0)
+			{
+				return 0.0;
+			}
+
+			return texture(u_pressure, pos).x;
+			
+			// Boundary condition: Vanish for at walls.
+			// if(pos.x > 1.0 - border.x || pos.y > 1.0 - border.y ||
+			// 	pos.x < border.x || pos.y < border.y)
+			// {
+			// 	return 0.0;
+			// }
+			// else
+			// {
+			// 	return texture(PressureTexture, pos).x;
+			// }
+		}
+
         void main(){
 
 			vec2 inverseResolution = vec2(1.0 / vec2(1024.0, 768.0));
 			vec2 uv = v_texcoord;
 
-			vec4 diverColor = texture(u_divergence, v_texcoord);
-            outColor = vec4(diverColor.xy, 0., 0.);
-			outColor = vec4(1., 1., 1., 1.);
-			// outColor = vec4(1.0, .0, 0.0, 1.0);
+			float div = texture(u_divergence, uv).x;
+			float x0 = samplePressure(uv - vec2(inverseResolution.x, 0));
+			float x1 = samplePressure(uv + vec2(inverseResolution.x, 0));
+			float y0 = samplePressure(uv - vec2(0, inverseResolution.y));
+			float y1 = samplePressure(uv + vec2(0, inverseResolution.y));
+			
+			// outColor = vec4((x0 + x1 + y0 + y1 - div) * 0.25); 
+			outColor = vec4((x0 + x1 + y0 + y1 - div) * 0.25);
         }
         ';
 
