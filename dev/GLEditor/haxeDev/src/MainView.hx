@@ -432,13 +432,13 @@ class MainView extends VBox {
 				final progress = timestamp - lastRender;
 				lastRender = timestamp;
 
-				// trace( 'timestamp', timestamp, tickCount );
+				// trace( 'timestamp', progress, tickCount );
 
 				final mr = rect.getComponent(MeshRenderer);
 				if (mr != null && mr.geometry != null) {
 					final pm = Mat3Tools.projection(gl.canvas.width, gl.canvas.height);
 					final modelMatrix = Mat3.fromScaling(null, Vec2.fromValues(1024.0 / 100.0, 768.0 / 100.0));
-					mr.geometry.uniform.set('u_time', [lastRender * .001]);
+					mr.geometry.uniform.set('u_time', [progress]);
 					mr.geometry.uniform.set('u_matrix', pm.toArray());
 					mr.geometry.uniform.set('u_modelMatrix', modelMatrix.toArray());
 				}

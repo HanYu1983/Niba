@@ -58,14 +58,29 @@ class Combine extends WebglShader {
 
         out vec4 outColor;
 
+		vec4 showDivergence(vec2 uv){
+			return abs(texture(u_divergence, uv));
+		}
+
+		vec4 showVelocity(vec2 uv){
+			vec4 color = texture(u_velocity, uv);
+			if(color.z > 0.0){
+				return vec4(0.5);
+			}else{
+				return abs(color) * 0.008;
+			}
+		}
+
+		vec4 showPressure(vec2 uv){
+			return abs(texture(u_pressure, uv)) * 0.05;
+		}
+
         void main(){
 
-			vec4 c1 = texture(u_velocity, v_texcoord);
-			vec4 c2 = texture(u_pressure, v_texcoord);
-			vec4 c3 = texture(u_divergence, v_texcoord);
-            outColor = vec4(abs(c2.rgb) * 0.05, 1.0);
-			outColor = vec4(abs(c3.rgb), 1.0);
-			outColor = vec4(abs(c1.rgb) * .008, 1.0);
+			outColor = showVelocity(v_texcoord);
+			// outColor = showDivergence(v_texcoord);
+			// outColor = showPressure(v_texcoord);
+			outColor.a = 1.0;
         }
         ';
 

@@ -67,18 +67,15 @@ class PressureCalculator extends WebglShader {
 				return 0.0;
 			}
 
-			return texture(u_pressure, pos).x;
-			
-			// Boundary condition: Vanish for at walls.
-			// if(pos.x > 1.0 - border.x || pos.y > 1.0 - border.y ||
-			// 	pos.x < border.x || pos.y < border.y)
-			// {
-			// 	return 0.0;
-			// }
-			// else
-			// {
-			// 	return texture(PressureTexture, pos).x;
-			// }
+			vec2 border = vec2(1.0 / vec2(1024.0, 768.0)) * 5.0;
+			if(pos.x > (1.0 - border.x) || pos.y > (1.0 - border.y) || pos.x < border.x || pos.y < border.y)
+			{
+				return 0.0;
+			}
+			else
+			{
+				return texture(u_pressure, pos).x;
+			}
 		}
 
         void main(){
@@ -93,8 +90,7 @@ class PressureCalculator extends WebglShader {
 			float y1 = samplePressure(uv + vec2(0, inverseResolution.y));
 			
 			float result = (x0 + x1 + y0 + y1 - div) * 0.25;
-			// result = 1.0;
-			outColor = vec4(vec3(result), .0);
+			outColor = vec4(result);
         }
         ';
 

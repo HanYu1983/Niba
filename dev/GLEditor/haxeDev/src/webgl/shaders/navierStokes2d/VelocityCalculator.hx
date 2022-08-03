@@ -58,24 +58,37 @@ class VelocityCalculator extends WebglShader {
 
 			vec2 inverseResolution = vec2(1.0 / vec2(1024.0, 768.0));
 			vec2 uv = v_texcoord;
-			float time = u_time * .001;
+			float deltaTime = u_time * .001;
 
 			vec2 oldVelocity = texture(u_velocityAfter, uv).xy;
-			vec2 samplePos = uv - oldVelocity * time * inverseResolution;
+			vec2 samplePos = uv - oldVelocity * deltaTime * inverseResolution;
 			vec2 outputVelocity = texture(u_velocityAfter, samplePos).xy;
 
-			vec2 forceAreaMin = vec2(0.4, 0.4);
-			vec2 forceAreaMax = vec2(0.6, 0.6);
-			vec2 force = vec2(100, 0.0);
+			vec2 forceAreaMin = vec2(0.0, 0.3);
+			vec2 forceAreaMax = vec2(0.06, 0.7);
+			vec2 force = vec2(100.0, 0.0);
 			if(uv.x > forceAreaMin.x && uv.x < forceAreaMax.x && uv.y > forceAreaMin.y && uv.y < forceAreaMax.y){
-				outputVelocity += force * time;
+				outputVelocity += force * deltaTime;
 			}
 
 			if(uv.x > (1.0 - inverseResolution.x) && uv.x < (inverseResolution.x) && (uv.y > 1.0 - inverseResolution.y) && (uv.y < inverseResolution.y)){
 				outputVelocity = vec2(0.0, 0.0);
 			}
 
-			outColor = vec4(outputVelocity, .0, 0.0);
+			float limitVelocity = 70.0;
+			outputVelocity = min(outputVelocity, vec2(limitVelocity, limitVelocity));
+			outputVelocity = max(outputVelocity, vec2(-limitVelocity, -limitVelocity));
+
+			vec2 barrierPosition = vec2(0.2, 0.5);
+			float barrierRadiusSq = 0.01;
+			vec2 toBarrier = barrierPosition - uv;
+			toBarrier.x *= inverseResolution.y / inverseResolution.x;
+			if(dot(toBarrier, toBarrier) < barrierRadiusSq){
+				outColor = vec4(0.0, 0.0, 999.0, 0.0);
+			}else{
+				outColor = vec4(outputVelocity, .0, 0.0);
+			}
+			
         }
         ';
 
