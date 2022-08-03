@@ -363,14 +363,15 @@ class MainView extends VBox {
 		WebglEngine.inst.init('canvas_gl');
 		final gl = WebglEngine.inst.gl;
 		if (gl != null) {
+			WebglEngine.inst.enabledWriteFloatInFramebuffer();
+			final tw = 1024;
+			final th = 768;
+
 			WebglEngine.inst.addShader('DivergenceCalculator', new DivergenceCalculator());
 			WebglEngine.inst.addShader('PressureCalculator', new PressureCalculator());
 			WebglEngine.inst.addShader('VelocityCalculator', new VelocityCalculator());
 			WebglEngine.inst.addShader('VelocityAfterCalculator', new VelocityAfterCalculator());
 			WebglEngine.inst.addShader('Combine', new Combine());
-
-			final tw = 1024;
-			final th = 768;
 
 			WebglEngine.inst.createRenderTarget('DivergenceCalculatorA', tw, th);
 			WebglEngine.inst.createRenderTarget('PressureCalculatorA', tw, th);
@@ -508,14 +509,12 @@ class MainView extends VBox {
 					WebglEngine.inst.render(tw, th, Vec3.fromValues(0.0, 0.0, 1));
 				}
 
-				
-
 				// combine
 				{
 					final mr = rect.getComponent(MeshRenderer);
 					if (mr != null && mr.geometry != null) {
 						WebglEngine.inst.changeMaterial(mr.name, 'combineMaterial');
-						// WebglEngine.inst.changeMaterial(mr.name, 'velocityMaterial');
+						// WebglEngine.inst.changeMaterial(mr.name, 'pressureMaterial');
 					}
 
 					WebglEngine.inst.defaultFrameBuffer();

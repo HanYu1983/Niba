@@ -61,14 +61,6 @@ class WebglEngine {
 		final dom_gl = Browser.document.getElementById(canvasName);
 		gl = CanvasHelpers.getWebGL2(cast(dom_gl, CanvasElement));
 
-		// 允許RGBA32F的紋理給予framebuffer
-		gl.getExtension('OES_texture_float_linear');
-		gl.getExtension('OES_texture_half_float_linear');
-		gl.getExtension('EXT_texture_filter_anisotropic');
-		gl.getExtension('EXT_color_buffer_float');
-		gl.getExtension('WEBGL_debug_shaders');
-		gl.getExtension('KHR_parallel_shader_compile');
-
 		meshs.set(F2D, new F2dMesh());
 		meshs.set(RECTANGLE2D, new Rectangle2dMesh());
 		meshs.set(F3D, new F3dMesh(20));
@@ -80,6 +72,19 @@ class WebglEngine {
 		shaders.set('Basic3dShader', new Basic3dShader());
 		shaders.set('Basic3dInstanceShader', new Basic3dInstanceShader());
 		WebglEngine.inst.createNoiseTexture('noise');
+	}
+
+	public function enabledWriteFloatInFramebuffer() {
+		// 允許RGBA32F的紋理給予framebuffer
+		gl.getExtension('OES_texture_float_linear');
+		gl.getExtension('OES_texture_half_float_linear');
+		gl.getExtension('EXT_color_buffer_float');
+	}
+
+	public function enableWhatever() {
+		gl.getExtension('EXT_texture_filter_anisotropic');
+		gl.getExtension('WEBGL_debug_shaders');
+		gl.getExtension('KHR_parallel_shader_compile');
 	}
 
 	public function addMesh(name:DEFAULT_MESH, mesh:WebglMesh) {

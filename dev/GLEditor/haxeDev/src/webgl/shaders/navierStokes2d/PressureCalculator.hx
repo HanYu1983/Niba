@@ -92,8 +92,8 @@ class PressureCalculator extends WebglShader {
 			float y0 = samplePressure(uv - vec2(0, inverseResolution.y));
 			float y1 = samplePressure(uv + vec2(0, inverseResolution.y));
 			
-			// outColor = vec4((x0 + x1 + y0 + y1 - div) * 0.25); 
-			outColor = vec4((x0 + x1 + y0 + y1 - div) * 0.25);
+			float result = (x0 + x1 + y0 + y1 - div) * 0.25;
+			outColor = vec4(vec3(result), .0);
         }
         ';
 

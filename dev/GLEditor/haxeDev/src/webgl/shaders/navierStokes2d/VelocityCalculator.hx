@@ -64,9 +64,9 @@ class VelocityCalculator extends WebglShader {
 			vec2 samplePos = uv - oldVelocity * time * inverseResolution;
 			vec2 outputVelocity = texture(u_velocityAfter, samplePos).xy;
 
-			vec2 forceAreaMin = vec2(0.1, 0.2);
-			vec2 forceAreaMax = vec2(0.16, 0.8);
-			vec2 force = vec2(100, 0.0);
+			vec2 forceAreaMin = vec2(0.4, 0.4);
+			vec2 forceAreaMax = vec2(0.6, 0.6);
+			vec2 force = vec2(130, 0.0);
 			if(uv.x > forceAreaMin.x && uv.x < forceAreaMax.x && uv.y > forceAreaMin.y && uv.y < forceAreaMax.y){
 				outputVelocity += force * time;
 			}
