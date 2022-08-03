@@ -67,26 +67,35 @@ class VelocityCalculator extends WebglShader {
 			vec2 forceAreaMin = vec2(0.0, 0.3);
 			vec2 forceAreaMax = vec2(0.06, 0.7);
 			vec2 force = vec2(100.0, 0.0);
+
+			// 定義發現區域
 			if(uv.x > forceAreaMin.x && uv.x < forceAreaMax.x && uv.y > forceAreaMin.y && uv.y < forceAreaMax.y){
 				outputVelocity += force * deltaTime;
 			}
 
+			// 邊界速度設爲0
 			if(uv.x > (1.0 - inverseResolution.x) && uv.x < (inverseResolution.x) && (uv.y > 1.0 - inverseResolution.y) && (uv.y < inverseResolution.y)){
 				outputVelocity = vec2(0.0, 0.0);
 			}
 
+			// 做速度的限制，否則容易計算出過高的值。過高的值在畫面上會呈現花斑
 			float limitVelocity = 70.0;
 			outputVelocity = min(outputVelocity, vec2(limitVelocity, limitVelocity));
 			outputVelocity = max(outputVelocity, vec2(-limitVelocity, -limitVelocity));
 
+			// 定義碰撞球形
 			vec2 barrierPosition = vec2(0.2, 0.5);
 			float barrierRadiusSq = 0.01;
 			vec2 toBarrier = barrierPosition - uv;
+
+			// 修正比例
 			toBarrier.x *= inverseResolution.y / inverseResolution.x;
+
+			// 在球形内部的速度設爲0。z值設爲999是告訴別的buffer說這是在球形内部
 			if(dot(toBarrier, toBarrier) < barrierRadiusSq){
 				outColor = vec4(0.0, 0.0, 999.0, 0.0);
 			}else{
-				outColor = vec4(outputVelocity, .0, 0.0);
+				outColor = vec4(outputVelocity, 0.0, 0.0);
 			}
 			
         }

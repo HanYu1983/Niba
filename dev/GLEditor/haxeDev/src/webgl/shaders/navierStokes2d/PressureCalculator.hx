@@ -80,10 +80,16 @@ class PressureCalculator extends WebglShader {
 
         void main(){
 
+			// 計算一個pixel的uv距離
 			vec2 inverseResolution = vec2(1.0 / vec2(1024.0, 768.0));
 			vec2 uv = v_texcoord;
 
+			// 把散度從buffer中取出來
 			float div = texture(u_divergence, uv).x;
+
+			// 不確定是做什麽運算，看起來像是散度運算。這裏把上下左右的pixel的壓力加起來減去中間pixel的散度。再乘上0.25
+			// 不確定0.25這個值能不能亂變，這個值調整起來效果有時會變的很怪
+			// 這個壓力的計算來源也是壓力buffer自己，由上一個tick的壓力計算當前tick的壓力
 			float x0 = samplePressure(uv - vec2(inverseResolution.x, 0));
 			float x1 = samplePressure(uv + vec2(inverseResolution.x, 0));
 			float y0 = samplePressure(uv - vec2(0, inverseResolution.y));

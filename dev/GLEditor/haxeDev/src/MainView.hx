@@ -363,6 +363,8 @@ class MainView extends VBox {
 		WebglEngine.inst.init('canvas_gl');
 		final gl = WebglEngine.inst.gl;
 		if (gl != null) {
+
+			// 這邊告訴gl說要允許framebuffer輸入浮點值
 			WebglEngine.inst.enabledWriteFloatInFramebuffer();
 			final tw = 1024;
 			final th = 768;
@@ -432,8 +434,6 @@ class MainView extends VBox {
 				final progress = timestamp - lastRender;
 				lastRender = timestamp;
 
-				// trace( 'timestamp', progress, tickCount );
-
 				final mr = rect.getComponent(MeshRenderer);
 				if (mr != null && mr.geometry != null) {
 					final pm = Mat3Tools.projection(gl.canvas.width, gl.canvas.height);
@@ -456,8 +456,6 @@ class MainView extends VBox {
 					WebglEngine.inst.render(tw, th, Vec3.fromValues(0.0, 0.0, 0.0));
 				}
 
-				// return;
-
 				// bufferB
 				{
 					final mr = rect.getComponent(MeshRenderer);
@@ -471,10 +469,6 @@ class MainView extends VBox {
 					// 畫在指定的不顯示的畫布上
 					WebglEngine.inst.render(tw, th, Vec3.fromValues(0.0, 0.0, 1));
 				}
-
-				// gl.enable(gl.BLEND);
-				// gl.blendEquationSeparate(gl.FUNC_ADD, gl.FUNC_ADD);
-				// gl.blendFuncSeparate(gl.SRC_ALPHA, gl.ONE_MINUS_SRC_ALPHA, gl.ONE, gl.ONE_MINUS_SRC_ALPHA);
 
 				// bufferC
 				{
@@ -493,8 +487,6 @@ class MainView extends VBox {
 					// 畫在指定的不顯示的畫布上
 					WebglEngine.inst.render(tw, th, Vec3.fromValues(0.0, 0.0, 1));
 				}
-
-				// gl.disable(gl.BLEND);
 
 				// bufferD
 				{

@@ -58,17 +58,22 @@ class VelocityAfterCalculator extends WebglShader {
 
         void main(){
 
+			// 計算一個pixel的uv距離
 			vec2 inverseResolution = vec2(1.0 / vec2(1024.0, 768.0));
 			vec2 uv = v_texcoord;
 
+			// 速度由壓力的梯度決定(由高壓往低壓流動)
 			float x0 = texture(u_pressure, uv - vec2(inverseResolution.x, 0.0)).x;
 			float x1 = texture(u_pressure, uv + vec2(inverseResolution.x, 0.0)).x;
 			float y0 = texture(u_pressure, uv - vec2(0.0, inverseResolution.y)).x;
 			float y1 = texture(u_pressure, uv + vec2(0.0, inverseResolution.y)).x;
 
+			// 不知道爲什麽要乘上0.5，可能是取平均的關係。
 			vec2 pressureGradient = (vec2(x1, y1) - vec2(x0, y0)) * 0.5;
-			vec2 oldV = texture(u_velocity, v_texcoord).xy;
 
+			// 取得本來的速度
+			vec2 oldV = texture(u_velocity, v_texcoord).xy;
+			// 新的速度
             outColor = vec4(oldV - pressureGradient, 0.0, 0.0);
         }
         ';

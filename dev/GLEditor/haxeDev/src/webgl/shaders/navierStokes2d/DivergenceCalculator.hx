@@ -55,14 +55,18 @@ class DivergenceCalculator extends WebglShader {
         out vec4 outColor;
 
         void main(){
+
+			// 球形内部，發散速度為0。
             if(texture(u_velocity, v_texcoord).z > 0.0){
                 outColor = vec4(0.0);
                 return;
             }
 
+			// 計算一個pixel的uv距離
             vec2 inverseResolution = vec2(1.0 / vec2(1024.0, 768.0));
 			vec2 uv = v_texcoord;
 			
+			// 做速度的散度運算？這裏做x的偏微分和y的偏微分相加后平均
 			float x0 = texture(u_velocity, uv - vec2(inverseResolution.x, 0)).x;
 			float x1 = texture(u_velocity, uv + vec2(inverseResolution.x, 0)).x;
 			float y0 = texture(u_velocity, uv - vec2(0, inverseResolution.y)).y;
