@@ -65,6 +65,7 @@ class Combine extends WebglShader {
 			vec4 c3 = texture(u_divergence, v_texcoord);
             outColor = vec4(abs(c2.rgb) * 0.05, 1.0);
 			outColor = vec4(abs(c3.rgb), 1.0);
+			outColor = vec4(abs(c1.rgb) * .008, 1.0);
         }
         ';
 
