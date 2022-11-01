@@ -1,0 +1,1 @@
+docker run --rm -ti -v $(pwd):/tmpdev -w /tmpdev -p 8080:8080 arm64v8/node:16 npx --yes http-server -c-1
