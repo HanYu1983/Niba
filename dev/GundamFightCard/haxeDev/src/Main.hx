@@ -1,6 +1,7 @@
 package ;
 
 import model.HanModel;
+import assets.MainView;
 import haxe.ui.HaxeUIApp;
 
 class Main {

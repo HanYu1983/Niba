@@ -144,6 +144,14 @@ HxOverrides.remove = function(a,obj) {
 HxOverrides.now = function() {
 	return Date.now();
 };
+var IInfo = function() { };
+$hxClasses["IInfo"] = IInfo;
+IInfo.__name__ = "IInfo";
+IInfo.__isInterface__ = true;
+IInfo.prototype = {
+	setInfo: null
+	,__class__: IInfo
+};
 var Lambda = function() { };
 $hxClasses["Lambda"] = Lambda;
 Lambda.__name__ = "Lambda";
@@ -191,9 +199,251 @@ Main.__name__ = "Main";
 Main.main = function() {
 	var app = new haxe_ui_HaxeUIApp();
 	app.ready(function() {
-		app.addComponent(new MainView(new model_HanModel()));
+		app.addComponent(new assets_MainView(new model_HanModel()));
 		app.start();
 	});
+};
+Math.__name__ = "Math";
+var Reflect = function() { };
+$hxClasses["Reflect"] = Reflect;
+Reflect.__name__ = "Reflect";
+Reflect.field = function(o,field) {
+	try {
+		return o[field];
+	} catch( _g ) {
+		return null;
+	}
+};
+Reflect.getProperty = function(o,field) {
+	var tmp;
+	if(o == null) {
+		return null;
+	} else {
+		var tmp1;
+		if(o.__properties__) {
+			tmp = o.__properties__["get_" + field];
+			tmp1 = tmp;
+		} else {
+			tmp1 = false;
+		}
+		if(tmp1) {
+			return o[tmp]();
+		} else {
+			return o[field];
+		}
+	}
+};
+Reflect.setProperty = function(o,field,value) {
+	var tmp;
+	var tmp1;
+	if(o.__properties__) {
+		tmp = o.__properties__["set_" + field];
+		tmp1 = tmp;
+	} else {
+		tmp1 = false;
+	}
+	if(tmp1) {
+		o[tmp](value);
+	} else {
+		o[field] = value;
+	}
+};
+Reflect.fields = function(o) {
+	var a = [];
+	if(o != null) {
+		var hasOwnProperty = Object.prototype.hasOwnProperty;
+		for( var f in o ) {
+		if(f != "__id__" && f != "hx__closures__" && hasOwnProperty.call(o,f)) {
+			a.push(f);
+		}
+		}
+	}
+	return a;
+};
+Reflect.isFunction = function(f) {
+	if(typeof(f) == "function") {
+		return !(f.__name__ || f.__ename__);
+	} else {
+		return false;
+	}
+};
+Reflect.deleteField = function(o,field) {
+	if(!Object.prototype.hasOwnProperty.call(o,field)) {
+		return false;
+	}
+	delete(o[field]);
+	return true;
+};
+var Std = function() { };
+$hxClasses["Std"] = Std;
+Std.__name__ = "Std";
+Std.string = function(s) {
+	return js_Boot.__string_rec(s,"");
+};
+Std.parseInt = function(x) {
+	if(x != null) {
+		var _g = 0;
+		var _g1 = x.length;
+		while(_g < _g1) {
+			var i = _g++;
+			var c = x.charCodeAt(i);
+			if(c <= 8 || c >= 14 && c != 32 && c != 45) {
+				var nc = x.charCodeAt(i + 1);
+				var v = parseInt(x,nc == 120 || nc == 88 ? 16 : 10);
+				if(isNaN(v)) {
+					return null;
+				} else {
+					return v;
+				}
+			}
+		}
+	}
+	return null;
+};
+var StringTools = function() { };
+$hxClasses["StringTools"] = StringTools;
+StringTools.__name__ = "StringTools";
+StringTools.startsWith = function(s,start) {
+	if(s.length >= start.length) {
+		return s.lastIndexOf(start,0) == 0;
+	} else {
+		return false;
+	}
+};
+StringTools.endsWith = function(s,end) {
+	var elen = end.length;
+	var slen = s.length;
+	if(slen >= elen) {
+		return s.indexOf(end,slen - elen) == slen - elen;
+	} else {
+		return false;
+	}
+};
+StringTools.isSpace = function(s,pos) {
+	var c = HxOverrides.cca(s,pos);
+	if(!(c > 8 && c < 14)) {
+		return c == 32;
+	} else {
+		return true;
+	}
+};
+StringTools.ltrim = function(s) {
+	var l = s.length;
+	var r = 0;
+	while(r < l && StringTools.isSpace(s,r)) ++r;
+	if(r > 0) {
+		return HxOverrides.substr(s,r,l - r);
+	} else {
+		return s;
+	}
+};
+StringTools.rtrim = function(s) {
+	var l = s.length;
+	var r = 0;
+	while(r < l && StringTools.isSpace(s,l - r - 1)) ++r;
+	if(r > 0) {
+		return HxOverrides.substr(s,0,l - r);
+	} else {
+		return s;
+	}
+};
+StringTools.trim = function(s) {
+	return StringTools.ltrim(StringTools.rtrim(s));
+};
+StringTools.replace = function(s,sub,by) {
+	return s.split(sub).join(by);
+};
+StringTools.hex = function(n,digits) {
+	var s = "";
+	var hexChars = "0123456789ABCDEF";
+	while(true) {
+		s = hexChars.charAt(n & 15) + s;
+		n >>>= 4;
+		if(!(n > 0)) {
+			break;
+		}
+	}
+	if(digits != null) {
+		while(s.length < digits) s = "0" + s;
+	}
+	return s;
+};
+var ValueType = $hxEnums["ValueType"] = { __ename__:true,__constructs__:null
+	,TNull: {_hx_name:"TNull",_hx_index:0,__enum__:"ValueType",toString:$estr}
+	,TInt: {_hx_name:"TInt",_hx_index:1,__enum__:"ValueType",toString:$estr}
+	,TFloat: {_hx_name:"TFloat",_hx_index:2,__enum__:"ValueType",toString:$estr}
+	,TBool: {_hx_name:"TBool",_hx_index:3,__enum__:"ValueType",toString:$estr}
+	,TObject: {_hx_name:"TObject",_hx_index:4,__enum__:"ValueType",toString:$estr}
+	,TFunction: {_hx_name:"TFunction",_hx_index:5,__enum__:"ValueType",toString:$estr}
+	,TClass: ($_=function(c) { return {_hx_index:6,c:c,__enum__:"ValueType",toString:$estr}; },$_._hx_name="TClass",$_.__params__ = ["c"],$_)
+	,TEnum: ($_=function(e) { return {_hx_index:7,e:e,__enum__:"ValueType",toString:$estr}; },$_._hx_name="TEnum",$_.__params__ = ["e"],$_)
+	,TUnknown: {_hx_name:"TUnknown",_hx_index:8,__enum__:"ValueType",toString:$estr}
+};
+ValueType.__constructs__ = [ValueType.TNull,ValueType.TInt,ValueType.TFloat,ValueType.TBool,ValueType.TObject,ValueType.TFunction,ValueType.TClass,ValueType.TEnum,ValueType.TUnknown];
+var Type = function() { };
+$hxClasses["Type"] = Type;
+Type.__name__ = "Type";
+Type.createInstance = function(cl,args) {
+	var ctor = Function.prototype.bind.apply(cl,[null].concat(args));
+	return new (ctor);
+};
+Type.createEnum = function(e,constr,params) {
+	var f = Reflect.field(e,constr);
+	if(f == null) {
+		throw haxe_Exception.thrown("No such constructor " + constr);
+	}
+	if(Reflect.isFunction(f)) {
+		if(params == null) {
+			throw haxe_Exception.thrown("Constructor " + constr + " need parameters");
+		}
+		return f.apply(e,params);
+	}
+	if(params != null && params.length != 0) {
+		throw haxe_Exception.thrown("Constructor " + constr + " does not need parameters");
+	}
+	return f;
+};
+Type.getInstanceFields = function(c) {
+	var a = [];
+	for(var i in c.prototype) a.push(i);
+	HxOverrides.remove(a,"__class__");
+	HxOverrides.remove(a,"__properties__");
+	return a;
+};
+Type.typeof = function(v) {
+	switch(typeof(v)) {
+	case "boolean":
+		return ValueType.TBool;
+	case "function":
+		if(v.__name__ || v.__ename__) {
+			return ValueType.TObject;
+		}
+		return ValueType.TFunction;
+	case "number":
+		if(Math.ceil(v) == v % 2147483648.0) {
+			return ValueType.TInt;
+		}
+		return ValueType.TFloat;
+	case "object":
+		if(v == null) {
+			return ValueType.TNull;
+		}
+		var e = v.__enum__;
+		if(e != null) {
+			return ValueType.TEnum($hxEnums[e]);
+		}
+		var c = js_Boot.getClass(v);
+		if(c != null) {
+			return ValueType.TClass(c);
+		}
+		return ValueType.TObject;
+	case "string":
+		return ValueType.TClass(String);
+	case "undefined":
+		return ValueType.TNull;
+	default:
+		return ValueType.TUnknown;
+	}
 };
 var haxe_ui_backend_ComponentSurface = function() {
 };
@@ -4650,6 +4900,81 @@ haxe_ui_containers_Box.prototype = $extend(haxe_ui_core_Component.prototype,{
 	,__class__: haxe_ui_containers_Box
 	,__properties__: $extend(haxe_ui_core_Component.prototype.__properties__,{set_icon:"set_icon",get_icon:"get_icon",set_layoutName:"set_layoutName",get_layoutName:"get_layoutName"})
 });
+var assets_Card = function() {
+	haxe_ui_containers_Box.call(this);
+	var c0 = new haxe_ui_containers_VBox();
+	c0.set_id("box_card");
+	c0.set_percentWidth(100.);
+	c0.set_percentHeight(100.);
+	c0.set_styleString("background-color: yellow");
+	var c1 = new haxe_ui_components_Label();
+	c1.set_id("lbl_id");
+	c1.set_percentWidth(100.);
+	c1.set_text("id");
+	c0.addComponent(c1);
+	var c2 = new haxe_ui_components_Label();
+	c2.set_id("lbl_name");
+	c2.set_percentWidth(100.);
+	c2.set_text("name");
+	c0.addComponent(c2);
+	var c3 = new haxe_ui_components_Label();
+	c3.set_id("lbl_content");
+	c3.set_percentWidth(100.);
+	c3.set_text("contentcontentcontentcontentcontentcontentcontentcontentcontentcontentcontentcontentcontentcontentcontent");
+	c0.addComponent(c3);
+	this.addComponent(c0);
+	var c4 = new haxe_ui_containers_Box();
+	c4.set_id("box_cover");
+	c4.set_percentWidth(100.);
+	c4.set_percentHeight(100.);
+	this.addComponent(c4);
+	this.set_width(100.);
+	this.set_height(150.);
+	this.set_padding(0);
+	this.bindingRoot = true;
+	this.lbl_name = c2;
+	this.lbl_id = c1;
+	this.lbl_content = c3;
+	this.box_cover = c4;
+	this.box_card = c0;
+};
+$hxClasses["assets.Card"] = assets_Card;
+assets_Card.__name__ = "assets.Card";
+assets_Card.__interfaces__ = [IInfo];
+assets_Card.__super__ = haxe_ui_containers_Box;
+assets_Card.prototype = $extend(haxe_ui_containers_Box.prototype,{
+	setInfo: function(info) {
+		var cardModel = info;
+		this.lbl_id.set_text(cardModel.id);
+		this.lbl_name.set_text(cardModel.name);
+		this.lbl_content.set_text(cardModel.content);
+	}
+	,registerBehaviours: function() {
+		haxe_ui_containers_Box.prototype.registerBehaviours.call(this);
+	}
+	,cloneComponent: function() {
+		var c = haxe_ui_containers_Box.prototype.cloneComponent.call(this);
+		if((this._children == null ? [] : this._children).length != (c._children == null ? [] : c._children).length) {
+			var _g = 0;
+			var _g1 = this._children == null ? [] : this._children;
+			while(_g < _g1.length) {
+				var child = _g1[_g];
+				++_g;
+				c.addComponent(child.cloneComponent());
+			}
+		}
+		return c;
+	}
+	,self: function() {
+		return new assets_Card();
+	}
+	,lbl_name: null
+	,lbl_id: null
+	,lbl_content: null
+	,box_cover: null
+	,box_card: null
+	,__class__: assets_Card
+});
 var haxe_ui_containers_VBox = function() {
 	haxe_ui_containers_Box.call(this);
 	this.set_layout(new haxe_ui_layouts_VerticalLayout());
@@ -4679,7 +5004,7 @@ haxe_ui_containers_VBox.prototype = $extend(haxe_ui_containers_Box.prototype,{
 	}
 	,__class__: haxe_ui_containers_VBox
 });
-var MainView = function(game) {
+var assets_MainView = function(game) {
 	haxe_ui_containers_VBox.call(this);
 	haxe_ui_Toolkit.styleSheet.parse("\r\n        .button {\r\n            font-size: 24px;\r\n        }\r\n    ","user");
 	var c0 = new haxe_ui_containers_HBox();
@@ -4691,10 +5016,10 @@ var MainView = function(game) {
 	this.box_table = c1;
 	this.game = game;
 };
-$hxClasses["MainView"] = MainView;
-MainView.__name__ = "MainView";
-MainView.__super__ = haxe_ui_containers_VBox;
-MainView.prototype = $extend(haxe_ui_containers_VBox.prototype,{
+$hxClasses["assets.MainView"] = assets_MainView;
+assets_MainView.__name__ = "assets.MainView";
+assets_MainView.__super__ = haxe_ui_containers_VBox;
+assets_MainView.prototype = $extend(haxe_ui_containers_VBox.prototype,{
 	game: null
 	,onInitialize: function() {
 		haxe_ui_containers_VBox.prototype.onInitialize.call(this);
@@ -4705,25 +5030,33 @@ MainView.prototype = $extend(haxe_ui_containers_VBox.prototype,{
 		this.syncHand(gameModel.players[0].hand);
 	}
 	,syncHand: function(cards) {
+		var _gthis = this;
 		var _g = 0;
 		var _g1 = cards.length;
 		while(_g < _g1) {
 			var i = _g++;
 			var card = [new assets_Card()];
 			var cardModel = [cards[i]];
+			card[0].setInfo(cardModel[0]);
 			card[0].set_left(i * 110);
 			card[0].box_cover.set_onMouseOver((function(cardModel,card) {
 				return function(e) {
-					haxe_Log.trace("over card: " + cardModel[0].id,{ fileName : "src/MainView.hx", lineNumber : 40, className : "MainView", methodName : "syncHand"});
-					tweenx909_TweenX.to(card[0].box_card,{ "top" : 30},.3,null,null,null,null,null,null,null,{ fileName : "src/MainView.hx", lineNumber : 41, className : "MainView", methodName : "syncHand"});
+					haxe_Log.trace("over card: " + cardModel[0].id,{ fileName : "src/assets/MainView.hx", lineNumber : 40, className : "assets.MainView", methodName : "syncHand"});
+					tweenx909_TweenX.to(card[0].box_card,{ "top" : 30},.3,null,null,null,null,null,null,null,{ fileName : "src/assets/MainView.hx", lineNumber : 41, className : "assets.MainView", methodName : "syncHand"});
+					_gthis.game.previewPlayCard(cardModel[0].id);
 				};
 			})(cardModel,card));
 			card[0].box_cover.set_onMouseOut((function(cardModel,card) {
 				return function(e) {
-					haxe_Log.trace("out card:" + cardModel[0].id,{ fileName : "src/MainView.hx", lineNumber : 44, className : "MainView", methodName : "syncHand"});
-					tweenx909_TweenX.to(card[0].box_card,{ "top" : 0},.3,null,null,null,null,null,null,null,{ fileName : "src/MainView.hx", lineNumber : 45, className : "MainView", methodName : "syncHand"});
+					haxe_Log.trace("out card:" + cardModel[0].id,{ fileName : "src/assets/MainView.hx", lineNumber : 46, className : "assets.MainView", methodName : "syncHand"});
+					tweenx909_TweenX.to(card[0].box_card,{ "top" : 0},.3,null,null,null,null,null,null,null,{ fileName : "src/assets/MainView.hx", lineNumber : 47, className : "assets.MainView", methodName : "syncHand"});
 				};
 			})(cardModel,card));
+			card[0].box_cover.set_onClick((function(cardModel) {
+				return function(e) {
+					haxe_Log.trace("play card:" + cardModel[0].id,{ fileName : "src/assets/MainView.hx", lineNumber : 50, className : "assets.MainView", methodName : "syncHand"});
+				};
+			})(cardModel));
 			this.box_table.addComponent(card[0]);
 		}
 	}
@@ -4745,299 +5078,10 @@ MainView.prototype = $extend(haxe_ui_containers_VBox.prototype,{
 	}
 	,_constructorParam_game: null
 	,self: function() {
-		return new MainView(this._constructorParam_game);
+		return new assets_MainView(this._constructorParam_game);
 	}
 	,box_table: null
-	,__class__: MainView
-});
-Math.__name__ = "Math";
-var Reflect = function() { };
-$hxClasses["Reflect"] = Reflect;
-Reflect.__name__ = "Reflect";
-Reflect.field = function(o,field) {
-	try {
-		return o[field];
-	} catch( _g ) {
-		return null;
-	}
-};
-Reflect.getProperty = function(o,field) {
-	var tmp;
-	if(o == null) {
-		return null;
-	} else {
-		var tmp1;
-		if(o.__properties__) {
-			tmp = o.__properties__["get_" + field];
-			tmp1 = tmp;
-		} else {
-			tmp1 = false;
-		}
-		if(tmp1) {
-			return o[tmp]();
-		} else {
-			return o[field];
-		}
-	}
-};
-Reflect.setProperty = function(o,field,value) {
-	var tmp;
-	var tmp1;
-	if(o.__properties__) {
-		tmp = o.__properties__["set_" + field];
-		tmp1 = tmp;
-	} else {
-		tmp1 = false;
-	}
-	if(tmp1) {
-		o[tmp](value);
-	} else {
-		o[field] = value;
-	}
-};
-Reflect.fields = function(o) {
-	var a = [];
-	if(o != null) {
-		var hasOwnProperty = Object.prototype.hasOwnProperty;
-		for( var f in o ) {
-		if(f != "__id__" && f != "hx__closures__" && hasOwnProperty.call(o,f)) {
-			a.push(f);
-		}
-		}
-	}
-	return a;
-};
-Reflect.isFunction = function(f) {
-	if(typeof(f) == "function") {
-		return !(f.__name__ || f.__ename__);
-	} else {
-		return false;
-	}
-};
-Reflect.deleteField = function(o,field) {
-	if(!Object.prototype.hasOwnProperty.call(o,field)) {
-		return false;
-	}
-	delete(o[field]);
-	return true;
-};
-var Std = function() { };
-$hxClasses["Std"] = Std;
-Std.__name__ = "Std";
-Std.string = function(s) {
-	return js_Boot.__string_rec(s,"");
-};
-Std.parseInt = function(x) {
-	if(x != null) {
-		var _g = 0;
-		var _g1 = x.length;
-		while(_g < _g1) {
-			var i = _g++;
-			var c = x.charCodeAt(i);
-			if(c <= 8 || c >= 14 && c != 32 && c != 45) {
-				var nc = x.charCodeAt(i + 1);
-				var v = parseInt(x,nc == 120 || nc == 88 ? 16 : 10);
-				if(isNaN(v)) {
-					return null;
-				} else {
-					return v;
-				}
-			}
-		}
-	}
-	return null;
-};
-var StringTools = function() { };
-$hxClasses["StringTools"] = StringTools;
-StringTools.__name__ = "StringTools";
-StringTools.startsWith = function(s,start) {
-	if(s.length >= start.length) {
-		return s.lastIndexOf(start,0) == 0;
-	} else {
-		return false;
-	}
-};
-StringTools.endsWith = function(s,end) {
-	var elen = end.length;
-	var slen = s.length;
-	if(slen >= elen) {
-		return s.indexOf(end,slen - elen) == slen - elen;
-	} else {
-		return false;
-	}
-};
-StringTools.isSpace = function(s,pos) {
-	var c = HxOverrides.cca(s,pos);
-	if(!(c > 8 && c < 14)) {
-		return c == 32;
-	} else {
-		return true;
-	}
-};
-StringTools.ltrim = function(s) {
-	var l = s.length;
-	var r = 0;
-	while(r < l && StringTools.isSpace(s,r)) ++r;
-	if(r > 0) {
-		return HxOverrides.substr(s,r,l - r);
-	} else {
-		return s;
-	}
-};
-StringTools.rtrim = function(s) {
-	var l = s.length;
-	var r = 0;
-	while(r < l && StringTools.isSpace(s,l - r - 1)) ++r;
-	if(r > 0) {
-		return HxOverrides.substr(s,0,l - r);
-	} else {
-		return s;
-	}
-};
-StringTools.trim = function(s) {
-	return StringTools.ltrim(StringTools.rtrim(s));
-};
-StringTools.replace = function(s,sub,by) {
-	return s.split(sub).join(by);
-};
-StringTools.hex = function(n,digits) {
-	var s = "";
-	var hexChars = "0123456789ABCDEF";
-	while(true) {
-		s = hexChars.charAt(n & 15) + s;
-		n >>>= 4;
-		if(!(n > 0)) {
-			break;
-		}
-	}
-	if(digits != null) {
-		while(s.length < digits) s = "0" + s;
-	}
-	return s;
-};
-var ValueType = $hxEnums["ValueType"] = { __ename__:true,__constructs__:null
-	,TNull: {_hx_name:"TNull",_hx_index:0,__enum__:"ValueType",toString:$estr}
-	,TInt: {_hx_name:"TInt",_hx_index:1,__enum__:"ValueType",toString:$estr}
-	,TFloat: {_hx_name:"TFloat",_hx_index:2,__enum__:"ValueType",toString:$estr}
-	,TBool: {_hx_name:"TBool",_hx_index:3,__enum__:"ValueType",toString:$estr}
-	,TObject: {_hx_name:"TObject",_hx_index:4,__enum__:"ValueType",toString:$estr}
-	,TFunction: {_hx_name:"TFunction",_hx_index:5,__enum__:"ValueType",toString:$estr}
-	,TClass: ($_=function(c) { return {_hx_index:6,c:c,__enum__:"ValueType",toString:$estr}; },$_._hx_name="TClass",$_.__params__ = ["c"],$_)
-	,TEnum: ($_=function(e) { return {_hx_index:7,e:e,__enum__:"ValueType",toString:$estr}; },$_._hx_name="TEnum",$_.__params__ = ["e"],$_)
-	,TUnknown: {_hx_name:"TUnknown",_hx_index:8,__enum__:"ValueType",toString:$estr}
-};
-ValueType.__constructs__ = [ValueType.TNull,ValueType.TInt,ValueType.TFloat,ValueType.TBool,ValueType.TObject,ValueType.TFunction,ValueType.TClass,ValueType.TEnum,ValueType.TUnknown];
-var Type = function() { };
-$hxClasses["Type"] = Type;
-Type.__name__ = "Type";
-Type.createInstance = function(cl,args) {
-	var ctor = Function.prototype.bind.apply(cl,[null].concat(args));
-	return new (ctor);
-};
-Type.createEnum = function(e,constr,params) {
-	var f = Reflect.field(e,constr);
-	if(f == null) {
-		throw haxe_Exception.thrown("No such constructor " + constr);
-	}
-	if(Reflect.isFunction(f)) {
-		if(params == null) {
-			throw haxe_Exception.thrown("Constructor " + constr + " need parameters");
-		}
-		return f.apply(e,params);
-	}
-	if(params != null && params.length != 0) {
-		throw haxe_Exception.thrown("Constructor " + constr + " does not need parameters");
-	}
-	return f;
-};
-Type.getInstanceFields = function(c) {
-	var a = [];
-	for(var i in c.prototype) a.push(i);
-	HxOverrides.remove(a,"__class__");
-	HxOverrides.remove(a,"__properties__");
-	return a;
-};
-Type.typeof = function(v) {
-	switch(typeof(v)) {
-	case "boolean":
-		return ValueType.TBool;
-	case "function":
-		if(v.__name__ || v.__ename__) {
-			return ValueType.TObject;
-		}
-		return ValueType.TFunction;
-	case "number":
-		if(Math.ceil(v) == v % 2147483648.0) {
-			return ValueType.TInt;
-		}
-		return ValueType.TFloat;
-	case "object":
-		if(v == null) {
-			return ValueType.TNull;
-		}
-		var e = v.__enum__;
-		if(e != null) {
-			return ValueType.TEnum($hxEnums[e]);
-		}
-		var c = js_Boot.getClass(v);
-		if(c != null) {
-			return ValueType.TClass(c);
-		}
-		return ValueType.TObject;
-	case "string":
-		return ValueType.TClass(String);
-	case "undefined":
-		return ValueType.TNull;
-	default:
-		return ValueType.TUnknown;
-	}
-};
-var assets_Card = function() {
-	haxe_ui_containers_Box.call(this);
-	var c0 = new haxe_ui_containers_Box();
-	c0.set_id("box_card");
-	c0.set_percentWidth(100.);
-	c0.set_percentHeight(100.);
-	c0.set_styleString("background-color: yellow");
-	this.addComponent(c0);
-	var c1 = new haxe_ui_containers_Box();
-	c1.set_id("box_cover");
-	c1.set_percentWidth(100.);
-	c1.set_percentHeight(100.);
-	this.addComponent(c1);
-	this.set_width(100.);
-	this.set_height(150.);
-	this.set_padding(0);
-	this.bindingRoot = true;
-	this.box_cover = c1;
-	this.box_card = c0;
-};
-$hxClasses["assets.Card"] = assets_Card;
-assets_Card.__name__ = "assets.Card";
-assets_Card.__super__ = haxe_ui_containers_Box;
-assets_Card.prototype = $extend(haxe_ui_containers_Box.prototype,{
-	registerBehaviours: function() {
-		haxe_ui_containers_Box.prototype.registerBehaviours.call(this);
-	}
-	,cloneComponent: function() {
-		var c = haxe_ui_containers_Box.prototype.cloneComponent.call(this);
-		if((this._children == null ? [] : this._children).length != (c._children == null ? [] : c._children).length) {
-			var _g = 0;
-			var _g1 = this._children == null ? [] : this._children;
-			while(_g < _g1.length) {
-				var child = _g1[_g];
-				++_g;
-				c.addComponent(child.cloneComponent());
-			}
-		}
-		return c;
-	}
-	,self: function() {
-		return new assets_Card();
-	}
-	,box_cover: null
-	,box_card: null
-	,__class__: assets_Card
+	,__class__: assets_MainView
 });
 var haxe_IMap = function() { };
 $hxClasses["haxe.IMap"] = haxe_IMap;
@@ -6807,6 +6851,13 @@ haxe_ui_Toolkit.build = function() {
 	haxe_ui_themes_ThemeManager.get_instance().addStyleResource("native","styles/native/main.css",-1);
 	haxe_ui_themes_ThemeManager.get_instance().addStyleResource("global","styles/main.css",-2);
 	haxe_ui_themes_ThemeManager.get_instance().addStyleResource("default","styles/default/main.css",-1);
+	haxe_ui_core_ComponentClassMap.register("vbox","haxe.ui.containers.VBox");
+	haxe_ui_core_ComponentClassMap.register("mainview","assets.MainView");
+	haxe_ui_core_ComponentClassMap.register("label","haxe.ui.components.Label");
+	haxe_ui_core_ComponentClassMap.register("hbox","haxe.ui.containers.HBox");
+	haxe_ui_core_ComponentClassMap.register("card","assets.Card");
+	haxe_ui_core_ComponentClassMap.register("box","haxe.ui.containers.Box");
+	haxe_ui_core_ComponentClassMap.register("absolute","haxe.ui.containers.Absolute");
 	haxe_ui_Toolkit.buildBackend();
 	haxe_ui_Toolkit._built = true;
 };
@@ -11717,6 +11768,58 @@ haxe_ui_containers_HBox.prototype = $extend(haxe_ui_containers_Box.prototype,{
 	,__class__: haxe_ui_containers_HBox
 	,__properties__: $extend(haxe_ui_containers_Box.prototype.__properties__,{set_continuous:"set_continuous",get_continuous:"get_continuous"})
 });
+var haxe_ui_core_ComponentClassMap = function() {
+	this._map = new haxe_ds_StringMap();
+};
+$hxClasses["haxe.ui.core.ComponentClassMap"] = haxe_ui_core_ComponentClassMap;
+haxe_ui_core_ComponentClassMap.__name__ = "haxe.ui.core.ComponentClassMap";
+haxe_ui_core_ComponentClassMap.__properties__ = {get_instance:"get_instance"};
+haxe_ui_core_ComponentClassMap.get_instance = function() {
+	if(haxe_ui_core_ComponentClassMap._instance == null) {
+		haxe_ui_core_ComponentClassMap._instance = new haxe_ui_core_ComponentClassMap();
+	}
+	return haxe_ui_core_ComponentClassMap._instance;
+};
+haxe_ui_core_ComponentClassMap.get = function(alias) {
+	alias = StringTools.replace(alias,"-","").toLowerCase();
+	return haxe_ui_core_ComponentClassMap.get_instance().getClassName(alias);
+};
+haxe_ui_core_ComponentClassMap.register = function(alias,className) {
+	haxe_ui_core_ComponentClassMap.get_instance().registerClassName(alias.toLowerCase(),className);
+};
+haxe_ui_core_ComponentClassMap.list = function() {
+	return new haxe_ds__$StringMap_StringMapKeyIterator(haxe_ui_core_ComponentClassMap.get_instance()._map.h);
+};
+haxe_ui_core_ComponentClassMap.clear = function() {
+	haxe_ui_core_ComponentClassMap.get_instance()._map = new haxe_ds_StringMap();
+};
+haxe_ui_core_ComponentClassMap.hasClass = function(className) {
+	return haxe_ui_core_ComponentClassMap.get_instance().hasClassName(className);
+};
+haxe_ui_core_ComponentClassMap.prototype = {
+	_map: null
+	,getClassName: function(alias) {
+		return this._map.h[alias];
+	}
+	,registerClassName: function(alias,className) {
+		this._map.h[alias] = className;
+	}
+	,hasClassName: function(className) {
+		var h = this._map.h;
+		var k_h = h;
+		var k_keys = Object.keys(h);
+		var k_length = k_keys.length;
+		var k_current = 0;
+		while(k_current < k_length) {
+			var k = k_keys[k_current++];
+			if(this._map.h[k] == className) {
+				return true;
+			}
+		}
+		return false;
+	}
+	,__class__: haxe_ui_core_ComponentClassMap
+};
 var haxe_ui_core_ComponentTextBehaviour = function(component) {
 	haxe_ui_behaviours_DefaultBehaviour.call(this,component);
 };
@@ -21750,13 +21853,16 @@ $hxClasses["model.Model"] = model_Model;
 model_Model.__name__ = "model.Model";
 model_Model.prototype = {
 	createCard: function() {
-		return { id : "card_" + Math.floor(Math.random() * 9999), name : "dx", owner : "vic"};
+		return { id : "card_" + Math.floor(Math.random() * 9999), name : "dx", content : "contentcontentcontentcontentcontentcontentcontentcontentcontentcontentcontentcontent", owner : "vic"};
 	}
 	,createPlayer: function() {
 		return { id : "player_" + Math.floor(Math.random() * 9999), name : "dx", hand : [this.createCard(),this.createCard(),this.createCard(),this.createCard()], deck : [this.createCard(),this.createCard(),this.createCard()]};
 	}
 	,getGame: function() {
 		return { players : [this.createPlayer(),this.createPlayer()]};
+	}
+	,previewPlayCard: function(id) {
+		return { success : false, msg : "should have xxxx", content : { }};
 	}
 	,__class__: model_Model
 };

@@ -3,6 +3,7 @@ package model;
 typedef CardModel = {
 	id:String,
 	name:String,
+	content:String,
 	owner:String,
 }
 
@@ -17,15 +18,20 @@ typedef GameModel = {
 	players:Array<PlayerModel>
 }
 
-class Model {
-    public function new(){
+typedef PreviewPlayCardModel = {
+	success:Bool,
+	msg:String,
+	content:Dynamic
+}
 
-    }
+class Model {
+	public function new() {}
 
 	private function createCard():CardModel {
 		return {
 			id: 'card_' + Math.floor(Math.random() * 9999),
 			name: 'dx',
+			content: 'contentcontentcontentcontentcontentcontentcontentcontentcontentcontentcontentcontent',
 			owner: 'vic'
 		};
 	}
@@ -41,10 +47,15 @@ class Model {
 
 	public function getGame():GameModel {
 		return {
-			players: [
-				createPlayer(),
-                createPlayer()
-			]
+			players: [createPlayer(), createPlayer()]
 		};
+	}
+
+	public function previewPlayCard(id:String):PreviewPlayCardModel {
+		return {
+			success: false,
+			msg: 'should have xxxx',
+			content: {}
+		}
 	}
 }
