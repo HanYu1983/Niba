@@ -11,6 +11,8 @@ class Main {
             app.addComponent(new MainView(new HanModel()));
 
             app.start();
+
+            trace('test');
         });
     }
 }
