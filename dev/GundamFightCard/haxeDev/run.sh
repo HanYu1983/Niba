@@ -1,0 +1,1 @@
+docker run --rm -ti -v "$PWD":/tmp_dev -w /tmp_dev -p 8081:8081 node npx http-server -c-1 -p 8081 public
