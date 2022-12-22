@@ -1,0 +1,10 @@
+-cp src
+-main Main
+
+-lib haxeui-core
+-lib haxeui-html5
+-lib libnoise
+-lib hxSet
+-lib tweenx
+
+-js public/Main.js

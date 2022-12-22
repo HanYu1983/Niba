@@ -1,0 +1,7 @@
+<box width='100' height='150' padding='0'>
+    
+    <box id='box_card' width='100%' height='100%' style='background-color: yellow'>
+    </box>
+    <box id='box_cover' width='100%' height='100%'>
+    </box>
+</box>
