@@ -5005,15 +5005,30 @@ haxe_ui_containers_VBox.prototype = $extend(haxe_ui_containers_Box.prototype,{
 	,__class__: haxe_ui_containers_VBox
 });
 var assets_MainView = function(game) {
+	this.firstClick = null;
+	this.enemyTable = new assets_PlayerTable();
+	this.playerTable = new assets_PlayerTable();
 	haxe_ui_containers_VBox.call(this);
-	haxe_ui_Toolkit.styleSheet.parse("\r\n        .button {\r\n            font-size: 24px;\r\n        }\r\n    ","user");
-	var c0 = new haxe_ui_containers_HBox();
-	var c1 = new haxe_ui_containers_Absolute();
-	c1.set_id("box_table");
+	haxe_ui_Toolkit.styleSheet.parse("\r\n    ","user");
+	var c0 = new haxe_ui_containers_Absolute();
+	c0.set_percentWidth(100.);
+	c0.set_percentHeight(100.);
+	var c1 = new haxe_ui_containers_VBox();
+	c1.set_id("box_playerTable");
+	c1.set_percentWidth(100.);
+	c1.set_percentHeight(100.);
 	c0.addComponent(c1);
+	var c2 = new haxe_ui_containers_Absolute();
+	c2.set_id("box_table");
+	c0.addComponent(c2);
 	this.addComponent(c0);
+	this.set_percentWidth(100.);
+	this.set_percentHeight(100.);
 	this.bindingRoot = true;
-	this.box_table = c1;
+	this.box_table = c2;
+	this.box_playerTable = c1;
+	this.box_playerTable.addComponent(this.playerTable);
+	this.box_playerTable.addComponent(this.enemyTable);
 	this.game = game;
 };
 $hxClasses["assets.MainView"] = assets_MainView;
@@ -5021,16 +5036,20 @@ assets_MainView.__name__ = "assets.MainView";
 assets_MainView.__super__ = haxe_ui_containers_VBox;
 assets_MainView.prototype = $extend(haxe_ui_containers_VBox.prototype,{
 	game: null
-	,onInitialize: function() {
-		haxe_ui_containers_VBox.prototype.onInitialize.call(this);
+	,playerTable: null
+	,enemyTable: null
+	,ready: function() {
+		haxe_ui_containers_VBox.prototype.ready.call(this);
 		this.syncGame();
 	}
 	,syncGame: function() {
 		var gameModel = this.game.getGame();
-		this.syncHand(gameModel.players[0].hand);
+		this.syncHand(this.playerTable,gameModel.players[0].hand);
 	}
-	,syncHand: function(cards) {
+	,firstClick: null
+	,syncHand: function(table,cards) {
 		var _gthis = this;
+		haxe_Log.trace(table.box_deck.get_componentClipRect(),{ fileName : "src/assets/MainView.hx", lineNumber : 54, className : "assets.MainView", methodName : "syncHand"});
 		var _g = 0;
 		var _g1 = cards.length;
 		while(_g < _g1) {
@@ -5038,23 +5057,33 @@ assets_MainView.prototype = $extend(haxe_ui_containers_VBox.prototype,{
 			var card = [new assets_Card()];
 			var cardModel = [cards[i]];
 			card[0].setInfo(cardModel[0]);
-			card[0].set_left(i * 110);
+			card[0].set_left(i * 110 + table.box_deck.get_screenLeft());
+			card[0].set_top(table.box_deck.get_screenTop());
 			card[0].box_cover.set_onMouseOver((function(cardModel,card) {
 				return function(e) {
-					haxe_Log.trace("over card: " + cardModel[0].id,{ fileName : "src/assets/MainView.hx", lineNumber : 40, className : "assets.MainView", methodName : "syncHand"});
-					tweenx909_TweenX.to(card[0].box_card,{ "top" : 30},.3,null,null,null,null,null,null,null,{ fileName : "src/assets/MainView.hx", lineNumber : 41, className : "assets.MainView", methodName : "syncHand"});
+					if(_gthis.firstClick != null) {
+						return;
+					}
+					haxe_Log.trace("over card: " + cardModel[0].id,{ fileName : "src/assets/MainView.hx", lineNumber : 66, className : "assets.MainView", methodName : "syncHand"});
+					tweenx909_TweenX.to(card[0].box_card,{ "top" : 30},.3,null,null,null,null,null,null,null,{ fileName : "src/assets/MainView.hx", lineNumber : 67, className : "assets.MainView", methodName : "syncHand"});
 					_gthis.game.previewPlayCard(cardModel[0].id);
 				};
 			})(cardModel,card));
 			card[0].box_cover.set_onMouseOut((function(cardModel,card) {
 				return function(e) {
-					haxe_Log.trace("out card:" + cardModel[0].id,{ fileName : "src/assets/MainView.hx", lineNumber : 46, className : "assets.MainView", methodName : "syncHand"});
-					tweenx909_TweenX.to(card[0].box_card,{ "top" : 0},.3,null,null,null,null,null,null,null,{ fileName : "src/assets/MainView.hx", lineNumber : 47, className : "assets.MainView", methodName : "syncHand"});
+					if(_gthis.firstClick != null) {
+						return;
+					}
+					haxe_Log.trace("out card:" + cardModel[0].id,{ fileName : "src/assets/MainView.hx", lineNumber : 74, className : "assets.MainView", methodName : "syncHand"});
+					tweenx909_TweenX.to(card[0].box_card,{ "top" : 0},.3,null,null,null,null,null,null,null,{ fileName : "src/assets/MainView.hx", lineNumber : 75, className : "assets.MainView", methodName : "syncHand"});
 				};
 			})(cardModel,card));
 			card[0].box_cover.set_onClick((function(cardModel) {
 				return function(e) {
-					haxe_Log.trace("play card:" + cardModel[0].id,{ fileName : "src/assets/MainView.hx", lineNumber : 50, className : "assets.MainView", methodName : "syncHand"});
+					if(_gthis.firstClick == null) {
+						_gthis.firstClick = cardModel[0];
+						haxe_Log.trace("first click card:" + cardModel[0].id,{ fileName : "src/assets/MainView.hx", lineNumber : 80, className : "assets.MainView", methodName : "syncHand"});
+					}
 				};
 			})(cardModel));
 			this.box_table.addComponent(card[0]);
@@ -5081,7 +5110,165 @@ assets_MainView.prototype = $extend(haxe_ui_containers_VBox.prototype,{
 		return new assets_MainView(this._constructorParam_game);
 	}
 	,box_table: null
+	,box_playerTable: null
 	,__class__: assets_MainView
+});
+var haxe_ui_containers_Absolute = function() {
+	haxe_ui_containers_Box.call(this);
+	this.set_layout(new haxe_ui_layouts_AbsoluteLayout());
+};
+$hxClasses["haxe.ui.containers.Absolute"] = haxe_ui_containers_Absolute;
+haxe_ui_containers_Absolute.__name__ = "haxe.ui.containers.Absolute";
+haxe_ui_containers_Absolute.__super__ = haxe_ui_containers_Box;
+haxe_ui_containers_Absolute.prototype = $extend(haxe_ui_containers_Box.prototype,{
+	registerBehaviours: function() {
+		haxe_ui_containers_Box.prototype.registerBehaviours.call(this);
+	}
+	,cloneComponent: function() {
+		var c = haxe_ui_containers_Box.prototype.cloneComponent.call(this);
+		if((this._children == null ? [] : this._children).length != (c._children == null ? [] : c._children).length) {
+			var _g = 0;
+			var _g1 = this._children == null ? [] : this._children;
+			while(_g < _g1.length) {
+				var child = _g1[_g];
+				++_g;
+				c.addComponent(child.cloneComponent());
+			}
+		}
+		return c;
+	}
+	,self: function() {
+		return new haxe_ui_containers_Absolute();
+	}
+	,__class__: haxe_ui_containers_Absolute
+});
+var assets_PlayerTable = function() {
+	haxe_ui_containers_Absolute.call(this);
+	var c0 = new haxe_ui_containers_HBox();
+	c0.set_percentWidth(100.);
+	c0.set_percentHeight(100.);
+	var c1 = new haxe_ui_containers_Absolute();
+	c1.set_id("box_deck");
+	c1.set_width(100.);
+	var c2 = new haxe_ui_components_Label();
+	c2.set_text("牌庫");
+	c1.addComponent(c2);
+	c0.addComponent(c1);
+	var c3 = new haxe_ui_containers_Absolute();
+	c3.set_id("box_deck2");
+	c3.set_width(100.);
+	var c4 = new haxe_ui_components_Label();
+	c4.set_text("捨山");
+	c3.addComponent(c4);
+	c0.addComponent(c3);
+	var c5 = new haxe_ui_containers_Absolute();
+	c5.set_id("box_trash");
+	c5.set_width(100.);
+	var c6 = new haxe_ui_components_Label();
+	c6.set_text("廢棄庫");
+	c5.addComponent(c6);
+	c0.addComponent(c5);
+	var c7 = new haxe_ui_containers_Absolute();
+	c7.set_id("box_out");
+	c7.set_width(100.);
+	var c8 = new haxe_ui_components_Label();
+	c8.set_text("除外");
+	c7.addComponent(c8);
+	c0.addComponent(c7);
+	var c9 = new haxe_ui_containers_VBox();
+	c9.set_percentWidth(100.);
+	var c10 = new haxe_ui_containers_HBox();
+	c10.set_height(100.);
+	c10.set_percentWidth(100.);
+	var c11 = new haxe_ui_containers_Absolute();
+	c11.set_id("box_hand");
+	c11.set_percentWidth(70.);
+	c11.set_percentHeight(100.);
+	var c12 = new haxe_ui_components_Label();
+	c12.set_text("手牌");
+	c11.addComponent(c12);
+	c10.addComponent(c11);
+	var c13 = new haxe_ui_containers_Absolute();
+	c13.set_id("box_hand2");
+	c13.set_percentHeight(100.);
+	var c14 = new haxe_ui_components_Label();
+	c14.set_text("工場");
+	c13.addComponent(c14);
+	c10.addComponent(c13);
+	c9.addComponent(c10);
+	var c15 = new haxe_ui_containers_Absolute();
+	c15.set_id("box_standby");
+	c15.set_height(100.);
+	c15.set_percentWidth(100.);
+	var c16 = new haxe_ui_components_Label();
+	c16.set_text("配置");
+	c15.addComponent(c16);
+	c9.addComponent(c15);
+	var c17 = new haxe_ui_containers_HBox();
+	c17.set_percentWidth(100.);
+	var c18 = new haxe_ui_containers_Absolute();
+	c18.set_id("box_earth");
+	c18.set_percentWidth(50.);
+	var c19 = new haxe_ui_components_Label();
+	c19.set_text("地球");
+	c18.addComponent(c19);
+	c17.addComponent(c18);
+	var c20 = new haxe_ui_containers_Absolute();
+	c20.set_id("box_universe");
+	c20.set_percentWidth(50.);
+	var c21 = new haxe_ui_components_Label();
+	c21.set_text("宇宙");
+	c20.addComponent(c21);
+	c17.addComponent(c20);
+	c9.addComponent(c17);
+	c0.addComponent(c9);
+	this.addComponent(c0);
+	this.set_percentWidth(100.);
+	this.set_percentHeight(100.);
+	this.bindingRoot = true;
+	this.box_universe = c20;
+	this.box_trash = c5;
+	this.box_standby = c15;
+	this.box_out = c7;
+	this.box_hand2 = c13;
+	this.box_hand = c11;
+	this.box_earth = c18;
+	this.box_deck2 = c3;
+	this.box_deck = c1;
+};
+$hxClasses["assets.PlayerTable"] = assets_PlayerTable;
+assets_PlayerTable.__name__ = "assets.PlayerTable";
+assets_PlayerTable.__super__ = haxe_ui_containers_Absolute;
+assets_PlayerTable.prototype = $extend(haxe_ui_containers_Absolute.prototype,{
+	registerBehaviours: function() {
+		haxe_ui_containers_Absolute.prototype.registerBehaviours.call(this);
+	}
+	,cloneComponent: function() {
+		var c = haxe_ui_containers_Absolute.prototype.cloneComponent.call(this);
+		if((this._children == null ? [] : this._children).length != (c._children == null ? [] : c._children).length) {
+			var _g = 0;
+			var _g1 = this._children == null ? [] : this._children;
+			while(_g < _g1.length) {
+				var child = _g1[_g];
+				++_g;
+				c.addComponent(child.cloneComponent());
+			}
+		}
+		return c;
+	}
+	,self: function() {
+		return new assets_PlayerTable();
+	}
+	,box_universe: null
+	,box_trash: null
+	,box_standby: null
+	,box_out: null
+	,box_hand2: null
+	,box_hand: null
+	,box_earth: null
+	,box_deck2: null
+	,box_deck: null
+	,__class__: assets_PlayerTable
 });
 var haxe_IMap = function() { };
 $hxClasses["haxe.IMap"] = haxe_IMap;
@@ -6852,6 +7039,7 @@ haxe_ui_Toolkit.build = function() {
 	haxe_ui_themes_ThemeManager.get_instance().addStyleResource("global","styles/main.css",-2);
 	haxe_ui_themes_ThemeManager.get_instance().addStyleResource("default","styles/default/main.css",-1);
 	haxe_ui_core_ComponentClassMap.register("vbox","haxe.ui.containers.VBox");
+	haxe_ui_core_ComponentClassMap.register("playertable","assets.PlayerTable");
 	haxe_ui_core_ComponentClassMap.register("mainview","assets.MainView");
 	haxe_ui_core_ComponentClassMap.register("label","haxe.ui.components.Label");
 	haxe_ui_core_ComponentClassMap.register("hbox","haxe.ui.containers.HBox");
@@ -11696,35 +11884,6 @@ haxe_ui_components__$Label_Builder.prototype = $extend(haxe_ui_core_CompositeBui
 		return this._label.getTextDisplay().measureTextWidth() > componentClipRect.width;
 	}
 	,__class__: haxe_ui_components__$Label_Builder
-});
-var haxe_ui_containers_Absolute = function() {
-	haxe_ui_containers_Box.call(this);
-	this.set_layout(new haxe_ui_layouts_AbsoluteLayout());
-};
-$hxClasses["haxe.ui.containers.Absolute"] = haxe_ui_containers_Absolute;
-haxe_ui_containers_Absolute.__name__ = "haxe.ui.containers.Absolute";
-haxe_ui_containers_Absolute.__super__ = haxe_ui_containers_Box;
-haxe_ui_containers_Absolute.prototype = $extend(haxe_ui_containers_Box.prototype,{
-	registerBehaviours: function() {
-		haxe_ui_containers_Box.prototype.registerBehaviours.call(this);
-	}
-	,cloneComponent: function() {
-		var c = haxe_ui_containers_Box.prototype.cloneComponent.call(this);
-		if((this._children == null ? [] : this._children).length != (c._children == null ? [] : c._children).length) {
-			var _g = 0;
-			var _g1 = this._children == null ? [] : this._children;
-			while(_g < _g1.length) {
-				var child = _g1[_g];
-				++_g;
-				c.addComponent(child.cloneComponent());
-			}
-		}
-		return c;
-	}
-	,self: function() {
-		return new haxe_ui_containers_Absolute();
-	}
-	,__class__: haxe_ui_containers_Absolute
 });
 var haxe_ui_containers_HBox = function() {
 	haxe_ui_containers_Box.call(this);
