@@ -1,0 +1,1 @@
+docker run --name gundam_fight_card -ti -v "$PWD":/tmp_dev -w /tmp_dev haxe:4.2.4 bash
