@@ -11,7 +11,10 @@ tool.card = tool.card || {};
     })
     module.SPEC_CARD = SPEC_CARD
 
-    const SPEC_CARD_STACK = spec.collection("SPEC_CARD_STACK", SPEC_CARD)
+    const SPEC_CARDS = spec.collection("SPEC_CARDS", SPEC_CARD)
+    module.SPEC_CARDS = SPEC_CARDS
+
+    const SPEC_CARD_STACK = spec.collection("SPEC_CARD_STACK", spec.int)
     module.SPEC_CARD_STACK = SPEC_CARD_STACK
 
     // const SPEC_CARD_STACKS = spec.and("SPEC_CARD_STACKS", spec.obj, x => {
@@ -23,6 +26,7 @@ tool.card = tool.card || {};
     module.SPEC_CARD_STACKS = SPEC_CARD_STACKS
 
     const SPEC_TABLE = spec.map("SPEC_TABLE", {
+        cards: SPEC_CARDS,
         cardStacks: SPEC_CARD_STACKS
     });
     module.SPEC_TABLE = SPEC_TABLE
@@ -37,6 +41,7 @@ tool.card = tool.card || {};
     module.CARD = CARD
 
     const TABLE = {
+        cards: [],
         cardStacks: [],
     }
     module.TABLE = TABLE
@@ -46,30 +51,25 @@ tool.card = tool.card || {};
     }
     module.getCardStack = getCardStack
 
-    function moveCard(table, cardId, fromId, toId, mapF) {
-        let card = table.cardStacks[fromId].find(c => c.id == cardId)
-        if (card == null) {
+    function moveCard(table, cardId, fromId, toId) {
+        if (getCardStack(table, fromId).includes(cardId) == false) {
             throw new Error(`card not found: ${fromId} > ${cardId}`)
         }
-        card = mapF(card)
         table = {...table}
-        table.cardStacks[fromId] = getCardStack(table, fromId).filter(c => c.id != cardId)
-        table.cardStacks[toId] = getCardStack(table, toId).concat([card])
+        table.cardStacks[fromId] = getCardStack(table, fromId).filter(c => c != cardId)
+        table.cardStacks[toId] = getCardStack(table, toId).concat([cardId])
         return table
     }
     module.moveCard = moveCard
-
-    function getCards(table) {
-        return Object.values(table.cardStacks).reduce((a, c) => a.concat(c))
-    }
-    module.getCards = getCards
 
     function test() {
         let table = TABLE
         assert(SPEC_TABLE, table)
         const homeId = 0
         let card1 = { ...CARD, id: 0 }
-        table.cardStacks[homeId] = getCardStack(table, homeId).concat([card1])
+        table.cards = [card1]
+        table.cardStacks[homeId] = getCardStack(table, homeId).concat([card1.id])
+        console.log(table)
         assert(SPEC_TABLE, table)
         const handId = 1
         table = moveCard(table, card1.id, homeId, handId, c => {
@@ -84,13 +84,6 @@ tool.card = tool.card || {};
         }
         if (table.cardStacks[handId].length != 1) {
             throw new Error("card must move to hand")
-        }
-        card1 = getCards(table).find(c => c.id == card1.id)
-        if (card1 == null) {
-            throw new Error("card1 is gone")
-        }
-        if (card1.tap == false) {
-            throw new Error("card1 must tap")
         }
     }
     test()

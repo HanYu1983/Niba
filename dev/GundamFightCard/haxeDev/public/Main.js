@@ -24859,7 +24859,7 @@ model_HanModel.prototype = {
 			var _g3 = handCards.length;
 			while(_g2 < _g3) {
 				var i1 = _g2++;
-				result1[i1] = model_HanModel_toCardModel(app,handCards[i1]);
+				result1[i1] = model_HanModel_toCardModel(app,app.table.cards[handCards[i1]]);
 			}
 			var tmp2 = result1;
 			var result2 = new Array(handCards.length);
@@ -24867,7 +24867,7 @@ model_HanModel.prototype = {
 			var _g5 = handCards.length;
 			while(_g4 < _g5) {
 				var i2 = _g4++;
-				result2[i2] = model_HanModel_toCardModel(app,handCards[i2]);
+				result2[i2] = model_HanModel_toCardModel(app,app.table.cards[handCards[i2]]);
 			}
 			result[i] = { id : tmp, name : tmp1, hand : tmp2, deck : result2};
 		}

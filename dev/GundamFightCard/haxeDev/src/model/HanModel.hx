@@ -13,15 +13,12 @@ private typedef Card = {
 }
 
 @:nullSafety
-private typedef CardStack = Array<Card>;
-
-// js的object當成array來用，若使用StringMap的話，haxe的方法存取不到json物件
-@:nullSafety
-private typedef CardStacks = Array<CardStack>; // StringMap<CardStack>
+private typedef CardStack = Array<Int>;
 
 @:nullSafety
 private typedef Table = {
-	cardStacks:CardStacks
+	cards:Array<Card>,
+	cardStacks:Array<CardStack>
 }
 
 @:nullSafety
@@ -66,10 +63,10 @@ class HanModel implements IViewModel {
 					id: '${player.id}',
 					name: '${player.id}',
 					hand: handCards.map(c -> {
-						return toCardModel(app, c);
+						return toCardModel(app, app.table.cards[c]);
 					}),
 					deck: handCards.map(c -> {
-						return toCardModel(app, c);
+						return toCardModel(app, app.table.cards[c]);
 					}),
 				}
 			})

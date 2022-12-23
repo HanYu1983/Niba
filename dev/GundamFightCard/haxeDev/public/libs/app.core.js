@@ -43,13 +43,12 @@ app.core = app.core || {};
             ...APP,
             players: [{ ...PLAYER, id: playerId++, handId: cardStackId++ }],
             table: {
-                cardStacks: [
-                    [{ ...tool.card.CARD, id: cardId++ }]
-                ]
+                cards: [{ ...tool.card.CARD, id: cardId++ }],
+                cardStacks: [[0]]
             }
         }
         assert(SPEC_APP, app)
     }
     debugInit()
-    
+
 })(app.core)
