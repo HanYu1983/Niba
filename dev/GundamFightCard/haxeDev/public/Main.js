@@ -24827,38 +24827,51 @@ viewModel_IViewModel.prototype = {
 	,previewPlayCard: null
 	,__class__: viewModel_IViewModel
 };
-var model_Model = function() {
+var model_HanModel = function() {
 };
-$hxClasses["model.Model"] = model_Model;
-model_Model.__name__ = "model.Model";
-model_Model.__interfaces__ = [viewModel_IViewModel];
-model_Model.prototype = {
-	createCard: function() {
-		return { id : "card_" + Math.floor(Math.random() * 9999), name : "dx", content : "contentcontentcontentcontentcontentcontentcontentcontentcontentcontentcontentcontent", owner : "vic"};
-	}
-	,createPlayer: function() {
-		return { id : "player_" + Math.floor(Math.random() * 9999), name : "dx", hand : [this.createCard(),this.createCard(),this.createCard(),this.createCard()], deck : [this.createCard(),this.createCard(),this.createCard()]};
-	}
-	,getGame: function() {
-		return { players : [this.createPlayer(),this.createPlayer()]};
+$hxClasses["model.HanModel"] = model_HanModel;
+model_HanModel.__name__ = "model.HanModel";
+model_HanModel.__interfaces__ = [viewModel_IViewModel];
+model_HanModel.prototype = {
+	getGame: function() {
+		var app = Native.getApp();
+		var _this = app.players;
+		var result = new Array(_this.length);
+		var _g = 0;
+		var _g1 = _this.length;
+		while(_g < _g1) {
+			var i = _g++;
+			var player = _this[i];
+			var handCards = app.table.cardStacks[player.handId];
+			var player1 = player.id;
+			var player2 = player.id;
+			var result1 = new Array(handCards.length);
+			var _g2 = 0;
+			var _g3 = handCards.length;
+			while(_g2 < _g3) {
+				var i1 = _g2++;
+				result1[i1] = model_HanModel_toCardModel(app,handCards[i1]);
+			}
+			var tmp = result1;
+			var result2 = new Array(handCards.length);
+			var _g4 = 0;
+			var _g5 = handCards.length;
+			while(_g4 < _g5) {
+				var i2 = _g4++;
+				result2[i2] = model_HanModel_toCardModel(app,handCards[i2]);
+			}
+			result[i] = { id : player1, name : player2, hand : tmp, deck : result2};
+		}
+		return { players : result};
 	}
 	,previewPlayCard: function(id) {
 		return { success : false, msg : "should have xxxx", content : { }};
 	}
-	,__class__: model_Model
-};
-var model_HanModel = function() {
-	model_Model.call(this);
-};
-$hxClasses["model.HanModel"] = model_HanModel;
-model_HanModel.__name__ = "model.HanModel";
-model_HanModel.__super__ = model_Model;
-model_HanModel.prototype = $extend(model_Model.prototype,{
-	getGame: function() {
-		return model_Model.prototype.getGame.call(this);
-	}
 	,__class__: model_HanModel
-});
+};
+function model_HanModel_toCardModel(app,card) {
+	return { id : card.id, name : card.id, content : "card " + card.id, owner : card.owner};
+}
 var tweenx909_EventX = function() { };
 $hxClasses["tweenx909.EventX"] = tweenx909_EventX;
 tweenx909_EventX.__name__ = "tweenx909.EventX";
