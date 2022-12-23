@@ -5472,11 +5472,17 @@ haxe_Exception.prototype = $extend(Error.prototype,{
 	__skipStack: null
 	,__nativeException: null
 	,__previousException: null
+	,toString: function() {
+		return this.get_message();
+	}
+	,get_message: function() {
+		return this.message;
+	}
 	,get_native: function() {
 		return this.__nativeException;
 	}
 	,__class__: haxe_Exception
-	,__properties__: {get_native:"get_native"}
+	,__properties__: {get_native:"get_native",get_message:"get_message"}
 });
 var haxe_Resource = function() { };
 $hxClasses["haxe.Resource"] = haxe_Resource;
@@ -24843,8 +24849,11 @@ model_HanModel.prototype = {
 			var i = _g++;
 			var player = _this[i];
 			var handCards = app.table.cardStacks[player.handId];
-			var player1 = player.id;
-			var player2 = player.id;
+			if(handCards == null) {
+				throw new haxe_Exception("" + player.handId + " not found");
+			}
+			var tmp = "" + player.id;
+			var tmp1 = "" + player.id;
 			var result1 = new Array(handCards.length);
 			var _g2 = 0;
 			var _g3 = handCards.length;
@@ -24852,7 +24861,7 @@ model_HanModel.prototype = {
 				var i1 = _g2++;
 				result1[i1] = model_HanModel_toCardModel(app,handCards[i1]);
 			}
-			var tmp = result1;
+			var tmp2 = result1;
 			var result2 = new Array(handCards.length);
 			var _g4 = 0;
 			var _g5 = handCards.length;
@@ -24860,7 +24869,7 @@ model_HanModel.prototype = {
 				var i2 = _g4++;
 				result2[i2] = model_HanModel_toCardModel(app,handCards[i2]);
 			}
-			result[i] = { id : player1, name : player2, hand : tmp, deck : result2};
+			result[i] = { id : tmp, name : tmp1, hand : tmp2, deck : result2};
 		}
 		return { players : result};
 	}
@@ -24870,7 +24879,7 @@ model_HanModel.prototype = {
 	,__class__: model_HanModel
 };
 function model_HanModel_toCardModel(app,card) {
-	return { id : card.id, name : card.id, content : "card " + card.id, owner : card.owner};
+	return { id : "" + card.id, name : "" + card.id, content : "card " + card.id, owner : card.owner};
 }
 var tweenx909_EventX = function() { };
 $hxClasses["tweenx909.EventX"] = tweenx909_EventX;
