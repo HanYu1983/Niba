@@ -35,6 +35,9 @@ private typedef App = {
 
 @:native("Native")
 private extern class Native {
+	// 沒有使用JSON.parse字串的形式
+	// 直接使用json物件
+	// 注意：這樣使用的話，不能傳入js object用StringMap, 只能傳入js array用Array的形式
 	public static function getApp():App;
 }
 
