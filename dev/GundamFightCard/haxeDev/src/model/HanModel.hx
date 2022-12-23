@@ -1,6 +1,6 @@
 package model;
 
-import model.Model.GameModel;
+import viewModel.IViewModel;
 
 class HanModel extends Model{
 

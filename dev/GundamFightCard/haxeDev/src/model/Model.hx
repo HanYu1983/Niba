@@ -1,30 +1,8 @@
 package model;
 
-typedef CardModel = {
-	id:String,
-	name:String,
-	content:String,
-	owner:String,
-}
+import viewModel.IViewModel;
 
-typedef PlayerModel = {
-	id:String,
-	name:String,
-	hand:Array<CardModel>,
-	deck:Array<CardModel>
-}
-
-typedef GameModel = {
-	players:Array<PlayerModel>
-}
-
-typedef PreviewPlayCardModel = {
-	success:Bool,
-	msg:String,
-	content:Dynamic
-}
-
-class Model {
+class Model implements IViewModel{
 	public function new() {}
 
 	private function createCard():CardModel {
