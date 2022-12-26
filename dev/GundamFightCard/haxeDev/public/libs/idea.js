@@ -1,6 +1,6 @@
 (function (module) {
     function test1() {
-        function testAbility(ctx, testAbi, activeCardId) {
+        function testAbility(ctx, testAbi, activeCardId, evt) {
             console.log(`招式名:${testAbi.title}`)
             for (key in testAbi.requires) {
                 const script = testAbi.requires[key]
@@ -25,7 +25,7 @@
 
             // 解發出擊事件
             eval(`var onEvent = ${testAbi.onEvent}`)
-            ctx = onEvent.bind(testAbi)(ctx, "onAttack", activeCardId)
+            ctx = onEvent.bind(testAbi)(ctx, evt, activeCardId)
 
             return ctx
         }
@@ -91,15 +91,111 @@
                 return ctx
             }.toString()
         }
+        const abi3 = {
+            title: "『起動』：自軍カードが、「ゲイン」の効果で戦闘修正を得た場合、そのカードのセットグループ以外の自軍ユニット１枚は、ターン終了時まで、その戦闘修正と同じ値の戦闘修正を得る。",
+            selection: {},
+            requires: {},
+            action: function fn(ctx) {
+                return ctx
+            }.toString(),
+            onEvent: function fn(ctx, evt, cardId) {
+                if (evt == "「ゲイン」の効果で戦闘修正を得た場合") {
+                    return {
+                        ...ctx,
+                        effectStack: [
+                            ...ctx.effectStack,
+                            {
+                                ...this,
+                                title: "ターン終了時まで、その戦闘修正と同じ値の戦闘修正を得る。",
+                                selection: {
+                                    ...this.selection,
+                                    "「ゲイン」の効果で戦闘修正を得た場合": [1, 1, 1]
+                                },
+                                requires: {
+                                    "そのカードのセットグループ以外の自軍ユニット１枚": function fn(ctx, cardId) {
+                                        return {
+                                            type: "unit",
+                                            values: [0],
+                                            count: 1,
+                                            action: function fn(ctx, cardId) {
+                                                const selectedCard = this.selection["そのカードのセットグループ以外の自軍ユニット１枚"]
+                                                const bonus = this.selection["「ゲイン」の効果で戦闘修正を得た場合"]
+                                                console.log(`${selectedCard} get bonus ${bonus}`)
+                                                return ctx
+                                            }.toString(),
+                                        }
+                                    }.toString()
+                                },
+                                action: function fn(ctx, cardId) {
+                                    return ctx
+                                }.toString()
+                            }
+                        ]
+                    }
+                }
+                return ctx
+            }.toString()
+        }
+
+        const abi4 = {
+            title: "（ダメージ判定ステップ）〔２〕：このカードが戦闘ダメージで破壊されている場合、このカードを、破壊を無効にした上で自軍Gにする。",
+            selection: {},
+            requires: {},
+            action: function fn(ctx) {
+                return ctx
+            }.toString(),
+            onEvent: function fn(ctx, evt, cardId) {
+                if (evt == "このカードが戦闘ダメージで破壊されている場合") {
+                    return {
+                        ...ctx,
+                        effectStack: [
+                            ...ctx.effectStack,
+                            {
+                                ...this,
+                                title: "（ダメージ判定ステップ）〔２〕：このカードが戦闘ダメージで破壊されている場合、このカードを、破壊を無効にした上で自軍Gにする。",
+                                requires: {
+                                    "ダメージ判定ステップ": function fn(ctx) {
+                                        console.log("check step is ダメージ判定ステップ")
+                                        return null
+                                    }.toString(),
+                                    "戦闘ダメージで破壊されている場合": function fn(ctx){
+                                        // 破壞中 = 確認效果堆疊中有沒有這張卡的破壞效果並且原因是戰鬥傷害
+                                        console.log("check 戦闘ダメージで破壊されている場合")
+                                        return null
+                                    }.toString(),
+                                    "2": function fn(ctx) {
+                                        return {
+                                            type: "G",
+                                            values: [1, 2, 3],
+                                            count: 2,
+                                            action: function fn(ctx) {
+                                                // tap card
+                                                return ctx
+                                            }.toString(),
+                                        }
+                                    },
+                                },
+                                action: function fn(ctx, cardId) {
+                                    console.log("移除堆疊中這張卡的破壞效果")
+                                    console.log("このカードを自軍Gにする。")
+                                    return ctx
+                                }.toString()
+                            }
+                        ]
+                    }
+                }
+                return ctx
+            }.toString()
+        }
 
         let ctx = {
             level: 3,
             effectStack: []
         }
         const cardId = 0
-        ctx = testAbility(ctx, abi1, cardId)
+        ctx = testAbility(ctx, abi4, cardId, "このカードが戦闘ダメージで破壊されている場合")
         console.log(ctx)
-        if(ctx.effectStack.length){
+        if (ctx.effectStack.length) {
             ctx = testAbility(ctx, ctx.effectStack[0], cardId)
             console.log(ctx)
         }
