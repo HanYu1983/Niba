@@ -323,20 +323,17 @@
                         text: {
                             id: "速攻",
                             selection: {},
-                            requires: {},
+                            requires: null,
                             action: null,
-                            onEvent: null,
-                        }
-                    },
-                    {
-                        type: "event",
-                        action: function (ctx) {
-                            if (ctx.phase == "回合結束時") {
-                                return {
-                                    ...ctx,
-                                    marks: ctx.marks.filter(m => m.id != mark.id)
+                            onEvent: function (ctx) {
+                                if (ctx.phase == "回合結束時") {
+                                    return {
+                                        ...ctx,
+                                        marks: ctx.marks.filter(m => m.id != this._mark.id)
+                                    }
                                 }
-                            }
+                            }.toString(),
+                            _markId: mark.id,
                         }
                     }
                 ]
