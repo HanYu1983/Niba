@@ -1,3 +1,4 @@
+
 (function (module) {
     function test1() {
         function testAbility(ctx, testAbi, activeCardId, evt) {
@@ -158,7 +159,7 @@
                                         console.log("check step is ダメージ判定ステップ")
                                         return null
                                     }.toString(),
-                                    "戦闘ダメージで破壊されている場合": function fn(ctx){
+                                    "戦闘ダメージで破壊されている場合": function fn(ctx) {
                                         // 破壞中 = 確認效果堆疊中有沒有這張卡的破壞效果並且原因是戰鬥傷害
                                         console.log("check 戦闘ダメージで破壊されている場合")
                                         return null
@@ -200,5 +201,153 @@
             console.log(ctx)
         }
     }
-    test1();
+    function test2() {
+
+        const runtime = {
+            cardId: 0,
+            ownerId: 0,
+            controllerId: 0,
+            cause: {
+                id: "支付機體國力",
+            }
+        }
+
+        const effect = {
+            description: "獲得回合結束前速攻",
+            selection: {},
+            requires: null,
+            action: function fn(ctx, runtime) {
+                return {
+                    ...ctx,
+                    marks: [...ctx.marks, {
+                        id: "回合結束前速攻",
+                        textId: "回合結束前速攻",
+                        type: "attach text",
+                        attachCardId: runtime.cardId,
+                        cause: {
+                            id: "card effect",
+                            cardId: runtime.cardId,
+                        }
+                    }]
+                }
+            }.toString(),
+            onEvent: null
+        }
+
+        const effect2 = {
+            description: "破壞效果",
+            selection: {},
+            requires: null,
+            action: function fn() {
+                // 廢棄這個卡
+                // trigger卡片廢棄事件
+            }.toString(),
+            onEvent: null
+        }
+
+        const effect3 = {
+            description: "換裝廢棄效果",
+            selection: {},
+            requires: null,
+            action: function fn() {
+                // 廢棄這個卡
+                // trigger卡片換裝廢棄事件
+            }.toString(),
+            onEvent: null
+        }
+
+        const effect4 = {
+            description: "",
+            selection: {},
+            requires: function fn(ctx) {
+                return [
+                    {
+                        id: "",
+                        type: "card",
+                        tips: [],
+                        values: [],
+                        lengthMustInclude: [1],
+                        action: function fn() {
+
+                        }.toString()
+                    },
+                    {
+                        id: "",
+                        type: "field",
+                        tips: [],
+                        values: [],
+                        lengthMustInclude: [1],
+                        action: function fn() {
+
+                        }.toString()
+                    }
+                ]
+            }.toString(),
+            action: function fn(ctx) {
+                return ctx
+            }.toString(),
+            onEvent: function fn(ctx) {
+                return ctx
+            }.toString()
+        }
+
+        const marks = [
+            {
+                id: "1",
+                textId: "+1/+1/+1 token",
+                type: "token",
+                attachCardId: 0,
+                cause: {
+                    id: "card effect",
+                    cardId: 0
+                },
+            },
+            {
+                id: "2",
+                textId: "回合結束前速攻",
+                type: "attach text",
+                attachCardId: 0,
+                cause: {
+                    id: "card effect",
+                    cardId: 0,
+                }
+            }
+        ]
+        // 從各自的腳本查詢
+        // eval(`var query = data.${mark.cause.cardId}.query`)
+        function queryResult(mark) {
+            if (mark.textId == "回合結束前速攻") {
+                return [
+                    {
+                        type: "card text",
+                        text: {
+                            id: "速攻",
+                            selection: {},
+                            requires: {},
+                            action: null,
+                            onEvent: null,
+                        }
+                    },
+                    {
+                        type: "event",
+                        action: function (ctx) {
+                            if (ctx.phase == "回合結束時") {
+                                return {
+                                    ...ctx,
+                                    marks: ctx.marks.filter(m => m.id != mark.id)
+                                }
+                            }
+                        }
+                    }
+                ]
+            }
+            if (mark.textId == "+1/+1/+1 token") {
+                return {
+                    type: "battle point bonus",
+                    value: [1, 1, 1]
+                }
+            }
+        }
+    }
+    test2();
 })()
