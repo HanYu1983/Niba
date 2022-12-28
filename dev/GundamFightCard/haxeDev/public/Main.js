@@ -28054,20 +28054,27 @@ hxbit_enumSer_Model_$ver1_$MarkCause.doSerialize = function(ctx,v) {
 	if(v == null) {
 		ctx.out.addByte(0);
 	} else {
-		var cardId = v.cardId;
-		ctx.out.addByte(1);
-		if(cardId == null) {
-			ctx.out.addByte(0);
-		} else {
-			var b = haxe_io_Bytes.ofString(cardId);
-			var v = b.length + 1;
-			if(v >= 0 && v < 128) {
-				ctx.out.addByte(v);
+		switch(v._hx_index) {
+		case 0:
+			ctx.out.addByte(1);
+			break;
+		case 1:
+			var cardId = v.cardId;
+			ctx.out.addByte(2);
+			if(cardId == null) {
+				ctx.out.addByte(0);
 			} else {
-				ctx.out.addByte(128);
-				ctx.out.addInt32(v);
+				var b = haxe_io_Bytes.ofString(cardId);
+				var v = b.length + 1;
+				if(v >= 0 && v < 128) {
+					ctx.out.addByte(v);
+				} else {
+					ctx.out.addByte(128);
+					ctx.out.addInt32(v);
+				}
+				ctx.out.add(b);
 			}
-			ctx.out.add(b);
+			break;
 		}
 	}
 };
@@ -28076,7 +28083,10 @@ hxbit_enumSer_Model_$ver1_$MarkCause.doUnserialize = function(ctx) {
 	if(b == 0) {
 		return null;
 	}
-	if(b == 1) {
+	switch(b) {
+	case 1:
+		return model_ver1_MarkCause.Pending;
+	case 2:
 		var _cardId;
 		var v = ctx.input.b[ctx.inPos++];
 		if(v == 128) {
@@ -28093,12 +28103,14 @@ hxbit_enumSer_Model_$ver1_$MarkCause.doUnserialize = function(ctx) {
 			_cardId = s;
 		}
 		return model_ver1_MarkCause.CardEffect(_cardId);
-	} else {
+	default:
 		throw haxe_Exception.thrown("Invalid enum index " + b);
 	}
 };
 hxbit_enumSer_Model_$ver1_$MarkCause.getSchema = function() {
 	var s = new hxbit_Schema();
+	s.fieldsTypes.push(null);
+	s.fieldsNames.push("Pending");
 	var s1 = s.fieldsTypes;
 	var _g = [];
 	var v;
@@ -28115,20 +28127,27 @@ hxbit_enumSer_Model_$ver1_$MarkType.doSerialize = function(ctx,v) {
 	if(v == null) {
 		ctx.out.addByte(0);
 	} else {
-		var cardId = v.cardId;
-		ctx.out.addByte(1);
-		if(cardId == null) {
-			ctx.out.addByte(0);
-		} else {
-			var b = haxe_io_Bytes.ofString(cardId);
-			var v = b.length + 1;
-			if(v >= 0 && v < 128) {
-				ctx.out.addByte(v);
+		switch(v._hx_index) {
+		case 0:
+			ctx.out.addByte(1);
+			break;
+		case 1:
+			var cardId = v.cardId;
+			ctx.out.addByte(2);
+			if(cardId == null) {
+				ctx.out.addByte(0);
 			} else {
-				ctx.out.addByte(128);
-				ctx.out.addInt32(v);
+				var b = haxe_io_Bytes.ofString(cardId);
+				var v = b.length + 1;
+				if(v >= 0 && v < 128) {
+					ctx.out.addByte(v);
+				} else {
+					ctx.out.addByte(128);
+					ctx.out.addInt32(v);
+				}
+				ctx.out.add(b);
 			}
-			ctx.out.add(b);
+			break;
 		}
 	}
 };
@@ -28137,7 +28156,10 @@ hxbit_enumSer_Model_$ver1_$MarkType.doUnserialize = function(ctx) {
 	if(b == 0) {
 		return null;
 	}
-	if(b == 1) {
+	switch(b) {
+	case 1:
+		return model_ver1_MarkType.Pending;
+	case 2:
 		var _cardId;
 		var v = ctx.input.b[ctx.inPos++];
 		if(v == 128) {
@@ -28154,12 +28176,14 @@ hxbit_enumSer_Model_$ver1_$MarkType.doUnserialize = function(ctx) {
 			_cardId = s;
 		}
 		return model_ver1_MarkType.AttachCard(_cardId);
-	} else {
+	default:
 		throw haxe_Exception.thrown("Invalid enum index " + b);
 	}
 };
 hxbit_enumSer_Model_$ver1_$MarkType.getSchema = function() {
 	var s = new hxbit_Schema();
+	s.fieldsTypes.push(null);
+	s.fieldsNames.push("Pending");
 	var s1 = s.fieldsTypes;
 	var _g = [];
 	var v;
@@ -28616,7 +28640,7 @@ model_TestModel.prototype = $extend(viewModel_DefaultViewModel.prototype,{
 });
 var model_ver1_Player = function() {
 	this.__uid = hxbit_Serializer.SEQ << 24 | ++hxbit_Serializer.UID;
-	this.id = "unknown";
+	this.id = model_ver1_Define_PENDING_STRING;
 };
 $hxClasses["model.ver1.Player"] = model_ver1_Player;
 model_ver1_Player.__name__ = "model.ver1.Player";
@@ -28651,7 +28675,7 @@ model_ver1_Player.prototype = {
 		return schema;
 	}
 	,unserializeInit: function() {
-		this.id = "unknown";
+		this.id = model_ver1_Define_PENDING_STRING;
 	}
 	,unserialize: function(__ctx) {
 		var v = __ctx.input.b[__ctx.inPos++];
@@ -28675,8 +28699,10 @@ model_ver1_Player.prototype = {
 };
 var model_ver1_Card = function() {
 	this.__uid = hxbit_Serializer.SEQ << 24 | ++hxbit_Serializer.UID;
+	this.protoId = model_ver1_Define_PENDING_STRING;
 	this.isTap = false;
 	this.isFaceUp = false;
+	this.id = model_ver1_Define_PENDING_STRING;
 };
 $hxClasses["model.ver1.Card"] = model_ver1_Card;
 model_ver1_Card.__name__ = "model.ver1.Card";
@@ -28736,8 +28762,10 @@ model_ver1_Card.prototype = {
 		return schema;
 	}
 	,unserializeInit: function() {
+		this.id = model_ver1_Define_PENDING_STRING;
 		this.isFaceUp = false;
 		this.isTap = false;
+		this.protoId = model_ver1_Define_PENDING_STRING;
 	}
 	,unserialize: function(__ctx) {
 		var v = __ctx.input.b[__ctx.inPos++];
@@ -28780,6 +28808,7 @@ model_ver1_Card.prototype = {
 var model_ver1_CardStack = function() {
 	this.__uid = hxbit_Serializer.SEQ << 24 | ++hxbit_Serializer.UID;
 	this.cardIds = [];
+	this.id = model_ver1_Define_PENDING_STRING;
 };
 $hxClasses["model.ver1.CardStack"] = model_ver1_CardStack;
 model_ver1_CardStack.__name__ = "model.ver1.CardStack";
@@ -28847,6 +28876,7 @@ model_ver1_CardStack.prototype = {
 		return schema;
 	}
 	,unserializeInit: function() {
+		this.id = model_ver1_Define_PENDING_STRING;
 		this.cardIds = [];
 	}
 	,unserialize: function(__ctx) {
@@ -28908,10 +28938,7 @@ model_ver1_CardStack.prototype = {
 var model_ver1_Table = function() {
 	this.__uid = hxbit_Serializer.SEQ << 24 | ++hxbit_Serializer.UID;
 	this.cardStacks = new haxe_ds_StringMap();
-	var _g = new haxe_ds_StringMap();
-	var value = new model_ver1_Card();
-	_g.h[""] = value;
-	this.cards = _g;
+	this.cards = new haxe_ds_StringMap();
 };
 $hxClasses["model.ver1.Table"] = model_ver1_Table;
 model_ver1_Table.__name__ = "model.ver1.Table";
@@ -29019,10 +29046,7 @@ model_ver1_Table.prototype = {
 		return schema;
 	}
 	,unserializeInit: function() {
-		var _g = new haxe_ds_StringMap();
-		var value = new model_ver1_Card();
-		_g.h[""] = value;
-		this.cards = _g;
+		this.cards = new haxe_ds_StringMap();
 		this.cardStacks = new haxe_ds_StringMap();
 	}
 	,unserialize: function(__ctx) {
@@ -29383,7 +29407,7 @@ model_ver1_Context.prototype = {
 	,__class__: model_ver1_Context
 };
 var model_ver1_Require = function() {
-	this.id = "unknown";
+	this.id = model_ver1_Define_PENDING_STRING;
 };
 $hxClasses["model.ver1.Require"] = model_ver1_Require;
 model_ver1_Require.__name__ = "model.ver1.Require";
@@ -29394,7 +29418,7 @@ model_ver1_Require.prototype = {
 	,__class__: model_ver1_Require
 };
 var model_ver1_RequireUserSelect = function() {
-	this.responsePlayerId = "unknown";
+	this.responsePlayerId = model_ver1_Define_PENDING_STRING;
 	this.tips = [];
 	model_ver1_Require.call(this);
 };
@@ -29407,7 +29431,7 @@ model_ver1_RequireUserSelect.prototype = $extend(model_ver1_Require.prototype,{
 	,__class__: model_ver1_RequireUserSelect
 });
 var model_ver1_CardText = function() {
-	this.id = "unknown";
+	this.id = model_ver1_Define_PENDING_STRING;
 };
 $hxClasses["model.ver1.CardText"] = model_ver1_CardText;
 model_ver1_CardText.__name__ = "model.ver1.CardText";
@@ -29421,15 +29445,20 @@ model_ver1_CardText.prototype = {
 	,__class__: model_ver1_CardText
 };
 var model_ver1_MarkType = $hxEnums["model.ver1.MarkType"] = { __ename__:true,__constructs__:null
-	,AttachCard: ($_=function(cardId) { return {_hx_index:0,cardId:cardId,__enum__:"model.ver1.MarkType",toString:$estr}; },$_._hx_name="AttachCard",$_.__params__ = ["cardId"],$_)
+	,Pending: {_hx_name:"Pending",_hx_index:0,__enum__:"model.ver1.MarkType",toString:$estr}
+	,AttachCard: ($_=function(cardId) { return {_hx_index:1,cardId:cardId,__enum__:"model.ver1.MarkType",toString:$estr}; },$_._hx_name="AttachCard",$_.__params__ = ["cardId"],$_)
 };
-model_ver1_MarkType.__constructs__ = [model_ver1_MarkType.AttachCard];
+model_ver1_MarkType.__constructs__ = [model_ver1_MarkType.Pending,model_ver1_MarkType.AttachCard];
 var model_ver1_MarkCause = $hxEnums["model.ver1.MarkCause"] = { __ename__:true,__constructs__:null
-	,CardEffect: ($_=function(cardId) { return {_hx_index:0,cardId:cardId,__enum__:"model.ver1.MarkCause",toString:$estr}; },$_._hx_name="CardEffect",$_.__params__ = ["cardId"],$_)
+	,Pending: {_hx_name:"Pending",_hx_index:0,__enum__:"model.ver1.MarkCause",toString:$estr}
+	,CardEffect: ($_=function(cardId) { return {_hx_index:1,cardId:cardId,__enum__:"model.ver1.MarkCause",toString:$estr}; },$_._hx_name="CardEffect",$_.__params__ = ["cardId"],$_)
 };
-model_ver1_MarkCause.__constructs__ = [model_ver1_MarkCause.CardEffect];
+model_ver1_MarkCause.__constructs__ = [model_ver1_MarkCause.Pending,model_ver1_MarkCause.CardEffect];
 var model_ver1_Mark = function() {
 	this.__uid = hxbit_Serializer.SEQ << 24 | ++hxbit_Serializer.UID;
+	this.cause = model_ver1_MarkCause.Pending;
+	this.type = model_ver1_MarkType.Pending;
+	this.id = model_ver1_Define_PENDING_STRING;
 };
 $hxClasses["model.ver1.Mark"] = model_ver1_Mark;
 model_ver1_Mark.__name__ = "model.ver1.Mark";
@@ -29472,6 +29501,9 @@ model_ver1_Mark.prototype = {
 		return schema;
 	}
 	,unserializeInit: function() {
+		this.id = model_ver1_Define_PENDING_STRING;
+		this.type = model_ver1_MarkType.Pending;
+		this.cause = model_ver1_MarkCause.Pending;
 	}
 	,unserialize: function(__ctx) {
 		var v = __ctx.input.b[__ctx.inPos++];
@@ -34419,6 +34451,7 @@ model_ver1_CardStack.__clid = hxbit_Serializer.registerClass(model_ver1_CardStac
 model_ver1_Table.__clid = hxbit_Serializer.registerClass(model_ver1_Table);
 model_ver1_Context.__clid = hxbit_Serializer.registerClass(model_ver1_Context);
 model_ver1_Mark.__clid = hxbit_Serializer.registerClass(model_ver1_Mark);
+var model_ver1_Define_PENDING_STRING = "";
 var model_ver1_TestCardProto_CardProto1Text1Require1MarkFirstAttck = "CardProto1Text1Require1MarkFirstAttck";
 tweenx909_EventX.PLAY = "play";
 tweenx909_EventX.DELAY = "delay";
