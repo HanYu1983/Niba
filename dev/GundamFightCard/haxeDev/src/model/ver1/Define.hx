@@ -2,11 +2,8 @@ package model.ver1;
 
 import haxe.ds.Option;
 
-final PENDING_STRING = "unknown";
-
 // 實作hxbit.Serializable這個介面後並使用了@:s
 // @:nullSafety就會出錯
-// 因為不能使用Null<Type>，改使用PENDING_STRING用來判斷是否有設值(null的替代品)
 class Player implements hxbit.Serializable {
 	public function new(id:String) {
 		this.id = id;
@@ -101,31 +98,42 @@ class CardText {
 		return [];
 	}
 
+	public function action(ctx:Context, runtime:ExecuteRuntime):Void {}
+
 	public function onEvent(ctx:Context, runtime:ExecuteRuntime):Void {}
 }
 
 enum MarkType {
 	Pending;
 	AttachCard(cardId:String);
+	Token(cardId:String);
 }
 
 enum MarkCause {
 	Pending;
-	CardEffect(cardId:String);
+	CardEffect(fromCardId:String);
+	CardText(cardId:String);
+}
+
+enum MarkEffect {
+	Text(text:CardText);
+	AddBattlePoint(cardId:String, battlePoint:BattlePoint);
 }
 
 class Mark implements hxbit.Serializable {
-	public function new(id:String) {
+	public function new(id:String, type:MarkType, cause:MarkCause) {
 		this.id = id;
+		this.type = type;
+		this.cause = cause;
 	}
 
 	@:s public var id:String;
 	@:s public var type = MarkType.Pending;
 	@:s public var cause = MarkCause.Pending;
-}
 
-enum MarkEffect {
-	Text(text:CardText);
+	public function getEffect(ctx:Context, runtime:ExecuteRuntime):Array<MarkEffect> {
+		return [];
+	}
 }
 
 interface ExecuteRuntime {
@@ -133,16 +141,19 @@ interface ExecuteRuntime {
 }
 
 interface ICardProto {
-	function getMarkEffect(mark:Mark):Array<MarkEffect>;
-	function getTexts(ctx:Context, runtime:ExecuteRuntime):Array<CardText>;
+	// function getMarkEffect(mark:Mark):Array<MarkEffect>;
+	// function getTexts(ctx:Context, runtime:ExecuteRuntime):Array<CardText>;
+	function getMarks(ctx:Context, runtime:ExecuteRuntime):Array<Mark>;
 }
 
 class AbstractCardProto implements ICardProto {
-	public function getMarkEffect(mark:Mark):Array<MarkEffect> {
-		return [];
-	}
-
-	public function getTexts(ctx:Context, runtime:ExecuteRuntime):Array<CardText> {
+	// public function getMarkEffect(mark:Mark):Array<MarkEffect> {
+	// 	return [];
+	// }
+	// public function getTexts(ctx:Context, runtime:ExecuteRuntime):Array<CardText> {
+	// 	return [];
+	// }
+	public function getMarks(ctx:Context, runtime:ExecuteRuntime):Array<Mark> {
 		return [];
 	}
 }
