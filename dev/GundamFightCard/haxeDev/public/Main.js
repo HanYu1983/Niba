@@ -28143,23 +28143,6 @@ hxbit_enumSer_Model_$ver1_$MarkCause.doSerialize = function(ctx,v) {
 				ctx.out.addByte(0);
 			} else {
 				var b = haxe_io_Bytes.ofString(fromCardId);
-				var v1 = b.length + 1;
-				if(v1 >= 0 && v1 < 128) {
-					ctx.out.addByte(v1);
-				} else {
-					ctx.out.addByte(128);
-					ctx.out.addInt32(v1);
-				}
-				ctx.out.add(b);
-			}
-			break;
-		case 2:
-			var cardId = v.cardId;
-			ctx.out.addByte(3);
-			if(cardId == null) {
-				ctx.out.addByte(0);
-			} else {
-				var b = haxe_io_Bytes.ofString(cardId);
 				var v = b.length + 1;
 				if(v >= 0 && v < 128) {
 					ctx.out.addByte(v);
@@ -28198,23 +28181,6 @@ hxbit_enumSer_Model_$ver1_$MarkCause.doUnserialize = function(ctx) {
 			_fromCardId = s;
 		}
 		return model_ver1_MarkCause.CardEffect(_fromCardId);
-	case 3:
-		var _cardId;
-		var v = ctx.input.b[ctx.inPos++];
-		if(v == 128) {
-			v = ctx.input.getInt32(ctx.inPos);
-			ctx.inPos += 4;
-		}
-		var len = v;
-		if(len == 0) {
-			_cardId = null;
-		} else {
-			--len;
-			var s = ctx.input.getString(ctx.inPos,len);
-			ctx.inPos += len;
-			_cardId = s;
-		}
-		return model_ver1_MarkCause.CardText(_cardId);
 	default:
 		throw haxe_Exception.thrown("Invalid enum index " + b);
 	}
@@ -28230,13 +28196,6 @@ hxbit_enumSer_Model_$ver1_$MarkCause.getSchema = function() {
 	_g.push({ name : "", type : t, opt : false});
 	s1.push(hxbit_PropTypeDesc.PObj(_g));
 	s.fieldsNames.push("CardEffect");
-	var s1 = s.fieldsTypes;
-	var _g = [];
-	var v;
-	var t = hxbit_PropTypeDesc.PString;
-	_g.push({ name : "", type : t, opt : false});
-	s1.push(hxbit_PropTypeDesc.PObj(_g));
-	s.fieldsNames.push("CardText");
 	return s;
 };
 var hxbit_enumSer_Model_$ver1_$MarkType = function() { };
@@ -28722,32 +28681,45 @@ model_Game.ofMemonto = function(memonto) {
 model_Game.prototype = {
 	ctx: null
 	,test: function() {
+		console.log("src/model/TestModel.hx:29:","============= test =============");
 		var cardProto = new model_ver1_CardProto1();
 		var runtime = new model_SimpleRuntime();
-		var marks = cardProto.getMarks(this.ctx,runtime);
-		console.log("src/model/TestModel.hx:33:",marks);
+		var cardTexts = cardProto.getTexts(this.ctx,runtime);
 		var _g = [];
-		var _g1 = 0;
-		while(_g1 < marks.length) {
-			var mark = marks[_g1];
-			++_g1;
-			var _g2 = 0;
-			var _g3 = mark.getEffect(this.ctx,runtime);
-			while(_g2 < _g3.length) {
-				var markEffect = _g3[_g2];
-				++_g2;
-				var tmp;
+		var h = this.ctx.marks.h;
+		var mark_h = h;
+		var mark_keys = Object.keys(h);
+		var mark_length = mark_keys.length;
+		var mark_current = 0;
+		while(mark_current < mark_length) {
+			var mark = mark_h[mark_keys[mark_current++]];
+			var _g1 = 0;
+			var _g2 = mark.getEffect(this.ctx,runtime);
+			while(_g1 < _g2.length) {
+				var markEffect = _g2[_g1];
+				++_g1;
+				var attachTexts;
 				if(markEffect._hx_index == 0) {
 					var text = markEffect.text;
-					tmp = text;
+					attachTexts = text;
 				} else {
-					tmp = null;
+					attachTexts = null;
 				}
-				_g.push(tmp);
+				_g.push(attachTexts);
 			}
 		}
-		var texts = _g;
-		console.log("src/model/TestModel.hx:52:",texts);
+		var _g1 = [];
+		var _g2 = 0;
+		var _g3 = _g;
+		while(_g2 < _g3.length) {
+			var v = _g3[_g2];
+			++_g2;
+			if(v != null) {
+				_g1.push(v);
+			}
+		}
+		var attachTexts = _g1;
+		var texts = cardTexts.concat(attachTexts);
 		var _g = 0;
 		while(_g < texts.length) {
 			var text = texts[_g];
@@ -28762,28 +28734,92 @@ model_Game.prototype = {
 				++_g1;
 				req.action(this.ctx,runtime);
 			}
+			console.log("src/model/TestModel.hx:55:","改變狀態");
 			text.action(this.ctx,runtime);
 		}
+		console.log("src/model/TestModel.hx:58:","重取得最新狀態");
+		var cardTexts = cardProto.getTexts(this.ctx,runtime);
+		var _g = [];
+		var h = this.ctx.marks.h;
+		var mark_h = h;
+		var mark_keys = Object.keys(h);
+		var mark_length = mark_keys.length;
+		var mark_current = 0;
+		while(mark_current < mark_length) {
+			var mark = mark_h[mark_keys[mark_current++]];
+			var _g1 = 0;
+			var _g2 = mark.getEffect(this.ctx,runtime);
+			while(_g1 < _g2.length) {
+				var markEffect = _g2[_g1];
+				++_g1;
+				var attachTexts;
+				if(markEffect._hx_index == 0) {
+					var text = markEffect.text;
+					attachTexts = text;
+				} else {
+					attachTexts = null;
+				}
+				_g.push(attachTexts);
+			}
+		}
+		var _g1 = [];
+		var _g2 = 0;
+		var _g3 = _g;
+		while(_g2 < _g3.length) {
+			var v = _g3[_g2];
+			++_g2;
+			if(v != null) {
+				_g1.push(v);
+			}
+		}
+		var attachTexts = _g1;
+		texts = cardTexts.concat(attachTexts);
+		var _g = [];
+		var h = this.ctx.marks.h;
+		var mark_h = h;
+		var mark_keys = Object.keys(h);
+		var mark_length = mark_keys.length;
+		var mark_current = 0;
+		while(mark_current < mark_length) {
+			var mark = mark_h[mark_keys[mark_current++]];
+			var _g1 = 0;
+			var _g2 = mark.getEffect(this.ctx,runtime);
+			while(_g1 < _g2.length) {
+				var markEffect = _g2[_g1];
+				++_g1;
+				_g.push(markEffect);
+			}
+		}
+		var markEffects = _g;
 		var _g = [];
 		var _g1 = 0;
-		while(_g1 < marks.length) {
-			var mark = marks[_g1];
+		while(_g1 < texts.length) {
+			var text = texts[_g1];
 			++_g1;
 			var _g2 = 0;
-			var _g3 = mark.getEffect(this.ctx,runtime);
+			var _g3 = text.getEffect(this.ctx,runtime);
 			while(_g2 < _g3.length) {
 				var markEffect = _g3[_g2];
 				++_g2;
-				var tmp;
-				if(markEffect._hx_index == 1) {
-					var cardId = markEffect.cardId;
-					var battlePoint = markEffect.battlePoint;
-					tmp = { cardId : cardId, battlePoint : battlePoint};
-				} else {
-					tmp = null;
-				}
-				_g.push(tmp);
+				_g.push(markEffect);
 			}
+		}
+		var markEffects1 = markEffects.concat(_g);
+		console.log("src/model/TestModel.hx:83:","常駐增強內文");
+		var _g = [];
+		var _g1 = 0;
+		while(_g1 < markEffects1.length) {
+			var markEffect = markEffects1[_g1];
+			++_g1;
+			var tmp;
+			if(markEffect._hx_index == 1) {
+				var cardId = markEffect.cardId;
+				var battlePoint = markEffect.battlePoint;
+				tmp = { cardId : cardId, battlePoint : battlePoint};
+			} else {
+				tmp = null;
+			}
+			_g.push(tmp);
 		}
 		var bonusList = _g;
 		var _g = 0;
@@ -28793,9 +28829,37 @@ model_Game.prototype = {
 			if(bonus == null) {
 				continue;
 			}
-			console.log("src/model/TestModel.hx:82:",bonus.cardId);
-			console.log("src/model/TestModel.hx:83:",bonus.battlePoint);
+			console.log("src/model/TestModel.hx:101:",bonus.cardId);
+			console.log("src/model/TestModel.hx:102:",bonus.battlePoint);
 		}
+		console.log("src/model/TestModel.hx:104:","速攻");
+		var _g = [];
+		var _g1 = 0;
+		while(_g1 < markEffects1.length) {
+			var markEffect = markEffects1[_g1];
+			++_g1;
+			var tmp;
+			if(markEffect._hx_index == 2) {
+				var cardId = markEffect.cardId;
+				var speed = markEffect.speed;
+				tmp = { cardId : cardId, speed : speed};
+			} else {
+				tmp = null;
+			}
+			_g.push(tmp);
+		}
+		var attackSpeedList = _g;
+		var _g = 0;
+		while(_g < attackSpeedList.length) {
+			var bonus = attackSpeedList[_g];
+			++_g;
+			if(bonus == null) {
+				continue;
+			}
+			console.log("src/model/TestModel.hx:122:",bonus.cardId);
+			console.log("src/model/TestModel.hx:123:",bonus.speed);
+		}
+		console.log("src/model/TestModel.hx:175:","==========================");
 	}
 	,getMemonto: function() {
 		var s = new hxbit_Serializer();
@@ -28833,9 +28897,10 @@ model_TestModel.prototype = $extend(viewModel_DefaultViewModel.prototype,{
 	getGame: function() {
 		var game = new model_Game();
 		game.test();
+		console.log("src/model/TestModel.hx:197:",game.ctx);
 		var loadGame = model_Game.ofMemonto(game.getMemonto());
 		loadGame.test();
-		console.log("src/model/TestModel.hx:109:",loadGame.ctx);
+		console.log("src/model/TestModel.hx:201:",loadGame.ctx);
 		var h = loadGame.ctx.marks.h;
 		var _g_h = h;
 		var _g_keys = Object.keys(h);
@@ -28847,8 +28912,8 @@ model_TestModel.prototype = $extend(viewModel_DefaultViewModel.prototype,{
 			var _g1_value = _g_h[key];
 			var key1 = _g1_key;
 			var value = _g1_value;
-			console.log("src/model/TestModel.hx:111:",key1);
-			console.log("src/model/TestModel.hx:112:",value);
+			console.log("src/model/TestModel.hx:203:",key1);
+			console.log("src/model/TestModel.hx:204:",value);
 		}
 		return { players : []};
 	}
@@ -29631,6 +29696,9 @@ $hxClasses["model.ver1.CardText"] = model_ver1_CardText;
 model_ver1_CardText.__name__ = "model.ver1.CardText";
 model_ver1_CardText.prototype = {
 	id: null
+	,getEffect: function(ctx,runtime) {
+		return [];
+	}
 	,getRequires: function(ctx,runtime) {
 		return [];
 	}
@@ -29649,14 +29717,14 @@ model_ver1_MarkType.__constructs__ = [model_ver1_MarkType.Pending,model_ver1_Mar
 var model_ver1_MarkCause = $hxEnums["model.ver1.MarkCause"] = { __ename__:true,__constructs__:null
 	,Pending: {_hx_name:"Pending",_hx_index:0,__enum__:"model.ver1.MarkCause",toString:$estr}
 	,CardEffect: ($_=function(fromCardId) { return {_hx_index:1,fromCardId:fromCardId,__enum__:"model.ver1.MarkCause",toString:$estr}; },$_._hx_name="CardEffect",$_.__params__ = ["fromCardId"],$_)
-	,CardText: ($_=function(cardId) { return {_hx_index:2,cardId:cardId,__enum__:"model.ver1.MarkCause",toString:$estr}; },$_._hx_name="CardText",$_.__params__ = ["cardId"],$_)
 };
-model_ver1_MarkCause.__constructs__ = [model_ver1_MarkCause.Pending,model_ver1_MarkCause.CardEffect,model_ver1_MarkCause.CardText];
+model_ver1_MarkCause.__constructs__ = [model_ver1_MarkCause.Pending,model_ver1_MarkCause.CardEffect];
 var model_ver1_MarkEffect = $hxEnums["model.ver1.MarkEffect"] = { __ename__:true,__constructs__:null
 	,Text: ($_=function(text) { return {_hx_index:0,text:text,__enum__:"model.ver1.MarkEffect",toString:$estr}; },$_._hx_name="Text",$_.__params__ = ["text"],$_)
 	,AddBattlePoint: ($_=function(cardId,battlePoint) { return {_hx_index:1,cardId:cardId,battlePoint:battlePoint,__enum__:"model.ver1.MarkEffect",toString:$estr}; },$_._hx_name="AddBattlePoint",$_.__params__ = ["cardId","battlePoint"],$_)
+	,AttackSpeed: ($_=function(cardId,speed) { return {_hx_index:2,cardId:cardId,speed:speed,__enum__:"model.ver1.MarkEffect",toString:$estr}; },$_._hx_name="AttackSpeed",$_.__params__ = ["cardId","speed"],$_)
 };
-model_ver1_MarkEffect.__constructs__ = [model_ver1_MarkEffect.Text,model_ver1_MarkEffect.AddBattlePoint];
+model_ver1_MarkEffect.__constructs__ = [model_ver1_MarkEffect.Text,model_ver1_MarkEffect.AddBattlePoint,model_ver1_MarkEffect.AttackSpeed];
 var model_ver1_Mark = function(id,type,cause) {
 	this.__uid = hxbit_Serializer.SEQ << 24 | ++hxbit_Serializer.UID;
 	this.cause = model_ver1_MarkCause.Pending;
@@ -29741,7 +29809,7 @@ $hxClasses["model.ver1.ICardProto"] = model_ver1_ICardProto;
 model_ver1_ICardProto.__name__ = "model.ver1.ICardProto";
 model_ver1_ICardProto.__isInterface__ = true;
 model_ver1_ICardProto.prototype = {
-	getMarks: null
+	getTexts: null
 	,__class__: model_ver1_ICardProto
 };
 var model_ver1_AbstractCardProto = function() { };
@@ -29749,20 +29817,11 @@ $hxClasses["model.ver1.AbstractCardProto"] = model_ver1_AbstractCardProto;
 model_ver1_AbstractCardProto.__name__ = "model.ver1.AbstractCardProto";
 model_ver1_AbstractCardProto.__interfaces__ = [model_ver1_ICardProto];
 model_ver1_AbstractCardProto.prototype = {
-	getMarks: function(ctx,runtime) {
+	getTexts: function(ctx,runtime) {
 		return [];
 	}
 	,__class__: model_ver1_AbstractCardProto
 };
-var model_ver1_CardTextFirstAttack = function() {
-	model_ver1_CardText.call(this,"CardTextFirstAttack");
-};
-$hxClasses["model.ver1.CardTextFirstAttack"] = model_ver1_CardTextFirstAttack;
-model_ver1_CardTextFirstAttack.__name__ = "model.ver1.CardTextFirstAttack";
-model_ver1_CardTextFirstAttack.__super__ = model_ver1_CardText;
-model_ver1_CardTextFirstAttack.prototype = $extend(model_ver1_CardText.prototype,{
-	__class__: model_ver1_CardTextFirstAttack
-});
 var model_ver1_RemoveFirstAttackWhenTurnEnd = function() {
 	model_ver1_CardText.call(this,"回合結束時刪除速攻");
 };
@@ -29770,7 +29829,10 @@ $hxClasses["model.ver1.RemoveFirstAttackWhenTurnEnd"] = model_ver1_RemoveFirstAt
 model_ver1_RemoveFirstAttackWhenTurnEnd.__name__ = "model.ver1.RemoveFirstAttackWhenTurnEnd";
 model_ver1_RemoveFirstAttackWhenTurnEnd.__super__ = model_ver1_CardText;
 model_ver1_RemoveFirstAttackWhenTurnEnd.prototype = $extend(model_ver1_CardText.prototype,{
-	onEvent: function(ctx,runtime) {
+	getEffect: function(ctx,runtime) {
+		return [model_ver1_MarkEffect.AttackSpeed(runtime.getCardId(),1)];
+	}
+	,onEvent: function(ctx,runtime) {
 		var _g = ctx.phase;
 		if(_g._hx_index == 1) {
 			if(_g.str == "回合結束時") {
@@ -29792,7 +29854,7 @@ model_ver1__$TestCardProto_CardProto1Text1Require1MarkFirstAttack.__name__ = "mo
 model_ver1__$TestCardProto_CardProto1Text1Require1MarkFirstAttack.__super__ = model_ver1_Mark;
 model_ver1__$TestCardProto_CardProto1Text1Require1MarkFirstAttack.prototype = $extend(model_ver1_Mark.prototype,{
 	getEffect: function(ctx,runtime) {
-		return [model_ver1_MarkEffect.Text(new model_ver1_CardTextFirstAttack()),model_ver1_MarkEffect.Text(new model_ver1_RemoveFirstAttackWhenTurnEnd())];
+		return [model_ver1_MarkEffect.Text(new model_ver1_RemoveFirstAttackWhenTurnEnd())];
 	}
 	,getCLID: function() {
 		return model_ver1__$TestCardProto_CardProto1Text1Require1MarkFirstAttack.__clid;
@@ -29808,7 +29870,7 @@ model_ver1_CardProto1Text1Require1.__name__ = "model.ver1.CardProto1Text1Require
 model_ver1_CardProto1Text1Require1.__super__ = model_ver1_RequireUserSelect;
 model_ver1_CardProto1Text1Require1.prototype = $extend(model_ver1_RequireUserSelect.prototype,{
 	action: function(ctx,runtime) {
-		console.log("src/model/ver1/TestCardProto.hx:44:","支付");
+		console.log("src/model/ver1/TestCardProto.hx:48:","支付");
 	}
 	,__class__: model_ver1_CardProto1Text1Require1
 });
@@ -29828,36 +29890,18 @@ model_ver1_CardProto1Text1.prototype = $extend(model_ver1_CardText.prototype,{
 	}
 	,__class__: model_ver1_CardProto1Text1
 });
-var model_ver1_Mark1 = function(ctx,runtime) {
-	model_ver1_Mark.call(this,"獲得回合結束前速攻",model_ver1_MarkType.AttachCard(runtime.getCardId()),model_ver1_MarkCause.CardText(runtime.getCardId()));
+var model_ver1_CardProto1Text2 = function() {
+	model_ver1_CardText.call(this,"+x/+x/+x. x為機體數量");
 };
-$hxClasses["model.ver1.Mark1"] = model_ver1_Mark1;
-model_ver1_Mark1.__name__ = "model.ver1.Mark1";
-model_ver1_Mark1.__super__ = model_ver1_Mark;
-model_ver1_Mark1.prototype = $extend(model_ver1_Mark.prototype,{
-	getEffect: function(ctx,runtime) {
-		return [model_ver1_MarkEffect.Text(new model_ver1_CardProto1Text1())];
-	}
-	,getCLID: function() {
-		return model_ver1_Mark1.__clid;
-	}
-	,__class__: model_ver1_Mark1
-});
-var model_ver1_Mark2 = function(ctx,runtime) {
-	model_ver1_Mark.call(this,"+x/+x/+x. x為機體數量",model_ver1_MarkType.AttachCard(runtime.getCardId()),model_ver1_MarkCause.CardText(runtime.getCardId()));
-};
-$hxClasses["model.ver1.Mark2"] = model_ver1_Mark2;
-model_ver1_Mark2.__name__ = "model.ver1.Mark2";
-model_ver1_Mark2.__super__ = model_ver1_Mark;
-model_ver1_Mark2.prototype = $extend(model_ver1_Mark.prototype,{
+$hxClasses["model.ver1.CardProto1Text2"] = model_ver1_CardProto1Text2;
+model_ver1_CardProto1Text2.__name__ = "model.ver1.CardProto1Text2";
+model_ver1_CardProto1Text2.__super__ = model_ver1_CardText;
+model_ver1_CardProto1Text2.prototype = $extend(model_ver1_CardText.prototype,{
 	getEffect: function(ctx,runtime) {
 		var x = 3;
 		return [model_ver1_MarkEffect.AddBattlePoint(runtime.getCardId(),{ v1 : x, v2 : x, v3 : x})];
 	}
-	,getCLID: function() {
-		return model_ver1_Mark2.__clid;
-	}
-	,__class__: model_ver1_Mark2
+	,__class__: model_ver1_CardProto1Text2
 });
 var model_ver1_CardProto1 = function() {
 };
@@ -29865,8 +29909,8 @@ $hxClasses["model.ver1.CardProto1"] = model_ver1_CardProto1;
 model_ver1_CardProto1.__name__ = "model.ver1.CardProto1";
 model_ver1_CardProto1.__super__ = model_ver1_AbstractCardProto;
 model_ver1_CardProto1.prototype = $extend(model_ver1_AbstractCardProto.prototype,{
-	getMarks: function(ctx,runtime) {
-		return [new model_ver1_Mark1(ctx,runtime),new model_ver1_Mark2(ctx,runtime)];
+	getTexts: function(ctx,runtime) {
+		return [new model_ver1_CardProto1Text1(),new model_ver1_CardProto1Text2()];
 	}
 	,__class__: model_ver1_CardProto1
 });
@@ -34696,8 +34740,6 @@ model_ver1_Table.__clid = hxbit_Serializer.registerClass(model_ver1_Table);
 model_ver1_Context.__clid = hxbit_Serializer.registerClass(model_ver1_Context);
 model_ver1_Mark.__clid = hxbit_Serializer.registerClass(model_ver1_Mark);
 model_ver1__$TestCardProto_CardProto1Text1Require1MarkFirstAttack.__clid = hxbit_Serializer.registerClass(model_ver1__$TestCardProto_CardProto1Text1Require1MarkFirstAttack);
-model_ver1_Mark1.__clid = hxbit_Serializer.registerClass(model_ver1_Mark1);
-model_ver1_Mark2.__clid = hxbit_Serializer.registerClass(model_ver1_Mark2);
 var model_ver1_TestCardProto_CardProto1Text1Require1MarkFirstAttackId = "CardProto1Text1Require1MarkFirstAttackId";
 tweenx909_EventX.PLAY = "play";
 tweenx909_EventX.DELAY = "delay";

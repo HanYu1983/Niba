@@ -4,6 +4,13 @@ import viewModel.IViewModel;
 import model.ver1.Define;
 import model.ver1.TestCardProto;
 
+// switch Type.typeof(markEffect) {
+// 	case TClass(cls) if (cls == Any):
+// 		true;
+// 	case _:
+// 		false;
+// }
+
 class SimpleRuntime implements ExecuteRuntime {
 	public function new() {}
 
@@ -19,37 +26,24 @@ class Game implements hxbit.Serializable {
 	public function new() {}
 
 	public function test() {
+		trace("============= test =============");
 		final cardProto = new CardProto1();
 		final runtime = new SimpleRuntime();
-		// final texts = cardProto.getTexts(ctx, runtime);
-		// for (text in texts) {
-		// 	final reqs = text.getRequires(ctx, runtime);
-		// 	for (req in reqs) {
-		// 		req.action(ctx, runtime);
-		// 	}
-		// }
-		// 所有標記
-		final marks = cardProto.getMarks(ctx, runtime);
-		trace(marks);
-		// 
-		final texts = [
-			for (mark in marks)
-				for (markEffect in mark.getEffect(ctx, runtime)) {
-					switch markEffect {
-						case Text(text):
-							text;
-						case _:
-							null;
+		var texts = {
+			var cardTexts = cardProto.getTexts(ctx, runtime);
+			var attachTexts:Array<CardText> = cast [
+				for (mark in ctx.marks)
+					for (markEffect in mark.getEffect(ctx, runtime)) {
+						switch markEffect {
+							case Text(text):
+								text;
+							case _:
+								null;
+						}
 					}
-				}
-			// switch Type.typeof(markEffect) {
-			// 	case TClass(cls) if (cls == Any):
-			// 		true;
-			// 	case _:
-			// 		false;
-			// }
-		];
-		trace(texts);
+			].filter(a -> a != null);
+			cardTexts.concat(attachTexts);
+		}
 		for (text in texts) {
 			if (text == null) {
 				continue;
@@ -58,30 +52,127 @@ class Game implements hxbit.Serializable {
 			for (req in reqs) {
 				req.action(ctx, runtime);
 			}
+			trace("改變狀態");
 			text.action(ctx, runtime);
 		}
-		// 常駐增強內文
-		final bonusList = [
-			for (mark in marks)
-				for (markEffect in mark.getEffect(ctx, runtime)) {
-					switch markEffect {
-						case AddBattlePoint(cardId, battlePoint):
-							{
-								cardId: cardId,
-								battlePoint: battlePoint
-							};
-						case _:
-							null;
+		trace("重取得最新狀態");
+		texts = {
+			var cardTexts = cardProto.getTexts(ctx, runtime);
+			var attachTexts:Array<CardText> = cast [
+				for (mark in ctx.marks)
+					for (markEffect in mark.getEffect(ctx, runtime)) {
+						switch markEffect {
+							case Text(text):
+								text;
+							case _:
+								null;
+						}
 					}
+			].filter(a -> a != null);
+			cardTexts.concat(attachTexts);
+		}
+		final markEffects = [
+			for (mark in ctx.marks)
+				for (markEffect in mark.getEffect(ctx, runtime))
+					markEffect
+		].concat([
+			for (text in texts)
+				for (markEffect in text.getEffect(ctx, runtime))
+					markEffect
+		]);
+		trace("常駐增強內文");
+		final bonusList = [
+			for (markEffect in markEffects) {
+				switch markEffect {
+					case AddBattlePoint(cardId, battlePoint):
+						{
+							cardId: cardId,
+							battlePoint: battlePoint
+						};
+					case _:
+						null;
 				}
+			}
 		];
-		for(bonus in bonusList){
+		for (bonus in bonusList) {
 			if (bonus == null) {
 				continue;
 			}
 			trace(bonus.cardId);
 			trace(bonus.battlePoint);
 		}
+		trace("速攻");
+		final attackSpeedList = [
+			for (markEffect in markEffects) {
+				switch markEffect {
+					case AttackSpeed(cardId, speed):
+						{
+							cardId: cardId,
+							speed: speed
+						};
+					case _:
+						null;
+				}
+			}
+		];
+		for (bonus in attackSpeedList) {
+			if (bonus == null) {
+				continue;
+			}
+			trace(bonus.cardId);
+			trace(bonus.speed);
+		}
+
+		// 所有標記
+		// final marks = cardProto.getMarks(ctx, runtime);
+		// trace(marks);
+		// //
+		// final texts = [
+		// 	for (mark in marks)
+		// 		for (markEffect in mark.getEffect(ctx, runtime)) {
+		// 			switch markEffect {
+		// 				case Text(text):
+		// 					text;
+		// 				case _:
+		// 					null;
+		// 			}
+		// 		}
+
+		// ];
+		// trace(texts);
+		// for (text in texts) {
+		// 	if (text == null) {
+		// 		continue;
+		// 	}
+		// 	final reqs = text.getRequires(ctx, runtime);
+		// 	for (req in reqs) {
+		// 		req.action(ctx, runtime);
+		// 	}
+		// 	text.action(ctx, runtime);
+		// }
+		// // 常駐增強內文
+		// final bonusList = [
+		// 	for (mark in marks)
+		// 		for (markEffect in mark.getEffect(ctx, runtime)) {
+		// 			switch markEffect {
+		// 				case AddBattlePoint(cardId, battlePoint):
+		// 					{
+		// 						cardId: cardId,
+		// 						battlePoint: battlePoint
+		// 					};
+		// 				case _:
+		// 					null;
+		// 			}
+		// 		}
+		// ];
+		// for(bonus in bonusList){
+		// 	if (bonus == null) {
+		// 		continue;
+		// 	}
+		// 	trace(bonus.cardId);
+		// 	trace(bonus.battlePoint);
+		// }
+		trace("==========================");
 	}
 
 	public function getMemonto():String {
@@ -103,6 +194,7 @@ class TestModel extends DefaultViewModel {
 	public override function getGame():GameModel {
 		final game = new Game();
 		game.test();
+		trace(game.ctx);
 
 		final loadGame = Game.ofMemonto(game.getMemonto());
 		loadGame.test();

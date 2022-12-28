@@ -94,6 +94,10 @@ class CardText {
 
 	public final id:String;
 
+	public function getEffect(ctx:Context, runtime:ExecuteRuntime):Array<MarkEffect> {
+		return [];
+	}
+
 	public function getRequires(ctx:Context, runtime:ExecuteRuntime):Array<Require> {
 		return [];
 	}
@@ -112,12 +116,13 @@ enum MarkType {
 enum MarkCause {
 	Pending;
 	CardEffect(fromCardId:String);
-	CardText(cardId:String);
+	//CardText(cardId:String);
 }
 
 enum MarkEffect {
 	Text(text:CardText);
 	AddBattlePoint(cardId:String, battlePoint:BattlePoint);
+	AttackSpeed(cardId:String, speed: Int);
 }
 
 class Mark implements hxbit.Serializable {
@@ -142,18 +147,18 @@ interface ExecuteRuntime {
 
 interface ICardProto {
 	// function getMarkEffect(mark:Mark):Array<MarkEffect>;
-	// function getTexts(ctx:Context, runtime:ExecuteRuntime):Array<CardText>;
-	function getMarks(ctx:Context, runtime:ExecuteRuntime):Array<Mark>;
+	function getTexts(ctx:Context, runtime:ExecuteRuntime):Array<CardText>;
+	//function getMarks(ctx:Context, runtime:ExecuteRuntime):Array<Mark>;
 }
 
 class AbstractCardProto implements ICardProto {
 	// public function getMarkEffect(mark:Mark):Array<MarkEffect> {
 	// 	return [];
 	// }
-	// public function getTexts(ctx:Context, runtime:ExecuteRuntime):Array<CardText> {
-	// 	return [];
-	// }
-	public function getMarks(ctx:Context, runtime:ExecuteRuntime):Array<Mark> {
+	public function getTexts(ctx:Context, runtime:ExecuteRuntime):Array<CardText> {
 		return [];
 	}
+	// public function getMarks(ctx:Context, runtime:ExecuteRuntime):Array<Mark> {
+	// 	return [];
+	// }
 }

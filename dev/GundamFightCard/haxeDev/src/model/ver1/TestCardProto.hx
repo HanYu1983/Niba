@@ -4,15 +4,19 @@ import model.ver1.Define;
 
 private final CardProto1Text1Require1MarkFirstAttackId = "CardProto1Text1Require1MarkFirstAttackId";
 
-class CardTextFirstAttack extends CardText {
-	public function new() {
-		super("CardTextFirstAttack");
-	}
-}
+// class CardTextFirstAttack extends CardText {
+// 	public function new() {
+// 		super("CardTextFirstAttack");
+// 	}
+// }
 
 class RemoveFirstAttackWhenTurnEnd extends CardText {
 	public function new() {
 		super("回合結束時刪除速攻");
+	}
+
+	public override function getEffect(ctx:Context, runtime:ExecuteRuntime):Array<MarkEffect> {
+		return [AttackSpeed(runtime.getCardId(), 1)];
 	}
 
 	public override function onEvent(ctx:Context, runtime:ExecuteRuntime):Void {
@@ -30,7 +34,7 @@ private class CardProto1Text1Require1MarkFirstAttack extends Mark {
 	}
 
 	public override function getEffect(ctx:Context, runtime:ExecuteRuntime):Array<MarkEffect> {
-		return [Text(new CardTextFirstAttack()), Text(new RemoveFirstAttackWhenTurnEnd())];
+		return [Text(new RemoveFirstAttackWhenTurnEnd())];
 	}
 }
 
@@ -60,19 +64,9 @@ class CardProto1Text1 extends CardText {
 	}
 }
 
-class Mark1 extends Mark {
-	public function new(ctx:Context, runtime:ExecuteRuntime) {
-		super("獲得回合結束前速攻", AttachCard(runtime.getCardId()), CardText(runtime.getCardId()));
-	}
-
-	public override function getEffect(ctx:Context, runtime:ExecuteRuntime):Array<MarkEffect> {
-		return [Text(new CardProto1Text1())];
-	}
-}
-
-class Mark2 extends Mark {
-	public function new(ctx:Context, runtime:ExecuteRuntime) {
-		super("+x/+x/+x. x為機體數量", AttachCard(runtime.getCardId()), CardText(runtime.getCardId()));
+class CardProto1Text2 extends CardText {
+	public function new() {
+		super("+x/+x/+x. x為機體數量");
 	}
 
 	public override function getEffect(ctx:Context, runtime:ExecuteRuntime):Array<MarkEffect> {
@@ -80,6 +74,24 @@ class Mark2 extends Mark {
 		return [AddBattlePoint(runtime.getCardId(), {v1: x, v2: x, v3: x})];
 	}
 }
+
+// class Mark1 extends Mark {
+// 	public function new(ctx:Context, runtime:ExecuteRuntime) {
+// 		super("獲得回合結束前速攻", AttachCard(runtime.getCardId()), CardText(runtime.getCardId()));
+// 	}
+// 	public override function getEffect(ctx:Context, runtime:ExecuteRuntime):Array<MarkEffect> {
+// 		return [Text(new CardProto1Text1())];
+// 	}
+// }
+// class Mark2 extends Mark {
+// 	public function new(ctx:Context, runtime:ExecuteRuntime) {
+// 		super("+x/+x/+x. x為機體數量", AttachCard(runtime.getCardId()), CardText(runtime.getCardId()));
+// 	}
+// 	public override function getEffect(ctx:Context, runtime:ExecuteRuntime):Array<MarkEffect> {
+// 		final x = 3;
+// 		return [AddBattlePoint(runtime.getCardId(), {v1: x, v2: x, v3: x})];
+// 	}
+// }
 
 class CardProto1 extends AbstractCardProto {
 	public function new() {}
@@ -92,11 +104,11 @@ class CardProto1 extends AbstractCardProto {
 	// 			[];
 	// 	}
 	// }
-	// public override function getTexts(ctx:Context, runtime:ExecuteRuntime):Array<CardText> {
-	// 	return [new CardProto1Text1()];
-	// }
-
-	public override function getMarks(ctx:Context, runtime:ExecuteRuntime):Array<Mark> {
-		return [new Mark1(ctx, runtime), new Mark2(ctx, runtime)];
+	public override function getTexts(ctx:Context, runtime:ExecuteRuntime):Array<CardText> {
+		return [new CardProto1Text1(), new CardProto1Text2()];
 	}
+
+	// public override function getMarks(ctx:Context, runtime:ExecuteRuntime):Array<Mark> {
+	// 	return [new Mark1(ctx, runtime), new Mark2(ctx, runtime)];
+	// }
 }
