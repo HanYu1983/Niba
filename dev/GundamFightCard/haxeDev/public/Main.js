@@ -6818,6 +6818,11 @@ haxe_ds_ObjectMap.prototype = {
 	}
 	,__class__: haxe_ds_ObjectMap
 };
+var haxe_ds_Option = $hxEnums["haxe.ds.Option"] = { __ename__:true,__constructs__:null
+	,Some: ($_=function(v) { return {_hx_index:0,v:v,__enum__:"haxe.ds.Option",toString:$estr}; },$_._hx_name="Some",$_.__params__ = ["v"],$_)
+	,None: {_hx_name:"None",_hx_index:1,__enum__:"haxe.ds.Option",toString:$estr}
+};
+haxe_ds_Option.__constructs__ = [haxe_ds_Option.Some,haxe_ds_Option.None];
 var haxe_ds_StringMap = function() {
 	this.h = Object.create(null);
 };
@@ -27645,6 +27650,79 @@ hxbit_StructSerializable.prototype = {
 	,customUnserialize: null
 	,__class__: hxbit_StructSerializable
 };
+var hxbit_enumSer_Haxe_$ds_$Option = function() { };
+$hxClasses["hxbit.enumSer.Haxe_ds_Option"] = hxbit_enumSer_Haxe_$ds_$Option;
+hxbit_enumSer_Haxe_$ds_$Option.__name__ = "hxbit.enumSer.Haxe_ds_Option";
+hxbit_enumSer_Haxe_$ds_$Option.doSerialize = function(ctx,v) {
+	if(v == null) {
+		ctx.out.addByte(0);
+	} else {
+		switch(v._hx_index) {
+		case 0:
+			var v1 = v.v;
+			ctx.out.addByte(1);
+			if(v1 == null) {
+				ctx.out.addByte(0);
+			} else {
+				var b = haxe_io_Bytes.ofString(v1);
+				var v = b.length + 1;
+				if(v >= 0 && v < 128) {
+					ctx.out.addByte(v);
+				} else {
+					ctx.out.addByte(128);
+					ctx.out.addInt32(v);
+				}
+				ctx.out.add(b);
+			}
+			break;
+		case 1:
+			ctx.out.addByte(2);
+			break;
+		}
+	}
+};
+hxbit_enumSer_Haxe_$ds_$Option.doUnserialize = function(ctx) {
+	var b = ctx.input.b[ctx.inPos++];
+	if(b == 0) {
+		return null;
+	}
+	switch(b) {
+	case 1:
+		var _v;
+		var v = ctx.input.b[ctx.inPos++];
+		if(v == 128) {
+			v = ctx.input.getInt32(ctx.inPos);
+			ctx.inPos += 4;
+		}
+		var len = v;
+		if(len == 0) {
+			_v = null;
+		} else {
+			--len;
+			var s = ctx.input.getString(ctx.inPos,len);
+			ctx.inPos += len;
+			_v = s;
+		}
+		return haxe_ds_Option.Some(_v);
+	case 2:
+		return haxe_ds_Option.None;
+	default:
+		throw haxe_Exception.thrown("Invalid enum index " + b);
+	}
+};
+hxbit_enumSer_Haxe_$ds_$Option.getSchema = function() {
+	var s = new hxbit_Schema();
+	var s1 = s.fieldsTypes;
+	var _g = [];
+	var v;
+	var t = hxbit_PropTypeDesc.PString;
+	_g.push({ name : "", type : t, opt : false});
+	s1.push(hxbit_PropTypeDesc.PObj(_g));
+	s.fieldsNames.push("Some");
+	s.fieldsTypes.push(null);
+	s.fieldsNames.push("None");
+	return s;
+};
 var hxbit_enumSer_Hxbit_$PropTypeDesc = function() { };
 $hxClasses["hxbit.enumSer.Hxbit_PropTypeDesc"] = hxbit_enumSer_Hxbit_$PropTypeDesc;
 hxbit_enumSer_Hxbit_$PropTypeDesc.__name__ = "hxbit.enumSer.Hxbit_PropTypeDesc";
@@ -28638,9 +28716,9 @@ model_TestModel.prototype = $extend(viewModel_DefaultViewModel.prototype,{
 	}
 	,__class__: model_TestModel
 });
-var model_ver1_Player = function() {
+var model_ver1_Player = function(id) {
 	this.__uid = hxbit_Serializer.SEQ << 24 | ++hxbit_Serializer.UID;
-	this.id = model_ver1_Define_PENDING_STRING;
+	this.id = id;
 };
 $hxClasses["model.ver1.Player"] = model_ver1_Player;
 model_ver1_Player.__name__ = "model.ver1.Player";
@@ -28675,7 +28753,6 @@ model_ver1_Player.prototype = {
 		return schema;
 	}
 	,unserializeInit: function() {
-		this.id = model_ver1_Define_PENDING_STRING;
 	}
 	,unserialize: function(__ctx) {
 		var v = __ctx.input.b[__ctx.inPos++];
@@ -28697,12 +28774,12 @@ model_ver1_Player.prototype = {
 	}
 	,__class__: model_ver1_Player
 };
-var model_ver1_Card = function() {
+var model_ver1_Card = function(id) {
 	this.__uid = hxbit_Serializer.SEQ << 24 | ++hxbit_Serializer.UID;
-	this.protoId = model_ver1_Define_PENDING_STRING;
+	this.protoId = haxe_ds_Option.None;
 	this.isTap = false;
 	this.isFaceUp = false;
-	this.id = model_ver1_Define_PENDING_STRING;
+	this.id = id;
 };
 $hxClasses["model.ver1.Card"] = model_ver1_Card;
 model_ver1_Card.__name__ = "model.ver1.Card";
@@ -28733,20 +28810,7 @@ model_ver1_Card.prototype = {
 		}
 		__ctx.out.addByte(this.isFaceUp ? 1 : 0);
 		__ctx.out.addByte(this.isTap ? 1 : 0);
-		var s = this.protoId;
-		if(s == null) {
-			__ctx.out.addByte(0);
-		} else {
-			var b = haxe_io_Bytes.ofString(s);
-			var v = b.length + 1;
-			if(v >= 0 && v < 128) {
-				__ctx.out.addByte(v);
-			} else {
-				__ctx.out.addByte(128);
-				__ctx.out.addInt32(v);
-			}
-			__ctx.out.add(b);
-		}
+		hxbit_enumSer_Haxe_$ds_$Option.doSerialize(__ctx,this.protoId);
 	}
 	,getSerializeSchema: function() {
 		var schema = new hxbit_Schema();
@@ -28757,15 +28821,14 @@ model_ver1_Card.prototype = {
 		schema.fieldsNames.push("isTap");
 		schema.fieldsTypes.push(hxbit_PropTypeDesc.PBool);
 		schema.fieldsNames.push("protoId");
-		schema.fieldsTypes.push(hxbit_PropTypeDesc.PString);
+		schema.fieldsTypes.push(hxbit_PropTypeDesc.PEnum("haxe.ds.Option"));
 		schema.isFinal = hxbit_Serializer.isClassFinal(model_ver1_Card.__clid);
 		return schema;
 	}
 	,unserializeInit: function() {
-		this.id = model_ver1_Define_PENDING_STRING;
 		this.isFaceUp = false;
 		this.isTap = false;
-		this.protoId = model_ver1_Define_PENDING_STRING;
+		this.protoId = haxe_ds_Option.None;
 	}
 	,unserialize: function(__ctx) {
 		var v = __ctx.input.b[__ctx.inPos++];
@@ -28786,29 +28849,15 @@ model_ver1_Card.prototype = {
 		this.id = tmp;
 		this.isFaceUp = __ctx.input.b[__ctx.inPos++] != 0;
 		this.isTap = __ctx.input.b[__ctx.inPos++] != 0;
-		var v = __ctx.input.b[__ctx.inPos++];
-		if(v == 128) {
-			v = __ctx.input.getInt32(__ctx.inPos);
-			__ctx.inPos += 4;
-		}
-		var len = v;
-		var tmp;
-		if(len == 0) {
-			tmp = null;
-		} else {
-			--len;
-			var s = __ctx.input.getString(__ctx.inPos,len);
-			__ctx.inPos += len;
-			tmp = s;
-		}
-		this.protoId = tmp;
+		var __e = hxbit_enumSer_Haxe_$ds_$Option.doUnserialize(__ctx);
+		this.protoId = __e;
 	}
 	,__class__: model_ver1_Card
 };
-var model_ver1_CardStack = function() {
+var model_ver1_CardStack = function(id) {
 	this.__uid = hxbit_Serializer.SEQ << 24 | ++hxbit_Serializer.UID;
 	this.cardIds = [];
-	this.id = model_ver1_Define_PENDING_STRING;
+	this.id = id;
 };
 $hxClasses["model.ver1.CardStack"] = model_ver1_CardStack;
 model_ver1_CardStack.__name__ = "model.ver1.CardStack";
@@ -28876,7 +28925,6 @@ model_ver1_CardStack.prototype = {
 		return schema;
 	}
 	,unserializeInit: function() {
-		this.id = model_ver1_Define_PENDING_STRING;
 		this.cardIds = [];
 	}
 	,unserialize: function(__ctx) {
@@ -29406,8 +29454,13 @@ model_ver1_Context.prototype = {
 	}
 	,__class__: model_ver1_Context
 };
-var model_ver1_Require = function() {
-	this.id = model_ver1_Define_PENDING_STRING;
+var model_ver1_RelativePlayer = $hxEnums["model.ver1.RelativePlayer"] = { __ename__:true,__constructs__:null
+	,You: {_hx_name:"You",_hx_index:0,__enum__:"model.ver1.RelativePlayer",toString:$estr}
+	,Opponent: {_hx_name:"Opponent",_hx_index:1,__enum__:"model.ver1.RelativePlayer",toString:$estr}
+};
+model_ver1_RelativePlayer.__constructs__ = [model_ver1_RelativePlayer.You,model_ver1_RelativePlayer.Opponent];
+var model_ver1_Require = function(id) {
+	this.id = id;
 };
 $hxClasses["model.ver1.Require"] = model_ver1_Require;
 model_ver1_Require.__name__ = "model.ver1.Require";
@@ -29417,10 +29470,10 @@ model_ver1_Require.prototype = {
 	}
 	,__class__: model_ver1_Require
 };
-var model_ver1_RequireUserSelect = function() {
-	this.responsePlayerId = model_ver1_Define_PENDING_STRING;
+var model_ver1_RequireUserSelect = function(id) {
+	this.responsePlayerId = model_ver1_RelativePlayer.You;
 	this.tips = [];
-	model_ver1_Require.call(this);
+	model_ver1_Require.call(this,id);
 };
 $hxClasses["model.ver1.RequireUserSelect"] = model_ver1_RequireUserSelect;
 model_ver1_RequireUserSelect.__name__ = "model.ver1.RequireUserSelect";
@@ -29430,8 +29483,8 @@ model_ver1_RequireUserSelect.prototype = $extend(model_ver1_Require.prototype,{
 	,responsePlayerId: null
 	,__class__: model_ver1_RequireUserSelect
 });
-var model_ver1_CardText = function() {
-	this.id = model_ver1_Define_PENDING_STRING;
+var model_ver1_CardText = function(id) {
+	this.id = id;
 };
 $hxClasses["model.ver1.CardText"] = model_ver1_CardText;
 model_ver1_CardText.__name__ = "model.ver1.CardText";
@@ -29454,11 +29507,11 @@ var model_ver1_MarkCause = $hxEnums["model.ver1.MarkCause"] = { __ename__:true,_
 	,CardEffect: ($_=function(cardId) { return {_hx_index:1,cardId:cardId,__enum__:"model.ver1.MarkCause",toString:$estr}; },$_._hx_name="CardEffect",$_.__params__ = ["cardId"],$_)
 };
 model_ver1_MarkCause.__constructs__ = [model_ver1_MarkCause.Pending,model_ver1_MarkCause.CardEffect];
-var model_ver1_Mark = function() {
+var model_ver1_Mark = function(id) {
 	this.__uid = hxbit_Serializer.SEQ << 24 | ++hxbit_Serializer.UID;
 	this.cause = model_ver1_MarkCause.Pending;
 	this.type = model_ver1_MarkType.Pending;
-	this.id = model_ver1_Define_PENDING_STRING;
+	this.id = id;
 };
 $hxClasses["model.ver1.Mark"] = model_ver1_Mark;
 model_ver1_Mark.__name__ = "model.ver1.Mark";
@@ -29501,7 +29554,6 @@ model_ver1_Mark.prototype = {
 		return schema;
 	}
 	,unserializeInit: function() {
-		this.id = model_ver1_Define_PENDING_STRING;
 		this.type = model_ver1_MarkType.Pending;
 		this.cause = model_ver1_MarkCause.Pending;
 	}
@@ -29556,18 +29608,15 @@ model_ver1_AbstractCardProto.prototype = {
 	,__class__: model_ver1_AbstractCardProto
 };
 var model_ver1_CardProto1Text1Require1 = function(ctx,runtime) {
-	model_ver1_RequireUserSelect.call(this);
-	this.id = "獲得回合結束前速攻";
+	model_ver1_RequireUserSelect.call(this,"獲得回合結束前速攻");
 	this.tips = ["0","1"];
-	this.responsePlayerId = "0";
 };
 $hxClasses["model.ver1.CardProto1Text1Require1"] = model_ver1_CardProto1Text1Require1;
 model_ver1_CardProto1Text1Require1.__name__ = "model.ver1.CardProto1Text1Require1";
 model_ver1_CardProto1Text1Require1.__super__ = model_ver1_RequireUserSelect;
 model_ver1_CardProto1Text1Require1.prototype = $extend(model_ver1_RequireUserSelect.prototype,{
 	action: function(ctx,runtime) {
-		var mark = new model_ver1_Mark();
-		mark.id = model_ver1_TestCardProto_CardProto1Text1Require1MarkFirstAttck;
+		var mark = new model_ver1_Mark(model_ver1_TestCardProto_CardProto1Text1Require1MarkFirstAttck);
 		mark.type = model_ver1_MarkType.AttachCard(runtime.getCardId());
 		mark.cause = model_ver1_MarkCause.CardEffect(runtime.getCardId());
 		ctx.marks.h[mark.id] = mark;
@@ -29575,7 +29624,7 @@ model_ver1_CardProto1Text1Require1.prototype = $extend(model_ver1_RequireUserSel
 	,__class__: model_ver1_CardProto1Text1Require1
 });
 var model_ver1_CardProto1Text1 = function() {
-	model_ver1_CardText.call(this);
+	model_ver1_CardText.call(this,"CardProto1Text1");
 };
 $hxClasses["model.ver1.CardProto1Text1"] = model_ver1_CardProto1Text1;
 model_ver1_CardProto1Text1.__name__ = "model.ver1.CardProto1Text1";
@@ -29587,8 +29636,7 @@ model_ver1_CardProto1Text1.prototype = $extend(model_ver1_CardText.prototype,{
 	,__class__: model_ver1_CardProto1Text1
 });
 var model_ver1_CardProto1Text1_$1 = function() {
-	model_ver1_CardText.call(this);
-	this.id = "速攻";
+	model_ver1_CardText.call(this,"速攻");
 };
 $hxClasses["model.ver1.CardProto1Text1_1"] = model_ver1_CardProto1Text1_$1;
 model_ver1_CardProto1Text1_$1.__name__ = "model.ver1.CardProto1Text1_1";
@@ -34451,7 +34499,7 @@ model_ver1_CardStack.__clid = hxbit_Serializer.registerClass(model_ver1_CardStac
 model_ver1_Table.__clid = hxbit_Serializer.registerClass(model_ver1_Table);
 model_ver1_Context.__clid = hxbit_Serializer.registerClass(model_ver1_Context);
 model_ver1_Mark.__clid = hxbit_Serializer.registerClass(model_ver1_Mark);
-var model_ver1_Define_PENDING_STRING = "";
+var model_ver1_Define_PENDING_STRING = "unknown";
 var model_ver1_TestCardProto_CardProto1Text1Require1MarkFirstAttck = "CardProto1Text1Require1MarkFirstAttck";
 tweenx909_EventX.PLAY = "play";
 tweenx909_EventX.DELAY = "delay";

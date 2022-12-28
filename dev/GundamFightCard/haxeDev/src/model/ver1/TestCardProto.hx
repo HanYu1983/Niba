@@ -6,15 +6,12 @@ private final CardProto1Text1Require1MarkFirstAttck = "CardProto1Text1Require1Ma
 
 class CardProto1Text1Require1 extends RequireUserSelect<String> {
 	public function new(ctx:Context, runtime:ExecuteRuntime) {
-		super();
-		this.id = "獲得回合結束前速攻";
+		super("獲得回合結束前速攻");
 		this.tips = ["0", "1"];
-		this.responsePlayerId = "0";
 	}
 
 	public override function action(ctx:Context, runtime:ExecuteRuntime):Void {
-		final mark = new Mark();
-		mark.id = CardProto1Text1Require1MarkFirstAttck;
+		final mark = new Mark(CardProto1Text1Require1MarkFirstAttck);
 		mark.type = AttachCard(runtime.getCardId());
 		mark.cause = CardEffect(runtime.getCardId());
 		ctx.marks[mark.id] = mark;
@@ -22,7 +19,9 @@ class CardProto1Text1Require1 extends RequireUserSelect<String> {
 }
 
 class CardProto1Text1 extends CardText {
-	public function new() {}
+	public function new() {
+        super("CardProto1Text1");
+    }
 
 	public override function getRequires(ctx:Context, runtime:ExecuteRuntime):Array<Require> {
 		return [new CardProto1Text1Require1(ctx, runtime)];
@@ -31,7 +30,7 @@ class CardProto1Text1 extends CardText {
 
 class CardProto1Text1_1 extends CardText {
 	public function new() {
-		this.id = "速攻";
+        super("速攻");
 	}
 
 	public override function onEvent(ctx:Context, runtime:ExecuteRuntime):Void {

@@ -1,32 +1,40 @@
 package model.ver1;
 
-final PENDING_STRING = "";
+import haxe.ds.Option;
+
+final PENDING_STRING = "unknown";
 
 // 實作hxbit.Serializable這個介面後並使用了@:s
 // @:nullSafety就會出錯
 // 因為不能使用Null<Type>，改使用PENDING_STRING用來判斷是否有設值(null的替代品)
 class Player implements hxbit.Serializable {
-	public function new() {}
+	public function new(id:String) {
+		this.id = id;
+	}
 
 	// @:s不能作用在interface
 	// 不能用final
 	// 不支援巢狀typedef
-	@:s public var id = PENDING_STRING;
+	@:s public var id:String;
 }
 
 class Card implements hxbit.Serializable {
-	public function new() {}
+	public function new(id:String) {
+		this.id = id;
+	}
 
-	@:s public var id = PENDING_STRING;
+	@:s public var id:String;
 	@:s public var isFaceUp = false;
 	@:s public var isTap = false;
-	@:s public var protoId = PENDING_STRING;
+	@:s public var protoId:Option<String> = None;
 }
 
 class CardStack implements hxbit.Serializable {
-	public function new() {}
+	public function new(id:String) {
+		this.id = id;
+	}
 
-	@:s public var id = PENDING_STRING;
+	@:s public var id:String;
 	@:s public var cardIds:Array<String> = [];
 }
 
@@ -58,25 +66,36 @@ typedef BattlePoint = {
 	v3:Int
 };
 
-class Require {
-	public function new() {}
+enum RelativePlayer {
+	You;
+	Opponent;
+}
 
-	public var id = PENDING_STRING;
+class Require {
+	public function new(id:String) {
+		this.id = id;
+	}
+
+	public final id:String;
 
 	public function action(ctx:Context, runtime:ExecuteRuntime):Void {}
 }
 
 class RequireUserSelect<T> extends Require {
-	public function new() {
-		super();
+	public function new(id:String) {
+		super(id);
 	}
 
 	public var tips:Array<T> = [];
-	public var responsePlayerId = PENDING_STRING;
+	public var responsePlayerId = RelativePlayer.You;
 }
 
 class CardText {
-	public var id = PENDING_STRING;
+	public function new(id:String) {
+		this.id = id;
+	}
+
+	public final id:String;
 
 	public function getRequires(ctx:Context, runtime:ExecuteRuntime):Array<Require> {
 		return [];
@@ -96,9 +115,11 @@ enum MarkCause {
 }
 
 class Mark implements hxbit.Serializable {
-	public function new() {}
+	public function new(id:String) {
+		this.id = id;
+	}
 
-	@:s public var id = PENDING_STRING;
+	@:s public var id:String;
 	@:s public var type = MarkType.Pending;
 	@:s public var cause = MarkCause.Pending;
 }
