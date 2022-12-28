@@ -11,3 +11,11 @@
     gradle init
     gradle test
     gradle runShadow
+
+# scala gradle dev
+
+    mkdir scalaDev
+    cd scalaDev
+    docker run --name dev-project4-scaladev -ti -p 8080:80 -v "$PWD":/home/gradle/project -w /home/gradle/project --add-host host.docker.internal:host-gateway gradle:latest bash
+    gradle init
+    gradle run
