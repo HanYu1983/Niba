@@ -2,7 +2,7 @@ package model;
 
 import viewModel.IViewModel;
 
-class Model implements IViewModel{
+class Model extends DefaultViewModel{
 	public function new() {}
 
 	private function createCard():CardModel {
@@ -23,13 +23,13 @@ class Model implements IViewModel{
 		}
 	}
 
-	public function getGame():GameModel {
+	public override function getGame():GameModel {
 		return {
 			players: [createPlayer(), createPlayer()]
 		};
 	}
 
-	public function previewPlayCard(id:String):PreviewPlayCardModel {
+	public override function previewPlayCard(id:String):PreviewPlayCardModel {
 		return {
 			success: false,
 			msg: 'should have xxxx',

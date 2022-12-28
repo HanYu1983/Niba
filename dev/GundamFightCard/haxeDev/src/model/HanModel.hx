@@ -51,10 +51,10 @@ private function toCardModel(app:App, card:Card):CardModel {
 }
 
 @:nullSafety
-class HanModel implements IViewModel {
+class HanModel extends DefaultViewModel {
 	public function new() {}
 
-	public function getGame():GameModel {
+	public override function getGame():GameModel {
 		final app = Native.getApp();
 		return {
 			players: app.players.map(player -> {
@@ -74,13 +74,5 @@ class HanModel implements IViewModel {
 				}
 			})
 		};
-	}
-
-	public function previewPlayCard(id:String):PreviewPlayCardModel {
-		return {
-			success: false,
-			msg: 'should have xxxx',
-			content: {}
-		}
 	}
 }
