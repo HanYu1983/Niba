@@ -27,6 +27,10 @@ class RequireUserSelectBattlePoint extends RequireUserSelect<BattlePoint> {
 }
 
 class TextConfig {
+	public function getId():String {
+		return "0";
+	}
+
 	public function getRequires(ctx:Context, runtime:ExecuteRuntime):Array<Require> {
 		return [];
 	}
@@ -105,13 +109,29 @@ class CardProto1Text1 extends TextConfig {
 	}
 }
 
+class CardProto1Text1_1 extends TextConfig {
+	public function new() {}
+
+	public override function getId():String {
+		return "速攻";
+	}
+
+	public override function onEvent(ctx:Context, runtime:ExecuteRuntime):Void {
+		switch ctx.phase {
+			case Test("回合結束時"):
+				ctx.marks.remove("回合結束前速攻");
+			default:
+		}
+	}
+}
+
 class CardProto1 extends AbstractCardProto {
 	public function new() {}
 
 	public override function getMarkEffect(mark:Mark):Array<MarkEffect> {
 		return switch mark.id {
 			case "回合結束前速攻":
-				[MarkEffect.Text(new CardProto1Text1())];
+				[MarkEffect.Text(new CardProto1Text1_1())];
 			default:
 				[];
 		}
@@ -153,6 +173,11 @@ class Table implements hxbit.Serializable {
 	@:s public var cardStacks:Map<String, CardStack> = [];
 }
 
+enum Phase {
+	Pending;
+	Test(str:String);
+}
+
 class Context implements hxbit.Serializable {
 	public function new() {}
 
@@ -160,6 +185,7 @@ class Context implements hxbit.Serializable {
 	@:s public var playersOrder:Array<String> = [];
 	@:s public var table = new Table();
 	@:s public var marks:Map<String, Mark> = [];
+	@:s public var phase:Phase = Pending;
 }
 
 class SimpleRuntime implements ExecuteRuntime {

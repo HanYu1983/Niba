@@ -28175,6 +28175,79 @@ hxbit_enumSer_Model_$MarkType.getSchema = function() {
 	s.fieldsNames.push("AttachCard");
 	return s;
 };
+var hxbit_enumSer_Model_$Phase = function() { };
+$hxClasses["hxbit.enumSer.Model_Phase"] = hxbit_enumSer_Model_$Phase;
+hxbit_enumSer_Model_$Phase.__name__ = "hxbit.enumSer.Model_Phase";
+hxbit_enumSer_Model_$Phase.doSerialize = function(ctx,v) {
+	if(v == null) {
+		ctx.out.addByte(0);
+	} else {
+		switch(v._hx_index) {
+		case 0:
+			ctx.out.addByte(1);
+			break;
+		case 1:
+			var str = v.str;
+			ctx.out.addByte(2);
+			if(str == null) {
+				ctx.out.addByte(0);
+			} else {
+				var b = haxe_io_Bytes.ofString(str);
+				var v = b.length + 1;
+				if(v >= 0 && v < 128) {
+					ctx.out.addByte(v);
+				} else {
+					ctx.out.addByte(128);
+					ctx.out.addInt32(v);
+				}
+				ctx.out.add(b);
+			}
+			break;
+		}
+	}
+};
+hxbit_enumSer_Model_$Phase.doUnserialize = function(ctx) {
+	var b = ctx.input.b[ctx.inPos++];
+	if(b == 0) {
+		return null;
+	}
+	switch(b) {
+	case 1:
+		return model_Phase.Pending;
+	case 2:
+		var _str;
+		var v = ctx.input.b[ctx.inPos++];
+		if(v == 128) {
+			v = ctx.input.getInt32(ctx.inPos);
+			ctx.inPos += 4;
+		}
+		var len = v;
+		if(len == 0) {
+			_str = null;
+		} else {
+			--len;
+			var s = ctx.input.getString(ctx.inPos,len);
+			ctx.inPos += len;
+			_str = s;
+		}
+		return model_Phase.Test(_str);
+	default:
+		throw haxe_Exception.thrown("Invalid enum index " + b);
+	}
+};
+hxbit_enumSer_Model_$Phase.getSchema = function() {
+	var s = new hxbit_Schema();
+	s.fieldsTypes.push(null);
+	s.fieldsNames.push("Pending");
+	var s1 = s.fieldsTypes;
+	var _g = [];
+	var v;
+	var t = hxbit_PropTypeDesc.PString;
+	_g.push({ name : "", type : t, opt : false});
+	s1.push(hxbit_PropTypeDesc.PObj(_g));
+	s.fieldsNames.push("Test");
+	return s;
+};
 var js_Boot = function() { };
 $hxClasses["js.Boot"] = js_Boot;
 js_Boot.__name__ = "js.Boot";
@@ -28469,7 +28542,10 @@ var model_TextConfig = function() { };
 $hxClasses["model.TextConfig"] = model_TextConfig;
 model_TextConfig.__name__ = "model.TextConfig";
 model_TextConfig.prototype = {
-	getRequires: function(ctx,runtime) {
+	getId: function() {
+		return "0";
+	}
+	,getRequires: function(ctx,runtime) {
 		return [];
 	}
 	,doRequire: function($require,ctx,runtime) {
@@ -28625,6 +28701,28 @@ model_CardProto1Text1.prototype = $extend(model_TextConfig.prototype,{
 	}
 	,__class__: model_CardProto1Text1
 });
+var model_CardProto1Text1_$1 = function() {
+};
+$hxClasses["model.CardProto1Text1_1"] = model_CardProto1Text1_$1;
+model_CardProto1Text1_$1.__name__ = "model.CardProto1Text1_1";
+model_CardProto1Text1_$1.__super__ = model_TextConfig;
+model_CardProto1Text1_$1.prototype = $extend(model_TextConfig.prototype,{
+	getId: function() {
+		return "速攻";
+	}
+	,onEvent: function(ctx,runtime) {
+		var _g = ctx.phase;
+		if(_g._hx_index == 1) {
+			if(_g.str == "回合結束時") {
+				var _this = ctx.marks;
+				if(Object.prototype.hasOwnProperty.call(_this.h,"回合結束前速攻")) {
+					delete(_this.h["回合結束前速攻"]);
+				}
+			}
+		}
+	}
+	,__class__: model_CardProto1Text1_$1
+});
 var model_CardProto1 = function() {
 };
 $hxClasses["model.CardProto1"] = model_CardProto1;
@@ -28633,7 +28731,7 @@ model_CardProto1.__super__ = model_AbstractCardProto;
 model_CardProto1.prototype = $extend(model_AbstractCardProto.prototype,{
 	getMarkEffect: function(mark) {
 		if(mark.id == "回合結束前速攻") {
-			return [model_MarkEffect.Text(new model_CardProto1Text1())];
+			return [model_MarkEffect.Text(new model_CardProto1Text1_$1())];
 		} else {
 			return [];
 		}
@@ -29129,8 +29227,14 @@ model_Table.prototype = {
 	}
 	,__class__: model_Table
 };
+var model_Phase = $hxEnums["model.Phase"] = { __ename__:true,__constructs__:null
+	,Pending: {_hx_name:"Pending",_hx_index:0,__enum__:"model.Phase",toString:$estr}
+	,Test: ($_=function(str) { return {_hx_index:1,str:str,__enum__:"model.Phase",toString:$estr}; },$_._hx_name="Test",$_.__params__ = ["str"],$_)
+};
+model_Phase.__constructs__ = [model_Phase.Pending,model_Phase.Test];
 var model_Context = function() {
 	this.__uid = hxbit_Serializer.SEQ << 24 | ++hxbit_Serializer.UID;
+	this.phase = model_Phase.Pending;
 	this.marks = new haxe_ds_StringMap();
 	this.table = new model_Table();
 	this.playersOrder = [];
@@ -29144,6 +29248,7 @@ model_Context.prototype = {
 	,playersOrder: null
 	,table: null
 	,marks: null
+	,phase: null
 	,__uid: null
 	,getCLID: function() {
 		return model_Context.__clid;
@@ -29264,6 +29369,7 @@ model_Context.prototype = {
 				__ctx.addKnownRef(a.h[k]);
 			}
 		}
+		hxbit_enumSer_Model_$Phase.doSerialize(__ctx,this.phase);
 	}
 	,getSerializeSchema: function() {
 		var schema = new hxbit_Schema();
@@ -29275,6 +29381,8 @@ model_Context.prototype = {
 		schema.fieldsTypes.push(hxbit_PropTypeDesc.PSerializable("model.Table"));
 		schema.fieldsNames.push("marks");
 		schema.fieldsTypes.push(hxbit_PropTypeDesc.PMap(hxbit_PropTypeDesc.PString,hxbit_PropTypeDesc.PSerializable("model.Mark")));
+		schema.fieldsNames.push("phase");
+		schema.fieldsTypes.push(hxbit_PropTypeDesc.PEnum("model.Phase"));
 		schema.isFinal = hxbit_Serializer.isClassFinal(model_Context.__clid);
 		return schema;
 	}
@@ -29283,6 +29391,7 @@ model_Context.prototype = {
 		this.playersOrder = [];
 		this.table = new model_Table();
 		this.marks = new haxe_ds_StringMap();
+		this.phase = model_Phase.Pending;
 	}
 	,unserialize: function(__ctx) {
 		var k0;
@@ -29394,6 +29503,8 @@ model_Context.prototype = {
 			tmp = m;
 		}
 		this.marks = tmp;
+		var __e = hxbit_enumSer_Model_$Phase.doUnserialize(__ctx);
+		this.phase = __e;
 	}
 	,__class__: model_Context
 };
@@ -29476,7 +29587,7 @@ model_TestModel.prototype = {
 		game.test();
 		var loadGame = model_Game.ofMemonto(game.getMemonto());
 		loadGame.test();
-		console.log("src/model/TestModel.hx:216:",loadGame.ctx);
+		console.log("src/model/TestModel.hx:242:",loadGame.ctx);
 		var h = loadGame.ctx.marks.h;
 		var _g_h = h;
 		var _g_keys = Object.keys(h);
@@ -29488,8 +29599,8 @@ model_TestModel.prototype = {
 			var _g1_value = _g_h[key];
 			var key1 = _g1_key;
 			var value = _g1_value;
-			console.log("src/model/TestModel.hx:218:",key1);
-			console.log("src/model/TestModel.hx:219:",value);
+			console.log("src/model/TestModel.hx:244:",key1);
+			console.log("src/model/TestModel.hx:245:",value);
 		}
 		return { players : []};
 	}
