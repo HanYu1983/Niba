@@ -58,6 +58,7 @@ class Context implements hxbit.Serializable {
 	@:s public var table = new Table();
 	@:s public var marks:Map<String, Mark> = [];
 	@:s public var phase:Phase = Pending;
+	@:s public var cardProtoPool:Map<String, AbstractCardProto> = [];
 }
 
 typedef BattlePoint = {
@@ -172,7 +173,7 @@ interface ICardProto {
 	// function getMarks(ctx:Context, runtime:ExecuteRuntime):Array<Mark>;
 }
 
-class AbstractCardProto implements ICardProto {
+class AbstractCardProto implements ICardProto implements hxbit.Serializable{
 	// public function getMarkEffect(mark:Mark):Array<MarkEffect> {
 	// 	return [];
 	// }
@@ -190,17 +191,33 @@ enum GColor {
 }
 
 // Alg
+@:nullSafety
+function registerCardProto(ctx:Context, key:String, proto:AbstractCardProto) {
+	ctx.cardProtoPool[key] = proto;
+}
+
+@:nullSafety
+function getCurrentCardProto(ctx:Context, key:String):ICardProto {
+	final obj = ctx.cardProtoPool[key];
+    if(obj == null){
+        return getCardProto(key);
+    }
+	return obj;
+}
+
+@:nullSafety
 function getUnitOfSetGroup(ctx:Context, cardId:String):Option<String> {
 	return None;
 }
 
+@:nullSafety
 function mapRuntimeText<T>(ctx:Context, mapFn:(runtime:ExecuteRuntime, text:CardText) -> T):Array<T> {
 	final runtime = new DefaultExecuteRuntime();
 	// 原始內文
 	final originReturn = [
 		for (card in ctx.table.cards) {
 			runtime.cardId = card.id;
-			for (text in getCardProto(card.protoId).getTexts(ctx, runtime)) {
+			for (text in getCurrentCardProto(ctx, card.protoId).getTexts(ctx, runtime)) {
 				mapFn(runtime, text);
 			}
 		}
@@ -209,7 +226,7 @@ function mapRuntimeText<T>(ctx:Context, mapFn:(runtime:ExecuteRuntime, text:Card
 	final originMarkEffects = [
 		for (card in ctx.table.cards) {
 			runtime.cardId = card.id;
-			for (text in getCardProto(card.protoId).getTexts(ctx, runtime)) {
+			for (text in getCurrentCardProto(ctx, card.protoId).getTexts(ctx, runtime)) {
 				for (effect in text.getEffect(ctx, runtime)) {
 					effect;
 				}

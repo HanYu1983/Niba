@@ -3,7 +3,7 @@ package model;
 import viewModel.IViewModel;
 import model.ver1.Define;
 import model.ver1.TestCardProto;
-import model.ver1.CardProto_179001_01A_CH_WT007R_white;
+import model.ver1.DataPool;
 
 // switch Type.typeof(markEffect) {
 // 	case TClass(cls) if (cls == Any):
@@ -22,6 +22,7 @@ class Game implements hxbit.Serializable {
 		trace("============= test =============");
 		final cardProto = new CardProto1();
 		final runtime = new DefaultExecuteRuntime();
+		ctx.cardProtoPool["cardProto"] = cardProto;
 		var texts = {
 			var cardTexts = cardProto.getTexts(ctx, runtime);
 			var attachTexts:Array<CardText> = cast [

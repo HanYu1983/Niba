@@ -2,12 +2,9 @@ package model.ver1;
 
 import model.ver1.Define;
 
-private final _cardProtoPool:Map<String, ICardProto> = [];
-
-@:nullSafety
-function registerCardProto(key:String, proto:ICardProto) {
-	_cardProtoPool[key] = proto;
-}
+private final _cardProtoPool:Map<String, ICardProto> = [
+    "179001_01A_CH_WT007R_white" => new CardProto_179001_01A_CH_WT007R_white(),
+];
 
 @:nullSafety
 function getCardProto(key:String):ICardProto {
