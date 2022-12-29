@@ -4,6 +4,7 @@ import model.ver1.Define;
 
 private final _cardProtoPool:Map<String, ICardProto> = [
     "179001_01A_CH_WT007R_white" => new CardProto_179001_01A_CH_WT007R_white(),
+    "179003_01A_U_BK008U_black" => new CardProto_179003_01A_U_BK008U_black(),
 ];
 
 @:nullSafety

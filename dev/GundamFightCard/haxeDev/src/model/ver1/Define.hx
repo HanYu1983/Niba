@@ -59,6 +59,26 @@ typedef Memory = {
 	playerSelection:PlayerSelection
 }
 
+enum BlockCause {
+	Pending;
+	System;
+	PlayCard(cardId:String);
+	PlayText(cardId:String, textId:String);
+	TextEffect(cardId:String, textId:String);
+}
+
+class Block implements hxbit.Serializable {
+	public function new(id:String, cause:BlockCause, text:CardText) {
+		this.id = id;
+		this.cause = cause;
+		this.text = text;
+	}
+
+	@:s public var id:String;
+	@:s public var cause:BlockCause;
+	@:s public var text:CardText;
+}
+
 class Context implements hxbit.Serializable {
 	public function new() {}
 
@@ -73,6 +93,8 @@ class Context implements hxbit.Serializable {
 			cardIds: []
 		}
 	};
+	@:s public var immediateStack:Array<Block> = [];
+	@:s public var effectStack:Array<Block> = [];
 }
 
 typedef BattlePoint = {
@@ -107,14 +129,14 @@ class RequireUserSelect<T> extends Require {
 	public var responsePlayerId = RelativePlayer.You;
 }
 
-class CardText {
+class CardText implements hxbit.Serializable {
 	public function new(id:String, description:String) {
 		this.id = id;
 		this.description = description;
 	}
 
-	public final id:String;
-	public final description:String;
+	@:s public var id:String;
+	@:s public var description:String;
 
 	public function getEffect(ctx:Context, runtime:ExecuteRuntime):Array<MarkEffect> {
 		return [];
@@ -149,7 +171,7 @@ class Mark implements hxbit.Serializable {
 
 interface ExecuteRuntime {
 	function getCardId():String;
-	function getSelectedCard(id:String):Array<String>;
+	function getPlayerId():String;
 }
 
 class DefaultExecuteRuntime implements ExecuteRuntime {
@@ -161,8 +183,8 @@ class DefaultExecuteRuntime implements ExecuteRuntime {
 		return cardId;
 	}
 
-	public function getSelectedCard(id:String):Array<String> {
-		return [];
+	public function getPlayerId():String {
+		return "";
 	}
 }
 
@@ -179,6 +201,7 @@ class AbstractCardProto implements ICardProto implements hxbit.Serializable {
 //
 enum GColor {
 	Red;
+	Black;
 }
 
 // Alg
@@ -195,6 +218,20 @@ function getCurrentCardProto(ctx:Context, key:String):ICardProto {
 		return getCardProto(key);
 	}
 	return obj;
+}
+
+@:nullSafety
+function isDestroyNow(ctx:Context, cardId:String, condition:{isByBattleDamage:Bool}):Bool {
+	// cardId是否有破壞並廢棄的效果在堆疊中
+	if (condition.isByBattleDamage) {}
+	return false;
+}
+
+function removeDestroyEffect(ctx:Context, cardId:String):Void {
+	trace("移除堆疊中的破壞效果");
+}
+function becomeG(ctx:Context, cardId:String):Void {
+	trace("將自己變成G");
 }
 
 @:nullSafety
@@ -389,11 +426,11 @@ class RequireG extends RequireUserSelect<String> {
 	}
 
 	public override function action(ctx:Context, runtime:ExecuteRuntime):Void {
-		final select = runtime.getSelectedCard(this.id);
-		if (select == null) {
-			throw new haxe.Exception("還沒選好牌");
-		}
-		trace("横置選中的卡");
+		// final select = runtime.getSelectedCard(this.id);
+		// if (select == null) {
+		// 	throw new haxe.Exception("還沒選好牌");
+		// }
+		// trace("横置選中的卡");
 	}
 }
 
