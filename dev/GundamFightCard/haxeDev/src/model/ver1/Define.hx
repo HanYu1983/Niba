@@ -50,6 +50,14 @@ enum Phase {
 	Test(str:String);
 }
 
+typedef PlayerSelection = {
+	cardIds:Map<String, Array<String>>
+}
+
+typedef Memory = {
+	playerSelection:PlayerSelection
+}
+
 class Context implements hxbit.Serializable {
 	public function new() {}
 
@@ -59,6 +67,11 @@ class Context implements hxbit.Serializable {
 	@:s public var marks:Map<String, Mark> = [];
 	@:s public var phase:Phase = Pending;
 	@:s public var cardProtoPool:Map<String, AbstractCardProto> = [];
+	@:s public var memory:Memory = {
+		playerSelection: {
+			cardIds: []
+		}
+	};
 }
 
 typedef BattlePoint = {
@@ -168,21 +181,13 @@ class DefaultExecuteRuntime implements ExecuteRuntime {
 }
 
 interface ICardProto {
-	// function getMarkEffect(mark:Mark):Array<MarkEffect>;
 	function getTexts(ctx:Context, runtime:ExecuteRuntime):Array<CardText>;
-	// function getMarks(ctx:Context, runtime:ExecuteRuntime):Array<Mark>;
 }
 
-class AbstractCardProto implements ICardProto implements hxbit.Serializable{
-	// public function getMarkEffect(mark:Mark):Array<MarkEffect> {
-	// 	return [];
-	// }
+class AbstractCardProto implements ICardProto implements hxbit.Serializable {
 	public function getTexts(ctx:Context, runtime:ExecuteRuntime):Array<CardText> {
 		return [];
 	}
-	// public function getMarks(ctx:Context, runtime:ExecuteRuntime):Array<Mark> {
-	// 	return [];
-	// }
 }
 
 //
@@ -191,6 +196,7 @@ enum GColor {
 }
 
 // Alg
+
 @:nullSafety
 function registerCardProto(ctx:Context, key:String, proto:AbstractCardProto) {
 	ctx.cardProtoPool[key] = proto;
@@ -199,9 +205,9 @@ function registerCardProto(ctx:Context, key:String, proto:AbstractCardProto) {
 @:nullSafety
 function getCurrentCardProto(ctx:Context, key:String):ICardProto {
 	final obj = ctx.cardProtoPool[key];
-    if(obj == null){
-        return getCardProto(key);
-    }
+	if (obj == null) {
+		return getCardProto(key);
+	}
 	return obj;
 }
 
@@ -301,6 +307,7 @@ class RequirePhase extends Require {
 	}
 }
 
+@:nullSafety
 class RequireG extends RequireUserSelect<String> {
 	public function new(id:String, description:String, colors:Array<GColor>, ctx:Context, runtime:ExecuteRuntime) {
 		super(id, description);
@@ -317,11 +324,22 @@ class RequireG extends RequireUserSelect<String> {
 	}
 }
 
-class MarkTargetCard extends Require {
-	public function new(id:String, description:String, cardId:String) {
+@:nullSafety
+class ForceTargetCard extends Require {
+	public function new(id:String, description:String, selectKey:String, cardId:String) {
 		super(id, description);
+		this.selectKey = selectKey;
 		this.cardId = cardId;
 	}
 
 	public final cardId:String;
+	public final selectKey: String;
+
+	public override function action(ctx:Context, runtime:ExecuteRuntime):Void {
+		final selectCard = ctx.table.cards[cardId];
+		if (selectCard == null) {
+			throw new haxe.Exception('指定的卡不存在: ${cardId}');
+		}
+		ctx.memory.playerSelection.cardIds[this.selectKey] = [cardId];
+	}
 }

@@ -28839,6 +28839,56 @@ model_TestModel.prototype = $extend(viewModel_DefaultViewModel.prototype,{
 	}
 	,__class__: model_TestModel
 });
+var model_ver1_ICardProto = function() { };
+$hxClasses["model.ver1.ICardProto"] = model_ver1_ICardProto;
+model_ver1_ICardProto.__name__ = "model.ver1.ICardProto";
+model_ver1_ICardProto.__isInterface__ = true;
+model_ver1_ICardProto.prototype = {
+	getTexts: null
+	,__class__: model_ver1_ICardProto
+};
+var model_ver1_AbstractCardProto = function() {
+	this.__uid = hxbit_Serializer.SEQ << 24 | ++hxbit_Serializer.UID;
+};
+$hxClasses["model.ver1.AbstractCardProto"] = model_ver1_AbstractCardProto;
+model_ver1_AbstractCardProto.__name__ = "model.ver1.AbstractCardProto";
+model_ver1_AbstractCardProto.__interfaces__ = [hxbit_Serializable,model_ver1_ICardProto];
+model_ver1_AbstractCardProto.prototype = {
+	getTexts: function(ctx,runtime) {
+		return [];
+	}
+	,__uid: null
+	,getCLID: function() {
+		return model_ver1_AbstractCardProto.__clid;
+	}
+	,serialize: function(__ctx) {
+	}
+	,getSerializeSchema: function() {
+		var schema = new hxbit_Schema();
+		schema.isFinal = hxbit_Serializer.isClassFinal(model_ver1_AbstractCardProto.__clid);
+		return schema;
+	}
+	,unserializeInit: function() {
+	}
+	,unserialize: function(__ctx) {
+	}
+	,__class__: model_ver1_AbstractCardProto
+};
+var model_ver1_CardProto_$179001_$01A_$CH_$WT007R_$white = function() {
+	model_ver1_AbstractCardProto.call(this);
+};
+$hxClasses["model.ver1.CardProto_179001_01A_CH_WT007R_white"] = model_ver1_CardProto_$179001_$01A_$CH_$WT007R_$white;
+model_ver1_CardProto_$179001_$01A_$CH_$WT007R_$white.__name__ = "model.ver1.CardProto_179001_01A_CH_WT007R_white";
+model_ver1_CardProto_$179001_$01A_$CH_$WT007R_$white.__super__ = model_ver1_AbstractCardProto;
+model_ver1_CardProto_$179001_$01A_$CH_$WT007R_$white.prototype = $extend(model_ver1_AbstractCardProto.prototype,{
+	getTexts: function(ctx,runtime) {
+		return [new model_ver1_CardProto_$179001_$01A_$CH_$WT007R_$white_$Text1()];
+	}
+	,getCLID: function() {
+		return model_ver1_CardProto_$179001_$01A_$CH_$WT007R_$white.__clid;
+	}
+	,__class__: model_ver1_CardProto_$179001_$01A_$CH_$WT007R_$white
+});
 var model_ver1_CardText = function(id,description) {
 	this.id = id;
 	this.description = description;
@@ -28860,31 +28910,38 @@ model_ver1_CardText.prototype = {
 	}
 	,__class__: model_ver1_CardText
 };
-var model_ver1_CardProto_$179001_$01A_$CH_$WT007R_$white_$Text1_$Mark1_$Text = function(removeMarkId) {
-	model_ver1_CardText.call(this,tool_Helper_getNextId(),"回合結束時刪除速攻");
-	this.removeMarkId = removeMarkId;
+var model_ver1_CardProto_$179001_$01A_$CH_$WT007R_$white_$Text1 = function() {
+	model_ver1_CardText.call(this,tool_Helper_getNextId(),"（戦闘フェイズ）〔２〕：このセットグループのユニットは、ターン終了時まで「速攻」を得る。");
 };
-$hxClasses["model.ver1.CardProto_179001_01A_CH_WT007R_white_Text1_Mark1_Text"] = model_ver1_CardProto_$179001_$01A_$CH_$WT007R_$white_$Text1_$Mark1_$Text;
-model_ver1_CardProto_$179001_$01A_$CH_$WT007R_$white_$Text1_$Mark1_$Text.__name__ = "model.ver1.CardProto_179001_01A_CH_WT007R_white_Text1_Mark1_Text";
-model_ver1_CardProto_$179001_$01A_$CH_$WT007R_$white_$Text1_$Mark1_$Text.__super__ = model_ver1_CardText;
-model_ver1_CardProto_$179001_$01A_$CH_$WT007R_$white_$Text1_$Mark1_$Text.prototype = $extend(model_ver1_CardText.prototype,{
-	removeMarkId: null
-	,getEffect: function(ctx,runtime) {
-		return [model_ver1_MarkEffect.AttackSpeed(runtime.getCardId(),1)];
+$hxClasses["model.ver1.CardProto_179001_01A_CH_WT007R_white_Text1"] = model_ver1_CardProto_$179001_$01A_$CH_$WT007R_$white_$Text1;
+model_ver1_CardProto_$179001_$01A_$CH_$WT007R_$white_$Text1.__name__ = "model.ver1.CardProto_179001_01A_CH_WT007R_white_Text1";
+model_ver1_CardProto_$179001_$01A_$CH_$WT007R_$white_$Text1.__super__ = model_ver1_CardText;
+model_ver1_CardProto_$179001_$01A_$CH_$WT007R_$white_$Text1.prototype = $extend(model_ver1_CardText.prototype,{
+	getRequires: function(ctx,runtime) {
+		var unit;
+		var _g = model_ver1_Define_getUnitOfSetGroup(ctx,runtime.getCardId());
+		if(_g._hx_index == 0) {
+			var cardId = _g.v;
+			unit = cardId;
+		} else {
+			unit = "unknown";
+		}
+		return [new model_ver1_RequirePhase(tool_Helper_getNextId(),"（戦闘フェイズ）",model_ver1_Phase.Test("戦闘フェイズ")),new model_ver1_RequireG(tool_Helper_getNextId(),"2",[model_ver1_GColor.Red,model_ver1_GColor.Red],ctx,runtime),new model_ver1_ForceTargetCard(tool_Helper_getNextId(),"このセットグループのユニット","このセットグループのユニット",unit)];
 	}
-	,onEvent: function(ctx,runtime) {
-		var _g = ctx.phase;
-		if(_g._hx_index == 1) {
-			if(_g.str == "回合結束時") {
-				var key = this.removeMarkId;
-				var _this = ctx.marks;
-				if(Object.prototype.hasOwnProperty.call(_this.h,key)) {
-					delete(_this.h[key]);
-				}
-			}
+	,action: function(ctx,runtime) {
+		var selectUnits = ctx.memory.playerSelection.cardIds.h["このセットグループのユニット"];
+		if(selectUnits == null) {
+			throw new haxe_Exception("selectUnits not found");
+		}
+		var _g = 0;
+		while(_g < selectUnits.length) {
+			var unit = selectUnits[_g];
+			++_g;
+			var mark = new model_ver1_CardProto_$179001_$01A_$CH_$WT007R_$white_$Text1_$Mark1(tool_Helper_getNextId(),unit,model_ver1_MarkCause.CardEffect(runtime.getCardId()));
+			ctx.marks.h[mark.id] = mark;
 		}
 	}
-	,__class__: model_ver1_CardProto_$179001_$01A_$CH_$WT007R_$white_$Text1_$Mark1_$Text
+	,__class__: model_ver1_CardProto_$179001_$01A_$CH_$WT007R_$white_$Text1
 });
 var model_ver1_Mark = function(id,type,cause) {
 	this.__uid = hxbit_Serializer.SEQ << 24 | ++hxbit_Serializer.UID;
@@ -29025,79 +29082,31 @@ model_ver1_CardProto_$179001_$01A_$CH_$WT007R_$white_$Text1_$Mark1.prototype = $
 	}
 	,__class__: model_ver1_CardProto_$179001_$01A_$CH_$WT007R_$white_$Text1_$Mark1
 });
-var model_ver1_CardProto_$179001_$01A_$CH_$WT007R_$white_$Text1 = function() {
-	model_ver1_CardText.call(this,tool_Helper_getNextId(),"（戦闘フェイズ）〔２〕：このセットグループのユニットは、ターン終了時まで「速攻」を得る。");
+var model_ver1_CardProto_$179001_$01A_$CH_$WT007R_$white_$Text1_$Mark1_$Text = function(removeMarkId) {
+	model_ver1_CardText.call(this,tool_Helper_getNextId(),"回合結束時刪除速攻");
+	this.removeMarkId = removeMarkId;
 };
-$hxClasses["model.ver1.CardProto_179001_01A_CH_WT007R_white_Text1"] = model_ver1_CardProto_$179001_$01A_$CH_$WT007R_$white_$Text1;
-model_ver1_CardProto_$179001_$01A_$CH_$WT007R_$white_$Text1.__name__ = "model.ver1.CardProto_179001_01A_CH_WT007R_white_Text1";
-model_ver1_CardProto_$179001_$01A_$CH_$WT007R_$white_$Text1.__super__ = model_ver1_CardText;
-model_ver1_CardProto_$179001_$01A_$CH_$WT007R_$white_$Text1.prototype = $extend(model_ver1_CardText.prototype,{
-	getRequires: function(ctx,runtime) {
-		return [new model_ver1_RequirePhase(tool_Helper_getNextId(),"（戦闘フェイズ）",model_ver1_Phase.Test("戦闘フェイズ")),new model_ver1_RequireG(tool_Helper_getNextId(),"2",[model_ver1_GColor.Red,model_ver1_GColor.Red],ctx,runtime),new model_ver1_MarkTargetCard(tool_Helper_getNextId(),"このセットグループのユニット","cardId")];
+$hxClasses["model.ver1.CardProto_179001_01A_CH_WT007R_white_Text1_Mark1_Text"] = model_ver1_CardProto_$179001_$01A_$CH_$WT007R_$white_$Text1_$Mark1_$Text;
+model_ver1_CardProto_$179001_$01A_$CH_$WT007R_$white_$Text1_$Mark1_$Text.__name__ = "model.ver1.CardProto_179001_01A_CH_WT007R_white_Text1_Mark1_Text";
+model_ver1_CardProto_$179001_$01A_$CH_$WT007R_$white_$Text1_$Mark1_$Text.__super__ = model_ver1_CardText;
+model_ver1_CardProto_$179001_$01A_$CH_$WT007R_$white_$Text1_$Mark1_$Text.prototype = $extend(model_ver1_CardText.prototype,{
+	removeMarkId: null
+	,getEffect: function(ctx,runtime) {
+		return [model_ver1_MarkEffect.AttackSpeed(runtime.getCardId(),1)];
 	}
-	,action: function(ctx,runtime) {
-		var unit;
-		var _g = model_ver1_Define_getUnitOfSetGroup(ctx,runtime.getCardId());
-		if(_g._hx_index == 0) {
-			var cardId = _g.v;
-			unit = cardId;
-		} else {
-			throw new haxe_Exception("機體找不到");
+	,onEvent: function(ctx,runtime) {
+		var _g = ctx.phase;
+		if(_g._hx_index == 1) {
+			if(_g.str == "回合結束時") {
+				var key = this.removeMarkId;
+				var _this = ctx.marks;
+				if(Object.prototype.hasOwnProperty.call(_this.h,key)) {
+					delete(_this.h[key]);
+				}
+			}
 		}
-		var mark = new model_ver1_CardProto_$179001_$01A_$CH_$WT007R_$white_$Text1_$Mark1(tool_Helper_getNextId(),unit,model_ver1_MarkCause.CardEffect(runtime.getCardId()));
-		ctx.marks.h[mark.id] = mark;
 	}
-	,__class__: model_ver1_CardProto_$179001_$01A_$CH_$WT007R_$white_$Text1
-});
-var model_ver1_ICardProto = function() { };
-$hxClasses["model.ver1.ICardProto"] = model_ver1_ICardProto;
-model_ver1_ICardProto.__name__ = "model.ver1.ICardProto";
-model_ver1_ICardProto.__isInterface__ = true;
-model_ver1_ICardProto.prototype = {
-	getTexts: null
-	,__class__: model_ver1_ICardProto
-};
-var model_ver1_AbstractCardProto = function() {
-	this.__uid = hxbit_Serializer.SEQ << 24 | ++hxbit_Serializer.UID;
-};
-$hxClasses["model.ver1.AbstractCardProto"] = model_ver1_AbstractCardProto;
-model_ver1_AbstractCardProto.__name__ = "model.ver1.AbstractCardProto";
-model_ver1_AbstractCardProto.__interfaces__ = [hxbit_Serializable,model_ver1_ICardProto];
-model_ver1_AbstractCardProto.prototype = {
-	getTexts: function(ctx,runtime) {
-		return [];
-	}
-	,__uid: null
-	,getCLID: function() {
-		return model_ver1_AbstractCardProto.__clid;
-	}
-	,serialize: function(__ctx) {
-	}
-	,getSerializeSchema: function() {
-		var schema = new hxbit_Schema();
-		schema.isFinal = hxbit_Serializer.isClassFinal(model_ver1_AbstractCardProto.__clid);
-		return schema;
-	}
-	,unserializeInit: function() {
-	}
-	,unserialize: function(__ctx) {
-	}
-	,__class__: model_ver1_AbstractCardProto
-};
-var model_ver1_CardProto_$179001_$01A_$CH_$WT007R_$white = function() {
-	model_ver1_AbstractCardProto.call(this);
-};
-$hxClasses["model.ver1.CardProto_179001_01A_CH_WT007R_white"] = model_ver1_CardProto_$179001_$01A_$CH_$WT007R_$white;
-model_ver1_CardProto_$179001_$01A_$CH_$WT007R_$white.__name__ = "model.ver1.CardProto_179001_01A_CH_WT007R_white";
-model_ver1_CardProto_$179001_$01A_$CH_$WT007R_$white.__super__ = model_ver1_AbstractCardProto;
-model_ver1_CardProto_$179001_$01A_$CH_$WT007R_$white.prototype = $extend(model_ver1_AbstractCardProto.prototype,{
-	getTexts: function(ctx,runtime) {
-		return [new model_ver1_CardProto_$179001_$01A_$CH_$WT007R_$white_$Text1()];
-	}
-	,getCLID: function() {
-		return model_ver1_CardProto_$179001_$01A_$CH_$WT007R_$white.__clid;
-	}
-	,__class__: model_ver1_CardProto_$179001_$01A_$CH_$WT007R_$white
+	,__class__: model_ver1_CardProto_$179001_$01A_$CH_$WT007R_$white_$Text1_$Mark1_$Text
 });
 function model_ver1_DataPool_getCardProto(key) {
 	var obj = model_ver1_DataPool__cardProtoPool.h[key];
@@ -29597,6 +29606,7 @@ var model_ver1_Phase = $hxEnums["model.ver1.Phase"] = { __ename__:true,__constru
 model_ver1_Phase.__constructs__ = [model_ver1_Phase.Pending,model_ver1_Phase.Test];
 var model_ver1_Context = function() {
 	this.__uid = hxbit_Serializer.SEQ << 24 | ++hxbit_Serializer.UID;
+	this.memory = { playerSelection : { cardIds : new haxe_ds_StringMap()}};
 	this.cardProtoPool = new haxe_ds_StringMap();
 	this.phase = model_ver1_Phase.Pending;
 	this.marks = new haxe_ds_StringMap();
@@ -29614,6 +29624,7 @@ model_ver1_Context.prototype = {
 	,marks: null
 	,phase: null
 	,cardProtoPool: null
+	,memory: null
 	,__uid: null
 	,getCLID: function() {
 		return model_ver1_Context.__clid;
@@ -29777,6 +29788,113 @@ model_ver1_Context.prototype = {
 				__ctx.addKnownRef(a.h[k]);
 			}
 		}
+		var v = this.memory;
+		if(v == null) {
+			__ctx.out.addByte(0);
+		} else {
+			var fbits = 0;
+			if(v.playerSelection != null) {
+				fbits |= 1;
+			}
+			var v1 = fbits + 1;
+			if(v1 >= 0 && v1 < 128) {
+				__ctx.out.addByte(v1);
+			} else {
+				__ctx.out.addByte(128);
+				__ctx.out.addInt32(v1);
+			}
+			if((fbits & 1) != 0) {
+				var v1 = v.playerSelection;
+				if(v1 == null) {
+					__ctx.out.addByte(0);
+				} else {
+					var fbits = 0;
+					if(v1.cardIds != null) {
+						fbits |= 1;
+					}
+					var v = fbits + 1;
+					if(v >= 0 && v < 128) {
+						__ctx.out.addByte(v);
+					} else {
+						__ctx.out.addByte(128);
+						__ctx.out.addInt32(v);
+					}
+					if((fbits & 1) != 0) {
+						var a = v1.cardIds;
+						if(a == null) {
+							__ctx.out.addByte(0);
+						} else {
+							var _g = [];
+							var h = a.h;
+							var k_h = h;
+							var k_keys = Object.keys(h);
+							var k_length = k_keys.length;
+							var k_current = 0;
+							while(k_current < k_length) {
+								var k = k_keys[k_current++];
+								_g.push(k);
+							}
+							var keys = _g;
+							var v = keys.length + 1;
+							if(v >= 0 && v < 128) {
+								__ctx.out.addByte(v);
+							} else {
+								__ctx.out.addByte(128);
+								__ctx.out.addInt32(v);
+							}
+							var _g = 0;
+							while(_g < keys.length) {
+								var k = keys[_g];
+								++_g;
+								if(k == null) {
+									__ctx.out.addByte(0);
+								} else {
+									var b = haxe_io_Bytes.ofString(k);
+									var v = b.length + 1;
+									if(v >= 0 && v < 128) {
+										__ctx.out.addByte(v);
+									} else {
+										__ctx.out.addByte(128);
+										__ctx.out.addInt32(v);
+									}
+									__ctx.out.add(b);
+								}
+								var v1 = a.h[k];
+								if(v1 == null) {
+									__ctx.out.addByte(0);
+								} else {
+									var v2 = v1.length + 1;
+									if(v2 >= 0 && v2 < 128) {
+										__ctx.out.addByte(v2);
+									} else {
+										__ctx.out.addByte(128);
+										__ctx.out.addInt32(v2);
+									}
+									var _g1 = 0;
+									while(_g1 < v1.length) {
+										var v3 = v1[_g1];
+										++_g1;
+										if(v3 == null) {
+											__ctx.out.addByte(0);
+										} else {
+											var b1 = haxe_io_Bytes.ofString(v3);
+											var v4 = b1.length + 1;
+											if(v4 >= 0 && v4 < 128) {
+												__ctx.out.addByte(v4);
+											} else {
+												__ctx.out.addByte(128);
+												__ctx.out.addInt32(v4);
+											}
+											__ctx.out.add(b1);
+										}
+									}
+								}
+							}
+						}
+					}
+				}
+			}
+		}
 	}
 	,getSerializeSchema: function() {
 		var schema = new hxbit_Schema();
@@ -29792,6 +29910,8 @@ model_ver1_Context.prototype = {
 		schema.fieldsTypes.push(hxbit_PropTypeDesc.PEnum("model.ver1.Phase"));
 		schema.fieldsNames.push("cardProtoPool");
 		schema.fieldsTypes.push(hxbit_PropTypeDesc.PMap(hxbit_PropTypeDesc.PString,hxbit_PropTypeDesc.PSerializable("model.ver1.AbstractCardProto")));
+		schema.fieldsNames.push("memory");
+		schema.fieldsTypes.push(hxbit_PropTypeDesc.PObj([{ name : "playerSelection", opt : false, type : hxbit_PropTypeDesc.PObj([{ name : "cardIds", opt : false, type : hxbit_PropTypeDesc.PMap(hxbit_PropTypeDesc.PString,hxbit_PropTypeDesc.PArray(hxbit_PropTypeDesc.PString))}])}]));
 		schema.isFinal = hxbit_Serializer.isClassFinal(model_ver1_Context.__clid);
 		return schema;
 	}
@@ -29802,6 +29922,7 @@ model_ver1_Context.prototype = {
 		this.marks = new haxe_ds_StringMap();
 		this.phase = model_ver1_Phase.Pending;
 		this.cardProtoPool = new haxe_ds_StringMap();
+		this.memory = { playerSelection : { cardIds : new haxe_ds_StringMap()}};
 	}
 	,unserialize: function(__ctx) {
 		var k0;
@@ -29951,6 +30072,103 @@ model_ver1_Context.prototype = {
 			tmp = m;
 		}
 		this.cardProtoPool = tmp;
+		var v = __ctx.input.b[__ctx.inPos++];
+		if(v == 128) {
+			v = __ctx.input.getInt32(__ctx.inPos);
+			__ctx.inPos += 4;
+		}
+		var fbits = v;
+		if(fbits == 0) {
+			this.memory = null;
+		} else {
+			--fbits;
+			var playerSelection = null;
+			if((fbits & 1) != 0) {
+				var v = __ctx.input.b[__ctx.inPos++];
+				if(v == 128) {
+					v = __ctx.input.getInt32(__ctx.inPos);
+					__ctx.inPos += 4;
+				}
+				var fbits = v;
+				if(fbits == 0) {
+					playerSelection = null;
+				} else {
+					--fbits;
+					var cardIds = null;
+					if((fbits & 1) != 0) {
+						var k2;
+						var v2;
+						var v = __ctx.input.b[__ctx.inPos++];
+						if(v == 128) {
+							v = __ctx.input.getInt32(__ctx.inPos);
+							__ctx.inPos += 4;
+						}
+						var len = v;
+						if(len == 0) {
+							cardIds = null;
+						} else {
+							var m = new haxe_ds_StringMap();
+							while(--len > 0) {
+								var v = __ctx.input.b[__ctx.inPos++];
+								if(v == 128) {
+									v = __ctx.input.getInt32(__ctx.inPos);
+									__ctx.inPos += 4;
+								}
+								var len1 = v;
+								if(len1 == 0) {
+									k2 = null;
+								} else {
+									--len1;
+									var s = __ctx.input.getString(__ctx.inPos,len1);
+									__ctx.inPos += len1;
+									k2 = s;
+								}
+								var k = k2;
+								var e3;
+								var v1 = __ctx.input.b[__ctx.inPos++];
+								if(v1 == 128) {
+									v1 = __ctx.input.getInt32(__ctx.inPos);
+									__ctx.inPos += 4;
+								}
+								var len2 = v1;
+								if(len2 == 0) {
+									v2 = null;
+								} else {
+									--len2;
+									var a = [];
+									var _g = 0;
+									var _g1 = len2;
+									while(_g < _g1) {
+										var i = _g++;
+										var v3 = __ctx.input.b[__ctx.inPos++];
+										if(v3 == 128) {
+											v3 = __ctx.input.getInt32(__ctx.inPos);
+											__ctx.inPos += 4;
+										}
+										var len3 = v3;
+										if(len3 == 0) {
+											e3 = null;
+										} else {
+											--len3;
+											var s1 = __ctx.input.getString(__ctx.inPos,len3);
+											__ctx.inPos += len3;
+											e3 = s1;
+										}
+										a[i] = e3;
+									}
+									v2 = a;
+								}
+								var v4 = v2;
+								m.h[k] = v4;
+							}
+							cardIds = m;
+						}
+					}
+					playerSelection = { cardIds : cardIds};
+				}
+			}
+			this.memory = { playerSelection : playerSelection};
+		}
 	}
 	,__class__: model_ver1_Context
 };
@@ -30049,7 +30267,7 @@ model_ver1_RequirePhase.prototype = $extend(model_ver1_Require.prototype,{
 });
 var model_ver1_RequireG = function(id,description,colors,ctx,runtime) {
 	model_ver1_RequireUserSelect.call(this,id,description);
-	console.log("src/model/ver1/Define.hx:307:","查G的ID");
+	console.log("src/model/ver1/Define.hx:314:","查G的ID");
 	this.tips = ["0","1"];
 };
 $hxClasses["model.ver1.RequireG"] = model_ver1_RequireG;
@@ -30061,20 +30279,30 @@ model_ver1_RequireG.prototype = $extend(model_ver1_RequireUserSelect.prototype,{
 		if(select == null) {
 			throw new haxe_Exception("還沒選好牌");
 		}
-		console.log("src/model/ver1/Define.hx:316:","横置選中的卡");
+		console.log("src/model/ver1/Define.hx:323:","横置選中的卡");
 	}
 	,__class__: model_ver1_RequireG
 });
-var model_ver1_MarkTargetCard = function(id,description,cardId) {
+var model_ver1_ForceTargetCard = function(id,description,selectKey,cardId) {
 	model_ver1_Require.call(this,id,description);
+	this.selectKey = selectKey;
 	this.cardId = cardId;
 };
-$hxClasses["model.ver1.MarkTargetCard"] = model_ver1_MarkTargetCard;
-model_ver1_MarkTargetCard.__name__ = "model.ver1.MarkTargetCard";
-model_ver1_MarkTargetCard.__super__ = model_ver1_Require;
-model_ver1_MarkTargetCard.prototype = $extend(model_ver1_Require.prototype,{
+$hxClasses["model.ver1.ForceTargetCard"] = model_ver1_ForceTargetCard;
+model_ver1_ForceTargetCard.__name__ = "model.ver1.ForceTargetCard";
+model_ver1_ForceTargetCard.__super__ = model_ver1_Require;
+model_ver1_ForceTargetCard.prototype = $extend(model_ver1_Require.prototype,{
 	cardId: null
-	,__class__: model_ver1_MarkTargetCard
+	,selectKey: null
+	,action: function(ctx,runtime) {
+		var selectCard = ctx.table.cards.h[this.cardId];
+		if(selectCard == null) {
+			throw new haxe_Exception("指定的卡不存在: " + this.cardId);
+		}
+		var v = [this.cardId];
+		ctx.memory.playerSelection.cardIds.h[this.selectKey] = v;
+	}
+	,__class__: model_ver1_ForceTargetCard
 });
 function model_ver1_Define_registerCardProto(ctx,key,proto) {
 	ctx.cardProtoPool.h[key] = proto;
@@ -35150,10 +35378,10 @@ hxbit_Serializer.CLASSES = [];
 hxbit_Serializer.ENUM_CLASSES = new haxe_ds_StringMap();
 hxbit_Schema.__clid = hxbit_Serializer.registerClass(hxbit_Schema);
 model_Game.__clid = hxbit_Serializer.registerClass(model_Game);
-model_ver1_Mark.__clid = hxbit_Serializer.registerClass(model_ver1_Mark);
-model_ver1_CardProto_$179001_$01A_$CH_$WT007R_$white_$Text1_$Mark1.__clid = hxbit_Serializer.registerClass(model_ver1_CardProto_$179001_$01A_$CH_$WT007R_$white_$Text1_$Mark1);
 model_ver1_AbstractCardProto.__clid = hxbit_Serializer.registerClass(model_ver1_AbstractCardProto);
 model_ver1_CardProto_$179001_$01A_$CH_$WT007R_$white.__clid = hxbit_Serializer.registerClass(model_ver1_CardProto_$179001_$01A_$CH_$WT007R_$white);
+model_ver1_Mark.__clid = hxbit_Serializer.registerClass(model_ver1_Mark);
+model_ver1_CardProto_$179001_$01A_$CH_$WT007R_$white_$Text1_$Mark1.__clid = hxbit_Serializer.registerClass(model_ver1_CardProto_$179001_$01A_$CH_$WT007R_$white_$Text1_$Mark1);
 var model_ver1_DataPool__cardProtoPool = (function($this) {
 	var $r;
 	var _g = new haxe_ds_StringMap();
