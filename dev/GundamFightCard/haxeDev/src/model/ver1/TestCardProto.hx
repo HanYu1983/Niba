@@ -30,7 +30,7 @@ class RemoveFirstAttackWhenTurnEnd extends CardText {
 
 private class CardProto1Text1Require1MarkFirstAttack extends Mark {
 	public function new(ctx:Context, runtime:ExecuteRuntime) {
-		super(CardProto1Text1Require1MarkFirstAttackId, AttachCard(runtime.getCardId()), CardEffect(runtime.getCardId()));
+		super(CardProto1Text1Require1MarkFirstAttackId);
 	}
 
 	public override function getEffect(ctx:Context):Array<MarkEffect> {

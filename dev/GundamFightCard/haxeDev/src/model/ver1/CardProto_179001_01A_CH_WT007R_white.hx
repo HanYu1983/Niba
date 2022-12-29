@@ -41,15 +41,15 @@ class CardProto_179001_01A_CH_WT007R_white_Text1 extends CardText {
 			throw new haxe.Exception("selectUnits not found");
 		}
 		for (unit in selectUnits) {
-			final mark = new CardProto_179001_01A_CH_WT007R_white_Text1_Mark1(getNextId(), unit, CardEffect(runtime.getCardId()));
+			final mark = new CardProto_179001_01A_CH_WT007R_white_Text1_Mark1(getNextId(), unit);
 			ctx.marks[mark.id] = mark;
 		}
 	}
 }
 
 class CardProto_179001_01A_CH_WT007R_white_Text1_Mark1 extends Mark {
-	public function new(id:String, attachCardId:String, cause:MarkCause) {
-		super(id, AttachCard(attachCardId), cause);
+	public function new(id:String, attachCardId:String) {
+		super(id);
 		this.attachCardId = attachCardId;
 	}
 

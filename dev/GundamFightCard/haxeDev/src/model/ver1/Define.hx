@@ -128,17 +128,6 @@ class CardText {
 	public function onEvent(ctx:Context, runtime:ExecuteRuntime):Void {}
 }
 
-enum MarkType {
-	Pending;
-	AttachCard(cardId:String);
-	Token(cardId:String);
-}
-
-enum MarkCause {
-	Pending;
-	CardEffect(fromCardId:String);
-}
-
 enum MarkEffect {
 	AddBattlePoint(cardId:String, battlePoint:BattlePoint);
 	AttackSpeed(cardId:String, speed:Int);
@@ -146,15 +135,11 @@ enum MarkEffect {
 }
 
 class Mark implements hxbit.Serializable {
-	public function new(id:String, type:MarkType, cause:MarkCause) {
+	public function new(id:String) {
 		this.id = id;
-		this.type = type;
-		this.cause = cause;
 	}
 
 	@:s public var id:String;
-	@:s public var type = MarkType.Pending;
-	@:s public var cause = MarkCause.Pending;
 
 	public function getEffect(ctx:Context):Array<MarkEffect> {
 		return [];
@@ -333,7 +318,7 @@ class ForceTargetCard extends Require {
 	}
 
 	public final cardId:String;
-	public final selectKey: String;
+	public final selectKey:String;
 
 	public override function action(ctx:Context, runtime:ExecuteRuntime):Void {
 		final selectCard = ctx.table.cards[cardId];
