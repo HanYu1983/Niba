@@ -91,15 +91,21 @@ function test() {
 	card1.protoId = "179001_01A_CH_WT007R_white";
 	ctx.table.cards[card1.id] = card1;
 	ctx.phase = Test("戦闘フェイズ");
-	final infos = mapRuntimeText(ctx, (runtime, text) -> {
-		return {cardId: runtime.getCardId(), text: text, reqs: text.getRequires(ctx, runtime)};
+	final playerId = "0";
+	final infos = getRuntimeText(ctx, playerId).map(info->{
+		return {
+			cardId: info.runtime.getCardId(),
+			text: info.text,
+			reqs: info.text.getRequires(ctx, info.runtime),
+		}
 	});
 	trace(infos);
 	if (infos.length == 0) {
 		throw new haxe.Exception("infos.length == 0");
 	}
 	final selectTextId = infos[0].text.id;
-	final findText = getRuntimeText(ctx).filter(info -> {
+	final playerId = "0";
+	final findText = getRuntimeText(ctx, playerId).filter(info -> {
 		return info.text.id == selectTextId;
 	});
 	if (findText.length == 0) {

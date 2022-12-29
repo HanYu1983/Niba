@@ -21,7 +21,7 @@ class Game implements hxbit.Serializable {
 	public function test() {
 		trace("============= test =============");
 		final cardProto = new CardProto1();
-		final runtime = new DefaultExecuteRuntime();
+		final runtime = new DefaultExecuteRuntime("0","0");
 		ctx.cardProtoPool["cardProto"] = cardProto;
 		var texts = {
 			var cardTexts = cardProto.getTexts(ctx, runtime);

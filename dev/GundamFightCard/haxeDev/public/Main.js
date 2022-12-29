@@ -28632,7 +28632,7 @@ model_Game.prototype = {
 	,test: function() {
 		console.log("src/model/TestModel.hx:22:","============= test =============");
 		var cardProto = new model_ver1_CardProto1();
-		var runtime = new model_ver1_DefaultExecuteRuntime();
+		var runtime = new model_ver1_DefaultExecuteRuntime("0","0");
 		this.ctx.cardProtoPool.h["cardProto"] = cardProto;
 		var cardTexts = cardProto.getTexts(this.ctx,runtime);
 		var _g = [];
@@ -29221,17 +29221,26 @@ function model_ver1_CardProto_$179001_$01A_$CH_$WT007R_$white_test() {
 	card1.protoId = "179001_01A_CH_WT007R_white";
 	ctx.table.cards.h[card1.id] = card1;
 	ctx.phase = model_ver1_Phase.Test("戦闘フェイズ");
-	var infos = model_ver1_Define_mapRuntimeText(ctx,function(runtime,text) {
-		return { cardId : runtime.getCardId(), text : text, reqs : text.getRequires(ctx,runtime)};
-	});
-	console.log("src/model/ver1/CardProto_179001_01A_CH_WT007R_white.hx:97:",infos);
+	var playerId = "0";
+	var _this = model_ver1_Define_getRuntimeText(ctx,playerId);
+	var result = new Array(_this.length);
+	var _g = 0;
+	var _g1 = _this.length;
+	while(_g < _g1) {
+		var i = _g++;
+		var info = _this[i];
+		result[i] = { cardId : info.runtime.getCardId(), text : info.text, reqs : info.text.getRequires(ctx,info.runtime)};
+	}
+	var infos = result;
+	console.log("src/model/ver1/CardProto_179001_01A_CH_WT007R_white.hx:102:",infos);
 	if(infos.length == 0) {
 		throw new haxe_Exception("infos.length == 0");
 	}
 	var selectTextId = infos[0].text.id;
+	var playerId = "0";
 	var _g = [];
 	var _g1 = 0;
-	var _g2 = model_ver1_Define_getRuntimeText(ctx);
+	var _g2 = model_ver1_Define_getRuntimeText(ctx,playerId);
 	while(_g1 < _g2.length) {
 		var v = _g2[_g1];
 		++_g1;
@@ -30600,14 +30609,16 @@ model_ver1_ExecuteRuntime.prototype = {
 	,getPlayerId: null
 	,__class__: model_ver1_ExecuteRuntime
 };
-var model_ver1_DefaultExecuteRuntime = function() {
-	this.cardId = "";
+var model_ver1_DefaultExecuteRuntime = function(cardId,playerId) {
+	this.cardId = cardId;
+	this.playerId = playerId;
 };
 $hxClasses["model.ver1.DefaultExecuteRuntime"] = model_ver1_DefaultExecuteRuntime;
 model_ver1_DefaultExecuteRuntime.__name__ = "model.ver1.DefaultExecuteRuntime";
 model_ver1_DefaultExecuteRuntime.__interfaces__ = [model_ver1_ExecuteRuntime];
 model_ver1_DefaultExecuteRuntime.prototype = {
 	cardId: null
+	,playerId: null
 	,getCardId: function() {
 		return this.cardId;
 	}
@@ -30639,7 +30650,7 @@ model_ver1_RequirePhase.prototype = $extend(model_ver1_Require.prototype,{
 });
 var model_ver1_RequireG = function(id,description,colors,ctx,runtime) {
 	model_ver1_RequireUserSelect.call(this,id,description);
-	console.log("src/model/ver1/Define.hx:424:","查G的ID");
+	console.log("src/model/ver1/Define.hx:352:","查G的ID");
 	this.tips = ["0","1"];
 };
 $hxClasses["model.ver1.RequireG"] = model_ver1_RequireG;
@@ -30686,15 +30697,15 @@ function model_ver1_Define_isDestroyNow(ctx,cardId,condition) {
 	return false;
 }
 function model_ver1_Define_removeDestroyEffect(ctx,cardId) {
-	console.log("src/model/ver1/Define.hx:231:","移除堆疊中的破壞效果");
+	console.log("src/model/ver1/Define.hx:236:","移除堆疊中的破壞效果");
 }
 function model_ver1_Define_becomeG(ctx,cardId) {
-	console.log("src/model/ver1/Define.hx:234:","將自己變成G");
+	console.log("src/model/ver1/Define.hx:240:","將自己變成G");
 }
 function model_ver1_Define_getUnitOfSetGroup(ctx,cardId) {
 	return haxe_ds_Option.None;
 }
-function model_ver1_Define_getRuntimeText(ctx) {
+function model_ver1_Define_getRuntimeText(ctx,playerId) {
 	var ret = [];
 	var _g = [];
 	var h = ctx.table.cards.h;
@@ -30704,8 +30715,7 @@ function model_ver1_Define_getRuntimeText(ctx) {
 	var card_current = 0;
 	while(card_current < card_length) {
 		var card = card_h[card_keys[card_current++]];
-		var runtime = new model_ver1_DefaultExecuteRuntime();
-		runtime.cardId = card.id;
+		var runtime = new model_ver1_DefaultExecuteRuntime(card.id,playerId);
 		var _g1 = 0;
 		var _g2 = model_ver1_Define_getCurrentCardProto(ctx,card.protoId).getTexts(ctx,runtime);
 		while(_g1 < _g2.length) {
@@ -30723,8 +30733,7 @@ function model_ver1_Define_getRuntimeText(ctx) {
 	var card_current = 0;
 	while(card_current < card_length) {
 		var card = card_h[card_keys[card_current++]];
-		var runtime = new model_ver1_DefaultExecuteRuntime();
-		runtime.cardId = card.id;
+		var runtime = new model_ver1_DefaultExecuteRuntime(card.id,playerId);
 		var _g1 = 0;
 		var _g2 = model_ver1_Define_getCurrentCardProto(ctx,card.protoId).getTexts(ctx,runtime);
 		while(_g1 < _g2.length) {
@@ -30773,8 +30782,7 @@ function model_ver1_Define_getRuntimeText(ctx) {
 		} else {
 			throw new haxe_Exception("addedReturn xxx");
 		}
-		var runtime = new model_ver1_DefaultExecuteRuntime();
-		runtime.cardId = info.cardId;
+		var runtime = new model_ver1_DefaultExecuteRuntime(info.cardId,playerId);
 		result[i] = ret.push({ runtime : runtime, text : info.text});
 	}
 	var addedReturn = result;
@@ -30828,149 +30836,11 @@ function model_ver1_Define_getRuntimeText(ctx) {
 		} else {
 			throw new haxe_Exception("globalAddedReturn xxx");
 		}
-		var runtime = new model_ver1_DefaultExecuteRuntime();
-		runtime.cardId = info.cardId;
+		var runtime = new model_ver1_DefaultExecuteRuntime(info.cardId,playerId);
 		result[i] = ret.push({ runtime : runtime, text : info.text});
 	}
 	var globalAddedReturn = result;
 	return ret;
-}
-function model_ver1_Define_mapRuntimeText(ctx,mapFn) {
-	var runtime = new model_ver1_DefaultExecuteRuntime();
-	var _g = [];
-	var h = ctx.table.cards.h;
-	var card_h = h;
-	var card_keys = Object.keys(h);
-	var card_length = card_keys.length;
-	var card_current = 0;
-	while(card_current < card_length) {
-		var card = card_h[card_keys[card_current++]];
-		runtime.cardId = card.id;
-		var _g1 = 0;
-		var _g2 = model_ver1_Define_getCurrentCardProto(ctx,card.protoId).getTexts(ctx,runtime);
-		while(_g1 < _g2.length) {
-			var text = _g2[_g1];
-			++_g1;
-			_g.push(mapFn(runtime,text));
-		}
-	}
-	var originReturn = _g;
-	var _g = [];
-	var h = ctx.table.cards.h;
-	var card_h = h;
-	var card_keys = Object.keys(h);
-	var card_length = card_keys.length;
-	var card_current = 0;
-	while(card_current < card_length) {
-		var card = card_h[card_keys[card_current++]];
-		runtime.cardId = card.id;
-		var _g1 = 0;
-		var _g2 = model_ver1_Define_getCurrentCardProto(ctx,card.protoId).getTexts(ctx,runtime);
-		while(_g1 < _g2.length) {
-			var text = _g2[_g1];
-			++_g1;
-			var _g3 = 0;
-			var _g4 = text.getEffect(ctx,runtime);
-			while(_g3 < _g4.length) {
-				var effect = _g4[_g3];
-				++_g3;
-				_g.push(effect);
-			}
-		}
-	}
-	var originMarkEffects = _g;
-	var _g = [];
-	var _g1 = 0;
-	var _g2 = originMarkEffects;
-	while(_g1 < _g2.length) {
-		var v = _g2[_g1];
-		++_g1;
-		var tmp;
-		if(v._hx_index == 2) {
-			var _g3 = v.cardID;
-			var _g4 = v.text;
-			tmp = true;
-		} else {
-			tmp = false;
-		}
-		if(tmp) {
-			_g.push(v);
-		}
-	}
-	var attachTextEffect = _g;
-	var result = new Array(attachTextEffect.length);
-	var _g = 0;
-	var _g1 = attachTextEffect.length;
-	while(_g < _g1) {
-		var i = _g++;
-		var effect = attachTextEffect[i];
-		var info;
-		if(effect._hx_index == 2) {
-			var cardId = effect.cardID;
-			var text = effect.text;
-			info = { cardId : cardId, text : text};
-		} else {
-			throw new haxe_Exception("addedReturn xxx");
-		}
-		runtime.cardId = info.cardId;
-		result[i] = mapFn(runtime,info.text);
-	}
-	var addedReturn = result;
-	var _g = [];
-	var h = ctx.marks.h;
-	var mark_h = h;
-	var mark_keys = Object.keys(h);
-	var mark_length = mark_keys.length;
-	var mark_current = 0;
-	while(mark_current < mark_length) {
-		var mark = mark_h[mark_keys[mark_current++]];
-		var _g1 = 0;
-		var _g2 = mark.getEffect(ctx);
-		while(_g1 < _g2.length) {
-			var effect = _g2[_g1];
-			++_g1;
-			_g.push(effect);
-		}
-	}
-	var globalMarkEffects = _g;
-	var _g = [];
-	var _g1 = 0;
-	var _g2 = globalMarkEffects;
-	while(_g1 < _g2.length) {
-		var v = _g2[_g1];
-		++_g1;
-		var tmp;
-		if(v._hx_index == 2) {
-			var _g3 = v.cardID;
-			var _g4 = v.text;
-			tmp = true;
-		} else {
-			tmp = false;
-		}
-		if(tmp) {
-			_g.push(v);
-		}
-	}
-	var globalAttachTextEffect = _g;
-	var result = new Array(globalAttachTextEffect.length);
-	var _g = 0;
-	var _g1 = globalAttachTextEffect.length;
-	while(_g < _g1) {
-		var i = _g++;
-		var effect = globalAttachTextEffect[i];
-		var info;
-		if(effect._hx_index == 2) {
-			var cardId = effect.cardID;
-			var text = effect.text;
-			info = { cardId : cardId, text : text};
-		} else {
-			throw new haxe_Exception("globalAddedReturn xxx");
-		}
-		runtime.cardId = info.cardId;
-		result[i] = mapFn(runtime,info.text);
-	}
-	var globalAddedReturn = result;
-	return originReturn.concat(addedReturn).concat(globalAddedReturn);
 }
 var model_ver1_RemoveFirstAttackWhenTurnEnd = function() {
 	model_ver1_CardText.call(this,"RemoveFirstAttackWhenTurnEnd","回合結束時刪除速攻");

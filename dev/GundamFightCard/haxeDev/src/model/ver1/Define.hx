@@ -174,10 +174,15 @@ interface ExecuteRuntime {
 	function getPlayerId():String;
 }
 
+@:nullSafety
 class DefaultExecuteRuntime implements ExecuteRuntime {
-	public function new() {}
+	public function new(cardId:String, playerId:String) {
+		this.cardId = cardId;
+		this.playerId = playerId;
+	}
 
-	public var cardId = "";
+	public var cardId:String;
+	public var playerId:String;
 
 	public function getCardId():String {
 		return cardId;
@@ -230,6 +235,7 @@ function isDestroyNow(ctx:Context, cardId:String, condition:{isByBattleDamage:Bo
 function removeDestroyEffect(ctx:Context, cardId:String):Void {
 	trace("移除堆疊中的破壞效果");
 }
+
 function becomeG(ctx:Context, cardId:String):Void {
 	trace("將自己變成G");
 }
@@ -240,13 +246,12 @@ function getUnitOfSetGroup(ctx:Context, cardId:String):Option<String> {
 }
 
 @:nullSafety
-function getRuntimeText(ctx:Context):Array<{runtime:ExecuteRuntime, text:CardText}> {
+function getRuntimeText(ctx:Context, playerId: String):Array<{runtime:ExecuteRuntime, text:CardText}> {
 	final ret = new Array<{runtime:ExecuteRuntime, text:CardText}>();
 	// 原始內文
 	final originReturn = [
 		for (card in ctx.table.cards) {
-			var runtime = new DefaultExecuteRuntime();
-			runtime.cardId = card.id;
+			final runtime = new DefaultExecuteRuntime(card.id, playerId);
 			for (text in getCurrentCardProto(ctx, card.protoId).getTexts(ctx, runtime)) {
 				ret.push({
 					runtime: runtime,
@@ -258,8 +263,7 @@ function getRuntimeText(ctx:Context):Array<{runtime:ExecuteRuntime, text:CardTex
 	// 計算常駐能力新增內文
 	final originMarkEffects = [
 		for (card in ctx.table.cards) {
-			var runtime = new DefaultExecuteRuntime();
-			runtime.cardId = card.id;
+			final runtime = new DefaultExecuteRuntime(card.id, playerId);
 			for (text in getCurrentCardProto(ctx, card.protoId).getTexts(ctx, runtime)) {
 				for (effect in text.getEffect(ctx, runtime)) {
 					effect;
@@ -285,8 +289,7 @@ function getRuntimeText(ctx:Context):Array<{runtime:ExecuteRuntime, text:CardTex
 			case _:
 				throw new haxe.Exception("addedReturn xxx");
 		}
-		var runtime = new DefaultExecuteRuntime();
-		runtime.cardId = info.cardId;
+		final runtime = new DefaultExecuteRuntime(info.cardId, playerId);
 		ret.push({
 			runtime: runtime,
 			text: info.text
@@ -316,88 +319,13 @@ function getRuntimeText(ctx:Context):Array<{runtime:ExecuteRuntime, text:CardTex
 			case _:
 				throw new haxe.Exception("globalAddedReturn xxx");
 		}
-		var runtime = new DefaultExecuteRuntime();
-		runtime.cardId = info.cardId;
+		final runtime = new DefaultExecuteRuntime(info.cardId, playerId);
 		ret.push({
 			runtime: runtime,
 			text: info.text
 		});
 	});
 	return ret;
-}
-
-@:nullSafety
-function mapRuntimeText<T>(ctx:Context, mapFn:(runtime:ExecuteRuntime, text:CardText) -> T):Array<T> {
-	final runtime = new DefaultExecuteRuntime();
-	// 原始內文
-	final originReturn = [
-		for (card in ctx.table.cards) {
-			runtime.cardId = card.id;
-			for (text in getCurrentCardProto(ctx, card.protoId).getTexts(ctx, runtime)) {
-				mapFn(runtime, text);
-			}
-		}
-	];
-	// 計算常駐能力新增內文
-	final originMarkEffects = [
-		for (card in ctx.table.cards) {
-			runtime.cardId = card.id;
-			for (text in getCurrentCardProto(ctx, card.protoId).getTexts(ctx, runtime)) {
-				for (effect in text.getEffect(ctx, runtime)) {
-					effect;
-				}
-			}
-		}
-	];
-	final attachTextEffect = originMarkEffects.filter(effect -> {
-		return switch effect {
-			case AddText(_, _):
-				true;
-			case _:
-				false;
-		}
-	});
-	final addedReturn = attachTextEffect.map(effect -> {
-		final info = switch effect {
-			case AddText(cardId, text):
-				{
-					cardId: cardId,
-					text: text
-				};
-			case _:
-				throw new haxe.Exception("addedReturn xxx");
-		}
-		runtime.cardId = info.cardId;
-		return mapFn(runtime, info.text);
-	});
-	// 計算效果新增內文
-	final globalMarkEffects = [
-		for (mark in ctx.marks)
-			for (effect in mark.getEffect(ctx))
-				effect
-	];
-	final globalAttachTextEffect = globalMarkEffects.filter(effect -> {
-		return switch effect {
-			case AddText(_, _):
-				true;
-			case _:
-				false;
-		}
-	});
-	final globalAddedReturn = globalAttachTextEffect.map(effect -> {
-		final info = switch effect {
-			case AddText(cardId, text):
-				{
-					cardId: cardId,
-					text: text
-				};
-			case _:
-				throw new haxe.Exception("globalAddedReturn xxx");
-		}
-		runtime.cardId = info.cardId;
-		return mapFn(runtime, info.text);
-	});
-	return originReturn.concat(addedReturn).concat(globalAddedReturn);
 }
 
 // Requires
