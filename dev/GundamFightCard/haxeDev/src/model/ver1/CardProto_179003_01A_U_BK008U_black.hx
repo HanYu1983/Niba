@@ -44,7 +44,7 @@ class Text1 extends CardText {
 
 	public override function action(ctx:Context, runtime:ExecuteRuntime):Void {
 		final cardId = runtime.getCardId();
-		ctx.effectStack.push(new Block("", PlayText(cardId, id), new Text2('${id}_Text2')));
+		ctx.effectStack.push(new Block('${id}_${Date.now()}', PlayText(cardId, id), new Text2('${id}_Text2')));
 	}
 }
 
@@ -57,5 +57,41 @@ class Text2 extends CardText {
 		final cardId = runtime.getCardId();
 		removeDestroyEffect(ctx, cardId);
 		becomeG(ctx, cardId);
+	}
+}
+
+function test() {
+	final ctx = new Context();
+	final card1 = new Card("0");
+	card1.protoId = "179003_01A_U_BK008U_black";
+	ctx.table.cards[card1.id] = card1;
+	ctx.phase = Test("ダメージ判定ステップ");
+	final playerId = "0";
+	final infos = getRuntimeText(ctx, playerId).map(info -> {
+		return {
+			cardId: info.runtime.getCardId(),
+			text: info.text,
+			reqs: info.text.getRequires(ctx, info.runtime),
+		}
+	});
+	trace(infos);
+	if (infos.length == 0) {
+		throw new haxe.Exception("infos.length == 0");
+	}
+	final selectTextId = infos[0].text.id;
+	final playerId = "0";
+	final findText = getRuntimeText(ctx, playerId).filter(info -> {
+		return info.text.id == selectTextId;
+	});
+	if (findText.length == 0) {
+		throw new haxe.Exception("findText not found");
+	}
+	{
+		final text = findText[0].text;
+		final runtime = findText[0].runtime;
+		for (req in text.getRequires(ctx, runtime)) {
+			req.action(ctx, runtime);
+		}
+		text.action(ctx, runtime);
 	}
 }

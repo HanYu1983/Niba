@@ -28,6 +28,7 @@ class Card implements hxbit.Serializable {
 	@:s public var isFaceUp = false;
 	@:s public var isTap = false;
 	@:s public var protoId = "unknown";
+	@:s public var owner = "unknown";
 }
 
 class CardStack implements hxbit.Serializable {
@@ -232,10 +233,12 @@ function isDestroyNow(ctx:Context, cardId:String, condition:{isByBattleDamage:Bo
 	return false;
 }
 
+@:nullSafety
 function removeDestroyEffect(ctx:Context, cardId:String):Void {
 	trace("移除堆疊中的破壞效果");
 }
 
+@:nullSafety
 function becomeG(ctx:Context, cardId:String):Void {
 	trace("將自己變成G");
 }
@@ -245,8 +248,43 @@ function getUnitOfSetGroup(ctx:Context, cardId:String):Option<String> {
 	return None;
 }
 
+function getBlocks(ctx:Context):Array<Block> {
+	return ctx.effectStack.concat(ctx.immediateStack);
+}
+
+function getBlock(ctx:Context, blockId:String):Block {
+	final blocks = getBlocks(ctx);
+	final findBlock = blocks.filter(block -> block.id == blockId);
+	if (findBlock.length == 0) {
+		throw new haxe.Exception("block not found");
+	}
+	return findBlock[0];
+}
+
+function getBlockRuntime(ctx:Context, playerId:String, blockId:String):ExecuteRuntime {
+	final block = getBlock(ctx, blockId);
+	return switch block.cause {
+		case System:
+			new DefaultExecuteRuntime("0", playerId);
+		case PlayCard(cardId):
+			new DefaultExecuteRuntime(cardId, playerId);
+		case PlayText(cardId, textId):
+			new DefaultExecuteRuntime(cardId, playerId);
+		case TextEffect(cardId, textId):
+			new DefaultExecuteRuntime(cardId, playerId);
+		case _:
+			new DefaultExecuteRuntime("0", playerId);
+	}
+}
+
+function removeBlock(ctx:Context, blockId:String):Void {
+	final block = getBlock(ctx, blockId);
+	ctx.effectStack.remove(block);
+	ctx.immediateStack.remove(block);
+}
+
 @:nullSafety
-function getRuntimeText(ctx:Context, playerId: String):Array<{runtime:ExecuteRuntime, text:CardText}> {
+function getRuntimeText(ctx:Context, playerId:String):Array<{runtime:ExecuteRuntime, text:CardText}> {
 	final ret = new Array<{runtime:ExecuteRuntime, text:CardText}>();
 	// 原始內文
 	final originReturn = [
@@ -326,6 +364,52 @@ function getRuntimeText(ctx:Context, playerId: String):Array<{runtime:ExecuteRun
 		});
 	});
 	return ret;
+}
+
+// 常駐增強內文
+function getAddBattlePoint(ctx:Context, playerId:String) {
+	// TODO
+	final infos = [
+		for (info in getRuntimeText(ctx, playerId)) {
+			final runtime = info.runtime;
+			final text = info.text;
+			final effects = text.getEffect(ctx, runtime);
+			for (effect in effects) {
+				switch effect {
+					case AddBattlePoint(cardId, battlePoint):
+						{
+							cardId: cardId,
+							battlePoint: battlePoint
+						};
+					case _:
+						null;
+				}
+			}
+		}
+	];
+}
+
+// 速攻
+function getAttackSpeed(ctx:Context, playerId:String) {
+	// TODO
+	final infos = [
+		for (info in getRuntimeText(ctx, playerId)) {
+			final runtime = info.runtime;
+			final text = info.text;
+			final effects = text.getEffect(ctx, runtime);
+			for (effect in effects) {
+				switch effect {
+					case AttackSpeed(cardId, speed):
+						{
+							cardId: cardId,
+							speed: speed
+						};
+					case _:
+						null;
+				}
+			}
+		}
+	];
 }
 
 // Requires

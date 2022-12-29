@@ -2,207 +2,61 @@ package model;
 
 import viewModel.IViewModel;
 import model.ver1.Define;
-import model.ver1.TestCardProto;
 import model.ver1.DataPool;
+import model.ver1.Game;
 
-// switch Type.typeof(markEffect) {
-// 	case TClass(cls) if (cls == Any):
-// 		true;
-// 	case _:
-// 		false;
-// }
-
-@:nullSafety
-class Game implements hxbit.Serializable {
-	@:s public var ctx = new Context();
-
-	public function new() {}
-
-	public function test() {
-		trace("============= test =============");
-		final cardProto = new CardProto1();
-		final runtime = new DefaultExecuteRuntime("0","0");
-		ctx.cardProtoPool["cardProto"] = cardProto;
-		var texts = {
-			var cardTexts = cardProto.getTexts(ctx, runtime);
-			var attachTexts:Array<CardText> = cast [
-				for (mark in ctx.marks)
-					for (markEffect in mark.getEffect(ctx)) {
-						switch markEffect {
-							case AddText(_, text):
-								text;
-							case _:
-								null;
-						}
-					}
-			].filter(a -> a != null);
-			cardTexts.concat(attachTexts);
-		}
-		for (text in texts) {
-			if (text == null) {
-				continue;
-			}
-			final reqs = text.getRequires(ctx, runtime);
-			for (req in reqs) {
-				req.action(ctx, runtime);
-			}
-			trace("改變狀態");
-			text.action(ctx, runtime);
-		}
-		trace("重取得最新狀態");
-		texts = {
-			var cardTexts = cardProto.getTexts(ctx, runtime);
-			var attachTexts:Array<CardText> = cast [
-				for (mark in ctx.marks)
-					for (markEffect in mark.getEffect(ctx)) {
-						switch markEffect {
-							case AddText(_, text):
-								text;
-							case _:
-								null;
-						}
-					}
-			].filter(a -> a != null);
-			cardTexts.concat(attachTexts);
-		}
-		final markEffects = [
-			for (mark in ctx.marks)
-				for (markEffect in mark.getEffect(ctx))
-					markEffect
-		].concat([
-			for (text in texts)
-				for (markEffect in text.getEffect(ctx, runtime))
-					markEffect
-		]);
-		trace("常駐增強內文");
-		final bonusList = [
-			for (markEffect in markEffects) {
-				switch markEffect {
-					case AddBattlePoint(cardId, battlePoint):
-						{
-							cardId: cardId,
-							battlePoint: battlePoint
-						};
-					case _:
-						null;
-				}
-			}
-		];
-		for (bonus in bonusList) {
-			if (bonus == null) {
-				continue;
-			}
-			trace(bonus.cardId);
-			trace(bonus.battlePoint);
-		}
-		trace("速攻");
-		final attackSpeedList = [
-			for (markEffect in markEffects) {
-				switch markEffect {
-					case AttackSpeed(cardId, speed):
-						{
-							cardId: cardId,
-							speed: speed
-						};
-					case _:
-						null;
-				}
-			}
-		];
-		for (bonus in attackSpeedList) {
-			if (bonus == null) {
-				continue;
-			}
-			trace(bonus.cardId);
-			trace(bonus.speed);
-		}
-
-		// 所有標記
-		// final marks = cardProto.getMarks(ctx, runtime);
-		// trace(marks);
-		// //
-		// final texts = [
-		// 	for (mark in marks)
-		// 		for (markEffect in mark.getEffect(ctx, runtime)) {
-		// 			switch markEffect {
-		// 				case Text(text):
-		// 					text;
-		// 				case _:
-		// 					null;
-		// 			}
-		// 		}
-
-		// ];
-		// trace(texts);
-		// for (text in texts) {
-		// 	if (text == null) {
-		// 		continue;
-		// 	}
-		// 	final reqs = text.getRequires(ctx, runtime);
-		// 	for (req in reqs) {
-		// 		req.action(ctx, runtime);
-		// 	}
-		// 	text.action(ctx, runtime);
-		// }
-		// // 常駐增強內文
-		// final bonusList = [
-		// 	for (mark in marks)
-		// 		for (markEffect in mark.getEffect(ctx, runtime)) {
-		// 			switch markEffect {
-		// 				case AddBattlePoint(cardId, battlePoint):
-		// 					{
-		// 						cardId: cardId,
-		// 						battlePoint: battlePoint
-		// 					};
-		// 				case _:
-		// 					null;
-		// 			}
-		// 		}
-		// ];
-		// for(bonus in bonusList){
-		// 	if (bonus == null) {
-		// 		continue;
-		// 	}
-		// 	trace(bonus.cardId);
-		// 	trace(bonus.battlePoint);
-		// }
-		trace("==========================");
-	}
-
-	public function test2(){
-		model.ver1.CardProto_179001_01A_CH_WT007R_white.test();
-	}
-
-	public function getMemonto():String {
-		final s = new hxbit.Serializer();
-		final bytes = s.serialize(this);
-		return bytes.toHex();
-	}
-
-	public static function ofMemonto(memonto:String):Game {
-		final u = new hxbit.Serializer();
-		return u.unserialize(haxe.io.Bytes.ofHex(memonto), Game);
+private function toCardModel(ctx:Context, card:Card):CardModel {
+	return {
+		id: '${card.id}',
+		name: '${card.id}',
+		content: 'card ${card.id}',
+		owner: card.owner,
 	}
 }
 
 @:nullSafety
 class TestModel extends DefaultViewModel {
-	public function new() {}
+	private var game = new Game();
 
-	public override function getGame():GameModel {
-		final game = new Game();
-		game.test2();
+	public function new() {
+		final card1 = new Card("0");
+		card1.protoId = "179003_01A_U_BK008U_black";
+
+		final card2 = new Card("1");
+		card2.protoId = "179003_01A_U_BK008U_black";
+		game.ctx.table.cards[card1.id] = card1;
+		game.ctx.table.cards[card2.id] = card2;
+		trace("============ getGame ============");
+		// game.test();
 		trace(game.ctx);
 
+		trace("============ testMemonto ============");
 		final loadGame = Game.ofMemonto(game.getMemonto());
-		loadGame.test2();
+		// loadGame.test();
 		trace(loadGame.ctx);
+		trace("=================================");
 		for (key => value in loadGame.ctx.marks) {
 			trace(key);
 			trace(value);
 		}
+		trace("=================================");
+		game = loadGame;
+	}
+
+	public override function getGame():GameModel {
+		final cards = [
+			for (card in game.ctx.table.cards)
+				toCardModel(game.ctx, card)
+		];
 		return {
-			players: []
+			players: [
+				{
+					id: 'test',
+					name: 'test',
+					hand: cards,
+					deck: cards,
+				}
+			]
 		};
 	}
 
