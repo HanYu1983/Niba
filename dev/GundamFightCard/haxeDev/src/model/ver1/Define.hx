@@ -1,6 +1,9 @@
 package model.ver1;
 
+using Lambda;
+
 import haxe.ds.Option;
+import model.ver1.DataPool;
 
 // 實作hxbit.Serializable這個介面後並使用了@:s
 // @:nullSafety就會出錯
@@ -23,7 +26,7 @@ class Card implements hxbit.Serializable {
 	@:s public var id:String;
 	@:s public var isFaceUp = false;
 	@:s public var isTap = false;
-	@:s public var protoId:Option<String> = None;
+	@:s public var protoId = "unknown";
 }
 
 class CardStack implements hxbit.Serializable {
@@ -120,12 +123,9 @@ enum MarkType {
 enum MarkCause {
 	Pending;
 	CardEffect(fromCardId:String);
-	// CardText(cardId:String);
 }
 
 enum MarkEffect {
-	// deprecated
-	Text(text:CardText);
 	AddBattlePoint(cardId:String, battlePoint:BattlePoint);
 	AttackSpeed(cardId:String, speed:Int);
 	AddText(cardID:String, text:CardText);
@@ -142,7 +142,7 @@ class Mark implements hxbit.Serializable {
 	@:s public var type = MarkType.Pending;
 	@:s public var cause = MarkCause.Pending;
 
-	public function getEffect(ctx:Context, runtime:ExecuteRuntime):Array<MarkEffect> {
+	public function getEffect(ctx:Context):Array<MarkEffect> {
 		return [];
 	}
 }
@@ -195,19 +195,27 @@ function getUnitOfSetGroup(ctx:Context, cardId:String):Option<String> {
 }
 
 function mapRuntimeText<T>(ctx:Context, mapFn:(runtime:ExecuteRuntime, text:CardText) -> T):Array<T> {
-	final currentCardId = "0";
-	var runtime = new DefaultExecuteRuntime();
-	runtime.cardId = currentCardId;
-	final originTexts = [new CardText("", ""), new CardText("", "")];
-	final originMarkEffects = [
-		for (text in originTexts)
-			for (effect in text.getEffect(ctx, runtime))
-				effect
+	final runtime = new DefaultExecuteRuntime();
+	// 原始內文
+	final originReturn = [
+		for (card in ctx.table.cards) {
+			runtime.cardId = card.id;
+			for (text in getCardProto(card.protoId).getTexts(ctx, runtime)) {
+				mapFn(runtime, text);
+			}
+		}
 	];
-	final originReturn = originTexts.map(text -> {
-		runtime.cardId = currentCardId;
-		return mapFn(runtime, text);
-	});
+	// 計算常駐能力新增內文
+	final originMarkEffects = [
+		for (card in ctx.table.cards) {
+			runtime.cardId = card.id;
+			for (text in getCardProto(card.protoId).getTexts(ctx, runtime)) {
+				for (effect in text.getEffect(ctx, runtime)) {
+					effect;
+				}
+			}
+		}
+	];
 	final attachTextEffect = originMarkEffects.filter(effect -> {
 		return switch effect {
 			case AddText(_, _):
@@ -229,9 +237,10 @@ function mapRuntimeText<T>(ctx:Context, mapFn:(runtime:ExecuteRuntime, text:Card
 		runtime.cardId = info.cardId;
 		return mapFn(runtime, info.text);
 	});
+	// 計算效果新增內文
 	final globalMarkEffects = [
 		for (mark in ctx.marks)
-			for (effect in mark.getEffect(ctx, runtime))
+			for (effect in mark.getEffect(ctx))
 				effect
 	];
 	final globalAttachTextEffect = globalMarkEffects.filter(effect -> {

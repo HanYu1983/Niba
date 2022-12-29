@@ -26,9 +26,9 @@ class Game implements hxbit.Serializable {
 			var cardTexts = cardProto.getTexts(ctx, runtime);
 			var attachTexts:Array<CardText> = cast [
 				for (mark in ctx.marks)
-					for (markEffect in mark.getEffect(ctx, runtime)) {
+					for (markEffect in mark.getEffect(ctx)) {
 						switch markEffect {
-							case Text(text):
+							case AddText(_, text):
 								text;
 							case _:
 								null;
@@ -53,9 +53,9 @@ class Game implements hxbit.Serializable {
 			var cardTexts = cardProto.getTexts(ctx, runtime);
 			var attachTexts:Array<CardText> = cast [
 				for (mark in ctx.marks)
-					for (markEffect in mark.getEffect(ctx, runtime)) {
+					for (markEffect in mark.getEffect(ctx)) {
 						switch markEffect {
-							case Text(text):
+							case AddText(_, text):
 								text;
 							case _:
 								null;
@@ -66,7 +66,7 @@ class Game implements hxbit.Serializable {
 		}
 		final markEffects = [
 			for (mark in ctx.marks)
-				for (markEffect in mark.getEffect(ctx, runtime))
+				for (markEffect in mark.getEffect(ctx))
 					markEffect
 		].concat([
 			for (text in texts)

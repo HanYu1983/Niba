@@ -33,8 +33,8 @@ private class CardProto1Text1Require1MarkFirstAttack extends Mark {
 		super(CardProto1Text1Require1MarkFirstAttackId, AttachCard(runtime.getCardId()), CardEffect(runtime.getCardId()));
 	}
 
-	public override function getEffect(ctx:Context, runtime:ExecuteRuntime):Array<MarkEffect> {
-		return [Text(new RemoveFirstAttackWhenTurnEnd())];
+	public override function getEffect(ctx:Context):Array<MarkEffect> {
+		return [AddText("", new RemoveFirstAttackWhenTurnEnd())];
 	}
 }
 

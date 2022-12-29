@@ -10,7 +10,7 @@ import tool.Helper;
 // （戦闘フェイズ）〔２〕：このセットグループのユニットは、ターン終了時まで「速攻」を得る。
 
 class CardProto_179001_01A_CH_WT007R_white_Text1_Mark1_Text extends CardText {
-	public function new(removeMarkId: String) {
+	public function new(removeMarkId:String) {
 		super(getNextId(), "回合結束時刪除速攻");
 		this.removeMarkId = removeMarkId;
 	}
@@ -31,12 +31,17 @@ class CardProto_179001_01A_CH_WT007R_white_Text1_Mark1_Text extends CardText {
 }
 
 class CardProto_179001_01A_CH_WT007R_white_Text1_Mark1 extends Mark {
-	public function new(id:String, type:MarkType, cause:MarkCause) {
-		super(id, type, cause);
+	public function new(id:String, attachCardId:String, cause:MarkCause) {
+		super(id, AttachCard(attachCardId), cause);
+		this.attachCardId = attachCardId;
 	}
 
-	public override function getEffect(ctx:Context, runtime:ExecuteRuntime):Array<MarkEffect> {
-		return [Text(new CardProto_179001_01A_CH_WT007R_white_Text1_Mark1_Text(id))];
+	@:s public var attachCardId:String;
+
+	public override function getEffect(ctx:Context):Array<MarkEffect> {
+		return [
+			AddText(attachCardId, new CardProto_179001_01A_CH_WT007R_white_Text1_Mark1_Text(id))
+		];
 	}
 }
 
@@ -60,7 +65,7 @@ class CardProto_179001_01A_CH_WT007R_white_Text1 extends CardText {
 			case _:
 				throw new haxe.Exception("機體找不到");
 		}
-		final mark = new CardProto_179001_01A_CH_WT007R_white_Text1_Mark1(getNextId(), AttachCard(unit), CardEffect(runtime.getCardId()));
+		final mark = new CardProto_179001_01A_CH_WT007R_white_Text1_Mark1(getNextId(), unit, CardEffect(runtime.getCardId()));
 		ctx.marks[mark.id] = mark;
 	}
 }
