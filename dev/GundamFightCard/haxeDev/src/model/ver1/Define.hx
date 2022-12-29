@@ -2,6 +2,7 @@ package model.ver1;
 
 using Lambda;
 
+import haxe.EnumTools;
 import haxe.ds.Option;
 import model.ver1.DataPool;
 
@@ -202,6 +203,93 @@ function getUnitOfSetGroup(ctx:Context, cardId:String):Option<String> {
 }
 
 @:nullSafety
+function getRuntimeText(ctx:Context):Array<{runtime:ExecuteRuntime, text:CardText}> {
+	final ret = new Array<{runtime:ExecuteRuntime, text:CardText}>();
+	// 原始內文
+	final originReturn = [
+		for (card in ctx.table.cards) {
+			var runtime = new DefaultExecuteRuntime();
+			runtime.cardId = card.id;
+			for (text in getCurrentCardProto(ctx, card.protoId).getTexts(ctx, runtime)) {
+				ret.push({
+					runtime: runtime,
+					text: text
+				});
+			}
+		}
+	];
+	// 計算常駐能力新增內文
+	final originMarkEffects = [
+		for (card in ctx.table.cards) {
+			var runtime = new DefaultExecuteRuntime();
+			runtime.cardId = card.id;
+			for (text in getCurrentCardProto(ctx, card.protoId).getTexts(ctx, runtime)) {
+				for (effect in text.getEffect(ctx, runtime)) {
+					effect;
+				}
+			}
+		}
+	];
+	final attachTextEffect = originMarkEffects.filter(effect -> {
+		return switch effect {
+			case AddText(_, _):
+				true;
+			case _:
+				false;
+		}
+	});
+	final addedReturn = attachTextEffect.map(effect -> {
+		final info = switch effect {
+			case AddText(cardId, text):
+				{
+					cardId: cardId,
+					text: text
+				};
+			case _:
+				throw new haxe.Exception("addedReturn xxx");
+		}
+		var runtime = new DefaultExecuteRuntime();
+		runtime.cardId = info.cardId;
+		ret.push({
+			runtime: runtime,
+			text: info.text
+		});
+	});
+	// 計算效果新增內文
+	final globalMarkEffects = [
+		for (mark in ctx.marks)
+			for (effect in mark.getEffect(ctx))
+				effect
+	];
+	final globalAttachTextEffect = globalMarkEffects.filter(effect -> {
+		return switch effect {
+			case AddText(_, _):
+				true;
+			case _:
+				false;
+		}
+	});
+	final globalAddedReturn = globalAttachTextEffect.map(effect -> {
+		final info = switch effect {
+			case AddText(cardId, text):
+				{
+					cardId: cardId,
+					text: text
+				};
+			case _:
+				throw new haxe.Exception("globalAddedReturn xxx");
+		}
+		var runtime = new DefaultExecuteRuntime();
+		runtime.cardId = info.cardId;
+		ret.push({
+			runtime: runtime,
+			text: info.text
+		});
+	});
+	return ret;
+}
+
+@:nullSafety
 function mapRuntimeText<T>(ctx:Context, mapFn:(runtime:ExecuteRuntime, text:CardText) -> T):Array<T> {
 	final runtime = new DefaultExecuteRuntime();
 	// 原始內文
@@ -240,7 +328,7 @@ function mapRuntimeText<T>(ctx:Context, mapFn:(runtime:ExecuteRuntime, text:Card
 					text: text
 				};
 			case _:
-				throw new haxe.Exception("xxx");
+				throw new haxe.Exception("addedReturn xxx");
 		}
 		runtime.cardId = info.cardId;
 		return mapFn(runtime, info.text);
@@ -267,7 +355,7 @@ function mapRuntimeText<T>(ctx:Context, mapFn:(runtime:ExecuteRuntime, text:Card
 					text: text
 				};
 			case _:
-				throw new haxe.Exception("xxx");
+				throw new haxe.Exception("globalAddedReturn xxx");
 		}
 		runtime.cardId = info.cardId;
 		return mapFn(runtime, info.text);
@@ -286,8 +374,8 @@ class RequirePhase extends Require {
 	public final phase:Phase;
 
 	public override function action(ctx:Context, runtime:ExecuteRuntime):Void {
-		if (ctx.phase != this.phase) {
-			throw new haxe.Exception("xxx");
+		if (EnumValueTools.equals(ctx.phase, phase) == false) {
+			throw new haxe.Exception('ctx.phase != this.phase: ${ctx.phase} != ${phase}');
 		}
 	}
 }

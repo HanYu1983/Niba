@@ -169,6 +169,10 @@ class Game implements hxbit.Serializable {
 		trace("==========================");
 	}
 
+	public function test2(){
+		model.ver1.CardProto_179001_01A_CH_WT007R_white.test();
+	}
+
 	public function getMemonto():String {
 		final s = new hxbit.Serializer();
 		final bytes = s.serialize(this);
@@ -187,11 +191,11 @@ class TestModel extends DefaultViewModel {
 
 	public override function getGame():GameModel {
 		final game = new Game();
-		game.test();
+		game.test2();
 		trace(game.ctx);
 
 		final loadGame = Game.ofMemonto(game.getMemonto());
-		loadGame.test();
+		loadGame.test2();
 		trace(loadGame.ctx);
 		for (key => value in loadGame.ctx.marks) {
 			trace(key);

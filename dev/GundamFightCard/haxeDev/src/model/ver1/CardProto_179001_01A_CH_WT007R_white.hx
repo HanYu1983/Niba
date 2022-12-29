@@ -12,13 +12,15 @@ class CardProto_179001_01A_CH_WT007R_white extends AbstractCardProto {
 	public function new() {}
 
 	public override function getTexts(ctx:Context, runtime:ExecuteRuntime):Array<CardText> {
-		return [new CardProto_179001_01A_CH_WT007R_white_Text1()];
+		return [
+			new CardProto_179001_01A_CH_WT007R_white_Text1('${runtime.getCardId()}_CardProto_179001_01A_CH_WT007R_white_Text1')
+		];
 	}
 }
 
 class CardProto_179001_01A_CH_WT007R_white_Text1 extends CardText {
-	public function new() {
-		super(getNextId(), "（戦闘フェイズ）〔２〕：このセットグループのユニットは、ターン終了時まで「速攻」を得る。");
+	public function new(id:String) {
+		super(id, "（戦闘フェイズ）〔２〕：このセットグループのユニットは、ターン終了時まで「速攻」を得る。");
 	}
 
 	public override function getRequires(ctx:Context, runtime:ExecuteRuntime):Array<Require> {
@@ -29,9 +31,9 @@ class CardProto_179001_01A_CH_WT007R_white_Text1 extends CardText {
 				"unknown";
 		}
 		return [
-			new RequirePhase(getNextId(), "（戦闘フェイズ）", Test("戦闘フェイズ")),
-			new RequireG(getNextId(), "2", [Red, Red], ctx, runtime),
-			new ForceTargetCard(getNextId(), "このセットグループのユニット", "このセットグループのユニット", unit),
+			new RequirePhase('${id}_CardProto_179001_01A_CH_WT007R_white_Text1_Req1', "（戦闘フェイズ）", Test("戦闘フェイズ")),
+			new RequireG('${id}_CardProto_179001_01A_CH_WT007R_white_Text1_Req2', "2", [Red, Red], ctx, runtime),
+			new ForceTargetCard('${id}_CardProto_179001_01A_CH_WT007R_white_Text1_Req3', "このセットグループのユニット", "このセットグループのユニット", unit),
 		];
 	}
 
@@ -41,7 +43,7 @@ class CardProto_179001_01A_CH_WT007R_white_Text1 extends CardText {
 			throw new haxe.Exception("selectUnits not found");
 		}
 		for (unit in selectUnits) {
-			final mark = new CardProto_179001_01A_CH_WT007R_white_Text1_Mark1(getNextId(), unit);
+			final mark = new CardProto_179001_01A_CH_WT007R_white_Text1_Mark1('${id}_CardProto_179001_01A_CH_WT007R_white_Text1_Mark1', unit);
 			ctx.marks[mark.id] = mark;
 		}
 	}
@@ -57,14 +59,14 @@ class CardProto_179001_01A_CH_WT007R_white_Text1_Mark1 extends Mark {
 
 	public override function getEffect(ctx:Context):Array<MarkEffect> {
 		return [
-			AddText(attachCardId, new CardProto_179001_01A_CH_WT007R_white_Text1_Mark1_Text(id))
+			AddText(attachCardId, new CardProto_179001_01A_CH_WT007R_white_Text1_Mark1_Text('${id}CardProto_179001_01A_CH_WT007R_white_Text1_Mark1_Text', id))
 		];
 	}
 }
 
 class CardProto_179001_01A_CH_WT007R_white_Text1_Mark1_Text extends CardText {
-	public function new(removeMarkId:String) {
-		super(getNextId(), "回合結束時刪除速攻");
+	public function new(id:String, removeMarkId:String) {
+		super(id, "回合結束時刪除速攻");
 		this.removeMarkId = removeMarkId;
 	}
 
@@ -80,5 +82,35 @@ class CardProto_179001_01A_CH_WT007R_white_Text1_Mark1_Text extends CardText {
 				ctx.marks.remove(removeMarkId);
 			default:
 		}
+	}
+}
+
+function test() {
+	final ctx = new Context();
+	final card1 = new Card("0");
+	card1.protoId = "179001_01A_CH_WT007R_white";
+	ctx.table.cards[card1.id] = card1;
+	ctx.phase = Test("戦闘フェイズ");
+	final infos = mapRuntimeText(ctx, (runtime, text) -> {
+		return {cardId: runtime.getCardId(), text: text, reqs: text.getRequires(ctx, runtime)};
+	});
+	trace(infos);
+	if (infos.length == 0) {
+		throw new haxe.Exception("infos.length == 0");
+	}
+	final selectTextId = infos[0].text.id;
+	final findText = getRuntimeText(ctx).filter(info -> {
+		return info.text.id == selectTextId;
+	});
+	if (findText.length == 0) {
+		throw new haxe.Exception("findText not found");
+	}
+	{
+		final text = findText[0].text;
+		final runtime = findText[0].runtime;
+		for (req in text.getRequires(ctx, runtime)) {
+			req.action(ctx, runtime);
+		}
+		text.action(ctx, runtime);
 	}
 }
