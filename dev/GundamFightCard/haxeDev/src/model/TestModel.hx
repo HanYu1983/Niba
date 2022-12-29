@@ -3,6 +3,7 @@ package model;
 import viewModel.IViewModel;
 import model.ver1.Define;
 import model.ver1.TestCardProto;
+import model.ver1.CardProto_179001_01A_CH_WT007R_white;
 
 // switch Type.typeof(markEffect) {
 // 	case TClass(cls) if (cls == Any):
@@ -10,14 +11,6 @@ import model.ver1.TestCardProto;
 // 	case _:
 // 		false;
 // }
-
-class SimpleRuntime implements ExecuteRuntime {
-	public function new() {}
-
-	public function getCardId():String {
-		return "0";
-	}
-}
 
 @:nullSafety
 class Game implements hxbit.Serializable {
@@ -28,7 +21,7 @@ class Game implements hxbit.Serializable {
 	public function test() {
 		trace("============= test =============");
 		final cardProto = new CardProto1();
-		final runtime = new SimpleRuntime();
+		final runtime = new DefaultExecuteRuntime();
 		var texts = {
 			var cardTexts = cardProto.getTexts(ctx, runtime);
 			var attachTexts:Array<CardText> = cast [

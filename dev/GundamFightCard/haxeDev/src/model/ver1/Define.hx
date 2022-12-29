@@ -69,18 +69,20 @@ enum RelativePlayer {
 }
 
 class Require {
-	public function new(id:String) {
+	public function new(id:String, description:String) {
 		this.id = id;
+		this.description = description;
 	}
 
 	public final id:String;
+	public final description:String;
 
 	public function action(ctx:Context, runtime:ExecuteRuntime):Void {}
 }
 
 class RequireUserSelect<T> extends Require {
-	public function new(id:String) {
-		super(id);
+	public function new(id:String, description:String) {
+		super(id, description);
 	}
 
 	public var tips:Array<T> = [];
@@ -88,11 +90,13 @@ class RequireUserSelect<T> extends Require {
 }
 
 class CardText {
-	public function new(id:String) {
+	public function new(id:String, description:String) {
 		this.id = id;
+		this.description = description;
 	}
 
 	public final id:String;
+	public final description:String;
 
 	public function getEffect(ctx:Context, runtime:ExecuteRuntime):Array<MarkEffect> {
 		return [];
@@ -116,13 +120,15 @@ enum MarkType {
 enum MarkCause {
 	Pending;
 	CardEffect(fromCardId:String);
-	//CardText(cardId:String);
+	// CardText(cardId:String);
 }
 
 enum MarkEffect {
+	// deprecated
 	Text(text:CardText);
 	AddBattlePoint(cardId:String, battlePoint:BattlePoint);
-	AttackSpeed(cardId:String, speed: Int);
+	AttackSpeed(cardId:String, speed:Int);
+	AddText(cardID:String, text:CardText);
 }
 
 class Mark implements hxbit.Serializable {
@@ -143,12 +149,27 @@ class Mark implements hxbit.Serializable {
 
 interface ExecuteRuntime {
 	function getCardId():String;
+	function getSelectedCard(id:String):Array<String>;
+}
+
+class DefaultExecuteRuntime implements ExecuteRuntime {
+	public function new() {}
+
+	public var cardId = "";
+
+	public function getCardId():String {
+		return cardId;
+	}
+
+	public function getSelectedCard(id:String):Array<String> {
+		return [];
+	}
 }
 
 interface ICardProto {
 	// function getMarkEffect(mark:Mark):Array<MarkEffect>;
 	function getTexts(ctx:Context, runtime:ExecuteRuntime):Array<CardText>;
-	//function getMarks(ctx:Context, runtime:ExecuteRuntime):Array<Mark>;
+	// function getMarks(ctx:Context, runtime:ExecuteRuntime):Array<Mark>;
 }
 
 class AbstractCardProto implements ICardProto {
@@ -161,4 +182,120 @@ class AbstractCardProto implements ICardProto {
 	// public function getMarks(ctx:Context, runtime:ExecuteRuntime):Array<Mark> {
 	// 	return [];
 	// }
+}
+
+//
+enum GColor {
+	Red;
+}
+
+// Alg
+function getUnitOfSetGroup(ctx:Context, cardId:String):Option<String> {
+	return None;
+}
+
+function mapRuntimeText<T>(ctx:Context, mapFn:(runtime:ExecuteRuntime, text:CardText) -> T):Array<T> {
+	final currentCardId = "0";
+	var runtime = new DefaultExecuteRuntime();
+	runtime.cardId = currentCardId;
+	final originTexts = [new CardText("", ""), new CardText("", "")];
+	final originMarkEffects = [
+		for (text in originTexts)
+			for (effect in text.getEffect(ctx, runtime))
+				effect
+	];
+	final originReturn = originTexts.map(text -> {
+		runtime.cardId = currentCardId;
+		return mapFn(runtime, text);
+	});
+	final attachTextEffect = originMarkEffects.filter(effect -> {
+		return switch effect {
+			case AddText(_, _):
+				true;
+			case _:
+				false;
+		}
+	});
+	final addedReturn = attachTextEffect.map(effect -> {
+		final info = switch effect {
+			case AddText(cardId, text):
+				{
+					cardId: cardId,
+					text: text
+				};
+			case _:
+				throw new haxe.Exception("xxx");
+		}
+		runtime.cardId = info.cardId;
+		return mapFn(runtime, info.text);
+	});
+	final globalMarkEffects = [
+		for (mark in ctx.marks)
+			for (effect in mark.getEffect(ctx, runtime))
+				effect
+	];
+	final globalAttachTextEffect = globalMarkEffects.filter(effect -> {
+		return switch effect {
+			case AddText(_, _):
+				true;
+			case _:
+				false;
+		}
+	});
+	final globalAddedReturn = globalAttachTextEffect.map(effect -> {
+		final info = switch effect {
+			case AddText(cardId, text):
+				{
+					cardId: cardId,
+					text: text
+				};
+			case _:
+				throw new haxe.Exception("xxx");
+		}
+		runtime.cardId = info.cardId;
+		return mapFn(runtime, info.text);
+	});
+	return originReturn.concat(addedReturn).concat(globalAddedReturn);
+}
+
+// Requires
+
+class RequirePhase extends Require {
+	public function new(id:String, description:String, phase:Phase) {
+		super(id, description);
+		this.phase = phase;
+	}
+
+	public final phase:Phase;
+
+	public override function action(ctx:Context, runtime:ExecuteRuntime):Void {
+		if (ctx.phase != this.phase) {
+			throw new haxe.Exception("xxx");
+		}
+	}
+}
+
+class RequireG extends RequireUserSelect<String> {
+	public function new(id:String, description:String, colors:Array<GColor>, ctx:Context, runtime:ExecuteRuntime) {
+		super(id, description);
+		trace("查G的ID");
+		this.tips = ["0", "1"];
+	}
+
+	public override function action(ctx:Context, runtime:ExecuteRuntime):Void {
+		final select = runtime.getSelectedCard(this.id);
+		if (select == null) {
+			throw new haxe.Exception("還沒選好牌");
+		}
+		trace("横置選中的卡");
+	}
+}
+
+class MarkTargetCard extends Require {
+	public function new(id:String, description:String, cardId:String) {
+		super(id, description);
+		this.cardId = cardId;
+	}
+
+	public final cardId:String;
 }

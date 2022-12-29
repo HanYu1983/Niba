@@ -12,7 +12,7 @@ private final CardProto1Text1Require1MarkFirstAttackId = "CardProto1Text1Require
 
 class RemoveFirstAttackWhenTurnEnd extends CardText {
 	public function new() {
-		super("回合結束時刪除速攻");
+		super("RemoveFirstAttackWhenTurnEnd", "回合結束時刪除速攻");
 	}
 
 	public override function getEffect(ctx:Context, runtime:ExecuteRuntime):Array<MarkEffect> {
@@ -40,7 +40,7 @@ private class CardProto1Text1Require1MarkFirstAttack extends Mark {
 
 class CardProto1Text1Require1 extends RequireUserSelect<String> {
 	public function new(ctx:Context, runtime:ExecuteRuntime) {
-		super("CardProto1Text1Require1");
+		super("CardProto1Text1Require1", "CardProto1Text1Require1");
 		this.tips = ["0", "1"];
 	}
 
@@ -51,7 +51,7 @@ class CardProto1Text1Require1 extends RequireUserSelect<String> {
 
 class CardProto1Text1 extends CardText {
 	public function new() {
-		super("獲得回合結束前速攻");
+		super("CardProto1Text1", "獲得回合結束前速攻");
 	}
 
 	public override function getRequires(ctx:Context, runtime:ExecuteRuntime):Array<Require> {
@@ -66,7 +66,7 @@ class CardProto1Text1 extends CardText {
 
 class CardProto1Text2 extends CardText {
 	public function new() {
-		super("+x/+x/+x. x為機體數量");
+		super("CardProto1Text2", "+x/+x/+x. x為機體數量");
 	}
 
 	public override function getEffect(ctx:Context, runtime:ExecuteRuntime):Array<MarkEffect> {
