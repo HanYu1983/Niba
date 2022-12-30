@@ -16,12 +16,12 @@ class CardProto_179001_01A_CH_WT007R_white extends CardProto {
 
 	public override function getTexts(ctx:Context, runtime:ExecuteRuntime):Array<CardText> {
 		return [
-			new CardProto_179001_01A_CH_WT007R_white_Text1('${runtime.getCardId()}_CardProto_179001_01A_CH_WT007R_white_Text1')
+			new Text1('${runtime.getCardId()}_Text1')
 		];
 	}
 }
 
-class CardProto_179001_01A_CH_WT007R_white_Text1 extends CardText {
+private class Text1 extends CardText {
 	public function new(id:String) {
 		super(id, "（戦闘フェイズ）〔２〕：このセットグループのユニットは、ターン終了時まで「速攻」を得る。");
 	}
@@ -34,9 +34,9 @@ class CardProto_179001_01A_CH_WT007R_white_Text1 extends CardText {
 				"unknown";
 		}
 		return [
-			new RequirePhase('${id}_CardProto_179001_01A_CH_WT007R_white_Text1_Req1', "（戦闘フェイズ）", Test("戦闘フェイズ")),
-			new RequireG('${id}_CardProto_179001_01A_CH_WT007R_white_Text1_Req2', "2", [Red, Red], ctx, runtime),
-			new ForceTargetCard('${id}_CardProto_179001_01A_CH_WT007R_white_Text1_Req3', "このセットグループのユニット", "このセットグループのユニット", unit),
+			new RequirePhase('${id}_req1', "（戦闘フェイズ）", Test("戦闘フェイズ")),
+			new RequireG('${id}_req2', "2", [Red, Red], ctx, runtime),
+			new ForceTargetCard('${id}_req3', "このセットグループのユニット", "このセットグループのユニット", unit),
 		];
 	}
 
@@ -46,13 +46,13 @@ class CardProto_179001_01A_CH_WT007R_white_Text1 extends CardText {
 			throw new haxe.Exception("selectUnits not found");
 		}
 		for (unit in selectUnits) {
-			final mark = new CardProto_179001_01A_CH_WT007R_white_Text1_Mark1('${id}_CardProto_179001_01A_CH_WT007R_white_Text1_Mark1', unit);
+			final mark = new Mark1('${id}_Mark1', unit);
 			ctx.marks[mark.id] = mark;
 		}
 	}
 }
 
-class CardProto_179001_01A_CH_WT007R_white_Text1_Mark1 extends Mark {
+private class Mark1 extends Mark {
 	public function new(id:String, attachCardId:String) {
 		super(id);
 		this.attachCardId = attachCardId;
@@ -61,30 +61,15 @@ class CardProto_179001_01A_CH_WT007R_white_Text1_Mark1 extends Mark {
 	@:s public var attachCardId:String;
 
 	public override function getEffect(ctx:Context):Array<MarkEffect> {
-		return [
-			AddText(attachCardId, new CardProto_179001_01A_CH_WT007R_white_Text1_Mark1_Text('${id}CardProto_179001_01A_CH_WT007R_white_Text1_Mark1_Text', id))
-		];
-	}
-}
-
-class CardProto_179001_01A_CH_WT007R_white_Text1_Mark1_Text extends CardText {
-	public function new(id:String, removeMarkId:String) {
-		super(id, "回合結束時刪除速攻");
-		this.removeMarkId = removeMarkId;
+		return [AttackSpeed(attachCardId, 1)];
 	}
 
-	public final removeMarkId:String;
-
-	public override function getEffect(ctx:Context, runtime:ExecuteRuntime):Array<MarkEffect> {
-		return [AttackSpeed(runtime.getCardId(), 1)];
-	}
-
-	public override function onEvent(ctx:Context, event:Event, runtime:ExecuteRuntime):Void {
+	public override function onEvent(ctx:Context, event:Event):Void {
 		switch event {
 			case ChangePhase:
 				switch ctx.phase {
 					case Test("回合結束時"):
-						ctx.marks.remove(removeMarkId);
+						ctx.marks.remove(id);
 					default:
 				}
 			case _:

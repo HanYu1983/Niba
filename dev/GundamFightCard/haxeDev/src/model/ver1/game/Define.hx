@@ -143,6 +143,10 @@ class Mark implements hxbit.Serializable {
 	public function getEffect(ctx:Context):Array<MarkEffect> {
 		return [];
 	}
+
+	public function onEvent(ctx:Context, event:Event):Void {
+
+	}
 }
 
 interface ExecuteRuntime {

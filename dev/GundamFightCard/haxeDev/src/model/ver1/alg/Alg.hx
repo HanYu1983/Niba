@@ -86,6 +86,19 @@ function removeBlock(ctx:Context, blockId:String):Void {
 	ctx.immediateStack.remove(block);
 }
 
+//
+// Event
+//
+function sendEvent(ctx:Context, evt:Event):Void {
+	for (info in getRuntimeText(ctx)) {
+		final runtime = info.runtime;
+		final text = info.text;
+		text.onEvent(ctx, evt, runtime);
+	}
+	for(mark in ctx.marks){
+		mark.onEvent(ctx, evt);
+	}
+}
 
 //
 // Runtime
@@ -195,10 +208,8 @@ function getCard(ctx:Context, cardId:String):Card {
 }
 
 // 自軍カードが
-function isMyCard(ctx:Context, masterCardId:String, slaveCardId:String):Bool {
-	final masterCard = getCard(ctx, masterCardId);
-	final slaveCard = getCard(ctx, slaveCardId);
-	return masterCard.owner == slaveCard.owner;
+function isMyCard(ctx:Context, playerId:String, cardId:String):Bool {
+	return playerId == getCard(ctx, cardId).owner;
 }
 
 // 常駐增強內文

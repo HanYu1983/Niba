@@ -27,17 +27,18 @@ private class Text1 extends CardText {
 
 	public override function onEvent(ctx:Context, event:Event, runtime:ExecuteRuntime):Void {
 		final thisCardId = runtime.getCardId();
+		final responsePlayerId = runtime.getResponsePlayerId();
 		switch event {
 			case Gain(gainCardId, gainValue):
-				if (isMyCard(ctx, thisCardId, gainCardId)) {
-					ctx.immediateStack.push(new Block('${id}_${Date.now()}', TextEffect(thisCardId, id), new Text2('${id}_Text2', gainCardId, gainValue)));
+				if (isMyCard(ctx, responsePlayerId, gainCardId)) {
+					ctx.immediateStack.push(new Block('${id}_${Date.now()}', TextEffect(thisCardId, id), new Text1_1('${id}_Text1_1', gainCardId, gainValue)));
 				}
 			case _:
 		}
 	}
 }
 
-private class Text2 extends CardText {
+private class Text1_1 extends CardText {
 	public function new(id:String, gainCardId:String, gainValue:Int) {
 		super(id, "そのカードのセットグループ以外の自軍ユニット１枚は、ターン終了時まで、その戦闘修正と同じ値の戦闘修正を得る。");
 		this.gainCardId = gainCardId;
@@ -47,14 +48,56 @@ private class Text2 extends CardText {
 	@:s public var gainCardId:String;
 	@:s public var gainValue:Int;
 
+	private function getKey1() {
+		return '${id}_Text2_Req1';
+	}
+
 	public override function getRequires(ctx:Context, runtime:ExecuteRuntime):Array<Require> {
+		final responsePlayerId = runtime.getResponsePlayerId();
 		final gainCardSetGroupsIds = getCardSetGroupCardIds(ctx, gainCardId);
 		final tips = [for (card in ctx.table.cards) card].filter(card -> {
-			return gainCardSetGroupsIds.contains(card.id) == false && isMyCard(ctx, gainCardId, card.id);
+			return gainCardSetGroupsIds.contains(card.id) == false && isMyCard(ctx, responsePlayerId, card.id);
 		}).map(card -> card.id);
-		final req = new RequireUserSelect<String>('${id}_Text2_Req1', "そのカードのセットグループ以外の自軍ユニット１枚は");
+		final req = new RequireUserSelect<String>(getKey1(), "そのカードのセットグループ以外の自軍ユニット１枚は");
 		req.tips = tips;
-		req.lengthInclude = [1];
 		return [req];
+	}
+
+	public override function action(ctx:Context, runtime:ExecuteRuntime):Void {
+		final selectUnits = ctx.memory.playerSelection.cardIds[getKey1()];
+		if (selectUnits == null) {
+			throw new haxe.Exception("selectUnits not found");
+		}
+		for (unit in selectUnits) {
+			final mark = new Mark1('${id}_Mark1', gainCardId, {v1: gainValue, v2: gainValue, v3: gainValue});
+			ctx.marks[mark.id] = mark;
+		}
+	}
+}
+
+class Mark1 extends Mark {
+	public function new(id:String, attachCardId:String, battlePoint:BattlePoint) {
+		super(id);
+		this.attachCardId = attachCardId;
+		this.battlePoint = battlePoint;
+	}
+
+	@:s public var attachCardId:String;
+	@:s public var battlePoint:BattlePoint;
+
+	public override function getEffect(ctx:Context):Array<MarkEffect> {
+		return [AddBattlePoint(attachCardId, battlePoint)];
+	}
+
+	public override function onEvent(ctx:Context, event:Event):Void {
+		switch event {
+			case ChangePhase:
+				switch ctx.phase {
+					case Test("回合結束時"):
+						ctx.marks.remove(id);
+					default:
+				}
+			case _:
+		}
 	}
 }
