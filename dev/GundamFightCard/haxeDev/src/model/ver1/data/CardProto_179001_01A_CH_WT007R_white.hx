@@ -4,7 +4,7 @@ import haxe.Exception;
 import tool.Table;
 import tool.Helper;
 import model.ver1.game.Define;
-import model.ver1.game.Require;
+import model.ver1.data.Require;
 import model.ver1.alg.Alg;
 
 // 179001_01A_CH_WT007R_white
@@ -34,8 +34,8 @@ private class Text1 extends CardText {
 				"unknown";
 		}
 		return [
-			new RequirePhase('${id}_req1', "（戦闘フェイズ）", Test("戦闘フェイズ")),
-			new RequireG('${id}_req2', "2", [Red, Red], ctx, runtime),
+			new RequirePhase('${id}_req1', Test("戦闘フェイズ")),
+			new RequireGTap('${id}_req2', [Red, Red], ctx, runtime),
 			new ForceTargetCard('${id}_req3', "このセットグループのユニット", "このセットグループのユニット", unit),
 		];
 	}

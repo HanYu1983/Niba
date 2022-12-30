@@ -3,8 +3,9 @@ package model.ver1.data;
 import haxe.Exception;
 import tool.Table;
 import model.ver1.game.Define;
-import model.ver1.game.Require;
+import model.ver1.data.Require;
 import model.ver1.alg.Alg;
+
 // 179003_01A_U_BK008U_black
 // U
 // V
@@ -15,11 +16,14 @@ class CardProto_179003_01A_U_BK008U_black extends CardProto {
 	public function new() {}
 
 	public override function getTexts(ctx:Context, runtime:ExecuteRuntime):Array<CardText> {
-		return [new Text1('${runtime.getCardId()}_Text1')];
+		return [
+			new PlayerPlayCard('${runtime.getCardId()}_PlayerPlayCard'),
+			new Text1('${runtime.getCardId()}_Text1')
+		];
 	}
 }
 
-class RequireThisCardDestroyByBattleDamage extends Require {
+private class RequireThisCardDestroyByBattleDamage extends Require {
 	public function new(id:String) {
 		super(id, "このカードが戦闘ダメージで破壊されている場合");
 	}
@@ -31,15 +35,15 @@ class RequireThisCardDestroyByBattleDamage extends Require {
 	}
 }
 
-class Text1 extends CardText {
+private class Text1 extends CardText {
 	public function new(id:String) {
 		super(id, "（ダメージ判定ステップ）〔２〕：このカードが戦闘ダメージで破壊されている場合、このカードを、破壊を無効にした上で自軍Gにする。");
 	}
 
 	public override function getRequires(ctx:Context, runtime:ExecuteRuntime):Array<Require> {
 		return [
-			new RequirePhase('${id}_Text1_Req1', "（ダメージ判定ステップ）", Test("ダメージ判定ステップ")),
-			new RequireG('${id}_Text1_Req2', "〔２〕", [Black, Black], ctx, runtime),
+			new RequirePhase('${id}_Text1_Req1', Test("ダメージ判定ステップ")),
+			new RequireGTap('${id}_Text1_Req2', [Black, Black], ctx, runtime),
 			new RequireThisCardDestroyByBattleDamage('${id}_Text1_Req3'),
 		];
 	}
@@ -50,7 +54,7 @@ class Text1 extends CardText {
 	}
 }
 
-class Text2 extends CardText {
+private class Text2 extends CardText {
 	public function new(id:String) {
 		super(id, "このカードを、破壊を無効にした上で自軍Gにする。");
 	}

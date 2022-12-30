@@ -10,12 +10,20 @@ import model.ver1.data.DataPool;
 enum GColor {
 	Red;
 	Black;
+	Purple;
+}
+
+typedef GSign = {
+	colors: Array<GColor>,
+	production: String
 }
 
 enum Event {
 	ChangePhase;
 	// 「ゲイン」の効果で戦闘修正を得た場合
 	Gain(cardId:String, value:Int);
+	//
+	CardEnterField(cardId:String);
 }
 
 // 實作hxbit.Serializable這個介面後並使用了@:s
@@ -103,6 +111,28 @@ class Require {
 	public final description:String;
 
 	public function action(ctx:Context, runtime:ExecuteRuntime):Void {}
+}
+
+class RequireUserSelect<T> extends Require {
+	public function new(id:String, description:String) {
+		super(id, description);
+	}
+
+	public var tips:Array<T> = [];
+	public var lengthInclude:Array<Int> = [1];
+	public var responsePlayerId = RelativePlayer.You;
+}
+
+class RequireUserSelectCard extends RequireUserSelect<String>{
+	public function new(id:String, description:String) {
+		super(id, description);
+	}
+}
+
+class RequireUserSelectBattlePoint extends RequireUserSelect<BattlePoint>{
+	public function new(id:String, description:String) {
+		super(id, description);
+	}
 }
 
 class CardText implements hxbit.Serializable {

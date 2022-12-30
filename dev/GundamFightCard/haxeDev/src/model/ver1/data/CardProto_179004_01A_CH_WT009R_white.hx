@@ -3,7 +3,7 @@ package model.ver1.data;
 import haxe.Exception;
 import tool.Helper;
 import model.ver1.game.Define;
-import model.ver1.game.Require;
+import model.ver1.data.Require;
 import model.ver1.alg.Alg;
 
 // 179004_01A_CH_WT009R_white
@@ -58,7 +58,7 @@ private class Text1_1 extends CardText {
 		final tips = [for (card in ctx.table.cards) card].filter(card -> {
 			return gainCardSetGroupsIds.contains(card.id) == false && isMyCard(ctx, responsePlayerId, card.id);
 		}).map(card -> card.id);
-		final req = new RequireUserSelect<String>(getKey1(), "そのカードのセットグループ以外の自軍ユニット１枚は");
+		final req = new RequireUserSelectCard(getKey1(), "そのカードのセットグループ以外の自軍ユニット１枚は");
 		req.tips = tips;
 		return [req];
 	}

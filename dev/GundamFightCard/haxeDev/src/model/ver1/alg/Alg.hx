@@ -44,6 +44,18 @@ function getUnitOfSetGroup(ctx:Context, cardId:String):Option<String> {
 	return None;
 }
 
+function tapCard(ctx:Context, cardId:String):Void {
+	final card = getCard(ctx, cardId);
+	if (card.isTap) {
+		throw new haxe.Exception("already tap");
+	}
+	card.isTap = true;
+}
+
+function playCardToField(ctx:Context, cardId:String): Void {
+	sendEvent(ctx, CardEnterField(cardId));
+}
+
 //
 // Block
 //
@@ -67,13 +79,12 @@ function getBlockRuntime(ctx:Context, blockId:String):ExecuteRuntime {
 		case System(respnosePlayerId):
 			new SystemExecuteRuntime(respnosePlayerId);
 		case PlayCard(playCardPlayerId, cardId):
-			final responsePlayerId = playCardPlayerId;
-			new DefaultExecuteRuntime(cardId, responsePlayerId);
+			new DefaultExecuteRuntime(cardId, playCardPlayerId);
 		case PlayText(cardId, textId):
-			final responsePlayerId = getCard(ctx, cardId).owner;
+			final responsePlayerId = getCardControllerAndAssertExist(ctx, cardId);
 			new DefaultExecuteRuntime(cardId, responsePlayerId);
 		case TextEffect(cardId, textId):
-			final responsePlayerId = getCard(ctx, cardId).owner;
+			final responsePlayerId = getCardControllerAndAssertExist(ctx, cardId);
 			new DefaultExecuteRuntime(cardId, responsePlayerId);
 		case _:
 			new AbstractExecuteRuntime();
@@ -95,7 +106,7 @@ function sendEvent(ctx:Context, evt:Event):Void {
 		final text = info.text;
 		text.onEvent(ctx, evt, runtime);
 	}
-	for(mark in ctx.marks){
+	for (mark in ctx.marks) {
 		mark.onEvent(ctx, evt);
 	}
 }
@@ -106,10 +117,17 @@ function sendEvent(ctx:Context, evt:Event):Void {
 
 function getRuntimeText(ctx:Context):Array<{runtime:ExecuteRuntime, text:CardText}> {
 	final ret = new Array<{runtime:ExecuteRuntime, text:CardText}>();
+	// 除外的卡不計算
+	final cards = [for (card in ctx.table.cards) card].filter(card -> {
+		return switch getCardController(ctx, card.id) {
+			case Some(_): true;
+			case _: false;
+		};
+	});
 	// 原始內文
 	final originReturn = [
-		for (card in ctx.table.cards) {
-			final responsePlayerId = card.owner;
+		for (card in cards) {
+			final responsePlayerId = getCardControllerAndAssertExist(ctx, card.id);
 			final runtime = new DefaultExecuteRuntime(card.id, responsePlayerId);
 			for (text in getCurrentCardProto(ctx, card.protoId).getTexts(ctx, runtime)) {
 				ret.push({
@@ -121,8 +139,8 @@ function getRuntimeText(ctx:Context):Array<{runtime:ExecuteRuntime, text:CardTex
 	];
 	// 計算常駐能力新增內文
 	final originMarkEffects = [
-		for (card in ctx.table.cards) {
-			final responsePlayerId = card.owner;
+		for (card in cards) {
+			final responsePlayerId = getCardControllerAndAssertExist(ctx, card.id);
 			final runtime = new DefaultExecuteRuntime(card.id, responsePlayerId);
 			for (text in getCurrentCardProto(ctx, card.protoId).getTexts(ctx, runtime)) {
 				for (effect in text.getEffect(ctx, runtime)) {
@@ -149,7 +167,7 @@ function getRuntimeText(ctx:Context):Array<{runtime:ExecuteRuntime, text:CardTex
 			case _:
 				throw new haxe.Exception("addedReturn xxx");
 		}
-		final responsePlayerId = getCard(ctx, info.cardId).owner;
+		final responsePlayerId = getCardControllerAndAssertExist(ctx, info.cardId);
 		final runtime = new DefaultExecuteRuntime(info.cardId, responsePlayerId);
 		ret.push({
 			runtime: runtime,
@@ -180,7 +198,7 @@ function getRuntimeText(ctx:Context):Array<{runtime:ExecuteRuntime, text:CardTex
 			case _:
 				throw new haxe.Exception("globalAddedReturn xxx");
 		}
-		final responsePlayerId = getCard(ctx, info.cardId).owner;
+		final responsePlayerId = getCardControllerAndAssertExist(ctx, info.cardId);
 		final runtime = new DefaultExecuteRuntime(info.cardId, responsePlayerId);
 		ret.push({
 			runtime: runtime,
@@ -193,6 +211,33 @@ function getRuntimeText(ctx:Context):Array<{runtime:ExecuteRuntime, text:CardTex
 //
 // Query
 //
+
+function getCardController(ctx:Context, cardId:String):Option<String> {
+	return None;
+}
+
+function getCardControllerAndAssertExist(ctx:Context, cardId:String):String {
+	return switch getCardController(ctx, cardId) {
+		case Some(playerId): playerId;
+		case _: throw new haxe.Exception("卡片被除外，沒有控制者");
+	}
+}
+
+function getCardGSign(ctx:Context, cardId:String):GSign {
+	return {
+		colors: [Red],
+		production: ""
+	}
+}
+
+function getPlayerGCountForPlay(ctx:Context, playerId:String):Int {
+	// 查詢有沒有增加國力的卡
+	return 0;
+}
+
+function getPlayerGCardIds(ctx:Context, playerId:String):Array<String> {
+	return [];
+}
 
 function getCardSetGroupCardIds(ctx:Context, cardId:String):Array<String> {
 	return [];
