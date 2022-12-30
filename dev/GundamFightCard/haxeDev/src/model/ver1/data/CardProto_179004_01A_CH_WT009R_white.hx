@@ -27,10 +27,9 @@ private class Text1 extends CardText {
 
 	public override function onEvent(ctx:Context, event:Event, runtime:ExecuteRuntime):Void {
 		final thisCardId = runtime.getCardId();
-		final responsePlayerId = runtime.getResponsePlayerId();
 		switch event {
 			case Gain(gainCardId, gainValue):
-				if (isMyCard(ctx, responsePlayerId, gainCardId)) {
+				if (isMyCard(ctx, thisCardId, gainCardId)) {
 					ctx.immediateStack.push(new Block('${id}_${Date.now()}', TextEffect(thisCardId, id), new Text1_1('${id}_Text1_1', gainCardId, gainValue)));
 				}
 			case _:
@@ -53,10 +52,9 @@ private class Text1_1 extends CardText {
 	}
 
 	public override function getRequires(ctx:Context, runtime:ExecuteRuntime):Array<Require> {
-		final responsePlayerId = runtime.getResponsePlayerId();
 		final gainCardSetGroupsIds = getCardSetGroupCardIds(ctx, gainCardId);
 		final tips = [for (card in ctx.table.cards) card].filter(card -> {
-			return gainCardSetGroupsIds.contains(card.id) == false && isMyCard(ctx, responsePlayerId, card.id);
+			return gainCardSetGroupsIds.contains(card.id) == false && isMyCard(ctx, gainCardId, card.id);
 		}).map(card -> card.id);
 		final req = new RequireUserSelectCard(getKey1(), "そのカードのセットグループ以外の自軍ユニット１枚は");
 		req.tips = tips;
