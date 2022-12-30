@@ -29627,7 +29627,7 @@ model_ver1_data__$CardProto_$179004_$01A_$CH_$WT009R_$white_Text1_$1.prototype =
 		while(_g < selectUnits.length) {
 			var unit = selectUnits[_g];
 			++_g;
-			var mark = new model_ver1_data_Mark1("" + this.id + "_Mark1",this.gainCardId,{ v1 : this.gainValue, v2 : this.gainValue, v3 : this.gainValue});
+			var mark = new model_ver1_data__$CardProto_$179004_$01A_$CH_$WT009R_$white_Mark1("" + this.id + "_Mark1",this.gainCardId,{ v1 : this.gainValue, v2 : this.gainValue, v3 : this.gainValue});
 			ctx.marks.h[mark.id] = mark;
 		}
 	}
@@ -29694,15 +29694,15 @@ model_ver1_data__$CardProto_$179004_$01A_$CH_$WT009R_$white_Text1_$1.prototype =
 	}
 	,__class__: model_ver1_data__$CardProto_$179004_$01A_$CH_$WT009R_$white_Text1_$1
 });
-var model_ver1_data_Mark1 = function(id,attachCardId,battlePoint) {
+var model_ver1_data__$CardProto_$179004_$01A_$CH_$WT009R_$white_Mark1 = function(id,attachCardId,battlePoint) {
 	model_ver1_game_Mark.call(this,id);
 	this.attachCardId = attachCardId;
 	this.battlePoint = battlePoint;
 };
-$hxClasses["model.ver1.data.Mark1"] = model_ver1_data_Mark1;
-model_ver1_data_Mark1.__name__ = "model.ver1.data.Mark1";
-model_ver1_data_Mark1.__super__ = model_ver1_game_Mark;
-model_ver1_data_Mark1.prototype = $extend(model_ver1_game_Mark.prototype,{
+$hxClasses["model.ver1.data._CardProto_179004_01A_CH_WT009R_white.Mark1"] = model_ver1_data__$CardProto_$179004_$01A_$CH_$WT009R_$white_Mark1;
+model_ver1_data__$CardProto_$179004_$01A_$CH_$WT009R_$white_Mark1.__name__ = "model.ver1.data._CardProto_179004_01A_CH_WT009R_white.Mark1";
+model_ver1_data__$CardProto_$179004_$01A_$CH_$WT009R_$white_Mark1.__super__ = model_ver1_game_Mark;
+model_ver1_data__$CardProto_$179004_$01A_$CH_$WT009R_$white_Mark1.prototype = $extend(model_ver1_game_Mark.prototype,{
 	attachCardId: null
 	,battlePoint: null
 	,getEffect: function(ctx) {
@@ -29723,7 +29723,7 @@ model_ver1_data_Mark1.prototype = $extend(model_ver1_game_Mark.prototype,{
 		}
 	}
 	,getCLID: function() {
-		return model_ver1_data_Mark1.__clid;
+		return model_ver1_data__$CardProto_$179004_$01A_$CH_$WT009R_$white_Mark1.__clid;
 	}
 	,serialize: function(__ctx) {
 		model_ver1_game_Mark.prototype.serialize.call(this,__ctx);
@@ -29782,7 +29782,7 @@ model_ver1_data_Mark1.prototype = $extend(model_ver1_game_Mark.prototype,{
 		schema.fieldsTypes.push(hxbit_PropTypeDesc.PString);
 		schema.fieldsNames.push("battlePoint");
 		schema.fieldsTypes.push(hxbit_PropTypeDesc.PObj([{ name : "v1", opt : false, type : hxbit_PropTypeDesc.PInt},{ name : "v2", opt : false, type : hxbit_PropTypeDesc.PInt},{ name : "v3", opt : false, type : hxbit_PropTypeDesc.PInt}]));
-		schema.isFinal = hxbit_Serializer.isClassFinal(model_ver1_data_Mark1.__clid);
+		schema.isFinal = hxbit_Serializer.isClassFinal(model_ver1_data__$CardProto_$179004_$01A_$CH_$WT009R_$white_Mark1.__clid);
 		return schema;
 	}
 	,unserialize: function(__ctx) {
@@ -29834,7 +29834,7 @@ model_ver1_data_Mark1.prototype = $extend(model_ver1_game_Mark.prototype,{
 			this.battlePoint = { v1 : v1, v2 : v2, v3 : v3};
 		}
 	}
-	,__class__: model_ver1_data_Mark1
+	,__class__: model_ver1_data__$CardProto_$179004_$01A_$CH_$WT009R_$white_Mark1
 });
 function model_ver1_data_DataPool_getCardProto(key) {
 	var obj = model_ver1_data_DataPool__cardProtoPool.h[key];
@@ -36121,7 +36121,7 @@ model_ver1_data_Text2.__clid = hxbit_Serializer.registerClass(model_ver1_data_Te
 model_ver1_data_CardProto_$179004_$01A_$CH_$WT009R_$white.__clid = hxbit_Serializer.registerClass(model_ver1_data_CardProto_$179004_$01A_$CH_$WT009R_$white);
 model_ver1_data__$CardProto_$179004_$01A_$CH_$WT009R_$white_Text1.__clid = hxbit_Serializer.registerClass(model_ver1_data__$CardProto_$179004_$01A_$CH_$WT009R_$white_Text1);
 model_ver1_data__$CardProto_$179004_$01A_$CH_$WT009R_$white_Text1_$1.__clid = hxbit_Serializer.registerClass(model_ver1_data__$CardProto_$179004_$01A_$CH_$WT009R_$white_Text1_$1);
-model_ver1_data_Mark1.__clid = hxbit_Serializer.registerClass(model_ver1_data_Mark1);
+model_ver1_data__$CardProto_$179004_$01A_$CH_$WT009R_$white_Mark1.__clid = hxbit_Serializer.registerClass(model_ver1_data__$CardProto_$179004_$01A_$CH_$WT009R_$white_Mark1);
 var model_ver1_data_DataPool__cardProtoPool = (function($this) {
 	var $r;
 	var _g = new haxe_ds_StringMap();
