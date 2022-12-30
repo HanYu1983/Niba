@@ -1,6 +1,6 @@
 package model.ver1;
 
-import model.ver1.Define;
+import model.ver1.game.Define;
 
 private final CardProto1Text1Require1MarkFirstAttackId = "CardProto1Text1Require1MarkFirstAttackId";
 

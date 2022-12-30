@@ -1,8 +1,11 @@
-package model.ver1;
+package model.ver1.data;
 
 import haxe.Exception;
-import model.ver1.Define;
+import tool.Table;
 import tool.Helper;
+import model.ver1.game.Define;
+import model.ver1.game.Require;
+import model.ver1.alg.Alg;
 
 // 179001_01A_CH_WT007R_white
 // キラ・ヤマト
@@ -92,7 +95,7 @@ function test() {
 	ctx.table.cards[card1.id] = card1;
 	ctx.phase = Test("戦闘フェイズ");
 	final playerId = "0";
-	final infos = getRuntimeText(ctx, playerId).map(info->{
+	final infos = getRuntimeText(ctx, playerId).map(info -> {
 		return {
 			cardId: info.runtime.getCardId(),
 			text: info.text,

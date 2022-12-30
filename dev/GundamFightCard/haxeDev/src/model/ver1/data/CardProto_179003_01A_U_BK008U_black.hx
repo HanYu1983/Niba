@@ -1,8 +1,10 @@
-package model.ver1;
+package model.ver1.data;
 
 import haxe.Exception;
-import model.ver1.Define;
-
+import tool.Table;
+import model.ver1.game.Define;
+import model.ver1.game.Require;
+import model.ver1.alg.Alg;
 // 179003_01A_U_BK008U_black
 // U
 // V

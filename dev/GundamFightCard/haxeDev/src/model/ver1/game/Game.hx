@@ -1,5 +1,5 @@
-package model.ver1;
-import model.ver1.Define;
+package model.ver1.game;
+import model.ver1.game.Define;
 // switch Type.typeof(markEffect) {
 // 	case TClass(cls) if (cls == Any):
 // 		true;
@@ -13,7 +13,7 @@ class Game implements hxbit.Serializable {
 
 	public function test() {
 		// model.ver1.CardProto_179001_01A_CH_WT007R_white.test();
-		model.ver1.CardProto_179003_01A_U_BK008U_black.test();
+		model.ver1.data.CardProto_179003_01A_U_BK008U_black.test();
 	}
 
 	public function getMemonto():String {
