@@ -75,7 +75,7 @@ private class Text1_1 extends CardText {
 	}
 }
 
-class Mark1 extends Mark {
+private class Mark1 extends Mark {
 	public function new(id:String, attachCardId:String, battlePoint:BattlePoint) {
 		super(id);
 		this.attachCardId = attachCardId;
