@@ -15,6 +15,8 @@ class PlayerPlayCard extends CardText {
 
 	public override function getRequires(ctx:Context, runtime:ExecuteRuntime):Array<Require> {
 		// TODO: 查詢有沒有快速
+		// TODO: 查詢有沒有替代横置國力顏色的效果
+		// TODO: 查詢有沒有在SET在特定卡上而減少横置國力的效果
 		return [
 			new RequirePhase('${id}_RequirePhase', Test("settings")),
 			new RequireGCount('${id}_RequireGCount', 3),
