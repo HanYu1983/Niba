@@ -11,7 +11,7 @@ import model.ver1.alg.Alg;
 // シャッコー
 // シャッコー系　MS
 // （ダメージ判定ステップ）〔２〕：このカードが戦闘ダメージで破壊されている場合、このカードを、破壊を無効にした上で自軍Gにする。
-class CardProto_179003_01A_U_BK008U_black extends AbstractCardProto {
+class CardProto_179003_01A_U_BK008U_black extends CardProto {
 	public function new() {}
 
 	public override function getTexts(ctx:Context, runtime:ExecuteRuntime):Array<CardText> {
@@ -68,8 +68,7 @@ function test() {
 	card1.protoId = "179003_01A_U_BK008U_black";
 	ctx.table.cards[card1.id] = card1;
 	ctx.phase = Test("ダメージ判定ステップ");
-	final playerId = "0";
-	final infos = getRuntimeText(ctx, playerId).map(info -> {
+	final infos = getRuntimeText(ctx).map(info -> {
 		return {
 			cardId: info.runtime.getCardId(),
 			text: info.text,
@@ -81,8 +80,7 @@ function test() {
 		throw new haxe.Exception("infos.length == 0");
 	}
 	final selectTextId = infos[0].text.id;
-	final playerId = "0";
-	final findText = getRuntimeText(ctx, playerId).filter(info -> {
+	final findText = getRuntimeText(ctx).filter(info -> {
 		return info.text.id == selectTextId;
 	});
 	if (findText.length == 0) {

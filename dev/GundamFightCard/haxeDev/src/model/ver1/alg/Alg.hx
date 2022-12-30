@@ -1,16 +1,18 @@
 package model.ver1.alg;
 
 import haxe.ds.Option;
+import tool.Table;
 import model.ver1.data.DataPool;
 import model.ver1.game.Define;
 
-@:nullSafety
-function registerCardProto(ctx:Context, key:String, proto:AbstractCardProto) {
+//
+// CardProto
+//
+function registerCardProto(ctx:Context, key:String, proto:CardProto) {
 	ctx.cardProtoPool[key] = proto;
 }
 
-@:nullSafety
-function getCurrentCardProto(ctx:Context, key:String):ICardProto {
+function getCurrentCardProto(ctx:Context, key:String):CardProto {
 	final obj = ctx.cardProtoPool[key];
 	if (obj == null) {
 		return getCardProto(key);
@@ -18,27 +20,33 @@ function getCurrentCardProto(ctx:Context, key:String):ICardProto {
 	return obj;
 }
 
-@:nullSafety
+//
+// Destroy
+//
 function isDestroyNow(ctx:Context, cardId:String, condition:{isByBattleDamage:Bool}):Bool {
 	// cardId是否有破壞並廢棄的效果在堆疊中
 	if (condition.isByBattleDamage) {}
 	return false;
 }
 
-@:nullSafety
 function removeDestroyEffect(ctx:Context, cardId:String):Void {
 	trace("移除堆疊中的破壞效果");
 }
 
-@:nullSafety
+//
+//
+//
 function becomeG(ctx:Context, cardId:String):Void {
 	trace("將自己變成G");
 }
 
-@:nullSafety
 function getUnitOfSetGroup(ctx:Context, cardId:String):Option<String> {
 	return None;
 }
+
+//
+// Block
+//
 
 function getBlocks(ctx:Context):Array<Block> {
 	return ctx.effectStack.concat(ctx.immediateStack);
@@ -53,19 +61,22 @@ function getBlock(ctx:Context, blockId:String):Block {
 	return findBlock[0];
 }
 
-function getBlockRuntime(ctx:Context, playerId:String, blockId:String):ExecuteRuntime {
+function getBlockRuntime(ctx:Context, blockId:String):ExecuteRuntime {
 	final block = getBlock(ctx, blockId);
 	return switch block.cause {
-		case System:
-			new DefaultExecuteRuntime("0", playerId);
-		case PlayCard(cardId):
-			new DefaultExecuteRuntime(cardId, playerId);
+		case System(respnosePlayerId):
+			new SystemExecuteRuntime(respnosePlayerId);
+		case PlayCard(playCardPlayerId, cardId):
+			final responsePlayerId = playCardPlayerId;
+			new DefaultExecuteRuntime(cardId, responsePlayerId);
 		case PlayText(cardId, textId):
-			new DefaultExecuteRuntime(cardId, playerId);
+			final responsePlayerId = getCard(ctx, cardId).owner;
+			new DefaultExecuteRuntime(cardId, responsePlayerId);
 		case TextEffect(cardId, textId):
-			new DefaultExecuteRuntime(cardId, playerId);
+			final responsePlayerId = getCard(ctx, cardId).owner;
+			new DefaultExecuteRuntime(cardId, responsePlayerId);
 		case _:
-			new DefaultExecuteRuntime("0", playerId);
+			new AbstractExecuteRuntime();
 	}
 }
 
@@ -75,13 +86,18 @@ function removeBlock(ctx:Context, blockId:String):Void {
 	ctx.immediateStack.remove(block);
 }
 
-@:nullSafety
-function getRuntimeText(ctx:Context, playerId:String):Array<{runtime:ExecuteRuntime, text:CardText}> {
+
+//
+// Runtime
+//
+
+function getRuntimeText(ctx:Context):Array<{runtime:ExecuteRuntime, text:CardText}> {
 	final ret = new Array<{runtime:ExecuteRuntime, text:CardText}>();
 	// 原始內文
 	final originReturn = [
 		for (card in ctx.table.cards) {
-			final runtime = new DefaultExecuteRuntime(card.id, playerId);
+			final responsePlayerId = card.owner;
+			final runtime = new DefaultExecuteRuntime(card.id, responsePlayerId);
 			for (text in getCurrentCardProto(ctx, card.protoId).getTexts(ctx, runtime)) {
 				ret.push({
 					runtime: runtime,
@@ -93,7 +109,8 @@ function getRuntimeText(ctx:Context, playerId:String):Array<{runtime:ExecuteRunt
 	// 計算常駐能力新增內文
 	final originMarkEffects = [
 		for (card in ctx.table.cards) {
-			final runtime = new DefaultExecuteRuntime(card.id, playerId);
+			final responsePlayerId = card.owner;
+			final runtime = new DefaultExecuteRuntime(card.id, responsePlayerId);
 			for (text in getCurrentCardProto(ctx, card.protoId).getTexts(ctx, runtime)) {
 				for (effect in text.getEffect(ctx, runtime)) {
 					effect;
@@ -119,7 +136,8 @@ function getRuntimeText(ctx:Context, playerId:String):Array<{runtime:ExecuteRunt
 			case _:
 				throw new haxe.Exception("addedReturn xxx");
 		}
-		final runtime = new DefaultExecuteRuntime(info.cardId, playerId);
+		final responsePlayerId = getCard(ctx, info.cardId).owner;
+		final runtime = new DefaultExecuteRuntime(info.cardId, responsePlayerId);
 		ret.push({
 			runtime: runtime,
 			text: info.text
@@ -149,7 +167,8 @@ function getRuntimeText(ctx:Context, playerId:String):Array<{runtime:ExecuteRunt
 			case _:
 				throw new haxe.Exception("globalAddedReturn xxx");
 		}
-		final runtime = new DefaultExecuteRuntime(info.cardId, playerId);
+		final responsePlayerId = getCard(ctx, info.cardId).owner;
+		final runtime = new DefaultExecuteRuntime(info.cardId, responsePlayerId);
 		ret.push({
 			runtime: runtime,
 			text: info.text
@@ -158,11 +177,35 @@ function getRuntimeText(ctx:Context, playerId:String):Array<{runtime:ExecuteRunt
 	return ret;
 }
 
+//
+// Query
+//
+
+function getCardSetGroupCardIds(ctx:Context, cardId:String):Array<String> {
+	return [];
+}
+
+@:nullSafety
+function getCard(ctx:Context, cardId:String):Card {
+	final card = ctx.table.cards[cardId];
+	if (card == null) {
+		throw new haxe.Exception('card not found: ${cardId}');
+	}
+	return card;
+}
+
+// 自軍カードが
+function isMyCard(ctx:Context, masterCardId:String, slaveCardId:String):Bool {
+	final masterCard = getCard(ctx, masterCardId);
+	final slaveCard = getCard(ctx, slaveCardId);
+	return masterCard.owner == slaveCard.owner;
+}
+
 // 常駐增強內文
-function getAddBattlePoint(ctx:Context, playerId:String) {
+function getAddBattlePoint(ctx:Context) {
 	// TODO
 	final infos = [
-		for (info in getRuntimeText(ctx, playerId)) {
+		for (info in getRuntimeText(ctx)) {
 			final runtime = info.runtime;
 			final text = info.text;
 			final effects = text.getEffect(ctx, runtime);
@@ -182,10 +225,10 @@ function getAddBattlePoint(ctx:Context, playerId:String) {
 }
 
 // 速攻
-function getAttackSpeed(ctx:Context, playerId:String) {
+function getAttackSpeed(ctx:Context) {
 	// TODO
 	final infos = [
-		for (info in getRuntimeText(ctx, playerId)) {
+		for (info in getRuntimeText(ctx)) {
 			final runtime = info.runtime;
 			final text = info.text;
 			final effects = text.getEffect(ctx, runtime);

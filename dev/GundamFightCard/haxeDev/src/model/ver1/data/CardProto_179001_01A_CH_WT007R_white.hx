@@ -11,7 +11,7 @@ import model.ver1.alg.Alg;
 // キラ・ヤマト
 // 男性　子供　CO
 // （戦闘フェイズ）〔２〕：このセットグループのユニットは、ターン終了時まで「速攻」を得る。
-class CardProto_179001_01A_CH_WT007R_white extends AbstractCardProto {
+class CardProto_179001_01A_CH_WT007R_white extends CardProto {
 	public function new() {}
 
 	public override function getTexts(ctx:Context, runtime:ExecuteRuntime):Array<CardText> {
@@ -79,11 +79,15 @@ class CardProto_179001_01A_CH_WT007R_white_Text1_Mark1_Text extends CardText {
 		return [AttackSpeed(runtime.getCardId(), 1)];
 	}
 
-	public override function onEvent(ctx:Context, runtime:ExecuteRuntime):Void {
-		switch ctx.phase {
-			case Test("回合結束時"):
-				ctx.marks.remove(removeMarkId);
-			default:
+	public override function onEvent(ctx:Context, event:Event, runtime:ExecuteRuntime):Void {
+		switch event {
+			case ChangePhase:
+				switch ctx.phase {
+					case Test("回合結束時"):
+						ctx.marks.remove(removeMarkId);
+					default:
+				}
+			case _:
 		}
 	}
 }
@@ -94,8 +98,7 @@ function test() {
 	card1.protoId = "179001_01A_CH_WT007R_white";
 	ctx.table.cards[card1.id] = card1;
 	ctx.phase = Test("戦闘フェイズ");
-	final playerId = "0";
-	final infos = getRuntimeText(ctx, playerId).map(info -> {
+	final infos = getRuntimeText(ctx).map(info -> {
 		return {
 			cardId: info.runtime.getCardId(),
 			text: info.text,
@@ -107,8 +110,7 @@ function test() {
 		throw new haxe.Exception("infos.length == 0");
 	}
 	final selectTextId = infos[0].text.id;
-	final playerId = "0";
-	final findText = getRuntimeText(ctx, playerId).filter(info -> {
+	final findText = getRuntimeText(ctx).filter(info -> {
 		return info.text.id == selectTextId;
 	});
 	if (findText.length == 0) {

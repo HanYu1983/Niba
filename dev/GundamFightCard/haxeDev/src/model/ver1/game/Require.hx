@@ -9,6 +9,7 @@ class RequireUserSelect<T> extends Require {
 	}
 
 	public var tips:Array<T> = [];
+	public var lengthInclude:Array<Int> = [1];
 	public var responsePlayerId = RelativePlayer.You;
 }
 
