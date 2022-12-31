@@ -1,6 +1,7 @@
 package ;
 
-import model.TestModel;
+import model.ver0.NativeModel;
+import model.ver1.TestModel;
 import model.Model;
 import assets.MainView;
 import haxe.ui.HaxeUIApp;

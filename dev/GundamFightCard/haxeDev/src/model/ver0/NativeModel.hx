@@ -1,4 +1,4 @@
-package model;
+package model.ver0;
 
 import haxe.Exception;
 import viewModel.IViewModel;
@@ -51,7 +51,7 @@ private function toCardModel(app:App, card:Card):CardModel {
 }
 
 @:nullSafety
-class HanModel extends DefaultViewModel {
+class NativeModel extends DefaultViewModel {
 	public function new() {}
 
 	public override function getGame():GameModel {

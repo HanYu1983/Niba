@@ -1,4 +1,4 @@
-package model;
+package model.ver1;
 
 import tool.Table;
 import viewModel.IViewModel;

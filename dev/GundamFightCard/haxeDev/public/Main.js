@@ -207,9 +207,9 @@ Main.__name__ = "Main";
 Main.main = function() {
 	var app = new haxe_ui_HaxeUIApp();
 	app.ready(function() {
-		app.addComponent(new assets_MainView(new model_TestModel()));
+		app.addComponent(new assets_MainView(new model_ver1_TestModel()));
 		app.start();
-		console.log("src/Main.hx:17:","test");
+		console.log("src/Main.hx:18:","test");
 	});
 };
 Math.__name__ = "Math";
@@ -28914,7 +28914,52 @@ model_Model.prototype = $extend(viewModel_DefaultViewModel.prototype,{
 	}
 	,__class__: model_Model
 });
-var model_TestModel = function() {
+var model_ver0_NativeModel = function() {
+};
+$hxClasses["model.ver0.NativeModel"] = model_ver0_NativeModel;
+model_ver0_NativeModel.__name__ = "model.ver0.NativeModel";
+model_ver0_NativeModel.__super__ = viewModel_DefaultViewModel;
+model_ver0_NativeModel.prototype = $extend(viewModel_DefaultViewModel.prototype,{
+	getGame: function() {
+		var app = Native.getApp();
+		var _this = app.players;
+		var result = new Array(_this.length);
+		var _g = 0;
+		var _g1 = _this.length;
+		while(_g < _g1) {
+			var i = _g++;
+			var player = _this[i];
+			var handCards = app.table.cardStacks[player.handId];
+			if(handCards == null) {
+				throw new haxe_Exception("" + player.handId + " not found");
+			}
+			var tmp = "" + player.id;
+			var tmp1 = "" + player.id;
+			var result1 = new Array(handCards.length);
+			var _g2 = 0;
+			var _g3 = handCards.length;
+			while(_g2 < _g3) {
+				var i1 = _g2++;
+				result1[i1] = model_ver0_NativeModel_toCardModel(app,app.table.cards[handCards[i1]]);
+			}
+			var tmp2 = result1;
+			var result2 = new Array(handCards.length);
+			var _g4 = 0;
+			var _g5 = handCards.length;
+			while(_g4 < _g5) {
+				var i2 = _g4++;
+				result2[i2] = model_ver0_NativeModel_toCardModel(app,app.table.cards[handCards[i2]]);
+			}
+			result[i] = { id : tmp, name : tmp1, hand : tmp2, deck : result2};
+		}
+		return { players : result};
+	}
+	,__class__: model_ver0_NativeModel
+});
+function model_ver0_NativeModel_toCardModel(app,card) {
+	return { id : "" + card.id, name : "" + card.id, content : "card " + card.id, owner : card.owner};
+}
+var model_ver1_TestModel = function() {
 	this.game = new model_ver1_game_Game();
 	var card1 = new tool_Card("0");
 	card1.protoId = "179003_01A_U_BK008U_black";
@@ -28922,12 +28967,12 @@ var model_TestModel = function() {
 	card2.protoId = "179003_01A_U_BK008U_black";
 	this.game.ctx.table.cards.h[card1.id] = card1;
 	this.game.ctx.table.cards.h[card2.id] = card2;
-	console.log("src/model/TestModel.hx:31:","============ getGame ============");
-	console.log("src/model/TestModel.hx:33:",this.game.ctx);
-	console.log("src/model/TestModel.hx:35:","============ testMemonto ============");
+	console.log("src/model/ver1/TestModel.hx:31:","============ getGame ============");
+	console.log("src/model/ver1/TestModel.hx:33:",this.game.ctx);
+	console.log("src/model/ver1/TestModel.hx:35:","============ testMemonto ============");
 	var loadGame = model_ver1_game_Game.ofMemonto(this.game.getMemonto());
-	console.log("src/model/TestModel.hx:38:",loadGame.ctx);
-	console.log("src/model/TestModel.hx:39:","=================================");
+	console.log("src/model/ver1/TestModel.hx:38:",loadGame.ctx);
+	console.log("src/model/ver1/TestModel.hx:39:","=================================");
 	var h = loadGame.ctx.marks.h;
 	var _g_h = h;
 	var _g_keys = Object.keys(h);
@@ -28939,16 +28984,16 @@ var model_TestModel = function() {
 		var _g1_value = _g_h[key];
 		var key1 = _g1_key;
 		var value = _g1_value;
-		console.log("src/model/TestModel.hx:41:",key1);
-		console.log("src/model/TestModel.hx:42:",value);
+		console.log("src/model/ver1/TestModel.hx:41:",key1);
+		console.log("src/model/ver1/TestModel.hx:42:",value);
 	}
-	console.log("src/model/TestModel.hx:44:","=================================");
+	console.log("src/model/ver1/TestModel.hx:44:","=================================");
 	this.game = loadGame;
 };
-$hxClasses["model.TestModel"] = model_TestModel;
-model_TestModel.__name__ = "model.TestModel";
-model_TestModel.__super__ = viewModel_DefaultViewModel;
-model_TestModel.prototype = $extend(viewModel_DefaultViewModel.prototype,{
+$hxClasses["model.ver1.TestModel"] = model_ver1_TestModel;
+model_ver1_TestModel.__name__ = "model.ver1.TestModel";
+model_ver1_TestModel.__super__ = viewModel_DefaultViewModel;
+model_ver1_TestModel.prototype = $extend(viewModel_DefaultViewModel.prototype,{
 	game: null
 	,getGame: function() {
 		var _g = [];
@@ -28959,7 +29004,7 @@ model_TestModel.prototype = $extend(viewModel_DefaultViewModel.prototype,{
 		var card_current = 0;
 		while(card_current < card_length) {
 			var card = card_h[card_keys[card_current++]];
-			_g.push(model_TestModel_toCardModel(this.game.ctx,card));
+			_g.push(model_ver1_TestModel_toCardModel(this.game.ctx,card));
 		}
 		var cards = _g;
 		return { players : [{ id : "test", name : "test", hand : cards, deck : cards}]};
@@ -28967,9 +29012,9 @@ model_TestModel.prototype = $extend(viewModel_DefaultViewModel.prototype,{
 	,previewPlayCard: function(id) {
 		return { success : false, msg : "should have xxxx", content : { }};
 	}
-	,__class__: model_TestModel
+	,__class__: model_ver1_TestModel
 });
-function model_TestModel_toCardModel(ctx,card) {
+function model_ver1_TestModel_toCardModel(ctx,card) {
 	return { id : "" + card.id, name : "" + card.id, content : "card " + card.id, owner : card.owner};
 }
 var model_ver1_game_define_CardProto = function() {
