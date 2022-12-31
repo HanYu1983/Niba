@@ -7,7 +7,6 @@ import haxe.ds.Option;
 import haxe.ds.EnumValueMap;
 import tool.Table;
 import tool.Helper;
-import model.ver1.data.DataPool;
 import model.ver1.game.define.Timing;
 
 // Context

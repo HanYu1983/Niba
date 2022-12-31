@@ -8,7 +8,6 @@ import model.ver1.game.define.Define;
 import model.ver1.game.define.ExecuteRuntimeImpl;
 import model.ver1.game.alg.Context;
 import model.ver1.game.alg.CardProto;
-import model.ver1.data.DataPool;
 import model.ver1.data.PlayerPlayCard;
 
 //

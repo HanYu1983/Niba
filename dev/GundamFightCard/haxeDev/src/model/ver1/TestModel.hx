@@ -3,8 +3,6 @@ package model.ver1;
 import tool.Table;
 import viewModel.IViewModel;
 import model.ver1.game.define.Define;
-
-import model.ver1.data.DataPool;
 import model.ver1.game.Game;
 
 private function toCardModel(ctx:Context, card:Card):CardModel {

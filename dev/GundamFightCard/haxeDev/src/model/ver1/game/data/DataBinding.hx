@@ -1,11 +1,11 @@
-package model.ver1.data;
+package model.ver1.game.data;
 
 import model.ver1.game.define.Define;
 
 private final _cardProtoPool:Map<String, CardProto> = [
-	"179001_01A_CH_WT007R_white" => new CardProto_179001_01A_CH_WT007R_white(),
-	"179003_01A_U_BK008U_black" => new CardProto_179003_01A_U_BK008U_black(),
-	"179004_01A_CH_WT009R_white" => new CardProto_179004_01A_CH_WT009R_white(),
+	"179001_01A_CH_WT007R_white" => new model.ver1.data.CardProto_179001_01A_CH_WT007R_white(),
+	"179003_01A_U_BK008U_black" => new model.ver1.data.CardProto_179003_01A_U_BK008U_black(),
+	"179004_01A_CH_WT009R_white" => new model.ver1.data.CardProto_179004_01A_CH_WT009R_white(),
 ];
 
 @:nullSafety

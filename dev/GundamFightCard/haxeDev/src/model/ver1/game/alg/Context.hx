@@ -7,8 +7,6 @@ import tool.Table;
 import model.ver1.game.define.Define;
 import model.ver1.game.define.ExecuteRuntimeImpl;
 import model.ver1.game.alg.Runtime;
-import model.ver1.data.DataPool;
-import model.ver1.data.PlayerPlayCard;
 
 //
 // General

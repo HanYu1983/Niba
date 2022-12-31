@@ -28967,12 +28967,12 @@ var model_ver1_TestModel = function() {
 	card2.protoId = "179003_01A_U_BK008U_black";
 	this.game.ctx.table.cards.h[card1.id] = card1;
 	this.game.ctx.table.cards.h[card2.id] = card2;
-	console.log("src/model/ver1/TestModel.hx:31:","============ getGame ============");
-	console.log("src/model/ver1/TestModel.hx:33:",this.game.ctx);
-	console.log("src/model/ver1/TestModel.hx:35:","============ testMemonto ============");
+	console.log("src/model/ver1/TestModel.hx:29:","============ getGame ============");
+	console.log("src/model/ver1/TestModel.hx:31:",this.game.ctx);
+	console.log("src/model/ver1/TestModel.hx:33:","============ testMemonto ============");
 	var loadGame = model_ver1_game_Game.ofMemonto(this.game.getMemonto());
-	console.log("src/model/ver1/TestModel.hx:38:",loadGame.ctx);
-	console.log("src/model/ver1/TestModel.hx:39:","=================================");
+	console.log("src/model/ver1/TestModel.hx:36:",loadGame.ctx);
+	console.log("src/model/ver1/TestModel.hx:37:","=================================");
 	var h = loadGame.ctx.marks.h;
 	var _g_h = h;
 	var _g_keys = Object.keys(h);
@@ -28984,10 +28984,10 @@ var model_ver1_TestModel = function() {
 		var _g1_value = _g_h[key];
 		var key1 = _g1_key;
 		var value = _g1_value;
-		console.log("src/model/ver1/TestModel.hx:41:",key1);
-		console.log("src/model/ver1/TestModel.hx:42:",value);
+		console.log("src/model/ver1/TestModel.hx:39:",key1);
+		console.log("src/model/ver1/TestModel.hx:40:",value);
 	}
-	console.log("src/model/ver1/TestModel.hx:44:","=================================");
+	console.log("src/model/ver1/TestModel.hx:42:","=================================");
 	this.game = loadGame;
 };
 $hxClasses["model.ver1.TestModel"] = model_ver1_TestModel;
@@ -29816,13 +29816,6 @@ model_ver1_data__$CardProto_$179004_$01A_$CH_$WT009R_$white_Mark1.prototype = $e
 	}
 	,__class__: model_ver1_data__$CardProto_$179004_$01A_$CH_$WT009R_$white_Mark1
 });
-function model_ver1_data_DataPool_getCardProto(key) {
-	var obj = model_ver1_data_DataPool__cardProtoPool.h[key];
-	if(obj == null) {
-		throw new haxe_Exception("" + key + " not found");
-	}
-	return obj;
-}
 var model_ver1_data_PlayerPlayCard = function(id) {
 	model_ver1_game_define_CardText.call(this,id,"カードのプレイ");
 };
@@ -30057,12 +30050,12 @@ function model_ver1_game_alg_CardProto_registerCardProto(ctx,key,proto) {
 function model_ver1_game_alg_CardProto_getCurrentCardProto(ctx,key) {
 	var obj = ctx.cardProtoPool.h[key];
 	if(obj == null) {
-		return model_ver1_data_DataPool_getCardProto(key);
+		return model_ver1_game_data_DataBinding_getCardProto(key);
 	}
 	return obj;
 }
 function model_ver1_game_alg_Context_becomeG(ctx,cardId) {
-	console.log("src/model/ver1/game/alg/Context.hx:17:","將自己變成G");
+	console.log("src/model/ver1/game/alg/Context.hx:15:","將自己變成G");
 }
 function model_ver1_game_alg_Context_getUnitOfSetGroup(ctx,cardId) {
 	return haxe_ds_Option.None;
@@ -30529,6 +30522,13 @@ function model_ver1_game_alg_Runtime_getRuntimeText(ctx) {
 	}
 	var globalAddedReturn = result;
 	return playReturn.concat(specialReturn).concat(specialReturn2).concat(originReturn).concat(addedReturn).concat(globalAddedReturn);
+}
+function model_ver1_game_data_DataBinding_getCardProto(key) {
+	var obj = model_ver1_game_data_DataBinding__cardProtoPool.h[key];
+	if(obj == null) {
+		throw new haxe_Exception("" + key + " not found");
+	}
+	return obj;
 }
 var model_ver1_game_define_Context = function() {
 	this.__uid = hxbit_Serializer.SEQ << 24 | ++hxbit_Serializer.UID;
@@ -36740,7 +36740,11 @@ model_ver1_data_CardProto_$179004_$01A_$CH_$WT009R_$white.__clid = hxbit_Seriali
 model_ver1_data__$CardProto_$179004_$01A_$CH_$WT009R_$white_Text1.__clid = hxbit_Serializer.registerClass(model_ver1_data__$CardProto_$179004_$01A_$CH_$WT009R_$white_Text1);
 model_ver1_data__$CardProto_$179004_$01A_$CH_$WT009R_$white_Text1_$1.__clid = hxbit_Serializer.registerClass(model_ver1_data__$CardProto_$179004_$01A_$CH_$WT009R_$white_Text1_$1);
 model_ver1_data__$CardProto_$179004_$01A_$CH_$WT009R_$white_Mark1.__clid = hxbit_Serializer.registerClass(model_ver1_data__$CardProto_$179004_$01A_$CH_$WT009R_$white_Mark1);
-var model_ver1_data_DataPool__cardProtoPool = (function($this) {
+model_ver1_data_PlayerPlayCard.__clid = hxbit_Serializer.registerClass(model_ver1_data_PlayerPlayCard);
+model_ver1_data__$PlayerPlayCard_PlayerPlayCardEffect.__clid = hxbit_Serializer.registerClass(model_ver1_data__$PlayerPlayCard_PlayerPlayCardEffect);
+model_ver1_data_PlayerPlayG.__clid = hxbit_Serializer.registerClass(model_ver1_data_PlayerPlayG);
+model_ver1_game_Game.__clid = hxbit_Serializer.registerClass(model_ver1_game_Game);
+var model_ver1_game_data_DataBinding__cardProtoPool = (function($this) {
 	var $r;
 	var _g = new haxe_ds_StringMap();
 	{
@@ -36758,10 +36762,6 @@ var model_ver1_data_DataPool__cardProtoPool = (function($this) {
 	$r = _g;
 	return $r;
 }(this));
-model_ver1_data_PlayerPlayCard.__clid = hxbit_Serializer.registerClass(model_ver1_data_PlayerPlayCard);
-model_ver1_data__$PlayerPlayCard_PlayerPlayCardEffect.__clid = hxbit_Serializer.registerClass(model_ver1_data__$PlayerPlayCard_PlayerPlayCardEffect);
-model_ver1_data_PlayerPlayG.__clid = hxbit_Serializer.registerClass(model_ver1_data_PlayerPlayG);
-model_ver1_game_Game.__clid = hxbit_Serializer.registerClass(model_ver1_game_Game);
 model_ver1_game_define_Context.__clid = hxbit_Serializer.registerClass(model_ver1_game_define_Context);
 model_ver1_game_define_Player.__clid = hxbit_Serializer.registerClass(model_ver1_game_define_Player);
 model_ver1_game_define_Block.__clid = hxbit_Serializer.registerClass(model_ver1_game_define_Block);
