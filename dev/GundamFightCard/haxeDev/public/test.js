@@ -5605,6 +5605,17 @@ var model_ver1_game_define_GColor = $hxEnums["model.ver1.game.define.GColor"] = 
 	,Purple: {_hx_name:"Purple",_hx_index:2,__enum__:"model.ver1.game.define.GColor",toString:$estr}
 };
 model_ver1_game_define_GColor.__constructs__ = [model_ver1_game_define_GColor.Red,model_ver1_game_define_GColor.Black,model_ver1_game_define_GColor.Purple];
+var model_ver1_game_define_GProperty = $hxEnums["model.ver1.game.define.GProperty"] = { __ename__:true,__constructs__:null
+};
+model_ver1_game_define_GProperty.__constructs__ = [];
+var model_ver1_game_define_GSign = $hxEnums["model.ver1.game.define.GSign"] = { __ename__:true,__constructs__:null
+	,Default: ($_=function(color,property) { return {_hx_index:0,color:color,property:property,__enum__:"model.ver1.game.define.GSign",toString:$estr}; },$_._hx_name="Default",$_.__params__ = ["color","property"],$_)
+};
+model_ver1_game_define_GSign.__constructs__ = [model_ver1_game_define_GSign.Default];
+var model_ver1_game_define_BattlePoint = $hxEnums["model.ver1.game.define.BattlePoint"] = { __ename__:true,__constructs__:null
+	,Default: ($_=function(melee,range,hp) { return {_hx_index:0,melee:melee,range:range,hp:hp,__enum__:"model.ver1.game.define.BattlePoint",toString:$estr}; },$_._hx_name="Default",$_.__params__ = ["melee","range","hp"],$_)
+};
+model_ver1_game_define_BattlePoint.__constructs__ = [model_ver1_game_define_BattlePoint.Default];
 var model_ver1_game_define_RelativePlayer = $hxEnums["model.ver1.game.define.RelativePlayer"] = { __ename__:true,__constructs__:null
 	,You: {_hx_name:"You",_hx_index:0,__enum__:"model.ver1.game.define.RelativePlayer",toString:$estr}
 	,Opponent: {_hx_name:"Opponent",_hx_index:1,__enum__:"model.ver1.game.define.RelativePlayer",toString:$estr}

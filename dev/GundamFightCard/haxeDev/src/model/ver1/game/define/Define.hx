@@ -78,16 +78,18 @@ enum GColor {
 	Purple;
 }
 
-typedef GSign = {
-	colors:Array<GColor>,
-	production:String
+enum GProperty {
+	Uc;
+	Zero8;
 }
 
-typedef BattlePoint = {
-	v1:Int,
-	v2:Int,
-	v3:Int
-};
+enum GSign {
+	Default(color:GColor, property:GProperty);
+}
+
+enum BattlePoint {
+	Default(melee:Int, range:Int, hp:Int);
+}
 
 enum RelativePlayer {
 	You;
