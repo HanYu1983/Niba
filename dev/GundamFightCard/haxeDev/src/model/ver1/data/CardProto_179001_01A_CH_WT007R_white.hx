@@ -15,9 +15,7 @@ class CardProto_179001_01A_CH_WT007R_white extends CardProto {
 	public function new() {}
 
 	public override function getTexts(ctx:Context, runtime:ExecuteRuntime):Array<CardText> {
-		return [
-			new Text1('${runtime.getCardId()}_Text1')
-		];
+		return [new Text1('${runtime.getCardId()}_Text1')];
 	}
 }
 
@@ -41,10 +39,7 @@ private class Text1 extends CardText {
 	}
 
 	public override function action(ctx:Context, runtime:ExecuteRuntime):Void {
-		final selectUnits = ctx.memory.playerSelection.cardIds["このセットグループのユニット"];
-		if (selectUnits == null) {
-			throw new haxe.Exception("selectUnits not found");
-		}
+		final selectUnits = getPlayerSelectionCardId(ctx, "このセットグループのユニット");
 		for (unit in selectUnits) {
 			final mark = new Mark1('${id}_Mark1', unit);
 			ctx.marks[mark.id] = mark;

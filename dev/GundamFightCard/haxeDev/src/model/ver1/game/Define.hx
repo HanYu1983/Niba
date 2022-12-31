@@ -4,30 +4,89 @@ using Lambda;
 
 import haxe.EnumTools;
 import haxe.ds.Option;
+import haxe.ds.EnumValueMap;
 import tool.Table;
 import model.ver1.data.DataPool;
 
-enum GColor {
-	Red;
-	Black;
-	Purple;
+// BaSyou
+
+enum BaSyouKeyword {
+	// 本国
+	HonGoku;
+	// 捨て山
+	SuteYama;
+	// 宇宙エリア
+	SpaceArea;
+	// 地球エリア
+	EarchArea;
+	// 配備エリア
+	MaintenanceArea;
+	// Gゾーン
+	GZone;
+	// ジャンクヤード
+	JunkYard;
+	// 手札
+	TeHuTa;
+	// ハンガー
+	Hanger;
+	// プレイされたカード
+	PlayedCard;
+	// 取り除かれたカード
+	RemovedCard;
 }
 
-typedef GSign = {
-	colors: Array<GColor>,
-	production: String
+function isBattleArea(k:BaSyouKeyword) {
+	return switch k {
+		case SpaceArea | EarchArea:
+			true;
+		case _:
+			false;
+	}
 }
 
-enum Event {
-	ChangePhase;
-	// 「ゲイン」の効果で戦闘修正を得た場合
-	Gain(cardId:String, value:Int);
-	//
-	CardEnterField(cardId:String);
+function isMaintenanceArea(k:BaSyouKeyword) {
+	return switch k {
+		case MaintenanceArea | GZone:
+			true;
+		case _:
+			false;
+	}
+}
+
+function isBa(k:BaSyouKeyword) {
+	if (isBattleArea(k)) {
+		return true;
+	}
+	if (isMaintenanceArea(k)) {
+		return true;
+	}
+	return false;
+}
+
+class CardStackKey implements hxbit.Serializable {
+	public function new(playerId:String, baSyouKeyword:BaSyouKeyword) {
+		this.playerId = playerId;
+		this.baSyouKeyword = baSyouKeyword;
+	}
+
+	@:s public var playerId:String;
+	@:s public var baSyouKeyword:BaSyouKeyword;
+}
+
+function getCardStackId(key:CardStackKey):String {
+	final s = new hxbit.Serializer();
+	final bytes = s.serialize(key);
+	return bytes.toHex();
+}
+
+function getBaSyouKeyword(cardStackId:String):CardStackKey {
+	final u = new hxbit.Serializer();
+	return u.unserialize(haxe.io.Bytes.ofHex(cardStackId), CardStackKey);
 }
 
 // 實作hxbit.Serializable這個介面後並使用了@:s
 // @:nullSafety就會出錯
+// hxbit.Serializable不支援EnumValueMap
 class Player implements hxbit.Serializable {
 	public function new(id:String) {
 		this.id = id;
@@ -37,6 +96,25 @@ class Player implements hxbit.Serializable {
 	// 不能用final
 	// 不支援巢狀typedef
 	@:s public var id:String;
+}
+
+enum GColor {
+	Red;
+	Black;
+	Purple;
+}
+
+typedef GSign = {
+	colors:Array<GColor>,
+	production:String
+}
+
+enum Event {
+	ChangePhase;
+	// 「ゲイン」の効果で戦闘修正を得た場合
+	Gain(cardId:String, value:Int);
+	//
+	CardEnterField(cardId:String);
 }
 
 enum Phase {
@@ -123,13 +201,13 @@ class RequireUserSelect<T> extends Require {
 	public var responsePlayerId = RelativePlayer.You;
 }
 
-class RequireUserSelectCard extends RequireUserSelect<String>{
+class RequireUserSelectCard extends RequireUserSelect<String> {
 	public function new(id:String, description:String) {
 		super(id, description);
 	}
 }
 
-class RequireUserSelectBattlePoint extends RequireUserSelect<BattlePoint>{
+class RequireUserSelectBattlePoint extends RequireUserSelect<BattlePoint> {
 	public function new(id:String, description:String) {
 		super(id, description);
 	}
@@ -174,9 +252,7 @@ class Mark implements hxbit.Serializable {
 		return [];
 	}
 
-	public function onEvent(ctx:Context, event:Event):Void {
-
-	}
+	public function onEvent(ctx:Context, event:Event):Void {}
 }
 
 interface ExecuteRuntime {

@@ -62,10 +62,7 @@ private class Text1_1 extends CardText {
 	}
 
 	public override function action(ctx:Context, runtime:ExecuteRuntime):Void {
-		final selectUnits = ctx.memory.playerSelection.cardIds[getKey1()];
-		if (selectUnits == null) {
-			throw new haxe.Exception("selectUnits not found");
-		}
+		final selectUnits = getPlayerSelectionCardId(ctx, getKey1());
 		for (unit in selectUnits) {
 			final mark = new Mark1('${id}_Mark1', gainCardId, {v1: gainValue, v2: gainValue, v3: gainValue});
 			ctx.marks[mark.id] = mark;

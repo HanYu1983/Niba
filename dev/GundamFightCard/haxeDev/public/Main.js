@@ -28066,6 +28066,108 @@ hxbit_enumSer_Hxbit_$PropTypeDesc.getSchema = function() {
 	s.fieldsNames.push("PStruct");
 	return s;
 };
+var hxbit_enumSer_Model_$ver1_$game_$BaSyouKeyword = function() { };
+$hxClasses["hxbit.enumSer.Model_ver1_game_BaSyouKeyword"] = hxbit_enumSer_Model_$ver1_$game_$BaSyouKeyword;
+hxbit_enumSer_Model_$ver1_$game_$BaSyouKeyword.__name__ = "hxbit.enumSer.Model_ver1_game_BaSyouKeyword";
+hxbit_enumSer_Model_$ver1_$game_$BaSyouKeyword.doSerialize = function(ctx,v) {
+	if(v == null) {
+		ctx.out.addByte(0);
+	} else {
+		switch(v._hx_index) {
+		case 0:
+			ctx.out.addByte(1);
+			break;
+		case 1:
+			ctx.out.addByte(2);
+			break;
+		case 2:
+			ctx.out.addByte(3);
+			break;
+		case 3:
+			ctx.out.addByte(4);
+			break;
+		case 4:
+			ctx.out.addByte(5);
+			break;
+		case 5:
+			ctx.out.addByte(6);
+			break;
+		case 6:
+			ctx.out.addByte(7);
+			break;
+		case 7:
+			ctx.out.addByte(8);
+			break;
+		case 8:
+			ctx.out.addByte(9);
+			break;
+		case 9:
+			ctx.out.addByte(10);
+			break;
+		case 10:
+			ctx.out.addByte(11);
+			break;
+		}
+	}
+};
+hxbit_enumSer_Model_$ver1_$game_$BaSyouKeyword.doUnserialize = function(ctx) {
+	var b = ctx.input.b[ctx.inPos++];
+	if(b == 0) {
+		return null;
+	}
+	switch(b) {
+	case 1:
+		return model_ver1_game_BaSyouKeyword.HonGoku;
+	case 2:
+		return model_ver1_game_BaSyouKeyword.SuteYama;
+	case 3:
+		return model_ver1_game_BaSyouKeyword.SpaceArea;
+	case 4:
+		return model_ver1_game_BaSyouKeyword.EarchArea;
+	case 5:
+		return model_ver1_game_BaSyouKeyword.MaintenanceArea;
+	case 6:
+		return model_ver1_game_BaSyouKeyword.GZone;
+	case 7:
+		return model_ver1_game_BaSyouKeyword.JunkYard;
+	case 8:
+		return model_ver1_game_BaSyouKeyword.TeHuTa;
+	case 9:
+		return model_ver1_game_BaSyouKeyword.Hanger;
+	case 10:
+		return model_ver1_game_BaSyouKeyword.PlayedCard;
+	case 11:
+		return model_ver1_game_BaSyouKeyword.RemovedCard;
+	default:
+		throw haxe_Exception.thrown("Invalid enum index " + b);
+	}
+};
+hxbit_enumSer_Model_$ver1_$game_$BaSyouKeyword.getSchema = function() {
+	var s = new hxbit_Schema();
+	s.fieldsTypes.push(null);
+	s.fieldsNames.push("HonGoku");
+	s.fieldsTypes.push(null);
+	s.fieldsNames.push("SuteYama");
+	s.fieldsTypes.push(null);
+	s.fieldsNames.push("SpaceArea");
+	s.fieldsTypes.push(null);
+	s.fieldsNames.push("EarchArea");
+	s.fieldsTypes.push(null);
+	s.fieldsNames.push("MaintenanceArea");
+	s.fieldsTypes.push(null);
+	s.fieldsNames.push("GZone");
+	s.fieldsTypes.push(null);
+	s.fieldsNames.push("JunkYard");
+	s.fieldsTypes.push(null);
+	s.fieldsNames.push("TeHuTa");
+	s.fieldsTypes.push(null);
+	s.fieldsNames.push("Hanger");
+	s.fieldsTypes.push(null);
+	s.fieldsNames.push("PlayedCard");
+	s.fieldsTypes.push(null);
+	s.fieldsNames.push("RemovedCard");
+	return s;
+};
 var hxbit_enumSer_Model_$ver1_$game_$BlockCause = function() { };
 $hxClasses["hxbit.enumSer.Model_ver1_game_BlockCause"] = hxbit_enumSer_Model_$ver1_$game_$BlockCause;
 hxbit_enumSer_Model_$ver1_$game_$BlockCause.__name__ = "hxbit.enumSer.Model_ver1_game_BlockCause";
@@ -29138,6 +29240,13 @@ function model_ver1_alg_Alg_getRuntimeText(ctx) {
 	var globalAddedReturn = result;
 	return playReturn.concat(specialReturn).concat(specialReturn2).concat(originReturn).concat(addedReturn).concat(globalAddedReturn);
 }
+function model_ver1_alg_Alg_getPlayerSelectionCardId(ctx,key) {
+	var selection = ctx.memory.playerSelection.cardIds.h[key];
+	if(selection == null) {
+		throw new haxe_Exception("selection not found");
+	}
+	return selection;
+}
 function model_ver1_alg_Alg_getCardController(ctx,cardId) {
 	return haxe_ds_Option.None;
 }
@@ -29422,10 +29531,7 @@ model_ver1_data__$CardProto_$179001_$01A_$CH_$WT007R_$white_Text1.prototype = $e
 		return [new model_ver1_data_RequirePhase("" + this.id + "_req1",model_ver1_game_Phase.Test("戦闘フェイズ")),new model_ver1_data_RequireGTap("" + this.id + "_req2",[model_ver1_game_GColor.Red,model_ver1_game_GColor.Red],ctx,runtime),new model_ver1_data_ForceTargetCard("" + this.id + "_req3","このセットグループのユニット","このセットグループのユニット",unit)];
 	}
 	,action: function(ctx,runtime) {
-		var selectUnits = ctx.memory.playerSelection.cardIds.h["このセットグループのユニット"];
-		if(selectUnits == null) {
-			throw new haxe_Exception("selectUnits not found");
-		}
+		var selectUnits = model_ver1_alg_Alg_getPlayerSelectionCardId(ctx,"このセットグループのユニット");
 		var _g = 0;
 		while(_g < selectUnits.length) {
 			var unit = selectUnits[_g];
@@ -29592,7 +29698,7 @@ function model_ver1_data_CardProto_$179001_$01A_$CH_$WT007R_$white_test() {
 		result[i] = { cardId : info.runtime.getCardId(), text : info.text, reqs : info.text.getRequires(ctx,info.runtime)};
 	}
 	var infos = result;
-	console.log("src/model/ver1/data/CardProto_179001_01A_CH_WT007R_white.hx:93:",infos);
+	console.log("src/model/ver1/data/CardProto_179001_01A_CH_WT007R_white.hx:88:",infos);
 	if(infos.length == 0) {
 		throw new haxe_Exception("infos.length == 0");
 	}
@@ -29834,12 +29940,7 @@ model_ver1_data__$CardProto_$179004_$01A_$CH_$WT009R_$white_Text1_$1.prototype =
 		return [req];
 	}
 	,action: function(ctx,runtime) {
-		var this1 = ctx.memory.playerSelection.cardIds;
-		var key = this.getKey1();
-		var selectUnits = this1.h[key];
-		if(selectUnits == null) {
-			throw new haxe_Exception("selectUnits not found");
-		}
+		var selectUnits = model_ver1_alg_Alg_getPlayerSelectionCardId(ctx,this.getKey1());
 		var _g = 0;
 		while(_g < selectUnits.length) {
 			var unit = selectUnits[_g];
@@ -30235,18 +30336,85 @@ model_ver1_data_RequireGCount.prototype = $extend(model_ver1_game_Require.protot
 	}
 	,__class__: model_ver1_data_RequireGCount
 });
-var model_ver1_game_GColor = $hxEnums["model.ver1.game.GColor"] = { __ename__:true,__constructs__:null
-	,Red: {_hx_name:"Red",_hx_index:0,__enum__:"model.ver1.game.GColor",toString:$estr}
-	,Black: {_hx_name:"Black",_hx_index:1,__enum__:"model.ver1.game.GColor",toString:$estr}
-	,Purple: {_hx_name:"Purple",_hx_index:2,__enum__:"model.ver1.game.GColor",toString:$estr}
+var model_ver1_game_BaSyouKeyword = $hxEnums["model.ver1.game.BaSyouKeyword"] = { __ename__:true,__constructs__:null
+	,HonGoku: {_hx_name:"HonGoku",_hx_index:0,__enum__:"model.ver1.game.BaSyouKeyword",toString:$estr}
+	,SuteYama: {_hx_name:"SuteYama",_hx_index:1,__enum__:"model.ver1.game.BaSyouKeyword",toString:$estr}
+	,SpaceArea: {_hx_name:"SpaceArea",_hx_index:2,__enum__:"model.ver1.game.BaSyouKeyword",toString:$estr}
+	,EarchArea: {_hx_name:"EarchArea",_hx_index:3,__enum__:"model.ver1.game.BaSyouKeyword",toString:$estr}
+	,MaintenanceArea: {_hx_name:"MaintenanceArea",_hx_index:4,__enum__:"model.ver1.game.BaSyouKeyword",toString:$estr}
+	,GZone: {_hx_name:"GZone",_hx_index:5,__enum__:"model.ver1.game.BaSyouKeyword",toString:$estr}
+	,JunkYard: {_hx_name:"JunkYard",_hx_index:6,__enum__:"model.ver1.game.BaSyouKeyword",toString:$estr}
+	,TeHuTa: {_hx_name:"TeHuTa",_hx_index:7,__enum__:"model.ver1.game.BaSyouKeyword",toString:$estr}
+	,Hanger: {_hx_name:"Hanger",_hx_index:8,__enum__:"model.ver1.game.BaSyouKeyword",toString:$estr}
+	,PlayedCard: {_hx_name:"PlayedCard",_hx_index:9,__enum__:"model.ver1.game.BaSyouKeyword",toString:$estr}
+	,RemovedCard: {_hx_name:"RemovedCard",_hx_index:10,__enum__:"model.ver1.game.BaSyouKeyword",toString:$estr}
 };
-model_ver1_game_GColor.__constructs__ = [model_ver1_game_GColor.Red,model_ver1_game_GColor.Black,model_ver1_game_GColor.Purple];
-var model_ver1_game_Event = $hxEnums["model.ver1.game.Event"] = { __ename__:true,__constructs__:null
-	,ChangePhase: {_hx_name:"ChangePhase",_hx_index:0,__enum__:"model.ver1.game.Event",toString:$estr}
-	,Gain: ($_=function(cardId,value) { return {_hx_index:1,cardId:cardId,value:value,__enum__:"model.ver1.game.Event",toString:$estr}; },$_._hx_name="Gain",$_.__params__ = ["cardId","value"],$_)
-	,CardEnterField: ($_=function(cardId) { return {_hx_index:2,cardId:cardId,__enum__:"model.ver1.game.Event",toString:$estr}; },$_._hx_name="CardEnterField",$_.__params__ = ["cardId"],$_)
+model_ver1_game_BaSyouKeyword.__constructs__ = [model_ver1_game_BaSyouKeyword.HonGoku,model_ver1_game_BaSyouKeyword.SuteYama,model_ver1_game_BaSyouKeyword.SpaceArea,model_ver1_game_BaSyouKeyword.EarchArea,model_ver1_game_BaSyouKeyword.MaintenanceArea,model_ver1_game_BaSyouKeyword.GZone,model_ver1_game_BaSyouKeyword.JunkYard,model_ver1_game_BaSyouKeyword.TeHuTa,model_ver1_game_BaSyouKeyword.Hanger,model_ver1_game_BaSyouKeyword.PlayedCard,model_ver1_game_BaSyouKeyword.RemovedCard];
+var model_ver1_game_CardStackKey = function(playerId,baSyouKeyword) {
+	this.__uid = hxbit_Serializer.SEQ << 24 | ++hxbit_Serializer.UID;
+	this.playerId = playerId;
+	this.baSyouKeyword = baSyouKeyword;
 };
-model_ver1_game_Event.__constructs__ = [model_ver1_game_Event.ChangePhase,model_ver1_game_Event.Gain,model_ver1_game_Event.CardEnterField];
+$hxClasses["model.ver1.game.CardStackKey"] = model_ver1_game_CardStackKey;
+model_ver1_game_CardStackKey.__name__ = "model.ver1.game.CardStackKey";
+model_ver1_game_CardStackKey.__interfaces__ = [hxbit_Serializable];
+model_ver1_game_CardStackKey.prototype = {
+	playerId: null
+	,baSyouKeyword: null
+	,__uid: null
+	,getCLID: function() {
+		return model_ver1_game_CardStackKey.__clid;
+	}
+	,serialize: function(__ctx) {
+		var s = this.playerId;
+		if(s == null) {
+			__ctx.out.addByte(0);
+		} else {
+			var b = haxe_io_Bytes.ofString(s);
+			var v = b.length + 1;
+			if(v >= 0 && v < 128) {
+				__ctx.out.addByte(v);
+			} else {
+				__ctx.out.addByte(128);
+				__ctx.out.addInt32(v);
+			}
+			__ctx.out.add(b);
+		}
+		hxbit_enumSer_Model_$ver1_$game_$BaSyouKeyword.doSerialize(__ctx,this.baSyouKeyword);
+	}
+	,getSerializeSchema: function() {
+		var schema = new hxbit_Schema();
+		schema.fieldsNames.push("playerId");
+		schema.fieldsTypes.push(hxbit_PropTypeDesc.PString);
+		schema.fieldsNames.push("baSyouKeyword");
+		schema.fieldsTypes.push(hxbit_PropTypeDesc.PEnum("model.ver1.game.BaSyouKeyword"));
+		schema.isFinal = hxbit_Serializer.isClassFinal(model_ver1_game_CardStackKey.__clid);
+		return schema;
+	}
+	,unserializeInit: function() {
+	}
+	,unserialize: function(__ctx) {
+		var v = __ctx.input.b[__ctx.inPos++];
+		if(v == 128) {
+			v = __ctx.input.getInt32(__ctx.inPos);
+			__ctx.inPos += 4;
+		}
+		var len = v;
+		var tmp;
+		if(len == 0) {
+			tmp = null;
+		} else {
+			--len;
+			var s = __ctx.input.getString(__ctx.inPos,len);
+			__ctx.inPos += len;
+			tmp = s;
+		}
+		this.playerId = tmp;
+		var __e = hxbit_enumSer_Model_$ver1_$game_$BaSyouKeyword.doUnserialize(__ctx);
+		this.baSyouKeyword = __e;
+	}
+	,__class__: model_ver1_game_CardStackKey
+};
 var model_ver1_game_Player = function(id) {
 	this.__uid = hxbit_Serializer.SEQ << 24 | ++hxbit_Serializer.UID;
 	this.id = id;
@@ -30305,6 +30473,18 @@ model_ver1_game_Player.prototype = {
 	}
 	,__class__: model_ver1_game_Player
 };
+var model_ver1_game_GColor = $hxEnums["model.ver1.game.GColor"] = { __ename__:true,__constructs__:null
+	,Red: {_hx_name:"Red",_hx_index:0,__enum__:"model.ver1.game.GColor",toString:$estr}
+	,Black: {_hx_name:"Black",_hx_index:1,__enum__:"model.ver1.game.GColor",toString:$estr}
+	,Purple: {_hx_name:"Purple",_hx_index:2,__enum__:"model.ver1.game.GColor",toString:$estr}
+};
+model_ver1_game_GColor.__constructs__ = [model_ver1_game_GColor.Red,model_ver1_game_GColor.Black,model_ver1_game_GColor.Purple];
+var model_ver1_game_Event = $hxEnums["model.ver1.game.Event"] = { __ename__:true,__constructs__:null
+	,ChangePhase: {_hx_name:"ChangePhase",_hx_index:0,__enum__:"model.ver1.game.Event",toString:$estr}
+	,Gain: ($_=function(cardId,value) { return {_hx_index:1,cardId:cardId,value:value,__enum__:"model.ver1.game.Event",toString:$estr}; },$_._hx_name="Gain",$_.__params__ = ["cardId","value"],$_)
+	,CardEnterField: ($_=function(cardId) { return {_hx_index:2,cardId:cardId,__enum__:"model.ver1.game.Event",toString:$estr}; },$_._hx_name="CardEnterField",$_.__params__ = ["cardId"],$_)
+};
+model_ver1_game_Event.__constructs__ = [model_ver1_game_Event.ChangePhase,model_ver1_game_Event.Gain,model_ver1_game_Event.CardEnterField];
 var model_ver1_game_Phase = $hxEnums["model.ver1.game.Phase"] = { __ename__:true,__constructs__:null
 	,Pending: {_hx_name:"Pending",_hx_index:0,__enum__:"model.ver1.game.Phase",toString:$estr}
 	,Test: ($_=function(str) { return {_hx_index:1,str:str,__enum__:"model.ver1.game.Phase",toString:$estr}; },$_._hx_name="Test",$_.__params__ = ["str"],$_)
@@ -31125,6 +31305,40 @@ model_ver1_game_DefaultExecuteRuntime.prototype = $extend(model_ver1_game_Abstra
 	}
 	,__class__: model_ver1_game_DefaultExecuteRuntime
 });
+function model_ver1_game_Define_isBattleArea(k) {
+	switch(k._hx_index) {
+	case 2:case 3:
+		return true;
+	default:
+		return false;
+	}
+}
+function model_ver1_game_Define_isMaintenanceArea(k) {
+	switch(k._hx_index) {
+	case 4:case 5:
+		return true;
+	default:
+		return false;
+	}
+}
+function model_ver1_game_Define_isBa(k) {
+	if(model_ver1_game_Define_isBattleArea(k)) {
+		return true;
+	}
+	if(model_ver1_game_Define_isMaintenanceArea(k)) {
+		return true;
+	}
+	return false;
+}
+function model_ver1_game_Define_getCardStackId(key) {
+	var s = new hxbit_Serializer();
+	var bytes = s.serialize(key);
+	return bytes.toHex();
+}
+function model_ver1_game_Define_getBaSyouKeyword(cardStackId) {
+	var u = new hxbit_Serializer();
+	return u.unserialize(haxe_io_Bytes.ofHex(cardStackId),model_ver1_game_CardStackKey);
+}
 var model_ver1_game_Game = function() {
 	this.__uid = hxbit_Serializer.SEQ << 24 | ++hxbit_Serializer.UID;
 	this.ctx = new model_ver1_game_Context();
@@ -36481,6 +36695,7 @@ var model_ver1_data_DataPool__cardProtoPool = (function($this) {
 model_ver1_data_PlayerPlayCard.__clid = hxbit_Serializer.registerClass(model_ver1_data_PlayerPlayCard);
 model_ver1_data__$PlayerPlayCard_PlayerPlayCardEffect.__clid = hxbit_Serializer.registerClass(model_ver1_data__$PlayerPlayCard_PlayerPlayCardEffect);
 model_ver1_data_PlayerPlayG.__clid = hxbit_Serializer.registerClass(model_ver1_data_PlayerPlayG);
+model_ver1_game_CardStackKey.__clid = hxbit_Serializer.registerClass(model_ver1_game_CardStackKey);
 model_ver1_game_Player.__clid = hxbit_Serializer.registerClass(model_ver1_game_Player);
 model_ver1_game_Block.__clid = hxbit_Serializer.registerClass(model_ver1_game_Block);
 model_ver1_game_Context.__clid = hxbit_Serializer.registerClass(model_ver1_game_Context);

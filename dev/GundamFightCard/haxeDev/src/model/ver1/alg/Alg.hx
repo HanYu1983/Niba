@@ -273,6 +273,14 @@ function getRuntimeText(ctx:Context):Array<{runtime:ExecuteRuntime, text:CardTex
 //
 // Query
 //
+function getPlayerSelectionCardId(ctx:Context, key:String):Array<String> {
+	final selection = ctx.memory.playerSelection.cardIds[key];
+	if (selection == null) {
+		throw new haxe.Exception("selection not found");
+	}
+	return selection;
+}
+
 // p.63
 // 手札、ハンガー中的卡沒有控制者，但有Play的權利
 // 本国、捨て山、ジャンクヤード中的卡沒有控制者
