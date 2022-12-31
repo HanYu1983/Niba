@@ -6,82 +6,14 @@ import haxe.EnumTools;
 import haxe.ds.Option;
 import haxe.ds.EnumValueMap;
 import tool.Table;
+import tool.Helper;
 import model.ver1.data.DataPool;
 
-// BaSyou
 
-enum BaSyouKeyword {
-	// 本国
-	HonGoku;
-	// 捨て山
-	SuteYama;
-	// 宇宙エリア
-	SpaceArea;
-	// 地球エリア
-	EarchArea;
-	// 配備エリア
-	MaintenanceArea;
-	// Gゾーン
-	GZone;
-	// ジャンクヤード
-	JunkYard;
-	// 手札
-	TeHuTa;
-	// ハンガー
-	Hanger;
-	// プレイされたカード
-	PlayedCard;
-	// 取り除かれたカード
-	RemovedCard;
-}
-
-function isBattleArea(k:BaSyouKeyword) {
-	return switch k {
-		case SpaceArea | EarchArea:
-			true;
-		case _:
-			false;
-	}
-}
-
-function isMaintenanceArea(k:BaSyouKeyword) {
-	return switch k {
-		case MaintenanceArea | GZone:
-			true;
-		case _:
-			false;
-	}
-}
-
-function isBa(k:BaSyouKeyword) {
-	if (isBattleArea(k)) {
-		return true;
-	}
-	if (isMaintenanceArea(k)) {
-		return true;
-	}
-	return false;
-}
-
-class CardStackKey implements hxbit.Serializable {
-	public function new(playerId:String, baSyouKeyword:BaSyouKeyword) {
-		this.playerId = playerId;
-		this.baSyouKeyword = baSyouKeyword;
-	}
-
-	@:s public var playerId:String;
-	@:s public var baSyouKeyword:BaSyouKeyword;
-}
-
-function getCardStackId(key:CardStackKey):String {
-	final s = new hxbit.Serializer();
-	final bytes = s.serialize(key);
-	return bytes.toHex();
-}
-
-function getBaSyouKeyword(cardStackId:String):CardStackKey {
-	final u = new hxbit.Serializer();
-	return u.unserialize(haxe.io.Bytes.ofHex(cardStackId), CardStackKey);
+//
+enum Phase {
+	Pending;
+	Test(str:String);
 }
 
 // 實作hxbit.Serializable這個介面後並使用了@:s
@@ -117,11 +49,6 @@ enum Event {
 	CardEnterField(cardId:String);
 }
 
-enum Phase {
-	Pending;
-	Test(str:String);
-}
-
 typedef PlayerSelection = {
 	cardIds:Map<String, Array<String>>
 }
@@ -151,23 +78,7 @@ class Block implements hxbit.Serializable {
 	@:s public var isImmediate = false;
 }
 
-class Context implements hxbit.Serializable {
-	public function new() {}
 
-	@:s public var players:Map<String, Player> = [];
-	@:s public var playersOrder:Array<String> = [];
-	@:s public var table = new Table();
-	@:s public var marks:Map<String, Mark> = [];
-	@:s public var phase:Phase = Pending;
-	@:s public var cardProtoPool:Map<String, CardProto> = [];
-	@:s public var memory:Memory = {
-		playerSelection: {
-			cardIds: []
-		}
-	};
-	// serializable不支援List
-	@:s public var cuts:Array<Array<Block>> = [];
-}
 
 typedef BattlePoint = {
 	v1:Int,

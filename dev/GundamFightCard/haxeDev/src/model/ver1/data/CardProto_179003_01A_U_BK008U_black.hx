@@ -3,6 +3,8 @@ package model.ver1.data;
 import haxe.Exception;
 import tool.Table;
 import model.ver1.game.Define;
+import model.ver1.game.Timing;
+import model.ver1.game.Context;
 import model.ver1.data.Require;
 import model.ver1.alg.Alg;
 
@@ -42,7 +44,8 @@ private class Text1 extends CardText {
 
 	public override function getRequires(ctx:Context, runtime:ExecuteRuntime):Array<Require> {
 		return [
-			new RequirePhase('${id}_Text1_Req1', Test("ダメージ判定ステップ")),
+			// TODO: timing list
+			new RequirePhase('${id}_Text1_Req1', Default(Battle, Some(DamageChecking), Free1)),
 			new RequireGTap('${id}_Text1_Req2', [Black, Black], ctx, runtime),
 			new RequireThisCardDestroyByBattleDamage('${id}_Text1_Req3'),
 		];
@@ -72,7 +75,7 @@ function test() {
 	final card1 = new Card("0");
 	card1.protoId = "179003_01A_U_BK008U_black";
 	ctx.table.cards[card1.id] = card1;
-	ctx.phase = Test("ダメージ判定ステップ");
+	ctx.timing = Timing.Default(Battle, Some(DamageChecking), Start);
 	final infos = getRuntimeText(ctx).map(info -> {
 		return {
 			cardId: info.runtime.getCardId(),

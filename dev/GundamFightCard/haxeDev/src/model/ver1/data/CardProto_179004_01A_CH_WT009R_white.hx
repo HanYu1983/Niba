@@ -3,6 +3,8 @@ package model.ver1.data;
 import haxe.Exception;
 import tool.Helper;
 import model.ver1.game.Define;
+import model.ver1.game.Timing;
+import model.ver1.game.Context;
 import model.ver1.data.Require;
 import model.ver1.alg.Alg;
 
@@ -89,8 +91,8 @@ private class Mark1 extends Mark {
 	public override function onEvent(ctx:Context, event:Event):Void {
 		switch event {
 			case ChangePhase:
-				switch ctx.phase {
-					case Test("回合結束時"):
+				switch ctx.timing {
+					case Default(Battle, Some(End), End):
 						ctx.marks.remove(id);
 					default:
 				}

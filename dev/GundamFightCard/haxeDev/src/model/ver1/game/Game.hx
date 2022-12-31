@@ -1,5 +1,6 @@
 package model.ver1.game;
 import model.ver1.game.Define;
+import model.ver1.game.Context;
 // switch Type.typeof(markEffect) {
 // 	case TClass(cls) if (cls == Any):
 // 		true;

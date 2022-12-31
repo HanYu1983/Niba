@@ -27664,6 +27664,55 @@ hxbit_StructSerializable.prototype = {
 	,customUnserialize: null
 	,__class__: hxbit_StructSerializable
 };
+var hxbit_enumSer_Haxe_$ds_$Option = function() { };
+$hxClasses["hxbit.enumSer.Haxe_ds_Option"] = hxbit_enumSer_Haxe_$ds_$Option;
+hxbit_enumSer_Haxe_$ds_$Option.__name__ = "hxbit.enumSer.Haxe_ds_Option";
+hxbit_enumSer_Haxe_$ds_$Option.doSerialize = function(ctx,v) {
+	if(v == null) {
+		ctx.out.addByte(0);
+	} else {
+		switch(v._hx_index) {
+		case 0:
+			var v1 = v.v;
+			ctx.out.addByte(1);
+			hxbit_enumSer_Model_$ver1_$game_$StepKeyword.doSerialize(ctx,v1);
+			break;
+		case 1:
+			ctx.out.addByte(2);
+			break;
+		}
+	}
+};
+hxbit_enumSer_Haxe_$ds_$Option.doUnserialize = function(ctx) {
+	var b = ctx.input.b[ctx.inPos++];
+	if(b == 0) {
+		return null;
+	}
+	switch(b) {
+	case 1:
+		var _v;
+		var __e = hxbit_enumSer_Model_$ver1_$game_$StepKeyword.doUnserialize(ctx);
+		_v = __e;
+		return haxe_ds_Option.Some(_v);
+	case 2:
+		return haxe_ds_Option.None;
+	default:
+		throw haxe_Exception.thrown("Invalid enum index " + b);
+	}
+};
+hxbit_enumSer_Haxe_$ds_$Option.getSchema = function() {
+	var s = new hxbit_Schema();
+	var s1 = s.fieldsTypes;
+	var _g = [];
+	var v;
+	var t = hxbit_PropTypeDesc.PEnum("model.ver1.game.StepKeyword");
+	_g.push({ name : "", type : t, opt : false});
+	s1.push(hxbit_PropTypeDesc.PObj(_g));
+	s.fieldsNames.push("Some");
+	s.fieldsTypes.push(null);
+	s.fieldsNames.push("None");
+	return s;
+};
 var hxbit_enumSer_Hxbit_$PropTypeDesc = function() { };
 $hxClasses["hxbit.enumSer.Hxbit_PropTypeDesc"] = hxbit_enumSer_Hxbit_$PropTypeDesc;
 hxbit_enumSer_Hxbit_$PropTypeDesc.__name__ = "hxbit.enumSer.Hxbit_PropTypeDesc";
@@ -28066,108 +28115,6 @@ hxbit_enumSer_Hxbit_$PropTypeDesc.getSchema = function() {
 	s.fieldsNames.push("PStruct");
 	return s;
 };
-var hxbit_enumSer_Model_$ver1_$game_$BaSyouKeyword = function() { };
-$hxClasses["hxbit.enumSer.Model_ver1_game_BaSyouKeyword"] = hxbit_enumSer_Model_$ver1_$game_$BaSyouKeyword;
-hxbit_enumSer_Model_$ver1_$game_$BaSyouKeyword.__name__ = "hxbit.enumSer.Model_ver1_game_BaSyouKeyword";
-hxbit_enumSer_Model_$ver1_$game_$BaSyouKeyword.doSerialize = function(ctx,v) {
-	if(v == null) {
-		ctx.out.addByte(0);
-	} else {
-		switch(v._hx_index) {
-		case 0:
-			ctx.out.addByte(1);
-			break;
-		case 1:
-			ctx.out.addByte(2);
-			break;
-		case 2:
-			ctx.out.addByte(3);
-			break;
-		case 3:
-			ctx.out.addByte(4);
-			break;
-		case 4:
-			ctx.out.addByte(5);
-			break;
-		case 5:
-			ctx.out.addByte(6);
-			break;
-		case 6:
-			ctx.out.addByte(7);
-			break;
-		case 7:
-			ctx.out.addByte(8);
-			break;
-		case 8:
-			ctx.out.addByte(9);
-			break;
-		case 9:
-			ctx.out.addByte(10);
-			break;
-		case 10:
-			ctx.out.addByte(11);
-			break;
-		}
-	}
-};
-hxbit_enumSer_Model_$ver1_$game_$BaSyouKeyword.doUnserialize = function(ctx) {
-	var b = ctx.input.b[ctx.inPos++];
-	if(b == 0) {
-		return null;
-	}
-	switch(b) {
-	case 1:
-		return model_ver1_game_BaSyouKeyword.HonGoku;
-	case 2:
-		return model_ver1_game_BaSyouKeyword.SuteYama;
-	case 3:
-		return model_ver1_game_BaSyouKeyword.SpaceArea;
-	case 4:
-		return model_ver1_game_BaSyouKeyword.EarchArea;
-	case 5:
-		return model_ver1_game_BaSyouKeyword.MaintenanceArea;
-	case 6:
-		return model_ver1_game_BaSyouKeyword.GZone;
-	case 7:
-		return model_ver1_game_BaSyouKeyword.JunkYard;
-	case 8:
-		return model_ver1_game_BaSyouKeyword.TeHuTa;
-	case 9:
-		return model_ver1_game_BaSyouKeyword.Hanger;
-	case 10:
-		return model_ver1_game_BaSyouKeyword.PlayedCard;
-	case 11:
-		return model_ver1_game_BaSyouKeyword.RemovedCard;
-	default:
-		throw haxe_Exception.thrown("Invalid enum index " + b);
-	}
-};
-hxbit_enumSer_Model_$ver1_$game_$BaSyouKeyword.getSchema = function() {
-	var s = new hxbit_Schema();
-	s.fieldsTypes.push(null);
-	s.fieldsNames.push("HonGoku");
-	s.fieldsTypes.push(null);
-	s.fieldsNames.push("SuteYama");
-	s.fieldsTypes.push(null);
-	s.fieldsNames.push("SpaceArea");
-	s.fieldsTypes.push(null);
-	s.fieldsNames.push("EarchArea");
-	s.fieldsTypes.push(null);
-	s.fieldsNames.push("MaintenanceArea");
-	s.fieldsTypes.push(null);
-	s.fieldsNames.push("GZone");
-	s.fieldsTypes.push(null);
-	s.fieldsNames.push("JunkYard");
-	s.fieldsTypes.push(null);
-	s.fieldsNames.push("TeHuTa");
-	s.fieldsTypes.push(null);
-	s.fieldsNames.push("Hanger");
-	s.fieldsTypes.push(null);
-	s.fieldsNames.push("PlayedCard");
-	s.fieldsTypes.push(null);
-	s.fieldsNames.push("RemovedCard");
-	return s;
-};
 var hxbit_enumSer_Model_$ver1_$game_$BlockCause = function() { };
 $hxClasses["hxbit.enumSer.Model_ver1_game_BlockCause"] = hxbit_enumSer_Model_$ver1_$game_$BlockCause;
 hxbit_enumSer_Model_$ver1_$game_$BlockCause.__name__ = "hxbit.enumSer.Model_ver1_game_BlockCause";
@@ -28454,10 +28401,10 @@ hxbit_enumSer_Model_$ver1_$game_$BlockCause.getSchema = function() {
 	s.fieldsNames.push("TextEffect");
 	return s;
 };
-var hxbit_enumSer_Model_$ver1_$game_$Phase = function() { };
-$hxClasses["hxbit.enumSer.Model_ver1_game_Phase"] = hxbit_enumSer_Model_$ver1_$game_$Phase;
-hxbit_enumSer_Model_$ver1_$game_$Phase.__name__ = "hxbit.enumSer.Model_ver1_game_Phase";
-hxbit_enumSer_Model_$ver1_$game_$Phase.doSerialize = function(ctx,v) {
+var hxbit_enumSer_Model_$ver1_$game_$PhaseKeyword = function() { };
+$hxClasses["hxbit.enumSer.Model_ver1_game_PhaseKeyword"] = hxbit_enumSer_Model_$ver1_$game_$PhaseKeyword;
+hxbit_enumSer_Model_$ver1_$game_$PhaseKeyword.__name__ = "hxbit.enumSer.Model_ver1_game_PhaseKeyword";
+hxbit_enumSer_Model_$ver1_$game_$PhaseKeyword.doSerialize = function(ctx,v) {
 	if(v == null) {
 		ctx.out.addByte(0);
 	} else {
@@ -28466,65 +28413,242 @@ hxbit_enumSer_Model_$ver1_$game_$Phase.doSerialize = function(ctx,v) {
 			ctx.out.addByte(1);
 			break;
 		case 1:
-			var str = v.str;
 			ctx.out.addByte(2);
-			if(str == null) {
-				ctx.out.addByte(0);
-			} else {
-				var b = haxe_io_Bytes.ofString(str);
-				var v = b.length + 1;
-				if(v >= 0 && v < 128) {
-					ctx.out.addByte(v);
-				} else {
-					ctx.out.addByte(128);
-					ctx.out.addInt32(v);
-				}
-				ctx.out.add(b);
-			}
+			break;
+		case 2:
+			ctx.out.addByte(3);
+			break;
+		case 3:
+			ctx.out.addByte(4);
 			break;
 		}
 	}
 };
-hxbit_enumSer_Model_$ver1_$game_$Phase.doUnserialize = function(ctx) {
+hxbit_enumSer_Model_$ver1_$game_$PhaseKeyword.doUnserialize = function(ctx) {
 	var b = ctx.input.b[ctx.inPos++];
 	if(b == 0) {
 		return null;
 	}
 	switch(b) {
 	case 1:
-		return model_ver1_game_Phase.Pending;
+		return model_ver1_game_PhaseKeyword.Reroll;
 	case 2:
-		var _str;
-		var v = ctx.input.b[ctx.inPos++];
-		if(v == 128) {
-			v = ctx.input.getInt32(ctx.inPos);
-			ctx.inPos += 4;
-		}
-		var len = v;
-		if(len == 0) {
-			_str = null;
-		} else {
-			--len;
-			var s = ctx.input.getString(ctx.inPos,len);
-			ctx.inPos += len;
-			_str = s;
-		}
-		return model_ver1_game_Phase.Test(_str);
+		return model_ver1_game_PhaseKeyword.Draw;
+	case 3:
+		return model_ver1_game_PhaseKeyword.Maintenance;
+	case 4:
+		return model_ver1_game_PhaseKeyword.Battle;
 	default:
 		throw haxe_Exception.thrown("Invalid enum index " + b);
 	}
 };
-hxbit_enumSer_Model_$ver1_$game_$Phase.getSchema = function() {
+hxbit_enumSer_Model_$ver1_$game_$PhaseKeyword.getSchema = function() {
 	var s = new hxbit_Schema();
 	s.fieldsTypes.push(null);
-	s.fieldsNames.push("Pending");
+	s.fieldsNames.push("Reroll");
+	s.fieldsTypes.push(null);
+	s.fieldsNames.push("Draw");
+	s.fieldsTypes.push(null);
+	s.fieldsNames.push("Maintenance");
+	s.fieldsTypes.push(null);
+	s.fieldsNames.push("Battle");
+	return s;
+};
+var hxbit_enumSer_Model_$ver1_$game_$StepKeyword = function() { };
+$hxClasses["hxbit.enumSer.Model_ver1_game_StepKeyword"] = hxbit_enumSer_Model_$ver1_$game_$StepKeyword;
+hxbit_enumSer_Model_$ver1_$game_$StepKeyword.__name__ = "hxbit.enumSer.Model_ver1_game_StepKeyword";
+hxbit_enumSer_Model_$ver1_$game_$StepKeyword.doSerialize = function(ctx,v) {
+	if(v == null) {
+		ctx.out.addByte(0);
+	} else {
+		switch(v._hx_index) {
+		case 0:
+			ctx.out.addByte(1);
+			break;
+		case 1:
+			ctx.out.addByte(2);
+			break;
+		case 2:
+			ctx.out.addByte(3);
+			break;
+		case 3:
+			ctx.out.addByte(4);
+			break;
+		case 4:
+			ctx.out.addByte(5);
+			break;
+		}
+	}
+};
+hxbit_enumSer_Model_$ver1_$game_$StepKeyword.doUnserialize = function(ctx) {
+	var b = ctx.input.b[ctx.inPos++];
+	if(b == 0) {
+		return null;
+	}
+	switch(b) {
+	case 1:
+		return model_ver1_game_StepKeyword.Attack;
+	case 2:
+		return model_ver1_game_StepKeyword.Defense;
+	case 3:
+		return model_ver1_game_StepKeyword.DamageChecking;
+	case 4:
+		return model_ver1_game_StepKeyword.Return;
+	case 5:
+		return model_ver1_game_StepKeyword.End;
+	default:
+		throw haxe_Exception.thrown("Invalid enum index " + b);
+	}
+};
+hxbit_enumSer_Model_$ver1_$game_$StepKeyword.getSchema = function() {
+	var s = new hxbit_Schema();
+	s.fieldsTypes.push(null);
+	s.fieldsNames.push("Attack");
+	s.fieldsTypes.push(null);
+	s.fieldsNames.push("Defense");
+	s.fieldsTypes.push(null);
+	s.fieldsNames.push("DamageChecking");
+	s.fieldsTypes.push(null);
+	s.fieldsNames.push("Return");
+	s.fieldsTypes.push(null);
+	s.fieldsNames.push("End");
+	return s;
+};
+var hxbit_enumSer_Model_$ver1_$game_$Timing = function() { };
+$hxClasses["hxbit.enumSer.Model_ver1_game_Timing"] = hxbit_enumSer_Model_$ver1_$game_$Timing;
+hxbit_enumSer_Model_$ver1_$game_$Timing.__name__ = "hxbit.enumSer.Model_ver1_game_Timing";
+hxbit_enumSer_Model_$ver1_$game_$Timing.doSerialize = function(ctx,v) {
+	if(v == null) {
+		ctx.out.addByte(0);
+	} else {
+		var phase = v.phase;
+		var step = v.step;
+		var timing = v.timing;
+		ctx.out.addByte(1);
+		hxbit_enumSer_Model_$ver1_$game_$PhaseKeyword.doSerialize(ctx,phase);
+		hxbit_enumSer_Haxe_$ds_$Option.doSerialize(ctx,step);
+		hxbit_enumSer_Model_$ver1_$game_$TimingKeyword.doSerialize(ctx,timing);
+	}
+};
+hxbit_enumSer_Model_$ver1_$game_$Timing.doUnserialize = function(ctx) {
+	var b = ctx.input.b[ctx.inPos++];
+	if(b == 0) {
+		return null;
+	}
+	if(b == 1) {
+		var _phase;
+		var __e = hxbit_enumSer_Model_$ver1_$game_$PhaseKeyword.doUnserialize(ctx);
+		_phase = __e;
+		var _step;
+		var __e = hxbit_enumSer_Haxe_$ds_$Option.doUnserialize(ctx);
+		_step = __e;
+		var _timing;
+		var __e = hxbit_enumSer_Model_$ver1_$game_$TimingKeyword.doUnserialize(ctx);
+		_timing = __e;
+		return model_ver1_game_Timing.Default(_phase,_step,_timing);
+	} else {
+		throw haxe_Exception.thrown("Invalid enum index " + b);
+	}
+};
+hxbit_enumSer_Model_$ver1_$game_$Timing.getSchema = function() {
+	var s = new hxbit_Schema();
 	var s1 = s.fieldsTypes;
 	var _g = [];
 	var v;
-	var t = hxbit_PropTypeDesc.PString;
+	var v;
+	var v;
+	var t = hxbit_PropTypeDesc.PEnum("model.ver1.game.TimingKeyword");
 	_g.push({ name : "", type : t, opt : false});
 	s1.push(hxbit_PropTypeDesc.PObj(_g));
-	s.fieldsNames.push("Test");
+	s.fieldsNames.push("Default");
+	return s;
+};
+var hxbit_enumSer_Model_$ver1_$game_$TimingKeyword = function() { };
+$hxClasses["hxbit.enumSer.Model_ver1_game_TimingKeyword"] = hxbit_enumSer_Model_$ver1_$game_$TimingKeyword;
+hxbit_enumSer_Model_$ver1_$game_$TimingKeyword.__name__ = "hxbit.enumSer.Model_ver1_game_TimingKeyword";
+hxbit_enumSer_Model_$ver1_$game_$TimingKeyword.doSerialize = function(ctx,v) {
+	if(v == null) {
+		ctx.out.addByte(0);
+	} else {
+		switch(v._hx_index) {
+		case 0:
+			ctx.out.addByte(1);
+			break;
+		case 1:
+			ctx.out.addByte(2);
+			break;
+		case 2:
+			ctx.out.addByte(3);
+			break;
+		case 3:
+			ctx.out.addByte(4);
+			break;
+		case 4:
+			ctx.out.addByte(5);
+			break;
+		case 5:
+			ctx.out.addByte(6);
+			break;
+		case 6:
+			ctx.out.addByte(7);
+			break;
+		case 7:
+			ctx.out.addByte(8);
+			break;
+		case 8:
+			ctx.out.addByte(9);
+			break;
+		}
+	}
+};
+hxbit_enumSer_Model_$ver1_$game_$TimingKeyword.doUnserialize = function(ctx) {
+	var b = ctx.input.b[ctx.inPos++];
+	if(b == 0) {
+		return null;
+	}
+	switch(b) {
+	case 1:
+		return model_ver1_game_TimingKeyword.Start;
+	case 2:
+		return model_ver1_game_TimingKeyword.Free1;
+	case 3:
+		return model_ver1_game_TimingKeyword.Rule;
+	case 4:
+		return model_ver1_game_TimingKeyword.Free2;
+	case 5:
+		return model_ver1_game_TimingKeyword.End;
+	case 6:
+		return model_ver1_game_TimingKeyword.DamageReset;
+	case 7:
+		return model_ver1_game_TimingKeyword.ResolveEffect;
+	case 8:
+		return model_ver1_game_TimingKeyword.AdjustHand;
+	case 9:
+		return model_ver1_game_TimingKeyword.TurnEnd;
+	default:
+		throw haxe_Exception.thrown("Invalid enum index " + b);
+	}
+};
+hxbit_enumSer_Model_$ver1_$game_$TimingKeyword.getSchema = function() {
+	var s = new hxbit_Schema();
+	s.fieldsTypes.push(null);
+	s.fieldsNames.push("Start");
+	s.fieldsTypes.push(null);
+	s.fieldsNames.push("Free1");
+	s.fieldsTypes.push(null);
+	s.fieldsNames.push("Rule");
+	s.fieldsTypes.push(null);
+	s.fieldsNames.push("Free2");
+	s.fieldsTypes.push(null);
+	s.fieldsNames.push("End");
+	s.fieldsTypes.push(null);
+	s.fieldsNames.push("DamageReset");
+	s.fieldsTypes.push(null);
+	s.fieldsNames.push("ResolveEffect");
+	s.fieldsTypes.push(null);
+	s.fieldsNames.push("AdjustHand");
+	s.fieldsTypes.push(null);
+	s.fieldsNames.push("TurnEnd");
 	return s;
 };
 var js_Boot = function() { };
@@ -28798,12 +28922,12 @@ var model_TestModel = function() {
 	card2.protoId = "179003_01A_U_BK008U_black";
 	this.game.ctx.table.cards.h[card1.id] = card1;
 	this.game.ctx.table.cards.h[card2.id] = card2;
-	console.log("src/model/TestModel.hx:30:","============ getGame ============");
-	console.log("src/model/TestModel.hx:32:",this.game.ctx);
-	console.log("src/model/TestModel.hx:34:","============ testMemonto ============");
+	console.log("src/model/TestModel.hx:31:","============ getGame ============");
+	console.log("src/model/TestModel.hx:33:",this.game.ctx);
+	console.log("src/model/TestModel.hx:35:","============ testMemonto ============");
 	var loadGame = model_ver1_game_Game.ofMemonto(this.game.getMemonto());
-	console.log("src/model/TestModel.hx:37:",loadGame.ctx);
-	console.log("src/model/TestModel.hx:38:","=================================");
+	console.log("src/model/TestModel.hx:38:",loadGame.ctx);
+	console.log("src/model/TestModel.hx:39:","=================================");
 	var h = loadGame.ctx.marks.h;
 	var _g_h = h;
 	var _g_keys = Object.keys(h);
@@ -28815,10 +28939,10 @@ var model_TestModel = function() {
 		var _g1_value = _g_h[key];
 		var key1 = _g1_key;
 		var value = _g1_value;
-		console.log("src/model/TestModel.hx:40:",key1);
-		console.log("src/model/TestModel.hx:41:",value);
+		console.log("src/model/TestModel.hx:41:",key1);
+		console.log("src/model/TestModel.hx:42:",value);
 	}
-	console.log("src/model/TestModel.hx:43:","=================================");
+	console.log("src/model/TestModel.hx:44:","=================================");
 	this.game = loadGame;
 };
 $hxClasses["model.TestModel"] = model_TestModel;
@@ -28863,10 +28987,10 @@ function model_ver1_alg_Alg_isDestroyNow(ctx,cardId,condition) {
 	return false;
 }
 function model_ver1_alg_Alg_removeDestroyEffect(ctx,cardId) {
-	console.log("src/model/ver1/alg/Alg.hx:36:","移除堆疊中的破壞效果");
+	console.log("src/model/ver1/alg/Alg.hx:37:","移除堆疊中的破壞效果");
 }
 function model_ver1_alg_Alg_becomeG(ctx,cardId) {
-	console.log("src/model/ver1/alg/Alg.hx:43:","將自己變成G");
+	console.log("src/model/ver1/alg/Alg.hx:44:","將自己變成G");
 }
 function model_ver1_alg_Alg_getUnitOfSetGroup(ctx,cardId) {
 	return haxe_ds_Option.None;
@@ -29545,7 +29669,7 @@ model_ver1_data__$CardProto_$179001_$01A_$CH_$WT007R_$white_Text1.prototype = $e
 		} else {
 			unit = "unknown";
 		}
-		return [new model_ver1_data_RequirePhase("" + this.id + "_req1",model_ver1_game_Phase.Test("戦闘フェイズ")),new model_ver1_data_RequireGTap("" + this.id + "_req2",[model_ver1_game_GColor.Red,model_ver1_game_GColor.Red],ctx,runtime),new model_ver1_data_ForceTargetCard("" + this.id + "_req3","このセットグループのユニット","このセットグループのユニット",unit)];
+		return [new model_ver1_data_RequirePhase("" + this.id + "_req1",model_ver1_game_Timing.Default(model_ver1_game_PhaseKeyword.Battle,haxe_ds_Option.None,model_ver1_game_TimingKeyword.Free1)),new model_ver1_data_RequireGTap("" + this.id + "_req2",[model_ver1_game_GColor.Red,model_ver1_game_GColor.Red],ctx,runtime),new model_ver1_data_ForceTargetCard("" + this.id + "_req3","このセットグループのユニット","このセットグループのユニット",unit)];
 	}
 	,action: function(ctx,runtime) {
 		var selectUnits = model_ver1_alg_Alg_getPlayerSelectionCardId(ctx,"このセットグループのユニット");
@@ -29639,13 +29763,18 @@ model_ver1_data__$CardProto_$179001_$01A_$CH_$WT007R_$white_Mark1.prototype = $e
 	}
 	,onEvent: function(ctx,event) {
 		if(event._hx_index == 0) {
-			var _g = ctx.phase;
-			if(_g._hx_index == 1) {
-				if(_g.str == "回合結束時") {
-					var key = this.id;
-					var _this = ctx.marks;
-					if(Object.prototype.hasOwnProperty.call(_this.h,key)) {
-						delete(_this.h[key]);
+			var _g = ctx.timing;
+			var _g1 = _g.step;
+			if(_g.phase._hx_index == 3) {
+				if(_g1._hx_index == 0) {
+					if(_g1.v._hx_index == 4) {
+						if(_g.timing._hx_index == 4) {
+							var key = this.id;
+							var _this = ctx.marks;
+							if(Object.prototype.hasOwnProperty.call(_this.h,key)) {
+								delete(_this.h[key]);
+							}
+						}
 					}
 				}
 			}
@@ -29704,7 +29833,7 @@ function model_ver1_data_CardProto_$179001_$01A_$CH_$WT007R_$white_test() {
 	var card1 = new tool_Card("0");
 	card1.protoId = "179001_01A_CH_WT007R_white";
 	ctx.table.cards.h[card1.id] = card1;
-	ctx.phase = model_ver1_game_Phase.Test("戦闘フェイズ");
+	ctx.timing = model_ver1_game_Timing.Default(model_ver1_game_PhaseKeyword.Battle,haxe_ds_Option.Some(model_ver1_game_StepKeyword.Attack),model_ver1_game_TimingKeyword.Start);
 	var _this = model_ver1_alg_Alg_getRuntimeText(ctx);
 	var result = new Array(_this.length);
 	var _g = 0;
@@ -29715,7 +29844,7 @@ function model_ver1_data_CardProto_$179001_$01A_$CH_$WT007R_$white_test() {
 		result[i] = { cardId : info.runtime.getCardId(), text : info.text, reqs : info.text.getRequires(ctx,info.runtime)};
 	}
 	var infos = result;
-	console.log("src/model/ver1/data/CardProto_179001_01A_CH_WT007R_white.hx:88:",infos);
+	console.log("src/model/ver1/data/CardProto_179001_01A_CH_WT007R_white.hx:90:",infos);
 	if(infos.length == 0) {
 		throw new haxe_Exception("infos.length == 0");
 	}
@@ -29795,7 +29924,7 @@ model_ver1_data__$CardProto_$179003_$01A_$U_$BK008U_$black_Text1.__name__ = "mod
 model_ver1_data__$CardProto_$179003_$01A_$U_$BK008U_$black_Text1.__super__ = model_ver1_game_CardText;
 model_ver1_data__$CardProto_$179003_$01A_$U_$BK008U_$black_Text1.prototype = $extend(model_ver1_game_CardText.prototype,{
 	getRequires: function(ctx,runtime) {
-		return [new model_ver1_data_RequirePhase("" + this.id + "_Text1_Req1",model_ver1_game_Phase.Test("ダメージ判定ステップ")),new model_ver1_data_RequireGTap("" + this.id + "_Text1_Req2",[model_ver1_game_GColor.Black,model_ver1_game_GColor.Black],ctx,runtime),new model_ver1_data__$CardProto_$179003_$01A_$U_$BK008U_$black_RequireThisCardDestroyByBattleDamage("" + this.id + "_Text1_Req3")];
+		return [new model_ver1_data_RequirePhase("" + this.id + "_Text1_Req1",model_ver1_game_Timing.Default(model_ver1_game_PhaseKeyword.Battle,haxe_ds_Option.Some(model_ver1_game_StepKeyword.DamageChecking),model_ver1_game_TimingKeyword.Free1)),new model_ver1_data_RequireGTap("" + this.id + "_Text1_Req2",[model_ver1_game_GColor.Black,model_ver1_game_GColor.Black],ctx,runtime),new model_ver1_data__$CardProto_$179003_$01A_$U_$BK008U_$black_RequireThisCardDestroyByBattleDamage("" + this.id + "_Text1_Req3")];
 	}
 	,action: function(ctx,runtime) {
 		var cardId = runtime.getCardId();
@@ -29829,7 +29958,7 @@ function model_ver1_data_CardProto_$179003_$01A_$U_$BK008U_$black_test() {
 	var card1 = new tool_Card("0");
 	card1.protoId = "179003_01A_U_BK008U_black";
 	ctx.table.cards.h[card1.id] = card1;
-	ctx.phase = model_ver1_game_Phase.Test("ダメージ判定ステップ");
+	ctx.timing = model_ver1_game_Timing.Default(model_ver1_game_PhaseKeyword.Battle,haxe_ds_Option.Some(model_ver1_game_StepKeyword.DamageChecking),model_ver1_game_TimingKeyword.Start);
 	var _this = model_ver1_alg_Alg_getRuntimeText(ctx);
 	var result = new Array(_this.length);
 	var _g = 0;
@@ -29840,7 +29969,7 @@ function model_ver1_data_CardProto_$179003_$01A_$U_$BK008U_$black_test() {
 		result[i] = { cardId : info.runtime.getCardId(), text : info.text, reqs : info.text.getRequires(ctx,info.runtime)};
 	}
 	var infos = result;
-	console.log("src/model/ver1/data/CardProto_179003_01A_U_BK008U_black.hx:83:",infos);
+	console.log("src/model/ver1/data/CardProto_179003_01A_U_BK008U_black.hx:86:",infos);
 	if(infos.length == 0) {
 		throw new haxe_Exception("infos.length == 0");
 	}
@@ -30048,13 +30177,18 @@ model_ver1_data__$CardProto_$179004_$01A_$CH_$WT009R_$white_Mark1.prototype = $e
 	}
 	,onEvent: function(ctx,event) {
 		if(event._hx_index == 0) {
-			var _g = ctx.phase;
-			if(_g._hx_index == 1) {
-				if(_g.str == "回合結束時") {
-					var key = this.id;
-					var _this = ctx.marks;
-					if(Object.prototype.hasOwnProperty.call(_this.h,key)) {
-						delete(_this.h[key]);
+			var _g = ctx.timing;
+			var _g1 = _g.step;
+			if(_g.phase._hx_index == 3) {
+				if(_g1._hx_index == 0) {
+					if(_g1.v._hx_index == 4) {
+						if(_g.timing._hx_index == 4) {
+							var key = this.id;
+							var _this = ctx.marks;
+							if(Object.prototype.hasOwnProperty.call(_this.h,key)) {
+								delete(_this.h[key]);
+							}
+						}
 					}
 				}
 			}
@@ -30189,7 +30323,7 @@ model_ver1_data_PlayerPlayCard.__name__ = "model.ver1.data.PlayerPlayCard";
 model_ver1_data_PlayerPlayCard.__super__ = model_ver1_game_CardText;
 model_ver1_data_PlayerPlayCard.prototype = $extend(model_ver1_game_CardText.prototype,{
 	getRequires: function(ctx,runtime) {
-		return [new model_ver1_data_RequirePhase("" + this.id + "_RequirePhase",model_ver1_game_Phase.Test("settings")),new model_ver1_data_RequireGCount("" + this.id + "_RequireGCount",3),new model_ver1_data_RequireGTap("" + this.id + "_RequireGTap",[model_ver1_game_GColor.Black,model_ver1_game_GColor.Black],ctx,runtime)];
+		return [new model_ver1_data_RequirePhase("" + this.id + "_RequirePhase",model_ver1_game_Timing.Default(model_ver1_game_PhaseKeyword.Maintenance,haxe_ds_Option.None,model_ver1_game_TimingKeyword.Free1)),new model_ver1_data_RequireGCount("" + this.id + "_RequireGCount",3),new model_ver1_data_RequireGTap("" + this.id + "_RequireGTap",[model_ver1_game_GColor.Black,model_ver1_game_GColor.Black],ctx,runtime)];
 	}
 	,action: function(ctx,runtime) {
 		var cardId = runtime.getCardId();
@@ -30235,18 +30369,18 @@ model_ver1_data_PlayerPlayG.prototype = $extend(model_ver1_game_CardText.prototy
 	}
 	,__class__: model_ver1_data_PlayerPlayG
 });
-var model_ver1_data_RequirePhase = function(id,phase) {
+var model_ver1_data_RequirePhase = function(id,timing) {
 	model_ver1_game_Require.call(this,id,"RequirePhase");
-	this.phase = phase;
+	this.timing = timing;
 };
 $hxClasses["model.ver1.data.RequirePhase"] = model_ver1_data_RequirePhase;
 model_ver1_data_RequirePhase.__name__ = "model.ver1.data.RequirePhase";
 model_ver1_data_RequirePhase.__super__ = model_ver1_game_Require;
 model_ver1_data_RequirePhase.prototype = $extend(model_ver1_game_Require.prototype,{
-	phase: null
+	timing: null
 	,action: function(ctx,runtime) {
-		if(Type.enumEq(ctx.phase,this.phase) == false) {
-			throw new haxe_Exception("ctx.phase != this.phase: " + Std.string(ctx.phase) + " != " + Std.string(this.phase));
+		if(Type.enumEq(ctx.timing,this.timing) == false) {
+			throw new haxe_Exception("ctx.phase != this.phase: " + Std.string(ctx.timing) + " != " + Std.string(this.timing));
 		}
 	}
 	,__class__: model_ver1_data_RequirePhase
@@ -30357,252 +30491,12 @@ model_ver1_data_RequireGCount.prototype = $extend(model_ver1_game_Require.protot
 	}
 	,__class__: model_ver1_data_RequireGCount
 });
-var model_ver1_game_BaSyouKeyword = $hxEnums["model.ver1.game.BaSyouKeyword"] = { __ename__:true,__constructs__:null
-	,HonGoku: {_hx_name:"HonGoku",_hx_index:0,__enum__:"model.ver1.game.BaSyouKeyword",toString:$estr}
-	,SuteYama: {_hx_name:"SuteYama",_hx_index:1,__enum__:"model.ver1.game.BaSyouKeyword",toString:$estr}
-	,SpaceArea: {_hx_name:"SpaceArea",_hx_index:2,__enum__:"model.ver1.game.BaSyouKeyword",toString:$estr}
-	,EarchArea: {_hx_name:"EarchArea",_hx_index:3,__enum__:"model.ver1.game.BaSyouKeyword",toString:$estr}
-	,MaintenanceArea: {_hx_name:"MaintenanceArea",_hx_index:4,__enum__:"model.ver1.game.BaSyouKeyword",toString:$estr}
-	,GZone: {_hx_name:"GZone",_hx_index:5,__enum__:"model.ver1.game.BaSyouKeyword",toString:$estr}
-	,JunkYard: {_hx_name:"JunkYard",_hx_index:6,__enum__:"model.ver1.game.BaSyouKeyword",toString:$estr}
-	,TeHuTa: {_hx_name:"TeHuTa",_hx_index:7,__enum__:"model.ver1.game.BaSyouKeyword",toString:$estr}
-	,Hanger: {_hx_name:"Hanger",_hx_index:8,__enum__:"model.ver1.game.BaSyouKeyword",toString:$estr}
-	,PlayedCard: {_hx_name:"PlayedCard",_hx_index:9,__enum__:"model.ver1.game.BaSyouKeyword",toString:$estr}
-	,RemovedCard: {_hx_name:"RemovedCard",_hx_index:10,__enum__:"model.ver1.game.BaSyouKeyword",toString:$estr}
-};
-model_ver1_game_BaSyouKeyword.__constructs__ = [model_ver1_game_BaSyouKeyword.HonGoku,model_ver1_game_BaSyouKeyword.SuteYama,model_ver1_game_BaSyouKeyword.SpaceArea,model_ver1_game_BaSyouKeyword.EarchArea,model_ver1_game_BaSyouKeyword.MaintenanceArea,model_ver1_game_BaSyouKeyword.GZone,model_ver1_game_BaSyouKeyword.JunkYard,model_ver1_game_BaSyouKeyword.TeHuTa,model_ver1_game_BaSyouKeyword.Hanger,model_ver1_game_BaSyouKeyword.PlayedCard,model_ver1_game_BaSyouKeyword.RemovedCard];
-var model_ver1_game_CardStackKey = function(playerId,baSyouKeyword) {
-	this.__uid = hxbit_Serializer.SEQ << 24 | ++hxbit_Serializer.UID;
-	this.playerId = playerId;
-	this.baSyouKeyword = baSyouKeyword;
-};
-$hxClasses["model.ver1.game.CardStackKey"] = model_ver1_game_CardStackKey;
-model_ver1_game_CardStackKey.__name__ = "model.ver1.game.CardStackKey";
-model_ver1_game_CardStackKey.__interfaces__ = [hxbit_Serializable];
-model_ver1_game_CardStackKey.prototype = {
-	playerId: null
-	,baSyouKeyword: null
-	,__uid: null
-	,getCLID: function() {
-		return model_ver1_game_CardStackKey.__clid;
-	}
-	,serialize: function(__ctx) {
-		var s = this.playerId;
-		if(s == null) {
-			__ctx.out.addByte(0);
-		} else {
-			var b = haxe_io_Bytes.ofString(s);
-			var v = b.length + 1;
-			if(v >= 0 && v < 128) {
-				__ctx.out.addByte(v);
-			} else {
-				__ctx.out.addByte(128);
-				__ctx.out.addInt32(v);
-			}
-			__ctx.out.add(b);
-		}
-		hxbit_enumSer_Model_$ver1_$game_$BaSyouKeyword.doSerialize(__ctx,this.baSyouKeyword);
-	}
-	,getSerializeSchema: function() {
-		var schema = new hxbit_Schema();
-		schema.fieldsNames.push("playerId");
-		schema.fieldsTypes.push(hxbit_PropTypeDesc.PString);
-		schema.fieldsNames.push("baSyouKeyword");
-		schema.fieldsTypes.push(hxbit_PropTypeDesc.PEnum("model.ver1.game.BaSyouKeyword"));
-		schema.isFinal = hxbit_Serializer.isClassFinal(model_ver1_game_CardStackKey.__clid);
-		return schema;
-	}
-	,unserializeInit: function() {
-	}
-	,unserialize: function(__ctx) {
-		var v = __ctx.input.b[__ctx.inPos++];
-		if(v == 128) {
-			v = __ctx.input.getInt32(__ctx.inPos);
-			__ctx.inPos += 4;
-		}
-		var len = v;
-		var tmp;
-		if(len == 0) {
-			tmp = null;
-		} else {
-			--len;
-			var s = __ctx.input.getString(__ctx.inPos,len);
-			__ctx.inPos += len;
-			tmp = s;
-		}
-		this.playerId = tmp;
-		var __e = hxbit_enumSer_Model_$ver1_$game_$BaSyouKeyword.doUnserialize(__ctx);
-		this.baSyouKeyword = __e;
-	}
-	,__class__: model_ver1_game_CardStackKey
-};
-var model_ver1_game_Player = function(id) {
-	this.__uid = hxbit_Serializer.SEQ << 24 | ++hxbit_Serializer.UID;
-	this.id = id;
-};
-$hxClasses["model.ver1.game.Player"] = model_ver1_game_Player;
-model_ver1_game_Player.__name__ = "model.ver1.game.Player";
-model_ver1_game_Player.__interfaces__ = [hxbit_Serializable];
-model_ver1_game_Player.prototype = {
-	id: null
-	,__uid: null
-	,getCLID: function() {
-		return model_ver1_game_Player.__clid;
-	}
-	,serialize: function(__ctx) {
-		var s = this.id;
-		if(s == null) {
-			__ctx.out.addByte(0);
-		} else {
-			var b = haxe_io_Bytes.ofString(s);
-			var v = b.length + 1;
-			if(v >= 0 && v < 128) {
-				__ctx.out.addByte(v);
-			} else {
-				__ctx.out.addByte(128);
-				__ctx.out.addInt32(v);
-			}
-			__ctx.out.add(b);
-		}
-	}
-	,getSerializeSchema: function() {
-		var schema = new hxbit_Schema();
-		schema.fieldsNames.push("id");
-		schema.fieldsTypes.push(hxbit_PropTypeDesc.PString);
-		schema.isFinal = hxbit_Serializer.isClassFinal(model_ver1_game_Player.__clid);
-		return schema;
-	}
-	,unserializeInit: function() {
-	}
-	,unserialize: function(__ctx) {
-		var v = __ctx.input.b[__ctx.inPos++];
-		if(v == 128) {
-			v = __ctx.input.getInt32(__ctx.inPos);
-			__ctx.inPos += 4;
-		}
-		var len = v;
-		var tmp;
-		if(len == 0) {
-			tmp = null;
-		} else {
-			--len;
-			var s = __ctx.input.getString(__ctx.inPos,len);
-			__ctx.inPos += len;
-			tmp = s;
-		}
-		this.id = tmp;
-	}
-	,__class__: model_ver1_game_Player
-};
-var model_ver1_game_GColor = $hxEnums["model.ver1.game.GColor"] = { __ename__:true,__constructs__:null
-	,Red: {_hx_name:"Red",_hx_index:0,__enum__:"model.ver1.game.GColor",toString:$estr}
-	,Black: {_hx_name:"Black",_hx_index:1,__enum__:"model.ver1.game.GColor",toString:$estr}
-	,Purple: {_hx_name:"Purple",_hx_index:2,__enum__:"model.ver1.game.GColor",toString:$estr}
-};
-model_ver1_game_GColor.__constructs__ = [model_ver1_game_GColor.Red,model_ver1_game_GColor.Black,model_ver1_game_GColor.Purple];
-var model_ver1_game_Event = $hxEnums["model.ver1.game.Event"] = { __ename__:true,__constructs__:null
-	,ChangePhase: {_hx_name:"ChangePhase",_hx_index:0,__enum__:"model.ver1.game.Event",toString:$estr}
-	,Gain: ($_=function(cardId,value) { return {_hx_index:1,cardId:cardId,value:value,__enum__:"model.ver1.game.Event",toString:$estr}; },$_._hx_name="Gain",$_.__params__ = ["cardId","value"],$_)
-	,CardEnterField: ($_=function(cardId) { return {_hx_index:2,cardId:cardId,__enum__:"model.ver1.game.Event",toString:$estr}; },$_._hx_name="CardEnterField",$_.__params__ = ["cardId"],$_)
-};
-model_ver1_game_Event.__constructs__ = [model_ver1_game_Event.ChangePhase,model_ver1_game_Event.Gain,model_ver1_game_Event.CardEnterField];
-var model_ver1_game_Phase = $hxEnums["model.ver1.game.Phase"] = { __ename__:true,__constructs__:null
-	,Pending: {_hx_name:"Pending",_hx_index:0,__enum__:"model.ver1.game.Phase",toString:$estr}
-	,Test: ($_=function(str) { return {_hx_index:1,str:str,__enum__:"model.ver1.game.Phase",toString:$estr}; },$_._hx_name="Test",$_.__params__ = ["str"],$_)
-};
-model_ver1_game_Phase.__constructs__ = [model_ver1_game_Phase.Pending,model_ver1_game_Phase.Test];
-var model_ver1_game_BlockCause = $hxEnums["model.ver1.game.BlockCause"] = { __ename__:true,__constructs__:null
-	,Pending: {_hx_name:"Pending",_hx_index:0,__enum__:"model.ver1.game.BlockCause",toString:$estr}
-	,System: ($_=function(respnosePlayerId) { return {_hx_index:1,respnosePlayerId:respnosePlayerId,__enum__:"model.ver1.game.BlockCause",toString:$estr}; },$_._hx_name="System",$_.__params__ = ["respnosePlayerId"],$_)
-	,PlayCard: ($_=function(playerId,cardId) { return {_hx_index:2,playerId:playerId,cardId:cardId,__enum__:"model.ver1.game.BlockCause",toString:$estr}; },$_._hx_name="PlayCard",$_.__params__ = ["playerId","cardId"],$_)
-	,PlayText: ($_=function(cardId,textId) { return {_hx_index:3,cardId:cardId,textId:textId,__enum__:"model.ver1.game.BlockCause",toString:$estr}; },$_._hx_name="PlayText",$_.__params__ = ["cardId","textId"],$_)
-	,TextEffect: ($_=function(cardId,textId) { return {_hx_index:4,cardId:cardId,textId:textId,__enum__:"model.ver1.game.BlockCause",toString:$estr}; },$_._hx_name="TextEffect",$_.__params__ = ["cardId","textId"],$_)
-};
-model_ver1_game_BlockCause.__constructs__ = [model_ver1_game_BlockCause.Pending,model_ver1_game_BlockCause.System,model_ver1_game_BlockCause.PlayCard,model_ver1_game_BlockCause.PlayText,model_ver1_game_BlockCause.TextEffect];
-var model_ver1_game_Block = function(id,cause,text) {
-	this.__uid = hxbit_Serializer.SEQ << 24 | ++hxbit_Serializer.UID;
-	this.isImmediate = false;
-	this.id = id;
-	this.cause = cause;
-	this.text = text;
-};
-$hxClasses["model.ver1.game.Block"] = model_ver1_game_Block;
-model_ver1_game_Block.__name__ = "model.ver1.game.Block";
-model_ver1_game_Block.__interfaces__ = [hxbit_Serializable];
-model_ver1_game_Block.prototype = {
-	id: null
-	,cause: null
-	,text: null
-	,isImmediate: null
-	,__uid: null
-	,getCLID: function() {
-		return model_ver1_game_Block.__clid;
-	}
-	,serialize: function(__ctx) {
-		var s = this.id;
-		if(s == null) {
-			__ctx.out.addByte(0);
-		} else {
-			var b = haxe_io_Bytes.ofString(s);
-			var v = b.length + 1;
-			if(v >= 0 && v < 128) {
-				__ctx.out.addByte(v);
-			} else {
-				__ctx.out.addByte(128);
-				__ctx.out.addInt32(v);
-			}
-			__ctx.out.add(b);
-		}
-		hxbit_enumSer_Model_$ver1_$game_$BlockCause.doSerialize(__ctx,this.cause);
-		__ctx.addKnownRef(this.text);
-		__ctx.out.addByte(this.isImmediate ? 1 : 0);
-	}
-	,getSerializeSchema: function() {
-		var schema = new hxbit_Schema();
-		schema.fieldsNames.push("id");
-		schema.fieldsTypes.push(hxbit_PropTypeDesc.PString);
-		schema.fieldsNames.push("cause");
-		schema.fieldsTypes.push(hxbit_PropTypeDesc.PEnum("model.ver1.game.BlockCause"));
-		schema.fieldsNames.push("text");
-		schema.fieldsTypes.push(hxbit_PropTypeDesc.PSerializable("model.ver1.game.CardText"));
-		schema.fieldsNames.push("isImmediate");
-		schema.fieldsTypes.push(hxbit_PropTypeDesc.PBool);
-		schema.isFinal = hxbit_Serializer.isClassFinal(model_ver1_game_Block.__clid);
-		return schema;
-	}
-	,unserializeInit: function() {
-		this.isImmediate = false;
-	}
-	,unserialize: function(__ctx) {
-		var v = __ctx.input.b[__ctx.inPos++];
-		if(v == 128) {
-			v = __ctx.input.getInt32(__ctx.inPos);
-			__ctx.inPos += 4;
-		}
-		var len = v;
-		var tmp;
-		if(len == 0) {
-			tmp = null;
-		} else {
-			--len;
-			var s = __ctx.input.getString(__ctx.inPos,len);
-			__ctx.inPos += len;
-			tmp = s;
-		}
-		this.id = tmp;
-		var __e = hxbit_enumSer_Model_$ver1_$game_$BlockCause.doUnserialize(__ctx);
-		this.cause = __e;
-		this.text = __ctx.getRef(model_ver1_game_CardText,model_ver1_game_CardText.__clid);
-		this.isImmediate = __ctx.input.b[__ctx.inPos++] != 0;
-	}
-	,__class__: model_ver1_game_Block
-};
 var model_ver1_game_Context = function() {
 	this.__uid = hxbit_Serializer.SEQ << 24 | ++hxbit_Serializer.UID;
 	this.cuts = [];
 	this.memory = { playerSelection : { cardIds : new haxe_ds_StringMap()}};
 	this.cardProtoPool = new haxe_ds_StringMap();
-	this.phase = model_ver1_game_Phase.Pending;
+	this.timing = model_ver1_game_Timing_TIMINGS[0];
 	this.marks = new haxe_ds_StringMap();
 	this.table = new tool_Table();
 	this.playersOrder = [];
@@ -30616,7 +30510,7 @@ model_ver1_game_Context.prototype = {
 	,playersOrder: null
 	,table: null
 	,marks: null
-	,phase: null
+	,timing: null
 	,cardProtoPool: null
 	,memory: null
 	,cuts: null
@@ -30740,7 +30634,7 @@ model_ver1_game_Context.prototype = {
 				__ctx.addKnownRef(a.h[k]);
 			}
 		}
-		hxbit_enumSer_Model_$ver1_$game_$Phase.doSerialize(__ctx,this.phase);
+		hxbit_enumSer_Model_$ver1_$game_$Timing.doSerialize(__ctx,this.timing);
 		var a = this.cardProtoPool;
 		if(a == null) {
 			__ctx.out.addByte(0);
@@ -30935,8 +30829,8 @@ model_ver1_game_Context.prototype = {
 		schema.fieldsTypes.push(hxbit_PropTypeDesc.PSerializable("tool.Table"));
 		schema.fieldsNames.push("marks");
 		schema.fieldsTypes.push(hxbit_PropTypeDesc.PMap(hxbit_PropTypeDesc.PString,hxbit_PropTypeDesc.PSerializable("model.ver1.game.Mark")));
-		schema.fieldsNames.push("phase");
-		schema.fieldsTypes.push(hxbit_PropTypeDesc.PEnum("model.ver1.game.Phase"));
+		schema.fieldsNames.push("timing");
+		schema.fieldsTypes.push(hxbit_PropTypeDesc.PEnum("model.ver1.game.Timing"));
 		schema.fieldsNames.push("cardProtoPool");
 		schema.fieldsTypes.push(hxbit_PropTypeDesc.PMap(hxbit_PropTypeDesc.PString,hxbit_PropTypeDesc.PSerializable("model.ver1.game.CardProto")));
 		schema.fieldsNames.push("memory");
@@ -30951,7 +30845,7 @@ model_ver1_game_Context.prototype = {
 		this.playersOrder = [];
 		this.table = new tool_Table();
 		this.marks = new haxe_ds_StringMap();
-		this.phase = model_ver1_game_Phase.Pending;
+		this.timing = model_ver1_game_Timing_TIMINGS[0];
 		this.cardProtoPool = new haxe_ds_StringMap();
 		this.memory = { playerSelection : { cardIds : new haxe_ds_StringMap()}};
 		this.cuts = [];
@@ -31066,8 +30960,8 @@ model_ver1_game_Context.prototype = {
 			tmp = m;
 		}
 		this.marks = tmp;
-		var __e = hxbit_enumSer_Model_$ver1_$game_$Phase.doUnserialize(__ctx);
-		this.phase = __e;
+		var __e = hxbit_enumSer_Model_$ver1_$game_$Timing.doUnserialize(__ctx);
+		this.timing = __e;
 		var k0;
 		var v0;
 		var v = __ctx.input.b[__ctx.inPos++];
@@ -31247,6 +31141,167 @@ model_ver1_game_Context.prototype = {
 	}
 	,__class__: model_ver1_game_Context
 };
+var model_ver1_game_Phase = $hxEnums["model.ver1.game.Phase"] = { __ename__:true,__constructs__:null
+	,Pending: {_hx_name:"Pending",_hx_index:0,__enum__:"model.ver1.game.Phase",toString:$estr}
+	,Test: ($_=function(str) { return {_hx_index:1,str:str,__enum__:"model.ver1.game.Phase",toString:$estr}; },$_._hx_name="Test",$_.__params__ = ["str"],$_)
+};
+model_ver1_game_Phase.__constructs__ = [model_ver1_game_Phase.Pending,model_ver1_game_Phase.Test];
+var model_ver1_game_Player = function(id) {
+	this.__uid = hxbit_Serializer.SEQ << 24 | ++hxbit_Serializer.UID;
+	this.id = id;
+};
+$hxClasses["model.ver1.game.Player"] = model_ver1_game_Player;
+model_ver1_game_Player.__name__ = "model.ver1.game.Player";
+model_ver1_game_Player.__interfaces__ = [hxbit_Serializable];
+model_ver1_game_Player.prototype = {
+	id: null
+	,__uid: null
+	,getCLID: function() {
+		return model_ver1_game_Player.__clid;
+	}
+	,serialize: function(__ctx) {
+		var s = this.id;
+		if(s == null) {
+			__ctx.out.addByte(0);
+		} else {
+			var b = haxe_io_Bytes.ofString(s);
+			var v = b.length + 1;
+			if(v >= 0 && v < 128) {
+				__ctx.out.addByte(v);
+			} else {
+				__ctx.out.addByte(128);
+				__ctx.out.addInt32(v);
+			}
+			__ctx.out.add(b);
+		}
+	}
+	,getSerializeSchema: function() {
+		var schema = new hxbit_Schema();
+		schema.fieldsNames.push("id");
+		schema.fieldsTypes.push(hxbit_PropTypeDesc.PString);
+		schema.isFinal = hxbit_Serializer.isClassFinal(model_ver1_game_Player.__clid);
+		return schema;
+	}
+	,unserializeInit: function() {
+	}
+	,unserialize: function(__ctx) {
+		var v = __ctx.input.b[__ctx.inPos++];
+		if(v == 128) {
+			v = __ctx.input.getInt32(__ctx.inPos);
+			__ctx.inPos += 4;
+		}
+		var len = v;
+		var tmp;
+		if(len == 0) {
+			tmp = null;
+		} else {
+			--len;
+			var s = __ctx.input.getString(__ctx.inPos,len);
+			__ctx.inPos += len;
+			tmp = s;
+		}
+		this.id = tmp;
+	}
+	,__class__: model_ver1_game_Player
+};
+var model_ver1_game_GColor = $hxEnums["model.ver1.game.GColor"] = { __ename__:true,__constructs__:null
+	,Red: {_hx_name:"Red",_hx_index:0,__enum__:"model.ver1.game.GColor",toString:$estr}
+	,Black: {_hx_name:"Black",_hx_index:1,__enum__:"model.ver1.game.GColor",toString:$estr}
+	,Purple: {_hx_name:"Purple",_hx_index:2,__enum__:"model.ver1.game.GColor",toString:$estr}
+};
+model_ver1_game_GColor.__constructs__ = [model_ver1_game_GColor.Red,model_ver1_game_GColor.Black,model_ver1_game_GColor.Purple];
+var model_ver1_game_Event = $hxEnums["model.ver1.game.Event"] = { __ename__:true,__constructs__:null
+	,ChangePhase: {_hx_name:"ChangePhase",_hx_index:0,__enum__:"model.ver1.game.Event",toString:$estr}
+	,Gain: ($_=function(cardId,value) { return {_hx_index:1,cardId:cardId,value:value,__enum__:"model.ver1.game.Event",toString:$estr}; },$_._hx_name="Gain",$_.__params__ = ["cardId","value"],$_)
+	,CardEnterField: ($_=function(cardId) { return {_hx_index:2,cardId:cardId,__enum__:"model.ver1.game.Event",toString:$estr}; },$_._hx_name="CardEnterField",$_.__params__ = ["cardId"],$_)
+};
+model_ver1_game_Event.__constructs__ = [model_ver1_game_Event.ChangePhase,model_ver1_game_Event.Gain,model_ver1_game_Event.CardEnterField];
+var model_ver1_game_BlockCause = $hxEnums["model.ver1.game.BlockCause"] = { __ename__:true,__constructs__:null
+	,Pending: {_hx_name:"Pending",_hx_index:0,__enum__:"model.ver1.game.BlockCause",toString:$estr}
+	,System: ($_=function(respnosePlayerId) { return {_hx_index:1,respnosePlayerId:respnosePlayerId,__enum__:"model.ver1.game.BlockCause",toString:$estr}; },$_._hx_name="System",$_.__params__ = ["respnosePlayerId"],$_)
+	,PlayCard: ($_=function(playerId,cardId) { return {_hx_index:2,playerId:playerId,cardId:cardId,__enum__:"model.ver1.game.BlockCause",toString:$estr}; },$_._hx_name="PlayCard",$_.__params__ = ["playerId","cardId"],$_)
+	,PlayText: ($_=function(cardId,textId) { return {_hx_index:3,cardId:cardId,textId:textId,__enum__:"model.ver1.game.BlockCause",toString:$estr}; },$_._hx_name="PlayText",$_.__params__ = ["cardId","textId"],$_)
+	,TextEffect: ($_=function(cardId,textId) { return {_hx_index:4,cardId:cardId,textId:textId,__enum__:"model.ver1.game.BlockCause",toString:$estr}; },$_._hx_name="TextEffect",$_.__params__ = ["cardId","textId"],$_)
+};
+model_ver1_game_BlockCause.__constructs__ = [model_ver1_game_BlockCause.Pending,model_ver1_game_BlockCause.System,model_ver1_game_BlockCause.PlayCard,model_ver1_game_BlockCause.PlayText,model_ver1_game_BlockCause.TextEffect];
+var model_ver1_game_Block = function(id,cause,text) {
+	this.__uid = hxbit_Serializer.SEQ << 24 | ++hxbit_Serializer.UID;
+	this.isImmediate = false;
+	this.id = id;
+	this.cause = cause;
+	this.text = text;
+};
+$hxClasses["model.ver1.game.Block"] = model_ver1_game_Block;
+model_ver1_game_Block.__name__ = "model.ver1.game.Block";
+model_ver1_game_Block.__interfaces__ = [hxbit_Serializable];
+model_ver1_game_Block.prototype = {
+	id: null
+	,cause: null
+	,text: null
+	,isImmediate: null
+	,__uid: null
+	,getCLID: function() {
+		return model_ver1_game_Block.__clid;
+	}
+	,serialize: function(__ctx) {
+		var s = this.id;
+		if(s == null) {
+			__ctx.out.addByte(0);
+		} else {
+			var b = haxe_io_Bytes.ofString(s);
+			var v = b.length + 1;
+			if(v >= 0 && v < 128) {
+				__ctx.out.addByte(v);
+			} else {
+				__ctx.out.addByte(128);
+				__ctx.out.addInt32(v);
+			}
+			__ctx.out.add(b);
+		}
+		hxbit_enumSer_Model_$ver1_$game_$BlockCause.doSerialize(__ctx,this.cause);
+		__ctx.addKnownRef(this.text);
+		__ctx.out.addByte(this.isImmediate ? 1 : 0);
+	}
+	,getSerializeSchema: function() {
+		var schema = new hxbit_Schema();
+		schema.fieldsNames.push("id");
+		schema.fieldsTypes.push(hxbit_PropTypeDesc.PString);
+		schema.fieldsNames.push("cause");
+		schema.fieldsTypes.push(hxbit_PropTypeDesc.PEnum("model.ver1.game.BlockCause"));
+		schema.fieldsNames.push("text");
+		schema.fieldsTypes.push(hxbit_PropTypeDesc.PSerializable("model.ver1.game.CardText"));
+		schema.fieldsNames.push("isImmediate");
+		schema.fieldsTypes.push(hxbit_PropTypeDesc.PBool);
+		schema.isFinal = hxbit_Serializer.isClassFinal(model_ver1_game_Block.__clid);
+		return schema;
+	}
+	,unserializeInit: function() {
+		this.isImmediate = false;
+	}
+	,unserialize: function(__ctx) {
+		var v = __ctx.input.b[__ctx.inPos++];
+		if(v == 128) {
+			v = __ctx.input.getInt32(__ctx.inPos);
+			__ctx.inPos += 4;
+		}
+		var len = v;
+		var tmp;
+		if(len == 0) {
+			tmp = null;
+		} else {
+			--len;
+			var s = __ctx.input.getString(__ctx.inPos,len);
+			__ctx.inPos += len;
+			tmp = s;
+		}
+		this.id = tmp;
+		var __e = hxbit_enumSer_Model_$ver1_$game_$BlockCause.doUnserialize(__ctx);
+		this.cause = __e;
+		this.text = __ctx.getRef(model_ver1_game_CardText,model_ver1_game_CardText.__clid);
+		this.isImmediate = __ctx.input.b[__ctx.inPos++] != 0;
+	}
+	,__class__: model_ver1_game_Block
+};
 var model_ver1_game_RelativePlayer = $hxEnums["model.ver1.game.RelativePlayer"] = { __ename__:true,__constructs__:null
 	,You: {_hx_name:"You",_hx_index:0,__enum__:"model.ver1.game.RelativePlayer",toString:$estr}
 	,Opponent: {_hx_name:"Opponent",_hx_index:1,__enum__:"model.ver1.game.RelativePlayer",toString:$estr}
@@ -31323,40 +31378,6 @@ model_ver1_game_DefaultExecuteRuntime.prototype = $extend(model_ver1_game_Abstra
 	}
 	,__class__: model_ver1_game_DefaultExecuteRuntime
 });
-function model_ver1_game_Define_isBattleArea(k) {
-	switch(k._hx_index) {
-	case 2:case 3:
-		return true;
-	default:
-		return false;
-	}
-}
-function model_ver1_game_Define_isMaintenanceArea(k) {
-	switch(k._hx_index) {
-	case 4:case 5:
-		return true;
-	default:
-		return false;
-	}
-}
-function model_ver1_game_Define_isBa(k) {
-	if(model_ver1_game_Define_isBattleArea(k)) {
-		return true;
-	}
-	if(model_ver1_game_Define_isMaintenanceArea(k)) {
-		return true;
-	}
-	return false;
-}
-function model_ver1_game_Define_getCardStackId(key) {
-	var s = new hxbit_Serializer();
-	var bytes = s.serialize(key);
-	return bytes.toHex();
-}
-function model_ver1_game_Define_getBaSyouKeyword(cardStackId) {
-	var u = new hxbit_Serializer();
-	return u.unserialize(haxe_io_Bytes.ofHex(cardStackId),model_ver1_game_CardStackKey);
-}
 var model_ver1_game_Game = function() {
 	this.__uid = hxbit_Serializer.SEQ << 24 | ++hxbit_Serializer.UID;
 	this.ctx = new model_ver1_game_Context();
@@ -31400,6 +31421,51 @@ model_ver1_game_Game.prototype = {
 	}
 	,__class__: model_ver1_game_Game
 };
+var model_ver1_game_TurnKeyword = $hxEnums["model.ver1.game.TurnKeyword"] = { __ename__:true,__constructs__:null
+	,You: {_hx_name:"You",_hx_index:0,__enum__:"model.ver1.game.TurnKeyword",toString:$estr}
+	,Opponent: {_hx_name:"Opponent",_hx_index:1,__enum__:"model.ver1.game.TurnKeyword",toString:$estr}
+};
+model_ver1_game_TurnKeyword.__constructs__ = [model_ver1_game_TurnKeyword.You,model_ver1_game_TurnKeyword.Opponent];
+var model_ver1_game_PhaseKeyword = $hxEnums["model.ver1.game.PhaseKeyword"] = { __ename__:true,__constructs__:null
+	,Reroll: {_hx_name:"Reroll",_hx_index:0,__enum__:"model.ver1.game.PhaseKeyword",toString:$estr}
+	,Draw: {_hx_name:"Draw",_hx_index:1,__enum__:"model.ver1.game.PhaseKeyword",toString:$estr}
+	,Maintenance: {_hx_name:"Maintenance",_hx_index:2,__enum__:"model.ver1.game.PhaseKeyword",toString:$estr}
+	,Battle: {_hx_name:"Battle",_hx_index:3,__enum__:"model.ver1.game.PhaseKeyword",toString:$estr}
+};
+model_ver1_game_PhaseKeyword.__constructs__ = [model_ver1_game_PhaseKeyword.Reroll,model_ver1_game_PhaseKeyword.Draw,model_ver1_game_PhaseKeyword.Maintenance,model_ver1_game_PhaseKeyword.Battle];
+var model_ver1_game_StepKeyword = $hxEnums["model.ver1.game.StepKeyword"] = { __ename__:true,__constructs__:null
+	,Attack: {_hx_name:"Attack",_hx_index:0,__enum__:"model.ver1.game.StepKeyword",toString:$estr}
+	,Defense: {_hx_name:"Defense",_hx_index:1,__enum__:"model.ver1.game.StepKeyword",toString:$estr}
+	,DamageChecking: {_hx_name:"DamageChecking",_hx_index:2,__enum__:"model.ver1.game.StepKeyword",toString:$estr}
+	,Return: {_hx_name:"Return",_hx_index:3,__enum__:"model.ver1.game.StepKeyword",toString:$estr}
+	,End: {_hx_name:"End",_hx_index:4,__enum__:"model.ver1.game.StepKeyword",toString:$estr}
+};
+model_ver1_game_StepKeyword.__constructs__ = [model_ver1_game_StepKeyword.Attack,model_ver1_game_StepKeyword.Defense,model_ver1_game_StepKeyword.DamageChecking,model_ver1_game_StepKeyword.Return,model_ver1_game_StepKeyword.End];
+var model_ver1_game_TimingKeyword = $hxEnums["model.ver1.game.TimingKeyword"] = { __ename__:true,__constructs__:null
+	,Start: {_hx_name:"Start",_hx_index:0,__enum__:"model.ver1.game.TimingKeyword",toString:$estr}
+	,Free1: {_hx_name:"Free1",_hx_index:1,__enum__:"model.ver1.game.TimingKeyword",toString:$estr}
+	,Rule: {_hx_name:"Rule",_hx_index:2,__enum__:"model.ver1.game.TimingKeyword",toString:$estr}
+	,Free2: {_hx_name:"Free2",_hx_index:3,__enum__:"model.ver1.game.TimingKeyword",toString:$estr}
+	,End: {_hx_name:"End",_hx_index:4,__enum__:"model.ver1.game.TimingKeyword",toString:$estr}
+	,DamageReset: {_hx_name:"DamageReset",_hx_index:5,__enum__:"model.ver1.game.TimingKeyword",toString:$estr}
+	,ResolveEffect: {_hx_name:"ResolveEffect",_hx_index:6,__enum__:"model.ver1.game.TimingKeyword",toString:$estr}
+	,AdjustHand: {_hx_name:"AdjustHand",_hx_index:7,__enum__:"model.ver1.game.TimingKeyword",toString:$estr}
+	,TurnEnd: {_hx_name:"TurnEnd",_hx_index:8,__enum__:"model.ver1.game.TimingKeyword",toString:$estr}
+};
+model_ver1_game_TimingKeyword.__constructs__ = [model_ver1_game_TimingKeyword.Start,model_ver1_game_TimingKeyword.Free1,model_ver1_game_TimingKeyword.Rule,model_ver1_game_TimingKeyword.Free2,model_ver1_game_TimingKeyword.End,model_ver1_game_TimingKeyword.DamageReset,model_ver1_game_TimingKeyword.ResolveEffect,model_ver1_game_TimingKeyword.AdjustHand,model_ver1_game_TimingKeyword.TurnEnd];
+var model_ver1_game_Timing = $hxEnums["model.ver1.game.Timing"] = { __ename__:true,__constructs__:null
+	,Default: ($_=function(phase,step,timing) { return {_hx_index:0,phase:phase,step:step,timing:timing,__enum__:"model.ver1.game.Timing",toString:$estr}; },$_._hx_name="Default",$_.__params__ = ["phase","step","timing"],$_)
+};
+model_ver1_game_Timing.__constructs__ = [model_ver1_game_Timing.Default];
+function tool_Helper_getMemonto(key) {
+	var s = new hxbit_Serializer();
+	var bytes = s.serialize(key);
+	return bytes.toHex();
+}
+function tool_Helper_ofMemonto(memonto,clz) {
+	var u = new hxbit_Serializer();
+	return u.unserialize(haxe_io_Bytes.ofHex(memonto),clz);
+}
 var tool_Card = function(id) {
 	this.__uid = hxbit_Serializer.SEQ << 24 | ++hxbit_Serializer.UID;
 	this.owner = "unknown";
@@ -36713,11 +36779,11 @@ var model_ver1_data_DataPool__cardProtoPool = (function($this) {
 model_ver1_data_PlayerPlayCard.__clid = hxbit_Serializer.registerClass(model_ver1_data_PlayerPlayCard);
 model_ver1_data__$PlayerPlayCard_PlayerPlayCardEffect.__clid = hxbit_Serializer.registerClass(model_ver1_data__$PlayerPlayCard_PlayerPlayCardEffect);
 model_ver1_data_PlayerPlayG.__clid = hxbit_Serializer.registerClass(model_ver1_data_PlayerPlayG);
-model_ver1_game_CardStackKey.__clid = hxbit_Serializer.registerClass(model_ver1_game_CardStackKey);
+model_ver1_game_Context.__clid = hxbit_Serializer.registerClass(model_ver1_game_Context);
 model_ver1_game_Player.__clid = hxbit_Serializer.registerClass(model_ver1_game_Player);
 model_ver1_game_Block.__clid = hxbit_Serializer.registerClass(model_ver1_game_Block);
-model_ver1_game_Context.__clid = hxbit_Serializer.registerClass(model_ver1_game_Context);
 model_ver1_game_Game.__clid = hxbit_Serializer.registerClass(model_ver1_game_Game);
+var model_ver1_game_Timing_TIMINGS = [model_ver1_game_Timing.Default(model_ver1_game_PhaseKeyword.Reroll,haxe_ds_Option.None,model_ver1_game_TimingKeyword.Start),model_ver1_game_Timing.Default(model_ver1_game_PhaseKeyword.Reroll,haxe_ds_Option.None,model_ver1_game_TimingKeyword.Rule),model_ver1_game_Timing.Default(model_ver1_game_PhaseKeyword.Reroll,haxe_ds_Option.None,model_ver1_game_TimingKeyword.Free2),model_ver1_game_Timing.Default(model_ver1_game_PhaseKeyword.Reroll,haxe_ds_Option.None,model_ver1_game_TimingKeyword.End),model_ver1_game_Timing.Default(model_ver1_game_PhaseKeyword.Draw,haxe_ds_Option.None,model_ver1_game_TimingKeyword.Start),model_ver1_game_Timing.Default(model_ver1_game_PhaseKeyword.Draw,haxe_ds_Option.None,model_ver1_game_TimingKeyword.Free1),model_ver1_game_Timing.Default(model_ver1_game_PhaseKeyword.Draw,haxe_ds_Option.None,model_ver1_game_TimingKeyword.Rule),model_ver1_game_Timing.Default(model_ver1_game_PhaseKeyword.Draw,haxe_ds_Option.None,model_ver1_game_TimingKeyword.Free2),model_ver1_game_Timing.Default(model_ver1_game_PhaseKeyword.Draw,haxe_ds_Option.None,model_ver1_game_TimingKeyword.End),model_ver1_game_Timing.Default(model_ver1_game_PhaseKeyword.Maintenance,haxe_ds_Option.None,model_ver1_game_TimingKeyword.Start),model_ver1_game_Timing.Default(model_ver1_game_PhaseKeyword.Maintenance,haxe_ds_Option.None,model_ver1_game_TimingKeyword.Free1),model_ver1_game_Timing.Default(model_ver1_game_PhaseKeyword.Maintenance,haxe_ds_Option.None,model_ver1_game_TimingKeyword.End),model_ver1_game_Timing.Default(model_ver1_game_PhaseKeyword.Battle,haxe_ds_Option.Some(model_ver1_game_StepKeyword.Attack),model_ver1_game_TimingKeyword.Start),model_ver1_game_Timing.Default(model_ver1_game_PhaseKeyword.Battle,haxe_ds_Option.Some(model_ver1_game_StepKeyword.Attack),model_ver1_game_TimingKeyword.Free1),model_ver1_game_Timing.Default(model_ver1_game_PhaseKeyword.Battle,haxe_ds_Option.Some(model_ver1_game_StepKeyword.Attack),model_ver1_game_TimingKeyword.Rule),model_ver1_game_Timing.Default(model_ver1_game_PhaseKeyword.Battle,haxe_ds_Option.Some(model_ver1_game_StepKeyword.Attack),model_ver1_game_TimingKeyword.Free2),model_ver1_game_Timing.Default(model_ver1_game_PhaseKeyword.Battle,haxe_ds_Option.Some(model_ver1_game_StepKeyword.Attack),model_ver1_game_TimingKeyword.End),model_ver1_game_Timing.Default(model_ver1_game_PhaseKeyword.Battle,haxe_ds_Option.Some(model_ver1_game_StepKeyword.Defense),model_ver1_game_TimingKeyword.Start),model_ver1_game_Timing.Default(model_ver1_game_PhaseKeyword.Battle,haxe_ds_Option.Some(model_ver1_game_StepKeyword.Defense),model_ver1_game_TimingKeyword.Free1),model_ver1_game_Timing.Default(model_ver1_game_PhaseKeyword.Battle,haxe_ds_Option.Some(model_ver1_game_StepKeyword.Defense),model_ver1_game_TimingKeyword.Rule),model_ver1_game_Timing.Default(model_ver1_game_PhaseKeyword.Battle,haxe_ds_Option.Some(model_ver1_game_StepKeyword.Defense),model_ver1_game_TimingKeyword.Free2),model_ver1_game_Timing.Default(model_ver1_game_PhaseKeyword.Battle,haxe_ds_Option.Some(model_ver1_game_StepKeyword.Defense),model_ver1_game_TimingKeyword.End),model_ver1_game_Timing.Default(model_ver1_game_PhaseKeyword.Battle,haxe_ds_Option.Some(model_ver1_game_StepKeyword.DamageChecking),model_ver1_game_TimingKeyword.Start),model_ver1_game_Timing.Default(model_ver1_game_PhaseKeyword.Battle,haxe_ds_Option.Some(model_ver1_game_StepKeyword.DamageChecking),model_ver1_game_TimingKeyword.Free1),model_ver1_game_Timing.Default(model_ver1_game_PhaseKeyword.Battle,haxe_ds_Option.Some(model_ver1_game_StepKeyword.DamageChecking),model_ver1_game_TimingKeyword.Rule),model_ver1_game_Timing.Default(model_ver1_game_PhaseKeyword.Battle,haxe_ds_Option.Some(model_ver1_game_StepKeyword.DamageChecking),model_ver1_game_TimingKeyword.Free2),model_ver1_game_Timing.Default(model_ver1_game_PhaseKeyword.Battle,haxe_ds_Option.Some(model_ver1_game_StepKeyword.DamageChecking),model_ver1_game_TimingKeyword.End),model_ver1_game_Timing.Default(model_ver1_game_PhaseKeyword.Battle,haxe_ds_Option.Some(model_ver1_game_StepKeyword.Return),model_ver1_game_TimingKeyword.Start),model_ver1_game_Timing.Default(model_ver1_game_PhaseKeyword.Battle,haxe_ds_Option.Some(model_ver1_game_StepKeyword.Return),model_ver1_game_TimingKeyword.Free1),model_ver1_game_Timing.Default(model_ver1_game_PhaseKeyword.Battle,haxe_ds_Option.Some(model_ver1_game_StepKeyword.Return),model_ver1_game_TimingKeyword.Rule),model_ver1_game_Timing.Default(model_ver1_game_PhaseKeyword.Battle,haxe_ds_Option.Some(model_ver1_game_StepKeyword.Return),model_ver1_game_TimingKeyword.Free2),model_ver1_game_Timing.Default(model_ver1_game_PhaseKeyword.Battle,haxe_ds_Option.Some(model_ver1_game_StepKeyword.End),model_ver1_game_TimingKeyword.DamageReset),model_ver1_game_Timing.Default(model_ver1_game_PhaseKeyword.Battle,haxe_ds_Option.Some(model_ver1_game_StepKeyword.End),model_ver1_game_TimingKeyword.ResolveEffect),model_ver1_game_Timing.Default(model_ver1_game_PhaseKeyword.Battle,haxe_ds_Option.Some(model_ver1_game_StepKeyword.End),model_ver1_game_TimingKeyword.AdjustHand),model_ver1_game_Timing.Default(model_ver1_game_PhaseKeyword.Battle,haxe_ds_Option.Some(model_ver1_game_StepKeyword.End),model_ver1_game_TimingKeyword.TurnEnd)];
 tool_Card.__clid = hxbit_Serializer.registerClass(tool_Card);
 tool_CardStack.__clid = hxbit_Serializer.registerClass(tool_CardStack);
 tool_Table.__clid = hxbit_Serializer.registerClass(tool_Table);

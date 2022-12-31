@@ -4,6 +4,8 @@ import haxe.Exception;
 import tool.Table;
 import tool.Helper;
 import model.ver1.game.Define;
+import model.ver1.game.Timing;
+import model.ver1.game.Context;
 import model.ver1.data.Require;
 import model.ver1.alg.Alg;
 
@@ -32,7 +34,7 @@ private class Text1 extends CardText {
 				"unknown";
 		}
 		return [
-			new RequirePhase('${id}_req1', Test("戦闘フェイズ")),
+			new RequirePhase('${id}_req1', Default(Battle, None, Free1)),
 			new RequireGTap('${id}_req2', [Red, Red], ctx, runtime),
 			new ForceTargetCard('${id}_req3', "このセットグループのユニット", "このセットグループのユニット", unit),
 		];
@@ -62,8 +64,8 @@ private class Mark1 extends Mark {
 	public override function onEvent(ctx:Context, event:Event):Void {
 		switch event {
 			case ChangePhase:
-				switch ctx.phase {
-					case Test("回合結束時"):
+				switch ctx.timing {
+					case Default(Battle, Some(End), End):
 						ctx.marks.remove(id);
 					default:
 				}
@@ -77,7 +79,7 @@ function test() {
 	final card1 = new Card("0");
 	card1.protoId = "179001_01A_CH_WT007R_white";
 	ctx.table.cards[card1.id] = card1;
-	ctx.phase = Test("戦闘フェイズ");
+	ctx.timing = Timing.Default(Battle, Some(Attack), Start);
 	final infos = getRuntimeText(ctx).map(info -> {
 		return {
 			cardId: info.runtime.getCardId(),

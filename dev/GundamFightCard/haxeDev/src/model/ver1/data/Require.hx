@@ -5,19 +5,21 @@ using Lambda;
 import haxe.Exception;
 import haxe.EnumTools;
 import model.ver1.game.Define;
+import model.ver1.game.Timing;
+import model.ver1.game.Context;
 import model.ver1.alg.Alg;
 
 class RequirePhase extends Require {
-	public function new(id:String, phase:Phase) {
+	public function new(id:String, timing:Timing) {
 		super(id, "RequirePhase");
-		this.phase = phase;
+		this.timing = timing;
 	}
 
-	public final phase:Phase;
+	public final timing:Timing;
 
 	public override function action(ctx:Context, runtime:ExecuteRuntime):Void {
-		if (EnumValueTools.equals(ctx.phase, phase) == false) {
-			throw new haxe.Exception('ctx.phase != this.phase: ${ctx.phase} != ${phase}');
+		if (EnumValueTools.equals(ctx.timing, timing) == false) {
+			throw new haxe.Exception('ctx.phase != this.phase: ${ctx.timing} != ${timing}');
 		}
 	}
 }

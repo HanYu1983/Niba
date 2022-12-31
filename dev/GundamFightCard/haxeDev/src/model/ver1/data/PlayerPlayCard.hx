@@ -5,6 +5,8 @@ using Lambda;
 import haxe.Exception;
 import model.ver1.data.Require;
 import model.ver1.game.Define;
+import model.ver1.game.Timing;
+import model.ver1.game.Context;
 import model.ver1.alg.Alg;
 
 // カードのプレイ(p.20)
@@ -18,7 +20,7 @@ class PlayerPlayCard extends CardText {
 		// TODO: 查詢有沒有替代横置國力顏色的效果
 		// TODO: 查詢有沒有在SET在特定卡上而減少横置國力的效果
 		return [
-			new RequirePhase('${id}_RequirePhase', Test("settings")),
+			new RequirePhase('${id}_RequirePhase', Default(Maintenance, None, Free1)),
 			new RequireGCount('${id}_RequireGCount', 3),
 			new RequireGTap('${id}_RequireGTap', [Black, Black], ctx, runtime),
 		];

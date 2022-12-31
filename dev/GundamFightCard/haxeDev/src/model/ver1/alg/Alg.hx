@@ -5,6 +5,7 @@ using Lambda;
 import haxe.ds.Option;
 import tool.Table;
 import model.ver1.game.Define;
+import model.ver1.game.Context;
 import model.ver1.data.DataPool;
 import model.ver1.data.PlayerPlayCard;
 
