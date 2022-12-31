@@ -4,10 +4,10 @@ using Lambda;
 
 import haxe.Exception;
 import haxe.EnumTools;
-import model.ver1.game.Define;
-import model.ver1.game.Timing;
-import model.ver1.game.Context;
-import model.ver1.alg.Alg;
+import model.ver1.game.define.Define;
+import model.ver1.game.define.Timing;
+
+import model.ver1.game.alg.Context;
 
 class RequirePhase extends Require {
 	public function new(id:String, timing:Timing) {

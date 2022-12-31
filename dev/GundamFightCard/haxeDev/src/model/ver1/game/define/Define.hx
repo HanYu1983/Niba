@@ -1,4 +1,4 @@
-package model.ver1.game;
+package model.ver1.game.define;
 
 using Lambda;
 
@@ -8,6 +8,36 @@ import haxe.ds.EnumValueMap;
 import tool.Table;
 import tool.Helper;
 import model.ver1.data.DataPool;
+import model.ver1.game.define.Timing;
+
+// Context
+
+typedef PlayerSelection = {
+	cardIds:Map<String, Array<String>>
+}
+
+typedef Memory = {
+	playerSelection:PlayerSelection
+}
+
+class Context implements hxbit.Serializable {
+	public function new() {}
+
+	@:s public var players:Map<String, Player> = [];
+	@:s public var playersOrder:Array<String> = [];
+	@:s public var table = new Table();
+	@:s public var marks:Map<String, Mark> = [];
+	@:s public var timing = TIMINGS[0];
+	@:s public var cardProtoPool:Map<String, CardProto> = [];
+	@:s public var memory:Memory = {
+		playerSelection: {
+			cardIds: []
+		}
+	};
+	// serializable不支援List
+	@:s public var cuts:Array<Array<Block>> = [];
+}
+
 
 // General
 

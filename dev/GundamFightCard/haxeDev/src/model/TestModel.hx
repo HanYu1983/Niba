@@ -2,8 +2,8 @@ package model;
 
 import tool.Table;
 import viewModel.IViewModel;
-import model.ver1.game.Define;
-import model.ver1.game.Context;
+import model.ver1.game.define.Define;
+
 import model.ver1.data.DataPool;
 import model.ver1.game.Game;
 

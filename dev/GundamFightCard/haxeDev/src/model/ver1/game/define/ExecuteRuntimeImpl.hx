@@ -1,6 +1,6 @@
-package model.ver1.game;
+package model.ver1.game.define;
 
-import model.ver1.game.Define;
+import model.ver1.game.define.Define;
 
 class AbstractExecuteRuntime implements ExecuteRuntime {
 	public function new() {}

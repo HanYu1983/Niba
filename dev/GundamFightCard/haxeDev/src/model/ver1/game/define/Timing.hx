@@ -1,4 +1,4 @@
-package model.ver1.game;
+package model.ver1.game.define;
 
 import haxe.ds.Option;
 import tool.Helper;

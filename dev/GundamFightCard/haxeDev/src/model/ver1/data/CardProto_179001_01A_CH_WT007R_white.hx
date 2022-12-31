@@ -3,11 +3,11 @@ package model.ver1.data;
 import haxe.Exception;
 import tool.Table;
 import tool.Helper;
-import model.ver1.game.Define;
-import model.ver1.game.Timing;
-import model.ver1.game.Context;
+import model.ver1.game.define.Define;
+import model.ver1.game.define.Timing;
+import model.ver1.game.alg.Context;
+import model.ver1.game.alg.Runtime;
 import model.ver1.data.RequireImpl;
-import model.ver1.alg.Alg;
 
 // 179001_01A_CH_WT007R_white
 // キラ・ヤマト
