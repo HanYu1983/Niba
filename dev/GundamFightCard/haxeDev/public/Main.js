@@ -29844,7 +29844,7 @@ function model_ver1_data_CardProto_$179001_$01A_$CH_$WT007R_$white_test() {
 		result[i] = { cardId : info.runtime.getCardId(), text : info.text, reqs : info.text.getRequires(ctx,info.runtime)};
 	}
 	var infos = result;
-	console.log("src/model/ver1/data/CardProto_179001_01A_CH_WT007R_white.hx:90:",infos);
+	console.log("src/model/ver1/data/CardProto_179001_01A_CH_WT007R_white.hx:91:",infos);
 	if(infos.length == 0) {
 		throw new haxe_Exception("infos.length == 0");
 	}
@@ -29969,7 +29969,7 @@ function model_ver1_data_CardProto_$179003_$01A_$U_$BK008U_$black_test() {
 		result[i] = { cardId : info.runtime.getCardId(), text : info.text, reqs : info.text.getRequires(ctx,info.runtime)};
 	}
 	var infos = result;
-	console.log("src/model/ver1/data/CardProto_179003_01A_U_BK008U_black.hx:86:",infos);
+	console.log("src/model/ver1/data/CardProto_179003_01A_U_BK008U_black.hx:87:",infos);
 	if(infos.length == 0) {
 		throw new haxe_Exception("infos.length == 0");
 	}
@@ -31141,11 +31141,17 @@ model_ver1_game_Context.prototype = {
 	}
 	,__class__: model_ver1_game_Context
 };
-var model_ver1_game_Phase = $hxEnums["model.ver1.game.Phase"] = { __ename__:true,__constructs__:null
-	,Pending: {_hx_name:"Pending",_hx_index:0,__enum__:"model.ver1.game.Phase",toString:$estr}
-	,Test: ($_=function(str) { return {_hx_index:1,str:str,__enum__:"model.ver1.game.Phase",toString:$estr}; },$_._hx_name="Test",$_.__params__ = ["str"],$_)
+var model_ver1_game_GColor = $hxEnums["model.ver1.game.GColor"] = { __ename__:true,__constructs__:null
+	,Red: {_hx_name:"Red",_hx_index:0,__enum__:"model.ver1.game.GColor",toString:$estr}
+	,Black: {_hx_name:"Black",_hx_index:1,__enum__:"model.ver1.game.GColor",toString:$estr}
+	,Purple: {_hx_name:"Purple",_hx_index:2,__enum__:"model.ver1.game.GColor",toString:$estr}
 };
-model_ver1_game_Phase.__constructs__ = [model_ver1_game_Phase.Pending,model_ver1_game_Phase.Test];
+model_ver1_game_GColor.__constructs__ = [model_ver1_game_GColor.Red,model_ver1_game_GColor.Black,model_ver1_game_GColor.Purple];
+var model_ver1_game_RelativePlayer = $hxEnums["model.ver1.game.RelativePlayer"] = { __ename__:true,__constructs__:null
+	,You: {_hx_name:"You",_hx_index:0,__enum__:"model.ver1.game.RelativePlayer",toString:$estr}
+	,Opponent: {_hx_name:"Opponent",_hx_index:1,__enum__:"model.ver1.game.RelativePlayer",toString:$estr}
+};
+model_ver1_game_RelativePlayer.__constructs__ = [model_ver1_game_RelativePlayer.You,model_ver1_game_RelativePlayer.Opponent];
 var model_ver1_game_Player = function(id) {
 	this.__uid = hxbit_Serializer.SEQ << 24 | ++hxbit_Serializer.UID;
 	this.id = id;
@@ -31204,12 +31210,6 @@ model_ver1_game_Player.prototype = {
 	}
 	,__class__: model_ver1_game_Player
 };
-var model_ver1_game_GColor = $hxEnums["model.ver1.game.GColor"] = { __ename__:true,__constructs__:null
-	,Red: {_hx_name:"Red",_hx_index:0,__enum__:"model.ver1.game.GColor",toString:$estr}
-	,Black: {_hx_name:"Black",_hx_index:1,__enum__:"model.ver1.game.GColor",toString:$estr}
-	,Purple: {_hx_name:"Purple",_hx_index:2,__enum__:"model.ver1.game.GColor",toString:$estr}
-};
-model_ver1_game_GColor.__constructs__ = [model_ver1_game_GColor.Red,model_ver1_game_GColor.Black,model_ver1_game_GColor.Purple];
 var model_ver1_game_Event = $hxEnums["model.ver1.game.Event"] = { __ename__:true,__constructs__:null
 	,ChangePhase: {_hx_name:"ChangePhase",_hx_index:0,__enum__:"model.ver1.game.Event",toString:$estr}
 	,Gain: ($_=function(cardId,value) { return {_hx_index:1,cardId:cardId,value:value,__enum__:"model.ver1.game.Event",toString:$estr}; },$_._hx_name="Gain",$_.__params__ = ["cardId","value"],$_)
@@ -31302,20 +31302,6 @@ model_ver1_game_Block.prototype = {
 	}
 	,__class__: model_ver1_game_Block
 };
-var model_ver1_game_RelativePlayer = $hxEnums["model.ver1.game.RelativePlayer"] = { __ename__:true,__constructs__:null
-	,You: {_hx_name:"You",_hx_index:0,__enum__:"model.ver1.game.RelativePlayer",toString:$estr}
-	,Opponent: {_hx_name:"Opponent",_hx_index:1,__enum__:"model.ver1.game.RelativePlayer",toString:$estr}
-};
-model_ver1_game_RelativePlayer.__constructs__ = [model_ver1_game_RelativePlayer.You,model_ver1_game_RelativePlayer.Opponent];
-var model_ver1_game_RequireUserSelectBattlePoint = function(id,description) {
-	model_ver1_game_RequireUserSelect.call(this,id,description);
-};
-$hxClasses["model.ver1.game.RequireUserSelectBattlePoint"] = model_ver1_game_RequireUserSelectBattlePoint;
-model_ver1_game_RequireUserSelectBattlePoint.__name__ = "model.ver1.game.RequireUserSelectBattlePoint";
-model_ver1_game_RequireUserSelectBattlePoint.__super__ = model_ver1_game_RequireUserSelect;
-model_ver1_game_RequireUserSelectBattlePoint.prototype = $extend(model_ver1_game_RequireUserSelect.prototype,{
-	__class__: model_ver1_game_RequireUserSelectBattlePoint
-});
 var model_ver1_game_MarkEffect = $hxEnums["model.ver1.game.MarkEffect"] = { __ename__:true,__constructs__:null
 	,AddBattlePoint: ($_=function(cardId,battlePoint) { return {_hx_index:0,cardId:cardId,battlePoint:battlePoint,__enum__:"model.ver1.game.MarkEffect",toString:$estr}; },$_._hx_name="AddBattlePoint",$_.__params__ = ["cardId","battlePoint"],$_)
 	,AttackSpeed: ($_=function(cardId,speed) { return {_hx_index:1,cardId:cardId,speed:speed,__enum__:"model.ver1.game.MarkEffect",toString:$estr}; },$_._hx_name="AttackSpeed",$_.__params__ = ["cardId","speed"],$_)
@@ -31421,6 +31407,15 @@ model_ver1_game_Game.prototype = {
 	}
 	,__class__: model_ver1_game_Game
 };
+var model_ver1_game_RequireUserSelectBattlePoint = function(id,description) {
+	model_ver1_game_RequireUserSelect.call(this,id,description);
+};
+$hxClasses["model.ver1.game.RequireUserSelectBattlePoint"] = model_ver1_game_RequireUserSelectBattlePoint;
+model_ver1_game_RequireUserSelectBattlePoint.__name__ = "model.ver1.game.RequireUserSelectBattlePoint";
+model_ver1_game_RequireUserSelectBattlePoint.__super__ = model_ver1_game_RequireUserSelect;
+model_ver1_game_RequireUserSelectBattlePoint.prototype = $extend(model_ver1_game_RequireUserSelect.prototype,{
+	__class__: model_ver1_game_RequireUserSelectBattlePoint
+});
 var model_ver1_game_TurnKeyword = $hxEnums["model.ver1.game.TurnKeyword"] = { __ename__:true,__constructs__:null
 	,You: {_hx_name:"You",_hx_index:0,__enum__:"model.ver1.game.TurnKeyword",toString:$estr}
 	,Opponent: {_hx_name:"Opponent",_hx_index:1,__enum__:"model.ver1.game.TurnKeyword",toString:$estr}

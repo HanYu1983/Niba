@@ -4,6 +4,14 @@ import tool.Table;
 import model.ver1.game.Define;
 import model.ver1.game.Timing;
 
+typedef PlayerSelection = {
+	cardIds:Map<String, Array<String>>
+}
+
+typedef Memory = {
+	playerSelection:PlayerSelection
+}
+
 class Context implements hxbit.Serializable {
 	public function new() {}
 

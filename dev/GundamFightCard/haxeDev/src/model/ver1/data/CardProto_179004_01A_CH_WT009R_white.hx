@@ -5,7 +5,8 @@ import tool.Helper;
 import model.ver1.game.Define;
 import model.ver1.game.Timing;
 import model.ver1.game.Context;
-import model.ver1.data.Require;
+import model.ver1.game.Require;
+import model.ver1.data.RequireImpl;
 import model.ver1.alg.Alg;
 
 // 179004_01A_CH_WT009R_white

@@ -9,13 +9,31 @@ import tool.Table;
 import tool.Helper;
 import model.ver1.data.DataPool;
 
+// General
 
-//
-enum Phase {
-	Pending;
-	Test(str:String);
+enum GColor {
+	Red;
+	Black;
+	Purple;
 }
 
+typedef GSign = {
+	colors:Array<GColor>,
+	production:String
+}
+
+typedef BattlePoint = {
+	v1:Int,
+	v2:Int,
+	v3:Int
+};
+
+enum RelativePlayer {
+	You;
+	Opponent;
+}
+
+// Player
 // 實作hxbit.Serializable這個介面後並使用了@:s
 // @:nullSafety就會出錯
 // hxbit.Serializable不支援EnumValueMap
@@ -30,16 +48,7 @@ class Player implements hxbit.Serializable {
 	@:s public var id:String;
 }
 
-enum GColor {
-	Red;
-	Black;
-	Purple;
-}
-
-typedef GSign = {
-	colors:Array<GColor>,
-	production:String
-}
+// Event
 
 enum Event {
 	ChangePhase;
@@ -49,13 +58,7 @@ enum Event {
 	CardEnterField(cardId:String);
 }
 
-typedef PlayerSelection = {
-	cardIds:Map<String, Array<String>>
-}
-
-typedef Memory = {
-	playerSelection:PlayerSelection
-}
+// Block
 
 enum BlockCause {
 	Pending;
@@ -78,52 +81,7 @@ class Block implements hxbit.Serializable {
 	@:s public var isImmediate = false;
 }
 
-
-
-typedef BattlePoint = {
-	v1:Int,
-	v2:Int,
-	v3:Int
-};
-
-enum RelativePlayer {
-	You;
-	Opponent;
-}
-
-class Require {
-	public function new(id:String, description:String) {
-		this.id = id;
-		this.description = description;
-	}
-
-	public final id:String;
-	public final description:String;
-
-	public function action(ctx:Context, runtime:ExecuteRuntime):Void {}
-}
-
-class RequireUserSelect<T> extends Require {
-	public function new(id:String, description:String) {
-		super(id, description);
-	}
-
-	public var tips:Array<T> = [];
-	public var lengthInclude:Array<Int> = [1];
-	public var responsePlayerId = RelativePlayer.You;
-}
-
-class RequireUserSelectCard extends RequireUserSelect<String> {
-	public function new(id:String, description:String) {
-		super(id, description);
-	}
-}
-
-class RequireUserSelectBattlePoint extends RequireUserSelect<BattlePoint> {
-	public function new(id:String, description:String) {
-		super(id, description);
-	}
-}
+// CardText
 
 class CardText implements hxbit.Serializable {
 	public function new(id:String, description:String) {
@@ -147,6 +105,8 @@ class CardText implements hxbit.Serializable {
 	public function onEvent(ctx:Context, event:Event, runtime:ExecuteRuntime):Void {}
 }
 
+// Mark
+
 enum MarkEffect {
 	AddBattlePoint(cardId:String, battlePoint:BattlePoint);
 	AttackSpeed(cardId:String, speed:Int);
@@ -167,15 +127,11 @@ class Mark implements hxbit.Serializable {
 	public function onEvent(ctx:Context, event:Event):Void {}
 }
 
+// ExecuteRuntime
+
 interface ExecuteRuntime {
 	function getCardId():String;
 	function getResponsePlayerId():String;
-}
-
-class CardProto implements hxbit.Serializable {
-	public function getTexts(ctx:Context, runtime:ExecuteRuntime):Array<CardText> {
-		return [];
-	}
 }
 
 class AbstractExecuteRuntime implements ExecuteRuntime {
@@ -219,5 +175,12 @@ class DefaultExecuteRuntime extends AbstractExecuteRuntime {
 
 	public override function getResponsePlayerId():String {
 		return responsePlayerId;
+	}
+}
+
+
+class CardProto implements hxbit.Serializable {
+	public function getTexts(ctx:Context, runtime:ExecuteRuntime):Array<CardText> {
+		return [];
 	}
 }
