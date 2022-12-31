@@ -9,7 +9,7 @@ class Model extends DefaultViewModel{
 		return {
 			id: 'card_' + Math.floor(Math.random() * 9999),
 			name: 'dx',
-			content: 'contentcontentcontentcontentcontentcontentcontentcontentcontentcontentcontentcontent',
+			content: 'content',
 			owner: 'vic'
 		};
 	}

@@ -46,14 +46,12 @@ class MainView extends VBox {
 	private var firstClick:CardModel = null;
 
 	private function syncHand(table:PlayerTable, cards:Array<CardModel>) {
-		final handPosition = Main.cumulativeOffset(table.box_hand.element);
-
 		for (i in 0...cards.length) {
 			var card = new Card();
 			var cardModel = cards[i];
 			card.setInfo(cardModel);
-			card.left = i * 110 + handPosition.left;
-			card.top = handPosition.top;
+			card.left = i * (card.width + 5) + table.box_hand.screenLeft;
+			card.top = table.box_hand.screenTop;
 			card.box_cover.onMouseOver = function(e) {
 				if (firstClick != null)
 					return;

@@ -5351,8 +5351,8 @@ var assets_Card = function() {
 	c4.set_percentWidth(100.);
 	c4.set_percentHeight(100.);
 	this.addComponent(c4);
-	this.set_width(100.);
-	this.set_height(150.);
+	this.set_width(50.);
+	this.set_height(75.);
 	this.set_padding(0);
 	this.bindingRoot = true;
 	this.lbl_name = c2;
@@ -5481,7 +5481,6 @@ assets_MainView.prototype = $extend(haxe_ui_containers_VBox.prototype,{
 	,firstClick: null
 	,syncHand: function(table,cards) {
 		var _gthis = this;
-		var handPosition = Main.cumulativeOffset(table.box_hand.element);
 		var _g = 0;
 		var _g1 = cards.length;
 		while(_g < _g1) {
@@ -5489,15 +5488,15 @@ assets_MainView.prototype = $extend(haxe_ui_containers_VBox.prototype,{
 			var card = [new assets_Card()];
 			var cardModel = [cards[i]];
 			card[0].setInfo(cardModel[0]);
-			card[0].set_left(i * 110 + handPosition.left);
-			card[0].set_top(handPosition.top);
+			card[0].set_left(i * (card[0].get_width() + 5) + table.box_hand.get_screenLeft());
+			card[0].set_top(table.box_hand.get_screenTop());
 			card[0].box_cover.set_onMouseOver((function(cardModel,card) {
 				return function(e) {
 					if(_gthis.firstClick != null) {
 						return;
 					}
-					console.log("src/assets/MainView.hx:60:","over card: " + cardModel[0].id);
-					tweenx909_TweenX.to(card[0].box_card,{ "top" : 30},.3,null,null,null,null,null,null,null,{ fileName : "src/assets/MainView.hx", lineNumber : 61, className : "assets.MainView", methodName : "syncHand"});
+					console.log("src/assets/MainView.hx:58:","over card: " + cardModel[0].id);
+					tweenx909_TweenX.to(card[0].box_card,{ "top" : 30},.3,null,null,null,null,null,null,null,{ fileName : "src/assets/MainView.hx", lineNumber : 59, className : "assets.MainView", methodName : "syncHand"});
 					_gthis.game.previewPlayCard(cardModel[0].id);
 				};
 			})(cardModel,card));
@@ -5506,15 +5505,15 @@ assets_MainView.prototype = $extend(haxe_ui_containers_VBox.prototype,{
 					if(_gthis.firstClick != null) {
 						return;
 					}
-					console.log("src/assets/MainView.hx:68:","out card:" + cardModel[0].id);
-					tweenx909_TweenX.to(card[0].box_card,{ "top" : 0},.3,null,null,null,null,null,null,null,{ fileName : "src/assets/MainView.hx", lineNumber : 69, className : "assets.MainView", methodName : "syncHand"});
+					console.log("src/assets/MainView.hx:66:","out card:" + cardModel[0].id);
+					tweenx909_TweenX.to(card[0].box_card,{ "top" : 0},.3,null,null,null,null,null,null,null,{ fileName : "src/assets/MainView.hx", lineNumber : 67, className : "assets.MainView", methodName : "syncHand"});
 				};
 			})(cardModel,card));
 			card[0].box_cover.set_onClick((function(cardModel) {
 				return function(e) {
 					if(_gthis.firstClick == null) {
 						_gthis.firstClick = cardModel[0];
-						console.log("src/assets/MainView.hx:74:","first click card:" + cardModel[0].id);
+						console.log("src/assets/MainView.hx:72:","first click card:" + cardModel[0].id);
 					}
 				};
 			})(cardModel));
@@ -31491,7 +31490,7 @@ model_Model.__name__ = "model.Model";
 model_Model.__super__ = viewModel_DefaultViewModel;
 model_Model.prototype = $extend(viewModel_DefaultViewModel.prototype,{
 	createCard: function() {
-		return { id : "card_" + Math.floor(Math.random() * 9999), name : "dx", content : "contentcontentcontentcontentcontentcontentcontentcontentcontentcontentcontentcontent", owner : "vic"};
+		return { id : "card_" + Math.floor(Math.random() * 9999), name : "dx", content : "content", owner : "vic"};
 	}
 	,createPlayer: function() {
 		return { id : "player_" + Math.floor(Math.random() * 9999), name : "dx", hand : [this.createCard(),this.createCard(),this.createCard(),this.createCard()], deck : [this.createCard(),this.createCard(),this.createCard()]};
@@ -31616,6 +31615,22 @@ model_ver1_game_Game.prototype = {
 	}
 	,__class__: model_ver1_game_Game
 };
+function model_ver1_game_Game_test() {
+	var game = new model_ver1_game_Game();
+	var card1 = new tool_Card("0");
+	card1.protoId = "179003_01A_U_BK008U_black";
+	var card2 = new tool_Card("1");
+	card2.protoId = "179003_01A_U_BK008U_black";
+	game.ctx.table.cards.h[card1.id] = card1;
+	game.ctx.table.cards.h[card2.id] = card2;
+	var loadGame = model_ver1_game_Game.ofMemonto(game.getMemonto());
+	if(loadGame.ctx.table.cards.h[card1.id].id != card1.id) {
+		throw new haxe_Exception("loadGame.ctx.table.cards[card1.id].id != card1.id");
+	}
+	if(loadGame.ctx.table.cards.h[card2.id].id != card2.id) {
+		throw new haxe_Exception("loadGame.ctx.table.cards[card2.id].id != card2.id");
+	}
+}
 var model_ver1_game_define_TextTypeAutomaticType = $hxEnums["model.ver1.game.define.TextTypeAutomaticType"] = { __ename__:true,__constructs__:null
 	,Resident: {_hx_name:"Resident",_hx_index:0,__enum__:"model.ver1.game.define.TextTypeAutomaticType",toString:$estr}
 	,Trigger: {_hx_name:"Trigger",_hx_index:1,__enum__:"model.ver1.game.define.TextTypeAutomaticType",toString:$estr}
