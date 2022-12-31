@@ -1,13 +1,15 @@
 package assets;
 
-import haxe.ui.core.Component;
-import haxe.ui.dragdrop.DragManager;
+import delay.Delay;
+import vdom.JQuery;
+import js.html.Document;
+import js.Syntax;
 import tweenx909.TweenX;
 import assets.Card;
 import haxe.ui.containers.VBox;
 import viewModel.IViewModel;
 
-@:build(haxe.ui.ComponentBuilder.build("src/assets/MainView.xml"))
+@:build(haxe.ui.ComponentBuilder.build("src/assets/mainView.xml"))
 class MainView extends VBox {
 	private var game:IViewModel;
 
@@ -17,46 +19,41 @@ class MainView extends VBox {
 	public function new(game:IViewModel) {
 		super();
 
+		enemyTable.id = 'abc';
+
 		box_playerTable.addComponent(playerTable);
 		box_playerTable.addComponent(enemyTable);
 
 		this.game = game;
-		// button1.onClick = function(e) {
-		// 	button1.text = "Thanks!";
-		// }
 	}
 
-	// override function onInitialize() {
-	// 	super.onInitialize();
-	// 	syncGame();
-	// }
-	// override function onComponentAdded(child:Component) {
-	// 	super.onComponentAdded(child);
-	// 	syncGame();
-	// }
+	override function onInitialize() {
+		super.onInitialize();
 
-	override function ready() {
-		super.ready();
-		syncGame();
+		// 這個事件觸發的時候，dom的參數（left和top等）還沒有初始化完成，所以這裏等0.1秒。
+		Delay.byTime(.1, () -> {
+			syncGame();
+		});
 	}
 
 	private function syncGame() {
 		var gameModel = game.getGame();
 
 		syncHand(playerTable, gameModel.players[0].hand);
+		syncHand(enemyTable, gameModel.players[1].hand);
 	}
 
 	private var firstClick:CardModel = null;
 
 	private function syncHand(table:PlayerTable, cards:Array<CardModel>) {
-		trace(table.box_deck);
+		final handPosition = Main.cumulativeOffset(table.box_hand.element);
 
 		for (i in 0...cards.length) {
 			var card = new Card();
 			var cardModel = cards[i];
 			card.setInfo(cardModel);
-			card.left = i * 110 + table.box_deck.screenLeft;
-			card.top = table.box_deck.screenTop;
+			card.left = i * 110 + handPosition.left;
+			card.top = handPosition.top;
 			card.box_cover.onMouseOver = function(e) {
 				if (firstClick != null)
 					return;

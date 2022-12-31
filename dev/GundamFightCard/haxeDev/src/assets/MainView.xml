@@ -5,7 +5,7 @@
         <vbox id='box_playerTable' width='100%' height='100%'>
             
         </vbox>
-        <absolute id='box_table'>
+        <absolute id='box_table'  width='100%' height='100%'>
         </absolute>
         <!-- <button text="Click Me!" id="button1" style="color: red;" />
         <button text="Click Me!" id="button2" style="color: green;" />
