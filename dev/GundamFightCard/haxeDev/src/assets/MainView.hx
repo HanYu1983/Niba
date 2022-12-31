@@ -50,10 +50,10 @@ class MainView extends VBox {
 			table.hand.push(card);
 			box_table.addComponent(card);
 		}
-		playCardMode();
+		selectMyHandMode();
 	}
 
-	private function playCardMode() {
+	private function selectMyHandMode() {
 		for (i in 0...playerTable.hand.length) {
 			var card = playerTable.hand[i];
 			card.box_cover.onMouseOver = function(e) {
@@ -74,8 +74,23 @@ class MainView extends VBox {
 				if (firstClick == null) {
 					firstClick = card.model;
 					trace('first click card:' + card.model.id);
+					selectAreaMode();
 				}
 			};
+		}
+	}
+
+	private function selectAreaMode() {
+		box_table.hide();
+		// box_table.depth = -10;
+		final areas = [playerTable.box_deck, playerTable.box_deck2, playerTable.box_hand];
+		for (area in areas) {
+			area.onMouseOver = function(e) {
+				trace('over area');
+				trace(area.screenLeft);
+			};
+			area.onMouseOut = function(e) {};
+			area.onClick = function(e) {};
 		}
 	}
 }

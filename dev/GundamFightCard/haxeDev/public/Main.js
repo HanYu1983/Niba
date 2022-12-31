@@ -5303,9 +5303,9 @@ assets_MainView.prototype = $extend(haxe_ui_containers_VBox.prototype,{
 			table.hand.push(card);
 			this.box_table.addComponent(card);
 		}
-		this.playCardMode();
+		this.selectMyHandMode();
 	}
-	,playCardMode: function() {
+	,selectMyHandMode: function() {
 		var _gthis = this;
 		var _g = 0;
 		var _g1 = this.playerTable.hand.length;
@@ -5318,7 +5318,7 @@ assets_MainView.prototype = $extend(haxe_ui_containers_VBox.prototype,{
 						return;
 					}
 					console.log("src/assets/MainView.hx:62:","over card: " + card[0].model.id);
-					tweenx909_TweenX.to(card[0].box_card,{ "top" : 30},.3,null,null,null,null,null,null,null,{ fileName : "src/assets/MainView.hx", lineNumber : 63, className : "assets.MainView", methodName : "playCardMode"});
+					tweenx909_TweenX.to(card[0].box_card,{ "top" : 30},.3,null,null,null,null,null,null,null,{ fileName : "src/assets/MainView.hx", lineNumber : 63, className : "assets.MainView", methodName : "selectMyHandMode"});
 					_gthis.game.previewPlayCard(card[0].model.id);
 				};
 			})(card));
@@ -5328,7 +5328,7 @@ assets_MainView.prototype = $extend(haxe_ui_containers_VBox.prototype,{
 						return;
 					}
 					console.log("src/assets/MainView.hx:70:","out card:" + card[0].model.id);
-					tweenx909_TweenX.to(card[0].box_card,{ "top" : 0},.3,null,null,null,null,null,null,null,{ fileName : "src/assets/MainView.hx", lineNumber : 71, className : "assets.MainView", methodName : "playCardMode"});
+					tweenx909_TweenX.to(card[0].box_card,{ "top" : 0},.3,null,null,null,null,null,null,null,{ fileName : "src/assets/MainView.hx", lineNumber : 71, className : "assets.MainView", methodName : "selectMyHandMode"});
 				};
 			})(card));
 			card[0].box_cover.set_onClick((function(card) {
@@ -5336,9 +5336,33 @@ assets_MainView.prototype = $extend(haxe_ui_containers_VBox.prototype,{
 					if(_gthis.firstClick == null) {
 						_gthis.firstClick = card[0].model;
 						console.log("src/assets/MainView.hx:76:","first click card:" + card[0].model.id);
+						_gthis.selectAreaMode();
 					}
 				};
 			})(card));
+		}
+	}
+	,selectAreaMode: function() {
+		this.box_table.hide();
+		var areas = [this.playerTable.box_deck,this.playerTable.box_deck2,this.playerTable.box_hand];
+		var _g = 0;
+		while(_g < areas.length) {
+			var area = [areas[_g]];
+			++_g;
+			area[0].set_onMouseOver((function(area) {
+				return function(e) {
+					console.log("src/assets/MainView.hx:89:","over area");
+					console.log("src/assets/MainView.hx:90:",area[0].get_screenLeft());
+				};
+			})(area));
+			area[0].set_onMouseOut((function() {
+				return function(e) {
+				};
+			})());
+			area[0].set_onClick((function() {
+				return function(e) {
+				};
+			})());
 		}
 	}
 	,registerBehaviours: function() {
@@ -5405,6 +5429,7 @@ var assets_PlayerTable = function() {
 	var c1 = new haxe_ui_containers_Absolute();
 	c1.set_id("box_deck");
 	c1.set_width(100.);
+	c1.set_percentHeight(100.);
 	var c2 = new haxe_ui_components_Label();
 	c2.set_text("牌庫");
 	c1.addComponent(c2);
@@ -5412,6 +5437,7 @@ var assets_PlayerTable = function() {
 	var c3 = new haxe_ui_containers_Absolute();
 	c3.set_id("box_deck2");
 	c3.set_width(100.);
+	c3.set_percentHeight(100.);
 	var c4 = new haxe_ui_components_Label();
 	c4.set_text("捨山");
 	c3.addComponent(c4);
@@ -5419,6 +5445,7 @@ var assets_PlayerTable = function() {
 	var c5 = new haxe_ui_containers_Absolute();
 	c5.set_id("box_trash");
 	c5.set_width(100.);
+	c5.set_percentHeight(100.);
 	var c6 = new haxe_ui_components_Label();
 	c6.set_text("廢棄庫");
 	c5.addComponent(c6);
@@ -5426,6 +5453,7 @@ var assets_PlayerTable = function() {
 	var c7 = new haxe_ui_containers_Absolute();
 	c7.set_id("box_out");
 	c7.set_width(100.);
+	c7.set_percentHeight(100.);
 	var c8 = new haxe_ui_components_Label();
 	c8.set_text("除外");
 	c7.addComponent(c8);

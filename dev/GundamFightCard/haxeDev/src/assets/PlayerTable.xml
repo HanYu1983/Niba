@@ -1,15 +1,15 @@
 <absolute width='100%' height='100%'>
     <hbox width='100%' height='100%'>
-        <absolute id='box_deck' width='100'>
+        <absolute id='box_deck' width='100' height='100%'>
             <label text='牌庫' />
         </absolute>
-        <absolute id='box_deck2' width='100'>
+        <absolute id='box_deck2' width='100' height='100%'>
             <label text='捨山' />
         </absolute>
-        <absolute id='box_trash' width='100'>
+        <absolute id='box_trash' width='100' height='100%'>
             <label text='廢棄庫' />
         </absolute>
-        <absolute id='box_out' width='100'>
+        <absolute id='box_out' width='100' height='100%'>
             <label text='除外' />
         </absolute>
         <vbox width='100%'>
