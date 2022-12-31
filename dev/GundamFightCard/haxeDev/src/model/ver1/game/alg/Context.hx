@@ -137,8 +137,8 @@ function getCard(ctx:Context, cardId:String):Card {
 
 // (p.63) 自軍カードが
 function isMyCard(ctx:Context, masterCardId:String, slaveCardId:String):Bool {
-	return switch {l: getCardController(ctx, masterCardId), r: getCardController(ctx, slaveCardId)} {
-		case {l: Some(c1), r: Some(c2)} if (c1 == c2):
+	return switch [getCardController(ctx, masterCardId), getCardController(ctx, slaveCardId)] {
+		case [Some(c1), Some(c2)] if (c1 == c2):
 			true;
 		case _:
 			false;

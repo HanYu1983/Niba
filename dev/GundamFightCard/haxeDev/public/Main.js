@@ -30328,10 +30328,8 @@ function model_ver1_game_alg_Context_getCard(ctx,cardId) {
 	return card;
 }
 function model_ver1_game_alg_Context_isMyCard(ctx,masterCardId,slaveCardId) {
-	var _g_l = model_ver1_game_alg_Context_getCardController(ctx,masterCardId);
-	var _g_r = model_ver1_game_alg_Context_getCardController(ctx,slaveCardId);
-	var _g = _g_l;
-	var _g1 = _g_r;
+	var _g = model_ver1_game_alg_Context_getCardController(ctx,masterCardId);
+	var _g1 = model_ver1_game_alg_Context_getCardController(ctx,slaveCardId);
 	if(_g._hx_index == 0) {
 		if(_g1._hx_index == 0) {
 			var c2 = _g1.v;
