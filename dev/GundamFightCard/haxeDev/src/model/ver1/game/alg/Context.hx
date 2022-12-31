@@ -5,6 +5,7 @@ using Lambda;
 import haxe.ds.Option;
 import tool.Table;
 import model.ver1.game.define.Define;
+import model.ver1.game.define.BaSyou;
 import model.ver1.game.define.ExecuteRuntimeImpl;
 import model.ver1.game.alg.Runtime;
 
@@ -27,11 +28,9 @@ function tapCard(ctx:Context, cardId:String):Void {
 	card.isTap = true;
 }
 
-function playCardToField(ctx:Context, cardId:String):Void {
-	sendEvent(ctx, CardEnterField(cardId));
+function moveCard(ctx:Context, cardId:String, from:BaSyou, to:BaSyou) {
+	tool.Table.moveCard(ctx.table, cardId, getCardStackId(from), getCardStackId(to));
 }
-
-
 
 //
 // Event
@@ -50,6 +49,11 @@ function sendEvent(ctx:Context, evt:Event):Void {
 //
 // Query
 //
+
+function getCardType(ctx:Context, cardId:String):CardCategory {
+	return Unit;
+}
+
 function getPlayerSelectionCardId(ctx:Context, key:String):Array<String> {
 	final selection = ctx.memory.playerSelection.cardIds[key];
 	if (selection == null) {
@@ -77,20 +81,29 @@ function getCardControllerAndAssertExist(ctx:Context, cardId:String):String {
 }
 
 // (p.63)場所管理者
-function getCardStackController(ctx:Context, cardStackId:String):Option<String> {
-	// 判斷cardStackId在哪個player身上
-	return None;
-}
-
-function getCardStackControllerAndAssertExist(ctx:Context, cardStackId:String):String {
-	return switch getCardStackController(ctx, cardStackId) {
-		case Some(playerId): playerId;
-		case _: throw new haxe.Exception("沒有控制者");
+function getBaSyouController(ctx:Context, baSyou:BaSyou):Option<String> {
+	return switch baSyou {
+		case Default(playerId, baSyouKeyword):
+			return Some(playerId);
 	}
 }
 
-function getCardCardStackId(ctx:Context, cardId:String):String {
-	return "";
+function getBaSyouControllerAndAssertExist(ctx:Context, baSyou:BaSyou):String {
+	return switch getBaSyouController(ctx, baSyou) {
+		case Some(playerId):
+			playerId;
+		case _:
+			throw new haxe.Exception("沒有控制者");
+	}
+}
+
+function getCardBaSyouAndAssertExist(ctx:Context, cardId:String):BaSyou {
+	return switch tool.Table.getCardCardStack(ctx.table, cardId) {
+		case Some(cardStack):
+			getBaSyou(cardStack.id);
+		case _:
+			throw new haxe.Exception('card baSyou not found');
+	}
 }
 
 function getCardGSign(ctx:Context, cardId:String):GSign {

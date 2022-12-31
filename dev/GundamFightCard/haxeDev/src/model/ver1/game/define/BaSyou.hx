@@ -67,9 +67,11 @@ enum BaSyou {
 // 	@:s public var playerId:String;
 // 	@:s public var baSyouKeyword:BaSyouKeyword;
 // }
-// function getCardStackId(key:CardStackKey):String {
-//     return getMemonto(key);
-// }
-// function getBaSyouKeyword(cardStackId:String):CardStackKey {
-//     return ofMemonto(cardStackId, CardStackKey);
-// }
+
+function getCardStackId(obj:BaSyou):String {
+	return getMemontoWithWrapper(obj);
+}
+
+function getBaSyou(cardStackId:String):BaSyou {
+	return ofMemontoWithWrapper(cardStackId);
+}

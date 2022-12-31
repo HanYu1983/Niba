@@ -8,12 +8,10 @@ import model.ver1.game.define.Define;
 import model.ver1.game.define.ExecuteRuntimeImpl;
 import model.ver1.game.alg.Context;
 import model.ver1.game.alg.CardProto;
-import model.ver1.data.PlayerPlayCard;
 
 //
 // Runtime
 //
-
 function getRuntimeText(ctx:Context):Array<{runtime:ExecuteRuntime, text:CardText}> {
 	final cardsNotHome = [for (card in ctx.table.cards) card];
 	final cardsHasNoController = cardsNotHome.filter(card -> {
@@ -28,11 +26,10 @@ function getRuntimeText(ctx:Context):Array<{runtime:ExecuteRuntime, text:CardTex
 	});
 	final playReturn = [
 		for (card in cardsInHandAndHanger) {
-			final responsePlayerId = getCardStackControllerAndAssertExist(ctx, getCardCardStackId(ctx, card.id));
+			final responsePlayerId = getBaSyouControllerAndAssertExist(ctx, getCardBaSyouAndAssertExist(ctx, card.id));
 			final runtime:ExecuteRuntime = new DefaultExecuteRuntime(card.id, responsePlayerId);
-			final playCardEffect = new PlayerPlayCard("");
 			// TODO: text是恆常
-			for (text in [(playCardEffect : CardText)].concat(getCurrentCardProto(ctx, card.protoId).getTexts(ctx, runtime).filter(text -> true))) {
+			for (text in getCurrentCardProto(ctx, card.protoId).getTexts(ctx, runtime).filter(text -> true)) {
 				{
 					runtime: runtime,
 					text: text
@@ -52,7 +49,7 @@ function getRuntimeText(ctx:Context):Array<{runtime:ExecuteRuntime, text:CardTex
 	});
 	final specialReturn = [
 		for (card in cardsUseG) {
-			final responsePlayerId = getCardStackControllerAndAssertExist(ctx, getCardCardStackId(ctx, card.id));
+			final responsePlayerId = getBaSyouControllerAndAssertExist(ctx, getCardBaSyouAndAssertExist(ctx, card.id));
 			final runtime:ExecuteRuntime = new DefaultExecuteRuntime(card.id, responsePlayerId);
 			// TODO: text是<>
 			for (text in getCurrentCardProto(ctx, card.protoId).getTexts(ctx, runtime).filter(text -> true)) {
@@ -69,7 +66,7 @@ function getRuntimeText(ctx:Context):Array<{runtime:ExecuteRuntime, text:CardTex
 	});
 	final specialReturn2 = [
 		for (card in cardsNotUseG) {
-			final responsePlayerId = getCardStackControllerAndAssertExist(ctx, getCardCardStackId(ctx, card.id));
+			final responsePlayerId = getBaSyouControllerAndAssertExist(ctx, getCardBaSyouAndAssertExist(ctx, card.id));
 			final runtime:ExecuteRuntime = new DefaultExecuteRuntime(card.id, responsePlayerId);
 			// TODO: text是恆常
 			for (text in getCurrentCardProto(ctx, card.protoId).getTexts(ctx, runtime).filter(text -> true)) {

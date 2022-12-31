@@ -37,8 +37,17 @@ class Context implements hxbit.Serializable {
 	@:s public var cuts:Array<Array<Block>> = [];
 }
 
-
 // General
+
+enum CardCategory {
+	Unit;
+	Character;
+	Command;
+	Operation;
+	OperationUnit;
+	Graphic;
+	Ace;
+}
 
 enum GColor {
 	Red;
@@ -141,6 +150,7 @@ class CardText implements hxbit.Serializable {
 
 	@:s public var id:String;
 	@:s public var description:String;
+	@:s public var isConstant
 
 	public function getEffect(ctx:Context, runtime:ExecuteRuntime):Array<MarkEffect> {
 		return [];

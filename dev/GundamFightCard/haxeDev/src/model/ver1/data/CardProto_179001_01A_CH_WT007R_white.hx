@@ -8,6 +8,7 @@ import model.ver1.game.define.Timing;
 import model.ver1.game.alg.Context;
 import model.ver1.game.alg.Runtime;
 import model.ver1.data.RequireImpl;
+import model.ver1.data.PlayerPlayCard;
 
 // 179001_01A_CH_WT007R_white
 // キラ・ヤマト
@@ -17,7 +18,10 @@ class CardProto_179001_01A_CH_WT007R_white extends CardProto {
 	public function new() {}
 
 	public override function getTexts(ctx:Context, runtime:ExecuteRuntime):Array<CardText> {
-		return [new Text1('${runtime.getCardId()}_Text1')];
+		return [
+			new PlayerPlayCard('${runtime.getCardId()}_PlayerPlayCard'),
+			new Text1('${runtime.getCardId()}_Text1')
+		];
 	}
 }
 

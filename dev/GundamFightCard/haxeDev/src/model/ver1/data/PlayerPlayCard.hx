@@ -4,6 +4,7 @@ using Lambda;
 
 import haxe.Exception;
 import model.ver1.game.define.Define;
+import model.ver1.game.define.BaSyou;
 import model.ver1.game.define.Timing;
 import model.ver1.game.alg.Context;
 import model.ver1.game.alg.Cut;
@@ -19,6 +20,15 @@ class PlayerPlayCard extends CardText {
 		// TODO: 查詢有沒有快速
 		// TODO: 查詢有沒有替代横置國力顏色的效果
 		// TODO: 查詢有沒有在SET在特定卡上而減少横置國力的效果
+		final cardId = runtime.getCardId();
+		switch getCardType(ctx, cardId) {
+			case Character | OperationUnit:
+			// TODO: require unit
+			case Command:
+			// TODO: text
+			case _:
+		}
+
 		return [
 			new RequirePhase('${id}_RequirePhase', Default(Maintenance, None, Free1)),
 			new RequireGCount('${id}_RequireGCount', 3),
@@ -27,30 +37,66 @@ class PlayerPlayCard extends CardText {
 	}
 
 	public override function action(ctx:Context, runtime:ExecuteRuntime):Void {
-		// TODO: 移到プレイされたカード(場所以外的特殊場所)
-		// Unit -> 場に出る効果 -> 配置區横置
-		// Command -> 內文效果 -> 解決內文並移到廢棄庫
-		// Operation -> 場に出る効果 -> 配置區直立
-		// 其它的移到配置區
 		final cardId = runtime.getCardId();
 		final responsePlayerId = runtime.getResponsePlayerId();
-		final block = new Block('${id}_${Date.now()}', PlayCard(responsePlayerId, cardId), new PlayerPlayCardEffect('${id}_PlayerPlayCardEffect'));
-		cutIn(ctx, block);
+		final from = getCardBaSyouAndAssertExist(ctx, cardId);
+		// 移到プレイされたカード
+		switch getCardType(ctx, cardId) {
+			case Unit | Character | Operation | OperationUnit:
+				final to = BaSyou.Default(responsePlayerId, PlayedCard);
+				moveCard(ctx, cardId, from, to);
+				ctx.table.cards[cardId].isFaceUp = true;
+			case _:
+		}
+		switch getCardType(ctx, cardId) {
+			case Unit | Operation | Character | OperationUnit:
+				final block = new Block('${id}_${Date.now()}', PlayCard(responsePlayerId, cardId), new EnterFieldEffect('${id}_PlayerPlayCardEffect'));
+				cutIn(ctx, block);
+			case Command:
+			// Command -> 內文效果 -> 解決內文並移到廢棄庫
+			case Graphic:
+				final to = BaSyou.Default(responsePlayerId, GZone);
+				moveCard(ctx, cardId, from, to);
+			case _:
+				throw new Exception("unsupport type");
+		}
 	}
 }
 
-private class PlayerPlayCardEffect extends CardText {
+private class EnterFieldEffect extends CardText {
 	public function new(id:String) {
 		super(id, "場に出る効果");
 	}
 
 	public override function action(ctx:Context, runtime:ExecuteRuntime):Void {
-		final cardId = runtime.getCardId();
 		// (p.64)
 		// getCardController(cardId)會等於None因為「プレイされたカード場所」是沒有控制者的
 		// 所以也沒有自軍或敵軍的分別
 		// 這時的自軍是指出牌的人
-		playCardToField(ctx, cardId);
+		final cardId = runtime.getCardId();
+		final responsePlayerId = runtime.getResponsePlayerId();
+		final from = getCardBaSyouAndAssertExist(ctx, cardId);
+		switch getCardType(ctx, cardId) {
+			case Unit:
+				// 移到配備區
+				final to = BaSyou.Default(responsePlayerId, MaintenanceArea);
+				moveCard(ctx, cardId, from, to);
+				// TODO: 查詢有沒有戰鬥配備
+				// 配置區横置
+				ctx.table.cards[cardId].isTap = true;
+				sendEvent(ctx, CardEnterField(cardId));
+			case Operation:
+				final to = BaSyou.Default(responsePlayerId, MaintenanceArea);
+				moveCard(ctx, cardId, from, to);
+				// 配置區直立
+				ctx.table.cards[cardId].isTap = false;
+				sendEvent(ctx, CardEnterField(cardId));
+			case Character:
+			case OperationUnit:
+			case Command:
+			case _:
+				throw new Exception("unsupport type");
+		}
 	}
 }
 
@@ -61,12 +107,18 @@ class PlayerPlayG extends CardText {
 	}
 
 	public override function getRequires(ctx:Context, runtime:ExecuteRuntime):Array<Require> {
-		// 必須有GSign
+		// TODO: 必須有GSign
 		return [];
 	}
 
 	public override function action(ctx:Context, runtime:ExecuteRuntime):Void {
 		// 沒有出場效果，所以不會引發切入，直接出場
-		// G -> 配置區倒置 (需加一個倒置卡牌的標記)
+		final cardId = runtime.getCardId();
+		final responsePlayerId = runtime.getResponsePlayerId();
+		final from = getCardBaSyouAndAssertExist(ctx, cardId);
+		final to = BaSyou.Default(responsePlayerId, GZone);
+		// 倒置
+		ctx.table.cards[cardId].isReverse = true;
+		moveCard(ctx, cardId, from, to);
 	}
 }
