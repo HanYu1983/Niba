@@ -28863,10 +28863,10 @@ function model_ver1_alg_Alg_isDestroyNow(ctx,cardId,condition) {
 	return false;
 }
 function model_ver1_alg_Alg_removeDestroyEffect(ctx,cardId) {
-	console.log("src/model/ver1/alg/Alg.hx:34:","移除堆疊中的破壞效果");
+	console.log("src/model/ver1/alg/Alg.hx:36:","移除堆疊中的破壞效果");
 }
 function model_ver1_alg_Alg_becomeG(ctx,cardId) {
-	console.log("src/model/ver1/alg/Alg.hx:41:","將自己變成G");
+	console.log("src/model/ver1/alg/Alg.hx:43:","將自己變成G");
 }
 function model_ver1_alg_Alg_getUnitOfSetGroup(ctx,cardId) {
 	return haxe_ds_Option.None;
@@ -28881,8 +28881,20 @@ function model_ver1_alg_Alg_tapCard(ctx,cardId) {
 function model_ver1_alg_Alg_playCardToField(ctx,cardId) {
 	model_ver1_alg_Alg_sendEvent(ctx,model_ver1_game_Event.CardEnterField(cardId));
 }
+function model_ver1_alg_Alg_cutIn(ctx,block) {
+	if(ctx.cuts.length == 0) {
+		ctx.cuts.push([]);
+	}
+	var lastCut = ctx.cuts[ctx.cuts.length - 1];
+	lastCut.push(block);
+}
+function model_ver1_alg_Alg_newCut(ctx,block) {
+	ctx.cuts.push([block]);
+}
 function model_ver1_alg_Alg_getBlocks(ctx) {
-	return ctx.effectStack.concat(ctx.immediateStack);
+	return Lambda.fold(ctx.cuts,function(c,a) {
+		return a.concat(c);
+	},[]);
 }
 function model_ver1_alg_Alg_getBlock(ctx,blockId) {
 	var blocks = model_ver1_alg_Alg_getBlocks(ctx);
@@ -28929,8 +28941,13 @@ function model_ver1_alg_Alg_getBlockRuntime(ctx,blockId) {
 }
 function model_ver1_alg_Alg_removeBlock(ctx,blockId) {
 	var block = model_ver1_alg_Alg_getBlock(ctx,blockId);
-	HxOverrides.remove(ctx.effectStack,block);
-	HxOverrides.remove(ctx.immediateStack,block);
+	var _g = 0;
+	var _g1 = ctx.cuts;
+	while(_g < _g1.length) {
+		var cut = _g1[_g];
+		++_g;
+		HxOverrides.remove(cut,block);
+	}
 }
 function model_ver1_alg_Alg_sendEvent(ctx,evt) {
 	var _g = 0;
@@ -29782,7 +29799,8 @@ model_ver1_data__$CardProto_$179003_$01A_$U_$BK008U_$black_Text1.prototype = $ex
 	}
 	,action: function(ctx,runtime) {
 		var cardId = runtime.getCardId();
-		ctx.effectStack.push(new model_ver1_game_Block("" + this.id + "_" + Std.string(new Date()),model_ver1_game_BlockCause.PlayText(cardId,this.id),new model_ver1_data__$CardProto_$179003_$01A_$U_$BK008U_$black_Text2("" + this.id + "_Text2")));
+		var block = new model_ver1_game_Block("" + this.id + "_" + Std.string(new Date()),model_ver1_game_BlockCause.PlayText(cardId,this.id),new model_ver1_data__$CardProto_$179003_$01A_$U_$BK008U_$black_Text2("" + this.id + "_Text2"));
+		model_ver1_alg_Alg_cutIn(ctx,block);
 	}
 	,getCLID: function() {
 		return model_ver1_data__$CardProto_$179003_$01A_$U_$BK008U_$black_Text1.__clid;
@@ -29822,7 +29840,7 @@ function model_ver1_data_CardProto_$179003_$01A_$U_$BK008U_$black_test() {
 		result[i] = { cardId : info.runtime.getCardId(), text : info.text, reqs : info.text.getRequires(ctx,info.runtime)};
 	}
 	var infos = result;
-	console.log("src/model/ver1/data/CardProto_179003_01A_U_BK008U_black.hx:82:",infos);
+	console.log("src/model/ver1/data/CardProto_179003_01A_U_BK008U_black.hx:83:",infos);
 	if(infos.length == 0) {
 		throw new haxe_Exception("infos.length == 0");
 	}
@@ -29880,7 +29898,9 @@ model_ver1_data__$CardProto_$179004_$01A_$CH_$WT009R_$white_Text1.prototype = $e
 			var gainCardId = event.cardId;
 			var gainValue = event.value;
 			if(model_ver1_alg_Alg_isMyCard(ctx,thisCardId,gainCardId)) {
-				ctx.immediateStack.push(new model_ver1_game_Block("" + this.id + "_" + Std.string(new Date()),model_ver1_game_BlockCause.TextEffect(thisCardId,this.id),new model_ver1_data__$CardProto_$179004_$01A_$CH_$WT009R_$white_Text1_$1("" + this.id + "_Text1_1",gainCardId,gainValue)));
+				var block = new model_ver1_game_Block("" + this.id + "_" + Std.string(new Date()),model_ver1_game_BlockCause.TextEffect(thisCardId,this.id),new model_ver1_data__$CardProto_$179004_$01A_$CH_$WT009R_$white_Text1_$1("" + this.id + "_Text1_1",gainCardId,gainValue));
+				block.isImmediate = true;
+				model_ver1_alg_Alg_cutIn(ctx,block);
 			}
 		}
 	}
@@ -30174,7 +30194,8 @@ model_ver1_data_PlayerPlayCard.prototype = $extend(model_ver1_game_CardText.prot
 	,action: function(ctx,runtime) {
 		var cardId = runtime.getCardId();
 		var responsePlayerId = runtime.getResponsePlayerId();
-		ctx.effectStack.push(new model_ver1_game_Block("" + this.id + "_" + Std.string(new Date()),model_ver1_game_BlockCause.PlayCard(responsePlayerId,cardId),new model_ver1_data__$PlayerPlayCard_PlayerPlayCardEffect("" + this.id + "_PlayerPlayCardEffect")));
+		var block = new model_ver1_game_Block("" + this.id + "_" + Std.string(new Date()),model_ver1_game_BlockCause.PlayCard(responsePlayerId,cardId),new model_ver1_data__$PlayerPlayCard_PlayerPlayCardEffect("" + this.id + "_PlayerPlayCardEffect"));
+		model_ver1_alg_Alg_cutIn(ctx,block);
 	}
 	,getCLID: function() {
 		return model_ver1_data_PlayerPlayCard.__clid;
@@ -30500,6 +30521,7 @@ var model_ver1_game_BlockCause = $hxEnums["model.ver1.game.BlockCause"] = { __en
 model_ver1_game_BlockCause.__constructs__ = [model_ver1_game_BlockCause.Pending,model_ver1_game_BlockCause.System,model_ver1_game_BlockCause.PlayCard,model_ver1_game_BlockCause.PlayText,model_ver1_game_BlockCause.TextEffect];
 var model_ver1_game_Block = function(id,cause,text) {
 	this.__uid = hxbit_Serializer.SEQ << 24 | ++hxbit_Serializer.UID;
+	this.isImmediate = false;
 	this.id = id;
 	this.cause = cause;
 	this.text = text;
@@ -30511,6 +30533,7 @@ model_ver1_game_Block.prototype = {
 	id: null
 	,cause: null
 	,text: null
+	,isImmediate: null
 	,__uid: null
 	,getCLID: function() {
 		return model_ver1_game_Block.__clid;
@@ -30532,6 +30555,7 @@ model_ver1_game_Block.prototype = {
 		}
 		hxbit_enumSer_Model_$ver1_$game_$BlockCause.doSerialize(__ctx,this.cause);
 		__ctx.addKnownRef(this.text);
+		__ctx.out.addByte(this.isImmediate ? 1 : 0);
 	}
 	,getSerializeSchema: function() {
 		var schema = new hxbit_Schema();
@@ -30541,10 +30565,13 @@ model_ver1_game_Block.prototype = {
 		schema.fieldsTypes.push(hxbit_PropTypeDesc.PEnum("model.ver1.game.BlockCause"));
 		schema.fieldsNames.push("text");
 		schema.fieldsTypes.push(hxbit_PropTypeDesc.PSerializable("model.ver1.game.CardText"));
+		schema.fieldsNames.push("isImmediate");
+		schema.fieldsTypes.push(hxbit_PropTypeDesc.PBool);
 		schema.isFinal = hxbit_Serializer.isClassFinal(model_ver1_game_Block.__clid);
 		return schema;
 	}
 	,unserializeInit: function() {
+		this.isImmediate = false;
 	}
 	,unserialize: function(__ctx) {
 		var v = __ctx.input.b[__ctx.inPos++];
@@ -30566,13 +30593,13 @@ model_ver1_game_Block.prototype = {
 		var __e = hxbit_enumSer_Model_$ver1_$game_$BlockCause.doUnserialize(__ctx);
 		this.cause = __e;
 		this.text = __ctx.getRef(model_ver1_game_CardText,model_ver1_game_CardText.__clid);
+		this.isImmediate = __ctx.input.b[__ctx.inPos++] != 0;
 	}
 	,__class__: model_ver1_game_Block
 };
 var model_ver1_game_Context = function() {
 	this.__uid = hxbit_Serializer.SEQ << 24 | ++hxbit_Serializer.UID;
-	this.effectStack = [];
-	this.immediateStack = [];
+	this.cuts = [];
 	this.memory = { playerSelection : { cardIds : new haxe_ds_StringMap()}};
 	this.cardProtoPool = new haxe_ds_StringMap();
 	this.phase = model_ver1_game_Phase.Pending;
@@ -30592,8 +30619,7 @@ model_ver1_game_Context.prototype = {
 	,phase: null
 	,cardProtoPool: null
 	,memory: null
-	,immediateStack: null
-	,effectStack: null
+	,cuts: null
 	,__uid: null
 	,getCLID: function() {
 		return model_ver1_game_Context.__clid;
@@ -30864,7 +30890,7 @@ model_ver1_game_Context.prototype = {
 				}
 			}
 		}
-		var a = this.immediateStack;
+		var a = this.cuts;
 		if(a == null) {
 			__ctx.out.addByte(0);
 		} else {
@@ -30879,25 +30905,23 @@ model_ver1_game_Context.prototype = {
 			while(_g < a.length) {
 				var v = a[_g];
 				++_g;
-				__ctx.addKnownRef(v);
-			}
-		}
-		var a = this.effectStack;
-		if(a == null) {
-			__ctx.out.addByte(0);
-		} else {
-			var v = a.length + 1;
-			if(v >= 0 && v < 128) {
-				__ctx.out.addByte(v);
-			} else {
-				__ctx.out.addByte(128);
-				__ctx.out.addInt32(v);
-			}
-			var _g = 0;
-			while(_g < a.length) {
-				var v = a[_g];
-				++_g;
-				__ctx.addKnownRef(v);
+				if(v == null) {
+					__ctx.out.addByte(0);
+				} else {
+					var v1 = v.length + 1;
+					if(v1 >= 0 && v1 < 128) {
+						__ctx.out.addByte(v1);
+					} else {
+						__ctx.out.addByte(128);
+						__ctx.out.addInt32(v1);
+					}
+					var _g1 = 0;
+					while(_g1 < v.length) {
+						var v2 = v[_g1];
+						++_g1;
+						__ctx.addKnownRef(v2);
+					}
+				}
 			}
 		}
 	}
@@ -30917,10 +30941,8 @@ model_ver1_game_Context.prototype = {
 		schema.fieldsTypes.push(hxbit_PropTypeDesc.PMap(hxbit_PropTypeDesc.PString,hxbit_PropTypeDesc.PSerializable("model.ver1.game.CardProto")));
 		schema.fieldsNames.push("memory");
 		schema.fieldsTypes.push(hxbit_PropTypeDesc.PObj([{ name : "playerSelection", opt : false, type : hxbit_PropTypeDesc.PObj([{ name : "cardIds", opt : false, type : hxbit_PropTypeDesc.PMap(hxbit_PropTypeDesc.PString,hxbit_PropTypeDesc.PArray(hxbit_PropTypeDesc.PString))}])}]));
-		schema.fieldsNames.push("immediateStack");
-		schema.fieldsTypes.push(hxbit_PropTypeDesc.PArray(hxbit_PropTypeDesc.PSerializable("model.ver1.game.Block")));
-		schema.fieldsNames.push("effectStack");
-		schema.fieldsTypes.push(hxbit_PropTypeDesc.PArray(hxbit_PropTypeDesc.PSerializable("model.ver1.game.Block")));
+		schema.fieldsNames.push("cuts");
+		schema.fieldsTypes.push(hxbit_PropTypeDesc.PArray(hxbit_PropTypeDesc.PArray(hxbit_PropTypeDesc.PSerializable("model.ver1.game.Block"))));
 		schema.isFinal = hxbit_Serializer.isClassFinal(model_ver1_game_Context.__clid);
 		return schema;
 	}
@@ -30932,8 +30954,7 @@ model_ver1_game_Context.prototype = {
 		this.phase = model_ver1_game_Phase.Pending;
 		this.cardProtoPool = new haxe_ds_StringMap();
 		this.memory = { playerSelection : { cardIds : new haxe_ds_StringMap()}};
-		this.immediateStack = [];
-		this.effectStack = [];
+		this.cuts = [];
 	}
 	,unserialize: function(__ctx) {
 		var k0;
@@ -31197,35 +31218,32 @@ model_ver1_game_Context.prototype = {
 			var _g1 = len;
 			while(_g < _g1) {
 				var i = _g++;
-				e0 = __ctx.getRef(model_ver1_game_Block,model_ver1_game_Block.__clid);
+				var e1;
+				var v = __ctx.input.b[__ctx.inPos++];
+				if(v == 128) {
+					v = __ctx.input.getInt32(__ctx.inPos);
+					__ctx.inPos += 4;
+				}
+				var len = v;
+				if(len == 0) {
+					e0 = null;
+				} else {
+					--len;
+					var a1 = [];
+					var _g2 = 0;
+					var _g3 = len;
+					while(_g2 < _g3) {
+						var i1 = _g2++;
+						e1 = __ctx.getRef(model_ver1_game_Block,model_ver1_game_Block.__clid);
+						a1[i1] = e1;
+					}
+					e0 = a1;
+				}
 				a[i] = e0;
 			}
 			tmp = a;
 		}
-		this.immediateStack = tmp;
-		var e0;
-		var v = __ctx.input.b[__ctx.inPos++];
-		if(v == 128) {
-			v = __ctx.input.getInt32(__ctx.inPos);
-			__ctx.inPos += 4;
-		}
-		var len = v;
-		var tmp;
-		if(len == 0) {
-			tmp = null;
-		} else {
-			--len;
-			var a = [];
-			var _g = 0;
-			var _g1 = len;
-			while(_g < _g1) {
-				var i = _g++;
-				e0 = __ctx.getRef(model_ver1_game_Block,model_ver1_game_Block.__clid);
-				a[i] = e0;
-			}
-			tmp = a;
-		}
-		this.effectStack = tmp;
+		this.cuts = tmp;
 	}
 	,__class__: model_ver1_game_Context
 };

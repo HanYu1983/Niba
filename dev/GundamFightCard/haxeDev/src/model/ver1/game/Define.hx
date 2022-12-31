@@ -148,6 +148,7 @@ class Block implements hxbit.Serializable {
 	@:s public var id:String;
 	@:s public var cause:BlockCause;
 	@:s public var text:CardText;
+	@:s public var isImmediate = false;
 }
 
 class Context implements hxbit.Serializable {
@@ -164,8 +165,8 @@ class Context implements hxbit.Serializable {
 			cardIds: []
 		}
 	};
-	@:s public var immediateStack:Array<Block> = [];
-	@:s public var effectStack:Array<Block> = [];
+	// serializable不支援List
+	@:s public var cuts:Array<Array<Block>> = [];
 }
 
 typedef BattlePoint = {

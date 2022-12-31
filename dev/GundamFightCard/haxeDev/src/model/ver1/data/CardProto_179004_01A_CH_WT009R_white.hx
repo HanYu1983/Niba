@@ -30,7 +30,9 @@ private class Text1 extends CardText {
 		switch event {
 			case Gain(gainCardId, gainValue):
 				if (isMyCard(ctx, thisCardId, gainCardId)) {
-					ctx.immediateStack.push(new Block('${id}_${Date.now()}', TextEffect(thisCardId, id), new Text1_1('${id}_Text1_1', gainCardId, gainValue)));
+					final block = new Block('${id}_${Date.now()}', TextEffect(thisCardId, id), new Text1_1('${id}_Text1_1', gainCardId, gainValue));
+					block.isImmediate = true;
+					cutIn(ctx, block);
 				}
 			case _:
 		}

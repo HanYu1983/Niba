@@ -50,7 +50,8 @@ private class Text1 extends CardText {
 
 	public override function action(ctx:Context, runtime:ExecuteRuntime):Void {
 		final cardId = runtime.getCardId();
-		ctx.effectStack.push(new Block('${id}_${Date.now()}', PlayText(cardId, id), new Text2('${id}_Text2')));
+		final block = new Block('${id}_${Date.now()}', PlayText(cardId, id), new Text2('${id}_Text2'));
+		cutIn(ctx, block);
 	}
 }
 

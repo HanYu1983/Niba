@@ -1,5 +1,7 @@
 package model.ver1.alg;
 
+using Lambda;
+
 import haxe.ds.Option;
 import tool.Table;
 import model.ver1.game.Define;
@@ -57,12 +59,26 @@ function playCardToField(ctx:Context, cardId:String):Void {
 	sendEvent(ctx, CardEnterField(cardId));
 }
 
+function cutIn(ctx:Context, block:Block):Void {
+	if (ctx.cuts.length == 0) {
+		ctx.cuts.push([]);
+	}
+	final lastCut = ctx.cuts[ctx.cuts.length - 1];
+	lastCut.push(block);
+}
+
+function newCut(ctx:Context, block:Block):Void {
+	ctx.cuts.push([block]);
+}
+
 //
 // Block
 //
 
 function getBlocks(ctx:Context):Array<Block> {
-	return ctx.effectStack.concat(ctx.immediateStack);
+	return ctx.cuts.fold((c, a) -> {
+		return a.concat(c);
+	}, []);
 }
 
 function getBlock(ctx:Context, blockId:String):Block {
@@ -94,8 +110,9 @@ function getBlockRuntime(ctx:Context, blockId:String):ExecuteRuntime {
 
 function removeBlock(ctx:Context, blockId:String):Void {
 	final block = getBlock(ctx, blockId);
-	ctx.effectStack.remove(block);
-	ctx.immediateStack.remove(block);
+	for (cut in ctx.cuts) {
+		cut.remove(block);
+	}
 }
 
 //

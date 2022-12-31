@@ -32,7 +32,8 @@ class PlayerPlayCard extends CardText {
 		// 其它的移到配置區
 		final cardId = runtime.getCardId();
 		final responsePlayerId = runtime.getResponsePlayerId();
-		ctx.effectStack.push(new Block('${id}_${Date.now()}', PlayCard(responsePlayerId, cardId), new PlayerPlayCardEffect('${id}_PlayerPlayCardEffect')));
+		final block = new Block('${id}_${Date.now()}', PlayCard(responsePlayerId, cardId), new PlayerPlayCardEffect('${id}_PlayerPlayCardEffect'));
+		cutIn(ctx, block);
 	}
 }
 
