@@ -7,6 +7,7 @@ import model.ver1.game.Game;
 class Test {
 	public static function main() {
 		test1();
+		model.ver1.game.define.BaSyou.test();
 		model.ver1.data.CardProto_179003_01A_U_BK008U_black.test();
 	}
 

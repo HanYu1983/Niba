@@ -23,6 +23,9 @@ function isContantType(text:CardText) {
 //
 function getRuntimeText(ctx:Context):Array<{runtime:ExecuteRuntime, text:CardText}> {
 	// 本國捨山以外的卡
+	// final hideCards = [for(cs in ctx.table.cardStacks) cs].filter(cs->{
+	// 	switch getBaSyou(cs.id) {}
+	// })
 	final cardsNotHome = [for (card in ctx.table.cards) card].filter(card -> {
 		return switch getCardBaSyouAndAssertExist(ctx, card.id) {
 			case Default(_, HonGoku | SuteYama):

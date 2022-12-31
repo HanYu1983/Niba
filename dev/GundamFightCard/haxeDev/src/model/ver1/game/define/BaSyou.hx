@@ -1,5 +1,7 @@
 package model.ver1.game.define;
 
+import haxe.Exception;
+import haxe.EnumTools;
 import tool.Helper;
 
 enum BaSyouKeyword {
@@ -68,10 +70,38 @@ enum BaSyou {
 // 	@:s public var baSyouKeyword:BaSyouKeyword;
 // }
 
+private class Wrapper implements hxbit.Serializable {
+	public function new() {}
+
+	@:s public var hold:BaSyou;
+}
+
 function getCardStackId(obj:BaSyou):String {
-	return getMemontoWithWrapper(obj);
+	final wrapper = new Wrapper();
+	wrapper.hold = obj;
+	return getMemonto(wrapper);
 }
 
 function getBaSyou(cardStackId:String):BaSyou {
-	return ofMemontoWithWrapper(cardStackId);
+	try {
+		final wrapper = ofMemonto(cardStackId, Wrapper);
+		return cast wrapper.hold;
+	} catch (e) {
+		throw new haxe.Exception('getBaSyou error: ${cardStackId} not right; ${e}');
+	}
+}
+
+function test() {
+	final b1 = BaSyou.Default("0", HonGoku);
+	final csId = getCardStackId(b1);
+	final b2 = getBaSyou(csId);
+	if (EnumValueTools.equals(b1, b2) == false) {
+		throw new haxe.Exception("b1 must equals b2");
+	}
+	try {
+		getBaSyou("dd");
+		throw new haxe.Exception("must throw error");
+	} catch (e) {
+		// success
+	}
 }
