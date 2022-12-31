@@ -2,19 +2,19 @@ package assets;
 
 import haxe.ui.core.Component;
 import haxe.ui.dragdrop.DragManager;
-import model.Model;
 import tweenx909.TweenX;
 import assets.Card;
 import haxe.ui.containers.VBox;
+import viewModel.IViewModel;
 
 @:build(haxe.ui.ComponentBuilder.build("src/assets/MainView.xml"))
 class MainView extends VBox {
-	private var game:Model;
+	private var game:IViewModel;
 
 	private var playerTable = new PlayerTable();
 	private var enemyTable = new PlayerTable();
 
-	public function new(game:Model) {
+	public function new(game:IViewModel) {
 		super();
 
 		box_playerTable.addComponent(playerTable);

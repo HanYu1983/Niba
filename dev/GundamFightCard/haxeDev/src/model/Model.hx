@@ -1,30 +1,8 @@
 package model;
 
-typedef CardModel = {
-	id:String,
-	name:String,
-	content:String,
-	owner:String,
-}
+import viewModel.IViewModel;
 
-typedef PlayerModel = {
-	id:String,
-	name:String,
-	hand:Array<CardModel>,
-	deck:Array<CardModel>
-}
-
-typedef GameModel = {
-	players:Array<PlayerModel>
-}
-
-typedef PreviewPlayCardModel = {
-	success:Bool,
-	msg:String,
-	content:Dynamic
-}
-
-class Model {
+class Model extends DefaultViewModel{
 	public function new() {}
 
 	private function createCard():CardModel {
@@ -45,13 +23,13 @@ class Model {
 		}
 	}
 
-	public function getGame():GameModel {
+	public override function getGame():GameModel {
 		return {
 			players: [createPlayer(), createPlayer()]
 		};
 	}
 
-	public function previewPlayCard(id:String):PreviewPlayCardModel {
+	public override function previewPlayCard(id:String):PreviewPlayCardModel {
 		return {
 			success: false,
 			msg: 'should have xxxx',
