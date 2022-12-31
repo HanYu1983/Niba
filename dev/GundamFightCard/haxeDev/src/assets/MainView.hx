@@ -1,9 +1,6 @@
 package assets;
 
 import delay.Delay;
-import vdom.JQuery;
-import js.html.Document;
-import js.Syntax;
 import tweenx909.TweenX;
 import assets.Card;
 import haxe.ui.containers.VBox;
@@ -18,8 +15,6 @@ class MainView extends VBox {
 
 	public function new(game:IViewModel) {
 		super();
-
-		enemyTable.id = 'abc';
 
 		box_playerTable.addComponent(playerTable);
 		box_playerTable.addComponent(enemyTable);
@@ -49,45 +44,38 @@ class MainView extends VBox {
 		for (i in 0...cards.length) {
 			var card = new Card();
 			var cardModel = cards[i];
-			card.setInfo(cardModel);
+			card.model = cardModel;
 			card.left = i * (card.width + 5) + table.box_hand.screenLeft;
 			card.top = table.box_hand.screenTop;
+			table.hand.push(card);
+			box_table.addComponent(card);
+		}
+		playCardMode();
+	}
+
+	private function playCardMode() {
+		for (i in 0...playerTable.hand.length) {
+			var card = playerTable.hand[i];
 			card.box_cover.onMouseOver = function(e) {
 				if (firstClick != null)
 					return;
-				trace('over card: ' + cardModel.id);
+				trace('over card: ' + card.model.id);
 				TweenX.to(card.box_card, {'top': 30}, .3);
 
-				game.previewPlayCard(cardModel.id);
+				game.previewPlayCard(card.model.id);
 			};
 			card.box_cover.onMouseOut = function(e) {
 				if (firstClick != null)
 					return;
-				trace('out card:' + cardModel.id);
+				trace('out card:' + card.model.id);
 				TweenX.to(card.box_card, {'top': 0}, .3);
 			};
 			card.box_cover.onClick = function(e) {
 				if (firstClick == null) {
-					firstClick = cardModel;
-					trace('first click card:' + cardModel.id);
+					firstClick = card.model;
+					trace('first click card:' + card.model.id);
 				}
 			};
-			// card.onDragStart = function(e){
-
-			// };
-			// card.onDragEnd = function(e) {
-			// 	trace(e);
-			// };
-			// card.onDrag = function(e) {
-			// 	trace(e.left, e.top);
-			// };
-			// DragManager.instance.registerDraggable(card);
-			box_table.addComponent(card);
 		}
 	}
-
-	// @:bind(button2, MouseEvent.CLICK)
-	// private function onMyButton(e:MouseEvent) {
-	// 	button2.text = "Thanks!";
-	// }
 }
