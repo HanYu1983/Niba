@@ -30009,8 +30009,7 @@ $hxClasses["model.ver1.game.Game"] = model_ver1_game_Game;
 model_ver1_game_Game.__name__ = "model.ver1.game.Game";
 model_ver1_game_Game.__interfaces__ = [hxbit_Serializable];
 model_ver1_game_Game.ofMemonto = function(memonto) {
-	var u = new hxbit_Serializer();
-	return u.unserialize(haxe_io_Bytes.ofHex(memonto),model_ver1_game_Game);
+	return tool_Helper_ofMemonto(memonto,model_ver1_game_Game);
 };
 model_ver1_game_Game.prototype = {
 	ctx: null
@@ -30018,9 +30017,7 @@ model_ver1_game_Game.prototype = {
 		model_ver1_data_CardProto_$179003_$01A_$U_$BK008U_$black_test();
 	}
 	,getMemonto: function() {
-		var s = new hxbit_Serializer();
-		var bytes = s.serialize(this);
-		return bytes.toHex();
+		return tool_Helper_getMemonto(this);
 	}
 	,__uid: null
 	,getCLID: function() {

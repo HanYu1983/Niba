@@ -1,4 +1,6 @@
 package model.ver1.game;
+
+import tool.Helper;
 import model.ver1.game.define.Define;
 
 // switch Type.typeof(markEffect) {
@@ -18,13 +20,10 @@ class Game implements hxbit.Serializable {
 	}
 
 	public function getMemonto():String {
-		final s = new hxbit.Serializer();
-		final bytes = s.serialize(this);
-		return bytes.toHex();
+		return tool.Helper.getMemonto(this);
 	}
 
 	public static function ofMemonto(memonto:String):Game {
-		final u = new hxbit.Serializer();
-		return u.unserialize(haxe.io.Bytes.ofHex(memonto), Game);
+		return tool.Helper.ofMemonto(memonto, Game);
 	}
 }
