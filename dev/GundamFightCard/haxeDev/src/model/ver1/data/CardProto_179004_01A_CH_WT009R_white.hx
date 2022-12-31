@@ -18,7 +18,7 @@ class CardProto_179004_01A_CH_WT009R_white extends CardProto {
 	public function new() {}
 
 	public override function getTexts(ctx:Context, runtime:ExecuteRuntime):Array<CardText> {
-		return [];
+		return [new PlayerPlayCard('${runtime.getCardId()}_PlayerPlayCard')];
 	}
 }
 

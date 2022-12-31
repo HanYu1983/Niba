@@ -6,7 +6,6 @@ import haxe.Exception;
 import haxe.EnumTools;
 import model.ver1.game.define.Define;
 import model.ver1.game.define.Timing;
-
 import model.ver1.game.alg.Context;
 
 class RequirePhase extends Require {

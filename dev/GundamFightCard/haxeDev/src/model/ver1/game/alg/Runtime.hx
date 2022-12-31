@@ -9,27 +9,54 @@ import model.ver1.game.define.ExecuteRuntimeImpl;
 import model.ver1.game.alg.Context;
 import model.ver1.game.alg.CardProto;
 
+function isContantType(text:CardText) {
+	return switch (text.type) {
+		case Automatic(Constant):
+			true;
+		case _:
+			false;
+	}
+}
+
 //
 // Runtime
 //
 function getRuntimeText(ctx:Context):Array<{runtime:ExecuteRuntime, text:CardText}> {
-	final cardsNotHome = [for (card in ctx.table.cards) card];
+	// 本國捨山以外的卡
+	final cardsNotHome = [for (card in ctx.table.cards) card].filter(card -> {
+		return switch getCardBaSyouAndAssertExist(ctx, card.id) {
+			case Default(_, HonGoku | SuteYama):
+				false;
+			case _:
+				true;
+		}
+	});
+	// 沒有控制權的卡（廢棄庫/手牌/hanger）(p.63)
 	final cardsHasNoController = cardsNotHome.filter(card -> {
 		return switch getCardController(ctx, card.id) {
-			case Some(_): false;
-			case _: true;
+			case Some(_):
+				false;
+			case _:
+				true;
 		};
 	});
+	// ver1 （沒使用）
 	// 手牌，hanger中的牌, 直接給它Play的權力
+	// ver2
+	// 手牌，hanger中的牌, 可以使用恆常內文。出牌算恆常內文
 	final cardsInHandAndHanger = cardsHasNoController.filter(card -> {
-		return true;
+		return switch getCardBaSyouAndAssertExist(ctx, card.id) {
+			case Default(_, TeHuTa | Hanger):
+				true;
+			case _:
+				false;
+		}
 	});
 	final playReturn = [
 		for (card in cardsInHandAndHanger) {
 			final responsePlayerId = getBaSyouControllerAndAssertExist(ctx, getCardBaSyouAndAssertExist(ctx, card.id));
 			final runtime:ExecuteRuntime = new DefaultExecuteRuntime(card.id, responsePlayerId);
-			// TODO: text是恆常
-			for (text in getCurrentCardProto(ctx, card.protoId).getTexts(ctx, runtime).filter(text -> true)) {
+			for (text in getCurrentCardProto(ctx, card.protoId).getTexts(ctx, runtime).filter(isContantType)) {
 				{
 					runtime: runtime,
 					text: text
@@ -44,15 +71,18 @@ function getRuntimeText(ctx:Context):Array<{runtime:ExecuteRuntime, text:CardTex
 	});
 	// 倒置G的情況可以使用<>內文
 	final cardsUseG = cardsNotInHandAndHanger.filter(card -> {
-		// 標記為倒置的卡並在配置區
-		return true;
+		return switch getCardBaSyouAndAssertExist(ctx, card.id) {
+			case Default(_, GZone):
+				true;
+			case _:
+				false;
+		}
 	});
 	final specialReturn = [
 		for (card in cardsUseG) {
 			final responsePlayerId = getBaSyouControllerAndAssertExist(ctx, getCardBaSyouAndAssertExist(ctx, card.id));
 			final runtime:ExecuteRuntime = new DefaultExecuteRuntime(card.id, responsePlayerId);
-			// TODO: text是<>
-			for (text in getCurrentCardProto(ctx, card.protoId).getTexts(ctx, runtime).filter(text -> true)) {
+			for (text in getCurrentCardProto(ctx, card.protoId).getTexts(ctx, runtime).filter(text -> text.isSurroundedByArrows)) {
 				{
 					runtime: runtime,
 					text: text
@@ -68,8 +98,7 @@ function getRuntimeText(ctx:Context):Array<{runtime:ExecuteRuntime, text:CardTex
 		for (card in cardsNotUseG) {
 			final responsePlayerId = getBaSyouControllerAndAssertExist(ctx, getCardBaSyouAndAssertExist(ctx, card.id));
 			final runtime:ExecuteRuntime = new DefaultExecuteRuntime(card.id, responsePlayerId);
-			// TODO: text是恆常
-			for (text in getCurrentCardProto(ctx, card.protoId).getTexts(ctx, runtime).filter(text -> true)) {
+			for (text in getCurrentCardProto(ctx, card.protoId).getTexts(ctx, runtime).filter(isContantType)) {
 				{
 					runtime: runtime,
 					text: text

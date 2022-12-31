@@ -14,6 +14,7 @@ import model.ver1.data.RequireImpl;
 class PlayerPlayCard extends CardText {
 	public function new(id:String) {
 		super(id, "カードのプレイ");
+		this.type = Automatic(Constant);
 	}
 
 	public override function getRequires(ctx:Context, runtime:ExecuteRuntime):Array<Require> {

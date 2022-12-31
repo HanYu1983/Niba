@@ -9,6 +9,29 @@ import tool.Table;
 import tool.Helper;
 import model.ver1.game.define.Timing;
 
+//
+// 常駐技能在每次尋問中重新計算，卡片必須在場中
+// 恆常技能在每次尋問中重新計算，無論卡片在哪
+// 起動技能在每次事件發生時，就將符合的起動技能加入block
+
+enum TextTypeAutomaticType {
+	// 常駐
+	Resident;
+	// 起動
+	Trigger;
+	// 恒常
+	Constant;
+}
+
+enum TextType {
+	// 自動型
+	Automatic(type:TextTypeAutomaticType);
+	// 使用型
+	Use;
+	// 特殊型
+	Special;
+}
+
 // Context
 
 typedef PlayerSelection = {
@@ -150,7 +173,9 @@ class CardText implements hxbit.Serializable {
 
 	@:s public var id:String;
 	@:s public var description:String;
-	@:s public var isConstant
+	@:s public var type = Use;
+	// << >>內文
+	@:s public var isSurroundedByArrows = false;
 
 	public function getEffect(ctx:Context, runtime:ExecuteRuntime):Array<MarkEffect> {
 		return [];
