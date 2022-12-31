@@ -18,30 +18,7 @@ private function toCardModel(ctx:Context, card:Card):CardModel {
 class TestModel extends DefaultViewModel {
 	private var game = new Game();
 
-	public function new() {
-		final card1 = new Card("0");
-		card1.protoId = "179003_01A_U_BK008U_black";
-
-		final card2 = new Card("1");
-		card2.protoId = "179003_01A_U_BK008U_black";
-		game.ctx.table.cards[card1.id] = card1;
-		game.ctx.table.cards[card2.id] = card2;
-		trace("============ getGame ============");
-		// game.test();
-		trace(game.ctx);
-
-		trace("============ testMemonto ============");
-		final loadGame = Game.ofMemonto(game.getMemonto());
-		// loadGame.test();
-		trace(loadGame.ctx);
-		trace("=================================");
-		for (key => value in loadGame.ctx.marks) {
-			trace(key);
-			trace(value);
-		}
-		trace("=================================");
-		game = loadGame;
-	}
+	public function new() {}
 
 	public override function getGame():GameModel {
 		final cards = [

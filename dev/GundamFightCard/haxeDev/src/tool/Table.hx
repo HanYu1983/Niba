@@ -43,9 +43,9 @@ function getCardStack(table:Table, cardStackId:String):CardStack {
 function getCardCardStack(table:Table, cardId:String):Option<CardStack> {
 	final findCs = [for (cs in table.cardStacks) cs].filter(cs -> cs.cardIds.contains(cardId));
 	if (findCs.length == 0) {
-		return Some(findCs[0]);
+		return None;
 	}
-	return None;
+	return Some(findCs[0]);
 }
 
 @:nullSafety
