@@ -5,6 +5,7 @@ using Lambda;
 import haxe.ds.Option;
 import tool.Table;
 import model.ver1.game.define.Define;
+import model.ver1.game.define.BaSyou;
 import model.ver1.game.define.ExecuteRuntimeImpl;
 import model.ver1.game.alg.Context;
 import model.ver1.game.alg.CardProto;
@@ -22,39 +23,18 @@ function isContantType(text:CardText) {
 // Runtime
 //
 function getRuntimeText(ctx:Context):Array<{runtime:ExecuteRuntime, text:CardText}> {
-	// 本國捨山以外的卡
-	// final hideCards = [for(cs in ctx.table.cardStacks) cs].filter(cs->{
-	// 	switch getBaSyou(cs.id) {}
-	// })
-	final cardsNotHome = [for (card in ctx.table.cards) card].filter(card -> {
-		return switch getCardBaSyouAndAssertExist(ctx, card.id) {
-			case Default(_, HonGoku | SuteYama):
-				false;
-			case _:
-				true;
-		}
-	});
-	// 沒有控制權的卡（廢棄庫/手牌/hanger）(p.63)
-	final cardsHasNoController = cardsNotHome.filter(card -> {
-		return switch getCardController(ctx, card.id) {
-			case Some(_):
-				false;
-			case _:
-				true;
-		};
-	});
 	// ver1 （沒使用）
 	// 手牌，hanger中的牌, 直接給它Play的權力
 	// ver2
 	// 手牌，hanger中的牌, 可以使用恆常內文。出牌算恆常內文
-	final cardsInHandAndHanger = cardsHasNoController.filter(card -> {
-		return switch getCardBaSyouAndAssertExist(ctx, card.id) {
+	final cardsInHandAndHanger = [for (cs in ctx.table.cardStacks) cs].filter(cs -> {
+		return switch getBaSyou(cs.id) {
 			case Default(_, TeHuTa | Hanger):
 				true;
 			case _:
 				false;
 		}
-	});
+	}).map(cs -> cs.cardIds).fold((c, a) -> a.concat(c), new Array<String>()).map(id->ctx.table.cards[id]);
 	final playReturn = [
 		for (card in cardsInHandAndHanger) {
 			final responsePlayerId = getBaSyouControllerAndAssertExist(ctx, getCardBaSyouAndAssertExist(ctx, card.id));
@@ -67,22 +47,17 @@ function getRuntimeText(ctx:Context):Array<{runtime:ExecuteRuntime, text:CardTex
 			}
 		}
 	];
-	// 手牌，hanger以外的沒有控制中的牌(倒置G，廢棄庫...)
-	final cardsNotInHandAndHanger = cardsHasNoController.filter(card -> {
-		// TODO: 本國以外
-		return cardsInHandAndHanger.contains(card) == false;
-	});
 	// 倒置G的情況可以使用<>內文
-	final cardsUseG = cardsNotInHandAndHanger.filter(card -> {
-		return switch getCardBaSyouAndAssertExist(ctx, card.id) {
+	final cardsInGZone = [for (cs in ctx.table.cardStacks) cs].filter(cs -> {
+		return switch getBaSyou(cs.id) {
 			case Default(_, GZone):
 				true;
 			case _:
 				false;
 		}
-	});
+	}).map(cs -> cs.cardIds).fold((c, a) -> a.concat(c), new Array<String>()).map(id->ctx.table.cards[id]);
 	final specialReturn = [
-		for (card in cardsUseG) {
+		for (card in cardsInGZone) {
 			final responsePlayerId = getBaSyouControllerAndAssertExist(ctx, getCardBaSyouAndAssertExist(ctx, card.id));
 			final runtime:ExecuteRuntime = new DefaultExecuteRuntime(card.id, responsePlayerId);
 			for (text in getCurrentCardProto(ctx, card.protoId).getTexts(ctx, runtime).filter(text -> text.isSurroundedByArrows)) {
@@ -94,11 +69,16 @@ function getRuntimeText(ctx:Context):Array<{runtime:ExecuteRuntime, text:CardTex
 		}
 	];
 	// 廢棄庫可以使用恆常內文
-	final cardsNotUseG = cardsNotInHandAndHanger.filter(card -> {
-		return cardsUseG.contains(card) == false;
-	});
+	final cardsInJunkYard = [for (cs in ctx.table.cardStacks) cs].filter(cs -> {
+		return switch getBaSyou(cs.id) {
+			case Default(_, JunkYard):
+				true;
+			case _:
+				false;
+		}
+	}).map(cs -> cs.cardIds).fold((c, a) -> a.concat(c), new Array<String>()).map(id->ctx.table.cards[id]);
 	final specialReturn2 = [
-		for (card in cardsNotUseG) {
+		for (card in cardsInJunkYard) {
 			final responsePlayerId = getBaSyouControllerAndAssertExist(ctx, getCardBaSyouAndAssertExist(ctx, card.id));
 			final runtime:ExecuteRuntime = new DefaultExecuteRuntime(card.id, responsePlayerId);
 			for (text in getCurrentCardProto(ctx, card.protoId).getTexts(ctx, runtime).filter(isContantType)) {
@@ -109,10 +89,15 @@ function getRuntimeText(ctx:Context):Array<{runtime:ExecuteRuntime, text:CardTex
 			}
 		}
 	];
-	//
-	final cardsHasController = cardsNotHome.filter(card -> {
-		return cardsHasNoController.contains(card) == false;
-	});
+
+	final cardsHasController = [for (cs in ctx.table.cardStacks) cs].filter(cs -> {
+		return switch getBaSyou(cs.id) {
+			case Default(_, kw):
+				isBa(kw);
+			case _:
+				false;
+		}
+	}).map(cs -> cs.cardIds).fold((c, a) -> a.concat(c), new Array<String>()).map(id->ctx.table.cards[id]);
 	// 原始內文
 	final originReturn = [
 		for (card in cardsHasController) {
