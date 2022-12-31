@@ -33,6 +33,20 @@ enum RelativePlayer {
 	Opponent;
 }
 
+// Require
+
+class Require {
+	public function new(id:String, description:String) {
+		this.id = id;
+		this.description = description;
+	}
+
+	public final id:String;
+	public final description:String;
+
+	public function action(ctx:Context, runtime:ExecuteRuntime):Void {}
+}
+
 // Player
 // 實作hxbit.Serializable這個介面後並使用了@:s
 // @:nullSafety就會出錯
@@ -81,6 +95,13 @@ class Block implements hxbit.Serializable {
 	@:s public var isImmediate = false;
 }
 
+// ExecuteRuntime
+
+interface ExecuteRuntime {
+	function getCardId():String;
+	function getResponsePlayerId():String;
+}
+
 // CardText
 
 class CardText implements hxbit.Serializable {
@@ -127,57 +148,7 @@ class Mark implements hxbit.Serializable {
 	public function onEvent(ctx:Context, event:Event):Void {}
 }
 
-// ExecuteRuntime
-
-interface ExecuteRuntime {
-	function getCardId():String;
-	function getResponsePlayerId():String;
-}
-
-class AbstractExecuteRuntime implements ExecuteRuntime {
-	public function new() {}
-
-	public function getCardId():String {
-		throw new haxe.Exception("not support");
-	}
-
-	public function getResponsePlayerId():String {
-		throw new haxe.Exception("not support");
-	}
-}
-
-class SystemExecuteRuntime extends AbstractExecuteRuntime {
-	public function new(responsePlayerId:String) {
-		super();
-		this.responsePlayerId = responsePlayerId;
-	}
-
-	public final responsePlayerId:String;
-
-	public override function getResponsePlayerId():String {
-		return responsePlayerId;
-	}
-}
-
-class DefaultExecuteRuntime extends AbstractExecuteRuntime {
-	public function new(cardId:String, responsePlayerId:String) {
-		super();
-		this.cardId = cardId;
-		this.responsePlayerId = responsePlayerId;
-	}
-
-	public final cardId:String;
-	public final responsePlayerId:String;
-
-	public override function getCardId():String {
-		return cardId;
-	}
-
-	public override function getResponsePlayerId():String {
-		return responsePlayerId;
-	}
-}
-
+// CardProto
 
 class CardProto implements hxbit.Serializable {
 	public function getTexts(ctx:Context, runtime:ExecuteRuntime):Array<CardText> {

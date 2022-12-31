@@ -6,7 +6,6 @@ import haxe.Exception;
 import haxe.EnumTools;
 import model.ver1.game.Define;
 import model.ver1.game.Timing;
-import model.ver1.game.Require;
 import model.ver1.game.Context;
 import model.ver1.alg.Alg;
 
@@ -86,5 +85,27 @@ class RequireGCount extends Require {
 		if (gCount < count) {
 			throw new Exception('g count not enougth: ${gCount} < ${count}');
 		}
+	}
+}
+
+class RequireUserSelect<T> extends Require {
+	public function new(id:String, description:String) {
+		super(id, description);
+	}
+
+	public var tips:Array<T> = [];
+	public var lengthInclude:Array<Int> = [1];
+	public var responsePlayerId = RelativePlayer.You;
+}
+
+class RequireUserSelectCard extends RequireUserSelect<String> {
+	public function new(id:String, description:String) {
+		super(id, description);
+	}
+}
+
+class RequireUserSelectBattlePoint extends RequireUserSelect<BattlePoint> {
+	public function new(id:String, description:String) {
+		super(id, description);
 	}
 }

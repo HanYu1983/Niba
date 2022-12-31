@@ -28987,10 +28987,10 @@ function model_ver1_alg_Alg_isDestroyNow(ctx,cardId,condition) {
 	return false;
 }
 function model_ver1_alg_Alg_removeDestroyEffect(ctx,cardId) {
-	console.log("src/model/ver1/alg/Alg.hx:37:","移除堆疊中的破壞效果");
+	console.log("src/model/ver1/alg/Alg.hx:38:","移除堆疊中的破壞效果");
 }
 function model_ver1_alg_Alg_becomeG(ctx,cardId) {
-	console.log("src/model/ver1/alg/Alg.hx:44:","將自己變成G");
+	console.log("src/model/ver1/alg/Alg.hx:45:","將自己變成G");
 }
 function model_ver1_alg_Alg_getUnitOfSetGroup(ctx,cardId) {
 	return haxe_ds_Option.None;
@@ -29844,7 +29844,7 @@ function model_ver1_data_CardProto_$179001_$01A_$CH_$WT007R_$white_test() {
 		result[i] = { cardId : info.runtime.getCardId(), text : info.text, reqs : info.text.getRequires(ctx,info.runtime)};
 	}
 	var infos = result;
-	console.log("src/model/ver1/data/CardProto_179001_01A_CH_WT007R_white.hx:91:",infos);
+	console.log("src/model/ver1/data/CardProto_179001_01A_CH_WT007R_white.hx:90:",infos);
 	if(infos.length == 0) {
 		throw new haxe_Exception("infos.length == 0");
 	}
@@ -29969,7 +29969,7 @@ function model_ver1_data_CardProto_$179003_$01A_$U_$BK008U_$black_test() {
 		result[i] = { cardId : info.runtime.getCardId(), text : info.text, reqs : info.text.getRequires(ctx,info.runtime)};
 	}
 	var infos = result;
-	console.log("src/model/ver1/data/CardProto_179003_01A_U_BK008U_black.hx:87:",infos);
+	console.log("src/model/ver1/data/CardProto_179003_01A_U_BK008U_black.hx:86:",infos);
 	if(infos.length == 0) {
 		throw new haxe_Exception("infos.length == 0");
 	}
@@ -30084,7 +30084,7 @@ model_ver1_data__$CardProto_$179004_$01A_$CH_$WT009R_$white_Text1_$1.prototype =
 			result[i] = _this[i].id;
 		}
 		var tips = result;
-		var req = new model_ver1_game_RequireUserSelectCard(this.getKey1(),"そのカードのセットグループ以外の自軍ユニット１枚は");
+		var req = new model_ver1_data_RequireUserSelectCard(this.getKey1(),"そのカードのセットグループ以外の自軍ユニット１枚は");
 		req.tips = tips;
 		return [req];
 	}
@@ -30385,32 +30385,32 @@ model_ver1_data_RequirePhase.prototype = $extend(model_ver1_game_Require.prototy
 	}
 	,__class__: model_ver1_data_RequirePhase
 });
-var model_ver1_game_RequireUserSelect = function(id,description) {
+var model_ver1_data_RequireUserSelect = function(id,description) {
 	this.responsePlayerId = model_ver1_game_RelativePlayer.You;
 	this.lengthInclude = [1];
 	this.tips = [];
 	model_ver1_game_Require.call(this,id,description);
 };
-$hxClasses["model.ver1.game.RequireUserSelect"] = model_ver1_game_RequireUserSelect;
-model_ver1_game_RequireUserSelect.__name__ = "model.ver1.game.RequireUserSelect";
-model_ver1_game_RequireUserSelect.__super__ = model_ver1_game_Require;
-model_ver1_game_RequireUserSelect.prototype = $extend(model_ver1_game_Require.prototype,{
+$hxClasses["model.ver1.data.RequireUserSelect"] = model_ver1_data_RequireUserSelect;
+model_ver1_data_RequireUserSelect.__name__ = "model.ver1.data.RequireUserSelect";
+model_ver1_data_RequireUserSelect.__super__ = model_ver1_game_Require;
+model_ver1_data_RequireUserSelect.prototype = $extend(model_ver1_game_Require.prototype,{
 	tips: null
 	,lengthInclude: null
 	,responsePlayerId: null
-	,__class__: model_ver1_game_RequireUserSelect
+	,__class__: model_ver1_data_RequireUserSelect
 });
-var model_ver1_game_RequireUserSelectCard = function(id,description) {
-	model_ver1_game_RequireUserSelect.call(this,id,description);
+var model_ver1_data_RequireUserSelectCard = function(id,description) {
+	model_ver1_data_RequireUserSelect.call(this,id,description);
 };
-$hxClasses["model.ver1.game.RequireUserSelectCard"] = model_ver1_game_RequireUserSelectCard;
-model_ver1_game_RequireUserSelectCard.__name__ = "model.ver1.game.RequireUserSelectCard";
-model_ver1_game_RequireUserSelectCard.__super__ = model_ver1_game_RequireUserSelect;
-model_ver1_game_RequireUserSelectCard.prototype = $extend(model_ver1_game_RequireUserSelect.prototype,{
-	__class__: model_ver1_game_RequireUserSelectCard
+$hxClasses["model.ver1.data.RequireUserSelectCard"] = model_ver1_data_RequireUserSelectCard;
+model_ver1_data_RequireUserSelectCard.__name__ = "model.ver1.data.RequireUserSelectCard";
+model_ver1_data_RequireUserSelectCard.__super__ = model_ver1_data_RequireUserSelect;
+model_ver1_data_RequireUserSelectCard.prototype = $extend(model_ver1_data_RequireUserSelect.prototype,{
+	__class__: model_ver1_data_RequireUserSelectCard
 });
 var model_ver1_data_RequireGTap = function(id,colors,ctx,runtime) {
-	model_ver1_game_RequireUserSelectCard.call(this,id,"RequireGTap");
+	model_ver1_data_RequireUserSelectCard.call(this,id,"RequireGTap");
 	var responsePlayerId = runtime.getResponsePlayerId();
 	var gCardIds = model_ver1_alg_Alg_getPlayerGCardIds(ctx,responsePlayerId);
 	var _g = [];
@@ -30436,8 +30436,8 @@ var model_ver1_data_RequireGTap = function(id,colors,ctx,runtime) {
 };
 $hxClasses["model.ver1.data.RequireGTap"] = model_ver1_data_RequireGTap;
 model_ver1_data_RequireGTap.__name__ = "model.ver1.data.RequireGTap";
-model_ver1_data_RequireGTap.__super__ = model_ver1_game_RequireUserSelectCard;
-model_ver1_data_RequireGTap.prototype = $extend(model_ver1_game_RequireUserSelectCard.prototype,{
+model_ver1_data_RequireGTap.__super__ = model_ver1_data_RequireUserSelectCard;
+model_ver1_data_RequireGTap.prototype = $extend(model_ver1_data_RequireUserSelectCard.prototype,{
 	action: function(ctx,runtime) {
 		var selectIds = ctx.memory.playerSelection.cardIds.h[this.id];
 		if(selectIds == null) {
@@ -30490,6 +30490,15 @@ model_ver1_data_RequireGCount.prototype = $extend(model_ver1_game_Require.protot
 		}
 	}
 	,__class__: model_ver1_data_RequireGCount
+});
+var model_ver1_data_RequireUserSelectBattlePoint = function(id,description) {
+	model_ver1_data_RequireUserSelect.call(this,id,description);
+};
+$hxClasses["model.ver1.data.RequireUserSelectBattlePoint"] = model_ver1_data_RequireUserSelectBattlePoint;
+model_ver1_data_RequireUserSelectBattlePoint.__name__ = "model.ver1.data.RequireUserSelectBattlePoint";
+model_ver1_data_RequireUserSelectBattlePoint.__super__ = model_ver1_data_RequireUserSelect;
+model_ver1_data_RequireUserSelectBattlePoint.prototype = $extend(model_ver1_data_RequireUserSelect.prototype,{
+	__class__: model_ver1_data_RequireUserSelectBattlePoint
 });
 var model_ver1_game_Context = function() {
 	this.__uid = hxbit_Serializer.SEQ << 24 | ++hxbit_Serializer.UID;
@@ -31302,12 +31311,6 @@ model_ver1_game_Block.prototype = {
 	}
 	,__class__: model_ver1_game_Block
 };
-var model_ver1_game_MarkEffect = $hxEnums["model.ver1.game.MarkEffect"] = { __ename__:true,__constructs__:null
-	,AddBattlePoint: ($_=function(cardId,battlePoint) { return {_hx_index:0,cardId:cardId,battlePoint:battlePoint,__enum__:"model.ver1.game.MarkEffect",toString:$estr}; },$_._hx_name="AddBattlePoint",$_.__params__ = ["cardId","battlePoint"],$_)
-	,AttackSpeed: ($_=function(cardId,speed) { return {_hx_index:1,cardId:cardId,speed:speed,__enum__:"model.ver1.game.MarkEffect",toString:$estr}; },$_._hx_name="AttackSpeed",$_.__params__ = ["cardId","speed"],$_)
-	,AddText: ($_=function(cardID,text) { return {_hx_index:2,cardID:cardID,text:text,__enum__:"model.ver1.game.MarkEffect",toString:$estr}; },$_._hx_name="AddText",$_.__params__ = ["cardID","text"],$_)
-};
-model_ver1_game_MarkEffect.__constructs__ = [model_ver1_game_MarkEffect.AddBattlePoint,model_ver1_game_MarkEffect.AttackSpeed,model_ver1_game_MarkEffect.AddText];
 var model_ver1_game_ExecuteRuntime = function() { };
 $hxClasses["model.ver1.game.ExecuteRuntime"] = model_ver1_game_ExecuteRuntime;
 model_ver1_game_ExecuteRuntime.__name__ = "model.ver1.game.ExecuteRuntime";
@@ -31317,6 +31320,12 @@ model_ver1_game_ExecuteRuntime.prototype = {
 	,getResponsePlayerId: null
 	,__class__: model_ver1_game_ExecuteRuntime
 };
+var model_ver1_game_MarkEffect = $hxEnums["model.ver1.game.MarkEffect"] = { __ename__:true,__constructs__:null
+	,AddBattlePoint: ($_=function(cardId,battlePoint) { return {_hx_index:0,cardId:cardId,battlePoint:battlePoint,__enum__:"model.ver1.game.MarkEffect",toString:$estr}; },$_._hx_name="AddBattlePoint",$_.__params__ = ["cardId","battlePoint"],$_)
+	,AttackSpeed: ($_=function(cardId,speed) { return {_hx_index:1,cardId:cardId,speed:speed,__enum__:"model.ver1.game.MarkEffect",toString:$estr}; },$_._hx_name="AttackSpeed",$_.__params__ = ["cardId","speed"],$_)
+	,AddText: ($_=function(cardID,text) { return {_hx_index:2,cardID:cardID,text:text,__enum__:"model.ver1.game.MarkEffect",toString:$estr}; },$_._hx_name="AddText",$_.__params__ = ["cardID","text"],$_)
+};
+model_ver1_game_MarkEffect.__constructs__ = [model_ver1_game_MarkEffect.AddBattlePoint,model_ver1_game_MarkEffect.AttackSpeed,model_ver1_game_MarkEffect.AddText];
 var model_ver1_game_AbstractExecuteRuntime = function() {
 };
 $hxClasses["model.ver1.game.AbstractExecuteRuntime"] = model_ver1_game_AbstractExecuteRuntime;
@@ -31407,15 +31416,6 @@ model_ver1_game_Game.prototype = {
 	}
 	,__class__: model_ver1_game_Game
 };
-var model_ver1_game_RequireUserSelectBattlePoint = function(id,description) {
-	model_ver1_game_RequireUserSelect.call(this,id,description);
-};
-$hxClasses["model.ver1.game.RequireUserSelectBattlePoint"] = model_ver1_game_RequireUserSelectBattlePoint;
-model_ver1_game_RequireUserSelectBattlePoint.__name__ = "model.ver1.game.RequireUserSelectBattlePoint";
-model_ver1_game_RequireUserSelectBattlePoint.__super__ = model_ver1_game_RequireUserSelect;
-model_ver1_game_RequireUserSelectBattlePoint.prototype = $extend(model_ver1_game_RequireUserSelect.prototype,{
-	__class__: model_ver1_game_RequireUserSelectBattlePoint
-});
 var model_ver1_game_TurnKeyword = $hxEnums["model.ver1.game.TurnKeyword"] = { __ename__:true,__constructs__:null
 	,You: {_hx_name:"You",_hx_index:0,__enum__:"model.ver1.game.TurnKeyword",toString:$estr}
 	,Opponent: {_hx_name:"Opponent",_hx_index:1,__enum__:"model.ver1.game.TurnKeyword",toString:$estr}
