@@ -2,6 +2,7 @@ package tool;
 
 import haxe.ds.Option;
 
+// Option<String> or 泛型不能被Serializable
 class Card implements hxbit.Serializable {
 	public function new(id:String) {
 		this.id = id;
@@ -11,8 +12,8 @@ class Card implements hxbit.Serializable {
 	@:s public var isFaceUp = false;
 	@:s public var isTap = false;
 	@:s public var isReverse = false;
-	@:s public var protoId = "unknown";
-	@:s public var owner = "unknown";
+	@:s public var protoId:Null<String>;
+	@:s public var owner:Null<String>;
 }
 
 class CardStack implements hxbit.Serializable {
@@ -54,7 +55,7 @@ function getCard(table:Table, cardId:String):Card {
 function getCardStack(table:Table, cardStackId:String):CardStack {
 	final ret = table.cardStacks[cardStackId];
 	if (ret == null) {
-		throw new haxe.Exception("cardStack not found");
+		throw new haxe.Exception('cardStack not found: ${cardStackId}');
 	}
 	return ret;
 }

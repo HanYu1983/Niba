@@ -77,15 +77,18 @@ private class Wrapper implements hxbit.Serializable {
 }
 
 function getCardStackId(obj:BaSyou):String {
-	final wrapper = new Wrapper();
-	wrapper.hold = obj;
-	return getMemonto(wrapper);
+	return switch obj {
+		case Default(playerId, kw):
+			return '${playerId}_${EnumValueTools.getName(kw)}';
+	}
 }
 
 function getBaSyou(cardStackId:String):BaSyou {
 	try {
-		final wrapper = ofMemonto(cardStackId, Wrapper);
-		return cast wrapper.hold;
+		final pair = cardStackId.split("_");
+		final playerId = pair[0];
+		final kw = EnumTools.createByName(BaSyouKeyword, pair[1]);
+		return Default(playerId, kw);
 	} catch (e) {
 		throw new haxe.Exception('getBaSyou error: ${cardStackId} not right; ${e}');
 	}
@@ -94,6 +97,7 @@ function getBaSyou(cardStackId:String):BaSyou {
 function test() {
 	final b1 = BaSyou.Default("0", HonGoku);
 	final csId = getCardStackId(b1);
+	trace(csId);
 	final b2 = getBaSyou(csId);
 	if (EnumValueTools.equals(b1, b2) == false) {
 		throw new haxe.Exception("b1 must equals b2");
@@ -103,5 +107,10 @@ function test() {
 		throw new haxe.Exception("must throw error");
 	} catch (e) {
 		// success
+	}
+	final b3 = BaSyou.Default("0", HonGoku);
+	final csId3 = getCardStackId(b3);
+	if (csId != csId3) {
+		throw "csId != csId3";
 	}
 }

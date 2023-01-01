@@ -13,10 +13,20 @@ import model.ver1.game.alg.CardProto;
 //
 // General
 //
-
 // 持ち主の手札に移す
-function returnToOwnerHand(ctx:Context, cardId:String):Void{
-	trace("持ち主の手札に移す");
+function returnToOwnerHand(ctx:Context, cardId:String):Void {
+	final from = getCardBaSyouAndAssertExist(ctx, cardId);
+	final to = BaSyou.Default(getCardOwner(ctx, cardId), TeHuTa);
+	moveCard(ctx, cardId, from, to);
+}
+
+@:nullSafety
+function getCardOwner(ctx:Context, cardId:String):String {
+	final owner = getCard(ctx.table, cardId).owner;
+	if (owner == null) {
+		throw "owner not set yet";
+	}
+	return owner;
 }
 
 function becomeG(ctx:Context, cardId:String):Void {
@@ -82,12 +92,18 @@ function getCardEntityCategory(ctx:Context, cardId:String):Option<CardEntityCate
 	}
 }
 
+// Selection
+
 function getPlayerSelectionCardId(ctx:Context, key:String):Array<String> {
 	final selection = ctx.memory.playerSelection.cardIds[key];
 	if (selection == null) {
 		throw new haxe.Exception("selection not found");
 	}
 	return selection;
+}
+
+function setPlayerSelectionCardId(ctx:Context, key:String, values:Array<String>):Void {
+	ctx.memory.playerSelection.cardIds[key] = values;
 }
 
 // p.63
