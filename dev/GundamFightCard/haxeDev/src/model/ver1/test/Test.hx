@@ -17,6 +17,43 @@ function test() {
 	model.ver1.game.define.BaSyou.test();
 	model.ver1.test.Test_getRuntimeText.test();
 	test_getMarkEffects();
+	test_constantText();
+}
+
+function test_constantText() {
+	final playerId = "0";
+	final ctx = new Context();
+	registerCardProto(ctx, "AddTextCardProto", new AddTextCardProto());
+	registerCardProto(ctx, "OnlyConstentTextCardProto", new OnlyConstentTextCardProto());
+	final card = new Card("0");
+	card.protoId = "AddTextCardProto";
+	final runtime = new DefaultExecuteRuntime(card.id, playerId);
+	var texts = getCurrentCardProto(ctx, card.protoId).getTexts(ctx, runtime);
+	if (texts.length != 1) {
+		throw "確定卡的內文有1個";
+	}
+	switch texts[0].type {
+		case Automatic(Constant):
+			throw "並且不是恆常能力";
+		case _:
+	}
+	addCard(ctx.table, getCardStackId(Default("0", TeHuTa)), card);
+	if (getRuntimeText(ctx).length != 0) {
+		throw new haxe.Exception("但找不到那個內文，因為在手牌中只有恆常能力可發動");
+	}
+	card.protoId = "OnlyConstentTextCardProto";
+	texts = getCurrentCardProto(ctx, card.protoId).getTexts(ctx, runtime);
+	if (texts.length != 1) {
+		throw "確定卡的內文有1個";
+	}
+	switch texts[0].type {
+		case Automatic(Constant):
+		case _:
+			throw "並且是恆常能力";
+	}
+	if (getRuntimeText(ctx).length != 1) {
+		throw new haxe.Exception("必須找到1個恆常能力");
+	}
 }
 
 function test_getMarkEffects() {

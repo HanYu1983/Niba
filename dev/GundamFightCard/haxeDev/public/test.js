@@ -7672,6 +7672,46 @@ function model_ver1_test_Test_test() {
 	model_ver1_game_define_BaSyou_test();
 	model_ver1_test_Test_$getRuntimeText_test();
 	model_ver1_test_Test_test_getMarkEffects();
+	model_ver1_test_Test_test_constantText();
+}
+function model_ver1_test_Test_test_constantText() {
+	var playerId = "0";
+	var ctx = new model_ver1_game_define_Context();
+	model_ver1_game_alg_CardProto_registerCardProto(ctx,"AddTextCardProto",new model_ver1_test_common_AddTextCardProto());
+	model_ver1_game_alg_CardProto_registerCardProto(ctx,"OnlyConstentTextCardProto",new model_ver1_test_common_OnlyConstentTextCardProto());
+	var card = new tool_Card("0");
+	card.protoId = "AddTextCardProto";
+	var runtime = new model_ver1_game_define_DefaultExecuteRuntime(card.id,playerId);
+	var texts = model_ver1_game_alg_CardProto_getCurrentCardProto(ctx,card.protoId).getTexts(ctx,runtime);
+	if(texts.length != 1) {
+		throw haxe_Exception.thrown("確定卡的內文有1個");
+	}
+	var _g = texts[0].type;
+	if(_g._hx_index == 0) {
+		if(_g.type._hx_index == 2) {
+			throw haxe_Exception.thrown("並且不是恆常能力");
+		}
+	}
+	tool_Table_addCard(ctx.table,model_ver1_game_define_BaSyou_getCardStackId(model_ver1_game_define_BaSyou.Default("0",model_ver1_game_define_BaSyouKeyword.TeHuTa)),card);
+	if(model_ver1_game_alg_Runtime_getRuntimeText(ctx).length != 0) {
+		throw new haxe_Exception("但找不到那個內文，因為在手牌中只有恆常能力可發動");
+	}
+	card.protoId = "OnlyConstentTextCardProto";
+	texts = model_ver1_game_alg_CardProto_getCurrentCardProto(ctx,card.protoId).getTexts(ctx,runtime);
+	if(texts.length != 1) {
+		throw haxe_Exception.thrown("確定卡的內文有1個");
+	}
+	var _g = texts[0].type;
+	if(_g._hx_index == 0) {
+		if(_g.type._hx_index != 2) {
+			throw haxe_Exception.thrown("並且是恆常能力");
+		}
+	} else {
+		throw haxe_Exception.thrown("並且是恆常能力");
+	}
+	if(model_ver1_game_alg_Runtime_getRuntimeText(ctx).length != 1) {
+		throw new haxe_Exception("必須找到1個恆常能力");
+	}
 }
 function model_ver1_test_Test_test_getMarkEffects() {
 	var ctx = new model_ver1_game_define_Context();
@@ -7721,18 +7761,6 @@ function model_ver1_test_Test_$getRuntimeText_test() {
 	model_ver1_test_Test_$getRuntimeText_test_getRuntimeText1();
 	model_ver1_test_Test_$getRuntimeText_test_getRuntimeText2();
 }
-var model_ver1_test_common_EmptyText = function(id) {
-	model_ver1_game_define_CardText.call(this,id,"EmptyText");
-};
-$hxClasses["model.ver1.test.common.EmptyText"] = model_ver1_test_common_EmptyText;
-model_ver1_test_common_EmptyText.__name__ = "model.ver1.test.common.EmptyText";
-model_ver1_test_common_EmptyText.__super__ = model_ver1_game_define_CardText;
-model_ver1_test_common_EmptyText.prototype = $extend(model_ver1_game_define_CardText.prototype,{
-	getCLID: function() {
-		return model_ver1_test_common_EmptyText.__clid;
-	}
-	,__class__: model_ver1_test_common_EmptyText
-});
 var model_ver1_test_common_OnlyEmptyTextCardProto = function() {
 	model_ver1_game_define_CardProto.call(this);
 };
@@ -7742,7 +7770,7 @@ model_ver1_test_common_OnlyEmptyTextCardProto.__super__ = model_ver1_game_define
 model_ver1_test_common_OnlyEmptyTextCardProto.prototype = $extend(model_ver1_game_define_CardProto.prototype,{
 	getTexts: function(ctx,runtime) {
 		var thisCardId = runtime.getCardId();
-		return [new model_ver1_test_common_EmptyText("" + thisCardId + "_TestText")];
+		return [new model_ver1_game_define_CardText("" + thisCardId + "_CardText","")];
 	}
 	,getCLID: function() {
 		return model_ver1_test_common_OnlyEmptyTextCardProto.__clid;
@@ -7758,7 +7786,7 @@ model_ver1_test_common_AddOneTextText.__super__ = model_ver1_game_define_CardTex
 model_ver1_test_common_AddOneTextText.prototype = $extend(model_ver1_game_define_CardText.prototype,{
 	getEffect: function(ctx,runtime) {
 		var thisCardId = runtime.getCardId();
-		return [model_ver1_game_define_MarkEffect.AddText(thisCardId,new model_ver1_test_common_EmptyText("" + thisCardId + "_EmptyText"))];
+		return [model_ver1_game_define_MarkEffect.AddText(thisCardId,new model_ver1_game_define_CardText("" + thisCardId + "_EmptyText",""))];
 	}
 	,getCLID: function() {
 		return model_ver1_test_common_AddOneTextText.__clid;
@@ -7780,6 +7808,24 @@ model_ver1_test_common_AddTextCardProto.prototype = $extend(model_ver1_game_defi
 		return model_ver1_test_common_AddTextCardProto.__clid;
 	}
 	,__class__: model_ver1_test_common_AddTextCardProto
+});
+var model_ver1_test_common_OnlyConstentTextCardProto = function() {
+	model_ver1_game_define_CardProto.call(this);
+};
+$hxClasses["model.ver1.test.common.OnlyConstentTextCardProto"] = model_ver1_test_common_OnlyConstentTextCardProto;
+model_ver1_test_common_OnlyConstentTextCardProto.__name__ = "model.ver1.test.common.OnlyConstentTextCardProto";
+model_ver1_test_common_OnlyConstentTextCardProto.__super__ = model_ver1_game_define_CardProto;
+model_ver1_test_common_OnlyConstentTextCardProto.prototype = $extend(model_ver1_game_define_CardProto.prototype,{
+	getTexts: function(ctx,runtime) {
+		var thisCardId = runtime.getCardId();
+		var text = new model_ver1_game_define_CardText("" + thisCardId + "_TestText","");
+		text.type = model_ver1_game_define_TextType.Automatic(model_ver1_game_define_TextTypeAutomaticType.Constant);
+		return [text];
+	}
+	,getCLID: function() {
+		return model_ver1_test_common_OnlyConstentTextCardProto.__clid;
+	}
+	,__class__: model_ver1_test_common_OnlyConstentTextCardProto
 });
 function tool_Helper_getMemonto(obj) {
 	var s = new hxbit_Serializer();
@@ -8366,10 +8412,10 @@ model_ver1_game_define_Context.__clid = hxbit_Serializer.registerClass(model_ver
 model_ver1_game_define_Block.__clid = hxbit_Serializer.registerClass(model_ver1_game_define_Block);
 model_ver1_game_define_EnterFieldMark.__clid = hxbit_Serializer.registerClass(model_ver1_game_define_EnterFieldMark);
 var model_ver1_game_define_Timing_TIMINGS = [model_ver1_game_define_Timing.Default(model_ver1_game_define_PhaseKeyword.Reroll,haxe_ds_Option.None,model_ver1_game_define_TimingKeyword.Start),model_ver1_game_define_Timing.Default(model_ver1_game_define_PhaseKeyword.Reroll,haxe_ds_Option.None,model_ver1_game_define_TimingKeyword.Rule),model_ver1_game_define_Timing.Default(model_ver1_game_define_PhaseKeyword.Reroll,haxe_ds_Option.None,model_ver1_game_define_TimingKeyword.Free2),model_ver1_game_define_Timing.Default(model_ver1_game_define_PhaseKeyword.Reroll,haxe_ds_Option.None,model_ver1_game_define_TimingKeyword.End),model_ver1_game_define_Timing.Default(model_ver1_game_define_PhaseKeyword.Draw,haxe_ds_Option.None,model_ver1_game_define_TimingKeyword.Start),model_ver1_game_define_Timing.Default(model_ver1_game_define_PhaseKeyword.Draw,haxe_ds_Option.None,model_ver1_game_define_TimingKeyword.Free1),model_ver1_game_define_Timing.Default(model_ver1_game_define_PhaseKeyword.Draw,haxe_ds_Option.None,model_ver1_game_define_TimingKeyword.Rule),model_ver1_game_define_Timing.Default(model_ver1_game_define_PhaseKeyword.Draw,haxe_ds_Option.None,model_ver1_game_define_TimingKeyword.Free2),model_ver1_game_define_Timing.Default(model_ver1_game_define_PhaseKeyword.Draw,haxe_ds_Option.None,model_ver1_game_define_TimingKeyword.End),model_ver1_game_define_Timing.Default(model_ver1_game_define_PhaseKeyword.Maintenance,haxe_ds_Option.None,model_ver1_game_define_TimingKeyword.Start),model_ver1_game_define_Timing.Default(model_ver1_game_define_PhaseKeyword.Maintenance,haxe_ds_Option.None,model_ver1_game_define_TimingKeyword.Free1),model_ver1_game_define_Timing.Default(model_ver1_game_define_PhaseKeyword.Maintenance,haxe_ds_Option.None,model_ver1_game_define_TimingKeyword.End),model_ver1_game_define_Timing.Default(model_ver1_game_define_PhaseKeyword.Battle,haxe_ds_Option.Some(model_ver1_game_define_StepKeyword.Attack),model_ver1_game_define_TimingKeyword.Start),model_ver1_game_define_Timing.Default(model_ver1_game_define_PhaseKeyword.Battle,haxe_ds_Option.Some(model_ver1_game_define_StepKeyword.Attack),model_ver1_game_define_TimingKeyword.Free1),model_ver1_game_define_Timing.Default(model_ver1_game_define_PhaseKeyword.Battle,haxe_ds_Option.Some(model_ver1_game_define_StepKeyword.Attack),model_ver1_game_define_TimingKeyword.Rule),model_ver1_game_define_Timing.Default(model_ver1_game_define_PhaseKeyword.Battle,haxe_ds_Option.Some(model_ver1_game_define_StepKeyword.Attack),model_ver1_game_define_TimingKeyword.Free2),model_ver1_game_define_Timing.Default(model_ver1_game_define_PhaseKeyword.Battle,haxe_ds_Option.Some(model_ver1_game_define_StepKeyword.Attack),model_ver1_game_define_TimingKeyword.End),model_ver1_game_define_Timing.Default(model_ver1_game_define_PhaseKeyword.Battle,haxe_ds_Option.Some(model_ver1_game_define_StepKeyword.Defense),model_ver1_game_define_TimingKeyword.Start),model_ver1_game_define_Timing.Default(model_ver1_game_define_PhaseKeyword.Battle,haxe_ds_Option.Some(model_ver1_game_define_StepKeyword.Defense),model_ver1_game_define_TimingKeyword.Free1),model_ver1_game_define_Timing.Default(model_ver1_game_define_PhaseKeyword.Battle,haxe_ds_Option.Some(model_ver1_game_define_StepKeyword.Defense),model_ver1_game_define_TimingKeyword.Rule),model_ver1_game_define_Timing.Default(model_ver1_game_define_PhaseKeyword.Battle,haxe_ds_Option.Some(model_ver1_game_define_StepKeyword.Defense),model_ver1_game_define_TimingKeyword.Free2),model_ver1_game_define_Timing.Default(model_ver1_game_define_PhaseKeyword.Battle,haxe_ds_Option.Some(model_ver1_game_define_StepKeyword.Defense),model_ver1_game_define_TimingKeyword.End),model_ver1_game_define_Timing.Default(model_ver1_game_define_PhaseKeyword.Battle,haxe_ds_Option.Some(model_ver1_game_define_StepKeyword.DamageChecking),model_ver1_game_define_TimingKeyword.Start),model_ver1_game_define_Timing.Default(model_ver1_game_define_PhaseKeyword.Battle,haxe_ds_Option.Some(model_ver1_game_define_StepKeyword.DamageChecking),model_ver1_game_define_TimingKeyword.Free1),model_ver1_game_define_Timing.Default(model_ver1_game_define_PhaseKeyword.Battle,haxe_ds_Option.Some(model_ver1_game_define_StepKeyword.DamageChecking),model_ver1_game_define_TimingKeyword.Rule),model_ver1_game_define_Timing.Default(model_ver1_game_define_PhaseKeyword.Battle,haxe_ds_Option.Some(model_ver1_game_define_StepKeyword.DamageChecking),model_ver1_game_define_TimingKeyword.Free2),model_ver1_game_define_Timing.Default(model_ver1_game_define_PhaseKeyword.Battle,haxe_ds_Option.Some(model_ver1_game_define_StepKeyword.DamageChecking),model_ver1_game_define_TimingKeyword.End),model_ver1_game_define_Timing.Default(model_ver1_game_define_PhaseKeyword.Battle,haxe_ds_Option.Some(model_ver1_game_define_StepKeyword.Return),model_ver1_game_define_TimingKeyword.Start),model_ver1_game_define_Timing.Default(model_ver1_game_define_PhaseKeyword.Battle,haxe_ds_Option.Some(model_ver1_game_define_StepKeyword.Return),model_ver1_game_define_TimingKeyword.Free1),model_ver1_game_define_Timing.Default(model_ver1_game_define_PhaseKeyword.Battle,haxe_ds_Option.Some(model_ver1_game_define_StepKeyword.Return),model_ver1_game_define_TimingKeyword.Rule),model_ver1_game_define_Timing.Default(model_ver1_game_define_PhaseKeyword.Battle,haxe_ds_Option.Some(model_ver1_game_define_StepKeyword.Return),model_ver1_game_define_TimingKeyword.Free2),model_ver1_game_define_Timing.Default(model_ver1_game_define_PhaseKeyword.Battle,haxe_ds_Option.Some(model_ver1_game_define_StepKeyword.End),model_ver1_game_define_TimingKeyword.DamageReset),model_ver1_game_define_Timing.Default(model_ver1_game_define_PhaseKeyword.Battle,haxe_ds_Option.Some(model_ver1_game_define_StepKeyword.End),model_ver1_game_define_TimingKeyword.ResolveEffect),model_ver1_game_define_Timing.Default(model_ver1_game_define_PhaseKeyword.Battle,haxe_ds_Option.Some(model_ver1_game_define_StepKeyword.End),model_ver1_game_define_TimingKeyword.AdjustHand),model_ver1_game_define_Timing.Default(model_ver1_game_define_PhaseKeyword.Battle,haxe_ds_Option.Some(model_ver1_game_define_StepKeyword.End),model_ver1_game_define_TimingKeyword.TurnEnd)];
-model_ver1_test_common_EmptyText.__clid = hxbit_Serializer.registerClass(model_ver1_test_common_EmptyText);
 model_ver1_test_common_OnlyEmptyTextCardProto.__clid = hxbit_Serializer.registerClass(model_ver1_test_common_OnlyEmptyTextCardProto);
 model_ver1_test_common_AddOneTextText.__clid = hxbit_Serializer.registerClass(model_ver1_test_common_AddOneTextText);
 model_ver1_test_common_AddTextCardProto.__clid = hxbit_Serializer.registerClass(model_ver1_test_common_AddTextCardProto);
+model_ver1_test_common_OnlyConstentTextCardProto.__clid = hxbit_Serializer.registerClass(model_ver1_test_common_OnlyConstentTextCardProto);
 tool_Card.__clid = hxbit_Serializer.registerClass(tool_Card);
 tool_CardStack.__clid = hxbit_Serializer.registerClass(tool_CardStack);
 tool_Table.__clid = hxbit_Serializer.registerClass(tool_Table);
