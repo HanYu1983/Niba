@@ -8,10 +8,17 @@ import model.ver1.game.define.Define;
 import model.ver1.game.define.BaSyou;
 import model.ver1.game.define.ExecuteRuntimeImpl;
 import model.ver1.game.alg.Runtime;
+import model.ver1.game.alg.CardProto;
 
 //
 // General
 //
+
+// 持ち主の手札に移す
+function returnToOwnerHand(ctx:Context, cardId:String):Void{
+	trace("持ち主の手札に移す");
+}
+
 function becomeG(ctx:Context, cardId:String):Void {
 	trace("將自己變成G");
 }
@@ -21,7 +28,7 @@ function getUnitOfSetGroup(ctx:Context, cardId:String):Option<String> {
 }
 
 function tapCard(ctx:Context, cardId:String):Void {
-	final card = getCard(ctx, cardId);
+	final card = getCard(ctx.table, cardId);
 	if (card.isTap) {
 		throw new haxe.Exception("already tap");
 	}
@@ -51,7 +58,28 @@ function sendEvent(ctx:Context, evt:Event):Void {
 //
 
 function getCardType(ctx:Context, cardId:String):CardCategory {
-	return Unit;
+	final proto = getCurrentCardProto(ctx, getCard(ctx.table, cardId).protoId);
+	return proto.category;
+}
+
+function getCardEntityCategory(ctx:Context, cardId:String):Option<CardEntityCategory> {
+	return switch getCardBaSyouAndAssertExist(ctx, cardId) {
+		case Default(_, GZone):
+			Some(G);
+		case Default(_, kw) if (isBa(kw)):
+			switch getCardType(ctx, cardId) {
+				case Unit:
+					Some(Unit);
+				case Operation | OperationUnit:
+					Some(Operation);
+				case Character:
+					Some(Character);
+				case _:
+					throw '不知到為什麼在這裡:${kw}:${cardId}';
+			}
+		case _:
+			None;
+	}
 }
 
 function getPlayerSelectionCardId(ctx:Context, key:String):Array<String> {
@@ -128,15 +156,6 @@ function getCardSetGroupCardIds(ctx:Context, cardId:String):Array<String> {
 	return [];
 }
 
-@:nullSafety
-function getCard(ctx:Context, cardId:String):Card {
-	final card = ctx.table.cards[cardId];
-	if (card == null) {
-		throw new haxe.Exception('card not found: ${cardId}');
-	}
-	return card;
-}
-
 // (p.63) 自軍カードが
 function isMyCard(ctx:Context, masterCardId:String, slaveCardId:String):Bool {
 	return switch [getCardController(ctx, masterCardId), getCardController(ctx, slaveCardId)] {
@@ -145,6 +164,33 @@ function isMyCard(ctx:Context, masterCardId:String, slaveCardId:String):Bool {
 		case _:
 			false;
 	}
+}
+
+function isOpponentsCard(ctx:Context, masterCardId:String, slaveCardId:String):Bool {
+	return switch [getCardController(ctx, masterCardId), getCardController(ctx, slaveCardId)] {
+		case [Some(c1), Some(c2)] if (c1 != c2):
+			true;
+		case _:
+			false;
+	}
+}
+
+function getEnterFieldThisTurnCardIds(ctx:Context):Array<String> {
+	return getMarkEffects(ctx).filter(e -> {
+		return switch e {
+			case EnterFieldThisTurn(_):
+				true;
+			case _:
+				false;
+		}
+	}).map(e -> {
+		return switch e {
+			case EnterFieldThisTurn(cardId):
+				cardId;
+			case _:
+				throw "should not go here";
+		}
+	});
 }
 
 // 常駐增強內文

@@ -11,6 +11,7 @@ import model.ver1.game.alg.Context;
 import model.ver1.game.alg.CardProto;
 import model.ver1.game.alg.Runtime;
 import model.ver1.test.common.Common;
+import model.ver1.data.CardProto_179030_11E_U_VT186R_purple;
 
 function test() {
 	model.ver1.game.Game.test();

@@ -91,6 +91,13 @@ enum CardCategory {
 	Ace;
 }
 
+enum CardEntityCategory {
+	Unit;
+	Character;
+	Operation;
+	G;
+}
+
 enum GColor {
 	Red;
 	Black;
@@ -144,7 +151,7 @@ enum MarkEffect {
 	AddBattlePoint(cardId:String, battlePoint:BattlePoint);
 	AttackSpeed(cardId:String, speed:Int);
 	AddText(cardId:String, text:CardText);
-	EnterField(cardId:String);
+	EnterFieldThisTurn(cardId:String);
 }
 
 class Mark implements hxbit.Serializable {
@@ -170,7 +177,7 @@ class EnterFieldMark extends Mark {
 	@:s public var cardId:String;
 
 	public override function getEffect(ctx:Context):Array<MarkEffect> {
-		return [EnterField(this.cardId)];
+		return [EnterFieldThisTurn(this.cardId)];
 	}
 
 	public override function onEvent(ctx:Context, event:Event):Void {
@@ -217,6 +224,10 @@ class CardText implements hxbit.Serializable {
 	// << >>內文
 	@:s public var isSurroundedByArrows = false;
 
+	private function getSubKey(v:Int) {
+		return '${id}_${v}';
+	}
+
 	public function getEffect(ctx:Context, runtime:ExecuteRuntime):Array<MarkEffect> {
 		return [];
 	}
@@ -233,6 +244,8 @@ class CardText implements hxbit.Serializable {
 // CardProto
 
 class CardProto implements hxbit.Serializable {
+	public var category = CardCategory.Unit;
+
 	public function getTexts(ctx:Context, runtime:ExecuteRuntime):Array<CardText> {
 		return [];
 	}

@@ -42,6 +42,14 @@ function addCard(table:Table, cardStackId:String, card:Card):Void {
 	table.cardStacks[cardStackId].cardIds.push(card.id);
 }
 
+function getCard(table:Table, cardId:String):Card {
+	final card = table.cards[cardId];
+	if (card == null) {
+		throw new haxe.Exception('card not found: ${cardId}');
+	}
+	return card;
+}
+
 @:nullSafety
 function getCardStack(table:Table, cardStackId:String):CardStack {
 	final ret = table.cardStacks[cardStackId];
