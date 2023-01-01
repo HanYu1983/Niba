@@ -9,30 +9,31 @@ import tool.Table;
 import tool.Helper;
 import model.ver1.game.define.Timing;
 
-//
-// 常駐技能在每次尋問中重新計算，卡片必須在場中
-// 恆常技能在每次尋問中重新計算，無論卡片在哪
-// 起動技能在每次事件發生時，就將符合的起動技能加入block
-
-enum TextTypeAutomaticType {
-	// 常駐
-	Resident;
-	// 起動
-	Trigger;
-	// 恒常
-	Constant;
-}
-
-enum TextType {
-	// 自動型
-	Automatic(type:TextTypeAutomaticType);
-	// 使用型
-	Use;
-	// 特殊型
-	Special;
-}
-
 // Context
+// Player
+// 實作hxbit.Serializable這個介面後並使用了@:s
+// @:nullSafety就會出錯
+// hxbit.Serializable不支援EnumValueMap
+class Player implements hxbit.Serializable {
+	public function new(id:String) {
+		this.id = id;
+	}
+
+	// @:s不能作用在interface
+	// 不能用final
+	// 不支援巢狀typedef
+	@:s public var id:String;
+}
+
+// Event
+
+enum Event {
+	ChangePhase;
+	// 「ゲイン」の効果で戦闘修正を得た場合
+	Gain(cardId:String, value:Int);
+	//
+	CardEnterField(cardId:String);
+}
 
 typedef PlayerSelection = {
 	cardIds:Map<String, Array<String>>
@@ -61,6 +62,24 @@ class Context implements hxbit.Serializable {
 }
 
 // General
+
+enum TextTypeAutomaticType {
+	// 常駐
+	Resident;
+	// 起動
+	Trigger;
+	// 恒常
+	Constant;
+}
+
+enum TextType {
+	// 自動型
+	Automatic(type:TextTypeAutomaticType);
+	// 使用型
+	Use;
+	// 特殊型
+	Special;
+}
 
 enum CardCategory {
 	Unit;
@@ -96,45 +115,6 @@ enum RelativePlayer {
 	Opponent;
 }
 
-// Require
-
-class Require {
-	public function new(id:String, description:String) {
-		this.id = id;
-		this.description = description;
-	}
-
-	public final id:String;
-	public final description:String;
-
-	public function action(ctx:Context, runtime:ExecuteRuntime):Void {}
-}
-
-// Player
-// 實作hxbit.Serializable這個介面後並使用了@:s
-// @:nullSafety就會出錯
-// hxbit.Serializable不支援EnumValueMap
-class Player implements hxbit.Serializable {
-	public function new(id:String) {
-		this.id = id;
-	}
-
-	// @:s不能作用在interface
-	// 不能用final
-	// 不支援巢狀typedef
-	@:s public var id:String;
-}
-
-// Event
-
-enum Event {
-	ChangePhase;
-	// 「ゲイン」の効果で戦闘修正を得た場合
-	Gain(cardId:String, value:Int);
-	//
-	CardEnterField(cardId:String);
-}
-
 // Block
 
 enum BlockCause {
@@ -158,14 +138,72 @@ class Block implements hxbit.Serializable {
 	@:s public var isImmediate = false;
 }
 
-// ExecuteRuntime
+// Mark
+
+enum MarkEffect {
+	AddBattlePoint(cardId:String, battlePoint:BattlePoint);
+	AttackSpeed(cardId:String, speed:Int);
+	AddText(cardId:String, text:CardText);
+	EnterField(cardId:String);
+}
+
+class Mark implements hxbit.Serializable {
+	public function new(id:String) {
+		this.id = id;
+	}
+
+	@:s public var id:String;
+
+	public function getEffect(ctx:Context):Array<MarkEffect> {
+		return [];
+	}
+
+	public function onEvent(ctx:Context, event:Event):Void {}
+}
+
+class EnterFieldMark extends Mark {
+	public function new(id:String, cardId:String) {
+		super(id);
+		this.cardId = cardId;
+	}
+
+	@:s public var cardId:String;
+
+	public override function getEffect(ctx:Context):Array<MarkEffect> {
+		return [EnterField(this.cardId)];
+	}
+
+	public override function onEvent(ctx:Context, event:Event):Void {
+		switch event {
+			case ChangePhase:
+				switch ctx.timing {
+					case Default(Battle, Some(End), End):
+						ctx.marks.remove(id);
+					case _:
+				}
+			case _:
+		}
+	}
+}
+
+// CardText
 
 interface ExecuteRuntime {
 	function getCardId():String;
 	function getResponsePlayerId():String;
 }
 
-// CardText
+class Require {
+	public function new(id:String, description:String) {
+		this.id = id;
+		this.description = description;
+	}
+
+	public final id:String;
+	public final description:String;
+
+	public function action(ctx:Context, runtime:ExecuteRuntime):Void {}
+}
 
 class CardText implements hxbit.Serializable {
 	public function new(id:String, description:String) {
@@ -190,28 +228,6 @@ class CardText implements hxbit.Serializable {
 	public function action(ctx:Context, runtime:ExecuteRuntime):Void {}
 
 	public function onEvent(ctx:Context, event:Event, runtime:ExecuteRuntime):Void {}
-}
-
-// Mark
-
-enum MarkEffect {
-	AddBattlePoint(cardId:String, battlePoint:BattlePoint);
-	AttackSpeed(cardId:String, speed:Int);
-	AddText(cardID:String, text:CardText);
-}
-
-class Mark implements hxbit.Serializable {
-	public function new(id:String) {
-		this.id = id;
-	}
-
-	@:s public var id:String;
-
-	public function getEffect(ctx:Context):Array<MarkEffect> {
-		return [];
-	}
-
-	public function onEvent(ctx:Context, event:Event):Void {}
 }
 
 // CardProto

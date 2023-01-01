@@ -34,7 +34,10 @@ function getRuntimeText(ctx:Context):Array<{runtime:ExecuteRuntime, text:CardTex
 			case _:
 				false;
 		}
-	}).map(cs -> cs.cardIds).fold((c, a) -> a.concat(c), new Array<String>()).map(id->ctx.table.cards[id]);
+	})
+		.map(cs -> cs.cardIds)
+		.fold((c, a) -> a.concat(c), new Array<String>())
+		.map(id -> ctx.table.cards[id]);
 	final playReturn = [
 		for (card in cardsInHandAndHanger) {
 			final responsePlayerId = getBaSyouControllerAndAssertExist(ctx, getCardBaSyouAndAssertExist(ctx, card.id));
@@ -55,7 +58,10 @@ function getRuntimeText(ctx:Context):Array<{runtime:ExecuteRuntime, text:CardTex
 			case _:
 				false;
 		}
-	}).map(cs -> cs.cardIds).fold((c, a) -> a.concat(c), new Array<String>()).map(id->ctx.table.cards[id]);
+	})
+		.map(cs -> cs.cardIds)
+		.fold((c, a) -> a.concat(c), new Array<String>())
+		.map(id -> ctx.table.cards[id]);
 	final specialReturn = [
 		for (card in cardsInGZone) {
 			final responsePlayerId = getBaSyouControllerAndAssertExist(ctx, getCardBaSyouAndAssertExist(ctx, card.id));
@@ -76,7 +82,10 @@ function getRuntimeText(ctx:Context):Array<{runtime:ExecuteRuntime, text:CardTex
 			case _:
 				false;
 		}
-	}).map(cs -> cs.cardIds).fold((c, a) -> a.concat(c), new Array<String>()).map(id->ctx.table.cards[id]);
+	})
+		.map(cs -> cs.cardIds)
+		.fold((c, a) -> a.concat(c), new Array<String>())
+		.map(id -> ctx.table.cards[id]);
 	final specialReturn2 = [
 		for (card in cardsInJunkYard) {
 			final responsePlayerId = getBaSyouControllerAndAssertExist(ctx, getCardBaSyouAndAssertExist(ctx, card.id));
@@ -97,7 +106,10 @@ function getRuntimeText(ctx:Context):Array<{runtime:ExecuteRuntime, text:CardTex
 			case _:
 				false;
 		}
-	}).map(cs -> cs.cardIds).fold((c, a) -> a.concat(c), new Array<String>()).map(id->ctx.table.cards[id]);
+	})
+		.map(cs -> cs.cardIds)
+		.fold((c, a) -> a.concat(c), new Array<String>())
+		.map(id -> ctx.table.cards[id]);
 	// 原始內文
 	final originReturn = [
 		for (card in cardsHasController) {
@@ -180,4 +192,35 @@ function getRuntimeText(ctx:Context):Array<{runtime:ExecuteRuntime, text:CardTex
 		};
 	});
 	return playReturn.concat(specialReturn).concat(specialReturn2).concat(originReturn).concat(addedReturn).concat(globalAddedReturn);
+}
+
+function getMarkEffects(ctx:Context):Array<MarkEffect> {
+	final textEffects = [
+		for (info in getRuntimeText(ctx)) {
+			final runtime = info.runtime;
+			final text = info.text;
+			final effects = text.getEffect(ctx, runtime);
+			for (effect in effects) {
+				effect;
+			}
+		}
+	];
+	final markEffects = [
+		for (mark in ctx.marks) {
+			final effects = mark.getEffect(ctx);
+			for (effect in effects) {
+				effect;
+			}
+		}
+	].filter(e -> switch e {
+		case AddText(_, _):
+			false;
+		case _:
+			true;
+	});
+	return textEffects.concat(markEffects);
+}
+
+function test(){
+	trace("abc");
 }

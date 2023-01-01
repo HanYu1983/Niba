@@ -8,36 +8,33 @@ import model.ver1.game.alg.Context;
 import model.ver1.game.alg.Cut;
 import model.ver1.data.RequireImpl;
 
-// 179004_01A_CH_WT009R_white
-// ラクス・クライン
-// 女性　子供　CO
-// 【ステイ】　〔１〕：ゲイン　〔１〕：供給
-// 『起動』：自軍カードが、「ゲイン」の効果で戦闘修正を得た場合、そのカードのセットグループ以外の自軍ユニット１枚は、ターン終了時まで、その戦闘修正と同じ値の戦闘修正を得る。
+// 179030_11E_U_VT186R_purple
+// R
+// BF
+// すーぱーふみな［†］
+// ガンプラ　心形流　専用「サカイ・ミナト」
+// クイック
+// 『起動』：このカードが場に出た場合、このターン中に場に出た敵軍ユニット１枚を、持ち主の手札に移す。
 
-class CardProto_179004_01A_CH_WT009R_white extends CardProto {
+class CardProto_179030_11E_U_VT186R_purple extends CardProto {
 	public function new() {}
 
 	public override function getTexts(ctx:Context, runtime:ExecuteRuntime):Array<CardText> {
-		return [
-			new PlayerPlayCard('${runtime.getCardId()}_PlayerPlayCard'),
-			new Text1('${runtime.getCardId()}_Text1')
-		];
+		return [new PlayerPlayCard('${runtime.getCardId()}_PlayerPlayCard')];
 	}
 }
 
 private class Text1 extends CardText {
 	public function new(id:String) {
-		super(id, "『起動』：自軍カードが、「ゲイン」の効果で戦闘修正を得た場合、そのカードのセットグループ以外の自軍ユニット１枚は、ターン終了時まで、その戦闘修正と同じ値の戦闘修正を得る。");
+		super(id, "『起動』：このカードが場に出た場合、このターン中に場に出た敵軍ユニット１枚を、持ち主の手札に移す。");
 	}
 
 	public override function onEvent(ctx:Context, event:Event, runtime:ExecuteRuntime):Void {
 		final thisCardId = runtime.getCardId();
 		switch event {
-			case Gain(gainCardId, gainValue):
-				if (isMyCard(ctx, thisCardId, gainCardId)) {
-					final block = new Block('${id}_${Date.now()}', TextEffect(thisCardId, id), new Text1_1('${id}_Text1_1', gainCardId, gainValue));
-					block.isImmediate = true;
-					cutIn(ctx, block);
+			case EnterField(enterFieldCardId):
+				if(enterFieldCardId == thisCardId){
+					
 				}
 			case _:
 		}
@@ -71,7 +68,7 @@ private class Text1_1 extends CardText {
 	public override function action(ctx:Context, runtime:ExecuteRuntime):Void {
 		final selectUnits = getPlayerSelectionCardId(ctx, getKey1());
 		for (unit in selectUnits) {
-			final mark = new Mark1('${id}_Mark1', gainCardId, Default(gainValue, gainValue, gainValue));
+			final mark = new Mark1('${id}_Mark1', gainCardId, {v1: gainValue, v2: gainValue, v3: gainValue});
 			ctx.marks[mark.id] = mark;
 		}
 	}

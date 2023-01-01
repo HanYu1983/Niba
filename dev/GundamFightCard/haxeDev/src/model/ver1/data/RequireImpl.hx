@@ -30,10 +30,16 @@ class RequireGTap extends RequireUserSelectCard {
 		final responsePlayerId = runtime.getResponsePlayerId();
 		final gCardIds = getPlayerGCardIds(ctx, responsePlayerId);
 		final tips = gCardIds.filter(id -> {
-			final cardColors = getCardGSign(ctx, id).colors;
-			return cardColors.fold((c:GColor, a:Bool) -> {
-				return a || colors.contains(c);
-			}, true);
+			// final cardColors = getCardGSign(ctx, id).colors;
+			// return cardColors.fold((c:GColor, a:Bool) -> {
+			// 	return a || colors.contains(c);
+			// }, true);
+			
+			final cardColor = switch getCardGSign(ctx, id) {
+				case Default(color, _):
+					color;
+			}
+			return colors.contains(cardColor);
 		});
 		this.tips = tips;
 		this.lengthInclude = [2];

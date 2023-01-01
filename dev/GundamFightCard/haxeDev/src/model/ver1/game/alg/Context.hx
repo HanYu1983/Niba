@@ -107,10 +107,7 @@ function getCardBaSyouAndAssertExist(ctx:Context, cardId:String):BaSyou {
 }
 
 function getCardGSign(ctx:Context, cardId:String):GSign {
-	return {
-		colors: [Red],
-		production: ""
-	}
+	return Default(Red, Uc);
 }
 
 function getPlayerGCountForPlay(ctx:Context, playerId:String):Int {
