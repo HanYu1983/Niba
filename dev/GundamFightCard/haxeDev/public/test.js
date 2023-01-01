@@ -5816,8 +5816,8 @@ function model_ver1_data_CardProto_$179030_$11E_$U_$VT186R_$purple_test() {
 	var card2 = new tool_Card("2");
 	card2.owner = player2;
 	card2.protoId = "179030_11E_U_VT186R_purple";
-	console.log("src/model/ver1/data/CardProto_179030_11E_U_VT186R_purple.hx:102:","設置剛出場標記");
 	tool_Table_addCard(ctx.table,model_ver1_game_define_BaSyou_getCardStackId(model_ver1_game_define_BaSyou.Default(player2,model_ver1_game_define_BaSyouKeyword.MaintenanceArea)),card2);
+	console.log("src/model/ver1/data/CardProto_179030_11E_U_VT186R_purple.hx:103:","設置剛出場標記");
 	var enterFieldMark = new model_ver1_game_define_EnterFieldThisTurnMark("EnterFieldThisTurnMark",card2.id);
 	ctx.marks.h[enterFieldMark.id] = enterFieldMark;
 	if(model_ver1_game_alg_Cut_getTopCut(ctx).length != 0) {
