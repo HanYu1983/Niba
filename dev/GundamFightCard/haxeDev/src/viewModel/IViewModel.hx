@@ -5,13 +5,17 @@ typedef CardModel = {
 	name:String,
 	content:String,
 	owner:String,
+	url:String,
+	faceup:Bool,
+	watching:Bool,
 }
 
 typedef PlayerModel = {
 	id:String,
 	name:String,
 	hand:Array<CardModel>,
-	deck:Array<CardModel>
+	deck:Array<CardModel>,
+	url:String
 }
 
 typedef GameModel = {

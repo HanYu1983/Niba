@@ -34,17 +34,19 @@ class MainView extends VBox {
 	private function syncGame() {
 		var gameModel = game.getGame();
 
-		syncHand(playerTable, gameModel.players[0].hand);
-		syncHand(enemyTable, gameModel.players[1].hand);
+		syncHand(playerTable, gameModel.players[0]);
+		syncHand(enemyTable, gameModel.players[1]);
 	}
 
 	private var firstClick:CardModel = null;
 
-	private function syncHand(table:PlayerTable, cards:Array<CardModel>) {
+	private function syncHand(table:PlayerTable, player:PlayerModel) {
+		final cards = player.hand;
 		for (i in 0...cards.length) {
 			var card = new Card();
 			var cardModel = cards[i];
 			card.model = cardModel;
+			card.playerModel = player;
 			card.left = i * (card.width + 5) + table.box_hand.screenLeft;
 			card.top = table.box_hand.screenTop;
 			table.hand.push(card);

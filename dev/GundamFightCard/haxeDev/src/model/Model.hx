@@ -2,7 +2,7 @@ package model;
 
 import viewModel.IViewModel;
 
-class Model extends DefaultViewModel{
+class Model extends DefaultViewModel {
 	public function new() {}
 
 	private function createCard():CardModel {
@@ -10,7 +10,10 @@ class Model extends DefaultViewModel{
 			id: 'card_' + Math.floor(Math.random() * 9999),
 			name: 'dx',
 			content: 'content',
-			owner: 'vic'
+			owner: 'vic',
+			url: 'https://storage.googleapis.com/particle-resources/cardPackage/gundamWarN/179030_11E_U_BL208S_2_blue.jpg',
+			faceup: (Math.random() > 0.5),
+			watching: (Math.random() > 0.5),
 		};
 	}
 
@@ -19,7 +22,8 @@ class Model extends DefaultViewModel{
 			id: 'player_' + Math.floor(Math.random() * 9999),
 			name: 'dx',
 			hand: [createCard(), createCard(), createCard(), createCard()],
-			deck: [createCard(), createCard(), createCard()]
+			deck: [createCard(), createCard(), createCard()],
+			url: 'https://particle-979.appspot.com/card/images/cardback.png',
 		}
 	}
 

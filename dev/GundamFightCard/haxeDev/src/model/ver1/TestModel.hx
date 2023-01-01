@@ -11,6 +11,9 @@ private function toCardModel(ctx:Context, card:Card):CardModel {
 		name: '${card.id}',
 		content: 'card ${card.id}',
 		owner: card.owner,
+		url:'',
+		faceup: false,
+		watching: true,
 	}
 }
 
@@ -32,6 +35,7 @@ class TestModel extends DefaultViewModel {
 					name: 'test',
 					hand: cards,
 					deck: cards,
+					url:''
 				}
 			]
 		};

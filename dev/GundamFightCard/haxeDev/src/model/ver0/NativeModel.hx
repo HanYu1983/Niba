@@ -47,6 +47,9 @@ private function toCardModel(app:App, card:Card):CardModel {
 		name: '${card.id}',
 		content: 'card ${card.id}',
 		owner: card.owner,
+		url:'',
+		faceup: false,
+		watching: true
 	}
 }
 
@@ -71,6 +74,7 @@ class NativeModel extends DefaultViewModel {
 					deck: handCards.map(c -> {
 						return toCardModel(app, app.table.cards[c]);
 					}),
+					url:''
 				}
 			})
 		};
