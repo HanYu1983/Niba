@@ -54,22 +54,18 @@ private class Text1_1 extends CardText {
 	@:s public var gainCardId:String;
 	@:s public var gainValue:Int;
 
-	private function getKey1() {
-		return '${id}_Text2_Req1';
-	}
-
 	public override function getRequires(ctx:Context, runtime:ExecuteRuntime):Array<Require> {
 		final gainCardSetGroupsIds = getCardSetGroupCardIds(ctx, gainCardId);
 		final tips = [for (card in ctx.table.cards) card].filter(card -> {
 			return gainCardSetGroupsIds.contains(card.id) == false && isMyCard(ctx, gainCardId, card.id);
 		}).map(card -> card.id);
-		final req = new RequireUserSelectCard(getKey1(), "そのカードのセットグループ以外の自軍ユニット１枚は");
+		final req = new RequireUserSelectCard(getSubKey(0), "そのカードのセットグループ以外の自軍ユニット１枚は");
 		req.tips = tips;
 		return [req];
 	}
 
 	public override function action(ctx:Context, runtime:ExecuteRuntime):Void {
-		final selectUnits = getPlayerSelectionCardId(ctx, getKey1());
+		final selectUnits = getPlayerSelectionCardId(ctx, getSubKey(0));
 		for (unit in selectUnits) {
 			final mark = new Mark1('${id}_Mark1', gainCardId, Default(gainValue, gainValue, gainValue));
 			ctx.marks[mark.id] = mark;

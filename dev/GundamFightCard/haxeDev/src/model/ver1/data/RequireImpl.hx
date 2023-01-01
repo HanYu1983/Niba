@@ -34,7 +34,7 @@ class RequireGTap extends RequireUserSelectCard {
 			// return cardColors.fold((c:GColor, a:Bool) -> {
 			// 	return a || colors.contains(c);
 			// }, true);
-			
+
 			final cardColor = switch getCardGSign(ctx, id) {
 				case Default(color, _):
 					color;
@@ -106,6 +106,13 @@ class RequireUserSelect<T> extends Require {
 class RequireUserSelectCard extends RequireUserSelect<String> {
 	public function new(id:String, description:String) {
 		super(id, description);
+	}
+
+	public override function action(ctx:Context, runtime:ExecuteRuntime):Void {
+		final selection = getPlayerSelectionCardId(ctx, id);
+		if (lengthInclude.contains(selection.length) == false) {
+			throw "select card length not right";
+		}
 	}
 }
 

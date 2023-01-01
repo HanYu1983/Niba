@@ -11,6 +11,9 @@ import model.ver1.game.alg.Context;
 import model.ver1.game.alg.CardProto;
 import model.ver1.game.alg.Runtime;
 import model.ver1.test.common.Common;
+import model.ver1.data.CardProto_179001_01A_CH_WT007R_white;
+import model.ver1.data.CardProto_179003_01A_U_BK008U_black;
+import model.ver1.data.CardProto_179004_01A_CH_WT009R_white;
 import model.ver1.data.CardProto_179030_11E_U_VT186R_purple;
 
 function test() {

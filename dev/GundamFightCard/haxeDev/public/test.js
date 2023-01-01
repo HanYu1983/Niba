@@ -5417,10 +5417,7 @@ $hxClasses["model.ver1.data._CardProto_179004_01A_CH_WT009R_white.Text1_1"] = mo
 model_ver1_data__$CardProto_$179004_$01A_$CH_$WT009R_$white_Text1_$1.__name__ = "model.ver1.data._CardProto_179004_01A_CH_WT009R_white.Text1_1";
 model_ver1_data__$CardProto_$179004_$01A_$CH_$WT009R_$white_Text1_$1.__super__ = model_ver1_game_define_CardText;
 model_ver1_data__$CardProto_$179004_$01A_$CH_$WT009R_$white_Text1_$1.prototype = $extend(model_ver1_game_define_CardText.prototype,{
-	getKey1: function() {
-		return "" + this.id + "_Text2_Req1";
-	}
-	,getRequires: function(ctx,runtime) {
+	getRequires: function(ctx,runtime) {
 		var _gthis = this;
 		var gainCardSetGroupsIds = model_ver1_game_alg_Context_getCardSetGroupCardIds(ctx,this.gainCardId);
 		var _g = [];
@@ -5452,12 +5449,12 @@ model_ver1_data__$CardProto_$179004_$01A_$CH_$WT009R_$white_Text1_$1.prototype =
 			result[i] = _this[i].id;
 		}
 		var tips = result;
-		var req = new model_ver1_data_RequireUserSelectCard(this.getKey1(),"そのカードのセットグループ以外の自軍ユニット１枚は");
+		var req = new model_ver1_data_RequireUserSelectCard(this.getSubKey(0),"そのカードのセットグループ以外の自軍ユニット１枚は");
 		req.tips = tips;
 		return [req];
 	}
 	,action: function(ctx,runtime) {
-		var selectUnits = model_ver1_game_alg_Context_getPlayerSelectionCardId(ctx,this.getKey1());
+		var selectUnits = model_ver1_game_alg_Context_getPlayerSelectionCardId(ctx,this.getSubKey(0));
 		var _g = 0;
 		while(_g < selectUnits.length) {
 			var unit = selectUnits[_g];
@@ -5615,6 +5612,7 @@ model_ver1_data__$CardProto_$179004_$01A_$CH_$WT009R_$white_Mark1.prototype = $e
 });
 var model_ver1_data_CardProto_$179030_$11E_$U_$VT186R_$purple = function() {
 	model_ver1_game_define_CardProto.call(this);
+	this.category = model_ver1_game_define_CardCategory.Unit;
 };
 $hxClasses["model.ver1.data.CardProto_179030_11E_U_VT186R_purple"] = model_ver1_data_CardProto_$179030_$11E_$U_$VT186R_$purple;
 model_ver1_data_CardProto_$179030_$11E_$U_$VT186R_$purple.__name__ = "model.ver1.data.CardProto_179030_11E_U_VT186R_purple";
@@ -5929,7 +5927,13 @@ $hxClasses["model.ver1.data.RequireUserSelectCard"] = model_ver1_data_RequireUse
 model_ver1_data_RequireUserSelectCard.__name__ = "model.ver1.data.RequireUserSelectCard";
 model_ver1_data_RequireUserSelectCard.__super__ = model_ver1_data_RequireUserSelect;
 model_ver1_data_RequireUserSelectCard.prototype = $extend(model_ver1_data_RequireUserSelect.prototype,{
-	__class__: model_ver1_data_RequireUserSelectCard
+	action: function(ctx,runtime) {
+		var selection = model_ver1_game_alg_Context_getPlayerSelectionCardId(ctx,this.id);
+		if(this.lengthInclude.indexOf(selection.length) != -1 == false) {
+			throw haxe_Exception.thrown("select card length not right");
+		}
+	}
+	,__class__: model_ver1_data_RequireUserSelectCard
 });
 var model_ver1_data_RequireGTap = function(id,colors,ctx,runtime) {
 	model_ver1_data_RequireUserSelectCard.call(this,id,"RequireGTap");

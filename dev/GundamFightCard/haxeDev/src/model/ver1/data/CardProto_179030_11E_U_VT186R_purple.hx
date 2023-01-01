@@ -17,7 +17,9 @@ import model.ver1.data.RequireImpl;
 // 『起動』：このカードが場に出た場合、このターン中に場に出た敵軍ユニット１枚を、持ち主の手札に移す。
 
 class CardProto_179030_11E_U_VT186R_purple extends CardProto {
-	public function new() {}
+	public function new() {
+		this.category = Unit;
+	}
 
 	public override function getTexts(ctx:Context, runtime:ExecuteRuntime):Array<CardText> {
 		return [
