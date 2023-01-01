@@ -31,6 +31,17 @@ class Table implements hxbit.Serializable {
 	@:s public var cardStacks:Map<String, CardStack> = [];
 }
 
+function addCard(table:Table, cardStackId:String, card:Card):Void {
+	if (table.cards[card.id] != null) {
+		throw new haxe.Exception('card key already exist. ${card.id}');
+	}
+	if (table.cardStacks[cardStackId] == null) {
+		table.cardStacks[cardStackId] = new CardStack(cardStackId);
+	}
+	table.cards[card.id] = card;
+	table.cardStacks[cardStackId].cardIds.push(card.id);
+}
+
 @:nullSafety
 function getCardStack(table:Table, cardStackId:String):CardStack {
 	final ret = table.cardStacks[cardStackId];

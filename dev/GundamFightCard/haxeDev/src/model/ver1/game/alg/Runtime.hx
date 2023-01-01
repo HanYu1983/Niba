@@ -221,6 +221,4 @@ function getMarkEffects(ctx:Context):Array<MarkEffect> {
 	return textEffects.concat(markEffects);
 }
 
-function test(){
-	trace("abc");
-}
+

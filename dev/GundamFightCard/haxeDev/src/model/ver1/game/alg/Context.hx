@@ -70,7 +70,12 @@ function getCardController(ctx:Context, cardId:String):Option<String> {
 	// 所在區域的管理者
 	// 所在部隊的管理者
 	// 其它的都沒有管理者
-	return None;
+	return switch getCardBaSyouAndAssertExist(ctx, cardId) {
+		case Default(playerId, baSyouKeyword) if (isBa(baSyouKeyword)):
+			Some(playerId);
+		case _:
+			None;
+	}
 }
 
 function getCardControllerAndAssertExist(ctx:Context, cardId:String):String {
