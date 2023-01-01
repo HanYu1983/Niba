@@ -63,5 +63,5 @@ app.cardEffect = app.cardEffect || {};
         }
         //console.log(type, value)
     }
-    test()
+    // test()
 })(app.cardEffect)
