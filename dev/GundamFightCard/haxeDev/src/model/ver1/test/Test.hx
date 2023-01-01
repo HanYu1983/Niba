@@ -73,7 +73,7 @@ function test_getMarkEffects() {
 	if (getMarkEffects(ctx).length != 1) {
 		throw new haxe.Exception("必須找到1個效果");
 	}
-	final enterFieldMark = new EnterFieldMark('EnterFieldMark', card.id);
+	final enterFieldMark = new EnterFieldThisTurnMark('EnterFieldThisTurnMark', card.id);
 	ctx.marks[enterFieldMark.id] = enterFieldMark;
 	if (getRuntimeText(ctx).length != 2) {
 		throw new haxe.Exception("還是找到2個內文");

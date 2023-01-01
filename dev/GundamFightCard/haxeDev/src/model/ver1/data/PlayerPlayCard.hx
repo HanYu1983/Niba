@@ -85,7 +85,7 @@ private class EnterFieldEffect extends CardText {
 				// TODO: 查詢有沒有戰鬥配備
 				// 配置區横置
 				ctx.table.cards[cardId].isTap = true;
-				final enterFieldMark = new EnterFieldMark('${id}_EnterFieldMark', cardId);
+				final enterFieldMark = new EnterFieldThisTurnMark('${id}_EnterFieldMark', cardId);
 				ctx.marks[enterFieldMark.id] = enterFieldMark;
 				sendEvent(ctx, CardEnterField(cardId));
 			case Operation:

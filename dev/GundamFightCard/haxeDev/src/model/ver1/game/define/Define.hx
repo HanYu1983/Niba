@@ -168,7 +168,7 @@ class Mark implements hxbit.Serializable {
 	public function onEvent(ctx:Context, event:Event):Void {}
 }
 
-class EnterFieldMark extends Mark {
+class EnterFieldThisTurnMark extends Mark {
 	public function new(id:String, cardId:String) {
 		super(id);
 		this.cardId = cardId;

@@ -103,7 +103,7 @@ function test() {
 	card2.protoId = "179030_11E_U_VT186R_purple";
 	trace("設置剛出場標記");
 	addCard(ctx.table, getCardStackId(Default(player2, MaintenanceArea)), card2);
-	final enterFieldMark = new EnterFieldMark('EnterFieldMark', card2.id);
+	final enterFieldMark = new EnterFieldThisTurnMark('EnterFieldThisTurnMark', card2.id);
 	ctx.marks[enterFieldMark.id] = enterFieldMark;
 	//
 	if (getTopCut(ctx).length != 0) {
