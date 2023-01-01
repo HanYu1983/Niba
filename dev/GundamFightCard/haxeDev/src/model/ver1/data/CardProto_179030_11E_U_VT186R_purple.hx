@@ -88,8 +88,6 @@ function test() {
 	final player1 = "player1";
 	final player2 = "player2";
 	final ctx = new Context();
-	// final player1Hand = new CardStack(getCardStackId(Default(player1, TeHuTa)));
-	// ctx.table.cardStacks[player1Hand.id] = player1Hand;
 	final player2Hand = new CardStack(getCardStackId(Default(player2, TeHuTa)));
 	ctx.table.cardStacks[player2Hand.id] = player2Hand;
 	trace("機體1在場");

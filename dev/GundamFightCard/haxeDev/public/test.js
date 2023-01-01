@@ -5807,23 +5807,23 @@ function model_ver1_data_CardProto_$179030_$11E_$U_$VT186R_$purple_test() {
 	var ctx = new model_ver1_game_define_Context();
 	var player2Hand = new tool_CardStack(model_ver1_game_define_BaSyou_getCardStackId(model_ver1_game_define_BaSyou.Default(player2,model_ver1_game_define_BaSyouKeyword.TeHuTa)));
 	ctx.table.cardStacks.h[player2Hand.id] = player2Hand;
-	console.log("src/model/ver1/data/CardProto_179030_11E_U_VT186R_purple.hx:95:","機體1在場");
+	console.log("src/model/ver1/data/CardProto_179030_11E_U_VT186R_purple.hx:93:","機體1在場");
 	var card = new tool_Card("1");
 	card.owner = player1;
 	card.protoId = "179030_11E_U_VT186R_purple";
 	tool_Table_addCard(ctx.table,model_ver1_game_define_BaSyou_getCardStackId(model_ver1_game_define_BaSyou.Default(player1,model_ver1_game_define_BaSyouKeyword.MaintenanceArea)),card);
-	console.log("src/model/ver1/data/CardProto_179030_11E_U_VT186R_purple.hx:100:","機體2這回合剛出場");
+	console.log("src/model/ver1/data/CardProto_179030_11E_U_VT186R_purple.hx:98:","機體2這回合剛出場");
 	var card2 = new tool_Card("2");
 	card2.owner = player2;
 	card2.protoId = "179030_11E_U_VT186R_purple";
-	console.log("src/model/ver1/data/CardProto_179030_11E_U_VT186R_purple.hx:104:","設置剛出場標記");
+	console.log("src/model/ver1/data/CardProto_179030_11E_U_VT186R_purple.hx:102:","設置剛出場標記");
 	tool_Table_addCard(ctx.table,model_ver1_game_define_BaSyou_getCardStackId(model_ver1_game_define_BaSyou.Default(player2,model_ver1_game_define_BaSyouKeyword.MaintenanceArea)),card2);
 	var enterFieldMark = new model_ver1_game_define_EnterFieldThisTurnMark("EnterFieldThisTurnMark",card2.id);
 	ctx.marks.h[enterFieldMark.id] = enterFieldMark;
 	if(model_ver1_game_alg_Cut_getTopCut(ctx).length != 0) {
 		throw haxe_Exception.thrown("一開始堆疊中沒有效果");
 	}
-	console.log("src/model/ver1/data/CardProto_179030_11E_U_VT186R_purple.hx:112:","機體1出場事件");
+	console.log("src/model/ver1/data/CardProto_179030_11E_U_VT186R_purple.hx:110:","機體1出場事件");
 	model_ver1_game_alg_Context_sendEvent(ctx,model_ver1_game_define_Event.CardEnterField(card.id));
 	if(model_ver1_game_alg_Cut_getTopCut(ctx).length != 1) {
 		throw haxe_Exception.thrown("堆疊中必須有一個效果");
@@ -5838,11 +5838,11 @@ function model_ver1_data_CardProto_$179030_$11E_$U_$VT186R_$purple_test() {
 	if($require.tips.length != 1) {
 		throw haxe_Exception.thrown("必須有一個可選機體");
 	}
-	console.log("src/model/ver1/data/CardProto_179030_11E_U_VT186R_purple.hx:127:","選擇要回手的一個敵機");
+	console.log("src/model/ver1/data/CardProto_179030_11E_U_VT186R_purple.hx:125:","選擇要回手的一個敵機");
 	model_ver1_game_alg_Context_setPlayerSelectionCardId(ctx,$require.id,[$require.tips[0]]);
-	console.log("src/model/ver1/data/CardProto_179030_11E_U_VT186R_purple.hx:129:","驗証支付");
+	console.log("src/model/ver1/data/CardProto_179030_11E_U_VT186R_purple.hx:127:","驗証支付");
 	$require.action(ctx,runtime);
-	console.log("src/model/ver1/data/CardProto_179030_11E_U_VT186R_purple.hx:131:","解決效果");
+	console.log("src/model/ver1/data/CardProto_179030_11E_U_VT186R_purple.hx:129:","解決效果");
 	block.text.action(ctx,runtime);
 	if(player2Hand.cardIds.length != 1) {
 		throw haxe_Exception.thrown("牌被移到手上");
