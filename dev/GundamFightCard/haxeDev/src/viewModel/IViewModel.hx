@@ -5,8 +5,11 @@ typedef CardModel = {
 	name:String,
 	content:String,
 	owner:String,
+	// 卡片的url
 	url:String,
+	// 是否公開
 	faceup:Bool,
+	// 是否正在觀察
 	watching:Bool,
 }
 
@@ -15,6 +18,7 @@ typedef PlayerModel = {
 	name:String,
 	hand:Array<CardModel>,
 	deck:Array<CardModel>,
+	// 卡背的url
 	url:String
 }
 
