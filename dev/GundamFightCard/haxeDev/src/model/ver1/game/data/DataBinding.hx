@@ -7,6 +7,7 @@ private final _cardProtoPool:Map<String, CardProto> = [
 	"179003_01A_U_BK008U_black" => new model.ver1.data.CardProto_179003_01A_U_BK008U_black(),
 	"179004_01A_CH_WT009R_white" => new model.ver1.data.CardProto_179004_01A_CH_WT009R_white(),
 	"179030_11E_U_VT186R_purple" => new model.ver1.data.CardProto_179030_11E_U_VT186R_purple(),
+	"179030_11E_CH_BN091N_brown" => new model.ver1.data.CardProto_179030_11E_CH_BN091N_brown(),
 ];
 
 @:nullSafety
@@ -28,14 +29,6 @@ function getCardProto(key:String):CardProto {
 // 新たな挑戦へ
 // 支配
 // （自軍戦闘フェイズ）：自軍手札、または自軍ハンガーにある、「特徴：トライファイターズ」を持つカード１枚を選んで廃棄する。その場合、このターンの終了直後、新たな自軍ターンを開始する。新たなターンでは、全ての自軍Gはリロールできず、戦闘フェイズのみ行われる。
-
-// roll也是事件
-// 179030_11E_CH_BN091N_brown
-// N
-// ∀
-// ポゥ・エイジ
-// 女性　大人
-// 『起動』：このカードがロールした場合、敵軍G１枚をロールする。その場合、このセットグループは、このターンと次のターン、リロールできない。
 
 
 

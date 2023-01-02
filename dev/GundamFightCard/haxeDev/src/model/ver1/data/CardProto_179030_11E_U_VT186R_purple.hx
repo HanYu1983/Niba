@@ -35,6 +35,7 @@ class CardProto_179030_11E_U_VT186R_purple extends CardProto {
 private class Text1 extends CardText {
 	public function new(id:String) {
 		super(id, "『起動』：このカードが場に出た場合、このターン中に場に出た敵軍ユニット１枚を、持ち主の手札に移す。");
+		type = Automatic(Trigger);
 	}
 
 	public override function onEvent(ctx:Context, event:Event, runtime:ExecuteRuntime):Void {

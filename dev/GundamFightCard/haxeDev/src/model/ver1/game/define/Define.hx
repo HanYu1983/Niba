@@ -14,16 +14,19 @@ import model.ver1.game.define.Timing;
 // 實作hxbit.Serializable這個介面後並使用了@:s
 // @:nullSafety就會出錯
 // hxbit.Serializable不支援EnumValueMap
-class Player implements hxbit.Serializable {
-	public function new(id:String) {
-		this.id = id;
-	}
+// class Player implements hxbit.Serializable {
+// 	public function new(id:String) {
+// 		this.id = id;
+// 	}
 
-	// @:s不能作用在interface
-	// 不能用final
-	// 不支援巢狀typedef
-	@:s public var id:String;
-}
+// 	// @:s不能作用在interface
+// 	// 不能用final
+// 	// 不支援巢狀typedef
+// 	@:s public var id:String;
+// }
+
+final PLAYER_A = "PLAYER_A";
+final PLAYER_B = "PLAYER_B";
 
 // Event
 
@@ -33,6 +36,8 @@ enum Event {
 	Gain(cardId:String, value:Int);
 	//
 	CardEnterField(cardId:String);
+	//
+	CardRoll(cardId:String);
 }
 
 typedef PlayerSelection = {
@@ -46,7 +51,7 @@ typedef Memory = {
 class Context implements hxbit.Serializable {
 	public function new() {}
 
-	@:s public var players:Map<String, Player> = [];
+	//@:s public var players:Map<String, Player> = [];
 	@:s public var playersOrder:Array<String> = [];
 	@:s public var table = new Table();
 	@:s public var marks:Map<String, Mark> = [];
@@ -152,6 +157,7 @@ enum MarkEffect {
 	AttackSpeed(cardId:String, speed:Int);
 	AddText(cardId:String, text:CardText);
 	EnterFieldThisTurn(cardId:String);
+	CanNotReroll(cardId:String);
 }
 
 class Mark implements hxbit.Serializable {
@@ -196,18 +202,19 @@ class EnterFieldThisTurnMark extends Mark {
 	public override function getEffect(ctx:Context):Array<MarkEffect> {
 		return [EnterFieldThisTurn(this.cardId)];
 	}
+}
 
-	// public override function onEvent(ctx:Context, event:Event):Void {
-	// 	switch event {
-	// 		case ChangePhase:
-	// 			switch ctx.timing {
-	// 				case Default(Battle, Some(End), End):
-	// 					ctx.marks.remove(id);
-	// 				case _:
-	// 			}
-	// 		case _:
-	// 	}
-	// }
+class CanNotRerollMark extends Mark {
+	public function new(id:String, cardId:String) {
+		super(id);
+		this.cardId = cardId;
+	}
+
+	@:s public var cardId:String;
+
+	public override function getEffect(ctx:Context):Array<MarkEffect> {
+		return [CanNotReroll(this.cardId)];
+	}
 }
 
 // CardText

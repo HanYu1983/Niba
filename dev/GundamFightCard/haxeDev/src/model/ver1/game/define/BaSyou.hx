@@ -79,13 +79,13 @@ private class Wrapper implements hxbit.Serializable {
 function getCardStackId(obj:BaSyou):String {
 	return switch obj {
 		case Default(playerId, kw):
-			return '${playerId}_${EnumValueTools.getName(kw)}';
+			return '${playerId}@@@${EnumValueTools.getName(kw)}';
 	}
 }
 
 function getBaSyou(cardStackId:String):BaSyou {
 	try {
-		final pair = cardStackId.split("_");
+		final pair = cardStackId.split("@@@");
 		final playerId = pair[0];
 		final kw = EnumTools.createByName(BaSyouKeyword, pair[1]);
 		return Default(playerId, kw);

@@ -28,6 +28,7 @@ class CardProto_179004_01A_CH_WT009R_white extends CardProto {
 private class Text1 extends CardText {
 	public function new(id:String) {
 		super(id, "『起動』：自軍カードが、「ゲイン」の効果で戦闘修正を得た場合、そのカードのセットグループ以外の自軍ユニット１枚は、ターン終了時まで、その戦闘修正と同じ値の戦闘修正を得る。");
+		type = Automatic(Trigger);
 	}
 
 	public override function onEvent(ctx:Context, event:Event, runtime:ExecuteRuntime):Void {
