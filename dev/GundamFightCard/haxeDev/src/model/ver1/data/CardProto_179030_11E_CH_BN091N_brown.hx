@@ -85,9 +85,11 @@ private class Process1 extends CardText {
 		for (unit in selectUnits) {
 			tapCard(ctx, unit);
 		}
-		final mark = new CanNotRerollMark(getSubKey(0), thisCardId);
-		mark.age = 2;
-		ctx.marks[mark.id] = mark;
+		for (cardId in getThisCardSetGroupCardIds(ctx, thisCardId)) {
+			final mark = new CanNotRerollMark(getSubKey(0), cardId);
+			mark.age = 2;
+			ctx.marks[mark.id] = mark;
+		}
 	}
 }
 

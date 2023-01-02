@@ -5788,9 +5788,15 @@ model_ver1_data__$CardProto_$179030_$11E_$CH_$BN091N_$brown_Process1.prototype =
 			++_g;
 			model_ver1_game_alg_Context_tapCard(ctx,unit);
 		}
-		var mark = new model_ver1_game_define_CanNotRerollMark(this.getSubKey(0),thisCardId);
-		mark.age = 2;
-		ctx.marks.h[mark.id] = mark;
+		var _g = 0;
+		var _g1 = model_ver1_game_alg_Context_getThisCardSetGroupCardIds(ctx,thisCardId);
+		while(_g < _g1.length) {
+			var cardId = _g1[_g];
+			++_g;
+			var mark = new model_ver1_game_define_CanNotRerollMark(this.getSubKey(0),cardId);
+			mark.age = 2;
+			ctx.marks.h[mark.id] = mark;
+		}
 	}
 	,getCLID: function() {
 		return model_ver1_data__$CardProto_$179030_$11E_$CH_$BN091N_$brown_Process1.__clid;
@@ -5882,12 +5888,12 @@ function model_ver1_data_CardProto_$179030_$11E_$CH_$BN091N_$brown_test() {
 	var ctx = new model_ver1_game_define_Context();
 	var player2Hand = new tool_CardStack(model_ver1_game_define_BaSyou_getCardStackId(model_ver1_game_define_BaSyou.Default(player2,model_ver1_game_define_BaSyouKeyword.TeHuTa)));
 	ctx.table.cardStacks.h[player2Hand.id] = player2Hand;
-	console.log("src/model/ver1/data/CardProto_179030_11E_CH_BN091N_brown.hx:100:","卡牌1在場");
+	console.log("src/model/ver1/data/CardProto_179030_11E_CH_BN091N_brown.hx:102:","卡牌1在場");
 	var card = new tool_Card("1");
 	card.owner = player1;
 	card.protoId = "179030_11E_CH_BN091N_brown";
 	tool_Table_addCard(ctx.table,model_ver1_game_define_BaSyou_getCardStackId(model_ver1_game_define_BaSyou.Default(player1,model_ver1_game_define_BaSyouKeyword.MaintenanceArea)),card);
-	console.log("src/model/ver1/data/CardProto_179030_11E_CH_BN091N_brown.hx:105:","敵軍G在場");
+	console.log("src/model/ver1/data/CardProto_179030_11E_CH_BN091N_brown.hx:107:","敵軍G在場");
 	var card2 = new tool_Card("2");
 	card2.owner = player2;
 	card2.protoId = "179030_11E_CH_BN091N_brown";
@@ -5896,7 +5902,7 @@ function model_ver1_data_CardProto_$179030_$11E_$CH_$BN091N_$brown_test() {
 	if(model_ver1_game_alg_Cut_getTopCut(ctx).length != 0) {
 		throw haxe_Exception.thrown("一開始堆疊中沒有效果");
 	}
-	console.log("src/model/ver1/data/CardProto_179030_11E_CH_BN091N_brown.hx:115:","卡牌横置");
+	console.log("src/model/ver1/data/CardProto_179030_11E_CH_BN091N_brown.hx:117:","卡牌横置");
 	model_ver1_game_alg_Context_sendEvent(ctx,model_ver1_game_define_Event.CardRoll(card.id));
 	if(model_ver1_game_alg_Cut_getTopCut(ctx).length != 1) {
 		throw haxe_Exception.thrown("堆疊中必須有一個效果");
@@ -5911,11 +5917,11 @@ function model_ver1_data_CardProto_$179030_$11E_$CH_$BN091N_$brown_test() {
 	if($require.tips.length != 1) {
 		throw haxe_Exception.thrown("必須有一個可選G");
 	}
-	console.log("src/model/ver1/data/CardProto_179030_11E_CH_BN091N_brown.hx:130:","選擇");
+	console.log("src/model/ver1/data/CardProto_179030_11E_CH_BN091N_brown.hx:132:","選擇");
 	model_ver1_game_alg_Context_setPlayerSelectionCardId(ctx,$require.id,[$require.tips[0]]);
-	console.log("src/model/ver1/data/CardProto_179030_11E_CH_BN091N_brown.hx:132:","驗証支付");
+	console.log("src/model/ver1/data/CardProto_179030_11E_CH_BN091N_brown.hx:134:","驗証支付");
 	$require.action(ctx,runtime);
-	console.log("src/model/ver1/data/CardProto_179030_11E_CH_BN091N_brown.hx:134:","解決效果");
+	console.log("src/model/ver1/data/CardProto_179030_11E_CH_BN091N_brown.hx:136:","解決效果");
 	block.text.action(ctx,runtime);
 	if(card2.isTap != true) {
 		throw haxe_Exception.thrown("牌必須被横置");
@@ -5933,7 +5939,7 @@ function model_ver1_data_CardProto_$179030_$11E_$CH_$BN091N_$brown_test() {
 	if(_g.length != 1) {
 		throw haxe_Exception.thrown("必須有不能重置效果");
 	}
-	console.log("src/model/ver1/data/CardProto_179030_11E_CH_BN091N_brown.hx:142:","結束一個turn");
+	console.log("src/model/ver1/data/CardProto_179030_11E_CH_BN091N_brown.hx:144:","結束一個turn");
 	ctx.timing = model_ver1_game_define_Timing.Default(model_ver1_game_define_PhaseKeyword.Battle,haxe_ds_Option.Some(model_ver1_game_define_StepKeyword.End),model_ver1_game_define_TimingKeyword.End);
 	model_ver1_game_alg_Context_sendEvent(ctx,model_ver1_game_define_Event.ChangePhase);
 	var _g = [];
@@ -5949,7 +5955,7 @@ function model_ver1_data_CardProto_$179030_$11E_$CH_$BN091N_$brown_test() {
 	if(_g.length != 1) {
 		throw haxe_Exception.thrown("必須有不能重置效果");
 	}
-	console.log("src/model/ver1/data/CardProto_179030_11E_CH_BN091N_brown.hx:148:","再結束一個turn");
+	console.log("src/model/ver1/data/CardProto_179030_11E_CH_BN091N_brown.hx:150:","再結束一個turn");
 	model_ver1_game_alg_Context_sendEvent(ctx,model_ver1_game_define_Event.ChangePhase);
 	var _g = [];
 	var h = ctx.marks.h;
@@ -6559,6 +6565,9 @@ function model_ver1_game_alg_Context_getCardEntityCategory(ctx,cardId) {
 			return haxe_ds_Option.None;
 		}
 	}
+}
+function model_ver1_game_alg_Context_getThisCardSetGroupCardIds(ctx,cardId) {
+	return [cardId];
 }
 function model_ver1_game_alg_Context_getOpponentPlayerId(ctx,playerId) {
 	if(playerId == model_ver1_game_define_Define_PLAYER_A) {

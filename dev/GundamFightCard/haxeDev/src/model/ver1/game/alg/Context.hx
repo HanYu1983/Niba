@@ -94,6 +94,10 @@ function getCardEntityCategory(ctx:Context, cardId:String):Option<CardEntityCate
 
 // Selection
 
+function getThisCardSetGroupCardIds(ctx:Context, cardId:String):Array<String> {
+	return [cardId];
+}
+
 function getOpponentPlayerId(ctx:Context, playerId:String):String {
 	return playerId == PLAYER_A ? PLAYER_B : PLAYER_A;
 }
