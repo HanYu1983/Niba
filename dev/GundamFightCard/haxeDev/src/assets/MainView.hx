@@ -87,11 +87,14 @@ class MainView extends VBox {
 		// box_table.depth = -10;
 		final areas = [playerTable.box_deck, playerTable.box_deck2, playerTable.box_hand];
 		for (area in areas) {
+			area.styleNames = 'selectable';
 			area.onMouseOver = function(e) {
 				trace('over area');
-				trace(area.screenLeft);
+				// trace(area.screenLeft);
 			};
-			area.onMouseOut = function(e) {};
+			area.onMouseOut = function(e) {
+				trace('out area');
+			};
 			area.onClick = function(e) {};
 		}
 	}
