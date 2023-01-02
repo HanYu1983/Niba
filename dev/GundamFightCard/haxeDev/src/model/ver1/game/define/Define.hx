@@ -160,18 +160,35 @@ class Mark implements hxbit.Serializable {
 	}
 
 	@:s public var id:String;
+	@:s public var age:Null<Int>;
 
 	public function getEffect(ctx:Context):Array<MarkEffect> {
 		return [];
 	}
 
-	public function onEvent(ctx:Context, event:Event):Void {}
+	public function onEvent(ctx:Context, event:Event):Void {
+		if (age != null) {
+			switch event {
+				case ChangePhase:
+					switch ctx.timing {
+						case Default(Battle, Some(End), End):
+							age -= 1;
+							if (age <= 0) {
+								ctx.marks.remove(id);
+							}
+						case _:
+					}
+				case _:
+			}
+		}
+	}
 }
 
 class EnterFieldThisTurnMark extends Mark {
 	public function new(id:String, cardId:String) {
 		super(id);
 		this.cardId = cardId;
+		this.age = 1;
 	}
 
 	@:s public var cardId:String;
@@ -180,17 +197,17 @@ class EnterFieldThisTurnMark extends Mark {
 		return [EnterFieldThisTurn(this.cardId)];
 	}
 
-	public override function onEvent(ctx:Context, event:Event):Void {
-		switch event {
-			case ChangePhase:
-				switch ctx.timing {
-					case Default(Battle, Some(End), End):
-						ctx.marks.remove(id);
-					case _:
-				}
-			case _:
-		}
-	}
+	// public override function onEvent(ctx:Context, event:Event):Void {
+	// 	switch event {
+	// 		case ChangePhase:
+	// 			switch ctx.timing {
+	// 				case Default(Battle, Some(End), End):
+	// 					ctx.marks.remove(id);
+	// 				case _:
+	// 			}
+	// 		case _:
+	// 	}
+	// }
 }
 
 // CardText

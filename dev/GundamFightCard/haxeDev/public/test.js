@@ -5096,6 +5096,28 @@ model_ver1_game_define_Mark.prototype = {
 		return [];
 	}
 	,onEvent: function(ctx,event) {
+		if(this.age != null) {
+			if(event._hx_index == 0) {
+				var _g = ctx.timing;
+				var _g1 = _g.step;
+				if(_g.phase._hx_index == 3) {
+					if(_g1._hx_index == 0) {
+						if(_g1.v._hx_index == 4) {
+							if(_g.timing._hx_index == 4) {
+								this.age -= 1;
+								if(this.age <= 0) {
+									var key = this.id;
+									var _this = ctx.marks;
+									if(Object.prototype.hasOwnProperty.call(_this.h,key)) {
+										delete(_this.h[key]);
+									}
+								}
+							}
+						}
+					}
+				}
+			}
+		}
 	}
 	,getCLID: function() {
 		return model_ver1_game_define_Mark.__clid;
@@ -5115,11 +5137,25 @@ model_ver1_game_define_Mark.prototype = {
 			}
 			__ctx.out.add(b);
 		}
+		if(this.age == null) {
+			__ctx.out.addByte(0);
+		} else {
+			__ctx.out.addByte(1);
+			var v = this.age;
+			if(v >= 0 && v < 128) {
+				__ctx.out.addByte(v);
+			} else {
+				__ctx.out.addByte(128);
+				__ctx.out.addInt32(v);
+			}
+		}
 	}
 	,getSerializeSchema: function() {
 		var schema = new hxbit_Schema();
 		schema.fieldsNames.push("id");
 		schema.fieldsTypes.push(hxbit_PropTypeDesc.PString);
+		schema.fieldsNames.push("age");
+		schema.fieldsTypes.push(hxbit_PropTypeDesc.PNull(hxbit_PropTypeDesc.PInt));
 		schema.isFinal = hxbit_Serializer.isClassFinal(model_ver1_game_define_Mark.__clid);
 		return schema;
 	}
@@ -5142,6 +5178,16 @@ model_ver1_game_define_Mark.prototype = {
 			tmp = s;
 		}
 		this.id = tmp;
+		if(__ctx.input.b[__ctx.inPos++] == 0) {
+			this.age = null;
+		} else {
+			var v = __ctx.input.b[__ctx.inPos++];
+			if(v == 128) {
+				v = __ctx.input.getInt32(__ctx.inPos);
+				__ctx.inPos += 4;
+			}
+			this.age = v;
+		}
 	}
 	,__class__: model_ver1_game_define_Mark
 };
@@ -7857,6 +7903,7 @@ model_ver1_game_define_MarkEffect.__constructs__ = [model_ver1_game_define_MarkE
 var model_ver1_game_define_EnterFieldThisTurnMark = function(id,cardId) {
 	model_ver1_game_define_Mark.call(this,id);
 	this.cardId = cardId;
+	this.age = 1;
 };
 $hxClasses["model.ver1.game.define.EnterFieldThisTurnMark"] = model_ver1_game_define_EnterFieldThisTurnMark;
 model_ver1_game_define_EnterFieldThisTurnMark.__name__ = "model.ver1.game.define.EnterFieldThisTurnMark";
@@ -7864,25 +7911,6 @@ model_ver1_game_define_EnterFieldThisTurnMark.__super__ = model_ver1_game_define
 model_ver1_game_define_EnterFieldThisTurnMark.prototype = $extend(model_ver1_game_define_Mark.prototype,{
 	getEffect: function(ctx) {
 		return [model_ver1_game_define_MarkEffect.EnterFieldThisTurn(this.cardId)];
-	}
-	,onEvent: function(ctx,event) {
-		if(event._hx_index == 0) {
-			var _g = ctx.timing;
-			var _g1 = _g.step;
-			if(_g.phase._hx_index == 3) {
-				if(_g1._hx_index == 0) {
-					if(_g1.v._hx_index == 4) {
-						if(_g.timing._hx_index == 4) {
-							var key = this.id;
-							var _this = ctx.marks;
-							if(Object.prototype.hasOwnProperty.call(_this.h,key)) {
-								delete(_this.h[key]);
-							}
-						}
-					}
-				}
-			}
-		}
 	}
 	,getCLID: function() {
 		return model_ver1_game_define_EnterFieldThisTurnMark.__clid;
