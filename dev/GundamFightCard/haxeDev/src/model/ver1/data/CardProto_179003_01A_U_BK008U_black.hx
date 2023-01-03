@@ -28,12 +28,15 @@ class CardProto_179003_01A_U_BK008U_black extends CardProto {
 }
 
 private class RequireThisCardDestroyByBattleDamage extends Require {
-	public function new(id:String) {
+	public function new(id:String, cardId:String) {
 		super(id, "このカードが戦闘ダメージで破壊されている場合");
+		this.cardId = cardId;
 	}
 
-	public override function action(ctx:Context, runtime:ExecuteRuntime):Void {
-		if (isDestroyNow(ctx, runtime.getCardId(), {isByBattleDamage: true}) == false) {
+	@:s public var cardId:String;
+
+	public override function action(ctx:Context):Void {
+		if (isDestroyNow(ctx, cardId, {isByBattleDamage: true}) == false) {
 			throw new haxe.Exception("這張卡必須是破壞中的狀態");
 		}
 	}
@@ -46,11 +49,12 @@ private class Text1 extends CardText {
 	}
 
 	public override function getRequires(ctx:Context, runtime:ExecuteRuntime):Array<Require> {
+		final thisCardId = runtime.getCardId();
 		return [
 			// TODO: timing list
 			new RequirePhase('${id}_Text1_Req1', Default(Battle, Some(DamageChecking), Free1)),
 			new RequireGTap('${id}_Text1_Req2', [Black, Black], ctx, runtime),
-			new RequireThisCardDestroyByBattleDamage('${id}_Text1_Req3'),
+			new RequireThisCardDestroyByBattleDamage('${id}_Text1_Req3', thisCardId),
 		];
 	}
 
@@ -101,7 +105,7 @@ function test() {
 		final text = findText[0].text;
 		final runtime = findText[0].runtime;
 		for (req in text.getRequires(ctx, runtime)) {
-			req.action(ctx, runtime);
+			req.action(ctx);
 		}
 		text.action(ctx, runtime);
 	}

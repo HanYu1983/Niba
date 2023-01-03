@@ -132,7 +132,7 @@ function test() {
 	trace("選擇");
 	setPlayerSelectionCardId(ctx, require.id, [require.tips[0]]);
 	trace("驗証支付");
-	require.action(ctx, runtime);
+	require.action(ctx);
 	trace("解決效果");
 	block.text.action(ctx, runtime);
 	if (card2.isTap != true) {

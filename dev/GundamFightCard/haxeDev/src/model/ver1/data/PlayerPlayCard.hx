@@ -22,6 +22,7 @@ class PlayerPlayCard extends CardText {
 		// TODO: 查詢有沒有替代横置國力顏色的效果
 		// TODO: 查詢有沒有在SET在特定卡上而減少横置國力的效果
 		final cardId = runtime.getCardId();
+		final responsePlayerId = runtime.getResponsePlayerId();
 		switch getCardType(ctx, cardId) {
 			case Character | OperationUnit:
 			// TODO: require unit
@@ -32,7 +33,7 @@ class PlayerPlayCard extends CardText {
 
 		return [
 			new RequirePhase('${id}_RequirePhase', Default(Maintenance, None, Free1)),
-			new RequireGCount('${id}_RequireGCount', 3),
+			new RequireGCount('${id}_RequireGCount', responsePlayerId, 3),
 			new RequireGTap('${id}_RequireGTap', [Black, Black], ctx, runtime),
 		];
 	}

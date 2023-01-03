@@ -107,7 +107,7 @@ function test() {
 		final text = findText[0].text;
 		final runtime = findText[0].runtime;
 		for (req in text.getRequires(ctx, runtime)) {
-			req.action(ctx, runtime);
+			req.action(ctx);
 		}
 		text.action(ctx, runtime);
 	}

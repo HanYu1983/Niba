@@ -233,7 +233,7 @@ class Require {
 	public final id:String;
 	public final description:String;
 
-	public function action(ctx:Context, runtime:ExecuteRuntime):Void {}
+	public function action(ctx:Context):Void {}
 }
 
 class CardText implements hxbit.Serializable {
