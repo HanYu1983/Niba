@@ -1,7 +1,7 @@
 package model.ver1.test.common;
 
 import model.ver1.game.define.Define;
-import model.ver1.game.define.ExecuteRuntimeImpl;
+import model.ver1.game.define.ExecuteRuntime;
 import model.ver1.game.define.Mark;
 
 class OnlyEmptyTextCardProto extends CardProto {

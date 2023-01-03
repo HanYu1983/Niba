@@ -4,7 +4,7 @@ import haxe.Exception;
 import tool.Table;
 import tool.Helper;
 import model.ver1.game.define.Define;
-import model.ver1.game.define.ExecuteRuntimeImpl;
+import model.ver1.game.define.ExecuteRuntime;
 import model.ver1.game.define.Mark;
 import model.ver1.game.define.Timing;
 import model.ver1.game.define.Block;

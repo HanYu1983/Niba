@@ -8,7 +8,7 @@ import haxe.ds.EnumValueMap;
 import tool.Table;
 import tool.Helper;
 import model.ver1.game.define.Timing;
-import model.ver1.game.define.ExecuteRuntimeImpl;
+import model.ver1.game.define.ExecuteRuntime;
 import model.ver1.game.define.Mark;
 import model.ver1.game.define.Block;
 import model.ver1.game.define.Require;

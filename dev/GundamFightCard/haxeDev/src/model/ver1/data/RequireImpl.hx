@@ -5,7 +5,7 @@ using Lambda;
 import haxe.Exception;
 import haxe.EnumTools;
 import model.ver1.game.define.Define;
-import model.ver1.game.define.ExecuteRuntimeImpl;
+import model.ver1.game.define.ExecuteRuntime;
 import model.ver1.game.define.Timing;
 import model.ver1.game.define.Require;
 import model.ver1.game.alg.Context;

@@ -1,7 +1,6 @@
 package model.ver1.game.define;
 
 import model.ver1.game.define.Define;
-// Block
 
 enum BlockCause {
 	Pending;

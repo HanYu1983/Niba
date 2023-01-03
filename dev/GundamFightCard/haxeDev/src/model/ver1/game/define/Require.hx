@@ -1,7 +1,7 @@
 package model.ver1.game.define;
 
 import model.ver1.game.define.Define;
-import model.ver1.game.define.ExecuteRuntimeImpl;
+import model.ver1.game.define.ExecuteRuntime;
 
 class Require {
 	public function new(id:String, description:String) {
