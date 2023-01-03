@@ -2,6 +2,11 @@ package model.ver1.game.define;
 
 import model.ver1.game.define.Define;
 
+interface ExecuteRuntime {
+	function getCardId():String;
+	function getResponsePlayerId():String;
+}
+
 class AbstractExecuteRuntime implements ExecuteRuntime {
 	public function new() {}
 

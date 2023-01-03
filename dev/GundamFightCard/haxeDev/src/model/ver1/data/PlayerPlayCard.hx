@@ -4,8 +4,12 @@ using Lambda;
 
 import haxe.Exception;
 import model.ver1.game.define.Define;
+import model.ver1.game.define.ExecuteRuntimeImpl;
 import model.ver1.game.define.BaSyou;
 import model.ver1.game.define.Timing;
+import model.ver1.game.define.Mark;
+import model.ver1.game.define.Block;
+import model.ver1.game.define.Require;
 import model.ver1.game.alg.Context;
 import model.ver1.game.alg.Cut;
 import model.ver1.data.RequireImpl;

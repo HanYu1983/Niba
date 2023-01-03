@@ -7,6 +7,10 @@ import model.ver1.game.define.Define;
 import model.ver1.game.define.Timing;
 import model.ver1.game.define.BaSyou;
 import model.ver1.game.define.ExecuteRuntimeImpl;
+import model.ver1.game.define.Mark;
+import model.ver1.game.define.Block;
+import model.ver1.game.define.Require;
+import model.ver1.game.define.Event;
 import model.ver1.game.alg.Context;
 import model.ver1.game.alg.Cut;
 import model.ver1.data.RequireImpl;
@@ -26,8 +30,8 @@ class CardProto_179030_11E_U_VT186R_purple extends CardProto {
 
 	public override function getTexts(ctx:Context, runtime:ExecuteRuntime):Array<CardText> {
 		return [
-			new PlayerPlayCard('${runtime.getCardId()}_PlayerPlayCard'),
-			new Text1('${runtime.getCardId()}_Text1')
+			new PlayerPlayCard('CardProto_179030_11E_U_VT186R_purple_1'),
+			new Text1('CardProto_179030_11E_U_VT186R_purple_2')
 		];
 	}
 }

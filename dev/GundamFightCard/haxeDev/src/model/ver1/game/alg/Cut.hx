@@ -1,6 +1,7 @@
 package model.ver1.game.alg;
 
 import model.ver1.game.define.Define;
+import model.ver1.game.define.Block;
 
 function getTopCut(ctx:Context):Array<Block> {
 	if (ctx.cuts.length == 0) {

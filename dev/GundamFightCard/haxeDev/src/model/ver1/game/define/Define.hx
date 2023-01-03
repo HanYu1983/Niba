@@ -8,6 +8,11 @@ import haxe.ds.EnumValueMap;
 import tool.Table;
 import tool.Helper;
 import model.ver1.game.define.Timing;
+import model.ver1.game.define.ExecuteRuntimeImpl;
+import model.ver1.game.define.Mark;
+import model.ver1.game.define.Block;
+import model.ver1.game.define.Require;
+import model.ver1.game.define.Event;
 
 // Context
 // Player
@@ -18,7 +23,6 @@ import model.ver1.game.define.Timing;
 // 	public function new(id:String) {
 // 		this.id = id;
 // 	}
-
 // 	// @:s不能作用在interface
 // 	// 不能用final
 // 	// 不支援巢狀typedef
@@ -27,18 +31,6 @@ import model.ver1.game.define.Timing;
 
 final PLAYER_A = "PLAYER_A";
 final PLAYER_B = "PLAYER_B";
-
-// Event
-
-enum Event {
-	ChangePhase;
-	// 「ゲイン」の効果で戦闘修正を得た場合
-	Gain(cardId:String, value:Int);
-	//
-	CardEnterField(cardId:String);
-	//
-	CardRoll(cardId:String);
-}
 
 typedef PlayerSelection = {
 	cardIds:Map<String, Array<String>>
@@ -51,7 +43,7 @@ typedef Memory = {
 class Context implements hxbit.Serializable {
 	public function new() {}
 
-	//@:s public var players:Map<String, Player> = [];
+	// @:s public var players:Map<String, Player> = [];
 	@:s public var playersOrder:Array<String> = [];
 	@:s public var table = new Table();
 	@:s public var marks:Map<String, Mark> = [];
@@ -125,115 +117,6 @@ enum BattlePoint {
 enum RelativePlayer {
 	You;
 	Opponent;
-}
-
-// Block
-
-enum BlockCause {
-	Pending;
-	System(respnosePlayerId:String);
-	PlayCard(playerId:String, cardId:String);
-	PlayText(cardId:String, textId:String);
-	TextEffect(cardId:String, textId:String);
-}
-
-class Block implements hxbit.Serializable {
-	public function new(id:String, cause:BlockCause, text:CardText) {
-		this.id = id;
-		this.cause = cause;
-		this.text = text;
-	}
-
-	@:s public var id:String;
-	@:s public var cause:BlockCause;
-	@:s public var text:CardText;
-	@:s public var isImmediate = false;
-}
-
-// Mark
-
-enum MarkEffect {
-	AddBattlePoint(cardId:String, battlePoint:BattlePoint);
-	AttackSpeed(cardId:String, speed:Int);
-	AddText(cardId:String, text:CardText);
-	EnterFieldThisTurn(cardId:String);
-	CanNotReroll(cardId:String);
-}
-
-class Mark implements hxbit.Serializable {
-	public function new(id:String) {
-		this.id = id;
-	}
-
-	@:s public var id:String;
-	@:s public var age:Null<Int>;
-
-	public function getEffect(ctx:Context):Array<MarkEffect> {
-		return [];
-	}
-
-	public function onEvent(ctx:Context, event:Event):Void {
-		if (age != null) {
-			switch event {
-				case ChangePhase:
-					switch ctx.timing {
-						case Default(Battle, Some(End), End):
-							age -= 1;
-							if (age <= 0) {
-								ctx.marks.remove(id);
-							}
-						case _:
-					}
-				case _:
-			}
-		}
-	}
-}
-
-class EnterFieldThisTurnMark extends Mark {
-	public function new(id:String, cardId:String) {
-		super(id);
-		this.cardId = cardId;
-		this.age = 1;
-	}
-
-	@:s public var cardId:String;
-
-	public override function getEffect(ctx:Context):Array<MarkEffect> {
-		return [EnterFieldThisTurn(this.cardId)];
-	}
-}
-
-class CanNotRerollMark extends Mark {
-	public function new(id:String, cardId:String) {
-		super(id);
-		this.cardId = cardId;
-	}
-
-	@:s public var cardId:String;
-
-	public override function getEffect(ctx:Context):Array<MarkEffect> {
-		return [CanNotReroll(this.cardId)];
-	}
-}
-
-// CardText
-
-interface ExecuteRuntime {
-	function getCardId():String;
-	function getResponsePlayerId():String;
-}
-
-class Require {
-	public function new(id:String, description:String) {
-		this.id = id;
-		this.description = description;
-	}
-
-	public final id:String;
-	public final description:String;
-
-	public function action(ctx:Context, runtime:ExecuteRuntime):Void {}
 }
 
 class CardText implements hxbit.Serializable {
