@@ -47,17 +47,7 @@ private class Text1 extends CardText {
 		switch event {
 			case CardEnterField(enterFieldCardId):
 				if (enterFieldCardId == thisCardId) {
-					final unitsEnterFieldThisTurn = getEnterFieldThisTurnCardIds(ctx).filter(cardId -> {
-						return switch getCardEntityCategory(ctx, cardId) {
-							case Some(Unit):
-								true;
-							case _:
-								false;
-						}
-					}).filter(cardId -> {
-						return isOpponentsCard(ctx, thisCardId, cardId);
-					});
-					final block = new Block(getSubKey(0), TextEffect(thisCardId, id), new Process1('${id}_Process1', unitsEnterFieldThisTurn));
+					final block = new Block(getSubKey(0), TextEffect(thisCardId, id), new Process1('${id}_Process1'));
 					block.isImmediate = true;
 					cutIn(ctx, block);
 				}
@@ -66,18 +56,31 @@ private class Text1 extends CardText {
 	}
 }
 
+private class RequireOpponentUnitsEnterFieldThisTurn extends RequireUserSelectCard {
+	public function new(id:String, ctx:Context, runtime:ExecuteRuntime) {
+		super(id, "このターン中に場に出た敵軍ユニット１枚を");
+		final thisCardId = runtime.getCardId();
+		final unitsEnterFieldThisTurn = getEnterFieldThisTurnCardIds(ctx).filter(cardId -> {
+			return switch getCardEntityCategory(ctx, cardId) {
+				case Some(Unit):
+					true;
+				case _:
+					false;
+			}
+		}).filter(cardId -> {
+			return isOpponentsCard(ctx, thisCardId, cardId);
+		});
+		this.tips = unitsEnterFieldThisTurn;
+	}
+}
+
 private class Process1 extends CardText {
-	public function new(id:String, cardIds:Array<String>) {
+	public function new(id:String) {
 		super(id, "このターン中に場に出た敵軍ユニット１枚を、持ち主の手札に移す。");
-		this.cardIds = cardIds;
 	}
 
-	@:s public var cardIds:Array<String>;
-
 	public override function getRequires(ctx:Context, runtime:ExecuteRuntime):Array<Require> {
-		final req = new RequireUserSelectCard(getSubKey(0), "このターン中に場に出た敵軍ユニット１枚");
-		req.tips = cardIds;
-		return [req];
+		return [new RequireOpponentUnitsEnterFieldThisTurn(getSubKey(0), ctx, runtime)];
 	}
 
 	public override function action(ctx:Context, runtime:ExecuteRuntime):Void {
@@ -118,7 +121,7 @@ function test() {
 		throw "堆疊中必須有一個效果";
 	}
 	final block = getTopCut(ctx)[0];
-	final runtime = new DefaultExecuteRuntime(player1, card.id);
+	final runtime = new DefaultExecuteRuntime(card.id, player1);
 	final requires = block.text.getRequires(ctx, runtime);
 	if (requires.length != 1) {
 		throw "requires.length != 1";

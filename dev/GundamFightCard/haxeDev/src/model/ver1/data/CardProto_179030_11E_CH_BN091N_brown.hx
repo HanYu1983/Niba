@@ -124,7 +124,7 @@ function test() {
 		throw "堆疊中必須有一個效果";
 	}
 	final block = getTopCut(ctx)[0];
-	final runtime = new DefaultExecuteRuntime(player1, card.id);
+	final runtime = new DefaultExecuteRuntime(card.id, player1);
 	final requires = block.text.getRequires(ctx, runtime);
 	if (requires.length != 1) {
 		throw "requires.length != 1";

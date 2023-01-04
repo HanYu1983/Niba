@@ -161,7 +161,8 @@ function getCardBaSyouAndAssertExist(ctx:Context, cardId:String):BaSyou {
 		case Some(cardStack):
 			getBaSyou(cardStack.id);
 		case _:
-			throw new haxe.Exception('card baSyou not found');
+			trace(ctx);
+			throw new haxe.Exception('card baSyou not found: ${cardId}');
 	}
 }
 
