@@ -84,7 +84,7 @@ class RequireGCount extends Require {
 		this.count = count;
 	}
 
-	@:s public var count:Int;
+	public var count:Int;
 
 	public override function action(ctx:Context, runtime:ExecuteRuntime):Void {
 		final responsePlayerId = runtime.getResponsePlayerId();
