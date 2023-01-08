@@ -96,6 +96,10 @@ enum FlowType {
 	FlowHandleStackEffectFinished;
 	FlowCancelPassCut;
 	FlowPassCut;
+	FlowPassPhase;
+	FlowCancelPassPhase;
+	FlowNextTiming;
+	FlowTriggerTextEvent(event:Event);
 }
 
 enum Flow {
@@ -240,6 +244,81 @@ function queryFlow(ctx:Context, playerId:String):Array<Flow> {
 			return [Default(FlowSetActiveEffectId(effect.id, [effect]), "支付最上方的堆疊效果")];
 		}
 	}
+	// 處理自由時間，必須雙方都宣告結束才能進行到下一步
+	{
+		final myCommandList = getClientCommand(ctx, playerId);
+		switch ctx.timing {
+			case Default(_, _, Free1 | Free2):
+				final isAllPassPhase = ctx.flowMemory.hasPlayerPassPhase[PLAYER_A] && ctx.flowMemory.hasPlayerPassPhase[PLAYER_B];
+				if (isAllPassPhase == false) {
+					if (ctx.flowMemory.hasPlayerPassPhase[playerId]) {
+						return [Default(FlowCancelPassPhase, '等待對方結束或是取消[${ctx.timing}]結束')];
+					}
+					final r1 = myCommandList.length == 0 ? [] : [
+						Flow.Default(FlowSetActiveEffectId(myCommandList[0].id, myCommandList), "選擇一個指令")
+					];
+					final r2 = [Flow.Default(FlowPassPhase, '宣告[${ctx.timing}]結束')];
+					return r1.concat(r2);
+				}
+				if (playerId != ctx.activePlayerId) {
+					return [Default(FlowWaitPlayer, "等待伺服器處理")];
+				}
+				return [Default(FlowNextTiming, "")];
+			case _:
+		}
+	}
+	// 之後的都是系統事件，由主動玩家呼叫
+	{
+		if (playerId != ctx.activePlayerId) {
+			return [Default(FlowWaitPlayer, "等待伺服器處理")];
+		}
+		switch ctx.timing {
+			case Default(Draw, None, Rule):
+				if (ctx.flowMemory.hasTriggerEvent) {
+					return [Default(FlowNextTiming, "")];
+				}
+			// TODO
+			// addDrawRuleEffect(ctx);
+			case Default(Reroll, None, Rule):
+				if (ctx.flowMemory.hasTriggerEvent) {
+					return [Default(FlowNextTiming, "")];
+				}
+			// TODO
+			// addRerollRuleEffect(ctx);
+			case Default(Battle, Some(Attack), Rule):
+				// TODO
+				if (ctx.flowMemory.hasTriggerEvent) {
+					return [Default(FlowNextTiming, "")];
+				}
+			case Default(Battle, Some(Defense), Rule):
+				if (ctx.flowMemory.hasTriggerEvent) {
+					return [Default(FlowNextTiming, "")];
+				}
+			case Default(Battle, Some(DamageChecking), Rule):
+				if (ctx.flowMemory.hasTriggerEvent) {
+					return [Default(FlowNextTiming, "")];
+				}
+			case Default(Battle, Some(Return), Rule):
+				if (ctx.flowMemory.hasTriggerEvent) {
+					return [Default(FlowNextTiming, "")];
+				}
+			case Default(Battle, Some(End), DamageReset):
+			case Default(Battle, Some(End), ResolveEffect):
+			case Default(Battle, Some(End), AdjustHand):
+			case Default(Battle, Some(End), TurnEnd):
+				if (ctx.flowMemory.hasTriggerEvent) {
+					return [Default(FlowNextTiming, "")];
+				}
+				return [Default(FlowTriggerTextEvent(ChangePhase), "")];
+			case Default(_, _, Start | End):
+				// 如果已經觸發事件
+				if (ctx.flowMemory.hasTriggerEvent) {
+					return [Default(FlowNextTiming, "")];
+				}
+				return [Default(FlowTriggerTextEvent(ChangePhase), "")];
+			case _:
+		}
+	}
 	return [];
 }
 
@@ -259,4 +338,6 @@ function getClientCommand(ctx:Context, playerId:String):Array<Block> {
 	return [];
 }
 
+function addDrawRuleEffect(ctx:Context):Void {}
+function addRerollRuleEffect(ctx:Context):Void {}
 function test() {}
