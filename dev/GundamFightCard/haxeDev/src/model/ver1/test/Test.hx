@@ -20,6 +20,7 @@ import model.ver1.data.CardProto_179030_11E_U_VT186R_purple;
 function test() {
 	model.ver1.game.Game.test();
 	model.ver1.game.define.BaSyou.test();
+	model.ver1.game.define.Flow.test();
 	model.ver1.test.Test_getRuntimeText.test();
 	test_getMarkEffects();
 	test_constantText();

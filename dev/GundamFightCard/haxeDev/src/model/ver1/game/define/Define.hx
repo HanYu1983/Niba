@@ -13,6 +13,7 @@ import model.ver1.game.define.Mark;
 import model.ver1.game.define.Block;
 import model.ver1.game.define.Require;
 import model.ver1.game.define.Event;
+import model.ver1.game.define.Flow;
 
 // Context
 // Player
@@ -31,6 +32,10 @@ import model.ver1.game.define.Event;
 
 final PLAYER_A = "PLAYER_A";
 final PLAYER_B = "PLAYER_B";
+
+function getOpponentPlayerId(playerId:String):String {
+	return playerId == PLAYER_A ? PLAYER_B : PLAYER_A;
+}
 
 typedef PlayerSelection = {
 	cardIds:Map<String, Array<String>>
@@ -56,6 +61,15 @@ class Context implements hxbit.Serializable {
 	};
 	// serializable不支援List
 	@:s public var cuts:Array<Array<Block>> = [];
+	@:s public var flowMemory:FlowMemory = {
+		state: PrepareDeck,
+		hasTriggerEvent: false,
+		hasPlayerPassPhase: new Map<String, Bool>(),
+		hasPlayerPassCut: new Map<String, Bool>(),
+		hasPlayerPassPayCost: new Map<String, Bool>(),
+		shouldTriggerStackEffectFinishedEvent: false,
+		msgs: [],
+	};
 }
 
 // General
