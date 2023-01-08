@@ -104,7 +104,7 @@ function queryFlow(ctx:Context, playerId:String):Array<Flow> {
 			return [Default(FlowWaitPlayer, "遊戲結束")];
 		case _:
 	}
-	// 支付行為
+	// 有玩家在支付卡片
 	switch getActiveBlockId(ctx) {
 		case Some(activeBlockId):
 			final runtime = getBlockRuntime(ctx, activeBlockId);
@@ -136,7 +136,7 @@ function queryFlow(ctx:Context, playerId:String):Array<Flow> {
 						return [Default(FlowObserveEffect, "")];
 					}
 					// 對方已支付（自己未支付）
-					// 自宣告已支付
+					// 自己宣告已支付
 					return [Default(FlowPassPayCost(activeBlockId), "")];
 				}
 			}
