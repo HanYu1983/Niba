@@ -70,6 +70,7 @@ class Context implements hxbit.Serializable {
 		shouldTriggerStackEffectFinishedEvent: false,
 		msgs: [],
 	};
+	@:s public var activePlayerId: String;
 }
 
 // General

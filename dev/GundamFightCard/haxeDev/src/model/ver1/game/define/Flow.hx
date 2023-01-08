@@ -91,6 +91,8 @@ enum FlowType {
 	FlowDoEffect(blockId:String);
 	FlowPassPayCost(blockId:String);
 	FlowCancelActiveEffect;
+	FlowSetActiveEffectId(blockId:String, tips:Array<Block>);
+	FlowDeleteImmediateEffect(blockId:String, tips:Array<Block>);
 }
 
 enum Flow {
@@ -153,6 +155,39 @@ function queryFlow(ctx:Context, playerId:String):Array<Flow> {
 			];
 		case None:
 	}
+	// 起動效果
+	{
+		final immediateEffects = getImmediateEffects(ctx);
+		if (immediateEffects.length > 0) {
+			final isActivePlayer = ctx.activePlayerId == playerId;
+			final myEffect:Array<Block> = [];
+			final opponentEffect:Array<Block> = [];
+			for (effect in immediateEffects) {
+				final controller = getBlockRuntime(ctx, effect.id).getResponsePlayerId();
+				if (controller == playerId) {
+					myEffect.push(effect);
+				} else {
+					opponentEffect.push(effect);
+				}
+			}
+			// 不是主動玩家的情況，要等主動玩家先處理完起動效果才行
+			if (isActivePlayer == false) {
+				if (opponentEffect.length > 0) {
+					return [Default(FlowWaitPlayer, "等待主動玩家處理起動效果")];
+				}
+			}
+			// 主動玩家
+			if (myEffect.length == 0) {
+				return [Default(FlowWaitPlayer, "等待被動玩家處理起動效果")];
+			}
+			final optionEffect = myEffect.filter((v) -> v.isOption == true);
+			final r1:Array<Flow> = myEffect.length == 0 ? [] : [Default(FlowSetActiveEffectId(myEffect[0].id, myEffect), "選擇一個起動效果")];
+			final r2:Array<Flow> = optionEffect.length == 0 ? [] : [
+				Default(FlowDeleteImmediateEffect(optionEffect[0].id, optionEffect), "你可以放棄這些效果")
+			];
+			return r1.concat(r2);
+		}
+	}
 	return [];
 }
 
@@ -162,6 +197,10 @@ function hasSomeoneLiveIsZero(ctx:Context):Option<String> {
 
 function getActiveBlockId(ctx:Context):Option<String> {
 	return None;
+}
+
+function getImmediateEffects(ctx:Context):Array<Block> {
+	return [];
 }
 
 function test() {}

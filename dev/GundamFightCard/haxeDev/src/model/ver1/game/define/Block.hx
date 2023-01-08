@@ -21,4 +21,5 @@ class Block implements hxbit.Serializable {
 	@:s public var cause:BlockCause;
 	@:s public var text:CardText;
 	@:s public var isImmediate = false;
+	@:s public var isOption = false;
 }

@@ -7413,6 +7413,7 @@ var model_ver1_game_define_BlockCause = $hxEnums["model.ver1.game.define.BlockCa
 model_ver1_game_define_BlockCause.__constructs__ = [model_ver1_game_define_BlockCause.Pending,model_ver1_game_define_BlockCause.System,model_ver1_game_define_BlockCause.PlayCard,model_ver1_game_define_BlockCause.PlayText,model_ver1_game_define_BlockCause.TextEffect];
 var model_ver1_game_define_Block = function(id,cause,text) {
 	this.__uid = hxbit_Serializer.SEQ << 24 | ++hxbit_Serializer.UID;
+	this.isOption = false;
 	this.isImmediate = false;
 	this.id = id;
 	this.cause = cause;
@@ -7443,6 +7444,7 @@ model_ver1_game_define_Block.prototype = {
 		hxbit_enumSer_Model_$ver1_$game_$define_$BlockCause.doSerialize(__ctx,this.cause);
 		__ctx.addKnownRef(this.text);
 		__ctx.out.addByte(this.isImmediate ? 1 : 0);
+		__ctx.out.addByte(this.isOption ? 1 : 0);
 	}
 	,getSerializeSchema: function() {
 		var schema = new hxbit_Schema();
@@ -7454,11 +7456,14 @@ model_ver1_game_define_Block.prototype = {
 		schema.fieldsTypes.push(hxbit_PropTypeDesc.PSerializable("model.ver1.game.define.CardText"));
 		schema.fieldsNames.push("isImmediate");
 		schema.fieldsTypes.push(hxbit_PropTypeDesc.PBool);
+		schema.fieldsNames.push("isOption");
+		schema.fieldsTypes.push(hxbit_PropTypeDesc.PBool);
 		schema.isFinal = hxbit_Serializer.isClassFinal(model_ver1_game_define_Block.__clid);
 		return schema;
 	}
 	,unserializeInit: function() {
 		this.isImmediate = false;
+		this.isOption = false;
 	}
 	,unserialize: function(__ctx) {
 		var v = __ctx.input.b[__ctx.inPos++];
@@ -7481,6 +7486,7 @@ model_ver1_game_define_Block.prototype = {
 		this.cause = __e;
 		this.text = __ctx.getRef(model_ver1_game_define_CardText,model_ver1_game_define_CardText.__clid);
 		this.isImmediate = __ctx.input.b[__ctx.inPos++] != 0;
+		this.isOption = __ctx.input.b[__ctx.inPos++] != 0;
 	}
 	,__class__: model_ver1_game_define_Block
 };
@@ -7945,6 +7951,20 @@ model_ver1_game_define_Context.prototype = {
 				hxbit_enumSer_Model_$ver1_$game_$define_$FlowMemoryState.doSerialize(__ctx,v.state);
 			}
 		}
+		var s = this.activePlayerId;
+		if(s == null) {
+			__ctx.out.addByte(0);
+		} else {
+			var b = haxe_io_Bytes.ofString(s);
+			var v = b.length + 1;
+			if(v >= 0 && v < 128) {
+				__ctx.out.addByte(v);
+			} else {
+				__ctx.out.addByte(128);
+				__ctx.out.addInt32(v);
+			}
+			__ctx.out.add(b);
+		}
 	}
 	,getSerializeSchema: function() {
 		var schema = new hxbit_Schema();
@@ -7964,6 +7984,8 @@ model_ver1_game_define_Context.prototype = {
 		schema.fieldsTypes.push(hxbit_PropTypeDesc.PArray(hxbit_PropTypeDesc.PArray(hxbit_PropTypeDesc.PSerializable("model.ver1.game.define.Block"))));
 		schema.fieldsNames.push("flowMemory");
 		schema.fieldsTypes.push(hxbit_PropTypeDesc.PObj([{ name : "hasPlayerPassCut", opt : false, type : hxbit_PropTypeDesc.PMap(hxbit_PropTypeDesc.PString,hxbit_PropTypeDesc.PBool)},{ name : "hasPlayerPassPayCost", opt : false, type : hxbit_PropTypeDesc.PMap(hxbit_PropTypeDesc.PString,hxbit_PropTypeDesc.PBool)},{ name : "hasPlayerPassPhase", opt : false, type : hxbit_PropTypeDesc.PMap(hxbit_PropTypeDesc.PString,hxbit_PropTypeDesc.PBool)},{ name : "hasTriggerEvent", opt : false, type : hxbit_PropTypeDesc.PBool},{ name : "msgs", opt : false, type : hxbit_PropTypeDesc.PArray(hxbit_PropTypeDesc.PDynamic)},{ name : "shouldTriggerStackEffectFinishedEvent", opt : false, type : hxbit_PropTypeDesc.PBool},{ name : "state", opt : false, type : hxbit_PropTypeDesc.PEnum("model.ver1.game.define.FlowMemoryState")}]));
+		schema.fieldsNames.push("activePlayerId");
+		schema.fieldsTypes.push(hxbit_PropTypeDesc.PString);
 		schema.isFinal = hxbit_Serializer.isClassFinal(model_ver1_game_define_Context.__clid);
 		return schema;
 	}
@@ -8384,6 +8406,22 @@ model_ver1_game_define_Context.prototype = {
 			}
 			this.flowMemory = { hasPlayerPassCut : hasPlayerPassCut, hasPlayerPassPayCost : hasPlayerPassPayCost, hasPlayerPassPhase : hasPlayerPassPhase, hasTriggerEvent : hasTriggerEvent, msgs : msgs, shouldTriggerStackEffectFinishedEvent : shouldTriggerStackEffectFinishedEvent, state : state};
 		}
+		var v = __ctx.input.b[__ctx.inPos++];
+		if(v == 128) {
+			v = __ctx.input.getInt32(__ctx.inPos);
+			__ctx.inPos += 4;
+		}
+		var len = v;
+		var tmp;
+		if(len == 0) {
+			tmp = null;
+		} else {
+			--len;
+			var s = __ctx.input.getString(__ctx.inPos,len);
+			__ctx.inPos += len;
+			tmp = s;
+		}
+		this.activePlayerId = tmp;
 	}
 	,__class__: model_ver1_game_define_Context
 };
@@ -8508,8 +8546,10 @@ var model_ver1_game_define_FlowType = $hxEnums["model.ver1.game.define.FlowType"
 	,FlowDoEffect: ($_=function(blockId) { return {_hx_index:2,blockId:blockId,__enum__:"model.ver1.game.define.FlowType",toString:$estr}; },$_._hx_name="FlowDoEffect",$_.__params__ = ["blockId"],$_)
 	,FlowPassPayCost: ($_=function(blockId) { return {_hx_index:3,blockId:blockId,__enum__:"model.ver1.game.define.FlowType",toString:$estr}; },$_._hx_name="FlowPassPayCost",$_.__params__ = ["blockId"],$_)
 	,FlowCancelActiveEffect: {_hx_name:"FlowCancelActiveEffect",_hx_index:4,__enum__:"model.ver1.game.define.FlowType",toString:$estr}
+	,FlowSetActiveEffectId: ($_=function(blockId,tips) { return {_hx_index:5,blockId:blockId,tips:tips,__enum__:"model.ver1.game.define.FlowType",toString:$estr}; },$_._hx_name="FlowSetActiveEffectId",$_.__params__ = ["blockId","tips"],$_)
+	,FlowDeleteImmediateEffect: ($_=function(blockId,tips) { return {_hx_index:6,blockId:blockId,tips:tips,__enum__:"model.ver1.game.define.FlowType",toString:$estr}; },$_._hx_name="FlowDeleteImmediateEffect",$_.__params__ = ["blockId","tips"],$_)
 };
-model_ver1_game_define_FlowType.__constructs__ = [model_ver1_game_define_FlowType.FlowWaitPlayer,model_ver1_game_define_FlowType.FlowObserveEffect,model_ver1_game_define_FlowType.FlowDoEffect,model_ver1_game_define_FlowType.FlowPassPayCost,model_ver1_game_define_FlowType.FlowCancelActiveEffect];
+model_ver1_game_define_FlowType.__constructs__ = [model_ver1_game_define_FlowType.FlowWaitPlayer,model_ver1_game_define_FlowType.FlowObserveEffect,model_ver1_game_define_FlowType.FlowDoEffect,model_ver1_game_define_FlowType.FlowPassPayCost,model_ver1_game_define_FlowType.FlowCancelActiveEffect,model_ver1_game_define_FlowType.FlowSetActiveEffectId,model_ver1_game_define_FlowType.FlowDeleteImmediateEffect];
 var model_ver1_game_define_Flow = $hxEnums["model.ver1.game.define.Flow"] = { __ename__:true,__constructs__:null
 	,Default: ($_=function(type,description) { return {_hx_index:0,type:type,description:description,__enum__:"model.ver1.game.define.Flow",toString:$estr}; },$_._hx_name="Default",$_.__params__ = ["type","description"],$_)
 };
@@ -8626,6 +8666,45 @@ function model_ver1_game_define_Flow_queryFlow(ctx,playerId) {
 	case 1:
 		break;
 	}
+	var immediateEffects = model_ver1_game_define_Flow_getImmediateEffects(ctx);
+	if(immediateEffects.length > 0) {
+		var isActivePlayer = ctx.activePlayerId == playerId;
+		var myEffect = [];
+		var opponentEffect = [];
+		var _g = 0;
+		while(_g < immediateEffects.length) {
+			var effect = immediateEffects[_g];
+			++_g;
+			var controller = model_ver1_game_alg_Block_getBlockRuntime(ctx,effect.id).getResponsePlayerId();
+			if(controller == playerId) {
+				myEffect.push(effect);
+			} else {
+				opponentEffect.push(effect);
+			}
+		}
+		if(isActivePlayer == false) {
+			if(opponentEffect.length > 0) {
+				return [model_ver1_game_define_Flow.Default(model_ver1_game_define_FlowType.FlowWaitPlayer,"等待主動玩家處理起動效果")];
+			}
+		}
+		if(myEffect.length == 0) {
+			return [model_ver1_game_define_Flow.Default(model_ver1_game_define_FlowType.FlowWaitPlayer,"等待被動玩家處理起動效果")];
+		}
+		var _g = [];
+		var _g1 = 0;
+		var _g2 = myEffect;
+		while(_g1 < _g2.length) {
+			var v = _g2[_g1];
+			++_g1;
+			if(v.isOption == true) {
+				_g.push(v);
+			}
+		}
+		var optionEffect = _g;
+		var r1 = myEffect.length == 0 ? [] : [model_ver1_game_define_Flow.Default(model_ver1_game_define_FlowType.FlowSetActiveEffectId(myEffect[0].id,myEffect),"選擇一個起動效果")];
+		var r2 = optionEffect.length == 0 ? [] : [model_ver1_game_define_Flow.Default(model_ver1_game_define_FlowType.FlowDeleteImmediateEffect(optionEffect[0].id,optionEffect),"你可以放棄這些效果")];
+		return r1.concat(r2);
+	}
 	return [];
 }
 function model_ver1_game_define_Flow_hasSomeoneLiveIsZero(ctx) {
@@ -8633,6 +8712,9 @@ function model_ver1_game_define_Flow_hasSomeoneLiveIsZero(ctx) {
 }
 function model_ver1_game_define_Flow_getActiveBlockId(ctx) {
 	return haxe_ds_Option.None;
+}
+function model_ver1_game_define_Flow_getImmediateEffects(ctx) {
+	return [];
 }
 function model_ver1_game_define_Flow_test() {
 }
