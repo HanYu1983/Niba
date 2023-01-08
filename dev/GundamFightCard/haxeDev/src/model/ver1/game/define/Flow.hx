@@ -105,12 +105,6 @@ function queryFlow(ctx:Context, playerId:String):Array<Flow> {
 		case _:
 	}
 	// 支付行為
-	// 雙方都已支付 -> FlowDoEffect
-	// 是控制者並已支付 -> FlowObserveEffect等待對方支付
-	// 非控制者並對方未支付 -> FlowObserveEffect等待對方支付
-	// 非控制者並對方已支付 -> FlowPassPayCost宣告已支付
-	// 非控制者並雙方未支付 -> FlowObserveEffect等待對方支付
-	// 其它情況 -> FlowCancelActiveEffect取消支付或是FlowPassPayCost宣告已支付
 	switch getActiveBlockId(ctx) {
 		case Some(activeBlockId):
 			final runtime = getBlockRuntime(ctx, activeBlockId);
@@ -118,25 +112,41 @@ function queryFlow(ctx:Context, playerId:String):Array<Flow> {
 			final isPass = ctx.flowMemory.hasPlayerPassPayCost[playerId];
 			final isOpponentPass = ctx.flowMemory.hasPlayerPassPayCost[getOpponentPlayerId(playerId)];
 			if (isPass && isOpponentPass) {
+				// 雙方都已支付
 				if (controller != playerId) {
+					// 非控制者等待
 					return [Default(FlowObserveEffect, "")];
 				}
+				// 控制者可解決效果
 				return [Default(FlowDoEffect(activeBlockId), "")];
 			} else if (isPass || isOpponentPass) {
+				// 其中一方支付
 				if (controller == playerId) {
+					// 控制者
 					if (isPass) {
+						// 已支付
+						// 等待
 						return [Default(FlowObserveEffect, "")];
 					}
 				} else {
+					// 非控制者
 					if (isOpponentPass == false) {
+						// 對方未支付（自己已支付）
+						// 等待
 						return [Default(FlowObserveEffect, "")];
 					}
+					// 對方已支付（自己未支付）
+					// 自宣告已支付
 					return [Default(FlowPassPayCost(activeBlockId), "")];
 				}
 			}
 			if (controller != playerId) {
+				// 非控制者並雙方都支付
+				// 等待控制者解決效果
 				return [Default(FlowWaitPlayer, "等待對方支付ActiveEffectID")];
 			}
+			// 是控制者但未支付
+			// 取消支付或宣告已支付
 			return [
 				Default(FlowCancelActiveEffect, "取消支付效果，讓其它玩家可以支付"),
 				Default(FlowPassPayCost(activeBlockId), ""),
