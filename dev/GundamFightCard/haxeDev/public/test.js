@@ -8548,8 +8548,11 @@ var model_ver1_game_define_FlowType = $hxEnums["model.ver1.game.define.FlowType"
 	,FlowCancelActiveEffect: {_hx_name:"FlowCancelActiveEffect",_hx_index:4,__enum__:"model.ver1.game.define.FlowType",toString:$estr}
 	,FlowSetActiveEffectId: ($_=function(blockId,tips) { return {_hx_index:5,blockId:blockId,tips:tips,__enum__:"model.ver1.game.define.FlowType",toString:$estr}; },$_._hx_name="FlowSetActiveEffectId",$_.__params__ = ["blockId","tips"],$_)
 	,FlowDeleteImmediateEffect: ($_=function(blockId,tips) { return {_hx_index:6,blockId:blockId,tips:tips,__enum__:"model.ver1.game.define.FlowType",toString:$estr}; },$_._hx_name="FlowDeleteImmediateEffect",$_.__params__ = ["blockId","tips"],$_)
+	,FlowHandleStackEffectFinished: {_hx_name:"FlowHandleStackEffectFinished",_hx_index:7,__enum__:"model.ver1.game.define.FlowType",toString:$estr}
+	,FlowCancelPassCut: {_hx_name:"FlowCancelPassCut",_hx_index:8,__enum__:"model.ver1.game.define.FlowType",toString:$estr}
+	,FlowPassCut: {_hx_name:"FlowPassCut",_hx_index:9,__enum__:"model.ver1.game.define.FlowType",toString:$estr}
 };
-model_ver1_game_define_FlowType.__constructs__ = [model_ver1_game_define_FlowType.FlowWaitPlayer,model_ver1_game_define_FlowType.FlowObserveEffect,model_ver1_game_define_FlowType.FlowDoEffect,model_ver1_game_define_FlowType.FlowPassPayCost,model_ver1_game_define_FlowType.FlowCancelActiveEffect,model_ver1_game_define_FlowType.FlowSetActiveEffectId,model_ver1_game_define_FlowType.FlowDeleteImmediateEffect];
+model_ver1_game_define_FlowType.__constructs__ = [model_ver1_game_define_FlowType.FlowWaitPlayer,model_ver1_game_define_FlowType.FlowObserveEffect,model_ver1_game_define_FlowType.FlowDoEffect,model_ver1_game_define_FlowType.FlowPassPayCost,model_ver1_game_define_FlowType.FlowCancelActiveEffect,model_ver1_game_define_FlowType.FlowSetActiveEffectId,model_ver1_game_define_FlowType.FlowDeleteImmediateEffect,model_ver1_game_define_FlowType.FlowHandleStackEffectFinished,model_ver1_game_define_FlowType.FlowCancelPassCut,model_ver1_game_define_FlowType.FlowPassCut];
 var model_ver1_game_define_Flow = $hxEnums["model.ver1.game.define.Flow"] = { __ename__:true,__constructs__:null
 	,Default: ($_=function(type,description) { return {_hx_index:0,type:type,description:description,__enum__:"model.ver1.game.define.Flow",toString:$estr}; },$_._hx_name="Default",$_.__params__ = ["type","description"],$_)
 };
@@ -8705,6 +8708,40 @@ function model_ver1_game_define_Flow_queryFlow(ctx,playerId) {
 		var r2 = optionEffect.length == 0 ? [] : [model_ver1_game_define_Flow.Default(model_ver1_game_define_FlowType.FlowDeleteImmediateEffect(optionEffect[0].id,optionEffect),"你可以放棄這些效果")];
 		return r1.concat(r2);
 	}
+	if(ctx.flowMemory.shouldTriggerStackEffectFinishedEvent) {
+		var isActivePlayer = ctx.activePlayerId == playerId;
+		if(isActivePlayer == false) {
+			return [model_ver1_game_define_Flow.Default(model_ver1_game_define_FlowType.FlowWaitPlayer,"等待主動玩家處理")];
+		}
+		return [model_ver1_game_define_Flow.Default(model_ver1_game_define_FlowType.FlowHandleStackEffectFinished,"處理堆疊結束")];
+	}
+	var myCommandList = model_ver1_game_define_Flow_getClientCommand(ctx,playerId);
+	var blocks = model_ver1_game_alg_Block_getBlocks(ctx);
+	if(blocks.length > 0) {
+		var effect = blocks[0];
+		var controller = model_ver1_game_alg_Block_getBlockRuntime(ctx,effect.id).getResponsePlayerId();
+		var isAllPassCut = ctx.flowMemory.hasPlayerPassCut.h[model_ver1_game_define_Define_PLAYER_A] && ctx.flowMemory.hasPlayerPassCut.h[model_ver1_game_define_Define_PLAYER_B];
+		if(isAllPassCut == false) {
+			var isPassCut = ctx.flowMemory.hasPlayerPassCut.h[playerId];
+			if(isPassCut) {
+				return [model_ver1_game_define_Flow.Default(model_ver1_game_define_FlowType.FlowCancelPassCut,"")];
+			}
+			if(controller == playerId) {
+				var opponentPlayerID = model_ver1_game_define_Define_getOpponentPlayerId(playerId);
+				var isOpponentPassCut = ctx.flowMemory.hasPlayerPassCut.h[opponentPlayerID];
+				if(isOpponentPassCut == false) {
+					return [model_ver1_game_define_Flow.Default(model_ver1_game_define_FlowType.FlowWaitPlayer,"現在的切入優先權在對方")];
+				}
+			}
+			var r1 = myCommandList.length == 0 ? [] : [model_ver1_game_define_Flow.Default(model_ver1_game_define_FlowType.FlowSetActiveEffectId(myCommandList[0].id,myCommandList),"你可以切入")];
+			var r2 = [model_ver1_game_define_Flow.Default(model_ver1_game_define_FlowType.FlowPassCut,"")];
+			return r1.concat(r2);
+		}
+		if(controller != playerId) {
+			return [model_ver1_game_define_Flow.Default(model_ver1_game_define_FlowType.FlowWaitPlayer,"等待效果控制者處理")];
+		}
+		return [model_ver1_game_define_Flow.Default(model_ver1_game_define_FlowType.FlowSetActiveEffectId(effect.id,[effect]),"支付最上方的堆疊效果")];
+	}
 	return [];
 }
 function model_ver1_game_define_Flow_hasSomeoneLiveIsZero(ctx) {
@@ -8714,6 +8751,9 @@ function model_ver1_game_define_Flow_getActiveBlockId(ctx) {
 	return haxe_ds_Option.None;
 }
 function model_ver1_game_define_Flow_getImmediateEffects(ctx) {
+	return [];
+}
+function model_ver1_game_define_Flow_getClientCommand(ctx,playerId) {
 	return [];
 }
 function model_ver1_game_define_Flow_test() {

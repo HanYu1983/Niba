@@ -93,6 +93,9 @@ enum FlowType {
 	FlowCancelActiveEffect;
 	FlowSetActiveEffectId(blockId:String, tips:Array<Block>);
 	FlowDeleteImmediateEffect(blockId:String, tips:Array<Block>);
+	FlowHandleStackEffectFinished;
+	FlowCancelPassCut;
+	FlowPassCut;
 }
 
 enum Flow {
@@ -188,6 +191,55 @@ function queryFlow(ctx:Context, playerId:String):Array<Flow> {
 			return r1.concat(r2);
 		}
 	}
+	// 一個切入結束時，由主動玩家執行處理堆疊結束的行為
+	if (ctx.flowMemory.shouldTriggerStackEffectFinishedEvent) {
+		final isActivePlayer = ctx.activePlayerId == playerId;
+		if (isActivePlayer == false) {
+			return [Default(FlowWaitPlayer, "等待主動玩家處理")];
+		}
+		return [Default(FlowHandleStackEffectFinished, "處理堆疊結束")];
+	}
+	// 切入
+	{
+		final myCommandList = getClientCommand(ctx, playerId);
+		final blocks = getBlocks(ctx);
+		// 處理堆疊效果，從最上方開始處理
+		if (blocks.length > 0) {
+			// 取得最上方的效果
+			final effect = blocks[0];
+			// 取得效果的控制者
+			final controller = getBlockRuntime(ctx, effect.id).getResponsePlayerId();
+			// 判斷切入流程
+			final isAllPassCut = ctx.flowMemory.hasPlayerPassCut[PLAYER_A] && ctx.flowMemory.hasPlayerPassCut[PLAYER_B];
+			// 如果雙方玩家還沒放棄切入
+			if (isAllPassCut == false) {
+				// 如果我宣告了放棄切入，回傳取消
+				final isPassCut = ctx.flowMemory.hasPlayerPassCut[playerId];
+				if (isPassCut) {
+					return [Default(FlowCancelPassCut, "")];
+				}
+				// 雙方現在都可以切入，但要判斷切入的優先權在誰那
+				// 如果堆疊最上方的控制者是自己，則優先權在對方。必須等對方宣告放棄切入
+				if (controller == playerId) {
+					final opponentPlayerID = getOpponentPlayerId(playerId);
+					final isOpponentPassCut = ctx.flowMemory.hasPlayerPassCut[opponentPlayerID];
+					if (isOpponentPassCut == false) {
+						return [Default(FlowWaitPlayer, "現在的切入優先權在對方")];
+					}
+				}
+				// 可以切入的指令
+				final r1 = myCommandList.length == 0 ? [] : [Flow.Default(FlowSetActiveEffectId(myCommandList[0].id, myCommandList), "你可以切入")];
+				// 宣告放棄切入
+				final r2 = [Flow.Default(FlowPassCut, "")];
+				return r1.concat(r2);
+			}
+			// 雙方都已放棄切入，等待堆疊中的效果控制者處理
+			if (controller != playerId) {
+				return [Default(FlowWaitPlayer, "等待效果控制者處理")];
+			}
+			return [Default(FlowSetActiveEffectId(effect.id, [effect]), "支付最上方的堆疊效果")];
+		}
+	}
 	return [];
 }
 
@@ -200,6 +252,10 @@ function getActiveBlockId(ctx:Context):Option<String> {
 }
 
 function getImmediateEffects(ctx:Context):Array<Block> {
+	return [];
+}
+
+function getClientCommand(ctx:Context, playerId:String):Array<Block> {
 	return [];
 }
 
