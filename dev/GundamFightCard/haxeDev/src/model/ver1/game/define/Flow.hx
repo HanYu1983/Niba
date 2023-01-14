@@ -106,6 +106,17 @@ enum Flow {
 	Default(type:FlowType, description:String);
 }
 
+function applyFlow(
+	ctx: Context,
+	playerID: String,
+	flow: Flow
+  ): Void {
+	switch flow {
+		case Default(FlowSetActiveEffectId(blockId, tips), _):
+		case _:
+	}
+}
+
 function queryFlow(ctx:Context, playerId:String):Array<Flow> {
 	// 是否有玩家牌生命歸0，遊戲結束
 	switch hasSomeoneLiveIsZero(ctx) {

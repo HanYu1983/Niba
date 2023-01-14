@@ -8633,6 +8633,11 @@ function model_ver1_game_define_Flow_cancelTriggerEvent(memory) {
 function model_ver1_game_define_Flow_markTriggerStackEffectFinishedEventDone(memory) {
 	memory.shouldTriggerStackEffectFinishedEvent = true;
 }
+function model_ver1_game_define_Flow_applyFlow(ctx,playerID,flow) {
+	var _g = flow.type;
+	var _g1 = flow.description;
+	var tmp = _g._hx_index == 5;
+}
 function model_ver1_game_define_Flow_queryFlow(ctx,playerId) {
 	var _g = model_ver1_game_define_Flow_hasSomeoneLiveIsZero(ctx);
 	if(_g._hx_index == 0) {
