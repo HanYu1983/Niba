@@ -1,11 +1,14 @@
 (ns my.group.myapp
   (:gen-class))
 
-(defn init [ns-name]
+(defn require2 [ns-name]
   (require (symbol ns-name))
   (let [bar (find-ns (symbol ns-name))]
     ((ns-resolve bar (symbol "hello-world")))))
 
-(defn -main
+(defn test-require
   [& args]
-  (init "tool.lib1"))
+  (require2 "tool.lib1"))
+
+(defn -main []
+  (test-require))
