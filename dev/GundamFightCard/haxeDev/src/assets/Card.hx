@@ -22,14 +22,16 @@ class Card extends Box {
 	}
 
 	public function set_model(model:CardModel):CardModel {
-		lbl_id.text = model.id;
-		lbl_name.text = model.name;
-		lbl_content.text = model.content;
-		img_card.resource = model.url;
+		final cardInfo = Main.getGame().getCardInfoByProtoId(model.protoId);
+
+		lbl_id.text = cardInfo.id;
+		lbl_name.text = cardInfo.name;
+		lbl_content.text = cardInfo.content;
+		img_card.resource = cardInfo.url;
 
 		box_watching.hide();
 		img_cardback.hide();
-		switch ([model.faceup, model.watching]) {
+		switch ([model.faceup, model.watchingByPlayer.length > 0]) {
 			// 沒打開，在觀察
 			case [false, true]:
 				box_watching.show();

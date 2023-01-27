@@ -7,14 +7,21 @@ import assets.MainView;
 import haxe.ui.HaxeUIApp;
 
 class Main {
+	private static final model = new Model();
+
+	// private static final model = new TestModel();
+
 	public static function main() {
 		var app = new HaxeUIApp();
 		app.ready(function() {
-			// app.addComponent(new MainView(new TestModel()));
-			app.addComponent(new MainView(new Model()));
+			app.addComponent(new MainView(model));
 
 			app.start();
 		});
+	}
+
+	public static function getGame() {
+		return model;
 	}
 
 	public static function cumulativeOffset(element:js.html.Element) {

@@ -8,12 +8,10 @@ class Model extends DefaultViewModel {
 	private function createCard():CardModel {
 		return {
 			id: 'card_' + Math.floor(Math.random() * 9999),
-			name: 'dx',
-			content: 'content',
+			protoId:'',
 			owner: 'vic',
-			url: 'https://storage.googleapis.com/particle-resources/cardPackage/gundamWarN/179030_11E_U_BL208S_2_blue.jpg',
 			faceup: (Math.random() > 0.5),
-			watching: (Math.random() > 0.5),
+			watchingByPlayer: []
 		};
 	}
 
@@ -40,4 +38,5 @@ class Model extends DefaultViewModel {
 			content: {}
 		}
 	}
+	
 }

@@ -44,12 +44,14 @@ private extern class Native {
 private function toCardModel(app:App, card:Card):CardModel {
 	return {
 		id: '${card.id}',
-		name: '${card.id}',
-		content: 'card ${card.id}',
+		protoId: '',
+		watchingByPlayer: [],
+		// name: '${card.id}',
+		// content: 'card ${card.id}',
 		owner: card.owner,
-		url:'',
+		// url:'',
 		faceup: false,
-		watching: true
+		// watching: true
 	}
 }
 
