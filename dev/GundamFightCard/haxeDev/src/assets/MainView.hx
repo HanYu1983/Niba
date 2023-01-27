@@ -36,6 +36,21 @@ class MainView extends VBox {
 
 		syncHand(playerTable, gameModel.players[0]);
 		syncHand(enemyTable, gameModel.players[1]);
+		syncDeck(playerTable, gameModel.players[0]);
+		syncDeck(enemyTable, gameModel.players[1]);
+	}
+
+	private function syncDeck(table:PlayerTable, player:PlayerModel) {
+		final cards = player.deck;
+		for (i in 0...cards.length) {
+			final card = new Card();
+			final cardModel = cards[i];
+			card.model = cardModel;
+			card.playerModel = player;
+			card.left = i * 1 + table.box_deck.screenLeft;
+			card.top = i * 1 + table.box_deck.screenTop;
+			box_table.addComponent(card);
+		}
 	}
 
 	private var firstClick:CardModel = null;
@@ -43,8 +58,8 @@ class MainView extends VBox {
 	private function syncHand(table:PlayerTable, player:PlayerModel) {
 		final cards = player.hand;
 		for (i in 0...cards.length) {
-			var card = new Card();
-			var cardModel = cards[i];
+			final card = new Card();
+			final cardModel = cards[i];
 			card.model = cardModel;
 			card.playerModel = player;
 			card.left = i * (card.width + 5) + table.box_hand.screenLeft;

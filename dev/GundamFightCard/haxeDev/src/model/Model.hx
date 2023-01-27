@@ -8,7 +8,7 @@ class Model extends DefaultViewModel {
 	private function createCard():CardModel {
 		return {
 			id: 'card_' + Math.floor(Math.random() * 9999),
-			protoId:'',
+			protoId: '',
 			owner: 'vic',
 			faceup: (Math.random() > 0.5),
 			watchingByPlayer: []
@@ -20,7 +20,17 @@ class Model extends DefaultViewModel {
 			id: 'player_' + Math.floor(Math.random() * 9999),
 			name: 'dx',
 			hand: [createCard(), createCard(), createCard(), createCard()],
-			deck: [createCard(), createCard(), createCard()],
+			deck: [
+				createCard(),
+				createCard(),
+				createCard(),
+				createCard(),
+				createCard(),
+				createCard(),
+				createCard(),
+				createCard(),
+				createCard()
+			],
 			url: 'https://particle-979.appspot.com/card/images/cardback.png',
 		}
 	}
@@ -38,5 +48,4 @@ class Model extends DefaultViewModel {
 			content: {}
 		}
 	}
-	
 }

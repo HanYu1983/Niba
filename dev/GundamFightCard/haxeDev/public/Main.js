@@ -229,7 +229,7 @@ model_Model.prototype = $extend(viewModel_DefaultViewModel.prototype,{
 		return { id : "card_" + Math.floor(Math.random() * 9999), protoId : "", owner : "vic", faceup : Math.random() > 0.5, watchingByPlayer : []};
 	}
 	,createPlayer: function() {
-		return { id : "player_" + Math.floor(Math.random() * 9999), name : "dx", hand : [this.createCard(),this.createCard(),this.createCard(),this.createCard()], deck : [this.createCard(),this.createCard(),this.createCard()], url : "https://particle-979.appspot.com/card/images/cardback.png"};
+		return { id : "player_" + Math.floor(Math.random() * 9999), name : "dx", hand : [this.createCard(),this.createCard(),this.createCard(),this.createCard()], deck : [this.createCard(),this.createCard(),this.createCard(),this.createCard(),this.createCard(),this.createCard(),this.createCard(),this.createCard(),this.createCard()], url : "https://particle-979.appspot.com/card/images/cardback.png"};
 	}
 	,getGame: function() {
 		return { players : [this.createPlayer(),this.createPlayer()]};
@@ -5394,6 +5394,23 @@ assets_MainView.prototype = $extend(haxe_ui_containers_VBox.prototype,{
 		var gameModel = this.game.getGame();
 		this.syncHand(this.playerTable,gameModel.players[0]);
 		this.syncHand(this.enemyTable,gameModel.players[1]);
+		this.syncDeck(this.playerTable,gameModel.players[0]);
+		this.syncDeck(this.enemyTable,gameModel.players[1]);
+	}
+	,syncDeck: function(table,player) {
+		var cards = player.deck;
+		var _g = 0;
+		var _g1 = cards.length;
+		while(_g < _g1) {
+			var i = _g++;
+			var card = new assets_Card();
+			var cardModel = cards[i];
+			card.set_model(cardModel);
+			card.set_playerModel(player);
+			card.set_left(i + table.box_deck.get_screenLeft());
+			card.set_top(i + table.box_deck.get_screenTop());
+			this.box_table.addComponent(card);
+		}
 	}
 	,firstClick: null
 	,syncHand: function(table,player) {
@@ -5425,8 +5442,8 @@ assets_MainView.prototype = $extend(haxe_ui_containers_VBox.prototype,{
 					if(_gthis.firstClick != null) {
 						return;
 					}
-					console.log("src/assets/MainView.hx:64:","over card: " + card[0].model.id);
-					tweenx909_TweenX.to(card[0].box_card,{ "top" : 30},.3,null,null,null,null,null,null,null,{ fileName : "src/assets/MainView.hx", lineNumber : 65, className : "assets.MainView", methodName : "selectMyHandMode"});
+					console.log("src/assets/MainView.hx:79:","over card: " + card[0].model.id);
+					tweenx909_TweenX.to(card[0].box_card,{ "top" : 30},.3,null,null,null,null,null,null,null,{ fileName : "src/assets/MainView.hx", lineNumber : 80, className : "assets.MainView", methodName : "selectMyHandMode"});
 					_gthis.game.previewPlayCard(card[0].model.id);
 				};
 			})(card));
@@ -5435,15 +5452,15 @@ assets_MainView.prototype = $extend(haxe_ui_containers_VBox.prototype,{
 					if(_gthis.firstClick != null) {
 						return;
 					}
-					console.log("src/assets/MainView.hx:72:","out card:" + card[0].model.id);
-					tweenx909_TweenX.to(card[0].box_card,{ "top" : 0},.3,null,null,null,null,null,null,null,{ fileName : "src/assets/MainView.hx", lineNumber : 73, className : "assets.MainView", methodName : "selectMyHandMode"});
+					console.log("src/assets/MainView.hx:87:","out card:" + card[0].model.id);
+					tweenx909_TweenX.to(card[0].box_card,{ "top" : 0},.3,null,null,null,null,null,null,null,{ fileName : "src/assets/MainView.hx", lineNumber : 88, className : "assets.MainView", methodName : "selectMyHandMode"});
 				};
 			})(card));
 			card[0].box_cover.set_onClick((function(card) {
 				return function(e) {
 					if(_gthis.firstClick == null) {
 						_gthis.firstClick = card[0].model;
-						console.log("src/assets/MainView.hx:78:","first click card:" + card[0].model.id);
+						console.log("src/assets/MainView.hx:93:","first click card:" + card[0].model.id);
 						_gthis.selectAreaMode();
 					}
 				};
@@ -5459,10 +5476,10 @@ assets_MainView.prototype = $extend(haxe_ui_containers_VBox.prototype,{
 			++_g;
 			area.set_styleNames("selectable");
 			area.set_onMouseOver(function(e) {
-				console.log("src/assets/MainView.hx:92:","over area");
+				console.log("src/assets/MainView.hx:107:","over area");
 			});
 			area.set_onMouseOut(function(e) {
-				console.log("src/assets/MainView.hx:96:","out area");
+				console.log("src/assets/MainView.hx:111:","out area");
 			});
 			area.set_onClick(function(e) {
 			});
