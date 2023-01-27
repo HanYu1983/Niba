@@ -15,6 +15,13 @@ class Model extends DefaultViewModel {
 		};
 	}
 
+	private function createCommand():CommandModel {
+		return {
+			id: 'test',
+			name: 'testname'
+		}
+	}
+
 	private function createPlayer():PlayerModel {
 		return {
 			id: 'player_' + Math.floor(Math.random() * 9999),
@@ -37,7 +44,8 @@ class Model extends DefaultViewModel {
 
 	public override function getGame():GameModel {
 		return {
-			players: [createPlayer(), createPlayer()]
+			players: [createPlayer(), createPlayer()],
+			commands: [createCommand(), createCommand(), createCommand()]
 		};
 	}
 

@@ -78,7 +78,8 @@ class NativeModel extends DefaultViewModel {
 					}),
 					url:''
 				}
-			})
+			}),
+			commands: []
 		};
 	}
 }

@@ -10,8 +10,8 @@ import viewModel.IViewModel;
 class MainView extends VBox {
 	private var game:IViewModel;
 
-	private var playerTable = new PlayerTable();
-	private var enemyTable = new PlayerTable();
+	private final playerTable = new PlayerTable();
+	private final enemyTable = new PlayerTable();
 
 	public function new(game:IViewModel) {
 		super();
@@ -32,12 +32,23 @@ class MainView extends VBox {
 	}
 
 	private function syncGame() {
-		var gameModel = game.getGame();
+		final gameModel = game.getGame();
 
 		syncHand(playerTable, gameModel.players[0]);
 		syncHand(enemyTable, gameModel.players[1]);
 		syncDeck(playerTable, gameModel.players[0]);
 		syncDeck(enemyTable, gameModel.players[1]);
+		syncCommands();
+	}
+
+	private function syncCommands() {
+		final gameModel = game.getGame();
+		final commands = gameModel.commands;
+		for (i in 0...commands.length) {
+			final model = commands[i];
+			final commandView = new Command();
+			box_commandList.addComponent(commandView);
+		}
 	}
 
 	private function syncDeck(table:PlayerTable, player:PlayerModel) {
@@ -72,7 +83,7 @@ class MainView extends VBox {
 
 	private function selectMyHandMode() {
 		for (i in 0...playerTable.hand.length) {
-			var card = playerTable.hand[i];
+			final card = playerTable.hand[i];
 			card.box_cover.onMouseOver = function(e) {
 				if (firstClick != null)
 					return;

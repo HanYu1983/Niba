@@ -39,7 +39,8 @@ class TestModel extends DefaultViewModel {
 					deck: cards,
 					url:''
 				}
-			]
+			],
+			commands: []
 		};
 	}
 

@@ -6,8 +6,7 @@ typedef CardModel = {
 	owner:String,
 	// 是否公開
 	faceup:Bool,
-	// 是否正在觀察
-	// watching:Bool,
+	// 被誰觀察
 	watchingByPlayer:Array<String>,
 }
 
@@ -28,12 +27,19 @@ typedef PlayerModel = {
 	url:String
 }
 
+typedef CommandModel = {
+	id:String,
+	name:String,
+}
+
 typedef GameModel = {
-	players:Array<PlayerModel>
+	players:Array<PlayerModel>,
+	commands:Array<CommandModel>,
 }
 
 final DEFAULT_GAME_MODEL:GameModel = {
-	players: []
+	players: [],
+	commands: []
 }
 
 typedef PreviewPlayCardModel = {
