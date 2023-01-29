@@ -101,19 +101,19 @@ function test() {
 	final player1 = PLAYER_A;
 	final player2 = PLAYER_B;
 	final ctx = new Context();
-	final player2Hand = new CardStack(getCardStackId(Default(player2, TeHuTa)));
+	final player2Hand = new CardStack((Default(player2, TeHuTa):BaSyouId));
 	ctx.table.cardStacks[player2Hand.id] = player2Hand;
 	trace("卡牌1在場");
 	final card = new Card("1");
 	card.owner = player1;
 	card.protoId = "179030_11E_CH_BN091N_brown";
-	addCard(ctx.table, getCardStackId(Default(player1, MaintenanceArea)), card);
+	addCard(ctx.table, (Default(player1, MaintenanceArea):BaSyouId), card);
 	trace("敵軍G在場");
 	final card2 = new Card("2");
 	card2.owner = player2;
 	card2.protoId = "179030_11E_CH_BN091N_brown";
 	card2.isTap = false;
-	addCard(ctx.table, getCardStackId(Default(player2, GZone)), card2);
+	addCard(ctx.table, (Default(player2, GZone):BaSyouId), card2);
 	//
 	if (getTopCut(ctx).length != 0) {
 		throw "一開始堆疊中沒有效果";

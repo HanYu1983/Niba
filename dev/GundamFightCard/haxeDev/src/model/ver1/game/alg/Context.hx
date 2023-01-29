@@ -48,7 +48,7 @@ function tapCard(ctx:Context, cardId:String):Void {
 }
 
 function moveCard(ctx:Context, cardId:String, from:BaSyou, to:BaSyou) {
-	tool.Table.moveCard(ctx.table, cardId, getCardStackId(from), getCardStackId(to));
+	tool.Table.moveCard(ctx.table, cardId, (from:BaSyouId), (to:BaSyouId));
 }
 
 //
@@ -155,7 +155,7 @@ function getBaSyouControllerAndAssertExist(ctx:Context, baSyou:BaSyou):String {
 function getCardBaSyouAndAssertExist(ctx:Context, cardId:String):BaSyou {
 	return switch tool.Table.getCardCardStack(ctx.table, cardId) {
 		case Some(cardStack):
-			getBaSyou(cardStack.id);
+			(cardStack.id:BaSyouId);
 		case _:
 			trace(ctx);
 			throw new haxe.Exception('card baSyou not found: ${cardId}');

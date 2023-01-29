@@ -30,7 +30,7 @@ function getRuntimeText(ctx:Context):Array<{runtime:ExecuteRuntime, text:CardTex
 	// ver2
 	// 手牌，hanger中的牌, 可以使用恆常內文。出牌算恆常內文
 	final cardsInHandAndHanger = [for (cs in ctx.table.cardStacks) cs].filter(cs -> {
-		return switch getBaSyou(cs.id) {
+		return switch ((cs.id:BaSyouId):BaSyou) {
 			case Default(_, TeHuTa | Hanger):
 				true;
 			case _:
@@ -54,7 +54,7 @@ function getRuntimeText(ctx:Context):Array<{runtime:ExecuteRuntime, text:CardTex
 	];
 	// 倒置G的情況可以使用<>內文
 	final cardsInGZone = [for (cs in ctx.table.cardStacks) cs].filter(cs -> {
-		return switch getBaSyou(cs.id) {
+		return switch ((cs.id:BaSyouId):BaSyou) {
 			case Default(_, GZone):
 				true;
 			case _:
@@ -78,7 +78,7 @@ function getRuntimeText(ctx:Context):Array<{runtime:ExecuteRuntime, text:CardTex
 	];
 	// 廢棄庫可以使用恆常內文
 	final cardsInJunkYard = [for (cs in ctx.table.cardStacks) cs].filter(cs -> {
-		return switch getBaSyou(cs.id) {
+		return switch ((cs.id:BaSyouId):BaSyou) {
 			case Default(_, JunkYard):
 				true;
 			case _:
@@ -102,7 +102,7 @@ function getRuntimeText(ctx:Context):Array<{runtime:ExecuteRuntime, text:CardTex
 	];
 
 	final cardsHasController = [for (cs in ctx.table.cardStacks) cs].filter(cs -> {
-		return switch getBaSyou(cs.id) {
+		return switch ((cs.id:BaSyouId):BaSyou) {
 			case Default(_, kw):
 				isBa(kw);
 			case _:

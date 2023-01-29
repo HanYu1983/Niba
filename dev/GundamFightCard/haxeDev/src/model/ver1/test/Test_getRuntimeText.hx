@@ -20,7 +20,7 @@ private function test_getRuntimeText1() {
 	}
 	final card = new Card("0");
 	card.protoId = "OnlyEmptyTextCardProto";
-	addCard(ctx.table, getCardStackId(Default("0", MaintenanceArea)), card);
+	addCard(ctx.table, (Default("0", MaintenanceArea):BaSyouId), card);
 	if (getRuntimeText(ctx).length != 1) {
 		throw new haxe.Exception("必須找到1個內文");
 	}
@@ -31,7 +31,7 @@ private function test_getRuntimeText2() {
 	registerCardProto(ctx, "AddTextCardProto", new AddTextCardProto());
 	final card = new Card("0");
 	card.protoId = "AddTextCardProto";
-	addCard(ctx.table, getCardStackId(Default("0", MaintenanceArea)), card);
+	addCard(ctx.table, (Default("0", MaintenanceArea):BaSyouId), card);
 	if (getRuntimeText(ctx).length != 2) {
 		throw new haxe.Exception("必須找到2個內文");
 	}
