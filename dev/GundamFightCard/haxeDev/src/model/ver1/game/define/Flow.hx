@@ -106,11 +106,7 @@ enum Flow {
 	Default(type:FlowType, description:String);
 }
 
-function applyFlow(
-	ctx: Context,
-	playerID: String,
-	flow: Flow
-  ): Void {
+function applyFlow(ctx:Context, playerID:String, flow:Flow):Void {
 	switch flow {
 		case Default(FlowSetActiveEffectId(blockId, tips), _):
 		case _:
