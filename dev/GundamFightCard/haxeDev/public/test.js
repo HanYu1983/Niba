@@ -3847,175 +3847,6 @@ hxbit_enumSer_Hxbit_$PropTypeDesc.getSchema = function() {
 	s.fieldsNames.push("PStruct");
 	return s;
 };
-var hxbit_enumSer_Model_$ver1_$game_$define_$BaSyou = function() { };
-$hxClasses["hxbit.enumSer.Model_ver1_game_define_BaSyou"] = hxbit_enumSer_Model_$ver1_$game_$define_$BaSyou;
-hxbit_enumSer_Model_$ver1_$game_$define_$BaSyou.__name__ = "hxbit.enumSer.Model_ver1_game_define_BaSyou";
-hxbit_enumSer_Model_$ver1_$game_$define_$BaSyou.doSerialize = function(ctx,v) {
-	if(v == null) {
-		ctx.out.addByte(0);
-	} else {
-		var playerId = v.playerId;
-		var baSyouKeyword = v.baSyouKeyword;
-		ctx.out.addByte(1);
-		if(playerId == null) {
-			ctx.out.addByte(0);
-		} else {
-			var b = haxe_io_Bytes.ofString(playerId);
-			var v = b.length + 1;
-			if(v >= 0 && v < 128) {
-				ctx.out.addByte(v);
-			} else {
-				ctx.out.addByte(128);
-				ctx.out.addInt32(v);
-			}
-			ctx.out.add(b);
-		}
-		hxbit_enumSer_Model_$ver1_$game_$define_$BaSyouKeyword.doSerialize(ctx,baSyouKeyword);
-	}
-};
-hxbit_enumSer_Model_$ver1_$game_$define_$BaSyou.doUnserialize = function(ctx) {
-	var b = ctx.input.b[ctx.inPos++];
-	if(b == 0) {
-		return null;
-	}
-	if(b == 1) {
-		var _playerId;
-		var v = ctx.input.b[ctx.inPos++];
-		if(v == 128) {
-			v = ctx.input.getInt32(ctx.inPos);
-			ctx.inPos += 4;
-		}
-		var len = v;
-		if(len == 0) {
-			_playerId = null;
-		} else {
-			--len;
-			var s = ctx.input.getString(ctx.inPos,len);
-			ctx.inPos += len;
-			_playerId = s;
-		}
-		var _baSyouKeyword;
-		var __e = hxbit_enumSer_Model_$ver1_$game_$define_$BaSyouKeyword.doUnserialize(ctx);
-		_baSyouKeyword = __e;
-		return model_ver1_game_define_BaSyou.Default(_playerId,_baSyouKeyword);
-	} else {
-		throw haxe_Exception.thrown("Invalid enum index " + b);
-	}
-};
-hxbit_enumSer_Model_$ver1_$game_$define_$BaSyou.getSchema = function() {
-	var s = new hxbit_Schema();
-	var s1 = s.fieldsTypes;
-	var _g = [];
-	var v;
-	var v;
-	var t = hxbit_PropTypeDesc.PEnum("model.ver1.game.define.BaSyouKeyword");
-	_g.push({ name : "", type : t, opt : false});
-	s1.push(hxbit_PropTypeDesc.PObj(_g));
-	s.fieldsNames.push("Default");
-	return s;
-};
-var hxbit_enumSer_Model_$ver1_$game_$define_$BaSyouKeyword = function() { };
-$hxClasses["hxbit.enumSer.Model_ver1_game_define_BaSyouKeyword"] = hxbit_enumSer_Model_$ver1_$game_$define_$BaSyouKeyword;
-hxbit_enumSer_Model_$ver1_$game_$define_$BaSyouKeyword.__name__ = "hxbit.enumSer.Model_ver1_game_define_BaSyouKeyword";
-hxbit_enumSer_Model_$ver1_$game_$define_$BaSyouKeyword.doSerialize = function(ctx,v) {
-	if(v == null) {
-		ctx.out.addByte(0);
-	} else {
-		switch(v._hx_index) {
-		case 0:
-			ctx.out.addByte(1);
-			break;
-		case 1:
-			ctx.out.addByte(2);
-			break;
-		case 2:
-			ctx.out.addByte(3);
-			break;
-		case 3:
-			ctx.out.addByte(4);
-			break;
-		case 4:
-			ctx.out.addByte(5);
-			break;
-		case 5:
-			ctx.out.addByte(6);
-			break;
-		case 6:
-			ctx.out.addByte(7);
-			break;
-		case 7:
-			ctx.out.addByte(8);
-			break;
-		case 8:
-			ctx.out.addByte(9);
-			break;
-		case 9:
-			ctx.out.addByte(10);
-			break;
-		case 10:
-			ctx.out.addByte(11);
-			break;
-		}
-	}
-};
-hxbit_enumSer_Model_$ver1_$game_$define_$BaSyouKeyword.doUnserialize = function(ctx) {
-	var b = ctx.input.b[ctx.inPos++];
-	if(b == 0) {
-		return null;
-	}
-	switch(b) {
-	case 1:
-		return model_ver1_game_define_BaSyouKeyword.HonGoku;
-	case 2:
-		return model_ver1_game_define_BaSyouKeyword.SuteYama;
-	case 3:
-		return model_ver1_game_define_BaSyouKeyword.SpaceArea;
-	case 4:
-		return model_ver1_game_define_BaSyouKeyword.EarchArea;
-	case 5:
-		return model_ver1_game_define_BaSyouKeyword.MaintenanceArea;
-	case 6:
-		return model_ver1_game_define_BaSyouKeyword.GZone;
-	case 7:
-		return model_ver1_game_define_BaSyouKeyword.JunkYard;
-	case 8:
-		return model_ver1_game_define_BaSyouKeyword.TeHuTa;
-	case 9:
-		return model_ver1_game_define_BaSyouKeyword.Hanger;
-	case 10:
-		return model_ver1_game_define_BaSyouKeyword.PlayedCard;
-	case 11:
-		return model_ver1_game_define_BaSyouKeyword.RemovedCard;
-	default:
-		throw haxe_Exception.thrown("Invalid enum index " + b);
-	}
-};
-hxbit_enumSer_Model_$ver1_$game_$define_$BaSyouKeyword.getSchema = function() {
-	var s = new hxbit_Schema();
-	s.fieldsTypes.push(null);
-	s.fieldsNames.push("HonGoku");
-	s.fieldsTypes.push(null);
-	s.fieldsNames.push("SuteYama");
-	s.fieldsTypes.push(null);
-	s.fieldsNames.push("SpaceArea");
-	s.fieldsTypes.push(null);
-	s.fieldsNames.push("EarchArea");
-	s.fieldsTypes.push(null);
-	s.fieldsNames.push("MaintenanceArea");
-	s.fieldsTypes.push(null);
-	s.fieldsNames.push("GZone");
-	s.fieldsTypes.push(null);
-	s.fieldsNames.push("JunkYard");
-	s.fieldsTypes.push(null);
-	s.fieldsNames.push("TeHuTa");
-	s.fieldsTypes.push(null);
-	s.fieldsNames.push("Hanger");
-	s.fieldsTypes.push(null);
-	s.fieldsNames.push("PlayedCard");
-	s.fieldsTypes.push(null);
-	s.fieldsNames.push("RemovedCard");
-	return s;
-};
 var hxbit_enumSer_Model_$ver1_$game_$define_$BattlePoint = function() { };
 $hxClasses["hxbit.enumSer.Model_ver1_game_define_BattlePoint"] = hxbit_enumSer_Model_$ver1_$game_$define_$BattlePoint;
 hxbit_enumSer_Model_$ver1_$game_$define_$BattlePoint.__name__ = "hxbit.enumSer.Model_ver1_game_define_BattlePoint";
@@ -7315,33 +7146,41 @@ var model_ver1_game_define_BaSyou = $hxEnums["model.ver1.game.define.BaSyou"] = 
 	,Default: ($_=function(playerId,baSyouKeyword) { return {_hx_index:0,playerId:playerId,baSyouKeyword:baSyouKeyword,__enum__:"model.ver1.game.define.BaSyou",toString:$estr}; },$_._hx_name="Default",$_.__params__ = ["playerId","baSyouKeyword"],$_)
 };
 model_ver1_game_define_BaSyou.__constructs__ = [model_ver1_game_define_BaSyou.Default];
-var model_ver1_game_define__$BaSyou_Wrapper = function() {
-	this.__uid = hxbit_Serializer.SEQ << 24 | ++hxbit_Serializer.UID;
+var model_ver1_game_define_BaSyou2 = {};
+model_ver1_game_define_BaSyou2._new = function(i) {
+	var this1 = i;
+	return this1;
 };
-$hxClasses["model.ver1.game.define._BaSyou.Wrapper"] = model_ver1_game_define__$BaSyou_Wrapper;
-model_ver1_game_define__$BaSyou_Wrapper.__name__ = "model.ver1.game.define._BaSyou.Wrapper";
-model_ver1_game_define__$BaSyou_Wrapper.__interfaces__ = [hxbit_Serializable];
-model_ver1_game_define__$BaSyou_Wrapper.prototype = {
-	getCLID: function() {
-		return model_ver1_game_define__$BaSyou_Wrapper.__clid;
+model_ver1_game_define_BaSyou2.toCustom = function(this1) {
+	var pair = this1.split(model_ver1_game_define_BaSyou2._split);
+	var playerId = pair[0];
+	var kw = Type.createEnum(model_ver1_game_define_BaSyouKeyword,pair[1],null);
+	return { playerId : playerId, baSyouKeyword : kw};
+};
+model_ver1_game_define_BaSyou2.fromCustom = function(custom) {
+	var e = custom.baSyouKeyword;
+	var this1 = "" + custom.playerId + model_ver1_game_define_BaSyou2._split + $hxEnums[e.__enum__].__constructs__[e._hx_index]._hx_name;
+	return this1;
+};
+var model_ver1_game_define_BaSyou3 = {};
+model_ver1_game_define_BaSyou3._new = function(i) {
+	var this1 = i;
+	return this1;
+};
+model_ver1_game_define_BaSyou3.toString = function(this1) {
+	var e = this1.baSyouKeyword;
+	return "" + this1.playerId + model_ver1_game_define_BaSyou3._split + $hxEnums[e.__enum__].__constructs__[e._hx_index]._hx_name;
+};
+model_ver1_game_define_BaSyou3.fromString = function(v) {
+	try {
+		var pair = v.split(model_ver1_game_define_BaSyou3._split);
+		var playerId = pair[0];
+		var kw = Type.createEnum(model_ver1_game_define_BaSyouKeyword,pair[1],null);
+		var this1 = { playerId : playerId, baSyouKeyword : kw};
+		return this1;
+	} catch( _g ) {
+		throw haxe_Exception.thrown("unknown key");
 	}
-	,serialize: function(__ctx) {
-		hxbit_enumSer_Model_$ver1_$game_$define_$BaSyou.doSerialize(__ctx,this.hold);
-	}
-	,getSerializeSchema: function() {
-		var schema = new hxbit_Schema();
-		schema.fieldsNames.push("hold");
-		schema.fieldsTypes.push(hxbit_PropTypeDesc.PEnum("model.ver1.game.define.BaSyou"));
-		schema.isFinal = hxbit_Serializer.isClassFinal(model_ver1_game_define__$BaSyou_Wrapper.__clid);
-		return schema;
-	}
-	,unserializeInit: function() {
-	}
-	,unserialize: function(__ctx) {
-		var __e = hxbit_enumSer_Model_$ver1_$game_$define_$BaSyou.doUnserialize(__ctx);
-		this.hold = __e;
-	}
-	,__class__: model_ver1_game_define__$BaSyou_Wrapper
 };
 function model_ver1_game_define_BaSyou_isBattleArea(k) {
 	switch(k._hx_index) {
@@ -7387,7 +7226,7 @@ function model_ver1_game_define_BaSyou_getBaSyou(cardStackId) {
 function model_ver1_game_define_BaSyou_test() {
 	var b1 = model_ver1_game_define_BaSyou.Default("0",model_ver1_game_define_BaSyouKeyword.HonGoku);
 	var csId = model_ver1_game_define_BaSyou_getCardStackId(b1);
-	console.log("src/model/ver1/game/define/BaSyou.hx:100:",csId);
+	console.log("src/model/ver1/game/define/BaSyou.hx:154:",csId);
 	var b2 = model_ver1_game_define_BaSyou_getBaSyou(csId);
 	if(Type.enumEq(b1,b2) == false) {
 		throw new haxe_Exception("b1 must equals b2");
@@ -7402,6 +7241,35 @@ function model_ver1_game_define_BaSyou_test() {
 	if(csId != csId3) {
 		throw haxe_Exception.thrown("csId != csId3");
 	}
+	var custom_playerId = "A";
+	var custom_baSyouKeyword = model_ver1_game_define_BaSyouKeyword.Hanger;
+	var e = custom_baSyouKeyword;
+	var this1 = "" + custom_playerId + model_ver1_game_define_BaSyou2._split + $hxEnums[e.__enum__].__constructs__[e._hx_index]._hx_name;
+	var b5 = this1;
+	var _g = model_ver1_game_define_BaSyou2.toCustom(b5);
+	var _g1 = _g.playerId;
+	var kw = _g.baSyouKeyword;
+	console.log("src/model/ver1/game/define/BaSyou.hx:175:","XX");
+	var h_h = Object.create(null);
+	h_h[b5] = 1;
+	console.log("src/model/ver1/game/define/BaSyou.hx:178:",h_h["A_Hanger"]);
+	var b6_playerId = "A";
+	var b6_baSyouKeyword = model_ver1_game_define_BaSyouKeyword.Hanger;
+	var h2_h = Object.create(null);
+	var e = b6_baSyouKeyword;
+	h2_h["" + b6_playerId + model_ver1_game_define_BaSyou3._split + $hxEnums[e.__enum__].__constructs__[e._hx_index]._hx_name] = 1;
+	console.log("src/model/ver1/game/define/BaSyou.hx:182:",h2_h["A_Hanger"]);
+	var b7;
+	try {
+		var pair = "A_Hanger".split(model_ver1_game_define_BaSyou3._split);
+		var playerId = pair[0];
+		var kw = Type.createEnum(model_ver1_game_define_BaSyouKeyword,pair[1],null);
+		var this1 = { playerId : playerId, baSyouKeyword : kw};
+		b7 = this1;
+	} catch( _g ) {
+		throw haxe_Exception.thrown("unknown key");
+	}
+	var b71 = b7;
 }
 var model_ver1_game_define_BlockCause = $hxEnums["model.ver1.game.define.BlockCause"] = { __ename__:true,__constructs__:null
 	,Pending: {_hx_name:"Pending",_hx_index:0,__enum__:"model.ver1.game.define.BlockCause",toString:$estr}
@@ -9885,7 +9753,8 @@ var model_ver1_game_data_DataBinding__cardProtoPool = (function($this) {
 	$r = _g;
 	return $r;
 }(this));
-model_ver1_game_define__$BaSyou_Wrapper.__clid = hxbit_Serializer.registerClass(model_ver1_game_define__$BaSyou_Wrapper);
+model_ver1_game_define_BaSyou2._split = "_";
+model_ver1_game_define_BaSyou3._split = "_";
 model_ver1_game_define_Block.__clid = hxbit_Serializer.registerClass(model_ver1_game_define_Block);
 model_ver1_game_define_Context.__clid = hxbit_Serializer.registerClass(model_ver1_game_define_Context);
 var model_ver1_game_define_Define_PLAYER_A = "PLAYER_A";
