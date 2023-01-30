@@ -84,6 +84,10 @@ private class Process1 extends CardText {
 		return [new RequireOpponentUnitsEnterFieldThisTurn(getSubKey(0), ctx, runtime)];
 	}
 
+	public override function getRequires2(ctx:Context, runtime:ExecuteRuntime):Array<Require2> {
+		return [getRequireOpponentUnitsEnterFieldThisTurn(ctx, runtime, getSubKey(0))];
+	}
+
 	public override function action(ctx:Context, runtime:ExecuteRuntime):Void {
 		final cardId = runtime.getCardId();
 		final selectCardIds = getPlayerSelectionCardId(ctx, getSubKey(0));
@@ -97,18 +101,18 @@ function test() {
 	final player1 = PlayerId.A;
 	final player2 = PlayerId.B;
 	final ctx = new Context();
-	final player2Hand = new CardStack((Default(player2, TeHuTa):BaSyouId));
+	final player2Hand = new CardStack((Default(player2, TeHuTa) : BaSyouId));
 	ctx.table.cardStacks[player2Hand.id] = player2Hand;
 	trace("機體1在場");
 	final card = new Card("1");
 	card.owner = player1;
 	card.protoId = "179030_11E_U_VT186R_purple";
-	addCard(ctx.table, (Default(player1, MaintenanceArea):BaSyouId), card);
+	addCard(ctx.table, (Default(player1, MaintenanceArea) : BaSyouId), card);
 	trace("機體2這回合剛出場");
 	final card2 = new Card("2");
 	card2.owner = player2;
 	card2.protoId = "179030_11E_U_VT186R_purple";
-	addCard(ctx.table, (Default(player2, MaintenanceArea):BaSyouId), card2);
+	addCard(ctx.table, (Default(player2, MaintenanceArea) : BaSyouId), card2);
 	trace("設置剛出場標記");
 	final enterFieldMark = new EnterFieldThisTurnMark('EnterFieldThisTurnMark', card2.id);
 	ctx.marks[enterFieldMark.id] = enterFieldMark;
@@ -123,18 +127,24 @@ function test() {
 	}
 	final block = getTopCut(ctx)[0];
 	final runtime = new DefaultExecuteRuntime(card.id, player1);
-	final requires = block.text.getRequires(ctx, runtime);
+	final requires = block.text.getRequires2(ctx, runtime);
 	if (requires.length != 1) {
 		throw "requires.length != 1";
 	}
-	final require:RequireUserSelectCard = cast requires[0];
-	if (require.tips.length != 1) {
+	final require = requires[0];
+	final tips = switch require.type {
+		case SelectCard(tips, lengthInclude):
+			tips;
+		case _:
+			throw "must be SelectCard";
+	}
+	if (tips.length != 1) {
 		throw "必須有一個可選機體";
 	}
 	trace("選擇要回手的一個敵機");
-	setPlayerSelectionCardId(ctx, require.id, [require.tips[0]]);
+	setPlayerSelectionCardId(ctx, require.id, [tips[0].value]);
 	trace("驗証支付");
-	require.action(ctx, runtime);
+	require.action();
 	trace("解決效果");
 	block.text.action(ctx, runtime);
 	if (player2Hand.cardIds.length != 1) {

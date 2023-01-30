@@ -19,15 +19,20 @@ class Require {
 
 // TODO: refactor
 
+typedef Tip<T> = {
+	value:T,
+	weight:Float,
+}
+
 enum RequireType {
 	Pending;
-	SelectCard(tips:Array<String>);
+	SelectCard(tips:Array<Tip<String>>, lengthInclude:Array<Int>);
 	SelectBattlePoint(tips:Array<BattlePoint>);
 }
 
 typedef Require2 = {
 	id:String,
 	description:String,
-	type: RequireType,
+	type:RequireType,
 	action:() -> Void,
 }

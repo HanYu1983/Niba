@@ -156,6 +156,10 @@ class CardText implements hxbit.Serializable {
 		return [];
 	}
 
+	public function getRequires2(ctx:Context, runtime:ExecuteRuntime):Array<Require2> {
+		return [];
+	}
+
 	public function action(ctx:Context, runtime:ExecuteRuntime):Void {}
 
 	public function onEvent(ctx:Context, event:Event, runtime:ExecuteRuntime):Void {}

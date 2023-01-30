@@ -4840,6 +4840,9 @@ model_ver1_game_define_CardText.prototype = {
 	,getRequires: function(ctx,runtime) {
 		return [];
 	}
+	,getRequires2: function(ctx,runtime) {
+		return [];
+	}
 	,action: function(ctx,runtime) {
 	}
 	,onEvent: function(ctx,event,runtime) {
@@ -5986,6 +5989,9 @@ model_ver1_data__$CardProto_$179030_$11E_$U_$VT186R_$purple_Process1.prototype =
 	getRequires: function(ctx,runtime) {
 		return [new model_ver1_data__$CardProto_$179030_$11E_$U_$VT186R_$purple_RequireOpponentUnitsEnterFieldThisTurn(this.getSubKey(0),ctx,runtime)];
 	}
+	,getRequires2: function(ctx,runtime) {
+		return [model_ver1_data_RequireImpl_getRequireOpponentUnitsEnterFieldThisTurn(ctx,runtime,this.getSubKey(0))];
+	}
 	,action: function(ctx,runtime) {
 		var cardId = runtime.getCardId();
 		var selectCardIds = model_ver1_game_alg_Context_getPlayerSelectionCardId(ctx,this.getSubKey(0));
@@ -6011,7 +6017,7 @@ function model_ver1_data_CardProto_$179030_$11E_$U_$VT186R_$purple_test() {
 	var this1 = "" + playerId + model_ver1_game_define_BaSyouId._split + $hxEnums[baSyouKeyword.__enum__].__constructs__[baSyouKeyword._hx_index]._hx_name;
 	var player2Hand = new tool_CardStack(this1);
 	ctx.table.cardStacks.h[player2Hand.id] = player2Hand;
-	console.log("src/model/ver1/data/CardProto_179030_11E_U_VT186R_purple.hx:102:","機體1在場");
+	console.log("src/model/ver1/data/CardProto_179030_11E_U_VT186R_purple.hx:106:","機體1在場");
 	var card = new tool_Card("1");
 	card.owner = player1;
 	card.protoId = "179030_11E_U_VT186R_purple";
@@ -6020,7 +6026,7 @@ function model_ver1_data_CardProto_$179030_$11E_$U_$VT186R_$purple_test() {
 	var baSyouKeyword = baSyou.baSyouKeyword;
 	var this1 = "" + playerId + model_ver1_game_define_BaSyouId._split + $hxEnums[baSyouKeyword.__enum__].__constructs__[baSyouKeyword._hx_index]._hx_name;
 	tool_Table_addCard(ctx.table,this1,card);
-	console.log("src/model/ver1/data/CardProto_179030_11E_U_VT186R_purple.hx:107:","機體2這回合剛出場");
+	console.log("src/model/ver1/data/CardProto_179030_11E_U_VT186R_purple.hx:111:","機體2這回合剛出場");
 	var card2 = new tool_Card("2");
 	card2.owner = player2;
 	card2.protoId = "179030_11E_U_VT186R_purple";
@@ -6029,32 +6035,41 @@ function model_ver1_data_CardProto_$179030_$11E_$U_$VT186R_$purple_test() {
 	var baSyouKeyword = baSyou.baSyouKeyword;
 	var this1 = "" + playerId + model_ver1_game_define_BaSyouId._split + $hxEnums[baSyouKeyword.__enum__].__constructs__[baSyouKeyword._hx_index]._hx_name;
 	tool_Table_addCard(ctx.table,this1,card2);
-	console.log("src/model/ver1/data/CardProto_179030_11E_U_VT186R_purple.hx:112:","設置剛出場標記");
+	console.log("src/model/ver1/data/CardProto_179030_11E_U_VT186R_purple.hx:116:","設置剛出場標記");
 	var enterFieldMark = new model_ver1_game_define_EnterFieldThisTurnMark("EnterFieldThisTurnMark",card2.id);
 	ctx.marks.h[enterFieldMark.id] = enterFieldMark;
 	if(model_ver1_game_alg_Cut_getTopCut(ctx).length != 0) {
 		throw haxe_Exception.thrown("一開始堆疊中沒有效果");
 	}
-	console.log("src/model/ver1/data/CardProto_179030_11E_U_VT186R_purple.hx:119:","機體1出場事件");
+	console.log("src/model/ver1/data/CardProto_179030_11E_U_VT186R_purple.hx:123:","機體1出場事件");
 	model_ver1_game_alg_Context_sendEvent(ctx,model_ver1_game_define_Event.CardEnterField(card.id));
 	if(model_ver1_game_alg_Cut_getTopCut(ctx).length != 1) {
 		throw haxe_Exception.thrown("堆疊中必須有一個效果");
 	}
 	var block = model_ver1_game_alg_Cut_getTopCut(ctx)[0];
 	var runtime = new model_ver1_game_define_DefaultExecuteRuntime(card.id,player1);
-	var requires = block.text.getRequires(ctx,runtime);
+	var requires = block.text.getRequires2(ctx,runtime);
 	if(requires.length != 1) {
 		throw haxe_Exception.thrown("requires.length != 1");
 	}
 	var $require = requires[0];
-	if($require.tips.length != 1) {
+	var tips;
+	var _g = $require.type;
+	if(_g._hx_index == 1) {
+		var tips1 = _g.tips;
+		var lengthInclude = _g.lengthInclude;
+		tips = tips1;
+	} else {
+		throw haxe_Exception.thrown("must be SelectCard");
+	}
+	if(tips.length != 1) {
 		throw haxe_Exception.thrown("必須有一個可選機體");
 	}
-	console.log("src/model/ver1/data/CardProto_179030_11E_U_VT186R_purple.hx:134:","選擇要回手的一個敵機");
-	model_ver1_game_alg_Context_setPlayerSelectionCardId(ctx,$require.id,[$require.tips[0]]);
-	console.log("src/model/ver1/data/CardProto_179030_11E_U_VT186R_purple.hx:136:","驗証支付");
-	$require.action(ctx,runtime);
-	console.log("src/model/ver1/data/CardProto_179030_11E_U_VT186R_purple.hx:138:","解決效果");
+	console.log("src/model/ver1/data/CardProto_179030_11E_U_VT186R_purple.hx:144:","選擇要回手的一個敵機");
+	model_ver1_game_alg_Context_setPlayerSelectionCardId(ctx,$require.id,[tips[0].value]);
+	console.log("src/model/ver1/data/CardProto_179030_11E_U_VT186R_purple.hx:146:","驗証支付");
+	$require.action();
+	console.log("src/model/ver1/data/CardProto_179030_11E_U_VT186R_purple.hx:148:","解決效果");
 	block.text.action(ctx,runtime);
 	if(player2Hand.cardIds.length != 1) {
 		throw haxe_Exception.thrown("牌被移到手上");
@@ -6275,6 +6290,87 @@ model_ver1_data_RequireUserSelectBattlePoint.__super__ = model_ver1_data_Require
 model_ver1_data_RequireUserSelectBattlePoint.prototype = $extend(model_ver1_data_RequireUserSelect.prototype,{
 	__class__: model_ver1_data_RequireUserSelectBattlePoint
 });
+function model_ver1_data_RequireImpl_getRequirePhase(ctx,runtime,timing,id) {
+	return { id : id, description : "RequirePhase", type : model_ver1_game_define_RequireType.Pending, action : function() {
+		if(Type.enumEq(ctx.timing,timing) == false) {
+			throw new haxe_Exception("ctx.phase != this.phase: " + Std.string(ctx.timing) + " != " + Std.string(timing));
+		}
+	}};
+}
+function model_ver1_data_RequireImpl_getRequireGTap(ctx,runtime,colors,id) {
+	var responsePlayerId = runtime.getResponsePlayerId();
+	var gCardIds = model_ver1_game_alg_Context_getPlayerGCardIds(ctx,responsePlayerId);
+	var _g = [];
+	var _g1 = 0;
+	var _g2 = gCardIds;
+	while(_g1 < _g2.length) {
+		var v = _g2[_g1];
+		++_g1;
+		var _g3 = model_ver1_game_alg_Context_getCardGSign(ctx,v);
+		var _g4 = _g3.property;
+		var color = _g3.color;
+		var cardColor = color;
+		if(colors.indexOf(cardColor) != -1) {
+			_g.push(v);
+		}
+	}
+	var _this = _g;
+	var result = new Array(_this.length);
+	var _g = 0;
+	var _g1 = _this.length;
+	while(_g < _g1) {
+		var i = _g++;
+		result[i] = { value : _this[i], weight : 0.0};
+	}
+	var tips = result;
+	return { id : id, description : "RequireGTap", type : model_ver1_game_define_RequireType.SelectCard(tips,[2]), action : function() {
+		var selectIds = ctx.memory.playerSelection.cardIds.h[id];
+		if(selectIds == null) {
+			throw new haxe_Exception("selectIds not found");
+		}
+		var _g = 0;
+		while(_g < selectIds.length) {
+			var cardId = selectIds[_g];
+			++_g;
+			model_ver1_game_alg_Context_tapCard(ctx,cardId);
+		}
+	}};
+}
+function model_ver1_data_RequireImpl_getRequireOpponentUnitsEnterFieldThisTurn(ctx,runtime,id) {
+	var thisCardId = runtime.getCardId();
+	var _g = [];
+	var _g1 = 0;
+	var _g2 = model_ver1_game_alg_Context_getEnterFieldThisTurnCardIds(ctx);
+	while(_g1 < _g2.length) {
+		var v = _g2[_g1];
+		++_g1;
+		if(model_ver1_game_alg_Context_isOpponentsCard(ctx,thisCardId,v)) {
+			_g.push(v);
+		}
+	}
+	var _g1 = [];
+	var _g2 = 0;
+	var _g3 = _g;
+	while(_g2 < _g3.length) {
+		var v = _g3[_g2];
+		++_g2;
+		var _g = model_ver1_game_alg_Context_getCardEntityCategory(ctx,v);
+		if(_g._hx_index == 0 && _g.v._hx_index == 0) {
+			_g1.push(v);
+		}
+	}
+	var unitsEnterFieldThisTurn = _g1;
+	var result = new Array(unitsEnterFieldThisTurn.length);
+	var _g = 0;
+	var _g1 = unitsEnterFieldThisTurn.length;
+	while(_g < _g1) {
+		var i = _g++;
+		result[i] = { value : unitsEnterFieldThisTurn[i], weight : 0.0};
+	}
+	var tips = result;
+	return { id : id, description : "このターン中に場に出た敵軍ユニット１枚を", type : model_ver1_game_define_RequireType.SelectCard(tips,[1]), action : function() {
+	}};
+}
 var model_ver1_game_Game = function() {
 	this.__uid = hxbit_Serializer.SEQ << 24 | ++hxbit_Serializer.UID;
 	this.ctx = new model_ver1_game_define_Context();
@@ -9055,7 +9151,7 @@ model_ver1_game_define_PlayerId.getOpponentPlayerId = function(this1) {
 };
 var model_ver1_game_define_RequireType = $hxEnums["model.ver1.game.define.RequireType"] = { __ename__:true,__constructs__:null
 	,Pending: {_hx_name:"Pending",_hx_index:0,__enum__:"model.ver1.game.define.RequireType",toString:$estr}
-	,SelectCard: ($_=function(tips) { return {_hx_index:1,tips:tips,__enum__:"model.ver1.game.define.RequireType",toString:$estr}; },$_._hx_name="SelectCard",$_.__params__ = ["tips"],$_)
+	,SelectCard: ($_=function(tips,lengthInclude) { return {_hx_index:1,tips:tips,lengthInclude:lengthInclude,__enum__:"model.ver1.game.define.RequireType",toString:$estr}; },$_._hx_name="SelectCard",$_.__params__ = ["tips","lengthInclude"],$_)
 	,SelectBattlePoint: ($_=function(tips) { return {_hx_index:2,tips:tips,__enum__:"model.ver1.game.define.RequireType",toString:$estr}; },$_._hx_name="SelectBattlePoint",$_.__params__ = ["tips"],$_)
 };
 model_ver1_game_define_RequireType.__constructs__ = [model_ver1_game_define_RequireType.Pending,model_ver1_game_define_RequireType.SelectCard,model_ver1_game_define_RequireType.SelectBattlePoint];
