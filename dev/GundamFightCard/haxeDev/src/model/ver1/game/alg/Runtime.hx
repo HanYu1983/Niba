@@ -28,9 +28,9 @@ function getRuntimeText(ctx:Context):Array<{runtime:ExecuteRuntime, text:CardTex
 	// ver1 （沒使用）
 	// 手牌，hanger中的牌, 直接給它Play的權力
 	// ver2
-	// 手牌，hanger中的牌, 可以使用恆常內文。出牌算恆常內文
+	// 手牌，hanger中的牌
 	final cardsInHandAndHanger = [for (cs in ctx.table.cardStacks) cs].filter(cs -> {
-		return switch ((cs.id:BaSyouId):BaSyou) {
+		return switch ((cs.id : BaSyouId) : BaSyou) {
 			case Default(_, TeHuTa | Hanger):
 				true;
 			case _:
@@ -40,6 +40,7 @@ function getRuntimeText(ctx:Context):Array<{runtime:ExecuteRuntime, text:CardTex
 		.map(cs -> cs.cardIds)
 		.fold((c, a) -> a.concat(c), new Array<String>())
 		.map(id -> ctx.table.cards[id]);
+	// 恆常內文, 出牌算恆常內文
 	final playReturn = [
 		for (card in cardsInHandAndHanger) {
 			final responsePlayerId = getBaSyouControllerAndAssertExist(ctx, getCardBaSyouAndAssertExist(ctx, card.id));
@@ -52,9 +53,9 @@ function getRuntimeText(ctx:Context):Array<{runtime:ExecuteRuntime, text:CardTex
 			}
 		}
 	];
-	// 倒置G的情況可以使用<>內文
+	// 倒置G
 	final cardsInGZone = [for (cs in ctx.table.cardStacks) cs].filter(cs -> {
-		return switch ((cs.id:BaSyouId):BaSyou) {
+		return switch ((cs.id : BaSyouId) : BaSyou) {
 			case Default(_, GZone):
 				true;
 			case _:
@@ -64,6 +65,7 @@ function getRuntimeText(ctx:Context):Array<{runtime:ExecuteRuntime, text:CardTex
 		.map(cs -> cs.cardIds)
 		.fold((c, a) -> a.concat(c), new Array<String>())
 		.map(id -> ctx.table.cards[id]);
+	// 可以使用<>內文
 	final specialReturn = [
 		for (card in cardsInGZone) {
 			final responsePlayerId = getBaSyouControllerAndAssertExist(ctx, getCardBaSyouAndAssertExist(ctx, card.id));
@@ -76,9 +78,9 @@ function getRuntimeText(ctx:Context):Array<{runtime:ExecuteRuntime, text:CardTex
 			}
 		}
 	];
-	// 廢棄庫可以使用恆常內文
+	// 廢棄庫
 	final cardsInJunkYard = [for (cs in ctx.table.cardStacks) cs].filter(cs -> {
-		return switch ((cs.id:BaSyouId):BaSyou) {
+		return switch ((cs.id : BaSyouId) : BaSyou) {
 			case Default(_, JunkYard):
 				true;
 			case _:
@@ -88,6 +90,7 @@ function getRuntimeText(ctx:Context):Array<{runtime:ExecuteRuntime, text:CardTex
 		.map(cs -> cs.cardIds)
 		.fold((c, a) -> a.concat(c), new Array<String>())
 		.map(id -> ctx.table.cards[id]);
+	// 恆常內文
 	final specialReturn2 = [
 		for (card in cardsInJunkYard) {
 			final responsePlayerId = getBaSyouControllerAndAssertExist(ctx, getCardBaSyouAndAssertExist(ctx, card.id));
@@ -100,9 +103,9 @@ function getRuntimeText(ctx:Context):Array<{runtime:ExecuteRuntime, text:CardTex
 			}
 		}
 	];
-
+	// 有控制者的卡(配置區, 戰區)
 	final cardsHasController = [for (cs in ctx.table.cardStacks) cs].filter(cs -> {
-		return switch ((cs.id:BaSyouId):BaSyou) {
+		return switch ((cs.id : BaSyouId) : BaSyou) {
 			case Default(_, kw):
 				isBa(kw);
 			case _:
@@ -222,5 +225,3 @@ function getMarkEffects(ctx:Context):Array<MarkEffect> {
 	});
 	return textEffects.concat(markEffects);
 }
-
-
