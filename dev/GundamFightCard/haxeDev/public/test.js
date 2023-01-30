@@ -7312,7 +7312,6 @@ function model_ver1_game_define_BaSyou_test() {
 	var baSyouKeyword = b1.baSyouKeyword;
 	var this1 = "" + playerId + model_ver1_game_define_BaSyouId._split + $hxEnums[baSyouKeyword.__enum__].__constructs__[baSyouKeyword._hx_index]._hx_name;
 	var csId = this1;
-	console.log("src/model/ver1/game/define/BaSyou.hx:101:",csId);
 	var b2 = model_ver1_game_define_BaSyouId.toBaSyou(csId);
 	if(Type.enumEq(b1,b2) == false) {
 		throw new haxe_Exception("b1 must equals b2");
@@ -7334,13 +7333,6 @@ function model_ver1_game_define_BaSyou_test() {
 	var baSyouKeyword = baSyou.baSyouKeyword;
 	var this1 = "" + playerId + model_ver1_game_define_BaSyouId._split + $hxEnums[baSyouKeyword.__enum__].__constructs__[baSyouKeyword._hx_index]._hx_name;
 	var b5 = this1;
-	var _g = model_ver1_game_define_BaSyouId.toBaSyou(b5);
-	var _g1 = _g.playerId;
-	var _g1 = _g.baSyouKeyword;
-	console.log("src/model/ver1/game/define/BaSyou.hx:116:","XX");
-	var h_h = Object.create(null);
-	h_h[b5] = 1;
-	console.log("src/model/ver1/game/define/BaSyou.hx:119:",h_h["A@@@Hanger"]);
 }
 var model_ver1_game_define_BlockCause = $hxEnums["model.ver1.game.define.BlockCause"] = { __ename__:true,__constructs__:null
 	,Pending: {_hx_name:"Pending",_hx_index:0,__enum__:"model.ver1.game.define.BlockCause",toString:$estr}

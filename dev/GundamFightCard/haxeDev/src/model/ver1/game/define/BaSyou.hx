@@ -98,7 +98,6 @@ abstract BaSyouId(String) to String {
 function test() {
 	final b1 = BaSyou.Default(PlayerId.A, HonGoku);
 	final csId = (b1 : BaSyouId);
-	trace(csId);
 	final b2:BaSyou = csId;
 	if (EnumValueTools.equals(b1, b2) == false) {
 		throw new haxe.Exception("b1 must equals b2");
@@ -111,10 +110,6 @@ function test() {
 
 	final b4 = ("A@@@Hanger" : BaSyouId);
 	final b5:BaSyouId = BaSyou.Default(PlayerId.A, Hanger);
-	switch (b5 : BaSyou) {
-		case Default(_, _):
-			trace("XX");
-	}
-	final h = [(b5 : String) => 1];
-	trace(h["A@@@Hanger"]);
+	// 能編譯過就是代表是字串
+	(b5 : String);
 }
