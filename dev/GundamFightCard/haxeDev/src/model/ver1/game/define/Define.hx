@@ -14,6 +14,7 @@ import model.ver1.game.define.Block;
 import model.ver1.game.define.Require;
 import model.ver1.game.define.Event;
 import model.ver1.game.define.Flow;
+import model.ver1.game.define.Player;
 
 // Context
 // Player
@@ -30,11 +31,8 @@ import model.ver1.game.define.Flow;
 // 	@:s public var id:String;
 // }
 
-final PLAYER_A = "PLAYER_A";
-final PLAYER_B = "PLAYER_B";
-
 function getOpponentPlayerId(playerId:String):String {
-	return playerId == PLAYER_A ? PLAYER_B : PLAYER_A;
+	return playerId == PlayerId.A ? PlayerId.B : PlayerId.A;
 }
 
 typedef PlayerSelection = {

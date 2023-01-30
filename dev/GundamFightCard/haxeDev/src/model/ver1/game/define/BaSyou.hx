@@ -3,6 +3,7 @@ package model.ver1.game.define;
 import haxe.Exception;
 import haxe.EnumTools;
 import tool.Helper;
+import model.ver1.game.define.Player;
 
 enum BaSyouKeyword {
 	// 本国
@@ -61,11 +62,6 @@ enum BaSyou {
 	Default(playerId:String, baSyouKeyword:BaSyouKeyword);
 }
 
-enum abstract PlayerId(String) from String to String {
-	var A;
-	var B;
-}
-
 abstract BaSyouId(String) to String {
 	static final _split = "@@@";
 
@@ -80,7 +76,8 @@ abstract BaSyouId(String) to String {
 			final kw = EnumTools.createByName(BaSyouKeyword, pair[1]);
 			return Default(playerId, kw);
 		} catch (e) {
-			throw 'unknown key ${this}';
+			trace(e);
+			throw 'can not parse BaSyou (${this}), because ${e}';
 		}
 	}
 
@@ -99,14 +96,14 @@ abstract BaSyouId(String) to String {
 }
 
 function test() {
-	final b1 = BaSyou.Default("0", HonGoku);
+	final b1 = BaSyou.Default(PlayerId.A, HonGoku);
 	final csId = (b1 : BaSyouId);
 	trace(csId);
 	final b2:BaSyou = csId;
 	if (EnumValueTools.equals(b1, b2) == false) {
 		throw new haxe.Exception("b1 must equals b2");
 	}
-	final b3 = BaSyou.Default("0", HonGoku);
+	final b3 = BaSyou.Default(PlayerId.A, HonGoku);
 	final csId3 = (b3 : BaSyouId);
 	if (csId != csId3) {
 		throw "csId != csId3";

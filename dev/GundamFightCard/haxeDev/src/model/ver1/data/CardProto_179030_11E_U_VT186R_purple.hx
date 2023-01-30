@@ -11,6 +11,7 @@ import model.ver1.game.define.Mark;
 import model.ver1.game.define.Block;
 import model.ver1.game.define.Require;
 import model.ver1.game.define.Event;
+import model.ver1.game.define.Player;
 import model.ver1.game.alg.Context;
 import model.ver1.game.alg.Cut;
 import model.ver1.data.RequireImpl;
@@ -93,8 +94,8 @@ private class Process1 extends CardText {
 }
 
 function test() {
-	final player1 = "player1";
-	final player2 = "player2";
+	final player1 = PlayerId.A;
+	final player2 = PlayerId.B;
 	final ctx = new Context();
 	final player2Hand = new CardStack((Default(player2, TeHuTa):BaSyouId));
 	ctx.table.cardStacks[player2Hand.id] = player2Hand;

@@ -2,6 +2,7 @@ package model.ver1.game.define;
 
 import haxe.ds.Option;
 import model.ver1.game.define.Define;
+import model.ver1.game.define.Player;
 import model.ver1.game.alg.Block;
 import model.ver1.game.alg.Context;
 
@@ -221,7 +222,7 @@ function queryFlow(ctx:Context, playerId:String):Array<Flow> {
 			// 取得效果的控制者
 			final controller = getBlockRuntime(ctx, effect.id).getResponsePlayerId();
 			// 判斷切入流程
-			final isAllPassCut = ctx.flowMemory.hasPlayerPassCut[PLAYER_A] && ctx.flowMemory.hasPlayerPassCut[PLAYER_B];
+			final isAllPassCut = ctx.flowMemory.hasPlayerPassCut[PlayerId.A] && ctx.flowMemory.hasPlayerPassCut[PlayerId.B];
 			// 如果雙方玩家還沒放棄切入
 			if (isAllPassCut == false) {
 				// 如果我宣告了放棄切入，回傳取消
@@ -256,7 +257,7 @@ function queryFlow(ctx:Context, playerId:String):Array<Flow> {
 		final myCommandList = getClientCommand(ctx, playerId);
 		switch ctx.timing {
 			case Default(_, _, Free1 | Free2):
-				final isAllPassPhase = ctx.flowMemory.hasPlayerPassPhase[PLAYER_A] && ctx.flowMemory.hasPlayerPassPhase[PLAYER_B];
+				final isAllPassPhase = ctx.flowMemory.hasPlayerPassPhase[PlayerId.A] && ctx.flowMemory.hasPlayerPassPhase[PlayerId.B];
 				if (isAllPassPhase == false) {
 					if (ctx.flowMemory.hasPlayerPassPhase[playerId]) {
 						return [Default(FlowCancelPassPhase, '等待對方結束或是取消[${ctx.timing}]結束')];
