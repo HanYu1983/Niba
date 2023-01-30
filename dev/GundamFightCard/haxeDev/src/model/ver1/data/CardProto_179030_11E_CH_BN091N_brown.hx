@@ -50,14 +50,14 @@ private class Text1 extends CardText {
 			case CardRoll(rollCardId):
 				if (rollCardId == thisCardId) {
 					final unitIds = [for (card in ctx.table.cards) card].map(card -> card.id).filter(cardId -> {
+						return getCardOwner(ctx, cardId) == opponentPlayerId;
+					}).filter(cardId -> {
 						return switch getCardEntityCategory(ctx, cardId) {
 							case Some(G):
 								true;
 							case _:
 								false;
 						}
-					}).filter(cardId -> {
-						return getCardOwner(ctx, cardId) == opponentPlayerId;
 					});
 					if (unitIds.length >= 1) {
 						final block = new Block(getSubKey(0), TextEffect(thisCardId, id), new Process1('${id}_Process1', unitIds));
@@ -84,12 +84,43 @@ private class Process1 extends CardText {
 		return [req];
 	}
 
+	public override function getRequires2(ctx:Context, runtime:ExecuteRuntime):Array<Require2> {
+		final thisCardId = runtime.getCardId();
+		final responsePlayerId = runtime.getResponsePlayerId();
+		final opponentPlayerId = ~(responsePlayerId);
+		final unitIds = [for (card in ctx.table.cards) card].map(card -> card.id).filter(cardId -> {
+			return getCardOwner(ctx, cardId) == opponentPlayerId;
+		}).filter(cardId -> {
+			return switch getCardEntityCategory(ctx, cardId) {
+				case Some(G):
+					true;
+				case _:
+					false;
+			}
+		});
+		final tips:Array<Tip<String>> = unitIds.map(i -> {
+			return {
+				value: i,
+				weight: 0.0,
+			}
+		});
+		return [
+			{
+				id: getSubKey(0),
+				description: "敵軍G１枚をロールする。",
+				type: SelectCard(tips, [1]),
+				action: () -> {
+					final selectUnits = getPlayerSelectionCardId(ctx, getSubKey(0));
+					for (unit in selectUnits) {
+						tapCard(ctx, unit);
+					}
+				},
+			}
+		];
+	}
+
 	public override function action(ctx:Context, runtime:ExecuteRuntime):Void {
 		final thisCardId = runtime.getCardId();
-		final selectUnits = getPlayerSelectionCardId(ctx, getSubKey(0));
-		for (unit in selectUnits) {
-			tapCard(ctx, unit);
-		}
 		for (cardId in getThisCardSetGroupCardIds(ctx, thisCardId)) {
 			final mark = new CanNotRerollMark(getSubKey(0), cardId);
 			mark.age = 2;
@@ -102,19 +133,19 @@ function test() {
 	final player1 = PlayerId.A;
 	final player2 = PlayerId.B;
 	final ctx = new Context();
-	final player2Hand = new CardStack((Default(player2, TeHuTa):BaSyouId));
+	final player2Hand = new CardStack((Default(player2, TeHuTa) : BaSyouId));
 	ctx.table.cardStacks[player2Hand.id] = player2Hand;
 	trace("卡牌1在場");
 	final card = new Card("1");
 	card.owner = player1;
 	card.protoId = "179030_11E_CH_BN091N_brown";
-	addCard(ctx.table, (Default(player1, MaintenanceArea):BaSyouId), card);
+	addCard(ctx.table, (Default(player1, MaintenanceArea) : BaSyouId), card);
 	trace("敵軍G在場");
 	final card2 = new Card("2");
 	card2.owner = player2;
 	card2.protoId = "179030_11E_CH_BN091N_brown";
 	card2.isTap = false;
-	addCard(ctx.table, (Default(player2, GZone):BaSyouId), card2);
+	addCard(ctx.table, (Default(player2, GZone) : BaSyouId), card2);
 	//
 	if (getTopCut(ctx).length != 0) {
 		throw "一開始堆疊中沒有效果";
@@ -126,23 +157,29 @@ function test() {
 	}
 	final block = getTopCut(ctx)[0];
 	final runtime = new DefaultExecuteRuntime(card.id, player1);
-	final requires = block.text.getRequires(ctx, runtime);
+	final requires = block.text.getRequires2(ctx, runtime);
 	if (requires.length != 1) {
 		throw "requires.length != 1";
 	}
-	final require:RequireUserSelectCard = cast requires[0];
-	if (require.tips.length != 1) {
+	final require = requires[0];
+	final tips = switch require.type {
+		case SelectCard(tips, lengthInclude):
+			tips;
+		case _:
+			throw "must be SelectCard";
+	}
+	if (tips.length != 1) {
 		throw "必須有一個可選G";
 	}
 	trace("選擇");
-	setPlayerSelectionCardId(ctx, require.id, [require.tips[0]]);
+	setPlayerSelectionCardId(ctx, require.id, [tips[0].value]);
 	trace("驗証支付");
-	require.action(ctx, runtime);
-	trace("解決效果");
-	block.text.action(ctx, runtime);
+	require.action();
 	if (card2.isTap != true) {
 		throw "牌必須被横置";
 	}
+	trace("解決效果");
+	block.text.action(ctx, runtime);
 	if ([for (mark in ctx.marks) mark].length != 1) {
 		throw "必須有不能重置效果";
 	}
