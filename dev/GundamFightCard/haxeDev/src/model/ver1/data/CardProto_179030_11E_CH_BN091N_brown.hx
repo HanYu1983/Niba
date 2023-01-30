@@ -122,7 +122,8 @@ private class Process1 extends CardText {
 	public override function action(ctx:Context, runtime:ExecuteRuntime):Void {
 		final thisCardId = runtime.getCardId();
 		for (cardId in getThisCardSetGroupCardIds(ctx, thisCardId)) {
-			final mark = new CanNotRerollMark(getSubKey(0), cardId);
+			final markId = '${id}_${cardId}';
+			final mark = new CanNotRerollMark(markId, cardId);
 			mark.age = 2;
 			ctx.marks[mark.id] = mark;
 		}

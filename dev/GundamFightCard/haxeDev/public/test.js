@@ -5754,7 +5754,8 @@ model_ver1_data__$CardProto_$179030_$11E_$CH_$BN091N_$brown_Process1.prototype =
 		while(_g < _g1.length) {
 			var cardId = _g1[_g];
 			++_g;
-			var mark = new model_ver1_game_define_CanNotRerollMark(this.getSubKey(0),cardId);
+			var markId = "" + this.id + "_" + cardId;
+			var mark = new model_ver1_game_define_CanNotRerollMark(markId,cardId);
 			mark.age = 2;
 			ctx.marks.h[mark.id] = mark;
 		}
@@ -5853,7 +5854,7 @@ function model_ver1_data_CardProto_$179030_$11E_$CH_$BN091N_$brown_test() {
 	var this1 = "" + playerId + model_ver1_game_define_BaSyouId._split + $hxEnums[baSyouKeyword.__enum__].__constructs__[baSyouKeyword._hx_index]._hx_name;
 	var player2Hand = new tool_CardStack(this1);
 	ctx.table.cardStacks.h[player2Hand.id] = player2Hand;
-	console.log("src/model/ver1/data/CardProto_179030_11E_CH_BN091N_brown.hx:138:","卡牌1在場");
+	console.log("src/model/ver1/data/CardProto_179030_11E_CH_BN091N_brown.hx:139:","卡牌1在場");
 	var card = new tool_Card("1");
 	card.owner = player1;
 	card.protoId = "179030_11E_CH_BN091N_brown";
@@ -5862,7 +5863,7 @@ function model_ver1_data_CardProto_$179030_$11E_$CH_$BN091N_$brown_test() {
 	var baSyouKeyword = baSyou.baSyouKeyword;
 	var this1 = "" + playerId + model_ver1_game_define_BaSyouId._split + $hxEnums[baSyouKeyword.__enum__].__constructs__[baSyouKeyword._hx_index]._hx_name;
 	tool_Table_addCard(ctx.table,this1,card);
-	console.log("src/model/ver1/data/CardProto_179030_11E_CH_BN091N_brown.hx:143:","敵軍G在場");
+	console.log("src/model/ver1/data/CardProto_179030_11E_CH_BN091N_brown.hx:144:","敵軍G在場");
 	var card2 = new tool_Card("2");
 	card2.owner = player2;
 	card2.protoId = "179030_11E_CH_BN091N_brown";
@@ -5875,7 +5876,7 @@ function model_ver1_data_CardProto_$179030_$11E_$CH_$BN091N_$brown_test() {
 	if(model_ver1_game_alg_Cut_getTopCut(ctx).length != 0) {
 		throw haxe_Exception.thrown("一開始堆疊中沒有效果");
 	}
-	console.log("src/model/ver1/data/CardProto_179030_11E_CH_BN091N_brown.hx:153:","卡牌横置");
+	console.log("src/model/ver1/data/CardProto_179030_11E_CH_BN091N_brown.hx:154:","卡牌横置");
 	model_ver1_game_alg_Context_sendEvent(ctx,model_ver1_game_define_Event.CardRoll(card.id));
 	if(model_ver1_game_alg_Cut_getTopCut(ctx).length != 1) {
 		throw haxe_Exception.thrown("堆疊中必須有一個效果");
@@ -5899,14 +5900,14 @@ function model_ver1_data_CardProto_$179030_$11E_$CH_$BN091N_$brown_test() {
 	if(tips.length != 1) {
 		throw haxe_Exception.thrown("必須有一個可選G");
 	}
-	console.log("src/model/ver1/data/CardProto_179030_11E_CH_BN091N_brown.hx:174:","選擇");
+	console.log("src/model/ver1/data/CardProto_179030_11E_CH_BN091N_brown.hx:175:","選擇");
 	model_ver1_game_alg_Context_setPlayerSelectionCardId(ctx,$require.id,[tips[0].value]);
-	console.log("src/model/ver1/data/CardProto_179030_11E_CH_BN091N_brown.hx:176:","驗証支付");
+	console.log("src/model/ver1/data/CardProto_179030_11E_CH_BN091N_brown.hx:177:","驗証支付");
 	$require.action();
 	if(card2.isTap != true) {
 		throw haxe_Exception.thrown("牌必須被横置");
 	}
-	console.log("src/model/ver1/data/CardProto_179030_11E_CH_BN091N_brown.hx:181:","解決效果");
+	console.log("src/model/ver1/data/CardProto_179030_11E_CH_BN091N_brown.hx:182:","解決效果");
 	block.text.action(ctx,runtime);
 	var _g = [];
 	var h = ctx.marks.h;
@@ -5921,7 +5922,7 @@ function model_ver1_data_CardProto_$179030_$11E_$CH_$BN091N_$brown_test() {
 	if(_g.length != 1) {
 		throw haxe_Exception.thrown("必須有不能重置效果");
 	}
-	console.log("src/model/ver1/data/CardProto_179030_11E_CH_BN091N_brown.hx:186:","結束一個turn");
+	console.log("src/model/ver1/data/CardProto_179030_11E_CH_BN091N_brown.hx:187:","結束一個turn");
 	ctx.timing = model_ver1_game_define_Timing.Default(model_ver1_game_define_PhaseKeyword.Battle,haxe_ds_Option.Some(model_ver1_game_define_StepKeyword.End),model_ver1_game_define_TimingKeyword.End);
 	model_ver1_game_alg_Context_sendEvent(ctx,model_ver1_game_define_Event.ChangePhase);
 	var _g = [];
@@ -5937,7 +5938,7 @@ function model_ver1_data_CardProto_$179030_$11E_$CH_$BN091N_$brown_test() {
 	if(_g.length != 1) {
 		throw haxe_Exception.thrown("必須有不能重置效果");
 	}
-	console.log("src/model/ver1/data/CardProto_179030_11E_CH_BN091N_brown.hx:192:","再結束一個turn");
+	console.log("src/model/ver1/data/CardProto_179030_11E_CH_BN091N_brown.hx:193:","再結束一個turn");
 	model_ver1_game_alg_Context_sendEvent(ctx,model_ver1_game_define_Event.ChangePhase);
 	var _g = [];
 	var h = ctx.marks.h;
