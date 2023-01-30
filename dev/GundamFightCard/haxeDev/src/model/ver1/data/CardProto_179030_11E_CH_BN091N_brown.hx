@@ -45,7 +45,7 @@ private class Text1 extends CardText {
 	public override function onEvent(ctx:Context, event:Event, runtime:ExecuteRuntime):Void {
 		final thisCardId = runtime.getCardId();
 		final responsePlayerId = runtime.getResponsePlayerId();
-		final opponentPlayerId = getOpponentPlayerId(responsePlayerId);
+		final opponentPlayerId = ~(responsePlayerId);
 		switch event {
 			case CardRoll(rollCardId):
 				if (rollCardId == thisCardId) {

@@ -30,7 +30,7 @@ function test() {
 }
 
 function test_constantText() {
-	final playerId = "0";
+	final playerId = PlayerId.A;
 	final ctx = new Context();
 	registerCardProto(ctx, "AddTextCardProto", new AddTextCardProto());
 	registerCardProto(ctx, "OnlyConstentTextCardProto", new OnlyConstentTextCardProto());

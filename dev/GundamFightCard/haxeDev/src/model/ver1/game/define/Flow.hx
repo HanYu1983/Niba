@@ -107,14 +107,14 @@ enum Flow {
 	Default(type:FlowType, description:String);
 }
 
-function applyFlow(ctx:Context, playerID:String, flow:Flow):Void {
+function applyFlow(ctx:Context, playerID:PlayerId, flow:Flow):Void {
 	switch flow {
 		case Default(FlowSetActiveEffectId(blockId, tips), _):
 		case _:
 	}
 }
 
-function queryFlow(ctx:Context, playerId:String):Array<Flow> {
+function queryFlow(ctx:Context, playerId:PlayerId):Array<Flow> {
 	// 是否有玩家牌生命歸0，遊戲結束
 	switch hasSomeoneLiveIsZero(ctx) {
 		case Some(playerId):
@@ -127,7 +127,7 @@ function queryFlow(ctx:Context, playerId:String):Array<Flow> {
 			final runtime = getBlockRuntime(ctx, activeBlockId);
 			final controller = runtime.getResponsePlayerId();
 			final isPass = ctx.flowMemory.hasPlayerPassPayCost[playerId];
-			final isOpponentPass = ctx.flowMemory.hasPlayerPassPayCost[getOpponentPlayerId(playerId)];
+			final isOpponentPass = ctx.flowMemory.hasPlayerPassPayCost[~(playerId)];
 			if (isPass && isOpponentPass) {
 				// 雙方都已支付
 				if (controller != playerId) {
@@ -233,7 +233,7 @@ function queryFlow(ctx:Context, playerId:String):Array<Flow> {
 				// 雙方現在都可以切入，但要判斷切入的優先權在誰那
 				// 如果堆疊最上方的控制者是自己，則優先權在對方。必須等對方宣告放棄切入
 				if (controller == playerId) {
-					final opponentPlayerID = getOpponentPlayerId(playerId);
+					final opponentPlayerID = ~(playerId);
 					final isOpponentPassCut = ctx.flowMemory.hasPlayerPassCut[opponentPlayerID];
 					if (isOpponentPassCut == false) {
 						return [Default(FlowWaitPlayer, "現在的切入優先權在對方")];

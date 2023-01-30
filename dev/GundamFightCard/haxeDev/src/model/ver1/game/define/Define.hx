@@ -31,9 +31,9 @@ import model.ver1.game.define.Player;
 // 	@:s public var id:String;
 // }
 
-function getOpponentPlayerId(playerId:String):String {
-	return playerId == PlayerId.A ? PlayerId.B : PlayerId.A;
-}
+// function getOpponentPlayerId(playerId:String):String {
+// 	return playerId == PlayerId.A ? PlayerId.B : PlayerId.A;
+// }
 
 typedef PlayerSelection = {
 	cardIds:Map<String, Array<String>>

@@ -14,4 +14,9 @@ abstract PlayerId(String) to String {
 		}
 		return new PlayerId(s);
 	}
+
+	@:op(~A)
+	public inline function getOpponentPlayerId():PlayerId {
+		return this == PlayerId.A ? PlayerId.B : PlayerId.A;
+	}
 }
