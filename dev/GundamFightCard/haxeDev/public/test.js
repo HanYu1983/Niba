@@ -6601,6 +6601,7 @@ function model_ver1_game_alg_Context_tapCard(ctx,cardId) {
 		throw new haxe_Exception("already tap");
 	}
 	card.isTap = true;
+	model_ver1_game_alg_Context_sendEvent(ctx,model_ver1_game_define_Event.CardRoll(card.id));
 }
 function model_ver1_game_alg_Context_moveCard(ctx,cardId,from,to) {
 	var playerId = from.playerId;
@@ -6718,7 +6719,7 @@ function model_ver1_game_alg_Context_getCardBaSyouAndAssertExist(ctx,cardId) {
 		model_ver1_game_define_BaSyouId.toBaSyou(ret);
 		return model_ver1_game_define_BaSyouId.toBaSyou(ret);
 	} else {
-		console.log("src/model/ver1/game/alg/Context.hx:160:",ctx);
+		console.log("src/model/ver1/game/alg/Context.hx:162:",ctx);
 		throw new haxe_Exception("card baSyou not found: " + cardId);
 	}
 }

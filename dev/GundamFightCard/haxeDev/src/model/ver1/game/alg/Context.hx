@@ -45,10 +45,12 @@ function tapCard(ctx:Context, cardId:String):Void {
 		throw new haxe.Exception("already tap");
 	}
 	card.isTap = true;
+	// TODO: put here?
+	sendEvent(ctx, CardRoll(card.id));
 }
 
 function moveCard(ctx:Context, cardId:String, from:BaSyou, to:BaSyou) {
-	tool.Table.moveCard(ctx.table, cardId, (from:BaSyouId), (to:BaSyouId));
+	tool.Table.moveCard(ctx.table, cardId, (from : BaSyouId), (to : BaSyouId));
 }
 
 //
@@ -155,7 +157,7 @@ function getBaSyouControllerAndAssertExist(ctx:Context, baSyou:BaSyou):String {
 function getCardBaSyouAndAssertExist(ctx:Context, cardId:String):BaSyou {
 	return switch tool.Table.getCardCardStack(ctx.table, cardId) {
 		case Some(cardStack):
-			(cardStack.id:BaSyouId);
+			(cardStack.id : BaSyouId);
 		case _:
 			trace(ctx);
 			throw new haxe.Exception('card baSyou not found: ${cardId}');
