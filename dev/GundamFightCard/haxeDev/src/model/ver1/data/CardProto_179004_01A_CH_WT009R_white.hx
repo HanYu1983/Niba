@@ -62,9 +62,10 @@ private class Text1_1 extends CardText {
 	@:s public var gainValue:Int;
 
 	public override function getRequires(ctx:Context, runtime:ExecuteRuntime):Array<Require> {
+		final thisCardId = runtime.getCardId();
 		final gainCardSetGroupsIds = getCardSetGroupCardIds(ctx, gainCardId);
 		final tips = [for (card in ctx.table.cards) card].filter(card -> {
-			return gainCardSetGroupsIds.contains(card.id) == false && isMyCard(ctx, gainCardId, card.id);
+			return gainCardSetGroupsIds.contains(card.id) == false && isMyCard(ctx, thisCardId, card.id);
 		}).map(card -> card.id);
 		final req = new RequireUserSelectCard(getSubKey(0), "そのカードのセットグループ以外の自軍ユニット１枚は");
 		req.tips = tips;

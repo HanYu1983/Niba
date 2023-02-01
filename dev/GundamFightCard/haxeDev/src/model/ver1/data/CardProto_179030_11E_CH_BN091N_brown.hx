@@ -36,6 +36,21 @@ class CardProto_179030_11E_CH_BN091N_brown extends CardProto {
 	}
 }
 
+function getOpponentG(ctx:Context, runtime:ExecuteRuntime):Array<String> {
+	final responsePlayerId = runtime.getResponsePlayerId();
+	final opponentPlayerId = ~(responsePlayerId);
+	return [for (card in ctx.table.cards) card].map(card -> card.id).filter(cardId -> {
+		return getCardOwner(ctx, cardId) == opponentPlayerId;
+	}).filter(cardId -> {
+		return switch getCardEntityCategory(ctx, cardId) {
+			case Some(G):
+				true;
+			case _:
+				false;
+		}
+	});
+}
+
 private class Text1 extends CardText {
 	public function new(id:String) {
 		super(id, "『起動』：このカードがロールした場合、敵軍G１枚をロールする。その場合、このセットグループは、このターンと次のターン、リロールできない。");
@@ -49,18 +64,8 @@ private class Text1 extends CardText {
 		switch event {
 			case CardRoll(rollCardId):
 				if (rollCardId == thisCardId) {
-					final unitIds = [for (card in ctx.table.cards) card].map(card -> card.id).filter(cardId -> {
-						return getCardOwner(ctx, cardId) == opponentPlayerId;
-					}).filter(cardId -> {
-						return switch getCardEntityCategory(ctx, cardId) {
-							case Some(G):
-								true;
-							case _:
-								false;
-						}
-					});
-					if (unitIds.length >= 1) {
-						final block = new Block(getSubKey(0), TextEffect(thisCardId, id), new Process1('${id}_Process1', unitIds));
+					if (getOpponentG(ctx, runtime).length >= 1) {
+						final block = new Block(getSubKey(0), TextEffect(thisCardId, id), new Process1('${id}_Process1'));
 						block.isImmediate = true;
 						cutIn(ctx, block);
 					}
@@ -71,34 +76,12 @@ private class Text1 extends CardText {
 }
 
 private class Process1 extends CardText {
-	public function new(id:String, tips:Array<String>) {
+	public function new(id:String) {
 		super(id, "敵軍G１枚をロールする。その場合、このセットグループは、このターンと次のターン、リロールできない。");
-		this.tips = tips;
-	}
-
-	@:s public var tips:Array<String>;
-
-	public override function getRequires(ctx:Context, runtime:ExecuteRuntime):Array<Require> {
-		final req = new RequireUserSelectCard(getSubKey(0), "敵軍G１枚");
-		req.tips = tips;
-		return [req];
 	}
 
 	public override function getRequires2(ctx:Context, runtime:ExecuteRuntime):Array<Require2> {
-		final thisCardId = runtime.getCardId();
-		final responsePlayerId = runtime.getResponsePlayerId();
-		final opponentPlayerId = ~(responsePlayerId);
-		final unitIds = [for (card in ctx.table.cards) card].map(card -> card.id).filter(cardId -> {
-			return getCardOwner(ctx, cardId) == opponentPlayerId;
-		}).filter(cardId -> {
-			return switch getCardEntityCategory(ctx, cardId) {
-				case Some(G):
-					true;
-				case _:
-					false;
-			}
-		});
-		final tips:Array<Tip<String>> = unitIds.map(i -> {
+		final tips:Array<Tip<String>> = getOpponentG(ctx, runtime).map(i -> {
 			return {
 				value: i,
 				weight: 0.0,
