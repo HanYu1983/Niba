@@ -27,6 +27,7 @@ function test() {
 	test_constantText();
 	model.ver1.data.CardProto_179030_11E_U_VT186R_purple.test();
 	model.ver1.data.CardProto_179030_11E_CH_BN091N_brown.test();
+	model.ver1.data.CardProto_179004_01A_CH_WT009R_white.test();
 }
 
 function test_constantText() {

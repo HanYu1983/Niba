@@ -170,6 +170,8 @@ class CardText implements hxbit.Serializable {
 class CardProto implements hxbit.Serializable {
 	public var category = CardCategory.Unit;
 
+	public function new() {}
+
 	public function getTexts(ctx:Context, runtime:ExecuteRuntime):Array<CardText> {
 		return [];
 	}

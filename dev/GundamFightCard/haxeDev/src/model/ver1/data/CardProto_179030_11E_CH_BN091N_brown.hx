@@ -25,6 +25,7 @@ import model.ver1.data.RequireImpl;
 
 class CardProto_179030_11E_CH_BN091N_brown extends CardProto {
 	public function new() {
+		super();
 		this.category = Character;
 	}
 

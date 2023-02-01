@@ -22,7 +22,9 @@ import model.ver1.data.RequireImpl;
 // シャッコー系　MS
 // （ダメージ判定ステップ）〔２〕：このカードが戦闘ダメージで破壊されている場合、このカードを、破壊を無効にした上で自軍Gにする。
 class CardProto_179003_01A_U_BK008U_black extends CardProto {
-	public function new() {}
+	public function new() {
+		super();
+	}
 
 	public override function getTexts(ctx:Context, runtime:ExecuteRuntime):Array<CardText> {
 		return [

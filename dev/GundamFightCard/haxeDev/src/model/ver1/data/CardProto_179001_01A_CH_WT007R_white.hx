@@ -22,7 +22,9 @@ import model.ver1.data.PlayerPlayCard;
 // 男性　子供　CO
 // （戦闘フェイズ）〔２〕：このセットグループのユニットは、ターン終了時まで「速攻」を得る。
 class CardProto_179001_01A_CH_WT007R_white extends CardProto {
-	public function new() {}
+	public function new() {
+		super();
+	}
 
 	public override function getTexts(ctx:Context, runtime:ExecuteRuntime):Array<CardText> {
 		return [

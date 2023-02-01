@@ -178,7 +178,7 @@ function getPlayerGCardIds(ctx:Context, playerId:String):Array<String> {
 }
 
 function getCardSetGroupCardIds(ctx:Context, cardId:String):Array<String> {
-	return [];
+	return [cardId];
 }
 
 // (p.63) 自軍カードが

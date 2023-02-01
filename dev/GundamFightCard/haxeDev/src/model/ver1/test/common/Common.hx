@@ -5,7 +5,9 @@ import model.ver1.game.define.ExecuteRuntime;
 import model.ver1.game.define.Mark;
 
 class OnlyEmptyTextCardProto extends CardProto {
-	public function new() {}
+	public function new() {
+		super();
+	}
 
 	public override function getTexts(ctx:Context, runtime:ExecuteRuntime):Array<CardText> {
 		final thisCardId = runtime.getCardId();
@@ -25,7 +27,9 @@ class AddOneTextText extends CardText {
 }
 
 class AddTextCardProto extends CardProto {
-	public function new() {}
+	public function new() {
+		super();
+	}
 
 	public override function getTexts(ctx:Context, runtime:ExecuteRuntime):Array<CardText> {
 		final thisCardId = runtime.getCardId();
@@ -34,7 +38,9 @@ class AddTextCardProto extends CardProto {
 }
 
 class OnlyConstentTextCardProto extends CardProto {
-	public function new() {}
+	public function new() {
+		super();
+	}
 
 	public override function getTexts(ctx:Context, runtime:ExecuteRuntime):Array<CardText> {
 		final thisCardId = runtime.getCardId();

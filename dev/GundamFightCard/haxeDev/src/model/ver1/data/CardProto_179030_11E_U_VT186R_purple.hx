@@ -26,6 +26,7 @@ import model.ver1.data.RequireImpl;
 
 class CardProto_179030_11E_U_VT186R_purple extends CardProto {
 	public function new() {
+		super();
 		this.category = Unit;
 	}
 
