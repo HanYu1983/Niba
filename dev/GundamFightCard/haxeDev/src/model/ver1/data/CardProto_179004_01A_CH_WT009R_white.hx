@@ -120,6 +120,7 @@ private class Text1_1 extends CardText {
 		final selectUnits = getPlayerSelectionCardId(ctx, getSubKey(0));
 		for (unit in selectUnits) {
 			final mark = new Mark1('${id}_Mark1', gainCardId, gainValue);
+			mark.age = 1;
 			ctx.marks[mark.id] = mark;
 		}
 	}
@@ -137,18 +138,6 @@ private class Mark1 extends Mark {
 
 	public override function getEffect(ctx:Context):Array<MarkEffect> {
 		return [AddBattlePoint(attachCardId, battlePoint)];
-	}
-
-	public override function onEvent(ctx:Context, event:Event):Void {
-		switch event {
-			case ChangePhase:
-				switch ctx.timing {
-					case Default(Battle, Some(End), End):
-						ctx.marks.remove(id);
-					default:
-				}
-			case _:
-		}
 	}
 }
 
@@ -209,5 +198,15 @@ function test() {
 	setPlayerSelectionCardId(ctx, require.id, [tips[0].value]);
 	trace("驗証支付");
 	require.action();
-	// TODO: check battle point
+	trace("解決效果");
+	block.text.action(ctx, runtime);
+	if ([for (mark in ctx.marks) mark].length != 1) {
+		throw "必須有效果";
+	}
+	trace("結束一個turn");
+	ctx.timing = Default(Battle, Some(End), End);
+	sendEvent(ctx, ChangePhase);
+	if ([for (mark in ctx.marks) mark].length != 0) {
+		throw "效果必須被移除";
+	}
 }

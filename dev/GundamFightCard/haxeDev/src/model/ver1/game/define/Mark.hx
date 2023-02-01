@@ -16,6 +16,7 @@ class Mark implements hxbit.Serializable {
 	}
 
 	@:s public var id:String;
+	// hxbit.Serializable not support Option
 	@:s public var age:Null<Int>;
 
 	public function getEffect(ctx:Context):Array<MarkEffect> {
