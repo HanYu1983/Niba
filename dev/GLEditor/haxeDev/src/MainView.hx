@@ -1,10 +1,14 @@
 package;
 
+import webgl.shaders.smokingDuck.SmokingDuckBufferC;
+import webgl.shaders.smokingDuck.SmokingDuckBufferB;
+import webgl.shaders.smokingDuck.SmokingDuckImage;
 import webgl.shaders.navierStokes2d.Combine;
 import webgl.shaders.navierStokes2d.VelocityAfterCalculator;
 import webgl.shaders.navierStokes2d.VelocityCalculator;
 import webgl.shaders.navierStokes2d.PressureCalculator;
 import webgl.shaders.navierStokes2d.DivergenceCalculator;
+import webgl.shaders.smokingDuck.SmokingDuckBufferA;
 import webgl.shaders.BasicEnviromentShader;
 import webgl.shaders.BasicCubeMapShader;
 import js.html.URL;
@@ -55,7 +59,13 @@ class MainView extends VBox {
 		// testDoubleBuffer();
 		// testRenderTarget();
 		// testNoiseShader();
-		test2DNavierStokes();
+
+		// https://www.shadertoy.com/view/ldd3WS
+		// test2DNavierStokes();
+
+		// https://www.shadertoy.com/view/mtfXD4
+		testSmokingDuck();
+
 		// testMultiTexture();
 		// testShaderToy();
 		// testCubeMap();
@@ -359,11 +369,141 @@ class MainView extends VBox {
 		}
 	}
 
+	function testSmokingDuck() {
+		WebglEngine.inst.init('canvas_gl');
+		final gl = WebglEngine.inst.gl;
+		if (gl != null) {
+			// 這邊告訴gl說要允許framebuffer輸入浮點值
+			WebglEngine.inst.enabledWriteFloatInFramebuffer();
+			final tw = 1024;
+			final th = 768;
+
+			WebglEngine.inst.addShader('SmokingDuckBufferA', new SmokingDuckBufferA());
+			WebglEngine.inst.addShader('SmokingDuckBufferB', new SmokingDuckBufferB());
+			WebglEngine.inst.addShader('SmokingDuckBufferC', new SmokingDuckBufferC());
+			WebglEngine.inst.addShader('SmokingDuckImage', new SmokingDuckImage());
+
+			WebglEngine.inst.createRenderTarget('SmokingDuckBufferA1', tw, th);
+			WebglEngine.inst.createRenderTarget('SmokingDuckBufferA2', tw, th);
+			WebglEngine.inst.createRenderTarget('SmokingDuckBufferB', tw, th);
+			WebglEngine.inst.createRenderTarget('SmokingDuckBufferC', tw, th);
+			WebglEngine.inst.createRenderTarget('SmokingDuckBufferD', tw, th);
+
+			final bufferAMaterial = WebglEngine.inst.createMaterial('bufferAMaterial', 'SmokingDuckBufferA');
+			if (bufferAMaterial != null) {
+				bufferAMaterial.uniform.set('u_bufferD', 0);
+				bufferAMaterial.uniform.set('u_bufferA', 1);
+				bufferAMaterial.textures.push('SmokingDuckBufferD');
+				bufferAMaterial.textures.push('SmokingDuckBufferA1');
+			}
+
+			final bufferBMaterial = WebglEngine.inst.createMaterial('bufferBMaterial', 'SmokingDuckBufferB');
+			if (bufferBMaterial != null) {
+				bufferBMaterial.uniform.set('u_bufferA', 0);
+				bufferBMaterial.textures.push('SmokingDuckBufferA1');
+			}
+
+			final bufferCMaterial = WebglEngine.inst.createMaterial('bufferCMaterial', 'SmokingDuckBufferC');
+			if (bufferCMaterial != null) {
+				bufferCMaterial.uniform.set('u_bufferB', 0);
+				bufferCMaterial.uniform.set('u_bufferD', 1);
+				bufferCMaterial.textures.push('SmokingDuckBufferB');
+				bufferCMaterial.textures.push('SmokingDuckBufferD');
+			}
+
+			final imageMaterial = WebglEngine.inst.createMaterial('imageMaterial', 'SmokingDuckImage');
+			if (imageMaterial != null) {
+				imageMaterial.uniform.set('u_bufferA', 0);
+				imageMaterial.textures.push('SmokingDuckBufferC');
+			}
+
+			final rect = Tool.createMeshEntity('rect', RECTANGLE2D, 'imageMaterial');
+
+			var lastRender = 0.0;
+			var tickCount = 0.0;
+			function render(timestamp:Float) {
+				final progress = timestamp - lastRender;
+				lastRender = timestamp;
+
+				final mr = rect.getComponent(MeshRenderer);
+				if (mr != null && mr.geometry != null) {
+					final pm = Mat3Tools.projection(gl.canvas.width, gl.canvas.height);
+					final modelMatrix = Mat3.fromScaling(null, Vec2.fromValues(1024.0 / 100.0, 768.0 / 100.0));
+					mr.geometry.uniform.set('u_time', [timestamp]);
+					mr.geometry.uniform.set('u_matrix', pm.toArray());
+					mr.geometry.uniform.set('u_modelMatrix', modelMatrix.toArray());
+				}
+
+				// bufferA
+				{
+					final mr = rect.getComponent(MeshRenderer);
+					if (mr != null && mr.geometry != null) {
+						WebglEngine.inst.changeMaterial(mr.name, 'bufferAMaterial');
+					}
+
+					if (bufferAMaterial != null && bufferAMaterial.textures.length > 1) {
+						bufferAMaterial.textures.pop();
+						bufferAMaterial.textures.push(tickCount % 2 == 0 ? 'SmokingDuckBufferA1' : 'SmokingDuckBufferA2');
+					}
+					// 指定新的不顯示的畫布
+					WebglEngine.inst.bindFrameBuffer(tickCount % 2 == 0 ? 'SmokingDuckBufferA2' : 'SmokingDuckBufferA1');
+
+					// 畫在指定的不顯示的畫布上
+					WebglEngine.inst.render(tw, th, Vec3.fromValues(0.0, 0.0, 1));
+				}
+
+				// bufferB
+				{
+					final mr = rect.getComponent(MeshRenderer);
+					if (mr != null && mr.geometry != null) {
+						WebglEngine.inst.changeMaterial(mr.name, 'bufferBMaterial');
+					}
+
+					// 指定新的不顯示的畫布
+					WebglEngine.inst.bindFrameBuffer('SmokingDuckBufferB');
+
+					// 畫在指定的不顯示的畫布上
+					WebglEngine.inst.render(tw, th, Vec3.fromValues(0.0, 0.0, 1));
+				}
+
+				// bufferC
+				{
+					final mr = rect.getComponent(MeshRenderer);
+					if (mr != null && mr.geometry != null) {
+						WebglEngine.inst.changeMaterial(mr.name, 'bufferCMaterial');
+					}
+
+					// 指定新的不顯示的畫布
+					WebglEngine.inst.bindFrameBuffer('SmokingDuckBufferC');
+
+					// 畫在指定的不顯示的畫布上
+					WebglEngine.inst.render(tw, th, Vec3.fromValues(0.0, 0.0, 1));
+				}
+
+				// combine
+				{
+					final mr = rect.getComponent(MeshRenderer);
+					if (mr != null && mr.geometry != null) {
+						WebglEngine.inst.changeMaterial(mr.name, 'imageMaterial');
+					}
+
+					WebglEngine.inst.defaultFrameBuffer();
+
+					// 畫在當前的顯示畫布
+					WebglEngine.inst.render(gl.canvas.width, gl.canvas.height, Vec3.fromValues(0.7, 0.7, 0.7));
+				}
+
+				Browser.window.requestAnimationFrame(render);
+				tickCount += 1;
+			}
+			Browser.window.requestAnimationFrame(render);
+		}
+	}
+
 	function test2DNavierStokes() {
 		WebglEngine.inst.init('canvas_gl');
 		final gl = WebglEngine.inst.gl;
 		if (gl != null) {
-
 			// 這邊告訴gl說要允許framebuffer輸入浮點值
 			WebglEngine.inst.enabledWriteFloatInFramebuffer();
 			final tw = 1024;
