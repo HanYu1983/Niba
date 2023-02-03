@@ -1,0 +1,4 @@
+<hbox width='100%' height='100' styleName='area' >
+    <label text='id'></label>
+    <label text='action'></label>
+</hbox>

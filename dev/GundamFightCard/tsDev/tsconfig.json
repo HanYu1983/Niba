@@ -1,0 +1,26 @@
+{
+  "compilerOptions": {
+    "sourceMap": false,
+    "module": "commonjs",
+    "esModuleInterop": true,
+    "resolveJsonModule": true,
+    "experimentalDecorators": true,
+    "downlevelIteration": true,
+    "outDir": "../haxeDev/public/ver4",
+    "strict": false,
+    "alwaysStrict": false,
+    "noImplicitAny": false,
+    "noImplicitThis": false,
+    "strictBindCallApply": true,
+    "strictFunctionTypes": true,
+    "strictNullChecks": true,
+    "strictPropertyInitialization": true,
+    "useUnknownInCatchVariables": true,
+    // prevent "use strict" in js file, 不然eval的功能會被限制
+    "noImplicitUseStrict": true,
+  },
+  "include": [
+    "src"
+  ],
+  "compileOnSave": false
+}

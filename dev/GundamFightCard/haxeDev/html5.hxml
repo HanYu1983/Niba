@@ -6,5 +6,7 @@
 -lib libnoise
 -lib hxSet
 -lib tweenx
+-lib hxbit
+-lib delay
 
 -js public/Main.js

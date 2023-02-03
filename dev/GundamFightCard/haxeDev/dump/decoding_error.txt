@@ -1,0 +1,55 @@
+{
+	expr: EBlock([{
+		expr: EVars([{
+			expr: null
+			isFinal: false
+			meta: []
+			name: __e
+			type: null
+		}])
+		pos: #pos
+	}, {
+		expr: EBinop(OpAssign, {
+			expr: EConst(CIdent(__e))
+			pos: #pos
+		}, {
+			expr: ECall({
+				expr: EField({
+					expr: EParenthesis({
+						expr: ECheckType({
+							expr: EConst(CIdent(null))
+							pos: #pos
+						}, TPath({
+							name: Serializable
+							pack: [hxbit]
+							params: [TPType(null <- expected enum value)]
+							sub: SerializableEnum
+						}))
+						pos: #pos
+					})
+					pos: #pos
+				}, unserialize)
+				pos: #pos
+			}, [{
+				expr: EConst(CIdent(__ctx))
+				pos: #pos
+			}])
+			pos: #pos
+		})
+		pos: #pos
+	}, {
+		expr: EBinop(OpAssign, {
+			expr: EField({
+				expr: EConst(CIdent(this))
+				pos: #pos
+			}, protoId)
+			pos: #pos
+		}, {
+			expr: EConst(CIdent(__e))
+			pos: #pos
+		})
+		pos: #pos
+	}])
+	pos: #pos
+}
+line 25: expected enum value

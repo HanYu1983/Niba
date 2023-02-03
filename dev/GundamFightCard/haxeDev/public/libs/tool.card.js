@@ -69,7 +69,6 @@ tool.card = tool.card || {};
         let card1 = { ...CARD, id: 0 }
         table.cards = [card1]
         table.cardStacks[homeId] = getCardStack(table, homeId).concat([card1.id])
-        console.log(table)
         assert(SPEC_TABLE, table)
         const handId = 1
         table = moveCard(table, card1.id, homeId, handId, c => {

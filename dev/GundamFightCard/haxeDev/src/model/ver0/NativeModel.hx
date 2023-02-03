@@ -1,4 +1,4 @@
-package model;
+package model.ver0;
 
 import haxe.Exception;
 import viewModel.IViewModel;
@@ -44,17 +44,22 @@ private extern class Native {
 private function toCardModel(app:App, card:Card):CardModel {
 	return {
 		id: '${card.id}',
-		name: '${card.id}',
-		content: 'card ${card.id}',
+		protoId: '',
+		watchingByPlayer: [],
+		// name: '${card.id}',
+		// content: 'card ${card.id}',
 		owner: card.owner,
+		// url:'',
+		faceup: false,
+		// watching: true
 	}
 }
 
 @:nullSafety
-class HanModel implements IViewModel {
+class NativeModel extends DefaultViewModel {
 	public function new() {}
 
-	public function getGame():GameModel {
+	public override function getGame():GameModel {
 		final app = Native.getApp();
 		return {
 			players: app.players.map(player -> {
@@ -71,16 +76,10 @@ class HanModel implements IViewModel {
 					deck: handCards.map(c -> {
 						return toCardModel(app, app.table.cards[c]);
 					}),
+					url:''
 				}
-			})
+			}),
+			commands: []
 		};
-	}
-
-	public function previewPlayCard(id:String):PreviewPlayCardModel {
-		return {
-			success: false,
-			msg: 'should have xxxx',
-			content: {}
-		}
 	}
 }

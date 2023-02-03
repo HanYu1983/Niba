@@ -1,0 +1,1 @@
+docker exec -ti dev-project4-scaladev bash
