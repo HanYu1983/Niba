@@ -1,5 +1,6 @@
 package;
 
+import webgl.shaders.smokingDuck.SmokingDuckBufferD;
 import webgl.shaders.smokingDuck.SmokingDuckBufferC;
 import webgl.shaders.smokingDuck.SmokingDuckBufferB;
 import webgl.shaders.smokingDuck.SmokingDuckImage;
@@ -381,6 +382,7 @@ class MainView extends VBox {
 			WebglEngine.inst.addShader('SmokingDuckBufferA', new SmokingDuckBufferA());
 			WebglEngine.inst.addShader('SmokingDuckBufferB', new SmokingDuckBufferB());
 			WebglEngine.inst.addShader('SmokingDuckBufferC', new SmokingDuckBufferC());
+			WebglEngine.inst.addShader('SmokingDuckBufferD', new SmokingDuckBufferD());
 			WebglEngine.inst.addShader('SmokingDuckImage', new SmokingDuckImage());
 
 			WebglEngine.inst.createRenderTarget('SmokingDuckBufferA1', tw, th);
@@ -411,10 +413,18 @@ class MainView extends VBox {
 				bufferCMaterial.textures.push('SmokingDuckBufferD');
 			}
 
+			final bufferDMaterial = WebglEngine.inst.createMaterial('bufferDMaterial', 'SmokingDuckBufferD');
+			if (bufferDMaterial != null) {
+				bufferDMaterial.uniform.set('u_bufferA', 0);
+				bufferDMaterial.uniform.set('u_bufferC', 1);
+				bufferDMaterial.textures.push('SmokingDuckBufferA1');
+				bufferDMaterial.textures.push('SmokingDuckBufferC');
+			}
+
 			final imageMaterial = WebglEngine.inst.createMaterial('imageMaterial', 'SmokingDuckImage');
 			if (imageMaterial != null) {
 				imageMaterial.uniform.set('u_bufferA', 0);
-				imageMaterial.textures.push('SmokingDuckBufferC');
+				imageMaterial.textures.push('SmokingDuckBufferD');
 			}
 
 			final rect = Tool.createMeshEntity('rect', RECTANGLE2D, 'imageMaterial');
@@ -475,6 +485,20 @@ class MainView extends VBox {
 
 					// 指定新的不顯示的畫布
 					WebglEngine.inst.bindFrameBuffer('SmokingDuckBufferC');
+
+					// 畫在指定的不顯示的畫布上
+					WebglEngine.inst.render(tw, th, Vec3.fromValues(0.0, 0.0, 1));
+				}
+
+				// bufferD
+				{
+					final mr = rect.getComponent(MeshRenderer);
+					if (mr != null && mr.geometry != null) {
+						WebglEngine.inst.changeMaterial(mr.name, 'bufferDMaterial');
+					}
+
+					// 指定新的不顯示的畫布
+					WebglEngine.inst.bindFrameBuffer('SmokingDuckBufferD');
 
 					// 畫在指定的不顯示的畫布上
 					WebglEngine.inst.render(tw, th, Vec3.fromValues(0.0, 0.0, 1));

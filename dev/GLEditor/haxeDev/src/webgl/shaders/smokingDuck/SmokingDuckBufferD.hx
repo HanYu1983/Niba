@@ -15,8 +15,8 @@ class SmokingDuckBufferD extends WebglShader {
 		return [
 			'u_matrix' => 'mat3',
 			'u_modelMatrix' => 'mat3',
-			'u_bufferB' => 'sampler2D',
-            'u_bufferD' => 'sampler2D',
+			'u_bufferA' => 'sampler2D',
+            'u_bufferC' => 'sampler2D',
 			'u_time' => 'float'
 		];
 	}
@@ -49,8 +49,8 @@ class SmokingDuckBufferD extends WebglShader {
 
 		in vec2 v_texcoord;
 
-        uniform sampler2D u_bufferB;
-        uniform sampler2D u_bufferD;
+        uniform sampler2D u_bufferA;
+        uniform sampler2D u_bufferC;
 
         uniform float u_time;
 
@@ -58,201 +58,14 @@ class SmokingDuckBufferD extends WebglShader {
 
         float div(int x,int y)
         {
-            return texelFetch(u_bufferB, ivec2(gl_FragCoord.xy) + ivec2(x,  y) , 0).x;
+            return texelFetch(u_bufferC, ivec2(gl_FragCoord.xy) + ivec2(x,  y) , 0).y;
         }
-
-        float getDiv( void )
-        {
-            float p = 0.;
-            p += 1.*div(-9, 0);
-            p += 9.*div(-8, -1);
-            p += 4.*div(-8, 0);
-            p += 9.*div(-8, 1);
-            p += 36.*div(-7, -2);
-            p += 32.*div(-7, -1);
-            p += 97.*div(-7, 0);
-            p += 32.*div(-7, 1);
-            p += 36.*div(-7, 2);
-            p += 84.*div(-6, -3);
-            p += 112.*div(-6, -2);
-            p += 436.*div(-6, -1);
-            p += 320.*div(-6, 0);
-            p += 436.*div(-6, 1);
-            p += 112.*div(-6, 2);
-            p += 84.*div(-6, 3);
-            p += 126.*div(-5, -4);
-            p += 224.*div(-5, -3);
-            p += 1092.*div(-5, -2);
-            p += 1280.*div(-5, -1);
-            p += 2336.*div(-5, 0);
-            p += 1280.*div(-5, 1);
-            p += 1092.*div(-5, 2);
-            p += 224.*div(-5, 3);
-            p += 126.*div(-5, 4);
-            p += 126.*div(-4, -5);
-            p += 280.*div(-4, -4);
-            p += 1694.*div(-4, -3);
-            p += 2752.*div(-4, -2);
-            p += 6656.*div(-4, -1);
-            p += 6464.*div(-4, 0);
-            p += 6656.*div(-4, 1);
-            p += 2752.*div(-4, 2);
-            p += 1694.*div(-4, 3);
-            p += 280.*div(-4, 4);
-            p += 126.*div(-4, 5);
-            p += 84.*div(-3, -6);
-            p += 224.*div(-3, -5);
-            p += 1694.*div(-3, -4);
-            p += 3520.*div(-3, -3);
-            p += 11016.*div(-3, -2);
-            p += 16128.*div(-3, -1);
-            p += 24608.*div(-3, 0);
-            p += 16128.*div(-3, 1);
-            p += 11016.*div(-3, 2);
-            p += 3520.*div(-3, 3);
-            p += 1694.*div(-3, 4);
-            p += 224.*div(-3, 5);
-            p += 84.*div(-3, 6);
-            p += 36.*div(-2, -7);
-            p += 112.*div(-2, -6);
-            p += 1092.*div(-2, -5);
-            p += 2752.*div(-2, -4);
-            p += 11016.*div(-2, -3);
-            p += 21664.*div(-2, -2);
-            p += 47432.*div(-2, -1);
-            p += 59712.*div(-2, 0);
-            p += 47432.*div(-2, 1);
-            p += 21664.*div(-2, 2);
-            p += 11016.*div(-2, 3);
-            p += 2752.*div(-2, 4);
-            p += 1092.*div(-2, 5);
-            p += 112.*div(-2, 6);
-            p += 36.*div(-2, 7);
-            p += 9.*div(-1, -8);
-            p += 32.*div(-1, -7);
-            p += 436.*div(-1, -6);
-            p += 1280.*div(-1, -5);
-            p += 6656.*div(-1, -4);
-            p += 16128.*div(-1, -3);
-            p += 47432.*div(-1, -2);
-            p += 92224.*div(-1, -1);
-            p += 163476.*div(-1, 0);
-            p += 92224.*div(-1, 1);
-            p += 47432.*div(-1, 2);
-            p += 16128.*div(-1, 3);
-            p += 6656.*div(-1, 4);
-            p += 1280.*div(-1, 5);
-            p += 436.*div(-1, 6);
-            p += 32.*div(-1, 7);
-            p += 9.*div(-1, 8);
-            p += 1.*div(0, -9);
-            p += 4.*div(0, -8);
-            p += 97.*div(0, -7);
-            p += 320.*div(0, -6);
-            p += 2336.*div(0, -5);
-            p += 6464.*div(0, -4);
-            p += 24608.*div(0, -3);
-            p += 59712.*div(0, -2);
-            p += 163476.*div(0, -1);
-            p += 409744.*div(0, 0);
-            p += 163476.*div(0, 1);
-            p += 59712.*div(0, 2);
-            p += 24608.*div(0, 3);
-            p += 6464.*div(0, 4);
-            p += 2336.*div(0, 5);
-            p += 320.*div(0, 6);
-            p += 97.*div(0, 7);
-            p += 4.*div(0, 8);
-            p += 1.*div(0, 9);
-            p += 9.*div(1, -8);
-            p += 32.*div(1, -7);
-            p += 436.*div(1, -6);
-            p += 1280.*div(1, -5);
-            p += 6656.*div(1, -4);
-            p += 16128.*div(1, -3);
-            p += 47432.*div(1, -2);
-            p += 92224.*div(1, -1);
-            p += 163476.*div(1, 0);
-            p += 92224.*div(1, 1);
-            p += 47432.*div(1, 2);
-            p += 16128.*div(1, 3);
-            p += 6656.*div(1, 4);
-            p += 1280.*div(1, 5);
-            p += 436.*div(1, 6);
-            p += 32.*div(1, 7);
-            p += 9.*div(1, 8);
-            p += 36.*div(2, -7);
-            p += 112.*div(2, -6);
-            p += 1092.*div(2, -5);
-            p += 2752.*div(2, -4);
-            p += 11016.*div(2, -3);
-            p += 21664.*div(2, -2);
-            p += 47432.*div(2, -1);
-            p += 59712.*div(2, 0);
-            p += 47432.*div(2, 1);
-            p += 21664.*div(2, 2);
-            p += 11016.*div(2, 3);
-            p += 2752.*div(2, 4);
-            p += 1092.*div(2, 5);
-            p += 112.*div(2, 6);
-            p += 36.*div(2, 7);
-            p += 84.*div(3, -6);
-            p += 224.*div(3, -5);
-            p += 1694.*div(3, -4);
-            p += 3520.*div(3, -3);
-            p += 11016.*div(3, -2);
-            p += 16128.*div(3, -1);
-            p += 24608.*div(3, 0);
-            p += 16128.*div(3, 1);
-            p += 11016.*div(3, 2);
-            p += 3520.*div(3, 3);
-            p += 1694.*div(3, 4);
-            p += 224.*div(3, 5);
-            p += 84.*div(3, 6);
-            p += 126.*div(4, -5);
-            p += 280.*div(4, -4);
-            p += 1694.*div(4, -3);
-            p += 2752.*div(4, -2);
-            p += 6656.*div(4, -1);
-            p += 6464.*div(4, 0);
-            p += 6656.*div(4, 1);
-            p += 2752.*div(4, 2);
-            p += 1694.*div(4, 3);
-            p += 280.*div(4, 4);
-            p += 126.*div(4, 5);
-            p += 126.*div(5, -4);
-            p += 224.*div(5, -3);
-            p += 1092.*div(5, -2);
-            p += 1280.*div(5, -1);
-            p += 2336.*div(5, 0);
-            p += 1280.*div(5, 1);
-            p += 1092.*div(5, 2);
-            p += 224.*div(5, 3);
-            p += 126.*div(5, 4);
-            p += 84.*div(6, -3);
-            p += 112.*div(6, -2);
-            p += 436.*div(6, -1);
-            p += 320.*div(6, 0);
-            p += 436.*div(6, 1);
-            p += 112.*div(6, 2);
-            p += 84.*div(6, 3);
-            p += 36.*div(7, -2);
-            p += 32.*div(7, -1);
-            p += 97.*div(7, 0);
-            p += 32.*div(7, 1);
-            p += 36.*div(7, 2);
-            p += 9.*div(8, -1);
-            p += 4.*div(8, 0);
-            p += 9.*div(8, 1);
-            p += 1.*div(9, 0);
-            return  p / 1048576.;
-        }
-
+        
         float pre(int x,int y)
         {
-            return texelFetch(u_bufferD, ivec2(gl_FragCoord.xy) + ivec2(x,  y) , 0).w;
+            return texelFetch(u_bufferC, ivec2(gl_FragCoord.xy) + ivec2(x,  y) , 0).x;
         }
-
+        
         float getPre( void )
         {
             float p = 0.;
@@ -380,16 +193,345 @@ class SmokingDuckBufferD extends WebglShader {
             return  p / 1048576.;
         }
 
+        const float dissipation 	= 0.95;
+
+        const float ballRadius		= 0.09;
+        const float fogHeigth		= ballRadius * 3.;
+        const int	nbSlice			= 24;
+        const float fogSlice		= fogHeigth / float(nbSlice);
+        const int	nbSphere 		= 1;
+        const float shadowDensity 	= 15.;
+        const float fogDensity 		= 5.;
+        const float lightHeight     = 2.0;
+        const float waterHeight     = 0.2;
+        const float waterScale      = 0.025;
+        const float duckScale       = 0.25;
+        const vec3  lightPos        = vec3(0.5, lightHeight, 0.5);
+
+        const vec2 iResolution = vec2(1024.0, 768.0);
+        
+        vec2 duckPosition(float fframe, float aspectRatio)
+        {
+            float s = 0.02;
+            return vec2(cos(fframe * s * 0.5) * aspectRatio, sin(fframe * s)) * 0.7;
+        }
+
+        float beak(vec3 p, float s)
+        {
+            float k = max(length(p)-s, -(length(p+vec3(-0.15,-0.2,-0.1))-0.25));
+            k = max(k, -(length(p+vec3(0.12,-0.2,-0.1))-0.25));
+            return k < 0.0 ? 0.0 : k;
+        }
+        
+        float duckBeak(vec3 p)
+        {
+            float k = 12.0;
+            float a = 0.;
+            
+            a += exp(-k * beak(p + vec3(0, -0.55, -0.1), 0.15));
+        
+            return -log(a) / k;
+        }
+
+        // Box SDF by IQ https://iquilezles.org/articles/distfunctions/distfunctions.htm
+        float sdSphere( vec3 p, float s )
+        {
+            return length(p)-s;
+        }
+
+        vec4 nearest(vec4 d1, vec4 d2)
+        {
+            return (d1.x<d2.x) ? d1 : d2;
+        }
+
+
+        // Duck model from Jimmi: https://www.shadertoy.com/view/4lsSDl
+
+        float duckBody(vec3 p) {
+            float k = 6.0;
+            float a = 0.;
+            
+            //p.x = abs(p.x);
+            
+            a += exp(-k * sdSphere(p + vec3(0.11, 0, 0.1), 0.06));
+            a += exp(-k * sdSphere(p + vec3(-0.11, 0, 0.1), 0.06));
+            a += exp(-k * sdSphere(p + vec3(0.2, 0, 0.3), 0.1));
+            a += exp(-k * sdSphere(p + vec3(-0.2, 0, 0.3), 0.1));
+            a += exp(-k * sdSphere(p + vec3(0.2, 0, 0.55), 0.07));
+            a += exp(-k * sdSphere(p + vec3(-0.2, 0, 0.55), 0.07));
+            a += exp(-k * sdSphere(p + vec3(-0.00, 0, 0.72), 0.1));
+            
+            a += exp(-k * sdSphere(p + vec3(0, -0.39, 0.8), 0.01));
+        
+            a += exp(-k * sdSphere(p + vec3(0, -0.7, 0.1), 0.15));
+            a += exp(-k * sdSphere(p + vec3(0, -0.65, -0.05), 0.07));
+        
+            return -log(a) / k;
+        }
+
+        float duckMap(in vec3 p)
+        {
+            p /= duckScale;
+            return min(duckBody(p), duckBeak(p)) * duckScale;
+        }
+
+
+        vec4 duckMapColor(vec3 p)
+        {
+            p /= duckScale;
+            p.x = abs(p.x);
+            vec4 res = vec4(duckBody(p), vec3(1, 1, 0));
+            res = nearest(res, vec4(duckBeak(p), vec3(1, 0, 0)));
+            res = nearest(res, vec4(sdSphere(p-vec3(0.09, 0.62, 0.14), 0.06), vec3(0.0, 0, 0.3)));
+            res.x *= duckScale;
+            return res;
+        }
+
+        vec3 calcNormalDuck(in vec3 p)	
+        { 
+            const vec2 k = vec2(0.0001,-0.0001);
+            return normalize( k.xyy * duckMap(p + k.xyy) + k.yyx * duckMap(p + k.yyx) + k.yxy * duckMap(p + k.yxy) + k.xxx * duckMap(p + k.xxx) );	
+        }
+        
+
+        float sceneIntersection(in vec3 ro,in vec3 rd, out vec3 inter, out vec3 normal, out vec3 color, in float far)
+        {
+            float d = far;
+            inter = vec3(0);
+            normal = vec3(0);
+            color = vec3(0);
+            float iFrame = u_time * .1;
+        
+        
+               // Duck
+            vec2 p = duckPosition(iFrame, iResolution.x / iResolution.y);
+            vec2 op = duckPosition(iFrame + 1.0, iResolution.x / iResolution.y);
+            vec2 dir = normalize(p - op);
+            vec3 y = vec3(0, 1, 0);
+            vec3 z = vec3(-dir.x, 0, -dir.y);
+            vec3 x = cross(z, y);
+        
+            mat4 mr = mat4(
+            x.x,		y.x,		z.x,         0,
+            x.y,		y.y,		z.y,         0,
+            x.z,		y.z,		z.z,         0,
+            0,	        0,	        0,           1.0 );
+        
+            mat4 mt = mat4(
+            1.0,		0.0,		0.0,         0.0,
+            0.0,		1.0,		0.0,         0.0,
+            0.0,		0.0,		1.0,         0.0,
+            -p.x,	0,	-p.y,     1.0 );
+        
+            mat4 tr= mr * mt;
+        
+            float t = 0.0;
+            vec3 tp;
+            for( int j = 0; j < 32; j++ )
+            {
+                vec3	p = ro + t*rd;
+                tp = vec3(tr * vec4(p, 1.0));
+                float	h = duckMap(tp);
+                if( abs(h) < 0.001)
+                {
+                    break;
+                }
+                t += h;
+            }
+            if(t < d)
+            {
+                d = t;
+                normal = (inverse(tr) * vec4(calcNormalDuck(tp), 0)).xyz;
+                color = duckMapColor(tp).yzw;
+            }
+            
+            // Plane
+            
+            return d;
+        }
+        
+        float sampleFog(in vec3 pos)
+        {
+            vec2 uv = pos.xz;
+            uv.x *= iResolution.y / iResolution.x;
+            uv = uv * 0.5 + 0.5;
+            if(max(uv.x, uv.y) > 1. || min(uv.x, uv.y) < 0.)
+            {
+                return 0.;
+            }
+            return texture(u_bufferA, uv).z;
+        }
+        
+        float height(in float y)
+        {
+            y = clamp(y / fogHeigth, 0.0, 1.0);
+            return (1.0 - sin(acos(abs(y) * 2.0 - 1.0))) * fogHeigth;
+        }
+        
+        float getWaterHeight(in vec3 pos)
+        {
+            vec2 uv = pos.xz;
+            uv.x *= iResolution.y / iResolution.x;
+            uv = uv * 0.5 + 0.5;
+            uv = clamp(uv, 0.0, 1.0);
+            return texture(u_bufferA, uv).w * waterScale;
+        }
+        
+        vec3 getWaterNormal(in vec3 p)
+        {
+            vec2 d = 1.0 / iResolution.xy;
+            float hMid = getWaterHeight(p);
+            float hRight = getWaterHeight(p + vec3(d.x, 0, 0));
+            float hTop = getWaterHeight(p + vec3(0, 0, d.y));
+            return normalize(cross(vec3(0, hTop - hMid, d.y), vec3(d.x, hRight - hMid, 0)));
+        }
+        
+        vec3 getSkyColor(vec3 rd)
+        {
+            vec3 blue = smoothstep(.2, 1., rd.y) * vec3(0, 0, .5);
+            vec3 highlight = vec3(pow(clamp(dot(rd, normalize(vec3(1, 1, 0))), 0., 1.), 100.) * 2.0)
+                           + vec3(pow(clamp(dot(rd, normalize(vec3(-0.5, 1, 0.5))), 0., 1.), 100.) * 2.0);
+            return blue + highlight;
+        }
+        
+        // Caustic inspired by Dave Hoskins https://www.shadertoy.com/view/MdKXDm
+        
+        float F(inout vec3 key, in float R)
+        {
+            key *=mat3(-2,-1,2, 3,-2,1, 1,2,2) * R;
+            return length(.5-fract(key));
+        }
+        
+        float caustic(vec3 p)
+        {
+            float iTime = u_time;
+            vec3 key = vec3(p * 2.0) + iTime * 0.2;
+            return pow(min(min(F(key,.5),F(key,.4)),F(key,.3)), 7.)*25.0;
+        }
+        
+        // vec3 Render(in vec3 ro,in vec3 rd,in float far, float fudge)
+        // {
+        //     vec3  inter;
+        //     vec3  normal;
+        //     vec3  baseColor; 
+        //     float mint = sceneIntersection(ro, rd, inter, normal, baseColor, far);
+            
+        //     vec3 color = mint != far ? baseColor * (0.2 + 0.8 * max(0.0, dot(normal, normalize(ro * mint - lightPos)))) +  getSkyColor(reflect(rd, normal)) : vec3(0.25);
+                
+        //     vec3 n;
+        //     float aspecRatio = iResolution.x / iResolution.y;  
+        
+        //     vec2 ret = boxIntersection(ro, rd, vec3(aspecRatio, waterHeight * 2.0, 1), vec3(0, 0, 0), n);
+        //     if(ret.x > 0.0 && ret.x < mint)
+        //     {
+        //         vec3 pi = ro + rd * ret.x;
+        //         float wt = ret.x;
+        //         float h = getWaterHeight(pi);
+        //         vec3 waterNormal;
+        //         if(pi.y < h)
+        //         {
+        //             waterNormal = n;
+        //         }
+        //         else
+        //         {
+        //             for (int i = 0; i < 80; i++)
+        //             {
+        //                 vec3 p = ro + rd * wt;
+        //                 float h = p.y - getWaterHeight(p);
+        //                 if (h < 0.0002 || wt > min(mint, ret.y))
+        //                     break;
+        //                 wt += h * 0.5;
+        //             }
+        //             waterNormal = getWaterNormal(ro + rd * wt);
+        //         }
+                
+        //         if(wt < ret.y && wt < mint)
+        //         {
+        //             // refract
+        //             vec3 enter = ro + rd * wt;
+        //             vec3 refr = -refract(rd, waterNormal, 0.8);
+        //             vec3 refn;
+        //             vec2 ret2 = boxIntersection(enter, refr, vec3(aspecRatio, waterHeight * 2.0, 1), vec3(0, 0, 0), refn);
+        //             vec3 exit = enter + refr * ret2.x;
+        //             float dist = distance(enter, exit);
+        //             color = vec3(1) * (0.2 + 0.8 * max(0.0, dot(-refn, normalize(ro * dist - lightPos))));
+        //             color += caustic(exit + getWaterNormal(exit)) * 0.7;
+        //             color = applyFog( color, vec3(0, 0, 1), dist * 3.0);
+        //             color += getSkyColor(reflect(rd, waterNormal));
+        //         }  
+        //     }
+            
+        //     // Compute Fog
+        //     float t;
+        //     if(floorIntersect(ro, rd, fogHeigth, t))
+        //     {
+        //         vec3 curPos = ro + rd * t;
+        //         vec3 fogStep = (fogHeigth / float(nbSlice)) * rd / abs(rd.y);
+        //         curPos += fudge * fogStep;  // fix banding issue
+        //         float stepLen = length(fogStep);
+        //         float curDensity = 0.;
+        //         float transmittance = 1.;
+        //         float lightEnergy = 0.;
+        //         for(int i = 0; i < nbSlice; i++)
+        //         {
+        //             if( dot(curPos - ro, rd) > mint)
+        //                 break;
+        //             float curHeigth = sampleFog(curPos) * fogHeigth;
+        //             float curSample = min(max(0., curHeigth - height(curPos.y)), fogSlice) * stepLen / fogSlice;
+        //             if(curSample > 0.001)
+        //             {
+        //                 vec3 lightDir = normalize(lightPos - curPos);
+        //                 vec3 shadowStep = (fogHeigth / float(nbSlice)) * lightDir / lightDir.y;
+        //                 float lightDist2 = dist2(lightPos - curPos);
+        //                 vec3 shadowPos = curPos + shadowStep * fudge;
+        //                 float shadowDist = 0.;
+        
+        //                 for (int j = 0; j < nbSlice; j++)
+        //                 {
+        //                     shadowPos += shadowStep;
+        //                     float curHeight = sampleFog(shadowPos) * fogHeigth;
+        //                      shadowDist += min(max(0., curHeight - height(shadowPos.y)), fogSlice) * length(shadowStep) / fogSlice;
+        //                }
+        
+                        
+        //                 float shadowFactor = exp(-shadowDist * shadowDensity);
+        //                 curDensity = curSample * fogDensity;
+        //                 float absorbedlight =  shadowFactor * (1. * curDensity);
+        //                 lightEnergy += absorbedlight * transmittance;
+        //                 transmittance *= 1. - curDensity;	
+        //             }
+        //             curPos+= fogStep;       
+        //         }
+        //         color = mix(color, vec3(lightEnergy * 1.8), 1. - transmittance);
+        //     }  
+            
+            
+        //     return color;
+        // }
+        
+        // vec3 vignette(vec3 color, vec2 q, float v)
+        // {
+        //     color *= 0.3 + 0.8 * pow(16.0 * q.x * q.y * (1.0 - q.x) * (1.0 - q.y), v);
+        //     return color;
+        // }
+        
+        // mat3 setCamera( in vec3 ro, in vec3 ta )
+        // {
+        //     vec3 cw = normalize(ta-ro);
+        //     vec3 up = vec3(0, 1, 0);
+        //     vec3 cu = normalize( cross(cw,up) );
+        //     vec3 cv = normalize( cross(cu,cw) );
+        //     return mat3( cu, cv, cw );
+        // }
+
         void main(){
             // 計算一個pixel的uv距離
-			vec2 iResolution = vec2(1024.0, 768.0);
+			
             vec2 fragCoord = v_texcoord * iResolution;
             float iTime = u_time * 0.001;
             float iFrame = u_time * .1;
 
-            float div = getDiv();
-            float p = getPre() - div;
-            outColor = vec4(p, div, vec3(1));
+            outColor = vec4(1,0,0,1);
         }
         ';
 
