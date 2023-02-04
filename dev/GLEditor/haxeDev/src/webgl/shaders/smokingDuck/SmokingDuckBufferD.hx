@@ -408,130 +408,205 @@ class SmokingDuckBufferD extends WebglShader {
             vec3 key = vec3(p * 2.0) + iTime * 0.2;
             return pow(min(min(F(key,.5),F(key,.4)),F(key,.3)), 7.)*25.0;
         }
+        // https://iquilezles.org/articles/boxfunctions
+
+        vec2 boxIntersection( in vec3 ro, in vec3 rd, in vec3 rad, in vec3 center,out vec3 oN ) 
+        {
+            ro -= center;
+            vec3 m = 1.0/rd;
+            vec3 n = m*ro;
+            vec3 k = abs(m)*rad;
+            vec3 t1 = -n - k;
+            vec3 t2 = -n + k;
         
-        // vec3 Render(in vec3 ro,in vec3 rd,in float far, float fudge)
-        // {
-        //     vec3  inter;
-        //     vec3  normal;
-        //     vec3  baseColor; 
-        //     float mint = sceneIntersection(ro, rd, inter, normal, baseColor, far);
+            float tN = max( max( t1.x, t1.y ), t1.z );
+            float tF = min( min( t2.x, t2.y ), t2.z );
             
-        //     vec3 color = mint != far ? baseColor * (0.2 + 0.8 * max(0.0, dot(normal, normalize(ro * mint - lightPos)))) +  getSkyColor(reflect(rd, normal)) : vec3(0.25);
-                
-        //     vec3 n;
-        //     float aspecRatio = iResolution.x / iResolution.y;  
-        
-        //     vec2 ret = boxIntersection(ro, rd, vec3(aspecRatio, waterHeight * 2.0, 1), vec3(0, 0, 0), n);
-        //     if(ret.x > 0.0 && ret.x < mint)
-        //     {
-        //         vec3 pi = ro + rd * ret.x;
-        //         float wt = ret.x;
-        //         float h = getWaterHeight(pi);
-        //         vec3 waterNormal;
-        //         if(pi.y < h)
-        //         {
-        //             waterNormal = n;
-        //         }
-        //         else
-        //         {
-        //             for (int i = 0; i < 80; i++)
-        //             {
-        //                 vec3 p = ro + rd * wt;
-        //                 float h = p.y - getWaterHeight(p);
-        //                 if (h < 0.0002 || wt > min(mint, ret.y))
-        //                     break;
-        //                 wt += h * 0.5;
-        //             }
-        //             waterNormal = getWaterNormal(ro + rd * wt);
-        //         }
-                
-        //         if(wt < ret.y && wt < mint)
-        //         {
-        //             // refract
-        //             vec3 enter = ro + rd * wt;
-        //             vec3 refr = -refract(rd, waterNormal, 0.8);
-        //             vec3 refn;
-        //             vec2 ret2 = boxIntersection(enter, refr, vec3(aspecRatio, waterHeight * 2.0, 1), vec3(0, 0, 0), refn);
-        //             vec3 exit = enter + refr * ret2.x;
-        //             float dist = distance(enter, exit);
-        //             color = vec3(1) * (0.2 + 0.8 * max(0.0, dot(-refn, normalize(ro * dist - lightPos))));
-        //             color += caustic(exit + getWaterNormal(exit)) * 0.7;
-        //             color = applyFog( color, vec3(0, 0, 1), dist * 3.0);
-        //             color += getSkyColor(reflect(rd, waterNormal));
-        //         }  
-        //     }
+            if( tN>tF || tF<0.0) return vec2(-1.0); // no intersection
             
-        //     // Compute Fog
-        //     float t;
-        //     if(floorIntersect(ro, rd, fogHeigth, t))
-        //     {
-        //         vec3 curPos = ro + rd * t;
-        //         vec3 fogStep = (fogHeigth / float(nbSlice)) * rd / abs(rd.y);
-        //         curPos += fudge * fogStep;  // fix banding issue
-        //         float stepLen = length(fogStep);
-        //         float curDensity = 0.;
-        //         float transmittance = 1.;
-        //         float lightEnergy = 0.;
-        //         for(int i = 0; i < nbSlice; i++)
-        //         {
-        //             if( dot(curPos - ro, rd) > mint)
-        //                 break;
-        //             float curHeigth = sampleFog(curPos) * fogHeigth;
-        //             float curSample = min(max(0., curHeigth - height(curPos.y)), fogSlice) * stepLen / fogSlice;
-        //             if(curSample > 0.001)
-        //             {
-        //                 vec3 lightDir = normalize(lightPos - curPos);
-        //                 vec3 shadowStep = (fogHeigth / float(nbSlice)) * lightDir / lightDir.y;
-        //                 float lightDist2 = dist2(lightPos - curPos);
-        //                 vec3 shadowPos = curPos + shadowStep * fudge;
-        //                 float shadowDist = 0.;
+            oN = -sign(rd)*step(t1.yzx,t1.xyz)*step(t1.zxy,t1.xyz);
         
-        //                 for (int j = 0; j < nbSlice; j++)
-        //                 {
-        //                     shadowPos += shadowStep;
-        //                     float curHeight = sampleFog(shadowPos) * fogHeigth;
-        //                      shadowDist += min(max(0., curHeight - height(shadowPos.y)), fogSlice) * length(shadowStep) / fogSlice;
-        //                }
+            return vec2( tN, tF );
+        }
+
+        bool floorIntersect(in vec3 ro, in vec3 rd, in float floorHeight, out float t) 
+        {
+            ro.y -= floorHeight;
+            if(rd.y < -0.01)
+            {
+                t = ro.y / - rd.y;
+                return true;
+            }
+            return false;
+        } 
+
+        // Fog by IQ https://iquilezles.org/articles/fog
+
+        vec3 applyFog( in vec3  rgb, vec3 fogColor, in float distance)
+        {
+            float fogAmount = exp( -distance );
+            return mix( fogColor, rgb, fogAmount );
+        }
+        float dist2(vec3 v)
+        {
+            return dot(v, v);
+        }
+        // https://www.shadertoy.com/view/4djSRW
+
+        float hash12(vec2 p)
+        {
+            vec3 p3  = fract(vec3(p.xyx) * .1031);
+            p3 += dot(p3, p3.yzx + 33.33);
+            return fract((p3.x + p3.y) * p3.z);
+        }
+        vec3 Render(in vec3 ro,in vec3 rd,in float far, float fudge)
+        {
+            vec3  inter;
+            vec3  normal;
+            vec3  baseColor; 
+            float mint = sceneIntersection(ro, rd, inter, normal, baseColor, far);
+            
+            vec3 color = mint != far ? baseColor * (0.2 + 0.8 * max(0.0, dot(normal, normalize(ro * mint - lightPos)))) +  getSkyColor(reflect(rd, normal)) : vec3(0.25);
+                
+            vec3 n;
+            float aspecRatio = iResolution.x / iResolution.y;  
+        
+            vec2 ret = boxIntersection(ro, rd, vec3(aspecRatio, waterHeight * 2.0, 1), vec3(0, 0, 0), n);
+            if(ret.x > 0.0 && ret.x < mint)
+            {
+                vec3 pi = ro + rd * ret.x;
+                float wt = ret.x;
+                float h = getWaterHeight(pi);
+                vec3 waterNormal;
+                if(pi.y < h)
+                {
+                    waterNormal = n;
+                }
+                else
+                {
+                    for (int i = 0; i < 80; i++)
+                    {
+                        vec3 p = ro + rd * wt;
+                        float h = p.y - getWaterHeight(p);
+                        if (h < 0.0002 || wt > min(mint, ret.y))
+                            break;
+                        wt += h * 0.5;
+                    }
+                    waterNormal = getWaterNormal(ro + rd * wt);
+                }
+                
+                if(wt < ret.y && wt < mint)
+                {
+                    // refract
+                    vec3 enter = ro + rd * wt;
+                    vec3 refr = -refract(rd, waterNormal, 0.8);
+                    vec3 refn;
+                    vec2 ret2 = boxIntersection(enter, refr, vec3(aspecRatio, waterHeight * 2.0, 1), vec3(0, 0, 0), refn);
+                    vec3 exit = enter + refr * ret2.x;
+                    float dist = distance(enter, exit);
+                    color = vec3(1) * (0.2 + 0.8 * max(0.0, dot(-refn, normalize(ro * dist - lightPos))));
+                    color += caustic(exit + getWaterNormal(exit)) * 0.7;
+                    color = applyFog( color, vec3(0, 0, 1), dist * 3.0);
+                    color += getSkyColor(reflect(rd, waterNormal));
+                }  
+            }
+            
+            // Compute Fog
+            float t;
+            if(floorIntersect(ro, rd, fogHeigth, t))
+            {
+                vec3 curPos = ro + rd * t;
+                vec3 fogStep = (fogHeigth / float(nbSlice)) * rd / abs(rd.y);
+                curPos += fudge * fogStep;  // fix banding issue
+                float stepLen = length(fogStep);
+                float curDensity = 0.;
+                float transmittance = 1.;
+                float lightEnergy = 0.;
+                for(int i = 0; i < nbSlice; i++)
+                {
+                    if( dot(curPos - ro, rd) > mint)
+                        break;
+                    float curHeigth = sampleFog(curPos) * fogHeigth;
+                    float curSample = min(max(0., curHeigth - height(curPos.y)), fogSlice) * stepLen / fogSlice;
+                    if(curSample > 0.001)
+                    {
+                        vec3 lightDir = normalize(lightPos - curPos);
+                        vec3 shadowStep = (fogHeigth / float(nbSlice)) * lightDir / lightDir.y;
+                        float lightDist2 = dist2(lightPos - curPos);
+                        vec3 shadowPos = curPos + shadowStep * fudge;
+                        float shadowDist = 0.;
+        
+                        for (int j = 0; j < nbSlice; j++)
+                        {
+                            shadowPos += shadowStep;
+                            float curHeight = sampleFog(shadowPos) * fogHeigth;
+                             shadowDist += min(max(0., curHeight - height(shadowPos.y)), fogSlice) * length(shadowStep) / fogSlice;
+                       }
         
                         
-        //                 float shadowFactor = exp(-shadowDist * shadowDensity);
-        //                 curDensity = curSample * fogDensity;
-        //                 float absorbedlight =  shadowFactor * (1. * curDensity);
-        //                 lightEnergy += absorbedlight * transmittance;
-        //                 transmittance *= 1. - curDensity;	
-        //             }
-        //             curPos+= fogStep;       
-        //         }
-        //         color = mix(color, vec3(lightEnergy * 1.8), 1. - transmittance);
-        //     }  
+                        float shadowFactor = exp(-shadowDist * shadowDensity);
+                        curDensity = curSample * fogDensity;
+                        float absorbedlight =  shadowFactor * (1. * curDensity);
+                        lightEnergy += absorbedlight * transmittance;
+                        transmittance *= 1. - curDensity;	
+                    }
+                    curPos+= fogStep;       
+                }
+                color = mix(color, vec3(lightEnergy * 1.8), 1. - transmittance);
+            }  
             
             
-        //     return color;
-        // }
+            return color;
+        }
         
-        // vec3 vignette(vec3 color, vec2 q, float v)
-        // {
-        //     color *= 0.3 + 0.8 * pow(16.0 * q.x * q.y * (1.0 - q.x) * (1.0 - q.y), v);
-        //     return color;
-        // }
+        vec3 vignette(vec3 color, vec2 q, float v)
+        {
+            color *= 0.3 + 0.8 * pow(16.0 * q.x * q.y * (1.0 - q.x) * (1.0 - q.y), v);
+            return color;
+        }
         
-        // mat3 setCamera( in vec3 ro, in vec3 ta )
-        // {
-        //     vec3 cw = normalize(ta-ro);
-        //     vec3 up = vec3(0, 1, 0);
-        //     vec3 cu = normalize( cross(cw,up) );
-        //     vec3 cv = normalize( cross(cu,cw) );
-        //     return mat3( cu, cv, cw );
-        // }
+        mat3 setCamera( in vec3 ro, in vec3 ta )
+        {
+            vec3 cw = normalize(ta-ro);
+            vec3 up = vec3(0, 1, 0);
+            vec3 cu = normalize( cross(cw,up) );
+            vec3 cv = normalize( cross(cu,cw) );
+            return mat3( cu, cv, cw );
+        }
 
         void main(){
             // 計算一個pixel的uv距離
 			
             vec2 fragCoord = v_texcoord * iResolution;
+            vec2 iMouse = vec2( 0, 0);
             float iTime = u_time * 0.001;
             float iFrame = u_time * .1;
 
-            outColor = vec4(1,0,0,1);
+            vec3 tot = vec3(0.0);
+        
+            vec2 p = (-iResolution.xy + 2.0*fragCoord)/iResolution.y;
+
+            // camera       
+            float theta	= radians(360.)*(iMouse.x/iResolution.x-0.5) + radians(90.);
+            float phi	= - radians(45.);
+            vec3 ro = 2. * vec3( sin(phi)*cos(theta),cos(phi),sin(phi)*sin(theta));
+            vec3 ta = vec3( 0 );
+            // camera-to-world transformation
+            mat3 ca = setCamera( ro, ta );
+
+            vec3 rd =  ca*normalize(vec3(p,1.5));        
+
+            vec3 col = Render(ro ,rd, 6., hash12(fragCoord + iTime));
+
+
+            tot += col;
+                    
+            tot = vignette(tot, fragCoord / iResolution.xy, 0.6);
+            
+            float pr = getPre() - div(0,0);
+            outColor = vec4( tot, pr );
+            
+            // outColor = vec4(1,0,0,1);
         }
         ';
 

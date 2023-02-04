@@ -57,8 +57,12 @@ class SmokingDuckImage extends WebglShader {
 
         void main(){
 
-            outColor = vec4(texture(u_bufferA, v_texcoord));
+            outColor = vec4(texture(u_bufferD, v_texcoord));
             // outColor = vec4(0, 1, 0,1);
+
+			// vec3 c = texelFetch(iChannel1, ivec2(fragCoord), 0).rgb;
+			// c += Bloom(ivec2(fragCoord));
+			// fragColor = vec4(sqrt(c), 1.0);
         }
         ';
 

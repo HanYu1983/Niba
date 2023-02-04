@@ -424,6 +424,8 @@ class MainView extends VBox {
 			final imageMaterial = WebglEngine.inst.createMaterial('imageMaterial', 'SmokingDuckImage');
 			if (imageMaterial != null) {
 				imageMaterial.uniform.set('u_bufferA', 0);
+				imageMaterial.uniform.set('u_bufferD', 1);
+				imageMaterial.textures.push('SmokingDuckBufferA1');
 				imageMaterial.textures.push('SmokingDuckBufferD');
 			}
 
