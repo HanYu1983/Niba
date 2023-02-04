@@ -54,15 +54,38 @@ class SmokingDuckImage extends WebglShader {
         uniform float u_time;
 
         out vec4 outColor;
+		int bloomSize = 10;
+
+		vec3 Bloom( in ivec2 uv)
+		{
+			vec3 bloom = vec3(0);
+			float sum = 0.0;
+		
+			for (int x = -bloomSize; x <= bloomSize; x++)
+			{
+				for (int y = -bloomSize; y <= bloomSize; y++)
+				{
+					ivec2 off = ivec2(x, y);
+					vec2  v = vec2(off) / sqrt(float(bloomSize * bloomSize + bloomSize * bloomSize));
+					float w = exp(-4.0  * (dot(v, v)));
+					sum += w;
+					float c = dot(texelFetch(u_bufferD, uv + off, 0).rgb, vec3(1.0 / 3.0));
+					bloom += pow(c, 3.0) * w;
+		
+				}
+			}
+			
+			return bloom / sum;
+		}
 
         void main(){
 
-            outColor = vec4(texture(u_bufferD, v_texcoord));
-            // outColor = vec4(0, 1, 0,1);
+			vec2 iResolution = vec2(1024.0, 768.0);
+			vec2 fragCoord = v_texcoord * iResolution;
 
-			// vec3 c = texelFetch(iChannel1, ivec2(fragCoord), 0).rgb;
-			// c += Bloom(ivec2(fragCoord));
-			// fragColor = vec4(sqrt(c), 1.0);
+			vec3 c = texelFetch(u_bufferD, ivec2(fragCoord), 0).rgb;
+			c += Bloom(ivec2(fragCoord));
+			outColor = vec4(sqrt(c), 1.0);
         }
         ';
 

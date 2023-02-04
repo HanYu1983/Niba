@@ -404,7 +404,7 @@ class SmokingDuckBufferD extends WebglShader {
         
         float caustic(vec3 p)
         {
-            float iTime = u_time;
+            float iTime = u_time * 0.001;
             vec3 key = vec3(p * 2.0) + iTime * 0.2;
             return pow(min(min(F(key,.5),F(key,.4)),F(key,.3)), 7.)*25.0;
         }

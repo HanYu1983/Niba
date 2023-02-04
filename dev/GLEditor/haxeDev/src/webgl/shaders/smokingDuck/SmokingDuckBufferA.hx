@@ -113,7 +113,7 @@ class SmokingDuckBufferA extends WebglShader {
             // 計算一個pixel的uv距離
 			vec2 iResolution = vec2(1024.0, 768.0);
             vec2 fragCoord = v_texcoord * iResolution;
-            float iTime = u_time * 0.001;
+            float iTime = u_time * 0.0001;
             float iFrame = u_time * .1;
 
             const float dissipation 	= 0.95;
@@ -145,7 +145,7 @@ class SmokingDuckBufferA extends WebglShader {
             // Injection
             vec2 injectionNoise = fbm(vec3(uv *1.5, iTime * 0.1 + 30.), 7) - 0.5;
             //velocity += injectionNoise * 0.1;
-            density += (length(injectionNoise) * 0.004) * mix(1., vig, 1.0);
+            density += (length(injectionNoise) * 0.002) * mix(1., vig, 1.0);
             velocity += injectionNoise * 0.01;
 
             // Inject emiter
@@ -154,22 +154,21 @@ class SmokingDuckBufferA extends WebglShader {
             float dist = distance(uv, p);
             if(dist < influenceRadius)
             {
-                vec2 op = duckPosition(iFrame + .1, iResolution.x / iResolution.y);
+                vec2 op = duckPosition(iFrame + 3., iResolution.x / iResolution.y);
                 vec2 ballVelocity = p - op;
                 float infuence = (influenceRadius - dist) / influenceRadius;
-                density += infuence * length(ballVelocity) * 4.0;
+                density += infuence * length(ballVelocity) * 2.;
                 density = max(0., density);
                 velocity += infuence * (ballVelocity * 40. + detailNoise * 4.);   
             }
 
             density = min(1., density);
-            density *= 0.995;     // damp
+            density *= 0.99;     // damp
             veld = vec3(velocity, density);
             veld *=  mix(1., vig, 0.02);
-            // fragColor = vec4(veld, texture(iChannel0,fragCoord / iResolution.xy).w);
-            // fragColor = vec4(veld, 1.0);
-            
-            outColor = vec4(veld, 1.0);
+            outColor = vec4(veld, texture(u_bufferD,fragCoord / iResolution.xy).w);
+            // outColor = vec4( velocity,0, 1.0);
+            // outColor = vec4(vec3(density), 1);
         }
         ';
 
