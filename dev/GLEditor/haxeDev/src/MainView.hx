@@ -1,5 +1,7 @@
 package;
 
+import webgl.shaders.fourDSun.FourDSunImageShader;
+import webgl.shaders.fourDSun.FourDSunBufferAShader;
 import webgl.shaders.smokingDuck.SmokingDuckBufferD;
 import webgl.shaders.smokingDuck.SmokingDuckBufferC;
 import webgl.shaders.smokingDuck.SmokingDuckBufferB;
@@ -65,7 +67,10 @@ class MainView extends VBox {
 		// test2DNavierStokes();
 
 		// https://www.shadertoy.com/view/mtfXD4
-		testSmokingDuck();
+		// testSmokingDuck();
+
+		// https://www.shadertoy.com/view/wtVGDR
+		test4DSun();
 
 		// testMultiTexture();
 		// testShaderToy();
@@ -365,6 +370,79 @@ class MainView extends VBox {
 				WebglEngine.inst.render();
 
 				Browser.window.requestAnimationFrame(render);
+			}
+			Browser.window.requestAnimationFrame(render);
+		}
+	}
+
+	function test4DSun() {
+		WebglEngine.inst.init('canvas_gl');
+		final gl = WebglEngine.inst.gl;
+		if (gl != null) {
+			// 這邊告訴gl說要允許framebuffer輸入浮點值
+			WebglEngine.inst.enabledWriteFloatInFramebuffer();
+			final tw = 1024;
+			final th = 768;
+
+			WebglEngine.inst.addShader('FourDSunBufferAShader', new FourDSunBufferAShader());
+			WebglEngine.inst.addShader('FourDSunImageShader', new FourDSunImageShader());
+
+			WebglEngine.inst.createRenderTarget('FourDSunBufferA', tw, th);
+
+			final bufferAMaterial = WebglEngine.inst.createMaterial('bufferAMaterial', 'FourDSunBufferAShader');
+			
+			final imageMaterial = WebglEngine.inst.createMaterial('imageMaterial', 'FourDSunImageShader');
+			if (imageMaterial != null) {
+				imageMaterial.uniform.set('u_bufferA', 0);
+				imageMaterial.textures.push('FourDSunBufferA');
+			}
+
+			final rect = Tool.createMeshEntity('rect', RECTANGLE2D, 'imageMaterial');
+
+			var lastRender = 0.0;
+			var tickCount = 0.0;
+			function render(timestamp:Float) {
+				final progress = timestamp - lastRender;
+				lastRender = timestamp;
+
+				final mr = rect.getComponent(MeshRenderer);
+				if (mr != null && mr.geometry != null) {
+					final pm = Mat3Tools.projection(gl.canvas.width, gl.canvas.height);
+					final modelMatrix = Mat3.fromScaling(null, Vec2.fromValues(1024.0 / 100.0, 768.0 / 100.0));
+					mr.geometry.uniform.set('u_time', [timestamp]);
+					mr.geometry.uniform.set('u_matrix', pm.toArray());
+					mr.geometry.uniform.set('u_modelMatrix', modelMatrix.toArray());
+				}
+
+				// bufferA
+				{
+					final mr = rect.getComponent(MeshRenderer);
+					if (mr != null && mr.geometry != null) {
+						WebglEngine.inst.changeMaterial(mr.name, 'bufferAMaterial');
+					}
+
+					// 指定新的不顯示的畫布
+					WebglEngine.inst.bindFrameBuffer('FourDSunBufferA');
+
+					// 畫在指定的不顯示的畫布上
+					WebglEngine.inst.render(tw, th, Vec3.fromValues(0.0, 0.0, 1));
+				}
+
+				// combine
+				{
+					final mr = rect.getComponent(MeshRenderer);
+					if (mr != null && mr.geometry != null) {
+						WebglEngine.inst.changeMaterial(mr.name, 'imageMaterial');
+					}
+
+					WebglEngine.inst.defaultFrameBuffer();
+
+					// 畫在當前的顯示畫布
+					WebglEngine.inst.render(gl.canvas.width, gl.canvas.height, Vec3.fromValues(0.7, 0.7, 0.7));
+				}
+
+				Browser.window.requestAnimationFrame(render);
+				tickCount += 1;
 			}
 			Browser.window.requestAnimationFrame(render);
 		}
