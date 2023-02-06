@@ -43,9 +43,17 @@ class Model extends DefaultViewModel {
 	}
 
 	public override function getGame():GameModel {
+		final cmds = [createCommand(), createCommand(), createCommand()];
+		cmds[0].id = '0';
+		cmds[0].name = '打出gundam';
+		cmds[1].id = '1';
+		cmds[1].name = '使用x gundam的月光炮';
+		cmds[2].id = '2';
+		cmds[2].name = '打出g';
+
 		return {
 			players: [createPlayer(), createPlayer()],
-			commands: [createCommand(), createCommand(), createCommand()]
+			commands: cmds
 		};
 	}
 

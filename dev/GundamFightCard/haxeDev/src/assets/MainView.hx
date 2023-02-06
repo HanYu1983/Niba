@@ -13,6 +13,8 @@ class MainView extends VBox {
 	private final playerTable = new PlayerTable();
 	private final enemyTable = new PlayerTable();
 
+	private final commandViews:Array<Command> = [];
+
 	public function new(game:IViewModel) {
 		super();
 
@@ -39,15 +41,39 @@ class MainView extends VBox {
 		syncDeck(playerTable, gameModel.players[0]);
 		syncDeck(enemyTable, gameModel.players[1]);
 		syncCommands();
+		selectCommandMode();
 	}
 
 	private function syncCommands() {
+		while (commandViews.length > 0)
+			commandViews.pop();
+
 		final gameModel = game.getGame();
 		final commands = gameModel.commands;
 		for (i in 0...commands.length) {
 			final model = commands[i];
 			final commandView = new Command();
+			commandView.model = model;
 			box_commandList.addComponent(commandView);
+
+			commandViews.push(commandView);
+		}
+	}
+
+	private function selectCommandMode() {
+		for (cmd in commandViews) {
+			final model = cmd.model;
+			cmd.selectable = true;
+			cmd.focus = false;
+			cmd.onMouseOver = function(e) {
+				trace('in');
+				cmd.focus = true;
+			}
+
+			cmd.onMouseOut = function(e) {
+				trace('out');
+				cmd.focus = false;
+			}
 		}
 	}
 
@@ -78,7 +104,6 @@ class MainView extends VBox {
 			table.hand.push(card);
 			box_table.addComponent(card);
 		}
-		selectMyHandMode();
 	}
 
 	private function selectMyHandMode() {

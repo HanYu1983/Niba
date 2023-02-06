@@ -1,12 +1,4 @@
 <absolute width='100%' height='100%'>
-    <!-- <style>
-        .area{
-        border: 1px solid gray;
-        }
-        .selectable{
-        border: 3px solid red;
-        }
-    </style> -->
     <hbox width='100%' height='100%'>
         <absolute id='box_deck' width='100' height='100%' styleName='area'>
             <label text='牌庫' />
