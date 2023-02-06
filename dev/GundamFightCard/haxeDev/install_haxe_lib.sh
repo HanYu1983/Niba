@@ -5,4 +5,5 @@ haxelib install hxSet && \
 haxelib install tweenx && \
 haxelib install vector-math && \
 haxelib install hxbit && \
-haxelib install delay
+haxelib install delay && \
+haxelib install pool
