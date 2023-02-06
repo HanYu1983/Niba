@@ -1,12 +1,13 @@
 package assets;
 
+import pool.Poolable;
 import haxe.ui.containers.Absolute;
 import haxe.ui.containers.Box;
 import haxe.ui.events.MouseEvent;
 import viewModel.IViewModel;
 
 @:build(haxe.ui.ComponentBuilder.build('src/assets/Card.xml'))
-class Card extends Box {
+class Card extends Box implements Poolable {
 	public var model(default, set):CardModel;
 	public var playerModel(default, set):PlayerModel;
 
@@ -47,4 +48,6 @@ class Card extends Box {
 		this.model = model;
 		return model;
 	}
+
+	function _pool_reset_haxe_ui_containers_Box() {}
 }

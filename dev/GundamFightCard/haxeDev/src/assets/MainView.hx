@@ -12,6 +12,7 @@ class MainView extends VBox {
 	private final enemyTable = new PlayerTable();
 
 	private final commandViews:Array<Command> = [];
+	private final cardViews:Array<Card> = [];
 
 	public function new() {
 		super();
@@ -42,6 +43,8 @@ class MainView extends VBox {
 	}
 
 	private function clearTable() {
+		while (cardViews.length > 0)
+			cardViews.pop();
 		box_table.removeAllComponents();
 	}
 
@@ -109,6 +112,7 @@ class MainView extends VBox {
 			card.top = table.box_hand.screenTop;
 			table.hand.push(card);
 			box_table.addComponent(card);
+			cardViews.push(card);
 		}
 	}
 

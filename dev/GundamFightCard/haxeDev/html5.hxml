@@ -8,5 +8,6 @@
 -lib tweenx
 -lib hxbit
 -lib delay
+-lib pool
 
 -js public/Main.js

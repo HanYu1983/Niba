@@ -5032,7 +5032,12 @@ haxe_ui_containers_Box.prototype = $extend(haxe_ui_core_Component.prototype,{
 	,__class__: haxe_ui_containers_Box
 	,__properties__: $extend(haxe_ui_core_Component.prototype.__properties__,{set_icon:"set_icon",get_icon:"get_icon",set_layoutName:"set_layoutName",get_layoutName:"get_layoutName"})
 });
+var pool_Poolable = function() { };
+$hxClasses["pool.Poolable"] = pool_Poolable;
+pool_Poolable.__name__ = "pool.Poolable";
+pool_Poolable.__isInterface__ = true;
 var assets_Card = function() {
+	this._pool_next = null;
 	haxe_ui_containers_Box.call(this);
 	var c0 = new haxe_ui_containers_Box();
 	c0.set_id("box_card");
@@ -5100,6 +5105,7 @@ var assets_Card = function() {
 };
 $hxClasses["assets.Card"] = assets_Card;
 assets_Card.__name__ = "assets.Card";
+assets_Card.__interfaces__ = [pool_Poolable];
 assets_Card.__super__ = haxe_ui_containers_Box;
 assets_Card.prototype = $extend(haxe_ui_containers_Box.prototype,{
 	model: null
@@ -5126,6 +5132,13 @@ assets_Card.prototype = $extend(haxe_ui_containers_Box.prototype,{
 		}
 		this.model = model;
 		return model;
+	}
+	,_pool_reset_haxe_ui_containers_Box: function() {
+	}
+	,_pool_next: null
+	,_pool_reset_assets_Card: function() {
+		this._pool_reset_haxe_ui_containers_Box();
+		this.box_desc.hide();
 	}
 	,registerBehaviours: function() {
 		haxe_ui_containers_Box.prototype.registerBehaviours.call(this);
@@ -5325,6 +5338,7 @@ haxe_ui_containers_VBox.prototype = $extend(haxe_ui_containers_Box.prototype,{
 });
 var assets_MainView = function() {
 	this.firstClick = null;
+	this.cardViews = [];
 	this.commandViews = [];
 	this.enemyTable = new assets_PlayerTable();
 	this.playerTable = new assets_PlayerTable();
@@ -5369,6 +5383,7 @@ assets_MainView.prototype = $extend(haxe_ui_containers_VBox.prototype,{
 	playerTable: null
 	,enemyTable: null
 	,commandViews: null
+	,cardViews: null
 	,onInitialize: function() {
 		var _gthis = this;
 		haxe_ui_containers_VBox.prototype.onInitialize.call(this);
@@ -5387,6 +5402,7 @@ assets_MainView.prototype = $extend(haxe_ui_containers_VBox.prototype,{
 		this.selectCommandMode();
 	}
 	,clearTable: function() {
+		while(this.cardViews.length > 0) this.cardViews.pop();
 		this.box_table.removeAllComponents();
 	}
 	,syncCommands: function() {
@@ -5417,13 +5433,13 @@ assets_MainView.prototype = $extend(haxe_ui_containers_VBox.prototype,{
 			cmd[0].set_focus(false);
 			cmd[0].set_onMouseOver((function(cmd) {
 				return function(e) {
-					haxe_Log.trace("in",{ fileName : "src/assets/MainView.hx", lineNumber : 71, className : "assets.MainView", methodName : "selectCommandMode"});
+					haxe_Log.trace("in",{ fileName : "src/assets/MainView.hx", lineNumber : 74, className : "assets.MainView", methodName : "selectCommandMode"});
 					cmd[0].set_focus(true);
 				};
 			})(cmd));
 			cmd[0].set_onMouseOut((function(cmd) {
 				return function(e) {
-					haxe_Log.trace("out",{ fileName : "src/assets/MainView.hx", lineNumber : 76, className : "assets.MainView", methodName : "selectCommandMode"});
+					haxe_Log.trace("out",{ fileName : "src/assets/MainView.hx", lineNumber : 79, className : "assets.MainView", methodName : "selectCommandMode"});
 					cmd[0].set_focus(false);
 				};
 			})(cmd));
@@ -5464,6 +5480,7 @@ assets_MainView.prototype = $extend(haxe_ui_containers_VBox.prototype,{
 			card.set_top(table.box_hand.get_screenTop());
 			table.hand.push(card);
 			this.box_table.addComponent(card);
+			this.cardViews.push(card);
 		}
 	}
 	,selectMyHandMode: function() {
@@ -5478,8 +5495,8 @@ assets_MainView.prototype = $extend(haxe_ui_containers_VBox.prototype,{
 					if(_gthis.firstClick != null) {
 						return;
 					}
-					haxe_Log.trace("over card: " + card[0].model.id,{ fileName : "src/assets/MainView.hx", lineNumber : 121, className : "assets.MainView", methodName : "selectMyHandMode"});
-					tweenx909_TweenX.to(card[0].box_card,{ "top" : 30},.3,null,null,null,null,null,null,null,{ fileName : "src/assets/MainView.hx", lineNumber : 122, className : "assets.MainView", methodName : "selectMyHandMode"});
+					haxe_Log.trace("over card: " + card[0].model.id,{ fileName : "src/assets/MainView.hx", lineNumber : 125, className : "assets.MainView", methodName : "selectMyHandMode"});
+					tweenx909_TweenX.to(card[0].box_card,{ "top" : 30},.3,null,null,null,null,null,null,null,{ fileName : "src/assets/MainView.hx", lineNumber : 126, className : "assets.MainView", methodName : "selectMyHandMode"});
 					Main.model.previewPlayCard(card[0].model.id);
 				};
 			})(card));
@@ -5488,15 +5505,15 @@ assets_MainView.prototype = $extend(haxe_ui_containers_VBox.prototype,{
 					if(_gthis.firstClick != null) {
 						return;
 					}
-					haxe_Log.trace("out card:" + card[0].model.id,{ fileName : "src/assets/MainView.hx", lineNumber : 129, className : "assets.MainView", methodName : "selectMyHandMode"});
-					tweenx909_TweenX.to(card[0].box_card,{ "top" : 0},.3,null,null,null,null,null,null,null,{ fileName : "src/assets/MainView.hx", lineNumber : 130, className : "assets.MainView", methodName : "selectMyHandMode"});
+					haxe_Log.trace("out card:" + card[0].model.id,{ fileName : "src/assets/MainView.hx", lineNumber : 133, className : "assets.MainView", methodName : "selectMyHandMode"});
+					tweenx909_TweenX.to(card[0].box_card,{ "top" : 0},.3,null,null,null,null,null,null,null,{ fileName : "src/assets/MainView.hx", lineNumber : 134, className : "assets.MainView", methodName : "selectMyHandMode"});
 				};
 			})(card));
 			card[0].box_cover.set_onClick((function(card) {
 				return function(e) {
 					if(_gthis.firstClick == null) {
 						_gthis.firstClick = card[0].model;
-						haxe_Log.trace("first click card:" + card[0].model.id,{ fileName : "src/assets/MainView.hx", lineNumber : 135, className : "assets.MainView", methodName : "selectMyHandMode"});
+						haxe_Log.trace("first click card:" + card[0].model.id,{ fileName : "src/assets/MainView.hx", lineNumber : 139, className : "assets.MainView", methodName : "selectMyHandMode"});
 						_gthis.selectAreaMode();
 					}
 				};
@@ -5512,10 +5529,10 @@ assets_MainView.prototype = $extend(haxe_ui_containers_VBox.prototype,{
 			++_g;
 			area.set_styleNames("selectable");
 			area.set_onMouseOver(function(e) {
-				haxe_Log.trace("over area",{ fileName : "src/assets/MainView.hx", lineNumber : 149, className : "assets.MainView", methodName : "selectAreaMode"});
+				haxe_Log.trace("over area",{ fileName : "src/assets/MainView.hx", lineNumber : 153, className : "assets.MainView", methodName : "selectAreaMode"});
 			});
 			area.set_onMouseOut(function(e) {
-				haxe_Log.trace("out area",{ fileName : "src/assets/MainView.hx", lineNumber : 153, className : "assets.MainView", methodName : "selectAreaMode"});
+				haxe_Log.trace("out area",{ fileName : "src/assets/MainView.hx", lineNumber : 157, className : "assets.MainView", methodName : "selectAreaMode"});
 			});
 			area.set_onClick(function(e) {
 			});
@@ -8294,6 +8311,7 @@ haxe_ui_Toolkit.buildBackend = function() {
 	haxe_ui_util_Defines.set("target.name","js");
 	haxe_ui_util_Defines.set("source_header","Generated by Haxe 4.2.4");
 	haxe_ui_util_Defines.set("signals","1.3.2");
+	haxe_ui_util_Defines.set("pool","0.1.1");
 	haxe_ui_util_Defines.set("notifier","1.1.24");
 	haxe_ui_util_Defines.set("libnoise","1.0.0");
 	haxe_ui_util_Defines.set("js_es5","1");
