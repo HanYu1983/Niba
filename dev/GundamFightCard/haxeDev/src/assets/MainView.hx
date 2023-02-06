@@ -1,5 +1,6 @@
 package assets;
 
+import haxe.ui.core.Component;
 import delay.Delay;
 import tweenx909.TweenX;
 import assets.Card;
@@ -34,10 +35,37 @@ class MainView extends VBox {
 		final gameModel = Main.model.getGame();
 
 		clearTable();
-		syncHand(playerTable, gameModel.players[0]);
-		syncHand(enemyTable, gameModel.players[1]);
-		syncDeck(playerTable, gameModel.players[0]);
-		syncDeck(enemyTable, gameModel.players[1]);
+
+		final p1 = gameModel.players[0];
+		final p2 = gameModel.players[1];
+
+		syncHand(playerTable.box_hand, p1.hand, p1);
+		syncHand(enemyTable.box_hand, p2.hand, p2);
+
+		syncHand(playerTable.box_hand2, p1.hand2, p1);
+		syncHand(enemyTable.box_hand2, p2.hand2, p2);
+
+		syncHand(playerTable.box_standby, p1.standby, p1);
+		syncHand(enemyTable.box_standby, p2.standby, p2);
+
+		syncHand(playerTable.box_earth, p1.battleEarth, p1);
+		syncHand(enemyTable.box_earth, p2.battleEarth, p2);
+
+		syncHand(playerTable.box_universe, p1.battleUniverse, p1);
+		syncHand(enemyTable.box_universe, p2.battleUniverse, p2);
+
+		syncDeck(playerTable.box_deck, p1.deck, p1);
+		syncDeck(enemyTable.box_deck, p2.deck, p2);
+
+		syncDeck(playerTable.box_deck2, p1.deck2, p1);
+		syncDeck(enemyTable.box_deck2, p2.deck2, p2);
+
+		syncDeck(playerTable.box_trash, p1.trash, p1);
+		syncDeck(enemyTable.box_trash, p2.trash, p2);
+
+		syncDeck(playerTable.box_out, p1.outOfGame, p1);
+		syncDeck(enemyTable.box_out, p2.outOfGame, p2);
+
 		syncCommands();
 		selectCommandMode();
 	}
@@ -86,35 +114,47 @@ class MainView extends VBox {
 		}
 	}
 
-	private function syncDeck(table:PlayerTable, player:PlayerModel) {
-		final cards = player.deck;
+	private function syncDeck(box:Component, cards:Array<CardModel>, player:PlayerModel) {
 		for (i in 0...cards.length) {
 			final card = new Card();
 			final cardModel = cards[i];
 			card.model = cardModel;
 			card.playerModel = player;
-			card.left = i * 1 + table.box_deck.screenLeft;
-			card.top = i * 1 + table.box_deck.screenTop;
+			card.left = i * 1 + box.screenLeft;
+			card.top = i * 1 + box.screenTop;
 			box_table.addComponent(card);
 		}
 	}
 
 	private var firstClick:CardModel = null;
 
-	private function syncHand(table:PlayerTable, player:PlayerModel) {
-		final cards = player.hand;
+	private function syncHand(box:Component, cards:Array<CardModel>, player:PlayerModel) {
 		for (i in 0...cards.length) {
 			final card = new Card();
 			final cardModel = cards[i];
 			card.model = cardModel;
 			card.playerModel = player;
-			card.left = i * (card.width + 5) + table.box_hand.screenLeft;
-			card.top = table.box_hand.screenTop;
-			table.hand.push(card);
+			card.left = i * (card.width + 5) + box.screenLeft;
+			card.top = box.screenTop;
 			box_table.addComponent(card);
 			cardViews.push(card);
 		}
 	}
+
+	// private function syncHand(table:PlayerTable, player:PlayerModel) {
+	// 	final cards = player.hand;
+	// 	for (i in 0...cards.length) {
+	// 		final card = new Card();
+	// 		final cardModel = cards[i];
+	// 		card.model = cardModel;
+	// 		card.playerModel = player;
+	// 		card.left = i * (card.width + 5) + table.box_hand.screenLeft;
+	// 		card.top = table.box_hand.screenTop;
+	// 		table.hand.push(card);
+	// 		box_table.addComponent(card);
+	// 		cardViews.push(card);
+	// 	}
+	// }
 
 	private function selectMyHandMode() {
 		for (i in 0...playerTable.hand.length) {

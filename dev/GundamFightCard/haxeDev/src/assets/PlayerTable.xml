@@ -17,7 +17,7 @@
                 <absolute id='box_hand' width='70%' height='100%' styleName='area'>
                     <label text='手牌' />
                 </absolute>
-                <absolute id='box_hand2' height='100%' width='100%' styleName='area'>
+                <absolute id='box_hand2' height='100%' width='30%' styleName='area'>
                     <label text='工場' />
                 </absolute>
             </hbox>

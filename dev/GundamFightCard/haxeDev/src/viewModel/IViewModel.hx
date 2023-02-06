@@ -21,8 +21,24 @@ typedef CardInfoModel = {
 typedef PlayerModel = {
 	id:String,
 	name:String,
+	// 手牌
 	hand:Array<CardModel>,
+	// 機庫
+	hand2:Array<CardModel>,
+	// 配備
+	standby:Array<CardModel>,
+	// 戰區地球
+	battleEarth:Array<CardModel>,
+	// 戰區宇宙
+	battleUniverse:Array<CardModel>,
+	// 牌庫
 	deck:Array<CardModel>,
+	// 捨山
+	deck2:Array<CardModel>,
+	// 廢棄庫
+	trash:Array<CardModel>,
+	// 除外
+	outOfGame:Array<CardModel>,
 	// 卡背的url
 	url:String
 }

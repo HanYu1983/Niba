@@ -27,6 +27,7 @@ class Model extends DefaultViewModel {
 			id: 'player_' + Math.floor(Math.random() * 9999),
 			name: 'dx',
 			hand: [createCard(), createCard(), createCard(), createCard()],
+			hand2: [createCard(), createCard(), createCard(), createCard()],
 			deck: [
 				createCard(),
 				createCard(),
@@ -38,6 +39,12 @@ class Model extends DefaultViewModel {
 				createCard(),
 				createCard()
 			],
+			deck2: [createCard(), createCard(), createCard(), createCard()],
+			trash: [createCard(), createCard(), createCard(), createCard()],
+			outOfGame: [createCard(), createCard(), createCard(), createCard()],
+			standby: [createCard(), createCard(), createCard(), createCard()],
+			battleUniverse: [createCard(), createCard(), createCard(), createCard()],
+			battleEarth: [createCard(), createCard(), createCard(), createCard()],
 			url: 'https://particle-979.appspot.com/card/images/cardback.png',
 		}
 	}

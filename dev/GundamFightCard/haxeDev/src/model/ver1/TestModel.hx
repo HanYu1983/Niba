@@ -36,8 +36,15 @@ class TestModel extends DefaultViewModel {
 					id: 'test',
 					name: 'test',
 					hand: cards,
+					hand2: cards,
 					deck: cards,
-					url:''
+					deck2: cards,
+					standby: cards,
+					trash: cards,
+					outOfGame: cards,
+					battleUniverse: cards,
+					battleEarth: cards,
+					url: ''
 				}
 			],
 			commands: []

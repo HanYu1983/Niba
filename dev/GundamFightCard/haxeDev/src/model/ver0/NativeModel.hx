@@ -73,10 +73,17 @@ class NativeModel extends DefaultViewModel {
 					hand: handCards.map(c -> {
 						return toCardModel(app, app.table.cards[c]);
 					}),
+					hand2: [],
 					deck: handCards.map(c -> {
 						return toCardModel(app, app.table.cards[c]);
 					}),
-					url:''
+					deck2: [],
+					standby: [],
+					outOfGame: [],
+					battleEarth: [],
+					battleUniverse: [],
+					trash: [],
+					url: ''
 				}
 			}),
 			commands: []
