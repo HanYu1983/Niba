@@ -8,20 +8,16 @@ import viewModel.IViewModel;
 
 @:build(haxe.ui.ComponentBuilder.build("src/assets/mainView.xml"))
 class MainView extends VBox {
-	private var game:IViewModel;
-
 	private final playerTable = new PlayerTable();
 	private final enemyTable = new PlayerTable();
 
 	private final commandViews:Array<Command> = [];
 
-	public function new(game:IViewModel) {
+	public function new() {
 		super();
 
 		box_playerTable.addComponent(playerTable);
 		box_playerTable.addComponent(enemyTable);
-
-		this.game = game;
 	}
 
 	override function onInitialize() {
@@ -34,8 +30,9 @@ class MainView extends VBox {
 	}
 
 	private function syncGame() {
-		final gameModel = game.getGame();
+		final gameModel = Main.model.getGame();
 
+		clearTable();
 		syncHand(playerTable, gameModel.players[0]);
 		syncHand(enemyTable, gameModel.players[1]);
 		syncDeck(playerTable, gameModel.players[0]);
@@ -44,11 +41,16 @@ class MainView extends VBox {
 		selectCommandMode();
 	}
 
+	private function clearTable() {
+		box_table.removeAllComponents();
+	}
+
 	private function syncCommands() {
 		while (commandViews.length > 0)
 			commandViews.pop();
 
-		final gameModel = game.getGame();
+		box_commandList.removeAllComponents();
+		final gameModel = Main.model.getGame();
 		final commands = gameModel.commands;
 		for (i in 0...commands.length) {
 			final model = commands[i];
@@ -73,6 +75,10 @@ class MainView extends VBox {
 			cmd.onMouseOut = function(e) {
 				trace('out');
 				cmd.focus = false;
+			}
+
+			cmd.onClick = function(e) {
+				Main.model.play(cmd.id, syncGame);
 			}
 		}
 	}
@@ -115,7 +121,7 @@ class MainView extends VBox {
 				trace('over card: ' + card.model.id);
 				TweenX.to(card.box_card, {'top': 30}, .3);
 
-				game.previewPlayCard(card.model.id);
+				Main.model.previewPlayCard(card.model.id);
 			};
 			card.box_cover.onMouseOut = function(e) {
 				if (firstClick != null)

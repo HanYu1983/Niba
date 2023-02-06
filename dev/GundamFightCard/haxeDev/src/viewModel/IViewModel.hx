@@ -55,8 +55,8 @@ final DEFAULT_PREVIEW_PLAY_CARD_MODEL:PreviewPlayCardModel = {
 }
 
 final DEFAULT_CARD_INFO_MODEL:CardInfoModel = {
-	id:'0',
-	name:'gundam',
+	id: '0',
+	name: 'gundam',
 	content: "content",
 	// 卡片的url
 	url: 'https://storage.googleapis.com/particle-resources/cardPackage/gundamWarN/179030_11E_U_BL208S_2_blue.jpg',
@@ -64,6 +64,7 @@ final DEFAULT_CARD_INFO_MODEL:CardInfoModel = {
 
 interface IViewModel {
 	function getGame():GameModel;
+	function play(commandId:String, cb:() -> Void):Void;
 	function previewPlayCard(id:String):PreviewPlayCardModel;
 	function getCardInfoByProtoId(protoId:String):CardInfoModel;
 }
@@ -79,5 +80,9 @@ class DefaultViewModel implements IViewModel {
 
 	public function getCardInfoByProtoId(protoId:String):CardInfoModel {
 		return DEFAULT_CARD_INFO_MODEL;
+	}
+
+	public function play(commandId:String, cb:() -> Void) {
+		cb();
 	}
 }

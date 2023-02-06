@@ -22,7 +22,7 @@ class Card extends Box {
 	}
 
 	public function set_model(model:CardModel):CardModel {
-		final cardInfo = Main.getGame().getCardInfoByProtoId(model.protoId);
+		final cardInfo = Main.model.getCardInfoByProtoId(model.protoId);
 
 		lbl_id.text = cardInfo.id;
 		lbl_name.text = cardInfo.name;

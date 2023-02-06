@@ -199,6 +199,7 @@ viewModel_IViewModel.__name__ = "viewModel.IViewModel";
 viewModel_IViewModel.__isInterface__ = true;
 viewModel_IViewModel.prototype = {
 	getGame: null
+	,play: null
 	,previewPlayCard: null
 	,getCardInfoByProtoId: null
 	,__class__: viewModel_IViewModel
@@ -216,6 +217,9 @@ viewModel_DefaultViewModel.prototype = {
 	}
 	,getCardInfoByProtoId: function(protoId) {
 		return viewModel_IViewModel_DEFAULT_CARD_INFO_MODEL;
+	}
+	,play: function(commandId,cb) {
+		cb();
 	}
 	,__class__: viewModel_DefaultViewModel
 };
@@ -255,12 +259,9 @@ Main.__name__ = "Main";
 Main.main = function() {
 	var app = new haxe_ui_HaxeUIApp();
 	app.ready(function() {
-		app.addComponent(new assets_MainView(Main.model));
+		app.addComponent(new assets_MainView());
 		app.start();
 	});
-};
-Main.getGame = function() {
-	return Main.model;
 };
 Main.cumulativeOffset = function(element) {
 	var top = 0;
@@ -5108,7 +5109,7 @@ assets_Card.prototype = $extend(haxe_ui_containers_Box.prototype,{
 		return player;
 	}
 	,set_model: function(model) {
-		var cardInfo = Main.getGame().getCardInfoByProtoId(model.protoId);
+		var cardInfo = Main.model.getCardInfoByProtoId(model.protoId);
 		this.lbl_id.set_text(cardInfo.id);
 		this.lbl_name.set_text(cardInfo.name);
 		this.lbl_content.set_text(cardInfo.content);
@@ -5322,7 +5323,7 @@ haxe_ui_containers_VBox.prototype = $extend(haxe_ui_containers_Box.prototype,{
 	}
 	,__class__: haxe_ui_containers_VBox
 });
-var assets_MainView = function(game) {
+var assets_MainView = function() {
 	this.firstClick = null;
 	this.commandViews = [];
 	this.enemyTable = new assets_PlayerTable();
@@ -5360,14 +5361,12 @@ var assets_MainView = function(game) {
 	this.box_commandList = c1;
 	this.box_playerTable.addComponent(this.playerTable);
 	this.box_playerTable.addComponent(this.enemyTable);
-	this.game = game;
 };
 $hxClasses["assets.MainView"] = assets_MainView;
 assets_MainView.__name__ = "assets.MainView";
 assets_MainView.__super__ = haxe_ui_containers_VBox;
 assets_MainView.prototype = $extend(haxe_ui_containers_VBox.prototype,{
-	game: null
-	,playerTable: null
+	playerTable: null
 	,enemyTable: null
 	,commandViews: null
 	,onInitialize: function() {
@@ -5378,7 +5377,8 @@ assets_MainView.prototype = $extend(haxe_ui_containers_VBox.prototype,{
 		});
 	}
 	,syncGame: function() {
-		var gameModel = this.game.getGame();
+		var gameModel = Main.model.getGame();
+		this.clearTable();
 		this.syncHand(this.playerTable,gameModel.players[0]);
 		this.syncHand(this.enemyTable,gameModel.players[1]);
 		this.syncDeck(this.playerTable,gameModel.players[0]);
@@ -5386,9 +5386,13 @@ assets_MainView.prototype = $extend(haxe_ui_containers_VBox.prototype,{
 		this.syncCommands();
 		this.selectCommandMode();
 	}
+	,clearTable: function() {
+		this.box_table.removeAllComponents();
+	}
 	,syncCommands: function() {
 		while(this.commandViews.length > 0) this.commandViews.pop();
-		var gameModel = this.game.getGame();
+		this.box_commandList.removeAllComponents();
+		var gameModel = Main.model.getGame();
 		var commands = gameModel.commands;
 		var _g = 0;
 		var _g1 = commands.length;
@@ -5402,6 +5406,7 @@ assets_MainView.prototype = $extend(haxe_ui_containers_VBox.prototype,{
 		}
 	}
 	,selectCommandMode: function() {
+		var _gthis = this;
 		var _g = 0;
 		var _g1 = this.commandViews;
 		while(_g < _g1.length) {
@@ -5412,14 +5417,19 @@ assets_MainView.prototype = $extend(haxe_ui_containers_VBox.prototype,{
 			cmd[0].set_focus(false);
 			cmd[0].set_onMouseOver((function(cmd) {
 				return function(e) {
-					haxe_Log.trace("in",{ fileName : "src/assets/MainView.hx", lineNumber : 69, className : "assets.MainView", methodName : "selectCommandMode"});
+					haxe_Log.trace("in",{ fileName : "src/assets/MainView.hx", lineNumber : 71, className : "assets.MainView", methodName : "selectCommandMode"});
 					cmd[0].set_focus(true);
 				};
 			})(cmd));
 			cmd[0].set_onMouseOut((function(cmd) {
 				return function(e) {
-					haxe_Log.trace("out",{ fileName : "src/assets/MainView.hx", lineNumber : 74, className : "assets.MainView", methodName : "selectCommandMode"});
+					haxe_Log.trace("out",{ fileName : "src/assets/MainView.hx", lineNumber : 76, className : "assets.MainView", methodName : "selectCommandMode"});
 					cmd[0].set_focus(false);
+				};
+			})(cmd));
+			cmd[0].set_onClick((function(cmd) {
+				return function(e) {
+					Main.model.play(cmd[0].get_id(),$bind(_gthis,_gthis.syncGame));
 				};
 			})(cmd));
 		}
@@ -5468,9 +5478,9 @@ assets_MainView.prototype = $extend(haxe_ui_containers_VBox.prototype,{
 					if(_gthis.firstClick != null) {
 						return;
 					}
-					haxe_Log.trace("over card: " + card[0].model.id,{ fileName : "src/assets/MainView.hx", lineNumber : 115, className : "assets.MainView", methodName : "selectMyHandMode"});
-					tweenx909_TweenX.to(card[0].box_card,{ "top" : 30},.3,null,null,null,null,null,null,null,{ fileName : "src/assets/MainView.hx", lineNumber : 116, className : "assets.MainView", methodName : "selectMyHandMode"});
-					_gthis.game.previewPlayCard(card[0].model.id);
+					haxe_Log.trace("over card: " + card[0].model.id,{ fileName : "src/assets/MainView.hx", lineNumber : 121, className : "assets.MainView", methodName : "selectMyHandMode"});
+					tweenx909_TweenX.to(card[0].box_card,{ "top" : 30},.3,null,null,null,null,null,null,null,{ fileName : "src/assets/MainView.hx", lineNumber : 122, className : "assets.MainView", methodName : "selectMyHandMode"});
+					Main.model.previewPlayCard(card[0].model.id);
 				};
 			})(card));
 			card[0].box_cover.set_onMouseOut((function(card) {
@@ -5478,15 +5488,15 @@ assets_MainView.prototype = $extend(haxe_ui_containers_VBox.prototype,{
 					if(_gthis.firstClick != null) {
 						return;
 					}
-					haxe_Log.trace("out card:" + card[0].model.id,{ fileName : "src/assets/MainView.hx", lineNumber : 123, className : "assets.MainView", methodName : "selectMyHandMode"});
-					tweenx909_TweenX.to(card[0].box_card,{ "top" : 0},.3,null,null,null,null,null,null,null,{ fileName : "src/assets/MainView.hx", lineNumber : 124, className : "assets.MainView", methodName : "selectMyHandMode"});
+					haxe_Log.trace("out card:" + card[0].model.id,{ fileName : "src/assets/MainView.hx", lineNumber : 129, className : "assets.MainView", methodName : "selectMyHandMode"});
+					tweenx909_TweenX.to(card[0].box_card,{ "top" : 0},.3,null,null,null,null,null,null,null,{ fileName : "src/assets/MainView.hx", lineNumber : 130, className : "assets.MainView", methodName : "selectMyHandMode"});
 				};
 			})(card));
 			card[0].box_cover.set_onClick((function(card) {
 				return function(e) {
 					if(_gthis.firstClick == null) {
 						_gthis.firstClick = card[0].model;
-						haxe_Log.trace("first click card:" + card[0].model.id,{ fileName : "src/assets/MainView.hx", lineNumber : 129, className : "assets.MainView", methodName : "selectMyHandMode"});
+						haxe_Log.trace("first click card:" + card[0].model.id,{ fileName : "src/assets/MainView.hx", lineNumber : 135, className : "assets.MainView", methodName : "selectMyHandMode"});
 						_gthis.selectAreaMode();
 					}
 				};
@@ -5502,10 +5512,10 @@ assets_MainView.prototype = $extend(haxe_ui_containers_VBox.prototype,{
 			++_g;
 			area.set_styleNames("selectable");
 			area.set_onMouseOver(function(e) {
-				haxe_Log.trace("over area",{ fileName : "src/assets/MainView.hx", lineNumber : 143, className : "assets.MainView", methodName : "selectAreaMode"});
+				haxe_Log.trace("over area",{ fileName : "src/assets/MainView.hx", lineNumber : 149, className : "assets.MainView", methodName : "selectAreaMode"});
 			});
 			area.set_onMouseOut(function(e) {
-				haxe_Log.trace("out area",{ fileName : "src/assets/MainView.hx", lineNumber : 147, className : "assets.MainView", methodName : "selectAreaMode"});
+				haxe_Log.trace("out area",{ fileName : "src/assets/MainView.hx", lineNumber : 153, className : "assets.MainView", methodName : "selectAreaMode"});
 			});
 			area.set_onClick(function(e) {
 			});
@@ -5527,9 +5537,8 @@ assets_MainView.prototype = $extend(haxe_ui_containers_VBox.prototype,{
 		}
 		return c;
 	}
-	,_constructorParam_game: null
 	,self: function() {
-		return new assets_MainView(this._constructorParam_game);
+		return new assets_MainView();
 	}
 	,box_table: null
 	,box_playerTable: null
