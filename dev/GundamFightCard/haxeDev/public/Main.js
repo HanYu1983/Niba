@@ -236,7 +236,7 @@ model_Model.prototype = $extend(viewModel_DefaultViewModel.prototype,{
 		return { id : "test", name : "testname"};
 	}
 	,createPlayer: function() {
-		return { id : "player_" + Math.floor(Math.random() * 9999), name : "dx", hand : [this.createCard(),this.createCard(),this.createCard(),this.createCard()], deck : [this.createCard(),this.createCard(),this.createCard(),this.createCard(),this.createCard(),this.createCard(),this.createCard(),this.createCard(),this.createCard()], url : "https://particle-979.appspot.com/card/images/cardback.png"};
+		return { id : "player_" + Math.floor(Math.random() * 9999), name : "dx", hand : [this.createCard(),this.createCard(),this.createCard(),this.createCard()], hand2 : [this.createCard(),this.createCard(),this.createCard(),this.createCard()], deck : [this.createCard(),this.createCard(),this.createCard(),this.createCard(),this.createCard(),this.createCard(),this.createCard(),this.createCard(),this.createCard()], deck2 : [this.createCard(),this.createCard(),this.createCard(),this.createCard()], trash : [this.createCard(),this.createCard(),this.createCard(),this.createCard()], outOfGame : [this.createCard(),this.createCard(),this.createCard(),this.createCard()], standby : [this.createCard(),this.createCard(),this.createCard(),this.createCard()], battleUniverse : [this.createCard(),this.createCard(),this.createCard(),this.createCard()], battleEarth : [this.createCard(),this.createCard(),this.createCard(),this.createCard()], url : "https://particle-979.appspot.com/card/images/cardback.png"};
 	}
 	,getGame: function() {
 		var cmds = [this.createCommand(),this.createCommand(),this.createCommand()];
@@ -5520,32 +5520,32 @@ var assets_MainView = function() {
 	var c0 = new haxe_ui_containers_HBox();
 	c0.set_percentWidth(100.);
 	c0.set_percentHeight(100.);
-	var c1 = new haxe_ui_containers_VBox();
-	c1.set_id("box_commandList");
-	c1.set_width(200.);
+	var c1 = new haxe_ui_containers_Absolute();
+	c1.set_percentWidth(100.);
 	c1.set_percentHeight(100.);
-	c0.addComponent(c1);
-	var c2 = new haxe_ui_containers_Absolute();
+	var c2 = new haxe_ui_containers_VBox();
+	c2.set_id("box_playerTable");
 	c2.set_percentWidth(100.);
 	c2.set_percentHeight(100.);
-	var c3 = new haxe_ui_containers_VBox();
-	c3.set_id("box_playerTable");
+	c1.addComponent(c2);
+	var c3 = new haxe_ui_containers_Absolute();
+	c3.set_id("box_table");
 	c3.set_percentWidth(100.);
 	c3.set_percentHeight(100.);
-	c2.addComponent(c3);
-	var c4 = new haxe_ui_containers_Absolute();
-	c4.set_id("box_table");
-	c4.set_percentWidth(100.);
+	c1.addComponent(c3);
+	c0.addComponent(c1);
+	var c4 = new haxe_ui_containers_VBox();
+	c4.set_id("box_commandList");
+	c4.set_width(200.);
 	c4.set_percentHeight(100.);
-	c2.addComponent(c4);
-	c0.addComponent(c2);
+	c0.addComponent(c4);
 	this.addComponent(c0);
 	this.set_percentWidth(100.);
 	this.set_percentHeight(100.);
 	this.bindingRoot = true;
-	this.box_table = c4;
-	this.box_playerTable = c3;
-	this.box_commandList = c1;
+	this.box_table = c3;
+	this.box_playerTable = c2;
+	this.box_commandList = c4;
 	this.box_playerTable.addComponent(this.playerTable);
 	this.box_playerTable.addComponent(this.enemyTable);
 };
@@ -5567,10 +5567,26 @@ assets_MainView.prototype = $extend(haxe_ui_containers_VBox.prototype,{
 	,syncGame: function() {
 		var gameModel = Main.model.getGame();
 		this.clearTable();
-		this.syncHand(this.playerTable,gameModel.players[0]);
-		this.syncHand(this.enemyTable,gameModel.players[1]);
-		this.syncDeck(this.playerTable,gameModel.players[0]);
-		this.syncDeck(this.enemyTable,gameModel.players[1]);
+		var p1 = gameModel.players[0];
+		var p2 = gameModel.players[1];
+		this.syncHand(this.playerTable.box_hand,p1.hand,p1);
+		this.syncHand(this.enemyTable.box_hand,p2.hand,p2);
+		this.syncHand(this.playerTable.box_hand2,p1.hand2,p1);
+		this.syncHand(this.enemyTable.box_hand2,p2.hand2,p2);
+		this.syncHand(this.playerTable.box_standby,p1.standby,p1);
+		this.syncHand(this.enemyTable.box_standby,p2.standby,p2);
+		this.syncHand(this.playerTable.box_earth,p1.battleEarth,p1);
+		this.syncHand(this.enemyTable.box_earth,p2.battleEarth,p2);
+		this.syncHand(this.playerTable.box_universe,p1.battleUniverse,p1);
+		this.syncHand(this.enemyTable.box_universe,p2.battleUniverse,p2);
+		this.syncDeck(this.playerTable.box_deck,p1.deck,p1);
+		this.syncDeck(this.enemyTable.box_deck,p2.deck,p2);
+		this.syncDeck(this.playerTable.box_deck2,p1.deck2,p1);
+		this.syncDeck(this.enemyTable.box_deck2,p2.deck2,p2);
+		this.syncDeck(this.playerTable.box_trash,p1.trash,p1);
+		this.syncDeck(this.enemyTable.box_trash,p2.trash,p2);
+		this.syncDeck(this.playerTable.box_out,p1.outOfGame,p1);
+		this.syncDeck(this.enemyTable.box_out,p2.outOfGame,p2);
 		this.syncCommands();
 		this.selectCommandMode();
 	}
@@ -5606,13 +5622,13 @@ assets_MainView.prototype = $extend(haxe_ui_containers_VBox.prototype,{
 			cmd[0].set_focus(false);
 			cmd[0].set_onMouseOver((function(cmd) {
 				return function(e) {
-					console.log("src/assets/MainView.hx:74:","in");
+					console.log("src/assets/MainView.hx:102:","in");
 					cmd[0].set_focus(true);
 				};
 			})(cmd));
 			cmd[0].set_onMouseOut((function(cmd) {
 				return function(e) {
-					console.log("src/assets/MainView.hx:79:","out");
+					console.log("src/assets/MainView.hx:107:","out");
 					cmd[0].set_focus(false);
 				};
 			})(cmd));
@@ -5623,8 +5639,7 @@ assets_MainView.prototype = $extend(haxe_ui_containers_VBox.prototype,{
 			})(cmd));
 		}
 	}
-	,syncDeck: function(table,player) {
-		var cards = player.deck;
+	,syncDeck: function(box,cards,player) {
 		var _g = 0;
 		var _g1 = cards.length;
 		while(_g < _g1) {
@@ -5633,14 +5648,13 @@ assets_MainView.prototype = $extend(haxe_ui_containers_VBox.prototype,{
 			var cardModel = cards[i];
 			card.set_model(cardModel);
 			card.set_playerModel(player);
-			card.set_left(i + table.box_deck.get_screenLeft());
-			card.set_top(i + table.box_deck.get_screenTop());
+			card.set_left(i + box.get_screenLeft());
+			card.set_top(i + box.get_screenTop());
 			this.box_table.addComponent(card);
 		}
 	}
 	,firstClick: null
-	,syncHand: function(table,player) {
-		var cards = player.hand;
+	,syncHand: function(box,cards,player) {
 		var _g = 0;
 		var _g1 = cards.length;
 		while(_g < _g1) {
@@ -5649,9 +5663,8 @@ assets_MainView.prototype = $extend(haxe_ui_containers_VBox.prototype,{
 			var cardModel = cards[i];
 			card.set_model(cardModel);
 			card.set_playerModel(player);
-			card.set_left(i * (card.get_width() + 5) + table.box_hand.get_screenLeft());
-			card.set_top(table.box_hand.get_screenTop());
-			table.hand.push(card);
+			card.set_left(i * (card.get_width() + 5) + box.get_screenLeft());
+			card.set_top(box.get_screenTop());
 			this.box_table.addComponent(card);
 			this.cardViews.push(card);
 		}
@@ -5668,8 +5681,8 @@ assets_MainView.prototype = $extend(haxe_ui_containers_VBox.prototype,{
 					if(_gthis.firstClick != null) {
 						return;
 					}
-					console.log("src/assets/MainView.hx:125:","over card: " + card[0].model.id);
-					tweenx909_TweenX.to(card[0].box_card,{ "top" : 30},.3,null,null,null,null,null,null,null,{ fileName : "src/assets/MainView.hx", lineNumber : 126, className : "assets.MainView", methodName : "selectMyHandMode"});
+					console.log("src/assets/MainView.hx:165:","over card: " + card[0].model.id);
+					tweenx909_TweenX.to(card[0].box_card,{ "top" : 30},.3,null,null,null,null,null,null,null,{ fileName : "src/assets/MainView.hx", lineNumber : 166, className : "assets.MainView", methodName : "selectMyHandMode"});
 					Main.model.previewPlayCard(card[0].model.id);
 				};
 			})(card));
@@ -5678,15 +5691,15 @@ assets_MainView.prototype = $extend(haxe_ui_containers_VBox.prototype,{
 					if(_gthis.firstClick != null) {
 						return;
 					}
-					console.log("src/assets/MainView.hx:133:","out card:" + card[0].model.id);
-					tweenx909_TweenX.to(card[0].box_card,{ "top" : 0},.3,null,null,null,null,null,null,null,{ fileName : "src/assets/MainView.hx", lineNumber : 134, className : "assets.MainView", methodName : "selectMyHandMode"});
+					console.log("src/assets/MainView.hx:173:","out card:" + card[0].model.id);
+					tweenx909_TweenX.to(card[0].box_card,{ "top" : 0},.3,null,null,null,null,null,null,null,{ fileName : "src/assets/MainView.hx", lineNumber : 174, className : "assets.MainView", methodName : "selectMyHandMode"});
 				};
 			})(card));
 			card[0].box_cover.set_onClick((function(card) {
 				return function(e) {
 					if(_gthis.firstClick == null) {
 						_gthis.firstClick = card[0].model;
-						console.log("src/assets/MainView.hx:139:","first click card:" + card[0].model.id);
+						console.log("src/assets/MainView.hx:179:","first click card:" + card[0].model.id);
 						_gthis.selectAreaMode();
 					}
 				};
@@ -5702,10 +5715,10 @@ assets_MainView.prototype = $extend(haxe_ui_containers_VBox.prototype,{
 			++_g;
 			area.set_styleNames("selectable");
 			area.set_onMouseOver(function(e) {
-				console.log("src/assets/MainView.hx:153:","over area");
+				console.log("src/assets/MainView.hx:193:","over area");
 			});
 			area.set_onMouseOut(function(e) {
-				console.log("src/assets/MainView.hx:157:","out area");
+				console.log("src/assets/MainView.hx:197:","out area");
 			});
 			area.set_onClick(function(e) {
 			});
@@ -5825,7 +5838,7 @@ var assets_PlayerTable = function() {
 	c10.addComponent(c11);
 	var c13 = new haxe_ui_containers_Absolute();
 	c13.set_id("box_hand2");
-	c13.set_percentWidth(100.);
+	c13.set_percentWidth(30.);
 	c13.set_percentHeight(100.);
 	c13.set_styleNames("area");
 	var c14 = new haxe_ui_components_Label();
@@ -8468,7 +8481,6 @@ haxe_ui_Toolkit.build = function() {
 	haxe_ui_themes_ThemeManager.get_instance().addStyleResource("global","styles/main.css",-2,null);
 	haxe_ui_themes_ThemeManager.get_instance().addStyleResource("default","styles/default/main.css",-1,null);
 	haxe_ui_core_ComponentClassMap.register("vbox","haxe.ui.containers.VBox");
-	haxe_ui_core_ComponentClassMap.register("playertable","assets.PlayerTable");
 	haxe_ui_core_ComponentClassMap.register("mainview","assets.MainView");
 	haxe_ui_core_ComponentClassMap.register("label","haxe.ui.components.Label");
 	haxe_ui_core_ComponentClassMap.register("image","haxe.ui.components.Image");
@@ -29699,7 +29711,7 @@ model_ver0_NativeModel.prototype = $extend(viewModel_DefaultViewModel.prototype,
 				var i2 = _g4++;
 				result2[i2] = model_ver0_NativeModel_toCardModel(app,app.table.cards[handCards[i2]]);
 			}
-			result[i] = { id : tmp, name : tmp1, hand : tmp2, deck : result2, url : ""};
+			result[i] = { id : tmp, name : tmp1, hand : tmp2, hand2 : [], deck : result2, deck2 : [], standby : [], outOfGame : [], battleEarth : [], battleUniverse : [], trash : [], url : ""};
 		}
 		return { players : result, commands : []};
 	}
@@ -29728,7 +29740,7 @@ model_ver1_TestModel.prototype = $extend(viewModel_DefaultViewModel.prototype,{
 			_g.push(model_ver1_TestModel_toCardModel(this.game.ctx,card));
 		}
 		var cards = _g;
-		return { players : [{ id : "test", name : "test", hand : cards, deck : cards, url : ""}], commands : []};
+		return { players : [{ id : "test", name : "test", hand : cards, hand2 : cards, deck : cards, deck2 : cards, standby : cards, trash : cards, outOfGame : cards, battleUniverse : cards, battleEarth : cards, url : ""}], commands : []};
 	}
 	,previewPlayCard: function(id) {
 		return { success : false, msg : "should have xxxx", content : { }};

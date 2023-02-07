@@ -19,7 +19,6 @@ private function toCardModel(ctx:Context, card:Card):CardModel {
 	}
 }
 
-@:nullSafety
 class TestModel extends DefaultViewModel {
 	private var game = new Game();
 

@@ -1,5 +1,6 @@
 package;
 
+import viewModel.IViewModel;
 import model.ver0.NativeModel;
 import model.ver1.TestModel;
 import model.Model;
@@ -7,7 +8,7 @@ import assets.MainView;
 import haxe.ui.HaxeUIApp;
 
 class Main {
-	public static final model = new Model();
+	public static final model:IViewModel = new Model();
 
 	// public static final model = new TestModel();
 
