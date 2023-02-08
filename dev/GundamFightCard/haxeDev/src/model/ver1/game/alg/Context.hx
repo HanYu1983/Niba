@@ -71,6 +71,10 @@ function sendEvent(ctx:Context, evt:Event):Void {
 // Query
 //
 
+function getCardsByBaSyou(ctx:Context, baSyou: BaSyou):Array<String> {
+	return getCardStack(ctx.table, (baSyou:BaSyouId)).cardIds;
+}
+
 function getCardType(ctx:Context, cardId:String):CardCategory {
 	final proto = getCurrentCardProto(ctx, getCard(ctx.table, cardId).protoId);
 	return proto.category;

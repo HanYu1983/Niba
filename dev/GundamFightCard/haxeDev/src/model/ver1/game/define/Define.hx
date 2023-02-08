@@ -50,7 +50,7 @@ class Context implements hxbit.Serializable {
 	@:s public var playersOrder:Array<String> = [];
 	@:s public var table = new Table();
 	@:s public var marks:Map<String, Mark> = [];
-	@:s public var timing = TIMINGS[0];
+	@:s public var timing = Timing.Default(Reroll, None, Start);
 	@:s public var cardProtoPool:Map<String, CardProto> = [];
 	@:s public var memory:Memory = {
 		playerSelection: {

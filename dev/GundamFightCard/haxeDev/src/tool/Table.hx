@@ -51,7 +51,6 @@ function getCard(table:Table, cardId:String):Card {
 	return card;
 }
 
-@:nullSafety
 function getCardStack(table:Table, cardStackId:String):CardStack {
 	final ret = table.cardStacks[cardStackId];
 	if (ret == null) {
@@ -68,7 +67,6 @@ function getCardCardStack(table:Table, cardId:String):Option<CardStack> {
 	return Some(findCs[0]);
 }
 
-@:nullSafety
 function moveCard(table:Table, cardId:String, fromId:String, toId:String):Void {
 	if (getCardStack(table, fromId).cardIds.contains(cardId) == false) {
 		throw new haxe.Exception('card not found: ${fromId} > ${cardId}');

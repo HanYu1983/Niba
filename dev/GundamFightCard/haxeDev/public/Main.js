@@ -29722,6 +29722,24 @@ function model_ver0_NativeModel_toCardModel(app,card) {
 }
 var model_ver1_TestModel = function() {
 	this.game = new model_ver1_game_Game();
+	var ctx = this.game.ctx;
+	var player1 = model_ver1_game_define_PlayerId.A;
+	var player2 = model_ver1_game_define_PlayerId.B;
+	var baSyou = model_ver1_game_define_BaSyou.Default(player2,model_ver1_game_define_BaSyouKeyword.MaintenanceArea);
+	var playerId = baSyou.playerId;
+	var baSyouKeyword = baSyou.baSyouKeyword;
+	var this1 = "" + playerId + model_ver1_game_define_BaSyouId._split + $hxEnums[baSyouKeyword.__enum__].__constructs__[baSyouKeyword._hx_index]._hx_name;
+	var player2Hand = new tool_CardStack(this1);
+	ctx.table.cardStacks.h[player2Hand.id] = player2Hand;
+	var card = new tool_Card("1");
+	card.owner = player1;
+	card.protoId = "179030_11E_U_VT186R_purple";
+	card.isFaceUp = true;
+	var baSyou = model_ver1_game_define_BaSyou.Default(player1,model_ver1_game_define_BaSyouKeyword.MaintenanceArea);
+	var playerId = baSyou.playerId;
+	var baSyouKeyword = baSyou.baSyouKeyword;
+	var this1 = "" + playerId + model_ver1_game_define_BaSyouId._split + $hxEnums[baSyouKeyword.__enum__].__constructs__[baSyouKeyword._hx_index]._hx_name;
+	tool_Table_addCard(ctx.table,this1,card);
 };
 $hxClasses["model.ver1.TestModel"] = model_ver1_TestModel;
 model_ver1_TestModel.__name__ = "model.ver1.TestModel";
@@ -29729,18 +29747,7 @@ model_ver1_TestModel.__super__ = viewModel_DefaultViewModel;
 model_ver1_TestModel.prototype = $extend(viewModel_DefaultViewModel.prototype,{
 	game: null
 	,getGame: function() {
-		var _g = [];
-		var h = this.game.ctx.table.cards.h;
-		var card_h = h;
-		var card_keys = Object.keys(h);
-		var card_length = card_keys.length;
-		var card_current = 0;
-		while(card_current < card_length) {
-			var card = card_h[card_keys[card_current++]];
-			_g.push(model_ver1_TestModel_toCardModel(this.game.ctx,card));
-		}
-		var cards = _g;
-		return { players : [{ id : "test", name : "test", hand : cards, hand2 : cards, deck : cards, deck2 : cards, standby : cards, trash : cards, outOfGame : cards, battleUniverse : cards, battleEarth : cards, url : ""}], commands : []};
+		return { players : [model_ver1_TestModel_getPlayerModel(this.game.ctx,model_ver1_game_define_PlayerId.A),model_ver1_TestModel_getPlayerModel(this.game.ctx,model_ver1_game_define_PlayerId.B)], commands : []};
 	}
 	,previewPlayCard: function(id) {
 		return { success : false, msg : "should have xxxx", content : { }};
@@ -29748,7 +29755,27 @@ model_ver1_TestModel.prototype = $extend(viewModel_DefaultViewModel.prototype,{
 	,__class__: model_ver1_TestModel
 });
 function model_ver1_TestModel_toCardModel(ctx,card) {
-	return { id : "" + card.id, protoId : "", watchingByPlayer : [], owner : card.owner, faceup : false};
+	return { id : "" + card.id, protoId : card.protoId != null ? card.protoId : "", watchingByPlayer : [], owner : card.owner, faceup : card.isFaceUp};
+}
+function model_ver1_TestModel_getPlayerModel(ctx,playerId) {
+	var _this = model_ver1_game_alg_Context_getCardsByBaSyou(ctx,model_ver1_game_define_BaSyou.Default(playerId,model_ver1_game_define_BaSyouKeyword.MaintenanceArea));
+	var result = new Array(_this.length);
+	var _g = 0;
+	var _g1 = _this.length;
+	while(_g < _g1) {
+		var i = _g++;
+		result[i] = ctx.table.cards.h[_this[i]];
+	}
+	var _this = result;
+	var result = new Array(_this.length);
+	var _g = 0;
+	var _g1 = _this.length;
+	while(_g < _g1) {
+		var i = _g++;
+		result[i] = model_ver1_TestModel_toCardModel(ctx,_this[i]);
+	}
+	var cards = result;
+	return { id : playerId, name : playerId, hand : cards, hand2 : cards, deck : cards, deck2 : cards, standby : cards, trash : cards, outOfGame : cards, battleUniverse : cards, battleEarth : cards, url : "https://particle-979.appspot.com/card/images/cardback.png"};
 }
 var model_ver1_game_define_CardProto = function() {
 	this.__uid = hxbit_Serializer.SEQ << 24 | ++hxbit_Serializer.UID;
@@ -31654,6 +31681,12 @@ function model_ver1_game_alg_Context_sendEvent(ctx,evt) {
 		mark.onEvent(ctx,evt);
 	}
 }
+function model_ver1_game_alg_Context_getCardsByBaSyou(ctx,baSyou) {
+	var playerId = baSyou.playerId;
+	var baSyouKeyword = baSyou.baSyouKeyword;
+	var this1 = "" + playerId + model_ver1_game_define_BaSyouId._split + $hxEnums[baSyouKeyword.__enum__].__constructs__[baSyouKeyword._hx_index]._hx_name;
+	return tool_Table_getCardStack(ctx.table,this1).cardIds;
+}
 function model_ver1_game_alg_Context_getCardType(ctx,cardId) {
 	var proto = model_ver1_game_alg_CardProto_getCurrentCardProto(ctx,tool_Table_getCard(ctx.table,cardId).protoId);
 	return proto.category;
@@ -31741,7 +31774,7 @@ function model_ver1_game_alg_Context_getCardBaSyouAndAssertExist(ctx,cardId) {
 		model_ver1_game_define_BaSyouId.toBaSyou(ret);
 		return model_ver1_game_define_BaSyouId.toBaSyou(ret);
 	} else {
-		console.log("src/model/ver1/game/alg/Context.hx:162:",ctx);
+		console.log("src/model/ver1/game/alg/Context.hx:166:",ctx);
 		throw new haxe_Exception("card baSyou not found: " + cardId);
 	}
 }
@@ -32627,7 +32660,7 @@ var model_ver1_game_define_Context = function() {
 	this.cuts = [];
 	this.memory = { playerSelection : { cardIds : new haxe_ds_StringMap()}};
 	this.cardProtoPool = new haxe_ds_StringMap();
-	this.timing = model_ver1_game_define_Timing_TIMINGS[0];
+	this.timing = model_ver1_game_define_Timing.Default(model_ver1_game_define_PhaseKeyword.Reroll,haxe_ds_Option.None,model_ver1_game_define_TimingKeyword.Start);
 	this.marks = new haxe_ds_StringMap();
 	this.table = new tool_Table();
 	this.playersOrder = [];
@@ -33134,7 +33167,7 @@ model_ver1_game_define_Context.prototype = {
 		this.playersOrder = [];
 		this.table = new tool_Table();
 		this.marks = new haxe_ds_StringMap();
-		this.timing = model_ver1_game_define_Timing_TIMINGS[0];
+		this.timing = model_ver1_game_define_Timing.Default(model_ver1_game_define_PhaseKeyword.Reroll,haxe_ds_Option.None,model_ver1_game_define_TimingKeyword.Start);
 		this.cardProtoPool = new haxe_ds_StringMap();
 		this.memory = { playerSelection : { cardIds : new haxe_ds_StringMap()}};
 		this.cuts = [];

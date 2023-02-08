@@ -9,8 +9,7 @@ import haxe.ui.HaxeUIApp;
 
 class Main {
 	public static final model:IViewModel = new Model();
-
-	// public static final model = new TestModel();
+	// public static final model:IViewModel = new TestModel();
 
 	public static function main() {
 		var app = new HaxeUIApp();
