@@ -1,0 +1,1 @@
+haxe -js public/testVer2.js -cp src -lib hxbit -main TestVer2
