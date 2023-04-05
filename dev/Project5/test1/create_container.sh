@@ -1,0 +1,1 @@
+docker run --name dev-project5-test1 -ti -p 8080:80 -v "$PWD":/home/gradle/project -w /home/gradle/project --add-host host.docker.internal:host-gateway gradle:latest bash
