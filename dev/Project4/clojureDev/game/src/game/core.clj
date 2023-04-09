@@ -68,7 +68,8 @@
        ~'ctx)))
 
 (defn test-async-> []
-  (go (let [ctx (<! (async-> 0
+  (go (let [ctx 100
+            ctx (<! (async-> ctx
                              ((fn [ctx n] (go (+ n ctx))) 10)
                              (#(inc %))
                              ((fn [ctx] (go (inc ctx))))))
