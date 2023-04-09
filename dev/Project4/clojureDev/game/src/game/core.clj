@@ -1,7 +1,7 @@
 (ns game.core
   (:import [clojure.core.async.impl.channels ManyToManyChannel])
   (:require [game.tool]
-            [clojure.core.async :refer [go <!]]))
+            [clojure.core.async :refer [go <! chan >! close! timeout]]))
 
 (defn do-script [ctx script]
   (eval (list 'let ['ctx ctx
@@ -52,8 +52,7 @@
   (let [init 30
         _ (println (str (macroexpand '(simple-str [1 2 3]))))
         _ (println (macroexpand '(-> c (+ 3) (* 2))))
-        _ (println (macroexpand '(option-> 30 ((fn [ctx] nil)))))
-        ]))
+        _ (println (macroexpand '(option-> 30 ((fn [ctx] nil)))))]))
 
 (defmacro async-> [ctx & expr]
   `(clojure.core.async/go
@@ -69,11 +68,15 @@
        ~'ctx)))
 
 (defn test-async-> []
-  (go (println
-       (<! (async-> 0
-                    ((fn [ctx n] (go (+ n ctx))) 10)
-                    (#(inc %))
-                    ((fn [ctx] (go (inc ctx)))))))))
+  (go (let [ctx (<! (async-> 0
+                             ((fn [ctx n] (go (+ n ctx))) 10)
+                             (#(inc %))
+                             ((fn [ctx] (go (inc ctx))))))
+            abc 30
+            cde (<! (async-> 100))
+            ctx (+ ctx cde abc)
+            _ (println ctx)]
+        ctx)))
 
 (defn test-async []
   (go (let [ctx 0
@@ -91,4 +94,9 @@
   (macroexpand-1 '(async-> 0 ((fn [ctx] (go (inc ctx)))))))
 
 (defn -main []
-  (go (println "-->" (<! (test-async)))))
+  (let [wait (chan)
+        _ (go (println "-->" (<! (test-async->)))
+              (<! (timeout 3000))
+              (close! wait))
+        _ (go (<! wait) (println "done"))
+        _ (println "return")]))
