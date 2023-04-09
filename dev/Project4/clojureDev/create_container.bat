@@ -1,0 +1,1 @@
+docker run --name dev-project4-clojureDev -ti -p 8080:80 -v D:\Han\dev\Niba\dev\Project4\clojureDev:/tmpdev -w /tmpdev --add-host host.docker.internal:host-gateway clojure bash
