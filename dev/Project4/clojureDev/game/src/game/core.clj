@@ -70,5 +70,7 @@
 
 (defn -main []
   (let [_ (println "start")
-        _ (<!! (go (<! (test-async->))))
+        _ (test-do-script)
+        _ (test-option->)
+        _ (<!! (test-async->))
         _ (println "return")]))
