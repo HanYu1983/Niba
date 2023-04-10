@@ -1,6 +1,6 @@
 (ns game.core
   (:require [clojure.core.async :refer [go <! chan >! close! timeout <!!]]
-            [game.tool]))
+            [game.tool :refer [async->]]))
 
 (defn do-script [ctx script]
   (eval (list 'let ['ctx ctx
@@ -58,12 +58,12 @@
 
 (defn test-async-> []
   (go (let [ctx 100
-            ctx (<! (game.tool/async-> ctx
+            ctx (<! (async-> ctx
                                        ((fn [ctx n] (go (+ n ctx))) 10)
                                        (#(inc %))
                                        ((fn [ctx] (go (inc ctx))))))
             abc 30
-            cde (<! (game.tool/async-> 100))
+            cde (<! (async-> 100))
             ctx (+ ctx cde abc)
             _ (println ctx)]
         ctx)))
