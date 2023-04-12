@@ -1,6 +1,15 @@
 (ns game.core
   (:require [clojure.core.async :refer [go <! chan >! close! timeout <!!]]
-            [game.tool :refer [async->]]))
+            [clojure.spec.alpha :as s]
+            [game.tool :refer [async->]]
+            [game.define.event :refer :all]
+            [game.define.basyou]
+            [game.define.card-text]
+            [game.define.effect]
+            [game.define.card-proto]
+            [game.define.require]))
+
+
 
 (defn do-script [ctx script]
   (eval (list 'let ['ctx ctx
@@ -68,9 +77,21 @@
             _ (println ctx)]
         ctx)))
 
-(defn -main []
+(s/check-asserts true)
+
+(defn test-local []
   (let [_ (println "start")
         _ (test-do-script)
         _ (test-option->)
         _ (<!! (test-async->))
         _ (println "return")]))
+
+(defn tests []
+  (game.define.card-text/tests)
+  (game.define.basyou/tests)
+  (game.define.effect/tests)
+  (game.define.card-proto/tests)
+  (game.define.require/tests))
+
+(defn -main []
+  (let [_ (tests)]))

@@ -2,7 +2,7 @@
   #_(:import [clojure.core.async.impl.channels ManyToManyChannel])
   (:require [clojure.core.async :refer [go <! chan >! close! timeout]]))
 
-(defn do-something [])
+(defn do-something [] 1000)
 
 (defmacro async-> [ctx & expr]
   `(clojure.core.async/go
