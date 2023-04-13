@@ -5,9 +5,12 @@
             [game.define.event :refer :all]
             [game.define.basyou]
             [game.define.card-text]
-            [game.define.effect]
+            [game.define.game-effect]
             [game.define.card-proto]
-            [game.define.require]))
+            [game.define.require]
+            [game.define.runtime]
+            [game.component.cuts]
+            [game.entity.model]))
 
 
 
@@ -89,9 +92,12 @@
 (defn tests []
   (game.define.card-text/tests)
   (game.define.basyou/tests)
-  (game.define.effect/tests)
+  (game.define.game-effect/tests)
   (game.define.card-proto/tests)
-  (game.define.require/tests))
+  (game.define.require/tests)
+  (game.define.runtime/tests)
+  (game.component.cuts/tests)
+  (game.entity.model/tests))
 
 (defn -main []
   (let [_ (tests)]))

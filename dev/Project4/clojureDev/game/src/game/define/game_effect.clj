@@ -1,4 +1,4 @@
-(ns game.define.effect
+(ns game.define.game-effect
   (:require [clojure.spec.alpha :as s]
             [game.define.basic]
             [game.define.card]

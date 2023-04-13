@@ -2,7 +2,7 @@
   (:require [clojure.spec.alpha :as s]
             [clojure.core.match :refer [match]]
             [game.define.basic]
-            [game.define.effect]
+            [game.define.game-effect]
             [game.define.require]
             [game.tool]
             [tool.card.table]))
@@ -18,7 +18,7 @@
 (s/def ::type (s/or :automatic (s/tuple #{:automatic} ::type-automatic-type)
                     :use #{:use}
                     :special #{:special}))
-#_(s/def ::effects (s/coll-of :game.define.effect/spec))
+#_(s/def ::effects (s/coll-of :game.define.game-effect/spec))
 #_(s/def ::requires (s/coll-of :game.define.require/spec))
 (s/def ::spec (s/keys :req-un [::id
                                ::description
