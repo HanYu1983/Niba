@@ -46,6 +46,11 @@
                               (map (fn [[effect-id effect]] [effect-id (f effect)]))
                               (into {})))))
 
+(defn remove-effect [ctx id]
+  (s/assert ::spec ctx)
+  (-> ctx
+      (game.component.cuts/remove-effect id)
+      (update :effects #(dissoc % id))))
 
 (defmethod get-card-controller-and-assert-exist ::test [ctx card-id] :A)
 
@@ -70,9 +75,7 @@
     :else
     (throw (ex-message "reason not match"))))
 
-(defn test-get-effect-runtime []
-  (doseq [effect (map #(assoc game.define.effect/effect :reason %) game.define.effect/reasons)]
-    (get-effect-runtime {:env ::test} effect)))
+
 
 (defn- test-get-effects []
   (let [ctx {:cuts []
@@ -133,10 +136,31 @@
                 2 3
                 3 4}))))
 
+(defn- test-remove-effect []
+  (let [ctx {:cuts [[1 2 3] [4 5]]
+             :effects {1 :effect1
+                       2 :effect2
+                       3 :effect3
+                       4 :effect4
+                       5 :effect5}}]
+    (-> ctx
+        (remove-effect 2)
+        (remove-effect 4)
+        (#(= % {:cuts [[1 3] [5]]
+                :effects {1 :effect1
+                          3 :effect3
+                          5 :effect5}}))
+        (assert "test-remove-effect test failed"))))
+
+(defn test-get-effect-runtime []
+  (doseq [effect (map #(assoc game.define.effect/effect :reason %) game.define.effect/reasons)]
+    (get-effect-runtime {:env ::test} effect)))
+
 (defn tests []
   (test-cut-in)
   (test-get-effects)
   (test-get-top-cut)
   (test-new-cut)
   (test-map-effects)
+  (test-remove-effect)
   (test-get-effect-runtime))

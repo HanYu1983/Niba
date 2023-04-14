@@ -23,6 +23,13 @@
   (s/assert ::spec ctx)
   (update ctx :cuts #(cons [effect] %)))
 
+(defn remove-effect [ctx effect]
+  (s/assert ::spec ctx)
+  (update ctx :cuts (fn [cuts]
+                      (mapv (fn [sub-cuts]
+                              (into [] (remove #{effect} sub-cuts)))
+                            cuts))))
+
 ; ============= test ===========
 (defn- test-get-top-cut []
   (let [ctx {:cuts [[1 2 3]]}]
@@ -43,7 +50,16 @@
         (#(= (get-top-cut %) [4]))
         (assert "new-cut test failed"))))
 
+(defn- test-remove-effect []
+  (let [ctx {:cuts [[1 2 3] [4 5]]}]
+    (-> ctx
+        (remove-effect 2)
+        (remove-effect 4)
+        (#(= (:cuts %) [[1 3] [5]]))
+        (assert "test-remove-effect test failed"))))
+
 (defn tests []
   (test-get-top-cut)
   (test-cut-in)
-  (test-new-cut))
+  (test-new-cut)
+  (test-remove-effect))
