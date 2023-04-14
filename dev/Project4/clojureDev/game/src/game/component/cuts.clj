@@ -5,20 +5,17 @@
 (s/def ::spec (s/keys :req-un [:game.component.spec/cuts]))
 
 (defn get-top-cut
-  "取得最新的切入"
   [ctx]
   (s/assert ::spec ctx)
   (-> ctx :cuts first (or [])))
 
 (defn cut-in
-  "切入效果, 切入位置必須在最新的切入的堆裡"
   [ctx effect]
   (s/assert ::spec ctx)
   (update ctx :cuts (fn [cuts]
                       (into [] (cons (into [] (cons effect (first cuts)))
                                      (rest cuts))))))
 (defn new-cut
-  "新的切入"
   [ctx effect]
   (s/assert ::spec ctx)
   (update ctx :cuts #(cons [effect] %)))

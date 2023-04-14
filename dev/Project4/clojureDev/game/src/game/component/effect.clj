@@ -16,13 +16,11 @@
   (mapv #((:effects ctx) %) ids))
 
 (defn get-top-cut
-  "取得最新的切入"
   [ctx]
   (s/assert ::spec ctx)
   (-> ctx :cuts first (or []) (#(get-effects ctx %))))
 
 (defn cut-in
-  "切入效果, 切入位置必須在最新的切入的堆裡"
   [ctx id effect]
   (s/assert ::spec ctx)
   (-> ctx
@@ -30,7 +28,6 @@
       (assoc-in [:effects id] effect)))
 
 (defn new-cut
-  "新的切入"
   [ctx id effect]
   (s/assert ::spec ctx)
   (-> ctx
@@ -38,7 +35,6 @@
       (assoc-in [:effects id] effect)))
 
 (defn map-effects
-  "印射效果"
   [ctx f]
   (s/assert ::spec ctx)
   (update ctx :effects (fn [effects]
