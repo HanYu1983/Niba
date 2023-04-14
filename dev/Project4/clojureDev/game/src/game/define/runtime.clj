@@ -6,7 +6,7 @@
 
 (defrecord SystemExecuteRuntime [response-player-id]
   ExecuteRuntime
-  (get-card-id [_] (throw (Exception. "not support" {})))
+  (get-card-id [_] (throw (ex-info "not support" {})))
   (get-response-player-id [this] (:response-player-id this)))
 
 (defrecord DefaultExecuteRuntime [card-id response-player-id]
@@ -16,4 +16,4 @@
 
 (defn tests []
   (when (not (= :gundam (get-card-id (DefaultExecuteRuntime. :gundam nil))))
-    (throw (Exception. "xxx"))))
+    (throw (ex-message "xxx"))))

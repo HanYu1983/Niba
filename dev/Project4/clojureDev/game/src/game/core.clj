@@ -9,7 +9,9 @@
             [game.define.card-proto]
             [game.define.require]
             [game.define.runtime]
+            [game.define.effect]
             [game.component.cuts]
+            [game.component.effect]
             [game.entity.model]))
 
 
@@ -96,7 +98,9 @@
   (game.define.card-proto/tests)
   (game.define.require/tests)
   (game.define.runtime/tests)
+  (game.define.effect/tests)
   (game.component.cuts/tests)
+  (game.component.effect/tests)
   (game.entity.model/tests))
 
 (defn -main []

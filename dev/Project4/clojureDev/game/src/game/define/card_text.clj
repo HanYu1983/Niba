@@ -27,6 +27,17 @@
                                ::requires]
                       :opt-un [::is-surrounded-by-arrows]))
 
+(def card-text {:id :shoot
+                :description "shoot"
+                :type [:automatic :residents]
+                :effects '(fn [ctx runtime])
+                :requires '(fn [ctx runtime]
+                             (let [mid-value (+ ctx (game.tool/do-something))]
+                               [{:id :shoot
+                                 :description "shoot"
+                                 :type [:select :card 5 [:0 :1]]
+                                 :action `(fn [~'ctx ~'runtime])}]))})
+
 (defn tests-text []
   (let [text (s/assert ::spec (read-string (str {:id :shoot
                                                  :description "shoot"
