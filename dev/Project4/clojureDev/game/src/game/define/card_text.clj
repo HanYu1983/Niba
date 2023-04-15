@@ -18,6 +18,7 @@
                                ::type]
                       :opt-un [::effects
                                ::requires
+                               ::action
                                ::on-event
                                ::is-surrounded-by-arrows]))
 

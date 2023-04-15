@@ -37,7 +37,15 @@
                                                                                        (game.entity.model/return-to-owner-hand ctx (.get-card-id runtime) card-id)) ctx selection)))}}
                                                  ctx (game.component.effect/cut-in ctx (:id effect) effect)]
                                              ctx)
-                                           ctx)))}]})
+                                           ctx)))}
+                         {:id :play
+                          :description "play"
+                          :type [:automatic :constant]
+                          :requires '(fn [ctx runtime])
+                          :action '(fn [ctx runtime]
+                                     ; put card to played-card zone
+                                     ; add played-card effect
+                                     ctx)}]})
 
 (defn test-scrips []
   (s/assert :game.define.card-proto/spec card-proto)
