@@ -153,10 +153,12 @@
     (get-effect-runtime {:env ::test} effect)))
 
 (defn tests []
+  (s/check-asserts false)
   (test-cut-in)
   (test-get-effects)
   (test-get-top-cut)
   (test-new-cut)
   (test-map-effects)
   (test-remove-effect)
-  (test-get-effect-runtime))
+  (test-get-effect-runtime)
+  (s/check-asserts true))

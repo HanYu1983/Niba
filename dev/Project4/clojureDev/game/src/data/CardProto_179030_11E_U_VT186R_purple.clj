@@ -65,7 +65,8 @@
         ctx (require-1-action-fn ctx runtime)
         effect-text-action-fn (eval (:action effect-text))
         ctx (effect-text-action-fn ctx runtime)
-        _ (println ctx)]))
+        ;_ (println ctx)
+        ]))
 
 (defn tests []
   (test-scrips))

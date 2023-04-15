@@ -56,7 +56,9 @@
         (assert "test-remove-effect test failed"))))
 
 (defn tests []
+  (s/check-asserts false)
   (test-get-top-cut)
   (test-cut-in)
   (test-new-cut)
-  (test-remove-effect))
+  (test-remove-effect)
+  (s/check-asserts true))

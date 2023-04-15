@@ -8,11 +8,11 @@
 
 (s/def ::id any?)
 (s/def ::description string?)
-(s/def ::type #{[:automatic :residents]
-                [:automatic :trigger]
-                [:automatic :constant]
-                :use
-                :special})
+(s/def ::type (s/nilable #{[:automatic :residents]
+                           [:automatic :trigger]
+                           [:automatic :constant]
+                           :use
+                           :special}))
 (s/def ::spec (s/keys :req-un [::id
                                ::description
                                ::type]

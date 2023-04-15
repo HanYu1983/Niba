@@ -75,16 +75,14 @@
 (defn test-async-> []
   (go (let [ctx 100
             ctx (<! (async-> ctx
-                                       ((fn [ctx n] (go (+ n ctx))) 10)
-                                       (#(inc %))
-                                       ((fn [ctx] (go (inc ctx))))))
+                             ((fn [ctx n] (go (+ n ctx))) 10)
+                             (#(inc %))
+                             ((fn [ctx] (go (inc ctx))))))
             abc 30
             cde (<! (async-> 100))
             ctx (+ ctx cde abc)
             _ (println ctx)]
         ctx)))
-
-(s/check-asserts true)
 
 (defn test-local []
   (let [_ (println "start")
@@ -94,6 +92,7 @@
         _ (println "return")]))
 
 (defn tests []
+  (s/check-asserts true)
   (game.define.card-text/tests)
   (game.define.basyou/tests)
   (game.define.game-effect/tests)
