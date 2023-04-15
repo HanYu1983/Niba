@@ -12,7 +12,9 @@
             [game.define.effect]
             [game.component.cuts]
             [game.component.effect]
-            [game.entity.model]))
+            [game.component.card-proto]
+            [game.entity.model]
+            [data.CardProto_179030_11E_U_VT186R_purple]))
 
 
 
@@ -101,7 +103,9 @@
   (game.define.effect/tests)
   (game.component.cuts/tests)
   (game.component.effect/tests)
-  (game.entity.model/tests))
+  (game.component.card-proto/tests)
+  (game.entity.model/tests)
+  (data.CardProto_179030_11E_U_VT186R_purple/tests))
 
 (defn -main []
   (let [_ (tests)]))

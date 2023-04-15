@@ -8,10 +8,9 @@
 (s/def ::texts (s/coll-of :game.define.card-text/spec))
 (s/def ::spec (s/keys :req-un [::id ::type ::texts]))
 
-#_(defmulti get-proto identity)
-
-#_(defmethod get-proto :default [_] {:id :default
-                                   :type :character})
+(def card-proto {:id :test
+                 :type :unit
+                 :texts []})
 
 (defn tests []
   #_(s/assert ::spec (get-proto 0)))
