@@ -45,6 +45,14 @@
                           :action '(fn [ctx runtime]
                                      ; put card to played-card zone
                                      ; add played-card effect
+                                     (cond (card-type (.get-card-id runtime))
+                                           #{:unit :operation} (let [_ (comment "移到プレイされたカード")
+                                                                     _ (comment "push 出場效果")]
+                                                                 ctx)
+                                           :command (let [_ (comment "移到プレイされたカード")
+                                                          _ (comment "push 內文+廢棄效果")]
+                                                      ctx)
+                                           :else ctx)
                                      ctx)}]})
 
 (defn test-scrips []
