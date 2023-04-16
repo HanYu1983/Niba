@@ -3,7 +3,7 @@
             [clojure.core.match :refer [match]]
             [game.define.basic]
             [game.define.require]
-            [game.tool]
+            [tool.basic]
             [tool.card.table]))
 
 (s/def ::id any?)
@@ -27,7 +27,7 @@
                 :type [:automatic :residents]
                 :effects '(fn [ctx runtime])
                 :requires '(fn [ctx runtime]
-                             (let [mid-value (+ ctx (game.tool/do-something))]
+                             (let [mid-value (+ ctx (tool.basic/do-something))]
                                [{:id :shoot
                                  :description "shoot"
                                  :type [:select :card 5 [:0 :1]]
@@ -40,12 +40,12 @@
                                                  :type [:automatic :residents]
                                                  :effects '(fn [ctx runtime])
                                                  :requires '(fn [ctx runtime]
-                                                              (let [mid-value (+ ctx (game.tool/do-something))]
+                                                              (let [mid-value (+ ctx (tool.basic/do-something))]
                                                                 [{:id :shoot
                                                                   :description "shoot"
                                                                   :type [:select :card 5 [:0 :1]]
                                                                   :action `(fn [~'ctx ~'runtime]
-                                                                             (let [~'result (+ ~mid-value ~'ctx (game.tool/do-something))]
+                                                                             (let [~'result (+ ~mid-value ~'ctx (tool.basic/do-something))]
                                                                                ~'result))}]))})))
         requires (eval (:requires text))
         action (-> (requires 100 nil) first :action eval)
