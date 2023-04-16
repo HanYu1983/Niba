@@ -20,6 +20,9 @@
       [:start-game game-id]
       (<! (start-game model game-id)))))
 
+(defn swap-model [evt]
+  (go (reset! model (<! (update-model @model evt)))))
+
 (defn page-index []
   (let [model @model]
     (html [:div
@@ -31,8 +34,7 @@
 (compojure.core/defroutes app
   (GET "/" [] (page-index))
   (wrap-params (POST "/fn/start_game" [game-id :as r]
-                 (<!! (go (let [next-model (<! (update-model @model [:start-game game-id]))
-                                _ (reset! model next-model)])))
+                 (<!! (swap-model [:start-game game-id]))
                  (redirect "/")))
   (wrap-params (GET "/user/:id" [id greeting]
                  (str "<h1>" greeting " user " id "</h1>")))
