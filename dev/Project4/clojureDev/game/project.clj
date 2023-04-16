@@ -7,6 +7,8 @@
                  [org.clojure/core.async "1.6.673"]
                  [org.clojure/core.match "1.0.1"]
                  [ring/ring-core "1.5.0"]
-                 [ring/ring-jetty-adapter "1.5.0"]]
+                 [ring/ring-jetty-adapter "1.5.0"]
+                 [compojure "1.7.0"]
+                 [hiccup "1.0.5"]]
   :repl-options {:init-ns game.core}
   :main game.core)

@@ -1,6 +1,6 @@
 (ns game.core
-  (:require [clojure.spec.alpha :as s]
-            [tool.basic]
+  (:require [clojure.spec.alpha :as s])
+  (:require [tool.basic]
             [game.define.event]
             [game.define.basyou]
             [game.define.card-text]
@@ -13,7 +13,8 @@
             [game.component.effect]
             [game.component.card-proto]
             [game.entity.model]
-            [data.CardProto_179030_11E_U_VT186R_purple]))
+            [data.CardProto_179030_11E_U_VT186R_purple])
+  (:require [game.http-server.core]))
 
 (defn tests []
   (s/check-asserts true)
@@ -32,4 +33,5 @@
   (data.CardProto_179030_11E_U_VT186R_purple/tests))
 
 (defn -main []
-  (let [_ (tests)]))
+  (let [_ (tests)
+        _ (game.http-server.core/run)]))
