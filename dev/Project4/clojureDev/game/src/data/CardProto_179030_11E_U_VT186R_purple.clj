@@ -26,10 +26,10 @@
                                                                              (let [tips []]
                                                                                [{:id :CardProto_179030_11E_U_VT186R_purple-1-3
                                                                                  :description "このターン中に場に出た敵軍ユニット１枚を"
-                                                                                 :type [:select :card 1 tips]
+                                                                                 :type [:select-card #{1} tips]
                                                                                  :response-player :you
                                                                                  :action `(fn [~'ctx ~'runtime]
-                                                                                            (game.component.selection/assert-selection ~'ctx :CardProto_179030_11E_U_VT186R_purple-1-3 [:card 1 ~tips])
+                                                                                            (game.component.selection/assert-selection ~'ctx :CardProto_179030_11E_U_VT186R_purple-1-3 [:select-card #{1} ~tips])
                                                                                             ~'ctx)}]))
                                                                 :action '(fn [ctx runtime]
                                                                            (let [selection (game.component.selection/get-selection ctx :CardProto_179030_11E_U_VT186R_purple-1-3)]
@@ -69,6 +69,7 @@
         effect-text-requires-fn (eval (:requires effect-text))
         requires (effect-text-requires-fn ctx runtime)
         require-1 (get requires 0)
+        ctx (game.component.selection/set-selection ctx :CardProto_179030_11E_U_VT186R_purple-1-3 [])
         require-1-action-fn (eval (:action require-1))
         ctx (require-1-action-fn ctx runtime)
         effect-text-action-fn (eval (:action effect-text))

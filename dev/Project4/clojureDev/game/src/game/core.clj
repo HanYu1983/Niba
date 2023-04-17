@@ -34,4 +34,5 @@
 
 (defn -main []
   (let [_ (tests)
-        _ (game.http-server.core/run)]))
+        ;_ (game.http-server.core/run)
+        ]))

@@ -1,6 +1,5 @@
 (ns game.define.basic
   (:require [clojure.spec.alpha :as s]
-            
             [tool.card.table]))
 
 (s/def ::table :tool.card.table/table)
