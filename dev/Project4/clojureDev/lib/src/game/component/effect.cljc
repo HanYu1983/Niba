@@ -1,12 +1,12 @@
 (ns game.component.effect
   (:require [clojure.spec.alpha :as s]
-            [clojure.core.match :refer [match]])
-  (:require [game.define.runtime]
+            [clojure.core.match :refer [match]]
+            [game.define.runtime]
             [game.define.effect]
             [game.component.spec]
             [game.component.cuts]
             [game.component.protocol.basic :refer [get-card-controller-and-assert-exist]])
-  (:import [game.define.runtime SystemExecuteRuntime DefaultExecuteRuntime]))
+  #?(:clj (:import [game.define.runtime SystemExecuteRuntime DefaultExecuteRuntime])))
 
 (s/def ::spec (s/keys :req-un [:game.component.spec/cuts
                                :game.component.spec/effects]))
@@ -56,17 +56,17 @@
   (s/assert :game.define.effect/spec effect)
   (match (:reason effect)
     [:system response-player-id]
-    (SystemExecuteRuntime. response-player-id)
+    (game.define.runtime/SystemExecuteRuntime. response-player-id)
 
     [:play-card play-card-player-id card-id]
-    (DefaultExecuteRuntime. card-id play-card-player-id)
+    (game.define.runtime/DefaultExecuteRuntime. card-id play-card-player-id)
 
     [:play-text play-card-player-id card-id text-id]
-    (DefaultExecuteRuntime. card-id play-card-player-id)
+    (game.define.runtime/DefaultExecuteRuntime. card-id play-card-player-id)
 
     [:text-effect card-id text-id]
     (let [response-player-id (get-card-controller-and-assert-exist ctx card-id)]
-      (DefaultExecuteRuntime. card-id response-player-id))
+      (game.define.runtime/DefaultExecuteRuntime. card-id response-player-id))
 
     :else
     (throw (ex-message "reason not match"))))

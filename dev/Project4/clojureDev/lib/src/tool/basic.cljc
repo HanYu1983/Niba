@@ -1,5 +1,5 @@
 (ns tool.basic
-  (:require [clojure.core.async :refer [go <! chan >! close! timeout <!!]]))
+  (:require [clojure.core.async :refer [go <! chan >! close! timeout]]))
 
 
 (defmacro async-> [ctx & expr]
@@ -64,6 +64,7 @@
     (macroexpand-1 '(async-> 0 ((fn [ctx] (go (inc ctx)))))))
 
 (defn tests []
-  (<!! (test-async->))
-  (test-option->)
-  (test-do-script))
+  (go
+    (test-async->)
+    (test-option->)
+    (test-do-script)))

@@ -1,7 +1,6 @@
-(ns game.core
+(ns frontend.core
   (:require [clojure.spec.alpha :as s]
-            [clojure.core.async :refer [<!!]])
-  (:require [tool.basic]
+            [tool.basic]
             [game.define.event]
             [game.define.basyou]
             [game.define.card-text]
@@ -14,26 +13,18 @@
             [game.component.effect]
             [game.component.card-proto]
             [game.entity.model]
-            [data.CardProto_179030_11E_U_VT186R_purple])
-  (:require [game.http-server.core]))
+            [data.CardProto_179030_11E_U_VT186R_purple]))
 
 (defn tests []
   (s/check-asserts true)
-  (<!! (tool.basic/tests))
-  (game.define.card-text/tests)
   (game.define.basyou/tests)
   (game.define.game-effect/tests)
   (game.define.card-proto/tests)
-  (game.define.require/tests)
   (game.define.runtime/tests)
   (game.define.effect/tests)
   (game.component.cuts/tests)
   (game.component.effect/tests)
   (game.component.card-proto/tests)
-  (game.entity.model/tests)
-  (data.CardProto_179030_11E_U_VT186R_purple/tests))
+  (game.entity.model/tests))
 
-(defn -main [args]
-  (let [_ (tests)
-        ;_ (game.http-server.core/run)
-        ]))
+(tests)
