@@ -1,7 +1,8 @@
 (ns data.CardProto_179030_11E_U_VT186R_purple
   (:require [clojure.spec.alpha :as s]
             [game.define.card-proto]
-            [game.component.selection]))
+            [game.component.selection]
+            [game.define.runtime]))
 
 (def card-proto {:id :CardProto_179030_11E_U_VT186R_purple
                  :type :unit

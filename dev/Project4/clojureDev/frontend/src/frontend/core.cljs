@@ -1,5 +1,6 @@
 (ns frontend.core
   (:require [clojure.spec.alpha :as s]
+            #_[clojure.core.async :refer [<! go]]
             [tool.basic]
             [game.define.event]
             [game.define.basyou]
@@ -17,6 +18,7 @@
 
 (defn tests []
   (s/check-asserts true)
+  #_(go (<! (tool.basic/tests)))
   (game.define.basyou/tests)
   (game.define.game-effect/tests)
   (game.define.card-proto/tests)

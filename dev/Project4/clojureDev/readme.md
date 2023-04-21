@@ -29,7 +29,7 @@ https://clojurescript.org/guides/quick-start
 ## compile (docker -p 9000:9000)
 
     cd frontend
-    clj -M --main cljs.main --compile frontend.core --repl
+    clj -M --main cljs.main --repl-opts "{:launch-browser false}" --compile frontend.core --repl
 
 ## compile to node
 
