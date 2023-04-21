@@ -14,14 +14,17 @@
             [game.component.effect]
             [game.component.card-proto]
             [game.entity.model]
-            [data.CardProto_179030_11E_U_VT186R_purple]))
+            [data.CardProto_179030_11E_U_VT186R_purple])
+  #_(:require-macros [client.macro :refer [abc]]))
 
 (enable-console-print!)
 
 (defn tests []
   (go (<! (timeout 1000))
-      (js/console.log "wow")
-      (println "how"))
+      (js/console.log "wow2")
+      (println "how")
+      #_(abc 0
+           (#(fn [ctx] (go (inc ctx))))))
   (s/check-asserts true)
   (game.define.basyou/tests)
   (game.define.game-effect/tests)

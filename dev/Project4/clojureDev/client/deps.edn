@@ -1,6 +1,11 @@
 ; https://kozieiev.com/blog/clojure-cli-tools-deps-deps-edn-guide/#most-usable-clj-options
+; https://github.com/borkdude/cljs-macro
 {:deps {han/game {:local/root "../game"}
         org.clojure/clojurescript {:mvn/version "1.11.60"}
         org.clojure/core.async {:mvn/version "1.6.673"}}
- :aliases {; clj -M:dev
-           :run {:main-opts ["-m" "cljs.main" "--repl-opts" "{:launch-browser false}" "--compile" "client.core" "--repl"]}}}
+ :aliases {; not working
+           :build-macro {:main-opts ["-m" "cljs.main" "-O" "advanced" "-c" "client.macro"]}
+           ; macro not working
+           :build  {:main-opts ["-m" "cljs.main" "-c" "client.core"]}
+           ; clj -M:dev
+           :run {:main-opts ["-m" "cljs.main" "-c" "client.core" "--repl-opts" "{:launch-browser false}" "--repl"]}}}
