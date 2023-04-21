@@ -1,4 +1,4 @@
-(ns game.http-server.core
+(ns server.http-server.core
   (:require [ring.adapter.jetty :refer [run-jetty]]
             [ring.middleware.params :refer [wrap-params]]
             [ring.util.response :refer [redirect]]

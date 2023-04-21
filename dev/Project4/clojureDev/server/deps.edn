@@ -1,0 +1,12 @@
+; https://kozieiev.com/blog/clojure-cli-tools-deps-deps-edn-guide/#most-usable-clj-options
+; https://code.thheller.com/blog/shadow-cljs/2019/10/12/clojurescript-macros.html
+{:deps {han/game {:local/root "../game"}
+        ring/ring-core {:mvn/version "1.5.0"}
+        ring/ring-jetty-adapter {:mvn/version "1.5.0"}
+        compojure/compojure {:mvn/version "1.7.0"}
+        hiccup/hiccup {:mvn/version "1.0.5"}}
+ :aliases {; clj -M:run (only -main)
+           :run  {:main-opts ["-m" "server.core" {:env :m}]}
+           ; clj -X:run2
+           :run2  {:exec-fn game.core/-main
+                   :exec-args {:env :x}}}}

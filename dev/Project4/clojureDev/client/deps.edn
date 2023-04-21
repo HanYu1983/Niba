@@ -1,0 +1,6 @@
+; https://kozieiev.com/blog/clojure-cli-tools-deps-deps-edn-guide/#most-usable-clj-options
+{:deps {han/game {:local/root "../game"}
+        org.clojure/clojurescript {:mvn/version "1.11.60"}
+        org.clojure/core.async {:mvn/version "1.6.673"}}
+ :aliases {; clj -M:dev
+           :run {:main-opts ["-m" "cljs.main" "--repl-opts" "{:launch-browser false}" "--compile" "client.core" "--repl"]}}}
