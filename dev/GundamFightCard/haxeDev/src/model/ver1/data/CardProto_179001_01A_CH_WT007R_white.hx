@@ -16,11 +16,12 @@ import model.ver1.game.define.CardProto;
 import model.ver1.game.entity.Alg;
 import model.ver1.game.entity.Runtime;
 import model.ver1.game.entity.Event;
-import model.ver1.data.RequireImpl;
-import model.ver1.data.PlayerPlayCard;
 import model.ver1.game.entity.Context;
 import model.ver1.game.entity.DefaultMark;
 import model.ver1.game.entity.MarkEffect;
+import model.ver1.game.component.SelectionComponent;
+import model.ver1.data.RequireImpl;
+import model.ver1.data.PlayerPlayCard;
 
 // 179001_01A_CH_WT007R_white
 // キラ・ヤマト
@@ -84,7 +85,7 @@ private class Mark1 extends DefaultMark {
 
 	public override function onEvent(_ctx:Any, event:Any):Void {
 		final ctx = cast(_ctx, Context);
-		switch cast(event: Event) {
+		switch cast(event : Event) {
 			case ChangePhase:
 				switch ctx.timing {
 					case Default(Battle, Some(End), End):

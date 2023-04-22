@@ -11,7 +11,7 @@ import model.ver1.game.define.Mark;
 import model.ver1.game.entity.Event;
 import model.ver1.game.define.CardText;
 import model.ver1.game.entity.Alg;
-import model.ver1.game.component.CardProto;
+import model.ver1.game.component.CardProtoPoolComponent;
 import model.ver1.game.entity.Context;
 import model.ver1.game.entity.MarkEffect;
 

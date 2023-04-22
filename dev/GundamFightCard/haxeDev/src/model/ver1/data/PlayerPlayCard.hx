@@ -13,7 +13,7 @@ import model.ver1.game.define.Require;
 import model.ver1.game.define.CardText;
 import model.ver1.game.define.CardProto;
 import model.ver1.game.entity.Alg;
-import model.ver1.game.component.Cut;
+import model.ver1.game.component.CutComponent;
 import model.ver1.data.RequireImpl;
 import model.ver1.game.entity.Context;
 import model.ver1.game.entity.DefaultMark;

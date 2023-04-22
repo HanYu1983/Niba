@@ -14,11 +14,12 @@ import model.ver1.game.entity.Event;
 import model.ver1.game.define.Player;
 import model.ver1.game.define.CardText;
 import model.ver1.game.define.CardProto;
+import model.ver1.game.component.CutComponent;
+import model.ver1.game.component.SelectionComponent;
 import model.ver1.game.entity.Alg;
-import model.ver1.game.component.Cut;
-import model.ver1.data.RequireImpl;
 import model.ver1.game.entity.Context;
 import model.ver1.game.entity.DefaultMark;
+import model.ver1.data.RequireImpl;
 
 // 179030_11E_U_VT186R_purple
 // R
@@ -51,7 +52,7 @@ private class Text1 extends CardText {
 	public override function onEvent(_ctx:Any, event:Any, runtime:Runtime):Void {
 		final ctx = cast(_ctx, Context);
 		final thisCardId = runtime.getCardId();
-		switch cast(event: Event) {
+		switch cast(event : Event) {
 			case CardEnterField(enterFieldCardId):
 				if (enterFieldCardId == thisCardId) {
 					final block = new Block(getSubKey(0), TextEffect(thisCardId, id), new Process1('${id}_Process1'));

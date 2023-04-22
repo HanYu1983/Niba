@@ -14,11 +14,13 @@ import model.ver1.game.entity.Event;
 import model.ver1.game.define.Player;
 import model.ver1.game.define.CardText;
 import model.ver1.game.define.CardProto;
-import model.ver1.game.entity.Alg;
-import model.ver1.game.component.Cut;
-import model.ver1.data.RequireImpl;
+import model.ver1.game.component.CutComponent;
+import model.ver1.game.component.SelectionComponent;
 import model.ver1.game.entity.Context;
 import model.ver1.game.entity.DefaultMark;
+import model.ver1.game.entity.Alg;
+import model.ver1.data.RequireImpl;
+
 // 179030_11E_CH_BN091N_brown
 // N
 // ∀
@@ -67,7 +69,7 @@ private class Text1 extends CardText {
 		final thisCardId = runtime.getCardId();
 		final responsePlayerId = runtime.getResponsePlayerId();
 		final opponentPlayerId = ~(responsePlayerId);
-		switch cast(event: Event) {
+		switch cast(event : Event) {
 			case CardRoll(rollCardId):
 				if (rollCardId == thisCardId) {
 					if (getOpponentG(ctx, runtime).length >= 1) {

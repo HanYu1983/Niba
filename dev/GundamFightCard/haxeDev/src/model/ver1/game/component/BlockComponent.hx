@@ -11,7 +11,6 @@ interface IBlockComponent {
 	var cuts:Array<Array<Block>>;
 }
 
-
 function getBlocks(ctx:IBlockComponent):Array<Block> {
 	return ctx.cuts.fold((c, a) -> {
 		return a.concat(c);

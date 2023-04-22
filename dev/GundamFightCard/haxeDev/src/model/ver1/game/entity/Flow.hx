@@ -6,10 +6,9 @@ import model.ver1.game.define.Player;
 import model.ver1.game.define.Block;
 import model.ver1.game.entity.Event;
 import model.ver1.game.define.Runtime;
-import model.ver1.game.component.Block;
+import model.ver1.game.component.BlockComponent;
 import model.ver1.game.entity.Alg;
 import model.ver1.game.entity.Context;
-
 
 // 宣告結束
 function passPhase(memory:FlowMemory, playerId:String):Void {
@@ -91,24 +90,6 @@ enum FlowType {
 
 enum Flow {
 	Default(type:FlowType, description:String);
-}
-
-function getBlockRuntime(ctx:Context, blockId:String):Runtime {
-	final block = getBlock(ctx, blockId);
-	return switch block.cause {
-		case System(respnosePlayerId):
-			new SystemRuntime(respnosePlayerId);
-		case PlayCard(playCardPlayerId, cardId):
-			new DefaultRuntime(cardId, playCardPlayerId);
-		case PlayText(cardId, textId):
-			final responsePlayerId = getCardControllerAndAssertExist(ctx, cardId);
-			new DefaultRuntime(cardId, responsePlayerId);
-		case TextEffect(cardId, textId):
-			final responsePlayerId = getCardControllerAndAssertExist(ctx, cardId);
-			new DefaultRuntime(cardId, responsePlayerId);
-		case _:
-			new AbstractRuntime();
-	}
 }
 
 function applyFlow(ctx:Context, playerID:PlayerId, flow:Flow):Void {

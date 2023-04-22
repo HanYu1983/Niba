@@ -10,9 +10,11 @@ import model.ver1.game.define.Runtime;
 import model.ver1.game.define.Mark;
 import model.ver1.game.entity.Event;
 import model.ver1.game.entity.Runtime;
-import model.ver1.game.component.CardProto;
 import model.ver1.game.entity.Context;
 import model.ver1.game.entity.MarkEffect;
+import model.ver1.game.component.CardProtoPoolComponent;
+import model.ver1.game.component.BlockComponent;
+
 //
 // General
 //
@@ -23,7 +25,6 @@ function returnToOwnerHand(ctx:Context, cardId:String):Void {
 	moveCard(ctx, cardId, from, to);
 }
 
-@:nullSafety
 function getCardOwner(ctx:Context, cardId:String):String {
 	final owner = getCard(ctx.table, cardId).owner;
 	if (owner == null) {
@@ -72,8 +73,8 @@ function sendEvent(ctx:Context, evt:Event):Void {
 // Query
 //
 
-function getCardsByBaSyou(ctx:Context, baSyou: BaSyou):Array<String> {
-	return getCardStack(ctx.table, (baSyou:BaSyouId)).cardIds;
+function getCardsByBaSyou(ctx:Context, baSyou:BaSyou):Array<String> {
+	return getCardStack(ctx.table, (baSyou : BaSyouId)).cardIds;
 }
 
 function getCardType(ctx:Context, cardId:String):CardCategory {
@@ -101,22 +102,8 @@ function getCardEntityCategory(ctx:Context, cardId:String):Option<CardEntityCate
 	}
 }
 
-// Selection
-
 function getThisCardSetGroupCardIds(ctx:Context, cardId:String):Array<String> {
 	return [cardId];
-}
-
-function getPlayerSelectionCardId(ctx:Context, key:String):Array<String> {
-	final selection = ctx.memory.playerSelection.cardIds[key];
-	if (selection == null) {
-		throw new haxe.Exception("selection not found");
-	}
-	return selection;
-}
-
-function setPlayerSelectionCardId(ctx:Context, key:String, values:Array<String>):Void {
-	ctx.memory.playerSelection.cardIds[key] = values;
 }
 
 // p.63
@@ -232,7 +219,7 @@ function getAddBattlePoint(ctx:Context) {
 			final text = info.text;
 			final effects = text.getEffect(ctx, runtime);
 			for (effect in effects) {
-				switch cast (effect: MarkEffect) {
+				switch cast(effect : MarkEffect) {
 					case AddBattlePoint(cardId, battlePoint):
 						{
 							cardId: cardId,
@@ -255,7 +242,7 @@ function getAttackSpeed(ctx:Context) {
 			final text = info.text;
 			final effects = text.getEffect(ctx, runtime);
 			for (effect in effects) {
-				switch cast (effect: MarkEffect) {
+				switch cast(effect : MarkEffect) {
 					case AttackSpeed(cardId, speed):
 						{
 							cardId: cardId,
@@ -267,4 +254,32 @@ function getAttackSpeed(ctx:Context) {
 			}
 		}
 	];
+}
+
+function isDestroyNow(ctx:Context, cardId:String, condition:{isByBattleDamage:Bool}):Bool {
+	// cardId是否有破壞並廢棄的效果在堆疊中
+	if (condition.isByBattleDamage) {}
+	return false;
+}
+
+function removeDestroyEffect(ctx:Context, cardId:String):Void {
+	trace("移除堆疊中的破壞效果");
+}
+
+function getBlockRuntime(ctx:Context, blockId:String):Runtime {
+	final block = getBlock(ctx, blockId);
+	return switch block.cause {
+		case System(respnosePlayerId):
+			new SystemRuntime(respnosePlayerId);
+		case PlayCard(playCardPlayerId, cardId):
+			new DefaultRuntime(cardId, playCardPlayerId);
+		case PlayText(cardId, textId):
+			final responsePlayerId = getCardControllerAndAssertExist(ctx, cardId);
+			new DefaultRuntime(cardId, responsePlayerId);
+		case TextEffect(cardId, textId):
+			final responsePlayerId = getCardControllerAndAssertExist(ctx, cardId);
+			new DefaultRuntime(cardId, responsePlayerId);
+		case _:
+			new AbstractRuntime();
+	}
 }

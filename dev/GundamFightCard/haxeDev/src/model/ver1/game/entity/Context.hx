@@ -8,9 +8,10 @@ import model.ver1.game.define.Block;
 import model.ver1.game.define.Timing;
 import model.ver1.game.define.Define;
 import model.ver1.game.define.CardProto;
-import model.ver1.game.component.Cut;
-import model.ver1.game.component.Block;
-import model.ver1.game.component.CardProto;
+import model.ver1.game.component.CutComponent;
+import model.ver1.game.component.BlockComponent;
+import model.ver1.game.component.CardProtoPoolComponent;
+import model.ver1.game.component.SelectionComponent;
 
 enum FlowMemoryState {
 	PrepareDeck;
@@ -31,15 +32,7 @@ typedef FlowMemory = {
 	msgs:Array<Message>,
 }
 
-typedef PlayerSelection = {
-	cardIds:Map<String, Array<String>>
-}
-
-typedef Memory = {
-	playerSelection:PlayerSelection
-}
-
-class Context implements ICutComponent implements IBlockComponent implements ICardProtoComponent {
+class Context implements ICutComponent implements IBlockComponent implements ICardProtoPoolComponent implements ISelectionComponent{
 	public function new() {}
 
 	public var playersOrder:Array<String> = [];
@@ -47,11 +40,9 @@ class Context implements ICutComponent implements IBlockComponent implements ICa
 	public var marks:Map<String, Mark> = [];
 	public var timing = Timing.Default(Reroll, None, Start);
 	public var cardProtoPool:Map<String, CardProto> = [];
-	public var memory:Memory = {
-		playerSelection: {
-			cardIds: []
-		}
-	};
+	public var playerSelection:PlayerSelection = {
+		cardIds: []
+	}
 	public var cuts:Array<Array<Block>> = [];
 	public var flowMemory:FlowMemory = {
 		state: PrepareDeck,
@@ -65,12 +56,3 @@ class Context implements ICutComponent implements IBlockComponent implements ICa
 	public var activePlayerId:String;
 }
 
-function isDestroyNow(ctx:Context, cardId:String, condition:{isByBattleDamage:Bool}):Bool {
-	// cardId是否有破壞並廢棄的效果在堆疊中
-	if (condition.isByBattleDamage) {}
-	return false;
-}
-
-function removeDestroyEffect(ctx:Context, cardId:String):Void {
-	trace("移除堆疊中的破壞效果");
-}

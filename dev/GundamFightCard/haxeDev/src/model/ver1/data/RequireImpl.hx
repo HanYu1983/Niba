@@ -10,6 +10,7 @@ import model.ver1.game.define.Timing;
 import model.ver1.game.define.Require;
 import model.ver1.game.define.CardText;
 import model.ver1.game.define.CardProto;
+import model.ver1.game.component.SelectionComponent;
 import model.ver1.game.entity.Alg;
 import model.ver1.game.entity.Context;
 
@@ -66,7 +67,7 @@ class RequireGTap extends RequireUserSelectCard {
 
 	public override function action(_ctx:Any, runtime:Runtime):Void {
 		final ctx = cast(_ctx, Context);
-		final selectIds = ctx.memory.playerSelection.cardIds[id];
+		final selectIds = ctx.playerSelection.cardIds[id];
 		if (selectIds == null) {
 			throw new haxe.Exception("selectIds not found");
 		}
@@ -101,7 +102,7 @@ function getRequireGTap(ctx:Context, runtime:Runtime, colors:Array<GColor>, id:S
 		type: SelectCard(tips, [2]),
 		player: You,
 		action: () -> {
-			final selectIds = ctx.memory.playerSelection.cardIds[id];
+			final selectIds = ctx.playerSelection.cardIds[id];
 			if (selectIds == null) {
 				throw new haxe.Exception("selectIds not found");
 			}
@@ -155,7 +156,7 @@ class ForceTargetCard extends Require {
 		if (selectCard == null) {
 			throw new haxe.Exception('指定的卡不存在: ${cardId}');
 		}
-		ctx.memory.playerSelection.cardIds[this.selectKey] = [cardId];
+		ctx.playerSelection.cardIds[this.selectKey] = [cardId];
 	}
 }
 
