@@ -10,7 +10,7 @@ import model.ver1.game.define.Timing;
 import model.ver1.game.define.Require;
 import model.ver1.game.define.CardText;
 import model.ver1.game.define.CardProto;
-import model.ver1.game.alg.Context;
+import model.ver1.game.entity.Alg;
 import model.ver1.game.entity.Context;
 
 class RequirePhase extends Require {

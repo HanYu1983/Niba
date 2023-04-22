@@ -1,12 +1,16 @@
 package model.ver1.game.entity;
 
 using Lambda;
+
 import tool.Table;
 import model.ver1.game.define.Mark;
 import model.ver1.game.define.Block;
 import model.ver1.game.define.Timing;
 import model.ver1.game.define.Define.IContext;
 import model.ver1.game.define.CardProto;
+import model.ver1.game.component.Cut;
+import model.ver1.game.component.Block;
+import model.ver1.game.component.CardProto;
 
 enum FlowMemoryState {
 	PrepareDeck;
@@ -35,7 +39,7 @@ typedef Memory = {
 	playerSelection:PlayerSelection
 }
 
-class Context implements hxbit.Serializable implements IContext {
+class Context implements hxbit.Serializable implements IContext implements ICutComponent implements IBlockComponent implements ICardProtoComponent{
 	public function new() {}
 
 	// @:s public var players:Map<String, Player> = [];
@@ -60,5 +64,15 @@ class Context implements hxbit.Serializable implements IContext {
 		shouldTriggerStackEffectFinishedEvent: false,
 		msgs: [],
 	};
-	@:s public var activePlayerId: String;
+	@:s public var activePlayerId:String;
+}
+
+function isDestroyNow(ctx:Context, cardId:String, condition:{isByBattleDamage:Bool}):Bool {
+	// cardId是否有破壞並廢棄的效果在堆疊中
+	if (condition.isByBattleDamage) {}
+	return false;
+}
+
+function removeDestroyEffect(ctx:Context, cardId:String):Void {
+	trace("移除堆疊中的破壞效果");
 }

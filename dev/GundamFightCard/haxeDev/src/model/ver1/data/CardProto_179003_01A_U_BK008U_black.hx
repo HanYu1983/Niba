@@ -11,10 +11,9 @@ import model.ver1.game.define.Require;
 import model.ver1.game.define.Player;
 import model.ver1.game.define.CardText;
 import model.ver1.game.define.CardProto;
-import model.ver1.game.alg.Context;
-import model.ver1.game.alg.Runtime;
-import model.ver1.game.alg.Cut;
-import model.ver1.game.alg.Destroy;
+import model.ver1.game.entity.Alg;
+import model.ver1.game.entity.Runtime;
+import model.ver1.game.component.Cut;
 import model.ver1.data.RequireImpl;
 import model.ver1.game.entity.Context;
 

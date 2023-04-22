@@ -1,4 +1,4 @@
-package model.ver1.game.alg;
+package model.ver1.game.entity;
 
 using Lambda;
 
@@ -10,8 +10,8 @@ import model.ver1.game.define.ExecuteRuntime;
 import model.ver1.game.define.Mark;
 import model.ver1.game.define.Event;
 import model.ver1.game.define.CardText;
-import model.ver1.game.alg.Context;
-import model.ver1.game.alg.CardProto;
+import model.ver1.game.entity.Alg;
+import model.ver1.game.component.CardProto;
 import model.ver1.game.entity.Context;
 
 function isContantType(text:CardText) {

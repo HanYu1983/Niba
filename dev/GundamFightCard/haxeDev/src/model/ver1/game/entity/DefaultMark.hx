@@ -10,29 +10,30 @@ class DefaultMark extends Mark {
 	public function new(id:String) {
 		super(id);
 	}
+
 	// hxbit.Serializable not support Option
 	@:s public var age:Null<Int>;
+
 	public override function onEvent(_ctx:IContext, event:Event):Void {
-		final ctx = cast(_ctx : Context);
-		if (age != null) {
-			switch event {
-				case ChangePhase:
-					switch ctx.timing {
-						case Default(Battle, Some(End), End):
-							age -= 1;
-							if (age <= 0) {
-								trace("===============");
-								trace(ctx.marks);
-								ctx.marks.remove(id);
-							}
-						case _:
-					}
-				case _:
-			}
-		}
+		// final ctx = cast(_ctx : Context);
+		// if (age != null) {
+		// 	switch event {
+		// 		case ChangePhase:
+		// 			switch ctx.timing {
+		// 				case Default(Battle, Some(End), End):
+		// 					age -= 1;
+		// 					if (age <= 0) {
+		// 						trace("===============");
+		// 						trace(ctx.marks);
+		// 						ctx.marks.remove(id);
+		// 					}
+		// 				case _:
+		// 			}
+		// 		case _:
+		// 	}
+		// }
 	}
 }
-
 
 class EnterFieldThisTurnMark extends DefaultMark {
 	public function new(id:String, cardId:String) {

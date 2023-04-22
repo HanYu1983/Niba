@@ -5,8 +5,9 @@ import model.ver1.game.define.Define;
 import model.ver1.game.define.Player;
 import model.ver1.game.define.Block;
 import model.ver1.game.define.Event;
-import model.ver1.game.alg.Block;
-import model.ver1.game.alg.Context;
+import model.ver1.game.define.ExecuteRuntime;
+import model.ver1.game.component.Block;
+import model.ver1.game.entity.Alg;
 import model.ver1.game.entity.Context;
 
 
@@ -90,6 +91,24 @@ enum FlowType {
 
 enum Flow {
 	Default(type:FlowType, description:String);
+}
+
+function getBlockRuntime(ctx:Context, blockId:String):ExecuteRuntime {
+	final block = getBlock(ctx, blockId);
+	return switch block.cause {
+		case System(respnosePlayerId):
+			new SystemExecuteRuntime(respnosePlayerId);
+		case PlayCard(playCardPlayerId, cardId):
+			new DefaultExecuteRuntime(cardId, playCardPlayerId);
+		case PlayText(cardId, textId):
+			final responsePlayerId = getCardControllerAndAssertExist(ctx, cardId);
+			new DefaultExecuteRuntime(cardId, responsePlayerId);
+		case TextEffect(cardId, textId):
+			final responsePlayerId = getCardControllerAndAssertExist(ctx, cardId);
+			new DefaultExecuteRuntime(cardId, responsePlayerId);
+		case _:
+			new AbstractExecuteRuntime();
+	}
 }
 
 function applyFlow(ctx:Context, playerID:PlayerId, flow:Flow):Void {
