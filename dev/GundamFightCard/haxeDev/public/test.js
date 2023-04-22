@@ -5098,6 +5098,29 @@ model_ver1_game_entity_DefaultMark.__name__ = "model.ver1.game.entity.DefaultMar
 model_ver1_game_entity_DefaultMark.__super__ = model_ver1_game_define_Mark;
 model_ver1_game_entity_DefaultMark.prototype = $extend(model_ver1_game_define_Mark.prototype,{
 	onEvent: function(_ctx,event) {
+		var ctx = _ctx;
+		if(this.age != null) {
+			if(event._hx_index == 0) {
+				var _g = ctx.timing;
+				var _g1 = _g.step;
+				if(_g.phase._hx_index == 3) {
+					if(_g1._hx_index == 0) {
+						if(_g1.v._hx_index == 4) {
+							if(_g.timing._hx_index == 4) {
+								this.age -= 1;
+								if(this.age <= 0) {
+									var key = this.id;
+									var _this = ctx.marks;
+									if(Object.prototype.hasOwnProperty.call(_this.h,key)) {
+										delete(_this.h[key]);
+									}
+								}
+							}
+						}
+					}
+				}
+			}
+		}
 	}
 	,getCLID: function() {
 		return model_ver1_game_entity_DefaultMark.__clid;
@@ -6021,7 +6044,6 @@ function model_ver1_data_CardProto_$179030_$11E_$CH_$BN091N_$brown_test() {
 		throw haxe_Exception.thrown("必須有不能重置效果");
 	}
 	console.log("src/model/ver1/data/CardProto_179030_11E_CH_BN091N_brown.hx:178:","結束一個turn");
-	console.log("src/model/ver1/data/CardProto_179030_11E_CH_BN091N_brown.hx:179:",ctx);
 	ctx.timing = model_ver1_game_define_Timing.Default(model_ver1_game_define_PhaseKeyword.Battle,haxe_ds_Option.Some(model_ver1_game_define_StepKeyword.End),model_ver1_game_define_TimingKeyword.End);
 	model_ver1_game_entity_Alg_sendEvent(ctx,model_ver1_game_define_Event.ChangePhase);
 	var _g = [];
@@ -6037,7 +6059,7 @@ function model_ver1_data_CardProto_$179030_$11E_$CH_$BN091N_$brown_test() {
 	if(_g.length != 1) {
 		throw haxe_Exception.thrown("必須有不能重置效果");
 	}
-	console.log("src/model/ver1/data/CardProto_179030_11E_CH_BN091N_brown.hx:185:","再結束一個turn");
+	console.log("src/model/ver1/data/CardProto_179030_11E_CH_BN091N_brown.hx:184:","再結束一個turn");
 	model_ver1_game_entity_Alg_sendEvent(ctx,model_ver1_game_define_Event.ChangePhase);
 	var _g = [];
 	var h = ctx.marks.h;

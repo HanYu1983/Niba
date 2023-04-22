@@ -176,7 +176,6 @@ function test() {
 		throw "必須有不能重置效果";
 	}
 	trace("結束一個turn");
-	trace(ctx);
 	ctx.timing = Default(Battle, Some(End), End);
 	sendEvent(ctx, ChangePhase);
 	if ([for (mark in ctx.marks) mark].length != 1) {

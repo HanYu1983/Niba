@@ -15,23 +15,21 @@ class DefaultMark extends Mark {
 	@:s public var age:Null<Int>;
 
 	public override function onEvent(_ctx:IContext, event:Event):Void {
-		// final ctx = cast(_ctx : Context);
-		// if (age != null) {
-		// 	switch event {
-		// 		case ChangePhase:
-		// 			switch ctx.timing {
-		// 				case Default(Battle, Some(End), End):
-		// 					age -= 1;
-		// 					if (age <= 0) {
-		// 						trace("===============");
-		// 						trace(ctx.marks);
-		// 						ctx.marks.remove(id);
-		// 					}
-		// 				case _:
-		// 			}
-		// 		case _:
-		// 	}
-		// }
+		final ctx:Context = cast _ctx;
+		if (age != null) {
+			switch event {
+				case ChangePhase:
+					switch ctx.timing {
+						case Default(Battle, Some(End), End):
+							age -= 1;
+							if (age <= 0) {
+								ctx.marks.remove(id);
+							}
+						case _:
+					}
+				case _:
+			}
+		}
 	}
 }
 
