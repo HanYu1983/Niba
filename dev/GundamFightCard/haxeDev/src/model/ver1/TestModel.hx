@@ -7,6 +7,7 @@ import model.ver1.game.define.Player;
 import model.ver1.game.define.BaSyou;
 import model.ver1.game.alg.Context;
 import model.ver1.game.Game;
+import model.ver1.game.entity.Context;
 
 private function toCardModel(ctx:Context, card:Card):CardModel {
 	return {

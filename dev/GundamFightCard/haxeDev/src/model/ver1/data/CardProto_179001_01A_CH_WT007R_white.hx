@@ -16,6 +16,7 @@ import model.ver1.game.alg.Runtime;
 import model.ver1.game.define.Event;
 import model.ver1.data.RequireImpl;
 import model.ver1.data.PlayerPlayCard;
+import model.ver1.game.entity.Context;
 
 // 179001_01A_CH_WT007R_white
 // キラ・ヤマト

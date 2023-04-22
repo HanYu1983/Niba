@@ -3,6 +3,7 @@ package model.ver1.test.common;
 import model.ver1.game.define.Define;
 import model.ver1.game.define.ExecuteRuntime;
 import model.ver1.game.define.Mark;
+import model.ver1.game.entity.Context;
 
 class OnlyEmptyTextCardProto extends CardProto {
 	public function new() {

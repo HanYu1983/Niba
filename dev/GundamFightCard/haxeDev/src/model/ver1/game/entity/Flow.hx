@@ -1,10 +1,13 @@
-package model.ver1.game.define;
+package model.ver1.game.entity;
 
 import haxe.ds.Option;
 import model.ver1.game.define.Define;
 import model.ver1.game.define.Player;
+import model.ver1.game.define.Block;
+import model.ver1.game.define.Event;
 import model.ver1.game.alg.Block;
 import model.ver1.game.alg.Context;
+import model.ver1.game.entity.Context;
 
 enum FlowMemoryState {
 	PrepareDeck;

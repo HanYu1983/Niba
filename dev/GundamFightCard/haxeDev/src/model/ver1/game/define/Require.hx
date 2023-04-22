@@ -4,6 +4,7 @@ import haxe.ds.Option;
 import model.ver1.game.define.Define;
 import model.ver1.game.define.ExecuteRuntime;
 import model.ver1.game.define.Timing;
+import model.ver1.game.entity.Context;
 
 class Require {
 	public function new(id:String, description:String) {

@@ -9,6 +9,7 @@ import model.ver1.game.define.ExecuteRuntime;
 import model.ver1.game.define.Timing;
 import model.ver1.game.define.Require;
 import model.ver1.game.alg.Context;
+import model.ver1.game.entity.Context;
 
 class RequirePhase extends Require {
 	public function new(id:String, timing:Timing) {

@@ -12,6 +12,7 @@ import model.ver1.game.alg.Context;
 import model.ver1.game.alg.CardProto;
 import model.ver1.game.alg.Runtime;
 import model.ver1.test.common.Common;
+import model.ver1.game.entity.Context;
 
 private function test_getRuntimeText1() {
 	final ctx = new Context();

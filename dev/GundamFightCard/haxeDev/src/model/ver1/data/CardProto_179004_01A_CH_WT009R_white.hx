@@ -16,6 +16,7 @@ import model.ver1.game.alg.Context;
 import model.ver1.game.alg.Cut;
 import model.ver1.game.alg.CardProto;
 import model.ver1.data.RequireImpl;
+import model.ver1.game.entity.Context;
 
 // 179004_01A_CH_WT009R_white
 // ラクス・クライン

@@ -11,6 +11,7 @@ import model.ver1.game.define.Mark;
 import model.ver1.game.define.Event;
 import model.ver1.game.alg.Context;
 import model.ver1.game.alg.CardProto;
+import model.ver1.game.entity.Context;
 
 function isContantType(text:CardText) {
 	return switch (text.type) {

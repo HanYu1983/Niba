@@ -13,6 +13,7 @@ import model.ver1.game.define.Require;
 import model.ver1.game.alg.Context;
 import model.ver1.game.alg.Cut;
 import model.ver1.data.RequireImpl;
+import model.ver1.game.entity.Context;
 
 // カードのプレイ(p.20)
 class PlayerPlayCard extends CardText {

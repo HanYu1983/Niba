@@ -15,6 +15,7 @@ import model.ver1.game.define.Player;
 import model.ver1.game.alg.Context;
 import model.ver1.game.alg.Cut;
 import model.ver1.data.RequireImpl;
+import model.ver1.game.entity.Context;
 
 // 179030_11E_CH_BN091N_brown
 // N

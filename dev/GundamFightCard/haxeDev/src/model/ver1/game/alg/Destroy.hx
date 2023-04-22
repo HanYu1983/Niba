@@ -3,6 +3,7 @@ package model.ver1.game.alg;
 using Lambda;
 
 import model.ver1.game.define.Define;
+import model.ver1.game.entity.Context;
 
 function isDestroyNow(ctx:Context, cardId:String, condition:{isByBattleDamage:Bool}):Bool {
 	// cardId是否有破壞並廢棄的效果在堆疊中

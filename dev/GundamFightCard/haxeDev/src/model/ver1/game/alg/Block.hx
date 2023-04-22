@@ -7,6 +7,7 @@ import model.ver1.game.define.Define;
 import model.ver1.game.define.Block;
 import model.ver1.game.define.ExecuteRuntime;
 import model.ver1.game.alg.Context;
+import model.ver1.game.entity.Context;
 
 function getBlocks(ctx:Context):Array<Block> {
 	return ctx.cuts.fold((c, a) -> {
