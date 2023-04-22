@@ -4,8 +4,9 @@ import haxe.ds.Option;
 import model.ver1.game.define.Define;
 import model.ver1.game.define.ExecuteRuntime;
 import model.ver1.game.define.Timing;
+import model.ver1.game.entity.Context;
 
-class Require {
+class Require<T> {
 	public function new(id:String, description:String) {
 		this.id = id;
 		this.description = description;
@@ -14,7 +15,7 @@ class Require {
 	public final id:String;
 	public final description:String;
 
-	public function action(ctx:Context, runtime:ExecuteRuntime):Void {}
+	public function action(ctx:T, runtime:ExecuteRuntime):Void {}
 }
 
 // TODO: refactor

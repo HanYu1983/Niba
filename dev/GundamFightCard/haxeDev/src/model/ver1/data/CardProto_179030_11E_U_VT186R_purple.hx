@@ -15,6 +15,10 @@ import model.ver1.game.define.Player;
 import model.ver1.game.alg.Context;
 import model.ver1.game.alg.Cut;
 import model.ver1.data.RequireImpl;
+import model.ver1.game.entity.Context;
+import model.ver1.game.entity.DefaultCardProto;
+import model.ver1.game.entity.DefaultCardText;
+import model.ver1.game.entity.DefaultRequire;
 
 // 179030_11E_U_VT186R_purple
 // R
@@ -24,13 +28,13 @@ import model.ver1.data.RequireImpl;
 // クイック
 // 『起動』：このカードが場に出た場合、このターン中に場に出た敵軍ユニット１枚を、持ち主の手札に移す。
 
-class CardProto_179030_11E_U_VT186R_purple extends CardProto {
+class CardProto_179030_11E_U_VT186R_purple extends DefaultCardProto {
 	public function new() {
 		super();
 		this.category = Unit;
 	}
 
-	public override function getTexts(ctx:Context, runtime:ExecuteRuntime):Array<CardText> {
+	public override function getTexts(ctx:Context, runtime:ExecuteRuntime):Array<CardText<Context,MarkEffect>> {
 		return [
 			new PlayerPlayCard('CardProto_179030_11E_U_VT186R_purple_1'),
 			new Text1('CardProto_179030_11E_U_VT186R_purple_2')
@@ -38,7 +42,7 @@ class CardProto_179030_11E_U_VT186R_purple extends CardProto {
 	}
 }
 
-private class Text1 extends CardText {
+private class Text1 extends DefaultCardText {
 	public function new(id:String) {
 		super(id, "『起動』：このカードが場に出た場合、このターン中に場に出た敵軍ユニット１枚を、持ち主の手札に移す。");
 		type = Automatic(Trigger);
@@ -76,12 +80,12 @@ private class RequireOpponentUnitsEnterFieldThisTurn extends RequireUserSelectCa
 	}
 }
 
-private class Process1 extends CardText {
+private class Process1 extends DefaultCardText {
 	public function new(id:String) {
 		super(id, "このターン中に場に出た敵軍ユニット１枚を、持ち主の手札に移す。");
 	}
 
-	public override function getRequires(ctx:Context, runtime:ExecuteRuntime):Array<Require> {
+	public override function getRequires(ctx:Context, runtime:ExecuteRuntime):Array<Require<Context>> {
 		return [new RequireOpponentUnitsEnterFieldThisTurn(getSubKey(0), ctx, runtime)];
 	}
 

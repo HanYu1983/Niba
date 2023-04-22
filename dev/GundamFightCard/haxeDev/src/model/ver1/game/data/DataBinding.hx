@@ -1,8 +1,9 @@
 package model.ver1.game.data;
 
 import model.ver1.game.define.Define;
+import model.ver1.game.entity.DefaultCardProto;
 
-private final _cardProtoPool:Map<String, CardProto> = [
+private final _cardProtoPool:Map<String, DefaultCardProto> = [
 	"179001_01A_CH_WT007R_white" => new model.ver1.data.CardProto_179001_01A_CH_WT007R_white(),
 	"179003_01A_U_BK008U_black" => new model.ver1.data.CardProto_179003_01A_U_BK008U_black(),
 	"179004_01A_CH_WT009R_white" => new model.ver1.data.CardProto_179004_01A_CH_WT009R_white(),
@@ -10,8 +11,7 @@ private final _cardProtoPool:Map<String, CardProto> = [
 	"179030_11E_CH_BN091N_brown" => new model.ver1.data.CardProto_179030_11E_CH_BN091N_brown(),
 ];
 
-@:nullSafety
-function getCardProto(key:String):CardProto {
+function getCardProto(key:String):DefaultCardProto {
 	final obj = _cardProtoPool[key];
 	if (obj == null) {
 		throw new haxe.Exception('${key} not found');

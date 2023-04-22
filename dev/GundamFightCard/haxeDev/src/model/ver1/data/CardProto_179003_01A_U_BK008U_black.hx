@@ -14,6 +14,10 @@ import model.ver1.game.alg.Runtime;
 import model.ver1.game.alg.Cut;
 import model.ver1.game.alg.Destroy;
 import model.ver1.data.RequireImpl;
+import model.ver1.game.entity.Context;
+import model.ver1.game.entity.DefaultCardProto;
+import model.ver1.game.entity.DefaultCardText;
+import model.ver1.game.entity.DefaultRequire;
 
 // 179003_01A_U_BK008U_black
 // U
@@ -21,12 +25,12 @@ import model.ver1.data.RequireImpl;
 // シャッコー
 // シャッコー系　MS
 // （ダメージ判定ステップ）〔２〕：このカードが戦闘ダメージで破壊されている場合、このカードを、破壊を無効にした上で自軍Gにする。
-class CardProto_179003_01A_U_BK008U_black extends CardProto {
+class CardProto_179003_01A_U_BK008U_black extends DefaultCardProto {
 	public function new() {
 		super();
 	}
 
-	public override function getTexts(ctx:Context, runtime:ExecuteRuntime):Array<CardText> {
+	public override function getTexts(ctx:Context, runtime:ExecuteRuntime):Array<DefaultCardText> {
 		return [
 			new PlayerPlayCard('${runtime.getCardId()}_PlayerPlayCard'),
 			new Text1('${runtime.getCardId()}_Text1')
@@ -34,7 +38,7 @@ class CardProto_179003_01A_U_BK008U_black extends CardProto {
 	}
 }
 
-private class RequireThisCardDestroyByBattleDamage extends Require {
+private class RequireThisCardDestroyByBattleDamage extends DefaultRequire {
 	public function new(id:String) {
 		super(id, "このカードが戦闘ダメージで破壊されている場合");
 	}
@@ -46,13 +50,13 @@ private class RequireThisCardDestroyByBattleDamage extends Require {
 	}
 }
 
-private class Text1 extends CardText {
+private class Text1 extends DefaultCardText {
 	public function new(id:String) {
 		super(id, "（ダメージ判定ステップ）〔２〕：このカードが戦闘ダメージで破壊されている場合、このカードを、破壊を無効にした上で自軍Gにする。");
 		type = Use;
 	}
 
-	public override function getRequires(ctx:Context, runtime:ExecuteRuntime):Array<Require> {
+	public override function getRequires(ctx:Context, runtime:ExecuteRuntime):Array<DefaultRequire> {
 		return [
 			// TODO: timing list
 			new RequirePhase('${id}_Text1_Req1', Default(Battle, Some(DamageChecking), Free1)),
@@ -68,7 +72,7 @@ private class Text1 extends CardText {
 	}
 }
 
-private class Text2 extends CardText {
+private class Text2 extends DefaultCardText {
 	public function new(id:String) {
 		super(id, "このカードを、破壊を無効にした上で自軍Gにする。");
 	}

@@ -15,6 +15,10 @@ import model.ver1.game.define.Player;
 import model.ver1.game.alg.Context;
 import model.ver1.game.alg.Cut;
 import model.ver1.data.RequireImpl;
+import model.ver1.game.entity.Context;
+import model.ver1.game.entity.DefaultCardProto;
+import model.ver1.game.entity.DefaultCardText;
+import model.ver1.game.entity.DefaultRequire;
 
 // 179030_11E_CH_BN091N_brown
 // N
@@ -23,13 +27,13 @@ import model.ver1.data.RequireImpl;
 // 女性　大人
 // 『起動』：このカードがロールした場合、敵軍G１枚をロールする。その場合、このセットグループは、このターンと次のターン、リロールできない。
 
-class CardProto_179030_11E_CH_BN091N_brown extends CardProto {
+class CardProto_179030_11E_CH_BN091N_brown extends DefaultCardProto {
 	public function new() {
 		super();
 		this.category = Character;
 	}
 
-	public override function getTexts(ctx:Context, runtime:ExecuteRuntime):Array<CardText> {
+	public override function getTexts(ctx:Context, runtime:ExecuteRuntime):Array<DefaultCardText> {
 		return [
 			new PlayerPlayCard('${runtime.getCardId()}_PlayerPlayCard'),
 			new Text1('${runtime.getCardId()}_Text1')
@@ -52,7 +56,7 @@ function getOpponentG(ctx:Context, runtime:ExecuteRuntime):Array<String> {
 	});
 }
 
-private class Text1 extends CardText {
+private class Text1 extends DefaultCardText {
 	public function new(id:String) {
 		super(id, "『起動』：このカードがロールした場合、敵軍G１枚をロールする。その場合、このセットグループは、このターンと次のターン、リロールできない。");
 		type = Automatic(Trigger);
@@ -76,7 +80,7 @@ private class Text1 extends CardText {
 	}
 }
 
-private class Process1 extends CardText {
+private class Process1 extends DefaultCardText {
 	public function new(id:String) {
 		super(id, "敵軍G１枚をロールする。その場合、このセットグループは、このターンと次のターン、リロールできない。");
 	}

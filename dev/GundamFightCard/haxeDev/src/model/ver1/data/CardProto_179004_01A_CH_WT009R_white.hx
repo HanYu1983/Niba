@@ -16,6 +16,11 @@ import model.ver1.game.alg.Context;
 import model.ver1.game.alg.Cut;
 import model.ver1.game.alg.CardProto;
 import model.ver1.data.RequireImpl;
+import model.ver1.game.entity.Context;
+import model.ver1.game.entity.MarkEffect;
+import model.ver1.game.entity.DefaultCardProto;
+import model.ver1.game.entity.DefaultCardText;
+import model.ver1.game.entity.DefaultRequire;
 
 // 179004_01A_CH_WT009R_white
 // ラクス・クライン
@@ -23,13 +28,13 @@ import model.ver1.data.RequireImpl;
 // 【ステイ】　〔１〕：ゲイン　〔１〕：供給
 // 『起動』：自軍カードが、「ゲイン」の効果で戦闘修正を得た場合、そのカードのセットグループ以外の自軍ユニット１枚は、ターン終了時まで、その戦闘修正と同じ値の戦闘修正を得る。
 
-class CardProto_179004_01A_CH_WT009R_white extends CardProto {
+class CardProto_179004_01A_CH_WT009R_white extends DefaultCardProto {
 	public function new() {
 		super();
 		this.category = Character;
 	}
 
-	public override function getTexts(ctx:Context, runtime:ExecuteRuntime):Array<CardText> {
+	public override function getTexts(ctx:Context, runtime:ExecuteRuntime):Array<DefaultCardText> {
 		final thisCardId = runtime.getCardId();
 		return [
 			new PlayerPlayCard('${thisCardId}_PlayerPlayCard'),
@@ -38,7 +43,7 @@ class CardProto_179004_01A_CH_WT009R_white extends CardProto {
 	}
 }
 
-private class Text1 extends CardText {
+private class Text1 extends DefaultCardText {
 	public function new(id:String) {
 		super(id, "『起動』：自軍カードが、「ゲイン」の効果で戦闘修正を得た場合、そのカードのセットグループ以外の自軍ユニット１枚は、ターン終了時まで、その戦闘修正と同じ値の戦闘修正を得る。");
 		type = Automatic(Trigger);
@@ -58,7 +63,7 @@ private class Text1 extends CardText {
 	}
 }
 
-private class Text1_1 extends CardText {
+private class Text1_1 extends DefaultCardText {
 	public function new(id:String, gainCardId:String, gainValue:BattlePoint) {
 		super(id, "そのカードのセットグループ以外の自軍ユニット１枚は、ターン終了時まで、その戦闘修正と同じ値の戦闘修正を得る。");
 		this.gainCardId = gainCardId;
@@ -68,7 +73,7 @@ private class Text1_1 extends CardText {
 	@:s public var gainCardId:String;
 	@:s public var gainValue:BattlePoint;
 
-	public override function getRequires(ctx:Context, runtime:ExecuteRuntime):Array<Require> {
+	public override function getRequires(ctx:Context, runtime:ExecuteRuntime):Array<Require<Context>> {
 		final thisCardId = runtime.getCardId();
 		final gainCardSetGroupsIds = getCardSetGroupCardIds(ctx, gainCardId);
 		final tips = [for (card in ctx.table.cards) card].filter(card -> {
@@ -126,7 +131,7 @@ private class Text1_1 extends CardText {
 	}
 }
 
-private class Mark1 extends Mark {
+private class Mark1 extends DefaultMark {
 	public function new(id:String, attachCardId:String, battlePoint:BattlePoint) {
 		super(id);
 		this.attachCardId = attachCardId;

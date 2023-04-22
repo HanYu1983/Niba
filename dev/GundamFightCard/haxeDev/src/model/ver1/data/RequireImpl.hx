@@ -9,8 +9,10 @@ import model.ver1.game.define.ExecuteRuntime;
 import model.ver1.game.define.Timing;
 import model.ver1.game.define.Require;
 import model.ver1.game.alg.Context;
+import model.ver1.game.entity.Context;
+import model.ver1.game.entity.DefaultRequire;
 
-class RequirePhase extends Require {
+class RequirePhase extends DefaultRequire {
 	public function new(id:String, timing:Timing) {
 		super(id, "RequirePhase");
 		this.timing = timing;
@@ -131,7 +133,7 @@ function getRequireOpponentUnitsEnterFieldThisTurn(ctx:Context, runtime:ExecuteR
 	}
 }
 
-class ForceTargetCard extends Require {
+class ForceTargetCard extends DefaultRequire {
 	public function new(id:String, description:String, selectKey:String, cardId:String) {
 		super(id, description);
 		this.selectKey = selectKey;
@@ -150,7 +152,7 @@ class ForceTargetCard extends Require {
 	}
 }
 
-class RequireGCount extends Require {
+class RequireGCount extends DefaultRequire {
 	public function new(id:String, count:Int) {
 		super(id, "RequireGCount");
 		this.count = count;
@@ -167,7 +169,7 @@ class RequireGCount extends Require {
 	}
 }
 
-class RequireUserSelect<T> extends Require {
+class RequireUserSelect<T> extends DefaultRequire {
 	public function new(id:String, description:String) {
 		super(id, description);
 	}

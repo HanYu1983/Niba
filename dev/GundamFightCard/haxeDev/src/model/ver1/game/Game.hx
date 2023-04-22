@@ -4,6 +4,8 @@ import haxe.Exception;
 import tool.Helper;
 import tool.Table;
 import model.ver1.game.define.Define;
+import model.ver1.game.entity.Context;
+import model.ver1.game.entity.Flow;
 
 // switch Type.typeof(markEffect) {
 // 	case TClass(cls) if (cls == Any):

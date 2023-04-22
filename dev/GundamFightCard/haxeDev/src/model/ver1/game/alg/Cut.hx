@@ -2,8 +2,13 @@ package model.ver1.game.alg;
 
 import model.ver1.game.define.Define;
 import model.ver1.game.define.Block;
+import model.ver1.game.entity.DefaultBlock;
 
-function getTopCut(ctx:Context):Array<Block> {
+interface ICut {
+	var cuts:Array<Array<DefaultBlock>>;
+}
+
+function getTopCut(ctx:ICut):Array<DefaultBlock> {
 	if (ctx.cuts.length == 0) {
 		ctx.cuts.push([]);
 	}
@@ -11,10 +16,10 @@ function getTopCut(ctx:Context):Array<Block> {
 	return topCut;
 }
 
-function cutIn(ctx:Context, block:Block):Void {
+function cutIn(ctx:ICut, block:DefaultBlock):Void {
 	getTopCut(ctx).push(block);
 }
 
-function newCut(ctx:Context, block:Block):Void {
+function newCut(ctx:ICut, block:DefaultBlock):Void {
 	ctx.cuts.push([block]);
 }

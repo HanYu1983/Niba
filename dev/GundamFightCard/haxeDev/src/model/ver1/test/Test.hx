@@ -17,6 +17,7 @@ import model.ver1.data.CardProto_179001_01A_CH_WT007R_white;
 import model.ver1.data.CardProto_179003_01A_U_BK008U_black;
 import model.ver1.data.CardProto_179004_01A_CH_WT009R_white;
 import model.ver1.data.CardProto_179030_11E_U_VT186R_purple;
+import model.ver1.game.entity.Flow;
 
 function test() {
 	model.ver1.game.Game.test();

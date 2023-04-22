@@ -16,17 +16,22 @@ import model.ver1.game.alg.Runtime;
 import model.ver1.game.define.Event;
 import model.ver1.data.RequireImpl;
 import model.ver1.data.PlayerPlayCard;
+import model.ver1.game.entity.Context;
+import model.ver1.game.entity.MarkEffect;
+import model.ver1.game.entity.DefaultCardProto;
+import model.ver1.game.entity.DefaultCardText;
+import model.ver1.game.entity.DefaultRequire;
 
 // 179001_01A_CH_WT007R_white
 // キラ・ヤマト
 // 男性　子供　CO
 // （戦闘フェイズ）〔２〕：このセットグループのユニットは、ターン終了時まで「速攻」を得る。
-class CardProto_179001_01A_CH_WT007R_white extends CardProto {
+class CardProto_179001_01A_CH_WT007R_white extends DefaultCardProto {
 	public function new() {
 		super();
 	}
 
-	public override function getTexts(ctx:Context, runtime:ExecuteRuntime):Array<CardText> {
+	public override function getTexts(ctx:Context, runtime:ExecuteRuntime):Array<DefaultCardText> {
 		return [
 			new PlayerPlayCard('${runtime.getCardId()}_PlayerPlayCard'),
 			new Text1('${runtime.getCardId()}_Text1')
@@ -34,13 +39,13 @@ class CardProto_179001_01A_CH_WT007R_white extends CardProto {
 	}
 }
 
-private class Text1 extends CardText {
+private class Text1 extends DefaultCardText {
 	public function new(id:String) {
 		super(id, "（戦闘フェイズ）〔２〕：このセットグループのユニットは、ターン終了時まで「速攻」を得る。");
 		type = Use;
 	}
 
-	public override function getRequires(ctx:Context, runtime:ExecuteRuntime):Array<Require> {
+	public override function getRequires(ctx:Context, runtime:ExecuteRuntime):Array<DefaultRequire> {
 		final unit = switch getUnitOfSetGroup(ctx, runtime.getCardId()) {
 			case Some(cardId):
 				cardId;
@@ -63,7 +68,7 @@ private class Text1 extends CardText {
 	}
 }
 
-private class Mark1 extends Mark {
+private class Mark1 extends DefaultMark {
 	public function new(id:String, attachCardId:String) {
 		super(id);
 		this.attachCardId = attachCardId;

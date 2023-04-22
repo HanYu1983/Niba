@@ -11,8 +11,12 @@ import model.ver1.game.define.Mark;
 import model.ver1.game.define.Event;
 import model.ver1.game.alg.Context;
 import model.ver1.game.alg.CardProto;
+import model.ver1.game.entity.Context;
+import model.ver1.game.entity.MarkEffect;
+import model.ver1.game.entity.DefaultCardProto;
+import model.ver1.game.entity.DefaultCardText;
 
-function isContantType(text:CardText) {
+function isContantType<T, E>(text:CardText<T, E>) {
 	return switch (text.type) {
 		case Automatic(Constant):
 			true;
@@ -24,7 +28,7 @@ function isContantType(text:CardText) {
 //
 // Runtime
 //
-function getRuntimeText(ctx:Context):Array<{runtime:ExecuteRuntime, text:CardText}> {
+function getRuntimeText(ctx:Context):Array<{runtime:ExecuteRuntime, text:DefaultCardText}> {
 	// ver1 （沒使用）
 	// 手牌，hanger中的牌, 直接給它Play的權力
 	// ver2

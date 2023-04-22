@@ -13,15 +13,19 @@ import model.ver1.game.define.Require;
 import model.ver1.game.alg.Context;
 import model.ver1.game.alg.Cut;
 import model.ver1.data.RequireImpl;
+import model.ver1.game.entity.Context;
+import model.ver1.game.entity.MarkEffect;
+import model.ver1.game.entity.DefaultRequire;
+import model.ver1.game.entity.DefaultCardText;
 
 // カードのプレイ(p.20)
-class PlayerPlayCard extends CardText {
+class PlayerPlayCard extends DefaultCardText {
 	public function new(id:String) {
 		super(id, "カードのプレイ");
 		this.type = Automatic(Constant);
 	}
 
-	public override function getRequires(ctx:Context, runtime:ExecuteRuntime):Array<Require> {
+	public override function getRequires(ctx:Context, runtime:ExecuteRuntime):Array<DefaultRequire> {
 		// TODO: 查詢有沒有快速
 		// TODO: 查詢有沒有替代横置國力顏色的效果
 		// TODO: 查詢有沒有在SET在特定卡上而減少横置國力的效果
@@ -68,7 +72,7 @@ class PlayerPlayCard extends CardText {
 	}
 }
 
-private class EnterFieldEffect extends CardText {
+private class EnterFieldEffect extends DefaultCardText {
 	public function new(id:String) {
 		super(id, "場に出る効果");
 	}
@@ -108,12 +112,12 @@ private class EnterFieldEffect extends CardText {
 }
 
 // Gのプレイ(P.21)
-class PlayerPlayG extends CardText {
+class PlayerPlayG extends DefaultCardText {
 	public function new(id:String) {
 		super(id, "Gのプレイ");
 	}
 
-	public override function getRequires(ctx:Context, runtime:ExecuteRuntime):Array<Require> {
+	public override function getRequires(ctx:Context, runtime:ExecuteRuntime):Array<DefaultRequire> {
 		// TODO: 必須有GSign
 		return [];
 	}

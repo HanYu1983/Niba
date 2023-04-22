@@ -7,14 +7,19 @@ import model.ver1.game.define.Define;
 import model.ver1.game.define.Block;
 import model.ver1.game.define.ExecuteRuntime;
 import model.ver1.game.alg.Context;
+import model.ver1.game.entity.DefaultBlock;
 
-function getBlocks(ctx:Context):Array<Block> {
+interface IBlock {
+	var cuts:Array<Array<DefaultBlock>>;
+}
+
+function getBlocks(ctx:IBlock):Array<DefaultBlock> {
 	return ctx.cuts.fold((c, a) -> {
 		return a.concat(c);
 	}, []);
 }
 
-function getBlock(ctx:Context, blockId:String):Block {
+function getBlock(ctx:IBlock, blockId:String):DefaultBlock {
 	final blocks = getBlocks(ctx);
 	final findBlock = blocks.filter(block -> block.id == blockId);
 	if (findBlock.length == 0) {
@@ -23,7 +28,7 @@ function getBlock(ctx:Context, blockId:String):Block {
 	return findBlock[0];
 }
 
-function getBlockRuntime(ctx:Context, blockId:String):ExecuteRuntime {
+function getBlockRuntime(ctx:IBlock, blockId:String):ExecuteRuntime {
 	final block = getBlock(ctx, blockId);
 	return switch block.cause {
 		case System(respnosePlayerId):
@@ -41,7 +46,7 @@ function getBlockRuntime(ctx:Context, blockId:String):ExecuteRuntime {
 	}
 }
 
-function removeBlock(ctx:Context, blockId:String):Void {
+function removeBlock(ctx:IBlock, blockId:String):Void {
 	final block = getBlock(ctx, blockId);
 	for (cut in ctx.cuts) {
 		cut.remove(block);

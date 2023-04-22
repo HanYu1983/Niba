@@ -13,8 +13,9 @@ import model.ver1.game.define.Mark;
 import model.ver1.game.define.Block;
 import model.ver1.game.define.Require;
 import model.ver1.game.define.Event;
-import model.ver1.game.define.Flow;
 import model.ver1.game.define.Player;
+import model.ver1.game.alg.CardProto;
+
 
 // Context
 // Player
@@ -41,34 +42,6 @@ typedef PlayerSelection = {
 
 typedef Memory = {
 	playerSelection:PlayerSelection
-}
-
-class Context implements hxbit.Serializable {
-	public function new() {}
-
-	// @:s public var players:Map<String, Player> = [];
-	@:s public var playersOrder:Array<String> = [];
-	@:s public var table = new Table();
-	@:s public var marks:Map<String, Mark> = [];
-	@:s public var timing = Timing.Default(Reroll, None, Start);
-	@:s public var cardProtoPool:Map<String, CardProto> = [];
-	@:s public var memory:Memory = {
-		playerSelection: {
-			cardIds: []
-		}
-	};
-	// serializable不支援List
-	@:s public var cuts:Array<Array<Block>> = [];
-	@:s public var flowMemory:FlowMemory = {
-		state: PrepareDeck,
-		hasTriggerEvent: false,
-		hasPlayerPassPhase: new Map<String, Bool>(),
-		hasPlayerPassCut: new Map<String, Bool>(),
-		hasPlayerPassPayCost: new Map<String, Bool>(),
-		shouldTriggerStackEffectFinishedEvent: false,
-		msgs: [],
-	};
-	@:s public var activePlayerId: String;
 }
 
 // General
@@ -132,7 +105,7 @@ enum RelativePlayer {
 	Opponent;
 }
 
-class CardText implements hxbit.Serializable {
+class CardText<T, Eff> implements hxbit.Serializable {
 	public function new(id:String, description:String) {
 		this.id = id;
 		this.description = description;
@@ -148,31 +121,31 @@ class CardText implements hxbit.Serializable {
 		return '${id}_${v}';
 	}
 
-	public function getEffect(ctx:Context, runtime:ExecuteRuntime):Array<MarkEffect> {
+	public function getEffect(ctx:T, runtime:ExecuteRuntime):Array<Eff> {
 		return [];
 	}
 
-	public function getRequires(ctx:Context, runtime:ExecuteRuntime):Array<Require> {
+	public function getRequires(ctx:T, runtime:ExecuteRuntime):Array<Require<T>> {
 		return [];
 	}
 
-	public function getRequires2(ctx:Context, runtime:ExecuteRuntime):Array<Require2> {
+	public function getRequires2(ctx:T, runtime:ExecuteRuntime):Array<Require2> {
 		return [];
 	}
 
-	public function action(ctx:Context, runtime:ExecuteRuntime):Void {}
+	public function action(ctx:T, runtime:ExecuteRuntime):Void {}
 
-	public function onEvent(ctx:Context, event:Event, runtime:ExecuteRuntime):Void {}
+	public function onEvent(ctx:T, event:Event, runtime:ExecuteRuntime):Void {}
 }
 
 // CardProto
 
-class CardProto implements hxbit.Serializable {
+class CardProto<T, Eff> implements hxbit.Serializable {
 	public var category = CardCategory.Unit;
 
 	public function new() {}
 
-	public function getTexts(ctx:Context, runtime:ExecuteRuntime):Array<CardText> {
+	public function getTexts(ctx:T, runtime:ExecuteRuntime):Array<CardText<T, Eff>> {
 		return [];
 	}
 }
