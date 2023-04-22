@@ -10,9 +10,9 @@ class Mark {
 
 	public var id:String;
 
-	public function getEffect(_ctx:IContext):Array<Any> {
+	public function getEffect(_ctx:Any):Array<Any> {
 		return [];
 	}
 
-	public function onEvent(_ctx:IContext, event:Any):Void {}
+	public function onEvent(_ctx:Any, event:Any):Void {}
 }

@@ -25,7 +25,7 @@ class PlayerPlayCard extends CardText {
 		this.type = Automatic(Constant);
 	}
 
-	public override function getRequires(_ctx:IContext, runtime:Runtime):Array<Require> {
+	public override function getRequires(_ctx:Any, runtime:Runtime):Array<Require> {
 		final ctx = cast(_ctx, Context);
 		// TODO: 查詢有沒有快速
 		// TODO: 查詢有沒有替代横置國力顏色的效果
@@ -46,7 +46,7 @@ class PlayerPlayCard extends CardText {
 		];
 	}
 
-	public override function action(_ctx:IContext, runtime:Runtime):Void {
+	public override function action(_ctx:Any, runtime:Runtime):Void {
 		final ctx = cast(_ctx, Context);
 		final cardId = runtime.getCardId();
 		final responsePlayerId = runtime.getResponsePlayerId();
@@ -79,7 +79,7 @@ private class EnterFieldEffect extends CardText {
 		super(id, "場に出る効果");
 	}
 
-	public override function action(_ctx:IContext, runtime:Runtime):Void {
+	public override function action(_ctx:Any, runtime:Runtime):Void {
 		final ctx = cast(_ctx, Context);
 		// (p.64)
 		// getCardController(cardId)會等於None因為「プレイされたカード場所」是沒有控制者的
@@ -120,12 +120,12 @@ class PlayerPlayG extends CardText {
 		super(id, "Gのプレイ");
 	}
 
-	public override function getRequires(_ctx:IContext, runtime:Runtime):Array<Require> {
+	public override function getRequires(_ctx:Any, runtime:Runtime):Array<Require> {
 		// TODO: 必須有GSign
 		return [];
 	}
 
-	public override function action(_ctx:IContext, runtime:Runtime):Void {
+	public override function action(_ctx:Any, runtime:Runtime):Void {
 		final ctx = cast(_ctx, Context);
 		// 沒有出場效果，所以不會引發切入，直接出場
 		final cardId = runtime.getCardId();

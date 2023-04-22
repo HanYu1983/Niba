@@ -2932,10 +2932,6 @@ var model_ver1_game_define_RelativePlayer = $hxEnums["model.ver1.game.define.Rel
 	,Opponent: {_hx_name:"Opponent",_hx_index:1,__enum__:"model.ver1.game.define.RelativePlayer",toString:$estr}
 };
 model_ver1_game_define_RelativePlayer.__constructs__ = [model_ver1_game_define_RelativePlayer.You,model_ver1_game_define_RelativePlayer.Opponent];
-var model_ver1_game_define_IContext = function() { };
-$hxClasses["model.ver1.game.define.IContext"] = model_ver1_game_define_IContext;
-model_ver1_game_define_IContext.__name__ = "model.ver1.game.define.IContext";
-model_ver1_game_define_IContext.__isInterface__ = true;
 var model_ver1_game_define_PlayerId = {};
 model_ver1_game_define_PlayerId._new = function(i) {
 	var this1 = i;
@@ -3370,7 +3366,7 @@ var model_ver1_game_entity_Context = function() {
 };
 $hxClasses["model.ver1.game.entity.Context"] = model_ver1_game_entity_Context;
 model_ver1_game_entity_Context.__name__ = "model.ver1.game.entity.Context";
-model_ver1_game_entity_Context.__interfaces__ = [model_ver1_game_component_ICardProtoComponent,model_ver1_game_component_IBlockComponent,model_ver1_game_component_ICutComponent,model_ver1_game_define_IContext];
+model_ver1_game_entity_Context.__interfaces__ = [model_ver1_game_component_ICardProtoComponent,model_ver1_game_component_IBlockComponent,model_ver1_game_component_ICutComponent];
 model_ver1_game_entity_Context.prototype = {
 	__class__: model_ver1_game_entity_Context
 };

@@ -21,19 +21,19 @@ class CardText {
 		return '${id}_${v}';
 	}
 
-	public function getEffect(_ctx:IContext, runtime:Runtime):Array<Any> {
+	public function getEffect(_ctx:Any, runtime:Runtime):Array<Any> {
 		return [];
 	}
 
-	public function getRequires(_ctx:IContext, runtime:Runtime):Array<Require> {
+	public function getRequires(_ctx:Any, runtime:Runtime):Array<Require> {
 		return [];
 	}
 
-	public function getRequires2(_ctx:IContext, runtime:Runtime):Array<Require2> {
+	public function getRequires2(_ctx:Any, runtime:Runtime):Array<Require2> {
 		return [];
 	}
 
-	public function action(_ctx:IContext, runtime:Runtime):Void {}
+	public function action(_ctx:Any, runtime:Runtime):Void {}
 
-	public function onEvent(_ctx:IContext, event:Any, runtime:Runtime):Void {}
+	public function onEvent(_ctx:Any, event:Any, runtime:Runtime):Void {}
 }

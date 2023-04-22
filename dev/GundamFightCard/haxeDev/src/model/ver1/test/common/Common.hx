@@ -13,7 +13,7 @@ class OnlyEmptyTextCardProto extends CardProto {
 		super();
 	}
 
-	public override function getTexts(_ctx:IContext, runtime:Runtime):Array<CardText> {
+	public override function getTexts(_ctx:Any, runtime:Runtime):Array<CardText> {
 		final thisCardId = runtime.getCardId();
 		return [new CardText('${thisCardId}_CardText', "")];
 	}
@@ -24,7 +24,7 @@ class AddOneTextText extends CardText {
 		super(id, "AddOneTextText");
 	}
 
-	public override function getEffect(_ctx:IContext, runtime:Runtime):Array<Any> {
+	public override function getEffect(_ctx:Any, runtime:Runtime):Array<Any> {
 		final thisCardId = runtime.getCardId();
 		return [AddText(thisCardId, new CardText('${thisCardId}_EmptyText', ""))];
 	}
@@ -35,7 +35,7 @@ class AddTextCardProto extends CardProto {
 		super();
 	}
 
-	public override function getTexts(_ctx:IContext, runtime:Runtime):Array<CardText> {
+	public override function getTexts(_ctx:Any, runtime:Runtime):Array<CardText> {
 		final thisCardId = runtime.getCardId();
 		return [new AddOneTextText('${thisCardId}_TestText2')];
 	}
@@ -46,7 +46,7 @@ class OnlyConstentTextCardProto extends CardProto {
 		super();
 	}
 
-	public override function getTexts(_ctx:IContext, runtime:Runtime):Array<CardText> {
+	public override function getTexts(_ctx:Any, runtime:Runtime):Array<CardText> {
 		final thisCardId = runtime.getCardId();
 		final text = new CardText('${thisCardId}_TestText', "");
 		text.type = Automatic(Constant);

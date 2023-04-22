@@ -34,7 +34,7 @@ class CardProto_179004_01A_CH_WT009R_white extends CardProto {
 		this.category = Character;
 	}
 
-	public override function getTexts(_ctx:IContext, runtime:Runtime):Array<CardText> {
+	public override function getTexts(_ctx:Any, runtime:Runtime):Array<CardText> {
 		final ctx = cast(_ctx, Context);
 		final thisCardId = runtime.getCardId();
 		return [
@@ -50,7 +50,7 @@ private class Text1 extends CardText {
 		type = Automatic(Trigger);
 	}
 
-	public override function onEvent(_ctx:IContext, event:Any, runtime:Runtime):Void {
+	public override function onEvent(_ctx:Any, event:Any, runtime:Runtime):Void {
 		final ctx = cast(_ctx, Context);
 		final thisCardId = runtime.getCardId();
 		switch cast(event: Event) {
@@ -75,7 +75,7 @@ private class Text1_1 extends CardText {
 	public var gainCardId:String;
 	public var gainValue:BattlePoint;
 
-	public override function getRequires(_ctx:IContext, runtime:Runtime):Array<Require> {
+	public override function getRequires(_ctx:Any, runtime:Runtime):Array<Require> {
 		final ctx = cast(_ctx, Context);
 		final thisCardId = runtime.getCardId();
 		final gainCardSetGroupsIds = getCardSetGroupCardIds(ctx, gainCardId);
@@ -87,7 +87,7 @@ private class Text1_1 extends CardText {
 		return [req];
 	}
 
-	public override function getRequires2(_ctx:IContext, runtime:Runtime):Array<Require2> {
+	public override function getRequires2(_ctx:Any, runtime:Runtime):Array<Require2> {
 		final ctx = cast(_ctx, Context);
 		final thisCardId = runtime.getCardId();
 		final gainCardSetGroupsIds = getCardSetGroupCardIds(ctx, gainCardId);
@@ -125,7 +125,7 @@ private class Text1_1 extends CardText {
 		];
 	}
 
-	public override function action(_ctx:IContext, runtime:Runtime):Void {
+	public override function action(_ctx:Any, runtime:Runtime):Void {
 		final ctx = cast(_ctx, Context);
 		final selectUnits = getPlayerSelectionCardId(ctx, getSubKey(0));
 		for (unit in selectUnits) {
@@ -146,7 +146,7 @@ private class Mark1 extends DefaultMark {
 	public var attachCardId:String;
 	public var battlePoint:BattlePoint;
 
-	public override function getEffect(_ctx:IContext):Array<Any> {
+	public override function getEffect(_ctx:Any):Array<Any> {
 		return [AddBattlePoint(attachCardId, battlePoint)];
 	}
 }

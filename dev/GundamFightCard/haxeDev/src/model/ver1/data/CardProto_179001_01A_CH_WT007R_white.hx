@@ -31,7 +31,7 @@ class CardProto_179001_01A_CH_WT007R_white extends CardProto {
 		super();
 	}
 
-	public override function getTexts(_ctx:IContext, runtime:Runtime):Array<CardText> {
+	public override function getTexts(_ctx:Any, runtime:Runtime):Array<CardText> {
 		return [
 			new PlayerPlayCard('${runtime.getCardId()}_PlayerPlayCard'),
 			new Text1('${runtime.getCardId()}_Text1')
@@ -45,7 +45,7 @@ private class Text1 extends CardText {
 		type = Use;
 	}
 
-	public override function getRequires(_ctx:IContext, runtime:Runtime):Array<Require> {
+	public override function getRequires(_ctx:Any, runtime:Runtime):Array<Require> {
 		final ctx = cast(_ctx, Context);
 		final unit = switch getUnitOfSetGroup(ctx, runtime.getCardId()) {
 			case Some(cardId):
@@ -60,7 +60,7 @@ private class Text1 extends CardText {
 		];
 	}
 
-	public override function action(_ctx:IContext, runtime:Runtime):Void {
+	public override function action(_ctx:Any, runtime:Runtime):Void {
 		final ctx = cast(_ctx, Context);
 		final selectUnits = getPlayerSelectionCardId(ctx, "このセットグループのユニット");
 		for (unit in selectUnits) {
@@ -78,11 +78,11 @@ private class Mark1 extends DefaultMark {
 
 	public var attachCardId:String;
 
-	public override function getEffect(_ctx:IContext):Array<Any> {
+	public override function getEffect(_ctx:Any):Array<Any> {
 		return [AttackSpeed(attachCardId, 1)];
 	}
 
-	public override function onEvent(_ctx:IContext, event:Any):Void {
+	public override function onEvent(_ctx:Any, event:Any):Void {
 		final ctx = cast(_ctx, Context);
 		switch cast(event: Event) {
 			case ChangePhase:

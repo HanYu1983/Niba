@@ -49,7 +49,7 @@ function test_constantText() {
 			throw "並且不是恆常能力";
 		case _:
 	}
-	addCard(ctx.table, (Default(PlayerId.A, TeHuTa):BaSyouId), card);
+	addCard(ctx.table, (Default(PlayerId.A, TeHuTa) : BaSyouId), card);
 	if (getRuntimeText(ctx).length != 0) {
 		throw new haxe.Exception("但找不到那個內文，因為在手牌中只有恆常能力可發動");
 	}
@@ -73,7 +73,7 @@ function test_getMarkEffects() {
 	registerCardProto(ctx, "AddTextCardProto", new AddTextCardProto());
 	final card = new Card("0");
 	card.protoId = "AddTextCardProto";
-	addCard(ctx.table, (Default(PlayerId.A, MaintenanceArea):BaSyouId), card);
+	addCard(ctx.table, (Default(PlayerId.A, MaintenanceArea) : BaSyouId), card);
 	if (getRuntimeText(ctx).length != 2) {
 		throw new haxe.Exception("必須找到2個內文");
 	}

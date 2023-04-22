@@ -34,7 +34,7 @@ class CardProto_179030_11E_U_VT186R_purple extends CardProto {
 		this.category = Unit;
 	}
 
-	public override function getTexts(_ctx:IContext, runtime:Runtime):Array<CardText> {
+	public override function getTexts(_ctx:Any, runtime:Runtime):Array<CardText> {
 		return [
 			new PlayerPlayCard('CardProto_179030_11E_U_VT186R_purple_1'),
 			new Text1('CardProto_179030_11E_U_VT186R_purple_2')
@@ -48,7 +48,7 @@ private class Text1 extends CardText {
 		type = Automatic(Trigger);
 	}
 
-	public override function onEvent(_ctx:IContext, event:Any, runtime:Runtime):Void {
+	public override function onEvent(_ctx:Any, event:Any, runtime:Runtime):Void {
 		final ctx = cast(_ctx, Context);
 		final thisCardId = runtime.getCardId();
 		switch cast(event: Event) {
@@ -86,17 +86,17 @@ private class Process1 extends CardText {
 		super(id, "このターン中に場に出た敵軍ユニット１枚を、持ち主の手札に移す。");
 	}
 
-	public override function getRequires(_ctx:IContext, runtime:Runtime):Array<Require> {
+	public override function getRequires(_ctx:Any, runtime:Runtime):Array<Require> {
 		final ctx = cast(_ctx, Context);
 		return [new RequireOpponentUnitsEnterFieldThisTurn(getSubKey(0), ctx, runtime)];
 	}
 
-	public override function getRequires2(_ctx:IContext, runtime:Runtime):Array<Require2> {
+	public override function getRequires2(_ctx:Any, runtime:Runtime):Array<Require2> {
 		final ctx = cast(_ctx, Context);
 		return [getRequireOpponentUnitsEnterFieldThisTurn(ctx, runtime, getSubKey(0))];
 	}
 
-	public override function action(_ctx:IContext, runtime:Runtime):Void {
+	public override function action(_ctx:Any, runtime:Runtime):Void {
 		final ctx = cast(_ctx, Context);
 		final cardId = runtime.getCardId();
 		final selectCardIds = getPlayerSelectionCardId(ctx, getSubKey(0));

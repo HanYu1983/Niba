@@ -6,7 +6,7 @@ import tool.Table;
 import model.ver1.game.define.Mark;
 import model.ver1.game.define.Block;
 import model.ver1.game.define.Timing;
-import model.ver1.game.define.Define.IContext;
+import model.ver1.game.define.Define;
 import model.ver1.game.define.CardProto;
 import model.ver1.game.component.Cut;
 import model.ver1.game.component.Block;
@@ -39,7 +39,7 @@ typedef Memory = {
 	playerSelection:PlayerSelection
 }
 
-class Context  implements IContext implements ICutComponent implements IBlockComponent implements ICardProtoComponent{
+class Context implements ICutComponent implements IBlockComponent implements ICardProtoComponent {
 	public function new() {}
 
 	public var playersOrder:Array<String> = [];

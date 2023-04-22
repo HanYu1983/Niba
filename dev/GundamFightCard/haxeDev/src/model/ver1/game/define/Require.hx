@@ -14,7 +14,7 @@ class Require {
 	public final id:String;
 	public final description:String;
 
-	public function action(_ctx:IContext, runtime:Runtime):Void {}
+	public function action(_ctx:Any, runtime:Runtime):Void {}
 }
 
 // TODO: refactor

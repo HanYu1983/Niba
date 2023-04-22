@@ -11,7 +11,7 @@ class CardProto {
 
 	public function new() {}
 
-	public function getTexts(_ctx:IContext, runtime:Runtime):Array<CardText> {
+	public function getTexts(_ctx:Any, runtime:Runtime):Array<CardText> {
 		return [];
 	}
 }

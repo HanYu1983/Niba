@@ -62,5 +62,3 @@ enum RelativePlayer {
 	You;
 	Opponent;
 }
-
-interface IContext {}

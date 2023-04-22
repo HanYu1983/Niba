@@ -21,7 +21,7 @@ class RequirePhase extends Require {
 
 	public final timing:Timing;
 
-	public override function action(_ctx:IContext, runtime:Runtime):Void {
+	public override function action(_ctx:Any, runtime:Runtime):Void {
 		final ctx = cast(_ctx, Context);
 		if (EnumValueTools.equals(ctx.timing, timing) == false) {
 			throw new haxe.Exception('ctx.phase != this.phase: ${ctx.timing} != ${timing}');
@@ -63,7 +63,7 @@ class RequireGTap extends RequireUserSelectCard {
 		this.lengthInclude = [2];
 	}
 
-	public override function action(_ctx:IContext, runtime:Runtime):Void {
+	public override function action(_ctx:Any, runtime:Runtime):Void {
 		final ctx = cast(_ctx, Context);
 		final selectIds = ctx.memory.playerSelection.cardIds[id];
 		if (selectIds == null) {
@@ -146,7 +146,7 @@ class ForceTargetCard extends Require {
 	public final cardId:String;
 	public final selectKey:String;
 
-	public override function action(_ctx:IContext, runtime:Runtime):Void {
+	public override function action(_ctx:Any, runtime:Runtime):Void {
 		final ctx = cast(_ctx, Context);
 		final selectCard = ctx.table.cards[cardId];
 		if (selectCard == null) {
@@ -164,7 +164,7 @@ class RequireGCount extends Require {
 
 	public var count:Int;
 
-	public override function action(_ctx:IContext, runtime:Runtime):Void {
+	public override function action(_ctx:Any, runtime:Runtime):Void {
 		final ctx = cast(_ctx, Context);
 		final responsePlayerId = runtime.getResponsePlayerId();
 		final gCount = getPlayerGCountForPlay(ctx, responsePlayerId);
@@ -189,7 +189,7 @@ class RequireUserSelectCard extends RequireUserSelect<String> {
 		super(id, description);
 	}
 
-	public override function action(_ctx:IContext, runtime:Runtime):Void {
+	public override function action(_ctx:Any, runtime:Runtime):Void {
 		final ctx = cast(_ctx, Context);
 		final selection = getPlayerSelectionCardId(ctx, id);
 		if (lengthInclude.contains(selection.length) == false) {
