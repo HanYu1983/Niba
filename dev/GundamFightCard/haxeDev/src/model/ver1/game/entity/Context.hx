@@ -39,23 +39,21 @@ typedef Memory = {
 	playerSelection:PlayerSelection
 }
 
-class Context implements hxbit.Serializable implements IContext implements ICutComponent implements IBlockComponent implements ICardProtoComponent{
+class Context  implements IContext implements ICutComponent implements IBlockComponent implements ICardProtoComponent{
 	public function new() {}
 
-	// @:s public var players:Map<String, Player> = [];
-	@:s public var playersOrder:Array<String> = [];
-	@:s public var table = new Table();
-	@:s public var marks:Map<String, Mark> = [];
-	@:s public var timing = Timing.Default(Reroll, None, Start);
-	@:s public var cardProtoPool:Map<String, CardProto> = [];
-	@:s public var memory:Memory = {
+	public var playersOrder:Array<String> = [];
+	public var table = new Table();
+	public var marks:Map<String, Mark> = [];
+	public var timing = Timing.Default(Reroll, None, Start);
+	public var cardProtoPool:Map<String, CardProto> = [];
+	public var memory:Memory = {
 		playerSelection: {
 			cardIds: []
 		}
 	};
-	// serializable不支援List
-	@:s public var cuts:Array<Array<Block>> = [];
-	@:s public var flowMemory:FlowMemory = {
+	public var cuts:Array<Array<Block>> = [];
+	public var flowMemory:FlowMemory = {
 		state: PrepareDeck,
 		hasTriggerEvent: false,
 		hasPlayerPassPhase: new Map<String, Bool>(),
@@ -64,7 +62,7 @@ class Context implements hxbit.Serializable implements IContext implements ICutC
 		shouldTriggerStackEffectFinishedEvent: false,
 		msgs: [],
 	};
-	@:s public var activePlayerId:String;
+	public var activePlayerId:String;
 }
 
 function isDestroyNow(ctx:Context, cardId:String, condition:{isByBattleDamage:Bool}):Bool {

@@ -85,15 +85,15 @@ final TIMINGS = [
 	Timing.Default(Battle, Some(End), TurnEnd),
 ];
 
-// class Timing implements hxbit.Serializable {
+// class Timing {
 // 	public function new(phase:PhaseKeyword, step:Option<StepKeyword>, timing:TimingKeyword) {
 // 		this.phase = phase;
 // 		this.step = step;
 // 		this.timing = timing;
 // 	}
-// 	@:s public var phase:PhaseKeyword;
-// 	@:s public var step:Option<StepKeyword>;
-// 	@:s public var timing:TimingKeyword;
+// 	public var phase:PhaseKeyword;
+// 	public var step:Option<StepKeyword>;
+// 	public var timing:TimingKeyword;
 // }
 // final TIMINGS = [
 // 	// Reroll

@@ -10,16 +10,16 @@ enum BlockCause {
 	TextEffect(cardId:String, textId:String);
 }
 
-class Block implements hxbit.Serializable {
+class Block {
 	public function new(id:String, cause:BlockCause, text:CardText) {
 		this.id = id;
 		this.cause = cause;
 		this.text = text;
 	}
 
-	@:s public var id:String;
-	@:s public var cause:BlockCause;
-	@:s public var text:CardText;
-	@:s public var isImmediate = false;
-	@:s public var isOption = false;
+	public var id:String;
+	public var cause:BlockCause;
+	public var text:CardText;
+	public var isImmediate = false;
+	public var isOption = false;
 }

@@ -6,7 +6,7 @@ import model.ver1.game.define.Require;
 import model.ver1.game.define.Define;
 import model.ver1.game.define.CardText;
 
-class CardProto implements hxbit.Serializable {
+class CardProto {
 	public var category = CardCategory.Unit;
 
 	public function new() {}

@@ -5,17 +5,17 @@ import model.ver1.game.define.Mark;
 import model.ver1.game.define.Require;
 import model.ver1.game.define.Define;
 
-class CardText implements hxbit.Serializable {
+class CardText {
 	public function new(id:String, description:String) {
 		this.id = id;
 		this.description = description;
 	}
 
-	@:s public var id:String;
-	@:s public var description:String;
-	@:s public var type = Use;
+	public var id:String;
+	public var description:String;
+	public var type = Use;
 	// << >>內文
-	@:s public var isSurroundedByArrows = false;
+	public var isSurroundedByArrows = false;
 
 	private function getSubKey(v:Int) {
 		return '${id}_${v}';

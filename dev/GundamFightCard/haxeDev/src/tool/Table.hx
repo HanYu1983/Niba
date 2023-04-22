@@ -2,34 +2,33 @@ package tool;
 
 import haxe.ds.Option;
 
-// Option<String> or 泛型不能被Serializable
-class Card implements hxbit.Serializable {
+class Card {
 	public function new(id:String) {
 		this.id = id;
 	}
 
-	@:s public var id:String;
-	@:s public var isFaceUp = false;
-	@:s public var isTap = false;
-	@:s public var isReverse = false;
-	@:s public var protoId:Null<String>;
-	@:s public var owner:Null<String>;
+	public var id:String;
+	public var isFaceUp = false;
+	public var isTap = false;
+	public var isReverse = false;
+	public var protoId:Null<String>;
+	public var owner:Null<String>;
 }
 
-class CardStack implements hxbit.Serializable {
+class CardStack {
 	public function new(id:String) {
 		this.id = id;
 	}
 
-	@:s public var id:String;
-	@:s public var cardIds:Array<String> = [];
+	public var id:String;
+	public var cardIds:Array<String> = [];
 }
 
-class Table implements hxbit.Serializable {
+class Table {
 	public function new() {}
 
-	@:s public var cards:Map<String, Card> = [];
-	@:s public var cardStacks:Map<String, CardStack> = [];
+	public var cards:Map<String, Card> = [];
+	public var cardStacks:Map<String, CardStack> = [];
 }
 
 function addCard(table:Table, cardStackId:String, card:Card):Void {

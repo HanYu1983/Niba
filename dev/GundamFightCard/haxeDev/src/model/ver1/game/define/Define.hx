@@ -9,14 +9,14 @@ import model.ver1.game.define.Require;
 // 實作hxbit.Serializable這個介面後並使用了@:s
 // @:nullSafety就會出錯
 // hxbit.Serializable不支援EnumValueMap
-// class Player implements hxbit.Serializable {
+// class Player {
 // 	public function new(id:String) {
 // 		this.id = id;
 // 	}
 // 	// @:s不能作用在interface
 // 	// 不能用final
 // 	// 不支援巢狀typedef
-// 	@:s public var id:String;
+// 	public var id:String;
 // }
 // function getOpponentPlayerId(playerId:String):String {
 // 	return playerId == PlayerId.A ? PlayerId.B : PlayerId.A;

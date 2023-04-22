@@ -9,6 +9,28 @@ function $extend(from, fields) {
 var HxOverrides = function() { };
 $hxClasses["HxOverrides"] = HxOverrides;
 HxOverrides.__name__ = "HxOverrides";
+HxOverrides.strDate = function(s) {
+	switch(s.length) {
+	case 8:
+		var k = s.split(":");
+		var d = new Date();
+		d["setTime"](0);
+		d["setUTCHours"](k[0]);
+		d["setUTCMinutes"](k[1]);
+		d["setUTCSeconds"](k[2]);
+		return d;
+	case 10:
+		var k = s.split("-");
+		return new Date(k[0],k[1] - 1,k[2],0,0,0);
+	case 19:
+		var k = s.split(" ");
+		var y = k[0].split("-");
+		var t = k[1].split(":");
+		return new Date(y[0],y[1] - 1,y[2],t[0],t[1],t[2]);
+	default:
+		throw haxe_Exception.thrown("Invalid date format : " + s);
+	}
+};
 HxOverrides.cca = function(s,index) {
 	var x = s.charCodeAt(index);
 	if(x != x) {
@@ -80,27 +102,26 @@ Reflect.isFunction = function(f) {
 		return false;
 	}
 };
-Reflect.compare = function(a,b) {
-	if(a == b) {
-		return 0;
-	} else if(a > b) {
-		return 1;
-	} else {
-		return -1;
-	}
-};
-Reflect.isEnumValue = function(v) {
-	if(v != null) {
-		return v.__enum__ != null;
-	} else {
+Reflect.deleteField = function(o,field) {
+	if(!Object.prototype.hasOwnProperty.call(o,field)) {
 		return false;
 	}
+	delete(o[field]);
+	return true;
 };
 var Std = function() { };
 $hxClasses["Std"] = Std;
 Std.__name__ = "Std";
 Std.string = function(s) {
 	return js_Boot.__string_rec(s,"");
+};
+var StringBuf = function() {
+	this.b = "";
+};
+$hxClasses["StringBuf"] = StringBuf;
+StringBuf.__name__ = "StringBuf";
+StringBuf.prototype = {
+	__class__: StringBuf
 };
 var Test = function() { };
 $hxClasses["Test"] = Test;
@@ -110,7 +131,7 @@ Test.main = function() {
 	model_ver1_test_Test_test();
 	console.log("src/Test.hx:7:","==== Test Pass ====");
 };
-var ValueType = $hxEnums["ValueType"] = { __ename__:true,__constructs__:null
+var ValueType = $hxEnums["ValueType"] = { __ename__:"ValueType",__constructs__:null
 	,TNull: {_hx_name:"TNull",_hx_index:0,__enum__:"ValueType",toString:$estr}
 	,TInt: {_hx_name:"TInt",_hx_index:1,__enum__:"ValueType",toString:$estr}
 	,TFloat: {_hx_name:"TFloat",_hx_index:2,__enum__:"ValueType",toString:$estr}
@@ -223,9 +244,6 @@ var haxe_IMap = function() { };
 $hxClasses["haxe.IMap"] = haxe_IMap;
 haxe_IMap.__name__ = "haxe.IMap";
 haxe_IMap.__isInterface__ = true;
-haxe_IMap.prototype = {
-	__class__: haxe_IMap
-};
 var haxe_Exception = function(message,previous,native) {
 	Error.call(this,message);
 	this.message = message;
@@ -266,14 +284,660 @@ haxe_Exception.prototype = $extend(Error.prototype,{
 	}
 	,__class__: haxe_Exception
 });
-var haxe__$Int64__$_$_$Int64 = function(high,low) {
-	this.high = high;
-	this.low = low;
+var haxe_Serializer = function() {
+	this.buf = new StringBuf();
+	this.cache = [];
+	this.useCache = haxe_Serializer.USE_CACHE;
+	this.useEnumIndex = haxe_Serializer.USE_ENUM_INDEX;
+	this.shash = new haxe_ds_StringMap();
+	this.scount = 0;
 };
-$hxClasses["haxe._Int64.___Int64"] = haxe__$Int64__$_$_$Int64;
-haxe__$Int64__$_$_$Int64.__name__ = "haxe._Int64.___Int64";
-haxe__$Int64__$_$_$Int64.prototype = {
-	__class__: haxe__$Int64__$_$_$Int64
+$hxClasses["haxe.Serializer"] = haxe_Serializer;
+haxe_Serializer.__name__ = "haxe.Serializer";
+haxe_Serializer.run = function(v) {
+	var s = new haxe_Serializer();
+	s.serialize(v);
+	return s.toString();
+};
+haxe_Serializer.prototype = {
+	toString: function() {
+		return this.buf.b;
+	}
+	,serializeString: function(s) {
+		var x = this.shash.h[s];
+		if(x != null) {
+			this.buf.b += "R";
+			this.buf.b += x == null ? "null" : "" + x;
+			return;
+		}
+		this.shash.h[s] = this.scount++;
+		this.buf.b += "y";
+		s = encodeURIComponent(s);
+		this.buf.b += Std.string(s.length);
+		this.buf.b += ":";
+		this.buf.b += s == null ? "null" : "" + s;
+	}
+	,serializeRef: function(v) {
+		var vt = typeof(v);
+		var _g = 0;
+		var _g1 = this.cache.length;
+		while(_g < _g1) {
+			var i = _g++;
+			var ci = this.cache[i];
+			if(typeof(ci) == vt && ci == v) {
+				this.buf.b += "r";
+				this.buf.b += i == null ? "null" : "" + i;
+				return true;
+			}
+		}
+		this.cache.push(v);
+		return false;
+	}
+	,serializeFields: function(v) {
+		var _g = 0;
+		var _g1 = Reflect.fields(v);
+		while(_g < _g1.length) {
+			var f = _g1[_g];
+			++_g;
+			this.serializeString(f);
+			this.serialize(Reflect.field(v,f));
+		}
+		this.buf.b += "g";
+	}
+	,serialize: function(v) {
+		var _g = Type.typeof(v);
+		switch(_g._hx_index) {
+		case 0:
+			this.buf.b += "n";
+			break;
+		case 1:
+			var v1 = v;
+			if(v1 == 0) {
+				this.buf.b += "z";
+				return;
+			}
+			this.buf.b += "i";
+			this.buf.b += v1 == null ? "null" : "" + v1;
+			break;
+		case 2:
+			var v1 = v;
+			if(isNaN(v1)) {
+				this.buf.b += "k";
+			} else if(!isFinite(v1)) {
+				this.buf.b += v1 < 0 ? "m" : "p";
+			} else {
+				this.buf.b += "d";
+				this.buf.b += v1 == null ? "null" : "" + v1;
+			}
+			break;
+		case 3:
+			this.buf.b += v ? "t" : "f";
+			break;
+		case 4:
+			if(js_Boot.__instanceof(v,Class)) {
+				var className = v.__name__;
+				this.buf.b += "A";
+				this.serializeString(className);
+			} else if(js_Boot.__instanceof(v,Enum)) {
+				this.buf.b += "B";
+				this.serializeString(v.__ename__);
+			} else {
+				if(this.useCache && this.serializeRef(v)) {
+					return;
+				}
+				this.buf.b += "o";
+				this.serializeFields(v);
+			}
+			break;
+		case 5:
+			throw haxe_Exception.thrown("Cannot serialize function");
+		case 6:
+			var c = _g.c;
+			if(c == String) {
+				this.serializeString(v);
+				return;
+			}
+			if(this.useCache && this.serializeRef(v)) {
+				return;
+			}
+			switch(c) {
+			case Array:
+				var ucount = 0;
+				this.buf.b += "a";
+				var l = v["length"];
+				var _g1 = 0;
+				var _g2 = l;
+				while(_g1 < _g2) {
+					var i = _g1++;
+					if(v[i] == null) {
+						++ucount;
+					} else {
+						if(ucount > 0) {
+							if(ucount == 1) {
+								this.buf.b += "n";
+							} else {
+								this.buf.b += "u";
+								this.buf.b += ucount == null ? "null" : "" + ucount;
+							}
+							ucount = 0;
+						}
+						this.serialize(v[i]);
+					}
+				}
+				if(ucount > 0) {
+					if(ucount == 1) {
+						this.buf.b += "n";
+					} else {
+						this.buf.b += "u";
+						this.buf.b += ucount == null ? "null" : "" + ucount;
+					}
+				}
+				this.buf.b += "h";
+				break;
+			case Date:
+				var d = v;
+				this.buf.b += "v";
+				this.buf.b += Std.string(d.getTime());
+				break;
+			case haxe_ds_IntMap:
+				this.buf.b += "q";
+				var v1 = v;
+				var k = v1.keys();
+				while(k.hasNext()) {
+					var k1 = k.next();
+					this.buf.b += ":";
+					this.buf.b += k1 == null ? "null" : "" + k1;
+					this.serialize(v1.h[k1]);
+				}
+				this.buf.b += "h";
+				break;
+			case haxe_ds_List:
+				this.buf.b += "l";
+				var v1 = v;
+				var _g_head = v1.h;
+				while(_g_head != null) {
+					var val = _g_head.item;
+					_g_head = _g_head.next;
+					var i = val;
+					this.serialize(i);
+				}
+				this.buf.b += "h";
+				break;
+			case haxe_ds_ObjectMap:
+				this.buf.b += "M";
+				var v1 = v;
+				var k = v1.keys();
+				while(k.hasNext()) {
+					var k1 = k.next();
+					var id = Reflect.field(k1,"__id__");
+					Reflect.deleteField(k1,"__id__");
+					this.serialize(k1);
+					k1["__id__"] = id;
+					this.serialize(v1.h[k1.__id__]);
+				}
+				this.buf.b += "h";
+				break;
+			case haxe_ds_StringMap:
+				this.buf.b += "b";
+				var v1 = v;
+				var h = v1.h;
+				var _g_h = h;
+				var _g_keys = Object.keys(h);
+				var _g_length = _g_keys.length;
+				var _g_current = 0;
+				while(_g_current < _g_length) {
+					var k = _g_keys[_g_current++];
+					this.serializeString(k);
+					this.serialize(v1.h[k]);
+				}
+				this.buf.b += "h";
+				break;
+			case haxe_io_Bytes:
+				var v1 = v;
+				this.buf.b += "s";
+				this.buf.b += Std.string(Math.ceil(v1.length * 8 / 6));
+				this.buf.b += ":";
+				var i = 0;
+				var max = v1.length - 2;
+				var b64 = haxe_Serializer.BASE64_CODES;
+				if(b64 == null) {
+					var this1 = new Array(haxe_Serializer.BASE64.length);
+					b64 = this1;
+					var _g1 = 0;
+					var _g2 = haxe_Serializer.BASE64.length;
+					while(_g1 < _g2) {
+						var i1 = _g1++;
+						b64[i1] = HxOverrides.cca(haxe_Serializer.BASE64,i1);
+					}
+					haxe_Serializer.BASE64_CODES = b64;
+				}
+				while(i < max) {
+					var b1 = v1.b[i++];
+					var b2 = v1.b[i++];
+					var b3 = v1.b[i++];
+					this.buf.b += String.fromCodePoint(b64[b1 >> 2]);
+					this.buf.b += String.fromCodePoint(b64[(b1 << 4 | b2 >> 4) & 63]);
+					this.buf.b += String.fromCodePoint(b64[(b2 << 2 | b3 >> 6) & 63]);
+					this.buf.b += String.fromCodePoint(b64[b3 & 63]);
+				}
+				if(i == max) {
+					var b1 = v1.b[i++];
+					var b2 = v1.b[i++];
+					this.buf.b += String.fromCodePoint(b64[b1 >> 2]);
+					this.buf.b += String.fromCodePoint(b64[(b1 << 4 | b2 >> 4) & 63]);
+					this.buf.b += String.fromCodePoint(b64[b2 << 2 & 63]);
+				} else if(i == max + 1) {
+					var b1 = v1.b[i++];
+					this.buf.b += String.fromCodePoint(b64[b1 >> 2]);
+					this.buf.b += String.fromCodePoint(b64[b1 << 4 & 63]);
+				}
+				break;
+			default:
+				if(this.useCache) {
+					this.cache.pop();
+				}
+				if(v.hxSerialize != null) {
+					this.buf.b += "C";
+					this.serializeString(c.__name__);
+					if(this.useCache) {
+						this.cache.push(v);
+					}
+					v.hxSerialize(this);
+					this.buf.b += "g";
+				} else {
+					this.buf.b += "c";
+					this.serializeString(c.__name__);
+					if(this.useCache) {
+						this.cache.push(v);
+					}
+					this.serializeFields(v);
+				}
+			}
+			break;
+		case 7:
+			var e = _g.e;
+			if(this.useCache) {
+				if(this.serializeRef(v)) {
+					return;
+				}
+				this.cache.pop();
+			}
+			this.buf.b += Std.string(this.useEnumIndex ? "j" : "w");
+			this.serializeString(e.__ename__);
+			if(this.useEnumIndex) {
+				this.buf.b += ":";
+				this.buf.b += Std.string(v._hx_index);
+			} else {
+				var e = v;
+				this.serializeString($hxEnums[e.__enum__].__constructs__[e._hx_index]._hx_name);
+			}
+			this.buf.b += ":";
+			var params = Type.enumParameters(v);
+			this.buf.b += Std.string(params.length);
+			var _g = 0;
+			while(_g < params.length) {
+				var p = params[_g];
+				++_g;
+				this.serialize(p);
+			}
+			if(this.useCache) {
+				this.cache.push(v);
+			}
+			break;
+		default:
+			throw haxe_Exception.thrown("Cannot serialize " + Std.string(v));
+		}
+	}
+	,__class__: haxe_Serializer
+};
+var haxe__$Unserializer_DefaultResolver = function() {
+};
+$hxClasses["haxe._Unserializer.DefaultResolver"] = haxe__$Unserializer_DefaultResolver;
+haxe__$Unserializer_DefaultResolver.__name__ = "haxe._Unserializer.DefaultResolver";
+haxe__$Unserializer_DefaultResolver.prototype = {
+	resolveClass: function(name) {
+		return $hxClasses[name];
+	}
+	,resolveEnum: function(name) {
+		return $hxEnums[name];
+	}
+	,__class__: haxe__$Unserializer_DefaultResolver
+};
+var haxe_Unserializer = function(buf) {
+	this.buf = buf;
+	this.length = this.buf.length;
+	this.pos = 0;
+	this.scache = [];
+	this.cache = [];
+	var r = haxe_Unserializer.DEFAULT_RESOLVER;
+	if(r == null) {
+		r = new haxe__$Unserializer_DefaultResolver();
+		haxe_Unserializer.DEFAULT_RESOLVER = r;
+	}
+	this.resolver = r;
+};
+$hxClasses["haxe.Unserializer"] = haxe_Unserializer;
+haxe_Unserializer.__name__ = "haxe.Unserializer";
+haxe_Unserializer.initCodes = function() {
+	var codes = [];
+	var _g = 0;
+	var _g1 = haxe_Unserializer.BASE64.length;
+	while(_g < _g1) {
+		var i = _g++;
+		codes[haxe_Unserializer.BASE64.charCodeAt(i)] = i;
+	}
+	return codes;
+};
+haxe_Unserializer.run = function(v) {
+	return new haxe_Unserializer(v).unserialize();
+};
+haxe_Unserializer.prototype = {
+	readDigits: function() {
+		var k = 0;
+		var s = false;
+		var fpos = this.pos;
+		while(true) {
+			var c = this.buf.charCodeAt(this.pos);
+			if(c != c) {
+				break;
+			}
+			if(c == 45) {
+				if(this.pos != fpos) {
+					break;
+				}
+				s = true;
+				this.pos++;
+				continue;
+			}
+			if(c < 48 || c > 57) {
+				break;
+			}
+			k = k * 10 + (c - 48);
+			this.pos++;
+		}
+		if(s) {
+			k *= -1;
+		}
+		return k;
+	}
+	,readFloat: function() {
+		var p1 = this.pos;
+		while(true) {
+			var c = this.buf.charCodeAt(this.pos);
+			if(c != c) {
+				break;
+			}
+			if(c >= 43 && c < 58 || c == 101 || c == 69) {
+				this.pos++;
+			} else {
+				break;
+			}
+		}
+		return parseFloat(HxOverrides.substr(this.buf,p1,this.pos - p1));
+	}
+	,unserializeObject: function(o) {
+		while(true) {
+			if(this.pos >= this.length) {
+				throw haxe_Exception.thrown("Invalid object");
+			}
+			if(this.buf.charCodeAt(this.pos) == 103) {
+				break;
+			}
+			var k = this.unserialize();
+			if(typeof(k) != "string") {
+				throw haxe_Exception.thrown("Invalid object key");
+			}
+			var v = this.unserialize();
+			o[k] = v;
+		}
+		this.pos++;
+	}
+	,unserializeEnum: function(edecl,tag) {
+		if(this.buf.charCodeAt(this.pos++) != 58) {
+			throw haxe_Exception.thrown("Invalid enum format");
+		}
+		var nargs = this.readDigits();
+		if(nargs == 0) {
+			return Type.createEnum(edecl,tag);
+		}
+		var args = [];
+		while(nargs-- > 0) args.push(this.unserialize());
+		return Type.createEnum(edecl,tag,args);
+	}
+	,unserialize: function() {
+		switch(this.buf.charCodeAt(this.pos++)) {
+		case 65:
+			var name = this.unserialize();
+			var cl = this.resolver.resolveClass(name);
+			if(cl == null) {
+				throw haxe_Exception.thrown("Class not found " + name);
+			}
+			return cl;
+		case 66:
+			var name = this.unserialize();
+			var e = this.resolver.resolveEnum(name);
+			if(e == null) {
+				throw haxe_Exception.thrown("Enum not found " + name);
+			}
+			return e;
+		case 67:
+			var name = this.unserialize();
+			var cl = this.resolver.resolveClass(name);
+			if(cl == null) {
+				throw haxe_Exception.thrown("Class not found " + name);
+			}
+			var o = Object.create(cl.prototype);
+			this.cache.push(o);
+			o.hxUnserialize(this);
+			if(this.buf.charCodeAt(this.pos++) != 103) {
+				throw haxe_Exception.thrown("Invalid custom data");
+			}
+			return o;
+		case 77:
+			var h = new haxe_ds_ObjectMap();
+			this.cache.push(h);
+			var buf = this.buf;
+			while(this.buf.charCodeAt(this.pos) != 104) {
+				var s = this.unserialize();
+				h.set(s,this.unserialize());
+			}
+			this.pos++;
+			return h;
+		case 82:
+			var n = this.readDigits();
+			if(n < 0 || n >= this.scache.length) {
+				throw haxe_Exception.thrown("Invalid string reference");
+			}
+			return this.scache[n];
+		case 97:
+			var buf = this.buf;
+			var a = [];
+			this.cache.push(a);
+			while(true) {
+				var c = this.buf.charCodeAt(this.pos);
+				if(c == 104) {
+					this.pos++;
+					break;
+				}
+				if(c == 117) {
+					this.pos++;
+					var n = this.readDigits();
+					a[a.length + n - 1] = null;
+				} else {
+					a.push(this.unserialize());
+				}
+			}
+			return a;
+		case 98:
+			var h = new haxe_ds_StringMap();
+			this.cache.push(h);
+			var buf = this.buf;
+			while(this.buf.charCodeAt(this.pos) != 104) {
+				var s = this.unserialize();
+				var value = this.unserialize();
+				h.h[s] = value;
+			}
+			this.pos++;
+			return h;
+		case 99:
+			var name = this.unserialize();
+			var cl = this.resolver.resolveClass(name);
+			if(cl == null) {
+				throw haxe_Exception.thrown("Class not found " + name);
+			}
+			var o = Object.create(cl.prototype);
+			this.cache.push(o);
+			this.unserializeObject(o);
+			return o;
+		case 100:
+			return this.readFloat();
+		case 102:
+			return false;
+		case 105:
+			return this.readDigits();
+		case 106:
+			var name = this.unserialize();
+			var edecl = this.resolver.resolveEnum(name);
+			if(edecl == null) {
+				throw haxe_Exception.thrown("Enum not found " + name);
+			}
+			this.pos++;
+			var index = this.readDigits();
+			var _this = edecl.__constructs__;
+			var result = new Array(_this.length);
+			var _g = 0;
+			var _g1 = _this.length;
+			while(_g < _g1) {
+				var i = _g++;
+				result[i] = _this[i]._hx_name;
+			}
+			var tag = result[index];
+			if(tag == null) {
+				throw haxe_Exception.thrown("Unknown enum index " + name + "@" + index);
+			}
+			var e = this.unserializeEnum(edecl,tag);
+			this.cache.push(e);
+			return e;
+		case 107:
+			return NaN;
+		case 108:
+			var l = new haxe_ds_List();
+			this.cache.push(l);
+			var buf = this.buf;
+			while(this.buf.charCodeAt(this.pos) != 104) l.add(this.unserialize());
+			this.pos++;
+			return l;
+		case 109:
+			return -Infinity;
+		case 110:
+			return null;
+		case 111:
+			var o = { };
+			this.cache.push(o);
+			this.unserializeObject(o);
+			return o;
+		case 112:
+			return Infinity;
+		case 113:
+			var h = new haxe_ds_IntMap();
+			this.cache.push(h);
+			var buf = this.buf;
+			var c = this.buf.charCodeAt(this.pos++);
+			while(c == 58) {
+				var i = this.readDigits();
+				var value = this.unserialize();
+				h.h[i] = value;
+				c = this.buf.charCodeAt(this.pos++);
+			}
+			if(c != 104) {
+				throw haxe_Exception.thrown("Invalid IntMap format");
+			}
+			return h;
+		case 114:
+			var n = this.readDigits();
+			if(n < 0 || n >= this.cache.length) {
+				throw haxe_Exception.thrown("Invalid reference");
+			}
+			return this.cache[n];
+		case 115:
+			var len = this.readDigits();
+			var buf = this.buf;
+			if(this.buf.charCodeAt(this.pos++) != 58 || this.length - this.pos < len) {
+				throw haxe_Exception.thrown("Invalid bytes length");
+			}
+			var codes = haxe_Unserializer.CODES;
+			if(codes == null) {
+				codes = haxe_Unserializer.initCodes();
+				haxe_Unserializer.CODES = codes;
+			}
+			var i = this.pos;
+			var rest = len & 3;
+			var size = (len >> 2) * 3 + (rest >= 2 ? rest - 1 : 0);
+			var max = i + (len - rest);
+			var bytes = new haxe_io_Bytes(new ArrayBuffer(size));
+			var bpos = 0;
+			while(i < max) {
+				var c1 = codes[buf.charCodeAt(i++)];
+				var c2 = codes[buf.charCodeAt(i++)];
+				bytes.b[bpos++] = c1 << 2 | c2 >> 4;
+				var c3 = codes[buf.charCodeAt(i++)];
+				bytes.b[bpos++] = c2 << 4 | c3 >> 2;
+				var c4 = codes[buf.charCodeAt(i++)];
+				bytes.b[bpos++] = c3 << 6 | c4;
+			}
+			if(rest >= 2) {
+				var c1 = codes[buf.charCodeAt(i++)];
+				var c2 = codes[buf.charCodeAt(i++)];
+				bytes.b[bpos++] = c1 << 2 | c2 >> 4;
+				if(rest == 3) {
+					var c3 = codes[buf.charCodeAt(i++)];
+					bytes.b[bpos++] = c2 << 4 | c3 >> 2;
+				}
+			}
+			this.pos += len;
+			this.cache.push(bytes);
+			return bytes;
+		case 116:
+			return true;
+		case 118:
+			var d;
+			if(this.buf.charCodeAt(this.pos) >= 48 && this.buf.charCodeAt(this.pos) <= 57 && this.buf.charCodeAt(this.pos + 1) >= 48 && this.buf.charCodeAt(this.pos + 1) <= 57 && this.buf.charCodeAt(this.pos + 2) >= 48 && this.buf.charCodeAt(this.pos + 2) <= 57 && this.buf.charCodeAt(this.pos + 3) >= 48 && this.buf.charCodeAt(this.pos + 3) <= 57 && this.buf.charCodeAt(this.pos + 4) == 45) {
+				d = HxOverrides.strDate(HxOverrides.substr(this.buf,this.pos,19));
+				this.pos += 19;
+			} else {
+				d = new Date(this.readFloat());
+			}
+			this.cache.push(d);
+			return d;
+		case 119:
+			var name = this.unserialize();
+			var edecl = this.resolver.resolveEnum(name);
+			if(edecl == null) {
+				throw haxe_Exception.thrown("Enum not found " + name);
+			}
+			var e = this.unserializeEnum(edecl,this.unserialize());
+			this.cache.push(e);
+			return e;
+		case 120:
+			throw haxe_Exception.thrown(this.unserialize());
+		case 121:
+			var len = this.readDigits();
+			if(this.buf.charCodeAt(this.pos++) != 58 || this.length - this.pos < len) {
+				throw haxe_Exception.thrown("Invalid string length");
+			}
+			var s = HxOverrides.substr(this.buf,this.pos,len);
+			this.pos += len;
+			s = decodeURIComponent(s.split("+").join(" "));
+			this.scache.push(s);
+			return s;
+		case 122:
+			return 0;
+		default:
+		}
+		this.pos--;
+		throw haxe_Exception.thrown("Invalid char " + this.buf.charAt(this.pos) + " at position " + this.pos);
+	}
+	,__class__: haxe_Unserializer
 };
 var haxe_ValueException = function(value,previous,native) {
 	haxe_Exception.call(this,String(value),previous,native);
@@ -285,360 +949,6 @@ haxe_ValueException.__super__ = haxe_Exception;
 haxe_ValueException.prototype = $extend(haxe_Exception.prototype,{
 	__class__: haxe_ValueException
 });
-var haxe_crypto_Crc32 = function() { };
-$hxClasses["haxe.crypto.Crc32"] = haxe_crypto_Crc32;
-haxe_crypto_Crc32.__name__ = "haxe.crypto.Crc32";
-haxe_crypto_Crc32.make = function(data) {
-	var c_crc = -1;
-	var b = data.b.bufferValue;
-	var _g = 0;
-	var _g1 = data.length;
-	while(_g < _g1) {
-		var i = _g++;
-		var tmp = (c_crc ^ b.bytes[i]) & 255;
-		tmp = tmp >>> 1 ^ -(tmp & 1) & -306674912;
-		tmp = tmp >>> 1 ^ -(tmp & 1) & -306674912;
-		tmp = tmp >>> 1 ^ -(tmp & 1) & -306674912;
-		tmp = tmp >>> 1 ^ -(tmp & 1) & -306674912;
-		tmp = tmp >>> 1 ^ -(tmp & 1) & -306674912;
-		tmp = tmp >>> 1 ^ -(tmp & 1) & -306674912;
-		tmp = tmp >>> 1 ^ -(tmp & 1) & -306674912;
-		tmp = tmp >>> 1 ^ -(tmp & 1) & -306674912;
-		c_crc = c_crc >>> 8 ^ tmp;
-	}
-	return c_crc ^ -1;
-};
-var haxe_crypto_Md5 = function() {
-};
-$hxClasses["haxe.crypto.Md5"] = haxe_crypto_Md5;
-haxe_crypto_Md5.__name__ = "haxe.crypto.Md5";
-haxe_crypto_Md5.make = function(b) {
-	var h = new haxe_crypto_Md5().doEncode(haxe_crypto_Md5.bytes2blks(b));
-	var out = new haxe_io_Bytes(new ArrayBuffer(16));
-	var p = 0;
-	out.b[p++] = h[0] & 255;
-	out.b[p++] = h[0] >> 8 & 255;
-	out.b[p++] = h[0] >> 16 & 255;
-	out.b[p++] = h[0] >>> 24;
-	out.b[p++] = h[1] & 255;
-	out.b[p++] = h[1] >> 8 & 255;
-	out.b[p++] = h[1] >> 16 & 255;
-	out.b[p++] = h[1] >>> 24;
-	out.b[p++] = h[2] & 255;
-	out.b[p++] = h[2] >> 8 & 255;
-	out.b[p++] = h[2] >> 16 & 255;
-	out.b[p++] = h[2] >>> 24;
-	out.b[p++] = h[3] & 255;
-	out.b[p++] = h[3] >> 8 & 255;
-	out.b[p++] = h[3] >> 16 & 255;
-	out.b[p++] = h[3] >>> 24;
-	return out;
-};
-haxe_crypto_Md5.bytes2blks = function(b) {
-	var nblk = (b.length + 8 >> 6) + 1;
-	var blks = [];
-	var blksSize = nblk * 16;
-	var _g = 0;
-	var _g1 = blksSize;
-	while(_g < _g1) {
-		var i = _g++;
-		blks[i] = 0;
-	}
-	var i = 0;
-	while(i < b.length) {
-		blks[i >> 2] |= b.b[i] << (((b.length << 3) + i & 3) << 3);
-		++i;
-	}
-	blks[i >> 2] |= 128 << (b.length * 8 + i) % 4 * 8;
-	var l = b.length * 8;
-	var k = nblk * 16 - 2;
-	blks[k] = l & 255;
-	blks[k] |= (l >>> 8 & 255) << 8;
-	blks[k] |= (l >>> 16 & 255) << 16;
-	blks[k] |= (l >>> 24 & 255) << 24;
-	return blks;
-};
-haxe_crypto_Md5.prototype = {
-	bitOR: function(a,b) {
-		var lsb = a & 1 | b & 1;
-		var msb31 = a >>> 1 | b >>> 1;
-		return msb31 << 1 | lsb;
-	}
-	,bitXOR: function(a,b) {
-		var lsb = a & 1 ^ b & 1;
-		var msb31 = a >>> 1 ^ b >>> 1;
-		return msb31 << 1 | lsb;
-	}
-	,bitAND: function(a,b) {
-		var lsb = a & 1 & (b & 1);
-		var msb31 = a >>> 1 & b >>> 1;
-		return msb31 << 1 | lsb;
-	}
-	,addme: function(x,y) {
-		var lsw = (x & 65535) + (y & 65535);
-		var msw = (x >> 16) + (y >> 16) + (lsw >> 16);
-		return msw << 16 | lsw & 65535;
-	}
-	,rol: function(num,cnt) {
-		return num << cnt | num >>> 32 - cnt;
-	}
-	,cmn: function(q,a,b,x,s,t) {
-		return this.addme(this.rol(this.addme(this.addme(a,q),this.addme(x,t)),s),b);
-	}
-	,ff: function(a,b,c,d,x,s,t) {
-		return this.cmn(this.bitOR(this.bitAND(b,c),this.bitAND(~b,d)),a,b,x,s,t);
-	}
-	,gg: function(a,b,c,d,x,s,t) {
-		return this.cmn(this.bitOR(this.bitAND(b,d),this.bitAND(c,~d)),a,b,x,s,t);
-	}
-	,hh: function(a,b,c,d,x,s,t) {
-		return this.cmn(this.bitXOR(this.bitXOR(b,c),d),a,b,x,s,t);
-	}
-	,ii: function(a,b,c,d,x,s,t) {
-		return this.cmn(this.bitXOR(c,this.bitOR(b,~d)),a,b,x,s,t);
-	}
-	,doEncode: function(x) {
-		var a = 1732584193;
-		var b = -271733879;
-		var c = -1732584194;
-		var d = 271733878;
-		var step;
-		var i = 0;
-		while(i < x.length) {
-			var olda = a;
-			var oldb = b;
-			var oldc = c;
-			var oldd = d;
-			step = 0;
-			a = this.ff(a,b,c,d,x[i],7,-680876936);
-			d = this.ff(d,a,b,c,x[i + 1],12,-389564586);
-			c = this.ff(c,d,a,b,x[i + 2],17,606105819);
-			b = this.ff(b,c,d,a,x[i + 3],22,-1044525330);
-			a = this.ff(a,b,c,d,x[i + 4],7,-176418897);
-			d = this.ff(d,a,b,c,x[i + 5],12,1200080426);
-			c = this.ff(c,d,a,b,x[i + 6],17,-1473231341);
-			b = this.ff(b,c,d,a,x[i + 7],22,-45705983);
-			a = this.ff(a,b,c,d,x[i + 8],7,1770035416);
-			d = this.ff(d,a,b,c,x[i + 9],12,-1958414417);
-			c = this.ff(c,d,a,b,x[i + 10],17,-42063);
-			b = this.ff(b,c,d,a,x[i + 11],22,-1990404162);
-			a = this.ff(a,b,c,d,x[i + 12],7,1804603682);
-			d = this.ff(d,a,b,c,x[i + 13],12,-40341101);
-			c = this.ff(c,d,a,b,x[i + 14],17,-1502002290);
-			b = this.ff(b,c,d,a,x[i + 15],22,1236535329);
-			a = this.gg(a,b,c,d,x[i + 1],5,-165796510);
-			d = this.gg(d,a,b,c,x[i + 6],9,-1069501632);
-			c = this.gg(c,d,a,b,x[i + 11],14,643717713);
-			b = this.gg(b,c,d,a,x[i],20,-373897302);
-			a = this.gg(a,b,c,d,x[i + 5],5,-701558691);
-			d = this.gg(d,a,b,c,x[i + 10],9,38016083);
-			c = this.gg(c,d,a,b,x[i + 15],14,-660478335);
-			b = this.gg(b,c,d,a,x[i + 4],20,-405537848);
-			a = this.gg(a,b,c,d,x[i + 9],5,568446438);
-			d = this.gg(d,a,b,c,x[i + 14],9,-1019803690);
-			c = this.gg(c,d,a,b,x[i + 3],14,-187363961);
-			b = this.gg(b,c,d,a,x[i + 8],20,1163531501);
-			a = this.gg(a,b,c,d,x[i + 13],5,-1444681467);
-			d = this.gg(d,a,b,c,x[i + 2],9,-51403784);
-			c = this.gg(c,d,a,b,x[i + 7],14,1735328473);
-			b = this.gg(b,c,d,a,x[i + 12],20,-1926607734);
-			a = this.hh(a,b,c,d,x[i + 5],4,-378558);
-			d = this.hh(d,a,b,c,x[i + 8],11,-2022574463);
-			c = this.hh(c,d,a,b,x[i + 11],16,1839030562);
-			b = this.hh(b,c,d,a,x[i + 14],23,-35309556);
-			a = this.hh(a,b,c,d,x[i + 1],4,-1530992060);
-			d = this.hh(d,a,b,c,x[i + 4],11,1272893353);
-			c = this.hh(c,d,a,b,x[i + 7],16,-155497632);
-			b = this.hh(b,c,d,a,x[i + 10],23,-1094730640);
-			a = this.hh(a,b,c,d,x[i + 13],4,681279174);
-			d = this.hh(d,a,b,c,x[i],11,-358537222);
-			c = this.hh(c,d,a,b,x[i + 3],16,-722521979);
-			b = this.hh(b,c,d,a,x[i + 6],23,76029189);
-			a = this.hh(a,b,c,d,x[i + 9],4,-640364487);
-			d = this.hh(d,a,b,c,x[i + 12],11,-421815835);
-			c = this.hh(c,d,a,b,x[i + 15],16,530742520);
-			b = this.hh(b,c,d,a,x[i + 2],23,-995338651);
-			a = this.ii(a,b,c,d,x[i],6,-198630844);
-			d = this.ii(d,a,b,c,x[i + 7],10,1126891415);
-			c = this.ii(c,d,a,b,x[i + 14],15,-1416354905);
-			b = this.ii(b,c,d,a,x[i + 5],21,-57434055);
-			a = this.ii(a,b,c,d,x[i + 12],6,1700485571);
-			d = this.ii(d,a,b,c,x[i + 3],10,-1894986606);
-			c = this.ii(c,d,a,b,x[i + 10],15,-1051523);
-			b = this.ii(b,c,d,a,x[i + 1],21,-2054922799);
-			a = this.ii(a,b,c,d,x[i + 8],6,1873313359);
-			d = this.ii(d,a,b,c,x[i + 15],10,-30611744);
-			c = this.ii(c,d,a,b,x[i + 6],15,-1560198380);
-			b = this.ii(b,c,d,a,x[i + 13],21,1309151649);
-			a = this.ii(a,b,c,d,x[i + 4],6,-145523070);
-			d = this.ii(d,a,b,c,x[i + 11],10,-1120210379);
-			c = this.ii(c,d,a,b,x[i + 2],15,718787259);
-			b = this.ii(b,c,d,a,x[i + 9],21,-343485551);
-			a = this.addme(a,olda);
-			b = this.addme(b,oldb);
-			c = this.addme(c,oldc);
-			d = this.addme(d,oldd);
-			i += 16;
-		}
-		return [a,b,c,d];
-	}
-	,__class__: haxe_crypto_Md5
-};
-var haxe_ds_BalancedTree = function() {
-};
-$hxClasses["haxe.ds.BalancedTree"] = haxe_ds_BalancedTree;
-haxe_ds_BalancedTree.__name__ = "haxe.ds.BalancedTree";
-haxe_ds_BalancedTree.__interfaces__ = [haxe_IMap];
-haxe_ds_BalancedTree.prototype = {
-	set: function(key,value) {
-		this.root = this.setLoop(key,value,this.root);
-	}
-	,get: function(key) {
-		var node = this.root;
-		while(node != null) {
-			var c = this.compare(key,node.key);
-			if(c == 0) {
-				return node.value;
-			}
-			if(c < 0) {
-				node = node.left;
-			} else {
-				node = node.right;
-			}
-		}
-		return null;
-	}
-	,keys: function() {
-		var ret = [];
-		this.keysLoop(this.root,ret);
-		return new haxe_iterators_ArrayIterator(ret);
-	}
-	,setLoop: function(k,v,node) {
-		if(node == null) {
-			return new haxe_ds_TreeNode(null,k,v,null);
-		}
-		var c = this.compare(k,node.key);
-		if(c == 0) {
-			return new haxe_ds_TreeNode(node.left,k,v,node.right,node == null ? 0 : node._height);
-		} else if(c < 0) {
-			var nl = this.setLoop(k,v,node.left);
-			return this.balance(nl,node.key,node.value,node.right);
-		} else {
-			var nr = this.setLoop(k,v,node.right);
-			return this.balance(node.left,node.key,node.value,nr);
-		}
-	}
-	,keysLoop: function(node,acc) {
-		if(node != null) {
-			this.keysLoop(node.left,acc);
-			acc.push(node.key);
-			this.keysLoop(node.right,acc);
-		}
-	}
-	,balance: function(l,k,v,r) {
-		var hl = l == null ? 0 : l._height;
-		var hr = r == null ? 0 : r._height;
-		if(hl > hr + 2) {
-			var _this = l.left;
-			var _this1 = l.right;
-			if((_this == null ? 0 : _this._height) >= (_this1 == null ? 0 : _this1._height)) {
-				return new haxe_ds_TreeNode(l.left,l.key,l.value,new haxe_ds_TreeNode(l.right,k,v,r));
-			} else {
-				return new haxe_ds_TreeNode(new haxe_ds_TreeNode(l.left,l.key,l.value,l.right.left),l.right.key,l.right.value,new haxe_ds_TreeNode(l.right.right,k,v,r));
-			}
-		} else if(hr > hl + 2) {
-			var _this = r.right;
-			var _this1 = r.left;
-			if((_this == null ? 0 : _this._height) > (_this1 == null ? 0 : _this1._height)) {
-				return new haxe_ds_TreeNode(new haxe_ds_TreeNode(l,k,v,r.left),r.key,r.value,r.right);
-			} else {
-				return new haxe_ds_TreeNode(new haxe_ds_TreeNode(l,k,v,r.left.left),r.left.key,r.left.value,new haxe_ds_TreeNode(r.left.right,r.key,r.value,r.right));
-			}
-		} else {
-			return new haxe_ds_TreeNode(l,k,v,r,(hl > hr ? hl : hr) + 1);
-		}
-	}
-	,compare: function(k1,k2) {
-		return Reflect.compare(k1,k2);
-	}
-	,__class__: haxe_ds_BalancedTree
-};
-var haxe_ds_TreeNode = function(l,k,v,r,h) {
-	if(h == null) {
-		h = -1;
-	}
-	this.left = l;
-	this.key = k;
-	this.value = v;
-	this.right = r;
-	if(h == -1) {
-		var tmp;
-		var _this = this.left;
-		var _this1 = this.right;
-		if((_this == null ? 0 : _this._height) > (_this1 == null ? 0 : _this1._height)) {
-			var _this = this.left;
-			tmp = _this == null ? 0 : _this._height;
-		} else {
-			var _this = this.right;
-			tmp = _this == null ? 0 : _this._height;
-		}
-		this._height = tmp + 1;
-	} else {
-		this._height = h;
-	}
-};
-$hxClasses["haxe.ds.TreeNode"] = haxe_ds_TreeNode;
-haxe_ds_TreeNode.__name__ = "haxe.ds.TreeNode";
-haxe_ds_TreeNode.prototype = {
-	__class__: haxe_ds_TreeNode
-};
-var haxe_ds_EnumValueMap = function() {
-	haxe_ds_BalancedTree.call(this);
-};
-$hxClasses["haxe.ds.EnumValueMap"] = haxe_ds_EnumValueMap;
-haxe_ds_EnumValueMap.__name__ = "haxe.ds.EnumValueMap";
-haxe_ds_EnumValueMap.__interfaces__ = [haxe_IMap];
-haxe_ds_EnumValueMap.__super__ = haxe_ds_BalancedTree;
-haxe_ds_EnumValueMap.prototype = $extend(haxe_ds_BalancedTree.prototype,{
-	compare: function(k1,k2) {
-		var d = k1._hx_index - k2._hx_index;
-		if(d != 0) {
-			return d;
-		}
-		var p1 = Type.enumParameters(k1);
-		var p2 = Type.enumParameters(k2);
-		if(p1.length == 0 && p2.length == 0) {
-			return 0;
-		}
-		return this.compareArgs(p1,p2);
-	}
-	,compareArgs: function(a1,a2) {
-		var ld = a1.length - a2.length;
-		if(ld != 0) {
-			return ld;
-		}
-		var _g = 0;
-		var _g1 = a1.length;
-		while(_g < _g1) {
-			var i = _g++;
-			var d = this.compareArg(a1[i],a2[i]);
-			if(d != 0) {
-				return d;
-			}
-		}
-		return 0;
-	}
-	,compareArg: function(v1,v2) {
-		if(Reflect.isEnumValue(v1) && Reflect.isEnumValue(v2)) {
-			return this.compare(v1,v2);
-		} else if(((v1) instanceof Array) && ((v2) instanceof Array)) {
-			return this.compareArgs(v1,v2);
-		} else {
-			return Reflect.compare(v1,v2);
-		}
-	}
-	,__class__: haxe_ds_EnumValueMap
-});
 var haxe_ds_IntMap = function() {
 	this.h = { };
 };
@@ -646,22 +956,39 @@ $hxClasses["haxe.ds.IntMap"] = haxe_ds_IntMap;
 haxe_ds_IntMap.__name__ = "haxe.ds.IntMap";
 haxe_ds_IntMap.__interfaces__ = [haxe_IMap];
 haxe_ds_IntMap.prototype = {
-	get: function(key) {
-		return this.h[key];
-	}
-	,remove: function(key) {
-		if(!this.h.hasOwnProperty(key)) {
-			return false;
-		}
-		delete(this.h[key]);
-		return true;
-	}
-	,keys: function() {
+	keys: function() {
 		var a = [];
 		for( var key in this.h ) if(this.h.hasOwnProperty(key)) a.push(+key);
 		return new haxe_iterators_ArrayIterator(a);
 	}
 	,__class__: haxe_ds_IntMap
+};
+var haxe_ds_List = function() {
+	this.length = 0;
+};
+$hxClasses["haxe.ds.List"] = haxe_ds_List;
+haxe_ds_List.__name__ = "haxe.ds.List";
+haxe_ds_List.prototype = {
+	add: function(item) {
+		var x = new haxe_ds__$List_ListNode(item,null);
+		if(this.h == null) {
+			this.h = x;
+		} else {
+			this.q.next = x;
+		}
+		this.q = x;
+		this.length++;
+	}
+	,__class__: haxe_ds_List
+};
+var haxe_ds__$List_ListNode = function(item,next) {
+	this.item = item;
+	this.next = next;
+};
+$hxClasses["haxe.ds._List.ListNode"] = haxe_ds__$List_ListNode;
+haxe_ds__$List_ListNode.__name__ = "haxe.ds._List.ListNode";
+haxe_ds__$List_ListNode.prototype = {
+	__class__: haxe_ds__$List_ListNode
 };
 var haxe_ds_ObjectMap = function() {
 	this.h = { __keys__ : { }};
@@ -678,9 +1005,6 @@ haxe_ds_ObjectMap.prototype = {
 		this.h[id] = value;
 		this.h.__keys__[id] = key;
 	}
-	,get: function(key) {
-		return this.h[key.__id__];
-	}
 	,keys: function() {
 		var a = [];
 		for( var key in this.h.__keys__ ) {
@@ -692,7 +1016,7 @@ haxe_ds_ObjectMap.prototype = {
 	}
 	,__class__: haxe_ds_ObjectMap
 };
-var haxe_ds_Option = $hxEnums["haxe.ds.Option"] = { __ename__:true,__constructs__:null
+var haxe_ds_Option = $hxEnums["haxe.ds.Option"] = { __ename__:"haxe.ds.Option",__constructs__:null
 	,Some: ($_=function(v) { return {_hx_index:0,v:v,__enum__:"haxe.ds.Option",toString:$estr}; },$_._hx_name="Some",$_.__params__ = ["v"],$_)
 	,None: {_hx_name:"None",_hx_index:1,__enum__:"haxe.ds.Option",toString:$estr}
 };
@@ -704,30 +1028,7 @@ $hxClasses["haxe.ds.StringMap"] = haxe_ds_StringMap;
 haxe_ds_StringMap.__name__ = "haxe.ds.StringMap";
 haxe_ds_StringMap.__interfaces__ = [haxe_IMap];
 haxe_ds_StringMap.prototype = {
-	get: function(key) {
-		return this.h[key];
-	}
-	,keys: function() {
-		return new haxe_ds__$StringMap_StringMapKeyIterator(this.h);
-	}
-	,__class__: haxe_ds_StringMap
-};
-var haxe_ds__$StringMap_StringMapKeyIterator = function(h) {
-	this.h = h;
-	this.keys = Object.keys(h);
-	this.length = this.keys.length;
-	this.current = 0;
-};
-$hxClasses["haxe.ds._StringMap.StringMapKeyIterator"] = haxe_ds__$StringMap_StringMapKeyIterator;
-haxe_ds__$StringMap_StringMapKeyIterator.__name__ = "haxe.ds._StringMap.StringMapKeyIterator";
-haxe_ds__$StringMap_StringMapKeyIterator.prototype = {
-	hasNext: function() {
-		return this.current < this.length;
-	}
-	,next: function() {
-		return this.keys[this.current++];
-	}
-	,__class__: haxe_ds__$StringMap_StringMapKeyIterator
+	__class__: haxe_ds_StringMap
 };
 var haxe_io_Bytes = function(data) {
 	this.length = data.byteLength;
@@ -738,260 +1039,9 @@ var haxe_io_Bytes = function(data) {
 };
 $hxClasses["haxe.io.Bytes"] = haxe_io_Bytes;
 haxe_io_Bytes.__name__ = "haxe.io.Bytes";
-haxe_io_Bytes.ofString = function(s,encoding) {
-	if(encoding == haxe_io_Encoding.RawNative) {
-		var buf = new Uint8Array(s.length << 1);
-		var _g = 0;
-		var _g1 = s.length;
-		while(_g < _g1) {
-			var i = _g++;
-			var c = s.charCodeAt(i);
-			buf[i << 1] = c & 255;
-			buf[i << 1 | 1] = c >> 8;
-		}
-		return new haxe_io_Bytes(buf.buffer);
-	}
-	var a = [];
-	var i = 0;
-	while(i < s.length) {
-		var c = s.charCodeAt(i++);
-		if(55296 <= c && c <= 56319) {
-			c = c - 55232 << 10 | s.charCodeAt(i++) & 1023;
-		}
-		if(c <= 127) {
-			a.push(c);
-		} else if(c <= 2047) {
-			a.push(192 | c >> 6);
-			a.push(128 | c & 63);
-		} else if(c <= 65535) {
-			a.push(224 | c >> 12);
-			a.push(128 | c >> 6 & 63);
-			a.push(128 | c & 63);
-		} else {
-			a.push(240 | c >> 18);
-			a.push(128 | c >> 12 & 63);
-			a.push(128 | c >> 6 & 63);
-			a.push(128 | c & 63);
-		}
-	}
-	return new haxe_io_Bytes(new Uint8Array(a).buffer);
-};
-haxe_io_Bytes.ofHex = function(s) {
-	if((s.length & 1) != 0) {
-		throw haxe_Exception.thrown("Not a hex string (odd number of digits)");
-	}
-	var a = [];
-	var i = 0;
-	var len = s.length >> 1;
-	while(i < len) {
-		var high = s.charCodeAt(i * 2);
-		var low = s.charCodeAt(i * 2 + 1);
-		high = (high & 15) + ((high & 64) >> 6) * 9;
-		low = (low & 15) + ((low & 64) >> 6) * 9;
-		a.push((high << 4 | low) & 255);
-		++i;
-	}
-	return new haxe_io_Bytes(new Uint8Array(a).buffer);
-};
 haxe_io_Bytes.prototype = {
-	sub: function(pos,len) {
-		if(pos < 0 || len < 0 || pos + len > this.length) {
-			throw haxe_Exception.thrown(haxe_io_Error.OutsideBounds);
-		}
-		return new haxe_io_Bytes(this.b.buffer.slice(pos + this.b.byteOffset,pos + this.b.byteOffset + len));
-	}
-	,getDouble: function(pos) {
-		if(this.data == null) {
-			this.data = new DataView(this.b.buffer,this.b.byteOffset,this.b.byteLength);
-		}
-		return this.data.getFloat64(pos,true);
-	}
-	,getFloat: function(pos) {
-		if(this.data == null) {
-			this.data = new DataView(this.b.buffer,this.b.byteOffset,this.b.byteLength);
-		}
-		return this.data.getFloat32(pos,true);
-	}
-	,getInt32: function(pos) {
-		if(this.data == null) {
-			this.data = new DataView(this.b.buffer,this.b.byteOffset,this.b.byteLength);
-		}
-		return this.data.getInt32(pos,true);
-	}
-	,getInt64: function(pos) {
-		var this1 = new haxe__$Int64__$_$_$Int64(this.getInt32(pos + 4),this.getInt32(pos));
-		return this1;
-	}
-	,getString: function(pos,len,encoding) {
-		if(pos < 0 || len < 0 || pos + len > this.length) {
-			throw haxe_Exception.thrown(haxe_io_Error.OutsideBounds);
-		}
-		if(encoding == null) {
-			encoding = haxe_io_Encoding.UTF8;
-		}
-		var s = "";
-		var b = this.b;
-		var i = pos;
-		var max = pos + len;
-		switch(encoding._hx_index) {
-		case 0:
-			var debug = pos > 0;
-			while(i < max) {
-				var c = b[i++];
-				if(c < 128) {
-					if(c == 0) {
-						break;
-					}
-					s += String.fromCodePoint(c);
-				} else if(c < 224) {
-					var code = (c & 63) << 6 | b[i++] & 127;
-					s += String.fromCodePoint(code);
-				} else if(c < 240) {
-					var c2 = b[i++];
-					var code1 = (c & 31) << 12 | (c2 & 127) << 6 | b[i++] & 127;
-					s += String.fromCodePoint(code1);
-				} else {
-					var c21 = b[i++];
-					var c3 = b[i++];
-					var u = (c & 15) << 18 | (c21 & 127) << 12 | (c3 & 127) << 6 | b[i++] & 127;
-					s += String.fromCodePoint(u);
-				}
-			}
-			break;
-		case 1:
-			while(i < max) {
-				var c = b[i++] | b[i++] << 8;
-				s += String.fromCodePoint(c);
-			}
-			break;
-		}
-		return s;
-	}
-	,toHex: function() {
-		var s_b = "";
-		var chars = [];
-		var str = "0123456789abcdef";
-		var _g = 0;
-		var _g1 = str.length;
-		while(_g < _g1) {
-			var i = _g++;
-			chars.push(HxOverrides.cca(str,i));
-		}
-		var _g = 0;
-		var _g1 = this.length;
-		while(_g < _g1) {
-			var i = _g++;
-			var c = this.b[i];
-			s_b += String.fromCodePoint(chars[c >> 4]);
-			s_b += String.fromCodePoint(chars[c & 15]);
-		}
-		return s_b;
-	}
-	,__class__: haxe_io_Bytes
+	__class__: haxe_io_Bytes
 };
-var haxe_io_BytesBuffer = function() {
-	this.pos = 0;
-	this.size = 0;
-};
-$hxClasses["haxe.io.BytesBuffer"] = haxe_io_BytesBuffer;
-haxe_io_BytesBuffer.__name__ = "haxe.io.BytesBuffer";
-haxe_io_BytesBuffer.prototype = {
-	addByte: function(byte) {
-		if(this.pos == this.size) {
-			this.grow(1);
-		}
-		this.view.setUint8(this.pos++,byte);
-	}
-	,add: function(src) {
-		if(this.pos + src.length > this.size) {
-			this.grow(src.length);
-		}
-		if(this.size == 0) {
-			return;
-		}
-		var sub = new Uint8Array(src.b.buffer,src.b.byteOffset,src.length);
-		this.u8.set(sub,this.pos);
-		this.pos += src.length;
-	}
-	,addInt32: function(v) {
-		if(this.pos + 4 > this.size) {
-			this.grow(4);
-		}
-		this.view.setInt32(this.pos,v,true);
-		this.pos += 4;
-	}
-	,addInt64: function(v) {
-		if(this.pos + 8 > this.size) {
-			this.grow(8);
-		}
-		this.view.setInt32(this.pos,v.low,true);
-		this.view.setInt32(this.pos + 4,v.high,true);
-		this.pos += 8;
-	}
-	,addFloat: function(v) {
-		if(this.pos + 4 > this.size) {
-			this.grow(4);
-		}
-		this.view.setFloat32(this.pos,v,true);
-		this.pos += 4;
-	}
-	,addDouble: function(v) {
-		if(this.pos + 8 > this.size) {
-			this.grow(8);
-		}
-		this.view.setFloat64(this.pos,v,true);
-		this.pos += 8;
-	}
-	,addBytes: function(src,pos,len) {
-		if(pos < 0 || len < 0 || pos + len > src.length) {
-			throw haxe_Exception.thrown(haxe_io_Error.OutsideBounds);
-		}
-		if(this.pos + len > this.size) {
-			this.grow(len);
-		}
-		if(this.size == 0) {
-			return;
-		}
-		var sub = new Uint8Array(src.b.buffer,src.b.byteOffset + pos,len);
-		this.u8.set(sub,this.pos);
-		this.pos += len;
-	}
-	,grow: function(delta) {
-		var req = this.pos + delta;
-		var nsize = this.size == 0 ? 16 : this.size;
-		while(nsize < req) nsize = nsize * 3 >> 1;
-		var nbuf = new ArrayBuffer(nsize);
-		var nu8 = new Uint8Array(nbuf);
-		if(this.size > 0) {
-			nu8.set(this.u8);
-		}
-		this.size = nsize;
-		this.buffer = nbuf;
-		this.u8 = nu8;
-		this.view = new DataView(this.buffer);
-	}
-	,getBytes: function() {
-		if(this.size == 0) {
-			return new haxe_io_Bytes(new ArrayBuffer(0));
-		}
-		var b = new haxe_io_Bytes(this.buffer);
-		b.length = this.pos;
-		return b;
-	}
-	,__class__: haxe_io_BytesBuffer
-};
-var haxe_io_Encoding = $hxEnums["haxe.io.Encoding"] = { __ename__:true,__constructs__:null
-	,UTF8: {_hx_name:"UTF8",_hx_index:0,__enum__:"haxe.io.Encoding",toString:$estr}
-	,RawNative: {_hx_name:"RawNative",_hx_index:1,__enum__:"haxe.io.Encoding",toString:$estr}
-};
-haxe_io_Encoding.__constructs__ = [haxe_io_Encoding.UTF8,haxe_io_Encoding.RawNative];
-var haxe_io_Error = $hxEnums["haxe.io.Error"] = { __ename__:true,__constructs__:null
-	,Blocked: {_hx_name:"Blocked",_hx_index:0,__enum__:"haxe.io.Error",toString:$estr}
-	,Overflow: {_hx_name:"Overflow",_hx_index:1,__enum__:"haxe.io.Error",toString:$estr}
-	,OutsideBounds: {_hx_name:"OutsideBounds",_hx_index:2,__enum__:"haxe.io.Error",toString:$estr}
-	,Custom: ($_=function(e) { return {_hx_index:3,e:e,__enum__:"haxe.io.Error",toString:$estr}; },$_._hx_name="Custom",$_.__params__ = ["e"],$_)
-};
-haxe_io_Error.__constructs__ = [haxe_io_Error.Blocked,haxe_io_Error.Overflow,haxe_io_Error.OutsideBounds,haxe_io_Error.Custom];
 var haxe_iterators_ArrayIterator = function(array) {
 	this.current = 0;
 	this.array = array;
@@ -1006,3610 +1056,6 @@ haxe_iterators_ArrayIterator.prototype = {
 		return this.array[this.current++];
 	}
 	,__class__: haxe_iterators_ArrayIterator
-};
-var haxe_rtti_Meta = function() { };
-$hxClasses["haxe.rtti.Meta"] = haxe_rtti_Meta;
-haxe_rtti_Meta.__name__ = "haxe.rtti.Meta";
-haxe_rtti_Meta.getType = function(t) {
-	var meta = haxe_rtti_Meta.getMeta(t);
-	if(meta == null || meta.obj == null) {
-		return { };
-	} else {
-		return meta.obj;
-	}
-};
-haxe_rtti_Meta.getMeta = function(t) {
-	return t.__meta__;
-};
-var hxbit_ConvertField = function(path,from,to) {
-	this.path = path;
-	this.from = from;
-	this.to = to;
-};
-$hxClasses["hxbit.ConvertField"] = hxbit_ConvertField;
-hxbit_ConvertField.__name__ = "hxbit.ConvertField";
-hxbit_ConvertField.prototype = {
-	__class__: hxbit_ConvertField
-};
-var hxbit_Convert = function(classPath,ourSchema,schema) {
-	var ourMap_h = Object.create(null);
-	var _g = 0;
-	var _g1 = ourSchema.fieldsNames.length;
-	while(_g < _g1) {
-		var i = _g++;
-		ourMap_h[ourSchema.fieldsNames[i]] = ourSchema.fieldsTypes[i];
-	}
-	this.read = [];
-	this.hadCID = !schema.isFinal;
-	this.hasCID = !ourSchema.isFinal;
-	var map_h = Object.create(null);
-	var _g = 0;
-	var _g1 = schema.fieldsNames.length;
-	while(_g < _g1) {
-		var i = _g++;
-		var oldT = schema.fieldsTypes[i];
-		var newT = ourMap_h[schema.fieldsNames[i]];
-		var c = new hxbit_ConvertField(classPath + "." + schema.fieldsNames[i],oldT,newT);
-		if(newT != null) {
-			if(hxbit_Convert.sameType(oldT,newT)) {
-				c.same = true;
-			} else {
-				c.conv = hxbit_Convert.convFuns.h[c.path];
-				c.defaultValue = hxbit_Convert.getDefault(newT);
-			}
-		}
-		c.index = this.read.length;
-		this.read.push(c);
-		map_h[schema.fieldsNames[i]] = c;
-	}
-	this.write = [];
-	var _g = 0;
-	var _g1 = ourSchema.fieldsNames.length;
-	while(_g < _g1) {
-		var i = _g++;
-		var newT = ourSchema.fieldsTypes[i];
-		var c = map_h[ourSchema.fieldsNames[i]];
-		if(c == null) {
-			c = new hxbit_ConvertField(null,null,newT);
-			c.defaultValue = hxbit_Convert.getDefault(newT);
-		}
-		this.write.push(c);
-	}
-};
-$hxClasses["hxbit.Convert"] = hxbit_Convert;
-hxbit_Convert.__name__ = "hxbit.Convert";
-hxbit_Convert.sameType = function(a,b) {
-	switch(a._hx_index) {
-	case 0:
-		switch(b._hx_index) {
-		case 10:
-			var b1 = b.k;
-			return hxbit_Convert.sameType(a,b1);
-		case 16:
-			var _g = b.t;
-			return true;
-		default:
-			return Type.enumEq(a,b);
-		}
-		break;
-	case 7:
-		var _g = a.k;
-		var _g1 = a.v;
-		switch(b._hx_index) {
-		case 7:
-			var bk = b.k;
-			var bv = b.v;
-			var av = _g1;
-			var ak = _g;
-			if(hxbit_Convert.sameType(ak,bk)) {
-				return hxbit_Convert.sameType(av,bv);
-			} else {
-				return false;
-			}
-			break;
-		case 10:
-			var b1 = b.k;
-			return hxbit_Convert.sameType(a,b1);
-		default:
-			return Type.enumEq(a,b);
-		}
-		break;
-	case 8:
-		var _g = a.k;
-		switch(b._hx_index) {
-		case 8:
-			var b1 = b.k;
-			var a1 = _g;
-			return hxbit_Convert.sameType(a1,b1);
-		case 10:
-			var b1 = b.k;
-			return hxbit_Convert.sameType(a,b1);
-		default:
-			return Type.enumEq(a,b);
-		}
-		break;
-	case 9:
-		var _g = a.fields;
-		switch(b._hx_index) {
-		case 9:
-			var fb = b.fields;
-			var fa = _g;
-			if(fa.length != fb.length) {
-				return false;
-			}
-			var _g = 0;
-			var _g1 = fa.length;
-			while(_g < _g1) {
-				var i = _g++;
-				var a1 = fa[i];
-				var b1 = fb[i];
-				if(a1.name != b1.name || a1.opt != b1.opt || !hxbit_Convert.sameType(a1.type,b1.type)) {
-					return false;
-				}
-			}
-			return true;
-		case 10:
-			var b1 = b.k;
-			return hxbit_Convert.sameType(a,b1);
-		default:
-			return Type.enumEq(a,b);
-		}
-		break;
-	case 10:
-		var _g = a.k;
-		if(b._hx_index == 10) {
-			var b1 = b.k;
-			var a1 = _g;
-			return hxbit_Convert.sameType(a1,b1);
-		} else {
-			var a1 = _g;
-			return hxbit_Convert.sameType(a1,b);
-		}
-		break;
-	case 11:
-		var _g = a.k;
-		switch(b._hx_index) {
-		case 10:
-			var b1 = b.k;
-			return hxbit_Convert.sameType(a,b1);
-		case 11:
-			var b1 = b.k;
-			var a1 = _g;
-			return hxbit_Convert.sameType(a1,b1);
-		default:
-			return Type.enumEq(a,b);
-		}
-		break;
-	case 12:
-		var _g = a.t;
-		switch(b._hx_index) {
-		case 10:
-			var b1 = b.k;
-			return hxbit_Convert.sameType(a,b1);
-		case 12:
-			var b1 = b.t;
-			var a1 = _g;
-			return hxbit_Convert.sameType(a1,b1);
-		default:
-			return Type.enumEq(a,b);
-		}
-		break;
-	case 16:
-		var _g = a.t;
-		switch(b._hx_index) {
-		case 0:
-			return true;
-		case 10:
-			var b1 = b.k;
-			return hxbit_Convert.sameType(a,b1);
-		default:
-			return Type.enumEq(a,b);
-		}
-		break;
-	default:
-		if(b._hx_index == 10) {
-			var b1 = b.k;
-			return hxbit_Convert.sameType(a,b1);
-		} else {
-			return Type.enumEq(a,b);
-		}
-	}
-};
-hxbit_Convert.getDefault = function(t) {
-	switch(t._hx_index) {
-	case 0:
-		return 0;
-	case 1:
-		return 0.;
-	case 2:
-		return false;
-	case 5:
-		var _g = t.name;
-		return null;
-	case 6:
-		var _g = t.name;
-		return null;
-	case 7:
-		var _g = t.v;
-		var k = t.k;
-		switch(k._hx_index) {
-		case 0:
-			return new haxe_ds_IntMap();
-		case 3:
-			return new haxe_ds_StringMap();
-		default:
-			return new haxe_ds_ObjectMap();
-		}
-		break;
-	case 8:
-		var _g = t.k;
-		return [];
-	case 9:
-		var _g = t.fields;
-		return null;
-	case 10:
-		var t1 = t.k;
-		return hxbit_Convert.getDefault(t1);
-	case 11:
-		var _g = t.k;
-		var this1 = new Array(0);
-		return this1;
-	case 12:
-		var _g = t.t;
-		return null;
-	case 3:case 4:case 13:case 14:case 17:
-		return null;
-	case 15:
-		var this1 = new haxe__$Int64__$_$_$Int64(0,0);
-		return this1;
-	case 16:
-		var _g = t.t;
-		return 0;
-	}
-};
-hxbit_Convert.registerConverter = function(path,f) {
-	hxbit_Convert.convFuns.h[path] = f;
-};
-hxbit_Convert.prototype = {
-	toString: function() {
-		var _g = [];
-		var _g1 = 0;
-		var _g2 = this.write.length;
-		while(_g1 < _g2) {
-			var i = _g1++;
-			var w = this.write[i];
-			if(w.from == null) {
-				_g.push("insert:" + Std.string(w.defaultValue));
-			} else if(w.same) {
-				_g.push(i == w.index ? "s" : "@" + w.index);
-			} else {
-				_g.push("@" + w.index + ":" + Std.string(w.to));
-			}
-		}
-		return _g.toString();
-	}
-	,__class__: hxbit_Convert
-};
-var hxbit_RpcMode = $hxEnums["hxbit.RpcMode"] = { __ename__:true,__constructs__:null
-	,All: {_hx_name:"All",_hx_index:0,__enum__:"hxbit.RpcMode",toString:$estr}
-	,Clients: {_hx_name:"Clients",_hx_index:1,__enum__:"hxbit.RpcMode",toString:$estr}
-	,Server: {_hx_name:"Server",_hx_index:2,__enum__:"hxbit.RpcMode",toString:$estr}
-	,Owner: {_hx_name:"Owner",_hx_index:3,__enum__:"hxbit.RpcMode",toString:$estr}
-	,Immediate: {_hx_name:"Immediate",_hx_index:4,__enum__:"hxbit.RpcMode",toString:$estr}
-};
-hxbit_RpcMode.__constructs__ = [hxbit_RpcMode.All,hxbit_RpcMode.Clients,hxbit_RpcMode.Server,hxbit_RpcMode.Owner,hxbit_RpcMode.Immediate];
-var hxbit_PropTypeDesc = $hxEnums["hxbit.PropTypeDesc"] = { __ename__:true,__constructs__:null
-	,PInt: {_hx_name:"PInt",_hx_index:0,__enum__:"hxbit.PropTypeDesc",toString:$estr}
-	,PFloat: {_hx_name:"PFloat",_hx_index:1,__enum__:"hxbit.PropTypeDesc",toString:$estr}
-	,PBool: {_hx_name:"PBool",_hx_index:2,__enum__:"hxbit.PropTypeDesc",toString:$estr}
-	,PString: {_hx_name:"PString",_hx_index:3,__enum__:"hxbit.PropTypeDesc",toString:$estr}
-	,PBytes: {_hx_name:"PBytes",_hx_index:4,__enum__:"hxbit.PropTypeDesc",toString:$estr}
-	,PSerializable: ($_=function(name) { return {_hx_index:5,name:name,__enum__:"hxbit.PropTypeDesc",toString:$estr}; },$_._hx_name="PSerializable",$_.__params__ = ["name"],$_)
-	,PEnum: ($_=function(name) { return {_hx_index:6,name:name,__enum__:"hxbit.PropTypeDesc",toString:$estr}; },$_._hx_name="PEnum",$_.__params__ = ["name"],$_)
-	,PMap: ($_=function(k,v) { return {_hx_index:7,k:k,v:v,__enum__:"hxbit.PropTypeDesc",toString:$estr}; },$_._hx_name="PMap",$_.__params__ = ["k","v"],$_)
-	,PArray: ($_=function(k) { return {_hx_index:8,k:k,__enum__:"hxbit.PropTypeDesc",toString:$estr}; },$_._hx_name="PArray",$_.__params__ = ["k"],$_)
-	,PObj: ($_=function(fields) { return {_hx_index:9,fields:fields,__enum__:"hxbit.PropTypeDesc",toString:$estr}; },$_._hx_name="PObj",$_.__params__ = ["fields"],$_)
-	,PAlias: ($_=function(k) { return {_hx_index:10,k:k,__enum__:"hxbit.PropTypeDesc",toString:$estr}; },$_._hx_name="PAlias",$_.__params__ = ["k"],$_)
-	,PVector: ($_=function(k) { return {_hx_index:11,k:k,__enum__:"hxbit.PropTypeDesc",toString:$estr}; },$_._hx_name="PVector",$_.__params__ = ["k"],$_)
-	,PNull: ($_=function(t) { return {_hx_index:12,t:t,__enum__:"hxbit.PropTypeDesc",toString:$estr}; },$_._hx_name="PNull",$_.__params__ = ["t"],$_)
-	,PUnknown: {_hx_name:"PUnknown",_hx_index:13,__enum__:"hxbit.PropTypeDesc",toString:$estr}
-	,PDynamic: {_hx_name:"PDynamic",_hx_index:14,__enum__:"hxbit.PropTypeDesc",toString:$estr}
-	,PInt64: {_hx_name:"PInt64",_hx_index:15,__enum__:"hxbit.PropTypeDesc",toString:$estr}
-	,PFlags: ($_=function(t) { return {_hx_index:16,t:t,__enum__:"hxbit.PropTypeDesc",toString:$estr}; },$_._hx_name="PFlags",$_.__params__ = ["t"],$_)
-	,PStruct: {_hx_name:"PStruct",_hx_index:17,__enum__:"hxbit.PropTypeDesc",toString:$estr}
-};
-hxbit_PropTypeDesc.__constructs__ = [hxbit_PropTypeDesc.PInt,hxbit_PropTypeDesc.PFloat,hxbit_PropTypeDesc.PBool,hxbit_PropTypeDesc.PString,hxbit_PropTypeDesc.PBytes,hxbit_PropTypeDesc.PSerializable,hxbit_PropTypeDesc.PEnum,hxbit_PropTypeDesc.PMap,hxbit_PropTypeDesc.PArray,hxbit_PropTypeDesc.PObj,hxbit_PropTypeDesc.PAlias,hxbit_PropTypeDesc.PVector,hxbit_PropTypeDesc.PNull,hxbit_PropTypeDesc.PUnknown,hxbit_PropTypeDesc.PDynamic,hxbit_PropTypeDesc.PInt64,hxbit_PropTypeDesc.PFlags,hxbit_PropTypeDesc.PStruct];
-var hxbit_Macros = function() { };
-$hxClasses["hxbit.Macros"] = hxbit_Macros;
-hxbit_Macros.__name__ = "hxbit.Macros";
-var hxbit_Serializable = function() { };
-$hxClasses["hxbit.Serializable"] = hxbit_Serializable;
-hxbit_Serializable.__name__ = "hxbit.Serializable";
-hxbit_Serializable.__isInterface__ = true;
-hxbit_Serializable.prototype = {
-	__class__: hxbit_Serializable
-};
-var hxbit_Serializer = function() {
-	this.usedClasses = [];
-	if(hxbit_Serializer.CLIDS == null) {
-		hxbit_Serializer.initClassIDS();
-	}
-};
-$hxClasses["hxbit.Serializer"] = hxbit_Serializer;
-hxbit_Serializer.__name__ = "hxbit.Serializer";
-hxbit_Serializer.resetCounters = function() {
-	hxbit_Serializer.UID = 0;
-	hxbit_Serializer.SEQ = 0;
-};
-hxbit_Serializer.allocUID = function() {
-	return hxbit_Serializer.SEQ << 24 | ++hxbit_Serializer.UID;
-};
-hxbit_Serializer.registerClass = function(c) {
-	if(hxbit_Serializer.CLIDS != null) {
-		throw haxe_Exception.thrown("Too late to register class");
-	}
-	var idx = hxbit_Serializer.CLASSES.length;
-	hxbit_Serializer.CLASSES.push(c);
-	return idx;
-};
-hxbit_Serializer.hash = function(name) {
-	var v = 1;
-	var _g = 0;
-	var _g1 = name.length;
-	while(_g < _g1) {
-		var i = _g++;
-		v = v * 223 + name.charCodeAt(i) | 0;
-	}
-	v = 1 + (v & 1073741823) % 65423;
-	return v;
-};
-hxbit_Serializer.initClassIDS = function() {
-	var cl = hxbit_Serializer.CLASSES;
-	var _g = [];
-	var _g1 = 0;
-	while(_g1 < cl.length) {
-		var c = cl[_g1];
-		++_g1;
-		_g.push([]);
-	}
-	var subClasses = _g;
-	var isSub = [];
-	var _g = 0;
-	var _g1 = cl.length;
-	while(_g < _g1) {
-		var i = _g++;
-		var c = cl[i];
-		while(true) {
-			c = c.__super__;
-			if(c == null) {
-				break;
-			}
-			var idx = cl.indexOf(c);
-			if(idx < 0) {
-				break;
-			}
-			subClasses[idx].push(i);
-			isSub[i] = true;
-		}
-	}
-	var _g = [];
-	var _g1 = 0;
-	var _g2 = hxbit_Serializer.CLASSES.length;
-	while(_g1 < _g2) {
-		var i = _g1++;
-		if(subClasses[i].length == 0 && !isSub[i]) {
-			_g.push(0);
-		} else {
-			var name = cl[i].__name__;
-			var v = 1;
-			var _g3 = 0;
-			var _g4 = name.length;
-			while(_g3 < _g4) {
-				var i1 = _g3++;
-				v = v * 223 + name.charCodeAt(i1) | 0;
-			}
-			v = 1 + (v & 1073741823) % 65423;
-			_g.push(v);
-		}
-	}
-	hxbit_Serializer.CLIDS = _g;
-	hxbit_Serializer.CL_BYID = [];
-	var _g = 0;
-	var _g1 = hxbit_Serializer.CLIDS.length;
-	while(_g < _g1) {
-		var i = _g++;
-		var cid = hxbit_Serializer.CLIDS[i];
-		if(cid == 0) {
-			continue;
-		}
-		if(hxbit_Serializer.CL_BYID[cid] != null) {
-			var c = hxbit_Serializer.CL_BYID[cid];
-			throw haxe_Exception.thrown("Conflicting CLID between " + c.__name__ + " and " + cl[i].__name__);
-		}
-		hxbit_Serializer.CL_BYID[cid] = cl[i];
-	}
-};
-hxbit_Serializer.getSignature = function() {
-	if(hxbit_Serializer.__SIGN != null) {
-		return hxbit_Serializer.__SIGN;
-	}
-	var s = new hxbit_Serializer();
-	s.begin();
-	var v = hxbit_Serializer.CLASSES.length;
-	if(v >= 0 && v < 128) {
-		s.out.addByte(v);
-	} else {
-		s.out.addByte(128);
-		s.out.addInt32(v);
-	}
-	var _g = 0;
-	var _g1 = hxbit_Serializer.CLASSES.length;
-	while(_g < _g1) {
-		var i = _g++;
-		var v = hxbit_Serializer.CLIDS[i];
-		if(v >= 0 && v < 128) {
-			s.out.addByte(v);
-		} else {
-			s.out.addByte(128);
-			s.out.addInt32(v);
-		}
-		var v1 = Object.create(hxbit_Serializer.CLASSES[i].prototype).getSerializeSchema().get_checkSum();
-		s.out.addInt32(v1);
-	}
-	return hxbit_Serializer.__SIGN = haxe_crypto_Md5.make(s.end());
-};
-hxbit_Serializer.isClassFinal = function(index) {
-	return hxbit_Serializer.CLIDS[index] == 0;
-};
-hxbit_Serializer.save = function(value) {
-	var s = new hxbit_Serializer();
-	s.beginSave();
-	s.addKnownRef(value);
-	return s.endSave();
-};
-hxbit_Serializer.load = function(bytes,cl) {
-	var s = new hxbit_Serializer();
-	s.beginLoad(bytes);
-	var value = s.getRef(cl,cl.__clid);
-	s.endLoad();
-	return value;
-};
-hxbit_Serializer.prototype = {
-	set_remapIds: function(b) {
-		this.remapObjs = b ? new haxe_ds_ObjectMap() : null;
-		return b;
-	}
-	,get_remapIds: function() {
-		return this.remapObjs != null;
-	}
-	,remap: function(s) {
-		if(this.remapObjs.h.__keys__[s.__id__] != null) {
-			return;
-		}
-		this.remapObjs.set(s,s.__uid);
-		s.__uid = hxbit_Serializer.SEQ << 24 | ++hxbit_Serializer.UID;
-	}
-	,begin: function() {
-		this.out = new haxe_io_BytesBuffer();
-		this.refs = new haxe_ds_IntMap();
-		this.knownStructs = [];
-	}
-	,end: function() {
-		var bytes = this.out.getBytes();
-		this.out = null;
-		this.refs = null;
-		this.knownStructs = null;
-		return bytes;
-	}
-	,setInput: function(data,pos) {
-		this.input = data;
-		this.inPos = pos;
-		if(this.refs == null) {
-			this.refs = new haxe_ds_IntMap();
-		}
-		if(this.knownStructs == null) {
-			this.knownStructs = [];
-		}
-	}
-	,serialize: function(s) {
-		this.begin();
-		this.addKnownRef(s);
-		return this.out.getBytes();
-	}
-	,unserialize: function(data,c,startPos) {
-		if(startPos == null) {
-			startPos = 0;
-		}
-		this.refs = new haxe_ds_IntMap();
-		this.knownStructs = [];
-		this.setInput(data,startPos);
-		return this.getRef(c,c.__clid);
-	}
-	,getByte: function() {
-		return this.input.b[this.inPos++];
-	}
-	,addByte: function(v) {
-		this.out.addByte(v);
-	}
-	,addInt: function(v) {
-		if(v >= 0 && v < 128) {
-			this.out.addByte(v);
-		} else {
-			this.out.addByte(128);
-			this.out.addInt32(v);
-		}
-	}
-	,addInt32: function(v) {
-		this.out.addInt32(v);
-	}
-	,addInt64: function(v) {
-		this.out.addInt64(v);
-	}
-	,addFloat: function(v) {
-		this.out.addFloat(v);
-	}
-	,addDouble: function(v) {
-		this.out.addDouble(v);
-	}
-	,addBool: function(v) {
-		this.out.addByte(v ? 1 : 0);
-	}
-	,addArray: function(a,f) {
-		if(a == null) {
-			this.out.addByte(0);
-			return;
-		}
-		var v = a.length + 1;
-		if(v >= 0 && v < 128) {
-			this.out.addByte(v);
-		} else {
-			this.out.addByte(128);
-			this.out.addInt32(v);
-		}
-		var _g = 0;
-		while(_g < a.length) {
-			var v = a[_g];
-			++_g;
-			f(v);
-		}
-	}
-	,addVector: function(a,f) {
-		if(a == null) {
-			this.out.addByte(0);
-			return;
-		}
-		var v = a.length + 1;
-		if(v >= 0 && v < 128) {
-			this.out.addByte(v);
-		} else {
-			this.out.addByte(128);
-			this.out.addInt32(v);
-		}
-		var _g = 0;
-		while(_g < a.length) {
-			var v = a[_g];
-			++_g;
-			f(v);
-		}
-	}
-	,getArray: function(f) {
-		var v = this.input.b[this.inPos++];
-		if(v == 128) {
-			v = this.input.getInt32(this.inPos);
-			this.inPos += 4;
-		}
-		var len = v;
-		if(len == 0) {
-			return null;
-		}
-		--len;
-		var a = [];
-		var _g = 0;
-		var _g1 = len;
-		while(_g < _g1) {
-			var i = _g++;
-			a[i] = f();
-		}
-		return a;
-	}
-	,getVector: function(f) {
-		var v = this.input.b[this.inPos++];
-		if(v == 128) {
-			v = this.input.getInt32(this.inPos);
-			this.inPos += 4;
-		}
-		var len = v;
-		if(len == 0) {
-			return null;
-		}
-		--len;
-		var this1 = new Array(len);
-		var a = this1;
-		var _g = 0;
-		var _g1 = len;
-		while(_g < _g1) {
-			var i = _g++;
-			a[i] = f();
-		}
-		return a;
-	}
-	,addMap: function(a,fk,ft) {
-		if(a == null) {
-			this.out.addByte(0);
-			return;
-		}
-		var _g = [];
-		var k = a.keys();
-		while(k.hasNext()) {
-			var k1 = k.next();
-			_g.push(k1);
-		}
-		var keys = _g;
-		var v = keys.length + 1;
-		if(v >= 0 && v < 128) {
-			this.out.addByte(v);
-		} else {
-			this.out.addByte(128);
-			this.out.addInt32(v);
-		}
-		var _g = 0;
-		while(_g < keys.length) {
-			var k = keys[_g];
-			++_g;
-			fk(k);
-			ft(a.get(k));
-		}
-	}
-	,getBool: function() {
-		return this.input.b[this.inPos++] != 0;
-	}
-	,getInt: function() {
-		var v = this.input.b[this.inPos++];
-		if(v == 128) {
-			v = this.input.getInt32(this.inPos);
-			this.inPos += 4;
-		}
-		return v;
-	}
-	,skip: function(size) {
-		this.inPos += size;
-	}
-	,getInt32: function() {
-		var v = this.input.getInt32(this.inPos);
-		this.inPos += 4;
-		return v;
-	}
-	,getInt64: function() {
-		var v = this.input.getInt64(this.inPos);
-		this.inPos += 8;
-		return v;
-	}
-	,getDouble: function() {
-		var v = this.input.getDouble(this.inPos);
-		this.inPos += 8;
-		return v;
-	}
-	,getFloat: function() {
-		var v = this.input.getFloat(this.inPos);
-		this.inPos += 4;
-		return v;
-	}
-	,addString: function(s) {
-		if(s == null) {
-			this.out.addByte(0);
-		} else {
-			var b = haxe_io_Bytes.ofString(s);
-			var v = b.length + 1;
-			if(v >= 0 && v < 128) {
-				this.out.addByte(v);
-			} else {
-				this.out.addByte(128);
-				this.out.addInt32(v);
-			}
-			this.out.add(b);
-		}
-	}
-	,addBytes: function(b) {
-		if(b == null) {
-			this.out.addByte(0);
-		} else {
-			var v = b.length + 1;
-			if(v >= 0 && v < 128) {
-				this.out.addByte(v);
-			} else {
-				this.out.addByte(128);
-				this.out.addInt32(v);
-			}
-			this.out.add(b);
-		}
-	}
-	,addBytesSub: function(b,pos,len) {
-		if(b == null) {
-			this.out.addByte(0);
-		} else {
-			var v = len + 1;
-			if(v >= 0 && v < 128) {
-				this.out.addByte(v);
-			} else {
-				this.out.addByte(128);
-				this.out.addInt32(v);
-			}
-			this.out.addBytes(b,pos,len);
-		}
-	}
-	,getString: function() {
-		var v = this.input.b[this.inPos++];
-		if(v == 128) {
-			v = this.input.getInt32(this.inPos);
-			this.inPos += 4;
-		}
-		var len = v;
-		if(len == 0) {
-			return null;
-		}
-		--len;
-		var s = this.input.getString(this.inPos,len);
-		this.inPos += len;
-		return s;
-	}
-	,getBytes: function() {
-		var v = this.input.b[this.inPos++];
-		if(v == 128) {
-			v = this.input.getInt32(this.inPos);
-			this.inPos += 4;
-		}
-		var len = v;
-		if(len == 0) {
-			return null;
-		}
-		--len;
-		var s = this.input.sub(this.inPos,len);
-		this.inPos += len;
-		return s;
-	}
-	,getDynamic: function() {
-		var _g = this.input.b[this.inPos++];
-		switch(_g) {
-		case 0:
-			return null;
-		case 1:
-			return false;
-		case 2:
-			return true;
-		case 3:
-			var v = this.input.b[this.inPos++];
-			if(v == 128) {
-				v = this.input.getInt32(this.inPos);
-				this.inPos += 4;
-			}
-			return v;
-		case 4:
-			var v = this.input.getFloat(this.inPos);
-			this.inPos += 4;
-			return v;
-		case 5:
-			var o = { };
-			var _g1 = 0;
-			var v = this.input.b[this.inPos++];
-			if(v == 128) {
-				v = this.input.getInt32(this.inPos);
-				this.inPos += 4;
-			}
-			var _g2 = v;
-			while(_g1 < _g2) {
-				var i = _g1++;
-				var v = this.input.b[this.inPos++];
-				if(v == 128) {
-					v = this.input.getInt32(this.inPos);
-					this.inPos += 4;
-				}
-				var len = v;
-				var field;
-				if(len == 0) {
-					field = null;
-				} else {
-					--len;
-					var s = this.input.getString(this.inPos,len);
-					this.inPos += len;
-					field = s;
-				}
-				o[field] = this.getDynamic();
-			}
-			return o;
-		case 6:
-			var v = this.input.b[this.inPos++];
-			if(v == 128) {
-				v = this.input.getInt32(this.inPos);
-				this.inPos += 4;
-			}
-			var len = v;
-			if(len == 0) {
-				return null;
-			} else {
-				--len;
-				var s = this.input.getString(this.inPos,len);
-				this.inPos += len;
-				return s;
-			}
-			break;
-		case 7:
-			var _g1 = [];
-			var _g2 = 0;
-			var v = this.input.b[this.inPos++];
-			if(v == 128) {
-				v = this.input.getInt32(this.inPos);
-				this.inPos += 4;
-			}
-			var _g3 = v;
-			while(_g2 < _g3) {
-				var i = _g2++;
-				_g1.push(this.getDynamic());
-			}
-			return _g1;
-		case 8:
-			var v = this.input.b[this.inPos++];
-			if(v == 128) {
-				v = this.input.getInt32(this.inPos);
-				this.inPos += 4;
-			}
-			var len = v;
-			if(len == 0) {
-				return null;
-			} else {
-				--len;
-				var s = this.input.sub(this.inPos,len);
-				this.inPos += len;
-				return s;
-			}
-			break;
-		default:
-			var x = _g;
-			throw haxe_Exception.thrown("Invalid dynamic prefix " + x);
-		}
-	}
-	,addDynamic: function(v) {
-		if(v == null) {
-			this.out.addByte(0);
-			return;
-		}
-		var _g = Type.typeof(v);
-		switch(_g._hx_index) {
-		case 1:
-			this.out.addByte(3);
-			var v1 = v;
-			if(v1 >= 0 && v1 < 128) {
-				this.out.addByte(v1);
-			} else {
-				this.out.addByte(128);
-				this.out.addInt32(v1);
-			}
-			break;
-		case 2:
-			this.out.addByte(4);
-			this.out.addFloat(v);
-			break;
-		case 3:
-			this.out.addByte(v ? 2 : 1);
-			break;
-		case 4:
-			var fields = Reflect.fields(v);
-			this.out.addByte(5);
-			var v1 = fields.length;
-			if(v1 >= 0 && v1 < 128) {
-				this.out.addByte(v1);
-			} else {
-				this.out.addByte(128);
-				this.out.addInt32(v1);
-			}
-			var _g1 = 0;
-			while(_g1 < fields.length) {
-				var f = fields[_g1];
-				++_g1;
-				if(f == null) {
-					this.out.addByte(0);
-				} else {
-					var b = haxe_io_Bytes.ofString(f);
-					var v1 = b.length + 1;
-					if(v1 >= 0 && v1 < 128) {
-						this.out.addByte(v1);
-					} else {
-						this.out.addByte(128);
-						this.out.addInt32(v1);
-					}
-					this.out.add(b);
-				}
-				this.addDynamic(Reflect.field(v,f));
-			}
-			break;
-		case 6:
-			var c = _g.c;
-			switch(c) {
-			case Array:
-				this.out.addByte(7);
-				var a = v;
-				var v1 = a.length;
-				if(v1 >= 0 && v1 < 128) {
-					this.out.addByte(v1);
-				} else {
-					this.out.addByte(128);
-					this.out.addInt32(v1);
-				}
-				var _g1 = 0;
-				while(_g1 < a.length) {
-					var v1 = a[_g1];
-					++_g1;
-					this.addDynamic(v1);
-				}
-				break;
-			case String:
-				this.out.addByte(6);
-				var s = v;
-				if(s == null) {
-					this.out.addByte(0);
-				} else {
-					var b = haxe_io_Bytes.ofString(s);
-					var v1 = b.length + 1;
-					if(v1 >= 0 && v1 < 128) {
-						this.out.addByte(v1);
-					} else {
-						this.out.addByte(128);
-						this.out.addInt32(v1);
-					}
-					this.out.add(b);
-				}
-				break;
-			case haxe_io_Bytes:
-				this.out.addByte(8);
-				var b = v;
-				if(b == null) {
-					this.out.addByte(0);
-				} else {
-					var v = b.length + 1;
-					if(v >= 0 && v < 128) {
-						this.out.addByte(v);
-					} else {
-						this.out.addByte(128);
-						this.out.addInt32(v);
-					}
-					this.out.add(b);
-				}
-				break;
-			default:
-				throw haxe_Exception.thrown("Unsupported dynamic " + Std.string(c));
-			}
-			break;
-		default:
-			var t = _g;
-			throw haxe_Exception.thrown("Unsupported dynamic " + Std.string(t));
-		}
-	}
-	,addCLID: function(clid) {
-		this.out.addByte(clid >> 8);
-		this.out.addByte(clid & 255);
-	}
-	,getCLID: function() {
-		return this.input.b[this.inPos++] << 8 | this.input.b[this.inPos++];
-	}
-	,addStruct: function(s) {
-		if(s == null) {
-			this.out.addByte(0);
-			return;
-		}
-		var c = js_Boot.__implements(s,hxbit_Serializable) ? s : null;
-		if(c != null) {
-			this.out.addByte(1);
-			this.addAnyRef(c);
-			return;
-		}
-		var index = this.knownStructs.indexOf(s);
-		if(index >= 0) {
-			this.out.addByte(2);
-			if(index >= 0 && index < 128) {
-				this.out.addByte(index);
-			} else {
-				this.out.addByte(128);
-				this.out.addInt32(index);
-			}
-			return;
-		}
-		this.knownStructs.push(s);
-		this.out.addByte(3);
-		var c = js_Boot.getClass(s);
-		if(c == null) {
-			throw haxe_Exception.thrown(Std.string(s) + " does not have a class ?");
-		}
-		var s1 = c.__name__;
-		if(s1 == null) {
-			this.out.addByte(0);
-		} else {
-			var b = haxe_io_Bytes.ofString(s1);
-			var v = b.length + 1;
-			if(v >= 0 && v < 128) {
-				this.out.addByte(v);
-			} else {
-				this.out.addByte(128);
-				this.out.addInt32(v);
-			}
-			this.out.add(b);
-		}
-		s.customSerialize(this);
-		this.out.addByte(255);
-	}
-	,getStruct: function() {
-		switch(this.input.b[this.inPos++]) {
-		case 0:
-			return null;
-		case 1:
-			return this.getAnyRef();
-		case 2:
-			var tmp = this.knownStructs;
-			var v = this.input.b[this.inPos++];
-			if(v == 128) {
-				v = this.input.getInt32(this.inPos);
-				this.inPos += 4;
-			}
-			return tmp[v];
-		case 3:
-			var v = this.input.b[this.inPos++];
-			if(v == 128) {
-				v = this.input.getInt32(this.inPos);
-				this.inPos += 4;
-			}
-			var len = v;
-			var cname;
-			if(len == 0) {
-				cname = null;
-			} else {
-				--len;
-				var s = this.input.getString(this.inPos,len);
-				this.inPos += len;
-				cname = s;
-			}
-			var cl = $hxClasses[cname];
-			if(cl == null) {
-				throw haxe_Exception.thrown("Missing struct class " + cname);
-			}
-			var s = Object.create(cl.prototype);
-			this.knownStructs.push(s);
-			s.customUnserialize(this);
-			if(this.input.b[this.inPos++] != 255) {
-				throw haxe_Exception.thrown("Invalid customUnserialize for " + Std.string(s));
-			}
-			return s;
-		default:
-			throw haxe_Exception.thrown("assert");
-		}
-	}
-	,addObjRef: function(s) {
-		var v = s.__uid;
-		if(v >= 0 && v < 128) {
-			this.out.addByte(v);
-		} else {
-			this.out.addByte(128);
-			this.out.addInt32(v);
-		}
-	}
-	,getObjRef: function() {
-		var v = this.input.b[this.inPos++];
-		if(v == 128) {
-			v = this.input.getInt32(this.inPos);
-			this.inPos += 4;
-		}
-		return v;
-	}
-	,addAnyRef: function(s) {
-		if(s == null) {
-			this.out.addByte(0);
-			return;
-		}
-		if(this.remapObjs != null) {
-			this.remap(s);
-		}
-		this.addObjRef(s);
-		if(this.refs.h[s.__uid] != null) {
-			return;
-		}
-		this.refs.h[s.__uid] = s;
-		var index = s.getCLID();
-		this.usedClasses[index] = true;
-		this.out.addByte(index >> 8);
-		this.out.addByte(index & 255);
-		s.serialize(this);
-	}
-	,addKnownRef: function(s) {
-		if(s == null) {
-			this.out.addByte(0);
-			return;
-		}
-		if(this.remapObjs != null) {
-			this.remap(s);
-		}
-		this.addObjRef(s);
-		if(this.refs.h[s.__uid] != null) {
-			return;
-		}
-		this.refs.h[s.__uid] = s;
-		var index = s.getCLID();
-		this.usedClasses[index] = true;
-		var clid = hxbit_Serializer.CLIDS[index];
-		if(clid != 0) {
-			this.out.addByte(clid >> 8);
-			this.out.addByte(clid & 255);
-		}
-		s.serialize(this);
-	}
-	,getAnyRef: function() {
-		var id = this.getObjRef();
-		if(id == 0) {
-			return null;
-		}
-		if(this.refs.h[id] != null) {
-			return this.refs.h[id];
-		}
-		var rid = id & 16777215;
-		if(hxbit_Serializer.UID < rid) {
-			hxbit_Serializer.UID = rid;
-		}
-		var clidx = this.input.b[this.inPos++] << 8 | this.input.b[this.inPos++];
-		if(this.mapIndexes != null) {
-			clidx = this.mapIndexes[clidx];
-		}
-		var i = Object.create(hxbit_Serializer.CLASSES[clidx].prototype);
-		if(this.newObjects != null) {
-			this.newObjects.push(i);
-		}
-		i.__uid = id;
-		i.unserializeInit();
-		this.refs.h[id] = i;
-		if(this.convert != null && this.convert[clidx] != null) {
-			this.convertRef(i,this.convert[clidx]);
-		} else {
-			i.unserialize(this);
-		}
-		return i;
-	}
-	,getRef: function(c,clidx) {
-		var id = this.getObjRef();
-		if(id == 0) {
-			return null;
-		}
-		if(this.refs.h[id] != null) {
-			return this.refs.h[id];
-		}
-		var rid = id & 16777215;
-		if(hxbit_Serializer.UID < rid) {
-			hxbit_Serializer.UID = rid;
-		}
-		if(this.convert != null && this.convert[clidx] != null) {
-			var conv = this.convert[clidx];
-			if(conv.hadCID) {
-				var realIdx = this.input.b[this.inPos++] << 8 | this.input.b[this.inPos++];
-				if(conv.hasCID) {
-					c = hxbit_Serializer.CL_BYID[realIdx];
-					clidx = c.__clid;
-				}
-			}
-		} else if(hxbit_Serializer.CLIDS[clidx] != 0) {
-			var realIdx = this.input.b[this.inPos++] << 8 | this.input.b[this.inPos++];
-			c = hxbit_Serializer.CL_BYID[realIdx];
-			if(this.convert != null) {
-				clidx = c.__clid;
-			}
-		}
-		var i = Object.create(c.prototype);
-		if(this.newObjects != null) {
-			this.newObjects.push(i);
-		}
-		i.__uid = id;
-		i.unserializeInit();
-		this.refs.h[id] = i;
-		if(this.convert != null && this.convert[clidx] != null) {
-			this.convertRef(i,this.convert[clidx]);
-		} else {
-			i.unserialize(this);
-		}
-		return i;
-	}
-	,getKnownRef: function(c) {
-		return this.getRef(c,c.__clid);
-	}
-	,beginSave: function() {
-		this.begin();
-		this.usedClasses = [];
-	}
-	,endSave: function(savePosition) {
-		if(savePosition == null) {
-			savePosition = 0;
-		}
-		var content = this.end();
-		this.begin();
-		var classes = [];
-		var schemas = [];
-		var sidx = hxbit_Serializer.CLASSES.indexOf(hxbit_Schema);
-		var _g = 0;
-		var _g1 = this.usedClasses.length;
-		while(_g < _g1) {
-			var i = _g++;
-			if(!this.usedClasses[i] || i == sidx) {
-				continue;
-			}
-			var c = hxbit_Serializer.CLASSES[i];
-			var schema = Object.create(c.prototype).getSerializeSchema();
-			schemas.push(schema);
-			classes.push(i);
-			this.addKnownRef(schema);
-			this.refs.remove(schema.__uid);
-		}
-		var schemaData = this.end();
-		this.begin();
-		this.out.addBytes(content,0,savePosition);
-		var b = haxe_io_Bytes.ofString("HXS");
-		var v = b.length + 1;
-		if(v >= 0 && v < 128) {
-			this.out.addByte(v);
-		} else {
-			this.out.addByte(128);
-			this.out.addInt32(v);
-		}
-		this.out.add(b);
-		this.out.addByte(1);
-		var _g = 0;
-		var _g1 = classes.length;
-		while(_g < _g1) {
-			var i = _g++;
-			var index = classes[i];
-			var c = hxbit_Serializer.CLASSES[index];
-			var s = c.__name__;
-			if(s == null) {
-				this.out.addByte(0);
-			} else {
-				var b = haxe_io_Bytes.ofString(s);
-				var v = b.length + 1;
-				if(v >= 0 && v < 128) {
-					this.out.addByte(v);
-				} else {
-					this.out.addByte(128);
-					this.out.addInt32(v);
-				}
-				this.out.add(b);
-			}
-			this.out.addByte(index >> 8);
-			this.out.addByte(index & 255);
-			var v1 = schemas[i].get_checkSum();
-			this.out.addInt32(v1);
-		}
-		var s = null;
-		if(s == null) {
-			this.out.addByte(0);
-		} else {
-			var b = haxe_io_Bytes.ofString(s);
-			var v = b.length + 1;
-			if(v >= 0 && v < 128) {
-				this.out.addByte(v);
-			} else {
-				this.out.addByte(128);
-				this.out.addInt32(v);
-			}
-			this.out.add(b);
-		}
-		var v = schemaData.length;
-		if(v >= 0 && v < 128) {
-			this.out.addByte(v);
-		} else {
-			this.out.addByte(128);
-			this.out.addInt32(v);
-		}
-		this.out.add(schemaData);
-		this.out.addBytes(content,savePosition,content.length - savePosition);
-		return this.end();
-	}
-	,beginLoad: function(bytes,position) {
-		if(position == null) {
-			position = 0;
-		}
-		this.setInput(bytes,position);
-		var classByName_h = Object.create(null);
-		var schemas = [];
-		var mapIndexes = [];
-		var indexes = [];
-		var needConvert = false;
-		var needReindex = false;
-		var _g = 0;
-		var _g1 = hxbit_Serializer.CLASSES.length;
-		while(_g < _g1) {
-			var i = _g++;
-			var c = hxbit_Serializer.CLASSES[i];
-			classByName_h[c.__name__] = i;
-			mapIndexes[i] = i;
-		}
-		var v = this.input.b[this.inPos++];
-		if(v == 128) {
-			v = this.input.getInt32(this.inPos);
-			this.inPos += 4;
-		}
-		var len = v;
-		var tmp;
-		if(len == 0) {
-			tmp = null;
-		} else {
-			--len;
-			var s = this.input.getString(this.inPos,len);
-			this.inPos += len;
-			tmp = s;
-		}
-		if(tmp != "HXS") {
-			throw haxe_Exception.thrown("Invalid HXS data");
-		}
-		var version = this.input.b[this.inPos++];
-		if(version != 1) {
-			throw haxe_Exception.thrown("Unsupported HXS version " + version);
-		}
-		while(true) {
-			var v = this.input.b[this.inPos++];
-			if(v == 128) {
-				v = this.input.getInt32(this.inPos);
-				this.inPos += 4;
-			}
-			var len = v;
-			var clname;
-			if(len == 0) {
-				clname = null;
-			} else {
-				--len;
-				var s = this.input.getString(this.inPos,len);
-				this.inPos += len;
-				clname = s;
-			}
-			if(clname == null) {
-				break;
-			}
-			var index = this.input.b[this.inPos++] << 8 | this.input.b[this.inPos++];
-			var v1 = this.input.getInt32(this.inPos);
-			this.inPos += 4;
-			var crc = v1;
-			var ourClassIndex = classByName_h[clname];
-			if(ourClassIndex == null) {
-				throw haxe_Exception.thrown("Missing class " + clname + " found in HXS data");
-			}
-			var ourSchema = Object.create(hxbit_Serializer.CLASSES[ourClassIndex].prototype).getSerializeSchema();
-			if(ourSchema.get_checkSum() != crc) {
-				needConvert = true;
-				schemas[index] = ourSchema;
-			}
-			if(index != ourClassIndex) {
-				needReindex = true;
-				mapIndexes[index] = ourClassIndex;
-			}
-			indexes.push(index);
-		}
-		var v = this.input.b[this.inPos++];
-		if(v == 128) {
-			v = this.input.getInt32(this.inPos);
-			this.inPos += 4;
-		}
-		var schemaDataSize = v;
-		if(needConvert) {
-			this.convert = [];
-			var _g = 0;
-			while(_g < indexes.length) {
-				var index = indexes[_g];
-				++_g;
-				var ourSchema = schemas[index];
-				var c = hxbit_Schema;
-				var schema = this.getRef(c,c.__clid);
-				this.refs.remove(schema.__uid);
-				if(ourSchema != null) {
-					var c1 = hxbit_Serializer.CLASSES[mapIndexes[index]];
-					this.convert[mapIndexes[index]] = new hxbit_Convert(c1.__name__,ourSchema,schema);
-				}
-			}
-		} else {
-			this.inPos += schemaDataSize;
-		}
-		if(needReindex) {
-			this.mapIndexes = mapIndexes;
-		}
-	}
-	,endLoad: function() {
-		this.convert = null;
-		this.mapIndexes = null;
-		this.setInput(null,0);
-	}
-	,convertRef: function(i,c) {
-		var this1 = new Array(c.read.length);
-		var values = this1;
-		var writePos = 0;
-		var _g = 0;
-		var _g1 = c.read;
-		while(_g < _g1.length) {
-			var r = _g1[_g];
-			++_g;
-			values[r.index] = this.readValue(r.from);
-		}
-		var oldOut = this.out;
-		this.out = new haxe_io_BytesBuffer();
-		var _g = 0;
-		var _g1 = c.write;
-		while(_g < _g1.length) {
-			var w = _g1[_g];
-			++_g;
-			var v;
-			if(w.from == null) {
-				v = w.defaultValue;
-			} else {
-				v = values[w.index];
-				if(!w.same) {
-					if(v == null) {
-						v = w.defaultValue;
-					} else if(w.conv != null) {
-						v = w.conv(v);
-					} else {
-						v = this.convertValue(w.path,v,w.from,w.to);
-					}
-				}
-			}
-			this.writeValue(v,w.to);
-		}
-		var bytes = this.out.getBytes();
-		this.out = oldOut;
-		var oldIn = this.input;
-		var oldPos = this.inPos;
-		this.setInput(bytes,0);
-		i.unserialize(this);
-		this.setInput(oldIn,oldPos);
-	}
-	,isNullable: function(t) {
-		switch(t._hx_index) {
-		case 0:case 1:case 2:
-			return false;
-		default:
-			return true;
-		}
-	}
-	,convertValue: function(path,v,from,to) {
-		if(v == null) {
-			return hxbit_Convert.getDefault(to);
-		}
-		if(hxbit_Convert.sameType(from,to)) {
-			return v;
-		}
-		var conv = hxbit_Convert.convFuns.h[path];
-		if(conv != null) {
-			return conv(v);
-		}
-		switch(from._hx_index) {
-		case 0:
-			switch(to._hx_index) {
-			case 1:
-				return v * 1.0;
-			case 10:
-				var to1 = to.k;
-				return this.convertValue(path,v,from,to1);
-			case 12:
-				var to1 = to.t;
-				return this.convertValue(path,v,from,to1);
-			default:
-			}
-			break;
-		case 1:
-			switch(to._hx_index) {
-			case 0:
-				return v | 0;
-			case 10:
-				var to1 = to.k;
-				return this.convertValue(path,v,from,to1);
-			case 12:
-				var to1 = to.t;
-				return this.convertValue(path,v,from,to1);
-			default:
-			}
-			break;
-		case 2:
-			switch(to._hx_index) {
-			case 0:
-				if(v) {
-					return 1;
-				} else {
-					return 0;
-				}
-				break;
-			case 1:
-				if(v) {
-					return 1.;
-				} else {
-					return 0.;
-				}
-				break;
-			case 10:
-				var to1 = to.k;
-				return this.convertValue(path,v,from,to1);
-			case 12:
-				var to1 = to.t;
-				return this.convertValue(path,v,from,to1);
-			default:
-			}
-			break;
-		case 5:
-			var _g = from.name;
-			switch(to._hx_index) {
-			case 5:
-				var to1 = to.name;
-				var value = v;
-				var v2 = js_Boot.__downcastCheck(value,$hxClasses[to1]) ? value : null;
-				if(v2 != null) {
-					return v2;
-				}
-				break;
-			case 10:
-				var to1 = to.k;
-				return this.convertValue(path,v,from,to1);
-			case 12:
-				var to1 = to.t;
-				return this.convertValue(path,v,from,to1);
-			default:
-			}
-			break;
-		case 8:
-			var _g = from.k;
-			switch(to._hx_index) {
-			case 8:
-				var to1 = to.k;
-				var from1 = _g;
-				var arr = v;
-				var _g = [];
-				var _g1 = 0;
-				while(_g1 < arr.length) {
-					var v1 = arr[_g1];
-					++_g1;
-					_g.push(this.convertValue(path + "[]",v1,from1,to1));
-				}
-				return _g;
-			case 10:
-				var to1 = to.k;
-				return this.convertValue(path,v,from,to1);
-			case 12:
-				var to1 = to.t;
-				return this.convertValue(path,v,from,to1);
-			default:
-			}
-			break;
-		case 9:
-			var _g = from.fields;
-			switch(to._hx_index) {
-			case 9:
-				var obj2 = to.fields;
-				var obj1 = _g;
-				var v2 = { };
-				var _g = 0;
-				while(_g < obj2.length) {
-					var f = obj2[_g];
-					++_g;
-					var found = false;
-					var field = null;
-					var _g1 = 0;
-					while(_g1 < obj1.length) {
-						var f2 = obj1[_g1];
-						++_g1;
-						if(f2.name == f.name) {
-							found = true;
-							field = this.convertValue(path + "." + f2.name,Reflect.field(v,f2.name),f2.type,f.type);
-							break;
-						}
-					}
-					if(!found) {
-						if(f.opt) {
-							continue;
-						}
-						field = hxbit_Convert.getDefault(f.type);
-					} else if(field == null && f.opt) {
-						continue;
-					}
-					v2[f.name] = field;
-				}
-				return v2;
-			case 10:
-				var to1 = to.k;
-				return this.convertValue(path,v,from,to1);
-			case 12:
-				var to1 = to.t;
-				return this.convertValue(path,v,from,to1);
-			default:
-			}
-			break;
-		case 10:
-			var _g = from.k;
-			switch(to._hx_index) {
-			case 10:
-				var _g1 = to.k;
-				var from1 = _g;
-				return this.convertValue(path,v,from1,to);
-			case 12:
-				var to1 = to.t;
-				return this.convertValue(path,v,from,to1);
-			default:
-				var from1 = _g;
-				return this.convertValue(path,v,from1,to);
-			}
-			break;
-		case 12:
-			var from1 = from.t;
-			return this.convertValue(path,v,from1,to);
-		default:
-			switch(to._hx_index) {
-			case 10:
-				var to1 = to.k;
-				return this.convertValue(path,v,from,to1);
-			case 12:
-				var to1 = to.t;
-				return this.convertValue(path,v,from,to1);
-			default:
-			}
-		}
-		throw haxe_Exception.thrown("Cannot convert " + path + "(" + Std.string(v) + ") from " + Std.string(from) + " to " + Std.string(to));
-	}
-	,getEnumClass: function(name) {
-		var cl = hxbit_Serializer.ENUM_CLASSES.h[name];
-		if(cl != null) {
-			return cl;
-		}
-		var path = name.split(".").join("_");
-		path = path.charAt(0).toUpperCase() + HxOverrides.substr(path,1,null);
-		cl = $hxClasses["hxbit.enumSer." + path];
-		if(cl != null) {
-			hxbit_Serializer.ENUM_CLASSES.h[name] = cl;
-		}
-		return cl;
-	}
-	,readValue: function(t) {
-		var _gthis = this;
-		switch(t._hx_index) {
-		case 0:
-			var v = this.input.b[this.inPos++];
-			if(v == 128) {
-				v = this.input.getInt32(this.inPos);
-				this.inPos += 4;
-			}
-			return v;
-		case 1:
-			var v = this.input.getFloat(this.inPos);
-			this.inPos += 4;
-			return v;
-		case 2:
-			return this.input.b[this.inPos++] != 0;
-		case 3:
-			var v = this.input.b[this.inPos++];
-			if(v == 128) {
-				v = this.input.getInt32(this.inPos);
-				this.inPos += 4;
-			}
-			var len = v;
-			if(len == 0) {
-				return null;
-			} else {
-				--len;
-				var s = this.input.getString(this.inPos,len);
-				this.inPos += len;
-				return s;
-			}
-			break;
-		case 4:
-			var v = this.input.b[this.inPos++];
-			if(v == 128) {
-				v = this.input.getInt32(this.inPos);
-				this.inPos += 4;
-			}
-			var len = v;
-			if(len == 0) {
-				return null;
-			} else {
-				--len;
-				var s = this.input.sub(this.inPos,len);
-				this.inPos += len;
-				return s;
-			}
-			break;
-		case 5:
-			var name = t.name;
-			var c = $hxClasses[name];
-			return this.getRef(c,c.__clid);
-		case 6:
-			var name = t.name;
-			var ser = this.getEnumClass(name);
-			if(ser == null) {
-				var e = $hxEnums[name];
-				var tmp;
-				if(e != null) {
-					var o = haxe_rtti_Meta.getType(e);
-					tmp = Object.prototype.hasOwnProperty.call(o,"skipSerialize");
-				} else {
-					tmp = false;
-				}
-				if(tmp) {
-					var v = this.input.b[this.inPos++];
-					if(v == 128) {
-						v = this.input.getInt32(this.inPos);
-						this.inPos += 4;
-					}
-					return null;
-				}
-				throw haxe_Exception.thrown("No enum unserializer found for " + name);
-			}
-			return ser.doUnserialize(this);
-		case 7:
-			var k = t.k;
-			var v = t.v;
-			switch(k._hx_index) {
-			case 0:
-				var v1 = this.input.b[this.inPos++];
-				if(v1 == 128) {
-					v1 = this.input.getInt32(this.inPos);
-					this.inPos += 4;
-				}
-				var len = v1;
-				var tmp;
-				if(len == 0) {
-					tmp = null;
-				} else {
-					var m = new haxe_ds_IntMap();
-					while(--len > 0) {
-						var k1 = _gthis.readValue(k);
-						var v1 = _gthis.readValue(v);
-						m.h[k1] = v1;
-					}
-					tmp = m;
-				}
-				return tmp;
-			case 3:
-				var v1 = this.input.b[this.inPos++];
-				if(v1 == 128) {
-					v1 = this.input.getInt32(this.inPos);
-					this.inPos += 4;
-				}
-				var len = v1;
-				var tmp;
-				if(len == 0) {
-					tmp = null;
-				} else {
-					var m = new haxe_ds_StringMap();
-					while(--len > 0) {
-						var k1 = _gthis.readValue(k);
-						var v1 = _gthis.readValue(v);
-						m.h[k1] = v1;
-					}
-					tmp = m;
-				}
-				return tmp;
-			case 6:
-				var _g = k.name;
-				var v1 = this.input.b[this.inPos++];
-				if(v1 == 128) {
-					v1 = this.input.getInt32(this.inPos);
-					this.inPos += 4;
-				}
-				var len = v1;
-				if(len == 0) {
-					return null;
-				}
-				var m = new haxe_ds_EnumValueMap();
-				while(--len > 0) {
-					var k1 = this.readValue(k);
-					var v1 = this.readValue(v);
-					m.set(k1,v1);
-				}
-				return m;
-			default:
-				var v1 = this.input.b[this.inPos++];
-				if(v1 == 128) {
-					v1 = this.input.getInt32(this.inPos);
-					this.inPos += 4;
-				}
-				var len = v1;
-				var tmp;
-				if(len == 0) {
-					tmp = null;
-				} else {
-					var m = new haxe_ds_ObjectMap();
-					while(--len > 0) {
-						var k1 = _gthis.readValue(k);
-						var v1 = _gthis.readValue(v);
-						m.set(k1,v1);
-					}
-					tmp = m;
-				}
-				return tmp;
-			}
-			break;
-		case 8:
-			var t1 = t.k;
-			var v = this.input.b[this.inPos++];
-			if(v == 128) {
-				v = this.input.getInt32(this.inPos);
-				this.inPos += 4;
-			}
-			var len = v;
-			if(len == 0) {
-				return null;
-			} else {
-				--len;
-				var a = [];
-				var _g = 0;
-				var _g1 = len;
-				while(_g < _g1) {
-					var i = _g++;
-					a[i] = _gthis.readValue(t1);
-				}
-				return a;
-			}
-			break;
-		case 9:
-			var fields = t.fields;
-			var v = this.input.b[this.inPos++];
-			if(v == 128) {
-				v = this.input.getInt32(this.inPos);
-				this.inPos += 4;
-			}
-			var bits = v;
-			if(bits == 0) {
-				return null;
-			}
-			var o = { };
-			--bits;
-			var _g = [];
-			var _g1 = 0;
-			while(_g1 < fields.length) {
-				var f = fields[_g1];
-				++_g1;
-				if(this.isNullable(f.type)) {
-					_g.push(f);
-				}
-			}
-			var nullables = _g;
-			var _g = 0;
-			while(_g < fields.length) {
-				var f = fields[_g];
-				++_g;
-				var nidx = nullables.indexOf(f);
-				if(nidx >= 0 && (bits & 1 << nidx) == 0) {
-					continue;
-				}
-				o[f.name] = this.readValue(f.type);
-			}
-			return o;
-		case 10:
-			var t1 = t.k;
-			return this.readValue(t1);
-		case 11:
-			var t1 = t.k;
-			var v = this.input.b[this.inPos++];
-			if(v == 128) {
-				v = this.input.getInt32(this.inPos);
-				this.inPos += 4;
-			}
-			var len = v;
-			if(len == 0) {
-				return null;
-			} else {
-				--len;
-				var this1 = new Array(len);
-				var a = this1;
-				var _g = 0;
-				var _g1 = len;
-				while(_g < _g1) {
-					var i = _g++;
-					a[i] = _gthis.readValue(t1);
-				}
-				return a;
-			}
-			break;
-		case 12:
-			var t1 = t.t;
-			if(this.input.b[this.inPos++] == 0) {
-				return null;
-			} else {
-				return this.readValue(t1);
-			}
-			break;
-		case 13:
-			throw haxe_Exception.thrown("assert");
-		case 14:
-			return this.getDynamic();
-		case 15:
-			var v = this.input.getInt64(this.inPos);
-			this.inPos += 8;
-			return v;
-		case 16:
-			var _g = t.t;
-			var v = this.input.b[this.inPos++];
-			if(v == 128) {
-				v = this.input.getInt32(this.inPos);
-				this.inPos += 4;
-			}
-			return v;
-		case 17:
-			return this.getStruct();
-		}
-	}
-	,writeValue: function(v,t) {
-		var _gthis = this;
-		switch(t._hx_index) {
-		case 0:
-			var v1 = v;
-			if(v1 >= 0 && v1 < 128) {
-				this.out.addByte(v1);
-			} else {
-				this.out.addByte(128);
-				this.out.addInt32(v1);
-			}
-			break;
-		case 1:
-			this.out.addFloat(v);
-			break;
-		case 2:
-			this.out.addByte(v ? 1 : 0);
-			break;
-		case 3:
-			var s = v;
-			if(s == null) {
-				this.out.addByte(0);
-			} else {
-				var b = haxe_io_Bytes.ofString(s);
-				var v1 = b.length + 1;
-				if(v1 >= 0 && v1 < 128) {
-					this.out.addByte(v1);
-				} else {
-					this.out.addByte(128);
-					this.out.addInt32(v1);
-				}
-				this.out.add(b);
-			}
-			break;
-		case 4:
-			var b = v;
-			if(b == null) {
-				this.out.addByte(0);
-			} else {
-				var v1 = b.length + 1;
-				if(v1 >= 0 && v1 < 128) {
-					this.out.addByte(v1);
-				} else {
-					this.out.addByte(128);
-					this.out.addInt32(v1);
-				}
-				this.out.add(b);
-			}
-			break;
-		case 5:
-			var _g = t.name;
-			this.addKnownRef(v);
-			break;
-		case 6:
-			var name = t.name;
-			var ser = this.getEnumClass(name);
-			if(ser == null) {
-				throw haxe_Exception.thrown("No enum unserializer found for " + name);
-			}
-			ser.doSerialize(this,v);
-			break;
-		case 7:
-			var k = t.k;
-			var t1 = t.v;
-			switch(k._hx_index) {
-			case 0:
-				var v1 = v;
-				if(v1 == null) {
-					this.out.addByte(0);
-				} else {
-					var _g = [];
-					var k1 = v1.keys();
-					while(k1.hasNext()) {
-						var k2 = k1.next();
-						_g.push(k2);
-					}
-					var keys = _g;
-					var v2 = keys.length + 1;
-					if(v2 >= 0 && v2 < 128) {
-						this.out.addByte(v2);
-					} else {
-						this.out.addByte(128);
-						this.out.addInt32(v2);
-					}
-					var _g = 0;
-					while(_g < keys.length) {
-						var k1 = keys[_g];
-						++_g;
-						_gthis.writeValue(k1,k);
-						_gthis.writeValue(v1.h[k1],t1);
-					}
-				}
-				break;
-			case 3:
-				var v1 = v;
-				if(v1 == null) {
-					this.out.addByte(0);
-				} else {
-					var _g = [];
-					var h = v1.h;
-					var k_h = h;
-					var k_keys = Object.keys(h);
-					var k_length = k_keys.length;
-					var k_current = 0;
-					while(k_current < k_length) {
-						var k1 = k_keys[k_current++];
-						_g.push(k1);
-					}
-					var keys = _g;
-					var v2 = keys.length + 1;
-					if(v2 >= 0 && v2 < 128) {
-						this.out.addByte(v2);
-					} else {
-						this.out.addByte(128);
-						this.out.addInt32(v2);
-					}
-					var _g = 0;
-					while(_g < keys.length) {
-						var k1 = keys[_g];
-						++_g;
-						_gthis.writeValue(k1,k);
-						_gthis.writeValue(v1.h[k1],t1);
-					}
-				}
-				break;
-			case 6:
-				var _g = k.name;
-				var v1 = v;
-				if(v1 == null) {
-					this.out.addByte(0);
-					return;
-				}
-				var _g = [];
-				var k1 = v1.keys();
-				while(k1.hasNext()) {
-					var k2 = k1.next();
-					_g.push(k2);
-				}
-				var keys = _g;
-				var v2 = keys.length + 1;
-				if(v2 >= 0 && v2 < 128) {
-					this.out.addByte(v2);
-				} else {
-					this.out.addByte(128);
-					this.out.addInt32(v2);
-				}
-				var _g = 0;
-				while(_g < keys.length) {
-					var vk = keys[_g];
-					++_g;
-					this.writeValue(vk,k);
-					this.writeValue(v1.get(vk),t1);
-				}
-				break;
-			default:
-				var v1 = v;
-				if(v1 == null) {
-					this.out.addByte(0);
-				} else {
-					var _g = [];
-					var k1 = v1.keys();
-					while(k1.hasNext()) {
-						var k2 = k1.next();
-						_g.push(k2);
-					}
-					var keys = _g;
-					var v2 = keys.length + 1;
-					if(v2 >= 0 && v2 < 128) {
-						this.out.addByte(v2);
-					} else {
-						this.out.addByte(128);
-						this.out.addInt32(v2);
-					}
-					var _g = 0;
-					while(_g < keys.length) {
-						var k1 = keys[_g];
-						++_g;
-						_gthis.writeValue(k1,k);
-						_gthis.writeValue(v1.h[k1.__id__],t1);
-					}
-				}
-			}
-			break;
-		case 8:
-			var t1 = t.k;
-			var a = v;
-			if(a == null) {
-				this.out.addByte(0);
-			} else {
-				var v1 = a.length + 1;
-				if(v1 >= 0 && v1 < 128) {
-					this.out.addByte(v1);
-				} else {
-					this.out.addByte(128);
-					this.out.addInt32(v1);
-				}
-				var _g = 0;
-				while(_g < a.length) {
-					var v1 = a[_g];
-					++_g;
-					_gthis.writeValue(v1,t1);
-				}
-			}
-			break;
-		case 9:
-			var fields = t.fields;
-			if(v == null) {
-				this.out.addByte(0);
-			} else {
-				var fbits = 0;
-				var _g = [];
-				var _g1 = 0;
-				while(_g1 < fields.length) {
-					var f = fields[_g1];
-					++_g1;
-					if(this.isNullable(f.type)) {
-						_g.push(f);
-					}
-				}
-				var nullables = _g;
-				var _g = 0;
-				var _g1 = nullables.length;
-				while(_g < _g1) {
-					var i = _g++;
-					if(Reflect.field(v,nullables[i].name) != null) {
-						fbits |= 1 << i;
-					}
-				}
-				var v1 = fbits + 1;
-				if(v1 >= 0 && v1 < 128) {
-					this.out.addByte(v1);
-				} else {
-					this.out.addByte(128);
-					this.out.addInt32(v1);
-				}
-				var _g = 0;
-				while(_g < fields.length) {
-					var f = fields[_g];
-					++_g;
-					var nidx = nullables.indexOf(f);
-					if(nidx >= 0 && (fbits & 1 << nidx) == 0) {
-						continue;
-					}
-					this.writeValue(Reflect.field(v,f.name),f.type);
-				}
-			}
-			break;
-		case 10:
-			var t1 = t.k;
-			this.writeValue(v,t1);
-			break;
-		case 11:
-			var t1 = t.k;
-			var a = v;
-			if(a == null) {
-				this.out.addByte(0);
-			} else {
-				var v1 = a.length + 1;
-				if(v1 >= 0 && v1 < 128) {
-					this.out.addByte(v1);
-				} else {
-					this.out.addByte(128);
-					this.out.addInt32(v1);
-				}
-				var _g = 0;
-				while(_g < a.length) {
-					var v1 = a[_g];
-					++_g;
-					_gthis.writeValue(v1,t1);
-				}
-			}
-			break;
-		case 12:
-			var t1 = t.t;
-			if(v == null) {
-				this.out.addByte(0);
-			} else {
-				this.out.addByte(1);
-				this.writeValue(v,t1);
-			}
-			break;
-		case 13:
-			throw haxe_Exception.thrown("assert");
-		case 14:
-			this.addDynamic(v);
-			break;
-		case 15:
-			this.out.addInt64(v);
-			break;
-		case 16:
-			var _g = t.t;
-			var v1 = v;
-			if(v1 >= 0 && v1 < 128) {
-				this.out.addByte(v1);
-			} else {
-				this.out.addByte(128);
-				this.out.addInt32(v1);
-			}
-			break;
-		case 17:
-			this.addStruct(v);
-			break;
-		}
-	}
-	,__class__: hxbit_Serializer
-};
-var hxbit_Schema = function() {
-	this.__uid = hxbit_Serializer.SEQ << 24 | ++hxbit_Serializer.UID;
-	this.fieldsNames = [];
-	this.fieldsTypes = [];
-};
-$hxClasses["hxbit.Schema"] = hxbit_Schema;
-hxbit_Schema.__name__ = "hxbit.Schema";
-hxbit_Schema.__interfaces__ = [hxbit_Serializable];
-hxbit_Schema.prototype = {
-	get_checkSum: function() {
-		var s = new hxbit_Serializer();
-		s.begin();
-		var old = this.__uid;
-		this.__uid = 0;
-		s.addKnownRef(this);
-		this.__uid = old;
-		var bytes = s.end();
-		return haxe_crypto_Crc32.make(bytes);
-	}
-	,getCLID: function() {
-		return hxbit_Schema.__clid;
-	}
-	,serialize: function(__ctx) {
-		__ctx.out.addByte(this.isFinal ? 1 : 0);
-		var a = this.fieldsNames;
-		if(a == null) {
-			__ctx.out.addByte(0);
-		} else {
-			var v = a.length + 1;
-			if(v >= 0 && v < 128) {
-				__ctx.out.addByte(v);
-			} else {
-				__ctx.out.addByte(128);
-				__ctx.out.addInt32(v);
-			}
-			var _g = 0;
-			while(_g < a.length) {
-				var v = a[_g];
-				++_g;
-				if(v == null) {
-					__ctx.out.addByte(0);
-				} else {
-					var b = haxe_io_Bytes.ofString(v);
-					var v1 = b.length + 1;
-					if(v1 >= 0 && v1 < 128) {
-						__ctx.out.addByte(v1);
-					} else {
-						__ctx.out.addByte(128);
-						__ctx.out.addInt32(v1);
-					}
-					__ctx.out.add(b);
-				}
-			}
-		}
-		var a = this.fieldsTypes;
-		if(a == null) {
-			__ctx.out.addByte(0);
-		} else {
-			var v = a.length + 1;
-			if(v >= 0 && v < 128) {
-				__ctx.out.addByte(v);
-			} else {
-				__ctx.out.addByte(128);
-				__ctx.out.addInt32(v);
-			}
-			var _g = 0;
-			while(_g < a.length) {
-				var v = a[_g];
-				++_g;
-				hxbit_enumSer_Hxbit_$PropTypeDesc.doSerialize(__ctx,v);
-			}
-		}
-	}
-	,getSerializeSchema: function() {
-		var schema = new hxbit_Schema();
-		schema.fieldsNames.push("isFinal");
-		schema.fieldsTypes.push(hxbit_PropTypeDesc.PBool);
-		schema.fieldsNames.push("fieldsNames");
-		schema.fieldsTypes.push(hxbit_PropTypeDesc.PArray(hxbit_PropTypeDesc.PString));
-		schema.fieldsNames.push("fieldsTypes");
-		schema.fieldsTypes.push(hxbit_PropTypeDesc.PArray(hxbit_PropTypeDesc.PEnum("hxbit.PropTypeDesc")));
-		schema.isFinal = hxbit_Serializer.isClassFinal(hxbit_Schema.__clid);
-		return schema;
-	}
-	,unserializeInit: function() {
-	}
-	,unserialize: function(__ctx) {
-		this.isFinal = __ctx.input.b[__ctx.inPos++] != 0;
-		var e0;
-		var v = __ctx.input.b[__ctx.inPos++];
-		if(v == 128) {
-			v = __ctx.input.getInt32(__ctx.inPos);
-			__ctx.inPos += 4;
-		}
-		var len = v;
-		var tmp;
-		if(len == 0) {
-			tmp = null;
-		} else {
-			--len;
-			var a = [];
-			var _g = 0;
-			var _g1 = len;
-			while(_g < _g1) {
-				var i = _g++;
-				var v = __ctx.input.b[__ctx.inPos++];
-				if(v == 128) {
-					v = __ctx.input.getInt32(__ctx.inPos);
-					__ctx.inPos += 4;
-				}
-				var len = v;
-				if(len == 0) {
-					e0 = null;
-				} else {
-					--len;
-					var s = __ctx.input.getString(__ctx.inPos,len);
-					__ctx.inPos += len;
-					e0 = s;
-				}
-				a[i] = e0;
-			}
-			tmp = a;
-		}
-		this.fieldsNames = tmp;
-		var e0;
-		var v = __ctx.input.b[__ctx.inPos++];
-		if(v == 128) {
-			v = __ctx.input.getInt32(__ctx.inPos);
-			__ctx.inPos += 4;
-		}
-		var len = v;
-		var tmp;
-		if(len == 0) {
-			tmp = null;
-		} else {
-			--len;
-			var a = [];
-			var _g = 0;
-			var _g1 = len;
-			while(_g < _g1) {
-				var i = _g++;
-				var __e = hxbit_enumSer_Hxbit_$PropTypeDesc.doUnserialize(__ctx);
-				e0 = __e;
-				a[i] = e0;
-			}
-			tmp = a;
-		}
-		this.fieldsTypes = tmp;
-	}
-	,__class__: hxbit_Schema
-};
-var hxbit_SerializableEnum = function() { };
-$hxClasses["hxbit.SerializableEnum"] = hxbit_SerializableEnum;
-hxbit_SerializableEnum.__name__ = "hxbit.SerializableEnum";
-var hxbit_StructSerializable = function() { };
-$hxClasses["hxbit.StructSerializable"] = hxbit_StructSerializable;
-hxbit_StructSerializable.__name__ = "hxbit.StructSerializable";
-hxbit_StructSerializable.__isInterface__ = true;
-hxbit_StructSerializable.prototype = {
-	__class__: hxbit_StructSerializable
-};
-var hxbit_enumSer_Haxe_$ds_$Option = function() { };
-$hxClasses["hxbit.enumSer.Haxe_ds_Option"] = hxbit_enumSer_Haxe_$ds_$Option;
-hxbit_enumSer_Haxe_$ds_$Option.__name__ = "hxbit.enumSer.Haxe_ds_Option";
-hxbit_enumSer_Haxe_$ds_$Option.doSerialize = function(ctx,v) {
-	if(v == null) {
-		ctx.out.addByte(0);
-	} else {
-		switch(v._hx_index) {
-		case 0:
-			var v1 = v.v;
-			ctx.out.addByte(1);
-			hxbit_enumSer_Model_$ver1_$game_$define_$StepKeyword.doSerialize(ctx,v1);
-			break;
-		case 1:
-			ctx.out.addByte(2);
-			break;
-		}
-	}
-};
-hxbit_enumSer_Haxe_$ds_$Option.doUnserialize = function(ctx) {
-	var b = ctx.input.b[ctx.inPos++];
-	if(b == 0) {
-		return null;
-	}
-	switch(b) {
-	case 1:
-		var _v;
-		var __e = hxbit_enumSer_Model_$ver1_$game_$define_$StepKeyword.doUnserialize(ctx);
-		_v = __e;
-		return haxe_ds_Option.Some(_v);
-	case 2:
-		return haxe_ds_Option.None;
-	default:
-		throw haxe_Exception.thrown("Invalid enum index " + b);
-	}
-};
-hxbit_enumSer_Haxe_$ds_$Option.getSchema = function() {
-	var s = new hxbit_Schema();
-	var s1 = s.fieldsTypes;
-	var _g = [];
-	var v;
-	var t = hxbit_PropTypeDesc.PEnum("model.ver1.game.define.StepKeyword");
-	_g.push({ name : "", type : t, opt : false});
-	s1.push(hxbit_PropTypeDesc.PObj(_g));
-	s.fieldsNames.push("Some");
-	s.fieldsTypes.push(null);
-	s.fieldsNames.push("None");
-	return s;
-};
-var hxbit_enumSer_Hxbit_$PropTypeDesc = function() { };
-$hxClasses["hxbit.enumSer.Hxbit_PropTypeDesc"] = hxbit_enumSer_Hxbit_$PropTypeDesc;
-hxbit_enumSer_Hxbit_$PropTypeDesc.__name__ = "hxbit.enumSer.Hxbit_PropTypeDesc";
-hxbit_enumSer_Hxbit_$PropTypeDesc.doSerialize = function(ctx,v) {
-	if(v == null) {
-		ctx.out.addByte(0);
-	} else {
-		switch(v._hx_index) {
-		case 0:
-			ctx.out.addByte(1);
-			break;
-		case 1:
-			ctx.out.addByte(2);
-			break;
-		case 2:
-			ctx.out.addByte(3);
-			break;
-		case 3:
-			ctx.out.addByte(4);
-			break;
-		case 4:
-			ctx.out.addByte(5);
-			break;
-		case 5:
-			var name = v.name;
-			ctx.out.addByte(6);
-			if(name == null) {
-				ctx.out.addByte(0);
-			} else {
-				var b = haxe_io_Bytes.ofString(name);
-				var v1 = b.length + 1;
-				if(v1 >= 0 && v1 < 128) {
-					ctx.out.addByte(v1);
-				} else {
-					ctx.out.addByte(128);
-					ctx.out.addInt32(v1);
-				}
-				ctx.out.add(b);
-			}
-			break;
-		case 6:
-			var name = v.name;
-			ctx.out.addByte(7);
-			if(name == null) {
-				ctx.out.addByte(0);
-			} else {
-				var b = haxe_io_Bytes.ofString(name);
-				var v1 = b.length + 1;
-				if(v1 >= 0 && v1 < 128) {
-					ctx.out.addByte(v1);
-				} else {
-					ctx.out.addByte(128);
-					ctx.out.addInt32(v1);
-				}
-				ctx.out.add(b);
-			}
-			break;
-		case 7:
-			var k = v.k;
-			var v1 = v.v;
-			ctx.out.addByte(8);
-			hxbit_enumSer_Hxbit_$PropTypeDesc.doSerialize(ctx,k);
-			hxbit_enumSer_Hxbit_$PropTypeDesc.doSerialize(ctx,v1);
-			break;
-		case 8:
-			var k = v.k;
-			ctx.out.addByte(9);
-			hxbit_enumSer_Hxbit_$PropTypeDesc.doSerialize(ctx,k);
-			break;
-		case 9:
-			var fields = v.fields;
-			ctx.out.addByte(10);
-			if(fields == null) {
-				ctx.out.addByte(0);
-			} else {
-				var v1 = fields.length + 1;
-				if(v1 >= 0 && v1 < 128) {
-					ctx.out.addByte(v1);
-				} else {
-					ctx.out.addByte(128);
-					ctx.out.addInt32(v1);
-				}
-				var _g = 0;
-				while(_g < fields.length) {
-					var v1 = fields[_g];
-					++_g;
-					var v2 = v1;
-					if(v2 == null) {
-						ctx.out.addByte(0);
-					} else {
-						var fbits = 0;
-						if(v2.name != null) {
-							fbits |= 1;
-						}
-						if(v2.type != null) {
-							fbits |= 2;
-						}
-						var v3 = fbits + 1;
-						if(v3 >= 0 && v3 < 128) {
-							ctx.out.addByte(v3);
-						} else {
-							ctx.out.addByte(128);
-							ctx.out.addInt32(v3);
-						}
-						if((fbits & 1) != 0) {
-							var s = v2.name;
-							if(s == null) {
-								ctx.out.addByte(0);
-							} else {
-								var b = haxe_io_Bytes.ofString(s);
-								var v4 = b.length + 1;
-								if(v4 >= 0 && v4 < 128) {
-									ctx.out.addByte(v4);
-								} else {
-									ctx.out.addByte(128);
-									ctx.out.addInt32(v4);
-								}
-								ctx.out.add(b);
-							}
-						}
-						ctx.out.addByte(v2.opt ? 1 : 0);
-						if((fbits & 2) != 0) {
-							hxbit_enumSer_Hxbit_$PropTypeDesc.doSerialize(ctx,v2.type);
-						}
-					}
-				}
-			}
-			break;
-		case 10:
-			var k = v.k;
-			ctx.out.addByte(11);
-			hxbit_enumSer_Hxbit_$PropTypeDesc.doSerialize(ctx,k);
-			break;
-		case 11:
-			var k = v.k;
-			ctx.out.addByte(12);
-			hxbit_enumSer_Hxbit_$PropTypeDesc.doSerialize(ctx,k);
-			break;
-		case 12:
-			var t = v.t;
-			ctx.out.addByte(13);
-			hxbit_enumSer_Hxbit_$PropTypeDesc.doSerialize(ctx,t);
-			break;
-		case 13:
-			ctx.out.addByte(14);
-			break;
-		case 14:
-			ctx.out.addByte(15);
-			break;
-		case 15:
-			ctx.out.addByte(16);
-			break;
-		case 16:
-			var t = v.t;
-			ctx.out.addByte(17);
-			hxbit_enumSer_Hxbit_$PropTypeDesc.doSerialize(ctx,t);
-			break;
-		case 17:
-			ctx.out.addByte(18);
-			break;
-		}
-	}
-};
-hxbit_enumSer_Hxbit_$PropTypeDesc.doUnserialize = function(ctx) {
-	var b = ctx.input.b[ctx.inPos++];
-	if(b == 0) {
-		return null;
-	}
-	switch(b) {
-	case 1:
-		return hxbit_PropTypeDesc.PInt;
-	case 2:
-		return hxbit_PropTypeDesc.PFloat;
-	case 3:
-		return hxbit_PropTypeDesc.PBool;
-	case 4:
-		return hxbit_PropTypeDesc.PString;
-	case 5:
-		return hxbit_PropTypeDesc.PBytes;
-	case 6:
-		var _name;
-		var v = ctx.input.b[ctx.inPos++];
-		if(v == 128) {
-			v = ctx.input.getInt32(ctx.inPos);
-			ctx.inPos += 4;
-		}
-		var len = v;
-		if(len == 0) {
-			_name = null;
-		} else {
-			--len;
-			var s = ctx.input.getString(ctx.inPos,len);
-			ctx.inPos += len;
-			_name = s;
-		}
-		return hxbit_PropTypeDesc.PSerializable(_name);
-	case 7:
-		var _name;
-		var v = ctx.input.b[ctx.inPos++];
-		if(v == 128) {
-			v = ctx.input.getInt32(ctx.inPos);
-			ctx.inPos += 4;
-		}
-		var len = v;
-		if(len == 0) {
-			_name = null;
-		} else {
-			--len;
-			var s = ctx.input.getString(ctx.inPos,len);
-			ctx.inPos += len;
-			_name = s;
-		}
-		return hxbit_PropTypeDesc.PEnum(_name);
-	case 8:
-		var _k;
-		var __e = hxbit_enumSer_Hxbit_$PropTypeDesc.doUnserialize(ctx);
-		_k = __e;
-		var _v;
-		var __e = hxbit_enumSer_Hxbit_$PropTypeDesc.doUnserialize(ctx);
-		_v = __e;
-		return hxbit_PropTypeDesc.PMap(_k,_v);
-	case 9:
-		var _k;
-		var __e = hxbit_enumSer_Hxbit_$PropTypeDesc.doUnserialize(ctx);
-		_k = __e;
-		return hxbit_PropTypeDesc.PArray(_k);
-	case 10:
-		var _fields;
-		var e0;
-		var v = ctx.input.b[ctx.inPos++];
-		if(v == 128) {
-			v = ctx.input.getInt32(ctx.inPos);
-			ctx.inPos += 4;
-		}
-		var len = v;
-		if(len == 0) {
-			_fields = null;
-		} else {
-			--len;
-			var a = [];
-			var _g = 0;
-			var _g1 = len;
-			while(_g < _g1) {
-				var i = _g++;
-				var v = ctx.input.b[ctx.inPos++];
-				if(v == 128) {
-					v = ctx.input.getInt32(ctx.inPos);
-					ctx.inPos += 4;
-				}
-				var fbits = v;
-				if(fbits == 0) {
-					e0 = null;
-				} else {
-					--fbits;
-					var type = null;
-					var name = null;
-					if((fbits & 1) != 0) {
-						var v1 = ctx.input.b[ctx.inPos++];
-						if(v1 == 128) {
-							v1 = ctx.input.getInt32(ctx.inPos);
-							ctx.inPos += 4;
-						}
-						var len = v1;
-						if(len == 0) {
-							name = null;
-						} else {
-							--len;
-							var s = ctx.input.getString(ctx.inPos,len);
-							ctx.inPos += len;
-							name = s;
-						}
-					}
-					var opt = ctx.input.b[ctx.inPos++] != 0;
-					if((fbits & 2) != 0) {
-						var __e = hxbit_enumSer_Hxbit_$PropTypeDesc.doUnserialize(ctx);
-						type = __e;
-					}
-					e0 = { name : name, opt : opt, type : type};
-				}
-				a[i] = e0;
-			}
-			_fields = a;
-		}
-		return hxbit_PropTypeDesc.PObj(_fields);
-	case 11:
-		var _k;
-		var __e = hxbit_enumSer_Hxbit_$PropTypeDesc.doUnserialize(ctx);
-		_k = __e;
-		return hxbit_PropTypeDesc.PAlias(_k);
-	case 12:
-		var _k;
-		var __e = hxbit_enumSer_Hxbit_$PropTypeDesc.doUnserialize(ctx);
-		_k = __e;
-		return hxbit_PropTypeDesc.PVector(_k);
-	case 13:
-		var _t;
-		var __e = hxbit_enumSer_Hxbit_$PropTypeDesc.doUnserialize(ctx);
-		_t = __e;
-		return hxbit_PropTypeDesc.PNull(_t);
-	case 14:
-		return hxbit_PropTypeDesc.PUnknown;
-	case 15:
-		return hxbit_PropTypeDesc.PDynamic;
-	case 16:
-		return hxbit_PropTypeDesc.PInt64;
-	case 17:
-		var _t;
-		var __e = hxbit_enumSer_Hxbit_$PropTypeDesc.doUnserialize(ctx);
-		_t = __e;
-		return hxbit_PropTypeDesc.PFlags(_t);
-	case 18:
-		return hxbit_PropTypeDesc.PStruct;
-	default:
-		throw haxe_Exception.thrown("Invalid enum index " + b);
-	}
-};
-hxbit_enumSer_Hxbit_$PropTypeDesc.getSchema = function() {
-	var s = new hxbit_Schema();
-	s.fieldsTypes.push(null);
-	s.fieldsNames.push("PInt");
-	s.fieldsTypes.push(null);
-	s.fieldsNames.push("PFloat");
-	s.fieldsTypes.push(null);
-	s.fieldsNames.push("PBool");
-	s.fieldsTypes.push(null);
-	s.fieldsNames.push("PString");
-	s.fieldsTypes.push(null);
-	s.fieldsNames.push("PBytes");
-	var s1 = s.fieldsTypes;
-	var _g = [];
-	var v;
-	var t = hxbit_PropTypeDesc.PString;
-	_g.push({ name : "", type : t, opt : false});
-	s1.push(hxbit_PropTypeDesc.PObj(_g));
-	s.fieldsNames.push("PSerializable");
-	var s1 = s.fieldsTypes;
-	var _g = [];
-	var v;
-	var t = hxbit_PropTypeDesc.PString;
-	_g.push({ name : "", type : t, opt : false});
-	s1.push(hxbit_PropTypeDesc.PObj(_g));
-	s.fieldsNames.push("PEnum");
-	var s1 = s.fieldsTypes;
-	var _g = [];
-	var v;
-	var v;
-	var t = hxbit_PropTypeDesc.PEnum("hxbit.PropTypeDesc");
-	_g.push({ name : "", type : t, opt : false});
-	s1.push(hxbit_PropTypeDesc.PObj(_g));
-	s.fieldsNames.push("PMap");
-	var s1 = s.fieldsTypes;
-	var _g = [];
-	var v;
-	var t = hxbit_PropTypeDesc.PEnum("hxbit.PropTypeDesc");
-	_g.push({ name : "", type : t, opt : false});
-	s1.push(hxbit_PropTypeDesc.PObj(_g));
-	s.fieldsNames.push("PArray");
-	var s1 = s.fieldsTypes;
-	var _g = [];
-	var v;
-	var t = hxbit_PropTypeDesc.PArray(hxbit_PropTypeDesc.PObj([{ name : "name", opt : false, type : hxbit_PropTypeDesc.PString},{ name : "opt", opt : false, type : hxbit_PropTypeDesc.PBool},{ name : "type", opt : false, type : hxbit_PropTypeDesc.PEnum("hxbit.PropTypeDesc")}]));
-	_g.push({ name : "", type : t, opt : false});
-	s1.push(hxbit_PropTypeDesc.PObj(_g));
-	s.fieldsNames.push("PObj");
-	var s1 = s.fieldsTypes;
-	var _g = [];
-	var v;
-	var t = hxbit_PropTypeDesc.PEnum("hxbit.PropTypeDesc");
-	_g.push({ name : "", type : t, opt : false});
-	s1.push(hxbit_PropTypeDesc.PObj(_g));
-	s.fieldsNames.push("PAlias");
-	var s1 = s.fieldsTypes;
-	var _g = [];
-	var v;
-	var t = hxbit_PropTypeDesc.PEnum("hxbit.PropTypeDesc");
-	_g.push({ name : "", type : t, opt : false});
-	s1.push(hxbit_PropTypeDesc.PObj(_g));
-	s.fieldsNames.push("PVector");
-	var s1 = s.fieldsTypes;
-	var _g = [];
-	var v;
-	var t = hxbit_PropTypeDesc.PEnum("hxbit.PropTypeDesc");
-	_g.push({ name : "", type : t, opt : false});
-	s1.push(hxbit_PropTypeDesc.PObj(_g));
-	s.fieldsNames.push("PNull");
-	s.fieldsTypes.push(null);
-	s.fieldsNames.push("PUnknown");
-	s.fieldsTypes.push(null);
-	s.fieldsNames.push("PDynamic");
-	s.fieldsTypes.push(null);
-	s.fieldsNames.push("PInt64");
-	var s1 = s.fieldsTypes;
-	var _g = [];
-	var v;
-	var t = hxbit_PropTypeDesc.PEnum("hxbit.PropTypeDesc");
-	_g.push({ name : "", type : t, opt : false});
-	s1.push(hxbit_PropTypeDesc.PObj(_g));
-	s.fieldsNames.push("PFlags");
-	s.fieldsTypes.push(null);
-	s.fieldsNames.push("PStruct");
-	return s;
-};
-var hxbit_enumSer_Model_$ver1_$game_$define_$BattlePoint = function() { };
-$hxClasses["hxbit.enumSer.Model_ver1_game_define_BattlePoint"] = hxbit_enumSer_Model_$ver1_$game_$define_$BattlePoint;
-hxbit_enumSer_Model_$ver1_$game_$define_$BattlePoint.__name__ = "hxbit.enumSer.Model_ver1_game_define_BattlePoint";
-hxbit_enumSer_Model_$ver1_$game_$define_$BattlePoint.doSerialize = function(ctx,v) {
-	if(v == null) {
-		ctx.out.addByte(0);
-	} else {
-		var melee = v.melee;
-		var range = v.range;
-		var hp = v.hp;
-		ctx.out.addByte(1);
-		if(melee >= 0 && melee < 128) {
-			ctx.out.addByte(melee);
-		} else {
-			ctx.out.addByte(128);
-			ctx.out.addInt32(melee);
-		}
-		if(range >= 0 && range < 128) {
-			ctx.out.addByte(range);
-		} else {
-			ctx.out.addByte(128);
-			ctx.out.addInt32(range);
-		}
-		if(hp >= 0 && hp < 128) {
-			ctx.out.addByte(hp);
-		} else {
-			ctx.out.addByte(128);
-			ctx.out.addInt32(hp);
-		}
-	}
-};
-hxbit_enumSer_Model_$ver1_$game_$define_$BattlePoint.doUnserialize = function(ctx) {
-	var b = ctx.input.b[ctx.inPos++];
-	if(b == 0) {
-		return null;
-	}
-	if(b == 1) {
-		var v = ctx.input.b[ctx.inPos++];
-		if(v == 128) {
-			v = ctx.input.getInt32(ctx.inPos);
-			ctx.inPos += 4;
-		}
-		var _melee = v;
-		var v = ctx.input.b[ctx.inPos++];
-		if(v == 128) {
-			v = ctx.input.getInt32(ctx.inPos);
-			ctx.inPos += 4;
-		}
-		var _range = v;
-		var v = ctx.input.b[ctx.inPos++];
-		if(v == 128) {
-			v = ctx.input.getInt32(ctx.inPos);
-			ctx.inPos += 4;
-		}
-		var _hp = v;
-		return model_ver1_game_define_BattlePoint.Default(_melee,_range,_hp);
-	} else {
-		throw haxe_Exception.thrown("Invalid enum index " + b);
-	}
-};
-hxbit_enumSer_Model_$ver1_$game_$define_$BattlePoint.getSchema = function() {
-	var s = new hxbit_Schema();
-	var s1 = s.fieldsTypes;
-	var _g = [];
-	var v;
-	var v;
-	var v;
-	var t = hxbit_PropTypeDesc.PInt;
-	_g.push({ name : "", type : t, opt : false});
-	s1.push(hxbit_PropTypeDesc.PObj(_g));
-	s.fieldsNames.push("Default");
-	return s;
-};
-var hxbit_enumSer_Model_$ver1_$game_$define_$BlockCause = function() { };
-$hxClasses["hxbit.enumSer.Model_ver1_game_define_BlockCause"] = hxbit_enumSer_Model_$ver1_$game_$define_$BlockCause;
-hxbit_enumSer_Model_$ver1_$game_$define_$BlockCause.__name__ = "hxbit.enumSer.Model_ver1_game_define_BlockCause";
-hxbit_enumSer_Model_$ver1_$game_$define_$BlockCause.doSerialize = function(ctx,v) {
-	if(v == null) {
-		ctx.out.addByte(0);
-	} else {
-		switch(v._hx_index) {
-		case 0:
-			ctx.out.addByte(1);
-			break;
-		case 1:
-			var respnosePlayerId = v.respnosePlayerId;
-			ctx.out.addByte(2);
-			if(respnosePlayerId == null) {
-				ctx.out.addByte(0);
-			} else {
-				var b = haxe_io_Bytes.ofString(respnosePlayerId);
-				var v1 = b.length + 1;
-				if(v1 >= 0 && v1 < 128) {
-					ctx.out.addByte(v1);
-				} else {
-					ctx.out.addByte(128);
-					ctx.out.addInt32(v1);
-				}
-				ctx.out.add(b);
-			}
-			break;
-		case 2:
-			var playerId = v.playerId;
-			var cardId = v.cardId;
-			ctx.out.addByte(3);
-			if(playerId == null) {
-				ctx.out.addByte(0);
-			} else {
-				var b = haxe_io_Bytes.ofString(playerId);
-				var v1 = b.length + 1;
-				if(v1 >= 0 && v1 < 128) {
-					ctx.out.addByte(v1);
-				} else {
-					ctx.out.addByte(128);
-					ctx.out.addInt32(v1);
-				}
-				ctx.out.add(b);
-			}
-			if(cardId == null) {
-				ctx.out.addByte(0);
-			} else {
-				var b = haxe_io_Bytes.ofString(cardId);
-				var v1 = b.length + 1;
-				if(v1 >= 0 && v1 < 128) {
-					ctx.out.addByte(v1);
-				} else {
-					ctx.out.addByte(128);
-					ctx.out.addInt32(v1);
-				}
-				ctx.out.add(b);
-			}
-			break;
-		case 3:
-			var cardId = v.cardId;
-			var textId = v.textId;
-			ctx.out.addByte(4);
-			if(cardId == null) {
-				ctx.out.addByte(0);
-			} else {
-				var b = haxe_io_Bytes.ofString(cardId);
-				var v1 = b.length + 1;
-				if(v1 >= 0 && v1 < 128) {
-					ctx.out.addByte(v1);
-				} else {
-					ctx.out.addByte(128);
-					ctx.out.addInt32(v1);
-				}
-				ctx.out.add(b);
-			}
-			if(textId == null) {
-				ctx.out.addByte(0);
-			} else {
-				var b = haxe_io_Bytes.ofString(textId);
-				var v1 = b.length + 1;
-				if(v1 >= 0 && v1 < 128) {
-					ctx.out.addByte(v1);
-				} else {
-					ctx.out.addByte(128);
-					ctx.out.addInt32(v1);
-				}
-				ctx.out.add(b);
-			}
-			break;
-		case 4:
-			var cardId = v.cardId;
-			var textId = v.textId;
-			ctx.out.addByte(5);
-			if(cardId == null) {
-				ctx.out.addByte(0);
-			} else {
-				var b = haxe_io_Bytes.ofString(cardId);
-				var v = b.length + 1;
-				if(v >= 0 && v < 128) {
-					ctx.out.addByte(v);
-				} else {
-					ctx.out.addByte(128);
-					ctx.out.addInt32(v);
-				}
-				ctx.out.add(b);
-			}
-			if(textId == null) {
-				ctx.out.addByte(0);
-			} else {
-				var b = haxe_io_Bytes.ofString(textId);
-				var v = b.length + 1;
-				if(v >= 0 && v < 128) {
-					ctx.out.addByte(v);
-				} else {
-					ctx.out.addByte(128);
-					ctx.out.addInt32(v);
-				}
-				ctx.out.add(b);
-			}
-			break;
-		}
-	}
-};
-hxbit_enumSer_Model_$ver1_$game_$define_$BlockCause.doUnserialize = function(ctx) {
-	var b = ctx.input.b[ctx.inPos++];
-	if(b == 0) {
-		return null;
-	}
-	switch(b) {
-	case 1:
-		return model_ver1_game_define_BlockCause.Pending;
-	case 2:
-		var _respnosePlayerId;
-		var v = ctx.input.b[ctx.inPos++];
-		if(v == 128) {
-			v = ctx.input.getInt32(ctx.inPos);
-			ctx.inPos += 4;
-		}
-		var len = v;
-		if(len == 0) {
-			_respnosePlayerId = null;
-		} else {
-			--len;
-			var s = ctx.input.getString(ctx.inPos,len);
-			ctx.inPos += len;
-			_respnosePlayerId = s;
-		}
-		return model_ver1_game_define_BlockCause.System(_respnosePlayerId);
-	case 3:
-		var _playerId;
-		var v = ctx.input.b[ctx.inPos++];
-		if(v == 128) {
-			v = ctx.input.getInt32(ctx.inPos);
-			ctx.inPos += 4;
-		}
-		var len = v;
-		if(len == 0) {
-			_playerId = null;
-		} else {
-			--len;
-			var s = ctx.input.getString(ctx.inPos,len);
-			ctx.inPos += len;
-			_playerId = s;
-		}
-		var _cardId;
-		var v = ctx.input.b[ctx.inPos++];
-		if(v == 128) {
-			v = ctx.input.getInt32(ctx.inPos);
-			ctx.inPos += 4;
-		}
-		var len = v;
-		if(len == 0) {
-			_cardId = null;
-		} else {
-			--len;
-			var s = ctx.input.getString(ctx.inPos,len);
-			ctx.inPos += len;
-			_cardId = s;
-		}
-		return model_ver1_game_define_BlockCause.PlayCard(_playerId,_cardId);
-	case 4:
-		var _cardId;
-		var v = ctx.input.b[ctx.inPos++];
-		if(v == 128) {
-			v = ctx.input.getInt32(ctx.inPos);
-			ctx.inPos += 4;
-		}
-		var len = v;
-		if(len == 0) {
-			_cardId = null;
-		} else {
-			--len;
-			var s = ctx.input.getString(ctx.inPos,len);
-			ctx.inPos += len;
-			_cardId = s;
-		}
-		var _textId;
-		var v = ctx.input.b[ctx.inPos++];
-		if(v == 128) {
-			v = ctx.input.getInt32(ctx.inPos);
-			ctx.inPos += 4;
-		}
-		var len = v;
-		if(len == 0) {
-			_textId = null;
-		} else {
-			--len;
-			var s = ctx.input.getString(ctx.inPos,len);
-			ctx.inPos += len;
-			_textId = s;
-		}
-		return model_ver1_game_define_BlockCause.PlayText(_cardId,_textId);
-	case 5:
-		var _cardId;
-		var v = ctx.input.b[ctx.inPos++];
-		if(v == 128) {
-			v = ctx.input.getInt32(ctx.inPos);
-			ctx.inPos += 4;
-		}
-		var len = v;
-		if(len == 0) {
-			_cardId = null;
-		} else {
-			--len;
-			var s = ctx.input.getString(ctx.inPos,len);
-			ctx.inPos += len;
-			_cardId = s;
-		}
-		var _textId;
-		var v = ctx.input.b[ctx.inPos++];
-		if(v == 128) {
-			v = ctx.input.getInt32(ctx.inPos);
-			ctx.inPos += 4;
-		}
-		var len = v;
-		if(len == 0) {
-			_textId = null;
-		} else {
-			--len;
-			var s = ctx.input.getString(ctx.inPos,len);
-			ctx.inPos += len;
-			_textId = s;
-		}
-		return model_ver1_game_define_BlockCause.TextEffect(_cardId,_textId);
-	default:
-		throw haxe_Exception.thrown("Invalid enum index " + b);
-	}
-};
-hxbit_enumSer_Model_$ver1_$game_$define_$BlockCause.getSchema = function() {
-	var s = new hxbit_Schema();
-	s.fieldsTypes.push(null);
-	s.fieldsNames.push("Pending");
-	var s1 = s.fieldsTypes;
-	var _g = [];
-	var v;
-	var t = hxbit_PropTypeDesc.PString;
-	_g.push({ name : "", type : t, opt : false});
-	s1.push(hxbit_PropTypeDesc.PObj(_g));
-	s.fieldsNames.push("System");
-	var s1 = s.fieldsTypes;
-	var _g = [];
-	var v;
-	var v;
-	var t = hxbit_PropTypeDesc.PString;
-	_g.push({ name : "", type : t, opt : false});
-	s1.push(hxbit_PropTypeDesc.PObj(_g));
-	s.fieldsNames.push("PlayCard");
-	var s1 = s.fieldsTypes;
-	var _g = [];
-	var v;
-	var v;
-	var t = hxbit_PropTypeDesc.PString;
-	_g.push({ name : "", type : t, opt : false});
-	s1.push(hxbit_PropTypeDesc.PObj(_g));
-	s.fieldsNames.push("PlayText");
-	var s1 = s.fieldsTypes;
-	var _g = [];
-	var v;
-	var v;
-	var t = hxbit_PropTypeDesc.PString;
-	_g.push({ name : "", type : t, opt : false});
-	s1.push(hxbit_PropTypeDesc.PObj(_g));
-	s.fieldsNames.push("TextEffect");
-	return s;
-};
-var hxbit_enumSer_Model_$ver1_$game_$define_$PhaseKeyword = function() { };
-$hxClasses["hxbit.enumSer.Model_ver1_game_define_PhaseKeyword"] = hxbit_enumSer_Model_$ver1_$game_$define_$PhaseKeyword;
-hxbit_enumSer_Model_$ver1_$game_$define_$PhaseKeyword.__name__ = "hxbit.enumSer.Model_ver1_game_define_PhaseKeyword";
-hxbit_enumSer_Model_$ver1_$game_$define_$PhaseKeyword.doSerialize = function(ctx,v) {
-	if(v == null) {
-		ctx.out.addByte(0);
-	} else {
-		switch(v._hx_index) {
-		case 0:
-			ctx.out.addByte(1);
-			break;
-		case 1:
-			ctx.out.addByte(2);
-			break;
-		case 2:
-			ctx.out.addByte(3);
-			break;
-		case 3:
-			ctx.out.addByte(4);
-			break;
-		}
-	}
-};
-hxbit_enumSer_Model_$ver1_$game_$define_$PhaseKeyword.doUnserialize = function(ctx) {
-	var b = ctx.input.b[ctx.inPos++];
-	if(b == 0) {
-		return null;
-	}
-	switch(b) {
-	case 1:
-		return model_ver1_game_define_PhaseKeyword.Reroll;
-	case 2:
-		return model_ver1_game_define_PhaseKeyword.Draw;
-	case 3:
-		return model_ver1_game_define_PhaseKeyword.Maintenance;
-	case 4:
-		return model_ver1_game_define_PhaseKeyword.Battle;
-	default:
-		throw haxe_Exception.thrown("Invalid enum index " + b);
-	}
-};
-hxbit_enumSer_Model_$ver1_$game_$define_$PhaseKeyword.getSchema = function() {
-	var s = new hxbit_Schema();
-	s.fieldsTypes.push(null);
-	s.fieldsNames.push("Reroll");
-	s.fieldsTypes.push(null);
-	s.fieldsNames.push("Draw");
-	s.fieldsTypes.push(null);
-	s.fieldsNames.push("Maintenance");
-	s.fieldsTypes.push(null);
-	s.fieldsNames.push("Battle");
-	return s;
-};
-var hxbit_enumSer_Model_$ver1_$game_$define_$StepKeyword = function() { };
-$hxClasses["hxbit.enumSer.Model_ver1_game_define_StepKeyword"] = hxbit_enumSer_Model_$ver1_$game_$define_$StepKeyword;
-hxbit_enumSer_Model_$ver1_$game_$define_$StepKeyword.__name__ = "hxbit.enumSer.Model_ver1_game_define_StepKeyword";
-hxbit_enumSer_Model_$ver1_$game_$define_$StepKeyword.doSerialize = function(ctx,v) {
-	if(v == null) {
-		ctx.out.addByte(0);
-	} else {
-		switch(v._hx_index) {
-		case 0:
-			ctx.out.addByte(1);
-			break;
-		case 1:
-			ctx.out.addByte(2);
-			break;
-		case 2:
-			ctx.out.addByte(3);
-			break;
-		case 3:
-			ctx.out.addByte(4);
-			break;
-		case 4:
-			ctx.out.addByte(5);
-			break;
-		}
-	}
-};
-hxbit_enumSer_Model_$ver1_$game_$define_$StepKeyword.doUnserialize = function(ctx) {
-	var b = ctx.input.b[ctx.inPos++];
-	if(b == 0) {
-		return null;
-	}
-	switch(b) {
-	case 1:
-		return model_ver1_game_define_StepKeyword.Attack;
-	case 2:
-		return model_ver1_game_define_StepKeyword.Defense;
-	case 3:
-		return model_ver1_game_define_StepKeyword.DamageChecking;
-	case 4:
-		return model_ver1_game_define_StepKeyword.Return;
-	case 5:
-		return model_ver1_game_define_StepKeyword.End;
-	default:
-		throw haxe_Exception.thrown("Invalid enum index " + b);
-	}
-};
-hxbit_enumSer_Model_$ver1_$game_$define_$StepKeyword.getSchema = function() {
-	var s = new hxbit_Schema();
-	s.fieldsTypes.push(null);
-	s.fieldsNames.push("Attack");
-	s.fieldsTypes.push(null);
-	s.fieldsNames.push("Defense");
-	s.fieldsTypes.push(null);
-	s.fieldsNames.push("DamageChecking");
-	s.fieldsTypes.push(null);
-	s.fieldsNames.push("Return");
-	s.fieldsTypes.push(null);
-	s.fieldsNames.push("End");
-	return s;
-};
-var hxbit_enumSer_Model_$ver1_$game_$define_$TextType = function() { };
-$hxClasses["hxbit.enumSer.Model_ver1_game_define_TextType"] = hxbit_enumSer_Model_$ver1_$game_$define_$TextType;
-hxbit_enumSer_Model_$ver1_$game_$define_$TextType.__name__ = "hxbit.enumSer.Model_ver1_game_define_TextType";
-hxbit_enumSer_Model_$ver1_$game_$define_$TextType.doSerialize = function(ctx,v) {
-	if(v == null) {
-		ctx.out.addByte(0);
-	} else {
-		switch(v._hx_index) {
-		case 0:
-			var type = v.type;
-			ctx.out.addByte(1);
-			hxbit_enumSer_Model_$ver1_$game_$define_$TextTypeAutomaticType.doSerialize(ctx,type);
-			break;
-		case 1:
-			ctx.out.addByte(2);
-			break;
-		case 2:
-			ctx.out.addByte(3);
-			break;
-		}
-	}
-};
-hxbit_enumSer_Model_$ver1_$game_$define_$TextType.doUnserialize = function(ctx) {
-	var b = ctx.input.b[ctx.inPos++];
-	if(b == 0) {
-		return null;
-	}
-	switch(b) {
-	case 1:
-		var _type;
-		var __e = hxbit_enumSer_Model_$ver1_$game_$define_$TextTypeAutomaticType.doUnserialize(ctx);
-		_type = __e;
-		return model_ver1_game_define_TextType.Automatic(_type);
-	case 2:
-		return model_ver1_game_define_TextType.Use;
-	case 3:
-		return model_ver1_game_define_TextType.Special;
-	default:
-		throw haxe_Exception.thrown("Invalid enum index " + b);
-	}
-};
-hxbit_enumSer_Model_$ver1_$game_$define_$TextType.getSchema = function() {
-	var s = new hxbit_Schema();
-	var s1 = s.fieldsTypes;
-	var _g = [];
-	var v;
-	var t = hxbit_PropTypeDesc.PEnum("model.ver1.game.define.TextTypeAutomaticType");
-	_g.push({ name : "", type : t, opt : false});
-	s1.push(hxbit_PropTypeDesc.PObj(_g));
-	s.fieldsNames.push("Automatic");
-	s.fieldsTypes.push(null);
-	s.fieldsNames.push("Use");
-	s.fieldsTypes.push(null);
-	s.fieldsNames.push("Special");
-	return s;
-};
-var hxbit_enumSer_Model_$ver1_$game_$define_$TextTypeAutomaticType = function() { };
-$hxClasses["hxbit.enumSer.Model_ver1_game_define_TextTypeAutomaticType"] = hxbit_enumSer_Model_$ver1_$game_$define_$TextTypeAutomaticType;
-hxbit_enumSer_Model_$ver1_$game_$define_$TextTypeAutomaticType.__name__ = "hxbit.enumSer.Model_ver1_game_define_TextTypeAutomaticType";
-hxbit_enumSer_Model_$ver1_$game_$define_$TextTypeAutomaticType.doSerialize = function(ctx,v) {
-	if(v == null) {
-		ctx.out.addByte(0);
-	} else {
-		switch(v._hx_index) {
-		case 0:
-			ctx.out.addByte(1);
-			break;
-		case 1:
-			ctx.out.addByte(2);
-			break;
-		case 2:
-			ctx.out.addByte(3);
-			break;
-		}
-	}
-};
-hxbit_enumSer_Model_$ver1_$game_$define_$TextTypeAutomaticType.doUnserialize = function(ctx) {
-	var b = ctx.input.b[ctx.inPos++];
-	if(b == 0) {
-		return null;
-	}
-	switch(b) {
-	case 1:
-		return model_ver1_game_define_TextTypeAutomaticType.Resident;
-	case 2:
-		return model_ver1_game_define_TextTypeAutomaticType.Trigger;
-	case 3:
-		return model_ver1_game_define_TextTypeAutomaticType.Constant;
-	default:
-		throw haxe_Exception.thrown("Invalid enum index " + b);
-	}
-};
-hxbit_enumSer_Model_$ver1_$game_$define_$TextTypeAutomaticType.getSchema = function() {
-	var s = new hxbit_Schema();
-	s.fieldsTypes.push(null);
-	s.fieldsNames.push("Resident");
-	s.fieldsTypes.push(null);
-	s.fieldsNames.push("Trigger");
-	s.fieldsTypes.push(null);
-	s.fieldsNames.push("Constant");
-	return s;
-};
-var hxbit_enumSer_Model_$ver1_$game_$define_$Timing = function() { };
-$hxClasses["hxbit.enumSer.Model_ver1_game_define_Timing"] = hxbit_enumSer_Model_$ver1_$game_$define_$Timing;
-hxbit_enumSer_Model_$ver1_$game_$define_$Timing.__name__ = "hxbit.enumSer.Model_ver1_game_define_Timing";
-hxbit_enumSer_Model_$ver1_$game_$define_$Timing.doSerialize = function(ctx,v) {
-	if(v == null) {
-		ctx.out.addByte(0);
-	} else {
-		var phase = v.phase;
-		var step = v.step;
-		var timing = v.timing;
-		ctx.out.addByte(1);
-		hxbit_enumSer_Model_$ver1_$game_$define_$PhaseKeyword.doSerialize(ctx,phase);
-		hxbit_enumSer_Haxe_$ds_$Option.doSerialize(ctx,step);
-		hxbit_enumSer_Model_$ver1_$game_$define_$TimingKeyword.doSerialize(ctx,timing);
-	}
-};
-hxbit_enumSer_Model_$ver1_$game_$define_$Timing.doUnserialize = function(ctx) {
-	var b = ctx.input.b[ctx.inPos++];
-	if(b == 0) {
-		return null;
-	}
-	if(b == 1) {
-		var _phase;
-		var __e = hxbit_enumSer_Model_$ver1_$game_$define_$PhaseKeyword.doUnserialize(ctx);
-		_phase = __e;
-		var _step;
-		var __e = hxbit_enumSer_Haxe_$ds_$Option.doUnserialize(ctx);
-		_step = __e;
-		var _timing;
-		var __e = hxbit_enumSer_Model_$ver1_$game_$define_$TimingKeyword.doUnserialize(ctx);
-		_timing = __e;
-		return model_ver1_game_define_Timing.Default(_phase,_step,_timing);
-	} else {
-		throw haxe_Exception.thrown("Invalid enum index " + b);
-	}
-};
-hxbit_enumSer_Model_$ver1_$game_$define_$Timing.getSchema = function() {
-	var s = new hxbit_Schema();
-	var s1 = s.fieldsTypes;
-	var _g = [];
-	var v;
-	var v;
-	var v;
-	var t = hxbit_PropTypeDesc.PEnum("model.ver1.game.define.TimingKeyword");
-	_g.push({ name : "", type : t, opt : false});
-	s1.push(hxbit_PropTypeDesc.PObj(_g));
-	s.fieldsNames.push("Default");
-	return s;
-};
-var hxbit_enumSer_Model_$ver1_$game_$define_$TimingKeyword = function() { };
-$hxClasses["hxbit.enumSer.Model_ver1_game_define_TimingKeyword"] = hxbit_enumSer_Model_$ver1_$game_$define_$TimingKeyword;
-hxbit_enumSer_Model_$ver1_$game_$define_$TimingKeyword.__name__ = "hxbit.enumSer.Model_ver1_game_define_TimingKeyword";
-hxbit_enumSer_Model_$ver1_$game_$define_$TimingKeyword.doSerialize = function(ctx,v) {
-	if(v == null) {
-		ctx.out.addByte(0);
-	} else {
-		switch(v._hx_index) {
-		case 0:
-			ctx.out.addByte(1);
-			break;
-		case 1:
-			ctx.out.addByte(2);
-			break;
-		case 2:
-			ctx.out.addByte(3);
-			break;
-		case 3:
-			ctx.out.addByte(4);
-			break;
-		case 4:
-			ctx.out.addByte(5);
-			break;
-		case 5:
-			ctx.out.addByte(6);
-			break;
-		case 6:
-			ctx.out.addByte(7);
-			break;
-		case 7:
-			ctx.out.addByte(8);
-			break;
-		case 8:
-			ctx.out.addByte(9);
-			break;
-		}
-	}
-};
-hxbit_enumSer_Model_$ver1_$game_$define_$TimingKeyword.doUnserialize = function(ctx) {
-	var b = ctx.input.b[ctx.inPos++];
-	if(b == 0) {
-		return null;
-	}
-	switch(b) {
-	case 1:
-		return model_ver1_game_define_TimingKeyword.Start;
-	case 2:
-		return model_ver1_game_define_TimingKeyword.Free1;
-	case 3:
-		return model_ver1_game_define_TimingKeyword.Rule;
-	case 4:
-		return model_ver1_game_define_TimingKeyword.Free2;
-	case 5:
-		return model_ver1_game_define_TimingKeyword.End;
-	case 6:
-		return model_ver1_game_define_TimingKeyword.DamageReset;
-	case 7:
-		return model_ver1_game_define_TimingKeyword.ResolveEffect;
-	case 8:
-		return model_ver1_game_define_TimingKeyword.AdjustHand;
-	case 9:
-		return model_ver1_game_define_TimingKeyword.TurnEnd;
-	default:
-		throw haxe_Exception.thrown("Invalid enum index " + b);
-	}
-};
-hxbit_enumSer_Model_$ver1_$game_$define_$TimingKeyword.getSchema = function() {
-	var s = new hxbit_Schema();
-	s.fieldsTypes.push(null);
-	s.fieldsNames.push("Start");
-	s.fieldsTypes.push(null);
-	s.fieldsNames.push("Free1");
-	s.fieldsTypes.push(null);
-	s.fieldsNames.push("Rule");
-	s.fieldsTypes.push(null);
-	s.fieldsNames.push("Free2");
-	s.fieldsTypes.push(null);
-	s.fieldsNames.push("End");
-	s.fieldsTypes.push(null);
-	s.fieldsNames.push("DamageReset");
-	s.fieldsTypes.push(null);
-	s.fieldsNames.push("ResolveEffect");
-	s.fieldsTypes.push(null);
-	s.fieldsNames.push("AdjustHand");
-	s.fieldsTypes.push(null);
-	s.fieldsNames.push("TurnEnd");
-	return s;
-};
-var hxbit_enumSer_Model_$ver1_$game_$entity_$FlowMemoryState = function() { };
-$hxClasses["hxbit.enumSer.Model_ver1_game_entity_FlowMemoryState"] = hxbit_enumSer_Model_$ver1_$game_$entity_$FlowMemoryState;
-hxbit_enumSer_Model_$ver1_$game_$entity_$FlowMemoryState.__name__ = "hxbit.enumSer.Model_ver1_game_entity_FlowMemoryState";
-hxbit_enumSer_Model_$ver1_$game_$entity_$FlowMemoryState.doSerialize = function(ctx,v) {
-	if(v == null) {
-		ctx.out.addByte(0);
-	} else {
-		switch(v._hx_index) {
-		case 0:
-			ctx.out.addByte(1);
-			break;
-		case 1:
-			ctx.out.addByte(2);
-			break;
-		case 2:
-			ctx.out.addByte(3);
-			break;
-		case 3:
-			ctx.out.addByte(4);
-			break;
-		}
-	}
-};
-hxbit_enumSer_Model_$ver1_$game_$entity_$FlowMemoryState.doUnserialize = function(ctx) {
-	var b = ctx.input.b[ctx.inPos++];
-	if(b == 0) {
-		return null;
-	}
-	switch(b) {
-	case 1:
-		return model_ver1_game_entity_FlowMemoryState.PrepareDeck;
-	case 2:
-		return model_ver1_game_entity_FlowMemoryState.WhoFirst;
-	case 3:
-		return model_ver1_game_entity_FlowMemoryState.Draw6AndConfirm;
-	case 4:
-		return model_ver1_game_entity_FlowMemoryState.Playing;
-	default:
-		throw haxe_Exception.thrown("Invalid enum index " + b);
-	}
-};
-hxbit_enumSer_Model_$ver1_$game_$entity_$FlowMemoryState.getSchema = function() {
-	var s = new hxbit_Schema();
-	s.fieldsTypes.push(null);
-	s.fieldsNames.push("PrepareDeck");
-	s.fieldsTypes.push(null);
-	s.fieldsNames.push("WhoFirst");
-	s.fieldsTypes.push(null);
-	s.fieldsNames.push("Draw6AndConfirm");
-	s.fieldsTypes.push(null);
-	s.fieldsNames.push("Playing");
-	return s;
 };
 var js_Boot = function() { };
 $hxClasses["js.Boot"] = js_Boot;
@@ -4800,9 +1246,6 @@ js_Boot.__downcastCheck = function(o,cl) {
 		return true;
 	}
 };
-js_Boot.__implements = function(o,iface) {
-	return js_Boot.__interfLoop(js_Boot.getClass(o),iface);
-};
 js_Boot.__cast = function(o,t) {
 	if(o == null || js_Boot.__instanceof(o,t)) {
 		return o;
@@ -4823,40 +1266,14 @@ js_Boot.__isNativeObj = function(o) {
 js_Boot.__resolveNativeClass = function(name) {
 	return $global[name];
 };
-var js_lib__$ArrayBuffer_ArrayBufferCompat = function() { };
-$hxClasses["js.lib._ArrayBuffer.ArrayBufferCompat"] = js_lib__$ArrayBuffer_ArrayBufferCompat;
-js_lib__$ArrayBuffer_ArrayBufferCompat.__name__ = "js.lib._ArrayBuffer.ArrayBufferCompat";
-js_lib__$ArrayBuffer_ArrayBufferCompat.sliceImpl = function(begin,end) {
-	var u = new Uint8Array(this,begin,end == null ? null : end - begin);
-	var resultArray = new Uint8Array(u.byteLength);
-	resultArray.set(u);
-	return resultArray.buffer;
-};
 var model_ver1_game_define_CardProto = function() {
-	this.__uid = hxbit_Serializer.SEQ << 24 | ++hxbit_Serializer.UID;
 	this.category = model_ver1_game_define_CardCategory.Unit;
 };
 $hxClasses["model.ver1.game.define.CardProto"] = model_ver1_game_define_CardProto;
 model_ver1_game_define_CardProto.__name__ = "model.ver1.game.define.CardProto";
-model_ver1_game_define_CardProto.__interfaces__ = [hxbit_Serializable];
 model_ver1_game_define_CardProto.prototype = {
 	getTexts: function(_ctx,runtime) {
 		return [];
-	}
-	,getCLID: function() {
-		return model_ver1_game_define_CardProto.__clid;
-	}
-	,serialize: function(__ctx) {
-	}
-	,getSerializeSchema: function() {
-		var schema = new hxbit_Schema();
-		schema.isFinal = hxbit_Serializer.isClassFinal(model_ver1_game_define_CardProto.__clid);
-		return schema;
-	}
-	,unserializeInit: function() {
-		this.category = model_ver1_game_define_CardCategory.Unit;
-	}
-	,unserialize: function(__ctx) {
 	}
 	,__class__: model_ver1_game_define_CardProto
 };
@@ -4870,13 +1287,9 @@ model_ver1_data_CardProto_$179001_$01A_$CH_$WT007R_$white.prototype = $extend(mo
 	getTexts: function(_ctx,runtime) {
 		return [new model_ver1_data_PlayerPlayCard("" + runtime.getCardId() + "_PlayerPlayCard"),new model_ver1_data__$CardProto_$179001_$01A_$CH_$WT007R_$white_Text1("" + runtime.getCardId() + "_Text1")];
 	}
-	,getCLID: function() {
-		return model_ver1_data_CardProto_$179001_$01A_$CH_$WT007R_$white.__clid;
-	}
 	,__class__: model_ver1_data_CardProto_$179001_$01A_$CH_$WT007R_$white
 });
 var model_ver1_game_define_CardText = function(id,description) {
-	this.__uid = hxbit_Serializer.SEQ << 24 | ++hxbit_Serializer.UID;
 	this.isSurroundedByArrows = false;
 	this.type = model_ver1_game_define_TextType.Use;
 	this.id = id;
@@ -4884,7 +1297,6 @@ var model_ver1_game_define_CardText = function(id,description) {
 };
 $hxClasses["model.ver1.game.define.CardText"] = model_ver1_game_define_CardText;
 model_ver1_game_define_CardText.__name__ = "model.ver1.game.define.CardText";
-model_ver1_game_define_CardText.__interfaces__ = [hxbit_Serializable];
 model_ver1_game_define_CardText.prototype = {
 	getSubKey: function(v) {
 		return "" + this.id + "_" + v;
@@ -4901,95 +1313,6 @@ model_ver1_game_define_CardText.prototype = {
 	,action: function(_ctx,runtime) {
 	}
 	,onEvent: function(_ctx,event,runtime) {
-	}
-	,getCLID: function() {
-		return model_ver1_game_define_CardText.__clid;
-	}
-	,serialize: function(__ctx) {
-		var s = this.id;
-		if(s == null) {
-			__ctx.out.addByte(0);
-		} else {
-			var b = haxe_io_Bytes.ofString(s);
-			var v = b.length + 1;
-			if(v >= 0 && v < 128) {
-				__ctx.out.addByte(v);
-			} else {
-				__ctx.out.addByte(128);
-				__ctx.out.addInt32(v);
-			}
-			__ctx.out.add(b);
-		}
-		var s = this.description;
-		if(s == null) {
-			__ctx.out.addByte(0);
-		} else {
-			var b = haxe_io_Bytes.ofString(s);
-			var v = b.length + 1;
-			if(v >= 0 && v < 128) {
-				__ctx.out.addByte(v);
-			} else {
-				__ctx.out.addByte(128);
-				__ctx.out.addInt32(v);
-			}
-			__ctx.out.add(b);
-		}
-		hxbit_enumSer_Model_$ver1_$game_$define_$TextType.doSerialize(__ctx,this.type);
-		__ctx.out.addByte(this.isSurroundedByArrows ? 1 : 0);
-	}
-	,getSerializeSchema: function() {
-		var schema = new hxbit_Schema();
-		schema.fieldsNames.push("id");
-		schema.fieldsTypes.push(hxbit_PropTypeDesc.PString);
-		schema.fieldsNames.push("description");
-		schema.fieldsTypes.push(hxbit_PropTypeDesc.PString);
-		schema.fieldsNames.push("type");
-		schema.fieldsTypes.push(hxbit_PropTypeDesc.PEnum("model.ver1.game.define.TextType"));
-		schema.fieldsNames.push("isSurroundedByArrows");
-		schema.fieldsTypes.push(hxbit_PropTypeDesc.PBool);
-		schema.isFinal = hxbit_Serializer.isClassFinal(model_ver1_game_define_CardText.__clid);
-		return schema;
-	}
-	,unserializeInit: function() {
-		this.type = model_ver1_game_define_TextType.Use;
-		this.isSurroundedByArrows = false;
-	}
-	,unserialize: function(__ctx) {
-		var v = __ctx.input.b[__ctx.inPos++];
-		if(v == 128) {
-			v = __ctx.input.getInt32(__ctx.inPos);
-			__ctx.inPos += 4;
-		}
-		var len = v;
-		var tmp;
-		if(len == 0) {
-			tmp = null;
-		} else {
-			--len;
-			var s = __ctx.input.getString(__ctx.inPos,len);
-			__ctx.inPos += len;
-			tmp = s;
-		}
-		this.id = tmp;
-		var v = __ctx.input.b[__ctx.inPos++];
-		if(v == 128) {
-			v = __ctx.input.getInt32(__ctx.inPos);
-			__ctx.inPos += 4;
-		}
-		var len = v;
-		var tmp;
-		if(len == 0) {
-			tmp = null;
-		} else {
-			--len;
-			var s = __ctx.input.getString(__ctx.inPos,len);
-			__ctx.inPos += len;
-			tmp = s;
-		}
-		this.description = tmp;
-		var __e = hxbit_enumSer_Model_$ver1_$game_$define_$TextType.doUnserialize(__ctx);
-		this.type = __e;
-		this.isSurroundedByArrows = __ctx.input.b[__ctx.inPos++] != 0;
 	}
 	,__class__: model_ver1_game_define_CardText
 };
@@ -5024,69 +1347,18 @@ model_ver1_data__$CardProto_$179001_$01A_$CH_$WT007R_$white_Text1.prototype = $e
 			ctx.marks.h[mark.id] = mark;
 		}
 	}
-	,getCLID: function() {
-		return model_ver1_data__$CardProto_$179001_$01A_$CH_$WT007R_$white_Text1.__clid;
-	}
 	,__class__: model_ver1_data__$CardProto_$179001_$01A_$CH_$WT007R_$white_Text1
 });
 var model_ver1_game_define_Mark = function(id) {
-	this.__uid = hxbit_Serializer.SEQ << 24 | ++hxbit_Serializer.UID;
 	this.id = id;
 };
 $hxClasses["model.ver1.game.define.Mark"] = model_ver1_game_define_Mark;
 model_ver1_game_define_Mark.__name__ = "model.ver1.game.define.Mark";
-model_ver1_game_define_Mark.__interfaces__ = [hxbit_Serializable];
 model_ver1_game_define_Mark.prototype = {
 	getEffect: function(_ctx) {
 		return [];
 	}
 	,onEvent: function(_ctx,event) {
-	}
-	,getCLID: function() {
-		return model_ver1_game_define_Mark.__clid;
-	}
-	,serialize: function(__ctx) {
-		var s = this.id;
-		if(s == null) {
-			__ctx.out.addByte(0);
-		} else {
-			var b = haxe_io_Bytes.ofString(s);
-			var v = b.length + 1;
-			if(v >= 0 && v < 128) {
-				__ctx.out.addByte(v);
-			} else {
-				__ctx.out.addByte(128);
-				__ctx.out.addInt32(v);
-			}
-			__ctx.out.add(b);
-		}
-	}
-	,getSerializeSchema: function() {
-		var schema = new hxbit_Schema();
-		schema.fieldsNames.push("id");
-		schema.fieldsTypes.push(hxbit_PropTypeDesc.PString);
-		schema.isFinal = hxbit_Serializer.isClassFinal(model_ver1_game_define_Mark.__clid);
-		return schema;
-	}
-	,unserializeInit: function() {
-	}
-	,unserialize: function(__ctx) {
-		var v = __ctx.input.b[__ctx.inPos++];
-		if(v == 128) {
-			v = __ctx.input.getInt32(__ctx.inPos);
-			__ctx.inPos += 4;
-		}
-		var len = v;
-		var tmp;
-		if(len == 0) {
-			tmp = null;
-		} else {
-			--len;
-			var s = __ctx.input.getString(__ctx.inPos,len);
-			__ctx.inPos += len;
-			tmp = s;
-		}
-		this.id = tmp;
 	}
 	,__class__: model_ver1_game_define_Mark
 };
@@ -5122,44 +1394,6 @@ model_ver1_game_entity_DefaultMark.prototype = $extend(model_ver1_game_define_Ma
 			}
 		}
 	}
-	,getCLID: function() {
-		return model_ver1_game_entity_DefaultMark.__clid;
-	}
-	,serialize: function(__ctx) {
-		model_ver1_game_define_Mark.prototype.serialize.call(this,__ctx);
-		if(this.age == null) {
-			__ctx.out.addByte(0);
-		} else {
-			__ctx.out.addByte(1);
-			var v = this.age;
-			if(v >= 0 && v < 128) {
-				__ctx.out.addByte(v);
-			} else {
-				__ctx.out.addByte(128);
-				__ctx.out.addInt32(v);
-			}
-		}
-	}
-	,getSerializeSchema: function() {
-		var schema = model_ver1_game_define_Mark.prototype.getSerializeSchema.call(this);
-		schema.fieldsNames.push("age");
-		schema.fieldsTypes.push(hxbit_PropTypeDesc.PNull(hxbit_PropTypeDesc.PInt));
-		schema.isFinal = hxbit_Serializer.isClassFinal(model_ver1_game_entity_DefaultMark.__clid);
-		return schema;
-	}
-	,unserialize: function(__ctx) {
-		model_ver1_game_define_Mark.prototype.unserialize.call(this,__ctx);
-		if(__ctx.input.b[__ctx.inPos++] == 0) {
-			this.age = null;
-		} else {
-			var v = __ctx.input.b[__ctx.inPos++];
-			if(v == 128) {
-				v = __ctx.input.getInt32(__ctx.inPos);
-				__ctx.inPos += 4;
-			}
-			this.age = v;
-		}
-	}
 	,__class__: model_ver1_game_entity_DefaultMark
 });
 var model_ver1_data__$CardProto_$179001_$01A_$CH_$WT007R_$white_Mark1 = function(id,attachCardId) {
@@ -5192,52 +1426,6 @@ model_ver1_data__$CardProto_$179001_$01A_$CH_$WT007R_$white_Mark1.prototype = $e
 				}
 			}
 		}
-	}
-	,getCLID: function() {
-		return model_ver1_data__$CardProto_$179001_$01A_$CH_$WT007R_$white_Mark1.__clid;
-	}
-	,serialize: function(__ctx) {
-		model_ver1_game_entity_DefaultMark.prototype.serialize.call(this,__ctx);
-		var s = this.attachCardId;
-		if(s == null) {
-			__ctx.out.addByte(0);
-		} else {
-			var b = haxe_io_Bytes.ofString(s);
-			var v = b.length + 1;
-			if(v >= 0 && v < 128) {
-				__ctx.out.addByte(v);
-			} else {
-				__ctx.out.addByte(128);
-				__ctx.out.addInt32(v);
-			}
-			__ctx.out.add(b);
-		}
-	}
-	,getSerializeSchema: function() {
-		var schema = model_ver1_game_entity_DefaultMark.prototype.getSerializeSchema.call(this);
-		schema.fieldsNames.push("attachCardId");
-		schema.fieldsTypes.push(hxbit_PropTypeDesc.PString);
-		schema.isFinal = hxbit_Serializer.isClassFinal(model_ver1_data__$CardProto_$179001_$01A_$CH_$WT007R_$white_Mark1.__clid);
-		return schema;
-	}
-	,unserialize: function(__ctx) {
-		model_ver1_game_entity_DefaultMark.prototype.unserialize.call(this,__ctx);
-		var v = __ctx.input.b[__ctx.inPos++];
-		if(v == 128) {
-			v = __ctx.input.getInt32(__ctx.inPos);
-			__ctx.inPos += 4;
-		}
-		var len = v;
-		var tmp;
-		if(len == 0) {
-			tmp = null;
-		} else {
-			--len;
-			var s = __ctx.input.getString(__ctx.inPos,len);
-			__ctx.inPos += len;
-			tmp = s;
-		}
-		this.attachCardId = tmp;
 	}
 	,__class__: model_ver1_data__$CardProto_$179001_$01A_$CH_$WT007R_$white_Mark1
 });
@@ -5298,9 +1486,6 @@ model_ver1_data_CardProto_$179003_$01A_$U_$BK008U_$black.prototype = $extend(mod
 		var ctx = js_Boot.__cast(_ctx , model_ver1_game_entity_Context);
 		return [new model_ver1_data_PlayerPlayCard("" + runtime.getCardId() + "_PlayerPlayCard"),new model_ver1_data__$CardProto_$179003_$01A_$U_$BK008U_$black_Text1("" + runtime.getCardId() + "_Text1")];
 	}
-	,getCLID: function() {
-		return model_ver1_data_CardProto_$179003_$01A_$U_$BK008U_$black.__clid;
-	}
 	,__class__: model_ver1_data_CardProto_$179003_$01A_$U_$BK008U_$black
 });
 var model_ver1_game_define_Require = function(id,description) {
@@ -5347,9 +1532,6 @@ model_ver1_data__$CardProto_$179003_$01A_$U_$BK008U_$black_Text1.prototype = $ex
 		var block = new model_ver1_game_define_Block("" + this.id + "_" + Std.string(new Date()),model_ver1_game_define_BlockCause.PlayText(cardId,this.id),new model_ver1_data__$CardProto_$179003_$01A_$U_$BK008U_$black_Text2("" + this.id + "_Text2"));
 		model_ver1_game_component_Cut_cutIn(ctx,block);
 	}
-	,getCLID: function() {
-		return model_ver1_data__$CardProto_$179003_$01A_$U_$BK008U_$black_Text1.__clid;
-	}
 	,__class__: model_ver1_data__$CardProto_$179003_$01A_$U_$BK008U_$black_Text1
 });
 var model_ver1_data__$CardProto_$179003_$01A_$U_$BK008U_$black_Text2 = function(id) {
@@ -5364,9 +1546,6 @@ model_ver1_data__$CardProto_$179003_$01A_$U_$BK008U_$black_Text2.prototype = $ex
 		var cardId = runtime.getCardId();
 		model_ver1_game_entity_Context_removeDestroyEffect(ctx,cardId);
 		model_ver1_game_entity_Alg_becomeG(ctx,cardId);
-	}
-	,getCLID: function() {
-		return model_ver1_data__$CardProto_$179003_$01A_$U_$BK008U_$black_Text2.__clid;
 	}
 	,__class__: model_ver1_data__$CardProto_$179003_$01A_$U_$BK008U_$black_Text2
 });
@@ -5429,9 +1608,6 @@ model_ver1_data_CardProto_$179004_$01A_$CH_$WT009R_$white.prototype = $extend(mo
 		var thisCardId = runtime.getCardId();
 		return [new model_ver1_data_PlayerPlayCard("" + thisCardId + "_PlayerPlayCard"),new model_ver1_data__$CardProto_$179004_$01A_$CH_$WT009R_$white_Text1("" + thisCardId + "_Text1")];
 	}
-	,getCLID: function() {
-		return model_ver1_data_CardProto_$179004_$01A_$CH_$WT009R_$white.__clid;
-	}
 	,__class__: model_ver1_data_CardProto_$179004_$01A_$CH_$WT009R_$white
 });
 var model_ver1_data__$CardProto_$179004_$01A_$CH_$WT009R_$white_Text1 = function(id) {
@@ -5454,9 +1630,6 @@ model_ver1_data__$CardProto_$179004_$01A_$CH_$WT009R_$white_Text1.prototype = $e
 				model_ver1_game_component_Cut_cutIn(ctx,block);
 			}
 		}
-	}
-	,getCLID: function() {
-		return model_ver1_data__$CardProto_$179004_$01A_$CH_$WT009R_$white_Text1.__clid;
 	}
 	,__class__: model_ver1_data__$CardProto_$179004_$01A_$CH_$WT009R_$white_Text1
 });
@@ -5589,57 +1762,6 @@ model_ver1_data__$CardProto_$179004_$01A_$CH_$WT009R_$white_Text1_$1.prototype =
 			ctx.marks.h[mark.id] = mark;
 		}
 	}
-	,getCLID: function() {
-		return model_ver1_data__$CardProto_$179004_$01A_$CH_$WT009R_$white_Text1_$1.__clid;
-	}
-	,serialize: function(__ctx) {
-		model_ver1_game_define_CardText.prototype.serialize.call(this,__ctx);
-		var s = this.gainCardId;
-		if(s == null) {
-			__ctx.out.addByte(0);
-		} else {
-			var b = haxe_io_Bytes.ofString(s);
-			var v = b.length + 1;
-			if(v >= 0 && v < 128) {
-				__ctx.out.addByte(v);
-			} else {
-				__ctx.out.addByte(128);
-				__ctx.out.addInt32(v);
-			}
-			__ctx.out.add(b);
-		}
-		hxbit_enumSer_Model_$ver1_$game_$define_$BattlePoint.doSerialize(__ctx,this.gainValue);
-	}
-	,getSerializeSchema: function() {
-		var schema = model_ver1_game_define_CardText.prototype.getSerializeSchema.call(this);
-		schema.fieldsNames.push("gainCardId");
-		schema.fieldsTypes.push(hxbit_PropTypeDesc.PString);
-		schema.fieldsNames.push("gainValue");
-		schema.fieldsTypes.push(hxbit_PropTypeDesc.PEnum("model.ver1.game.define.BattlePoint"));
-		schema.isFinal = hxbit_Serializer.isClassFinal(model_ver1_data__$CardProto_$179004_$01A_$CH_$WT009R_$white_Text1_$1.__clid);
-		return schema;
-	}
-	,unserialize: function(__ctx) {
-		model_ver1_game_define_CardText.prototype.unserialize.call(this,__ctx);
-		var v = __ctx.input.b[__ctx.inPos++];
-		if(v == 128) {
-			v = __ctx.input.getInt32(__ctx.inPos);
-			__ctx.inPos += 4;
-		}
-		var len = v;
-		var tmp;
-		if(len == 0) {
-			tmp = null;
-		} else {
-			--len;
-			var s = __ctx.input.getString(__ctx.inPos,len);
-			__ctx.inPos += len;
-			tmp = s;
-		}
-		this.gainCardId = tmp;
-		var __e = hxbit_enumSer_Model_$ver1_$game_$define_$BattlePoint.doUnserialize(__ctx);
-		this.gainValue = __e;
-	}
 	,__class__: model_ver1_data__$CardProto_$179004_$01A_$CH_$WT009R_$white_Text1_$1
 });
 var model_ver1_data__$CardProto_$179004_$01A_$CH_$WT009R_$white_Mark1 = function(id,attachCardId,battlePoint) {
@@ -5653,57 +1775,6 @@ model_ver1_data__$CardProto_$179004_$01A_$CH_$WT009R_$white_Mark1.__super__ = mo
 model_ver1_data__$CardProto_$179004_$01A_$CH_$WT009R_$white_Mark1.prototype = $extend(model_ver1_game_entity_DefaultMark.prototype,{
 	getEffect: function(_ctx) {
 		return [model_ver1_game_define_MarkEffect.AddBattlePoint(this.attachCardId,this.battlePoint)];
-	}
-	,getCLID: function() {
-		return model_ver1_data__$CardProto_$179004_$01A_$CH_$WT009R_$white_Mark1.__clid;
-	}
-	,serialize: function(__ctx) {
-		model_ver1_game_entity_DefaultMark.prototype.serialize.call(this,__ctx);
-		var s = this.attachCardId;
-		if(s == null) {
-			__ctx.out.addByte(0);
-		} else {
-			var b = haxe_io_Bytes.ofString(s);
-			var v = b.length + 1;
-			if(v >= 0 && v < 128) {
-				__ctx.out.addByte(v);
-			} else {
-				__ctx.out.addByte(128);
-				__ctx.out.addInt32(v);
-			}
-			__ctx.out.add(b);
-		}
-		hxbit_enumSer_Model_$ver1_$game_$define_$BattlePoint.doSerialize(__ctx,this.battlePoint);
-	}
-	,getSerializeSchema: function() {
-		var schema = model_ver1_game_entity_DefaultMark.prototype.getSerializeSchema.call(this);
-		schema.fieldsNames.push("attachCardId");
-		schema.fieldsTypes.push(hxbit_PropTypeDesc.PString);
-		schema.fieldsNames.push("battlePoint");
-		schema.fieldsTypes.push(hxbit_PropTypeDesc.PEnum("model.ver1.game.define.BattlePoint"));
-		schema.isFinal = hxbit_Serializer.isClassFinal(model_ver1_data__$CardProto_$179004_$01A_$CH_$WT009R_$white_Mark1.__clid);
-		return schema;
-	}
-	,unserialize: function(__ctx) {
-		model_ver1_game_entity_DefaultMark.prototype.unserialize.call(this,__ctx);
-		var v = __ctx.input.b[__ctx.inPos++];
-		if(v == 128) {
-			v = __ctx.input.getInt32(__ctx.inPos);
-			__ctx.inPos += 4;
-		}
-		var len = v;
-		var tmp;
-		if(len == 0) {
-			tmp = null;
-		} else {
-			--len;
-			var s = __ctx.input.getString(__ctx.inPos,len);
-			__ctx.inPos += len;
-			tmp = s;
-		}
-		this.attachCardId = tmp;
-		var __e = hxbit_enumSer_Model_$ver1_$game_$define_$BattlePoint.doUnserialize(__ctx);
-		this.battlePoint = __e;
 	}
 	,__class__: model_ver1_data__$CardProto_$179004_$01A_$CH_$WT009R_$white_Mark1
 });
@@ -5825,9 +1896,6 @@ model_ver1_data_CardProto_$179030_$11E_$CH_$BN091N_$brown.prototype = $extend(mo
 	getTexts: function(_ctx,runtime) {
 		return [new model_ver1_data_PlayerPlayCard("" + runtime.getCardId() + "_PlayerPlayCard"),new model_ver1_data__$CardProto_$179030_$11E_$CH_$BN091N_$brown_Text1("" + runtime.getCardId() + "_Text1")];
 	}
-	,getCLID: function() {
-		return model_ver1_data_CardProto_$179030_$11E_$CH_$BN091N_$brown.__clid;
-	}
 	,__class__: model_ver1_data_CardProto_$179030_$11E_$CH_$BN091N_$brown
 });
 var model_ver1_data__$CardProto_$179030_$11E_$CH_$BN091N_$brown_Text1 = function(id) {
@@ -5857,9 +1925,6 @@ model_ver1_data__$CardProto_$179030_$11E_$CH_$BN091N_$brown_Text1.prototype = $e
 				}
 			}
 		}
-	}
-	,getCLID: function() {
-		return model_ver1_data__$CardProto_$179030_$11E_$CH_$BN091N_$brown_Text1.__clid;
 	}
 	,__class__: model_ver1_data__$CardProto_$179030_$11E_$CH_$BN091N_$brown_Text1
 });
@@ -5905,9 +1970,6 @@ model_ver1_data__$CardProto_$179030_$11E_$CH_$BN091N_$brown_Process1.prototype =
 			mark.age = 2;
 			ctx.marks.h[mark.id] = mark;
 		}
-	}
-	,getCLID: function() {
-		return model_ver1_data__$CardProto_$179030_$11E_$CH_$BN091N_$brown_Process1.__clid;
 	}
 	,__class__: model_ver1_data__$CardProto_$179030_$11E_$CH_$BN091N_$brown_Process1
 });
@@ -6086,9 +2148,6 @@ model_ver1_data_CardProto_$179030_$11E_$U_$VT186R_$purple.prototype = $extend(mo
 	getTexts: function(_ctx,runtime) {
 		return [new model_ver1_data_PlayerPlayCard("CardProto_179030_11E_U_VT186R_purple_1"),new model_ver1_data__$CardProto_$179030_$11E_$U_$VT186R_$purple_Text1("CardProto_179030_11E_U_VT186R_purple_2")];
 	}
-	,getCLID: function() {
-		return model_ver1_data_CardProto_$179030_$11E_$U_$VT186R_$purple.__clid;
-	}
 	,__class__: model_ver1_data_CardProto_$179030_$11E_$U_$VT186R_$purple
 });
 var model_ver1_data__$CardProto_$179030_$11E_$U_$VT186R_$purple_Text1 = function(id) {
@@ -6110,9 +2169,6 @@ model_ver1_data__$CardProto_$179030_$11E_$U_$VT186R_$purple_Text1.prototype = $e
 				model_ver1_game_component_Cut_cutIn(ctx,block);
 			}
 		}
-	}
-	,getCLID: function() {
-		return model_ver1_data__$CardProto_$179030_$11E_$U_$VT186R_$purple_Text1.__clid;
 	}
 	,__class__: model_ver1_data__$CardProto_$179030_$11E_$U_$VT186R_$purple_Text1
 });
@@ -6202,9 +2258,6 @@ model_ver1_data__$CardProto_$179030_$11E_$U_$VT186R_$purple_Process1.prototype =
 			++_g;
 			model_ver1_game_entity_Alg_returnToOwnerHand(ctx,cardId);
 		}
-	}
-	,getCLID: function() {
-		return model_ver1_data__$CardProto_$179030_$11E_$U_$VT186R_$purple_Process1.__clid;
 	}
 	,__class__: model_ver1_data__$CardProto_$179030_$11E_$U_$VT186R_$purple_Process1
 });
@@ -6324,9 +2377,6 @@ model_ver1_data_PlayerPlayCard.prototype = $extend(model_ver1_game_define_CardTe
 			throw new haxe_Exception("unsupport type");
 		}
 	}
-	,getCLID: function() {
-		return model_ver1_data_PlayerPlayCard.__clid;
-	}
 	,__class__: model_ver1_data_PlayerPlayCard
 });
 var model_ver1_data__$PlayerPlayCard_EnterFieldEffect = function(id) {
@@ -6366,9 +2416,6 @@ model_ver1_data__$PlayerPlayCard_EnterFieldEffect.prototype = $extend(model_ver1
 			throw new haxe_Exception("unsupport type");
 		}
 	}
-	,getCLID: function() {
-		return model_ver1_data__$PlayerPlayCard_EnterFieldEffect.__clid;
-	}
 	,__class__: model_ver1_data__$PlayerPlayCard_EnterFieldEffect
 });
 var model_ver1_data_PlayerPlayG = function(id) {
@@ -6389,9 +2436,6 @@ model_ver1_data_PlayerPlayG.prototype = $extend(model_ver1_game_define_CardText.
 		var to = model_ver1_game_define_BaSyou.Default(responsePlayerId,model_ver1_game_define_BaSyouKeyword.GZone);
 		ctx.table.cards.h[cardId].isReverse = true;
 		model_ver1_game_entity_Alg_moveCard(ctx,cardId,from,to);
-	}
-	,getCLID: function() {
-		return model_ver1_data_PlayerPlayG.__clid;
 	}
 	,__class__: model_ver1_data_PlayerPlayG
 });
@@ -6581,37 +2625,16 @@ function model_ver1_data_RequireImpl_getRequireOpponentUnitsEnterFieldThisTurn(c
 	}};
 }
 var model_ver1_game_Game = function() {
-	this.__uid = hxbit_Serializer.SEQ << 24 | ++hxbit_Serializer.UID;
 	this.ctx = new model_ver1_game_entity_Context();
 };
 $hxClasses["model.ver1.game.Game"] = model_ver1_game_Game;
 model_ver1_game_Game.__name__ = "model.ver1.game.Game";
-model_ver1_game_Game.__interfaces__ = [hxbit_Serializable];
 model_ver1_game_Game.ofMemonto = function(memonto) {
 	return tool_Helper_ofMemonto(memonto,model_ver1_game_Game);
 };
 model_ver1_game_Game.prototype = {
 	getMemonto: function() {
 		return tool_Helper_getMemonto(this);
-	}
-	,getCLID: function() {
-		return model_ver1_game_Game.__clid;
-	}
-	,serialize: function(__ctx) {
-		__ctx.addKnownRef(this.ctx);
-	}
-	,getSerializeSchema: function() {
-		var schema = new hxbit_Schema();
-		schema.fieldsNames.push("ctx");
-		schema.fieldsTypes.push(hxbit_PropTypeDesc.PSerializable("model.ver1.game.entity.Context"));
-		schema.isFinal = hxbit_Serializer.isClassFinal(model_ver1_game_Game.__clid);
-		return schema;
-	}
-	,unserializeInit: function() {
-		this.ctx = new model_ver1_game_entity_Context();
-	}
-	,unserialize: function(__ctx) {
-		this.ctx = __ctx.getRef(model_ver1_game_entity_Context,model_ver1_game_entity_Context.__clid);
 	}
 	,__class__: model_ver1_game_Game
 };
@@ -6623,7 +2646,20 @@ function model_ver1_game_Game_test() {
 	card2.protoId = "179003_01A_U_BK008U_black";
 	game.ctx.table.cards.h[card1.id] = card1;
 	game.ctx.table.cards.h[card2.id] = card2;
+	game.ctx.timing = model_ver1_game_define_Timing_TIMINGS[2];
 	var loadGame = model_ver1_game_Game.ofMemonto(game.getMemonto());
+	var _g = game.ctx.timing;
+	if(_g.phase._hx_index == 0) {
+		if(_g.step._hx_index == 1) {
+			if(_g.timing._hx_index != 3) {
+				throw new haxe_Exception("timing not right");
+			}
+		} else {
+			throw new haxe_Exception("timing not right");
+		}
+	} else {
+		throw new haxe_Exception("timing not right");
+	}
 	if(loadGame.ctx.table.cards.h[card1.id].id != card1.id) {
 		throw new haxe_Exception("loadGame.ctx.table.cards[card1.id].id != card1.id");
 	}
@@ -6708,7 +2744,7 @@ function model_ver1_game_component_Cut_cutIn(ctx,block) {
 function model_ver1_game_component_Cut_newCut(ctx,block) {
 	ctx.cuts.push([block]);
 }
-var model_ver1_game_define_CardCategory = $hxEnums["model.ver1.game.define.CardCategory"] = { __ename__:true,__constructs__:null
+var model_ver1_game_define_CardCategory = $hxEnums["model.ver1.game.define.CardCategory"] = { __ename__:"model.ver1.game.define.CardCategory",__constructs__:null
 	,Unit: {_hx_name:"Unit",_hx_index:0,__enum__:"model.ver1.game.define.CardCategory",toString:$estr}
 	,Character: {_hx_name:"Character",_hx_index:1,__enum__:"model.ver1.game.define.CardCategory",toString:$estr}
 	,Command: {_hx_name:"Command",_hx_index:2,__enum__:"model.ver1.game.define.CardCategory",toString:$estr}
@@ -6725,7 +2761,7 @@ function model_ver1_game_data_DataBinding_getCardProto(key) {
 	}
 	return obj;
 }
-var model_ver1_game_define_BaSyouKeyword = $hxEnums["model.ver1.game.define.BaSyouKeyword"] = { __ename__:true,__constructs__:null
+var model_ver1_game_define_BaSyouKeyword = $hxEnums["model.ver1.game.define.BaSyouKeyword"] = { __ename__:"model.ver1.game.define.BaSyouKeyword",__constructs__:null
 	,HonGoku: {_hx_name:"HonGoku",_hx_index:0,__enum__:"model.ver1.game.define.BaSyouKeyword",toString:$estr}
 	,SuteYama: {_hx_name:"SuteYama",_hx_index:1,__enum__:"model.ver1.game.define.BaSyouKeyword",toString:$estr}
 	,SpaceArea: {_hx_name:"SpaceArea",_hx_index:2,__enum__:"model.ver1.game.define.BaSyouKeyword",toString:$estr}
@@ -6739,7 +2775,7 @@ var model_ver1_game_define_BaSyouKeyword = $hxEnums["model.ver1.game.define.BaSy
 	,RemovedCard: {_hx_name:"RemovedCard",_hx_index:10,__enum__:"model.ver1.game.define.BaSyouKeyword",toString:$estr}
 };
 model_ver1_game_define_BaSyouKeyword.__constructs__ = [model_ver1_game_define_BaSyouKeyword.HonGoku,model_ver1_game_define_BaSyouKeyword.SuteYama,model_ver1_game_define_BaSyouKeyword.SpaceArea,model_ver1_game_define_BaSyouKeyword.EarchArea,model_ver1_game_define_BaSyouKeyword.MaintenanceArea,model_ver1_game_define_BaSyouKeyword.GZone,model_ver1_game_define_BaSyouKeyword.JunkYard,model_ver1_game_define_BaSyouKeyword.TeHuTa,model_ver1_game_define_BaSyouKeyword.Hanger,model_ver1_game_define_BaSyouKeyword.PlayedCard,model_ver1_game_define_BaSyouKeyword.RemovedCard];
-var model_ver1_game_define_BaSyou = $hxEnums["model.ver1.game.define.BaSyou"] = { __ename__:true,__constructs__:null
+var model_ver1_game_define_BaSyou = $hxEnums["model.ver1.game.define.BaSyou"] = { __ename__:"model.ver1.game.define.BaSyou",__constructs__:null
 	,Default: ($_=function(playerId,baSyouKeyword) { return {_hx_index:0,playerId:playerId,baSyouKeyword:baSyouKeyword,__enum__:"model.ver1.game.define.BaSyou",toString:$estr}; },$_._hx_name="Default",$_.__params__ = ["playerId","baSyouKeyword"],$_)
 };
 model_ver1_game_define_BaSyou.__constructs__ = [model_ver1_game_define_BaSyou.Default];
@@ -6830,7 +2866,7 @@ function model_ver1_game_define_BaSyou_test() {
 	var this1 = "" + playerId + model_ver1_game_define_BaSyouId._split + $hxEnums[baSyouKeyword.__enum__].__constructs__[baSyouKeyword._hx_index]._hx_name;
 	var b5 = this1;
 }
-var model_ver1_game_define_BlockCause = $hxEnums["model.ver1.game.define.BlockCause"] = { __ename__:true,__constructs__:null
+var model_ver1_game_define_BlockCause = $hxEnums["model.ver1.game.define.BlockCause"] = { __ename__:"model.ver1.game.define.BlockCause",__constructs__:null
 	,Pending: {_hx_name:"Pending",_hx_index:0,__enum__:"model.ver1.game.define.BlockCause",toString:$estr}
 	,System: ($_=function(respnosePlayerId) { return {_hx_index:1,respnosePlayerId:respnosePlayerId,__enum__:"model.ver1.game.define.BlockCause",toString:$estr}; },$_._hx_name="System",$_.__params__ = ["respnosePlayerId"],$_)
 	,PlayCard: ($_=function(playerId,cardId) { return {_hx_index:2,playerId:playerId,cardId:cardId,__enum__:"model.ver1.game.define.BlockCause",toString:$estr}; },$_._hx_name="PlayCard",$_.__params__ = ["playerId","cardId"],$_)
@@ -6839,7 +2875,6 @@ var model_ver1_game_define_BlockCause = $hxEnums["model.ver1.game.define.BlockCa
 };
 model_ver1_game_define_BlockCause.__constructs__ = [model_ver1_game_define_BlockCause.Pending,model_ver1_game_define_BlockCause.System,model_ver1_game_define_BlockCause.PlayCard,model_ver1_game_define_BlockCause.PlayText,model_ver1_game_define_BlockCause.TextEffect];
 var model_ver1_game_define_Block = function(id,cause,text) {
-	this.__uid = hxbit_Serializer.SEQ << 24 | ++hxbit_Serializer.UID;
 	this.isOption = false;
 	this.isImmediate = false;
 	this.id = id;
@@ -6848,114 +2883,48 @@ var model_ver1_game_define_Block = function(id,cause,text) {
 };
 $hxClasses["model.ver1.game.define.Block"] = model_ver1_game_define_Block;
 model_ver1_game_define_Block.__name__ = "model.ver1.game.define.Block";
-model_ver1_game_define_Block.__interfaces__ = [hxbit_Serializable];
 model_ver1_game_define_Block.prototype = {
-	getCLID: function() {
-		return model_ver1_game_define_Block.__clid;
-	}
-	,serialize: function(__ctx) {
-		var s = this.id;
-		if(s == null) {
-			__ctx.out.addByte(0);
-		} else {
-			var b = haxe_io_Bytes.ofString(s);
-			var v = b.length + 1;
-			if(v >= 0 && v < 128) {
-				__ctx.out.addByte(v);
-			} else {
-				__ctx.out.addByte(128);
-				__ctx.out.addInt32(v);
-			}
-			__ctx.out.add(b);
-		}
-		hxbit_enumSer_Model_$ver1_$game_$define_$BlockCause.doSerialize(__ctx,this.cause);
-		__ctx.addKnownRef(this.text);
-		__ctx.out.addByte(this.isImmediate ? 1 : 0);
-		__ctx.out.addByte(this.isOption ? 1 : 0);
-	}
-	,getSerializeSchema: function() {
-		var schema = new hxbit_Schema();
-		schema.fieldsNames.push("id");
-		schema.fieldsTypes.push(hxbit_PropTypeDesc.PString);
-		schema.fieldsNames.push("cause");
-		schema.fieldsTypes.push(hxbit_PropTypeDesc.PEnum("model.ver1.game.define.BlockCause"));
-		schema.fieldsNames.push("text");
-		schema.fieldsTypes.push(hxbit_PropTypeDesc.PSerializable("model.ver1.game.define.CardText"));
-		schema.fieldsNames.push("isImmediate");
-		schema.fieldsTypes.push(hxbit_PropTypeDesc.PBool);
-		schema.fieldsNames.push("isOption");
-		schema.fieldsTypes.push(hxbit_PropTypeDesc.PBool);
-		schema.isFinal = hxbit_Serializer.isClassFinal(model_ver1_game_define_Block.__clid);
-		return schema;
-	}
-	,unserializeInit: function() {
-		this.isImmediate = false;
-		this.isOption = false;
-	}
-	,unserialize: function(__ctx) {
-		var v = __ctx.input.b[__ctx.inPos++];
-		if(v == 128) {
-			v = __ctx.input.getInt32(__ctx.inPos);
-			__ctx.inPos += 4;
-		}
-		var len = v;
-		var tmp;
-		if(len == 0) {
-			tmp = null;
-		} else {
-			--len;
-			var s = __ctx.input.getString(__ctx.inPos,len);
-			__ctx.inPos += len;
-			tmp = s;
-		}
-		this.id = tmp;
-		var __e = hxbit_enumSer_Model_$ver1_$game_$define_$BlockCause.doUnserialize(__ctx);
-		this.cause = __e;
-		this.text = __ctx.getRef(model_ver1_game_define_CardText,model_ver1_game_define_CardText.__clid);
-		this.isImmediate = __ctx.input.b[__ctx.inPos++] != 0;
-		this.isOption = __ctx.input.b[__ctx.inPos++] != 0;
-	}
-	,__class__: model_ver1_game_define_Block
+	__class__: model_ver1_game_define_Block
 };
-var model_ver1_game_define_TextTypeAutomaticType = $hxEnums["model.ver1.game.define.TextTypeAutomaticType"] = { __ename__:true,__constructs__:null
+var model_ver1_game_define_TextTypeAutomaticType = $hxEnums["model.ver1.game.define.TextTypeAutomaticType"] = { __ename__:"model.ver1.game.define.TextTypeAutomaticType",__constructs__:null
 	,Resident: {_hx_name:"Resident",_hx_index:0,__enum__:"model.ver1.game.define.TextTypeAutomaticType",toString:$estr}
 	,Trigger: {_hx_name:"Trigger",_hx_index:1,__enum__:"model.ver1.game.define.TextTypeAutomaticType",toString:$estr}
 	,Constant: {_hx_name:"Constant",_hx_index:2,__enum__:"model.ver1.game.define.TextTypeAutomaticType",toString:$estr}
 };
 model_ver1_game_define_TextTypeAutomaticType.__constructs__ = [model_ver1_game_define_TextTypeAutomaticType.Resident,model_ver1_game_define_TextTypeAutomaticType.Trigger,model_ver1_game_define_TextTypeAutomaticType.Constant];
-var model_ver1_game_define_TextType = $hxEnums["model.ver1.game.define.TextType"] = { __ename__:true,__constructs__:null
+var model_ver1_game_define_TextType = $hxEnums["model.ver1.game.define.TextType"] = { __ename__:"model.ver1.game.define.TextType",__constructs__:null
 	,Automatic: ($_=function(type) { return {_hx_index:0,type:type,__enum__:"model.ver1.game.define.TextType",toString:$estr}; },$_._hx_name="Automatic",$_.__params__ = ["type"],$_)
 	,Use: {_hx_name:"Use",_hx_index:1,__enum__:"model.ver1.game.define.TextType",toString:$estr}
 	,Special: {_hx_name:"Special",_hx_index:2,__enum__:"model.ver1.game.define.TextType",toString:$estr}
 };
 model_ver1_game_define_TextType.__constructs__ = [model_ver1_game_define_TextType.Automatic,model_ver1_game_define_TextType.Use,model_ver1_game_define_TextType.Special];
-var model_ver1_game_define_CardEntityCategory = $hxEnums["model.ver1.game.define.CardEntityCategory"] = { __ename__:true,__constructs__:null
+var model_ver1_game_define_CardEntityCategory = $hxEnums["model.ver1.game.define.CardEntityCategory"] = { __ename__:"model.ver1.game.define.CardEntityCategory",__constructs__:null
 	,Unit: {_hx_name:"Unit",_hx_index:0,__enum__:"model.ver1.game.define.CardEntityCategory",toString:$estr}
 	,Character: {_hx_name:"Character",_hx_index:1,__enum__:"model.ver1.game.define.CardEntityCategory",toString:$estr}
 	,Operation: {_hx_name:"Operation",_hx_index:2,__enum__:"model.ver1.game.define.CardEntityCategory",toString:$estr}
 	,G: {_hx_name:"G",_hx_index:3,__enum__:"model.ver1.game.define.CardEntityCategory",toString:$estr}
 };
 model_ver1_game_define_CardEntityCategory.__constructs__ = [model_ver1_game_define_CardEntityCategory.Unit,model_ver1_game_define_CardEntityCategory.Character,model_ver1_game_define_CardEntityCategory.Operation,model_ver1_game_define_CardEntityCategory.G];
-var model_ver1_game_define_GColor = $hxEnums["model.ver1.game.define.GColor"] = { __ename__:true,__constructs__:null
+var model_ver1_game_define_GColor = $hxEnums["model.ver1.game.define.GColor"] = { __ename__:"model.ver1.game.define.GColor",__constructs__:null
 	,Red: {_hx_name:"Red",_hx_index:0,__enum__:"model.ver1.game.define.GColor",toString:$estr}
 	,Black: {_hx_name:"Black",_hx_index:1,__enum__:"model.ver1.game.define.GColor",toString:$estr}
 	,Purple: {_hx_name:"Purple",_hx_index:2,__enum__:"model.ver1.game.define.GColor",toString:$estr}
 };
 model_ver1_game_define_GColor.__constructs__ = [model_ver1_game_define_GColor.Red,model_ver1_game_define_GColor.Black,model_ver1_game_define_GColor.Purple];
-var model_ver1_game_define_GProperty = $hxEnums["model.ver1.game.define.GProperty"] = { __ename__:true,__constructs__:null
+var model_ver1_game_define_GProperty = $hxEnums["model.ver1.game.define.GProperty"] = { __ename__:"model.ver1.game.define.GProperty",__constructs__:null
 	,Uc: {_hx_name:"Uc",_hx_index:0,__enum__:"model.ver1.game.define.GProperty",toString:$estr}
 	,Zero8: {_hx_name:"Zero8",_hx_index:1,__enum__:"model.ver1.game.define.GProperty",toString:$estr}
 };
 model_ver1_game_define_GProperty.__constructs__ = [model_ver1_game_define_GProperty.Uc,model_ver1_game_define_GProperty.Zero8];
-var model_ver1_game_define_GSign = $hxEnums["model.ver1.game.define.GSign"] = { __ename__:true,__constructs__:null
+var model_ver1_game_define_GSign = $hxEnums["model.ver1.game.define.GSign"] = { __ename__:"model.ver1.game.define.GSign",__constructs__:null
 	,Default: ($_=function(color,property) { return {_hx_index:0,color:color,property:property,__enum__:"model.ver1.game.define.GSign",toString:$estr}; },$_._hx_name="Default",$_.__params__ = ["color","property"],$_)
 };
 model_ver1_game_define_GSign.__constructs__ = [model_ver1_game_define_GSign.Default];
-var model_ver1_game_define_BattlePoint = $hxEnums["model.ver1.game.define.BattlePoint"] = { __ename__:true,__constructs__:null
+var model_ver1_game_define_BattlePoint = $hxEnums["model.ver1.game.define.BattlePoint"] = { __ename__:"model.ver1.game.define.BattlePoint",__constructs__:null
 	,Default: ($_=function(melee,range,hp) { return {_hx_index:0,melee:melee,range:range,hp:hp,__enum__:"model.ver1.game.define.BattlePoint",toString:$estr}; },$_._hx_name="Default",$_.__params__ = ["melee","range","hp"],$_)
 };
 model_ver1_game_define_BattlePoint.__constructs__ = [model_ver1_game_define_BattlePoint.Default];
-var model_ver1_game_define_RelativePlayer = $hxEnums["model.ver1.game.define.RelativePlayer"] = { __ename__:true,__constructs__:null
+var model_ver1_game_define_RelativePlayer = $hxEnums["model.ver1.game.define.RelativePlayer"] = { __ename__:"model.ver1.game.define.RelativePlayer",__constructs__:null
 	,You: {_hx_name:"You",_hx_index:0,__enum__:"model.ver1.game.define.RelativePlayer",toString:$estr}
 	,Opponent: {_hx_name:"Opponent",_hx_index:1,__enum__:"model.ver1.game.define.RelativePlayer",toString:$estr}
 };
@@ -6964,7 +2933,7 @@ var model_ver1_game_define_IContext = function() { };
 $hxClasses["model.ver1.game.define.IContext"] = model_ver1_game_define_IContext;
 model_ver1_game_define_IContext.__name__ = "model.ver1.game.define.IContext";
 model_ver1_game_define_IContext.__isInterface__ = true;
-var model_ver1_game_define_Event = $hxEnums["model.ver1.game.define.Event"] = { __ename__:true,__constructs__:null
+var model_ver1_game_define_Event = $hxEnums["model.ver1.game.define.Event"] = { __ename__:"model.ver1.game.define.Event",__constructs__:null
 	,ChangePhase: {_hx_name:"ChangePhase",_hx_index:0,__enum__:"model.ver1.game.define.Event",toString:$estr}
 	,Gain: ($_=function(cardId,value) { return {_hx_index:1,cardId:cardId,value:value,__enum__:"model.ver1.game.define.Event",toString:$estr}; },$_._hx_name="Gain",$_.__params__ = ["cardId","value"],$_)
 	,CardEnterField: ($_=function(cardId) { return {_hx_index:2,cardId:cardId,__enum__:"model.ver1.game.define.Event",toString:$estr}; },$_._hx_name="CardEnterField",$_.__params__ = ["cardId"],$_)
@@ -7027,7 +2996,7 @@ model_ver1_game_define_DefaultExecuteRuntime.prototype = $extend(model_ver1_game
 	}
 	,__class__: model_ver1_game_define_DefaultExecuteRuntime
 });
-var model_ver1_game_define_MarkEffect = $hxEnums["model.ver1.game.define.MarkEffect"] = { __ename__:true,__constructs__:null
+var model_ver1_game_define_MarkEffect = $hxEnums["model.ver1.game.define.MarkEffect"] = { __ename__:"model.ver1.game.define.MarkEffect",__constructs__:null
 	,AddBattlePoint: ($_=function(cardId,battlePoint) { return {_hx_index:0,cardId:cardId,battlePoint:battlePoint,__enum__:"model.ver1.game.define.MarkEffect",toString:$estr}; },$_._hx_name="AddBattlePoint",$_.__params__ = ["cardId","battlePoint"],$_)
 	,AttackSpeed: ($_=function(cardId,speed) { return {_hx_index:1,cardId:cardId,speed:speed,__enum__:"model.ver1.game.define.MarkEffect",toString:$estr}; },$_._hx_name="AttackSpeed",$_.__params__ = ["cardId","speed"],$_)
 	,AddText: ($_=function(cardId,text) { return {_hx_index:2,cardId:cardId,text:text,__enum__:"model.ver1.game.define.MarkEffect",toString:$estr}; },$_._hx_name="AddText",$_.__params__ = ["cardId","text"],$_)
@@ -7058,25 +3027,25 @@ model_ver1_game_define_PlayerId.getOpponentPlayerId = function(this1) {
 		return model_ver1_game_define_PlayerId.A;
 	}
 };
-var model_ver1_game_define_RequireType = $hxEnums["model.ver1.game.define.RequireType"] = { __ename__:true,__constructs__:null
+var model_ver1_game_define_RequireType = $hxEnums["model.ver1.game.define.RequireType"] = { __ename__:"model.ver1.game.define.RequireType",__constructs__:null
 	,Pending: {_hx_name:"Pending",_hx_index:0,__enum__:"model.ver1.game.define.RequireType",toString:$estr}
 	,SelectCard: ($_=function(tips,lengthInclude) { return {_hx_index:1,tips:tips,lengthInclude:lengthInclude,__enum__:"model.ver1.game.define.RequireType",toString:$estr}; },$_._hx_name="SelectCard",$_.__params__ = ["tips","lengthInclude"],$_)
 	,SelectBattlePoint: ($_=function(tips) { return {_hx_index:2,tips:tips,__enum__:"model.ver1.game.define.RequireType",toString:$estr}; },$_._hx_name="SelectBattlePoint",$_.__params__ = ["tips"],$_)
 };
 model_ver1_game_define_RequireType.__constructs__ = [model_ver1_game_define_RequireType.Pending,model_ver1_game_define_RequireType.SelectCard,model_ver1_game_define_RequireType.SelectBattlePoint];
-var model_ver1_game_define_TurnKeyword = $hxEnums["model.ver1.game.define.TurnKeyword"] = { __ename__:true,__constructs__:null
+var model_ver1_game_define_TurnKeyword = $hxEnums["model.ver1.game.define.TurnKeyword"] = { __ename__:"model.ver1.game.define.TurnKeyword",__constructs__:null
 	,You: {_hx_name:"You",_hx_index:0,__enum__:"model.ver1.game.define.TurnKeyword",toString:$estr}
 	,Opponent: {_hx_name:"Opponent",_hx_index:1,__enum__:"model.ver1.game.define.TurnKeyword",toString:$estr}
 };
 model_ver1_game_define_TurnKeyword.__constructs__ = [model_ver1_game_define_TurnKeyword.You,model_ver1_game_define_TurnKeyword.Opponent];
-var model_ver1_game_define_PhaseKeyword = $hxEnums["model.ver1.game.define.PhaseKeyword"] = { __ename__:true,__constructs__:null
+var model_ver1_game_define_PhaseKeyword = $hxEnums["model.ver1.game.define.PhaseKeyword"] = { __ename__:"model.ver1.game.define.PhaseKeyword",__constructs__:null
 	,Reroll: {_hx_name:"Reroll",_hx_index:0,__enum__:"model.ver1.game.define.PhaseKeyword",toString:$estr}
 	,Draw: {_hx_name:"Draw",_hx_index:1,__enum__:"model.ver1.game.define.PhaseKeyword",toString:$estr}
 	,Maintenance: {_hx_name:"Maintenance",_hx_index:2,__enum__:"model.ver1.game.define.PhaseKeyword",toString:$estr}
 	,Battle: {_hx_name:"Battle",_hx_index:3,__enum__:"model.ver1.game.define.PhaseKeyword",toString:$estr}
 };
 model_ver1_game_define_PhaseKeyword.__constructs__ = [model_ver1_game_define_PhaseKeyword.Reroll,model_ver1_game_define_PhaseKeyword.Draw,model_ver1_game_define_PhaseKeyword.Maintenance,model_ver1_game_define_PhaseKeyword.Battle];
-var model_ver1_game_define_StepKeyword = $hxEnums["model.ver1.game.define.StepKeyword"] = { __ename__:true,__constructs__:null
+var model_ver1_game_define_StepKeyword = $hxEnums["model.ver1.game.define.StepKeyword"] = { __ename__:"model.ver1.game.define.StepKeyword",__constructs__:null
 	,Attack: {_hx_name:"Attack",_hx_index:0,__enum__:"model.ver1.game.define.StepKeyword",toString:$estr}
 	,Defense: {_hx_name:"Defense",_hx_index:1,__enum__:"model.ver1.game.define.StepKeyword",toString:$estr}
 	,DamageChecking: {_hx_name:"DamageChecking",_hx_index:2,__enum__:"model.ver1.game.define.StepKeyword",toString:$estr}
@@ -7084,7 +3053,7 @@ var model_ver1_game_define_StepKeyword = $hxEnums["model.ver1.game.define.StepKe
 	,End: {_hx_name:"End",_hx_index:4,__enum__:"model.ver1.game.define.StepKeyword",toString:$estr}
 };
 model_ver1_game_define_StepKeyword.__constructs__ = [model_ver1_game_define_StepKeyword.Attack,model_ver1_game_define_StepKeyword.Defense,model_ver1_game_define_StepKeyword.DamageChecking,model_ver1_game_define_StepKeyword.Return,model_ver1_game_define_StepKeyword.End];
-var model_ver1_game_define_TimingKeyword = $hxEnums["model.ver1.game.define.TimingKeyword"] = { __ename__:true,__constructs__:null
+var model_ver1_game_define_TimingKeyword = $hxEnums["model.ver1.game.define.TimingKeyword"] = { __ename__:"model.ver1.game.define.TimingKeyword",__constructs__:null
 	,Start: {_hx_name:"Start",_hx_index:0,__enum__:"model.ver1.game.define.TimingKeyword",toString:$estr}
 	,Free1: {_hx_name:"Free1",_hx_index:1,__enum__:"model.ver1.game.define.TimingKeyword",toString:$estr}
 	,Rule: {_hx_name:"Rule",_hx_index:2,__enum__:"model.ver1.game.define.TimingKeyword",toString:$estr}
@@ -7096,7 +3065,7 @@ var model_ver1_game_define_TimingKeyword = $hxEnums["model.ver1.game.define.Timi
 	,TurnEnd: {_hx_name:"TurnEnd",_hx_index:8,__enum__:"model.ver1.game.define.TimingKeyword",toString:$estr}
 };
 model_ver1_game_define_TimingKeyword.__constructs__ = [model_ver1_game_define_TimingKeyword.Start,model_ver1_game_define_TimingKeyword.Free1,model_ver1_game_define_TimingKeyword.Rule,model_ver1_game_define_TimingKeyword.Free2,model_ver1_game_define_TimingKeyword.End,model_ver1_game_define_TimingKeyword.DamageReset,model_ver1_game_define_TimingKeyword.ResolveEffect,model_ver1_game_define_TimingKeyword.AdjustHand,model_ver1_game_define_TimingKeyword.TurnEnd];
-var model_ver1_game_define_Timing = $hxEnums["model.ver1.game.define.Timing"] = { __ename__:true,__constructs__:null
+var model_ver1_game_define_Timing = $hxEnums["model.ver1.game.define.Timing"] = { __ename__:"model.ver1.game.define.Timing",__constructs__:null
 	,Default: ($_=function(phase,step,timing) { return {_hx_index:0,phase:phase,step:step,timing:timing,__enum__:"model.ver1.game.define.Timing",toString:$estr}; },$_._hx_name="Default",$_.__params__ = ["phase","step","timing"],$_)
 };
 model_ver1_game_define_Timing.__constructs__ = [model_ver1_game_define_Timing.Default];
@@ -7392,7 +3361,7 @@ function model_ver1_game_entity_Alg_getAttackSpeed(ctx) {
 	}
 	var infos = _g;
 }
-var model_ver1_game_entity_FlowMemoryState = $hxEnums["model.ver1.game.entity.FlowMemoryState"] = { __ename__:true,__constructs__:null
+var model_ver1_game_entity_FlowMemoryState = $hxEnums["model.ver1.game.entity.FlowMemoryState"] = { __ename__:"model.ver1.game.entity.FlowMemoryState",__constructs__:null
 	,PrepareDeck: {_hx_name:"PrepareDeck",_hx_index:0,__enum__:"model.ver1.game.entity.FlowMemoryState",toString:$estr}
 	,WhoFirst: {_hx_name:"WhoFirst",_hx_index:1,__enum__:"model.ver1.game.entity.FlowMemoryState",toString:$estr}
 	,Draw6AndConfirm: {_hx_name:"Draw6AndConfirm",_hx_index:2,__enum__:"model.ver1.game.entity.FlowMemoryState",toString:$estr}
@@ -7400,7 +3369,6 @@ var model_ver1_game_entity_FlowMemoryState = $hxEnums["model.ver1.game.entity.Fl
 };
 model_ver1_game_entity_FlowMemoryState.__constructs__ = [model_ver1_game_entity_FlowMemoryState.PrepareDeck,model_ver1_game_entity_FlowMemoryState.WhoFirst,model_ver1_game_entity_FlowMemoryState.Draw6AndConfirm,model_ver1_game_entity_FlowMemoryState.Playing];
 var model_ver1_game_entity_Context = function() {
-	this.__uid = hxbit_Serializer.SEQ << 24 | ++hxbit_Serializer.UID;
 	this.flowMemory = { state : model_ver1_game_entity_FlowMemoryState.PrepareDeck, hasTriggerEvent : false, hasPlayerPassPhase : new haxe_ds_StringMap(), hasPlayerPassCut : new haxe_ds_StringMap(), hasPlayerPassPayCost : new haxe_ds_StringMap(), shouldTriggerStackEffectFinishedEvent : false, msgs : []};
 	this.cuts = [];
 	this.memory = { playerSelection : { cardIds : new haxe_ds_StringMap()}};
@@ -7412,934 +3380,16 @@ var model_ver1_game_entity_Context = function() {
 };
 $hxClasses["model.ver1.game.entity.Context"] = model_ver1_game_entity_Context;
 model_ver1_game_entity_Context.__name__ = "model.ver1.game.entity.Context";
-model_ver1_game_entity_Context.__interfaces__ = [model_ver1_game_component_ICardProtoComponent,model_ver1_game_component_IBlockComponent,model_ver1_game_component_ICutComponent,model_ver1_game_define_IContext,hxbit_Serializable];
+model_ver1_game_entity_Context.__interfaces__ = [model_ver1_game_component_ICardProtoComponent,model_ver1_game_component_IBlockComponent,model_ver1_game_component_ICutComponent,model_ver1_game_define_IContext];
 model_ver1_game_entity_Context.prototype = {
-	getCLID: function() {
-		return model_ver1_game_entity_Context.__clid;
-	}
-	,serialize: function(__ctx) {
-		var a = this.playersOrder;
-		if(a == null) {
-			__ctx.out.addByte(0);
-		} else {
-			var v = a.length + 1;
-			if(v >= 0 && v < 128) {
-				__ctx.out.addByte(v);
-			} else {
-				__ctx.out.addByte(128);
-				__ctx.out.addInt32(v);
-			}
-			var _g = 0;
-			while(_g < a.length) {
-				var v = a[_g];
-				++_g;
-				if(v == null) {
-					__ctx.out.addByte(0);
-				} else {
-					var b = haxe_io_Bytes.ofString(v);
-					var v1 = b.length + 1;
-					if(v1 >= 0 && v1 < 128) {
-						__ctx.out.addByte(v1);
-					} else {
-						__ctx.out.addByte(128);
-						__ctx.out.addInt32(v1);
-					}
-					__ctx.out.add(b);
-				}
-			}
-		}
-		__ctx.addKnownRef(this.table);
-		var a = this.marks;
-		if(a == null) {
-			__ctx.out.addByte(0);
-		} else {
-			var _g = [];
-			var h = a.h;
-			var k_h = h;
-			var k_keys = Object.keys(h);
-			var k_length = k_keys.length;
-			var k_current = 0;
-			while(k_current < k_length) {
-				var k = k_keys[k_current++];
-				_g.push(k);
-			}
-			var keys = _g;
-			var v = keys.length + 1;
-			if(v >= 0 && v < 128) {
-				__ctx.out.addByte(v);
-			} else {
-				__ctx.out.addByte(128);
-				__ctx.out.addInt32(v);
-			}
-			var _g = 0;
-			while(_g < keys.length) {
-				var k = keys[_g];
-				++_g;
-				if(k == null) {
-					__ctx.out.addByte(0);
-				} else {
-					var b = haxe_io_Bytes.ofString(k);
-					var v = b.length + 1;
-					if(v >= 0 && v < 128) {
-						__ctx.out.addByte(v);
-					} else {
-						__ctx.out.addByte(128);
-						__ctx.out.addInt32(v);
-					}
-					__ctx.out.add(b);
-				}
-				__ctx.addKnownRef(a.h[k]);
-			}
-		}
-		hxbit_enumSer_Model_$ver1_$game_$define_$Timing.doSerialize(__ctx,this.timing);
-		var a = this.cardProtoPool;
-		if(a == null) {
-			__ctx.out.addByte(0);
-		} else {
-			var _g = [];
-			var h = a.h;
-			var k_h = h;
-			var k_keys = Object.keys(h);
-			var k_length = k_keys.length;
-			var k_current = 0;
-			while(k_current < k_length) {
-				var k = k_keys[k_current++];
-				_g.push(k);
-			}
-			var keys = _g;
-			var v = keys.length + 1;
-			if(v >= 0 && v < 128) {
-				__ctx.out.addByte(v);
-			} else {
-				__ctx.out.addByte(128);
-				__ctx.out.addInt32(v);
-			}
-			var _g = 0;
-			while(_g < keys.length) {
-				var k = keys[_g];
-				++_g;
-				if(k == null) {
-					__ctx.out.addByte(0);
-				} else {
-					var b = haxe_io_Bytes.ofString(k);
-					var v = b.length + 1;
-					if(v >= 0 && v < 128) {
-						__ctx.out.addByte(v);
-					} else {
-						__ctx.out.addByte(128);
-						__ctx.out.addInt32(v);
-					}
-					__ctx.out.add(b);
-				}
-				__ctx.addKnownRef(a.h[k]);
-			}
-		}
-		var v = this.memory;
-		if(v == null) {
-			__ctx.out.addByte(0);
-		} else {
-			var fbits = 0;
-			if(v.playerSelection != null) {
-				fbits |= 1;
-			}
-			var v1 = fbits + 1;
-			if(v1 >= 0 && v1 < 128) {
-				__ctx.out.addByte(v1);
-			} else {
-				__ctx.out.addByte(128);
-				__ctx.out.addInt32(v1);
-			}
-			if((fbits & 1) != 0) {
-				var v1 = v.playerSelection;
-				if(v1 == null) {
-					__ctx.out.addByte(0);
-				} else {
-					var fbits = 0;
-					if(v1.cardIds != null) {
-						fbits |= 1;
-					}
-					var v = fbits + 1;
-					if(v >= 0 && v < 128) {
-						__ctx.out.addByte(v);
-					} else {
-						__ctx.out.addByte(128);
-						__ctx.out.addInt32(v);
-					}
-					if((fbits & 1) != 0) {
-						var a = v1.cardIds;
-						if(a == null) {
-							__ctx.out.addByte(0);
-						} else {
-							var _g = [];
-							var h = a.h;
-							var k_h = h;
-							var k_keys = Object.keys(h);
-							var k_length = k_keys.length;
-							var k_current = 0;
-							while(k_current < k_length) {
-								var k = k_keys[k_current++];
-								_g.push(k);
-							}
-							var keys = _g;
-							var v = keys.length + 1;
-							if(v >= 0 && v < 128) {
-								__ctx.out.addByte(v);
-							} else {
-								__ctx.out.addByte(128);
-								__ctx.out.addInt32(v);
-							}
-							var _g = 0;
-							while(_g < keys.length) {
-								var k = keys[_g];
-								++_g;
-								if(k == null) {
-									__ctx.out.addByte(0);
-								} else {
-									var b = haxe_io_Bytes.ofString(k);
-									var v = b.length + 1;
-									if(v >= 0 && v < 128) {
-										__ctx.out.addByte(v);
-									} else {
-										__ctx.out.addByte(128);
-										__ctx.out.addInt32(v);
-									}
-									__ctx.out.add(b);
-								}
-								var v1 = a.h[k];
-								if(v1 == null) {
-									__ctx.out.addByte(0);
-								} else {
-									var v2 = v1.length + 1;
-									if(v2 >= 0 && v2 < 128) {
-										__ctx.out.addByte(v2);
-									} else {
-										__ctx.out.addByte(128);
-										__ctx.out.addInt32(v2);
-									}
-									var _g1 = 0;
-									while(_g1 < v1.length) {
-										var v3 = v1[_g1];
-										++_g1;
-										if(v3 == null) {
-											__ctx.out.addByte(0);
-										} else {
-											var b1 = haxe_io_Bytes.ofString(v3);
-											var v4 = b1.length + 1;
-											if(v4 >= 0 && v4 < 128) {
-												__ctx.out.addByte(v4);
-											} else {
-												__ctx.out.addByte(128);
-												__ctx.out.addInt32(v4);
-											}
-											__ctx.out.add(b1);
-										}
-									}
-								}
-							}
-						}
-					}
-				}
-			}
-		}
-		var a = this.cuts;
-		if(a == null) {
-			__ctx.out.addByte(0);
-		} else {
-			var v = a.length + 1;
-			if(v >= 0 && v < 128) {
-				__ctx.out.addByte(v);
-			} else {
-				__ctx.out.addByte(128);
-				__ctx.out.addInt32(v);
-			}
-			var _g = 0;
-			while(_g < a.length) {
-				var v = a[_g];
-				++_g;
-				if(v == null) {
-					__ctx.out.addByte(0);
-				} else {
-					var v1 = v.length + 1;
-					if(v1 >= 0 && v1 < 128) {
-						__ctx.out.addByte(v1);
-					} else {
-						__ctx.out.addByte(128);
-						__ctx.out.addInt32(v1);
-					}
-					var _g1 = 0;
-					while(_g1 < v.length) {
-						var v2 = v[_g1];
-						++_g1;
-						__ctx.addKnownRef(v2);
-					}
-				}
-			}
-		}
-		var v = this.flowMemory;
-		if(v == null) {
-			__ctx.out.addByte(0);
-		} else {
-			var fbits = 0;
-			if(v.hasPlayerPassCut != null) {
-				fbits |= 1;
-			}
-			if(v.hasPlayerPassPayCost != null) {
-				fbits |= 2;
-			}
-			if(v.hasPlayerPassPhase != null) {
-				fbits |= 4;
-			}
-			if(v.msgs != null) {
-				fbits |= 8;
-			}
-			if(v.state != null) {
-				fbits |= 16;
-			}
-			var v1 = fbits + 1;
-			if(v1 >= 0 && v1 < 128) {
-				__ctx.out.addByte(v1);
-			} else {
-				__ctx.out.addByte(128);
-				__ctx.out.addInt32(v1);
-			}
-			if((fbits & 1) != 0) {
-				var a = v.hasPlayerPassCut;
-				if(a == null) {
-					__ctx.out.addByte(0);
-				} else {
-					var _g = [];
-					var h = a.h;
-					var k_h = h;
-					var k_keys = Object.keys(h);
-					var k_length = k_keys.length;
-					var k_current = 0;
-					while(k_current < k_length) {
-						var k = k_keys[k_current++];
-						_g.push(k);
-					}
-					var keys = _g;
-					var v1 = keys.length + 1;
-					if(v1 >= 0 && v1 < 128) {
-						__ctx.out.addByte(v1);
-					} else {
-						__ctx.out.addByte(128);
-						__ctx.out.addInt32(v1);
-					}
-					var _g = 0;
-					while(_g < keys.length) {
-						var k = keys[_g];
-						++_g;
-						if(k == null) {
-							__ctx.out.addByte(0);
-						} else {
-							var b = haxe_io_Bytes.ofString(k);
-							var v1 = b.length + 1;
-							if(v1 >= 0 && v1 < 128) {
-								__ctx.out.addByte(v1);
-							} else {
-								__ctx.out.addByte(128);
-								__ctx.out.addInt32(v1);
-							}
-							__ctx.out.add(b);
-						}
-						__ctx.out.addByte(a.h[k] ? 1 : 0);
-					}
-				}
-			}
-			if((fbits & 2) != 0) {
-				var a = v.hasPlayerPassPayCost;
-				if(a == null) {
-					__ctx.out.addByte(0);
-				} else {
-					var _g = [];
-					var h = a.h;
-					var k_h = h;
-					var k_keys = Object.keys(h);
-					var k_length = k_keys.length;
-					var k_current = 0;
-					while(k_current < k_length) {
-						var k = k_keys[k_current++];
-						_g.push(k);
-					}
-					var keys = _g;
-					var v1 = keys.length + 1;
-					if(v1 >= 0 && v1 < 128) {
-						__ctx.out.addByte(v1);
-					} else {
-						__ctx.out.addByte(128);
-						__ctx.out.addInt32(v1);
-					}
-					var _g = 0;
-					while(_g < keys.length) {
-						var k = keys[_g];
-						++_g;
-						if(k == null) {
-							__ctx.out.addByte(0);
-						} else {
-							var b = haxe_io_Bytes.ofString(k);
-							var v1 = b.length + 1;
-							if(v1 >= 0 && v1 < 128) {
-								__ctx.out.addByte(v1);
-							} else {
-								__ctx.out.addByte(128);
-								__ctx.out.addInt32(v1);
-							}
-							__ctx.out.add(b);
-						}
-						__ctx.out.addByte(a.h[k] ? 1 : 0);
-					}
-				}
-			}
-			if((fbits & 4) != 0) {
-				var a = v.hasPlayerPassPhase;
-				if(a == null) {
-					__ctx.out.addByte(0);
-				} else {
-					var _g = [];
-					var h = a.h;
-					var k_h = h;
-					var k_keys = Object.keys(h);
-					var k_length = k_keys.length;
-					var k_current = 0;
-					while(k_current < k_length) {
-						var k = k_keys[k_current++];
-						_g.push(k);
-					}
-					var keys = _g;
-					var v1 = keys.length + 1;
-					if(v1 >= 0 && v1 < 128) {
-						__ctx.out.addByte(v1);
-					} else {
-						__ctx.out.addByte(128);
-						__ctx.out.addInt32(v1);
-					}
-					var _g = 0;
-					while(_g < keys.length) {
-						var k = keys[_g];
-						++_g;
-						if(k == null) {
-							__ctx.out.addByte(0);
-						} else {
-							var b = haxe_io_Bytes.ofString(k);
-							var v1 = b.length + 1;
-							if(v1 >= 0 && v1 < 128) {
-								__ctx.out.addByte(v1);
-							} else {
-								__ctx.out.addByte(128);
-								__ctx.out.addInt32(v1);
-							}
-							__ctx.out.add(b);
-						}
-						__ctx.out.addByte(a.h[k] ? 1 : 0);
-					}
-				}
-			}
-			__ctx.out.addByte(v.hasTriggerEvent ? 1 : 0);
-			if((fbits & 8) != 0) {
-				var a = v.msgs;
-				if(a == null) {
-					__ctx.out.addByte(0);
-				} else {
-					var v1 = a.length + 1;
-					if(v1 >= 0 && v1 < 128) {
-						__ctx.out.addByte(v1);
-					} else {
-						__ctx.out.addByte(128);
-						__ctx.out.addInt32(v1);
-					}
-					var _g = 0;
-					while(_g < a.length) {
-						var v1 = a[_g];
-						++_g;
-						__ctx.addDynamic(v1);
-					}
-				}
-			}
-			__ctx.out.addByte(v.shouldTriggerStackEffectFinishedEvent ? 1 : 0);
-			if((fbits & 16) != 0) {
-				hxbit_enumSer_Model_$ver1_$game_$entity_$FlowMemoryState.doSerialize(__ctx,v.state);
-			}
-		}
-		var s = this.activePlayerId;
-		if(s == null) {
-			__ctx.out.addByte(0);
-		} else {
-			var b = haxe_io_Bytes.ofString(s);
-			var v = b.length + 1;
-			if(v >= 0 && v < 128) {
-				__ctx.out.addByte(v);
-			} else {
-				__ctx.out.addByte(128);
-				__ctx.out.addInt32(v);
-			}
-			__ctx.out.add(b);
-		}
-	}
-	,getSerializeSchema: function() {
-		var schema = new hxbit_Schema();
-		schema.fieldsNames.push("playersOrder");
-		schema.fieldsTypes.push(hxbit_PropTypeDesc.PArray(hxbit_PropTypeDesc.PString));
-		schema.fieldsNames.push("table");
-		schema.fieldsTypes.push(hxbit_PropTypeDesc.PSerializable("tool.Table"));
-		schema.fieldsNames.push("marks");
-		schema.fieldsTypes.push(hxbit_PropTypeDesc.PMap(hxbit_PropTypeDesc.PString,hxbit_PropTypeDesc.PSerializable("model.ver1.game.define.Mark")));
-		schema.fieldsNames.push("timing");
-		schema.fieldsTypes.push(hxbit_PropTypeDesc.PEnum("model.ver1.game.define.Timing"));
-		schema.fieldsNames.push("cardProtoPool");
-		schema.fieldsTypes.push(hxbit_PropTypeDesc.PMap(hxbit_PropTypeDesc.PString,hxbit_PropTypeDesc.PSerializable("model.ver1.game.define.CardProto")));
-		schema.fieldsNames.push("memory");
-		schema.fieldsTypes.push(hxbit_PropTypeDesc.PObj([{ name : "playerSelection", opt : false, type : hxbit_PropTypeDesc.PObj([{ name : "cardIds", opt : false, type : hxbit_PropTypeDesc.PMap(hxbit_PropTypeDesc.PString,hxbit_PropTypeDesc.PArray(hxbit_PropTypeDesc.PString))}])}]));
-		schema.fieldsNames.push("cuts");
-		schema.fieldsTypes.push(hxbit_PropTypeDesc.PArray(hxbit_PropTypeDesc.PArray(hxbit_PropTypeDesc.PSerializable("model.ver1.game.define.Block"))));
-		schema.fieldsNames.push("flowMemory");
-		schema.fieldsTypes.push(hxbit_PropTypeDesc.PObj([{ name : "hasPlayerPassCut", opt : false, type : hxbit_PropTypeDesc.PMap(hxbit_PropTypeDesc.PString,hxbit_PropTypeDesc.PBool)},{ name : "hasPlayerPassPayCost", opt : false, type : hxbit_PropTypeDesc.PMap(hxbit_PropTypeDesc.PString,hxbit_PropTypeDesc.PBool)},{ name : "hasPlayerPassPhase", opt : false, type : hxbit_PropTypeDesc.PMap(hxbit_PropTypeDesc.PString,hxbit_PropTypeDesc.PBool)},{ name : "hasTriggerEvent", opt : false, type : hxbit_PropTypeDesc.PBool},{ name : "msgs", opt : false, type : hxbit_PropTypeDesc.PArray(hxbit_PropTypeDesc.PDynamic)},{ name : "shouldTriggerStackEffectFinishedEvent", opt : false, type : hxbit_PropTypeDesc.PBool},{ name : "state", opt : false, type : hxbit_PropTypeDesc.PEnum("model.ver1.game.entity.FlowMemoryState")}]));
-		schema.fieldsNames.push("activePlayerId");
-		schema.fieldsTypes.push(hxbit_PropTypeDesc.PString);
-		schema.isFinal = hxbit_Serializer.isClassFinal(model_ver1_game_entity_Context.__clid);
-		return schema;
-	}
-	,unserializeInit: function() {
-		this.playersOrder = [];
-		this.table = new tool_Table();
-		this.marks = new haxe_ds_StringMap();
-		this.timing = model_ver1_game_define_Timing.Default(model_ver1_game_define_PhaseKeyword.Reroll,haxe_ds_Option.None,model_ver1_game_define_TimingKeyword.Start);
-		this.cardProtoPool = new haxe_ds_StringMap();
-		this.memory = { playerSelection : { cardIds : new haxe_ds_StringMap()}};
-		this.cuts = [];
-		this.flowMemory = { state : model_ver1_game_entity_FlowMemoryState.PrepareDeck, hasTriggerEvent : false, hasPlayerPassPhase : new haxe_ds_StringMap(), hasPlayerPassCut : new haxe_ds_StringMap(), hasPlayerPassPayCost : new haxe_ds_StringMap(), shouldTriggerStackEffectFinishedEvent : false, msgs : []};
-	}
-	,unserialize: function(__ctx) {
-		var e0;
-		var v = __ctx.input.b[__ctx.inPos++];
-		if(v == 128) {
-			v = __ctx.input.getInt32(__ctx.inPos);
-			__ctx.inPos += 4;
-		}
-		var len = v;
-		var tmp;
-		if(len == 0) {
-			tmp = null;
-		} else {
-			--len;
-			var a = [];
-			var _g = 0;
-			var _g1 = len;
-			while(_g < _g1) {
-				var i = _g++;
-				var v = __ctx.input.b[__ctx.inPos++];
-				if(v == 128) {
-					v = __ctx.input.getInt32(__ctx.inPos);
-					__ctx.inPos += 4;
-				}
-				var len = v;
-				if(len == 0) {
-					e0 = null;
-				} else {
-					--len;
-					var s = __ctx.input.getString(__ctx.inPos,len);
-					__ctx.inPos += len;
-					e0 = s;
-				}
-				a[i] = e0;
-			}
-			tmp = a;
-		}
-		this.playersOrder = tmp;
-		this.table = __ctx.getRef(tool_Table,tool_Table.__clid);
-		var k0;
-		var v0;
-		var v = __ctx.input.b[__ctx.inPos++];
-		if(v == 128) {
-			v = __ctx.input.getInt32(__ctx.inPos);
-			__ctx.inPos += 4;
-		}
-		var len = v;
-		var tmp;
-		if(len == 0) {
-			tmp = null;
-		} else {
-			var m = new haxe_ds_StringMap();
-			while(--len > 0) {
-				var v = __ctx.input.b[__ctx.inPos++];
-				if(v == 128) {
-					v = __ctx.input.getInt32(__ctx.inPos);
-					__ctx.inPos += 4;
-				}
-				var len1 = v;
-				if(len1 == 0) {
-					k0 = null;
-				} else {
-					--len1;
-					var s = __ctx.input.getString(__ctx.inPos,len1);
-					__ctx.inPos += len1;
-					k0 = s;
-				}
-				var k = k0;
-				v0 = __ctx.getRef(model_ver1_game_define_Mark,model_ver1_game_define_Mark.__clid);
-				var v1 = v0;
-				m.h[k] = v1;
-			}
-			tmp = m;
-		}
-		this.marks = tmp;
-		var __e = hxbit_enumSer_Model_$ver1_$game_$define_$Timing.doUnserialize(__ctx);
-		this.timing = __e;
-		var k0;
-		var v0;
-		var v = __ctx.input.b[__ctx.inPos++];
-		if(v == 128) {
-			v = __ctx.input.getInt32(__ctx.inPos);
-			__ctx.inPos += 4;
-		}
-		var len = v;
-		var tmp;
-		if(len == 0) {
-			tmp = null;
-		} else {
-			var m = new haxe_ds_StringMap();
-			while(--len > 0) {
-				var v = __ctx.input.b[__ctx.inPos++];
-				if(v == 128) {
-					v = __ctx.input.getInt32(__ctx.inPos);
-					__ctx.inPos += 4;
-				}
-				var len1 = v;
-				if(len1 == 0) {
-					k0 = null;
-				} else {
-					--len1;
-					var s = __ctx.input.getString(__ctx.inPos,len1);
-					__ctx.inPos += len1;
-					k0 = s;
-				}
-				var k = k0;
-				v0 = __ctx.getRef(model_ver1_game_define_CardProto,model_ver1_game_define_CardProto.__clid);
-				var v1 = v0;
-				m.h[k] = v1;
-			}
-			tmp = m;
-		}
-		this.cardProtoPool = tmp;
-		var v = __ctx.input.b[__ctx.inPos++];
-		if(v == 128) {
-			v = __ctx.input.getInt32(__ctx.inPos);
-			__ctx.inPos += 4;
-		}
-		var fbits = v;
-		if(fbits == 0) {
-			this.memory = null;
-		} else {
-			--fbits;
-			var playerSelection = null;
-			if((fbits & 1) != 0) {
-				var v = __ctx.input.b[__ctx.inPos++];
-				if(v == 128) {
-					v = __ctx.input.getInt32(__ctx.inPos);
-					__ctx.inPos += 4;
-				}
-				var fbits = v;
-				if(fbits == 0) {
-					playerSelection = null;
-				} else {
-					--fbits;
-					var cardIds = null;
-					if((fbits & 1) != 0) {
-						var k2;
-						var v2;
-						var v = __ctx.input.b[__ctx.inPos++];
-						if(v == 128) {
-							v = __ctx.input.getInt32(__ctx.inPos);
-							__ctx.inPos += 4;
-						}
-						var len = v;
-						if(len == 0) {
-							cardIds = null;
-						} else {
-							var m = new haxe_ds_StringMap();
-							while(--len > 0) {
-								var v = __ctx.input.b[__ctx.inPos++];
-								if(v == 128) {
-									v = __ctx.input.getInt32(__ctx.inPos);
-									__ctx.inPos += 4;
-								}
-								var len1 = v;
-								if(len1 == 0) {
-									k2 = null;
-								} else {
-									--len1;
-									var s = __ctx.input.getString(__ctx.inPos,len1);
-									__ctx.inPos += len1;
-									k2 = s;
-								}
-								var k = k2;
-								var e3;
-								var v1 = __ctx.input.b[__ctx.inPos++];
-								if(v1 == 128) {
-									v1 = __ctx.input.getInt32(__ctx.inPos);
-									__ctx.inPos += 4;
-								}
-								var len2 = v1;
-								if(len2 == 0) {
-									v2 = null;
-								} else {
-									--len2;
-									var a = [];
-									var _g = 0;
-									var _g1 = len2;
-									while(_g < _g1) {
-										var i = _g++;
-										var v3 = __ctx.input.b[__ctx.inPos++];
-										if(v3 == 128) {
-											v3 = __ctx.input.getInt32(__ctx.inPos);
-											__ctx.inPos += 4;
-										}
-										var len3 = v3;
-										if(len3 == 0) {
-											e3 = null;
-										} else {
-											--len3;
-											var s1 = __ctx.input.getString(__ctx.inPos,len3);
-											__ctx.inPos += len3;
-											e3 = s1;
-										}
-										a[i] = e3;
-									}
-									v2 = a;
-								}
-								var v4 = v2;
-								m.h[k] = v4;
-							}
-							cardIds = m;
-						}
-					}
-					playerSelection = { cardIds : cardIds};
-				}
-			}
-			this.memory = { playerSelection : playerSelection};
-		}
-		var e0;
-		var v = __ctx.input.b[__ctx.inPos++];
-		if(v == 128) {
-			v = __ctx.input.getInt32(__ctx.inPos);
-			__ctx.inPos += 4;
-		}
-		var len = v;
-		var tmp;
-		if(len == 0) {
-			tmp = null;
-		} else {
-			--len;
-			var a = [];
-			var _g = 0;
-			var _g1 = len;
-			while(_g < _g1) {
-				var i = _g++;
-				var e1;
-				var v = __ctx.input.b[__ctx.inPos++];
-				if(v == 128) {
-					v = __ctx.input.getInt32(__ctx.inPos);
-					__ctx.inPos += 4;
-				}
-				var len = v;
-				if(len == 0) {
-					e0 = null;
-				} else {
-					--len;
-					var a1 = [];
-					var _g2 = 0;
-					var _g3 = len;
-					while(_g2 < _g3) {
-						var i1 = _g2++;
-						e1 = __ctx.getRef(model_ver1_game_define_Block,model_ver1_game_define_Block.__clid);
-						a1[i1] = e1;
-					}
-					e0 = a1;
-				}
-				a[i] = e0;
-			}
-			tmp = a;
-		}
-		this.cuts = tmp;
-		var v = __ctx.input.b[__ctx.inPos++];
-		if(v == 128) {
-			v = __ctx.input.getInt32(__ctx.inPos);
-			__ctx.inPos += 4;
-		}
-		var fbits = v;
-		if(fbits == 0) {
-			this.flowMemory = null;
-		} else {
-			--fbits;
-			var state = null;
-			var msgs = null;
-			var hasPlayerPassPhase = null;
-			var hasPlayerPassPayCost = null;
-			var hasPlayerPassCut = null;
-			if((fbits & 1) != 0) {
-				var k1;
-				var v1;
-				var v = __ctx.input.b[__ctx.inPos++];
-				if(v == 128) {
-					v = __ctx.input.getInt32(__ctx.inPos);
-					__ctx.inPos += 4;
-				}
-				var len = v;
-				if(len == 0) {
-					hasPlayerPassCut = null;
-				} else {
-					var m = new haxe_ds_StringMap();
-					while(--len > 0) {
-						var v = __ctx.input.b[__ctx.inPos++];
-						if(v == 128) {
-							v = __ctx.input.getInt32(__ctx.inPos);
-							__ctx.inPos += 4;
-						}
-						var len1 = v;
-						if(len1 == 0) {
-							k1 = null;
-						} else {
-							--len1;
-							var s = __ctx.input.getString(__ctx.inPos,len1);
-							__ctx.inPos += len1;
-							k1 = s;
-						}
-						var k = k1;
-						v1 = __ctx.input.b[__ctx.inPos++] != 0;
-						var v2 = v1;
-						m.h[k] = v2;
-					}
-					hasPlayerPassCut = m;
-				}
-			}
-			if((fbits & 2) != 0) {
-				var k1;
-				var v1;
-				var v = __ctx.input.b[__ctx.inPos++];
-				if(v == 128) {
-					v = __ctx.input.getInt32(__ctx.inPos);
-					__ctx.inPos += 4;
-				}
-				var len = v;
-				if(len == 0) {
-					hasPlayerPassPayCost = null;
-				} else {
-					var m = new haxe_ds_StringMap();
-					while(--len > 0) {
-						var v = __ctx.input.b[__ctx.inPos++];
-						if(v == 128) {
-							v = __ctx.input.getInt32(__ctx.inPos);
-							__ctx.inPos += 4;
-						}
-						var len1 = v;
-						if(len1 == 0) {
-							k1 = null;
-						} else {
-							--len1;
-							var s = __ctx.input.getString(__ctx.inPos,len1);
-							__ctx.inPos += len1;
-							k1 = s;
-						}
-						var k = k1;
-						v1 = __ctx.input.b[__ctx.inPos++] != 0;
-						var v2 = v1;
-						m.h[k] = v2;
-					}
-					hasPlayerPassPayCost = m;
-				}
-			}
-			if((fbits & 4) != 0) {
-				var k1;
-				var v1;
-				var v = __ctx.input.b[__ctx.inPos++];
-				if(v == 128) {
-					v = __ctx.input.getInt32(__ctx.inPos);
-					__ctx.inPos += 4;
-				}
-				var len = v;
-				if(len == 0) {
-					hasPlayerPassPhase = null;
-				} else {
-					var m = new haxe_ds_StringMap();
-					while(--len > 0) {
-						var v = __ctx.input.b[__ctx.inPos++];
-						if(v == 128) {
-							v = __ctx.input.getInt32(__ctx.inPos);
-							__ctx.inPos += 4;
-						}
-						var len1 = v;
-						if(len1 == 0) {
-							k1 = null;
-						} else {
-							--len1;
-							var s = __ctx.input.getString(__ctx.inPos,len1);
-							__ctx.inPos += len1;
-							k1 = s;
-						}
-						var k = k1;
-						v1 = __ctx.input.b[__ctx.inPos++] != 0;
-						var v2 = v1;
-						m.h[k] = v2;
-					}
-					hasPlayerPassPhase = m;
-				}
-			}
-			var hasTriggerEvent = __ctx.input.b[__ctx.inPos++] != 0;
-			if((fbits & 8) != 0) {
-				var e1;
-				var v = __ctx.input.b[__ctx.inPos++];
-				if(v == 128) {
-					v = __ctx.input.getInt32(__ctx.inPos);
-					__ctx.inPos += 4;
-				}
-				var len = v;
-				if(len == 0) {
-					msgs = null;
-				} else {
-					--len;
-					var a = [];
-					var _g = 0;
-					var _g1 = len;
-					while(_g < _g1) {
-						var i = _g++;
-						var v2 = __ctx.getDynamic();
-						e1 = v2;
-						a[i] = e1;
-					}
-					msgs = a;
-				}
-			}
-			var shouldTriggerStackEffectFinishedEvent = __ctx.input.b[__ctx.inPos++] != 0;
-			if((fbits & 16) != 0) {
-				var __e = hxbit_enumSer_Model_$ver1_$game_$entity_$FlowMemoryState.doUnserialize(__ctx);
-				state = __e;
-			}
-			this.flowMemory = { hasPlayerPassCut : hasPlayerPassCut, hasPlayerPassPayCost : hasPlayerPassPayCost, hasPlayerPassPhase : hasPlayerPassPhase, hasTriggerEvent : hasTriggerEvent, msgs : msgs, shouldTriggerStackEffectFinishedEvent : shouldTriggerStackEffectFinishedEvent, state : state};
-		}
-		var v = __ctx.input.b[__ctx.inPos++];
-		if(v == 128) {
-			v = __ctx.input.getInt32(__ctx.inPos);
-			__ctx.inPos += 4;
-		}
-		var len = v;
-		var tmp;
-		if(len == 0) {
-			tmp = null;
-		} else {
-			--len;
-			var s = __ctx.input.getString(__ctx.inPos,len);
-			__ctx.inPos += len;
-			tmp = s;
-		}
-		this.activePlayerId = tmp;
-	}
-	,__class__: model_ver1_game_entity_Context
+	__class__: model_ver1_game_entity_Context
 };
 function model_ver1_game_entity_Context_isDestroyNow(ctx,cardId,condition) {
 	var condition1 = condition.isByBattleDamage;
 	return false;
 }
 function model_ver1_game_entity_Context_removeDestroyEffect(ctx,cardId) {
-	console.log("src/model/ver1/game/entity/Context.hx:77:","移除堆疊中的破壞效果");
+	console.log("src/model/ver1/game/entity/Context.hx:75:","移除堆疊中的破壞效果");
 }
 var model_ver1_game_entity_EnterFieldThisTurnMark = function(id,cardId) {
 	model_ver1_game_entity_DefaultMark.call(this,id);
@@ -8352,52 +3402,6 @@ model_ver1_game_entity_EnterFieldThisTurnMark.__super__ = model_ver1_game_entity
 model_ver1_game_entity_EnterFieldThisTurnMark.prototype = $extend(model_ver1_game_entity_DefaultMark.prototype,{
 	getEffect: function(_ctx) {
 		return [model_ver1_game_define_MarkEffect.EnterFieldThisTurn(this.cardId)];
-	}
-	,getCLID: function() {
-		return model_ver1_game_entity_EnterFieldThisTurnMark.__clid;
-	}
-	,serialize: function(__ctx) {
-		model_ver1_game_entity_DefaultMark.prototype.serialize.call(this,__ctx);
-		var s = this.cardId;
-		if(s == null) {
-			__ctx.out.addByte(0);
-		} else {
-			var b = haxe_io_Bytes.ofString(s);
-			var v = b.length + 1;
-			if(v >= 0 && v < 128) {
-				__ctx.out.addByte(v);
-			} else {
-				__ctx.out.addByte(128);
-				__ctx.out.addInt32(v);
-			}
-			__ctx.out.add(b);
-		}
-	}
-	,getSerializeSchema: function() {
-		var schema = model_ver1_game_entity_DefaultMark.prototype.getSerializeSchema.call(this);
-		schema.fieldsNames.push("cardId");
-		schema.fieldsTypes.push(hxbit_PropTypeDesc.PString);
-		schema.isFinal = hxbit_Serializer.isClassFinal(model_ver1_game_entity_EnterFieldThisTurnMark.__clid);
-		return schema;
-	}
-	,unserialize: function(__ctx) {
-		model_ver1_game_entity_DefaultMark.prototype.unserialize.call(this,__ctx);
-		var v = __ctx.input.b[__ctx.inPos++];
-		if(v == 128) {
-			v = __ctx.input.getInt32(__ctx.inPos);
-			__ctx.inPos += 4;
-		}
-		var len = v;
-		var tmp;
-		if(len == 0) {
-			tmp = null;
-		} else {
-			--len;
-			var s = __ctx.input.getString(__ctx.inPos,len);
-			__ctx.inPos += len;
-			tmp = s;
-		}
-		this.cardId = tmp;
 	}
 	,__class__: model_ver1_game_entity_EnterFieldThisTurnMark
 });
@@ -8412,55 +3416,9 @@ model_ver1_game_entity_CanNotRerollMark.prototype = $extend(model_ver1_game_enti
 	getEffect: function(_ctx) {
 		return [model_ver1_game_define_MarkEffect.CanNotReroll(this.cardId)];
 	}
-	,getCLID: function() {
-		return model_ver1_game_entity_CanNotRerollMark.__clid;
-	}
-	,serialize: function(__ctx) {
-		model_ver1_game_entity_DefaultMark.prototype.serialize.call(this,__ctx);
-		var s = this.cardId;
-		if(s == null) {
-			__ctx.out.addByte(0);
-		} else {
-			var b = haxe_io_Bytes.ofString(s);
-			var v = b.length + 1;
-			if(v >= 0 && v < 128) {
-				__ctx.out.addByte(v);
-			} else {
-				__ctx.out.addByte(128);
-				__ctx.out.addInt32(v);
-			}
-			__ctx.out.add(b);
-		}
-	}
-	,getSerializeSchema: function() {
-		var schema = model_ver1_game_entity_DefaultMark.prototype.getSerializeSchema.call(this);
-		schema.fieldsNames.push("cardId");
-		schema.fieldsTypes.push(hxbit_PropTypeDesc.PString);
-		schema.isFinal = hxbit_Serializer.isClassFinal(model_ver1_game_entity_CanNotRerollMark.__clid);
-		return schema;
-	}
-	,unserialize: function(__ctx) {
-		model_ver1_game_entity_DefaultMark.prototype.unserialize.call(this,__ctx);
-		var v = __ctx.input.b[__ctx.inPos++];
-		if(v == 128) {
-			v = __ctx.input.getInt32(__ctx.inPos);
-			__ctx.inPos += 4;
-		}
-		var len = v;
-		var tmp;
-		if(len == 0) {
-			tmp = null;
-		} else {
-			--len;
-			var s = __ctx.input.getString(__ctx.inPos,len);
-			__ctx.inPos += len;
-			tmp = s;
-		}
-		this.cardId = tmp;
-	}
 	,__class__: model_ver1_game_entity_CanNotRerollMark
 });
-var model_ver1_game_entity_FlowType = $hxEnums["model.ver1.game.entity.FlowType"] = { __ename__:true,__constructs__:null
+var model_ver1_game_entity_FlowType = $hxEnums["model.ver1.game.entity.FlowType"] = { __ename__:"model.ver1.game.entity.FlowType",__constructs__:null
 	,FlowWaitPlayer: {_hx_name:"FlowWaitPlayer",_hx_index:0,__enum__:"model.ver1.game.entity.FlowType",toString:$estr}
 	,FlowObserveEffect: {_hx_name:"FlowObserveEffect",_hx_index:1,__enum__:"model.ver1.game.entity.FlowType",toString:$estr}
 	,FlowDoEffect: ($_=function(blockId) { return {_hx_index:2,blockId:blockId,__enum__:"model.ver1.game.entity.FlowType",toString:$estr}; },$_._hx_name="FlowDoEffect",$_.__params__ = ["blockId"],$_)
@@ -8477,7 +3435,7 @@ var model_ver1_game_entity_FlowType = $hxEnums["model.ver1.game.entity.FlowType"
 	,FlowTriggerTextEvent: ($_=function(event) { return {_hx_index:13,event:event,__enum__:"model.ver1.game.entity.FlowType",toString:$estr}; },$_._hx_name="FlowTriggerTextEvent",$_.__params__ = ["event"],$_)
 };
 model_ver1_game_entity_FlowType.__constructs__ = [model_ver1_game_entity_FlowType.FlowWaitPlayer,model_ver1_game_entity_FlowType.FlowObserveEffect,model_ver1_game_entity_FlowType.FlowDoEffect,model_ver1_game_entity_FlowType.FlowPassPayCost,model_ver1_game_entity_FlowType.FlowCancelActiveEffect,model_ver1_game_entity_FlowType.FlowSetActiveEffectId,model_ver1_game_entity_FlowType.FlowDeleteImmediateEffect,model_ver1_game_entity_FlowType.FlowHandleStackEffectFinished,model_ver1_game_entity_FlowType.FlowCancelPassCut,model_ver1_game_entity_FlowType.FlowPassCut,model_ver1_game_entity_FlowType.FlowPassPhase,model_ver1_game_entity_FlowType.FlowCancelPassPhase,model_ver1_game_entity_FlowType.FlowNextTiming,model_ver1_game_entity_FlowType.FlowTriggerTextEvent];
-var model_ver1_game_entity_Flow = $hxEnums["model.ver1.game.entity.Flow"] = { __ename__:true,__constructs__:null
+var model_ver1_game_entity_Flow = $hxEnums["model.ver1.game.entity.Flow"] = { __ename__:"model.ver1.game.entity.Flow",__constructs__:null
 	,Default: ($_=function(type,description) { return {_hx_index:0,type:type,description:description,__enum__:"model.ver1.game.entity.Flow",toString:$estr}; },$_._hx_name="Default",$_.__params__ = ["type","description"],$_)
 };
 model_ver1_game_entity_Flow.__constructs__ = [model_ver1_game_entity_Flow.Default];
@@ -9557,9 +4515,6 @@ model_ver1_test_common_OnlyEmptyTextCardProto.prototype = $extend(model_ver1_gam
 		var thisCardId = runtime.getCardId();
 		return [new model_ver1_game_define_CardText("" + thisCardId + "_CardText","")];
 	}
-	,getCLID: function() {
-		return model_ver1_test_common_OnlyEmptyTextCardProto.__clid;
-	}
 	,__class__: model_ver1_test_common_OnlyEmptyTextCardProto
 });
 var model_ver1_test_common_AddOneTextText = function(id) {
@@ -9573,9 +4528,6 @@ model_ver1_test_common_AddOneTextText.prototype = $extend(model_ver1_game_define
 		var thisCardId = runtime.getCardId();
 		return [model_ver1_game_define_MarkEffect.AddText(thisCardId,new model_ver1_game_define_CardText("" + thisCardId + "_EmptyText",""))];
 	}
-	,getCLID: function() {
-		return model_ver1_test_common_AddOneTextText.__clid;
-	}
 	,__class__: model_ver1_test_common_AddOneTextText
 });
 var model_ver1_test_common_AddTextCardProto = function() {
@@ -9588,9 +4540,6 @@ model_ver1_test_common_AddTextCardProto.prototype = $extend(model_ver1_game_defi
 	getTexts: function(_ctx,runtime) {
 		var thisCardId = runtime.getCardId();
 		return [new model_ver1_test_common_AddOneTextText("" + thisCardId + "_TestText2")];
-	}
-	,getCLID: function() {
-		return model_ver1_test_common_AddTextCardProto.__clid;
 	}
 	,__class__: model_ver1_test_common_AddTextCardProto
 });
@@ -9607,22 +4556,16 @@ model_ver1_test_common_OnlyConstentTextCardProto.prototype = $extend(model_ver1_
 		text.type = model_ver1_game_define_TextType.Automatic(model_ver1_game_define_TextTypeAutomaticType.Constant);
 		return [text];
 	}
-	,getCLID: function() {
-		return model_ver1_test_common_OnlyConstentTextCardProto.__clid;
-	}
 	,__class__: model_ver1_test_common_OnlyConstentTextCardProto
 });
 function tool_Helper_getMemonto(obj) {
-	var s = new hxbit_Serializer();
-	var bytes = s.serialize(obj);
-	return bytes.toHex();
+	haxe_Serializer.USE_CACHE = true;
+	return haxe_Serializer.run(obj);
 }
 function tool_Helper_ofMemonto(memonto,clz) {
-	var u = new hxbit_Serializer();
-	return u.unserialize(haxe_io_Bytes.ofHex(memonto),clz);
+	return haxe_Unserializer.run(memonto);
 }
 var tool_Card = function(id) {
-	this.__uid = hxbit_Serializer.SEQ << 24 | ++hxbit_Serializer.UID;
 	this.isReverse = false;
 	this.isTap = false;
 	this.isFaceUp = false;
@@ -9630,447 +4573,26 @@ var tool_Card = function(id) {
 };
 $hxClasses["tool.Card"] = tool_Card;
 tool_Card.__name__ = "tool.Card";
-tool_Card.__interfaces__ = [hxbit_Serializable];
 tool_Card.prototype = {
-	getCLID: function() {
-		return tool_Card.__clid;
-	}
-	,serialize: function(__ctx) {
-		var s = this.id;
-		if(s == null) {
-			__ctx.out.addByte(0);
-		} else {
-			var b = haxe_io_Bytes.ofString(s);
-			var v = b.length + 1;
-			if(v >= 0 && v < 128) {
-				__ctx.out.addByte(v);
-			} else {
-				__ctx.out.addByte(128);
-				__ctx.out.addInt32(v);
-			}
-			__ctx.out.add(b);
-		}
-		__ctx.out.addByte(this.isFaceUp ? 1 : 0);
-		__ctx.out.addByte(this.isTap ? 1 : 0);
-		__ctx.out.addByte(this.isReverse ? 1 : 0);
-		var s = this.protoId;
-		if(s == null) {
-			__ctx.out.addByte(0);
-		} else {
-			var b = haxe_io_Bytes.ofString(s);
-			var v = b.length + 1;
-			if(v >= 0 && v < 128) {
-				__ctx.out.addByte(v);
-			} else {
-				__ctx.out.addByte(128);
-				__ctx.out.addInt32(v);
-			}
-			__ctx.out.add(b);
-		}
-		var s = this.owner;
-		if(s == null) {
-			__ctx.out.addByte(0);
-		} else {
-			var b = haxe_io_Bytes.ofString(s);
-			var v = b.length + 1;
-			if(v >= 0 && v < 128) {
-				__ctx.out.addByte(v);
-			} else {
-				__ctx.out.addByte(128);
-				__ctx.out.addInt32(v);
-			}
-			__ctx.out.add(b);
-		}
-	}
-	,getSerializeSchema: function() {
-		var schema = new hxbit_Schema();
-		schema.fieldsNames.push("id");
-		schema.fieldsTypes.push(hxbit_PropTypeDesc.PString);
-		schema.fieldsNames.push("isFaceUp");
-		schema.fieldsTypes.push(hxbit_PropTypeDesc.PBool);
-		schema.fieldsNames.push("isTap");
-		schema.fieldsTypes.push(hxbit_PropTypeDesc.PBool);
-		schema.fieldsNames.push("isReverse");
-		schema.fieldsTypes.push(hxbit_PropTypeDesc.PBool);
-		schema.fieldsNames.push("protoId");
-		schema.fieldsTypes.push(hxbit_PropTypeDesc.PString);
-		schema.fieldsNames.push("owner");
-		schema.fieldsTypes.push(hxbit_PropTypeDesc.PString);
-		schema.isFinal = hxbit_Serializer.isClassFinal(tool_Card.__clid);
-		return schema;
-	}
-	,unserializeInit: function() {
-		this.isFaceUp = false;
-		this.isTap = false;
-		this.isReverse = false;
-	}
-	,unserialize: function(__ctx) {
-		var v = __ctx.input.b[__ctx.inPos++];
-		if(v == 128) {
-			v = __ctx.input.getInt32(__ctx.inPos);
-			__ctx.inPos += 4;
-		}
-		var len = v;
-		var tmp;
-		if(len == 0) {
-			tmp = null;
-		} else {
-			--len;
-			var s = __ctx.input.getString(__ctx.inPos,len);
-			__ctx.inPos += len;
-			tmp = s;
-		}
-		this.id = tmp;
-		this.isFaceUp = __ctx.input.b[__ctx.inPos++] != 0;
-		this.isTap = __ctx.input.b[__ctx.inPos++] != 0;
-		this.isReverse = __ctx.input.b[__ctx.inPos++] != 0;
-		var v = __ctx.input.b[__ctx.inPos++];
-		if(v == 128) {
-			v = __ctx.input.getInt32(__ctx.inPos);
-			__ctx.inPos += 4;
-		}
-		var len = v;
-		var tmp;
-		if(len == 0) {
-			tmp = null;
-		} else {
-			--len;
-			var s = __ctx.input.getString(__ctx.inPos,len);
-			__ctx.inPos += len;
-			tmp = s;
-		}
-		this.protoId = tmp;
-		var v = __ctx.input.b[__ctx.inPos++];
-		if(v == 128) {
-			v = __ctx.input.getInt32(__ctx.inPos);
-			__ctx.inPos += 4;
-		}
-		var len = v;
-		var tmp;
-		if(len == 0) {
-			tmp = null;
-		} else {
-			--len;
-			var s = __ctx.input.getString(__ctx.inPos,len);
-			__ctx.inPos += len;
-			tmp = s;
-		}
-		this.owner = tmp;
-	}
-	,__class__: tool_Card
+	__class__: tool_Card
 };
 var tool_CardStack = function(id) {
-	this.__uid = hxbit_Serializer.SEQ << 24 | ++hxbit_Serializer.UID;
 	this.cardIds = [];
 	this.id = id;
 };
 $hxClasses["tool.CardStack"] = tool_CardStack;
 tool_CardStack.__name__ = "tool.CardStack";
-tool_CardStack.__interfaces__ = [hxbit_Serializable];
 tool_CardStack.prototype = {
-	getCLID: function() {
-		return tool_CardStack.__clid;
-	}
-	,serialize: function(__ctx) {
-		var s = this.id;
-		if(s == null) {
-			__ctx.out.addByte(0);
-		} else {
-			var b = haxe_io_Bytes.ofString(s);
-			var v = b.length + 1;
-			if(v >= 0 && v < 128) {
-				__ctx.out.addByte(v);
-			} else {
-				__ctx.out.addByte(128);
-				__ctx.out.addInt32(v);
-			}
-			__ctx.out.add(b);
-		}
-		var a = this.cardIds;
-		if(a == null) {
-			__ctx.out.addByte(0);
-		} else {
-			var v = a.length + 1;
-			if(v >= 0 && v < 128) {
-				__ctx.out.addByte(v);
-			} else {
-				__ctx.out.addByte(128);
-				__ctx.out.addInt32(v);
-			}
-			var _g = 0;
-			while(_g < a.length) {
-				var v = a[_g];
-				++_g;
-				if(v == null) {
-					__ctx.out.addByte(0);
-				} else {
-					var b = haxe_io_Bytes.ofString(v);
-					var v1 = b.length + 1;
-					if(v1 >= 0 && v1 < 128) {
-						__ctx.out.addByte(v1);
-					} else {
-						__ctx.out.addByte(128);
-						__ctx.out.addInt32(v1);
-					}
-					__ctx.out.add(b);
-				}
-			}
-		}
-	}
-	,getSerializeSchema: function() {
-		var schema = new hxbit_Schema();
-		schema.fieldsNames.push("id");
-		schema.fieldsTypes.push(hxbit_PropTypeDesc.PString);
-		schema.fieldsNames.push("cardIds");
-		schema.fieldsTypes.push(hxbit_PropTypeDesc.PArray(hxbit_PropTypeDesc.PString));
-		schema.isFinal = hxbit_Serializer.isClassFinal(tool_CardStack.__clid);
-		return schema;
-	}
-	,unserializeInit: function() {
-		this.cardIds = [];
-	}
-	,unserialize: function(__ctx) {
-		var v = __ctx.input.b[__ctx.inPos++];
-		if(v == 128) {
-			v = __ctx.input.getInt32(__ctx.inPos);
-			__ctx.inPos += 4;
-		}
-		var len = v;
-		var tmp;
-		if(len == 0) {
-			tmp = null;
-		} else {
-			--len;
-			var s = __ctx.input.getString(__ctx.inPos,len);
-			__ctx.inPos += len;
-			tmp = s;
-		}
-		this.id = tmp;
-		var e0;
-		var v = __ctx.input.b[__ctx.inPos++];
-		if(v == 128) {
-			v = __ctx.input.getInt32(__ctx.inPos);
-			__ctx.inPos += 4;
-		}
-		var len = v;
-		var tmp;
-		if(len == 0) {
-			tmp = null;
-		} else {
-			--len;
-			var a = [];
-			var _g = 0;
-			var _g1 = len;
-			while(_g < _g1) {
-				var i = _g++;
-				var v = __ctx.input.b[__ctx.inPos++];
-				if(v == 128) {
-					v = __ctx.input.getInt32(__ctx.inPos);
-					__ctx.inPos += 4;
-				}
-				var len = v;
-				if(len == 0) {
-					e0 = null;
-				} else {
-					--len;
-					var s = __ctx.input.getString(__ctx.inPos,len);
-					__ctx.inPos += len;
-					e0 = s;
-				}
-				a[i] = e0;
-			}
-			tmp = a;
-		}
-		this.cardIds = tmp;
-	}
-	,__class__: tool_CardStack
+	__class__: tool_CardStack
 };
 var tool_Table = function() {
-	this.__uid = hxbit_Serializer.SEQ << 24 | ++hxbit_Serializer.UID;
 	this.cardStacks = new haxe_ds_StringMap();
 	this.cards = new haxe_ds_StringMap();
 };
 $hxClasses["tool.Table"] = tool_Table;
 tool_Table.__name__ = "tool.Table";
-tool_Table.__interfaces__ = [hxbit_Serializable];
 tool_Table.prototype = {
-	getCLID: function() {
-		return tool_Table.__clid;
-	}
-	,serialize: function(__ctx) {
-		var a = this.cards;
-		if(a == null) {
-			__ctx.out.addByte(0);
-		} else {
-			var _g = [];
-			var h = a.h;
-			var k_h = h;
-			var k_keys = Object.keys(h);
-			var k_length = k_keys.length;
-			var k_current = 0;
-			while(k_current < k_length) {
-				var k = k_keys[k_current++];
-				_g.push(k);
-			}
-			var keys = _g;
-			var v = keys.length + 1;
-			if(v >= 0 && v < 128) {
-				__ctx.out.addByte(v);
-			} else {
-				__ctx.out.addByte(128);
-				__ctx.out.addInt32(v);
-			}
-			var _g = 0;
-			while(_g < keys.length) {
-				var k = keys[_g];
-				++_g;
-				if(k == null) {
-					__ctx.out.addByte(0);
-				} else {
-					var b = haxe_io_Bytes.ofString(k);
-					var v = b.length + 1;
-					if(v >= 0 && v < 128) {
-						__ctx.out.addByte(v);
-					} else {
-						__ctx.out.addByte(128);
-						__ctx.out.addInt32(v);
-					}
-					__ctx.out.add(b);
-				}
-				__ctx.addKnownRef(a.h[k]);
-			}
-		}
-		var a = this.cardStacks;
-		if(a == null) {
-			__ctx.out.addByte(0);
-		} else {
-			var _g = [];
-			var h = a.h;
-			var k_h = h;
-			var k_keys = Object.keys(h);
-			var k_length = k_keys.length;
-			var k_current = 0;
-			while(k_current < k_length) {
-				var k = k_keys[k_current++];
-				_g.push(k);
-			}
-			var keys = _g;
-			var v = keys.length + 1;
-			if(v >= 0 && v < 128) {
-				__ctx.out.addByte(v);
-			} else {
-				__ctx.out.addByte(128);
-				__ctx.out.addInt32(v);
-			}
-			var _g = 0;
-			while(_g < keys.length) {
-				var k = keys[_g];
-				++_g;
-				if(k == null) {
-					__ctx.out.addByte(0);
-				} else {
-					var b = haxe_io_Bytes.ofString(k);
-					var v = b.length + 1;
-					if(v >= 0 && v < 128) {
-						__ctx.out.addByte(v);
-					} else {
-						__ctx.out.addByte(128);
-						__ctx.out.addInt32(v);
-					}
-					__ctx.out.add(b);
-				}
-				__ctx.addKnownRef(a.h[k]);
-			}
-		}
-	}
-	,getSerializeSchema: function() {
-		var schema = new hxbit_Schema();
-		schema.fieldsNames.push("cards");
-		schema.fieldsTypes.push(hxbit_PropTypeDesc.PMap(hxbit_PropTypeDesc.PString,hxbit_PropTypeDesc.PSerializable("tool.Card")));
-		schema.fieldsNames.push("cardStacks");
-		schema.fieldsTypes.push(hxbit_PropTypeDesc.PMap(hxbit_PropTypeDesc.PString,hxbit_PropTypeDesc.PSerializable("tool.CardStack")));
-		schema.isFinal = hxbit_Serializer.isClassFinal(tool_Table.__clid);
-		return schema;
-	}
-	,unserializeInit: function() {
-		this.cards = new haxe_ds_StringMap();
-		this.cardStacks = new haxe_ds_StringMap();
-	}
-	,unserialize: function(__ctx) {
-		var k0;
-		var v0;
-		var v = __ctx.input.b[__ctx.inPos++];
-		if(v == 128) {
-			v = __ctx.input.getInt32(__ctx.inPos);
-			__ctx.inPos += 4;
-		}
-		var len = v;
-		var tmp;
-		if(len == 0) {
-			tmp = null;
-		} else {
-			var m = new haxe_ds_StringMap();
-			while(--len > 0) {
-				var v = __ctx.input.b[__ctx.inPos++];
-				if(v == 128) {
-					v = __ctx.input.getInt32(__ctx.inPos);
-					__ctx.inPos += 4;
-				}
-				var len1 = v;
-				if(len1 == 0) {
-					k0 = null;
-				} else {
-					--len1;
-					var s = __ctx.input.getString(__ctx.inPos,len1);
-					__ctx.inPos += len1;
-					k0 = s;
-				}
-				var k = k0;
-				v0 = __ctx.getRef(tool_Card,tool_Card.__clid);
-				var v1 = v0;
-				m.h[k] = v1;
-			}
-			tmp = m;
-		}
-		this.cards = tmp;
-		var k0;
-		var v0;
-		var v = __ctx.input.b[__ctx.inPos++];
-		if(v == 128) {
-			v = __ctx.input.getInt32(__ctx.inPos);
-			__ctx.inPos += 4;
-		}
-		var len = v;
-		var tmp;
-		if(len == 0) {
-			tmp = null;
-		} else {
-			var m = new haxe_ds_StringMap();
-			while(--len > 0) {
-				var v = __ctx.input.b[__ctx.inPos++];
-				if(v == 128) {
-					v = __ctx.input.getInt32(__ctx.inPos);
-					__ctx.inPos += 4;
-				}
-				var len1 = v;
-				if(len1 == 0) {
-					k0 = null;
-				} else {
-					--len1;
-					var s = __ctx.input.getString(__ctx.inPos,len1);
-					__ctx.inPos += len1;
-					k0 = s;
-				}
-				var k = k0;
-				v0 = __ctx.getRef(tool_CardStack,tool_CardStack.__clid);
-				var v1 = v0;
-				m.h[k] = v1;
-			}
-			tmp = m;
-		}
-		this.cardStacks = tmp;
-	}
-	,__class__: tool_Table
+	__class__: tool_Table
 };
 function tool_Table_addCard(table,cardStackId,card) {
 	if(table.cards.h[card.id] != null) {
@@ -10153,42 +4675,11 @@ var Class = { };
 var Enum = { };
 haxe_ds_ObjectMap.count = 0;
 js_Boot.__toStr = ({ }).toString;
-if(ArrayBuffer.prototype.slice == null) {
-	ArrayBuffer.prototype.slice = js_lib__$ArrayBuffer_ArrayBufferCompat.sliceImpl;
-}
-hxbit_Convert.convFuns = new haxe_ds_StringMap();
-hxbit_Macros.IN_ENUM_SER = false;
-hxbit_Serializer.UID = 0;
-hxbit_Serializer.SEQ = 0;
-hxbit_Serializer.SEQ_BITS = 8;
-hxbit_Serializer.SEQ_MASK = 16777215;
-hxbit_Serializer.CLASSES = [];
-hxbit_Serializer.ENUM_CLASSES = new haxe_ds_StringMap();
-hxbit_Schema.__clid = hxbit_Serializer.registerClass(hxbit_Schema);
-model_ver1_game_define_CardProto.__clid = hxbit_Serializer.registerClass(model_ver1_game_define_CardProto);
-model_ver1_data_CardProto_$179001_$01A_$CH_$WT007R_$white.__clid = hxbit_Serializer.registerClass(model_ver1_data_CardProto_$179001_$01A_$CH_$WT007R_$white);
-model_ver1_game_define_CardText.__clid = hxbit_Serializer.registerClass(model_ver1_game_define_CardText);
-model_ver1_data__$CardProto_$179001_$01A_$CH_$WT007R_$white_Text1.__clid = hxbit_Serializer.registerClass(model_ver1_data__$CardProto_$179001_$01A_$CH_$WT007R_$white_Text1);
-model_ver1_game_define_Mark.__clid = hxbit_Serializer.registerClass(model_ver1_game_define_Mark);
-model_ver1_game_entity_DefaultMark.__clid = hxbit_Serializer.registerClass(model_ver1_game_entity_DefaultMark);
-model_ver1_data__$CardProto_$179001_$01A_$CH_$WT007R_$white_Mark1.__clid = hxbit_Serializer.registerClass(model_ver1_data__$CardProto_$179001_$01A_$CH_$WT007R_$white_Mark1);
-model_ver1_data_CardProto_$179003_$01A_$U_$BK008U_$black.__clid = hxbit_Serializer.registerClass(model_ver1_data_CardProto_$179003_$01A_$U_$BK008U_$black);
-model_ver1_data__$CardProto_$179003_$01A_$U_$BK008U_$black_Text1.__clid = hxbit_Serializer.registerClass(model_ver1_data__$CardProto_$179003_$01A_$U_$BK008U_$black_Text1);
-model_ver1_data__$CardProto_$179003_$01A_$U_$BK008U_$black_Text2.__clid = hxbit_Serializer.registerClass(model_ver1_data__$CardProto_$179003_$01A_$U_$BK008U_$black_Text2);
-model_ver1_data_CardProto_$179004_$01A_$CH_$WT009R_$white.__clid = hxbit_Serializer.registerClass(model_ver1_data_CardProto_$179004_$01A_$CH_$WT009R_$white);
-model_ver1_data__$CardProto_$179004_$01A_$CH_$WT009R_$white_Text1.__clid = hxbit_Serializer.registerClass(model_ver1_data__$CardProto_$179004_$01A_$CH_$WT009R_$white_Text1);
-model_ver1_data__$CardProto_$179004_$01A_$CH_$WT009R_$white_Text1_$1.__clid = hxbit_Serializer.registerClass(model_ver1_data__$CardProto_$179004_$01A_$CH_$WT009R_$white_Text1_$1);
-model_ver1_data__$CardProto_$179004_$01A_$CH_$WT009R_$white_Mark1.__clid = hxbit_Serializer.registerClass(model_ver1_data__$CardProto_$179004_$01A_$CH_$WT009R_$white_Mark1);
-model_ver1_data_CardProto_$179030_$11E_$CH_$BN091N_$brown.__clid = hxbit_Serializer.registerClass(model_ver1_data_CardProto_$179030_$11E_$CH_$BN091N_$brown);
-model_ver1_data__$CardProto_$179030_$11E_$CH_$BN091N_$brown_Text1.__clid = hxbit_Serializer.registerClass(model_ver1_data__$CardProto_$179030_$11E_$CH_$BN091N_$brown_Text1);
-model_ver1_data__$CardProto_$179030_$11E_$CH_$BN091N_$brown_Process1.__clid = hxbit_Serializer.registerClass(model_ver1_data__$CardProto_$179030_$11E_$CH_$BN091N_$brown_Process1);
-model_ver1_data_CardProto_$179030_$11E_$U_$VT186R_$purple.__clid = hxbit_Serializer.registerClass(model_ver1_data_CardProto_$179030_$11E_$U_$VT186R_$purple);
-model_ver1_data__$CardProto_$179030_$11E_$U_$VT186R_$purple_Text1.__clid = hxbit_Serializer.registerClass(model_ver1_data__$CardProto_$179030_$11E_$U_$VT186R_$purple_Text1);
-model_ver1_data__$CardProto_$179030_$11E_$U_$VT186R_$purple_Process1.__clid = hxbit_Serializer.registerClass(model_ver1_data__$CardProto_$179030_$11E_$U_$VT186R_$purple_Process1);
-model_ver1_data_PlayerPlayCard.__clid = hxbit_Serializer.registerClass(model_ver1_data_PlayerPlayCard);
-model_ver1_data__$PlayerPlayCard_EnterFieldEffect.__clid = hxbit_Serializer.registerClass(model_ver1_data__$PlayerPlayCard_EnterFieldEffect);
-model_ver1_data_PlayerPlayG.__clid = hxbit_Serializer.registerClass(model_ver1_data_PlayerPlayG);
-model_ver1_game_Game.__clid = hxbit_Serializer.registerClass(model_ver1_game_Game);
+haxe_Serializer.USE_CACHE = false;
+haxe_Serializer.USE_ENUM_INDEX = false;
+haxe_Serializer.BASE64 = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789%:";
+haxe_Unserializer.DEFAULT_RESOLVER = new haxe__$Unserializer_DefaultResolver();
+haxe_Unserializer.BASE64 = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789%:";
 var model_ver1_game_data_DataBinding__cardProtoPool = (function($this) {
 	var $r;
 	var _g = new haxe_ds_StringMap();
@@ -10216,7 +4707,6 @@ var model_ver1_game_data_DataBinding__cardProtoPool = (function($this) {
 	return $r;
 }(this));
 model_ver1_game_define_BaSyouId._split = "@@@";
-model_ver1_game_define_Block.__clid = hxbit_Serializer.registerClass(model_ver1_game_define_Block);
 model_ver1_game_define_PlayerId.A = (function($this) {
 	var $r;
 	var this1 = "A";
@@ -10230,15 +4720,5 @@ model_ver1_game_define_PlayerId.B = (function($this) {
 	return $r;
 }(this));
 var model_ver1_game_define_Timing_TIMINGS = [model_ver1_game_define_Timing.Default(model_ver1_game_define_PhaseKeyword.Reroll,haxe_ds_Option.None,model_ver1_game_define_TimingKeyword.Start),model_ver1_game_define_Timing.Default(model_ver1_game_define_PhaseKeyword.Reroll,haxe_ds_Option.None,model_ver1_game_define_TimingKeyword.Rule),model_ver1_game_define_Timing.Default(model_ver1_game_define_PhaseKeyword.Reroll,haxe_ds_Option.None,model_ver1_game_define_TimingKeyword.Free2),model_ver1_game_define_Timing.Default(model_ver1_game_define_PhaseKeyword.Reroll,haxe_ds_Option.None,model_ver1_game_define_TimingKeyword.End),model_ver1_game_define_Timing.Default(model_ver1_game_define_PhaseKeyword.Draw,haxe_ds_Option.None,model_ver1_game_define_TimingKeyword.Start),model_ver1_game_define_Timing.Default(model_ver1_game_define_PhaseKeyword.Draw,haxe_ds_Option.None,model_ver1_game_define_TimingKeyword.Free1),model_ver1_game_define_Timing.Default(model_ver1_game_define_PhaseKeyword.Draw,haxe_ds_Option.None,model_ver1_game_define_TimingKeyword.Rule),model_ver1_game_define_Timing.Default(model_ver1_game_define_PhaseKeyword.Draw,haxe_ds_Option.None,model_ver1_game_define_TimingKeyword.Free2),model_ver1_game_define_Timing.Default(model_ver1_game_define_PhaseKeyword.Draw,haxe_ds_Option.None,model_ver1_game_define_TimingKeyword.End),model_ver1_game_define_Timing.Default(model_ver1_game_define_PhaseKeyword.Maintenance,haxe_ds_Option.None,model_ver1_game_define_TimingKeyword.Start),model_ver1_game_define_Timing.Default(model_ver1_game_define_PhaseKeyword.Maintenance,haxe_ds_Option.None,model_ver1_game_define_TimingKeyword.Free1),model_ver1_game_define_Timing.Default(model_ver1_game_define_PhaseKeyword.Maintenance,haxe_ds_Option.None,model_ver1_game_define_TimingKeyword.End),model_ver1_game_define_Timing.Default(model_ver1_game_define_PhaseKeyword.Battle,haxe_ds_Option.Some(model_ver1_game_define_StepKeyword.Attack),model_ver1_game_define_TimingKeyword.Start),model_ver1_game_define_Timing.Default(model_ver1_game_define_PhaseKeyword.Battle,haxe_ds_Option.Some(model_ver1_game_define_StepKeyword.Attack),model_ver1_game_define_TimingKeyword.Free1),model_ver1_game_define_Timing.Default(model_ver1_game_define_PhaseKeyword.Battle,haxe_ds_Option.Some(model_ver1_game_define_StepKeyword.Attack),model_ver1_game_define_TimingKeyword.Rule),model_ver1_game_define_Timing.Default(model_ver1_game_define_PhaseKeyword.Battle,haxe_ds_Option.Some(model_ver1_game_define_StepKeyword.Attack),model_ver1_game_define_TimingKeyword.Free2),model_ver1_game_define_Timing.Default(model_ver1_game_define_PhaseKeyword.Battle,haxe_ds_Option.Some(model_ver1_game_define_StepKeyword.Attack),model_ver1_game_define_TimingKeyword.End),model_ver1_game_define_Timing.Default(model_ver1_game_define_PhaseKeyword.Battle,haxe_ds_Option.Some(model_ver1_game_define_StepKeyword.Defense),model_ver1_game_define_TimingKeyword.Start),model_ver1_game_define_Timing.Default(model_ver1_game_define_PhaseKeyword.Battle,haxe_ds_Option.Some(model_ver1_game_define_StepKeyword.Defense),model_ver1_game_define_TimingKeyword.Free1),model_ver1_game_define_Timing.Default(model_ver1_game_define_PhaseKeyword.Battle,haxe_ds_Option.Some(model_ver1_game_define_StepKeyword.Defense),model_ver1_game_define_TimingKeyword.Rule),model_ver1_game_define_Timing.Default(model_ver1_game_define_PhaseKeyword.Battle,haxe_ds_Option.Some(model_ver1_game_define_StepKeyword.Defense),model_ver1_game_define_TimingKeyword.Free2),model_ver1_game_define_Timing.Default(model_ver1_game_define_PhaseKeyword.Battle,haxe_ds_Option.Some(model_ver1_game_define_StepKeyword.Defense),model_ver1_game_define_TimingKeyword.End),model_ver1_game_define_Timing.Default(model_ver1_game_define_PhaseKeyword.Battle,haxe_ds_Option.Some(model_ver1_game_define_StepKeyword.DamageChecking),model_ver1_game_define_TimingKeyword.Start),model_ver1_game_define_Timing.Default(model_ver1_game_define_PhaseKeyword.Battle,haxe_ds_Option.Some(model_ver1_game_define_StepKeyword.DamageChecking),model_ver1_game_define_TimingKeyword.Free1),model_ver1_game_define_Timing.Default(model_ver1_game_define_PhaseKeyword.Battle,haxe_ds_Option.Some(model_ver1_game_define_StepKeyword.DamageChecking),model_ver1_game_define_TimingKeyword.Rule),model_ver1_game_define_Timing.Default(model_ver1_game_define_PhaseKeyword.Battle,haxe_ds_Option.Some(model_ver1_game_define_StepKeyword.DamageChecking),model_ver1_game_define_TimingKeyword.Free2),model_ver1_game_define_Timing.Default(model_ver1_game_define_PhaseKeyword.Battle,haxe_ds_Option.Some(model_ver1_game_define_StepKeyword.DamageChecking),model_ver1_game_define_TimingKeyword.End),model_ver1_game_define_Timing.Default(model_ver1_game_define_PhaseKeyword.Battle,haxe_ds_Option.Some(model_ver1_game_define_StepKeyword.Return),model_ver1_game_define_TimingKeyword.Start),model_ver1_game_define_Timing.Default(model_ver1_game_define_PhaseKeyword.Battle,haxe_ds_Option.Some(model_ver1_game_define_StepKeyword.Return),model_ver1_game_define_TimingKeyword.Free1),model_ver1_game_define_Timing.Default(model_ver1_game_define_PhaseKeyword.Battle,haxe_ds_Option.Some(model_ver1_game_define_StepKeyword.Return),model_ver1_game_define_TimingKeyword.Rule),model_ver1_game_define_Timing.Default(model_ver1_game_define_PhaseKeyword.Battle,haxe_ds_Option.Some(model_ver1_game_define_StepKeyword.Return),model_ver1_game_define_TimingKeyword.Free2),model_ver1_game_define_Timing.Default(model_ver1_game_define_PhaseKeyword.Battle,haxe_ds_Option.Some(model_ver1_game_define_StepKeyword.End),model_ver1_game_define_TimingKeyword.DamageReset),model_ver1_game_define_Timing.Default(model_ver1_game_define_PhaseKeyword.Battle,haxe_ds_Option.Some(model_ver1_game_define_StepKeyword.End),model_ver1_game_define_TimingKeyword.ResolveEffect),model_ver1_game_define_Timing.Default(model_ver1_game_define_PhaseKeyword.Battle,haxe_ds_Option.Some(model_ver1_game_define_StepKeyword.End),model_ver1_game_define_TimingKeyword.AdjustHand),model_ver1_game_define_Timing.Default(model_ver1_game_define_PhaseKeyword.Battle,haxe_ds_Option.Some(model_ver1_game_define_StepKeyword.End),model_ver1_game_define_TimingKeyword.TurnEnd)];
-model_ver1_game_entity_Context.__clid = hxbit_Serializer.registerClass(model_ver1_game_entity_Context);
-model_ver1_game_entity_EnterFieldThisTurnMark.__clid = hxbit_Serializer.registerClass(model_ver1_game_entity_EnterFieldThisTurnMark);
-model_ver1_game_entity_CanNotRerollMark.__clid = hxbit_Serializer.registerClass(model_ver1_game_entity_CanNotRerollMark);
-model_ver1_test_common_OnlyEmptyTextCardProto.__clid = hxbit_Serializer.registerClass(model_ver1_test_common_OnlyEmptyTextCardProto);
-model_ver1_test_common_AddOneTextText.__clid = hxbit_Serializer.registerClass(model_ver1_test_common_AddOneTextText);
-model_ver1_test_common_AddTextCardProto.__clid = hxbit_Serializer.registerClass(model_ver1_test_common_AddTextCardProto);
-model_ver1_test_common_OnlyConstentTextCardProto.__clid = hxbit_Serializer.registerClass(model_ver1_test_common_OnlyConstentTextCardProto);
-tool_Card.__clid = hxbit_Serializer.registerClass(tool_Card);
-tool_CardStack.__clid = hxbit_Serializer.registerClass(tool_CardStack);
-tool_Table.__clid = hxbit_Serializer.registerClass(tool_Table);
 Test.main();
 })(typeof window != "undefined" ? window : typeof global != "undefined" ? global : typeof self != "undefined" ? self : this);

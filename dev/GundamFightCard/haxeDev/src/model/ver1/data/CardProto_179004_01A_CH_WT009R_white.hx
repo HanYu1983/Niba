@@ -71,8 +71,8 @@ private class Text1_1 extends CardText {
 		this.gainValue = gainValue;
 	}
 
-	@:s public var gainCardId:String;
-	@:s public var gainValue:BattlePoint;
+	public var gainCardId:String;
+	public var gainValue:BattlePoint;
 
 	public override function getRequires(_ctx:IContext, runtime:ExecuteRuntime):Array<Require> {
 		final ctx = cast(_ctx, Context);
@@ -142,8 +142,8 @@ private class Mark1 extends DefaultMark {
 		this.battlePoint = battlePoint;
 	}
 
-	@:s public var attachCardId:String;
-	@:s public var battlePoint:BattlePoint;
+	public var attachCardId:String;
+	public var battlePoint:BattlePoint;
 
 	public override function getEffect(_ctx:IContext):Array<MarkEffect> {
 		return [AddBattlePoint(attachCardId, battlePoint)];

@@ -11,12 +11,12 @@ enum MarkEffect {
 	CanNotReroll(cardId:String);
 }
 
-class Mark implements hxbit.Serializable {
+class Mark {
 	public function new(id:String) {
 		this.id = id;
 	}
 
-	@:s public var id:String;
+	public var id:String;
 
 	public function getEffect(_ctx:IContext):Array<MarkEffect> {
 		return [];

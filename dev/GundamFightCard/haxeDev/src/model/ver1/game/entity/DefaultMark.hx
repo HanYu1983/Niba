@@ -11,8 +11,7 @@ class DefaultMark extends Mark {
 		super(id);
 	}
 
-	// hxbit.Serializable not support Option
-	@:s public var age:Null<Int>;
+	public var age:Null<Int>;
 
 	public override function onEvent(_ctx:IContext, event:Event):Void {
 		final ctx:Context = cast _ctx;
@@ -40,7 +39,7 @@ class EnterFieldThisTurnMark extends DefaultMark {
 		this.age = 1;
 	}
 
-	@:s public var cardId:String;
+	public var cardId:String;
 
 	public override function getEffect(_ctx:IContext):Array<MarkEffect> {
 		return [EnterFieldThisTurn(this.cardId)];
@@ -53,7 +52,7 @@ class CanNotRerollMark extends DefaultMark {
 		this.cardId = cardId;
 	}
 
-	@:s public var cardId:String;
+	public var cardId:String;
 
 	public override function getEffect(_ctx:IContext):Array<MarkEffect> {
 		return [CanNotReroll(this.cardId)];

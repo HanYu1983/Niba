@@ -75,7 +75,7 @@ private class Mark1 extends DefaultMark {
 		this.attachCardId = attachCardId;
 	}
 
-	@:s public var attachCardId:String;
+	public var attachCardId:String;
 
 	public override function getEffect(_ctx:IContext):Array<MarkEffect> {
 		return [AttackSpeed(attachCardId, 1)];
