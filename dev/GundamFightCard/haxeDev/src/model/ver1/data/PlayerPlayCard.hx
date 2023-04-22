@@ -10,10 +10,13 @@ import model.ver1.game.define.Timing;
 import model.ver1.game.define.Mark;
 import model.ver1.game.define.Block;
 import model.ver1.game.define.Require;
+import model.ver1.game.define.CardText;
+import model.ver1.game.define.CardProto;
 import model.ver1.game.alg.Context;
 import model.ver1.game.alg.Cut;
 import model.ver1.data.RequireImpl;
 import model.ver1.game.entity.Context;
+import model.ver1.game.entity.DefaultMark;
 
 // カードのプレイ(p.20)
 class PlayerPlayCard extends CardText {
@@ -22,7 +25,8 @@ class PlayerPlayCard extends CardText {
 		this.type = Automatic(Constant);
 	}
 
-	public override function getRequires(ctx:Context, runtime:ExecuteRuntime):Array<Require> {
+	public override function getRequires(_ctx:IContext, runtime:ExecuteRuntime):Array<Require> {
+		final ctx = cast(_ctx, Context);
 		// TODO: 查詢有沒有快速
 		// TODO: 查詢有沒有替代横置國力顏色的效果
 		// TODO: 查詢有沒有在SET在特定卡上而減少横置國力的效果
@@ -42,7 +46,8 @@ class PlayerPlayCard extends CardText {
 		];
 	}
 
-	public override function action(ctx:Context, runtime:ExecuteRuntime):Void {
+	public override function action(_ctx:IContext, runtime:ExecuteRuntime):Void {
+		final ctx = cast(_ctx, Context);
 		final cardId = runtime.getCardId();
 		final responsePlayerId = runtime.getResponsePlayerId();
 		final from = getCardBaSyouAndAssertExist(ctx, cardId);
@@ -74,7 +79,8 @@ private class EnterFieldEffect extends CardText {
 		super(id, "場に出る効果");
 	}
 
-	public override function action(ctx:Context, runtime:ExecuteRuntime):Void {
+	public override function action(_ctx:IContext, runtime:ExecuteRuntime):Void {
+		final ctx = cast(_ctx, Context);
 		// (p.64)
 		// getCardController(cardId)會等於None因為「プレイされたカード場所」是沒有控制者的
 		// 所以也沒有自軍或敵軍的分別
@@ -114,12 +120,13 @@ class PlayerPlayG extends CardText {
 		super(id, "Gのプレイ");
 	}
 
-	public override function getRequires(ctx:Context, runtime:ExecuteRuntime):Array<Require> {
+	public override function getRequires(_ctx:IContext, runtime:ExecuteRuntime):Array<Require> {
 		// TODO: 必須有GSign
 		return [];
 	}
 
-	public override function action(ctx:Context, runtime:ExecuteRuntime):Void {
+	public override function action(_ctx:IContext, runtime:ExecuteRuntime):Void {
+		final ctx = cast(_ctx, Context);
 		// 沒有出場效果，所以不會引發切入，直接出場
 		final cardId = runtime.getCardId();
 		final responsePlayerId = runtime.getResponsePlayerId();

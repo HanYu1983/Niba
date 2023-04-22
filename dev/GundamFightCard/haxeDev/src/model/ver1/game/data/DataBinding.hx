@@ -1,6 +1,7 @@
 package model.ver1.game.data;
 
 import model.ver1.game.define.Define;
+import model.ver1.game.define.CardProto;
 
 private final _cardProtoPool:Map<String, CardProto> = [
 	"179001_01A_CH_WT007R_white" => new model.ver1.data.CardProto_179001_01A_CH_WT007R_white(),

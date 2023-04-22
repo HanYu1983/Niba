@@ -9,6 +9,7 @@ import model.ver1.game.define.BaSyou;
 import model.ver1.game.define.ExecuteRuntime;
 import model.ver1.game.define.Mark;
 import model.ver1.game.define.Event;
+import model.ver1.game.define.CardText;
 import model.ver1.game.alg.Context;
 import model.ver1.game.alg.CardProto;
 import model.ver1.game.entity.Context;

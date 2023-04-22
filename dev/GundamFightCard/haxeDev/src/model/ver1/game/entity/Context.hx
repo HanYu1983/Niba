@@ -1,21 +1,31 @@
 package model.ver1.game.entity;
 
 using Lambda;
-
-import haxe.EnumTools;
-import haxe.ds.Option;
-import haxe.ds.EnumValueMap;
 import tool.Table;
-import tool.Helper;
-import model.ver1.game.define.Timing;
-import model.ver1.game.define.ExecuteRuntime;
 import model.ver1.game.define.Mark;
 import model.ver1.game.define.Block;
-import model.ver1.game.define.Require;
-import model.ver1.game.define.Event;
-import model.ver1.game.entity.Flow;
-import model.ver1.game.define.Player;
-import model.ver1.game.define.Define;
+import model.ver1.game.define.Timing;
+import model.ver1.game.define.Define.IContext;
+import model.ver1.game.define.CardProto;
+
+enum FlowMemoryState {
+	PrepareDeck;
+	WhoFirst;
+	Draw6AndConfirm;
+	Playing;
+}
+
+typedef Message = Any;
+
+typedef FlowMemory = {
+	state:FlowMemoryState,
+	hasTriggerEvent:Bool,
+	hasPlayerPassPhase:Map<String, Bool>,
+	hasPlayerPassCut:Map<String, Bool>,
+	hasPlayerPassPayCost:Map<String, Bool>,
+	shouldTriggerStackEffectFinishedEvent:Bool,
+	msgs:Array<Message>,
+}
 
 typedef PlayerSelection = {
 	cardIds:Map<String, Array<String>>
@@ -25,7 +35,7 @@ typedef Memory = {
 	playerSelection:PlayerSelection
 }
 
-class Context implements hxbit.Serializable {
+class Context implements hxbit.Serializable implements IContext {
 	public function new() {}
 
 	// @:s public var players:Map<String, Player> = [];

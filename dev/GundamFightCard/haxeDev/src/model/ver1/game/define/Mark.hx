@@ -1,7 +1,7 @@
 package model.ver1.game.define;
 
 import model.ver1.game.define.Define;
-import model.ver1.game.entity.Context;
+import model.ver1.game.define.Timing;
 
 enum MarkEffect {
 	AddBattlePoint(cardId:String, battlePoint:BattlePoint);
@@ -17,54 +17,12 @@ class Mark implements hxbit.Serializable {
 	}
 
 	@:s public var id:String;
-	// hxbit.Serializable not support Option
-	@:s public var age:Null<Int>;
 
-	public function getEffect(ctx:Context):Array<MarkEffect> {
+	public function getEffect(_ctx:IContext):Array<MarkEffect> {
 		return [];
 	}
 
-	public function onEvent(ctx:Context, event:Event):Void {
-		if (age != null) {
-			switch event {
-				case ChangePhase:
-					switch ctx.timing {
-						case Default(Battle, Some(End), End):
-							age -= 1;
-							if (age <= 0) {
-								ctx.marks.remove(id);
-							}
-						case _:
-					}
-				case _:
-			}
-		}
-	}
-}
-
-class EnterFieldThisTurnMark extends Mark {
-	public function new(id:String, cardId:String) {
-		super(id);
-		this.cardId = cardId;
-		this.age = 1;
-	}
-
-	@:s public var cardId:String;
-
-	public override function getEffect(ctx:Context):Array<MarkEffect> {
-		return [EnterFieldThisTurn(this.cardId)];
-	}
-}
-
-class CanNotRerollMark extends Mark {
-	public function new(id:String, cardId:String) {
-		super(id);
-		this.cardId = cardId;
-	}
-
-	@:s public var cardId:String;
-
-	public override function getEffect(ctx:Context):Array<MarkEffect> {
-		return [CanNotReroll(this.cardId)];
+	public function onEvent(_ctx:IContext, event:Event):Void {
+		
 	}
 }

@@ -9,6 +9,8 @@ import model.ver1.game.define.Timing;
 import model.ver1.game.define.Block;
 import model.ver1.game.define.Require;
 import model.ver1.game.define.Player;
+import model.ver1.game.define.CardText;
+import model.ver1.game.define.CardProto;
 import model.ver1.game.alg.Context;
 import model.ver1.game.alg.Runtime;
 import model.ver1.game.alg.Cut;
@@ -27,7 +29,8 @@ class CardProto_179003_01A_U_BK008U_black extends CardProto {
 		super();
 	}
 
-	public override function getTexts(ctx:Context, runtime:ExecuteRuntime):Array<CardText> {
+	public override function getTexts(_ctx:IContext, runtime:ExecuteRuntime):Array<CardText> {
+		final ctx = cast(_ctx, Context);
 		return [
 			new PlayerPlayCard('${runtime.getCardId()}_PlayerPlayCard'),
 			new Text1('${runtime.getCardId()}_Text1')
@@ -40,7 +43,8 @@ private class RequireThisCardDestroyByBattleDamage extends Require {
 		super(id, "このカードが戦闘ダメージで破壊されている場合");
 	}
 
-	public override function action(ctx:Context, runtime:ExecuteRuntime):Void {
+	public override function action(_ctx:IContext, runtime:ExecuteRuntime):Void {
+		final ctx = cast(_ctx, Context);
 		if (isDestroyNow(ctx, runtime.getCardId(), {isByBattleDamage: true}) == false) {
 			throw new haxe.Exception("這張卡必須是破壞中的狀態");
 		}
@@ -53,7 +57,8 @@ private class Text1 extends CardText {
 		type = Use;
 	}
 
-	public override function getRequires(ctx:Context, runtime:ExecuteRuntime):Array<Require> {
+	public override function getRequires(_ctx:IContext, runtime:ExecuteRuntime):Array<Require> {
+		final ctx = cast(_ctx, Context);
 		return [
 			// TODO: timing list
 			new RequirePhase('${id}_Text1_Req1', Default(Battle, Some(DamageChecking), Free1)),
@@ -62,7 +67,8 @@ private class Text1 extends CardText {
 		];
 	}
 
-	public override function action(ctx:Context, runtime:ExecuteRuntime):Void {
+	public override function action(_ctx:IContext, runtime:ExecuteRuntime):Void {
+		final ctx = cast(_ctx, Context);
 		final cardId = runtime.getCardId();
 		final block = new Block('${id}_${Date.now()}', PlayText(cardId, id), new Text2('${id}_Text2'));
 		cutIn(ctx, block);
@@ -74,7 +80,8 @@ private class Text2 extends CardText {
 		super(id, "このカードを、破壊を無効にした上で自軍Gにする。");
 	}
 
-	public override function action(ctx:Context, runtime:ExecuteRuntime):Void {
+	public override function action(_ctx:IContext, runtime:ExecuteRuntime):Void {
+		final ctx = cast(_ctx, Context);
 		final cardId = runtime.getCardId();
 		removeDestroyEffect(ctx, cardId);
 		becomeG(ctx, cardId);

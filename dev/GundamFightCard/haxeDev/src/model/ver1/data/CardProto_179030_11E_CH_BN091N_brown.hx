@@ -12,11 +12,13 @@ import model.ver1.game.define.Block;
 import model.ver1.game.define.Require;
 import model.ver1.game.define.Event;
 import model.ver1.game.define.Player;
+import model.ver1.game.define.CardText;
+import model.ver1.game.define.CardProto;
 import model.ver1.game.alg.Context;
 import model.ver1.game.alg.Cut;
 import model.ver1.data.RequireImpl;
 import model.ver1.game.entity.Context;
-
+import model.ver1.game.entity.DefaultMark;
 // 179030_11E_CH_BN091N_brown
 // N
 // ∀
@@ -30,7 +32,7 @@ class CardProto_179030_11E_CH_BN091N_brown extends CardProto {
 		this.category = Character;
 	}
 
-	public override function getTexts(ctx:Context, runtime:ExecuteRuntime):Array<CardText> {
+	public override function getTexts(_ctx:IContext, runtime:ExecuteRuntime):Array<CardText> {
 		return [
 			new PlayerPlayCard('${runtime.getCardId()}_PlayerPlayCard'),
 			new Text1('${runtime.getCardId()}_Text1')
@@ -38,7 +40,8 @@ class CardProto_179030_11E_CH_BN091N_brown extends CardProto {
 	}
 }
 
-function getOpponentG(ctx:Context, runtime:ExecuteRuntime):Array<String> {
+function getOpponentG(_ctx:IContext, runtime:ExecuteRuntime):Array<String> {
+	final ctx = cast(_ctx, Context);
 	final responsePlayerId = runtime.getResponsePlayerId();
 	final opponentPlayerId = ~(responsePlayerId);
 	return [for (card in ctx.table.cards) card].map(card -> card.id).filter(cardId -> {
@@ -59,7 +62,8 @@ private class Text1 extends CardText {
 		type = Automatic(Trigger);
 	}
 
-	public override function onEvent(ctx:Context, event:Event, runtime:ExecuteRuntime):Void {
+	public override function onEvent(_ctx:IContext, event:Event, runtime:ExecuteRuntime):Void {
+		final ctx = cast(_ctx, Context);
 		final thisCardId = runtime.getCardId();
 		final responsePlayerId = runtime.getResponsePlayerId();
 		final opponentPlayerId = ~(responsePlayerId);
@@ -82,7 +86,8 @@ private class Process1 extends CardText {
 		super(id, "敵軍G１枚をロールする。その場合、このセットグループは、このターンと次のターン、リロールできない。");
 	}
 
-	public override function getRequires2(ctx:Context, runtime:ExecuteRuntime):Array<Require2> {
+	public override function getRequires2(_ctx:IContext, runtime:ExecuteRuntime):Array<Require2> {
+		final ctx = cast(_ctx, Context);
 		final tips:Array<Tip<String>> = getOpponentG(ctx, runtime).map(i -> {
 			return {
 				value: i,
@@ -104,7 +109,8 @@ private class Process1 extends CardText {
 		];
 	}
 
-	public override function action(ctx:Context, runtime:ExecuteRuntime):Void {
+	public override function action(_ctx:IContext, runtime:ExecuteRuntime):Void {
+		final ctx = cast(_ctx, Context);
 		final thisCardId = runtime.getCardId();
 		for (cardId in getThisCardSetGroupCardIds(ctx, thisCardId)) {
 			final markId = '${id}_${cardId}';
@@ -170,6 +176,7 @@ function test() {
 		throw "必須有不能重置效果";
 	}
 	trace("結束一個turn");
+	trace(ctx);
 	ctx.timing = Default(Battle, Some(End), End);
 	sendEvent(ctx, ChangePhase);
 	if ([for (mark in ctx.marks) mark].length != 1) {

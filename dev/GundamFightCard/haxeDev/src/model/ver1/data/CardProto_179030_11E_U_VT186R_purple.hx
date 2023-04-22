@@ -12,10 +12,13 @@ import model.ver1.game.define.Block;
 import model.ver1.game.define.Require;
 import model.ver1.game.define.Event;
 import model.ver1.game.define.Player;
+import model.ver1.game.define.CardText;
+import model.ver1.game.define.CardProto;
 import model.ver1.game.alg.Context;
 import model.ver1.game.alg.Cut;
 import model.ver1.data.RequireImpl;
 import model.ver1.game.entity.Context;
+import model.ver1.game.entity.DefaultMark;
 
 // 179030_11E_U_VT186R_purple
 // R
@@ -31,7 +34,7 @@ class CardProto_179030_11E_U_VT186R_purple extends CardProto {
 		this.category = Unit;
 	}
 
-	public override function getTexts(ctx:Context, runtime:ExecuteRuntime):Array<CardText> {
+	public override function getTexts(_ctx:IContext, runtime:ExecuteRuntime):Array<CardText> {
 		return [
 			new PlayerPlayCard('CardProto_179030_11E_U_VT186R_purple_1'),
 			new Text1('CardProto_179030_11E_U_VT186R_purple_2')
@@ -45,7 +48,8 @@ private class Text1 extends CardText {
 		type = Automatic(Trigger);
 	}
 
-	public override function onEvent(ctx:Context, event:Event, runtime:ExecuteRuntime):Void {
+	public override function onEvent(_ctx:IContext, event:Event, runtime:ExecuteRuntime):Void {
+		final ctx = cast(_ctx, Context);
 		final thisCardId = runtime.getCardId();
 		switch event {
 			case CardEnterField(enterFieldCardId):
@@ -82,15 +86,18 @@ private class Process1 extends CardText {
 		super(id, "このターン中に場に出た敵軍ユニット１枚を、持ち主の手札に移す。");
 	}
 
-	public override function getRequires(ctx:Context, runtime:ExecuteRuntime):Array<Require> {
+	public override function getRequires(_ctx:IContext, runtime:ExecuteRuntime):Array<Require> {
+		final ctx = cast(_ctx, Context);
 		return [new RequireOpponentUnitsEnterFieldThisTurn(getSubKey(0), ctx, runtime)];
 	}
 
-	public override function getRequires2(ctx:Context, runtime:ExecuteRuntime):Array<Require2> {
+	public override function getRequires2(_ctx:IContext, runtime:ExecuteRuntime):Array<Require2> {
+		final ctx = cast(_ctx, Context);
 		return [getRequireOpponentUnitsEnterFieldThisTurn(ctx, runtime, getSubKey(0))];
 	}
 
-	public override function action(ctx:Context, runtime:ExecuteRuntime):Void {
+	public override function action(_ctx:IContext, runtime:ExecuteRuntime):Void {
+		final ctx = cast(_ctx, Context);
 		final cardId = runtime.getCardId();
 		final selectCardIds = getPlayerSelectionCardId(ctx, getSubKey(0));
 		for (cardId in selectCardIds) {

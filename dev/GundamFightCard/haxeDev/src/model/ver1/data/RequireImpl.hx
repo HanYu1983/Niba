@@ -8,6 +8,8 @@ import model.ver1.game.define.Define;
 import model.ver1.game.define.ExecuteRuntime;
 import model.ver1.game.define.Timing;
 import model.ver1.game.define.Require;
+import model.ver1.game.define.CardText;
+import model.ver1.game.define.CardProto;
 import model.ver1.game.alg.Context;
 import model.ver1.game.entity.Context;
 
@@ -19,7 +21,8 @@ class RequirePhase extends Require {
 
 	public final timing:Timing;
 
-	public override function action(ctx:Context, runtime:ExecuteRuntime):Void {
+	public override function action(_ctx:IContext, runtime:ExecuteRuntime):Void {
+		final ctx = cast(_ctx, Context);
 		if (EnumValueTools.equals(ctx.timing, timing) == false) {
 			throw new haxe.Exception('ctx.phase != this.phase: ${ctx.timing} != ${timing}');
 		}
@@ -60,7 +63,8 @@ class RequireGTap extends RequireUserSelectCard {
 		this.lengthInclude = [2];
 	}
 
-	public override function action(ctx:Context, runtime:ExecuteRuntime):Void {
+	public override function action(_ctx:IContext, runtime:ExecuteRuntime):Void {
+		final ctx = cast(_ctx, Context);
 		final selectIds = ctx.memory.playerSelection.cardIds[id];
 		if (selectIds == null) {
 			throw new haxe.Exception("selectIds not found");
@@ -142,7 +146,8 @@ class ForceTargetCard extends Require {
 	public final cardId:String;
 	public final selectKey:String;
 
-	public override function action(ctx:Context, runtime:ExecuteRuntime):Void {
+	public override function action(_ctx:IContext, runtime:ExecuteRuntime):Void {
+		final ctx = cast(_ctx, Context);
 		final selectCard = ctx.table.cards[cardId];
 		if (selectCard == null) {
 			throw new haxe.Exception('指定的卡不存在: ${cardId}');
@@ -159,7 +164,8 @@ class RequireGCount extends Require {
 
 	public var count:Int;
 
-	public override function action(ctx:Context, runtime:ExecuteRuntime):Void {
+	public override function action(_ctx:IContext, runtime:ExecuteRuntime):Void {
+		final ctx = cast(_ctx, Context);
 		final responsePlayerId = runtime.getResponsePlayerId();
 		final gCount = getPlayerGCountForPlay(ctx, responsePlayerId);
 		if (gCount < count) {
@@ -183,7 +189,8 @@ class RequireUserSelectCard extends RequireUserSelect<String> {
 		super(id, description);
 	}
 
-	public override function action(ctx:Context, runtime:ExecuteRuntime):Void {
+	public override function action(_ctx:IContext, runtime:ExecuteRuntime):Void {
+		final ctx = cast(_ctx, Context);
 		final selection = getPlayerSelectionCardId(ctx, id);
 		if (lengthInclude.contains(selection.length) == false) {
 			throw "select card length not right";

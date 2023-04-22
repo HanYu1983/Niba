@@ -9,24 +9,6 @@ import model.ver1.game.alg.Block;
 import model.ver1.game.alg.Context;
 import model.ver1.game.entity.Context;
 
-enum FlowMemoryState {
-	PrepareDeck;
-	WhoFirst;
-	Draw6AndConfirm;
-	Playing;
-}
-
-typedef Message = Any;
-
-typedef FlowMemory = {
-	state:FlowMemoryState,
-	hasTriggerEvent:Bool,
-	hasPlayerPassPhase:Map<String, Bool>,
-	hasPlayerPassCut:Map<String, Bool>,
-	hasPlayerPassPayCost:Map<String, Bool>,
-	shouldTriggerStackEffectFinishedEvent:Bool,
-	msgs:Array<Message>,
-}
 
 // 宣告結束
 function passPhase(memory:FlowMemory, playerId:String):Void {

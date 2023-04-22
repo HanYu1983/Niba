@@ -12,11 +12,14 @@ import model.ver1.game.define.Block;
 import model.ver1.game.define.Require;
 import model.ver1.game.define.Event;
 import model.ver1.game.define.Player;
+import model.ver1.game.define.CardText;
+import model.ver1.game.define.CardProto;
 import model.ver1.game.alg.Context;
 import model.ver1.game.alg.Cut;
 import model.ver1.game.alg.CardProto;
 import model.ver1.data.RequireImpl;
 import model.ver1.game.entity.Context;
+import model.ver1.game.entity.DefaultMark;
 
 // 179004_01A_CH_WT009R_white
 // ラクス・クライン
@@ -30,7 +33,8 @@ class CardProto_179004_01A_CH_WT009R_white extends CardProto {
 		this.category = Character;
 	}
 
-	public override function getTexts(ctx:Context, runtime:ExecuteRuntime):Array<CardText> {
+	public override function getTexts(_ctx:IContext, runtime:ExecuteRuntime):Array<CardText> {
+		final ctx = cast(_ctx, Context);
 		final thisCardId = runtime.getCardId();
 		return [
 			new PlayerPlayCard('${thisCardId}_PlayerPlayCard'),
@@ -45,7 +49,8 @@ private class Text1 extends CardText {
 		type = Automatic(Trigger);
 	}
 
-	public override function onEvent(ctx:Context, event:Event, runtime:ExecuteRuntime):Void {
+	public override function onEvent(_ctx:IContext, event:Event, runtime:ExecuteRuntime):Void {
+		final ctx = cast(_ctx, Context);
 		final thisCardId = runtime.getCardId();
 		switch event {
 			case Gain(gainCardId, gainValue):
@@ -69,7 +74,8 @@ private class Text1_1 extends CardText {
 	@:s public var gainCardId:String;
 	@:s public var gainValue:BattlePoint;
 
-	public override function getRequires(ctx:Context, runtime:ExecuteRuntime):Array<Require> {
+	public override function getRequires(_ctx:IContext, runtime:ExecuteRuntime):Array<Require> {
+		final ctx = cast(_ctx, Context);
 		final thisCardId = runtime.getCardId();
 		final gainCardSetGroupsIds = getCardSetGroupCardIds(ctx, gainCardId);
 		final tips = [for (card in ctx.table.cards) card].filter(card -> {
@@ -80,7 +86,8 @@ private class Text1_1 extends CardText {
 		return [req];
 	}
 
-	public override function getRequires2(ctx:Context, runtime:ExecuteRuntime):Array<Require2> {
+	public override function getRequires2(_ctx:IContext, runtime:ExecuteRuntime):Array<Require2> {
+		final ctx = cast(_ctx, Context);
 		final thisCardId = runtime.getCardId();
 		final gainCardSetGroupsIds = getCardSetGroupCardIds(ctx, gainCardId);
 		final tips = [for (card in ctx.table.cards) card].filter(card -> {
@@ -117,7 +124,8 @@ private class Text1_1 extends CardText {
 		];
 	}
 
-	public override function action(ctx:Context, runtime:ExecuteRuntime):Void {
+	public override function action(_ctx:IContext, runtime:ExecuteRuntime):Void {
+		final ctx = cast(_ctx, Context);
 		final selectUnits = getPlayerSelectionCardId(ctx, getSubKey(0));
 		for (unit in selectUnits) {
 			final mark = new Mark1('${id}_Mark1', gainCardId, gainValue);
@@ -127,7 +135,7 @@ private class Text1_1 extends CardText {
 	}
 }
 
-private class Mark1 extends Mark {
+private class Mark1 extends DefaultMark {
 	public function new(id:String, attachCardId:String, battlePoint:BattlePoint) {
 		super(id);
 		this.attachCardId = attachCardId;
@@ -137,7 +145,7 @@ private class Mark1 extends Mark {
 	@:s public var attachCardId:String;
 	@:s public var battlePoint:BattlePoint;
 
-	public override function getEffect(ctx:Context):Array<MarkEffect> {
+	public override function getEffect(_ctx:IContext):Array<MarkEffect> {
 		return [AddBattlePoint(attachCardId, battlePoint)];
 	}
 }

@@ -1,21 +1,8 @@
 package model.ver1.game.define;
 
-using Lambda;
-
-import haxe.EnumTools;
-import haxe.ds.Option;
-import haxe.ds.EnumValueMap;
-import tool.Table;
-import tool.Helper;
-import model.ver1.game.define.Timing;
 import model.ver1.game.define.ExecuteRuntime;
 import model.ver1.game.define.Mark;
-import model.ver1.game.define.Block;
 import model.ver1.game.define.Require;
-import model.ver1.game.define.Event;
-import model.ver1.game.entity.Flow;
-import model.ver1.game.define.Player;
-import model.ver1.game.entity.Context;
 
 // Context
 // Player
@@ -31,7 +18,6 @@ import model.ver1.game.entity.Context;
 // 	// 不支援巢狀typedef
 // 	@:s public var id:String;
 // }
-
 // function getOpponentPlayerId(playerId:String):String {
 // 	return playerId == PlayerId.A ? PlayerId.B : PlayerId.A;
 // }
@@ -96,47 +82,4 @@ enum RelativePlayer {
 	Opponent;
 }
 
-class CardText implements hxbit.Serializable {
-	public function new(id:String, description:String) {
-		this.id = id;
-		this.description = description;
-	}
-
-	@:s public var id:String;
-	@:s public var description:String;
-	@:s public var type = Use;
-	// << >>內文
-	@:s public var isSurroundedByArrows = false;
-
-	private function getSubKey(v:Int) {
-		return '${id}_${v}';
-	}
-
-	public function getEffect(ctx:Context, runtime:ExecuteRuntime):Array<MarkEffect> {
-		return [];
-	}
-
-	public function getRequires(ctx:Context, runtime:ExecuteRuntime):Array<Require> {
-		return [];
-	}
-
-	public function getRequires2(ctx:Context, runtime:ExecuteRuntime):Array<Require2> {
-		return [];
-	}
-
-	public function action(ctx:Context, runtime:ExecuteRuntime):Void {}
-
-	public function onEvent(ctx:Context, event:Event, runtime:ExecuteRuntime):Void {}
-}
-
-// CardProto
-
-class CardProto implements hxbit.Serializable {
-	public var category = CardCategory.Unit;
-
-	public function new() {}
-
-	public function getTexts(ctx:Context, runtime:ExecuteRuntime):Array<CardText> {
-		return [];
-	}
-}
+interface IContext {}

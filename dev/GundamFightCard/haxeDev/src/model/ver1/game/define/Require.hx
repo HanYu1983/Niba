@@ -4,7 +4,6 @@ import haxe.ds.Option;
 import model.ver1.game.define.Define;
 import model.ver1.game.define.ExecuteRuntime;
 import model.ver1.game.define.Timing;
-import model.ver1.game.entity.Context;
 
 class Require {
 	public function new(id:String, description:String) {
@@ -15,7 +14,7 @@ class Require {
 	public final id:String;
 	public final description:String;
 
-	public function action(ctx:Context, runtime:ExecuteRuntime):Void {}
+	public function action(_ctx:IContext, runtime:ExecuteRuntime):Void {}
 }
 
 // TODO: refactor
