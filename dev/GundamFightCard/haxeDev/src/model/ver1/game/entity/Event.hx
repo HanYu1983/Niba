@@ -1,4 +1,4 @@
-package model.ver1.game.define;
+package model.ver1.game.entity;
 
 import model.ver1.game.define.Define;
 

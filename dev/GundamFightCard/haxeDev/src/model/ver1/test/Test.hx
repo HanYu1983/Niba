@@ -6,7 +6,7 @@ import haxe.ds.Option;
 import tool.Table;
 import model.ver1.game.define.Define;
 import model.ver1.game.define.BaSyou;
-import model.ver1.game.define.ExecuteRuntime;
+import model.ver1.game.define.Runtime;
 import model.ver1.game.define.Mark;
 import model.ver1.game.define.Player;
 import model.ver1.game.entity.Alg;
@@ -39,7 +39,7 @@ function test_constantText() {
 	registerCardProto(ctx, "OnlyConstentTextCardProto", new OnlyConstentTextCardProto());
 	final card = new Card("0");
 	card.protoId = "AddTextCardProto";
-	final runtime = new DefaultExecuteRuntime(card.id, playerId);
+	final runtime = new DefaultRuntime(card.id, playerId);
 	var texts = getCurrentCardProto(ctx, card.protoId).getTexts(ctx, runtime);
 	if (texts.length != 1) {
 		throw "確定卡的內文有1個";

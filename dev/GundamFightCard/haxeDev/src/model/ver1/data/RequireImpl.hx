@@ -5,7 +5,7 @@ using Lambda;
 import haxe.Exception;
 import haxe.EnumTools;
 import model.ver1.game.define.Define;
-import model.ver1.game.define.ExecuteRuntime;
+import model.ver1.game.define.Runtime;
 import model.ver1.game.define.Timing;
 import model.ver1.game.define.Require;
 import model.ver1.game.define.CardText;
@@ -21,7 +21,7 @@ class RequirePhase extends Require {
 
 	public final timing:Timing;
 
-	public override function action(_ctx:IContext, runtime:ExecuteRuntime):Void {
+	public override function action(_ctx:IContext, runtime:Runtime):Void {
 		final ctx = cast(_ctx, Context);
 		if (EnumValueTools.equals(ctx.timing, timing) == false) {
 			throw new haxe.Exception('ctx.phase != this.phase: ${ctx.timing} != ${timing}');
@@ -29,7 +29,7 @@ class RequirePhase extends Require {
 	}
 }
 
-function getRequirePhase(ctx:Context, runtime:ExecuteRuntime, timing:Timing, id:String):Require2 {
+function getRequirePhase(ctx:Context, runtime:Runtime, timing:Timing, id:String):Require2 {
 	return {
 		id: id,
 		description: "RequirePhase",
@@ -43,7 +43,7 @@ function getRequirePhase(ctx:Context, runtime:ExecuteRuntime, timing:Timing, id:
 }
 
 class RequireGTap extends RequireUserSelectCard {
-	public function new(id:String, colors:Array<GColor>, ctx:Context, runtime:ExecuteRuntime) {
+	public function new(id:String, colors:Array<GColor>, ctx:Context, runtime:Runtime) {
 		super(id, "RequireGTap");
 		final responsePlayerId = runtime.getResponsePlayerId();
 		final gCardIds = getPlayerGCardIds(ctx, responsePlayerId);
@@ -63,7 +63,7 @@ class RequireGTap extends RequireUserSelectCard {
 		this.lengthInclude = [2];
 	}
 
-	public override function action(_ctx:IContext, runtime:ExecuteRuntime):Void {
+	public override function action(_ctx:IContext, runtime:Runtime):Void {
 		final ctx = cast(_ctx, Context);
 		final selectIds = ctx.memory.playerSelection.cardIds[id];
 		if (selectIds == null) {
@@ -75,7 +75,7 @@ class RequireGTap extends RequireUserSelectCard {
 	}
 }
 
-function getRequireGTap(ctx:Context, runtime:ExecuteRuntime, colors:Array<GColor>, id:String):Require2 {
+function getRequireGTap(ctx:Context, runtime:Runtime, colors:Array<GColor>, id:String):Require2 {
 	final responsePlayerId = runtime.getResponsePlayerId();
 	final gCardIds = getPlayerGCardIds(ctx, responsePlayerId);
 	final tips:Array<Tip<String>> = gCardIds.filter(id -> {
@@ -110,7 +110,7 @@ function getRequireGTap(ctx:Context, runtime:ExecuteRuntime, colors:Array<GColor
 	}
 }
 
-function getRequireOpponentUnitsEnterFieldThisTurn(ctx:Context, runtime:ExecuteRuntime, id:String):Require2 {
+function getRequireOpponentUnitsEnterFieldThisTurn(ctx:Context, runtime:Runtime, id:String):Require2 {
 	final thisCardId = runtime.getCardId();
 	final unitsEnterFieldThisTurn = getEnterFieldThisTurnCardIds(ctx).filter(cardId -> {
 		return isOpponentsCard(ctx, thisCardId, cardId);
@@ -146,7 +146,7 @@ class ForceTargetCard extends Require {
 	public final cardId:String;
 	public final selectKey:String;
 
-	public override function action(_ctx:IContext, runtime:ExecuteRuntime):Void {
+	public override function action(_ctx:IContext, runtime:Runtime):Void {
 		final ctx = cast(_ctx, Context);
 		final selectCard = ctx.table.cards[cardId];
 		if (selectCard == null) {
@@ -164,7 +164,7 @@ class RequireGCount extends Require {
 
 	public var count:Int;
 
-	public override function action(_ctx:IContext, runtime:ExecuteRuntime):Void {
+	public override function action(_ctx:IContext, runtime:Runtime):Void {
 		final ctx = cast(_ctx, Context);
 		final responsePlayerId = runtime.getResponsePlayerId();
 		final gCount = getPlayerGCountForPlay(ctx, responsePlayerId);
@@ -189,7 +189,7 @@ class RequireUserSelectCard extends RequireUserSelect<String> {
 		super(id, description);
 	}
 
-	public override function action(_ctx:IContext, runtime:ExecuteRuntime):Void {
+	public override function action(_ctx:IContext, runtime:Runtime):Void {
 		final ctx = cast(_ctx, Context);
 		final selection = getPlayerSelectionCardId(ctx, id);
 		if (lengthInclude.contains(selection.length) == false) {

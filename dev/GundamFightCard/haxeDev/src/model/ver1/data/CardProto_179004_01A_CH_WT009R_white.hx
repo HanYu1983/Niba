@@ -6,11 +6,11 @@ import tool.Table;
 import model.ver1.game.define.Define;
 import model.ver1.game.define.Timing;
 import model.ver1.game.define.BaSyou;
-import model.ver1.game.define.ExecuteRuntime;
+import model.ver1.game.define.Runtime;
 import model.ver1.game.define.Mark;
 import model.ver1.game.define.Block;
 import model.ver1.game.define.Require;
-import model.ver1.game.define.Event;
+import model.ver1.game.entity.Event;
 import model.ver1.game.define.Player;
 import model.ver1.game.define.CardText;
 import model.ver1.game.define.CardProto;
@@ -20,6 +20,7 @@ import model.ver1.game.component.CardProto;
 import model.ver1.data.RequireImpl;
 import model.ver1.game.entity.Context;
 import model.ver1.game.entity.DefaultMark;
+import model.ver1.game.entity.MarkEffect;
 
 // 179004_01A_CH_WT009R_white
 // ラクス・クライン
@@ -33,7 +34,7 @@ class CardProto_179004_01A_CH_WT009R_white extends CardProto {
 		this.category = Character;
 	}
 
-	public override function getTexts(_ctx:IContext, runtime:ExecuteRuntime):Array<CardText> {
+	public override function getTexts(_ctx:IContext, runtime:Runtime):Array<CardText> {
 		final ctx = cast(_ctx, Context);
 		final thisCardId = runtime.getCardId();
 		return [
@@ -49,10 +50,10 @@ private class Text1 extends CardText {
 		type = Automatic(Trigger);
 	}
 
-	public override function onEvent(_ctx:IContext, event:Event, runtime:ExecuteRuntime):Void {
+	public override function onEvent(_ctx:IContext, event:Any, runtime:Runtime):Void {
 		final ctx = cast(_ctx, Context);
 		final thisCardId = runtime.getCardId();
-		switch event {
+		switch cast(event: Event) {
 			case Gain(gainCardId, gainValue):
 				if (isMyCard(ctx, thisCardId, gainCardId)) {
 					final block = new Block('${id}_${Date.now()}', TextEffect(thisCardId, id), new Text1_1('${id}_Text1_1', gainCardId, gainValue));
@@ -74,7 +75,7 @@ private class Text1_1 extends CardText {
 	public var gainCardId:String;
 	public var gainValue:BattlePoint;
 
-	public override function getRequires(_ctx:IContext, runtime:ExecuteRuntime):Array<Require> {
+	public override function getRequires(_ctx:IContext, runtime:Runtime):Array<Require> {
 		final ctx = cast(_ctx, Context);
 		final thisCardId = runtime.getCardId();
 		final gainCardSetGroupsIds = getCardSetGroupCardIds(ctx, gainCardId);
@@ -86,7 +87,7 @@ private class Text1_1 extends CardText {
 		return [req];
 	}
 
-	public override function getRequires2(_ctx:IContext, runtime:ExecuteRuntime):Array<Require2> {
+	public override function getRequires2(_ctx:IContext, runtime:Runtime):Array<Require2> {
 		final ctx = cast(_ctx, Context);
 		final thisCardId = runtime.getCardId();
 		final gainCardSetGroupsIds = getCardSetGroupCardIds(ctx, gainCardId);
@@ -124,7 +125,7 @@ private class Text1_1 extends CardText {
 		];
 	}
 
-	public override function action(_ctx:IContext, runtime:ExecuteRuntime):Void {
+	public override function action(_ctx:IContext, runtime:Runtime):Void {
 		final ctx = cast(_ctx, Context);
 		final selectUnits = getPlayerSelectionCardId(ctx, getSubKey(0));
 		for (unit in selectUnits) {
@@ -145,7 +146,7 @@ private class Mark1 extends DefaultMark {
 	public var attachCardId:String;
 	public var battlePoint:BattlePoint;
 
-	public override function getEffect(_ctx:IContext):Array<MarkEffect> {
+	public override function getEffect(_ctx:IContext):Array<Any> {
 		return [AddBattlePoint(attachCardId, battlePoint)];
 	}
 }
@@ -185,7 +186,7 @@ function test() {
 		throw "堆疊中必須有一個效果";
 	}
 	final block = getTopCut(ctx)[0];
-	final runtime = new DefaultExecuteRuntime(card.id, player1);
+	final runtime = new DefaultRuntime(card.id, player1);
 	final requires = block.text.getRequires2(ctx, runtime);
 	if (requires.length != 1) {
 		throw "requires.length != 1";

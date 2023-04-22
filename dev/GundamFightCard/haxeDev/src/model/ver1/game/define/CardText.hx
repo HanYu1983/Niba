@@ -1,6 +1,6 @@
 package model.ver1.game.define;
 
-import model.ver1.game.define.ExecuteRuntime;
+import model.ver1.game.define.Runtime;
 import model.ver1.game.define.Mark;
 import model.ver1.game.define.Require;
 import model.ver1.game.define.Define;
@@ -21,19 +21,19 @@ class CardText {
 		return '${id}_${v}';
 	}
 
-	public function getEffect(_ctx:IContext, runtime:ExecuteRuntime):Array<MarkEffect> {
+	public function getEffect(_ctx:IContext, runtime:Runtime):Array<Any> {
 		return [];
 	}
 
-	public function getRequires(_ctx:IContext, runtime:ExecuteRuntime):Array<Require> {
+	public function getRequires(_ctx:IContext, runtime:Runtime):Array<Require> {
 		return [];
 	}
 
-	public function getRequires2(_ctx:IContext, runtime:ExecuteRuntime):Array<Require2> {
+	public function getRequires2(_ctx:IContext, runtime:Runtime):Array<Require2> {
 		return [];
 	}
 
-	public function action(_ctx:IContext, runtime:ExecuteRuntime):Void {}
+	public function action(_ctx:IContext, runtime:Runtime):Void {}
 
-	public function onEvent(_ctx:IContext, event:Event, runtime:ExecuteRuntime):Void {}
+	public function onEvent(_ctx:IContext, event:Any, runtime:Runtime):Void {}
 }

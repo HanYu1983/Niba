@@ -6,13 +6,14 @@ import haxe.ds.Option;
 import tool.Table;
 import model.ver1.game.define.Define;
 import model.ver1.game.define.BaSyou;
-import model.ver1.game.define.ExecuteRuntime;
+import model.ver1.game.define.Runtime;
 import model.ver1.game.define.Mark;
-import model.ver1.game.define.Event;
+import model.ver1.game.entity.Event;
 import model.ver1.game.define.CardText;
 import model.ver1.game.entity.Alg;
 import model.ver1.game.component.CardProto;
 import model.ver1.game.entity.Context;
+import model.ver1.game.entity.MarkEffect;
 
 function isContantType(text:CardText) {
 	return switch (text.type) {
@@ -26,7 +27,7 @@ function isContantType(text:CardText) {
 //
 // Runtime
 //
-function getRuntimeText(ctx:Context):Array<{runtime:ExecuteRuntime, text:CardText}> {
+function getRuntimeText(ctx:Context):Array<{runtime:Runtime, text:CardText}> {
 	// ver1 （沒使用）
 	// 手牌，hanger中的牌, 直接給它Play的權力
 	// ver2
@@ -46,7 +47,7 @@ function getRuntimeText(ctx:Context):Array<{runtime:ExecuteRuntime, text:CardTex
 	final playReturn = [
 		for (card in cardsInHandAndHanger) {
 			final responsePlayerId = getBaSyouControllerAndAssertExist(ctx, getCardBaSyouAndAssertExist(ctx, card.id));
-			final runtime:ExecuteRuntime = new DefaultExecuteRuntime(card.id, responsePlayerId);
+			final runtime:Runtime = new DefaultRuntime(card.id, responsePlayerId);
 			for (text in getCurrentCardProto(ctx, card.protoId).getTexts(ctx, runtime).filter(isContantType)) {
 				{
 					runtime: runtime,
@@ -71,7 +72,7 @@ function getRuntimeText(ctx:Context):Array<{runtime:ExecuteRuntime, text:CardTex
 	final specialReturn = [
 		for (card in cardsInGZone) {
 			final responsePlayerId = getBaSyouControllerAndAssertExist(ctx, getCardBaSyouAndAssertExist(ctx, card.id));
-			final runtime:ExecuteRuntime = new DefaultExecuteRuntime(card.id, responsePlayerId);
+			final runtime:Runtime = new DefaultRuntime(card.id, responsePlayerId);
 			for (text in getCurrentCardProto(ctx, card.protoId).getTexts(ctx, runtime).filter(text -> text.isSurroundedByArrows)) {
 				{
 					runtime: runtime,
@@ -96,7 +97,7 @@ function getRuntimeText(ctx:Context):Array<{runtime:ExecuteRuntime, text:CardTex
 	final specialReturn2 = [
 		for (card in cardsInJunkYard) {
 			final responsePlayerId = getBaSyouControllerAndAssertExist(ctx, getCardBaSyouAndAssertExist(ctx, card.id));
-			final runtime:ExecuteRuntime = new DefaultExecuteRuntime(card.id, responsePlayerId);
+			final runtime:Runtime = new DefaultRuntime(card.id, responsePlayerId);
 			for (text in getCurrentCardProto(ctx, card.protoId).getTexts(ctx, runtime).filter(isContantType)) {
 				{
 					runtime: runtime,
@@ -121,7 +122,7 @@ function getRuntimeText(ctx:Context):Array<{runtime:ExecuteRuntime, text:CardTex
 	final originReturn = [
 		for (card in cardsHasController) {
 			final responsePlayerId = getCardControllerAndAssertExist(ctx, card.id);
-			final runtime:ExecuteRuntime = new DefaultExecuteRuntime(card.id, responsePlayerId);
+			final runtime:Runtime = new DefaultRuntime(card.id, responsePlayerId);
 			for (text in getCurrentCardProto(ctx, card.protoId).getTexts(ctx, runtime)) {
 				{
 					runtime: runtime,
@@ -134,10 +135,10 @@ function getRuntimeText(ctx:Context):Array<{runtime:ExecuteRuntime, text:CardTex
 	final originMarkEffects = [
 		for (card in cardsHasController) {
 			final responsePlayerId = getCardControllerAndAssertExist(ctx, card.id);
-			final runtime:ExecuteRuntime = new DefaultExecuteRuntime(card.id, responsePlayerId);
+			final runtime:Runtime = new DefaultRuntime(card.id, responsePlayerId);
 			for (text in getCurrentCardProto(ctx, card.protoId).getTexts(ctx, runtime)) {
 				for (effect in text.getEffect(ctx, runtime)) {
-					effect;
+					cast (effect: MarkEffect);
 				}
 			}
 		}
@@ -161,7 +162,7 @@ function getRuntimeText(ctx:Context):Array<{runtime:ExecuteRuntime, text:CardTex
 				throw new haxe.Exception("addedReturn xxx");
 		}
 		final responsePlayerId = getCardControllerAndAssertExist(ctx, info.cardId);
-		final runtime:ExecuteRuntime = new DefaultExecuteRuntime(info.cardId, responsePlayerId);
+		final runtime:Runtime = new DefaultRuntime(info.cardId, responsePlayerId);
 		{
 			runtime: runtime,
 			text: info.text
@@ -171,7 +172,7 @@ function getRuntimeText(ctx:Context):Array<{runtime:ExecuteRuntime, text:CardTex
 	final globalMarkEffects = [
 		for (mark in ctx.marks)
 			for (effect in mark.getEffect(ctx))
-				effect
+				cast (effect: MarkEffect)
 	];
 	final globalAttachTextEffect = globalMarkEffects.filter(effect -> {
 		return switch effect {
@@ -192,7 +193,7 @@ function getRuntimeText(ctx:Context):Array<{runtime:ExecuteRuntime, text:CardTex
 				throw new haxe.Exception("globalAddedReturn xxx");
 		}
 		final responsePlayerId = getCardControllerAndAssertExist(ctx, info.cardId);
-		final runtime:ExecuteRuntime = new DefaultExecuteRuntime(info.cardId, responsePlayerId);
+		final runtime:Runtime = new DefaultRuntime(info.cardId, responsePlayerId);
 		{
 			runtime: runtime,
 			text: info.text
@@ -208,7 +209,7 @@ function getMarkEffects(ctx:Context):Array<MarkEffect> {
 			final text = info.text;
 			final effects = text.getEffect(ctx, runtime);
 			for (effect in effects) {
-				effect;
+				cast (effect: MarkEffect);
 			}
 		}
 	];
@@ -216,7 +217,7 @@ function getMarkEffects(ctx:Context):Array<MarkEffect> {
 		for (mark in ctx.marks) {
 			final effects = mark.getEffect(ctx);
 			for (effect in effects) {
-				effect;
+				cast (effect: MarkEffect);
 			}
 		}
 	].filter(e -> switch e {

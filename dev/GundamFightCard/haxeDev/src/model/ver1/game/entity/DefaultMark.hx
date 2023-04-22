@@ -2,7 +2,7 @@ package model.ver1.game.entity;
 
 import model.ver1.game.define.Define.IContext;
 import model.ver1.game.define.Timing;
-import model.ver1.game.define.Event;
+import model.ver1.game.entity.Event;
 import model.ver1.game.define.Mark;
 import model.ver1.game.entity.Context;
 
@@ -13,10 +13,10 @@ class DefaultMark extends Mark {
 
 	public var age:Null<Int>;
 
-	public override function onEvent(_ctx:IContext, event:Event):Void {
+	public override function onEvent(_ctx:IContext, event:Any):Void {
 		final ctx:Context = cast _ctx;
 		if (age != null) {
-			switch event {
+			switch cast(event: Event) {
 				case ChangePhase:
 					switch ctx.timing {
 						case Default(Battle, Some(End), End):

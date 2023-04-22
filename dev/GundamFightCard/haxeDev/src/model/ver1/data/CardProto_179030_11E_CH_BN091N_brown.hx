@@ -6,11 +6,11 @@ import tool.Table;
 import model.ver1.game.define.Define;
 import model.ver1.game.define.Timing;
 import model.ver1.game.define.BaSyou;
-import model.ver1.game.define.ExecuteRuntime;
+import model.ver1.game.define.Runtime;
 import model.ver1.game.define.Mark;
 import model.ver1.game.define.Block;
 import model.ver1.game.define.Require;
-import model.ver1.game.define.Event;
+import model.ver1.game.entity.Event;
 import model.ver1.game.define.Player;
 import model.ver1.game.define.CardText;
 import model.ver1.game.define.CardProto;
@@ -32,7 +32,7 @@ class CardProto_179030_11E_CH_BN091N_brown extends CardProto {
 		this.category = Character;
 	}
 
-	public override function getTexts(_ctx:IContext, runtime:ExecuteRuntime):Array<CardText> {
+	public override function getTexts(_ctx:IContext, runtime:Runtime):Array<CardText> {
 		return [
 			new PlayerPlayCard('${runtime.getCardId()}_PlayerPlayCard'),
 			new Text1('${runtime.getCardId()}_Text1')
@@ -40,7 +40,7 @@ class CardProto_179030_11E_CH_BN091N_brown extends CardProto {
 	}
 }
 
-function getOpponentG(_ctx:IContext, runtime:ExecuteRuntime):Array<String> {
+function getOpponentG(_ctx:IContext, runtime:Runtime):Array<String> {
 	final ctx = cast(_ctx, Context);
 	final responsePlayerId = runtime.getResponsePlayerId();
 	final opponentPlayerId = ~(responsePlayerId);
@@ -62,12 +62,12 @@ private class Text1 extends CardText {
 		type = Automatic(Trigger);
 	}
 
-	public override function onEvent(_ctx:IContext, event:Event, runtime:ExecuteRuntime):Void {
+	public override function onEvent(_ctx:IContext, event:Any, runtime:Runtime):Void {
 		final ctx = cast(_ctx, Context);
 		final thisCardId = runtime.getCardId();
 		final responsePlayerId = runtime.getResponsePlayerId();
 		final opponentPlayerId = ~(responsePlayerId);
-		switch event {
+		switch cast(event: Event) {
 			case CardRoll(rollCardId):
 				if (rollCardId == thisCardId) {
 					if (getOpponentG(ctx, runtime).length >= 1) {
@@ -86,7 +86,7 @@ private class Process1 extends CardText {
 		super(id, "敵軍G１枚をロールする。その場合、このセットグループは、このターンと次のターン、リロールできない。");
 	}
 
-	public override function getRequires2(_ctx:IContext, runtime:ExecuteRuntime):Array<Require2> {
+	public override function getRequires2(_ctx:IContext, runtime:Runtime):Array<Require2> {
 		final ctx = cast(_ctx, Context);
 		final tips:Array<Tip<String>> = getOpponentG(ctx, runtime).map(i -> {
 			return {
@@ -109,7 +109,7 @@ private class Process1 extends CardText {
 		];
 	}
 
-	public override function action(_ctx:IContext, runtime:ExecuteRuntime):Void {
+	public override function action(_ctx:IContext, runtime:Runtime):Void {
 		final ctx = cast(_ctx, Context);
 		final thisCardId = runtime.getCardId();
 		for (cardId in getThisCardSetGroupCardIds(ctx, thisCardId)) {
@@ -148,7 +148,7 @@ function test() {
 		throw "堆疊中必須有一個效果";
 	}
 	final block = getTopCut(ctx)[0];
-	final runtime = new DefaultExecuteRuntime(card.id, player1);
+	final runtime = new DefaultRuntime(card.id, player1);
 	final requires = block.text.getRequires2(ctx, runtime);
 	if (requires.length != 1) {
 		throw "requires.length != 1";

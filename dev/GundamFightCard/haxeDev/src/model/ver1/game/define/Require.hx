@@ -2,7 +2,7 @@ package model.ver1.game.define;
 
 import haxe.ds.Option;
 import model.ver1.game.define.Define;
-import model.ver1.game.define.ExecuteRuntime;
+import model.ver1.game.define.Runtime;
 import model.ver1.game.define.Timing;
 
 class Require {
@@ -14,7 +14,7 @@ class Require {
 	public final id:String;
 	public final description:String;
 
-	public function action(_ctx:IContext, runtime:ExecuteRuntime):Void {}
+	public function action(_ctx:IContext, runtime:Runtime):Void {}
 }
 
 // TODO: refactor

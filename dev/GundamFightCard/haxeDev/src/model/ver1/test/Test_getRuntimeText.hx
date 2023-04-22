@@ -6,7 +6,7 @@ import haxe.ds.Option;
 import tool.Table;
 import model.ver1.game.define.Define;
 import model.ver1.game.define.BaSyou;
-import model.ver1.game.define.ExecuteRuntime;
+import model.ver1.game.define.Runtime;
 import model.ver1.game.define.Player;
 import model.ver1.game.entity.Alg;
 import model.ver1.game.component.CardProto;

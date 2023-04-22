@@ -5,7 +5,7 @@ using Lambda;
 import haxe.ds.Option;
 import model.ver1.game.define.Define;
 import model.ver1.game.define.Block;
-import model.ver1.game.define.ExecuteRuntime;
+import model.ver1.game.define.Runtime;
 
 interface IBlockComponent {
 	var cuts:Array<Array<Block>>;

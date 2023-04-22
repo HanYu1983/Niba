@@ -1,6 +1,6 @@
 package model.ver1.game.define;
 
-import model.ver1.game.define.ExecuteRuntime;
+import model.ver1.game.define.Runtime;
 import model.ver1.game.define.Mark;
 import model.ver1.game.define.Require;
 import model.ver1.game.define.Define;
@@ -11,7 +11,7 @@ class CardProto {
 
 	public function new() {}
 
-	public function getTexts(_ctx:IContext, runtime:ExecuteRuntime):Array<CardText> {
+	public function getTexts(_ctx:IContext, runtime:Runtime):Array<CardText> {
 		return [];
 	}
 }

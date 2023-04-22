@@ -3,12 +3,12 @@ package model.ver1.game.define;
 import model.ver1.game.define.Define;
 import model.ver1.game.define.Player;
 
-interface ExecuteRuntime {
+interface Runtime {
 	function getCardId():String;
 	function getResponsePlayerId():PlayerId;
 }
 
-class AbstractExecuteRuntime implements ExecuteRuntime {
+class AbstractRuntime implements Runtime {
 	public function new() {}
 
 	public function getCardId():String {
@@ -20,7 +20,7 @@ class AbstractExecuteRuntime implements ExecuteRuntime {
 	}
 }
 
-class SystemExecuteRuntime extends AbstractExecuteRuntime {
+class SystemRuntime extends AbstractRuntime {
 	public function new(responsePlayerId:String) {
 		super();
 		this.responsePlayerId = responsePlayerId;
@@ -33,7 +33,7 @@ class SystemExecuteRuntime extends AbstractExecuteRuntime {
 	}
 }
 
-class DefaultExecuteRuntime extends AbstractExecuteRuntime {
+class DefaultRuntime extends AbstractRuntime {
 	public function new(cardId:String, responsePlayerId:PlayerId) {
 		super();
 		this.cardId = cardId;

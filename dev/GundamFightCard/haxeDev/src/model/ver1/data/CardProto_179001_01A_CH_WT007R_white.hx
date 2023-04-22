@@ -4,22 +4,23 @@ import haxe.Exception;
 import tool.Table;
 import tool.Helper;
 import model.ver1.game.define.Define;
-import model.ver1.game.define.ExecuteRuntime;
+import model.ver1.game.define.Runtime;
 import model.ver1.game.define.Mark;
 import model.ver1.game.define.Timing;
 import model.ver1.game.define.Block;
 import model.ver1.game.define.Require;
-import model.ver1.game.define.Event;
+import model.ver1.game.entity.Event;
 import model.ver1.game.define.Player;
 import model.ver1.game.define.CardText;
 import model.ver1.game.define.CardProto;
 import model.ver1.game.entity.Alg;
 import model.ver1.game.entity.Runtime;
-import model.ver1.game.define.Event;
+import model.ver1.game.entity.Event;
 import model.ver1.data.RequireImpl;
 import model.ver1.data.PlayerPlayCard;
 import model.ver1.game.entity.Context;
 import model.ver1.game.entity.DefaultMark;
+import model.ver1.game.entity.MarkEffect;
 
 // 179001_01A_CH_WT007R_white
 // キラ・ヤマト
@@ -30,7 +31,7 @@ class CardProto_179001_01A_CH_WT007R_white extends CardProto {
 		super();
 	}
 
-	public override function getTexts(_ctx:IContext, runtime:ExecuteRuntime):Array<CardText> {
+	public override function getTexts(_ctx:IContext, runtime:Runtime):Array<CardText> {
 		return [
 			new PlayerPlayCard('${runtime.getCardId()}_PlayerPlayCard'),
 			new Text1('${runtime.getCardId()}_Text1')
@@ -44,7 +45,7 @@ private class Text1 extends CardText {
 		type = Use;
 	}
 
-	public override function getRequires(_ctx:IContext, runtime:ExecuteRuntime):Array<Require> {
+	public override function getRequires(_ctx:IContext, runtime:Runtime):Array<Require> {
 		final ctx = cast(_ctx, Context);
 		final unit = switch getUnitOfSetGroup(ctx, runtime.getCardId()) {
 			case Some(cardId):
@@ -59,7 +60,7 @@ private class Text1 extends CardText {
 		];
 	}
 
-	public override function action(_ctx:IContext, runtime:ExecuteRuntime):Void {
+	public override function action(_ctx:IContext, runtime:Runtime):Void {
 		final ctx = cast(_ctx, Context);
 		final selectUnits = getPlayerSelectionCardId(ctx, "このセットグループのユニット");
 		for (unit in selectUnits) {
@@ -77,13 +78,13 @@ private class Mark1 extends DefaultMark {
 
 	public var attachCardId:String;
 
-	public override function getEffect(_ctx:IContext):Array<MarkEffect> {
+	public override function getEffect(_ctx:IContext):Array<Any> {
 		return [AttackSpeed(attachCardId, 1)];
 	}
 
-	public override function onEvent(_ctx:IContext, event:Event):Void {
+	public override function onEvent(_ctx:IContext, event:Any):Void {
 		final ctx = cast(_ctx, Context);
-		switch event {
+		switch cast(event: Event) {
 			case ChangePhase:
 				switch ctx.timing {
 					case Default(Battle, Some(End), End):

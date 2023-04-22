@@ -6,11 +6,11 @@ import tool.Table;
 import model.ver1.game.define.Define;
 import model.ver1.game.define.Timing;
 import model.ver1.game.define.BaSyou;
-import model.ver1.game.define.ExecuteRuntime;
+import model.ver1.game.define.Runtime;
 import model.ver1.game.define.Mark;
 import model.ver1.game.define.Block;
 import model.ver1.game.define.Require;
-import model.ver1.game.define.Event;
+import model.ver1.game.entity.Event;
 import model.ver1.game.define.Player;
 import model.ver1.game.define.CardText;
 import model.ver1.game.define.CardProto;
@@ -34,7 +34,7 @@ class CardProto_179030_11E_U_VT186R_purple extends CardProto {
 		this.category = Unit;
 	}
 
-	public override function getTexts(_ctx:IContext, runtime:ExecuteRuntime):Array<CardText> {
+	public override function getTexts(_ctx:IContext, runtime:Runtime):Array<CardText> {
 		return [
 			new PlayerPlayCard('CardProto_179030_11E_U_VT186R_purple_1'),
 			new Text1('CardProto_179030_11E_U_VT186R_purple_2')
@@ -48,10 +48,10 @@ private class Text1 extends CardText {
 		type = Automatic(Trigger);
 	}
 
-	public override function onEvent(_ctx:IContext, event:Event, runtime:ExecuteRuntime):Void {
+	public override function onEvent(_ctx:IContext, event:Any, runtime:Runtime):Void {
 		final ctx = cast(_ctx, Context);
 		final thisCardId = runtime.getCardId();
-		switch event {
+		switch cast(event: Event) {
 			case CardEnterField(enterFieldCardId):
 				if (enterFieldCardId == thisCardId) {
 					final block = new Block(getSubKey(0), TextEffect(thisCardId, id), new Process1('${id}_Process1'));
@@ -64,7 +64,7 @@ private class Text1 extends CardText {
 }
 
 private class RequireOpponentUnitsEnterFieldThisTurn extends RequireUserSelectCard {
-	public function new(id:String, ctx:Context, runtime:ExecuteRuntime) {
+	public function new(id:String, ctx:Context, runtime:Runtime) {
 		super(id, "このターン中に場に出た敵軍ユニット１枚を");
 		final thisCardId = runtime.getCardId();
 		final unitsEnterFieldThisTurn = getEnterFieldThisTurnCardIds(ctx).filter(cardId -> {
@@ -86,17 +86,17 @@ private class Process1 extends CardText {
 		super(id, "このターン中に場に出た敵軍ユニット１枚を、持ち主の手札に移す。");
 	}
 
-	public override function getRequires(_ctx:IContext, runtime:ExecuteRuntime):Array<Require> {
+	public override function getRequires(_ctx:IContext, runtime:Runtime):Array<Require> {
 		final ctx = cast(_ctx, Context);
 		return [new RequireOpponentUnitsEnterFieldThisTurn(getSubKey(0), ctx, runtime)];
 	}
 
-	public override function getRequires2(_ctx:IContext, runtime:ExecuteRuntime):Array<Require2> {
+	public override function getRequires2(_ctx:IContext, runtime:Runtime):Array<Require2> {
 		final ctx = cast(_ctx, Context);
 		return [getRequireOpponentUnitsEnterFieldThisTurn(ctx, runtime, getSubKey(0))];
 	}
 
-	public override function action(_ctx:IContext, runtime:ExecuteRuntime):Void {
+	public override function action(_ctx:IContext, runtime:Runtime):Void {
 		final ctx = cast(_ctx, Context);
 		final cardId = runtime.getCardId();
 		final selectCardIds = getPlayerSelectionCardId(ctx, getSubKey(0));
@@ -135,7 +135,7 @@ function test() {
 		throw "堆疊中必須有一個效果";
 	}
 	final block = getTopCut(ctx)[0];
-	final runtime = new DefaultExecuteRuntime(card.id, player1);
+	final runtime = new DefaultRuntime(card.id, player1);
 	final requires = block.text.getRequires2(ctx, runtime);
 	if (requires.length != 1) {
 		throw "requires.length != 1";

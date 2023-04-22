@@ -1,27 +1,8 @@
 package model.ver1.game.define;
 
-import model.ver1.game.define.ExecuteRuntime;
+import model.ver1.game.define.Runtime;
 import model.ver1.game.define.Mark;
 import model.ver1.game.define.Require;
-
-// Context
-// Player
-// 實作hxbit.Serializable這個介面後並使用了@:s
-// @:nullSafety就會出錯
-// hxbit.Serializable不支援EnumValueMap
-// class Player {
-// 	public function new(id:String) {
-// 		this.id = id;
-// 	}
-// 	// @:s不能作用在interface
-// 	// 不能用final
-// 	// 不支援巢狀typedef
-// 	public var id:String;
-// }
-// function getOpponentPlayerId(playerId:String):String {
-// 	return playerId == PlayerId.A ? PlayerId.B : PlayerId.A;
-// }
-// General
 
 enum TextTypeAutomaticType {
 	// 常駐

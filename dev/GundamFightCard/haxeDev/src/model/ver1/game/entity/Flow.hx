@@ -4,8 +4,8 @@ import haxe.ds.Option;
 import model.ver1.game.define.Define;
 import model.ver1.game.define.Player;
 import model.ver1.game.define.Block;
-import model.ver1.game.define.Event;
-import model.ver1.game.define.ExecuteRuntime;
+import model.ver1.game.entity.Event;
+import model.ver1.game.define.Runtime;
 import model.ver1.game.component.Block;
 import model.ver1.game.entity.Alg;
 import model.ver1.game.entity.Context;
@@ -93,21 +93,21 @@ enum Flow {
 	Default(type:FlowType, description:String);
 }
 
-function getBlockRuntime(ctx:Context, blockId:String):ExecuteRuntime {
+function getBlockRuntime(ctx:Context, blockId:String):Runtime {
 	final block = getBlock(ctx, blockId);
 	return switch block.cause {
 		case System(respnosePlayerId):
-			new SystemExecuteRuntime(respnosePlayerId);
+			new SystemRuntime(respnosePlayerId);
 		case PlayCard(playCardPlayerId, cardId):
-			new DefaultExecuteRuntime(cardId, playCardPlayerId);
+			new DefaultRuntime(cardId, playCardPlayerId);
 		case PlayText(cardId, textId):
 			final responsePlayerId = getCardControllerAndAssertExist(ctx, cardId);
-			new DefaultExecuteRuntime(cardId, responsePlayerId);
+			new DefaultRuntime(cardId, responsePlayerId);
 		case TextEffect(cardId, textId):
 			final responsePlayerId = getCardControllerAndAssertExist(ctx, cardId);
-			new DefaultExecuteRuntime(cardId, responsePlayerId);
+			new DefaultRuntime(cardId, responsePlayerId);
 		case _:
-			new AbstractExecuteRuntime();
+			new AbstractRuntime();
 	}
 }
 

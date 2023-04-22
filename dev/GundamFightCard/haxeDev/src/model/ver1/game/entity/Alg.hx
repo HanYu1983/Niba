@@ -6,12 +6,13 @@ import haxe.ds.Option;
 import tool.Table;
 import model.ver1.game.define.Define;
 import model.ver1.game.define.BaSyou;
-import model.ver1.game.define.ExecuteRuntime;
+import model.ver1.game.define.Runtime;
 import model.ver1.game.define.Mark;
-import model.ver1.game.define.Event;
+import model.ver1.game.entity.Event;
 import model.ver1.game.entity.Runtime;
 import model.ver1.game.component.CardProto;
 import model.ver1.game.entity.Context;
+import model.ver1.game.entity.MarkEffect;
 //
 // General
 //
@@ -231,7 +232,7 @@ function getAddBattlePoint(ctx:Context) {
 			final text = info.text;
 			final effects = text.getEffect(ctx, runtime);
 			for (effect in effects) {
-				switch effect {
+				switch cast (effect: MarkEffect) {
 					case AddBattlePoint(cardId, battlePoint):
 						{
 							cardId: cardId,
@@ -254,7 +255,7 @@ function getAttackSpeed(ctx:Context) {
 			final text = info.text;
 			final effects = text.getEffect(ctx, runtime);
 			for (effect in effects) {
-				switch effect {
+				switch cast (effect: MarkEffect) {
 					case AttackSpeed(cardId, speed):
 						{
 							cardId: cardId,

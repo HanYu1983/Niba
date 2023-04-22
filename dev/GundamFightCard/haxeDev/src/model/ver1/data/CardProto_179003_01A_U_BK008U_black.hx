@@ -3,7 +3,7 @@ package model.ver1.data;
 import haxe.Exception;
 import tool.Table;
 import model.ver1.game.define.Define;
-import model.ver1.game.define.ExecuteRuntime;
+import model.ver1.game.define.Runtime;
 import model.ver1.game.define.Mark;
 import model.ver1.game.define.Timing;
 import model.ver1.game.define.Block;
@@ -28,7 +28,7 @@ class CardProto_179003_01A_U_BK008U_black extends CardProto {
 		super();
 	}
 
-	public override function getTexts(_ctx:IContext, runtime:ExecuteRuntime):Array<CardText> {
+	public override function getTexts(_ctx:IContext, runtime:Runtime):Array<CardText> {
 		final ctx = cast(_ctx, Context);
 		return [
 			new PlayerPlayCard('${runtime.getCardId()}_PlayerPlayCard'),
@@ -42,7 +42,7 @@ private class RequireThisCardDestroyByBattleDamage extends Require {
 		super(id, "このカードが戦闘ダメージで破壊されている場合");
 	}
 
-	public override function action(_ctx:IContext, runtime:ExecuteRuntime):Void {
+	public override function action(_ctx:IContext, runtime:Runtime):Void {
 		final ctx = cast(_ctx, Context);
 		if (isDestroyNow(ctx, runtime.getCardId(), {isByBattleDamage: true}) == false) {
 			throw new haxe.Exception("這張卡必須是破壞中的狀態");
@@ -56,7 +56,7 @@ private class Text1 extends CardText {
 		type = Use;
 	}
 
-	public override function getRequires(_ctx:IContext, runtime:ExecuteRuntime):Array<Require> {
+	public override function getRequires(_ctx:IContext, runtime:Runtime):Array<Require> {
 		final ctx = cast(_ctx, Context);
 		return [
 			// TODO: timing list
@@ -66,7 +66,7 @@ private class Text1 extends CardText {
 		];
 	}
 
-	public override function action(_ctx:IContext, runtime:ExecuteRuntime):Void {
+	public override function action(_ctx:IContext, runtime:Runtime):Void {
 		final ctx = cast(_ctx, Context);
 		final cardId = runtime.getCardId();
 		final block = new Block('${id}_${Date.now()}', PlayText(cardId, id), new Text2('${id}_Text2'));
@@ -79,7 +79,7 @@ private class Text2 extends CardText {
 		super(id, "このカードを、破壊を無効にした上で自軍Gにする。");
 	}
 
-	public override function action(_ctx:IContext, runtime:ExecuteRuntime):Void {
+	public override function action(_ctx:IContext, runtime:Runtime):Void {
 		final ctx = cast(_ctx, Context);
 		final cardId = runtime.getCardId();
 		removeDestroyEffect(ctx, cardId);
