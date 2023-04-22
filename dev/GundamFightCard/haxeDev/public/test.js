@@ -2630,7 +2630,7 @@ var model_ver1_game_Game = function() {
 $hxClasses["model.ver1.game.Game"] = model_ver1_game_Game;
 model_ver1_game_Game.__name__ = "model.ver1.game.Game";
 model_ver1_game_Game.ofMemonto = function(memonto) {
-	return tool_Helper_ofMemonto(memonto,model_ver1_game_Game);
+	return tool_Helper_ofMemonto(memonto);
 };
 model_ver1_game_Game.prototype = {
 	getMemonto: function() {
@@ -4562,7 +4562,7 @@ function tool_Helper_getMemonto(obj) {
 	haxe_Serializer.USE_CACHE = true;
 	return haxe_Serializer.run(obj);
 }
-function tool_Helper_ofMemonto(memonto,clz) {
+function tool_Helper_ofMemonto(memonto) {
 	return haxe_Unserializer.run(memonto);
 }
 var tool_Card = function(id) {

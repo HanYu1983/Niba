@@ -23,7 +23,7 @@ class Game {
 	}
 
 	public static function ofMemonto(memonto:String):Game {
-		return tool.Helper.ofMemonto(memonto, Game);
+		return tool.Helper.ofMemonto(memonto);
 	}
 }
 
