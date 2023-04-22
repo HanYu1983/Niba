@@ -99,6 +99,7 @@ private class Process1 extends CardText {
 				id: getSubKey(0),
 				description: "敵軍G１枚をロールする。",
 				type: SelectCard(tips, [1]),
+				player: You,
 				action: () -> {
 					final selectUnits = getPlayerSelectionCardId(ctx, getSubKey(0));
 					for (unit in selectUnits) {

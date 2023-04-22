@@ -34,5 +34,6 @@ typedef Require2 = {
 	id:String,
 	description:String,
 	type:RequireType,
+	player:RelativePlayer,
 	action:() -> Void,
 }
