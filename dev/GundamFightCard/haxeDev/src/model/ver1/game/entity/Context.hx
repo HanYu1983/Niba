@@ -12,6 +12,8 @@ import model.ver1.game.component.CutComponent;
 import model.ver1.game.component.BlockComponent;
 import model.ver1.game.component.CardProtoPoolComponent;
 import model.ver1.game.component.SelectionComponent;
+import model.ver1.game.component.MarkComponent;
+import model.ver1.game.component.TimingComponent;
 
 enum FlowMemoryState {
 	PrepareDeck;
@@ -32,7 +34,7 @@ typedef FlowMemory = {
 	msgs:Array<Message>,
 }
 
-class Context implements ICutComponent implements IBlockComponent implements ICardProtoPoolComponent implements ISelectionComponent{
+class Context implements ICutComponent implements IBlockComponent implements ICardProtoPoolComponent implements ISelectionComponent implements IMarkComponent implements ITimingComponent{
 	public function new() {}
 
 	public var playersOrder:Array<String> = [];
@@ -55,4 +57,3 @@ class Context implements ICutComponent implements IBlockComponent implements ICa
 	};
 	public var activePlayerId:String;
 }
-

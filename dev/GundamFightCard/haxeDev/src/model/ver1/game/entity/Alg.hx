@@ -14,6 +14,7 @@ import model.ver1.game.entity.Context;
 import model.ver1.game.entity.MarkEffect;
 import model.ver1.game.component.CardProtoPoolComponent;
 import model.ver1.game.component.BlockComponent;
+import model.ver1.game.component.MarkComponent;
 
 //
 // General
@@ -64,7 +65,8 @@ function sendEvent(ctx:Context, evt:Event):Void {
 		final text = info.text;
 		text.onEvent(ctx, evt, runtime);
 	}
-	for (mark in ctx.marks) {
+
+	for (mark in getMarks(ctx)) {
 		mark.onEvent(ctx, evt);
 	}
 }

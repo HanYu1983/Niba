@@ -5,6 +5,7 @@ import tool.Helper;
 import tool.Table;
 import model.ver1.game.define.Define;
 import model.ver1.game.define.Timing;
+import model.ver1.game.component.TimingComponent;
 import model.ver1.game.entity.Context;
 
 // switch Type.typeof(markEffect) {
@@ -35,9 +36,9 @@ function test() {
 	card2.protoId = "179003_01A_U_BK008U_black";
 	game.ctx.table.cards[card1.id] = card1;
 	game.ctx.table.cards[card2.id] = card2;
-	game.ctx.timing = TIMINGS[2];
+	setTimging(game.ctx, TIMINGS[2]);
 	final loadGame = Game.ofMemonto(game.getMemonto());
-	switch game.ctx.timing {
+	switch getTiming(game.ctx) {
 		case Default(Reroll, None, Free2):
 		default:
 			throw new haxe.Exception("timing not right");

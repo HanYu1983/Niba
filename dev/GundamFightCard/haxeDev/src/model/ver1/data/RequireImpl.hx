@@ -11,6 +11,7 @@ import model.ver1.game.define.Require;
 import model.ver1.game.define.CardText;
 import model.ver1.game.define.CardProto;
 import model.ver1.game.component.SelectionComponent;
+import model.ver1.game.component.TimingComponent;
 import model.ver1.game.entity.Alg;
 import model.ver1.game.entity.Context;
 
@@ -24,7 +25,7 @@ class RequirePhase extends Require {
 
 	public override function action(_ctx:Any, runtime:Runtime):Void {
 		final ctx = cast(_ctx, Context);
-		if (EnumValueTools.equals(ctx.timing, timing) == false) {
+		if (isTiming(ctx, timing) == false) {
 			throw new haxe.Exception('ctx.phase != this.phase: ${ctx.timing} != ${timing}');
 		}
 	}
@@ -37,7 +38,7 @@ function getRequirePhase(ctx:Context, runtime:Runtime, timing:Timing, id:String)
 		type: Pending,
 		player: You,
 		action: () -> {
-			if (EnumValueTools.equals(ctx.timing, timing) == false) {
+			if (isTiming(ctx, timing) == false) {
 				throw new haxe.Exception('ctx.phase != this.phase: ${ctx.timing} != ${timing}');
 			}
 		},

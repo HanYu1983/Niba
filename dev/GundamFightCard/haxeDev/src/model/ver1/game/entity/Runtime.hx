@@ -8,10 +8,11 @@ import model.ver1.game.define.Define;
 import model.ver1.game.define.BaSyou;
 import model.ver1.game.define.Runtime;
 import model.ver1.game.define.Mark;
-import model.ver1.game.entity.Event;
 import model.ver1.game.define.CardText;
-import model.ver1.game.entity.Alg;
 import model.ver1.game.component.CardProtoPoolComponent;
+import model.ver1.game.component.MarkComponent;
+import model.ver1.game.entity.Alg;
+import model.ver1.game.entity.Event;
 import model.ver1.game.entity.Context;
 import model.ver1.game.entity.MarkEffect;
 
@@ -138,7 +139,7 @@ function getRuntimeText(ctx:Context):Array<{runtime:Runtime, text:CardText}> {
 			final runtime:Runtime = new DefaultRuntime(card.id, responsePlayerId);
 			for (text in getCurrentCardProto(ctx, card.protoId).getTexts(ctx, runtime)) {
 				for (effect in text.getEffect(ctx, runtime)) {
-					cast (effect: MarkEffect);
+					cast(effect : MarkEffect);
 				}
 			}
 		}
@@ -170,9 +171,9 @@ function getRuntimeText(ctx:Context):Array<{runtime:Runtime, text:CardText}> {
 	});
 	// 計算效果新增內文
 	final globalMarkEffects = [
-		for (mark in ctx.marks)
+		for (mark in getMarks(ctx))
 			for (effect in mark.getEffect(ctx))
-				cast (effect: MarkEffect)
+				cast(effect : MarkEffect)
 	];
 	final globalAttachTextEffect = globalMarkEffects.filter(effect -> {
 		return switch effect {
@@ -209,15 +210,15 @@ function getMarkEffects(ctx:Context):Array<MarkEffect> {
 			final text = info.text;
 			final effects = text.getEffect(ctx, runtime);
 			for (effect in effects) {
-				cast (effect: MarkEffect);
+				cast(effect : MarkEffect);
 			}
 		}
 	];
 	final markEffects = [
-		for (mark in ctx.marks) {
+		for (mark in getMarks(ctx)) {
 			final effects = mark.getEffect(ctx);
 			for (effect in effects) {
-				cast (effect: MarkEffect);
+				cast(effect : MarkEffect);
 			}
 		}
 	].filter(e -> switch e {

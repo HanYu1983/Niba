@@ -7,6 +7,7 @@ import model.ver1.game.define.Block;
 import model.ver1.game.entity.Event;
 import model.ver1.game.define.Runtime;
 import model.ver1.game.component.BlockComponent;
+import model.ver1.game.component.TimingComponent;
 import model.ver1.game.entity.Alg;
 import model.ver1.game.entity.Context;
 
@@ -240,7 +241,7 @@ function queryFlow(ctx:Context, playerId:PlayerId):Array<Flow> {
 	// 處理自由時間，必須雙方都宣告結束才能進行到下一步
 	{
 		final myCommandList = getClientCommand(ctx, playerId);
-		switch ctx.timing {
+		switch getTiming(ctx) {
 			case Default(_, _, Free1 | Free2):
 				final isAllPassPhase = ctx.flowMemory.hasPlayerPassPhase[PlayerId.A] && ctx.flowMemory.hasPlayerPassPhase[PlayerId.B];
 				if (isAllPassPhase == false) {
@@ -265,7 +266,7 @@ function queryFlow(ctx:Context, playerId:PlayerId):Array<Flow> {
 		if (playerId != ctx.activePlayerId) {
 			return [Default(FlowWaitPlayer, "等待伺服器處理")];
 		}
-		switch ctx.timing {
+		switch getTiming(ctx) {
 			case Default(Draw, None, Rule):
 				if (ctx.flowMemory.hasTriggerEvent) {
 					return [Default(FlowNextTiming, "")];

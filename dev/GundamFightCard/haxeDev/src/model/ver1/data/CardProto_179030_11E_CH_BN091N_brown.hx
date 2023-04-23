@@ -16,6 +16,8 @@ import model.ver1.game.define.CardText;
 import model.ver1.game.define.CardProto;
 import model.ver1.game.component.CutComponent;
 import model.ver1.game.component.SelectionComponent;
+import model.ver1.game.component.MarkComponent;
+import model.ver1.game.component.TimingComponent;
 import model.ver1.game.entity.Context;
 import model.ver1.game.entity.DefaultMark;
 import model.ver1.game.entity.Alg;
@@ -119,7 +121,7 @@ private class Process1 extends CardText {
 			final markId = '${id}_${cardId}';
 			final mark = new CanNotRerollMark(markId, cardId);
 			mark.age = 2;
-			ctx.marks[mark.id] = mark;
+			addMark(ctx, mark);
 		}
 	}
 }
@@ -175,18 +177,18 @@ function test() {
 	}
 	trace("解決效果");
 	block.text.action(ctx, runtime);
-	if ([for (mark in ctx.marks) mark].length != 1) {
+	if (getMarks(ctx).length != 1) {
 		throw "必須有不能重置效果";
 	}
 	trace("結束一個turn");
-	ctx.timing = Default(Battle, Some(End), End);
+	setTimging(ctx, Default(Battle, Some(End), End));
 	sendEvent(ctx, ChangePhase);
-	if ([for (mark in ctx.marks) mark].length != 1) {
+	if (getMarks(ctx).length != 1) {
 		throw "必須有不能重置效果";
 	}
 	trace("再結束一個turn");
 	sendEvent(ctx, ChangePhase);
-	if ([for (mark in ctx.marks) mark].length != 0) {
+	if (getMarks(ctx).length != 0) {
 		throw "不能重置效果必須被移除";
 	}
 }

@@ -10,18 +10,20 @@ import model.ver1.game.define.Runtime;
 import model.ver1.game.define.Mark;
 import model.ver1.game.define.Block;
 import model.ver1.game.define.Require;
-import model.ver1.game.entity.Event;
 import model.ver1.game.define.Player;
 import model.ver1.game.define.CardText;
 import model.ver1.game.define.CardProto;
-import model.ver1.game.entity.Alg;
 import model.ver1.game.component.CutComponent;
 import model.ver1.game.component.CardProtoPoolComponent;
 import model.ver1.game.component.SelectionComponent;
-import model.ver1.data.RequireImpl;
+import model.ver1.game.component.MarkComponent;
+import model.ver1.game.component.TimingComponent;
+import model.ver1.game.entity.Event;
+import model.ver1.game.entity.Alg;
 import model.ver1.game.entity.Context;
 import model.ver1.game.entity.DefaultMark;
 import model.ver1.game.entity.MarkEffect;
+import model.ver1.data.RequireImpl;
 
 // 179004_01A_CH_WT009R_white
 // ラクス・クライン
@@ -54,7 +56,7 @@ private class Text1 extends CardText {
 	public override function onEvent(_ctx:Any, event:Any, runtime:Runtime):Void {
 		final ctx = cast(_ctx, Context);
 		final thisCardId = runtime.getCardId();
-		switch cast(event: Event) {
+		switch cast(event : Event) {
 			case Gain(gainCardId, gainValue):
 				if (isMyCard(ctx, thisCardId, gainCardId)) {
 					final block = new Block('${id}_${Date.now()}', TextEffect(thisCardId, id), new Text1_1('${id}_Text1_1', gainCardId, gainValue));
@@ -133,7 +135,7 @@ private class Text1_1 extends CardText {
 		for (unit in selectUnits) {
 			final mark = new Mark1('${id}_Mark1', gainCardId, gainValue);
 			mark.age = 1;
-			ctx.marks[mark.id] = mark;
+			addMark(ctx, mark);
 		}
 	}
 }
@@ -212,13 +214,13 @@ function test() {
 	require.action();
 	trace("解決效果");
 	block.text.action(ctx, runtime);
-	if ([for (mark in ctx.marks) mark].length != 1) {
+	if (getMarks(ctx).length != 1) {
 		throw "必須有效果";
 	}
 	trace("結束一個turn");
-	ctx.timing = Default(Battle, Some(End), End);
+	setTimging(ctx, Default(Battle, Some(End), End));
 	sendEvent(ctx, ChangePhase);
-	if ([for (mark in ctx.marks) mark].length != 0) {
+	if (getMarks(ctx).length != 0) {
 		throw "效果必須被移除";
 	}
 }

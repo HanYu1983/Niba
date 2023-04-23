@@ -2,8 +2,10 @@ package model.ver1.game.entity;
 
 import model.ver1.game.define.Define;
 import model.ver1.game.define.Timing;
-import model.ver1.game.entity.Event;
 import model.ver1.game.define.Mark;
+import model.ver1.game.component.MarkComponent;
+import model.ver1.game.component.TimingComponent;
+import model.ver1.game.entity.Event;
 import model.ver1.game.entity.Context;
 
 class DefaultMark extends Mark {
@@ -16,13 +18,13 @@ class DefaultMark extends Mark {
 	public override function onEvent(_ctx:Any, event:Any):Void {
 		final ctx:Context = cast _ctx;
 		if (age != null) {
-			switch cast(event: Event) {
+			switch cast(event : Event) {
 				case ChangePhase:
-					switch ctx.timing {
+					switch getTiming(ctx) {
 						case Default(Battle, Some(End), End):
 							age -= 1;
 							if (age <= 0) {
-								ctx.marks.remove(id);
+								removeMark(ctx, id);
 							}
 						case _:
 					}

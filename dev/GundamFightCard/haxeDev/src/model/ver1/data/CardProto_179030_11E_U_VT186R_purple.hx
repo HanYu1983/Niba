@@ -16,6 +16,7 @@ import model.ver1.game.define.CardText;
 import model.ver1.game.define.CardProto;
 import model.ver1.game.component.CutComponent;
 import model.ver1.game.component.SelectionComponent;
+import model.ver1.game.component.MarkComponent;
 import model.ver1.game.entity.Alg;
 import model.ver1.game.entity.Context;
 import model.ver1.game.entity.DefaultMark;
@@ -125,7 +126,7 @@ function test() {
 	addCard(ctx.table, (Default(player2, MaintenanceArea) : BaSyouId), card2);
 	trace("設置剛出場標記");
 	final enterFieldMark = new EnterFieldThisTurnMark('EnterFieldThisTurnMark', card2.id);
-	ctx.marks[enterFieldMark.id] = enterFieldMark;
+	addMark(ctx, enterFieldMark);
 	//
 	if (getTopCut(ctx).length != 0) {
 		throw "一開始堆疊中沒有效果";

@@ -11,11 +11,12 @@ import model.ver1.game.define.Require;
 import model.ver1.game.define.Player;
 import model.ver1.game.define.CardText;
 import model.ver1.game.define.CardProto;
+import model.ver1.game.component.CutComponent;
+import model.ver1.game.component.TimingComponent;
 import model.ver1.game.entity.Alg;
 import model.ver1.game.entity.Runtime;
-import model.ver1.game.component.CutComponent;
-import model.ver1.data.RequireImpl;
 import model.ver1.game.entity.Context;
+import model.ver1.data.RequireImpl;
 
 // 179003_01A_U_BK008U_black
 // U
@@ -92,7 +93,7 @@ function test() {
 	final card1 = new Card("0");
 	card1.protoId = "179003_01A_U_BK008U_black";
 	ctx.table.cards[card1.id] = card1;
-	ctx.timing = Timing.Default(Battle, Some(DamageChecking), Start);
+	setTimging(ctx,  Timing.Default(Battle, Some(DamageChecking), Start));
 	final infos = getRuntimeText(ctx).map(info -> {
 		return {
 			cardId: info.runtime.getCardId(),

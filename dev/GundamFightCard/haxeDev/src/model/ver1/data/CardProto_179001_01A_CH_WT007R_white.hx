@@ -20,6 +20,8 @@ import model.ver1.game.entity.Context;
 import model.ver1.game.entity.DefaultMark;
 import model.ver1.game.entity.MarkEffect;
 import model.ver1.game.component.SelectionComponent;
+import model.ver1.game.component.MarkComponent;
+import model.ver1.game.component.TimingComponent;
 import model.ver1.data.RequireImpl;
 import model.ver1.data.PlayerPlayCard;
 
@@ -66,7 +68,7 @@ private class Text1 extends CardText {
 		final selectUnits = getPlayerSelectionCardId(ctx, "このセットグループのユニット");
 		for (unit in selectUnits) {
 			final mark = new Mark1('${id}_Mark1', unit);
-			ctx.marks[mark.id] = mark;
+			addMark(ctx, mark);
 		}
 	}
 }
@@ -87,9 +89,9 @@ private class Mark1 extends DefaultMark {
 		final ctx = cast(_ctx, Context);
 		switch cast(event : Event) {
 			case ChangePhase:
-				switch ctx.timing {
+				switch getTiming(ctx) {
 					case Default(Battle, Some(End), End):
-						ctx.marks.remove(id);
+						removeMark(ctx, id);
 					default:
 				}
 			case _:
@@ -102,7 +104,7 @@ function test() {
 	final card1 = new Card("0");
 	card1.protoId = "179001_01A_CH_WT007R_white";
 	ctx.table.cards[card1.id] = card1;
-	ctx.timing = Timing.Default(Battle, Some(Attack), Start);
+	setTimging(ctx, Timing.Default(Battle, Some(Attack), Start));
 	final infos = getRuntimeText(ctx).map(info -> {
 		return {
 			cardId: info.runtime.getCardId(),

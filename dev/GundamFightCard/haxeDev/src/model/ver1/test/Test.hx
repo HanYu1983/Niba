@@ -9,16 +9,17 @@ import model.ver1.game.define.BaSyou;
 import model.ver1.game.define.Runtime;
 import model.ver1.game.define.Mark;
 import model.ver1.game.define.Player;
-import model.ver1.game.entity.Alg;
 import model.ver1.game.component.CardProtoPoolComponent;
+import model.ver1.game.component.MarkComponent;
+import model.ver1.game.entity.Alg;
 import model.ver1.game.entity.Runtime;
-import model.ver1.test.common.Common;
+import model.ver1.game.entity.Context;
+import model.ver1.game.entity.DefaultMark;
 import model.ver1.data.CardProto_179001_01A_CH_WT007R_white;
 import model.ver1.data.CardProto_179003_01A_U_BK008U_black;
 import model.ver1.data.CardProto_179004_01A_CH_WT009R_white;
 import model.ver1.data.CardProto_179030_11E_U_VT186R_purple;
-import model.ver1.game.entity.Context;
-import model.ver1.game.entity.DefaultMark;
+import model.ver1.test.common.Common;
 
 function test() {
 	model.ver1.game.Game.test();
@@ -81,7 +82,7 @@ function test_getMarkEffects() {
 		throw new haxe.Exception("必須找到1個效果");
 	}
 	final enterFieldMark = new EnterFieldThisTurnMark('EnterFieldThisTurnMark', card.id);
-	ctx.marks[enterFieldMark.id] = enterFieldMark;
+	addMark(ctx, enterFieldMark);
 	if (getRuntimeText(ctx).length != 2) {
 		throw new haxe.Exception("還是找到2個內文");
 	}

@@ -14,6 +14,7 @@ import model.ver1.game.define.CardText;
 import model.ver1.game.define.CardProto;
 import model.ver1.game.entity.Alg;
 import model.ver1.game.component.CutComponent;
+import model.ver1.game.component.MarkComponent;
 import model.ver1.data.RequireImpl;
 import model.ver1.game.entity.Context;
 import model.ver1.game.entity.DefaultMark;
@@ -97,7 +98,7 @@ private class EnterFieldEffect extends CardText {
 				// 配置區横置
 				ctx.table.cards[cardId].isTap = true;
 				final enterFieldMark = new EnterFieldThisTurnMark('${id}_EnterFieldMark', cardId);
-				ctx.marks[enterFieldMark.id] = enterFieldMark;
+				addMark(ctx, enterFieldMark);
 				sendEvent(ctx, CardEnterField(cardId));
 			case Operation:
 				final to = BaSyou.Default(responsePlayerId, MaintenanceArea);
