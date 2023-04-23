@@ -4,11 +4,11 @@ import haxe.ds.Option;
 import model.ver1.game.define.Define;
 import model.ver1.game.define.Player;
 import model.ver1.game.define.Block;
-import model.ver1.game.entity.gameComponent.Event;
+import model.ver1.game.gameComponent.Event;
 import model.ver1.game.define.Runtime;
 import model.ver1.game.component.BlockComponent;
 import model.ver1.game.component.TimingComponent;
-import model.ver1.game.entity.gameComponent.Alg;
+import model.ver1.game.gameComponent.Alg;
 import model.ver1.game.entity.Context;
 
 // 宣告結束

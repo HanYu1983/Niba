@@ -12,12 +12,12 @@ import model.ver1.game.define.Block;
 import model.ver1.game.define.Require;
 import model.ver1.game.define.CardText;
 import model.ver1.game.define.CardProto;
-import model.ver1.game.entity.gameComponent.Alg;
+import model.ver1.game.gameComponent.Alg;
 import model.ver1.game.component.CutComponent;
 import model.ver1.game.component.MarkComponent;
 import model.ver1.data.RequireImpl;
 import model.ver1.game.entity.Context;
-import model.ver1.game.entity.gameComponent.DefaultMark;
+import model.ver1.game.gameComponent.DefaultMark;
 
 // カードのプレイ(p.20)
 class PlayerPlayCard extends CardText {

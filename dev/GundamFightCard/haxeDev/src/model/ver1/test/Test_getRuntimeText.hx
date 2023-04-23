@@ -8,9 +8,9 @@ import model.ver1.game.define.Define;
 import model.ver1.game.define.BaSyou;
 import model.ver1.game.define.Runtime;
 import model.ver1.game.define.Player;
-import model.ver1.game.entity.gameComponent.Alg;
+import model.ver1.game.gameComponent.Alg;
 import model.ver1.game.component.CardProtoPoolComponent;
-import model.ver1.game.entity.gameComponent.Runtime;
+import model.ver1.game.gameComponent.Runtime;
 import model.ver1.test.common.Common;
 import model.ver1.game.entity.Context;
 

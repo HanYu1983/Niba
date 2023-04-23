@@ -1,13 +1,13 @@
-package model.ver1.game.entity.gameComponent;
+package model.ver1.game.gameComponent;
 
 import model.ver1.game.define.Define;
 import model.ver1.game.define.Timing;
 import model.ver1.game.define.Mark;
 import model.ver1.game.component.MarkComponent;
 import model.ver1.game.component.TimingComponent;
-import model.ver1.game.entity.gameComponent.GameComponent;
-import model.ver1.game.entity.gameComponent.Event;
-import model.ver1.game.entity.gameComponent.MarkEffect;
+import model.ver1.game.gameComponent.GameComponent;
+import model.ver1.game.gameComponent.Event;
+import model.ver1.game.gameComponent.MarkEffect;
 
 class DefaultMark extends Mark {
 	public function new(id:String) {

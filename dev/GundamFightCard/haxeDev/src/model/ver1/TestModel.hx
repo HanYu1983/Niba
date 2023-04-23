@@ -5,7 +5,7 @@ import viewModel.IViewModel;
 import model.ver1.game.define.Define;
 import model.ver1.game.define.Player;
 import model.ver1.game.define.BaSyou;
-import model.ver1.game.entity.gameComponent.Alg;
+import model.ver1.game.gameComponent.Alg;
 import model.ver1.game.Game;
 import model.ver1.game.entity.Context;
 

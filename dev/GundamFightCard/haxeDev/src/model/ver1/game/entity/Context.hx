@@ -14,7 +14,7 @@ import model.ver1.game.component.CardProtoPoolComponent;
 import model.ver1.game.component.SelectionComponent;
 import model.ver1.game.component.MarkComponent;
 import model.ver1.game.component.TimingComponent;
-import model.ver1.game.entity.gameComponent.GameComponent;
+import model.ver1.game.gameComponent.GameComponent;
 
 enum FlowMemoryState {
 	PrepareDeck;

@@ -10,16 +10,16 @@ import model.ver1.game.define.Runtime;
 import model.ver1.game.define.Mark;
 import model.ver1.game.define.Block;
 import model.ver1.game.define.Require;
-import model.ver1.game.entity.gameComponent.Event;
+import model.ver1.game.gameComponent.Event;
 import model.ver1.game.define.Player;
 import model.ver1.game.define.CardText;
 import model.ver1.game.define.CardProto;
 import model.ver1.game.component.CutComponent;
 import model.ver1.game.component.SelectionComponent;
 import model.ver1.game.component.MarkComponent;
-import model.ver1.game.entity.gameComponent.Alg;
+import model.ver1.game.gameComponent.Alg;
 import model.ver1.game.entity.Context;
-import model.ver1.game.entity.gameComponent.DefaultMark;
+import model.ver1.game.gameComponent.DefaultMark;
 import model.ver1.data.RequireImpl;
 
 // 179030_11E_U_VT186R_purple

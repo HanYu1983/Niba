@@ -1,4 +1,4 @@
-package model.ver1.game.entity.gameComponent;
+package model.ver1.game.gameComponent;
 
 using Lambda;
 
@@ -11,10 +11,10 @@ import model.ver1.game.define.Mark;
 import model.ver1.game.define.CardText;
 import model.ver1.game.component.CardProtoPoolComponent;
 import model.ver1.game.component.MarkComponent;
-import model.ver1.game.entity.gameComponent.Alg;
-import model.ver1.game.entity.gameComponent.Event;
-import model.ver1.game.entity.gameComponent.MarkEffect;
-import model.ver1.game.entity.gameComponent.GameComponent;
+import model.ver1.game.gameComponent.Alg;
+import model.ver1.game.gameComponent.Event;
+import model.ver1.game.gameComponent.MarkEffect;
+import model.ver1.game.gameComponent.GameComponent;
 
 function isContantType(text:CardText) {
 	return switch (text.type) {

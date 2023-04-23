@@ -13,8 +13,8 @@ import model.ver1.game.define.CardText;
 import model.ver1.game.define.CardProto;
 import model.ver1.game.component.CutComponent;
 import model.ver1.game.component.TimingComponent;
-import model.ver1.game.entity.gameComponent.Alg;
-import model.ver1.game.entity.gameComponent.Runtime;
+import model.ver1.game.gameComponent.Alg;
+import model.ver1.game.gameComponent.Runtime;
 import model.ver1.game.entity.Context;
 import model.ver1.data.RequireImpl;
 
