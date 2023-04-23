@@ -1,4 +1,4 @@
-package model.ver1.game.entity;
+package model.ver1.game.entity.gameComponent;
 
 import model.ver1.game.define.Define;
 import model.ver1.game.define.CardText;

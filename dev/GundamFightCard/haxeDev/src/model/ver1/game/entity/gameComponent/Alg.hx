@@ -1,4 +1,4 @@
-package model.ver1.game.entity;
+package model.ver1.game.entity.gameComponent;
 
 using Lambda;
 
@@ -8,25 +8,25 @@ import model.ver1.game.define.Define;
 import model.ver1.game.define.BaSyou;
 import model.ver1.game.define.Runtime;
 import model.ver1.game.define.Mark;
-import model.ver1.game.entity.Event;
-import model.ver1.game.entity.Runtime;
-import model.ver1.game.entity.Context;
-import model.ver1.game.entity.MarkEffect;
 import model.ver1.game.component.CardProtoPoolComponent;
 import model.ver1.game.component.BlockComponent;
 import model.ver1.game.component.MarkComponent;
+import model.ver1.game.entity.gameComponent.Event;
+import model.ver1.game.entity.gameComponent.Runtime;
+import model.ver1.game.entity.gameComponent.MarkEffect;
+import model.ver1.game.entity.gameComponent.GameComponent;
 
 //
 // General
 //
 // 持ち主の手札に移す
-function returnToOwnerHand(ctx:Context, cardId:String):Void {
+function returnToOwnerHand(ctx:IGameComponent, cardId:String):Void {
 	final from = getCardBaSyouAndAssertExist(ctx, cardId);
 	final to = BaSyou.Default(getCardOwner(ctx, cardId), TeHuTa);
 	moveCard(ctx, cardId, from, to);
 }
 
-function getCardOwner(ctx:Context, cardId:String):String {
+function getCardOwner(ctx:IGameComponent, cardId:String):String {
 	final owner = getCard(ctx.table, cardId).owner;
 	if (owner == null) {
 		throw "owner not set yet";
@@ -34,15 +34,15 @@ function getCardOwner(ctx:Context, cardId:String):String {
 	return owner;
 }
 
-function becomeG(ctx:Context, cardId:String):Void {
+function becomeG(ctx:IGameComponent, cardId:String):Void {
 	trace("將自己變成G");
 }
 
-function getUnitOfSetGroup(ctx:Context, cardId:String):Option<String> {
+function getUnitOfSetGroup(ctx:IGameComponent, cardId:String):Option<String> {
 	return None;
 }
 
-function tapCard(ctx:Context, cardId:String):Void {
+function tapCard(ctx:IGameComponent, cardId:String):Void {
 	final card = getCard(ctx.table, cardId);
 	if (card.isTap) {
 		throw new haxe.Exception("already tap");
@@ -52,14 +52,14 @@ function tapCard(ctx:Context, cardId:String):Void {
 	sendEvent(ctx, CardRoll(card.id));
 }
 
-function moveCard(ctx:Context, cardId:String, from:BaSyou, to:BaSyou) {
+function moveCard(ctx:IGameComponent, cardId:String, from:BaSyou, to:BaSyou) {
 	tool.Table.moveCard(ctx.table, cardId, (from : BaSyouId), (to : BaSyouId));
 }
 
 //
 // Event
 //
-function sendEvent(ctx:Context, evt:Event):Void {
+function sendEvent(ctx:IGameComponent, evt:Event):Void {
 	for (info in getRuntimeText(ctx)) {
 		final runtime = info.runtime;
 		final text = info.text;
@@ -75,16 +75,16 @@ function sendEvent(ctx:Context, evt:Event):Void {
 // Query
 //
 
-function getCardsByBaSyou(ctx:Context, baSyou:BaSyou):Array<String> {
+function getCardsByBaSyou(ctx:IGameComponent, baSyou:BaSyou):Array<String> {
 	return getCardStack(ctx.table, (baSyou : BaSyouId)).cardIds;
 }
 
-function getCardType(ctx:Context, cardId:String):CardCategory {
+function getCardType(ctx:IGameComponent, cardId:String):CardCategory {
 	final proto = getCurrentCardProto(ctx, getCard(ctx.table, cardId).protoId);
 	return proto.category;
 }
 
-function getCardEntityCategory(ctx:Context, cardId:String):Option<CardEntityCategory> {
+function getCardEntityCategory(ctx:IGameComponent, cardId:String):Option<CardEntityCategory> {
 	return switch getCardBaSyouAndAssertExist(ctx, cardId) {
 		case Default(_, GZone):
 			Some(G);
@@ -104,7 +104,7 @@ function getCardEntityCategory(ctx:Context, cardId:String):Option<CardEntityCate
 	}
 }
 
-function getThisCardSetGroupCardIds(ctx:Context, cardId:String):Array<String> {
+function getThisCardSetGroupCardIds(ctx:IGameComponent, cardId:String):Array<String> {
 	return [cardId];
 }
 
@@ -112,7 +112,7 @@ function getThisCardSetGroupCardIds(ctx:Context, cardId:String):Array<String> {
 // 手札、ハンガー中的卡沒有控制者，但有Play的權利
 // 本国、捨て山、ジャンクヤード中的卡沒有控制者
 // 沒有控制者的情況也就代表不能使用內文也不能出擊
-function getCardController(ctx:Context, cardId:String):Option<String> {
+function getCardController(ctx:IGameComponent, cardId:String):Option<String> {
 	// 所在區域的管理者
 	// 所在部隊的管理者
 	// 其它的都沒有管理者
@@ -124,7 +124,7 @@ function getCardController(ctx:Context, cardId:String):Option<String> {
 	}
 }
 
-function getCardControllerAndAssertExist(ctx:Context, cardId:String):String {
+function getCardControllerAndAssertExist(ctx:IGameComponent, cardId:String):String {
 	return switch getCardController(ctx, cardId) {
 		case Some(playerId): playerId;
 		case _: throw new haxe.Exception("卡片被除外，沒有控制者");
@@ -132,14 +132,14 @@ function getCardControllerAndAssertExist(ctx:Context, cardId:String):String {
 }
 
 // (p.63)場所管理者
-function getBaSyouController(ctx:Context, baSyou:BaSyou):Option<String> {
+function getBaSyouController(ctx:IGameComponent, baSyou:BaSyou):Option<String> {
 	return switch baSyou {
 		case Default(playerId, baSyouKeyword):
 			return Some(playerId);
 	}
 }
 
-function getBaSyouControllerAndAssertExist(ctx:Context, baSyou:BaSyou):String {
+function getBaSyouControllerAndAssertExist(ctx:IGameComponent, baSyou:BaSyou):String {
 	return switch getBaSyouController(ctx, baSyou) {
 		case Some(playerId):
 			playerId;
@@ -148,7 +148,7 @@ function getBaSyouControllerAndAssertExist(ctx:Context, baSyou:BaSyou):String {
 	}
 }
 
-function getCardBaSyouAndAssertExist(ctx:Context, cardId:String):BaSyou {
+function getCardBaSyouAndAssertExist(ctx:IGameComponent, cardId:String):BaSyou {
 	return switch tool.Table.getCardCardStack(ctx.table, cardId) {
 		case Some(cardStack):
 			(cardStack.id : BaSyouId);
@@ -158,25 +158,25 @@ function getCardBaSyouAndAssertExist(ctx:Context, cardId:String):BaSyou {
 	}
 }
 
-function getCardGSign(ctx:Context, cardId:String):GSign {
+function getCardGSign(ctx:IGameComponent, cardId:String):GSign {
 	return Default(Red, Uc);
 }
 
-function getPlayerGCountForPlay(ctx:Context, playerId:String):Int {
+function getPlayerGCountForPlay(ctx:IGameComponent, playerId:String):Int {
 	// 查詢有沒有增加國力的卡
 	return 0;
 }
 
-function getPlayerGCardIds(ctx:Context, playerId:String):Array<String> {
+function getPlayerGCardIds(ctx:IGameComponent, playerId:String):Array<String> {
 	return [];
 }
 
-function getCardSetGroupCardIds(ctx:Context, cardId:String):Array<String> {
+function getCardSetGroupCardIds(ctx:IGameComponent, cardId:String):Array<String> {
 	return [cardId];
 }
 
 // (p.63) 自軍カードが
-function isMyCard(ctx:Context, masterCardId:String, slaveCardId:String):Bool {
+function isMyCard(ctx:IGameComponent, masterCardId:String, slaveCardId:String):Bool {
 	return switch [getCardController(ctx, masterCardId), getCardController(ctx, slaveCardId)] {
 		case [Some(c1), Some(c2)] if (c1 == c2):
 			true;
@@ -185,7 +185,7 @@ function isMyCard(ctx:Context, masterCardId:String, slaveCardId:String):Bool {
 	}
 }
 
-function isOpponentsCard(ctx:Context, masterCardId:String, slaveCardId:String):Bool {
+function isOpponentsCard(ctx:IGameComponent, masterCardId:String, slaveCardId:String):Bool {
 	return switch [getCardController(ctx, masterCardId), getCardController(ctx, slaveCardId)] {
 		case [Some(c1), Some(c2)] if (c1 != c2):
 			true;
@@ -194,7 +194,7 @@ function isOpponentsCard(ctx:Context, masterCardId:String, slaveCardId:String):B
 	}
 }
 
-function getEnterFieldThisTurnCardIds(ctx:Context):Array<String> {
+function getEnterFieldThisTurnCardIds(ctx:IGameComponent):Array<String> {
 	return getMarkEffects(ctx).filter(e -> {
 		return switch e {
 			case EnterFieldThisTurn(_):
@@ -213,7 +213,7 @@ function getEnterFieldThisTurnCardIds(ctx:Context):Array<String> {
 }
 
 // 常駐增強內文
-function getAddBattlePoint(ctx:Context) {
+function getAddBattlePoint(ctx:IGameComponent) {
 	// TODO
 	final infos = [
 		for (info in getRuntimeText(ctx)) {
@@ -236,7 +236,7 @@ function getAddBattlePoint(ctx:Context) {
 }
 
 // 速攻
-function getAttackSpeed(ctx:Context) {
+function getAttackSpeed(ctx:IGameComponent) {
 	// TODO
 	final infos = [
 		for (info in getRuntimeText(ctx)) {
@@ -258,17 +258,17 @@ function getAttackSpeed(ctx:Context) {
 	];
 }
 
-function isDestroyNow(ctx:Context, cardId:String, condition:{isByBattleDamage:Bool}):Bool {
+function isDestroyNow(ctx:IGameComponent, cardId:String, condition:{isByBattleDamage:Bool}):Bool {
 	// cardId是否有破壞並廢棄的效果在堆疊中
 	if (condition.isByBattleDamage) {}
 	return false;
 }
 
-function removeDestroyEffect(ctx:Context, cardId:String):Void {
+function removeDestroyEffect(ctx:IGameComponent, cardId:String):Void {
 	trace("移除堆疊中的破壞效果");
 }
 
-function getBlockRuntime(ctx:Context, blockId:String):Runtime {
+function getBlockRuntime(ctx:IGameComponent, blockId:String):Runtime {
 	final block = getBlock(ctx, blockId);
 	return switch block.cause {
 		case System(respnosePlayerId):

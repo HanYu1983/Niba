@@ -1,4 +1,4 @@
-package model.ver1.game.entity;
+package model.ver1.game.entity.gameComponent;
 
 using Lambda;
 
@@ -11,10 +11,10 @@ import model.ver1.game.define.Mark;
 import model.ver1.game.define.CardText;
 import model.ver1.game.component.CardProtoPoolComponent;
 import model.ver1.game.component.MarkComponent;
-import model.ver1.game.entity.Alg;
-import model.ver1.game.entity.Event;
-import model.ver1.game.entity.Context;
-import model.ver1.game.entity.MarkEffect;
+import model.ver1.game.entity.gameComponent.Alg;
+import model.ver1.game.entity.gameComponent.Event;
+import model.ver1.game.entity.gameComponent.MarkEffect;
+import model.ver1.game.entity.gameComponent.GameComponent;
 
 function isContantType(text:CardText) {
 	return switch (text.type) {
@@ -28,7 +28,7 @@ function isContantType(text:CardText) {
 //
 // Runtime
 //
-function getRuntimeText(ctx:Context):Array<{runtime:Runtime, text:CardText}> {
+function getRuntimeText(ctx:IGameComponent):Array<{runtime:Runtime, text:CardText}> {
 	// ver1 （沒使用）
 	// 手牌，hanger中的牌, 直接給它Play的權力
 	// ver2
@@ -203,7 +203,7 @@ function getRuntimeText(ctx:Context):Array<{runtime:Runtime, text:CardText}> {
 	return playReturn.concat(specialReturn).concat(specialReturn2).concat(originReturn).concat(addedReturn).concat(globalAddedReturn);
 }
 
-function getMarkEffects(ctx:Context):Array<MarkEffect> {
+function getMarkEffects(ctx:IGameComponent):Array<MarkEffect> {
 	final textEffects = [
 		for (info in getRuntimeText(ctx)) {
 			final runtime = info.runtime;

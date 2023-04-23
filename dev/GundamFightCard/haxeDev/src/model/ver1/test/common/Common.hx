@@ -6,7 +6,7 @@ import model.ver1.game.define.Mark;
 import model.ver1.game.define.CardText;
 import model.ver1.game.define.CardProto;
 import model.ver1.game.entity.Context;
-import model.ver1.game.entity.MarkEffect;
+import model.ver1.game.entity.gameComponent.MarkEffect;
 
 class OnlyEmptyTextCardProto extends CardProto {
 	public function new() {

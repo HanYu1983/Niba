@@ -10,7 +10,7 @@ import model.ver1.game.define.Runtime;
 import model.ver1.game.define.Mark;
 import model.ver1.game.define.Block;
 import model.ver1.game.define.Require;
-import model.ver1.game.entity.Event;
+import model.ver1.game.entity.gameComponent.Event;
 import model.ver1.game.define.Player;
 import model.ver1.game.define.CardText;
 import model.ver1.game.define.CardProto;
@@ -19,8 +19,8 @@ import model.ver1.game.component.SelectionComponent;
 import model.ver1.game.component.MarkComponent;
 import model.ver1.game.component.TimingComponent;
 import model.ver1.game.entity.Context;
-import model.ver1.game.entity.DefaultMark;
-import model.ver1.game.entity.Alg;
+import model.ver1.game.entity.gameComponent.DefaultMark;
+import model.ver1.game.entity.gameComponent.Alg;
 import model.ver1.data.RequireImpl;
 
 // 179030_11E_CH_BN091N_brown

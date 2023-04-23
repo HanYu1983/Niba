@@ -1,12 +1,13 @@
-package model.ver1.game.entity;
+package model.ver1.game.entity.gameComponent;
 
 import model.ver1.game.define.Define;
 import model.ver1.game.define.Timing;
 import model.ver1.game.define.Mark;
 import model.ver1.game.component.MarkComponent;
 import model.ver1.game.component.TimingComponent;
-import model.ver1.game.entity.Event;
-import model.ver1.game.entity.Context;
+import model.ver1.game.entity.gameComponent.GameComponent;
+import model.ver1.game.entity.gameComponent.Event;
+import model.ver1.game.entity.gameComponent.MarkEffect;
 
 class DefaultMark extends Mark {
 	public function new(id:String) {
@@ -16,7 +17,7 @@ class DefaultMark extends Mark {
 	public var age:Null<Int>;
 
 	public override function onEvent(_ctx:Any, event:Any):Void {
-		final ctx:Context = cast _ctx;
+		final ctx:IGameComponent = cast _ctx;
 		if (age != null) {
 			switch cast(event : Event) {
 				case ChangePhase:
