@@ -3,7 +3,7 @@ package model.ver1.game.entity;
 import haxe.ds.Option;
 import model.ver1.game.define.Define;
 import model.ver1.game.define.Player;
-import model.ver1.game.define.Block;
+import model.ver1.game.define.Effect;
 import model.ver1.game.gameComponent.Event;
 import model.ver1.game.define.Runtime;
 import model.ver1.game.component.EffectComponent;
@@ -78,8 +78,8 @@ enum FlowType {
 	FlowDoEffect(blockId:String);
 	FlowPassPayCost(blockId:String);
 	FlowCancelActiveEffect;
-	FlowSetActiveEffectId(blockId:String, tips:Array<Block>);
-	FlowDeleteImmediateEffect(blockId:String, tips:Array<Block>);
+	FlowSetActiveEffectId(blockId:String, tips:Array<Effect>);
+	FlowDeleteImmediateEffect(blockId:String, tips:Array<Effect>);
 	FlowHandleStackEffectFinished;
 	FlowCancelPassCut;
 	FlowPassCut;
@@ -161,8 +161,8 @@ function queryFlow(ctx:Context, playerId:PlayerId):Array<Flow> {
 		final immediateEffects = getImmediateEffects(ctx);
 		if (immediateEffects.length > 0) {
 			final isActivePlayer = ctx.activePlayerId == playerId;
-			final myEffect:Array<Block> = [];
-			final opponentEffect:Array<Block> = [];
+			final myEffect:Array<Effect> = [];
+			final opponentEffect:Array<Effect> = [];
 			for (effect in immediateEffects) {
 				final controller = getBlockRuntime(ctx, effect.id).getResponsePlayerId();
 				if (controller == playerId) {
@@ -324,11 +324,11 @@ function getActiveBlockId(ctx:Context):Option<String> {
 	return None;
 }
 
-function getImmediateEffects(ctx:Context):Array<Block> {
+function getImmediateEffects(ctx:Context):Array<Effect> {
 	return [];
 }
 
-function getClientCommand(ctx:Context, playerId:String):Array<Block> {
+function getClientCommand(ctx:Context, playerId:String):Array<Effect> {
 	return [];
 }
 

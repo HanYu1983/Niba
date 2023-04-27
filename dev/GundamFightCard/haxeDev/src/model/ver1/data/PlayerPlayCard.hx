@@ -8,7 +8,7 @@ import model.ver1.game.define.Runtime;
 import model.ver1.game.define.BaSyou;
 import model.ver1.game.define.Timing;
 import model.ver1.game.define.Mark;
-import model.ver1.game.define.Block;
+import model.ver1.game.define.Effect;
 import model.ver1.game.define.Require;
 import model.ver1.game.define.CardText;
 import model.ver1.game.define.CardProto;
@@ -62,7 +62,7 @@ class PlayerPlayCard extends CardText {
 		}
 		switch getCardType(ctx, cardId) {
 			case Unit | Operation | Character | OperationUnit:
-				final block = new Block('${id}_${Date.now()}', PlayCard(responsePlayerId, cardId), new EnterFieldEffect('${id}_PlayerPlayCardEffect'));
+				final block = new Effect('${id}_${Date.now()}', PlayCard(responsePlayerId, cardId), new EnterFieldEffect('${id}_PlayerPlayCardEffect'));
 				cutIn(ctx, block);
 			case Command:
 			// Command -> 內文效果 -> 解決內文並移到廢棄庫

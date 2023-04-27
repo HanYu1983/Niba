@@ -8,7 +8,7 @@ import model.ver1.game.define.Timing;
 import model.ver1.game.define.BaSyou;
 import model.ver1.game.define.Runtime;
 import model.ver1.game.define.Mark;
-import model.ver1.game.define.Block;
+import model.ver1.game.define.Effect;
 import model.ver1.game.define.Require;
 import model.ver1.game.gameComponent.Event;
 import model.ver1.game.define.Player;
@@ -75,7 +75,7 @@ private class Text1 extends CardText {
 			case CardRoll(rollCardId):
 				if (rollCardId == thisCardId) {
 					if (getOpponentG(ctx, runtime).length >= 1) {
-						final block = new Block(getSubKey(0), TextEffect(thisCardId, id), new Process1('${id}_Process1'));
+						final block = new Effect(getSubKey(0), TextEffect(thisCardId, id), new Process1('${id}_Process1'));
 						block.isImmediate = true;
 						cutIn(ctx, block);
 					}

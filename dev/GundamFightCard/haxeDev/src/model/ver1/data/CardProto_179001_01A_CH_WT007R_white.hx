@@ -7,7 +7,7 @@ import model.ver1.game.define.Define;
 import model.ver1.game.define.Runtime;
 import model.ver1.game.define.Mark;
 import model.ver1.game.define.Timing;
-import model.ver1.game.define.Block;
+import model.ver1.game.define.Effect;
 import model.ver1.game.define.Require;
 import model.ver1.game.gameComponent.Event;
 import model.ver1.game.define.Player;

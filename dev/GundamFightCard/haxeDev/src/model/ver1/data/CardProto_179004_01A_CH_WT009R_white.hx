@@ -8,7 +8,7 @@ import model.ver1.game.define.Timing;
 import model.ver1.game.define.BaSyou;
 import model.ver1.game.define.Runtime;
 import model.ver1.game.define.Mark;
-import model.ver1.game.define.Block;
+import model.ver1.game.define.Effect;
 import model.ver1.game.define.Require;
 import model.ver1.game.define.Player;
 import model.ver1.game.define.CardText;
@@ -59,7 +59,7 @@ private class Text1 extends CardText {
 		switch cast(event : Event) {
 			case Gain(gainCardId, gainValue):
 				if (isMyCard(ctx, thisCardId, gainCardId)) {
-					final block = new Block('${id}_${Date.now()}', TextEffect(thisCardId, id), new Text1_1('${id}_Text1_1', gainCardId, gainValue));
+					final block = new Effect('${id}_${Date.now()}', TextEffect(thisCardId, id), new Text1_1('${id}_Text1_1', gainCardId, gainValue));
 					block.isImmediate = true;
 					cutIn(ctx, block);
 				}

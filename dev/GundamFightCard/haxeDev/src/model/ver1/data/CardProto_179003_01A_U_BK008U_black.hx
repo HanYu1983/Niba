@@ -6,7 +6,7 @@ import model.ver1.game.define.Define;
 import model.ver1.game.define.Runtime;
 import model.ver1.game.define.Mark;
 import model.ver1.game.define.Timing;
-import model.ver1.game.define.Block;
+import model.ver1.game.define.Effect;
 import model.ver1.game.define.Require;
 import model.ver1.game.define.Player;
 import model.ver1.game.define.CardText;
@@ -70,7 +70,7 @@ private class Text1 extends CardText {
 	public override function action(_ctx:Any, runtime:Runtime):Void {
 		final ctx = cast(_ctx, Context);
 		final cardId = runtime.getCardId();
-		final block = new Block('${id}_${Date.now()}', PlayText(cardId, id), new Text2('${id}_Text2'));
+		final block = new Effect('${id}_${Date.now()}', PlayText(cardId, id), new Text2('${id}_Text2'));
 		cutIn(ctx, block);
 	}
 }

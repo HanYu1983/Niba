@@ -4,7 +4,7 @@ using Lambda;
 
 import tool.Table;
 import model.ver1.game.define.Mark;
-import model.ver1.game.define.Block;
+import model.ver1.game.define.Effect;
 import model.ver1.game.define.Timing;
 import model.ver1.game.define.Define;
 import model.ver1.game.define.CardProto;
@@ -46,7 +46,7 @@ class Context implements IGameComponent {
 		cardIds: []
 	}
 	public var cuts:Array<Array<String>> = [];
-	public var effects:Map<String, Block> = [];
+	public var effects:Map<String, Effect> = [];
 	public var activePlayerId:String;
 	public var flowMemory:FlowMemory = {
 		state: PrepareDeck,
