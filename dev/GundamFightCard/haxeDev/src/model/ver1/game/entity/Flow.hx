@@ -6,7 +6,7 @@ import model.ver1.game.define.Player;
 import model.ver1.game.define.Block;
 import model.ver1.game.gameComponent.Event;
 import model.ver1.game.define.Runtime;
-import model.ver1.game.component.BlockComponent;
+import model.ver1.game.component.EffectComponent;
 import model.ver1.game.component.TimingComponent;
 import model.ver1.game.gameComponent.Alg;
 import model.ver1.game.entity.Context;
@@ -200,7 +200,7 @@ function queryFlow(ctx:Context, playerId:PlayerId):Array<Flow> {
 	// 切入
 	{
 		final myCommandList = getClientCommand(ctx, playerId);
-		final blocks = getBlocks(ctx);
+		final blocks = getEffects(ctx);
 		// 處理堆疊效果，從最上方開始處理
 		if (blocks.length > 0) {
 			// 取得最上方的效果

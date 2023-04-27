@@ -9,7 +9,7 @@ import model.ver1.game.define.BaSyou;
 import model.ver1.game.define.Runtime;
 import model.ver1.game.define.Mark;
 import model.ver1.game.component.CardProtoPoolComponent;
-import model.ver1.game.component.BlockComponent;
+import model.ver1.game.component.EffectComponent;
 import model.ver1.game.component.MarkComponent;
 import model.ver1.game.gameComponent.Event;
 import model.ver1.game.gameComponent.Runtime;
@@ -269,7 +269,7 @@ function removeDestroyEffect(ctx:IGameComponent, cardId:String):Void {
 }
 
 function getBlockRuntime(ctx:IGameComponent, blockId:String):Runtime {
-	final block = getBlock(ctx, blockId);
+	final block = getEffect(ctx, blockId);
 	return switch block.cause {
 		case System(respnosePlayerId):
 			new SystemRuntime(respnosePlayerId);

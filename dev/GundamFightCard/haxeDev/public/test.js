@@ -2612,46 +2612,6 @@ function model_ver1_game_Game_test() {
 		throw new haxe_Exception("loadGame.ctx.table.cards[card2.id].id != card2.id");
 	}
 }
-var model_ver1_game_component_IBlockComponent = function() { };
-$hxClasses["model.ver1.game.component.IBlockComponent"] = model_ver1_game_component_IBlockComponent;
-model_ver1_game_component_IBlockComponent.__name__ = "model.ver1.game.component.IBlockComponent";
-model_ver1_game_component_IBlockComponent.__isInterface__ = true;
-model_ver1_game_component_IBlockComponent.prototype = {
-	__class__: model_ver1_game_component_IBlockComponent
-};
-function model_ver1_game_component_BlockComponent_getBlocks(ctx) {
-	return Lambda.fold(ctx.cuts,function(c,a) {
-		return a.concat(c);
-	},[]);
-}
-function model_ver1_game_component_BlockComponent_getBlock(ctx,blockId) {
-	var blocks = model_ver1_game_component_BlockComponent_getBlocks(ctx);
-	var _g = [];
-	var _g1 = 0;
-	var _g2 = blocks;
-	while(_g1 < _g2.length) {
-		var v = _g2[_g1];
-		++_g1;
-		if(v.id == blockId) {
-			_g.push(v);
-		}
-	}
-	var findBlock = _g;
-	if(findBlock.length == 0) {
-		throw new haxe_Exception("block not found");
-	}
-	return findBlock[0];
-}
-function model_ver1_game_component_BlockComponent_removeBlock(ctx,blockId) {
-	var block = model_ver1_game_component_BlockComponent_getBlock(ctx,blockId);
-	var _g = 0;
-	var _g1 = ctx.cuts;
-	while(_g < _g1.length) {
-		var cut = _g1[_g];
-		++_g;
-		HxOverrides.remove(cut,block);
-	}
-}
 var model_ver1_game_component_ICardProtoPoolComponent = function() { };
 $hxClasses["model.ver1.game.component.ICardProtoPoolComponent"] = model_ver1_game_component_ICardProtoPoolComponent;
 model_ver1_game_component_ICardProtoPoolComponent.__name__ = "model.ver1.game.component.ICardProtoPoolComponent";
@@ -2669,10 +2629,18 @@ function model_ver1_game_component_CardProtoPoolComponent_getCurrentCardProto(ct
 	}
 	return obj;
 }
+var model_ver1_game_component_IEffectComponent = function() { };
+$hxClasses["model.ver1.game.component.IEffectComponent"] = model_ver1_game_component_IEffectComponent;
+model_ver1_game_component_IEffectComponent.__name__ = "model.ver1.game.component.IEffectComponent";
+model_ver1_game_component_IEffectComponent.__isInterface__ = true;
+model_ver1_game_component_IEffectComponent.prototype = {
+	__class__: model_ver1_game_component_IEffectComponent
+};
 var model_ver1_game_component_ICutComponent = function() { };
 $hxClasses["model.ver1.game.component.ICutComponent"] = model_ver1_game_component_ICutComponent;
 model_ver1_game_component_ICutComponent.__name__ = "model.ver1.game.component.ICutComponent";
 model_ver1_game_component_ICutComponent.__isInterface__ = true;
+model_ver1_game_component_ICutComponent.__interfaces__ = [model_ver1_game_component_IEffectComponent];
 model_ver1_game_component_ICutComponent.prototype = {
 	__class__: model_ver1_game_component_ICutComponent
 };
@@ -2681,13 +2649,65 @@ function model_ver1_game_component_CutComponent_getTopCut(ctx) {
 		ctx.cuts.push([]);
 	}
 	var topCut = ctx.cuts[ctx.cuts.length - 1];
-	return topCut;
+	var result = new Array(topCut.length);
+	var _g = 0;
+	var _g1 = topCut.length;
+	while(_g < _g1) {
+		var i = _g++;
+		result[i] = ctx.effects.h[topCut[i]];
+	}
+	return result;
 }
 function model_ver1_game_component_CutComponent_cutIn(ctx,block) {
-	model_ver1_game_component_CutComponent_getTopCut(ctx).push(block);
+	model_ver1_game_component_CutComponent_getTopCut(ctx);
+	var topCut = ctx.cuts[ctx.cuts.length - 1];
+	topCut.push(block.id);
+	model_ver1_game_component_EffectComponent_addEffect(ctx,block);
 }
 function model_ver1_game_component_CutComponent_newCut(ctx,block) {
-	ctx.cuts.push([block]);
+	ctx.cuts.push([block.id]);
+	model_ver1_game_component_EffectComponent_addEffect(ctx,block);
+}
+function model_ver1_game_component_CutComponent_removeEffect(ctx,blockId) {
+	var _g = 0;
+	var _g1 = ctx.cuts;
+	while(_g < _g1.length) {
+		var sub = _g1[_g];
+		++_g;
+		HxOverrides.remove(sub,blockId);
+	}
+	model_ver1_game_component_EffectComponent_removeEffect(ctx,blockId);
+}
+function model_ver1_game_component_EffectComponent_getEffects(ctx) {
+	var _g = [];
+	var h = ctx.effects.h;
+	var block_h = h;
+	var block_keys = Object.keys(h);
+	var block_length = block_keys.length;
+	var block_current = 0;
+	while(block_current < block_length) {
+		var block = block_h[block_keys[block_current++]];
+		_g.push(block);
+	}
+	return _g;
+}
+function model_ver1_game_component_EffectComponent_getEffect(ctx,blockId) {
+	if(ctx.effects.h[blockId] == null) {
+		throw new haxe_Exception("block not found");
+	}
+	return ctx.effects.h[blockId];
+}
+function model_ver1_game_component_EffectComponent_removeEffect(ctx,blockId) {
+	var _this = ctx.effects;
+	if(Object.prototype.hasOwnProperty.call(_this.h,blockId)) {
+		delete(_this.h[blockId]);
+	}
+}
+function model_ver1_game_component_EffectComponent_addEffect(ctx,block) {
+	if(ctx.effects.h[block.id] != null) {
+		throw new haxe_Exception("block exists");
+	}
+	ctx.effects.h[block.id] = block;
 }
 var model_ver1_game_component_IMarkComponent = function() { };
 $hxClasses["model.ver1.game.component.IMarkComponent"] = model_ver1_game_component_IMarkComponent;
@@ -3071,12 +3091,13 @@ var model_ver1_game_gameComponent_IGameComponent = function() { };
 $hxClasses["model.ver1.game.gameComponent.IGameComponent"] = model_ver1_game_gameComponent_IGameComponent;
 model_ver1_game_gameComponent_IGameComponent.__name__ = "model.ver1.game.gameComponent.IGameComponent";
 model_ver1_game_gameComponent_IGameComponent.__isInterface__ = true;
-model_ver1_game_gameComponent_IGameComponent.__interfaces__ = [model_ver1_game_component_ITimingComponent,model_ver1_game_component_IMarkComponent,model_ver1_game_component_ISelectionComponent,model_ver1_game_component_ICardProtoPoolComponent,model_ver1_game_component_IBlockComponent,model_ver1_game_component_ICutComponent];
+model_ver1_game_gameComponent_IGameComponent.__interfaces__ = [model_ver1_game_component_ITimingComponent,model_ver1_game_component_IMarkComponent,model_ver1_game_component_ISelectionComponent,model_ver1_game_component_ICardProtoPoolComponent,model_ver1_game_component_ICutComponent];
 model_ver1_game_gameComponent_IGameComponent.prototype = {
 	__class__: model_ver1_game_gameComponent_IGameComponent
 };
 var model_ver1_game_entity_Context = function() {
 	this.flowMemory = { state : model_ver1_game_entity_FlowMemoryState.PrepareDeck, hasTriggerEvent : false, hasPlayerPassPhase : new haxe_ds_StringMap(), hasPlayerPassCut : new haxe_ds_StringMap(), hasPlayerPassPayCost : new haxe_ds_StringMap(), shouldTriggerStackEffectFinishedEvent : false, msgs : []};
+	this.effects = new haxe_ds_StringMap();
 	this.cuts = [];
 	this.playerSelection = { cardIds : new haxe_ds_StringMap()};
 	this.cardProtoPool = new haxe_ds_StringMap();
@@ -3289,7 +3310,7 @@ function model_ver1_game_entity_Flow_queryFlow(ctx,playerId) {
 		return [model_ver1_game_entity_Flow.Default(model_ver1_game_entity_FlowType.FlowHandleStackEffectFinished,"處理堆疊結束")];
 	}
 	var myCommandList = model_ver1_game_entity_Flow_getClientCommand(ctx,playerId);
-	var blocks = model_ver1_game_component_BlockComponent_getBlocks(ctx);
+	var blocks = model_ver1_game_component_EffectComponent_getEffects(ctx);
 	if(blocks.length > 0) {
 		var effect = blocks[0];
 		var controller = model_ver1_game_gameComponent_Alg_getBlockRuntime(ctx,effect.id).getResponsePlayerId();
@@ -3815,7 +3836,7 @@ function model_ver1_game_gameComponent_Alg_removeDestroyEffect(ctx,cardId) {
 	console.log("src/model/ver1/game/gameComponent/Alg.hx:268:","移除堆疊中的破壞效果");
 }
 function model_ver1_game_gameComponent_Alg_getBlockRuntime(ctx,blockId) {
-	var block = model_ver1_game_component_BlockComponent_getBlock(ctx,blockId);
+	var block = model_ver1_game_component_EffectComponent_getEffect(ctx,blockId);
 	var _g = block.cause;
 	switch(_g._hx_index) {
 	case 1:

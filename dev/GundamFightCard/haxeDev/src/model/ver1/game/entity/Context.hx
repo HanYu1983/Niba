@@ -9,7 +9,6 @@ import model.ver1.game.define.Timing;
 import model.ver1.game.define.Define;
 import model.ver1.game.define.CardProto;
 import model.ver1.game.component.CutComponent;
-import model.ver1.game.component.BlockComponent;
 import model.ver1.game.component.CardProtoPoolComponent;
 import model.ver1.game.component.SelectionComponent;
 import model.ver1.game.component.MarkComponent;
@@ -46,7 +45,9 @@ class Context implements IGameComponent {
 	public var playerSelection:PlayerSelection = {
 		cardIds: []
 	}
-	public var cuts:Array<Array<Block>> = [];
+	public var cuts:Array<Array<String>> = [];
+	public var effects:Map<String, Block> = [];
+	public var activePlayerId:String;
 	public var flowMemory:FlowMemory = {
 		state: PrepareDeck,
 		hasTriggerEvent: false,
@@ -56,5 +57,4 @@ class Context implements IGameComponent {
 		shouldTriggerStackEffectFinishedEvent: false,
 		msgs: [],
 	};
-	public var activePlayerId:String;
 }

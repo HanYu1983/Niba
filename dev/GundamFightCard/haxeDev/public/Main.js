@@ -27311,6 +27311,7 @@ model_ver1_game_component_ICutComponent.__name__ = "model.ver1.game.component.IC
 model_ver1_game_component_ICutComponent.__isInterface__ = true;
 model_ver1_game_component_ICutComponent.prototype = {
 	cuts: null
+	,cuts2: null
 	,__class__: model_ver1_game_component_ICutComponent
 };
 function model_ver1_game_component_CutComponent_getTopCut(ctx) {
@@ -27730,6 +27731,7 @@ model_ver1_game_gameComponent_IGameComponent.prototype = {
 };
 var model_ver1_game_entity_Context = function() {
 	this.flowMemory = { state : model_ver1_game_entity_FlowMemoryState.PrepareDeck, hasTriggerEvent : false, hasPlayerPassPhase : new haxe_ds_StringMap(), hasPlayerPassCut : new haxe_ds_StringMap(), hasPlayerPassPayCost : new haxe_ds_StringMap(), shouldTriggerStackEffectFinishedEvent : false, msgs : []};
+	this.cuts2 = [];
 	this.cuts = [];
 	this.playerSelection = { cardIds : new haxe_ds_StringMap()};
 	this.cardProtoPool = new haxe_ds_StringMap();
@@ -27749,8 +27751,9 @@ model_ver1_game_entity_Context.prototype = {
 	,cardProtoPool: null
 	,playerSelection: null
 	,cuts: null
-	,flowMemory: null
+	,cuts2: null
 	,activePlayerId: null
+	,flowMemory: null
 	,__class__: model_ver1_game_entity_Context
 };
 function model_ver1_game_gameComponent_Alg_returnToOwnerHand(ctx,cardId) {
