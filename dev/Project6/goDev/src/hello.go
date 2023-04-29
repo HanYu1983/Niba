@@ -1,9 +1,11 @@
 package main
 
 import (
-	"fmt"
+	"src/test/mixing"
+	"src/tool/memonto"
 )
 
 func main() {
-	fmt.Println("Hello, world.")
+	mixing.Test()
+	memonto.Test()
 }
