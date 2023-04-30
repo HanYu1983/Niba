@@ -20,6 +20,25 @@ type Robot interface {
 	GetCombatStyle(env interface{}) CombatStyle
 }
 
-type RobotAttackResult interface{}
+type IReaction interface{}
+
+type RobotAttackPreview struct {
+	HitRate  float32
+	Reaction IReaction
+}
+
+type ReactionShieldBlock struct {
+	Shield Weapon
+	Rate   float32
+}
+
+type ReactionSwordBlock struct {
+	Sword Weapon
+	Rate  float32
+}
+
+type ReactionEvade struct {
+	Rate float32
+}
 
 type BattleComponent interface{}

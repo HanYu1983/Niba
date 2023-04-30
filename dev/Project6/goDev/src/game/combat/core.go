@@ -1,6 +1,6 @@
 package combat
 
-func GetRobotAttackResult(ctx BattleComponent, robotA Robot, robotB Robot) RobotAttackResult {
+func GetRobotAttackResult(ctx BattleComponent, robotA Robot, robotB Robot) RobotAttackPreview {
 	switch styleA := robotA.GetCombatStyle(ctx).(type) {
 	case SwordShieldCombatStyle:
 		switch styleB := robotB.GetCombatStyle(ctx).(type) {
@@ -13,5 +13,5 @@ func GetRobotAttackResult(ctx BattleComponent, robotA Robot, robotB Robot) Robot
 	default:
 		var _ = styleA
 	}
-	return nil
+	return RobotAttackPreview{}
 }
