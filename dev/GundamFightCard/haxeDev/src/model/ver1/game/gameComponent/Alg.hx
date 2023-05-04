@@ -269,7 +269,7 @@ function removeDestroyEffect(ctx:IGameComponent, cardId:String):Void {
 	trace("移除堆疊中的破壞效果");
 }
 
-function getBlockRuntime(ctx:IGameComponent, blockId:String):Runtime {
+function getEffectRuntime(ctx:IGameComponent, blockId:String):Runtime {
 	final block = getEffect(ctx, blockId);
 	return switch block.cause {
 		case System(respnosePlayerId):

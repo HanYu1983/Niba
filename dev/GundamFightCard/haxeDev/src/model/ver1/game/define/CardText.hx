@@ -13,7 +13,7 @@ class CardText {
 
 	public var id:String;
 	public var description:String;
-	public var type = Use;
+	public var type = Automatic(Resident);
 	// << >>內文
 	public var isSurroundedByArrows = false;
 

@@ -28,6 +28,3 @@ function addEffect(ctx:IEffectComponent, block:Effect):Void {
 	ctx.effects[block.id] = block;
 }
 
-function getImmediateEffects(ctx:IEffectComponent):Array<Effect> {
-	return getEffects(ctx).filter(v->v.isImmediate);
-}

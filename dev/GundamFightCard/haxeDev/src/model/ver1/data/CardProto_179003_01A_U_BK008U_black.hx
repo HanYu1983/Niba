@@ -54,7 +54,7 @@ private class RequireThisCardDestroyByBattleDamage extends Require {
 private class Text1 extends CardText {
 	public function new(id:String) {
 		super(id, "（ダメージ判定ステップ）〔２〕：このカードが戦闘ダメージで破壊されている場合、このカードを、破壊を無効にした上で自軍Gにする。");
-		type = Use;
+		type = Use(Absolute(DamageChecking));
 	}
 
 	public override function getRequires(_ctx:Any, runtime:Runtime):Array<Require> {

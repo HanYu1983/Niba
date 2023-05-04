@@ -45,7 +45,7 @@ class CardProto_179001_01A_CH_WT007R_white extends CardProto {
 private class Text1 extends CardText {
 	public function new(id:String) {
 		super(id, "（戦闘フェイズ）〔２〕：このセットグループのユニットは、ターン終了時まで「速攻」を得る。");
-		type = Use;
+		type = Use(Absolute(Battle));
 	}
 
 	public override function getRequires(_ctx:Any, runtime:Runtime):Array<Require> {

@@ -5,12 +5,14 @@ import model.ver1.game.define.Define;
 import model.ver1.game.define.Player;
 import model.ver1.game.define.Effect;
 import model.ver1.game.define.Runtime;
-import model.ver1.game.component.EffectComponent;
+import model.ver1.game.component.CutComponent;
 import model.ver1.game.component.TimingComponent;
 import model.ver1.game.component.ActiveEffectComponent;
+import model.ver1.game.component.ActivePlayerComponent;
 import model.ver1.game.gameComponent.Alg;
 import model.ver1.game.gameComponent.Event;
 import model.ver1.game.gameComponent.GameComponent;
+import model.ver1.game.gameComponent.Runtime;
 import model.ver1.game.flowComponent.FlowMemory;
 
 interface IFlowComponent extends IGameComponent {
@@ -56,7 +58,7 @@ function queryFlow(ctx:IFlowComponent, playerId:PlayerId):Array<Flow> {
 	switch getActiveEffect(ctx) {
 		case Some(activeBlock):
 			final activeBlockId = activeBlock.id;
-			final runtime = getBlockRuntime(ctx, activeBlockId);
+			final runtime = getEffectRuntime(ctx, activeBlockId);
 			final controller = runtime.getResponsePlayerId();
 			final isPass = ctx.flowMemory.hasPlayerPassPayCost[playerId];
 			final isOpponentPass = ctx.flowMemory.hasPlayerPassPayCost[~(playerId)];
@@ -106,11 +108,11 @@ function queryFlow(ctx:IFlowComponent, playerId:PlayerId):Array<Flow> {
 	{
 		final immediateEffects = getImmediateEffects(ctx);
 		if (immediateEffects.length > 0) {
-			final isActivePlayer = ctx.activePlayerId == playerId;
+			final isActivePlayer = getActivePlayerIdAndAssert(ctx) == playerId;
 			final myEffect:Array<Effect> = [];
 			final opponentEffect:Array<Effect> = [];
 			for (effect in immediateEffects) {
-				final controller = getBlockRuntime(ctx, effect.id).getResponsePlayerId();
+				final controller = getEffectRuntime(ctx, effect.id).getResponsePlayerId();
 				if (controller == playerId) {
 					myEffect.push(effect);
 				} else {
@@ -137,7 +139,7 @@ function queryFlow(ctx:IFlowComponent, playerId:PlayerId):Array<Flow> {
 	}
 	// 一個切入結束時，由主動玩家執行處理堆疊結束的行為
 	if (ctx.flowMemory.shouldTriggerStackEffectFinishedEvent) {
-		final isActivePlayer = ctx.activePlayerId == playerId;
+		final isActivePlayer = getActivePlayerIdAndAssert(ctx) == playerId;
 		if (isActivePlayer == false) {
 			return [Default(FlowWaitPlayer, "等待主動玩家處理")];
 		}
@@ -146,13 +148,13 @@ function queryFlow(ctx:IFlowComponent, playerId:PlayerId):Array<Flow> {
 	// 切入
 	{
 		final myCommandList = getClientCommand(ctx, playerId);
-		final blocks = getEffects(ctx);
+		final blocks = getTopCut(ctx);
 		// 處理堆疊效果，從最上方開始處理
 		if (blocks.length > 0) {
 			// 取得最上方的效果
 			final effect = blocks[0];
 			// 取得效果的控制者
-			final controller = getBlockRuntime(ctx, effect.id).getResponsePlayerId();
+			final controller = getEffectRuntime(ctx, effect.id).getResponsePlayerId();
 			// 判斷切入流程
 			final isAllPassCut = ctx.flowMemory.hasPlayerPassCut[PlayerId.A] && ctx.flowMemory.hasPlayerPassCut[PlayerId.B];
 			// 如果雙方玩家還沒放棄切入
@@ -200,7 +202,7 @@ function queryFlow(ctx:IFlowComponent, playerId:PlayerId):Array<Flow> {
 					final r2 = [Flow.Default(FlowPassPhase, '宣告[${ctx.timing}]結束')];
 					return r1.concat(r2);
 				}
-				if (playerId != ctx.activePlayerId) {
+				if (playerId != getActivePlayerIdAndAssert(ctx)) {
 					return [Default(FlowWaitPlayer, "等待伺服器處理")];
 				}
 				return [Default(FlowNextTiming, "")];
@@ -209,7 +211,7 @@ function queryFlow(ctx:IFlowComponent, playerId:PlayerId):Array<Flow> {
 	}
 	// 之後的都是系統事件，由主動玩家呼叫
 	{
-		if (playerId != ctx.activePlayerId) {
+		if (playerId != getActivePlayerIdAndAssert(ctx)) {
 			return [Default(FlowWaitPlayer, "等待伺服器處理")];
 		}
 		switch getTiming(ctx) {
@@ -262,7 +264,10 @@ function queryFlow(ctx:IFlowComponent, playerId:PlayerId):Array<Flow> {
 	return [];
 }
 
-function getClientCommand(ctx:IFlowComponent, playerId:String):Array<Effect> {
+function getClientCommand(ctx:IFlowComponent, playerId:PlayerId):Array<Effect> {
+	final infos = getRuntimeText(ctx).filter(info -> {
+		return true;
+	});
 	return [];
 }
 

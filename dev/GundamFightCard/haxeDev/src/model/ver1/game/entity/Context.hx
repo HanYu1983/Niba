@@ -9,6 +9,7 @@ import model.ver1.game.define.Effect;
 import model.ver1.game.define.Timing;
 import model.ver1.game.define.Define;
 import model.ver1.game.define.CardProto;
+import model.ver1.game.define.Player;
 import model.ver1.game.component.CutComponent;
 import model.ver1.game.component.CardProtoPoolComponent;
 import model.ver1.game.component.SelectionComponent;
@@ -30,7 +31,7 @@ class Context implements IFlowComponent {
 	}
 	public var cuts:Array<Array<String>> = [];
 	public var effects:Map<String, Effect> = [];
-	public var activePlayerId:String;
+	public var activePlayerId:Option<PlayerId>;
 	public var activeEffect:Option<Effect>;
 	public var flowMemory:FlowMemory = {
 		state: PrepareDeck,

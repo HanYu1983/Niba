@@ -10,14 +10,22 @@ interface ICutComponent extends IEffectComponent {
 
 function getTopCut(ctx:ICutComponent):Array<Effect> {
 	if (ctx.cuts.length == 0) {
-		ctx.cuts.push([]);
+		return [];
 	}
 	final topCut = ctx.cuts[ctx.cuts.length - 1];
+	if (topCut.length == 0) {
+		ctx.cuts.pop();
+		if (ctx.cuts.length == 0) {
+			return [];
+		}
+	}
 	return topCut.map(id -> ctx.effects[id]);
 }
 
 function cutIn(ctx:ICutComponent, block:Effect):Void {
-	getTopCut(ctx);
+	if (ctx.cuts.length == 0) {
+		ctx.cuts.push([]);
+	}
 	final topCut = ctx.cuts[ctx.cuts.length - 1];
 	topCut.push(block.id);
 	addEffect(ctx, block);

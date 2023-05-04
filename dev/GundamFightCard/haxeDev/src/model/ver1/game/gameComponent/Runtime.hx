@@ -9,8 +9,11 @@ import model.ver1.game.define.BaSyou;
 import model.ver1.game.define.Runtime;
 import model.ver1.game.define.Mark;
 import model.ver1.game.define.CardText;
+import model.ver1.game.define.Player;
 import model.ver1.game.component.CardProtoPoolComponent;
 import model.ver1.game.component.MarkComponent;
+import model.ver1.game.component.TimingComponent;
+import model.ver1.game.component.ActivePlayerComponent;
 import model.ver1.game.gameComponent.Alg;
 import model.ver1.game.gameComponent.Event;
 import model.ver1.game.gameComponent.MarkEffect;
@@ -25,10 +28,15 @@ function isContantType(text:CardText) {
 	}
 }
 
+typedef RuntimeText = {
+	runtime:Runtime,
+	text:CardText
+}
+
 //
 // Runtime
 //
-function getRuntimeText(ctx:IGameComponent):Array<{runtime:Runtime, text:CardText}> {
+function getRuntimeText(ctx:IGameComponent):Array<RuntimeText> {
 	// ver1 （沒使用）
 	// 手牌，hanger中的牌, 直接給它Play的權力
 	// ver2
@@ -57,6 +65,26 @@ function getRuntimeText(ctx:IGameComponent):Array<{runtime:Runtime, text:CardTex
 			}
 		}
 	];
+	// 使用型內文
+	// final useReturn = [
+	// 	for (card in cardsInHandAndHanger) {
+	// 		final responsePlayerId = getBaSyouControllerAndAssertExist(ctx, getCardBaSyouAndAssertExist(ctx, card.id));
+	// 		final runtime:Runtime = new DefaultRuntime(card.id, responsePlayerId);
+	// 		for (text in getCurrentCardProto(ctx, card.protoId).getTexts(ctx, runtime).filter(text -> {
+	// 			switch (text.type) {
+	// 				case Use(useTiming):
+	// 					return isPlayerTiming(ctx,  getTiming(ctx), useTiming, playerId);
+	// 				case _:
+	// 			}
+	// 			return false;
+	// 		})) {
+	// 			{
+	// 				runtime: runtime,
+	// 				text: text
+	// 			};
+	// 		}
+	// 	}
+	// ];
 	// 倒置G
 	final cardsInGZone = [for (cs in ctx.table.cardStacks) cs].filter(cs -> {
 		return switch ((cs.id : BaSyouId) : BaSyou) {
@@ -108,6 +136,7 @@ function getRuntimeText(ctx:IGameComponent):Array<{runtime:Runtime, text:CardTex
 		}
 	];
 	// 有控制者的卡(配置區, 戰區)
+	// 使用型與常駐都在這裡, 也包含恆常
 	final cardsHasController = [for (cs in ctx.table.cardStacks) cs].filter(cs -> {
 		return switch ((cs.id : BaSyouId) : BaSyou) {
 			case Default(_, kw):
@@ -228,4 +257,19 @@ function getMarkEffects(ctx:IGameComponent):Array<MarkEffect> {
 			true;
 	});
 	return textEffects.concat(markEffects);
+}
+
+function getRuntimeTextByPlayer(ctx:IGameComponent, playerId:PlayerId):Array<RuntimeText> {
+	getRuntimeText(ctx).filter(rt -> {
+		// if (rt.runtime.getResponsePlayerId() != playerId) {
+		// 	return false;
+		// }
+		switch (rt.text.type) {
+			case Use(useTiming):
+				return isPlayerTiming(ctx, getTiming(ctx), useTiming, playerId);
+			case _:
+		}
+		return false;
+	});
+	return [];
 }

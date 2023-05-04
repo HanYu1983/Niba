@@ -1,6 +1,5 @@
 package model.ver1.game.component;
 
-using haxe.EnumTools.EnumValueTools;
 import model.ver1.game.define.Timing;
 
 interface ITimingComponent {
