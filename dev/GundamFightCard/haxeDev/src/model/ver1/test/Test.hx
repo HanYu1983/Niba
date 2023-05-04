@@ -24,7 +24,7 @@ import model.ver1.test.common.Common;
 function test() {
 	model.ver1.game.Game.test();
 	model.ver1.game.define.BaSyou.test();
-	model.ver1.game.entity.Flow.test();
+	model.ver1.game.flowComponent.FlowComponent.test();
 	model.ver1.test.Test_getRuntimeText.test();
 	test_getMarkEffects();
 	test_constantText();

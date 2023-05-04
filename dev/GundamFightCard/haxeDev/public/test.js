@@ -3093,13 +3093,6 @@ var model_ver1_game_define_Timing = $hxEnums["model.ver1.game.define.Timing"] = 
 	,Default: ($_=function(phase,step,timing) { return {_hx_index:0,phase:phase,step:step,timing:timing,__enum__:"model.ver1.game.define.Timing",toString:$estr}; },$_._hx_name="Default",$_.__params__ = ["phase","step","timing"],$_)
 };
 model_ver1_game_define_Timing.__constructs__ = [model_ver1_game_define_Timing.Default];
-var model_ver1_game_entity_FlowMemoryState = $hxEnums["model.ver1.game.entity.FlowMemoryState"] = { __ename__:"model.ver1.game.entity.FlowMemoryState",__constructs__:null
-	,PrepareDeck: {_hx_name:"PrepareDeck",_hx_index:0,__enum__:"model.ver1.game.entity.FlowMemoryState",toString:$estr}
-	,WhoFirst: {_hx_name:"WhoFirst",_hx_index:1,__enum__:"model.ver1.game.entity.FlowMemoryState",toString:$estr}
-	,Draw6AndConfirm: {_hx_name:"Draw6AndConfirm",_hx_index:2,__enum__:"model.ver1.game.entity.FlowMemoryState",toString:$estr}
-	,Playing: {_hx_name:"Playing",_hx_index:3,__enum__:"model.ver1.game.entity.FlowMemoryState",toString:$estr}
-};
-model_ver1_game_entity_FlowMemoryState.__constructs__ = [model_ver1_game_entity_FlowMemoryState.PrepareDeck,model_ver1_game_entity_FlowMemoryState.WhoFirst,model_ver1_game_entity_FlowMemoryState.Draw6AndConfirm,model_ver1_game_entity_FlowMemoryState.Playing];
 var model_ver1_game_gameComponent_IGameComponent = function() { };
 $hxClasses["model.ver1.game.gameComponent.IGameComponent"] = model_ver1_game_gameComponent_IGameComponent;
 model_ver1_game_gameComponent_IGameComponent.__name__ = "model.ver1.game.gameComponent.IGameComponent";
@@ -3108,8 +3101,16 @@ model_ver1_game_gameComponent_IGameComponent.__interfaces__ = [model_ver1_game_c
 model_ver1_game_gameComponent_IGameComponent.prototype = {
 	__class__: model_ver1_game_gameComponent_IGameComponent
 };
+var model_ver1_game_flowComponent_IFlowComponent = function() { };
+$hxClasses["model.ver1.game.flowComponent.IFlowComponent"] = model_ver1_game_flowComponent_IFlowComponent;
+model_ver1_game_flowComponent_IFlowComponent.__name__ = "model.ver1.game.flowComponent.IFlowComponent";
+model_ver1_game_flowComponent_IFlowComponent.__isInterface__ = true;
+model_ver1_game_flowComponent_IFlowComponent.__interfaces__ = [model_ver1_game_gameComponent_IGameComponent];
+model_ver1_game_flowComponent_IFlowComponent.prototype = {
+	__class__: model_ver1_game_flowComponent_IFlowComponent
+};
 var model_ver1_game_entity_Context = function() {
-	this.flowMemory = { state : model_ver1_game_entity_FlowMemoryState.PrepareDeck, hasTriggerEvent : false, hasPlayerPassPhase : new haxe_ds_StringMap(), hasPlayerPassCut : new haxe_ds_StringMap(), hasPlayerPassPayCost : new haxe_ds_StringMap(), shouldTriggerStackEffectFinishedEvent : false, msgs : []};
+	this.flowMemory = { state : model_ver1_game_flowComponent_FlowMemoryState.PrepareDeck, hasTriggerEvent : false, hasPlayerPassPhase : new haxe_ds_StringMap(), hasPlayerPassCut : new haxe_ds_StringMap(), hasPlayerPassPayCost : new haxe_ds_StringMap(), shouldTriggerStackEffectFinishedEvent : false, msgs : []};
 	this.effects = new haxe_ds_StringMap();
 	this.cuts = [];
 	this.playerSelection = { cardIds : new haxe_ds_StringMap()};
@@ -3121,41 +3122,48 @@ var model_ver1_game_entity_Context = function() {
 };
 $hxClasses["model.ver1.game.entity.Context"] = model_ver1_game_entity_Context;
 model_ver1_game_entity_Context.__name__ = "model.ver1.game.entity.Context";
-model_ver1_game_entity_Context.__interfaces__ = [model_ver1_game_gameComponent_IGameComponent];
+model_ver1_game_entity_Context.__interfaces__ = [model_ver1_game_flowComponent_IFlowComponent];
 model_ver1_game_entity_Context.prototype = {
 	__class__: model_ver1_game_entity_Context
 };
-var model_ver1_game_entity_FlowType = $hxEnums["model.ver1.game.entity.FlowType"] = { __ename__:"model.ver1.game.entity.FlowType",__constructs__:null
-	,FlowWaitPlayer: {_hx_name:"FlowWaitPlayer",_hx_index:0,__enum__:"model.ver1.game.entity.FlowType",toString:$estr}
-	,FlowObserveEffect: {_hx_name:"FlowObserveEffect",_hx_index:1,__enum__:"model.ver1.game.entity.FlowType",toString:$estr}
-	,FlowDoEffect: ($_=function(blockId) { return {_hx_index:2,blockId:blockId,__enum__:"model.ver1.game.entity.FlowType",toString:$estr}; },$_._hx_name="FlowDoEffect",$_.__params__ = ["blockId"],$_)
-	,FlowPassPayCost: ($_=function(blockId) { return {_hx_index:3,blockId:blockId,__enum__:"model.ver1.game.entity.FlowType",toString:$estr}; },$_._hx_name="FlowPassPayCost",$_.__params__ = ["blockId"],$_)
-	,FlowCancelActiveEffect: {_hx_name:"FlowCancelActiveEffect",_hx_index:4,__enum__:"model.ver1.game.entity.FlowType",toString:$estr}
-	,FlowSetActiveEffectId: ($_=function(blockId,tips) { return {_hx_index:5,blockId:blockId,tips:tips,__enum__:"model.ver1.game.entity.FlowType",toString:$estr}; },$_._hx_name="FlowSetActiveEffectId",$_.__params__ = ["blockId","tips"],$_)
-	,FlowDeleteImmediateEffect: ($_=function(blockId,tips) { return {_hx_index:6,blockId:blockId,tips:tips,__enum__:"model.ver1.game.entity.FlowType",toString:$estr}; },$_._hx_name="FlowDeleteImmediateEffect",$_.__params__ = ["blockId","tips"],$_)
-	,FlowHandleStackEffectFinished: {_hx_name:"FlowHandleStackEffectFinished",_hx_index:7,__enum__:"model.ver1.game.entity.FlowType",toString:$estr}
-	,FlowCancelPassCut: {_hx_name:"FlowCancelPassCut",_hx_index:8,__enum__:"model.ver1.game.entity.FlowType",toString:$estr}
-	,FlowPassCut: {_hx_name:"FlowPassCut",_hx_index:9,__enum__:"model.ver1.game.entity.FlowType",toString:$estr}
-	,FlowPassPhase: {_hx_name:"FlowPassPhase",_hx_index:10,__enum__:"model.ver1.game.entity.FlowType",toString:$estr}
-	,FlowCancelPassPhase: {_hx_name:"FlowCancelPassPhase",_hx_index:11,__enum__:"model.ver1.game.entity.FlowType",toString:$estr}
-	,FlowNextTiming: {_hx_name:"FlowNextTiming",_hx_index:12,__enum__:"model.ver1.game.entity.FlowType",toString:$estr}
-	,FlowTriggerTextEvent: ($_=function(event) { return {_hx_index:13,event:event,__enum__:"model.ver1.game.entity.FlowType",toString:$estr}; },$_._hx_name="FlowTriggerTextEvent",$_.__params__ = ["event"],$_)
+var model_ver1_game_flowComponent_FlowMemoryState = $hxEnums["model.ver1.game.flowComponent.FlowMemoryState"] = { __ename__:"model.ver1.game.flowComponent.FlowMemoryState",__constructs__:null
+	,PrepareDeck: {_hx_name:"PrepareDeck",_hx_index:0,__enum__:"model.ver1.game.flowComponent.FlowMemoryState",toString:$estr}
+	,WhoFirst: {_hx_name:"WhoFirst",_hx_index:1,__enum__:"model.ver1.game.flowComponent.FlowMemoryState",toString:$estr}
+	,Draw6AndConfirm: {_hx_name:"Draw6AndConfirm",_hx_index:2,__enum__:"model.ver1.game.flowComponent.FlowMemoryState",toString:$estr}
+	,Playing: {_hx_name:"Playing",_hx_index:3,__enum__:"model.ver1.game.flowComponent.FlowMemoryState",toString:$estr}
 };
-model_ver1_game_entity_FlowType.__constructs__ = [model_ver1_game_entity_FlowType.FlowWaitPlayer,model_ver1_game_entity_FlowType.FlowObserveEffect,model_ver1_game_entity_FlowType.FlowDoEffect,model_ver1_game_entity_FlowType.FlowPassPayCost,model_ver1_game_entity_FlowType.FlowCancelActiveEffect,model_ver1_game_entity_FlowType.FlowSetActiveEffectId,model_ver1_game_entity_FlowType.FlowDeleteImmediateEffect,model_ver1_game_entity_FlowType.FlowHandleStackEffectFinished,model_ver1_game_entity_FlowType.FlowCancelPassCut,model_ver1_game_entity_FlowType.FlowPassCut,model_ver1_game_entity_FlowType.FlowPassPhase,model_ver1_game_entity_FlowType.FlowCancelPassPhase,model_ver1_game_entity_FlowType.FlowNextTiming,model_ver1_game_entity_FlowType.FlowTriggerTextEvent];
-var model_ver1_game_entity_Flow = $hxEnums["model.ver1.game.entity.Flow"] = { __ename__:"model.ver1.game.entity.Flow",__constructs__:null
-	,Default: ($_=function(type,description) { return {_hx_index:0,type:type,description:description,__enum__:"model.ver1.game.entity.Flow",toString:$estr}; },$_._hx_name="Default",$_.__params__ = ["type","description"],$_)
+model_ver1_game_flowComponent_FlowMemoryState.__constructs__ = [model_ver1_game_flowComponent_FlowMemoryState.PrepareDeck,model_ver1_game_flowComponent_FlowMemoryState.WhoFirst,model_ver1_game_flowComponent_FlowMemoryState.Draw6AndConfirm,model_ver1_game_flowComponent_FlowMemoryState.Playing];
+var model_ver1_game_flowComponent_FlowType = $hxEnums["model.ver1.game.flowComponent.FlowType"] = { __ename__:"model.ver1.game.flowComponent.FlowType",__constructs__:null
+	,FlowWaitPlayer: {_hx_name:"FlowWaitPlayer",_hx_index:0,__enum__:"model.ver1.game.flowComponent.FlowType",toString:$estr}
+	,FlowObserveEffect: {_hx_name:"FlowObserveEffect",_hx_index:1,__enum__:"model.ver1.game.flowComponent.FlowType",toString:$estr}
+	,FlowDoEffect: ($_=function(blockId) { return {_hx_index:2,blockId:blockId,__enum__:"model.ver1.game.flowComponent.FlowType",toString:$estr}; },$_._hx_name="FlowDoEffect",$_.__params__ = ["blockId"],$_)
+	,FlowPassPayCost: ($_=function(blockId) { return {_hx_index:3,blockId:blockId,__enum__:"model.ver1.game.flowComponent.FlowType",toString:$estr}; },$_._hx_name="FlowPassPayCost",$_.__params__ = ["blockId"],$_)
+	,FlowCancelActiveEffect: {_hx_name:"FlowCancelActiveEffect",_hx_index:4,__enum__:"model.ver1.game.flowComponent.FlowType",toString:$estr}
+	,FlowSetActiveEffectId: ($_=function(blockId,tips) { return {_hx_index:5,blockId:blockId,tips:tips,__enum__:"model.ver1.game.flowComponent.FlowType",toString:$estr}; },$_._hx_name="FlowSetActiveEffectId",$_.__params__ = ["blockId","tips"],$_)
+	,FlowDeleteImmediateEffect: ($_=function(blockId,tips) { return {_hx_index:6,blockId:blockId,tips:tips,__enum__:"model.ver1.game.flowComponent.FlowType",toString:$estr}; },$_._hx_name="FlowDeleteImmediateEffect",$_.__params__ = ["blockId","tips"],$_)
+	,FlowHandleStackEffectFinished: {_hx_name:"FlowHandleStackEffectFinished",_hx_index:7,__enum__:"model.ver1.game.flowComponent.FlowType",toString:$estr}
+	,FlowCancelPassCut: {_hx_name:"FlowCancelPassCut",_hx_index:8,__enum__:"model.ver1.game.flowComponent.FlowType",toString:$estr}
+	,FlowPassCut: {_hx_name:"FlowPassCut",_hx_index:9,__enum__:"model.ver1.game.flowComponent.FlowType",toString:$estr}
+	,FlowPassPhase: {_hx_name:"FlowPassPhase",_hx_index:10,__enum__:"model.ver1.game.flowComponent.FlowType",toString:$estr}
+	,FlowCancelPassPhase: {_hx_name:"FlowCancelPassPhase",_hx_index:11,__enum__:"model.ver1.game.flowComponent.FlowType",toString:$estr}
+	,FlowNextTiming: {_hx_name:"FlowNextTiming",_hx_index:12,__enum__:"model.ver1.game.flowComponent.FlowType",toString:$estr}
+	,FlowTriggerTextEvent: ($_=function(event) { return {_hx_index:13,event:event,__enum__:"model.ver1.game.flowComponent.FlowType",toString:$estr}; },$_._hx_name="FlowTriggerTextEvent",$_.__params__ = ["event"],$_)
 };
-model_ver1_game_entity_Flow.__constructs__ = [model_ver1_game_entity_Flow.Default];
-function model_ver1_game_entity_Flow_passPhase(memory,playerId) {
+model_ver1_game_flowComponent_FlowType.__constructs__ = [model_ver1_game_flowComponent_FlowType.FlowWaitPlayer,model_ver1_game_flowComponent_FlowType.FlowObserveEffect,model_ver1_game_flowComponent_FlowType.FlowDoEffect,model_ver1_game_flowComponent_FlowType.FlowPassPayCost,model_ver1_game_flowComponent_FlowType.FlowCancelActiveEffect,model_ver1_game_flowComponent_FlowType.FlowSetActiveEffectId,model_ver1_game_flowComponent_FlowType.FlowDeleteImmediateEffect,model_ver1_game_flowComponent_FlowType.FlowHandleStackEffectFinished,model_ver1_game_flowComponent_FlowType.FlowCancelPassCut,model_ver1_game_flowComponent_FlowType.FlowPassCut,model_ver1_game_flowComponent_FlowType.FlowPassPhase,model_ver1_game_flowComponent_FlowType.FlowCancelPassPhase,model_ver1_game_flowComponent_FlowType.FlowNextTiming,model_ver1_game_flowComponent_FlowType.FlowTriggerTextEvent];
+var model_ver1_game_flowComponent_Flow = $hxEnums["model.ver1.game.flowComponent.Flow"] = { __ename__:"model.ver1.game.flowComponent.Flow",__constructs__:null
+	,Default: ($_=function(type,description) { return {_hx_index:0,type:type,description:description,__enum__:"model.ver1.game.flowComponent.Flow",toString:$estr}; },$_._hx_name="Default",$_.__params__ = ["type","description"],$_)
+};
+model_ver1_game_flowComponent_Flow.__constructs__ = [model_ver1_game_flowComponent_Flow.Default];
+function model_ver1_game_flowComponent_FlowComponent_passPhase(memory,playerId) {
 	memory.hasPlayerPassPhase.h[playerId] = true;
 }
-function model_ver1_game_entity_Flow_cancelPassPhase(memory,playerId) {
+function model_ver1_game_flowComponent_FlowComponent_cancelPassPhase(memory,playerId) {
 	var _this = memory.hasPlayerPassPhase;
 	if(Object.prototype.hasOwnProperty.call(_this.h,playerId)) {
 		delete(_this.h[playerId]);
 	}
 }
-function model_ver1_game_entity_Flow_resetPassPhase(memory) {
+function model_ver1_game_flowComponent_FlowComponent_resetPassPhase(memory) {
 	var h = memory.hasPlayerPassPhase.h;
 	var k_h = h;
 	var k_keys = Object.keys(h);
@@ -3169,16 +3177,16 @@ function model_ver1_game_entity_Flow_resetPassPhase(memory) {
 		}
 	}
 }
-function model_ver1_game_entity_Flow_passCut(memory,playerId) {
+function model_ver1_game_flowComponent_FlowComponent_passCut(memory,playerId) {
 	memory.hasPlayerPassPayCost.h[playerId] = true;
 }
-function model_ver1_game_entity_Flow_cancelPassCut(memory,playerId) {
+function model_ver1_game_flowComponent_FlowComponent_cancelPassCut(memory,playerId) {
 	var _this = memory.hasPlayerPassPayCost;
 	if(Object.prototype.hasOwnProperty.call(_this.h,playerId)) {
 		delete(_this.h[playerId]);
 	}
 }
-function model_ver1_game_entity_Flow_resetPassCut(memory) {
+function model_ver1_game_flowComponent_FlowComponent_resetPassCut(memory) {
 	var h = memory.hasPlayerPassCut.h;
 	var k_h = h;
 	var k_keys = Object.keys(h);
@@ -3192,7 +3200,7 @@ function model_ver1_game_entity_Flow_resetPassCut(memory) {
 		}
 	}
 }
-function model_ver1_game_entity_Flow_resetPassCost(memory) {
+function model_ver1_game_flowComponent_FlowComponent_resetPassCost(memory) {
 	var h = memory.hasPlayerPassPayCost.h;
 	var k_h = h;
 	var k_keys = Object.keys(h);
@@ -3206,30 +3214,30 @@ function model_ver1_game_entity_Flow_resetPassCost(memory) {
 		}
 	}
 }
-function model_ver1_game_entity_Flow_hasTriggerEvent(memory) {
+function model_ver1_game_flowComponent_FlowComponent_hasTriggerEvent(memory) {
 	return memory.hasTriggerEvent;
 }
-function model_ver1_game_entity_Flow_triggerEvent(memory) {
+function model_ver1_game_flowComponent_FlowComponent_triggerEvent(memory) {
 	memory.hasTriggerEvent = true;
 }
-function model_ver1_game_entity_Flow_cancelTriggerEvent(memory) {
+function model_ver1_game_flowComponent_FlowComponent_cancelTriggerEvent(memory) {
 	memory.hasTriggerEvent = false;
 }
-function model_ver1_game_entity_Flow_markTriggerStackEffectFinishedEventDone(memory) {
+function model_ver1_game_flowComponent_FlowComponent_markTriggerStackEffectFinishedEventDone(memory) {
 	memory.shouldTriggerStackEffectFinishedEvent = true;
 }
-function model_ver1_game_entity_Flow_applyFlow(ctx,playerID,flow) {
+function model_ver1_game_flowComponent_FlowComponent_applyFlow(ctx,playerID,flow) {
 	var _g = flow.type;
 	var _g1 = flow.description;
 	var tmp = _g._hx_index == 5;
 }
-function model_ver1_game_entity_Flow_queryFlow(ctx,playerId) {
-	var _g = model_ver1_game_entity_Flow_hasSomeoneLiveIsZero(ctx);
+function model_ver1_game_flowComponent_FlowComponent_queryFlow(ctx,playerId) {
+	var _g = model_ver1_game_flowComponent_FlowComponent_hasSomeoneLiveIsZero(ctx);
 	if(_g._hx_index == 0) {
 		var playerId1 = _g.v;
-		return [model_ver1_game_entity_Flow.Default(model_ver1_game_entity_FlowType.FlowWaitPlayer,"遊戲結束")];
+		return [model_ver1_game_flowComponent_Flow.Default(model_ver1_game_flowComponent_FlowType.FlowWaitPlayer,"遊戲結束")];
 	}
-	var _g = model_ver1_game_entity_Flow_getActiveBlockId(ctx);
+	var _g = model_ver1_game_flowComponent_FlowComponent_getActiveBlockId(ctx);
 	switch(_g._hx_index) {
 	case 0:
 		var activeBlockId = _g.v;
@@ -3244,29 +3252,29 @@ function model_ver1_game_entity_Flow_queryFlow(ctx,playerId) {
 		var isOpponentPass = this1.h[this2 == model_ver1_game_define_PlayerId.A ? model_ver1_game_define_PlayerId.B : model_ver1_game_define_PlayerId.A];
 		if(isPass && isOpponentPass) {
 			if(controller != playerId) {
-				return [model_ver1_game_entity_Flow.Default(model_ver1_game_entity_FlowType.FlowObserveEffect,"")];
+				return [model_ver1_game_flowComponent_Flow.Default(model_ver1_game_flowComponent_FlowType.FlowObserveEffect,"")];
 			}
-			return [model_ver1_game_entity_Flow.Default(model_ver1_game_entity_FlowType.FlowDoEffect(activeBlockId),"")];
+			return [model_ver1_game_flowComponent_Flow.Default(model_ver1_game_flowComponent_FlowType.FlowDoEffect(activeBlockId),"")];
 		} else if(isPass || isOpponentPass) {
 			if(controller == playerId) {
 				if(isPass) {
-					return [model_ver1_game_entity_Flow.Default(model_ver1_game_entity_FlowType.FlowObserveEffect,"")];
+					return [model_ver1_game_flowComponent_Flow.Default(model_ver1_game_flowComponent_FlowType.FlowObserveEffect,"")];
 				}
 			} else {
 				if(isOpponentPass == false) {
-					return [model_ver1_game_entity_Flow.Default(model_ver1_game_entity_FlowType.FlowObserveEffect,"")];
+					return [model_ver1_game_flowComponent_Flow.Default(model_ver1_game_flowComponent_FlowType.FlowObserveEffect,"")];
 				}
-				return [model_ver1_game_entity_Flow.Default(model_ver1_game_entity_FlowType.FlowPassPayCost(activeBlockId),"")];
+				return [model_ver1_game_flowComponent_Flow.Default(model_ver1_game_flowComponent_FlowType.FlowPassPayCost(activeBlockId),"")];
 			}
 		}
 		if(controller != playerId) {
-			return [model_ver1_game_entity_Flow.Default(model_ver1_game_entity_FlowType.FlowWaitPlayer,"等待對方支付ActiveEffectID")];
+			return [model_ver1_game_flowComponent_Flow.Default(model_ver1_game_flowComponent_FlowType.FlowWaitPlayer,"等待對方支付ActiveEffectID")];
 		}
-		return [model_ver1_game_entity_Flow.Default(model_ver1_game_entity_FlowType.FlowCancelActiveEffect,"取消支付效果，讓其它玩家可以支付"),model_ver1_game_entity_Flow.Default(model_ver1_game_entity_FlowType.FlowPassPayCost(activeBlockId),"")];
+		return [model_ver1_game_flowComponent_Flow.Default(model_ver1_game_flowComponent_FlowType.FlowCancelActiveEffect,"取消支付效果，讓其它玩家可以支付"),model_ver1_game_flowComponent_Flow.Default(model_ver1_game_flowComponent_FlowType.FlowPassPayCost(activeBlockId),"")];
 	case 1:
 		break;
 	}
-	var immediateEffects = model_ver1_game_entity_Flow_getImmediateEffects(ctx);
+	var immediateEffects = model_ver1_game_flowComponent_FlowComponent_getImmediateEffects(ctx);
 	if(immediateEffects.length > 0) {
 		var s = ctx.activePlayerId;
 		if([model_ver1_game_define_PlayerId.A,model_ver1_game_define_PlayerId.B].indexOf(s) != -1 == false) {
@@ -3289,11 +3297,11 @@ function model_ver1_game_entity_Flow_queryFlow(ctx,playerId) {
 		}
 		if(isActivePlayer == false) {
 			if(opponentEffect.length > 0) {
-				return [model_ver1_game_entity_Flow.Default(model_ver1_game_entity_FlowType.FlowWaitPlayer,"等待主動玩家處理起動效果")];
+				return [model_ver1_game_flowComponent_Flow.Default(model_ver1_game_flowComponent_FlowType.FlowWaitPlayer,"等待主動玩家處理起動效果")];
 			}
 		}
 		if(myEffect.length == 0) {
-			return [model_ver1_game_entity_Flow.Default(model_ver1_game_entity_FlowType.FlowWaitPlayer,"等待被動玩家處理起動效果")];
+			return [model_ver1_game_flowComponent_Flow.Default(model_ver1_game_flowComponent_FlowType.FlowWaitPlayer,"等待被動玩家處理起動效果")];
 		}
 		var _g = [];
 		var _g1 = 0;
@@ -3306,8 +3314,8 @@ function model_ver1_game_entity_Flow_queryFlow(ctx,playerId) {
 			}
 		}
 		var optionEffect = _g;
-		var r1 = myEffect.length == 0 ? [] : [model_ver1_game_entity_Flow.Default(model_ver1_game_entity_FlowType.FlowSetActiveEffectId(myEffect[0].id,myEffect),"選擇一個起動效果")];
-		var r2 = optionEffect.length == 0 ? [] : [model_ver1_game_entity_Flow.Default(model_ver1_game_entity_FlowType.FlowDeleteImmediateEffect(optionEffect[0].id,optionEffect),"你可以放棄這些效果")];
+		var r1 = myEffect.length == 0 ? [] : [model_ver1_game_flowComponent_Flow.Default(model_ver1_game_flowComponent_FlowType.FlowSetActiveEffectId(myEffect[0].id,myEffect),"選擇一個起動效果")];
+		var r2 = optionEffect.length == 0 ? [] : [model_ver1_game_flowComponent_Flow.Default(model_ver1_game_flowComponent_FlowType.FlowDeleteImmediateEffect(optionEffect[0].id,optionEffect),"你可以放棄這些效果")];
 		return r1.concat(r2);
 	}
 	if(ctx.flowMemory.shouldTriggerStackEffectFinishedEvent) {
@@ -3318,11 +3326,11 @@ function model_ver1_game_entity_Flow_queryFlow(ctx,playerId) {
 		var this1 = s;
 		var isActivePlayer = this1 == playerId;
 		if(isActivePlayer == false) {
-			return [model_ver1_game_entity_Flow.Default(model_ver1_game_entity_FlowType.FlowWaitPlayer,"等待主動玩家處理")];
+			return [model_ver1_game_flowComponent_Flow.Default(model_ver1_game_flowComponent_FlowType.FlowWaitPlayer,"等待主動玩家處理")];
 		}
-		return [model_ver1_game_entity_Flow.Default(model_ver1_game_entity_FlowType.FlowHandleStackEffectFinished,"處理堆疊結束")];
+		return [model_ver1_game_flowComponent_Flow.Default(model_ver1_game_flowComponent_FlowType.FlowHandleStackEffectFinished,"處理堆疊結束")];
 	}
-	var myCommandList = model_ver1_game_entity_Flow_getClientCommand(ctx,playerId);
+	var myCommandList = model_ver1_game_flowComponent_FlowComponent_getClientCommand(ctx,playerId);
 	var blocks = model_ver1_game_component_EffectComponent_getEffects(ctx);
 	if(blocks.length > 0) {
 		var effect = blocks[0];
@@ -3331,7 +3339,7 @@ function model_ver1_game_entity_Flow_queryFlow(ctx,playerId) {
 		if(isAllPassCut == false) {
 			var isPassCut = ctx.flowMemory.hasPlayerPassCut.h[playerId];
 			if(isPassCut) {
-				return [model_ver1_game_entity_Flow.Default(model_ver1_game_entity_FlowType.FlowCancelPassCut,"")];
+				return [model_ver1_game_flowComponent_Flow.Default(model_ver1_game_flowComponent_FlowType.FlowCancelPassCut,"")];
 			}
 			if(controller == playerId) {
 				if([model_ver1_game_define_PlayerId.A,model_ver1_game_define_PlayerId.B].indexOf(playerId) != -1 == false) {
@@ -3341,19 +3349,19 @@ function model_ver1_game_entity_Flow_queryFlow(ctx,playerId) {
 				var opponentPlayerID = this1 == model_ver1_game_define_PlayerId.A ? model_ver1_game_define_PlayerId.B : model_ver1_game_define_PlayerId.A;
 				var isOpponentPassCut = ctx.flowMemory.hasPlayerPassCut.h[opponentPlayerID];
 				if(isOpponentPassCut == false) {
-					return [model_ver1_game_entity_Flow.Default(model_ver1_game_entity_FlowType.FlowWaitPlayer,"現在的切入優先權在對方")];
+					return [model_ver1_game_flowComponent_Flow.Default(model_ver1_game_flowComponent_FlowType.FlowWaitPlayer,"現在的切入優先權在對方")];
 				}
 			}
-			var r1 = myCommandList.length == 0 ? [] : [model_ver1_game_entity_Flow.Default(model_ver1_game_entity_FlowType.FlowSetActiveEffectId(myCommandList[0].id,myCommandList),"你可以切入")];
-			var r2 = [model_ver1_game_entity_Flow.Default(model_ver1_game_entity_FlowType.FlowPassCut,"")];
+			var r1 = myCommandList.length == 0 ? [] : [model_ver1_game_flowComponent_Flow.Default(model_ver1_game_flowComponent_FlowType.FlowSetActiveEffectId(myCommandList[0].id,myCommandList),"你可以切入")];
+			var r2 = [model_ver1_game_flowComponent_Flow.Default(model_ver1_game_flowComponent_FlowType.FlowPassCut,"")];
 			return r1.concat(r2);
 		}
 		if(controller != playerId) {
-			return [model_ver1_game_entity_Flow.Default(model_ver1_game_entity_FlowType.FlowWaitPlayer,"等待效果控制者處理")];
+			return [model_ver1_game_flowComponent_Flow.Default(model_ver1_game_flowComponent_FlowType.FlowWaitPlayer,"等待效果控制者處理")];
 		}
-		return [model_ver1_game_entity_Flow.Default(model_ver1_game_entity_FlowType.FlowSetActiveEffectId(effect.id,[effect]),"支付最上方的堆疊效果")];
+		return [model_ver1_game_flowComponent_Flow.Default(model_ver1_game_flowComponent_FlowType.FlowSetActiveEffectId(effect.id,[effect]),"支付最上方的堆疊效果")];
 	}
-	var myCommandList = model_ver1_game_entity_Flow_getClientCommand(ctx,playerId);
+	var myCommandList = model_ver1_game_flowComponent_FlowComponent_getClientCommand(ctx,playerId);
 	var _g = model_ver1_game_component_TimingComponent_getTiming(ctx);
 	var _g1 = _g.phase;
 	var _g1 = _g.step;
@@ -3362,20 +3370,20 @@ function model_ver1_game_entity_Flow_queryFlow(ctx,playerId) {
 		var isAllPassPhase = ctx.flowMemory.hasPlayerPassPhase.h[model_ver1_game_define_PlayerId.A] && ctx.flowMemory.hasPlayerPassPhase.h[model_ver1_game_define_PlayerId.B];
 		if(isAllPassPhase == false) {
 			if(ctx.flowMemory.hasPlayerPassPhase.h[playerId]) {
-				return [model_ver1_game_entity_Flow.Default(model_ver1_game_entity_FlowType.FlowCancelPassPhase,"等待對方結束或是取消[" + Std.string(ctx.timing) + "]結束")];
+				return [model_ver1_game_flowComponent_Flow.Default(model_ver1_game_flowComponent_FlowType.FlowCancelPassPhase,"等待對方結束或是取消[" + Std.string(ctx.timing) + "]結束")];
 			}
-			var r1 = myCommandList.length == 0 ? [] : [model_ver1_game_entity_Flow.Default(model_ver1_game_entity_FlowType.FlowSetActiveEffectId(myCommandList[0].id,myCommandList),"選擇一個指令")];
-			var r2 = [model_ver1_game_entity_Flow.Default(model_ver1_game_entity_FlowType.FlowPassPhase,"宣告[" + Std.string(ctx.timing) + "]結束")];
+			var r1 = myCommandList.length == 0 ? [] : [model_ver1_game_flowComponent_Flow.Default(model_ver1_game_flowComponent_FlowType.FlowSetActiveEffectId(myCommandList[0].id,myCommandList),"選擇一個指令")];
+			var r2 = [model_ver1_game_flowComponent_Flow.Default(model_ver1_game_flowComponent_FlowType.FlowPassPhase,"宣告[" + Std.string(ctx.timing) + "]結束")];
 			return r1.concat(r2);
 		}
 		if(playerId != ctx.activePlayerId) {
-			return [model_ver1_game_entity_Flow.Default(model_ver1_game_entity_FlowType.FlowWaitPlayer,"等待伺服器處理")];
+			return [model_ver1_game_flowComponent_Flow.Default(model_ver1_game_flowComponent_FlowType.FlowWaitPlayer,"等待伺服器處理")];
 		}
-		return [model_ver1_game_entity_Flow.Default(model_ver1_game_entity_FlowType.FlowNextTiming,"")];
+		return [model_ver1_game_flowComponent_Flow.Default(model_ver1_game_flowComponent_FlowType.FlowNextTiming,"")];
 	default:
 	}
 	if(playerId != ctx.activePlayerId) {
-		return [model_ver1_game_entity_Flow.Default(model_ver1_game_entity_FlowType.FlowWaitPlayer,"等待伺服器處理")];
+		return [model_ver1_game_flowComponent_Flow.Default(model_ver1_game_flowComponent_FlowType.FlowWaitPlayer,"等待伺服器處理")];
 	}
 	var _g = model_ver1_game_component_TimingComponent_getTiming(ctx);
 	var _g1 = _g.step;
@@ -3386,23 +3394,23 @@ function model_ver1_game_entity_Flow_queryFlow(ctx,playerId) {
 			switch(_g2._hx_index) {
 			case 2:
 				if(ctx.flowMemory.hasTriggerEvent) {
-					return [model_ver1_game_entity_Flow.Default(model_ver1_game_entity_FlowType.FlowNextTiming,"")];
+					return [model_ver1_game_flowComponent_Flow.Default(model_ver1_game_flowComponent_FlowType.FlowNextTiming,"")];
 				}
 				break;
 			case 0:case 4:
 				if(ctx.flowMemory.hasTriggerEvent) {
-					return [model_ver1_game_entity_Flow.Default(model_ver1_game_entity_FlowType.FlowNextTiming,"")];
+					return [model_ver1_game_flowComponent_Flow.Default(model_ver1_game_flowComponent_FlowType.FlowNextTiming,"")];
 				}
-				return [model_ver1_game_entity_Flow.Default(model_ver1_game_entity_FlowType.FlowTriggerTextEvent(model_ver1_game_gameComponent_Event.ChangePhase),"")];
+				return [model_ver1_game_flowComponent_Flow.Default(model_ver1_game_flowComponent_FlowType.FlowTriggerTextEvent(model_ver1_game_gameComponent_Event.ChangePhase),"")];
 			default:
 			}
 		} else {
 			switch(_g2._hx_index) {
 			case 0:case 4:
 				if(ctx.flowMemory.hasTriggerEvent) {
-					return [model_ver1_game_entity_Flow.Default(model_ver1_game_entity_FlowType.FlowNextTiming,"")];
+					return [model_ver1_game_flowComponent_Flow.Default(model_ver1_game_flowComponent_FlowType.FlowNextTiming,"")];
 				}
-				return [model_ver1_game_entity_Flow.Default(model_ver1_game_entity_FlowType.FlowTriggerTextEvent(model_ver1_game_gameComponent_Event.ChangePhase),"")];
+				return [model_ver1_game_flowComponent_Flow.Default(model_ver1_game_flowComponent_FlowType.FlowTriggerTextEvent(model_ver1_game_gameComponent_Event.ChangePhase),"")];
 			default:
 			}
 		}
@@ -3412,23 +3420,23 @@ function model_ver1_game_entity_Flow_queryFlow(ctx,playerId) {
 			switch(_g2._hx_index) {
 			case 2:
 				if(ctx.flowMemory.hasTriggerEvent) {
-					return [model_ver1_game_entity_Flow.Default(model_ver1_game_entity_FlowType.FlowNextTiming,"")];
+					return [model_ver1_game_flowComponent_Flow.Default(model_ver1_game_flowComponent_FlowType.FlowNextTiming,"")];
 				}
 				break;
 			case 0:case 4:
 				if(ctx.flowMemory.hasTriggerEvent) {
-					return [model_ver1_game_entity_Flow.Default(model_ver1_game_entity_FlowType.FlowNextTiming,"")];
+					return [model_ver1_game_flowComponent_Flow.Default(model_ver1_game_flowComponent_FlowType.FlowNextTiming,"")];
 				}
-				return [model_ver1_game_entity_Flow.Default(model_ver1_game_entity_FlowType.FlowTriggerTextEvent(model_ver1_game_gameComponent_Event.ChangePhase),"")];
+				return [model_ver1_game_flowComponent_Flow.Default(model_ver1_game_flowComponent_FlowType.FlowTriggerTextEvent(model_ver1_game_gameComponent_Event.ChangePhase),"")];
 			default:
 			}
 		} else {
 			switch(_g2._hx_index) {
 			case 0:case 4:
 				if(ctx.flowMemory.hasTriggerEvent) {
-					return [model_ver1_game_entity_Flow.Default(model_ver1_game_entity_FlowType.FlowNextTiming,"")];
+					return [model_ver1_game_flowComponent_Flow.Default(model_ver1_game_flowComponent_FlowType.FlowNextTiming,"")];
 				}
-				return [model_ver1_game_entity_Flow.Default(model_ver1_game_entity_FlowType.FlowTriggerTextEvent(model_ver1_game_gameComponent_Event.ChangePhase),"")];
+				return [model_ver1_game_flowComponent_Flow.Default(model_ver1_game_flowComponent_FlowType.FlowTriggerTextEvent(model_ver1_game_gameComponent_Event.ChangePhase),"")];
 			default:
 			}
 		}
@@ -3440,14 +3448,14 @@ function model_ver1_game_entity_Flow_queryFlow(ctx,playerId) {
 				switch(_g2._hx_index) {
 				case 2:
 					if(ctx.flowMemory.hasTriggerEvent) {
-						return [model_ver1_game_entity_Flow.Default(model_ver1_game_entity_FlowType.FlowNextTiming,"")];
+						return [model_ver1_game_flowComponent_Flow.Default(model_ver1_game_flowComponent_FlowType.FlowNextTiming,"")];
 					}
 					break;
 				case 0:case 4:
 					if(ctx.flowMemory.hasTriggerEvent) {
-						return [model_ver1_game_entity_Flow.Default(model_ver1_game_entity_FlowType.FlowNextTiming,"")];
+						return [model_ver1_game_flowComponent_Flow.Default(model_ver1_game_flowComponent_FlowType.FlowNextTiming,"")];
 					}
-					return [model_ver1_game_entity_Flow.Default(model_ver1_game_entity_FlowType.FlowTriggerTextEvent(model_ver1_game_gameComponent_Event.ChangePhase),"")];
+					return [model_ver1_game_flowComponent_Flow.Default(model_ver1_game_flowComponent_FlowType.FlowTriggerTextEvent(model_ver1_game_gameComponent_Event.ChangePhase),"")];
 				default:
 				}
 				break;
@@ -3455,14 +3463,14 @@ function model_ver1_game_entity_Flow_queryFlow(ctx,playerId) {
 				switch(_g2._hx_index) {
 				case 2:
 					if(ctx.flowMemory.hasTriggerEvent) {
-						return [model_ver1_game_entity_Flow.Default(model_ver1_game_entity_FlowType.FlowNextTiming,"")];
+						return [model_ver1_game_flowComponent_Flow.Default(model_ver1_game_flowComponent_FlowType.FlowNextTiming,"")];
 					}
 					break;
 				case 0:case 4:
 					if(ctx.flowMemory.hasTriggerEvent) {
-						return [model_ver1_game_entity_Flow.Default(model_ver1_game_entity_FlowType.FlowNextTiming,"")];
+						return [model_ver1_game_flowComponent_Flow.Default(model_ver1_game_flowComponent_FlowType.FlowNextTiming,"")];
 					}
-					return [model_ver1_game_entity_Flow.Default(model_ver1_game_entity_FlowType.FlowTriggerTextEvent(model_ver1_game_gameComponent_Event.ChangePhase),"")];
+					return [model_ver1_game_flowComponent_Flow.Default(model_ver1_game_flowComponent_FlowType.FlowTriggerTextEvent(model_ver1_game_gameComponent_Event.ChangePhase),"")];
 				default:
 				}
 				break;
@@ -3470,14 +3478,14 @@ function model_ver1_game_entity_Flow_queryFlow(ctx,playerId) {
 				switch(_g2._hx_index) {
 				case 2:
 					if(ctx.flowMemory.hasTriggerEvent) {
-						return [model_ver1_game_entity_Flow.Default(model_ver1_game_entity_FlowType.FlowNextTiming,"")];
+						return [model_ver1_game_flowComponent_Flow.Default(model_ver1_game_flowComponent_FlowType.FlowNextTiming,"")];
 					}
 					break;
 				case 0:case 4:
 					if(ctx.flowMemory.hasTriggerEvent) {
-						return [model_ver1_game_entity_Flow.Default(model_ver1_game_entity_FlowType.FlowNextTiming,"")];
+						return [model_ver1_game_flowComponent_Flow.Default(model_ver1_game_flowComponent_FlowType.FlowNextTiming,"")];
 					}
-					return [model_ver1_game_entity_Flow.Default(model_ver1_game_entity_FlowType.FlowTriggerTextEvent(model_ver1_game_gameComponent_Event.ChangePhase),"")];
+					return [model_ver1_game_flowComponent_Flow.Default(model_ver1_game_flowComponent_FlowType.FlowTriggerTextEvent(model_ver1_game_gameComponent_Event.ChangePhase),"")];
 				default:
 				}
 				break;
@@ -3485,14 +3493,14 @@ function model_ver1_game_entity_Flow_queryFlow(ctx,playerId) {
 				switch(_g2._hx_index) {
 				case 2:
 					if(ctx.flowMemory.hasTriggerEvent) {
-						return [model_ver1_game_entity_Flow.Default(model_ver1_game_entity_FlowType.FlowNextTiming,"")];
+						return [model_ver1_game_flowComponent_Flow.Default(model_ver1_game_flowComponent_FlowType.FlowNextTiming,"")];
 					}
 					break;
 				case 0:case 4:
 					if(ctx.flowMemory.hasTriggerEvent) {
-						return [model_ver1_game_entity_Flow.Default(model_ver1_game_entity_FlowType.FlowNextTiming,"")];
+						return [model_ver1_game_flowComponent_Flow.Default(model_ver1_game_flowComponent_FlowType.FlowNextTiming,"")];
 					}
-					return [model_ver1_game_entity_Flow.Default(model_ver1_game_entity_FlowType.FlowTriggerTextEvent(model_ver1_game_gameComponent_Event.ChangePhase),"")];
+					return [model_ver1_game_flowComponent_Flow.Default(model_ver1_game_flowComponent_FlowType.FlowTriggerTextEvent(model_ver1_game_gameComponent_Event.ChangePhase),"")];
 				default:
 				}
 				break;
@@ -3500,9 +3508,9 @@ function model_ver1_game_entity_Flow_queryFlow(ctx,playerId) {
 				switch(_g2._hx_index) {
 				case 0:case 4:
 					if(ctx.flowMemory.hasTriggerEvent) {
-						return [model_ver1_game_entity_Flow.Default(model_ver1_game_entity_FlowType.FlowNextTiming,"")];
+						return [model_ver1_game_flowComponent_Flow.Default(model_ver1_game_flowComponent_FlowType.FlowNextTiming,"")];
 					}
-					return [model_ver1_game_entity_Flow.Default(model_ver1_game_entity_FlowType.FlowTriggerTextEvent(model_ver1_game_gameComponent_Event.ChangePhase),"")];
+					return [model_ver1_game_flowComponent_Flow.Default(model_ver1_game_flowComponent_FlowType.FlowTriggerTextEvent(model_ver1_game_gameComponent_Event.ChangePhase),"")];
 				case 5:
 					break;
 				case 6:
@@ -3511,9 +3519,9 @@ function model_ver1_game_entity_Flow_queryFlow(ctx,playerId) {
 					break;
 				case 8:
 					if(ctx.flowMemory.hasTriggerEvent) {
-						return [model_ver1_game_entity_Flow.Default(model_ver1_game_entity_FlowType.FlowNextTiming,"")];
+						return [model_ver1_game_flowComponent_Flow.Default(model_ver1_game_flowComponent_FlowType.FlowNextTiming,"")];
 					}
-					return [model_ver1_game_entity_Flow.Default(model_ver1_game_entity_FlowType.FlowTriggerTextEvent(model_ver1_game_gameComponent_Event.ChangePhase),"")];
+					return [model_ver1_game_flowComponent_Flow.Default(model_ver1_game_flowComponent_FlowType.FlowTriggerTextEvent(model_ver1_game_gameComponent_Event.ChangePhase),"")];
 				default:
 				}
 				break;
@@ -3522,9 +3530,9 @@ function model_ver1_game_entity_Flow_queryFlow(ctx,playerId) {
 			switch(_g2._hx_index) {
 			case 0:case 4:
 				if(ctx.flowMemory.hasTriggerEvent) {
-					return [model_ver1_game_entity_Flow.Default(model_ver1_game_entity_FlowType.FlowNextTiming,"")];
+					return [model_ver1_game_flowComponent_Flow.Default(model_ver1_game_flowComponent_FlowType.FlowNextTiming,"")];
 				}
-				return [model_ver1_game_entity_Flow.Default(model_ver1_game_entity_FlowType.FlowTriggerTextEvent(model_ver1_game_gameComponent_Event.ChangePhase),"")];
+				return [model_ver1_game_flowComponent_Flow.Default(model_ver1_game_flowComponent_FlowType.FlowTriggerTextEvent(model_ver1_game_gameComponent_Event.ChangePhase),"")];
 			default:
 			}
 		}
@@ -3533,31 +3541,31 @@ function model_ver1_game_entity_Flow_queryFlow(ctx,playerId) {
 		switch(_g2._hx_index) {
 		case 0:case 4:
 			if(ctx.flowMemory.hasTriggerEvent) {
-				return [model_ver1_game_entity_Flow.Default(model_ver1_game_entity_FlowType.FlowNextTiming,"")];
+				return [model_ver1_game_flowComponent_Flow.Default(model_ver1_game_flowComponent_FlowType.FlowNextTiming,"")];
 			}
-			return [model_ver1_game_entity_Flow.Default(model_ver1_game_entity_FlowType.FlowTriggerTextEvent(model_ver1_game_gameComponent_Event.ChangePhase),"")];
+			return [model_ver1_game_flowComponent_Flow.Default(model_ver1_game_flowComponent_FlowType.FlowTriggerTextEvent(model_ver1_game_gameComponent_Event.ChangePhase),"")];
 		default:
 		}
 	}
 	return [];
 }
-function model_ver1_game_entity_Flow_hasSomeoneLiveIsZero(ctx) {
+function model_ver1_game_flowComponent_FlowComponent_hasSomeoneLiveIsZero(ctx) {
 	return haxe_ds_Option.None;
 }
-function model_ver1_game_entity_Flow_getActiveBlockId(ctx) {
+function model_ver1_game_flowComponent_FlowComponent_getActiveBlockId(ctx) {
 	return haxe_ds_Option.None;
 }
-function model_ver1_game_entity_Flow_getImmediateEffects(ctx) {
+function model_ver1_game_flowComponent_FlowComponent_getImmediateEffects(ctx) {
 	return [];
 }
-function model_ver1_game_entity_Flow_getClientCommand(ctx,playerId) {
+function model_ver1_game_flowComponent_FlowComponent_getClientCommand(ctx,playerId) {
 	return [];
 }
-function model_ver1_game_entity_Flow_addDrawRuleEffect(ctx) {
+function model_ver1_game_flowComponent_FlowComponent_addDrawRuleEffect(ctx) {
 }
-function model_ver1_game_entity_Flow_addRerollRuleEffect(ctx) {
+function model_ver1_game_flowComponent_FlowComponent_addRerollRuleEffect(ctx) {
 }
-function model_ver1_game_entity_Flow_test() {
+function model_ver1_game_flowComponent_FlowComponent_test() {
 }
 function model_ver1_game_gameComponent_Alg_returnToOwnerHand(ctx,cardId) {
 	var from = model_ver1_game_gameComponent_Alg_getCardBaSyouAndAssertExist(ctx,cardId);
@@ -4427,7 +4435,7 @@ function model_ver1_game_gameComponent_Runtime_getMarkEffects(ctx) {
 function model_ver1_test_Test_test() {
 	model_ver1_game_Game_test();
 	model_ver1_game_define_BaSyou_test();
-	model_ver1_game_entity_Flow_test();
+	model_ver1_game_flowComponent_FlowComponent_test();
 	model_ver1_test_Test_$getRuntimeText_test();
 	model_ver1_test_Test_test_getMarkEffects();
 	model_ver1_test_Test_test_constantText();

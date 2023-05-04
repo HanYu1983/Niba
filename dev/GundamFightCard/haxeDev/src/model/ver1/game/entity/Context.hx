@@ -13,28 +13,10 @@ import model.ver1.game.component.CardProtoPoolComponent;
 import model.ver1.game.component.SelectionComponent;
 import model.ver1.game.component.MarkComponent;
 import model.ver1.game.component.TimingComponent;
-import model.ver1.game.gameComponent.GameComponent;
+import model.ver1.game.flowComponent.FlowComponent;
 
-enum FlowMemoryState {
-	PrepareDeck;
-	WhoFirst;
-	Draw6AndConfirm;
-	Playing;
-}
 
-typedef Message = Any;
-
-typedef FlowMemory = {
-	state:FlowMemoryState,
-	hasTriggerEvent:Bool,
-	hasPlayerPassPhase:Map<String, Bool>,
-	hasPlayerPassCut:Map<String, Bool>,
-	hasPlayerPassPayCost:Map<String, Bool>,
-	shouldTriggerStackEffectFinishedEvent:Bool,
-	msgs:Array<Message>,
-}
-
-class Context implements IGameComponent {
+class Context implements IFlowComponent{
 	public function new() {}
 
 	public var playersOrder:Array<String> = [];

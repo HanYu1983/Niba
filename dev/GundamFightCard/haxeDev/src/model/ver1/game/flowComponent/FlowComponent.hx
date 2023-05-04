@@ -1,15 +1,38 @@
-package model.ver1.game.entity;
+package model.ver1.game.flowComponent;
 
 import haxe.ds.Option;
 import model.ver1.game.define.Define;
 import model.ver1.game.define.Player;
 import model.ver1.game.define.Effect;
-import model.ver1.game.gameComponent.Event;
 import model.ver1.game.define.Runtime;
 import model.ver1.game.component.EffectComponent;
 import model.ver1.game.component.TimingComponent;
 import model.ver1.game.gameComponent.Alg;
-import model.ver1.game.entity.Context;
+import model.ver1.game.gameComponent.Event;
+import model.ver1.game.gameComponent.GameComponent;
+
+enum FlowMemoryState {
+	PrepareDeck;
+	WhoFirst;
+	Draw6AndConfirm;
+	Playing;
+}
+
+typedef Message = Any;
+
+typedef FlowMemory = {
+	state:FlowMemoryState,
+	hasTriggerEvent:Bool,
+	hasPlayerPassPhase:Map<String, Bool>,
+	hasPlayerPassCut:Map<String, Bool>,
+	hasPlayerPassPayCost:Map<String, Bool>,
+	shouldTriggerStackEffectFinishedEvent:Bool,
+	msgs:Array<Message>,
+}
+
+interface IFlowComponent extends IGameComponent {
+	var flowMemory:FlowMemory;
+}
 
 // 宣告結束
 function passPhase(memory:FlowMemory, playerId:String):Void {
@@ -93,14 +116,14 @@ enum Flow {
 	Default(type:FlowType, description:String);
 }
 
-function applyFlow(ctx:Context, playerID:PlayerId, flow:Flow):Void {
+function applyFlow(ctx:IFlowComponent, playerID:PlayerId, flow:Flow):Void {
 	switch flow {
 		case Default(FlowSetActiveEffectId(blockId, tips), _):
 		case _:
 	}
 }
 
-function queryFlow(ctx:Context, playerId:PlayerId):Array<Flow> {
+function queryFlow(ctx:IFlowComponent, playerId:PlayerId):Array<Flow> {
 	// 是否有玩家牌生命歸0，遊戲結束
 	switch hasSomeoneLiveIsZero(ctx) {
 		case Some(playerId):
@@ -316,22 +339,22 @@ function queryFlow(ctx:Context, playerId:PlayerId):Array<Flow> {
 	return [];
 }
 
-function hasSomeoneLiveIsZero(ctx:Context):Option<String> {
+function hasSomeoneLiveIsZero(ctx:IFlowComponent):Option<String> {
 	return None;
 }
 
-function getActiveBlockId(ctx:Context):Option<String> {
+function getActiveBlockId(ctx:IFlowComponent):Option<String> {
 	return None;
 }
 
-function getImmediateEffects(ctx:Context):Array<Effect> {
+function getImmediateEffects(ctx:IFlowComponent):Array<Effect> {
 	return [];
 }
 
-function getClientCommand(ctx:Context, playerId:String):Array<Effect> {
+function getClientCommand(ctx:IFlowComponent, playerId:String):Array<Effect> {
 	return [];
 }
 
-function addDrawRuleEffect(ctx:Context):Void {}
-function addRerollRuleEffect(ctx:Context):Void {}
+function addDrawRuleEffect(ctx:IFlowComponent):Void {}
+function addRerollRuleEffect(ctx:IFlowComponent):Void {}
 function test() {}
