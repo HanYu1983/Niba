@@ -3126,13 +3126,6 @@ model_ver1_game_entity_Context.__interfaces__ = [model_ver1_game_flowComponent_I
 model_ver1_game_entity_Context.prototype = {
 	__class__: model_ver1_game_entity_Context
 };
-var model_ver1_game_flowComponent_FlowMemoryState = $hxEnums["model.ver1.game.flowComponent.FlowMemoryState"] = { __ename__:"model.ver1.game.flowComponent.FlowMemoryState",__constructs__:null
-	,PrepareDeck: {_hx_name:"PrepareDeck",_hx_index:0,__enum__:"model.ver1.game.flowComponent.FlowMemoryState",toString:$estr}
-	,WhoFirst: {_hx_name:"WhoFirst",_hx_index:1,__enum__:"model.ver1.game.flowComponent.FlowMemoryState",toString:$estr}
-	,Draw6AndConfirm: {_hx_name:"Draw6AndConfirm",_hx_index:2,__enum__:"model.ver1.game.flowComponent.FlowMemoryState",toString:$estr}
-	,Playing: {_hx_name:"Playing",_hx_index:3,__enum__:"model.ver1.game.flowComponent.FlowMemoryState",toString:$estr}
-};
-model_ver1_game_flowComponent_FlowMemoryState.__constructs__ = [model_ver1_game_flowComponent_FlowMemoryState.PrepareDeck,model_ver1_game_flowComponent_FlowMemoryState.WhoFirst,model_ver1_game_flowComponent_FlowMemoryState.Draw6AndConfirm,model_ver1_game_flowComponent_FlowMemoryState.Playing];
 var model_ver1_game_flowComponent_FlowType = $hxEnums["model.ver1.game.flowComponent.FlowType"] = { __ename__:"model.ver1.game.flowComponent.FlowType",__constructs__:null
 	,FlowWaitPlayer: {_hx_name:"FlowWaitPlayer",_hx_index:0,__enum__:"model.ver1.game.flowComponent.FlowType",toString:$estr}
 	,FlowObserveEffect: {_hx_name:"FlowObserveEffect",_hx_index:1,__enum__:"model.ver1.game.flowComponent.FlowType",toString:$estr}
@@ -3154,78 +3147,6 @@ var model_ver1_game_flowComponent_Flow = $hxEnums["model.ver1.game.flowComponent
 	,Default: ($_=function(type,description) { return {_hx_index:0,type:type,description:description,__enum__:"model.ver1.game.flowComponent.Flow",toString:$estr}; },$_._hx_name="Default",$_.__params__ = ["type","description"],$_)
 };
 model_ver1_game_flowComponent_Flow.__constructs__ = [model_ver1_game_flowComponent_Flow.Default];
-function model_ver1_game_flowComponent_FlowComponent_passPhase(memory,playerId) {
-	memory.hasPlayerPassPhase.h[playerId] = true;
-}
-function model_ver1_game_flowComponent_FlowComponent_cancelPassPhase(memory,playerId) {
-	var _this = memory.hasPlayerPassPhase;
-	if(Object.prototype.hasOwnProperty.call(_this.h,playerId)) {
-		delete(_this.h[playerId]);
-	}
-}
-function model_ver1_game_flowComponent_FlowComponent_resetPassPhase(memory) {
-	var h = memory.hasPlayerPassPhase.h;
-	var k_h = h;
-	var k_keys = Object.keys(h);
-	var k_length = k_keys.length;
-	var k_current = 0;
-	while(k_current < k_length) {
-		var k = k_keys[k_current++];
-		var _this = memory.hasPlayerPassPhase;
-		if(Object.prototype.hasOwnProperty.call(_this.h,k)) {
-			delete(_this.h[k]);
-		}
-	}
-}
-function model_ver1_game_flowComponent_FlowComponent_passCut(memory,playerId) {
-	memory.hasPlayerPassPayCost.h[playerId] = true;
-}
-function model_ver1_game_flowComponent_FlowComponent_cancelPassCut(memory,playerId) {
-	var _this = memory.hasPlayerPassPayCost;
-	if(Object.prototype.hasOwnProperty.call(_this.h,playerId)) {
-		delete(_this.h[playerId]);
-	}
-}
-function model_ver1_game_flowComponent_FlowComponent_resetPassCut(memory) {
-	var h = memory.hasPlayerPassCut.h;
-	var k_h = h;
-	var k_keys = Object.keys(h);
-	var k_length = k_keys.length;
-	var k_current = 0;
-	while(k_current < k_length) {
-		var k = k_keys[k_current++];
-		var _this = memory.hasPlayerPassCut;
-		if(Object.prototype.hasOwnProperty.call(_this.h,k)) {
-			delete(_this.h[k]);
-		}
-	}
-}
-function model_ver1_game_flowComponent_FlowComponent_resetPassCost(memory) {
-	var h = memory.hasPlayerPassPayCost.h;
-	var k_h = h;
-	var k_keys = Object.keys(h);
-	var k_length = k_keys.length;
-	var k_current = 0;
-	while(k_current < k_length) {
-		var k = k_keys[k_current++];
-		var _this = memory.hasPlayerPassPayCost;
-		if(Object.prototype.hasOwnProperty.call(_this.h,k)) {
-			delete(_this.h[k]);
-		}
-	}
-}
-function model_ver1_game_flowComponent_FlowComponent_hasTriggerEvent(memory) {
-	return memory.hasTriggerEvent;
-}
-function model_ver1_game_flowComponent_FlowComponent_triggerEvent(memory) {
-	memory.hasTriggerEvent = true;
-}
-function model_ver1_game_flowComponent_FlowComponent_cancelTriggerEvent(memory) {
-	memory.hasTriggerEvent = false;
-}
-function model_ver1_game_flowComponent_FlowComponent_markTriggerStackEffectFinishedEventDone(memory) {
-	memory.shouldTriggerStackEffectFinishedEvent = true;
-}
 function model_ver1_game_flowComponent_FlowComponent_applyFlow(ctx,playerID,flow) {
 	var _g = flow.type;
 	var _g1 = flow.description;
@@ -3566,6 +3487,85 @@ function model_ver1_game_flowComponent_FlowComponent_addDrawRuleEffect(ctx) {
 function model_ver1_game_flowComponent_FlowComponent_addRerollRuleEffect(ctx) {
 }
 function model_ver1_game_flowComponent_FlowComponent_test() {
+}
+var model_ver1_game_flowComponent_FlowMemoryState = $hxEnums["model.ver1.game.flowComponent.FlowMemoryState"] = { __ename__:"model.ver1.game.flowComponent.FlowMemoryState",__constructs__:null
+	,PrepareDeck: {_hx_name:"PrepareDeck",_hx_index:0,__enum__:"model.ver1.game.flowComponent.FlowMemoryState",toString:$estr}
+	,WhoFirst: {_hx_name:"WhoFirst",_hx_index:1,__enum__:"model.ver1.game.flowComponent.FlowMemoryState",toString:$estr}
+	,Draw6AndConfirm: {_hx_name:"Draw6AndConfirm",_hx_index:2,__enum__:"model.ver1.game.flowComponent.FlowMemoryState",toString:$estr}
+	,Playing: {_hx_name:"Playing",_hx_index:3,__enum__:"model.ver1.game.flowComponent.FlowMemoryState",toString:$estr}
+};
+model_ver1_game_flowComponent_FlowMemoryState.__constructs__ = [model_ver1_game_flowComponent_FlowMemoryState.PrepareDeck,model_ver1_game_flowComponent_FlowMemoryState.WhoFirst,model_ver1_game_flowComponent_FlowMemoryState.Draw6AndConfirm,model_ver1_game_flowComponent_FlowMemoryState.Playing];
+function model_ver1_game_flowComponent_FlowMemory_passPhase(memory,playerId) {
+	memory.hasPlayerPassPhase.h[playerId] = true;
+}
+function model_ver1_game_flowComponent_FlowMemory_cancelPassPhase(memory,playerId) {
+	var _this = memory.hasPlayerPassPhase;
+	if(Object.prototype.hasOwnProperty.call(_this.h,playerId)) {
+		delete(_this.h[playerId]);
+	}
+}
+function model_ver1_game_flowComponent_FlowMemory_resetPassPhase(memory) {
+	var h = memory.hasPlayerPassPhase.h;
+	var k_h = h;
+	var k_keys = Object.keys(h);
+	var k_length = k_keys.length;
+	var k_current = 0;
+	while(k_current < k_length) {
+		var k = k_keys[k_current++];
+		var _this = memory.hasPlayerPassPhase;
+		if(Object.prototype.hasOwnProperty.call(_this.h,k)) {
+			delete(_this.h[k]);
+		}
+	}
+}
+function model_ver1_game_flowComponent_FlowMemory_passCut(memory,playerId) {
+	memory.hasPlayerPassPayCost.h[playerId] = true;
+}
+function model_ver1_game_flowComponent_FlowMemory_cancelPassCut(memory,playerId) {
+	var _this = memory.hasPlayerPassPayCost;
+	if(Object.prototype.hasOwnProperty.call(_this.h,playerId)) {
+		delete(_this.h[playerId]);
+	}
+}
+function model_ver1_game_flowComponent_FlowMemory_resetPassCut(memory) {
+	var h = memory.hasPlayerPassCut.h;
+	var k_h = h;
+	var k_keys = Object.keys(h);
+	var k_length = k_keys.length;
+	var k_current = 0;
+	while(k_current < k_length) {
+		var k = k_keys[k_current++];
+		var _this = memory.hasPlayerPassCut;
+		if(Object.prototype.hasOwnProperty.call(_this.h,k)) {
+			delete(_this.h[k]);
+		}
+	}
+}
+function model_ver1_game_flowComponent_FlowMemory_resetPassCost(memory) {
+	var h = memory.hasPlayerPassPayCost.h;
+	var k_h = h;
+	var k_keys = Object.keys(h);
+	var k_length = k_keys.length;
+	var k_current = 0;
+	while(k_current < k_length) {
+		var k = k_keys[k_current++];
+		var _this = memory.hasPlayerPassPayCost;
+		if(Object.prototype.hasOwnProperty.call(_this.h,k)) {
+			delete(_this.h[k]);
+		}
+	}
+}
+function model_ver1_game_flowComponent_FlowMemory_hasTriggerEvent(memory) {
+	return memory.hasTriggerEvent;
+}
+function model_ver1_game_flowComponent_FlowMemory_triggerEvent(memory) {
+	memory.hasTriggerEvent = true;
+}
+function model_ver1_game_flowComponent_FlowMemory_cancelTriggerEvent(memory) {
+	memory.hasTriggerEvent = false;
+}
+function model_ver1_game_flowComponent_FlowMemory_markTriggerStackEffectFinishedEventDone(memory) {
+	memory.shouldTriggerStackEffectFinishedEvent = true;
 }
 function model_ver1_game_gameComponent_Alg_returnToOwnerHand(ctx,cardId) {
 	var from = model_ver1_game_gameComponent_Alg_getCardBaSyouAndAssertExist(ctx,cardId);

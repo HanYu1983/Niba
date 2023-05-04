@@ -14,9 +14,9 @@ import model.ver1.game.component.SelectionComponent;
 import model.ver1.game.component.MarkComponent;
 import model.ver1.game.component.TimingComponent;
 import model.ver1.game.flowComponent.FlowComponent;
+import model.ver1.game.flowComponent.FlowMemory;
 
-
-class Context implements IFlowComponent{
+class Context implements IFlowComponent {
 	public function new() {}
 
 	public var playersOrder:Array<String> = [];
