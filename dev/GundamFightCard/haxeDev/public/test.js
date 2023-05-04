@@ -2644,7 +2644,7 @@ function model_ver1_game_component_ActivePlayerComponent_getActivePlayerIdAndAss
 		throw new haxe_Exception("activePlayerId not found");
 	}
 }
-function model_ver1_game_component_ActivePlayerComponent_isPlayerTiming(ctx,timing,useTiming,playerId) {
+function model_ver1_game_component_ActivePlayerComponent_isPlayerTiming(ctx,useTiming,responsePlayerId,timing,playerId) {
 	switch(useTiming._hx_index) {
 	case 0:
 		switch(useTiming.timing._hx_index) {
@@ -3224,8 +3224,9 @@ var model_ver1_game_define_TextType = $hxEnums["model.ver1.game.define.TextType"
 	,Automatic: ($_=function(type) { return {_hx_index:0,type:type,__enum__:"model.ver1.game.define.TextType",toString:$estr}; },$_._hx_name="Automatic",$_.__params__ = ["type"],$_)
 	,Use: ($_=function(timing) { return {_hx_index:1,timing:timing,__enum__:"model.ver1.game.define.TextType",toString:$estr}; },$_._hx_name="Use",$_.__params__ = ["timing"],$_)
 	,Special: ($_=function(type) { return {_hx_index:2,type:type,__enum__:"model.ver1.game.define.TextType",toString:$estr}; },$_._hx_name="Special",$_.__params__ = ["type"],$_)
+	,PlayCard: ($_=function(timing) { return {_hx_index:3,timing:timing,__enum__:"model.ver1.game.define.TextType",toString:$estr}; },$_._hx_name="PlayCard",$_.__params__ = ["timing"],$_)
 };
-model_ver1_game_define_TextType.__constructs__ = [model_ver1_game_define_TextType.Automatic,model_ver1_game_define_TextType.Use,model_ver1_game_define_TextType.Special];
+model_ver1_game_define_TextType.__constructs__ = [model_ver1_game_define_TextType.Automatic,model_ver1_game_define_TextType.Use,model_ver1_game_define_TextType.Special,model_ver1_game_define_TextType.PlayCard];
 var model_ver1_game_define_CardEntityCategory = $hxEnums["model.ver1.game.define.CardEntityCategory"] = { __ename__:"model.ver1.game.define.CardEntityCategory",__constructs__:null
 	,Unit: {_hx_name:"Unit",_hx_index:0,__enum__:"model.ver1.game.define.CardEntityCategory",toString:$estr}
 	,Character: {_hx_name:"Character",_hx_index:1,__enum__:"model.ver1.game.define.CardEntityCategory",toString:$estr}
@@ -3252,18 +3253,6 @@ var model_ver1_game_define_BattlePoint = $hxEnums["model.ver1.game.define.Battle
 	,Default: ($_=function(melee,range,hp) { return {_hx_index:0,melee:melee,range:range,hp:hp,__enum__:"model.ver1.game.define.BattlePoint",toString:$estr}; },$_._hx_name="Default",$_.__params__ = ["melee","range","hp"],$_)
 };
 model_ver1_game_define_BattlePoint.__constructs__ = [model_ver1_game_define_BattlePoint.Default];
-function model_ver1_game_define_Define_flatSpecial(text) {
-	var _g = text.type;
-	if(_g._hx_index == 2) {
-		if(_g.type._hx_index == 0) {
-			return [];
-		} else {
-			return [text];
-		}
-	} else {
-		return [text];
-	}
-}
 var model_ver1_game_define_EffectCause = $hxEnums["model.ver1.game.define.EffectCause"] = { __ename__:"model.ver1.game.define.EffectCause",__constructs__:null
 	,Pending: {_hx_name:"Pending",_hx_index:0,__enum__:"model.ver1.game.define.EffectCause",toString:$estr}
 	,System: ($_=function(respnosePlayerId) { return {_hx_index:1,respnosePlayerId:respnosePlayerId,__enum__:"model.ver1.game.define.EffectCause",toString:$estr}; },$_._hx_name="System",$_.__params__ = ["respnosePlayerId"],$_)
@@ -4241,6 +4230,30 @@ var model_ver1_game_gameComponent_MarkEffect = $hxEnums["model.ver1.game.gameCom
 	,CanNotReroll: ($_=function(cardId) { return {_hx_index:4,cardId:cardId,__enum__:"model.ver1.game.gameComponent.MarkEffect",toString:$estr}; },$_._hx_name="CanNotReroll",$_.__params__ = ["cardId"],$_)
 };
 model_ver1_game_gameComponent_MarkEffect.__constructs__ = [model_ver1_game_gameComponent_MarkEffect.AddBattlePoint,model_ver1_game_gameComponent_MarkEffect.AttackSpeed,model_ver1_game_gameComponent_MarkEffect.AddText,model_ver1_game_gameComponent_MarkEffect.EnterFieldThisTurn,model_ver1_game_gameComponent_MarkEffect.CanNotReroll];
+var model_ver1_game_gameComponent_PSArmorText1 = function(id) {
+	model_ver1_game_define_CardText.call(this,id,"出場時直立");
+	this.type = model_ver1_game_define_TextType.Automatic(model_ver1_game_define_TextTypeAutomaticType.Trigger);
+};
+$hxClasses["model.ver1.game.gameComponent.PSArmorText1"] = model_ver1_game_gameComponent_PSArmorText1;
+model_ver1_game_gameComponent_PSArmorText1.__name__ = "model.ver1.game.gameComponent.PSArmorText1";
+model_ver1_game_gameComponent_PSArmorText1.__super__ = model_ver1_game_define_CardText;
+model_ver1_game_gameComponent_PSArmorText1.prototype = $extend(model_ver1_game_define_CardText.prototype,{
+	onEvent: function(_ctx,event,runtime) {
+	}
+	,__class__: model_ver1_game_gameComponent_PSArmorText1
+});
+var model_ver1_game_gameComponent_PSArmorText2 = function(id) {
+	model_ver1_game_define_CardText.call(this,id," 進入戰場時, 下回合開始時回到手上, 當中如果和補給或供給能力的組到隊的話, 就不必回到手上");
+	this.type = model_ver1_game_define_TextType.Automatic(model_ver1_game_define_TextTypeAutomaticType.Trigger);
+};
+$hxClasses["model.ver1.game.gameComponent.PSArmorText2"] = model_ver1_game_gameComponent_PSArmorText2;
+model_ver1_game_gameComponent_PSArmorText2.__name__ = "model.ver1.game.gameComponent.PSArmorText2";
+model_ver1_game_gameComponent_PSArmorText2.__super__ = model_ver1_game_define_CardText;
+model_ver1_game_gameComponent_PSArmorText2.prototype = $extend(model_ver1_game_define_CardText.prototype,{
+	onEvent: function(_ctx,event,runtime) {
+	}
+	,__class__: model_ver1_game_gameComponent_PSArmorText2
+});
 function model_ver1_game_gameComponent_Runtime_isContantType(text) {
 	var _g = text.type;
 	if(_g._hx_index == 0) {
@@ -4251,6 +4264,23 @@ function model_ver1_game_gameComponent_Runtime_isContantType(text) {
 		}
 	} else {
 		return false;
+	}
+}
+function model_ver1_game_gameComponent_Runtime_flatSpecial(text) {
+	var _g = text.type;
+	if(_g._hx_index == 2) {
+		switch(_g.type._hx_index) {
+		case 0:
+			return [];
+		case 10:
+			return [new model_ver1_game_gameComponent_PSArmorText1(text.id),new model_ver1_game_gameComponent_PSArmorText2(text.id + "2")];
+		case 11:
+			return [];
+		default:
+			return [text];
+		}
+	} else {
+		return [text];
 	}
 }
 function model_ver1_game_gameComponent_Runtime_getRuntimeText(ctx) {
@@ -4319,20 +4349,49 @@ function model_ver1_game_gameComponent_Runtime_getRuntimeText(ctx) {
 		var this1 = responsePlayerId;
 		var runtime = new model_ver1_game_define_DefaultRuntime(card1,this1);
 		var _g2 = 0;
-		var f = model_ver1_game_gameComponent_Runtime_isContantType;
+		var f = model_ver1_game_gameComponent_Runtime_flatSpecial;
 		var _g3 = [];
-		var _g4 = 0;
-		var _g5 = model_ver1_game_component_CardProtoPoolComponent_getCurrentCardProto(ctx,card.protoId).getTexts(ctx,runtime);
-		while(_g4 < _g5.length) {
-			var v = _g5[_g4];
-			++_g4;
-			if(f(v)) {
-				_g3.push(v);
+		var x = $getIterator(model_ver1_game_component_CardProtoPoolComponent_getCurrentCardProto(ctx,card.protoId).getTexts(ctx,runtime));
+		while(x.hasNext()) {
+			var x1 = x.next();
+			_g3.push(f(x1));
+		}
+		var _g4 = [];
+		var e = $getIterator(_g3);
+		while(e.hasNext()) {
+			var e1 = e.next();
+			var x2 = $getIterator(e1);
+			while(x2.hasNext()) {
+				var x3 = x2.next();
+				_g4.push(x3);
 			}
 		}
-		var _g6 = _g3;
-		while(_g2 < _g6.length) {
-			var text = _g6[_g2];
+		var _g5 = [];
+		var _g6 = 0;
+		var _g7 = _g4;
+		while(_g6 < _g7.length) {
+			var v = _g7[_g6];
+			++_g6;
+			var tmp;
+			var _g8 = v.type;
+			switch(_g8._hx_index) {
+			case 0:
+				tmp = _g8.type._hx_index == 2;
+				break;
+			case 3:
+				var _g9 = _g8.timing;
+				tmp = true;
+				break;
+			default:
+				tmp = false;
+			}
+			if(tmp) {
+				_g5.push(v);
+			}
+		}
+		var _g10 = _g5;
+		while(_g2 < _g10.length) {
+			var text = _g10[_g2];
 			++_g2;
 			_g.push({ runtime : runtime, text : text});
 		}
@@ -4395,19 +4454,36 @@ function model_ver1_game_gameComponent_Runtime_getRuntimeText(ctx) {
 		var this1 = responsePlayerId;
 		var runtime = new model_ver1_game_define_DefaultRuntime(card1,this1);
 		var _g2 = 0;
+		var f = model_ver1_game_gameComponent_Runtime_flatSpecial;
 		var _g3 = [];
-		var _g4 = 0;
-		var _g5 = model_ver1_game_component_CardProtoPoolComponent_getCurrentCardProto(ctx,card.protoId).getTexts(ctx,runtime);
-		while(_g4 < _g5.length) {
-			var v = _g5[_g4];
-			++_g4;
-			if(v.isSurroundedByArrows) {
-				_g3.push(v);
+		var x = $getIterator(model_ver1_game_component_CardProtoPoolComponent_getCurrentCardProto(ctx,card.protoId).getTexts(ctx,runtime));
+		while(x.hasNext()) {
+			var x1 = x.next();
+			_g3.push(f(x1));
+		}
+		var _g4 = [];
+		var e = $getIterator(_g3);
+		while(e.hasNext()) {
+			var e1 = e.next();
+			var x2 = $getIterator(e1);
+			while(x2.hasNext()) {
+				var x3 = x2.next();
+				_g4.push(x3);
 			}
 		}
-		var _g6 = _g3;
-		while(_g2 < _g6.length) {
-			var text = _g6[_g2];
+		var _g5 = [];
+		var _g6 = 0;
+		var _g7 = _g4;
+		while(_g6 < _g7.length) {
+			var v = _g7[_g6];
+			++_g6;
+			if(v.isSurroundedByArrows) {
+				_g5.push(v);
+			}
+		}
+		var _g8 = _g5;
+		while(_g2 < _g8.length) {
+			var text = _g8[_g2];
 			++_g2;
 			_g.push({ runtime : runtime, text : text});
 		}
@@ -4470,20 +4546,37 @@ function model_ver1_game_gameComponent_Runtime_getRuntimeText(ctx) {
 		var this1 = responsePlayerId;
 		var runtime = new model_ver1_game_define_DefaultRuntime(card1,this1);
 		var _g2 = 0;
-		var f = model_ver1_game_gameComponent_Runtime_isContantType;
+		var f = model_ver1_game_gameComponent_Runtime_flatSpecial;
 		var _g3 = [];
-		var _g4 = 0;
-		var _g5 = model_ver1_game_component_CardProtoPoolComponent_getCurrentCardProto(ctx,card.protoId).getTexts(ctx,runtime);
-		while(_g4 < _g5.length) {
-			var v = _g5[_g4];
-			++_g4;
-			if(f(v)) {
-				_g3.push(v);
+		var x = $getIterator(model_ver1_game_component_CardProtoPoolComponent_getCurrentCardProto(ctx,card.protoId).getTexts(ctx,runtime));
+		while(x.hasNext()) {
+			var x1 = x.next();
+			_g3.push(f(x1));
+		}
+		var _g4 = [];
+		var e = $getIterator(_g3);
+		while(e.hasNext()) {
+			var e1 = e.next();
+			var x2 = $getIterator(e1);
+			while(x2.hasNext()) {
+				var x3 = x2.next();
+				_g4.push(x3);
 			}
 		}
-		var _g6 = _g3;
-		while(_g2 < _g6.length) {
-			var text = _g6[_g2];
+		var f1 = model_ver1_game_gameComponent_Runtime_isContantType;
+		var _g5 = [];
+		var _g6 = 0;
+		var _g7 = _g4;
+		while(_g6 < _g7.length) {
+			var v = _g7[_g6];
+			++_g6;
+			if(f1(v)) {
+				_g5.push(v);
+			}
+		}
+		var _g8 = _g5;
+		while(_g2 < _g8.length) {
+			var text = _g8[_g2];
 			++_g2;
 			_g.push({ runtime : runtime, text : text});
 		}
@@ -4547,9 +4640,26 @@ function model_ver1_game_gameComponent_Runtime_getRuntimeText(ctx) {
 		var this1 = responsePlayerId;
 		var runtime = new model_ver1_game_define_DefaultRuntime(card1,this1);
 		var _g2 = 0;
-		var _g3 = model_ver1_game_component_CardProtoPoolComponent_getCurrentCardProto(ctx,card.protoId).getTexts(ctx,runtime);
-		while(_g2 < _g3.length) {
-			var text = _g3[_g2];
+		var f = model_ver1_game_gameComponent_Runtime_flatSpecial;
+		var _g3 = [];
+		var x = $getIterator(model_ver1_game_component_CardProtoPoolComponent_getCurrentCardProto(ctx,card.protoId).getTexts(ctx,runtime));
+		while(x.hasNext()) {
+			var x1 = x.next();
+			_g3.push(f(x1));
+		}
+		var _g4 = [];
+		var e = $getIterator(_g3);
+		while(e.hasNext()) {
+			var e1 = e.next();
+			var x2 = $getIterator(e1);
+			while(x2.hasNext()) {
+				var x3 = x2.next();
+				_g4.push(x3);
+			}
+		}
+		var _g5 = _g4;
+		while(_g2 < _g5.length) {
+			var text = _g5[_g2];
 			++_g2;
 			_g.push({ runtime : runtime, text : text});
 		}
@@ -4568,15 +4678,32 @@ function model_ver1_game_gameComponent_Runtime_getRuntimeText(ctx) {
 		var this1 = responsePlayerId;
 		var runtime = new model_ver1_game_define_DefaultRuntime(card1,this1);
 		var _g2 = 0;
-		var _g3 = model_ver1_game_component_CardProtoPoolComponent_getCurrentCardProto(ctx,card.protoId).getTexts(ctx,runtime);
-		while(_g2 < _g3.length) {
-			var text = _g3[_g2];
+		var f = model_ver1_game_gameComponent_Runtime_flatSpecial;
+		var _g3 = [];
+		var x = $getIterator(model_ver1_game_component_CardProtoPoolComponent_getCurrentCardProto(ctx,card.protoId).getTexts(ctx,runtime));
+		while(x.hasNext()) {
+			var x1 = x.next();
+			_g3.push(f(x1));
+		}
+		var _g4 = [];
+		var e = $getIterator(_g3);
+		while(e.hasNext()) {
+			var e1 = e.next();
+			var x2 = $getIterator(e1);
+			while(x2.hasNext()) {
+				var x3 = x2.next();
+				_g4.push(x3);
+			}
+		}
+		var _g5 = _g4;
+		while(_g2 < _g5.length) {
+			var text = _g5[_g2];
 			++_g2;
-			var _g4 = 0;
-			var _g5 = text.getEffect(ctx,runtime);
-			while(_g4 < _g5.length) {
-				var effect = _g5[_g4];
-				++_g4;
+			var _g6 = 0;
+			var _g7 = text.getEffect(ctx,runtime);
+			while(_g6 < _g7.length) {
+				var effect = _g7[_g6];
+				++_g6;
 				_g.push(effect);
 			}
 		}
@@ -4624,7 +4751,39 @@ function model_ver1_game_gameComponent_Runtime_getRuntimeText(ctx) {
 		var runtime = new model_ver1_game_define_DefaultRuntime(info1,this1);
 		result[i] = { runtime : runtime, text : info.text};
 	}
-	var addedReturn = result;
+	var _g = [];
+	var x = $getIterator(result);
+	while(x.hasNext()) {
+		var x1 = x.next();
+		var _g1 = x1.text.type;
+		var tmp;
+		if(_g1._hx_index == 2) {
+			var _g2 = _g1.type;
+			var _this = model_ver1_game_gameComponent_Runtime_flatSpecial(x1.text);
+			var result = new Array(_this.length);
+			var _g3 = 0;
+			var _g4 = _this.length;
+			while(_g3 < _g4) {
+				var i = _g3++;
+				result[i] = { runtime : x1.runtime, text : _this[i]};
+			}
+			tmp = result;
+		} else {
+			tmp = [x1];
+		}
+		_g.push(tmp);
+	}
+	var _g1 = [];
+	var e = $getIterator(_g);
+	while(e.hasNext()) {
+		var e1 = e.next();
+		var x = $getIterator(e1);
+		while(x.hasNext()) {
+			var x1 = x.next();
+			_g1.push(x1);
+		}
+	}
+	var addedReturn = _g1;
 	var _g = [];
 	var _g1 = 0;
 	var _g2 = model_ver1_game_component_MarkComponent_getMarks(ctx);
@@ -4682,7 +4841,39 @@ function model_ver1_game_gameComponent_Runtime_getRuntimeText(ctx) {
 		var runtime = new model_ver1_game_define_DefaultRuntime(info1,this1);
 		result[i] = { runtime : runtime, text : info.text};
 	}
-	var globalAddedReturn = result;
+	var _g = [];
+	var x = $getIterator(result);
+	while(x.hasNext()) {
+		var x1 = x.next();
+		var _g1 = x1.text.type;
+		var tmp;
+		if(_g1._hx_index == 2) {
+			var _g2 = _g1.type;
+			var _this = model_ver1_game_gameComponent_Runtime_flatSpecial(x1.text);
+			var result = new Array(_this.length);
+			var _g3 = 0;
+			var _g4 = _this.length;
+			while(_g3 < _g4) {
+				var i = _g3++;
+				result[i] = { runtime : x1.runtime, text : _this[i]};
+			}
+			tmp = result;
+		} else {
+			tmp = [x1];
+		}
+		_g.push(tmp);
+	}
+	var _g1 = [];
+	var e = $getIterator(_g);
+	while(e.hasNext()) {
+		var e1 = e.next();
+		var x = $getIterator(e1);
+		while(x.hasNext()) {
+			var x1 = x.next();
+			_g1.push(x1);
+		}
+	}
+	var globalAddedReturn = _g1;
 	return playReturn.concat(specialReturn).concat(specialReturn2).concat(originReturn).concat(addedReturn).concat(globalAddedReturn);
 }
 function model_ver1_game_gameComponent_Runtime_getMarkEffects(ctx) {
@@ -4738,25 +4929,35 @@ function model_ver1_game_gameComponent_Runtime_getMarkEffects(ctx) {
 	var markEffects = _g1;
 	return textEffects.concat(markEffects);
 }
-function model_ver1_game_gameComponent_Runtime_getRuntimeTextByPlayer(ctx,playerId) {
+function model_ver1_game_gameComponent_Runtime_isRequiresCanMet(ctx,playerId,rt) {
+	return true;
+}
+function model_ver1_game_gameComponent_Runtime_getPlayerRuntimeText(ctx,playerId) {
 	var _g = [];
 	var _g1 = 0;
 	var _g2 = model_ver1_game_gameComponent_Runtime_getRuntimeText(ctx);
 	while(_g1 < _g2.length) {
 		var v = _g2[_g1];
 		++_g1;
-		if((function(rt) {
-			var _g = rt.text.type;
-			if(_g._hx_index == 1) {
-				var useTiming = _g.timing;
-				return model_ver1_game_component_ActivePlayerComponent_isPlayerTiming(ctx,model_ver1_game_component_TimingComponent_getTiming(ctx),useTiming,playerId);
-			}
-			return false;
-		})(v)) {
+		var tmp;
+		var _g3 = v.text.type;
+		switch(_g3._hx_index) {
+		case 1:
+			var useTiming = _g3.timing;
+			tmp = model_ver1_game_component_ActivePlayerComponent_isPlayerTiming(ctx,useTiming,v.runtime.getResponsePlayerId(),model_ver1_game_component_TimingComponent_getTiming(ctx),playerId) && model_ver1_game_gameComponent_Runtime_isRequiresCanMet(ctx,playerId,v);
+			break;
+		case 3:
+			var useTiming1 = _g3.timing;
+			tmp = model_ver1_game_component_ActivePlayerComponent_isPlayerTiming(ctx,useTiming1,v.runtime.getResponsePlayerId(),model_ver1_game_component_TimingComponent_getTiming(ctx),playerId) && model_ver1_game_gameComponent_Runtime_isRequiresCanMet(ctx,playerId,v);
+			break;
+		default:
+			tmp = model_ver1_game_gameComponent_Runtime_isRequiresCanMet(ctx,playerId,v);
+		}
+		if(tmp) {
 			_g.push(v);
 		}
 	}
-	return [];
+	return _g;
 }
 function model_ver1_test_Test_test() {
 	model_ver1_game_Game_test();

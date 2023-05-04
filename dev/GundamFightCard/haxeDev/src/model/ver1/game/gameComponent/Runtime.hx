@@ -18,6 +18,7 @@ import model.ver1.game.gameComponent.Alg;
 import model.ver1.game.gameComponent.Event;
 import model.ver1.game.gameComponent.MarkEffect;
 import model.ver1.game.gameComponent.GameComponent;
+import model.ver1.game.gameComponent.PSArmor;
 
 function isContantType(text:CardText) {
 	return switch (text.type) {
@@ -25,6 +26,20 @@ function isContantType(text:CardText) {
 			true;
 		case _:
 			false;
+	}
+}
+
+function flatSpecial(text:CardText):Array<CardText> {
+	switch (text.type) {
+		case Special(HighMobility):
+			return [];
+		case Special(PSArmor):
+			return [new PSArmorText1(text.id), new PSArmorText2(text.id + "2")];
+		case Special(Quick):
+			// gen play card text
+			return [];
+		case _:
+			return [text];
 	}
 }
 
@@ -52,12 +67,19 @@ function getRuntimeText(ctx:IGameComponent):Array<RuntimeText> {
 		.map(cs -> cs.cardIds)
 		.fold((c, a) -> a.concat(c), new Array<String>())
 		.map(id -> ctx.table.cards[id]);
-	// 恆常內文, 出牌算恆常內文
+	// 恆常內文. PlayCard
 	final playReturn = [
 		for (card in cardsInHandAndHanger) {
 			final responsePlayerId = getBaSyouControllerAndAssertExist(ctx, getCardBaSyouAndAssertExist(ctx, card.id));
 			final runtime:Runtime = new DefaultRuntime(card.id, responsePlayerId);
-			for (text in getCurrentCardProto(ctx, card.protoId).getTexts(ctx, runtime).filter(isContantType)) {
+			for (text in getCurrentCardProto(ctx, card.protoId).getTexts(ctx, runtime).flatMap(flatSpecial).filter(text -> {
+				return switch (text.type) {
+					case Automatic(Constant) | PlayCard(_):
+						return true;
+					case _:
+						return false;
+				}
+			})) {
 				{
 					runtime: runtime,
 					text: text
@@ -65,26 +87,6 @@ function getRuntimeText(ctx:IGameComponent):Array<RuntimeText> {
 			}
 		}
 	];
-	// 使用型內文
-	// final useReturn = [
-	// 	for (card in cardsInHandAndHanger) {
-	// 		final responsePlayerId = getBaSyouControllerAndAssertExist(ctx, getCardBaSyouAndAssertExist(ctx, card.id));
-	// 		final runtime:Runtime = new DefaultRuntime(card.id, responsePlayerId);
-	// 		for (text in getCurrentCardProto(ctx, card.protoId).getTexts(ctx, runtime).filter(text -> {
-	// 			switch (text.type) {
-	// 				case Use(useTiming):
-	// 					return isPlayerTiming(ctx,  getTiming(ctx), useTiming, playerId);
-	// 				case _:
-	// 			}
-	// 			return false;
-	// 		})) {
-	// 			{
-	// 				runtime: runtime,
-	// 				text: text
-	// 			};
-	// 		}
-	// 	}
-	// ];
 	// 倒置G
 	final cardsInGZone = [for (cs in ctx.table.cardStacks) cs].filter(cs -> {
 		return switch ((cs.id : BaSyouId) : BaSyou) {
@@ -102,7 +104,7 @@ function getRuntimeText(ctx:IGameComponent):Array<RuntimeText> {
 		for (card in cardsInGZone) {
 			final responsePlayerId = getBaSyouControllerAndAssertExist(ctx, getCardBaSyouAndAssertExist(ctx, card.id));
 			final runtime:Runtime = new DefaultRuntime(card.id, responsePlayerId);
-			for (text in getCurrentCardProto(ctx, card.protoId).getTexts(ctx, runtime).filter(text -> text.isSurroundedByArrows)) {
+			for (text in getCurrentCardProto(ctx, card.protoId).getTexts(ctx, runtime).flatMap(flatSpecial).filter(text -> text.isSurroundedByArrows)) {
 				{
 					runtime: runtime,
 					text: text
@@ -127,7 +129,7 @@ function getRuntimeText(ctx:IGameComponent):Array<RuntimeText> {
 		for (card in cardsInJunkYard) {
 			final responsePlayerId = getBaSyouControllerAndAssertExist(ctx, getCardBaSyouAndAssertExist(ctx, card.id));
 			final runtime:Runtime = new DefaultRuntime(card.id, responsePlayerId);
-			for (text in getCurrentCardProto(ctx, card.protoId).getTexts(ctx, runtime).filter(isContantType)) {
+			for (text in getCurrentCardProto(ctx, card.protoId).getTexts(ctx, runtime).flatMap(flatSpecial).filter(isContantType)) {
 				{
 					runtime: runtime,
 					text: text
@@ -153,7 +155,7 @@ function getRuntimeText(ctx:IGameComponent):Array<RuntimeText> {
 		for (card in cardsHasController) {
 			final responsePlayerId = getCardControllerAndAssertExist(ctx, card.id);
 			final runtime:Runtime = new DefaultRuntime(card.id, responsePlayerId);
-			for (text in getCurrentCardProto(ctx, card.protoId).getTexts(ctx, runtime)) {
+			for (text in getCurrentCardProto(ctx, card.protoId).getTexts(ctx, runtime).flatMap(flatSpecial)) {
 				{
 					runtime: runtime,
 					text: text
@@ -166,7 +168,7 @@ function getRuntimeText(ctx:IGameComponent):Array<RuntimeText> {
 		for (card in cardsHasController) {
 			final responsePlayerId = getCardControllerAndAssertExist(ctx, card.id);
 			final runtime:Runtime = new DefaultRuntime(card.id, responsePlayerId);
-			for (text in getCurrentCardProto(ctx, card.protoId).getTexts(ctx, runtime)) {
+			for (text in getCurrentCardProto(ctx, card.protoId).getTexts(ctx, runtime).flatMap(flatSpecial)) {
 				for (effect in text.getEffect(ctx, runtime)) {
 					cast(effect : MarkEffect);
 				}
@@ -197,6 +199,16 @@ function getRuntimeText(ctx:IGameComponent):Array<RuntimeText> {
 			runtime: runtime,
 			text: info.text
 		};
+	}).flatMap(rt -> {
+		switch rt.text.type {
+			case Special(_):
+				return flatSpecial(rt.text).map(t -> {
+					runtime: rt.runtime,
+					text: t
+				});
+			case _:
+				return [rt];
+		}
 	});
 	// 計算效果新增內文
 	final globalMarkEffects = [
@@ -228,6 +240,16 @@ function getRuntimeText(ctx:IGameComponent):Array<RuntimeText> {
 			runtime: runtime,
 			text: info.text
 		};
+	}).flatMap(rt -> {
+		switch rt.text.type {
+			case Special(_):
+				return flatSpecial(rt.text).map(t -> {
+					runtime: rt.runtime,
+					text: t
+				});
+			case _:
+				return [rt];
+		}
 	});
 	return playReturn.concat(specialReturn).concat(specialReturn2).concat(originReturn).concat(addedReturn).concat(globalAddedReturn);
 }
@@ -259,17 +281,20 @@ function getMarkEffects(ctx:IGameComponent):Array<MarkEffect> {
 	return textEffects.concat(markEffects);
 }
 
-function getRuntimeTextByPlayer(ctx:IGameComponent, playerId:PlayerId):Array<RuntimeText> {
-	getRuntimeText(ctx).filter(rt -> {
-		// if (rt.runtime.getResponsePlayerId() != playerId) {
-		// 	return false;
-		// }
+function isRequiresCanMet(ctx:IGameComponent, playerId:PlayerId, rt:RuntimeText) {
+	return true;
+}
+
+function getPlayerRuntimeText(ctx:IGameComponent, playerId:PlayerId):Array<RuntimeText> {
+	return getRuntimeText(ctx).filter(rt -> {
 		switch (rt.text.type) {
-			case Use(useTiming):
-				return isPlayerTiming(ctx, getTiming(ctx), useTiming, playerId);
+			// 場上的使用型內文
+			// 手牌中的PlayCard(PlayUnit, PlayCommand, PlayOperation)
+			case Use(useTiming) | PlayCard(useTiming):
+				return isPlayerTiming(ctx, useTiming, rt.runtime.getResponsePlayerId(), getTiming(ctx), playerId)
+					&& isRequiresCanMet(ctx, playerId, rt);
 			case _:
+				return isRequiresCanMet(ctx, playerId, rt);
 		}
-		return false;
 	});
-	return [];
 }

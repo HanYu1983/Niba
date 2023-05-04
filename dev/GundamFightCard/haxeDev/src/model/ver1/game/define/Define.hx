@@ -88,6 +88,8 @@ enum TextType {
 	Use(timing:UseTiming);
 	// 特殊型
 	Special(type:TextTypeSpecialType);
+	// PlayCard
+	PlayCard(timing:UseTiming);
 }
 
 enum CardCategory {
@@ -126,11 +128,3 @@ enum BattlePoint {
 	Default(melee:Int, range:Int, hp:Int);
 }
 
-function flatSpecial(text:CardText):Array<CardText> {
-	switch (text.type) {
-		case Special(HighMobility):
-			return [];
-		case _:
-			return [text];
-	}
-}

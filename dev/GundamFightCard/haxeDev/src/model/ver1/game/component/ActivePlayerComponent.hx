@@ -24,7 +24,7 @@ function getActivePlayerIdAndAssert(ctx:IActivePlayerComponent):PlayerId {
 	}
 }
 
-function isPlayerTiming(ctx:IActivePlayerComponent, timing:Timing, useTiming:UseTiming, playerId:PlayerId) {
+function isPlayerTiming(ctx:IActivePlayerComponent, useTiming:UseTiming, responsePlayerId:PlayerId, timing:Timing, playerId:PlayerId) {
 	switch (useTiming) {
 		case Absolute(Any) | Relative(You, Turn):
 			switch timing {

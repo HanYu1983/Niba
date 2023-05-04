@@ -15,6 +15,7 @@ import model.ver1.game.gameComponent.Alg;
 import model.ver1.game.gameComponent.Runtime;
 import model.ver1.game.entity.Context;
 import model.ver1.game.gameComponent.DefaultMark;
+import model.ver1.game.gameComponent.PSArmor;
 import model.ver1.data.CardProto_179001_01A_CH_WT007R_white;
 import model.ver1.data.CardProto_179003_01A_U_BK008U_black;
 import model.ver1.data.CardProto_179004_01A_CH_WT009R_white;
