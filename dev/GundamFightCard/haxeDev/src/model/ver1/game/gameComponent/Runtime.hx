@@ -294,6 +294,7 @@ function getPlayerRuntimeText(ctx:IGameComponent, playerId:PlayerId):Array<Runti
 				return isPlayerTiming(ctx, useTiming, rt.runtime.getResponsePlayerId(), getTiming(ctx), playerId)
 					&& isRequiresCanMet(ctx, playerId, rt);
 			case _:
+				// 179025_07D_U_RD158C_red
 				return isRequiresCanMet(ctx, playerId, rt);
 		}
 	});
