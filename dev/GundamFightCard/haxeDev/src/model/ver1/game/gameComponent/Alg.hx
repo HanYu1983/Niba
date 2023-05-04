@@ -8,6 +8,7 @@ import model.ver1.game.define.Define;
 import model.ver1.game.define.BaSyou;
 import model.ver1.game.define.Runtime;
 import model.ver1.game.define.Mark;
+import model.ver1.game.define.Player;
 import model.ver1.game.component.CardProtoPoolComponent;
 import model.ver1.game.component.EffectComponent;
 import model.ver1.game.component.MarkComponent;
@@ -284,4 +285,8 @@ function getBlockRuntime(ctx:IGameComponent, blockId:String):Runtime {
 		case _:
 			new AbstractRuntime();
 	}
+}
+
+function hasSomeoneLiveIsZero(ctx:IGameComponent):Option<PlayerId> {
+	return None;
 }

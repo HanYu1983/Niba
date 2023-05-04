@@ -2,6 +2,7 @@ package model.ver1.game.entity;
 
 using Lambda;
 
+import haxe.ds.Option;
 import tool.Table;
 import model.ver1.game.define.Mark;
 import model.ver1.game.define.Effect;
@@ -30,6 +31,7 @@ class Context implements IFlowComponent {
 	public var cuts:Array<Array<String>> = [];
 	public var effects:Map<String, Effect> = [];
 	public var activePlayerId:String;
+	public var activeEffect:Option<Effect>;
 	public var flowMemory:FlowMemory = {
 		state: PrepareDeck,
 		hasTriggerEvent: false,

@@ -7,6 +7,7 @@ import model.ver1.game.define.Effect;
 import model.ver1.game.define.Runtime;
 import model.ver1.game.component.EffectComponent;
 import model.ver1.game.component.TimingComponent;
+import model.ver1.game.component.ActiveEffectComponent;
 import model.ver1.game.gameComponent.Alg;
 import model.ver1.game.gameComponent.Event;
 import model.ver1.game.gameComponent.GameComponent;
@@ -52,8 +53,9 @@ function queryFlow(ctx:IFlowComponent, playerId:PlayerId):Array<Flow> {
 		case _:
 	}
 	// 有玩家在支付卡片
-	switch getActiveBlockId(ctx) {
-		case Some(activeBlockId):
+	switch getActiveEffect(ctx) {
+		case Some(activeBlock):
+			final activeBlockId = activeBlock.id;
 			final runtime = getBlockRuntime(ctx, activeBlockId);
 			final controller = runtime.getResponsePlayerId();
 			final isPass = ctx.flowMemory.hasPlayerPassPayCost[playerId];
@@ -257,18 +259,6 @@ function queryFlow(ctx:IFlowComponent, playerId:PlayerId):Array<Flow> {
 			case _:
 		}
 	}
-	return [];
-}
-
-function hasSomeoneLiveIsZero(ctx:IFlowComponent):Option<PlayerId> {
-	return None;
-}
-
-function getActiveBlockId(ctx:IFlowComponent):Option<String> {
-	return None;
-}
-
-function getImmediateEffects(ctx:IFlowComponent):Array<Effect> {
 	return [];
 }
 
