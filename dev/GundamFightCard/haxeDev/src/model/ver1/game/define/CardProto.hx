@@ -14,4 +14,8 @@ class CardProto {
 	public function getTexts(_ctx:Any, runtime:Runtime):Array<CardText> {
 		return [];
 	}
+
+	public function createPlayCardText(options:{}):CardText {
+		return new CardText("", "");
+	}
 }

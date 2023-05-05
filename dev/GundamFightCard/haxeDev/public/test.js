@@ -1285,6 +1285,9 @@ model_ver1_game_define_CardProto.prototype = {
 	getTexts: function(_ctx,runtime) {
 		return [];
 	}
+	,createPlayCardText: function(options) {
+		return new model_ver1_game_define_CardText("","");
+	}
 	,__class__: model_ver1_game_define_CardProto
 };
 var model_ver1_data_CardProto_$179001_$01A_$CH_$WT007R_$white = function() {
@@ -3067,6 +3070,9 @@ model_ver1_game_component_ITableComponent.__isInterface__ = true;
 model_ver1_game_component_ITableComponent.prototype = {
 	__class__: model_ver1_game_component_ITableComponent
 };
+function model_ver1_game_component_TableComponent_getCard(ctx,cardId) {
+	return tool_Table_getCard(ctx.table,cardId);
+}
 function model_ver1_game_component_TableComponent_moveCard(ctx,cardId,from,to) {
 	var playerId = from.playerId;
 	var baSyouKeyword = from.baSyouKeyword;
@@ -3077,21 +3083,21 @@ function model_ver1_game_component_TableComponent_moveCard(ctx,cardId,from,to) {
 	tool_Table_moveCard(ctx.table,cardId,this1,this2);
 }
 function model_ver1_game_component_TableComponent_rollCard(ctx,cardId) {
-	var card = tool_Table_getCard(ctx.table,cardId);
+	var card = model_ver1_game_component_TableComponent_getCard(ctx,cardId);
 	if(card.isTap) {
 		throw new haxe_Exception("already tap");
 	}
 	card.isTap = true;
 }
 function model_ver1_game_component_TableComponent_rerollCard(ctx,cardId) {
-	var card = tool_Table_getCard(ctx.table,cardId);
+	var card = model_ver1_game_component_TableComponent_getCard(ctx,cardId);
 	if(card.isTap == false) {
 		throw new haxe_Exception("already reroll");
 	}
 	card.isTap = false;
 }
 function model_ver1_game_component_TableComponent_getCardOwner(ctx,cardId) {
-	var owner = tool_Table_getCard(ctx.table,cardId).owner;
+	var owner = model_ver1_game_component_TableComponent_getCard(ctx,cardId).owner;
 	if(owner == null) {
 		throw haxe_Exception.thrown("owner not set yet");
 	}
@@ -3106,7 +3112,7 @@ function model_ver1_game_component_TableComponent_getCardBaSyouAndAssertExist(ct
 		model_ver1_game_define_BaSyouId.toBaSyou(ret);
 		return model_ver1_game_define_BaSyouId.toBaSyou(ret);
 	} else {
-		console.log("src/model/ver1/game/component/TableComponent.hx:44:",ctx);
+		console.log("src/model/ver1/game/component/TableComponent.hx:48:",ctx);
 		throw new haxe_Exception("card baSyou not found: " + cardId);
 	}
 }
@@ -4018,14 +4024,14 @@ function model_ver1_game_flowComponent_FlowMemory_markTriggerStackEffectFinished
 	memory.shouldTriggerStackEffectFinishedEvent = true;
 }
 function model_ver1_game_gameComponent_Alg_becomeG(ctx,cardId) {
-	console.log("src/model/ver1/game/gameComponent/Alg.hx:27:","將自己變成G");
+	console.log("src/model/ver1/game/gameComponent/Alg.hx:26:","將自己變成G");
 }
 function model_ver1_game_gameComponent_Alg_getUnitOfSetGroup(ctx,cardId) {
 	return haxe_ds_Option.None;
 }
 function model_ver1_game_gameComponent_Alg_rollGameCard(ctx,cardId) {
 	model_ver1_game_component_TableComponent_rollCard(ctx,cardId);
-	var card = tool_Table_getCard(ctx.table,cardId);
+	var card = model_ver1_game_component_TableComponent_getCard(ctx,cardId);
 	model_ver1_game_gameComponent_Alg_sendEvent(ctx,model_ver1_game_gameComponent_Event.CardRoll(card.id));
 }
 function model_ver1_game_gameComponent_Alg_rerollGameCard(ctx,cardId) {
@@ -4050,7 +4056,7 @@ function model_ver1_game_gameComponent_Alg_sendEvent(ctx,evt) {
 	}
 }
 function model_ver1_game_gameComponent_Alg_getCardType(ctx,cardId) {
-	var proto = model_ver1_game_component_CardProtoPoolComponent_getCurrentCardProto(ctx,tool_Table_getCard(ctx.table,cardId).protoId);
+	var proto = model_ver1_game_component_CardProtoPoolComponent_getCurrentCardProto(ctx,model_ver1_game_component_TableComponent_getCard(ctx,cardId).protoId);
 	return proto.category;
 }
 function model_ver1_game_gameComponent_Alg_getCardEntityCategory(ctx,cardId) {
@@ -4203,7 +4209,7 @@ function model_ver1_game_gameComponent_Alg_isDestroyNow(ctx,cardId,condition) {
 	return false;
 }
 function model_ver1_game_gameComponent_Alg_removeDestroyEffect(ctx,cardId) {
-	console.log("src/model/ver1/game/gameComponent/Alg.hx:197:","移除堆疊中的破壞效果");
+	console.log("src/model/ver1/game/gameComponent/Alg.hx:196:","移除堆疊中的破壞效果");
 }
 function model_ver1_game_gameComponent_Alg_getEffectRuntime(ctx,blockId) {
 	var block = model_ver1_game_component_EffectComponent_getEffect(ctx,blockId);
@@ -4273,9 +4279,6 @@ model_ver1_game_gameComponent_GameCardProto.prototype = $extend(model_ver1_game_
 	}
 	,getGameTexts: function(ctx,runtime) {
 		return [];
-	}
-	,createPlayCardText: function() {
-		return new model_ver1_game_define_CardText("","");
 	}
 	,__class__: model_ver1_game_gameComponent_GameCardProto
 });
@@ -4434,13 +4437,13 @@ function model_ver1_game_gameComponent_Runtime_getRuntimeText(ctx) {
 		}
 		var this1 = responsePlayerId;
 		var runtime = new model_ver1_game_define_DefaultRuntime(card1,this1);
+		var cardProto = model_ver1_game_component_CardProtoPoolComponent_getCurrentCardProto(ctx,card.protoId);
 		var _g2 = 0;
-		var f = model_ver1_game_gameComponent_SpecialCardText_flatSpecial;
 		var _g3 = [];
-		var x = $getIterator(model_ver1_game_component_CardProtoPoolComponent_getCurrentCardProto(ctx,card.protoId).getTexts(ctx,runtime));
+		var x = $getIterator(cardProto.getTexts(ctx,runtime));
 		while(x.hasNext()) {
 			var x1 = x.next();
-			_g3.push(f(x1));
+			_g3.push(model_ver1_game_gameComponent_SpecialCardText_flatSpecial(ctx,card.id,x1));
 		}
 		var _g4 = [];
 		var e = $getIterator(_g3);
@@ -4539,13 +4542,13 @@ function model_ver1_game_gameComponent_Runtime_getRuntimeText(ctx) {
 		}
 		var this1 = responsePlayerId;
 		var runtime = new model_ver1_game_define_DefaultRuntime(card1,this1);
+		var cardProto = model_ver1_game_component_CardProtoPoolComponent_getCurrentCardProto(ctx,card.protoId);
 		var _g2 = 0;
-		var f = model_ver1_game_gameComponent_SpecialCardText_flatSpecial;
 		var _g3 = [];
-		var x = $getIterator(model_ver1_game_component_CardProtoPoolComponent_getCurrentCardProto(ctx,card.protoId).getTexts(ctx,runtime));
+		var x = $getIterator(cardProto.getTexts(ctx,runtime));
 		while(x.hasNext()) {
 			var x1 = x.next();
-			_g3.push(f(x1));
+			_g3.push(model_ver1_game_gameComponent_SpecialCardText_flatSpecial(ctx,card.id,x1));
 		}
 		var _g4 = [];
 		var e = $getIterator(_g3);
@@ -4631,13 +4634,13 @@ function model_ver1_game_gameComponent_Runtime_getRuntimeText(ctx) {
 		}
 		var this1 = responsePlayerId;
 		var runtime = new model_ver1_game_define_DefaultRuntime(card1,this1);
+		var cardProto = model_ver1_game_component_CardProtoPoolComponent_getCurrentCardProto(ctx,card.protoId);
 		var _g2 = 0;
-		var f = model_ver1_game_gameComponent_SpecialCardText_flatSpecial;
 		var _g3 = [];
-		var x = $getIterator(model_ver1_game_component_CardProtoPoolComponent_getCurrentCardProto(ctx,card.protoId).getTexts(ctx,runtime));
+		var x = $getIterator(cardProto.getTexts(ctx,runtime));
 		while(x.hasNext()) {
 			var x1 = x.next();
-			_g3.push(f(x1));
+			_g3.push(model_ver1_game_gameComponent_SpecialCardText_flatSpecial(ctx,card.id,x1));
 		}
 		var _g4 = [];
 		var e = $getIterator(_g3);
@@ -4649,14 +4652,14 @@ function model_ver1_game_gameComponent_Runtime_getRuntimeText(ctx) {
 				_g4.push(x3);
 			}
 		}
-		var f1 = model_ver1_game_gameComponent_Runtime_isContantType;
+		var f = model_ver1_game_gameComponent_Runtime_isContantType;
 		var _g5 = [];
 		var _g6 = 0;
 		var _g7 = _g4;
 		while(_g6 < _g7.length) {
 			var v = _g7[_g6];
 			++_g6;
-			if(f1(v)) {
+			if(f(v)) {
 				_g5.push(v);
 			}
 		}
@@ -4725,13 +4728,13 @@ function model_ver1_game_gameComponent_Runtime_getRuntimeText(ctx) {
 		}
 		var this1 = responsePlayerId;
 		var runtime = new model_ver1_game_define_DefaultRuntime(card1,this1);
+		var cardProto = model_ver1_game_component_CardProtoPoolComponent_getCurrentCardProto(ctx,card.protoId);
 		var _g2 = 0;
-		var f = model_ver1_game_gameComponent_SpecialCardText_flatSpecial;
 		var _g3 = [];
-		var x = $getIterator(model_ver1_game_component_CardProtoPoolComponent_getCurrentCardProto(ctx,card.protoId).getTexts(ctx,runtime));
+		var x = $getIterator(cardProto.getTexts(ctx,runtime));
 		while(x.hasNext()) {
 			var x1 = x.next();
-			_g3.push(f(x1));
+			_g3.push(model_ver1_game_gameComponent_SpecialCardText_flatSpecial(ctx,card.id,x1));
 		}
 		var _g4 = [];
 		var e = $getIterator(_g3);
@@ -4763,13 +4766,13 @@ function model_ver1_game_gameComponent_Runtime_getRuntimeText(ctx) {
 		}
 		var this1 = responsePlayerId;
 		var runtime = new model_ver1_game_define_DefaultRuntime(card1,this1);
+		var cardProto = model_ver1_game_component_CardProtoPoolComponent_getCurrentCardProto(ctx,card.protoId);
 		var _g2 = 0;
-		var f = model_ver1_game_gameComponent_SpecialCardText_flatSpecial;
 		var _g3 = [];
-		var x = $getIterator(model_ver1_game_component_CardProtoPoolComponent_getCurrentCardProto(ctx,card.protoId).getTexts(ctx,runtime));
+		var x = $getIterator(cardProto.getTexts(ctx,runtime));
 		while(x.hasNext()) {
 			var x1 = x.next();
-			_g3.push(f(x1));
+			_g3.push(model_ver1_game_gameComponent_SpecialCardText_flatSpecial(ctx,card.id,x1));
 		}
 		var _g4 = [];
 		var e = $getIterator(_g3);
@@ -4845,7 +4848,7 @@ function model_ver1_game_gameComponent_Runtime_getRuntimeText(ctx) {
 		var tmp;
 		if(_g1._hx_index == 2) {
 			var _g2 = _g1.type;
-			var _this = model_ver1_game_gameComponent_SpecialCardText_flatSpecial(x1.text);
+			var _this = model_ver1_game_gameComponent_SpecialCardText_flatSpecial(ctx,x1.runtime.getCardId(),x1.text);
 			var result = new Array(_this.length);
 			var _g3 = 0;
 			var _g4 = _this.length;
@@ -4935,7 +4938,7 @@ function model_ver1_game_gameComponent_Runtime_getRuntimeText(ctx) {
 		var tmp;
 		if(_g1._hx_index == 2) {
 			var _g2 = _g1.type;
-			var _this = model_ver1_game_gameComponent_SpecialCardText_flatSpecial(x1.text);
+			var _this = model_ver1_game_gameComponent_SpecialCardText_flatSpecial(ctx,x1.runtime.getCardId(),x1.text);
 			var result = new Array(_this.length);
 			var _g3 = 0;
 			var _g4 = _this.length;
@@ -5127,7 +5130,7 @@ model_ver1_game_gameComponent_PSArmorText2.prototype = $extend(model_ver1_game_g
 	}
 	,__class__: model_ver1_game_gameComponent_PSArmorText2
 });
-function model_ver1_game_gameComponent_SpecialCardText_flatSpecial(text) {
+function model_ver1_game_gameComponent_SpecialCardText_flatSpecial(ctx,cardId,text) {
 	var _g = text.type;
 	if(_g._hx_index == 2) {
 		switch(_g.type._hx_index) {
@@ -5136,7 +5139,9 @@ function model_ver1_game_gameComponent_SpecialCardText_flatSpecial(text) {
 		case 10:
 			return [new model_ver1_game_gameComponent_PSArmorText1(text.id),new model_ver1_game_gameComponent_PSArmorText2(text.id + "2")];
 		case 11:
-			return [];
+			var card = model_ver1_game_component_TableComponent_getCard(ctx,cardId);
+			var cardProto = model_ver1_game_component_CardProtoPoolComponent_getCurrentCardProto(ctx,card.protoId);
+			return [cardProto.createPlayCardText({ })];
 		default:
 			return [text];
 		}

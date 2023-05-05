@@ -5,30 +5,32 @@ using Lambda;
 
 import model.ver1.game.define.Define;
 import model.ver1.game.define.CardText;
+import model.ver1.game.define.CardProto;
 import model.ver1.game.define.Runtime;
 import model.ver1.game.define.Require;
 import model.ver1.game.define.BaSyou;
 import model.ver1.game.component.CardStateComponent;
 import model.ver1.game.component.TableComponent;
+import model.ver1.game.component.CardProtoPoolComponent;
 import model.ver1.game.gameComponent.Alg;
 import model.ver1.game.gameComponent.Event;
 import model.ver1.game.gameComponent.GameComponent;
 import model.ver1.game.gameComponent.Runtime;
 
-function flatSpecial(text:CardText):Array<CardText> {
+function flatSpecial(ctx:IGameComponent, cardId:String, text:CardText):Array<CardText> {
 	switch (text.type) {
 		case Special(HighMobility):
 			return [];
 		case Special(PSArmor):
 			return [new PSArmorText1(text.id), new PSArmorText2(text.id + "2")];
 		case Special(Quick):
-			// gen play card text
-			return [];
+			final card = getCard(ctx, cardId);
+			final cardProto = getCurrentCardProto(ctx, card.protoId);
+			return [cardProto.createPlayCardText({})];
 		case _:
 			return [text];
 	}
 }
-
 
 class PSArmorText1 extends GameCardText {
 	public function new(id:String) {

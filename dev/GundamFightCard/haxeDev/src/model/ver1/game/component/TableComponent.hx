@@ -8,12 +8,16 @@ interface ITableComponent {
 	var table:Table;
 }
 
+function getCard(ctx:ITableComponent, cardId:String):Card {
+	return tool.Table.getCard(ctx.table, cardId);
+}
+
 function moveCard(ctx:ITableComponent, cardId:String, from:BaSyou, to:BaSyou) {
 	tool.Table.moveCard(ctx.table, cardId, (from : BaSyouId), (to : BaSyouId));
 }
 
 function rollCard(ctx:ITableComponent, cardId:String):Void {
-	final card = getCard(ctx.table, cardId);
+	final card = getCard(ctx, cardId);
 	if (card.isTap) {
 		throw new haxe.Exception("already tap");
 	}
@@ -21,7 +25,7 @@ function rollCard(ctx:ITableComponent, cardId:String):Void {
 }
 
 function rerollCard(ctx:ITableComponent, cardId:String):Void {
-	final card = getCard(ctx.table, cardId);
+	final card = getCard(ctx, cardId);
 	if (card.isTap == false) {
 		throw new haxe.Exception("already reroll");
 	}
@@ -29,7 +33,7 @@ function rerollCard(ctx:ITableComponent, cardId:String):Void {
 }
 
 function getCardOwner(ctx:ITableComponent, cardId:String):String {
-	final owner = getCard(ctx.table, cardId).owner;
+	final owner = getCard(ctx, cardId).owner;
 	if (owner == null) {
 		throw "owner not set yet";
 	}

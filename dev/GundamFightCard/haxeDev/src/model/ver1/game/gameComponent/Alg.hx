@@ -3,7 +3,6 @@ package model.ver1.game.gameComponent;
 using Lambda;
 
 import haxe.ds.Option;
-import tool.Table;
 import model.ver1.game.define.Define;
 import model.ver1.game.define.BaSyou;
 import model.ver1.game.define.Runtime;
@@ -33,7 +32,7 @@ function getUnitOfSetGroup(ctx:IGameComponent, cardId:String):Option<String> {
 
 function rollGameCard(ctx:IGameComponent, cardId:String):Void {
 	rollCard(ctx, cardId);
-	final card = getCard(ctx.table, cardId);
+	final card = getCard(ctx, cardId);
 	sendEvent(ctx, CardRoll(card.id));
 }
 
@@ -61,7 +60,7 @@ function sendEvent(ctx:IGameComponent, evt:Event):Void {
 //
 
 function getCardType(ctx:IGameComponent, cardId:String):CardCategory {
-	final proto = getCurrentCardProto(ctx, getCard(ctx.table, cardId).protoId);
+	final proto = getCurrentCardProto(ctx, getCard(ctx, cardId).protoId);
 	return proto.category;
 }
 

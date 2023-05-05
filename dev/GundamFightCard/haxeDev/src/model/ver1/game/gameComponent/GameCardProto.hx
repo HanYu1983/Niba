@@ -16,8 +16,4 @@ class GameCardProto extends CardProto {
 	function getGameTexts(ctx:IGameComponent, runtime:Runtime):Array<CardText> {
 		return [];
 	}
-
-	function createPlayCardText():CardText {
-		return new CardText("", "");
-	}
 }

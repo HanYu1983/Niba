@@ -59,7 +59,8 @@ function getRuntimeText(ctx:IGameComponent):Array<RuntimeText> {
 		for (card in cardsInHandAndHanger) {
 			final responsePlayerId = getBaSyouControllerAndAssertExist(ctx, getCardBaSyouAndAssertExist(ctx, card.id));
 			final runtime:Runtime = new DefaultRuntime(card.id, responsePlayerId);
-			for (text in getCurrentCardProto(ctx, card.protoId).getTexts(ctx, runtime).flatMap(flatSpecial).filter(text -> {
+			final cardProto = getCurrentCardProto(ctx, card.protoId);
+			for (text in cardProto.getTexts(ctx, runtime).flatMap(text -> flatSpecial(ctx, card.id, text)).filter(text -> {
 				return switch (text.type) {
 					case Automatic(Constant) | PlayCard(_):
 						return true;
@@ -91,7 +92,8 @@ function getRuntimeText(ctx:IGameComponent):Array<RuntimeText> {
 		for (card in cardsInGZone) {
 			final responsePlayerId = getBaSyouControllerAndAssertExist(ctx, getCardBaSyouAndAssertExist(ctx, card.id));
 			final runtime:Runtime = new DefaultRuntime(card.id, responsePlayerId);
-			for (text in getCurrentCardProto(ctx, card.protoId).getTexts(ctx, runtime).flatMap(flatSpecial).filter(text -> text.isSurroundedByArrows)) {
+			final cardProto = getCurrentCardProto(ctx, card.protoId);
+			for (text in cardProto.getTexts(ctx, runtime).flatMap(text -> flatSpecial(ctx, card.id, text)).filter(text -> text.isSurroundedByArrows)) {
 				{
 					runtime: runtime,
 					text: text
@@ -116,7 +118,8 @@ function getRuntimeText(ctx:IGameComponent):Array<RuntimeText> {
 		for (card in cardsInJunkYard) {
 			final responsePlayerId = getBaSyouControllerAndAssertExist(ctx, getCardBaSyouAndAssertExist(ctx, card.id));
 			final runtime:Runtime = new DefaultRuntime(card.id, responsePlayerId);
-			for (text in getCurrentCardProto(ctx, card.protoId).getTexts(ctx, runtime).flatMap(flatSpecial).filter(isContantType)) {
+			final cardProto = getCurrentCardProto(ctx, card.protoId);
+			for (text in cardProto.getTexts(ctx, runtime).flatMap(text -> flatSpecial(ctx, card.id, text)).filter(isContantType)) {
 				{
 					runtime: runtime,
 					text: text
@@ -142,7 +145,8 @@ function getRuntimeText(ctx:IGameComponent):Array<RuntimeText> {
 		for (card in cardsHasController) {
 			final responsePlayerId = getCardControllerAndAssertExist(ctx, card.id);
 			final runtime:Runtime = new DefaultRuntime(card.id, responsePlayerId);
-			for (text in getCurrentCardProto(ctx, card.protoId).getTexts(ctx, runtime).flatMap(flatSpecial)) {
+			final cardProto = getCurrentCardProto(ctx, card.protoId);
+			for (text in cardProto.getTexts(ctx, runtime).flatMap(text -> flatSpecial(ctx, card.id, text))) {
 				{
 					runtime: runtime,
 					text: text
@@ -155,7 +159,8 @@ function getRuntimeText(ctx:IGameComponent):Array<RuntimeText> {
 		for (card in cardsHasController) {
 			final responsePlayerId = getCardControllerAndAssertExist(ctx, card.id);
 			final runtime:Runtime = new DefaultRuntime(card.id, responsePlayerId);
-			for (text in getCurrentCardProto(ctx, card.protoId).getTexts(ctx, runtime).flatMap(flatSpecial)) {
+			final cardProto = getCurrentCardProto(ctx, card.protoId);
+			for (text in cardProto.getTexts(ctx, runtime).flatMap(text -> flatSpecial(ctx, card.id, text))) {
 				for (effect in text.getEffect(ctx, runtime)) {
 					cast(effect : MarkEffect);
 				}
@@ -189,7 +194,7 @@ function getRuntimeText(ctx:IGameComponent):Array<RuntimeText> {
 	}).flatMap(rt -> {
 		switch rt.text.type {
 			case Special(_):
-				return flatSpecial(rt.text).map(t -> {
+				return flatSpecial(ctx, rt.runtime.getCardId(), rt.text).map(t -> {
 					runtime: rt.runtime,
 					text: t
 				});
@@ -230,7 +235,7 @@ function getRuntimeText(ctx:IGameComponent):Array<RuntimeText> {
 	}).flatMap(rt -> {
 		switch rt.text.type {
 			case Special(_):
-				return flatSpecial(rt.text).map(t -> {
+				return flatSpecial(ctx, rt.runtime.getCardId(), rt.text).map(t -> {
 					runtime: rt.runtime,
 					text: t
 				});
