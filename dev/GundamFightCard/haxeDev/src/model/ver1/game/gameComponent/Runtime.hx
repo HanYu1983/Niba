@@ -14,6 +14,7 @@ import model.ver1.game.component.CardProtoPoolComponent;
 import model.ver1.game.component.MarkComponent;
 import model.ver1.game.component.TimingComponent;
 import model.ver1.game.component.ActivePlayerComponent;
+import model.ver1.game.component.TableComponent;
 import model.ver1.game.gameComponent.Alg;
 import model.ver1.game.gameComponent.Event;
 import model.ver1.game.gameComponent.MarkEffect;

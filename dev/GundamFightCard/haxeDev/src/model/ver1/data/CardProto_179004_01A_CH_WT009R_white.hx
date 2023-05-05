@@ -18,11 +18,12 @@ import model.ver1.game.component.CardProtoPoolComponent;
 import model.ver1.game.component.SelectionComponent;
 import model.ver1.game.component.MarkComponent;
 import model.ver1.game.component.TimingComponent;
+import model.ver1.game.component.TableComponent;
 import model.ver1.game.gameComponent.Event;
 import model.ver1.game.gameComponent.Alg;
-import model.ver1.game.entity.Context;
 import model.ver1.game.gameComponent.DefaultMark;
 import model.ver1.game.gameComponent.MarkEffect;
+import model.ver1.game.entity.Context;
 import model.ver1.data.RequireImpl;
 
 // 179004_01A_CH_WT009R_white

@@ -12,6 +12,7 @@ import model.ver1.game.define.CardText;
 import model.ver1.game.define.CardProto;
 import model.ver1.game.component.SelectionComponent;
 import model.ver1.game.component.TimingComponent;
+import model.ver1.game.component.TableComponent;
 import model.ver1.game.gameComponent.Alg;
 import model.ver1.game.entity.Context;
 
@@ -73,7 +74,7 @@ class RequireGTap extends RequireUserSelectCard {
 			throw new haxe.Exception("selectIds not found");
 		}
 		for (cardId in selectIds) {
-			rollCard(ctx, cardId);
+			rollGameCard(ctx, cardId);
 		}
 	}
 }
@@ -108,7 +109,7 @@ function getRequireGTap(ctx:Context, runtime:Runtime, colors:Array<GColor>, id:S
 				throw new haxe.Exception("selectIds not found");
 			}
 			for (cardId in selectIds) {
-				rollCard(ctx, cardId);
+				rollGameCard(ctx, cardId);
 			}
 		},
 	}

@@ -20,7 +20,7 @@ enum Event {
 	//
 	CardRoll(cardId:String);
 	//
-	CardBecomeBattleGroup(cardId:String);
+	NewBattleGroup(cardIds:Array<String>);
 	//
 	PlayerEnterTurn(playerId:PlayerId);
 }

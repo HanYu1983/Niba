@@ -10,7 +10,6 @@ import model.ver1.game.define.Runtime;
 import model.ver1.game.define.Mark;
 import model.ver1.game.define.Effect;
 import model.ver1.game.define.Require;
-import model.ver1.game.gameComponent.Event;
 import model.ver1.game.define.Player;
 import model.ver1.game.define.CardText;
 import model.ver1.game.define.CardProto;
@@ -18,9 +17,12 @@ import model.ver1.game.component.CutComponent;
 import model.ver1.game.component.SelectionComponent;
 import model.ver1.game.component.MarkComponent;
 import model.ver1.game.component.TimingComponent;
-import model.ver1.game.entity.Context;
+import model.ver1.game.component.TableComponent;
+import model.ver1.game.gameComponent.Event;
+import model.ver1.game.gameComponent.Event;
 import model.ver1.game.gameComponent.DefaultMark;
 import model.ver1.game.gameComponent.Alg;
+import model.ver1.game.entity.Context;
 import model.ver1.data.RequireImpl;
 
 // 179030_11E_CH_BN091N_brown
@@ -107,7 +109,7 @@ private class Process1 extends CardText {
 				action: () -> {
 					final selectUnits = getPlayerSelectionCardId(ctx, getSubKey(0));
 					for (unit in selectUnits) {
-						rollCard(ctx, unit);
+						rollGameCard(ctx, unit);
 					}
 				},
 			}

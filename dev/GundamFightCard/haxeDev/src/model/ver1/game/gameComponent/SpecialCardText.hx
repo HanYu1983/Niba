@@ -1,13 +1,19 @@
 package model.ver1.game.gameComponent;
 
+using StringTools;
+using Lambda;
+
 import model.ver1.game.define.Define;
 import model.ver1.game.define.CardText;
 import model.ver1.game.define.Runtime;
 import model.ver1.game.define.Require;
 import model.ver1.game.define.BaSyou;
+import model.ver1.game.component.CardStateComponent;
+import model.ver1.game.component.TableComponent;
 import model.ver1.game.gameComponent.Alg;
 import model.ver1.game.gameComponent.Event;
 import model.ver1.game.gameComponent.GameComponent;
+import model.ver1.game.gameComponent.Runtime;
 
 function flatSpecial(text:CardText):Array<CardText> {
 	switch (text.type) {
@@ -46,7 +52,7 @@ class PSArmorText1 extends GameCardText {
 	public function onGameEvent(ctx:IGameComponent, event:Event, runtime:Runtime):Void {
 		switch (event) {
 			case CardEnter(cardId, baSyouKw, Play) if (isBa(baSyouKw) && cardId == runtime.getCardId()):
-				rerollCard(ctx, cardId);
+				rerollGameCard(ctx, cardId);
 			case _:
 		}
 	}
@@ -61,12 +67,25 @@ class PSArmorText2 extends CardText {
 	public function onGameEvent(ctx:IGameComponent, event:Event, runtime:Runtime):Void {
 		switch (event) {
 			case CardEnter(cardId, baSyouKw, _) if (isBattleArea(baSyouKw) && cardId == runtime.getCardId()):
-			// 加入下回合開始時回到手上的Mark
-			case CardBecomeBattleGroup(cardId):
-			// getBattleGroup
-			// 刪除下回合開始時回到手上的Mark
+				getCardState(ctx, cardId).bools["回合開始時回到手上"] = true;
+			case NewBattleGroup(setGroupCardIds) if (setGroupCardIds.contains(runtime.getCardId())):
+				final hasSupply = getRuntimeText(ctx).filter(rt -> {
+					return setGroupCardIds.contains(rt.runtime.getCardId());
+				}).exists(rt -> {
+					return switch (rt.text.type) {
+						case Special(Supply):
+							true;
+						case _:
+							false;
+					};
+				});
+				if (hasSupply) {
+					getCardState(ctx, runtime.getCardId()).bools["回合開始時回到手上"] = false;
+				}
 			case PlayerEnterTurn(playerId) if (playerId == runtime.getResponsePlayerId()):
-			// check mark and return
+				if (getCardState(ctx, runtime.getCardId()).bools["回合開始時回到手上"]) {
+					returnToOwnerHand(ctx, runtime.getCardId());
+				}
 			case _:
 		}
 	}

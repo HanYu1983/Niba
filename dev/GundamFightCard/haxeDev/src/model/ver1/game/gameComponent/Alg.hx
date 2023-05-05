@@ -12,6 +12,7 @@ import model.ver1.game.define.Player;
 import model.ver1.game.component.CardProtoPoolComponent;
 import model.ver1.game.component.EffectComponent;
 import model.ver1.game.component.MarkComponent;
+import model.ver1.game.component.TableComponent;
 import model.ver1.game.gameComponent.Event;
 import model.ver1.game.gameComponent.Runtime;
 import model.ver1.game.gameComponent.MarkEffect;
@@ -21,19 +22,6 @@ import model.ver1.game.gameComponent.GameComponent;
 // General
 //
 // 持ち主の手札に移す
-function returnToOwnerHand(ctx:IGameComponent, cardId:String):Void {
-	final from = getCardBaSyouAndAssertExist(ctx, cardId);
-	final to = BaSyou.Default(getCardOwner(ctx, cardId), TeHuTa);
-	moveCard(ctx, cardId, from, to);
-}
-
-function getCardOwner(ctx:IGameComponent, cardId:String):String {
-	final owner = getCard(ctx.table, cardId).owner;
-	if (owner == null) {
-		throw "owner not set yet";
-	}
-	return owner;
-}
 
 function becomeG(ctx:IGameComponent, cardId:String):Void {
 	trace("將自己變成G");
@@ -43,25 +31,14 @@ function getUnitOfSetGroup(ctx:IGameComponent, cardId:String):Option<String> {
 	return None;
 }
 
-function rollCard(ctx:IGameComponent, cardId:String):Void {
+function rollGameCard(ctx:IGameComponent, cardId:String):Void {
+	rollCard(ctx, cardId);
 	final card = getCard(ctx.table, cardId);
-	if (card.isTap) {
-		throw new haxe.Exception("already tap");
-	}
-	card.isTap = true;
 	sendEvent(ctx, CardRoll(card.id));
 }
 
-function rerollCard(ctx:IGameComponent, cardId:String):Void {
-	final card = getCard(ctx.table, cardId);
-	if (card.isTap == false) {
-		throw new haxe.Exception("already reroll");
-	}
-	card.isTap = false;
-}
-
-function moveCard(ctx:IGameComponent, cardId:String, from:BaSyou, to:BaSyou) {
-	tool.Table.moveCard(ctx.table, cardId, (from : BaSyouId), (to : BaSyouId));
+function rerollGameCard(ctx:IGameComponent, cardId:String):Void {
+	rerollCard(ctx, cardId);
 }
 
 //
@@ -82,10 +59,6 @@ function sendEvent(ctx:IGameComponent, evt:Event):Void {
 //
 // Query
 //
-
-function getCardsByBaSyou(ctx:IGameComponent, baSyou:BaSyou):Array<String> {
-	return getCardStack(ctx.table, (baSyou : BaSyouId)).cardIds;
-}
 
 function getCardType(ctx:IGameComponent, cardId:String):CardCategory {
 	final proto = getCurrentCardProto(ctx, getCard(ctx.table, cardId).protoId);
@@ -116,29 +89,6 @@ function getThisCardSetGroupCardIds(ctx:IGameComponent, cardId:String):Array<Str
 	return [cardId];
 }
 
-// p.63
-// 手札、ハンガー中的卡沒有控制者，但有Play的權利
-// 本国、捨て山、ジャンクヤード中的卡沒有控制者
-// 沒有控制者的情況也就代表不能使用內文也不能出擊
-function getCardController(ctx:IGameComponent, cardId:String):Option<String> {
-	// 所在區域的管理者
-	// 所在部隊的管理者
-	// 其它的都沒有管理者
-	return switch getCardBaSyouAndAssertExist(ctx, cardId) {
-		case Default(playerId, baSyouKeyword) if (isBa(baSyouKeyword)):
-			Some(playerId);
-		case _:
-			None;
-	}
-}
-
-function getCardControllerAndAssertExist(ctx:IGameComponent, cardId:String):String {
-	return switch getCardController(ctx, cardId) {
-		case Some(playerId): playerId;
-		case _: throw new haxe.Exception("卡片被除外，沒有控制者");
-	}
-}
-
 // (p.63)場所管理者
 function getBaSyouController(ctx:IGameComponent, baSyou:BaSyou):Option<String> {
 	return switch baSyou {
@@ -153,16 +103,6 @@ function getBaSyouControllerAndAssertExist(ctx:IGameComponent, baSyou:BaSyou):St
 			playerId;
 		case _:
 			throw new haxe.Exception("沒有控制者");
-	}
-}
-
-function getCardBaSyouAndAssertExist(ctx:IGameComponent, cardId:String):BaSyou {
-	return switch tool.Table.getCardCardStack(ctx.table, cardId) {
-		case Some(cardStack):
-			(cardStack.id : BaSyouId);
-		case _:
-			trace(ctx);
-			throw new haxe.Exception('card baSyou not found: ${cardId}');
 	}
 }
 
@@ -181,25 +121,6 @@ function getPlayerGCardIds(ctx:IGameComponent, playerId:String):Array<String> {
 
 function getCardSetGroupCardIds(ctx:IGameComponent, cardId:String):Array<String> {
 	return [cardId];
-}
-
-// (p.63) 自軍カードが
-function isMyCard(ctx:IGameComponent, masterCardId:String, slaveCardId:String):Bool {
-	return switch [getCardController(ctx, masterCardId), getCardController(ctx, slaveCardId)] {
-		case [Some(c1), Some(c2)] if (c1 == c2):
-			true;
-		case _:
-			false;
-	}
-}
-
-function isOpponentsCard(ctx:IGameComponent, masterCardId:String, slaveCardId:String):Bool {
-	return switch [getCardController(ctx, masterCardId), getCardController(ctx, slaveCardId)] {
-		case [Some(c1), Some(c2)] if (c1 != c2):
-			true;
-		case _:
-			false;
-	}
 }
 
 function getEnterFieldThisTurnCardIds(ctx:IGameComponent):Array<String> {

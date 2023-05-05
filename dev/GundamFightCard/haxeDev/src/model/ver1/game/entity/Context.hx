@@ -15,6 +15,7 @@ import model.ver1.game.component.CardProtoPoolComponent;
 import model.ver1.game.component.SelectionComponent;
 import model.ver1.game.component.MarkComponent;
 import model.ver1.game.component.TimingComponent;
+import model.ver1.game.component.CardStateComponent;
 import model.ver1.game.flowComponent.FlowComponent;
 import model.ver1.game.flowComponent.FlowMemory;
 
@@ -31,8 +32,9 @@ class Context implements IFlowComponent {
 	}
 	public var cuts:Array<Array<String>> = [];
 	public var effects:Map<String, Effect> = [];
-	public var activePlayerId:Option<PlayerId>;
-	public var activeEffect:Option<Effect>;
+	public var activePlayerId:Option<PlayerId> = None;
+	public var activeEffect:Option<Effect> = None;
+	public var cardStates:Map<String, CardState> = [];
 	public var flowMemory:FlowMemory = {
 		state: PrepareDeck,
 		hasTriggerEvent: false,
