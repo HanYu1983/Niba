@@ -9,15 +9,28 @@ import model.ver1.game.gameComponent.GameComponent;
 import model.ver1.game.gameComponent.Event;
 import model.ver1.game.gameComponent.MarkEffect;
 
-class DefaultMark extends Mark {
+class GameMark extends Mark {
 	public function new(id:String) {
 		super(id);
 	}
 
 	public var age:Null<Int>;
 
-	public override function onEvent(_ctx:Any, event:Any):Void {
+	public final override function getEffect(_ctx:Any):Array<Any> {
 		final ctx:IGameComponent = cast _ctx;
+		return _getEffect(ctx);
+	}
+
+	function _getEffect(ctx:IGameComponent):Array<Any> {
+		return [];
+	}
+
+	public final override function onEvent(_ctx:Any, event:Any):Void {
+		final ctx:IGameComponent = cast _ctx;
+		_onEvent(ctx, event);
+	}
+
+	function _onEvent(ctx:IGameComponent, event:Any):Void {
 		if (age != null) {
 			switch cast(event : Event) {
 				case ChangePhase:
@@ -35,7 +48,7 @@ class DefaultMark extends Mark {
 	}
 }
 
-class EnterFieldThisTurnMark extends DefaultMark {
+class EnterFieldThisTurnMark extends GameMark {
 	public function new(id:String, cardId:String) {
 		super(id);
 		this.cardId = cardId;
@@ -44,12 +57,12 @@ class EnterFieldThisTurnMark extends DefaultMark {
 
 	public var cardId:String;
 
-	public override function getEffect(_ctx:Any):Array<MarkEffect> {
+	public override function _getEffect(ctx:IGameComponent):Array<MarkEffect> {
 		return [EnterFieldThisTurn(this.cardId)];
 	}
 }
 
-class CanNotRerollMark extends DefaultMark {
+class CanNotRerollMark extends GameMark {
 	public function new(id:String, cardId:String) {
 		super(id);
 		this.cardId = cardId;
@@ -57,7 +70,7 @@ class CanNotRerollMark extends DefaultMark {
 
 	public var cardId:String;
 
-	public override function getEffect(_ctx:Any):Array<MarkEffect> {
+	public override function _getEffect(_ctx:IGameComponent):Array<MarkEffect> {
 		return [CanNotReroll(this.cardId)];
 	}
 }

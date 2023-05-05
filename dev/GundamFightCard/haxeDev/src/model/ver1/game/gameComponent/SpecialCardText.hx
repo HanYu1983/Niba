@@ -29,19 +29,6 @@ function flatSpecial(text:CardText):Array<CardText> {
 	}
 }
 
-abstract class GameCardText extends CardText {
-	public function new(id:String, description:String) {
-		super(id, description);
-	}
-
-	public override function onEvent(_ctx:Any, _event:Any, runtime:Runtime):Void {
-		final ctx = cast(_ctx : IGameComponent);
-		final event = cast(_event : Event);
-		this.onGameEvent(ctx, event, runtime);
-	}
-
-	abstract function onGameEvent(ctx:IGameComponent, event:Event, runtime:Runtime):Void;
-}
 
 class PSArmorText1 extends GameCardText {
 	public function new(id:String) {
@@ -49,7 +36,7 @@ class PSArmorText1 extends GameCardText {
 		type = Automatic(Trigger);
 	}
 
-	public function onGameEvent(ctx:IGameComponent, event:Event, runtime:Runtime):Void {
+	public override function _onEvent(ctx:IGameComponent, event:Event, runtime:Runtime):Void {
 		switch (event) {
 			case CardEnter(cardId, baSyouKw, Play) if (isBa(baSyouKw) && cardId == runtime.getCardId()):
 				rerollGameCard(ctx, cardId);
@@ -58,13 +45,13 @@ class PSArmorText1 extends GameCardText {
 	}
 }
 
-class PSArmorText2 extends CardText {
+class PSArmorText2 extends GameCardText {
 	public function new(id:String) {
 		super(id, " 進入戰場時, 下回合開始時回到手上, 當中如果和補給或供給能力的組到隊的話, 就不必回到手上");
 		type = Automatic(Trigger);
 	}
 
-	public function onGameEvent(ctx:IGameComponent, event:Event, runtime:Runtime):Void {
+	public override function _onEvent(ctx:IGameComponent, event:Event, runtime:Runtime):Void {
 		switch (event) {
 			case CardEnter(cardId, baSyouKw, _) if (isBattleArea(baSyouKw) && cardId == runtime.getCardId()):
 				getCardState(ctx, cardId).bools["回合開始時回到手上"] = true;

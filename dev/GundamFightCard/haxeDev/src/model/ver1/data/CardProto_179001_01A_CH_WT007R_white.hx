@@ -9,19 +9,19 @@ import model.ver1.game.define.Mark;
 import model.ver1.game.define.Timing;
 import model.ver1.game.define.Effect;
 import model.ver1.game.define.Require;
-import model.ver1.game.gameComponent.Event;
 import model.ver1.game.define.Player;
 import model.ver1.game.define.CardText;
 import model.ver1.game.define.CardProto;
-import model.ver1.game.gameComponent.Alg;
-import model.ver1.game.gameComponent.Runtime;
-import model.ver1.game.gameComponent.Event;
-import model.ver1.game.entity.Context;
-import model.ver1.game.gameComponent.DefaultMark;
-import model.ver1.game.gameComponent.MarkEffect;
 import model.ver1.game.component.SelectionComponent;
 import model.ver1.game.component.MarkComponent;
 import model.ver1.game.component.TimingComponent;
+import model.ver1.game.gameComponent.Alg;
+import model.ver1.game.gameComponent.Runtime;
+import model.ver1.game.gameComponent.Event;
+import model.ver1.game.gameComponent.GameComponent;
+import model.ver1.game.gameComponent.GameMark;
+import model.ver1.game.gameComponent.MarkEffect;
+import model.ver1.game.entity.Context;
 import model.ver1.data.RequireImpl;
 import model.ver1.data.PlayerPlayCard;
 
@@ -73,7 +73,7 @@ private class Text1 extends CardText {
 	}
 }
 
-private class Mark1 extends DefaultMark {
+private class Mark1 extends GameMark {
 	public function new(id:String, attachCardId:String) {
 		super(id);
 		this.attachCardId = attachCardId;
@@ -81,12 +81,11 @@ private class Mark1 extends DefaultMark {
 
 	public var attachCardId:String;
 
-	public override function getEffect(_ctx:Any):Array<Any> {
+	override function _getEffect(_ctx:IGameComponent):Array<Any> {
 		return [AttackSpeed(attachCardId, 1)];
 	}
 
-	public override function onEvent(_ctx:Any, event:Any):Void {
-		final ctx = cast(_ctx, Context);
+	override function _onEvent(ctx:IGameComponent, event:Any):Void {
 		switch cast(event : Event) {
 			case ChangePhase:
 				switch getTiming(ctx) {

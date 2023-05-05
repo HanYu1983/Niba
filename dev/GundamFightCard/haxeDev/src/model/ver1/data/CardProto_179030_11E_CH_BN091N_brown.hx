@@ -20,7 +20,7 @@ import model.ver1.game.component.TimingComponent;
 import model.ver1.game.component.TableComponent;
 import model.ver1.game.gameComponent.Event;
 import model.ver1.game.gameComponent.Event;
-import model.ver1.game.gameComponent.DefaultMark;
+import model.ver1.game.gameComponent.GameMark;
 import model.ver1.game.gameComponent.Alg;
 import model.ver1.game.entity.Context;
 import model.ver1.data.RequireImpl;

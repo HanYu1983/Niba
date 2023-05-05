@@ -21,8 +21,9 @@ import model.ver1.game.component.TimingComponent;
 import model.ver1.game.component.TableComponent;
 import model.ver1.game.gameComponent.Event;
 import model.ver1.game.gameComponent.Alg;
-import model.ver1.game.gameComponent.DefaultMark;
+import model.ver1.game.gameComponent.GameMark;
 import model.ver1.game.gameComponent.MarkEffect;
+import model.ver1.game.gameComponent.GameComponent;
 import model.ver1.game.entity.Context;
 import model.ver1.data.RequireImpl;
 
@@ -141,7 +142,7 @@ private class Text1_1 extends CardText {
 	}
 }
 
-private class Mark1 extends DefaultMark {
+private class Mark1 extends GameMark {
 	public function new(id:String, attachCardId:String, battlePoint:BattlePoint) {
 		super(id);
 		this.attachCardId = attachCardId;
@@ -151,7 +152,7 @@ private class Mark1 extends DefaultMark {
 	public var attachCardId:String;
 	public var battlePoint:BattlePoint;
 
-	public override function getEffect(_ctx:Any):Array<Any> {
+	override function _getEffect(ctx:IGameComponent):Array<Any> {
 		return [AddBattlePoint(attachCardId, battlePoint)];
 	}
 }
