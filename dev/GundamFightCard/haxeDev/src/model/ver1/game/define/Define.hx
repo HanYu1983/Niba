@@ -128,3 +128,6 @@ enum BattlePoint {
 	Default(melee:Int, range:Int, hp:Int);
 }
 
+enum RollCost {
+	
+}

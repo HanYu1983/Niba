@@ -17,6 +17,10 @@ import model.ver1.game.gameComponent.Event;
 import model.ver1.game.gameComponent.GameComponent;
 import model.ver1.game.gameComponent.Runtime;
 
+function createPlayCardText(cardProto:CardProto, options:{}):CardText {
+	return new GameCardText("", "");
+}
+
 function flatSpecial(ctx:IGameComponent, cardId:String, text:CardText):Array<CardText> {
 	switch (text.type) {
 		case Special(HighMobility):
@@ -26,7 +30,7 @@ function flatSpecial(ctx:IGameComponent, cardId:String, text:CardText):Array<Car
 		case Special(Quick):
 			final card = getCard(ctx, cardId);
 			final cardProto = getCurrentCardProto(ctx, card.protoId);
-			return [cardProto.createPlayCardText({})];
+			return [createPlayCardText(cardProto, {})];
 		case _:
 			return [text];
 	}

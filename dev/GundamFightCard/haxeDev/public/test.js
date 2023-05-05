@@ -1285,9 +1285,6 @@ model_ver1_game_define_CardProto.prototype = {
 	getTexts: function(_ctx,runtime) {
 		return [];
 	}
-	,createPlayCardText: function(options) {
-		return new model_ver1_game_define_CardText("","");
-	}
 	,__class__: model_ver1_game_define_CardProto
 };
 var model_ver1_data_CardProto_$179001_$01A_$CH_$WT007R_$white = function() {
@@ -3417,6 +3414,9 @@ var model_ver1_game_define_BattlePoint = $hxEnums["model.ver1.game.define.Battle
 	,Default: ($_=function(melee,range,hp) { return {_hx_index:0,melee:melee,range:range,hp:hp,__enum__:"model.ver1.game.define.BattlePoint",toString:$estr}; },$_._hx_name="Default",$_.__params__ = ["melee","range","hp"],$_)
 };
 model_ver1_game_define_BattlePoint.__constructs__ = [model_ver1_game_define_BattlePoint.Default];
+var model_ver1_game_define_RollCost = $hxEnums["model.ver1.game.define.RollCost"] = { __ename__:"model.ver1.game.define.RollCost",__constructs__:null
+};
+model_ver1_game_define_RollCost.__constructs__ = [];
 var model_ver1_game_define_EffectCause = $hxEnums["model.ver1.game.define.EffectCause"] = { __ename__:"model.ver1.game.define.EffectCause",__constructs__:null
 	,Pending: {_hx_name:"Pending",_hx_index:0,__enum__:"model.ver1.game.define.EffectCause",toString:$estr}
 	,System: ($_=function(respnosePlayerId) { return {_hx_index:1,respnosePlayerId:respnosePlayerId,__enum__:"model.ver1.game.define.EffectCause",toString:$estr}; },$_._hx_name="System",$_.__params__ = ["respnosePlayerId"],$_)
@@ -4023,8 +4023,12 @@ function model_ver1_game_flowComponent_FlowMemory_cancelTriggerEvent(memory) {
 function model_ver1_game_flowComponent_FlowMemory_markTriggerStackEffectFinishedEventDone(memory) {
 	memory.shouldTriggerStackEffectFinishedEvent = true;
 }
+function model_ver1_game_gameComponent_Alg_createRequireRollCost(rollcost,options) {
+	return { id : "createRequireRollCost", description : "roll cost", type : model_ver1_game_define_RequireType.SelectCard([],[1]), player : model_ver1_game_define_RelativePlayer.You, action : function() {
+	}};
+}
 function model_ver1_game_gameComponent_Alg_becomeG(ctx,cardId) {
-	console.log("src/model/ver1/game/gameComponent/Alg.hx:26:","將自己變成G");
+	console.log("src/model/ver1/game/gameComponent/Alg.hx:39:","將自己變成G");
 }
 function model_ver1_game_gameComponent_Alg_getUnitOfSetGroup(ctx,cardId) {
 	return haxe_ds_Option.None;
@@ -4209,7 +4213,7 @@ function model_ver1_game_gameComponent_Alg_isDestroyNow(ctx,cardId,condition) {
 	return false;
 }
 function model_ver1_game_gameComponent_Alg_removeDestroyEffect(ctx,cardId) {
-	console.log("src/model/ver1/game/gameComponent/Alg.hx:196:","移除堆疊中的破壞效果");
+	console.log("src/model/ver1/game/gameComponent/Alg.hx:209:","移除堆疊中的破壞效果");
 }
 function model_ver1_game_gameComponent_Alg_getEffectRuntime(ctx,blockId) {
 	var block = model_ver1_game_component_EffectComponent_getEffect(ctx,blockId);
@@ -4360,6 +4364,75 @@ var model_ver1_game_gameComponent_MarkEffect = $hxEnums["model.ver1.game.gameCom
 	,CanNotReroll: ($_=function(cardId) { return {_hx_index:4,cardId:cardId,__enum__:"model.ver1.game.gameComponent.MarkEffect",toString:$estr}; },$_._hx_name="CanNotReroll",$_.__params__ = ["cardId"],$_)
 };
 model_ver1_game_gameComponent_MarkEffect.__constructs__ = [model_ver1_game_gameComponent_MarkEffect.AddBattlePoint,model_ver1_game_gameComponent_MarkEffect.AttackSpeed,model_ver1_game_gameComponent_MarkEffect.AddText,model_ver1_game_gameComponent_MarkEffect.EnterFieldThisTurn,model_ver1_game_gameComponent_MarkEffect.CanNotReroll];
+var model_ver1_game_gameComponent_PlayUnitEffectText = function(id,description) {
+	model_ver1_game_gameComponent_GameCardText.call(this,id,description);
+};
+$hxClasses["model.ver1.game.gameComponent.PlayUnitEffectText"] = model_ver1_game_gameComponent_PlayUnitEffectText;
+model_ver1_game_gameComponent_PlayUnitEffectText.__name__ = "model.ver1.game.gameComponent.PlayUnitEffectText";
+model_ver1_game_gameComponent_PlayUnitEffectText.__super__ = model_ver1_game_gameComponent_GameCardText;
+model_ver1_game_gameComponent_PlayUnitEffectText.prototype = $extend(model_ver1_game_gameComponent_GameCardText.prototype,{
+	_action: function(ctx,runtime) {
+	}
+	,__class__: model_ver1_game_gameComponent_PlayUnitEffectText
+});
+var model_ver1_game_gameComponent_PlayPilotEffectText = function(id,description) {
+	model_ver1_game_gameComponent_GameCardText.call(this,id,description);
+};
+$hxClasses["model.ver1.game.gameComponent.PlayPilotEffectText"] = model_ver1_game_gameComponent_PlayPilotEffectText;
+model_ver1_game_gameComponent_PlayPilotEffectText.__name__ = "model.ver1.game.gameComponent.PlayPilotEffectText";
+model_ver1_game_gameComponent_PlayPilotEffectText.__super__ = model_ver1_game_gameComponent_GameCardText;
+model_ver1_game_gameComponent_PlayPilotEffectText.prototype = $extend(model_ver1_game_gameComponent_GameCardText.prototype,{
+	_action: function(ctx,runtime) {
+	}
+	,__class__: model_ver1_game_gameComponent_PlayPilotEffectText
+});
+var model_ver1_game_gameComponent_PlayCommandEffectText = function(id,description) {
+	model_ver1_game_gameComponent_GameCardText.call(this,id,description);
+};
+$hxClasses["model.ver1.game.gameComponent.PlayCommandEffectText"] = model_ver1_game_gameComponent_PlayCommandEffectText;
+model_ver1_game_gameComponent_PlayCommandEffectText.__name__ = "model.ver1.game.gameComponent.PlayCommandEffectText";
+model_ver1_game_gameComponent_PlayCommandEffectText.__super__ = model_ver1_game_gameComponent_GameCardText;
+model_ver1_game_gameComponent_PlayCommandEffectText.prototype = $extend(model_ver1_game_gameComponent_GameCardText.prototype,{
+	_action: function(ctx,runtime) {
+		this._commandEffectImpl(ctx,runtime);
+	}
+	,_commandEffectImpl: function(ctx,runtime) {
+	}
+	,__class__: model_ver1_game_gameComponent_PlayCommandEffectText
+});
+var model_ver1_game_gameComponent_PlayUnitText = function(id,description) {
+	model_ver1_game_gameComponent_GameCardText.call(this,id,description);
+};
+$hxClasses["model.ver1.game.gameComponent.PlayUnitText"] = model_ver1_game_gameComponent_PlayUnitText;
+model_ver1_game_gameComponent_PlayUnitText.__name__ = "model.ver1.game.gameComponent.PlayUnitText";
+model_ver1_game_gameComponent_PlayUnitText.__super__ = model_ver1_game_gameComponent_GameCardText;
+model_ver1_game_gameComponent_PlayUnitText.prototype = $extend(model_ver1_game_gameComponent_GameCardText.prototype,{
+	_getRequires2: function(ctx,runtime) {
+		return [model_ver1_game_gameComponent_Alg_createRequireRollCost(this.rollCost,{ })];
+	}
+	,_action: function(ctx,runtime) {
+		var block = new model_ver1_game_define_Effect(this.getSubKey(0),model_ver1_game_define_EffectCause.PlayCard(runtime.getResponsePlayerId(),runtime.getCardId()),new model_ver1_game_gameComponent_PlayUnitEffectText("",""));
+		model_ver1_game_component_CutComponent_cutIn(ctx,block);
+	}
+	,__class__: model_ver1_game_gameComponent_PlayUnitText
+});
+var model_ver1_game_gameComponent_PlayGText = function(id,description) {
+	model_ver1_game_gameComponent_GameCardText.call(this,id,description);
+};
+$hxClasses["model.ver1.game.gameComponent.PlayGText"] = model_ver1_game_gameComponent_PlayGText;
+model_ver1_game_gameComponent_PlayGText.__name__ = "model.ver1.game.gameComponent.PlayGText";
+model_ver1_game_gameComponent_PlayGText.__super__ = model_ver1_game_gameComponent_GameCardText;
+model_ver1_game_gameComponent_PlayGText.prototype = $extend(model_ver1_game_gameComponent_GameCardText.prototype,{
+	_getRequires2: function(ctx,runtime) {
+		return [];
+	}
+	,_action: function(ctx,runtime) {
+	}
+	,__class__: model_ver1_game_gameComponent_PlayGText
+});
+function model_ver1_game_gameComponent_PlayCardText_createPlayCardText(cardProto,options) {
+	return new model_ver1_game_gameComponent_PlayUnitText("","");
+}
 function model_ver1_game_gameComponent_Runtime_isContantType(text) {
 	var _g = text.type;
 	if(_g._hx_index == 0) {
@@ -5130,6 +5203,9 @@ model_ver1_game_gameComponent_PSArmorText2.prototype = $extend(model_ver1_game_g
 	}
 	,__class__: model_ver1_game_gameComponent_PSArmorText2
 });
+function model_ver1_game_gameComponent_SpecialCardText_createPlayCardText(cardProto,options) {
+	return new model_ver1_game_gameComponent_GameCardText("","");
+}
 function model_ver1_game_gameComponent_SpecialCardText_flatSpecial(ctx,cardId,text) {
 	var _g = text.type;
 	if(_g._hx_index == 2) {
@@ -5141,7 +5217,7 @@ function model_ver1_game_gameComponent_SpecialCardText_flatSpecial(ctx,cardId,te
 		case 11:
 			var card = model_ver1_game_component_TableComponent_getCard(ctx,cardId);
 			var cardProto = model_ver1_game_component_CardProtoPoolComponent_getCurrentCardProto(ctx,card.protoId);
-			return [cardProto.createPlayCardText({ })];
+			return [model_ver1_game_gameComponent_SpecialCardText_createPlayCardText(cardProto,{ })];
 		default:
 			return [text];
 		}

@@ -8,6 +8,7 @@ import model.ver1.game.define.BaSyou;
 import model.ver1.game.define.Runtime;
 import model.ver1.game.define.Mark;
 import model.ver1.game.define.Player;
+import model.ver1.game.define.Require;
 import model.ver1.game.component.CardProtoPoolComponent;
 import model.ver1.game.component.EffectComponent;
 import model.ver1.game.component.MarkComponent;
@@ -16,6 +17,18 @@ import model.ver1.game.gameComponent.Event;
 import model.ver1.game.gameComponent.Runtime;
 import model.ver1.game.gameComponent.MarkEffect;
 import model.ver1.game.gameComponent.GameComponent;
+
+function createRequireRollCost(rollcost:RollCost, options:{}):Require2 {
+	return {
+		id: "createRequireRollCost",
+		description: "roll cost",
+		type: SelectCard([], [1]),
+		player: You,
+		action: () -> {
+			// move card to playcardzone
+		},
+	}
+}
 
 //
 // General

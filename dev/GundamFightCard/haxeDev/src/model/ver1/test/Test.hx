@@ -15,6 +15,7 @@ import model.ver1.game.gameComponent.Alg;
 import model.ver1.game.gameComponent.Runtime;
 import model.ver1.game.gameComponent.GameMark;
 import model.ver1.game.gameComponent.GameCardProto;
+import model.ver1.game.gameComponent.PlayCardText;
 import model.ver1.game.entity.Context;
 import model.ver1.data.CardProto_179001_01A_CH_WT007R_white;
 import model.ver1.data.CardProto_179003_01A_U_BK008U_black;
