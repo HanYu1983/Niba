@@ -43,14 +43,21 @@ function getUnitOfSetGroup(ctx:IGameComponent, cardId:String):Option<String> {
 	return None;
 }
 
-function tapCard(ctx:IGameComponent, cardId:String):Void {
+function rollCard(ctx:IGameComponent, cardId:String):Void {
 	final card = getCard(ctx.table, cardId);
 	if (card.isTap) {
 		throw new haxe.Exception("already tap");
 	}
 	card.isTap = true;
-	// TODO: put here?
 	sendEvent(ctx, CardRoll(card.id));
+}
+
+function rerollCard(ctx:IGameComponent, cardId:String):Void {
+	final card = getCard(ctx.table, cardId);
+	if (card.isTap == false) {
+		throw new haxe.Exception("already reroll");
+	}
+	card.isTap = false;
 }
 
 function moveCard(ctx:IGameComponent, cardId:String, from:BaSyou, to:BaSyou) {

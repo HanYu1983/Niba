@@ -1,6 +1,13 @@
 package model.ver1.game.gameComponent;
 
 import model.ver1.game.define.Define;
+import model.ver1.game.define.BaSyou;
+import model.ver1.game.define.Player;
+
+enum CardEnterReason {
+	Whatever;
+	Play;
+}
 
 enum Event {
 	ChangePhase;
@@ -9,5 +16,11 @@ enum Event {
 	//
 	CardEnterField(cardId:String);
 	//
+	CardEnter(cardId:String, baSyouKeyword:BaSyouKeyword, reason:CardEnterReason);
+	//
 	CardRoll(cardId:String);
+	//
+	CardBecomeBattleGroup(cardId:String);
+	//
+	PlayerEnterTurn(playerId:PlayerId);
 }

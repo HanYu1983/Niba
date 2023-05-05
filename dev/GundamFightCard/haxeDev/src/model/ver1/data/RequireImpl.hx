@@ -73,7 +73,7 @@ class RequireGTap extends RequireUserSelectCard {
 			throw new haxe.Exception("selectIds not found");
 		}
 		for (cardId in selectIds) {
-			tapCard(ctx, cardId);
+			rollCard(ctx, cardId);
 		}
 	}
 }
@@ -108,7 +108,7 @@ function getRequireGTap(ctx:Context, runtime:Runtime, colors:Array<GColor>, id:S
 				throw new haxe.Exception("selectIds not found");
 			}
 			for (cardId in selectIds) {
-				tapCard(ctx, cardId);
+				rollCard(ctx, cardId);
 			}
 		},
 	}

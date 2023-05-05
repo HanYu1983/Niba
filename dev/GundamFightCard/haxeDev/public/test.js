@@ -1889,7 +1889,7 @@ model_ver1_data__$CardProto_$179030_$11E_$CH_$BN091N_$brown_Text1.prototype = $e
 		var this1 = responsePlayerId;
 		var opponentPlayerId = this1 == model_ver1_game_define_PlayerId.A ? model_ver1_game_define_PlayerId.B : model_ver1_game_define_PlayerId.A;
 		var _g = event;
-		if(_g._hx_index == 3) {
+		if(_g._hx_index == 4) {
 			var rollCardId = _g.cardId;
 			if(rollCardId == thisCardId) {
 				if(model_ver1_data_CardProto_$179030_$11E_$CH_$BN091N_$brown_getOpponentG(ctx,runtime).length >= 1) {
@@ -1927,7 +1927,7 @@ model_ver1_data__$CardProto_$179030_$11E_$CH_$BN091N_$brown_Process1.prototype =
 			while(_g < selectUnits.length) {
 				var unit = selectUnits[_g];
 				++_g;
-				model_ver1_game_gameComponent_Alg_tapCard(ctx,unit);
+				model_ver1_game_gameComponent_Alg_rollCard(ctx,unit);
 			}
 		}}];
 	}
@@ -2436,7 +2436,7 @@ model_ver1_data_RequireGTap.prototype = $extend(model_ver1_data_RequireUserSelec
 		while(_g < selectIds.length) {
 			var cardId = selectIds[_g];
 			++_g;
-			model_ver1_game_gameComponent_Alg_tapCard(ctx,cardId);
+			model_ver1_game_gameComponent_Alg_rollCard(ctx,cardId);
 		}
 	}
 	,__class__: model_ver1_data_RequireGTap
@@ -2530,7 +2530,7 @@ function model_ver1_data_RequireImpl_getRequireGTap(ctx,runtime,colors,id) {
 		while(_g < selectIds.length) {
 			var cardId = selectIds[_g];
 			++_g;
-			model_ver1_game_gameComponent_Alg_tapCard(ctx,cardId);
+			model_ver1_game_gameComponent_Alg_rollCard(ctx,cardId);
 		}
 	}};
 }
@@ -3877,13 +3877,20 @@ function model_ver1_game_gameComponent_Alg_becomeG(ctx,cardId) {
 function model_ver1_game_gameComponent_Alg_getUnitOfSetGroup(ctx,cardId) {
 	return haxe_ds_Option.None;
 }
-function model_ver1_game_gameComponent_Alg_tapCard(ctx,cardId) {
+function model_ver1_game_gameComponent_Alg_rollCard(ctx,cardId) {
 	var card = tool_Table_getCard(ctx.table,cardId);
 	if(card.isTap) {
 		throw new haxe_Exception("already tap");
 	}
 	card.isTap = true;
 	model_ver1_game_gameComponent_Alg_sendEvent(ctx,model_ver1_game_gameComponent_Event.CardRoll(card.id));
+}
+function model_ver1_game_gameComponent_Alg_rerollCard(ctx,cardId) {
+	var card = tool_Table_getCard(ctx.table,cardId);
+	if(card.isTap == false) {
+		throw new haxe_Exception("already reroll");
+	}
+	card.isTap = false;
 }
 function model_ver1_game_gameComponent_Alg_moveCard(ctx,cardId,from,to) {
 	var playerId = from.playerId;
@@ -3995,7 +4002,7 @@ function model_ver1_game_gameComponent_Alg_getCardBaSyouAndAssertExist(ctx,cardI
 		model_ver1_game_define_BaSyouId.toBaSyou(ret);
 		return model_ver1_game_define_BaSyouId.toBaSyou(ret);
 	} else {
-		console.log("src/model/ver1/game/gameComponent/Alg.hx:157:",ctx);
+		console.log("src/model/ver1/game/gameComponent/Alg.hx:164:",ctx);
 		throw new haxe_Exception("card baSyou not found: " + cardId);
 	}
 }
@@ -4146,7 +4153,7 @@ function model_ver1_game_gameComponent_Alg_isDestroyNow(ctx,cardId,condition) {
 	return false;
 }
 function model_ver1_game_gameComponent_Alg_removeDestroyEffect(ctx,cardId) {
-	console.log("src/model/ver1/game/gameComponent/Alg.hx:269:","移除堆疊中的破壞效果");
+	console.log("src/model/ver1/game/gameComponent/Alg.hx:276:","移除堆疊中的破壞效果");
 }
 function model_ver1_game_gameComponent_Alg_getEffectRuntime(ctx,blockId) {
 	var block = model_ver1_game_component_EffectComponent_getEffect(ctx,blockId);
@@ -4215,13 +4222,21 @@ model_ver1_game_gameComponent_CanNotRerollMark.prototype = $extend(model_ver1_ga
 	}
 	,__class__: model_ver1_game_gameComponent_CanNotRerollMark
 });
+var model_ver1_game_gameComponent_CardEnterReason = $hxEnums["model.ver1.game.gameComponent.CardEnterReason"] = { __ename__:"model.ver1.game.gameComponent.CardEnterReason",__constructs__:null
+	,Whatever: {_hx_name:"Whatever",_hx_index:0,__enum__:"model.ver1.game.gameComponent.CardEnterReason",toString:$estr}
+	,Play: {_hx_name:"Play",_hx_index:1,__enum__:"model.ver1.game.gameComponent.CardEnterReason",toString:$estr}
+};
+model_ver1_game_gameComponent_CardEnterReason.__constructs__ = [model_ver1_game_gameComponent_CardEnterReason.Whatever,model_ver1_game_gameComponent_CardEnterReason.Play];
 var model_ver1_game_gameComponent_Event = $hxEnums["model.ver1.game.gameComponent.Event"] = { __ename__:"model.ver1.game.gameComponent.Event",__constructs__:null
 	,ChangePhase: {_hx_name:"ChangePhase",_hx_index:0,__enum__:"model.ver1.game.gameComponent.Event",toString:$estr}
 	,Gain: ($_=function(cardId,value) { return {_hx_index:1,cardId:cardId,value:value,__enum__:"model.ver1.game.gameComponent.Event",toString:$estr}; },$_._hx_name="Gain",$_.__params__ = ["cardId","value"],$_)
 	,CardEnterField: ($_=function(cardId) { return {_hx_index:2,cardId:cardId,__enum__:"model.ver1.game.gameComponent.Event",toString:$estr}; },$_._hx_name="CardEnterField",$_.__params__ = ["cardId"],$_)
-	,CardRoll: ($_=function(cardId) { return {_hx_index:3,cardId:cardId,__enum__:"model.ver1.game.gameComponent.Event",toString:$estr}; },$_._hx_name="CardRoll",$_.__params__ = ["cardId"],$_)
+	,CardEnter: ($_=function(cardId,baSyouKeyword,reason) { return {_hx_index:3,cardId:cardId,baSyouKeyword:baSyouKeyword,reason:reason,__enum__:"model.ver1.game.gameComponent.Event",toString:$estr}; },$_._hx_name="CardEnter",$_.__params__ = ["cardId","baSyouKeyword","reason"],$_)
+	,CardRoll: ($_=function(cardId) { return {_hx_index:4,cardId:cardId,__enum__:"model.ver1.game.gameComponent.Event",toString:$estr}; },$_._hx_name="CardRoll",$_.__params__ = ["cardId"],$_)
+	,CardBecomeBattleGroup: ($_=function(cardId) { return {_hx_index:5,cardId:cardId,__enum__:"model.ver1.game.gameComponent.Event",toString:$estr}; },$_._hx_name="CardBecomeBattleGroup",$_.__params__ = ["cardId"],$_)
+	,PlayerEnterTurn: ($_=function(playerId) { return {_hx_index:6,playerId:playerId,__enum__:"model.ver1.game.gameComponent.Event",toString:$estr}; },$_._hx_name="PlayerEnterTurn",$_.__params__ = ["playerId"],$_)
 };
-model_ver1_game_gameComponent_Event.__constructs__ = [model_ver1_game_gameComponent_Event.ChangePhase,model_ver1_game_gameComponent_Event.Gain,model_ver1_game_gameComponent_Event.CardEnterField,model_ver1_game_gameComponent_Event.CardRoll];
+model_ver1_game_gameComponent_Event.__constructs__ = [model_ver1_game_gameComponent_Event.ChangePhase,model_ver1_game_gameComponent_Event.Gain,model_ver1_game_gameComponent_Event.CardEnterField,model_ver1_game_gameComponent_Event.CardEnter,model_ver1_game_gameComponent_Event.CardRoll,model_ver1_game_gameComponent_Event.CardBecomeBattleGroup,model_ver1_game_gameComponent_Event.PlayerEnterTurn];
 var model_ver1_game_gameComponent_MarkEffect = $hxEnums["model.ver1.game.gameComponent.MarkEffect"] = { __ename__:"model.ver1.game.gameComponent.MarkEffect",__constructs__:null
 	,AddBattlePoint: ($_=function(cardId,battlePoint) { return {_hx_index:0,cardId:cardId,battlePoint:battlePoint,__enum__:"model.ver1.game.gameComponent.MarkEffect",toString:$estr}; },$_._hx_name="AddBattlePoint",$_.__params__ = ["cardId","battlePoint"],$_)
 	,AttackSpeed: ($_=function(cardId,speed) { return {_hx_index:1,cardId:cardId,speed:speed,__enum__:"model.ver1.game.gameComponent.MarkEffect",toString:$estr}; },$_._hx_name="AttackSpeed",$_.__params__ = ["cardId","speed"],$_)
@@ -4230,30 +4245,6 @@ var model_ver1_game_gameComponent_MarkEffect = $hxEnums["model.ver1.game.gameCom
 	,CanNotReroll: ($_=function(cardId) { return {_hx_index:4,cardId:cardId,__enum__:"model.ver1.game.gameComponent.MarkEffect",toString:$estr}; },$_._hx_name="CanNotReroll",$_.__params__ = ["cardId"],$_)
 };
 model_ver1_game_gameComponent_MarkEffect.__constructs__ = [model_ver1_game_gameComponent_MarkEffect.AddBattlePoint,model_ver1_game_gameComponent_MarkEffect.AttackSpeed,model_ver1_game_gameComponent_MarkEffect.AddText,model_ver1_game_gameComponent_MarkEffect.EnterFieldThisTurn,model_ver1_game_gameComponent_MarkEffect.CanNotReroll];
-var model_ver1_game_gameComponent_PSArmorText1 = function(id) {
-	model_ver1_game_define_CardText.call(this,id,"出場時直立");
-	this.type = model_ver1_game_define_TextType.Automatic(model_ver1_game_define_TextTypeAutomaticType.Trigger);
-};
-$hxClasses["model.ver1.game.gameComponent.PSArmorText1"] = model_ver1_game_gameComponent_PSArmorText1;
-model_ver1_game_gameComponent_PSArmorText1.__name__ = "model.ver1.game.gameComponent.PSArmorText1";
-model_ver1_game_gameComponent_PSArmorText1.__super__ = model_ver1_game_define_CardText;
-model_ver1_game_gameComponent_PSArmorText1.prototype = $extend(model_ver1_game_define_CardText.prototype,{
-	onEvent: function(_ctx,event,runtime) {
-	}
-	,__class__: model_ver1_game_gameComponent_PSArmorText1
-});
-var model_ver1_game_gameComponent_PSArmorText2 = function(id) {
-	model_ver1_game_define_CardText.call(this,id," 進入戰場時, 下回合開始時回到手上, 當中如果和補給或供給能力的組到隊的話, 就不必回到手上");
-	this.type = model_ver1_game_define_TextType.Automatic(model_ver1_game_define_TextTypeAutomaticType.Trigger);
-};
-$hxClasses["model.ver1.game.gameComponent.PSArmorText2"] = model_ver1_game_gameComponent_PSArmorText2;
-model_ver1_game_gameComponent_PSArmorText2.__name__ = "model.ver1.game.gameComponent.PSArmorText2";
-model_ver1_game_gameComponent_PSArmorText2.__super__ = model_ver1_game_define_CardText;
-model_ver1_game_gameComponent_PSArmorText2.prototype = $extend(model_ver1_game_define_CardText.prototype,{
-	onEvent: function(_ctx,event,runtime) {
-	}
-	,__class__: model_ver1_game_gameComponent_PSArmorText2
-});
 function model_ver1_game_gameComponent_Runtime_isContantType(text) {
 	var _g = text.type;
 	if(_g._hx_index == 0) {
@@ -4264,23 +4255,6 @@ function model_ver1_game_gameComponent_Runtime_isContantType(text) {
 		}
 	} else {
 		return false;
-	}
-}
-function model_ver1_game_gameComponent_Runtime_flatSpecial(text) {
-	var _g = text.type;
-	if(_g._hx_index == 2) {
-		switch(_g.type._hx_index) {
-		case 0:
-			return [];
-		case 10:
-			return [new model_ver1_game_gameComponent_PSArmorText1(text.id),new model_ver1_game_gameComponent_PSArmorText2(text.id + "2")];
-		case 11:
-			return [];
-		default:
-			return [text];
-		}
-	} else {
-		return [text];
 	}
 }
 function model_ver1_game_gameComponent_Runtime_getRuntimeText(ctx) {
@@ -4349,7 +4323,7 @@ function model_ver1_game_gameComponent_Runtime_getRuntimeText(ctx) {
 		var this1 = responsePlayerId;
 		var runtime = new model_ver1_game_define_DefaultRuntime(card1,this1);
 		var _g2 = 0;
-		var f = model_ver1_game_gameComponent_Runtime_flatSpecial;
+		var f = model_ver1_game_gameComponent_SpecialCardText_flatSpecial;
 		var _g3 = [];
 		var x = $getIterator(model_ver1_game_component_CardProtoPoolComponent_getCurrentCardProto(ctx,card.protoId).getTexts(ctx,runtime));
 		while(x.hasNext()) {
@@ -4454,7 +4428,7 @@ function model_ver1_game_gameComponent_Runtime_getRuntimeText(ctx) {
 		var this1 = responsePlayerId;
 		var runtime = new model_ver1_game_define_DefaultRuntime(card1,this1);
 		var _g2 = 0;
-		var f = model_ver1_game_gameComponent_Runtime_flatSpecial;
+		var f = model_ver1_game_gameComponent_SpecialCardText_flatSpecial;
 		var _g3 = [];
 		var x = $getIterator(model_ver1_game_component_CardProtoPoolComponent_getCurrentCardProto(ctx,card.protoId).getTexts(ctx,runtime));
 		while(x.hasNext()) {
@@ -4546,7 +4520,7 @@ function model_ver1_game_gameComponent_Runtime_getRuntimeText(ctx) {
 		var this1 = responsePlayerId;
 		var runtime = new model_ver1_game_define_DefaultRuntime(card1,this1);
 		var _g2 = 0;
-		var f = model_ver1_game_gameComponent_Runtime_flatSpecial;
+		var f = model_ver1_game_gameComponent_SpecialCardText_flatSpecial;
 		var _g3 = [];
 		var x = $getIterator(model_ver1_game_component_CardProtoPoolComponent_getCurrentCardProto(ctx,card.protoId).getTexts(ctx,runtime));
 		while(x.hasNext()) {
@@ -4640,7 +4614,7 @@ function model_ver1_game_gameComponent_Runtime_getRuntimeText(ctx) {
 		var this1 = responsePlayerId;
 		var runtime = new model_ver1_game_define_DefaultRuntime(card1,this1);
 		var _g2 = 0;
-		var f = model_ver1_game_gameComponent_Runtime_flatSpecial;
+		var f = model_ver1_game_gameComponent_SpecialCardText_flatSpecial;
 		var _g3 = [];
 		var x = $getIterator(model_ver1_game_component_CardProtoPoolComponent_getCurrentCardProto(ctx,card.protoId).getTexts(ctx,runtime));
 		while(x.hasNext()) {
@@ -4678,7 +4652,7 @@ function model_ver1_game_gameComponent_Runtime_getRuntimeText(ctx) {
 		var this1 = responsePlayerId;
 		var runtime = new model_ver1_game_define_DefaultRuntime(card1,this1);
 		var _g2 = 0;
-		var f = model_ver1_game_gameComponent_Runtime_flatSpecial;
+		var f = model_ver1_game_gameComponent_SpecialCardText_flatSpecial;
 		var _g3 = [];
 		var x = $getIterator(model_ver1_game_component_CardProtoPoolComponent_getCurrentCardProto(ctx,card.protoId).getTexts(ctx,runtime));
 		while(x.hasNext()) {
@@ -4759,7 +4733,7 @@ function model_ver1_game_gameComponent_Runtime_getRuntimeText(ctx) {
 		var tmp;
 		if(_g1._hx_index == 2) {
 			var _g2 = _g1.type;
-			var _this = model_ver1_game_gameComponent_Runtime_flatSpecial(x1.text);
+			var _this = model_ver1_game_gameComponent_SpecialCardText_flatSpecial(x1.text);
 			var result = new Array(_this.length);
 			var _g3 = 0;
 			var _g4 = _this.length;
@@ -4849,7 +4823,7 @@ function model_ver1_game_gameComponent_Runtime_getRuntimeText(ctx) {
 		var tmp;
 		if(_g1._hx_index == 2) {
 			var _g2 = _g1.type;
-			var _this = model_ver1_game_gameComponent_Runtime_flatSpecial(x1.text);
+			var _this = model_ver1_game_gameComponent_SpecialCardText_flatSpecial(x1.text);
 			var result = new Array(_this.length);
 			var _g3 = 0;
 			var _g4 = _this.length;
@@ -4958,6 +4932,86 @@ function model_ver1_game_gameComponent_Runtime_getPlayerRuntimeText(ctx,playerId
 		}
 	}
 	return _g;
+}
+var model_ver1_game_gameComponent_GameCardText = function(id,description) {
+	model_ver1_game_define_CardText.call(this,id,description);
+};
+$hxClasses["model.ver1.game.gameComponent.GameCardText"] = model_ver1_game_gameComponent_GameCardText;
+model_ver1_game_gameComponent_GameCardText.__name__ = "model.ver1.game.gameComponent.GameCardText";
+model_ver1_game_gameComponent_GameCardText.__super__ = model_ver1_game_define_CardText;
+model_ver1_game_gameComponent_GameCardText.prototype = $extend(model_ver1_game_define_CardText.prototype,{
+	onEvent: function(_ctx,_event,runtime) {
+		var ctx = _ctx;
+		var event = _event;
+		this.onGameEvent(ctx,event,runtime);
+	}
+	,__class__: model_ver1_game_gameComponent_GameCardText
+});
+var model_ver1_game_gameComponent_PSArmorText1 = function(id) {
+	model_ver1_game_gameComponent_GameCardText.call(this,id,"出場時直立");
+	this.type = model_ver1_game_define_TextType.Automatic(model_ver1_game_define_TextTypeAutomaticType.Trigger);
+};
+$hxClasses["model.ver1.game.gameComponent.PSArmorText1"] = model_ver1_game_gameComponent_PSArmorText1;
+model_ver1_game_gameComponent_PSArmorText1.__name__ = "model.ver1.game.gameComponent.PSArmorText1";
+model_ver1_game_gameComponent_PSArmorText1.__super__ = model_ver1_game_gameComponent_GameCardText;
+model_ver1_game_gameComponent_PSArmorText1.prototype = $extend(model_ver1_game_gameComponent_GameCardText.prototype,{
+	onGameEvent: function(ctx,event,runtime) {
+		if(event._hx_index == 3) {
+			if(event.reason._hx_index == 1) {
+				var baSyouKw = event.baSyouKeyword;
+				var cardId = event.cardId;
+				if(model_ver1_game_define_BaSyou_isBa(baSyouKw) && cardId == runtime.getCardId()) {
+					model_ver1_game_gameComponent_Alg_rerollCard(ctx,cardId);
+				}
+			}
+		}
+	}
+	,__class__: model_ver1_game_gameComponent_PSArmorText1
+});
+var model_ver1_game_gameComponent_PSArmorText2 = function(id) {
+	model_ver1_game_define_CardText.call(this,id," 進入戰場時, 下回合開始時回到手上, 當中如果和補給或供給能力的組到隊的話, 就不必回到手上");
+	this.type = model_ver1_game_define_TextType.Automatic(model_ver1_game_define_TextTypeAutomaticType.Trigger);
+};
+$hxClasses["model.ver1.game.gameComponent.PSArmorText2"] = model_ver1_game_gameComponent_PSArmorText2;
+model_ver1_game_gameComponent_PSArmorText2.__name__ = "model.ver1.game.gameComponent.PSArmorText2";
+model_ver1_game_gameComponent_PSArmorText2.__super__ = model_ver1_game_define_CardText;
+model_ver1_game_gameComponent_PSArmorText2.prototype = $extend(model_ver1_game_define_CardText.prototype,{
+	onGameEvent: function(ctx,event,runtime) {
+		switch(event._hx_index) {
+		case 3:
+			var _g = event.reason;
+			var cardId = event.cardId;
+			var baSyouKw = event.baSyouKeyword;
+			var tmp = model_ver1_game_define_BaSyou_isBattleArea(baSyouKw) && cardId == runtime.getCardId();
+			break;
+		case 5:
+			var cardId = event.cardId;
+			break;
+		case 6:
+			var playerId = event.playerId;
+			var tmp = playerId == runtime.getResponsePlayerId();
+			break;
+		default:
+		}
+	}
+	,__class__: model_ver1_game_gameComponent_PSArmorText2
+});
+function model_ver1_game_gameComponent_SpecialCardText_flatSpecial(text) {
+	var _g = text.type;
+	if(_g._hx_index == 2) {
+		switch(_g.type._hx_index) {
+		case 0:
+			return [];
+		case 10:
+			return [new model_ver1_game_gameComponent_PSArmorText1(text.id),new model_ver1_game_gameComponent_PSArmorText2(text.id + "2")];
+		case 11:
+			return [];
+		default:
+			return [text];
+		}
+	} else {
+		return [text];
+	}
 }
 function model_ver1_test_Test_test() {
 	model_ver1_game_Game_test();

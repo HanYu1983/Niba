@@ -18,7 +18,7 @@ import model.ver1.game.gameComponent.Alg;
 import model.ver1.game.gameComponent.Event;
 import model.ver1.game.gameComponent.MarkEffect;
 import model.ver1.game.gameComponent.GameComponent;
-import model.ver1.game.gameComponent.PSArmor;
+import model.ver1.game.gameComponent.SpecialCardText;
 
 function isContantType(text:CardText) {
 	return switch (text.type) {
@@ -26,20 +26,6 @@ function isContantType(text:CardText) {
 			true;
 		case _:
 			false;
-	}
-}
-
-function flatSpecial(text:CardText):Array<CardText> {
-	switch (text.type) {
-		case Special(HighMobility):
-			return [];
-		case Special(PSArmor):
-			return [new PSArmorText1(text.id), new PSArmorText2(text.id + "2")];
-		case Special(Quick):
-			// gen play card text
-			return [];
-		case _:
-			return [text];
 	}
 }
 
