@@ -1,5 +1,7 @@
 package model.ver1.game.gameComponent;
 
+import haxe.ds.Option;
+import haxe.Exception;
 import model.ver1.game.define.Define;
 import model.ver1.game.define.CardText;
 import model.ver1.game.define.Runtime;
@@ -8,64 +10,131 @@ import model.ver1.game.define.CardProto;
 import model.ver1.game.define.Effect;
 import model.ver1.game.define.BaSyou;
 import model.ver1.game.component.CutComponent;
+import model.ver1.game.component.TableComponent;
+import model.ver1.game.component.PlayerStateComponent;
 import model.ver1.game.gameComponent.GameComponent;
 import model.ver1.game.gameComponent.GameCardText;
 import model.ver1.game.gameComponent.Alg;
 
-class PlayUnitEffectText extends GameCardText {
-	var baSyou:BaSyou;
+class PlayUnitEffect extends GameCardText {
+	public var baSyouOption:Option<BaSyou> = None;
 
 	override function _action(ctx:IGameComponent, runtime:Runtime):Void {
-		// 機體, op的話移到配置區
-		
+		final baSyou = switch (baSyouOption) {
+			case Some(baSyou):
+				baSyou;
+			case _:
+				throw new haxe.Exception("baSyou not found");
+		}
+		final from = getCardBaSyouAndAssertExist(ctx, runtime.getCardId());
+		moveCard(ctx, runtime.getCardId(), from, baSyou);
 	}
 }
 
-class PlayPilotEffectText extends GameCardText {
-	var baSyou:BaSyou;
-	var unitCardId:String;
+class PlayPilotEffect extends GameCardText {
+	var baSyouOption:Option<BaSyou> = None;
+	var unitCardIdOption:Option<String> = None;
 
 	override function _action(ctx:IGameComponent, runtime:Runtime):Void {
-		// 駕駛移到配置區(stay)或機體上
+		switch (baSyouOption) {
+			case Some(baSyou):
+				final from = getCardBaSyouAndAssertExist(ctx, runtime.getCardId());
+				moveCard(ctx, runtime.getCardId(), from, baSyou);
+			case _:
+		}
+		switch (unitCardIdOption) {
+			case Some(unitCardId):
+				final to = getCardBaSyouAndAssertExist(ctx, unitCardId);
+				final from = getCardBaSyouAndAssertExist(ctx, runtime.getCardId());
+				moveCard(ctx, runtime.getCardId(), from, to);
+			case _:
+		}
+		throw new haxe.Exception("baSyou and unitCardId not found");
 	}
 }
 
-class PlayCommandEffectText extends GameCardText {
-	override function _action(ctx:IGameComponent, runtime:Runtime):Void {
-		// 解決指令效果並移到廢棄庫
-		_commandEffectImpl(ctx, runtime);
-	}
-	function _commandEffectImpl(ctx:IGameComponent, runtime:Runtime):Void{
-
-	}
-}
-
-class PlayUnitText extends GameCardText {
+class PlayUnitRule extends GameCardText {
 	var rollCost:RollCost;
+
+	public function new() {
+		super("", "");
+		type = PlayCard(Relative(You, Maintenance));
+	}
 
 	override function _getRequires2(ctx:IGameComponent, runtime:Runtime):Array<Require2> {
 		return [createRequireRollCost(rollCost, {})];
 	}
 
 	override function _action(ctx:IGameComponent, runtime:Runtime):Void {
-		final block = new Effect(getSubKey(0), PlayCard(runtime.getResponsePlayerId(), runtime.getCardId()), new PlayUnitEffectText("", ""));
+		final playUnitEffect = new PlayUnitEffect("", "");
+		playUnitEffect.baSyouOption = Some(BaSyou.Default(runtime.getResponsePlayerId(), MaintenanceArea));
+		final block = new Effect(getSubKey(0), PlayCard(runtime.getResponsePlayerId(), runtime.getCardId()), playUnitEffect);
 		cutIn(ctx, block);
 	}
 }
 
-class PlayGText extends GameCardText {
-	var rollCost:RollCost;
+class PlayGRule extends GameCardText {
+	public function new() {
+		super("", "");
+		type = PlayCard(Relative(You, Maintenance));
+	}
 
 	override function _getRequires2(ctx:IGameComponent, runtime:Runtime):Array<Require2> {
-		// check has play G
-		return [];
+		return [
+			{
+				id: id,
+				description: "還沒下G",
+				type: Pending,
+				player: You,
+				action: () -> {
+					if (getPlayerState(ctx, runtime.getResponsePlayerId()).hasPlayG) {
+						throw new haxe.Exception("has Play G");
+					}
+				},
+			}
+		];
 	}
 
 	override function _action(ctx:IGameComponent, runtime:Runtime):Void {
-		// move card to GZone
+		getPlayerState(ctx, runtime.getResponsePlayerId()).hasPlayG = true;
+		final from = getCardBaSyouAndAssertExist(ctx, runtime.getCardId());
+		final to = BaSyou.Default(runtime.getResponsePlayerId(), GZone);
+		moveCard(ctx, runtime.getCardId(), from, to);
+	}
+}
+
+class PlayCommandEffect extends GameCardText {
+	override function _action(ctx:IGameComponent, runtime:Runtime):Void {
+		// 解決指令效果
+		_commandEffectImpl(ctx, runtime);
+		// 移到廢棄庫
+		final to = BaSyou.Default(runtime.getResponsePlayerId(), JunkYard);
+		final from = getCardBaSyouAndAssertExist(ctx, runtime.getCardId());
+		moveCard(ctx, runtime.getCardId(), from, to);
+	}
+
+	function _commandEffectImpl(ctx:IGameComponent, runtime:Runtime):Void {}
+}
+
+class PlayCommandRule extends GameCardText {
+	var rollCost:RollCost;
+	var commandEffect:CardText;
+
+	public function new() {
+		super("", "");
+		type = PlayCard(Relative(You, Maintenance));
+	}
+
+	override function _getRequires2(ctx:IGameComponent, runtime:Runtime):Array<Require2> {
+		return [createRequireRollCost(rollCost, {})];
+	}
+
+	override function _action(ctx:IGameComponent, runtime:Runtime):Void {
+		final block = new Effect(getSubKey(0), PlayCard(runtime.getResponsePlayerId(), runtime.getCardId()), commandEffect);
+		cutIn(ctx, block);
 	}
 }
 
 function createPlayCardText(cardProto:CardProto, options:{}):CardText {
-	return new PlayUnitText("", "");
+	return new PlayUnitRule();
 }

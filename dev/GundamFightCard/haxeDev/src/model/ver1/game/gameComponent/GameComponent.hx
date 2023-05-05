@@ -14,5 +14,5 @@ import model.ver1.game.component.MarkComponent;
 import model.ver1.game.component.TimingComponent;
 import model.ver1.game.component.TableComponent;
 import model.ver1.game.component.CardStateComponent;
-
-interface IGameComponent extends ICutComponent extends ICardProtoPoolComponent extends ISelectionComponent extends IMarkComponent extends ITimingComponent extends IActiveEffectComponent extends IActivePlayerComponent extends ITableComponent extends ICardStateComponent{}
+import model.ver1.game.component.PlayerStateComponent;
+interface IGameComponent extends ICutComponent extends ICardProtoPoolComponent extends ISelectionComponent extends IMarkComponent extends ITimingComponent extends IActiveEffectComponent extends IActivePlayerComponent extends ITableComponent extends ICardStateComponent extends IPlayerStateComponent{}
