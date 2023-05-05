@@ -65,6 +65,11 @@ class PlayUnitRule extends GameCardText {
 	}
 
 	override function _action(ctx:IGameComponent, runtime:Runtime):Void {
+		// 移到PlayedCard區, 這個區的牌是康牌的對象
+		final to = BaSyou.Default(runtime.getResponsePlayerId(), PlayedCard);
+		final from = getCardBaSyouAndAssertExist(ctx, runtime.getCardId());
+		moveCard(ctx, runtime.getCardId(), from, to);
+		// 推入場出的效果
 		final playUnitEffect = new PlayUnitEffect("", "", System);
 		playUnitEffect.baSyouOption = Some(BaSyou.Default(runtime.getResponsePlayerId(), MaintenanceArea));
 		final block = new Effect(getSubKey(0), PlayCard(runtime.getResponsePlayerId(), runtime.getCardId()), playUnitEffect);

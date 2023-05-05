@@ -4328,6 +4328,9 @@ model_ver1_game_gameComponent_PlayUnitRule.prototype = $extend(model_ver1_game_g
 		return [model_ver1_game_gameComponent_Alg_createRequireRollCost(this.rollCost,{ })];
 	}
 	,_action: function(ctx,runtime) {
+		var to = model_ver1_game_define_BaSyou.Default(runtime.getResponsePlayerId(),model_ver1_game_define_BaSyouKeyword.PlayedCard);
+		var from = model_ver1_game_component_TableComponent_getCardBaSyouAndAssertExist(ctx,runtime.getCardId());
+		model_ver1_game_component_TableComponent_moveCard(ctx,runtime.getCardId(),from,to);
 		var playUnitEffect = new model_ver1_game_gameComponent_PlayUnitEffect("","",model_ver1_game_define_TextType.System);
 		playUnitEffect.baSyouOption = haxe_ds_Option.Some(model_ver1_game_define_BaSyou.Default(runtime.getResponsePlayerId(),model_ver1_game_define_BaSyouKeyword.MaintenanceArea));
 		var block = new model_ver1_game_define_Effect(this.getSubKey(0),model_ver1_game_define_EffectCause.PlayCard(runtime.getResponsePlayerId(),runtime.getCardId()),playUnitEffect);
