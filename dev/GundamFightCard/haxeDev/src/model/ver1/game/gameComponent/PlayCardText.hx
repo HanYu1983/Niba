@@ -56,9 +56,8 @@ class PlayPilotEffect extends GameCardText {
 class PlayUnitRule extends GameCardText {
 	var rollCost:RollCost;
 
-	public function new() {
-		super("", "");
-		type = PlayCard(Relative(You, Maintenance));
+	public function new(id:String) {
+		super(id, "PlayUnitRule", PlayCard(Relative(You, Maintenance)));
 	}
 
 	override function _getRequires2(ctx:IGameComponent, runtime:Runtime):Array<Require2> {
@@ -66,7 +65,7 @@ class PlayUnitRule extends GameCardText {
 	}
 
 	override function _action(ctx:IGameComponent, runtime:Runtime):Void {
-		final playUnitEffect = new PlayUnitEffect("", "");
+		final playUnitEffect = new PlayUnitEffect("", "", System);
 		playUnitEffect.baSyouOption = Some(BaSyou.Default(runtime.getResponsePlayerId(), MaintenanceArea));
 		final block = new Effect(getSubKey(0), PlayCard(runtime.getResponsePlayerId(), runtime.getCardId()), playUnitEffect);
 		cutIn(ctx, block);
@@ -74,9 +73,8 @@ class PlayUnitRule extends GameCardText {
 }
 
 class PlayGRule extends GameCardText {
-	public function new() {
-		super("", "");
-		type = PlayCard(Relative(You, Maintenance));
+	public function new(id:String) {
+		super(id, "PlayGRule", PlayCard(Relative(You, Maintenance)));
 	}
 
 	override function _getRequires2(ctx:IGameComponent, runtime:Runtime):Array<Require2> {
@@ -120,9 +118,8 @@ class PlayCommandRule extends GameCardText {
 	var rollCost:RollCost;
 	var commandEffect:CardText;
 
-	public function new() {
-		super("", "");
-		type = PlayCard(Relative(You, Maintenance));
+	public function new(id:String) {
+		super(id, "PlayCommandRule", PlayCard(Relative(You, Maintenance)));
 	}
 
 	override function _getRequires2(ctx:IGameComponent, runtime:Runtime):Array<Require2> {
@@ -136,5 +133,5 @@ class PlayCommandRule extends GameCardText {
 }
 
 function createPlayCardText(cardProto:CardProto, options:{}):CardText {
-	return new PlayUnitRule();
+	return new PlayUnitRule("");
 }

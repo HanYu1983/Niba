@@ -32,7 +32,7 @@ class CardProto_179003_01A_U_BK008U_black extends CardProto {
 	public override function getTexts(_ctx:Any, runtime:Runtime):Array<CardText> {
 		final ctx = cast(_ctx, Context);
 		return [
-			new PlayerPlayCard('${runtime.getCardId()}_PlayerPlayCard'),
+			//new PlayerPlayCard('${runtime.getCardId()}_PlayerPlayCard'),
 			new Text1('${runtime.getCardId()}_Text1')
 		];
 	}
@@ -53,8 +53,7 @@ private class RequireThisCardDestroyByBattleDamage extends Require {
 
 private class Text1 extends CardText {
 	public function new(id:String) {
-		super(id, "（ダメージ判定ステップ）〔２〕：このカードが戦闘ダメージで破壊されている場合、このカードを、破壊を無効にした上で自軍Gにする。");
-		type = Use(Absolute(DamageChecking));
+		super(id, "（ダメージ判定ステップ）〔２〕：このカードが戦闘ダメージで破壊されている場合、このカードを、破壊を無効にした上で自軍Gにする。", Use(Absolute(DamageChecking)));
 	}
 
 	public override function getRequires(_ctx:Any, runtime:Runtime):Array<Require> {
@@ -77,7 +76,7 @@ private class Text1 extends CardText {
 
 private class Text2 extends CardText {
 	public function new(id:String) {
-		super(id, "このカードを、破壊を無効にした上で自軍Gにする。");
+		super(id, "このカードを、破壊を無効にした上で自軍Gにする。", System);
 	}
 
 	public override function action(_ctx:Any, runtime:Runtime):Void {

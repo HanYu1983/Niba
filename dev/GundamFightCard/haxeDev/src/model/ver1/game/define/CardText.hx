@@ -16,14 +16,15 @@ import model.ver1.game.define.Define;
 // }
 
 class CardText {
-	public function new(id:String, description:String) {
+	public function new(id:String, description:String, type:TextType) {
 		this.id = id;
 		this.description = description;
+		this.type = type;
 	}
 
-	public var id:String;
-	public var description:String;
-	public var type = Automatic(Resident);
+	public final id:String;
+	public final description:String;
+	public final type:TextType;
 	// << >>內文
 	public var isSurroundedByArrows = false;
 

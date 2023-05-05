@@ -90,6 +90,8 @@ enum TextType {
 	Special(type:TextTypeSpecialType);
 	// PlayCard
 	PlayCard(timing:UseTiming);
+	//
+	System;
 }
 
 enum CardCategory {
@@ -129,5 +131,5 @@ enum BattlePoint {
 }
 
 enum RollCost {
-	
+
 }

@@ -40,7 +40,7 @@ class CardProto_179030_11E_CH_BN091N_brown extends CardProto {
 
 	public override function getTexts(_ctx:Any, runtime:Runtime):Array<CardText> {
 		return [
-			new PlayerPlayCard('${runtime.getCardId()}_PlayerPlayCard'),
+			//new PlayerPlayCard('${runtime.getCardId()}_PlayerPlayCard'),
 			new Text1('${runtime.getCardId()}_Text1')
 		];
 	}
@@ -64,8 +64,7 @@ function getOpponentG(_ctx:Any, runtime:Runtime):Array<String> {
 
 private class Text1 extends CardText {
 	public function new(id:String) {
-		super(id, "『起動』：このカードがロールした場合、敵軍G１枚をロールする。その場合、このセットグループは、このターンと次のターン、リロールできない。");
-		type = Automatic(Trigger);
+		super(id, "『起動』：このカードがロールした場合、敵軍G１枚をロールする。その場合、このセットグループは、このターンと次のターン、リロールできない。", Automatic(Trigger));
 	}
 
 	public override function onEvent(_ctx:Any, event:Any, runtime:Runtime):Void {
@@ -89,7 +88,7 @@ private class Text1 extends CardText {
 
 private class Process1 extends CardText {
 	public function new(id:String) {
-		super(id, "敵軍G１枚をロールする。その場合、このセットグループは、このターンと次のターン、リロールできない。");
+		super(id, "敵軍G１枚をロールする。その場合、このセットグループは、このターンと次のターン、リロールできない。", System);
 	}
 
 	public override function getRequires2(_ctx:Any, runtime:Runtime):Array<Require2> {

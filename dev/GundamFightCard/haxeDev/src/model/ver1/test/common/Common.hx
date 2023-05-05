@@ -9,32 +9,24 @@ import model.ver1.game.entity.Context;
 import model.ver1.game.gameComponent.MarkEffect;
 
 class OnlyEmptyTextCardProto extends CardProto {
-	public function new() {
-		super();
-	}
-
 	public override function getTexts(_ctx:Any, runtime:Runtime):Array<CardText> {
 		final thisCardId = runtime.getCardId();
-		return [new CardText('${thisCardId}_CardText', "")];
+		return [new CardText('${thisCardId}_CardText', "", System)];
 	}
 }
 
 class AddOneTextText extends CardText {
 	public function new(id:String) {
-		super(id, "AddOneTextText");
+		super(id, "AddOneTextText", System);
 	}
 
 	public override function getEffect(_ctx:Any, runtime:Runtime):Array<Any> {
 		final thisCardId = runtime.getCardId();
-		return [AddText(thisCardId, new CardText('${thisCardId}_EmptyText', ""))];
+		return [AddText(thisCardId, new CardText('${thisCardId}_EmptyText', "", System))];
 	}
 }
 
 class AddTextCardProto extends CardProto {
-	public function new() {
-		super();
-	}
-
 	public override function getTexts(_ctx:Any, runtime:Runtime):Array<CardText> {
 		final thisCardId = runtime.getCardId();
 		return [new AddOneTextText('${thisCardId}_TestText2')];
@@ -42,14 +34,9 @@ class AddTextCardProto extends CardProto {
 }
 
 class OnlyConstentTextCardProto extends CardProto {
-	public function new() {
-		super();
-	}
-
 	public override function getTexts(_ctx:Any, runtime:Runtime):Array<CardText> {
 		final thisCardId = runtime.getCardId();
-		final text = new CardText('${thisCardId}_TestText', "");
-		text.type = Automatic(Constant);
+		final text = new CardText('${thisCardId}_TestText', "", Automatic(Constant));
 		return [text];
 	}
 }

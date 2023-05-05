@@ -43,7 +43,7 @@ class CardProto_179004_01A_CH_WT009R_white extends CardProto {
 		final ctx = cast(_ctx, Context);
 		final thisCardId = runtime.getCardId();
 		return [
-			new PlayerPlayCard('${thisCardId}_PlayerPlayCard'),
+			//new PlayerPlayCard('${thisCardId}_PlayerPlayCard'),
 			new Text1('${thisCardId}_Text1')
 		];
 	}
@@ -51,8 +51,7 @@ class CardProto_179004_01A_CH_WT009R_white extends CardProto {
 
 private class Text1 extends CardText {
 	public function new(id:String) {
-		super(id, "『起動』：自軍カードが、「ゲイン」の効果で戦闘修正を得た場合、そのカードのセットグループ以外の自軍ユニット１枚は、ターン終了時まで、その戦闘修正と同じ値の戦闘修正を得る。");
-		type = Automatic(Trigger);
+		super(id, "『起動』：自軍カードが、「ゲイン」の効果で戦闘修正を得た場合、そのカードのセットグループ以外の自軍ユニット１枚は、ターン終了時まで、その戦闘修正と同じ値の戦闘修正を得る。", Automatic(Trigger));
 	}
 
 	public override function onEvent(_ctx:Any, event:Any, runtime:Runtime):Void {
@@ -72,7 +71,7 @@ private class Text1 extends CardText {
 
 private class Text1_1 extends CardText {
 	public function new(id:String, gainCardId:String, gainValue:BattlePoint) {
-		super(id, "そのカードのセットグループ以外の自軍ユニット１枚は、ターン終了時まで、その戦闘修正と同じ値の戦闘修正を得る。");
+		super(id, "そのカードのセットグループ以外の自軍ユニット１枚は、ターン終了時まで、その戦闘修正と同じ値の戦闘修正を得る。", System);
 		this.gainCardId = gainCardId;
 		this.gainValue = gainValue;
 	}

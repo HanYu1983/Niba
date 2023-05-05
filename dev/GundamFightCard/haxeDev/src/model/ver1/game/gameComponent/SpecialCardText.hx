@@ -18,7 +18,7 @@ import model.ver1.game.gameComponent.GameComponent;
 import model.ver1.game.gameComponent.Runtime;
 
 function createPlayCardText(cardProto:CardProto, options:{}):CardText {
-	return new GameCardText("", "");
+	return new GameCardText("", "", System);
 }
 
 function flatSpecial(ctx:IGameComponent, cardId:String, text:CardText):Array<CardText> {
@@ -38,8 +38,7 @@ function flatSpecial(ctx:IGameComponent, cardId:String, text:CardText):Array<Car
 
 class PSArmorText1 extends GameCardText {
 	public function new(id:String) {
-		super(id, "出場時直立");
-		type = Automatic(Trigger);
+		super(id, "出場時直立", Automatic(Trigger));
 	}
 
 	public override function _onEvent(ctx:IGameComponent, event:Event, runtime:Runtime):Void {
@@ -53,8 +52,7 @@ class PSArmorText1 extends GameCardText {
 
 class PSArmorText2 extends GameCardText {
 	public function new(id:String) {
-		super(id, " 進入戰場時, 下回合開始時回到手上, 當中如果和補給或供給能力的組到隊的話, 就不必回到手上");
-		type = Automatic(Trigger);
+		super(id, " 進入戰場時, 下回合開始時回到手上, 當中如果和補給或供給能力的組到隊的話, 就不必回到手上", Automatic(Trigger));
 	}
 
 	public override function _onEvent(ctx:IGameComponent, event:Event, runtime:Runtime):Void {

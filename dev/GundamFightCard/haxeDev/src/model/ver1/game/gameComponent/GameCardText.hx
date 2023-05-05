@@ -7,10 +7,6 @@ import model.ver1.game.define.Require;
 import model.ver1.game.gameComponent.GameComponent;
 
 class GameCardText extends CardText {
-	public function new(id:String, description:String) {
-		super(id, description);
-	}
-
 	public final override function getEffect(_ctx:Any, runtime:Runtime):Array<Any> {
 		final ctx = cast(_ctx : IGameComponent);
 		return _getEffect(ctx, runtime);

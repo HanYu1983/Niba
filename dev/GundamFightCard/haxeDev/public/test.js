@@ -1295,15 +1295,15 @@ model_ver1_data_CardProto_$179001_$01A_$CH_$WT007R_$white.__name__ = "model.ver1
 model_ver1_data_CardProto_$179001_$01A_$CH_$WT007R_$white.__super__ = model_ver1_game_define_CardProto;
 model_ver1_data_CardProto_$179001_$01A_$CH_$WT007R_$white.prototype = $extend(model_ver1_game_define_CardProto.prototype,{
 	getTexts: function(_ctx,runtime) {
-		return [new model_ver1_data_PlayerPlayCard("" + runtime.getCardId() + "_PlayerPlayCard"),new model_ver1_data__$CardProto_$179001_$01A_$CH_$WT007R_$white_Text1("" + runtime.getCardId() + "_Text1")];
+		return [new model_ver1_data__$CardProto_$179001_$01A_$CH_$WT007R_$white_Text1("" + runtime.getCardId() + "_Text1")];
 	}
 	,__class__: model_ver1_data_CardProto_$179001_$01A_$CH_$WT007R_$white
 });
-var model_ver1_game_define_CardText = function(id,description) {
+var model_ver1_game_define_CardText = function(id,description,type) {
 	this.isSurroundedByArrows = false;
-	this.type = model_ver1_game_define_TextType.Automatic(model_ver1_game_define_TextTypeAutomaticType.Resident);
 	this.id = id;
 	this.description = description;
+	this.type = type;
 };
 $hxClasses["model.ver1.game.define.CardText"] = model_ver1_game_define_CardText;
 model_ver1_game_define_CardText.__name__ = "model.ver1.game.define.CardText";
@@ -1327,8 +1327,7 @@ model_ver1_game_define_CardText.prototype = {
 	,__class__: model_ver1_game_define_CardText
 };
 var model_ver1_data__$CardProto_$179001_$01A_$CH_$WT007R_$white_Text1 = function(id) {
-	model_ver1_game_define_CardText.call(this,id,"（戦闘フェイズ）〔２〕：このセットグループのユニットは、ターン終了時まで「速攻」を得る。");
-	this.type = model_ver1_game_define_TextType.Use(model_ver1_game_define_UseTiming.Absolute(model_ver1_game_define_AbsoluteUseTiming.Battle));
+	model_ver1_game_define_CardText.call(this,id,"（戦闘フェイズ）〔２〕：このセットグループのユニットは、ターン終了時まで「速攻」を得る。",model_ver1_game_define_TextType.Use(model_ver1_game_define_UseTiming.Absolute(model_ver1_game_define_AbsoluteUseTiming.Battle)));
 };
 $hxClasses["model.ver1.data._CardProto_179001_01A_CH_WT007R_white.Text1"] = model_ver1_data__$CardProto_$179001_$01A_$CH_$WT007R_$white_Text1;
 model_ver1_data__$CardProto_$179001_$01A_$CH_$WT007R_$white_Text1.__name__ = "model.ver1.data._CardProto_179001_01A_CH_WT007R_white.Text1";
@@ -1456,7 +1455,7 @@ function model_ver1_data_CardProto_$179001_$01A_$CH_$WT007R_$white_test() {
 		result[i] = { cardId : info.runtime.getCardId(), text : info.text, reqs : info.text.getRequires(ctx,info.runtime)};
 	}
 	var infos = result;
-	console.log("src/model/ver1/data/CardProto_179001_01A_CH_WT007R_white.hx:114:",infos);
+	console.log("src/model/ver1/data/CardProto_179001_01A_CH_WT007R_white.hx:113:",infos);
 	if(infos.length == 0) {
 		throw new haxe_Exception("infos.length == 0");
 	}
@@ -1495,7 +1494,7 @@ model_ver1_data_CardProto_$179003_$01A_$U_$BK008U_$black.__super__ = model_ver1_
 model_ver1_data_CardProto_$179003_$01A_$U_$BK008U_$black.prototype = $extend(model_ver1_game_define_CardProto.prototype,{
 	getTexts: function(_ctx,runtime) {
 		var ctx = js_Boot.__cast(_ctx , model_ver1_game_entity_Context);
-		return [new model_ver1_data_PlayerPlayCard("" + runtime.getCardId() + "_PlayerPlayCard"),new model_ver1_data__$CardProto_$179003_$01A_$U_$BK008U_$black_Text1("" + runtime.getCardId() + "_Text1")];
+		return [new model_ver1_data__$CardProto_$179003_$01A_$U_$BK008U_$black_Text1("" + runtime.getCardId() + "_Text1")];
 	}
 	,__class__: model_ver1_data_CardProto_$179003_$01A_$U_$BK008U_$black
 });
@@ -1526,8 +1525,7 @@ model_ver1_data__$CardProto_$179003_$01A_$U_$BK008U_$black_RequireThisCardDestro
 	,__class__: model_ver1_data__$CardProto_$179003_$01A_$U_$BK008U_$black_RequireThisCardDestroyByBattleDamage
 });
 var model_ver1_data__$CardProto_$179003_$01A_$U_$BK008U_$black_Text1 = function(id) {
-	model_ver1_game_define_CardText.call(this,id,"（ダメージ判定ステップ）〔２〕：このカードが戦闘ダメージで破壊されている場合、このカードを、破壊を無効にした上で自軍Gにする。");
-	this.type = model_ver1_game_define_TextType.Use(model_ver1_game_define_UseTiming.Absolute(model_ver1_game_define_AbsoluteUseTiming.DamageChecking));
+	model_ver1_game_define_CardText.call(this,id,"（ダメージ判定ステップ）〔２〕：このカードが戦闘ダメージで破壊されている場合、このカードを、破壊を無効にした上で自軍Gにする。",model_ver1_game_define_TextType.Use(model_ver1_game_define_UseTiming.Absolute(model_ver1_game_define_AbsoluteUseTiming.DamageChecking)));
 };
 $hxClasses["model.ver1.data._CardProto_179003_01A_U_BK008U_black.Text1"] = model_ver1_data__$CardProto_$179003_$01A_$U_$BK008U_$black_Text1;
 model_ver1_data__$CardProto_$179003_$01A_$U_$BK008U_$black_Text1.__name__ = "model.ver1.data._CardProto_179003_01A_U_BK008U_black.Text1";
@@ -1546,7 +1544,7 @@ model_ver1_data__$CardProto_$179003_$01A_$U_$BK008U_$black_Text1.prototype = $ex
 	,__class__: model_ver1_data__$CardProto_$179003_$01A_$U_$BK008U_$black_Text1
 });
 var model_ver1_data__$CardProto_$179003_$01A_$U_$BK008U_$black_Text2 = function(id) {
-	model_ver1_game_define_CardText.call(this,id,"このカードを、破壊を無効にした上で自軍Gにする。");
+	model_ver1_game_define_CardText.call(this,id,"このカードを、破壊を無効にした上で自軍Gにする。",model_ver1_game_define_TextType.System);
 };
 $hxClasses["model.ver1.data._CardProto_179003_01A_U_BK008U_black.Text2"] = model_ver1_data__$CardProto_$179003_$01A_$U_$BK008U_$black_Text2;
 model_ver1_data__$CardProto_$179003_$01A_$U_$BK008U_$black_Text2.__name__ = "model.ver1.data._CardProto_179003_01A_U_BK008U_black.Text2";
@@ -1576,7 +1574,7 @@ function model_ver1_data_CardProto_$179003_$01A_$U_$BK008U_$black_test() {
 		result[i] = { cardId : info.runtime.getCardId(), text : info.text, reqs : info.text.getRequires(ctx,info.runtime)};
 	}
 	var infos = result;
-	console.log("src/model/ver1/data/CardProto_179003_01A_U_BK008U_black.hx:104:",infos);
+	console.log("src/model/ver1/data/CardProto_179003_01A_U_BK008U_black.hx:103:",infos);
 	if(infos.length == 0) {
 		throw new haxe_Exception("infos.length == 0");
 	}
@@ -1617,13 +1615,12 @@ model_ver1_data_CardProto_$179004_$01A_$CH_$WT009R_$white.prototype = $extend(mo
 	getTexts: function(_ctx,runtime) {
 		var ctx = js_Boot.__cast(_ctx , model_ver1_game_entity_Context);
 		var thisCardId = runtime.getCardId();
-		return [new model_ver1_data_PlayerPlayCard("" + thisCardId + "_PlayerPlayCard"),new model_ver1_data__$CardProto_$179004_$01A_$CH_$WT009R_$white_Text1("" + thisCardId + "_Text1")];
+		return [new model_ver1_data__$CardProto_$179004_$01A_$CH_$WT009R_$white_Text1("" + thisCardId + "_Text1")];
 	}
 	,__class__: model_ver1_data_CardProto_$179004_$01A_$CH_$WT009R_$white
 });
 var model_ver1_data__$CardProto_$179004_$01A_$CH_$WT009R_$white_Text1 = function(id) {
-	model_ver1_game_define_CardText.call(this,id,"『起動』：自軍カードが、「ゲイン」の効果で戦闘修正を得た場合、そのカードのセットグループ以外の自軍ユニット１枚は、ターン終了時まで、その戦闘修正と同じ値の戦闘修正を得る。");
-	this.type = model_ver1_game_define_TextType.Automatic(model_ver1_game_define_TextTypeAutomaticType.Trigger);
+	model_ver1_game_define_CardText.call(this,id,"『起動』：自軍カードが、「ゲイン」の効果で戦闘修正を得た場合、そのカードのセットグループ以外の自軍ユニット１枚は、ターン終了時まで、その戦闘修正と同じ値の戦闘修正を得る。",model_ver1_game_define_TextType.Automatic(model_ver1_game_define_TextTypeAutomaticType.Trigger));
 };
 $hxClasses["model.ver1.data._CardProto_179004_01A_CH_WT009R_white.Text1"] = model_ver1_data__$CardProto_$179004_$01A_$CH_$WT009R_$white_Text1;
 model_ver1_data__$CardProto_$179004_$01A_$CH_$WT009R_$white_Text1.__name__ = "model.ver1.data._CardProto_179004_01A_CH_WT009R_white.Text1";
@@ -1646,7 +1643,7 @@ model_ver1_data__$CardProto_$179004_$01A_$CH_$WT009R_$white_Text1.prototype = $e
 	,__class__: model_ver1_data__$CardProto_$179004_$01A_$CH_$WT009R_$white_Text1
 });
 var model_ver1_data__$CardProto_$179004_$01A_$CH_$WT009R_$white_Text1_$1 = function(id,gainCardId,gainValue) {
-	model_ver1_game_define_CardText.call(this,id,"そのカードのセットグループ以外の自軍ユニット１枚は、ターン終了時まで、その戦闘修正と同じ値の戦闘修正を得る。");
+	model_ver1_game_define_CardText.call(this,id,"そのカードのセットグループ以外の自軍ユニット１枚は、ターン終了時まで、その戦闘修正と同じ値の戦闘修正を得る。",model_ver1_game_define_TextType.System);
 	this.gainCardId = gainCardId;
 	this.gainValue = gainValue;
 };
@@ -1795,7 +1792,7 @@ function model_ver1_data_CardProto_$179004_$01A_$CH_$WT009R_$white_test() {
 	var player2 = model_ver1_game_define_PlayerId.B;
 	var ctx = new model_ver1_game_entity_Context();
 	model_ver1_game_component_CardProtoPoolComponent_registerCardProto(ctx,"testUnit",new model_ver1_game_define_CardProto());
-	console.log("src/model/ver1/data/CardProto_179004_01A_CH_WT009R_white.hx:165:","角色在場");
+	console.log("src/model/ver1/data/CardProto_179004_01A_CH_WT009R_white.hx:164:","角色在場");
 	var card = new tool_Card("1");
 	card.owner = player1;
 	card.protoId = "179004_01A_CH_WT009R_white";
@@ -1804,7 +1801,7 @@ function model_ver1_data_CardProto_$179004_$01A_$CH_$WT009R_$white_test() {
 	var baSyouKeyword = baSyou.baSyouKeyword;
 	var this1 = "" + playerId + model_ver1_game_define_BaSyouId._split + $hxEnums[baSyouKeyword.__enum__].__constructs__[baSyouKeyword._hx_index]._hx_name;
 	tool_Table_addCard(ctx.table,this1,card);
-	console.log("src/model/ver1/data/CardProto_179004_01A_CH_WT009R_white.hx:170:","機體1出場");
+	console.log("src/model/ver1/data/CardProto_179004_01A_CH_WT009R_white.hx:169:","機體1出場");
 	var card2 = new tool_Card("2");
 	card2.owner = player1;
 	card2.protoId = "testUnit";
@@ -1813,7 +1810,7 @@ function model_ver1_data_CardProto_$179004_$01A_$CH_$WT009R_$white_test() {
 	var baSyouKeyword = baSyou.baSyouKeyword;
 	var this1 = "" + playerId + model_ver1_game_define_BaSyouId._split + $hxEnums[baSyouKeyword.__enum__].__constructs__[baSyouKeyword._hx_index]._hx_name;
 	tool_Table_addCard(ctx.table,this1,card2);
-	console.log("src/model/ver1/data/CardProto_179004_01A_CH_WT009R_white.hx:175:","機體2出場");
+	console.log("src/model/ver1/data/CardProto_179004_01A_CH_WT009R_white.hx:174:","機體2出場");
 	var card3 = new tool_Card("3");
 	card3.owner = player1;
 	card3.protoId = "testUnit";
@@ -1822,7 +1819,7 @@ function model_ver1_data_CardProto_$179004_$01A_$CH_$WT009R_$white_test() {
 	var baSyouKeyword = baSyou.baSyouKeyword;
 	var this1 = "" + playerId + model_ver1_game_define_BaSyouId._split + $hxEnums[baSyouKeyword.__enum__].__constructs__[baSyouKeyword._hx_index]._hx_name;
 	tool_Table_addCard(ctx.table,this1,card3);
-	console.log("src/model/ver1/data/CardProto_179004_01A_CH_WT009R_white.hx:180:","敵機體出場");
+	console.log("src/model/ver1/data/CardProto_179004_01A_CH_WT009R_white.hx:179:","敵機體出場");
 	var card4 = new tool_Card("4");
 	card4.owner = player2;
 	card4.protoId = "testUnit";
@@ -1834,7 +1831,7 @@ function model_ver1_data_CardProto_$179004_$01A_$CH_$WT009R_$white_test() {
 	if(model_ver1_game_component_CutComponent_getTopCut(ctx).length != 0) {
 		throw haxe_Exception.thrown("一開始堆疊中沒有效果");
 	}
-	console.log("src/model/ver1/data/CardProto_179004_01A_CH_WT009R_white.hx:189:","獲得gain");
+	console.log("src/model/ver1/data/CardProto_179004_01A_CH_WT009R_white.hx:188:","獲得gain");
 	model_ver1_game_gameComponent_Alg_sendEvent(ctx,model_ver1_game_gameComponent_Event.Gain(card2.id,model_ver1_game_define_BattlePoint.Default(1,0,0)));
 	if(model_ver1_game_component_CutComponent_getTopCut(ctx).length != 1) {
 		throw haxe_Exception.thrown("堆疊中必須有一個效果");
@@ -1861,16 +1858,16 @@ function model_ver1_data_CardProto_$179004_$01A_$CH_$WT009R_$white_test() {
 	if(tips[0].value != card3.id) {
 		throw haxe_Exception.thrown("必須可以選card3");
 	}
-	console.log("src/model/ver1/data/CardProto_179004_01A_CH_WT009R_white.hx:213:","選擇");
+	console.log("src/model/ver1/data/CardProto_179004_01A_CH_WT009R_white.hx:212:","選擇");
 	model_ver1_game_component_SelectionComponent_setPlayerSelectionCardId(ctx,$require.id,[tips[0].value]);
-	console.log("src/model/ver1/data/CardProto_179004_01A_CH_WT009R_white.hx:215:","驗証支付");
+	console.log("src/model/ver1/data/CardProto_179004_01A_CH_WT009R_white.hx:214:","驗証支付");
 	$require.action();
-	console.log("src/model/ver1/data/CardProto_179004_01A_CH_WT009R_white.hx:217:","解決效果");
+	console.log("src/model/ver1/data/CardProto_179004_01A_CH_WT009R_white.hx:216:","解決效果");
 	block.text.action(ctx,runtime);
 	if(model_ver1_game_component_MarkComponent_getMarks(ctx).length != 1) {
 		throw haxe_Exception.thrown("必須有效果");
 	}
-	console.log("src/model/ver1/data/CardProto_179004_01A_CH_WT009R_white.hx:222:","結束一個turn");
+	console.log("src/model/ver1/data/CardProto_179004_01A_CH_WT009R_white.hx:221:","結束一個turn");
 	model_ver1_game_component_TimingComponent_setTimging(ctx,model_ver1_game_define_Timing.Default(model_ver1_game_define_PhaseKeyword.Battle,haxe_ds_Option.Some(model_ver1_game_define_StepKeyword.End),model_ver1_game_define_TimingKeyword.End));
 	model_ver1_game_gameComponent_Alg_sendEvent(ctx,model_ver1_game_gameComponent_Event.ChangePhase);
 	if(model_ver1_game_component_MarkComponent_getMarks(ctx).length != 0) {
@@ -1886,13 +1883,12 @@ model_ver1_data_CardProto_$179030_$11E_$CH_$BN091N_$brown.__name__ = "model.ver1
 model_ver1_data_CardProto_$179030_$11E_$CH_$BN091N_$brown.__super__ = model_ver1_game_define_CardProto;
 model_ver1_data_CardProto_$179030_$11E_$CH_$BN091N_$brown.prototype = $extend(model_ver1_game_define_CardProto.prototype,{
 	getTexts: function(_ctx,runtime) {
-		return [new model_ver1_data_PlayerPlayCard("" + runtime.getCardId() + "_PlayerPlayCard"),new model_ver1_data__$CardProto_$179030_$11E_$CH_$BN091N_$brown_Text1("" + runtime.getCardId() + "_Text1")];
+		return [new model_ver1_data__$CardProto_$179030_$11E_$CH_$BN091N_$brown_Text1("" + runtime.getCardId() + "_Text1")];
 	}
 	,__class__: model_ver1_data_CardProto_$179030_$11E_$CH_$BN091N_$brown
 });
 var model_ver1_data__$CardProto_$179030_$11E_$CH_$BN091N_$brown_Text1 = function(id) {
-	model_ver1_game_define_CardText.call(this,id,"『起動』：このカードがロールした場合、敵軍G１枚をロールする。その場合、このセットグループは、このターンと次のターン、リロールできない。");
-	this.type = model_ver1_game_define_TextType.Automatic(model_ver1_game_define_TextTypeAutomaticType.Trigger);
+	model_ver1_game_define_CardText.call(this,id,"『起動』：このカードがロールした場合、敵軍G１枚をロールする。その場合、このセットグループは、このターンと次のターン、リロールできない。",model_ver1_game_define_TextType.Automatic(model_ver1_game_define_TextTypeAutomaticType.Trigger));
 };
 $hxClasses["model.ver1.data._CardProto_179030_11E_CH_BN091N_brown.Text1"] = model_ver1_data__$CardProto_$179030_$11E_$CH_$BN091N_$brown_Text1;
 model_ver1_data__$CardProto_$179030_$11E_$CH_$BN091N_$brown_Text1.__name__ = "model.ver1.data._CardProto_179030_11E_CH_BN091N_brown.Text1";
@@ -1922,7 +1918,7 @@ model_ver1_data__$CardProto_$179030_$11E_$CH_$BN091N_$brown_Text1.prototype = $e
 	,__class__: model_ver1_data__$CardProto_$179030_$11E_$CH_$BN091N_$brown_Text1
 });
 var model_ver1_data__$CardProto_$179030_$11E_$CH_$BN091N_$brown_Process1 = function(id) {
-	model_ver1_game_define_CardText.call(this,id,"敵軍G１枚をロールする。その場合、このセットグループは、このターンと次のターン、リロールできない。");
+	model_ver1_game_define_CardText.call(this,id,"敵軍G１枚をロールする。その場合、このセットグループは、このターンと次のターン、リロールできない。",model_ver1_game_define_TextType.System);
 };
 $hxClasses["model.ver1.data._CardProto_179030_11E_CH_BN091N_brown.Process1"] = model_ver1_data__$CardProto_$179030_$11E_$CH_$BN091N_$brown_Process1;
 model_ver1_data__$CardProto_$179030_$11E_$CH_$BN091N_$brown_Process1.__name__ = "model.ver1.data._CardProto_179030_11E_CH_BN091N_brown.Process1";
@@ -2030,7 +2026,7 @@ function model_ver1_data_CardProto_$179030_$11E_$CH_$BN091N_$brown_test() {
 	var this1 = "" + playerId + model_ver1_game_define_BaSyouId._split + $hxEnums[baSyouKeyword.__enum__].__constructs__[baSyouKeyword._hx_index]._hx_name;
 	var player2Hand = new tool_CardStack(this1);
 	ctx.table.cardStacks.h[player2Hand.id] = player2Hand;
-	console.log("src/model/ver1/data/CardProto_179030_11E_CH_BN091N_brown.hx:137:","卡牌1在場");
+	console.log("src/model/ver1/data/CardProto_179030_11E_CH_BN091N_brown.hx:136:","卡牌1在場");
 	var card = new tool_Card("1");
 	card.owner = player1;
 	card.protoId = "179030_11E_CH_BN091N_brown";
@@ -2039,7 +2035,7 @@ function model_ver1_data_CardProto_$179030_$11E_$CH_$BN091N_$brown_test() {
 	var baSyouKeyword = baSyou.baSyouKeyword;
 	var this1 = "" + playerId + model_ver1_game_define_BaSyouId._split + $hxEnums[baSyouKeyword.__enum__].__constructs__[baSyouKeyword._hx_index]._hx_name;
 	tool_Table_addCard(ctx.table,this1,card);
-	console.log("src/model/ver1/data/CardProto_179030_11E_CH_BN091N_brown.hx:142:","敵軍G在場");
+	console.log("src/model/ver1/data/CardProto_179030_11E_CH_BN091N_brown.hx:141:","敵軍G在場");
 	var card2 = new tool_Card("2");
 	card2.owner = player2;
 	card2.protoId = "179030_11E_CH_BN091N_brown";
@@ -2052,7 +2048,7 @@ function model_ver1_data_CardProto_$179030_$11E_$CH_$BN091N_$brown_test() {
 	if(model_ver1_game_component_CutComponent_getTopCut(ctx).length != 0) {
 		throw haxe_Exception.thrown("一開始堆疊中沒有效果");
 	}
-	console.log("src/model/ver1/data/CardProto_179030_11E_CH_BN091N_brown.hx:152:","卡牌横置");
+	console.log("src/model/ver1/data/CardProto_179030_11E_CH_BN091N_brown.hx:151:","卡牌横置");
 	model_ver1_game_gameComponent_Alg_sendEvent(ctx,model_ver1_game_gameComponent_Event.CardRoll(card.id));
 	if(model_ver1_game_component_CutComponent_getTopCut(ctx).length != 1) {
 		throw haxe_Exception.thrown("堆疊中必須有一個效果");
@@ -2076,25 +2072,25 @@ function model_ver1_data_CardProto_$179030_$11E_$CH_$BN091N_$brown_test() {
 	if(tips.length != 1) {
 		throw haxe_Exception.thrown("必須有一個可選G");
 	}
-	console.log("src/model/ver1/data/CardProto_179030_11E_CH_BN091N_brown.hx:173:","選擇");
+	console.log("src/model/ver1/data/CardProto_179030_11E_CH_BN091N_brown.hx:172:","選擇");
 	model_ver1_game_component_SelectionComponent_setPlayerSelectionCardId(ctx,$require.id,[tips[0].value]);
-	console.log("src/model/ver1/data/CardProto_179030_11E_CH_BN091N_brown.hx:175:","驗証支付");
+	console.log("src/model/ver1/data/CardProto_179030_11E_CH_BN091N_brown.hx:174:","驗証支付");
 	$require.action();
 	if(card2.isTap != true) {
 		throw haxe_Exception.thrown("牌必須被横置");
 	}
-	console.log("src/model/ver1/data/CardProto_179030_11E_CH_BN091N_brown.hx:180:","解決效果");
+	console.log("src/model/ver1/data/CardProto_179030_11E_CH_BN091N_brown.hx:179:","解決效果");
 	block.text.action(ctx,runtime);
 	if(model_ver1_game_component_MarkComponent_getMarks(ctx).length != 1) {
 		throw haxe_Exception.thrown("必須有不能重置效果");
 	}
-	console.log("src/model/ver1/data/CardProto_179030_11E_CH_BN091N_brown.hx:185:","結束一個turn");
+	console.log("src/model/ver1/data/CardProto_179030_11E_CH_BN091N_brown.hx:184:","結束一個turn");
 	model_ver1_game_component_TimingComponent_setTimging(ctx,model_ver1_game_define_Timing.Default(model_ver1_game_define_PhaseKeyword.Battle,haxe_ds_Option.Some(model_ver1_game_define_StepKeyword.End),model_ver1_game_define_TimingKeyword.End));
 	model_ver1_game_gameComponent_Alg_sendEvent(ctx,model_ver1_game_gameComponent_Event.ChangePhase);
 	if(model_ver1_game_component_MarkComponent_getMarks(ctx).length != 1) {
 		throw haxe_Exception.thrown("必須有不能重置效果");
 	}
-	console.log("src/model/ver1/data/CardProto_179030_11E_CH_BN091N_brown.hx:191:","再結束一個turn");
+	console.log("src/model/ver1/data/CardProto_179030_11E_CH_BN091N_brown.hx:190:","再結束一個turn");
 	model_ver1_game_gameComponent_Alg_sendEvent(ctx,model_ver1_game_gameComponent_Event.ChangePhase);
 	if(model_ver1_game_component_MarkComponent_getMarks(ctx).length != 0) {
 		throw haxe_Exception.thrown("不能重置效果必須被移除");
@@ -2109,13 +2105,12 @@ model_ver1_data_CardProto_$179030_$11E_$U_$VT186R_$purple.__name__ = "model.ver1
 model_ver1_data_CardProto_$179030_$11E_$U_$VT186R_$purple.__super__ = model_ver1_game_define_CardProto;
 model_ver1_data_CardProto_$179030_$11E_$U_$VT186R_$purple.prototype = $extend(model_ver1_game_define_CardProto.prototype,{
 	getTexts: function(_ctx,runtime) {
-		return [new model_ver1_data_PlayerPlayCard("CardProto_179030_11E_U_VT186R_purple_1"),new model_ver1_data__$CardProto_$179030_$11E_$U_$VT186R_$purple_Text1("CardProto_179030_11E_U_VT186R_purple_2")];
+		return [new model_ver1_data__$CardProto_$179030_$11E_$U_$VT186R_$purple_Text1("CardProto_179030_11E_U_VT186R_purple_2")];
 	}
 	,__class__: model_ver1_data_CardProto_$179030_$11E_$U_$VT186R_$purple
 });
 var model_ver1_data__$CardProto_$179030_$11E_$U_$VT186R_$purple_Text1 = function(id) {
-	model_ver1_game_define_CardText.call(this,id,"『起動』：このカードが場に出た場合、このターン中に場に出た敵軍ユニット１枚を、持ち主の手札に移す。");
-	this.type = model_ver1_game_define_TextType.Automatic(model_ver1_game_define_TextTypeAutomaticType.Trigger);
+	model_ver1_game_define_CardText.call(this,id,"『起動』：このカードが場に出た場合、このターン中に場に出た敵軍ユニット１枚を、持ち主の手札に移す。",model_ver1_game_define_TextType.Automatic(model_ver1_game_define_TextTypeAutomaticType.Trigger));
 };
 $hxClasses["model.ver1.data._CardProto_179030_11E_U_VT186R_purple.Text1"] = model_ver1_data__$CardProto_$179030_$11E_$U_$VT186R_$purple_Text1;
 model_ver1_data__$CardProto_$179030_$11E_$U_$VT186R_$purple_Text1.__name__ = "model.ver1.data._CardProto_179030_11E_U_VT186R_purple.Text1";
@@ -2198,7 +2193,7 @@ model_ver1_data__$CardProto_$179030_$11E_$U_$VT186R_$purple_RequireOpponentUnits
 	__class__: model_ver1_data__$CardProto_$179030_$11E_$U_$VT186R_$purple_RequireOpponentUnitsEnterFieldThisTurn
 });
 var model_ver1_data__$CardProto_$179030_$11E_$U_$VT186R_$purple_Process1 = function(id) {
-	model_ver1_game_define_CardText.call(this,id,"このターン中に場に出た敵軍ユニット１枚を、持ち主の手札に移す。");
+	model_ver1_game_define_CardText.call(this,id,"このターン中に場に出た敵軍ユニット１枚を、持ち主の手札に移す。",model_ver1_game_define_TextType.System);
 };
 $hxClasses["model.ver1.data._CardProto_179030_11E_U_VT186R_purple.Process1"] = model_ver1_data__$CardProto_$179030_$11E_$U_$VT186R_$purple_Process1;
 model_ver1_data__$CardProto_$179030_$11E_$U_$VT186R_$purple_Process1.__name__ = "model.ver1.data._CardProto_179030_11E_U_VT186R_purple.Process1";
@@ -2235,7 +2230,7 @@ function model_ver1_data_CardProto_$179030_$11E_$U_$VT186R_$purple_test() {
 	var this1 = "" + playerId + model_ver1_game_define_BaSyouId._split + $hxEnums[baSyouKeyword.__enum__].__constructs__[baSyouKeyword._hx_index]._hx_name;
 	var player2Hand = new tool_CardStack(this1);
 	ctx.table.cardStacks.h[player2Hand.id] = player2Hand;
-	console.log("src/model/ver1/data/CardProto_179030_11E_U_VT186R_purple.hx:118:","機體1在場");
+	console.log("src/model/ver1/data/CardProto_179030_11E_U_VT186R_purple.hx:117:","機體1在場");
 	var card = new tool_Card("1");
 	card.owner = player1;
 	card.protoId = "179030_11E_U_VT186R_purple";
@@ -2244,7 +2239,7 @@ function model_ver1_data_CardProto_$179030_$11E_$U_$VT186R_$purple_test() {
 	var baSyouKeyword = baSyou.baSyouKeyword;
 	var this1 = "" + playerId + model_ver1_game_define_BaSyouId._split + $hxEnums[baSyouKeyword.__enum__].__constructs__[baSyouKeyword._hx_index]._hx_name;
 	tool_Table_addCard(ctx.table,this1,card);
-	console.log("src/model/ver1/data/CardProto_179030_11E_U_VT186R_purple.hx:123:","機體2這回合剛出場");
+	console.log("src/model/ver1/data/CardProto_179030_11E_U_VT186R_purple.hx:122:","機體2這回合剛出場");
 	var card2 = new tool_Card("2");
 	card2.owner = player2;
 	card2.protoId = "179030_11E_U_VT186R_purple";
@@ -2253,13 +2248,13 @@ function model_ver1_data_CardProto_$179030_$11E_$U_$VT186R_$purple_test() {
 	var baSyouKeyword = baSyou.baSyouKeyword;
 	var this1 = "" + playerId + model_ver1_game_define_BaSyouId._split + $hxEnums[baSyouKeyword.__enum__].__constructs__[baSyouKeyword._hx_index]._hx_name;
 	tool_Table_addCard(ctx.table,this1,card2);
-	console.log("src/model/ver1/data/CardProto_179030_11E_U_VT186R_purple.hx:128:","設置剛出場標記");
+	console.log("src/model/ver1/data/CardProto_179030_11E_U_VT186R_purple.hx:127:","設置剛出場標記");
 	var enterFieldMark = new model_ver1_game_gameComponent_EnterFieldThisTurnMark("EnterFieldThisTurnMark",card2.id);
 	model_ver1_game_component_MarkComponent_addMark(ctx,enterFieldMark);
 	if(model_ver1_game_component_CutComponent_getTopCut(ctx).length != 0) {
 		throw haxe_Exception.thrown("一開始堆疊中沒有效果");
 	}
-	console.log("src/model/ver1/data/CardProto_179030_11E_U_VT186R_purple.hx:135:","機體1出場事件");
+	console.log("src/model/ver1/data/CardProto_179030_11E_U_VT186R_purple.hx:134:","機體1出場事件");
 	model_ver1_game_gameComponent_Alg_sendEvent(ctx,model_ver1_game_gameComponent_Event.CardEnterField(card.id));
 	if(model_ver1_game_component_CutComponent_getTopCut(ctx).length != 1) {
 		throw haxe_Exception.thrown("堆疊中必須有一個效果");
@@ -2283,126 +2278,16 @@ function model_ver1_data_CardProto_$179030_$11E_$U_$VT186R_$purple_test() {
 	if(tips.length != 1) {
 		throw haxe_Exception.thrown("必須有一個可選機體");
 	}
-	console.log("src/model/ver1/data/CardProto_179030_11E_U_VT186R_purple.hx:156:","選擇要回手的一個敵機");
+	console.log("src/model/ver1/data/CardProto_179030_11E_U_VT186R_purple.hx:155:","選擇要回手的一個敵機");
 	model_ver1_game_component_SelectionComponent_setPlayerSelectionCardId(ctx,$require.id,[tips[0].value]);
-	console.log("src/model/ver1/data/CardProto_179030_11E_U_VT186R_purple.hx:158:","驗証支付");
+	console.log("src/model/ver1/data/CardProto_179030_11E_U_VT186R_purple.hx:157:","驗証支付");
 	$require.action();
-	console.log("src/model/ver1/data/CardProto_179030_11E_U_VT186R_purple.hx:160:","解決效果");
+	console.log("src/model/ver1/data/CardProto_179030_11E_U_VT186R_purple.hx:159:","解決效果");
 	block.text.action(ctx,runtime);
 	if(player2Hand.cardIds.length != 1) {
 		throw haxe_Exception.thrown("牌被移到手上");
 	}
 }
-var model_ver1_data_PlayerPlayCard = function(id) {
-	model_ver1_game_define_CardText.call(this,id,"カードのプレイ");
-	this.type = model_ver1_game_define_TextType.Automatic(model_ver1_game_define_TextTypeAutomaticType.Constant);
-};
-$hxClasses["model.ver1.data.PlayerPlayCard"] = model_ver1_data_PlayerPlayCard;
-model_ver1_data_PlayerPlayCard.__name__ = "model.ver1.data.PlayerPlayCard";
-model_ver1_data_PlayerPlayCard.__super__ = model_ver1_game_define_CardText;
-model_ver1_data_PlayerPlayCard.prototype = $extend(model_ver1_game_define_CardText.prototype,{
-	getRequires: function(_ctx,runtime) {
-		var ctx = js_Boot.__cast(_ctx , model_ver1_game_entity_Context);
-		var cardId = runtime.getCardId();
-		switch(model_ver1_game_gameComponent_Alg_getCardType(ctx,cardId)._hx_index) {
-		case 2:
-			break;
-		case 1:case 4:
-			break;
-		default:
-		}
-		return [new model_ver1_data_RequirePhase("" + this.id + "_RequirePhase",model_ver1_game_define_Timing.Default(model_ver1_game_define_PhaseKeyword.Maintenance,haxe_ds_Option.None,model_ver1_game_define_TimingKeyword.Free1)),new model_ver1_data_RequireGCount("" + this.id + "_RequireGCount",3),new model_ver1_data_RequireGTap("" + this.id + "_RequireGTap",[model_ver1_game_define_GColor.Black,model_ver1_game_define_GColor.Black],ctx,runtime)];
-	}
-	,action: function(_ctx,runtime) {
-		var ctx = js_Boot.__cast(_ctx , model_ver1_game_entity_Context);
-		var cardId = runtime.getCardId();
-		var responsePlayerId = runtime.getResponsePlayerId();
-		var from = model_ver1_game_component_TableComponent_getCardBaSyouAndAssertExist(ctx,cardId);
-		switch(model_ver1_game_gameComponent_Alg_getCardType(ctx,cardId)._hx_index) {
-		case 0:case 1:case 3:case 4:
-			var to = model_ver1_game_define_BaSyou.Default(responsePlayerId,model_ver1_game_define_BaSyouKeyword.PlayedCard);
-			model_ver1_game_component_TableComponent_moveCard(ctx,cardId,from,to);
-			ctx.table.cards.h[cardId].isFaceUp = true;
-			break;
-		default:
-		}
-		switch(model_ver1_game_gameComponent_Alg_getCardType(ctx,cardId)._hx_index) {
-		case 2:
-			break;
-		case 0:case 1:case 3:case 4:
-			var block = new model_ver1_game_define_Effect("" + this.id + "_" + Std.string(new Date()),model_ver1_game_define_EffectCause.PlayCard(responsePlayerId,cardId),new model_ver1_data__$PlayerPlayCard_EnterFieldEffect("" + this.id + "_PlayerPlayCardEffect"));
-			model_ver1_game_component_CutComponent_cutIn(ctx,block);
-			break;
-		case 5:
-			var to = model_ver1_game_define_BaSyou.Default(responsePlayerId,model_ver1_game_define_BaSyouKeyword.GZone);
-			model_ver1_game_component_TableComponent_moveCard(ctx,cardId,from,to);
-			break;
-		default:
-			throw new haxe_Exception("unsupport type");
-		}
-	}
-	,__class__: model_ver1_data_PlayerPlayCard
-});
-var model_ver1_data__$PlayerPlayCard_EnterFieldEffect = function(id) {
-	model_ver1_game_define_CardText.call(this,id,"場に出る効果");
-};
-$hxClasses["model.ver1.data._PlayerPlayCard.EnterFieldEffect"] = model_ver1_data__$PlayerPlayCard_EnterFieldEffect;
-model_ver1_data__$PlayerPlayCard_EnterFieldEffect.__name__ = "model.ver1.data._PlayerPlayCard.EnterFieldEffect";
-model_ver1_data__$PlayerPlayCard_EnterFieldEffect.__super__ = model_ver1_game_define_CardText;
-model_ver1_data__$PlayerPlayCard_EnterFieldEffect.prototype = $extend(model_ver1_game_define_CardText.prototype,{
-	action: function(_ctx,runtime) {
-		var ctx = js_Boot.__cast(_ctx , model_ver1_game_entity_Context);
-		var cardId = runtime.getCardId();
-		var responsePlayerId = runtime.getResponsePlayerId();
-		var from = model_ver1_game_component_TableComponent_getCardBaSyouAndAssertExist(ctx,cardId);
-		switch(model_ver1_game_gameComponent_Alg_getCardType(ctx,cardId)._hx_index) {
-		case 0:
-			var to = model_ver1_game_define_BaSyou.Default(responsePlayerId,model_ver1_game_define_BaSyouKeyword.MaintenanceArea);
-			model_ver1_game_component_TableComponent_moveCard(ctx,cardId,from,to);
-			ctx.table.cards.h[cardId].isTap = true;
-			var enterFieldMark = new model_ver1_game_gameComponent_EnterFieldThisTurnMark("" + this.id + "_EnterFieldMark",cardId);
-			model_ver1_game_component_MarkComponent_addMark(ctx,enterFieldMark);
-			model_ver1_game_gameComponent_Alg_sendEvent(ctx,model_ver1_game_gameComponent_Event.CardEnterField(cardId));
-			break;
-		case 1:
-			break;
-		case 2:
-			break;
-		case 3:
-			var to = model_ver1_game_define_BaSyou.Default(responsePlayerId,model_ver1_game_define_BaSyouKeyword.MaintenanceArea);
-			model_ver1_game_component_TableComponent_moveCard(ctx,cardId,from,to);
-			ctx.table.cards.h[cardId].isTap = false;
-			model_ver1_game_gameComponent_Alg_sendEvent(ctx,model_ver1_game_gameComponent_Event.CardEnterField(cardId));
-			break;
-		case 4:
-			break;
-		default:
-			throw new haxe_Exception("unsupport type");
-		}
-	}
-	,__class__: model_ver1_data__$PlayerPlayCard_EnterFieldEffect
-});
-var model_ver1_data_PlayerPlayG = function(id) {
-	model_ver1_game_define_CardText.call(this,id,"Gのプレイ");
-};
-$hxClasses["model.ver1.data.PlayerPlayG"] = model_ver1_data_PlayerPlayG;
-model_ver1_data_PlayerPlayG.__name__ = "model.ver1.data.PlayerPlayG";
-model_ver1_data_PlayerPlayG.__super__ = model_ver1_game_define_CardText;
-model_ver1_data_PlayerPlayG.prototype = $extend(model_ver1_game_define_CardText.prototype,{
-	getRequires: function(_ctx,runtime) {
-		return [];
-	}
-	,action: function(_ctx,runtime) {
-		var ctx = js_Boot.__cast(_ctx , model_ver1_game_entity_Context);
-		var cardId = runtime.getCardId();
-		var responsePlayerId = runtime.getResponsePlayerId();
-		var from = model_ver1_game_component_TableComponent_getCardBaSyouAndAssertExist(ctx,cardId);
-		var to = model_ver1_game_define_BaSyou.Default(responsePlayerId,model_ver1_game_define_BaSyouKeyword.GZone);
-		ctx.table.cards.h[cardId].isReverse = true;
-		model_ver1_game_component_TableComponent_moveCard(ctx,cardId,from,to);
-	}
-	,__class__: model_ver1_data_PlayerPlayG
-});
 var model_ver1_data_RequirePhase = function(id,timing) {
 	model_ver1_game_define_Require.call(this,id,"RequirePhase");
 	this.timing = timing;
@@ -3403,8 +3288,9 @@ var model_ver1_game_define_TextType = $hxEnums["model.ver1.game.define.TextType"
 	,Use: ($_=function(timing) { return {_hx_index:1,timing:timing,__enum__:"model.ver1.game.define.TextType",toString:$estr}; },$_._hx_name="Use",$_.__params__ = ["timing"],$_)
 	,Special: ($_=function(type) { return {_hx_index:2,type:type,__enum__:"model.ver1.game.define.TextType",toString:$estr}; },$_._hx_name="Special",$_.__params__ = ["type"],$_)
 	,PlayCard: ($_=function(timing) { return {_hx_index:3,timing:timing,__enum__:"model.ver1.game.define.TextType",toString:$estr}; },$_._hx_name="PlayCard",$_.__params__ = ["timing"],$_)
+	,System: {_hx_name:"System",_hx_index:4,__enum__:"model.ver1.game.define.TextType",toString:$estr}
 };
-model_ver1_game_define_TextType.__constructs__ = [model_ver1_game_define_TextType.Automatic,model_ver1_game_define_TextType.Use,model_ver1_game_define_TextType.Special,model_ver1_game_define_TextType.PlayCard];
+model_ver1_game_define_TextType.__constructs__ = [model_ver1_game_define_TextType.Automatic,model_ver1_game_define_TextType.Use,model_ver1_game_define_TextType.Special,model_ver1_game_define_TextType.PlayCard,model_ver1_game_define_TextType.System];
 var model_ver1_game_define_CardEntityCategory = $hxEnums["model.ver1.game.define.CardEntityCategory"] = { __ename__:"model.ver1.game.define.CardEntityCategory",__constructs__:null
 	,Unit: {_hx_name:"Unit",_hx_index:0,__enum__:"model.ver1.game.define.CardEntityCategory",toString:$estr}
 	,Character: {_hx_name:"Character",_hx_index:1,__enum__:"model.ver1.game.define.CardEntityCategory",toString:$estr}
@@ -4304,8 +4190,8 @@ model_ver1_game_gameComponent_GameCardProto.prototype = $extend(model_ver1_game_
 	}
 	,__class__: model_ver1_game_gameComponent_GameCardProto
 });
-var model_ver1_game_gameComponent_GameCardText = function(id,description) {
-	model_ver1_game_define_CardText.call(this,id,description);
+var model_ver1_game_gameComponent_GameCardText = function(id,description,type) {
+	model_ver1_game_define_CardText.call(this,id,description,type);
 };
 $hxClasses["model.ver1.game.gameComponent.GameCardText"] = model_ver1_game_gameComponent_GameCardText;
 model_ver1_game_gameComponent_GameCardText.__name__ = "model.ver1.game.gameComponent.GameCardText";
@@ -4382,9 +4268,9 @@ var model_ver1_game_gameComponent_MarkEffect = $hxEnums["model.ver1.game.gameCom
 	,CanNotReroll: ($_=function(cardId) { return {_hx_index:4,cardId:cardId,__enum__:"model.ver1.game.gameComponent.MarkEffect",toString:$estr}; },$_._hx_name="CanNotReroll",$_.__params__ = ["cardId"],$_)
 };
 model_ver1_game_gameComponent_MarkEffect.__constructs__ = [model_ver1_game_gameComponent_MarkEffect.AddBattlePoint,model_ver1_game_gameComponent_MarkEffect.AttackSpeed,model_ver1_game_gameComponent_MarkEffect.AddText,model_ver1_game_gameComponent_MarkEffect.EnterFieldThisTurn,model_ver1_game_gameComponent_MarkEffect.CanNotReroll];
-var model_ver1_game_gameComponent_PlayUnitEffect = function(id,description) {
+var model_ver1_game_gameComponent_PlayUnitEffect = function(id,description,type) {
 	this.baSyouOption = haxe_ds_Option.None;
-	model_ver1_game_gameComponent_GameCardText.call(this,id,description);
+	model_ver1_game_gameComponent_GameCardText.call(this,id,description,type);
 };
 $hxClasses["model.ver1.game.gameComponent.PlayUnitEffect"] = model_ver1_game_gameComponent_PlayUnitEffect;
 model_ver1_game_gameComponent_PlayUnitEffect.__name__ = "model.ver1.game.gameComponent.PlayUnitEffect";
@@ -4404,10 +4290,10 @@ model_ver1_game_gameComponent_PlayUnitEffect.prototype = $extend(model_ver1_game
 	}
 	,__class__: model_ver1_game_gameComponent_PlayUnitEffect
 });
-var model_ver1_game_gameComponent_PlayPilotEffect = function(id,description) {
+var model_ver1_game_gameComponent_PlayPilotEffect = function(id,description,type) {
 	this.unitCardIdOption = haxe_ds_Option.None;
 	this.baSyouOption = haxe_ds_Option.None;
-	model_ver1_game_gameComponent_GameCardText.call(this,id,description);
+	model_ver1_game_gameComponent_GameCardText.call(this,id,description,type);
 };
 $hxClasses["model.ver1.game.gameComponent.PlayPilotEffect"] = model_ver1_game_gameComponent_PlayPilotEffect;
 model_ver1_game_gameComponent_PlayPilotEffect.__name__ = "model.ver1.game.gameComponent.PlayPilotEffect";
@@ -4431,9 +4317,8 @@ model_ver1_game_gameComponent_PlayPilotEffect.prototype = $extend(model_ver1_gam
 	}
 	,__class__: model_ver1_game_gameComponent_PlayPilotEffect
 });
-var model_ver1_game_gameComponent_PlayUnitRule = function() {
-	model_ver1_game_gameComponent_GameCardText.call(this,"","");
-	this.type = model_ver1_game_define_TextType.PlayCard(model_ver1_game_define_UseTiming.Relative(model_ver1_game_define_RelativePlayer.You,model_ver1_game_define_RelativeUseTiming.Maintenance));
+var model_ver1_game_gameComponent_PlayUnitRule = function(id) {
+	model_ver1_game_gameComponent_GameCardText.call(this,id,"PlayUnitRule",model_ver1_game_define_TextType.PlayCard(model_ver1_game_define_UseTiming.Relative(model_ver1_game_define_RelativePlayer.You,model_ver1_game_define_RelativeUseTiming.Maintenance)));
 };
 $hxClasses["model.ver1.game.gameComponent.PlayUnitRule"] = model_ver1_game_gameComponent_PlayUnitRule;
 model_ver1_game_gameComponent_PlayUnitRule.__name__ = "model.ver1.game.gameComponent.PlayUnitRule";
@@ -4443,16 +4328,15 @@ model_ver1_game_gameComponent_PlayUnitRule.prototype = $extend(model_ver1_game_g
 		return [model_ver1_game_gameComponent_Alg_createRequireRollCost(this.rollCost,{ })];
 	}
 	,_action: function(ctx,runtime) {
-		var playUnitEffect = new model_ver1_game_gameComponent_PlayUnitEffect("","");
+		var playUnitEffect = new model_ver1_game_gameComponent_PlayUnitEffect("","",model_ver1_game_define_TextType.System);
 		playUnitEffect.baSyouOption = haxe_ds_Option.Some(model_ver1_game_define_BaSyou.Default(runtime.getResponsePlayerId(),model_ver1_game_define_BaSyouKeyword.MaintenanceArea));
 		var block = new model_ver1_game_define_Effect(this.getSubKey(0),model_ver1_game_define_EffectCause.PlayCard(runtime.getResponsePlayerId(),runtime.getCardId()),playUnitEffect);
 		model_ver1_game_component_CutComponent_cutIn(ctx,block);
 	}
 	,__class__: model_ver1_game_gameComponent_PlayUnitRule
 });
-var model_ver1_game_gameComponent_PlayGRule = function() {
-	model_ver1_game_gameComponent_GameCardText.call(this,"","");
-	this.type = model_ver1_game_define_TextType.PlayCard(model_ver1_game_define_UseTiming.Relative(model_ver1_game_define_RelativePlayer.You,model_ver1_game_define_RelativeUseTiming.Maintenance));
+var model_ver1_game_gameComponent_PlayGRule = function(id) {
+	model_ver1_game_gameComponent_GameCardText.call(this,id,"PlayGRule",model_ver1_game_define_TextType.PlayCard(model_ver1_game_define_UseTiming.Relative(model_ver1_game_define_RelativePlayer.You,model_ver1_game_define_RelativeUseTiming.Maintenance)));
 };
 $hxClasses["model.ver1.game.gameComponent.PlayGRule"] = model_ver1_game_gameComponent_PlayGRule;
 model_ver1_game_gameComponent_PlayGRule.__name__ = "model.ver1.game.gameComponent.PlayGRule";
@@ -4473,8 +4357,8 @@ model_ver1_game_gameComponent_PlayGRule.prototype = $extend(model_ver1_game_game
 	}
 	,__class__: model_ver1_game_gameComponent_PlayGRule
 });
-var model_ver1_game_gameComponent_PlayCommandEffect = function(id,description) {
-	model_ver1_game_gameComponent_GameCardText.call(this,id,description);
+var model_ver1_game_gameComponent_PlayCommandEffect = function(id,description,type) {
+	model_ver1_game_gameComponent_GameCardText.call(this,id,description,type);
 };
 $hxClasses["model.ver1.game.gameComponent.PlayCommandEffect"] = model_ver1_game_gameComponent_PlayCommandEffect;
 model_ver1_game_gameComponent_PlayCommandEffect.__name__ = "model.ver1.game.gameComponent.PlayCommandEffect";
@@ -4490,9 +4374,8 @@ model_ver1_game_gameComponent_PlayCommandEffect.prototype = $extend(model_ver1_g
 	}
 	,__class__: model_ver1_game_gameComponent_PlayCommandEffect
 });
-var model_ver1_game_gameComponent_PlayCommandRule = function() {
-	model_ver1_game_gameComponent_GameCardText.call(this,"","");
-	this.type = model_ver1_game_define_TextType.PlayCard(model_ver1_game_define_UseTiming.Relative(model_ver1_game_define_RelativePlayer.You,model_ver1_game_define_RelativeUseTiming.Maintenance));
+var model_ver1_game_gameComponent_PlayCommandRule = function(id) {
+	model_ver1_game_gameComponent_GameCardText.call(this,id,"PlayCommandRule",model_ver1_game_define_TextType.PlayCard(model_ver1_game_define_UseTiming.Relative(model_ver1_game_define_RelativePlayer.You,model_ver1_game_define_RelativeUseTiming.Maintenance)));
 };
 $hxClasses["model.ver1.game.gameComponent.PlayCommandRule"] = model_ver1_game_gameComponent_PlayCommandRule;
 model_ver1_game_gameComponent_PlayCommandRule.__name__ = "model.ver1.game.gameComponent.PlayCommandRule";
@@ -4508,7 +4391,7 @@ model_ver1_game_gameComponent_PlayCommandRule.prototype = $extend(model_ver1_gam
 	,__class__: model_ver1_game_gameComponent_PlayCommandRule
 });
 function model_ver1_game_gameComponent_PlayCardText_createPlayCardText(cardProto,options) {
-	return new model_ver1_game_gameComponent_PlayUnitRule();
+	return new model_ver1_game_gameComponent_PlayUnitRule("");
 }
 function model_ver1_game_gameComponent_Runtime_isContantType(text) {
 	var _g = text.type;
@@ -5199,8 +5082,7 @@ function model_ver1_game_gameComponent_Runtime_getPlayerRuntimeText(ctx,playerId
 	return _g;
 }
 var model_ver1_game_gameComponent_PSArmorText1 = function(id) {
-	model_ver1_game_gameComponent_GameCardText.call(this,id,"出場時直立");
-	this.type = model_ver1_game_define_TextType.Automatic(model_ver1_game_define_TextTypeAutomaticType.Trigger);
+	model_ver1_game_gameComponent_GameCardText.call(this,id,"出場時直立",model_ver1_game_define_TextType.Automatic(model_ver1_game_define_TextTypeAutomaticType.Trigger));
 };
 $hxClasses["model.ver1.game.gameComponent.PSArmorText1"] = model_ver1_game_gameComponent_PSArmorText1;
 model_ver1_game_gameComponent_PSArmorText1.__name__ = "model.ver1.game.gameComponent.PSArmorText1";
@@ -5220,8 +5102,7 @@ model_ver1_game_gameComponent_PSArmorText1.prototype = $extend(model_ver1_game_g
 	,__class__: model_ver1_game_gameComponent_PSArmorText1
 });
 var model_ver1_game_gameComponent_PSArmorText2 = function(id) {
-	model_ver1_game_gameComponent_GameCardText.call(this,id," 進入戰場時, 下回合開始時回到手上, 當中如果和補給或供給能力的組到隊的話, 就不必回到手上");
-	this.type = model_ver1_game_define_TextType.Automatic(model_ver1_game_define_TextTypeAutomaticType.Trigger);
+	model_ver1_game_gameComponent_GameCardText.call(this,id," 進入戰場時, 下回合開始時回到手上, 當中如果和補給或供給能力的組到隊的話, 就不必回到手上",model_ver1_game_define_TextType.Automatic(model_ver1_game_define_TextTypeAutomaticType.Trigger));
 };
 $hxClasses["model.ver1.game.gameComponent.PSArmorText2"] = model_ver1_game_gameComponent_PSArmorText2;
 model_ver1_game_gameComponent_PSArmorText2.__name__ = "model.ver1.game.gameComponent.PSArmorText2";
@@ -5281,7 +5162,7 @@ model_ver1_game_gameComponent_PSArmorText2.prototype = $extend(model_ver1_game_g
 	,__class__: model_ver1_game_gameComponent_PSArmorText2
 });
 function model_ver1_game_gameComponent_SpecialCardText_createPlayCardText(cardProto,options) {
-	return new model_ver1_game_gameComponent_GameCardText("","");
+	return new model_ver1_game_gameComponent_GameCardText("","",model_ver1_game_define_TextType.System);
 }
 function model_ver1_game_gameComponent_SpecialCardText_flatSpecial(ctx,cardId,text) {
 	var _g = text.type;
@@ -5425,12 +5306,12 @@ model_ver1_test_common_OnlyEmptyTextCardProto.__super__ = model_ver1_game_define
 model_ver1_test_common_OnlyEmptyTextCardProto.prototype = $extend(model_ver1_game_define_CardProto.prototype,{
 	getTexts: function(_ctx,runtime) {
 		var thisCardId = runtime.getCardId();
-		return [new model_ver1_game_define_CardText("" + thisCardId + "_CardText","")];
+		return [new model_ver1_game_define_CardText("" + thisCardId + "_CardText","",model_ver1_game_define_TextType.System)];
 	}
 	,__class__: model_ver1_test_common_OnlyEmptyTextCardProto
 });
 var model_ver1_test_common_AddOneTextText = function(id) {
-	model_ver1_game_define_CardText.call(this,id,"AddOneTextText");
+	model_ver1_game_define_CardText.call(this,id,"AddOneTextText",model_ver1_game_define_TextType.System);
 };
 $hxClasses["model.ver1.test.common.AddOneTextText"] = model_ver1_test_common_AddOneTextText;
 model_ver1_test_common_AddOneTextText.__name__ = "model.ver1.test.common.AddOneTextText";
@@ -5438,7 +5319,7 @@ model_ver1_test_common_AddOneTextText.__super__ = model_ver1_game_define_CardTex
 model_ver1_test_common_AddOneTextText.prototype = $extend(model_ver1_game_define_CardText.prototype,{
 	getEffect: function(_ctx,runtime) {
 		var thisCardId = runtime.getCardId();
-		return [model_ver1_game_gameComponent_MarkEffect.AddText(thisCardId,new model_ver1_game_define_CardText("" + thisCardId + "_EmptyText",""))];
+		return [model_ver1_game_gameComponent_MarkEffect.AddText(thisCardId,new model_ver1_game_define_CardText("" + thisCardId + "_EmptyText","",model_ver1_game_define_TextType.System))];
 	}
 	,__class__: model_ver1_test_common_AddOneTextText
 });
@@ -5464,8 +5345,7 @@ model_ver1_test_common_OnlyConstentTextCardProto.__super__ = model_ver1_game_def
 model_ver1_test_common_OnlyConstentTextCardProto.prototype = $extend(model_ver1_game_define_CardProto.prototype,{
 	getTexts: function(_ctx,runtime) {
 		var thisCardId = runtime.getCardId();
-		var text = new model_ver1_game_define_CardText("" + thisCardId + "_TestText","");
-		text.type = model_ver1_game_define_TextType.Automatic(model_ver1_game_define_TextTypeAutomaticType.Constant);
+		var text = new model_ver1_game_define_CardText("" + thisCardId + "_TestText","",model_ver1_game_define_TextType.Automatic(model_ver1_game_define_TextTypeAutomaticType.Constant));
 		return [text];
 	}
 	,__class__: model_ver1_test_common_OnlyConstentTextCardProto

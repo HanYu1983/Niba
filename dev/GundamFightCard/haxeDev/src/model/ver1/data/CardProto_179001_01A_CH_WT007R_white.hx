@@ -36,7 +36,7 @@ class CardProto_179001_01A_CH_WT007R_white extends CardProto {
 
 	public override function getTexts(_ctx:Any, runtime:Runtime):Array<CardText> {
 		return [
-			new PlayerPlayCard('${runtime.getCardId()}_PlayerPlayCard'),
+			//new PlayerPlayCard('${runtime.getCardId()}_PlayerPlayCard'),
 			new Text1('${runtime.getCardId()}_Text1')
 		];
 	}
@@ -44,8 +44,7 @@ class CardProto_179001_01A_CH_WT007R_white extends CardProto {
 
 private class Text1 extends CardText {
 	public function new(id:String) {
-		super(id, "（戦闘フェイズ）〔２〕：このセットグループのユニットは、ターン終了時まで「速攻」を得る。");
-		type = Use(Absolute(Battle));
+		super(id, "（戦闘フェイズ）〔２〕：このセットグループのユニットは、ターン終了時まで「速攻」を得る。", Use(Absolute(Battle)));
 	}
 
 	public override function getRequires(_ctx:Any, runtime:Runtime):Array<Require> {

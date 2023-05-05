@@ -39,7 +39,7 @@ class CardProto_179030_11E_U_VT186R_purple extends CardProto {
 
 	public override function getTexts(_ctx:Any, runtime:Runtime):Array<CardText> {
 		return [
-			new PlayerPlayCard('CardProto_179030_11E_U_VT186R_purple_1'),
+			//new PlayerPlayCard('CardProto_179030_11E_U_VT186R_purple_1'),
 			new Text1('CardProto_179030_11E_U_VT186R_purple_2')
 		];
 	}
@@ -47,8 +47,7 @@ class CardProto_179030_11E_U_VT186R_purple extends CardProto {
 
 private class Text1 extends CardText {
 	public function new(id:String) {
-		super(id, "『起動』：このカードが場に出た場合、このターン中に場に出た敵軍ユニット１枚を、持ち主の手札に移す。");
-		type = Automatic(Trigger);
+		super(id, "『起動』：このカードが場に出た場合、このターン中に場に出た敵軍ユニット１枚を、持ち主の手札に移す。", Automatic(Trigger));
 	}
 
 	public override function onEvent(_ctx:Any, event:Any, runtime:Runtime):Void {
@@ -86,7 +85,7 @@ private class RequireOpponentUnitsEnterFieldThisTurn extends RequireUserSelectCa
 
 private class Process1 extends CardText {
 	public function new(id:String) {
-		super(id, "このターン中に場に出た敵軍ユニット１枚を、持ち主の手札に移す。");
+		super(id, "このターン中に場に出た敵軍ユニット１枚を、持ち主の手札に移す。",System);
 	}
 
 	public override function getRequires(_ctx:Any, runtime:Runtime):Array<Require> {
