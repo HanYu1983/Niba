@@ -20,6 +20,9 @@ import model.ver1.game.component.TableComponent;
 import model.ver1.game.gameComponent.Alg;
 import model.ver1.game.gameComponent.Event;
 import model.ver1.game.gameComponent.GameMark;
+import model.ver1.game.gameComponent.PlayRule;
+import model.ver1.game.gameComponent.GameCardProto;
+import model.ver1.game.gameComponent.GameComponent;
 import model.ver1.game.entity.Context;
 import model.ver1.data.RequireImpl;
 
@@ -31,15 +34,16 @@ import model.ver1.data.RequireImpl;
 // クイック
 // 『起動』：このカードが場に出た場合、このターン中に場に出た敵軍ユニット１枚を、持ち主の手札に移す。
 
-class CardProto_179030_11E_U_VT186R_purple extends CardProto {
+class CardProto_179030_11E_U_VT186R_purple extends GameCardProto {
 	public function new() {
 		super();
 		this.category = Unit;
 	}
 
-	public override function getTexts(_ctx:Any, runtime:Runtime):Array<CardText> {
+	public override function _getTexts(ctx:IGameComponent, runtime:Runtime):Array<CardText> {
 		return [
 			//new PlayerPlayCard('CardProto_179030_11E_U_VT186R_purple_1'),
+			new PlayGRule("CardProto_179030_11E_U_VT186R_purple_1"),
 			new Text1('CardProto_179030_11E_U_VT186R_purple_2')
 		];
 	}

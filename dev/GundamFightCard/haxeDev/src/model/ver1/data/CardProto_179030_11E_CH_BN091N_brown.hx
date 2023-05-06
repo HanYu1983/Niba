@@ -182,7 +182,7 @@ function test() {
 		throw "必須有不能重置效果";
 	}
 	trace("結束一個turn");
-	setTimging(ctx, Default(Battle, Some(End), End));
+	setTiming(ctx, Default(Battle, Some(End), End));
 	sendEvent(ctx, ChangePhase);
 	if (getMarks(ctx).length != 1) {
 		throw "必須有不能重置效果";

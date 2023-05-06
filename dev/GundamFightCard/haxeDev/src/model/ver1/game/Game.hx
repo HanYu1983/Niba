@@ -36,7 +36,7 @@ function test() {
 	card2.protoId = "179003_01A_U_BK008U_black";
 	game.ctx.table.cards[card1.id] = card1;
 	game.ctx.table.cards[card2.id] = card2;
-	setTimging(game.ctx, TIMINGS[2]);
+	setTiming(game.ctx, TIMINGS[2]);
 	final loadGame = Game.ofMemonto(game.getMemonto());
 	switch getTiming(game.ctx) {
 		case Default(Reroll, None, Free2):

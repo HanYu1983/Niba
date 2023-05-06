@@ -10,10 +10,10 @@ import model.ver1.game.gameComponent.GameComponent;
 class GameCardProto extends CardProto {
 	public override function getTexts(_ctx:Any, runtime:Runtime):Array<CardText> {
 		final ctx = cast(_ctx : IGameComponent);
-		return getGameTexts(ctx, runtime);
+		return _getTexts(ctx, runtime);
 	}
 
-	function getGameTexts(ctx:IGameComponent, runtime:Runtime):Array<CardText> {
+	function _getTexts(ctx:IGameComponent, runtime:Runtime):Array<CardText> {
 		return [];
 	}
 }

@@ -6,7 +6,7 @@ interface ITimingComponent {
 	var timing:Timing;
 }
 
-function setTimging(ctx:ITimingComponent, timing:Timing) {
+function setTiming(ctx:ITimingComponent, timing:Timing) {
 	ctx.timing = timing;
 }
 

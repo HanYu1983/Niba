@@ -8,8 +8,9 @@ import model.ver1.game.define.Define;
 import model.ver1.game.define.BaSyou;
 import model.ver1.game.define.Runtime;
 import model.ver1.game.define.Player;
-import model.ver1.game.gameComponent.Alg;
 import model.ver1.game.component.CardProtoPoolComponent;
+import model.ver1.game.component.TimingComponent;
+import model.ver1.game.gameComponent.Alg;
 import model.ver1.game.gameComponent.Runtime;
 import model.ver1.test.common.Common;
 import model.ver1.game.entity.Context;
@@ -22,7 +23,7 @@ private function test_getRuntimeText1() {
 	}
 	final card = new Card("0");
 	card.protoId = "OnlyEmptyTextCardProto";
-	addCard(ctx.table, (Default(PlayerId.A, MaintenanceArea):BaSyouId), card);
+	addCard(ctx.table, (Default(PlayerId.A, MaintenanceArea) : BaSyouId), card);
 	if (getRuntimeText(ctx).length != 1) {
 		throw new haxe.Exception("必須找到1個內文");
 	}
@@ -33,13 +34,49 @@ private function test_getRuntimeText2() {
 	registerCardProto(ctx, "AddTextCardProto", new AddTextCardProto());
 	final card = new Card("0");
 	card.protoId = "AddTextCardProto";
-	addCard(ctx.table, (Default(PlayerId.A, MaintenanceArea):BaSyouId), card);
+	addCard(ctx.table, (Default(PlayerId.A, MaintenanceArea) : BaSyouId), card);
 	if (getRuntimeText(ctx).length != 2) {
 		throw new haxe.Exception("必須找到2個內文");
+	}
+}
+
+private function test_playGRule() {
+	final ctx = new Context();
+	registerCardProto(ctx, "OnlyPlayGRuleCardProto", new OnlyPlayGRuleCardProto());
+	final card = new Card("0");
+	card.protoId = "OnlyPlayGRuleCardProto";
+	addCard(ctx.table, (Default(PlayerId.A, TeHuTa) : BaSyouId), card);
+	setTiming(ctx, Default(Maintenance, None, Free1));
+	{
+		final cmds = getPlayerRuntimeText(ctx, PlayerId.A);
+		if (cmds.length != 1) {
+			throw new haxe.Exception("must has 1");
+		}
+	}
+	{
+		final cmds = getPlayerRuntimeText(ctx, PlayerId.B);
+		if (cmds.length != 0) {
+			throw new haxe.Exception("must has 0");
+		}
+	}
+	setTiming(ctx, Default(Maintenance, None, Rule));
+	{
+		final cmds = getPlayerRuntimeText(ctx, PlayerId.A);
+		if (cmds.length != 0) {
+			throw new haxe.Exception("must has 0");
+		}
+	}
+	setTiming(ctx, Default(Draw, None, Free1));
+	{
+		final cmds = getPlayerRuntimeText(ctx, PlayerId.A);
+		if (cmds.length != 0) {
+			throw new haxe.Exception("must has 0");
+		}
 	}
 }
 
 function test() {
 	test_getRuntimeText1();
 	test_getRuntimeText2();
+	test_playGRule();
 }

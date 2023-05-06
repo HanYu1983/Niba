@@ -92,7 +92,7 @@ function test() {
 	final card1 = new Card("0");
 	card1.protoId = "179003_01A_U_BK008U_black";
 	ctx.table.cards[card1.id] = card1;
-	setTimging(ctx,  Timing.Default(Battle, Some(DamageChecking), Start));
+	setTiming(ctx,  Timing.Default(Battle, Some(DamageChecking), Start));
 	final infos = getRuntimeText(ctx).map(info -> {
 		return {
 			cardId: info.runtime.getCardId(),

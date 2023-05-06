@@ -26,56 +26,61 @@ function getActivePlayerIdAndAssert(ctx:IActivePlayerComponent):PlayerId {
 
 function isPlayerTiming(ctx:IActivePlayerComponent, useTiming:UseTiming, responsePlayerId:PlayerId, timing:Timing, playerId:PlayerId) {
 	switch (useTiming) {
-		case Absolute(Any) | Relative(You, Turn):
+		case Relative(You, _) if (responsePlayerId != playerId):
+			return false;
+		case Relative(Opponent, _) if (responsePlayerId != ~(playerId)):
+			return false;
+		case _:
+	}
+	switch (useTiming) {
+		case Absolute(Any) | Relative(_, Turn):
 			switch timing {
 				case Default(_, _, Free1 | Free2):
 					return true;
 				case _:
 			}
-		case Absolute(Draw) | Relative(You, Draw):
+		case Absolute(Draw) | Relative(_, Draw):
 			switch timing {
 				case Default(Draw, _, Free1 | Free2):
 					return true;
 				case _:
 			}
-		case Absolute(Maintenance) | Relative(You, Maintenance):
+		case Absolute(Maintenance) | Relative(_, Maintenance):
 			switch timing {
 				case Default(Maintenance, _, Free1 | Free2):
 					return true;
 				case _:
 			}
-		case Absolute(Battle) | Relative(You, Battle):
+		case Absolute(Battle) | Relative(_, Battle):
 			switch timing {
 				case Default(Battle, _, Free1 | Free2):
 					return true;
 				case _:
 			}
-		case Absolute(Attack) | Relative(You, Attack):
+		case Absolute(Attack) | Relative(_, Attack):
 			switch timing {
 				case Default(Battle, Some(Attack), Free1 | Free2):
 					return true;
 				case _:
 			}
-		case Absolute(Defense) | Relative(You, Defense):
+		case Absolute(Defense) | Relative(_, Defense):
 			switch timing {
 				case Default(Battle, Some(Defense), Free1 | Free2):
 					return true;
 				case _:
 			}
-		case Absolute(DamageChecking) | Relative(You, DamageChecking):
+		case Absolute(DamageChecking) | Relative(_, DamageChecking):
 			switch timing {
 				case Default(Battle, Some(DamageChecking), Free1 | Free2):
 					return true;
 				case _:
 			}
-		case Absolute(Return) | Relative(You, Return):
+		case Absolute(Return) | Relative(_, Return):
 			switch timing {
 				case Default(Battle, Some(Return), Free1 | Free2):
 					return true;
 				case _:
 			}
-		case Relative(Opponent, timing):
-			return false;
 		case _:
 	}
 	return false;
