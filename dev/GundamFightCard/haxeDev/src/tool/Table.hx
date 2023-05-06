@@ -7,7 +7,7 @@ class Card {
 		this.id = id;
 	}
 
-	public var id:String;
+	public final id:String;
 	public var isFaceUp = false;
 	public var isTap = false;
 	public var isReverse = false;
@@ -20,8 +20,8 @@ class CardStack {
 		this.id = id;
 	}
 
-	public var id:String;
-	public var cardIds:Array<String> = [];
+	public final id:String;
+	public final cardIds:Array<String> = [];
 }
 
 class Table {
@@ -48,6 +48,10 @@ function getCard(table:Table, cardId:String):Card {
 		throw new haxe.Exception('card not found: ${cardId}');
 	}
 	return card;
+}
+
+function getCards(table:Table):Array<Card> {
+	return [for (card in table.cards) card];
 }
 
 function getCardStack(table:Table, cardStackId:String):CardStack {

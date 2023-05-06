@@ -40,6 +40,10 @@ function getCardOwner(ctx:ITableComponent, cardId:String):String {
 	return owner;
 }
 
+function getCardsByOwner(ctx:ITableComponent, owner:String):Array<Card> {
+	return getCards(ctx.table).filter(card -> card.owner == owner);
+}
+
 function getCardBaSyouAndAssertExist(ctx:ITableComponent, cardId:String):BaSyou {
 	return switch tool.Table.getCardCardStack(ctx.table, cardId) {
 		case Some(cardStack):

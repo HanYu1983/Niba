@@ -3002,6 +3002,19 @@ function model_ver1_game_component_TableComponent_getCardOwner(ctx,cardId) {
 	}
 	return owner;
 }
+function model_ver1_game_component_TableComponent_getCardsByOwner(ctx,owner) {
+	var _g = [];
+	var _g1 = 0;
+	var _g2 = tool_Table_getCards(ctx.table);
+	while(_g1 < _g2.length) {
+		var v = _g2[_g1];
+		++_g1;
+		if(v.owner == owner) {
+			_g.push(v);
+		}
+	}
+	return _g;
+}
 function model_ver1_game_component_TableComponent_getCardBaSyouAndAssertExist(ctx,cardId) {
 	var _g = tool_Table_getCardCardStack(ctx.table,cardId);
 	if(_g._hx_index == 0) {
@@ -3011,7 +3024,7 @@ function model_ver1_game_component_TableComponent_getCardBaSyouAndAssertExist(ct
 		model_ver1_game_define_BaSyouId.toBaSyou(ret);
 		return model_ver1_game_define_BaSyouId.toBaSyou(ret);
 	} else {
-		console.log("src/model/ver1/game/component/TableComponent.hx:48:",ctx);
+		console.log("src/model/ver1/game/component/TableComponent.hx:52:",ctx);
 		throw new haxe_Exception("card baSyou not found: " + cardId);
 	}
 }
@@ -5407,6 +5420,19 @@ function tool_Table_getCard(table,cardId) {
 		throw new haxe_Exception("card not found: " + cardId);
 	}
 	return card;
+}
+function tool_Table_getCards(table) {
+	var _g = [];
+	var h = table.cards.h;
+	var card_h = h;
+	var card_keys = Object.keys(h);
+	var card_length = card_keys.length;
+	var card_current = 0;
+	while(card_current < card_length) {
+		var card = card_h[card_keys[card_current++]];
+		_g.push(card);
+	}
+	return _g;
 }
 function tool_Table_getCardStack(table,cardStackId) {
 	var ret = table.cardStacks.h[cardStackId];
