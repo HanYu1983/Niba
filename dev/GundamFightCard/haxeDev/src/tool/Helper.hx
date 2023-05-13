@@ -11,3 +11,7 @@ function getMemonto(obj:Any):String {
 function ofMemonto(memonto:String):Any {
 	return Unserializer.run(memonto);
 }
+
+function copy(obj:Any):Any {
+	return ofMemonto(getMemonto(obj));
+}

@@ -16,6 +16,7 @@ import model.ver1.game.component.CutComponent;
 import model.ver1.game.component.TableComponent;
 import model.ver1.game.component.PlayerStateComponent;
 import model.ver1.game.component.SelectionComponent;
+import model.ver1.game.component.ActiveEffectComponent;
 import model.ver1.game.gameComponent.GameComponent;
 import model.ver1.game.gameComponent.GameCardText;
 import model.ver1.game.gameComponent.Alg;
@@ -32,5 +33,5 @@ class DamageRule extends GameCardText {
 
 function addDamageRule(ctx:IGameComponent, playerId:PlayerId):Void {
 	final block = new Effect("DamageRule", System(Some(playerId)), new DamageRule());
-	cutIn(ctx, block);
+	setActiveEffect(ctx, Some(block));
 }

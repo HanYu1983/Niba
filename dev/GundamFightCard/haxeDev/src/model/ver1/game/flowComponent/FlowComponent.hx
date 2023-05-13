@@ -100,13 +100,17 @@ function applyFlow(ctx:IFlowComponent, playerID:PlayerId, flow:Flow):Void {
 		case SetActiveEffectId(blockId, tips):
 			switch getActiveEffect(ctx) {
 				case Some(effect):
-					final controller = getEffectRuntime(ctx, effect.id).getResponsePlayerId();
-					if (controller != playerID) {
-						throw new haxe.Exception("[setActiveEffectID] 你不是控制者");
+					switch getEffectRuntime(ctx, effect).getResponsePlayerIdOption() {
+						case None:
+							throw new haxe.Exception("系統效果不能替換");
+						case Some(controller) if (controller != playerID):
+							throw new haxe.Exception("你不是控制者");
+						case _:
+							// ignore
 					}
-				//   if (currentActiveEffect.requirePassed) {
-				// 	throw new Error("[cancelCommand] 已經處理需求的不能取消");
-				//   }
+				// if (ctx.flowMemory.hasEffectRequireActionHandled[effect.id]) {
+				// 	throw new haxe.Exception("已經處理需求的不能取消");
+				// }
 				case _:
 			}
 			switch model.ver1.game.component.EffectComponent.getEffect(ctx, blockId) {
@@ -114,6 +118,66 @@ function applyFlow(ctx:IFlowComponent, playerID:PlayerId, flow:Flow):Void {
 					throw new haxe.Exception('effect not found: ${blockId}');
 				case Some(effect):
 					setActiveEffect(ctx, Some(effect));
+			}
+		case DoEffect(effectID):
+			switch getActiveEffect(ctx) {
+				case Some(effect):
+					if (effect.id != effectID) {
+						throw new haxe.Exception("activeEffectID != effectID");
+					}
+					// 處理事件
+					final runtime = getEffectRuntime(ctx, effect);
+					// 試運行在測試的上下文
+					try {
+						final copyCtx = cast(ctx.copy() : IFlowComponent);
+						for (require in effect.text.getRequires2(copyCtx, runtime)) {
+							require.action();
+						}
+						effect.text.action(copyCtx, runtime);
+					} catch (e) {
+						throw e;
+					}
+					// 若沒錯誤, 再執行一次
+					for (require in effect.text.getRequires2(ctx, runtime)) {
+						require.action();
+					}
+					effect.text.action(ctx, runtime);
+					// 清除旗標，代表現在沒有正在支付的效果
+					setActiveEffect(ctx, None);
+					switch effect.cause {
+						case System(_):
+						// 規則的效果不會在堆疊內
+						case _:
+							// 將效果移除
+							removeEffect(ctx, effect.id);
+							// 如果是堆疊事件，將事件移到堆疊記憶去
+							// final isStackEffect = stackeffectEffect != null;
+							// if (isStackEffect) {
+							// 	ctx = {
+							// 		...ctx,
+							// 		gameState:{
+							// 			...ctx.gameState,
+							// 			stackEffectMemory:[...ctx.gameState.stackEffectMemory, stackEffect],
+							// 		},
+							// 	};
+							// }
+							// // 是否堆疊結束
+							// // 觸發切入解決事件，並清空堆疊記憶
+							// const isStackFinished = isStackEffect && ctx.gameState.stackEffect.length == 0;
+							// if (isStackFinished) {
+							// 	ctx = {
+							// 		...ctx,
+							// 		gameState:{
+							// 			...ctx.gameState,
+							// 			flowMemory:{
+							// 				...ctx.gameState.flowMemory,
+							// 				shouldTriggerStackEffectFinishedEvent:true,
+							// 			},
+							// 		},
+							// 	};
+							// }
+					}
+				case _:
 			}
 		case _:
 	}
@@ -126,55 +190,62 @@ function queryFlow(ctx:IFlowComponent, playerId:PlayerId):Array<Flow> {
 			return [createFlow(WaitPlayer, "遊戲結束")];
 		case _:
 	}
-	// 有玩家在支付卡片
+	// 有玩家在支付卡片或有系統效果(抽牌規定效果等)
 	switch getActiveEffect(ctx) {
 		case Some(activeBlock):
-			final activeBlockId = activeBlock.id;
-			final runtime = getEffectRuntime(ctx, activeBlockId);
-			final controller = runtime.getResponsePlayerId();
-			final isPass = ctx.flowMemory.hasPlayerPassPayCost[playerId];
-			final isOpponentPass = ctx.flowMemory.hasPlayerPassPayCost[~(playerId)];
-			if (isPass && isOpponentPass) {
-				// 雙方都已支付
-				if (controller != playerId) {
-					// 非控制者等待
-					return [createFlow(ObserveEffect, "")];
-				}
-				// 控制者可解決效果
-				return [createFlow(DoEffect(activeBlockId), "")];
-			} else if (isPass || isOpponentPass) {
-				// 其中一方支付
-				if (controller == playerId) {
-					// 控制者
-					if (isPass) {
-						// 已支付
-						// 等待
-						return [createFlow(ObserveEffect, "")];
+			switch getEffectRuntime(ctx, activeBlock).getResponsePlayerIdOption() {
+				case None:
+					// 沒有控制者的效果由主動玩家處理
+					if (playerId != getActivePlayerIdAndAssert(ctx)) {
+						return [createFlow(WaitPlayer, "等待伺服器處理")];
 					}
-				} else {
-					// 非控制者
-					if (isOpponentPass == false) {
-						// 對方未支付（自己已支付）
-						// 等待
-						return [createFlow(ObserveEffect, "")];
+					return [createFlow(DoEffect(activeBlock.id), "")];
+				case Some(controller):
+					final isPass = ctx.flowMemory.hasPlayerPassPayCost[playerId];
+					final isOpponentPass = ctx.flowMemory.hasPlayerPassPayCost[~(playerId)];
+					if (isPass && isOpponentPass) {
+						// 雙方都已支付
+						if (controller != playerId) {
+							// 非控制者等待
+							return [createFlow(ObserveEffect, "")];
+						}
+						// 控制者可解決效果
+						return [createFlow(DoEffect(activeBlock.id), "")];
+					} else if (isPass || isOpponentPass) {
+						// 其中一方支付
+						if (controller == playerId) {
+							// 控制者
+							if (isPass) {
+								// 已支付
+								// 等待
+								return [createFlow(ObserveEffect, "")];
+							}
+						} else {
+							// 非控制者
+							if (isOpponentPass == false) {
+								// 對方未支付（自己已支付）
+								// 等待
+								return [createFlow(ObserveEffect, "")];
+							}
+							// 對方已支付（自己未支付）
+							// 自己宣告已支付
+							return [createFlow(PassPayCost(activeBlock.id), "")];
+						}
 					}
-					// 對方已支付（自己未支付）
-					// 自己宣告已支付
-					return [createFlow(PassPayCost(activeBlockId), "")];
-				}
+					if (controller != playerId) {
+						// 非控制者並雙方都支付
+						// 等待控制者解決效果
+						return [createFlow(WaitPlayer, "等待對方支付ActiveEffectID")];
+					}
+					// 是控制者但未支付
+					// 取消支付或宣告已支付
+					return [
+						createFlow(CancelActiveEffect, "取消支付效果，讓其它玩家可以支付"),
+						createFlow(PassPayCost(activeBlock.id), ""),
+					];
 			}
-			if (controller != playerId) {
-				// 非控制者並雙方都支付
-				// 等待控制者解決效果
-				return [createFlow(WaitPlayer, "等待對方支付ActiveEffectID")];
-			}
-			// 是控制者但未支付
-			// 取消支付或宣告已支付
-			return [
-				createFlow(CancelActiveEffect, "取消支付效果，讓其它玩家可以支付"),
-				createFlow(PassPayCost(activeBlockId), ""),
-			];
 		case None:
+			// ignore
 	}
 	// 起動效果
 	{
@@ -184,7 +255,7 @@ function queryFlow(ctx:IFlowComponent, playerId:PlayerId):Array<Flow> {
 			final myEffect:Array<Effect> = [];
 			final opponentEffect:Array<Effect> = [];
 			for (effect in immediateEffects) {
-				final controller = getEffectRuntime(ctx, effect.id).getResponsePlayerId();
+				final controller = getEffectRuntime(ctx, effect).getResponsePlayerId();
 				if (controller == playerId) {
 					myEffect.push(effect);
 				} else {
@@ -224,7 +295,7 @@ function queryFlow(ctx:IFlowComponent, playerId:PlayerId):Array<Flow> {
 			// 取得最上方的效果
 			final effect = blocks[0];
 			// 取得效果的控制者
-			final controller = getEffectRuntime(ctx, effect.id).getResponsePlayerId();
+			final controller = getEffectRuntime(ctx, effect).getResponsePlayerId();
 			// 判斷切入流程
 			final isAllPassCut = ctx.flowMemory.hasPlayerPassCut[PlayerId.A] && ctx.flowMemory.hasPlayerPassCut[PlayerId.B];
 			// 如果雙方玩家還沒放棄切入

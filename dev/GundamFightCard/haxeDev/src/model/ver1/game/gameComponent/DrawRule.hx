@@ -13,6 +13,7 @@ import model.ver1.game.define.Player;
 import model.ver1.game.component.CutComponent;
 import model.ver1.game.component.TableComponent;
 import model.ver1.game.component.PlayerStateComponent;
+import model.ver1.game.component.ActiveEffectComponent;
 import model.ver1.game.gameComponent.GameComponent;
 import model.ver1.game.gameComponent.GameCardText;
 import model.ver1.game.gameComponent.Alg;
@@ -31,5 +32,5 @@ class DrawRule extends GameCardText {
 
 function addDrawRule(ctx:IGameComponent, playerId:PlayerId):Void {
 	final block = new Effect("DrawRule", System(Some(playerId)), new DrawRule());
-	cutIn(ctx, block);
+	setActiveEffect(ctx, Some(block));
 }

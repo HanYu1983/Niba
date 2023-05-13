@@ -2,9 +2,10 @@ package model.ver1.game.define;
 
 import haxe.ds.Option;
 import model.ver1.game.define.Define;
+import model.ver1.game.define.Player;
 
 enum EffectCause {
-	System(respnosePlayerId:Option<String>);
+	System(responsePlayerId:Option<PlayerId>);
 	PlayCard(playerId:String, cardId:String);
 	PlayText(cardId:String, textId:String);
 	TextEffect(cardId:String, textId:String);

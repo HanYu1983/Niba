@@ -40,10 +40,14 @@ class Context implements IFlowComponent {
 	public var flowMemory:FlowMemory = {
 		state: PrepareDeck,
 		hasTriggerEvent: false,
-		hasPlayerPassPhase: new Map<String, Bool>(),
-		hasPlayerPassCut: new Map<String, Bool>(),
-		hasPlayerPassPayCost: new Map<String, Bool>(),
+		hasPlayerPassPhase: [],
+		hasPlayerPassCut: [],
+		hasPlayerPassPayCost: [],
 		shouldTriggerStackEffectFinishedEvent: false,
 		msgs: [],
+		// hasEffectRequireActionHandled: [],
 	};
+	public function copy():Any {
+		return tool.Helper.copy(this);
+	}
 }

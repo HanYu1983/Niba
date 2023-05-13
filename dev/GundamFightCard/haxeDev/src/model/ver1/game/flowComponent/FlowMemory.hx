@@ -17,6 +17,7 @@ typedef FlowMemory = {
 	hasPlayerPassPayCost:Map<String, Bool>,
 	shouldTriggerStackEffectFinishedEvent:Bool,
 	msgs:Array<Message>,
+	//hasEffectRequireActionHandled:Map<String, Bool>,
 }
 
 // 宣告結束

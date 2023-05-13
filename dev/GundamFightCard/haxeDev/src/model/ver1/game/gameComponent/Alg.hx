@@ -9,6 +9,7 @@ import model.ver1.game.define.Runtime;
 import model.ver1.game.define.Mark;
 import model.ver1.game.define.Player;
 import model.ver1.game.define.Require;
+import model.ver1.game.define.Effect;
 import model.ver1.game.component.CardProtoPoolComponent;
 import model.ver1.game.component.EffectComponent;
 import model.ver1.game.component.MarkComponent;
@@ -213,23 +214,18 @@ function removeDestroyEffect(ctx:IGameComponent, cardId:String):Void {
 	trace("移除堆疊中的破壞效果");
 }
 
-function getEffectRuntime(ctx:IGameComponent, blockId:String):Runtime {
-	switch getEffect(ctx, blockId) {
-		case None:
-			throw new haxe.Exception('effect not found: ${blockId}');
-		case Some(block):
-			return switch block.cause {
-				case System(respnosePlayerId):
-					new SystemRuntime(respnosePlayerId);
-				case PlayCard(playCardPlayerId, cardId):
-					new DefaultRuntime(cardId, playCardPlayerId);
-				case PlayText(cardId, textId):
-					final responsePlayerId = getCardControllerAndAssertExist(ctx, cardId);
-					new DefaultRuntime(cardId, responsePlayerId);
-				case TextEffect(cardId, textId):
-					final responsePlayerId = getCardControllerAndAssertExist(ctx, cardId);
-					new DefaultRuntime(cardId, responsePlayerId);
-			}
+function getEffectRuntime(ctx:IGameComponent, effect:Effect):Runtime {
+	return switch effect.cause {
+		case System(responsePlayerId):
+			new SystemRuntime(responsePlayerId);
+		case PlayCard(playCardPlayerId, cardId):
+			new DefaultRuntime(cardId, playCardPlayerId);
+		case PlayText(cardId, textId):
+			final responsePlayerId = getCardControllerAndAssertExist(ctx, cardId);
+			new DefaultRuntime(cardId, responsePlayerId);
+		case TextEffect(cardId, textId):
+			final responsePlayerId = getCardControllerAndAssertExist(ctx, cardId);
+			new DefaultRuntime(cardId, responsePlayerId);
 	}
 }
 

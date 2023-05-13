@@ -16,6 +16,7 @@ import model.ver1.game.component.CutComponent;
 import model.ver1.game.component.TableComponent;
 import model.ver1.game.component.PlayerStateComponent;
 import model.ver1.game.component.SelectionComponent;
+import model.ver1.game.component.ActiveEffectComponent;
 import model.ver1.game.gameComponent.GameComponent;
 import model.ver1.game.gameComponent.GameCardText;
 import model.ver1.game.gameComponent.Alg;
@@ -44,5 +45,5 @@ class ReturnRule extends GameCardText {
 
 function addReturnRule(ctx:IGameComponent, playerId:PlayerId):Void {
 	final block = new Effect("ReturnRule", System(Some(playerId)), new ReturnRule());
-	cutIn(ctx, block);
+	setActiveEffect(ctx, Some(block));
 }
