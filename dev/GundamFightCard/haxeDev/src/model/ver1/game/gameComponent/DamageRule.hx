@@ -31,6 +31,6 @@ class DamageRule extends GameCardText {
 }
 
 function addDamageRule(ctx:IGameComponent, playerId:PlayerId):Void {
-	final block = new Effect("DamageRule", System(playerId), new DamageRule());
+	final block = new Effect("DamageRule", System(Some(playerId)), new DamageRule());
 	cutIn(ctx, block);
 }

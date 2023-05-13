@@ -1,10 +1,10 @@
 package model.ver1.game.define;
 
+import haxe.ds.Option;
 import model.ver1.game.define.Define;
 
 enum EffectCause {
-	Pending;
-	System(respnosePlayerId:String);
+	System(respnosePlayerId:Option<String>);
 	PlayCard(playerId:String, cardId:String);
 	PlayText(cardId:String, textId:String);
 	TextEffect(cardId:String, textId:String);

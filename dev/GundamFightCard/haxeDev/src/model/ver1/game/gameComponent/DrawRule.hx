@@ -30,6 +30,6 @@ class DrawRule extends GameCardText {
 }
 
 function addDrawRule(ctx:IGameComponent, playerId:PlayerId):Void {
-	final block = new Effect("DrawRule", System(playerId), new DrawRule());
+	final block = new Effect("DrawRule", System(Some(playerId)), new DrawRule());
 	cutIn(ctx, block);
 }

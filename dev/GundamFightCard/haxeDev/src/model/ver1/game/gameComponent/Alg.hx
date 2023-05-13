@@ -229,8 +229,6 @@ function getEffectRuntime(ctx:IGameComponent, blockId:String):Runtime {
 				case TextEffect(cardId, textId):
 					final responsePlayerId = getCardControllerAndAssertExist(ctx, cardId);
 					new DefaultRuntime(cardId, responsePlayerId);
-				case _:
-					new AbstractRuntime();
 			}
 	}
 }

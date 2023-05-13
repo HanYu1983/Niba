@@ -3371,13 +3371,12 @@ var model_ver1_game_define_RollCost = $hxEnums["model.ver1.game.define.RollCost"
 };
 model_ver1_game_define_RollCost.__constructs__ = [];
 var model_ver1_game_define_EffectCause = $hxEnums["model.ver1.game.define.EffectCause"] = { __ename__:"model.ver1.game.define.EffectCause",__constructs__:null
-	,Pending: {_hx_name:"Pending",_hx_index:0,__enum__:"model.ver1.game.define.EffectCause",toString:$estr}
-	,System: ($_=function(respnosePlayerId) { return {_hx_index:1,respnosePlayerId:respnosePlayerId,__enum__:"model.ver1.game.define.EffectCause",toString:$estr}; },$_._hx_name="System",$_.__params__ = ["respnosePlayerId"],$_)
-	,PlayCard: ($_=function(playerId,cardId) { return {_hx_index:2,playerId:playerId,cardId:cardId,__enum__:"model.ver1.game.define.EffectCause",toString:$estr}; },$_._hx_name="PlayCard",$_.__params__ = ["playerId","cardId"],$_)
-	,PlayText: ($_=function(cardId,textId) { return {_hx_index:3,cardId:cardId,textId:textId,__enum__:"model.ver1.game.define.EffectCause",toString:$estr}; },$_._hx_name="PlayText",$_.__params__ = ["cardId","textId"],$_)
-	,TextEffect: ($_=function(cardId,textId) { return {_hx_index:4,cardId:cardId,textId:textId,__enum__:"model.ver1.game.define.EffectCause",toString:$estr}; },$_._hx_name="TextEffect",$_.__params__ = ["cardId","textId"],$_)
+	,System: ($_=function(respnosePlayerId) { return {_hx_index:0,respnosePlayerId:respnosePlayerId,__enum__:"model.ver1.game.define.EffectCause",toString:$estr}; },$_._hx_name="System",$_.__params__ = ["respnosePlayerId"],$_)
+	,PlayCard: ($_=function(playerId,cardId) { return {_hx_index:1,playerId:playerId,cardId:cardId,__enum__:"model.ver1.game.define.EffectCause",toString:$estr}; },$_._hx_name="PlayCard",$_.__params__ = ["playerId","cardId"],$_)
+	,PlayText: ($_=function(cardId,textId) { return {_hx_index:2,cardId:cardId,textId:textId,__enum__:"model.ver1.game.define.EffectCause",toString:$estr}; },$_._hx_name="PlayText",$_.__params__ = ["cardId","textId"],$_)
+	,TextEffect: ($_=function(cardId,textId) { return {_hx_index:3,cardId:cardId,textId:textId,__enum__:"model.ver1.game.define.EffectCause",toString:$estr}; },$_._hx_name="TextEffect",$_.__params__ = ["cardId","textId"],$_)
 };
-model_ver1_game_define_EffectCause.__constructs__ = [model_ver1_game_define_EffectCause.Pending,model_ver1_game_define_EffectCause.System,model_ver1_game_define_EffectCause.PlayCard,model_ver1_game_define_EffectCause.PlayText,model_ver1_game_define_EffectCause.TextEffect];
+model_ver1_game_define_EffectCause.__constructs__ = [model_ver1_game_define_EffectCause.System,model_ver1_game_define_EffectCause.PlayCard,model_ver1_game_define_EffectCause.PlayText,model_ver1_game_define_EffectCause.TextEffect];
 var model_ver1_game_define_Effect = function(id,cause,text) {
 	this.isOption = false;
 	this.isImmediate = false;
@@ -3426,8 +3425,7 @@ model_ver1_game_define_Runtime.__isInterface__ = true;
 model_ver1_game_define_Runtime.prototype = {
 	__class__: model_ver1_game_define_Runtime
 };
-var model_ver1_game_define_AbstractRuntime = function() {
-};
+var model_ver1_game_define_AbstractRuntime = function() { };
 $hxClasses["model.ver1.game.define.AbstractRuntime"] = model_ver1_game_define_AbstractRuntime;
 model_ver1_game_define_AbstractRuntime.__name__ = "model.ver1.game.define.AbstractRuntime";
 model_ver1_game_define_AbstractRuntime.__interfaces__ = [model_ver1_game_define_Runtime];
@@ -3441,7 +3439,6 @@ model_ver1_game_define_AbstractRuntime.prototype = {
 	,__class__: model_ver1_game_define_AbstractRuntime
 };
 var model_ver1_game_define_SystemRuntime = function(responsePlayerId) {
-	model_ver1_game_define_AbstractRuntime.call(this);
 	this.responsePlayerId = responsePlayerId;
 };
 $hxClasses["model.ver1.game.define.SystemRuntime"] = model_ver1_game_define_SystemRuntime;
@@ -3449,17 +3446,22 @@ model_ver1_game_define_SystemRuntime.__name__ = "model.ver1.game.define.SystemRu
 model_ver1_game_define_SystemRuntime.__super__ = model_ver1_game_define_AbstractRuntime;
 model_ver1_game_define_SystemRuntime.prototype = $extend(model_ver1_game_define_AbstractRuntime.prototype,{
 	getResponsePlayerId: function() {
-		var s = this.responsePlayerId;
-		if([model_ver1_game_define_PlayerId.A,model_ver1_game_define_PlayerId.B].indexOf(s) != -1 == false) {
-			throw haxe_Exception.thrown("playerId (" + s + ") must be " + model_ver1_game_define_PlayerId.A + " or " + model_ver1_game_define_PlayerId.B);
+		var _g = this.responsePlayerId;
+		switch(_g._hx_index) {
+		case 0:
+			var playerId = _g.v;
+			if([model_ver1_game_define_PlayerId.A,model_ver1_game_define_PlayerId.B].indexOf(playerId) != -1 == false) {
+				throw haxe_Exception.thrown("playerId (" + playerId + ") must be " + model_ver1_game_define_PlayerId.A + " or " + model_ver1_game_define_PlayerId.B);
+			}
+			var this1 = playerId;
+			return this1;
+		case 1:
+			throw new haxe_Exception("no need playerId");
 		}
-		var this1 = s;
-		return this1;
 	}
 	,__class__: model_ver1_game_define_SystemRuntime
 });
 var model_ver1_game_define_DefaultRuntime = function(cardId,responsePlayerId) {
-	model_ver1_game_define_AbstractRuntime.call(this);
 	this.cardId = cardId;
 	this.responsePlayerId = responsePlayerId;
 };
@@ -4275,16 +4277,25 @@ function model_ver1_game_gameComponent_Alg_getEffectRuntime(ctx,blockId) {
 		var block = _g.v;
 		var _g = block.cause;
 		switch(_g._hx_index) {
-		case 1:
+		case 0:
 			var respnosePlayerId = _g.respnosePlayerId;
 			return new model_ver1_game_define_SystemRuntime(respnosePlayerId);
-		case 2:
+		case 1:
 			var playCardPlayerId = _g.playerId;
 			var cardId = _g.cardId;
 			if([model_ver1_game_define_PlayerId.A,model_ver1_game_define_PlayerId.B].indexOf(playCardPlayerId) != -1 == false) {
 				throw haxe_Exception.thrown("playerId (" + playCardPlayerId + ") must be " + model_ver1_game_define_PlayerId.A + " or " + model_ver1_game_define_PlayerId.B);
 			}
 			var this1 = playCardPlayerId;
+			return new model_ver1_game_define_DefaultRuntime(cardId,this1);
+		case 2:
+			var cardId = _g.cardId;
+			var textId = _g.textId;
+			var responsePlayerId = model_ver1_game_component_TableComponent_getCardControllerAndAssertExist(ctx,cardId);
+			if([model_ver1_game_define_PlayerId.A,model_ver1_game_define_PlayerId.B].indexOf(responsePlayerId) != -1 == false) {
+				throw haxe_Exception.thrown("playerId (" + responsePlayerId + ") must be " + model_ver1_game_define_PlayerId.A + " or " + model_ver1_game_define_PlayerId.B);
+			}
+			var this1 = responsePlayerId;
 			return new model_ver1_game_define_DefaultRuntime(cardId,this1);
 		case 3:
 			var cardId = _g.cardId;
@@ -4295,17 +4306,6 @@ function model_ver1_game_gameComponent_Alg_getEffectRuntime(ctx,blockId) {
 			}
 			var this1 = responsePlayerId;
 			return new model_ver1_game_define_DefaultRuntime(cardId,this1);
-		case 4:
-			var cardId = _g.cardId;
-			var textId = _g.textId;
-			var responsePlayerId = model_ver1_game_component_TableComponent_getCardControllerAndAssertExist(ctx,cardId);
-			if([model_ver1_game_define_PlayerId.A,model_ver1_game_define_PlayerId.B].indexOf(responsePlayerId) != -1 == false) {
-				throw haxe_Exception.thrown("playerId (" + responsePlayerId + ") must be " + model_ver1_game_define_PlayerId.A + " or " + model_ver1_game_define_PlayerId.B);
-			}
-			var this1 = responsePlayerId;
-			return new model_ver1_game_define_DefaultRuntime(cardId,this1);
-		default:
-			return new model_ver1_game_define_AbstractRuntime();
 		}
 		break;
 	case 1:
@@ -4395,7 +4395,7 @@ model_ver1_game_gameComponent_AttackRule.prototype = $extend(model_ver1_game_gam
 	,__class__: model_ver1_game_gameComponent_AttackRule
 });
 function model_ver1_game_gameComponent_AttackRule_addAttackRule(ctx,playerId) {
-	var block = new model_ver1_game_define_Effect("AttackRule",model_ver1_game_define_EffectCause.System(playerId),new model_ver1_game_gameComponent_AttackRule());
+	var block = new model_ver1_game_define_Effect("AttackRule",model_ver1_game_define_EffectCause.System(haxe_ds_Option.Some(playerId)),new model_ver1_game_gameComponent_AttackRule());
 	model_ver1_game_component_CutComponent_cutIn(ctx,block);
 }
 var model_ver1_game_gameComponent_DamageRule = function() {
@@ -4410,11 +4410,11 @@ model_ver1_game_gameComponent_DamageRule.prototype = $extend(model_ver1_game_gam
 	,__class__: model_ver1_game_gameComponent_DamageRule
 });
 function model_ver1_game_gameComponent_DamageRule_addDamageRule(ctx,playerId) {
-	var block = new model_ver1_game_define_Effect("DamageRule",model_ver1_game_define_EffectCause.System(playerId),new model_ver1_game_gameComponent_DamageRule());
+	var block = new model_ver1_game_define_Effect("DamageRule",model_ver1_game_define_EffectCause.System(haxe_ds_Option.Some(playerId)),new model_ver1_game_gameComponent_DamageRule());
 	model_ver1_game_component_CutComponent_cutIn(ctx,block);
 }
 function model_ver1_game_gameComponent_DefenceRule_addDefenceRule(ctx,playerId) {
-	var block = new model_ver1_game_define_Effect("DefenceRule",model_ver1_game_define_EffectCause.System(playerId),new model_ver1_game_gameComponent_AttackRule());
+	var block = new model_ver1_game_define_Effect("DefenceRule",model_ver1_game_define_EffectCause.System(haxe_ds_Option.Some(playerId)),new model_ver1_game_gameComponent_AttackRule());
 	model_ver1_game_component_CutComponent_cutIn(ctx,block);
 }
 var model_ver1_game_gameComponent_DrawRule = function() {
@@ -4432,7 +4432,7 @@ model_ver1_game_gameComponent_DrawRule.prototype = $extend(model_ver1_game_gameC
 	,__class__: model_ver1_game_gameComponent_DrawRule
 });
 function model_ver1_game_gameComponent_DrawRule_addDrawRule(ctx,playerId) {
-	var block = new model_ver1_game_define_Effect("DrawRule",model_ver1_game_define_EffectCause.System(playerId),new model_ver1_game_gameComponent_DrawRule());
+	var block = new model_ver1_game_define_Effect("DrawRule",model_ver1_game_define_EffectCause.System(haxe_ds_Option.Some(playerId)),new model_ver1_game_gameComponent_DrawRule());
 	model_ver1_game_component_CutComponent_cutIn(ctx,block);
 }
 var model_ver1_game_gameComponent_CardEnterReason = $hxEnums["model.ver1.game.gameComponent.CardEnterReason"] = { __ename__:"model.ver1.game.gameComponent.CardEnterReason",__constructs__:null
@@ -4657,7 +4657,7 @@ model_ver1_game_gameComponent_RerollRule.prototype = $extend(model_ver1_game_gam
 	,__class__: model_ver1_game_gameComponent_RerollRule
 });
 function model_ver1_game_gameComponent_RerollRule_addRerollRule(ctx,playerId) {
-	var block = new model_ver1_game_define_Effect("RerollRule",model_ver1_game_define_EffectCause.System(playerId),new model_ver1_game_gameComponent_RerollRule());
+	var block = new model_ver1_game_define_Effect("RerollRule",model_ver1_game_define_EffectCause.System(haxe_ds_Option.Some(playerId)),new model_ver1_game_gameComponent_RerollRule());
 	model_ver1_game_component_CutComponent_cutIn(ctx,block);
 }
 var model_ver1_game_gameComponent_ReturnRule = function() {
@@ -4709,7 +4709,7 @@ model_ver1_game_gameComponent_ReturnRule.prototype = $extend(model_ver1_game_gam
 	,__class__: model_ver1_game_gameComponent_ReturnRule
 });
 function model_ver1_game_gameComponent_ReturnRule_addReturnRule(ctx,playerId) {
-	var block = new model_ver1_game_define_Effect("ReturnRule",model_ver1_game_define_EffectCause.System(playerId),new model_ver1_game_gameComponent_ReturnRule());
+	var block = new model_ver1_game_define_Effect("ReturnRule",model_ver1_game_define_EffectCause.System(haxe_ds_Option.Some(playerId)),new model_ver1_game_gameComponent_ReturnRule());
 	model_ver1_game_component_CutComponent_cutIn(ctx,block);
 }
 function model_ver1_game_gameComponent_Runtime_isContantType(text) {

@@ -67,6 +67,6 @@ class AttackRule extends GameCardText {
 }
 
 function addAttackRule(ctx:IGameComponent, playerId:PlayerId):Void {
-	final block = new Effect("AttackRule", System(playerId), new AttackRule());
+	final block = new Effect("AttackRule", System(Some(playerId)), new AttackRule());
 	cutIn(ctx, block);
 }

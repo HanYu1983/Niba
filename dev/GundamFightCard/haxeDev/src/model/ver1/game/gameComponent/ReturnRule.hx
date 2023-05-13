@@ -43,6 +43,6 @@ class ReturnRule extends GameCardText {
 }
 
 function addReturnRule(ctx:IGameComponent, playerId:PlayerId):Void {
-	final block = new Effect("ReturnRule", System(playerId), new ReturnRule());
+	final block = new Effect("ReturnRule", System(Some(playerId)), new ReturnRule());
 	cutIn(ctx, block);
 }

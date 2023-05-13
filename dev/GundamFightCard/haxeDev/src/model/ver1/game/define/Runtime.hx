@@ -1,5 +1,6 @@
 package model.ver1.game.define;
 
+import haxe.ds.Option;
 import model.ver1.game.define.Define;
 import model.ver1.game.define.Player;
 
@@ -9,8 +10,6 @@ interface Runtime {
 }
 
 class AbstractRuntime implements Runtime {
-	public function new() {}
-
 	public function getCardId():String {
 		throw new haxe.Exception("not support");
 	}
@@ -21,21 +20,24 @@ class AbstractRuntime implements Runtime {
 }
 
 class SystemRuntime extends AbstractRuntime {
-	public function new(responsePlayerId:String) {
-		super();
+	public function new(responsePlayerId:Option<String>) {
 		this.responsePlayerId = responsePlayerId;
 	}
 
-	public final responsePlayerId:String;
+	public final responsePlayerId:Option<String>;
 
 	public override function getResponsePlayerId():PlayerId {
-		return responsePlayerId;
+		switch responsePlayerId {
+			case None:
+				throw new haxe.Exception("no need playerId");
+			case Some(playerId):
+				return playerId;
+		}
 	}
 }
 
 class DefaultRuntime extends AbstractRuntime {
 	public function new(cardId:String, responsePlayerId:PlayerId) {
-		super();
 		this.cardId = cardId;
 		this.responsePlayerId = responsePlayerId;
 	}

@@ -35,6 +35,6 @@ class RerollRule extends GameCardText {
 }
 
 function addRerollRule(ctx:IGameComponent, playerId:PlayerId):Void {
-	final block = new Effect("RerollRule", System(playerId), new RerollRule());
+	final block = new Effect("RerollRule", System(Some(playerId)), new RerollRule());
 	cutIn(ctx, block);
 }
