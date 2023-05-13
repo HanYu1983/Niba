@@ -13,36 +13,83 @@ import model.ver1.game.gameComponent.Alg;
 import model.ver1.game.gameComponent.Event;
 import model.ver1.game.gameComponent.GameComponent;
 import model.ver1.game.gameComponent.Runtime;
+import model.ver1.game.gameComponent.DrawRule;
+import model.ver1.game.gameComponent.RerollRule;
+import model.ver1.game.gameComponent.AttackRule;
+import model.ver1.game.gameComponent.DefenceRule;
+import model.ver1.game.gameComponent.DamageRule;
+import model.ver1.game.gameComponent.ReturnRule;
 import model.ver1.game.flowComponent.FlowMemory;
 
 interface IFlowComponent extends IGameComponent {
 	var flowMemory:FlowMemory;
 }
 
+enum SystemHandle {
+	PrepareDeck;
+	WhoFirst;
+	Draw6AndConfirm;
+	Playing;
+	DrawRule;
+	RerollRule;
+	AttackRule;
+	DefenceRule;
+	DamageRule;
+	ReturnRule;
+	TriggerEvent(event:Event);
+	StackEffectFinished;
+}
+
 enum FlowType {
-	FlowWaitPlayer;
-	FlowObserveEffect;
-	FlowDoEffect(blockId:String);
-	FlowPassPayCost(blockId:String);
-	FlowCancelActiveEffect;
-	FlowSetActiveEffectId(blockId:String, tips:Array<Effect>);
-	FlowDeleteImmediateEffect(blockId:String, tips:Array<Effect>);
-	FlowHandleStackEffectFinished;
-	FlowCancelPassCut;
-	FlowPassCut;
-	FlowPassPhase;
-	FlowCancelPassPhase;
-	FlowNextTiming;
-	FlowTriggerTextEvent(event:Event);
+	WaitPlayer;
+	ObserveEffect;
+	DoEffect(blockId:String);
+	PassPayCost(blockId:String);
+	CancelActiveEffect;
+	SetActiveEffectId(blockId:String, tips:Array<Effect>);
+	DeleteImmediateEffect(blockId:String, tips:Array<Effect>);
+	CancelPassCut;
+	PassCut;
+	PassPhase;
+	CancelPassPhase;
+	NextTiming;
+	SystemHandle(handle:SystemHandle);
 }
 
 enum Flow {
 	Default(type:FlowType, description:String);
 }
 
-function applyFlow(ctx:IFlowComponent, playerID:PlayerId, flow:Flow):Void {
-	switch flow {
-		case Default(FlowSetActiveEffectId(blockId, tips), _):
+function applyFlowType(ctx:IFlowComponent, playerID:PlayerId, flowType:FlowType):Void {
+	switch flowType {
+		case SystemHandle(PrepareDeck):
+			ctx.flowMemory.state = WhoFirst;
+			ctx.flowMemory.hasTriggerEvent = true;
+		case SystemHandle(WhoFirst):
+			ctx.flowMemory.state = Draw6AndConfirm;
+			ctx.flowMemory.hasTriggerEvent = true;
+		case SystemHandle(Draw6AndConfirm):
+			ctx.flowMemory.state = Playing;
+			ctx.flowMemory.hasTriggerEvent = true;
+		case SystemHandle(DrawRule):
+			addDrawRule(ctx, getActivePlayerIdAndAssert(ctx));
+			ctx.flowMemory.hasTriggerEvent = true;
+		case SystemHandle(RerollRule):
+			addRerollRule(ctx, getActivePlayerIdAndAssert(ctx));
+			ctx.flowMemory.hasTriggerEvent = true;
+		case SystemHandle(AttackRule):
+			addAttackRule(ctx, getActivePlayerIdAndAssert(ctx));
+			ctx.flowMemory.hasTriggerEvent = true;
+		case SystemHandle(DefenceRule):
+			addDefenceRule(ctx, getActivePlayerIdAndAssert(ctx));
+			ctx.flowMemory.hasTriggerEvent = true;
+		case SystemHandle(DamageRule):
+			addDamageRule(ctx, getActivePlayerIdAndAssert(ctx));
+			ctx.flowMemory.hasTriggerEvent = true;
+		case SystemHandle(ReturnRule):
+			addReturnRule(ctx, getActivePlayerIdAndAssert(ctx));
+			ctx.flowMemory.hasTriggerEvent = true;
+		case SetActiveEffectId(blockId, tips):
 		case _:
 	}
 }
@@ -51,7 +98,7 @@ function queryFlow(ctx:IFlowComponent, playerId:PlayerId):Array<Flow> {
 	// 是否有玩家牌生命歸0，遊戲結束
 	switch hasSomeoneLiveIsZero(ctx) {
 		case Some(playerId):
-			return [Default(FlowWaitPlayer, "遊戲結束")];
+			return [Default(WaitPlayer, "遊戲結束")];
 		case _:
 	}
 	// 有玩家在支付卡片
@@ -66,10 +113,10 @@ function queryFlow(ctx:IFlowComponent, playerId:PlayerId):Array<Flow> {
 				// 雙方都已支付
 				if (controller != playerId) {
 					// 非控制者等待
-					return [Default(FlowObserveEffect, "")];
+					return [Default(ObserveEffect, "")];
 				}
 				// 控制者可解決效果
-				return [Default(FlowDoEffect(activeBlockId), "")];
+				return [Default(DoEffect(activeBlockId), "")];
 			} else if (isPass || isOpponentPass) {
 				// 其中一方支付
 				if (controller == playerId) {
@@ -77,30 +124,30 @@ function queryFlow(ctx:IFlowComponent, playerId:PlayerId):Array<Flow> {
 					if (isPass) {
 						// 已支付
 						// 等待
-						return [Default(FlowObserveEffect, "")];
+						return [Default(ObserveEffect, "")];
 					}
 				} else {
 					// 非控制者
 					if (isOpponentPass == false) {
 						// 對方未支付（自己已支付）
 						// 等待
-						return [Default(FlowObserveEffect, "")];
+						return [Default(ObserveEffect, "")];
 					}
 					// 對方已支付（自己未支付）
 					// 自己宣告已支付
-					return [Default(FlowPassPayCost(activeBlockId), "")];
+					return [Default(PassPayCost(activeBlockId), "")];
 				}
 			}
 			if (controller != playerId) {
 				// 非控制者並雙方都支付
 				// 等待控制者解決效果
-				return [Default(FlowWaitPlayer, "等待對方支付ActiveEffectID")];
+				return [Default(WaitPlayer, "等待對方支付ActiveEffectID")];
 			}
 			// 是控制者但未支付
 			// 取消支付或宣告已支付
 			return [
-				Default(FlowCancelActiveEffect, "取消支付效果，讓其它玩家可以支付"),
-				Default(FlowPassPayCost(activeBlockId), ""),
+				Default(CancelActiveEffect, "取消支付效果，讓其它玩家可以支付"),
+				Default(PassPayCost(activeBlockId), ""),
 			];
 		case None:
 	}
@@ -122,18 +169,16 @@ function queryFlow(ctx:IFlowComponent, playerId:PlayerId):Array<Flow> {
 			// 不是主動玩家的情況，要等主動玩家先處理完起動效果才行
 			if (isActivePlayer == false) {
 				if (opponentEffect.length > 0) {
-					return [Default(FlowWaitPlayer, "等待主動玩家處理起動效果")];
+					return [Default(WaitPlayer, "等待主動玩家處理起動效果")];
 				}
 			}
 			// 主動玩家
 			if (myEffect.length == 0) {
-				return [Default(FlowWaitPlayer, "等待被動玩家處理起動效果")];
+				return [Default(WaitPlayer, "等待被動玩家處理起動效果")];
 			}
 			final optionEffect = myEffect.filter((v) -> v.isOption == true);
-			final r1:Array<Flow> = myEffect.length == 0 ? [] : [Default(FlowSetActiveEffectId(myEffect[0].id, myEffect), "選擇一個起動效果")];
-			final r2:Array<Flow> = optionEffect.length == 0 ? [] : [
-				Default(FlowDeleteImmediateEffect(optionEffect[0].id, optionEffect), "你可以放棄這些效果")
-			];
+			final r1:Array<Flow> = myEffect.length == 0 ? [] : [Default(SetActiveEffectId(myEffect[0].id, myEffect), "選擇一個起動效果")];
+			final r2:Array<Flow> = optionEffect.length == 0 ? [] : [Default(DeleteImmediateEffect(optionEffect[0].id, optionEffect), "你可以放棄這些效果")];
 			return r1.concat(r2);
 		}
 	}
@@ -141,9 +186,9 @@ function queryFlow(ctx:IFlowComponent, playerId:PlayerId):Array<Flow> {
 	if (ctx.flowMemory.shouldTriggerStackEffectFinishedEvent) {
 		final isActivePlayer = getActivePlayerIdAndAssert(ctx) == playerId;
 		if (isActivePlayer == false) {
-			return [Default(FlowWaitPlayer, "等待主動玩家處理")];
+			return [Default(WaitPlayer, "等待主動玩家處理")];
 		}
-		return [Default(FlowHandleStackEffectFinished, "處理堆疊結束")];
+		return [Default(SystemHandle(StackEffectFinished), "處理堆疊結束")];
 	}
 	// 切入
 	{
@@ -162,7 +207,7 @@ function queryFlow(ctx:IFlowComponent, playerId:PlayerId):Array<Flow> {
 				// 如果我宣告了放棄切入，回傳取消
 				final isPassCut = ctx.flowMemory.hasPlayerPassCut[playerId];
 				if (isPassCut) {
-					return [Default(FlowCancelPassCut, "")];
+					return [Default(CancelPassCut, "")];
 				}
 				// 雙方現在都可以切入，但要判斷切入的優先權在誰那
 				// 如果堆疊最上方的控制者是自己，則優先權在對方。必須等對方宣告放棄切入
@@ -170,20 +215,20 @@ function queryFlow(ctx:IFlowComponent, playerId:PlayerId):Array<Flow> {
 					final opponentPlayerID = ~(playerId);
 					final isOpponentPassCut = ctx.flowMemory.hasPlayerPassCut[opponentPlayerID];
 					if (isOpponentPassCut == false) {
-						return [Default(FlowWaitPlayer, "現在的切入優先權在對方")];
+						return [Default(WaitPlayer, "現在的切入優先權在對方")];
 					}
 				}
 				// 可以切入的指令
-				final r1 = myCommandList.length == 0 ? [] : [Flow.Default(FlowSetActiveEffectId(myCommandList[0].id, myCommandList), "你可以切入")];
+				final r1 = myCommandList.length == 0 ? [] : [Flow.Default(SetActiveEffectId(myCommandList[0].id, myCommandList), "你可以切入")];
 				// 宣告放棄切入
-				final r2 = [Flow.Default(FlowPassCut, "")];
+				final r2 = [Flow.Default(PassCut, "")];
 				return r1.concat(r2);
 			}
 			// 雙方都已放棄切入，等待堆疊中的效果控制者處理
 			if (controller != playerId) {
-				return [Default(FlowWaitPlayer, "等待效果控制者處理")];
+				return [Default(WaitPlayer, "等待效果控制者處理")];
 			}
-			return [Default(FlowSetActiveEffectId(effect.id, [effect]), "支付最上方的堆疊效果")];
+			return [Default(SetActiveEffectId(effect.id, [effect]), "支付最上方的堆疊效果")];
 		}
 	}
 	// 處理自由時間，必須雙方都宣告結束才能進行到下一步
@@ -194,70 +239,90 @@ function queryFlow(ctx:IFlowComponent, playerId:PlayerId):Array<Flow> {
 				final isAllPassPhase = ctx.flowMemory.hasPlayerPassPhase[PlayerId.A] && ctx.flowMemory.hasPlayerPassPhase[PlayerId.B];
 				if (isAllPassPhase == false) {
 					if (ctx.flowMemory.hasPlayerPassPhase[playerId]) {
-						return [Default(FlowCancelPassPhase, '等待對方結束或是取消[${ctx.timing}]結束')];
+						return [Default(CancelPassPhase, '等待對方結束或是取消[${ctx.timing}]結束')];
 					}
-					final r1 = myCommandList.length == 0 ? [] : [
-						Flow.Default(FlowSetActiveEffectId(myCommandList[0].id, myCommandList), "選擇一個指令")
-					];
-					final r2 = [Flow.Default(FlowPassPhase, '宣告[${ctx.timing}]結束')];
+					final r1 = myCommandList.length == 0 ? [] : [Flow.Default(SetActiveEffectId(myCommandList[0].id, myCommandList), "選擇一個指令")];
+					final r2 = [Flow.Default(PassPhase, '宣告[${ctx.timing}]結束')];
 					return r1.concat(r2);
 				}
 				if (playerId != getActivePlayerIdAndAssert(ctx)) {
-					return [Default(FlowWaitPlayer, "等待伺服器處理")];
+					return [Default(WaitPlayer, "等待伺服器處理")];
 				}
-				return [Default(FlowNextTiming, "")];
+				return [Default(NextTiming, "")];
 			case _:
 		}
 	}
 	// 之後的都是系統事件，由主動玩家呼叫
 	{
 		if (playerId != getActivePlayerIdAndAssert(ctx)) {
-			return [Default(FlowWaitPlayer, "等待伺服器處理")];
+			return [Default(WaitPlayer, "等待伺服器處理")];
+		}
+		switch ctx.flowMemory.state {
+			case PrepareDeck:
+				if (ctx.flowMemory.hasTriggerEvent) {
+					return [Default(NextTiming, "")];
+				}
+				return [Default(SystemHandle(PrepareDeck), "")];
+			case WhoFirst:
+				if (ctx.flowMemory.hasTriggerEvent) {
+					return [Default(NextTiming, "")];
+				}
+				return [Default(SystemHandle(WhoFirst), "")];
+			case Draw6AndConfirm:
+				if (ctx.flowMemory.hasTriggerEvent) {
+					return [Default(NextTiming, "")];
+				}
+				return [Default(SystemHandle(Draw6AndConfirm), "")];
+			case Playing:
+			// ignore
+			case _:
+				throw new haxe.Exception('unknown state: ${ctx.flowMemory.state}');
 		}
 		switch getTiming(ctx) {
 			case Default(Draw, None, Rule):
 				if (ctx.flowMemory.hasTriggerEvent) {
-					return [Default(FlowNextTiming, "")];
+					return [Default(NextTiming, "")];
 				}
-			// TODO
-			// addDrawRuleEffect(ctx);
+				return [Default(SystemHandle(DrawRule), "")];
 			case Default(Reroll, None, Rule):
 				if (ctx.flowMemory.hasTriggerEvent) {
-					return [Default(FlowNextTiming, "")];
+					return [Default(NextTiming, "")];
 				}
-			// TODO
-			// addRerollRuleEffect(ctx);
+				return [Default(SystemHandle(RerollRule), "")];
 			case Default(Battle, Some(Attack), Rule):
-				// TODO
 				if (ctx.flowMemory.hasTriggerEvent) {
-					return [Default(FlowNextTiming, "")];
+					return [Default(NextTiming, "")];
 				}
+				return [Default(SystemHandle(AttackRule), "")];
 			case Default(Battle, Some(Defense), Rule):
 				if (ctx.flowMemory.hasTriggerEvent) {
-					return [Default(FlowNextTiming, "")];
+					return [Default(NextTiming, "")];
 				}
+				return [Default(SystemHandle(DefenceRule), "")];
 			case Default(Battle, Some(DamageChecking), Rule):
 				if (ctx.flowMemory.hasTriggerEvent) {
-					return [Default(FlowNextTiming, "")];
+					return [Default(NextTiming, "")];
 				}
+				return [Default(SystemHandle(DamageRule), "")];
 			case Default(Battle, Some(Return), Rule):
 				if (ctx.flowMemory.hasTriggerEvent) {
-					return [Default(FlowNextTiming, "")];
+					return [Default(NextTiming, "")];
 				}
+				return [Default(SystemHandle(ReturnRule), "")];
 			case Default(Battle, Some(End), DamageReset):
 			case Default(Battle, Some(End), ResolveEffect):
 			case Default(Battle, Some(End), AdjustHand):
 			case Default(Battle, Some(End), TurnEnd):
 				if (ctx.flowMemory.hasTriggerEvent) {
-					return [Default(FlowNextTiming, "")];
+					return [Default(NextTiming, "")];
 				}
-				return [Default(FlowTriggerTextEvent(ChangePhase), "")];
+				return [Default(SystemHandle(TriggerEvent(ChangePhase)), "")];
 			case Default(_, _, Start | End):
 				// 如果已經觸發事件
 				if (ctx.flowMemory.hasTriggerEvent) {
-					return [Default(FlowNextTiming, "")];
+					return [Default(NextTiming, "")];
 				}
-				return [Default(FlowTriggerTextEvent(ChangePhase), "")];
+				return [Default(SystemHandle(TriggerEvent(ChangePhase)), "")];
 			case _:
 		}
 	}

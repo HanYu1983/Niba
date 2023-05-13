@@ -22,6 +22,6 @@ import model.ver1.game.gameComponent.Alg;
 import model.ver1.game.gameComponent.AttackRule;
 
 function addDefenceRule(ctx:IGameComponent, playerId:PlayerId):Void {
-	final block = new Effect("DefenceRule", System(playerId), new DefenceRule());
+	final block = new Effect("DefenceRule", System(playerId), new AttackRule());
 	cutIn(ctx, block);
 }

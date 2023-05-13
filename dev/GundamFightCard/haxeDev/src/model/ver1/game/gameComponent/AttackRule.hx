@@ -28,7 +28,7 @@ class AttackRule extends GameCardText {
 	override function _getRequires2(ctx:IGameComponent, runtime:Runtime):Array<Require2> {
 		return [
 			{
-				id: "String",
+				id: "area1",
 				description: "String",
 				type: SelectCard([], []),
 				player: You,
@@ -37,7 +37,7 @@ class AttackRule extends GameCardText {
 				},
 			},
 			{
-				id: "String",
+				id: "area2",
 				description: "String",
 				type: SelectCard([], []),
 				player: You,
@@ -49,14 +49,16 @@ class AttackRule extends GameCardText {
 	}
 
 	override function _action(ctx:IGameComponent, runtime:Runtime):Void {
-		final cardIdsGoEarth = getPlayerSelectionCardId(ctx, "earth");
+		final cardIdsGoEarth = getPlayerSelectionCardId(ctx, "area1");
 		for (cardId in cardIdsGoEarth) {
+			// TODO check area1 is earth or space
 			final from = getCardBaSyouAndAssertExist(ctx, cardId);
 			final to = BaSyou.Default(runtime.getResponsePlayerId(), EarthArea);
 			moveCard(ctx, runtime.getCardId(), from, to);
 		}
-		final cardIdsGoSpace = getPlayerSelectionCardId(ctx, "space");
+		final cardIdsGoSpace = getPlayerSelectionCardId(ctx, "area2");
 		for (cardId in cardIdsGoSpace) {
+			// TODO check area2 is earth or space
 			final from = getCardBaSyouAndAssertExist(ctx, cardId);
 			final to = BaSyou.Default(runtime.getResponsePlayerId(), SpaceArea);
 			moveCard(ctx, runtime.getCardId(), from, to);
