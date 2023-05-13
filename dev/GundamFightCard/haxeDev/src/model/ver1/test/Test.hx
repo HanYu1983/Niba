@@ -21,6 +21,7 @@ import model.ver1.game.gameComponent.RerollRule;
 import model.ver1.game.gameComponent.AttackRule;
 import model.ver1.game.gameComponent.DamageRule;
 import model.ver1.game.gameComponent.ReturnRule;
+import model.ver1.game.gameComponent.TargetFilter;
 import model.ver1.game.entity.Context;
 import model.ver1.data.CardProto_179001_01A_CH_WT007R_white;
 import model.ver1.data.CardProto_179003_01A_U_BK008U_black;

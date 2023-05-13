@@ -1,5 +1,7 @@
 package model.ver1.game.define;
 
+using Lambda;
+
 import model.ver1.game.define.Runtime;
 import model.ver1.game.define.Mark;
 import model.ver1.game.define.Require;
@@ -126,10 +128,22 @@ enum GSign {
 	Default(color:GColor, property:GProperty);
 }
 
-enum BattlePoint {
-	Default(melee:Int, range:Int, hp:Int);
+enum RollCost {}
+
+enum DamageType {
+	// 普通傷害(傷判以外的傷害)
+	Normal;
+	// 戰鬥傷害(傷判的傷害)
+	Battle(speed:Int);
 }
 
-enum RollCost {
-
+// p71
+enum DestroyReason {
+	Damage(type:DamageType, playerId:String);
 }
+
+
+
+// typedef DestroyReason = {
+// 	playerId:String;
+// }

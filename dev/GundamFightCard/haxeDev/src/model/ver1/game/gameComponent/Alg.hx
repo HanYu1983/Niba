@@ -10,10 +10,12 @@ import model.ver1.game.define.Mark;
 import model.ver1.game.define.Player;
 import model.ver1.game.define.Require;
 import model.ver1.game.define.Effect;
+import model.ver1.game.define.BattlePoint;
 import model.ver1.game.component.CardProtoPoolComponent;
 import model.ver1.game.component.EffectComponent;
 import model.ver1.game.component.MarkComponent;
 import model.ver1.game.component.TableComponent;
+import model.ver1.game.component.CardStateComponent;
 import model.ver1.game.gameComponent.Event;
 import model.ver1.game.gameComponent.Runtime;
 import model.ver1.game.gameComponent.MarkEffect;
@@ -231,4 +233,35 @@ function getEffectRuntime(ctx:IGameComponent, effect:Effect):Runtime {
 
 function hasSomeoneLiveIsZero(ctx:IGameComponent):Option<PlayerId> {
 	return None;
+}
+
+function getCardBattlePoint(ctx:IGameComponent, cardId:String):BattlePoint {
+	return [0, 0, 0];
+}
+
+function createAbandonedEffect(ctx:IGameComponent, cardId:String, reason:Any):Effect {
+	return new Effect("", System(None), new GameCardText("", "", System));
+}
+
+// 取得所有破壞狀態的卡, 產生[廢棄效果]並加入堆疊的開始
+// 每次切入解決完時呼叫
+// 傷判後的自由時間開始時呼叫
+function getAllAbandonedEffect(ctx:IGameComponent):Array<Effect> {
+	final cardIds = [
+		for (playerId in [PlayerId.A, PlayerId.B])
+			for (baSyouKw in [EarthArea, SpaceArea, MaintenanceArea])
+				BaSyou.Default(playerId, baSyouKw)
+	].flatMap(baSyou -> {
+		return getCardIdsByBaSyou(ctx, baSyou);
+	});
+	final destroyByNegativeHp = cardIds.map(cardId -> {
+		return getCardState(ctx, cardId);
+	}).filter(cardState -> {
+		final bp = getCardBattlePoint(ctx, cardState.cardId);
+		final isNegativeHp = cardState.damage >= bp.getHp();
+		return isNegativeHp;
+	}).map(cardState -> {
+		return createAbandonedEffect(ctx, cardState.cardId, 0);
+	});
+	return destroyByNegativeHp;
 }

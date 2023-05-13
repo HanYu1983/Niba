@@ -10,6 +10,7 @@ import model.ver1.game.define.Timing;
 import model.ver1.game.define.Require;
 import model.ver1.game.define.CardText;
 import model.ver1.game.define.CardProto;
+import model.ver1.game.define.BattlePoint;
 import model.ver1.game.component.SelectionComponent;
 import model.ver1.game.component.TimingComponent;
 import model.ver1.game.component.TableComponent;

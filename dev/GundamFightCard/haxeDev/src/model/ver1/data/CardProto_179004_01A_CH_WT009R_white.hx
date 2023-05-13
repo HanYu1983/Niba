@@ -13,6 +13,7 @@ import model.ver1.game.define.Require;
 import model.ver1.game.define.Player;
 import model.ver1.game.define.CardText;
 import model.ver1.game.define.CardProto;
+import model.ver1.game.define.BattlePoint;
 import model.ver1.game.component.CutComponent;
 import model.ver1.game.component.CardProtoPoolComponent;
 import model.ver1.game.component.SelectionComponent;
@@ -43,7 +44,7 @@ class CardProto_179004_01A_CH_WT009R_white extends CardProto {
 		final ctx = cast(_ctx, Context);
 		final thisCardId = runtime.getCardId();
 		return [
-			//new PlayerPlayCard('${thisCardId}_PlayerPlayCard'),
+			// new PlayerPlayCard('${thisCardId}_PlayerPlayCard'),
 			new Text1('${thisCardId}_Text1')
 		];
 	}
@@ -186,7 +187,7 @@ function test() {
 		throw "一開始堆疊中沒有效果";
 	}
 	trace("獲得gain");
-	sendEvent(ctx, Gain(card2.id, Default(1, 0, 0)));
+	sendEvent(ctx, Gain(card2.id, [1, 0, 0]));
 	if (getTopCut(ctx).length != 1) {
 		throw "堆疊中必須有一個效果";
 	}

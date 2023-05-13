@@ -58,7 +58,9 @@ class PSArmorText2 extends GameCardText {
 	public override function _onEvent(ctx:IGameComponent, event:Event, runtime:Runtime):Void {
 		switch (event) {
 			case CardEnter(cardId, baSyouKw, _) if (isBattleArea(baSyouKw) && cardId == runtime.getCardId()):
-				getCardState(ctx, cardId).bools["回合開始時回到手上"] = true;
+				final cardState = getCardState(ctx, cardId);
+				cardState.flag.bools["回合開始時回到手上"] = true;
+				setCardState(ctx, cardId, cardState);
 			case NewBattleGroup(setGroupCardIds) if (setGroupCardIds.contains(runtime.getCardId())):
 				final hasSupply = getRuntimeText(ctx).filter(rt -> {
 					return setGroupCardIds.contains(rt.runtime.getCardId());
@@ -71,10 +73,12 @@ class PSArmorText2 extends GameCardText {
 					};
 				});
 				if (hasSupply) {
-					getCardState(ctx, runtime.getCardId()).bools["回合開始時回到手上"] = false;
+					final cardState = getCardState(ctx, runtime.getCardId());
+					cardState.flag.bools["回合開始時回到手上"] = false;
+					setCardState(ctx, runtime.getCardId(), cardState);
 				}
 			case PlayerEnterTurn(playerId) if (playerId == runtime.getResponsePlayerId()):
-				if (getCardState(ctx, runtime.getCardId()).bools["回合開始時回到手上"]) {
+				if (getCardState(ctx, runtime.getCardId()).flag.bools["回合開始時回到手上"]) {
 					returnToOwnerHand(ctx, runtime.getCardId());
 				}
 			case _:
