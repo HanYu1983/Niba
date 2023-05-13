@@ -43,14 +43,18 @@ function getUnitOfSetGroup(ctx:IGameComponent, cardId:String):Option<String> {
 	return None;
 }
 
-function rollGameCard(ctx:IGameComponent, cardId:String):Void {
-	rollCard(ctx, cardId);
-	final card = getCard(ctx, cardId);
-	sendEvent(ctx, CardRoll(card.id));
+function rollCard(ctx:IGameComponent, cardId:String, options:{sendEvent:Bool}):Void {
+	model.ver1.game.component.TableComponent.rollCard(ctx, cardId);
+	if (options.sendEvent) {
+		sendEvent(ctx, CardRoll(cardId));
+	}
 }
 
-function rerollGameCard(ctx:IGameComponent, cardId:String):Void {
-	rerollCard(ctx, cardId);
+function rerollCard(ctx:IGameComponent, cardId:String, options:{sendEvent:Bool}):Void {
+	model.ver1.game.component.TableComponent.rerollCard(ctx, cardId);
+	if (options.sendEvent) {
+		sendEvent(ctx, CardReroll(cardId));
+	}
 }
 
 //

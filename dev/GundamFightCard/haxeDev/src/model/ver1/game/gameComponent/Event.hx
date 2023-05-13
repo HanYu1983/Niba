@@ -20,6 +20,8 @@ enum Event {
 	//
 	CardRoll(cardId:String);
 	//
+	CardReroll(cardId:String);
+	//
 	NewBattleGroup(cardIds:Array<String>);
 	//
 	PlayerEnterTurn(playerId:PlayerId);

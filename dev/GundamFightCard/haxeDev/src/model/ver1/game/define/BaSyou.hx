@@ -13,7 +13,7 @@ enum BaSyouKeyword {
 	// 宇宙エリア
 	SpaceArea;
 	// 地球エリア
-	EarchArea;
+	EarthArea;
 	// 配備エリア
 	MaintenanceArea;
 	// Gゾーン
@@ -32,7 +32,7 @@ enum BaSyouKeyword {
 
 function isBattleArea(k:BaSyouKeyword) {
 	return switch k {
-		case SpaceArea | EarchArea:
+		case SpaceArea | EarthArea:
 			true;
 		case _:
 			false;

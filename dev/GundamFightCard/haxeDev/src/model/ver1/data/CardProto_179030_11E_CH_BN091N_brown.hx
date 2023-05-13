@@ -108,7 +108,7 @@ private class Process1 extends CardText {
 				action: () -> {
 					final selectUnits = getPlayerSelectionCardId(ctx, getSubKey(0));
 					for (unit in selectUnits) {
-						rollGameCard(ctx, unit);
+						rollCard(ctx, unit, {sendEvent: true});
 					}
 				},
 			}

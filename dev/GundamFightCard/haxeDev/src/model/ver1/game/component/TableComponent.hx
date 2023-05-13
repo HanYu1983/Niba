@@ -12,6 +12,10 @@ function getCard(ctx:ITableComponent, cardId:String):Card {
 	return tool.Table.getCard(ctx.table, cardId);
 }
 
+function getCards(ctx:ITableComponent):Array<Card>{
+	return tool.Table.getCards(ctx.table);
+}
+
 function moveCard(ctx:ITableComponent, cardId:String, from:BaSyou, to:BaSyou) {
 	tool.Table.moveCard(ctx.table, cardId, (from : BaSyouId), (to : BaSyouId));
 }
@@ -41,7 +45,7 @@ function getCardOwner(ctx:ITableComponent, cardId:String):String {
 }
 
 function getCardsByOwner(ctx:ITableComponent, owner:String):Array<Card> {
-	return getCards(ctx.table).filter(card -> card.owner == owner);
+	return tool.Table.getCards(ctx.table).filter(card -> card.owner == owner);
 }
 
 function getCardBaSyouAndAssertExist(ctx:ITableComponent, cardId:String):BaSyou {
@@ -60,7 +64,7 @@ function returnToOwnerHand(ctx:ITableComponent, cardId:String):Void {
 	moveCard(ctx, cardId, from, to);
 }
 
-function getCardsByBaSyou(ctx:ITableComponent, baSyou:BaSyou):Array<String> {
+function getCardIdsByBaSyou(ctx:ITableComponent, baSyou:BaSyou):Array<String> {
 	return getCardStack(ctx.table, (baSyou : BaSyouId)).cardIds;
 }
 
@@ -103,5 +107,11 @@ function isOpponentsCard(ctx:ITableComponent, masterCardId:String, slaveCardId:S
 			true;
 		case _:
 			false;
+	}
+}
+
+function isCardBySyouIn(ctx:ITableComponent, baSyous:Array<BaSyou>):(card:Card)->Bool {
+	return (card:Card) -> {
+		return false;
 	}
 }

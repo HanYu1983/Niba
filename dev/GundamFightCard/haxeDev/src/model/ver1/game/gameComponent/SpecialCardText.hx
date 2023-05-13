@@ -44,7 +44,7 @@ class PSArmorText1 extends GameCardText {
 	public override function _onEvent(ctx:IGameComponent, event:Event, runtime:Runtime):Void {
 		switch (event) {
 			case CardEnter(cardId, baSyouKw, Play) if (isBa(baSyouKw) && cardId == runtime.getCardId()):
-				rerollGameCard(ctx, cardId);
+				rerollCard(ctx, cardId, {sendEvent: true});
 			case _:
 		}
 	}

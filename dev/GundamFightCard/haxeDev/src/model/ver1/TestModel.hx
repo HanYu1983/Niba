@@ -20,7 +20,7 @@ private function toCardModel(ctx:Context, card:Card):CardModel {
 }
 
 private function getPlayerModel(ctx:Context, playerId:PlayerId):PlayerModel {
-	final cards = getCardsByBaSyou(ctx, Default(playerId, MaintenanceArea)).map(cardId -> ctx.table.cards[cardId]).map(card -> toCardModel(ctx, card));
+	final cards = getCardIdsByBaSyou(ctx, Default(playerId, MaintenanceArea)).map(cardId -> ctx.table.cards[cardId]).map(card -> toCardModel(ctx, card));
 	return {
 		id: playerId,
 		name: playerId,
