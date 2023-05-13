@@ -1,5 +1,6 @@
 package model.ver1.game.component;
 
+import haxe.ds.Option;
 import model.ver1.game.define.Effect;
 
 interface IEffectComponent {
@@ -10,11 +11,11 @@ function getEffects(ctx:IEffectComponent):Array<Effect> {
 	return [for (block in ctx.effects) block];
 }
 
-function getEffect(ctx:IEffectComponent, blockId:String):Effect {
+function getEffect(ctx:IEffectComponent, blockId:String):Option<Effect> {
 	if (ctx.effects[blockId] == null) {
-		throw new haxe.Exception("block not found");
+		throw None;
 	}
-	return ctx.effects[blockId];
+	return Some(ctx.effects[blockId]);
 }
 
 function removeEffect(ctx:IEffectComponent, blockId:String):Void {
@@ -27,4 +28,3 @@ function addEffect(ctx:IEffectComponent, block:Effect):Void {
 	}
 	ctx.effects[block.id] = block;
 }
-

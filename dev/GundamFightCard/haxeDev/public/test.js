@@ -2909,9 +2909,9 @@ function model_ver1_game_component_EffectComponent_getEffects(ctx) {
 }
 function model_ver1_game_component_EffectComponent_getEffect(ctx,blockId) {
 	if(ctx.effects.h[blockId] == null) {
-		throw new haxe_Exception("block not found");
+		throw haxe_Exception.thrown(haxe_ds_Option.None);
 	}
-	return ctx.effects.h[blockId];
+	return haxe_ds_Option.Some(ctx.effects.h[blockId]);
 }
 function model_ver1_game_component_EffectComponent_removeEffect(ctx,blockId) {
 	var _this = ctx.effects;
@@ -3585,6 +3585,23 @@ function model_ver1_game_flowComponent_FlowComponent_applyFlow(ctx,playerID,flow
 	case 5:
 		var blockId = _g.blockId;
 		var tips = _g.tips;
+		var _g1 = model_ver1_game_component_ActiveEffectComponent_getActiveEffect(ctx);
+		if(_g1._hx_index == 0) {
+			var effect = _g1.v;
+			var controller = model_ver1_game_gameComponent_Alg_getEffectRuntime(ctx,effect.id).getResponsePlayerId();
+			if(controller != playerID) {
+				throw new haxe_Exception("[setActiveEffectID] 你不是控制者");
+			}
+		}
+		var _g1 = model_ver1_game_component_EffectComponent_getEffect(ctx,blockId);
+		switch(_g1._hx_index) {
+		case 0:
+			var effect = _g1.v;
+			model_ver1_game_component_ActiveEffectComponent_setActiveEffect(ctx,haxe_ds_Option.Some(effect));
+			break;
+		case 1:
+			throw new haxe_Exception("effect not found: " + blockId);
+		}
 		break;
 	case 12:
 		switch(_g.handle._hx_index) {
@@ -4252,40 +4269,47 @@ function model_ver1_game_gameComponent_Alg_removeDestroyEffect(ctx,cardId) {
 	console.log("src/model/ver1/game/gameComponent/Alg.hx:213:","移除堆疊中的破壞效果");
 }
 function model_ver1_game_gameComponent_Alg_getEffectRuntime(ctx,blockId) {
-	var block = model_ver1_game_component_EffectComponent_getEffect(ctx,blockId);
-	var _g = block.cause;
+	var _g = model_ver1_game_component_EffectComponent_getEffect(ctx,blockId);
 	switch(_g._hx_index) {
+	case 0:
+		var block = _g.v;
+		var _g = block.cause;
+		switch(_g._hx_index) {
+		case 1:
+			var respnosePlayerId = _g.respnosePlayerId;
+			return new model_ver1_game_define_SystemRuntime(respnosePlayerId);
+		case 2:
+			var playCardPlayerId = _g.playerId;
+			var cardId = _g.cardId;
+			if([model_ver1_game_define_PlayerId.A,model_ver1_game_define_PlayerId.B].indexOf(playCardPlayerId) != -1 == false) {
+				throw haxe_Exception.thrown("playerId (" + playCardPlayerId + ") must be " + model_ver1_game_define_PlayerId.A + " or " + model_ver1_game_define_PlayerId.B);
+			}
+			var this1 = playCardPlayerId;
+			return new model_ver1_game_define_DefaultRuntime(cardId,this1);
+		case 3:
+			var cardId = _g.cardId;
+			var textId = _g.textId;
+			var responsePlayerId = model_ver1_game_component_TableComponent_getCardControllerAndAssertExist(ctx,cardId);
+			if([model_ver1_game_define_PlayerId.A,model_ver1_game_define_PlayerId.B].indexOf(responsePlayerId) != -1 == false) {
+				throw haxe_Exception.thrown("playerId (" + responsePlayerId + ") must be " + model_ver1_game_define_PlayerId.A + " or " + model_ver1_game_define_PlayerId.B);
+			}
+			var this1 = responsePlayerId;
+			return new model_ver1_game_define_DefaultRuntime(cardId,this1);
+		case 4:
+			var cardId = _g.cardId;
+			var textId = _g.textId;
+			var responsePlayerId = model_ver1_game_component_TableComponent_getCardControllerAndAssertExist(ctx,cardId);
+			if([model_ver1_game_define_PlayerId.A,model_ver1_game_define_PlayerId.B].indexOf(responsePlayerId) != -1 == false) {
+				throw haxe_Exception.thrown("playerId (" + responsePlayerId + ") must be " + model_ver1_game_define_PlayerId.A + " or " + model_ver1_game_define_PlayerId.B);
+			}
+			var this1 = responsePlayerId;
+			return new model_ver1_game_define_DefaultRuntime(cardId,this1);
+		default:
+			return new model_ver1_game_define_AbstractRuntime();
+		}
+		break;
 	case 1:
-		var respnosePlayerId = _g.respnosePlayerId;
-		return new model_ver1_game_define_SystemRuntime(respnosePlayerId);
-	case 2:
-		var playCardPlayerId = _g.playerId;
-		var cardId = _g.cardId;
-		if([model_ver1_game_define_PlayerId.A,model_ver1_game_define_PlayerId.B].indexOf(playCardPlayerId) != -1 == false) {
-			throw haxe_Exception.thrown("playerId (" + playCardPlayerId + ") must be " + model_ver1_game_define_PlayerId.A + " or " + model_ver1_game_define_PlayerId.B);
-		}
-		var this1 = playCardPlayerId;
-		return new model_ver1_game_define_DefaultRuntime(cardId,this1);
-	case 3:
-		var cardId = _g.cardId;
-		var textId = _g.textId;
-		var responsePlayerId = model_ver1_game_component_TableComponent_getCardControllerAndAssertExist(ctx,cardId);
-		if([model_ver1_game_define_PlayerId.A,model_ver1_game_define_PlayerId.B].indexOf(responsePlayerId) != -1 == false) {
-			throw haxe_Exception.thrown("playerId (" + responsePlayerId + ") must be " + model_ver1_game_define_PlayerId.A + " or " + model_ver1_game_define_PlayerId.B);
-		}
-		var this1 = responsePlayerId;
-		return new model_ver1_game_define_DefaultRuntime(cardId,this1);
-	case 4:
-		var cardId = _g.cardId;
-		var textId = _g.textId;
-		var responsePlayerId = model_ver1_game_component_TableComponent_getCardControllerAndAssertExist(ctx,cardId);
-		if([model_ver1_game_define_PlayerId.A,model_ver1_game_define_PlayerId.B].indexOf(responsePlayerId) != -1 == false) {
-			throw haxe_Exception.thrown("playerId (" + responsePlayerId + ") must be " + model_ver1_game_define_PlayerId.A + " or " + model_ver1_game_define_PlayerId.B);
-		}
-		var this1 = responsePlayerId;
-		return new model_ver1_game_define_DefaultRuntime(cardId,this1);
-	default:
-		return new model_ver1_game_define_AbstractRuntime();
+		throw new haxe_Exception("effect not found: " + blockId);
 	}
 }
 function model_ver1_game_gameComponent_Alg_hasSomeoneLiveIsZero(ctx) {

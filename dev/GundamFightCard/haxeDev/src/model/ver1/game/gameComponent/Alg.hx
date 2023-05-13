@@ -214,20 +214,24 @@ function removeDestroyEffect(ctx:IGameComponent, cardId:String):Void {
 }
 
 function getEffectRuntime(ctx:IGameComponent, blockId:String):Runtime {
-	final block = getEffect(ctx, blockId);
-	return switch block.cause {
-		case System(respnosePlayerId):
-			new SystemRuntime(respnosePlayerId);
-		case PlayCard(playCardPlayerId, cardId):
-			new DefaultRuntime(cardId, playCardPlayerId);
-		case PlayText(cardId, textId):
-			final responsePlayerId = getCardControllerAndAssertExist(ctx, cardId);
-			new DefaultRuntime(cardId, responsePlayerId);
-		case TextEffect(cardId, textId):
-			final responsePlayerId = getCardControllerAndAssertExist(ctx, cardId);
-			new DefaultRuntime(cardId, responsePlayerId);
-		case _:
-			new AbstractRuntime();
+	switch getEffect(ctx, blockId) {
+		case None:
+			throw new haxe.Exception('effect not found: ${blockId}');
+		case Some(block):
+			return switch block.cause {
+				case System(respnosePlayerId):
+					new SystemRuntime(respnosePlayerId);
+				case PlayCard(playCardPlayerId, cardId):
+					new DefaultRuntime(cardId, playCardPlayerId);
+				case PlayText(cardId, textId):
+					final responsePlayerId = getCardControllerAndAssertExist(ctx, cardId);
+					new DefaultRuntime(cardId, responsePlayerId);
+				case TextEffect(cardId, textId):
+					final responsePlayerId = getCardControllerAndAssertExist(ctx, cardId);
+					new DefaultRuntime(cardId, responsePlayerId);
+				case _:
+					new AbstractRuntime();
+			}
 	}
 }
 

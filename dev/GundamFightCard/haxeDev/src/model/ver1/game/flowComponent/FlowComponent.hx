@@ -98,6 +98,23 @@ function applyFlow(ctx:IFlowComponent, playerID:PlayerId, flow:Flow):Void {
 			addReturnRule(ctx, getActivePlayerIdAndAssert(ctx));
 			ctx.flowMemory.hasTriggerEvent = true;
 		case SetActiveEffectId(blockId, tips):
+			switch getActiveEffect(ctx) {
+				case Some(effect):
+					final controller = getEffectRuntime(ctx, effect.id).getResponsePlayerId();
+					if (controller != playerID) {
+						throw new haxe.Exception("[setActiveEffectID] 你不是控制者");
+					}
+				//   if (currentActiveEffect.requirePassed) {
+				// 	throw new Error("[cancelCommand] 已經處理需求的不能取消");
+				//   }
+				case _:
+			}
+			switch model.ver1.game.component.EffectComponent.getEffect(ctx, blockId) {
+				case None:
+					throw new haxe.Exception('effect not found: ${blockId}');
+				case Some(effect):
+					setActiveEffect(ctx, Some(effect));
+			}
 		case _:
 	}
 }
