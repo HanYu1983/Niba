@@ -1,13 +1,17 @@
 -cp src
--main Main
 
+--each
 -lib haxeui-core
 -lib haxeui-html5
 -lib libnoise
 -lib hxSet
 -lib tweenx
--lib hxbit
 -lib delay
 -lib pool
-
+-main Main
 -js public/Main.js
+
+--next
+--macro model.ver1.Macro.importPackage()
+-main Test
+-js public/test.js

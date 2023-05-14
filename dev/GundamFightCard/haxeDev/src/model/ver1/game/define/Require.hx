@@ -42,6 +42,6 @@ typedef Require2 = {
 typedef Require3 = {
 	id:String,
 	description:String,
-	target: Target,
+	target:ITarget,
 	action:() -> Void,
 }

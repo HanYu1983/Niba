@@ -5,9 +5,12 @@ import viewModel.IViewModel;
 import model.ver1.game.define.Define;
 import model.ver1.game.define.Player;
 import model.ver1.game.define.BaSyou;
+import model.ver1.game.component.TableComponent;
 import model.ver1.game.gameComponent.Alg;
 import model.ver1.game.Game;
 import model.ver1.game.entity.Context;
+
+
 
 private function toCardModel(ctx:Context, card:Card):CardModel {
 	return {
@@ -41,6 +44,7 @@ class TestModel extends DefaultViewModel {
 	private var game = new Game();
 
 	public function new() {
+		// model.ver1.Macro.importPackage();
 		final ctx = game.ctx;
 		final player1 = PlayerId.A;
 		final player2 = PlayerId.B;

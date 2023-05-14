@@ -3578,67 +3578,109 @@ model_ver1_game_define_DefaultRuntime.prototype = $extend(model_ver1_game_define
 	}
 	,__class__: model_ver1_game_define_DefaultRuntime
 });
+var model_ver1_game_define_ITarget = function() { };
+$hxClasses["model.ver1.game.define.ITarget"] = model_ver1_game_define_ITarget;
+model_ver1_game_define_ITarget.__name__ = "model.ver1.game.define.ITarget";
+model_ver1_game_define_ITarget.__isInterface__ = true;
+var model_ver1_game_define_AbstractTarget = function() { };
+$hxClasses["model.ver1.game.define.AbstractTarget"] = model_ver1_game_define_AbstractTarget;
+model_ver1_game_define_AbstractTarget.__name__ = "model.ver1.game.define.AbstractTarget";
+model_ver1_game_define_AbstractTarget.__interfaces__ = [model_ver1_game_define_ITarget];
+var model_ver1_game_define_AbstractTargetOr = function() {
+	this.values = [];
+};
+$hxClasses["model.ver1.game.define.AbstractTargetOr"] = model_ver1_game_define_AbstractTargetOr;
+model_ver1_game_define_AbstractTargetOr.__name__ = "model.ver1.game.define.AbstractTargetOr";
+model_ver1_game_define_AbstractTargetOr.__super__ = model_ver1_game_define_AbstractTarget;
+model_ver1_game_define_AbstractTargetOr.prototype = $extend(model_ver1_game_define_AbstractTarget.prototype,{
+	__class__: model_ver1_game_define_AbstractTargetOr
+});
+var model_ver1_game_define_TargetCard = function(player,filter,count) {
+	this.player = player;
+	this.filter = filter;
+	this.count = count;
+};
+$hxClasses["model.ver1.game.define.TargetCard"] = model_ver1_game_define_TargetCard;
+model_ver1_game_define_TargetCard.__name__ = "model.ver1.game.define.TargetCard";
+model_ver1_game_define_TargetCard.__super__ = model_ver1_game_define_AbstractTarget;
+model_ver1_game_define_TargetCard.prototype = $extend(model_ver1_game_define_AbstractTarget.prototype,{
+	__class__: model_ver1_game_define_TargetCard
+});
 var model_ver1_game_define_TargetCount = $hxEnums["model.ver1.game.define.TargetCount"] = { __ename__:"model.ver1.game.define.TargetCount",__constructs__:null
 	,All: {_hx_name:"All",_hx_index:0,__enum__:"model.ver1.game.define.TargetCount",toString:$estr}
 	,Constants: ($_=function(value) { return {_hx_index:1,value:value,__enum__:"model.ver1.game.define.TargetCount",toString:$estr}; },$_._hx_name="Constants",$_.__params__ = ["value"],$_)
 	,MuchAsPossible: ($_=function(value) { return {_hx_index:2,value:value,__enum__:"model.ver1.game.define.TargetCount",toString:$estr}; },$_._hx_name="MuchAsPossible",$_.__params__ = ["value"],$_)
 };
 model_ver1_game_define_TargetCount.__constructs__ = [model_ver1_game_define_TargetCount.All,model_ver1_game_define_TargetCount.Constants,model_ver1_game_define_TargetCount.MuchAsPossible];
-var model_ver1_game_define_SameAsThisCardWhat = $hxEnums["model.ver1.game.define.SameAsThisCardWhat"] = { __ename__:"model.ver1.game.define.SameAsThisCardWhat",__constructs__:null
-	,GSign: {_hx_name:"GSign",_hx_index:0,__enum__:"model.ver1.game.define.SameAsThisCardWhat",toString:$estr}
-};
-model_ver1_game_define_SameAsThisCardWhat.__constructs__ = [model_ver1_game_define_SameAsThisCardWhat.GSign];
 var model_ver1_game_define_RelativeBaSyou = $hxEnums["model.ver1.game.define.RelativeBaSyou"] = { __ename__:"model.ver1.game.define.RelativeBaSyou",__constructs__:null
 	,RelativeBaSyou: ($_=function(playerId,baSyouKeyword) { return {_hx_index:0,playerId:playerId,baSyouKeyword:baSyouKeyword,__enum__:"model.ver1.game.define.RelativeBaSyou",toString:$estr}; },$_._hx_name="RelativeBaSyou",$_.__params__ = ["playerId","baSyouKeyword"],$_)
 };
 model_ver1_game_define_RelativeBaSyou.__constructs__ = [model_ver1_game_define_RelativeBaSyou.RelativeBaSyou];
-var model_ver1_game_define_TargetFilter = $hxEnums["model.ver1.game.define.TargetFilter"] = { __ename__:"model.ver1.game.define.TargetFilter",__constructs__:null
-	,Or: ($_=function(value) { return {_hx_index:0,value:value,__enum__:"model.ver1.game.define.TargetFilter",toString:$estr}; },$_._hx_name="Or",$_.__params__ = ["value"],$_)
-	,And: ($_=function(value) { return {_hx_index:1,value:value,__enum__:"model.ver1.game.define.TargetFilter",toString:$estr}; },$_._hx_name="And",$_.__params__ = ["value"],$_)
-	,Not: ($_=function(value) { return {_hx_index:2,value:value,__enum__:"model.ver1.game.define.TargetFilter",toString:$estr}; },$_._hx_name="Not",$_.__params__ = ["value"],$_)
-	,CardEntityCategoryIn: ($_=function(value) { return {_hx_index:3,value:value,__enum__:"model.ver1.game.define.TargetFilter",toString:$estr}; },$_._hx_name="CardEntityCategoryIn",$_.__params__ = ["value"],$_)
-	,CardCategoryIn: ($_=function(value) { return {_hx_index:4,value:value,__enum__:"model.ver1.game.define.TargetFilter",toString:$estr}; },$_._hx_name="CardCategoryIn",$_.__params__ = ["value"],$_)
-	,BelongPlayer: ($_=function(value) { return {_hx_index:5,value:value,__enum__:"model.ver1.game.define.TargetFilter",toString:$estr}; },$_._hx_name="BelongPlayer",$_.__params__ = ["value"],$_)
-	,CharacteristicIn: ($_=function(value) { return {_hx_index:6,value:value,__enum__:"model.ver1.game.define.TargetFilter",toString:$estr}; },$_._hx_name="CharacteristicIn",$_.__params__ = ["value"],$_)
-	,IsDestroyByBattleDamage: {_hx_name:"IsDestroyByBattleDamage",_hx_index:7,__enum__:"model.ver1.game.define.TargetFilter",toString:$estr}
-	,IsDestroyByBattleDamageSpeed: ($_=function(speed) { return {_hx_index:8,speed:speed,__enum__:"model.ver1.game.define.TargetFilter",toString:$estr}; },$_._hx_name="IsDestroyByBattleDamageSpeed",$_.__params__ = ["speed"],$_)
-	,InBattle: {_hx_name:"InBattle",_hx_index:9,__enum__:"model.ver1.game.define.TargetFilter",toString:$estr}
-	,BaSyouKeywordIn: ($_=function(value) { return {_hx_index:10,value:value,__enum__:"model.ver1.game.define.TargetFilter",toString:$estr}; },$_._hx_name="BaSyouKeywordIn",$_.__params__ = ["value"],$_)
-	,SameAsThisCard: ($_=function(what) { return {_hx_index:11,what:what,__enum__:"model.ver1.game.define.TargetFilter",toString:$estr}; },$_._hx_name="SameAsThisCard",$_.__params__ = ["what"],$_)
+var model_ver1_game_define_ITargetCardFilter = function() { };
+$hxClasses["model.ver1.game.define.ITargetCardFilter"] = model_ver1_game_define_ITargetCardFilter;
+model_ver1_game_define_ITargetCardFilter.__name__ = "model.ver1.game.define.ITargetCardFilter";
+model_ver1_game_define_ITargetCardFilter.__isInterface__ = true;
+model_ver1_game_define_ITargetCardFilter.prototype = {
+	__class__: model_ver1_game_define_ITargetCardFilter
 };
-model_ver1_game_define_TargetFilter.__constructs__ = [model_ver1_game_define_TargetFilter.Or,model_ver1_game_define_TargetFilter.And,model_ver1_game_define_TargetFilter.Not,model_ver1_game_define_TargetFilter.CardEntityCategoryIn,model_ver1_game_define_TargetFilter.CardCategoryIn,model_ver1_game_define_TargetFilter.BelongPlayer,model_ver1_game_define_TargetFilter.CharacteristicIn,model_ver1_game_define_TargetFilter.IsDestroyByBattleDamage,model_ver1_game_define_TargetFilter.IsDestroyByBattleDamageSpeed,model_ver1_game_define_TargetFilter.InBattle,model_ver1_game_define_TargetFilter.BaSyouKeywordIn,model_ver1_game_define_TargetFilter.SameAsThisCard];
-var model_ver1_game_define_BattleGroupFilter = $hxEnums["model.ver1.game.define.BattleGroupFilter"] = { __ename__:"model.ver1.game.define.BattleGroupFilter",__constructs__:null
-	,Or: ($_=function(value) { return {_hx_index:0,value:value,__enum__:"model.ver1.game.define.BattleGroupFilter",toString:$estr}; },$_._hx_name="Or",$_.__params__ = ["value"],$_)
-	,And: ($_=function(value) { return {_hx_index:1,value:value,__enum__:"model.ver1.game.define.BattleGroupFilter",toString:$estr}; },$_._hx_name="And",$_.__params__ = ["value"],$_)
-	,Not: ($_=function(value) { return {_hx_index:2,value:value,__enum__:"model.ver1.game.define.BattleGroupFilter",toString:$estr}; },$_._hx_name="Not",$_.__params__ = ["value"],$_)
-	,UnitCount: ($_=function(value) { return {_hx_index:3,value:value,__enum__:"model.ver1.game.define.BattleGroupFilter",toString:$estr}; },$_._hx_name="UnitCount",$_.__params__ = ["value"],$_)
-	,BelongPlayer: ($_=function(value) { return {_hx_index:4,value:value,__enum__:"model.ver1.game.define.BattleGroupFilter",toString:$estr}; },$_._hx_name="BelongPlayer",$_.__params__ = ["value"],$_)
+var model_ver1_game_define_AbstractTargetCardFilter = function() { };
+$hxClasses["model.ver1.game.define.AbstractTargetCardFilter"] = model_ver1_game_define_AbstractTargetCardFilter;
+model_ver1_game_define_AbstractTargetCardFilter.__name__ = "model.ver1.game.define.AbstractTargetCardFilter";
+model_ver1_game_define_AbstractTargetCardFilter.__interfaces__ = [model_ver1_game_define_ITargetCardFilter];
+model_ver1_game_define_AbstractTargetCardFilter.prototype = {
+	apply: function(ctx,runtime,card) {
+		return false;
+	}
+	,__class__: model_ver1_game_define_AbstractTargetCardFilter
 };
-model_ver1_game_define_BattleGroupFilter.__constructs__ = [model_ver1_game_define_BattleGroupFilter.Or,model_ver1_game_define_BattleGroupFilter.And,model_ver1_game_define_BattleGroupFilter.Not,model_ver1_game_define_BattleGroupFilter.UnitCount,model_ver1_game_define_BattleGroupFilter.BelongPlayer];
-var model_ver1_game_define_Target = $hxEnums["model.ver1.game.define.Target"] = { __ename__:"model.ver1.game.define.Target",__constructs__:null
-	,Or: ($_=function(value) { return {_hx_index:0,value:value,__enum__:"model.ver1.game.define.Target",toString:$estr}; },$_._hx_name="Or",$_.__params__ = ["value"],$_)
-	,Card: ($_=function(player,filter,count) { return {_hx_index:1,player:player,filter:filter,count:count,__enum__:"model.ver1.game.define.Target",toString:$estr}; },$_._hx_name="Card",$_.__params__ = ["player","filter","count"],$_)
-	,SetGroup: ($_=function(player,count) { return {_hx_index:2,player:player,count:count,__enum__:"model.ver1.game.define.Target",toString:$estr}; },$_._hx_name="SetGroup",$_.__params__ = ["player","count"],$_)
-	,Player: ($_=function(player) { return {_hx_index:3,player:player,__enum__:"model.ver1.game.define.Target",toString:$estr}; },$_._hx_name="Player",$_.__params__ = ["player"],$_)
-	,BattleGroup: ($_=function(player,filter,count) { return {_hx_index:4,player:player,filter:filter,count:count,__enum__:"model.ver1.game.define.Target",toString:$estr}; },$_._hx_name="BattleGroup",$_.__params__ = ["player","filter","count"],$_)
-	,Nation: ($_=function(player) { return {_hx_index:5,player:player,__enum__:"model.ver1.game.define.Target",toString:$estr}; },$_._hx_name="Nation",$_.__params__ = ["player"],$_)
+var model_ver1_game_define_Or = function(value) {
+	this.value = value;
 };
-model_ver1_game_define_Target.__constructs__ = [model_ver1_game_define_Target.Or,model_ver1_game_define_Target.Card,model_ver1_game_define_Target.SetGroup,model_ver1_game_define_Target.Player,model_ver1_game_define_Target.BattleGroup,model_ver1_game_define_Target.Nation];
-function model_ver1_game_define_Target_tests() {
-	var tmp = model_ver1_game_define_TargetFilter.And([model_ver1_game_define_TargetFilter.CharacteristicIn(["MF"]),model_ver1_game_define_TargetFilter.Not(model_ver1_game_define_TargetFilter.IsDestroyByBattleDamage),model_ver1_game_define_TargetFilter.BelongPlayer(model_ver1_game_define_RelativePlayer.You),model_ver1_game_define_TargetFilter.CardEntityCategoryIn([model_ver1_game_define_CardEntityCategory.Unit])]);
-	var tmp = model_ver1_game_define_TargetCount.Constants(1);
-	var tmp = model_ver1_game_define_TargetFilter.And([model_ver1_game_define_TargetFilter.Not(model_ver1_game_define_TargetFilter.IsDestroyByBattleDamageSpeed(2)),model_ver1_game_define_TargetFilter.BelongPlayer(model_ver1_game_define_RelativePlayer.You),model_ver1_game_define_TargetFilter.CardEntityCategoryIn([model_ver1_game_define_CardEntityCategory.Unit])]);
-	var tmp = model_ver1_game_define_TargetCount.Constants(1);
-	var tmp = model_ver1_game_define_TargetFilter.And([model_ver1_game_define_TargetFilter.Not(model_ver1_game_define_TargetFilter.InBattle),model_ver1_game_define_TargetFilter.CardEntityCategoryIn([model_ver1_game_define_CardEntityCategory.Unit])]);
-	var tmp = model_ver1_game_define_Target.Card(model_ver1_game_define_RelativePlayer.Opponent,model_ver1_game_define_TargetFilter.And([model_ver1_game_define_TargetFilter.Not(model_ver1_game_define_TargetFilter.BaSyouKeywordIn([model_ver1_game_define_RelativeBaSyou.RelativeBaSyou(model_ver1_game_define_RelativePlayer.You,model_ver1_game_define_BaSyouKeyword.TeHuTa)])),model_ver1_game_define_TargetFilter.BelongPlayer(model_ver1_game_define_RelativePlayer.You)]),model_ver1_game_define_TargetCount.Constants(1));
-	var tmp = model_ver1_game_define_Target.Card(model_ver1_game_define_RelativePlayer.Opponent,model_ver1_game_define_TargetFilter.And([model_ver1_game_define_TargetFilter.BelongPlayer(model_ver1_game_define_RelativePlayer.You)]),model_ver1_game_define_TargetCount.Constants(1));
-	var tmp = model_ver1_game_define_TargetFilter.And([model_ver1_game_define_TargetFilter.Not(model_ver1_game_define_TargetFilter.BaSyouKeywordIn([model_ver1_game_define_RelativeBaSyou.RelativeBaSyou(model_ver1_game_define_RelativePlayer.You,model_ver1_game_define_BaSyouKeyword.TeHuTa),model_ver1_game_define_RelativeBaSyou.RelativeBaSyou(model_ver1_game_define_RelativePlayer.You,model_ver1_game_define_BaSyouKeyword.GZone)])),model_ver1_game_define_TargetFilter.BelongPlayer(model_ver1_game_define_RelativePlayer.You)]);
-	var tmp = model_ver1_game_define_TargetCount.MuchAsPossible(2);
-	var tmp = model_ver1_game_define_TargetFilter.And([model_ver1_game_define_TargetFilter.SameAsThisCard(model_ver1_game_define_SameAsThisCardWhat.GSign),model_ver1_game_define_TargetFilter.BelongPlayer(model_ver1_game_define_RelativePlayer.You)]);
-	var tmp = model_ver1_game_define_TargetCount.Constants(1);
-	var tmp = model_ver1_game_define_BattleGroupFilter.And([model_ver1_game_define_BattleGroupFilter.UnitCount(model_ver1_game_define_TargetCount.Constants(1)),model_ver1_game_define_BattleGroupFilter.BelongPlayer(model_ver1_game_define_RelativePlayer.You)]);
-	var tmp = model_ver1_game_define_TargetCount.Constants(1);
-}
+$hxClasses["model.ver1.game.define.Or"] = model_ver1_game_define_Or;
+model_ver1_game_define_Or.__name__ = "model.ver1.game.define.Or";
+model_ver1_game_define_Or.__super__ = model_ver1_game_define_AbstractTargetCardFilter;
+model_ver1_game_define_Or.prototype = $extend(model_ver1_game_define_AbstractTargetCardFilter.prototype,{
+	apply: function(ctx,runtime,card) {
+		return Lambda.exists(this.value,function(f) {
+			return f.apply(ctx,runtime,card);
+		});
+	}
+	,__class__: model_ver1_game_define_Or
+});
+var model_ver1_game_define_And = function(value) {
+	this.value = value;
+};
+$hxClasses["model.ver1.game.define.And"] = model_ver1_game_define_And;
+model_ver1_game_define_And.__name__ = "model.ver1.game.define.And";
+model_ver1_game_define_And.__super__ = model_ver1_game_define_AbstractTargetCardFilter;
+model_ver1_game_define_And.prototype = $extend(model_ver1_game_define_AbstractTargetCardFilter.prototype,{
+	apply: function(ctx,runtime,card) {
+		var _g = [];
+		var _g1 = 0;
+		var _g2 = this.value;
+		while(_g1 < _g2.length) {
+			var v = _g2[_g1];
+			++_g1;
+			if(v.apply(ctx,runtime,card)) {
+				_g.push(v);
+			}
+		}
+		return _g.length == this.value.length;
+	}
+	,__class__: model_ver1_game_define_And
+});
+var model_ver1_game_define_Not = function(value) {
+	this.value = value;
+};
+$hxClasses["model.ver1.game.define.Not"] = model_ver1_game_define_Not;
+model_ver1_game_define_Not.__name__ = "model.ver1.game.define.Not";
+model_ver1_game_define_Not.__super__ = model_ver1_game_define_AbstractTargetCardFilter;
+model_ver1_game_define_Not.prototype = $extend(model_ver1_game_define_AbstractTargetCardFilter.prototype,{
+	apply: function(ctx,runtime,card) {
+		return !this.value.apply(ctx,runtime,card);
+	}
+	,__class__: model_ver1_game_define_Not
+});
 var model_ver1_game_define_TurnKeyword = $hxEnums["model.ver1.game.define.TurnKeyword"] = { __ename__:"model.ver1.game.define.TurnKeyword",__constructs__:null
 	,You: {_hx_name:"You",_hx_index:0,__enum__:"model.ver1.game.define.TurnKeyword",toString:$estr}
 	,Opponent: {_hx_name:"Opponent",_hx_index:1,__enum__:"model.ver1.game.define.TurnKeyword",toString:$estr}
@@ -5807,6 +5849,56 @@ function model_ver1_game_gameComponent_SpecialCardText_flatSpecial(ctx,cardId,te
 	} else {
 		return [text];
 	}
+}
+var model_ver1_game_gameComponent_CardEntityCategoryIn = function(value) {
+	this.value = value;
+};
+$hxClasses["model.ver1.game.gameComponent.CardEntityCategoryIn"] = model_ver1_game_gameComponent_CardEntityCategoryIn;
+model_ver1_game_gameComponent_CardEntityCategoryIn.__name__ = "model.ver1.game.gameComponent.CardEntityCategoryIn";
+model_ver1_game_gameComponent_CardEntityCategoryIn.__super__ = model_ver1_game_define_AbstractTargetCardFilter;
+model_ver1_game_gameComponent_CardEntityCategoryIn.prototype = $extend(model_ver1_game_define_AbstractTargetCardFilter.prototype,{
+	apply: function(ctx,runtime,card) {
+		return false;
+	}
+	,__class__: model_ver1_game_gameComponent_CardEntityCategoryIn
+});
+var model_ver1_game_gameComponent_BelongPlayer = function(value) {
+	this.value = value;
+};
+$hxClasses["model.ver1.game.gameComponent.BelongPlayer"] = model_ver1_game_gameComponent_BelongPlayer;
+model_ver1_game_gameComponent_BelongPlayer.__name__ = "model.ver1.game.gameComponent.BelongPlayer";
+model_ver1_game_gameComponent_BelongPlayer.__super__ = model_ver1_game_define_AbstractTargetCardFilter;
+model_ver1_game_gameComponent_BelongPlayer.prototype = $extend(model_ver1_game_define_AbstractTargetCardFilter.prototype,{
+	apply: function(ctx,runtime,card) {
+		return false;
+	}
+	,__class__: model_ver1_game_gameComponent_BelongPlayer
+});
+var model_ver1_game_gameComponent_CharacteristicIn = function(value) {
+	this.value = value;
+};
+$hxClasses["model.ver1.game.gameComponent.CharacteristicIn"] = model_ver1_game_gameComponent_CharacteristicIn;
+model_ver1_game_gameComponent_CharacteristicIn.__name__ = "model.ver1.game.gameComponent.CharacteristicIn";
+model_ver1_game_gameComponent_CharacteristicIn.__super__ = model_ver1_game_define_AbstractTargetCardFilter;
+model_ver1_game_gameComponent_CharacteristicIn.prototype = $extend(model_ver1_game_define_AbstractTargetCardFilter.prototype,{
+	apply: function(ctx,runtime,card) {
+		return false;
+	}
+	,__class__: model_ver1_game_gameComponent_CharacteristicIn
+});
+var model_ver1_game_gameComponent_IsDestroyByBattleDamage = function() {
+};
+$hxClasses["model.ver1.game.gameComponent.IsDestroyByBattleDamage"] = model_ver1_game_gameComponent_IsDestroyByBattleDamage;
+model_ver1_game_gameComponent_IsDestroyByBattleDamage.__name__ = "model.ver1.game.gameComponent.IsDestroyByBattleDamage";
+model_ver1_game_gameComponent_IsDestroyByBattleDamage.__super__ = model_ver1_game_define_AbstractTargetCardFilter;
+model_ver1_game_gameComponent_IsDestroyByBattleDamage.prototype = $extend(model_ver1_game_define_AbstractTargetCardFilter.prototype,{
+	apply: function(ctx,runtime,card) {
+		return false;
+	}
+	,__class__: model_ver1_game_gameComponent_IsDestroyByBattleDamage
+});
+function model_ver1_game_gameComponent_TargetFilter_tests() {
+	new model_ver1_game_define_TargetCard(model_ver1_game_define_RelativePlayer.You,new model_ver1_game_define_And([new model_ver1_game_gameComponent_CharacteristicIn(["MG"]),new model_ver1_game_define_Not(new model_ver1_game_gameComponent_IsDestroyByBattleDamage()),new model_ver1_game_gameComponent_BelongPlayer(model_ver1_game_define_RelativePlayer.You)]),model_ver1_game_define_TargetCount.Constants(1));
 }
 function model_ver1_test_Test_test() {
 	model_ver1_game_Game_test();
