@@ -45,7 +45,7 @@ private function test_playGRule() {
 	registerCardProto(ctx, "OnlyPlayGRuleCardProto", new OnlyPlayGRuleCardProto());
 	final card = new Card("0");
 	card.protoId = "OnlyPlayGRuleCardProto";
-	addCard(ctx.table, (Default(PlayerId.A, TeHuTa) : BaSyouId), card);
+	addCard(ctx.table, (Default(PlayerId.A, Hand) : BaSyouId), card);
 	setTiming(ctx, Default(Maintenance, None, Free1));
 	{
 		final cmds = getPlayerRuntimeText(ctx, PlayerId.A);

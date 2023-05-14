@@ -7,9 +7,9 @@ import model.ver1.game.define.Player;
 
 enum BaSyouKeyword {
 	// 本国
-	HonGoku;
+	Nation;
 	// 捨て山
-	SuteYama;
+	LostCard;
 	// 宇宙エリア
 	SpaceArea;
 	// 地球エリア
@@ -19,9 +19,9 @@ enum BaSyouKeyword {
 	// Gゾーン
 	GZone;
 	// ジャンクヤード
-	JunkYard;
+	Junkyard;
 	// 手札
-	TeHuTa;
+	Hand;
 	// ハンガー
 	Hanger;
 	// プレイされたカード
@@ -96,13 +96,13 @@ abstract BaSyouId(String) to String {
 }
 
 function test() {
-	final b1 = BaSyou.Default(PlayerId.A, HonGoku);
+	final b1 = BaSyou.Default(PlayerId.A, Nation);
 	final csId = (b1 : BaSyouId);
 	final b2:BaSyou = csId;
 	if (EnumValueTools.equals(b1, b2) == false) {
 		throw new haxe.Exception("b1 must equals b2");
 	}
-	final b3 = BaSyou.Default(PlayerId.A, HonGoku);
+	final b3 = BaSyou.Default(PlayerId.A, Nation);
 	final csId3 = (b3 : BaSyouId);
 	if (csId != csId3) {
 		throw "csId != csId3";

@@ -58,7 +58,7 @@ function test_constantText() {
 			throw "並且不是恆常能力";
 		case _:
 	}
-	addCard(ctx.table, (Default(PlayerId.A, TeHuTa) : BaSyouId), card);
+	addCard(ctx.table, (Default(PlayerId.A, Hand) : BaSyouId), card);
 	if (getRuntimeText(ctx).length != 0) {
 		throw new haxe.Exception("但找不到那個內文，因為在手牌中只有恆常能力可發動");
 	}

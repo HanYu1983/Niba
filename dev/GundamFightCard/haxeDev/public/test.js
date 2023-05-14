@@ -2038,7 +2038,7 @@ function model_ver1_data_CardProto_$179030_$11E_$CH_$BN091N_$brown_test() {
 	var player1 = model_ver1_game_define_PlayerId.A;
 	var player2 = model_ver1_game_define_PlayerId.B;
 	var ctx = new model_ver1_game_entity_Context();
-	var baSyou = model_ver1_game_define_BaSyou.Default(player2,model_ver1_game_define_BaSyouKeyword.TeHuTa);
+	var baSyou = model_ver1_game_define_BaSyou.Default(player2,model_ver1_game_define_BaSyouKeyword.Hand);
 	var playerId = baSyou.playerId;
 	var baSyouKeyword = baSyou.baSyouKeyword;
 	var this1 = "" + playerId + model_ver1_game_define_BaSyouId._split + $hxEnums[baSyouKeyword.__enum__].__constructs__[baSyouKeyword._hx_index]._hx_name;
@@ -2258,7 +2258,7 @@ function model_ver1_data_CardProto_$179030_$11E_$U_$VT186R_$purple_test() {
 	var player1 = model_ver1_game_define_PlayerId.A;
 	var player2 = model_ver1_game_define_PlayerId.B;
 	var ctx = new model_ver1_game_entity_Context();
-	var baSyou = model_ver1_game_define_BaSyou.Default(player2,model_ver1_game_define_BaSyouKeyword.TeHuTa);
+	var baSyou = model_ver1_game_define_BaSyou.Default(player2,model_ver1_game_define_BaSyouKeyword.Hand);
 	var playerId = baSyou.playerId;
 	var baSyouKeyword = baSyou.baSyouKeyword;
 	var this1 = "" + playerId + model_ver1_game_define_BaSyouId._split + $hxEnums[baSyouKeyword.__enum__].__constructs__[baSyouKeyword._hx_index]._hx_name;
@@ -3080,7 +3080,7 @@ function model_ver1_game_component_TableComponent_getCardBaSyouAndAssertExist(ct
 }
 function model_ver1_game_component_TableComponent_returnToOwnerHand(ctx,cardId) {
 	var from = model_ver1_game_component_TableComponent_getCardBaSyouAndAssertExist(ctx,cardId);
-	var to = model_ver1_game_define_BaSyou.Default(model_ver1_game_component_TableComponent_getCardOwner(ctx,cardId),model_ver1_game_define_BaSyouKeyword.TeHuTa);
+	var to = model_ver1_game_define_BaSyou.Default(model_ver1_game_component_TableComponent_getCardOwner(ctx,cardId),model_ver1_game_define_BaSyouKeyword.Hand);
 	model_ver1_game_component_TableComponent_moveCard(ctx,cardId,from,to);
 }
 function model_ver1_game_component_TableComponent_getCardIdsByBaSyou(ctx,baSyou) {
@@ -3189,19 +3189,19 @@ function model_ver1_game_data_DataBinding_getCardProto(key) {
 	return obj;
 }
 var model_ver1_game_define_BaSyouKeyword = $hxEnums["model.ver1.game.define.BaSyouKeyword"] = { __ename__:"model.ver1.game.define.BaSyouKeyword",__constructs__:null
-	,HonGoku: {_hx_name:"HonGoku",_hx_index:0,__enum__:"model.ver1.game.define.BaSyouKeyword",toString:$estr}
-	,SuteYama: {_hx_name:"SuteYama",_hx_index:1,__enum__:"model.ver1.game.define.BaSyouKeyword",toString:$estr}
+	,Nation: {_hx_name:"Nation",_hx_index:0,__enum__:"model.ver1.game.define.BaSyouKeyword",toString:$estr}
+	,LostCard: {_hx_name:"LostCard",_hx_index:1,__enum__:"model.ver1.game.define.BaSyouKeyword",toString:$estr}
 	,SpaceArea: {_hx_name:"SpaceArea",_hx_index:2,__enum__:"model.ver1.game.define.BaSyouKeyword",toString:$estr}
 	,EarthArea: {_hx_name:"EarthArea",_hx_index:3,__enum__:"model.ver1.game.define.BaSyouKeyword",toString:$estr}
 	,MaintenanceArea: {_hx_name:"MaintenanceArea",_hx_index:4,__enum__:"model.ver1.game.define.BaSyouKeyword",toString:$estr}
 	,GZone: {_hx_name:"GZone",_hx_index:5,__enum__:"model.ver1.game.define.BaSyouKeyword",toString:$estr}
-	,JunkYard: {_hx_name:"JunkYard",_hx_index:6,__enum__:"model.ver1.game.define.BaSyouKeyword",toString:$estr}
-	,TeHuTa: {_hx_name:"TeHuTa",_hx_index:7,__enum__:"model.ver1.game.define.BaSyouKeyword",toString:$estr}
+	,Junkyard: {_hx_name:"Junkyard",_hx_index:6,__enum__:"model.ver1.game.define.BaSyouKeyword",toString:$estr}
+	,Hand: {_hx_name:"Hand",_hx_index:7,__enum__:"model.ver1.game.define.BaSyouKeyword",toString:$estr}
 	,Hanger: {_hx_name:"Hanger",_hx_index:8,__enum__:"model.ver1.game.define.BaSyouKeyword",toString:$estr}
 	,PlayedCard: {_hx_name:"PlayedCard",_hx_index:9,__enum__:"model.ver1.game.define.BaSyouKeyword",toString:$estr}
 	,RemovedCard: {_hx_name:"RemovedCard",_hx_index:10,__enum__:"model.ver1.game.define.BaSyouKeyword",toString:$estr}
 };
-model_ver1_game_define_BaSyouKeyword.__constructs__ = [model_ver1_game_define_BaSyouKeyword.HonGoku,model_ver1_game_define_BaSyouKeyword.SuteYama,model_ver1_game_define_BaSyouKeyword.SpaceArea,model_ver1_game_define_BaSyouKeyword.EarthArea,model_ver1_game_define_BaSyouKeyword.MaintenanceArea,model_ver1_game_define_BaSyouKeyword.GZone,model_ver1_game_define_BaSyouKeyword.JunkYard,model_ver1_game_define_BaSyouKeyword.TeHuTa,model_ver1_game_define_BaSyouKeyword.Hanger,model_ver1_game_define_BaSyouKeyword.PlayedCard,model_ver1_game_define_BaSyouKeyword.RemovedCard];
+model_ver1_game_define_BaSyouKeyword.__constructs__ = [model_ver1_game_define_BaSyouKeyword.Nation,model_ver1_game_define_BaSyouKeyword.LostCard,model_ver1_game_define_BaSyouKeyword.SpaceArea,model_ver1_game_define_BaSyouKeyword.EarthArea,model_ver1_game_define_BaSyouKeyword.MaintenanceArea,model_ver1_game_define_BaSyouKeyword.GZone,model_ver1_game_define_BaSyouKeyword.Junkyard,model_ver1_game_define_BaSyouKeyword.Hand,model_ver1_game_define_BaSyouKeyword.Hanger,model_ver1_game_define_BaSyouKeyword.PlayedCard,model_ver1_game_define_BaSyouKeyword.RemovedCard];
 var model_ver1_game_define_BaSyou = $hxEnums["model.ver1.game.define.BaSyou"] = { __ename__:"model.ver1.game.define.BaSyou",__constructs__:null
 	,Default: ($_=function(playerId,baSyouKeyword) { return {_hx_index:0,playerId:playerId,baSyouKeyword:baSyouKeyword,__enum__:"model.ver1.game.define.BaSyou",toString:$estr}; },$_._hx_name="Default",$_.__params__ = ["playerId","baSyouKeyword"],$_)
 };
@@ -3266,7 +3266,7 @@ function model_ver1_game_define_BaSyou_isBa(k) {
 	return false;
 }
 function model_ver1_game_define_BaSyou_test() {
-	var b1 = model_ver1_game_define_BaSyou.Default(model_ver1_game_define_PlayerId.A,model_ver1_game_define_BaSyouKeyword.HonGoku);
+	var b1 = model_ver1_game_define_BaSyou.Default(model_ver1_game_define_PlayerId.A,model_ver1_game_define_BaSyouKeyword.Nation);
 	var playerId = b1.playerId;
 	var baSyouKeyword = b1.baSyouKeyword;
 	var this1 = "" + playerId + model_ver1_game_define_BaSyouId._split + $hxEnums[baSyouKeyword.__enum__].__constructs__[baSyouKeyword._hx_index]._hx_name;
@@ -3275,7 +3275,7 @@ function model_ver1_game_define_BaSyou_test() {
 	if(Type.enumEq(b1,b2) == false) {
 		throw new haxe_Exception("b1 must equals b2");
 	}
-	var b3 = model_ver1_game_define_BaSyou.Default(model_ver1_game_define_PlayerId.A,model_ver1_game_define_BaSyouKeyword.HonGoku);
+	var b3 = model_ver1_game_define_BaSyou.Default(model_ver1_game_define_PlayerId.A,model_ver1_game_define_BaSyouKeyword.Nation);
 	var playerId = b3.playerId;
 	var baSyouKeyword = b3.baSyouKeyword;
 	var this1 = "" + playerId + model_ver1_game_define_BaSyouId._split + $hxEnums[baSyouKeyword.__enum__].__constructs__[baSyouKeyword._hx_index]._hx_name;
@@ -4769,8 +4769,8 @@ model_ver1_game_gameComponent_DrawRule.__name__ = "model.ver1.game.gameComponent
 model_ver1_game_gameComponent_DrawRule.__super__ = model_ver1_game_gameComponent_GameCardText;
 model_ver1_game_gameComponent_DrawRule.prototype = $extend(model_ver1_game_gameComponent_GameCardText.prototype,{
 	_action: function(ctx,runtime) {
-		var from = model_ver1_game_define_BaSyou.Default(runtime.getResponsePlayerId(),model_ver1_game_define_BaSyouKeyword.HonGoku);
-		var to = model_ver1_game_define_BaSyou.Default(runtime.getResponsePlayerId(),model_ver1_game_define_BaSyouKeyword.TeHuTa);
+		var from = model_ver1_game_define_BaSyou.Default(runtime.getResponsePlayerId(),model_ver1_game_define_BaSyouKeyword.Nation);
+		var to = model_ver1_game_define_BaSyou.Default(runtime.getResponsePlayerId(),model_ver1_game_define_BaSyouKeyword.Hand);
 		model_ver1_game_component_TableComponent_moveCard(ctx,runtime.getCardId(),from,to);
 	}
 	,__class__: model_ver1_game_gameComponent_DrawRule
@@ -4931,7 +4931,7 @@ model_ver1_game_gameComponent_PlayCommandEffect.__super__ = model_ver1_game_game
 model_ver1_game_gameComponent_PlayCommandEffect.prototype = $extend(model_ver1_game_gameComponent_GameCardText.prototype,{
 	_action: function(ctx,runtime) {
 		this._commandEffectImpl(ctx,runtime);
-		var to = model_ver1_game_define_BaSyou.Default(runtime.getResponsePlayerId(),model_ver1_game_define_BaSyouKeyword.JunkYard);
+		var to = model_ver1_game_define_BaSyou.Default(runtime.getResponsePlayerId(),model_ver1_game_define_BaSyouKeyword.Junkyard);
 		var from = model_ver1_game_component_TableComponent_getCardBaSyouAndAssertExist(ctx,runtime.getCardId());
 		model_ver1_game_component_TableComponent_moveCard(ctx,runtime.getCardId(),from,to);
 	}
@@ -5929,7 +5929,7 @@ function model_ver1_test_Test_test_constantText() {
 			throw haxe_Exception.thrown("並且不是恆常能力");
 		}
 	}
-	var baSyou = model_ver1_game_define_BaSyou.Default(model_ver1_game_define_PlayerId.A,model_ver1_game_define_BaSyouKeyword.TeHuTa);
+	var baSyou = model_ver1_game_define_BaSyou.Default(model_ver1_game_define_PlayerId.A,model_ver1_game_define_BaSyouKeyword.Hand);
 	var playerId = baSyou.playerId;
 	var baSyouKeyword = baSyou.baSyouKeyword;
 	var this1 = "" + playerId + model_ver1_game_define_BaSyouId._split + $hxEnums[baSyouKeyword.__enum__].__constructs__[baSyouKeyword._hx_index]._hx_name;
@@ -6015,7 +6015,7 @@ function model_ver1_test_Test_$getRuntimeText_test_playGRule() {
 	model_ver1_game_component_CardProtoPoolComponent_registerCardProto(ctx,"OnlyPlayGRuleCardProto",new model_ver1_test_common_OnlyPlayGRuleCardProto());
 	var card = new tool_Card("0");
 	card.protoId = "OnlyPlayGRuleCardProto";
-	var baSyou = model_ver1_game_define_BaSyou.Default(model_ver1_game_define_PlayerId.A,model_ver1_game_define_BaSyouKeyword.TeHuTa);
+	var baSyou = model_ver1_game_define_BaSyou.Default(model_ver1_game_define_PlayerId.A,model_ver1_game_define_BaSyouKeyword.Hand);
 	var playerId = baSyou.playerId;
 	var baSyouKeyword = baSyou.baSyouKeyword;
 	var this1 = "" + playerId + model_ver1_game_define_BaSyouId._split + $hxEnums[baSyouKeyword.__enum__].__constructs__[baSyouKeyword._hx_index]._hx_name;

@@ -60,7 +60,7 @@ function getCardBaSyouAndAssertExist(ctx:ITableComponent, cardId:String):BaSyou 
 
 function returnToOwnerHand(ctx:ITableComponent, cardId:String):Void {
 	final from = getCardBaSyouAndAssertExist(ctx, cardId);
-	final to = BaSyou.Default(getCardOwner(ctx, cardId), TeHuTa);
+	final to = BaSyou.Default(getCardOwner(ctx, cardId), Hand);
 	moveCard(ctx, cardId, from, to);
 }
 

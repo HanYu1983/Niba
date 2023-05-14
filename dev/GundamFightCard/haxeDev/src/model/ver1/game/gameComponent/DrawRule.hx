@@ -24,8 +24,8 @@ class DrawRule extends GameCardText {
 	}
 
 	override function _action(ctx:IGameComponent, runtime:Runtime):Void {
-		final from = BaSyou.Default(runtime.getResponsePlayerId(), HonGoku);
-		final to = BaSyou.Default(runtime.getResponsePlayerId(), TeHuTa);
+		final from = BaSyou.Default(runtime.getResponsePlayerId(), Nation);
+		final to = BaSyou.Default(runtime.getResponsePlayerId(), Hand);
 		moveCard(ctx, runtime.getCardId(), from, to);
 	}
 }

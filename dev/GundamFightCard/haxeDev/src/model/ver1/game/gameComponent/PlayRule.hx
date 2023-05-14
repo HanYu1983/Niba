@@ -111,7 +111,7 @@ class PlayCommandEffect extends GameCardText {
 		// 解決指令效果
 		_commandEffectImpl(ctx, runtime);
 		// 移到廢棄庫
-		final to = BaSyou.Default(runtime.getResponsePlayerId(), JunkYard);
+		final to = BaSyou.Default(runtime.getResponsePlayerId(), Junkyard);
 		final from = getCardBaSyouAndAssertExist(ctx, runtime.getCardId());
 		moveCard(ctx, runtime.getCardId(), from, to);
 	}

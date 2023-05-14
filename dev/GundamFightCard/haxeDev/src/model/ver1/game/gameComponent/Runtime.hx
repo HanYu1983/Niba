@@ -45,7 +45,7 @@ function getRuntimeText(ctx:IGameComponent):Array<RuntimeText> {
 	// 手牌，hanger中的牌
 	final cardsInHandAndHanger = [for (cs in ctx.table.cardStacks) cs].filter(cs -> {
 		return switch ((cs.id : BaSyouId) : BaSyou) {
-			case Default(_, TeHuTa | Hanger):
+			case Default(_, Hand | Hanger):
 				true;
 			case _:
 				false;
@@ -104,7 +104,7 @@ function getRuntimeText(ctx:IGameComponent):Array<RuntimeText> {
 	// 廢棄庫
 	final cardsInJunkYard = [for (cs in ctx.table.cardStacks) cs].filter(cs -> {
 		return switch ((cs.id : BaSyouId) : BaSyou) {
-			case Default(_, JunkYard):
+			case Default(_, Junkyard):
 				true;
 			case _:
 				false;

@@ -192,12 +192,12 @@ function tests():Void {
 // 	Target.Card(You, And([Not(InBattle), CardEntityCategoryIn([Unit])]), All);
 // 	// 敵軍は、自分の手札1枚、または自分のカード１枚
 // 	Target.Or([
-// 		Card(Opponent, And([Not(BaSyouKeywordIn([RelativeBaSyou(You, TeHuTa)])), BelongPlayer(You),]), Constants(1)),
+// 		Card(Opponent, And([Not(BaSyouKeywordIn([RelativeBaSyou(You, Hand)])), BelongPlayer(You),]), Constants(1)),
 // 		Card(Opponent, And([BelongPlayer(You)]), Constants(1))
 // 	]);
 // 	// 敵軍は、自分の手札、G以外の自分のカードを、合計２枚まで、可能な限り選んで
 // 	Target.Card(Opponent, And([
-// 		Not(BaSyouKeywordIn([RelativeBaSyou(You, TeHuTa), RelativeBaSyou(You, GZone)])),
+// 		Not(BaSyouKeywordIn([RelativeBaSyou(You, Hand), RelativeBaSyou(You, GZone)])),
 // 		BelongPlayer(You),
 // 	]), MuchAsPossible(2));
 // 	// このカードと同じ属性のGサインを持つ自軍ユニット１枚

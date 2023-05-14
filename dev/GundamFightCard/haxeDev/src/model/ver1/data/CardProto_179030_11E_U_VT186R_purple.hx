@@ -116,7 +116,7 @@ function test() {
 	final player1 = PlayerId.A;
 	final player2 = PlayerId.B;
 	final ctx = new Context();
-	final player2Hand = new CardStack((Default(player2, TeHuTa) : BaSyouId));
+	final player2Hand = new CardStack((Default(player2, Hand) : BaSyouId));
 	ctx.table.cardStacks[player2Hand.id] = player2Hand;
 	trace("機體1在場");
 	final card = new Card("1");
