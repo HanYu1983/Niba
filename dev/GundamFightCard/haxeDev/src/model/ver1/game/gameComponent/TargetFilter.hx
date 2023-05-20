@@ -79,7 +79,7 @@ class CardEntityCategoryIn extends AbstractTargetCardFilter {
 		this.value = value;
 	}
 
-	public override function apply(ctx:Any, runtime:Runtime, card:Card):Bool {
+	public override function apply(card:Card):Bool {
 		return false;
 	}
 }
@@ -91,7 +91,7 @@ class BelongPlayer extends AbstractTargetCardFilter {
 		this.value = value;
 	}
 
-	public override function apply(ctx:Any, runtime:Runtime, card:Card):Bool {
+	public override function apply(card:Card):Bool {
 		return false;
 	}
 }
@@ -103,7 +103,7 @@ class CharacteristicIn extends AbstractTargetCardFilter {
 		this.value = value;
 	}
 
-	public override function apply(ctx:Any, runtime:Runtime, card:Card):Bool {
+	public override function apply(card:Card):Bool {
 		return false;
 	}
 }
@@ -111,7 +111,7 @@ class CharacteristicIn extends AbstractTargetCardFilter {
 class IsDestroyByBattleDamage extends AbstractTargetCardFilter {
 	public function new() {}
 
-	public override function apply(ctx:Any, runtime:Runtime, card:Card):Bool {
+	public override function apply(card:Card):Bool {
 		return false;
 	}
 }

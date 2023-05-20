@@ -8,6 +8,7 @@ import model.ver1.game.define.Define;
 import model.ver1.game.define.Player;
 import model.ver1.game.define.BaSyou;
 import model.ver1.game.component.TableComponent;
+import model.ver1.game.define.Require;
 
 enum TargetCount {
 	// 全て
@@ -23,11 +24,11 @@ enum RelativeBaSyou {
 }
 
 interface ITargetCardFilter {
-	function apply(ctx:Any, runtime:Runtime, card:Card):Bool;
+	function apply(card:Card):Bool;
 }
 
 class AbstractTargetCardFilter implements ITargetCardFilter {
-	public function apply(ctx:Any, runtime:Runtime, card:Card):Bool {
+	public function apply(card:Card):Bool {
 		return false;
 	}
 }
@@ -39,8 +40,8 @@ class Or extends AbstractTargetCardFilter {
 		this.value = value;
 	}
 
-	public override function apply(ctx:Any, runtime:Runtime, card:Card):Bool {
-		return value.exists(f -> f.apply(ctx, runtime, card));
+	public override function apply(card:Card):Bool {
+		return value.exists(f -> f.apply(card));
 	}
 }
 
@@ -51,8 +52,8 @@ class And extends AbstractTargetCardFilter {
 		this.value = value;
 	}
 
-	public override function apply(ctx:Any, runtime:Runtime, card:Card):Bool {
-		return value.filter(f -> f.apply(ctx, runtime, card)).length == value.length;
+	public override function apply(card:Card):Bool {
+		return value.filter(f -> f.apply(card)).length == value.length;
 	}
 }
 
@@ -63,7 +64,7 @@ class Not extends AbstractTargetCardFilter {
 		this.value = value;
 	}
 
-	public override function apply(ctx:Any, runtime:Runtime, card:Card):Bool {
-		return !value.apply(ctx, runtime, card);
+	public override function apply(card:Card):Bool {
+		return !value.apply(card);
 	}
 }

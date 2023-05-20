@@ -25936,6 +25936,9 @@ model_ver1_game_define_CardText.prototype = {
 	,getRequires2: function(_ctx,runtime) {
 		return [];
 	}
+	,getRequires3: function(_ctx,runtime) {
+		return { logic : haxe_ds_Option.None, selections : []};
+	}
 	,action: function(_ctx,runtime) {
 	}
 	,onEvent: function(_ctx,event,runtime) {
@@ -26589,6 +26592,19 @@ model_ver1_data__$CardProto_$179030_$11E_$CH_$BN091N_$brown_Process1.prototype =
 			}
 		}}];
 	}
+	,getRequires3: function(_ctx,runtime) {
+		var ctx = js_Boot.__cast(_ctx , model_ver1_game_entity_Context);
+		var tips = model_ver1_data_CardProto_$179030_$11E_$CH_$BN091N_$brown_getOpponentG(ctx,runtime);
+		return { logic : haxe_ds_Option.None, selections : [{ id : "敵軍G１枚をロールする。", description : "敵軍G１枚をロールする。", count : model_ver1_game_define_RequireSelectionCount.Constants(1), type : model_ver1_game_define_RequireSelectionType.SelectCard(tips), player : haxe_ds_Option.Some(runtime.getResponsePlayerId()), action : function() {
+			var selectUnits = model_ver1_game_component_SelectionComponent_getPlayerSelectionCardId(ctx,"敵軍G１枚をロールする。");
+			var _g = 0;
+			while(_g < selectUnits.length) {
+				var unit = selectUnits[_g];
+				++_g;
+				model_ver1_game_gameComponent_Alg_rollCard(ctx,unit,{ sendEvent : true});
+			}
+		}}]};
+	}
 	,action: function(_ctx,runtime) {
 		var ctx = js_Boot.__cast(_ctx , model_ver1_game_entity_Context);
 		var thisCardId = runtime.getCardId();
@@ -26669,7 +26685,7 @@ function model_ver1_data_CardProto_$179030_$11E_$CH_$BN091N_$brown_test() {
 	var this1 = "" + playerId + model_ver1_game_define_BaSyouId._split + $hxEnums[baSyouKeyword.__enum__].__constructs__[baSyouKeyword._hx_index]._hx_name;
 	var player2Hand = new tool_CardStack(this1);
 	ctx.table.cardStacks.h[player2Hand.id] = player2Hand;
-	console.log("src/model/ver1/data/CardProto_179030_11E_CH_BN091N_brown.hx:136:","卡牌1在場");
+	console.log("src/model/ver1/data/CardProto_179030_11E_CH_BN091N_brown.hx:160:","卡牌1在場");
 	var card = new tool_Card("1");
 	card.owner = player1;
 	card.protoId = "179030_11E_CH_BN091N_brown";
@@ -26678,7 +26694,7 @@ function model_ver1_data_CardProto_$179030_$11E_$CH_$BN091N_$brown_test() {
 	var baSyouKeyword = baSyou.baSyouKeyword;
 	var this1 = "" + playerId + model_ver1_game_define_BaSyouId._split + $hxEnums[baSyouKeyword.__enum__].__constructs__[baSyouKeyword._hx_index]._hx_name;
 	tool_Table_addCard(ctx.table,this1,card);
-	console.log("src/model/ver1/data/CardProto_179030_11E_CH_BN091N_brown.hx:141:","敵軍G在場");
+	console.log("src/model/ver1/data/CardProto_179030_11E_CH_BN091N_brown.hx:165:","敵軍G在場");
 	var card2 = new tool_Card("2");
 	card2.owner = player2;
 	card2.protoId = "179030_11E_CH_BN091N_brown";
@@ -26691,7 +26707,7 @@ function model_ver1_data_CardProto_$179030_$11E_$CH_$BN091N_$brown_test() {
 	if(model_ver1_game_component_CutComponent_getTopCut(ctx).length != 0) {
 		throw haxe_Exception.thrown("一開始堆疊中沒有效果");
 	}
-	console.log("src/model/ver1/data/CardProto_179030_11E_CH_BN091N_brown.hx:151:","卡牌横置");
+	console.log("src/model/ver1/data/CardProto_179030_11E_CH_BN091N_brown.hx:175:","卡牌横置");
 	model_ver1_game_gameComponent_Alg_sendEvent(ctx,model_ver1_game_gameComponent_Event.CardRoll(card.id));
 	if(model_ver1_game_component_CutComponent_getTopCut(ctx).length != 1) {
 		throw haxe_Exception.thrown("堆疊中必須有一個效果");
@@ -26715,25 +26731,25 @@ function model_ver1_data_CardProto_$179030_$11E_$CH_$BN091N_$brown_test() {
 	if(tips.length != 1) {
 		throw haxe_Exception.thrown("必須有一個可選G");
 	}
-	console.log("src/model/ver1/data/CardProto_179030_11E_CH_BN091N_brown.hx:172:","選擇");
+	console.log("src/model/ver1/data/CardProto_179030_11E_CH_BN091N_brown.hx:196:","選擇");
 	model_ver1_game_component_SelectionComponent_setPlayerSelectionCardId(ctx,$require.id,[tips[0].value]);
-	console.log("src/model/ver1/data/CardProto_179030_11E_CH_BN091N_brown.hx:174:","驗証支付");
+	console.log("src/model/ver1/data/CardProto_179030_11E_CH_BN091N_brown.hx:198:","驗証支付");
 	$require.action();
 	if(card2.isTap != true) {
 		throw haxe_Exception.thrown("牌必須被横置");
 	}
-	console.log("src/model/ver1/data/CardProto_179030_11E_CH_BN091N_brown.hx:179:","解決效果");
+	console.log("src/model/ver1/data/CardProto_179030_11E_CH_BN091N_brown.hx:203:","解決效果");
 	block.text.action(ctx,runtime);
 	if(model_ver1_game_component_MarkComponent_getMarks(ctx).length != 1) {
 		throw haxe_Exception.thrown("必須有不能重置效果");
 	}
-	console.log("src/model/ver1/data/CardProto_179030_11E_CH_BN091N_brown.hx:184:","結束一個turn");
+	console.log("src/model/ver1/data/CardProto_179030_11E_CH_BN091N_brown.hx:208:","結束一個turn");
 	model_ver1_game_component_TimingComponent_setTiming(ctx,model_ver1_game_define_Timing.Default(model_ver1_game_define_PhaseKeyword.Battle,haxe_ds_Option.Some(model_ver1_game_define_StepKeyword.End),model_ver1_game_define_TimingKeyword.End));
 	model_ver1_game_gameComponent_Alg_sendEvent(ctx,model_ver1_game_gameComponent_Event.ChangePhase);
 	if(model_ver1_game_component_MarkComponent_getMarks(ctx).length != 1) {
 		throw haxe_Exception.thrown("必須有不能重置效果");
 	}
-	console.log("src/model/ver1/data/CardProto_179030_11E_CH_BN091N_brown.hx:190:","再結束一個turn");
+	console.log("src/model/ver1/data/CardProto_179030_11E_CH_BN091N_brown.hx:214:","再結束一個turn");
 	model_ver1_game_gameComponent_Alg_sendEvent(ctx,model_ver1_game_gameComponent_Event.ChangePhase);
 	if(model_ver1_game_component_MarkComponent_getMarks(ctx).length != 0) {
 		throw haxe_Exception.thrown("不能重置效果必須被移除");
@@ -27651,6 +27667,106 @@ function model_ver1_game_component_SelectionComponent_getPlayerSelectionCardId(c
 function model_ver1_game_component_SelectionComponent_setPlayerSelectionCardId(ctx,key,values) {
 	ctx.playerSelection.cardIds.h[key] = values;
 }
+function model_ver1_game_component_SelectionComponent_checkCount(selection,count) {
+	switch(count._hx_index) {
+	case 0:
+		var n = count.value;
+		if(selection.length < n) {
+			throw haxe_Exception.thrown("abc");
+		}
+		break;
+	case 1:
+		var n = count.value;
+		if(selection.length >= n) {
+			throw haxe_Exception.thrown("abc");
+		}
+		break;
+	}
+}
+function model_ver1_game_component_SelectionComponent_attempt(ctx,$require,options) {
+	var _g = $require.logic;
+	switch(_g._hx_index) {
+	case 0:
+		var logic = _g.v;
+		var _g = [];
+		var _g1 = 0;
+		var _g2 = $require.selections;
+		while(_g1 < _g2.length) {
+			var v = _g2[_g1];
+			++_g1;
+			var _g3 = v.type;
+			switch(_g3._hx_index) {
+			case 0:
+				var tips = _g3.tips;
+				if(options.onlyTip) {
+					model_ver1_game_component_SelectionComponent_checkCount(tips,v.count);
+				} else {
+					var selection = model_ver1_game_component_SelectionComponent_getPlayerSelectionCardId(ctx,v.id);
+					model_ver1_game_component_SelectionComponent_checkCount(selection,v.count);
+				}
+				break;
+			case 1:
+				var tips1 = _g3.tips;
+				break;
+			}
+			if(!options.onlyTip) {
+				v.action();
+			}
+			_g.push(v);
+		}
+		var _this = _g;
+		var result = new Array(_this.length);
+		var _g = 0;
+		var _g1 = _this.length;
+		while(_g < _g1) {
+			var i = _g++;
+			result[i] = _this[i].id;
+		}
+		var requireSelectionIds = result;
+		var possibleSelectionGroups = tool_LogicTree_enumerateAll(logic);
+		var hasSolution = Lambda.exists(possibleSelectionGroups,function(group) {
+			var _g = 0;
+			while(_g < group.length) {
+				var k = group[_g];
+				++_g;
+				if(requireSelectionIds.indexOf(k) != -1 == false) {
+					return false;
+				}
+			}
+			return true;
+		});
+		break;
+	case 1:
+		var _g = 0;
+		var _g1 = $require.selections;
+		while(_g < _g1.length) {
+			var requireSelection = _g1[_g];
+			++_g;
+			var _g2 = requireSelection.type;
+			switch(_g2._hx_index) {
+			case 0:
+				var tips = _g2.tips;
+				if(options.onlyTip) {
+					model_ver1_game_component_SelectionComponent_checkCount(tips,requireSelection.count);
+				} else {
+					var selection = model_ver1_game_component_SelectionComponent_getPlayerSelectionCardId(ctx,requireSelection.id);
+					model_ver1_game_component_SelectionComponent_checkCount(selection,requireSelection.count);
+				}
+				break;
+			case 1:
+				var tips1 = _g2.tips;
+				if(options.onlyTip) {
+					model_ver1_game_component_SelectionComponent_checkCount(tips1,requireSelection.count);
+				}
+				break;
+			}
+			if(!options.onlyTip) {
+				requireSelection.action();
+			}
+		}
+		break;
+	}
+}
 var model_ver1_game_component_ITableComponent = function() { };
 $hxClasses["model.ver1.game.component.ITableComponent"] = model_ver1_game_component_ITableComponent;
 model_ver1_game_component_ITableComponent.__name__ = "model.ver1.game.component.ITableComponent";
@@ -28163,6 +28279,19 @@ var model_ver1_game_define_RequireType = $hxEnums["model.ver1.game.define.Requir
 	,SelectBattlePoint: ($_=function(tips) { return {_hx_index:2,tips:tips,__enum__:"model.ver1.game.define.RequireType",toString:$estr}; },$_._hx_name="SelectBattlePoint",$_.__params__ = ["tips"],$_)
 };
 model_ver1_game_define_RequireType.__constructs__ = [model_ver1_game_define_RequireType.Pending,model_ver1_game_define_RequireType.SelectCard,model_ver1_game_define_RequireType.SelectBattlePoint];
+var model_ver1_game_define_RequireSelectionCount = $hxEnums["model.ver1.game.define.RequireSelectionCount"] = { __ename__:"model.ver1.game.define.RequireSelectionCount",__constructs__:null
+	,Constants: ($_=function(value) { return {_hx_index:0,value:value,__enum__:"model.ver1.game.define.RequireSelectionCount",toString:$estr}; },$_._hx_name="Constants",$_.__params__ = ["value"],$_)
+	,MuchAsPossible: ($_=function(value) { return {_hx_index:1,value:value,__enum__:"model.ver1.game.define.RequireSelectionCount",toString:$estr}; },$_._hx_name="MuchAsPossible",$_.__params__ = ["value"],$_)
+};
+model_ver1_game_define_RequireSelectionCount.__constructs__ = [model_ver1_game_define_RequireSelectionCount.Constants,model_ver1_game_define_RequireSelectionCount.MuchAsPossible];
+var model_ver1_game_define_RequireSelectionType = $hxEnums["model.ver1.game.define.RequireSelectionType"] = { __ename__:"model.ver1.game.define.RequireSelectionType",__constructs__:null
+	,SelectCard: ($_=function(tips) { return {_hx_index:0,tips:tips,__enum__:"model.ver1.game.define.RequireSelectionType",toString:$estr}; },$_._hx_name="SelectCard",$_.__params__ = ["tips"],$_)
+	,SelectBattlePoint: ($_=function(tips) { return {_hx_index:1,tips:tips,__enum__:"model.ver1.game.define.RequireSelectionType",toString:$estr}; },$_._hx_name="SelectBattlePoint",$_.__params__ = ["tips"],$_)
+};
+model_ver1_game_define_RequireSelectionType.__constructs__ = [model_ver1_game_define_RequireSelectionType.SelectCard,model_ver1_game_define_RequireSelectionType.SelectBattlePoint];
+function model_ver1_game_define_Require_createRequire(id,description,type,player,action) {
+	return { id : id, description : description, type : type, player : player, action : action};
+}
 var model_ver1_game_define_Runtime = function() { };
 $hxClasses["model.ver1.game.define.Runtime"] = model_ver1_game_define_Runtime;
 model_ver1_game_define_Runtime.__name__ = "model.ver1.game.define.Runtime";
@@ -31095,6 +31224,69 @@ function tool_Helper_ofMemonto(memonto) {
 }
 function tool_Helper_copy(obj) {
 	return tool_Helper_ofMemonto(tool_Helper_getMemonto(obj));
+}
+var tool_LogicTree = $hxEnums["tool.LogicTree"] = { __ename__:"tool.LogicTree",__constructs__:null
+	,And: ($_=function(subtrees) { return {_hx_index:0,subtrees:subtrees,__enum__:"tool.LogicTree",toString:$estr}; },$_._hx_name="And",$_.__params__ = ["subtrees"],$_)
+	,Or: ($_=function(subtrees) { return {_hx_index:1,subtrees:subtrees,__enum__:"tool.LogicTree",toString:$estr}; },$_._hx_name="Or",$_.__params__ = ["subtrees"],$_)
+	,Leaf: ($_=function(value) { return {_hx_index:2,value:value,__enum__:"tool.LogicTree",toString:$estr}; },$_._hx_name="Leaf",$_.__params__ = ["value"],$_)
+};
+tool_LogicTree.__constructs__ = [tool_LogicTree.And,tool_LogicTree.Or,tool_LogicTree.Leaf];
+function tool_LogicTree_enumerateAll(tree) {
+	switch(tree._hx_index) {
+	case 0:
+		var subtrees = tree.subtrees;
+		var result = [[]];
+		var _g = 0;
+		while(_g < subtrees.length) {
+			var subtree = subtrees[_g];
+			++_g;
+			var subResults = tool_LogicTree_enumerateAll(subtree);
+			var updatedResult = [];
+			var _g1 = 0;
+			while(_g1 < subResults.length) {
+				var subResult = subResults[_g1];
+				++_g1;
+				var _g2 = 0;
+				while(_g2 < result.length) {
+					var res = result[_g2];
+					++_g2;
+					updatedResult.push(res.concat(subResult));
+				}
+			}
+			result = updatedResult;
+		}
+		return result;
+	case 1:
+		var subtrees = tree.subtrees;
+		var result = [];
+		var _g = 0;
+		while(_g < subtrees.length) {
+			var subtree = subtrees[_g];
+			++_g;
+			var subResults = tool_LogicTree_enumerateAll(subtree);
+			var _g1 = 0;
+			while(_g1 < subResults.length) {
+				var subResult = subResults[_g1];
+				++_g1;
+				result.push(subResult);
+			}
+		}
+		return result;
+	case 2:
+		var value = tree.value;
+		return [[value]];
+	}
+}
+function tool_LogicTree_test() {
+	var question1 = tool_LogicTree.Or([tool_LogicTree.And([tool_LogicTree.Leaf("1"),tool_LogicTree.Leaf("action 1")]),tool_LogicTree.And([tool_LogicTree.Or([tool_LogicTree.Leaf("2"),tool_LogicTree.Leaf("3")]),tool_LogicTree.Leaf("action 2")])]);
+	var answer1 = tool_LogicTree_enumerateAll(question1);
+	console.log("src/tool/LogicTree.hx:50:",answer1);
+	var question2 = tool_LogicTree.And([tool_LogicTree.Leaf("5"),tool_LogicTree.Leaf("6"),tool_LogicTree.Or([tool_LogicTree.Leaf("1"),tool_LogicTree.Or([tool_LogicTree.Leaf("2"),tool_LogicTree.Leaf("3")])])]);
+	var answer2 = tool_LogicTree_enumerateAll(question2);
+	console.log("src/tool/LogicTree.hx:54:",answer2);
+	var question3 = tool_LogicTree.And([tool_LogicTree.Leaf("5"),tool_LogicTree.Leaf("6"),tool_LogicTree.Or([tool_LogicTree.Leaf("1"),tool_LogicTree.Or([tool_LogicTree.Leaf("2"),tool_LogicTree.Leaf("3")])]),tool_LogicTree.Or([tool_LogicTree.Leaf("7"),tool_LogicTree.And([tool_LogicTree.Leaf("8"),tool_LogicTree.Leaf("9")])])]);
+	var answer3 = tool_LogicTree_enumerateAll(question3);
+	console.log("src/tool/LogicTree.hx:63:",answer3);
 }
 var tool_Card = function(id) {
 	this.isReverse = false;

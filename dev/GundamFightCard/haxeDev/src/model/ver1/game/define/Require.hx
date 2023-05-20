@@ -1,6 +1,7 @@
 package model.ver1.game.define;
 
 import haxe.ds.Option;
+import tool.LogicTree;
 import model.ver1.game.define.Define;
 import model.ver1.game.define.Runtime;
 import model.ver1.game.define.Timing;
@@ -37,4 +38,40 @@ typedef Require2 = {
 	type:RequireType,
 	player:Option<PlayerId>,
 	action:() -> Void,
+}
+
+function createRequire(id:String, description:String, type:RequireType, player:Option<PlayerId>, action:() -> Void):Require2 {
+	return {
+		id: id,
+		description: description,
+		type: type,
+		player: player,
+		action: action
+	}
+}
+
+enum RequireSelectionCount {
+	// 1枚
+	Constants(value:Int);
+	// 合計2枚まで
+	MuchAsPossible(value:Int);
+}
+
+enum RequireSelectionType {
+	SelectCard(tips:Array<String>);
+	SelectBattlePoint(tips:Array<BattlePoint>);
+}
+
+typedef RequireSelection = {
+	id:String,
+	description:String,
+	player:Option<PlayerId>,
+	type:RequireSelectionType,
+	count:RequireSelectionCount,
+	action:() -> Void,
+}
+
+typedef Require3 = {
+	logic:Option<LogicTree>,
+	selections:Array<RequireSelection>
 }

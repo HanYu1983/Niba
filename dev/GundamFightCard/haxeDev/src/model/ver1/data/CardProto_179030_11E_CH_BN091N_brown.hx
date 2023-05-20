@@ -1,5 +1,6 @@
 package model.ver1.data;
 
+import haxe.ds.Option;
 import haxe.Exception;
 import tool.Helper;
 import tool.Table;
@@ -40,7 +41,7 @@ class CardProto_179030_11E_CH_BN091N_brown extends CardProto {
 
 	public override function getTexts(_ctx:Any, runtime:Runtime):Array<CardText> {
 		return [
-			//new PlayerPlayCard('${runtime.getCardId()}_PlayerPlayCard'),
+			// new PlayerPlayCard('${runtime.getCardId()}_PlayerPlayCard'),
 			new Text1('${runtime.getCardId()}_Text1')
 		];
 	}
@@ -113,6 +114,29 @@ private class Process1 extends CardText {
 				},
 			}
 		];
+	}
+
+	public override function getRequires3(_ctx:Any, runtime:Runtime):Require3 {
+		final ctx = cast(_ctx, Context);
+		final tips = getOpponentG(ctx, runtime);
+		return {
+			logic: None,
+			selections: [
+				{
+					id: "敵軍G１枚をロールする。",
+					description: "敵軍G１枚をロールする。",
+					count: Constants(1),
+					type: SelectCard(tips),
+					player: Some(runtime.getResponsePlayerId()),
+					action: () -> {
+						final selectUnits = getPlayerSelectionCardId(ctx, "敵軍G１枚をロールする。");
+						for (unit in selectUnits) {
+							rollCard(ctx, unit, {sendEvent: true});
+						}
+					},
+				}
+			]
+		};
 	}
 
 	public override function action(_ctx:Any, runtime:Runtime):Void {
