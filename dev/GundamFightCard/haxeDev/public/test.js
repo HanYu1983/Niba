@@ -3586,14 +3586,14 @@ var model_ver1_game_define_AbstractTarget = function() { };
 $hxClasses["model.ver1.game.define.AbstractTarget"] = model_ver1_game_define_AbstractTarget;
 model_ver1_game_define_AbstractTarget.__name__ = "model.ver1.game.define.AbstractTarget";
 model_ver1_game_define_AbstractTarget.__interfaces__ = [model_ver1_game_define_ITarget];
-var model_ver1_game_define_AbstractTargetOr = function() {
+var model_ver1_game_define_TargetOr = function() {
 	this.values = [];
 };
-$hxClasses["model.ver1.game.define.AbstractTargetOr"] = model_ver1_game_define_AbstractTargetOr;
-model_ver1_game_define_AbstractTargetOr.__name__ = "model.ver1.game.define.AbstractTargetOr";
-model_ver1_game_define_AbstractTargetOr.__super__ = model_ver1_game_define_AbstractTarget;
-model_ver1_game_define_AbstractTargetOr.prototype = $extend(model_ver1_game_define_AbstractTarget.prototype,{
-	__class__: model_ver1_game_define_AbstractTargetOr
+$hxClasses["model.ver1.game.define.TargetOr"] = model_ver1_game_define_TargetOr;
+model_ver1_game_define_TargetOr.__name__ = "model.ver1.game.define.TargetOr";
+model_ver1_game_define_TargetOr.__super__ = model_ver1_game_define_AbstractTarget;
+model_ver1_game_define_TargetOr.prototype = $extend(model_ver1_game_define_AbstractTarget.prototype,{
+	__class__: model_ver1_game_define_TargetOr
 });
 var model_ver1_game_define_TargetCard = function(player,filter,count) {
 	this.player = player;
@@ -5900,6 +5900,69 @@ model_ver1_game_gameComponent_IsDestroyByBattleDamage.prototype = $extend(model_
 function model_ver1_game_gameComponent_TargetFilter_tests() {
 	new model_ver1_game_define_TargetCard(model_ver1_game_define_RelativePlayer.You,new model_ver1_game_define_And([new model_ver1_game_gameComponent_CharacteristicIn(["MG"]),new model_ver1_game_define_Not(new model_ver1_game_gameComponent_IsDestroyByBattleDamage()),new model_ver1_game_gameComponent_BelongPlayer(model_ver1_game_define_RelativePlayer.You)]),model_ver1_game_define_TargetCount.Constants(1));
 }
+var model_ver1_game_tip_LogicTree = $hxEnums["model.ver1.game.tip.LogicTree"] = { __ename__:"model.ver1.game.tip.LogicTree",__constructs__:null
+	,And: ($_=function(subtrees) { return {_hx_index:0,subtrees:subtrees,__enum__:"model.ver1.game.tip.LogicTree",toString:$estr}; },$_._hx_name="And",$_.__params__ = ["subtrees"],$_)
+	,Or: ($_=function(subtrees) { return {_hx_index:1,subtrees:subtrees,__enum__:"model.ver1.game.tip.LogicTree",toString:$estr}; },$_._hx_name="Or",$_.__params__ = ["subtrees"],$_)
+	,Leaf: ($_=function(value) { return {_hx_index:2,value:value,__enum__:"model.ver1.game.tip.LogicTree",toString:$estr}; },$_._hx_name="Leaf",$_.__params__ = ["value"],$_)
+};
+model_ver1_game_tip_LogicTree.__constructs__ = [model_ver1_game_tip_LogicTree.And,model_ver1_game_tip_LogicTree.Or,model_ver1_game_tip_LogicTree.Leaf];
+function model_ver1_game_tip_Tip_enumerateAll(tree) {
+	switch(tree._hx_index) {
+	case 0:
+		var subtrees = tree.subtrees;
+		var result = [[]];
+		var _g = 0;
+		while(_g < subtrees.length) {
+			var subtree = subtrees[_g];
+			++_g;
+			var subResults = model_ver1_game_tip_Tip_enumerateAll(subtree);
+			var updatedResult = [];
+			var _g1 = 0;
+			while(_g1 < subResults.length) {
+				var subResult = subResults[_g1];
+				++_g1;
+				var _g2 = 0;
+				while(_g2 < result.length) {
+					var res = result[_g2];
+					++_g2;
+					updatedResult.push(res.concat(subResult));
+				}
+			}
+			result = updatedResult;
+		}
+		return result;
+	case 1:
+		var subtrees = tree.subtrees;
+		var result = [];
+		var _g = 0;
+		while(_g < subtrees.length) {
+			var subtree = subtrees[_g];
+			++_g;
+			var subResults = model_ver1_game_tip_Tip_enumerateAll(subtree);
+			var _g1 = 0;
+			while(_g1 < subResults.length) {
+				var subResult = subResults[_g1];
+				++_g1;
+				result.push(subResult);
+			}
+		}
+		return result;
+	case 2:
+		var value = tree.value;
+		return [[value]];
+	}
+}
+function model_ver1_game_tip_Tip_test() {
+	var question1 = model_ver1_game_tip_LogicTree.Or([model_ver1_game_tip_LogicTree.Leaf("1"),model_ver1_game_tip_LogicTree.Or([model_ver1_game_tip_LogicTree.Leaf("2"),model_ver1_game_tip_LogicTree.Leaf("3")])]);
+	var answer1 = model_ver1_game_tip_Tip_enumerateAll(question1);
+	console.log("src/model/ver1/game/tip/Tip.hx:47:",answer1);
+	var question2 = model_ver1_game_tip_LogicTree.And([model_ver1_game_tip_LogicTree.Leaf("5"),model_ver1_game_tip_LogicTree.Leaf("6"),model_ver1_game_tip_LogicTree.Or([model_ver1_game_tip_LogicTree.Leaf("1"),model_ver1_game_tip_LogicTree.Or([model_ver1_game_tip_LogicTree.Leaf("2"),model_ver1_game_tip_LogicTree.Leaf("3")])])]);
+	var answer2 = model_ver1_game_tip_Tip_enumerateAll(question2);
+	console.log("src/model/ver1/game/tip/Tip.hx:51:",answer2);
+	var question3 = model_ver1_game_tip_LogicTree.And([model_ver1_game_tip_LogicTree.Leaf("5"),model_ver1_game_tip_LogicTree.Leaf("6"),model_ver1_game_tip_LogicTree.Or([model_ver1_game_tip_LogicTree.Leaf("1"),model_ver1_game_tip_LogicTree.Or([model_ver1_game_tip_LogicTree.Leaf("2"),model_ver1_game_tip_LogicTree.Leaf("3")])]),model_ver1_game_tip_LogicTree.Or([model_ver1_game_tip_LogicTree.Leaf("7"),model_ver1_game_tip_LogicTree.And([model_ver1_game_tip_LogicTree.Leaf("8"),model_ver1_game_tip_LogicTree.Leaf("9")])])]);
+	var answer3 = model_ver1_game_tip_Tip_enumerateAll(question3);
+	console.log("src/model/ver1/game/tip/Tip.hx:60:",answer3);
+}
 function model_ver1_test_Test_test() {
 	model_ver1_game_Game_test();
 	model_ver1_game_define_BaSyou_test();
@@ -5910,6 +5973,7 @@ function model_ver1_test_Test_test() {
 	model_ver1_data_CardProto_$179030_$11E_$U_$VT186R_$purple_test();
 	model_ver1_data_CardProto_$179030_$11E_$CH_$BN091N_$brown_test();
 	model_ver1_data_CardProto_$179004_$01A_$CH_$WT009R_$white_test();
+	model_ver1_game_tip_Tip_test();
 }
 function model_ver1_test_Test_test_constantText() {
 	var playerId = model_ver1_game_define_PlayerId.A;

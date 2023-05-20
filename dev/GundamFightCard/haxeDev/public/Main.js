@@ -28241,15 +28241,15 @@ var model_ver1_game_define_AbstractTarget = function() { };
 $hxClasses["model.ver1.game.define.AbstractTarget"] = model_ver1_game_define_AbstractTarget;
 model_ver1_game_define_AbstractTarget.__name__ = "model.ver1.game.define.AbstractTarget";
 model_ver1_game_define_AbstractTarget.__interfaces__ = [model_ver1_game_define_ITarget];
-var model_ver1_game_define_AbstractTargetOr = function() {
+var model_ver1_game_define_TargetOr = function() {
 	this.values = [];
 };
-$hxClasses["model.ver1.game.define.AbstractTargetOr"] = model_ver1_game_define_AbstractTargetOr;
-model_ver1_game_define_AbstractTargetOr.__name__ = "model.ver1.game.define.AbstractTargetOr";
-model_ver1_game_define_AbstractTargetOr.__super__ = model_ver1_game_define_AbstractTarget;
-model_ver1_game_define_AbstractTargetOr.prototype = $extend(model_ver1_game_define_AbstractTarget.prototype,{
+$hxClasses["model.ver1.game.define.TargetOr"] = model_ver1_game_define_TargetOr;
+model_ver1_game_define_TargetOr.__name__ = "model.ver1.game.define.TargetOr";
+model_ver1_game_define_TargetOr.__super__ = model_ver1_game_define_AbstractTarget;
+model_ver1_game_define_TargetOr.prototype = $extend(model_ver1_game_define_AbstractTarget.prototype,{
 	values: null
-	,__class__: model_ver1_game_define_AbstractTargetOr
+	,__class__: model_ver1_game_define_TargetOr
 });
 var model_ver1_game_define_TargetCard = function(player,filter,count) {
 	this.player = player;

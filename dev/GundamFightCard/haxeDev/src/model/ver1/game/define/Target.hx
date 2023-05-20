@@ -6,7 +6,7 @@ import model.ver1.game.define.TargetCardFilter;
 interface ITarget {}
 class AbstractTarget implements ITarget {}
 
-class AbstractTargetOr extends AbstractTarget {
+class TargetOr extends AbstractTarget {
 	public final values:Array<ITarget> = [];
 }
 
