@@ -5953,15 +5953,15 @@ function model_ver1_game_tip_Tip_enumerateAll(tree) {
 	}
 }
 function model_ver1_game_tip_Tip_test() {
-	var question1 = model_ver1_game_tip_LogicTree.Or([model_ver1_game_tip_LogicTree.Leaf("1"),model_ver1_game_tip_LogicTree.Or([model_ver1_game_tip_LogicTree.Leaf("2"),model_ver1_game_tip_LogicTree.Leaf("3")])]);
+	var question1 = model_ver1_game_tip_LogicTree.Or([model_ver1_game_tip_LogicTree.And([model_ver1_game_tip_LogicTree.Leaf("1"),model_ver1_game_tip_LogicTree.Leaf("action 1")]),model_ver1_game_tip_LogicTree.And([model_ver1_game_tip_LogicTree.Or([model_ver1_game_tip_LogicTree.Leaf("2"),model_ver1_game_tip_LogicTree.Leaf("3")]),model_ver1_game_tip_LogicTree.Leaf("action 2")])]);
 	var answer1 = model_ver1_game_tip_Tip_enumerateAll(question1);
-	console.log("src/model/ver1/game/tip/Tip.hx:47:",answer1);
+	console.log("src/model/ver1/game/tip/Tip.hx:50:",answer1);
 	var question2 = model_ver1_game_tip_LogicTree.And([model_ver1_game_tip_LogicTree.Leaf("5"),model_ver1_game_tip_LogicTree.Leaf("6"),model_ver1_game_tip_LogicTree.Or([model_ver1_game_tip_LogicTree.Leaf("1"),model_ver1_game_tip_LogicTree.Or([model_ver1_game_tip_LogicTree.Leaf("2"),model_ver1_game_tip_LogicTree.Leaf("3")])])]);
 	var answer2 = model_ver1_game_tip_Tip_enumerateAll(question2);
-	console.log("src/model/ver1/game/tip/Tip.hx:51:",answer2);
+	console.log("src/model/ver1/game/tip/Tip.hx:54:",answer2);
 	var question3 = model_ver1_game_tip_LogicTree.And([model_ver1_game_tip_LogicTree.Leaf("5"),model_ver1_game_tip_LogicTree.Leaf("6"),model_ver1_game_tip_LogicTree.Or([model_ver1_game_tip_LogicTree.Leaf("1"),model_ver1_game_tip_LogicTree.Or([model_ver1_game_tip_LogicTree.Leaf("2"),model_ver1_game_tip_LogicTree.Leaf("3")])]),model_ver1_game_tip_LogicTree.Or([model_ver1_game_tip_LogicTree.Leaf("7"),model_ver1_game_tip_LogicTree.And([model_ver1_game_tip_LogicTree.Leaf("8"),model_ver1_game_tip_LogicTree.Leaf("9")])])]);
 	var answer3 = model_ver1_game_tip_Tip_enumerateAll(question3);
-	console.log("src/model/ver1/game/tip/Tip.hx:60:",answer3);
+	console.log("src/model/ver1/game/tip/Tip.hx:63:",answer3);
 }
 function model_ver1_test_Test_test() {
 	model_ver1_game_Game_test();

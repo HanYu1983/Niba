@@ -42,7 +42,10 @@ function enumerateAll(tree:LogicTree):Array<Array<String>> {
 }
 
 function test() {
-	var question1:LogicTree = Or([Leaf("1"), Or([Leaf("2"), Leaf("3")])]);
+	var question1:LogicTree = Or([
+		And([Leaf("1"), Leaf("action 1")]),
+		And([Or([Leaf("2"), Leaf("3")]), Leaf("action 2")])
+	]);
 	var answer1:Array<Array<String>> = enumerateAll(question1);
 	trace(answer1);
 
