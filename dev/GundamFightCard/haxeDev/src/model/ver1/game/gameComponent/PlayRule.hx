@@ -88,7 +88,7 @@ class PlayGRule extends GameCardText {
 				id: id,
 				description: "還沒下G",
 				type: Pending,
-				player: You,
+				player: None,
 				action: () -> {
 					if (getPlayerState(ctx, runtime.getResponsePlayerId()).hasPlayG) {
 						throw new haxe.Exception("has Play G");

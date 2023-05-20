@@ -38,7 +38,7 @@ function getRequirePhase(ctx:Context, runtime:Runtime, timing:Timing, id:String)
 		id: id,
 		description: "RequirePhase",
 		type: Pending,
-		player: You,
+		player: None,
 		action: () -> {
 			if (isTiming(ctx, timing) == false) {
 				throw new haxe.Exception('ctx.phase != this.phase: ${ctx.timing} != ${timing}');
@@ -103,7 +103,7 @@ function getRequireGTap(ctx:Context, runtime:Runtime, colors:Array<GColor>, id:S
 		id: id,
 		description: "RequireGTap",
 		type: SelectCard(tips, [2]),
-		player: You,
+		player: None,
 		action: () -> {
 			final selectIds = ctx.playerSelection.cardIds[id];
 			if (selectIds == null) {
@@ -138,7 +138,7 @@ function getRequireOpponentUnitsEnterFieldThisTurn(ctx:Context, runtime:Runtime,
 		id: id,
 		description: "このターン中に場に出た敵軍ユニット１枚を",
 		type: SelectCard(tips, [1]),
-		player: You,
+		player: None,
 		action: () -> {},
 	}
 }

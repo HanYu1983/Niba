@@ -4,7 +4,7 @@ import haxe.ds.Option;
 import model.ver1.game.define.Define;
 import model.ver1.game.define.Runtime;
 import model.ver1.game.define.Timing;
-import model.ver1.game.define.Target;
+import model.ver1.game.define.Player;
 
 class Require {
 	public function new(id:String, description:String) {
@@ -35,13 +35,6 @@ typedef Require2 = {
 	id:String,
 	description:String,
 	type:RequireType,
-	player:RelativePlayer,
-	action:() -> Void,
-}
-
-typedef Require3 = {
-	id:String,
-	description:String,
-	target:ITarget,
+	player:Option<PlayerId>,
 	action:() -> Void,
 }

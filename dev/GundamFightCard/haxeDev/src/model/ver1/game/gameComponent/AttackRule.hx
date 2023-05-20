@@ -32,7 +32,7 @@ class AttackRule extends GameCardText {
 				id: "area1",
 				description: "String",
 				type: SelectCard([], []),
-				player: You,
+				player: None,
 				action: () -> {
 					final selectUnits = getPlayerSelectionCardId(ctx, "earth");
 				},
@@ -41,7 +41,7 @@ class AttackRule extends GameCardText {
 				id: "area2",
 				description: "String",
 				type: SelectCard([], []),
-				player: You,
+				player: None,
 				action: () -> {
 					final selectUnits = getPlayerSelectionCardId(ctx, "space");
 				},

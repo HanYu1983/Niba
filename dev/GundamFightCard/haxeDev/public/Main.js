@@ -26375,7 +26375,7 @@ model_ver1_data__$CardProto_$179004_$01A_$CH_$WT009R_$white_Text1_$1.prototype =
 		}
 		var tips = result;
 		var tipsLengths = [1];
-		return [{ id : this.getSubKey(0), description : "そのカードのセットグループ以外の自軍ユニット１枚は", type : model_ver1_game_define_RequireType.SelectCard(tips,tipsLengths), player : model_ver1_game_define_RelativePlayer.You, action : function() {
+		return [{ id : this.getSubKey(0), description : "そのカードのセットグループ以外の自軍ユニット１枚は", type : model_ver1_game_define_RequireType.SelectCard(tips,tipsLengths), player : haxe_ds_Option.None, action : function() {
 			var selection = model_ver1_game_component_SelectionComponent_getPlayerSelectionCardId(ctx,_gthis.getSubKey(0));
 			if(tipsLengths.indexOf(selection.length) != -1 == false) {
 				throw haxe_Exception.thrown("length not right");
@@ -26579,7 +26579,7 @@ model_ver1_data__$CardProto_$179030_$11E_$CH_$BN091N_$brown_Process1.prototype =
 			result[i] = { value : _this[i], weight : 0.0};
 		}
 		var tips = result;
-		return [{ id : this.getSubKey(0), description : "敵軍G１枚をロールする。", type : model_ver1_game_define_RequireType.SelectCard(tips,[1]), player : model_ver1_game_define_RelativePlayer.You, action : function() {
+		return [{ id : this.getSubKey(0), description : "敵軍G１枚をロールする。", type : model_ver1_game_define_RequireType.SelectCard(tips,[1]), player : haxe_ds_Option.Some(runtime.getResponsePlayerId()), action : function() {
 			var selectUnits = model_ver1_game_component_SelectionComponent_getPlayerSelectionCardId(ctx,_gthis.getSubKey(0));
 			var _g = 0;
 			while(_g < selectUnits.length) {
@@ -27059,7 +27059,7 @@ model_ver1_data_RequireUserSelectBattlePoint.prototype = $extend(model_ver1_data
 	__class__: model_ver1_data_RequireUserSelectBattlePoint
 });
 function model_ver1_data_RequireImpl_getRequirePhase(ctx,runtime,timing,id) {
-	return { id : id, description : "RequirePhase", type : model_ver1_game_define_RequireType.Pending, player : model_ver1_game_define_RelativePlayer.You, action : function() {
+	return { id : id, description : "RequirePhase", type : model_ver1_game_define_RequireType.Pending, player : haxe_ds_Option.None, action : function() {
 		if(model_ver1_game_component_TimingComponent_isTiming(ctx,timing) == false) {
 			throw new haxe_Exception("ctx.phase != this.phase: " + Std.string(ctx.timing) + " != " + Std.string(timing));
 		}
@@ -27091,7 +27091,7 @@ function model_ver1_data_RequireImpl_getRequireGTap(ctx,runtime,colors,id) {
 		result[i] = { value : _this[i], weight : 0.0};
 	}
 	var tips = result;
-	return { id : id, description : "RequireGTap", type : model_ver1_game_define_RequireType.SelectCard(tips,[2]), player : model_ver1_game_define_RelativePlayer.You, action : function() {
+	return { id : id, description : "RequireGTap", type : model_ver1_game_define_RequireType.SelectCard(tips,[2]), player : haxe_ds_Option.None, action : function() {
 		var selectIds = ctx.playerSelection.cardIds.h[id];
 		if(selectIds == null) {
 			throw new haxe_Exception("selectIds not found");
@@ -27136,7 +27136,7 @@ function model_ver1_data_RequireImpl_getRequireOpponentUnitsEnterFieldThisTurn(c
 		result[i] = { value : unitsEnterFieldThisTurn[i], weight : 0.0};
 	}
 	var tips = result;
-	return { id : id, description : "このターン中に場に出た敵軍ユニット１枚を", type : model_ver1_game_define_RequireType.SelectCard(tips,[1]), player : model_ver1_game_define_RelativePlayer.You, action : function() {
+	return { id : id, description : "このターン中に場に出た敵軍ユニット１枚を", type : model_ver1_game_define_RequireType.SelectCard(tips,[1]), player : haxe_ds_Option.None, action : function() {
 	}};
 }
 var model_ver1_game_Game = function() {
@@ -28233,117 +28233,6 @@ model_ver1_game_define_DefaultRuntime.prototype = $extend(model_ver1_game_define
 	}
 	,__class__: model_ver1_game_define_DefaultRuntime
 });
-var model_ver1_game_define_ITarget = function() { };
-$hxClasses["model.ver1.game.define.ITarget"] = model_ver1_game_define_ITarget;
-model_ver1_game_define_ITarget.__name__ = "model.ver1.game.define.ITarget";
-model_ver1_game_define_ITarget.__isInterface__ = true;
-var model_ver1_game_define_AbstractTarget = function() { };
-$hxClasses["model.ver1.game.define.AbstractTarget"] = model_ver1_game_define_AbstractTarget;
-model_ver1_game_define_AbstractTarget.__name__ = "model.ver1.game.define.AbstractTarget";
-model_ver1_game_define_AbstractTarget.__interfaces__ = [model_ver1_game_define_ITarget];
-var model_ver1_game_define_TargetOr = function() {
-	this.values = [];
-};
-$hxClasses["model.ver1.game.define.TargetOr"] = model_ver1_game_define_TargetOr;
-model_ver1_game_define_TargetOr.__name__ = "model.ver1.game.define.TargetOr";
-model_ver1_game_define_TargetOr.__super__ = model_ver1_game_define_AbstractTarget;
-model_ver1_game_define_TargetOr.prototype = $extend(model_ver1_game_define_AbstractTarget.prototype,{
-	values: null
-	,__class__: model_ver1_game_define_TargetOr
-});
-var model_ver1_game_define_TargetCard = function(player,filter,count) {
-	this.player = player;
-	this.filter = filter;
-	this.count = count;
-};
-$hxClasses["model.ver1.game.define.TargetCard"] = model_ver1_game_define_TargetCard;
-model_ver1_game_define_TargetCard.__name__ = "model.ver1.game.define.TargetCard";
-model_ver1_game_define_TargetCard.__super__ = model_ver1_game_define_AbstractTarget;
-model_ver1_game_define_TargetCard.prototype = $extend(model_ver1_game_define_AbstractTarget.prototype,{
-	player: null
-	,filter: null
-	,count: null
-	,__class__: model_ver1_game_define_TargetCard
-});
-var model_ver1_game_define_TargetCount = $hxEnums["model.ver1.game.define.TargetCount"] = { __ename__:"model.ver1.game.define.TargetCount",__constructs__:null
-	,All: {_hx_name:"All",_hx_index:0,__enum__:"model.ver1.game.define.TargetCount",toString:$estr}
-	,Constants: ($_=function(value) { return {_hx_index:1,value:value,__enum__:"model.ver1.game.define.TargetCount",toString:$estr}; },$_._hx_name="Constants",$_.__params__ = ["value"],$_)
-	,MuchAsPossible: ($_=function(value) { return {_hx_index:2,value:value,__enum__:"model.ver1.game.define.TargetCount",toString:$estr}; },$_._hx_name="MuchAsPossible",$_.__params__ = ["value"],$_)
-};
-model_ver1_game_define_TargetCount.__constructs__ = [model_ver1_game_define_TargetCount.All,model_ver1_game_define_TargetCount.Constants,model_ver1_game_define_TargetCount.MuchAsPossible];
-var model_ver1_game_define_RelativeBaSyou = $hxEnums["model.ver1.game.define.RelativeBaSyou"] = { __ename__:"model.ver1.game.define.RelativeBaSyou",__constructs__:null
-	,RelativeBaSyou: ($_=function(playerId,baSyouKeyword) { return {_hx_index:0,playerId:playerId,baSyouKeyword:baSyouKeyword,__enum__:"model.ver1.game.define.RelativeBaSyou",toString:$estr}; },$_._hx_name="RelativeBaSyou",$_.__params__ = ["playerId","baSyouKeyword"],$_)
-};
-model_ver1_game_define_RelativeBaSyou.__constructs__ = [model_ver1_game_define_RelativeBaSyou.RelativeBaSyou];
-var model_ver1_game_define_ITargetCardFilter = function() { };
-$hxClasses["model.ver1.game.define.ITargetCardFilter"] = model_ver1_game_define_ITargetCardFilter;
-model_ver1_game_define_ITargetCardFilter.__name__ = "model.ver1.game.define.ITargetCardFilter";
-model_ver1_game_define_ITargetCardFilter.__isInterface__ = true;
-model_ver1_game_define_ITargetCardFilter.prototype = {
-	apply: null
-	,__class__: model_ver1_game_define_ITargetCardFilter
-};
-var model_ver1_game_define_AbstractTargetCardFilter = function() { };
-$hxClasses["model.ver1.game.define.AbstractTargetCardFilter"] = model_ver1_game_define_AbstractTargetCardFilter;
-model_ver1_game_define_AbstractTargetCardFilter.__name__ = "model.ver1.game.define.AbstractTargetCardFilter";
-model_ver1_game_define_AbstractTargetCardFilter.__interfaces__ = [model_ver1_game_define_ITargetCardFilter];
-model_ver1_game_define_AbstractTargetCardFilter.prototype = {
-	apply: function(ctx,runtime,card) {
-		return false;
-	}
-	,__class__: model_ver1_game_define_AbstractTargetCardFilter
-};
-var model_ver1_game_define_Or = function(value) {
-	this.value = value;
-};
-$hxClasses["model.ver1.game.define.Or"] = model_ver1_game_define_Or;
-model_ver1_game_define_Or.__name__ = "model.ver1.game.define.Or";
-model_ver1_game_define_Or.__super__ = model_ver1_game_define_AbstractTargetCardFilter;
-model_ver1_game_define_Or.prototype = $extend(model_ver1_game_define_AbstractTargetCardFilter.prototype,{
-	value: null
-	,apply: function(ctx,runtime,card) {
-		return Lambda.exists(this.value,function(f) {
-			return f.apply(ctx,runtime,card);
-		});
-	}
-	,__class__: model_ver1_game_define_Or
-});
-var model_ver1_game_define_And = function(value) {
-	this.value = value;
-};
-$hxClasses["model.ver1.game.define.And"] = model_ver1_game_define_And;
-model_ver1_game_define_And.__name__ = "model.ver1.game.define.And";
-model_ver1_game_define_And.__super__ = model_ver1_game_define_AbstractTargetCardFilter;
-model_ver1_game_define_And.prototype = $extend(model_ver1_game_define_AbstractTargetCardFilter.prototype,{
-	value: null
-	,apply: function(ctx,runtime,card) {
-		var _g = [];
-		var _g1 = 0;
-		var _g2 = this.value;
-		while(_g1 < _g2.length) {
-			var v = _g2[_g1];
-			++_g1;
-			if(v.apply(ctx,runtime,card)) {
-				_g.push(v);
-			}
-		}
-		return _g.length == this.value.length;
-	}
-	,__class__: model_ver1_game_define_And
-});
-var model_ver1_game_define_Not = function(value) {
-	this.value = value;
-};
-$hxClasses["model.ver1.game.define.Not"] = model_ver1_game_define_Not;
-model_ver1_game_define_Not.__name__ = "model.ver1.game.define.Not";
-model_ver1_game_define_Not.__super__ = model_ver1_game_define_AbstractTargetCardFilter;
-model_ver1_game_define_Not.prototype = $extend(model_ver1_game_define_AbstractTargetCardFilter.prototype,{
-	value: null
-	,apply: function(ctx,runtime,card) {
-		return !this.value.apply(ctx,runtime,card);
-	}
-	,__class__: model_ver1_game_define_Not
-});
 var model_ver1_game_define_TurnKeyword = $hxEnums["model.ver1.game.define.TurnKeyword"] = { __ename__:"model.ver1.game.define.TurnKeyword",__constructs__:null
 	,You: {_hx_name:"You",_hx_index:0,__enum__:"model.ver1.game.define.TurnKeyword",toString:$estr}
 	,Opponent: {_hx_name:"Opponent",_hx_index:1,__enum__:"model.ver1.game.define.TurnKeyword",toString:$estr}
@@ -29019,7 +28908,7 @@ function model_ver1_game_flowComponent_FlowMemory_markTriggerStackEffectFinished
 	memory.shouldTriggerStackEffectFinishedEvent = true;
 }
 function model_ver1_game_gameComponent_Alg_createRequireRollCost(rollcost,options) {
-	return { id : "createRequireRollCost", description : "roll cost", type : model_ver1_game_define_RequireType.SelectCard([],[1]), player : model_ver1_game_define_RelativePlayer.You, action : function() {
+	return { id : "createRequireRollCost", description : "roll cost", type : model_ver1_game_define_RequireType.SelectCard([],[1]), player : haxe_ds_Option.None, action : function() {
 	}};
 }
 function model_ver1_game_gameComponent_Alg_becomeG(ctx,cardId) {
@@ -29388,9 +29277,9 @@ model_ver1_game_gameComponent_AttackRule.__name__ = "model.ver1.game.gameCompone
 model_ver1_game_gameComponent_AttackRule.__super__ = model_ver1_game_gameComponent_GameCardText;
 model_ver1_game_gameComponent_AttackRule.prototype = $extend(model_ver1_game_gameComponent_GameCardText.prototype,{
 	_getRequires2: function(ctx,runtime) {
-		return [{ id : "area1", description : "String", type : model_ver1_game_define_RequireType.SelectCard([],[]), player : model_ver1_game_define_RelativePlayer.You, action : function() {
+		return [{ id : "area1", description : "String", type : model_ver1_game_define_RequireType.SelectCard([],[]), player : haxe_ds_Option.None, action : function() {
 			var selectUnits = model_ver1_game_component_SelectionComponent_getPlayerSelectionCardId(ctx,"earth");
-		}},{ id : "area2", description : "String", type : model_ver1_game_define_RequireType.SelectCard([],[]), player : model_ver1_game_define_RelativePlayer.You, action : function() {
+		}},{ id : "area2", description : "String", type : model_ver1_game_define_RequireType.SelectCard([],[]), player : haxe_ds_Option.None, action : function() {
 			var selectUnits = model_ver1_game_component_SelectionComponent_getPlayerSelectionCardId(ctx,"space");
 		}}];
 	}
@@ -29592,7 +29481,7 @@ model_ver1_game_gameComponent_PlayGRule.__name__ = "model.ver1.game.gameComponen
 model_ver1_game_gameComponent_PlayGRule.__super__ = model_ver1_game_gameComponent_GameCardText;
 model_ver1_game_gameComponent_PlayGRule.prototype = $extend(model_ver1_game_gameComponent_GameCardText.prototype,{
 	_getRequires2: function(ctx,runtime) {
-		return [{ id : this.id, description : "還沒下G", type : model_ver1_game_define_RequireType.Pending, player : model_ver1_game_define_RelativePlayer.You, action : function() {
+		return [{ id : this.id, description : "還沒下G", type : model_ver1_game_define_RequireType.Pending, player : haxe_ds_Option.None, action : function() {
 			if(model_ver1_game_component_PlayerStateComponent_getPlayerState(ctx,runtime.getResponsePlayerId()).hasPlayG) {
 				throw new haxe_Exception("has Play G");
 			}

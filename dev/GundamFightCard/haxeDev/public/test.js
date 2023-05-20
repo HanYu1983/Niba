@@ -1752,7 +1752,7 @@ model_ver1_data__$CardProto_$179004_$01A_$CH_$WT009R_$white_Text1_$1.prototype =
 		}
 		var tips = result;
 		var tipsLengths = [1];
-		return [{ id : this.getSubKey(0), description : "そのカードのセットグループ以外の自軍ユニット１枚は", type : model_ver1_game_define_RequireType.SelectCard(tips,tipsLengths), player : model_ver1_game_define_RelativePlayer.You, action : function() {
+		return [{ id : this.getSubKey(0), description : "そのカードのセットグループ以外の自軍ユニット１枚は", type : model_ver1_game_define_RequireType.SelectCard(tips,tipsLengths), player : haxe_ds_Option.None, action : function() {
 			var selection = model_ver1_game_component_SelectionComponent_getPlayerSelectionCardId(ctx,_gthis.getSubKey(0));
 			if(tipsLengths.indexOf(selection.length) != -1 == false) {
 				throw haxe_Exception.thrown("length not right");
@@ -1954,7 +1954,7 @@ model_ver1_data__$CardProto_$179030_$11E_$CH_$BN091N_$brown_Process1.prototype =
 			result[i] = { value : _this[i], weight : 0.0};
 		}
 		var tips = result;
-		return [{ id : this.getSubKey(0), description : "敵軍G１枚をロールする。", type : model_ver1_game_define_RequireType.SelectCard(tips,[1]), player : model_ver1_game_define_RelativePlayer.You, action : function() {
+		return [{ id : this.getSubKey(0), description : "敵軍G１枚をロールする。", type : model_ver1_game_define_RequireType.SelectCard(tips,[1]), player : haxe_ds_Option.Some(runtime.getResponsePlayerId()), action : function() {
 			var selectUnits = model_ver1_game_component_SelectionComponent_getPlayerSelectionCardId(ctx,_gthis.getSubKey(0));
 			var _g = 0;
 			while(_g < selectUnits.length) {
@@ -2427,7 +2427,7 @@ model_ver1_data_RequireUserSelectBattlePoint.prototype = $extend(model_ver1_data
 	__class__: model_ver1_data_RequireUserSelectBattlePoint
 });
 function model_ver1_data_RequireImpl_getRequirePhase(ctx,runtime,timing,id) {
-	return { id : id, description : "RequirePhase", type : model_ver1_game_define_RequireType.Pending, player : model_ver1_game_define_RelativePlayer.You, action : function() {
+	return { id : id, description : "RequirePhase", type : model_ver1_game_define_RequireType.Pending, player : haxe_ds_Option.None, action : function() {
 		if(model_ver1_game_component_TimingComponent_isTiming(ctx,timing) == false) {
 			throw new haxe_Exception("ctx.phase != this.phase: " + Std.string(ctx.timing) + " != " + Std.string(timing));
 		}
@@ -2459,7 +2459,7 @@ function model_ver1_data_RequireImpl_getRequireGTap(ctx,runtime,colors,id) {
 		result[i] = { value : _this[i], weight : 0.0};
 	}
 	var tips = result;
-	return { id : id, description : "RequireGTap", type : model_ver1_game_define_RequireType.SelectCard(tips,[2]), player : model_ver1_game_define_RelativePlayer.You, action : function() {
+	return { id : id, description : "RequireGTap", type : model_ver1_game_define_RequireType.SelectCard(tips,[2]), player : haxe_ds_Option.None, action : function() {
 		var selectIds = ctx.playerSelection.cardIds.h[id];
 		if(selectIds == null) {
 			throw new haxe_Exception("selectIds not found");
@@ -2504,7 +2504,7 @@ function model_ver1_data_RequireImpl_getRequireOpponentUnitsEnterFieldThisTurn(c
 		result[i] = { value : unitsEnterFieldThisTurn[i], weight : 0.0};
 	}
 	var tips = result;
-	return { id : id, description : "このターン中に場に出た敵軍ユニット１枚を", type : model_ver1_game_define_RequireType.SelectCard(tips,[1]), player : model_ver1_game_define_RelativePlayer.You, action : function() {
+	return { id : id, description : "このターン中に場に出た敵軍ユニット１枚を", type : model_ver1_game_define_RequireType.SelectCard(tips,[1]), player : haxe_ds_Option.None, action : function() {
 	}};
 }
 var model_ver1_game_Game = function() {
@@ -4341,7 +4341,7 @@ function model_ver1_game_flowComponent_FlowMemory_markTriggerStackEffectFinished
 	memory.shouldTriggerStackEffectFinishedEvent = true;
 }
 function model_ver1_game_gameComponent_Alg_createRequireRollCost(rollcost,options) {
-	return { id : "createRequireRollCost", description : "roll cost", type : model_ver1_game_define_RequireType.SelectCard([],[1]), player : model_ver1_game_define_RelativePlayer.You, action : function() {
+	return { id : "createRequireRollCost", description : "roll cost", type : model_ver1_game_define_RequireType.SelectCard([],[1]), player : haxe_ds_Option.None, action : function() {
 	}};
 }
 function model_ver1_game_gameComponent_Alg_becomeG(ctx,cardId) {
@@ -4710,9 +4710,9 @@ model_ver1_game_gameComponent_AttackRule.__name__ = "model.ver1.game.gameCompone
 model_ver1_game_gameComponent_AttackRule.__super__ = model_ver1_game_gameComponent_GameCardText;
 model_ver1_game_gameComponent_AttackRule.prototype = $extend(model_ver1_game_gameComponent_GameCardText.prototype,{
 	_getRequires2: function(ctx,runtime) {
-		return [{ id : "area1", description : "String", type : model_ver1_game_define_RequireType.SelectCard([],[]), player : model_ver1_game_define_RelativePlayer.You, action : function() {
+		return [{ id : "area1", description : "String", type : model_ver1_game_define_RequireType.SelectCard([],[]), player : haxe_ds_Option.None, action : function() {
 			var selectUnits = model_ver1_game_component_SelectionComponent_getPlayerSelectionCardId(ctx,"earth");
-		}},{ id : "area2", description : "String", type : model_ver1_game_define_RequireType.SelectCard([],[]), player : model_ver1_game_define_RelativePlayer.You, action : function() {
+		}},{ id : "area2", description : "String", type : model_ver1_game_define_RequireType.SelectCard([],[]), player : haxe_ds_Option.None, action : function() {
 			var selectUnits = model_ver1_game_component_SelectionComponent_getPlayerSelectionCardId(ctx,"space");
 		}}];
 	}
@@ -4908,7 +4908,7 @@ model_ver1_game_gameComponent_PlayGRule.__name__ = "model.ver1.game.gameComponen
 model_ver1_game_gameComponent_PlayGRule.__super__ = model_ver1_game_gameComponent_GameCardText;
 model_ver1_game_gameComponent_PlayGRule.prototype = $extend(model_ver1_game_gameComponent_GameCardText.prototype,{
 	_getRequires2: function(ctx,runtime) {
-		return [{ id : this.id, description : "還沒下G", type : model_ver1_game_define_RequireType.Pending, player : model_ver1_game_define_RelativePlayer.You, action : function() {
+		return [{ id : this.id, description : "還沒下G", type : model_ver1_game_define_RequireType.Pending, player : haxe_ds_Option.None, action : function() {
 			if(model_ver1_game_component_PlayerStateComponent_getPlayerState(ctx,runtime.getResponsePlayerId()).hasPlayG) {
 				throw new haxe_Exception("has Play G");
 			}

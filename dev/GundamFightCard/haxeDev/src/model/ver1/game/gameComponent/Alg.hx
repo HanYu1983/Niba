@@ -26,7 +26,7 @@ function createRequireRollCost(rollcost:RollCost, options:{}):Require2 {
 		id: "createRequireRollCost",
 		description: "roll cost",
 		type: SelectCard([], [1]),
-		player: You,
+		player: None,
 		action: () -> {
 			// move card to playcardzone
 		},

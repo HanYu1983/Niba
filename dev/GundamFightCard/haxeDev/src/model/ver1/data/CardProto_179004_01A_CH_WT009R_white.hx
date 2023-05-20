@@ -119,7 +119,7 @@ private class Text1_1 extends CardText {
 				id: getSubKey(0),
 				description: "そのカードのセットグループ以外の自軍ユニット１枚は",
 				type: SelectCard(tips, tipsLengths),
-				player: You,
+				player: None,
 				action: () -> {
 					// assert selection
 					final selection = getPlayerSelectionCardId(ctx, getSubKey(0));
