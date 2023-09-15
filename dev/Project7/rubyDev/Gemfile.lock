@@ -1,0 +1,17 @@
+GEM
+  remote: https://rubygems.org/
+  specs:
+    concurrent-ruby (1.2.2)
+    rantly (1.2.0)
+    speculation (0.4.2)
+      concurrent-ruby (~> 1.0)
+      rantly (~> 1.0)
+
+PLATFORMS
+  ruby
+
+DEPENDENCIES
+  speculation
+
+BUNDLED WITH
+   1.17.2

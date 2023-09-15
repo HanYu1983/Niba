@@ -1,0 +1,1 @@
+docker run --name dev-project7-rubyDev -ti -p 8080:8080 -v D:\Han\dev\Niba\dev\Project7\rubyDev:/tmpdev -w /tmpdev ruby:2.6.3 bash
