@@ -1,0 +1,1 @@
+docker run -ti --name dev-project8-pythonDev -v D:\Han\dev\Niba\dev\Project8\:/tmp/project -w /tmp/project/ python:3.10 bash
