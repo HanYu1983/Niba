@@ -6,5 +6,5 @@ def generate_text(model, message):
     print(output)
 
 if __name__ == "__main__":
-    model = Llama(model_path="llama-2-7b-chat.ggmlv3.q4_0.bin")
+    model = Llama(model_path="llama-2-7b-chat.Q4_0.gguf")
     generate_text(model, "hello")
