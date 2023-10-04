@@ -1,2 +1,5 @@
 *.bin
 *.gguf
+*.json
+*.pdf
+*.txt
