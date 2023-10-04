@@ -1,2 +1,0 @@
-pip install huggingface_hub
-pip install transformers sentencepiece torch

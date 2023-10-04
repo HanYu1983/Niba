@@ -1,11 +1,12 @@
-# 不要運行以下的代碼，不然下載檔案後會把C碟灌爆
-# import torch
-# from transformers import AutoModelForCausalLM, AutoTokenizer, TextStreamer
+import csv
+from datetime import datetime
 
-# model_path = "daryl149/llama-2-7b-chat-hf"
-# model = AutoModelForCausalLM.from_pretrained(model_path).cuda()
-# tokenizer = AutoTokenizer.from_pretrained(model_path, use_fast = False)
-# streamer = TextStreamer(tokenizer, skip_prompt = True, skip_special_tokens = True)
-# prompt = "How to learn AI effectively?"
-# generated_ids = model.generate(tokenizer(prompt, return_tensors='pt').input_ids.cuda(), max_new_tokens=100, streamer=streamer)
-# print(generated_ids)
+with open('useraction.csv', newline='') as f:
+    rows = [row for row in csv.reader(f)][1:] # drop header
+    now = datetime.now()
+    def to_insert_sql(row: list[str]) -> str:
+        user_id, post_id, rating, comment = row
+        return f"insert into post_comments (user_id, post_id, rating, comment, updated_at, created_at) values ({user_id}, {post_id}, {rating}, \"{comment}\", '{now}', '{now}')"
+    sql = ";\n".join([to_insert_sql(row) for row in rows])
+    with open('insert_post_comments.sql', 'w', encoding='utf8') as json_file:
+        json_file.write(sql)
