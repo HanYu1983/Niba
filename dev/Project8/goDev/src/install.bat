@@ -1,0 +1,1 @@
+go get github.com/aerospike/aerospike-client-go/v6
