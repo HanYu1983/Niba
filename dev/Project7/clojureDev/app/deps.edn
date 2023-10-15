@@ -1,0 +1,8 @@
+{:deps {org.clojure/core.async {:mvn/version "1.6.673"}
+        org.clojure/core.match {:mvn/version "1.0.1"}}
+ :aliases {; clj -M:run (only -main)
+           :run  {:main-opts ["-m" "app.core" {:env :m}]
+                  :extra-deps {org.clojure/test.check {:mvn/version "0.9.0"}}}
+           ; clj -M:run2 (not working)
+           :run2  {:exec-fn app.core/-main
+                   :exec-args {:env :x}}}}
