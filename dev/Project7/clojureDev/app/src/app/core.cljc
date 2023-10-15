@@ -76,7 +76,10 @@
                   (http-call2 resp (fn [err resp]
                                      (if err
                                        (callback err nil)
-                                       (http-call2 resp (fn [err2 resp])))))))))
+                                       (http-call2 resp (fn [err resp]
+                                                          (if err
+                                                            (callback err nil)
+                                                            (callback nil resp)))))))))))
 
 ;
 '(callback-let [resp (http-call2)])
