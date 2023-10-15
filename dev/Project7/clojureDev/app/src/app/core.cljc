@@ -82,7 +82,15 @@
                                                             (callback nil resp)))))))))))
 
 ;
-'(callback-let [resp (http-call2)])
+'((waterfall-> (http-call2 30)
+               (http-call3 "" "")
+               (http-call4 40))
+  (fn [err resp]
+    (println resp)))
+
+'((callback-> [abc (http-call2 30 _)
+               ddd (doA)
+               aaa (http-call2 ddd _)]))
 
 
 (defn test-async []
