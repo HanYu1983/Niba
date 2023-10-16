@@ -45,54 +45,6 @@
             (recur (inc state)))]
     [in out]))
 
-
-(defn http-call [url]
-  (let [respCh (a/chan)
-        errCh (a/chan)
-        _ (a/go (try
-                  (throw (Exception. (str "call " url " error")))
-                  (a/>! respCh "OK")
-                  (a/close! respCh)
-                  (catch Throwable e
-                    (a/>! errCh e)
-                    (a/close! errCh)
-                    (throw e))))]
-    [respCh errCh]))
-
-; https://brianmckenna.org/blog/cps_transform_js
-(defn http-call2 [url callback]
-  (a/go (try
-          (throw (Exception. (str "call " url " error")))
-          (callback nil "ok")
-          (catch Throwable e
-            (callback e nil)))))
-
-; 展開要變成這樣
-(fn [args callback]
-  (http-call2 args
-              (fn [err resp]
-                (if err
-                  (callback err nil)
-                  (http-call2 resp (fn [err resp]
-                                     (if err
-                                       (callback err nil)
-                                       (http-call2 resp (fn [err resp]
-                                                          (if err
-                                                            (callback err nil)
-                                                            (callback nil resp)))))))))))
-
-;
-'((waterfall-> (http-call2 30)
-               (http-call3 "" "")
-               (http-call4 40))
-  (fn [err resp]
-    (println resp)))
-
-'((callback-> [abc (http-call2 30 _)
-               ddd (doA)
-               aaa (http-call2 ddd _)]))
-
-
 (defn test-async []
   (let [[send-http resp-http] (http-agent)
         ch (a/merge [(a/go
@@ -123,6 +75,60 @@
         _ (println "=====")
         _ (println (a/<!! ch))]))
 
+
+(defmacro waterfall [& exprs]
+  "
+   (waterfall (get-current-user) (get-user-info {:sort :money}))
+   =>
+   (fn* ([root-callback resp]
+      (abc/get-current-user (fn [err resp]
+                              (if err
+                                (root-callback err nil)
+                                (app.core/get-user-info (fn [err resp]
+                                                          (if err
+                                                            (root-callback err nil)
+                                                            (root-callback nil resp)))
+                                                        {:sort :money} resp)))
+                            resp)))
+   "
+  (let [reverse-exprs (reverse exprs)
+        [[first-expr-fn & first-expr-args] & rest-exprs] reverse-exprs
+        callback-hell (reduce
+                       (fn [prev-else [fn & args]]
+                         (cons fn (cons (list 'fn '[err resp]
+                                              (list 'if 'err
+                                                    (list 'root-callback 'err 'nil)
+                                                    prev-else))
+                                        (seq (conj (vec args) 'resp)))))
+                       (cons first-expr-fn (cons '(fn [err resp]
+                                                    (if err
+                                                      (root-callback err nil)
+                                                      (root-callback nil resp)))
+                                                 (seq (conj (vec first-expr-args) 'resp))))
+                       rest-exprs)
+        final-expr (list 'fn '[root-callback resp] callback-hell)]
+    final-expr))
+
+
+
+; https://brianmckenna.org/blog/cps_transform_js
+(defn get-current-user [callback url]
+  (callback nil url))
+
+(defn get-user-info [callback option user-id]
+  (callback nil (merge option {:user-id user-id :name "john"})))
+
+(defn test-macro []
+  (println (macroexpand `(waterfall (abc/get-current-user)
+                                    (get-user-info {:sort :money}))))
+  (let [waterfall-fn (waterfall (get-current-user)
+                                ((fn [callback resp]
+                                   (callback "err!!!" nil)))
+                                (get-user-info {:sort :money}))
+        _ (waterfall-fn (fn [err resp]
+                          (println err resp))
+                        "wow")]))
+
 (defn -main [args]
-  (test-async)
+  (test-macro)
   (println "end"))
