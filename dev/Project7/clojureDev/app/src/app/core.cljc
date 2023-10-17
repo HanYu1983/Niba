@@ -129,6 +129,91 @@
                           (println err resp))
                         "wow")]))
 
+(defn callback-map [mapf callback]
+  (let [next-callback  (fn [cb]
+                         (callback (fn [err resp]
+                                     (if err
+                                       (cb err nil)
+                                       (cb nil (mapf resp))))))]
+    next-callback))
+
+(defn callback-flatmap [mapf callback]
+  (let [next-callback  (fn [cb]
+                         (callback (fn [err resp]
+                                     (if err
+                                       (cb err nil)
+                                       ((mapf resp) cb)))))]
+    next-callback))
+
+(defn test-callback-map []
+  (let [call1 (fn [cb]
+                (cb nil "call1"))
+        call2 (callback-map #(str % "OK") call1)
+        call3 (callback-flatmap (fn [resp]
+                                  (fn [cb]
+                                    (cb nil (str resp "OK"))))
+                                call2)
+        call4 (->> call1
+                   (callback-map #(str % "call2"))
+                   (callback-flatmap (fn [resp]
+                                       (fn [cb]
+                                         (cb nil (str resp "call3")))))
+                   #_(callback-flatmap (fn [resp]
+                                         (fn [cb]
+                                           (cb "err!" nil))))
+                   (callback-map #(str % "call4")))
+        _ (call2 (fn [err resp] (println err resp)))
+        _ (call3 (fn [err resp] (println err resp)))
+        _ (call4 (fn [err resp] (println err resp)))]))
+
+(defn option-flatmap [mapf option]
+  (if (nil? option)
+    nil
+    (mapf option)))
+
+(defn either-map [mapf either]
+  (let [[left right] either
+        ret (cond
+              left
+              [left right]
+
+              right
+              [left (mapf right)]
+
+              :else
+              (throw (Exception. "must has one value")))]
+    ret))
+
+(defn either-flatmap [mapf either]
+  (let [[left right] either
+        ret (cond
+              left
+              [left right]
+
+              right
+              (mapf right)
+
+              :else
+              (throw (Exception. "must has one value")))]
+    ret))
+
+
+(defn test-either []
+  (let [get-user-id-response [nil "john"]
+        get-user-info-response (->> get-user-id-response
+                                    (either-map (fn [resp] {:name resp}))
+                                    (either-flatmap (fn [resp]
+                                                      @(future
+                                                         (Thread/sleep 1000)
+                                                         [nil (merge resp {:http true})])))
+                                    #_(either-flatmap (fn [resp] ["err!" nil]))
+                                    (either-flatmap (fn [resp] [nil (merge resp {:age 18})])))
+        _ (println get-user-info-response)
+        ; shutdown future agent
+        _ (shutdown-agents)]))
+
+
+
 (defn -main [args]
-  (test-macro)
+   
   (println "end"))
