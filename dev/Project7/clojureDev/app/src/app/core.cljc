@@ -145,6 +145,15 @@
                                        ((mapf resp) cb)))))]
     next-callback))
 
+#_(defn callback-mapn [mapfs]
+  (fn [callback]
+    (let [counter (atom 0)
+          mediator (fn [err [f resp]]
+                     )
+          _ (for [mapf mapfs]
+              (mapf (fn [err resp]
+                      (mediator err [mapf resp]))))])))
+
 (defn test-callback-map []
   (let [call1 (fn [cb]
                 (cb nil "call1"))
@@ -213,6 +222,8 @@
         _ (shutdown-agents)]))
 
 
+
+(defn )
 
 (defn -main [args]
    
