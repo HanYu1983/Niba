@@ -1,0 +1,14 @@
+version: "3"
+services:
+  dsp:
+    build: src/
+    ports:
+      - "8080:8080"
+    command:
+      - ./dsp_main
+  ssp:
+    build: src/
+    command:
+      - ./ssp_main
+    depends_on:
+      - dsp
