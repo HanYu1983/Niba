@@ -15,6 +15,7 @@ services:
     ports:
       - 8080:8080
     command: node_modules/http-server/bin/http-server -c-1 -p 8080
+  # https://stackoverflow.com/questions/64247833/how-to-proxy-pass-api-path-to-port-with-nginx
   http-server2:
     image: nginx:1.25
     volumes: 
