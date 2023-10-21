@@ -1,0 +1,1 @@
+docker run -ti --rm -v D:\Han\dev\Niba\dev\Project7\elmDev\public:/han -w /han -p 8080:8080 node:16 npx --yes http-server -c-1 -p 8080
