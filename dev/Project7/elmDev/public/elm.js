@@ -5306,6 +5306,7 @@ var $author$project$Main$view = function (model) {
 				_List_fromArray(
 					[
 						$author$project$Main$viewLink('/home'),
+						$author$project$Main$viewLink('/home?page=abc&user=20'),
 						$author$project$Main$viewLink('/profile'),
 						$author$project$Main$viewLink('/reviews/the-century-of-the-self'),
 						$author$project$Main$viewLink('/reviews/public-opinion'),

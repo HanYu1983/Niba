@@ -84,10 +84,11 @@ view model =
       , b [] [ text (Url.toString model.url) ]
       , ul []
           [ viewLink "/home"
+          , viewLink "/home?page=abc&user=20"
           , viewLink "/profile"
-          , viewLink "/reviews/the-century-of-the-self"
-          , viewLink "/reviews/public-opinion"
-          , viewLink "/reviews/shah-of-shahs"
+          , viewLink "/reviews/the-century-of-the-self" -- not work
+          , viewLink "/reviews/public-opinion" -- not work
+          , viewLink "/reviews/shah-of-shahs" -- not work
           ]
       ]
   }
