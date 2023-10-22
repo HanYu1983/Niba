@@ -1,0 +1,12 @@
+version: "3"
+services:
+  # docker-compose run --rm node npm install typescript
+  # docker-compose run --rm node node_modules/typescript/bin/tsc
+  node:
+    image: node:16
+    working_dir: /han
+    volumes:
+      - ./:/han
+    
+  
+    
