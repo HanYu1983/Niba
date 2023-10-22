@@ -1,11 +1,19 @@
 version: "3"
 services:
+  aerospike-db:
+    image: aerospike:ee-6.4.0.6
+    ports:
+      - 3000-3002:3000-3002
+    volumes:
+      - ./aerospike_db_data:/opt/aerospike/data
   dsp:
     build: src/
     ports:
-      - "8080:8080"
+      - 8080:8080
     command:
       - ./dsp_main
+    depends_on:
+      - aerospike-db
   ssp:
     build: src/
     command:

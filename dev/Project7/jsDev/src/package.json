@@ -1,0 +1,6 @@
+{
+  "dependencies": {
+    "node-gyp": "^9.4.0",
+    "rebuild": "^0.1.2"
+  }
+}

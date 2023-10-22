@@ -1,0 +1,1 @@
+docker run -ti --name dev-project7-jsDev-centos -v D:\Han\dev\Niba\dev\Project7\jsDev\:/han -w /han centos:8 bash

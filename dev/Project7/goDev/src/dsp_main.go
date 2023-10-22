@@ -9,6 +9,7 @@ import (
 )
 
 func main() {
+
 	http.HandleFunc("/bigRequest", func(w http.ResponseWriter, r *http.Request) {
 		bidResponse := openrtb2.BidResponse{
 			SeatBid: []openrtb2.SeatBid{

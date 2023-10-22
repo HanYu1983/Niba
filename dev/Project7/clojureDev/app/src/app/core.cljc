@@ -222,8 +222,25 @@
         _ (shutdown-agents)]))
 
 
+(def game-context {:animations []})
 
-(defn )
+(defn query-command [ctx]
+  [[:click-map-position]
+   [:click-system-menu [:save :load :level-info]]
+   [:system-command :process-ai-next-unit]
+   [:system-command :wait-user-response {}]
+   [:system-command :process-ai-final-step]
+   [:load-animation]])
+
+(defn handle-command [ctx cmd]
+  (match cmd
+    [:click-map-position]
+    ctx
+    
+    [:system-command :process-ai-next-unit] 
+    ctx))
+
+
 
 (defn -main [args]
    
