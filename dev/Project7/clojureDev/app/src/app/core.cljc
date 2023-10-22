@@ -1,7 +1,8 @@
 (ns app.core
   (:require [clojure.spec.alpha :as s]
             [clojure.spec.test.alpha :as stest]
-            [clojure.core.async :as a]))
+            [clojure.core.async :as a]
+            [clojure.core.match :refer [match]]))
 
 (defn ranged-rand
   "Returns random int in range start <= rand < end"
@@ -242,6 +243,104 @@
 
 
 
+(def simple-data '(fn [ctx]
+                    `(fn [~'args]
+                       (println ~(:age ctx) ~'args))))
+
+(defn test-psArmor []
+  (let [str (str simple-data)
+        psArmor (read-string str)
+        _ (println psArmor)
+        _ (println "====")
+        psArmorEval (eval psArmor)
+        _ (println psArmorEval)
+        _ (println "====")
+        psArmorSub (psArmorEval {:age 30})
+        _ (println psArmorSub)
+        _ (println "====")
+        psArmorSubEval (eval psArmorSub)
+        _ (println psArmorSubEval)
+        _ (println "====")
+        _ (psArmorSubEval "gan")]))
+
+
+;  （戦闘フェイズ）〔２〕：このセットグループのユニットは、ターン終了時まで「速攻」を得る。
+(def test-script-1 [{:id "（戦闘フェイズ）〔２〕：このセットグループのユニットは、ターン終了時まで「速攻」を得る。"
+                     :description "（戦闘フェイズ）〔２〕：このセットグループのユニットは、ターン終了時まで「速攻」を得る。"
+                     :phase :battle-phase
+                     :payment {"〔２〕" ['(fn [ctx] []) 2 {:player :you} '(fn [ctx selection] (rollG ctx selection))]}
+                     :condition {"このセットグループのユニットは、"
+                                 [[:and ["〔２〕"]]
+                                  '(fn [ctx]
+                                     (cut-in ctx {:id "effect-id"
+                                                  :text {:id "ターン終了時まで「速攻」を得る。"
+                                                         :description nil
+                                                         :actions ['(fn [ctx]
+                                                                      (update-memory ctx (runtime/get-card-id ctx) #(assoc % :activate-speed-attack 1)))
+                                                                   '(fn [ctx]
+                                                                      (add-text ctx {:id "ターン終了時まで"
+                                                                                     :description nil
+                                                                                     :events ['(fn [ctx]
+                                                                                                 ; dissoc activate-speed-attack
+                                                                                                 ctx)]}))]}}))]}
+                     :effects ['(fn [ctx]
+                                  (when (-> ctx (get-memory (runtime/get-card-id ctx)) :activate-speed-attack)
+                                    [:speed-attack (runtime/get-card-id ctx)]))]}])
+
+(def test-script-2 [{:id :ps-armor
+                     :description "PS Armor"
+                     :phase nil
+                     :replace [{:description "出場時直立"
+                                :events ['(fn [ctx runtime evt]
+                                            (let [this-card-id (-> runtime :card-id option/get)
+                                                  ctx (match evt
+                                                        [:on-play-to-position (_ :guard #(= % this-card-id))] (reroll ctx this-card-id)
+                                                        :else ctx)]
+                                              ctx))]}
+                               {:description "到戰區時下回合開始時回手, 但如果有和補給或供給組成部隊時不必回手"
+                                :events ['(fn [ctx runtime evt]
+                                            (let [this-card-id (-> runtime :card-id option/get)
+                                                  ctx (match evt
+                                                        [:on-enter-battle-area (_ :guard #(= % this-card-id))]
+                                                        (update-memory ctx this-card-id #(assoc % :return-to-hand-by-psArmor 1))
+                                                        :else ctx)]
+                                              ctx))
+                                         '(fn [ctx runtime evt]
+                                            (match evt
+                                              [:on-battle-group group-id]
+                                              (let [this-card-id (-> runtime :card-id option/get)
+                                                    group (-> ctx (get-group group-id))
+                                                    ctx (if (and (-> group (contains? this-card-id))
+                                                                 (-> group (contains-supply)))
+                                                          (update-memory ctx this-card-id (dissoc % :return-to-hand-by-psArmor))
+                                                          ctx)])
+                                              :else ctx))
+                                         '(fn [ctx runtime evt]
+                                            (match evt
+                                              [:on-turn-start]
+                                              (let [this-card-id (-> runtime :card-id option/get)
+                                                    ctx (if (-> ctx (get-memory this-card-id) :return-to-hand-by-psArmor nil? not)
+                                                          (return-to-hand ctx this-card-id)
+                                                          ctx)])
+                                              :else ctx))]}]}])
+
+; 『起動』：自軍カードが、「ゲイン」の効果で戦闘修正を得た場合、そのカードのセットグループ以外の自軍ユニット１枚は、ターン終了時まで、その戦闘修正と同じ値の戦闘修正を得る。
+(def test-script-3 [{:id "『起動』：自軍カードが、「ゲイン」の効果で戦闘修正を得た場合、そのカードのセットグループ以外の自軍ユニット１枚は、ターン終了時まで、その戦闘修正と同じ値の戦闘修正を得る。"
+                     :description nil
+                     :phase nil
+                     :events ['(fn [ctx]
+                                 (if (is-event-on-gain)
+                                   (cut-in ctx {:id "effect-id"
+                                                :reason [:trigger-by-card-id this-card-id]
+                                                :is-immediate true
+                                                :clear-cut-in-status false
+                                                :text {:id "そのカードのセットグループ以外の自軍ユニット１枚は、ターン終了時まで、その戦闘修正と同じ値の戦闘修正を得る。"
+                                                       :description nil
+                                                       :payments {"そのカードのセットグループ以外の自軍ユニット１枚は、ターン終了時まで、その戦闘修正と同じ値の戦闘修正を得る。"
+                                                                  ['(fn [ctx] []) 1 nil '(fn [ctx selection] (add-text ctx {:events []
+                                                                                                                            :effects []}))]}}})
+                                   ctx))]}])
+
 (defn -main [args]
-   
+  (test-psArmor)
   (println "end"))
