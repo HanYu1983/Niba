@@ -390,6 +390,6 @@
                   effect-fn (eval effect-script)
                   _ (println (effect-fn ctx runtime))]))]))
 
-(defn -main [args] 
+(defn -main [args]
   (test-script-eval)
-  (println "end"))
+  (.println System/out "結束"))
