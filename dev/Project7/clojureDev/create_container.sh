@@ -1,0 +1,1 @@
+docker run --name dev-project7-clojureDev -ti -p 8080:8080 -p 9000:9000 -v "$PWD":/tmpdev -w /tmpdev clojure bash
