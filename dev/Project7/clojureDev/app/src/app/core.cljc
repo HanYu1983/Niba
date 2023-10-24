@@ -2,7 +2,8 @@
   (:require [clojure.spec.alpha :as s]
             [clojure.spec.test.alpha :as stest]
             [clojure.core.async :as a]
-            [clojure.core.match :refer [match]]))
+            [clojure.core.match :refer [match]]
+            [app.dynamic]))
 
 (defn ranged-rand
   "Returns random int in range start <= rand < end"
@@ -328,19 +329,67 @@
 (def test-script-3 [{:id "『起動』：自軍カードが、「ゲイン」の効果で戦闘修正を得た場合、そのカードのセットグループ以外の自軍ユニット１枚は、ターン終了時まで、その戦闘修正と同じ値の戦闘修正を得る。"
                      :description nil
                      :phase nil
-                     :events ['(fn [ctx]
-                                 (if (is-event-on-gain)
-                                   (cut-in ctx {:id "effect-id"
-                                                :reason [:trigger-by-card-id this-card-id]
-                                                :is-immediate true
-                                                :clear-cut-in-status false
-                                                :text {:id "そのカードのセットグループ以外の自軍ユニット１枚は、ターン終了時まで、その戦闘修正と同じ値の戦闘修正を得る。"
-                                                       :description nil
-                                                       :payments {"そのカードのセットグループ以外の自軍ユニット１枚は、ターン終了時まで、その戦闘修正と同じ値の戦闘修正を得る。"
-                                                                  ['(fn [ctx] []) 1 nil '(fn [ctx selection] (add-text ctx {:events []
-                                                                                                                            :effects []}))]}}})
+                     :events ['(fn [ctx runtime evt]
+                                 (clojure.core.match/match evt
+                                   [:on-gain {:battle-point battle-point}]
+                                   (let [this-card-id (-> runtime :card-id)
+                                         option-ids ["zaku" "gundam"]
+                                         ctx (if (-> option-ids count pos?)
+                                               (app.dynamic/cut-in ctx {:id "effect-id"
+                                                                        :reason [:trigger-by-card-id this-card-id]
+                                                                        :is-immediate true
+                                                                        :clear-cut-in-status false
+                                                                        :text {:id "そのカードのセットグループ以外の自軍ユニット１枚は、ターン終了時まで、その戦闘修正と同じ値の戦闘修正を得る。"
+                                                                               :description nil
+                                                                               :payments {"そのカードのセットグループ以外の自軍ユニット１枚は、ターン終了時まで、その戦闘修正と同じ値の戦闘修正を得る。"
+                                                                                          [option-ids 1 nil `(fn [~'ctx ~'selection]
+                                                                                                               (app.dynamic/add-text ~'ctx "text-id" {:events [(read-string (str "(fn [ctx runtime evt] 
+                                                                                                                                                                        (match evt
+                                                                                                                                                                        [:on-end-turn info]
+                                                                                                                                                                        (app.dynamic/delete-text ctx \"text-id\")
+
+                                                                                                                                                                        :else
+                                                                                                                                                                        ctx))"))]
+                                                                                                                                                      :effects [(read-string (str "(fn [ctx runtime] 
+                                                                                                                                                                         (for [card-id " ~'selection "] [:add-battle-point card-id " ~battle-point " '(fn [ctx])]))"))
+                                                                                                                                                                `(fn [~~''ctx ~~''runtime]
+                                                                                                                                                                   (for [~~''card-id ~~'selection]
+                                                                                                                                                                     [:add-battle-point ~~''card-id ~~battle-point `(fn [~~~'''ctx])]))
+                                                                                                                                                                (list ~''fn [~''ctx ~''runtime]
+                                                                                                                                                                      (list ~''for [~''card-id ~'selection]
+                                                                                                                                                                            [:add-battle-point ~''card-id ~battle-point]))]}))]}}})
+                                               ctx)]
+                                     ctx)
+                                   :else
                                    ctx))]}])
 
-(defn -main [args]
-  (test-psArmor)
+(defn test-script-eval []
+  (let [effect (atom nil)
+        added-text (atom nil)
+        _ (binding [app.dynamic/cut-in (fn [ctx eff]
+                                         (reset! effect eff)
+                                         ctx)
+                    app.dynamic/add-text (fn [ctx text-id text]
+                                           (reset! added-text text)
+                                           ctx)]
+            (let [ctx {}
+                  runtime {:card-id "gundam"}
+                  script (-> test-script-3 str read-string first :events first)
+                  _ (println script)
+                  eventF (eval script)
+                  _ (eventF ctx runtime [:on-gain {:battle-point [1 1 0]}])
+                  [option-ids _ _ action-script] (-> @effect :text :payments first second)
+                  _ (println "=============================")
+                  _ (println (macroexpand action-script))
+                  action-fn (eval action-script)
+                  _ (action-fn ctx option-ids)
+                  [effect-script & _] (-> @added-text :effects)
+                  _ (println "=============================")
+                  _ (println effect-script)
+                  _ (println (macroexpand effect-script))
+                  effect-fn (eval effect-script)
+                  _ (println (effect-fn ctx runtime))]))]))
+
+(defn -main [args] 
+  (test-script-eval)
   (println "end"))
