@@ -1,18 +1,17 @@
 package main
 
 import (
-	"log"
-
-	aerospike "github.com/aerospike/aerospike-client-go/v6"
+	"src/aerospike_db"
 )
 
 func main() {
-	address := "http://localhost"
-	port := 3000
-	client, err := aerospike.NewClient(address, port)
-	if err != nil {
-		log.Fatal(err)
-	}
-	defer client.Close()
-	println("end")
+	aerospike_db.Test()
+	// address := "http://localhost"
+	// port := 3000
+	// client, err := aerospike.NewClient(address, port)
+	// if err != nil {
+	// 	log.Fatal(err)
+	// }
+	// defer client.Close()
+	// println("end")
 }
