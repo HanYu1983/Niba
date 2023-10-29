@@ -76,6 +76,11 @@
                       :opt-un [::description ::phase ::payments ::events ::condition ::effects ::replace]))
 (s/def ::texts (s/coll-of ::text))
 
+(s/def ::is-immediate boolean?)
+(s/def ::clear-cutin-status boolean?)
+(s/def ::cutin-effect (s/keys :req-un [::id ::reason ::text]
+                              :opt-un [::is-immediate ::clear-cutin-status]))
+
 
 ; 『起動』：自軍カードが、「ゲイン」の効果で戦闘修正を得た場合、そのカードのセットグループ以外の自軍ユニット１枚は、ターン終了時まで、その戦闘修正と同じ値の戦闘修正を得る。
 (def test-script-3 [{:id "『起動』：自軍カードが、「ゲイン」の効果で戦闘修正を得た場合、そのカードのセットグループ以外の自軍ユニット１枚は、ターン終了時まで、その戦闘修正と同じ値の戦闘修正を得る。"
@@ -90,7 +95,7 @@
                                                (app.dynamic/cut-in ctx {:id "effect-id"
                                                                         :reason [:trigger-by-card-id this-card-id]
                                                                         :is-immediate true
-                                                                        :clear-cut-in-status false
+                                                                        :clear-cutin-status false
                                                                         :text {:id "そのカードのセットグループ以外の自軍ユニット１枚は、ターン終了時まで、その戦闘修正と同じ値の戦闘修正を得る。"
                                                                                :description nil
                                                                                :payments {"そのカードのセットグループ以外の自軍ユニット１枚は、ターン終了時まで、その戦闘修正と同じ値の戦闘修正を得る。"
