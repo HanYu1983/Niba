@@ -11,8 +11,6 @@ import view.widgets.TreasureListView;
 import model.IModel.PreResultOfStrategy;
 import haxe.ui.containers.dialogs.Dialogs;
 import haxe.ui.containers.dialogs.MessageBox;
-import view.widgets.GridListView;
-import view.widgets.LeaderListView;
 import view.widgets.StrategyListView;
 import view.widgets.PeopleListView;
 import haxe.ui.events.UIEvent;
