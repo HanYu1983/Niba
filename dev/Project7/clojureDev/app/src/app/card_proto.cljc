@@ -131,8 +131,8 @@
                   (map (comp eval :action conditions))
                   (zipmap key-list)
                   (map (fn [[key action-fn]]
-                         (try  [nil (action-fn ctx runtime (selections key))]
-                               (catch Throwable e [e nil]))))
+                         (try [nil (action-fn ctx runtime (selections key))]
+                              (catch Throwable e [e nil]))))
                   (filter first)
                   (map first))
         _ (when (-> errs count pos?)
