@@ -4,4 +4,5 @@
 {:deps {han/app {:local/root "../app"}
         org.clojure/clojurescript {:mvn/version "1.11.60"}
         org.clojure/core.async {:mvn/version "1.6.673"}}
- :aliases {:build  {:main-opts ["-m" "cljs.main" "-c" "client.core"]}}}
+ :aliases {; clj -M:build
+           :build  {:main-opts ["-m" "cljs.main" "-c" "client.core"]}}}

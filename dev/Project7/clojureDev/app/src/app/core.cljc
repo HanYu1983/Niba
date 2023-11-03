@@ -2,9 +2,7 @@
   (:require [clojure.core.match]
             [app.dynamic]
             [app.text]
-            [app.card-proto]
-            [lib.logic-tree]
-            [lib.util]))
+            [app.card-proto]))
 
 (defn -main [args]
   (println "ver 1.0.0")
