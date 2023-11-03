@@ -44,9 +44,10 @@
                                    (-> ctx :age (= 130))
                                    ((fn [ctx] (assoc ctx :weapon 1))))))
   (let [ctx {:state :origin}
-        _ (println (return-> ctx
-                             true
-                             ((fn [ctx args] (assoc ctx :age args)) 30)
+        ctx (return-> ctx
+                      true
+                      ((fn [ctx args] (assoc ctx :age args)) 30)
 
-                             (-> ctx :age (= 30))
-                             ((fn [ctx] (assoc ctx :weapon 1)))))]))
+                      (-> ctx :age (= 30))
+                      ((fn [ctx] (assoc ctx :weapon 1))))
+        _ (println ctx)]))

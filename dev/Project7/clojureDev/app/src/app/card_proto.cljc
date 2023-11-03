@@ -1,6 +1,7 @@
 (ns app.card-proto
   (:require [clojure.spec.alpha :as s]
             [clojure.spec.test.alpha :as stest]
+            [clojure.string]
             [app.dynamic]
             [lib.logic-tree]
             [lib.util :refer [return->]]))
@@ -119,11 +120,37 @@
 
 
 
-(defn do-logic [ctx runtime card-proto text-id logic selections] 
-  (let [has-logic (lib.logic-tree/has logic (keys selections))
-        conditions (-> card-proto second :texts (get text-id) :conditions)
-        logic-options (lib.logic-tree/has logic (keys selections))
-        _ (println logic-options)]))
+(defn do-logic [ctx runtime card-proto text-id logic selections]
+  (let [text (-> card-proto second :texts (get text-id))
+        conditions (-> text :conditions)
+        key-list (keys selections)
+        has-logic (lib.logic-tree/has logic key-list)
+        _ (when (not has-logic)
+            (throw (ex-info "not in" {})))
+        errs (->> key-list
+                  (map (comp eval :action conditions))
+                  (zipmap key-list)
+                  (map (fn [[key action-fn]]
+                         (try  [nil (action-fn ctx runtime (selections key))]
+                               (catch Throwable e [e nil]))))
+                  (filter first)
+                  (map first))
+        _ (when (-> errs count pos?)
+            (throw (ex-info (->> errs 
+                                 (map #(.getMessage %)) 
+                                 (clojure.string/join ",")) 
+                            {})))
+        ctx (->> key-list
+                 (map (comp eval :action conditions))
+                 (zipmap key-list)
+                 (reduce (fn [ctx [key action-fn]]
+                           (action-fn ctx runtime (selections key)))
+                         ctx))
+        action-fn (-> text :action eval)
+        ctx (if (not action-fn)
+              ctx
+              (action-fn ctx runtime))]
+    ctx))
 
 
 (defn test-all []
@@ -136,14 +163,18 @@
                               :events ['(fn [ctx runtime evt])]
                               :game-effects []
                               :conditions {"1"
-                                           {:tips '()
+                                           {:tips '(fn [ctx runtime]
+                                                     [:card "0" "1"])
                                             :count 1
                                             :options {:player :own}
-                                            :action '(fn [ctx runtime])}
+                                            :action '(fn [ctx runtime selection]
+                                                       #_(throw (ex-info "not in 2" {}))
+                                                       ctx)}
                                            "in-battle-phase"
                                            {:options {:player :enemy}
-                                            :action '(fn [ctx runtime]
-                                                       (assert-in-battle-phase ctx))}}
+                                            :action '(fn [ctx runtime selection]
+                                                       #_(throw (ex-info "not in" {}))
+                                                       ctx)}}
                               :logic '(And (Leaf "1")
                                            (Leaf "in-battle-phase"))
                               :action '(fn [ctx runtime])}

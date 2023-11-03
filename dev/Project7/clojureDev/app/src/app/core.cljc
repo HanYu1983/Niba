@@ -8,7 +8,7 @@
 
 (defn -main [args]
   (println "ver 1.0.0")
-  (lib.util/test-all)
+  ;(lib.util/test-all)
   (app.card-proto/test-all)
   ;(app.text/test)
   (.println System/out "結束"))
