@@ -1,7 +1,7 @@
 version: "3"
 services:
   # https://stackoverflow.com/questions/64247833/how-to-proxy-pass-api-path-to-port-with-nginx
-  http-server:
+  web:
     image: nginx:1.25
     volumes: 
       - ./nginx.conf:/etc/nginx/conf.d/default.conf
