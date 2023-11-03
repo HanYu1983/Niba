@@ -9,6 +9,14 @@ services:
       - ./client/out:/www/data/out
     ports:
       - 8080:8080
+  api:
+    image: clojure
+    working_dir: /han
+    volumes:
+      - ./game:/han
+    ports:
+      - 8081:8081
+    command: clj -X game.server/-main
   # docker-compose run --name dev-project7-clojureDev clojure bash
   clojure:
     image: clojure

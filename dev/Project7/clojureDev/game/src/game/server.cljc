@@ -32,6 +32,7 @@
 
 (compojure.core/defroutes app
   (GET "/" [] (page-index))
+  (GET "/fn/model" [] (str {:main 30 :script '(fn [] (read-string "(fn [])"))}))
   (wrap-params (POST "/fn/start_game" [game-id :as r]
                  (<!! (swap-model [:start-game game-id]))
                  (redirect "/")))

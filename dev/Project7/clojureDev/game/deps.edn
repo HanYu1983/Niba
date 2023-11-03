@@ -6,7 +6,4 @@
         hiccup/hiccup {:mvn/version "1.0.5"}}
  :aliases {; clj -M:run (only -main)
            :run {:main-opts ["-m" "game.core" {:env :m}]
-                 :extra-deps {org.clojure/test.check {:mvn/version "0.9.0"}}}
-           ; clj -M:server
-           :server {:exec-fn game.server/-main
-                    :exec-args {:env :x}}}}
+                 :extra-deps {org.clojure/test.check {:mvn/version "0.9.0"}}}}}
