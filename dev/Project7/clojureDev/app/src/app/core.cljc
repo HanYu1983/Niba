@@ -2,10 +2,13 @@
   (:require [clojure.core.match]
             [app.dynamic]
             [app.text]
-            [lib.logic-tree]))
+            [app.card-proto]
+            [lib.logic-tree]
+            [lib.util]))
 
 (defn -main [args]
   (println "ver 1.0.0")
-  (lib.logic-tree/test-all)
+  (lib.util/test-all)
+  (app.card-proto/test-all)
   ;(app.text/test)
   (.println System/out "結束"))

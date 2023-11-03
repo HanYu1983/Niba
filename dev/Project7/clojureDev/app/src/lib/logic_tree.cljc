@@ -22,6 +22,9 @@
     (leaf? tree) (list (list (second tree)))
     :else (throw (ex-info (str "Unknown tree structure" tree) {}))))
 
+(defn has [tree keys]
+  (->> (enumerateAll tree) (map #(into #{} %)) (some #(= (into #{} keys) %))))
+
 (def question1 '(And
                  (Leaf "action-1")
                  (Leaf "action-2")

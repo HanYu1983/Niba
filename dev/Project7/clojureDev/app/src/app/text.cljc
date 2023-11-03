@@ -161,6 +161,6 @@
   (s/explain ::texts test-script-2)
   (s/explain ::texts test-script-3))
 
-(defn test []
+(defn test-all []
   (test-spec)
   #_(test-script-eval))
