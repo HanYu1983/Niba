@@ -1,2 +1,6 @@
 .cpcache
 out
+.config
+bin
+fable_modules
+obj

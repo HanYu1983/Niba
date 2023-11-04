@@ -5,8 +5,9 @@ services:
     image: nginx:1.25
     volumes: 
       - ./nginx.conf:/etc/nginx/conf.d/default.conf
-      - ./client/public:/www/data
-      - ./client/out:/www/data/out
+      #- ./client/public:/www/data
+      #- ./client/out:/www/data/out
+      - ./client2:/www/data
     ports:
       - 8080:8080
   api:
@@ -20,6 +21,13 @@ services:
   # docker-compose run --name dev-project7-clojureDev clojure bash
   clojure:
     image: clojure
+    working_dir: /han
+    volumes:
+      - ./:/han
+  # docker-compose run --name dev-project7-clojureDev-dotnet dotnet bash
+  # https://fable.io/docs/getting-started/your-first-fable-project.html
+  dotnet:
+    image: mcr.microsoft.com/dotnet/sdk:8.0
     working_dir: /han
     volumes:
       - ./:/han
