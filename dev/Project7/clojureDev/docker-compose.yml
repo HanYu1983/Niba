@@ -7,8 +7,9 @@ services:
       - ./nginx.conf:/etc/nginx/conf.d/default.conf
       #- ./client/public:/www/data
       #- ./client/out:/www/data/out
+      - ./client:/www/data
       #- ./client2:/www/data
-      - ./client3/public:/www/data
+      #- ./client3/public:/www/data
     ports:
       - 8080:8080
   api:
@@ -18,7 +19,7 @@ services:
       - ./game:/han
     ports:
       - 8081:8081
-    command: clj -X game.server/-main
+    command: clj -X:server
   # docker-compose run --name dev-project7-clojureDev clojure bash
   clojure:
     image: clojure
