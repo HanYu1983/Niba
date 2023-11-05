@@ -118,7 +118,6 @@
                   _ (println (effect-fn ctx runtime))]))]))
 
 
-
 (defn do-logic [ctx runtime card-proto text-id logic selections]
   (let [text (-> card-proto second :texts (get text-id))
         conditions (-> text :conditions)
@@ -135,9 +134,9 @@
                   (filter first)
                   (map first))
         _ (when (-> errs count pos?)
-            (throw (ex-info (->> errs 
-                                 (map #(.getMessage %)) 
-                                 (clojure.string/join ",")) 
+            (throw (ex-info (->> errs
+                                 (map #(.getMessage %))
+                                 (clojure.string/join ","))
                             {})))
         ctx (->> key-list
                  (map (comp eval :action conditions))
@@ -190,3 +189,4 @@
                           (Leaf "in-battle-phase"))
                     {"1" [:card "1"]
                      "in-battle-phase" [:player-yes "ok"]})]))
+
