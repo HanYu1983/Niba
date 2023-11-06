@@ -1,0 +1,8 @@
+version: "3"
+services:
+  # docker-compose run --name dev-project7-pythonDev python bash
+  python:
+    image: python:2.7
+    working_dir: /han
+    volumes:
+      - ./src:/han
