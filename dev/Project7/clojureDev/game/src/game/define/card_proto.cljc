@@ -70,7 +70,7 @@
                                                                                :type :system 
                                                                                :conditions {"condition-1"
                                                                                             {:tips `(fn [~'ctx ~'runtime]
-                                                                                                      ~option-ids)
+                                                                                                      [:card ~@option-ids])
                                                                                              :count 1
                                                                                              :options nil
                                                                                              :action `(fn [~'ctx ~'runtime ~'selection]
@@ -78,7 +78,7 @@
                                                                                                                                              {:type :system
                                                                                                                                               :events [(read-string (str "(fn [ctx runtime evt] (match evt [:on-end-turn info] (app.dynamic/delete-text ctx \"text-id\") :else ctx))"))]
                                                                                                                                               :game-effects [`(fn [~~''ctx ~~''runtime]
-                                                                                                                                                                (for [~~''card-id ~~'selection]
+                                                                                                                                                                (for [~~''card-id (rest ~~'selection)]
                                                                                                                                                                   [:add-battle-point ~~''card-id ~~battle-point]))
                                                                                                                                                              (read-string (str "(fn [ctx runtime] (for [card-id " ~'selection "] [:add-battle-point card-id " ~battle-point "]))"))
                                                                                                                                                              (list ~''fn [~''ctx ~''runtime]
@@ -107,11 +107,15 @@
                   {option-ids-script :tips action-script :action} (-> @effect second :text second :conditions (get "condition-1"))
                   option-ids-fn (eval option-ids-script)
                   option-ids (option-ids-fn ctx runtime)
+                  _ (when (not (= option-ids [:card "zaku" "gundam"]))
+                      (throw (ex-info "option-ids not right" {})))
+                  ;_ (println option-ids)
                   action-fn (eval action-script)
                   _ (action-fn ctx runtime option-ids)
                   effect-script (-> @added-text second :game-effects first)
                   effect-fn (eval effect-script)
                   game-effects (effect-fn ctx runtime)
+                  ;_ (println game-effects)
                   _ (when (not (= game-effects (list [:add-battle-point "zaku" [1 1 0]] [:add-battle-point "gundam" [1 1 0]])))
                       (throw (ex-info "effects not right" {})))]))]))
 
