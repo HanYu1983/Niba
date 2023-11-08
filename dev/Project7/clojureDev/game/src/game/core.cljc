@@ -9,6 +9,7 @@
             [game.component.card-proto]
             [game.component.cuts]
             [game.component.effect]
+            [game.entity.model]
             [game.tool.return-let]
             [game.tool.waterfall]
             [game.tool.callback]
@@ -97,6 +98,7 @@
   (game.component.card-proto/tests)
   (game.component.cuts/tests)
   (game.component.effect/tests)
+  (game.entity.model/tests)
   (test-script-eval)
    ;; (game.tool.return-let/test-all)
   ;; (game.tool.waterfall/test-all)
