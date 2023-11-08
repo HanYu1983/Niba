@@ -6,6 +6,7 @@
             [game.define.basyou]
             [game.define.card-text]
             [game.define.effect]
+            [game.define.gsign]
             [game.component.card-proto]
             [game.component.cuts]
             [game.component.effect]
@@ -18,7 +19,7 @@
 (defn test-script-eval []
   (let [card-proto-example
         [""
-         {:gsign [:blue :UC]
+         {:gsign [:blue :uc]
           :type :unit
           :texts {"text-1"
                   {:description "『起動』：自軍カードが、「ゲイン」の効果で戦闘修正を得た場合、そのカードのセットグループ以外の自軍ユニット１枚は、ターン終了時まで、その戦闘修正と同じ値の戦闘修正を得る。"
@@ -95,6 +96,7 @@
   (game.define.basyou/tests)
   (game.define.card-proto/tests)
   (game.define.effect/tests)
+  (game.define.gsign/tests)
   (game.component.card-proto/tests)
   (game.component.cuts/tests)
   (game.component.effect/tests)

@@ -11,7 +11,7 @@
                        :opt-un [::battle-point ::cost ::pack ::char]))
 (s/def ::spec (s/tuple any? ::value))
 
-(def default-card-proto-value {:gsign [:blue :UC]
+(def default-card-proto-value {:gsign [:blue :uc]
                                :type :unit
                                :texts {}})
 
@@ -74,7 +74,7 @@
                              "gundam-text-2"
                              {:type [:special [:psycommu 3]]}}
                      :type :graphic
-                     :gsign [:blue :UC]
+                     :gsign [:blue :uc]
                      :battle-point [2 1 2]
                      :char "gundam xx ee"
                      :cost [:normal [:blue :blue nil nil nil]]
