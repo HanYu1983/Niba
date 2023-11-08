@@ -1,17 +1,15 @@
 (ns game.core
   (:require [clojure.core.match]
             [clojure.spec.alpha :as s]
-            [app.dynamic]
-            [app.text]
             [game.define.card-proto]
             [game.define.basyou]
             [game.define.card-text]
+            [game.define.effect]
+            [game.common.dynamic]
             [game.tool.return-let]
             [game.tool.waterfall]
             [game.tool.callback]
-            [game.tool.either]
-            [game.common.dynamic]
-            [game.define.effect]))
+            [game.tool.either]))
 
 (defn test-script-eval []
   (let [card-proto-example
@@ -91,7 +89,7 @@
   (s/check-asserts true)
 
   (game.define.card-text/tests)
-  ;; (game.define.basyou/tests)
+  (game.define.basyou/tests)
   ;; (game.tool.return-let/test-all)
   ;; (game.tool.waterfall/test-all)
   ;; (game.tool.callback/test-all)

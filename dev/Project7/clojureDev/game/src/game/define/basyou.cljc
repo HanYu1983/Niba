@@ -31,6 +31,6 @@
 (defn tests []
   (s/assert ::spec [:A :sute-yama])
   (when (not (is-battle-area? :space-area))
-    (throw "space-area is-battle-area?"))
+    (throw (ex-info "space-area is-battle-area?" {})))
   (when (is-battle-area? :hon-goku)
-    (throw "hon-goku is not is-battle-area?")))
+    (throw (ex-info "hon-goku is not is-battle-area?" {}))))
