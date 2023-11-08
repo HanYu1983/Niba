@@ -12,7 +12,7 @@
    其它國力用1個相應國力支付"
   [color pay-colors]
   (when (not (vector? pay-colors))
-    (throw (ex-message "pay-colors must vec")))
+    (throw (ex-info "pay-colors must vec" {})))
   (cond
     (= color :purple)
     (or (->> pay-colors (= [:purple]))
