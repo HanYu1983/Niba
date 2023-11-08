@@ -51,7 +51,7 @@
   "取得效果的執行期資訊"
   [ctx effect]
   (s/assert :game.define.effect/spec effect)
-  (match (:reason effect)
+  (match (-> effect second :reason)
     [:system response-player-id]
     {:card-id [(ex-info "" {}), nil] :player-id [nil, response-player-id]}
 
@@ -147,10 +147,10 @@
 
 (defn test-get-effect-runtime []
   (binding [get-card-controller-and-assert-exist (fn [ctx card-id] :A)]
-    (let [runtime (for [effect (map #(assoc game.define.effect/effect-value :reason %) game.define.effect/reasons)]
-                    (get-effect-runtime {} effect))
-          ;_ (println runtime)
-          ])))
+    (let [runtimes (for [effect (map #(assoc game.define.effect/effect-value :reason %) game.define.effect/reasons)]
+                     (get-effect-runtime {} ["effect-id" effect]))
+          _ (doseq [runtime runtimes]
+              (s/assert :game.define.runtime/spec runtime))])))
 
 (defn tests []
   (s/check-asserts false)
@@ -160,5 +160,5 @@
   (test-new-cut)
   (test-map-effects)
   (test-remove-effect)
-  (test-get-effect-runtime)
-  (s/check-asserts true))
+  (s/check-asserts true)
+  (test-get-effect-runtime))
