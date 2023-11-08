@@ -22,16 +22,16 @@
                        :opt-un [::description ::events ::game-effects ::conditions ::logic ::action ::is-surrounded-by-arrows]))
 (s/def ::spec (s/tuple any? ::value))
 
-(def default-text {:type [:use [:turn :own]]})
+(def card-text-value {:type [:use [:turn :own]]})
 
 (defn tests []
-  (s/assert ::value (merge default-text {:description ""
-                                         :events []
-                                         :game-effects []
-                                         :conditions {"" {:tips '()
-                                                          :count 0
-                                                          :options {}
-                                                          :action '()}}
-                                         :logic '(And (Leaf ""))
-                                         :action '()
-                                         :is-surrounded-by-arrows false})))
+  (s/assert ::value (merge card-text-value {:description ""
+                                            :events []
+                                            :game-effects []
+                                            :conditions {"" {:tips '()
+                                                             :count 0
+                                                             :options {}
+                                                             :action '()}}
+                                            :logic '(And (Leaf ""))
+                                            :action '()
+                                            :is-surrounded-by-arrows false})))

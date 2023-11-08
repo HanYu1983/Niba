@@ -8,8 +8,12 @@
 (s/def ::type #{:unit :character :command :operation :operation-unit :graphic :ace})
 (s/def ::gsign :game.define.gsign/spec)
 (s/def ::value (s/keys :req-un [::type ::gsign ::texts]
-                      :opt-un [::battle-point ::cost ::pack ::char]))
+                       :opt-un [::battle-point ::cost ::pack ::char]))
 (s/def ::spec (s/tuple any? ::value))
+
+(def default-card-proto-value {:gsign [:blue :UC]
+                               :type :unit
+                               :texts {}})
 
 (defn do-logic [ctx runtime card-proto text-id logic selections]
   (let [text (-> card-proto second :texts (get text-id))

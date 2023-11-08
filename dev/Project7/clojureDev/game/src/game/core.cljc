@@ -1,11 +1,14 @@
 (ns game.core
   (:require [clojure.core.match]
             [clojure.spec.alpha :as s]
+            [game.common.dynamic]
             [game.define.card-proto]
             [game.define.basyou]
             [game.define.card-text]
             [game.define.effect]
-            [game.common.dynamic]
+            [game.component.card-proto]
+            [game.component.cuts]
+            [game.component.effect]
             [game.tool.return-let]
             [game.tool.waterfall]
             [game.tool.callback]
@@ -28,7 +31,7 @@
                                option-ids ["zaku" "gundam"]
                                ctx (if (-> option-ids count pos?)
                                      (game.common.dynamic/cut-in ctx ["effect-id1"
-                                                                      {:reason [:trigger-by-card-id this-card-id]
+                                                                      {:reason [:play-text "player-id" this-card-id "text-1"]
                                                                        :is-immediate true
                                                                        :clear-cutin-status false
                                                                        :text ["text-2"
@@ -87,12 +90,16 @@
 
 (defn -main [args]
   (s/check-asserts true)
-
   (game.define.card-text/tests)
   (game.define.basyou/tests)
-  ;; (game.tool.return-let/test-all)
+  (game.define.card-proto/tests)
+  (game.define.effect/tests)
+  (game.component.card-proto/tests)
+  (game.component.cuts/tests)
+  (game.component.effect/tests)
+  (test-script-eval)
+   ;; (game.tool.return-let/test-all)
   ;; (game.tool.waterfall/test-all)
   ;; (game.tool.callback/test-all)
   ;; (game.tool.either/test-all)
-  (game.define.card-proto/tests)
-  (test-script-eval))
+  )
