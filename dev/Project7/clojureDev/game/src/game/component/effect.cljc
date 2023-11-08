@@ -53,7 +53,7 @@
   (s/assert :game.define.effect/spec effect)
   (match (:reason effect)
     [:system response-player-id]
-    {:card-id [(ex-message ""), nil] :player-id [nil, response-player-id]}
+    {:card-id [(ex-info "" {}), nil] :player-id [nil, response-player-id]}
 
     [:play-card play-card-player-id card-id]
     {:card-id [nil, card-id] :player-id [nil, play-card-player-id]}
@@ -66,7 +66,7 @@
       {:card-id [nil, card-id] :player-id [nil, response-player-id]})
 
     :else
-    (throw (ex-message "reason not match"))))
+    (throw (ex-info "reason not match" {}))))
 
 
 
