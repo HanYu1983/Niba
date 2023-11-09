@@ -9,8 +9,8 @@
 (s/def ::cards (s/map-of ::card-id ::card))
 (s/def ::table (s/keys :req-un [::decks ::cards]))
 
-(def ^:private table {:decks {}
-                      :cards {}})
+(def table {:decks {}
+            :cards {}})
 
 (defn create-table []
   table)
@@ -22,7 +22,7 @@
   (-> table
       (update :cards #(assoc % card-id card))
       (update :decks (fn [decks]
-                       (if (deck-id decks)
+                       (if (get decks deck-id)
                          (update decks deck-id #(conj % card-id))
                          (assoc decks deck-id [card-id]))))))
 

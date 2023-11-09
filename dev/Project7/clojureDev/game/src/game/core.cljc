@@ -10,6 +10,7 @@
             [game.component.card-proto]
             [game.component.cuts]
             [game.component.effect]
+            [game.component.table]
             [game.entity.model]
             [game.tool.return-let]
             [game.tool.waterfall]
@@ -100,6 +101,7 @@
   (game.component.card-proto/tests)
   (game.component.cuts/tests)
   (game.component.effect/tests)
+  (game.component.table/tests)
   (game.entity.model/tests)
   (test-script-eval)
    ;; (game.tool.return-let/test-all)

@@ -2,6 +2,5 @@
   (:require [clojure.spec.alpha :as s]
             [game.define.basic]
             [game.tool.card.table]))
-
-(s/def ::id any?)
-(s/def ::spec (s/keys :req-un [::id]))
+(s/def ::value (s/keys :req-un [::proto]))
+(s/def ::spec (s/tuple any? ::value))
