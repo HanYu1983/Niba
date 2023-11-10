@@ -4,4 +4,4 @@
 
 (s/def ::type #{:chip})
 (s/def ::card-proto :game.define.card-proto/value)
-(s/def ::value (s/keys :req-un [::type ::card-proto]))
+(s/def ::value (s/keys :req-un [::type ::name ::card-proto]))

@@ -7,6 +7,7 @@
             [game.define.card-text]
             [game.define.effect]
             [game.define.gsign]
+            [game.define.selection]
             [game.component.card-proto]
             [game.component.cuts]
             [game.component.effect]
@@ -78,7 +79,7 @@
                   _ (eventF ctx runtime [:on-gain {:battle-point [1 1 0]}])
                   {option-ids-script :tips action-script :action} (-> @effect second :text second :conditions (get "condition-1"))
                   option-ids-fn (eval option-ids-script)
-                  option-ids (option-ids-fn ctx runtime)
+                  option-ids (s/assert :game.define.selection/spec (option-ids-fn ctx runtime))
                   _ (when (not (= option-ids [:card "zaku" "gundam"]))
                       (throw (ex-info "option-ids not right" {})))
                   ;_ (println option-ids)
@@ -98,6 +99,7 @@
   (game.define.card-proto/tests)
   (game.define.effect/tests)
   (game.define.gsign/tests)
+  (game.define.selection/tests)
   (game.component.card-proto/tests)
   (game.component.cuts/tests)
   (game.component.effect/tests)
