@@ -24,6 +24,11 @@
 
 (def card-text-value {:type [:use [:turn :own]]})
 
+(defn get-conditions [text])
+(defn filter-player-condition [player-id text])
+(defn get-logic [text])
+(defn can-pass-conditions [text selection])
+
 (defn tests []
   (s/assert ::value (merge card-text-value {:description ""
                                             :events []
