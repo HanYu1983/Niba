@@ -13,6 +13,7 @@
             [game.component.effect]
             [game.component.table]
             [game.entity.model]
+            [game.entity.flow]
             [game.tool.return-let]
             [game.tool.waterfall]
             [game.tool.callback]
@@ -105,6 +106,7 @@
   (game.component.effect/tests)
   (game.component.table/tests)
   (game.entity.model/tests)
+  (game.entity.flow/tests)
   (test-script-eval)
    ;; (game.tool.return-let/test-all)
   ;; (game.tool.waterfall/test-all)

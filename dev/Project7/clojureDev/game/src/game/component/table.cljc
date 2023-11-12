@@ -64,7 +64,7 @@
         card-item {:type :card :proto ""}
         ctx (add-card-or-chip ctx [:A :hand] "item-1" card-item)
         _ (-> ctx (get-item "item-1") (= card-item) (or (throw (ex-info "must eq card-item" {}))))
-        coin-item {:type :coin :description "+1/+1/+1"}
+        coin-item {:type :coin :description "+1/+1/+1" :player-id :A}
         ctx (add-coin ctx "coin-1" coin-item)
         _ (-> ctx (get-item "coin-1") (= coin-item) (or (throw (ex-info "must eq coin-item" {}))))
         coin-item2 (assoc coin-item :description "change")
