@@ -3,3 +3,6 @@
 
 (s/def ::id #{:A :B})
 (s/def ::spec (s/keys :req-un [::id]))
+
+(defn get-opponent [player-id]
+  (if (= player-id :A) :B :A))
