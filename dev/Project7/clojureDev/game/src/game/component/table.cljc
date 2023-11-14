@@ -1,8 +1,10 @@
 (ns game.component.table
   (:require [clojure.spec.alpha :as s]
             [clojure.core.match :refer [match]]
-            [game.tool.card.table]
-            [game.define.table-item]))
+            [game.define.effect]
+            [game.define.table-item]
+            [game.define.runtime]
+            [game.tool.card.table]))
 
 (s/def ::table :game.tool.card.table/table)
 (s/def ::table-items (s/map-of any? :game.define.table-item/value))
@@ -36,27 +38,53 @@
   (update-in ctx [:table-items item-id] (constantly item)))
 
 (defn get-item-controller [ctx item]
+  (s/assert ::spec ctx)
+  (s/assert :game.define.table-item/value item)
   (match item
     ; 所在area或部隊的控制者
     {:type :card}
-    nil
+    :A
     ; 所在area或部隊的控制者
     {:type :chip}
-    nil
+    :A
 
     {:type :coin :player-id player-id}
     player-id
     
     :else
-    (throw (ex-info "item not match" item))))
+    (throw (ex-info (str "item not match:" item) {}))))
 
-(defn get-effect-controller [ctx effect]
-  (match effect
-    [:system player-id] player-id
-    [:play-card player-id card-id] player-id
-    [:play-text player-id card-id text-id] player-id
-    [:text-effect card-id text-id] (get-item-controller ctx card-id)
-    :else (throw (ex-info "effect not match" effect))))
+(defn get-effect-runtime
+  "取得效果的執行期資訊"
+  [ctx effect]
+  (s/assert ::spec ctx)
+  (s/assert :game.define.effect/spec effect)
+  (match (-> effect second :reason)
+    [:system response-player-id]
+    {:card-id ["system no card id", nil] :player-id [nil, response-player-id]}
+
+    [:play-card play-card-player-id card-id]
+    {:card-id [nil, card-id] :player-id [nil, play-card-player-id]}
+
+    [:play-text play-card-player-id card-id text-id]
+    {:card-id [nil, card-id] :player-id [nil, play-card-player-id]}
+
+    [:text-effect card-id text-id]
+    (let [response-player-id (->> card-id (get-item ctx) (get-item-controller ctx))]
+      {:card-id [nil, card-id] :player-id [nil, response-player-id]})
+
+    :else
+    (throw (ex-info "reason not match" {}))))
+
+(defn test-get-effect-runtime []
+  (let [ctx {:table game.tool.card.table/table
+             :table-items {"gundam" {:type :card
+                                     :proto ""}}}
+        runtimes (for [effect (map #(assoc game.define.effect/effect-value :reason %) 
+                                   [[:system :A] [:play-card :A "gundam"] [:play-text :A "gundam" "text"] [:text-effect "gundam" "text"]])]
+                   (get-effect-runtime ctx ["effect-id" effect]))
+        _ (doseq [runtime runtimes]
+            (s/assert :game.define.runtime/spec runtime))]))
 
 (defn tests []
   (let [ctx (s/assert ::spec {:table game.tool.card.table/table
@@ -71,4 +99,5 @@
         ctx (set-item ctx "coin-1" coin-item2)
         _ (-> ctx (get-item "coin-1") (= coin-item2) (or (throw (ex-info "must eq coin-item2" {}))))
         ctx (map-items ctx (fn [[key _]] [key card-item]))
-        _ (-> ctx (get-item "coin-1") (= card-item) (or (throw (ex-info "must eq card-item" {}))))]))
+        _ (-> ctx (get-item "coin-1") (= card-item) (or (throw (ex-info "must eq card-item" {}))))]) 
+  (test-get-effect-runtime))

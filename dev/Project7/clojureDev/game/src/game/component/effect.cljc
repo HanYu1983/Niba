@@ -1,11 +1,9 @@
 (ns game.component.effect
   (:require [clojure.spec.alpha :as s]
-            [clojure.core.match :refer [match]]
             [game.define.runtime]
             [game.define.effect]
             [game.component.spec]
-            [game.component.cuts]
-            [game.common.dynamic :refer [get-card-controller-and-assert-exist]]))
+            [game.component.cuts]))
 
 (s/def ::spec (s/keys :req-un [:game.component.spec/cuts
                                :game.component.spec/effects]))
@@ -46,29 +44,6 @@
   (-> ctx
       (game.component.cuts/remove-effect id)
       (update :effects #(dissoc % id))))
-
-(defn get-effect-runtime
-  "取得效果的執行期資訊"
-  [ctx effect]
-  (s/assert :game.define.effect/spec effect)
-  (match (-> effect second :reason)
-    [:system response-player-id]
-    {:card-id ["system no card id", nil] :player-id [nil, response-player-id]}
-
-    [:play-card play-card-player-id card-id]
-    {:card-id [nil, card-id] :player-id [nil, play-card-player-id]}
-
-    [:play-text play-card-player-id card-id text-id]
-    {:card-id [nil, card-id] :player-id [nil, play-card-player-id]}
-
-    [:text-effect card-id text-id]
-    (let [response-player-id (get-card-controller-and-assert-exist ctx card-id)]
-      {:card-id [nil, card-id] :player-id [nil, response-player-id]})
-
-    :else
-    (throw (ex-info "reason not match" {}))))
-
-
 
 (defn- test-get-effects []
   (let [ctx {:cuts []
@@ -145,13 +120,6 @@
                           5 :effect5}}))
         (assert "test-remove-effect test failed"))))
 
-(defn test-get-effect-runtime []
-  (binding [get-card-controller-and-assert-exist (fn [ctx card-id] :A)]
-    (let [runtimes (for [effect (map #(assoc game.define.effect/effect-value :reason %) game.define.effect/reasons)]
-                     (get-effect-runtime {} ["effect-id" effect]))
-          _ (doseq [runtime runtimes]
-              (s/assert :game.define.runtime/spec runtime))])))
-
 (defn tests []
   (s/check-asserts false)
   (test-cut-in)
@@ -160,5 +128,4 @@
   (test-new-cut)
   (test-map-effects)
   (test-remove-effect)
-  (s/check-asserts true)
-  (test-get-effect-runtime))
+  (s/check-asserts true))

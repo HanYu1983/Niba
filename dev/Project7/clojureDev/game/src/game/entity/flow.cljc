@@ -5,7 +5,7 @@
             [game.define.selection]
             [game.define.player :as player]
             [game.define.runtime :as runtime]
-            [game.component.effects :as effects]
+            [game.component.effect :as effect]
             [game.component.table :as table]
             [game.entity.model :as model]))
 
@@ -22,7 +22,7 @@
 (defn has-destroy-effects [ctx player-id])
 (defn has-immediate-effects [ctx player-id])
 (defn get-cut-effects [ctx]
-  (-> ctx effects/get-top-cut))
+  (-> ctx effect/get-top-cut))
 (defn has-cut-effects [ctx]
   (-> ctx get-cut-effects count pos?))
 (defn is-pass-cut [ctx player-id])
@@ -70,9 +70,9 @@
     (let [effects (query-immediate-effects ctx player-id)
           ; TODO 讓玩家選擇一個立即效果
           top-effect (first effects)
-          effect-controller (table/get-effect-controller ctx top-effect)
+          is-my-effect (->> top-effect (table/get-effect-runtime ctx) runtime/get-player-id (= player-id))
               ; 如果效果的擁有者是你
-          cmds (if (= effect-controller player-id)
+          cmds (if is-my-effect
                      ; 設定將要支付的效果
                  [{:type :set-current-pay-text
                    :effect top-effect}
@@ -83,7 +83,7 @@
         ; 如果有堆疊效果
     (has-cut-effects ctx)
     (let [top-effect (-> ctx get-cut-effects first)
-          is-my-effect (->> top-effect (effects/get-effect-runtime ctx) runtime/get-player-id (= player-id))
+          is-my-effect (->> top-effect (table/get-effect-runtime ctx) runtime/get-player-id (= player-id))
           ; 如果都讓過
           cmds (if (is-all-pass-cut ctx)
                  ; 如果是效果擁有者
