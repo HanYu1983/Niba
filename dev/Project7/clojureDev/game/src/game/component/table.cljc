@@ -10,21 +10,21 @@
 (s/def ::table-items (s/map-of any? :game.define.table-item/value))
 (s/def ::spec (s/keys :req-un [::table ::table-items]))
 
-(defn add-card-or-chip [ctx deck-id item-id card]
+(defn add-card-or-chip [ctx deck-id card]
   (s/assert ::spec ctx)
-  (s/assert :game.define.table-item/value card)
+  (s/assert :game.define.table-item/spec card)
   (-> ctx
       (update :table (fn [table]
-                       (game.tool.card.table/add-card table deck-id item-id nil)))
+                       (game.tool.card.table/add-card table deck-id (first card) nil)))
       (update :table-items (fn [table-items]
-                             (assoc table-items item-id card)))))
+                             (into table-items [card])))))
 
-(defn add-coin [ctx item-id coin]
+(defn add-coin [ctx coin]
   (s/assert ::spec ctx)
-  (s/assert :game.define.table-item/value coin)
+  (s/assert :game.define.table-item/spec coin)
   (-> ctx
       (update :table-items (fn [table-items]
-                             (assoc table-items item-id coin)))))
+                             (into table-items [coin])))))
 
 (defn map-items [ctx f]
   (s/assert ::spec ctx)
@@ -32,15 +32,18 @@
                                  (->> table-items (map f) (into {}))))))
 
 (defn get-item [ctx item-id]
-  (-> ctx :table-items (get item-id)))
+  (s/assert ::spec ctx)
+  (-> ctx :table-items (get item-id) ((fn [value] [item-id value]))))
 
-(defn set-item [ctx item-id item]
-  (update-in ctx [:table-items item-id] (constantly item)))
+(defn set-item [ctx item]
+  (s/assert ::spec ctx)
+  (s/assert :game.define.table-item/spec item)
+  (update ctx :table-items #(into % [item])))
 
 (defn get-item-controller [ctx item]
   (s/assert ::spec ctx)
-  (s/assert :game.define.table-item/value item)
-  (match item
+  (s/assert :game.define.table-item/spec item)
+  (match (second item)
     ; 所在area或部隊的控制者
     {:type :card}
     :A
@@ -50,7 +53,7 @@
 
     {:type :coin :player-id player-id}
     player-id
-    
+
     :else
     (throw (ex-info (str "item not match:" item) {}))))
 
@@ -89,15 +92,17 @@
 (defn tests []
   (let [ctx (s/assert ::spec {:table game.tool.card.table/table
                               :table-items {}})
-        card-item {:type :card :proto ""}
-        ctx (add-card-or-chip ctx [:A :hand] "item-1" card-item)
+        card-item ["item-1" {:type :card :proto ""}]
+        ctx (add-card-or-chip ctx [:A :hand] card-item)
         _ (-> ctx (get-item "item-1") (= card-item) (or (throw (ex-info "must eq card-item" {}))))
-        coin-item {:type :coin :description "+1/+1/+1" :player-id :A}
-        ctx (add-coin ctx "coin-1" coin-item)
+        coin-item ["coin-1" {:type :coin :description "+1/+1/+1" :player-id :A}]
+        ctx (add-coin ctx coin-item)
         _ (-> ctx (get-item "coin-1") (= coin-item) (or (throw (ex-info "must eq coin-item" {}))))
-        coin-item2 (assoc coin-item :description "change")
-        ctx (set-item ctx "coin-1" coin-item2)
+        coin-item2 [(first coin-item) (assoc (second coin-item) :description "change")]
+        ctx (set-item ctx coin-item2)
         _ (-> ctx (get-item "coin-1") (= coin-item2) (or (throw (ex-info "must eq coin-item2" {}))))
-        ctx (map-items ctx (fn [[key _]] [key card-item]))
-        _ (-> ctx (get-item "coin-1") (= card-item) (or (throw (ex-info "must eq card-item" {}))))]) 
+        _ (println ctx)
+        ctx (map-items ctx (fn [[key _]] [key (second card-item)]))
+        _ (println ctx)
+        _ (-> ctx (get-item "coin-1") second (= (second card-item)) (or (throw (ex-info "must eq card-item" {}))))])
   (test-get-effect-runtime))
