@@ -19,6 +19,8 @@
 (s/def ::spec (s/merge :game.entity.model/spec
                        (s/keys :req-un [::flow])))
 
+(def default-flow {:has-cuts {}})
+
 (defn has-destroy-effects [ctx player-id])
 (defn has-immediate-effects [ctx player-id])
 (defn get-cut-effects [ctx]
@@ -128,4 +130,14 @@
                                                         :has-cuts {}
                                                         :current-selection {"" [:card 0 1 2]}}}))
         ctx (query-command ctx player-id)
-        _ (println ctx)]))
+        ;_ (println ctx)
+        ])
+
+  (let [player-id :A
+        ctx (s/assert ::spec (-> model/model
+                                 (effect/cut-in ["effect-1" {:reason [:system :A] :text ["text-1" card-text/card-text-value]}])
+                                 (merge {:flow default-flow})))
+        ;_ (println ctx)
+        ctx (query-command ctx player-id)
+        _ (println ctx)
+        ]))
