@@ -1,8 +1,9 @@
 (ns game.component.current-effect
   (:require [clojure.spec.alpha :as s]
-            [game.component.spec]))
+            [game.define.effect]))
 
-(s/def ::spec (s/keys :req-un [:game.component.spec/current-effect]))
+(s/def ::current-effect :game.define.effect/value)
+(s/def ::spec (s/keys :req-un [::current-effect]))
 
 (defn set-current-effect
   "設定將要處理的效果

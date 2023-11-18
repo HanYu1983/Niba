@@ -1,8 +1,8 @@
 (ns game.component.cuts
-  (:require [clojure.spec.alpha :as s]
-            [game.component.spec]))
+  (:require [clojure.spec.alpha :as s]))
 
-(s/def ::spec (s/keys :req-un [:game.component.spec/cuts]))
+(s/def ::cuts (s/coll-of (s/coll-of any?)))
+(s/def ::spec (s/keys :req-un [::cuts]))
 
 (defn get-top-cut
   [ctx]

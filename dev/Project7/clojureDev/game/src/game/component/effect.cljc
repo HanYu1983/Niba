@@ -2,15 +2,15 @@
   (:require [clojure.spec.alpha :as s]
             [game.define.runtime]
             [game.define.effect]
-            [game.component.spec]
             [game.component.cuts]))
 
-(s/def ::spec (s/keys :req-un [:game.component.spec/cuts
-                               :game.component.spec/effects]))
+(s/def ::effects (s/map-of any? :game.define.effect/value))
+(s/def ::spec (s/merge :game.component.cuts/spec
+                       (s/keys :req-un [::effects])))
 
 (defn get-effects [ctx ids]
   (s/assert ::spec ctx)
-  (mapv (fn [id] [id (-> ctx :effects (get id)) ]) ids))
+  (mapv (fn [id] [id (-> ctx :effects (get id))]) ids))
 
 (defn get-top-cut
   [ctx]

@@ -1,10 +1,10 @@
 (ns game.component.card-proto
   (:require [clojure.spec.alpha :as s]
             [game.common.dynamic]
-            [game.define.card-proto]
-            [game.component.spec]))
+            [game.define.card-proto]))
 
-(s/def ::spec (s/keys :req-un [:game.component.spec/card-proto-pool]))
+(s/def ::card-proto-pool (s/map-of any? :game.define.card-proto/value))
+(s/def ::spec (s/keys :req-un [::card-proto-pool]))
 
 (defn register-card-proto [ctx key proto]
   (s/assert ::spec ctx)
