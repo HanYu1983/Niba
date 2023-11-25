@@ -17,45 +17,50 @@
                           :resolve-effect 
                           :adjust-hand 
                           :turn-end})
-(s/def ::timing #{;; Reroll
-                  [:reroll :start]
-                  [:reroll :rule]
-                  [:reroll :free2]
-                  [:reroll :end]
+(def timings [;; Reroll
+              [:reroll :start]
+              [:reroll :rule]
+              [:reroll :free2]
+              [:reroll :end]
                   ;; Draw
-                  [:draw :start]
-                  [:draw :free1]
-                  [:draw :rule]
-                  [:draw :free2]
-                  [:draw :end]
+              [:draw :start]
+              [:draw :free1]
+              [:draw :rule]
+              [:draw :free2]
+              [:draw :end]
                   ;; Maintenance
-                  [:maintenance :start]
-                  [:maintenance :free1]
-                  [:maintenance :end]
+              [:maintenance :start]
+              [:maintenance :free1]
+              [:maintenance :end]
                   ;; Attack
-                  [:battle :attack :start]
-                  [:battle :attack :free1]
-                  [:battle :attack :rule]
-                  [:battle :attack :free2]
-                  [:battle :attack :end]
+              [:battle :attack :start]
+              [:battle :attack :free1]
+              [:battle :attack :rule]
+              [:battle :attack :free2]
+              [:battle :attack :end]
                   ;; Defense
-                  [:battle :defense :start]
-                  [:battle :defense :free1]
-                  [:battle :defense :rule]
-                  [:battle :defense :free2]
-                  [:battle :defense :end]
+              [:battle :defense :start]
+              [:battle :defense :free1]
+              [:battle :defense :rule]
+              [:battle :defense :free2]
+              [:battle :defense :end]
                   ;; DamageChecking
-                  [:battle :damage-checking :start]
-                  [:battle :damage-checking :free1]
-                  [:battle :damage-checking :rule]
-                  [:battle :damage-checking :free2]
-                  [:battle :damage-checking :end]
+              [:battle :damage-checking :start]
+              [:battle :damage-checking :free1]
+              [:battle :damage-checking :rule]
+              [:battle :damage-checking :free2]
+              [:battle :damage-checking :end]
                   ;; Return
-                  [:battle :return :start]
-                  [:battle :return :free1]
-                  [:battle :return :rule]
-                  [:battle :return :free2]
-                  [:battle :end :damage-reset]
-                  [:battle :end :resolve-effect]
-                  [:battle :end :adjust-hand]
-                  [:battle :end :turn-end]})
+              [:battle :return :start]
+              [:battle :return :free1]
+              [:battle :return :rule]
+              [:battle :return :free2]
+              [:battle :end :damage-reset]
+              [:battle :end :resolve-effect]
+              [:battle :end :adjust-hand]
+              [:battle :end :turn-end]])
+
+(defn next-timing [curr-timing]
+  (->> timings cycle (take (inc (count timings))) (drop-while #(not (= % curr-timing))) next first))
+
+(s/def ::timing (into #{} timings))

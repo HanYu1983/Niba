@@ -12,6 +12,7 @@
             [game.component.cuts]
             [game.component.effect]
             [game.component.table]
+            [game.component.phase]
             [game.entity.model]
             [game.entity.flow]
             [game.tool.return-let]
@@ -105,6 +106,7 @@
   (game.component.cuts/tests)
   (game.component.effect/tests)
   (game.component.table/tests)
+  (game.component.phase/tests)
   (game.entity.model/tests)
   (game.entity.flow/tests)
   (test-script-eval)
