@@ -7,15 +7,17 @@
             [game.define.runtime :as runtime]
             [game.component.effect :as effect]
             [game.component.table :as table]
+            [game.component.phase :as phase]
+            [game.component.current-player :as current-player]
             [game.entity.model :as model]))
 
 
 (s/def ::pass-cut (s/map-of any? any?))
 (s/def ::current-pay-text :game.define.card-text/spec)
-(s/def ::current-player-id any?)
 (s/def ::current-selection (s/map-of any? :game.define.selection/spec))
+(s/def ::flags (s/coll-of #{:has-handle-draw-rule :has-handle-reroll-rule} :kind set?))
 (s/def ::flow (s/keys :req-un [::has-cuts]
-                      :opt-un [::current-pay-text ::current-player-id ::current-selection]))
+                      :opt-un [::current-pay-text ::current-selection ::flags]))
 (s/def ::spec (s/merge :game.entity.model/spec
                        (s/keys :req-un [::flow])))
 
@@ -23,6 +25,10 @@
 
 (defn has-destroy-effects [ctx player-id])
 (defn has-immediate-effects [ctx player-id])
+(defn has-handle-draw-rule [ctx]
+  (-> ctx :flow :flags :has-handle-draw-rule))
+(defn has-handle-reroll-rule [ctx]
+  (-> ctx :flow :flags :has-handle-reroll-rule))
 (defn get-cut-effects [ctx]
   (-> ctx effect/get-top-cut))
 (defn has-cut-effects [ctx]
@@ -39,10 +45,6 @@
 (defn has-current-pay-text [ctx]
   (get-current-pay-text ctx))
 
-
-(defn is-current-player [ctx player-id]
-  (-> ctx :current-player-id (= player-id)))
-
 (defn query-command [ctx player-id]
   (cond
     ; 如果正在支付
@@ -55,7 +57,7 @@
           ; 如果可以成功支付
       (if (card-text/can-pass-conditions text current-selection)
             ; 如果是主動玩家
-        (if (is-current-player ctx player-id)
+        (if (current-player/is-current-player ctx player-id)
               ; 執行支付(支付完後將效果從堆疊移除)
           [{:type :pay-conditions}]
           [{:type :wait :reason "等待對方支付"}])
@@ -115,7 +117,23 @@
     [{:type :convert-destroy-effects-to-new-cut}]
 
     :else
-    (throw (ex-info "not match cmd" {}))))
+    (match (-> ctx phase/get-phase)
+      (:or [:reroll :start])
+      []
+
+      [:reroll :rule]
+      (if (has-handle-reroll-rule ctx)
+        [{:type :next-phase}]
+        (if (current-player/is-current-player ctx player-id)
+          [{:type :handle-reroll-rule}]
+          [{:type :wait :reason ""}]))
+
+      [:draw :rule]
+      (if (has-handle-draw-rule ctx)
+        [{:type :next-phase}]
+        (if (current-player/is-current-player ctx player-id)
+          [{:type :handle-draw-rule}]
+          [{:type :wait :reason ""}])))))
 
 (defn exec-command [ctx player-id cmd]
   (match cmd
@@ -129,8 +147,8 @@
         ctx (s/assert ::spec (merge model/model {:flow {:current-pay-text ["" card-text/card-text-value]
                                                         :has-cuts {}
                                                         :current-selection {"" [:card 0 1 2]}}}))
-        ctx (query-command ctx player-id)
-        ;_ (println ctx)
+        cmds (query-command ctx player-id)
+        ;_ (println cmds)
         ])
 
   (let [player-id :A
@@ -138,6 +156,12 @@
                                  (effect/cut-in ["effect-1" {:reason [:system :A] :text ["text-1" card-text/card-text-value]}])
                                  (merge {:flow default-flow})))
         ;_ (println ctx)
-        ctx (query-command ctx player-id)
-        _ (println ctx)
-        ]))
+        cmds (query-command ctx player-id)
+        _ (println cmds)
+        ])
+  
+  (let [player-id :A
+        ctx (s/assert ::spec (-> model/model (merge {:flow default-flow
+                                                     :phase [:reroll :rule]})))
+        cmds (query-command ctx player-id)
+        _ (println cmds)]))

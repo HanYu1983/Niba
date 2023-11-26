@@ -19,7 +19,13 @@
   (s/assert ::spec ctx)
   (-> ctx get-phase game.define.timing/next-timing ((fn [timing] (set-phase ctx timing)))))
 
+(defn can-play-card-or-text [ctx]
+  (s/assert ::spec ctx)
+  (->> ctx get-phase (filter #{:free1 :free2}) count pos?))
+
 (defn tests []
   (let [_ (-> {:phase [:maintenance :start]} (set-phase [:reroll :rule]) get-phase (= [:reroll :rule]) (or (throw (ex-info "" {}))))
         _ (-> {:phase [:maintenance :start]} next-phase get-phase (= [:maintenance :free1]) (or (throw (ex-info "" {}))))
-        _ (-> {:phase [:battle :end :turn-end]} next-phase get-phase (= [:reroll :start]) (or (throw (ex-info "" {}))))]))
+        _ (-> {:phase [:battle :end :turn-end]} next-phase get-phase (= [:reroll :start]) (or (throw (ex-info "" {}))))
+        _ (-> {:phase [:battle :return :start]} can-play-card-or-text (= false) (or (throw (ex-info "" {}))))
+        _ (-> {:phase [:battle :return :free1]} can-play-card-or-text (= true) (or (throw (ex-info "" {}))))]))

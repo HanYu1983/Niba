@@ -2,7 +2,7 @@
   (:require [clojure.spec.alpha :as s]))
 
 
-; "緑" | "茶" | "青" | "白" | "紫" | "黒" | "赤" | "デュアル";
+; "緑" | "茶" | "青" | "白" | "紫" | "黒" | "赤";
 (s/def ::color #{:green :brown :blue :white :purple :black :red})
 (s/def ::property #{:uc :08})
 (s/def ::spec (s/tuple ::color ::property))

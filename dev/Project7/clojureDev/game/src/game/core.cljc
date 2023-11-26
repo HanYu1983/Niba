@@ -13,6 +13,7 @@
             [game.component.effect]
             [game.component.table]
             [game.component.phase]
+            [game.component.current-player]
             [game.entity.model]
             [game.entity.flow]
             [game.tool.return-let]
@@ -107,6 +108,7 @@
   (game.component.effect/tests)
   (game.component.table/tests)
   (game.component.phase/tests)
+  (game.component.current-player/tests)
   (game.entity.model/tests)
   (game.entity.flow/tests)
   (test-script-eval)
