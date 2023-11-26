@@ -5,6 +5,7 @@
             [game.define.selection]
             [game.define.player :as player]
             [game.define.runtime :as runtime]
+            [game.define.timing :as timing]
             [game.component.effect :as effect]
             [game.component.table :as table]
             [game.component.phase :as phase]
@@ -111,10 +112,14 @@
                       {:type :pass}]
                      [{:type :wait :reason "等待敵軍切入"}])))]
       cmds)
-        ; 如果有破壞中的機體
-    (has-destroy-effects ctx player-id)
-        ; 將破壞產生的廢棄效果推到新的切入
-    [{:type :convert-destroy-effects-to-new-cut}]
+    ; 自由時間
+    (-> ctx phase/get-phase timing/can-play-card-or-text)
+    ; 如果有破壞中的機體
+    (if (has-destroy-effects ctx player-id)
+    ; 將破壞產生的廢棄效果推到新的切入
+      [{:type :convert-destroy-effects-to-new-cut}]
+      ; 指令
+      [])
 
     :else
     (match (-> ctx phase/get-phase)
@@ -133,7 +138,31 @@
         [{:type :next-phase}]
         (if (current-player/is-current-player ctx player-id)
           [{:type :handle-draw-rule}]
-          [{:type :wait :reason ""}])))))
+          [{:type :wait :reason ""}]))
+
+      [:battle :attack :rule]
+      []
+
+      [:battle :defense :rule]
+      []
+
+      [:battle :damage-checking :rule]
+      []
+
+      [:battle :return :rule]
+      []
+
+      [:battle :end :damage-reset]
+      []
+
+      [:battle :end :resolve-effect]
+      []
+
+      [:battle :end :adjust-hand]
+      []
+
+      [:battle :end :turn-end]
+      [])))
 
 (defn exec-command [ctx player-id cmd]
   (match cmd

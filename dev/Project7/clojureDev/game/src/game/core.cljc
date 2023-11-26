@@ -8,6 +8,7 @@
             [game.define.effect]
             [game.define.gsign]
             [game.define.selection]
+            [game.define.timing]
             [game.component.card-proto]
             [game.component.cuts]
             [game.component.effect]
@@ -103,6 +104,7 @@
   (game.define.effect/tests)
   (game.define.gsign/tests)
   (game.define.selection/tests)
+  (game.define.timing/tests)
   (game.component.card-proto/tests)
   (game.component.cuts/tests)
   (game.component.effect/tests)

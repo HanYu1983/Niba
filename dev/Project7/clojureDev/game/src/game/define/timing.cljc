@@ -64,3 +64,11 @@
   (->> timings cycle (take (inc (count timings))) (drop-while #(not (= % curr-timing))) next first))
 
 (s/def ::timing (into #{} timings))
+
+(defn can-play-card-or-text [timing]
+  (s/assert ::timing timing)
+  (->> timing (filter #{:free1 :free2}) count pos?))
+
+(defn tests []
+  (let [_ (-> [:battle :return :start] can-play-card-or-text (= false) (or (throw (ex-info "" {}))))
+        _ (-> [:battle :return :free1] can-play-card-or-text (= true) (or (throw (ex-info "" {}))))]))
