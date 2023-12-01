@@ -1,0 +1,8 @@
+version: "3"
+services:
+  # docker-compose run --name dev-test-bundev bun bash
+  bun:
+    image: oven/bun:1
+    working_dir: /han
+    volumes:
+      - ./:/han
