@@ -2,6 +2,7 @@ package main
 
 import (
 	appdomain "define/app_domain"
+	citydomain "define/city_domain"
 	"net/http"
 
 	"github.com/gin-gonic/gin"
@@ -18,5 +19,6 @@ func main2() {
 }
 
 func main() {
-	var _ = appdomain.AppDomain{}
+	var app = appdomain.AppDomain{}
+	citydomain.GetBuilding(app.CityDomain, "")
 }

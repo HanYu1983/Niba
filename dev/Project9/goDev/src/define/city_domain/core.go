@@ -12,15 +12,15 @@ type BuildingStore struct {
 type City struct{}
 
 type CityDomain struct {
-	City           map[string]City
-	Building       map[string]Building
+	CityList       map[string]City
+	Buildings      map[string]Building
 	CityToGround   map[string]string
 	BuildingToCity map[string]string
 	BuildingStore  map[string]BuildingStore
 }
 
 func GetBuilding(domain CityDomain, buildingId string) interface{} {
-	building, has := domain.Building[buildingId]
+	building, has := domain.Buildings[buildingId]
 	if has {
 		panic("")
 	}
