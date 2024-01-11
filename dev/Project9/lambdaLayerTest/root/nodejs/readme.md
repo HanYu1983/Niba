@@ -1,0 +1,1 @@
+這層選取需要的檔案打包lambda function
