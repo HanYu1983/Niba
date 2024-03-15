@@ -1,0 +1,1 @@
+docker run -ti --name devProject9ElasticbeanstalkTestRuby27 -p 3000:3000 -v "$PWD":/tmp/project -w /tmp/project/ ruby:2.7 bash
