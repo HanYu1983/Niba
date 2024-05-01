@@ -1,0 +1,19 @@
+{
+  "manifest_version": 3,
+  "name": "awsEbEnvCopy",
+  "version": "1.0",
+  "description": "",
+  "permissions": [
+    "activeTab"    
+  ],
+  "content_scripts": [
+    {
+      "js": [
+        "content.js"
+      ],
+      "matches": [
+        "https://ap-northeast-1.console.aws.amazon.com/elasticbeanstalk/home*"
+      ]
+    }
+  ]
+}
