@@ -32,8 +32,8 @@ async function appendNewEnv(page, k, v) {
   await vElem.fill(v)
 }
 
-async function addEnvToEBConfigSettings(accountId, username, password, envs, page) {
-  await page.goto('https://ap-northeast-1.console.aws.amazon.com/elasticbeanstalk/home?region=ap-northeast-1#/environment/configuration/updates-monitoring-logging?environmentId=e-yp3sc4mvaz');
+async function addEnvToEBConfigSettings(url, accountId, username, password, envs, page) {
+  await page.goto(url);
   await page.waitForSelector('//input[@id="iam_user_radio_button"]');
   await page.click('input[id="iam_user_radio_button"]')
   await page.fill('input[id="resolving_input"]', accountId)
@@ -49,12 +49,13 @@ async function addEnvToEBConfigSettings(accountId, username, password, envs, pag
 }
 
 async function main() {
-  const { accountId, username, password } = process.env
-  const envs = await readEnv(".env.insert")
+  const { accountId, username, password, path, url } = process.env
+  //const url="https://ap-northeast-1.console.aws.amazon.com/elasticbeanstalk/home?region=ap-northeast-1#/environment/configuration/updates-monitoring-logging?environmentId=e-yp3sc4mvaz"
+  const envs = await readEnv(path)
   console.log(envs)
   const browser = await chromium.launch({ headless: false });
   const page = await browser.newPage();
-  await addEnvToEBConfigSettings(accountId, username, password, envs, page)
+  await addEnvToEBConfigSettings(url, accountId, username, password, envs, page)
   console.log("Success")
 }
 

@@ -1,6 +1,6 @@
 {
   "manifest_version": 3,
-  "name": "awsEbEnvCopy",
+  "name": "取得aws eb config env",
   "version": "1.0",
   "description": "",
   "permissions": [
