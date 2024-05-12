@@ -3,6 +3,9 @@
 ; https://code.thheller.com/blog/shadow-cljs/2019/10/12/clojurescript-macros.html
 {:deps {han/game {:local/root "../game"}
         org.clojure/clojurescript {:mvn/version "1.11.60"}
-        org.clojure/core.async {:mvn/version "1.6.673"}}
+        org.clojure/core.async {:mvn/version "1.6.673"}
+        reagent/reagent {:mvn/version "1.2.0"}
+        cljsjs/react {:mvn/version "17.0.2-0"}
+        cljsjs/react-dom {:mvn/version "17.0.2-0"}}
  :aliases {; clj -M:build
            :build  {:main-opts ["-m" "cljs.main" "-c" "client.core"]}}}

@@ -22,6 +22,23 @@
 (defn swap-model [evt]
   (go (reset! model (<! (update-model @model evt)))))
 
+(defn card-view [info]
+  [:div (str info)])
+
+(defn card-stack-view [info]
+  [:div
+   [:div (-> info :title)]
+   [:div (for [c (-> info :cards)]
+           (card-view c))]])
+
+(defn table-view [info]
+  [:div (for [cs (-> info :card-stacks)]
+          (card-stack-view cs))])
+
+(defn battle-page []
+  (let [model {:card-stacks [{:title "Home" :cards [{:id "abc"} {:id "abc"}]}]}]
+    (html (table-view model))))
+
 (defn page-index []
   (let [model @model]
     (html [:div
@@ -30,8 +47,10 @@
             [:input {:type "text" :name "game-id" :value (:game-id model)}]
             [:input {:type "submit" :value "start new game"}]]])))
 
+
 (compojure.core/defroutes app
   (GET "/" [] (page-index))
+  (GET "/battle" [] (battle-page))
   (GET "/fn/model" [] (str {:main "中文測試" :script '(fn [] (read-string "(fn [])"))}))
   (wrap-params (POST "/fn/start_game" [game-id :as r]
                  (<!! (swap-model [:start-game game-id]))
