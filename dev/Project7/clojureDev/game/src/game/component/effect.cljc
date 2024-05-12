@@ -4,13 +4,14 @@
             [game.define.effect]
             [game.component.cuts]))
 
-(s/def ::effects (s/map-of any? :game.define.effect/value))
+(s/def ::effect any?)
+(s/def ::effects (s/map-of any? ::effect))
 (s/def ::spec (s/merge :game.component.cuts/spec
                        (s/keys :req-un [::effects])))
 
 (defn get-effects [ctx ids]
   (s/assert ::spec ctx)
-  (mapv (fn [id] [id (-> ctx :effects (get id))]) ids))
+  (mapv (fn [id] (-> ctx :effects (get id))) ids))
 
 (defn get-top-cut
   [ctx]
@@ -18,20 +19,20 @@
   (-> ctx :cuts first (or []) (#(get-effects ctx %))))
 
 (defn cut-in
-  [ctx effect]
+  [ctx id effect]
   (s/assert ::spec ctx)
-  (s/assert :game.define.effect/spec effect)
+  (s/assert ::effect effect)
   (-> ctx
-      (game.component.cuts/cut-in (first effect))
-      (update :effects #(into % [effect]))))
+      (game.component.cuts/cut-in id)
+      (update :effects #(into % [[id effect]]))))
 
 (defn new-cut
-  [ctx effect]
+  [ctx id effect]
   (s/assert ::spec ctx)
-  (s/assert :game.define.effect/spec effect)
+  (s/assert ::effect effect)
   (-> ctx
-      (game.component.cuts/new-cut (first effect))
-      (update :effects #(into % [effect]))))
+      (game.component.cuts/new-cut id)
+      (update :effects #(into % [[id effect]]))))
 
 (defn map-effects
   [ctx f]
@@ -52,6 +53,7 @@
              :effects {1 :effect1
                        2 :effect2
                        3 :effect3}}]
+    ;(println (get-effects ctx [1 3]))
     (assert (= (get-effects ctx [1 3])
                [:effect1 :effect3]))
     (assert (= (get-effects ctx [])
@@ -123,11 +125,9 @@
         (assert "test-remove-effect test failed"))))
 
 (defn tests []
-  (s/check-asserts false)
-  ;; (test-cut-in)
-  ;; (test-get-effects)
-  ;; (test-get-top-cut)
-  ;; (test-new-cut)
-  ;; (test-map-effects)
-  ;; (test-remove-effect)
-  (s/check-asserts true))
+  (test-cut-in)
+  (test-get-effects)
+  (test-get-top-cut)
+  (test-new-cut)
+  (test-map-effects)
+  (test-remove-effect))

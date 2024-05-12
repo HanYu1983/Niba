@@ -149,3 +149,5 @@ bin/
 
 .env
 .env*
+
+.cpcache

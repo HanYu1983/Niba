@@ -17,10 +17,10 @@
 (s/def ::conditions (s/map-of any? ::condition))
 (s/def ::events (s/coll-of ::script))
 (s/def ::game-effects (s/coll-of ::script))
-(s/def ::logic ::script)
+(s/def ::logic (s/map-of any? ::script))
 (s/def ::value (s/keys :req-un [::type]
                        :opt-un [::description ::events ::game-effects ::conditions ::logic ::action ::is-surrounded-by-arrows]))
-(s/def ::spec (s/tuple any? ::value))
+;;(s/def ::spec (s/tuple any? ::value))
 
 (def card-text-value {:type [:use [:turn :own]]})
 
@@ -37,6 +37,5 @@
                                                              :count 0
                                                              :options {}
                                                              :action '()}}
-                                            :logic '(And (Leaf ""))
-                                            :action '()
+                                            :logic {'(And (Leaf "")) '()}
                                             :is-surrounded-by-arrows false})))

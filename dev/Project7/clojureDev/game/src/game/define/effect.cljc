@@ -19,13 +19,13 @@
                       :play-text ::play-text
                       :text-effect ::text-effect))
 
-(s/def ::text :game.define.card-text/spec)
+(s/def ::text :game.define.card-text/value)
 (s/def ::value (s/keys :req-un [::reason ::text]
                        :opt-un [::clear-cutin-status ::is-option ::is-immediate]))
-(s/def ::spec (s/tuple any? ::value))
+;;(s/def ::spec (s/tuple any? ::value))
 
 (def effect-value {:reason [:system :A]
-                   :text ["text-1" game.define.card-text/card-text-value]})
+                   :text game.define.card-text/card-text-value})
 
 (def reasons [[:system :A] [:play-card :A 0] [:play-text :A 0 0] [:text-effect 0 0]])
 

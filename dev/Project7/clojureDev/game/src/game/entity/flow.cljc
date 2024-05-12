@@ -14,7 +14,7 @@
 
 
 (s/def ::pass-cut (s/map-of any? any?))
-(s/def ::current-pay-text :game.define.card-text/spec)
+(s/def ::current-pay-text :game.define.card-text/value)
 (s/def ::current-selection (s/map-of any? :game.define.selection/spec))
 (s/def ::flags (s/coll-of #{:has-handle-draw-rule :has-handle-reroll-rule} :kind set?))
 (s/def ::flow (s/keys :req-un [::has-cuts]
@@ -173,7 +173,7 @@
 
 (defn tests []
   (let [player-id :A
-        ctx (s/assert ::spec (merge model/model {:flow {:current-pay-text ["" card-text/card-text-value]
+        ctx (s/assert ::spec (merge model/model {:flow {:current-pay-text card-text/card-text-value
                                                         :has-cuts {}
                                                         :current-selection {"" [:card 0 1 2]}}}))
         cmds (query-command ctx player-id)
@@ -182,15 +182,16 @@
 
   (let [player-id :A
         ctx (s/assert ::spec (-> model/model
-                                 (effect/cut-in ["effect-1" {:reason [:system :A] :text ["text-1" card-text/card-text-value]}])
+                                 (effect/cut-in "effect-1" {:reason [:system :A] :text card-text/card-text-value})
                                  (merge {:flow default-flow})))
         ;_ (println ctx)
         cmds (query-command ctx player-id)
-        _ (println cmds)
+        ;_ (println cmds)
         ])
   
   (let [player-id :A
         ctx (s/assert ::spec (-> model/model (merge {:flow default-flow
                                                      :phase [:reroll :rule]})))
         cmds (query-command ctx player-id)
-        _ (println cmds)]))
+        ;_ (println cmds)
+        ]))

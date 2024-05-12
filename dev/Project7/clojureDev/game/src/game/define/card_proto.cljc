@@ -9,7 +9,7 @@
 (s/def ::gsign :game.define.gsign/spec)
 (s/def ::value (s/keys :req-un [::type ::gsign ::texts]
                        :opt-un [::battle-point ::cost ::pack ::char]))
-(s/def ::spec (s/tuple any? ::value))
+;;(s/def ::spec (s/tuple any? ::value))
 
 (def default-card-proto-value {:gsign [:blue :uc]
                                :type :unit
@@ -68,9 +68,9 @@
                                             :action '(fn [ctx runtime selection]
                                                        #_(throw (ex-info "not in" {}))
                                                        ctx)}}
-                              :logic '(And (Leaf "1")
-                                           (Leaf "in-battle-phase"))
-                              :action '(fn [ctx runtime])}
+                              :logic {'(And (Leaf "1")
+                                            (Leaf "in-battle-phase"))
+                                      '(fn [ctx runtime])}}
                              "gundam-text-2"
                              {:type [:special [:psycommu 3]]}}
                      :type :graphic

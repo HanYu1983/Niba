@@ -3,4 +3,4 @@
             [game.define.basic]
             [game.tool.card.table]))
 (s/def ::value (s/keys :req-un [::proto]))
-(s/def ::spec (s/tuple any? ::value))
+;;(s/def ::spec (s/tuple any? ::value))

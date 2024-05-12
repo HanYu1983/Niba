@@ -38,29 +38,28 @@
                          (let [this-card-id (-> runtime :card-id)
                                option-ids ["zaku" "gundam"]
                                ctx (if (-> option-ids count pos?)
-                                     (game.common.dynamic/cut-in ctx ["effect-id1"
-                                                                      {:reason [:play-text "player-id" this-card-id "text-1"]
-                                                                       :is-immediate true
-                                                                       :clear-cutin-status false
-                                                                       :text ["text-2"
-                                                                              {:description "そのカードのセットグループ以外の自軍ユニット１枚は、ターン終了時まで、その戦闘修正と同じ値の戦闘修正を得る。"
-                                                                               :type :system
-                                                                               :conditions {"condition-1"
-                                                                                            {:tips `(fn [~'ctx ~'runtime]
-                                                                                                      [:card ~@option-ids])
-                                                                                             :count 1
-                                                                                             :options nil
-                                                                                             :action `(fn [~'ctx ~'runtime ~'selection]
-                                                                                                        (game.common.dynamic/add-text ~'ctx ["text-id"
-                                                                                                                                             {:type :system
-                                                                                                                                              :events [(read-string (str "(fn [ctx runtime evt] (match evt [:on-end-turn info] (app.dynamic/delete-text ctx \"text-id\") :else ctx))"))]
-                                                                                                                                              :game-effects [`(fn [~~''ctx ~~''runtime]
-                                                                                                                                                                (for [~~''card-id (rest ~~'selection)]
-                                                                                                                                                                  [:add-battle-point ~~''card-id ~~battle-point]))
-                                                                                                                                                             (read-string (str "(fn [ctx runtime] (for [card-id " ~'selection "] [:add-battle-point card-id " ~battle-point "]))"))
-                                                                                                                                                             (list ~''fn [~''ctx ~''runtime]
-                                                                                                                                                                   (list ~''for [~''card-id ~'selection]
-                                                                                                                                                                         [:add-battle-point ~''card-id ~battle-point]))]}]))}}}]}])
+                                     (game.common.dynamic/cut-in ctx "effect-id1"
+                                                                 {:reason [:play-text "player-id" this-card-id "text-1"]
+                                                                  :is-immediate true
+                                                                  :clear-cutin-status false
+                                                                  :text {:description "そのカードのセットグループ以外の自軍ユニット１枚は、ターン終了時まで、その戦闘修正と同じ値の戦闘修正を得る。"
+                                                                         :type :system
+                                                                         :conditions {"condition-1"
+                                                                                      {:tips `(fn [~'ctx ~'runtime]
+                                                                                                [:card ~@option-ids])
+                                                                                       :count 1
+                                                                                       :options nil
+                                                                                       :action `(fn [~'ctx ~'runtime ~'selection]
+                                                                                                  (game.common.dynamic/add-text ~'ctx "text-id"
+                                                                                                                                {:type :system
+                                                                                                                                 :events [(read-string (str "(fn [ctx runtime evt] (match evt [:on-end-turn info] (app.dynamic/delete-text ctx \"text-id\") :else ctx))"))]
+                                                                                                                                 :game-effects [`(fn [~~''ctx ~~''runtime]
+                                                                                                                                                   (for [~~''card-id (rest ~~'selection)]
+                                                                                                                                                     [:add-battle-point ~~''card-id ~~battle-point]))
+                                                                                                                                                (read-string (str "(fn [ctx runtime] (for [card-id " ~'selection "] [:add-battle-point card-id " ~battle-point "]))"))
+                                                                                                                                                (list ~''fn [~''ctx ~''runtime]
+                                                                                                                                                      (list ~''for [~''card-id ~'selection]
+                                                                                                                                                            [:add-battle-point ~''card-id ~battle-point]))]}))}}}})
                                      ctx)]
                            ctx)
                          :else
@@ -68,12 +67,12 @@
         _ (s/assert :game.define.card-proto/value (second card-proto-example))
         effect (atom nil)
         added-text (atom nil)
-        _ (binding [game.common.dynamic/cut-in (fn [ctx eff]
-                                                 (s/assert :game.define.effect/spec eff)
+        _ (binding [game.common.dynamic/cut-in (fn [ctx id eff]
+                                                 (s/assert :game.define.effect/value eff)
                                                  (reset! effect eff)
                                                  ctx)
-                    game.common.dynamic/add-text (fn [ctx text]
-                                                   (s/assert :game.define.card-text/spec text)
+                    game.common.dynamic/add-text (fn [ctx id text]
+                                                   (s/assert :game.define.card-text/value text)
                                                    (reset! added-text text)
                                                    ctx)]
             (let [ctx {}
@@ -81,7 +80,7 @@
                   script (-> card-proto-example str read-string second :texts (get "text-1") :events first)
                   eventF (eval script)
                   _ (eventF ctx runtime [:on-gain {:battle-point [1 1 0]}])
-                  {option-ids-script :tips action-script :action} (-> @effect second :text second :conditions (get "condition-1"))
+                  {option-ids-script :tips action-script :action} (-> @effect :text :conditions (get "condition-1"))
                   option-ids-fn (eval option-ids-script)
                   option-ids (s/assert :game.define.selection/spec (option-ids-fn ctx runtime))
                   _ (when (not (= option-ids [:card "zaku" "gundam"]))
@@ -89,7 +88,7 @@
                   ;_ (println option-ids)
                   action-fn (eval action-script)
                   _ (action-fn ctx runtime option-ids)
-                  effect-script (-> @added-text second :game-effects first)
+                  effect-script (-> @added-text :game-effects first)
                   effect-fn (eval effect-script)
                   game-effects (effect-fn ctx runtime)
                   ;_ (println game-effects)
