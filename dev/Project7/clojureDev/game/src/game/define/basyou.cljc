@@ -4,22 +4,24 @@
             [clojure.string]
             [game.define.player]))
 
-(s/def ::ba-syou-keyword #{:hon-goku
-                           :sute-yama
-                           :space-area
-                           :earch-area
-                           :maintenance-area
-                           :g-zone
-                           :junk-yard
-                           :te-hu-ta
-                           :hanger
-                           :played-card
-                           :removed-card})
+(def ba-syou-keyword [:hon-goku
+                      :sute-yama
+                      :space-area
+                      :earth-area
+                      :maintenance-area
+                      :g-zone
+                      :junk-yard
+                      :te-hu-ta
+                      :hanger
+                      :played-card
+                      :removed-card])
+
+(s/def ::ba-syou-keyword (into #{} ba-syou-keyword))
 
 (s/def ::spec (s/tuple :game.define.player/id ::ba-syou-keyword))
 
 (defn is-battle-area? [k]
-  (#{:space-area :earch-area} k))
+  (#{:space-area :earth-area} k))
 
 (defn is-maintenance-area? [k]
   (#{:maintenance-area :g-zone} k))

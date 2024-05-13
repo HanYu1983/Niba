@@ -2,7 +2,8 @@
   (:require [clojure.spec.alpha :as s]
             [cljs.reader :as reader]
             [reagent.core :as r]
-            [reagent.dom :as d]))
+            [reagent.dom :as d]
+            [game.define.basyou]))
 
 (s/def ::open boolean?)
 (s/def ::card (s/keys :req-un [::open]))
@@ -10,16 +11,19 @@
 (s/def ::cards (s/map-of any? ::card))
 (s/def ::card-stacks (s/map-of any? ::card-stack))
 (s/def ::battle (s/keys :req-un [::cards ::card-stacks]))
-(s/def ::view-model (s/merge (s/keys :req-un [::page])
-                        ::battle))
+(s/def ::view-model (s/merge (s/keys :req-un [::page]) ::battle))
+
+
+
+(defn get-card-stack-id [player-id card-stack-kw]
+  (str player-id "_" card-stack-kw))
 
 (def model-atom (atom {}))
 
 (def view-model-atom (r/atom {:page :battle
                               :battle {:cards {"0" {:open true} "1" {:open false} "2" {:open true}}
-                                       :card-stacks {"cs1" {:open false}
-                                                     "cs2" {:open true}}}}))
-
+                                       :card-stacks {":A_:hon-goku" {:open false}
+                                                     ":A_:sute-yama" {:open true}}}}))
 
 (defn card-view [card-id player-id]
   (let [view-model @view-model-atom
@@ -46,14 +50,22 @@
             (card-view card-id player-id))
           [:div (str "count:" (count card-ids))])]])))
 
-(defn battle-page [view-model]
-  (let [player-id ""]
+(defn player-stage [player-id]
+  [:div {:key player-id} (str "player-stage" player-id)
+   (let [player-id player-id]
+     [:div "card-stacks"
+      (for [kw game.define.basyou/ba-syou-keyword]
+        (-> (get-card-stack-id player-id kw)
+            (card-stack-view player-id)))])])
+
+(defn battle-page []
+  (let [view-model @view-model-atom]
     [:div "battle-page"
      [:div "debug"
       [:div (str view-model)]
       [:button {:on-click (fn [] (swap! view-model-atom assoc :page :home))} "home"]]
-     (card-stack-view "cs1" player-id)
-     (card-stack-view "cs2" player-id)]))
+     (player-stage :A)
+     (player-stage :B)]))
 
 (defn app []
   (let [view-model @view-model-atom]
@@ -63,7 +75,7 @@
              [:button {:on-click (fn []
                                    (swap! view-model-atom assoc :page :battle))}
               "battle"]]
-      :battle (battle-page view-model))))
+      :battle (battle-page))))
 
 (defn main []
   (enable-console-print!)
