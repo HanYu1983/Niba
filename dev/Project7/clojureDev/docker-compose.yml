@@ -26,6 +26,8 @@ services:
     working_dir: /han
     volumes:
       - ./:/han
+    #environment:
+    #  JAVA_TOOL_OPTIONS: -Dfile.encoding=UTF8
   # docker-compose run --name dev-project7-clojureDev-dotnet dotnet bash
   # https://fable.io/docs/getting-started/your-first-fable-project.html
   dotnet:
