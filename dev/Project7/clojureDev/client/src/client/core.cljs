@@ -23,7 +23,8 @@
 (def view-model-atom (r/atom {:page :battle
                               :battle {:cards {"0" {:open true} "1" {:open false} "2" {:open true}}
                                        :card-stacks {":A_:hon-goku" {:open false}
-                                                     ":A_:sute-yama" {:open true}}}}))
+                                                     ":A_:sute-yama" {:open true}
+                                                     ":B_:sute-yama" {:open true}}}}))
 
 (defn card-view [card-id player-id]
   (let [view-model @view-model-atom
@@ -46,17 +47,19 @@
                               (swap! view-model-atom update-in [:battle :card-stacks card-stack-id :open] not))}
          (if is-open "close" "open")]
         (if is-open
-          (for [card-id card-ids]
-            (card-view card-id player-id))
+          (doall
+           (for [card-id card-ids]
+             (card-view card-id player-id)))
           [:div (str "count:" (count card-ids))])]])))
 
 (defn player-stage [player-id]
   [:div {:key player-id} (str "player-stage" player-id)
    (let [player-id player-id]
      [:div "card-stacks"
-      (for [kw game.define.basyou/ba-syou-keyword]
-        (-> (get-card-stack-id player-id kw)
-            (card-stack-view player-id)))])])
+      (doall
+       (for [kw game.define.basyou/ba-syou-keyword]
+         (-> (get-card-stack-id player-id kw)
+             (card-stack-view player-id))))])])
 
 (defn battle-page []
   (let [view-model @view-model-atom]
