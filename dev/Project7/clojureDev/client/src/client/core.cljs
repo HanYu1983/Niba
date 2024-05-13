@@ -13,18 +13,21 @@
 (s/def ::battle (s/keys :req-un [::cards ::card-stacks]))
 (s/def ::view-model (s/merge (s/keys :req-un [::page]) ::battle))
 
-
+(defn on-error [e]
+  (js/alert (-> e (.-message))))
 
 (defn get-card-stack-id [player-id card-stack-kw]
   (str player-id "_" card-stack-kw))
 
-(def model-atom (atom {}))
+(def model-atom (r/atom {}))
 
 (def view-model-atom (r/atom {:page :battle
                               :battle {:cards {"0" {:open true} "1" {:open false} "2" {:open true}}
                                        :card-stacks {":A_:hon-goku" {:open false}
                                                      ":A_:sute-yama" {:open true}
-                                                     ":B_:sute-yama" {:open true}}}}))
+                                                     ":B_:sute-yama" {:open true}}
+                                       :players {":A" {:commands []}
+                                                 ":B" {:commands []}}}}))
 
 (defn card-view [card-id player-id]
   (let [view-model @view-model-atom
@@ -53,19 +56,43 @@
           [:div (str "count:" (count card-ids))])]])))
 
 (defn player-stage [player-id]
-  [:div {:key player-id} (str "player-stage" player-id)
-   (let [player-id player-id]
-     [:div "card-stacks"
-      (doall
-       (for [kw game.define.basyou/ba-syou-keyword]
-         (-> (get-card-stack-id player-id kw)
-             (card-stack-view player-id))))])])
+  (let [view-model @view-model-atom]
+    [:div {:key player-id} (str "player-stage" player-id)
+     [:button {:on-click (fn []
+                           (-> (js/axios (clj->js {:method "GET"
+                                                   :url "/fn/command"
+                                                   :params {:player-id player-id}}))
+                               (.then (fn [resp]
+                                        (-> resp (.-data) reader/read-string)))
+                               (.then (fn [cmds]
+                                        (swap! view-model-atom update-in [:battle :players player-id :commands] (constantly cmds))))
+                               (.catch on-error)))} "load command"]
+     [:div "commands"
+      (doall (for [cmd (-> view-model :battle :players (get player-id) :commands)]
+               [:button {:key (str cmd)} (str cmd)]))]
+     (let [player-id player-id]
+       [:div "card-stacks"
+        (doall
+         (for [kw game.define.basyou/ba-syou-keyword]
+           (-> (get-card-stack-id player-id kw)
+               (card-stack-view player-id))))])]))
+
 
 (defn battle-page []
-  (let [view-model @view-model-atom]
+  (let [view-model @view-model-atom
+        model @model-atom]
     [:div "battle-page"
      [:div "debug"
       [:div (str view-model)]
+      [:div (str model)]
+      [:button {:on-click (fn []
+                            (-> (js/axios (clj->js {:method "GET"
+                                                    :url "/fn/model"}))
+                                (.then (fn [resp]
+                                         (-> resp (.-data) reader/read-string)))
+                                (.then (fn [resp]
+                                         (reset! model-atom resp)))
+                                (.catch on-error)))} "load model"]
       [:button {:on-click (fn [] (swap! view-model-atom assoc :page :home))} "home"]]
      (player-stage :A)
      (player-stage :B)]))
