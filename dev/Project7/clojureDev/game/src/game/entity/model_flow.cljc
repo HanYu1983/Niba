@@ -242,7 +242,7 @@
 (defn tests []
   (let [player-id :A
         ctx (s/assert ::spec (update model-flow :flow merge {:current-pay-text card-text/card-text-value
-                                                             :current-pay-selection {"" [:card 0 1 2]}}))
+                                                             :current-pay-selection {"" [[:card 0 1 2] [:count 1]]}}))
         cmds (query-command ctx player-id)
         _ (println cmds)])
 
