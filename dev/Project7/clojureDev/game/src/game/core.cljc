@@ -16,7 +16,7 @@
             [game.component.phase]
             [game.component.current-player]
             [game.entity.model]
-            [game.entity.flow]
+            [game.entity.model-flow]
             [game.tool.return-let]
             [game.tool.waterfall]
             [game.tool.callback]
@@ -111,7 +111,7 @@
   (game.component.phase/tests)
   (game.component.current-player/tests)
   (game.entity.model/tests)
-  (game.entity.flow/tests)
+  (game.entity.model-flow/tests)
   (test-script-eval)
    ;; (game.tool.return-let/test-all)
   ;; (game.tool.waterfall/test-all)

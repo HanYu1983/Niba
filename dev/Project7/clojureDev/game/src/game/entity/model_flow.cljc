@@ -1,4 +1,4 @@
-(ns game.entity.flow
+(ns game.entity.model-flow
   (:require [clojure.spec.alpha :as s]
             [clojure.core.match :refer [match]]
             [game.define.card-text :as card-text]
@@ -22,7 +22,7 @@
 (s/def ::spec (s/merge :game.entity.model/spec
                        (s/keys :req-un [::flow])))
 
-(def default-flow {:has-cuts {} :flags #{}})
+(def model-flow (assoc model/model :flow {:has-cuts {} :flags #{}}))
 
 (defn has-destroy-effects [ctx player-id])
 (defn has-immediate-effects [ctx player-id])
@@ -188,26 +188,23 @@
 
 (defn tests []
   (let [player-id :A
-        ctx (s/assert ::spec (merge model/model {:flow (merge default-flow
-                                                              {:current-pay-text card-text/card-text-value
-                                                               :has-cuts {}
-                                                               :current-selection {"" [:card 0 1 2]}})}))
+        ctx (s/assert ::spec (update model-flow :flow merge {:current-pay-text card-text/card-text-value
+                                                             :has-cuts {}
+                                                             :current-selection {"" [:card 0 1 2]}}))
         cmds (query-command ctx player-id)
-        ;_ (println cmds)
+        _ (println cmds)
         ])
 
   (let [player-id :A
-        ctx (s/assert ::spec (-> model/model
-                                 (effect/cut-in "effect-1" {:reason [:system :A] :text card-text/card-text-value})
-                                 (merge {:flow default-flow})))
+        ctx (s/assert ::spec (-> model-flow
+                                 (effect/cut-in "effect-1" {:reason [:system :A] :text card-text/card-text-value})))
         ;_ (println ctx)
         cmds (query-command ctx player-id)
-        ;_ (println cmds)
+        _ (println cmds)
         ])
   
   (let [player-id :A
-        ctx (s/assert ::spec (-> model/model (merge {:flow default-flow
-                                                     :phase [:reroll :rule]})))
+        ctx (s/assert ::spec (assoc model-flow :phase [:reroll :rule]))
         cmds (query-command ctx player-id)
         _ (println cmds)
         ctx (exec-command ctx player-id (first cmds))
@@ -215,5 +212,4 @@
         cmds (query-command ctx player-id)
         _ (println cmds)
         ctx (exec-command ctx player-id (first cmds))
-        _ (println ctx)
-        ]))
+        _ (println ctx)]))

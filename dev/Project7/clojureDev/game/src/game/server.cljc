@@ -9,26 +9,24 @@
             [clojure.core.async :refer [go <!! timeout <!]]
             [clojure.core.match :refer [match]]
             [game.entity.model]
-            [game.entity.flow]))
+            [game.entity.model-flow]))
 
-(def model-atom (atom (-> game.entity.model/model
-                          (merge {:flow game.entity.flow/default-flow
-                                  :phase [:reroll :rule]}))))
+(def model-atom (atom (-> game.entity.model-flow/model-flow (assoc :phase [:reroll :rule]))))
 
 (defroutes app
   (wrap-params
    (POST "/fn/command" [player-id command :as r]
      (let [model @model-atom
-           model (game.entity.flow/exec-command model (keyword player-id) (-> command read-string))
-           _ (->> model (s/assert :game.entity.flow/spec) (reset! model-atom))]
+           model (game.entity.model-flow/exec-command model (keyword player-id) (-> command read-string))
+           _ (->> model (s/assert :game.entity.model-flow/spec) (reset! model-atom))]
        (str model))))
   (wrap-params
    (GET "/fn/command" [player-id]
      (let [model @model-atom
-           commands (game.entity.flow/query-command model (keyword player-id))]
+           commands (game.entity.model-flow/query-command model (keyword player-id))]
        (str commands))))
   (GET "/fn/model" []
-    (let [model (->> @model-atom (s/assert :game.entity.flow/spec))]
+    (let [model (->> @model-atom (s/assert :game.entity.model-flow/spec))]
       (str model)))
   (not-found (str {:message "page not found"})))
 
