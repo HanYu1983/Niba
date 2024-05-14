@@ -234,7 +234,10 @@
     (handle-reroll-rule ctx)
 
     {:type :next-phase :current-phase current-phase}
-    (handle-next-phase ctx)
+    (do
+      (-> ctx phase/get-phase (= current-phase) (or (throw (ex-info "current-phase not match" {}))))
+      (-> ctx (current-player/is-current-player player-id) (or (throw (ex-info "must be current player" {}))))
+      (handle-next-phase ctx))
 
     [:convert-destroy-effects-to-new-cut]
     (convert-destroy-effects-to-new-cut ctx)
@@ -273,7 +276,7 @@
         ctx (exec-command ctx player-id (first cmds))
         cmds (query-command ctx player-id)
         _ (match cmds
-            [{:type :next-phase}] true
+            [{:type :next-phase :current-phase [:reroll :rule]}] true
             :else (throw (ex-info "must :next-phase" {})))
         ctx (exec-command ctx player-id (first cmds))
         _ (-> ctx phase/get-phase (= [:reroll :free2])
