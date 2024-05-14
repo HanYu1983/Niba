@@ -10,40 +10,84 @@
             [game.component.table :as table]
             [game.component.phase :as phase]
             [game.component.current-player :as current-player]
+            [game.component.selection]
             [game.entity.model :as model]))
-
-
-(s/def ::pass-cut (s/map-of any? any?))
+; current-pay-component
 (s/def ::current-pay-text :game.define.card-text/value)
-(s/def ::current-selection (s/map-of any? :game.define.selection/spec))
+(s/def ::current-pay-selection (s/map-of any? :game.define.selection/spec))
+(s/def ::current-pay-component (s/keys :req-un [::current-pay-selection]
+                                       :opt-un [::current-pay-text]))
+(defn set-current-pay-text [ctx text]
+  (s/assert ::current-pay-component ctx)
+  (assoc ctx :current-pay-text text))
+(defn clear-current-pay-text [ctx]
+  (s/assert ::current-pay-component ctx)
+  (dissoc ctx :current-pay-text))
+(defn set-current-pay-selection [ctx k v]
+  (s/assert ::current-pay-component ctx)
+  (update ctx :current-pay-selection assoc k v))
+(defn get-current-pay-selection [ctx]
+  (s/assert ::current-pay-component ctx)
+  (-> ctx :current-pay-selection))
+(defn clear-current-pay-selection [ctx]
+  (s/assert ::current-pay-component ctx)
+  (assoc ctx :current-pay-selection {}))
+; flags-component
 (s/def ::flags (s/coll-of #{:has-handle-draw-rule :has-handle-reroll-rule} :kind set?))
-(s/def ::flow (s/keys :req-un [::has-cuts ::flags]
-                      :opt-un [::current-pay-text ::current-selection ]))
+(s/def ::flags-component (s/keys :req-un [::flags]))
+(defn set-flags [ctx fs]
+  (s/assert ::flags-component ctx)
+  (update ctx :flags #(into % fs)))
+(defn has-flag [ctx f]
+  (s/assert ::flags-component ctx)
+  (-> ctx :flags f nil? not))
+; has-cuts-component
+(s/def ::has-cuts (s/coll-of :game.define.player/id :kind set?))
+(s/def ::has-cuts-component (s/keys :req-un [::has-cuts]))
+(defn get-has-cut [ctx id]
+  (s/assert ::has-cuts-component ctx)
+  (s/assert :game.define.player/id id)
+  (-> ctx :has-cuts id nil? not))
+(defn set-has-cut [ctx id]
+  (s/assert ::has-cuts-component ctx)
+  (s/assert :game.define.player/id id)
+  (update ctx :has-cuts into [id]))
+; flow
+(s/def ::flow (s/merge ::current-pay-component
+                       ::flags-component
+                       ::has-cuts-component))
 (s/def ::spec (s/merge :game.entity.model/spec
                        (s/keys :req-un [::flow])))
-
-(def model-flow (assoc model/model :flow {:has-cuts {} :flags #{}}))
+(def flow {:has-cuts #{}
+           :flags #{}
+           :current-pay-selection {}})
+(def model-flow (assoc model/model
+                       :flow flow))
 
 (defn has-destroy-effects [ctx player-id])
 (defn has-immediate-effects [ctx player-id])
 ; draw rule
 (defn has-handle-draw-rule [ctx]
-  (-> ctx :flow :flags :has-handle-draw-rule))
+  (-> ctx :flow (has-flag :has-handle-draw-rule)))
 (defn handle-draw-rule [ctx]
-  (update-in ctx [:flow :flags] #(into % [:has-handle-draw-rule])))
+  (update ctx :flow #(set-flags % [:has-handle-draw-rule])))
 
 ; reroll rule
 (defn has-handle-reroll-rule [ctx]
-  (-> ctx :flow :flags :has-handle-reroll-rule))
+  (-> ctx :flow (has-flag :has-handle-reroll-rule)))
 (defn handle-reroll-rule [ctx]
-  (update-in ctx [:flow :flags] #(into % [:has-handle-reroll-rule])))
+  (update ctx :flow #(set-flags % [:has-handle-reroll-rule])))
 
 (defn get-cut-effects [ctx]
   (-> ctx effect/get-top-cut))
 (defn has-cut-effects [ctx]
   (-> ctx get-cut-effects count pos?))
-(defn is-pass-cut [ctx player-id])
-(defn is-all-pass-cut [ctx])
+
+(defn is-pass-cut [ctx player-id]
+  (-> ctx :flow (get-has-cut player-id)))
+(defn is-all-pass-cut [ctx]
+  (every? #(is-pass-cut ctx %) player/player-ids))
+
 (defn query-immediate-effects [ctx player-id])
 (defn query-cut-effects [ctx player-id])
 (defn convert-destroy-effects-to-new-cut [ctx])
@@ -198,20 +242,17 @@
 (defn tests []
   (let [player-id :A
         ctx (s/assert ::spec (update model-flow :flow merge {:current-pay-text card-text/card-text-value
-                                                             :has-cuts {}
-                                                             :current-selection {"" [:card 0 1 2]}}))
+                                                             :current-pay-selection {"" [:card 0 1 2]}}))
         cmds (query-command ctx player-id)
-        _ (println cmds)
-        ])
+        _ (println cmds)])
 
   (let [player-id :A
         ctx (s/assert ::spec (-> model-flow
                                  (effect/cut-in "effect-1" {:reason [:system :A] :text card-text/card-text-value})))
         ;_ (println ctx)
         cmds (query-command ctx player-id)
-        _ (println cmds)
-        ])
-  
+        _ (println cmds)])
+
   (let [player-id :A
         ctx (s/assert ::spec (assoc model-flow :phase [:reroll :rule]))
         cmds (query-command ctx player-id)

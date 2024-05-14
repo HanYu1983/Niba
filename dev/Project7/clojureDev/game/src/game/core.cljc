@@ -16,6 +16,7 @@
             [game.component.table]
             [game.component.phase]
             [game.component.current-player]
+            [game.component.selection]
             [game.entity.model]
             [game.entity.model-flow]
             [game.tool.return-let]
