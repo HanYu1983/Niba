@@ -66,10 +66,23 @@
                                         (-> resp (.-data) reader/read-string)))
                                (.then (fn [cmds]
                                         (swap! view-model-atom update-in [:battle :players player-id :commands] (constantly cmds))))
-                               (.catch on-error)))} "load command"]
+                               (.catch on-error)))}
+      "load command"]
      [:div "commands"
       (doall (for [cmd (-> view-model :battle :players (get player-id) :commands)]
-               [:button {:key (str cmd)} (str cmd)]))]
+               [:button {:key (str cmd)
+                         :on-click (fn []
+                                     (-> (js/axios (js-obj "method" "POST"
+                                                           "url" "/fn/command"
+                                                           "headers" (js-obj "Content-Type" "application/x-www-form-urlencoded")
+                                                           "data" (let [form (js/URLSearchParams.)
+                                                                        _ (.append form "player-id" player-id)
+                                                                        _ (.append form "command" (str cmd))]
+                                                                    form)))
+                                         (.then (fn [resp]
+                                                  (-> resp (.-data) reader/read-string (#(reset! model-atom %)))))
+                                         (.catch on-error)))}
+                (str cmd)]))]
      (let [player-id player-id]
        [:div "card-stacks"
         (doall

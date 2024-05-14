@@ -17,12 +17,12 @@
 (s/def ::current-pay-text :game.define.card-text/value)
 (s/def ::current-selection (s/map-of any? :game.define.selection/spec))
 (s/def ::flags (s/coll-of #{:has-handle-draw-rule :has-handle-reroll-rule} :kind set?))
-(s/def ::flow (s/keys :req-un [::has-cuts]
-                      :opt-un [::current-pay-text ::current-selection ::flags]))
+(s/def ::flow (s/keys :req-un [::has-cuts ::flags]
+                      :opt-un [::current-pay-text ::current-selection ]))
 (s/def ::spec (s/merge :game.entity.model/spec
                        (s/keys :req-un [::flow])))
 
-(def default-flow {:has-cuts {}})
+(def default-flow {:has-cuts {} :flags #{}})
 
 (defn has-destroy-effects [ctx player-id])
 (defn has-immediate-effects [ctx player-id])
@@ -30,6 +30,8 @@
   (-> ctx :flow :flags :has-handle-draw-rule))
 (defn has-handle-reroll-rule [ctx]
   (-> ctx :flow :flags :has-handle-reroll-rule))
+(defn handle-draw-rule [ctx]
+  (update-in ctx [:flow :flags] #(into % [:has-handle-reroll-rule])))
 (defn get-cut-effects [ctx]
   (-> ctx effect/get-top-cut))
 (defn has-cut-effects [ctx]
@@ -45,6 +47,10 @@
 
 (defn has-current-pay-text [ctx]
   (get-current-pay-text ctx))
+
+
+(defn handle-next-phase [ctx]
+  (phase/next-phase ctx))
 
 (defn query-command [ctx player-id]
   (cond
@@ -123,7 +129,7 @@
 
     :else
     (match (-> ctx phase/get-phase)
-      (:or [:reroll :start])
+      (:or [:reroll :start] [:draw :start])
       []
 
       [:reroll :rule]
@@ -164,18 +170,28 @@
       [:battle :end :turn-end]
       [])))
 
+
+
 (defn exec-command [ctx player-id cmd]
   (match cmd
+    {:type :handle-reroll-rule}
+    (handle-draw-rule ctx)
+
+    {:type :next-phase}
+    (handle-next-phase ctx)
+
     [:convert-destroy-effects-to-new-cut]
     (convert-destroy-effects-to-new-cut ctx)
 
-    [:set-selection condition-id selection]))
+    :else
+    (throw (ex-info (str cmd " not found") {:cmd cmd}))))
 
 (defn tests []
   (let [player-id :A
-        ctx (s/assert ::spec (merge model/model {:flow {:current-pay-text card-text/card-text-value
-                                                        :has-cuts {}
-                                                        :current-selection {"" [:card 0 1 2]}}}))
+        ctx (s/assert ::spec (merge model/model {:flow (merge default-flow
+                                                              {:current-pay-text card-text/card-text-value
+                                                               :has-cuts {}
+                                                               :current-selection {"" [:card 0 1 2]}})}))
         cmds (query-command ctx player-id)
         ;_ (println cmds)
         ])
@@ -193,5 +209,11 @@
         ctx (s/assert ::spec (-> model/model (merge {:flow default-flow
                                                      :phase [:reroll :rule]})))
         cmds (query-command ctx player-id)
-        ;_ (println cmds)
+        _ (println cmds)
+        ctx (exec-command ctx player-id (first cmds))
+        _ (println ctx)
+        cmds (query-command ctx player-id)
+        _ (println cmds)
+        ctx (exec-command ctx player-id (first cmds))
+        _ (println ctx)
         ]))

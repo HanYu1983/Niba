@@ -17,8 +17,11 @@
 
 (defroutes app
   (wrap-params
-   (POST "/fn/command" [command :as r]
-     [:div (str (read-string command))]))
+   (POST "/fn/command" [player-id command :as r]
+     (let [model @model-atom
+           model (game.entity.flow/exec-command model (keyword player-id) (-> command read-string))
+           _ (->> model (s/assert :game.entity.flow/spec) (reset! model-atom))]
+       (str model))))
   (wrap-params
    (GET "/fn/command" [player-id]
      (let [model @model-atom
