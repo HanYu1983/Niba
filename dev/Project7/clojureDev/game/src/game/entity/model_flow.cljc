@@ -20,6 +20,12 @@
 (defn set-current-pay-text [ctx text]
   (s/assert ::current-pay-component ctx)
   (assoc ctx :current-pay-text text))
+(defn get-current-pay-text [ctx]
+  (s/assert ::current-pay-component ctx)
+  (-> ctx :current-pay-text))
+(defn has-current-pay-text [ctx]
+  (s/assert ::current-pay-component ctx)
+  (get-current-pay-text ctx))
 (defn clear-current-pay-text [ctx]
   (s/assert ::current-pay-component ctx)
   (dissoc ctx :current-pay-text))
@@ -37,7 +43,7 @@
 (s/def ::flags-component (s/keys :req-un [::flags]))
 (defn set-flags [ctx fs]
   (s/assert ::flags-component ctx)
-  (update ctx :flags #(into % fs)))
+  (update ctx :flags into fs))
 (defn has-flag [ctx f]
   (s/assert ::flags-component ctx)
   (-> ctx :flags f nil? not))
@@ -58,6 +64,9 @@
                        ::has-cuts-component))
 (s/def ::spec (s/merge :game.entity.model/spec
                        (s/keys :req-un [::flow])))
+(defn get-flow [ctx]
+  (s/assert ::spec ctx)
+  (-> ctx :flow))
 (def flow {:has-cuts #{}
            :flags #{}
            :current-pay-selection {}})
@@ -92,12 +101,6 @@
 (defn query-cut-effects [ctx player-id])
 (defn convert-destroy-effects-to-new-cut [ctx])
 
-(defn get-current-pay-text [ctx]
-  (-> ctx :flow :current-pay-text))
-
-(defn has-current-pay-text [ctx]
-  (get-current-pay-text ctx))
-
 
 (defn handle-next-phase [ctx]
   (phase/next-phase ctx))
@@ -105,14 +108,14 @@
 (defn query-command [ctx player-id]
   (cond
     ; 如果正在支付
-    (has-current-pay-text ctx)
-    (let [text (get-current-pay-text ctx)
+    (-> ctx get-flow has-current-pay-text)
+    (let [text (-> ctx get-flow get-current-pay-text)
           conditions (card-text/get-conditions text)
           logic (card-text/get-logic text)
           my-conditions (->> conditions (filter (partial card-text/filter-player-condition player-id)))
-          current-selection (-> ctx :flow :current-selection)]
+          current-pay-selection (-> ctx get-flow get-current-pay-selection)]
           ; 如果可以成功支付
-      (if (card-text/can-pass-conditions text current-selection)
+      (if (card-text/can-pass-conditions text current-pay-selection)
             ; 如果是主動玩家
         (if (current-player/is-current-player ctx player-id)
               ; 執行支付(支付完後將效果從堆疊移除)
@@ -125,7 +128,7 @@
               ; 所有條件
           :conditions my-conditions
               ; 已經選擇的支付內容
-          :current-selection current-selection}]))
+          :current-pay-selection current-pay-selection}]))
         ; 如果有立即效果
     (has-immediate-effects ctx player-id)
     (let [effects (query-immediate-effects ctx player-id)
@@ -239,27 +242,44 @@
     :else
     (throw (ex-info (str cmd " not found") {:cmd cmd}))))
 
-(defn tests []
+(defn test-selection []
   (let [player-id :A
         ctx (s/assert ::spec (update model-flow :flow merge {:current-pay-text card-text/card-text-value
                                                              :current-pay-selection {"" [[:card 0 1 2] [:count 1]]}}))
         cmds (query-command ctx player-id)
-        _ (println cmds)])
+        _ (match cmds
+            [{:type :set-selection} & _] true
+            :else (throw (ex-info "must set-selection" {})))]))
 
+(defn test-cut []
   (let [player-id :A
-        ctx (s/assert ::spec (-> model-flow
-                                 (effect/cut-in "effect-1" {:reason [:system :A] :text card-text/card-text-value})))
-        ;_ (println ctx)
+        ctx (s/assert ::spec (-> model-flow (effect/cut-in "effect-1" {:reason [:system :A] :text card-text/card-text-value})))
         cmds (query-command ctx player-id)
-        _ (println cmds)])
+        _ (match cmds
+            [{:type :wait} & _] true
+            :else (throw (ex-info "must wait" {})))
+        cmds (query-command ctx (player/get-opponent player-id))
+        _ (match cmds
+            [{:type :cut-in} {:type :pass} & _] true
+            :else (throw (ex-info "must cut-in" {})))]))
 
+(defn test-next-phase []
   (let [player-id :A
         ctx (s/assert ::spec (assoc model-flow :phase [:reroll :rule]))
         cmds (query-command ctx player-id)
-        _ (println cmds)
+        _ (match cmds
+            [{:type :handle-reroll-rule}] true
+            :else (throw (ex-info "must handle-reroll-rule" {})))
         ctx (exec-command ctx player-id (first cmds))
-        _ (println ctx)
         cmds (query-command ctx player-id)
-        _ (println cmds)
+        _ (match cmds
+            [{:type :next-phase}] true
+            :else (throw (ex-info "must :next-phase" {})))
         ctx (exec-command ctx player-id (first cmds))
-        _ (println ctx)]))
+        _ (-> ctx phase/get-phase (= [:reroll :free2])
+              (or (throw (ex-info "must [:reroll :free2]" {}))))]))
+
+(defn tests []
+  (test-selection)
+  (test-cut)
+  (test-next-phase))

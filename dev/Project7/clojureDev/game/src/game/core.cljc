@@ -49,8 +49,6 @@
                                                                          :conditions {"condition-1"
                                                                                       {:tips `(fn [~'ctx ~'runtime]
                                                                                                 [[:card ~@option-ids] [:count 1]])
-                                                                                       :count 1
-                                                                                       :options nil
                                                                                        :action `(fn [~'ctx ~'runtime ~'selection]
                                                                                                   (game.common.dynamic/add-text ~'ctx "text-id"
                                                                                                                                 {:type :system

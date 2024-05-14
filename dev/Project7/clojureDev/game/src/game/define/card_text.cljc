@@ -26,7 +26,8 @@
 
 (defn get-conditions [text])
 (defn filter-player-condition [player-id text])
-(defn get-logic [text])
+(defn get-logic [text]
+  (-> text :logic))
 (defn can-pass-conditions [text selection])
 
 (defn tests []
