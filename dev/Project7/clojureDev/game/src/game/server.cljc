@@ -1,5 +1,6 @@
 (ns game.server
   (:require [clojure.spec.alpha :as s]
+            [clojure.core :refer [read-string]]
             [ring.adapter.jetty :refer [run-jetty]]
             [ring.middleware.params :refer [wrap-params]]
             [ring.util.response :refer [redirect]]

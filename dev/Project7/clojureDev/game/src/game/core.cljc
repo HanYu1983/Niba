@@ -1,6 +1,7 @@
 (ns game.core
   (:require [clojure.core.match]
             [clojure.spec.alpha :as s]
+            [clojure.core :refer [read-string]]
             [game.common.dynamic]
             [game.define.card-proto]
             [game.define.basyou]

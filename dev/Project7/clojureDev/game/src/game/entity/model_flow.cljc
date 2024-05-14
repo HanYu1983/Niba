@@ -26,12 +26,18 @@
 
 (defn has-destroy-effects [ctx player-id])
 (defn has-immediate-effects [ctx player-id])
+; draw rule
 (defn has-handle-draw-rule [ctx]
   (-> ctx :flow :flags :has-handle-draw-rule))
+(defn handle-draw-rule [ctx]
+  (update-in ctx [:flow :flags] #(into % [:has-handle-draw-rule])))
+
+; reroll rule
 (defn has-handle-reroll-rule [ctx]
   (-> ctx :flow :flags :has-handle-reroll-rule))
-(defn handle-draw-rule [ctx]
+(defn handle-reroll-rule [ctx]
   (update-in ctx [:flow :flags] #(into % [:has-handle-reroll-rule])))
+
 (defn get-cut-effects [ctx]
   (-> ctx effect/get-top-cut))
 (defn has-cut-effects [ctx]
@@ -134,7 +140,7 @@
 
       [:reroll :rule]
       (if (has-handle-reroll-rule ctx)
-        [{:type :next-phase}]
+        [{:type :next-phase :current-phase (-> ctx phase/get-phase)}]
         (if (current-player/is-current-player ctx player-id)
           [{:type :handle-reroll-rule}]
           [{:type :wait :reason ""}]))
@@ -174,10 +180,13 @@
 
 (defn exec-command [ctx player-id cmd]
   (match cmd
-    {:type :handle-reroll-rule}
+    {:type :handle-draw-rule}
     (handle-draw-rule ctx)
 
-    {:type :next-phase}
+    {:type :handle-reroll-rule}
+    (handle-reroll-rule ctx)
+
+    {:type :next-phase :current-phase current-phase}
     (handle-next-phase ctx)
 
     [:convert-destroy-effects-to-new-cut]
