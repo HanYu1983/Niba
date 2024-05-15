@@ -46,7 +46,6 @@
   (update ctx :flags into fs))
 (defn has-flag [ctx f]
   (s/assert ::flags-component ctx)
-  (println f)
   (-> ctx :flags (get f) nil? not))
 ; has-cuts-component
 (s/def ::has-cuts (s/coll-of :game.define.player/id :kind set?))
@@ -59,6 +58,9 @@
   (s/assert ::has-cuts-component ctx)
   (s/assert :game.define.player/id id)
   (update ctx :has-cuts into [id]))
+(defn clear-has-cut [ctx]
+  (s/assert ::has-cuts-component ctx)
+  (assoc ctx :has-cuts #{}))
 ; flow
 (s/def ::flow (s/merge ::current-pay-component
                        ::flags-component
@@ -119,6 +121,9 @@
 (defn is-all-pass-cut [ctx]
   (s/assert ::spec ctx)
   (every? #(is-pass-cut ctx %) player/player-ids))
+(defn set-pass-cut [ctx player-id]
+  (s/assert ::spec ctx)
+  (-> ctx get-flow (set-has-cut player-id) (#(set-flow ctx %))))
 
 (defn query-immediate-effects [ctx player-id])
 (defn query-cut-effects [ctx player-id])
@@ -127,7 +132,9 @@
 
 (defn handle-next-phase [ctx]
   (s/assert ::spec ctx)
-  (phase/next-phase ctx))
+  (-> ctx
+      get-flow clear-has-cut (#(set-flow ctx %))
+      phase/next-phase))
 
 (defn query-command [ctx player-id]
   (s/assert ::spec ctx)
@@ -197,9 +204,9 @@
                      [{:type :wait :reason "等待敵軍切入"}])))]
       cmds)
     ; 自由時間
-    (-> ctx phase/get-phase timing/can-play-card-or-text)
+    #_(-> ctx phase/get-phase timing/can-play-card-or-text)
     ; 如果有破壞中的機體
-    (if (has-destroy-effects ctx player-id)
+    #_(if (has-destroy-effects ctx player-id)
     ; 將破壞產生的廢棄效果推到新的切入
       [{:type :convert-destroy-effects-to-new-cut}]
       ; 指令
@@ -208,15 +215,42 @@
     :else
     (let [current-phase (-> ctx phase/get-phase)]
       (match current-phase
-        (:or [_ (:or :start :end :rule)] [_ _ (:or :start :end :rule)])
+        (:or [_ :start] [_ _ :start] [_ :end] [_ _ :end] [_ :end _] [_ :rule] [_ _ :rule])
         (if (has-handle-phase ctx current-phase)
           [{:type :next-phase :current-phase current-phase}]
           (if (current-player/is-current-player ctx player-id)
             [{:type :handle-phase :current-phase current-phase}]
             [{:type :wait :reason (str "等待系統處理階段" current-phase)}]))
-
-        (:or [_ (:or :free1 :free2)] [_ _ (:or :free1 :free2)])
-        []
+        ; 自由時間
+        (:or [_ :free1] [_ _ :free1] [_ :free2] [_ _ :free2])
+        ; 如果有破壞中的機體
+        (if (has-destroy-effects ctx player-id)
+        ; 將破壞產生的廢棄效果推到新的切入
+          (if (current-player/is-current-player ctx player-id)
+            [{:type :convert-destroy-effects-to-new-cut}]
+            [{:type :wait :reason (str "等待系統處理階段")}])
+        ; 指令
+          (let [cmds (if (is-all-pass-cut ctx)
+                       (if (current-player/is-current-player ctx player-id)
+                         [{:type :next-phase :current-phase current-phase}
+                          {:type :cut-in :card-ids []}]
+                         [{:type :wait :reason "等待效果擁有者處理"}])
+                                 ; 只有其中一個讓過
+                       (let [; 主動者有優先權
+                             is-my-cut-chance (current-player/is-current-player ctx player-id)
+                                       ; 如果我有優先權
+                             is-my-cut-chance (if is-my-cut-chance
+                                                          ; 並且我沒有讓過
+                                                (not (is-pass-cut ctx player-id))
+                                                          ; 我沒有優先權但對手讓過
+                                                (is-pass-cut ctx (player/get-opponent player-id)))]
+                         (if is-my-cut-chance
+                           [; 讓過
+                            {:type :pass}
+                            ; 切入
+                            {:type :cut-in :card-ids []}]
+                           [{:type :wait :reason "等待敵軍切入"}])))]
+            cmds))
 
         [:reroll :rule]
         (if (has-handle-reroll-rule ctx)
@@ -265,7 +299,10 @@
     (do
       (-> ctx phase/get-phase (= current-phase) (or (throw (ex-info "current-phase not match" {}))))
       (-> ctx (current-player/is-current-player player-id) (or (throw (ex-info "must be current player" {}))))
-      (handle-next-phase ctx))
+      (handle-next-phase ctx)) 
+    
+    {:type :pass}
+    (set-pass-cut ctx player-id)
 
     {:type :handle-draw-rule}
     (handle-draw-rule ctx)
@@ -328,21 +365,35 @@
         ctx (s/assert ::spec model-flow)]
     (loop [i 0
            ctx ctx]
-      (if (> i 10)
-        ctx
-        (let [_ (println (-> ctx phase/get-phase))
+      (if (> i 50)
+        (do
+          (-> ctx phase/get-phase (= [:reroll :end]) (or (throw (ex-info "must [:reroll :end]" {}))))
+          ctx)
+        (let [;_ (println "current-phase" (-> ctx phase/get-phase))
               cmds (query-command ctx player-a)
-              _ (println cmds)
-              _ (match cmds
-                  [{:type :handle-phase}] true
-                  [{:type :handle-reroll-rule}] true
-                  [{:type :next-phase}] true
-                  :else (throw (ex-info "must" {})))
-              ctx (exec-command ctx player-a (first cmds))]
+              ;_ (println player-a "cmds" cmds)
+              ctx (match cmds
+                    [{:type :handle-phase} & _]
+                    (exec-command ctx player-a (first cmds))
+
+                    [{:type :handle-reroll-rule} & _]
+                    (exec-command ctx player-a (first cmds))
+
+                    [{:type :next-phase} & _]
+                    (exec-command ctx player-a (first cmds))
+
+                    [{:type :pass} & _]
+                    (let [ctx (exec-command ctx player-a (first cmds))
+                          cmds (query-command ctx player-b)
+                          ;_ (println player-b "cmds" cmds)
+                          ctx (match cmds
+                                [{:type :pass} & _]
+                                (exec-command ctx player-b (first cmds)))]
+                      ctx))]
           (recur (inc i) ctx))))))
 
 (defn tests []
   (test-selection)
   (test-cut)
   #_(test-next-phase)
-  #_(test-next-phase2))
+  (test-next-phase2))
