@@ -1,6 +1,7 @@
 (ns game.entity.model-flow
   (:require [clojure.spec.alpha :as s]
             [clojure.core.match :refer [match]]
+            [clojure.set :refer [difference]]
             [game.define.card-text :as card-text]
             [game.define.selection]
             [game.define.player :as player]
@@ -47,6 +48,9 @@
 (defn has-flag [ctx f]
   (s/assert ::flags-component ctx)
   (-> ctx :flags (get f) nil? not))
+(defn remove-flags [ctx fs]
+  (s/assert ::flags-component ctx)
+  (update ctx :flags difference (into #{} fs)))
 ; has-cuts-component
 (s/def ::has-cuts (s/coll-of :game.define.player/id :kind set?))
 (s/def ::has-cuts-component (s/keys :req-un [::has-cuts]))
@@ -105,7 +109,16 @@
   (s/assert ::spec ctx)
   (when (has-handle-phase ctx phase)
     (throw (ex-info "already has handle phase" {})))
-  (-> ctx get-flow (set-flags [phase]) (#(set-flow ctx %))))
+  (let [main-handle (fn [ctx]
+                      (match phase
+                        [:reroll :start] ctx
+                        [:reroll :rule] (handle-reroll-rule ctx)
+                        [:draw :start] ctx
+                        [:draw :rule] (handle-draw-rule ctx)
+                        :else ctx))]
+    (-> ctx
+        get-flow (set-flags [phase]) (#(set-flow ctx %))
+        main-handle)))
 
 
 (defn get-cut-effects [ctx]
@@ -129,11 +142,16 @@
 (defn query-cut-effects [ctx player-id])
 (defn convert-destroy-effects-to-new-cut [ctx])
 
-
 (defn handle-next-phase [ctx]
   (s/assert ::spec ctx)
   (-> ctx
-      get-flow clear-has-cut (#(set-flow ctx %))
+      get-flow
+      ; 清除切入狀態
+      clear-has-cut
+      ; 清除處理階段的標記
+      (remove-flags (-> ctx phase/get-phase list))
+      (#(set-flow ctx %))
+      ; 到下一個時段
       phase/next-phase))
 
 (defn query-command [ctx player-id]
@@ -252,19 +270,19 @@
                            [{:type :wait :reason "等待敵軍切入"}])))]
             cmds))
 
-        [:reroll :rule]
-        (if (has-handle-reroll-rule ctx)
-          [{:type :next-phase :current-phase current-phase}]
-          (if (current-player/is-current-player ctx player-id)
-            [{:type :handle-reroll-rule}]
-            [{:type :wait :reason ""}]))
+        ;; [:reroll :rule]
+        ;; (if (has-handle-reroll-rule ctx)
+        ;;   [{:type :next-phase :current-phase current-phase}]
+        ;;   (if (current-player/is-current-player ctx player-id)
+        ;;     [{:type :handle-reroll-rule}]
+        ;;     [{:type :wait :reason ""}]))
 
-        [:draw :rule]
-        (if (has-handle-draw-rule ctx)
-          [{:type :next-phase :current-phase current-phase}]
-          (if (current-player/is-current-player ctx player-id)
-            [{:type :handle-draw-rule}]
-            [{:type :wait :reason ""}]))
+        ;; [:draw :rule]
+        ;; (if (has-handle-draw-rule ctx)
+        ;;   [{:type :next-phase :current-phase current-phase}]
+        ;;   (if (current-player/is-current-player ctx player-id)
+        ;;     [{:type :handle-draw-rule}]
+        ;;     [{:type :wait :reason ""}]))
 
         [:battle :attack :rule]
         []
@@ -299,16 +317,16 @@
     (do
       (-> ctx phase/get-phase (= current-phase) (or (throw (ex-info "current-phase not match" {}))))
       (-> ctx (current-player/is-current-player player-id) (or (throw (ex-info "must be current player" {}))))
-      (handle-next-phase ctx)) 
+      (handle-phase ctx current-phase)) 
     
     {:type :pass}
     (set-pass-cut ctx player-id)
 
-    {:type :handle-draw-rule}
-    (handle-draw-rule ctx)
+    ;; {:type :handle-draw-rule}
+    ;; (handle-draw-rule ctx)
 
-    {:type :handle-reroll-rule}
-    (handle-reroll-rule ctx)
+    ;; {:type :handle-reroll-rule}
+    ;; (handle-reroll-rule ctx)
 
     {:type :next-phase :current-phase current-phase}
     (do
@@ -343,14 +361,13 @@
             [{:type :cut-in} {:type :pass} & _] true
             :else (throw (ex-info "must cut-in" {})))]))
 
-#_(defn test-next-phase []
+(defn test-next-phase []
   (let [player-id :A
         ctx (s/assert ::spec (assoc model-flow :phase [:reroll :rule]))
         cmds (query-command ctx player-id)
-        _ (println cmds)
         _ (match cmds
-            [{:type :handle-reroll-rule}] true
-            :else (throw (ex-info "must handle-reroll-rule" {})))
+            [{:type :handle-phase :current-phase [:reroll :rule]}] true
+            :else (throw (ex-info "must handle-phase" {})))
         ctx (exec-command ctx player-id (first cmds))
         cmds (query-command ctx player-id)
         _ (match cmds
@@ -365,9 +382,10 @@
         ctx (s/assert ::spec model-flow)]
     (loop [i 0
            ctx ctx]
-      (if (> i 50)
+      (if (> i 70)
         (do
-          (-> ctx phase/get-phase (= [:reroll :end]) (or (throw (ex-info "must [:reroll :end]" {}))))
+          ;(println ctx)
+          (-> ctx phase/get-phase (= [:reroll :start]) (or (throw (ex-info "must [:reroll :start]" {}))))
           ctx)
         (let [;_ (println "current-phase" (-> ctx phase/get-phase))
               cmds (query-command ctx player-a)
@@ -395,5 +413,5 @@
 (defn tests []
   (test-selection)
   (test-cut)
-  #_(test-next-phase)
+  (test-next-phase)
   (test-next-phase2))
