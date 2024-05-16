@@ -1,0 +1,1 @@
+docker-compose run --name dev-project7-dockerPlayWright playwright bash
