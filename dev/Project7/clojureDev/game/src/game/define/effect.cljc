@@ -29,6 +29,10 @@
 
 (def reasons [[:system :A] [:play-card :A 0] [:play-text :A 0 0] [:text-effect 0 0]])
 
+(defn get-text [ctx]
+  (s/assert ::value ctx)
+  (-> ctx :text))
+
 (defn tests []
   (s/assert ::value effect-value)
   (s/assert (s/coll-of ::reason) reasons))

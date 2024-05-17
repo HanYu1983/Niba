@@ -2,11 +2,13 @@
   (:require [clojure.spec.alpha :as s]
             [clojure.core.match :refer [match]]
             [clojure.set :refer [difference]]
+            [game.tool.logic-tree :as logic-tree]
             [game.define.card-text :as card-text]
             [game.define.selection]
             [game.define.player :as player]
             [game.define.runtime :as runtime]
             [game.define.timing :as timing]
+            [game.define.effect]
             [game.component.effect :as effect]
             [game.component.table :as table]
             [game.component.phase :as phase]
@@ -14,22 +16,27 @@
             [game.component.selection]
             [game.entity.model :as model]))
 ; current-pay-component
-(s/def ::current-pay-text :game.define.card-text/value)
+(s/def ::current-pay-effect (s/nilable :game.define.effect/value))
+(s/def ::current-pay-logic (s/nilable any?))
 (s/def ::current-pay-selection (s/map-of any? :game.define.selection/spec))
-(s/def ::current-pay-component (s/keys :req-un [::current-pay-selection]
-                                       :opt-un [::current-pay-text]))
-(defn set-current-pay-text [ctx text]
+(s/def ::current-pay-component (s/keys :req-un [::current-pay-selection ::current-pay-effect ::current-pay-logic]))
+(defn set-current-pay-effect [ctx text]
   (s/assert ::current-pay-component ctx)
-  (assoc ctx :current-pay-text text))
-(defn get-current-pay-text [ctx]
+  (s/assert ::current-pay-effect text)
+  (assoc ctx :current-pay-effect text))
+(defn get-current-pay-effect [ctx]
   (s/assert ::current-pay-component ctx)
-  (-> ctx :current-pay-text))
-(defn has-current-pay-text [ctx]
+  (-> ctx :current-pay-effect))
+(defn has-current-pay-effect [ctx]
   (s/assert ::current-pay-component ctx)
-  (get-current-pay-text ctx))
-(defn clear-current-pay-text [ctx]
+  (get-current-pay-effect ctx))
+(defn set-current-pay-logic [ctx logic]
   (s/assert ::current-pay-component ctx)
-  (dissoc ctx :current-pay-text))
+  (s/assert ::current-pay-logic logic)
+  (assoc ctx :current-pay-logic logic))
+(defn get-current-pay-logic [ctx]
+  (s/assert ::current-pay-component ctx)
+  (-> ctx :current-pay-logic))
 (defn set-current-pay-selection [ctx k v]
   (s/assert ::current-pay-component ctx)
   (update ctx :current-pay-selection assoc k v))
@@ -40,7 +47,7 @@
   (s/assert ::current-pay-component ctx)
   (assoc ctx :current-pay-selection {}))
 ; flags-component
-(s/def ::flags (s/coll-of (into #{:has-handle-draw-rule :has-handle-reroll-rule} timing/timings) :kind set?))
+(s/def ::flags (s/coll-of (into #{:has-handle-reroll-rule} timing/timings) :kind set?))
 (s/def ::flags-component (s/keys :req-un [::flags]))
 (defn set-flags [ctx fs]
   (s/assert ::flags-component ctx)
@@ -79,19 +86,30 @@
   (assoc ctx :flow flow))
 (def flow {:has-cuts #{}
            :flags #{}
-           :current-pay-selection {}})
+           :current-pay-selection {}
+           :current-pay-effect nil
+           :current-pay-logic nil})
 (def model-flow (assoc model/model
                        :flow flow))
 
 (defn has-destroy-effects [ctx player-id])
 (defn has-immediate-effects [ctx player-id])
 ; draw rule
-(defn has-handle-draw-rule [ctx]
-  (s/assert ::spec ctx)
-  (-> ctx get-flow (has-flag :has-handle-draw-rule)))
 (defn handle-draw-rule [ctx]
   (s/assert ::spec ctx)
-  (-> ctx get-flow (set-flags [:has-handle-draw-rule]) (#(set-flow ctx %))))
+  #_(let [draw-rule-effect (s/assert :game.define.effect/value
+                                     {:reason [:system (current-player/get-attack-side ctx)]
+                                      :text {:type :system
+                                             :description "draw a card"
+                                             :conditions {"draw top1card" {:tips '(fn [ctx runtime]
+                                                                                    [:top-n-card-from-home 1])
+                                                                           :action '(fn [ctx runtime selection]
+                                                                               ; move to hand
+                                                                                      ctx)}}
+                                             :logic {'(Leaf "draw top1card") '(fn [ctx runtime]
+                                                                                ctx)}}})]
+      (-> ctx get-flow (set-current-pay-effect draw-rule-effect) (#(set-flow ctx %))))
+  ctx)
 
 ; reroll rule
 (defn has-handle-reroll-rule [ctx]
@@ -158,10 +176,10 @@
   (s/assert ::spec ctx)
   (cond
     ; 如果正在支付
-    (-> ctx get-flow has-current-pay-text)
-    (let [text (-> ctx get-flow get-current-pay-text)
+    (-> ctx get-flow has-current-pay-effect)
+    (let [effect (-> ctx get-flow get-current-pay-effect)
+          text (-> effect game.define.effect/get-text)
           conditions (card-text/get-conditions text)
-          logic (card-text/get-logic text)
           my-conditions (->> conditions (filter (partial card-text/filter-player-condition player-id)))
           current-pay-selection (-> ctx get-flow get-current-pay-selection)]
           ; 如果可以成功支付
@@ -173,12 +191,19 @@
           [{:type :wait :reason "等待對方支付"}])
             ; 不行成功支付的場合
             ; 選擇支付
-        [{:type :set-selection
-          :logic logic
-              ; 所有條件
-          :conditions my-conditions
-              ; 已經選擇的支付內容
-          :current-pay-selection current-pay-selection}]))
+        (if (-> ctx get-flow get-current-pay-logic nil?)
+          (if (current-player/is-current-player ctx player-id)
+           ; 選擇使用哪一個邏輯
+            [{:type :set-logic :logic-options (-> text card-text/get-logic keys)}]
+            [{:type :wait :reason "等待對方選擇使用哪一個邏輯"}])
+          (let [use-logic-one (-> ctx get-flow get-current-pay-logic)
+                all-condition-ids (-> use-logic-one logic-tree/enumerateAll)
+                my-conditions (->> all-condition-ids (map conditions) (zipmap all-condition-ids)
+                                   (filter (fn [[condition-id condition]] (card-text/is-condition-belong-to-player-id condition player-id))))]
+            [{:type :set-selection
+              :logic (-> ctx get-flow get-current-pay-logic)
+                        ; 我的所有條件
+              :conditions my-conditions}]))))
         ; 如果有立即效果
     (has-immediate-effects ctx player-id)
     (let [effects (query-immediate-effects ctx player-id)
@@ -188,7 +213,7 @@
               ; 如果效果的擁有者是你
           cmds (if is-my-effect
                      ; 設定將要支付的效果
-                 [{:type :set-current-pay-text
+                 [{:type :set-current-pay-effect
                    :effect top-effect}
                   {:type :cancel-current-play-text
                    :effect top-effect}]
@@ -203,7 +228,7 @@
                        ; 如果是效果擁有者
                  (if is-my-effect
                          ; 執行系統指令
-                   [{:type :set-current-pay-text :effects top-effect}]
+                   [{:type :set-current-pay-effect :effects top-effect}]
                    [{:type :wait :reason "等待效果擁有者處理"}])
                        ; 只有其中一個讓過
                  (let [; 效果擁有者沒有優先權
@@ -226,9 +251,9 @@
     ; 如果有破壞中的機體
     #_(if (has-destroy-effects ctx player-id)
     ; 將破壞產生的廢棄效果推到新的切入
-      [{:type :convert-destroy-effects-to-new-cut}]
+        [{:type :convert-destroy-effects-to-new-cut}]
       ; 指令
-      [])
+        [])
 
     :else
     (let [current-phase (-> ctx phase/get-phase)]
@@ -317,8 +342,8 @@
     (do
       (-> ctx phase/get-phase (= current-phase) (or (throw (ex-info "current-phase not match" {}))))
       (-> ctx (current-player/is-current-player player-id) (or (throw (ex-info "must be current player" {}))))
-      (handle-phase ctx current-phase)) 
-    
+      (handle-phase ctx current-phase))
+
     {:type :pass}
     (set-pass-cut ctx player-id)
 
@@ -342,12 +367,12 @@
 
 (defn test-selection []
   (let [player-id :A
-        ctx (s/assert ::spec (update model-flow :flow merge {:current-pay-text card-text/card-text-value
+        ctx (s/assert ::spec (update model-flow :flow merge {:current-pay-effect game.define.effect/effect-value
                                                              :current-pay-selection {"" [[:card 0 1 2] [:count 1]]}}))
         cmds (query-command ctx player-id)
         _ (match cmds
-            [{:type :set-selection} & _] true
-            :else (throw (ex-info "must set-selection" {})))]))
+            [{:type :set-logic} & _] true
+            :else (throw (ex-info "must set-logic" {})))]))
 
 (defn test-cut []
   (let [player-id :A
@@ -387,9 +412,9 @@
           ;(println ctx)
           (-> ctx phase/get-phase (= [:reroll :start]) (or (throw (ex-info "must [:reroll :start]" {}))))
           ctx)
-        (let [;_ (println "current-phase" (-> ctx phase/get-phase))
+        (let [_ (println "current-phase" (-> ctx phase/get-phase))
               cmds (query-command ctx player-a)
-              ;_ (println player-a "cmds" cmds)
+              _ (println player-a "cmds" cmds)
               ctx (match cmds
                     [{:type :handle-phase} & _]
                     (exec-command ctx player-a (first cmds))
