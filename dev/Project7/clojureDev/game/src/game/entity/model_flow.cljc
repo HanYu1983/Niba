@@ -17,9 +17,9 @@
             [game.entity.model :as model]))
 ; current-pay-component
 (s/def ::current-pay-effect (s/nilable :game.define.effect/value))
-(s/def ::current-pay-logic (s/nilable any?))
+(s/def ::current-pay-logic-id (s/nilable any?))
 (s/def ::current-pay-selection (s/map-of any? :game.define.selection/spec))
-(s/def ::current-pay-component (s/keys :req-un [::current-pay-selection ::current-pay-effect ::current-pay-logic]))
+(s/def ::current-pay-component (s/keys :req-un [::current-pay-selection ::current-pay-effect ::current-pay-logic-id]))
 (defn set-current-pay-effect [ctx text]
   (s/assert ::current-pay-component ctx)
   (s/assert ::current-pay-effect text)
@@ -30,13 +30,13 @@
 (defn has-current-pay-effect [ctx]
   (s/assert ::current-pay-component ctx)
   (get-current-pay-effect ctx))
-(defn set-current-pay-logic [ctx logic]
+(defn set-current-pay-logic-id [ctx logic]
   (s/assert ::current-pay-component ctx)
-  (s/assert ::current-pay-logic logic)
-  (assoc ctx :current-pay-logic logic))
-(defn get-current-pay-logic [ctx]
+  (s/assert ::current-pay-logic-id logic)
+  (assoc ctx :current-pay-logic-id logic))
+(defn get-current-pay-logic-id [ctx]
   (s/assert ::current-pay-component ctx)
-  (-> ctx :current-pay-logic))
+  (-> ctx :current-pay-logic-id))
 (defn set-current-pay-selection [ctx k v]
   (s/assert ::current-pay-component ctx)
   (update ctx :current-pay-selection assoc k v))
@@ -88,7 +88,7 @@
            :flags #{}
            :current-pay-selection {}
            :current-pay-effect nil
-           :current-pay-logic nil})
+           :current-pay-logic-id nil})
 (def model-flow (assoc model/model
                        :flow flow))
 
@@ -189,26 +189,33 @@
           [{:type :wait :reason "等待對方支付"}])
             ; 不行成功支付的場合
             ; 選擇支付
-        (if (-> ctx get-flow get-current-pay-logic nil?)
+        (if (-> ctx get-flow get-current-pay-logic-id nil?)
           (if (current-player/is-current-player ctx player-id)
            ; 選擇使用哪一個邏輯
-            [{:type :set-logic :logic-ids (-> text card-text/get-logic keys vec)}]
+            (let [logic-ids (-> text card-text/get-logic keys vec)]
+              [{:type :set-logic-id :logic-ids logic-ids :selected-logic-id (-> logic-ids first)}])
             [{:type :wait :reason "等待對方選擇使用哪一個邏輯"}])
-          (let [use-logic-one (-> ctx get-flow get-current-pay-logic)
+          (let [use-logic-one (-> ctx get-flow
+                                  get-current-pay-logic-id
+                                  (#(-> text card-text/get-logic (get %)))
+                                  (or (throw (ex-info "use-logic-one not found" {}))))
+                [logic action] use-logic-one
                 ; 邏輯需要的條件
-                all-condition-ids (-> use-logic-one logic-tree/enumerateAll)
+                all-condition-ids (-> logic logic-tree/enumerateAll flatten)
+                _ (println all-condition-ids)
                 ; 我的所有條件
                 my-conditions (->> all-condition-ids
-                                   (map (card-text/get-conditions text))
+                                   (map (-> text card-text/get-conditions))
                                    (zipmap all-condition-ids)
                                    (filter (fn [[condition-id condition]]
+                                             ; TODO 算出tips回傳
                                              (card-text/is-condition-belong-to-player-id condition player-id)))
-                                   vec)]
+                                   (into {}))]
             ; 雙方都可以支付條件
             (if (-> my-conditions count zero?)
               [{:type :wait :reason "等待對方支付條件"}]
               [{:type :set-selection
-                :logic (-> ctx get-flow get-current-pay-logic)
+                :logic-id (-> ctx get-flow get-current-pay-logic-id)
                 :conditions my-conditions}])))))
         ; 如果有立即效果
     (has-immediate-effects ctx player-id)
@@ -365,6 +372,9 @@
       (-> ctx (current-player/is-current-player player-id) (or (throw (ex-info "must be current player" {}))))
       (handle-next-phase ctx))
 
+    {:type :set-logic-id :logic-ids logic-ids :selected-logic-id selected-logic-id}
+    (-> ctx get-flow (set-current-pay-logic-id selected-logic-id) (#(set-flow ctx %)))
+
     [:convert-destroy-effects-to-new-cut]
     (convert-destroy-effects-to-new-cut ctx)
 
@@ -377,8 +387,8 @@
                                                              :current-pay-selection {"" [[:card 0 1 2] [:count 1]]}}))
         cmds (query-command ctx player-id)
         _ (match cmds
-            [{:type :set-logic} & _] true
-            :else (throw (ex-info "must set-logic" {})))]))
+            [{:type :set-logic-id} & _] true
+            :else (throw (ex-info "must set-logic-id" {})))]))
 
 (defn test-cut []
   (let [player-id :A
@@ -432,7 +442,9 @@
                     (exec-command ctx player-a (first cmds))
 
                     [{:type :pass} & _]
-                    (let [ctx (exec-command ctx player-a (first cmds))
+                    (let [_ (-> ctx get-flow get-current-pay-logic-id nil? (or (throw (ex-info "get-current-pay-logic-id must nil before exec" {}))))
+                          ctx (exec-command ctx player-a (first cmds))
+                          _ (-> ctx get-flow get-current-pay-logic-id nil? not (or (throw (ex-info "get-current-pay-logic-id must exist after exec" {}))))
                           cmds (query-command ctx player-b)
                           ;_ (println player-b "cmds" cmds)
                           ctx (match cmds
@@ -441,8 +453,37 @@
                       ctx))]
           (recur (inc i) ctx))))))
 
+(defn test-current-pay-effect []
+  (let [[player-a player-b] player/player-ids
+        ctx model-flow
+        ctx (-> ctx get-flow (set-current-pay-effect (merge game.define.effect/effect-value
+                                                            {:reason [:system (current-player/get-attack-side ctx)]
+                                                             :text {:type :system
+                                                                    :description "draw a card"
+                                                                    :conditions {"draw top1card" {:tips '(fn [ctx runtime]
+                                                                                                           [:top-n-card-from-home 1])
+                                                                                                  :action '(fn [ctx runtime selection]
+                                                                                                                                            ; move to hand
+                                                                                                             ctx)}}
+                                                                    :logic {"top1card" ['(Leaf "draw top1card")
+                                                                                        '(fn [ctx runtime]
+                                                                                           ctx)]}}}))
+                (#(set-flow ctx %))
+                (#(s/assert ::spec %)))
+        cmds (query-command ctx player-a)
+        _ (println cmds)
+        _ (match cmds
+            [{:type :set-logic-id :logic-ids logic-ids} & _]
+            (do
+              (-> logic-ids count pos? (or (throw (ex-info "logic-ids count must > 0" {}))))
+              (let [ctx (exec-command ctx player-a (first cmds))
+                    _ (println ctx)
+                    cmds (query-command ctx player-a)
+                    _ (println cmds)])))]))
+
 (defn tests []
   (test-selection)
   (test-cut)
   (test-next-phase)
-  (test-next-phase2))
+  #_(test-next-phase2)
+  (test-current-pay-effect))

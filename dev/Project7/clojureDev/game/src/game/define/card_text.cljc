@@ -24,10 +24,14 @@
 
 (def card-text-value {:type [:use [:turn :own]]})
 
-(defn get-conditions [text])
+(defn get-conditions [text]
+  (s/assert ::value text)
+  (-> text :conditions))
 (defn filter-player-condition [text condition player-id])
-(defn is-condition-belong-to-player-id [condition player-id])
+(defn is-condition-belong-to-player-id [condition player-id]
+  true)
 (defn get-logic [text]
+  (s/assert ::value text)
   (-> text :logic))
 (defn can-pass-conditions [text selection])
 
