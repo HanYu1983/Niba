@@ -192,20 +192,24 @@
         (if (-> ctx get-flow get-current-pay-logic nil?)
           (if (current-player/is-current-player ctx player-id)
            ; 選擇使用哪一個邏輯
-            [{:type :set-logic :logic-options (-> text card-text/get-logic keys vec)}]
+            [{:type :set-logic :logic-ids (-> text card-text/get-logic keys vec)}]
             [{:type :wait :reason "等待對方選擇使用哪一個邏輯"}])
           (let [use-logic-one (-> ctx get-flow get-current-pay-logic)
+                ; 邏輯需要的條件
                 all-condition-ids (-> use-logic-one logic-tree/enumerateAll)
+                ; 我的所有條件
                 my-conditions (->> all-condition-ids
                                    (map (card-text/get-conditions text))
                                    (zipmap all-condition-ids)
                                    (filter (fn [[condition-id condition]]
                                              (card-text/is-condition-belong-to-player-id condition player-id)))
                                    vec)]
-            [{:type :set-selection
-              :logic (-> ctx get-flow get-current-pay-logic)
-                        ; 我的所有條件
-              :conditions my-conditions}]))))
+            ; 雙方都可以支付條件
+            (if (-> my-conditions count zero?)
+              [{:type :wait :reason "等待對方支付條件"}]
+              [{:type :set-selection
+                :logic (-> ctx get-flow get-current-pay-logic)
+                :conditions my-conditions}])))))
         ; 如果有立即效果
     (has-immediate-effects ctx player-id)
     (let [effects (query-immediate-effects ctx player-id)
