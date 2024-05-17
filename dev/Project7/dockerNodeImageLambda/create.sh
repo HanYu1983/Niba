@@ -1,0 +1,1 @@
+docker run -ti --name dev-project7-dockerPlayWrightLambda dockerplaywrightlambda bash
