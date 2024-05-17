@@ -97,19 +97,19 @@
 ; draw rule
 (defn handle-draw-rule [ctx]
   (s/assert ::spec ctx)
-  #_(let [draw-rule-effect (s/assert :game.define.effect/value
-                                     {:reason [:system (current-player/get-attack-side ctx)]
-                                      :text {:type :system
-                                             :description "draw a card"
-                                             :conditions {"draw top1card" {:tips '(fn [ctx runtime]
-                                                                                    [:top-n-card-from-home 1])
-                                                                           :action '(fn [ctx runtime selection]
+  (let [draw-rule-effect (s/assert :game.define.effect/value
+                                   {:reason [:system (current-player/get-attack-side ctx)]
+                                    :text {:type :system
+                                           :description "draw a card"
+                                           :conditions {"draw top1card" {:tips '(fn [ctx runtime]
+                                                                                  [:top-n-card-from-home 1])
+                                                                         :action '(fn [ctx runtime selection]
                                                                                ; move to hand
-                                                                                      ctx)}}
-                                             :logic {'(Leaf "draw top1card") '(fn [ctx runtime]
-                                                                                ctx)}}})]
-      (-> ctx get-flow (set-current-pay-effect draw-rule-effect) (#(set-flow ctx %))))
-  ctx)
+                                                                                    ctx)}}
+                                           :logic {"top1card" ['(Leaf "draw top1card")
+                                                               '(fn [ctx runtime]
+                                                                  ctx)]}}})]
+    (-> ctx get-flow (set-current-pay-effect draw-rule-effect) (#(set-flow ctx %)))))
 
 ; reroll rule
 (defn has-handle-reroll-rule [ctx]
@@ -179,8 +179,6 @@
     (-> ctx get-flow has-current-pay-effect)
     (let [effect (-> ctx get-flow get-current-pay-effect)
           text (-> effect game.define.effect/get-text)
-          conditions (card-text/get-conditions text)
-          my-conditions (->> conditions (filter (partial card-text/filter-player-condition player-id)))
           current-pay-selection (-> ctx get-flow get-current-pay-selection)]
           ; 如果可以成功支付
       (if (card-text/can-pass-conditions text current-pay-selection)
@@ -194,12 +192,16 @@
         (if (-> ctx get-flow get-current-pay-logic nil?)
           (if (current-player/is-current-player ctx player-id)
            ; 選擇使用哪一個邏輯
-            [{:type :set-logic :logic-options (-> text card-text/get-logic keys)}]
+            [{:type :set-logic :logic-options (-> text card-text/get-logic keys vec)}]
             [{:type :wait :reason "等待對方選擇使用哪一個邏輯"}])
           (let [use-logic-one (-> ctx get-flow get-current-pay-logic)
                 all-condition-ids (-> use-logic-one logic-tree/enumerateAll)
-                my-conditions (->> all-condition-ids (map conditions) (zipmap all-condition-ids)
-                                   (filter (fn [[condition-id condition]] (card-text/is-condition-belong-to-player-id condition player-id))))]
+                my-conditions (->> all-condition-ids
+                                   (map (card-text/get-conditions text))
+                                   (zipmap all-condition-ids)
+                                   (filter (fn [[condition-id condition]]
+                                             (card-text/is-condition-belong-to-player-id condition player-id)))
+                                   vec)]
             [{:type :set-selection
               :logic (-> ctx get-flow get-current-pay-logic)
                         ; 我的所有條件
