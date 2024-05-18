@@ -202,12 +202,20 @@
                                                  (get "このカードが場に出た場合、カード３枚を引く")
                                                  nil?)]
                                  (if (-> this-card-id (= on-enter-card-id) (and not-yet))
-                                   (let [ctx (-> ctx
-                                                 (get-card-state this-card-id)
-                                                 (assoc "このカードが場に出た場合、カード３枚を引く")
-                                                 (#(set-card-state ctx this-card-id %))
-                                                 (draw-card 3))]
-                                     ctx)
+                                   (add-immediate-effect ctx (merge game.define.effect/effect-value
+                                                                    {:reason [:card-text this-card-id]
+                                                                     :text (merge game.define.card-text/card-text-value
+                                                                                  {:type :system
+                                                                                   :logic {"このカードが場に出た場合、カード３枚を引く"
+                                                                                           ['(And)
+                                                                                            '(fn [ctx runtime]
+                                                                                               (let [ctx (-> ctx
+                                                                                                             (get-card-state this-card-id)
+                                                                                                             (assoc "このカードが場に出た場合、カード３枚を引く")
+                                                                                                             (#(set-card-state ctx this-card-id %))
+                                                                                                             (draw-card 3))]
+                                                                                                 ctx))]}})}))
+                                   
                                    ctx))))]}}})]))
 
 (defn -main [args]
