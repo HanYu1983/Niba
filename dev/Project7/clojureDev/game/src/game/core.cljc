@@ -94,6 +94,122 @@
                   _ (when (not (= game-effects (list [:add-battle-point "zaku" [1 1 0]] [:add-battle-point "gundam" [1 1 0]])))
                       (throw (ex-info "effects not right" {})))]))]))
 
+
+
+(defn test-target []
+  ;; 179030_11E_U_BL212N_blue
+;; N
+;; CCA
+;; ジェガン重装型
+;; ジェガン系　MS
+;; 『起動』：このカードが場に出た場合、本来の記述に「特徴：装弾」を持つ自軍G１枚を、自軍ハンガーに移す事ができる。その場合、自軍本国の上のカード１枚を、ロール状態で自軍Gにする。 
+  (let [card-proto-179030_11E_U_BL212N_blue
+        (merge game.define.card-proto/default-card-proto-value
+               {:gsign [:blue :uc]
+                :type :unit
+                :texts {"『起動』：このカードが場に出た場合、本来の記述に「特徴：装弾」を持つ自軍G１枚を、自軍ハンガーに移す事ができる。その場合、自軍本国の上のカード１枚を、ロール状態で自軍Gにする。"
+                        {:type [:automatic :trigger]
+                         :events
+                         ['(fn [ctx runtime evt]
+                             (clojure.core.match/match evt
+                               [:on-enter-field {:card-id on-enter-card-id}]
+                               (let [this-card-id (-> runtime game.define.runtime/get-card-id)]
+                                 (if (-> this-card-id (= on-enter-card-id))
+                                   (add-immediate-effect ctx (merge game.define.effect/effect-value
+                                                                    {:reason [:card-text this-card-id]
+                                                                     :text (merge game.define.card-text/card-text-value
+                                                                                  {:type :system
+                                                                                   :conditions {"本来の記述に「特徴：装弾」を持つ自軍G１枚を、自軍ハンガーに移す事ができる。"
+                                                                                                {:tips '(fn [ctx runtime]
+                                                                                                          (let [card-tips (-> ctx get-g-cards (has-origin-char "装弾"))
+                                                                                                                card-basyou-tips (-> card-tips (map get-basyou) (zipmap card-tips) vec)]
+                                                                                                            card-basyou-tips))
+                                                                                                 :type :card
+                                                                                                 :count 1
+                                                                                                 :options {:can-cancel true}
+                                                                                                 :action '(fn [ctx runtime]
+                                                                                                            ; 自軍ハンガーに移す事ができる。
+                                                                                                            (let [[sel-card-id basyou] (-> ctx
+                                                                                                                                           (get-selection "本来の記述に「特徴：装弾」を持つ自軍G１枚を、自軍ハンガーに移す事ができる。"))
+                                                                                                                  ctx (-> ctx (move-card sel-card-id basyou [:A :hanger]))]
+                                                                                                              ctx))}}
+                                                                                   :logic {"その場合、自軍本国の上のカード１枚を、ロール状態で自軍Gにする。"
+                                                                                           ['(Leaf "本来の記述に「特徴：装弾」を持つ自軍G１枚を、自軍ハンガーに移す事ができる。")
+                                                                                            '(fn [ctx runtime]
+                                                                                               ; その場合、自軍本国の上のカード１枚を、ロール状態で自軍Gにする。
+                                                                                               ctx)]
+                                                                                           "do nothing"
+                                                                                           ['(And) '(fn [ctx runtime] ctx)]}})}))))
+                               :else ctx))]}}})
+;; 179030_11E_U_BL209R_blue
+;; R
+;; CCA
+;; νガンダム［†］
+;; νガンダム系　MS　専用「アムロ・レイ」
+;; 戦闘配備　〔１〕：サイコミュ（３）　〔１〕：改装［νガンダム系］
+;; 『恒常』：本来の記述に「特徴：装弾」を持つ自軍Gがある場合、このカードは、合計国力ー１してプレイできる。
+;; 『常駐』：青のGサインを持つ自軍Gが５枚以上ある場合、このカードと同じエリアにいる全ての自軍ユニットは、敵軍効果では破壊されずダメージを受けない。
+        card-proto-179030_11E_U_BL209R_blue
+        (merge game.define.card-proto/default-card-proto-value
+               {:gsign [:blue :uc]
+                :type :unit
+                :texts {"『恒常』：本来の記述に「特徴：装弾」を持つ自軍Gがある場合、このカードは、合計国力ー１してプレイできる。"
+                        {:type [:automatic :constant]
+                         :game-effects ['(fn [ctx runtime]
+                                           (let [enabled (-> ctx get-my-g (#(mapcat get-chars %)) (contains? "装弾"))]
+                                             (when enabled
+                                               {:description "このカードは、合計国力ー１してプレイできる。"})))]}
+                        "『常駐』：青のGサインを持つ自軍Gが５枚以上ある場合、このカードと同じエリアにいる全ての自軍ユニットは、敵軍効果では破壊されずダメージを受けない。"
+                        {:type [:automatic :residents]
+                         :game-effects ['(fn [ctx runtime]
+                                           (let [is-every-blue-g (-> ctx get-my-g (#(map get-color)) (#(map is-blue?)) every?)
+                                                 is-my-g-more-then-5 (-> ctx get-my-g count (> 5))
+                                                 enabled (and is-every-blue-g is-my-g-more-then-5)]
+                                             (when enabled
+                                               {:description "このカードと同じエリアにいる全ての自軍ユニットは、敵軍効果では破壊されずダメージを受けない。"})))]}}})
+        ;; 179030_11E_U_BL213S_blue
+        ;; S
+        ;; 閃光のハサウェイ
+        ;; ペーネロペー［†］
+        ;; ペーネロペー系　MS　専用「レーン・エイム」
+        ;; 戦闘配備　高機動　〔１〕：改装［ペーネロペー系］
+        ;; 『常駐』：このカードは、＋X／＋X／＋Xを得る。Xの値は、自軍手札の枚数とする。
+        ;; 『起動』：このカードが場に出た場合、カード３枚を引く。この記述の効果は、プレイヤー毎に１ターンに１回しか起動しない。
+        card-proto-179030_11E_U_BL213S_blue
+        (merge game.define.card-proto/default-card-proto-value
+               {:gsign [:blue :uc]
+                :type :unit
+                :texts {"『常駐』：このカードは、＋X／＋X／＋Xを得る。Xの値は、自軍手札の枚数とする。"
+                        {:type [:automatic :residents]
+                         :game-effects ['(fn [ctx runtime]
+                                           (let [x (-> ctx get-my-hand count)]
+                                             {:description "このカードは、＋X／＋X／＋Xを得る。Xの値は、自軍手札の枚数とする。"
+                                              :battle-point [x x x]}))]}
+                        "『起動』：このカードが場に出た場合、カード３枚を引く。この記述の効果は、プレイヤー毎に１ターンに１回しか起動しない。"
+                        {:type [:automatic :trigger]
+                         :events
+                         ['(fn [ctx runtime evt]
+                             (clojure.core.match/match evt
+                               [:on-end-turn {:player-id player-id}]
+                               (-> ctx
+                                   (get-card-state this-card-id)
+                                   (dissoc "このカードが場に出た場合、カード３枚を引く")
+                                   (#(set-card-state ctx this-card-id %)))
+                               [:on-enter-field {:card-id on-enter-card-id}]
+                               (let [this-card-id (-> runtime game.define.runtime/get-card-id)
+                                     not-yet (-> ctx
+                                                 (get-card-state this-card-id)
+                                                 (get "このカードが場に出た場合、カード３枚を引く")
+                                                 nil?)]
+                                 (if (-> this-card-id (= on-enter-card-id) (and not-yet))
+                                   (let [ctx (-> ctx
+                                                 (get-card-state this-card-id)
+                                                 (assoc "このカードが場に出た場合、カード３枚を引く")
+                                                 (#(set-card-state ctx this-card-id %))
+                                                 (draw-card 3))]
+                                     ctx)
+                                   ctx))))]}}})]))
+
 (defn -main [args]
   (s/check-asserts true)
   (game.define.card-text/tests)
