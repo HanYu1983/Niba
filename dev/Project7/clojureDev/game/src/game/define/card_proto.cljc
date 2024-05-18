@@ -51,7 +51,9 @@
   (let [ctx {}
         runtime {}
         card-proto ["gundam"
-                    {:texts {"gundam-text-1"
+                    {:play-card {:timing ""
+                                 :text {}}
+                     :texts {"gundam-text-1"
                              {:type [:special [:psycommu 3]]
                               :events ['(fn [ctx runtime evt])]
                               :game-effects []

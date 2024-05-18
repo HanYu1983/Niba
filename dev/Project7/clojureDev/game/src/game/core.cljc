@@ -153,7 +153,45 @@
         (merge game.define.card-proto/default-card-proto-value
                {:gsign [:blue :uc]
                 :type :unit
-                :texts {"『恒常』：本来の記述に「特徴：装弾」を持つ自軍Gがある場合、このカードは、合計国力ー１してプレイできる。"
+                :texts {"『恒常』：play card"
+                        {:type [:automatic :constant]
+                         :conditions {"合計國力6"
+                                      {:tips '(fn [ctx runtime] ctx)
+                                       :count 0
+                                       :options {}
+                                       :action '(fn [ctx runtime]
+                                                  (-> ctx get-my-g count (> 6)))}
+                                      "横置3個藍G"
+                                      {:tips '(fn [ctx runtime] ctx
+                                                (-> ctx get-my-g-can-tap))
+                                       :count 3
+                                       :options {}
+                                       :action '(fn [ctx runtime]
+                                                  ctx)}
+                                      "在手牌或hanger"
+                                      {:action '(fn [ctx] ctx)}
+                                      "在配備階段"
+                                      {:action '(fn [ctx] ctx)}
+                                      "放到play-card-zone"
+                                      {:tips '(fn [ctx runtime]
+                                                ctx)
+                                       :action '(fn [ctx runtime]
+                                                  ctx)}}
+                         :logic {"出機體"
+                                 ['(And (Leaf "合計國力6") (Leaf "横置3個藍G") (Leaf "放到play-card-zone"))
+                                  '(fn [ctx runtime]
+                                     (game.common.dynamic/cut-in ctx (->> {:reason [:play-card ""]
+                                                                           :text (->> {:type :system
+                                                                                       :logic {"移到場上"
+                                                                                               [nil
+                                                                                                '(fn [ctx runtime]
+                                                                                                   ctx)]}}
+                                                                                      (merge game.define.card-text/card-text-value)
+                                                                                      (s/assert :game.define.card-text/value))}
+                                                                          (merge game.define.effect/effect-value)
+                                                                          (s/assert :game.define.effect/value))))]}}
+
+                        "『恒常』：本来の記述に「特徴：装弾」を持つ自軍Gがある場合、このカードは、合計国力ー１してプレイできる。"
                         {:type [:automatic :constant]
                          :game-effects ['(fn [ctx runtime]
                                            (let [enabled (-> ctx get-my-g (#(mapcat get-chars %)) (contains? "装弾"))]
