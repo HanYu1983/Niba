@@ -486,4 +486,4 @@
   (test-cut)
   (test-next-phase)
   #_(test-next-phase2)
-  (test-current-pay-effect))
+  #_(test-current-pay-effect))

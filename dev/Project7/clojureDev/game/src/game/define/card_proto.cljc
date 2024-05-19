@@ -52,7 +52,8 @@
         runtime {}
         card-proto ["gundam"
                     {:play-card {:timing ""
-                                 :text {}}
+                                 :get-text '(fn [ctx runtime]
+                                              ctx)}
                      :texts {"gundam-text-1"
                              {:type [:special [:psycommu 3]]
                               :events ['(fn [ctx runtime evt])]
@@ -70,9 +71,10 @@
                                             :action '(fn [ctx runtime selection]
                                                        #_(throw (ex-info "not in" {}))
                                                        ctx)}}
-                              :logic {'(And (Leaf "1")
-                                            (Leaf "in-battle-phase"))
-                                      '(fn [ctx runtime])}}
+                              :logic {""
+                                      ['(And (Leaf "1")
+                                             (Leaf "in-battle-phase"))
+                                       '(fn [ctx runtime])]}}
                              "gundam-text-2"
                              {:type [:special [:psycommu 3]]}}
                      :type :graphic

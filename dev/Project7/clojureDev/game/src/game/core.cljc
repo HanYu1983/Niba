@@ -52,7 +52,7 @@
                                                                                        :action `(fn [~'ctx ~'runtime ~'selection]
                                                                                                   (game.common.dynamic/add-text ~'ctx "text-id"
                                                                                                                                 {:type :system
-                                                                                                                                 :events [(read-string (str "(fn [ctx runtime evt] (match evt [:on-end-turn info] (app.dynamic/delete-text ctx \"text-id\") :else ctx))"))]
+                                                                                                                                 :events [(read-string (str "(fn [ctx runtime evt] (clojure.core.match/match evt [:on-end-turn info] (game.common.dynamic/delete-text ctx \"text-id\") :else ctx))"))]
                                                                                                                                  :game-effects [`(fn [~~''ctx ~~''runtime]
                                                                                                                                                    (for [~~''card-id ~~'selection]
                                                                                                                                                      [:add-battle-point ~~''card-id ~~battle-point]))

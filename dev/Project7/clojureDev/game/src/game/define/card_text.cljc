@@ -1,7 +1,7 @@
 (ns game.define.card-text
   (:require [clojure.spec.alpha :as s]
             [game.define.basic]))
-(s/def ::script any?)
+(s/def ::script (fn [v] (-> v seq? (and (-> v eval fn?)))))
 (s/def ::use-timing (s/tuple #{:any :turn :draw :reroll :maintenance :battle :attack :defense :damage-checking :return}
                              #{:own :enemy nil}))
 (s/def ::description string?)
@@ -17,7 +17,7 @@
 (s/def ::conditions (s/map-of any? ::condition))
 (s/def ::events (s/coll-of ::script))
 (s/def ::game-effects (s/coll-of ::script))
-(s/def ::logic (s/map-of any? ::script))
+(s/def ::logic (s/map-of string? (s/tuple list? ::script)))
 (s/def ::value (s/keys :req-un [::type]
                        :opt-un [::description ::events ::game-effects ::conditions ::logic ::action ::is-surrounded-by-arrows]))
 ;;(s/def ::spec (s/tuple any? ::value))
@@ -39,9 +39,9 @@
   (s/assert ::value (merge card-text-value {:description ""
                                             :events []
                                             :game-effects []
-                                            :conditions {"" {:tips '()
+                                            :conditions {"" {:tips '(fn [])
                                                              :count 0
                                                              :options {}
-                                                             :action '()}}
-                                            :logic {'(And (Leaf "")) '()}
+                                                             :action '(fn [])}}
+                                            :logic {"" ['(And (Leaf "")) '(fn [])]}
                                             :is-surrounded-by-arrows false})))
