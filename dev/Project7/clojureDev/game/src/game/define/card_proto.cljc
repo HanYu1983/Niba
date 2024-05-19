@@ -1,5 +1,7 @@
 (ns game.define.card-proto
+  (:import (java.lang Throwable))
   (:require [clojure.spec.alpha :as s]
+            [clojure.string]
             [game.tool.logic-tree]
             [game.define.card-text]
             [game.define.gsign]))
