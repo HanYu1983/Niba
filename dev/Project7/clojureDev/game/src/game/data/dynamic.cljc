@@ -1,4 +1,4 @@
-(ns game.common.dynamic)
+(ns game.data.dynamic)
 (def ^:dynamic cut-in nil)
 (def ^:dynamic add-text nil)
 (def ^:dynamic delete-text nil)
