@@ -2,19 +2,22 @@
   (:import (java.lang Throwable))
   (:require [clojure.spec.alpha :as s]
             [clojure.string]
+            [clojure.core :refer [read-string]]
             [game.tool.logic-tree]
             [game.define.card-text]
             [game.define.gsign]))
-
 (s/def ::texts (s/map-of any? :game.define.card-text/value))
 (s/def ::type #{:unit :character :command :operation :operation-unit :graphic :ace})
 (s/def ::gsign :game.define.gsign/spec)
+(s/def ::play-card (s/keys :req-un [:game.define.card-text/script :game.define.card-text/use-timing]))
 (s/def ::value (s/keys :req-un [::type ::gsign ::texts]
-                       :opt-un [::battle-point ::cost ::pack ::char]))
+                       :opt-un [::battle-point ::cost ::pack ::char ::play-card]))
 ;;(s/def ::spec (s/tuple any? ::value))
 
 (def default-card-proto-value {:gsign [:blue :uc]
                                :type :unit
+                               :play-card {:use-timing [:any :any]
+                                           :script '(fn [ctx runtime] game.define.card-text/card-text-value)}
                                :texts {}})
 
 (defn do-logic [ctx runtime card-proto text-id logic selections]
@@ -53,9 +56,9 @@
   (let [ctx {}
         runtime {}
         card-proto ["gundam"
-                    {:play-card {:timing ""
-                                 :get-text '(fn [ctx runtime]
-                                              ctx)}
+                    {:play-card {:use-timing [:any :any]
+                                 :script '(fn [ctx runtime]
+                                            game.define.card-text/card-text-value)}
                      :texts {"gundam-text-1"
                              {:type [:special [:psycommu 3]]
                               :events ['(fn [ctx runtime evt])]

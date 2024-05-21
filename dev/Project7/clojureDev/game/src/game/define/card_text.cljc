@@ -3,7 +3,7 @@
             [game.define.basic]))
 (s/def ::script (fn [v] (-> v seq? (and (-> v eval fn?)))))
 (s/def ::use-timing (s/tuple #{:any :turn :draw :reroll :maintenance :battle :attack :defense :damage-checking :return}
-                             #{:own :enemy nil}))
+                             #{:any :own :enemy}))
 (s/def ::description string?)
 (s/def ::special-effect (s/or :psycommu (s/tuple #{:psycommu} int?)))
 (s/def ::type (s/or :automatic (s/tuple #{:automatic} #{:residents :trigger :constant})

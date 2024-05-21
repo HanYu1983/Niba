@@ -6,7 +6,8 @@
 ;; 戦闘配備　〔１〕：サイコミュ（３）　〔１〕：改装［νガンダム系］
 ;; 『恒常』：本来の記述に「特徴：装弾」を持つ自軍Gがある場合、このカードは、合計国力ー１してプレイできる。
 ;; 『常駐』：青のGサインを持つ自軍Gが５枚以上ある場合、このカードと同じエリアにいる全ての自軍ユニットは、敵軍効果では破壊されずダメージを受けない。
-{:gsign [:blue :uc]
+{:id "179030_11E_U_BL209R_blue"
+ :gsign [:blue :uc]
  :type :unit
  :texts {"『恒常』：play card"
          {:type [:automatic :constant]
@@ -58,4 +59,7 @@
                                   is-my-g-more-then-5 (-> ctx game.data.dynamic/get-my-g count (> 5))
                                   enabled (and is-every-blue-g is-my-g-more-then-5)]
                               (when enabled
-                                {:description "このカードと同じエリアにいる全ての自軍ユニットは、敵軍効果では破壊されずダメージを受けない。"})))]}}}
+                                {:description "このカードと同じエリアにいる全ての自軍ユニットは、敵軍効果では破壊されずダメージを受けない。"})))]}}
+ :play-card {:use-timing [:maintenance :own]
+             :script '(fn [ctx runtime]
+                        #_(helper/get-play-card-text 6 [:blue :blue :blue]))}}
