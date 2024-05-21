@@ -9,3 +9,7 @@
 (def ^:dynamic get-card-chars nil)
 (def ^:dynamic get-card-color nil)
 (def ^:dynamic is-card-color-blue nil)
+(def ^:dynamic get-my-hand nil)
+(def ^:dynamic get-card-state nil)
+(def ^:dynamic set-card-state nil)
+(def ^:dynamic add-immediate-effect nil)
