@@ -4,6 +4,8 @@
             [game.define.effect]
             [game.define.table-item]
             [game.define.runtime]
+            [game.define.card]
+            [game.define.table-item-card]
             [game.tool.card.table]))
 
 (s/def ::table :game.tool.card.table/table)
@@ -12,6 +14,7 @@
 
 (defn add-card-or-chip [ctx deck-id id card]
   (s/assert ::spec ctx)
+  (s/assert :game.define.basyou/spec deck-id)
   (s/assert :game.define.table-item/value card)
   (-> ctx
       (update :table (fn [table]
@@ -33,7 +36,11 @@
 
 (defn get-item [ctx item-id]
   (s/assert ::spec ctx)
-  (-> ctx :table-items (get item-id)))
+  (-> ctx :table-items (get item-id) (or (throw (ex-info (str "card not found:" item-id) {})))))
+
+(defn get-card [ctx item-id]
+  (s/assert ::spec ctx)
+  (-> ctx (get-item item-id) game.define.table-item-card/get-card))
 
 (defn set-item [ctx id item]
   (s/assert ::spec ctx)
@@ -82,7 +89,7 @@
 (defn test-get-effect-runtime []
   (let [ctx {:table game.tool.card.table/table
              :table-items {"gundam" {:type :card
-                                     :proto ""}}}
+                                     :card game.define.card/value}}}
         runtimes (for [effect (map #(assoc game.define.effect/effect-value :reason %) 
                                    [[:system :A] [:play-card :A "gundam"] [:play-text :A "gundam" "text"] [:text-effect "gundam" "text"]])]
                    (get-effect-runtime ctx effect))
@@ -92,8 +99,8 @@
 (defn tests []
   (let [ctx (s/assert ::spec {:table game.tool.card.table/table
                               :table-items {}})
-        card-item {:type :card :proto ""}
-        ctx (add-card-or-chip ctx [:A :hand] "item-1" card-item)
+        card-item {:type :card :card game.define.card/value}
+        ctx (add-card-or-chip ctx [:A :te-hu-ta] "item-1" card-item)
         _ (-> ctx (get-item "item-1") (= card-item) (or (throw (ex-info "must eq card-item" {}))))
         coin-item {:type :coin :description "+1/+1/+1" :player-id :A}
         ctx (add-coin ctx "coin-1"  coin-item)

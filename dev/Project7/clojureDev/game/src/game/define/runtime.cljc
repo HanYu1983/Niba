@@ -7,6 +7,10 @@
 (s/def ::player-id (s/tuple ::err ::id))
 (s/def ::spec (s/keys :opt-un [::card-id ::player-id]))
 
+(defn value-of [card-id player-id]
+  {:player-id [nil player-id]
+   :card-id [nil card-id]})
+
 (defn get-player-id [runtime]
   (let [[err id] (:player-id runtime)
         _ (when err (throw (ex-info err {})))]

@@ -2,24 +2,17 @@
   (:require [clojure.core :refer [read-string slurp]]
             [clojure.spec.alpha :as s]
             [game.define.card-proto]
-            [game.data.179030_11E_U_BL212N_blue]
-            [game.data.179030_11E_U_BL209R_blue]))
+            [game.data.dynamic]))
 
 (defn get-card-data [card-id]
-  (-> (str "data/" card-id ".edn") slurp read-string eval
+  (-> card-id empty? (and (throw (ex-info (str "card-id must exist") {}))))
+  (-> card-id
+      (#(str "data/" % ".edn")) slurp read-string eval
       (#(merge game.define.card-proto/default-card-proto-value %))
       (#(s/assert :game.define.card-proto/value %)))
   #_(-> (str "game.data." card-id "/value") read-string eval))
 
 (def get-card-date-memo (memoize get-card-data))
-
-(defn tests []
-  (doseq [card-id ["179030_11E_U_BL212N_blue"
-                   "179030_11E_U_BL209R_blue"
-                   "179030_11E_U_BL213S_blue"]]
-    (-> card-id get-card-date-memo))
-  (-> "179030_11E_U_BL212N_blue" get-card-date-memo :gsign (= [:blue :uc]) (or (throw (ex-info "must blue uc" {})))))
-
 
 (defn test-card-proto []
   (let [play-card-effect
@@ -59,3 +52,10 @@
                                                                                            (s/assert :game.define.card-text/value))}
                                                                                (merge game.define.effect/effect-value)
                                                                                (s/assert :game.define.effect/value))))]}})})]))
+
+(defn tests []
+  (doseq [card-id ["179030_11E_U_BL212N_blue"
+                   "179030_11E_U_BL209R_blue"
+                   "179030_11E_U_BL213S_blue"]]
+    (-> card-id get-card-date-memo))
+  (-> "179030_11E_U_BL212N_blue" get-card-date-memo :gsign (= [:blue :uc]) (or (throw (ex-info "must blue uc" {})))))
