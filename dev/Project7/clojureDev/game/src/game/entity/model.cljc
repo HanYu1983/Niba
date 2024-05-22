@@ -18,13 +18,12 @@
                        :game.component.table/spec
                        :game.component.phase/spec
                        :game.component.current-player/spec))
-(def model {:cuts []
-            :effects {}
-            ;:card-proto-pool {}
-            :table game.tool.card.table/table
-            :table-items {}
-            :phase [:reroll :start]
-            :current-player-id :A})
+(def model (->> {:cuts []
+                 :effects {}
+                 :table-items {}
+                 :phase [:reroll :start]
+                 :current-player-id :A}
+                (merge game.component.table/table-component)))
 ; card-text helper
 (defn get-play-card-text [ctx runtime]
   (let [card-proto (-> runtime

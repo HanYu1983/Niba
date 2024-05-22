@@ -17,6 +17,9 @@
             [game.component.phase]
             [game.component.current-player]
             [game.component.selection]
+            [game.component.card-table]
+            [game.component.chip-table]
+            [game.component.coin-table]
             [game.entity.model]
             [game.entity.model-flow]
             [game.data.core]
@@ -114,6 +117,9 @@
   (game.entity.model-flow/tests)
   (test-script-eval)
   (game.data.core/tests)
+  (game.component.card-table/tests)
+  (game.component.chip-table/tests)
+  (game.component.coin-table/tests)
    ;; (game.tool.return-let/test-all)
   ;; (game.tool.waterfall/test-all)
   ;; (game.tool.callback/test-all)

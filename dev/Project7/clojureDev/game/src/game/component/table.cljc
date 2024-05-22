@@ -5,12 +5,23 @@
             [game.define.table-item]
             [game.define.runtime]
             [game.define.card]
+            [game.define.chip]
+            [game.define.coin]
             [game.define.table-item-card]
             [game.tool.card.table]))
 
 (s/def ::table :game.tool.card.table/table)
 (s/def ::table-items (s/map-of any? :game.define.table-item/value))
-(s/def ::spec (s/keys :req-un [::table ::table-items]))
+(s/def ::cards (s/map-of any? :game.define.card/spec))
+(s/def ::chips (s/map-of any? :game.define.chips/spec))
+(s/def ::coins (s/map-of any? :game.define.coins/spec))
+(s/def ::spec (s/keys :req-un [::table ::table-items ::cards ::chips ::coins]))
+
+(def table-component {:cards {}
+                      :chips {}
+                      :coins {}
+                      :table-items {}
+                      :table game.tool.card.table/table})
 
 (defn add-card-or-chip [ctx deck-id id card]
   (s/assert ::spec ctx)
@@ -87,18 +98,18 @@
     (throw (ex-info "reason not match" {}))))
 
 (defn test-get-effect-runtime []
-  (let [ctx {:table game.tool.card.table/table
-             :table-items {"gundam" {:type :card
-                                     :card game.define.card/value}}}
-        runtimes (for [effect (map #(assoc game.define.effect/effect-value :reason %) 
+  (let [ctx (->> {:table game.tool.card.table/table
+                  :table-items {"gundam" {:type :card
+                                          :card game.define.card/value}}}
+                 (merge table-component))
+        runtimes (for [effect (map #(assoc game.define.effect/effect-value :reason %)
                                    [[:system :A] [:play-card :A "gundam"] [:play-text :A "gundam" "text"] [:text-effect "gundam" "text"]])]
                    (get-effect-runtime ctx effect))
         _ (doseq [runtime runtimes]
             (s/assert :game.define.runtime/spec runtime))]))
 
 (defn tests []
-  (let [ctx (s/assert ::spec {:table game.tool.card.table/table
-                              :table-items {}})
+  (let [ctx (s/assert ::spec table-component)
         card-item {:type :card :card game.define.card/value}
         ctx (add-card-or-chip ctx [:A :te-hu-ta] "item-1" card-item)
         _ (-> ctx (get-item "item-1") (= card-item) (or (throw (ex-info "must eq card-item" {}))))
