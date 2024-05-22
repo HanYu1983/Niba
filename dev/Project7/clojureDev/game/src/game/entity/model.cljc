@@ -14,7 +14,7 @@
             [game.component.table :as table]))
 (s/def ::spec (s/merge :game.component.cuts/spec
                        :game.component.effect/spec
-                       ;:game.component.card-proto/spec
+                       :game.component.card-proto/spec
                        :game.component.table/spec
                        :game.component.phase/spec
                        :game.component.current-player/spec))
@@ -22,7 +22,8 @@
                  :effects {}
                  :table-items {}
                  :phase [:reroll :start]
-                 :current-player-id :A}
+                 :current-player-id :A
+                 :card-proto-pool {}}
                 (merge game.component.table/table)))
 ; card-text helper
 (defn get-play-card-text [ctx runtime]
