@@ -24,7 +24,7 @@
                  :phase [:reroll :start]
                  :current-player-id :A
                  :card-proto-pool {}}
-                (merge game.component.table/table)))
+                (merge table/table)))
 ; card-text helper
 (defn get-play-card-text [ctx runtime]
   (let [card-proto (-> runtime

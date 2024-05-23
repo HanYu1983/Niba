@@ -18,7 +18,7 @@
 (defn tests []
   (let [ctx {:env :test
              :card-proto-pool {}}
-        card-proto game.define.card-proto/default-card-proto-value]
+        card-proto game.define.card-proto/card-proto]
     (-> ctx
         (register-card-proto :robot1 card-proto)
         (#(= (:card-proto-pool %) {:robot1 card-proto}))

@@ -12,13 +12,12 @@
 (s/def ::play-card (s/keys :req-un [:game.define.card-text/script :game.define.card-text/use-timing]))
 (s/def ::value (s/keys :req-un [::type ::gsign ::texts]
                        :opt-un [::battle-point ::cost ::pack ::char ::play-card]))
-;;(s/def ::spec (s/tuple any? ::value))
 
-(def default-card-proto-value {:gsign [:blue :uc]
-                               :type :unit
-                               :play-card {:use-timing [:any :any]
-                                           :script '(fn [ctx runtime] game.define.card-text/card-text-value)}
-                               :texts {}})
+(def card-proto {:gsign [:blue :uc]
+                 :type :unit
+                 :play-card {:use-timing [:any :any]
+                             :script '(fn [ctx runtime] game.define.card-text/card-text-value)}
+                 :texts {}})
 
 (defn do-logic [ctx runtime card-proto text-id logic selections]
   (let [text (-> card-proto second :texts (get text-id))

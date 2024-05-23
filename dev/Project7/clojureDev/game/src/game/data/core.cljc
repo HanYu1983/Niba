@@ -8,7 +8,7 @@
   (-> card-id empty? (and (throw (ex-info (str "card-id must exist") {}))))
   (-> card-id
       (#(str "data/" % ".edn")) slurp read-string eval
-      (#(merge game.define.card-proto/default-card-proto-value %))
+      (#(merge game.define.card-proto/card-proto %))
       (#(s/assert :game.define.card-proto/value %)))
   #_(-> (str "game.data." card-id "/value") read-string eval))
 

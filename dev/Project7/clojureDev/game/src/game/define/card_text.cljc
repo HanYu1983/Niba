@@ -20,7 +20,6 @@
 (s/def ::logic (s/map-of string? (s/tuple list? ::script)))
 (s/def ::value (s/keys :req-un [::type]
                        :opt-un [::description ::events ::game-effects ::conditions ::logic ::action ::is-surrounded-by-arrows]))
-;;(s/def ::spec (s/tuple any? ::value))
 
 (def card-text-value {:type [:use [:turn :own]]})
 
