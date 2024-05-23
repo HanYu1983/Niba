@@ -192,25 +192,29 @@
         (if (-> ctx get-flow get-current-pay-logic-id nil?)
           (if (current-player/is-current-player ctx player-id)
            ; 選擇使用哪一個邏輯
-            (let [logic-ids (-> text card-text/get-logic keys vec)]
+            (let [logic-ids (-> text card-text/get-logics-ids)]
               [{:type :set-logic-id :logic-ids logic-ids :selected-logic-id (-> logic-ids first)}])
             [{:type :wait :reason "等待對方選擇使用哪一個邏輯"}])
-          (let [use-logic-one (-> ctx get-flow
-                                  get-current-pay-logic-id
-                                  (#(-> text card-text/get-logic (get %)))
-                                  (or (throw (ex-info "use-logic-one not found" {}))))
-                [logic action] use-logic-one
-                ; 邏輯需要的條件
-                all-condition-ids (-> logic logic-tree/enumerateAll flatten)
-                _ (println all-condition-ids)
-                ; 我的所有條件
-                my-conditions (->> all-condition-ids
-                                   (map (-> text card-text/get-conditions))
-                                   (zipmap all-condition-ids)
-                                   (filter (fn [[condition-id condition]]
-                                             ; TODO 算出tips回傳
-                                             (card-text/is-condition-belong-to-player-id condition player-id)))
-                                   (into {}))]
+          (let [use-logic (-> text card-text/get-logics (get get-current-pay-logic-id))
+                need-conditions (-> text (card-text/get-logic-conditions use-logic))
+                my-conditions need-conditions
+                ;; use-logic-one (-> ctx get-flow
+                ;;                   get-current-pay-logic-id
+                ;;                   (#(-> text card-text/get-logics (get %)))
+                ;;                   (or (throw (ex-info "use-logic-one not found" {}))))
+                ;; [logic action] use-logic-one
+                ;; ; 邏輯需要的條件
+                ;; all-condition-ids (-> logic logic-tree/enumerateAll flatten)
+                ;; _ (println all-condition-ids)
+                ;; ; 我的所有條件
+                ;; my-conditions (->> all-condition-ids
+                ;;                    (map (-> text card-text/get-conditions))
+                ;;                    (zipmap all-condition-ids)
+                ;;                    (filter (fn [[condition-id condition]]
+                ;;                              ; TODO 算出tips回傳
+                ;;                              (card-text/is-condition-belong-to-player-id condition player-id)))
+                ;;                    (into {}))
+                ]
             ; 雙方都可以支付條件
             (if (-> my-conditions count zero?)
               [{:type :wait :reason "等待對方支付條件"}]
