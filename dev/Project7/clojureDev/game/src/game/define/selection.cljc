@@ -1,6 +1,6 @@
 (ns game.define.selection
   (:require [clojure.spec.alpha :as s]
-            [game.define.basic]))
+            [game.define.battle-point]))
 
 
 (s/def ::quantity (s/or :count (s/tuple #{:count} int?)
@@ -12,7 +12,7 @@
                               :basyou (s/cat :type #{:basyou}
                                              :options (s/+ any?))
                               :battle-point (s/cat :type #{:battle-point}
-                                                   :options (s/+ :game.define.basic/battle-point))))
+                                                   :options (s/+ :game.define.battle-point/spec))))
 
 (s/def ::spec (s/tuple ::selection-type ::quantity))
 

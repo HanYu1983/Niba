@@ -10,6 +10,7 @@
             [game.define.gsign]
             [game.define.selection]
             [game.define.timing]
+            [game.define.battle-point]
             [game.component.card-proto]
             [game.component.cuts]
             [game.component.effect]
@@ -109,6 +110,7 @@
   (game.define.gsign/tests)
   (game.define.selection/tests)
   (game.define.timing/tests)
+  (game.define.battle-point/tests)
   (game.component.card-proto/tests)
   (game.component.cuts/tests)
   (game.component.effect/tests)
