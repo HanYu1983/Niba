@@ -1,5 +1,6 @@
 (ns game.entity.model
   (:require [clojure.spec.alpha :as s]
+            [clojure.core.match :refer [match]]
             [game.tool.card.table]
             [game.data.core]
             [game.define.runtime]
@@ -69,6 +70,20 @@
                                                              (merge game.define.effect/effect-value)
                                                              (clojure.spec.alpha/assert :game.define.effect/value))))]}}]
     text))
+
+(defn gen-game-effects [ctx] [])
+
+(defn can-be-destroyed-card-id [ctx player-id]
+  (->> ctx
+       gen-game-effects
+       (filter (fn [[id game-effect]]
+                 (match game-effect
+                   ["敵軍効果では破壊されずダメージを受けない" card-ids]
+                   (->> card-ids (filter (fn [card-id] card-id)))
+
+                   :else [])))
+       (mapcat identity)
+       (into {})))
 
 (defn tests []
   (s/assert ::spec model)

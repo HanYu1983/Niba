@@ -25,9 +25,10 @@
           :game-effects ['(fn [ctx runtime]
                             (let [is-every-blue-g (-> ctx game.data.dynamic/get-my-g ((fn [gs] (map game.data.dynamic/get-card-color gs))) ((fn [colors] (every? game.data.dynamic/is-card-color-blue colors))))
                                   is-my-g-more-then-5 (-> ctx game.data.dynamic/get-my-g count (> 5))
-                                  enabled (and is-every-blue-g is-my-g-more-then-5)]
+                                  enabled (and is-every-blue-g is-my-g-more-then-5)
+                                  unit-in-the-same-area ["0" "1" "2"]]
                               (when enabled
-                                ["敵軍効果では破壊されずダメージを受けない" ["0" "1" "2"]])))]}}
+                                ["敵軍効果では破壊されずダメージを受けない" unit-in-the-same-area])))]}}
  :play-card {:use-timing [:maintenance :own]
              :script '(fn [ctx runtime]
                         #_(helper/get-play-card-text 6 [:blue :blue :blue]))}}
