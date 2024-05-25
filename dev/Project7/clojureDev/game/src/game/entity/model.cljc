@@ -35,27 +35,20 @@
                        game.data.core/get-card-data)
         text {:type [:automatic :constant]
               :conditions {"合計國力6"
-                           {:tips '(fn [ctx runtime] ctx)
-                            :count 0
-                            :options {}
-                            :action '(fn [ctx runtime]
-                                       (-> ctx game.data.dynamic/get-my-g count (> 6)))}
+                           ['(fn [ctx runtime] ctx)
+                            '(fn [ctx runtime]
+                               (-> ctx game.data.dynamic/get-my-g count (> 6)))]
                            "横置3個藍G"
-                           {:tips '(fn [ctx runtime] ctx
-                                     (-> ctx game.data.dynamic/get-my-g-can-tap))
-                            :count 3
-                            :options {}
-                            :action '(fn [ctx runtime]
-                                       ctx)}
+                           ['(fn [ctx runtime] ctx
+                               (-> ctx game.data.dynamic/get-my-g-can-tap))
+                            '(fn [ctx runtime]
+                               ctx)]
                            "在手牌或hanger"
-                           {:action '(fn [ctx] ctx)}
+                           ['(fn [ctx] ctx) '(fn [ctx] ctx)]
                            "在配備階段"
-                           {:action '(fn [ctx] ctx)}
+                           ['(fn [ctx] ctx) '(fn [ctx] ctx)]
                            "放到play-card-zone"
-                           {:tips '(fn [ctx runtime]
-                                     ctx)
-                            :action '(fn [ctx runtime]
-                                       ctx)}}
+                           ['(fn [ctx] ctx) '(fn [ctx] ctx)]}
               :logic {"出機體"
                       ['(And (Leaf "合計國力6") (Leaf "横置3個藍G") (Leaf "放到play-card-zone"))
                        '(fn [ctx runtime]

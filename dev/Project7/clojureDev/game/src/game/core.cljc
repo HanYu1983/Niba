@@ -52,19 +52,33 @@
                                                                   :text {:description "そのカードのセットグループ以外の自軍ユニット１枚は、ターン終了時まで、その戦闘修正と同じ値の戦闘修正を得る。"
                                                                          :type :system
                                                                          :conditions {"condition-1"
-                                                                                      {:tips `(fn [~'ctx ~'runtime]
-                                                                                                [[:card ~@option-ids] [:count 1]])
-                                                                                       :action `(fn [~'ctx ~'runtime ~'selection]
-                                                                                                  (game.common.dynamic/add-text ~'ctx "text-id"
-                                                                                                                                {:type :system
-                                                                                                                                 :events [(read-string (str "(fn [ctx runtime evt] (clojure.core.match/match evt [:on-end-turn info] (game.common.dynamic/delete-text ctx \"text-id\") :else ctx))"))]
-                                                                                                                                 :game-effects [`(fn [~~''ctx ~~''runtime]
-                                                                                                                                                   (for [~~''card-id ~~'selection]
-                                                                                                                                                     [:add-battle-point ~~''card-id ~~battle-point]))
-                                                                                                                                                (read-string (str "(fn [ctx runtime] (for [card-id " ~'selection "] [:add-battle-point card-id " ~battle-point "]))"))
-                                                                                                                                                (list ~''fn [~''ctx ~''runtime]
-                                                                                                                                                      (list ~''for [~''card-id ~'selection]
-                                                                                                                                                            [:add-battle-point ~''card-id ~battle-point]))]}))}}}})
+                                                                                      [`(fn [~'ctx ~'runtime]
+                                                                                          [[:card ~@option-ids] [:count 1]])
+                                                                                       `(fn [~'ctx ~'runtime ~'selection]
+                                                                                          (game.common.dynamic/add-text ~'ctx "text-id"
+                                                                                                                        {:type :system
+                                                                                                                         :events [(read-string (str "(fn [ctx runtime evt] (clojure.core.match/match evt [:on-end-turn info] (game.common.dynamic/delete-text ctx \"text-id\") :else ctx))"))]
+                                                                                                                         :game-effects [`(fn [~~''ctx ~~''runtime]
+                                                                                                                                           (for [~~''card-id ~~'selection]
+                                                                                                                                             [:add-battle-point ~~''card-id ~~battle-point]))
+                                                                                                                                        (read-string (str "(fn [ctx runtime] (for [card-id " ~'selection "] [:add-battle-point card-id " ~battle-point "]))"))
+                                                                                                                                        (list ~''fn [~''ctx ~''runtime]
+                                                                                                                                              (list ~''for [~''card-id ~'selection]
+                                                                                                                                                    [:add-battle-point ~''card-id ~battle-point]))]}))]}
+                                                                         #_:conditions #_{"condition-1"
+                                                                                          {:tips `(fn [~'ctx ~'runtime]
+                                                                                                    [[:card ~@option-ids] [:count 1]])
+                                                                                           :action `(fn [~'ctx ~'runtime ~'selection]
+                                                                                                      (game.common.dynamic/add-text ~'ctx "text-id"
+                                                                                                                                    {:type :system
+                                                                                                                                     :events [(read-string (str "(fn [ctx runtime evt] (clojure.core.match/match evt [:on-end-turn info] (game.common.dynamic/delete-text ctx \"text-id\") :else ctx))"))]
+                                                                                                                                     :game-effects [`(fn [~~''ctx ~~''runtime]
+                                                                                                                                                       (for [~~''card-id ~~'selection]
+                                                                                                                                                         [:add-battle-point ~~''card-id ~~battle-point]))
+                                                                                                                                                    (read-string (str "(fn [ctx runtime] (for [card-id " ~'selection "] [:add-battle-point card-id " ~battle-point "]))"))
+                                                                                                                                                    (list ~''fn [~''ctx ~''runtime]
+                                                                                                                                                          (list ~''for [~''card-id ~'selection]
+                                                                                                                                                                [:add-battle-point ~''card-id ~battle-point]))]}))}}}})
                                      ctx)]
                            ctx)
                          :else
@@ -85,7 +99,7 @@
                   script (-> card-proto-example str read-string second :texts (get "text-1") :events first)
                   eventF (eval script)
                   _ (eventF ctx runtime [:on-gain {:battle-point [1 1 0]}])
-                  {option-ids-script :tips action-script :action} (-> @effect :text :conditions (get "condition-1"))
+                  [option-ids-script action-script] (-> @effect :text :conditions (get "condition-1"))
                   option-ids-fn (eval option-ids-script)
                   option-ids (s/assert :game.define.selection/spec (option-ids-fn ctx runtime))
                   _ (when (not (= option-ids [[:card "zaku" "gundam"] [:count 1]]))

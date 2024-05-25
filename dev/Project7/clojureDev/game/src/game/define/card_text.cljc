@@ -10,10 +10,9 @@
                     :use (s/tuple #{:use} ::use-timing)
                     :special (s/tuple #{:special} ::special-effect)
                     :system #{:system}))
-(s/def ::action ::script)
 (s/def ::tips ::script)
-(s/def ::condition  (s/keys :req-un [::action]
-                            :opt-un [::tips ::count ::options]))
+(s/def ::action ::script)
+(s/def ::condition (s/tuple ::tips ::action))
 (s/def ::conditions (s/map-of any? ::condition))
 (s/def ::events (s/coll-of ::script))
 (s/def ::game-effects (s/coll-of ::script))
@@ -59,23 +58,15 @@
 
 (defn get-condition-tips [condition]
   (s/assert ::condition condition)
-  (-> condition :tips eval))
+  (-> condition first eval))
 
 (defn get-condition-action [condition]
   (s/assert ::condition condition)
-  (-> condition :action eval))
+  (-> condition second eval))
 
 (defn test-logic []
-  (let [text (->> {:conditions {"condition1" {:tips '(fn []
-                                                       :tips)
-                                              :count 0
-                                              :options {}
-                                              :action '(fn []
-                                                         :action)}
-                                "condition2" {:tips '(fn [])
-                                              :count 0
-                                              :options {}
-                                              :action '(fn [])}}
+  (let [text (->> {:conditions {"condition1" ['(fn [] :tips) '(fn [] :action)]
+                                "condition2" ['(fn []) '(fn [])]}
                    :logics {"condition1 and condition2" ['(And (Leaf "condition1") (Leaf "condition2")) '(fn [])]
                             "condition1" ['(Leaf "condition1") '(fn [])]}}
                   (merge card-text-value)
@@ -92,9 +83,6 @@
   (s/assert ::value (merge card-text-value {:description ""
                                             :events []
                                             :game-effects []
-                                            :conditions {"" {:tips '(fn [])
-                                                             :count 0
-                                                             :options {}
-                                                             :action '(fn [])}}
+                                            :conditions {"" ['(fn []) '(fn [])]}
                                             :logic {"" ['(And (Leaf "")) '(fn [])]}
                                             :is-surrounded-by-arrows false})))
