@@ -11,6 +11,14 @@
 (def chip-table {:chips {}
                  :table game.tool.card.table/table})
 
+(defn get-table [ctx]
+  (s/assert ::spec ctx)
+  (-> ctx :table))
+
+(defn get-chips [ctx]
+  (s/assert ::spec ctx)
+  (-> ctx :chips))
+
 (defn add-chip [ctx deck-id id card]
   (s/assert ::spec ctx)
   (s/assert :game.define.basyou/spec deck-id)

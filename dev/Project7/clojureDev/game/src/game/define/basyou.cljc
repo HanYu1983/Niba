@@ -30,6 +30,17 @@
   (or (is-battle-area? k)
       (is-maintenance-area? k)))
 
+#_(defn value-of [player-id basyou-id]
+  (s/assert ::spec [player-id basyou-id]))
+
+#_(defn get-player-id [basyou]
+  (s/assert ::spec basyou)
+  (-> basyou first))
+
+#_(defn get-ba-syou-id [basyou]
+  (s/assert ::spec basyou)
+  (-> basyou second))
+
 (defn tests []
   (s/assert ::spec [:A :sute-yama])
   (when (not (is-battle-area? :space-area))

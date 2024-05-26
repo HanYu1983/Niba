@@ -13,12 +13,14 @@
             :cards {}})
 
 (defn create-table []
-  table)
+  (s/assert ::table table))
 
 (defn map-card [table f]
+  (s/assert ::table table)
   (update table :cards #(into {} (map (fn [[card-id card]] [card-id (f card)]) %))))
 
 (defn add-card [table deck-id card-id card]
+  (s/assert ::table table)
   (-> table
       (update :cards #(assoc % card-id card))
       (update :decks (fn [decks]
@@ -26,7 +28,20 @@
                          (update decks deck-id #(conj % card-id))
                          (assoc decks deck-id [card-id]))))))
 
+(defn get-decks [table]
+  (s/assert ::table table)
+  (-> table :decks))
+
+(defn get-decks-deck [table deck-id]
+  (s/assert ::table table)
+  (-> table get-decks (get deck-id)))
+
+#_(defn get-deck [deck deck-id]
+  (s/assert ::deck deck)
+  (-> deck (get deck-id)))
+
 (defn remove-card [table card-id]
+  (s/assert ::table table)
   (-> table
       (update :decks (fn [decks]
                        (->> decks
@@ -36,5 +51,6 @@
       (update :cards dissoc card-id)))
 
 (defn shuffle-deck [table deck-id]
+  (s/assert ::table table)
   (-> table
       (update-in [:decks deck-id] shuffle)))

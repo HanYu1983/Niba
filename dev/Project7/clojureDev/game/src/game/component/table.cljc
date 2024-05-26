@@ -7,8 +7,9 @@
             [game.define.card]
             [game.define.chip]
             [game.define.coin]
-            [game.component.card-table]
-            [game.component.chip-table]
+            [game.define.basyou]
+            [game.component.card-table :as card-table]
+            [game.component.chip-table :as chip-table]
             [game.component.coin-table]))
 
 
@@ -19,6 +20,14 @@
 (def table (merge game.component.card-table/card-table
                   game.component.coin-table/coin-table
                   game.component.chip-table/chip-table))
+
+(defn get-item-ids-by-ba-syou [ctx ba-syou]
+  (s/assert ::spec ctx)
+  (s/assert :game.define.basyou/spec ba-syou)
+  (let [item-ids (-> ctx
+                     card-table/get-table
+                     (game.tool.card.table/get-decks-deck ba-syou))]
+    item-ids))
 
 (defn get-card-controller [ctx card-id]
   ; 所在area或部隊的控制者
@@ -73,6 +82,14 @@
         _ (doseq [runtime runtimes]
             (s/assert :game.define.runtime/spec runtime))]))
 
+(defn test-get-card-ids-by-ba-syou []
+  (let [basyou [:A :maintenance-area]
+        card-0 game.define.card/value
+        ctx table
+        ctx (-> ctx (card-table/add-card basyou "card-0" card-0))
+        item-ids (-> ctx (get-item-ids-by-ba-syou basyou))
+        _ (-> item-ids vec (= ["card-0"]) (or (throw (ex-info "must [card-0]" {}))))]))
+
 (defn tests []
   (let [ctx (s/assert ::spec table)
         card-item game.define.card/value
@@ -81,4 +98,5 @@
         coin-item {:id "+1/+1/+1"}
         ctx (game.component.coin-table/add-coin ctx "card-1" "coin-1" coin-item)
         _ (-> ctx (game.component.coin-table/get-coin "coin-1") (= coin-item) (or (throw (ex-info "must eq coin-item" {}))))])
-  (test-get-effect-runtime))
+  (test-get-effect-runtime)
+  (test-get-card-ids-by-ba-syou))

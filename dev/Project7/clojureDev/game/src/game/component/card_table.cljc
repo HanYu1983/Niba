@@ -11,6 +11,14 @@
 (def card-table {:cards {}
                  :table game.tool.card.table/table})
 
+(defn get-table [ctx]
+  (s/assert ::spec ctx)
+  (-> ctx :table))
+
+(defn get-cards [ctx]
+  (s/assert ::spec ctx)
+  (-> ctx :cards))
+
 (defn add-card [ctx deck-id id card]
   (s/assert ::spec ctx)
   (s/assert :game.define.basyou/spec deck-id)

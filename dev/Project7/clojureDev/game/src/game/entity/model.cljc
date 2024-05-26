@@ -64,7 +64,8 @@
                                                              (clojure.spec.alpha/assert :game.define.effect/value))))]}}]
     text))
 
-(defn gen-game-effects [ctx] [])
+(defn gen-game-effects [ctx]
+  [])
 
 (defn can-be-destroyed-card-id [ctx player-id]
   (->> ctx
