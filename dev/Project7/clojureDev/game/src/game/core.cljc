@@ -21,6 +21,7 @@
             [game.component.card-table]
             [game.component.chip-table]
             [game.component.coin-table]
+            [game.component.player-status-map]
             [game.entity.model]
             [game.entity.model-flow]
             [game.data.core]
@@ -134,6 +135,7 @@
   (game.component.card-table/tests)
   (game.component.chip-table/tests)
   (game.component.coin-table/tests)
+  (game.component.player-status-map/tests)
   (game.entity.model/tests)
   (game.entity.model-flow/tests)
    ;; (game.tool.return-let/test-all)

@@ -13,4 +13,3 @@
 (defmulti get-my-hand :data-dynamic)
 (defmulti get-card-state :data-dynamic)
 (defmulti set-card-state :data-dynamic)
-(defmulti add-immediate-effect :data-dynamic)

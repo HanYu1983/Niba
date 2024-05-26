@@ -1,6 +1,8 @@
 (ns game.define.card-text
   (:require [clojure.spec.alpha :as s]
-            [game.tool.logic-tree :as logic-tree]))
+            [game.tool.logic-tree :as logic-tree]
+            [game.component.card-table :as card-table]
+            [game.define.runtime :as runtime]))
 (s/def ::script (fn [v] (-> v seq? (and (-> v eval fn?)))))
 (s/def ::use-timing (s/tuple #{:any :turn :draw :reroll :maintenance :battle :attack :defense :damage-checking :return}
                              #{:any :own :enemy}))
@@ -64,19 +66,35 @@
   (s/assert ::condition condition)
   (-> condition second eval))
 
+; 自軍配備階段一次
+; check player status map has-play-g
+(defn get-play-g-text []
+  (let [text (->> {:logic {"play-g"
+                           [nil
+                            '(fn [ctx runtime]
+                               ; 直立進場
+                               ctx)]}}
+                  (merge card-text-value))]))
+
 (defn test-logic []
-  (let [text (->> {:conditions {"condition1" ['(fn [] :tips) '(fn [] :action)]
+  (let [; P20
+        ; 宣告play
+        text (->> {:conditions {"condition1" ['(fn [] :tips) '(fn [] :action)]
                                 "condition2" ['(fn []) '(fn [])]}
                    :logics {"condition1 and condition2" ['(And (Leaf "condition1") (Leaf "condition2")) '(fn [])]
                             "condition1" ['(Leaf "condition1") '(fn [])]}}
                   (merge card-text-value)
                   (s/assert ::value))
         _ (-> text get-logics-ids vec (= ["condition1 and condition2" "condition1"]) (or (throw (ex-info "logic-options not right" {}))))
+        ; 指定對象, 對象無法滿足的話不能play
         conditions (-> text get-logics (get (-> text get-logics-ids first)) (#(get-logic-conditions text %)))
         tips (-> conditions (get "condition1") get-condition-tips)
         _ (-> (tips) (= :tips) (or (throw (ex-info "must tips" {}))))
+        ; 支付
         action (-> conditions (get "condition1") get-condition-action)
-        _ (-> (action) (= :action) (or (throw (ex-info "must action" {}))))]))
+        _ (-> (action) (= :action) (or (throw (ex-info "must action" {}))))
+        ; 效果發生
+        ]))
 
 (defn tests []
   (test-logic)
