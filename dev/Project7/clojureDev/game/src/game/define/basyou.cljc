@@ -30,14 +30,14 @@
   (or (is-battle-area? k)
       (is-maintenance-area? k)))
 
-#_(defn value-of [player-id basyou-id]
+(defn value-of [player-id basyou-id]
   (s/assert ::spec [player-id basyou-id]))
 
-#_(defn get-player-id [basyou]
+(defn get-player-id [basyou]
   (s/assert ::spec basyou)
   (-> basyou first))
 
-#_(defn get-ba-syou-id [basyou]
+(defn get-ba-syou-id [basyou]
   (s/assert ::spec basyou)
   (-> basyou second))
 

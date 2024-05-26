@@ -19,7 +19,9 @@
                                                                                    {:type :system
                                                                                     :conditions {"本来の記述に「特徴：装弾」を持つ自軍G１枚を、自軍ハンガーに移す事ができる。"
                                                                                                  {:tips '(fn [ctx runtime]
-                                                                                                           (let [card-tips (-> ctx get-g-cards (has-origin-char "装弾"))
+                                                                                                           (let [card-id (-> runtime runtime/card-id)
+                                                                                                                 card-controller (-> ctx (get-card-controller card-id))
+                                                                                                                 card-tips (-> ctx (get-g-cards card-controller) (has-origin-char "装弾"))
                                                                                                                  card-basyou-tips (-> card-tips (map get-basyou) (zipmap card-tips) vec)]
                                                                                                              card-basyou-tips))
                                                                                                   :type :card

@@ -10,7 +10,7 @@
             [game.define.basyou]
             [game.component.card-table :as card-table]
             [game.component.chip-table :as chip-table]
-            [game.component.coin-table]))
+            [game.component.coin-table :as coin-table]))
 
 
 (s/def ::spec (s/merge :game.component.card-table/spec
@@ -30,26 +30,34 @@
     item-ids))
 
 (defn get-card-controller [ctx card-id]
-  ; 所在area或部隊的控制者
-  :A)
-
-
-#_(defn get-item-controller [ctx item]
   (s/assert ::spec ctx)
-  (s/assert :game.define.table-item/value item)
-  (match item
-    ; 所在area或部隊的控制者
-    {:type :card}
-    :A
-    ; 所在area或部隊的控制者
-    {:type :chip}
-    :A
+  ; 所在area或部隊的控制者
+  (-> ctx 
+      card-table/get-table 
+      (game.tool.card.table/get-deck-id-by-card-id card-id) 
+      (or (throw (ex-info (str "card not found:" card-id) {})))
+      game.define.basyou/get-player-id))
 
-    {:type :coin :player-id player-id}
-    player-id
+(def get-chip-controller get-card-controller)
 
-    :else
-    (throw (ex-info (str "item not match:" item) {}))))
+(defn get-coin-controller [ctx coin-id]
+  (s/assert ::spec ctx)
+  (-> ctx
+      (coin-table/get-coin coin-id)
+      (or (throw (ex-info (str "coin not found:" coin-id) {})))
+      game.define.coin/get-player-id))
+
+(defn get-item-controller [ctx item-id]
+  (s/assert ::spec ctx)
+  (cond
+    (card-table/is-card ctx item-id)
+    (-> ctx (get-card-controller item-id))
+
+    (chip-table/is-chip ctx item-id)
+    (-> ctx (get-chip-controller item-id))
+
+    (coin-table/is-coin ctx item-id)
+    (-> ctx (get-coin-controller item-id))))
 
 (defn get-effect-runtime
   "取得效果的執行期資訊"
@@ -67,7 +75,7 @@
     {:card-id [nil, card-id] :player-id [nil, play-card-player-id]}
 
     [:text-effect card-id text-id]
-    (let [response-player-id (->> card-id (get-card-controller ctx))]
+    (let [response-player-id (->> card-id (get-item-controller ctx))]
       {:card-id [nil, card-id] :player-id [nil, response-player-id]})
 
     :else
@@ -75,9 +83,9 @@
 
 (defn test-get-effect-runtime []
   (let [ctx (-> table
-                (game.component.card-table/add-card [:A :maintenance-area] "0" game.define.card/value))
+                (game.component.card-table/add-card [:A :maintenance-area] "card-0" game.define.card/value))
         runtimes (for [effect (map #(assoc game.define.effect/effect-value :reason %)
-                                   [[:system :A] [:play-card :A "gundam"] [:play-text :A "gundam" "text"] [:text-effect "gundam" "text"]])]
+                                   [[:system :A] [:play-card :A "card-0"] [:play-text :A "card-0" "text"] [:text-effect "card-0" "text"]])]
                    (get-effect-runtime ctx effect))
         _ (doseq [runtime runtimes]
             (s/assert :game.define.runtime/spec runtime))]))
@@ -95,7 +103,7 @@
         card-item game.define.card/value
         ctx (game.component.card-table/add-card ctx [:A :te-hu-ta] "card-1" card-item)
         _ (-> ctx (game.component.card-table/get-card "card-1") (= card-item) (or (throw (ex-info "must eq card-item" {}))))
-        coin-item {:id "+1/+1/+1"}
+        coin-item (->> {:id "+1/+1/+1"} (merge game.define.coin/coin))
         ctx (game.component.coin-table/add-coin ctx "card-1" "coin-1" coin-item)
         _ (-> ctx (game.component.coin-table/get-coin "coin-1") (= coin-item) (or (throw (ex-info "must eq coin-item" {}))))])
   (test-get-effect-runtime)

@@ -28,6 +28,10 @@
                          (update decks deck-id #(conj % card-id))
                          (assoc decks deck-id [card-id]))))))
 
+(defn get-deck-id-by-card-id [table card-id]
+  (s/assert ::table table)
+  (some->> table :decks (filter #(some #{card-id} (second %))) first first))
+
 (defn get-decks [table]
   (s/assert ::table table)
   (-> table :decks))
