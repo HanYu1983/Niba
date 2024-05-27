@@ -14,6 +14,7 @@
             [game.component.phase :as phase]
             [game.component.current-player :as current-player]
             [game.component.selection]
+            [game.component.flags-component :as flags-component]
             [game.entity.model :as model]))
 ; current-pay-component
 (s/def ::current-pay-effect (s/nilable :game.define.effect/value))
@@ -46,18 +47,6 @@
 (defn clear-current-pay-selection [ctx]
   (s/assert ::current-pay-component ctx)
   (assoc ctx :current-pay-selection {}))
-; flags-component
-(s/def ::flags (s/coll-of (into #{:has-handle-reroll-rule} timing/timings) :kind set?))
-(s/def ::flags-component (s/keys :req-un [::flags]))
-(defn set-flags [ctx fs]
-  (s/assert ::flags-component ctx)
-  (update ctx :flags into fs))
-(defn has-flag [ctx f]
-  (s/assert ::flags-component ctx)
-  (-> ctx :flags (get f) nil? not))
-(defn remove-flags [ctx fs]
-  (s/assert ::flags-component ctx)
-  (update ctx :flags difference (into #{} fs)))
 ; has-cuts-component
 (s/def ::has-cuts (s/coll-of :game.define.player/id :kind set?))
 (s/def ::has-cuts-component (s/keys :req-un [::has-cuts]))
@@ -74,7 +63,7 @@
   (assoc ctx :has-cuts #{}))
 ; flow
 (s/def ::flow (s/merge ::current-pay-component
-                       ::flags-component
+                       :game.component.flags-component/flags-component
                        ::has-cuts-component))
 (s/def ::spec (s/merge :game.entity.model/spec
                        (s/keys :req-un [::flow])))
@@ -114,15 +103,15 @@
 ; reroll rule
 (defn has-handle-reroll-rule [ctx]
   (s/assert ::spec ctx)
-  (-> ctx get-flow (has-flag :has-handle-reroll-rule)))
+  (-> ctx get-flow (flags-component/has-flag :has-handle-reroll-rule)))
 (defn handle-reroll-rule [ctx]
   (s/assert ::spec ctx)
-  (-> ctx get-flow (set-flags [:has-handle-reroll-rule]) (#(set-flow ctx %))))
+  (-> ctx get-flow (flags-component/set-flags #{:has-handle-reroll-rule}) (#(set-flow ctx %))))
 
 ; handle phase
 (defn has-handle-phase [ctx phase]
   (s/assert ::spec ctx)
-  (-> ctx get-flow (has-flag phase)))
+  (-> ctx get-flow (flags-component/has-flag phase)))
 (defn handle-phase [ctx phase]
   (s/assert ::spec ctx)
   (when (has-handle-phase ctx phase)
@@ -135,7 +124,7 @@
                         [:draw :rule] (handle-draw-rule ctx)
                         :else ctx))]
     (-> ctx
-        get-flow (set-flags [phase]) (#(set-flow ctx %))
+        get-flow (flags-component/set-flags #{phase}) (#(set-flow ctx %))
         main-handle)))
 
 
@@ -167,7 +156,7 @@
       ; 清除切入狀態
       clear-has-cut
       ; 清除處理階段的標記
-      (remove-flags (-> ctx phase/get-phase list))
+      (flags-component/remove-flags #{(-> ctx phase/get-phase)})
       (#(set-flow ctx %))
       ; 到下一個時段
       phase/next-phase))
