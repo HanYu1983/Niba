@@ -1,5 +1,6 @@
 (ns game.define.timing
-  (:require [clojure.spec.alpha :as s]))
+  (:require [clojure.spec.alpha :as s]
+            [clojure.core.match :refer [match]]))
 (s/def ::phase-keyword #{:reroll 
                          :draw 
                          :maintenance
@@ -68,6 +69,16 @@
 (defn can-play-card-or-text [timing]
   (s/assert ::timing timing)
   (->> timing (filter #{:free1 :free2}) count pos?))
+
+(defn get-phase-keyword [timing]
+  (s/assert ::timing timing)
+  (->> timing first))
+
+(defn get-step-keyword [timing]
+  (s/assert ::timing timing)
+  (match timing
+    [:battle step-keyword _] step-keyword
+    :else (throw (ex-info (str "no step:" timing) {}))))
 
 (defn tests []
   (let [_ (-> [:battle :return :start] can-play-card-or-text (= false) (or (throw (ex-info "" {}))))

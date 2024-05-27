@@ -29,7 +29,11 @@
 
 (defn get-card [ctx id]
   (s/assert ::spec ctx)
-  (-> ctx :cards (get id) (or (throw (ex-info (str "card id not found:" id) {})))))
+  (-> ctx :cards (get id) #_(or (throw (ex-info (str "card id not found:" id) {})))))
+
+(defn get-cards-by-ids [ctx ids]
+  (s/assert ::spec ctx)
+  (-> ctx :cards (keep ids)))
 
 (defn is-card [ctx id]
   (s/assert ::spec ctx)

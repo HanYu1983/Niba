@@ -17,9 +17,9 @@
                        :game.component.coin-table/spec
                        :game.component.chip-table/spec))
 
-(def table (merge game.component.card-table/card-table
-                  game.component.coin-table/coin-table
-                  game.component.chip-table/chip-table))
+(def table (merge card-table/card-table
+                  coin-table/coin-table
+                  chip-table/chip-table))
 
 (defn get-item-ids-by-ba-syou [ctx ba-syou]
   (s/assert ::spec ctx)
@@ -28,6 +28,13 @@
                      card-table/get-table
                      (game.tool.card.table/get-decks-deck ba-syou))]
     item-ids))
+
+(defn get-cards-by-ba-syou [ctx ba-syou]
+  (s/assert ::spec ctx)
+  (s/assert :game.define.basyou/spec ba-syou)
+  (-> ctx
+      (get-item-ids-by-ba-syou ba-syou)
+      (#(card-table/get-cards-by-ids ctx %))))
 
 (defn get-card-controller [ctx card-id]
   (s/assert ::spec ctx)

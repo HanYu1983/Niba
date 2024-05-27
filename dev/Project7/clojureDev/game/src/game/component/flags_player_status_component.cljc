@@ -4,7 +4,7 @@
 
 (s/def ::spec :game.component.flags-component/flags-component)
 
-(defn get-player-has-play-g-flag [player-id] (-> (name player-id) (str "-has-play-g") keyword))
+(defn get-player-has-play-g-flag [player-id] [player-id :has-play-g])
 
 (defn tests []
   (let [player-a :A

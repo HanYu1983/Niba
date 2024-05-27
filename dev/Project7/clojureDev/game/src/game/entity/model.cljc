@@ -6,10 +6,11 @@
             [game.define.runtime]
             [game.define.card]
             [game.define.card-text]
+            [game.define.timing]
             [game.component.cuts]
             [game.component.effect]
             [game.component.card-proto]
-            [game.component.phase]
+            [game.component.phase :as phase]
             [game.component.current-player]
             [game.component.card-table :as card-table]
             [game.component.table :as table]))
