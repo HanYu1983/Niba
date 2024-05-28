@@ -7,7 +7,7 @@
 (defn get-card-data [card-id]
   ; 其它方法
   ; (-> (str "game.data." card-id "/value") read-string eval)
-  (-> card-id empty? (and (throw (ex-info (str "card-id must exist") {}))))
+  (-> card-id empty? (and (throw (ex-info (str "card-id must exist:" card-id) {}))))
   (-> card-id
       (#(str "data/" % ".edn")) slurp read-string eval
       (#(merge game.define.card-proto/card-proto %))

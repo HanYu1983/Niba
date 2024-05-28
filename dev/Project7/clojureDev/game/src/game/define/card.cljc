@@ -4,10 +4,10 @@
 (s/def ::proto-id string?)
 (s/def ::is-face-down boolean?)
 (s/def ::is-roll boolean?)
-(s/def ::spec (s/keys :req-un [::proto-id ::is-face-down ::is-roll]))
+(s/def ::spec (s/keys :req-un [::is-face-down ::is-roll]
+                      :opt-un [::proto-id]))
 
-(def value {:proto-id ""
-            :is-face-down false
+(def value {:is-face-down false
             :is-roll false})
 
 (defn get-proto-id [ctx]

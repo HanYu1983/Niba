@@ -1,8 +1,6 @@
 (ns game.define.card-text
   (:require [clojure.spec.alpha :as s]
-            [game.tool.logic-tree :as logic-tree]
-            [game.component.card-table :as card-table]
-            [game.define.runtime :as runtime]))
+            [game.tool.logic-tree :as logic-tree]))
 (s/def ::script (fn [v] (-> v seq? (and (-> v eval fn?)))))
 (s/def ::use-timing (s/tuple #{:any :turn :draw :reroll :maintenance :battle :attack :defense :damage-checking :return}
                              #{:any :own :enemy}))
@@ -20,6 +18,7 @@
 (s/def ::game-effects (s/coll-of ::script))
 (s/def ::logic (s/tuple list? ::script))
 (s/def ::logics (s/map-of string? ::logic))
+(s/def ::is-surrounded-by-arrows boolean?)
 (s/def ::value (s/keys :req-un [::type]
                        :opt-un [::description ::events ::game-effects ::conditions ::logics ::action ::is-surrounded-by-arrows]))
 
@@ -65,6 +64,10 @@
 (defn get-condition-action [condition]
   (s/assert ::condition condition)
   (-> condition second eval))
+
+(defn is-surrounded-by-arrows [text]
+  (s/assert ::value text)
+  (-> text :is-surrounded-by-arrows (or false)))
 
 ; 自軍配備階段一次
 ; check player status map has-play-g

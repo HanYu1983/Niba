@@ -7,6 +7,7 @@
             [game.define.card]
             [game.define.card-text]
             [game.define.timing]
+            [game.define.card-proto]
             [game.component.cuts]
             [game.component.effect]
             [game.component.card-proto]
@@ -66,9 +67,24 @@
     text))
 
 (defn gen-game-effects [ctx]
-  [])
+  (let [g-card-texts
+        (-> ctx
+            (table/get-item-ids-by-ba-syou-keyword :g-zone)
+            (#(card-table/get-card-protos-by-ids ctx %))
+            (#(mapcat game.define.card-proto/get-texts %))
+            ;(#(s/assert (s/coll-of (s/tuple any? :game.define.card-text/value)) %))
+            (#(filter (fn [[name text]] (-> text game.define.card-text/is-surrounded-by-arrows)) %)))
+        _ (println g-card-texts)
+        maintenance-area-card-texts
+        (-> ctx
+            (table/get-item-ids-by-ba-syou-keyword :maintenance-area)
+            (#(card-table/get-card-protos-by-ids ctx %))
+            (#(mapcat game.define.card-proto/get-texts %)))
+        _ (println maintenance-area-card-texts)]
+    []))
 
 (defn can-be-destroyed-card-id [ctx player-id]
+  (s/assert ::spec ctx)
   (->> ctx
        gen-game-effects
        (filter (fn [[id game-effect]]
@@ -85,4 +101,12 @@
   (let [ctx (-> model (card-table/add-card [:A :maintenance-area] "0"
                                            (->> {:proto-id "179030_11E_U_BL209R_blue"}
                                                 (merge game.define.card/value))))
-        _ (-> ctx (get-play-card-text (game.define.runtime/value-of "0" :A)) (#(s/assert :game.define.card-text/value %)))]))
+        _ (-> ctx (get-play-card-text (game.define.runtime/value-of "0" :A)) (#(s/assert :game.define.card-text/value %)))])
+  
+  ; test gen-game-effects
+  (let [card (->> {:proto-id "179030_11E_U_BL209R_blue"}
+                  (merge game.define.card/value))
+        ctx (-> model
+                (card-table/add-card [:A :maintenance-area] "0" card)
+                (card-table/add-card [:B :maintenance-area] "1" card))
+        _ (gen-game-effects ctx)]))

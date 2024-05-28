@@ -37,7 +37,7 @@
   (s/assert ::spec basyou)
   (-> basyou first))
 
-(defn get-ba-syou-id [basyou]
+(defn get-ba-syou-keyword [basyou]
   (s/assert ::spec basyou)
   (-> basyou second))
 

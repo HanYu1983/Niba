@@ -24,9 +24,17 @@
 (defn get-item-ids-by-ba-syou [ctx ba-syou]
   (s/assert ::spec ctx)
   (s/assert :game.define.basyou/spec ba-syou)
-  (let [item-ids (-> ctx
-                     card-table/get-table
+  (let [item-ids (-> ctx card-table/get-table
                      (game.tool.card.table/get-decks-deck ba-syou))]
+    item-ids))
+
+(defn get-item-ids-by-ba-syou-keyword [ctx ba-syou-keyword]
+  (s/assert ::spec ctx)
+  (s/assert :game.define.basyou/ba-syou-keyword ba-syou-keyword)
+  (let [item-ids (->> ctx card-table/get-table
+                      game.tool.card.table/get-decks
+                      (filter (fn [[ba-syou _]] (-> ba-syou game.define.basyou/get-ba-syou-keyword (= ba-syou-keyword))))
+                      (mapcat (fn [[_ ids]] ids)))]
     item-ids))
 
 (defn get-cards-by-ba-syou [ctx ba-syou]

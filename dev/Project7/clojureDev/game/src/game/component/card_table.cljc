@@ -1,8 +1,9 @@
 (ns game.component.card-table
   (:require [clojure.spec.alpha :as s]
+            [game.tool.card.table]
+            [game.data.core]
             [game.define.card]
-            [game.define.basyou]
-            [game.tool.card.table]))
+            [game.define.basyou]))
 
 (s/def ::table :game.tool.card.table/table)
 (s/def ::cards (s/map-of any? :game.define.card/spec))
@@ -45,10 +46,23 @@
       (update :cards dissoc id)
       (update :table game.tool.card.table/remove-card id)))
 
+(defn get-card-protos-by-ids [ctx ids]
+  (s/assert ::spec ctx)
+  (-> ctx :cards (map ids) 
+      (#(map game.define.card/get-proto-id %)) 
+      (#(map game.data.core/get-card-data %)) 
+      (#(s/assert (s/coll-of :game.define.card-proto/value) %))))
+
 (defn tests []
   (let [ctx (s/assert ::spec card-table)
         card game.define.card/value
         ctx (-> ctx (add-card [:A :maintenance-area] "0" card))
         _ (-> ctx (is-card "0") (or (throw (ex-info "must is card" {}))))
         _ (-> ctx (get-card "0") (= card) (or (throw (ex-info "must be card" {}))))
-        ctx (-> ctx (remove-card "0"))]))
+        ctx (-> ctx (remove-card "0"))])
+  
+  
+  (let [ctx card-table
+        card (-> game.define.card/value (assoc :proto-id "179030_11E_U_BL209R_blue"))
+        ctx (-> ctx (add-card [:A :maintenance-area] "0" card))
+        _ (-> ctx (get-card-protos-by-ids ["0"]))]))
