@@ -16,15 +16,25 @@
                                   player-id (-> runtime game.define.runtime/get-player-id)
                                   enabled (-> ctx
                                               (game.data.dynamic/get-my-g player-id)
-                                              ((fn [ctx] (mapcat game.data.dynamic/get-card-chars ctx)))
-                                              (contains? "装弾"))]
+                                              ((fn [g-card-ids]
+                                                 (mapcat (fn [g-card-id]
+                                                           (game.data.dynamic/get-card-chars ctx g-card-id))
+                                                         g-card-ids)))
+                                              #_(contains? "装弾")
+                                              )]
                               (when enabled
                                 ["合計国力+Nしてプレイできる" [card-id] -1])))]}
          "『常駐』：青のGサインを持つ自軍Gが５枚以上ある場合、このカードと同じエリアにいる全ての自軍ユニットは、敵軍効果では破壊されずダメージを受けない。"
          {:type [:automatic :residents]
           :game-effects ['(fn [ctx runtime]
-                            (let [is-every-blue-g (-> ctx game.data.dynamic/get-my-g ((fn [gs] (map game.data.dynamic/get-card-color gs))) ((fn [colors] (every? game.data.dynamic/is-card-color-blue colors))))
-                                  is-my-g-more-then-5 (-> ctx game.data.dynamic/get-my-g count (> 5))
+                            (let [player-id (-> runtime game.define.runtime/get-player-id)
+                                  is-every-blue-g (-> ctx 
+                                                      (game.data.dynamic/get-my-g player-id) 
+                                                      ((fn [g-card-ids] 
+                                                         (map (fn [card-id] (game.data.dynamic/get-card-color ctx card-id)) g-card-ids))) 
+                                                      ((fn [colors]
+                                                         (every? game.data.dynamic/is-card-color-blue colors))))
+                                  is-my-g-more-then-5 (-> ctx (game.data.dynamic/get-my-g player-id) count (> 5))
                                   enabled (and is-every-blue-g is-my-g-more-then-5)
                                   unit-in-the-same-area ["0" "1" "2"]]
                               (when enabled
