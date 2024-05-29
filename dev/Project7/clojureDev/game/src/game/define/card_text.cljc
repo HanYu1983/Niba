@@ -69,6 +69,10 @@
   (s/assert ::value text)
   (-> text :is-surrounded-by-arrows (or false)))
 
+(defn get-game-effects [text]
+  (s/assert ::value text)
+  (-> text :game-effects (#(map eval %))))
+
 ; 自軍配備階段一次
 ; check player status map has-play-g
 (defn get-play-g-text []

@@ -75,12 +75,14 @@
             ;(#(s/assert (s/coll-of (s/tuple any? :game.define.card-text/value)) %))
             (#(filter (fn [[name text]] (-> text game.define.card-text/is-surrounded-by-arrows)) %)))
         _ (println g-card-texts)
-        maintenance-area-card-texts
+        maintenance-area-card-game-effects
         (-> ctx
             (table/get-item-ids-by-ba-syou-keyword :maintenance-area)
             (#(card-table/get-card-protos-by-ids ctx %))
-            (#(mapcat game.define.card-proto/get-texts %)))
-        _ (println maintenance-area-card-texts)]
+            (#(mapcat game.define.card-proto/get-texts %))
+            (#(mapcat (fn [[name text]] (game.define.card-text/get-game-effects text)) %)))
+        _ (println maintenance-area-card-game-effects)
+        game-effects-fns maintenance-area-card-game-effects]
     []))
 
 (defn can-be-destroyed-card-id [ctx player-id]
