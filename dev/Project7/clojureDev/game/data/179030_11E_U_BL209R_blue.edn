@@ -22,12 +22,13 @@
                                                          g-card-ids)))
                                               #_(contains? "装弾")
                                               )]
-                              (when enabled
-                                ["合計国力+Nしてプレイできる" [card-id] -1])))]}
+                              (when true
+                                ["合計国力+Nしてプレイできる" [card-id] -1 {:from-card-id card-id}])))]}
          "『常駐』：青のGサインを持つ自軍Gが５枚以上ある場合、このカードと同じエリアにいる全ての自軍ユニットは、敵軍効果では破壊されずダメージを受けない。"
          {:type [:automatic :residents]
           :game-effects ['(fn [ctx runtime]
-                            (let [player-id (-> runtime game.define.runtime/get-player-id)
+                            (let [card-id (-> runtime game.define.runtime/get-card-id)
+                                  player-id (-> runtime game.define.runtime/get-player-id)
                                   is-every-blue-g (-> ctx 
                                                       (game.data.dynamic/get-my-g player-id) 
                                                       ((fn [g-card-ids] 
@@ -37,8 +38,8 @@
                                   is-my-g-more-then-5 (-> ctx (game.data.dynamic/get-my-g player-id) count (> 5))
                                   enabled (and is-every-blue-g is-my-g-more-then-5)
                                   unit-in-the-same-area ["0" "1" "2"]]
-                              (when enabled
-                                ["敵軍効果では破壊されずダメージを受けない" unit-in-the-same-area])))]}}
+                              (when true
+                                ["敵軍効果では破壊されずダメージを受けない" unit-in-the-same-area {:from-card-id card-id}])))]}}
  :play-card {:use-timing [:maintenance :own]
              :script '(fn [ctx runtime]
                         #_(helper/get-play-card-text 6 [:blue :blue :blue]))}}

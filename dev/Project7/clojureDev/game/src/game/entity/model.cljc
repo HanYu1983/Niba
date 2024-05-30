@@ -9,6 +9,7 @@
             [game.define.card-text]
             [game.define.timing]
             [game.define.card-proto]
+            [game.define.game-effect]
             [game.component.cuts]
             [game.component.effect]
             [game.component.card-proto]
@@ -79,22 +80,24 @@
                                game-effects (->> game-effects-fns (map #(% ctx runtime)))]
                            game-effects))
         ; maintenance-area
-        game-effects-2 (for [card-id (table/get-item-ids-by-ba-syou-keyword ctx :maintenance-area)]
-                         (let [[card-proto] (card-table/get-card-protos-by-ids ctx [card-id])
-                               texts (-> card-proto game.define.card-proto/get-texts)
-                               game-effects-fns (->> texts (mapcat (fn [[name text]] (game.define.card-text/get-game-effects text))))
-                               runtime (game.define.runtime/value-of (table/get-card-controller ctx card-id) card-id)
-                               game-effects (->> game-effects-fns (map #(% ctx runtime)))]
-                           game-effects))]
+        game-effects-2 (->> (for [card-id (table/get-item-ids-by-ba-syou-keyword ctx :maintenance-area)]
+                              (let [[card-proto] (card-table/get-card-protos-by-ids ctx [card-id])
+                                    texts (-> card-proto game.define.card-proto/get-texts)
+                                    game-effects-fns (->> texts (mapcat (fn [[name text]] (game.define.card-text/get-game-effects text))))
+                                    runtime (game.define.runtime/value-of (table/get-card-controller ctx card-id) card-id)
+                                    game-effects (->> game-effects-fns (map #(% ctx runtime)))]
+                                game-effects))
+                            (mapcat identity)
+                            (s/assert (s/coll-of :game.define.game-effect/spec)))]
     game-effects-2))
 
 (defn can-be-destroyed-card-id [ctx player-id]
   (s/assert ::spec ctx)
   (->> ctx
        gen-game-effects
-       (filter (fn [[id game-effect]]
+       (filter (fn [game-effect]
                  (match game-effect
-                   ["敵軍効果では破壊されずダメージを受けない" card-ids]
+                   ["敵軍効果では破壊されずダメージを受けない" card-ids & _]
                    (->> card-ids (filter (fn [card-id] card-id)))
 
                    :else [])))
@@ -120,4 +123,5 @@
                 (card-table/add-card [:A :maintenance-area] "0" card)
                 (card-table/add-card [:B :maintenance-area] "1" card))
         game-effects (gen-game-effects ctx)
-        _ (println game-effects)]))
+        ;_ (println game-effects)
+        ]))
