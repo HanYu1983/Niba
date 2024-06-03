@@ -22,7 +22,7 @@
 (s/def ::value (s/keys :req-un [::type]
                        :opt-un [::description ::events ::game-effects ::conditions ::logics ::action ::is-surrounded-by-arrows]))
 
-(def card-text-value {:type [:use [:turn :own]]})
+(def card-text-value {:type :system})
 
 (defn get-conditions [text]
   (s/assert ::value text)
@@ -33,7 +33,7 @@
 (defn get-logics [text]
   (s/assert ::value text)
   (-> text :logics))
-(defn can-pass-conditions [text selection])
+(defn can-pass-conditions [text logic-id selection])
 
 (defn get-logics-ids [text]
   (s/assert ::value text)

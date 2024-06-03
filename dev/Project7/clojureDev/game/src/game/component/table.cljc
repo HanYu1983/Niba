@@ -10,7 +10,8 @@
             [game.define.basyou]
             [game.component.card-table :as card-table]
             [game.component.chip-table :as chip-table]
-            [game.component.coin-table :as coin-table]))
+            [game.component.coin-table :as coin-table]
+            [game.component.effect :as effect]))
 
 
 (s/def ::spec (s/merge :game.component.card-table/spec
@@ -73,6 +74,14 @@
 
     (coin-table/is-coin ctx item-id)
     (-> ctx (get-coin-controller item-id))))
+
+(defn get-effect-player-id [ctx eff]
+  (s/assert ::spec ctx)
+  (match (-> eff game.define.effect/get-reason)
+    [:text-effect card-id text-id]
+    (-> ctx (get-item-controller card-id))
+    :else
+    (-> eff game.define.effect/get-player-id)))
 
 (defn get-effect-runtime
   "取得效果的執行期資訊"

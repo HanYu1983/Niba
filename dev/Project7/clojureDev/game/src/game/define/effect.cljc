@@ -29,9 +29,23 @@
 
 (def reasons [[:system :A] [:play-card :A 0] [:play-text :A 0 0] [:text-effect 0 0]])
 
+(defn value-of-play-card-reason [player-id card-id]
+  (s/assert ::reason [:play-card player-id card-id]))
+
 (defn get-text [ctx]
   (s/assert ::value ctx)
   (-> ctx :text))
+
+(defn get-reason [ctx]
+  (s/assert ::value ctx)
+  (-> ctx :reason))
+
+(defn get-player-id [ctx]
+  (s/assert ::value ctx)
+  (match (-> ctx get-reason)
+    [:system player-id] player-id
+    [:play-card player-id card-id] player-id
+    [:play-text player-id card-id text-id] player-id))
 
 (defn tests []
   (s/assert ::value effect-value)

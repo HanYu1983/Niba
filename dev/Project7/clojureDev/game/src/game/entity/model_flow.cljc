@@ -168,23 +168,48 @@
     (-> ctx get-flow has-current-pay-effect)
     (let [effect (-> ctx get-flow get-current-pay-effect)
           text (-> effect game.define.effect/get-text)
+          current-pay-logic-id (-> ctx get-flow get-current-pay-logic-id)
           current-pay-selection (-> ctx get-flow get-current-pay-selection)]
+      (if (-> current-pay-logic-id nil?)
+        (if (-> ctx (table/get-effect-player-id effect) (= player-id))
+                 ; 選擇使用哪一個邏輯
+          (let [logic-ids (-> text card-text/get-logics-ids)]
+            (if (-> logic-ids count pos?)
+              [{:type :set-logic-id :logic-ids logic-ids :selected-logic-id (-> logic-ids first)}]
+              [{:type :pay-conditions}]))
+          [{:type :wait :reason "等待對方選擇使用哪一個邏輯"}])
+        (if (card-text/can-pass-conditions text current-pay-logic-id current-pay-selection)
+                    ; 如果是主動玩家
+          (if (-> ctx (table/get-effect-player-id effect) (= player-id))
+                      ; 執行支付(支付完後將效果從堆疊移除)
+            [{:type :pay-conditions}]
+            [{:type :wait :reason "等待對方支付"}])
+          (let [use-logic (-> text card-text/get-logics (get current-pay-logic-id))
+                need-conditions (-> text (card-text/get-logic-conditions use-logic))
+                my-conditions need-conditions]
+                            ; 雙方都可以支付條件
+            (if (-> my-conditions count zero?)
+              [{:type :wait :reason "等待對方支付條件"}]
+              [{:type :set-selection
+                :logic-id (-> ctx get-flow get-current-pay-logic-id)
+                :conditions my-conditions}]))))
+
           ; 如果可以成功支付
-      (if (card-text/can-pass-conditions text current-pay-selection)
+      #_(if (card-text/can-pass-conditions text current-pay-logic-id current-pay-selection)
             ; 如果是主動玩家
-        (if (current-player/is-current-player ctx player-id)
+        (if (-> ctx (table/get-effect-player-id effect) (= player-id))
               ; 執行支付(支付完後將效果從堆疊移除)
           [{:type :pay-conditions}]
           [{:type :wait :reason "等待對方支付"}])
             ; 不行成功支付的場合
             ; 選擇支付
-        (if (-> ctx get-flow get-current-pay-logic-id nil?)
-          (if (current-player/is-current-player ctx player-id)
+        (if (-> current-pay-logic-id nil?)
+          (if (-> ctx (table/get-effect-player-id effect) (= player-id))
            ; 選擇使用哪一個邏輯
             (let [logic-ids (-> text card-text/get-logics-ids)]
               [{:type :set-logic-id :logic-ids logic-ids :selected-logic-id (-> logic-ids first)}])
             [{:type :wait :reason "等待對方選擇使用哪一個邏輯"}])
-          (let [use-logic (-> text card-text/get-logics (get get-current-pay-logic-id))
+          (let [use-logic (-> text card-text/get-logics (get current-pay-logic-id))
                 need-conditions (-> text (card-text/get-logic-conditions use-logic))
                 my-conditions need-conditions
                 ;; use-logic-one (-> ctx get-flow
@@ -380,8 +405,8 @@
                                                              :current-pay-selection {"" [[:card 0 1 2] [:count 1]]}}))
         cmds (query-command ctx player-id)
         _ (match cmds
-            [{:type :set-logic-id} & _] true
-            :else (throw (ex-info "must set-logic-id" {})))]))
+            [{:type :pay-conditions} & _] true
+            :else (throw (ex-info "must :pay-conditions" {})))]))
 
 (defn test-cut []
   (let [player-id :A
@@ -474,9 +499,24 @@
                     cmds (query-command ctx player-a)
                     _ (println cmds)])))]))
 
+(defn test-current-pay-effect-play-g []
+  (let [[player-a player-b] player/player-ids
+        ctx model-flow
+        ctx (-> ctx get-flow (set-current-pay-effect (->> {:reason (game.define.effect/value-of-play-card-reason player-a "0")
+                                                           :text {:type :system
+                                                                  :action '(fn [ctx runtime]
+                                                                             ; move g
+                                                                             ctx)}}
+                                                          (merge game.define.effect/effect-value)))
+                (#(set-flow ctx %))
+                (#(s/assert ::spec %)))
+        cmds (query-command ctx player-a)
+        _ (println cmds)]))
+
 (defn tests []
   (test-selection)
   (test-cut)
   (test-next-phase)
+  (test-current-pay-effect-play-g)
   #_(test-next-phase2)
   #_(test-current-pay-effect))

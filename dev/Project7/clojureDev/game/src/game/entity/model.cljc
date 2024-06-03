@@ -68,7 +68,7 @@
                                                              (clojure.spec.alpha/assert :game.define.effect/value))))]}}]
     text))
 
-(defn gen-game-effects [ctx]
+(defn gen-game-effects-1 [ctx]
   (let [; g
         game-effects-1 (for [card-id (table/get-item-ids-by-ba-syou-keyword ctx :g-zone)]
                          (let [[card-proto] (card-table/get-card-protos-by-ids ctx [card-id])
@@ -91,10 +91,13 @@
                             (s/assert (s/coll-of :game.define.game-effect/spec)))]
     game-effects-2))
 
+(defn gen-game-effects-2 [ctx]
+  (gen-game-effects-1 ctx))
+
 (defn can-be-destroyed-card-id [ctx player-id]
   (s/assert ::spec ctx)
   (->> ctx
-       gen-game-effects
+       gen-game-effects-2
        (filter (fn [game-effect]
                  (match game-effect
                    ["敵軍効果では破壊されずダメージを受けない" card-ids & _]
@@ -122,6 +125,6 @@
         ctx (-> model
                 (card-table/add-card [:A :maintenance-area] "0" card)
                 (card-table/add-card [:B :maintenance-area] "1" card))
-        game-effects (gen-game-effects ctx)
+        game-effects (gen-game-effects-2 ctx)
         ;_ (println game-effects)
         ]))
