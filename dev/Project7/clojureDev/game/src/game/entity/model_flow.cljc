@@ -504,9 +504,13 @@
   (let [[player-a player-b] player/player-ids
         play-g-text {:type :system
                      :action `(fn [~'ctx ~'runtime]
-                                (-> ~'ctx
-                                    (game.entity.model/move-card [~player-a :te-hu-ta] [~player-a :maintenance-area] "0")
-                                    (game.component.card-table/set-card-is-roll [~player-a :maintenance-area] "0" true)))}
+                                (let [~'card-id (-> ~'runtime game.define.runtime/get-card-id)
+                                      ~'to-ba-syou-id [~player-a :maintenance-area]
+                                      ~'ctx (-> ~'ctx
+                                                (game.entity.model/move-card [~player-a :te-hu-ta] ~'to-ba-syou-id ~'card-id)
+                                                (game.component.card-table/set-card-is-roll ~'to-ba-syou-id ~'card-id true))]
+                                  ~'ctx))}
+        _ (println play-g-text)
         ctx model-flow
         ctx (-> ctx get-flow (set-current-pay-effect (->> {:reason (game.define.effect/value-of-play-card-reason player-a "0")
                                                            :text play-g-text}
