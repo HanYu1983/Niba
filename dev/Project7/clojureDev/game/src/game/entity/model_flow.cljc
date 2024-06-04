@@ -15,7 +15,8 @@
             [game.component.current-player :as current-player]
             [game.component.selection]
             [game.component.flags-component :as flags-component]
-            [game.entity.model :as model]))
+            [game.entity.model :as model]
+            [game.component.card-table :as card-table]))
 ; current-pay-component
 (s/def ::current-pay-effect (s/nilable :game.define.effect/value))
 (s/def ::current-pay-logic-id (s/nilable any?))
@@ -501,12 +502,14 @@
 
 (defn test-current-pay-effect-play-g []
   (let [[player-a player-b] player/player-ids
+        play-g-text {:type :system
+                     :action `(fn [~'ctx ~'runtime]
+                                (-> ~'ctx
+                                    (game.entity.model/move-card [~player-a :te-hu-ta] [~player-a :maintenance-area] "0")
+                                    (game.component.card-table/set-card-is-roll [~player-a :maintenance-area] "0" true)))}
         ctx model-flow
         ctx (-> ctx get-flow (set-current-pay-effect (->> {:reason (game.define.effect/value-of-play-card-reason player-a "0")
-                                                           :text {:type :system
-                                                                  :action '(fn [ctx runtime]
-                                                                             ; move g
-                                                                             ctx)}}
+                                                           :text play-g-text}
                                                           (merge game.define.effect/effect-value)))
                 (#(set-flow ctx %))
                 (#(s/assert ::spec %)))

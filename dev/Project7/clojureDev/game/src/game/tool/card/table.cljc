@@ -36,13 +36,24 @@
   (s/assert ::table table)
   (-> table :decks))
 
+(defn set-decks [table decks]
+  (s/assert ::table table)
+  (-> table (assoc :decks decks) (#(s/assert ::table %))))
+
 (defn get-decks-deck [table deck-id]
   (s/assert ::table table)
   (-> table get-decks (get deck-id)))
 
+(defn move-card [table from-deck-id to-deck-id card-id]
+  (s/assert ::table table)
+  (-> table get-decks
+      (update from-deck-id (fn [deck] (remove #(= % card-id) deck)))
+      (update to-deck-id conj card-id)
+      (#(set-decks table %))))
+
 #_(defn get-deck [deck deck-id]
-  (s/assert ::deck deck)
-  (-> deck (get deck-id)))
+    (s/assert ::deck deck)
+    (-> deck (get deck-id)))
 
 (defn remove-card [table card-id]
   (s/assert ::table table)

@@ -10,6 +10,16 @@
 (def value {:is-face-down false
             :is-roll false})
 
+(defn get-is-roll [ctx]
+  (s/assert ::spec ctx)
+  (-> ctx :is-roll))
+
+(defn set-is-roll [ctx is-roll]
+  (s/assert ::spec ctx)
+  (-> ctx get-is-roll (not= is-roll)
+      (or (throw (ex-info "" {} :same-state))))
+  (-> ctx (assoc :is-roll is-roll)))
+
 (defn get-proto-id [ctx]
   (s/assert ::spec ctx)
   (-> ctx :proto-id))

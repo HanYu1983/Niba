@@ -16,16 +16,24 @@
   (s/assert ::spec ctx)
   (-> ctx :table))
 
+(defn set-table [ctx table]
+  (s/assert ::spec ctx)
+  (-> ctx (assoc :table table)))
+
 (defn get-cards [ctx]
   (s/assert ::spec ctx)
   (-> ctx :cards))
 
-(defn add-card [ctx deck-id id card]
+(defn set-cards [ctx cards]
   (s/assert ::spec ctx)
-  (s/assert :game.define.basyou/spec deck-id)
+  (-> ctx (assoc :cards cards)))
+
+(defn add-card [ctx ba-syou-id id card]
+  (s/assert ::spec ctx)
+  (s/assert :game.define.basyou/spec ba-syou-id)
   (s/assert :game.define.card/spec card)
   (-> ctx
-      (update :table game.tool.card.table/add-card deck-id id nil)
+      (update :table game.tool.card.table/add-card ba-syou-id id nil)
       (update :cards assoc id card)))
 
 (defn get-card [ctx id]
@@ -52,6 +60,25 @@
       (#(map game.define.card/get-proto-id %)) 
       (#(map game.data.core/get-card-data %)) 
       (#(s/assert (s/coll-of :game.define.card-proto/value) %))))
+
+(defn move-card [ctx from-ba-syou-id to-ba-syou-id card-id]
+  (s/assert ::spec ctx)
+  (s/assert :game.define.basyou/spec from-ba-syou-id)
+  (s/assert :game.define.basyou/spec to-ba-syou-id)
+  (-> ctx (is-card card-id)
+      (or (throw (ex-info "card not found" {:card-id card-id} :card-not-found))))
+  (-> ctx get-table game.tool.card.table/get-decks (get from-ba-syou-id) (#(some #{card-id} %))
+      (or (throw (ex-info "card not found in ba-syou" {:ba-syou-id from-ba-syou-id} :card-not-found-in-ba-syou))))
+  (-> ctx get-table (game.tool.card.table/move-card from-ba-syou-id to-ba-syou-id card-id) (#(set-table ctx %))))
+
+(defn set-card-is-roll [ctx ba-syou-id card-id is-roll]
+  (s/assert ::spec ctx)
+  (s/assert :game.define.basyou/spec ba-syou-id)
+  (-> ctx (is-card card-id)
+      (or (throw (ex-info "card not found" {:card-id card-id} :card-not-found))))
+  (-> ctx get-table game.tool.card.table/get-decks (get ba-syou-id) (#(some #{card-id} %))
+      (or (throw (ex-info "card not found in ba-syou" {:ba-syou-id ba-syou-id} :card-not-found-in-ba-syou))))
+  (-> ctx get-cards (update card-id game.define.card/set-is-roll is-roll) (#(set-cards ctx %))))
 
 (defn tests []
   (let [ctx (s/assert ::spec card-table)

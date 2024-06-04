@@ -107,6 +107,15 @@
        (mapcat identity)
        (into {})))
 
+(defn on-move-card [ctx from-ba-syou-id to-ba-syou-id card-id]
+  ctx)
+
+(defn move-card [ctx from-ba-syou-id to-ba-syou-id card-id]
+  (s/assert ::spec ctx)
+  (-> ctx
+      (card-table/move-card from-ba-syou-id to-ba-syou-id card-id)
+      (on-move-card from-ba-syou-id to-ba-syou-id card-id)))
+
 (defmethod game.data.dynamic/get-my-g :default [ctx player-id] ["0"])
 (defmethod game.data.dynamic/get-card-chars :default [ctx card-id] ["0"])
 (defmethod game.data.dynamic/get-card-color :default [ctx card-id] ["0"])
