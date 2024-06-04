@@ -9,6 +9,12 @@
 (s/def ::cards (s/map-of any? :game.define.card/spec))
 (s/def ::spec (s/keys :req-un [::table ::cards]))
 
+(def table-path [:table])
+(def cards-path [:cards])
+(defn card-path [card-id] [:cards card-id])
+(defn card-is-roll-path [card-id] (into (card-path card-id) game.define.card/is-roll-path))
+
+
 (def card-table {:cards {}
                  :table game.tool.card.table/table})
 
@@ -56,9 +62,9 @@
 
 (defn get-card-protos-by-ids [ctx ids]
   (s/assert ::spec ctx)
-  (-> ctx :cards (map ids) 
-      (#(map game.define.card/get-proto-id %)) 
-      (#(map game.data.core/get-card-data %)) 
+  (-> ctx :cards (map ids)
+      (#(map game.define.card/get-proto-id %))
+      (#(map game.data.core/get-card-data %))
       (#(s/assert (s/coll-of :game.define.card-proto/value) %))))
 
 (defn move-card [ctx from-ba-syou-id to-ba-syou-id card-id]
@@ -74,6 +80,8 @@
 (defn set-card-is-roll [ctx ba-syou-id card-id is-roll]
   (s/assert ::spec ctx)
   (s/assert :game.define.basyou/spec ba-syou-id)
+  #_(-> ctx (update-in (card-is-roll-path card-id) is-roll))
+
   (-> ctx (is-card card-id)
       (or (throw (ex-info "card not found" {:card-id card-id} :card-not-found))))
   (-> ctx get-table game.tool.card.table/get-decks (get ba-syou-id) (#(some #{card-id} %))
@@ -87,8 +95,8 @@
         _ (-> ctx (is-card "0") (or (throw (ex-info "must is card" {}))))
         _ (-> ctx (get-card "0") (= card) (or (throw (ex-info "must be card" {}))))
         ctx (-> ctx (remove-card "0"))])
-  
-  
+
+
   (let [ctx card-table
         card (-> game.define.card/value (assoc :proto-id "179030_11E_U_BL209R_blue"))
         ctx (-> ctx (add-card [:A :maintenance-area] "0" card))
