@@ -10,6 +10,7 @@
             [game.define.timing]
             [game.define.card-proto]
             [game.define.game-effect]
+            [game.define.effect]
             [game.component.cuts]
             [game.component.effect]
             [game.component.card-proto]
@@ -94,18 +95,77 @@
 (defn gen-game-effects-2 [ctx]
   (gen-game-effects-1 ctx))
 
-(defn can-be-destroyed-card-id [ctx player-id]
+(def gen-game-effects-memo (memoize gen-game-effects-2))
+
+
+(defn get-card-item-type
+  "取得卡片類型, 比如機體或指令"
+  [ctx card-id])
+
+(defn get-effect-card-item-type 
+  "取得效果的卡片類型, 比如機體效果或指令效果"
+  [ctx effect] 
+  (s/assert ::spec ctx)
+  (match (-> ctx game.define.effect/get-reason)
+    [:system player-id] (throw (ex-info "" {} :abc))
+    [:play-card player-id card-id] (-> ctx (get-card-item-type card-id))
+    [:play-text player-id card-id text-id] (-> ctx (get-card-item-type card-id))
+    [:text-effect card-id text-id] (-> ctx (get-card-item-type card-id))))
+
+;; 自軍効果以外では破壊されずダメージを受けない
+;; 敵軍ユニットの効果では破壊されずダメージを受けない
+;; 敵軍コマンドの効果では破壊されず移動しない
+
+(defn can-not-be-destroyed-card-ids [ctx effect]
   (s/assert ::spec ctx)
   (->> ctx
-       gen-game-effects-2
+       gen-game-effects-memo
        (filter (fn [game-effect]
                  (match game-effect
-                   ["敵軍効果では破壊されずダメージを受けない" card-ids & _]
-                   (->> card-ids (filter (fn [card-id] card-id)))
+                   (:or ["敵軍効果では破壊されずダメージを受けない" card-ids & _]
+                        ["自軍効果以外では破壊されずダメージを受けない" card-ids & _])
+                   (let [player-a (-> effect game.define.effect/get-player-id)
+                         can-not-destroyed-card-ids (->> card-ids
+                                                         (table/get-item-controller ctx)
+                                                         (zipmap card-ids)
+                                                         (filter (fn [[card-id player-b]]
+                                                                   (not= player-a player-b)))
+                                                         (map first))]
+                     can-not-destroyed-card-ids)
+
+                   ["敵軍ユニットの効果では破壊されずダメージを受けない" card-ids & _]
+                   (let [player-a (-> effect game.define.effect/get-player-id)
+                         effect-card-item-type (->> effect (get-effect-card-item-type ctx))
+                         can-not-destroyed-card-ids (condp = effect-card-item-type
+                                                      :unit
+                                                      (->> card-ids
+                                                           (table/get-item-controller ctx)
+                                                           (zipmap card-ids)
+                                                           (filter (fn [[card-id player-b]]
+                                                                     (not= player-a player-b)))
+                                                           (map first))
+                                                      [])]
+                     can-not-destroyed-card-ids)
+
+                   ["敵軍コマンドの効果では破壊されず移動しない" card-ids & _]
+                   (let [player-a (-> effect game.define.effect/get-player-id)
+                         effect-card-item-type (->> effect (get-effect-card-item-type ctx))
+                         can-not-destroyed-card-ids (condp = effect-card-item-type
+                                                      :command
+                                                      (->> card-ids
+                                                           (table/get-item-controller ctx)
+                                                           (zipmap card-ids)
+                                                           (filter (fn [[card-id player-b]]
+                                                                     (not= player-a player-b)))
+                                                           (map first))
+                                                      [])]
+                     can-not-destroyed-card-ids)
 
                    :else [])))
        (mapcat identity)
        (into {})))
+
+(def can-not-be-destroyed-card-ids-memo (memoize can-not-be-destroyed-card-ids))
 
 (defn on-move-card [ctx from-ba-syou-id to-ba-syou-id card-id]
   ctx)
@@ -134,6 +194,6 @@
         ctx (-> model
                 (card-table/add-card [:A :maintenance-area] "0" card)
                 (card-table/add-card [:B :maintenance-area] "1" card))
-        game-effects (gen-game-effects-2 ctx)
+        game-effects (gen-game-effects-memo ctx)
         ;_ (println game-effects)
         ]))

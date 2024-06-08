@@ -27,6 +27,10 @@
 (def effect-value {:reason [:system :A]
                    :text game.define.card-text/card-text-value})
 
+;; 自軍効果以外では破壊されずダメージを受けない
+;; 敵軍ユニットの効果では破壊されずダメージを受けない
+;; 敵軍コマンドの効果では破壊されず移動しない
+
 (def reasons [[:system :A] [:play-card :A 0] [:play-text :A 0 0] [:text-effect 0 0]])
 
 (defn value-of-play-card-reason [player-id card-id]
