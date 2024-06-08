@@ -9,12 +9,6 @@
 (s/def ::cards (s/map-of any? :game.define.card/spec))
 (s/def ::spec (s/keys :req-un [::table ::cards]))
 
-(def table-path [:table])
-(def cards-path [:cards])
-(defn card-path [card-id] [:cards card-id])
-(defn card-is-roll-path [card-id] (into (card-path card-id) game.define.card/is-roll-path))
-
-
 (def card-table {:cards {}
                  :table game.tool.card.table/table})
 
