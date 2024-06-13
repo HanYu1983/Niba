@@ -1,0 +1,8 @@
+version: "3"
+services:
+  node16pixinode:
+    build: .
+    volumes:
+      - ./lib:/usr/src/app/lib
+      - ./assets:/usr/src/app/assets
+      - ./package.json:/usr/src/app/package.json

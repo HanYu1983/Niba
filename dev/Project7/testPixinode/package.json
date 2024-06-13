@@ -1,0 +1,18 @@
+{
+  "name": "testpixinode",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "type": "module",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "",
+  "license": "ISC",
+  "dependencies":{
+    "@pixi/node": "*",
+    "file-saver": "^2.0.0",
+    "jszip": "^3.1.5",
+    "webfontloader": "^1.6.28"
+  }
+}
