@@ -1,0 +1,1 @@
+右鍵點擊docker-compose.yml打包成zip上傳到eb就行了
