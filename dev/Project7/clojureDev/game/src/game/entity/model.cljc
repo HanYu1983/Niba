@@ -112,6 +112,8 @@
     [:play-text player-id card-id text-id] (-> ctx (get-card-item-type card-id))
     [:text-effect card-id text-id] (-> ctx (get-card-item-type card-id))))
 
+(defn can-not-be-moved-cards-ids [ctx effect])
+
 ;; 自軍効果以外では破壊されずダメージを受けない
 ;; 敵軍ユニットの効果では破壊されずダメージを受けない
 ;; 敵軍コマンドの効果では破壊されず移動しない
@@ -126,7 +128,7 @@
                         ["自軍効果以外では破壊されずダメージを受けない" card-ids & _])
                    (let [player-a (-> effect game.define.effect/get-player-id)
                          can-not-destroyed-card-ids (->> card-ids
-                                                         (table/get-item-controller ctx)
+                                                         (map #(table/get-item-controller ctx %))
                                                          (zipmap card-ids)
                                                          (filter (fn [[card-id player-b]]
                                                                    (not= player-a player-b)))
@@ -139,7 +141,7 @@
                          can-not-destroyed-card-ids (condp = effect-card-item-type
                                                       :unit
                                                       (->> card-ids
-                                                           (table/get-item-controller ctx)
+                                                           (map #(table/get-item-controller ctx %))
                                                            (zipmap card-ids)
                                                            (filter (fn [[card-id player-b]]
                                                                      (not= player-a player-b)))
@@ -153,7 +155,7 @@
                          can-not-destroyed-card-ids (condp = effect-card-item-type
                                                       :command
                                                       (->> card-ids
-                                                           (table/get-item-controller ctx)
+                                                           (map #(table/get-item-controller ctx %))
                                                            (zipmap card-ids)
                                                            (filter (fn [[card-id player-b]]
                                                                      (not= player-a player-b)))
