@@ -16,78 +16,40 @@ async function waitAndCheck(checkFn) {
     }
     await sleep(2000)
   }
-  //throw new Error("waitAndCheck timeout")
+  throw new Error("waitAndCheck timeout")
 }
-
-
-// function addEnvGetter() {
-//   console.log("addEnvGetter")
-
-//   function getEnvRows() {
-//     const elems = [...document.getElementsByClassName("awsui_row_wih1l_15664_301")]
-//     const keyValues = elems.map(elem => {
-//       const [keyElem, valueElem] = elem.getElementsByClassName("awsui_body-cell_c6tup_1finb_93")
-//       return [keyElem, valueElem].map(i => i.textContent)
-//     })
-//     return keyValues
-//   }
-
-//   function getInsertElem() {
-//     return getElementByXpath('/html/body/div[2]/div[2]/div/div[1]/div/div/div/main/div/div[3]/div/div/div[5]/div/div/div[2]/div/div[4]/div/div[1]/div/div/div')?.parentNode
-//   }
-
-//   const waitInsertElemShowP = waitAndCheck(async () => getInsertElem() != null)
-
-//   const textAreaP = (async () => {
-//     await waitInsertElemShowP
-//     const textArea = document.createElement('textarea')
-//     textArea.value = "wow"
-//     return textArea
-//   })()
-
-//   const buttonCopyP = (async () => {
-//     await waitInsertElemShowP
-//     const buttonCopy = document.createElement('button')
-//     buttonCopy.textContent = "copy"
-//     return buttonCopy
-//   })()
-
-//   const addControlPanelP = (async () => {
-//     await waitInsertElemShowP
-//     const insertElem = getInsertElem()
-//     insertElem.appendChild(await buttonCopyP)
-//     insertElem.appendChild(await textAreaP)
-//   })()
-
-//   const addButtonCopyCallback = (async () => {
-//     await addControlPanelP
-//     const btn = await buttonCopyP
-//     const textArea = await textAreaP
-//     btn.onclick = function () {
-//       const rows = getEnvRows()
-//       const output = rows.map(([k, v]) => `${k}=${v}`).join("\n")
-//       textArea.value = output
-//     }
-//   })()
-//   return Promise.all([addControlPanelP, addButtonCopyCallback])
-// }
 
 // https://ap-northeast-1.console.aws.amazon.com/elasticbeanstalk/home?region=ap-northeast-1#/environment/configuration/updates-monitoring-logging?environmentId=e-yp3sc4mvaz
 async function addEnvSetter() {
   console.log("addEnvSetter")
 
   function getInsertElem() {
-    return getElementByXpath("/html/body/div[2]/div[2]/div/div[1]/div/div/div/main/div/div[3]/div/div/div/div[3]/div[1]/div/div[1]/div/div/div[5]/div/div/div[2]/div/div/div[5]/div/div[1]/div").parentNode
+    return getElementByXpath("/html/body/div[2]/div[2]/div/div[1]/div/div/div/main/div/div[3]/div/div/div[2]/div/div[1]/div/div/div[5]/div/div/div[2]/div/div/div[5]/div/div[1]/div/h3").parentNode
   }
 
   function getAddEnvButton() {
-    return getElementByXpath("/html/body/div[2]/div[2]/div/div[1]/div/div/div/main/div/div[3]/div/div/div/div[3]/div[1]/div/div[1]/div/div/div[5]/div/div/div[2]/div/div/div[5]/div/div[2]/div/div[2]/div/div/div/div/div/div/button")
+    return getElementByXpath("/html/body/div[2]/div[2]/div/div[1]/div/div/div/main/div/div[3]/div/div/div[2]/div/div[1]/div/div/div[5]/div/div/div[2]/div/div/div[5]/div/div[2]/div/div[2]/div/div/div/div/div/div/button")
+  }
+
+  function getKeyValueRootTags(){
+    return document.getElementsByClassName("awsui_grid_14yj0_ak6xz_97 awsui_grid_vvxn7_1f735_132 awsui_grid-columns-2_vvxn7_1f735_159 awsui_no-gutters_14yj0_ak6xz_136 awsui_grid-breakpoint-xs_vvxn7_1f735_156")
+  }
+
+  function getKeyValuePairTagByRootTags(keyValueRootTag){
+    const ret = keyValueRootTag.getElementsByClassName("awsui_grid-column_14yj0_ak6xz_141 awsui_colspan-6_14yj0_ak6xz_202")
+    if(ret.length < 2){
+      throw new Error("Key Value Pair not right")
+    }
+    return ret
   }
 
   function getEnvRows() {
-    const elems = [...document.getElementsByClassName("awsui_row_n4qlp_18kkw_161 awsui_root_18wu0_1tuc9_93 awsui_box_18wu0_1tuc9_207 awsui_m-bottom-s_18wu0_1tuc9_859 awsui_color-default_18wu0_1tuc9_207 awsui_font-size-default_18wu0_1tuc9_223 awsui_font-weight-default_18wu0_1tuc9_263")]
+    const elems = [...getKeyValueRootTags()]
+    if (elems.length == 0) {
+      throw new Error("找不到環境屬性的TAG")
+    }
     const keyValues = elems.map(elem => {
-      const [keyElem, valueElem] = elem.getElementsByClassName("awsui_grid-column_14yj0_1s3lb_135 awsui_colspan-6_14yj0_1s3lb_194")
+      const [keyElem, valueElem] = [...getKeyValuePairTagByRootTags(elem)]
       return [keyElem, valueElem].map(elem2 => {
         return elem2.getElementsByTagName("input")[0].value
       })
@@ -95,27 +57,34 @@ async function addEnvSetter() {
     return keyValues
   }
 
-  await waitAndCheck(async () => getInsertElem() != null)
+  await waitAndCheck(async () => getInsertElem() != null).catch(e => {
+    console.log(e)
+    throw new Error("找不到將要插入按鈕的節點")
+  })
 
-  const waitAddEnvButtonP = waitAndCheck(async () => getAddEnvButton() != null)
+  const waitAddEnvButtonP = waitAndCheck(async () => getAddEnvButton() != null).catch(e => {
+    console.log(e)
+    throw new Error("找不到將要新增環境屬性按鈕")
+  })
   const addEnvButtonP = waitAddEnvButtonP.then(() => getAddEnvButton())
 
-  async function appendNewEnv(k, v){
+  async function appendNewEnv(k, v) {
     const btn = await addEnvButtonP
     btn.click()
     await sleep(10)
-    const elems = [...document.getElementsByClassName("awsui_row_n4qlp_18kkw_161 awsui_root_18wu0_1tuc9_93 awsui_box_18wu0_1tuc9_207 awsui_m-bottom-s_18wu0_1tuc9_859 awsui_color-default_18wu0_1tuc9_207 awsui_font-size-default_18wu0_1tuc9_223 awsui_font-weight-default_18wu0_1tuc9_263")]
-    if(elems.length == 0){
-      throw new Error('elems.length must > 0')
+    const elems = [...getKeyValueRootTags()]
+    if (elems.length == 0) {
+      throw new Error("找不到環境屬性的TAG")
     }
-    const latestElem = elems[elems.length-1]
-    const keyInputElem = latestElem.getElementsByClassName("awsui_grid-column_14yj0_1s3lb_135 awsui_colspan-6_14yj0_1s3lb_194")?.[0].getElementsByTagName("input")?.[0]
+    const latestElem = elems[elems.length - 1]
+    const [keyInputElem, valueInputElem] = [...getKeyValuePairTagByRootTags(latestElem)].map(elem=>{
+      return elem.getElementsByTagName("input")?.[0]
+    })
     if(keyInputElem == null){
-      throw new Error("keyInputElem must exist")
+      throw new Error("keyInputElem not found")
     }
-    const valueInputElem = latestElem.getElementsByClassName("awsui_grid-column_14yj0_1s3lb_135 awsui_colspan-6_14yj0_1s3lb_194")?.[1].getElementsByTagName("input")?.[0]
     if(valueInputElem == null){
-      throw new Error("valueInputElem must exist")
+      throw new Error("valueInputElem not found")
     }
     keyInputElem.value = "key"
     valueInputElem.value = "value"
@@ -124,7 +93,7 @@ async function addEnvSetter() {
 
   const textAreaP = (async () => {
     const textArea = document.createElement('textarea')
-    textArea.value = "wow"
+    textArea.value = "a=test"
     return textArea
   })()
 
@@ -151,29 +120,33 @@ async function addEnvSetter() {
     const btn = await buttonCopyP
     const textArea = await textAreaP
     btn.onclick = function () {
-      const rows = getEnvRows()
-      const output = rows.map(([k, v]) => `${k}=${v}`).join("\n")
-      textArea.value = output
+      try {
+        const rows = getEnvRows()
+        const output = rows.map(([k, v]) => `${k}=${v}`).join("\n")
+        textArea.value = output
+      } catch (e) {
+        console.error(e)
+        alert(e.message)
+      }
     }
   })()
 
   const addButtonInsertCallback = (async () => {
-    const addEnvButton = await addEnvButtonP
-    console.log(addEnvButton)
-    console.log(getAddEnvButton())
     const btn = await buttonInsertP
     btn.onclick = function () {
-      // addEnvButton.click()
-      // sleep(1000).then(() => addEnvButton.click())
-      appendNewEnv().catch(e=>console.log(e))
+      (async () => {
+        try {
+          await appendNewEnv("test k", "test v")
+        } catch (e) {
+          console.error(e)
+          alert(e.message)
+        }
+      })()
     }
   })()
 
   return Promise.all([addControlPanelP, addButtonCopyCallback, addButtonInsertCallback])
 }
-
-
-//addEnvGetter().catch(e => console.log(e))
 
 addEnvSetter().catch(e => console.log(e))
 
