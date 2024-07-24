@@ -13,16 +13,16 @@ async function readEnv(filePath) {
 }
 
 async function appendNewEnv(page, k, v) {
-  const addEnvButtonDescribe = 'button[class="awsui_add-button_n4qlp_18kkw_173 awsui_button_vjswe_16pdm_101 awsui_variant-normal_vjswe_16pdm_152"]'
+  const addEnvButtonDescribe = 'button[class="awsui_add-button_n4qlp_bf4y1_177 awsui_button_vjswe_1wo5s_105 awsui_variant-normal_vjswe_1wo5s_156"]'
   const addEnvButton = page.locator(addEnvButtonDescribe)
   await addEnvButton.click()
   await page.waitForTimeout(10)
-  const elems = await page.locator('div[class="awsui_row_n4qlp_18kkw_161 awsui_root_18wu0_1tuc9_93 awsui_box_18wu0_1tuc9_207 awsui_m-bottom-s_18wu0_1tuc9_859 awsui_color-default_18wu0_1tuc9_207 awsui_font-size-default_18wu0_1tuc9_223 awsui_font-weight-default_18wu0_1tuc9_263"]').all()
+  const elems = await page.locator('div[class="awsui_row_n4qlp_bf4y1_165 awsui_root_18wu0_1ra3n_851 awsui_box_18wu0_1ra3n_108 awsui_m-bottom-s_18wu0_1ra3n_691 awsui_color-default_18wu0_1ra3n_108 awsui_font-size-default_18wu0_1ra3n_124 awsui_font-weight-default_18wu0_1ra3n_164"]').all()
   if (elems.length == 0) {
     throw new Error('elems.length must > 0')
   }
   const lastElem = elems[elems.length - 1]
-  const kvElems = await lastElem.locator('div[class="awsui_grid-column_14yj0_1s3lb_135 awsui_colspan-6_14yj0_1s3lb_194"]').all()
+  const kvElems = await lastElem.locator('div[class="awsui_grid-column_14yj0_ak6xz_141 awsui_colspan-6_14yj0_ak6xz_202"]').all()
   if (kvElems.length != 2) {
     throw new Error('kvElems.length must 2')
   }
