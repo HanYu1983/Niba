@@ -2,23 +2,15 @@
   (:require [clojure.spec.alpha :as s]
             [tool.card.table]))
 
-(s/def ::table :tool.card.table/table)
 (s/def ::cards (s/map-of any? any?))
-(s/def ::spec (s/keys :req-un [::table ::cards]))
+(s/def ::spec (s/merge :tool.component.table/spec
+                       (s/keys :req-un [::cards])))
 
 (def card-table {:cards {}
                  :table (tool.card.table/create-table)})
 
 (defn create-table []
   (s/assert ::spec card-table))
-
-(defn get-table [ctx]
-  (s/assert ::spec ctx)
-  (-> ctx :table))
-
-(defn set-table [ctx table]
-  (s/assert ::spec ctx)
-  (-> ctx (assoc :table table)))
 
 (defn get-cards [ctx]
   (s/assert ::spec ctx)

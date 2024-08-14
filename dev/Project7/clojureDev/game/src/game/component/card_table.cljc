@@ -2,15 +2,12 @@
   (:require [clojure.spec.alpha :as s]
             [tool.card.table]
             [tool.component.card-table]
+            [tool.component.table :refer [get-table set-table]]
             [game.data.core]
             [game.define.card]
             [game.define.basyou]))
 
 (def card-table (tool.component.card-table/create-table))
-
-(def get-table tool.component.card-table/get-table)
-
-(def set-table tool.component.card-table/set-table)
 
 (def get-cards tool.component.card-table/get-cards)
 

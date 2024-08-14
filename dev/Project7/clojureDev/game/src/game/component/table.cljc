@@ -2,6 +2,7 @@
   (:require [clojure.spec.alpha :as s]
             [clojure.core.match :refer [match]]
             [tool.card.table]
+            [tool.component.table :refer [get-table]]
             [game.define.effect]
             [game.define.runtime]
             [game.define.card]
@@ -25,14 +26,14 @@
 (defn get-item-ids-by-ba-syou [ctx ba-syou]
   (s/assert ::spec ctx)
   (s/assert :game.define.basyou/spec ba-syou)
-  (let [item-ids (-> ctx card-table/get-table
+  (let [item-ids (-> ctx get-table
                      (tool.card.table/get-decks-deck ba-syou))]
     item-ids))
 
 (defn get-item-ids-by-ba-syou-keyword [ctx ba-syou-keyword]
   (s/assert ::spec ctx)
   (s/assert :game.define.basyou/ba-syou-keyword ba-syou-keyword)
-  (let [item-ids (->> ctx card-table/get-table
+  (let [item-ids (->> ctx get-table
                       tool.card.table/get-decks
                       (filter (fn [[ba-syou _]] (-> ba-syou game.define.basyou/get-ba-syou-keyword (= ba-syou-keyword))))
                       (mapcat (fn [[_ ids]] ids)))]
@@ -49,7 +50,7 @@
   (s/assert ::spec ctx)
   ; 所在area或部隊的控制者
   (-> ctx 
-      card-table/get-table 
+      get-table 
       (tool.card.table/get-deck-id-by-card-id card-id) 
       (or (throw (ex-info (str "card not found:" card-id) {})))
       game.define.basyou/get-player-id))

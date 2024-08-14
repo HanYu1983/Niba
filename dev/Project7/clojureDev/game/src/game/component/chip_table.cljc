@@ -7,8 +7,6 @@
 
 (def chip-table (tool.component.chip-table/create-table))
 
-(def get-table tool.component.chip-table/get-table)
-
 (def get-chips tool.component.chip-table/get-chips)
 
 (def get-chip tool.component.chip-table/get-chip)
