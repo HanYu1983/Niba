@@ -22,7 +22,8 @@
             [game.entity.model]
             [game.entity.model-flow]
             [game.data.core]
-            [game.exp]))
+            [game.exp]
+            [game.binding-data-dynamic]))
 
 (defn -main [args]
   (s/check-asserts true)
