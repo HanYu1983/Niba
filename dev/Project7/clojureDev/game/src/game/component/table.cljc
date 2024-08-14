@@ -10,13 +10,13 @@
             [game.define.coin]
             [game.define.basyou]
             [game.model-spec.core]
-            [game.component.card-table :as card-table]
-            [game.component.chip-table :as chip-table]
-            [game.component.coin-table :as coin-table]))
+            [game.component.card-table :refer [get-cards-by-ids is-card add-card get-card]]
+            [game.component.chip-table :refer [is-chip]]
+            [game.component.coin-table :refer [get-coin is-coin add-coin]]))
 
-(def table (merge card-table/card-table
-                  coin-table/coin-table
-                  chip-table/chip-table))
+(def table (merge game.component.card-table/card-table
+                  game.component.coin-table/coin-table
+                  game.component.chip-table/chip-table))
 
 (defn get-item-ids-by-ba-syou [ctx ba-syou]
   (s/assert :game.model-spec.core/is-table ctx)
@@ -39,7 +39,7 @@
   (s/assert :game.define.basyou/spec ba-syou)
   (-> ctx
       (get-item-ids-by-ba-syou ba-syou)
-      (#(card-table/get-cards-by-ids ctx %))))
+      (#(get-cards-by-ids ctx %))))
 
 (defn get-card-controller [ctx card-id]
   (s/assert :game.model-spec.core/is-table ctx)
@@ -55,20 +55,20 @@
 (defn get-coin-controller [ctx coin-id]
   (s/assert :game.model-spec.core/is-table ctx)
   (-> ctx
-      (coin-table/get-coin coin-id)
+      (get-coin coin-id)
       (or (throw (ex-info (str "coin not found:" coin-id) {})))
       game.define.coin/get-player-id))
 
 (defn get-item-controller [ctx item-id]
   (s/assert :game.model-spec.core/is-table ctx)
   (cond
-    (card-table/is-card ctx item-id)
+    (is-card ctx item-id)
     (-> ctx (get-card-controller item-id))
 
-    (chip-table/is-chip ctx item-id)
+    (is-chip ctx item-id)
     (-> ctx (get-chip-controller item-id))
 
-    (coin-table/is-coin ctx item-id)
+    (is-coin ctx item-id)
     (-> ctx (get-coin-controller item-id))))
 
 (defn get-effect-player-id [ctx eff]
@@ -103,7 +103,7 @@
 
 (defn test-get-effect-runtime []
   (let [ctx (-> table
-                (game.component.card-table/add-card [:A :maintenance-area] "card-0" game.define.card/value))
+                (add-card [:A :maintenance-area] "card-0" game.define.card/value))
         runtimes (for [effect (map #(assoc game.define.effect/effect-value :reason %)
                                    [[:system :A] [:play-card :A "card-0"] [:play-text :A "card-0" "text"] [:text-effect "card-0" "text"]])]
                    (get-effect-runtime ctx effect))
@@ -114,17 +114,17 @@
   (let [basyou [:A :maintenance-area]
         card-0 game.define.card/value
         ctx table
-        ctx (-> ctx (card-table/add-card basyou "card-0" card-0))
+        ctx (-> ctx (add-card basyou "card-0" card-0))
         item-ids (-> ctx (get-item-ids-by-ba-syou basyou))
         _ (-> item-ids vec (= ["card-0"]) (or (throw (ex-info "must [card-0]" {}))))]))
 
 (defn tests []
   (let [ctx (s/assert :game.model-spec.core/is-table table)
         card-item game.define.card/value
-        ctx (game.component.card-table/add-card ctx [:A :te-hu-ta] "card-1" card-item)
-        _ (-> ctx (game.component.card-table/get-card "card-1") (= card-item) (or (throw (ex-info "must eq card-item" {}))))
+        ctx (add-card ctx [:A :te-hu-ta] "card-1" card-item)
+        _ (-> ctx (get-card "card-1") (= card-item) (or (throw (ex-info "must eq card-item" {}))))
         coin-item (->> {:id "+1/+1/+1"} (merge game.define.coin/coin))
-        ctx (game.component.coin-table/add-coin ctx "card-1" "coin-1" coin-item)
-        _ (-> ctx (game.component.coin-table/get-coin "coin-1") (= coin-item) (or (throw (ex-info "must eq coin-item" {}))))])
+        ctx (add-coin ctx "card-1" "coin-1" coin-item)
+        _ (-> ctx (get-coin "coin-1") (= coin-item) (or (throw (ex-info "must eq coin-item" {}))))])
   (test-get-effect-runtime)
   (test-get-card-ids-by-ba-syou))

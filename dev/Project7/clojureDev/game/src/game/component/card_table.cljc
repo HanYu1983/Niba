@@ -32,7 +32,7 @@
       (#(map game.data.core/get-card-data %))
       (#(s/assert (s/coll-of :game.define.card-proto/value) %))))
 
-(defn on-move-card [ctx from-ba-syou-id to-ba-syou-id card-id]
+(defn on-move-card [ctx _from-ba-syou-id _to-ba-syou-id _card-id]
   ctx)
 
 (defn move-card [ctx from-ba-syou-id to-ba-syou-id card-id]
