@@ -3,18 +3,19 @@
             [clojure.core.match :refer [match]]
             [clojure.set :refer [difference]]
             [tool.logic-tree :as logic-tree]
+            [tool.component.flags-component :as flags-component]
             [game.define.card-text :as card-text]
             [game.define.selection]
             [game.define.player :as player]
             [game.define.runtime :as runtime]
             [game.define.timing :as timing]
             [game.define.effect]
+            [game.model-spec.core]
             [game.component.effect :as effect]
             [game.component.table :as table]
             [game.component.phase :as phase]
             [game.component.current-player :as current-player]
-            [game.component.selection]
-            [tool.component.flags-component :as flags-component]
+            [game.component.selection] 
             [game.entity.model :as model]
             [game.component.card-table :as card-table]))
 ; current-pay-component
@@ -66,7 +67,7 @@
 (s/def ::flow (s/merge ::current-pay-component
                        :tool.component.flags-component/flags-component
                        ::has-cuts-component))
-(s/def ::spec (s/merge :game.entity.model/spec
+(s/def ::spec (s/merge :game.model-spec.core/is-model
                        (s/keys :req-un [::flow])))
 (defn get-flow [ctx]
   (s/assert ::spec ctx)
@@ -507,7 +508,7 @@
                                 (let [~'card-id (-> ~'runtime game.define.runtime/get-card-id)
                                       ~'to-ba-syou-id [~player-a :maintenance-area]
                                       ~'ctx (-> ~'ctx
-                                                (game.entity.model/move-card [~player-a :te-hu-ta] ~'to-ba-syou-id ~'card-id)
+                                                (game.component.core/move-card [~player-a :te-hu-ta] ~'to-ba-syou-id ~'card-id)
                                                 (game.component.card-table/set-card-is-roll ~'to-ba-syou-id ~'card-id true))]
                                   ~'ctx))}
         _ (println play-g-text)

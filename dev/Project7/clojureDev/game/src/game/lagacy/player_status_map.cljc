@@ -1,4 +1,4 @@
-(ns game.component.player-status-map
+(ns game.lagacy.player-status-map
   (:require [clojure.spec.alpha :as s]
             [clojure.set :refer [difference]]
             [game.define.player :as player]))
