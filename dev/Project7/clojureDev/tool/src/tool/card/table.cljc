@@ -1,4 +1,4 @@
-(ns game.tool.card.table
+(ns tool.card.table
   (:require [clojure.spec.alpha :as s]))
 
 (s/def ::card-id any?)

@@ -1,4 +1,4 @@
-(ns game.component.flags-component
+(ns tool.component.flags-component
   (:require [clojure.spec.alpha :as s]
             [clojure.set :refer [difference]]))
 

@@ -43,7 +43,7 @@
                                 :logic {"出機體"
                                         ['(And (Leaf "合計國力6") (Leaf "横置3個藍G") (Leaf "放到play-card-zone"))
                                          '(fn [ctx runtime]
-                                            (game.common.dynamic/cut-in ctx (->> {:reason [:play-card ""]
+                                            (cut-in ctx (->> {:reason [:play-card ""]
                                                                                   :text (->> {:type :system
                                                                                               :logic {"移到場上"
                                                                                                       [nil

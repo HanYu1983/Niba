@@ -3,7 +3,7 @@
             [clojure.spec.test.alpha :as stest]
             [clojure.string]
             [app.dynamic]
-            [game.tool.logic-tree]))
+            [tool.logic-tree]))
 
 
 (s/def ::condition  (s/keys :req-un [::action]
@@ -122,7 +122,7 @@
   (let [text (-> card-proto second :texts (get text-id))
         conditions (-> text :conditions)
         key-list (keys selections)
-        has-logic (game.tool.logic-tree/has logic key-list)
+        has-logic (tool.logic-tree/has logic key-list)
         _ (when (not has-logic)
             (throw (ex-info "not in" {})))
         errs (->> key-list

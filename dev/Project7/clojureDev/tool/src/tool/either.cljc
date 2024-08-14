@@ -1,4 +1,4 @@
-(ns game.tool.either)
+(ns tool.either)
 
 
 (defn either-map [mapf either]

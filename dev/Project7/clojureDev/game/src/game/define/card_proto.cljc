@@ -2,7 +2,7 @@
   (:import (java.lang Throwable))
   (:require [clojure.spec.alpha :as s]
             [clojure.string]
-            [game.tool.logic-tree]
+            [tool.logic-tree]
             [game.define.card-text]
             [game.define.gsign]))
 (s/def ::texts (s/map-of any? :game.define.card-text/value))
@@ -26,7 +26,7 @@
   (let [text (-> card-proto get-texts (get text-id))
         conditions (-> text game.define.card-text/get-conditions)
         key-list (keys selections)
-        has-logic (game.tool.logic-tree/has logic key-list)
+        has-logic (tool.logic-tree/has logic key-list)
         _ (when (not has-logic)
             (throw (ex-info "not in" {})))
         errs (->> key-list

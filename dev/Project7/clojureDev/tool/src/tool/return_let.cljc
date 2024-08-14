@@ -1,4 +1,4 @@
-(ns game.tool.return-let)
+(ns tool.return-let)
 
 ; 用defn支援recur
 (defn return-let-impl [binding-vars & exprs]

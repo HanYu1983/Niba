@@ -1,10 +1,8 @@
 (ns game.define.effect
   (:require [clojure.spec.alpha :as s]
             [clojure.core.match :refer [match]]
-            [game.tool.logic-tree]
             [game.define.card-text]
-            [game.define.gsign]
-            [game.common.dynamic]))
+            [game.define.gsign]))
 
 (s/def ::card-id any?)
 (s/def ::player-id any?)

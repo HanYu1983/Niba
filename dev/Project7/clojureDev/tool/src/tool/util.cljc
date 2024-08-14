@@ -1,4 +1,4 @@
-(ns game.tool.util)
+(ns tool.util)
 
 (defn return->impl [ctx-var & exprs]
   (let [[first-pair & rest-pair] (->> exprs (partition 2) reverse)

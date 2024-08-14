@@ -1,4 +1,4 @@
-(ns game.tool.waterfall)
+(ns tool.waterfall)
 
 (defmacro waterfall [& exprs]
   "

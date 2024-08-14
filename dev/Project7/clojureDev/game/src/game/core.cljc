@@ -2,7 +2,6 @@
   (:require [clojure.core.match]
             [clojure.spec.alpha :as s]
             [clojure.core :refer [read-string]]
-            [game.common.dynamic]
             [game.define.card-proto]
             [game.define.basyou]
             [game.define.card-text]
@@ -11,7 +10,6 @@
             [game.define.selection]
             [game.define.timing]
             [game.define.battle-point]
-            [game.component.card-proto]
             [game.component.cuts]
             [game.component.effect]
             [game.component.table]
@@ -24,11 +22,11 @@
             [game.component.flags-player-status-component]
             [game.entity.model]
             [game.entity.model-flow]
-            [game.data.core]
-            [game.tool.return-let]
-            [game.tool.waterfall]
-            [game.tool.callback]
-            [game.tool.either]))
+            [game.data.core]))
+
+(def ^:dynamic cut-in nil)
+(def ^:dynamic add-text nil)
+(def ^:dynamic delete-text nil)
 
 (defn test-script-eval []
   (let [card-proto-example
@@ -46,7 +44,7 @@
                          (let [this-card-id (-> runtime :card-id)
                                option-ids ["zaku" "gundam"]
                                ctx (if (-> option-ids count pos?)
-                                     (game.common.dynamic/cut-in ctx "effect-id1"
+                                     (game.core/cut-in ctx "effect-id1"
                                                                  {:reason [:play-text "player-id" this-card-id "text-1"]
                                                                   :is-immediate true
                                                                   :clear-cutin-status false
@@ -56,9 +54,9 @@
                                                                                       [`(fn [~'ctx ~'runtime]
                                                                                           [[:card ~@option-ids] [:count 1]])
                                                                                        `(fn [~'ctx ~'runtime ~'selection]
-                                                                                          (game.common.dynamic/add-text ~'ctx "text-id"
+                                                                                          (game.core/add-text ~'ctx "text-id"
                                                                                                                         {:type :system
-                                                                                                                         :events [(read-string (str "(fn [ctx runtime evt] (clojure.core.match/match evt [:on-end-turn info] (game.common.dynamic/delete-text ctx \"text-id\") :else ctx))"))]
+                                                                                                                         :events [(read-string (str "(fn [ctx runtime evt] (clojure.core.match/match evt [:on-end-turn info] (game.core/delete-text ctx \"text-id\") :else ctx))"))]
                                                                                                                          :game-effects [`(fn [~~''ctx ~~''runtime]
                                                                                                                                            (for [~~''card-id ~~'selection]
                                                                                                                                              [:add-battle-point ~~''card-id ~~battle-point]))
@@ -70,9 +68,9 @@
                                                                                           {:tips `(fn [~'ctx ~'runtime]
                                                                                                     [[:card ~@option-ids] [:count 1]])
                                                                                            :action `(fn [~'ctx ~'runtime ~'selection]
-                                                                                                      (game.common.dynamic/add-text ~'ctx "text-id"
+                                                                                                      (game.core/add-text ~'ctx "text-id"
                                                                                                                                     {:type :system
-                                                                                                                                     :events [(read-string (str "(fn [ctx runtime evt] (clojure.core.match/match evt [:on-end-turn info] (game.common.dynamic/delete-text ctx \"text-id\") :else ctx))"))]
+                                                                                                                                     :events [(read-string (str "(fn [ctx runtime evt] (clojure.core.match/match evt [:on-end-turn info] (game.core/delete-text ctx \"text-id\") :else ctx))"))]
                                                                                                                                      :game-effects [`(fn [~~''ctx ~~''runtime]
                                                                                                                                                        (for [~~''card-id ~~'selection]
                                                                                                                                                          [:add-battle-point ~~''card-id ~~battle-point]))
@@ -87,11 +85,11 @@
         _ (s/assert :game.define.card-proto/value (second card-proto-example))
         effect (atom nil)
         added-text (atom nil)
-        _ (binding [game.common.dynamic/cut-in (fn [ctx id eff]
+        _ (binding [game.core/cut-in (fn [ctx id eff]
                                                  (s/assert :game.define.effect/value eff)
                                                  (reset! effect eff)
                                                  ctx)
-                    game.common.dynamic/add-text (fn [ctx id text]
+                    game.core/add-text (fn [ctx id text]
                                                    (s/assert :game.define.card-text/value text)
                                                    (reset! added-text text)
                                                    ctx)]
@@ -126,7 +124,6 @@
   (game.define.selection/tests)
   (game.define.timing/tests)
   (game.define.battle-point/tests)
-  (game.component.card-proto/tests)
   (game.component.cuts/tests)
   (game.component.effect/tests)
   (game.component.table/tests)
@@ -137,9 +134,4 @@
   (game.component.coin-table/tests)
   (game.component.flags-player-status-component/tests)
   (game.entity.model/tests)
-  (game.entity.model-flow/tests)
-   ;; (game.tool.return-let/test-all)
-  ;; (game.tool.waterfall/test-all)
-  ;; (game.tool.callback/test-all)
-  ;; (game.tool.either/test-all)
-  )
+  (game.entity.model-flow/tests))

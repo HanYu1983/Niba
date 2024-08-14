@@ -1,4 +1,4 @@
-(ns game.tool.option)
+(ns tool.option)
 
 (defn option-flatmap [mapf option]
   (if (nil? option)

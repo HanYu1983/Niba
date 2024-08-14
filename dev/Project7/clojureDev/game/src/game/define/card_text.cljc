@@ -1,6 +1,6 @@
 (ns game.define.card-text
   (:require [clojure.spec.alpha :as s]
-            [game.tool.logic-tree :as logic-tree]))
+            [tool.logic-tree :as logic-tree]))
 (s/def ::script (fn [v] (-> v seq? (and (-> v eval fn?)))))
 (s/def ::use-timing (s/tuple #{:any :turn :draw :reroll :maintenance :battle :attack :defense :damage-checking :return}
                              #{:any :own :enemy}))

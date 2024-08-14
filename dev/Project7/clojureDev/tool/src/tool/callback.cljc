@@ -1,4 +1,4 @@
-(ns game.tool.callback)
+(ns tool.callback)
 
 (defn callback-map [mapf callback]
   (let [next-callback  (fn [cb]

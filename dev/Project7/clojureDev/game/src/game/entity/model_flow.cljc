@@ -2,7 +2,7 @@
   (:require [clojure.spec.alpha :as s]
             [clojure.core.match :refer [match]]
             [clojure.set :refer [difference]]
-            [game.tool.logic-tree :as logic-tree]
+            [tool.logic-tree :as logic-tree]
             [game.define.card-text :as card-text]
             [game.define.selection]
             [game.define.player :as player]
@@ -14,7 +14,7 @@
             [game.component.phase :as phase]
             [game.component.current-player :as current-player]
             [game.component.selection]
-            [game.component.flags-component :as flags-component]
+            [tool.component.flags-component :as flags-component]
             [game.entity.model :as model]
             [game.component.card-table :as card-table]))
 ; current-pay-component
@@ -64,7 +64,7 @@
   (assoc ctx :has-cuts #{}))
 ; flow
 (s/def ::flow (s/merge ::current-pay-component
-                       :game.component.flags-component/flags-component
+                       :tool.component.flags-component/flags-component
                        ::has-cuts-component))
 (s/def ::spec (s/merge :game.entity.model/spec
                        (s/keys :req-un [::flow])))

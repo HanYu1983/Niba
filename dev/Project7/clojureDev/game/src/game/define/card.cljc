@@ -1,6 +1,5 @@
 (ns game.define.card
-  (:require [clojure.spec.alpha :as s]
-            [game.tool.card.table]))
+  (:require [clojure.spec.alpha :as s]))
 (s/def ::proto-id string?)
 (s/def ::is-face-down boolean?)
 (s/def ::is-roll boolean?)

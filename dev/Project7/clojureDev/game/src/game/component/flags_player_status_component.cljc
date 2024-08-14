@@ -1,8 +1,8 @@
 (ns game.component.flags-player-status-component
   (:require [clojure.spec.alpha :as s]
-            [game.component.flags-component :as flags-component]))
+            [tool.component.flags-component :as flags-component]))
 
-(s/def ::spec :game.component.flags-component/flags-component)
+(s/def ::spec :tool.component.flags-component/flags-component)
 
 (defn get-player-has-play-g-flag [player-id] [player-id :has-play-g])
 

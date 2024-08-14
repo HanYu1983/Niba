@@ -1,4 +1,4 @@
-(ns game.tool.logic-tree)
+(ns tool.logic-tree)
 
 (defn or? [tree]
   (= (first tree) 'Or))

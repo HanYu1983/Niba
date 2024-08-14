@@ -1,7 +1,6 @@
 (ns game.entity.model
   (:require [clojure.spec.alpha :as s]
             [clojure.core.match :refer [match]]
-            [game.tool.card.table]
             [game.data.core]
             [game.data.dynamic]
             [game.define.runtime]
@@ -13,14 +12,12 @@
             [game.define.effect]
             [game.component.cuts]
             [game.component.effect]
-            [game.component.card-proto]
             [game.component.phase :as phase]
             [game.component.current-player]
             [game.component.card-table :as card-table]
             [game.component.table :as table]))
 (s/def ::spec (s/merge :game.component.cuts/spec
                        :game.component.effect/spec
-                       :game.component.card-proto/spec
                        :game.component.table/spec
                        :game.component.phase/spec
                        :game.component.current-player/spec))
