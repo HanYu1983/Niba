@@ -11,15 +11,15 @@
             [game.define.game-effect]
             [game.define.effect]
             [game.component.effect]
-            [game.component.phase :as phase]
+            [game.component.phase]
             [game.component.current-player]
-            [game.component.card-table :as card-table]
-            [game.component.table :as table]))
+            [game.component.card-table :refer [get-card get-card-protos-by-ids add-card]]
+            [game.component.table :refer [get-item-controller get-item-ids-by-ba-syou-keyword get-card-controller]]))
 ; card-text helper
 (defn get-play-card-text [ctx runtime]
   (let [card-proto (-> runtime
                        game.define.runtime/get-card-id
-                       (#(card-table/get-card ctx %))
+                       (#(get-card ctx %))
                        game.define.card/get-proto-id
                        game.data.core/get-card-data)
         text {:type [:automatic :constant]
@@ -55,21 +55,21 @@
 
 (defn gen-game-effects-1 [ctx]
   (let [; g
-        game-effects-1 (for [card-id (table/get-item-ids-by-ba-syou-keyword ctx :g-zone)]
-                         (let [[card-proto] (card-table/get-card-protos-by-ids ctx [card-id])
+        game-effects-1 (for [card-id (get-item-ids-by-ba-syou-keyword ctx :g-zone)]
+                         (let [[card-proto] (get-card-protos-by-ids ctx [card-id])
                                texts (-> card-proto
                                          game.define.card-proto/get-texts
                                          (#(filter (fn [[name text]] (-> text game.define.card-text/is-surrounded-by-arrows)) %)))
                                game-effects-fns (->> texts (mapcat (fn [[name text]] (game.define.card-text/get-game-effects text))))
-                               runtime (game.define.runtime/value-of (table/get-card-controller ctx card-id) card-id)
+                               runtime (game.define.runtime/value-of (get-card-controller ctx card-id) card-id)
                                game-effects (->> game-effects-fns (map #(% ctx runtime)))]
                            game-effects))
         ; maintenance-area
-        game-effects-2 (->> (for [card-id (table/get-item-ids-by-ba-syou-keyword ctx :maintenance-area)]
-                              (let [[card-proto] (card-table/get-card-protos-by-ids ctx [card-id])
+        game-effects-2 (->> (for [card-id (get-item-ids-by-ba-syou-keyword ctx :maintenance-area)]
+                              (let [[card-proto] (get-card-protos-by-ids ctx [card-id])
                                     texts (-> card-proto game.define.card-proto/get-texts)
                                     game-effects-fns (->> texts (mapcat (fn [[name text]] (game.define.card-text/get-game-effects text))))
-                                    runtime (game.define.runtime/value-of (table/get-card-controller ctx card-id) card-id)
+                                    runtime (game.define.runtime/value-of (get-card-controller ctx card-id) card-id)
                                     game-effects (->> game-effects-fns (map #(% ctx runtime)))]
                                 game-effects))
                             (mapcat identity)
@@ -112,7 +112,7 @@
                         ["自軍効果以外では破壊されずダメージを受けない" card-ids & _])
                    (let [player-a (-> effect game.define.effect/get-player-id)
                          can-not-destroyed-card-ids (->> card-ids
-                                                         (map #(table/get-item-controller ctx %))
+                                                         (map #(get-item-controller ctx %))
                                                          (zipmap card-ids)
                                                          (filter (fn [[card-id player-b]]
                                                                    (not= player-a player-b)))
@@ -125,7 +125,7 @@
                          can-not-destroyed-card-ids (condp = effect-card-item-type
                                                       :unit
                                                       (->> card-ids
-                                                           (map #(table/get-item-controller ctx %))
+                                                           (map #(get-item-controller ctx %))
                                                            (zipmap card-ids)
                                                            (filter (fn [[card-id player-b]]
                                                                      (not= player-a player-b)))
@@ -139,7 +139,7 @@
                          can-not-destroyed-card-ids (condp = effect-card-item-type
                                                       :command
                                                       (->> card-ids
-                                                           (map #(table/get-item-controller ctx %))
+                                                           (map #(get-item-controller ctx %))
                                                            (zipmap card-ids)
                                                            (filter (fn [[card-id player-b]]
                                                                      (not= player-a player-b)))
@@ -153,15 +153,6 @@
 
 (def can-not-be-destroyed-card-ids-memo (memoize can-not-be-destroyed-card-ids))
 
-(defn on-move-card [ctx from-ba-syou-id to-ba-syou-id card-id]
-  ctx)
-
-(defn move-card [ctx from-ba-syou-id to-ba-syou-id card-id]
-  (s/assert ::spec ctx)
-  (-> ctx
-      (card-table/move-card from-ba-syou-id to-ba-syou-id card-id)
-      (on-move-card from-ba-syou-id to-ba-syou-id card-id)))
-
 (defmethod game.data.dynamic/get-my-g :default [ctx player-id] ["0"])
 (defmethod game.data.dynamic/get-card-chars :default [ctx card-id] ["0"])
 (defmethod game.data.dynamic/get-card-color :default [ctx card-id] ["0"])
@@ -174,8 +165,8 @@
                     :phase [:reroll :start]
                     :current-player-id :A
                     :card-proto-pool {}}
-                   (merge table/table))]
-    (let [ctx (-> model (card-table/add-card [:A :maintenance-area] "0"
+                   (merge game.component.table/table))]
+    (let [ctx (-> model (add-card [:A :maintenance-area] "0"
                                              (->> {:proto-id "179030_11E_U_BL209R_blue"}
                                                   (merge game.define.card/value))))
           _ (-> ctx (get-play-card-text (game.define.runtime/value-of "0" :A)) (#(s/assert :game.define.card-text/value %)))])
@@ -184,8 +175,8 @@
     (let [card (->> {:proto-id "179030_11E_U_BL209R_blue"}
                     (merge game.define.card/value))
           ctx (-> model
-                  (card-table/add-card [:A :maintenance-area] "0" card)
-                  (card-table/add-card [:B :maintenance-area] "1" card))
+                  (add-card [:A :maintenance-area] "0" card)
+                  (add-card [:B :maintenance-area] "1" card))
           game-effects (gen-game-effects-memo ctx)
         ;_ (println game-effects)
           ])))

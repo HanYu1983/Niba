@@ -22,4 +22,4 @@
 (s/def ::selection (s/map-of any? (s/coll-of any?)))
 (s/def ::has-selection (s/keys :req-un [::selection]))
 
-(s/def ::is-model (s/merge ::has-current-effect ::has-current-player-id ::has-effects ::is-table ::has-selection))
+(s/def ::is-model (s/merge ::has-current-effect ::has-current-player-id ::has-effects ::has-phase ::is-table ::has-selection))

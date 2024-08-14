@@ -9,15 +9,15 @@
             [game.define.player :as player]
             [game.define.runtime :as runtime]
             [game.define.timing :as timing]
-            [game.define.effect]
+            [game.define.effect :as effect]
             [game.model-spec.core]
-            [game.component.effect :as effect]
-            [game.component.table :as table]
-            [game.component.phase :as phase]
-            [game.component.current-player :as current-player]
-            [game.component.selection] 
-            [game.entity.model :as model]
-            [game.component.card-table :as card-table]))
+            [game.component.effect :refer [get-top-cut cut-in]]
+            [game.component.table :refer [get-effect-runtime get-effect-player-id]]
+            [game.component.phase :refer [get-phase next-phase]]
+            [game.component.current-player :refer [is-current-player get-attack-side]]
+            [game.component.selection]
+            [game.component.card-table]
+            [game.entity.model]))
 ; current-pay-component
 (s/def ::current-pay-effect (s/nilable :game.define.effect/value))
 (s/def ::current-pay-logic-id (s/nilable any?))
@@ -80,8 +80,7 @@
            :current-pay-selection {}
            :current-pay-effect nil
            :current-pay-logic-id nil})
-(def model-flow (assoc model/model
-                       :flow flow))
+(def model-flow (assoc game.entity.model/model :flow flow))
 
 (defn has-destroy-effects [ctx player-id])
 (defn has-immediate-effects [ctx player-id])
@@ -89,7 +88,7 @@
 (defn handle-draw-rule [ctx]
   (s/assert ::spec ctx)
   (let [draw-rule-effect (s/assert :game.define.effect/value
-                                   {:reason [:system (current-player/get-attack-side ctx)]
+                                   {:reason [:system (get-attack-side ctx)]
                                     :text {:type :system
                                            :description "draw a card"
                                            :conditions {"draw top1card" {:tips '(fn [ctx runtime]
@@ -132,7 +131,7 @@
 
 (defn get-cut-effects [ctx]
   (s/assert ::spec ctx)
-  (-> ctx effect/get-top-cut))
+  (-> ctx get-top-cut))
 (defn has-cut-effects [ctx]
   (s/assert ::spec ctx)
   (-> ctx get-cut-effects count pos?))
@@ -158,10 +157,10 @@
       ; 清除切入狀態
       clear-has-cut
       ; 清除處理階段的標記
-      (flags-component/remove-flags #{(-> ctx phase/get-phase)})
+      (flags-component/remove-flags #{(-> ctx get-phase)})
       (#(set-flow ctx %))
       ; 到下一個時段
-      phase/next-phase))
+      next-phase))
 
 (defn query-command [ctx player-id]
   (s/assert ::spec ctx)
@@ -173,7 +172,7 @@
           current-pay-logic-id (-> ctx get-flow get-current-pay-logic-id)
           current-pay-selection (-> ctx get-flow get-current-pay-selection)]
       (if (-> current-pay-logic-id nil?)
-        (if (-> ctx (table/get-effect-player-id effect) (= player-id))
+        (if (-> ctx (get-effect-player-id effect) (= player-id))
                  ; 選擇使用哪一個邏輯
           (let [logic-ids (-> text card-text/get-logics-ids)]
             (if (-> logic-ids count pos?)
@@ -182,7 +181,7 @@
           [{:type :wait :reason "等待對方選擇使用哪一個邏輯"}])
         (if (card-text/can-pass-conditions text current-pay-logic-id current-pay-selection)
                     ; 如果是主動玩家
-          (if (-> ctx (table/get-effect-player-id effect) (= player-id))
+          (if (-> ctx (get-effect-player-id effect) (= player-id))
                       ; 執行支付(支付完後將效果從堆疊移除)
             [{:type :pay-conditions}]
             [{:type :wait :reason "等待對方支付"}])
@@ -199,14 +198,14 @@
           ; 如果可以成功支付
       #_(if (card-text/can-pass-conditions text current-pay-logic-id current-pay-selection)
             ; 如果是主動玩家
-        (if (-> ctx (table/get-effect-player-id effect) (= player-id))
+        (if (-> ctx (get-effect-player-id effect) (= player-id))
               ; 執行支付(支付完後將效果從堆疊移除)
           [{:type :pay-conditions}]
           [{:type :wait :reason "等待對方支付"}])
             ; 不行成功支付的場合
             ; 選擇支付
         (if (-> current-pay-logic-id nil?)
-          (if (-> ctx (table/get-effect-player-id effect) (= player-id))
+          (if (-> ctx (get-effect-player-id effect) (= player-id))
            ; 選擇使用哪一個邏輯
             (let [logic-ids (-> text card-text/get-logics-ids)]
               [{:type :set-logic-id :logic-ids logic-ids :selected-logic-id (-> logic-ids first)}])
@@ -242,7 +241,7 @@
     (let [effects (query-immediate-effects ctx player-id)
           ; TODO 讓玩家選擇一個立即效果
           top-effect (first effects)
-          is-my-effect (->> top-effect (table/get-effect-runtime ctx) runtime/get-player-id (= player-id))
+          is-my-effect (->> top-effect (get-effect-runtime ctx) runtime/get-player-id (= player-id))
               ; 如果效果的擁有者是你
           cmds (if is-my-effect
                      ; 設定將要支付的效果
@@ -255,7 +254,7 @@
     ; 如果有堆疊效果
     (has-cut-effects ctx)
     (let [top-effect (-> ctx get-cut-effects first)
-          is-my-effect (->> top-effect (table/get-effect-runtime ctx) runtime/get-player-id (= player-id))
+          is-my-effect (->> top-effect (get-effect-runtime ctx) runtime/get-player-id (= player-id))
                 ; 如果都讓過
           cmds (if (is-all-pass-cut ctx)
                        ; 如果是效果擁有者
@@ -280,7 +279,7 @@
                      [{:type :wait :reason "等待敵軍切入"}])))]
       cmds)
     ; 自由時間
-    #_(-> ctx phase/get-phase timing/can-play-card-or-text)
+    #_(-> ctx get-phase timing/can-play-card-or-text)
     ; 如果有破壞中的機體
     #_(if (has-destroy-effects ctx player-id)
     ; 將破壞產生的廢棄效果推到新的切入
@@ -289,12 +288,12 @@
         [])
 
     :else
-    (let [current-phase (-> ctx phase/get-phase)]
+    (let [current-phase (-> ctx get-phase)]
       (match current-phase
         (:or [_ :start] [_ _ :start] [_ :end] [_ _ :end] [_ :end _] [_ :rule] [_ _ :rule])
         (if (has-handle-phase ctx current-phase)
           [{:type :next-phase :current-phase current-phase}]
-          (if (current-player/is-current-player ctx player-id)
+          (if (is-current-player ctx player-id)
             [{:type :handle-phase :current-phase current-phase}]
             [{:type :wait :reason (str "等待系統處理階段" current-phase)}]))
         ; 自由時間
@@ -302,18 +301,18 @@
         ; 如果有破壞中的機體
         (if (has-destroy-effects ctx player-id)
         ; 將破壞產生的廢棄效果推到新的切入
-          (if (current-player/is-current-player ctx player-id)
+          (if (is-current-player ctx player-id)
             [{:type :convert-destroy-effects-to-new-cut}]
             [{:type :wait :reason (str "等待系統處理階段")}])
         ; 指令
           (let [cmds (if (is-all-pass-cut ctx)
-                       (if (current-player/is-current-player ctx player-id)
+                       (if (is-current-player ctx player-id)
                          [{:type :next-phase :current-phase current-phase}
                           {:type :cut-in :card-ids []}]
                          [{:type :wait :reason "等待效果擁有者處理"}])
                                  ; 只有其中一個讓過
                        (let [; 主動者有優先權
-                             is-my-cut-chance (current-player/is-current-player ctx player-id)
+                             is-my-cut-chance (is-current-player ctx player-id)
                                        ; 如果我有優先權
                              is-my-cut-chance (if is-my-cut-chance
                                                           ; 並且我沒有讓過
@@ -331,14 +330,14 @@
         ;; [:reroll :rule]
         ;; (if (has-handle-reroll-rule ctx)
         ;;   [{:type :next-phase :current-phase current-phase}]
-        ;;   (if (current-player/is-current-player ctx player-id)
+        ;;   (if (is-current-player ctx player-id)
         ;;     [{:type :handle-reroll-rule}]
         ;;     [{:type :wait :reason ""}]))
 
         ;; [:draw :rule]
         ;; (if (has-handle-draw-rule ctx)
         ;;   [{:type :next-phase :current-phase current-phase}]
-        ;;   (if (current-player/is-current-player ctx player-id)
+        ;;   (if (is-current-player ctx player-id)
         ;;     [{:type :handle-draw-rule}]
         ;;     [{:type :wait :reason ""}]))
 
@@ -373,8 +372,8 @@
   (match cmd
     {:type :handle-phase :current-phase current-phase}
     (do
-      (-> ctx phase/get-phase (= current-phase) (or (throw (ex-info "current-phase not match" {}))))
-      (-> ctx (current-player/is-current-player player-id) (or (throw (ex-info "must be current player" {}))))
+      (-> ctx get-phase (= current-phase) (or (throw (ex-info "current-phase not match" {}))))
+      (-> ctx (is-current-player player-id) (or (throw (ex-info "must be current player" {}))))
       (handle-phase ctx current-phase))
 
     {:type :pass}
@@ -388,8 +387,8 @@
 
     {:type :next-phase :current-phase current-phase}
     (do
-      (-> ctx phase/get-phase (= current-phase) (or (throw (ex-info "current-phase not match" {}))))
-      (-> ctx (current-player/is-current-player player-id) (or (throw (ex-info "must be current player" {}))))
+      (-> ctx get-phase (= current-phase) (or (throw (ex-info "current-phase not match" {}))))
+      (-> ctx (is-current-player player-id) (or (throw (ex-info "must be current player" {}))))
       (handle-next-phase ctx))
 
     {:type :set-logic-id :logic-ids logic-ids :selected-logic-id selected-logic-id}
@@ -412,7 +411,7 @@
 
 (defn test-cut []
   (let [player-id :A
-        ctx (s/assert ::spec (-> model-flow (effect/cut-in "effect-1" {:reason [:system :A] :text card-text/card-text-value})))
+        ctx (s/assert ::spec (-> model-flow (cut-in "effect-1" {:reason [:system :A] :text card-text/card-text-value})))
         cmds (query-command ctx player-id)
         _ (match cmds
             [{:type :wait} & _] true
@@ -435,7 +434,7 @@
             [{:type :next-phase :current-phase [:reroll :rule]}] true
             :else (throw (ex-info "must :next-phase" {})))
         ctx (exec-command ctx player-id (first cmds))
-        _ (-> ctx phase/get-phase (= [:reroll :free2])
+        _ (-> ctx get-phase (= [:reroll :free2])
               (or (throw (ex-info "must [:reroll :free2]" {}))))]))
 
 (defn test-next-phase2 []
@@ -446,9 +445,9 @@
       (if (> i 70)
         (do
           ;(println ctx)
-          (-> ctx phase/get-phase (= [:reroll :start]) (or (throw (ex-info "must [:reroll :start]" {}))))
+          (-> ctx get-phase (= [:reroll :start]) (or (throw (ex-info "must [:reroll :start]" {}))))
           ctx)
-        (let [_ (println "current-phase" (-> ctx phase/get-phase))
+        (let [_ (println "current-phase" (-> ctx get-phase))
               cmds (query-command ctx player-a)
               _ (println player-a "cmds" cmds)
               ctx (match cmds
@@ -477,7 +476,7 @@
   (let [[player-a player-b] player/player-ids
         ctx model-flow
         ctx (-> ctx get-flow (set-current-pay-effect (merge game.define.effect/effect-value
-                                                            {:reason [:system (current-player/get-attack-side ctx)]
+                                                            {:reason [:system (get-attack-side ctx)]
                                                              :text {:type :system
                                                                     :description "draw a card"
                                                                     :conditions {"draw top1card" {:tips '(fn [ctx runtime]
@@ -508,7 +507,7 @@
                                 (let [~'card-id (-> ~'runtime game.define.runtime/get-card-id)
                                       ~'to-ba-syou-id [~player-a :maintenance-area]
                                       ~'ctx (-> ~'ctx
-                                                (game.component.core/move-card [~player-a :te-hu-ta] ~'to-ba-syou-id ~'card-id)
+                                                (game.component.card-table/move-card [~player-a :te-hu-ta] ~'to-ba-syou-id ~'card-id)
                                                 (game.component.card-table/set-card-is-roll ~'to-ba-syou-id ~'card-id true))]
                                   ~'ctx))}
         _ (println play-g-text)

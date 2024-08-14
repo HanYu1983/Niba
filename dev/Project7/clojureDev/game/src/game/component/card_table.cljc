@@ -32,6 +32,9 @@
       (#(map game.data.core/get-card-data %))
       (#(s/assert (s/coll-of :game.define.card-proto/value) %))))
 
+(defn on-move-card [ctx from-ba-syou-id to-ba-syou-id card-id]
+  ctx)
+
 (defn move-card [ctx from-ba-syou-id to-ba-syou-id card-id]
   (s/assert :game.define.basyou/spec from-ba-syou-id)
   (s/assert :game.define.basyou/spec to-ba-syou-id)
@@ -39,7 +42,11 @@
       (or (throw (ex-info "card not found" {:card-id card-id} :card-not-found))))
   (-> ctx get-table tool.card.table/get-decks (get from-ba-syou-id) (#(some #{card-id} %))
       (or (throw (ex-info "card not found in ba-syou" {:ba-syou-id from-ba-syou-id} :card-not-found-in-ba-syou))))
-  (-> ctx get-table (tool.card.table/move-card from-ba-syou-id to-ba-syou-id card-id) (#(set-table ctx %))))
+  (-> ctx
+      get-table
+      (tool.card.table/move-card from-ba-syou-id to-ba-syou-id card-id)
+      (#(set-table ctx %))
+      (on-move-card from-ba-syou-id to-ba-syou-id card-id)))
 
 (defn set-card-is-roll [ctx ba-syou-id card-id is-roll]
   (s/assert :game.define.basyou/spec ba-syou-id)
