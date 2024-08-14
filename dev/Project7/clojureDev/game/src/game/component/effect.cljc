@@ -1,12 +1,12 @@
 (ns game.component.effect
   (:require [clojure.spec.alpha :as s]
+            [tool.component.cuts]
             [game.define.runtime]
-            [game.define.effect]
-            [game.component.cuts]))
+            [game.define.effect]))
 
 (s/def ::effect any?)
 (s/def ::effects (s/map-of any? ::effect))
-(s/def ::spec (s/merge :game.component.cuts/spec
+(s/def ::spec (s/merge :tool.component.cuts/spec
                        (s/keys :req-un [::effects])))
 
 (defn get-effects [ctx ids]
@@ -23,7 +23,7 @@
   (s/assert ::spec ctx)
   (s/assert ::effect effect)
   (-> ctx
-      (game.component.cuts/cut-in id)
+      (tool.component.cuts/cut-in id)
       (update :effects #(into % [[id effect]]))))
 
 (defn new-cut
@@ -31,7 +31,7 @@
   (s/assert ::spec ctx)
   (s/assert ::effect effect)
   (-> ctx
-      (game.component.cuts/new-cut id)
+      (tool.component.cuts/new-cut id)
       (update :effects #(into % [[id effect]]))))
 
 (defn map-effects
@@ -45,7 +45,7 @@
 (defn remove-effect [ctx id]
   (s/assert ::spec ctx)
   (-> ctx
-      (game.component.cuts/remove-effect id)
+      (tool.component.cuts/remove-effect id)
       (update :effects #(dissoc % id))))
 
 (defn- test-get-effects []
@@ -125,6 +125,7 @@
         (assert "test-remove-effect test failed"))))
 
 (defn tests []
+  (tool.component.cuts/tests)
   (test-cut-in)
   (test-get-effects)
   (test-get-top-cut)

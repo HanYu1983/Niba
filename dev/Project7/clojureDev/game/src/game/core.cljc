@@ -10,7 +10,6 @@
             [game.define.selection]
             [game.define.timing]
             [game.define.battle-point]
-            [game.component.cuts]
             [game.component.effect]
             [game.component.table]
             [game.component.phase]
@@ -124,7 +123,6 @@
   (game.define.selection/tests)
   (game.define.timing/tests)
   (game.define.battle-point/tests)
-  (game.component.cuts/tests)
   (game.component.effect/tests)
   (game.component.table/tests)
   (game.component.phase/tests)

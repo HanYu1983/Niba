@@ -2,8 +2,6 @@
   (:require [clojure.spec.alpha :as s]
             [tool.component.flags-component :as flags-component]))
 
-(s/def ::spec :tool.component.flags-component/flags-component)
-
 (defn get-player-has-play-g-flag [player-id] [player-id :has-play-g])
 
 (defn tests []

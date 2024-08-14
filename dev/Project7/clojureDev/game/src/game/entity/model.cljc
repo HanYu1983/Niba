@@ -10,14 +10,12 @@
             [game.define.card-proto]
             [game.define.game-effect]
             [game.define.effect]
-            [game.component.cuts]
             [game.component.effect]
             [game.component.phase :as phase]
             [game.component.current-player]
             [game.component.card-table :as card-table]
             [game.component.table :as table]))
-(s/def ::spec (s/merge :game.component.cuts/spec
-                       :game.component.effect/spec
+(s/def ::spec (s/merge :game.component.effect/spec
                        :game.component.table/spec
                        :game.component.phase/spec
                        :game.component.current-player/spec))
