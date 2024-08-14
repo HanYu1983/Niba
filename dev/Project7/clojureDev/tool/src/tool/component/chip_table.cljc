@@ -39,4 +39,4 @@
         ctx (-> ctx (add-chip [:A :maintenance-area] "0" chip))
         _ (-> ctx (is-chip "0") (or (throw (ex-info "must is chip" {}))))
         _ (-> ctx (get-chip "0") (= chip) (or (throw (ex-info "must be chip" {}))))
-        ctx (-> ctx (remove-chip "0"))]))
+        _ (-> ctx (remove-chip "0"))]))

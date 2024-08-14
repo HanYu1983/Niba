@@ -50,4 +50,4 @@
         ctx (-> ctx (add-card [:A :maintenance-area] "0" card))
         _ (-> ctx (is-card "0") (or (throw (ex-info "must is card" {}))))
         _ (-> ctx (get-card "0") (= card) (or (throw (ex-info "must be card" {}))))
-        ctx (-> ctx (remove-card "0"))]))
+        _ (-> ctx (remove-card "0"))]))

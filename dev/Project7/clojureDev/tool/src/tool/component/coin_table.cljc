@@ -36,7 +36,7 @@
 (defn get-coin-ids-by-card-id [ctx card-id]
   (s/assert ::spec ctx)
   (->> ctx :coin-id-2-card-id
-       (filter (fn [[coin-id card-id2]] (= card-id card-id2)))
+       (filter (fn [[_ card-id2]] (= card-id card-id2)))
        (map first)))
 
 (defn tests []

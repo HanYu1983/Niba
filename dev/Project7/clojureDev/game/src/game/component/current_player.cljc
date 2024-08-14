@@ -1,16 +1,14 @@
 (ns game.component.current-player
   (:require [clojure.spec.alpha :as s]
+            [game.model-spec.core]
             [game.define.player]))
 
-(s/def ::current-player-id any?)
-(s/def ::spec (s/keys :req-un [::current-player-id]))
-
 (defn get-attack-side [ctx]
-  (s/assert ::spec ctx)
+  (s/assert :game.model-spec.core/has-current-player-id ctx)
   (-> ctx :current-player-id))
 
 (defn get-defend-side [ctx]
-  (s/assert ::spec ctx)
+  (s/assert :game.model-spec.core/has-current-player-id ctx)
   (-> ctx get-attack-side game.define.player/get-opponent))
 
 (defn is-current-player [ctx player-id]

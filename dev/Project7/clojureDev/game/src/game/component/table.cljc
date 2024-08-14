@@ -9,29 +9,24 @@
             [game.define.chip]
             [game.define.coin]
             [game.define.basyou]
+            [game.model-spec.core]
             [game.component.card-table :as card-table]
             [game.component.chip-table :as chip-table]
-            [game.component.coin-table :as coin-table]
-            [game.component.effect :as effect]))
-
-
-(s/def ::spec (s/merge :tool.component.card-table/spec
-                       :tool.component.coin-table/spec
-                       :tool.component.chip-table/spec))
+            [game.component.coin-table :as coin-table]))
 
 (def table (merge card-table/card-table
                   coin-table/coin-table
                   chip-table/chip-table))
 
 (defn get-item-ids-by-ba-syou [ctx ba-syou]
-  (s/assert ::spec ctx)
+  (s/assert :game.model-spec.core/is-table ctx)
   (s/assert :game.define.basyou/spec ba-syou)
   (let [item-ids (-> ctx get-table
                      (tool.card.table/get-decks-deck ba-syou))]
     item-ids))
 
 (defn get-item-ids-by-ba-syou-keyword [ctx ba-syou-keyword]
-  (s/assert ::spec ctx)
+  (s/assert :game.model-spec.core/is-table ctx)
   (s/assert :game.define.basyou/ba-syou-keyword ba-syou-keyword)
   (let [item-ids (->> ctx get-table
                       tool.card.table/get-decks
@@ -40,14 +35,14 @@
     item-ids))
 
 (defn get-cards-by-ba-syou [ctx ba-syou]
-  (s/assert ::spec ctx)
+  (s/assert :game.model-spec.core/is-table ctx)
   (s/assert :game.define.basyou/spec ba-syou)
   (-> ctx
       (get-item-ids-by-ba-syou ba-syou)
       (#(card-table/get-cards-by-ids ctx %))))
 
 (defn get-card-controller [ctx card-id]
-  (s/assert ::spec ctx)
+  (s/assert :game.model-spec.core/is-table ctx)
   ; 所在area或部隊的控制者
   (-> ctx 
       get-table 
@@ -58,14 +53,14 @@
 (def get-chip-controller get-card-controller)
 
 (defn get-coin-controller [ctx coin-id]
-  (s/assert ::spec ctx)
+  (s/assert :game.model-spec.core/is-table ctx)
   (-> ctx
       (coin-table/get-coin coin-id)
       (or (throw (ex-info (str "coin not found:" coin-id) {})))
       game.define.coin/get-player-id))
 
 (defn get-item-controller [ctx item-id]
-  (s/assert ::spec ctx)
+  (s/assert :game.model-spec.core/is-table ctx)
   (cond
     (card-table/is-card ctx item-id)
     (-> ctx (get-card-controller item-id))
@@ -77,9 +72,9 @@
     (-> ctx (get-coin-controller item-id))))
 
 (defn get-effect-player-id [ctx eff]
-  (s/assert ::spec ctx)
+  (s/assert :game.model-spec.core/is-table ctx)
   (match (-> eff game.define.effect/get-reason)
-    [:text-effect card-id text-id]
+    [:text-effect card-id _text-id]
     (-> ctx (get-item-controller card-id))
     :else
     (-> eff game.define.effect/get-player-id)))
@@ -87,7 +82,7 @@
 (defn get-effect-runtime
   "取得效果的執行期資訊"
   [ctx effect]
-  (s/assert ::spec ctx)
+  (s/assert :game.model-spec.core/is-table ctx)
   (s/assert :game.define.effect/value effect)
   (match (-> effect :reason)
     [:system response-player-id]
@@ -96,10 +91,10 @@
     [:play-card play-card-player-id card-id]
     {:card-id [nil, card-id] :player-id [nil, play-card-player-id]}
 
-    [:play-text play-card-player-id card-id text-id]
+    [:play-text play-card-player-id card-id _text-id]
     {:card-id [nil, card-id] :player-id [nil, play-card-player-id]}
 
-    [:text-effect card-id text-id]
+    [:text-effect card-id _text-id]
     (let [response-player-id (->> card-id (get-item-controller ctx))]
       {:card-id [nil, card-id] :player-id [nil, response-player-id]})
 
@@ -124,7 +119,7 @@
         _ (-> item-ids vec (= ["card-0"]) (or (throw (ex-info "must [card-0]" {}))))]))
 
 (defn tests []
-  (let [ctx (s/assert ::spec table)
+  (let [ctx (s/assert :game.model-spec.core/is-table table)
         card-item game.define.card/value
         ctx (game.component.card-table/add-card ctx [:A :te-hu-ta] "card-1" card-item)
         _ (-> ctx (game.component.card-table/get-card "card-1") (= card-item) (or (throw (ex-info "must eq card-item" {}))))

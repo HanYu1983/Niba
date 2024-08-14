@@ -15,7 +15,7 @@
             [game.component.current-player]
             [game.component.card-table :as card-table]
             [game.component.table :as table]))
-(s/def ::spec (s/merge :game.component.effect/spec
+(s/def ::spec any? #_(s/merge :game.component.effect/spec
                        :game.component.table/spec
                        :game.component.phase/spec
                        :game.component.current-player/spec))

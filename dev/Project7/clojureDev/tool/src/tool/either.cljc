@@ -11,7 +11,7 @@
               [left (mapf right)]
 
               :else
-              (throw (Exception. "must has one value")))]
+              (throw (ex-info "must has one value" {})))]
     ret))
 
 (defn either-flatmap [mapf either]
@@ -24,7 +24,7 @@
               (mapf right)
 
               :else
-              (throw (Exception. "must has one value")))]
+              (throw (ex-info "must has one value" {})))]
     ret))
 
 

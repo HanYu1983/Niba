@@ -1,22 +1,19 @@
 (ns game.component.phase
   (:require [clojure.spec.alpha :as s]
+            [game.model-spec.core]
             [game.define.timing]))
 
-(s/def ::timing :game.define.timing/timing)
-(s/def ::phase any?)
-(s/def ::spec (s/keys :req-un [::phase]))
-
 (defn get-phase [ctx]
-  (s/assert ::spec ctx)
-  (->> ctx :phase (s/assert ::timing)))
+  (s/assert :game.model-spec.core/has-phase ctx)
+  (->> ctx :phase (s/assert :game.define.timing/timing)))
 
 (defn set-phase [ctx timing]
-  (s/assert ::spec ctx)
-  (s/assert ::timing timing)
+  (s/assert :game.model-spec.core/has-phase ctx)
+  (s/assert :game.define.timing/timing timing)
   (-> ctx (assoc :phase timing)))
 
 (defn next-phase [ctx]
-  (s/assert ::spec ctx)
+  (s/assert :game.model-spec.core/has-phase ctx)
   (-> ctx get-phase game.define.timing/next-timing ((fn [timing] (set-phase ctx timing)))))
 
 (defn tests []
