@@ -13,7 +13,7 @@
       (#(merge game.define.card-proto/card-proto %))
       (#(s/assert :game.define.card-proto/value %))))
 
-(def get-card-date-memo (memoize get-card-data))
+(def get-card-data-memo (memoize get-card-data))
 
 #_(defn test-card-proto []
     (let [play-card-effect
@@ -58,5 +58,5 @@
   (doseq [card-id ["179030_11E_U_BL212N_blue"
                    "179030_11E_U_BL209R_blue"
                    "179030_11E_U_BL213S_blue"]]
-    (-> card-id get-card-date-memo))
-  (-> "179030_11E_U_BL212N_blue" get-card-date-memo :gsign (= [:blue :uc]) (or (throw (ex-info "must blue uc" {})))))
+    (-> card-id get-card-data-memo))
+  (-> "179030_11E_U_BL212N_blue" get-card-data-memo :gsign (= [:blue :uc]) (or (throw (ex-info "must blue uc" {})))))
