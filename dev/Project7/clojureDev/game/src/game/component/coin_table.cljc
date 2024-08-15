@@ -4,7 +4,7 @@
             [game.define.coin]
             [game.define.basyou]))
 
-(def coin-table (tool.component.coin-table/create-table))
+(def create-coin-table tool.component.coin-table/create-coin-table)
 
 (defn add-coin [ctx card-id id card]
   (s/assert :game.define.coin/spec card)

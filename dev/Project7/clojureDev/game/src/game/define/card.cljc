@@ -5,7 +5,7 @@
 (s/def ::is-roll boolean?)
 (s/def ::spec (s/keys :opt-un [::proto-id ::is-face-down ::is-roll]))
 
-(def value {})
+(defn create [] {})
 
 (defn get-is-roll [ctx]
   (s/assert ::spec ctx)

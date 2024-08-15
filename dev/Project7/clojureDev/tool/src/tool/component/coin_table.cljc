@@ -7,11 +7,9 @@
 (s/def ::coin-id-2-card-id (s/map-of any? any?))
 (s/def ::spec (s/keys :req-un [::coins ::coin-id-2-card-id]))
 
-(def coin-table {:coins {}
-                 :coin-id-2-card-id {}})
-
-(defn create-table []
-  (s/assert ::spec coin-table))
+(defn create-coin-table []
+  (s/assert ::spec {:coins {}
+                    :coin-id-2-card-id {}}))
 
 (defn add-coin [ctx card-id id card]
   (s/assert ::spec ctx)
@@ -40,7 +38,7 @@
        (map first)))
 
 (defn tests []
-  (let [ctx (s/assert ::spec coin-table)
+  (let [ctx (create-coin-table)
         coin "coin"
         ctx (-> ctx (add-coin "card0" "0" coin))
         _ (-> ctx (is-coin "0") (or (throw (ex-info "must is coin" {}))))

@@ -4,10 +4,10 @@
             [tool.component.card-table]
             [tool.component.table :refer [get-table set-table]]
             [game.data.core]
-            [game.define.card]
+            [game.define.card :as card]
             [game.define.basyou]))
 
-(def card-table (tool.component.card-table/create-table))
+(def create-card-table tool.component.card-table/create-card-table)
 
 (def get-cards tool.component.card-table/get-cards)
 
@@ -60,7 +60,7 @@
 
 (defn tests []
   (tool.component.card-table/tests)
-  (let [ctx card-table
-        card (-> game.define.card/value (assoc :proto-id "179030_11E_U_BL209R_blue"))
+  (let [ctx (create-card-table)
+        card (-> (card/create) (assoc :proto-id "179030_11E_U_BL209R_blue"))
         ctx (-> ctx (add-card [:A :maintenance-area] "0" card))
         _ (-> ctx (get-card-protos-by-ids ["0"]))]))

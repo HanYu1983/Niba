@@ -6,11 +6,9 @@
 (s/def ::spec (s/merge :tool.component.table/spec
                        (s/keys :req-un [::chips])))
 
-(def chip-table {:chips {}
-                 :table (tool.card.table/create-table)})
-
-(defn create-table []
-  (s/assert ::spec chip-table))
+(defn create-chip-table []
+  (s/assert ::spec {:chips {}
+                    :table (tool.card.table/create-table)}))
 
 (defn get-chips [ctx]
   (s/assert ::spec ctx)
@@ -34,7 +32,7 @@
   (-> ctx (update :chips dissoc id)))
 
 (defn tests []
-  (let [ctx (s/assert ::spec chip-table)
+  (let [ctx (create-chip-table)
         chip "chip"
         ctx (-> ctx (add-chip [:A :maintenance-area] "0" chip))
         _ (-> ctx (is-chip "0") (or (throw (ex-info "must is chip" {}))))

@@ -5,18 +5,19 @@
             [tool.component.table :refer [get-table]]
             [game.define.effect]
             [game.define.runtime]
-            [game.define.card]
+            [game.define.card :as card]
             [game.define.chip]
             [game.define.coin]
             [game.define.basyou]
             [game.model-spec.core]
-            [game.component.card-table :refer [get-cards-by-ids is-card add-card get-card]]
-            [game.component.chip-table :refer [is-chip]]
-            [game.component.coin-table :refer [get-coin is-coin add-coin]]))
+            [game.component.card-table :refer [create-card-table get-cards-by-ids is-card add-card get-card]]
+            [game.component.chip-table :refer [create-chip-table is-chip]]
+            [game.component.coin-table :refer [create-coin-table get-coin is-coin add-coin]]))
 
-(def table (merge game.component.card-table/card-table
-                  game.component.coin-table/coin-table
-                  game.component.chip-table/chip-table))
+(defn create-table []
+  (merge (create-card-table)
+         (create-chip-table)
+         (create-coin-table)))
 
 (defn get-item-ids-by-ba-syou [ctx ba-syou]
   (s/assert :game.model-spec.core/is-table ctx)
@@ -102,8 +103,8 @@
     (throw (ex-info "reason not match" {}))))
 
 (defn test-get-effect-runtime []
-  (let [ctx (-> table
-                (add-card [:A :maintenance-area] "card-0" game.define.card/value))
+  (let [ctx (-> (create-table)
+                (add-card [:A :maintenance-area] "card-0" (card/create)))
         runtimes (for [effect (map #(assoc game.define.effect/effect-value :reason %)
                                    [[:system :A] [:play-card :A "card-0"] [:play-text :A "card-0" "text"] [:text-effect "card-0" "text"]])]
                    (get-effect-runtime ctx effect))
@@ -112,15 +113,15 @@
 
 (defn test-get-card-ids-by-ba-syou []
   (let [basyou [:A :maintenance-area]
-        card-0 game.define.card/value
-        ctx table
+        card-0 (card/create)
+        ctx (create-table)
         ctx (-> ctx (add-card basyou "card-0" card-0))
         item-ids (-> ctx (get-item-ids-by-ba-syou basyou))
         _ (-> item-ids vec (= ["card-0"]) (or (throw (ex-info "must [card-0]" {}))))]))
 
 (defn tests []
-  (let [ctx (s/assert :game.model-spec.core/is-table table)
-        card-item game.define.card/value
+  (let [ctx (s/assert :game.model-spec.core/is-table (create-table))
+        card-item (card/create)
         ctx (add-card ctx [:A :te-hu-ta] "card-1" card-item)
         _ (-> ctx (get-card "card-1") (= card-item) (or (throw (ex-info "must eq card-item" {}))))
         coin-item (->> {:id "+1/+1/+1"} (merge game.define.coin/coin))

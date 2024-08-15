@@ -5,7 +5,7 @@
             [game.define.chip]
             [game.define.basyou]))
 
-(def chip-table (tool.component.chip-table/create-table))
+(def create-chip-table tool.component.chip-table/create-chip-table)
 
 (def get-chips tool.component.chip-table/get-chips)
 

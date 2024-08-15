@@ -4,7 +4,7 @@
             [game.data.core]
             [game.data.dynamic]
             [game.define.runtime]
-            [game.define.card]
+            [game.define.card :as card]
             [game.define.card-text]
             [game.define.timing]
             [game.define.card-proto]
@@ -14,7 +14,7 @@
             [game.component.phase]
             [game.component.current-player]
             [game.component.card-table :refer [get-card get-card-protos-by-ids add-card]]
-            [game.component.table :refer [get-item-controller get-item-ids-by-ba-syou-keyword get-card-controller]]))
+            [game.component.table :refer [create-table get-item-controller get-item-ids-by-ba-syou-keyword get-card-controller]]))
 ; card-text helper
 (defn get-play-card-text [ctx runtime]
   (let [card-proto (-> runtime
@@ -38,19 +38,18 @@
                            {:tips '(fn [ctx] ctx) :action '(fn [ctx] ctx)}
                            "放到play-card-zone"
                            {:tips '(fn [ctx] ctx) :action '(fn [ctx] ctx)}}
-              :logic {"出機體"
-                      ['(And (Leaf "合計國力6") (Leaf "横置3個藍G") (Leaf "放到play-card-zone"))
-                       '(fn [ctx runtime]
-                          (game.data.dynamic/cut-in ctx (->> {:reason [:play-card ""]
-                                                              :text (->> {:type :system
-                                                                          :logic {"移到場上"
-                                                                                  [nil
-                                                                                   '(fn [ctx runtime]
-                                                                                      ctx)]}}
-                                                                         (merge game.define.card-text/card-text-value)
-                                                                         (clojure.spec.alpha/assert :game.define.card-text/value))}
-                                                             (merge game.define.effect/effect-value)
-                                                             (clojure.spec.alpha/assert :game.define.effect/value))))]}}]
+              :logics {"出機體"
+                       {:logic-tree '(And (Leaf "合計國力6") (Leaf "横置3個藍G") (Leaf "放到play-card-zone"))
+                        :action '(fn [ctx runtime]
+                                   (game.data.dynamic/cut-in ctx (->> {:reason [:play-card ""]
+                                                                       :text (->> {:type :system
+                                                                                   :logics {"移到場上"
+                                                                                            {:action '(fn [ctx runtime]
+                                                                                                        ctx)}}}
+                                                                                  (merge game.define.card-text/card-text-value)
+                                                                                  (clojure.spec.alpha/assert :game.define.card-text/value))}
+                                                                      (merge game.define.effect/effect-value)
+                                                                      (clojure.spec.alpha/assert :game.define.effect/value))))}}}]
     text))
 
 (defn gen-game-effects-1 [ctx]
@@ -160,15 +159,12 @@
                     :phase [:reroll :start]
                     :current-player-id :A
                     :card-proto-pool {}}
-                   (merge game.component.table/table))]
-    (let [ctx (-> model (add-card [:A :maintenance-area] "0"
-                                             (->> {:proto-id "179030_11E_U_BL209R_blue"}
-                                                  (merge game.define.card/value))))
+                   (merge (create-table)))]
+    (let [ctx (-> model (add-card [:A :maintenance-area] "0" (merge (card/create) {:proto-id "179030_11E_U_BL209R_blue"})))
           _ (-> ctx (get-play-card-text (game.define.runtime/value-of "0" :A)) (#(s/assert :game.define.card-text/value %)))])
 
   ; test gen-game-effects
-    (let [card (->> {:proto-id "179030_11E_U_BL209R_blue"}
-                    (merge game.define.card/value))
+    (let [card (merge (card/create) {:proto-id "179030_11E_U_BL209R_blue"})
           ctx (-> model
                   (add-card [:A :maintenance-area] "0" card)
                   (add-card [:B :maintenance-area] "1" card))

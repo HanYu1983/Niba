@@ -1,5 +1,5 @@
 (ns game.entity.model
-  (:require [game.component.table]))
+  (:require [game.component.table :refer [create-table]]))
 
 (def model (->> {:cuts []
                  :effects {}
@@ -8,4 +8,4 @@
                  :current-player-id :A
                  :card-proto-pool {}
                  :selection {}}
-                (merge game.component.table/table)))
+                (merge (create-table))))
