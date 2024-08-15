@@ -25,6 +25,9 @@
 
 (def card-text-value {:type :system})
 
+(defn create []
+  {:type :system})
+
 (defn get-conditions [text]
   (s/assert ::value text)
   (-> text :conditions))

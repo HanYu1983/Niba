@@ -5,3 +5,4 @@
 (defmethod game.data.dynamic/get-card-chars :default [ctx card-id] ["0"])
 (defmethod game.data.dynamic/get-card-color :default [ctx card-id] ["0"])
 (defmethod game.data.dynamic/is-card-color-blue :default [color] true)
+(defmethod game.data.dynamic/cut-in :default [ctx effect] true)
