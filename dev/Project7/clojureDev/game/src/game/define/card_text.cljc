@@ -12,11 +12,12 @@
                     :system #{:system}))
 (s/def ::tips ::script)
 (s/def ::action ::script)
-(s/def ::condition (s/tuple ::tips ::action))
+(s/def ::condition (s/keys :opt-un [::tips ::action]))
 (s/def ::conditions (s/map-of any? ::condition))
 (s/def ::events (s/coll-of ::script))
 (s/def ::game-effects (s/coll-of ::script))
-(s/def ::logic (s/tuple list? ::script))
+(s/def ::logic-tree list?)
+(s/def ::logic (s/keys :opt-un [::logic-tree ::action]))
 (s/def ::logics (s/map-of string? ::logic))
 (s/def ::is-surrounded-by-arrows boolean?)
 (s/def ::value (s/keys :req-un [::type]
@@ -41,11 +42,11 @@
 
 (defn get-logic-tree [logic]
   (s/assert ::logic logic)
-  (-> logic first))
+  (-> logic :logic-tree))
 
 (defn get-logic-action [logic]
   (s/assert ::logic logic)
-  (-> logic second))
+  (-> logic :action eval))
 
 (defn get-logic-conditions [text logic]
   (s/assert ::value text)
@@ -59,11 +60,11 @@
 
 (defn get-condition-tips [condition]
   (s/assert ::condition condition)
-  (-> condition first eval))
+  (-> condition :tips eval))
 
 (defn get-condition-action [condition]
   (s/assert ::condition condition)
-  (-> condition second eval))
+  (-> condition :action eval))
 
 (defn is-surrounded-by-arrows [text]
   (s/assert ::value text)
@@ -86,10 +87,12 @@
 (defn test-logic []
   (let [; P20
         ; 宣告play
-        text (->> {:conditions {"condition1" ['(fn [] :tips) '(fn [] :action)]
-                                "condition2" ['(fn []) '(fn [])]}
-                   :logics {"condition1 and condition2" ['(And (Leaf "condition1") (Leaf "condition2")) '(fn [])]
-                            "condition1" ['(Leaf "condition1") '(fn [])]}}
+        text (->> {:conditions {"condition1"
+                                {:tips '(fn [] :tips) :action '(fn [] :action)}
+                                "condition2"
+                                {:tips '(fn []) :action '(fn [])}}
+                   :logics {"condition1 and condition2" {:logic-tree '(And (Leaf "condition1") (Leaf "condition2")) :action '(fn [])}
+                            "condition1" {:logic-tree '(Leaf "condition1") :action '(fn [])}}}
                   (merge card-text-value)
                   (s/assert ::value))
         _ (-> text get-logics-ids vec (= ["condition1 and condition2" "condition1"]) (or (throw (ex-info "logic-options not right" {}))))
@@ -105,9 +108,11 @@
 
 (defn tests []
   (test-logic)
-  (s/assert ::value (merge card-text-value {:description ""
-                                            :events []
-                                            :game-effects []
-                                            :conditions {"" ['(fn []) '(fn [])]}
-                                            :logic {"" ['(And (Leaf "")) '(fn [])]}
-                                            :is-surrounded-by-arrows false})))
+  (->> {:description ""
+        :events []
+        :game-effects []
+        :conditions {"" {:tips '(fn []) :action '(fn [])}}
+        :logics {"" {:logic-tree '(And (Leaf "")) :action '(fn [])}}
+        :is-surrounded-by-arrows false}
+       (merge card-text-value)
+       (s/assert ::value)))

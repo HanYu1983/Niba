@@ -65,16 +65,11 @@
                              :events ['(fn [ctx runtime evt])]
                              :game-effects []
                              :conditions {"1"
-                                          ['(fn [ctx runtime]
-                                              [:card "0" "1"])
-                                           '(fn [ctx runtime selection]
-                                              #_(throw (ex-info "not in 2" {}))
-                                              ctx)]
+                                          {:tips '(fn [ctx runtime] [:card "0" "1"])
+                                           :action '(fn [ctx runtime selection] ctx)}
                                           "in-battle-phase"
-                                          ['(fn [ctx runtime] {:player :enemy})
-                                           '(fn [ctx runtime selection]
-                                              #_(throw (ex-info "not in" {}))
-                                              ctx)]}
+                                          {:tips '(fn [ctx runtime] {:player :enemy})
+                                           :action '(fn [ctx runtime selection] ctx)}}
                              :logic {""
                                      ['(And (Leaf "1")
                                             (Leaf "in-battle-phase"))
