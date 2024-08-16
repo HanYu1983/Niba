@@ -20,8 +20,6 @@
             [game.component.chip-table]
             [game.component.coin-table]
             [game.component.flags-player-status-component]
-            [game.entity.model]
-            [game.entity.model-flow]
             [game.data.core]))
 
 (def ^:dynamic cut-in nil)

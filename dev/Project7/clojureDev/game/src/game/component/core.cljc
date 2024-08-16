@@ -15,6 +15,18 @@
             [game.component.current-player]
             [game.component.card-table :refer [get-card get-card-protos-by-ids add-card]]
             [game.component.table :refer [create-table get-item-controller get-item-ids-by-ba-syou-keyword get-card-controller]]))
+
+(defn create-model []
+  (->> {:cuts []
+        :effects {}
+        :table-items {}
+        :phase [:reroll :start]
+        :current-player-id :A
+        :card-proto-pool {}
+        :selection {}}
+       (merge (create-table))
+       (s/assert :game.model-spec.core/is-model)))
+
 ; card-text helper
 (defn get-play-card-text [ctx runtime]
   (let [card-proto (-> runtime
@@ -156,13 +168,7 @@
 (def can-not-be-destroyed-card-ids-memo (memoize can-not-be-destroyed-card-ids))
 
 (defn test-play-card-text []
-  (let [model (->> {:cuts []
-                    :effects {}
-                    :table-items {}
-                    :phase [:reroll :start]
-                    :current-player-id :A
-                    :card-proto-pool {}}
-                   (merge (create-table)))
+  (let [model (create-model)
         ctx (-> model (add-card [:A :maintenance-area] "0" (merge (card/create) {:proto-id "179030_11E_U_BL209R_blue"})))
         runtime (runtime/value-of "0" :A)
         play-card-text (-> ctx (get-play-card-text runtime))
@@ -179,13 +185,7 @@
 
 (defn tests []
   (test-play-card-text)
-  (let [model (->> {:cuts []
-                    :effects {}
-                    :table-items {}
-                    :phase [:reroll :start]
-                    :current-player-id :A
-                    :card-proto-pool {}}
-                   (merge (create-table)))]
+  (let [model (create-model)]
   ; test gen-game-effects
     (let [card (merge (card/create) {:proto-id "179030_11E_U_BL209R_blue"})
           ctx (-> model

@@ -10,21 +10,21 @@
             [clojure.core.async :refer [go <!! timeout <!]]
             [clojure.core.match :refer [match]]
             [game.entity.model]
-            [game.entity.model-flow]))
+            [game.entity.model-flow :refer [exec-command query-command]]))
 
 (def model-atom (atom (-> game.entity.model-flow/model-flow (assoc :phase [:reroll :rule]))))
 
 (defroutes app
   (wrap-params
-   (POST "/fn/command" [player-id command :as r]
+   (POST "/fn/command" [player-id command :as _r]
      (let [model @model-atom
-           model (game.entity.model-flow/exec-command model (keyword player-id) (-> command read-string))
+           model (exec-command model (keyword player-id) (-> command read-string))
            _ (->> model (s/assert :game.entity.model-flow/spec) (reset! model-atom))]
        (str model))))
   (wrap-params
    (GET "/fn/command" [player-id]
      (let [model @model-atom
-           commands (game.entity.model-flow/query-command model (keyword player-id))]
+           commands (query-command model (keyword player-id))]
        (str commands))))
   (GET "/fn/model" []
     (let [model (->> @model-atom (s/assert :game.entity.model-flow/spec))]

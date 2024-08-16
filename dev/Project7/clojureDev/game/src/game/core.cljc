@@ -19,10 +19,9 @@
             [game.component.chip-table]
             [game.component.coin-table]
             [game.component.flags-player-status-component]
-            [game.entity.model]
-            [game.entity.model-flow]
             [game.data.core]
             [game.exp]
+            [game.model-flow.core]
             [game.binding-data-dynamic]))
 
 (defn -main [args]
@@ -46,4 +45,4 @@
   (game.component.chip-table/tests)
   (game.component.coin-table/tests)
   (game.component.flags-player-status-component/tests)
-  (game.entity.model-flow/tests))
+  (game.model-flow.core/tests))
