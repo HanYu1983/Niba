@@ -81,10 +81,9 @@
     (GET "/" [] (page-index))
     (GET "/battle" [] (battle-page))
     (GET "/fn/model" [] (str {:main "中文測試" :script '(fn [] (read-string "(fn [])"))}))
-    (wrap-params (POST "/fn/start_game" [game-id :as r]
+    (wrap-params (POST "/fn/start_game" [game-id :as _r]
                    (<!! (swap-model [:start-game game-id]))
                    (redirect "/")))
     (wrap-params (GET "/user/:id" [id greeting]
                    (str "<h1>" greeting " user " id "</h1>")))
-    (not-found "<h1>Page not found</h1>"))
-  )
+    (not-found "<h1>Page not found</h1>")))
