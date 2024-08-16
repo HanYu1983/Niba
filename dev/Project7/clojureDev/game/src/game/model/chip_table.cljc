@@ -1,4 +1,4 @@
-(ns game.component.chip-table
+(ns game.model.chip-table
   (:require [clojure.spec.alpha :as s]
             [tool.component.chip-table]
             [tool.card.table]

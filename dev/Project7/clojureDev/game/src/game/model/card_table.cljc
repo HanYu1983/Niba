@@ -1,4 +1,4 @@
-(ns game.component.card-table
+(ns game.model.card-table
   (:require [clojure.spec.alpha :as s]
             [tool.card.table]
             [tool.component.card-table]

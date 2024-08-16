@@ -9,16 +9,16 @@
             [game.define.selection]
             [game.define.timing]
             [game.define.battle-point]
-            [game.component.core]
-            [game.component.effect]
-            [game.component.table]
-            [game.component.phase]
-            [game.component.current-player]
-            [game.component.selection]
-            [game.component.card-table]
-            [game.component.chip-table]
-            [game.component.coin-table]
-            [game.component.flags-player-status-component]
+            [game.model.core]
+            [game.model.effect]
+            [game.model.table]
+            [game.model.phase]
+            [game.model.current-player]
+            [game.model.selection]
+            [game.model.card-table]
+            [game.model.chip-table]
+            [game.model.coin-table]
+            [game.model.flags-player-status-component]
             [game.data.core]
             [game.exp]
             [game.model-flow.core]
@@ -36,13 +36,13 @@
   (game.define.selection/tests)
   (game.define.timing/tests)
   (game.define.battle-point/tests)
-  (game.component.core/tests)
-  (game.component.effect/tests)
-  (game.component.table/tests)
-  (game.component.phase/tests)
-  (game.component.current-player/tests)
-  (game.component.card-table/tests)
-  (game.component.chip-table/tests)
-  (game.component.coin-table/tests)
-  (game.component.flags-player-status-component/tests)
+  (game.model.core/tests)
+  (game.model.effect/tests)
+  (game.model.table/tests)
+  (game.model.phase/tests)
+  (game.model.current-player/tests)
+  (game.model.card-table/tests)
+  (game.model.chip-table/tests)
+  (game.model.coin-table/tests)
+  (game.model.flags-player-status-component/tests)
   (game.model-flow.core/tests))

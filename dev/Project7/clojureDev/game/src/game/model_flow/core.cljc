@@ -11,13 +11,13 @@
             [game.define.timing :as timing]
             [game.define.effect :as effect]
             [game.model-spec.core]
-            [game.component.core :refer [create-model]]
-            [game.component.effect :refer [get-top-cut cut-in]]
-            [game.component.table :refer [get-effect-runtime get-effect-player-id]]
-            [game.component.phase :refer [get-phase next-phase]]
-            [game.component.current-player :refer [is-current-player get-attack-side]]
-            [game.component.selection]
-            [game.component.card-table]
+            [game.model.core :refer [create-model]]
+            [game.model.effect :refer [get-top-cut cut-in]]
+            [game.model.table :refer [get-effect-runtime get-effect-player-id]]
+            [game.model.phase :refer [get-phase next-phase]]
+            [game.model.current-player :refer [is-current-player get-attack-side]]
+            [game.model.selection]
+            [game.model.card-table]
             [game.flow.current-pay-component :refer [set-current-pay-effect
                                                      get-current-pay-effect
                                                      has-current-pay-effect
@@ -28,7 +28,7 @@
                                                      clear-current-pay-selection]]
             [game.flow.has-cuts-component :refer [get-has-cut set-has-cut clear-has-cut]]
             [game.flow.core :refer [create-flow]]))
-; model-flow
+
 (s/def ::spec (s/merge :game.model-spec.core/is-model
                        (s/keys :req-un [::flow])))
 (defn get-flow [ctx]
@@ -464,8 +464,8 @@
                                 (let [~'card-id (-> ~'runtime game.define.runtime/get-card-id)
                                       ~'to-ba-syou-id [~player-a :maintenance-area]
                                       ~'ctx (-> ~'ctx
-                                                (game.component.card-table/move-card [~player-a :te-hu-ta] ~'to-ba-syou-id ~'card-id)
-                                                (game.component.card-table/set-card-is-roll ~'to-ba-syou-id ~'card-id true))]
+                                                (game.model.card-table/move-card [~player-a :te-hu-ta] ~'to-ba-syou-id ~'card-id)
+                                                (game.model.card-table/set-card-is-roll ~'to-ba-syou-id ~'card-id true))]
                                   ~'ctx))}
         _ (println play-g-text)
         ctx model-flow

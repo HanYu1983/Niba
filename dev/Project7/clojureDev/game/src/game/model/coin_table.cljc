@@ -1,4 +1,4 @@
-(ns game.component.coin-table
+(ns game.model.coin-table
   (:require [clojure.spec.alpha :as s]
             [tool.component.coin-table]
             [game.define.coin]

@@ -1,4 +1,4 @@
-(ns game.component.flags-player-status-component
+(ns game.model.flags-player-status-component
   (:require [tool.component.flags-component :refer [set-flags has-flag remove-flags]]))
 
 (defn get-player-has-play-g-flag [player-id] [player-id :has-play-g])

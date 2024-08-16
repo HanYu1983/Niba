@@ -1,4 +1,4 @@
-(ns game.component.phase
+(ns game.model.phase
   (:require [clojure.spec.alpha :as s]
             [game.model-spec.core]
             [game.define.timing]))

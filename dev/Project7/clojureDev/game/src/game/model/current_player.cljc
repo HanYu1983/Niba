@@ -1,4 +1,4 @@
-(ns game.component.current-player
+(ns game.model.current-player
   (:require [clojure.spec.alpha :as s]
             [game.model-spec.core]
             [game.define.player]))

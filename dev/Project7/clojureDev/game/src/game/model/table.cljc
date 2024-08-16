@@ -1,4 +1,4 @@
-(ns game.component.table
+(ns game.model.table
   (:require [clojure.spec.alpha :as s]
             [clojure.core.match :refer [match]]
             [tool.card.table]
@@ -10,9 +10,9 @@
             [game.define.coin]
             [game.define.basyou]
             [game.model-spec.core]
-            [game.component.card-table :refer [create-card-table get-cards-by-ids is-card add-card get-card]]
-            [game.component.chip-table :refer [create-chip-table is-chip]]
-            [game.component.coin-table :refer [create-coin-table get-coin is-coin add-coin]]))
+            [game.model.card-table :refer [create-card-table get-cards-by-ids is-card add-card get-card]]
+            [game.model.chip-table :refer [create-chip-table is-chip]]
+            [game.model.coin-table :refer [create-coin-table get-coin is-coin add-coin]]))
 
 (defn create-table []
   (merge (create-card-table)

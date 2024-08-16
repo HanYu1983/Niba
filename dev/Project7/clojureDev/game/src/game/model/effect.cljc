@@ -1,4 +1,4 @@
-(ns game.component.effect
+(ns game.model.effect
   (:require [clojure.spec.alpha :as s]
             [tool.component.cuts]
             [tool.component.effect]

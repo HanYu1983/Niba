@@ -2,8 +2,8 @@
   (:require [clojure.spec.alpha :as s]
             [game.define.selection]
             [game.model-spec.core]
-            [game.component.selection]
-            [game.component.card-table]))
+            [game.model.selection]
+            [game.model.card-table]))
 (s/def ::has-cuts (s/coll-of :game.define.player/id :kind set?))
 (s/def ::has-cuts-component (s/keys :req-un [::has-cuts]))
 (defn get-has-cut [ctx id]

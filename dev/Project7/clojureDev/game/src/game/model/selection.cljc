@@ -1,4 +1,4 @@
-(ns game.component.selection
+(ns game.model.selection
   (:require [clojure.spec.alpha :as s]
             [game.define.selection]
             [game.model-spec.core]))

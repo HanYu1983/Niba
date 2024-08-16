@@ -1,4 +1,4 @@
-(ns game.component.current-effect
+(ns game.model.current-effect
   (:require [clojure.spec.alpha :as s]
             [game.model-spec.core]
             [game.define.effect]))

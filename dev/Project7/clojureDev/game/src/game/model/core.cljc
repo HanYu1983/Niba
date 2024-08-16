@@ -1,4 +1,4 @@
-(ns game.component.core
+(ns game.model.core
   (:require [clojure.spec.alpha :as s]
             [clojure.core.match :refer [match]]
             [game.data.core]
@@ -10,11 +10,11 @@
             [game.define.card-proto]
             [game.define.game-effect]
             [game.define.effect]
-            [game.component.effect]
-            [game.component.phase]
-            [game.component.current-player]
-            [game.component.card-table :refer [get-card get-card-protos-by-ids add-card]]
-            [game.component.table :refer [create-table get-item-controller get-item-ids-by-ba-syou-keyword get-card-controller]]))
+            [game.model.effect]
+            [game.model.phase]
+            [game.model.current-player]
+            [game.model.card-table :refer [get-card get-card-protos-by-ids add-card]]
+            [game.model.table :refer [create-table get-item-controller get-item-ids-by-ba-syou-keyword get-card-controller]]))
 
 (defn create-model []
   (->> {:cuts []

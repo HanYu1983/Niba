@@ -3,8 +3,8 @@
             [game.define.selection]
             [game.define.effect]
             [game.model-spec.core]
-            [game.component.selection]
-            [game.component.card-table]))
+            [game.model.selection]
+            [game.model.card-table]))
 
 (s/def ::current-pay-effect (s/nilable :game.define.effect/value))
 (s/def ::current-pay-logic-id (s/nilable any?))
