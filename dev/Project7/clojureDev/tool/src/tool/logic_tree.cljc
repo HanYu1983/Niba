@@ -17,6 +17,7 @@
 
 (defn enumerateAll [tree]
   (cond
+    (nil? tree) '()
     (or? tree) (mapcat enumerateAll (children tree))
     (and? tree) (reduce cross-product '(()) (map enumerateAll (children tree)))
     (leaf? tree) (list (list (second tree)))

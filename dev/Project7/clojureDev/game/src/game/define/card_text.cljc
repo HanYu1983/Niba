@@ -37,7 +37,8 @@
 (defn get-logics [text]
   (s/assert ::value text)
   (-> text :logics))
-(defn can-pass-conditions [text logic-id selection])
+(defn can-pass-conditions [text logic-id selection]
+  true)
 
 (defn get-logics-ids [text]
   (s/assert ::value text)

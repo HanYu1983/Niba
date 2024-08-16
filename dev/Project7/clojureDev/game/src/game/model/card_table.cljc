@@ -39,9 +39,9 @@
   (s/assert :game.define.basyou/spec from-ba-syou-id)
   (s/assert :game.define.basyou/spec to-ba-syou-id)
   (-> ctx (is-card card-id)
-      (or (throw (ex-info "card not found" {:card-id card-id} :card-not-found))))
+      (or (throw (ex-info "card not found" {:card-id card-id}))))
   (-> ctx get-table tool.card.table/get-decks (get from-ba-syou-id) (#(some #{card-id} %))
-      (or (throw (ex-info "card not found in ba-syou" {:ba-syou-id from-ba-syou-id} :card-not-found-in-ba-syou))))
+      (or (throw (ex-info "card not found in ba-syou" {:ba-syou-id from-ba-syou-id}))))
   (-> ctx
       get-table
       (tool.card.table/move-card from-ba-syou-id to-ba-syou-id card-id)

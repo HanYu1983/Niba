@@ -10,16 +10,18 @@
             [game.define.runtime :as runtime]
             [game.define.timing :as timing]
             [game.define.effect :as effect]
+            [game.define.card :as card]
             [game.model-spec.core]
             [game.model.core :refer [create-model]]
             [game.model.effect :refer [get-top-cut cut-in]]
-            [game.model.table :refer [get-effect-runtime get-effect-player-id]]
+            [game.model.card-table :refer [add-card]]
+            [game.model.table :refer [get-effect-runtime get-effect-player-id get-cards-by-ba-syou]]
             [game.model.phase :refer [get-phase next-phase set-phase]]
             [game.model.current-player :refer [is-current-player get-attack-side]]
             [game.model.selection]
-            [game.model.card-table]
             [game.flow.current-pay-component :refer [set-current-pay-effect
                                                      get-current-pay-effect
+                                                     clear-current-pay-effect
                                                      has-current-pay-effect
                                                      set-current-pay-logic-id
                                                      get-current-pay-logic-id
@@ -144,12 +146,14 @@
                       ; 執行支付(支付完後將效果從堆疊移除)
             [{:type :pay-conditions}]
             [{:type :wait :reason "等待對方支付"}])
-          (let [use-logic (-> text card-text/get-logics (get current-pay-logic-id))
+          (let [use-logic (-> text card-text/get-logics (get current-pay-logic-id)
+                              (or (throw (ex-info "所使用的邏輯不存在" {}))))
                 need-conditions (-> text (card-text/get-logic-conditions use-logic))
+                ; TODO: 過濾出我的條件
                 my-conditions need-conditions]
-                            ; 雙方都可以支付條件
+                ; 雙方都可以支付條件
             (if (-> my-conditions count zero?)
-              [{:type :wait :reason "等待對方支付條件"}]
+              [{:type :wait :reason "等待雙方都將條件完成支付"}]
               [{:type :set-selection
                 :logic-id (-> ctx get-flow get-current-pay-logic-id)
                 :conditions my-conditions}]))))
@@ -329,6 +333,25 @@
 (defn exec-command [ctx player-id cmd]
   (s/assert ::spec ctx)
   (match cmd
+    {:type :pay-conditions}
+    (let [effect (-> ctx get-flow get-current-pay-effect
+                     (or (throw (ex-info "正在支付的效果不存在" {}))))
+          text (-> effect game.define.effect/get-text)
+          logic-ids (-> text card-text/get-logics-ids)
+          ctx (if (-> logic-ids count pos? not)
+                ctx
+                (let [current-pay-logic-id (-> ctx get-flow get-current-pay-logic-id)
+                      logic (-> text card-text/get-logics (get current-pay-logic-id))
+                      conditions (-> text (card-text/get-logic-conditions logic))
+                      runtime (-> ctx (get-effect-runtime effect))
+                      ; 支付
+                      ctx (->> conditions vals (map card-text/get-condition-tips) (reduce (fn [ctx f] (f ctx)) ctx))
+                      ctx (->> conditions vals (map card-text/get-condition-action) (reduce (fn [ctx f] (f ctx)) ctx))
+                      ctx (-> logic (card-text/get-logic-action) (#(% ctx runtime)))]
+                  ctx))
+          ctx (-> ctx get-flow clear-current-pay-effect (#(set-flow ctx %)))]
+      ctx)
+
     {:type :handle-phase :current-phase current-phase}
     (do
       (-> ctx get-phase (= current-phase) (or (throw (ex-info "current-phase not match" {}))))
@@ -470,27 +493,47 @@
                     ])))]))
 
 (defn test-current-pay-effect-play-g []
-  (let [[player-a player-b] player/player-ids
+  (let [[player-a _player-b] player/player-ids
         play-g-text {:type :system
-                     :action `(fn [~'ctx ~'runtime]
-                                (let [~'card-id (-> ~'runtime game.define.runtime/get-card-id)
-                                      ~'to-ba-syou-id [~player-a :maintenance-area]
-                                      ~'ctx (-> ~'ctx
-                                                (game.model.card-table/move-card [~player-a :te-hu-ta] ~'to-ba-syou-id ~'card-id)
-                                                (game.model.card-table/set-card-is-roll ~'to-ba-syou-id ~'card-id true))]
-                                  ~'ctx))}
-        ;_ (println play-g-text)
+                     :logics {"出牌到G-zone"
+                              {:action `(fn [~'ctx ~'runtime]
+                                          (let [~'card-id (-> ~'runtime game.define.runtime/get-card-id)
+                                                ~'to-ba-syou-id [~player-a :maintenance-area]
+                                                ~'ctx (-> ~'ctx
+                                                          (game.model.card-table/move-card [~player-a :te-hu-ta] ~'to-ba-syou-id ~'card-id)
+                                                          (game.model.card-table/set-card-is-roll ~'to-ba-syou-id ~'card-id true))]
+                                            ~'ctx))}}}
         ctx (create-model-flow)
-        ctx (-> ctx 
-                get-flow 
+        ctx (-> ctx
+                get-flow
                 (set-current-pay-effect (->> {:reason (game.define.effect/value-of-play-card-reason player-a "0")
                                               :text play-g-text}
                                              (merge game.define.effect/effect-value)))
                 (#(set-flow ctx %))
+                (add-card [:A :te-hu-ta] "0" (merge (card/create) {:proto-id "179030_11E_U_BL209R_blue"}))
                 (#(s/assert ::spec %)))
+        _ (-> ctx (get-cards-by-ba-syou [player-a :te-hu-ta]) count (= 1) (or (throw (ex-info "player-a te-hu-ta must 1" {}))))
+        _ (-> ctx (get-cards-by-ba-syou [player-a :maintenance-area]) count zero? (or (throw (ex-info "player-a maintenance-area must 0" {}))))
         cmds (query-command ctx player-a)
-        ;_ (println cmds)
-        ]))
+        ctx (match cmds
+              [{:type :set-logic-id} & _] (exec-command ctx player-a (first cmds))
+              :else (throw (ex-info "must set-logic-id" {})))
+        cmds (query-command ctx player-a)
+        ;; _ (println cmds)
+        ;; ctx (match cmds
+        ;;       [{:type :wait} & _] ctx
+        ;;       :else (throw (ex-info "must wait" {})))
+        ;; cmds (query-command ctx player-b)
+        ;; _ (println cmds)
+        ctx (match cmds
+              [{:type :pay-conditions} & _] (exec-command ctx player-a (first cmds))
+              :else (throw (ex-info "must pay-conditions" {})))
+        cmds (query-command ctx player-a)
+        ctx (match cmds
+              [{:type :handle-phase} & _] ctx
+              :else (throw (ex-info "must handle-phase" {})))
+        _ (-> ctx (get-cards-by-ba-syou [player-a :te-hu-ta]) count zero? (or (throw (ex-info "player-a te-hu-ta must 0" {}))))
+        _ (-> ctx (get-cards-by-ba-syou [player-a :maintenance-area]) count (= 1) (or (throw (ex-info "player-a maintenance-area must 1" {}))))]))
 
 (defn tests []
   (test-selection)

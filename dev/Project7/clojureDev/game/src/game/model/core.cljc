@@ -38,13 +38,13 @@
               :conditions {"合計國力6"
                            {:tips '(fn [ctx runtime] ctx)
                             :action '(fn [ctx runtime]
-                                       (println "use total power 6")
+                                       (println "合計國力6")
                                        #_(-> ctx game.data.dynamic/get-my-g count (> 6)))}
                            "横置3個藍G"
                            {:tips '(fn [ctx runtime] ctx
                                      #_(-> ctx game.data.dynamic/get-my-g-can-tap))
                             :action '(fn [ctx runtime]
-                                       (println "reroll 3 blue g")
+                                       (println "横置3個藍G")
                                        ctx)}
                            "在手牌或hanger"
                            {:tips '(fn [ctx runtime] ctx) :action '(fn [ctx runtime] ctx)}

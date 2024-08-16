@@ -18,6 +18,9 @@
 (defn get-current-pay-effect [ctx]
   (s/assert ::current-pay-component ctx)
   (-> ctx :current-pay-effect))
+(defn clear-current-pay-effect [ctx]
+  (s/assert ::current-pay-component ctx)
+  (assoc ctx :current-pay-effect nil))
 (defn has-current-pay-effect [ctx]
   (s/assert ::current-pay-component ctx)
   (get-current-pay-effect ctx))
