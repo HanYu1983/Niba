@@ -1,4 +1,5 @@
 (ns game.core
+  (:import [java.lang Exception])
   (:require [clojure.core.match]
             [clojure.spec.alpha :as s]
             [game.define.card-proto]
@@ -24,7 +25,7 @@
             [game.model-flow.core]
             [game.binding-data-dynamic]))
 
-(defn -main [args]
+(defn -main [_args]
   (println "Running tests...")
   (s/check-asserts true)
   (try

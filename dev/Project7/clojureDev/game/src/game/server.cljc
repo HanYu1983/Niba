@@ -7,7 +7,7 @@
             [compojure.core :refer [defroutes GET POST]]
             [compojure.route :refer [not-found]]
             [hiccup.core :refer [html]]
-            [clojure.core.async :refer [go <!! timeout <!]]
+            [clojure.core.async :refer [go <!! <!]]
             [clojure.core.match :refer [match]]
             [game.entity.model]
             [game.entity.model-flow :refer [exec-command query-command]]))
@@ -32,7 +32,7 @@
   (not-found (str {:message "page not found"})))
 
 
-(defn -main [args]
+(defn -main [_args]
   (run-jetty app {:port 8081}))
 
 

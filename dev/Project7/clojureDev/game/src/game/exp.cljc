@@ -83,11 +83,11 @@
         _ (s/assert :game.define.card-proto/value (second card-proto-example))
         effect (atom nil)
         added-text (atom nil)
-        _ (binding [game.exp/cut-in (fn [ctx id eff]
+        _ (binding [game.exp/cut-in (fn [ctx _id eff]
                                        (s/assert :game.define.effect/value eff)
                                        (reset! effect eff)
                                        ctx)
-                    game.exp/add-text (fn [ctx id text]
+                    game.exp/add-text (fn [ctx _id text]
                                          (s/assert :game.define.card-text/value text)
                                          (reset! added-text text)
                                          ctx)]
