@@ -69,4 +69,5 @@
         _ (-> ctx (get-player-status player-a) get-has-play-g (or (throw (ex-info "must has-play-g" {}))))
         ctx (-> ctx (update-player-status player-a clear-has-play-g))
         _ (-> ctx (get-player-status player-a) get-has-play-g not (or (throw (ex-info "must no has-play-g" {}))))
-        _ (println ctx)]))
+        ;_ (println ctx)
+        ]))

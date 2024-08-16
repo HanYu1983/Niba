@@ -11,4 +11,5 @@
         _ (-> ctx (has-flag has-play-g-flag) (or (throw (ex-info "must has-play-g" {}))))
         ctx (-> ctx (remove-flags #{has-play-g-flag}))
         _ (-> ctx (has-flag has-play-g-flag) not (or (throw (ex-info "must no has-play-g" {}))))
-        _ (println ctx)]))
+        ;_ (println ctx)
+        ]))

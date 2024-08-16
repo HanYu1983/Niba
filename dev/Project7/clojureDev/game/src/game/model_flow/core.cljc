@@ -14,7 +14,7 @@
             [game.model.core :refer [create-model]]
             [game.model.effect :refer [get-top-cut cut-in]]
             [game.model.table :refer [get-effect-runtime get-effect-player-id]]
-            [game.model.phase :refer [get-phase next-phase]]
+            [game.model.phase :refer [get-phase next-phase set-phase]]
             [game.model.current-player :refer [is-current-player get-attack-side]]
             [game.model.selection]
             [game.model.card-table]
@@ -30,14 +30,16 @@
             [game.flow.core :refer [create-flow]]))
 
 (s/def ::spec (s/merge :game.model-spec.core/is-model
-                       (s/keys :req-un [::flow])))
+                       (s/keys :req-un [:game.flow.core/flow])))
+
+(defn create-model-flow []
+  (assoc (create-model) :flow (create-flow)))
 (defn get-flow [ctx]
   (s/assert ::spec ctx)
   (-> ctx :flow))
 (defn set-flow [ctx flow]
   (s/assert ::spec ctx)
   (assoc ctx :flow flow))
-(def model-flow (assoc (create-model) :flow (create-flow)))
 
 (defn has-destroy-effects [ctx player-id])
 (defn has-immediate-effects [ctx player-id])
@@ -359,8 +361,13 @@
 
 (defn test-selection []
   (let [player-id :A
-        ctx (s/assert ::spec (update model-flow :flow merge {:current-pay-effect game.define.effect/effect-value
-                                                             :current-pay-selection {"" [[:card 0 1 2] [:count 1]]}}))
+        ctx (create-model-flow)
+        ctx (-> ctx
+                get-flow
+                (set-current-pay-effect game.define.effect/effect-value)
+                (set-current-pay-selection "" [[:card 0 1 2] [:count 1]])
+                (#(set-flow ctx %))
+                (#(s/assert ::spec %)))
         cmds (query-command ctx player-id)
         _ (match cmds
             [{:type :pay-conditions} & _] true
@@ -368,7 +375,9 @@
 
 (defn test-cut []
   (let [player-id :A
-        ctx (s/assert ::spec (-> model-flow (cut-in "effect-1" {:reason [:system :A] :text card-text/card-text-value})))
+        ctx (-> (create-model-flow)
+                (cut-in "effect-1" {:reason [:system :A] :text card-text/card-text-value})
+                (#(s/assert ::spec %)))
         cmds (query-command ctx player-id)
         _ (match cmds
             [{:type :wait} & _] true
@@ -380,7 +389,9 @@
 
 (defn test-next-phase []
   (let [player-id :A
-        ctx (s/assert ::spec (assoc model-flow :phase [:reroll :rule]))
+        ctx (-> (create-model-flow)
+                (set-phase [:reroll :rule])
+                (#(s/assert ::spec %)))
         cmds (query-command ctx player-id)
         _ (match cmds
             [{:type :handle-phase :current-phase [:reroll :rule]}] true
@@ -396,7 +407,7 @@
 
 (defn test-next-phase2 []
   (let [[player-a player-b] player/player-ids
-        ctx (s/assert ::spec model-flow)]
+        ctx (s/assert ::spec (create-model-flow))]
     (loop [i 0
            ctx ctx]
       (if (> i 70)
@@ -404,9 +415,9 @@
           ;(println ctx)
           (-> ctx get-phase (= [:reroll :start]) (or (throw (ex-info "must [:reroll :start]" {}))))
           ctx)
-        (let [_ (println "current-phase" (-> ctx get-phase))
+        (let [;_ (println "current-phase" (-> ctx get-phase))
               cmds (query-command ctx player-a)
-              _ (println player-a "cmds" cmds)
+              ;_ (println player-a "cmds" cmds)
               ctx (match cmds
                     [{:type :handle-phase} & _]
                     (exec-command ctx player-a (first cmds))
@@ -431,7 +442,7 @@
 
 (defn test-current-pay-effect []
   (let [[player-a player-b] player/player-ids
-        ctx model-flow
+        ctx (create-model-flow)
         ctx (-> ctx get-flow (set-current-pay-effect (merge game.define.effect/effect-value
                                                             {:reason [:system (get-attack-side ctx)]
                                                              :text {:type :system
@@ -447,15 +458,16 @@
                 (#(set-flow ctx %))
                 (#(s/assert ::spec %)))
         cmds (query-command ctx player-a)
-        _ (println cmds)
+        ;_ (println cmds)
         _ (match cmds
             [{:type :set-logic-id :logic-ids logic-ids} & _]
             (do
               (-> logic-ids count pos? (or (throw (ex-info "logic-ids count must > 0" {}))))
               (let [ctx (exec-command ctx player-a (first cmds))
-                    _ (println ctx)
+                    ;_ (println ctx)
                     cmds (query-command ctx player-a)
-                    _ (println cmds)])))]))
+                    ;_ (println cmds)
+                    ])))]))
 
 (defn test-current-pay-effect-play-g []
   (let [[player-a player-b] player/player-ids
@@ -467,15 +479,18 @@
                                                 (game.model.card-table/move-card [~player-a :te-hu-ta] ~'to-ba-syou-id ~'card-id)
                                                 (game.model.card-table/set-card-is-roll ~'to-ba-syou-id ~'card-id true))]
                                   ~'ctx))}
-        _ (println play-g-text)
-        ctx model-flow
-        ctx (-> ctx get-flow (set-current-pay-effect (->> {:reason (game.define.effect/value-of-play-card-reason player-a "0")
-                                                           :text play-g-text}
-                                                          (merge game.define.effect/effect-value)))
+        ;_ (println play-g-text)
+        ctx (create-model-flow)
+        ctx (-> ctx 
+                get-flow 
+                (set-current-pay-effect (->> {:reason (game.define.effect/value-of-play-card-reason player-a "0")
+                                              :text play-g-text}
+                                             (merge game.define.effect/effect-value)))
                 (#(set-flow ctx %))
                 (#(s/assert ::spec %)))
         cmds (query-command ctx player-a)
-        _ (println cmds)]))
+        ;_ (println cmds)
+        ]))
 
 (defn tests []
   (test-selection)
