@@ -183,7 +183,6 @@
         _ (-> ctx (get-cards-by-ba-syou [player-a :te-hu-ta]) count zero? (or (throw (ex-info "player-a te-hu-ta must 0" {}))))
         _ (-> ctx (get-cards-by-ba-syou [player-a :played-card]) count (= 1) (or (throw (ex-info "player-a played-card must 1" {}))))
         _ (-> ctx get-top-cut count (= 1) (or (throw (ex-info "must has cut 1" {}))))
-        _ (println ctx)
         ctx (-> ctx str read-string)
         top-effect (-> ctx get-top-cut first)
         text (effect/get-text top-effect)
