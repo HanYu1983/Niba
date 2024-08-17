@@ -1,6 +1,6 @@
 (ns game.data.dynamic)
 
-(defmulti cut-in :data-dynamic)
+(defmulti cut-in (fn [ctx effect-id effect] (-> ctx :data-dynamic)))
 (defmulti add-text :data-dynamic)
 (defmulti delete-text :data-dynamic)
 (defmulti get-card-proto :data-dynamic)

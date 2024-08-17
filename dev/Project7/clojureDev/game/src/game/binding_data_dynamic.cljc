@@ -2,7 +2,9 @@
   (:require [game.data.dynamic]
             [game.define.runtime :as runtime]
             [game.model.core :refer [get-runtime-card-id get-runtime-player-id]]
-            [game.model.card-table :refer [move-card]]))
+            [game.model.card-table :refer [move-card]]
+            [game.model.effect :refer [cut-in]]
+            [game.define.effect :as effect]))
 
 ;; (defmethod game.data.dynamic/get-my-g :default [ctx player-id] ["0"])
 ;; (defmethod game.data.dynamic/get-card-chars :default [ctx card-id] ["0"])
@@ -10,7 +12,7 @@
 ;; (defmethod game.data.dynamic/is-card-color-blue :default [color] true)
 ;; (defmethod game.data.dynamic/cut-in :default [ctx effect] true)
 
-(defmethod game.data.dynamic/cut-in :default [ctx effect] true)
+(defmethod game.data.dynamic/cut-in :default [ctx effect-id effect] (cut-in ctx effect-id effect))
 (defmethod game.data.dynamic/add-text :default [ctx card-id text] ctx)
 (defmethod game.data.dynamic/delete-text :default [ctx card-id text] ctx)
 (defmethod game.data.dynamic/get-card-proto :default [ctx card-id] {})

@@ -50,7 +50,7 @@
 
 (defn get-logic-action [logic]
   (s/assert ::logic logic)
-  (-> logic :action eval))
+  (-> logic :action (or (throw (ex-info ":action not found" logic))) eval))
 
 (defn get-logic-conditions [text logic]
   (s/assert ::value text)

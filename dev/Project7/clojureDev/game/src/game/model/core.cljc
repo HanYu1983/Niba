@@ -12,11 +12,17 @@
             [game.define.card-proto :as card-proto]
             [game.define.game-effect]
             [game.define.effect]
-            [game.model.effect]
+            [game.model.effect :refer [get-top-cut]]
             [game.model.phase]
             [game.model.current-player]
             [game.model.card-table :refer [get-card get-card-protos-by-ids add-card]]
-            [game.model.table :refer [create-table get-item-controller get-item-ids-by-ba-syou-keyword get-card-controller get-cards-by-ba-syou]]))
+            [game.model.table :refer [create-table
+                                      get-item-controller
+                                      get-item-ids-by-ba-syou-keyword
+                                      get-card-controller
+                                      get-cards-by-ba-syou
+                                      get-effect-runtime]]
+            [game.define.effect :as effect]))
 
 (defn create-model []
   (->> {:cuts []
@@ -54,9 +60,8 @@
 (defn get-play-g-text [ctx runtime])
 
 (defn get-play-card-text [ctx runtime]
-  (let [card-id (get-runtime-card-id ctx runtime)
-        card-proto (get-card-proto ctx card-id)
-        card-runtime-type (get-card-runtime-type ctx card-id)
+  (let [card-id (get-runtime-card-id ctx runtime) 
+        card-runtime-type (get-card-runtime-type ctx card-id) 
         common-conditions {"合計國力6"
                            {:tips '(fn [ctx runtime] ctx)
                             :action '(fn [ctx runtime]
@@ -101,41 +106,101 @@
                 :logics {"出機體"
                          {:logic-tree '(And (Leaf "合計國力6") (Leaf "横置3個藍G") (Leaf "在手牌或hanger") (Leaf "在配備階段") (Leaf "放到play-card-zone"))
                           :action '(fn [ctx runtime]
-                                     (game.data.dynamic/cut-in ctx (->> {:reason [:play-card "" ""]
-                                                                         :text (->> {:type :system
-                                                                                     :logics {"移到場上"
-                                                                                              {:action '(fn [ctx runtime]
-                                                                                                          (let [card-id (game.data.dynamic/get-runtime-card-id ctx runtime)
-                                                                                                                player-id (game.data.dynamic/get-runtime-player-id ctx runtime)
-                                                                                                                ctx (-> ctx (game.data.dynamic/move-card [player-id :played-card] [player-id :maintenance-area] card-id))]
-                                                                                                            ctx))}}}
-                                                                                    (merge game.define.card-text/card-text-value)
-                                                                                    (clojure.spec.alpha/assert :game.define.card-text/value))}
-                                                                        (merge game.define.effect/effect-value)
-                                                                        (clojure.spec.alpha/assert :game.define.effect/value))))}}}
-               
+                                     (game.data.dynamic/cut-in ctx "出機體"
+                                                               (->> {:reason [:play-card "" ""]
+                                                                     :text (->> {:type :system
+                                                                                 :logics {"移到場上"
+                                                                                          {:action '(fn [ctx runtime]
+                                                                                                      (let [card-id (game.data.dynamic/get-runtime-card-id ctx runtime)
+                                                                                                            player-id (game.data.dynamic/get-runtime-player-id ctx runtime)
+                                                                                                            ctx (-> ctx (game.data.dynamic/move-card [player-id :played-card] [player-id :maintenance-area] card-id))]
+                                                                                                        ctx))}}}
+                                                                                (merge game.define.card-text/card-text-value)
+                                                                                (clojure.spec.alpha/assert :game.define.card-text/value))}
+                                                                    (merge game.define.effect/effect-value)
+                                                                    (clojure.spec.alpha/assert :game.define.effect/value))))}}}
+
                :command
-               {:type [:automatic :constant]
-                :conditions common-conditions
-                :logics {"出指令"
-                         {:logic-tree '(And (Leaf "合計國力6") (Leaf "横置3個藍G") (Leaf "在手牌或hanger") (Leaf "在配備階段") (Leaf "放到play-card-zone"))
-                          :action '(fn [ctx runtime]
-                                     (game.data.dynamic/cut-in ctx (->> {:reason [:play-card "" ""]
+               (let [; 將script的list轉為字串, 不然再子腳本會被解為記憶體的引用, 這樣就無法正確儲存
+                     ; 字腳本要使用時, 先read-string再eval變成函式
+                     command-action (-> ctx (get-card-proto card-id) card-proto/get-command-action str)]
+                 {:type [:automatic :constant]
+                  :conditions common-conditions
+                  :logics {"出指令"
+                           {:logic-tree '(And (Leaf "合計國力6") (Leaf "横置3個藍G") (Leaf "在手牌或hanger") (Leaf "在配備階段") (Leaf "放到play-card-zone"))
+                            :action `(fn [~'ctx ~'runtime]
+                                       (let [~'card-id (game.data.dynamic/get-runtime-card-id ~'ctx ~'runtime)
+                                             ~'player-id (game.data.dynamic/get-runtime-player-id ~'ctx ~'runtime)]
+                                         (game.data.dynamic/cut-in ~'ctx "出指令"
+                                                                   (->> {:reason [:play-card ~'player-id ~'card-id]
                                                                          :text (->> {:type :system
-                                                                                     :logics {"移到墓地"
-                                                                                              {:action '(fn [ctx runtime]
-                                                                                                          (let [card-id (game.data.dynamic/get-runtime-card-id ctx runtime)
-                                                                                                                player-id (game.data.dynamic/get-runtime-player-id ctx runtime)
-                                                                                                                ctx (-> ctx (game.data.dynamic/move-card [player-id :played-card] [player-id :junk-yard] card-id))]
-                                                                                                            ctx))}}}
+                                                                                     :logics {"移到墓地並發動指令效果"
+                                                                                              {:action `(fn [~~''ctx ~~''runtime]
+                                                                                                          (let [~~''card-id (game.data.dynamic/get-runtime-card-id ~~''ctx ~~''runtime)
+                                                                                                                ~~''player-id (game.data.dynamic/get-runtime-player-id ~~''ctx ~~''runtime)
+                                                                                                                ~~''ctx (-> ~~''ctx (game.data.dynamic/move-card [~~''player-id :played-card] [~~''player-id :junk-yard] ~~''card-id))
+                                                                                                                ~~''command-action (-> ~~command-action read-string eval)
+                                                                                                                ~~''ctx (~~''command-action ~~''ctx ~~''runtime)]
+                                                                                                            ~~''ctx))}}}
                                                                                     (merge game.define.card-text/card-text-value)
                                                                                     (clojure.spec.alpha/assert :game.define.card-text/value))}
                                                                         (merge game.define.effect/effect-value)
-                                                                        (clojure.spec.alpha/assert :game.define.effect/value))))}}}
-               
-               :else (throw (ex-info "not impl yet" {:card-runtime-type card-runtime-type})))
+                                                                        (clojure.spec.alpha/assert :game.define.effect/value)))))}}})
+
+               (throw (ex-info "not impl yet" {:card-runtime-type card-runtime-type})))
         _ (s/assert :game.define.card-text/value text)]
     text))
+
+(defn test-play-card-text []
+  (let [player-a :A
+        model (create-model)
+        ctx (-> model (add-card [player-a :te-hu-ta] "0" (merge (card/create) {:proto-id "179030_11E_U_BL209R_blue"})))
+        runtime (runtime/value-of "0" player-a)
+        play-card-text (-> ctx (get-play-card-text runtime))
+        ; 指定對象, 對象無法滿足的話不能play
+        logic (-> play-card-text
+                  card-text/get-logics
+                  (get (-> play-card-text card-text/get-logics-ids first)))
+        conditions (-> play-card-text (card-text/get-logic-conditions logic))
+        ; 支付
+        ctx (->> conditions vals (map card-text/get-condition-tips) (map (fn [f] (or f identity))) (reduce (fn [ctx f] (f ctx runtime)) ctx)) 
+        ctx (->> conditions vals (map card-text/get-condition-action) (map (fn [f] (or f identity))) (reduce (fn [ctx f] (f ctx runtime)) ctx))
+        ; 效果發生
+        ctx (-> logic (card-text/get-logic-action) (#(% ctx runtime)))
+        _ (-> ctx (get-cards-by-ba-syou [player-a :te-hu-ta]) count zero? (or (throw (ex-info "player-a te-hu-ta must 0" {}))))
+        _ (-> ctx (get-cards-by-ba-syou [player-a :played-card]) count (= 1) (or (throw (ex-info "player-a played-card must 1" {}))))]))
+
+(defn test-play-card-text-2 []
+  (let [player-a :A
+        model (create-model)
+        ctx (-> model (add-card [player-a :te-hu-ta] "0" (merge (card/create) {:proto-id "test_command"})))
+        runtime (runtime/value-of "0" player-a)
+        text (-> ctx (get-play-card-text runtime))
+        ; 指定對象, 對象無法滿足的話不能play
+        logic (-> text
+                  card-text/get-logics
+                  (get (-> text card-text/get-logics-ids first)))
+        conditions (-> text (card-text/get-logic-conditions logic))
+        ; 支付
+        ctx (->> conditions vals (map card-text/get-condition-tips) (map (fn [f] (or f identity))) (reduce (fn [ctx f] (f ctx runtime)) ctx))
+        ctx (->> conditions vals (map card-text/get-condition-action) (map (fn [f] (or f identity))) (reduce (fn [ctx f] (f ctx runtime)) ctx))
+        ; 效果發生
+        ctx (-> logic card-text/get-logic-action (#(% ctx runtime)))
+        _ (-> ctx (get-cards-by-ba-syou [player-a :te-hu-ta]) count zero? (or (throw (ex-info "player-a te-hu-ta must 0" {}))))
+        _ (-> ctx (get-cards-by-ba-syou [player-a :played-card]) count (= 1) (or (throw (ex-info "player-a played-card must 1" {}))))
+        _ (-> ctx get-top-cut count (= 1) (or (throw (ex-info "must has cut 1" {}))))
+        top-effect (-> ctx get-top-cut first)
+        runtime (get-effect-runtime ctx top-effect)
+        text (effect/get-text top-effect)
+        logic (-> text
+                  card-text/get-logics
+                  (get (-> text card-text/get-logics-ids first)))
+        conditions (-> text (card-text/get-logic-conditions logic))
+        ; 支付
+        ctx (->> conditions vals (map card-text/get-condition-tips) (map (fn [f] (or f identity))) (reduce (fn [ctx f] (f ctx runtime)) ctx))
+        ctx (->> conditions vals (map card-text/get-condition-action) (map (fn [f] (or f identity))) (reduce (fn [ctx f] (f ctx runtime)) ctx))
+        ; 效果發生
+        ctx (-> logic card-text/get-logic-action (#(% ctx runtime)))]))
 
 (defn gen-game-effects-1 [ctx]
   (let [; g
@@ -237,27 +302,11 @@
 
 (def can-not-be-destroyed-card-ids-memo (memoize can-not-be-destroyed-card-ids))
 
-(defn test-play-card-text []
-  (let [player-a :A
-        model (create-model)
-        ctx (-> model (add-card [player-a :te-hu-ta] "0" (merge (card/create) {:proto-id "179030_11E_U_BL209R_blue"})))
-        runtime (runtime/value-of "0" player-a)
-        play-card-text (-> ctx (get-play-card-text runtime))
-        ; 指定對象, 對象無法滿足的話不能play
-        logic (-> play-card-text
-                  card-text/get-logics
-                  (get (-> play-card-text card-text/get-logics-ids first)))
-        conditions (-> play-card-text (card-text/get-logic-conditions logic))
-        ; 支付
-        ctx (->> conditions vals (map card-text/get-condition-tips) (map (fn [f] (or f identity))) (reduce (fn [ctx f] (f ctx runtime)) ctx))
-        ctx (->> conditions vals (map card-text/get-condition-action) (map (fn [f] (or f identity))) (reduce (fn [ctx f] (f ctx runtime)) ctx))
-        ; 效果發生
-        _ctx (-> logic (card-text/get-logic-action) (#(% ctx runtime)))
-        _ (-> ctx (get-cards-by-ba-syou [player-a :te-hu-ta]) count zero? (or (throw (ex-info "player-a te-hu-ta must 0" {}))))
-        _ (-> ctx (get-cards-by-ba-syou [player-a :played-card]) count (= 1) (or (throw (ex-info "player-a played-card must 1" {}))))]))
+
 
 (defn tests []
   (test-play-card-text)
+  (test-play-card-text-2)
   (let [model (create-model)]
   ; test gen-game-effects
     (let [card (merge (card/create) {:proto-id "179030_11E_U_BL209R_blue"})

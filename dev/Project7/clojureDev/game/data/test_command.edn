@@ -1,0 +1,7 @@
+{:id "test_command"
+ :gsign [:blue :uc]
+ :type :command
+ :texts {}
+ :command-action '(fn [ctx runtime]
+                    (println "command action!!")
+                    ctx)}

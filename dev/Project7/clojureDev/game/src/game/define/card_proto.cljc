@@ -5,12 +5,14 @@
             [tool.logic-tree]
             [game.define.card-text]
             [game.define.gsign]))
+(s/def ::script :game.define.card-text/script)
 (s/def ::texts (s/map-of any? :game.define.card-text/value))
 (s/def ::type #{:unit :character :command :operation :operation-unit :graphic :ace})
 (s/def ::gsign :game.define.gsign/spec)
 (s/def ::play-card (s/keys :req-un [:game.define.card-text/script :game.define.card-text/use-timing]))
+(s/def ::command-action ::script)
 (s/def ::value (s/keys :req-un [::type ::gsign ::texts]
-                       :opt-un [::battle-point ::cost ::pack ::char ::play-card]))
+                       :opt-un [::battle-point ::cost ::pack ::char ::play-card ::command-action]))
 
 (def card-proto {:gsign [:blue :uc]
                  :type :unit
@@ -25,6 +27,11 @@
 (defn get-texts [ctx]
   (s/assert ::value ctx)
   (-> ctx :texts))
+
+(defn get-command-action [ctx]
+  (s/assert ::value ctx)
+  (-> ctx :command-action
+      (or (throw (ex-info "command-action not found" ctx)))))
 
 (defn do-logic [ctx runtime card-proto text-id logic selections]
   (let [text (-> card-proto get-texts (get text-id))
