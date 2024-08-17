@@ -345,8 +345,8 @@
                       conditions (-> text (card-text/get-logic-conditions logic))
                       runtime (-> ctx (get-effect-runtime effect))
                       ; 支付
-                      ctx (->> conditions vals (map card-text/get-condition-tips) (reduce (fn [ctx f] (f ctx)) ctx))
-                      ctx (->> conditions vals (map card-text/get-condition-action) (reduce (fn [ctx f] (f ctx)) ctx))
+                      ctx (->> conditions vals (map card-text/get-condition-tips) (map (fn [f] (or f identity))) (reduce (fn [ctx f] (f ctx runtime)) ctx))
+                      ctx (->> conditions vals (map card-text/get-condition-action) (map (fn [f] (or f identity))) (reduce (fn [ctx f] (f ctx runtime)) ctx))
                       ctx (-> logic (card-text/get-logic-action) (#(% ctx runtime)))]
                   ctx))
           ctx (-> ctx get-flow clear-current-pay-effect (#(set-flow ctx %)))]

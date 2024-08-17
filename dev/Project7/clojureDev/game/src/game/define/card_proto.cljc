@@ -18,6 +18,10 @@
                              :script '(fn [ctx runtime] game.define.card-text/card-text-value)}
                  :texts {}})
 
+(defn get-type [ctx]
+  (s/assert ::value ctx)
+  (-> ctx :type))
+
 (defn get-texts [ctx]
   (s/assert ::value ctx)
   (-> ctx :texts))

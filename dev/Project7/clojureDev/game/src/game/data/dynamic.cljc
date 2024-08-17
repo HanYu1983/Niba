@@ -13,3 +13,7 @@
 (defmulti get-my-hand :data-dynamic)
 (defmulti get-card-state :data-dynamic)
 (defmulti set-card-state :data-dynamic)
+(defmulti move-card (fn [ctx from to card-id] (-> ctx :data-dynamic)))
+(defmulti get-runtime-card-id (fn [ctx runtime] (-> ctx :data-dynamic)))
+(defmulti get-runtime-player-id (fn [ctx runtime] (-> ctx :data-dynamic)))
+(defmulti get-card-runtime-type (fn [ctx card-id] (-> ctx :data-dynamic)))
