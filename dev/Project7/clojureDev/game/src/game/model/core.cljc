@@ -200,7 +200,9 @@
         ctx (->> conditions vals (map card-text/get-condition-tips) (map (fn [f] (or f identity))) (reduce (fn [ctx f] (f ctx runtime)) ctx))
         ctx (->> conditions vals (map card-text/get-condition-action) (map (fn [f] (or f identity))) (reduce (fn [ctx f] (f ctx runtime)) ctx))
         ; 效果發生
-        ctx (-> logic card-text/get-logic-action (#(% ctx runtime)))]))
+        ctx (-> logic card-text/get-logic-action (#(% ctx runtime)))
+        _ (-> ctx (get-cards-by-ba-syou [player-a :played-card]) count zero? (or (throw (ex-info "player-a played-card must 0" {}))))
+        _ (-> ctx (get-cards-by-ba-syou [player-a :junk-yard]) count (= 1) (or (throw (ex-info "player-a junk-yard must 1" {}))))]))
 
 (defn gen-game-effects-1 [ctx]
   (let [; g
