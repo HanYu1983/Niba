@@ -20,8 +20,7 @@
                                                  (mapcat (fn [g-card-id]
                                                            (game.data.dynamic/get-card-chars ctx g-card-id))
                                                          g-card-ids)))
-                                              #_(contains? "装弾")
-                                              )]
+                                              #_(contains? "装弾"))]
                               (when true
                                 ["合計国力+Nしてプレイできる" [card-id] -1 {:from-card-id card-id}])))]}
          "『常駐』：青のGサインを持つ自軍Gが５枚以上ある場合、このカードと同じエリアにいる全ての自軍ユニットは、敵軍効果では破壊されずダメージを受けない。"
@@ -29,17 +28,14 @@
           :game-effects ['(fn [ctx runtime]
                             (let [card-id (-> runtime game.define.runtime/get-card-id)
                                   player-id (-> runtime game.define.runtime/get-player-id)
-                                  is-every-blue-g (-> ctx 
-                                                      (game.data.dynamic/get-my-g player-id) 
-                                                      ((fn [g-card-ids] 
-                                                         (map (fn [card-id] (game.data.dynamic/get-card-color ctx card-id)) g-card-ids))) 
+                                  is-every-blue-g (-> ctx
+                                                      (game.data.dynamic/get-my-g player-id)
+                                                      ((fn [g-card-ids]
+                                                         (map (fn [card-id] (game.data.dynamic/get-card-color ctx card-id)) g-card-ids)))
                                                       ((fn [colors]
                                                          (every? game.data.dynamic/is-card-color-blue colors))))
                                   is-my-g-more-then-5 (-> ctx (game.data.dynamic/get-my-g player-id) count (> 5))
                                   enabled (and is-every-blue-g is-my-g-more-then-5)
                                   unit-in-the-same-area ["0" "1" "2"]]
                               (when true
-                                ["敵軍効果では破壊されずダメージを受けない" unit-in-the-same-area {:from-card-id card-id}])))]}}
- :play-card {:use-timing [:maintenance :own]
-             :script '(fn [ctx runtime]
-                        #_(helper/get-play-card-text 6 [:blue :blue :blue]))}}
+                                ["敵軍効果では破壊されずダメージを受けない" unit-in-the-same-area {:from-card-id card-id}])))]}}}

@@ -9,15 +9,12 @@
 (s/def ::texts (s/map-of any? :game.define.card-text/value))
 (s/def ::type #{:unit :character :command :operation :operation-unit :graphic :ace})
 (s/def ::gsign :game.define.gsign/spec)
-(s/def ::play-card (s/keys :req-un [:game.define.card-text/script :game.define.card-text/use-timing]))
 (s/def ::command-action ::script)
 (s/def ::value (s/keys :req-un [::type ::gsign ::texts]
-                       :opt-un [::battle-point ::cost ::pack ::char ::play-card ::command-action]))
+                       :opt-un [::battle-point ::cost ::pack ::char ::command-action]))
 
 (def card-proto {:gsign [:blue :uc]
                  :type :unit
-                 :play-card {:use-timing [:any :any]
-                             :script '(fn [ctx runtime] game.define.card-text/card-text-value)}
                  :texts {}})
 
 (defn get-type [ctx]
@@ -28,7 +25,7 @@
   (s/assert ::value ctx)
   (-> ctx :texts))
 
-(defn get-raw-command-action [ctx]
+(defn get-command-action-script [ctx]
   (s/assert ::value ctx)
   (-> ctx :command-action
       (or (throw (ex-info "command-action not found" ctx)))))
@@ -68,10 +65,7 @@
 (defn test-do-logic []
   (let [ctx {}
         runtime {}
-        card-proto {:play-card {:use-timing [:any :any]
-                                :script '(fn [ctx runtime]
-                                           game.define.card-text/card-text-value)}
-                    :texts {"gundam-text-1"
+        card-proto {:texts {"gundam-text-1"
                             {:type [:special [:psycommu 3]]
                              :events ['(fn [ctx runtime evt])]
                              :game-effects []

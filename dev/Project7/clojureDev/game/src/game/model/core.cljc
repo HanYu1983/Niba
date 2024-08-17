@@ -56,6 +56,16 @@
       (match [_ :g-zone] :graphic :else (get-card-type ctx card-id))
       (#(s/assert :game.define.card-proto/type %))))
 
+(defn perform-text-logic [ctx text logic-id runtime]
+  (let [logic (-> text card-text/get-logics (get logic-id))
+        conditions (-> text (card-text/get-logic-conditions logic))
+        ; 支付
+        ctx (->> conditions vals (map card-text/get-condition-tips) (map (fn [f] (or f identity))) (reduce (fn [ctx f] (f ctx runtime)) ctx))
+        ctx (->> conditions vals (map card-text/get-condition-action) (map (fn [f] (or f identity))) (reduce (fn [ctx f] (f ctx runtime)) ctx))
+        ; 效果發生
+        ctx (-> logic (card-text/get-logic-action) (#(% ctx runtime)))]
+    ctx))
+
 ; card-text helper
 (defn get-play-g-text [ctx runtime])
 
@@ -123,7 +133,7 @@
                :command
                (let [; 將script的list轉為字串, 不然再子腳本會被解為記憶體的引用, 這樣就無法正確儲存
                      ; 字腳本要使用時, 先read-string再eval變成函式
-                     command-action (-> ctx (get-card-proto card-id) card-proto/get-raw-command-action str)]
+                     command-action (-> ctx (get-card-proto card-id) card-proto/get-command-action-script str)]
                  {:type [:automatic :constant]
                   :conditions common-conditions
                   :logics {"出指令"
@@ -157,16 +167,8 @@
         ctx (-> model (add-card [player-a :te-hu-ta] "0" (merge (card/create) {:proto-id "179030_11E_U_BL209R_blue"})))
         runtime (runtime/value-of "0" player-a)
         play-card-text (-> ctx (get-play-card-text runtime))
-        ; 指定對象, 對象無法滿足的話不能play
-        logic (-> play-card-text
-                  card-text/get-logics
-                  (get (-> play-card-text card-text/get-logics-ids first)))
-        conditions (-> play-card-text (card-text/get-logic-conditions logic))
-        ; 支付
-        ctx (->> conditions vals (map card-text/get-condition-tips) (map (fn [f] (or f identity))) (reduce (fn [ctx f] (f ctx runtime)) ctx)) 
-        ctx (->> conditions vals (map card-text/get-condition-action) (map (fn [f] (or f identity))) (reduce (fn [ctx f] (f ctx runtime)) ctx))
-        ; 效果發生
-        ctx (-> logic (card-text/get-logic-action) (#(% ctx runtime)))
+        logic-id (-> play-card-text card-text/get-logics-ids first)
+        ctx (perform-text-logic ctx play-card-text logic-id runtime)
         _ (-> ctx (get-cards-by-ba-syou [player-a :te-hu-ta]) count zero? (or (throw (ex-info "player-a te-hu-ta must 0" {}))))
         _ (-> ctx (get-cards-by-ba-syou [player-a :played-card]) count (= 1) (or (throw (ex-info "player-a played-card must 1" {}))))]))
 
@@ -176,31 +178,16 @@
         ctx (-> model (add-card [player-a :te-hu-ta] "0" (merge (card/create) {:proto-id "test_command"})))
         runtime (runtime/value-of "0" player-a)
         text (-> ctx (get-play-card-text runtime))
-        ; 指定對象, 對象無法滿足的話不能play
-        logic (-> text
-                  card-text/get-logics
-                  (get (-> text card-text/get-logics-ids first)))
-        conditions (-> text (card-text/get-logic-conditions logic))
-        ; 支付
-        ctx (->> conditions vals (map card-text/get-condition-tips) (map (fn [f] (or f identity))) (reduce (fn [ctx f] (f ctx runtime)) ctx))
-        ctx (->> conditions vals (map card-text/get-condition-action) (map (fn [f] (or f identity))) (reduce (fn [ctx f] (f ctx runtime)) ctx))
-        ; 效果發生
-        ctx (-> logic card-text/get-logic-action (#(% ctx runtime)))
+        logic-id (-> text card-text/get-logics-ids first)
+        ctx (perform-text-logic ctx text logic-id runtime)
         _ (-> ctx (get-cards-by-ba-syou [player-a :te-hu-ta]) count zero? (or (throw (ex-info "player-a te-hu-ta must 0" {}))))
         _ (-> ctx (get-cards-by-ba-syou [player-a :played-card]) count (= 1) (or (throw (ex-info "player-a played-card must 1" {}))))
         _ (-> ctx get-top-cut count (= 1) (or (throw (ex-info "must has cut 1" {}))))
         top-effect (-> ctx get-top-cut first)
         runtime (get-effect-runtime ctx top-effect)
         text (effect/get-text top-effect)
-        logic (-> text
-                  card-text/get-logics
-                  (get (-> text card-text/get-logics-ids first)))
-        conditions (-> text (card-text/get-logic-conditions logic))
-        ; 支付
-        ctx (->> conditions vals (map card-text/get-condition-tips) (map (fn [f] (or f identity))) (reduce (fn [ctx f] (f ctx runtime)) ctx))
-        ctx (->> conditions vals (map card-text/get-condition-action) (map (fn [f] (or f identity))) (reduce (fn [ctx f] (f ctx runtime)) ctx))
-        ; 效果發生
-        ctx (-> logic card-text/get-logic-action (#(% ctx runtime)))
+        logic-id (-> text card-text/get-logics-ids first)
+        ctx (perform-text-logic ctx text logic-id runtime)
         _ (-> ctx (get-cards-by-ba-syou [player-a :played-card]) count zero? (or (throw (ex-info "player-a played-card must 0" {}))))
         _ (-> ctx (get-cards-by-ba-syou [player-a :junk-yard]) count (= 1) (or (throw (ex-info "player-a junk-yard must 1" {}))))]))
 
