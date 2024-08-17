@@ -80,12 +80,12 @@
     :else
     (-> eff game.define.effect/get-player-id)))
 
-(defn get-effect-runtime
+(defn get-reason-runtime
   "取得效果的執行期資訊"
-  [ctx effect]
+  [ctx reason]
   (s/assert :game.model-spec.core/is-table ctx)
-  (s/assert :game.define.effect/value effect)
-  (match (-> effect :reason)
+  (s/assert :game.define.effect/reason reason)
+  (match reason
     [:system response-player-id]
     {:card-id ["system no card id", nil] :player-id [nil, response-player-id]}
 
@@ -101,6 +101,13 @@
 
     :else
     (throw (ex-info "reason not match" {}))))
+
+(defn get-effect-runtime
+  "取得效果的執行期資訊"
+  [ctx effect]
+  (s/assert :game.model-spec.core/is-table ctx)
+  (s/assert :game.define.effect/value effect)
+  (get-reason-runtime ctx (:reason effect)))
 
 (defn test-get-effect-runtime []
   (let [ctx (-> (create-table)

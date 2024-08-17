@@ -21,7 +21,8 @@
                                       get-item-ids-by-ba-syou-keyword
                                       get-card-controller
                                       get-cards-by-ba-syou
-                                      get-effect-runtime]]
+                                      get-effect-runtime
+                                      get-reason-runtime]]
             [game.define.effect :as effect]))
 
 (defn create-model []
@@ -69,9 +70,8 @@
 ; card-text helper
 (defn get-play-g-text [ctx runtime])
 
-(defn get-play-card-text [ctx runtime]
-  (let [card-id (get-runtime-card-id ctx runtime) 
-        card-runtime-type (get-card-runtime-type ctx card-id) 
+(defn get-play-card-text [ctx card-id]
+  (let [card-runtime-type (get-card-runtime-type ctx card-id)
         common-conditions {"合計國力6"
                            {:tips '(fn [ctx runtime] ctx)
                             :action '(fn [ctx runtime]
@@ -163,10 +163,11 @@
 
 (defn test-play-card-text []
   (let [player-a :A
-        model (create-model)
-        ctx (-> model (add-card [player-a :te-hu-ta] "0" (merge (card/create) {:proto-id "179030_11E_U_BL209R_blue"})))
-        runtime (runtime/value-of "0" player-a)
-        play-card-text (-> ctx (get-play-card-text runtime))
+        card-id "0"
+        ctx (create-model)
+        ctx (-> ctx (add-card [player-a :te-hu-ta] card-id (merge (card/create) {:proto-id "179030_11E_U_BL209R_blue"})))
+        play-card-text (-> ctx (get-play-card-text card-id))
+        runtime (get-reason-runtime ctx [:play-card player-a card-id])
         logic-id (-> play-card-text card-text/get-logics-ids first)
         ctx (perform-text-logic ctx play-card-text logic-id runtime)
         _ (-> ctx (get-cards-by-ba-syou [player-a :te-hu-ta]) count zero? (or (throw (ex-info "player-a te-hu-ta must 0" {}))))
@@ -174,19 +175,20 @@
 
 (defn test-play-card-text-2 []
   (let [player-a :A
-        model (create-model)
-        ctx (-> model (add-card [player-a :te-hu-ta] "0" (merge (card/create) {:proto-id "test_command"})))
-        runtime (runtime/value-of "0" player-a)
-        text (-> ctx (get-play-card-text runtime))
+        card-id "0"
+        ctx (create-model)
+        ctx (-> ctx (add-card [player-a :te-hu-ta] card-id (merge (card/create) {:proto-id "test_command"})))
+        text (-> ctx (get-play-card-text card-id))
         logic-id (-> text card-text/get-logics-ids first)
+        runtime (get-reason-runtime ctx [:play-card player-a card-id])
         ctx (perform-text-logic ctx text logic-id runtime)
         _ (-> ctx (get-cards-by-ba-syou [player-a :te-hu-ta]) count zero? (or (throw (ex-info "player-a te-hu-ta must 0" {}))))
         _ (-> ctx (get-cards-by-ba-syou [player-a :played-card]) count (= 1) (or (throw (ex-info "player-a played-card must 1" {}))))
         _ (-> ctx get-top-cut count (= 1) (or (throw (ex-info "must has cut 1" {}))))
         top-effect (-> ctx get-top-cut first)
-        runtime (get-effect-runtime ctx top-effect)
         text (effect/get-text top-effect)
         logic-id (-> text card-text/get-logics-ids first)
+        runtime (get-effect-runtime ctx top-effect)
         ctx (perform-text-logic ctx text logic-id runtime)
         _ (-> ctx (get-cards-by-ba-syou [player-a :played-card]) count zero? (or (throw (ex-info "player-a played-card must 0" {}))))
         _ (-> ctx (get-cards-by-ba-syou [player-a :junk-yard]) count (= 1) (or (throw (ex-info "player-a junk-yard must 1" {}))))]))
