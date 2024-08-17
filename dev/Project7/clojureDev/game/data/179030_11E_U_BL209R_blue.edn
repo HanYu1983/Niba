@@ -11,9 +11,17 @@
  :type :unit
  :texts {"『恒常』：本来の記述に「特徴：装弾」を持つ自軍Gがある場合、このカードは、合計国力ー１してプレイできる。"
          {:type [:automatic :constant]
-          :game-effects ['(fn [ctx runtime]
-                            (let [card-id (-> runtime game.define.runtime/get-card-id)
-                                  player-id (-> runtime game.define.runtime/get-player-id)
+          :game-effects [`(fn [~'ctx ~'runtime]
+                            (let [~'card-id (game.data.dynamic/get-runtime-card-id ~'ctx ~'runtime)
+                                  ~'power 30
+                                  ~'text `(fn [~~''ctx ~~''runtime]
+                                            (println "power" ~~'power)
+                                            ~~''ctx)]
+                              ["add text" [~'card-id] {:type :system
+                                                       :logics {"default" {:action ~'text}}}]))
+                         '(fn [ctx runtime]
+                            (let [card-id (game.data.dynamic/get-runtime-card-id ctx runtime)
+                                  player-id (game.data.dynamic/get-runtime-player-id ctx runtime)
                                   enabled (-> ctx
                                               (game.data.dynamic/get-my-g player-id)
                                               ((fn [g-card-ids]

@@ -3,4 +3,5 @@
  :type :command
  :texts {}
  :command-action '(fn [ctx runtime]
+                    (println "test_command perform")
                     ctx)}
