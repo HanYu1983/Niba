@@ -123,7 +123,7 @@
                :command
                (let [; 將script的list轉為字串, 不然再子腳本會被解為記憶體的引用, 這樣就無法正確儲存
                      ; 字腳本要使用時, 先read-string再eval變成函式
-                     command-action (-> ctx (get-card-proto card-id) card-proto/get-command-action str)]
+                     command-action (-> ctx (get-card-proto card-id) card-proto/get-raw-command-action str)]
                  {:type [:automatic :constant]
                   :conditions common-conditions
                   :logics {"出指令"

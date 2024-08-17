@@ -28,7 +28,7 @@
   (s/assert ::value ctx)
   (-> ctx :texts))
 
-(defn get-command-action [ctx]
+(defn get-raw-command-action [ctx]
   (s/assert ::value ctx)
   (-> ctx :command-action
       (or (throw (ex-info "command-action not found" ctx)))))
