@@ -4,6 +4,7 @@
             [clojure.core.match :refer [match]]
             [tool.card.table :as table]
             [tool.component.table :refer [get-table]]
+            [tool.component.item-group :refer [create-item-group]]
             [game.data.core]
             [game.data.dynamic]
             [game.define.runtime :as runtime]
@@ -34,7 +35,8 @@
         :current-player-id :A
         :card-proto-pool {}
         :selection {}}
-       (merge (create-table))
+       (merge (create-table)
+              (create-item-group))
        (s/assert :game.model-spec.core/is-model)))
 
 (defn get-runtime-card-id [_ctx runtime]

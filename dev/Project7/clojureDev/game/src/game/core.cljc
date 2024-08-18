@@ -2,6 +2,7 @@
   (:import [java.lang Exception])
   (:require [clojure.core.match]
             [clojure.spec.alpha :as s]
+            [tool.component.item-group]
             [game.define.card-proto]
             [game.define.basyou]
             [game.define.card-text]
@@ -29,6 +30,7 @@
   (println "Running tests...")
   (s/check-asserts true)
   (try
+    (tool.component.item-group/tests)
     (game.exp/tests)
     (game.data.core/tests)
     (game.define.card-text/tests)
