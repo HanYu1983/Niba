@@ -1,9 +1,11 @@
 (ns game.define.card
   (:require [clojure.spec.alpha :as s]))
+
+(s/def ::id any?)
 (s/def ::proto-id string?)
 (s/def ::is-face-down boolean?)
 (s/def ::is-roll boolean?)
-(s/def ::spec (s/keys :opt-un [::proto-id ::is-face-down ::is-roll]))
+(s/def ::spec (s/keys :opt-un [::id ::proto-id ::is-face-down ::is-roll]))
 
 (defn create [] {})
 

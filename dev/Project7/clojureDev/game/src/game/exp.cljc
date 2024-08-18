@@ -100,7 +100,7 @@
                   [tips-script action-script] (-> @effect :text :conditions (get "condition-1") ((juxt card-text/get-condition-tips card-text/get-condition-action)))
                   tips-fn (eval tips-script)
                   tips (s/assert :game.model-spec.core/tips (tips-fn ctx runtime))
-                  option-ids (-> tips first tip/get-options)
+                  option-ids (-> tips first tip/get-tip-selection tip/get-tip-selection-items)
                   _ (when (not (= option-ids ["zaku" "gundam"]))
                       (throw (ex-info "option-ids not right" {})))
                   user-selection-ids option-ids
