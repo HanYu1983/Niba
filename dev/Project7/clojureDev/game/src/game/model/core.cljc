@@ -14,6 +14,7 @@
             [game.define.card-proto :as card-proto]
             [game.define.game-effect]
             [game.define.effect :as effect]
+            [game.define.selection :as selection]
             [game.model.effect :refer [get-top-cut]]
             [game.model.phase]
             [game.model.current-player]
@@ -26,7 +27,8 @@
                                       get-card-ids-by-player-id
                                       get-effect-runtime
                                       get-reason-runtime]]
-            [game.model.setgroup :refer [get-setgroup set-setgroup-character]]))
+            [game.model.setgroup :refer [get-setgroup set-setgroup-character]]
+            [game.model.selection :refer [create-selections]]))
 
 (defn create-model []
   (->> {:cuts []
@@ -34,10 +36,10 @@
         :table-items {}
         :phase [:reroll :start]
         :current-player-id :A
-        :card-proto-pool {}
-        :selection {}}
+        :card-proto-pool {}}
        (merge (create-table)
-              (create-item-group))
+              (create-item-group)
+              (create-selections))
        (s/assert :game.model-spec.core/is-model)))
 
 (defn get-runtime-card-id [_ctx runtime]
@@ -185,7 +187,9 @@
                {:type :system
                 :conditions (->> {"選一個機體"
                                   {:tips '(fn [ctx runtime]
-                                            [:cards (game.data.dynamic/get-my-units-can-set-character ctx (game.data.dynamic/get-runtime-player-id ctx runtime))])
+                                            (let [player-id (game.data.dynamic/get-runtime-player-id ctx runtime)
+                                                  card-ids (game.data.dynamic/get-my-units-can-set-character ctx player-id)]
+                                              [(vec `(:card ~@card-ids)) [:count 1]]))
                                    :action '(fn [ctx runtime]
                                               ctx)}}
                              (merge common-conditions))
@@ -250,20 +254,35 @@
 (defn test-play-card-text-empty-character []
   (let [player-a :A
         player-b :B
-        card-id "0"
+        character-card-id "0"
+        player-a-unit-0 "player-a-unit-0"
+        player-a-unit-1 "player-a-unit-1"
+        player-b-unit-1 "player-b-unit-1"
+        character-card-id2 "character-card-id2"
         ctx (create-model)
         ctx (-> ctx
-                (add-card [player-a :te-hu-ta] card-id (merge (card/create) {:proto-id "empty_character"}))
-                (add-card [player-a :maintenance-area] "unit-id0" (merge (card/create) {:proto-id "179030_11E_U_BL209R_blue"}))
-                (add-card [player-a :maintenance-area] "unit-id1" (merge (card/create) {:proto-id "179030_11E_U_BL209R_blue"}))
-                (add-card [player-b :maintenance-area] "unit-id2" (merge (card/create) {:proto-id "179030_11E_U_BL209R_blue"}))
-                (add-card [player-a :maintenance-area] "char-0" (merge (card/create) {:proto-id "empty_character"}))
-                (set-setgroup-character "unit-id0" "char-0"))
-        text (-> ctx (get-play-card-text player-a card-id))
+                (add-card [player-a :te-hu-ta] character-card-id (merge (card/create) {:proto-id "empty_character"}))
+                (add-card [player-a :maintenance-area] player-a-unit-0 (merge (card/create) {:proto-id "179030_11E_U_BL209R_blue"}))
+                (add-card [player-a :maintenance-area] player-a-unit-1 (merge (card/create) {:proto-id "179030_11E_U_BL209R_blue"}))
+                (add-card [player-b :maintenance-area] player-b-unit-1 (merge (card/create) {:proto-id "179030_11E_U_BL209R_blue"})))
+        text (-> ctx (get-play-card-text player-a character-card-id))
         condition (-> text card-text/get-conditions (get "選一個機體") (or (throw (ex-info "選一個機體 condition must exist" {}))))
-        runtime (get-reason-runtime ctx [:play-card player-a card-id])
-        tips (-> condition card-text/get-condition-tips (#(% ctx runtime)))
-        _ (println tips)]))
+        ; player-a
+        runtime (get-reason-runtime ctx [:play-card player-a character-card-id])
+        tips (-> condition card-text/get-condition-tips (#(% ctx runtime))
+                 (->> (s/assert :game.model-spec.core/selection)))
+        _ (-> tips selection/get-options (= [player-a-unit-0 player-a-unit-1]) (or (throw (ex-info "must be player-a-unit-0 player-a-unit-1" {}))))
+        ctx (-> ctx
+                (add-card [player-a :maintenance-area] character-card-id2 (merge (card/create) {:proto-id "empty_character"}))
+                (set-setgroup-character player-a-unit-0 character-card-id2))
+        tips (-> condition card-text/get-condition-tips (#(% ctx runtime))
+                 (->> (s/assert :game.model-spec.core/selection)))
+        _ (-> tips selection/get-options (= [player-a-unit-1]) (or (throw (ex-info "must be player-a-unit-1" {}))))
+        ; player-b
+        runtime (get-reason-runtime ctx [:play-card player-b character-card-id])
+        tips (-> condition card-text/get-condition-tips (#(% ctx runtime))
+                 (->> (s/assert :game.model-spec.core/selection)))
+        _ (-> tips selection/get-options (= [player-b-unit-1]) (or (throw (ex-info "must be player-b-unit-1" {}))))]))
 
 (defn test-179030_11E_U_BL209R_blue []
   (let [player-a :A

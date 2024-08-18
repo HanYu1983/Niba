@@ -55,4 +55,4 @@
     (println "All tests completed successfully.")
     (catch Exception e
       (println (ex-message e) (ex-data e))
-      (st/print-cause-trace e #(re-find #"game/" (or (:file %) ""))))))
+      (st/print-cause-trace e #_#(re-find #"game/" (or (:file %) ""))))))

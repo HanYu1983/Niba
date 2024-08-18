@@ -1,6 +1,5 @@
 (ns game.model-spec.core
-  (:require [clojure.spec.alpha :as s]
-            [tool.component.item-group]))
+  (:require [clojure.spec.alpha :as s]))
 
 (s/def ::current-effect :game.define.effect/value)
 (s/def ::has-current-effect (s/keys :opt-un [::current-effect]))
@@ -20,9 +19,10 @@
                            :tool.component.coin-table/spec
                            :tool.component.chip-table/spec))
 
-(s/def ::selection (s/map-of any? (s/coll-of any?)))
-(s/def ::has-selection (s/keys :req-un [::selection]))
+(s/def ::selection :game.define.selection/spec)
+(s/def ::selections (s/map-of any? (s/coll-of ::selection)))
+(s/def ::has-selections (s/keys :req-un [::selections]))
 
 (s/def ::has-set-group :tool.component.item-group/spec)
 
-(s/def ::is-model (s/merge ::has-current-effect ::has-current-player-id ::has-effects ::has-phase ::is-table ::has-selection ::has-set-group))
+(s/def ::is-model (s/merge ::has-current-effect ::has-current-player-id ::has-effects ::has-phase ::is-table ::has-selections ::has-set-group))
