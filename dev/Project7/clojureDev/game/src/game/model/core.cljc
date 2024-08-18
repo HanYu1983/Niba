@@ -15,6 +15,7 @@
             [game.define.game-effect]
             [game.define.effect :as effect]
             [game.define.selection :as selection]
+            [game.define.tip :as tip]
             [game.model.effect :refer [get-top-cut]]
             [game.model.phase]
             [game.model.current-player]
@@ -28,7 +29,7 @@
                                       get-effect-runtime
                                       get-reason-runtime]]
             [game.model.setgroup :refer [get-setgroup set-setgroup-character]]
-            [game.model.selection :refer [create-selections]]))
+            [game.model.selection :refer [create-selections get-selection]]))
 
 (defn create-model []
   (->> {:cuts []
@@ -66,9 +67,22 @@
 (defn perform-text-logic [ctx text logic-id runtime]
   (let [logic (-> text card-text/get-logics (get logic-id))
         conditions (-> text (card-text/get-logic-conditions logic))
+        _ (->> conditions (map (fn [[condition-id condition]]
+                                 (let [tips-fn (card-text/get-condition-tips condition)
+                                       tips (->> (tips-fn ctx runtime) (s/assert :game.model-spec.core/tips))
+                                       tip-ids (->> tips (map tip/get-id))
+                                       tip-selections (->> tip-ids (map #(get-selection ctx %)) (zipmap tip-ids))
+                                       action-fn (card-text/get-condition-action condition)
+                                       ctx (action-fn ctx runtime)]
+                                   ctx)))
+               doall)
         ; 支付
-        _ (->> conditions vals (map card-text/get-condition-tips) (map (fn [f] (or f identity))) (map (fn [f] (f ctx runtime))) doall)
-        ctx (->> conditions vals (map card-text/get-condition-action) (map (fn [f] (or f identity))) (reduce (fn [ctx f] (f ctx runtime)) ctx))
+        _ (->> conditions vals (map card-text/get-condition-tips)
+               (map (fn [f] (or f identity)))
+               (map (fn [f] (f ctx runtime))) doall)
+        ctx (->> conditions vals (map card-text/get-condition-action)
+                 (map (fn [f] (or f identity)))
+                 (reduce (fn [ctx f] (f ctx runtime)) ctx))
         ; 效果發生
         ctx (-> logic (card-text/get-logic-action) (#(% ctx runtime)))]
     ctx))
@@ -102,7 +116,7 @@
 (defn get-play-card-text [ctx _player-id card-id]
   (let [card-runtime-type (get-card-runtime-type ctx card-id)
         common-conditions {"合計國力6"
-                           {:tips '(fn [ctx runtime] ctx)
+                           {:tips '(fn [ctx runtime] [])
                             :action '(fn [ctx runtime]
                                        (println "合計國力6")
                                        #_(-> ctx game.data.dynamic/get-my-g count (> 6))
@@ -110,16 +124,16 @@
                            "横置3個藍G"
                            {:tips '(fn [ctx runtime]
                                      #_(-> ctx game.data.dynamic/get-my-g-can-tap)
-                                     ctx)
+                                     [])
                             :action '(fn [ctx runtime]
                                        (println "横置3個藍G")
                                        ctx)}
                            "在手牌或hanger"
-                           {:tips '(fn [ctx runtime] ctx) :action '(fn [ctx runtime] ctx)}
+                           {:tips '(fn [ctx runtime] []) :action '(fn [ctx runtime] ctx)}
                            "在配備階段"
-                           {:tips '(fn [ctx runtime] ctx) :action '(fn [ctx runtime] ctx)}
+                           {:tips '(fn [ctx runtime] []) :action '(fn [ctx runtime] ctx)}
                            "放到play-card-zone"
-                           {:tips '(fn [ctx runtime] ctx)
+                           {:tips '(fn [ctx runtime] [])
                             :action '(fn [ctx runtime]
                                        (let [card-id (game.data.dynamic/get-runtime-card-id ctx runtime)
                                              player-id (game.data.dynamic/get-runtime-player-id ctx runtime)
@@ -188,9 +202,14 @@
                 :conditions (->> {"選一個機體"
                                   {:tips '(fn [ctx runtime]
                                             (let [player-id (game.data.dynamic/get-runtime-player-id ctx runtime)
-                                                  card-ids (game.data.dynamic/get-my-units-can-set-character ctx player-id)]
-                                              [(vec `(:card ~@card-ids)) [:count 1]]))
+                                                  card-ids (game.data.dynamic/get-my-units-can-set-character ctx player-id)
+                                                  ; TODO: real basyou
+                                                  card-ids-with-basyou (map (fn [card-id]
+                                                                              [card-id [:A :maintenance-area]])
+                                                                            card-ids)]
+                                              [[:select-one-unit `[:unit ~@card-ids-with-basyou] [:count 1]]]))
                                    :action '(fn [ctx runtime]
+                                              ;(let [selection (get-selection ctx :select-one-unit)])
                                               ctx)}}
                              (merge common-conditions))
                 :logics {"出角色"
@@ -201,7 +220,7 @@
                                        (game.data.dynamic/cut-in ~'ctx "出角色"
                                                                  (->> {:reason [:play-card ~'player-id ~'card-id]
                                                                        :text (->> {:type :system
-                                                                                   :logics {"移到墓地並發動指令效果"
+                                                                                   :logics {"出角色"
                                                                                             {:action `(fn [~~''ctx ~~''runtime]
                                                                                                         (let [~~''card-id (game.data.dynamic/get-runtime-card-id ~~''ctx ~~''runtime)
                                                                                                               ~~''player-id (game.data.dynamic/get-runtime-player-id ~~''ctx ~~''runtime)
@@ -270,19 +289,19 @@
         ; player-a
         runtime (get-reason-runtime ctx [:play-card player-a character-card-id])
         tips (-> condition card-text/get-condition-tips (#(% ctx runtime))
-                 (->> (s/assert :game.model-spec.core/selection)))
-        _ (-> tips selection/get-options (= [player-a-unit-0 player-a-unit-1]) (or (throw (ex-info "must be player-a-unit-0 player-a-unit-1" {}))))
+                 (->> (s/assert :game.model-spec.core/tips)))
+        _ (-> tips first tip/get-options-unit-id (= [player-a-unit-0 player-a-unit-1]) (or (throw (ex-info "must be player-a-unit-0 player-a-unit-1" {}))))
         ctx (-> ctx
                 (add-card [player-a :maintenance-area] character-card-id2 (merge (card/create) {:proto-id "empty_character"}))
                 (set-setgroup-character player-a-unit-0 character-card-id2))
         tips (-> condition card-text/get-condition-tips (#(% ctx runtime))
                  (->> (s/assert :game.model-spec.core/selection)))
-        _ (-> tips selection/get-options (= [player-a-unit-1]) (or (throw (ex-info "must be player-a-unit-1" {}))))
+        _ (-> tips first tip/get-options-unit-id (= [player-a-unit-1]) (or (throw (ex-info "must be player-a-unit-1" {}))))
         ; player-b
         runtime (get-reason-runtime ctx [:play-card player-b character-card-id])
         tips (-> condition card-text/get-condition-tips (#(% ctx runtime))
                  (->> (s/assert :game.model-spec.core/selection)))
-        _ (-> tips selection/get-options (= [player-b-unit-1]) (or (throw (ex-info "must be player-b-unit-1" {}))))]))
+        _ (-> tips first tip/get-options-unit-id (= [player-b-unit-1]) (or (throw (ex-info "must be player-b-unit-1" {}))))]))
 
 (defn test-179030_11E_U_BL209R_blue []
   (let [player-a :A

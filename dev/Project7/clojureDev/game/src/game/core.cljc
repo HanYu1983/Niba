@@ -12,6 +12,7 @@
             [game.define.selection]
             [game.define.timing]
             [game.define.battle-point]
+            [game.define.tip]
             [game.model.core]
             [game.model.effect]
             [game.model.table]
@@ -42,6 +43,7 @@
     (game.define.selection/tests)
     (game.define.timing/tests)
     (game.define.battle-point/tests)
+    (game.define.tip/tests)
     (game.model.core/tests)
     (game.model.effect/tests)
     (game.model.table/tests)

@@ -20,7 +20,8 @@
             [game.model.chip-table]
             [game.model.coin-table]
             [game.model.flags-player-status-component]
-            [game.data.core]))
+            [game.data.core]
+            [game.define.tip :as tip]))
 
 (def ^:dynamic cut-in nil)
 (def ^:dynamic add-text nil)
@@ -64,7 +65,7 @@
                                                                                                                                    [:add-battle-point ~''card-id ~battle-point]))]}))]}
                                                                :conditions {"condition-1"
                                                                             {:tips `(fn [~'ctx ~'runtime]
-                                                                                      [[:card ~@option-ids] [:count 1]])
+                                                                                      [[(gensym "tip") [:card ~@option-ids] [:count 1]]])
                                                                              :action `(fn [~'ctx ~'runtime ~'selection]
                                                                                         (game.exp/add-text ~'ctx "text-id"
                                                                                                            {:type :system
@@ -96,12 +97,13 @@
                   script (-> card-proto-example str read-string second :texts (get "text-1") :events first)
                   eventF (eval script)
                   _ (eventF ctx runtime [:on-gain {:battle-point [1 1 0]}])
-                  [option-ids-script action-script] (-> @effect :text :conditions (get "condition-1") ((juxt card-text/get-condition-tips card-text/get-condition-action)))
-                  option-ids-fn (eval option-ids-script)
-                  option-ids (s/assert :game.define.selection/spec (option-ids-fn ctx runtime))
-                  _ (when (not (= option-ids [[:card "zaku" "gundam"] [:count 1]]))
+                  [tips-script action-script] (-> @effect :text :conditions (get "condition-1") ((juxt card-text/get-condition-tips card-text/get-condition-action)))
+                  tips-fn (eval tips-script)
+                  tips (s/assert :game.model-spec.core/tips (tips-fn ctx runtime))
+                  option-ids (-> tips first tip/get-options)
+                  _ (when (not (= option-ids ["zaku" "gundam"]))
                       (throw (ex-info "option-ids not right" {})))
-                  user-selection-ids (game.define.selection/get-options option-ids)
+                  user-selection-ids option-ids
                   action-fn (eval action-script)
                   _ (action-fn ctx runtime (into [] user-selection-ids))
                   effect-script (-> @added-text :game-effects first)

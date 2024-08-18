@@ -25,4 +25,7 @@
 
 (s/def ::has-set-group :tool.component.item-group/spec)
 
+(s/def ::tip :game.define.tip/spec)
+(s/def ::tips (s/coll-of ::tip))
+
 (s/def ::is-model (s/merge ::has-current-effect ::has-current-player-id ::has-effects ::has-phase ::is-table ::has-selections ::has-set-group))
