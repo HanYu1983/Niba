@@ -1,7 +1,7 @@
 (ns game.binding-data-dynamic
   (:require [game.data.dynamic]
             [game.define.runtime :as runtime]
-            [game.model.core :refer [get-runtime-card-id get-runtime-player-id]]
+            [game.model.core :refer [get-runtime-card-id get-runtime-player-id get-my-units-can-set-character]]
             [game.model.card-table :refer [move-card]]
             [game.model.effect :refer [cut-in]]
             [game.define.effect :as effect]))
@@ -28,3 +28,5 @@
 (defmethod game.data.dynamic/move-card :default [ctx from to card-id] (move-card ctx from to card-id))
 (defmethod game.data.dynamic/get-runtime-card-id :default [ctx runtime] (get-runtime-card-id ctx runtime))
 (defmethod game.data.dynamic/get-runtime-player-id :default [ctx runtime] (get-runtime-player-id ctx runtime))
+(defmethod game.data.dynamic/get-my-units-can-set-character :default [ctx runtime] (get-my-units-can-set-character ctx runtime))
+

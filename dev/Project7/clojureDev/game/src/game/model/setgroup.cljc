@@ -3,13 +3,13 @@
             [tool.component.item-group :refer [get-item-group-from-root set-item-group-parent delete-item-group-parent]]
             [game.model-spec.core]))
 
-(defn set-setgroup-character [ctx card-id to-card-id]
+(defn set-setgroup-character [ctx to-card-id card-id]
   (s/assert :game.model-spec.core/has-set-group ctx)
   (if (nil? to-card-id)
     (-> ctx (delete-item-group-parent card-id))
     (-> ctx (set-item-group-parent card-id to-card-id))))
 
-(defn set-setgroup-operation-unit [ctx card-id to-card-id]
+(defn set-setgroup-operation-unit [ctx to-card-id card-id]
   (s/assert :game.model-spec.core/has-set-group ctx)
   (if (nil? to-card-id)
     (-> ctx (delete-item-group-parent card-id))

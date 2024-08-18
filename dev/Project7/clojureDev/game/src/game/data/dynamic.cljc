@@ -17,3 +17,4 @@
 (defmulti get-runtime-card-id (fn [ctx runtime] (-> ctx :data-dynamic)))
 (defmulti get-runtime-player-id (fn [ctx runtime] (-> ctx :data-dynamic)))
 (defmulti get-card-runtime-type (fn [ctx card-id] (-> ctx :data-dynamic)))
+(defmulti get-my-units-can-set-character (fn [ctx player-id] (-> ctx :data-dynamic)))

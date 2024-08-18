@@ -1,0 +1,4 @@
+{:id "empty_character"
+ :gsign [:blue :uc]
+ :type :character
+ :texts {}}

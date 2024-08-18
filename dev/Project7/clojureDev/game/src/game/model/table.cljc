@@ -8,9 +8,9 @@
             [game.define.card :as card]
             [game.define.chip]
             [game.define.coin]
-            [game.define.basyou]
+            [game.define.basyou :as basyou]
             [game.model-spec.core]
-            [game.model.card-table :refer [create-card-table get-cards-by-ids is-card add-card get-card]]
+            [game.model.card-table :refer [create-card-table get-cards-by-ids is-card add-card get-card is-card]]
             [game.model.chip-table :refer [create-chip-table is-chip]]
             [game.model.coin-table :refer [create-coin-table get-coin is-coin add-coin]]))
 
@@ -38,16 +38,31 @@
 (defn get-cards-by-ba-syou [ctx ba-syou]
   (s/assert :game.model-spec.core/is-table ctx)
   (s/assert :game.define.basyou/spec ba-syou)
-  (-> ctx
-      (get-item-ids-by-ba-syou ba-syou)
-      (#(get-cards-by-ids ctx %))))
+  (->> ba-syou
+       (get-item-ids-by-ba-syou ctx)
+       (get-cards-by-ids ctx))
+  #_(-> ctx
+        (get-item-ids-by-ba-syou ba-syou)
+        (#(get-cards-by-ids ctx %))))
+
+(defn get-item-ids-by-player-id [ctx player-id]
+  (s/assert :game.model-spec.core/is-table ctx)
+  (->> (basyou/get-basyous-by-player-id player-id)
+       (filter (comp basyou/is-ba? basyou/get-ba-syou-keyword))
+       (mapcat #(get-item-ids-by-ba-syou ctx %))))
+
+(defn get-card-ids-by-player-id [ctx player-id]
+  (s/assert :game.model-spec.core/is-table ctx)
+  (->> player-id
+       (get-item-ids-by-player-id ctx)
+       (filter (fn [card-id] (is-card ctx card-id)))))
 
 (defn get-card-controller [ctx card-id]
   (s/assert :game.model-spec.core/is-table ctx)
   ; 所在area或部隊的控制者
-  (-> ctx 
-      get-table 
-      (tool.card.table/get-deck-id-by-card-id card-id) 
+  (-> ctx
+      get-table
+      (tool.card.table/get-deck-id-by-card-id card-id)
       (or (throw (ex-info (str "card not found:" card-id) {})))
       game.define.basyou/get-player-id))
 

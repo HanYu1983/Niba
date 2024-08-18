@@ -2,6 +2,7 @@
   (:import [java.lang Exception])
   (:require [clojure.core.match]
             [clojure.spec.alpha :as s]
+            [clojure.stacktrace :as st]
             [tool.component.item-group]
             [game.define.card-proto]
             [game.define.basyou]
@@ -53,6 +54,5 @@
     (game.model-flow.core/tests)
     (println "All tests completed successfully.")
     (catch Exception e
-      (.printStackTrace e)
-      (println "An error occurred during testing:")
-      (println (ex-message e) (ex-data e)))))
+      (println (ex-message e) (ex-data e))
+      (st/print-cause-trace e #(re-find #"game/" (or (:file %) ""))))))
