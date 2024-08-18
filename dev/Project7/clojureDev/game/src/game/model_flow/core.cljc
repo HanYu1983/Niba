@@ -388,7 +388,7 @@
         ctx (-> ctx
                 get-flow
                 (set-current-pay-effect game.define.effect/effect-value)
-                (set-current-pay-selection "" [[:card 0 1 2] [:count 1]])
+                (set-current-pay-selection "" [:card 0 1 2])
                 (#(set-flow ctx %))
                 (#(s/assert ::spec %)))
         cmds (query-command ctx player-id)

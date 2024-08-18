@@ -295,12 +295,12 @@
                 (add-card [player-a :maintenance-area] character-card-id2 (merge (card/create) {:proto-id "empty_character"}))
                 (set-setgroup-character player-a-unit-0 character-card-id2))
         tips (-> condition card-text/get-condition-tips (#(% ctx runtime))
-                 (->> (s/assert :game.model-spec.core/selection)))
+                 (->> (s/assert :game.model-spec.core/tips)))
         _ (-> tips first tip/get-options-unit-id (= [player-a-unit-1]) (or (throw (ex-info "must be player-a-unit-1" {}))))
         ; player-b
         runtime (get-reason-runtime ctx [:play-card player-b character-card-id])
         tips (-> condition card-text/get-condition-tips (#(% ctx runtime))
-                 (->> (s/assert :game.model-spec.core/selection)))
+                 (->> (s/assert :game.model-spec.core/tips)))
         _ (-> tips first tip/get-options-unit-id (= [player-b-unit-1]) (or (throw (ex-info "must be player-b-unit-1" {}))))]))
 
 (defn test-179030_11E_U_BL209R_blue []
