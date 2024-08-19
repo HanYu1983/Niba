@@ -59,8 +59,8 @@
   (-> ctx (get-card-proto card-id) card-proto/get-type))
 
 (defn get-card-runtime-type [ctx card-id]
-  (-> ctx 
-      (get-card-basyou card-id) 
+  (-> ctx
+      (get-card-basyou card-id)
       (match [_ :g-zone] :graphic :else (get-card-type ctx card-id))
       (#(s/assert :game.define.card-proto/type %))))
 
@@ -88,7 +88,7 @@
     ctx))
 
 (defn get-unit-character-count [ctx card-id]
-  (-> ctx (get-card-runtime-type card-id) (= :unit) 
+  (-> ctx (get-card-runtime-type card-id) (= :unit)
       (or (throw (ex-info "must be unit" {:card-id card-id :runtime-type (get-card-runtime-type ctx card-id)}))))
   (-> ctx (get-setgroup card-id) (->> (remove #{card-id})
                                       (map #(get-card-runtime-type ctx %))
@@ -102,7 +102,7 @@
 
 (defn get-my-units [ctx player-id]
   (->> (get-card-ids-by-player-id ctx player-id)
-       (filter (fn [card-id] 
+       (filter (fn [card-id]
                  (->> (get-card-runtime-type ctx card-id) (= :unit))))))
 
 (defn get-my-units-can-set-character [ctx player-id]
@@ -207,7 +207,7 @@
                                               [[:select-one-unit `[:unit ~@card-ids-with-basyou] [:count 1]]]))
                                    :action '(fn [ctx runtime]
                                               ctx)}}
-                             (merge common-conditions))
+                                 (merge common-conditions))
                 :logics {"出角色"
                          {:logic-tree '(And (Leaf "選一個機體") (Leaf "合計國力6") (Leaf "横置3個藍G") (Leaf "在手牌或hanger") (Leaf "在配備階段") (Leaf "放到play-card-zone"))
                           :action
@@ -226,7 +226,7 @@
                                                                                                       _ (-> options count pos? (or (throw (ex-info "options must has 1" {}))))
                                                                                                       [[target-unit target-basyou]] options
                                                                                                       from-basyou (game.data.dynamic/get-card-basyou ctx card-id)
-                                                                                                      ctx (-> ctx 
+                                                                                                      ctx (-> ctx
                                                                                                               (game.data.dynamic/move-card from-basyou target-basyou card-id)
                                                                                                               (game.data.dynamic/set-setgroup-character target-unit card-id))]
                                                                                                   ctx))}}}
@@ -345,6 +345,49 @@
         tip (-> tips first)
         _ (-> tip tip/get-tip-selection tip/get-tip-selection-items-unit-id (= [player-b-unit-1]) (or (throw (ex-info "must be player-b-unit-1" {}))))]))
 
+
+(defn get-attack-phase-rule-effect [player-id]
+  (let [effect {:reason [:system player-id]
+                :text {:type :system
+                       :conditions {"選擇機體出擊到地球"
+                                    {:tips '(fn [ctx runtime]
+                                              (let [player-id (game.data.dynamic/get-runtime-player-id ctx runtime)
+                                                    card-ids (game.data.dynamic/get-my-units-can-go-earth ctx player-id)
+                                                    card-ids-with-basyou (->> card-ids (map #(game.data.dynamic/get-card-basyou ctx %)) (zipmap card-ids))])
+                                              [[:go-earth `[:unit ~@card-ids-with-basyou] [:count 0]]])
+                                     :action '(fn [ctx runtime])}
+                                    "選擇機體出擊到宇宙"
+                                    {:tips '(fn [ctx runtime]
+                                              (let [player-id (game.data.dynamic/get-runtime-player-id ctx runtime)
+                                                    card-ids (game.data.dynamic/get-my-units-can-go-space ctx player-id)
+                                                    card-ids-with-basyou (->> card-ids (map #(game.data.dynamic/get-card-basyou ctx %)) (zipmap card-ids))])
+                                              [[:go-universe `[:unit ~@card-ids-with-basyou] [:count 0]]])
+                                     :action '(fn [ctx runtime])}}
+                       :logics {:logic-tree '(And (Leaf "選擇機體出擊到地球") (Leaf "選擇機體出擊到宇宙"))
+                                :action '(fn [ctx runtime]
+                                           (let [player-id (game.data.dynamic/get-runtime-player-id ctx runtime)
+                                                 go-earth-card-ids-with-basyou (game.data.dynamic/get-selection ctx :go-earth)
+                                                 go-universe-card-ids-with-basyou (game.data.dynamic/get-selection ctx :go-universe)
+                                                 ctx (-> ctx
+                                                         (game.data.dynamic/move-setgroup go-earth-card-ids-with-basyou [player-id :earth-area])
+                                                         (game.data.dynamic/move-setgroup go-universe-card-ids-with-basyou [player-id :space-area]))]
+                                             ctx))}}}
+        _ (s/assert :game.define.effect/value effect)]
+    effect))
+
+(def get-deffence-phase-rule-effect get-attack-phase-rule-effect)
+
+(defn get-return-phase-rule-effect [player-id]
+  (let [effect {:reason [:system player-id]
+                :text {:type :system
+                       :logics {:action '(fn [ctx runtime]
+                                           (let []
+                                             ctx))}}}
+        _ (s/assert :game.define.effect/value effect)]
+    effect))
+
+(defn get-damage-checking-step-rule-effect [])
+
 (defn test-179030_11E_U_BL209R_blue []
   (let [player-a :A
         card-id "0"
@@ -393,9 +436,9 @@
   "取得卡片類型, 比如機體或指令"
   [ctx card-id])
 
-(defn get-effect-card-item-type 
+(defn get-effect-card-item-type
   "取得效果的卡片類型, 比如機體效果或指令效果"
-  [ctx effect] 
+  [ctx effect]
   (s/assert ::spec ctx)
   (match (-> ctx game.define.effect/get-reason)
     [:system player-id] (throw (ex-info "" {} :abc))
