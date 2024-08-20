@@ -44,6 +44,11 @@
 (defn get-basyous-by-player-id [player-id]
   (->> ba-syou-keyword (map (fn [k] (value-of player-id k)))))
 
+(defn update-ba-syou-keyword [basyou kw]
+  (s/assert ::spec basyou)
+  (s/assert ::ba-syou-keyword kw)
+  (value-of (get-player-id basyou) kw))
+
 (defn tests []
   (s/assert ::spec [:A :sute-yama])
   (when (not (is-battle-area? :space-area))

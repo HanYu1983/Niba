@@ -377,11 +377,40 @@
 
 (def get-deffence-phase-rule-effect get-attack-phase-rule-effect)
 
-(defn get-return-phase-rule-effect [player-id]
-  (let [effect {:reason [:system player-id]
+(defn get-return-phase-rule-effect []
+  (let [effect {:reason [:system nil]
                 :text {:type :system
                        :logics {:action '(fn [ctx runtime]
-                                           (let []
+                                           (let [ctx (->> game.define.player/player-ids
+                                                          (mapcat (fn [player-id] [(game.define.basyou/value-of player-id :earth-area)
+                                                                                   (game.define.basyou/value-of player-id :space-area)]))
+                                                          (map (fn [basyou]
+                                                                 (fn [ctx]
+                                                                   (let [card-ids (game.data.dynamic/get-setgroup-ids-by-basyou ctx basyou)
+                                                                         card-ids-with-basyou (map #([% basyou]) card-ids)
+                                                                         ctx (game.data.dynamic/move-setgroup ctx card-ids-with-basyou (game.define.basyou/update-ba-syou-keyword basyou :maintenance-area))]
+                                                                     ctx))))
+                                                          (reduce (fn [ctx f] (f ctx)) ctx))
+                                                ;;  card-ids (->> [:earth-area :space-area]
+                                                ;;                (mapcat #(game.data.dynamic/get-card-ids-by-basyou-keyword ctx %)))
+                                                ;;  player-card-ids-pairs (->> (game.data.dynamic/get-card-controler ctx card-ids)
+                                                ;;                             (zipmap card-ids)
+                                                ;;                             (group-by (fn [[card-id controller]] controller))
+                                                ;;                             ((apply juxt game.define.player/player-ids))
+                                                ;;                             (clojure.spec.alpha/assert (clojure.spec.alpha/coll-of (clojure.spec.alpha/coll-of string?)))
+                                                ;;                             (map (fn [card-id-controller-pairs]
+                                                ;;                                    (map (fn [[card-id controller]]
+                                                ;;                                           card-id)
+                                                ;;                                         card-id-controller-pairs)))
+                                                ;;                             (zipmap game.define.player/player-ids)
+                                                ;;                             (clojure.spec.alpha/assert (clojure.spec.alpha/map-of :game.define.player/id (clojure.spec.alpha/coll-of string?))))
+                                                ;;  ctx (->> player-card-ids-pairs
+                                                ;;           (reduce (fn [ctx [player-id card-ids]]
+                                                ;;                     (let [card-ids-with-basyou (->> (game.data.dynamic/get-card-basyou ctx card-ids)
+                                                ;;                                                     (zipmap card-ids))
+                                                ;;                           ctx (-> ctx (game.data.dynamic/move-setgroup card-ids-with-basyou [player-id :maintenance-area]))]
+                                                ;;                       ctx))))
+                                                 ]
                                              ctx))}}}
         _ (s/assert :game.define.effect/value effect)]
     effect))
