@@ -1,20 +1,18 @@
 
-import {doA} from "./game"
+import type { CardProto, Model } from "./define/type"
 
-export default {
-    doA: ()=>{
-        doA()
-    },
-    payments: [["select 3 card", "pay cost"], ["select 1 card", "tap"]],
-    condition: "1 or 2",
-    action: (ctx, selection)=>{
-        
-    },
-    onEvent: (ctx, evt)=>{
-        addBlock(ctx, {
-            action: (ctx)=>{
-                evt.power
-            }
-        })
+const a: CardProto = {
+    texts: {
+        doA: {
+            action: `function action (ctx) {
+                const value = moveCard(ctx)
+                console.log("impl action executed");
+                return \`function action(ctx){
+                    console.log("\`+value+\`");
+                }\`;
+            }`
+        }
     }
 }
+
+export default a

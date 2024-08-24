@@ -1,5 +1,10 @@
+function doB(){
+    console.log("doB")
+}
+
 export function doA(){
-    console.log("abc")
+    doB()
+    return "xxx aaa"
 }
 
 export default {}

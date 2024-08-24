@@ -1,6 +1,6 @@
 {
     "compilerOptions": {
-        //"outDir": "dist",
+        "outDir": "dist",
         "sourceMap": true,
         "module": "commonjs",
         "esModuleInterop": true,
@@ -13,7 +13,8 @@
             "dom",
             "ES2015",
         ],
-        "downlevelIteration": true
+        "downlevelIteration": true,
+        "noImplicitAny": false
     },
     "include": [
         "src"

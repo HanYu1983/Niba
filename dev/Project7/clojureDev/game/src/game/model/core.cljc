@@ -417,6 +417,7 @@
 
 (defn get-damage-checking-step-rule-effect [])
 
+
 (defn test-179030_11E_U_BL209R_blue []
   (let [player-a :A
         card-id "0"
@@ -477,10 +478,11 @@
 
 (defn can-not-be-moved-cards-ids [ctx effect])
 
+;; 殺牌程移動牌在tips就要篩選掉
 ;; 自軍効果以外では破壊されずダメージを受けない
 ;; 敵軍ユニットの効果では破壊されずダメージを受けない
 ;; 敵軍コマンドの効果では破壊されず移動しない
-
+;; DOTO: effect改為effect-controller
 (defn can-not-be-destroyed-card-ids [ctx effect]
   (s/assert ::spec ctx)
   (->> ctx
