@@ -23,3 +23,7 @@ export type Logic = { id: "or" } | { id: "and" }
 export type CardProto = {
     texts: { [key: string]: Text }
 }
+
+export type Game = {
+    doA(ctx:any): string
+}

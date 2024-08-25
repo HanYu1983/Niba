@@ -1,6 +1,5 @@
 import * as Game from "./app/game"
 
-
 async function main() {
     const card1 = (await import("./app/card1")).default
     const script1 = card1.texts.doA.action
