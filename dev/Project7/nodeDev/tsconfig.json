@@ -11,7 +11,7 @@
         "jsx": "react",
         "lib": [
             "dom",
-            "ES2015",
+            "ES2017",
         ],
         "downlevelIteration": true,
         "noImplicitAny": false
