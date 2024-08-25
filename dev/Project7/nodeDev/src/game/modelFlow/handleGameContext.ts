@@ -687,6 +687,9 @@ export function handleAttackDamage(
             const hp = setGroupCards
               .map((setGroupCardID) => {
                 const [_2, _3, hp] = getCardBattlePoint(ctx, setGroupCardID);
+                if(hp == "*"){
+                  return 0;
+                }
                 return hp;
               })
               .reduce((a, b) => a + b);
@@ -822,6 +825,9 @@ export function handleAttackDamage(
             const hp = setGroupCards
               .map((setGroupCardID) => {
                 const [_2, _3, hp] = getCardBattlePoint(ctx, setGroupCardID);
+                if(hp == "*"){
+                  return 0;
+                }
                 return hp;
               })
               .reduce((a, b) => a + b);
