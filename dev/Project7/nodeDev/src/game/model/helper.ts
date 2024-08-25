@@ -243,8 +243,14 @@ export function getBattleGroupBattlePoint(
         const power = setGroupCards
           .map((setGroupCardID) => {
             const [melee, range] = getCardBattlePoint(ctx, setGroupCardID);
+            if (melee == "*") {
+              return 0;
+            }
             if (i == 0) {
               return melee || 0;
+            }
+            if (range == "*") {
+              return 0;
             }
             return range || 0;
           })

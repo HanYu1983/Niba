@@ -194,7 +194,7 @@ export function isCanPlayCardInPhase(phase: Phase): boolean {
   }
 }
 
-export type BattleBonus = [number, number, number];
+export type BattleBonus = ["*" | number, "*" | number, "*" | number];
 
 type GameEvent1 = {
   id: "GameEventOnTiming";

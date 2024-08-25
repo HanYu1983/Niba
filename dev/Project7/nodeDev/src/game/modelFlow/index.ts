@@ -23,7 +23,8 @@ import {
   reduceEffect,
   mapCard,
   getCardBaSyou,
-  getCardController
+  getCardController,
+  addImmediateEffect
 } from "../model";
 import { log2 } from "../../tool/logger";
 import {
@@ -655,13 +656,14 @@ export function applyFlow(
         },
         //...(block.require ? { require: wrapRequireKey(block.require) } : null),
       };
-      ctx = {
-        ...ctx,
-        gameState: {
-          ...ctx.gameState,
-          immediateEffect: [block, ...ctx.gameState.immediateEffect],
-        },
-      };
+      ctx = addImmediateEffect(ctx, block)
+      // ctx = {
+      //   ...ctx,
+      //   gameState: {
+      //     ...ctx.gameState,
+      //     immediateEffect: [block, ...ctx.gameState.immediateEffect],
+      //   },
+      // };
       // set hasTriggerEvent
       ctx = {
         ...ctx,
