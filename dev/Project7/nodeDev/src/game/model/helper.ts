@@ -6,7 +6,6 @@ import {
   CardCategory,
   CardColor,
   CardRole,
-  Coin,
   getBaSyouID,
   getOpponentPlayerID,
   isBa,
@@ -362,20 +361,19 @@ export function isMaster(
   return true;
 }
 
-export function getCardCoins(ctx: GameContext, cardID: string): Coin[] {
-  // return ctx.gameState.table.tokens
-  //   .filter((token) => {
-  //     if (token.position.id != "TokenPositionCard") {
-  //       return false;
-  //     }
-  //     if (token.position.cardID != cardID) {
-  //       return false;
-  //     }
-  //     return true;
-  //   })
-  //   .map((token) => token.protoID as Coin);
-  return []
-}
+// export function getCardCoins(ctx: GameContext, cardID: string): Coin[] {
+//   return ctx.gameState.table.tokens
+//     .filter((token) => {
+//       if (token.position.id != "TokenPositionCard") {
+//         return false;
+//       }
+//       if (token.position.cardID != cardID) {
+//         return false;
+//       }
+//       return true;
+//     })
+//     .map((token) => token.protoID as Coin);
+// }
 
 // export function getCardStateIterator(
 //   ctx: GameContext

@@ -1443,7 +1443,7 @@ export function queryFlow(ctx: GameContext, playerID: string): Flow[] {
                       responsePlayerID: playerID,
                       block: {
                         isOption: true,
-                        contextID: `${phase[1]}規定效果`,
+                        // contextID: `${phase[1]}規定效果`,
                         // require: {
                         //   id: "RequireTarget",
                         //   targets: {

@@ -345,15 +345,15 @@ export function getOpponentPlayerID(playerID: PlayerID): PlayerID {
 
 export type AttackSpeed = 1 | 2;
 
-type CoinBattleBonus = {
-  id: "CoinBattleBonus";
-  battleBonus: BattleBonus;
-};
+// type CoinBattleBonus = {
+//   id: "CoinBattleBonus";
+//   battleBonus: BattleBonus;
+// };
 
-type CoinCoin = {
-  id: "CoinCoin";
-};
-export type Coin = CoinCoin | CoinBattleBonus;
+// type CoinCoin = {
+//   id: "CoinCoin";
+// };
+// export type Coin = CoinCoin | CoinBattleBonus;
 
 
 export type DestroyReason1 = {
@@ -425,9 +425,9 @@ export type BlockPayloadCause =
 export type BlockPayload = {
   id?: string;
   cause?: BlockPayloadCause;
-  contextID?: string;
+  // 是否已經支付, 支付了不能取消
   requirePassed?: boolean;
-  feedbackPassed?: boolean;
+  // 是否是可選擇要不要發動的效果
   isOption?: boolean;
 };
 
