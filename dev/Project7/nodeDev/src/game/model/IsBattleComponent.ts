@@ -8,7 +8,7 @@ import {
   CardTableComponent,
 } from "./CardTableComponent"
 import { Table } from "../../tool/table";
-import { getOpponentBattleArea } from "./index";
+import { getOpponentBattleArea } from "./GameState";
 
 export type IsBattleComponent = {
   // 是否交戰中，key代表牌堆名稱的字串

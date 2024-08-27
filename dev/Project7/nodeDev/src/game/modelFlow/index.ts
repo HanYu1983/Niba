@@ -17,7 +17,7 @@ import {
   getBlockOwner,
   GameState,
   doBlockPayload,
-} from "../model";
+} from "../model/GameState";
 import {
   filterEffect,
   iterateEffect,
@@ -35,6 +35,7 @@ import {
   updateEffect,
 } from "./handleGameContext";
 import { DEFAULT_TABLE } from "../../tool/table";
+import { cancelActiveEffectID, setActiveEffectID } from "../model/ActiveEffectComponent";
 
 export type Message = {
   id: "MessageCustom";
@@ -94,71 +95,26 @@ export const DEFAULT_GAME_CONTEXT: GameContext = {
   versionID: 0,
 };
 
-export function setActiveEffectID(
+function setGameActiveEffectID(
   ctx: GameContext,
   playerID: string,
   effectID: string
 ): GameContext {
-  if (ctx.gameState.activeEffectID != null) {
-    throw new Error("有人在執行其它指令");
-  }
-  if (ctx.gameState.activeEffectID != null) {
-    const currentActiveEffect = iterateEffect(ctx.gameState).find(
-      (e) => e.id == ctx.gameState.activeEffectID
-    );
-    if (currentActiveEffect != null) {
-      const controller = getBlockOwner(ctx.gameState, currentActiveEffect);
-      if (controller != playerID) {
-        throw new Error("[cancelCommand] 你不是控制者");
-      }
-      if (currentActiveEffect.requirePassed) {
-        throw new Error("[cancelCommand] 已經處理需求的不能取消");
-      }
-    }
-  }
-  const effect = iterateEffect(ctx.gameState).find((e) => e.id == effectID);
-  if (effect == null) {
-    throw new Error("effect not found");
-  }
-  const controller = getBlockOwner(ctx.gameState, effect);
-  if (controller != playerID) {
-    throw new Error("[cancelCommand] 你不是控制者");
-  }
+  const gameState = setActiveEffectID(ctx.gameState, playerID, effectID)
   return {
     ...ctx,
-    gameState: {
-      ...ctx.gameState,
-      activeEffectID: effectID,
-    },
+    gameState: gameState as GameStateWithFlowMemory
   };
 }
 
-export function cancelActiveEffectID(
+function cancelGameActiveEffectID(
   ctx: GameContext,
   playerID: string
 ): GameContext {
-  if (ctx.gameState.activeEffectID == null) {
-    throw new Error("[cancelEffectID] activeEffectID not exist");
-  }
-  const effect = iterateEffect(ctx.gameState).find(
-    (e) => e.id == ctx.gameState.activeEffectID
-  );
-  if (effect == null) {
-    return ctx;
-  }
-  const controller = getBlockOwner(ctx.gameState, effect);
-  if (controller != playerID) {
-    throw new Error("[cancelEffectID] 你不是控制者");
-  }
-  if (effect.requirePassed) {
-    throw new Error("[cancelEffectID] 已經處理需求的不能取消");
-  }
+  const gameState = cancelActiveEffectID(ctx.gameState, playerID)
   return {
     ...ctx,
-    gameState: {
-      ...ctx.gameState,
-      activeEffectID: null,
-    },
+    gameState: gameState as GameStateWithFlowMemory
   };
 }
 
@@ -240,7 +196,7 @@ export function deleteImmediateEffect(
     if (effect.id != effectID) {
       return true;
     }
-    const controller = getBlockOwner(ctx.gameState, effect);
+    const controller = getBlockOwner(effect);
     if (controller != playerID) {
       throw new Error("you are not controller");
     }
@@ -383,7 +339,7 @@ export function applyFlow(
       if (flow.effectID == null) {
         throw new Error("effectID not found");
       }
-      ctx = setActiveEffectID(ctx, playerID, flow.effectID);
+      ctx = setGameActiveEffectID(ctx, playerID, flow.effectID);
       const isAllPassCut =
         !!ctx.gameState.flowMemory.hasPlayerPassCut[PlayerA] &&
         !!ctx.gameState.flowMemory.hasPlayerPassCut[PlayerB];
@@ -403,7 +359,7 @@ export function applyFlow(
       return ctx;
     }
     case "FlowCancelActiveEffectID": {
-      return cancelActiveEffectID(ctx, playerID);
+      return cancelGameActiveEffectID(ctx, playerID);
     }
     case "FlowDeleteImmediateEffect": {
       if (flow.effectID == null) {
@@ -1004,7 +960,7 @@ export function queryFlow(ctx: GameContext, playerID: string): Flow[] {
 
     const enablePayCost = true;
     if (enablePayCost) {
-      const controller = getBlockOwner(ctx.gameState, currentActiveEffect);
+      const controller = getBlockOwner(currentActiveEffect);
       const isPass = !!ctx.gameState.flowMemory.hasPlayerPassPayCost[playerID];
       const isOpponentPass =
         !!ctx.gameState.flowMemory.hasPlayerPassPayCost[
@@ -1072,7 +1028,7 @@ export function queryFlow(ctx: GameContext, playerID: string): Flow[] {
       ];
     }
 
-    const controller = getBlockOwner(ctx.gameState, currentActiveEffect);
+    const controller = getBlockOwner(currentActiveEffect);
     if (controller != playerID) {
       return [
         {
@@ -1102,7 +1058,7 @@ export function queryFlow(ctx: GameContext, playerID: string): Flow[] {
     const myEffect: BlockPayload[] = [];
     const opponentEffect: BlockPayload[] = [];
     ctx.gameState.immediateEffect.forEach((effect) => {
-      const controller = getBlockOwner(ctx.gameState, effect);
+      const controller = getBlockOwner(effect);
       if (controller == playerID) {
         myEffect.push(effect);
       } else {
@@ -1216,7 +1172,7 @@ export function queryFlow(ctx: GameContext, playerID: string): Flow[] {
       throw new Error("effect.id not found");
     }
     // 取得效果的控制者
-    const controller = getBlockOwner(ctx.gameState, effect);
+    const controller = getBlockOwner(effect);
     // 判斷切入流程
     const isAllPassCut =
       !!ctx.gameState.flowMemory.hasPlayerPassCut[PlayerA] &&

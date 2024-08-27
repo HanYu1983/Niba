@@ -1,7 +1,7 @@
 import {
   CardState,
   DEFAULT_CARD_STATE,
-} from "./index";
+} from "./GameState";
 
 export type CardStateComponent = {
   cardStates: { [key: string]: CardState }

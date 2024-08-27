@@ -21,8 +21,9 @@ import {
 import { CardStateComponent, getCardState } from "./CardStateComponent";
 import { IsBattleComponent } from "./IsBattleComponent";
 import { getSetGroupCards, getSetGroupRoot, SetGroupComponent } from "./SetGroupComponent";
-import { EffectStackComponent } from "./EffectStackComponent";
+import { EffectStackComponent, iterateEffect } from "./EffectStackComponent";
 import { getPreloadPrototype } from "../../script";
+import { ActiveEffectComponent } from "./ActiveEffectComponent";
 
 export type PlayerState = {
   id: string;
@@ -90,15 +91,21 @@ export type DestroyReason1 = {
 
 export type DestroyReason = DestroyReason1;
 
-export type GameState = {
-  //table: Table;
-  //cardState: CardState[];
+export type TimingComponent = {
   timing: Timing;
+}
+
+export type PlayerStateComponent = {
   playerState: PlayerState[];
+}
+
+export type ActivePlayerComponent = {
   activePlayerID: string | null;
+}
+
+export type GameState = {
   effects: GameEffectState[];
   globalCardState: GlobalCardState[];
-  activeEffectID: string | null;
   stackEffectMemory: BlockPayload[];
   // 專門給破壞效果用的用的堆疊
   // 傷害判定結束時，將所有破壞產生的廢棄效果丟到這，重設「決定解決順序」的旗標為真
@@ -106,23 +113,18 @@ export type GameState = {
   // 旗標為假時，才能才能開放給玩家切入
   // 這個堆疊解決完後，才回復到本來的堆疊的解決程序
   destroyEffect: BlockPayload[];
-  // 是否交戰中，key代表牌堆名稱的字串
-  isBattle: { [key: string]: boolean };
-  //
-  // flowMemory: {
-  //   state: "prepareDeck" | "whoFirst" | "draw6AndConfirm" | "playing";
-  //   hasTriggerEvent: boolean;
-  //   hasPlayerPassPhase: { [key: string]: boolean };
-  //   hasPlayerPassCut: { [key: string]: boolean };
-  //   hasPlayerPassPayCost: { [key: string]: boolean };
-  //   shouldTriggerStackEffectFinishedEvent: boolean;
-  //   msgs: Message[];
-  // };
   chipPool: { [key: string]: CardPrototype };
-} & SetGroupComponent & IsBattleComponent & CardTableComponent & EffectStackComponent & CardStateComponent;
+} & SetGroupComponent
+  & IsBattleComponent
+  & CardTableComponent
+  & EffectStackComponent
+  & CardStateComponent
+  & TimingComponent
+  & PlayerStateComponent
+  & ActivePlayerComponent
+  & ActiveEffectComponent;
 
 export function getBlockOwner(
-  ctx: GameState,
   blockPayload: BlockPayload
 ): PlayerID {
   if (blockPayload.cause == null) {

@@ -22,7 +22,7 @@ import {
   getBattleGroupBattlePoint,
   getCardBattlePoint,
   isABattleGroup,
-} from "../model";
+} from "../model/GameState";
 import {
   mapCard,
   getCardBaSyou,
@@ -496,7 +496,7 @@ export function updateDestroyEffect(ctx: GameContext): GameContext {
 
 export function getClientCommand(ctx: GameContext, clientID: string) {
   return ctx.gameState.commandEffect.filter((effect) => {
-    const controller = getBlockOwner(ctx.gameState, effect);
+    const controller = getBlockOwner(effect);
     if (controller != clientID) {
       log2("getClientCommand", "you are not owner. return");
       return;
