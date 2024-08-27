@@ -10,7 +10,8 @@ import {
   getBaSyouID,
   BattleAreaKeyword,
   BlockPayload,
-  CardPrototype
+  CardPrototype,
+  TIMING_CHART
 } from "../define";
 import {
   getCard,
@@ -24,6 +25,7 @@ import { getSetGroupCards, getSetGroupRoot, SetGroupComponent } from "./SetGroup
 import { EffectStackComponent, iterateEffect } from "./EffectStackComponent";
 import { getPreloadPrototype } from "../../script";
 import { ActiveEffectComponent } from "./ActiveEffectComponent";
+import { DEFAULT_TABLE } from "../../tool/table";
 
 export type PlayerState = {
   id: string;
@@ -123,6 +125,26 @@ export type GameState = {
   & PlayerStateComponent
   & ActivePlayerComponent
   & ActiveEffectComponent;
+
+export const DEFAULT_GAME_STATE: GameState = {
+  cards: {},
+  effects: [],
+  globalCardState: [],
+  table: DEFAULT_TABLE,
+  cardStates: {},
+  timing: TIMING_CHART[0],
+  playerState: [],
+  activePlayerID: null,
+  activeEffectID: null,
+  commandEffect: [],
+  immediateEffect: [],
+  stackEffect: [],
+  stackEffectMemory: [],
+  destroyEffect: [],
+  setGroupLink: {},
+  isBattle: {},
+  chipPool: {},
+}
 
 export function getBlockOwner(
   blockPayload: BlockPayload
