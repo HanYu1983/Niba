@@ -7,120 +7,63 @@ import { checkIsBattle } from "../gameState/IsBattleComponent";
 import { Flow } from "./Flow";
 import { GameStateWithFlowMemory } from "../gameStateWithFlowMemory/GameStateWithFlowMemory";
 import { setActiveEffectID, cancelActiveEffectID, doEffect, deleteImmediateEffect } from "../gameStateWithFlowMemory/handleEffect";
-import { GameContext } from "./GameContext";
-
-function setGameActiveEffectID(
-    ctx: GameContext,
-    playerID: string,
-    effectID: string
-): GameContext {
-    const gameState = setActiveEffectID(ctx.gameState, playerID, effectID)
-    return {
-        ...ctx,
-        gameState: gameState
-    };
-}
-
-function cancelGameActiveEffectID(
-    ctx: GameContext,
-    playerID: string
-): GameContext {
-    const gameState = cancelActiveEffectID(ctx.gameState, playerID)
-    return {
-        ...ctx,
-        gameState: gameState
-    };
-}
-
-function doGameEffect(
-    ctx: GameContext,
-    playerID: string,
-    effectID: string
-): GameContext {
-    const gameState = doEffect(ctx.gameState, playerID, effectID)
-    return {
-        ...ctx,
-        gameState: gameState
-    }
-}
-
-export function deleteGameImmediateEffect(
-    ctx: GameContext,
-    playerID: string,
-    effectID: string
-  ): GameContext {
-    let gameState = deleteImmediateEffect(ctx.gameState, playerID, effectID)
-    return {
-      ...ctx,
-      gameState: gameState
-    };
-  }
 
 let idSeq = 0;
 export function applyFlow(
-    ctx: GameContext,
+    ctx: GameStateWithFlowMemory,
     playerID: string,
     flow: Flow
-): GameContext {
+): GameStateWithFlowMemory {
     log2("applyFlow", playerID, flow);
     switch (flow.id) {
         case "FlowSetActiveEffectID": {
             if (flow.effectID == null) {
                 throw new Error("effectID not found");
             }
-            ctx = setGameActiveEffectID(ctx, playerID, flow.effectID);
+            ctx = setActiveEffectID(ctx, playerID, flow.effectID);
             const isAllPassCut =
-                !!ctx.gameState.flowMemory.hasPlayerPassCut[PlayerA] &&
-                !!ctx.gameState.flowMemory.hasPlayerPassCut[PlayerB];
+                !!ctx.flowMemory.hasPlayerPassCut[PlayerA] &&
+                !!ctx.flowMemory.hasPlayerPassCut[PlayerB];
             // 如果不是雙方都結束，就重設
             if (isAllPassCut == false) {
                 ctx = {
                     ...ctx,
-                    gameState: {
-                        ...ctx.gameState,
-                        flowMemory: {
-                            ...ctx.gameState.flowMemory,
-                            hasPlayerPassCut: {},
-                        },
+                    flowMemory: {
+                        ...ctx.flowMemory,
+                        hasPlayerPassCut: {},
                     },
                 };
             }
             return ctx;
         }
         case "FlowCancelActiveEffectID": {
-            return cancelGameActiveEffectID(ctx, playerID);
+            return cancelActiveEffectID(ctx, playerID);
         }
         case "FlowDeleteImmediateEffect": {
             if (flow.effectID == null) {
                 throw new Error("effectID not found");
             }
-            return deleteGameImmediateEffect(ctx, playerID, flow.effectID);
+            return deleteImmediateEffect(ctx, playerID, flow.effectID);
         }
         case "FlowDoEffect": {
             if (flow.effectID == null) {
                 throw new Error("effectID not found");
             }
-            ctx = doGameEffect(ctx, playerID, flow.effectID);
+            ctx = doEffect(ctx, playerID, flow.effectID);
             // 執行完效果時自動取消其中一方的結束宣告
             ctx = {
                 ...ctx,
-                gameState: {
-                    ...ctx.gameState,
-                    flowMemory: {
-                        ...ctx.gameState.flowMemory,
-                        hasPlayerPassPhase: {},
-                    },
+                flowMemory: {
+                    ...ctx.flowMemory,
+                    hasPlayerPassPhase: {},
                 },
             };
             // 清空支付狀態
             ctx = {
                 ...ctx,
-                gameState: {
-                    ...ctx.gameState,
-                    flowMemory: {
-                        ...ctx.gameState.flowMemory,
-                        hasPlayerPassPayCost: {},
-                    },
+                flowMemory: {
+                    ...ctx.flowMemory,
+                    hasPlayerPassPayCost: {},
                 },
             };
             // 每執行完一次效果，就更新指令
@@ -130,14 +73,11 @@ export function applyFlow(
         case "FlowPassPhase": {
             return {
                 ...ctx,
-                gameState: {
-                    ...ctx.gameState,
-                    flowMemory: {
-                        ...ctx.gameState.flowMemory,
-                        hasPlayerPassPhase: {
-                            ...ctx.gameState.flowMemory.hasPlayerPassPhase,
-                            [playerID]: true,
-                        },
+                flowMemory: {
+                    ...ctx.flowMemory,
+                    hasPlayerPassPhase: {
+                        ...ctx.flowMemory.hasPlayerPassPhase,
+                        [playerID]: true,
                     },
                 },
             };
@@ -145,61 +85,50 @@ export function applyFlow(
         case "FlowCancelPassPhase":
             return {
                 ...ctx,
-                gameState: {
-                    ...ctx.gameState,
-                    flowMemory: {
-                        ...ctx.gameState.flowMemory,
-                        hasPlayerPassPhase: {
-                            ...ctx.gameState.flowMemory.hasPlayerPassPhase,
-                            [playerID]: false,
-                        },
+                flowMemory: {
+                    ...ctx.flowMemory,
+                    hasPlayerPassPhase: {
+                        ...ctx.flowMemory.hasPlayerPassPhase,
+                        [playerID]: false,
                     },
                 },
             };
         case "FlowPassCut": {
             return {
                 ...ctx,
-                gameState: {
-                    ...ctx.gameState,
-                    flowMemory: {
-                        ...ctx.gameState.flowMemory,
-                        hasPlayerPassCut: {
-                            ...ctx.gameState.flowMemory.hasPlayerPassCut,
-                            [playerID]: true,
-                        },
+                flowMemory: {
+                    ...ctx.flowMemory,
+                    hasPlayerPassCut: {
+                        ...ctx.flowMemory.hasPlayerPassCut,
+                        [playerID]: true,
                     },
-                },
+                }
+
             };
         }
         case "FlowCancelPassCut":
             return {
                 ...ctx,
-                gameState: {
-                    ...ctx.gameState,
-                    flowMemory: {
-                        ...ctx.gameState.flowMemory,
-                        hasPlayerPassCut: {
-                            ...ctx.gameState.flowMemory.hasPlayerPassCut,
-                            [playerID]: false,
-                        },
+                flowMemory: {
+                    ...ctx.flowMemory,
+                    hasPlayerPassCut: {
+                        ...ctx.flowMemory.hasPlayerPassCut,
+                        [playerID]: false,
                     },
                 },
             };
         case "FlowTriggerTextEvent":
-            if (ctx.gameState.flowMemory.hasTriggerEvent) {
+            if (ctx.flowMemory.hasTriggerEvent) {
                 log2("applyFlow", "已經執行過triggerTextEvent");
                 return ctx;
             }
-            let gameState = triggerTextEvent(ctx.gameState, flow.event);
+            ctx = triggerTextEvent(ctx, flow.event) as GameStateWithFlowMemory;
             // set hasTriggerEvent
             ctx = {
                 ...ctx,
-                gameState: {
-                    ...gameState as GameStateWithFlowMemory,
-                    flowMemory: {
-                        ...ctx.gameState.flowMemory,
-                        hasTriggerEvent: true,
-                    },
+                flowMemory: {
+                    ...ctx.flowMemory,
+                    hasTriggerEvent: true,
                 },
             };
             return ctx;
@@ -208,20 +137,17 @@ export function applyFlow(
             // set hasTriggerEvent
             ctx = {
                 ...ctx,
-                gameState: {
-                    ...ctx.gameState,
-                    flowMemory: {
-                        ...ctx.gameState.flowMemory,
-                        hasTriggerEvent: true,
-                    },
-                },
+                flowMemory: {
+                    ...ctx.flowMemory,
+                    hasTriggerEvent: true,
+                }
             };
             return ctx;
         case "FlowNextTiming": {
             {
                 // 處理遊戲開始的效果
-                if (ctx.gameState.flowMemory.state != "playing") {
-                    switch (ctx.gameState.flowMemory.state) {
+                if (ctx.flowMemory.state != "playing") {
+                    switch (ctx.flowMemory.state) {
                         case "prepareDeck": {
                             {
                                 const plyrID = PlayerA;
@@ -230,19 +156,16 @@ export function applyFlow(
                                     value: [plyrID, "本国"],
                                 };
                                 const fromCS =
-                                    ctx.gameState.table.cardStack[getBaSyouID(baSyou)];
+                                    ctx.table.cardStack[getBaSyouID(baSyou)];
                                 ctx = {
                                     ...ctx,
-                                    gameState: {
-                                        ...ctx.gameState,
-                                        table: {
-                                            ...ctx.gameState.table,
-                                            cardStack: {
-                                                ...ctx.gameState.table.cardStack,
-                                                [getBaSyouID(baSyou)]: fromCS.sort(
-                                                    () => Math.random() - 0.5
-                                                ),
-                                            },
+                                    table: {
+                                        ...ctx.table,
+                                        cardStack: {
+                                            ...ctx.table.cardStack,
+                                            [getBaSyouID(baSyou)]: fromCS.sort(
+                                                () => Math.random() - 0.5
+                                            ),
                                         },
                                     },
                                 };
@@ -254,31 +177,25 @@ export function applyFlow(
                                     value: [plyrID, "本国"],
                                 };
                                 const fromCS =
-                                    ctx.gameState.table.cardStack[getBaSyouID(baSyou)];
+                                    ctx.table.cardStack[getBaSyouID(baSyou)];
                                 ctx = {
                                     ...ctx,
-                                    gameState: {
-                                        ...ctx.gameState,
-                                        table: {
-                                            ...ctx.gameState.table,
-                                            cardStack: {
-                                                ...ctx.gameState.table.cardStack,
-                                                [getBaSyouID(baSyou)]: fromCS.sort(
-                                                    () => Math.random() - 0.5
-                                                ),
-                                            },
+                                    table: {
+                                        ...ctx.table,
+                                        cardStack: {
+                                            ...ctx.table.cardStack,
+                                            [getBaSyouID(baSyou)]: fromCS.sort(
+                                                () => Math.random() - 0.5
+                                            ),
                                         },
                                     },
                                 };
                             }
                             ctx = {
                                 ...ctx,
-                                gameState: {
-                                    ...ctx.gameState,
-                                    flowMemory: {
-                                        ...ctx.gameState.flowMemory,
-                                        state: "whoFirst",
-                                    },
+                                flowMemory: {
+                                    ...ctx.flowMemory,
+                                    state: "whoFirst",
                                 },
                             };
                             break;
@@ -286,12 +203,9 @@ export function applyFlow(
                         case "whoFirst": {
                             ctx = {
                                 ...ctx,
-                                gameState: {
-                                    ...ctx.gameState,
-                                    flowMemory: {
-                                        ...ctx.gameState.flowMemory,
-                                        state: "draw6AndConfirm",
-                                    },
+                                flowMemory: {
+                                    ...ctx.flowMemory,
+                                    state: "draw6AndConfirm",
                                 },
                             };
                             break;
@@ -299,19 +213,14 @@ export function applyFlow(
                         case "draw6AndConfirm": {
                             ctx = {
                                 ...ctx,
-                                gameState: {
-                                    ...ctx.gameState,
-                                    timing: [0, ["リロールフェイズ", "フェイズ開始"]],
-                                },
+                                timing: [0, ["リロールフェイズ", "フェイズ開始"]],
+
                             };
                             ctx = {
                                 ...ctx,
-                                gameState: {
-                                    ...ctx.gameState,
-                                    flowMemory: {
-                                        ...ctx.gameState.flowMemory,
-                                        state: "playing",
-                                    },
+                                flowMemory: {
+                                    ...ctx.flowMemory,
+                                    state: "playing",
                                 },
                             };
                             break;
@@ -322,75 +231,59 @@ export function applyFlow(
             }
             // 傷判的規定效果一結束就收集所有破壞的卡並建立破壞而廢棄的效果
             if (
-                ctx.gameState.timing[1][0] == "戦闘フェイズ" &&
-                ctx.gameState.timing[1][1] == "ダメージ判定ステップ" &&
-                ctx.gameState.timing[1][2] == "規定の効果"
+                ctx.timing[1][0] == "戦闘フェイズ" &&
+                ctx.timing[1][1] == "ダメージ判定ステップ" &&
+                ctx.timing[1][2] == "規定の効果"
             ) {
                 // 更新所有破壞而廢棄的效果
                 // 若有產生值，在下一步時主動玩家就要拿到決定解決順序的指令
-                let gameState = updateDestroyEffect(ctx.gameState);
-                ctx = {
-                    ...ctx,
-                    gameState: gameState as GameStateWithFlowMemory
-                }
+                ctx = updateDestroyEffect(ctx) as GameStateWithFlowMemory;
             }
             // 回合結束時切換主動玩家
             if (
-                ctx.gameState.timing[1][0] == "戦闘フェイズ" &&
-                ctx.gameState.timing[1][1] == "ターン終了時" &&
-                ctx.gameState.timing[1][2] == "効果終了。ターン終了"
+                ctx.timing[1][0] == "戦闘フェイズ" &&
+                ctx.timing[1][1] == "ターン終了時" &&
+                ctx.timing[1][2] == "効果終了。ターン終了"
             ) {
-                if (ctx.gameState.activePlayerID == null) {
+                if (ctx.activePlayerID == null) {
                     throw new Error("activePlayerID not found");
                 }
                 ctx = {
                     ...ctx,
-                    gameState: {
-                        ...ctx.gameState,
-                        activePlayerID: getOpponentPlayerID(ctx.gameState.activePlayerID),
-                    },
+                    activePlayerID: getOpponentPlayerID(ctx.activePlayerID),
                 };
             }
             // 下一步
             {
-                const nextTiming = getNextTiming(ctx.gameState.timing);
+                const nextTiming = getNextTiming(ctx.timing);
                 ctx = {
                     ...ctx,
-                    gameState: {
-                        ...ctx.gameState,
-                        timing: nextTiming,
-                    },
+                    timing: nextTiming,
                 };
             }
             // p34
             // 戰鬥階段的每個步驟開始時，確認是否交戰中
             if (
-                ctx.gameState.timing[1][0] == "戦闘フェイズ" &&
-                ctx.gameState.timing[1][2] == "ステップ開始"
+                ctx.timing[1][0] == "戦闘フェイズ" &&
+                ctx.timing[1][2] == "ステップ開始"
             ) {
-                ctx = { ...ctx, gameState: checkIsBattle(ctx.gameState) as GameStateWithFlowMemory };
+                ctx = checkIsBattle(ctx) as GameStateWithFlowMemory
             }
             // 重設觸發flag
             ctx = {
                 ...ctx,
-                gameState: {
-                    ...ctx.gameState,
-                    flowMemory: {
-                        ...ctx.gameState.flowMemory,
-                        hasTriggerEvent: false,
-                    },
+                flowMemory: {
+                    ...ctx.flowMemory,
+                    hasTriggerEvent: false,
                 },
             };
             // 重設宣告結束的flag
             ctx = {
                 ...ctx,
-                gameState: {
-                    ...ctx.gameState,
-                    flowMemory: {
-                        ...ctx.gameState.flowMemory,
-                        hasPlayerPassPhase: {},
-                    },
-                },
+                flowMemory: {
+                    ...ctx.flowMemory,
+                    hasPlayerPassPhase: {},
+                }
             };
             // 自動更新指令
             ctx = updateCommand(ctx);
@@ -408,78 +301,67 @@ export function applyFlow(
                 },
                 //...(block.require ? { require: wrapRequireKey(block.require) } : null),
             };
-            let gameState = addImmediateEffect(ctx.gameState, block)
-            ctx = {
-                ...ctx,
-                gameState: gameState as GameStateWithFlowMemory
-            }
+            ctx = addImmediateEffect(ctx, block) as GameStateWithFlowMemory
             // ctx = {
             //   ...ctx,
             //   gameState: {
-            //     ...ctx.gameState,
-            //     immediateEffect: [block, ...ctx.gameState.immediateEffect],
+            //     ...ctx,
+            //     immediateEffect: [block, ...ctx.immediateEffect],
             //   },
             // };
             // set hasTriggerEvent
             ctx = {
                 ...ctx,
-                gameState: {
-                    ...ctx.gameState,
-                    flowMemory: {
-                        ...ctx.gameState.flowMemory,
-                        hasTriggerEvent: true,
-                    },
-                },
+                flowMemory: {
+                    ...ctx.flowMemory,
+                    hasTriggerEvent: true,
+                }
             };
             return ctx;
         }
         case "FlowHandleDamageStepRule": {
             // 傷害計算並造成傷害
-            const attackPlayerID = ctx.gameState.activePlayerID;
+            const attackPlayerID = ctx.activePlayerID;
             if (attackPlayerID == null) {
                 throw new Error("attackPlayerID not found");
             }
             const guardPlayerID = getOpponentPlayerID(attackPlayerID);
             // 速度1
-            let gameState = ctx.gameState as GameState
-            gameState = handleAttackDamage(
-                gameState,
+            ctx = handleAttackDamage(
+                ctx,
                 attackPlayerID,
                 guardPlayerID,
                 "戦闘エリア（左）",
                 1
-            );
-            gameState = handleAttackDamage(
-                gameState,
+            ) as GameStateWithFlowMemory;
+            ctx = handleAttackDamage(
+                ctx,
                 attackPlayerID,
                 guardPlayerID,
                 "戦闘エリア（右）",
                 1
-            );
+            ) as GameStateWithFlowMemory;
             // 速度2
-            gameState = handleAttackDamage(
-                gameState,
+            ctx = handleAttackDamage(
+                ctx,
                 attackPlayerID,
                 guardPlayerID,
                 "戦闘エリア（左）",
                 2
-            );
-            gameState = handleAttackDamage(
-                gameState,
+            ) as GameStateWithFlowMemory;
+            ctx = handleAttackDamage(
+                ctx,
                 attackPlayerID,
                 guardPlayerID,
                 "戦闘エリア（右）",
                 2
-            );
+            ) as GameStateWithFlowMemory;
             // set hasTriggerEvent
             ctx = {
                 ...ctx,
-                gameState: {
-                    ...gameState as GameStateWithFlowMemory,
-                    flowMemory: {
-                        ...ctx.gameState.flowMemory,
-                        hasTriggerEvent: true,
-                    },
+                flowMemory: {
+                    ...ctx.flowMemory,
+                    hasTriggerEvent: true,
                 },
             };
             return ctx;
@@ -489,7 +371,7 @@ export function applyFlow(
             // {
             //   ctx = updateEffect(ctx);
             // }
-            // const cardsInBattleArea = iterateCard(ctx.gameState.table).filter(
+            // const cardsInBattleArea = iterateCard(ctx.table).filter(
             //   (card) => {
             //     switch (getCardBaSyou(ctx, card.id).value[1]) {
             //       case "戦闘エリア（右）":
@@ -514,7 +396,7 @@ export function applyFlow(
             //     value: [cardController, "配備エリア"],
             //   };
             //   const table = moveCard(
-            //     ctx.gameState.table,
+            //     ctx.table,
             //     getBaSyouID(fromBaSyou),
             //     getBaSyouID(toBaSyou),
             //     card.id,
@@ -523,7 +405,7 @@ export function applyFlow(
             //   return {
             //     ...ctx,
             //     gameState: {
-            //       ...ctx.gameState,
+            //       ...ctx,
             //       table: table,
             //     },
             //   };
@@ -546,9 +428,9 @@ export function applyFlow(
             // ctx = {
             //   ...ctx,
             //   gameState: {
-            //     ...ctx.gameState,
+            //     ...ctx,
             //     flowMemory: {
-            //       ...ctx.gameState.flowMemory,
+            //       ...ctx.flowMemory,
             //       hasTriggerEvent: true,
             //     },
             //   },
@@ -556,77 +438,68 @@ export function applyFlow(
             return ctx;
         }
         case "FlowHandleStackEffectFinished": {
-            let gameState = triggerTextEvent(ctx.gameState, {
+            ctx = triggerTextEvent(ctx, {
                 id: "カット終了時",
-                effects: ctx.gameState.stackEffectMemory,
-            });
+                effects: ctx.stackEffectMemory,
+            }) as GameStateWithFlowMemory;
             ctx = {
                 ...ctx,
-                gameState: {
-                    ...gameState as GameStateWithFlowMemory,
-                    stackEffectMemory: [],
-                    flowMemory: {
-                        ...ctx.gameState.flowMemory,
-                        shouldTriggerStackEffectFinishedEvent: false,
-                    },
+                stackEffectMemory: [],
+                flowMemory: {
+                    ...ctx.flowMemory,
+                    shouldTriggerStackEffectFinishedEvent: false,
                 },
             };
             return ctx;
         }
         case "FlowPassPayCost": {
-            const effect = iterateEffect(ctx.gameState).find((e) => e.id == flow.effectID);
+            const effect = iterateEffect(ctx).find((e) => e.id == flow.effectID);
             if (effect == null) {
                 throw new Error(`effectID not found:${flow.effectID}`);
             }
             //assertBlockPayloadTargetTypeValueLength(effect);
             ctx = {
                 ...ctx,
-                gameState: {
-                    ...ctx.gameState,
-                    flowMemory: {
-                        ...ctx.gameState.flowMemory,
-                        hasPlayerPassPayCost: {
-                            ...ctx.gameState.flowMemory.hasPlayerPassPayCost,
-                            [playerID]: true,
-                        },
+                flowMemory: {
+                    ...ctx.flowMemory,
+                    hasPlayerPassPayCost: {
+                        ...ctx.flowMemory.hasPlayerPassPayCost,
+                        [playerID]: true,
                     },
                 },
             };
             return ctx;
         }
         case "FlowMakeDestroyOrder": {
-            const willAddedDestroyEffect = ctx.gameState.destroyEffect.filter((a) => {
-                return ctx.gameState.stackEffect.find((b) => a.id == b.id) == null;
+            const willAddedDestroyEffect = ctx.destroyEffect.filter((a) => {
+                return ctx.stackEffect.find((b) => a.id == b.id) == null;
             });
             if (flow.destroyEffect.length != willAddedDestroyEffect.length) {
                 throw new Error("長度不符合");
             }
             return {
                 ...ctx,
-                gameState: {
-                    ...ctx.gameState,
-                    // 移除破壞效果，全部移到堆疊
-                    destroyEffect: [],
-                    stackEffect: [
-                        ...willAddedDestroyEffect,
-                        ...ctx.gameState.stackEffect,
-                    ],
-                    // 重設切入旗標，讓玩家再次切入
-                    flowMemory: {
-                        ...ctx.gameState.flowMemory,
-                        hasPlayerPassCut: {},
-                    },
+                // 移除破壞效果，全部移到堆疊
+                destroyEffect: [],
+                stackEffect: [
+                    ...willAddedDestroyEffect,
+                    ...ctx.stackEffect,
+                ],
+                // 重設切入旗標，讓玩家再次切入
+                flowMemory: {
+                    ...ctx.flowMemory,
+                    hasPlayerPassCut: {},
                 },
             };
         }
         case "FlowHandleRerollPhaseRule": {
-            // const activePlayerID = ctx.gameState.activePlayerID;
+            // const activePlayerID = ctx.activePlayerID;
             // if (activePlayerID == null) {
             //   throw new Error("activePlayer not found");
             // }
             // // 先更新效果
             // ctx = updateEffect(ctx);
-            // const myCards = iterateCard(ctx.gameState.table)
+            // const myCards = iterateCard(ctx.table)
             //   // 我控制的
             //   .filter((card) => {
             //     return getCardController(ctx, card.id) == activePlayerID;
@@ -652,9 +525,9 @@ export function applyFlow(
             // ctx = {
             //   ...ctx,
             //   gameState: {
-            //     ...ctx.gameState,
+            //     ...ctx,
             //     flowMemory: {
-            //       ...ctx.gameState.flowMemory,
+            //       ...ctx.flowMemory,
             //       hasTriggerEvent: true,
             //     },
             //   },

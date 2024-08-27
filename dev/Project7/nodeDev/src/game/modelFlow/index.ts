@@ -37,7 +37,7 @@ function filterEnableCardText(
 
 // 更新命令列表
 // 使用型技能
-export function updateCommand(ctx: GameContext): GameContext {
+export function updateCommand(ctx: GameStateWithFlowMemory): GameStateWithFlowMemory {
   // ctx = {
   //   ...ctx,
   //   gameState: {

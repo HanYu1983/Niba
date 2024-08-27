@@ -5,8 +5,9 @@ import { Flow } from "./Flow";
 import { getActiveEffectID } from "../gameStateWithFlowMemory/handleEffect";
 import { GameContext } from "./GameContext";
 import { getClientCommand } from "./getClientCommand";
+import { GameStateWithFlowMemory } from "../gameStateWithFlowMemory/GameStateWithFlowMemory";
 
-export function queryFlow(ctx: GameContext, playerID: string): Flow[] {
+export function queryFlow(ctx: GameStateWithFlowMemory, playerID: string): Flow[] {
     if (true) {
         const hasSomeoneLiveIsZero =
             [PlayerA, PlayerB]
@@ -14,7 +15,7 @@ export function queryFlow(ctx: GameContext, playerID: string): Flow[] {
                     return getBaSyouID({ id: "AbsoluteBaSyou", value: [pid, "本国"] });
                 })
                 .map((baSyouID) => {
-                    return ctx.gameState.table.cardStack[baSyouID] || [];
+                    return ctx.table.cardStack[baSyouID] || [];
                 })
                 .filter((cards) => {
                     return cards.length == 0;
@@ -25,9 +26,9 @@ export function queryFlow(ctx: GameContext, playerID: string): Flow[] {
         }
     }
     // 有玩家在支付卡片
-    const activeEffectID = getActiveEffectID(ctx.gameState)
+    const activeEffectID = getActiveEffectID(ctx)
     if (activeEffectID != null) {
-        const currentActiveEffect = iterateEffect(ctx.gameState).find(
+        const currentActiveEffect = iterateEffect(ctx).find(
             (e) => e.id == activeEffectID
         );
         if (currentActiveEffect == null) {
@@ -37,9 +38,9 @@ export function queryFlow(ctx: GameContext, playerID: string): Flow[] {
         const enablePayCost = true;
         if (enablePayCost) {
             const controller = getBlockOwner(currentActiveEffect);
-            const isPass = !!ctx.gameState.flowMemory.hasPlayerPassPayCost[playerID];
+            const isPass = !!ctx.flowMemory.hasPlayerPassPayCost[playerID];
             const isOpponentPass =
-                !!ctx.gameState.flowMemory.hasPlayerPassPayCost[
+                !!ctx.flowMemory.hasPlayerPassPayCost[
                 getOpponentPlayerID(playerID)
                 ];
             if (isPass && isOpponentPass) {
@@ -129,11 +130,11 @@ export function queryFlow(ctx: GameContext, playerID: string): Flow[] {
         ];
     }
     // 處理立即效果
-    if (ctx.gameState.immediateEffect.length) {
-        const isActivePlayer = ctx.gameState.activePlayerID == playerID;
+    if (ctx.immediateEffect.length) {
+        const isActivePlayer = ctx.activePlayerID == playerID;
         const myEffect: BlockPayload[] = [];
         const opponentEffect: BlockPayload[] = [];
-        ctx.gameState.immediateEffect.forEach((effect) => {
+        ctx.immediateEffect.forEach((effect) => {
             const controller = getBlockOwner(effect);
             if (controller == playerID) {
                 myEffect.push(effect);
@@ -185,8 +186,8 @@ export function queryFlow(ctx: GameContext, playerID: string): Flow[] {
                 : []),
         ];
     }
-    if (ctx.gameState.flowMemory.shouldTriggerStackEffectFinishedEvent) {
-        const isActivePlayer = ctx.gameState.activePlayerID == playerID;
+    if (ctx.flowMemory.shouldTriggerStackEffectFinishedEvent) {
+        const isActivePlayer = ctx.activePlayerID == playerID;
         if (isActivePlayer == false) {
             return [
                 {
@@ -204,23 +205,23 @@ export function queryFlow(ctx: GameContext, playerID: string): Flow[] {
     }
     // 破壞效果，如果效果多於1個，則讓主動玩家選擇順序
     SelectDestroyOrder: {
-        switch (ctx.gameState.timing[1][0]) {
+        switch (ctx.timing[1][0]) {
             case "戦闘フェイズ":
-                switch (ctx.gameState.timing[1][1]) {
+                switch (ctx.timing[1][1]) {
                     case "ダメージ判定ステップ":
-                        switch (ctx.gameState.timing[1][2]) {
+                        switch (ctx.timing[1][2]) {
                             case "規定の効果":
                                 break SelectDestroyOrder;
                         }
                 }
                 // 因為destroyEffect可以重復刷新，所以在加入到堆疊時，不能加入重復的
-                const willAddedDestroyEffect = ctx.gameState.destroyEffect.filter(
+                const willAddedDestroyEffect = ctx.destroyEffect.filter(
                     (a) => {
-                        return ctx.gameState.stackEffect.find((b) => a.id == b.id) == null;
+                        return ctx.stackEffect.find((b) => a.id == b.id) == null;
                     }
                 );
                 if (willAddedDestroyEffect.length) {
-                    const isActivePlayer = ctx.gameState.activePlayerID == playerID;
+                    const isActivePlayer = ctx.activePlayerID == playerID;
                     if (isActivePlayer == false) {
                         return [
                             {
@@ -239,11 +240,11 @@ export function queryFlow(ctx: GameContext, playerID: string): Flow[] {
                 }
         }
     }
-    const myCommandList = getClientCommand(ctx.gameState, playerID);
+    const myCommandList = getClientCommand(ctx, playerID);
     // 處理堆疊效果，從最上方開始處理
-    if (ctx.gameState.stackEffect.length) {
+    if (ctx.stackEffect.length) {
         // 取得最上方的效果
-        const effect = ctx.gameState.stackEffect[0];
+        const effect = ctx.stackEffect[0];
         if (effect.id == null) {
             throw new Error("effect.id not found");
         }
@@ -251,12 +252,12 @@ export function queryFlow(ctx: GameContext, playerID: string): Flow[] {
         const controller = getBlockOwner(effect);
         // 判斷切入流程
         const isAllPassCut =
-            !!ctx.gameState.flowMemory.hasPlayerPassCut[PlayerA] &&
-            !!ctx.gameState.flowMemory.hasPlayerPassCut[PlayerB];
+            !!ctx.flowMemory.hasPlayerPassCut[PlayerA] &&
+            !!ctx.flowMemory.hasPlayerPassCut[PlayerB];
         // 如果雙方玩家還沒放棄切入
         if (isAllPassCut == false) {
             // 如果我宣告了放棄切入，回傳取消
-            const isPassCut = ctx.gameState.flowMemory.hasPlayerPassCut[playerID];
+            const isPassCut = ctx.flowMemory.hasPlayerPassCut[playerID];
             if (isPassCut) {
                 return [
                     {
@@ -269,7 +270,7 @@ export function queryFlow(ctx: GameContext, playerID: string): Flow[] {
             if (controller == playerID) {
                 const opponentPlayerID = playerID == PlayerA ? PlayerB : PlayerA;
                 const isOpponentPassCut =
-                    ctx.gameState.flowMemory.hasPlayerPassCut[opponentPlayerID];
+                    ctx.flowMemory.hasPlayerPassCut[opponentPlayerID];
                 if (!isOpponentPassCut) {
                     return [
                         {
@@ -321,21 +322,21 @@ export function queryFlow(ctx: GameContext, playerID: string): Flow[] {
 
     const handleFreeTiming = (): Flow[] => {
         const isAllPassPhase =
-            !!ctx.gameState.flowMemory.hasPlayerPassPhase[PlayerA] &&
-            !!ctx.gameState.flowMemory.hasPlayerPassPhase[PlayerB];
+            !!ctx.flowMemory.hasPlayerPassPhase[PlayerA] &&
+            !!ctx.flowMemory.hasPlayerPassPhase[PlayerB];
         if (isAllPassPhase == false) {
-            if (ctx.gameState.flowMemory.hasPlayerPassPhase[playerID]) {
+            if (ctx.flowMemory.hasPlayerPassPhase[playerID]) {
                 return [
                     {
                         id: "FlowCancelPassPhase",
-                        description: `等待對方結束或是取消[${ctx.gameState.timing}]結束`,
+                        description: `等待對方結束或是取消[${ctx.timing}]結束`,
                     },
                 ];
             }
             return [
                 {
                     id: "FlowPassPhase",
-                    description: `宣告[${ctx.gameState.timing}]結束`,
+                    description: `宣告[${ctx.timing}]結束`,
                 },
                 // 處理指令
                 ...((): Flow[] => {
@@ -353,7 +354,7 @@ export function queryFlow(ctx: GameContext, playerID: string): Flow[] {
                 })(),
             ];
         }
-        if (playerID != ctx.gameState.activePlayerID) {
+        if (playerID != ctx.activePlayerID) {
             return [
                 {
                     id: "FlowWaitPlayer",
@@ -370,7 +371,7 @@ export function queryFlow(ctx: GameContext, playerID: string): Flow[] {
     {
         // 處理遊戲開始的效果
         // 在FlowNextTiming處理
-        if (ctx.gameState.flowMemory.state == "prepareDeck") {
+        if (ctx.flowMemory.state == "prepareDeck") {
             if (playerID != PlayerA) {
                 return [
                     {
@@ -381,7 +382,7 @@ export function queryFlow(ctx: GameContext, playerID: string): Flow[] {
             }
             return [{ id: "FlowNextTiming", description: "準備卡組" }];
         }
-        if (ctx.gameState.flowMemory.state == "whoFirst") {
+        if (ctx.flowMemory.state == "whoFirst") {
             if (playerID != PlayerA) {
                 return [
                     {
@@ -392,7 +393,7 @@ export function queryFlow(ctx: GameContext, playerID: string): Flow[] {
             }
             return [{ id: "FlowNextTiming", description: "PlayerA先攻" }];
         }
-        if (ctx.gameState.flowMemory.state == "draw6AndConfirm") {
+        if (ctx.flowMemory.state == "draw6AndConfirm") {
             if (playerID != PlayerA) {
                 return [
                     {
@@ -404,7 +405,7 @@ export function queryFlow(ctx: GameContext, playerID: string): Flow[] {
             return [{ id: "FlowNextTiming", description: "抽6張" }];
         }
     }
-    const [id, phase] = ctx.gameState.timing;
+    const [id, phase] = ctx.timing;
     // 處理自由時間，必須雙方都宣告結束才能進行到下一步
     switch (phase[0]) {
         case "ドローフェイズ":
@@ -430,7 +431,7 @@ export function queryFlow(ctx: GameContext, playerID: string): Flow[] {
             break;
     }
     // 之後的都是系統事件，由主動玩家呼叫
-    if (playerID != ctx.gameState.activePlayerID) {
+    if (playerID != ctx.activePlayerID) {
         return [
             {
                 id: "FlowWaitPlayer",
@@ -446,7 +447,7 @@ export function queryFlow(ctx: GameContext, playerID: string): Flow[] {
                 case "フェイズ開始":
                 case "フェイズ終了":
                     // 如果已經觸發事件
-                    if (ctx.gameState.flowMemory.hasTriggerEvent) {
+                    if (ctx.flowMemory.hasTriggerEvent) {
                         return [{ id: "FlowNextTiming" }];
                     }
                     return [
@@ -454,13 +455,13 @@ export function queryFlow(ctx: GameContext, playerID: string): Flow[] {
                             id: "FlowTriggerTextEvent",
                             event: {
                                 id: "GameEventOnTiming",
-                                timing: ctx.gameState.timing,
+                                timing: ctx.timing,
                             },
                         },
                     ];
                 case "規定の効果":
                     // 如果已經觸發規定の効果
-                    if (ctx.gameState.flowMemory.hasTriggerEvent) {
+                    if (ctx.flowMemory.hasTriggerEvent) {
                         return [{ id: "FlowNextTiming" }];
                     }
                     switch (phase[0]) {
@@ -468,7 +469,7 @@ export function queryFlow(ctx: GameContext, playerID: string): Flow[] {
                             return [
                                 {
                                     id: "FlowAddBlock",
-                                    responsePlayerID: ctx.gameState.activePlayerID,
+                                    responsePlayerID: ctx.activePlayerID,
                                     description: `${phase[0]}規定效果`,
                                     block: {
                                         // feedback: [
@@ -486,7 +487,7 @@ export function queryFlow(ctx: GameContext, playerID: string): Flow[] {
                             ];
                         case "リロールフェイズ":
                             // 如果已經觸發規定の効果
-                            if (ctx.gameState.flowMemory.hasTriggerEvent) {
+                            if (ctx.flowMemory.hasTriggerEvent) {
                                 return [{ id: "FlowNextTiming" }];
                             }
                             return [
@@ -509,7 +510,7 @@ export function queryFlow(ctx: GameContext, playerID: string): Flow[] {
                         case "ステップ開始":
                         case "ステップ終了":
                             // 如果已經觸發事件
-                            if (ctx.gameState.flowMemory.hasTriggerEvent) {
+                            if (ctx.flowMemory.hasTriggerEvent) {
                                 return [{ id: "FlowNextTiming" }];
                             }
                             return [
@@ -517,13 +518,13 @@ export function queryFlow(ctx: GameContext, playerID: string): Flow[] {
                                     id: "FlowTriggerTextEvent",
                                     event: {
                                         id: "GameEventOnTiming",
-                                        timing: ctx.gameState.timing,
+                                        timing: ctx.timing,
                                     },
                                 },
                             ];
                         case "規定の効果":
                             // 如果已經觸發規定の効果
-                            if (ctx.gameState.flowMemory.hasTriggerEvent) {
+                            if (ctx.flowMemory.hasTriggerEvent) {
                                 return [{ id: "FlowNextTiming" }];
                             }
                             switch (phase[1]) {
@@ -535,8 +536,8 @@ export function queryFlow(ctx: GameContext, playerID: string): Flow[] {
                                     ] = ["地球エリア", "宇宙エリア"];
                                     const playerID =
                                         phase[1] == "攻撃ステップ"
-                                            ? ctx.gameState.activePlayerID
-                                            : getOpponentPlayerID(ctx.gameState.activePlayerID);
+                                            ? ctx.activePlayerID
+                                            : getOpponentPlayerID(ctx.activePlayerID);
                                     return [
                                         {
                                             id: "FlowAddBlock",
@@ -677,7 +678,7 @@ export function queryFlow(ctx: GameContext, playerID: string): Flow[] {
 
                                 case "ダメージ判定ステップ":
                                     // 如果已經觸發規定の効果
-                                    if (ctx.gameState.flowMemory.hasTriggerEvent) {
+                                    if (ctx.flowMemory.hasTriggerEvent) {
                                         return [{ id: "FlowNextTiming" }];
                                     }
                                     return [
@@ -688,7 +689,7 @@ export function queryFlow(ctx: GameContext, playerID: string): Flow[] {
                                     ];
                                 case "帰還ステップ":
                                     // 如果已經觸發規定の効果
-                                    if (ctx.gameState.flowMemory.hasTriggerEvent) {
+                                    if (ctx.flowMemory.hasTriggerEvent) {
                                         return [{ id: "FlowNextTiming" }];
                                     }
                                     return [
@@ -713,7 +714,7 @@ export function queryFlow(ctx: GameContext, playerID: string): Flow[] {
                             ];
                         case "効果終了。ターン終了":
                             // 如果已經觸發事件
-                            if (ctx.gameState.flowMemory.hasTriggerEvent) {
+                            if (ctx.flowMemory.hasTriggerEvent) {
                                 return [{ id: "FlowNextTiming" }];
                             }
                             return [
@@ -721,7 +722,7 @@ export function queryFlow(ctx: GameContext, playerID: string): Flow[] {
                                     id: "FlowTriggerTextEvent",
                                     event: {
                                         id: "GameEventOnTiming",
-                                        timing: ctx.gameState.timing,
+                                        timing: ctx.timing,
                                     },
                                 },
                             ];
