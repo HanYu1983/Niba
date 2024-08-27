@@ -14,23 +14,19 @@ import {
 } from "../define";
 import {
   CardTextState,
-  checkIsBattle,
-  filterEffect,
   GameContext,
   getBlockOwner,
-  getSetGroupCards,
+  GameState,
+  doBlockPayload
+} from "../model";
+import {
+  filterEffect,
   iterateEffect,
   reduceEffect,
-  mapCard,
-  getCardBaSyou,
-  getCardController,
   addImmediateEffect,
-  GameState
-} from "../model";
+} from "../model/EffectStackComponent";
+import { checkIsBattle } from "../model/IsBattleComponent";
 import { log2 } from "../../tool/logger";
-import {
-  doBlockPayload,
-} from "../model/handleBlockPayload";
 import {
   getClientCommand,
   handleAttackDamage,
@@ -53,7 +49,7 @@ export function setActiveEffectID(
       (e) => e.id == ctx.gameState.activeEffectID
     );
     if (currentActiveEffect != null) {
-      const controller = getBlockOwner(ctx, currentActiveEffect);
+      const controller = getBlockOwner(ctx.gameState, currentActiveEffect);
       if (controller != playerID) {
         throw new Error("[cancelCommand] 你不是控制者");
       }
@@ -66,7 +62,7 @@ export function setActiveEffectID(
   if (effect == null) {
     throw new Error("effect not found");
   }
-  const controller = getBlockOwner(ctx, effect);
+  const controller = getBlockOwner(ctx.gameState, effect);
   if (controller != playerID) {
     throw new Error("[cancelCommand] 你不是控制者");
   }
@@ -92,7 +88,7 @@ export function cancelActiveEffectID(
   if (effect == null) {
     return ctx;
   }
-  const controller = getBlockOwner(ctx, effect);
+  const controller = getBlockOwner(ctx.gameState, effect);
   if (controller != playerID) {
     throw new Error("[cancelEffectID] 你不是控制者");
   }
@@ -186,7 +182,7 @@ export function deleteImmediateEffect(
     if (effect.id != effectID) {
       return true;
     }
-    const controller = getBlockOwner(ctx, effect);
+    const controller = getBlockOwner(ctx.gameState, effect);
     if (controller != playerID) {
       throw new Error("you are not controller");
     }
@@ -195,7 +191,7 @@ export function deleteImmediateEffect(
     }
     return false;
   }) as GameState;
-  
+
   return {
     ...ctx,
     gameState: gameState
@@ -625,7 +621,7 @@ export function applyFlow(
         ctx.gameState.timing[1][0] == "戦闘フェイズ" &&
         ctx.gameState.timing[1][2] == "ステップ開始"
       ) {
-        ctx = {...ctx, gameState: checkIsBattle(ctx.gameState) as GameState};
+        ctx = { ...ctx, gameState: checkIsBattle(ctx.gameState) as GameState };
       }
       // 重設觸發flag
       ctx = {
@@ -950,7 +946,7 @@ export function queryFlow(ctx: GameContext, playerID: string): Flow[] {
 
     const enablePayCost = true;
     if (enablePayCost) {
-      const controller = getBlockOwner(ctx, currentActiveEffect);
+      const controller = getBlockOwner(ctx.gameState, currentActiveEffect);
       const isPass = !!ctx.gameState.flowMemory.hasPlayerPassPayCost[playerID];
       const isOpponentPass =
         !!ctx.gameState.flowMemory.hasPlayerPassPayCost[
@@ -1018,7 +1014,7 @@ export function queryFlow(ctx: GameContext, playerID: string): Flow[] {
       ];
     }
 
-    const controller = getBlockOwner(ctx, currentActiveEffect);
+    const controller = getBlockOwner(ctx.gameState, currentActiveEffect);
     if (controller != playerID) {
       return [
         {
@@ -1048,7 +1044,7 @@ export function queryFlow(ctx: GameContext, playerID: string): Flow[] {
     const myEffect: BlockPayload[] = [];
     const opponentEffect: BlockPayload[] = [];
     ctx.gameState.immediateEffect.forEach((effect) => {
-      const controller = getBlockOwner(ctx, effect);
+      const controller = getBlockOwner(ctx.gameState, effect);
       if (controller == playerID) {
         myEffect.push(effect);
       } else {
@@ -1162,7 +1158,7 @@ export function queryFlow(ctx: GameContext, playerID: string): Flow[] {
       throw new Error("effect.id not found");
     }
     // 取得效果的控制者
-    const controller = getBlockOwner(ctx, effect);
+    const controller = getBlockOwner(ctx.gameState, effect);
     // 判斷切入流程
     const isAllPassCut =
       !!ctx.gameState.flowMemory.hasPlayerPassCut[PlayerA] &&

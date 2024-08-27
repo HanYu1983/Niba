@@ -15,26 +15,28 @@ import {
 } from "../define";
 import {
   CardState,
-  CardTextState,
   DestroyReason,
   GameContext,
   getBlockOwner,
-  getSetGroupCards,
-  reduceEffect,
-  getCardBaSyou,
-  getCardController,
-  mapCard,
-  GameState
-} from "../model";
-import { log2 } from "../../tool/logger";
-import {
+  GameState,
   getBattleGroup,
   getBattleGroupBattlePoint,
   getCardBattlePoint,
-  getCardState,
   isABattleGroup,
+} from "../model";
+import {
+  mapCard,
+  getCardBaSyou,
+} from "../model/CardTableComponent"
+import {
+  getSetGroupCards,
+  getSetGroupRoot,
+} from "../model/SetGroupComponent";
+import { log2 } from "../../tool/logger";
+import {
+  getCardState,
   mapCardState,
-} from "../model/helper";
+} from "../model/CardStateComponent";
 
 function filterEnableCardText(
   ctx: GameContext,
@@ -494,7 +496,7 @@ export function updateDestroyEffect(ctx: GameContext): GameContext {
 
 export function getClientCommand(ctx: GameContext, clientID: string) {
   return ctx.gameState.commandEffect.filter((effect) => {
-    const controller = getBlockOwner(ctx, effect);
+    const controller = getBlockOwner(ctx.gameState, effect);
     if (controller != clientID) {
       log2("getClientCommand", "you are not owner. return");
       return;

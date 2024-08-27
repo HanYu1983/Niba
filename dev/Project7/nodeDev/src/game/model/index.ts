@@ -18,8 +18,21 @@ import {
   TIMING_CHART,
   BlockPayload
 } from "../define";
+import {
+  getCard,
+  Card,
+  getAbsoluteBaSyou,
+  getCardBaSyou,
+  getCardController,
+  getCardOwner,
+  CardTableComponent,
+} from "./CardTableComponent"
 import { DEFAULT_TABLE, Table, getCardPosition } from "../../tool/table";
-import { CardStateComponent } from "./helper";
+import { CardStateComponent, getCardState } from "./CardStateComponent";
+import { IsBattleComponent } from "./IsBattleComponent";
+import { getSetGroupCards, getSetGroupRoot, SetGroupComponent } from "./SetGroupComponent";
+import { EffectStackComponent } from "./EffectStackComponent";
+import { getPreloadPrototype } from "../../script";
 
 export type PlayerState = {
   id: string;
@@ -180,15 +193,8 @@ export const DEFAULT_GAME_CONTEXT: GameContext = {
   versionID: 0,
 };
 
-
-// export type RequireScriptFunction = (
-//   gameCtx: GameContext,
-//   blockPayload: BlockPayload,
-//   varCtxID: string
-// ) => GameContext;
-
 export function getBlockOwner(
-  ctx: GameContext,
+  ctx: GameState,
   blockPayload: BlockPayload
 ): PlayerID {
   if (blockPayload.cause == null) {
@@ -214,242 +220,310 @@ export function getOpponentBattleArea(baSyou: AbsoluteBaSyou): AbsoluteBaSyou {
   };
 }
 
-// EffectStackComponent
-
-export type EffectStackComponent = {
-  // 指令效果
-  commandEffect: BlockPayload[];
-  // 立即效果。玩家必須立即一個一個進行處理
-  immediateEffect: BlockPayload[];
-  // 堆疊效果。每次只處理第一個代表top的block
-  stackEffect: BlockPayload[];
-}
-
-export function iterateEffect(ctx: EffectStackComponent): BlockPayload[] {
-  return [
-    ...ctx.immediateEffect,
-    ...ctx.commandEffect,
-    ...ctx.stackEffect,
-  ];
-}
-
-export function mapEffect(
-  ctx: EffectStackComponent,
-  doF: (effect: BlockPayload) => BlockPayload
-): EffectStackComponent {
-  return {
-    ...ctx,
-    immediateEffect: ctx.immediateEffect.map(doF),
-    commandEffect: ctx.commandEffect.map(doF),
-    stackEffect: ctx.stackEffect.map(doF),
-  };
-}
-
-export function reduceEffect<T>(
-  ctx: EffectStackComponent,
-  doF: (init: T, effect: BlockPayload) => T,
-  init: T
-): T {
-  return [
-    ...ctx.immediateEffect,
-    ...ctx.commandEffect,
-    ...ctx.stackEffect,
-  ].reduce(doF, init);
-}
-
-export function filterEffect(
-  ctx: EffectStackComponent,
-  filterF: (effect: BlockPayload) => boolean
-): EffectStackComponent {
-  return {
-    ...ctx,
-    immediateEffect: ctx.immediateEffect.filter(filterF),
-    commandEffect: ctx.commandEffect.filter(filterF),
-    stackEffect: ctx.stackEffect.filter(filterF)
-  };
-}
-
-export function addStackEffect(ctx: EffectStackComponent, block: BlockPayload): EffectStackComponent {
-  return {
-    ...ctx,
-    stackEffect: [block, ...ctx.stackEffect],
-  };
-}
-
-export function addImmediateEffect(ctx: EffectStackComponent, block: BlockPayload): EffectStackComponent {
-  return {
-    ...ctx,
-    immediateEffect: [block, ...ctx.immediateEffect],
-  };
-}
-
-// setGroup
-
-export type SetGroupComponent = {
-  setGroupLink: { [key: string]: string };
-}
-
-export function getSetGroupCards(ctx: SetGroupComponent, cardID: string): string[] {
-  const root = getSetGroupRoot(ctx, cardID);
-  if (root != null) {
-    return getSetGroupCards(ctx, root);
+export function getCardCharacteristic(ctx: GameState, cardID: string) {
+  const card = getCard(ctx, cardID);
+  if (card == null) {
+    throw new Error("card not found");
   }
-  return [
-    cardID,
-    ...Object.keys(ctx.setGroupLink).filter((k) => {
-      return ctx.setGroupLink[k] == cardID;
-    }),
-  ];
+  const prototype = getPreloadPrototype(card.protoID);
+  return prototype.characteristic;
 }
 
-export function getSetGroupRoot(
-  ctx: SetGroupComponent,
+export function getCardColor(ctx: GameState, cardID: string): CardColor {
+  const card = getCard(ctx, cardID);
+  if (card == null) {
+    throw new Error("card not found");
+  }
+  const prototype = getPreloadPrototype(card.protoID);
+  return prototype.color;
+}
+
+export function getCardTitle(ctx: GameState, cardID: string): string {
+  const card = getCard(ctx, cardID);
+  if (card == null) {
+    throw new Error("card not found");
+  }
+  const prototype = getPreloadPrototype(card.protoID);
+  return prototype.title;
+}
+
+export function getCardBattlePoint(
+  ctx: GameContext,
   cardID: string
-): string | null {
-  return ctx.setGroupLink[cardID] || null;
+): BattleBonus {
+  const card = getCard(ctx.gameState, cardID);
+  if (card == null) {
+    throw new Error("card not found");
+  }
+  const prototype = getPreloadPrototype(card.protoID);
+  // const bonusFromCardState = ctx.gameState.globalCardState
+  //   .filter((cs) => cs.cardID == cardID)
+  //   .flatMap((cs) => cs.cardTextStates.map((cts) => cts.cardText))
+  //   .filter(
+  //     (ct) =>
+  //       ct.id == "CardTextCustom" &&
+  //       ct.customID.id == "CardTextCustomIDBattleBonus"
+  //   )
+  //   .map((ct) => {
+  //     if (
+  //       ct.id != "CardTextCustom" ||
+  //       ct.customID.id != "CardTextCustomIDBattleBonus"
+  //     ) {
+  //       throw new Error("must be CardTextCustomIDBattleBonus");
+  //     }
+  //     return ct.customID.battleBonus;
+  //   });
+  // const bonusFromCoin = ctx.gameState.table.tokens
+  //   .filter((t) => {
+  //     if (t.position.id != "TokenPositionCard") {
+  //       return false;
+  //     }
+  //     if (t.position.cardID != cardID) {
+  //       return false;
+  //     }
+  //     const coin = t.protoID as Coin;
+  //     if (coin == null) {
+  //       return false;
+  //     }
+  //     if (coin.id != "CoinBattleBonus") {
+  //       return false;
+  //     }
+  //     return true;
+  //   })
+  //   .map((t) => {
+  //     const coin = t.protoID as Coin;
+  //     if (coin.id != "CoinBattleBonus") {
+  //       throw new Error("must be CoinBattleBonus");
+  //     }
+  //     return coin.battleBonus;
+  //   });
+  // const retBonus = [...bonusFromCardState, ...bonusFromCoin].reduce(
+  //   ([x, y, z], [x2, y2, z2]): BattleBonus => {
+  //     return [x + x2, y + y2, z + z2];
+  //   },
+  //   prototype.battlePoint
+  // );
+  return [0, 0, 0];
 }
 
-// battle
-
-export type IsBattleComponent = {
-  // 是否交戰中，key代表牌堆名稱的字串
-  isBattle: { [key: string]: boolean }
-  table: Table
-} & CardTableComponent
-
-export function checkIsBattle(ctx: IsBattleComponent): IsBattleComponent {
-  const battleAreas: AbsoluteBaSyou[] = [
-    { id: "AbsoluteBaSyou", value: [PlayerA, "戦闘エリア（左）"] },
-    { id: "AbsoluteBaSyou", value: [PlayerA, "戦闘エリア（右）"] },
-  ];
-  return battleAreas.reduce((ctx, battleArea) => {
-    const baSyouID1 = getBaSyouID(battleArea);
-    const baSyouID2 = getBaSyouID(getOpponentBattleArea(battleArea));
-    if (
-      ctx.table.cardStack[baSyouID1]?.length &&
-      ctx.table.cardStack[baSyouID2]?.length
-    ) {
-      return {
-        ...ctx,
-        isBattle: {
-          ...ctx.isBattle,
-          [baSyouID1]: true,
-          [baSyouID2]: true,
-        },
-      };
-    }
-    return {
-      ...ctx,
-      isBattle: {
-        ...ctx.isBattle,
-        [baSyouID1]: false,
-        [baSyouID2]: false,
-      }
-    };
-  }, ctx);
+export function getBattleGroup(
+  ctx: GameContext,
+  baSyou: AbsoluteBaSyou
+): string[] {
+  return (
+    ctx.gameState.table.cardStack[getBaSyouID(baSyou)]
+      ?.filter((cardId) => {
+        return getSetGroupRoot(ctx.gameState, cardId) == null;
+      })
+      .map((rootCardId) => {
+        return rootCardId
+      }) || []
+  );
 }
 
-export function isBattle(
-  ctx: IsBattleComponent,
-  cardID: string,
-  cardID2: string | null
+export function getBattleGroupBattlePoint(
+  ctx: GameContext,
+  unitCardIDs: string[]
+) {
+  const attackPower =
+    unitCardIDs
+      .map((cardID, i): number => {
+        // 破壞的單位沒有攻擊力
+        const cs = getCardState(ctx.gameState, cardID);
+        if (cs.destroyReason != null) {
+          return 0;
+        }
+        const card = getCard(ctx.gameState, cardID);
+        if (card == null) {
+          throw new Error("card not found");
+        }
+        // 横置的單位沒有攻擊力
+        if (card.tap) {
+          return 0;
+        }
+        const setGroupCards = getSetGroupCards(ctx.gameState, cardID);
+        const power = setGroupCards
+          .map((setGroupCardID) => {
+            const [melee, range] = getCardBattlePoint(ctx, setGroupCardID);
+            if (melee == "*") {
+              return 0;
+            }
+            if (i == 0) {
+              return melee || 0;
+            }
+            if (range == "*") {
+              return 0;
+            }
+            return range || 0;
+          })
+          .reduce((a, b) => a + b);
+        return power;
+      })
+      ?.reduce((acc, c) => acc + c, 0) || 0;
+  return attackPower;
+}
+
+export function hasTokuSyouKouKa(
+  ctx: GameContext,
+  a: TokuSyuKouKa,
+  cardID: string
 ): boolean {
-  const baSyou1 = getCardBaSyou(ctx, cardID);
-  if (ctx.isBattle[getBaSyouID(baSyou1)] != true) {
+  // const cs = getCardState(ctx, cardID);
+  // const gcs = ctx.gameState.globalCardState.filter((cs) => {
+  //   return cs.cardID == cardID;
+  // });
+  // const texts = [cs, ...gcs]
+  //   .reduce((acc, cs) => acc.concat(cs.cardTextStates), [])
+  //   .map((cts) => cts.cardText);
+  // const has =
+  //   texts.find((text) => {
+  //     if (text.id != "特殊型") {
+  //       return false;
+  //     }
+  //     if (text.description[0] != a[0]) {
+  //       return false;
+  //     }
+  //     return true;
+  //   }) != null;
+  // return has;
+  return false;
+}
+
+export function isABattleGroup(
+  ctx: GameContext,
+  a: TokuSyuKouKa,
+  cardID: string
+): boolean {
+  const baSyou = getCardBaSyou(ctx.gameState, cardID);
+  const battleGroup = getBattleGroup(ctx, baSyou);
+  return (
+    battleGroup
+      .map((cardID) => {
+        // 其中一張卡有就行了
+        const setGroupCards = getSetGroupCards(ctx.gameState, cardID);
+        for (const cardGroupCardID of setGroupCards) {
+          if (hasTokuSyouKouKa(ctx, a, cardGroupCardID)) {
+            return true;
+          }
+        }
+        return false;
+      })
+      .reduce((acc, c) => {
+        return acc && c;
+      }) || false
+  );
+}
+
+export function isCanReroll(
+  ctx: GameContext,
+  condition: any,
+  cardID: string
+): boolean {
+  const baSyouKW = getCardBaSyou(ctx.gameState, cardID).value[1];
+  switch (baSyouKW) {
+    case "Gゾーン":
+    case "配備エリア":
+    case "戦闘エリア（右）":
+    case "戦闘エリア（左）":
+      break;
+    default:
+      return false;
+  }
+  const baSyou = getCardBaSyou(ctx.gameState, cardID);
+  const setGroup = getSetGroupCards(ctx.gameState, cardID);
+  return true;
+}
+
+export function isOpponentHasBattleGroup(
+  ctx: GameContext,
+  cardID: string
+): boolean {
+  const controller = getCardController(ctx.gameState, cardID);
+  const opponentPlayerID = getOpponentPlayerID(controller);
+  const battleAreas: AbsoluteBaSyou[] = [
+    { id: "AbsoluteBaSyou", value: [opponentPlayerID, "戦闘エリア（右）"] },
+    { id: "AbsoluteBaSyou", value: [opponentPlayerID, "戦闘エリア（左）"] },
+  ];
+  return (
+    battleAreas.reduce((acc: string[], battleArea) => {
+      return acc.concat(ctx.gameState.table.cardStack[getBaSyouID(battleArea)] || []);
+    }, []).length != 0
+  );
+}
+
+export function isMaster(
+  ctx: GameState,
+  unitCardID: string,
+  cardID: string
+): boolean {
+  const match = getCardCharacteristic(ctx, unitCardID)
+    .join("|")
+    .match(/専用「(.+?)」/);
+  if (match == null) {
     return false;
   }
-  if (cardID2 != null) {
-    const baSyou2 = getOpponentBattleArea(baSyou1);
-    const isFindCardID2 =
-      ctx.table.cardStack[getBaSyouID(baSyou2)].find((cardId) => {
-        return cardId == cardID2;
-      }) != null;
-    if (isFindCardID2 == false) {
-      return false;
-    }
+  const [_, masterName] = match;
+  if (masterName != getCardTitle(ctx, cardID)) {
+    return false;
   }
   return true;
 }
 
-// card
-export type Card = {
-  id: string
-  ownerID: string
-  protoID: string
-  tap: boolean
-}
+// export function getCardCoins(ctx: GameContext, cardID: string): Coin[] {
+//   return ctx.gameState.table.tokens
+//     .filter((token) => {
+//       if (token.position.id != "TokenPositionCard") {
+//         return false;
+//       }
+//       if (token.position.cardID != cardID) {
+//         return false;
+//       }
+//       return true;
+//     })
+//     .map((token) => token.protoID as Coin);
+// }
 
-export type CardTableComponent = {
-  table: Table
-  cards: { [key: string]: Card }
-}
+// export function getCardStateIterator(
+//   ctx: GameContext
+// ): [string, CardTextState[]][] {
+//   const converGlobalCardState = ctx.gameState.globalCardState.map((gs) => {
+//     return {
+//       id: gs.cardID,
+//       cardTextStates: gs.cardTextStates,
+//     };
+//   });
+//   return [...ctx.gameState.cardState, ...converGlobalCardState].map((v) => {
+//     return [v.id, v.cardTextStates] as [string, CardTextState[]];
+//   });
+// }
 
-export function getCard(ctx: CardTableComponent, cardId: string): Card | null {
-  return ctx.cards[cardId];
-}
-
-export function mapCard(ctx: CardTableComponent, f: (Card) => Card): CardTableComponent {
-  return ctx;
-}
-
-export function getCardBaSyou(
-  ctx: CardTableComponent,
+export function getCardCardTextState(
+  ctx: GameState,
   cardID: string
-): AbsoluteBaSyou {
-  const [_, cardPosition] = getCardPosition(ctx.table, cardID);
-  if (cardPosition == null) {
-    throw new Error("[getController] cardPosition not found");
-  }
-  return getBaSyou(cardPosition);
+): CardTextState[] {
+  // return getCardStateIterator(ctx)
+  //   .filter(([id, cts]) => {
+  //     return id == cardID;
+  //   })
+  //   .flatMap(([_, cts]) => cts);
+  return [];
 }
 
-export function getCardController(ctx: CardTableComponent, cardID: string): PlayerID {
-  const baSyou = getCardBaSyou(ctx, cardID);
-  return baSyou.value[0];
-}
-
-export function getCardOwner(ctx: CardTableComponent, cardID: string): PlayerID {
+export function getCardBattleArea(
+  ctx: GameState,
+  cardID: string
+): BattleAreaKeyword[] {
   const card = getCard(ctx, cardID);
   if (card == null) {
-    throw new Error("[getCardOwner] card not found");
+    throw new Error("card not found");
   }
-  if (card.ownerID == null) {
-    throw new Error("[getCardOwner] card.ownerID not found");
-  }
-  return card.ownerID;
+  const prototype = getPreloadPrototype(card.protoID);
+  return prototype.battleArea;
 }
 
-export function getAbsoluteBaSyou(
-  baSyou: BaSyou,
-  ctx: CardTableComponent,
-  cardID: string
-): AbsoluteBaSyou {
-  if (baSyou.id == "AbsoluteBaSyou") {
-    return baSyou;
-  }
-  const _playerID = (() => {
-    switch (baSyou.value[0]) {
-      case "持ち主": {
-        const card = getCard(ctx, cardID);
-        if (card == null) {
-          throw new Error("getAbsoluteBaSyou card not found");
-        }
-        if (card.ownerID == null) {
-          throw new Error("getAbsoluteBaSyou ownerID must not null");
-        }
-        return card.ownerID;
-      }
-      case "自軍":
-        return getCardController(ctx, cardID);
-      case "敵軍":
-        return getOpponentPlayerID(getCardController(ctx, cardID));
-    }
-  })();
-  return {
-    id: "AbsoluteBaSyou",
-    value: [_playerID, baSyou.value[1]],
-  };
+export function doBlockPayload(
+  ctx: GameState,
+  blockPayload: BlockPayload
+): GameState {
+  return ctx;
 }
-
-// 
-
