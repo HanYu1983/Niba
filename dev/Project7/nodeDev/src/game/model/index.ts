@@ -1,34 +1,23 @@
 import {
-  GameEvent,
   CardText,
   Timing,
   TokuSyuKouKa,
-  CardCategory,
   CardColor,
   AbsoluteBaSyou,
   PlayerID,
-  BaSyou,
-  RelatedBaSyou,
   getOpponentPlayerID,
   BattleBonus,
   getBaSyouID,
-  PlayerA,
   BattleAreaKeyword,
-  getBaSyou,
-  TIMING_CHART,
   BlockPayload,
   CardPrototype
 } from "../define";
 import {
   getCard,
-  Card,
-  getAbsoluteBaSyou,
   getCardBaSyou,
   getCardController,
-  getCardOwner,
   CardTableComponent,
 } from "./CardTableComponent"
-import { DEFAULT_TABLE, Table, getCardPosition } from "../../tool/table";
 import { CardStateComponent, getCardState } from "./CardStateComponent";
 import { IsBattleComponent } from "./IsBattleComponent";
 import { getSetGroupCards, getSetGroupRoot, SetGroupComponent } from "./SetGroupComponent";
@@ -467,60 +456,3 @@ export function doBlockPayload(
   return ctx;
 }
 
-export type Message = {
-  id: "MessageCustom";
-  value: string;
-};
-
-type FlowMemoryComponent = {
-  state: "prepareDeck" | "whoFirst" | "draw6AndConfirm" | "playing";
-  hasTriggerEvent: boolean;
-  hasPlayerPassPhase: { [key: string]: boolean };
-  hasPlayerPassCut: { [key: string]: boolean };
-  hasPlayerPassPayCost: { [key: string]: boolean };
-  shouldTriggerStackEffectFinishedEvent: boolean;
-  msgs: Message[];
-}
-
-type HasFlowMemoryComponent = {
-  flowMemory: FlowMemoryComponent
-}
-
-export type GameStateWithFlowMemory = GameState & HasFlowMemoryComponent;
-
-export type GameContext = {
-  gameState: GameStateWithFlowMemory;
-  versionID: number;
-};
-
-export const DEFAULT_GAME_CONTEXT: GameContext = {
-  gameState: {
-    cards: {},
-    effects: [],
-    globalCardState: [],
-    table: DEFAULT_TABLE,
-    cardStates: {},
-    timing: TIMING_CHART[0],
-    playerState: [],
-    activePlayerID: null,
-    activeEffectID: null,
-    commandEffect: [],
-    immediateEffect: [],
-    stackEffect: [],
-    stackEffectMemory: [],
-    destroyEffect: [],
-    setGroupLink: {},
-    isBattle: {},
-    flowMemory: {
-      state: "prepareDeck",
-      hasTriggerEvent: false,
-      hasPlayerPassPhase: {},
-      hasPlayerPassCut: {},
-      hasPlayerPassPayCost: {},
-      shouldTriggerStackEffectFinishedEvent: false,
-      msgs: [],
-    },
-    chipPool: {},
-  },
-  versionID: 0,
-};

@@ -10,15 +10,13 @@ import {
   isBa,
   PlayerA,
   PlayerB,
-  BlockPayload
+  BlockPayload,
+  TIMING_CHART
 } from "../define";
 import {
-  CardTextState,
-  GameContext,
   getBlockOwner,
   GameState,
   doBlockPayload,
-  GameStateWithFlowMemory
 } from "../model";
 import {
   filterEffect,
@@ -36,6 +34,65 @@ import {
   updateDestroyEffect,
   updateEffect,
 } from "./handleGameContext";
+import { DEFAULT_TABLE } from "../../tool/table";
+
+export type Message = {
+  id: "MessageCustom";
+  value: string;
+};
+
+type FlowMemoryComponent = {
+  state: "prepareDeck" | "whoFirst" | "draw6AndConfirm" | "playing";
+  hasTriggerEvent: boolean;
+  hasPlayerPassPhase: { [key: string]: boolean };
+  hasPlayerPassCut: { [key: string]: boolean };
+  hasPlayerPassPayCost: { [key: string]: boolean };
+  shouldTriggerStackEffectFinishedEvent: boolean;
+  msgs: Message[];
+}
+
+type HasFlowMemoryComponent = {
+  flowMemory: FlowMemoryComponent
+}
+
+export type GameStateWithFlowMemory = GameState & HasFlowMemoryComponent;
+
+export type GameContext = {
+  gameState: GameStateWithFlowMemory;
+  versionID: number;
+};
+
+export const DEFAULT_GAME_CONTEXT: GameContext = {
+  gameState: {
+    cards: {},
+    effects: [],
+    globalCardState: [],
+    table: DEFAULT_TABLE,
+    cardStates: {},
+    timing: TIMING_CHART[0],
+    playerState: [],
+    activePlayerID: null,
+    activeEffectID: null,
+    commandEffect: [],
+    immediateEffect: [],
+    stackEffect: [],
+    stackEffectMemory: [],
+    destroyEffect: [],
+    setGroupLink: {},
+    isBattle: {},
+    flowMemory: {
+      state: "prepareDeck",
+      hasTriggerEvent: false,
+      hasPlayerPassPhase: {},
+      hasPlayerPassCut: {},
+      hasPlayerPassPayCost: {},
+      shouldTriggerStackEffectFinishedEvent: false,
+      msgs: [],
+    },
+    chipPool: {},
+  },
+  versionID: 0,
+};
 
 export function setActiveEffectID(
   ctx: GameContext,

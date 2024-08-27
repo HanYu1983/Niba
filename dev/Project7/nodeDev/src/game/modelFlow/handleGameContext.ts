@@ -16,7 +16,6 @@ import {
 import {
   CardState,
   DestroyReason,
-  GameContext,
   getBlockOwner,
   GameState,
   getBattleGroup,
@@ -37,7 +36,7 @@ import {
   getCardState,
   mapCardState,
 } from "../model/CardStateComponent";
-import { GameStateWithFlowMemory } from "../model";
+import { GameContext, GameStateWithFlowMemory } from ".";
 
 function filterEnableCardText(
   ctx: GameContext,
