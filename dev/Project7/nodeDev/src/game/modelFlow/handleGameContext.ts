@@ -37,6 +37,7 @@ import {
   getCardState,
   mapCardState,
 } from "../model/CardStateComponent";
+import { GameStateWithFlowMemory } from "../model";
 
 function filterEnableCardText(
   ctx: GameContext,
@@ -435,7 +436,7 @@ export function initCardFace(ctx: GameContext): GameContext {
         };
     }
   }) as GameState;
-  return {...ctx, gameState: gameState}
+  return {...ctx, gameState: gameState as GameStateWithFlowMemory}
 }
 
 export function updateDestroyEffect(ctx: GameContext): GameContext {
@@ -745,7 +746,7 @@ export function handleAttackDamage(
           }) as GameState
           ctx = {
             ...ctx,
-            gameState
+            gameState: gameState as GameStateWithFlowMemory
           }
           // const cardState = ctx.gameState.cardState.map((cs1) => {
           //   for (const cs2 of changedCardState) {
@@ -895,7 +896,7 @@ export function handleAttackDamage(
           }) as GameState
           ctx = {
             ...ctx,
-            gameState
+            gameState: gameState as GameStateWithFlowMemory
           }
           // const cardState = ctx.gameState.cardState.map((cs1) => {
           //   for (const cs2 of changedCardState) {

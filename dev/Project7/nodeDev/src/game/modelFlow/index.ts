@@ -17,7 +17,8 @@ import {
   GameContext,
   getBlockOwner,
   GameState,
-  doBlockPayload
+  doBlockPayload,
+  GameStateWithFlowMemory
 } from "../model";
 import {
   filterEffect,
@@ -125,11 +126,11 @@ export function doEffect(
       }
       return doBlockPayload(ctx, effect);
     },
-    ctx.gameState
+    ctx.gameState as GameState
   );
   ctx = {
     ...ctx,
-    gameState: gameState
+    gameState: gameState as GameStateWithFlowMemory
   }
   // 清除旗標，代表現在沒有正在支付的效果
   ctx = {
@@ -194,7 +195,7 @@ export function deleteImmediateEffect(
 
   return {
     ...ctx,
-    gameState: gameState
+    gameState: gameState as GameStateWithFlowMemory
   };
 }
 
@@ -621,7 +622,7 @@ export function applyFlow(
         ctx.gameState.timing[1][0] == "戦闘フェイズ" &&
         ctx.gameState.timing[1][2] == "ステップ開始"
       ) {
-        ctx = { ...ctx, gameState: checkIsBattle(ctx.gameState) as GameState };
+        ctx = { ...ctx, gameState: checkIsBattle(ctx.gameState) as GameStateWithFlowMemory };
       }
       // 重設觸發flag
       ctx = {
@@ -661,10 +662,10 @@ export function applyFlow(
         },
         //...(block.require ? { require: wrapRequireKey(block.require) } : null),
       };
-      let gameState = addImmediateEffect(ctx.gameState, block) as GameState
+      let gameState = addImmediateEffect(ctx.gameState, block)
       ctx = {
         ...ctx,
-        gameState: gameState
+        gameState: gameState as GameStateWithFlowMemory
       }
       // ctx = {
       //   ...ctx,

@@ -88,10 +88,10 @@ export type GameEffectState = {
   effect: GameEffect;
 };
 
-export type Message = {
-  id: "MessageCustom";
-  value: string;
-};
+// export type Message = {
+//   id: "MessageCustom";
+//   value: string;
+// };
 
 export type DestroyReason1 = {
   id: "通常ダメージ" | "戦闘ダメージ" | "破壊する" | "マイナスの戦闘修正";
@@ -120,19 +120,17 @@ export type GameState = {
   // 是否交戰中，key代表牌堆名稱的字串
   isBattle: { [key: string]: boolean };
   //
-  flowMemory: {
-    state: "prepareDeck" | "whoFirst" | "draw6AndConfirm" | "playing";
-    hasTriggerEvent: boolean;
-    hasPlayerPassPhase: { [key: string]: boolean };
-    hasPlayerPassCut: { [key: string]: boolean };
-    hasPlayerPassPayCost: { [key: string]: boolean };
-    shouldTriggerStackEffectFinishedEvent: boolean;
-    msgs: Message[];
-  };
+  // flowMemory: {
+  //   state: "prepareDeck" | "whoFirst" | "draw6AndConfirm" | "playing";
+  //   hasTriggerEvent: boolean;
+  //   hasPlayerPassPhase: { [key: string]: boolean };
+  //   hasPlayerPassCut: { [key: string]: boolean };
+  //   hasPlayerPassPayCost: { [key: string]: boolean };
+  //   shouldTriggerStackEffectFinishedEvent: boolean;
+  //   msgs: Message[];
+  // };
   chipPool: { [key: string]: CardPrototype };
 } & SetGroupComponent & IsBattleComponent & CardTableComponent & EffectStackComponent & CardStateComponent;
-
-
 
 export function getBlockOwner(
   ctx: GameState,
@@ -469,8 +467,29 @@ export function doBlockPayload(
   return ctx;
 }
 
+export type Message = {
+  id: "MessageCustom";
+  value: string;
+};
+
+type FlowMemoryComponent = {
+  state: "prepareDeck" | "whoFirst" | "draw6AndConfirm" | "playing";
+  hasTriggerEvent: boolean;
+  hasPlayerPassPhase: { [key: string]: boolean };
+  hasPlayerPassCut: { [key: string]: boolean };
+  hasPlayerPassPayCost: { [key: string]: boolean };
+  shouldTriggerStackEffectFinishedEvent: boolean;
+  msgs: Message[];
+}
+
+type HasFlowMemoryComponent = {
+  flowMemory: FlowMemoryComponent
+}
+
+export type GameStateWithFlowMemory = GameState & HasFlowMemoryComponent;
+
 export type GameContext = {
-  gameState: GameState;
+  gameState: GameStateWithFlowMemory;
   versionID: number;
 };
 
