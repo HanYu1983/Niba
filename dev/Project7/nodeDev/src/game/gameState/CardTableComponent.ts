@@ -32,7 +32,7 @@ export function getCardBaSyou(
   ctx: CardTableComponent,
   cardID: string
 ): AbsoluteBaSyou {
-  const [_, cardPosition] = getCardPosition(ctx.table, cardID);
+  const cardPosition = getCardPosition(ctx.table, cardID);
   if (cardPosition == null) {
     throw new Error("[getController] cardPosition not found");
   }
