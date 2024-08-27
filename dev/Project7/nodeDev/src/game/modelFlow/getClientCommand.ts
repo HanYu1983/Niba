@@ -1,6 +1,6 @@
 import { log2 } from "../../tool/logger";
-import { getCardState } from "../model/CardStateComponent";
-import { getBlockOwner } from "../model/GameState";
+import { getCardState } from "../gameState/CardStateComponent";
+import { getBlockOwner } from "../gameState/GameState";
 import { GameContext } from "./GameContext";
 
 export function getClientCommand(ctx: GameContext, clientID: string) {

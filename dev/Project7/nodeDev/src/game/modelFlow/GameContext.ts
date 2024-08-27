@@ -1,5 +1,5 @@
 import { GameStateWithFlowMemory, DEFAULT_FLOW_MEMORY } from "../gameStateWithFlowMemory/GameStateWithFlowMemory";
-import { DEFAULT_GAME_STATE } from "../model/GameState";
+import { DEFAULT_GAME_STATE } from "../gameState/GameState";
 
 export type GameContext = {
     gameState: GameStateWithFlowMemory;

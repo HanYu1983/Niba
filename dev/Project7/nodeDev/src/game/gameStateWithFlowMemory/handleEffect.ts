@@ -1,6 +1,6 @@
 import { log2 } from "../../tool/logger";
-import { filterEffect, iterateEffect, reduceEffect } from "../model/EffectStackComponent";
-import { doBlockPayload, getBlockOwner } from "../model/GameState";
+import { filterEffect, iterateEffect, reduceEffect } from "../gameState/EffectStackComponent";
+import { doBlockPayload, getBlockOwner } from "../gameState/GameState";
 import { GameStateWithFlowMemory } from "./GameStateWithFlowMemory";
 
 export function setActiveEffectID(

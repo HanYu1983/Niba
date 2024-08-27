@@ -1,4 +1,4 @@
-import { GameState } from "../model/GameState";
+import { GameState } from "../gameState/GameState";
 
 
 export type Message = {

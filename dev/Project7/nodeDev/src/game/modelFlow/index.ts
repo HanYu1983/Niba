@@ -1,9 +1,9 @@
 import { log2 } from "../../tool/logger";
 import { CardTextSiYouKaTa, CardTextZiDouKaTa, isBa, PlayerA, getBaSyouID, PlayerB } from "../define";
 import { GameStateWithFlowMemory, DEFAULT_FLOW_MEMORY } from "../gameStateWithFlowMemory/GameStateWithFlowMemory";
-import { getCardState } from "../model/CardStateComponent";
-import { getCardBaSyou, mapCard } from "../model/CardTableComponent";
-import { DEFAULT_GAME_STATE, GameState, getBlockOwner } from "../model/GameState";
+import { getCardState } from "../gameState/CardStateComponent";
+import { getCardBaSyou, mapCard } from "../gameState/CardTableComponent";
+import { DEFAULT_GAME_STATE, GameState, getBlockOwner } from "../gameState/GameState";
 import { GameContext } from "./GameContext";
 
 

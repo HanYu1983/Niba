@@ -1,6 +1,6 @@
 import { PlayerA, PlayerB, getBaSyouID, getOpponentPlayerID, BlockPayload, BattleAreaKeyword } from "../define";
-import { iterateEffect } from "../model/EffectStackComponent";
-import { getBlockOwner } from "../model/GameState";
+import { iterateEffect } from "../gameState/EffectStackComponent";
+import { getBlockOwner } from "../gameState/GameState";
 import { Flow } from "./Flow";
 import { getActiveEffectID } from "../gameStateWithFlowMemory/handleEffect";
 import { GameContext } from "./GameContext";
