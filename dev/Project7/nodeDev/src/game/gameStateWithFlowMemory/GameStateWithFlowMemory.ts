@@ -1,4 +1,4 @@
-import { GameState } from "../gameState/GameState";
+import { DEFAULT_GAME_STATE, GameState } from "../gameState/GameState";
 
 
 export type Message = {
@@ -33,3 +33,9 @@ export type HasFlowMemoryComponent = {
 export type GameStateWithFlowMemory = {
     activeEffectID: string | null;
 } & GameState & HasFlowMemoryComponent;
+
+export const DEFAULT_GAME_STATE_WITH_FLOW_MEMORY = {
+    ...DEFAULT_GAME_STATE,
+    activeEffectID: null,
+    flowMemory: DEFAULT_FLOW_MEMORY
+}

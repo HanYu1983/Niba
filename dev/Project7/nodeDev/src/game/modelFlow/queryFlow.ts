@@ -239,7 +239,7 @@ export function queryFlow(ctx: GameContext, playerID: string): Flow[] {
                 }
         }
     }
-    const myCommandList = getClientCommand(ctx, playerID);
+    const myCommandList = getClientCommand(ctx.gameState, playerID);
     // 處理堆疊效果，從最上方開始處理
     if (ctx.gameState.stackEffect.length) {
         // 取得最上方的效果

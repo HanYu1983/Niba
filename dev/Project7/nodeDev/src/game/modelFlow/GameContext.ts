@@ -1,5 +1,4 @@
-import { GameStateWithFlowMemory, DEFAULT_FLOW_MEMORY } from "../gameStateWithFlowMemory/GameStateWithFlowMemory";
-import { DEFAULT_GAME_STATE } from "../gameState/GameState";
+import { GameStateWithFlowMemory, DEFAULT_GAME_STATE_WITH_FLOW_MEMORY } from "../gameStateWithFlowMemory/GameStateWithFlowMemory";
 
 export type GameContext = {
     gameState: GameStateWithFlowMemory;
@@ -7,10 +6,6 @@ export type GameContext = {
 };
 
 export const DEFAULT_GAME_CONTEXT: GameContext = {
-    gameState: {
-        ...DEFAULT_GAME_STATE,
-        activeEffectID: null,
-        flowMemory: DEFAULT_FLOW_MEMORY
-    },
+    gameState: DEFAULT_GAME_STATE_WITH_FLOW_MEMORY,
     versionID: 0,
 };
