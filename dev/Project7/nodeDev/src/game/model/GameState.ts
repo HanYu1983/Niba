@@ -27,7 +27,6 @@ import { IsBattleComponent } from "./IsBattleComponent";
 import { getSetGroupCards, getSetGroupRoot, SetGroupComponent } from "./SetGroupComponent";
 import { EffectStackComponent, iterateEffect } from "./EffectStackComponent";
 import { getPreloadPrototype } from "../../script";
-import { ActiveEffectComponent } from "./ActiveEffectComponent";
 import { DEFAULT_TABLE } from "../../tool/table";
 import { log2 } from "../../tool/logger";
 
@@ -127,8 +126,7 @@ export type GameState = {
   & CardStateComponent
   & TimingComponent
   & PlayerStateComponent
-  & ActivePlayerComponent
-  & ActiveEffectComponent;
+  & ActivePlayerComponent;
 
 export const DEFAULT_GAME_STATE: GameState = {
   cards: {},
@@ -139,7 +137,6 @@ export const DEFAULT_GAME_STATE: GameState = {
   timing: TIMING_CHART[0],
   playerState: [],
   activePlayerID: null,
-  activeEffectID: null,
   commandEffect: [],
   immediateEffect: [],
   stackEffect: [],
