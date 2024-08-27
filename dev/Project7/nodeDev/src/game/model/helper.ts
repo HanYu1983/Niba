@@ -33,8 +33,26 @@ import {
 import { log2 } from "../../tool/logger";
 import { getPreloadPrototype } from "../../script";
 
-export function getCardState(ctx: GameContext, cardID: string): CardState {
-  return DEFAULT_CARD_STATE;
+export type CardStateComponent = {
+  cardStates: { [key: string]: CardState }
+}
+
+export function getCardState(ctx: CardStateComponent, cardID: string): CardState {
+  return ctx.cardStates[cardID] || DEFAULT_CARD_STATE;
+}
+
+export function mapCardState(ctx: CardStateComponent, f: (key: string, cs: CardState) => CardState): CardStateComponent {
+  let cardStates = ctx.cardStates;
+  Object.keys(ctx.cardStates).forEach(key => {
+    cardStates = {
+      ...cardStates,
+      [key]: f(key, cardStates[key])
+    }
+  })
+  return {
+    ...ctx,
+    cardStates
+  }
 }
 
 // export function getCardState(
@@ -118,7 +136,7 @@ export function getCardState(ctx: GameContext, cardID: string): CardState {
 // }
 
 export function getCardCharacteristic(ctx: GameContext, cardID: string) {
-  const card = getCard(ctx, cardID);
+  const card = getCard(ctx.gameState, cardID);
   if (card == null) {
     throw new Error("card not found");
   }
@@ -127,7 +145,7 @@ export function getCardCharacteristic(ctx: GameContext, cardID: string) {
 }
 
 export function getCardColor(ctx: GameContext, cardID: string): CardColor {
-  const card = getCard(ctx, cardID);
+  const card = getCard(ctx.gameState, cardID);
   if (card == null) {
     throw new Error("card not found");
   }
@@ -136,7 +154,7 @@ export function getCardColor(ctx: GameContext, cardID: string): CardColor {
 }
 
 export function getCardTitle(ctx: GameContext, cardID: string): string {
-  const card = getCard(ctx, cardID);
+  const card = getCard(ctx.gameState, cardID);
   if (card == null) {
     throw new Error("card not found");
   }
@@ -148,7 +166,7 @@ export function getCardBattlePoint(
   ctx: GameContext,
   cardID: string
 ): BattleBonus {
-  const card = getCard(ctx, cardID);
+  const card = getCard(ctx.gameState, cardID);
   if (card == null) {
     throw new Error("card not found");
   }
@@ -207,16 +225,15 @@ export function getBattleGroup(
   ctx: GameContext,
   baSyou: AbsoluteBaSyou
 ): string[] {
-  // return (
-  //   ctx.gameState.table.cardStack[getBaSyouID(baSyou)]
-  //     ?.filter((card) => {
-  //       return getSetGroupRoot(ctx, card.id) == null;
-  //     })
-  //     .map((root) => {
-  //       return root.id;
-  //     }) || []
-  // );
-  return [];
+  return (
+    ctx.gameState.table.cardStack[getBaSyouID(baSyou)]
+      ?.filter((cardId) => {
+        return getSetGroupRoot(ctx.gameState, cardId) == null;
+      })
+      .map((rootCardId) => {
+        return rootCardId
+      }) || []
+  );
 }
 
 export function getBattleGroupBattlePoint(
@@ -227,11 +244,11 @@ export function getBattleGroupBattlePoint(
     unitCardIDs
       .map((cardID, i): number => {
         // 破壞的單位沒有攻擊力
-        const cs = getCardState(ctx, cardID);
+        const cs = getCardState(ctx.gameState, cardID);
         if (cs.destroyReason != null) {
           return 0;
         }
-        const card = getCard(ctx, cardID);
+        const card = getCard(ctx.gameState, cardID);
         if (card == null) {
           throw new Error("card not found");
         }
@@ -239,7 +256,7 @@ export function getBattleGroupBattlePoint(
         if (card.tap) {
           return 0;
         }
-        const setGroupCards = getSetGroupCards(ctx, cardID);
+        const setGroupCards = getSetGroupCards(ctx.gameState, cardID);
         const power = setGroupCards
           .map((setGroupCardID) => {
             const [melee, range] = getCardBattlePoint(ctx, setGroupCardID);
@@ -292,13 +309,13 @@ export function isABattleGroup(
   a: TokuSyuKouKa,
   cardID: string
 ): boolean {
-  const baSyou = getCardBaSyou(ctx, cardID);
+  const baSyou = getCardBaSyou(ctx.gameState, cardID);
   const battleGroup = getBattleGroup(ctx, baSyou);
   return (
     battleGroup
       .map((cardID) => {
         // 其中一張卡有就行了
-        const setGroupCards = getSetGroupCards(ctx, cardID);
+        const setGroupCards = getSetGroupCards(ctx.gameState, cardID);
         for (const cardGroupCardID of setGroupCards) {
           if (hasTokuSyouKouKa(ctx, a, cardGroupCardID)) {
             return true;
@@ -317,7 +334,7 @@ export function isCanReroll(
   condition: any,
   cardID: string
 ): boolean {
-  const baSyouKW = getCardBaSyou(ctx, cardID).value[1];
+  const baSyouKW = getCardBaSyou(ctx.gameState, cardID).value[1];
   switch (baSyouKW) {
     case "Gゾーン":
     case "配備エリア":
@@ -327,8 +344,8 @@ export function isCanReroll(
     default:
       return false;
   }
-  const baSyou = getCardBaSyou(ctx, cardID);
-  const setGroup = getSetGroupCards(ctx, cardID);
+  const baSyou = getCardBaSyou(ctx.gameState, cardID);
+  const setGroup = getSetGroupCards(ctx.gameState, cardID);
   return true;
 }
 
@@ -336,7 +353,7 @@ export function isOpponentHasBattleGroup(
   ctx: GameContext,
   cardID: string
 ): boolean {
-  const controller = getCardController(ctx, cardID);
+  const controller = getCardController(ctx.gameState, cardID);
   const opponentPlayerID = getOpponentPlayerID(controller);
   const battleAreas: AbsoluteBaSyou[] = [
     { id: "AbsoluteBaSyou", value: [opponentPlayerID, "戦闘エリア（右）"] },
@@ -411,7 +428,7 @@ export function getCardBattleArea(
   ctx: GameContext,
   cardID: string
 ): BattleAreaKeyword[] {
-  const card = getCard(ctx, cardID);
+  const card = getCard(ctx.gameState, cardID);
   if (card == null) {
     throw new Error("card not found");
   }

@@ -19,6 +19,7 @@ import {
   BlockPayload
 } from "../define";
 import { DEFAULT_TABLE, Table, getCardPosition } from "../../tool/table";
+import { CardStateComponent } from "./helper";
 
 export type PlayerState = {
   id: string;
@@ -111,22 +112,14 @@ export type DestroyReason1 = {
 export type DestroyReason = DestroyReason1;
 
 export type GameState = {
-  table: Table;
-  cardState: CardState[];
+  //table: Table;
+  //cardState: CardState[];
   timing: Timing;
   playerState: PlayerState[];
   activePlayerID: string | null;
   effects: GameEffectState[];
   globalCardState: GlobalCardState[];
   activeEffectID: string | null;
-  // 指令效果
-  commandEffect: BlockPayload[];
-  // 立即效果。玩家必須立即一個一個進行處理
-  immediateEffect: BlockPayload[];
-  // 堆疊效果。每次只處理第一個代表top的block
-  stackEffect: BlockPayload[];
-  // 記錄上一次的堆疊。每次解決一個堆疊效果，就將那效果移到這裡
-  // 在發送切入解決時，清空。
   stackEffectMemory: BlockPayload[];
   // 專門給破壞效果用的用的堆疊
   // 傷害判定結束時，將所有破壞產生的廢棄效果丟到這，重設「決定解決順序」的旗標為真
@@ -134,8 +127,6 @@ export type GameState = {
   // 旗標為假時，才能才能開放給玩家切入
   // 這個堆疊解決完後，才回復到本來的堆疊的解決程序
   destroyEffect: BlockPayload[];
-  // setGroup
-  setGroupLink: { [key: string]: string };
   // 是否交戰中，key代表牌堆名稱的字串
   isBattle: { [key: string]: boolean };
   //
@@ -149,7 +140,7 @@ export type GameState = {
     msgs: Message[];
   };
   chipPool: { [key: string]: CardPrototype };
-};
+} & SetGroupComponent & IsBattleComponent & CardTableComponent & EffectStackComponent & CardStateComponent;
 
 
 export type GameContext = {
@@ -159,10 +150,11 @@ export type GameContext = {
 
 export const DEFAULT_GAME_CONTEXT: GameContext = {
   gameState: {
+    cards: {},
     effects: [],
     globalCardState: [],
     table: DEFAULT_TABLE,
-    cardState: [],
+    cardStates: {},
     timing: TIMING_CHART[0],
     playerState: [],
     activePlayerID: null,
@@ -188,61 +180,12 @@ export const DEFAULT_GAME_CONTEXT: GameContext = {
   versionID: 0,
 };
 
-export function iterateEffect(ctx: GameContext): BlockPayload[] {
-  return [
-    ...ctx.gameState.immediateEffect,
-    ...ctx.gameState.commandEffect,
-    ...ctx.gameState.stackEffect,
-  ];
-}
 
-export function mapEffect(
-  ctx: GameContext,
-  doF: (effect: BlockPayload) => BlockPayload
-): GameContext {
-  return {
-    ...ctx,
-    gameState: {
-      ...ctx.gameState,
-      immediateEffect: ctx.gameState.immediateEffect.map(doF),
-      commandEffect: ctx.gameState.commandEffect.map(doF),
-      stackEffect: ctx.gameState.stackEffect.map(doF),
-    },
-  };
-}
-
-export function reduceEffect<T>(
-  ctx: GameContext,
-  doF: (init: T, effect: BlockPayload) => T,
-  init: T
-): T {
-  return [
-    ...ctx.gameState.immediateEffect,
-    ...ctx.gameState.commandEffect,
-    ...ctx.gameState.stackEffect,
-  ].reduce(doF, init);
-}
-
-export function filterEffect(
-  ctx: GameContext,
-  filterF: (effect: BlockPayload) => boolean
-): GameContext {
-  return {
-    ...ctx,
-    gameState: {
-      ...ctx.gameState,
-      immediateEffect: ctx.gameState.immediateEffect.filter(filterF),
-      commandEffect: ctx.gameState.commandEffect.filter(filterF),
-      stackEffect: ctx.gameState.stackEffect.filter(filterF),
-    },
-  };
-}
-
-export type RequireScriptFunction = (
-  gameCtx: GameContext,
-  blockPayload: BlockPayload,
-  varCtxID: string
-) => GameContext;
+// export type RequireScriptFunction = (
+//   gameCtx: GameContext,
+//   blockPayload: BlockPayload,
+//   varCtxID: string
+// ) => GameContext;
 
 export function getBlockOwner(
   ctx: GameContext,
@@ -261,26 +204,6 @@ export function getBlockOwner(
   }
 }
 
-export function getSetGroupCards(ctx: GameContext, cardID: string): string[] {
-  const root = getSetGroupRoot(ctx, cardID);
-  if (root != null) {
-    return getSetGroupCards(ctx, root);
-  }
-  return [
-    cardID,
-    ...Object.keys(ctx.gameState.setGroupLink).filter((k) => {
-      return ctx.gameState.setGroupLink[k] == cardID;
-    }),
-  ];
-}
-
-export function getSetGroupRoot(
-  ctx: GameContext,
-  cardID: string
-): string | null {
-  return ctx.gameState.setGroupLink[cardID] || null;
-}
-
 export function getOpponentBattleArea(baSyou: AbsoluteBaSyou): AbsoluteBaSyou {
   const {
     value: [playerID, baSyouKW],
@@ -291,7 +214,110 @@ export function getOpponentBattleArea(baSyou: AbsoluteBaSyou): AbsoluteBaSyou {
   };
 }
 
-export function checkIsBattle(ctx: GameContext): GameContext {
+// EffectStackComponent
+
+export type EffectStackComponent = {
+  // 指令效果
+  commandEffect: BlockPayload[];
+  // 立即效果。玩家必須立即一個一個進行處理
+  immediateEffect: BlockPayload[];
+  // 堆疊效果。每次只處理第一個代表top的block
+  stackEffect: BlockPayload[];
+}
+
+export function iterateEffect(ctx: EffectStackComponent): BlockPayload[] {
+  return [
+    ...ctx.immediateEffect,
+    ...ctx.commandEffect,
+    ...ctx.stackEffect,
+  ];
+}
+
+export function mapEffect(
+  ctx: EffectStackComponent,
+  doF: (effect: BlockPayload) => BlockPayload
+): EffectStackComponent {
+  return {
+    ...ctx,
+    immediateEffect: ctx.immediateEffect.map(doF),
+    commandEffect: ctx.commandEffect.map(doF),
+    stackEffect: ctx.stackEffect.map(doF),
+  };
+}
+
+export function reduceEffect<T>(
+  ctx: EffectStackComponent,
+  doF: (init: T, effect: BlockPayload) => T,
+  init: T
+): T {
+  return [
+    ...ctx.immediateEffect,
+    ...ctx.commandEffect,
+    ...ctx.stackEffect,
+  ].reduce(doF, init);
+}
+
+export function filterEffect(
+  ctx: EffectStackComponent,
+  filterF: (effect: BlockPayload) => boolean
+): EffectStackComponent {
+  return {
+    ...ctx,
+    immediateEffect: ctx.immediateEffect.filter(filterF),
+    commandEffect: ctx.commandEffect.filter(filterF),
+    stackEffect: ctx.stackEffect.filter(filterF)
+  };
+}
+
+export function addStackEffect(ctx: EffectStackComponent, block: BlockPayload): EffectStackComponent {
+  return {
+    ...ctx,
+    stackEffect: [block, ...ctx.stackEffect],
+  };
+}
+
+export function addImmediateEffect(ctx: EffectStackComponent, block: BlockPayload): EffectStackComponent {
+  return {
+    ...ctx,
+    immediateEffect: [block, ...ctx.immediateEffect],
+  };
+}
+
+// setGroup
+
+export type SetGroupComponent = {
+  setGroupLink: { [key: string]: string };
+}
+
+export function getSetGroupCards(ctx: SetGroupComponent, cardID: string): string[] {
+  const root = getSetGroupRoot(ctx, cardID);
+  if (root != null) {
+    return getSetGroupCards(ctx, root);
+  }
+  return [
+    cardID,
+    ...Object.keys(ctx.setGroupLink).filter((k) => {
+      return ctx.setGroupLink[k] == cardID;
+    }),
+  ];
+}
+
+export function getSetGroupRoot(
+  ctx: SetGroupComponent,
+  cardID: string
+): string | null {
+  return ctx.setGroupLink[cardID] || null;
+}
+
+// battle
+
+export type IsBattleComponent = {
+  // 是否交戰中，key代表牌堆名稱的字串
+  isBattle: { [key: string]: boolean }
+  table: Table
+} & CardTableComponent
+
+export function checkIsBattle(ctx: IsBattleComponent): IsBattleComponent {
   const battleAreas: AbsoluteBaSyou[] = [
     { id: "AbsoluteBaSyou", value: [PlayerA, "戦闘エリア（左）"] },
     { id: "AbsoluteBaSyou", value: [PlayerA, "戦闘エリア（右）"] },
@@ -300,48 +326,42 @@ export function checkIsBattle(ctx: GameContext): GameContext {
     const baSyouID1 = getBaSyouID(battleArea);
     const baSyouID2 = getBaSyouID(getOpponentBattleArea(battleArea));
     if (
-      ctx.gameState.table.cardStack[baSyouID1]?.length &&
-      ctx.gameState.table.cardStack[baSyouID2]?.length
+      ctx.table.cardStack[baSyouID1]?.length &&
+      ctx.table.cardStack[baSyouID2]?.length
     ) {
       return {
         ...ctx,
-        gameState: {
-          ...ctx.gameState,
-          isBattle: {
-            ...ctx.gameState.isBattle,
-            [baSyouID1]: true,
-            [baSyouID2]: true,
-          },
+        isBattle: {
+          ...ctx.isBattle,
+          [baSyouID1]: true,
+          [baSyouID2]: true,
         },
       };
     }
     return {
       ...ctx,
-      gameState: {
-        ...ctx.gameState,
-        isBattle: {
-          ...ctx.gameState.isBattle,
-          [baSyouID1]: false,
-          [baSyouID2]: false,
-        },
-      },
+      isBattle: {
+        ...ctx.isBattle,
+        [baSyouID1]: false,
+        [baSyouID2]: false,
+      }
     };
   }, ctx);
 }
 
 export function isBattle(
-  ctx: GameContext,
+  ctx: IsBattleComponent,
   cardID: string,
   cardID2: string | null
 ): boolean {
   const baSyou1 = getCardBaSyou(ctx, cardID);
-  if (ctx.gameState.isBattle[getBaSyouID(baSyou1)] != true) {
+  if (ctx.isBattle[getBaSyouID(baSyou1)] != true) {
     return false;
   }
   if (cardID2 != null) {
     const baSyou2 = getOpponentBattleArea(baSyou1);
     const isFindCardID2 =
-      ctx.gameState.table.cardStack[getBaSyouID(baSyou2)].find((cardId) => {
+      ctx.table.cardStack[getBaSyouID(baSyou2)].find((cardId) => {
         return cardId == cardID2;
       }) != null;
     if (isFindCardID2 == false) {
@@ -351,7 +371,7 @@ export function isBattle(
   return true;
 }
 
-
+// card
 export type Card = {
   id: string
   ownerID: string
@@ -359,17 +379,49 @@ export type Card = {
   tap: boolean
 }
 
-export function getCard(ctx: GameContext, cardId: string): Card | null {
-  return null;
+export type CardTableComponent = {
+  table: Table
+  cards: { [key: string]: Card }
 }
 
-export function mapCard(ctx: GameContext, f: (Card) => Card): GameContext {
+export function getCard(ctx: CardTableComponent, cardId: string): Card | null {
+  return ctx.cards[cardId];
+}
+
+export function mapCard(ctx: CardTableComponent, f: (Card) => Card): CardTableComponent {
   return ctx;
+}
+
+export function getCardBaSyou(
+  ctx: CardTableComponent,
+  cardID: string
+): AbsoluteBaSyou {
+  const [_, cardPosition] = getCardPosition(ctx.table, cardID);
+  if (cardPosition == null) {
+    throw new Error("[getController] cardPosition not found");
+  }
+  return getBaSyou(cardPosition);
+}
+
+export function getCardController(ctx: CardTableComponent, cardID: string): PlayerID {
+  const baSyou = getCardBaSyou(ctx, cardID);
+  return baSyou.value[0];
+}
+
+export function getCardOwner(ctx: CardTableComponent, cardID: string): PlayerID {
+  const card = getCard(ctx, cardID);
+  if (card == null) {
+    throw new Error("[getCardOwner] card not found");
+  }
+  if (card.ownerID == null) {
+    throw new Error("[getCardOwner] card.ownerID not found");
+  }
+  return card.ownerID;
 }
 
 export function getAbsoluteBaSyou(
   baSyou: BaSyou,
-  ctx: GameContext,
+  ctx: CardTableComponent,
   cardID: string
 ): AbsoluteBaSyou {
   if (baSyou.id == "AbsoluteBaSyou") {
@@ -399,49 +451,5 @@ export function getAbsoluteBaSyou(
   };
 }
 
-export function getCardBaSyou(
-  ctx: GameContext,
-  cardID: string
-): AbsoluteBaSyou {
-  const [_, cardPosition] = getCardPosition(ctx.gameState.table, cardID);
-  if (cardPosition == null) {
-    throw new Error("[getController] cardPosition not found");
-  }
-  return getBaSyou(cardPosition);
-}
+// 
 
-export function getCardController(ctx: GameContext, cardID: string): PlayerID {
-  const baSyou = getCardBaSyou(ctx, cardID);
-  return baSyou.value[0];
-}
-
-export function getCardOwner(ctx: GameContext, cardID: string): PlayerID {
-  const card = getCard(ctx, cardID);
-  if (card == null) {
-    throw new Error("[getCardOwner] card not found");
-  }
-  if (card.ownerID == null) {
-    throw new Error("[getCardOwner] card.ownerID not found");
-  }
-  return card.ownerID;
-}
-
-export function addStackEffect(ctx: GameContext, block: BlockPayload): GameContext {
-  return {
-    ...ctx,
-    gameState: {
-      ...ctx.gameState,
-      stackEffect: [block, ...ctx.gameState.stackEffect],
-    },
-  };
-}
-
-export function addImmediateEffect(ctx: GameContext, block: BlockPayload): GameContext {
-  return {
-    ...ctx,
-    gameState: {
-      ...ctx.gameState,
-      immediateEffect: [block, ...ctx.gameState.immediateEffect],
-    },
-  };
-}

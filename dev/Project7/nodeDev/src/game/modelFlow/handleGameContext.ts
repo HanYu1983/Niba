@@ -23,7 +23,8 @@ import {
   reduceEffect,
   getCardBaSyou,
   getCardController,
-  mapCard
+  mapCard,
+  GameState
 } from "../model";
 import { log2 } from "../../tool/logger";
 import {
@@ -32,6 +33,7 @@ import {
   getCardBattlePoint,
   getCardState,
   isABattleGroup,
+  mapCardState,
 } from "../model/helper";
 
 function filterEnableCardText(
@@ -42,7 +44,7 @@ function filterEnableCardText(
 ) {
   const {
     value: [_, baSyouKeyword],
-  } = getCardBaSyou(ctx, cardID);
+  } = getCardBaSyou(ctx.gameState, cardID);
   // [起動]應該只有在場時有效
   if (isBa(baSyouKeyword) == false) {
     // 是G時，計算<>技能
@@ -414,8 +416,8 @@ export function initState(ctx: GameContext): GameContext {
 }
 
 export function initCardFace(ctx: GameContext): GameContext {
-  ctx = mapCard(ctx, (card) => {
-    const baSyou = getCardBaSyou(ctx, card.id);
+  let gameState = mapCard(ctx.gameState, (card) => {
+    const baSyou = getCardBaSyou(ctx.gameState, card.id);
     switch (baSyou.value[1]) {
       case "本国":
       case "捨て山":
@@ -430,8 +432,8 @@ export function initCardFace(ctx: GameContext): GameContext {
           faceDown: false,
         };
     }
-  });
-  return ctx
+  }) as GameState;
+  return {...ctx, gameState: gameState}
 }
 
 export function updateDestroyEffect(ctx: GameContext): GameContext {
@@ -516,7 +518,7 @@ export function getClientCommand(ctx: GameContext, clientID: string) {
       log2("getClientCommand", `cardTextID(${cardTextID})已經在堆疊裡.`);
       return;
     }
-    const cardState = getCardState(ctx, cardID);
+    const cardState = getCardState(ctx.gameState, cardID);
     const text = cardState.cardTextStates.find((v) => v.id == cardTextID);
     if (text == null) {
       throw new Error("must find text");
@@ -679,11 +681,11 @@ export function handleAttackDamage(
         // 敵方機體存在, 攻擊機體
         if (willGuardUnits.length) {
           const changedCardState = willGuardUnits.map((cardID): CardState => {
-            const cs = getCardState(ctx, cardID);
+            const cs = getCardState(ctx.gameState, cardID);
             if (currentAttackPower <= 0) {
               return cs;
             }
-            const setGroupCards = getSetGroupCards(ctx, cardID);
+            const setGroupCards = getSetGroupCards(ctx.gameState, cardID);
             const hp = setGroupCards
               .map((setGroupCardID) => {
                 const [_2, _3, hp] = getCardBattlePoint(ctx, setGroupCardID);
@@ -731,21 +733,33 @@ export function handleAttackDamage(
             };
           });
           // 套用傷害
-          const cardState = ctx.gameState.cardState.map((cs1) => {
+          let gameState = mapCardState(ctx.gameState, (_, cs1)=>{
             for (const cs2 of changedCardState) {
               if (cs1.id == cs2.id) {
                 return cs2;
               }
             }
             return cs1;
-          });
+          }) as GameState
           ctx = {
             ...ctx,
-            gameState: {
-              ...ctx.gameState,
-              cardState: cardState,
-            },
-          };
+            gameState
+          }
+          // const cardState = ctx.gameState.cardState.map((cs1) => {
+          //   for (const cs2 of changedCardState) {
+          //     if (cs1.id == cs2.id) {
+          //       return cs2;
+          //     }
+          //   }
+          //   return cs1;
+          // });
+          // ctx = {
+          //   ...ctx,
+          //   gameState: {
+          //     ...ctx.gameState,
+          //     cardState: cardState,
+          //   },
+          // };
         }
         // 攻擊方可以攻擊本國
         // 若傷害沒有用完, 攻擊本國
@@ -817,11 +831,11 @@ export function handleAttackDamage(
         // 敵方機體存在, 攻擊機體
         if (willGuardUnits.length) {
           const changedCardState = willGuardUnits.map((cardID): CardState => {
-            const cs = getCardState(ctx, cardID);
+            const cs = getCardState(ctx.gameState, cardID);
             if (currentAttackPower <= 0) {
               return cs;
             }
-            const setGroupCards = getSetGroupCards(ctx, cardID);
+            const setGroupCards = getSetGroupCards(ctx.gameState, cardID);
             const hp = setGroupCards
               .map((setGroupCardID) => {
                 const [_2, _3, hp] = getCardBattlePoint(ctx, setGroupCardID);
@@ -869,21 +883,33 @@ export function handleAttackDamage(
             };
           });
           // 套用傷害
-          const cardState = ctx.gameState.cardState.map((cs1) => {
+          let gameState = mapCardState(ctx.gameState, (_, cs1)=>{
             for (const cs2 of changedCardState) {
               if (cs1.id == cs2.id) {
                 return cs2;
               }
             }
             return cs1;
-          });
+          }) as GameState
           ctx = {
             ...ctx,
-            gameState: {
-              ...ctx.gameState,
-              cardState: cardState,
-            },
-          };
+            gameState
+          }
+          // const cardState = ctx.gameState.cardState.map((cs1) => {
+          //   for (const cs2 of changedCardState) {
+          //     if (cs1.id == cs2.id) {
+          //       return cs2;
+          //     }
+          //   }
+          //   return cs1;
+          // });
+          // ctx = {
+          //   ...ctx,
+          //   gameState: {
+          //     ...ctx.gameState,
+          //     cardState: cardState,
+          //   },
+          // };
         }
       }
     }

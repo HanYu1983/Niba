@@ -1,11 +1,11 @@
 import {
   BlockPayload,
 } from "../define";
-import { GameContext } from "../model";
+import { GameContext, GameState } from "../model";
 
 export function doBlockPayload(
-  ctx: GameContext,
+  ctx: GameState,
   blockPayload: BlockPayload
-): GameContext {
+): GameState {
   return ctx;
 }

@@ -24,7 +24,8 @@ import {
   mapCard,
   getCardBaSyou,
   getCardController,
-  addImmediateEffect
+  addImmediateEffect,
+  GameState
 } from "../model";
 import { log2 } from "../../tool/logger";
 import {
@@ -48,7 +49,7 @@ export function setActiveEffectID(
     throw new Error("有人在執行其它指令");
   }
   if (ctx.gameState.activeEffectID != null) {
-    const currentActiveEffect = iterateEffect(ctx).find(
+    const currentActiveEffect = iterateEffect(ctx.gameState).find(
       (e) => e.id == ctx.gameState.activeEffectID
     );
     if (currentActiveEffect != null) {
@@ -61,7 +62,7 @@ export function setActiveEffectID(
       }
     }
   }
-  const effect = iterateEffect(ctx).find((e) => e.id == effectID);
+  const effect = iterateEffect(ctx.gameState).find((e) => e.id == effectID);
   if (effect == null) {
     throw new Error("effect not found");
   }
@@ -85,7 +86,7 @@ export function cancelActiveEffectID(
   if (ctx.gameState.activeEffectID == null) {
     throw new Error("[cancelEffectID] activeEffectID not exist");
   }
-  const effect = iterateEffect(ctx).find(
+  const effect = iterateEffect(ctx.gameState).find(
     (e) => e.id == ctx.gameState.activeEffectID
   );
   if (effect == null) {
@@ -120,16 +121,20 @@ export function doEffect(
   // 暫存原本的效果, 用來發送當堆疊結束時的事件
   const stackEffect = ctx.gameState.stackEffect.find((e) => e.id == effectID);
   // 處理事件
-  ctx = reduceEffect(
-    ctx,
+  let gameState = reduceEffect(
+    ctx.gameState,
     (ctx, effect) => {
       if (effect.id != effectID) {
         return ctx;
       }
       return doBlockPayload(ctx, effect);
     },
-    ctx
+    ctx.gameState
   );
+  ctx = {
+    ...ctx,
+    gameState: gameState
+  }
   // 清除旗標，代表現在沒有正在支付的效果
   ctx = {
     ...ctx,
@@ -139,9 +144,9 @@ export function doEffect(
     },
   };
   // 將效果移除
-  ctx = filterEffect(ctx, (effect) => {
+  gameState = filterEffect(ctx.gameState, (effect) => {
     return effect.requirePassed != true;
-  });
+  }) as GameState;
   // 如果是堆疊事件，將事件移到堆疊記憶去
   const isStackEffect = stackEffect != null;
   if (isStackEffect) {
@@ -177,7 +182,7 @@ export function deleteImmediateEffect(
   playerID: string,
   effectID: string
 ): GameContext {
-  ctx = filterEffect(ctx, (effect) => {
+  let gameState = filterEffect(ctx.gameState, (effect) => {
     if (effect.id != effectID) {
       return true;
     }
@@ -189,8 +194,12 @@ export function deleteImmediateEffect(
       throw new Error("isOption must true");
     }
     return false;
-  });
-  return ctx;
+  }) as GameState;
+  
+  return {
+    ...ctx,
+    gameState: gameState
+  };
 }
 
 type FlowUpdateCommand = {
@@ -616,7 +625,7 @@ export function applyFlow(
         ctx.gameState.timing[1][0] == "戦闘フェイズ" &&
         ctx.gameState.timing[1][2] == "ステップ開始"
       ) {
-        ctx = checkIsBattle(ctx);
+        ctx = {...ctx, gameState: checkIsBattle(ctx.gameState) as GameState};
       }
       // 重設觸發flag
       ctx = {
@@ -656,7 +665,11 @@ export function applyFlow(
         },
         //...(block.require ? { require: wrapRequireKey(block.require) } : null),
       };
-      ctx = addImmediateEffect(ctx, block)
+      let gameState = addImmediateEffect(ctx.gameState, block) as GameState
+      ctx = {
+        ...ctx,
+        gameState: gameState
+      }
       // ctx = {
       //   ...ctx,
       //   gameState: {
@@ -817,7 +830,7 @@ export function applyFlow(
       return ctx;
     }
     case "FlowPassPayCost": {
-      const effect = iterateEffect(ctx).find((e) => e.id == flow.effectID);
+      const effect = iterateEffect(ctx.gameState).find((e) => e.id == flow.effectID);
       if (effect == null) {
         throw new Error(`effectID not found:${flow.effectID}`);
       }
@@ -928,7 +941,7 @@ export function queryFlow(ctx: GameContext, playerID: string): Flow[] {
   }
   // 有玩家在支付卡片
   if (ctx.gameState.activeEffectID != null) {
-    const currentActiveEffect = iterateEffect(ctx).find(
+    const currentActiveEffect = iterateEffect(ctx.gameState).find(
       (e) => e.id == ctx.gameState.activeEffectID
     );
     if (currentActiveEffect == null) {
