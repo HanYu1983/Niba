@@ -2,10 +2,9 @@ import { PlayerA, PlayerB, getBaSyouID, getOpponentPlayerID, BlockPayload, Battl
 import { iterateEffect } from "../gameState/EffectStackComponent";
 import { getBlockOwner } from "../gameState/GameState";
 import { Flow } from "./Flow";
-import { getActiveEffectID } from "../gameStateWithFlowMemory/handleEffect";
-import { GameContext } from "./GameContext";
+import { getActiveEffectID } from "./handleEffect";
 import { getClientCommand } from "./getClientCommand";
-import { GameStateWithFlowMemory } from "../gameStateWithFlowMemory/GameStateWithFlowMemory";
+import { GameStateWithFlowMemory } from "./GameStateWithFlowMemory";
 
 export function queryFlow(ctx: GameStateWithFlowMemory, playerID: string): Flow[] {
     if (true) {

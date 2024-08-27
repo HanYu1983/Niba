@@ -1,12 +1,11 @@
-import { updateCommand } from ".";
 import { log2 } from "../../tool/logger";
 import { PlayerA, PlayerB, AbsoluteBaSyou, getBaSyouID, getOpponentPlayerID, getNextTiming } from "../define";
 import { addImmediateEffect, iterateEffect } from "../gameState/EffectStackComponent";
 import { triggerTextEvent, updateDestroyEffect, GameState, handleAttackDamage } from "../gameState/GameState";
 import { checkIsBattle } from "../gameState/IsBattleComponent";
 import { Flow } from "./Flow";
-import { GameStateWithFlowMemory } from "../gameStateWithFlowMemory/GameStateWithFlowMemory";
-import { setActiveEffectID, cancelActiveEffectID, doEffect, deleteImmediateEffect } from "../gameStateWithFlowMemory/handleEffect";
+import { GameStateWithFlowMemory, updateCommand } from "./GameStateWithFlowMemory";
+import { setActiveEffectID, cancelActiveEffectID, doEffect, deleteImmediateEffect } from "./handleEffect";
 
 let idSeq = 0;
 export function applyFlow(

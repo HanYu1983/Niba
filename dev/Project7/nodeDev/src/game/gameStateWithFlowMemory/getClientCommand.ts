@@ -1,7 +1,7 @@
 import { log2 } from "../../tool/logger";
 import { getCardState } from "../gameState/CardStateComponent";
 import { getBlockOwner } from "../gameState/GameState";
-import { GameStateWithFlowMemory } from "../gameStateWithFlowMemory/GameStateWithFlowMemory";
+import { GameStateWithFlowMemory } from "./GameStateWithFlowMemory";
 
 export function getClientCommand(ctx: GameStateWithFlowMemory, clientID: string) {
     return ctx.commandEffect.filter((effect) => {
