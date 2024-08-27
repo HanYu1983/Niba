@@ -11,7 +11,10 @@ import {
   BattleAreaKeyword,
   BlockPayload,
   CardPrototype,
-  TIMING_CHART
+  TIMING_CHART,
+  AttackSpeed,
+  BaSyouKeyword,
+  GameEvent
 } from "../define";
 import {
   getCard,
@@ -19,13 +22,14 @@ import {
   getCardController,
   CardTableComponent,
 } from "./CardTableComponent"
-import { CardStateComponent, getCardState } from "./CardStateComponent";
+import { CardStateComponent, getCardState, mapCardState } from "./CardStateComponent";
 import { IsBattleComponent } from "./IsBattleComponent";
 import { getSetGroupCards, getSetGroupRoot, SetGroupComponent } from "./SetGroupComponent";
 import { EffectStackComponent, iterateEffect } from "./EffectStackComponent";
 import { getPreloadPrototype } from "../../script";
 import { ActiveEffectComponent } from "./ActiveEffectComponent";
 import { DEFAULT_TABLE } from "../../tool/table";
+import { log2 } from "../../tool/logger";
 
 export type PlayerState = {
   id: string;
@@ -480,3 +484,407 @@ export function doBlockPayload(
   return ctx;
 }
 
+export function handleAttackDamage(
+  ctx: GameState,
+  attackPlayerID: string,
+  guardPlayerID: string,
+  where: BaSyouKeyword,
+  speed: AttackSpeed
+): GameState {
+  const attackUnits = getBattleGroup(ctx, {
+    id: "AbsoluteBaSyou",
+    value: [attackPlayerID, where],
+  });
+  const attackPower = getBattleGroupBattlePoint(ctx, attackUnits);
+  const guardUnits = getBattleGroup(ctx, {
+    id: "AbsoluteBaSyou",
+    value: [guardPlayerID, where],
+  });
+  const guardPower = getBattleGroupBattlePoint(ctx, guardUnits);
+  const willTriggerEvent: GameEvent[] = [];
+  {
+    const currentAttackPlayerID = attackPlayerID;
+    const currentGuardPlayerID = guardPlayerID;
+    const willAttackUnits = attackUnits;
+    const willGuardUnits = guardUnits;
+    const willAttackPower = attackPower;
+    log2("handleAttackDamage", "speed", speed);
+    log2("handleAttackDamage", "baSyou", where);
+    log2("handleAttackDamage", "willAttackUnits", willAttackUnits);
+    log2("handleAttackDamage", "willGuardUnits", willGuardUnits);
+    log2("handleAttackDamage", "willAttackPower", willAttackPower);
+    if (willAttackUnits.length) {
+      // 判斷速度1速度2是否可攻擊
+      const hasSpeedAttack = isABattleGroup(ctx, ["速攻"], willAttackUnits[0]);
+      if (
+        // 有速攻的情況在速度1
+        (hasSpeedAttack && speed == 1) ||
+        // 沒速攻的情況在速度2
+        (hasSpeedAttack == false && speed == 2)
+      ) {
+        let currentAttackPower = willAttackPower;
+        log2("handleAttackDamage", "attack", currentAttackPower);
+        // 敵方機體存在, 攻擊機體
+        if (willGuardUnits.length) {
+          const changedCardState = willGuardUnits.map((cardID): CardState => {
+            const cs = getCardState(ctx, cardID);
+            if (currentAttackPower <= 0) {
+              return cs;
+            }
+            const setGroupCards = getSetGroupCards(ctx, cardID);
+            const hp = setGroupCards
+              .map((setGroupCardID) => {
+                const [_2, _3, hp] = getCardBattlePoint(ctx, setGroupCardID);
+                if (hp == "*") {
+                  return 0;
+                }
+                return hp;
+              })
+              .reduce((a, b) => a + b);
+            const live = hp - cs.damage;
+            if (live <= 0) {
+              return cs;
+            }
+            currentAttackPower -= live;
+            if (currentAttackPower >= 0) {
+              const reason: DestroyReason = {
+                id: "戦闘ダメージ",
+                playerID: currentAttackPlayerID,
+              };
+              const gameEvent: GameEvent = {
+                id: "破壊された場合",
+                cardID: cs.id,
+                destroyReason: reason,
+              };
+              willTriggerEvent.push(gameEvent);
+              return {
+                ...cs,
+                damage: hp,
+                destroyReason: reason,
+              };
+            }
+            // 剩餘血量
+            const nextLive = -currentAttackPower;
+            const nextDamage = hp - nextLive;
+            // 傷害用完了, 重設為0
+            currentAttackPower = 0;
+            const gameEvent: GameEvent = {
+              id: "戦闘ダメージを受けた場合",
+              cardID: cs.id,
+            };
+            willTriggerEvent.push(gameEvent);
+            return {
+              ...cs,
+              damage: nextDamage,
+            };
+          });
+          // 套用傷害
+          ctx = mapCardState(ctx, (_, cs1) => {
+            for (const cs2 of changedCardState) {
+              if (cs1.id == cs2.id) {
+                return cs2;
+              }
+            }
+            return cs1;
+          }) as GameState
+          // const cardState = ctx.gameState.cardState.map((cs1) => {
+          //   for (const cs2 of changedCardState) {
+          //     if (cs1.id == cs2.id) {
+          //       return cs2;
+          //     }
+          //   }
+          //   return cs1;
+          // });
+          // ctx = {
+          //   ...ctx,
+          //   gameState: {
+          //     ...ctx.gameState,
+          //     cardState: cardState,
+          //   },
+          // };
+        }
+        // 攻擊方可以攻擊本國
+        // 若傷害沒有用完, 攻擊本國
+        if (
+          currentAttackPower > 0 ||
+          // 對方有防禦機體的情況, 有強襲就攻擊本國
+          (willGuardUnits.length &&
+            isABattleGroup(ctx, ["強襲"], willAttackUnits[0]))
+        ) {
+          // 本國傷害
+          log2("handleAttackDamage", "attack 本国", currentAttackPower);
+          let table = ctx.table;
+          let fromCardStackID = getBaSyouID({
+            id: "AbsoluteBaSyou",
+            value: [currentGuardPlayerID, "本国"],
+          });
+          let toCardStackID = getBaSyouID({
+            id: "AbsoluteBaSyou",
+            value: [currentGuardPlayerID, "捨て山"],
+          });
+          table = {
+            ...table,
+            cardStack: {
+              ...table.cardStack,
+              [fromCardStackID]:
+                table.cardStack[fromCardStackID].slice(currentAttackPower),
+              [toCardStackID]: [
+                ...table.cardStack[fromCardStackID].slice(
+                  0,
+                  currentAttackPower
+                ),
+                ...table.cardStack[toCardStackID],
+              ],
+            },
+          };
+          ctx = {
+            ...ctx,
+            table: table,
+          };
+        }
+      }
+    }
+  }
+  {
+    const currentAttackPlayerID = guardPlayerID;
+    const currentGuardPlayerID = attackPlayerID;
+    const willAttackUnits = guardUnits;
+    const willGuardUnits = attackUnits;
+    const willAttackPower = guardPower;
+    log2("handleAttackDamage", "speed", speed);
+    log2("handleAttackDamage", "baSyou", where);
+    log2("handleAttackDamage", "willAttackUnits", willAttackUnits);
+    log2("handleAttackDamage", "willGuardUnits", willGuardUnits);
+    log2("handleAttackDamage", "willAttackPower", willAttackPower);
+    if (willAttackUnits.length) {
+      // 判斷速度1速度2是否可攻擊
+      const hasSpeedAttack = isABattleGroup(ctx, ["速攻"], willAttackUnits[0]);
+      if (
+        // 有速攻的情況在速度1
+        (hasSpeedAttack && speed == 1) ||
+        // 沒速攻的情況在速度2
+        (hasSpeedAttack == false && speed == 2)
+      ) {
+        let currentAttackPower = willAttackPower;
+        log2("handleAttackDamage", "attack", currentAttackPower);
+        // 敵方機體存在, 攻擊機體
+        if (willGuardUnits.length) {
+          const changedCardState = willGuardUnits.map((cardID): CardState => {
+            const cs = getCardState(ctx, cardID);
+            if (currentAttackPower <= 0) {
+              return cs;
+            }
+            const setGroupCards = getSetGroupCards(ctx, cardID);
+            const hp = setGroupCards
+              .map((setGroupCardID) => {
+                const [_2, _3, hp] = getCardBattlePoint(ctx, setGroupCardID);
+                if (hp == "*") {
+                  return 0;
+                }
+                return hp;
+              })
+              .reduce((a, b) => a + b);
+            const live = hp - cs.damage;
+            if (live <= 0) {
+              return cs;
+            }
+            currentAttackPower -= live;
+            if (currentAttackPower >= 0) {
+              const reason: DestroyReason = {
+                id: "戦闘ダメージ",
+                playerID: currentAttackPlayerID,
+              };
+              const gameEvent: GameEvent = {
+                id: "破壊された場合",
+                cardID: cs.id,
+                destroyReason: reason,
+              };
+              willTriggerEvent.push(gameEvent);
+              return {
+                ...cs,
+                damage: hp,
+                destroyReason: reason,
+              };
+            }
+            // 剩餘血量
+            const nextLive = -currentAttackPower;
+            const nextDamage = hp - nextLive;
+            // 傷害用完了, 重設為0
+            currentAttackPower = 0;
+            const gameEvent: GameEvent = {
+              id: "戦闘ダメージを受けた場合",
+              cardID: cs.id,
+            };
+            willTriggerEvent.push(gameEvent);
+            return {
+              ...cs,
+              damage: nextDamage,
+            };
+          });
+          // 套用傷害
+          ctx = mapCardState(ctx, (_, cs1) => {
+            for (const cs2 of changedCardState) {
+              if (cs1.id == cs2.id) {
+                return cs2;
+              }
+            }
+            return cs1;
+          }) as GameState
+          // const cardState = ctx.gameState.cardState.map((cs1) => {
+          //   for (const cs2 of changedCardState) {
+          //     if (cs1.id == cs2.id) {
+          //       return cs2;
+          //     }
+          //   }
+          //   return cs1;
+          // });
+          // ctx = {
+          //   ...ctx,
+          //   gameState: {
+          //     ...ctx.gameState,
+          //     cardState: cardState,
+          //   },
+          // };
+        }
+      }
+    }
+  }
+  ctx = updateDestroyEffect(ctx);
+  ctx = willTriggerEvent.reduce((ctx, evt) => {
+    return triggerTextEvent(ctx, evt);
+  }, ctx);
+  return ctx;
+}
+
+// 觸發事件腳本
+// 在每次事件發生時都要呼叫
+// 起動型技能
+export function triggerTextEvent(
+  ctx: GameState,
+  evt: GameEvent
+): GameState {
+  log2("triggerTextEvent", evt.id);
+  // return getCardStateIterator(ctx).reduce((ctx, [cardID, cardTextStates]) => {
+  //   return cardTextStates.reduce((ctx, cardTextState) => {
+  //     const cardTexts = (() => {
+  //       switch (cardTextState.cardText.id) {
+  //         case "自動型":
+  //           return [cardTextState.cardText].filter((t) => {
+  //             if (t.id == "自動型" && t.category == "起動") {
+  //               return filterEnableCardText(ctx, cardID, false, t);
+  //             }
+  //             return false;
+  //           });
+  //         case "特殊型":
+  //         case "恒常":
+  //           return cardTextState.cardText.texts.filter((t) => {
+  //             if (t.id == "自動型" && t.category == "起動") {
+  //               return filterEnableCardText(ctx, cardID, true, t);
+  //             }
+  //             return false;
+  //           });
+  //         default:
+  //           return [];
+  //       }
+  //     })();
+  //     return cardTexts.reduce((ctx, cardText) => {
+  //       const cardController = getCardController(ctx, cardID);
+  //       const wrapEvent: BlockPayload = {
+  //         ...cardText.block,
+  //         cause: {
+  //           id: "BlockPayloadCauseGameEvent",
+  //           playerID: cardController,
+  //           cardID: cardID,
+  //           cardTextID: cardTextState.id,
+  //           gameEvent: evt,
+  //           description: cardText.description,
+  //         },
+  //         // 加上卡ID，讓varCtxID變成每張卡唯一。而不是遊戲唯一。
+  //         contextID: `[${cardID}]_[${cardText.block.contextID}]`,
+  //       };
+  //       // const varCtxID = "triggerTextEvent";
+  //       // try {
+  //       //   if (wrapEvent.require != null) {
+  //       //     // 清空變量，因為是臨時性的訪問，所以可以這麼做
+  //       //     ctx = {
+  //       //       ...ctx,
+  //       //       varsPool: {
+  //       //         ...ctx.varsPool,
+  //       //         [varCtxID]: {
+  //       //           targets: {},
+  //       //           jsonfpContext: {},
+  //       //         },
+  //       //       },
+  //       //     };
+  //       //     ctx = doRequire(ctx, wrapEvent, wrapEvent.require, varCtxID);
+  //       //   }
+  //       //   if (wrapEvent.feedback) {
+  //       //     ctx = wrapEvent.feedback.reduce((ctx, feedback) => {
+  //       //       return doFeedback(ctx, wrapEvent, feedback, varCtxID);
+  //       //     }, ctx);
+  //       //   }
+  //       // } catch (e) {
+  //       //   log2("triggerTextEvent", err2string(e));
+  //       // }
+  //       return ctx;
+  //     }, ctx);
+  //   }, ctx);
+  // }, ctx);
+  return ctx;
+}
+
+export function updateDestroyEffect(ctx: GameState): GameState {
+  // 將所有破壞效果加入破壞用堆疊
+  // 加入破壞用堆疊後，主動玩家就必須決定解決順序
+  // 決定後，依順序將所有效果移到正在解決中的堆疊，並重設切入的旗標，讓玩家可以在堆疊解決中可以再次切入
+  // const effects = ctx.gameState.cardState
+  //   .filter((cs) => {
+  //     if (cs.destroyReason == null) {
+  //       return false;
+  //     }
+  //     return true;
+  //   })
+  //   .map((cs): BlockPayload => {
+  //     const card = getCard(ctx.gameState.table, cs.id);
+  //     if (card == null) {
+  //       throw new Error("card not found");
+  //     }
+  //     if (cs.destroyReason == null) {
+  //       throw new Error("destroyReason must found");
+  //     }
+  //     const setGroupCards = getSetGroupCards(ctx, card.id);
+  //     const hp = setGroupCards
+  //       .map((setGroupCardID) => {
+  //         const [_2, _3, hp] = getCardBattlePoint(ctx, setGroupCardID);
+  //         return hp;
+  //       })
+  //       .reduce((a, b) => a + b);
+  //     return {
+  //       ...getCardTextMacro({
+  //         id: "破壊する",
+  //         cause: {
+  //           id: "BlockPayloadCauseDestroy",
+  //           reason:
+  //             hp <= 0
+  //               ? {
+  //                   id: "マイナスの戦闘修正",
+  //                   playerID: cs.destroyReason.playerID,
+  //                 }
+  //               : cs.destroyReason,
+  //           playerID: cs.destroyReason.playerID,
+  //           cardID: cs.id,
+  //           description: "破壞產生的自身的廢棄效果",
+  //         },
+  //       }).block,
+  //       id: `updateDestroyEffect_${cs.id}`,
+  //     };
+  //   });
+  // ctx = {
+  //   ...ctx,
+  //   gameState: {
+  //     ...ctx.gameState,
+  //     destroyEffect: effects,
+  //   },
+  // };
+  return ctx;
+}
