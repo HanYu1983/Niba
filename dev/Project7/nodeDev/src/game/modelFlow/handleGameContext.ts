@@ -647,16 +647,16 @@ export function handleAttackDamage(
   where: BaSyouKeyword,
   speed: AttackSpeed
 ): GameContext {
-  const attackUnits = getBattleGroup(ctx, {
+  const attackUnits = getBattleGroup(ctx.gameState, {
     id: "AbsoluteBaSyou",
     value: [attackPlayerID, where],
   });
-  const attackPower = getBattleGroupBattlePoint(ctx, attackUnits);
-  const guardUnits = getBattleGroup(ctx, {
+  const attackPower = getBattleGroupBattlePoint(ctx.gameState, attackUnits);
+  const guardUnits = getBattleGroup(ctx.gameState, {
     id: "AbsoluteBaSyou",
     value: [guardPlayerID, where],
   });
-  const guardPower = getBattleGroupBattlePoint(ctx, guardUnits);
+  const guardPower = getBattleGroupBattlePoint(ctx.gameState, guardUnits);
   const willTriggerEvent: GameEvent[] = [];
   {
     const currentAttackPlayerID = attackPlayerID;
@@ -671,7 +671,7 @@ export function handleAttackDamage(
     log2("handleAttackDamage", "willAttackPower", willAttackPower);
     if (willAttackUnits.length) {
       // 判斷速度1速度2是否可攻擊
-      const hasSpeedAttack = isABattleGroup(ctx, ["速攻"], willAttackUnits[0]);
+      const hasSpeedAttack = isABattleGroup(ctx.gameState, ["速攻"], willAttackUnits[0]);
       if (
         // 有速攻的情況在速度1
         (hasSpeedAttack && speed == 1) ||
@@ -690,7 +690,7 @@ export function handleAttackDamage(
             const setGroupCards = getSetGroupCards(ctx.gameState, cardID);
             const hp = setGroupCards
               .map((setGroupCardID) => {
-                const [_2, _3, hp] = getCardBattlePoint(ctx, setGroupCardID);
+                const [_2, _3, hp] = getCardBattlePoint(ctx.gameState, setGroupCardID);
                 if(hp == "*"){
                   return 0;
                 }
@@ -769,7 +769,7 @@ export function handleAttackDamage(
           currentAttackPower > 0 ||
           // 對方有防禦機體的情況, 有強襲就攻擊本國
           (willGuardUnits.length &&
-            isABattleGroup(ctx, ["強襲"], willAttackUnits[0]))
+            isABattleGroup(ctx.gameState, ["強襲"], willAttackUnits[0]))
         ) {
           // 本國傷害
           log2("handleAttackDamage", "attack 本国", currentAttackPower);
@@ -821,7 +821,7 @@ export function handleAttackDamage(
     log2("handleAttackDamage", "willAttackPower", willAttackPower);
     if (willAttackUnits.length) {
       // 判斷速度1速度2是否可攻擊
-      const hasSpeedAttack = isABattleGroup(ctx, ["速攻"], willAttackUnits[0]);
+      const hasSpeedAttack = isABattleGroup(ctx.gameState, ["速攻"], willAttackUnits[0]);
       if (
         // 有速攻的情況在速度1
         (hasSpeedAttack && speed == 1) ||
@@ -840,7 +840,7 @@ export function handleAttackDamage(
             const setGroupCards = getSetGroupCards(ctx.gameState, cardID);
             const hp = setGroupCards
               .map((setGroupCardID) => {
-                const [_2, _3, hp] = getCardBattlePoint(ctx, setGroupCardID);
+                const [_2, _3, hp] = getCardBattlePoint(ctx.gameState, setGroupCardID);
                 if(hp == "*"){
                   return 0;
                 }

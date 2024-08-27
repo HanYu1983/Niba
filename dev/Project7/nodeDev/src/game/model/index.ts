@@ -16,7 +16,8 @@ import {
   BattleAreaKeyword,
   getBaSyou,
   TIMING_CHART,
-  BlockPayload
+  BlockPayload,
+  CardPrototype
 } from "../define";
 import {
   getCard,
@@ -45,30 +46,6 @@ export type CardTextState = {
   id: string;
   enabled: boolean;
   cardText: CardText;
-};
-
-export type CardPrototype = {
-  title: string;
-  characteristic: string[];
-  color: CardColor;
-  category: CardCategory;
-  rollCost: (CardColor | null)[];
-  battlePoint: BattleBonus;
-  battleArea: BattleAreaKeyword[];
-  texts: CardText[];
-  implProgress: number;
-};
-
-export const DEFAULT_CARD_PROTOTYPE: CardPrototype = {
-  title: "名稱未定義",
-  characteristic: [],
-  color: "白",
-  category: "ユニット",
-  rollCost: [],
-  battlePoint: [0, 0, 0],
-  battleArea: ["地球エリア", "宇宙エリア"],
-  texts: [],
-  implProgress: 0,
 };
 
 export type CardState = {
@@ -156,42 +133,6 @@ export type GameState = {
 } & SetGroupComponent & IsBattleComponent & CardTableComponent & EffectStackComponent & CardStateComponent;
 
 
-export type GameContext = {
-  gameState: GameState;
-  versionID: number;
-};
-
-export const DEFAULT_GAME_CONTEXT: GameContext = {
-  gameState: {
-    cards: {},
-    effects: [],
-    globalCardState: [],
-    table: DEFAULT_TABLE,
-    cardStates: {},
-    timing: TIMING_CHART[0],
-    playerState: [],
-    activePlayerID: null,
-    activeEffectID: null,
-    commandEffect: [],
-    immediateEffect: [],
-    stackEffect: [],
-    stackEffectMemory: [],
-    destroyEffect: [],
-    setGroupLink: {},
-    isBattle: {},
-    flowMemory: {
-      state: "prepareDeck",
-      hasTriggerEvent: false,
-      hasPlayerPassPhase: {},
-      hasPlayerPassCut: {},
-      hasPlayerPassPayCost: {},
-      shouldTriggerStackEffectFinishedEvent: false,
-      msgs: [],
-    },
-    chipPool: {},
-  },
-  versionID: 0,
-};
 
 export function getBlockOwner(
   ctx: GameState,
@@ -248,15 +189,15 @@ export function getCardTitle(ctx: GameState, cardID: string): string {
 }
 
 export function getCardBattlePoint(
-  ctx: GameContext,
+  ctx: GameState,
   cardID: string
 ): BattleBonus {
-  const card = getCard(ctx.gameState, cardID);
+  const card = getCard(ctx, cardID);
   if (card == null) {
     throw new Error("card not found");
   }
   const prototype = getPreloadPrototype(card.protoID);
-  // const bonusFromCardState = ctx.gameState.globalCardState
+  // const bonusFromCardState = ctx.globalCardState
   //   .filter((cs) => cs.cardID == cardID)
   //   .flatMap((cs) => cs.cardTextStates.map((cts) => cts.cardText))
   //   .filter(
@@ -273,7 +214,7 @@ export function getCardBattlePoint(
   //     }
   //     return ct.customID.battleBonus;
   //   });
-  // const bonusFromCoin = ctx.gameState.table.tokens
+  // const bonusFromCoin = ctx.table.tokens
   //   .filter((t) => {
   //     if (t.position.id != "TokenPositionCard") {
   //       return false;
@@ -307,13 +248,13 @@ export function getCardBattlePoint(
 }
 
 export function getBattleGroup(
-  ctx: GameContext,
+  ctx: GameState,
   baSyou: AbsoluteBaSyou
 ): string[] {
   return (
-    ctx.gameState.table.cardStack[getBaSyouID(baSyou)]
+    ctx.table.cardStack[getBaSyouID(baSyou)]
       ?.filter((cardId) => {
-        return getSetGroupRoot(ctx.gameState, cardId) == null;
+        return getSetGroupRoot(ctx, cardId) == null;
       })
       .map((rootCardId) => {
         return rootCardId
@@ -322,18 +263,18 @@ export function getBattleGroup(
 }
 
 export function getBattleGroupBattlePoint(
-  ctx: GameContext,
+  ctx: GameState,
   unitCardIDs: string[]
 ) {
   const attackPower =
     unitCardIDs
       .map((cardID, i): number => {
         // 破壞的單位沒有攻擊力
-        const cs = getCardState(ctx.gameState, cardID);
+        const cs = getCardState(ctx, cardID);
         if (cs.destroyReason != null) {
           return 0;
         }
-        const card = getCard(ctx.gameState, cardID);
+        const card = getCard(ctx, cardID);
         if (card == null) {
           throw new Error("card not found");
         }
@@ -341,7 +282,7 @@ export function getBattleGroupBattlePoint(
         if (card.tap) {
           return 0;
         }
-        const setGroupCards = getSetGroupCards(ctx.gameState, cardID);
+        const setGroupCards = getSetGroupCards(ctx, cardID);
         const power = setGroupCards
           .map((setGroupCardID) => {
             const [melee, range] = getCardBattlePoint(ctx, setGroupCardID);
@@ -364,12 +305,12 @@ export function getBattleGroupBattlePoint(
 }
 
 export function hasTokuSyouKouKa(
-  ctx: GameContext,
+  ctx: GameState,
   a: TokuSyuKouKa,
   cardID: string
 ): boolean {
   // const cs = getCardState(ctx, cardID);
-  // const gcs = ctx.gameState.globalCardState.filter((cs) => {
+  // const gcs = ctx.globalCardState.filter((cs) => {
   //   return cs.cardID == cardID;
   // });
   // const texts = [cs, ...gcs]
@@ -390,17 +331,17 @@ export function hasTokuSyouKouKa(
 }
 
 export function isABattleGroup(
-  ctx: GameContext,
+  ctx: GameState,
   a: TokuSyuKouKa,
   cardID: string
 ): boolean {
-  const baSyou = getCardBaSyou(ctx.gameState, cardID);
+  const baSyou = getCardBaSyou(ctx, cardID);
   const battleGroup = getBattleGroup(ctx, baSyou);
   return (
     battleGroup
       .map((cardID) => {
         // 其中一張卡有就行了
-        const setGroupCards = getSetGroupCards(ctx.gameState, cardID);
+        const setGroupCards = getSetGroupCards(ctx, cardID);
         for (const cardGroupCardID of setGroupCards) {
           if (hasTokuSyouKouKa(ctx, a, cardGroupCardID)) {
             return true;
@@ -415,11 +356,11 @@ export function isABattleGroup(
 }
 
 export function isCanReroll(
-  ctx: GameContext,
+  ctx: GameState,
   condition: any,
   cardID: string
 ): boolean {
-  const baSyouKW = getCardBaSyou(ctx.gameState, cardID).value[1];
+  const baSyouKW = getCardBaSyou(ctx, cardID).value[1];
   switch (baSyouKW) {
     case "Gゾーン":
     case "配備エリア":
@@ -429,16 +370,16 @@ export function isCanReroll(
     default:
       return false;
   }
-  const baSyou = getCardBaSyou(ctx.gameState, cardID);
-  const setGroup = getSetGroupCards(ctx.gameState, cardID);
+  const baSyou = getCardBaSyou(ctx, cardID);
+  const setGroup = getSetGroupCards(ctx, cardID);
   return true;
 }
 
 export function isOpponentHasBattleGroup(
-  ctx: GameContext,
+  ctx: GameState,
   cardID: string
 ): boolean {
-  const controller = getCardController(ctx.gameState, cardID);
+  const controller = getCardController(ctx, cardID);
   const opponentPlayerID = getOpponentPlayerID(controller);
   const battleAreas: AbsoluteBaSyou[] = [
     { id: "AbsoluteBaSyou", value: [opponentPlayerID, "戦闘エリア（右）"] },
@@ -446,7 +387,7 @@ export function isOpponentHasBattleGroup(
   ];
   return (
     battleAreas.reduce((acc: string[], battleArea) => {
-      return acc.concat(ctx.gameState.table.cardStack[getBaSyouID(battleArea)] || []);
+      return acc.concat(ctx.table.cardStack[getBaSyouID(battleArea)] || []);
     }, []).length != 0
   );
 }
@@ -469,8 +410,8 @@ export function isMaster(
   return true;
 }
 
-// export function getCardCoins(ctx: GameContext, cardID: string): Coin[] {
-//   return ctx.gameState.table.tokens
+// export function getCardCoins(ctx: GameState, cardID: string): Coin[] {
+//   return ctx.table.tokens
 //     .filter((token) => {
 //       if (token.position.id != "TokenPositionCard") {
 //         return false;
@@ -484,15 +425,15 @@ export function isMaster(
 // }
 
 // export function getCardStateIterator(
-//   ctx: GameContext
+//   ctx: GameState
 // ): [string, CardTextState[]][] {
-//   const converGlobalCardState = ctx.gameState.globalCardState.map((gs) => {
+//   const converGlobalCardState = ctx.globalCardState.map((gs) => {
 //     return {
 //       id: gs.cardID,
 //       cardTextStates: gs.cardTextStates,
 //     };
 //   });
-//   return [...ctx.gameState.cardState, ...converGlobalCardState].map((v) => {
+//   return [...ctx.cardState, ...converGlobalCardState].map((v) => {
 //     return [v.id, v.cardTextStates] as [string, CardTextState[]];
 //   });
 // }
@@ -527,3 +468,40 @@ export function doBlockPayload(
 ): GameState {
   return ctx;
 }
+
+export type GameContext = {
+  gameState: GameState;
+  versionID: number;
+};
+
+export const DEFAULT_GAME_CONTEXT: GameContext = {
+  gameState: {
+    cards: {},
+    effects: [],
+    globalCardState: [],
+    table: DEFAULT_TABLE,
+    cardStates: {},
+    timing: TIMING_CHART[0],
+    playerState: [],
+    activePlayerID: null,
+    activeEffectID: null,
+    commandEffect: [],
+    immediateEffect: [],
+    stackEffect: [],
+    stackEffectMemory: [],
+    destroyEffect: [],
+    setGroupLink: {},
+    isBattle: {},
+    flowMemory: {
+      state: "prepareDeck",
+      hasTriggerEvent: false,
+      hasPlayerPassPhase: {},
+      hasPlayerPassCut: {},
+      hasPlayerPassPayCost: {},
+      shouldTriggerStackEffectFinishedEvent: false,
+      msgs: [],
+    },
+    chipPool: {},
+  },
+  versionID: 0,
+};
