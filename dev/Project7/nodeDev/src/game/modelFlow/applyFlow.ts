@@ -1,12 +1,13 @@
-import { GameContext, updateCommand } from ".";
+import { updateCommand } from ".";
 import { log2 } from "../../tool/logger";
 import { PlayerA, PlayerB, AbsoluteBaSyou, getBaSyouID, getOpponentPlayerID, getNextTiming } from "../define";
 import { addImmediateEffect, iterateEffect } from "../model/EffectStackComponent";
 import { triggerTextEvent, updateDestroyEffect, GameState, handleAttackDamage } from "../model/GameState";
 import { checkIsBattle } from "../model/IsBattleComponent";
 import { Flow } from "./Flow";
-import { GameStateWithFlowMemory } from "./GameStateWithFlowMemory";
-import { setActiveEffectID, cancelActiveEffectID, doEffect, deleteImmediateEffect } from "./handleEffect";
+import { GameStateWithFlowMemory } from "../gameStateWithFlowMemory/GameStateWithFlowMemory";
+import { setActiveEffectID, cancelActiveEffectID, doEffect, deleteImmediateEffect } from "../gameStateWithFlowMemory/handleEffect";
+import { GameContext } from "./GameContext";
 
 function setGameActiveEffectID(
     ctx: GameContext,
