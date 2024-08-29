@@ -1,3 +1,3 @@
 import { tests } from "./debug";
 
-tests();
+tests().catch(console.error)

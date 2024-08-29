@@ -1,21 +1,7 @@
 import { testBattleBonus, testFlow1, testFlow2 } from "./testFlow";
 
-export function tests() {
-    // [
-    //     testFlow1,
-    //     //testFlow2,
-    //     testBattleBonus
-    // ].forEach((testF: Function) => {
-    //     console.log(
-    //         `================================================================`
-    //     );
-    //     console.log(`${testF.name}`);
-    //     console.log(
-    //         `================================================================`
-    //     );
-    //     testF();
-    // });
-    [testFlow1, testBattleBonus].reduce((worker, testF) => {
+export async function tests() {
+    return [testFlow1, testBattleBonus].reduce((worker, testF) => {
         return worker.then(async () => {
             console.log(
                 `================================================================`
