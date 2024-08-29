@@ -4,8 +4,9 @@ import {
   BaSyou,
   getOpponentPlayerID,
   getBaSyou,
+  getBaSyouID,
 } from "../define";
-import { Table, getCardPosition } from "../../tool/table";
+import { Table, addCard, getCardPosition } from "../../tool/table";
 
 // card
 export type Card = {
@@ -13,6 +14,15 @@ export type Card = {
   ownerID: string
   protoID: string
   tap: boolean
+  faceDown: boolean
+}
+
+export const DEFAULT_CARD: Card = {
+  id: "",
+  ownerID: "",
+  protoID: "",
+  tap: false,
+  faceDown: false
 }
 
 export type CardTableComponent = {
@@ -26,6 +36,32 @@ export function getCard(ctx: CardTableComponent, cardId: string): Card | null {
 
 export function mapCard(ctx: CardTableComponent, f: (Card) => Card): CardTableComponent {
   return ctx;
+}
+
+export function createGundamCardWithProtoIds(ctx: CardTableComponent, playerID: PlayerID, basyou: AbsoluteBaSyou, cardProtoIds: string[]): CardTableComponent {
+  ctx = addGundamCards(ctx, basyou, cardProtoIds.map((protoId, i) => {
+    return {
+      ...DEFAULT_CARD,
+      id: `card${i}_${protoId}_${new Date().getTime()}_${Math.round(Math.random() * 1000000)}`,
+      protoID: protoId,
+    }
+  }))
+  return ctx;
+}
+
+export function addGundamCards(ctx: CardTableComponent, basyou: AbsoluteBaSyou, addedCards: Card[]): CardTableComponent {
+  ctx = addedCards.reduce((ctx, newCard) => {
+    const table = addCard(ctx.table, getBaSyouID(basyou), newCard.id)
+    return {
+      ...ctx,
+      table: table,
+      cards: {
+        ...ctx.cards,
+        [newCard.id]: newCard
+      }
+    }
+  }, ctx)
+  return ctx
 }
 
 export function getCardBaSyou(

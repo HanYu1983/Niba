@@ -4,7 +4,12 @@ import {
 
 export async function getPrototype(imgID: string): Promise<CardPrototype> {
   try {
-    return (await import(`./${imgID}`)).prototype;
+    if (_preloadPrototype[imgID]) {
+      return _preloadPrototype[imgID]
+    }
+    const proto = (await import(`./${imgID}`)).prototype;
+    _preloadPrototype[imgID] = proto
+    return proto
   } catch (e) {
     console.log(e)
     throw new Error(`script/${imgID}.ts not found`);
@@ -12,10 +17,6 @@ export async function getPrototype(imgID: string): Promise<CardPrototype> {
 }
 
 const _preloadPrototype: { [key: string]: CardPrototype } = {}
-
-export async function loadPrototype(imgID: string) {
-  _preloadPrototype[imgID] = await getPrototype(imgID)
-}
 
 export function getPreloadPrototype(imgId: string): CardPrototype {
   if (_preloadPrototype[imgId] == null) {

@@ -256,7 +256,7 @@ export function getCardBattlePoint(
   //   },
   //   prototype.battlePoint
   // );
-  return [0, 0, 0];
+  return prototype.battlePoint;
 }
 
 export function getBattleGroup(
@@ -277,42 +277,40 @@ export function getBattleGroup(
 export function getBattleGroupBattlePoint(
   ctx: GameState,
   unitCardIDs: string[]
-) {
-  const attackPower =
-    unitCardIDs
-      .map((cardID, i): number => {
-        // 破壞的單位沒有攻擊力
-        const cs = getCardState(ctx, cardID);
-        if (cs.destroyReason != null) {
-          return 0;
-        }
-        const card = getCard(ctx, cardID);
-        if (card == null) {
-          throw new Error("card not found");
-        }
-        // 横置的單位沒有攻擊力
-        if (card.tap) {
-          return 0;
-        }
-        const setGroupCards = getSetGroupCards(ctx, cardID);
-        const power = setGroupCards
-          .map((setGroupCardID) => {
-            const [melee, range] = getCardBattlePoint(ctx, setGroupCardID);
-            if (melee == "*") {
-              return 0;
-            }
-            if (i == 0) {
-              return melee || 0;
-            }
-            if (range == "*") {
-              return 0;
-            }
-            return range || 0;
-          })
-          .reduce((a, b) => a + b);
-        return power;
-      })
-      ?.reduce((acc, c) => acc + c, 0) || 0;
+): number {
+  const attackPower = unitCardIDs
+    .map((cardID, i): number => {
+      // 破壞的單位沒有攻擊力
+      const cs = getCardState(ctx, cardID);
+      if (cs.destroyReason != null) {
+        return 0;
+      }
+      const card = getCard(ctx, cardID);
+      if (card == null) {
+        throw new Error("card not found");
+      }
+      // 横置的單位沒有攻擊力
+      if (card.tap) {
+        return 0;
+      }
+      const setGroupCards = getSetGroupCards(ctx, cardID);
+      const power = setGroupCards
+        .map((setGroupCardID) => {
+          const [melee, range] = getCardBattlePoint(ctx, setGroupCardID);
+          if (melee == "*") {
+            return 0;
+          }
+          if (i == 0) {
+            return melee || 0;
+          }
+          if (range == "*") {
+            return 0;
+          }
+          return range || 0;
+        })
+        .reduce((a, b) => a + b);
+      return power;
+    }).reduce((acc, c) => acc + c, 0);
   return attackPower;
 }
 

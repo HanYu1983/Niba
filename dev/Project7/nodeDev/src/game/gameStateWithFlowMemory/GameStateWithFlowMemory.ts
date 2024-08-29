@@ -35,7 +35,7 @@ export type GameStateWithFlowMemory = {
     activeEffectID: string | null;
 } & GameState & HasFlowMemoryComponent;
 
-export const DEFAULT_GAME_STATE_WITH_FLOW_MEMORY = {
+export const DEFAULT_GAME_STATE_WITH_FLOW_MEMORY: GameStateWithFlowMemory = {
     ...DEFAULT_GAME_STATE,
     activeEffectID: null,
     flowMemory: DEFAULT_FLOW_MEMORY

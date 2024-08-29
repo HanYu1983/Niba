@@ -1,10 +1,17 @@
-export type CardId = string;
-
 export type Table = {
-    cardStack: { [key: string]: CardId[] },
+    cardStack: { [key: string]: string[] },
 }
 
-export function moveCard(table: Table, fromPosition: string, toPosition: string, cardId: CardId): Table {
+export function addCard(table:Table, position: string, cardId:string):Table {
+    if (!table.cardStack[position]) {
+        table.cardStack[position] = [cardId];
+    } else {
+        table.cardStack[position].push(cardId);
+    }
+    return table;
+}
+
+export function moveCard(table: Table, fromPosition: string, toPosition: string, cardId: string): Table {
     if (!table.cardStack[fromPosition] || !table.cardStack[fromPosition].includes(cardId)) {
         throw new Error("Card not found in the specified position");
     }
@@ -20,7 +27,7 @@ export function moveCard(table: Table, fromPosition: string, toPosition: string,
     }
 }
 
-export function getCardPosition(table: Table, cardId: CardId): string {
+export function getCardPosition(table: Table, cardId: string): string {
     for (const [key, value] of Object.entries(table.cardStack)) {
         if (value.includes(cardId)) {
             return key;

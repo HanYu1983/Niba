@@ -110,6 +110,10 @@ export type Phase =
 
 export type Timing = [number, Phase];
 
+export function getTimingSeq(timing: Timing): number {
+  return timing[0]
+}
+
 export type RelatedPlayerSideKeyword = "自軍" | "敵軍";
 
 export type SiYouTiming =
