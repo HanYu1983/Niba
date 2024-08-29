@@ -6,7 +6,7 @@ import {
   getBaSyou,
   getBaSyouID,
 } from "../define";
-import Table, { TableType } from "../../tool/table";
+import Table, { TTable } from "../../tool/table";
 
 // card
 export type Card = {
@@ -26,7 +26,7 @@ export const DEFAULT_CARD: Card = {
 }
 
 export type CardTableComponent = {
-  table: TableType
+  table: TTable
   cards: { [key: string]: Card }
 }
 

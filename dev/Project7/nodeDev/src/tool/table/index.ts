@@ -1,8 +1,8 @@
-export type TableType = {
+export type TTable = {
     cardStack: { [key: string]: string[] },
 }
 
-function addCard(table: TableType, position: string, cardId: string): TableType {
+function addCard(table: TTable, position: string, cardId: string): TTable {
     if (!table.cardStack[position]) {
         table.cardStack[position] = [cardId];
     } else {
@@ -11,7 +11,7 @@ function addCard(table: TableType, position: string, cardId: string): TableType 
     return table;
 }
 
-function moveCard(table: TableType, fromPosition: string, toPosition: string, cardId: string): TableType {
+function moveCard(table: TTable, fromPosition: string, toPosition: string, cardId: string): TTable {
     if (!table.cardStack[fromPosition] || !table.cardStack[fromPosition].includes(cardId)) {
         throw new Error("Card not found in the specified position");
     }
@@ -27,7 +27,7 @@ function moveCard(table: TableType, fromPosition: string, toPosition: string, ca
     }
 }
 
-function getCardPosition(table: TableType, cardId: string): string {
+function getCardPosition(table: TTable, cardId: string): string {
     for (const [key, value] of Object.entries(table.cardStack)) {
         if (value.includes(cardId)) {
             return key;
@@ -36,7 +36,7 @@ function getCardPosition(table: TableType, cardId: string): string {
     throw new Error("Card not found")
 }
 
-const DEFAULT_TABLE: TableType = {
+const DEFAULT_TABLE: TTable = {
     cardStack: {}
 }
 

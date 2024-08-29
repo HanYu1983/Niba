@@ -7,13 +7,13 @@ import {
   getCardBaSyou,
   CardTableComponent,
 } from "./CardTableComponent"
-import { Table } from "../../tool/table";
+import { TTable } from "../../tool/table";
 import { getOpponentBattleArea } from "./GameState";
 
 export type IsBattleComponent = {
   // 是否交戰中，key代表牌堆名稱的字串
   isBattle: { [key: string]: boolean }
-  table: Table
+  table: TTable
 } & CardTableComponent
 
 export function checkIsBattle(ctx: IsBattleComponent): IsBattleComponent {
