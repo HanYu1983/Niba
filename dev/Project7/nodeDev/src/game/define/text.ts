@@ -52,7 +52,7 @@ export type TSituation = {
 export type TTextTitle = ["自動型", "常駐" | "起動" | "恒常"] | ["使用型", SiYouTiming] | ["特殊型", TTextTokuSyuKouKa] | TTextBattleBonus
 
 export type TLogicTreeCommand = {
-    logicTree: TLogicTree
+    logicTree?: TLogicTree
     actions: TAction[]
 }
 
@@ -104,7 +104,7 @@ const testTexts: TText[] = [
         },
         logicTreeCommands: [
             {
-                logicTree: { type: "Leaf", value: "1" },
+                //logicTree: { type: "Leaf", value: "1" },
                 actions: [
                     {
                         title: ["このカードをリロールする", "このカード", "リロール"],
