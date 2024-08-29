@@ -460,12 +460,18 @@ export function getBlockPayloadGetGlobalEffect(ctx: BlockPayload) {
 
 export const DEFAULT_BLOCK_PAYLOAD: BlockPayload = {};
 
-export type AddText = {
+export type GlobalEffectAddText = {
   type: "AddText",
   cardIds: string[],
   text: CardText
 }
-export type GlobalEffect = AddText;
+
+export type GlobalEffectRollAsG = {
+  type: "自軍Gとしてロール",
+  cardIds: string[],
+}
+
+export type GlobalEffect = GlobalEffectAddText | GlobalEffectRollAsG;
 
 export type CardPrototype = {
   title: string;

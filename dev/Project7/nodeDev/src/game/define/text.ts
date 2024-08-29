@@ -134,7 +134,7 @@ const testTexts: TText[] = [
                     const cardId = evt.cardID;
                 }
             }
-            return []
+            return [{type: "自軍Gとしてロール", cardIds: [runtime.getCardID()]}]
         }.toString(),
     }
 ]
