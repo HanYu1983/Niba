@@ -31,7 +31,7 @@ import { IsBattleComponent } from "./IsBattleComponent";
 import { getSetGroupCards, getSetGroupRoot, SetGroupComponent } from "./SetGroupComponent";
 import { EffectStackComponent, iterateEffect } from "./EffectStackComponent";
 import { getPreloadPrototype } from "../../script";
-import { DEFAULT_TABLE } from "../../tool/table";
+import Table from "../../tool/table";
 import { log2 } from "../../tool/logger";
 import { Bridge, Runtime } from "../../script/bridge";
 
@@ -137,7 +137,7 @@ export const DEFAULT_GAME_STATE: GameState = {
   cards: {},
   effects: [],
   globalCardState: [],
-  table: DEFAULT_TABLE,
+  table: Table.DEFAULT_TABLE,
   cardStates: {},
   timing: TIMING_CHART[0],
   playerState: [],

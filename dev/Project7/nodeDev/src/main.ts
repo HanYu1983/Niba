@@ -16,3 +16,9 @@ async function main(){
 }
 
 main().catch(console.error)
+
+export default {
+    doMain: "30"
+}
+
+export const Fuck = 30

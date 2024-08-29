@@ -1,22 +1,22 @@
-type LogicTree = {
+export type TLogicTree = {
     type: 'And' | 'Or' | 'Leaf';
     value?: string;
-    children?: LogicTree[];
+    children?: TLogicTree[];
 };
 
-function or(tree: LogicTree): boolean {
+function or(tree: TLogicTree): boolean {
     return tree.type === 'Or';
 }
 
-function and(tree: LogicTree): boolean {
+function and(tree: TLogicTree): boolean {
     return tree.type === 'And';
 }
 
-function leaf(tree: LogicTree): boolean {
+function leaf(tree: TLogicTree): boolean {
     return tree.type === 'Leaf';
 }
 
-function children(tree: LogicTree): LogicTree[] {
+function children(tree: TLogicTree): TLogicTree[] {
     return tree.children || [];
 }
 
@@ -24,7 +24,7 @@ function crossProduct(a: any[], b: any[]): any[] {
     return a.flatMap(x => b.map(y => [].concat(x, y)));
 }
 
-function enumerateAll(tree: LogicTree): any[] {
+function enumerateAll(tree: TLogicTree): any[] {
     if (!tree) return [];
     if (or(tree)) return children(tree).flatMap(enumerateAll);
     if (and(tree)) return children(tree).map(enumerateAll).reduce(crossProduct, [[]]);
@@ -32,12 +32,12 @@ function enumerateAll(tree: LogicTree): any[] {
     throw new Error(`Unknown tree structure ${tree}`);
 }
 
-function has(tree: LogicTree, keys: string[]): boolean {
+function has(tree: TLogicTree, keys: string[]): boolean {
     return enumerateAll(tree).some(set => keys.length === set.length && keys.every(key => set.includes(key)));
 }
 
 function testEnumerateAll() {
-    const tree1: LogicTree = {
+    const tree1: TLogicTree = {
         type: 'And',
         children: [
             { type: 'Leaf', value: 'action-1' },
@@ -79,7 +79,7 @@ function testEnumerateAll() {
         ]
     };
 
-    const tree2: LogicTree = {
+    const tree2: TLogicTree = {
         type: 'And',
         children: [
             { type: 'Leaf', value: '5' },
@@ -100,7 +100,7 @@ function testEnumerateAll() {
         ]
     };
 
-    const tree3: LogicTree = {
+    const tree3: TLogicTree = {
         type: 'And',
         children: [
             { type: 'Leaf', value: '5' },
@@ -227,6 +227,17 @@ function testEnumerateAll() {
     assertEqual(result3, enumerateAll(tree3));
 }
 
-export function tests() {
+function tests() {
     testEnumerateAll();
+}
+
+export default {
+    or,
+    and,
+    leaf,
+    children,
+    crossProduct,
+    enumerateAll,
+    has,
+    tests
 }

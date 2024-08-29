@@ -6,7 +6,7 @@ import {
   getBaSyou,
   getBaSyouID,
 } from "../define";
-import { Table, addCard, getCardPosition } from "../../tool/table";
+import Table, { TableType } from "../../tool/table";
 
 // card
 export type Card = {
@@ -26,7 +26,7 @@ export const DEFAULT_CARD: Card = {
 }
 
 export type CardTableComponent = {
-  table: Table
+  table: TableType
   cards: { [key: string]: Card }
 }
 
@@ -55,7 +55,7 @@ export function createGundamCardWithProtoIds(ctx: CardTableComponent, playerID: 
 
 export function addGundamCards(ctx: CardTableComponent, basyou: AbsoluteBaSyou, addedCards: Card[]): CardTableComponent {
   ctx = addedCards.reduce((ctx, newCard) => {
-    const table = addCard(ctx.table, getBaSyouID(basyou), newCard.id)
+    const table = Table.addCard(ctx.table, getBaSyouID(basyou), newCard.id)
     return {
       ...ctx,
       table: table,
@@ -72,7 +72,7 @@ export function getCardBaSyou(
   ctx: CardTableComponent,
   cardID: string
 ): AbsoluteBaSyou {
-  const cardPosition = getCardPosition(ctx.table, cardID);
+  const cardPosition = Table.getCardPosition(ctx.table, cardID);
   if (cardPosition == null) {
     throw new Error("[getController] cardPosition not found");
   }
