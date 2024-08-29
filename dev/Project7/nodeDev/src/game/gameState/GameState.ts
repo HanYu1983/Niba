@@ -14,13 +14,17 @@ import {
   TIMING_CHART,
   AttackSpeed,
   BaSyouKeyword,
-  GameEvent
+  GameEvent,
+  GlobalEffect,
+  getBlockPayloadGetGlobalEffect,
+  addBattleBonus
 } from "../define";
 import {
-  getCard,
+  getGundamCard,
   getCardBaSyou,
   getCardController,
   CardTableComponent,
+  getGundamCardIds,
 } from "./CardTableComponent"
 import { CardStateComponent, getCardState, mapCardState } from "./CardStateComponent";
 import { IsBattleComponent } from "./IsBattleComponent";
@@ -29,6 +33,7 @@ import { EffectStackComponent, iterateEffect } from "./EffectStackComponent";
 import { getPreloadPrototype } from "../../script";
 import { DEFAULT_TABLE } from "../../tool/table";
 import { log2 } from "../../tool/logger";
+import { Bridge, Runtime } from "../../script/bridge";
 
 export type PlayerState = {
   id: string;
@@ -174,7 +179,7 @@ export function getOpponentBattleArea(baSyou: AbsoluteBaSyou): AbsoluteBaSyou {
 }
 
 export function getCardCharacteristic(ctx: GameState, cardID: string) {
-  const card = getCard(ctx, cardID);
+  const card = getGundamCard(ctx, cardID);
   if (card == null) {
     throw new Error("card not found");
   }
@@ -183,7 +188,7 @@ export function getCardCharacteristic(ctx: GameState, cardID: string) {
 }
 
 export function getCardColor(ctx: GameState, cardID: string): CardColor {
-  const card = getCard(ctx, cardID);
+  const card = getGundamCard(ctx, cardID);
   if (card == null) {
     throw new Error("card not found");
   }
@@ -192,7 +197,7 @@ export function getCardColor(ctx: GameState, cardID: string): CardColor {
 }
 
 export function getCardTitle(ctx: GameState, cardID: string): string {
-  const card = getCard(ctx, cardID);
+  const card = getGundamCard(ctx, cardID);
   if (card == null) {
     throw new Error("card not found");
   }
@@ -200,14 +205,53 @@ export function getCardTitle(ctx: GameState, cardID: string): string {
   return prototype.title;
 }
 
+export function getGlobalEffects(ctx: GameState): GlobalEffect[] {
+  return getGundamCardIds(ctx).map(cardId => getGundamCard(ctx, cardId)).flatMap(card => {
+    if (card == null) {
+      throw new Error("card not found")
+    }
+    // TODO
+    const bridge: Bridge = {
+      getMyUnitIds(ctx: GameState, playerID: string): string[] {
+        return getGundamCardIds(ctx)
+      }
+    }
+    const runtime: Runtime = {
+      getPlayerID() {
+        return getCardController(ctx, card.id)
+      },
+      getCardID() {
+        return card.id
+      }
+    }
+    const proto = getPreloadPrototype(card.protoID)
+    const globalEffects = proto.texts.filter(text => text.id == "自動型")
+      .filter(text => text.category == "恒常")
+      .filter(text => text.block.getGlobalEffectScript)
+      .map(text => getBlockPayloadGetGlobalEffect(text.block))
+      .flatMap(fn => fn(ctx, runtime, bridge))
+    return globalEffects
+  })
+}
+
 export function getCardBattlePoint(
   ctx: GameState,
   cardID: string
 ): BattleBonus {
-  const card = getCard(ctx, cardID);
+  const globalEffects = getGlobalEffects(ctx);
+  const card = getGundamCard(ctx, cardID);
   if (card == null) {
     throw new Error("card not found");
   }
+  const bonusFromGlobalEffects = globalEffects.map(ge => {
+    if (ge.type == "AddText" &&
+      ge.cardIds.includes(cardID) &&
+      ge.text.id == "CardTextCustom" &&
+      ge.text.customID.id == "CardTextCustomIDBattleBonus") {
+      return ge.text.customID.battleBonus
+    }
+    return [0, 0, 0] as BattleBonus
+  })
   const prototype = getPreloadPrototype(card.protoID);
   // const bonusFromCardState = ctx.globalCardState
   //   .filter((cs) => cs.cardID == cardID)
@@ -250,13 +294,11 @@ export function getCardBattlePoint(
   //     }
   //     return coin.battleBonus;
   //   });
-  // const retBonus = [...bonusFromCardState, ...bonusFromCoin].reduce(
-  //   ([x, y, z], [x2, y2, z2]): BattleBonus => {
-  //     return [x + x2, y + y2, z + z2];
-  //   },
-  //   prototype.battlePoint
-  // );
-  return prototype.battlePoint;
+  const retBonus = [...bonusFromGlobalEffects].reduce(
+    (acc, curr) => addBattleBonus(acc, curr),
+    prototype.battlePoint
+  );
+  return retBonus;
 }
 
 export function getBattleGroup(
@@ -285,7 +327,7 @@ export function getBattleGroupBattlePoint(
       if (cs.destroyReason != null) {
         return 0;
       }
-      const card = getCard(ctx, cardID);
+      const card = getGundamCard(ctx, cardID);
       if (card == null) {
         throw new Error("card not found");
       }
@@ -464,7 +506,7 @@ export function getCardBattleArea(
   ctx: GameState,
   cardID: string
 ): BattleAreaKeyword[] {
-  const card = getCard(ctx, cardID);
+  const card = getGundamCard(ctx, cardID);
   if (card == null) {
     throw new Error("card not found");
   }

@@ -199,6 +199,7 @@ export function testFlow2() {
 export async function testBattleBonus() {
   await getPrototype("179016_04B_U_WT075C_white")
   await getPrototype("179001_01A_CH_WT007R_white")
+  await getPrototype("testBPBonus")
   let ctx = DEFAULT_GAME_STATE_WITH_FLOW_MEMORY;
   ctx = {
     ...ctx,
@@ -216,14 +217,14 @@ export async function testBattleBonus() {
       {
         id: "a1",
         protoID: "179016_04B_U_WT075C_white",
-        faceDown: true,
+        faceDown: false,
         ownerID: PlayerA,
         tap: false,
       },
       {
         id: "a2",
         protoID: "179001_01A_CH_WT007R_white",
-        faceDown: true,
+        faceDown: false,
         ownerID: PlayerA,
         tap: false,
       }
@@ -278,40 +279,34 @@ export async function testBattleBonus() {
     }
   }
   console.log("給a1獲得+3/+3/+3");
-  ctx = {
-    ...ctx,
-    globalCardState: [
+  ctx = addGundamCards(
+    ctx,
+    {
+      id: "AbsoluteBaSyou",
+      value: [PlayerA, "配備エリア"],
+    },
+    [
       {
-        id: "",
-        cardID: "a1",
-        cardTextStates: [
-          {
-            id: "",
-            enabled: true,
-            cardText: {
-              id: "CardTextCustom",
-              customID: {
-                id: "CardTextCustomIDBattleBonus",
-                battleBonus: [3, 3, 3],
-              },
-            },
-          },
-        ],
-      } as GlobalCardState,
-    ],
-  };
-  // {
-  //   const [x, y, z] = getCardBattlePoint(ctx, "a1");
-  //   if (x != 8) {
-  //     throw new Error("x != 8");
-  //   }
-  //   if (y != 5) {
-  //     throw new Error("y != 5");
-  //   }
-  //   if (z != 7) {
-  //     throw new Error("z != 7");
-  //   }
-  // }
+        id: "a3",
+        protoID: "testBPBonus",
+        faceDown: false,
+        ownerID: PlayerA,
+        tap: false,
+      }
+    ]
+  ) as GameStateWithFlowMemory
+  {
+    const [x, y, z] = getCardBattlePoint(ctx, "a1");
+    if (x != 8) {
+      throw new Error("x != 8");
+    }
+    if (y != 5) {
+      throw new Error("y != 5");
+    }
+    if (z != 7) {
+      throw new Error("z != 7");
+    }
+  }
   {
     const bta = getBattleGroupBattlePoint(
       ctx,
@@ -320,7 +315,7 @@ export async function testBattleBonus() {
         value: [PlayerA, "戦闘エリア（左）"],
       })
     );
-    if (bta != 10) {
+    if (bta != 13) {
       throw new Error("must be 10");
     }
   }

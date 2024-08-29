@@ -30,8 +30,12 @@ export type CardTableComponent = {
   cards: { [key: string]: Card }
 }
 
-export function getCard(ctx: CardTableComponent, cardId: string): Card | null {
+export function getGundamCard(ctx: CardTableComponent, cardId: string): Card | null {
   return ctx.cards[cardId];
+}
+
+export function getGundamCardIds(ctx: CardTableComponent): string[] {
+  return Object.keys(ctx.cards);
 }
 
 export function mapCard(ctx: CardTableComponent, f: (Card) => Card): CardTableComponent {
@@ -81,7 +85,7 @@ export function getCardController(ctx: CardTableComponent, cardID: string): Play
 }
 
 export function getCardOwner(ctx: CardTableComponent, cardID: string): PlayerID {
-  const card = getCard(ctx, cardID);
+  const card = getGundamCard(ctx, cardID);
   if (card == null) {
     throw new Error("[getCardOwner] card not found");
   }
@@ -102,7 +106,7 @@ export function getAbsoluteBaSyou(
   const _playerID = (() => {
     switch (baSyou.value[0]) {
       case "持ち主": {
-        const card = getCard(ctx, cardID);
+        const card = getGundamCard(ctx, cardID);
         if (card == null) {
           throw new Error("getAbsoluteBaSyou card not found");
         }

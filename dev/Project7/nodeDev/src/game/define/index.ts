@@ -200,6 +200,22 @@ export function isCanPlayCardInPhase(phase: Phase): boolean {
 
 export type BattleBonus = ["*" | number, "*" | number, "*" | number];
 
+export function getBattlePointSingleValue(v: "*" | number): number {
+  if (v == "*") {
+    return 0
+  }
+  return v
+}
+
+export function addBattleBonus([x, y, z]: BattleBonus, [x2, y2, z2]: BattleBonus): BattleBonus {
+  return [
+    getBattlePointSingleValue(x) + getBattlePointSingleValue(x2),
+    getBattlePointSingleValue(y) + getBattlePointSingleValue(y2),
+    getBattlePointSingleValue(z) + getBattlePointSingleValue(z2)
+  ]
+}
+
+
 type GameEvent1 = {
   id: "GameEventOnTiming";
   timing: Timing;
@@ -426,16 +442,30 @@ export type BlockPayloadCause =
   | BlockPayloadCauseGameRule
   | BlockPayloadCauseDestroy;
 
+// Effect
 export type BlockPayload = {
   id?: string;
   cause?: BlockPayloadCause;
+  getGlobalEffectScript?: string;
   // 是否已經支付, 支付了不能取消
   requirePassed?: boolean;
   // 是否是可選擇要不要發動的效果
   isOption?: boolean;
 };
 
+export function getBlockPayloadGetGlobalEffect(ctx: BlockPayload) {
+  const script = ctx.getGlobalEffectScript || (function _() { }).toString()
+  return eval(script + ";_")
+}
+
 export const DEFAULT_BLOCK_PAYLOAD: BlockPayload = {};
+
+export type AddText = {
+  type: "AddText",
+  cardIds: string[],
+  text: CardText
+}
+export type GlobalEffect = AddText;
 
 export type CardPrototype = {
   title: string;
@@ -446,7 +476,6 @@ export type CardPrototype = {
   battlePoint: BattleBonus;
   battleArea: BattleAreaKeyword[];
   texts: CardText[];
-  implProgress: number;
 };
 
 export const DEFAULT_CARD_PROTOTYPE: CardPrototype = {
@@ -458,5 +487,4 @@ export const DEFAULT_CARD_PROTOTYPE: CardPrototype = {
   battlePoint: [0, 0, 0],
   battleArea: ["地球エリア", "宇宙エリア"],
   texts: [],
-  implProgress: 0,
 };
