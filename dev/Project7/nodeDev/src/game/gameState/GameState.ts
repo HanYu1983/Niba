@@ -14,7 +14,8 @@ import Table from "../../tool/table";
 import { log2 } from "../../tool/logger";
 import { Bridge, Runtime } from "../../script/bridge";
 import Text, { TText, TTextTokuSyuKouKa } from "../define/Text";
-import { PlayerID, getOpponentPlayerID, AttackSpeed } from "../define";
+import { AttackSpeed } from "../define";
+import PlayerID, { TPlayerID } from "../define/PlayerID";
 import BaSyou, { AbsoluteBaSyou, BattleAreaKeyword, BaSyouKeyword } from "../define/BaSyou";
 import BattleBonus, { TBattleBonus } from "../define/BattlePoint";
 import { CardPrototype, CardColor } from "../define/CardPrototype";
@@ -22,7 +23,6 @@ import { GlobalEffect } from "../define/GlobalEffect";
 import { Timing, TIMING_CHART } from "../define/Timing";
 import { TEffect } from "../define/Effect";
 import { TEvent } from "../define/Event";
-
 
 export type PlayerState = {
   id: string;
@@ -143,7 +143,7 @@ export const DEFAULT_GAME_STATE: GameState = {
 
 export function getBlockOwner(
   blockPayload: TEffect
-): PlayerID {
+): TPlayerID {
   // if (blockPayload.reason == null) {
   //   throw new Error("must has cause");
   // }
@@ -164,7 +164,7 @@ export function getOpponentBattleArea(baSyou: AbsoluteBaSyou): AbsoluteBaSyou {
   } = baSyou;
   return {
     id: "AbsoluteBaSyou",
-    value: [getOpponentPlayerID(playerID), baSyouKW],
+    value: [PlayerID.getOpponentPlayerID(playerID), baSyouKW],
   };
 }
 
@@ -419,7 +419,7 @@ export function isOpponentHasBattleGroup(
   cardID: string
 ): boolean {
   const controller = getCardController(ctx, cardID);
-  const opponentPlayerID = getOpponentPlayerID(controller);
+  const opponentPlayerID = PlayerID.getOpponentPlayerID(controller);
   const battleAreas: AbsoluteBaSyou[] = [
     { id: "AbsoluteBaSyou", value: [opponentPlayerID, "戦闘エリア（右）"] },
     { id: "AbsoluteBaSyou", value: [opponentPlayerID, "戦闘エリア（左）"] },

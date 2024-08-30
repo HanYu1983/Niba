@@ -1,4 +1,4 @@
-import { PlayerA, PlayerB } from "../define";
+import PlayerID, { PlayerA, PlayerB } from "../define/PlayerID";
 import { getCardBaSyou, mapCard } from "../gameState/CardTableComponent";
 import { DEFAULT_GAME_STATE, GameState } from "../gameState/GameState";
 import BaSyou from "../define/BaSyou";

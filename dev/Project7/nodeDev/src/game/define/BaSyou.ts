@@ -1,4 +1,5 @@
-import { PlayerID, RelatedPlayerSideKeyword } from ".";
+import {  RelatedPlayerSideKeyword } from ".";
+import { TPlayerID } from "./PlayerID";
 
 // basyou
 export type BattleAreaKeyword = "宇宙エリア" | "地球エリア";
@@ -31,7 +32,7 @@ function isBa(k: BaSyouKeyword): boolean {
 
 export type AbsoluteBaSyou = {
     id: "AbsoluteBaSyou";
-    value: [PlayerID, BaSyouKeyword];
+    value: [TPlayerID, BaSyouKeyword];
 };
 
 export type RelatedBaSyou = {

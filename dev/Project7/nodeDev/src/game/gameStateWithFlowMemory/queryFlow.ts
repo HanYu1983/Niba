@@ -4,7 +4,7 @@ import { Flow } from "./Flow";
 import { getActiveEffectID } from "./handleEffect";
 import { getClientCommand } from "./getClientCommand";
 import { GameStateWithFlowMemory } from "./GameStateWithFlowMemory";
-import { PlayerA, PlayerB, getOpponentPlayerID } from "../define";
+import PlayerID, { PlayerA, PlayerB } from "../define/PlayerID";
 import BaSyou, { BattleAreaKeyword } from "../define/BaSyou";
 import { TEffect } from "../define/Effect";
 
@@ -42,7 +42,7 @@ export function queryFlow(ctx: GameStateWithFlowMemory, playerID: string): Flow[
             const isPass = !!ctx.flowMemory.hasPlayerPassPayCost[playerID];
             const isOpponentPass =
                 !!ctx.flowMemory.hasPlayerPassPayCost[
-                getOpponentPlayerID(playerID)
+                PlayerID.getOpponentPlayerID(playerID)
                 ];
             if (isPass && isOpponentPass) {
                 if (controller != playerID) {
@@ -531,7 +531,7 @@ export function queryFlow(ctx: GameStateWithFlowMemory, playerID: string): Flow[
                                     const playerID =
                                         phase[1] == "攻撃ステップ"
                                             ? ctx.activePlayerID
-                                            : getOpponentPlayerID(ctx.activePlayerID);
+                                            : PlayerID.getOpponentPlayerID(ctx.activePlayerID);
                                     return [
                                         {
                                             id: "FlowAddBlock",

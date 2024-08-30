@@ -1,6 +1,6 @@
 import Table, { TTable } from "../../tool/table";
-import { PlayerID, getOpponentPlayerID } from "../define";
 import BaSyou, { AbsoluteBaSyou, TBaSyou } from "../define/BaSyou";
+import PlayerID, { TPlayerID } from "../define/PlayerID";
 
 // card
 export type Card = {
@@ -36,7 +36,7 @@ export function mapCard(ctx: CardTableComponent, f: (Card) => Card): CardTableCo
   return ctx;
 }
 
-export function createGundamCardWithProtoIds(ctx: CardTableComponent, playerID: PlayerID, basyou: AbsoluteBaSyou, cardProtoIds: string[]): CardTableComponent {
+export function createGundamCardWithProtoIds(ctx: CardTableComponent, playerID: TPlayerID, basyou: AbsoluteBaSyou, cardProtoIds: string[]): CardTableComponent {
   ctx = addGundamCards(ctx, basyou, cardProtoIds.map((protoId, i) => {
     return {
       ...DEFAULT_CARD,
@@ -73,12 +73,12 @@ export function getCardBaSyou(
   return BaSyou.getBaSyou(cardPosition);
 }
 
-export function getCardController(ctx: CardTableComponent, cardID: string): PlayerID {
+export function getCardController(ctx: CardTableComponent, cardID: string): TPlayerID {
   const baSyou = getCardBaSyou(ctx, cardID);
   return baSyou.value[0];
 }
 
-export function getCardOwner(ctx: CardTableComponent, cardID: string): PlayerID {
+export function getCardOwner(ctx: CardTableComponent, cardID: string): TPlayerID {
   const card = getGundamCard(ctx, cardID);
   if (card == null) {
     throw new Error("[getCardOwner] card not found");
@@ -112,7 +112,7 @@ export function getAbsoluteBaSyou(
       case "自軍":
         return getCardController(ctx, cardID);
       case "敵軍":
-        return getOpponentPlayerID(getCardController(ctx, cardID));
+        return PlayerID.getOpponentPlayerID(getCardController(ctx, cardID));
     }
   })();
   return {

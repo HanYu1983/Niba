@@ -1,13 +1,11 @@
 import {
-  PlayerA,
-} from "../define";
-import {
   getCardBaSyou,
   CardTableComponent,
 } from "./CardTableComponent"
 import { TTable } from "../../tool/table";
 import { getOpponentBattleArea } from "./GameState";
 import BaSyou, { AbsoluteBaSyou } from "../define/BaSyou";
+import { PlayerA } from "../define/PlayerID";
 
 export type IsBattleComponent = {
   // 是否交戰中，key代表牌堆名稱的字串

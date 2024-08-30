@@ -1,5 +1,5 @@
 import { log2 } from "../../tool/logger";
-import { PlayerA, PlayerB, getOpponentPlayerID } from "../define";
+import PlayerID, { PlayerA, PlayerB } from "../define/PlayerID";
 import BaSyou, { AbsoluteBaSyou } from "../define/BaSyou";
 import { addImmediateEffect, iterateEffect } from "../gameState/EffectStackComponent";
 import { triggerTextEvent, updateDestroyEffect, GameState, handleAttackDamage } from "../gameState/GameState";
@@ -251,7 +251,7 @@ export function applyFlow(
                 }
                 ctx = {
                     ...ctx,
-                    activePlayerID: getOpponentPlayerID(ctx.activePlayerID),
+                    activePlayerID: PlayerID.getOpponentPlayerID(ctx.activePlayerID),
                 };
             }
             // 下一步
@@ -324,7 +324,7 @@ export function applyFlow(
             if (attackPlayerID == null) {
                 throw new Error("attackPlayerID not found");
             }
-            const guardPlayerID = getOpponentPlayerID(attackPlayerID);
+            const guardPlayerID = PlayerID.getOpponentPlayerID(attackPlayerID);
             // 速度1
             ctx = handleAttackDamage(
                 ctx,

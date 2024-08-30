@@ -1,4 +1,4 @@
-import { PlayerA, PlayerB } from "../game/define";
+import { PlayerA, PlayerB } from "../game/define/PlayerID";
 import { addGundamCards, createGundamCardWithProtoIds } from "../game/gameState/CardTableComponent";
 import { getCardBattlePoint, getBattleGroupBattlePoint, getBattleGroup, GlobalCardState } from "../game/gameState/GameState";
 import { applyFlow } from "../game/gameStateWithFlowMemory/applyFlow";

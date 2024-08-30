@@ -1,5 +1,5 @@
 import { TEffect } from "./Effect";
-import { TBattleBonus } from "./text";
+import { TBattleBonus } from "./Text";
 import { TTextID } from "./TextID";
 import { Timing } from "./Timing";
 
