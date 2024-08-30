@@ -1,6 +1,4 @@
-import {
-  CardPrototype
-} from "../game/define";
+import { CardPrototype } from "../game/define/CardPrototype";
 
 export async function getPrototype(imgID: string): Promise<CardPrototype> {
   try {

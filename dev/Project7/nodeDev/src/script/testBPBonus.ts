@@ -5,10 +5,10 @@
 // アストレイ系　ブルーフレーム系　MS　専用「叢雲劾」
 // 〔０〕：改装［ブルーフレーム系］
 // 『起動』：「特徴：アストレイ系」を持つ自軍ユニットが、「改装」の効果で場に出た場合、〔白２〕を支払う事ができる。その場合、５以下の防御力を持つ敵軍ユニット１枚を破壊する。（注：このカードが場に出た時にも起動する）
-
-import { CardPrototype, DEFAULT_CARD_PROTOTYPE, DEFAULT_CARD_TEXT_ZIDOU_KATA, GlobalEffect, CardTextCustom, CardText } from "../game/define";
+import { CardPrototype, DEFAULT_CARD_PROTOTYPE } from "../game/define/CardPrototype";
+import { GlobalEffect } from "../game/define/GlobalEffect";
+import { TSituation } from "../game/define/Text";
 import { GameState } from "../game/gameState/GameState";
-import { GameStateWithFlowMemory } from "../game/gameStateWithFlowMemory/GameStateWithFlowMemory";
 import { Bridge, Runtime } from "./bridge";
 
 export const prototype: CardPrototype = {
@@ -23,27 +23,19 @@ export const prototype: CardPrototype = {
   battlePoint: [5, 2, 4],
   texts: [
     {
-      ...DEFAULT_CARD_TEXT_ZIDOU_KATA,
-      category: "恒常",
-      block: {
-        id: "+3/+3/+3",
-        getGlobalEffectScript: function _(ctx: GameState, runtime: Runtime, lib: Bridge): GlobalEffect[] {
-          const units = lib.getMyUnitIds(ctx, runtime.getPlayerID())
-          return [
-            {
-              type: "AddText",
-              cardIds: units,
-              text: {
-                id: "CardTextCustom",
-                customID: {
-                  id: "CardTextCustomIDBattleBonus",
-                  battleBonus: [3, 3, 3]
-                }
-              }
-            } as GlobalEffect
-          ]
-        }.toString()
-      }
-    }
+      title: ["自動型", "恒常"],
+      onSituation: function _(ctx: GameState, runtime: Runtime, situation: TSituation, lib: Bridge): GlobalEffect[] {
+        const units = lib.getMyUnitIds(ctx, runtime.getPlayerID())
+        return [
+          {
+            type: "AddText",
+            cardIds: units,
+            text: {
+              title: ["TTextBattleBonus", [3, 3, 3]],
+            }
+          }
+        ]
+      }.toString()
+    },
   ],
 };

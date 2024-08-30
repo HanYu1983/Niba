@@ -1,25 +1,4 @@
 import {
-  CardText,
-  Timing,
-  TokuSyuKouKa,
-  CardColor,
-  AbsoluteBaSyou,
-  PlayerID,
-  getOpponentPlayerID,
-  BattleBonus,
-  getBaSyouID,
-  BattleAreaKeyword,
-  BlockPayload,
-  CardPrototype,
-  TIMING_CHART,
-  AttackSpeed,
-  BaSyouKeyword,
-  GameEvent,
-  GlobalEffect,
-  getBlockPayloadGetGlobalEffect,
-  addBattleBonus
-} from "../define";
-import {
   getGundamCard,
   getCardBaSyou,
   getCardController,
@@ -34,6 +13,16 @@ import { getPreloadPrototype } from "../../script";
 import Table from "../../tool/table";
 import { log2 } from "../../tool/logger";
 import { Bridge, Runtime } from "../../script/bridge";
+import Text, { TText, TTextTokuSyuKouKa } from "../define/Text";
+import { PlayerID, getOpponentPlayerID, AttackSpeed } from "../define";
+import BaSyou, { AbsoluteBaSyou, BattleAreaKeyword, BaSyouKeyword } from "../define/BaSyou";
+import BattleBonus, { TBattleBonus } from "../define/BattlePoint";
+import { CardPrototype, CardColor } from "../define/CardPrototype";
+import { GlobalEffect } from "../define/GlobalEffect";
+import { Timing, TIMING_CHART } from "../define/Timing";
+import { TEffect } from "../define/Effect";
+import { TEvent } from "../define/Event";
+
 
 export type PlayerState = {
   id: string;
@@ -45,7 +34,7 @@ export type PlayerState = {
 export type CardTextState = {
   id: string;
   enabled: boolean;
-  cardText: CardText;
+  cardText: TText;
 };
 
 export type CardState = {
@@ -116,13 +105,13 @@ export type ActivePlayerComponent = {
 export type GameState = {
   effects: GameEffectState[];
   globalCardState: GlobalCardState[];
-  stackEffectMemory: BlockPayload[];
+  stackEffectMemory: TEffect[];
   // 專門給破壞效果用的用的堆疊
   // 傷害判定結束時，將所有破壞產生的廢棄效果丟到這，重設「決定解決順序」的旗標為真
   // 如果這個堆疊一有值時並「決定解決順序」為真時，就立刻讓主動玩家決定解決順序，決定完後，將旗標設為假
   // 旗標為假時，才能才能開放給玩家切入
   // 這個堆疊解決完後，才回復到本來的堆疊的解決程序
-  destroyEffect: BlockPayload[];
+  destroyEffect: TEffect[];
   chipPool: { [key: string]: CardPrototype };
 } & SetGroupComponent
   & IsBattleComponent
@@ -153,19 +142,20 @@ export const DEFAULT_GAME_STATE: GameState = {
 }
 
 export function getBlockOwner(
-  blockPayload: BlockPayload
+  blockPayload: TEffect
 ): PlayerID {
-  if (blockPayload.cause == null) {
-    throw new Error("must has cause");
-  }
-  switch (blockPayload.cause.id) {
-    case "BlockPayloadCauseGameEvent":
-    case "BlockPayloadCauseUpdateEffect":
-    case "BlockPayloadCauseUpdateCommand":
-    case "BlockPayloadCauseGameRule":
-    case "BlockPayloadCauseDestroy":
-      return blockPayload.cause.playerID;
-  }
+  // if (blockPayload.reason == null) {
+  //   throw new Error("must has cause");
+  // }
+  // switch (blockPayload.reason.id) {
+  //   case "BlockPayloadCauseGameEvent":
+  //   case "BlockPayloadCauseUpdateEffect":
+  //   case "BlockPayloadCauseUpdateCommand":
+  //   case "BlockPayloadCauseGameRule":
+  //   case "BlockPayloadCauseDestroy":
+  //     return blockPayload.reason.playerID;
+  // }
+  return "";
 }
 
 export function getOpponentBattleArea(baSyou: AbsoluteBaSyou): AbsoluteBaSyou {
@@ -225,11 +215,9 @@ export function getGlobalEffects(ctx: GameState): GlobalEffect[] {
       }
     }
     const proto = getPreloadPrototype(card.protoID)
-    const globalEffects = proto.texts.filter(text => text.id == "自動型")
-      .filter(text => text.category == "恒常")
-      .filter(text => text.block.getGlobalEffectScript)
-      .map(text => getBlockPayloadGetGlobalEffect(text.block))
-      .flatMap(fn => fn(ctx, runtime, bridge))
+    const globalEffects = proto.texts.filter(text => text.title[0] == "自動型" && text.title[1] == "恒常")
+      .map(text => Text.getGlobalEffectFn(text))
+      .flatMap(fn => fn(ctx, runtime, null, bridge))
     return globalEffects
   })
 }
@@ -237,7 +225,7 @@ export function getGlobalEffects(ctx: GameState): GlobalEffect[] {
 export function getCardBattlePoint(
   ctx: GameState,
   cardID: string
-): BattleBonus {
+): TBattleBonus {
   const globalEffects = getGlobalEffects(ctx);
   const card = getGundamCard(ctx, cardID);
   if (card == null) {
@@ -246,11 +234,10 @@ export function getCardBattlePoint(
   const bonusFromGlobalEffects = globalEffects.map(ge => {
     if (ge.type == "AddText" &&
       ge.cardIds.includes(cardID) &&
-      ge.text.id == "CardTextCustom" &&
-      ge.text.customID.id == "CardTextCustomIDBattleBonus") {
-      return ge.text.customID.battleBonus
+      ge.text.title[0] == "TTextBattleBonus") {
+      return ge.text.title[1]
     }
-    return [0, 0, 0] as BattleBonus
+    return [0, 0, 0] as TBattleBonus
   })
   const prototype = getPreloadPrototype(card.protoID);
   // const bonusFromCardState = ctx.globalCardState
@@ -295,7 +282,7 @@ export function getCardBattlePoint(
   //     return coin.battleBonus;
   //   });
   const retBonus = [...bonusFromGlobalEffects].reduce(
-    (acc, curr) => addBattleBonus(acc, curr),
+    BattleBonus.add,
     prototype.battlePoint
   );
   return retBonus;
@@ -306,7 +293,7 @@ export function getBattleGroup(
   baSyou: AbsoluteBaSyou
 ): string[] {
   return (
-    ctx.table.cardStack[getBaSyouID(baSyou)]
+    ctx.table.cardStack[BaSyou.getBaSyouID(baSyou)]
       ?.filter((cardId) => {
         return getSetGroupRoot(ctx, cardId) == null;
       })
@@ -358,7 +345,7 @@ export function getBattleGroupBattlePoint(
 
 export function hasTokuSyouKouKa(
   ctx: GameState,
-  a: TokuSyuKouKa,
+  a: TTextTokuSyuKouKa,
   cardID: string
 ): boolean {
   // const cs = getCardState(ctx, cardID);
@@ -384,7 +371,7 @@ export function hasTokuSyouKouKa(
 
 export function isABattleGroup(
   ctx: GameState,
-  a: TokuSyuKouKa,
+  a: TTextTokuSyuKouKa,
   cardID: string
 ): boolean {
   const baSyou = getCardBaSyou(ctx, cardID);
@@ -439,7 +426,7 @@ export function isOpponentHasBattleGroup(
   ];
   return (
     battleAreas.reduce((acc: string[], battleArea) => {
-      return acc.concat(ctx.table.cardStack[getBaSyouID(battleArea)] || []);
+      return acc.concat(ctx.table.cardStack[BaSyou.getBaSyouID(battleArea)] || []);
     }, []).length != 0
   );
 }
@@ -516,7 +503,7 @@ export function getCardBattleArea(
 
 export function doBlockPayload(
   ctx: GameState,
-  blockPayload: BlockPayload
+  blockPayload: TEffect
 ): GameState {
   return ctx;
 }
@@ -538,7 +525,7 @@ export function handleAttackDamage(
     value: [guardPlayerID, where],
   });
   const guardPower = getBattleGroupBattlePoint(ctx, guardUnits);
-  const willTriggerEvent: GameEvent[] = [];
+  const willTriggerEvent: TEvent[] = [];
   {
     const currentAttackPlayerID = attackPlayerID;
     const currentGuardPlayerID = guardPlayerID;
@@ -588,10 +575,9 @@ export function handleAttackDamage(
                 id: "戦闘ダメージ",
                 playerID: currentAttackPlayerID,
               };
-              const gameEvent: GameEvent = {
-                id: "破壊された場合",
-                cardID: cs.id,
-                destroyReason: reason,
+              const gameEvent: TEvent = {
+                title: ["破壊された場合", reason],
+                cardID: cs.id
               };
               willTriggerEvent.push(gameEvent);
               return {
@@ -605,8 +591,8 @@ export function handleAttackDamage(
             const nextDamage = hp - nextLive;
             // 傷害用完了, 重設為0
             currentAttackPower = 0;
-            const gameEvent: GameEvent = {
-              id: "戦闘ダメージを受けた場合",
+            const gameEvent: TEvent = {
+              title: ["戦闘ダメージを受けた場合"],
               cardID: cs.id,
             };
             willTriggerEvent.push(gameEvent);
@@ -651,11 +637,11 @@ export function handleAttackDamage(
           // 本國傷害
           log2("handleAttackDamage", "attack 本国", currentAttackPower);
           let table = ctx.table;
-          let fromCardStackID = getBaSyouID({
+          let fromCardStackID = BaSyou.getBaSyouID({
             id: "AbsoluteBaSyou",
             value: [currentGuardPlayerID, "本国"],
           });
-          let toCardStackID = getBaSyouID({
+          let toCardStackID = BaSyou.getBaSyouID({
             id: "AbsoluteBaSyou",
             value: [currentGuardPlayerID, "捨て山"],
           });
@@ -731,10 +717,9 @@ export function handleAttackDamage(
                 id: "戦闘ダメージ",
                 playerID: currentAttackPlayerID,
               };
-              const gameEvent: GameEvent = {
-                id: "破壊された場合",
+              const gameEvent: TEvent = {
+                title: ["破壊された場合", reason],
                 cardID: cs.id,
-                destroyReason: reason,
               };
               willTriggerEvent.push(gameEvent);
               return {
@@ -748,8 +733,8 @@ export function handleAttackDamage(
             const nextDamage = hp - nextLive;
             // 傷害用完了, 重設為0
             currentAttackPower = 0;
-            const gameEvent: GameEvent = {
-              id: "戦闘ダメージを受けた場合",
+            const gameEvent: TEvent = {
+              title: ["戦闘ダメージを受けた場合"],
               cardID: cs.id,
             };
             willTriggerEvent.push(gameEvent);
@@ -798,9 +783,9 @@ export function handleAttackDamage(
 // 起動型技能
 export function triggerTextEvent(
   ctx: GameState,
-  evt: GameEvent
+  evt: TEvent
 ): GameState {
-  log2("triggerTextEvent", evt.id);
+  log2("triggerTextEvent", evt.title);
   // return getCardStateIterator(ctx).reduce((ctx, [cardID, cardTextStates]) => {
   //   return cardTextStates.reduce((ctx, cardTextState) => {
   //     const cardTexts = (() => {
@@ -826,7 +811,7 @@ export function triggerTextEvent(
   //     })();
   //     return cardTexts.reduce((ctx, cardText) => {
   //       const cardController = getCardController(ctx, cardID);
-  //       const wrapEvent: BlockPayload = {
+  //       const wrapEvent: TEffect = {
   //         ...cardText.block,
   //         cause: {
   //           id: "BlockPayloadCauseGameEvent",
@@ -881,7 +866,7 @@ export function updateDestroyEffect(ctx: GameState): GameState {
   //     }
   //     return true;
   //   })
-  //   .map((cs): BlockPayload => {
+  //   .map((cs): TEffect => {
   //     const card = getCard(ctx.gameState.table, cs.id);
   //     if (card == null) {
   //       throw new Error("card not found");

@@ -2,6 +2,9 @@ import { log2 } from "../../tool/logger";
 import { getCardState } from "../gameState/CardStateComponent";
 import { getBlockOwner } from "../gameState/GameState";
 import { GameStateWithFlowMemory } from "./GameStateWithFlowMemory";
+import TextID from "../define/TextID";
+import Text, { TText } from "../define/Text"
+import { SiYouTiming } from "../define/Timing";
 
 export function getClientCommand(ctx: GameStateWithFlowMemory, clientID: string) {
     return ctx.commandEffect.filter((effect) => {
@@ -10,48 +13,47 @@ export function getClientCommand(ctx: GameStateWithFlowMemory, clientID: string)
             log2("getClientCommand", "you are not owner. return");
             return;
         }
-        if (effect.cause?.id != "BlockPayloadCauseUpdateCommand") {
+        if (effect.reason[0] != "TEffectReasonUpdateCommand") {
             throw new Error("must from command cause");
         }
-        const { cardID, cardTextID } = effect.cause;
+        const [_, textID] = effect.reason;
         // 在堆疊裡的技能不能再次發動(記免同一個技能一直切入)
         if (
             ctx.stackEffect.filter((e) => {
-                if (e.cause?.id != "BlockPayloadCauseUpdateCommand") {
+                if (e.reason[0] != "TEffectReasonUpdateCommand") {
                     return false;
                 }
-                if (e.cause.cardTextID != cardTextID) {
+                const [_, textID2] = e.reason;
+                if (TextID.eq(textID, textID2)) {
                     return false;
                 }
                 return true;
             }).length
         ) {
-            log2("getClientCommand", `cardTextID(${cardTextID})已經在堆疊裡.`);
+            log2("getClientCommand", `cardTextID(${TextID.toString(textID)})已經在堆疊裡.`);
             return;
         }
-        const cardState = getCardState(ctx, cardID);
-        const text = cardState.cardTextStates.find((v) => v.id == cardTextID);
+        const cardState = getCardState(ctx, TextID.getCardID(textID));
+        const text = cardState.cardTextStates.find((v) => v.id == TextID.getTextID(textID));
         if (text == null) {
             throw new Error("must find text");
         }
-        const siYouTiming = (() => {
-            switch (text.cardText.id) {
-                case "使用型":
-                    return text.cardText.timing;
-                case "恒常":
-                case "特殊型": {
-                    const t = text.cardText.texts.find((v) => v.id == "使用型");
-                    if (t == null) {
-                        throw new Error("t must find");
-                    }
-                    if (t.id != "使用型") {
-                        throw new Error("t must be 使用型");
-                    }
-                    return t.timing;
-                }
-                default:
-                    throw new Error("not support:" + text.cardText.id);
+        const siYouTiming: SiYouTiming = (() => {
+            if (text.cardText.title[0] == "使用型") {
+                return text.cardText.title[1]
             }
+            if (text.cardText.title[0] == "特殊型") {
+                const [_, toku] = text.cardText.title;
+                const t = Text.getTextsFromTokuSyuKouKa(toku).find((v) => v.title[0] == "使用型");
+                if (t == null) {
+                    throw new Error("t must find");
+                }
+                if (t.title[0] != "使用型") {
+                    throw new Error("must be 使用型")
+                }
+                return t.title[1];
+            }
+            throw new Error("not support:" + text.cardText);
         })();
         switch (siYouTiming[0]) {
             case "自軍":

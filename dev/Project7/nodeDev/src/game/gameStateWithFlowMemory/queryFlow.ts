@@ -1,17 +1,19 @@
-import { PlayerA, PlayerB, getBaSyouID, getOpponentPlayerID, BlockPayload, BattleAreaKeyword } from "../define";
 import { iterateEffect } from "../gameState/EffectStackComponent";
 import { getBlockOwner } from "../gameState/GameState";
 import { Flow } from "./Flow";
 import { getActiveEffectID } from "./handleEffect";
 import { getClientCommand } from "./getClientCommand";
 import { GameStateWithFlowMemory } from "./GameStateWithFlowMemory";
+import { PlayerA, PlayerB, getOpponentPlayerID } from "../define";
+import BaSyou, { BattleAreaKeyword } from "../define/BaSyou";
+import { TEffect } from "../define/Effect";
 
 export function queryFlow(ctx: GameStateWithFlowMemory, playerID: string): Flow[] {
     if (true) {
         const hasSomeoneLiveIsZero =
             [PlayerA, PlayerB]
                 .map((pid) => {
-                    return getBaSyouID({ id: "AbsoluteBaSyou", value: [pid, "本国"] });
+                    return BaSyou.getBaSyouID({ id: "AbsoluteBaSyou", value: [pid, "本国"] });
                 })
                 .map((baSyouID) => {
                     return ctx.table.cardStack[baSyouID] || [];
@@ -131,8 +133,8 @@ export function queryFlow(ctx: GameStateWithFlowMemory, playerID: string): Flow[
     // 處理立即效果
     if (ctx.immediateEffect.length) {
         const isActivePlayer = ctx.activePlayerID == playerID;
-        const myEffect: BlockPayload[] = [];
-        const opponentEffect: BlockPayload[] = [];
+        const myEffect: TEffect[] = [];
+        const opponentEffect: TEffect[] = [];
         ctx.immediateEffect.forEach((effect) => {
             const controller = getBlockOwner(effect);
             if (controller == playerID) {
@@ -453,8 +455,7 @@ export function queryFlow(ctx: GameStateWithFlowMemory, playerID: string): Flow[
                         {
                             id: "FlowTriggerTextEvent",
                             event: {
-                                id: "GameEventOnTiming",
-                                timing: ctx.timing,
+                                title: ["GameEventOnTiming", ctx.timing]
                             },
                         },
                     ];
@@ -471,16 +472,11 @@ export function queryFlow(ctx: GameStateWithFlowMemory, playerID: string): Flow[
                                     responsePlayerID: ctx.activePlayerID,
                                     description: `${phase[0]}規定效果`,
                                     block: {
-                                        // feedback: [
-                                        //   {
-                                        //     id: "FeedbackAction",
-                                        //     action: [
-                                        //       {
-                                        //         id: "ActionRuleDraw",
-                                        //       },
-                                        //     ],
-                                        //   },
-                                        // ],
+                                        id: "",
+                                        reason: ["GameRule"],
+                                        text: {
+                                            title: ["system"]
+                                        }
                                     },
                                 },
                             ];
@@ -516,8 +512,7 @@ export function queryFlow(ctx: GameStateWithFlowMemory, playerID: string): Flow[
                                 {
                                     id: "FlowTriggerTextEvent",
                                     event: {
-                                        id: "GameEventOnTiming",
-                                        timing: ctx.timing,
+                                        title: ["GameEventOnTiming", ctx.timing]
                                     },
                                 },
                             ];
@@ -543,7 +538,23 @@ export function queryFlow(ctx: GameStateWithFlowMemory, playerID: string): Flow[
                                             description: `${phase[1]}規定效果`,
                                             responsePlayerID: playerID,
                                             block: {
+                                                id: "",
+                                                reason: ["GameRule"],
+                                                text: {
+                                                    title: ["system"],
+                                                    conditions: {
+                                                        "去左方的卡": {
+                                                            title: ""
+                                                        }
+                                                    },
+                                                    logicTreeCommands: [
+                                                        {
+                                                            actions: []
+                                                        }
+                                                    ]
+                                                },
                                                 isOption: true,
+
                                                 // contextID: `${phase[1]}規定效果`,
                                                 // require: {
                                                 //   id: "RequireTarget",
@@ -720,8 +731,7 @@ export function queryFlow(ctx: GameStateWithFlowMemory, playerID: string): Flow[
                                 {
                                     id: "FlowTriggerTextEvent",
                                     event: {
-                                        id: "GameEventOnTiming",
-                                        timing: ctx.timing,
+                                        title: ["GameEventOnTiming", ctx.timing]
                                     },
                                 },
                             ];

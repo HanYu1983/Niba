@@ -1,6 +1,7 @@
-import { CardTextSiYouKaTa, CardTextZiDouKaTa, isBa, PlayerA, getBaSyouID, PlayerB } from "../define";
+import { PlayerA, PlayerB } from "../define";
 import { getCardBaSyou, mapCard } from "../gameState/CardTableComponent";
 import { DEFAULT_GAME_STATE, GameState } from "../gameState/GameState";
+import BaSyou from "../define/BaSyou";
 
 export type Message = {
     id: "MessageCustom";
@@ -39,32 +40,6 @@ export const DEFAULT_GAME_STATE_WITH_FLOW_MEMORY: GameStateWithFlowMemory = {
     ...DEFAULT_GAME_STATE,
     activeEffectID: null,
     flowMemory: DEFAULT_FLOW_MEMORY
-}
-
-function filterEnableCardText(
-    ctx: GameStateWithFlowMemory,
-    cardID: string,
-    isPer: boolean,
-    cardText: CardTextSiYouKaTa | CardTextZiDouKaTa
-) {
-    const {
-        value: [_, baSyouKeyword],
-    } = getCardBaSyou(ctx, cardID);
-    // [起動]應該只有在場時有效
-    if (isBa(baSyouKeyword) == false) {
-        // 是G時，計算<>技能
-        if (baSyouKeyword == "Gゾーン" && cardText.fixed) {
-            return true;
-        }
-        // 恒常
-        if (isPer) {
-            if (baSyouKeyword == "ジャンクヤード") {
-                return true;
-            }
-        }
-        return false;
-    }
-    return true;
 }
 
 // 更新命令列表
@@ -268,67 +243,67 @@ export function initState(ctx: GameStateWithFlowMemory): GameStateWithFlowMemory
         table: {
             ...ctx.table,
             cardStack: {
-                [getBaSyouID({ id: "AbsoluteBaSyou", value: [PlayerA, "Gゾーン"] })]:
+                [BaSyou.getBaSyouID({ id: "AbsoluteBaSyou", value: [PlayerA, "Gゾーン"] })]:
                     [],
-                [getBaSyouID({
+                [BaSyou.getBaSyouID({
                     id: "AbsoluteBaSyou",
                     value: [PlayerA, "ジャンクヤード"],
                 })]: [],
-                [getBaSyouID({ id: "AbsoluteBaSyou", value: [PlayerA, "ハンガー"] })]:
+                [BaSyou.getBaSyouID({ id: "AbsoluteBaSyou", value: [PlayerA, "ハンガー"] })]:
                     [],
-                [getBaSyouID({
+                [BaSyou.getBaSyouID({
                     id: "AbsoluteBaSyou",
                     value: [PlayerA, "プレイされているカード"],
                 })]: [],
-                [getBaSyouID({
+                [BaSyou.getBaSyouID({
                     id: "AbsoluteBaSyou",
                     value: [PlayerA, "取り除かれたカード"],
                 })]: [],
-                [getBaSyouID({
+                [BaSyou.getBaSyouID({
                     id: "AbsoluteBaSyou",
                     value: [PlayerA, "戦闘エリア（右）"],
                 })]: [],
-                [getBaSyouID({
+                [BaSyou.getBaSyouID({
                     id: "AbsoluteBaSyou",
                     value: [PlayerA, "戦闘エリア（左）"],
                 })]: [],
-                [getBaSyouID({ id: "AbsoluteBaSyou", value: [PlayerA, "手札"] })]: [],
-                [getBaSyouID({ id: "AbsoluteBaSyou", value: [PlayerA, "捨て山"] })]:
+                [BaSyou.getBaSyouID({ id: "AbsoluteBaSyou", value: [PlayerA, "手札"] })]: [],
+                [BaSyou.getBaSyouID({ id: "AbsoluteBaSyou", value: [PlayerA, "捨て山"] })]:
                     [],
-                [getBaSyouID({ id: "AbsoluteBaSyou", value: [PlayerA, "本国"] })]: [],
-                [getBaSyouID({
+                [BaSyou.getBaSyouID({ id: "AbsoluteBaSyou", value: [PlayerA, "本国"] })]: [],
+                [BaSyou.getBaSyouID({
                     id: "AbsoluteBaSyou",
                     value: [PlayerA, "配備エリア"],
                 })]: [],
-                [getBaSyouID({ id: "AbsoluteBaSyou", value: [PlayerB, "Gゾーン"] })]:
+                [BaSyou.getBaSyouID({ id: "AbsoluteBaSyou", value: [PlayerB, "Gゾーン"] })]:
                     [],
-                [getBaSyouID({
+                [BaSyou.getBaSyouID({
                     id: "AbsoluteBaSyou",
                     value: [PlayerB, "ジャンクヤード"],
                 })]: [],
-                [getBaSyouID({ id: "AbsoluteBaSyou", value: [PlayerB, "ハンガー"] })]:
+                [BaSyou.getBaSyouID({ id: "AbsoluteBaSyou", value: [PlayerB, "ハンガー"] })]:
                     [],
-                [getBaSyouID({
+                [BaSyou.getBaSyouID({
                     id: "AbsoluteBaSyou",
                     value: [PlayerB, "プレイされているカード"],
                 })]: [],
-                [getBaSyouID({
+                [BaSyou.getBaSyouID({
                     id: "AbsoluteBaSyou",
                     value: [PlayerB, "取り除かれたカード"],
                 })]: [],
-                [getBaSyouID({
+                [BaSyou.getBaSyouID({
                     id: "AbsoluteBaSyou",
                     value: [PlayerB, "戦闘エリア（右）"],
                 })]: [],
-                [getBaSyouID({
+                [BaSyou.getBaSyouID({
                     id: "AbsoluteBaSyou",
                     value: [PlayerB, "戦闘エリア（左）"],
                 })]: [],
-                [getBaSyouID({ id: "AbsoluteBaSyou", value: [PlayerB, "手札"] })]: [],
-                [getBaSyouID({ id: "AbsoluteBaSyou", value: [PlayerB, "捨て山"] })]:
+                [BaSyou.getBaSyouID({ id: "AbsoluteBaSyou", value: [PlayerB, "手札"] })]: [],
+                [BaSyou.getBaSyouID({ id: "AbsoluteBaSyou", value: [PlayerB, "捨て山"] })]:
                     [],
-                [getBaSyouID({ id: "AbsoluteBaSyou", value: [PlayerB, "本国"] })]: [],
-                [getBaSyouID({
+                [BaSyou.getBaSyouID({ id: "AbsoluteBaSyou", value: [PlayerB, "本国"] })]: [],
+                [BaSyou.getBaSyouID({
                     id: "AbsoluteBaSyou",
                     value: [PlayerB, "配備エリア"],
                 })]: [],

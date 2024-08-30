@@ -1,12 +1,6 @@
-import {
-  AbsoluteBaSyou,
-  PlayerID,
-  BaSyou,
-  getOpponentPlayerID,
-  getBaSyou,
-  getBaSyouID,
-} from "../define";
 import Table, { TTable } from "../../tool/table";
+import { PlayerID, getOpponentPlayerID } from "../define";
+import BaSyou, { AbsoluteBaSyou, TBaSyou } from "../define/BaSyou";
 
 // card
 export type Card = {
@@ -55,7 +49,7 @@ export function createGundamCardWithProtoIds(ctx: CardTableComponent, playerID: 
 
 export function addGundamCards(ctx: CardTableComponent, basyou: AbsoluteBaSyou, addedCards: Card[]): CardTableComponent {
   ctx = addedCards.reduce((ctx, newCard) => {
-    const table = Table.addCard(ctx.table, getBaSyouID(basyou), newCard.id)
+    const table = Table.addCard(ctx.table, BaSyou.getBaSyouID(basyou), newCard.id)
     return {
       ...ctx,
       table: table,
@@ -76,7 +70,7 @@ export function getCardBaSyou(
   if (cardPosition == null) {
     throw new Error("[getController] cardPosition not found");
   }
-  return getBaSyou(cardPosition);
+  return BaSyou.getBaSyou(cardPosition);
 }
 
 export function getCardController(ctx: CardTableComponent, cardID: string): PlayerID {
@@ -96,7 +90,7 @@ export function getCardOwner(ctx: CardTableComponent, cardID: string): PlayerID 
 }
 
 export function getAbsoluteBaSyou(
-  baSyou: BaSyou,
+  baSyou: TBaSyou,
   ctx: CardTableComponent,
   cardID: string
 ): AbsoluteBaSyou {

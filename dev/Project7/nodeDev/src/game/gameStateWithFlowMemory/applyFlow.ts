@@ -1,11 +1,13 @@
 import { log2 } from "../../tool/logger";
-import { PlayerA, PlayerB, AbsoluteBaSyou, getBaSyouID, getOpponentPlayerID, getNextTiming } from "../define";
+import { PlayerA, PlayerB, getOpponentPlayerID } from "../define";
+import BaSyou, { AbsoluteBaSyou } from "../define/BaSyou";
 import { addImmediateEffect, iterateEffect } from "../gameState/EffectStackComponent";
 import { triggerTextEvent, updateDestroyEffect, GameState, handleAttackDamage } from "../gameState/GameState";
 import { checkIsBattle } from "../gameState/IsBattleComponent";
 import { Flow } from "./Flow";
 import { GameStateWithFlowMemory, updateCommand } from "./GameStateWithFlowMemory";
 import { setActiveEffectID, cancelActiveEffectID, doEffect, deleteImmediateEffect } from "./handleEffect";
+import Timing from "../define/Timing"
 
 let idSeq = 0;
 export function applyFlow(
@@ -155,14 +157,14 @@ export function applyFlow(
                                     value: [plyrID, "本国"],
                                 };
                                 const fromCS =
-                                    ctx.table.cardStack[getBaSyouID(baSyou)];
+                                    ctx.table.cardStack[BaSyou.getBaSyouID(baSyou)];
                                 ctx = {
                                     ...ctx,
                                     table: {
                                         ...ctx.table,
                                         cardStack: {
                                             ...ctx.table.cardStack,
-                                            [getBaSyouID(baSyou)]: fromCS.sort(
+                                            [BaSyou.getBaSyouID(baSyou)]: fromCS.sort(
                                                 () => Math.random() - 0.5
                                             ),
                                         },
@@ -176,14 +178,14 @@ export function applyFlow(
                                     value: [plyrID, "本国"],
                                 };
                                 const fromCS =
-                                    ctx.table.cardStack[getBaSyouID(baSyou)];
+                                    ctx.table.cardStack[BaSyou.getBaSyouID(baSyou)];
                                 ctx = {
                                     ...ctx,
                                     table: {
                                         ...ctx.table,
                                         cardStack: {
                                             ...ctx.table.cardStack,
-                                            [getBaSyouID(baSyou)]: fromCS.sort(
+                                            [BaSyou.getBaSyouID(baSyou)]: fromCS.sort(
                                                 () => Math.random() - 0.5
                                             ),
                                         },
@@ -254,7 +256,7 @@ export function applyFlow(
             }
             // 下一步
             {
-                const nextTiming = getNextTiming(ctx.timing);
+                const nextTiming = Timing.getNextTiming(ctx.timing);
                 ctx = {
                     ...ctx,
                     timing: nextTiming,
@@ -293,11 +295,9 @@ export function applyFlow(
             block = {
                 ...block,
                 id: `FlowAddBlock_${idSeq++}`,
-                cause: {
-                    id: "BlockPayloadCauseGameRule",
-                    playerID: flow.responsePlayerID,
-                    description: flow.description || "",
-                },
+                reason: ["GameRule"],
+                playerID: flow.responsePlayerID,
+                description: flow.description || "",
                 //...(block.require ? { require: wrapRequireKey(block.require) } : null),
             };
             ctx = addImmediateEffect(ctx, block) as GameStateWithFlowMemory
@@ -438,8 +438,7 @@ export function applyFlow(
         }
         case "FlowHandleStackEffectFinished": {
             ctx = triggerTextEvent(ctx, {
-                id: "カット終了時",
-                effects: ctx.stackEffectMemory,
+                title: ["カット終了時", ctx.stackEffectMemory]
             }) as GameStateWithFlowMemory;
             ctx = {
                 ...ctx,
