@@ -10,19 +10,19 @@ import { IsBattleComponent } from "./IsBattleComponent";
 import { getSetGroupCards, getSetGroupRoot, SetGroupComponent } from "./SetGroupComponent";
 import { EffectStackComponent, iterateEffect } from "./EffectStackComponent";
 import { getPreloadPrototype } from "../../script";
-import Table from "../../tool/table";
-import { log2 } from "../../tool/logger";
+import { log } from "../../tool/logger";
 import { Bridge, Runtime } from "../../script/bridge";
-import Text, { TText, TTextTokuSyuKouKa } from "../define/Text";
+import { getGlobalEffectFn, Text, TextTokuSyuKouKa } from "../define/Text";
 import { AttackSpeed } from "../define";
-import PlayerID, { TPlayerID } from "../define/PlayerID";
-import BaSyou, { AbsoluteBaSyou, BattleAreaKeyword, BaSyouKeyword } from "../define/BaSyou";
-import BattleBonus, { TBattleBonus } from "../define/BattlePoint";
+import { getOpponentPlayerID, PlayerID } from "../define/PlayerID";
+import { AbsoluteBaSyou, BattleAreaKeyword, BaSyouKeyword, getBaSyouID } from "../define/BaSyou";
+import { addBattleBonus, BattlePoint } from "../define/BattlePoint";
 import { CardPrototype, CardColor } from "../define/CardPrototype";
 import { GlobalEffect } from "../define/GlobalEffect";
 import { Timing, TIMING_CHART } from "../define/Timing";
-import { TEffect } from "../define/Effect";
-import { TEvent } from "../define/Event";
+import { Effect } from "../define/Effect";
+import { Event } from "../define/Event";
+import { DEFAULT_TABLE } from "../../tool/table";
 
 export type PlayerState = {
   id: string;
@@ -34,7 +34,7 @@ export type PlayerState = {
 export type CardTextState = {
   id: string;
   enabled: boolean;
-  cardText: TText;
+  cardText: Text;
 };
 
 export type CardState = {
@@ -105,13 +105,13 @@ export type ActivePlayerComponent = {
 export type GameState = {
   effects: GameEffectState[];
   globalCardState: GlobalCardState[];
-  stackEffectMemory: TEffect[];
+  stackEffectMemory: Effect[];
   // 專門給破壞效果用的用的堆疊
   // 傷害判定結束時，將所有破壞產生的廢棄效果丟到這，重設「決定解決順序」的旗標為真
   // 如果這個堆疊一有值時並「決定解決順序」為真時，就立刻讓主動玩家決定解決順序，決定完後，將旗標設為假
   // 旗標為假時，才能才能開放給玩家切入
   // 這個堆疊解決完後，才回復到本來的堆疊的解決程序
-  destroyEffect: TEffect[];
+  destroyEffect: Effect[];
   chipPool: { [key: string]: CardPrototype };
 } & SetGroupComponent
   & IsBattleComponent
@@ -126,7 +126,7 @@ export const DEFAULT_GAME_STATE: GameState = {
   cards: {},
   effects: [],
   globalCardState: [],
-  table: Table.DEFAULT_TABLE,
+  table: DEFAULT_TABLE,
   cardStates: {},
   timing: TIMING_CHART[0],
   playerState: [],
@@ -142,8 +142,8 @@ export const DEFAULT_GAME_STATE: GameState = {
 }
 
 export function getBlockOwner(
-  blockPayload: TEffect
-): TPlayerID {
+  blockPayload: Effect
+): PlayerID {
   // if (blockPayload.reason == null) {
   //   throw new Error("must has cause");
   // }
@@ -164,7 +164,7 @@ export function getOpponentBattleArea(baSyou: AbsoluteBaSyou): AbsoluteBaSyou {
   } = baSyou;
   return {
     id: "AbsoluteBaSyou",
-    value: [PlayerID.getOpponentPlayerID(playerID), baSyouKW],
+    value: [getOpponentPlayerID(playerID), baSyouKW],
   };
 }
 
@@ -216,7 +216,7 @@ export function getGlobalEffects(ctx: GameState): GlobalEffect[] {
     }
     const proto = getPreloadPrototype(card.protoID)
     const globalEffects = proto.texts.filter(text => text.title[0] == "自動型" && text.title[1] == "恒常")
-      .map(text => Text.getGlobalEffectFn(text))
+      .map(text => getGlobalEffectFn(text))
       .flatMap(fn => fn(ctx, runtime, null, bridge))
     return globalEffects
   })
@@ -225,7 +225,7 @@ export function getGlobalEffects(ctx: GameState): GlobalEffect[] {
 export function getCardBattlePoint(
   ctx: GameState,
   cardID: string
-): TBattleBonus {
+): BattlePoint {
   const globalEffects = getGlobalEffects(ctx);
   const card = getGundamCard(ctx, cardID);
   if (card == null) {
@@ -237,7 +237,7 @@ export function getCardBattlePoint(
       ge.text.title[0] == "TTextBattleBonus") {
       return ge.text.title[1]
     }
-    return [0, 0, 0] as TBattleBonus
+    return [0, 0, 0] as BattlePoint
   })
   const prototype = getPreloadPrototype(card.protoID);
   // const bonusFromCardState = ctx.globalCardState
@@ -282,7 +282,7 @@ export function getCardBattlePoint(
   //     return coin.battleBonus;
   //   });
   const retBonus = [...bonusFromGlobalEffects].reduce(
-    BattleBonus.add,
+    addBattleBonus,
     prototype.battlePoint
   );
   return retBonus;
@@ -293,7 +293,7 @@ export function getBattleGroup(
   baSyou: AbsoluteBaSyou
 ): string[] {
   return (
-    ctx.table.cardStack[BaSyou.getBaSyouID(baSyou)]
+    ctx.table.cardStack[getBaSyouID(baSyou)]
       ?.filter((cardId) => {
         return getSetGroupRoot(ctx, cardId) == null;
       })
@@ -345,7 +345,7 @@ export function getBattleGroupBattlePoint(
 
 export function hasTokuSyouKouKa(
   ctx: GameState,
-  a: TTextTokuSyuKouKa,
+  a: TextTokuSyuKouKa,
   cardID: string
 ): boolean {
   // const cs = getCardState(ctx, cardID);
@@ -371,7 +371,7 @@ export function hasTokuSyouKouKa(
 
 export function isABattleGroup(
   ctx: GameState,
-  a: TTextTokuSyuKouKa,
+  a: TextTokuSyuKouKa,
   cardID: string
 ): boolean {
   const baSyou = getCardBaSyou(ctx, cardID);
@@ -419,14 +419,14 @@ export function isOpponentHasBattleGroup(
   cardID: string
 ): boolean {
   const controller = getCardController(ctx, cardID);
-  const opponentPlayerID = PlayerID.getOpponentPlayerID(controller);
+  const opponentPlayerID = getOpponentPlayerID(controller);
   const battleAreas: AbsoluteBaSyou[] = [
     { id: "AbsoluteBaSyou", value: [opponentPlayerID, "戦闘エリア（右）"] },
     { id: "AbsoluteBaSyou", value: [opponentPlayerID, "戦闘エリア（左）"] },
   ];
   return (
     battleAreas.reduce((acc: string[], battleArea) => {
-      return acc.concat(ctx.table.cardStack[BaSyou.getBaSyouID(battleArea)] || []);
+      return acc.concat(ctx.table.cardStack[getBaSyouID(battleArea)] || []);
     }, []).length != 0
   );
 }
@@ -503,7 +503,7 @@ export function getCardBattleArea(
 
 export function doBlockPayload(
   ctx: GameState,
-  blockPayload: TEffect
+  blockPayload: Effect
 ): GameState {
   return ctx;
 }
@@ -525,18 +525,18 @@ export function handleAttackDamage(
     value: [guardPlayerID, where],
   });
   const guardPower = getBattleGroupBattlePoint(ctx, guardUnits);
-  const willTriggerEvent: TEvent[] = [];
+  const willTriggerEvent: Event[] = [];
   {
     const currentAttackPlayerID = attackPlayerID;
     const currentGuardPlayerID = guardPlayerID;
     const willAttackUnits = attackUnits;
     const willGuardUnits = guardUnits;
     const willAttackPower = attackPower;
-    log2("handleAttackDamage", "speed", speed);
-    log2("handleAttackDamage", "baSyou", where);
-    log2("handleAttackDamage", "willAttackUnits", willAttackUnits);
-    log2("handleAttackDamage", "willGuardUnits", willGuardUnits);
-    log2("handleAttackDamage", "willAttackPower", willAttackPower);
+    log("handleAttackDamage", "speed", speed);
+    log("handleAttackDamage", "baSyou", where);
+    log("handleAttackDamage", "willAttackUnits", willAttackUnits);
+    log("handleAttackDamage", "willGuardUnits", willGuardUnits);
+    log("handleAttackDamage", "willAttackPower", willAttackPower);
     if (willAttackUnits.length) {
       // 判斷速度1速度2是否可攻擊
       const hasSpeedAttack = isABattleGroup(ctx, ["速攻"], willAttackUnits[0]);
@@ -547,7 +547,7 @@ export function handleAttackDamage(
         (hasSpeedAttack == false && speed == 2)
       ) {
         let currentAttackPower = willAttackPower;
-        log2("handleAttackDamage", "attack", currentAttackPower);
+        log("handleAttackDamage", "attack", currentAttackPower);
         // 敵方機體存在, 攻擊機體
         if (willGuardUnits.length) {
           const changedCardState = willGuardUnits.map((cardID): CardState => {
@@ -575,7 +575,7 @@ export function handleAttackDamage(
                 id: "戦闘ダメージ",
                 playerID: currentAttackPlayerID,
               };
-              const gameEvent: TEvent = {
+              const gameEvent: Event = {
                 title: ["破壊された場合", reason],
                 cardID: cs.id
               };
@@ -591,7 +591,7 @@ export function handleAttackDamage(
             const nextDamage = hp - nextLive;
             // 傷害用完了, 重設為0
             currentAttackPower = 0;
-            const gameEvent: TEvent = {
+            const gameEvent: Event = {
               title: ["戦闘ダメージを受けた場合"],
               cardID: cs.id,
             };
@@ -635,13 +635,13 @@ export function handleAttackDamage(
             isABattleGroup(ctx, ["強襲"], willAttackUnits[0]))
         ) {
           // 本國傷害
-          log2("handleAttackDamage", "attack 本国", currentAttackPower);
+          log("handleAttackDamage", "attack 本国", currentAttackPower);
           let table = ctx.table;
-          let fromCardStackID = BaSyou.getBaSyouID({
+          let fromCardStackID = getBaSyouID({
             id: "AbsoluteBaSyou",
             value: [currentGuardPlayerID, "本国"],
           });
-          let toCardStackID = BaSyou.getBaSyouID({
+          let toCardStackID = getBaSyouID({
             id: "AbsoluteBaSyou",
             value: [currentGuardPlayerID, "捨て山"],
           });
@@ -674,11 +674,11 @@ export function handleAttackDamage(
     const willAttackUnits = guardUnits;
     const willGuardUnits = attackUnits;
     const willAttackPower = guardPower;
-    log2("handleAttackDamage", "speed", speed);
-    log2("handleAttackDamage", "baSyou", where);
-    log2("handleAttackDamage", "willAttackUnits", willAttackUnits);
-    log2("handleAttackDamage", "willGuardUnits", willGuardUnits);
-    log2("handleAttackDamage", "willAttackPower", willAttackPower);
+    log("handleAttackDamage", "speed", speed);
+    log("handleAttackDamage", "baSyou", where);
+    log("handleAttackDamage", "willAttackUnits", willAttackUnits);
+    log("handleAttackDamage", "willGuardUnits", willGuardUnits);
+    log("handleAttackDamage", "willAttackPower", willAttackPower);
     if (willAttackUnits.length) {
       // 判斷速度1速度2是否可攻擊
       const hasSpeedAttack = isABattleGroup(ctx, ["速攻"], willAttackUnits[0]);
@@ -689,7 +689,7 @@ export function handleAttackDamage(
         (hasSpeedAttack == false && speed == 2)
       ) {
         let currentAttackPower = willAttackPower;
-        log2("handleAttackDamage", "attack", currentAttackPower);
+        log("handleAttackDamage", "attack", currentAttackPower);
         // 敵方機體存在, 攻擊機體
         if (willGuardUnits.length) {
           const changedCardState = willGuardUnits.map((cardID): CardState => {
@@ -717,7 +717,7 @@ export function handleAttackDamage(
                 id: "戦闘ダメージ",
                 playerID: currentAttackPlayerID,
               };
-              const gameEvent: TEvent = {
+              const gameEvent: Event = {
                 title: ["破壊された場合", reason],
                 cardID: cs.id,
               };
@@ -733,7 +733,7 @@ export function handleAttackDamage(
             const nextDamage = hp - nextLive;
             // 傷害用完了, 重設為0
             currentAttackPower = 0;
-            const gameEvent: TEvent = {
+            const gameEvent: Event = {
               title: ["戦闘ダメージを受けた場合"],
               cardID: cs.id,
             };
@@ -783,9 +783,9 @@ export function handleAttackDamage(
 // 起動型技能
 export function triggerTextEvent(
   ctx: GameState,
-  evt: TEvent
+  evt: Event
 ): GameState {
-  log2("triggerTextEvent", evt.title);
+  log("triggerTextEvent", evt.title);
   // return getCardStateIterator(ctx).reduce((ctx, [cardID, cardTextStates]) => {
   //   return cardTextStates.reduce((ctx, cardTextState) => {
   //     const cardTexts = (() => {

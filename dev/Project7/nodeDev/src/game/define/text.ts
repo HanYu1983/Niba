@@ -2,13 +2,13 @@ import { RelatedPlayerSideKeyword } from ".";
 import { TLogicTree } from "../../tool/logicTree";
 import { BaSyouKeyword } from "./BaSyou";
 import { CardColor, CardCategory } from "./CardPrototype";
-import { TEvent } from "./Event";
+import { Event } from "./Event";
 import { GlobalEffect } from "./GlobalEffect";
 import { SiYouTiming } from "./Timing";
 
-export type TBattleBonus = [number, number, number]
+export type BattleBonus = [number, number, number]
 
-export type TTextTokuSyuKouKa =
+export type TextTokuSyuKouKa =
     | ["高機動"]
     | ["速攻"]
     | ["サイコミュ", number]
@@ -25,13 +25,13 @@ export type TTextTokuSyuKouKa =
     | ["ステイ"]
     | ["1枚制限"];
 
-export type TActionTitle = string | ["このカードをリロールする", "このカード" | string[], "リロール"]
+export type ActionTitle = string | ["このカードをリロールする", "このカード" | string[], "リロール"]
 
-export type TAction = {
-    title: TActionTitle,
+export type Action = {
+    title: ActionTitle,
 }
 
-export type TConditionTitle =
+export type ConditionTitle =
     | string
     | ["(x)", number]
     | ["c(x)", CardColor, number]
@@ -39,47 +39,47 @@ export type TConditionTitle =
     | ["(戦闘エリア)にいる(敵軍)(ユニット)(１)～(２)枚", BaSyouKeyword, RelatedPlayerSideKeyword, CardCategory, number, number]
     | ["(交戦中)の(自軍)(ユニット)(１)枚", "交戦中" | "非交戦中", RelatedPlayerSideKeyword, CardCategory, number]
 
-export type TCondition = {
-    title: TConditionTitle,
-    actions?: TAction[]
+export type Condition = {
+    title: ConditionTitle,
+    actions?: Action[]
 }
 
-export type TSituationTitle = ["「特徴：装弾」を持つ自軍コマンドの効果で自軍Gをロールする場合", string, RelatedPlayerSideKeyword, CardCategory, RelatedPlayerSideKeyword, CardCategory, "ロール"]
+export type SituationTitle = ["「特徴：装弾」を持つ自軍コマンドの効果で自軍Gをロールする場合", string, RelatedPlayerSideKeyword, CardCategory, RelatedPlayerSideKeyword, CardCategory, "ロール"]
 
 // 『常駐』：「特徴：装弾」を持つ自軍コマンドの効果で自軍Gをロールする場合、このカードを自軍Gとしてロールできる。
-export type TSituation = {
-    title: TSituationTitle,
+export type Situation = {
+    title: SituationTitle,
     cardID?: string
 }
 
-export type TTextBattleBonus = ["TTextBattleBonus", TBattleBonus]
+export type TextBattleBonus = ["TTextBattleBonus", BattleBonus]
 
-export type TTextTitle =
+export type TextTitle =
     | ["自動型", "常駐" | "起動" | "恒常"]
     | ["使用型", SiYouTiming]
-    | ["特殊型", TTextTokuSyuKouKa]
-    | TTextBattleBonus
+    | ["特殊型", TextTokuSyuKouKa]
+    | TextBattleBonus
     | ["system"]
 
-export type TLogicTreeCommand = {
+export type LogicTreeCommand = {
     logicTree?: TLogicTree
-    actions: TAction[]
+    actions: Action[]
 }
 
-export type TText = {
-    title: TTextTitle
+export type Text = {
+    title: TextTitle
     description?: string
-    conditions?: { [key: string]: TCondition }
-    logicTreeCommands?: TLogicTreeCommand[]
+    conditions?: { [key: string]: Condition }
+    logicTreeCommands?: LogicTreeCommand[]
     onEvent?: string,
     onSituation?: string
 }
 
-function getTextsFromTokuSyuKouKa(value: TTextTokuSyuKouKa): TText[] {
+export function getTextsFromTokuSyuKouKa(value: TextTokuSyuKouKa): Text[] {
     return [];
 }
 
-const testTexts: TText[] = [
+const testTexts: Text[] = [
     {
         title: ["TTextBattleBonus", [3, 4, 2]]
     },
@@ -123,14 +123,14 @@ const testTexts: TText[] = [
                     {
                         title: function _(ctx: any, runtime: any, bridge: any): any {
                             const cardIds = ["abc"]
-                            const action: TAction = { title: ["このカードをリロールする", cardIds, "リロール"] }
+                            const action: Action = { title: ["このカードをリロールする", cardIds, "リロール"] }
                             return bridge.getFunctionByAction(action)(ctx, runtime, bridge)
                         }.toString()
                     }
                 ]
             }
         ],
-        onEvent: function _(ctx: any, evt: TEvent, runtime: any) {
+        onEvent: function _(ctx: any, evt: Event, runtime: any) {
             if (Array.isArray(evt.title)) {
                 if (evt.title[0] == "コインがx個以上になった場合") {
                     const [_, x] = evt.title;
@@ -138,7 +138,7 @@ const testTexts: TText[] = [
                 }
             }
         }.toString(),
-        onSituation: function _(ctx: any, evt: TSituation, runtime: any): GlobalEffect[] {
+        onSituation: function _(ctx: any, evt: Situation, runtime: any): GlobalEffect[] {
             if (Array.isArray(evt.title)) {
                 if (evt.title[0] == "「特徴：装弾」を持つ自軍コマンドの効果で自軍Gをロールする場合") {
                     const [_, x] = evt.title;
@@ -150,17 +150,13 @@ const testTexts: TText[] = [
     }
 ]
 
-export type GlobalEffectFn = (ctx: any, runtime: any, evt: TSituation | null, bridge: any) => GlobalEffect[];
+export type GlobalEffectFn = (ctx: any, runtime: any, evt: Situation | null, bridge: any) => GlobalEffect[];
 
-function getGlobalEffectFn(ctx: TText): GlobalEffectFn {
+export function getGlobalEffectFn(ctx: Text): GlobalEffectFn {
     if (ctx.onSituation == null) {
         return function (ctx) {
             return ctx
         }
     }
     return eval(ctx.onSituation + ";_")
-}
-
-export default {
-    getGlobalEffectFn, getTextsFromTokuSyuKouKa
 }

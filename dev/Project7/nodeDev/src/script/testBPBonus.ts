@@ -7,7 +7,7 @@
 // 『起動』：「特徴：アストレイ系」を持つ自軍ユニットが、「改装」の効果で場に出た場合、〔白２〕を支払う事ができる。その場合、５以下の防御力を持つ敵軍ユニット１枚を破壊する。（注：このカードが場に出た時にも起動する）
 import { CardPrototype, DEFAULT_CARD_PROTOTYPE } from "../game/define/CardPrototype";
 import { GlobalEffect } from "../game/define/GlobalEffect";
-import { TSituation } from "../game/define/Text";
+import { Situation } from "../game/define/Text";
 import { GameState } from "../game/gameState/GameState";
 import { Bridge, Runtime } from "./bridge";
 
@@ -24,7 +24,7 @@ export const prototype: CardPrototype = {
   texts: [
     {
       title: ["自動型", "恒常"],
-      onSituation: function _(ctx: GameState, runtime: Runtime, situation: TSituation, lib: Bridge): GlobalEffect[] {
+      onSituation: function _(ctx: GameState, runtime: Runtime, situation: Situation, lib: Bridge): GlobalEffect[] {
         const units = lib.getMyUnitIds(ctx, runtime.getPlayerID())
         return [
           {

@@ -1,6 +1,6 @@
-import Table, { TTable } from "../../tool/table";
-import BaSyou, { AbsoluteBaSyou, TBaSyou } from "../define/BaSyou";
-import PlayerID, { TPlayerID } from "../define/PlayerID";
+import { addCard, getCardPosition, Table } from "../../tool/table";
+import { AbsoluteBaSyou, getBaSyou, getBaSyouID, TBaSyou } from "../define/BaSyou";
+import { getOpponentPlayerID, PlayerID } from "../define/PlayerID";
 
 // card
 export type Card = {
@@ -20,7 +20,7 @@ export const DEFAULT_CARD: Card = {
 }
 
 export type CardTableComponent = {
-  table: TTable
+  table: Table
   cards: { [key: string]: Card }
 }
 
@@ -36,7 +36,7 @@ export function mapCard(ctx: CardTableComponent, f: (Card) => Card): CardTableCo
   return ctx;
 }
 
-export function createGundamCardWithProtoIds(ctx: CardTableComponent, playerID: TPlayerID, basyou: AbsoluteBaSyou, cardProtoIds: string[]): CardTableComponent {
+export function createGundamCardWithProtoIds(ctx: CardTableComponent, playerID: PlayerID, basyou: AbsoluteBaSyou, cardProtoIds: string[]): CardTableComponent {
   ctx = addGundamCards(ctx, basyou, cardProtoIds.map((protoId, i) => {
     return {
       ...DEFAULT_CARD,
@@ -49,7 +49,7 @@ export function createGundamCardWithProtoIds(ctx: CardTableComponent, playerID: 
 
 export function addGundamCards(ctx: CardTableComponent, basyou: AbsoluteBaSyou, addedCards: Card[]): CardTableComponent {
   ctx = addedCards.reduce((ctx, newCard) => {
-    const table = Table.addCard(ctx.table, BaSyou.getBaSyouID(basyou), newCard.id)
+    const table = addCard(ctx.table, getBaSyouID(basyou), newCard.id)
     return {
       ...ctx,
       table: table,
@@ -66,19 +66,19 @@ export function getCardBaSyou(
   ctx: CardTableComponent,
   cardID: string
 ): AbsoluteBaSyou {
-  const cardPosition = Table.getCardPosition(ctx.table, cardID);
+  const cardPosition = getCardPosition(ctx.table, cardID);
   if (cardPosition == null) {
     throw new Error("[getController] cardPosition not found");
   }
-  return BaSyou.getBaSyou(cardPosition);
+  return getBaSyou(cardPosition);
 }
 
-export function getCardController(ctx: CardTableComponent, cardID: string): TPlayerID {
+export function getCardController(ctx: CardTableComponent, cardID: string): PlayerID {
   const baSyou = getCardBaSyou(ctx, cardID);
   return baSyou.value[0];
 }
 
-export function getCardOwner(ctx: CardTableComponent, cardID: string): TPlayerID {
+export function getCardOwner(ctx: CardTableComponent, cardID: string): PlayerID {
   const card = getGundamCard(ctx, cardID);
   if (card == null) {
     throw new Error("[getCardOwner] card not found");
@@ -112,7 +112,7 @@ export function getAbsoluteBaSyou(
       case "自軍":
         return getCardController(ctx, cardID);
       case "敵軍":
-        return PlayerID.getOpponentPlayerID(getCardController(ctx, cardID));
+        return getOpponentPlayerID(getCardController(ctx, cardID));
     }
   })();
   return {

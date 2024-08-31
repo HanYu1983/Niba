@@ -1,4 +1,4 @@
-import { log2 } from "../../tool/logger";
+import { log } from "../../tool/logger";
 import { filterEffect, iterateEffect, reduceEffect } from "../gameState/EffectStackComponent";
 import { doBlockPayload, getBlockOwner } from "../gameState/GameState";
 import { GameStateWithFlowMemory } from "./GameStateWithFlowMemory";
@@ -77,7 +77,7 @@ export function clearActiveEffectID(ctx: GameStateWithFlowMemory): GameStateWith
 }
 
 export function doEffect(ctx: GameStateWithFlowMemory, playerID: string, effectID: string): GameStateWithFlowMemory {
-  log2("doEffect", effectID);
+  log("doEffect", effectID);
   // 判斷這個效果是否正在支付，不然不應該執行
   if (getActiveEffectID(ctx) != effectID) {
     throw new Error("activeEffectID != effectID");

@@ -1,5 +1,5 @@
-import { TEffect } from "../define/Effect";
-import { TEvent } from "../define/Event";
+import { Effect } from "../define/Effect";
+import { Event } from "../define/Event";
 
 type FlowUpdateCommand = {
     id: "FlowUpdateCommand";
@@ -7,7 +7,7 @@ type FlowUpdateCommand = {
 };
 type FlowTriggerTextEvent = {
     id: "FlowTriggerTextEvent";
-    event: TEvent;
+    event: Event;
     description?: string;
 };
 type FlowNextTiming = {
@@ -18,7 +18,7 @@ type FlowAddBlock = {
     id: "FlowAddBlock";
     responsePlayerID: string;
     description?: string;
-    block: TEffect;
+    block: Effect;
 };
 type FlowWaitPlayer = {
     id: "FlowWaitPlayer";
@@ -27,7 +27,7 @@ type FlowWaitPlayer = {
 type FlowSetActiveEffectID = {
     id: "FlowSetActiveEffectID";
     effectID: string | null;
-    tips: TEffect[];
+    tips: Effect[];
     description?: string;
 };
 type FlowCancelActiveEffectID = {
@@ -48,7 +48,7 @@ type FlowDeleteImmediateEffect = {
     id: "FlowDeleteImmediateEffect";
     effectID: string | null;
     description?: string;
-    tips: TEffect[];
+    tips: Effect[];
 };
 type FlowPassPhase = {
     id: "FlowPassPhase";
@@ -85,7 +85,7 @@ type FlowPassPayCost = {
 };
 type FlowMakeDestroyOrder = {
     id: "FlowMakeDestroyOrder";
-    destroyEffect: TEffect[];
+    destroyEffect: Effect[];
     description?: string;
 };
 

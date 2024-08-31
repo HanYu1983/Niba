@@ -16,7 +16,7 @@ const hideCategory: string[] = [
 ];
 let filterCategory = true;
 
-export const log2 = (category: string, ...msg: any[]) => {
+export const log = (category: string, ...msg: any[]) => {
   if (filterCategory) {
     if (hideCategory.find(c => c == category)) {
       return;

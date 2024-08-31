@@ -1,13 +1,13 @@
-import { log2 } from "../../tool/logger";
-import PlayerID, { PlayerA, PlayerB } from "../define/PlayerID";
-import BaSyou, { AbsoluteBaSyou } from "../define/BaSyou";
+import { log } from "../../tool/logger";
+import { getOpponentPlayerID, PlayerA, PlayerB } from "../define/PlayerID";
+import { AbsoluteBaSyou, getBaSyouID } from "../define/BaSyou";
 import { addImmediateEffect, iterateEffect } from "../gameState/EffectStackComponent";
 import { triggerTextEvent, updateDestroyEffect, GameState, handleAttackDamage } from "../gameState/GameState";
 import { checkIsBattle } from "../gameState/IsBattleComponent";
 import { Flow } from "./Flow";
 import { GameStateWithFlowMemory, updateCommand } from "./GameStateWithFlowMemory";
 import { setActiveEffectID, cancelActiveEffectID, doEffect, deleteImmediateEffect } from "./handleEffect";
-import Timing from "../define/Timing"
+import { getNextTiming } from "../define/Timing";
 
 let idSeq = 0;
 export function applyFlow(
@@ -15,7 +15,7 @@ export function applyFlow(
     playerID: string,
     flow: Flow
 ): GameStateWithFlowMemory {
-    log2("applyFlow", playerID, flow);
+    log("applyFlow", playerID, flow);
     switch (flow.id) {
         case "FlowSetActiveEffectID": {
             if (flow.effectID == null) {
@@ -120,7 +120,7 @@ export function applyFlow(
             };
         case "FlowTriggerTextEvent":
             if (ctx.flowMemory.hasTriggerEvent) {
-                log2("applyFlow", "已經執行過triggerTextEvent");
+                log("applyFlow", "已經執行過triggerTextEvent");
                 return ctx;
             }
             ctx = triggerTextEvent(ctx, flow.event) as GameStateWithFlowMemory;
@@ -157,14 +157,14 @@ export function applyFlow(
                                     value: [plyrID, "本国"],
                                 };
                                 const fromCS =
-                                    ctx.table.cardStack[BaSyou.getBaSyouID(baSyou)];
+                                    ctx.table.cardStack[getBaSyouID(baSyou)];
                                 ctx = {
                                     ...ctx,
                                     table: {
                                         ...ctx.table,
                                         cardStack: {
                                             ...ctx.table.cardStack,
-                                            [BaSyou.getBaSyouID(baSyou)]: fromCS.sort(
+                                            [getBaSyouID(baSyou)]: fromCS.sort(
                                                 () => Math.random() - 0.5
                                             ),
                                         },
@@ -178,14 +178,14 @@ export function applyFlow(
                                     value: [plyrID, "本国"],
                                 };
                                 const fromCS =
-                                    ctx.table.cardStack[BaSyou.getBaSyouID(baSyou)];
+                                    ctx.table.cardStack[getBaSyouID(baSyou)];
                                 ctx = {
                                     ...ctx,
                                     table: {
                                         ...ctx.table,
                                         cardStack: {
                                             ...ctx.table.cardStack,
-                                            [BaSyou.getBaSyouID(baSyou)]: fromCS.sort(
+                                            [getBaSyouID(baSyou)]: fromCS.sort(
                                                 () => Math.random() - 0.5
                                             ),
                                         },
@@ -251,12 +251,12 @@ export function applyFlow(
                 }
                 ctx = {
                     ...ctx,
-                    activePlayerID: PlayerID.getOpponentPlayerID(ctx.activePlayerID),
+                    activePlayerID: getOpponentPlayerID(ctx.activePlayerID),
                 };
             }
             // 下一步
             {
-                const nextTiming = Timing.getNextTiming(ctx.timing);
+                const nextTiming = getNextTiming(ctx.timing);
                 ctx = {
                     ...ctx,
                     timing: nextTiming,
@@ -324,7 +324,7 @@ export function applyFlow(
             if (attackPlayerID == null) {
                 throw new Error("attackPlayerID not found");
             }
-            const guardPlayerID = PlayerID.getOpponentPlayerID(attackPlayerID);
+            const guardPlayerID = getOpponentPlayerID(attackPlayerID);
             // 速度1
             ctx = handleAttackDamage(
                 ctx,

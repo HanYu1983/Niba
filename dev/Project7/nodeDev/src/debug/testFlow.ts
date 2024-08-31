@@ -1,11 +1,12 @@
 import { PlayerA, PlayerB } from "../game/define/PlayerID";
+import { getTimingSeq } from "../game/define/Timing";
 import { addGundamCards, createGundamCardWithProtoIds } from "../game/gameState/CardTableComponent";
 import { getCardBattlePoint, getBattleGroupBattlePoint, getBattleGroup, GlobalCardState } from "../game/gameState/GameState";
 import { applyFlow } from "../game/gameStateWithFlowMemory/applyFlow";
 import { DEFAULT_GAME_STATE_WITH_FLOW_MEMORY, GameStateWithFlowMemory, initState } from "../game/gameStateWithFlowMemory/GameStateWithFlowMemory";
 import { queryFlow } from "../game/gameStateWithFlowMemory/queryFlow";
 import { getPrototype } from "../script";
-import Timing from "../game/define/Timing";
+
 export function testFlow1() {
   let ctx = DEFAULT_GAME_STATE_WITH_FLOW_MEMORY;
   ctx = {
@@ -16,14 +17,14 @@ export function testFlow1() {
     },
   };
   const firstTiming = ctx.timing;
-  if (Timing.getTimingSeq(firstTiming) != 0) {
+  if (getTimingSeq(firstTiming) != 0) {
     throw new Error("timingSeq must 0")
   }
   ctx = applyFlow(ctx, PlayerA, {
     id: "FlowNextTiming",
   });
   const afterTime = ctx.timing;
-  if (Timing.getTimingSeq(afterTime) != Timing.getTimingSeq(firstTiming) + 1) {
+  if (getTimingSeq(afterTime) != getTimingSeq(firstTiming) + 1) {
     throw new Error("必須進到下一時間");
   }
   ctx = applyFlow(ctx, PlayerA, {

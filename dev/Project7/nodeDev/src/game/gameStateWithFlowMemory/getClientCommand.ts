@@ -1,16 +1,16 @@
-import { log2 } from "../../tool/logger";
+import { log } from "../../tool/logger";
 import { getCardState } from "../gameState/CardStateComponent";
 import { getBlockOwner } from "../gameState/GameState";
 import { GameStateWithFlowMemory } from "./GameStateWithFlowMemory";
-import TextID from "../define/TextID";
-import Text, { TText } from "../define/Text"
 import { SiYouTiming } from "../define/Timing";
+import { TextIDFns } from "../define/TextID";
+import { getTextsFromTokuSyuKouKa } from "../define/Text";
 
 export function getClientCommand(ctx: GameStateWithFlowMemory, clientID: string) {
     return ctx.commandEffect.filter((effect) => {
         const controller = getBlockOwner(effect);
         if (controller != clientID) {
-            log2("getClientCommand", "you are not owner. return");
+            log("getClientCommand", "you are not owner. return");
             return;
         }
         if (effect.reason[0] != "TEffectReasonUpdateCommand") {
@@ -24,17 +24,17 @@ export function getClientCommand(ctx: GameStateWithFlowMemory, clientID: string)
                     return false;
                 }
                 const [_, textID2] = e.reason;
-                if (TextID.eq(textID, textID2)) {
+                if (TextIDFns.eq(textID, textID2)) {
                     return false;
                 }
                 return true;
             }).length
         ) {
-            log2("getClientCommand", `cardTextID(${TextID.toString(textID)})已經在堆疊裡.`);
+            log("getClientCommand", `cardTextID(${TextIDFns.inspect(textID)})已經在堆疊裡.`);
             return;
         }
-        const cardState = getCardState(ctx, TextID.getCardID(textID));
-        const text = cardState.cardTextStates.find((v) => v.id == TextID.getTextID(textID));
+        const cardState = getCardState(ctx, TextIDFns.getCardID(textID));
+        const text = cardState.cardTextStates.find((v) => v.id == TextIDFns.getTextID(textID));
         if (text == null) {
             throw new Error("must find text");
         }
@@ -44,7 +44,7 @@ export function getClientCommand(ctx: GameStateWithFlowMemory, clientID: string)
             }
             if (text.cardText.title[0] == "特殊型") {
                 const [_, toku] = text.cardText.title;
-                const t = Text.getTextsFromTokuSyuKouKa(toku).find((v) => v.title[0] == "使用型");
+                const t = getTextsFromTokuSyuKouKa(toku).find((v) => v.title[0] == "使用型");
                 if (t == null) {
                     throw new Error("t must find");
                 }
@@ -58,7 +58,7 @@ export function getClientCommand(ctx: GameStateWithFlowMemory, clientID: string)
         switch (siYouTiming[0]) {
             case "自軍":
                 if (ctx.activePlayerID != clientID) {
-                    log2(
+                    log(
                         "getClientCommand",
                         `ctx.activePlayerID != ${clientID}`,
                         effect
@@ -68,7 +68,7 @@ export function getClientCommand(ctx: GameStateWithFlowMemory, clientID: string)
                 break;
             case "敵軍":
                 if (ctx.activePlayerID == clientID) {
-                    log2(
+                    log(
                         "getClientCommand",
                         `ctx.activePlayerID == ${clientID}`,
                         effect
@@ -78,7 +78,7 @@ export function getClientCommand(ctx: GameStateWithFlowMemory, clientID: string)
                 break;
             case "戦闘フェイズ":
                 if (ctx.timing[1][0] != "戦闘フェイズ") {
-                    log2(
+                    log(
                         "getClientCommand",
                         `ctx.timing[1][0] != "戦闘フェイズ"`,
                         effect
@@ -91,7 +91,7 @@ export function getClientCommand(ctx: GameStateWithFlowMemory, clientID: string)
             case "ダメージ判定ステップ":
             case "帰還ステップ":
                 if (ctx.timing[1][0] != "戦闘フェイズ") {
-                    log2(
+                    log(
                         "getClientCommand",
                         `ctx.timing[1][0] != "戦闘フェイズ"`,
                         effect
@@ -99,7 +99,7 @@ export function getClientCommand(ctx: GameStateWithFlowMemory, clientID: string)
                     return;
                 }
                 if (ctx.timing[1][1] != siYouTiming[0]) {
-                    log2(
+                    log(
                         "getClientCommand",
                         `ctx.timing[1][1] != ${siYouTiming[0]}`,
                         effect
@@ -115,7 +115,7 @@ export function getClientCommand(ctx: GameStateWithFlowMemory, clientID: string)
                     case "配備フェイズ":
                     case "戦闘フェイズ":
                         if (ctx.timing[1][0] != siYouTiming[1]) {
-                            log2(
+                            log(
                                 "getClientCommand",
                                 `ctx.timing[1][0] != ${siYouTiming[1]}`,
                                 effect
@@ -128,7 +128,7 @@ export function getClientCommand(ctx: GameStateWithFlowMemory, clientID: string)
                     case "ダメージ判定ステップ":
                     case "帰還ステップ":
                         if (ctx.timing[1][0] != "戦闘フェイズ") {
-                            log2(
+                            log(
                                 "getClientCommand",
                                 `ctx.timing[1][0] != "戦闘フェイズ"`,
                                 effect
@@ -136,7 +136,7 @@ export function getClientCommand(ctx: GameStateWithFlowMemory, clientID: string)
                             return;
                         }
                         if (ctx.timing[1][1] != siYouTiming[1]) {
-                            log2(
+                            log(
                                 "getClientCommand",
                                 `ctx.timing[1][1] != ${siYouTiming[1]}`,
                                 effect

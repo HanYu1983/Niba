@@ -35,7 +35,7 @@ export type Phase =
 
 export type Timing = [number, Phase];
 
-function getTimingSeq(timing: Timing): number {
+export function getTimingSeq(timing: Timing): number {
     return timing[0]
 }
 
@@ -104,12 +104,12 @@ export const TIMING_CHART: Timing[] = [
     [34, ["戦闘フェイズ", "ターン終了時", "効果終了。ターン終了"]],
 ];
 
-function getNextTiming(timing: Timing): Timing {
+export function getNextTiming(timing: Timing): Timing {
     const nextId = (timing[0] + 1) % TIMING_CHART.length;
     return TIMING_CHART[nextId];
 }
 
-function isCanPlayCardInPhase(phase: Phase): boolean {
+export function isCanPlayCardInPhase(phase: Phase): boolean {
     switch (phase[0]) {
         case "ドローフェイズ":
             return phase[1] == "フリータイミング";
@@ -119,10 +119,4 @@ function isCanPlayCardInPhase(phase: Phase): boolean {
         case "戦闘フェイズ":
             return phase[2] == "フリータイミング" || phase[2] == "ステップ開始";
     }
-}
-
-export default {
-    getNextTiming,
-    isCanPlayCardInPhase,
-    getTimingSeq
 }

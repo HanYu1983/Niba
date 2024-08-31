@@ -1,9 +1,9 @@
-import { TText } from "./Text";
+import { Text } from "./Text";
 
 export type GlobalEffectAddText = {
     type: "AddText",
     cardIds: string[],
-    text: TText
+    text: Text
 }
 
 export type GlobalEffectRollAsG = {

@@ -4,16 +4,16 @@ import { Flow } from "./Flow";
 import { getActiveEffectID } from "./handleEffect";
 import { getClientCommand } from "./getClientCommand";
 import { GameStateWithFlowMemory } from "./GameStateWithFlowMemory";
-import PlayerID, { PlayerA, PlayerB } from "../define/PlayerID";
-import BaSyou, { BattleAreaKeyword } from "../define/BaSyou";
-import { TEffect } from "../define/Effect";
+import { getOpponentPlayerID, PlayerA, PlayerB } from "../define/PlayerID";
+import { BattleAreaKeyword, getBaSyouID } from "../define/BaSyou";
+import { Effect } from "../define/Effect";
 
 export function queryFlow(ctx: GameStateWithFlowMemory, playerID: string): Flow[] {
     if (true) {
         const hasSomeoneLiveIsZero =
             [PlayerA, PlayerB]
                 .map((pid) => {
-                    return BaSyou.getBaSyouID({ id: "AbsoluteBaSyou", value: [pid, "本国"] });
+                    return getBaSyouID({ id: "AbsoluteBaSyou", value: [pid, "本国"] });
                 })
                 .map((baSyouID) => {
                     return ctx.table.cardStack[baSyouID] || [];
@@ -42,7 +42,7 @@ export function queryFlow(ctx: GameStateWithFlowMemory, playerID: string): Flow[
             const isPass = !!ctx.flowMemory.hasPlayerPassPayCost[playerID];
             const isOpponentPass =
                 !!ctx.flowMemory.hasPlayerPassPayCost[
-                PlayerID.getOpponentPlayerID(playerID)
+                getOpponentPlayerID(playerID)
                 ];
             if (isPass && isOpponentPass) {
                 if (controller != playerID) {
@@ -133,8 +133,8 @@ export function queryFlow(ctx: GameStateWithFlowMemory, playerID: string): Flow[
     // 處理立即效果
     if (ctx.immediateEffect.length) {
         const isActivePlayer = ctx.activePlayerID == playerID;
-        const myEffect: TEffect[] = [];
-        const opponentEffect: TEffect[] = [];
+        const myEffect: Effect[] = [];
+        const opponentEffect: Effect[] = [];
         ctx.immediateEffect.forEach((effect) => {
             const controller = getBlockOwner(effect);
             if (controller == playerID) {
@@ -531,7 +531,7 @@ export function queryFlow(ctx: GameStateWithFlowMemory, playerID: string): Flow[
                                     const playerID =
                                         phase[1] == "攻撃ステップ"
                                             ? ctx.activePlayerID
-                                            : PlayerID.getOpponentPlayerID(ctx.activePlayerID);
+                                            : getOpponentPlayerID(ctx.activePlayerID);
                                     return [
                                         {
                                             id: "FlowAddBlock",

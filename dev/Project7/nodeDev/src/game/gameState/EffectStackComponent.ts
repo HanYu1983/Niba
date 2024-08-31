@@ -1,16 +1,16 @@
-import { TEffect } from "../define/Effect";
+import { Effect } from "../define/Effect";
 
 
 export type EffectStackComponent = {
   // 指令效果
-  commandEffect: TEffect[];
+  commandEffect: Effect[];
   // 立即效果。玩家必須立即一個一個進行處理
-  immediateEffect: TEffect[];
+  immediateEffect: Effect[];
   // 堆疊效果。每次只處理第一個代表top的block
-  stackEffect: TEffect[];
+  stackEffect: Effect[];
 }
 
-export function iterateEffect(ctx: EffectStackComponent): TEffect[] {
+export function iterateEffect(ctx: EffectStackComponent): Effect[] {
   return [
     ...ctx.immediateEffect,
     ...ctx.commandEffect,
@@ -20,7 +20,7 @@ export function iterateEffect(ctx: EffectStackComponent): TEffect[] {
 
 export function mapEffect(
   ctx: EffectStackComponent,
-  doF: (effect: TEffect) => TEffect
+  doF: (effect: Effect) => Effect
 ): EffectStackComponent {
   return {
     ...ctx,
@@ -32,7 +32,7 @@ export function mapEffect(
 
 export function reduceEffect<T>(
   ctx: EffectStackComponent,
-  doF: (init: T, effect: TEffect) => T,
+  doF: (init: T, effect: Effect) => T,
   init: T
 ): T {
   return [
@@ -44,7 +44,7 @@ export function reduceEffect<T>(
 
 export function filterEffect(
   ctx: EffectStackComponent,
-  filterF: (effect: TEffect) => boolean
+  filterF: (effect: Effect) => boolean
 ): EffectStackComponent {
   return {
     ...ctx,
@@ -54,14 +54,14 @@ export function filterEffect(
   };
 }
 
-export function addStackEffect(ctx: EffectStackComponent, block: TEffect): EffectStackComponent {
+export function addStackEffect(ctx: EffectStackComponent, block: Effect): EffectStackComponent {
   return {
     ...ctx,
     stackEffect: [block, ...ctx.stackEffect],
   };
 }
 
-export function addImmediateEffect(ctx: EffectStackComponent, block: TEffect): EffectStackComponent {
+export function addImmediateEffect(ctx: EffectStackComponent, block: Effect): EffectStackComponent {
   return {
     ...ctx,
     immediateEffect: [block, ...ctx.immediateEffect],

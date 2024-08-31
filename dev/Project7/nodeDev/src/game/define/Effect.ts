@@ -1,14 +1,14 @@
-import { TPlayerID } from "./PlayerID";
-import { TText } from "./Text";
-import { TTextID } from "./TextID";
+import { PlayerID } from "./PlayerID";
+import { Text } from "./Text";
+import { TextID } from "./TextID";
 
-export type TEffectReason = ["TEffectReasonUpdateCommand", TTextID] | ["GameRule"];
+export type EffectReason = ["TEffectReasonUpdateCommand", TextID] | ["GameRule"];
 
-export type TEffect = {
+export type Effect = {
     id: string,
-    reason: TEffectReason
-    text: TText
-    playerID?: TPlayerID
+    reason: EffectReason
+    text: Text
+    playerID?: PlayerID
     description?: string
     isOption?: boolean
     // TODO: delete

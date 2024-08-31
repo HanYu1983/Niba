@@ -1,5 +1,5 @@
-import {  RelatedPlayerSideKeyword } from ".";
-import { TPlayerID } from "./PlayerID";
+import { RelatedPlayerSideKeyword } from ".";
+import { PlayerID } from "./PlayerID";
 
 // basyou
 export type BattleAreaKeyword = "宇宙エリア" | "地球エリア";
@@ -19,7 +19,7 @@ export type BaSyouKeyword =
     | "プレイされているカード"
     | BaKeyword;
 
-function isBa(k: BaSyouKeyword): boolean {
+export function isBa(k: BaSyouKeyword): boolean {
     switch (k) {
         case "戦闘エリア（右）":
         case "戦闘エリア（左）":
@@ -32,7 +32,7 @@ function isBa(k: BaSyouKeyword): boolean {
 
 export type AbsoluteBaSyou = {
     id: "AbsoluteBaSyou";
-    value: [TPlayerID, BaSyouKeyword];
+    value: [PlayerID, BaSyouKeyword];
 };
 
 export type RelatedBaSyou = {
@@ -42,19 +42,13 @@ export type RelatedBaSyou = {
 
 export type TBaSyou = AbsoluteBaSyou | RelatedBaSyou;
 
-function getBaSyouID(baSyou: AbsoluteBaSyou) {
+export function getBaSyouID(baSyou: AbsoluteBaSyou) {
     return JSON.stringify(baSyou.value);
 }
 
-function getBaSyou(id: string): AbsoluteBaSyou {
+export function getBaSyou(id: string): AbsoluteBaSyou {
     return {
         id: "AbsoluteBaSyou",
         value: JSON.parse(id),
     };
-}
-
-export default {
-    getBaSyou,
-    getBaSyouID,
-    isBa
 }
