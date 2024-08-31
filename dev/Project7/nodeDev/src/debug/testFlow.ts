@@ -1,6 +1,6 @@
 import { PlayerA, PlayerB } from "../game/define/PlayerID";
 import { getTimingSeq } from "../game/define/Timing";
-import { addGundamCards, createGundamCardWithProtoIds } from "../game/gameState/CardTableComponent";
+import { addCards, createCardWithProtoIds } from "../game/gameState/CardTableComponent";
 import { getCardBattlePoint, getBattleGroupBattlePoint, getBattleGroup, GlobalCardState } from "../game/gameState/GameState";
 import { applyFlow } from "../game/gameStateWithFlowMemory/applyFlow";
 import { DEFAULT_GAME_STATE_WITH_FLOW_MEMORY, GameStateWithFlowMemory, initState } from "../game/gameStateWithFlowMemory/GameStateWithFlowMemory";
@@ -56,7 +56,7 @@ export function testFlow1() {
 export function testFlow2() {
   let ctx = DEFAULT_GAME_STATE_WITH_FLOW_MEMORY;
   let table = ctx.table;
-  ctx = createGundamCardWithProtoIds(
+  ctx = createCardWithProtoIds(
     ctx,
     PlayerA,
     {
@@ -208,7 +208,7 @@ export async function testBattleBonus() {
     setGroupLink: { a2: "a1" },
     timing: [22, ["戦闘フェイズ", "ダメージ判定ステップ", "ステップ開始"]],
   };
-  ctx = addGundamCards(
+  ctx = addCards(
     ctx,
     {
       id: "AbsoluteBaSyou",
@@ -231,7 +231,7 @@ export async function testBattleBonus() {
       }
     ]
   ) as GameStateWithFlowMemory
-  ctx = addGundamCards(
+  ctx = addCards(
     ctx,
     {
       id: "AbsoluteBaSyou",
@@ -280,7 +280,7 @@ export async function testBattleBonus() {
     }
   }
   console.log("給a1獲得+3/+3/+3");
-  ctx = addGundamCards(
+  ctx = addCards(
     ctx,
     {
       id: "AbsoluteBaSyou",

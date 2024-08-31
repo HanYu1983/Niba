@@ -5,11 +5,12 @@ import { GameStateWithFlowMemory } from "./GameStateWithFlowMemory";
 import { SiYouTiming } from "../define/Timing";
 import { TextIDFns } from "../define/TextID";
 import { getTextsFromTokuSyuKouKa } from "../define/Text";
+import { PlayerID } from "../define/PlayerID";
 
-export function getClientCommand(ctx: GameStateWithFlowMemory, clientID: string) {
+export function getClientCommand(ctx: GameStateWithFlowMemory, playerId: PlayerID) {
     return ctx.commandEffect.filter((effect) => {
         const controller = getBlockOwner(effect);
-        if (controller != clientID) {
+        if (controller != playerId) {
             log("getClientCommand", "you are not owner. return");
             return;
         }
@@ -57,20 +58,20 @@ export function getClientCommand(ctx: GameStateWithFlowMemory, clientID: string)
         })();
         switch (siYouTiming[0]) {
             case "自軍":
-                if (ctx.activePlayerID != clientID) {
+                if (ctx.activePlayerID != playerId) {
                     log(
                         "getClientCommand",
-                        `ctx.activePlayerID != ${clientID}`,
+                        `ctx.activePlayerID != ${playerId}`,
                         effect
                     );
                     return;
                 }
                 break;
             case "敵軍":
-                if (ctx.activePlayerID == clientID) {
+                if (ctx.activePlayerID == playerId) {
                     log(
                         "getClientCommand",
-                        `ctx.activePlayerID == ${clientID}`,
+                        `ctx.activePlayerID == ${playerId}`,
                         effect
                     );
                     return;

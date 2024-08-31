@@ -1,9 +1,9 @@
 import {
-  getGundamCard,
+  getCard,
   getCardBaSyou,
   getCardController,
   CardTableComponent,
-  getGundamCardIds,
+  getCardIds,
 } from "./CardTableComponent"
 import { CardStateComponent, getCardState, mapCardState } from "./CardStateComponent";
 import { IsBattleComponent } from "./IsBattleComponent";
@@ -169,7 +169,7 @@ export function getOpponentBattleArea(baSyou: AbsoluteBaSyou): AbsoluteBaSyou {
 }
 
 export function getCardCharacteristic(ctx: GameState, cardID: string) {
-  const card = getGundamCard(ctx, cardID);
+  const card = getCard(ctx, cardID);
   if (card == null) {
     throw new Error("card not found");
   }
@@ -178,7 +178,7 @@ export function getCardCharacteristic(ctx: GameState, cardID: string) {
 }
 
 export function getCardColor(ctx: GameState, cardID: string): CardColor {
-  const card = getGundamCard(ctx, cardID);
+  const card = getCard(ctx, cardID);
   if (card == null) {
     throw new Error("card not found");
   }
@@ -187,7 +187,7 @@ export function getCardColor(ctx: GameState, cardID: string): CardColor {
 }
 
 export function getCardTitle(ctx: GameState, cardID: string): string {
-  const card = getGundamCard(ctx, cardID);
+  const card = getCard(ctx, cardID);
   if (card == null) {
     throw new Error("card not found");
   }
@@ -196,14 +196,14 @@ export function getCardTitle(ctx: GameState, cardID: string): string {
 }
 
 export function getGlobalEffects(ctx: GameState): GlobalEffect[] {
-  return getGundamCardIds(ctx).map(cardId => getGundamCard(ctx, cardId)).flatMap(card => {
+  return getCardIds(ctx).map(cardId => getCard(ctx, cardId)).flatMap(card => {
     if (card == null) {
       throw new Error("card not found")
     }
     // TODO
     const bridge: Bridge = {
       getMyUnitIds(ctx: GameState, playerID: string): string[] {
-        return getGundamCardIds(ctx)
+        return getCardIds(ctx)
       }
     }
     const runtime: Runtime = {
@@ -227,7 +227,7 @@ export function getCardBattlePoint(
   cardID: string
 ): BattlePoint {
   const globalEffects = getGlobalEffects(ctx);
-  const card = getGundamCard(ctx, cardID);
+  const card = getCard(ctx, cardID);
   if (card == null) {
     throw new Error("card not found");
   }
@@ -314,7 +314,7 @@ export function getBattleGroupBattlePoint(
       if (cs.destroyReason != null) {
         return 0;
       }
-      const card = getGundamCard(ctx, cardID);
+      const card = getCard(ctx, cardID);
       if (card == null) {
         throw new Error("card not found");
       }
@@ -493,7 +493,7 @@ export function getCardBattleArea(
   ctx: GameState,
   cardID: string
 ): BattleAreaKeyword[] {
-  const card = getGundamCard(ctx, cardID);
+  const card = getCard(ctx, cardID);
   if (card == null) {
     throw new Error("card not found");
   }
