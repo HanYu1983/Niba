@@ -12,7 +12,7 @@ import { EffectStackComponent, iterateEffect } from "./EffectStackComponent";
 import { getPreloadPrototype } from "../../script";
 import { log } from "../../tool/logger";
 import { Bridge, Runtime } from "../../script/bridge";
-import { getGlobalEffectFn, Text, TextTokuSyuKouKa } from "../define/Text";
+import { ActionTitle, getGlobalEffectFn, Text, TextTokuSyuKouKa } from "../define/Text";
 import { AttackSpeed } from "../define";
 import { getOpponentPlayerID, PlayerID } from "../define/PlayerID";
 import { AbsoluteBaSyou, BattleAreaKeyword, BaSyouKeyword, getBaSyouID } from "../define/BaSyou";
@@ -20,9 +20,10 @@ import { addBattleBonus, BattlePoint } from "../define/BattlePoint";
 import { CardPrototype, CardColor } from "../define/CardPrototype";
 import { GlobalEffect } from "../define/GlobalEffect";
 import { Timing, TIMING_CHART } from "../define/Timing";
-import { Effect } from "../define/Effect";
+import { Effect, EffectRuntime } from "../define/Effect";
 import { Event } from "../define/Event";
 import { DEFAULT_TABLE } from "../../tool/table";
+import { GameStateWithFlowMemory } from "../gameStateWithFlowMemory/GameStateWithFlowMemory";
 
 export type PlayerState = {
   id: string;
@@ -202,8 +203,14 @@ export function getGlobalEffects(ctx: GameState): GlobalEffect[] {
     }
     // TODO
     const bridge: Bridge = {
-      getMyUnitIds(ctx: GameState, playerID: string): string[] {
-        return getCardIds(ctx)
+      getMyUnitIds(ctx: GameStateWithFlowMemory, playerID: string): string[] {
+        return getCardIds(ctx);
+      },
+      getFunctionByAction: function (action: ActionTitle): (ctx: GameStateWithFlowMemory, runtime: EffectRuntime) => GameStateWithFlowMemory {
+        throw new Error("Function not implemented.");
+      },
+      cutIn: function (ctx: GameStateWithFlowMemory, effect: Effect) {
+        throw new Error("Function not implemented.");
       }
     }
     const runtime: Runtime = {

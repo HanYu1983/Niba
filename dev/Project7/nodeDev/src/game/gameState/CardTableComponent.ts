@@ -1,5 +1,5 @@
 import { Table, TableFns } from "../../tool/table";
-import { AbsoluteBaSyou, getBaSyou, getBaSyouID, TBaSyou } from "../define/BaSyou";
+import { AbsoluteBaSyou, getBaSyou, getBaSyouID, BaSyou } from "../define/BaSyou";
 import { getOpponentPlayerID, PlayerID } from "../define/PlayerID";
 
 // card
@@ -24,12 +24,19 @@ export type CardTableComponent = {
   cards: { [key: string]: Card }
 }
 
-export function getCard(ctx: CardTableComponent, cardId: string): Card | null {
+export function getCard(ctx: CardTableComponent, cardId: string): Card {
+  if(ctx.cards[cardId] == null){
+    throw new Error("card not found")
+  }
   return ctx.cards[cardId];
 }
 
 export function getCardIds(ctx: CardTableComponent): string[] {
   return Object.keys(ctx.cards);
+}
+
+export function getCardIdsByBasyou(ctx: CardTableComponent, basyou: AbsoluteBaSyou): string[] {
+  return TableFns.getCardsByPosition(ctx.table, getBaSyouID(basyou))
 }
 
 export function mapCard(ctx: CardTableComponent, f: (Card) => Card): CardTableComponent {
@@ -90,7 +97,7 @@ export function getCardOwner(ctx: CardTableComponent, cardID: string): PlayerID 
 }
 
 export function getAbsoluteBaSyou(
-  baSyou: TBaSyou,
+  baSyou: BaSyou,
   ctx: CardTableComponent,
   cardID: string
 ): AbsoluteBaSyou {

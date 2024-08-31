@@ -35,12 +35,19 @@ export type AbsoluteBaSyou = {
     value: [PlayerID, BaSyouKeyword];
 };
 
+export function AbsoluteBaSyouOf(p: PlayerID, k: BaSyouKeyword): AbsoluteBaSyou {
+    return {
+        id: "AbsoluteBaSyou",
+        value: [p, k]
+    }
+}
+
 export type RelatedBaSyou = {
     id: "RelatedBaSyou";
     value: [RelatedPlayerSideKeyword | "持ち主", BaSyouKeyword];
 };
 
-export type TBaSyou = AbsoluteBaSyou | RelatedBaSyou;
+export type BaSyou = AbsoluteBaSyou | RelatedBaSyou;
 
 export function getBaSyouID(baSyou: AbsoluteBaSyou) {
     return JSON.stringify(baSyou.value);

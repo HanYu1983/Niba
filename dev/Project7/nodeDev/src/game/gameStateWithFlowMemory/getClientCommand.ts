@@ -1,125 +1,137 @@
 import { log } from "../../tool/logger";
 import { getCardState } from "../gameState/CardStateComponent";
-import { getBlockOwner } from "../gameState/GameState";
-import { GameStateWithFlowMemory } from "./GameStateWithFlowMemory";
+import { GameState, getBlockOwner } from "../gameState/GameState";
+import { DEFAULT_GAME_STATE_WITH_FLOW_MEMORY, GameStateWithFlowMemory } from "./GameStateWithFlowMemory";
 import { SiYouTiming } from "../define/Timing";
 import { TextIDFns } from "../define/TextID";
 import { getTextsFromTokuSyuKouKa } from "../define/Text";
-import { PlayerID } from "../define/PlayerID";
+import { PlayerA, PlayerID } from "../define/PlayerID";
+import { AbsoluteBaSyouOf } from "../define/BaSyou";
+import { concatMap, filter, lastValueFrom, merge, of, toArray } from "rxjs";
+import { addCards, createCardWithProtoIds, getCard, getCardBaSyou, getCardIdsByBasyou } from "../gameState/CardTableComponent";
+import { Effect, EffectRuntime } from "../define/Effect";
+import { Bridge } from "../../script/bridge";
+import { getPreloadPrototype } from "../../script";
 
-export function getClientCommand(ctx: GameStateWithFlowMemory, playerId: PlayerID) {
-    return ctx.commandEffect.filter((effect) => {
-        const controller = getBlockOwner(effect);
-        if (controller != playerId) {
-            log("getClientCommand", "you are not owner. return");
-            return;
+function getPlayCardEffect(ctx: GameStateWithFlowMemory, playerId: PlayerID, cardId: string): Effect {
+    return {
+        id: "",
+        reason: ["EffectReasonPlayCard", cardId],
+        playerID: playerId,
+        text: {
+            title: [],
+            conditions: {
+                "1": {
+                    title: ["total(x)", 3],
+                    actions: [
+                        {
+                            title: ["(このカード)を(リロール)する", ["abc"], "リロール"]
+                        }
+                    ]
+                },
+                "2": {
+                    title: ["c(x)", "白", 2],
+                    actions: [
+                        {
+                            title: ["(このカード)を(リロール)する", ["abc"], "リロール"]
+                        }
+                    ]
+                }
+            },
+            logicTreeCommands: [
+                {
+                    actions: [
+                        {
+                            title: ["(このカード)を(リロール)する", ["abc"], "リロール"]
+                        },
+                        {
+                            title: function _(ctx: GameStateWithFlowMemory, runtime: EffectRuntime, lib: Bridge): GameStateWithFlowMemory {
+                                lib.cutIn(ctx, {
+                                    id: "",
+                                    reason: ["場に出る", runtime.getCardID()],
+                                    text: {
+                                        title: [],
+                                        logicTreeCommands: [
+                                            {
+                                                actions: [
+                                                    {
+                                                        title: ["(このカード)を(リロール)する", [runtime.getCardID()], "リロール"]
+                                                    }
+                                                ]
+                                            }
+                                        ]
+                                    }
+                                })
+                                return ctx
+                            }.toString()
+                        }
+                    ]
+                }
+            ]
         }
-        if (effect.reason[0] != "TEffectReasonUpdateCommand") {
-            throw new Error("must from command cause");
-        }
-        const [_, textID] = effect.reason;
-        // 在堆疊裡的技能不能再次發動(記免同一個技能一直切入)
-        if (
-            ctx.stackEffect.filter((e) => {
-                if (e.reason[0] != "TEffectReasonUpdateCommand") {
-                    return false;
-                }
-                const [_, textID2] = e.reason;
-                if (TextIDFns.eq(textID, textID2)) {
-                    return false;
-                }
-                return true;
-            }).length
-        ) {
-            log("getClientCommand", `cardTextID(${TextIDFns.inspect(textID)})已經在堆疊裡.`);
-            return;
-        }
-        const cardState = getCardState(ctx, TextIDFns.getCardID(textID));
-        const text = cardState.cardTextStates.find((v) => v.id == TextIDFns.getTextID(textID));
-        if (text == null) {
-            throw new Error("must find text");
-        }
-        const siYouTiming: SiYouTiming = (() => {
-            if (text.cardText.title[0] == "使用型") {
-                return text.cardText.title[1]
-            }
-            if (text.cardText.title[0] == "特殊型") {
-                const [_, toku] = text.cardText.title;
-                const t = getTextsFromTokuSyuKouKa(toku).find((v) => v.title[0] == "使用型");
-                if (t == null) {
-                    throw new Error("t must find");
-                }
-                if (t.title[0] != "使用型") {
-                    throw new Error("must be 使用型")
-                }
-                return t.title[1];
-            }
-            throw new Error("not support:" + text.cardText);
-        })();
-        switch (siYouTiming[0]) {
-            case "自軍":
-                if (ctx.activePlayerID != playerId) {
-                    log(
-                        "getClientCommand",
-                        `ctx.activePlayerID != ${playerId}`,
-                        effect
-                    );
-                    return;
-                }
-                break;
-            case "敵軍":
-                if (ctx.activePlayerID == playerId) {
-                    log(
-                        "getClientCommand",
-                        `ctx.activePlayerID == ${playerId}`,
-                        effect
-                    );
-                    return;
-                }
-                break;
-            case "戦闘フェイズ":
-                if (ctx.timing[1][0] != "戦闘フェイズ") {
-                    log(
-                        "getClientCommand",
-                        `ctx.timing[1][0] != "戦闘フェイズ"`,
-                        effect
-                    );
-                    return;
-                }
-                break;
-            case "攻撃ステップ":
-            case "防御ステップ":
-            case "ダメージ判定ステップ":
-            case "帰還ステップ":
-                if (ctx.timing[1][0] != "戦闘フェイズ") {
-                    log(
-                        "getClientCommand",
-                        `ctx.timing[1][0] != "戦闘フェイズ"`,
-                        effect
-                    );
-                    return;
-                }
-                if (ctx.timing[1][1] != siYouTiming[0]) {
-                    log(
-                        "getClientCommand",
-                        `ctx.timing[1][1] != ${siYouTiming[0]}`,
-                        effect
-                    );
-                    return;
-                }
-                break;
-        }
-        switch (siYouTiming[0]) {
-            case "自軍":
-            case "敵軍":
-                switch (siYouTiming[1]) {
-                    case "配備フェイズ":
-                    case "戦闘フェイズ":
-                        if (ctx.timing[1][0] != siYouTiming[1]) {
+    }
+}
+
+export function getClientCommand(ctx: GameStateWithFlowMemory, playerId: PlayerID): Effect[] {
+    ctx = createCardWithProtoIds(ctx, playerId, AbsoluteBaSyouOf(playerId, "手札"), ["179001_01A_CH_WT007R_white"]) as GameStateWithFlowMemory
+    ctx = createCardWithProtoIds(ctx, playerId, AbsoluteBaSyouOf(playerId, "ハンガー"), ["179001_01A_CH_WT007R_white"]) as GameStateWithFlowMemory
+    ctx = createCardWithProtoIds(ctx, playerId, AbsoluteBaSyouOf(playerId, "配備エリア"), ["179001_01A_CH_WT007R_white"]) as GameStateWithFlowMemory
+    const playCardEffects = of(AbsoluteBaSyouOf(playerId, "手札"), AbsoluteBaSyouOf(playerId, "ハンガー"))
+        .pipe(concatMap(basyou => getCardIdsByBasyou(ctx, basyou)))
+        .pipe(concatMap(cardId => {
+            return [getPlayCardEffect(ctx, playerId, cardId)]
+        }))
+
+    const playTextCards = of(AbsoluteBaSyouOf(playerId, "配備エリア"))
+        .pipe(concatMap(basyou => getCardIdsByBasyou(ctx, basyou)))
+        .pipe(concatMap(cardId => {
+            const card = getCard(ctx, cardId)
+            const proto = getPreloadPrototype(card.protoID)
+            const textsInTime = proto.texts.filter(text => {
+                const siYouTiming: SiYouTiming = (() => {
+                    if (text.title[0] == "使用型") {
+                        return text.title[1]
+                    }
+                    if (text.title[0] == "特殊型") {
+                        const [_, toku] = text.title;
+                        const t = getTextsFromTokuSyuKouKa(toku).find((v) => v.title[0] == "使用型");
+                        if (t == null) {
+                            throw new Error("t must find");
+                        }
+                        if (t.title[0] != "使用型") {
+                            throw new Error("must be 使用型")
+                        }
+                        return t.title[1];
+                    }
+                    throw new Error("not support:" + text);
+                })();
+                switch (siYouTiming[0]) {
+                    case "自軍":
+                        if (ctx.activePlayerID != playerId) {
                             log(
                                 "getClientCommand",
-                                `ctx.timing[1][0] != ${siYouTiming[1]}`,
-                                effect
+                                `ctx.activePlayerID != ${playerId}`,
+                                text
+                            );
+                            return;
+                        }
+                        break;
+                    case "敵軍":
+                        if (ctx.activePlayerID == playerId) {
+                            log(
+                                "getClientCommand",
+                                `ctx.activePlayerID == ${playerId}`,
+                                text
+                            );
+                            return;
+                        }
+                        break;
+                    case "戦闘フェイズ":
+                        if (ctx.timing[1][0] != "戦闘フェイズ") {
+                            log(
+                                "getClientCommand",
+                                `ctx.timing[1][0] != "戦闘フェイズ"`,
+                                text
                             );
                             return;
                         }
@@ -132,23 +144,78 @@ export function getClientCommand(ctx: GameStateWithFlowMemory, playerId: PlayerI
                             log(
                                 "getClientCommand",
                                 `ctx.timing[1][0] != "戦闘フェイズ"`,
-                                effect
+                                text
                             );
                             return;
                         }
-                        if (ctx.timing[1][1] != siYouTiming[1]) {
+                        if (ctx.timing[1][1] != siYouTiming[0]) {
                             log(
                                 "getClientCommand",
-                                `ctx.timing[1][1] != ${siYouTiming[1]}`,
-                                effect
+                                `ctx.timing[1][1] != ${siYouTiming[0]}`,
+                                text
                             );
                             return;
                         }
                         break;
                 }
-                break;
-        }
-        return true;
+                switch (siYouTiming[0]) {
+                    case "自軍":
+                    case "敵軍":
+                        switch (siYouTiming[1]) {
+                            case "配備フェイズ":
+                            case "戦闘フェイズ":
+                                if (ctx.timing[1][0] != siYouTiming[1]) {
+                                    log(
+                                        "getClientCommand",
+                                        `ctx.timing[1][0] != ${siYouTiming[1]}`,
+                                        text
+                                    );
+                                    return;
+                                }
+                                break;
+                            case "攻撃ステップ":
+                            case "防御ステップ":
+                            case "ダメージ判定ステップ":
+                            case "帰還ステップ":
+                                if (ctx.timing[1][0] != "戦闘フェイズ") {
+                                    log(
+                                        "getClientCommand",
+                                        `ctx.timing[1][0] != "戦闘フェイズ"`,
+                                        text
+                                    );
+                                    return;
+                                }
+                                if (ctx.timing[1][1] != siYouTiming[1]) {
+                                    log(
+                                        "getClientCommand",
+                                        `ctx.timing[1][1] != ${siYouTiming[1]}`,
+                                        text
+                                    );
+                                    return;
+                                }
+                                break;
+                        }
+                        break;
+                }
+                return true;
+            })
+            return textsInTime.map(text => {
+                return {
+                    id: "",
+                    reason: ["場に出る", ""],
+                    text: text
+                } as Effect
+            })
+        }))
+    const allEffects = merge(playCardEffects, playTextCards).pipe(toArray())
+    let ret: any;
+    allEffects.subscribe(effects => {
+        ret = effects;
     });
+    return ret
 }
 
+export function testGetClientCommand() {
+    const ctx = DEFAULT_GAME_STATE_WITH_FLOW_MEMORY
+    getClientCommand(ctx, PlayerA)
+}

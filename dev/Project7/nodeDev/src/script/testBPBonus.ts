@@ -9,6 +9,7 @@ import { CardPrototype, DEFAULT_CARD_PROTOTYPE } from "../game/define/CardProtot
 import { GlobalEffect } from "../game/define/GlobalEffect";
 import { Situation } from "../game/define/Text";
 import { GameState } from "../game/gameState/GameState";
+import { GameStateWithFlowMemory } from "../game/gameStateWithFlowMemory/GameStateWithFlowMemory";
 import { Bridge, Runtime } from "./bridge";
 
 export const prototype: CardPrototype = {
@@ -24,7 +25,7 @@ export const prototype: CardPrototype = {
   texts: [
     {
       title: ["自動型", "恒常"],
-      onSituation: function _(ctx: GameState, runtime: Runtime, situation: Situation, lib: Bridge): GlobalEffect[] {
+      onSituation: function _(ctx: GameStateWithFlowMemory, runtime: Runtime, situation: Situation, lib: Bridge): GlobalEffect[] {
         const units = lib.getMyUnitIds(ctx, runtime.getPlayerID())
         return [
           {

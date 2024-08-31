@@ -11,6 +11,13 @@ function addCard(table: Table, position: string, cardId: string): Table {
     return table;
 }
 
+function getCardsByPosition(table: Table, position: string): string[] {
+    if(table.cardStack[position] == null){
+        throw new Error(`table.cardStack[${position}] not found`)
+    }
+    return table.cardStack[position]
+}
+
 function moveCard(table: Table, fromPosition: string, toPosition: string, cardId: string): Table {
     if (!table.cardStack[fromPosition] || !table.cardStack[fromPosition].includes(cardId)) {
         throw new Error("Card not found in the specified position");
@@ -41,5 +48,5 @@ export const DEFAULT_TABLE: Table = {
 }
 
 export const TableFns = {
-    addCard, moveCard, getCardPosition
+    addCard, moveCard, getCardPosition, getCardsByPosition
 }

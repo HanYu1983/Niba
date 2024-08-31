@@ -475,7 +475,7 @@ export function queryFlow(ctx: GameStateWithFlowMemory, playerID: string): Flow[
                                         id: "",
                                         reason: ["GameRule"],
                                         text: {
-                                            title: ["system"]
+                                            title: []
                                         }
                                     },
                                 },
@@ -541,7 +541,7 @@ export function queryFlow(ctx: GameStateWithFlowMemory, playerID: string): Flow[
                                                 id: "",
                                                 reason: ["GameRule"],
                                                 text: {
-                                                    title: ["system"],
+                                                    title: [],
                                                     conditions: {
                                                         "去左方的卡": {
                                                             title: ""

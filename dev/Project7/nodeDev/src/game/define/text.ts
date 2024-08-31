@@ -25,7 +25,9 @@ export type TextTokuSyuKouKa =
     | ["ステイ"]
     | ["1枚制限"];
 
-export type ActionTitle = string | ["このカードをリロールする", "このカード" | string[], "リロール"]
+export type ActionTitle =
+    | string
+    | ["(このカード)を(リロール)する", "このカード" | string[], "リロール"]
 
 export type Action = {
     title: ActionTitle,
@@ -35,6 +37,7 @@ export type ConditionTitle =
     | string
     | ["(x)", number]
     | ["c(x)", CardColor, number]
+    | ["total(x)", number]
     | ["本来の記述に｢特徴：(装弾)｣を持つ(自軍)(G)(１)枚", string, RelatedPlayerSideKeyword, CardCategory, number]
     | ["(戦闘エリア)にいる(敵軍)(ユニット)(１)～(２)枚", BaSyouKeyword, RelatedPlayerSideKeyword, CardCategory, number, number]
     | ["(交戦中)の(自軍)(ユニット)(１)枚", "交戦中" | "非交戦中", RelatedPlayerSideKeyword, CardCategory, number]
@@ -59,7 +62,7 @@ export type TextTitle =
     | ["使用型", SiYouTiming]
     | ["特殊型", TextTokuSyuKouKa]
     | TextBattleBonus
-    | ["system"]
+    | []
 
 export type LogicTreeCommand = {
     logicTree?: TLogicTree
@@ -87,10 +90,7 @@ const testTexts: Text[] = [
         title: ["特殊型", ["サイコミュ", 3]],
         conditions: {
             "1": {
-                title: ["c(x)", "緑", 3],
-                actions: [{
-                    title: ["このカードをリロールする", "このカード", "リロール"],
-                }]
+                title: ["c(x)", "緑", 3]
             }
         },
     },
@@ -101,10 +101,8 @@ const testTexts: Text[] = [
         title: ["使用型", ["自軍", "戦闘フェイズ"]],
         conditions: {
             "1": {
-                title: ["(戦闘エリア)にいる(敵軍)(ユニット)(１)～(２)枚", "戦闘エリア（右）", "自軍", "ユニット", 1, 2],
-                actions: [{
-                    title: ["このカードをリロールする", "このカード", "リロール"],
-                }]
+                title: ["(戦闘エリア)にいる(敵軍)(ユニット)(１)～(２)枚", "戦闘エリア（右）", "自軍", "ユニット", 1, 2]
+
             },
             "2": {
                 title: function _() { }.toString(),
@@ -118,12 +116,9 @@ const testTexts: Text[] = [
                 //logicTree: { type: "Leaf", value: "1" },
                 actions: [
                     {
-                        title: ["このカードをリロールする", "このカード", "リロール"],
-                    },
-                    {
                         title: function _(ctx: any, runtime: any, bridge: any): any {
                             const cardIds = ["abc"]
-                            const action: Action = { title: ["このカードをリロールする", cardIds, "リロール"] }
+                            const action: Action = { title: ["(このカード)を(リロール)する", cardIds, "リロール"] }
                             return bridge.getFunctionByAction(action)(ctx, runtime, bridge)
                         }.toString()
                     }
