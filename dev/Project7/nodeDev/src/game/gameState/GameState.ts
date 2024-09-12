@@ -4,6 +4,7 @@ import {
   getCardController,
   CardTableComponent,
   getCardIds,
+  getCardIdsByBasyou,
 } from "./CardTableComponent"
 import { CardStateComponent, getCardState, mapCardState } from "./CardStateComponent";
 import { IsBattleComponent } from "./IsBattleComponent";
@@ -14,7 +15,7 @@ import { log } from "../../tool/logger";
 import { Bridge } from "../../script/bridge";
 import { ActionTitle, getOnSituationFn, OnSituationFn, Situation, Text, TextTokuSyuKouKa } from "../define/Text";
 import { AttackSpeed } from "../define";
-import { getOpponentPlayerID, PlayerID } from "../define/PlayerID";
+import { getOpponentPlayerID, PlayerA, PlayerID } from "../define/PlayerID";
 import { AbsoluteBaSyou, BattleAreaKeyword, BaSyouKeyword, getBaSyouID } from "../define/BaSyou";
 import { CardPrototype, CardColor } from "../define/CardPrototype";
 import { GlobalEffect } from "../define/GlobalEffect";
@@ -194,6 +195,10 @@ function createBridge(ctx: GameState): Bridge {
 }
 
 export function getSituationEffects(ctx: GameState, situation: Situation | null): GlobalEffect[] {
+  // getCardIdsByBasyou(ctx, {
+  //   id: "AbsoluteBaSyou",
+  //   value: [PlayerA, "Gゾーン"]
+  // })
   return getCardIds(ctx).map(cardId => getCard(ctx, cardId)).flatMap(card => {
     if (card == null) {
       throw new Error("card not found")

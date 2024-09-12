@@ -25,7 +25,7 @@ export type CardTableComponent = {
 }
 
 export function getCard(ctx: CardTableComponent, cardId: string): Card {
-  if(ctx.cards[cardId] == null){
+  if (ctx.cards[cardId] == null) {
     throw new Error("card not found")
   }
   return ctx.cards[cardId];
@@ -33,6 +33,10 @@ export function getCard(ctx: CardTableComponent, cardId: string): Card {
 
 export function getCardIds(ctx: CardTableComponent): string[] {
   return Object.keys(ctx.cards);
+}
+
+export function getCards(ctx: CardTableComponent): Card[] {
+  return Object.values(ctx.cards)
 }
 
 export function getCardIdsByBasyou(ctx: CardTableComponent, basyou: AbsoluteBaSyou): string[] {
