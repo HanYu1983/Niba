@@ -1,5 +1,7 @@
 (ns game.binding-data-dynamic
-  (:require [game.data.dynamic]
+  (:require [clojure.spec.alpha :as s]
+            [clojure.core.match :refer [match]]
+            [game.data.dynamic]
             [game.define.runtime :as runtime]
             [game.model.core :refer [get-runtime-card-id get-runtime-player-id get-my-units-can-set-character]]
             [game.model.card-table :refer [move-card]]
@@ -32,3 +34,16 @@
 (defmethod game.data.dynamic/set-setgroup-character :default [ctx to-card-id card-id] (set-setgroup-character ctx to-card-id card-id))
 (defmethod game.data.dynamic/set-setgroup-operation-unit :default [ctx to-card-id card-id] (set-setgroup-operation-unit ctx to-card-id card-id))
 (defmethod game.data.dynamic/get-setgroup :default [ctx card-id] (get-setgroup ctx card-id))
+
+(defn gen-use-time [desc]
+  #_(->> (condp = desc
+         "戦闘フェイズ" [:battle :any])
+       #_(s/assert ::use-timing)))
+
+(defn gen-condition [desc]
+  #_(->> (match desc
+         ["〔x〕" x] {})
+       #_(s/assert ::condition)))
+
+(defmethod game.data.dynamic/gen-use-time :default [desc] (gen-use-time desc))
+(defmethod game.data.dynamic/gen-condition :default [desc] (gen-condition desc))

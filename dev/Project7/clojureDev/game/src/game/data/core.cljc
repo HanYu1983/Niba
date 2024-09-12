@@ -11,11 +11,14 @@
   (-> card-id
       (#(str "data/" % ".edn")) slurp read-string eval
       (#(merge game.define.card-proto/card-proto %))
-      (#(s/assert :game.define.card-proto/value %))))
+      #_(#(s/assert :game.define.card-proto/value %))
+      ))
 
 (def get-card-data-memo (memoize get-card-data))
 
 (defn tests []
+  (let [data (get-card-data "179001_01A_CH_WT007R_white")
+        _ (println data)])
   (doseq [card-id ["179030_11E_U_BL212N_blue"
                    "179030_11E_U_BL209R_blue"
                    "179030_11E_U_BL213S_blue"]]

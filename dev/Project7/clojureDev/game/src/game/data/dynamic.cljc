@@ -24,3 +24,5 @@
 (defmulti set-setgroup-character (fn [ctx to-card-id card-id] (-> ctx :data-dynamic)))
 (defmulti set-setgroup-operation-unit (fn [ctx to-card-id card-id] (-> ctx :data-dynamic)))
 (defmulti get-setgroup (fn [ctx card-id] (-> ctx :data-dynamic)))
+(defmulti gen-use-time (fn [desc] desc))
+(defmulti gen-condition (fn [desc] desc))
