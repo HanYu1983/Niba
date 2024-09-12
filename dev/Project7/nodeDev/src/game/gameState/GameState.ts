@@ -12,7 +12,7 @@ import { EffectStackComponent, iterateEffect } from "./EffectStackComponent";
 import { getPreloadPrototype } from "../../script";
 import { log } from "../../tool/logger";
 import { Bridge } from "../../script/bridge";
-import { ActionTitle, getGlobalEffectFn, GlobalEffectFn, Text, TextTokuSyuKouKa } from "../define/Text";
+import { ActionTitle, getOnSituationFn, OnSituationFn, Situation, Text, TextTokuSyuKouKa } from "../define/Text";
 import { AttackSpeed } from "../define";
 import { getOpponentPlayerID, PlayerID } from "../define/PlayerID";
 import { AbsoluteBaSyou, BattleAreaKeyword, BaSyouKeyword, getBaSyouID } from "../define/BaSyou";
@@ -142,23 +142,6 @@ export const DEFAULT_GAME_STATE: GameState = {
   chipPool: {},
 }
 
-export function getBlockOwner(
-  blockPayload: Effect
-): PlayerID {
-  // if (blockPayload.reason == null) {
-  //   throw new Error("must has cause");
-  // }
-  // switch (blockPayload.reason.id) {
-  //   case "BlockPayloadCauseGameEvent":
-  //   case "BlockPayloadCauseUpdateEffect":
-  //   case "BlockPayloadCauseUpdateCommand":
-  //   case "BlockPayloadCauseGameRule":
-  //   case "BlockPayloadCauseDestroy":
-  //     return blockPayload.reason.playerID;
-  // }
-  return "";
-}
-
 export function getOpponentBattleArea(baSyou: AbsoluteBaSyou): AbsoluteBaSyou {
   const {
     value: [playerID, baSyouKW],
@@ -196,8 +179,9 @@ export function getCardTitle(ctx: GameState, cardID: string): string {
   return prototype.title;
 }
 
-function createBridge(ctx: GameState, effect: Effect): Bridge {
+function createBridge(ctx: GameState): Bridge {
   const bridge: Bridge = {
+    ctx: ctx,
     getEffectCardID: function (effect: Effect): string {
       return EffectFn.getCardID(effect)
     },
@@ -217,7 +201,7 @@ function createBridge(ctx: GameState, effect: Effect): Bridge {
   return bridge
 }
 
-export function getGlobalEffects(ctx: GameState): GlobalEffect[] {
+export function getSituationEffects(ctx: GameState, situation: Situation | null): GlobalEffect[] {
   return getCardIds(ctx).map(cardId => getCard(ctx, cardId)).flatMap(card => {
     if (card == null) {
       throw new Error("card not found")
@@ -226,18 +210,18 @@ export function getGlobalEffects(ctx: GameState): GlobalEffect[] {
     const globalEffects = proto.texts.filter(text => text.title[0] == "自動型" && text.title[1] == "恒常")
       .map((text, i) => {
         const cardController = getCardController(ctx, card.id)
-        const fn = getGlobalEffectFn(text)
+        const fn = getOnSituationFn(text)
         const effect: Effect = {
           id: "",
           reason: ["PlayText", cardController, ["origin", card.id, i]],
           text: text
         }
-        const ret: [GlobalEffectFn, Effect] = [fn, effect]
+        const ret: [OnSituationFn, Effect] = [fn, effect]
         return ret
       })
       .flatMap(([fn, effect]) => {
-        const bridge = createBridge(ctx, effect)
-        return fn(bridge, effect, null)
+        const bridge = createBridge(ctx)
+        return fn(bridge, effect, situation)
       })
     return globalEffects
   })
@@ -247,7 +231,7 @@ export function getCardBattlePoint(
   ctx: GameState,
   cardID: string
 ): BattlePoint {
-  const globalEffects = getGlobalEffects(ctx);
+  const globalEffects = getSituationEffects(ctx, null);
   const card = getCard(ctx, cardID);
   if (card == null) {
     throw new Error("card not found");

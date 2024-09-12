@@ -1,6 +1,7 @@
 import { log } from "../../tool/logger";
+import { EffectFn } from "../define/Effect";
 import { filterEffect, iterateEffect, reduceEffect } from "../gameState/EffectStackComponent";
-import { doBlockPayload, getBlockOwner } from "../gameState/GameState";
+import { doBlockPayload } from "../gameState/GameState";
 import { GameStateWithFlowMemory } from "./GameStateWithFlowMemory";
 
 export function setActiveEffectID(
@@ -16,7 +17,7 @@ export function setActiveEffectID(
       (e) => e.id == ctx.activeEffectID
     );
     if (currentActiveEffect != null) {
-      const controller = getBlockOwner(currentActiveEffect);
+      const controller = EffectFn.getPlayerID(currentActiveEffect);
       if (controller != playerID) {
         throw new Error("[cancelCommand] 你不是控制者");
       }
@@ -29,7 +30,7 @@ export function setActiveEffectID(
   if (effect == null) {
     throw new Error("effect not found");
   }
-  const controller = getBlockOwner(effect);
+  const controller = EffectFn.getPlayerID(effect);
   if (controller != playerID) {
     throw new Error("[cancelCommand] 你不是控制者");
   }
@@ -52,7 +53,7 @@ export function cancelActiveEffectID(
   if (effect == null) {
     return ctx;
   }
-  const controller = getBlockOwner(effect);
+  const controller = EffectFn.getPlayerID(effect);
   if (controller != playerID) {
     throw new Error("[cancelEffectID] 你不是控制者");
   }
@@ -134,7 +135,7 @@ export function deleteImmediateEffect(
     if (effect.id != effectID) {
       return true;
     }
-    const controller = getBlockOwner(effect);
+    const controller = EffectFn.getPlayerID(effect);
     if (controller != playerID) {
       throw new Error("you are not controller");
     }

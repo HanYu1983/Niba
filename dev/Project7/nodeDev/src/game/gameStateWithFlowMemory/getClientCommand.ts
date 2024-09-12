@@ -1,9 +1,6 @@
 import { log } from "../../tool/logger";
-import { getCardState } from "../gameState/CardStateComponent";
-import { GameState, getBlockOwner } from "../gameState/GameState";
 import { DEFAULT_GAME_STATE_WITH_FLOW_MEMORY, GameStateWithFlowMemory } from "./GameStateWithFlowMemory";
 import { SiYouTiming } from "../define/Timing";
-import { TextIDFns } from "../define/TextID";
 import { getTextsFromTokuSyuKouKa } from "../define/Text";
 import { PlayerA, PlayerID } from "../define/PlayerID";
 import { AbsoluteBaSyouOf } from "../define/BaSyou";

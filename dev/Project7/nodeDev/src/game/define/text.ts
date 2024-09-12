@@ -146,12 +146,12 @@ const testTexts: Text[] = [
     }
 ]
 
-export type GlobalEffectFn = (ctx: any, effect: Effect, evt: Situation | null) => GlobalEffect[];
+export type OnSituationFn = (ctx: any, effect: Effect, evt: Situation | null) => GlobalEffect[];
 
-export function getGlobalEffectFn(ctx: Text): GlobalEffectFn {
+export function getOnSituationFn(ctx: Text): OnSituationFn {
     if (ctx.onSituation == null) {
         return function (ctx) {
-            return ctx
+            return []
         }
     }
     return eval(ctx.onSituation + ";_")

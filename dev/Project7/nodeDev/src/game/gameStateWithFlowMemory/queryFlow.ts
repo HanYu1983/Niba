@@ -1,12 +1,11 @@
 import { iterateEffect } from "../gameState/EffectStackComponent";
-import { getBlockOwner } from "../gameState/GameState";
 import { Flow } from "./Flow";
 import { getActiveEffectID } from "./handleEffect";
 import { getClientCommand } from "./getClientCommand";
 import { GameStateWithFlowMemory } from "./GameStateWithFlowMemory";
 import { getOpponentPlayerID, PlayerA, PlayerB } from "../define/PlayerID";
 import { BattleAreaKeyword, getBaSyouID } from "../define/BaSyou";
-import { Effect } from "../define/Effect";
+import { Effect, EffectFn } from "../define/Effect";
 
 export function queryFlow(ctx: GameStateWithFlowMemory, playerID: string): Flow[] {
     if (true) {
@@ -38,7 +37,7 @@ export function queryFlow(ctx: GameStateWithFlowMemory, playerID: string): Flow[
 
         const enablePayCost = true;
         if (enablePayCost) {
-            const controller = getBlockOwner(currentActiveEffect);
+            const controller =  EffectFn.getPlayerID(currentActiveEffect);
             const isPass = !!ctx.flowMemory.hasPlayerPassPayCost[playerID];
             const isOpponentPass =
                 !!ctx.flowMemory.hasPlayerPassPayCost[
@@ -106,7 +105,7 @@ export function queryFlow(ctx: GameStateWithFlowMemory, playerID: string): Flow[
             ];
         }
 
-        const controller = getBlockOwner(currentActiveEffect);
+        const controller =  EffectFn.getPlayerID(currentActiveEffect);
         if (controller != playerID) {
             return [
                 {
@@ -136,7 +135,7 @@ export function queryFlow(ctx: GameStateWithFlowMemory, playerID: string): Flow[
         const myEffect: Effect[] = [];
         const opponentEffect: Effect[] = [];
         ctx.immediateEffect.forEach((effect) => {
-            const controller = getBlockOwner(effect);
+            const controller =  EffectFn.getPlayerID(effect);
             if (controller == playerID) {
                 myEffect.push(effect);
             } else {
@@ -250,7 +249,7 @@ export function queryFlow(ctx: GameStateWithFlowMemory, playerID: string): Flow[
             throw new Error("effect.id not found");
         }
         // 取得效果的控制者
-        const controller = getBlockOwner(effect);
+        const controller = EffectFn.getPlayerID(effect);
         // 判斷切入流程
         const isAllPassCut =
             !!ctx.flowMemory.hasPlayerPassCut[PlayerA] &&
