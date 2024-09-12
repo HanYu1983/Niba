@@ -1,8 +1,8 @@
 import { log } from "../../tool/logger";
 import { getOpponentPlayerID, PlayerA, PlayerB } from "../define/PlayerID";
 import { AbsoluteBaSyou, getBaSyouID } from "../define/BaSyou";
-import { addImmediateEffect, iterateEffect } from "../gameState/EffectStackComponent";
-import { triggerTextEvent, updateDestroyEffect, GameState, handleAttackDamage } from "../gameState/GameState";
+import { addImmediateEffect, addStackEffect, getEffect } from "../gameState/EffectStackComponent";
+import { triggerTextEvent, updateDestroyEffect, handleAttackDamage } from "../gameState/GameState";
 import { checkIsBattle } from "../gameState/IsBattleComponent";
 import { Flow } from "./Flow";
 import { GameStateWithFlowMemory, updateCommand } from "./GameStateWithFlowMemory";
@@ -450,7 +450,7 @@ export function applyFlow(
             return ctx;
         }
         case "FlowPassPayCost": {
-            const effect = iterateEffect(ctx).find((e) => e.id == flow.effectID);
+            const effect = getEffect(ctx, flow.effectID)
             if (effect == null) {
                 throw new Error(`effectID not found:${flow.effectID}`);
             }
@@ -469,19 +469,18 @@ export function applyFlow(
         }
         case "FlowMakeDestroyOrder": {
             const willAddedDestroyEffect = ctx.destroyEffect.filter((a) => {
-                return ctx.stackEffect.find((b) => a.id == b.id) == null;
+                return ctx.stackEffect.find((id) => a.id == id) == null;
             });
             if (flow.destroyEffect.length != willAddedDestroyEffect.length) {
                 throw new Error("長度不符合");
+            }
+            for(const effect of willAddedDestroyEffect){
+                ctx = addStackEffect(ctx, effect) as GameStateWithFlowMemory
             }
             return {
                 ...ctx,
                 // 移除破壞效果，全部移到堆疊
                 destroyEffect: [],
-                stackEffect: [
-                    ...willAddedDestroyEffect,
-                    ...ctx.stackEffect,
-                ],
                 // 重設切入旗標，讓玩家再次切入
                 flowMemory: {
                     ...ctx.flowMemory,

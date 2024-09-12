@@ -1,4 +1,4 @@
-import { iterateEffect } from "../gameState/EffectStackComponent";
+import { getEffect, getTopEffect } from "../gameState/EffectStackComponent";
 import { Flow } from "./Flow";
 import { getActiveEffectID } from "./handleEffect";
 import { getClientCommand } from "./getClientCommand";
@@ -28,16 +28,14 @@ export function queryFlow(ctx: GameStateWithFlowMemory, playerID: string): Flow[
     // 有玩家在支付卡片
     const activeEffectID = getActiveEffectID(ctx)
     if (activeEffectID != null) {
-        const currentActiveEffect = iterateEffect(ctx).find(
-            (e) => e.id == activeEffectID
-        );
+        const currentActiveEffect = getEffect(ctx, activeEffectID)
         if (currentActiveEffect == null) {
             throw new Error("activeEffectID not found");
         }
 
         const enablePayCost = true;
         if (enablePayCost) {
-            const controller =  EffectFn.getPlayerID(currentActiveEffect);
+            const controller = EffectFn.getPlayerID(currentActiveEffect);
             const isPass = !!ctx.flowMemory.hasPlayerPassPayCost[playerID];
             const isOpponentPass =
                 !!ctx.flowMemory.hasPlayerPassPayCost[
@@ -105,7 +103,7 @@ export function queryFlow(ctx: GameStateWithFlowMemory, playerID: string): Flow[
             ];
         }
 
-        const controller =  EffectFn.getPlayerID(currentActiveEffect);
+        const controller = EffectFn.getPlayerID(currentActiveEffect);
         if (controller != playerID) {
             return [
                 {
@@ -134,8 +132,9 @@ export function queryFlow(ctx: GameStateWithFlowMemory, playerID: string): Flow[
         const isActivePlayer = ctx.activePlayerID == playerID;
         const myEffect: Effect[] = [];
         const opponentEffect: Effect[] = [];
-        ctx.immediateEffect.forEach((effect) => {
-            const controller =  EffectFn.getPlayerID(effect);
+        ctx.immediateEffect.forEach((effectID) => {
+            const effect = getEffect(ctx, effectID) as Effect
+            const controller = EffectFn.getPlayerID(effect);
             if (controller == playerID) {
                 myEffect.push(effect);
             } else {
@@ -217,7 +216,7 @@ export function queryFlow(ctx: GameStateWithFlowMemory, playerID: string): Flow[
                 // 因為destroyEffect可以重復刷新，所以在加入到堆疊時，不能加入重復的
                 const willAddedDestroyEffect = ctx.destroyEffect.filter(
                     (a) => {
-                        return ctx.stackEffect.find((b) => a.id == b.id) == null;
+                        return ctx.stackEffect.find((id) => a.id == id) == null;
                     }
                 );
                 if (willAddedDestroyEffect.length) {
@@ -244,7 +243,11 @@ export function queryFlow(ctx: GameStateWithFlowMemory, playerID: string): Flow[
     // 處理堆疊效果，從最上方開始處理
     if (ctx.stackEffect.length) {
         // 取得最上方的效果
-        const effect = ctx.stackEffect[0];
+        const effect = getTopEffect(ctx);
+        if (effect == null) {
+            throw new Error("effect not found")
+        }
+        
         if (effect.id == null) {
             throw new Error("effect.id not found");
         }

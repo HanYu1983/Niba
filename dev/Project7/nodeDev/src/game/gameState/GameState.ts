@@ -8,7 +8,7 @@ import {
 import { CardStateComponent, getCardState, mapCardState } from "./CardStateComponent";
 import { IsBattleComponent } from "./IsBattleComponent";
 import { getSetGroupCards, getSetGroupRoot, SetGroupComponent } from "./SetGroupComponent";
-import { EffectStackComponent, iterateEffect } from "./EffectStackComponent";
+import { EffectStackComponent } from "./EffectStackComponent";
 import { getPreloadPrototype } from "../../script";
 import { log } from "../../tool/logger";
 import { Bridge } from "../../script/bridge";
@@ -73,10 +73,10 @@ export type GameEffectCustom = {
 
 export type GameEffect = GameEffectCustom;
 
-export type GameEffectState = {
-  id: string;
-  effect: GameEffect;
-};
+// export type GameEffectState = {
+//   id: string;
+//   effect: GameEffect;
+// };
 
 // export type Message = {
 //   id: "MessageCustom";
@@ -104,7 +104,6 @@ export type ActivePlayerComponent = {
 }
 
 export type GameState = {
-  effects: GameEffectState[];
   globalCardState: GlobalCardState[];
   stackEffectMemory: Effect[];
   // 專門給破壞效果用的用的堆疊
@@ -125,7 +124,7 @@ export type GameState = {
 
 export const DEFAULT_GAME_STATE: GameState = {
   cards: {},
-  effects: [],
+  effects: {},
   globalCardState: [],
   table: DEFAULT_TABLE,
   cardStates: {},

@@ -1,6 +1,6 @@
 import { log } from "../../tool/logger";
 import { EffectFn } from "../define/Effect";
-import { filterEffect, iterateEffect, reduceEffect } from "../gameState/EffectStackComponent";
+import { getEffect, isStackEffect, removeEffect } from "../gameState/EffectStackComponent";
 import { doBlockPayload } from "../gameState/GameState";
 import { GameStateWithFlowMemory } from "./GameStateWithFlowMemory";
 
@@ -13,9 +13,7 @@ export function setActiveEffectID(
     throw new Error("有人在執行其它指令");
   }
   if (ctx.activeEffectID != null) {
-    const currentActiveEffect = iterateEffect(ctx).find(
-      (e) => e.id == ctx.activeEffectID
-    );
+    const currentActiveEffect = getEffect(ctx, ctx.activeEffectID)
     if (currentActiveEffect != null) {
       const controller = EffectFn.getPlayerID(currentActiveEffect);
       if (controller != playerID) {
@@ -26,7 +24,7 @@ export function setActiveEffectID(
       }
     }
   }
-  const effect = iterateEffect(ctx).find((e) => e.id == effectID);
+  const effect = getEffect(ctx, effectID)
   if (effect == null) {
     throw new Error("effect not found");
   }
@@ -47,9 +45,7 @@ export function cancelActiveEffectID(
   if (ctx.activeEffectID == null) {
     throw new Error("[cancelEffectID] activeEffectID not exist");
   }
-  const effect = iterateEffect(ctx).find(
-    (e) => e.id == ctx.activeEffectID
-  );
+  const effect = getEffect(ctx, ctx.activeEffectID)
   if (effect == null) {
     return ctx;
   }
@@ -83,38 +79,28 @@ export function doEffect(ctx: GameStateWithFlowMemory, playerID: string, effectI
   if (getActiveEffectID(ctx) != effectID) {
     throw new Error("activeEffectID != effectID");
   }
-  // 暫存原本的效果, 用來發送當堆疊結束時的事件
-  const stackEffect = ctx.stackEffect.find((e) => e.id == effectID);
   // 處理事件
-  ctx = reduceEffect(
-    ctx,
-    (ctx, effect) => {
-      if (effect.id != effectID) {
-        return ctx;
-      }
-      return doBlockPayload(ctx, effect) as GameStateWithFlowMemory;
-    },
-    ctx
-  );
+  const effect = getEffect(ctx, effectID)
+  if (effect == null) {
+    throw new Error("effect not found")
+  }
+  const isStackEffect_ = isStackEffect(ctx, effectID)
+  ctx = doBlockPayload(ctx, effect) as GameStateWithFlowMemory;
   // 清除旗標，代表現在沒有正在支付的效果
   ctx = clearActiveEffectID(ctx) as GameStateWithFlowMemory;
-
   // 將效果移除
-  ctx = filterEffect(ctx, (effect) => {
-    return effect.requirePassed != true;
-  }) as GameStateWithFlowMemory;
+  ctx = removeEffect(ctx, effectID) as GameStateWithFlowMemory;
   // 如果是堆疊事件，將事件移到堆疊記憶去
-  const isStackEffect = stackEffect != null;
-  if (isStackEffect) {
+  if (isStackEffect_) {
     ctx = {
       ...ctx,
-      stackEffectMemory: [...ctx.stackEffectMemory, stackEffect],
+      stackEffectMemory: [...ctx.stackEffectMemory, effect],
     };
   }
   // 是否堆疊結束
   // 觸發切入解決事件，並清空堆疊記憶
   const isStackFinished =
-    isStackEffect && ctx.stackEffect.length == 0;
+    isStackEffect_ && ctx.stackEffect.length == 0;
   if (isStackFinished) {
     ctx = {
       ...ctx,
@@ -131,17 +117,16 @@ export function deleteImmediateEffect(
   ctx: GameStateWithFlowMemory,
   playerID: string,
   effectID: string): GameStateWithFlowMemory {
-  return filterEffect(ctx, (effect) => {
-    if (effect.id != effectID) {
-      return true;
-    }
-    const controller = EffectFn.getPlayerID(effect);
-    if (controller != playerID) {
-      throw new Error("you are not controller");
-    }
-    if (effect.isOption != true) {
-      throw new Error("isOption must true");
-    }
-    return false;
-  }) as GameStateWithFlowMemory;
+  const effect = getEffect(ctx, effectID)
+  if (effect == null) {
+    throw new Error("effect not found " + effectID)
+  }
+  const controller = EffectFn.getPlayerID(effect);
+  if (controller != playerID) {
+    throw new Error("you are not controller");
+  }
+  if (effect.isOption != true) {
+    throw new Error("isOption must true");
+  }
+  return removeEffect(ctx, effectID) as GameStateWithFlowMemory
 }
