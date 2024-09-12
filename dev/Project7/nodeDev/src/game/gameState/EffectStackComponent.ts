@@ -1,4 +1,4 @@
-import { dissoc } from "ramda";
+import { assoc, dissoc } from "ramda";
 import { Effect } from "../define/Effect";
 
 export type EffectStackComponent = {
@@ -46,6 +46,7 @@ export function addStackEffect(ctx: EffectStackComponent, block: Effect): Effect
   return {
     ...ctx,
     stackEffect: [block.id, ...ctx.stackEffect],
+    effects: assoc(block.id, block, ctx.effects),
   };
 }
 
@@ -53,5 +54,6 @@ export function addImmediateEffect(ctx: EffectStackComponent, block: Effect): Ef
   return {
     ...ctx,
     immediateEffect: [block.id, ...ctx.immediateEffect],
+    effects: assoc(block.id, block, ctx.effects),
   };
 }

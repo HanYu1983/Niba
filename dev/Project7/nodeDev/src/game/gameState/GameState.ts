@@ -19,10 +19,9 @@ import { AbsoluteBaSyou, BattleAreaKeyword, BaSyouKeyword, getBaSyouID } from ".
 import { CardPrototype, CardColor } from "../define/CardPrototype";
 import { GlobalEffect } from "../define/GlobalEffect";
 import { Timing, TIMING_CHART } from "../define/Timing";
-import { Effect, EffectFn } from "../define/Effect";
+import { DestroyReason, Effect, EffectFn } from "../define/Effect";
 import { Event } from "../define/Event";
 import { DEFAULT_TABLE } from "../../tool/table";
-import { GameStateWithFlowMemory } from "../gameStateWithFlowMemory/GameStateWithFlowMemory";
 import { BattlePoint, BattlePointFn } from "../define/BattlePoint";
 
 export type PlayerState = {
@@ -83,13 +82,7 @@ export type GameEffect = GameEffectCustom;
 //   value: string;
 // };
 
-export type DestroyReason1 = {
-  id: "通常ダメージ" | "戦闘ダメージ" | "破壊する" | "マイナスの戦闘修正";
-  // 誰造成的
-  playerID: string;
-};
 
-export type DestroyReason = DestroyReason1;
 
 export type TimingComponent = {
   timing: Timing;

@@ -1,15 +1,7 @@
-import { Effect } from "./Effect";
+import { DestroyReason, Effect } from "./Effect";
 import { BattleBonus } from "./Text";
 import { TextID } from "./TextID";
 import { Timing } from "./Timing";
-
-export type DestroyReason1 = {
-    id: "通常ダメージ" | "戦闘ダメージ" | "破壊する" | "マイナスの戦闘修正";
-    // 誰造成的
-    playerID: string;
-};
-
-export type DestroyReason = DestroyReason1
 
 export type EventTitle =
     | ["GameEventOnTiming", Timing]
