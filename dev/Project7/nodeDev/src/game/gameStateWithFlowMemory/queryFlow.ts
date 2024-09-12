@@ -473,7 +473,7 @@ export function queryFlow(ctx: GameStateWithFlowMemory, playerID: string): Flow[
                                     description: `${phase[0]}規定效果`,
                                     block: {
                                         id: "",
-                                        reason: ["GameRule"],
+                                        reason: ["GameRule", null],
                                         text: {
                                             title: []
                                         }
@@ -539,7 +539,7 @@ export function queryFlow(ctx: GameStateWithFlowMemory, playerID: string): Flow[
                                             responsePlayerID: playerID,
                                             block: {
                                                 id: "",
-                                                reason: ["GameRule"],
+                                                reason: ["GameRule", playerID],
                                                 text: {
                                                     title: [],
                                                     conditions: {

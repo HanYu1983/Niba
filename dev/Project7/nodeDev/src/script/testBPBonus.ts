@@ -6,11 +6,10 @@
 // 〔０〕：改装［ブルーフレーム系］
 // 『起動』：「特徴：アストレイ系」を持つ自軍ユニットが、「改装」の効果で場に出た場合、〔白２〕を支払う事ができる。その場合、５以下の防御力を持つ敵軍ユニット１枚を破壊する。（注：このカードが場に出た時にも起動する）
 import { CardPrototype, DEFAULT_CARD_PROTOTYPE } from "../game/define/CardPrototype";
+import { Effect } from "../game/define/Effect";
 import { GlobalEffect } from "../game/define/GlobalEffect";
 import { Situation } from "../game/define/Text";
-import { GameState } from "../game/gameState/GameState";
-import { GameStateWithFlowMemory } from "../game/gameStateWithFlowMemory/GameStateWithFlowMemory";
-import { Bridge, Runtime } from "./bridge";
+import { Bridge } from "./bridge";
 
 export const prototype: CardPrototype = {
   ...DEFAULT_CARD_PROTOTYPE,
@@ -25,8 +24,8 @@ export const prototype: CardPrototype = {
   texts: [
     {
       title: ["自動型", "恒常"],
-      onSituation: function _(ctx: GameStateWithFlowMemory, runtime: Runtime, situation: Situation, lib: Bridge): GlobalEffect[] {
-        const units = lib.getMyUnitIds(ctx, runtime.getPlayerID())
+      onSituation: function _(bridge: Bridge, effect: Effect, situation: Situation): GlobalEffect[] {
+        const units = bridge.getMyUnitIds(bridge.getEffectCardID(effect))
         return [
           {
             type: "AddText",

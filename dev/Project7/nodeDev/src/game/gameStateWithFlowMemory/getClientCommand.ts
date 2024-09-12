@@ -9,15 +9,14 @@ import { PlayerA, PlayerID } from "../define/PlayerID";
 import { AbsoluteBaSyouOf } from "../define/BaSyou";
 import { concatMap, filter, lastValueFrom, merge, of, toArray } from "rxjs";
 import { addCards, createCardWithProtoIds, getCard, getCardBaSyou, getCardIdsByBasyou } from "../gameState/CardTableComponent";
-import { Effect, EffectRuntime } from "../define/Effect";
+import { Effect } from "../define/Effect";
 import { Bridge } from "../../script/bridge";
 import { getPreloadPrototype } from "../../script";
 
 function getPlayCardEffect(ctx: GameStateWithFlowMemory, playerId: PlayerID, cardId: string): Effect {
     return {
         id: "",
-        reason: ["EffectReasonPlayCard", cardId],
-        playerID: playerId,
+        reason: ["PlayCard", playerId, cardId],
         text: {
             title: [],
             conditions: {
@@ -45,24 +44,23 @@ function getPlayCardEffect(ctx: GameStateWithFlowMemory, playerId: PlayerID, car
                             title: ["(このカード)を(リロール)する", ["abc"], "リロール"]
                         },
                         {
-                            title: function _(ctx: GameStateWithFlowMemory, runtime: EffectRuntime, lib: Bridge): GameStateWithFlowMemory {
-                                lib.cutIn(ctx, {
+                            title: function _(bridge: Bridge, effect: Effect) {
+                                bridge.cutIn({
                                     id: "",
-                                    reason: ["場に出る", runtime.getCardID()],
+                                    reason: ["場に出る", playerId, bridge.getEffectCardID(effect)],
                                     text: {
                                         title: [],
                                         logicTreeCommands: [
                                             {
                                                 actions: [
                                                     {
-                                                        title: ["(このカード)を(リロール)する", [runtime.getCardID()], "リロール"]
+                                                        title: ["(このカード)を(リロール)する", [bridge.getEffectCardID(effect)], "リロール"]
                                                     }
                                                 ]
                                             }
                                         ]
                                     }
                                 })
-                                return ctx
                             }.toString()
                         }
                     ]
@@ -202,7 +200,7 @@ export function getClientCommand(ctx: GameStateWithFlowMemory, playerId: PlayerI
             return textsInTime.map(text => {
                 return {
                     id: "",
-                    reason: ["場に出る", ""],
+                    reason: ["場に出る", playerId, ""],
                     text: text
                 } as Effect
             })

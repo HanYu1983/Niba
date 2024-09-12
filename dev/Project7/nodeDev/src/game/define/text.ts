@@ -2,6 +2,7 @@ import { RelatedPlayerSideKeyword } from ".";
 import { TLogicTree } from "../../tool/logicTree";
 import { BaSyouKeyword } from "./BaSyou";
 import { CardColor, CardCategory } from "./CardPrototype";
+import { Effect } from "./Effect";
 import { Event } from "./Event";
 import { GlobalEffect } from "./GlobalEffect";
 import { SiYouTiming } from "./Timing";
@@ -145,7 +146,7 @@ const testTexts: Text[] = [
     }
 ]
 
-export type GlobalEffectFn = (ctx: any, runtime: any, evt: Situation | null, bridge: any) => GlobalEffect[];
+export type GlobalEffectFn = (ctx: any, effect: Effect, evt: Situation | null) => GlobalEffect[];
 
 export function getGlobalEffectFn(ctx: Text): GlobalEffectFn {
     if (ctx.onSituation == null) {

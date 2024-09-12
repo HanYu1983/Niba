@@ -295,8 +295,7 @@ export function applyFlow(
             block = {
                 ...block,
                 id: `FlowAddBlock_${idSeq++}`,
-                reason: ["GameRule"],
-                playerID: flow.responsePlayerID,
+                reason: ["GameRule", flow.responsePlayerID],
                 description: flow.description || "",
                 //...(block.require ? { require: wrapRequireKey(block.require) } : null),
             };

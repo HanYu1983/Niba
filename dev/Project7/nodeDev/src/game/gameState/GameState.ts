@@ -11,15 +11,15 @@ import { getSetGroupCards, getSetGroupRoot, SetGroupComponent } from "./SetGroup
 import { EffectStackComponent, iterateEffect } from "./EffectStackComponent";
 import { getPreloadPrototype } from "../../script";
 import { log } from "../../tool/logger";
-import { Bridge, Runtime } from "../../script/bridge";
-import { ActionTitle, getGlobalEffectFn, Text, TextTokuSyuKouKa } from "../define/Text";
+import { Bridge } from "../../script/bridge";
+import { ActionTitle, getGlobalEffectFn, GlobalEffectFn, Text, TextTokuSyuKouKa } from "../define/Text";
 import { AttackSpeed } from "../define";
 import { getOpponentPlayerID, PlayerID } from "../define/PlayerID";
 import { AbsoluteBaSyou, BattleAreaKeyword, BaSyouKeyword, getBaSyouID } from "../define/BaSyou";
 import { CardPrototype, CardColor } from "../define/CardPrototype";
 import { GlobalEffect } from "../define/GlobalEffect";
 import { Timing, TIMING_CHART } from "../define/Timing";
-import { Effect, EffectRuntime } from "../define/Effect";
+import { Effect, EffectFn } from "../define/Effect";
 import { Event } from "../define/Event";
 import { DEFAULT_TABLE } from "../../tool/table";
 import { GameStateWithFlowMemory } from "../gameStateWithFlowMemory/GameStateWithFlowMemory";
@@ -196,35 +196,49 @@ export function getCardTitle(ctx: GameState, cardID: string): string {
   return prototype.title;
 }
 
+function createBridge(ctx: GameState, effect: Effect): Bridge {
+  const bridge: Bridge = {
+    getEffectCardID: function (effect: Effect): string {
+      return EffectFn.getCardID(effect)
+    },
+    getEffectPlayerID: function (effect: Effect): PlayerID {
+      return EffectFn.getPlayerID(effect)
+    },
+    getMyUnitIds: function (playerID: PlayerID): string[] {
+      return getCardIds(ctx);
+    },
+    getFunctionByAction: function (action: ActionTitle): (ctx: Bridge, effect: Effect) => Bridge {
+      throw new Error("Function not implemented.");
+    },
+    cutIn: function (effect: Effect): Bridge {
+      throw new Error("Function not implemented.");
+    }
+  }
+  return bridge
+}
+
 export function getGlobalEffects(ctx: GameState): GlobalEffect[] {
   return getCardIds(ctx).map(cardId => getCard(ctx, cardId)).flatMap(card => {
     if (card == null) {
       throw new Error("card not found")
     }
-    // TODO
-    const bridge: Bridge = {
-      getMyUnitIds(ctx: GameStateWithFlowMemory, playerID: string): string[] {
-        return getCardIds(ctx);
-      },
-      getFunctionByAction: function (action: ActionTitle): (ctx: GameStateWithFlowMemory, runtime: EffectRuntime) => GameStateWithFlowMemory {
-        throw new Error("Function not implemented.");
-      },
-      cutIn: function (ctx: GameStateWithFlowMemory, effect: Effect) {
-        throw new Error("Function not implemented.");
-      }
-    }
-    const runtime: Runtime = {
-      getPlayerID() {
-        return getCardController(ctx, card.id)
-      },
-      getCardID() {
-        return card.id
-      }
-    }
     const proto = getPreloadPrototype(card.protoID)
     const globalEffects = proto.texts.filter(text => text.title[0] == "自動型" && text.title[1] == "恒常")
-      .map(text => getGlobalEffectFn(text))
-      .flatMap(fn => fn(ctx, runtime, null, bridge))
+      .map((text, i) => {
+        const cardController = getCardController(ctx, card.id)
+        const fn = getGlobalEffectFn(text)
+        const effect: Effect = {
+          id: "",
+          reason: ["PlayText", cardController, ["origin", card.id, i]],
+          text: text
+        }
+        const ret: [GlobalEffectFn, Effect] = [fn, effect]
+        return ret
+      })
+      .flatMap(([fn, effect]) => {
+        const bridge = createBridge(ctx, effect)
+        return fn(bridge, effect, null)
+      })
     return globalEffects
   })
 }

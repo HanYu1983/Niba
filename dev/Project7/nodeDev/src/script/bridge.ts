@@ -1,15 +1,11 @@
-import { Effect, EffectRuntime } from "../game/define/Effect";
+import { Effect } from "../game/define/Effect";
 import { PlayerID } from "../game/define/PlayerID";
 import { Action, ActionTitle } from "../game/define/Text";
-import { GameStateWithFlowMemory } from "../game/gameStateWithFlowMemory/GameStateWithFlowMemory";
 
 export type Bridge = {
-    getMyUnitIds(ctx: GameStateWithFlowMemory, playerID: PlayerID): string[]
-    getFunctionByAction(action: ActionTitle): (ctx: any, runtime: EffectRuntime) => GameStateWithFlowMemory
-    cutIn(ctx: GameStateWithFlowMemory, effect: Effect)
-}
-
-export type Runtime = {
-    getCardID(): string;
-    getPlayerID(): PlayerID;
+    getEffectCardID(effect: Effect): string;
+    getEffectPlayerID(effect: Effect): PlayerID;
+    getMyUnitIds(playerID: PlayerID): string[]
+    getFunctionByAction(action: ActionTitle): (ctx: Bridge, effect: Effect) => Bridge
+    cutIn(effect: Effect): Bridge
 }

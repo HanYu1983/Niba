@@ -317,7 +317,7 @@ export async function testBattleBonus() {
       })
     );
     if (bta != 13) {
-      throw new Error("must be 10");
+      throw new Error("must be 13");
     }
   }
 }
