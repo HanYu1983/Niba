@@ -1,5 +1,5 @@
+import { dissoc } from "ramda";
 import { Effect } from "../define/Effect";
-import * as R from 'ramda'
 
 export type EffectStackComponent = {
   // 指令效果
@@ -12,11 +12,11 @@ export type EffectStackComponent = {
   effects: { [key: string]: Effect };
 }
 
-export function isStackEffect(ctx:EffectStackComponent, id:string):boolean{
+export function isStackEffect(ctx: EffectStackComponent, id: string): boolean {
   return ctx.stackEffect.includes(id);
 }
 
-export function isImmediateEffect(ctx:EffectStackComponent, id:string):boolean{
+export function isImmediateEffect(ctx: EffectStackComponent, id: string): boolean {
   return ctx.immediateEffect.includes(id);
 }
 
@@ -33,18 +33,13 @@ export function getEffect(ctx: EffectStackComponent, id: string): Effect | null 
 }
 
 export function removeEffect(ctx: EffectStackComponent, id: string): EffectStackComponent {
-  const updatedEffects: EffectStackComponent = {
+  return {
     ...ctx,
-    effects: {
-      ...ctx.effects
-    },
+    effects: dissoc(id, ctx.effects),
     stackEffect: ctx.stackEffect.filter(_id => _id != id),
     immediateEffect: ctx.immediateEffect.filter(_id => _id != id),
     commandEffect: ctx.commandEffect.filter(_id => _id != id),
-  };
-
-  delete updatedEffects.effects[id]
-  return updatedEffects
+  }
 }
 
 export function addStackEffect(ctx: EffectStackComponent, block: Effect): EffectStackComponent {
