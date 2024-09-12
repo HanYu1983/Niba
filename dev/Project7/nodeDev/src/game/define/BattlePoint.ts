@@ -1,16 +1,21 @@
 export type BattlePoint = ["*" | number, "*" | number, "*" | number];
 
-export function getSingleValue(v: "*" | number): number {
+function getValue(v: "*" | number): number {
     if (v == "*") {
         return 0
     }
     return v
 }
 
-export function addBattleBonus([x, y, z]: BattlePoint, [x2, y2, z2]: BattlePoint): BattlePoint {
+function add([x, y, z]: BattlePoint, [x2, y2, z2]: BattlePoint): BattlePoint {
     return [
-        getSingleValue(x) + getSingleValue(x2),
-        getSingleValue(y) + getSingleValue(y2),
-        getSingleValue(z) + getSingleValue(z2)
+        getValue(x) + getValue(x2),
+        getValue(y) + getValue(y2),
+        getValue(z) + getValue(z2)
     ]
+}
+
+export const BattlePointFn = {
+    add: add,
+    getValue: getValue,
 }

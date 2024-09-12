@@ -16,7 +16,6 @@ import { ActionTitle, getGlobalEffectFn, Text, TextTokuSyuKouKa } from "../defin
 import { AttackSpeed } from "../define";
 import { getOpponentPlayerID, PlayerID } from "../define/PlayerID";
 import { AbsoluteBaSyou, BattleAreaKeyword, BaSyouKeyword, getBaSyouID } from "../define/BaSyou";
-import { addBattleBonus, BattlePoint } from "../define/BattlePoint";
 import { CardPrototype, CardColor } from "../define/CardPrototype";
 import { GlobalEffect } from "../define/GlobalEffect";
 import { Timing, TIMING_CHART } from "../define/Timing";
@@ -24,6 +23,7 @@ import { Effect, EffectRuntime } from "../define/Effect";
 import { Event } from "../define/Event";
 import { DEFAULT_TABLE } from "../../tool/table";
 import { GameStateWithFlowMemory } from "../gameStateWithFlowMemory/GameStateWithFlowMemory";
+import { BattlePoint, BattlePointFn } from "../define/BattlePoint";
 
 export type PlayerState = {
   id: string;
@@ -289,7 +289,7 @@ export function getCardBattlePoint(
   //     return coin.battleBonus;
   //   });
   const retBonus = [...bonusFromGlobalEffects].reduce(
-    addBattleBonus,
+    BattlePointFn.add,
     prototype.battlePoint
   );
   return retBonus;
