@@ -5,7 +5,7 @@ import { getOpponentPlayerID, PlayerID } from "./PlayerID";
 export type BattleAreaKeyword = "宇宙エリア" | "地球エリア";
 
 // 場
-export type BaKeyword = "戦闘エリア（左）" | "戦闘エリア（右）" | "配備エリア";
+export type BaKeyword = "戦闘エリア1" | "戦闘エリア2" | "配備エリア";
 
 // 場所
 export type BaSyouKeyword =
@@ -21,8 +21,8 @@ export type BaSyouKeyword =
 
 export function isBa(k: BaSyouKeyword): boolean {
     switch (k) {
-        case "戦闘エリア（右）":
-        case "戦闘エリア（左）":
+        case "戦闘エリア2":
+        case "戦闘エリア1":
         case "配備エリア":
             return true;
         default:

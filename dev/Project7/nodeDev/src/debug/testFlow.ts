@@ -208,7 +208,7 @@ export async function testBattleBonus() {
   };
   ctx = addCards(
     ctx,
-    AbsoluteBaSyouFn.of(PlayerA, "戦闘エリア（左）"),
+    AbsoluteBaSyouFn.of(PlayerA, "戦闘エリア1"),
     [
       {
         id: "a1",
@@ -228,7 +228,7 @@ export async function testBattleBonus() {
   ) as GameStateWithFlowMemory
   ctx = addCards(
     ctx,
-    AbsoluteBaSyouFn.of(PlayerB, "戦闘エリア（左）"),
+    AbsoluteBaSyouFn.of(PlayerB, "戦闘エリア1"),
     [
       {
         id: "b1",
@@ -264,7 +264,7 @@ export async function testBattleBonus() {
       ctx,
       getBattleGroup(ctx, {
         id: "AbsoluteBaSyou",
-        value: [PlayerA, "戦闘エリア（左）"],
+        value: [PlayerA, "戦闘エリア1"],
       })
     );
     if (bta != 7) {
@@ -305,7 +305,7 @@ export async function testBattleBonus() {
       ctx,
       getBattleGroup(ctx, {
         id: "AbsoluteBaSyou",
-        value: [PlayerA, "戦闘エリア（左）"],
+        value: [PlayerA, "戦闘エリア1"],
       })
     );
     if (bta != 13) {

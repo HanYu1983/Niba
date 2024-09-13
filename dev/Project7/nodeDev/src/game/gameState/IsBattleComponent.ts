@@ -15,8 +15,8 @@ export type IsBattleComponent = {
 
 export function checkIsBattle(ctx: IsBattleComponent): IsBattleComponent {
   const battleAreas: AbsoluteBaSyou[] = [
-    AbsoluteBaSyouFn.of(PlayerA, "戦闘エリア（左）"),
-    AbsoluteBaSyouFn.of(PlayerA, "戦闘エリア（右）"),
+    AbsoluteBaSyouFn.of(PlayerA, "戦闘エリア1"),
+    AbsoluteBaSyouFn.of(PlayerA, "戦闘エリア2"),
   ];
   return battleAreas.reduce((ctx, battleArea) => {
     const baSyouID1 = AbsoluteBaSyouFn.toString(battleArea);

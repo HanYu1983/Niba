@@ -406,8 +406,8 @@ export function isCanReroll(
   switch (baSyouKW) {
     case "Gゾーン":
     case "配備エリア":
-    case "戦闘エリア（右）":
-    case "戦闘エリア（左）":
+    case "戦闘エリア2":
+    case "戦闘エリア1":
       break;
     default:
       return false;
@@ -424,8 +424,8 @@ export function isOpponentHasBattleGroup(
   const controller = getCardController(ctx, cardID);
   const opponentPlayerID = getOpponentPlayerID(controller);
   const battleAreas: AbsoluteBaSyou[] = [
-    AbsoluteBaSyouFn.of(opponentPlayerID, "戦闘エリア（右）"),
-    AbsoluteBaSyouFn.of(opponentPlayerID, "戦闘エリア（左）"),
+    AbsoluteBaSyouFn.of(opponentPlayerID, "戦闘エリア2"),
+    AbsoluteBaSyouFn.of(opponentPlayerID, "戦闘エリア1"),
   ];
   return (
     battleAreas.reduce((acc: string[], battleArea) => {

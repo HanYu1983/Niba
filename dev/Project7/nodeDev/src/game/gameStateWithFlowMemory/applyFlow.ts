@@ -329,14 +329,14 @@ export function applyFlow(
                 ctx,
                 attackPlayerID,
                 guardPlayerID,
-                "戦闘エリア（左）",
+                "戦闘エリア1",
                 1
             ) as GameStateWithFlowMemory;
             ctx = handleAttackDamage(
                 ctx,
                 attackPlayerID,
                 guardPlayerID,
-                "戦闘エリア（右）",
+                "戦闘エリア2",
                 1
             ) as GameStateWithFlowMemory;
             // 速度2
@@ -344,14 +344,14 @@ export function applyFlow(
                 ctx,
                 attackPlayerID,
                 guardPlayerID,
-                "戦闘エリア（左）",
+                "戦闘エリア1",
                 2
             ) as GameStateWithFlowMemory;
             ctx = handleAttackDamage(
                 ctx,
                 attackPlayerID,
                 guardPlayerID,
-                "戦闘エリア（右）",
+                "戦闘エリア2",
                 2
             ) as GameStateWithFlowMemory;
             // set hasTriggerEvent
@@ -372,8 +372,8 @@ export function applyFlow(
             // const cardsInBattleArea = iterateCard(ctx.table).filter(
             //   (card) => {
             //     switch (getCardBaSyou(ctx, card.id).value[1]) {
-            //       case "戦闘エリア（右）":
-            //       case "戦闘エリア（左）":
+            //       case "戦闘エリア2":
+            //       case "戦闘エリア1":
             //         return true;
             //       default:
             //         return false;

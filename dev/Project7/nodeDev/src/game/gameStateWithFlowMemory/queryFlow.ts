@@ -662,7 +662,7 @@ export function queryFlow(ctx: GameStateWithFlowMemory, playerID: string): Flow[
                                                 //           value: [
                                                 //             {
                                                 //               id: "AbsoluteBaSyou",
-                                                //               value: [playerID, "戦闘エリア（左）"],
+                                                //               value: [playerID, "戦闘エリア1"],
                                                 //             },
                                                 //           ],
                                                 //         },
@@ -675,7 +675,7 @@ export function queryFlow(ctx: GameStateWithFlowMemory, playerID: string): Flow[
                                                 //           value: [
                                                 //             {
                                                 //               id: "AbsoluteBaSyou",
-                                                //               value: [playerID, "戦闘エリア（右）"],
+                                                //               value: [playerID, "戦闘エリア2"],
                                                 //             },
                                                 //           ],
                                                 //         },

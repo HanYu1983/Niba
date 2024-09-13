@@ -261,11 +261,11 @@ export function initState(ctx: GameStateWithFlowMemory): GameStateWithFlowMemory
                 })]: [],
                 [AbsoluteBaSyouFn.toString({
                     id: "AbsoluteBaSyou",
-                    value: [PlayerA, "戦闘エリア（右）"],
+                    value: [PlayerA, "戦闘エリア2"],
                 })]: [],
                 [AbsoluteBaSyouFn.toString({
                     id: "AbsoluteBaSyou",
-                    value: [PlayerA, "戦闘エリア（左）"],
+                    value: [PlayerA, "戦闘エリア1"],
                 })]: [],
                 [AbsoluteBaSyouFn.toString({ id: "AbsoluteBaSyou", value: [PlayerA, "手札"] })]: [],
                 [AbsoluteBaSyouFn.toString({ id: "AbsoluteBaSyou", value: [PlayerA, "捨て山"] })]:
@@ -293,11 +293,11 @@ export function initState(ctx: GameStateWithFlowMemory): GameStateWithFlowMemory
                 })]: [],
                 [AbsoluteBaSyouFn.toString({
                     id: "AbsoluteBaSyou",
-                    value: [PlayerB, "戦闘エリア（右）"],
+                    value: [PlayerB, "戦闘エリア2"],
                 })]: [],
                 [AbsoluteBaSyouFn.toString({
                     id: "AbsoluteBaSyou",
-                    value: [PlayerB, "戦闘エリア（左）"],
+                    value: [PlayerB, "戦闘エリア1"],
                 })]: [],
                 [AbsoluteBaSyouFn.toString({ id: "AbsoluteBaSyou", value: [PlayerB, "手札"] })]: [],
                 [AbsoluteBaSyouFn.toString({ id: "AbsoluteBaSyou", value: [PlayerB, "捨て山"] })]:
