@@ -46,7 +46,7 @@ export function getCardIdsByBasyou(ctx: CardTableComponent, basyou: AbsoluteBaSy
 
 export function mapCard(ctx: CardTableComponent, f: (key: AbsoluteBaSyou, card: Card) => Card): CardTableComponent {
   return toPairs(ctx.table.cardStack).map(([k, cardIds]) => {
-    const basyou = AbsoluteBaSyouFn.of(k)
+    const basyou = AbsoluteBaSyouFn.fromString(k)
     const cards = cardIds.map(cardId => getCard(ctx, cardId))
     return [basyou, cards] as [AbsoluteBaSyou, Card[]]
   }).reduce((ctx, [basyou, cards]) => {
@@ -88,7 +88,7 @@ export function getCardBaSyou(
   if (cardPosition == null) {
     throw new Error("[getController] cardPosition not found");
   }
-  return AbsoluteBaSyouFn.of(cardPosition);
+  return AbsoluteBaSyouFn.fromString(cardPosition);
 }
 
 export function getCardController(ctx: CardTableComponent, cardID: string): PlayerID {
@@ -133,8 +133,5 @@ export function getAbsoluteBaSyou(
         return getOpponentPlayerID(getCardController(ctx, cardID));
     }
   })();
-  return {
-    id: "AbsoluteBaSyou",
-    value: [_playerID, baSyou.value[1]],
-  };
+  return AbsoluteBaSyouFn.of(_playerID, baSyou.value[1])
 }

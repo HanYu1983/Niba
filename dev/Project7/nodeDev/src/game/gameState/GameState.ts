@@ -136,14 +136,8 @@ export const DEFAULT_GAME_STATE: GameState = {
   chipPool: {},
 }
 
-export function getOpponentBattleArea(baSyou: AbsoluteBaSyou): AbsoluteBaSyou {
-  const {
-    value: [playerID, baSyouKW],
-  } = baSyou;
-  return {
-    id: "AbsoluteBaSyou",
-    value: [getOpponentPlayerID(playerID), baSyouKW],
-  };
+function getOpponentBattleArea(baSyou: AbsoluteBaSyou): AbsoluteBaSyou {
+  return AbsoluteBaSyouFn.setOpponentPlayerID(baSyou)
 }
 
 export function getCardCharacteristic(ctx: GameState, cardID: string) {
@@ -351,7 +345,7 @@ export function hasTokuSyouKouKa(
   a: TextTokuSyuKouKa,
   cardID: string
 ): boolean {
-  
+
   // pipe(
   //   always(getCard(ctx, cardID)),
   //   card=>getPreloadPrototype
@@ -430,8 +424,8 @@ export function isOpponentHasBattleGroup(
   const controller = getCardController(ctx, cardID);
   const opponentPlayerID = getOpponentPlayerID(controller);
   const battleAreas: AbsoluteBaSyou[] = [
-    { id: "AbsoluteBaSyou", value: [opponentPlayerID, "戦闘エリア（右）"] },
-    { id: "AbsoluteBaSyou", value: [opponentPlayerID, "戦闘エリア（左）"] },
+    AbsoluteBaSyouFn.of(opponentPlayerID, "戦闘エリア（右）"),
+    AbsoluteBaSyouFn.of(opponentPlayerID, "戦闘エリア（左）"),
   ];
   return (
     battleAreas.reduce((acc: string[], battleArea) => {
@@ -552,15 +546,9 @@ export function handleAttackDamage(
   where: BaSyouKeyword,
   speed: AttackSpeed
 ): GameState {
-  const attackUnits = getBattleGroup(ctx, {
-    id: "AbsoluteBaSyou",
-    value: [attackPlayerID, where],
-  });
+  const attackUnits = getBattleGroup(ctx, AbsoluteBaSyouFn.of(attackPlayerID, where));
   const attackPower = getBattleGroupBattlePoint(ctx, attackUnits);
-  const guardUnits = getBattleGroup(ctx, {
-    id: "AbsoluteBaSyou",
-    value: [guardPlayerID, where],
-  });
+  const guardUnits = getBattleGroup(ctx, AbsoluteBaSyouFn.of(guardPlayerID, where));
   const guardPower = getBattleGroupBattlePoint(ctx, guardUnits);
   const willTriggerEvent: Event[] = [];
   {
@@ -674,14 +662,8 @@ export function handleAttackDamage(
           // 本國傷害
           log("handleAttackDamage", "attack 本国", currentAttackPower);
           let table = ctx.table;
-          let fromCardStackID = AbsoluteBaSyouFn.toString({
-            id: "AbsoluteBaSyou",
-            value: [currentGuardPlayerID, "本国"],
-          });
-          let toCardStackID = AbsoluteBaSyouFn.toString({
-            id: "AbsoluteBaSyou",
-            value: [currentGuardPlayerID, "捨て山"],
-          });
+          let fromCardStackID = AbsoluteBaSyouFn.toString(AbsoluteBaSyouFn.of(currentGuardPlayerID, "本国"))
+          let toCardStackID = AbsoluteBaSyouFn.toString(AbsoluteBaSyouFn.of(currentGuardPlayerID, "捨て山"))
           table = {
             ...table,
             cardStack: {

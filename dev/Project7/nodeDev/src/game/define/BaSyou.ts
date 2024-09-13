@@ -1,5 +1,5 @@
 import { RelatedPlayerSideKeyword } from ".";
-import { PlayerID } from "./PlayerID";
+import { getOpponentPlayerID, PlayerID } from "./PlayerID";
 
 // basyou
 export type BattleAreaKeyword = "宇宙エリア" | "地球エリア";
@@ -35,23 +35,31 @@ export type AbsoluteBaSyou = {
     value: [PlayerID, BaSyouKeyword];
 };
 
-export function AbsoluteBaSyouOf(p: PlayerID, k: BaSyouKeyword): AbsoluteBaSyou {
-    return {
-        id: "AbsoluteBaSyou",
-        value: [p, k]
-    }
-}
-
 export const AbsoluteBaSyouFn = {
     toString(baSyou: AbsoluteBaSyou) {
         return JSON.stringify(baSyou.value);
     },
-    of(id: string): AbsoluteBaSyou {
+    fromString(id: string): AbsoluteBaSyou {
         return {
             id: "AbsoluteBaSyou",
             value: JSON.parse(id),
         };
-    }
+    },
+    of(p: PlayerID, k: BaSyouKeyword): AbsoluteBaSyou {
+        return {
+            id: "AbsoluteBaSyou",
+            value: [p, k]
+        }
+    },
+    setBaSyouKeyword(baSyou: AbsoluteBaSyou, kw: BaSyouKeyword): AbsoluteBaSyou {
+        return this.of(baSyou.value[0], kw);
+    },
+    setPlayerID(baSyou: AbsoluteBaSyou, p: PlayerID): AbsoluteBaSyou {
+        return this.of(p, baSyou.value[1]);
+    },
+    setOpponentPlayerID(baSyou: AbsoluteBaSyou): AbsoluteBaSyou {
+        return this.of(getOpponentPlayerID(baSyou.value[0]), baSyou.value[1]);
+    },
 }
 
 export type RelatedBaSyou = {

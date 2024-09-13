@@ -1,3 +1,4 @@
+import { AbsoluteBaSyouFn } from "../game/define/BaSyou";
 import { PlayerA, PlayerB } from "../game/define/PlayerID";
 import { getTimingSeq } from "../game/define/Timing";
 import { addCards, createCardWithProtoIds } from "../game/gameState/CardTableComponent";
@@ -59,10 +60,7 @@ export function testFlow2() {
   ctx = createCardWithProtoIds(
     ctx,
     PlayerA,
-    {
-      id: "AbsoluteBaSyou",
-      value: [PlayerA, "本国"],
-    },
+    AbsoluteBaSyouFn.of(PlayerA, "本国"),
     [
       "179016_04B_U_WT075C_white",
       "179030_11E_U_BL208S_blue",
@@ -210,10 +208,7 @@ export async function testBattleBonus() {
   };
   ctx = addCards(
     ctx,
-    {
-      id: "AbsoluteBaSyou",
-      value: [PlayerA, "戦闘エリア（左）"],
-    },
+    AbsoluteBaSyouFn.of(PlayerA, "戦闘エリア（左）"),
     [
       {
         id: "a1",
@@ -233,10 +228,7 @@ export async function testBattleBonus() {
   ) as GameStateWithFlowMemory
   ctx = addCards(
     ctx,
-    {
-      id: "AbsoluteBaSyou",
-      value: [PlayerB, "戦闘エリア（左）"],
-    },
+    AbsoluteBaSyouFn.of(PlayerB, "戦闘エリア（左）"),
     [
       {
         id: "b1",

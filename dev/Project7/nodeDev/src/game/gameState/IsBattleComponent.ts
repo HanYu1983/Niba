@@ -3,7 +3,7 @@ import {
   CardTableComponent,
 } from "./CardTableComponent"
 import { Table } from "../../tool/table";
-import { getOpponentBattleArea } from "./GameState";
+import { } from "./GameState";
 import { AbsoluteBaSyou, AbsoluteBaSyouFn } from "../define/BaSyou";
 import { PlayerA } from "../define/PlayerID";
 
@@ -15,12 +15,12 @@ export type IsBattleComponent = {
 
 export function checkIsBattle(ctx: IsBattleComponent): IsBattleComponent {
   const battleAreas: AbsoluteBaSyou[] = [
-    { id: "AbsoluteBaSyou", value: [PlayerA, "戦闘エリア（左）"] },
-    { id: "AbsoluteBaSyou", value: [PlayerA, "戦闘エリア（右）"] },
+    AbsoluteBaSyouFn.of(PlayerA, "戦闘エリア（左）"),
+    AbsoluteBaSyouFn.of(PlayerA, "戦闘エリア（右）"),
   ];
   return battleAreas.reduce((ctx, battleArea) => {
     const baSyouID1 = AbsoluteBaSyouFn.toString(battleArea);
-    const baSyouID2 = AbsoluteBaSyouFn.toString(getOpponentBattleArea(battleArea));
+    const baSyouID2 = AbsoluteBaSyouFn.toString(AbsoluteBaSyouFn.setOpponentPlayerID(battleArea));
     if (
       ctx.table.cardStack[baSyouID1]?.length &&
       ctx.table.cardStack[baSyouID2]?.length
@@ -55,7 +55,7 @@ export function isBattle(
     return false;
   }
   if (cardID2 != null) {
-    const baSyou2 = getOpponentBattleArea(baSyou1);
+    const baSyou2 = AbsoluteBaSyouFn.setOpponentPlayerID(baSyou1);
     const isFindCardID2 =
       ctx.table.cardStack[AbsoluteBaSyouFn.toString(baSyou2)].find((cardId) => {
         return cardId == cardID2;
