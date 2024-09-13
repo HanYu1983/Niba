@@ -1,7 +1,7 @@
 import { log } from "../../tool/logger";
 import { EffectFn } from "../define/Effect";
 import { getEffect, isStackEffect, removeEffect } from "../gameState/EffectStackComponent";
-import { doBlockPayload } from "../gameState/GameState";
+import { doEffect } from "../gameState/GameState";
 import { GameStateWithFlowMemory } from "./GameStateWithFlowMemory";
 
 export function setActiveEffectID(
@@ -73,7 +73,7 @@ export function clearActiveEffectID(ctx: GameStateWithFlowMemory): GameStateWith
   }
 }
 
-export function doEffect(ctx: GameStateWithFlowMemory, playerID: string, effectID: string): GameStateWithFlowMemory {
+export function doActiveEffect(ctx: GameStateWithFlowMemory, playerID: string, effectID: string): GameStateWithFlowMemory {
   log("doEffect", effectID);
   // 判斷這個效果是否正在支付，不然不應該執行
   if (getActiveEffectID(ctx) != effectID) {
@@ -85,7 +85,9 @@ export function doEffect(ctx: GameStateWithFlowMemory, playerID: string, effectI
     throw new Error("effect not found")
   }
   const isStackEffect_ = isStackEffect(ctx, effectID)
-  ctx = doBlockPayload(ctx, effect) as GameStateWithFlowMemory;
+  const logicId = 0
+  const conditionIds = []
+  ctx = doEffect(ctx, effect, logicId, conditionIds) as GameStateWithFlowMemory;
   // 清除旗標，代表現在沒有正在支付的效果
   ctx = clearActiveEffectID(ctx) as GameStateWithFlowMemory;
   // 將效果移除

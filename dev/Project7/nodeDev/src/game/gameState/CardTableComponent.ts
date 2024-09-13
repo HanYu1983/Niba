@@ -1,3 +1,4 @@
+import { assoc, mapObjIndexed, toPairs } from "ramda";
 import { Table, TableFns } from "../../tool/table";
 import { AbsoluteBaSyou, getBaSyou, getBaSyouID, BaSyou } from "../define/BaSyou";
 import { getOpponentPlayerID, PlayerID } from "../define/PlayerID";
@@ -43,8 +44,14 @@ export function getCardIdsByBasyou(ctx: CardTableComponent, basyou: AbsoluteBaSy
   return TableFns.getCardsByPosition(ctx.table, getBaSyouID(basyou))
 }
 
-export function mapCard(ctx: CardTableComponent, f: (Card) => Card): CardTableComponent {
-  return ctx;
+export function mapCard(ctx: CardTableComponent, f: (key: AbsoluteBaSyou, card: Card) => Card): CardTableComponent {
+  return toPairs(ctx.table.cardStack).map(([k, cardIds]) => {
+    const basyou = getBaSyou(k)
+    const cards = cardIds.map(cardId => getCard(ctx, cardId))
+    return [basyou, cards] as [AbsoluteBaSyou, Card[]]
+  }).reduce((ctx, [basyou, cards]) => {
+    return cards.map(card => f(basyou, card)).reduce((ctx, card) => assoc(card.id, card, ctx), ctx)
+  }, ctx)
 }
 
 export function createCardWithProtoIds(ctx: CardTableComponent, playerID: PlayerID, basyou: AbsoluteBaSyou, cardProtoIds: string[]): CardTableComponent {

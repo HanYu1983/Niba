@@ -316,8 +316,7 @@ export function initState(ctx: GameStateWithFlowMemory): GameStateWithFlowMemory
 }
 
 export function initCardFace(ctx: GameStateWithFlowMemory): GameStateWithFlowMemory {
-    return mapCard(ctx, (card) => {
-        const baSyou = getCardBaSyou(ctx, card.id);
+    return mapCard(ctx, (baSyou, card) => {
         switch (baSyou.value[1]) {
             case "本国":
             case "捨て山":

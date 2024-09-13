@@ -1,5 +1,6 @@
+import { zipObj } from "ramda";
 import { RelatedPlayerSideKeyword } from ".";
-import { TLogicTree } from "../../tool/logicTree";
+import { LogicTree, LogicTreeFn } from "../../tool/logicTree";
 import { BaSyouKeyword } from "./BaSyou";
 import { CardColor, CardCategory } from "./CardPrototype";
 import { Effect } from "./Effect";
@@ -34,6 +35,17 @@ export type Action = {
     title: ActionTitle,
 }
 
+export type ActionTitleFn = (ctx: any, effect: Effect) => any;
+
+export const ActionFn = {
+    getTitleFn(ctx: Action): ActionTitleFn {
+        if (typeof ctx.title != "string") {
+            throw new Error("action.title must be string")
+        }
+        return eval(ctx.title + ";_")
+    }
+}
+
 export type ConditionTitle =
     | string
     | ["(x)", number]
@@ -46,6 +58,25 @@ export type ConditionTitle =
 export type Condition = {
     title: ConditionTitle,
     actions?: Action[]
+}
+
+export type Tip = any;
+
+export type ConditionTitleFn = (ctx: any, effect: Effect) => Tip[];
+
+export const ConditionFn = {
+    getTitleFn(ctx: Condition) {
+        if (typeof ctx.title != "string") {
+            throw new Error("condition.title must be string")
+        }
+        return eval(ctx.title + ";_")
+    },
+    getActionTitleFns(ctx: Condition, genActionFn: (title: Action) => ActionTitleFn): ActionTitleFn[] {
+        if (ctx.actions == null) {
+            return []
+        }
+        return ctx.actions.map(genActionFn)
+    }
 }
 
 export type SituationTitle = ["「特徴：装弾」を持つ自軍コマンドの効果で自軍Gをロールする場合", string, RelatedPlayerSideKeyword, CardCategory, RelatedPlayerSideKeyword, CardCategory, "ロール"]
@@ -65,18 +96,54 @@ export type TextTitle =
     | TextBattleBonus
     | []
 
-export type LogicTreeCommand = {
-    logicTree?: TLogicTree
+export type LogicTreeAction = {
+    logicTree?: LogicTree
     actions: Action[]
+}
+
+export const LogicTreeActionFn = {
+    getActionTitleFns(ctx: LogicTreeAction, genActionFn: (title: Action) => ActionTitleFn): ActionTitleFn[] {
+        if (ctx.actions == null) {
+            return []
+        }
+        return ctx.actions.map(genActionFn)
+    }
 }
 
 export type Text = {
     title: TextTitle
     description?: string
     conditions?: { [key: string]: Condition }
-    logicTreeCommands?: LogicTreeCommand[]
+    logicTreeCommands?: LogicTreeAction[]
     onEvent?: string,
     onSituation?: string
+}
+
+export const TextFn = {
+    getCondition(ctx: Text, conditionId: string): Condition {
+        if (ctx.conditions?.[conditionId] == null) {
+            throw new Error(`condition not found: ${conditionId}`)
+        }
+        return ctx.conditions[conditionId]
+    },
+
+    getLogicTreeAction(ctx: Text, id: number): LogicTreeAction {
+        if (ctx.logicTreeCommands?.[id] == null) {
+            throw new Error(`logic not found: ${id}`)
+        }
+        return ctx.logicTreeCommands[id]
+    },
+
+    getLogicTreeActionConditions(ctx: Text, logicTreeCommand: LogicTreeAction): { [key: string]: Condition }[] {
+        if (logicTreeCommand.logicTree == null) {
+            return []
+        }
+        const conditionIdsList = LogicTreeFn.enumerateAll(logicTreeCommand.logicTree) as string[][]
+        return conditionIdsList.map(conditionIds => {
+            const conditions = conditionIds.map(conditionId => this.getCondition(ctx, conditionId))
+            return zipObj(conditionIds, conditions)
+        })
+    },
 }
 
 export function getTextsFromTokuSyuKouKa(value: TextTokuSyuKouKa): Text[] {

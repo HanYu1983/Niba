@@ -6,7 +6,7 @@ import { triggerTextEvent, updateDestroyEffect, handleAttackDamage } from "../ga
 import { checkIsBattle } from "../gameState/IsBattleComponent";
 import { Flow } from "./Flow";
 import { GameStateWithFlowMemory, updateCommand } from "./GameStateWithFlowMemory";
-import { setActiveEffectID, cancelActiveEffectID, doEffect, deleteImmediateEffect } from "./handleEffect";
+import { setActiveEffectID, cancelActiveEffectID, doActiveEffect, deleteImmediateEffect } from "./handleEffect";
 import { getNextTiming } from "../define/Timing";
 
 let idSeq = 0;
@@ -50,7 +50,7 @@ export function applyFlow(
             if (flow.effectID == null) {
                 throw new Error("effectID not found");
             }
-            ctx = doEffect(ctx, playerID, flow.effectID);
+            ctx = doActiveEffect(ctx, playerID, flow.effectID);
             // 執行完效果時自動取消其中一方的結束宣告
             ctx = {
                 ...ctx,

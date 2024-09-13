@@ -13,7 +13,7 @@ import { EffectStackComponent } from "./EffectStackComponent";
 import { getPreloadPrototype } from "../../script";
 import { log } from "../../tool/logger";
 import { Bridge } from "../../script/bridge";
-import { ActionTitle, getOnSituationFn, OnSituationFn, Situation, Text, TextTokuSyuKouKa } from "../define/Text";
+import { Action, ActionFn, ActionTitle, ActionTitleFn, Condition, ConditionFn, ConditionTitle, ConditionTitleFn, getOnSituationFn, LogicTreeActionFn, OnSituationFn, Situation, Text, TextFn, TextTokuSyuKouKa } from "../define/Text";
 import { AttackSpeed } from "../define";
 import { getOpponentPlayerID, PlayerA, PlayerID } from "../define/PlayerID";
 import { AbsoluteBaSyou, BattleAreaKeyword, BaSyouKeyword, getBaSyouID } from "../define/BaSyou";
@@ -24,6 +24,7 @@ import { DestroyReason, Effect, EffectFn } from "../define/Effect";
 import { Event } from "../define/Event";
 import { DEFAULT_TABLE } from "../../tool/table";
 import { BattlePoint, BattlePointFn } from "../define/BattlePoint";
+import { __, always, flatten, flow, map, pipe, reduce } from "ramda";
 
 export type PlayerState = {
   id: string;
@@ -40,7 +41,7 @@ export type CardTextState = {
 
 export type CardState = {
   id: string; // card.id
-  isChip: boolean;
+  //isChip: boolean;
   damage: number;
   destroyReason: DestroyReason | null;
   //setGroupID: string;
@@ -51,7 +52,7 @@ export type CardState = {
 
 export const DEFAULT_CARD_STATE: CardState = {
   id: "",
-  isChip: true,
+  //isChip: true,
   damage: 0,
   destroyReason: null,
   //setGroupID: "",
@@ -350,6 +351,12 @@ export function hasTokuSyouKouKa(
   a: TextTokuSyuKouKa,
   cardID: string
 ): boolean {
+  
+  // pipe(
+  //   always(getCard(ctx, cardID)),
+  //   card=>getPreloadPrototype
+  // )
+
   // const cs = getCardState(ctx, cardID);
   // const gcs = ctx.globalCardState.filter((cs) => {
   //   return cs.cardID == cardID;
@@ -479,17 +486,6 @@ export function isMaster(
 //   });
 // }
 
-export function getCardCardTextState(
-  ctx: GameState,
-  cardID: string
-): CardTextState[] {
-  // return getCardStateIterator(ctx)
-  //   .filter(([id, cts]) => {
-  //     return id == cardID;
-  //   })
-  //   .flatMap(([_, cts]) => cts);
-  return [];
-}
 
 export function getCardBattleArea(
   ctx: GameState,
@@ -503,11 +499,50 @@ export function getCardBattleArea(
   return prototype.battleArea;
 }
 
-export function doBlockPayload(
+function genActionTitleFn(action: Action): ActionTitleFn {
+  if (typeof action.title == "string") {
+    return ActionFn.getTitleFn(action)
+  }
+  return function (ctx: Bridge, effect: Effect) {
+    return ctx
+  }
+}
+
+export function doEffect(
   ctx: GameState,
-  blockPayload: Effect
+  effect: Effect,
+  logicId: number,
+  conditionIds: string[],
 ): GameState {
-  return ctx;
+  const conditions = conditionIds.map(id => TextFn.getCondition(effect.text, id))
+  const bridge = createBridge(ctx)
+  // conditions
+  //   .flatMap(condition => ConditionFn.getActionTitleFns(condition, genActionTitleFn))
+  //   .reduce((ctx, fn) => {
+  //     return fn(ctx, effect)
+  //   }, bridge)
+  // LogicTreeActionFn.getActionTitleFns(TextFn.getLogicTreeAction(effect.text, logicId), genActionTitleFn)
+  //   .reduce((ctx, fn) => {
+  //     return fn(ctx, effect)
+  //   }, bridge)
+
+  const processCondition = pipe(
+    always(conditions),
+    map(condition => ConditionFn.getActionTitleFns(condition, genActionTitleFn)),
+    flatten,
+    reduce((ctx, fn) => fn(ctx, effect), bridge)
+  )
+
+  const processLogicAction = pipe(
+    always(TextFn.getLogicTreeAction(effect.text, logicId)),
+    lta => LogicTreeActionFn.getActionTitleFns(lta, genActionTitleFn),
+    reduce((ctx, fn) => fn(ctx, effect), bridge)
+  )
+
+  processCondition()
+  processLogicAction()
+
+  return bridge.ctx;
 }
 
 export function handleAttackDamage(

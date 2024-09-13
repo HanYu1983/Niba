@@ -1,22 +1,22 @@
-export type TLogicTree = {
+export type LogicTree = {
     type: 'And' | 'Or' | 'Leaf';
     value?: string;
-    children?: TLogicTree[];
+    children?: LogicTree[];
 };
 
-function or(tree: TLogicTree): boolean {
+function or(tree: LogicTree): boolean {
     return tree.type === 'Or';
 }
 
-function and(tree: TLogicTree): boolean {
+function and(tree: LogicTree): boolean {
     return tree.type === 'And';
 }
 
-function leaf(tree: TLogicTree): boolean {
+function leaf(tree: LogicTree): boolean {
     return tree.type === 'Leaf';
 }
 
-function children(tree: TLogicTree): TLogicTree[] {
+function children(tree: LogicTree): LogicTree[] {
     return tree.children || [];
 }
 
@@ -24,7 +24,7 @@ function crossProduct(a: any[], b: any[]): any[] {
     return a.flatMap(x => b.map(y => [].concat(x, y)));
 }
 
-function enumerateAll(tree: TLogicTree): any[] {
+function enumerateAll(tree: LogicTree): any[] {
     if (!tree) return [];
     if (or(tree)) return children(tree).flatMap(enumerateAll);
     if (and(tree)) return children(tree).map(enumerateAll).reduce(crossProduct, [[]]);
@@ -32,12 +32,12 @@ function enumerateAll(tree: TLogicTree): any[] {
     throw new Error(`Unknown tree structure ${tree}`);
 }
 
-function has(tree: TLogicTree, keys: string[]): boolean {
+function has(tree: LogicTree, keys: string[]): boolean {
     return enumerateAll(tree).some(set => keys.length === set.length && keys.every(key => set.includes(key)));
 }
 
 function testEnumerateAll() {
-    const tree1: TLogicTree = {
+    const tree1: LogicTree = {
         type: 'And',
         children: [
             { type: 'Leaf', value: 'action-1' },
@@ -79,7 +79,7 @@ function testEnumerateAll() {
         ]
     };
 
-    const tree2: TLogicTree = {
+    const tree2: LogicTree = {
         type: 'And',
         children: [
             { type: 'Leaf', value: '5' },
@@ -100,7 +100,7 @@ function testEnumerateAll() {
         ]
     };
 
-    const tree3: TLogicTree = {
+    const tree3: LogicTree = {
         type: 'And',
         children: [
             { type: 'Leaf', value: '5' },
@@ -231,7 +231,7 @@ function tests() {
     testEnumerateAll();
 }
 
-export default {
+export const LogicTreeFn = {
     or,
     and,
     leaf,
