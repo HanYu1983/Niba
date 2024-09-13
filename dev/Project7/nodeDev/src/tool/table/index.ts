@@ -3,16 +3,17 @@ export type Table = {
 }
 
 function addCard(table: Table, position: string, cardId: string): Table {
-    if (!table.cardStack[position]) {
-        table.cardStack[position] = [cardId];
-    } else {
-        table.cardStack[position].push(cardId);
+    return {
+        ...table,
+        cardStack: {
+            ...table.cardStack,
+            [position]: [...(table.cardStack[position] || []), cardId]
+        }
     }
-    return table;
 }
 
 function getCardsByPosition(table: Table, position: string): string[] {
-    if(table.cardStack[position] == null){
+    if (table.cardStack[position] == null) {
         throw new Error(`table.cardStack[${position}] not found`)
     }
     return table.cardStack[position]

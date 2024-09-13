@@ -1,5 +1,6 @@
+import { lift } from "ramda";
 import { RelatedPlayerSideKeyword } from ".";
-import { getOpponentPlayerID, PlayerID } from "./PlayerID";
+import { getOpponentPlayerID, PlayerA, PlayerB, PlayerID, PlayerIDFn } from "./PlayerID";
 
 // basyou
 export type BattleAreaKeyword = "宇宙エリア" | "地球エリア";
@@ -29,6 +30,8 @@ export function isBa(k: BaSyouKeyword): boolean {
             return false;
     }
 }
+
+export const ALL_BASYOU_KEYWORD: BaSyouKeyword[] = ["本国", "捨て山", "Gゾーン", "ジャンクヤード", "手札", "ハンガー", "取り除かれたカード"]
 
 export type AbsoluteBaSyou = {
     id: "AbsoluteBaSyou";
@@ -60,6 +63,9 @@ export const AbsoluteBaSyouFn = {
     setOpponentPlayerID(baSyou: AbsoluteBaSyou): AbsoluteBaSyou {
         return this.of(getOpponentPlayerID(baSyou.value[0]), baSyou.value[1]);
     },
+    getAll(): AbsoluteBaSyou[] {
+        return lift(this.of)(PlayerIDFn.ALL, ALL_BASYOU_KEYWORD)
+    }
 }
 
 export type RelatedBaSyou = {

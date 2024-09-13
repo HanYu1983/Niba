@@ -152,10 +152,7 @@ export function applyFlow(
                         case "prepareDeck": {
                             {
                                 const plyrID = PlayerA;
-                                const baSyou: AbsoluteBaSyou = {
-                                    id: "AbsoluteBaSyou",
-                                    value: [plyrID, "本国"],
-                                };
+                                const baSyou: AbsoluteBaSyou = AbsoluteBaSyouFn.of(plyrID, "本国")
                                 const fromCS =
                                     ctx.table.cardStack[AbsoluteBaSyouFn.toString(baSyou)];
                                 ctx = {
@@ -173,10 +170,7 @@ export function applyFlow(
                             }
                             {
                                 const plyrID = PlayerB;
-                                const baSyou: AbsoluteBaSyou = {
-                                    id: "AbsoluteBaSyou",
-                                    value: [plyrID, "本国"],
-                                };
+                                const baSyou: AbsoluteBaSyou = AbsoluteBaSyouFn.of(plyrID, "本国")
                                 const fromCS =
                                     ctx.table.cardStack[AbsoluteBaSyouFn.toString(baSyou)];
                                 ctx = {

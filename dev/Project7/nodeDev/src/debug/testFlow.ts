@@ -262,10 +262,7 @@ export async function testBattleBonus() {
   {
     const bta = getBattleGroupBattlePoint(
       ctx,
-      getBattleGroup(ctx, {
-        id: "AbsoluteBaSyou",
-        value: [PlayerA, "戦闘エリア1"],
-      })
+      getBattleGroup(ctx, AbsoluteBaSyouFn.of(PlayerA, "戦闘エリア1"))
     );
     if (bta != 7) {
       throw new Error("must be 7");
@@ -274,10 +271,7 @@ export async function testBattleBonus() {
   console.log("給a1獲得+3/+3/+3");
   ctx = addCards(
     ctx,
-    {
-      id: "AbsoluteBaSyou",
-      value: [PlayerA, "配備エリア"],
-    },
+    AbsoluteBaSyouFn.of(PlayerA, "配備エリア"),
     [
       {
         id: "a3",
@@ -303,10 +297,7 @@ export async function testBattleBonus() {
   {
     const bta = getBattleGroupBattlePoint(
       ctx,
-      getBattleGroup(ctx, {
-        id: "AbsoluteBaSyou",
-        value: [PlayerA, "戦闘エリア1"],
-      })
+      getBattleGroup(ctx, AbsoluteBaSyouFn.of(PlayerA, "戦闘エリア1"))
     );
     if (bta != 13) {
       throw new Error("must be 13");

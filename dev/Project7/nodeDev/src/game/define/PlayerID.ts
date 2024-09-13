@@ -5,3 +5,7 @@ export const PlayerB = "PlayerB";
 export function getOpponentPlayerID(playerID: PlayerID): PlayerID {
     return playerID == PlayerA ? PlayerB : PlayerA;
 }
+
+export const PlayerIDFn = {
+    ALL: [PlayerA, PlayerB]
+}

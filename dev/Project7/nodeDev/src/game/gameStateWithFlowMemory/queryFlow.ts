@@ -12,7 +12,7 @@ export function queryFlow(ctx: GameStateWithFlowMemory, playerID: string): Flow[
         const hasSomeoneLiveIsZero =
             [PlayerA, PlayerB]
                 .map((pid) => {
-                    return AbsoluteBaSyouFn.toString({ id: "AbsoluteBaSyou", value: [pid, "本国"] });
+                    return AbsoluteBaSyouFn.toString(AbsoluteBaSyouFn.of(pid, "本国"));
                 })
                 .map((baSyouID) => {
                     return ctx.table.cardStack[baSyouID] || [];
@@ -247,7 +247,7 @@ export function queryFlow(ctx: GameStateWithFlowMemory, playerID: string): Flow[
         if (effect == null) {
             throw new Error("effect not found")
         }
-        
+
         if (effect.id == null) {
             throw new Error("effect.id not found");
         }
