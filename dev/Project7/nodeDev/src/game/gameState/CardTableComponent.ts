@@ -1,6 +1,6 @@
 import { assoc, mapObjIndexed, toPairs } from "ramda";
 import { Table, TableFns } from "../../tool/table";
-import { AbsoluteBaSyou, getBaSyou, getBaSyouID, BaSyou } from "../define/BaSyou";
+import { AbsoluteBaSyou, BaSyou, AbsoluteBaSyouFn } from "../define/BaSyou";
 import { getOpponentPlayerID, PlayerID } from "../define/PlayerID";
 
 // card
@@ -41,12 +41,12 @@ export function getCards(ctx: CardTableComponent): Card[] {
 }
 
 export function getCardIdsByBasyou(ctx: CardTableComponent, basyou: AbsoluteBaSyou): string[] {
-  return TableFns.getCardsByPosition(ctx.table, getBaSyouID(basyou))
+  return TableFns.getCardsByPosition(ctx.table, AbsoluteBaSyouFn.toString(basyou))
 }
 
 export function mapCard(ctx: CardTableComponent, f: (key: AbsoluteBaSyou, card: Card) => Card): CardTableComponent {
   return toPairs(ctx.table.cardStack).map(([k, cardIds]) => {
-    const basyou = getBaSyou(k)
+    const basyou = AbsoluteBaSyouFn.of(k)
     const cards = cardIds.map(cardId => getCard(ctx, cardId))
     return [basyou, cards] as [AbsoluteBaSyou, Card[]]
   }).reduce((ctx, [basyou, cards]) => {
@@ -67,7 +67,7 @@ export function createCardWithProtoIds(ctx: CardTableComponent, playerID: Player
 
 export function addCards(ctx: CardTableComponent, basyou: AbsoluteBaSyou, addedCards: Card[]): CardTableComponent {
   ctx = addedCards.reduce((ctx, newCard) => {
-    const table = TableFns.addCard(ctx.table, getBaSyouID(basyou), newCard.id)
+    const table = TableFns.addCard(ctx.table, AbsoluteBaSyouFn.toString(basyou), newCard.id)
     return {
       ...ctx,
       table: table,
@@ -88,7 +88,7 @@ export function getCardBaSyou(
   if (cardPosition == null) {
     throw new Error("[getController] cardPosition not found");
   }
-  return getBaSyou(cardPosition);
+  return AbsoluteBaSyouFn.of(cardPosition);
 }
 
 export function getCardController(ctx: CardTableComponent, cardID: string): PlayerID {

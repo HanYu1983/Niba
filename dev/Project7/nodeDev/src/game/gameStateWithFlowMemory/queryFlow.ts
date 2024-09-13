@@ -4,7 +4,7 @@ import { getActiveEffectID } from "./handleEffect";
 import { getClientCommand } from "./getClientCommand";
 import { GameStateWithFlowMemory } from "./GameStateWithFlowMemory";
 import { getOpponentPlayerID, PlayerA, PlayerB } from "../define/PlayerID";
-import { BattleAreaKeyword, getBaSyouID } from "../define/BaSyou";
+import { AbsoluteBaSyouFn, BattleAreaKeyword } from "../define/BaSyou";
 import { Effect, EffectFn } from "../define/Effect";
 
 export function queryFlow(ctx: GameStateWithFlowMemory, playerID: string): Flow[] {
@@ -12,7 +12,7 @@ export function queryFlow(ctx: GameStateWithFlowMemory, playerID: string): Flow[
         const hasSomeoneLiveIsZero =
             [PlayerA, PlayerB]
                 .map((pid) => {
-                    return getBaSyouID({ id: "AbsoluteBaSyou", value: [pid, "本国"] });
+                    return AbsoluteBaSyouFn.toString({ id: "AbsoluteBaSyou", value: [pid, "本国"] });
                 })
                 .map((baSyouID) => {
                     return ctx.table.cardStack[baSyouID] || [];

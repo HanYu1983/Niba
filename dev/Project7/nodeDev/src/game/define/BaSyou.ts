@@ -42,20 +42,21 @@ export function AbsoluteBaSyouOf(p: PlayerID, k: BaSyouKeyword): AbsoluteBaSyou 
     }
 }
 
+export const AbsoluteBaSyouFn = {
+    toString(baSyou: AbsoluteBaSyou) {
+        return JSON.stringify(baSyou.value);
+    },
+    of(id: string): AbsoluteBaSyou {
+        return {
+            id: "AbsoluteBaSyou",
+            value: JSON.parse(id),
+        };
+    }
+}
+
 export type RelatedBaSyou = {
     id: "RelatedBaSyou";
     value: [RelatedPlayerSideKeyword | "持ち主", BaSyouKeyword];
 };
 
 export type BaSyou = AbsoluteBaSyou | RelatedBaSyou;
-
-export function getBaSyouID(baSyou: AbsoluteBaSyou) {
-    return JSON.stringify(baSyou.value);
-}
-
-export function getBaSyou(id: string): AbsoluteBaSyou {
-    return {
-        id: "AbsoluteBaSyou",
-        value: JSON.parse(id),
-    };
-}

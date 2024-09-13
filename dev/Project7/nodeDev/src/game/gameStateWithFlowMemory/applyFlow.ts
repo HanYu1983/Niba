@@ -1,6 +1,6 @@
 import { log } from "../../tool/logger";
 import { getOpponentPlayerID, PlayerA, PlayerB } from "../define/PlayerID";
-import { AbsoluteBaSyou, getBaSyouID } from "../define/BaSyou";
+import { AbsoluteBaSyou, AbsoluteBaSyouFn } from "../define/BaSyou";
 import { addImmediateEffect, addStackEffect, getEffect } from "../gameState/EffectStackComponent";
 import { triggerTextEvent, updateDestroyEffect, handleAttackDamage } from "../gameState/GameState";
 import { checkIsBattle } from "../gameState/IsBattleComponent";
@@ -157,14 +157,14 @@ export function applyFlow(
                                     value: [plyrID, "本国"],
                                 };
                                 const fromCS =
-                                    ctx.table.cardStack[getBaSyouID(baSyou)];
+                                    ctx.table.cardStack[AbsoluteBaSyouFn.toString(baSyou)];
                                 ctx = {
                                     ...ctx,
                                     table: {
                                         ...ctx.table,
                                         cardStack: {
                                             ...ctx.table.cardStack,
-                                            [getBaSyouID(baSyou)]: fromCS.sort(
+                                            [AbsoluteBaSyouFn.toString(baSyou)]: fromCS.sort(
                                                 () => Math.random() - 0.5
                                             ),
                                         },
@@ -178,14 +178,14 @@ export function applyFlow(
                                     value: [plyrID, "本国"],
                                 };
                                 const fromCS =
-                                    ctx.table.cardStack[getBaSyouID(baSyou)];
+                                    ctx.table.cardStack[AbsoluteBaSyouFn.toString(baSyou)];
                                 ctx = {
                                     ...ctx,
                                     table: {
                                         ...ctx.table,
                                         cardStack: {
                                             ...ctx.table.cardStack,
-                                            [getBaSyouID(baSyou)]: fromCS.sort(
+                                            [AbsoluteBaSyouFn.toString(baSyou)]: fromCS.sort(
                                                 () => Math.random() - 0.5
                                             ),
                                         },

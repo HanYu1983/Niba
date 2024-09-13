@@ -16,7 +16,7 @@ import { Bridge } from "../../script/bridge";
 import { Action, ActionFn, ActionTitle, ActionTitleFn, Condition, ConditionFn, ConditionTitle, ConditionTitleFn, getOnSituationFn, LogicTreeActionFn, OnSituationFn, Situation, Text, TextFn, TextTokuSyuKouKa } from "../define/Text";
 import { AttackSpeed } from "../define";
 import { getOpponentPlayerID, PlayerA, PlayerID } from "../define/PlayerID";
-import { AbsoluteBaSyou, BattleAreaKeyword, BaSyouKeyword, getBaSyouID } from "../define/BaSyou";
+import { AbsoluteBaSyou, BattleAreaKeyword, BaSyouKeyword, AbsoluteBaSyouFn } from "../define/BaSyou";
 import { CardPrototype, CardColor } from "../define/CardPrototype";
 import { GlobalEffect } from "../define/GlobalEffect";
 import { Timing, TIMING_CHART } from "../define/Timing";
@@ -296,7 +296,7 @@ export function getBattleGroup(
   baSyou: AbsoluteBaSyou
 ): string[] {
   return (
-    ctx.table.cardStack[getBaSyouID(baSyou)]
+    ctx.table.cardStack[AbsoluteBaSyouFn.toString(baSyou)]
       ?.filter((cardId) => {
         return getSetGroupRoot(ctx, cardId) == null;
       })
@@ -435,7 +435,7 @@ export function isOpponentHasBattleGroup(
   ];
   return (
     battleAreas.reduce((acc: string[], battleArea) => {
-      return acc.concat(ctx.table.cardStack[getBaSyouID(battleArea)] || []);
+      return acc.concat(ctx.table.cardStack[AbsoluteBaSyouFn.toString(battleArea)] || []);
     }, []).length != 0
   );
 }
@@ -674,11 +674,11 @@ export function handleAttackDamage(
           // 本國傷害
           log("handleAttackDamage", "attack 本国", currentAttackPower);
           let table = ctx.table;
-          let fromCardStackID = getBaSyouID({
+          let fromCardStackID = AbsoluteBaSyouFn.toString({
             id: "AbsoluteBaSyou",
             value: [currentGuardPlayerID, "本国"],
           });
-          let toCardStackID = getBaSyouID({
+          let toCardStackID = AbsoluteBaSyouFn.toString({
             id: "AbsoluteBaSyou",
             value: [currentGuardPlayerID, "捨て山"],
           });
