@@ -3,13 +3,13 @@ import {
   CardTableComponent,
   getCardIds,
 } from "./CardTableComponent"
-import { CardState, CardStateComponent, CardStateFn, getCardState, mapCardState } from "./CardStateComponent";
+import { CardState, CardStateComponent, CardStateFn, getCardState, getCardStateValues, mapCardState, setCardState } from "./CardStateComponent";
 import { IsBattleComponent } from "./IsBattleComponent";
 import { getSetGroupCards, getSetGroupRoot, SetGroupComponent } from "./SetGroupComponent";
-import { EffectStackComponent } from "./EffectStackComponent";
+import { addDestroyEffect, addImmediateEffect, EffectStackComponent } from "./EffectStackComponent";
 import { getPrototype } from "../../script";
 import { log } from "../../tool/logger";
-import { Action, ActionFn, ActionTitle, ActionTitleFn, Condition, ConditionFn, ConditionTitle, ConditionTitleFn, getOnSituationFn, LogicTreeActionFn, OnSituationFn, Situation, Text, TextFn, TextTokuSyuKouKa } from "../define/Text";
+import { Action, ActionFn, ActionTitle, ActionTitleFn, BattleBonus, Condition, ConditionFn, ConditionTitle, ConditionTitleFn, getOnSituationFn, LogicTreeActionFn, OnSituationFn, Situation, Text, TextFn, TextSpeicalEffect, TextSpeicalEffectFn } from "../define/Text";
 import { AttackSpeed } from "../define";
 import { getOpponentPlayerID, PlayerA, PlayerID } from "../define/PlayerID";
 import { AbsoluteBaSyou, BattleAreaKeyword, BaSyouKeyword, AbsoluteBaSyouFn } from "../define/BaSyou";
@@ -19,14 +19,15 @@ import { Timing, TIMING_CHART } from "../define/Timing";
 import { DestroyReason, Effect, EffectFn } from "../define/Effect";
 import { Event } from "../define/Event";
 import { DEFAULT_TABLE } from "../../tool/table";
-import { BattlePoint, BattlePointFn } from "../define/BattlePoint";
-import { __, always, flatten, flow, map, pipe, reduce, sum } from "ramda";
+import { BattlePoint, BattlePointFn, DEFAULT_BATTLE_POINT } from "../define/BattlePoint";
+import { __, always, filter, flatten, flow, map, pipe, reduce, sum } from "ramda";
 import { createBridge } from "../bridge/createBridge";
-import { CoinTableComponent } from "./CoinTableComponent";
+import { CoinTableComponent, getCardIdByCoinId, getCoins } from "./CoinTableComponent";
 import { getItemBaSyou, getItemController, getItemIdsByBasyou, getItemPrototype, ItemTableComponent } from "./ItemTableComponent";
 import { Tip } from "../define/Tip";
 import { Bridge } from "../../script/bridge";
 import { Card } from "../define/Card";
+import { ToolFn } from "../tool";
 
 export type PlayerState = {
   id: string;
@@ -79,16 +80,9 @@ export type ActivePlayerComponent = {
   activePlayerID: string | null;
 }
 
+
 export type GameState = {
-  globalCardState: GlobalCardState[];
-  stackEffectMemory: Effect[];
-  // 專門給破壞效果用的用的堆疊
-  // 傷害判定結束時，將所有破壞產生的廢棄效果丟到這，重設「決定解決順序」的旗標為真
-  // 如果這個堆疊一有值時並「決定解決順序」為真時，就立刻讓主動玩家決定解決順序，決定完後，將旗標設為假
-  // 旗標為假時，才能才能開放給玩家切入
-  // 這個堆疊解決完後，才回復到本來的堆疊的解決程序
-  destroyEffect: Effect[];
-  chipPool: { [key: string]: CardPrototype };
+  globalEffectPool: { [key: string]: GlobalEffect[] }
 } & SetGroupComponent
   & IsBattleComponent
   & CardTableComponent
@@ -103,7 +97,6 @@ export type GameState = {
 export const DEFAULT_GAME_STATE: GameState = {
   cards: {},
   effects: {},
-  globalCardState: [],
   table: DEFAULT_TABLE,
   chips: {},
   chipProtos: {},
@@ -114,13 +107,70 @@ export const DEFAULT_GAME_STATE: GameState = {
   commandEffect: [],
   immediateEffect: [],
   stackEffect: [],
-  stackEffectMemory: [],
   destroyEffect: [],
   setGroupLink: {},
   isBattle: {},
-  chipPool: {},
   coins: {},
-  coinId2cardId: {}
+  coinId2cardId: {},
+  globalEffectPool: {}
+}
+
+// globalEffects
+function getSituationEffects(ctx: GameState, situation: Situation | null): GlobalEffect[] {
+  // getCardIdsByBasyou(ctx, {
+  //   id: "AbsoluteBaSyou",
+  //   value: [PlayerA, "Gゾーン"]
+  // })
+  return getCardIds(ctx).map(cardId => getCard(ctx, cardId)).flatMap(card => {
+    if (card == null) {
+      throw new Error("card not found")
+    }
+    const proto = getItemPrototype(ctx, card.id)
+    const globalEffects = proto.texts.filter(text => text.title[0] == "自動型" && text.title[1] == "恒常")
+      .map((text, i) => {
+        const cardController = getItemController(ctx, card.id)
+        const fn = getOnSituationFn(text)
+        const effect: Effect = {
+          id: "",
+          reason: ["Situation", cardController, card.id, situation],
+          text: text
+        }
+        const ret: [OnSituationFn, Effect] = [fn, effect]
+        return ret
+      })
+      .flatMap(([fn, effect]) => {
+        return fn(ctx, effect, createBridge())
+      })
+    return globalEffects
+  })
+}
+
+export function getGlobalEffects(ctx: GameState, situation: Situation | null): GlobalEffect[] {
+  const key = JSON.stringify(situation)
+  const cached = ctx.globalEffectPool[key]
+  if (cached) {
+    //log("getGlobalEffects", "useCache")
+    return cached
+  }
+  const ges = getSituationEffects(ctx, situation)
+  ctx.globalEffectPool[key] = ges
+  return ges
+}
+
+export function clearGlobalEffects(ctx: GameState) {
+  ctx.globalEffectPool = {}
+}
+
+// card
+export function getCardTexts(ctx: GameState, cardID: string): Text[] {
+  const ges = getGlobalEffects(ctx, null)
+  const addedTexts = ges.map(e => {
+    if (e.cardIds.includes(cardID) && e.title[0] == "AddText") {
+      return e.title[1]
+    }
+  }).filter(v => v) as Text[]
+  const prototype = getItemPrototype(ctx, cardID)
+  return [...prototype.texts, ...addedTexts];
 }
 
 export function getCardCharacteristic(ctx: GameState, cardID: string) {
@@ -166,101 +216,109 @@ export function getCardCanPayRollCost(ctx: GameState, playerId: PlayerID, situat
   return normalG
 }
 
-export function getSituationEffects(ctx: GameState, situation: Situation | null): GlobalEffect[] {
-  // getCardIdsByBasyou(ctx, {
-  //   id: "AbsoluteBaSyou",
-  //   value: [PlayerA, "Gゾーン"]
-  // })
-  return getCardIds(ctx).map(cardId => getCard(ctx, cardId)).flatMap(card => {
-    if (card == null) {
-      throw new Error("card not found")
-    }
-    const proto = getItemPrototype(ctx, card.id)
-    const globalEffects = proto.texts.filter(text => text.title[0] == "自動型" && text.title[1] == "恒常")
-      .map((text, i) => {
-        const cardController = getItemController(ctx, card.id)
-        const fn = getOnSituationFn(text)
-        const effect: Effect = {
-          id: "",
-          reason: ["Situation", cardController, card.id, situation],
-          text: text
-        }
-        const ret: [OnSituationFn, Effect] = [fn, effect]
-        return ret
-      })
-      .flatMap(([fn, effect]) => {
-        return fn(ctx, effect, createBridge())
-      })
-    return globalEffects
-  })
-}
-
 export function getCardBattlePoint(
   ctx: GameState,
   cardID: string
 ): BattlePoint {
-  const globalEffects = getSituationEffects(ctx, null);
+  const globalEffects = getGlobalEffects(ctx, null);
   const card = getCard(ctx, cardID);
-  if (card == null) {
-    throw new Error("card not found");
-  }
   const bonusFromGlobalEffects = globalEffects.map(ge => {
     if (ge.title[0] == "AddText" &&
       ge.cardIds.includes(cardID) &&
-      ge.title[1].title[0] == "TTextBattleBonus") {
+      ge.title[1].title[0] == "TextBattleBonus") {
       return ge.title[1].title[1]
     }
-    return [0, 0, 0] as BattlePoint
+    if (ge.title[0] == "＋x／＋x／＋xを得る" && ge.cardIds.includes(cardID)) {
+      return ge.title[1]
+    }
+    return [0, 0, 0] as BattleBonus
+  })
+  const bonusFormCoin = getCoins(ctx).map(coin => {
+    if (coin.title[0] == "BattleBonus" && getCardIdByCoinId(ctx, coin.id) == cardID) {
+      return coin.title[1]
+    }
+    return [0, 0, 0] as BattleBonus
   })
   const prototype = getItemPrototype(ctx, card.id);
-  // const bonusFromCardState = ctx.globalCardState
-  //   .filter((cs) => cs.cardID == cardID)
-  //   .flatMap((cs) => cs.cardTextStates.map((cts) => cts.cardText))
-  //   .filter(
-  //     (ct) =>
-  //       ct.id == "CardTextCustom" &&
-  //       ct.customID.id == "CardTextCustomIDBattleBonus"
-  //   )
-  //   .map((ct) => {
-  //     if (
-  //       ct.id != "CardTextCustom" ||
-  //       ct.customID.id != "CardTextCustomIDBattleBonus"
-  //     ) {
-  //       throw new Error("must be CardTextCustomIDBattleBonus");
-  //     }
-  //     return ct.customID.battleBonus;
-  //   });
-  // const bonusFromCoin = ctx.table.tokens
-  //   .filter((t) => {
-  //     if (t.position.id != "TokenPositionCard") {
-  //       return false;
-  //     }
-  //     if (t.position.cardID != cardID) {
-  //       return false;
-  //     }
-  //     const coin = t.protoID as Coin;
-  //     if (coin == null) {
-  //       return false;
-  //     }
-  //     if (coin.id != "CoinBattleBonus") {
-  //       return false;
-  //     }
-  //     return true;
-  //   })
-  //   .map((t) => {
-  //     const coin = t.protoID as Coin;
-  //     if (coin.id != "CoinBattleBonus") {
-  //       throw new Error("must be CoinBattleBonus");
-  //     }
-  //     return coin.battleBonus;
-  //   });
-  const retBonus = [...bonusFromGlobalEffects].reduce(
+  const retBonus = [...bonusFromGlobalEffects, ...bonusFormCoin].reduce(
     BattlePointFn.add,
     prototype.battlePoint
   );
   return retBonus;
 }
 
+export function getCardHasSpeicalEffect(
+  ctx: GameState,
+  a: TextSpeicalEffect,
+  cardID: string
+): boolean {
+  const texts = getCardTexts(ctx, cardID)
+  const has = texts.filter(e =>
+    e.title[0] == "特殊型" &&
+    TextSpeicalEffectFn.isSameKeyword(e.title[1], a)
+  ).length > 0
+  return has;
+}
+
+
+export function isCardCanReroll(
+  ctx: GameState,
+  cardID: string,
+  situation: Situation | null
+): boolean {
+  const baSyouKW = getItemBaSyou(ctx, cardID).value[1];
+  switch (baSyouKW) {
+    case "Gゾーン":
+    case "配備エリア":
+    case "戦闘エリア2":
+    case "戦闘エリア1":
+      break;
+    default:
+      return false;
+  }
+  const baSyou = getItemBaSyou(ctx, cardID);
+  const setGroup = getSetGroupCards(ctx, cardID);
+  return true;
+}
+
+export function isCardMaster(
+  ctx: GameState,
+  unitCardID: string,
+  cardID: string
+): boolean {
+  const match = getCardCharacteristic(ctx, unitCardID).match(/専用「(.+?)」/);
+  if (match == null) {
+    return false;
+  }
+  const [_, masterName] = match;
+  if (masterName != getCardTitle(ctx, cardID)) {
+    return false;
+  }
+  return true;
+}
+
+export function getCardBattleArea(
+  ctx: GameState,
+  cardID: string
+): BattleAreaKeyword[] {
+  const card = getCard(ctx, cardID);
+  if (card == null) {
+    throw new Error("card not found");
+  }
+  const prototype = getItemPrototype(ctx, card.id);
+  return prototype.battleArea;
+}
+// setgroup
+export function getSetGroupBattlePoint(ctx: GameState, cardId: string): BattleBonus {
+  return pipe(
+    always(getSetGroupCards(ctx, cardId)),
+    map(setGroupCardID => getCardBattlePoint(ctx, setGroupCardID)),
+    reduce(BattlePointFn.add, DEFAULT_BATTLE_POINT),
+    BattlePointFn.toBattleBonus
+  )()
+}
+
+// battleGroup
 export function getBattleGroup(
   ctx: GameState,
   baSyou: AbsoluteBaSyou
@@ -289,62 +347,20 @@ export function getBattleGroupBattlePoint(
       if (card.isRoll) {
         return 0;
       }
-      const setGroupCards = getSetGroupCards(ctx, cardID);
-      const power = setGroupCards
-        .map((setGroupCardID) => {
-          const [melee, range] = getCardBattlePoint(ctx, setGroupCardID);
-          if (melee == "*") {
-            return 0;
-          }
-          if (i == 0) {
-            return melee || 0;
-          }
-          if (range == "*") {
-            return 0;
-          }
-          return range || 0;
-        })
-        .reduce((a, b) => a + b);
-      return power;
+      const [melee, range, _] = getSetGroupBattlePoint(ctx, cardID)
+      // 第一位是格鬥力
+      if (i == 0) {
+        return melee
+      }
+      // 其它的是射擊力
+      return range
     }).reduce((acc, c) => acc + c, 0);
   return attackPower;
 }
 
-export function hasTokuSyouKouKa(
-  ctx: GameState,
-  a: TextTokuSyuKouKa,
-  cardID: string
-): boolean {
-
-  // pipe(
-  //   always(getCard(ctx, cardID)),
-  //   card=>getPreloadPrototype
-  // )
-
-  // const cs = getCardState(ctx, cardID);
-  // const gcs = ctx.globalCardState.filter((cs) => {
-  //   return cs.cardID == cardID;
-  // });
-  // const texts = [cs, ...gcs]
-  //   .reduce((acc, cs) => acc.concat(cs.cardTextStates), [])
-  //   .map((cts) => cts.cardText);
-  // const has =
-  //   texts.find((text) => {
-  //     if (text.id != "特殊型") {
-  //       return false;
-  //     }
-  //     if (text.description[0] != a[0]) {
-  //       return false;
-  //     }
-  //     return true;
-  //   }) != null;
-  // return has;
-  return false;
-}
-
 export function isABattleGroup(
   ctx: GameState,
-  a: TextTokuSyuKouKa,
+  a: TextSpeicalEffect,
   cardID: string
 ): boolean {
   const baSyou = getItemBaSyou(ctx, cardID);
@@ -355,7 +371,7 @@ export function isABattleGroup(
         // 其中一張卡有就行了
         const setGroupCards = getSetGroupCards(ctx, cardID);
         for (const cardGroupCardID of setGroupCards) {
-          if (hasTokuSyouKouKa(ctx, a, cardGroupCardID)) {
+          if (getCardHasSpeicalEffect(ctx, a, cardGroupCardID)) {
             return true;
           }
         }
@@ -367,69 +383,149 @@ export function isABattleGroup(
   );
 }
 
-export function isCanReroll(
+// player
+export function isPlayerHasBattleGroup(
   ctx: GameState,
-  condition: any,
-  cardID: string
+  playerId: PlayerID
 ): boolean {
-  const baSyouKW = getItemBaSyou(ctx, cardID).value[1];
-  switch (baSyouKW) {
-    case "Gゾーン":
-    case "配備エリア":
-    case "戦闘エリア2":
-    case "戦闘エリア1":
-      break;
-    default:
-      return false;
-  }
-  const baSyou = getItemBaSyou(ctx, cardID);
-  const setGroup = getSetGroupCards(ctx, cardID);
-  return true;
+  return pipe(
+    always(
+      [
+        AbsoluteBaSyouFn.of(playerId, "戦闘エリア2"),
+        AbsoluteBaSyouFn.of(playerId, "戦闘エリア1"),
+      ]
+    ),
+    map(baSyou => getItemIdsByBasyou(ctx, baSyou).length),
+    sum
+  )() > 0
 }
 
-export function isOpponentHasBattleGroup(
+function doDamage(
   ctx: GameState,
-  cardID: string
-): boolean {
-  const controller = getItemController(ctx, cardID);
-  const opponentPlayerID = getOpponentPlayerID(controller);
-  const battleAreas: AbsoluteBaSyou[] = [
-    AbsoluteBaSyouFn.of(opponentPlayerID, "戦闘エリア2"),
-    AbsoluteBaSyouFn.of(opponentPlayerID, "戦闘エリア1"),
-  ];
-  return (
-    battleAreas.reduce((acc: string[], battleArea) => {
-      return acc.concat(ctx.table.cardStack[AbsoluteBaSyouFn.toString(battleArea)] || []);
-    }, []).length != 0
-  );
+  speedPhase: number,
+  currentAttackPlayerID: PlayerID,
+  currentGuardPlayerID: PlayerID,
+  willAttackUnits: string[],
+  willGuardUnits: string[],
+  willAttackPower: number
+): GameState {
+  log("handleAttackDamage", "speed", speedPhase);
+  log("handleAttackDamage", "willAttackUnits", willAttackUnits);
+  log("handleAttackDamage", "willGuardUnits", willGuardUnits);
+  log("handleAttackDamage", "willAttackPower", willAttackPower);
+  if (willAttackUnits.length) {
+    // 判斷速度1速度2是否可攻擊
+    const hasSpeedAttack = isABattleGroup(ctx, ["速攻"], willAttackUnits[0]);
+    if (
+      // 有速攻的情況在速度1
+      (hasSpeedAttack && speedPhase == 1) ||
+      // 沒速攻的情況在速度2
+      (hasSpeedAttack == false && speedPhase == 2)
+    ) {
+      let currentAttackPower = willAttackPower;
+      log("handleAttackDamage", "attack", currentAttackPower);
+      // 敵方機體存在, 攻擊機體
+      if (willGuardUnits.length) {
+        const changedCardState = willGuardUnits.map((cardID): CardState => {
+          const cs = getCardState(ctx, cardID);
+          if (currentAttackPower <= 0) {
+            return cs;
+          }
+          const [_, _2, hp] = getSetGroupBattlePoint(ctx, cardID);
+
+          const live = hp - cs.damage;
+          if (live <= 0) {
+            return cs;
+          }
+          currentAttackPower -= live;
+          if (currentAttackPower >= 0) {
+            const reason: DestroyReason = {
+              id: "戦闘ダメージ",
+              playerID: currentAttackPlayerID,
+            };
+            const gameEvent: Event = {
+              title: ["破壊された場合", reason],
+              cardID: cs.id
+            };
+            ctx = triggerTextEvent(ctx, gameEvent)
+            return {
+              ...cs,
+              damage: hp,
+              destroyReason: reason,
+            };
+          }
+          // 剩餘血量
+          const nextLive = -currentAttackPower;
+          const nextDamage = hp - nextLive;
+          // 傷害用完了, 重設為0
+          currentAttackPower = 0;
+          const gameEvent: Event = {
+            title: ["戦闘ダメージを受けた場合"],
+            cardID: cs.id,
+          };
+          ctx = triggerTextEvent(ctx, gameEvent)
+          return {
+            ...cs,
+            damage: nextDamage,
+          };
+        });
+        // 套用傷害
+        ctx = changedCardState.reduce((ctx, cs) => {
+          return setCardState(ctx, cs.id, cs) as GameState
+        }, ctx)
+      }
+      // 攻擊方可以攻擊本國
+      // 若傷害沒有用完, 攻擊本國
+      if (
+        currentAttackPower > 0 ||
+        // 對方有防禦機體的情況, 有強襲就攻擊本國
+        (willGuardUnits.length && isABattleGroup(ctx, ["強襲"], willAttackUnits[0]))
+      ) {
+        // 本國傷害
+        log("handleAttackDamage", "attack 本国", currentAttackPower);
+        let table = ctx.table;
+        let fromCardStackID = AbsoluteBaSyouFn.toString(AbsoluteBaSyouFn.of(currentGuardPlayerID, "本国"))
+        let toCardStackID = AbsoluteBaSyouFn.toString(AbsoluteBaSyouFn.of(currentGuardPlayerID, "捨て山"))
+        table = {
+          ...table,
+          cardStack: {
+            ...table.cardStack,
+            [fromCardStackID]:
+              table.cardStack[fromCardStackID].slice(currentAttackPower),
+            [toCardStackID]: [
+              ...table.cardStack[fromCardStackID].slice(
+                0,
+                currentAttackPower
+              ),
+              ...table.cardStack[toCardStackID],
+            ],
+          },
+        };
+        ctx = {
+          ...ctx,
+          table: table,
+        };
+      }
+    }
+  }
+  return ctx
 }
 
-export function isMaster(
+export function doPlayerAttack(
   ctx: GameState,
-  unitCardID: string,
-  cardID: string
-): boolean {
-  const match = getCardCharacteristic(ctx, unitCardID).match(/専用「(.+?)」/);
-  if (match == null) {
-    return false;
-  }
-  const [_, masterName] = match;
-  if (masterName != getCardTitle(ctx, cardID)) {
-    return false;
-  }
-  return true;
-}
-
-export function getCardBattleArea(
-  ctx: GameState,
-  cardID: string
-): BattleAreaKeyword[] {
-  const card = getCard(ctx, cardID);
-  if (card == null) {
-    throw new Error("card not found");
-  }
-  const prototype = getItemPrototype(ctx, card.id);
-  return prototype.battleArea;
+  attackPlayerID: PlayerID,
+  where: BaSyouKeyword,
+  speedPhase: AttackSpeed
+): GameState {
+  const guardPlayerID = getOpponentPlayerID(attackPlayerID)
+  const attackUnits = getBattleGroup(ctx, AbsoluteBaSyouFn.of(attackPlayerID, where));
+  const attackPower = getBattleGroupBattlePoint(ctx, attackUnits);
+  const guardUnits = getBattleGroup(ctx, AbsoluteBaSyouFn.of(guardPlayerID, where));
+  const guardPower = getBattleGroupBattlePoint(ctx, guardUnits);
+  ctx = doDamage(ctx, speedPhase, attackPlayerID, guardPlayerID, attackUnits, guardUnits, attackPower)
+  ctx = doDamage(ctx, speedPhase, guardPlayerID, attackPlayerID, guardUnits, attackUnits, guardPower)
+  ctx = updateDestroyEffect(ctx);
+  return ctx;
 }
 
 function getConditionTitleFn(condition: Condition, options: { isPlay?: boolean }): ConditionTitleFn {
@@ -474,290 +570,19 @@ export function doEffect(
 ): GameState {
   const conditions = conditionIds.map(id => TextFn.getCondition(effect.text, id))
   const bridge = createBridge()
-  // conditions
-  //   .flatMap(condition => ConditionFn.getActionTitleFns(condition, genActionTitleFn))
-  //   .reduce((ctx, fn) => {
-  //     return fn(ctx, effect)
-  //   }, bridge)
-  // LogicTreeActionFn.getActionTitleFns(TextFn.getLogicTreeAction(effect.text, logicId), genActionTitleFn)
-  //   .reduce((ctx, fn) => {
-  //     return fn(ctx, effect)
-  //   }, bridge)
-
   const processCondition = (ctx: GameState) => pipe(
     always(conditions),
     map(condition => ConditionFn.getActionTitleFns(condition, getActionTitleFn)),
     flatten,
     reduce((ctx, fn) => fn(ctx, effect, bridge), ctx)
   )
-
   const processLogicAction = (ctx: GameState) => pipe(
     always(TextFn.getLogicTreeAction(effect.text, logicId)),
     lta => LogicTreeActionFn.getActionTitleFns(lta, getActionTitleFn),
     reduce((ctx, fn) => fn(ctx, effect, bridge), ctx)
   )
-
   ctx = processCondition(ctx)()
   ctx = processLogicAction(ctx)()
-
-  return ctx;
-}
-
-export function handleAttackDamage(
-  ctx: GameState,
-  attackPlayerID: string,
-  guardPlayerID: string,
-  where: BaSyouKeyword,
-  speed: AttackSpeed
-): GameState {
-  const attackUnits = getBattleGroup(ctx, AbsoluteBaSyouFn.of(attackPlayerID, where));
-  const attackPower = getBattleGroupBattlePoint(ctx, attackUnits);
-  const guardUnits = getBattleGroup(ctx, AbsoluteBaSyouFn.of(guardPlayerID, where));
-  const guardPower = getBattleGroupBattlePoint(ctx, guardUnits);
-  const willTriggerEvent: Event[] = [];
-  {
-    const currentAttackPlayerID = attackPlayerID;
-    const currentGuardPlayerID = guardPlayerID;
-    const willAttackUnits = attackUnits;
-    const willGuardUnits = guardUnits;
-    const willAttackPower = attackPower;
-    log("handleAttackDamage", "speed", speed);
-    log("handleAttackDamage", "baSyou", where);
-    log("handleAttackDamage", "willAttackUnits", willAttackUnits);
-    log("handleAttackDamage", "willGuardUnits", willGuardUnits);
-    log("handleAttackDamage", "willAttackPower", willAttackPower);
-    if (willAttackUnits.length) {
-      // 判斷速度1速度2是否可攻擊
-      const hasSpeedAttack = isABattleGroup(ctx, ["速攻"], willAttackUnits[0]);
-      if (
-        // 有速攻的情況在速度1
-        (hasSpeedAttack && speed == 1) ||
-        // 沒速攻的情況在速度2
-        (hasSpeedAttack == false && speed == 2)
-      ) {
-        let currentAttackPower = willAttackPower;
-        log("handleAttackDamage", "attack", currentAttackPower);
-        // 敵方機體存在, 攻擊機體
-        if (willGuardUnits.length) {
-          const changedCardState = willGuardUnits.map((cardID): CardState => {
-            const cs = getCardState(ctx, cardID);
-            if (currentAttackPower <= 0) {
-              return cs;
-            }
-            const setGroupCards = getSetGroupCards(ctx, cardID);
-            const hp = setGroupCards
-              .map((setGroupCardID) => {
-                const [_2, _3, hp] = getCardBattlePoint(ctx, setGroupCardID);
-                if (hp == "*") {
-                  return 0;
-                }
-                return hp;
-              })
-              .reduce((a, b) => a + b);
-            const live = hp - cs.damage;
-            if (live <= 0) {
-              return cs;
-            }
-            currentAttackPower -= live;
-            if (currentAttackPower >= 0) {
-              const reason: DestroyReason = {
-                id: "戦闘ダメージ",
-                playerID: currentAttackPlayerID,
-              };
-              const gameEvent: Event = {
-                title: ["破壊された場合", reason],
-                cardID: cs.id
-              };
-              willTriggerEvent.push(gameEvent);
-              return {
-                ...cs,
-                damage: hp,
-                destroyReason: reason,
-              };
-            }
-            // 剩餘血量
-            const nextLive = -currentAttackPower;
-            const nextDamage = hp - nextLive;
-            // 傷害用完了, 重設為0
-            currentAttackPower = 0;
-            const gameEvent: Event = {
-              title: ["戦闘ダメージを受けた場合"],
-              cardID: cs.id,
-            };
-            willTriggerEvent.push(gameEvent);
-            return {
-              ...cs,
-              damage: nextDamage,
-            };
-          });
-          // 套用傷害
-          ctx = mapCardState(ctx, (_, cs1) => {
-            for (const cs2 of changedCardState) {
-              if (cs1.id == cs2.id) {
-                return cs2;
-              }
-            }
-            return cs1;
-          }) as GameState
-          // const cardState = ctx.gameState.cardState.map((cs1) => {
-          //   for (const cs2 of changedCardState) {
-          //     if (cs1.id == cs2.id) {
-          //       return cs2;
-          //     }
-          //   }
-          //   return cs1;
-          // });
-          // ctx = {
-          //   ...ctx,
-          //   gameState: {
-          //     ...ctx.gameState,
-          //     cardState: cardState,
-          //   },
-          // };
-        }
-        // 攻擊方可以攻擊本國
-        // 若傷害沒有用完, 攻擊本國
-        if (
-          currentAttackPower > 0 ||
-          // 對方有防禦機體的情況, 有強襲就攻擊本國
-          (willGuardUnits.length &&
-            isABattleGroup(ctx, ["強襲"], willAttackUnits[0]))
-        ) {
-          // 本國傷害
-          log("handleAttackDamage", "attack 本国", currentAttackPower);
-          let table = ctx.table;
-          let fromCardStackID = AbsoluteBaSyouFn.toString(AbsoluteBaSyouFn.of(currentGuardPlayerID, "本国"))
-          let toCardStackID = AbsoluteBaSyouFn.toString(AbsoluteBaSyouFn.of(currentGuardPlayerID, "捨て山"))
-          table = {
-            ...table,
-            cardStack: {
-              ...table.cardStack,
-              [fromCardStackID]:
-                table.cardStack[fromCardStackID].slice(currentAttackPower),
-              [toCardStackID]: [
-                ...table.cardStack[fromCardStackID].slice(
-                  0,
-                  currentAttackPower
-                ),
-                ...table.cardStack[toCardStackID],
-              ],
-            },
-          };
-          ctx = {
-            ...ctx,
-            table: table,
-          };
-        }
-      }
-    }
-  }
-  {
-    const currentAttackPlayerID = guardPlayerID;
-    const currentGuardPlayerID = attackPlayerID;
-    const willAttackUnits = guardUnits;
-    const willGuardUnits = attackUnits;
-    const willAttackPower = guardPower;
-    log("handleAttackDamage", "speed", speed);
-    log("handleAttackDamage", "baSyou", where);
-    log("handleAttackDamage", "willAttackUnits", willAttackUnits);
-    log("handleAttackDamage", "willGuardUnits", willGuardUnits);
-    log("handleAttackDamage", "willAttackPower", willAttackPower);
-    if (willAttackUnits.length) {
-      // 判斷速度1速度2是否可攻擊
-      const hasSpeedAttack = isABattleGroup(ctx, ["速攻"], willAttackUnits[0]);
-      if (
-        // 有速攻的情況在速度1
-        (hasSpeedAttack && speed == 1) ||
-        // 沒速攻的情況在速度2
-        (hasSpeedAttack == false && speed == 2)
-      ) {
-        let currentAttackPower = willAttackPower;
-        log("handleAttackDamage", "attack", currentAttackPower);
-        // 敵方機體存在, 攻擊機體
-        if (willGuardUnits.length) {
-          const changedCardState = willGuardUnits.map((cardID): CardState => {
-            const cs = getCardState(ctx, cardID);
-            if (currentAttackPower <= 0) {
-              return cs;
-            }
-            const setGroupCards = getSetGroupCards(ctx, cardID);
-            const hp = setGroupCards
-              .map((setGroupCardID) => {
-                const [_2, _3, hp] = getCardBattlePoint(ctx, setGroupCardID);
-                if (hp == "*") {
-                  return 0;
-                }
-                return hp;
-              })
-              .reduce((a, b) => a + b);
-            const live = hp - cs.damage;
-            if (live <= 0) {
-              return cs;
-            }
-            currentAttackPower -= live;
-            if (currentAttackPower >= 0) {
-              const reason: DestroyReason = {
-                id: "戦闘ダメージ",
-                playerID: currentAttackPlayerID,
-              };
-              const gameEvent: Event = {
-                title: ["破壊された場合", reason],
-                cardID: cs.id,
-              };
-              willTriggerEvent.push(gameEvent);
-              return {
-                ...cs,
-                damage: hp,
-                destroyReason: reason,
-              };
-            }
-            // 剩餘血量
-            const nextLive = -currentAttackPower;
-            const nextDamage = hp - nextLive;
-            // 傷害用完了, 重設為0
-            currentAttackPower = 0;
-            const gameEvent: Event = {
-              title: ["戦闘ダメージを受けた場合"],
-              cardID: cs.id,
-            };
-            willTriggerEvent.push(gameEvent);
-            return {
-              ...cs,
-              damage: nextDamage,
-            };
-          });
-          // 套用傷害
-          ctx = mapCardState(ctx, (_, cs1) => {
-            for (const cs2 of changedCardState) {
-              if (cs1.id == cs2.id) {
-                return cs2;
-              }
-            }
-            return cs1;
-          }) as GameState
-          // const cardState = ctx.gameState.cardState.map((cs1) => {
-          //   for (const cs2 of changedCardState) {
-          //     if (cs1.id == cs2.id) {
-          //       return cs2;
-          //     }
-          //   }
-          //   return cs1;
-          // });
-          // ctx = {
-          //   ...ctx,
-          //   gameState: {
-          //     ...ctx.gameState,
-          //     cardState: cardState,
-          //   },
-          // };
-        }
-      }
-    }
-  }
-  ctx = updateDestroyEffect(ctx);
-  ctx = willTriggerEvent.reduce((ctx, evt) => {
-    return triggerTextEvent(ctx, evt);
-  }, ctx);
   return ctx;
 }
 
@@ -768,128 +593,61 @@ export function triggerTextEvent(
   ctx: GameState,
   evt: Event
 ): GameState {
-  log("triggerTextEvent", evt.title);
-  // return getCardStateIterator(ctx).reduce((ctx, [cardID, cardTextStates]) => {
-  //   return cardTextStates.reduce((ctx, cardTextState) => {
-  //     const cardTexts = (() => {
-  //       switch (cardTextState.cardText.id) {
-  //         case "自動型":
-  //           return [cardTextState.cardText].filter((t) => {
-  //             if (t.id == "自動型" && t.category == "起動") {
-  //               return filterEnableCardText(ctx, cardID, false, t);
-  //             }
-  //             return false;
-  //           });
-  //         case "特殊型":
-  //         case "恒常":
-  //           return cardTextState.cardText.texts.filter((t) => {
-  //             if (t.id == "自動型" && t.category == "起動") {
-  //               return filterEnableCardText(ctx, cardID, true, t);
-  //             }
-  //             return false;
-  //           });
-  //         default:
-  //           return [];
-  //       }
-  //     })();
-  //     return cardTexts.reduce((ctx, cardText) => {
-  //       const cardController = getCardController(ctx, cardID);
-  //       const wrapEvent: TEffect = {
-  //         ...cardText.block,
-  //         cause: {
-  //           id: "BlockPayloadCauseGameEvent",
-  //           playerID: cardController,
-  //           cardID: cardID,
-  //           cardTextID: cardTextState.id,
-  //           gameEvent: evt,
-  //           description: cardText.description,
-  //         },
-  //         // 加上卡ID，讓varCtxID變成每張卡唯一。而不是遊戲唯一。
-  //         contextID: `[${cardID}]_[${cardText.block.contextID}]`,
-  //       };
-  //       // const varCtxID = "triggerTextEvent";
-  //       // try {
-  //       //   if (wrapEvent.require != null) {
-  //       //     // 清空變量，因為是臨時性的訪問，所以可以這麼做
-  //       //     ctx = {
-  //       //       ...ctx,
-  //       //       varsPool: {
-  //       //         ...ctx.varsPool,
-  //       //         [varCtxID]: {
-  //       //           targets: {},
-  //       //           jsonfpContext: {},
-  //       //         },
-  //       //       },
-  //       //     };
-  //       //     ctx = doRequire(ctx, wrapEvent, wrapEvent.require, varCtxID);
-  //       //   }
-  //       //   if (wrapEvent.feedback) {
-  //       //     ctx = wrapEvent.feedback.reduce((ctx, feedback) => {
-  //       //       return doFeedback(ctx, wrapEvent, feedback, varCtxID);
-  //       //     }, ctx);
-  //       //   }
-  //       // } catch (e) {
-  //       //   log2("triggerTextEvent", err2string(e));
-  //       // }
-  //       return ctx;
-  //     }, ctx);
-  //   }, ctx);
-  // }, ctx);
-  return ctx;
+  const bridge = createBridge()
+  return pipe(
+    always(getCardIds(ctx)),
+    map(cardId => ({ cardId: cardId, texts: getCardTexts(ctx, cardId) })),
+    reduce((ctx, { cardId, texts }) => {
+      return pipe(
+        always(texts),
+        reduce((ctx, text) => {
+          const effect: Effect = {
+            id: ToolFn.getUUID("triggerTextEvent"),
+            reason: ["Event", cardId, evt],
+            text: text
+          }
+          return TextFn.getOnEventFn(text)(ctx, effect, bridge)
+        }, ctx)
+      )()
+    }, ctx)
+  )()
 }
 
 export function updateDestroyEffect(ctx: GameState): GameState {
   // 將所有破壞效果加入破壞用堆疊
   // 加入破壞用堆疊後，主動玩家就必須決定解決順序
   // 決定後，依順序將所有效果移到正在解決中的堆疊，並重設切入的旗標，讓玩家可以在堆疊解決中可以再次切入
-  // const effects = ctx.gameState.cardState
-  //   .filter((cs) => {
-  //     if (cs.destroyReason == null) {
-  //       return false;
-  //     }
-  //     return true;
-  //   })
-  //   .map((cs): TEffect => {
-  //     const card = getCard(ctx.gameState.table, cs.id);
-  //     if (card == null) {
-  //       throw new Error("card not found");
-  //     }
-  //     if (cs.destroyReason == null) {
-  //       throw new Error("destroyReason must found");
-  //     }
-  //     const setGroupCards = getSetGroupCards(ctx, card.id);
-  //     const hp = setGroupCards
-  //       .map((setGroupCardID) => {
-  //         const [_2, _3, hp] = getCardBattlePoint(ctx, setGroupCardID);
-  //         return hp;
-  //       })
-  //       .reduce((a, b) => a + b);
-  //     return {
-  //       ...getCardTextMacro({
-  //         id: "破壊する",
-  //         cause: {
-  //           id: "BlockPayloadCauseDestroy",
-  //           reason:
-  //             hp <= 0
-  //               ? {
-  //                   id: "マイナスの戦闘修正",
-  //                   playerID: cs.destroyReason.playerID,
-  //                 }
-  //               : cs.destroyReason,
-  //           playerID: cs.destroyReason.playerID,
-  //           cardID: cs.id,
-  //           description: "破壞產生的自身的廢棄效果",
-  //         },
-  //       }).block,
-  //       id: `updateDestroyEffect_${cs.id}`,
-  //     };
-  //   });
-  // ctx = {
-  //   ...ctx,
-  //   gameState: {
-  //     ...ctx.gameState,
-  //     destroyEffect: effects,
-  //   },
-  // };
+  getCardStateValues(ctx).reduce((ctx, cs) => {
+    if (cs.destroyReason) {
+      const effect: Effect = {
+        id: ToolFn.getUUID("updateDestroyEffect"),
+        reason: ["Destroy", cs.destroyReason.playerID, cs.id, cs.destroyReason],
+        text: {
+          id: "",
+          title: [],
+        }
+      }
+      ctx = addDestroyEffect(ctx, effect) as GameState
+      return ctx
+    }
+    const [_, _2, hp] = getSetGroupBattlePoint(ctx, cs.id)
+    if (hp <= cs.damage) {
+      const destroyReason: DestroyReason = {
+        id: "マイナスの戦闘修正",
+        playerID: getItemController(ctx, cs.id)
+      }
+      const effect: Effect = {
+        id: ToolFn.getUUID("updateDestroyEffect"),
+        reason: ["Destroy", destroyReason.playerID, cs.id, destroyReason],
+        text: {
+          id: "",
+          title: [],
+        }
+      }
+      ctx = addDestroyEffect(ctx, effect) as GameState
+      return ctx
+    }
+    return ctx
+  }, ctx)
   return ctx;
 }

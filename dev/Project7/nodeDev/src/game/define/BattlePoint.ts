@@ -1,3 +1,5 @@
+import { BattleBonus } from "./Text";
+
 export type BattlePoint = ["*" | number, "*" | number, "*" | number];
 
 function getValue(v: "*" | number): number {
@@ -15,7 +17,12 @@ function add([x, y, z]: BattlePoint, [x2, y2, z2]: BattlePoint): BattlePoint {
     ]
 }
 
+export const DEFAULT_BATTLE_POINT: BattlePoint = ["*", "*", "*"]
+
 export const BattlePointFn = {
     add: add,
     getValue: getValue,
+    toBattleBonus(v: BattlePoint): BattleBonus {
+        return [getValue(v[0]), getValue[1], getValue[2]]
+    }
 }

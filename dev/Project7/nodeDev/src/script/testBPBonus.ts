@@ -18,13 +18,14 @@ export const prototype: CardPrototype = {
       title: ["自動型", "恒常"],
       onSituation: function _(ctx: GameState, effect: Effect, { GameStateFn }: Bridge): GlobalEffect[] {
         const cardIds = GameStateFn.getItemIds(ctx)
+        console.log("XXXXX", cardIds)
         //const cardId = EffectFn.getCardID(effect)
         const units = cardIds
         return [
           {
             title: ["AddText", {
               id: "",
-              title: ["TTextBattleBonus", [3, 3, 3]],
+              title: ["TextBattleBonus", [3, 3, 3]],
             }],
             cardIds: units
           }

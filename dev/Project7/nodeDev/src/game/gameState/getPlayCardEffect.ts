@@ -5,7 +5,7 @@ import { Effect } from "../define/Effect"
 import { PlayerA, PlayerID } from "../define/PlayerID"
 import { ToolFn } from "../tool"
 import { addCards, createCardWithProtoIds } from "./CardTableComponent"
-import { DEFAULT_GAME_STATE, GameState, getCardCanPayRollCost, getCardRollCost, getCardRollCostLength, getSituationEffects } from "./GameState"
+import { DEFAULT_GAME_STATE, GameState, getCardCanPayRollCost, getCardRollCost, getCardRollCostLength, getGlobalEffects } from "./GameState"
 import { getItemBaSyou, getItemIds } from "./ItemTableComponent"
 import { Tip } from "../define/Tip"
 import { loadPrototype } from "../../script"
@@ -83,7 +83,7 @@ export function getPlayCardEffect(ctx: GameState, playerId: PlayerID, cardId: st
         }
     }
     let ret = [playCardEffect]
-    const ges = getSituationEffects(ctx, null)
+    const ges = getGlobalEffects(ctx, null)
     const morePlayEfs = ges.filter(g => g.title[0] == "合計国力＋(１)してプレイできる" && g.cardIds.includes(cardId))
     const hasMorePlay = morePlayEfs.length > 0
     const addedLength = pipe(always(morePlayEfs), map(g => g.title[0] == "合計国力＋(１)してプレイできる" ? g.title[1] : 0), sum)()

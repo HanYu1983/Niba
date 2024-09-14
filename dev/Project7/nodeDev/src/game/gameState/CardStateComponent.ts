@@ -52,6 +52,10 @@ export function setCardState(ctx: CardStateComponent, cardID: string, cardState:
   return { ...ctx, cardStates: assoc(cardID, cardState, ctx.cardStates) }
 }
 
+export function getCardStateValues(ctx: CardStateComponent): CardState[] {
+  return Object.values(ctx.cardStates)
+}
+
 export function mapCardState(ctx: CardStateComponent, f: (key: AbsoluteBaSyou, cs: CardState) => CardState): CardStateComponent {
   const cardStates = Object.keys(ctx.cardStates).reduce((cardStates, key) => {
     return {

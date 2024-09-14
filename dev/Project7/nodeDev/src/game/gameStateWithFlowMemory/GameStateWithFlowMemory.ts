@@ -1,3 +1,4 @@
+import { Effect } from "../define/Effect";
 import { mapCardsWithBasyou } from "../gameState/CardTableComponent";
 import { DEFAULT_GAME_STATE, GameState } from "../gameState/GameState";
 
@@ -31,11 +32,13 @@ export type HasFlowMemoryComponent = {
 }
 
 export type GameStateWithFlowMemory = {
+    stackEffectMemory: Effect[];
     activeEffectID: string | null;
 } & GameState & HasFlowMemoryComponent;
 
 export const DEFAULT_GAME_STATE_WITH_FLOW_MEMORY: GameStateWithFlowMemory = {
     ...DEFAULT_GAME_STATE,
+    stackEffectMemory: [],
     activeEffectID: null,
     flowMemory: DEFAULT_FLOW_MEMORY
 }

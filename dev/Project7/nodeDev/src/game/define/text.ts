@@ -11,7 +11,7 @@ import { StrBaSyouPair, Tip } from "./Tip";
 
 export type BattleBonus = [number, number, number]
 
-export type TextTokuSyuKouKa =
+export type TextSpeicalEffect =
     | ["高機動"]
     | ["速攻"]
     | ["サイコミュ", number]
@@ -27,6 +27,12 @@ export type TextTokuSyuKouKa =
     | ["戦闘配備"]
     | ["ステイ"]
     | ["1枚制限"];
+
+export const TextSpeicalEffectFn = {
+    isSameKeyword(left: TextSpeicalEffect, right: TextSpeicalEffect): boolean {
+        return left[0] == right[0]
+    }
+}
 
 export type ActionTitle =
     | string
@@ -86,12 +92,12 @@ export type Situation = {
     cardID?: string
 }
 
-export type TextBattleBonus = ["TTextBattleBonus", BattleBonus]
+export type TextBattleBonus = ["TextBattleBonus", BattleBonus]
 
 export type TextTitle =
     | ["自動型", "常駐" | "起動" | "恒常"]
     | ["使用型", SiYouTiming]
-    | ["特殊型", TextTokuSyuKouKa]
+    | ["特殊型", TextSpeicalEffect]
     | TextBattleBonus
     | []
 
@@ -118,6 +124,8 @@ export type Text = {
     onEvent?: string,
     onSituation?: string
 }
+
+export type OnEventFn = (ctx: any, effect: Effect, lib: any) => any;
 
 export const TextFn = {
     getCondition(ctx: Text, conditionId: string): Condition {
@@ -149,7 +157,7 @@ export const TextFn = {
         if (logicTreeCommand.logicTree == null) {
             const conditionIds = Object.keys(ctx.conditions || {})
             const conditions = conditionIds.map(conditionId => this.getCondition(ctx, conditionId))
-            return [zipObj(conditionIds, conditions)] 
+            return [zipObj(conditionIds, conditions)]
         }
         const conditionIdsList = LogicTreeFn.enumerateAll(logicTreeCommand.logicTree) as string[][]
         return conditionIdsList.map(conditionIds => {
@@ -157,19 +165,28 @@ export const TextFn = {
             return zipObj(conditionIds, conditions)
         })
     },
+
+    getOnEventFn(ctx: Text): OnEventFn {
+        if (ctx.onEvent == null) {
+            return function (a) {
+                return a
+            }
+        }
+        return eval(ctx.onEvent + ";_")
+    }
 }
 
-export function getTextsFromTokuSyuKouKa(value: TextTokuSyuKouKa): Text[] {
+export function getTextsFromTokuSyuKouKa(value: TextSpeicalEffect): Text[] {
     return [];
 }
 
 const testTexts: Text[] = [
     {
-        id:"",
-        title: ["TTextBattleBonus", [3, 4, 2]]
+        id: "",
+        title: ["TextBattleBonus", [3, 4, 2]]
     },
     {
-        id:"",
+        id: "",
         title: ["特殊型", ["サイコミュ", 3]],
         conditions: {
             "1": {
@@ -178,11 +195,11 @@ const testTexts: Text[] = [
         },
     },
     {
-        id:"",
+        id: "",
         title: ["特殊型", ["サイコミュ", 2]]
     },
     {
-        id:"",
+        id: "",
         title: ["使用型", ["自軍", "戦闘フェイズ"]],
         conditions: {
             "1": {

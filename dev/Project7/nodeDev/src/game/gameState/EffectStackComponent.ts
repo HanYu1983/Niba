@@ -8,6 +8,12 @@ export type EffectStackComponent = {
   immediateEffect: string[];
   // 堆疊效果。每次只處理第一個代表top的block
   stackEffect: string[];
+  // 專門給破壞效果用的用的堆疊
+  // 傷害判定結束時，將所有破壞產生的廢棄效果丟到這，重設「決定解決順序」的旗標為真
+  // 如果這個堆疊一有值時並「決定解決順序」為真時，就立刻讓主動玩家決定解決順序，決定完後，將旗標設為假
+  // 旗標為假時，才能才能開放給玩家切入
+  // 這個堆疊解決完後，才回復到本來的堆疊的解決程序
+  destroyEffect: string[];
 
   effects: { [key: string]: Effect };
 }
@@ -28,7 +34,10 @@ export function getTopEffect(ctx: EffectStackComponent): Effect | null {
   return ctx.effects[topEffectId];
 }
 
-export function getEffect(ctx: EffectStackComponent, id: string): Effect | null {
+export function getEffect(ctx: EffectStackComponent, id: string): Effect {
+  if (ctx.effects[id] == null) {
+    throw new Error(`effect not found: ${id}`)
+  }
   return ctx.effects[id]
 }
 
@@ -40,6 +49,16 @@ export function removeEffect(ctx: EffectStackComponent, id: string): EffectStack
     immediateEffect: ctx.immediateEffect.filter(_id => _id != id),
     commandEffect: ctx.commandEffect.filter(_id => _id != id),
   }
+}
+
+export function clearDestroyEffects(ctx: EffectStackComponent): EffectStackComponent {
+  const effects = { ...ctx.effects }
+  ctx.destroyEffect.forEach(id => delete effects[id])
+  return {
+    ...ctx,
+    destroyEffect: []
+  }
+  return ctx
 }
 
 export function addStackEffect(ctx: EffectStackComponent, block: Effect): EffectStackComponent {
@@ -54,6 +73,14 @@ export function addImmediateEffect(ctx: EffectStackComponent, block: Effect): Ef
   return {
     ...ctx,
     immediateEffect: [block.id, ...ctx.immediateEffect],
+    effects: assoc(block.id, block, ctx.effects),
+  };
+}
+
+export function addDestroyEffect(ctx: EffectStackComponent, block: Effect): EffectStackComponent {
+  return {
+    ...ctx,
+    destroyEffect: [block.id, ...ctx.destroyEffect],
     effects: assoc(block.id, block, ctx.effects),
   };
 }

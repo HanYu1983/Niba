@@ -2,7 +2,7 @@ import { log } from "../../tool/logger";
 import { getOpponentPlayerID, PlayerA, PlayerB } from "../define/PlayerID";
 import { AbsoluteBaSyou, AbsoluteBaSyouFn } from "../define/BaSyou";
 import { addImmediateEffect, addStackEffect, getEffect } from "../gameState/EffectStackComponent";
-import { triggerTextEvent, updateDestroyEffect, handleAttackDamage } from "../gameState/GameState";
+import { triggerTextEvent, updateDestroyEffect, doPlayerAttack } from "../gameState/GameState";
 import { checkIsBattle } from "../gameState/IsBattleComponent";
 import { Flow } from "./Flow";
 import { GameStateWithFlowMemory, updateCommand } from "./GameStateWithFlowMemory";
@@ -317,37 +317,12 @@ export function applyFlow(
             if (attackPlayerID == null) {
                 throw new Error("attackPlayerID not found");
             }
-            const guardPlayerID = getOpponentPlayerID(attackPlayerID);
             // 速度1
-            ctx = handleAttackDamage(
-                ctx,
-                attackPlayerID,
-                guardPlayerID,
-                "戦闘エリア1",
-                1
-            ) as GameStateWithFlowMemory;
-            ctx = handleAttackDamage(
-                ctx,
-                attackPlayerID,
-                guardPlayerID,
-                "戦闘エリア2",
-                1
-            ) as GameStateWithFlowMemory;
+            ctx = doPlayerAttack(ctx, attackPlayerID, "戦闘エリア1", 1) as GameStateWithFlowMemory;
+            ctx = doPlayerAttack(ctx, attackPlayerID, "戦闘エリア2", 1) as GameStateWithFlowMemory;
             // 速度2
-            ctx = handleAttackDamage(
-                ctx,
-                attackPlayerID,
-                guardPlayerID,
-                "戦闘エリア1",
-                2
-            ) as GameStateWithFlowMemory;
-            ctx = handleAttackDamage(
-                ctx,
-                attackPlayerID,
-                guardPlayerID,
-                "戦闘エリア2",
-                2
-            ) as GameStateWithFlowMemory;
+            ctx = doPlayerAttack(ctx, attackPlayerID, "戦闘エリア1", 2) as GameStateWithFlowMemory;
+            ctx = doPlayerAttack(ctx, attackPlayerID, "戦闘エリア2", 2) as GameStateWithFlowMemory;
             // set hasTriggerEvent
             ctx = {
                 ...ctx,
@@ -462,19 +437,19 @@ export function applyFlow(
             return ctx;
         }
         case "FlowMakeDestroyOrder": {
-            const willAddedDestroyEffect = ctx.destroyEffect.filter((a) => {
-                return ctx.stackEffect.find((id) => a.id == id) == null;
+            const willAddedDestroyEffect = ctx.destroyEffect.filter((id1) => {
+                return ctx.stackEffect.find((id) => id1 == id) == null;
             });
             if (flow.destroyEffect.length != willAddedDestroyEffect.length) {
                 throw new Error("長度不符合");
             }
-            for(const effect of willAddedDestroyEffect){
+            // 移除破壞效果，全部移到堆疊
+            ctx = clearDestroyEffects(ctx)
+            for (const effect of flow.destroyEffect) {
                 ctx = addStackEffect(ctx, effect) as GameStateWithFlowMemory
             }
             return {
                 ...ctx,
-                // 移除破壞效果，全部移到堆疊
-                destroyEffect: [],
                 // 重設切入旗標，讓玩家再次切入
                 flowMemory: {
                     ...ctx.flowMemory,
@@ -526,4 +501,8 @@ export function applyFlow(
         }
     }
     return ctx;
+}
+
+function clearDestroyEffects(ctx: GameStateWithFlowMemory): GameStateWithFlowMemory {
+    throw new Error("Function not implemented.");
 }

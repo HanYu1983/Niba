@@ -2,7 +2,7 @@ import { AbsoluteBaSyouFn } from "../game/define/BaSyou";
 import { PlayerA, PlayerB } from "../game/define/PlayerID";
 import { getTimingSeq } from "../game/define/Timing";
 import { addCards, createCardWithProtoIds } from "../game/gameState/CardTableComponent";
-import { getCardBattlePoint, getBattleGroupBattlePoint, getBattleGroup, GlobalCardState } from "../game/gameState/GameState";
+import { getCardBattlePoint, getBattleGroupBattlePoint, getBattleGroup, GlobalCardState, clearGlobalEffects } from "../game/gameState/GameState";
 import { applyFlow } from "../game/gameStateWithFlowMemory/applyFlow";
 import { DEFAULT_GAME_STATE_WITH_FLOW_MEMORY, GameStateWithFlowMemory, initState } from "../game/gameStateWithFlowMemory/GameStateWithFlowMemory";
 import { queryFlow } from "../game/gameStateWithFlowMemory/queryFlow";
@@ -281,6 +281,7 @@ export async function testBattleBonus() {
       }
     ]
   ) as GameStateWithFlowMemory
+  clearGlobalEffects(ctx)
   {
     const [x, y, z] = getCardBattlePoint(ctx, "a1");
     if (x != 8) {
