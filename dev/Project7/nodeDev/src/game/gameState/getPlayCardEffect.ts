@@ -35,7 +35,7 @@ export function getPlayCardEffect(ctx: GameState, playerId: PlayerID, cardId: st
                         {
                             title: function _(ctx: GameState, effect: Effect, { DefineFn, GameStateFn }: Bridge): GameState {
                                 const cardId = DefineFn.EffectFn.getCardID(effect)
-                                const from = GameStateFn.getCardBaSyou(ctx, cardId)
+                                const from = GameStateFn.getItemBaSyou(ctx, cardId)
                                 ctx = GameStateFn.moveItem(ctx, DefineFn.AbsoluteBaSyouFn.setBaSyouKeyword(from, "プレイされているカード"), [cardId, from]) as GameState
                                 return GameStateFn.addStackEffect(ctx, {
                                     id: ToolFn.getUUID(),
@@ -49,7 +49,7 @@ export function getPlayCardEffect(ctx: GameState, playerId: PlayerID, cardId: st
                                                     {
                                                         title: function _(ctx: GameState, effect: Effect, { DefineFn, GameStateFn }: Bridge): GameState {
                                                             const cardId = DefineFn.EffectFn.getCardID(effect)
-                                                            const from = GameStateFn.getCardBaSyou(ctx, cardId)
+                                                            const from = GameStateFn.getItemBaSyou(ctx, cardId)
                                                             ctx = GameStateFn.moveItem(ctx, DefineFn.AbsoluteBaSyouFn.setBaSyouKeyword(from, "配備エリア"), [cardId, from]) as GameState
                                                             return ctx
                                                         }.toString()

@@ -12,7 +12,7 @@ export const GameStateFn = {
     ...EffectStackComponent,
     ...IsBattleComponent,
     ...SetGroupComponent,
-    ...CardTableComponent,
-    ...CoinTableComponent,
+    //...CardTableComponent,
+    //...CoinTableComponent,
     ...ItemTableComponent,
 }

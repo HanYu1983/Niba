@@ -13,9 +13,7 @@ import { TargetMissingError } from "../define/GameError";
 
 export type Item = Card | Coin | Chip;
 
-export type ItemTableComponent = {
-  itemIds: string[]
-} & CardTableComponent & CoinTableComponent & ChipTableComponent & SetGroupComponent
+export type ItemTableComponent = CardTableComponent & CoinTableComponent & ChipTableComponent & SetGroupComponent
 
 export function isCard(ctx: ItemTableComponent, id: string): boolean {
   return getCardIds(ctx).includes(id)
@@ -43,7 +41,11 @@ export function getItem(ctx: ItemTableComponent, id: string): Item {
 }
 
 export function getItemIds(ctx: ItemTableComponent): string[] {
-  return ctx.itemIds
+  return [
+    ...Object.keys(ctx.cards),
+    ...Object.keys(ctx.chips),
+    ...Object.keys(ctx.coins)
+  ]
 }
 
 export function getItemController(ctx: ItemTableComponent, id: string): PlayerID {

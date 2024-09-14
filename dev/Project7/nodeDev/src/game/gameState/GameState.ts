@@ -121,8 +121,7 @@ export const DEFAULT_GAME_STATE: GameState = {
   isBattle: {},
   chipPool: {},
   coins: {},
-  coinId2cardId: {},
-  itemIds: []
+  coinId2cardId: {}
 }
 
 export function getCardCharacteristic(ctx: GameState, cardID: string) {
