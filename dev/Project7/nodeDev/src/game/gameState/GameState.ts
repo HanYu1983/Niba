@@ -1,7 +1,6 @@
 import {
   getCard,
   getCardBaSyou,
-  getCardController,
   CardTableComponent,
   getCardIds,
   getCardIdsByBasyou,
@@ -12,7 +11,6 @@ import { getSetGroupCards, getSetGroupRoot, SetGroupComponent } from "./SetGroup
 import { EffectStackComponent } from "./EffectStackComponent";
 import { getPreloadPrototype } from "../../script";
 import { log } from "../../tool/logger";
-import { Bridge } from "../../script/bridge";
 import { Action, ActionFn, ActionTitle, ActionTitleFn, Condition, ConditionFn, ConditionTitle, ConditionTitleFn, getOnSituationFn, LogicTreeActionFn, OnSituationFn, Situation, Text, TextFn, TextTokuSyuKouKa } from "../define/Text";
 import { AttackSpeed } from "../define";
 import { getOpponentPlayerID, PlayerA, PlayerID } from "../define/PlayerID";
@@ -27,7 +25,7 @@ import { BattlePoint, BattlePointFn } from "../define/BattlePoint";
 import { __, always, flatten, flow, map, pipe, reduce } from "ramda";
 import { createBridge } from "../bridge/createBridge";
 import { CoinTableComponent } from "./CoinTableComponent";
-import { ItemTableComponent } from "./ItemTableComponent";
+import { getItemController, getItemPrototype, ItemTableComponent } from "./ItemTableComponent";
 
 export type PlayerState = {
   id: string;
@@ -129,7 +127,7 @@ export function getCardCharacteristic(ctx: GameState, cardID: string) {
   if (card == null) {
     throw new Error("card not found");
   }
-  const prototype = getPreloadPrototype(card.protoID);
+  const prototype = getPreloadPrototype(card.protoID || "unknownProtoID");
   return prototype.characteristic;
 }
 
@@ -138,7 +136,7 @@ export function getCardColor(ctx: GameState, cardID: string): CardColor {
   if (card == null) {
     throw new Error("card not found");
   }
-  const prototype = getPreloadPrototype(card.protoID);
+  const prototype = getPreloadPrototype(card.protoID || "unknownProtoID");
   return prototype.color;
 }
 
@@ -147,7 +145,7 @@ export function getCardTitle(ctx: GameState, cardID: string): string {
   if (card == null) {
     throw new Error("card not found");
   }
-  const prototype = getPreloadPrototype(card.protoID);
+  const prototype = getPreloadPrototype(card.protoID || "unknownProtoID");
   return prototype.title;
 }
 
@@ -162,10 +160,10 @@ export function getSituationEffects(ctx: GameState, situation: Situation | null)
     if (card == null) {
       throw new Error("card not found")
     }
-    const proto = getPreloadPrototype(card.protoID)
+    const proto = getItemPrototype(ctx, card.id)
     const globalEffects = proto.texts.filter(text => text.title[0] == "自動型" && text.title[1] == "恒常")
       .map((text, i) => {
-        const cardController = getCardController(ctx, card.id)
+        const cardController = getItemController(ctx, card.id)
         const fn = getOnSituationFn(text)
         const effect: Effect = {
           id: "",
@@ -199,7 +197,7 @@ export function getCardBattlePoint(
     }
     return [0, 0, 0] as BattlePoint
   })
-  const prototype = getPreloadPrototype(card.protoID);
+  const prototype = getItemPrototype(ctx, card.id);
   // const bonusFromCardState = ctx.globalCardState
   //   .filter((cs) => cs.cardID == cardID)
   //   .flatMap((cs) => cs.cardTextStates.map((cts) => cts.cardText))
@@ -384,7 +382,7 @@ export function isOpponentHasBattleGroup(
   ctx: GameState,
   cardID: string
 ): boolean {
-  const controller = getCardController(ctx, cardID);
+  const controller = getItemController(ctx, cardID);
   const opponentPlayerID = getOpponentPlayerID(controller);
   const battleAreas: AbsoluteBaSyou[] = [
     AbsoluteBaSyouFn.of(opponentPlayerID, "戦闘エリア2"),
@@ -450,7 +448,7 @@ export function getCardBattleArea(
   if (card == null) {
     throw new Error("card not found");
   }
-  const prototype = getPreloadPrototype(card.protoID);
+  const prototype = getItemPrototype(ctx, card.id);
   return prototype.battleArea;
 }
 

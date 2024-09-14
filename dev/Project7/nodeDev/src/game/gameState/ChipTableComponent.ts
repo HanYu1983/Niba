@@ -107,11 +107,6 @@ export function getChipBaSyou(
   return AbsoluteBaSyouFn.fromString(ChipPosition);
 }
 
-export function getChipController(ctx: ChipTableComponent, chipId: string): PlayerID {
-  const baSyou = getChipBaSyou(ctx, chipId);
-  return baSyou.value[0];
-}
-
 export function getChipOwner(ctx: ChipTableComponent, chipId: string): PlayerID {
   const Chip = getChip(ctx, chipId);
   if (Chip == null) {

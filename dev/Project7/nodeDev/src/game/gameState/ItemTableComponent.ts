@@ -1,15 +1,16 @@
 import { assoc, pair } from "ramda";
 import { DEFAULT_TABLE, Table, TableFns } from "../../tool/table";
-import { AbsoluteBaSyou, AbsoluteBaSyouFn } from "../define/BaSyou";
-import { CardPrototype } from "../define/CardPrototype";
-import { PlayerID } from "../define/PlayerID";
-import { Card, CardFn, CardTableComponent, getCard, getCardBaSyou, getCardController, getCardIds, getCardOwner, setCard } from "./CardTableComponent";
+import { AbsoluteBaSyou, AbsoluteBaSyouFn, BaSyou } from "../define/BaSyou";
+import { getOpponentPlayerID, PlayerID } from "../define/PlayerID";
+import { Card, CardFn, CardTableComponent, getCard, getCardBaSyou, getCardIds, getCardOwner, setCard } from "./CardTableComponent";
 import { addCoins, CoinTableComponent, getCoin, getCoinIds } from "./CoinTableComponent";
-import { Chip, ChipFn, ChipTableComponent, getChip, getChipController, getChipIds, getChipOwner, setChip } from "./ChipTableComponent";
+import { Chip, ChipFn, ChipTableComponent, getChip, getChipIds, getChipOwner, getChipPrototype, setChip } from "./ChipTableComponent";
 import { Coin } from "../define/Coin";
 import { StrBaSyouPair } from "../define/Tip";
 import { getSetGroupCards, SetGroupComponent } from "./SetGroupComponent";
 import { TargetMissingError } from "../define/GameError";
+import { CardPrototype } from "../define/CardPrototype";
+import { getPreloadPrototype } from "../../script";
 
 export type Item = Card | Coin | Chip;
 
@@ -49,11 +50,9 @@ export function getItemIds(ctx: ItemTableComponent): string[] {
 }
 
 export function getItemController(ctx: ItemTableComponent, id: string): PlayerID {
-  if (isCard(ctx, id)) {
-    return getCardController(ctx, id)
-  }
-  if (isChip(ctx, id)) {
-    return getChipController(ctx, id)
+  if (isCard(ctx, id) || isChip(ctx, id)) {
+    const baSyou = getItemBaSyou(ctx, id);
+    return baSyou.value[0];
   }
   if (isCoin(ctx, id)) {
     throw new Error(`coin no have controller`)
@@ -167,4 +166,40 @@ export function addCoinsToCard(ctx: ItemTableComponent, target: StrBaSyouPair, c
     return ctx
   }
   throw new Error(`unknown item: ${targetItemId}`)
+}
+
+export function getAbsoluteBaSyou(
+  ctx: ItemTableComponent,
+  itemId: string,
+  baSyou: BaSyou
+): AbsoluteBaSyou {
+  if (baSyou.id == "AbsoluteBaSyou") {
+    return baSyou;
+  }
+  const _playerID = (() => {
+    switch (baSyou.value[0]) {
+      case "持ち主": {
+        return getItemOwner(ctx, itemId)
+      }
+      case "自軍":
+        return getItemController(ctx, itemId)
+      case "敵軍":
+        return getOpponentPlayerID(getItemController(ctx, itemId));
+    }
+  })();
+  return AbsoluteBaSyouFn.of(_playerID, baSyou.value[1])
+}
+
+
+export function getItemPrototype(ctx: ItemTableComponent, itemId: string): CardPrototype {
+  if (isCard(ctx, itemId)) {
+    return getPreloadPrototype(getCard(ctx, itemId).protoID || "unknown")
+  }
+  if (isChip(ctx, itemId)) {
+    return getChipPrototype(ctx, getChip(ctx, itemId).protoID || "unknown")
+  }
+  if (isCoin(ctx, itemId)) {
+    throw new Error(`coin no prototype: ${itemId}`)
+  }
+  throw new Error(`unknown item: ${itemId}`)
 }

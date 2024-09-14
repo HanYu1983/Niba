@@ -9,6 +9,7 @@ import { addCards, createCardWithProtoIds, getCard, getCardBaSyou, getCardIdsByB
 import { Effect } from "../define/Effect";
 import { getPreloadPrototype } from "../../script";
 import { getPlayCardEffect } from "../gameState/getPlayCardEffect";
+import { getItemPrototype } from "../gameState/ItemTableComponent";
 
 export function getClientCommand(ctx: GameStateWithFlowMemory, playerId: PlayerID): Effect[] {
     ctx = createCardWithProtoIds(ctx, playerId, AbsoluteBaSyouFn.of(playerId, "手札"), ["179001_01A_CH_WT007R_white"]) as GameStateWithFlowMemory
@@ -24,7 +25,7 @@ export function getClientCommand(ctx: GameStateWithFlowMemory, playerId: PlayerI
         .pipe(concatMap(basyou => getCardIdsByBasyou(ctx, basyou)))
         .pipe(concatMap(cardId => {
             const card = getCard(ctx, cardId)
-            const proto = getPreloadPrototype(card.protoID)
+            const proto = getItemPrototype(ctx, card.id)
             const textsInTime = proto.texts.filter(text => {
                 const siYouTiming: SiYouTiming = (() => {
                     if (text.title[0] == "使用型") {

@@ -6,18 +6,14 @@ import { getOpponentPlayerID, PlayerID } from "../define/PlayerID";
 // card
 export type Card = {
   id: string
-  ownerID: string
-  protoID: string
-  isRoll: boolean
-  isFaceDown: boolean
+  ownerID?: string
+  protoID?: string
+  isRoll?: boolean
+  isFaceDown?: boolean
 }
 
 export const DEFAULT_CARD: Card = {
   id: "",
-  ownerID: "",
-  protoID: "",
-  isRoll: false,
-  isFaceDown: false
 }
 
 export const CardFn = {
@@ -110,11 +106,6 @@ export function getCardBaSyou(
   return AbsoluteBaSyouFn.fromString(cardPosition);
 }
 
-export function getCardController(ctx: CardTableComponent, cardID: string): PlayerID {
-  const baSyou = getCardBaSyou(ctx, cardID);
-  return baSyou.value[0];
-}
-
 export function getCardOwner(ctx: CardTableComponent, cardID: string): PlayerID {
   const card = getCard(ctx, cardID);
   if (card == null) {
@@ -126,32 +117,4 @@ export function getCardOwner(ctx: CardTableComponent, cardID: string): PlayerID 
   return card.ownerID;
 }
 
-export function getAbsoluteBaSyou(
-  baSyou: BaSyou,
-  ctx: CardTableComponent,
-  cardID: string
-): AbsoluteBaSyou {
-  if (baSyou.id == "AbsoluteBaSyou") {
-    return baSyou;
-  }
-  const _playerID = (() => {
-    switch (baSyou.value[0]) {
-      case "持ち主": {
-        const card = getCard(ctx, cardID);
-        if (card == null) {
-          throw new Error("getAbsoluteBaSyou card not found");
-        }
-        if (card.ownerID == null) {
-          throw new Error("getAbsoluteBaSyou ownerID must not null");
-        }
-        return card.ownerID;
-      }
-      case "自軍":
-        return getCardController(ctx, cardID);
-      case "敵軍":
-        return getOpponentPlayerID(getCardController(ctx, cardID));
-    }
-  })();
-  return AbsoluteBaSyouFn.of(_playerID, baSyou.value[1])
-}
 
