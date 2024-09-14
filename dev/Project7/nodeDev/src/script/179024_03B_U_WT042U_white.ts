@@ -36,18 +36,18 @@ export const prototype: CardPrototype = {
       {
         actions: [
           {
-            title: function _(ctx: GameState, effect: Effect, { EffectFn, GameStateFn }: Bridge): GameState {
+            title: function _(ctx: GameState, effect: Effect, { DefineFn, GameStateFn }: Bridge): GameState {
               ctx = GameStateFn.addStackEffect(ctx, {
                 id: "",
-                reason: ["PlayText", EffectFn.getPlayerID(effect), ["origin", "", 0]],
+                reason: ["PlayText", DefineFn.EffectFn.getPlayerID(effect), ["origin", "", 0]],
                 text: {
                   title: [],
                   logicTreeCommands: [
                     {
                       actions: [
                         {
-                          title: function _(ctx: GameState, effect: Effect, { EffectFn, GameStateFn }: Bridge): GameState {
-                            const cardId = EffectFn.getCardID(effect)
+                          title: function _(ctx: GameState, effect: Effect, { DefineFn, GameStateFn }: Bridge): GameState {
+                            const cardId = DefineFn.EffectFn.getCardID(effect)
                             let cardState = GameStateFn.getCardState(ctx, cardId);
                             if (GameStateFn.isBattle(ctx, cardId, null) == false) {
                               const target = GameStateFn.CardStateFn.getTarget(cardState, "敵軍ユニット１枚")
@@ -71,9 +71,9 @@ export const prototype: CardPrototype = {
         ]
       }
     ],
-    onEvent: function _(ctx: GameState, effect: Effect, { EffectFn, GameStateFn }: Bridge): GameState {
-      const event = EffectFn.getEvent(effect)
-      const cardId = EffectFn.getCardID(effect)
+    onEvent: function _(ctx: GameState, effect: Effect, { DefineFn, GameStateFn }: Bridge): GameState {
+      const event = DefineFn.EffectFn.getEvent(effect)
+      const cardId = DefineFn.EffectFn.getCardID(effect)
       if (event.title[0] == "GameEventOnTiming" && event.title[1][0] == 34) {
         let cardState = GameStateFn.getCardState(ctx, cardId);
         cardState = GameStateFn.CardStateFn.removeFlag(cardState, "add bonus")
@@ -82,8 +82,8 @@ export const prototype: CardPrototype = {
       }
       return ctx
     }.toString(),
-    onSituation: function _(ctx: GameState, effect: Effect, { EffectFn, GameStateFn }: Bridge): GlobalEffect[] {
-      const cardId = EffectFn.getCardID(effect)
+    onSituation: function _(ctx: GameState, effect: Effect, { DefineFn, GameStateFn }: Bridge): GlobalEffect[] {
+      const cardId = DefineFn.EffectFn.getCardID(effect)
       const cardState = GameStateFn.getCardState(ctx, cardId)
       if (cardState.flags["add bonus"]) {
         return [

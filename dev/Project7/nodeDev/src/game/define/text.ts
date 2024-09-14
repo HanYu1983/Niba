@@ -29,7 +29,7 @@ export type TextTokuSyuKouKa =
 
 export type ActionTitle =
     | string
-    | ["(このカード)を(リロール)する", "このカード" | string[], "リロール"]
+    | ["(このカード)を(リロール)する", "このカード" | string[], "ロール" | "リロール"]
 
 export type Action = {
     title: ActionTitle,

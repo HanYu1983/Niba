@@ -9,6 +9,7 @@ import { addCards, createCardWithProtoIds, getCard, getCardBaSyou, getCardIdsByB
 import { Effect } from "../define/Effect";
 import { Bridge } from "../../script/bridge";
 import { getPreloadPrototype } from "../../script";
+import { GameState } from "../gameState/GameState";
 
 function getPlayCardEffect(ctx: GameStateWithFlowMemory, playerId: PlayerID, cardId: string): Effect {
     return {
@@ -38,26 +39,34 @@ function getPlayCardEffect(ctx: GameStateWithFlowMemory, playerId: PlayerID, car
                 {
                     actions: [
                         {
-                            title: ["(このカード)を(リロール)する", ["abc"], "リロール"]
-                        },
-                        {
-                            title: function _(bridge: Bridge, effect: Effect) {
-                                bridge.cutIn({
+                            title: function _(ctx: GameState, effect: Effect, { DefineFn, GameStateFn }: Bridge): GameState {
+                                const cardId = DefineFn.EffectFn.getCardID(effect)
+                                const from = GameStateFn.getCardBaSyou(ctx, cardId)
+                                ctx = GameStateFn.moveCard(ctx, from, DefineFn.AbsoluteBaSyouFn.setBaSyouKeyword(from, "プレイされているカード"), [cardId]) as GameState
+                                return GameStateFn.addStackEffect(ctx, {
                                     id: "",
-                                    reason: ["場に出る", bridge.getEffectPlayerID(effect), bridge.getEffectCardID(effect)],
+                                    reason: ["場に出る", DefineFn.EffectFn.getPlayerID(effect), DefineFn.EffectFn.getCardID(effect)],
                                     text: {
                                         title: [],
                                         logicTreeCommands: [
                                             {
                                                 actions: [
                                                     {
-                                                        title: ["(このカード)を(リロール)する", [bridge.getEffectCardID(effect)], "リロール"]
+                                                        title: function _(ctx: GameState, effect: Effect, { DefineFn, GameStateFn }: Bridge): GameState {
+                                                            const cardId = DefineFn.EffectFn.getCardID(effect)
+                                                            const from = GameStateFn.getCardBaSyou(ctx, cardId)
+                                                            ctx = GameStateFn.moveCard(ctx, from, DefineFn.AbsoluteBaSyouFn.setBaSyouKeyword(from, "配備エリア"), [cardId]) as GameState
+                                                            return ctx
+                                                        }.toString()
+                                                    },
+                                                    {
+                                                        title: ["(このカード)を(リロール)する", [DefineFn.EffectFn.getCardID(effect)], "ロール"]
                                                     }
                                                 ]
                                             }
                                         ]
                                     }
-                                })
+                                }) as GameState
                             }.toString()
                         }
                     ]

@@ -25,7 +25,7 @@ import { Event } from "../define/Event";
 import { DEFAULT_TABLE } from "../../tool/table";
 import { BattlePoint, BattlePointFn } from "../define/BattlePoint";
 import { __, always, flatten, flow, map, pipe, reduce } from "ramda";
-import { createBridge } from "./createBridge";
+import { createBridge } from "../bridge/createBridge";
 
 export type PlayerState = {
   id: string;
@@ -172,8 +172,7 @@ export function getSituationEffects(ctx: GameState, situation: Situation | null)
         return ret
       })
       .flatMap(([fn, effect]) => {
-        const bridge = createBridge(ctx)
-        return fn(ctx, effect, bridge)
+        return fn(ctx, effect, createBridge())
       })
     return globalEffects
   })
@@ -467,7 +466,7 @@ export function doEffect(
   conditionIds: string[],
 ): GameState {
   const conditions = conditionIds.map(id => TextFn.getCondition(effect.text, id))
-  const bridge = createBridge(ctx)
+  const bridge = createBridge()
   // conditions
   //   .flatMap(condition => ConditionFn.getActionTitleFns(condition, genActionTitleFn))
   //   .reduce((ctx, fn) => {

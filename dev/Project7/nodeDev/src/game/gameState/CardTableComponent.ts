@@ -1,4 +1,4 @@
-import { assoc, mapObjIndexed, toPairs } from "ramda";
+import { assoc, toPairs } from "ramda";
 import { Table, TableFns } from "../../tool/table";
 import { AbsoluteBaSyou, BaSyou, AbsoluteBaSyouFn } from "../define/BaSyou";
 import { getOpponentPlayerID, PlayerID } from "../define/PlayerID";
@@ -52,6 +52,23 @@ export function mapCard(ctx: CardTableComponent, f: (key: AbsoluteBaSyou, card: 
   }).reduce((ctx, [basyou, cards]) => {
     return cards.map(card => f(basyou, card)).reduce((ctx, card) => assoc(card.id, card, ctx), ctx)
   }, ctx)
+}
+
+export type OnMoveCardFn = (ctx: CardTableComponent, from: AbsoluteBaSyou, to: AbsoluteBaSyou, cardIds: string[]) => CardTableComponent;
+
+export function moveCard(ctx: CardTableComponent, from: AbsoluteBaSyou, to: AbsoluteBaSyou, cardIds: string[], onFn?: OnMoveCardFn): CardTableComponent {
+  let table = ctx.table
+  table = cardIds.reduce((table, cardId) => {
+    return TableFns.moveCard(table, AbsoluteBaSyouFn.toString(from), AbsoluteBaSyouFn.toString(to), cardId)
+  }, table)
+  ctx = {
+    ...ctx,
+    table: table
+  }
+  if (onFn) {
+    ctx = onFn(ctx, from, to, cardIds)
+  }
+  return ctx
 }
 
 export function createCardWithProtoIds(ctx: CardTableComponent, playerID: PlayerID, basyou: AbsoluteBaSyou, cardProtoIds: string[]): CardTableComponent {
