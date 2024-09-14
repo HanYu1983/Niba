@@ -9,7 +9,7 @@ import { CardPrototype, DEFAULT_CARD_PROTOTYPE } from "../game/define/CardProtot
 export const prototype: CardPrototype = {
   ...DEFAULT_CARD_PROTOTYPE,
   title: "キラ・ヤマト",
-  characteristic: "男性　子供　CO".split("　"),
+  characteristic: "男性　子供　CO",
   category: "キャラクター",
   color: "白",
   rollCost: ["白", null, null, null],

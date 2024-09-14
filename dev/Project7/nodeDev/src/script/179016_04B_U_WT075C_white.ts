@@ -11,9 +11,7 @@ import { CardPrototype, DEFAULT_CARD_PROTOTYPE } from "../game/define/CardProtot
 export const prototype: CardPrototype = {
   ...DEFAULT_CARD_PROTOTYPE,
   title: "アストレイ ブルーフレーム セカンドL（ローエングリンランチャー）",
-  characteristic: "アストレイ系　ブルーフレーム系　MS　専用「叢雲劾」".split(
-    "　"
-  ),
+  characteristic: "アストレイ系　ブルーフレーム系　MS　専用「叢雲劾」",
   category: "ユニット",
   color: "白",
   rollCost: ["白", "白", null, null, null],

@@ -44,7 +44,7 @@ function getPlayCardEffect(ctx: GameStateWithFlowMemory, playerId: PlayerID, car
                             title: function _(bridge: Bridge, effect: Effect) {
                                 bridge.cutIn({
                                     id: "",
-                                    reason: ["場に出る", playerId, bridge.getEffectCardID(effect)],
+                                    reason: ["場に出る", bridge.getEffectPlayerID(effect), bridge.getEffectCardID(effect)],
                                     text: {
                                         title: [],
                                         logicTreeCommands: [

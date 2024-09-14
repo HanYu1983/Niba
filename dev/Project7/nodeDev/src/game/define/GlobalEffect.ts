@@ -1,4 +1,4 @@
-import { Text } from "./Text";
+import { BattleBonus, Text } from "./Text";
 
 export type GlobalEffectAddText = {
     type: "AddText",
@@ -11,4 +11,10 @@ export type GlobalEffectRollAsG = {
     cardIds: string[],
 }
 
-export type GlobalEffect = GlobalEffectAddText | GlobalEffectRollAsG;
+export type GlobalEffectBattleBonus = {
+    type: "＋x／＋x／＋xを得る",
+    cardIds: string[],
+    value: BattleBonus,
+}
+
+export type GlobalEffect = GlobalEffectAddText | GlobalEffectRollAsG | GlobalEffectBattleBonus;

@@ -1,22 +1,13 @@
-
-
-// 179016_04B_U_WT075C_white
-// アストレイ ブルーフレーム セカンドL（ローエングリンランチャー）
-// アストレイ系　ブルーフレーム系　MS　専用「叢雲劾」
-// 〔０〕：改装［ブルーフレーム系］
-// 『起動』：「特徴：アストレイ系」を持つ自軍ユニットが、「改装」の効果で場に出た場合、〔白２〕を支払う事ができる。その場合、５以下の防御力を持つ敵軍ユニット１枚を破壊する。（注：このカードが場に出た時にも起動する）
 import { CardPrototype, DEFAULT_CARD_PROTOTYPE } from "../game/define/CardPrototype";
 import { Effect } from "../game/define/Effect";
 import { GlobalEffect } from "../game/define/GlobalEffect";
-import { Situation } from "../game/define/Text";
+import { GameState } from "../game/gameState/GameState";
 import { Bridge } from "./bridge";
 
 export const prototype: CardPrototype = {
   ...DEFAULT_CARD_PROTOTYPE,
   title: "アストレイ ブルーフレーム セカンドL（ローエングリンランチャー）",
-  characteristic: "アストレイ系　ブルーフレーム系　MS　専用「叢雲劾」".split(
-    "　"
-  ),
+  characteristic: "アストレイ系　ブルーフレーム系　MS　専用「叢雲劾」",
   category: "ユニット",
   color: "白",
   rollCost: ["白", "白", null, null, null],
@@ -24,8 +15,10 @@ export const prototype: CardPrototype = {
   texts: [
     {
       title: ["自動型", "恒常"],
-      onSituation: function _(bridge: Bridge, effect: Effect, situation: Situation): GlobalEffect[] {
-        const units = bridge.getMyUnitIds(bridge.getEffectCardID(effect))
+      onSituation: function _(ctx: GameState, effect: Effect, { GameStateFn, EffectFn }: Bridge): GlobalEffect[] {
+        const cardIds = GameStateFn.getCardIds(ctx)
+        //const cardId = EffectFn.getCardID(effect)
+        const units = cardIds
         return [
           {
             type: "AddText",

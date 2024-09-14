@@ -25,7 +25,7 @@ export type CardColor =
 
 export type CardPrototype = {
     title: string;
-    characteristic: string[];
+    characteristic: string;
     color: CardColor;
     category: CardCategory;
     rollCost: (CardColor | null)[];
@@ -36,7 +36,7 @@ export type CardPrototype = {
 
 export const DEFAULT_CARD_PROTOTYPE: CardPrototype = {
     title: "名稱未定義",
-    characteristic: [],
+    characteristic: "",
     color: "白",
     category: "ユニット",
     rollCost: [],

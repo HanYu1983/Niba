@@ -1,4 +1,4 @@
-import { zipObj } from "ramda";
+import { always, ifElse, map, pipe, zipObj } from "ramda";
 import { RelatedPlayerSideKeyword } from ".";
 import { LogicTree, LogicTreeFn } from "../../tool/logicTree";
 import { BaSyouKeyword } from "./BaSyou";
@@ -35,7 +35,7 @@ export type Action = {
     title: ActionTitle,
 }
 
-export type ActionTitleFn = (ctx: any, effect: Effect) => any;
+export type ActionTitleFn = (ctx: any, effect: Effect, lib: any) => any;
 
 export const ActionFn = {
     getTitleFn(ctx: Action): ActionTitleFn {
@@ -48,12 +48,12 @@ export const ActionFn = {
 
 export type ConditionTitle =
     | string
-    | ["(x)", number]
+    | ["〔x〕", number]
     | ["c(x)", CardColor, number]
     | ["total(x)", number]
     | ["本来の記述に｢特徴：(装弾)｣を持つ(自軍)(G)(１)枚", string, RelatedPlayerSideKeyword, CardCategory, number]
     | ["(戦闘エリア)にいる(敵軍)(ユニット)(１)～(２)枚", BaSyouKeyword, RelatedPlayerSideKeyword, CardCategory, number, number]
-    | ["(交戦中)の(自軍)(ユニット)(１)枚", "交戦中" | "非交戦中", RelatedPlayerSideKeyword, CardCategory, number]
+    | ["(交戦中)の(自軍)(ユニット)(１)枚", "交戦中" | "非交戦中" | null, RelatedPlayerSideKeyword, CardCategory, number]
 
 export type Condition = {
     title: ConditionTitle,
@@ -62,7 +62,7 @@ export type Condition = {
 
 export type Tip = any;
 
-export type ConditionTitleFn = (ctx: any, effect: Effect) => Tip[];
+export type ConditionTitleFn = (ctx: any, effect: Effect, lib: any) => Tip[];
 
 export const ConditionFn = {
     getTitleFn(ctx: Condition) {
@@ -135,8 +135,21 @@ export const TextFn = {
     },
 
     getLogicTreeActionConditions(ctx: Text, logicTreeCommand: LogicTreeAction): { [key: string]: Condition }[] {
+        // return pipe(
+        //     ifElse(
+        //         always(logicTreeCommand.logicTree == null),
+        //         always([Object.keys(ctx.conditions || {})]),
+        //         always(LogicTreeFn.enumerateAll(logicTreeCommand.logicTree!) as string[][])
+        //     ),
+        //     map(conditionIds => {
+        //         const conditions = conditionIds.map(conditionId => this.getCondition(ctx, conditionId))
+        //         return zipObj(conditionIds, conditions)
+        //     })
+        // )()
         if (logicTreeCommand.logicTree == null) {
-            return []
+            const conditionIds = Object.keys(ctx.conditions || {})
+            const conditions = conditionIds.map(conditionId => this.getCondition(ctx, conditionId))
+            return [zipObj(conditionIds, conditions)] 
         }
         const conditionIdsList = LogicTreeFn.enumerateAll(logicTreeCommand.logicTree) as string[][]
         return conditionIdsList.map(conditionIds => {
@@ -213,7 +226,7 @@ const testTexts: Text[] = [
     }
 ]
 
-export type OnSituationFn = (ctx: any, effect: Effect, evt: Situation | null) => GlobalEffect[];
+export type OnSituationFn = (ctx: any, effect: Effect, lib: any) => GlobalEffect[];
 
 export function getOnSituationFn(ctx: Text): OnSituationFn {
     if (ctx.onSituation == null) {

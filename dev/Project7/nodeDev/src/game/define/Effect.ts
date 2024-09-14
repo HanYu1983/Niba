@@ -1,5 +1,6 @@
+import { Event } from "./Event";
 import { PlayerID } from "./PlayerID";
-import { Text } from "./Text";
+import { Situation, Text } from "./Text";
 import { TextID, TextIDFns } from "./TextID";
 
 export type DestroyReason1 = {
@@ -15,7 +16,9 @@ export type EffectReason =
     | ["PlayCard", PlayerID, string]
     | ["PlayText", PlayerID, TextID]
     | ["GameRule", PlayerID | null]
-    | ["Destroy", PlayerID, string, DestroyReason];
+    | ["Destroy", PlayerID, string, DestroyReason]
+    | ["Situation", PlayerID, string, Situation | null]
+    | ["Event", string, Event];
 
 export type Effect = {
     id: string,
@@ -31,7 +34,7 @@ export const EffectFn = {
     getCardID(ctx: Effect): string {
         switch (ctx.reason[0]) {
             case "GameRule":
-                throw new Error("GameRule no playerID");
+                throw new Error("GameRule no cardID");
 
             case "PlayText":
                 return TextIDFns.getCardID(ctx.reason[2])
@@ -39,7 +42,11 @@ export const EffectFn = {
             case "PlayCard":
             case "場に出る":
             case "Destroy":
+            case "Situation":
                 return ctx.reason[2]
+
+            case "Event":
+                return ctx.reason[1]
         }
     },
 
@@ -57,7 +64,37 @@ export const EffectFn = {
             case "場に出る":
             case "PlayCard":
             case "Destroy":
+            case "Situation":
                 return ctx.reason[1]
+            case "Event":
+                throw new Error(`${ctx.reason[0]} no playerID`)
+        }
+    },
+
+    getSituation(ctx: Effect): Situation | null {
+        switch (ctx.reason[0]) {
+            case "Situation":
+                return ctx.reason[3]
+            default:
+                throw new Error(`${ctx.reason[0]} no Situation`)
+        }
+    },
+
+    getDestroyReason(ctx: Effect): DestroyReason {
+        switch (ctx.reason[0]) {
+            case "Destroy":
+                return ctx.reason[3]
+            default:
+                throw new Error(`${ctx.reason[0]} no DestroyReason`)
+        }
+    },
+
+    getEvent(ctx: Effect): Event {
+        switch (ctx.reason[0]) {
+            case "Event":
+                return ctx.reason[2]
+            default:
+                throw new Error(`${ctx.reason[0]} no Event`)
         }
     }
 }

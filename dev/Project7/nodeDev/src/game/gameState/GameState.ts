@@ -6,7 +6,7 @@ import {
   getCardIds,
   getCardIdsByBasyou,
 } from "./CardTableComponent"
-import { CardStateComponent, getCardState, mapCardState } from "./CardStateComponent";
+import { CardState, CardStateComponent, CardStateFn, getCardState, mapCardState } from "./CardStateComponent";
 import { IsBattleComponent } from "./IsBattleComponent";
 import { getSetGroupCards, getSetGroupRoot, SetGroupComponent } from "./SetGroupComponent";
 import { EffectStackComponent } from "./EffectStackComponent";
@@ -25,6 +25,7 @@ import { Event } from "../define/Event";
 import { DEFAULT_TABLE } from "../../tool/table";
 import { BattlePoint, BattlePointFn } from "../define/BattlePoint";
 import { __, always, flatten, flow, map, pipe, reduce } from "ramda";
+import { createBridge } from "./createBridge";
 
 export type PlayerState = {
   id: string;
@@ -39,27 +40,6 @@ export type CardTextState = {
   cardText: Text;
 };
 
-export type CardState = {
-  id: string; // card.id
-  //isChip: boolean;
-  damage: number;
-  destroyReason: DestroyReason | null;
-  //setGroupID: string;
-  flags: string[];
-  cardTextStates: CardTextState[];
-  //prototype: CardPrototype;
-};
-
-export const DEFAULT_CARD_STATE: CardState = {
-  id: "",
-  //isChip: true,
-  damage: 0,
-  destroyReason: null,
-  //setGroupID: "",
-  flags: [],
-  cardTextStates: [],
-  // prototype: DEFAULT_CARD_PROTOTYPE,
-};
 
 export type GlobalCardState = {
   id: string;
@@ -167,27 +147,7 @@ export function getCardTitle(ctx: GameState, cardID: string): string {
   return prototype.title;
 }
 
-function createBridge(ctx: GameState): Bridge {
-  const bridge: Bridge = {
-    ctx: ctx,
-    getEffectCardID: function (effect: Effect): string {
-      return EffectFn.getCardID(effect)
-    },
-    getEffectPlayerID: function (effect: Effect): PlayerID {
-      return EffectFn.getPlayerID(effect)
-    },
-    getMyUnitIds: function (playerID: PlayerID): string[] {
-      return getCardIds(ctx);
-    },
-    getFunctionByAction: function (action: ActionTitle): (ctx: Bridge, effect: Effect) => Bridge {
-      throw new Error("Function not implemented.");
-    },
-    cutIn: function (effect: Effect): Bridge {
-      throw new Error("Function not implemented.");
-    }
-  }
-  return bridge
-}
+
 
 export function getSituationEffects(ctx: GameState, situation: Situation | null): GlobalEffect[] {
   // getCardIdsByBasyou(ctx, {
@@ -205,7 +165,7 @@ export function getSituationEffects(ctx: GameState, situation: Situation | null)
         const fn = getOnSituationFn(text)
         const effect: Effect = {
           id: "",
-          reason: ["PlayText", cardController, ["origin", card.id, i]],
+          reason: ["Situation", cardController, card.id, situation],
           text: text
         }
         const ret: [OnSituationFn, Effect] = [fn, effect]
@@ -213,7 +173,7 @@ export function getSituationEffects(ctx: GameState, situation: Situation | null)
       })
       .flatMap(([fn, effect]) => {
         const bridge = createBridge(ctx)
-        return fn(bridge, effect, situation)
+        return fn(ctx, effect, bridge)
       })
     return globalEffects
   })
@@ -439,9 +399,7 @@ export function isMaster(
   unitCardID: string,
   cardID: string
 ): boolean {
-  const match = getCardCharacteristic(ctx, unitCardID)
-    .join("|")
-    .match(/専用「(.+?)」/);
+  const match = getCardCharacteristic(ctx, unitCardID).match(/専用「(.+?)」/);
   if (match == null) {
     return false;
   }
@@ -520,23 +478,23 @@ export function doEffect(
   //     return fn(ctx, effect)
   //   }, bridge)
 
-  const processCondition = pipe(
+  const processCondition = (ctx: GameState) => pipe(
     always(conditions),
     map(condition => ConditionFn.getActionTitleFns(condition, genActionTitleFn)),
     flatten,
-    reduce((ctx, fn) => fn(ctx, effect), bridge)
+    reduce((ctx, fn) => fn(ctx, effect, bridge), ctx)
   )
 
-  const processLogicAction = pipe(
+  const processLogicAction = (ctx: GameState) => pipe(
     always(TextFn.getLogicTreeAction(effect.text, logicId)),
     lta => LogicTreeActionFn.getActionTitleFns(lta, genActionTitleFn),
-    reduce((ctx, fn) => fn(ctx, effect), bridge)
+    reduce((ctx, fn) => fn(ctx, effect, bridge), ctx)
   )
 
-  processCondition()
-  processLogicAction()
+  ctx = processCondition(ctx)()
+  ctx = processLogicAction(ctx)()
 
-  return bridge.ctx;
+  return ctx;
 }
 
 export function handleAttackDamage(

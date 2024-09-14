@@ -1,14 +1,51 @@
-import {
-  CardState,
-  DEFAULT_CARD_STATE,
-} from "./GameState";
+import { assoc, dissoc } from "ramda";
+import { DestroyReason } from "../define/Effect";
+import { Target } from "../define/Target";
+
+export type CardState = {
+  id: string;
+  damage: number;
+  destroyReason: DestroyReason | null;
+  flags: { [key: string]: any };
+  targets: { [key: string]: Target }
+};
+
+const DEFAULT_CARD_STATE: CardState = {
+  id: "",
+  damage: 0,
+  destroyReason: null,
+  flags: {},
+  targets: {},
+};
+
+export const CardStateFn = {
+  setFlag(ctx: CardState, k: string, v: any): CardState {
+    return {
+      ...ctx,
+      flags: assoc(k, v, ctx.flags)
+    }
+  },
+  removeFlag(ctx: CardState, k: string): CardState {
+    return {
+      ...ctx,
+      flags: dissoc(k, ctx.flags),
+    }
+  },
+  getTarget(ctx: CardState, k: string): Target | null {
+    return ctx.targets[k]
+  }
+}
 
 export type CardStateComponent = {
   cardStates: { [key: string]: CardState }
 }
 
 export function getCardState(ctx: CardStateComponent, cardID: string): CardState {
-  return ctx.cardStates[cardID] || DEFAULT_CARD_STATE;
+  return ctx.cardStates[cardID] || { ...DEFAULT_CARD_STATE, id: cardID };
+}
+
+export function setCardState(ctx: CardStateComponent, cardID: string, cardState: CardState): CardStateComponent {
+  return { ...ctx, cardStates: assoc(cardID, cardState, ctx.cardStates) }
 }
 
 export function mapCardState(ctx: CardStateComponent, f: (key: string, cs: CardState) => CardState): CardStateComponent {
