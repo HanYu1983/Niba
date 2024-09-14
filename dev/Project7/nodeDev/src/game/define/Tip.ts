@@ -1,5 +1,5 @@
 import { AbsoluteBaSyou } from "./BaSyou";
-import { GameError } from "./GameError";
+import { TargetMissingError } from "./GameError";
 
 export type StrBaSyouPair = [string, AbsoluteBaSyou]
 
@@ -14,7 +14,7 @@ export type Tip = {
 };
 
 export const TipFn = {
-    checkTipSatisfies(tip: Tip): GameError | null {
+    checkTipSatisfies(tip: Tip): TargetMissingError | null {
         const selection = (() => {
             switch (tip.title[0]) {
                 case "カード":
@@ -22,13 +22,13 @@ export const TipFn = {
             }
         })()
         if (tip.count != null && tip.count != selection.length) {
-            return new GameError(`count not right`)
+            return new TargetMissingError(`count not right`)
         }
         if (tip.min != null && selection.length < tip.min) {
-            return new GameError(`min not right`)
+            return new TargetMissingError(`min not right`)
         }
         if (tip.max != null && selection.length > tip.max) {
-            return new GameError(`max not right`)
+            return new TargetMissingError(`max not right`)
         }
         return null;
     }

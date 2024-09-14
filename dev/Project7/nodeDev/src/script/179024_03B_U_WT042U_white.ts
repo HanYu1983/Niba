@@ -20,7 +20,7 @@ export const prototype: CardPrototype = {
   rollCost: ["白", null, null, null],
   battlePoint: [5, 0, 4],
   texts: [{
-    id:"",
+    id: "",
     title: ["使用型", ["自軍", "ダメージ判定ステップ"]],
     description: "（自軍ダメージ判定ステップ）〔１〕：このカードは交戦中の場合、ターン終了時まで＋１／＋１／＋１を得る。または、このカードが非交戦中の場合、敵軍ユニット１枚の上に－１／－１／－１コイン１個を乗せる。",
     conditions: {
@@ -41,7 +41,7 @@ export const prototype: CardPrototype = {
                 id: "",
                 reason: ["PlayText", DefineFn.EffectFn.getPlayerID(effect), cardId, effect.text.id],
                 text: {
-                  id:"",
+                  id: "",
                   title: [],
                   logicTreeCommands: [
                     {
@@ -65,7 +65,7 @@ export const prototype: CardPrototype = {
                                 throw new Error("your must select 1")
                               }
                               const [targetCardId, targetBasyou] = pairs[0]
-                              ctx = GameStateFn.addCoins(ctx, targetBasyou, targetCardId, [DefineFn.CoinFn.battleBonus([-1, -1, -1])]) as GameState
+                              ctx = GameStateFn.addCoinsToCard(ctx, [targetCardId, targetBasyou], [DefineFn.CoinFn.battleBonus([-1, -1, -1])]) as GameState
                               return ctx
                             }
                             cardState = GameStateFn.CardStateFn.setFlag(cardState, "add bonus", true)

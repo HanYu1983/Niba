@@ -3,13 +3,13 @@ import { DEFAULT_TABLE, Table, TableFns } from "../../tool/table";
 import { AbsoluteBaSyou, AbsoluteBaSyouFn } from "../define/BaSyou";
 import { CardPrototype } from "../define/CardPrototype";
 import { PlayerID } from "../define/PlayerID";
-import { Card, CardFn, CardTableComponent, getCard, getCardController, getCardIds, getCardOwner, setCard } from "./CardTableComponent";
-import { CoinTableComponent, getCoin, getCoinIds } from "./CoinTableComponent";
+import { Card, CardFn, CardTableComponent, getCard, getCardBaSyou, getCardController, getCardIds, getCardOwner, setCard } from "./CardTableComponent";
+import { addCoins, CoinTableComponent, getCoin, getCoinIds } from "./CoinTableComponent";
 import { Chip, ChipFn, ChipTableComponent, getChip, getChipController, getChipIds, getChipOwner, setChip } from "./ChipTableComponent";
 import { Coin } from "../define/Coin";
 import { StrBaSyouPair } from "../define/Tip";
 import { getSetGroupCards, SetGroupComponent } from "./SetGroupComponent";
-import { GameError } from "../define/GameError";
+import { TargetMissingError } from "../define/GameError";
 
 export type Item = Card | Coin | Chip;
 
@@ -89,14 +89,14 @@ export function getItemBaSyou(
   throw new Error(`unknown item: ${id}`)
 }
 
-export type OnMoveItemFn = (ctx: ItemTableComponent, to: AbsoluteBaSyou, [itemId, originBasyou]: StrBaSyouPair) => ItemTableComponent;
+export type OnMoveItemFn = (ctx: ItemTableComponent, to: AbsoluteBaSyou, sb: StrBaSyouPair) => ItemTableComponent;
 
 export function moveItem(ctx: ItemTableComponent, to: AbsoluteBaSyou, sb: StrBaSyouPair, onFn?: OnMoveItemFn): ItemTableComponent {
   const [itemId, originBasyou] = sb
   if (isCard(ctx, itemId) && isChip(ctx, itemId)) {
     const nowBasyou = getItemBaSyou(ctx, itemId)
     if (AbsoluteBaSyouFn.eq(nowBasyou, originBasyou) == false) {
-      throw new GameError(`target missing: ${itemId} from ${originBasyou}`)
+      throw new TargetMissingError(`target missing: ${itemId} from ${originBasyou}`)
     }
     const itemIds = getSetGroupCards(ctx, itemId)
     const table = itemIds.reduce((table, itemId) => {
@@ -121,7 +121,7 @@ export function setItemIsRoll(ctx: ItemTableComponent, isRoll: boolean, [itemId,
   if (isCard(ctx, itemId)) {
     const nowBasyou = getItemBaSyou(ctx, itemId)
     if (AbsoluteBaSyouFn.eq(nowBasyou, originBasyou) == false) {
-      throw new GameError(`target missing: ${itemId} from ${originBasyou}`)
+      throw new TargetMissingError(`target missing: ${itemId} from ${originBasyou}`)
     }
     const itemIds = getSetGroupCards(ctx, itemId)
     ctx = itemIds.reduce((ctx, itemId) => {
@@ -144,7 +144,7 @@ export function setItemIsRoll(ctx: ItemTableComponent, isRoll: boolean, [itemId,
   if (isChip(ctx, itemId)) {
     const nowBasyou = getItemBaSyou(ctx, itemId)
     if (AbsoluteBaSyouFn.eq(nowBasyou, originBasyou) == false) {
-      throw new GameError(`target missing: ${itemId} from ${originBasyou}`)
+      throw new TargetMissingError(`target missing: ${itemId} from ${originBasyou}`)
     }
     let item = getChip(ctx, itemId)
     item = ChipFn.setIsRoll(item, isRoll)
@@ -152,4 +152,17 @@ export function setItemIsRoll(ctx: ItemTableComponent, isRoll: boolean, [itemId,
     return ctx
   }
   throw new Error(`unknown item: ${itemId}`)
+}
+
+export function addCoinsToCard(ctx: ItemTableComponent, target: StrBaSyouPair, coins: Coin[]): ItemTableComponent {
+  const [targetItemId, targetOriginBasyou] = target
+  if (isCard(ctx, targetItemId)) {
+    const nowBasyou = getCardBaSyou(ctx, targetItemId)
+    if (AbsoluteBaSyouFn.eq(targetOriginBasyou, nowBasyou)) {
+      throw new TargetMissingError("basyou not same")
+    }
+    ctx = addCoins(ctx, targetItemId, coins) as ItemTableComponent
+    return ctx
+  }
+  throw new Error(`unknown item: ${targetItemId}`)
 }

@@ -3,7 +3,7 @@ import { PlayerID } from "../define/PlayerID";
 import { BattleBonus } from "../define/Text";
 import { CardTableComponent, getCardBaSyou } from "./CardTableComponent";
 import { AbsoluteBaSyou, AbsoluteBaSyouFn } from "../define/BaSyou";
-import { GameError } from "../define/GameError";
+import { TargetMissingError } from "../define/GameError";
 import { ToolFn } from "../tool";
 import { Coin } from "../define/Coin";
 
@@ -27,10 +27,7 @@ export function getCoins(ctx: CoinTableComponent): Coin[] {
   return Object.values(ctx.coins)
 }
 
-export function addCoins(ctx: CoinTableComponent, baSyou: AbsoluteBaSyou, cardId: string, added: Coin[]): CoinTableComponent {
-  if (AbsoluteBaSyouFn.eq(getCardBaSyou(ctx, cardId), baSyou)) {
-    throw new GameError("basyou not same")
-  }
+export function addCoins(ctx: CoinTableComponent, cardId: string, added: Coin[]): CoinTableComponent {
   return {
     ...ctx,
     coins: {
