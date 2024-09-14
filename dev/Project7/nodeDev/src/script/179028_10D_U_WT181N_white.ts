@@ -21,7 +21,7 @@ export const prototype: CardPrototype = {
   category: "ユニット",
   color: "白",
   rollCost: ["白", null, null, null],
-  battlePoint: [5, 0, 4],
+  battlePoint: [4, 0, 4],
   texts: [
     {
       id: ToolFn.getUUID("text"),
