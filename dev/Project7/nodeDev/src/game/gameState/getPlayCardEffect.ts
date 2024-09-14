@@ -8,6 +8,7 @@ export function getPlayCardEffect(ctx: GameState, playerId: PlayerID, cardId: st
         id: "",
         reason: ["PlayCard", playerId, cardId],
         text: {
+            id:"",
             title: [],
             conditions: {
                 "1": {
@@ -39,6 +40,7 @@ export function getPlayCardEffect(ctx: GameState, playerId: PlayerID, cardId: st
                                     id: "",
                                     reason: ["場に出る", DefineFn.EffectFn.getPlayerID(effect), DefineFn.EffectFn.getCardID(effect)],
                                     text: {
+                                        id:"",
                                         title: [],
                                         logicTreeCommands: [
                                             {

@@ -7,6 +7,7 @@ import { Effect } from "./Effect";
 import { Event } from "./Event";
 import { GlobalEffect } from "./GlobalEffect";
 import { SiYouTiming } from "./Timing";
+import { Tip } from "./Tip";
 
 export type BattleBonus = [number, number, number]
 
@@ -60,8 +61,6 @@ export type Condition = {
     actions?: Action[]
 }
 
-export type Tip = any;
-
 export type ConditionTitleFn = (ctx: any, effect: Effect, lib: any) => Tip[];
 
 export const ConditionFn = {
@@ -111,6 +110,7 @@ export const LogicTreeActionFn = {
 }
 
 export type Text = {
+    id: string,
     title: TextTitle
     description?: string
     conditions?: { [key: string]: Condition }
@@ -165,9 +165,11 @@ export function getTextsFromTokuSyuKouKa(value: TextTokuSyuKouKa): Text[] {
 
 const testTexts: Text[] = [
     {
+        id:"",
         title: ["TTextBattleBonus", [3, 4, 2]]
     },
     {
+        id:"",
         title: ["特殊型", ["サイコミュ", 3]],
         conditions: {
             "1": {
@@ -176,9 +178,11 @@ const testTexts: Text[] = [
         },
     },
     {
+        id:"",
         title: ["特殊型", ["サイコミュ", 2]]
     },
     {
+        id:"",
         title: ["使用型", ["自軍", "戦闘フェイズ"]],
         conditions: {
             "1": {

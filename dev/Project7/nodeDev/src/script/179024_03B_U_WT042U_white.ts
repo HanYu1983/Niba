@@ -8,10 +8,8 @@
 import { CardPrototype, DEFAULT_CARD_PROTOTYPE } from "../game/define/CardPrototype";
 import type { Effect } from "../game/define/Effect";
 import type { Bridge } from "./bridge";
-import type { Situation } from "../game/define/Text";
 import type { GlobalEffect } from "../game/define/GlobalEffect";
 import type { GameState } from "../game/gameState/GameState";
-import type { Event } from "../game/define/Event";
 
 export const prototype: CardPrototype = {
   ...DEFAULT_CARD_PROTOTYPE,
@@ -22,6 +20,7 @@ export const prototype: CardPrototype = {
   rollCost: ["白", null, null, null],
   battlePoint: [5, 0, 4],
   texts: [{
+    id:"",
     title: ["使用型", ["自軍", "ダメージ判定ステップ"]],
     description: "（自軍ダメージ判定ステップ）〔１〕：このカードは交戦中の場合、ターン終了時まで＋１／＋１／＋１を得る。または、このカードが非交戦中の場合、敵軍ユニット１枚の上に－１／－１／－１コイン１個を乗せる。",
     conditions: {
@@ -37,10 +36,12 @@ export const prototype: CardPrototype = {
         actions: [
           {
             title: function _(ctx: GameState, effect: Effect, { DefineFn, GameStateFn }: Bridge): GameState {
+              const cardId = DefineFn.EffectFn.getCardID(effect)
               ctx = GameStateFn.addStackEffect(ctx, {
                 id: "",
-                reason: ["PlayText", DefineFn.EffectFn.getPlayerID(effect), ["origin", "", 0]],
+                reason: ["PlayText", DefineFn.EffectFn.getPlayerID(effect), cardId, effect.text.id],
                 text: {
+                  id:"",
                   title: [],
                   logicTreeCommands: [
                     {

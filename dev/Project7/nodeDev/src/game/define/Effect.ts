@@ -1,7 +1,6 @@
 import { Event } from "./Event";
 import { PlayerID } from "./PlayerID";
 import { Situation, Text } from "./Text";
-import { TextID, TextIDFns } from "./TextID";
 
 export type DestroyReason1 = {
     id: "通常ダメージ" | "戦闘ダメージ" | "破壊する" | "マイナスの戦闘修正";
@@ -14,7 +13,7 @@ export type DestroyReason = DestroyReason1
 export type EffectReason =
     | ["場に出る", PlayerID, string]
     | ["PlayCard", PlayerID, string]
-    | ["PlayText", PlayerID, TextID]
+    | ["PlayText", PlayerID, string, string]
     | ["GameRule", PlayerID | null]
     | ["Destroy", PlayerID, string, DestroyReason]
     | ["Situation", PlayerID, string, Situation | null]
@@ -37,8 +36,6 @@ export const EffectFn = {
                 throw new Error("GameRule no cardID");
 
             case "PlayText":
-                return TextIDFns.getCardID(ctx.reason[2])
-
             case "PlayCard":
             case "場に出る":
             case "Destroy":
@@ -59,8 +56,6 @@ export const EffectFn = {
                 return ctx.reason[1]
 
             case "PlayText":
-                return TextIDFns.getCardID(ctx.reason[2])
-
             case "場に出る":
             case "PlayCard":
             case "Destroy":

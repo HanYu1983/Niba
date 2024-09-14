@@ -120,10 +120,6 @@ export const DEFAULT_GAME_STATE: GameState = {
   coinId2cardId: {}
 }
 
-function getOpponentBattleArea(baSyou: AbsoluteBaSyou): AbsoluteBaSyou {
-  return AbsoluteBaSyouFn.setOpponentPlayerID(baSyou)
-}
-
 export function getCardCharacteristic(ctx: GameState, cardID: string) {
   const card = getCard(ctx, cardID);
   if (card == null) {
