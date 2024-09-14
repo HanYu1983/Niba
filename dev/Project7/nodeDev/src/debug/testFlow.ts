@@ -213,16 +213,16 @@ export async function testBattleBonus() {
       {
         id: "a1",
         protoID: "179016_04B_U_WT075C_white",
-        faceDown: false,
+        isFaceDown: false,
         ownerID: PlayerA,
-        tap: false,
+        isRoll: false,
       },
       {
         id: "a2",
         protoID: "179001_01A_CH_WT007R_white",
-        faceDown: false,
+        isFaceDown: false,
         ownerID: PlayerA,
-        tap: false,
+        isRoll: false,
       }
     ]
   ) as GameStateWithFlowMemory
@@ -233,16 +233,16 @@ export async function testBattleBonus() {
       {
         id: "b1",
         protoID: "179016_04B_U_WT075C_white",
-        faceDown: true,
+        isFaceDown: true,
         ownerID: PlayerB,
-        tap: false,
+        isRoll: false,
       },
       {
         id: "b2",
         protoID: "179016_04B_U_WT075C_white",
-        faceDown: true,
+        isFaceDown: true,
         ownerID: PlayerB,
-        tap: false,
+        isRoll: false,
       },
     ]
   ) as GameStateWithFlowMemory
@@ -276,9 +276,9 @@ export async function testBattleBonus() {
       {
         id: "a3",
         protoID: "testBPBonus",
-        faceDown: false,
+        isFaceDown: false,
         ownerID: PlayerA,
-        tap: false,
+        isRoll: false,
       }
     ]
   ) as GameStateWithFlowMemory

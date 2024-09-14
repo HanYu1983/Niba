@@ -1,8 +1,10 @@
 import { AbsoluteBaSyou } from "./BaSyou";
 import { GameError } from "./GameError";
 
+export type StrBaSyouPair = [string, AbsoluteBaSyou]
+
 export type TipTitle =
-    | ["カード", [string, AbsoluteBaSyou][], [string, AbsoluteBaSyou][]]
+    | ["カード", StrBaSyouPair[], StrBaSyouPair[]]
 
 export type Tip = {
     title: TipTitle,

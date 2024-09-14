@@ -1,6 +1,7 @@
 import { assoc, dissoc } from "ramda";
 import { DestroyReason } from "../define/Effect";
 import { Tip } from "../define/Tip";
+import { AbsoluteBaSyou, AbsoluteBaSyouFn } from "../define/BaSyou";
 
 export type CardState = {
   id: string;
@@ -51,14 +52,13 @@ export function setCardState(ctx: CardStateComponent, cardID: string, cardState:
   return { ...ctx, cardStates: assoc(cardID, cardState, ctx.cardStates) }
 }
 
-export function mapCardState(ctx: CardStateComponent, f: (key: string, cs: CardState) => CardState): CardStateComponent {
-  let cardStates = ctx.cardStates;
-  Object.keys(ctx.cardStates).forEach(key => {
-    cardStates = {
+export function mapCardState(ctx: CardStateComponent, f: (key: AbsoluteBaSyou, cs: CardState) => CardState): CardStateComponent {
+  const cardStates = Object.keys(ctx.cardStates).reduce((cardStates, key) => {
+    return {
       ...cardStates,
-      [key]: f(key, cardStates[key])
+      [key]: f(AbsoluteBaSyouFn.fromString(key), cardStates[key])
     }
-  })
+  }, ctx.cardStates)
   return {
     ...ctx,
     cardStates

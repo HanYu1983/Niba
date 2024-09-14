@@ -8,16 +8,25 @@ export type Card = {
   id: string
   ownerID: string
   protoID: string
-  tap: boolean
-  faceDown: boolean
+  isRoll: boolean
+  isFaceDown: boolean
 }
 
 export const DEFAULT_CARD: Card = {
   id: "",
   ownerID: "",
   protoID: "",
-  tap: false,
-  faceDown: false
+  isRoll: false,
+  isFaceDown: false
+}
+
+export const CardFn = {
+  setIsRoll(ctx: Card, isRoll: boolean): Card {
+    return {
+      ...ctx,
+      isRoll: isRoll
+    }
+  }
 }
 
 export type CardTableComponent = {
@@ -32,6 +41,16 @@ export function getCard(ctx: CardTableComponent, cardId: string): Card {
   return ctx.cards[cardId];
 }
 
+export function setCard(ctx: CardTableComponent, id: string, card: Card): CardTableComponent {
+  return {
+    ...ctx,
+    cards: {
+      ...ctx.cards,
+      [id]: card
+    }
+  }
+}
+
 export function getCardIds(ctx: CardTableComponent): string[] {
   return Object.keys(ctx.cards);
 }
@@ -44,7 +63,7 @@ export function getCardIdsByBasyou(ctx: CardTableComponent, basyou: AbsoluteBaSy
   return TableFns.getCardsByPosition(ctx.table, AbsoluteBaSyouFn.toString(basyou))
 }
 
-export function mapCard(ctx: CardTableComponent, f: (key: AbsoluteBaSyou, card: Card) => Card): CardTableComponent {
+export function mapCardsWithBasyou(ctx: CardTableComponent, f: (key: AbsoluteBaSyou, card: Card) => Card): CardTableComponent {
   return toPairs(ctx.table.cardStack).map(([k, cardIds]) => {
     const basyou = AbsoluteBaSyouFn.fromString(k)
     const cards = cardIds.map(cardId => getCard(ctx, cardId))
@@ -52,23 +71,6 @@ export function mapCard(ctx: CardTableComponent, f: (key: AbsoluteBaSyou, card: 
   }).reduce((ctx, [basyou, cards]) => {
     return cards.map(card => f(basyou, card)).reduce((ctx, card) => assoc(card.id, card, ctx), ctx)
   }, ctx)
-}
-
-export type OnMoveCardFn = (ctx: CardTableComponent, from: AbsoluteBaSyou, to: AbsoluteBaSyou, cardIds: string[]) => CardTableComponent;
-
-export function moveCard(ctx: CardTableComponent, from: AbsoluteBaSyou, to: AbsoluteBaSyou, cardIds: string[], onFn?: OnMoveCardFn): CardTableComponent {
-  let table = ctx.table
-  table = cardIds.reduce((table, cardId) => {
-    return TableFns.moveCard(table, AbsoluteBaSyouFn.toString(from), AbsoluteBaSyouFn.toString(to), cardId)
-  }, table)
-  ctx = {
-    ...ctx,
-    table: table
-  }
-  if (onFn) {
-    ctx = onFn(ctx, from, to, cardIds)
-  }
-  return ctx
 }
 
 export function createCardWithProtoIds(ctx: CardTableComponent, playerID: PlayerID, basyou: AbsoluteBaSyou, cardProtoIds: string[]): CardTableComponent {
@@ -152,3 +154,4 @@ export function getAbsoluteBaSyou(
   })();
   return AbsoluteBaSyouFn.of(_playerID, baSyou.value[1])
 }
+

@@ -2,15 +2,15 @@ export type SetGroupComponent = {
   setGroupLink: { [key: string]: string };
 }
 
-export function getSetGroupCards(ctx: SetGroupComponent, cardID: string): string[] {
-  const root = getSetGroupRoot(ctx, cardID);
+export function getSetGroupCards(ctx: SetGroupComponent, itemId: string): string[] {
+  const root = getSetGroupRoot(ctx, itemId);
   if (root != null) {
     return getSetGroupCards(ctx, root);
   }
   return [
-    cardID,
+    itemId,
     ...Object.keys(ctx.setGroupLink).filter((k) => {
-      return ctx.setGroupLink[k] == cardID;
+      return ctx.setGroupLink[k] == itemId;
     }),
   ];
 }

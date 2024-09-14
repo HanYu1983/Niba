@@ -27,6 +27,7 @@ import { BattlePoint, BattlePointFn } from "../define/BattlePoint";
 import { __, always, flatten, flow, map, pipe, reduce } from "ramda";
 import { createBridge } from "../bridge/createBridge";
 import { CoinTableComponent } from "./CoinTableComponent";
+import { ItemTableComponent } from "./ItemTableComponent";
 
 export type PlayerState = {
   id: string;
@@ -97,13 +98,16 @@ export type GameState = {
   & TimingComponent
   & PlayerStateComponent
   & ActivePlayerComponent
-  & CoinTableComponent;
+  & CoinTableComponent
+  & ItemTableComponent;
 
 export const DEFAULT_GAME_STATE: GameState = {
   cards: {},
   effects: {},
   globalCardState: [],
   table: DEFAULT_TABLE,
+  chips: {},
+  chipProtos: {},
   cardStates: {},
   timing: TIMING_CHART[0],
   playerState: [],
@@ -117,7 +121,8 @@ export const DEFAULT_GAME_STATE: GameState = {
   isBattle: {},
   chipPool: {},
   coins: {},
-  coinId2cardId: {}
+  coinId2cardId: {},
+  itemIds: []
 }
 
 export function getCardCharacteristic(ctx: GameState, cardID: string) {
@@ -275,7 +280,7 @@ export function getBattleGroupBattlePoint(
         throw new Error("card not found");
       }
       // 横置的單位沒有攻擊力
-      if (card.tap) {
+      if (card.isRoll) {
         return 0;
       }
       const setGroupCards = getSetGroupCards(ctx, cardID);
@@ -454,9 +459,17 @@ function genActionTitleFn(action: Action): ActionTitleFn {
   if (typeof action.title == "string") {
     return ActionFn.getTitleFn(action)
   }
-  return function (ctx: Bridge, effect: Effect) {
-    return ctx
+  switch (action.title[0]) {
+    case "(このカード)を(リロール)する": {
+      const [_, cardIds, isRollStr] = action.title
+      const isRoll = isRollStr == "ロール"
+      return function (ctx: GameState, effect: Effect): GameState {
+
+        return ctx
+      }
+    }
   }
+
 }
 
 export function doEffect(

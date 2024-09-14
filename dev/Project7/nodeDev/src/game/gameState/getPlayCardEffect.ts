@@ -1,14 +1,15 @@
 import { Bridge } from "../../script/bridge"
 import { Effect } from "../define/Effect"
 import { PlayerID } from "../define/PlayerID"
+import { ToolFn } from "../tool"
 import { GameState } from "./GameState"
 
 export function getPlayCardEffect(ctx: GameState, playerId: PlayerID, cardId: string): Effect {
     return {
-        id: "",
+        id: ToolFn.getUUID(),
         reason: ["PlayCard", playerId, cardId],
         text: {
-            id:"",
+            id: "",
             title: [],
             conditions: {
                 "1": {
@@ -35,12 +36,12 @@ export function getPlayCardEffect(ctx: GameState, playerId: PlayerID, cardId: st
                             title: function _(ctx: GameState, effect: Effect, { DefineFn, GameStateFn }: Bridge): GameState {
                                 const cardId = DefineFn.EffectFn.getCardID(effect)
                                 const from = GameStateFn.getCardBaSyou(ctx, cardId)
-                                ctx = GameStateFn.moveCard(ctx, from, DefineFn.AbsoluteBaSyouFn.setBaSyouKeyword(from, "プレイされているカード"), [cardId]) as GameState
+                                ctx = GameStateFn.moveItem(ctx, DefineFn.AbsoluteBaSyouFn.setBaSyouKeyword(from, "プレイされているカード"), [cardId, from]) as GameState
                                 return GameStateFn.addStackEffect(ctx, {
-                                    id: "",
+                                    id: ToolFn.getUUID(),
                                     reason: ["場に出る", DefineFn.EffectFn.getPlayerID(effect), DefineFn.EffectFn.getCardID(effect)],
                                     text: {
-                                        id:"",
+                                        id: "",
                                         title: [],
                                         logicTreeCommands: [
                                             {
@@ -49,7 +50,7 @@ export function getPlayCardEffect(ctx: GameState, playerId: PlayerID, cardId: st
                                                         title: function _(ctx: GameState, effect: Effect, { DefineFn, GameStateFn }: Bridge): GameState {
                                                             const cardId = DefineFn.EffectFn.getCardID(effect)
                                                             const from = GameStateFn.getCardBaSyou(ctx, cardId)
-                                                            ctx = GameStateFn.moveCard(ctx, from, DefineFn.AbsoluteBaSyouFn.setBaSyouKeyword(from, "配備エリア"), [cardId]) as GameState
+                                                            ctx = GameStateFn.moveItem(ctx, DefineFn.AbsoluteBaSyouFn.setBaSyouKeyword(from, "配備エリア"), [cardId, from]) as GameState
                                                             return ctx
                                                         }.toString()
                                                     },

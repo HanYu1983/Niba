@@ -1,5 +1,5 @@
 import { PlayerA, PlayerB } from "../define/PlayerID";
-import { getCardBaSyou, mapCard } from "../gameState/CardTableComponent";
+import { getCardBaSyou, mapCardsWithBasyou } from "../gameState/CardTableComponent";
 import { DEFAULT_GAME_STATE, GameState } from "../gameState/GameState";
 import { AbsoluteBaSyouFn } from "../define/BaSyou";
 
@@ -237,19 +237,19 @@ export function initState(ctx: GameStateWithFlowMemory): GameStateWithFlowMemory
 }
 
 export function initCardFace(ctx: GameStateWithFlowMemory): GameStateWithFlowMemory {
-    return mapCard(ctx, (baSyou, card) => {
+    return mapCardsWithBasyou(ctx, (baSyou, card) => {
         switch (baSyou.value[1]) {
             case "本国":
             case "捨て山":
             case "手札":
                 return {
                     ...card,
-                    faceDown: true,
+                    isFaceDown: true,
                 };
             default:
                 return {
                     ...card,
-                    faceDown: false,
+                    isFaceDown: false,
                 };
         }
     }) as GameStateWithFlowMemory;
