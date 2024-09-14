@@ -2,28 +2,7 @@ import { assoc, toPairs } from "ramda";
 import { Table, TableFns } from "../../tool/table";
 import { AbsoluteBaSyou, BaSyou, AbsoluteBaSyouFn } from "../define/BaSyou";
 import { getOpponentPlayerID, PlayerID } from "../define/PlayerID";
-
-// card
-export type Card = {
-  id: string
-  ownerID?: string
-  protoID?: string
-  isRoll?: boolean
-  isFaceDown?: boolean
-}
-
-export const DEFAULT_CARD: Card = {
-  id: "",
-}
-
-export const CardFn = {
-  setIsRoll(ctx: Card, isRoll: boolean): Card {
-    return {
-      ...ctx,
-      isRoll: isRoll
-    }
-  }
-}
+import { Card } from "../define/Card";
 
 export type CardTableComponent = {
   table: Table
@@ -72,7 +51,6 @@ export function mapCardsWithBasyou(ctx: CardTableComponent, f: (key: AbsoluteBaS
 export function createCardWithProtoIds(ctx: CardTableComponent, playerID: PlayerID, basyou: AbsoluteBaSyou, cardProtoIds: string[]): CardTableComponent {
   ctx = addCards(ctx, basyou, cardProtoIds.map((protoId, i) => {
     return {
-      ...DEFAULT_CARD,
       id: `card${i}_${protoId}_${new Date().getTime()}_${Math.round(Math.random() * 1000000)}`,
       protoID: protoId,
     }

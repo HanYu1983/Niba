@@ -3,29 +3,7 @@ import { DEFAULT_TABLE, Table, TableFns } from "../../tool/table";
 import { AbsoluteBaSyou, AbsoluteBaSyouFn } from "../define/BaSyou";
 import { CardPrototype } from "../define/CardPrototype";
 import { PlayerID } from "../define/PlayerID";
-
-export type Chip = {
-  id: string
-  ownerID: string
-  protoID: string
-  isRoll: boolean
-}
-
-export const DEFAULT_CHIP: Chip = {
-  id: "",
-  ownerID: "",
-  protoID: "",
-  isRoll: false,
-}
-
-export const ChipFn = {
-  setIsRoll(ctx: Chip, isRoll: boolean): Chip {
-    return {
-      ...ctx,
-      isRoll: isRoll
-    }
-  }
-}
+import { Chip } from "../define/Chip";
 
 export type ChipTableComponent = {
   table: Table

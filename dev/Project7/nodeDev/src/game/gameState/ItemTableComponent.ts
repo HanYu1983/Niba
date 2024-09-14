@@ -2,15 +2,17 @@ import { assoc, pair } from "ramda";
 import { DEFAULT_TABLE, Table, TableFns } from "../../tool/table";
 import { AbsoluteBaSyou, AbsoluteBaSyouFn, BaSyou } from "../define/BaSyou";
 import { getOpponentPlayerID, PlayerID } from "../define/PlayerID";
-import { Card, CardFn, CardTableComponent, getCard, getCardIds, getCardOwner, setCard } from "./CardTableComponent";
+import { CardTableComponent, getCard, getCardIds, getCardOwner, setCard } from "./CardTableComponent";
 import { addCoins, CoinTableComponent, getCardIdByCoinId, getCoin, getCoinIds, getCoinOwner } from "./CoinTableComponent";
-import { Chip, ChipFn, ChipTableComponent, getChip, getChipIds, getChipOwner, getChipPrototype, setChip } from "./ChipTableComponent";
+import { ChipTableComponent, getChip, getChipIds, getChipOwner, getChipPrototype, setChip } from "./ChipTableComponent";
 import { Coin } from "../define/Coin";
 import { StrBaSyouPair } from "../define/Tip";
 import { getSetGroupCards, SetGroupComponent } from "./SetGroupComponent";
 import { TargetMissingError } from "../define/GameError";
 import { CardPrototype } from "../define/CardPrototype";
 import { getPreloadPrototype } from "../../script";
+import { Card, CardFn } from "../define/Card";
+import { Chip, ChipFn } from "../define/Chip";
 
 export type Item = Card | Coin | Chip;
 
