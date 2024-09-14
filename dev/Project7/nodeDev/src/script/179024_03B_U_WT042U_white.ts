@@ -50,9 +50,21 @@ export const prototype: CardPrototype = {
                             const cardId = DefineFn.EffectFn.getCardID(effect)
                             let cardState = GameStateFn.getCardState(ctx, cardId);
                             if (GameStateFn.isBattle(ctx, cardId, null) == false) {
-                              const target = GameStateFn.CardStateFn.getTarget(cardState, "敵軍ユニット１枚")
-                              // check target missing or not
-                              // add coin
+                              const tip = GameStateFn.CardStateFn.getTip(cardState, "敵軍ユニット１枚")
+                              const err = DefineFn.TipFn.checkTipSatisfies(tip)
+                              if (err) {
+                                // add message
+                                return ctx
+                              }
+                              if (tip.title[0] != "カード") {
+                                throw new Error("xxx")
+                              }
+                              const [_, _2, pairs] = tip.title
+                              if (pairs.length < 1) {
+                                throw new Error("your must select 1")
+                              }
+                              const [targetCardId, targetBasyou] = pairs[0]
+                              ctx = GameStateFn.addCoins(ctx, targetBasyou, targetCardId, [DefineFn.CoinFn.battleBonus([-1, -1, -1])]) as GameState
                               return ctx
                             }
                             cardState = GameStateFn.CardStateFn.setFlag(cardState, "add bonus", true)

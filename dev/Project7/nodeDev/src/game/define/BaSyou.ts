@@ -65,6 +65,9 @@ export const AbsoluteBaSyouFn = {
     },
     getAll(): AbsoluteBaSyou[] {
         return lift(this.of)(PlayerIDFn.ALL, ALL_BASYOU_KEYWORD)
+    },
+    eq(left: AbsoluteBaSyou, right: AbsoluteBaSyou): boolean {
+        return this.toString(left) == this.toString(right)
     }
 }
 

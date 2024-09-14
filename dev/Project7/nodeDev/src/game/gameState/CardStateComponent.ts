@@ -1,13 +1,13 @@
 import { assoc, dissoc } from "ramda";
 import { DestroyReason } from "../define/Effect";
-import { Target } from "../define/Target";
+import { Tip } from "../define/Tip";
 
 export type CardState = {
   id: string;
   damage: number;
   destroyReason: DestroyReason | null;
   flags: { [key: string]: any };
-  targets: { [key: string]: Target }
+  tips: { [key: string]: Tip }
 };
 
 const DEFAULT_CARD_STATE: CardState = {
@@ -15,7 +15,7 @@ const DEFAULT_CARD_STATE: CardState = {
   damage: 0,
   destroyReason: null,
   flags: {},
-  targets: {},
+  tips: {},
 };
 
 export const CardStateFn = {
@@ -31,8 +31,11 @@ export const CardStateFn = {
       flags: dissoc(k, ctx.flags),
     }
   },
-  getTarget(ctx: CardState, k: string): Target | null {
-    return ctx.targets[k]
+  getTip(ctx: CardState, k: string): Tip {
+    if (ctx.tips[k] == null) {
+      throw new Error(`cardId: ${ctx.id} target not set yet: ${k}`)
+    }
+    return ctx.tips[k]
   }
 }
 

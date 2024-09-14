@@ -4,6 +4,7 @@ import * as EffectStackComponent from "./EffectStackComponent"
 import * as IsBattleComponent from "./IsBattleComponent"
 import * as SetGroupComponent from "./SetGroupComponent"
 import * as CardTableComponent from "./CardTableComponent"
+import * as CoinTableComponent from "./CoinTableComponent"
 export const GameStateFn = {
     ...GameState,
     ...CardState,
@@ -11,4 +12,5 @@ export const GameStateFn = {
     ...IsBattleComponent,
     ...SetGroupComponent,
     ...CardTableComponent,
+    ...CoinTableComponent
 }

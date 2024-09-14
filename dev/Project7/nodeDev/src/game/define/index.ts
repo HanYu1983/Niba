@@ -20,11 +20,12 @@ import * as Effect from "./Effect"
 import * as Event from "./Event"
 import * as GlobalEffect from "./GlobalEffect"
 import * as PlayerID from "./PlayerID"
-import * as Target from "./Target"
+import * as Target from "./Tip"
 import * as Text from "./Text"
 import * as TextID from "./TextID"
 import * as Timing from "./Timing"
-
+import * as Coin from "./Coin"
+import * as Tip from "./Tip"
 export const DefineFn = {
     ...BaSyou,
     ...BattlePoint,
@@ -37,4 +38,6 @@ export const DefineFn = {
     ...Text,
     ...TextID,
     ...Timing,
+    ...Coin,
+    ...Tip,
 }

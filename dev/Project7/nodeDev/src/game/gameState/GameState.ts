@@ -26,6 +26,7 @@ import { DEFAULT_TABLE } from "../../tool/table";
 import { BattlePoint, BattlePointFn } from "../define/BattlePoint";
 import { __, always, flatten, flow, map, pipe, reduce } from "ramda";
 import { createBridge } from "../bridge/createBridge";
+import { CoinTableComponent } from "./CoinTableComponent";
 
 export type PlayerState = {
   id: string;
@@ -95,7 +96,8 @@ export type GameState = {
   & CardStateComponent
   & TimingComponent
   & PlayerStateComponent
-  & ActivePlayerComponent;
+  & ActivePlayerComponent
+  & CoinTableComponent;
 
 export const DEFAULT_GAME_STATE: GameState = {
   cards: {},
@@ -114,6 +116,8 @@ export const DEFAULT_GAME_STATE: GameState = {
   setGroupLink: {},
   isBattle: {},
   chipPool: {},
+  coins: {},
+  coinId2cardId: {}
 }
 
 function getOpponentBattleArea(baSyou: AbsoluteBaSyou): AbsoluteBaSyou {
