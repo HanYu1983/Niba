@@ -1,4 +1,5 @@
 import { ToolFn } from "../tool"
+import { PlayerID } from "./PlayerID"
 import { BattleBonus } from "./Text"
 
 export type CoinTitle =
@@ -9,6 +10,7 @@ export type CoinTitle =
 export type Coin = {
     id: string
     title: CoinTitle,
+    ownerID?: PlayerID,
 }
 
 export const CoinFn = {

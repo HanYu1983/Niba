@@ -1,7 +1,5 @@
-import { PlayerA, PlayerB } from "../define/PlayerID";
-import { getCardBaSyou, mapCardsWithBasyou } from "../gameState/CardTableComponent";
+import { mapCardsWithBasyou } from "../gameState/CardTableComponent";
 import { DEFAULT_GAME_STATE, GameState } from "../gameState/GameState";
-import { AbsoluteBaSyouFn } from "../define/BaSyou";
 
 export type Message = {
     id: "MessageCustom";

@@ -95,17 +95,6 @@ export function addCards(ctx: CardTableComponent, basyou: AbsoluteBaSyou, addedC
   return ctx
 }
 
-export function getCardBaSyou(
-  ctx: CardTableComponent,
-  cardID: string
-): AbsoluteBaSyou {
-  const cardPosition = TableFns.getCardPosition(ctx.table, cardID);
-  if (cardPosition == null) {
-    throw new Error("[getController] cardPosition not found");
-  }
-  return AbsoluteBaSyouFn.fromString(cardPosition);
-}
-
 export function getCardOwner(ctx: CardTableComponent, cardID: string): PlayerID {
   const card = getCard(ctx, cardID);
   if (card == null) {

@@ -5,9 +5,8 @@ import { getTextsFromTokuSyuKouKa } from "../define/Text";
 import { PlayerA, PlayerID } from "../define/PlayerID";
 import { AbsoluteBaSyouFn } from "../define/BaSyou";
 import { concatMap, filter, lastValueFrom, merge, of, toArray } from "rxjs";
-import { addCards, createCardWithProtoIds, getCard, getCardBaSyou, getCardIdsByBasyou } from "../gameState/CardTableComponent";
+import { addCards, createCardWithProtoIds, getCard, getCardIdsByBasyou } from "../gameState/CardTableComponent";
 import { Effect } from "../define/Effect";
-import { getPreloadPrototype } from "../../script";
 import { getPlayCardEffect } from "../gameState/getPlayCardEffect";
 import { getItemPrototype } from "../gameState/ItemTableComponent";
 

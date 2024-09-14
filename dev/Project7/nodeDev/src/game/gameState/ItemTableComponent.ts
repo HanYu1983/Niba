@@ -2,8 +2,8 @@ import { assoc, pair } from "ramda";
 import { DEFAULT_TABLE, Table, TableFns } from "../../tool/table";
 import { AbsoluteBaSyou, AbsoluteBaSyouFn, BaSyou } from "../define/BaSyou";
 import { getOpponentPlayerID, PlayerID } from "../define/PlayerID";
-import { Card, CardFn, CardTableComponent, getCard, getCardBaSyou, getCardIds, getCardOwner, setCard } from "./CardTableComponent";
-import { addCoins, CoinTableComponent, getCoin, getCoinIds } from "./CoinTableComponent";
+import { Card, CardFn, CardTableComponent, getCard, getCardIds, getCardOwner, setCard } from "./CardTableComponent";
+import { addCoins, CoinTableComponent, getCardIdByCoinId, getCoin, getCoinIds, getCoinOwner } from "./CoinTableComponent";
 import { Chip, ChipFn, ChipTableComponent, getChip, getChipIds, getChipOwner, getChipPrototype, setChip } from "./ChipTableComponent";
 import { Coin } from "../define/Coin";
 import { StrBaSyouPair } from "../define/Tip";
@@ -55,7 +55,8 @@ export function getItemController(ctx: ItemTableComponent, id: string): PlayerID
     return baSyou.value[0];
   }
   if (isCoin(ctx, id)) {
-    throw new Error(`coin no have controller`)
+    const baSyou = getItemBaSyou(ctx, getCardIdByCoinId(ctx, id));
+    return baSyou.value[0];
   }
   throw new Error(`unknown item: ${id}`)
 }
@@ -68,7 +69,7 @@ export function getItemOwner(ctx: ItemTableComponent, id: string): PlayerID {
     return getChipOwner(ctx, id)
   }
   if (isCoin(ctx, id)) {
-    throw new Error(`coin no have owner`)
+    return getCoinOwner(ctx, id)
   }
   throw new Error(`unknown item: ${id}`)
 }
@@ -158,7 +159,7 @@ export function setItemIsRoll(ctx: ItemTableComponent, isRoll: boolean, [itemId,
 export function addCoinsToCard(ctx: ItemTableComponent, target: StrBaSyouPair, coins: Coin[]): ItemTableComponent {
   const [targetItemId, targetOriginBasyou] = target
   if (isCard(ctx, targetItemId)) {
-    const nowBasyou = getCardBaSyou(ctx, targetItemId)
+    const nowBasyou = getItemBaSyou(ctx, targetItemId)
     if (AbsoluteBaSyouFn.eq(targetOriginBasyou, nowBasyou)) {
       throw new TargetMissingError("basyou not same")
     }
@@ -189,7 +190,6 @@ export function getAbsoluteBaSyou(
   })();
   return AbsoluteBaSyouFn.of(_playerID, baSyou.value[1])
 }
-
 
 export function getItemPrototype(ctx: ItemTableComponent, itemId: string): CardPrototype {
   if (isCard(ctx, itemId)) {

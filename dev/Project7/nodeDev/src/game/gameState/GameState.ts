@@ -1,6 +1,5 @@
 import {
   getCard,
-  getCardBaSyou,
   CardTableComponent,
   getCardIds,
   getCardIdsByBasyou,
@@ -25,7 +24,7 @@ import { BattlePoint, BattlePointFn } from "../define/BattlePoint";
 import { __, always, flatten, flow, map, pipe, reduce } from "ramda";
 import { createBridge } from "../bridge/createBridge";
 import { CoinTableComponent } from "./CoinTableComponent";
-import { getItemController, getItemPrototype, ItemTableComponent } from "./ItemTableComponent";
+import { getItemBaSyou, getItemController, getItemPrototype, ItemTableComponent } from "./ItemTableComponent";
 
 export type PlayerState = {
   id: string;
@@ -338,7 +337,7 @@ export function isABattleGroup(
   a: TextTokuSyuKouKa,
   cardID: string
 ): boolean {
-  const baSyou = getCardBaSyou(ctx, cardID);
+  const baSyou = getItemBaSyou(ctx, cardID);
   const battleGroup = getBattleGroup(ctx, baSyou);
   return (
     battleGroup
@@ -363,7 +362,7 @@ export function isCanReroll(
   condition: any,
   cardID: string
 ): boolean {
-  const baSyouKW = getCardBaSyou(ctx, cardID).value[1];
+  const baSyouKW = getItemBaSyou(ctx, cardID).value[1];
   switch (baSyouKW) {
     case "Gゾーン":
     case "配備エリア":
@@ -373,7 +372,7 @@ export function isCanReroll(
     default:
       return false;
   }
-  const baSyou = getCardBaSyou(ctx, cardID);
+  const baSyou = getItemBaSyou(ctx, cardID);
   const setGroup = getSetGroupCards(ctx, cardID);
   return true;
 }

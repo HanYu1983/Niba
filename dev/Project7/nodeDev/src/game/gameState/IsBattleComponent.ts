@@ -1,17 +1,14 @@
-import {
-  getCardBaSyou,
-  CardTableComponent,
-} from "./CardTableComponent"
 import { Table } from "../../tool/table";
 import { } from "./GameState";
 import { AbsoluteBaSyou, AbsoluteBaSyouFn } from "../define/BaSyou";
 import { PlayerA } from "../define/PlayerID";
+import { getItemBaSyou, ItemTableComponent } from "./ItemTableComponent";
 
 export type IsBattleComponent = {
   // 是否交戰中，key代表牌堆名稱的字串
   isBattle: { [key: string]: boolean }
   table: Table
-} & CardTableComponent
+} & ItemTableComponent
 
 export function checkIsBattle(ctx: IsBattleComponent): IsBattleComponent {
   const battleAreas: AbsoluteBaSyou[] = [
@@ -50,7 +47,7 @@ export function isBattle(
   cardID: string,
   cardID2: string | null
 ): boolean {
-  const baSyou1 = getCardBaSyou(ctx, cardID);
+  const baSyou1 = getItemBaSyou(ctx, cardID);
   if (ctx.isBattle[AbsoluteBaSyouFn.toString(baSyou1)] != true) {
     return false;
   }

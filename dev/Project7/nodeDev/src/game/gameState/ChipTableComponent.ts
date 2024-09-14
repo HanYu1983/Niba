@@ -96,17 +96,6 @@ export function addChips(ctx: ChipTableComponent, basyou: AbsoluteBaSyou, addedC
   return ctx
 }
 
-export function getChipBaSyou(
-  ctx: ChipTableComponent,
-  chipId: string
-): AbsoluteBaSyou {
-  const ChipPosition = TableFns.getCardPosition(ctx.table, chipId);
-  if (ChipPosition == null) {
-    throw new Error("[getController] ChipPosition not found");
-  }
-  return AbsoluteBaSyouFn.fromString(ChipPosition);
-}
-
 export function getChipOwner(ctx: ChipTableComponent, chipId: string): PlayerID {
   const Chip = getChip(ctx, chipId);
   if (Chip == null) {

@@ -1,11 +1,7 @@
 import { always, assoc, fromPairs, map, pipe, toPairs } from "ramda";
-import { PlayerID } from "../define/PlayerID";
-import { BattleBonus } from "../define/Text";
-import { CardTableComponent, getCardBaSyou } from "./CardTableComponent";
-import { AbsoluteBaSyou, AbsoluteBaSyouFn } from "../define/BaSyou";
-import { TargetMissingError } from "../define/GameError";
-import { ToolFn } from "../tool";
+import { CardTableComponent } from "./CardTableComponent";
 import { Coin } from "../define/Coin";
+import { PlayerID } from "../define/PlayerID";
 
 export type CoinTableComponent = {
   coins: { [key: string]: Coin },
@@ -41,10 +37,17 @@ export function addCoins(ctx: CoinTableComponent, cardId: string, added: Coin[])
   }
 }
 
-// export function getCoinController(ctx: CoinTableComponent, id: string): PlayerID {
-//   return getCoin(ctx, id).ownerID
-// }
+export function getCardIdByCoinId(ctx: CoinTableComponent, id: string): string {
+  if(ctx.coinId2cardId[id] == null){
+    throw new Error(`coin cardId not found: ${id}`)
+  }
+  return ctx.coinId2cardId[id]
+}
 
-// export function getCoinOwner(ctx: CoinTableComponent, id: string): PlayerID {
-//   return getCoin(ctx, id).ownerID
-// }
+export function getCoinOwner(ctx: CoinTableComponent, id: string): PlayerID {
+  const item = getCoin(ctx, id);
+  if (item.ownerID == null) {
+    throw new Error("[getChipOwner] Chip.ownerID not found");
+  }
+  return item.ownerID;
+}
