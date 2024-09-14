@@ -6,7 +6,7 @@ import { getCardBattlePoint, getBattleGroupBattlePoint, getBattleGroup, GlobalCa
 import { applyFlow } from "../game/gameStateWithFlowMemory/applyFlow";
 import { DEFAULT_GAME_STATE_WITH_FLOW_MEMORY, GameStateWithFlowMemory, initState } from "../game/gameStateWithFlowMemory/GameStateWithFlowMemory";
 import { queryFlow } from "../game/gameStateWithFlowMemory/queryFlow";
-import { getPrototype } from "../script";
+import { loadPrototype } from "../script";
 
 export function testFlow1() {
   let ctx = DEFAULT_GAME_STATE_WITH_FLOW_MEMORY;
@@ -59,7 +59,6 @@ export function testFlow2() {
   let table = ctx.table;
   ctx = createCardWithProtoIds(
     ctx,
-    PlayerA,
     AbsoluteBaSyouFn.of(PlayerA, "本国"),
     [
       "179016_04B_U_WT075C_white",
@@ -196,9 +195,9 @@ export function testFlow2() {
 }
 
 export async function testBattleBonus() {
-  await getPrototype("179016_04B_U_WT075C_white")
-  await getPrototype("179001_01A_CH_WT007R_white")
-  await getPrototype("testBPBonus")
+  await loadPrototype("179016_04B_U_WT075C_white")
+  await loadPrototype("179001_01A_CH_WT007R_white")
+  await loadPrototype("testBPBonus")
   let ctx = DEFAULT_GAME_STATE_WITH_FLOW_MEMORY;
   ctx = {
     ...ctx,

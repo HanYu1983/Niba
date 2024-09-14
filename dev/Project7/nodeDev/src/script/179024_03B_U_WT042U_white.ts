@@ -101,9 +101,8 @@ export const prototype: CardPrototype = {
       if (cardState.flags["add bonus"]) {
         return [
           {
-            type: "＋x／＋x／＋xを得る",
+            title: ["＋x／＋x／＋xを得る", [1, 1, 1]],
             cardIds: [cardId],
-            value: [1, 1, 1]
           }
         ]
       }

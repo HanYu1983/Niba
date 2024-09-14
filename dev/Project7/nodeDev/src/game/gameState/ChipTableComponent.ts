@@ -42,10 +42,6 @@ export function getChips(ctx: ChipTableComponent): Chip[] {
   return Object.values(ctx.chips)
 }
 
-export function getChipIdsByBasyou(ctx: ChipTableComponent, basyou: AbsoluteBaSyou): string[] {
-  return TableFns.getCardsByPosition(ctx.table, AbsoluteBaSyouFn.toString(basyou))
-}
-
 export function setChipPrototype(ctx: ChipTableComponent, k: string, v: CardPrototype): ChipTableComponent {
   return {
     ...ctx,

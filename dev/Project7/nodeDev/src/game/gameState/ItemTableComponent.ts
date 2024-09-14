@@ -10,7 +10,7 @@ import { StrBaSyouPair } from "../define/Tip";
 import { getSetGroupCards, SetGroupComponent } from "./SetGroupComponent";
 import { TargetMissingError } from "../define/GameError";
 import { CardPrototype } from "../define/CardPrototype";
-import { getPreloadPrototype } from "../../script";
+import { getPrototype } from "../../script";
 import { Card, CardFn } from "../define/Card";
 import { Chip, ChipFn } from "../define/Chip";
 
@@ -49,6 +49,10 @@ export function getItemIds(ctx: ItemTableComponent): string[] {
     ...Object.keys(ctx.chips),
     ...Object.keys(ctx.coins)
   ]
+}
+
+export function getItemIdsByBasyou(ctx: CardTableComponent, basyou: AbsoluteBaSyou): string[] {
+  return TableFns.getCardsByPosition(ctx.table, AbsoluteBaSyouFn.toString(basyou))
 }
 
 export function getItemController(ctx: ItemTableComponent, id: string): PlayerID {
@@ -195,7 +199,7 @@ export function getAbsoluteBaSyou(
 
 export function getItemPrototype(ctx: ItemTableComponent, itemId: string): CardPrototype {
   if (isCard(ctx, itemId)) {
-    return getPreloadPrototype(getCard(ctx, itemId).protoID || "unknown")
+    return getPrototype(getCard(ctx, itemId).protoID || "unknown")
   }
   if (isChip(ctx, itemId)) {
     return getChipPrototype(ctx, getChip(ctx, itemId).protoID || "unknown")

@@ -120,3 +120,9 @@ export function isCanPlayCardInPhase(phase: Phase): boolean {
             return phase[2] == "フリータイミング" || phase[2] == "ステップ開始";
     }
 }
+
+export const TimingFn = {
+    isLast(ctx: Timing): boolean {
+        return ctx[0] == TIMING_CHART.length - 1
+    }
+}

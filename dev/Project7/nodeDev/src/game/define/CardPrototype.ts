@@ -23,24 +23,26 @@ export type CardColor =
   | "赤"
   | "デュアル";
 
+export type RollCostColor = CardColor | null;
+
 export type CardPrototype = {
-    title: string;
-    characteristic: string;
-    color: CardColor;
-    category: CardCategory;
-    rollCost: (CardColor | null)[];
-    battlePoint: BattlePoint;
-    battleArea: BattleAreaKeyword[];
-    texts: Text[];
+  title: string;
+  characteristic: string;
+  color: CardColor;
+  category: CardCategory;
+  rollCost: RollCostColor[];
+  battlePoint: BattlePoint;
+  battleArea: BattleAreaKeyword[];
+  texts: Text[];
 };
 
 export const DEFAULT_CARD_PROTOTYPE: CardPrototype = {
-    title: "名稱未定義",
-    characteristic: "",
-    color: "白",
-    category: "ユニット",
-    rollCost: [],
-    battlePoint: [0, 0, 0],
-    battleArea: ["地球エリア", "宇宙エリア"],
-    texts: [],
+  title: "名稱未定義",
+  characteristic: "",
+  color: "白",
+  category: "ユニット",
+  rollCost: [],
+  battlePoint: [0, 0, 0],
+  battleArea: ["地球エリア", "宇宙エリア"],
+  texts: [],
 };

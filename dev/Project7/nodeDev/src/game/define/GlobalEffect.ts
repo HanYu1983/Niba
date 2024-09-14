@@ -1,20 +1,13 @@
 import { BattleBonus, Text } from "./Text";
 
-export type GlobalEffectAddText = {
-    type: "AddText",
-    cardIds: string[],
-    text: Text
-}
+export type GlobalEffectTitle =
+    | ["合計国力＋(１)してプレイできる", number]
+    | ["合計国力＋(１)", number]
+    | ["AddText", Text]
+    | ["自軍Gとしてロール"]
+    | ["＋x／＋x／＋xを得る", BattleBonus]
 
-export type GlobalEffectRollAsG = {
-    type: "自軍Gとしてロール",
+export type GlobalEffect = {
+    title: GlobalEffectTitle,
     cardIds: string[],
 }
-
-export type GlobalEffectBattleBonus = {
-    type: "＋x／＋x／＋xを得る",
-    cardIds: string[],
-    value: BattleBonus,
-}
-
-export type GlobalEffect = GlobalEffectAddText | GlobalEffectRollAsG | GlobalEffectBattleBonus;

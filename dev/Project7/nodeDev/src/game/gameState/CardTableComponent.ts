@@ -3,6 +3,7 @@ import { Table, TableFns } from "../../tool/table";
 import { AbsoluteBaSyou, BaSyou, AbsoluteBaSyouFn } from "../define/BaSyou";
 import { getOpponentPlayerID, PlayerID } from "../define/PlayerID";
 import { Card } from "../define/Card";
+import { ToolFn } from "../tool";
 
 export type CardTableComponent = {
   table: Table
@@ -34,10 +35,6 @@ export function getCards(ctx: CardTableComponent): Card[] {
   return Object.values(ctx.cards)
 }
 
-export function getCardIdsByBasyou(ctx: CardTableComponent, basyou: AbsoluteBaSyou): string[] {
-  return TableFns.getCardsByPosition(ctx.table, AbsoluteBaSyouFn.toString(basyou))
-}
-
 export function mapCardsWithBasyou(ctx: CardTableComponent, f: (key: AbsoluteBaSyou, card: Card) => Card): CardTableComponent {
   return toPairs(ctx.table.cardStack).map(([k, cardIds]) => {
     const basyou = AbsoluteBaSyouFn.fromString(k)
@@ -48,10 +45,10 @@ export function mapCardsWithBasyou(ctx: CardTableComponent, f: (key: AbsoluteBaS
   }, ctx)
 }
 
-export function createCardWithProtoIds(ctx: CardTableComponent, playerID: PlayerID, basyou: AbsoluteBaSyou, cardProtoIds: string[]): CardTableComponent {
+export function createCardWithProtoIds(ctx: CardTableComponent, basyou: AbsoluteBaSyou, cardProtoIds: string[]): CardTableComponent {
   ctx = addCards(ctx, basyou, cardProtoIds.map((protoId, i) => {
     return {
-      id: `card${i}_${protoId}_${new Date().getTime()}_${Math.round(Math.random() * 1000000)}`,
+      id: ToolFn.getUUID("card"),
       protoID: protoId,
     }
   }))

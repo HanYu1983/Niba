@@ -2,29 +2,31 @@ import {
   getCard,
   CardTableComponent,
   getCardIds,
-  getCardIdsByBasyou,
 } from "./CardTableComponent"
 import { CardState, CardStateComponent, CardStateFn, getCardState, mapCardState } from "./CardStateComponent";
 import { IsBattleComponent } from "./IsBattleComponent";
 import { getSetGroupCards, getSetGroupRoot, SetGroupComponent } from "./SetGroupComponent";
 import { EffectStackComponent } from "./EffectStackComponent";
-import { getPreloadPrototype } from "../../script";
+import { getPrototype } from "../../script";
 import { log } from "../../tool/logger";
 import { Action, ActionFn, ActionTitle, ActionTitleFn, Condition, ConditionFn, ConditionTitle, ConditionTitleFn, getOnSituationFn, LogicTreeActionFn, OnSituationFn, Situation, Text, TextFn, TextTokuSyuKouKa } from "../define/Text";
 import { AttackSpeed } from "../define";
 import { getOpponentPlayerID, PlayerA, PlayerID } from "../define/PlayerID";
 import { AbsoluteBaSyou, BattleAreaKeyword, BaSyouKeyword, AbsoluteBaSyouFn } from "../define/BaSyou";
-import { CardPrototype, CardColor } from "../define/CardPrototype";
+import { CardPrototype, CardColor, RollCostColor } from "../define/CardPrototype";
 import { GlobalEffect } from "../define/GlobalEffect";
 import { Timing, TIMING_CHART } from "../define/Timing";
 import { DestroyReason, Effect, EffectFn } from "../define/Effect";
 import { Event } from "../define/Event";
 import { DEFAULT_TABLE } from "../../tool/table";
 import { BattlePoint, BattlePointFn } from "../define/BattlePoint";
-import { __, always, flatten, flow, map, pipe, reduce } from "ramda";
+import { __, always, flatten, flow, map, pipe, reduce, sum } from "ramda";
 import { createBridge } from "../bridge/createBridge";
 import { CoinTableComponent } from "./CoinTableComponent";
-import { getItemBaSyou, getItemController, getItemPrototype, ItemTableComponent } from "./ItemTableComponent";
+import { getItemBaSyou, getItemController, getItemIdsByBasyou, getItemPrototype, ItemTableComponent } from "./ItemTableComponent";
+import { Tip } from "../define/Tip";
+import { Bridge } from "../../script/bridge";
+import { Card } from "../define/Card";
 
 export type PlayerState = {
   id: string;
@@ -122,33 +124,47 @@ export const DEFAULT_GAME_STATE: GameState = {
 }
 
 export function getCardCharacteristic(ctx: GameState, cardID: string) {
-  const card = getCard(ctx, cardID);
-  if (card == null) {
-    throw new Error("card not found");
-  }
-  const prototype = getPreloadPrototype(card.protoID || "unknownProtoID");
+  const prototype = getItemPrototype(ctx, cardID)
   return prototype.characteristic;
 }
 
 export function getCardColor(ctx: GameState, cardID: string): CardColor {
-  const card = getCard(ctx, cardID);
-  if (card == null) {
-    throw new Error("card not found");
-  }
-  const prototype = getPreloadPrototype(card.protoID || "unknownProtoID");
+  const prototype = getItemPrototype(ctx, cardID)
   return prototype.color;
 }
 
 export function getCardTitle(ctx: GameState, cardID: string): string {
-  const card = getCard(ctx, cardID);
-  if (card == null) {
-    throw new Error("card not found");
-  }
-  const prototype = getPreloadPrototype(card.protoID || "unknownProtoID");
+  const prototype = getItemPrototype(ctx, cardID)
   return prototype.title;
 }
 
+export function getCardRollCost(ctx: GameState, cardID: string): RollCostColor[] {
+  const prototype = getItemPrototype(ctx, cardID)
+  return prototype.rollCost;
+}
 
+export function getCardRollCostLength(ctx: GameState, cardID: string): number {
+  const prototype = getItemPrototype(ctx, cardID)
+  const gEffects = getSituationEffects(ctx, null)
+  const added = pipe(
+    always(gEffects),
+    map(ge => {
+      if (ge.title[0] == "合計国力＋(１)") {
+        return ge.title[1]
+      }
+      return 0
+    }),
+    sum
+  )()
+  return prototype.rollCost.length + added;
+}
+
+export function getCardCanPayRollCost(ctx: GameState, playerId: PlayerID, situation: Situation | null): string[] {
+  const normalG = getItemIdsByBasyou(ctx, AbsoluteBaSyouFn.of(playerId, "Gゾーン")).map(cardId => {
+    return [cardId, getCard(ctx, cardId)] as [string, Card]
+  }).filter(([cardId, card]) => card.isRoll != true).map(([cardId]) => cardId)
+  return normalG
+}
 
 export function getSituationEffects(ctx: GameState, situation: Situation | null): GlobalEffect[] {
   // getCardIdsByBasyou(ctx, {
@@ -189,10 +205,10 @@ export function getCardBattlePoint(
     throw new Error("card not found");
   }
   const bonusFromGlobalEffects = globalEffects.map(ge => {
-    if (ge.type == "AddText" &&
+    if (ge.title[0] == "AddText" &&
       ge.cardIds.includes(cardID) &&
-      ge.text.title[0] == "TTextBattleBonus") {
-      return ge.text.title[1]
+      ge.title[1].title[0] == "TTextBattleBonus") {
+      return ge.title[1].title[1]
     }
     return [0, 0, 0] as BattlePoint
   })
@@ -249,15 +265,9 @@ export function getBattleGroup(
   ctx: GameState,
   baSyou: AbsoluteBaSyou
 ): string[] {
-  return (
-    ctx.table.cardStack[AbsoluteBaSyouFn.toString(baSyou)]
-      ?.filter((cardId) => {
-        return getSetGroupRoot(ctx, cardId) == null;
-      })
-      .map((rootCardId) => {
-        return rootCardId
-      }) || []
-  );
+  return getItemIdsByBasyou(ctx, baSyou).filter((cardId) => {
+    return getSetGroupRoot(ctx, cardId) == null;
+  })
 }
 
 export function getBattleGroupBattlePoint(
@@ -410,35 +420,6 @@ export function isMaster(
   return true;
 }
 
-// export function getCardCoins(ctx: GameState, cardID: string): Coin[] {
-//   return ctx.table.tokens
-//     .filter((token) => {
-//       if (token.position.id != "TokenPositionCard") {
-//         return false;
-//       }
-//       if (token.position.cardID != cardID) {
-//         return false;
-//       }
-//       return true;
-//     })
-//     .map((token) => token.protoID as Coin);
-// }
-
-// export function getCardStateIterator(
-//   ctx: GameState
-// ): [string, CardTextState[]][] {
-//   const converGlobalCardState = ctx.globalCardState.map((gs) => {
-//     return {
-//       id: gs.cardID,
-//       cardTextStates: gs.cardTextStates,
-//     };
-//   });
-//   return [...ctx.cardState, ...converGlobalCardState].map((v) => {
-//     return [v.id, v.cardTextStates] as [string, CardTextState[]];
-//   });
-// }
-
-
 export function getCardBattleArea(
   ctx: GameState,
   cardID: string
@@ -451,7 +432,25 @@ export function getCardBattleArea(
   return prototype.battleArea;
 }
 
-function genActionTitleFn(action: Action): ActionTitleFn {
+function getConditionTitleFn(condition: Condition, options: { isPlay?: boolean }): ConditionTitleFn {
+  if (typeof condition.title == "string") {
+    return ConditionFn.getTitleFn(condition)
+  }
+  switch (condition.title[0]) {
+    case "合計国力〔x〕":
+      return function (ctx: GameState, effect: Effect): Tip[] {
+        const playerId = EffectFn.getPlayerID(effect)
+
+        return []
+      }
+    default:
+      return function (ctx: GameState, effect: Effect): Tip[] {
+        return []
+      }
+  }
+}
+
+function getActionTitleFn(action: Action): ActionTitleFn {
   if (typeof action.title == "string") {
     return ActionFn.getTitleFn(action)
   }
@@ -465,7 +464,6 @@ function genActionTitleFn(action: Action): ActionTitleFn {
       }
     }
   }
-
 }
 
 export function doEffect(
@@ -488,14 +486,14 @@ export function doEffect(
 
   const processCondition = (ctx: GameState) => pipe(
     always(conditions),
-    map(condition => ConditionFn.getActionTitleFns(condition, genActionTitleFn)),
+    map(condition => ConditionFn.getActionTitleFns(condition, getActionTitleFn)),
     flatten,
     reduce((ctx, fn) => fn(ctx, effect, bridge), ctx)
   )
 
   const processLogicAction = (ctx: GameState) => pipe(
     always(TextFn.getLogicTreeAction(effect.text, logicId)),
-    lta => LogicTreeActionFn.getActionTitleFns(lta, genActionTitleFn),
+    lta => LogicTreeActionFn.getActionTitleFns(lta, getActionTitleFn),
     reduce((ctx, fn) => fn(ctx, effect, bridge), ctx)
   )
 

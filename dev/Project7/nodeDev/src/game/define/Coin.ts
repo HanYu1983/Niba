@@ -16,7 +16,7 @@ export type Coin = {
 export const CoinFn = {
     battleBonus(v: BattleBonus): Coin {
         return {
-            id: ToolFn.getUUID(),
+            id: ToolFn.getUUID("coin"),
             title: ["BattleBonus", v]
         }
     }

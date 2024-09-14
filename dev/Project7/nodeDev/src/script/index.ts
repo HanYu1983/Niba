@@ -1,6 +1,6 @@
 import { CardPrototype } from "../game/define/CardPrototype";
 
-export async function getPrototype(imgID: string): Promise<CardPrototype> {
+export async function loadPrototype(imgID: string): Promise<CardPrototype> {
   try {
     if (_preloadPrototype[imgID]) {
       return _preloadPrototype[imgID]
@@ -16,7 +16,7 @@ export async function getPrototype(imgID: string): Promise<CardPrototype> {
 
 const _preloadPrototype: { [key: string]: CardPrototype } = {}
 
-export function getPreloadPrototype(imgId: string): CardPrototype {
+export function getPrototype(imgId: string): CardPrototype {
   if (_preloadPrototype[imgId] == null) {
     throw new Error(`imgId not found: ${imgId}`)
   }

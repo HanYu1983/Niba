@@ -7,7 +7,7 @@ import { Effect } from "./Effect";
 import { Event } from "./Event";
 import { GlobalEffect } from "./GlobalEffect";
 import { SiYouTiming } from "./Timing";
-import { Tip } from "./Tip";
+import { StrBaSyouPair, Tip } from "./Tip";
 
 export type BattleBonus = [number, number, number]
 
@@ -30,7 +30,7 @@ export type TextTokuSyuKouKa =
 
 export type ActionTitle =
     | string
-    | ["(このカード)を(リロール)する", "このカード" | string[], "ロール" | "リロール"]
+    | ["(このカード)を(リロール)する", "このカード" | StrBaSyouPair[], "ロール" | "リロール"]
 
 export type Action = {
     title: ActionTitle,
@@ -50,8 +50,8 @@ export const ActionFn = {
 export type ConditionTitle =
     | string
     | ["〔x〕", number]
-    | ["c(x)", CardColor, number]
-    | ["total(x)", number]
+    | ["c〔x〕", CardColor, number]
+    | ["合計国力〔x〕", number]
     | ["本来の記述に｢特徴：(装弾)｣を持つ(自軍)(G)(１)枚", string, RelatedPlayerSideKeyword, CardCategory, number]
     | ["(戦闘エリア)にいる(敵軍)(ユニット)(１)～(２)枚", BaSyouKeyword, RelatedPlayerSideKeyword, CardCategory, number, number]
     | ["(交戦中)の(自軍)(ユニット)(１)枚", "交戦中" | "非交戦中" | null, RelatedPlayerSideKeyword, CardCategory, number]
@@ -173,7 +173,7 @@ const testTexts: Text[] = [
         title: ["特殊型", ["サイコミュ", 3]],
         conditions: {
             "1": {
-                title: ["c(x)", "緑", 3]
+                title: ["c〔x〕", "緑", 3]
             }
         },
     },
@@ -202,8 +202,7 @@ const testTexts: Text[] = [
                 actions: [
                     {
                         title: function _(ctx: any, runtime: any, bridge: any): any {
-                            const cardIds = ["abc"]
-                            const action: Action = { title: ["(このカード)を(リロール)する", cardIds, "リロール"] }
+                            const action: Action = { title: ["(このカード)を(リロール)する", [], "リロール"] }
                             return bridge.getFunctionByAction(action)(ctx, runtime, bridge)
                         }.toString()
                     }
@@ -225,7 +224,7 @@ const testTexts: Text[] = [
                     const cardId = evt.cardID;
                 }
             }
-            return [{ type: "自軍Gとしてロール", cardIds: [runtime.getCardID()] }]
+            return [{ title: ["自軍Gとしてロール"], cardIds: [runtime.getCardID()] }]
         }.toString(),
     }
 ]

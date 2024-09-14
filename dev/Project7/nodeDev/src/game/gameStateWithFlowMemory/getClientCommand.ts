@@ -5,23 +5,23 @@ import { getTextsFromTokuSyuKouKa } from "../define/Text";
 import { PlayerA, PlayerID } from "../define/PlayerID";
 import { AbsoluteBaSyouFn } from "../define/BaSyou";
 import { concatMap, filter, lastValueFrom, merge, of, toArray } from "rxjs";
-import { addCards, createCardWithProtoIds, getCard, getCardIdsByBasyou } from "../gameState/CardTableComponent";
+import { addCards, createCardWithProtoIds, getCard } from "../gameState/CardTableComponent";
 import { Effect } from "../define/Effect";
 import { getPlayCardEffect } from "../gameState/getPlayCardEffect";
-import { getItemPrototype } from "../gameState/ItemTableComponent";
+import { getItemIdsByBasyou, getItemPrototype } from "../gameState/ItemTableComponent";
 
 export function getClientCommand(ctx: GameStateWithFlowMemory, playerId: PlayerID): Effect[] {
-    ctx = createCardWithProtoIds(ctx, playerId, AbsoluteBaSyouFn.of(playerId, "手札"), ["179001_01A_CH_WT007R_white"]) as GameStateWithFlowMemory
-    ctx = createCardWithProtoIds(ctx, playerId, AbsoluteBaSyouFn.of(playerId, "ハンガー"), ["179001_01A_CH_WT007R_white"]) as GameStateWithFlowMemory
-    ctx = createCardWithProtoIds(ctx, playerId, AbsoluteBaSyouFn.of(playerId, "配備エリア"), ["179001_01A_CH_WT007R_white"]) as GameStateWithFlowMemory
+    ctx = createCardWithProtoIds(ctx, AbsoluteBaSyouFn.of(playerId, "手札"), ["179001_01A_CH_WT007R_white"]) as GameStateWithFlowMemory
+    ctx = createCardWithProtoIds(ctx, AbsoluteBaSyouFn.of(playerId, "ハンガー"), ["179001_01A_CH_WT007R_white"]) as GameStateWithFlowMemory
+    ctx = createCardWithProtoIds(ctx, AbsoluteBaSyouFn.of(playerId, "配備エリア"), ["179001_01A_CH_WT007R_white"]) as GameStateWithFlowMemory
     const playCardEffects = of(AbsoluteBaSyouFn.of(playerId, "手札"), AbsoluteBaSyouFn.of(playerId, "ハンガー"))
-        .pipe(concatMap(basyou => getCardIdsByBasyou(ctx, basyou)))
+        .pipe(concatMap(basyou => getItemIdsByBasyou(ctx, basyou)))
         .pipe(concatMap(cardId => {
             return [getPlayCardEffect(ctx, playerId, cardId)]
         }))
 
     const playTextCards = of(AbsoluteBaSyouFn.of(playerId, "配備エリア"))
-        .pipe(concatMap(basyou => getCardIdsByBasyou(ctx, basyou)))
+        .pipe(concatMap(basyou => getItemIdsByBasyou(ctx, basyou)))
         .pipe(concatMap(cardId => {
             const card = getCard(ctx, cardId)
             const proto = getItemPrototype(ctx, card.id)

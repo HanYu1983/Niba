@@ -14,7 +14,7 @@ export const prototype: CardPrototype = {
   battlePoint: [5, 2, 4],
   texts: [
     {
-      id:"",
+      id: "",
       title: ["自動型", "恒常"],
       onSituation: function _(ctx: GameState, effect: Effect, { GameStateFn }: Bridge): GlobalEffect[] {
         const cardIds = GameStateFn.getItemIds(ctx)
@@ -22,12 +22,11 @@ export const prototype: CardPrototype = {
         const units = cardIds
         return [
           {
-            type: "AddText",
-            cardIds: units,
-            text: {
-              id:"",
+            title: ["AddText", {
+              id: "",
               title: ["TTextBattleBonus", [3, 3, 3]],
-            }
+            }],
+            cardIds: units
           }
         ]
       }.toString()
