@@ -5,14 +5,13 @@ import { Effect } from "../define/Effect"
 import { PlayerA, PlayerID } from "../define/PlayerID"
 import { ToolFn } from "../tool"
 import { addCards, createCardWithProtoIds } from "./CardTableComponent"
-import { DEFAULT_GAME_STATE, GameState, getCardCanPayRollCost, getCardRollCost, getCardRollCostLength, getGlobalEffects } from "./GameState"
+import { DEFAULT_GAME_STATE, GameState, getCardIdsCanPayRollCost, getCardRollCost, getCardRollCostLength, getGlobalEffects } from "./GameState"
 import { getItemBaSyou, getItemIds } from "./ItemTableComponent"
 import { Tip } from "../define/Tip"
 import { loadPrototype } from "../../script"
 
 export function getPlayCardEffect(ctx: GameState, playerId: PlayerID, cardId: string): Effect[] {
     const cardRollCostLength = getCardRollCostLength(ctx, cardId)
-
     const playCardEffect: Effect = {
         id: ToolFn.getUUID("getPlayCardEffect"),
         reason: ["PlayCard", playerId, cardId],
@@ -21,15 +20,12 @@ export function getPlayCardEffect(ctx: GameState, playerId: PlayerID, cardId: st
             title: [],
             conditions: {
                 "合計国力〔x〕": {
-                    title: function _(ctx: GameState, effect: Effect, { DefineFn, GameStateFn }: Bridge): Tip[] {
-                        const rollCost = getCardRollCost(ctx, cardId)
-                        return []
-                    }.toString(),
+                    title: ["合計国力〔x〕", cardRollCostLength]
                 },
                 "rollCost": {
                     title: function _(ctx: GameState, effect: Effect, { DefineFn, GameStateFn }: Bridge): Tip[] {
                         const rollCost = GameStateFn.getCardRollCost(ctx, cardId)
-                        const canRollCardIds = GameStateFn.getCardCanPayRollCost(ctx, playerId, null)
+                        const canRollCardIds = GameStateFn.getCardIdsCanPayRollCost(ctx, playerId, null)
                         const pairs = canRollCardIds.map(cardId => {
                             return [cardId, GameStateFn.getItemBaSyou(ctx, cardId)] as [string, AbsoluteBaSyou]
                         })

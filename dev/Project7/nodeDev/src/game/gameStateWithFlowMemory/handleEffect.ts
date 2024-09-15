@@ -86,8 +86,8 @@ export function doActiveEffect(ctx: GameStateWithFlowMemory, playerID: string, e
   }
   const isStackEffect_ = isStackEffect(ctx, effectID)
   const logicId = 0
-  const conditionIds = []
-  ctx = doEffect(ctx, effect, logicId, conditionIds) as GameStateWithFlowMemory;
+  const logicConditionsId = 0
+  ctx = doEffect(ctx, effect, logicId, logicConditionsId) as GameStateWithFlowMemory;
   // 清除旗標，代表現在沒有正在支付的效果
   ctx = clearActiveEffectID(ctx) as GameStateWithFlowMemory;
   // 將效果移除

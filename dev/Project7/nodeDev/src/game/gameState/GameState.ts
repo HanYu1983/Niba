@@ -248,7 +248,7 @@ export function getCardRollCostLength(ctx: GameState, cardID: string): number {
   return prototype.rollCost.length + added;
 }
 
-export function getCardCanPayRollCost(ctx: GameState, playerId: PlayerID, situation: Situation | null): string[] {
+export function getCardIdsCanPayRollCost(ctx: GameState, playerId: PlayerID, situation: Situation | null): string[] {
   const normalG = getItemIdsByBasyou(ctx, AbsoluteBaSyouFn.of(playerId, "Gゾーン")).map(cardId => {
     return [cardId, getCard(ctx, cardId)] as [string, Card]
   }).filter(([cardId, card]) => card.isRoll != true).map(([cardId]) => cardId)
@@ -567,32 +567,6 @@ export function doPlayerAttack(
   return ctx;
 }
 
-
-
-export function doEffect(
-  ctx: GameState,
-  effect: Effect,
-  logicId: number,
-  conditionIds: string[],
-): GameState {
-  const conditions = conditionIds.map(id => TextFn.getCondition(effect.text, id))
-  const bridge = createBridge()
-  const processCondition = (ctx: GameState) => pipe(
-    always(conditions),
-    map(condition => ConditionFn.getActionTitleFns(condition, getActionTitleFn)),
-    flatten,
-    reduce((ctx, fn) => fn(ctx, effect, bridge), ctx)
-  )
-  const processLogicAction = (ctx: GameState) => pipe(
-    always(TextFn.getLogicTreeAction(effect.text, logicId)),
-    lta => LogicTreeActionFn.getActionTitleFns(lta, getActionTitleFn),
-    reduce((ctx, fn) => fn(ctx, effect, bridge), ctx)
-  )
-  ctx = processCondition(ctx)()
-  ctx = processLogicAction(ctx)()
-  return ctx;
-}
-
 // 觸發事件腳本
 // 在每次事件發生時都要呼叫
 // 起動型技能
@@ -659,6 +633,57 @@ export function updateDestroyEffect(ctx: GameState): GameState {
   return ctx;
 }
 
+export function doEffect(
+  ctx: GameState,
+  effect: Effect,
+  logicId: number,
+  logicConditionsId: number,
+): GameState {
+  const ltacs = TextFn.getLogicTreeActionConditions(effect.text, TextFn.getLogicTreeAction(effect.text, logicId))[logicConditionsId]
+  if (ltacs == null) {
+    throw new Error(`ltasc not found: ${logicId}/${logicConditionsId}`)
+  }
+  const conditionIds = Object.keys(ltacs)
+  const conditions = conditionIds.map(id => TextFn.getCondition(effect.text, id))
+  const bridge = createBridge()
+  const processCondition = (ctx: GameState) => pipe(
+    always(conditions),
+    map(condition => ConditionFn.getActionTitleFns(condition, getActionTitleFn)),
+    flatten,
+    reduce((ctx, fn) => fn(ctx, effect, bridge), ctx)
+  )
+  const processLogicAction = (ctx: GameState) => pipe(
+    always(TextFn.getLogicTreeAction(effect.text, logicId)),
+    lta => LogicTreeActionFn.getActionTitleFns(lta, getActionTitleFn),
+    reduce((ctx, fn) => fn(ctx, effect, bridge), ctx)
+  )
+  ctx = processCondition(ctx)()
+  ctx = processLogicAction(ctx)()
+  return ctx;
+}
+
+export function getEffectTips(
+  ctx: GameState,
+  effect: Effect,
+  logicId: number,
+  logicConditionsId: number,
+): Tip[] {
+  const ltacs = TextFn.getLogicTreeActionConditions(effect.text, TextFn.getLogicTreeAction(effect.text, logicId))[logicConditionsId]
+  if (ltacs == null) {
+    throw new Error(`ltasc not found: ${logicId}/${logicConditionsId}`)
+  }
+  const conditionIds = Object.keys(ltacs)
+  const conditions = conditionIds.map(id => TextFn.getCondition(effect.text, id))
+  const bridge = createBridge()
+  const getTips = pipe(
+    always(conditions),
+    map(condition => getConditionTitleFn(condition, {})),
+    map(tipFn => tipFn(ctx, effect, bridge)),
+    flatten
+  )
+  return getTips()
+}
+
 function getConditionTitleFn(condition: Condition, options: { isPlay?: boolean }): ConditionTitleFn {
   if (typeof condition.title == "string") {
     return ConditionFn.getTitleFn(condition)
@@ -666,9 +691,16 @@ function getConditionTitleFn(condition: Condition, options: { isPlay?: boolean }
   switch (condition.title[0]) {
     case "合計国力〔x〕":
       return function (ctx: GameState, effect: Effect): Tip[] {
+        const cardId = EffectFn.getCardID(effect)
         const playerId = EffectFn.getPlayerID(effect)
-
-        return []
+        const rollCostLength = getCardRollCostLength(ctx, cardId)
+        const cardIdsCanPay = getCardIdsCanPayRollCost(ctx, playerId, null)
+        return [
+          {
+            title: ["合計国力〔x〕", cardIdsCanPay],
+            min: rollCostLength
+          }
+        ]
       }
     default:
       return function (ctx: GameState, effect: Effect): Tip[] {

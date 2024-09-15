@@ -5,6 +5,7 @@ export type StrBaSyouPair = [string, AbsoluteBaSyou]
 
 export type TipTitle =
     | ["カード", StrBaSyouPair[], StrBaSyouPair[]]
+    | ["合計国力〔x〕", string[]]
 
 export type Tip = {
     title: TipTitle,
@@ -19,6 +20,8 @@ export const TipFn = {
             switch (tip.title[0]) {
                 case "カード":
                     return tip.title[2]
+                case "合計国力〔x〕":
+                    return tip.title[1]
             }
         })()
         if (tip.count != null && tip.count != selection.length) {

@@ -84,7 +84,7 @@ export const ConditionFn = {
     }
 }
 
-export type SituationTitle = ["「特徴：装弾」を持つ自軍コマンドの効果で自軍Gをロールする場合", string, RelatedPlayerSideKeyword, CardCategory, RelatedPlayerSideKeyword, CardCategory, "ロール"]
+export type SituationTitle = ["「特徴：装弾」を持つ自軍コマンドの効果で自軍Gをロールする場合"]
 
 // 『常駐』：「特徴：装弾」を持つ自軍コマンドの効果で自軍Gをロールする場合、このカードを自軍Gとしてロールできる。
 export type Situation = {
@@ -237,7 +237,6 @@ const testTexts: Text[] = [
         onSituation: function _(ctx: any, evt: Situation, runtime: any): GlobalEffect[] {
             if (Array.isArray(evt.title)) {
                 if (evt.title[0] == "「特徴：装弾」を持つ自軍コマンドの効果で自軍Gをロールする場合") {
-                    const [_, x] = evt.title;
                     const cardId = evt.cardID;
                 }
             }
