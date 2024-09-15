@@ -5,15 +5,15 @@ import { Effect } from "../define/Effect"
 import { PlayerA, PlayerID } from "../define/PlayerID"
 import { ToolFn } from "../tool"
 import { addCards, createCardWithProtoIds } from "./CardTableComponent"
-import { DEFAULT_GAME_STATE, GameState, getCardIdsCanPayRollCost, getCardRollCost, getCardRollCostLength, getGlobalEffects } from "./GameState"
-import { getItemBaSyou, getItemIds } from "./ItemTableComponent"
+import { clearGlobalEffects, createGameState, doEffect, GameState, getCardIdsCanPayRollCost, getCardRollCost, getCardRollCostLength, getEffectTips, getGlobalEffects } from "./GameState"
+import { getItemBaSyou, getItemIds, getItemIdsByBasyou } from "./ItemTableComponent"
 import { Tip } from "../define/Tip"
 import { loadPrototype } from "../../script"
+import { getTopEffect } from "./EffectStackComponent"
 
-export function getPlayCardEffect(ctx: GameState, playerId: PlayerID, cardId: string): Effect[] {
+export function getPlayCardEffects(ctx: GameState, playerId: PlayerID, cardId: string): Effect[] {
     const cardRollCostLength = getCardRollCostLength(ctx, cardId)
     const playCardEffect: Effect = {
-        id: ToolFn.getUUID("getPlayCardEffect"),
         reason: ["PlayCard", playerId, cardId],
         text: {
             id: "",
@@ -22,21 +22,21 @@ export function getPlayCardEffect(ctx: GameState, playerId: PlayerID, cardId: st
                 "合計国力〔x〕": {
                     title: ["合計国力〔x〕", cardRollCostLength]
                 },
-                "rollCost": {
-                    title: function _(ctx: GameState, effect: Effect, { DefineFn, GameStateFn }: Bridge): Tip[] {
-                        const rollCost = GameStateFn.getCardRollCost(ctx, cardId)
-                        const canRollCardIds = GameStateFn.getCardIdsCanPayRollCost(ctx, playerId, null)
-                        const pairs = canRollCardIds.map(cardId => {
-                            return [cardId, GameStateFn.getItemBaSyou(ctx, cardId)] as [string, AbsoluteBaSyou]
-                        })
-                        return [{ title: ["カード", pairs, pairs] }]
-                    }.toString(),
-                    actions: [
-                        {
-                            title: ["(このカード)を(リロール)する", [], "リロール"]
-                        }
-                    ]
-                }
+                // "rollCost": {
+                //     title: function _(ctx: GameState, effect: Effect, { DefineFn, GameStateFn }: Bridge): Tip[] {
+                //         const rollCost = GameStateFn.getCardRollCost(ctx, cardId)
+                //         const canRollCardIds = GameStateFn.getCardIdsCanPayRollCost(ctx, playerId, null)
+                //         const pairs = canRollCardIds.map(cardId => {
+                //             return [cardId, GameStateFn.getItemBaSyou(ctx, cardId)] as [string, AbsoluteBaSyou]
+                //         })
+                //         return [{ title: ["カード", pairs, pairs] }]
+                //     }.toString(),
+                //     actions: [
+                //         {
+                //             title: ["(このカード)を(リロール)する", [], "リロール"]
+                //         }
+                //     ]
+                // }
             },
             logicTreeActions: [
                 {
@@ -47,10 +47,8 @@ export function getPlayCardEffect(ctx: GameState, playerId: PlayerID, cardId: st
                                 const from = GameStateFn.getItemBaSyou(ctx, cardId)
                                 ctx = GameStateFn.moveItem(ctx, DefineFn.AbsoluteBaSyouFn.setBaSyouKeyword(from, "プレイされているカード"), [cardId, from]) as GameState
                                 return GameStateFn.addStackEffect(ctx, {
-                                    id: ToolFn.getUUID("場に出る"),
                                     reason: ["場に出る", DefineFn.EffectFn.getPlayerID(effect), DefineFn.EffectFn.getCardID(effect)],
                                     text: {
-                                        id: "",
                                         title: [],
                                         logicTreeActions: [
                                             {
@@ -101,16 +99,43 @@ export function getPlayCardEffect(ctx: GameState, playerId: PlayerID, cardId: st
 }
 
 export async function testGetPlayCardEffect() {
-    await loadPrototype("179024_03B_U_WT042U_white")
-    let ctx = DEFAULT_GAME_STATE
-    ctx = createCardWithProtoIds(ctx, AbsoluteBaSyouFn.of(PlayerA, "手札"), ["179024_03B_U_WT042U_white"]) as GameState
+    await loadPrototype("179028_10D_U_WT181N_white")
+    let ctx = createGameState()
+    ctx = createCardWithProtoIds(ctx, AbsoluteBaSyouFn.of(PlayerA, "手札"), ["179028_10D_U_WT181N_white"]) as GameState
     const cardIds = getItemIds(ctx)
     if (cardIds.length == 0) {
         throw new Error('must has one card')
     }
     const cardId = cardIds[0]
-    const playCardEffect = getPlayCardEffect(ctx, PlayerA, cardId)
-    console.log(JSON.stringify(playCardEffect, null, 2))
-    //ctx = addCards(ctx, AbsoluteBaSyouFn.of(PlayerA, "手札"))
-    //ctx = addCards
+    const playCardEffects = getPlayCardEffects(ctx, PlayerA, cardId)
+    if (playCardEffects.length != 2) {
+        throw new Error(`playCardEffects.length != 2`)
+    }
+    const useEffect = playCardEffects[1]
+    const tips = getEffectTips(ctx, useEffect, 0, 0)
+    if (tips[0]?.title[0] == "合計国力〔x〕" && tips[0]?.min == 5) {
+        if (getItemIdsByBasyou(ctx, AbsoluteBaSyouFn.of(PlayerA, "プレイされているカード")).length != 0) {
+            throw new Error(`getItemIdsByBasyou(ctx, AbsoluteBaSyouFn.of(PlayerA, "プレイされているカード")).length != 0`)
+        }
+        ctx = doEffect(ctx, useEffect, 0, 0)
+        if (getItemIdsByBasyou(ctx, AbsoluteBaSyouFn.of(PlayerA, "プレイされているカード")).length != 1) {
+            throw new Error(`getItemIdsByBasyou(ctx, AbsoluteBaSyouFn.of(PlayerA, "プレイされているカード")).length != 1`)
+        }
+        const effect = getTopEffect(ctx)
+        if (effect == null) {
+            throw new Error(`effect == null`)
+        }
+        if (effect.reason[0] != "場に出る") {
+            throw new Error(`effect.reason[0]!="場に出る`)
+        }
+        if (getItemIdsByBasyou(ctx, AbsoluteBaSyouFn.of(PlayerA, "配備エリア")).length != 0) {
+            throw new Error(`getItemIdsByBasyou(ctx, AbsoluteBaSyouFn.of(PlayerA, "配備エリア")).length != 0`)
+        }
+        ctx = doEffect(ctx, effect, 0, 0)
+        if (getItemIdsByBasyou(ctx, AbsoluteBaSyouFn.of(PlayerA, "配備エリア")).length != 1) {
+            throw new Error(`getItemIdsByBasyou(ctx, AbsoluteBaSyouFn.of(PlayerA, "配備エリア")).length != 1`)
+        }
+    } else {
+        throw new Error(`tips[0]?.title[0]=="合計国力〔x〕" && tips[0]?.min ==5`)
+    }
 }

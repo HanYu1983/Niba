@@ -1,5 +1,5 @@
 import { log } from "../../tool/logger";
-import { DEFAULT_GAME_STATE_WITH_FLOW_MEMORY, GameStateWithFlowMemory } from "./GameStateWithFlowMemory";
+import { createGameStateWithFlowMemory, GameStateWithFlowMemory } from "./GameStateWithFlowMemory";
 import { SiYouTiming } from "../define/Timing";
 import { getTextsFromTokuSyuKouKa } from "../define/Text";
 import { PlayerA, PlayerID } from "../define/PlayerID";
@@ -7,7 +7,7 @@ import { AbsoluteBaSyouFn } from "../define/BaSyou";
 import { concatMap, filter, lastValueFrom, merge, of, toArray } from "rxjs";
 import { addCards, createCardWithProtoIds, getCard } from "../gameState/CardTableComponent";
 import { Effect } from "../define/Effect";
-import { getPlayCardEffect } from "../gameState/getPlayCardEffect";
+import { getPlayCardEffects } from "../gameState/getPlayCardEffect";
 import { getItemIdsByBasyou, getItemPrototype } from "../gameState/ItemTableComponent";
 
 export function getClientCommand(ctx: GameStateWithFlowMemory, playerId: PlayerID): Effect[] {
@@ -17,7 +17,7 @@ export function getClientCommand(ctx: GameStateWithFlowMemory, playerId: PlayerI
     const playCardEffects = of(AbsoluteBaSyouFn.of(playerId, "手札"), AbsoluteBaSyouFn.of(playerId, "ハンガー"))
         .pipe(concatMap(basyou => getItemIdsByBasyou(ctx, basyou)))
         .pipe(concatMap(cardId => {
-            return [getPlayCardEffect(ctx, playerId, cardId)]
+            return [getPlayCardEffects(ctx, playerId, cardId)]
         }))
 
     const playTextCards = of(AbsoluteBaSyouFn.of(playerId, "配備エリア"))
@@ -154,6 +154,6 @@ export function getClientCommand(ctx: GameStateWithFlowMemory, playerId: PlayerI
 }
 
 export function testGetClientCommand() {
-    const ctx = DEFAULT_GAME_STATE_WITH_FLOW_MEMORY
+    const ctx = createGameStateWithFlowMemory()
     getClientCommand(ctx, PlayerA)
 }

@@ -4,12 +4,12 @@ import { getTimingSeq } from "../game/define/Timing";
 import { addCards, createCardWithProtoIds } from "../game/gameState/CardTableComponent";
 import { getCardBattlePoint, getBattleGroupBattlePoint, getBattleGroup, GlobalCardState, clearGlobalEffects } from "../game/gameState/GameState";
 import { applyFlow } from "../game/gameStateWithFlowMemory/applyFlow";
-import { DEFAULT_GAME_STATE_WITH_FLOW_MEMORY, GameStateWithFlowMemory, initState } from "../game/gameStateWithFlowMemory/GameStateWithFlowMemory";
+import { createGameStateWithFlowMemory, GameStateWithFlowMemory, initState } from "../game/gameStateWithFlowMemory/GameStateWithFlowMemory";
 import { queryFlow } from "../game/gameStateWithFlowMemory/queryFlow";
 import { loadPrototype } from "../script";
 
 export function testFlow1() {
-  let ctx = DEFAULT_GAME_STATE_WITH_FLOW_MEMORY;
+  let ctx = createGameStateWithFlowMemory();
   ctx = {
     ...ctx,
     flowMemory: {
@@ -55,7 +55,7 @@ export function testFlow1() {
 }
 
 export function testFlow2() {
-  let ctx = DEFAULT_GAME_STATE_WITH_FLOW_MEMORY;
+  let ctx = createGameStateWithFlowMemory();
   let table = ctx.table;
   ctx = createCardWithProtoIds(
     ctx,
@@ -198,7 +198,7 @@ export async function testBattleBonus() {
   await loadPrototype("179016_04B_U_WT075C_white")
   await loadPrototype("179001_01A_CH_WT007R_white")
   await loadPrototype("testBPBonus")
-  let ctx = DEFAULT_GAME_STATE_WITH_FLOW_MEMORY;
+  let ctx = createGameStateWithFlowMemory();
   ctx = {
     ...ctx,
     activePlayerID: PlayerA,

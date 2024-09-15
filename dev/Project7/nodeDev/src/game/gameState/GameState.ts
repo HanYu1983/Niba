@@ -4,7 +4,7 @@ import {
   getCardIds,
 } from "./CardTableComponent"
 import { ItemState, ItemStateComponent, ItemStateFn, getItemState, getItemStateValues, mapCardState, setItemState } from "./ItemStateComponent";
-import { IsBattleComponent } from "./IsBattleComponent";
+import { isBattle, IsBattleComponent } from "./IsBattleComponent";
 import { getSetGroupCards, getSetGroupRoot, SetGroupComponent } from "./SetGroupComponent";
 import { addDestroyEffect, addImmediateEffect, EffectStackComponent } from "./EffectStackComponent";
 import { log } from "../../tool/logger";
@@ -19,14 +19,15 @@ import { DestroyReason, Effect, EffectFn } from "../define/Effect";
 import { Event } from "../define/Event";
 import { DEFAULT_TABLE } from "../../tool/table";
 import { BattlePoint, BattlePointFn } from "../define/BattlePoint";
-import { always, filter, flatten, flow, lift, map, pipe, reduce, sum } from "ramda";
+import { always, filter, flatten, flow, lift, map, pipe, reduce, repeat, sum } from "ramda";
 import { createBridge } from "../bridge/createBridge";
 import { CoinTableComponent, getCardIdByCoinId, getCoins } from "./CoinTableComponent";
-import { getItem, getItemBaSyou, getItemController, getItemIdsByBasyou, getItemPrototype, isCard, isChip, Item, ItemTableComponent } from "./ItemTableComponent";
+import { addCoinsToCard, getItem, getItemBaSyou, getItemController, getItemIdsByBasyou, getItemPrototype, isCard, isChip, Item, ItemTableComponent } from "./ItemTableComponent";
 import { StrBaSyouPair, Tip, TipFn } from "../define/Tip";
 import { Card } from "../define/Card";
 import { ToolFn } from "../tool";
 import { TargetMissingError } from "../define/GameError";
+import { CoinFn } from "../define/Coin";
 
 export type PlayerState = {
   id: string;
@@ -93,25 +94,27 @@ export type GameState = {
   & CoinTableComponent
   & ItemTableComponent;
 
-export const DEFAULT_GAME_STATE: GameState = {
-  cards: {},
-  effects: {},
-  table: DEFAULT_TABLE,
-  chips: {},
-  chipProtos: {},
-  itemStates: {},
-  timing: TIMING_CHART[0],
-  playerState: [],
-  activePlayerID: null,
-  commandEffect: [],
-  immediateEffect: [],
-  stackEffect: [],
-  destroyEffect: [],
-  setGroupLink: {},
-  isBattle: {},
-  coins: {},
-  coinId2cardId: {},
-  globalEffectPool: {}
+export function createGameState(): GameState {
+  return {
+    cards: {},
+    effects: {},
+    table: DEFAULT_TABLE,
+    chips: {},
+    chipProtos: {},
+    itemStates: {},
+    timing: TIMING_CHART[0],
+    playerState: [],
+    activePlayerID: null,
+    commandEffect: [],
+    immediateEffect: [],
+    stackEffect: [],
+    destroyEffect: [],
+    setGroupLink: {},
+    isBattle: {},
+    coins: {},
+    coinId2cardId: {},
+    globalEffectPool: {}
+  }
 }
 
 // globalEffects
@@ -189,7 +192,7 @@ export function getGlobalEffects(ctx: GameState, situation: Situation | null): G
   const key = JSON.stringify(situation)
   const cached = ctx.globalEffectPool[key]
   if (cached) {
-    //log("getGlobalEffects", "useCache")
+    log("getGlobalEffects", "useCache")
     return cached
   }
   const ges = getSituationEffects(ctx, situation)
@@ -685,21 +688,20 @@ export function getEffectTips(
   return getTips()
 }
 
-function getConditionTitleFn(condition: Condition, options: { isPlay?: boolean }): ConditionTitleFn {
+export function getConditionTitleFn(condition: Condition, options: { isPlay?: boolean }): ConditionTitleFn {
   if (typeof condition.title == "string") {
     return ConditionFn.getTitleFn(condition)
   }
   switch (condition.title[0]) {
     case "合計国力〔x〕":
+      const [_, x] = condition.title
       return function (ctx: GameState, effect: Effect): Tip[] {
-        const cardId = EffectFn.getCardID(effect)
         const playerId = EffectFn.getPlayerID(effect)
-        const rollCostLength = getCardRollCostLength(ctx, cardId)
         const cardIdsCanPay = getCardIdsCanPayRollCost(ctx, playerId, null)
         return [
           {
             title: ["合計国力〔x〕", cardIdsCanPay],
-            min: rollCostLength
+            min: x
           }
         ]
       }
@@ -710,7 +712,7 @@ function getConditionTitleFn(condition: Condition, options: { isPlay?: boolean }
   }
 }
 
-function getActionTitleFn(action: Action): ActionTitleFn {
+export function getActionTitleFn(action: Action): ActionTitleFn {
   if (typeof action.title == "string") {
     return ActionFn.getTitleFn(action)
   }
@@ -739,6 +741,30 @@ function getActionTitleFn(action: Action): ActionTitleFn {
             return makeItemDamage(ctx, 1, pair)
           }, ctx)
         }
+        return ctx
+      }
+    }
+    case "(－１／－１／－１)コイン(１)個を乗せる": {
+      const [_, bonus, x] = action.title
+      const varName = action.var
+      if (varName == null) {
+        throw new Error(`action.var not found: ${action.title[0]}`)
+      }
+      return function (ctx: GameState, effect: Effect): GameState {
+        const cardId = EffectFn.getCardID(effect)
+        const cardState = getItemState(ctx, cardId);
+        const tip = ItemStateFn.getTip(cardState, varName)
+        const tipError = TipFn.checkTipSatisfies(tip)
+        if (tipError) {
+          throw tipError
+        }
+        if (tip.title[0] != "カード") {
+          throw new Error("must カード")
+        }
+        const pairs = TipFn.getSelection(tip) as StrBaSyouPair[]
+        const [targetCardId, targetBasyou] = pairs[0]
+        const coins = repeat(CoinFn.battleBonus(bonus))(x)
+        ctx = addCoinsToCard(ctx, [targetCardId, targetBasyou], coins) as GameState
         return ctx
       }
     }

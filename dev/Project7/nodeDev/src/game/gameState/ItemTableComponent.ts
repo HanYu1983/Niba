@@ -65,7 +65,7 @@ export function getItemController(ctx: ItemTableComponent, id: string): PlayerID
     const baSyou = getItemBaSyou(ctx, getCardIdByCoinId(ctx, id));
     return baSyou.value[0];
   }
-  throw new Error(`unknown item: ${id}`)
+  throw new Error(`getItemController unknown item: ${id}`)
 }
 
 export function getItemOwner(ctx: ItemTableComponent, id: string): PlayerID {
@@ -78,7 +78,7 @@ export function getItemOwner(ctx: ItemTableComponent, id: string): PlayerID {
   if (isCoin(ctx, id)) {
     return getCoinOwner(ctx, id)
   }
-  throw new Error(`unknown item: ${id}`)
+  throw new Error(`getItemOwner unknown item: ${id}`)
 }
 
 export function getItemBaSyou(
@@ -95,14 +95,14 @@ export function getItemBaSyou(
   if (isCoin(ctx, id)) {
     throw new Error(`coin no basyou`)
   }
-  throw new Error(`unknown item: ${id}`)
+  throw new Error(`getItemBaSyou unknown item: ${id}`)
 }
 
 export type OnMoveItemFn = (ctx: ItemTableComponent, to: AbsoluteBaSyou, sb: StrBaSyouPair) => ItemTableComponent;
 
 export function moveItem(ctx: ItemTableComponent, to: AbsoluteBaSyou, sb: StrBaSyouPair, onFn?: OnMoveItemFn): ItemTableComponent {
   const [itemId, originBasyou] = sb
-  if (isCard(ctx, itemId) && isChip(ctx, itemId)) {
+  if (isCard(ctx, itemId) || isChip(ctx, itemId)) {
     const nowBasyou = getItemBaSyou(ctx, itemId)
     if (AbsoluteBaSyouFn.eq(nowBasyou, originBasyou) == false) {
       throw new TargetMissingError(`target missing: ${itemId} from ${originBasyou}`)
@@ -123,7 +123,7 @@ export function moveItem(ctx: ItemTableComponent, to: AbsoluteBaSyou, sb: StrBaS
   if (isChip(ctx, itemId)) {
     throw new Error(`chip can not move: ${itemId}`)
   }
-  throw new Error(`unknown item: ${itemId}`)
+  throw new Error(`moveItem unknown item: ${itemId}`)
 }
 
 export function setItemIsRoll(ctx: ItemTableComponent, isRoll: boolean, [itemId, originBasyou]: StrBaSyouPair): ItemTableComponent {
@@ -160,7 +160,7 @@ export function setItemIsRoll(ctx: ItemTableComponent, isRoll: boolean, [itemId,
     ctx = setChip(ctx, itemId, item) as ItemTableComponent
     return ctx
   }
-  throw new Error(`unknown item: ${itemId}`)
+  throw new Error(`setItemIsRoll unknown item: ${itemId}`)
 }
 
 export function addCoinsToCard(ctx: ItemTableComponent, target: StrBaSyouPair, coins: Coin[]): ItemTableComponent {
@@ -173,7 +173,7 @@ export function addCoinsToCard(ctx: ItemTableComponent, target: StrBaSyouPair, c
     ctx = addCoins(ctx, targetItemId, coins) as ItemTableComponent
     return ctx
   }
-  throw new Error(`unknown item: ${targetItemId}`)
+  throw new Error(`addCoinsToCard unknown item: ${targetItemId}`)
 }
 
 
@@ -209,5 +209,5 @@ export function getItemPrototype(ctx: ItemTableComponent, itemId: string): CardP
   if (isCoin(ctx, itemId)) {
     throw new Error(`coin no prototype: ${itemId}`)
   }
-  throw new Error(`unknown item: ${itemId}`)
+  throw new Error(`getItemPrototype unknown item: ${itemId}`)
 }

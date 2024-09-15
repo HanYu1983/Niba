@@ -39,6 +39,7 @@ export type ActionTitle =
     | string
     | ["(このカード)を(リロール)する", "このカード" | StrBaSyouPair[], "ロール" | "リロール"]
     | ["(１)ダメージを与える", number]
+    | ["(－１／－１／－１)コイン(１)個を乗せる", BattleBonus, number]
 
 export type Action = {
     title: ActionTitle,

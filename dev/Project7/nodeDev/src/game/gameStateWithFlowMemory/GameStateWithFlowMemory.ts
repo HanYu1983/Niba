@@ -1,6 +1,6 @@
 import { Effect } from "../define/Effect";
 import { mapCardsWithBasyou } from "../gameState/CardTableComponent";
-import { DEFAULT_GAME_STATE, GameState } from "../gameState/GameState";
+import { createGameState, GameState } from "../gameState/GameState";
 
 export type Message = {
     id: "MessageCustom";
@@ -36,11 +36,13 @@ export type GameStateWithFlowMemory = {
     activeEffectID: string | null;
 } & GameState & HasFlowMemoryComponent;
 
-export const DEFAULT_GAME_STATE_WITH_FLOW_MEMORY: GameStateWithFlowMemory = {
-    ...DEFAULT_GAME_STATE,
-    stackEffectMemory: [],
-    activeEffectID: null,
-    flowMemory: DEFAULT_FLOW_MEMORY
+export function createGameStateWithFlowMemory():GameStateWithFlowMemory{
+    return {
+        ...createGameState(),
+        stackEffectMemory: [],
+        activeEffectID: null,
+        flowMemory: DEFAULT_FLOW_MEMORY
+    }
 }
 
 // 更新命令列表
