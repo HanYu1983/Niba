@@ -21,3 +21,13 @@ export function getSetGroupRoot(
 ): string | null {
   return ctx.setGroupLink[cardID] || null;
 }
+
+export function setSetGroupLink(ctx: SetGroupComponent, parentCardId: string, cardId: string): SetGroupComponent {
+  return {
+    ...ctx,
+    setGroupLink: {
+      ...ctx.setGroupLink,
+      [cardId]: parentCardId,
+    }
+  }
+}

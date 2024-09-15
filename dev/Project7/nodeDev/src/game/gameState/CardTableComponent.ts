@@ -50,6 +50,7 @@ export function createCardWithProtoIds(ctx: CardTableComponent, basyou: Absolute
     return {
       id: ToolFn.getUUID("card"),
       protoID: protoId,
+      ownerID: AbsoluteBaSyouFn.getPlayerID(basyou),
     }
   }))
   return ctx;

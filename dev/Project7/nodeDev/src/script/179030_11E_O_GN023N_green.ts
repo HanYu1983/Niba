@@ -60,7 +60,7 @@ export const prototype: CardPrototype = {
               description: "",
               conditions: {
                 "戦闘エリアにいる敵軍ユニット１枚": {
-                  title: ["(戦闘エリア)にいる(敵軍)(ユニット)(１)～(２)枚", ["戦闘エリア1", "戦闘エリア2"], opponentPlayerId, "ユニット", 1, 1]
+                  title: ["(戦闘エリア)にいる(敵軍)(ユニット)(１)～(２)枚", ["戦闘エリア1", "戦闘エリア2"], "敵軍", "ユニット", 1, 1]
                 },
               },
               logicTreeActions: [

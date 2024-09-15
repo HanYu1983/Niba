@@ -72,6 +72,9 @@ export const AbsoluteBaSyouFn = {
     setPlayerID(baSyou: AbsoluteBaSyou, p: PlayerID): AbsoluteBaSyou {
         return this.of(p, baSyou.value[1]);
     },
+    getPlayerID(baSyou: AbsoluteBaSyou): PlayerID {
+        return baSyou.value[0]
+    },
     setOpponentPlayerID(baSyou: AbsoluteBaSyou): AbsoluteBaSyou {
         return this.of(PlayerIDFn.getOpponent(baSyou.value[0]), baSyou.value[1]);
     },

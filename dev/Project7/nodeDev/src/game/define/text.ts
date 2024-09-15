@@ -62,9 +62,10 @@ export type ConditionTitle =
     | ["〔x〕", number]
     | ["c〔x〕", CardColor, number]
     | ["合計国力〔x〕", number]
-    | ["本来の記述に｢特徴：(装弾)｣を持つ(自軍)(G)(１)枚", string, PlayerID, CardCategory, number]
-    | ["(戦闘エリア)にいる(敵軍)(ユニット)(１)～(２)枚", BaSyouKeyword[], PlayerID, CardCategory, number, number]
-    | ["(交戦中)の(自軍)(ユニット)(１)枚", "交戦中" | "非交戦中" | null, PlayerID, CardCategory, number]
+    | ["本来の記述に｢特徴：(装弾)｣を持つ(自軍)(G)(１)枚", string, RelatedPlayerSideKeyword, CardCategory, number]
+    | ["(戦闘エリア)にいる(敵軍)(ユニット)(１)～(２)枚", BaSyouKeyword[], RelatedPlayerSideKeyword, CardCategory, number, number]
+    | ["(交戦中)の(自軍)(ユニット)(１)枚", "交戦中" | "非交戦中" | null, RelatedPlayerSideKeyword, CardCategory, number]
+    | ["_自軍_ユニット_１枚", RelatedPlayerSideKeyword, CardCategory, number]
 
 export type Condition = {
     title: ConditionTitle,

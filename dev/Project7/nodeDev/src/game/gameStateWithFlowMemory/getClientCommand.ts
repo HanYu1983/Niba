@@ -17,7 +17,7 @@ export function getClientCommand(ctx: GameStateWithFlowMemory, playerId: PlayerI
     const playCardEffects = of(AbsoluteBaSyouFn.of(playerId, "手札"), AbsoluteBaSyouFn.of(playerId, "ハンガー"))
         .pipe(concatMap(basyou => getItemIdsByBasyou(ctx, basyou)))
         .pipe(concatMap(cardId => {
-            return [getPlayCardEffects(ctx, playerId, cardId)]
+            return [getPlayCardEffects(ctx, cardId)]
         }))
 
     const playTextCards = of(AbsoluteBaSyouFn.of(playerId, "配備エリア"))
