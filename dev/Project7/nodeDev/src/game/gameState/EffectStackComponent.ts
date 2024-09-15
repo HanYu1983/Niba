@@ -1,5 +1,6 @@
 import { assoc, dissoc } from "ramda";
 import { Effect } from "../define/Effect";
+import { ToolFn } from "../tool";
 
 export type EffectStackComponent = {
   // 指令效果
@@ -52,6 +53,9 @@ export function removeEffect(ctx: EffectStackComponent, id: string): EffectStack
 }
 
 export function addStackEffect(ctx: EffectStackComponent, block: Effect): EffectStackComponent {
+  if (block.id == null) {
+    block.id = ToolFn.getUUID()
+  }
   return {
     ...ctx,
     stackEffect: [block.id, ...ctx.stackEffect],
@@ -60,6 +64,9 @@ export function addStackEffect(ctx: EffectStackComponent, block: Effect): Effect
 }
 
 export function addImmediateEffect(ctx: EffectStackComponent, block: Effect): EffectStackComponent {
+  if (block.id == null) {
+    block.id = ToolFn.getUUID()
+  }
   return {
     ...ctx,
     immediateEffect: [block.id, ...ctx.immediateEffect],
@@ -78,6 +85,9 @@ export function clearDestroyEffects(ctx: EffectStackComponent): EffectStackCompo
 }
 
 export function addDestroyEffect(ctx: EffectStackComponent, block: Effect): EffectStackComponent {
+  if (block.id == null) {
+    block.id = ToolFn.getUUID()
+  }
   return {
     ...ctx,
     destroyEffect: [block.id, ...ctx.destroyEffect],

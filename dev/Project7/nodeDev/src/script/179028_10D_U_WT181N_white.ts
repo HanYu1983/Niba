@@ -46,20 +46,20 @@ export const prototype: CardPrototype = {
       onEvent: function _(ctx: GameState, effect: Effect, { DefineFn, GameStateFn }: Bridge): GameState {
         const event = DefineFn.EffectFn.getEvent(effect)
         const cardId = DefineFn.EffectFn.getCardID(effect)
-        let state = GameStateFn.getCardState(ctx, cardId)
+        let state = GameStateFn.getItemState(ctx, cardId)
         if (event.title[0] == "場に出た場合") {
           const totalCostLength = getCardRollCostLength(ctx, cardId) - 1
-          state = GameStateFn.CardStateFn.setFlag(state, "bonus", totalCostLength)
+          state = GameStateFn.ItemStateFn.setFlag(state, "bonus", totalCostLength)
         }
         if (event.title[0] == "GameEventOnTiming" && DefineFn.TimingFn.isLast(event.title[1])) {
-          state = GameStateFn.CardStateFn.removeFlag(state, "bonus")
+          state = GameStateFn.ItemStateFn.removeFlag(state, "bonus")
         }
-        ctx = GameStateFn.setCardState(ctx, cardId, state) as GameState
+        ctx = GameStateFn.setItemState(ctx, cardId, state) as GameState
         return ctx
       }.toString(),
       onSituation: function _(ctx: GameState, effect: Effect, { DefineFn, GameStateFn }: Bridge): GlobalEffect[] {
         const cardId = DefineFn.EffectFn.getCardID(effect)
-        const totalCostLength = GameStateFn.getCardState(ctx, cardId).flags["bonus"]
+        const totalCostLength = GameStateFn.getItemState(ctx, cardId).flags["bonus"]
         if (totalCostLength != null) {
           return [{ title: ["＋x／＋x／＋xを得る", [totalCostLength, 0, totalCostLength]], cardIds: [DefineFn.EffectFn.getCardID(effect)] }]
         }

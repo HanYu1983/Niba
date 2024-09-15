@@ -3,7 +3,7 @@ import {
   CardTableComponent,
   getCardIds,
 } from "./CardTableComponent"
-import { CardState, CardStateComponent, CardStateFn, getCardState, getCardStateValues, mapCardState, setCardState } from "./CardStateComponent";
+import { ItemState, ItemStateComponent, ItemStateFn, getItemState, getItemStateValues, mapCardState, setItemState } from "./ItemStateComponent";
 import { IsBattleComponent } from "./IsBattleComponent";
 import { getSetGroupCards, getSetGroupRoot, SetGroupComponent } from "./SetGroupComponent";
 import { addDestroyEffect, addImmediateEffect, EffectStackComponent } from "./EffectStackComponent";
@@ -86,7 +86,7 @@ export type GameState = {
   & IsBattleComponent
   & CardTableComponent
   & EffectStackComponent
-  & CardStateComponent
+  & ItemStateComponent
   & TimingComponent
   & PlayerStateComponent
   & ActivePlayerComponent
@@ -99,7 +99,7 @@ export const DEFAULT_GAME_STATE: GameState = {
   table: DEFAULT_TABLE,
   chips: {},
   chipProtos: {},
-  cardStates: {},
+  itemStates: {},
   timing: TIMING_CHART[0],
   playerState: [],
   activePlayerID: null,
@@ -375,7 +375,7 @@ export function getBattleGroupBattlePoint(
   const attackPower = unitCardIDs
     .map((cardID, i): number => {
       // 破壞的單位沒有攻擊力
-      const cs = getCardState(ctx, cardID);
+      const cs = getItemState(ctx, cardID);
       if (cs.destroyReason != null) {
         return 0;
       }
@@ -466,8 +466,8 @@ function doDamage(
       log("handleAttackDamage", "attack", currentAttackPower);
       // 敵方機體存在, 攻擊機體
       if (willGuardUnits.length) {
-        const changedCardState = willGuardUnits.map((cardID): CardState => {
-          const cs = getCardState(ctx, cardID);
+        const changedCardState = willGuardUnits.map((cardID): ItemState => {
+          const cs = getItemState(ctx, cardID);
           if (currentAttackPower <= 0) {
             return cs;
           }
@@ -511,7 +511,7 @@ function doDamage(
         });
         // 套用傷害
         ctx = changedCardState.reduce((ctx, cs) => {
-          return setCardState(ctx, cs.id, cs) as GameState
+          return setItemState(ctx, cs.id, cs) as GameState
         }, ctx)
       }
       // 攻擊方可以攻擊本國
@@ -599,7 +599,7 @@ export function updateDestroyEffect(ctx: GameState): GameState {
   // 將所有破壞效果加入破壞用堆疊
   // 加入破壞用堆疊後，主動玩家就必須決定解決順序
   // 決定後，依順序將所有效果移到正在解決中的堆疊，並重設切入的旗標，讓玩家可以在堆疊解決中可以再次切入
-  getCardStateValues(ctx).reduce((ctx, cs) => {
+  getItemStateValues(ctx).reduce((ctx, cs) => {
     if (cs.destroyReason) {
       const effect: Effect = {
         id: ToolFn.getUUID("updateDestroyEffect"),
@@ -729,8 +729,8 @@ function getActionTitleFn(action: Action): ActionTitleFn {
           throw new Error(`action.var not found: ${action.title[0]}`)
         }
         const cardId = EffectFn.getCardID(effect)
-        let cardState = getCardState(ctx, cardId);
-        const tip = CardStateFn.getTip(cardState, action.var)
+        let cardState = getItemState(ctx, cardId);
+        const tip = ItemStateFn.getTip(cardState, action.var)
         const tipError = TipFn.checkTipSatisfies(tip)
         if (tipError) throw tipError
         if (tip.title[0] == "カード") {
@@ -752,9 +752,9 @@ export function makeItemDamage(ctx: GameState, damage: number, target: StrBaSyou
     if (AbsoluteBaSyouFn.eq(targetOriginBasyou, nowBasyou)) {
       throw new TargetMissingError("basyou not same")
     }
-    let cardState = getCardState(ctx, targetItemId);
-    cardState = CardStateFn.damage(cardState, damage)
-    ctx = setCardState(ctx, targetItemId, cardState) as GameState
+    let cardState = getItemState(ctx, targetItemId);
+    cardState = ItemStateFn.damage(cardState, damage)
+    ctx = setItemState(ctx, targetItemId, cardState) as GameState
     return ctx
   }
   throw new Error(`unknown item: ${targetItemId}`)
