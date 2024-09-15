@@ -8,7 +8,7 @@ import { isBattle, IsBattleComponent } from "./IsBattleComponent";
 import { getSetGroupCards, getSetGroupRoot, SetGroupComponent } from "./SetGroupComponent";
 import { addDestroyEffect, addImmediateEffect, EffectStackComponent } from "./EffectStackComponent";
 import { log } from "../../tool/logger";
-import { Action, ActionFn, ActionTitle, ActionTitleFn, BattleBonus, Condition, ConditionFn, ConditionTitle, ConditionTitleFn, getOnSituationFn, LogicTreeActionFn, OnSituationFn, Situation, Text, TextFn, TextSpeicalEffect, TextSpeicalEffectFn } from "../define/Text";
+import { Action, ActionFn, ActionTitle, ActionTitleFn, BattleBonus, Condition, ConditionFn, ConditionTitle, ConditionTitleFn, getOnSituationFn, getTextsFromTokuSyuKouKa, LogicTreeActionFn, OnSituationFn, Situation, Text, TextFn, TextSpeicalEffect, TextSpeicalEffectFn } from "../define/Text";
 import { AttackSpeed } from "../define";
 import { PlayerA, PlayerID, PlayerIDFn } from "../define/PlayerID";
 import { AbsoluteBaSyou, BattleAreaKeyword, BaSyouKeyword, AbsoluteBaSyouFn, BaSyouKeywordFn } from "../define/BaSyou";
@@ -114,7 +114,13 @@ function getSituationEffects(ctx: GameState, situation: Situation | null): Globa
     map(itemId => getItem(ctx, itemId)),
     map(item => {
       const proto = getItemPrototype(ctx, item.id)
-      const texts = proto.texts.filter(text => text.title[0] == "自動型" && (text.title[1] == "常駐" || text.title[1] == "起動"))
+      let texts = proto.texts.flatMap(text => {
+        if (text.title[0] == "特殊型") {
+          return getTextsFromTokuSyuKouKa(text.title[1])
+        }
+        return [text]
+      })
+      texts = texts.filter(text => text.title[0] == "自動型" && (text.title[1] == "常駐" || text.title[1] == "起動"))
       return [item, texts] as [Item, Text[]]
     })
   )
@@ -127,7 +133,13 @@ function getSituationEffects(ctx: GameState, situation: Situation | null): Globa
     map(itemId => getItem(ctx, itemId)),
     map(item => {
       const proto = getItemPrototype(ctx, item.id)
-      const texts = proto.texts.filter(text => text.title[0] == "自動型" && text.title[1] == "恒常")
+      let texts = proto.texts.flatMap(text => {
+        if (text.title[0] == "特殊型") {
+          return getTextsFromTokuSyuKouKa(text.title[1])
+        }
+        return [text]
+      })
+      texts = texts.filter(text => text.title[0] == "自動型" && text.title[1] == "恒常")
       return [item, texts] as [Item, Text[]]
     })
   )
