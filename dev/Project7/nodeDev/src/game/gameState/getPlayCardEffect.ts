@@ -16,7 +16,12 @@ export function getPlayCardEffects(ctx: GameState, cardId: string): Effect[] {
     const prototype = getItemPrototype(ctx, cardId)
     const playerId = getItemOwner(ctx, cardId)
     const cardRollCostLength = getCardRollCostLength(ctx, cardId)
-    const characterConditions: { [key: string]: Condition } = prototype.category == "キャラクター" || prototype.category == "オペレーション(unit)" ? {
+    const costConditions: { [key: string]: Condition } = (prototype.category != "グラフィック") ? {
+        "合計国力〔x〕": {
+            title: ["合計国力〔x〕", cardRollCostLength]
+        },
+    } : {}
+    const characterConditions: { [key: string]: Condition } = (prototype.category == "キャラクター" || prototype.category == "オペレーション(unit)") ? {
         "unitForSet": {
             title: function _(ctx: GameState, effect: Effect, { DefineFn, GameStateFn }: Bridge): GameState {
                 // TODO check character can set
@@ -32,9 +37,7 @@ export function getPlayCardEffects(ctx: GameState, cardId: string): Effect[] {
         text: {
             title: [],
             conditions: {
-                "合計国力〔x〕": {
-                    title: ["合計国力〔x〕", cardRollCostLength]
-                },
+                ...costConditions,
                 ...characterConditions,
                 ...commandConditions
             },
