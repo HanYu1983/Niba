@@ -43,7 +43,13 @@ export const ItemStateFn = {
       ...ctx,
       damage: ctx.damage + v
     }
-  }
+  },
+  setMoreTotalRollCostLengthPlay(ctx: ItemState, x: number) {
+    return this.setFlag(ctx, "合計国力＋(１)してプレイ", x)
+  },
+  getMoreTotalRollCostLengthPlay(ctx: ItemState): number {
+    return ctx.flags["合計国力＋(１)してプレイ"] || 0
+  },
 }
 
 export type ItemStateComponent = {
@@ -60,17 +66,4 @@ export function setItemState(ctx: ItemStateComponent, cardID: string, cardState:
 
 export function getItemStateValues(ctx: ItemStateComponent): ItemState[] {
   return Object.values(ctx.itemStates)
-}
-
-export function mapCardState(ctx: ItemStateComponent, f: (key: AbsoluteBaSyou, cs: ItemState) => ItemState): ItemStateComponent {
-  const cardStates = Object.keys(ctx.itemStates).reduce((cardStates, key) => {
-    return {
-      ...cardStates,
-      [key]: f(AbsoluteBaSyouFn.fromString(key), cardStates[key])
-    }
-  }, ctx.itemStates)
-  return {
-    ...ctx,
-    itemStates: cardStates
-  }
 }

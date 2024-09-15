@@ -11,11 +11,11 @@ import { CardPrototype, DEFAULT_CARD_PROTOTYPE } from "../game/define/CardProtot
 import type { Effect } from "../game/define/Effect";
 import type { Bridge } from "./bridge";
 import type { GlobalEffect } from "../game/define/GlobalEffect";
-import { getCardRollCostLength, type GameState } from "../game/gameState/GameState";
+import { type GameState } from "../game/gameState/GameState";
 
 export const prototype: CardPrototype = {
   ...DEFAULT_CARD_PROTOTYPE,
-  id:"179028_10D_U_WT181N_white",
+  id: "179028_10D_U_WT181N_white",
   title: "シェンロンガンダム［†］",
   characteristic: "シェンロン系　MS　専用「張五飛」",
   category: "ユニット",
@@ -43,8 +43,8 @@ export const prototype: CardPrototype = {
         const event = DefineFn.EffectFn.getEvent(effect)
         const cardId = DefineFn.EffectFn.getCardID(effect)
         let state = GameStateFn.getItemState(ctx, cardId)
-        if (event.title[0] == "場に出た場合") {
-          const totalCostLength = getCardRollCostLength(ctx, cardId) - 1
+        if (event.title[0] == "場に出た場合" && event.cardIds?.includes(cardId)) {
+          const totalCostLength = GameStateFn.getCardRollCostLength(ctx, cardId) - 1
           state = GameStateFn.ItemStateFn.setFlag(state, "bonus", totalCostLength)
         }
         if (event.title[0] == "GameEventOnTiming" && DefineFn.TimingFn.isLast(event.title[1])) {
@@ -55,11 +55,16 @@ export const prototype: CardPrototype = {
       }.toString(),
       onSituation: function _(ctx: GameState, effect: Effect, { DefineFn, GameStateFn }: Bridge): GlobalEffect[] {
         const cardId = DefineFn.EffectFn.getCardID(effect)
-        const totalCostLength = GameStateFn.getItemState(ctx, cardId).flags["bonus"]
-        if (totalCostLength != null) {
-          return [{ title: ["＋x／＋x／＋xを得る", [totalCostLength, 0, totalCostLength]], cardIds: [DefineFn.EffectFn.getCardID(effect)] }]
+        const hasSpecialPlayX = GameStateFn.ItemStateFn.getMoreTotalRollCostLengthPlay(GameStateFn.getItemState(ctx, cardId))
+        const ret: GlobalEffect[] = []
+        if (hasSpecialPlayX) {
+          ret.push({ title: ["合計国力＋(１)", hasSpecialPlayX], cardIds: [cardId] })
         }
-        return []
+        const totalCostLength = GameStateFn.getItemState(ctx, cardId).flags["bonus"]
+        if (totalCostLength) {
+          ret.push({ title: ["＋x／＋x／＋xを得る", [totalCostLength, 0, totalCostLength]], cardIds: [cardId] })
+        }
+        return ret
       }.toString()
     }
   ],

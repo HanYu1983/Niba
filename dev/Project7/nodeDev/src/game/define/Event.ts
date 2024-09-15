@@ -16,12 +16,12 @@ export type EventTitle =
     | ["「改装」の効果で廃棄される場合"]
     | ["「改装」の効果で場に出た場合"]
     | ["破壊された場合", DestroyReason]
-    | ["プレイした場合" | "解決直後", string, string]
+    | ["プレイした場合" | "解決直後"]
     | ["「ゲイン」の効果で戦闘修正を得る場合", BattleBonus]
     | ["(敵軍)(ユニット)がダメージを受けた場合", PlayerID, CardCategory]
 
 export type Event = {
     title: EventTitle;
-    cardId?: string;
+    cardIds?: string[];
     effect?: Effect;
 }

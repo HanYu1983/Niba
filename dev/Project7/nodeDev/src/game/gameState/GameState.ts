@@ -3,7 +3,7 @@ import {
   CardTableComponent,
   getCardIds,
 } from "./CardTableComponent"
-import { ItemState, ItemStateComponent, ItemStateFn, getItemState, getItemStateValues, mapCardState, setItemState } from "./ItemStateComponent";
+import { ItemState, ItemStateComponent, ItemStateFn, getItemState, getItemStateValues, setItemState } from "./ItemStateComponent";
 import { isBattle, IsBattleComponent } from "./IsBattleComponent";
 import { getSetGroupCards, getSetGroupRoot, SetGroupComponent } from "./SetGroupComponent";
 import { addDestroyEffect, addImmediateEffect, EffectStackComponent } from "./EffectStackComponent";
@@ -11,12 +11,12 @@ import { log } from "../../tool/logger";
 import { Action, ActionFn, ActionTitle, ActionTitleFn, BattleBonus, Condition, ConditionFn, ConditionTitle, ConditionTitleFn, getOnSituationFn, LogicTreeActionFn, OnSituationFn, Situation, Text, TextFn, TextSpeicalEffect, TextSpeicalEffectFn } from "../define/Text";
 import { AttackSpeed } from "../define";
 import { PlayerA, PlayerID, PlayerIDFn } from "../define/PlayerID";
-import { AbsoluteBaSyou, BattleAreaKeyword, BaSyouKeyword, AbsoluteBaSyouFn } from "../define/BaSyou";
+import { AbsoluteBaSyou, BattleAreaKeyword, BaSyouKeyword, AbsoluteBaSyouFn, BaSyouKeywordFn } from "../define/BaSyou";
 import { CardPrototype, CardColor, RollCostColor } from "../define/CardPrototype";
 import { GlobalEffect } from "../define/GlobalEffect";
 import { Timing, TIMING_CHART } from "../define/Timing";
 import { DestroyReason, Effect, EffectFn } from "../define/Effect";
-import { Event } from "../define/Event";
+import { Event, EventTitle } from "../define/Event";
 import { DEFAULT_TABLE } from "../../tool/table";
 import { BattlePoint, BattlePointFn } from "../define/BattlePoint";
 import { always, filter, flatten, flow, lift, map, pipe, reduce, repeat, sum } from "ramda";
@@ -42,7 +42,6 @@ export type CardTextState = {
   cardText: Text;
 };
 
-
 export type GlobalCardState = {
   id: string;
   cardID: string;
@@ -56,18 +55,6 @@ export type GameEffectCustom = {
 
 export type GameEffect = GameEffectCustom;
 
-// export type GameEffectState = {
-//   id: string;
-//   effect: GameEffect;
-// };
-
-// export type Message = {
-//   id: "MessageCustom";
-//   value: string;
-// };
-
-
-
 export type TimingComponent = {
   timing: Timing;
 }
@@ -79,7 +66,6 @@ export type PlayerStateComponent = {
 export type ActivePlayerComponent = {
   activePlayerID: string | null;
 }
-
 
 export type GameState = {
   globalEffectPool: { [key: string]: GlobalEffect[] }
@@ -128,7 +114,7 @@ function getSituationEffects(ctx: GameState, situation: Situation | null): Globa
     map(itemId => getItem(ctx, itemId)),
     map(item => {
       const proto = getItemPrototype(ctx, item.id)
-      const texts = proto.texts.filter(text => text.title[0] == "自動型" && text.title[1] == "常駐")
+      const texts = proto.texts.filter(text => text.title[0] == "自動型" && (text.title[1] == "常駐" || text.title[1] == "起動"))
       return [item, texts] as [Item, Text[]]
     })
   )
@@ -242,7 +228,7 @@ export function getCardRollCostLength(ctx: GameState, cardID: string): number {
   const added = pipe(
     always(gEffects),
     map(ge => {
-      if (ge.title[0] == "合計国力＋(１)") {
+      if (ge.title[0] == "合計国力＋(１)" && ge.cardIds.includes(cardID)) {
         return ge.title[1]
       }
       return 0
@@ -488,7 +474,7 @@ function doDamage(
             };
             const gameEvent: Event = {
               title: ["破壊された場合", reason],
-              cardId: cs.id
+              cardIds: [cs.id]
             };
             ctx = triggerTextEvent(ctx, gameEvent)
             return {
@@ -504,7 +490,7 @@ function doDamage(
           currentAttackPower = 0;
           const gameEvent: Event = {
             title: ["戦闘ダメージを受けた場合"],
-            cardId: cs.id,
+            cardIds: [cs.id],
           };
           ctx = triggerTextEvent(ctx, gameEvent)
           return {
@@ -659,10 +645,15 @@ export function doEffect(
   const processLogicAction = (ctx: GameState) => pipe(
     always(TextFn.getLogicTreeAction(effect.text, logicId)),
     lta => LogicTreeActionFn.getActionTitleFns(lta, getActionTitleFn),
-    reduce((ctx, fn) => fn(ctx, effect, bridge), ctx)
+    reduce((ctx, fn) => {
+      ctx = fn(ctx, effect, bridge)
+      //clearGlobalEffects(ctx)
+      return ctx
+    }, ctx)
   )
   ctx = processCondition(ctx)()
   ctx = processLogicAction(ctx)()
+  clearGlobalEffects(ctx)
   return ctx;
 }
 
@@ -783,5 +774,28 @@ export function makeItemDamage(ctx: GameState, damage: number, target: StrBaSyou
     ctx = setItemState(ctx, targetItemId, cardState) as GameState
     return ctx
   }
-  throw new Error(`unknown item: ${targetItemId}`)
+  throw new Error(`makeItemDamage unknown item: ${targetItemId}`)
+}
+
+export function onMoveItem(ctx: GameState, to: AbsoluteBaSyou, [cardId, from]: StrBaSyouPair): GameState {
+  clearGlobalEffects(ctx)
+  if (AbsoluteBaSyouFn.getBaSyouKeyword(from) == "手札") {
+    ctx = triggerTextEvent(ctx, {
+      title: ["プレイされて場に出た場合"],
+      cardIds: [cardId]
+    } as Event)
+    if (AbsoluteBaSyouFn.getBaSyouKeyword(to) == "プレイされているカード") {
+      ctx = triggerTextEvent(ctx, {
+        title: ["プレイした場合"],
+        cardIds: [cardId]
+      } as Event)
+    }
+  }
+  if (BaSyouKeywordFn.isBa(AbsoluteBaSyouFn.getBaSyouKeyword(from)) == false && BaSyouKeywordFn.isBa(AbsoluteBaSyouFn.getBaSyouKeyword(to))) {
+    ctx = triggerTextEvent(ctx, {
+      title: ["場に出た場合"],
+      cardIds: [cardId]
+    } as Event)
+  }
+  return ctx
 }

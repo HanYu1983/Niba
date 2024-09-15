@@ -23,5 +23,8 @@ export const BattlePointFn = {
     getValue: getValue,
     toBattleBonus(v: BattlePoint): BattleBonus {
         return [getValue(v[0]), getValue[1], getValue[2]]
+    },
+    eq(l: BattlePoint, r: BattlePoint): boolean {
+        return JSON.stringify(l) == JSON.stringify(r)
     }
 }

@@ -63,6 +63,9 @@ export const AbsoluteBaSyouFn = {
             value: [p, k]
         }
     },
+    getBaSyouKeyword(baSyou: AbsoluteBaSyou): BaSyouKeyword {
+        return baSyou.value[1]
+    },
     setBaSyouKeyword(baSyou: AbsoluteBaSyou, kw: BaSyouKeyword): AbsoluteBaSyou {
         return this.of(baSyou.value[0], kw);
     },

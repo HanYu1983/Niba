@@ -98,7 +98,7 @@ export function getItemBaSyou(
   throw new Error(`getItemBaSyou unknown item: ${id}`)
 }
 
-export type OnMoveItemFn = (ctx: ItemTableComponent, to: AbsoluteBaSyou, sb: StrBaSyouPair) => ItemTableComponent;
+export type OnMoveItemFn = (ctx: any, to: AbsoluteBaSyou, sb: StrBaSyouPair) => any;
 
 export function moveItem(ctx: ItemTableComponent, to: AbsoluteBaSyou, sb: StrBaSyouPair, onFn?: OnMoveItemFn): ItemTableComponent {
   const [itemId, originBasyou] = sb
