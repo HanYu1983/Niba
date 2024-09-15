@@ -28,7 +28,6 @@ export function getPlayCardEffect(ctx: GameState, playerId: PlayerID, cardId: st
                 },
                 "rollCost": {
                     title: function _(ctx: GameState, effect: Effect, { DefineFn, GameStateFn }: Bridge): Tip[] {
-                        //const ges = GameStateFn.getSituationEffects(ctx, null)
                         const rollCost = GameStateFn.getCardRollCost(ctx, cardId)
                         const canRollCardIds = GameStateFn.getCardCanPayRollCost(ctx, playerId, null)
                         const pairs = canRollCardIds.map(cardId => {

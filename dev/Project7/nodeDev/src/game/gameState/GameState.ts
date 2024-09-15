@@ -7,11 +7,10 @@ import { CardState, CardStateComponent, CardStateFn, getCardState, getCardStateV
 import { IsBattleComponent } from "./IsBattleComponent";
 import { getSetGroupCards, getSetGroupRoot, SetGroupComponent } from "./SetGroupComponent";
 import { addDestroyEffect, addImmediateEffect, EffectStackComponent } from "./EffectStackComponent";
-import { getPrototype } from "../../script";
 import { log } from "../../tool/logger";
 import { Action, ActionFn, ActionTitle, ActionTitleFn, BattleBonus, Condition, ConditionFn, ConditionTitle, ConditionTitleFn, getOnSituationFn, LogicTreeActionFn, OnSituationFn, Situation, Text, TextFn, TextSpeicalEffect, TextSpeicalEffectFn } from "../define/Text";
 import { AttackSpeed } from "../define";
-import { getOpponentPlayerID, PlayerA, PlayerID } from "../define/PlayerID";
+import { getOpponentPlayerID, PlayerA, PlayerID, PlayerIDFn } from "../define/PlayerID";
 import { AbsoluteBaSyou, BattleAreaKeyword, BaSyouKeyword, AbsoluteBaSyouFn } from "../define/BaSyou";
 import { CardPrototype, CardColor, RollCostColor } from "../define/CardPrototype";
 import { GlobalEffect } from "../define/GlobalEffect";
@@ -20,12 +19,11 @@ import { DestroyReason, Effect, EffectFn } from "../define/Effect";
 import { Event } from "../define/Event";
 import { DEFAULT_TABLE } from "../../tool/table";
 import { BattlePoint, BattlePointFn, DEFAULT_BATTLE_POINT } from "../define/BattlePoint";
-import { __, always, filter, flatten, flow, map, pipe, reduce, sum } from "ramda";
+import { always, filter, flatten, flow, lift, map, pipe, reduce, sum } from "ramda";
 import { createBridge } from "../bridge/createBridge";
 import { CoinTableComponent, getCardIdByCoinId, getCoins } from "./CoinTableComponent";
-import { getItemBaSyou, getItemController, getItemIdsByBasyou, getItemPrototype, ItemTableComponent } from "./ItemTableComponent";
+import { getItem, getItemBaSyou, getItemController, getItemIdsByBasyou, getItemPrototype, isCard, isChip, Item, ItemTableComponent } from "./ItemTableComponent";
 import { Tip } from "../define/Tip";
-import { Bridge } from "../../script/bridge";
 import { Card } from "../define/Card";
 import { ToolFn } from "../tool";
 
@@ -117,32 +115,73 @@ export const DEFAULT_GAME_STATE: GameState = {
 
 // globalEffects
 function getSituationEffects(ctx: GameState, situation: Situation | null): GlobalEffect[] {
-  // getCardIdsByBasyou(ctx, {
-  //   id: "AbsoluteBaSyou",
-  //   value: [PlayerA, "Gゾーン"]
-  // })
-  return getCardIds(ctx).map(cardId => getCard(ctx, cardId)).flatMap(card => {
-    if (card == null) {
-      throw new Error("card not found")
-    }
-    const proto = getItemPrototype(ctx, card.id)
-    const globalEffects = proto.texts.filter(text => text.title[0] == "自動型" && text.title[1] == "恒常")
+  // 常駐
+  const getTextGroup1 = pipe(
+    always(AbsoluteBaSyouFn.getBaAll()),
+    map(basyou => getItemIdsByBasyou(ctx, basyou)),
+    flatten,
+    itemIds => itemIds.filter(itemId => isCard(ctx, itemId) || isChip(ctx, itemId)),
+    map(itemId => getItem(ctx, itemId)),
+    map(item => {
+      const proto = getItemPrototype(ctx, item.id)
+      const texts = proto.texts.filter(text => text.title[0] == "自動型" && text.title[1] == "常駐")
+      return [item, texts] as [Item, Text[]]
+    })
+  )
+  // 恒常
+  const getTextGroup2 = pipe(
+    always(AbsoluteBaSyouFn.getScriptAll()),
+    map(basyou => getItemIdsByBasyou(ctx, basyou)),
+    flatten,
+    itemIds => itemIds.filter(itemId => isCard(ctx, itemId) || isChip(ctx, itemId)),
+    map(itemId => getItem(ctx, itemId)),
+    map(item => {
+      const proto = getItemPrototype(ctx, item.id)
+      const texts = proto.texts.filter(text => text.title[0] == "自動型" && text.title[1] == "恒常")
+      return [item, texts] as [Item, Text[]]
+    })
+  )
+  const allCardTexts = [...getTextGroup1(), ...getTextGroup2()]
+
+  const bridge = createBridge()
+  const ges = allCardTexts.flatMap(([item, texts]) => {
+    const globalEffects = texts
       .map((text, i) => {
-        const cardController = getItemController(ctx, card.id)
+        const cardController = getItemController(ctx, item.id)
         const fn = getOnSituationFn(text)
         const effect: Effect = {
-          id: "",
-          reason: ["Situation", cardController, card.id, situation],
+          id: ToolFn.getUUID("getSituationEffects"),
+          reason: ["Situation", cardController, item.id, situation],
           text: text
         }
-        const ret: [OnSituationFn, Effect] = [fn, effect]
-        return ret
+        return [fn, effect] as [OnSituationFn, Effect]
       })
       .flatMap(([fn, effect]) => {
-        return fn(ctx, effect, createBridge())
+        return fn(ctx, effect, bridge)
       })
     return globalEffects
   })
+
+  const addedGes = ges.filter(ge => ge.title[0] == "AddText")
+    .map(ge => [ge.cardIds, ge.title[1]] as [string[], Text])
+    .flatMap(([itemIds, text]) => {
+      return itemIds
+        .map(itemId => {
+          const cardController = getItemController(ctx, itemId)
+          const fn = getOnSituationFn(text)
+          const effect: Effect = {
+            id: ToolFn.getUUID("getSituationEffects"),
+            reason: ["Situation", cardController, itemId, situation],
+            text: text
+          }
+          return [fn, effect] as [OnSituationFn, Effect]
+        })
+        .flatMap(([fn, effect]) => {
+          return fn(ctx, effect, bridge)
+        })
+    })
+
+  return [...ges, ...addedGes]
 }
 
 export function getGlobalEffects(ctx: GameState, situation: Situation | null): GlobalEffect[] {
@@ -195,7 +234,7 @@ export function getCardRollCost(ctx: GameState, cardID: string): RollCostColor[]
 
 export function getCardRollCostLength(ctx: GameState, cardID: string): number {
   const prototype = getItemPrototype(ctx, cardID)
-  const gEffects = getSituationEffects(ctx, null)
+  const gEffects = getGlobalEffects(ctx, null)
   const added = pipe(
     always(gEffects),
     map(ge => {
@@ -528,39 +567,7 @@ export function doPlayerAttack(
   return ctx;
 }
 
-function getConditionTitleFn(condition: Condition, options: { isPlay?: boolean }): ConditionTitleFn {
-  if (typeof condition.title == "string") {
-    return ConditionFn.getTitleFn(condition)
-  }
-  switch (condition.title[0]) {
-    case "合計国力〔x〕":
-      return function (ctx: GameState, effect: Effect): Tip[] {
-        const playerId = EffectFn.getPlayerID(effect)
 
-        return []
-      }
-    default:
-      return function (ctx: GameState, effect: Effect): Tip[] {
-        return []
-      }
-  }
-}
-
-function getActionTitleFn(action: Action): ActionTitleFn {
-  if (typeof action.title == "string") {
-    return ActionFn.getTitleFn(action)
-  }
-  switch (action.title[0]) {
-    case "(このカード)を(リロール)する": {
-      const [_, cardIds, isRollStr] = action.title
-      const isRoll = isRollStr == "ロール"
-      return function (ctx: GameState, effect: Effect): GameState {
-
-        return ctx
-      }
-    }
-  }
-}
 
 export function doEffect(
   ctx: GameState,
@@ -650,4 +657,38 @@ export function updateDestroyEffect(ctx: GameState): GameState {
     return ctx
   }, ctx)
   return ctx;
+}
+
+function getConditionTitleFn(condition: Condition, options: { isPlay?: boolean }): ConditionTitleFn {
+  if (typeof condition.title == "string") {
+    return ConditionFn.getTitleFn(condition)
+  }
+  switch (condition.title[0]) {
+    case "合計国力〔x〕":
+      return function (ctx: GameState, effect: Effect): Tip[] {
+        const playerId = EffectFn.getPlayerID(effect)
+
+        return []
+      }
+    default:
+      return function (ctx: GameState, effect: Effect): Tip[] {
+        return []
+      }
+  }
+}
+
+function getActionTitleFn(action: Action): ActionTitleFn {
+  if (typeof action.title == "string") {
+    return ActionFn.getTitleFn(action)
+  }
+  switch (action.title[0]) {
+    case "(このカード)を(リロール)する": {
+      const [_, cardIds, isRollStr] = action.title
+      const isRoll = isRollStr == "ロール"
+      return function (ctx: GameState, effect: Effect): GameState {
+
+        return ctx
+      }
+    }
+  }
 }

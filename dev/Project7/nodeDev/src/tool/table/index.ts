@@ -14,7 +14,8 @@ function addCard(table: Table, position: string, cardId: string): Table {
 
 function getCardsByPosition(table: Table, position: string): string[] {
     if (table.cardStack[position] == null) {
-        throw new Error(`table.cardStack[${position}] not found`)
+        console.log(`table.cardStack[${position}] not found`)
+        return []
     }
     return table.cardStack[position]
 }

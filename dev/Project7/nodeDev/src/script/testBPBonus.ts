@@ -18,7 +18,6 @@ export const prototype: CardPrototype = {
       title: ["自動型", "恒常"],
       onSituation: function _(ctx: GameState, effect: Effect, { GameStateFn }: Bridge): GlobalEffect[] {
         const cardIds = GameStateFn.getItemIds(ctx)
-        console.log("XXXXX", cardIds)
         //const cardId = EffectFn.getCardID(effect)
         const units = cardIds
         return [

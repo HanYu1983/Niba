@@ -20,18 +20,27 @@ export type BaSyouKeyword =
     | "プレイされているカード"
     | BaKeyword;
 
-export function isBa(k: BaSyouKeyword): boolean {
-    switch (k) {
-        case "戦闘エリア2":
-        case "戦闘エリア1":
-        case "配備エリア":
-            return true;
-        default:
-            return false;
-    }
+export const BaSyouKeywordFn = {
+    isBa(k: BaSyouKeyword): boolean {
+        switch (k) {
+            case "戦闘エリア2":
+            case "戦闘エリア1":
+            case "配備エリア":
+                return true;
+            default:
+                return false;
+        }
+    },
+    getAll(): BaSyouKeyword[] {
+        return ["本国", "捨て山", "Gゾーン", "ジャンクヤード", "手札", "ハンガー", "取り除かれたカード", "戦闘エリア1", "戦闘エリア2", "配備エリア"]
+    },
+    getBaAll(): BaSyouKeyword[] {
+        return this.getAll().filter(this.isBa)
+    },
+    getScriptAll(): BaSyouKeyword[] {
+        return ["捨て山", "Gゾーン", "ジャンクヤード", "手札", "ハンガー", "戦闘エリア1", "戦闘エリア2", "配備エリア"]
+    },
 }
-
-export const ALL_BASYOU_KEYWORD: BaSyouKeyword[] = ["本国", "捨て山", "Gゾーン", "ジャンクヤード", "手札", "ハンガー", "取り除かれたカード"]
 
 export type AbsoluteBaSyou = {
     id: "AbsoluteBaSyou";
@@ -64,7 +73,13 @@ export const AbsoluteBaSyouFn = {
         return this.of(getOpponentPlayerID(baSyou.value[0]), baSyou.value[1]);
     },
     getAll(): AbsoluteBaSyou[] {
-        return lift(this.of)(PlayerIDFn.ALL, ALL_BASYOU_KEYWORD)
+        return lift(this.of)(PlayerIDFn.geAll(), BaSyouKeywordFn.getAll())
+    },
+    getBaAll(): AbsoluteBaSyou[] {
+        return lift(this.of)(PlayerIDFn.geAll(), BaSyouKeywordFn.getBaAll())
+    },
+    getScriptAll(): AbsoluteBaSyou[] {
+        return lift(this.of)(PlayerIDFn.geAll(), BaSyouKeywordFn.getScriptAll())
     },
     eq(left: AbsoluteBaSyou, right: AbsoluteBaSyou): boolean {
         return this.toString(left) == this.toString(right)

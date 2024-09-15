@@ -7,5 +7,5 @@ export function getOpponentPlayerID(playerID: PlayerID): PlayerID {
 }
 
 export const PlayerIDFn = {
-    ALL: [PlayerA, PlayerB]
+    geAll: () => [PlayerA, PlayerB]
 }

@@ -51,16 +51,6 @@ export function removeEffect(ctx: EffectStackComponent, id: string): EffectStack
   }
 }
 
-export function clearDestroyEffects(ctx: EffectStackComponent): EffectStackComponent {
-  const effects = { ...ctx.effects }
-  ctx.destroyEffect.forEach(id => delete effects[id])
-  return {
-    ...ctx,
-    destroyEffect: []
-  }
-  return ctx
-}
-
 export function addStackEffect(ctx: EffectStackComponent, block: Effect): EffectStackComponent {
   return {
     ...ctx,
@@ -75,6 +65,16 @@ export function addImmediateEffect(ctx: EffectStackComponent, block: Effect): Ef
     immediateEffect: [block.id, ...ctx.immediateEffect],
     effects: assoc(block.id, block, ctx.effects),
   };
+}
+
+export function clearDestroyEffects(ctx: EffectStackComponent): EffectStackComponent {
+  const effects = { ...ctx.effects }
+  ctx.destroyEffect.forEach(id => delete effects[id])
+  return {
+    ...ctx,
+    destroyEffect: []
+  }
+  return ctx
 }
 
 export function addDestroyEffect(ctx: EffectStackComponent, block: Effect): EffectStackComponent {
