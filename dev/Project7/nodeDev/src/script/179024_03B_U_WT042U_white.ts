@@ -31,7 +31,7 @@ export const prototype: CardPrototype = {
         title: ["(交戦中)の(自軍)(ユニット)(１)枚", null, "敵軍", "ユニット", 1]
       }
     },
-    logicTreeCommands: [
+    logicTreeActions: [
       {
         actions: [
           {
@@ -39,11 +39,11 @@ export const prototype: CardPrototype = {
               const cardId = DefineFn.EffectFn.getCardID(effect)
               ctx = GameStateFn.addStackEffect(ctx, {
                 id: "",
-                reason: ["PlayText", DefineFn.EffectFn.getPlayerID(effect), cardId, effect.text.id],
+                reason: ["PlayText", DefineFn.EffectFn.getPlayerID(effect), cardId, effect.text.id || "unknown"],
                 text: {
                   id: "",
                   title: [],
-                  logicTreeCommands: [
+                  logicTreeActions: [
                     {
                       actions: [
                         {

@@ -37,6 +37,12 @@ export const CardStateFn = {
       throw new Error(`cardId: ${ctx.id} target not set yet: ${k}`)
     }
     return ctx.tips[k]
+  },
+  damage(ctx: CardState, v: number): CardState {
+    return {
+      ...ctx,
+      damage: ctx.damage + v
+    }
   }
 }
 

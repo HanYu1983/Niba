@@ -1,6 +1,6 @@
 import { lift } from "ramda";
 import { RelatedPlayerSideKeyword } from ".";
-import { getOpponentPlayerID, PlayerA, PlayerB, PlayerID, PlayerIDFn } from "./PlayerID";
+import { PlayerA, PlayerB, PlayerID, PlayerIDFn } from "./PlayerID";
 
 // basyou
 export type BattleAreaKeyword = "宇宙エリア" | "地球エリア";
@@ -70,16 +70,16 @@ export const AbsoluteBaSyouFn = {
         return this.of(p, baSyou.value[1]);
     },
     setOpponentPlayerID(baSyou: AbsoluteBaSyou): AbsoluteBaSyou {
-        return this.of(getOpponentPlayerID(baSyou.value[0]), baSyou.value[1]);
+        return this.of(PlayerIDFn.getOpponent(baSyou.value[0]), baSyou.value[1]);
     },
     getAll(): AbsoluteBaSyou[] {
-        return lift(this.of)(PlayerIDFn.geAll(), BaSyouKeywordFn.getAll())
+        return lift(this.of)(PlayerIDFn.getAll(), BaSyouKeywordFn.getAll())
     },
     getBaAll(): AbsoluteBaSyou[] {
-        return lift(this.of)(PlayerIDFn.geAll(), BaSyouKeywordFn.getBaAll())
+        return lift(this.of)(PlayerIDFn.getAll(), BaSyouKeywordFn.getBaAll())
     },
     getScriptAll(): AbsoluteBaSyou[] {
-        return lift(this.of)(PlayerIDFn.geAll(), BaSyouKeywordFn.getScriptAll())
+        return lift(this.of)(PlayerIDFn.getAll(), BaSyouKeywordFn.getScriptAll())
     },
     eq(left: AbsoluteBaSyou, right: AbsoluteBaSyou): boolean {
         return this.toString(left) == this.toString(right)

@@ -1,7 +1,7 @@
 import { assoc, pair } from "ramda";
 import { DEFAULT_TABLE, Table, TableFns } from "../../tool/table";
 import { AbsoluteBaSyou, AbsoluteBaSyouFn, BaSyou } from "../define/BaSyou";
-import { getOpponentPlayerID, PlayerID } from "../define/PlayerID";
+import { PlayerID, PlayerIDFn } from "../define/PlayerID";
 import { CardTableComponent, getCard, getCardIds, getCardOwner, setCard } from "./CardTableComponent";
 import { addCoins, CoinTableComponent, getCardIdByCoinId, getCoin, getCoinIds, getCoinOwner } from "./CoinTableComponent";
 import { ChipTableComponent, getChip, getChipIds, getChipOwner, getChipPrototype, setChip } from "./ChipTableComponent";
@@ -13,6 +13,7 @@ import { CardPrototype } from "../define/CardPrototype";
 import { getPrototype } from "../../script";
 import { Card, CardFn } from "../define/Card";
 import { Chip, ChipFn } from "../define/Chip";
+import { CardStateFn, getCardState, setCardState } from "./CardStateComponent";
 
 export type Item = Card | Coin | Chip;
 
@@ -175,6 +176,7 @@ export function addCoinsToCard(ctx: ItemTableComponent, target: StrBaSyouPair, c
   throw new Error(`unknown item: ${targetItemId}`)
 }
 
+
 export function getAbsoluteBaSyou(
   ctx: ItemTableComponent,
   itemId: string,
@@ -191,7 +193,7 @@ export function getAbsoluteBaSyou(
       case "自軍":
         return getItemController(ctx, itemId)
       case "敵軍":
-        return getOpponentPlayerID(getItemController(ctx, itemId));
+        return PlayerIDFn.getOpponent(getItemController(ctx, itemId));
     }
   })();
   return AbsoluteBaSyouFn.of(_playerID, baSyou.value[1])

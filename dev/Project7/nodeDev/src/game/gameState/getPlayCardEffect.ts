@@ -38,7 +38,7 @@ export function getPlayCardEffect(ctx: GameState, playerId: PlayerID, cardId: st
                     ]
                 }
             },
-            logicTreeCommands: [
+            logicTreeActions: [
                 {
                     actions: [
                         {
@@ -52,7 +52,7 @@ export function getPlayCardEffect(ctx: GameState, playerId: PlayerID, cardId: st
                                     text: {
                                         id: "",
                                         title: [],
-                                        logicTreeCommands: [
+                                        logicTreeActions: [
                                             {
                                                 actions: [
                                                     {

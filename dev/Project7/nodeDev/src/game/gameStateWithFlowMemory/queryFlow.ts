@@ -3,7 +3,7 @@ import { Flow } from "./Flow";
 import { getActiveEffectID } from "./handleEffect";
 import { getClientCommand } from "./getClientCommand";
 import { GameStateWithFlowMemory } from "./GameStateWithFlowMemory";
-import { getOpponentPlayerID, PlayerA, PlayerB } from "../define/PlayerID";
+import { PlayerA, PlayerB, PlayerIDFn } from "../define/PlayerID";
 import { AbsoluteBaSyouFn, BattleAreaKeyword } from "../define/BaSyou";
 import { Effect, EffectFn } from "../define/Effect";
 
@@ -39,7 +39,7 @@ export function queryFlow(ctx: GameStateWithFlowMemory, playerID: string): Flow[
             const isPass = !!ctx.flowMemory.hasPlayerPassPayCost[playerID];
             const isOpponentPass =
                 !!ctx.flowMemory.hasPlayerPassPayCost[
-                getOpponentPlayerID(playerID)
+                PlayerIDFn.getOpponent(playerID)
                 ];
             if (isPass && isOpponentPass) {
                 if (controller != playerID) {
@@ -229,7 +229,7 @@ export function queryFlow(ctx: GameStateWithFlowMemory, playerID: string): Flow[
                             },
                         ];
                     }
-                    const willAddedDestroyEffects = willAddedDestroyEffectIds.map(id=>getEffect(ctx, id))
+                    const willAddedDestroyEffects = willAddedDestroyEffectIds.map(id => getEffect(ctx, id))
                     return [
                         {
                             id: "FlowMakeDestroyOrder",
@@ -478,7 +478,7 @@ export function queryFlow(ctx: GameStateWithFlowMemory, playerID: string): Flow[
                                         id: "",
                                         reason: ["GameRule", null],
                                         text: {
-                                            id:"",
+                                            id: "",
                                             title: []
                                         }
                                     },
@@ -535,7 +535,7 @@ export function queryFlow(ctx: GameStateWithFlowMemory, playerID: string): Flow[
                                     const playerID =
                                         phase[1] == "攻撃ステップ"
                                             ? ctx.activePlayerID
-                                            : getOpponentPlayerID(ctx.activePlayerID);
+                                            : PlayerIDFn.getOpponent(ctx.activePlayerID);
                                     return [
                                         {
                                             id: "FlowAddBlock",
@@ -545,14 +545,14 @@ export function queryFlow(ctx: GameStateWithFlowMemory, playerID: string): Flow[
                                                 id: "",
                                                 reason: ["GameRule", playerID],
                                                 text: {
-                                                    id:"",
+                                                    id: "",
                                                     title: [],
                                                     conditions: {
                                                         "去左方的卡": {
                                                             title: ""
                                                         }
                                                     },
-                                                    logicTreeCommands: [
+                                                    logicTreeActions: [
                                                         {
                                                             actions: []
                                                         }

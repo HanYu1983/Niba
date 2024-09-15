@@ -1,7 +1,7 @@
 import { assoc, toPairs } from "ramda";
 import { Table, TableFns } from "../../tool/table";
 import { AbsoluteBaSyou, BaSyou, AbsoluteBaSyouFn } from "../define/BaSyou";
-import { getOpponentPlayerID, PlayerID } from "../define/PlayerID";
+import { PlayerID } from "../define/PlayerID";
 import { Card } from "../define/Card";
 import { ToolFn } from "../tool";
 

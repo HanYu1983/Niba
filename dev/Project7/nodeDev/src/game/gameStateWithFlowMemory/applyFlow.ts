@@ -1,5 +1,5 @@
 import { log } from "../../tool/logger";
-import { getOpponentPlayerID, PlayerA, PlayerB } from "../define/PlayerID";
+import { PlayerA, PlayerB, PlayerIDFn } from "../define/PlayerID";
 import { AbsoluteBaSyou, AbsoluteBaSyouFn } from "../define/BaSyou";
 import { addImmediateEffect, addStackEffect, getEffect } from "../gameState/EffectStackComponent";
 import { triggerTextEvent, updateDestroyEffect, doPlayerAttack } from "../gameState/GameState";
@@ -245,7 +245,7 @@ export function applyFlow(
                 }
                 ctx = {
                     ...ctx,
-                    activePlayerID: getOpponentPlayerID(ctx.activePlayerID),
+                    activePlayerID: PlayerIDFn.getOpponent(ctx.activePlayerID),
                 };
             }
             // 下一步

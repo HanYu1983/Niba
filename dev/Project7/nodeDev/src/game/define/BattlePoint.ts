@@ -17,9 +17,8 @@ function add([x, y, z]: BattlePoint, [x2, y2, z2]: BattlePoint): BattlePoint {
     ]
 }
 
-export const DEFAULT_BATTLE_POINT: BattlePoint = ["*", "*", "*"]
-
 export const BattlePointFn = {
+    getAllStar: () => ["*", "*", "*"] as BattlePoint,
     add: add,
     getValue: getValue,
     toBattleBonus(v: BattlePoint): BattleBonus {

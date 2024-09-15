@@ -10,7 +10,7 @@ import { addDestroyEffect, addImmediateEffect, EffectStackComponent } from "./Ef
 import { log } from "../../tool/logger";
 import { Action, ActionFn, ActionTitle, ActionTitleFn, BattleBonus, Condition, ConditionFn, ConditionTitle, ConditionTitleFn, getOnSituationFn, LogicTreeActionFn, OnSituationFn, Situation, Text, TextFn, TextSpeicalEffect, TextSpeicalEffectFn } from "../define/Text";
 import { AttackSpeed } from "../define";
-import { getOpponentPlayerID, PlayerA, PlayerID, PlayerIDFn } from "../define/PlayerID";
+import { PlayerA, PlayerID, PlayerIDFn } from "../define/PlayerID";
 import { AbsoluteBaSyou, BattleAreaKeyword, BaSyouKeyword, AbsoluteBaSyouFn } from "../define/BaSyou";
 import { CardPrototype, CardColor, RollCostColor } from "../define/CardPrototype";
 import { GlobalEffect } from "../define/GlobalEffect";
@@ -18,14 +18,15 @@ import { Timing, TIMING_CHART } from "../define/Timing";
 import { DestroyReason, Effect, EffectFn } from "../define/Effect";
 import { Event } from "../define/Event";
 import { DEFAULT_TABLE } from "../../tool/table";
-import { BattlePoint, BattlePointFn, DEFAULT_BATTLE_POINT } from "../define/BattlePoint";
+import { BattlePoint, BattlePointFn } from "../define/BattlePoint";
 import { always, filter, flatten, flow, lift, map, pipe, reduce, sum } from "ramda";
 import { createBridge } from "../bridge/createBridge";
 import { CoinTableComponent, getCardIdByCoinId, getCoins } from "./CoinTableComponent";
 import { getItem, getItemBaSyou, getItemController, getItemIdsByBasyou, getItemPrototype, isCard, isChip, Item, ItemTableComponent } from "./ItemTableComponent";
-import { Tip } from "../define/Tip";
+import { StrBaSyouPair, Tip, TipFn } from "../define/Tip";
 import { Card } from "../define/Card";
 import { ToolFn } from "../tool";
+import { TargetMissingError } from "../define/GameError";
 
 export type PlayerState = {
   id: string;
@@ -352,7 +353,7 @@ export function getSetGroupBattlePoint(ctx: GameState, cardId: string): BattleBo
   return pipe(
     always(getSetGroupCards(ctx, cardId)),
     map(setGroupCardID => getCardBattlePoint(ctx, setGroupCardID)),
-    reduce(BattlePointFn.add, DEFAULT_BATTLE_POINT),
+    reduce(BattlePointFn.add, BattlePointFn.getAllStar()),
     BattlePointFn.toBattleBonus
   )()
 }
@@ -484,7 +485,7 @@ function doDamage(
             };
             const gameEvent: Event = {
               title: ["破壊された場合", reason],
-              cardID: cs.id
+              cardId: cs.id
             };
             ctx = triggerTextEvent(ctx, gameEvent)
             return {
@@ -500,7 +501,7 @@ function doDamage(
           currentAttackPower = 0;
           const gameEvent: Event = {
             title: ["戦闘ダメージを受けた場合"],
-            cardID: cs.id,
+            cardId: cs.id,
           };
           ctx = triggerTextEvent(ctx, gameEvent)
           return {
@@ -556,7 +557,7 @@ export function doPlayerAttack(
   where: BaSyouKeyword,
   speedPhase: AttackSpeed
 ): GameState {
-  const guardPlayerID = getOpponentPlayerID(attackPlayerID)
+  const guardPlayerID = PlayerIDFn.getOpponent(attackPlayerID)
   const attackUnits = getBattleGroup(ctx, AbsoluteBaSyouFn.of(attackPlayerID, where));
   const attackPower = getBattleGroupBattlePoint(ctx, attackUnits);
   const guardUnits = getBattleGroup(ctx, AbsoluteBaSyouFn.of(guardPlayerID, where));
@@ -722,5 +723,39 @@ function getActionTitleFn(action: Action): ActionTitleFn {
         return ctx
       }
     }
+    case "(１)ダメージを与える": {
+      return function (ctx: GameState, effect: Effect): GameState {
+        if (action.var == null) {
+          throw new Error(`action.var not found: ${action.title[0]}`)
+        }
+        const cardId = EffectFn.getCardID(effect)
+        let cardState = getCardState(ctx, cardId);
+        const tip = CardStateFn.getTip(cardState, action.var)
+        const tipError = TipFn.checkTipSatisfies(tip)
+        if (tipError) throw tipError
+        if (tip.title[0] == "カード") {
+          const targetPairs = TipFn.getSelection(tip) as StrBaSyouPair[]
+          ctx = targetPairs.reduce((ctx, pair) => {
+            return makeItemDamage(ctx, 1, pair)
+          }, ctx)
+        }
+        return ctx
+      }
+    }
   }
+}
+
+export function makeItemDamage(ctx: GameState, damage: number, target: StrBaSyouPair): GameState {
+  const [targetItemId, targetOriginBasyou] = target
+  if (isCard(ctx, targetItemId) || isChip(ctx, targetItemId)) {
+    const nowBasyou = getItemBaSyou(ctx, targetItemId)
+    if (AbsoluteBaSyouFn.eq(targetOriginBasyou, nowBasyou)) {
+      throw new TargetMissingError("basyou not same")
+    }
+    let cardState = getCardState(ctx, targetItemId);
+    cardState = CardStateFn.damage(cardState, damage)
+    ctx = setCardState(ctx, targetItemId, cardState) as GameState
+    return ctx
+  }
+  throw new Error(`unknown item: ${targetItemId}`)
 }

@@ -15,15 +15,16 @@ export type Tip = {
 };
 
 export const TipFn = {
+    getSelection(tip: Tip) {
+        switch (tip.title[0]) {
+            case "カード":
+                return tip.title[2]
+            case "合計国力〔x〕":
+                return tip.title[1]
+        }
+    },
     checkTipSatisfies(tip: Tip): TargetMissingError | null {
-        const selection = (() => {
-            switch (tip.title[0]) {
-                case "カード":
-                    return tip.title[2]
-                case "合計国力〔x〕":
-                    return tip.title[1]
-            }
-        })()
+        const selection = this.getSelection(tip)
         if (tip.count != null && tip.count != selection.length) {
             return new TargetMissingError(`count not right`)
         }

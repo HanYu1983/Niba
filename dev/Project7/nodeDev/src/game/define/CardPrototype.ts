@@ -1,5 +1,5 @@
 import { BattleAreaKeyword } from "./BaSyou";
-import { BattlePoint } from "./BattlePoint";
+import { BattlePoint, BattlePointFn } from "./BattlePoint";
 import { Text } from "./Text";
 
 // card
@@ -26,6 +26,7 @@ export type CardColor =
 export type RollCostColor = CardColor | null;
 
 export type CardPrototype = {
+  id: string;
   title: string;
   characteristic: string;
   color: CardColor;
@@ -37,12 +38,13 @@ export type CardPrototype = {
 };
 
 export const DEFAULT_CARD_PROTOTYPE: CardPrototype = {
+  id: "",
   title: "名稱未定義",
   characteristic: "",
   color: "白",
   category: "ユニット",
   rollCost: [],
-  battlePoint: [0, 0, 0],
+  battlePoint: BattlePointFn.getAllStar(),
   battleArea: ["地球エリア", "宇宙エリア"],
   texts: [],
 };

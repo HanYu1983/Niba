@@ -8,6 +8,7 @@ import { Event } from "./Event";
 import { GlobalEffect } from "./GlobalEffect";
 import { SiYouTiming } from "./Timing";
 import { StrBaSyouPair, Tip } from "./Tip";
+import { PlayerID } from "./PlayerID";
 
 export type BattleBonus = [number, number, number]
 
@@ -37,9 +38,11 @@ export const TextSpeicalEffectFn = {
 export type ActionTitle =
     | string
     | ["(このカード)を(リロール)する", "このカード" | StrBaSyouPair[], "ロール" | "リロール"]
+    | ["(１)ダメージを与える", number]
 
 export type Action = {
     title: ActionTitle,
+    var?: string
 }
 
 export type ActionTitleFn = (ctx: any, effect: Effect, lib: any) => any;
@@ -58,9 +61,9 @@ export type ConditionTitle =
     | ["〔x〕", number]
     | ["c〔x〕", CardColor, number]
     | ["合計国力〔x〕", number]
-    | ["本来の記述に｢特徴：(装弾)｣を持つ(自軍)(G)(１)枚", string, RelatedPlayerSideKeyword, CardCategory, number]
-    | ["(戦闘エリア)にいる(敵軍)(ユニット)(１)～(２)枚", BaSyouKeyword, RelatedPlayerSideKeyword, CardCategory, number, number]
-    | ["(交戦中)の(自軍)(ユニット)(１)枚", "交戦中" | "非交戦中" | null, RelatedPlayerSideKeyword, CardCategory, number]
+    | ["本来の記述に｢特徴：(装弾)｣を持つ(自軍)(G)(１)枚", string, PlayerID, CardCategory, number]
+    | ["(戦闘エリア)にいる(敵軍)(ユニット)(１)～(２)枚", BaSyouKeyword[], PlayerID, CardCategory, number, number]
+    | ["(交戦中)の(自軍)(ユニット)(１)枚", "交戦中" | "非交戦中" | null, PlayerID, CardCategory, number]
 
 export type Condition = {
     title: ConditionTitle,
@@ -116,11 +119,11 @@ export const LogicTreeActionFn = {
 }
 
 export type Text = {
-    id: string,
+    id?: string,
     title: TextTitle
     description?: string
     conditions?: { [key: string]: Condition }
-    logicTreeCommands?: LogicTreeAction[]
+    logicTreeActions?: LogicTreeAction[]
     onEvent?: string,
     onSituation?: string
 }
@@ -136,10 +139,10 @@ export const TextFn = {
     },
 
     getLogicTreeAction(ctx: Text, id: number): LogicTreeAction {
-        if (ctx.logicTreeCommands?.[id] == null) {
+        if (ctx.logicTreeActions?.[id] == null) {
             throw new Error(`logic not found: ${id}`)
         }
-        return ctx.logicTreeCommands[id]
+        return ctx.logicTreeActions[id]
     },
 
     getLogicTreeActionConditions(ctx: Text, logicTreeCommand: LogicTreeAction): { [key: string]: Condition }[] {
@@ -203,7 +206,7 @@ const testTexts: Text[] = [
         title: ["使用型", ["自軍", "戦闘フェイズ"]],
         conditions: {
             "1": {
-                title: ["(戦闘エリア)にいる(敵軍)(ユニット)(１)～(２)枚", "戦闘エリア2", "自軍", "ユニット", 1, 2]
+                title: ["(戦闘エリア)にいる(敵軍)(ユニット)(１)～(２)枚", ["戦闘エリア2"], "自軍", "ユニット", 1, 2]
 
             },
             "2": {
@@ -213,7 +216,7 @@ const testTexts: Text[] = [
                 ]
             }
         },
-        logicTreeCommands: [
+        logicTreeActions: [
             {
                 //logicTree: { type: "Leaf", value: "1" },
                 actions: [
@@ -228,7 +231,7 @@ const testTexts: Text[] = [
         ],
         onEvent: function _(ctx: any, evt: Event, runtime: any) {
             if (Array.isArray(evt.title)) {
-                if (evt.title[0] == "コインがx個以上になった場合") {
+                if (evt.title[0] == "コインが(x)個以上になった場合") {
                     const [_, x] = evt.title;
 
                 }
