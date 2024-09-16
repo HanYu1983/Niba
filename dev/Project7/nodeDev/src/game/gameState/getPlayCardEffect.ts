@@ -4,13 +4,15 @@ import { AbsoluteBaSyou, AbsoluteBaSyouFn } from "../define/BaSyou"
 import { Effect } from "../define/Effect"
 import { PlayerA, PlayerID } from "../define/PlayerID"
 import { addCards, createCardWithProtoIds, getCardOwner } from "./CardTableComponent"
-import { clearGlobalEffects, createGameState, doEffect, GameState, getBattleGroupBattlePoint, getCardBattlePoint, getCardIdsCanPayRollCost, getCardRollCost, getCardRollCostLength, getEffectTips, getGlobalEffects } from "./GameState"
+import { clearGlobalEffects, createGameState, doEffect, GameState, getBattleGroupBattlePoint, getCardBattlePoint, getCardIdsCanPayRollCost, getCardRollCost, getCardRollCostLength, getEffectTips, getGlobalEffects, setGlobalEffects, triggerTextEvent } from "./GameState"
 import { getItemBaSyou, getItemIds, getItemIdsByBasyou, getItemOwner, getItemPrototype } from "./ItemTableComponent"
 import { loadPrototype } from "../../script"
 import { getTopEffect } from "./EffectStackComponent"
 import { BattlePointFn } from "../define/BattlePoint"
 import { Condition } from "../define/Text"
 import { StrBaSyouPair } from "../define/Tip"
+import { TimingFn } from "../define/Timing"
+import { getItemState } from "./ItemStateComponent"
 
 export function getPlayCardEffects(ctx: GameState, cardId: string): Effect[] {
     const prototype = getItemPrototype(ctx, cardId)
@@ -159,6 +161,7 @@ export function getPlayCardEffects(ctx: GameState, cardId: string): Effect[] {
     }
     const ret = [playCardEffect]
     const ges = getGlobalEffects(ctx, null)
+    ctx = setGlobalEffects(ctx, null, ges)
     const morePlayEfs = ges.filter(g => g.title[0] == "合計国力＋(１)してプレイできる" && g.cardIds.includes(cardId))
     const hasMorePlay = morePlayEfs.length > 0
     const addedLength = pipe(always(morePlayEfs), map(g => g.title[0] == "合計国力＋(１)してプレイできる" ? g.title[1] : 0), sum)()
@@ -235,15 +238,26 @@ async function test179028_10D_U_WT181N_white() {
             throw new Error(`getItemIdsByBasyou(ctx, AbsoluteBaSyouFn.of(PlayerA, "配備エリア")).length != 1`)
         }
         const ges = getGlobalEffects(ctx, null)
+        ctx = setGlobalEffects(ctx, null, ges)
         if (ges.filter(ge => ge.title[0] == "＋x／＋x／＋xを得る").length != 1) {
             throw new Error(`ges.filter(ge=>ge.title[0]=="＋x／＋x／＋xを得る").length != 1`)
         }
-        const bp = getCardBattlePoint(ctx, cardId)
-        if (BattlePointFn.eq(bp, [8, 0, 8]) == false) {
+        if (BattlePointFn.eq(getCardBattlePoint(ctx, cardId), [8, 0, 8]) == false) {
             throw new Error(`BattlePointFn.eq(bp, [8,0,8]) == false`)
         }
         if (getCardRollCostLength(ctx, cardId) != 5) {
             throw new Error(`getCardRollCostLength(ctx, cardId) != 5`)
+        }
+        if (getItemState(ctx, cardId).flags["bonus"] == null) {
+            throw new Error(`getItemState(ctx, cardId).flags["bonus"] == null`)
+        }
+        ctx = triggerTextEvent(ctx, { title: ["GameEventOnTiming", TimingFn.getLast()] })
+        if (getItemState(ctx, cardId).flags["bonus"] != null) {
+            throw new Error(`getItemState(ctx, cardId).flags["bonus"] != null`)
+        }
+        ctx = clearGlobalEffects(ctx)
+        if (BattlePointFn.eq(getCardBattlePoint(ctx, cardId), [4, 0, 4]) == false) {
+            throw new Error(`BattlePointFn.eq(bp, [4,0,4]) == false`)
         }
     } else {
         throw new Error(`tips[0]?.title[0]=="合計国力〔x〕" && tips[0]?.min ==5`)

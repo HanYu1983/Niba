@@ -6,7 +6,7 @@ import { CardColor, CardCategory } from "./CardPrototype";
 import { Effect } from "./Effect";
 import { Event } from "./Event";
 import { GlobalEffect } from "./GlobalEffect";
-import { SiYouTiming } from "./Timing";
+import { SiYouTiming, Timing } from "./Timing";
 import { StrBaSyouPair, Tip } from "./Tip";
 import { PlayerID } from "./PlayerID";
 
@@ -40,6 +40,7 @@ export type ActionTitle =
     | ["(このカード)を(リロール)する", "このカード" | StrBaSyouPair[], "ロール" | "リロール"]
     | ["(１)ダメージを与える", number]
     | ["(－１／－１／－１)コイン(１)個を乗せる", BattleBonus, number]
+    | ["移除卡狀態_旗標", string]
 
 export type Action = {
     title: ActionTitle,
@@ -120,17 +121,21 @@ export const LogicTreeActionFn = {
     }
 }
 
+export type OnEventTitle =
+    | string
+    | ["GameEventOnTimingDoAction", Timing, Action]
+
 export type Text = {
     id?: string,
     title: TextTitle
     description?: string
     conditions?: { [key: string]: Condition }
     logicTreeActions?: LogicTreeAction[]
-    onEvent?: string,
+    onEvent?: OnEventTitle,
     onSituation?: string
 }
 
-export type OnEventFn = (ctx: any, effect: Effect, lib: any) => any;
+export type OnEventFn = ActionTitleFn
 
 export const TextFn = {
     getCondition(ctx: Text, conditionId: string): Condition {
@@ -176,6 +181,9 @@ export const TextFn = {
             return function (a) {
                 return a
             }
+        }
+        if (typeof ctx.onEvent != "string") {
+            throw new Error("condition.title must be string")
         }
         return eval(ctx.onEvent + ";_")
     }

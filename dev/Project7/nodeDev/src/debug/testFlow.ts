@@ -281,7 +281,7 @@ export async function testBattleBonus() {
       }
     ]
   ) as GameStateWithFlowMemory
-  clearGlobalEffects(ctx)
+  ctx = clearGlobalEffects(ctx) as GameStateWithFlowMemory
   {
     const [x, y, z] = getCardBattlePoint(ctx, "a1");
     if (x != 8) {

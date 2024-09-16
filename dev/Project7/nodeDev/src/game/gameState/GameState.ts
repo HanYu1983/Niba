@@ -2,19 +2,20 @@ import {
   getCard,
   CardTableComponent,
   getCardIds,
+  setCard,
 } from "./CardTableComponent"
 import { ItemStateComponent, getItemState, getItemStateValues, setItemState } from "./ItemStateComponent";
 import { isBattle, IsBattleComponent } from "./IsBattleComponent";
 import { getSetGroupCards, getSetGroupRoot, SetGroupComponent } from "./SetGroupComponent";
 import { addDestroyEffect, addImmediateEffect, EffectStackComponent } from "./EffectStackComponent";
 import { log } from "../../tool/logger";
-import { Action, ActionFn, ActionTitle, ActionTitleFn, BattleBonus, Condition, ConditionFn, ConditionTitle, ConditionTitleFn, getOnSituationFn, getTextsFromTokuSyuKouKa, LogicTreeActionFn, OnSituationFn, Situation, Text, TextFn, TextSpeicalEffect, TextSpeicalEffectFn } from "../define/Text";
+import { Action, ActionFn, ActionTitle, ActionTitleFn, BattleBonus, Condition, ConditionFn, ConditionTitle, ConditionTitleFn, getOnSituationFn, getTextsFromTokuSyuKouKa, LogicTreeActionFn, OnEventFn, OnEventTitle, OnSituationFn, Situation, Text, TextFn, TextSpeicalEffect, TextSpeicalEffectFn } from "../define/Text";
 import { AttackSpeed } from "../define";
 import { PlayerA, PlayerID, PlayerIDFn } from "../define/PlayerID";
 import { AbsoluteBaSyou, BattleAreaKeyword, BaSyouKeyword, AbsoluteBaSyouFn, BaSyouKeywordFn } from "../define/BaSyou";
 import { CardPrototype, CardColor, RollCostColor } from "../define/CardPrototype";
 import { GlobalEffect } from "../define/GlobalEffect";
-import { Timing, TIMING_CHART } from "../define/Timing";
+import { Timing, TIMING_CHART, TimingFn } from "../define/Timing";
 import { DestroyReason, Effect, EffectFn } from "../define/Effect";
 import { Event, EventTitle } from "../define/Event";
 import { DEFAULT_TABLE } from "../../tool/table";
@@ -24,7 +25,7 @@ import { createBridge } from "../bridge/createBridge";
 import { CoinTableComponent, getCardIdByCoinId, getCoins } from "./CoinTableComponent";
 import { addCoinsToCard, getItem, getItemBaSyou, getItemController, getItemIdsByBasyou, getItemPrototype, isCard, isChip, Item, ItemTableComponent } from "./ItemTableComponent";
 import { StrBaSyouPair, Tip, TipFn } from "../define/Tip";
-import { Card } from "../define/Card";
+import { Card, CardFn } from "../define/Card";
 import { ToolFn } from "../tool";
 import { TargetMissingError } from "../define/GameError";
 import { CoinFn } from "../define/Coin";
@@ -191,21 +192,34 @@ export function getGlobalEffects(ctx: GameState, situation: Situation | null): G
   const key = JSON.stringify(situation)
   const cached = ctx.globalEffectPool[key]
   if (cached) {
-    log("getGlobalEffects", "useCache")
+    //log("getGlobalEffects", "useCache")
     return cached
   }
-  const ges = getSituationEffects(ctx, situation)
-  ctx.globalEffectPool[key] = ges
-  return ges
+  return getSituationEffects(ctx, situation)
 }
 
-export function clearGlobalEffects(ctx: GameState) {
-  ctx.globalEffectPool = {}
+export function setGlobalEffects(ctx: GameState, situation: Situation | null, ges: GlobalEffect[]): GameState {
+  const key = JSON.stringify(situation)
+  return {
+    ...ctx,
+    globalEffectPool: {
+      ...ctx.globalEffectPool,
+      [key]: ges
+    }
+  }
+}
+
+export function clearGlobalEffects(ctx: GameState): GameState {
+  return {
+    ...ctx,
+    globalEffectPool: {}
+  }
 }
 
 // card
 export function getCardTexts(ctx: GameState, cardID: string): Text[] {
   const ges = getGlobalEffects(ctx, null)
+  ctx = setGlobalEffects(ctx, null, ges)
   const addedTexts = ges.map(e => {
     if (e.cardIds.includes(cardID) && e.title[0] == "AddText") {
       return e.title[1]
@@ -238,6 +252,7 @@ export function getCardRollCost(ctx: GameState, cardID: string): RollCostColor[]
 export function getCardRollCostLength(ctx: GameState, cardID: string): number {
   const prototype = getItemPrototype(ctx, cardID)
   const gEffects = getGlobalEffects(ctx, null)
+  ctx = setGlobalEffects(ctx, null, gEffects)
   const added = pipe(
     always(gEffects),
     map(ge => {
@@ -263,6 +278,7 @@ export function getCardBattlePoint(
   cardID: string
 ): BattlePoint {
   const globalEffects = getGlobalEffects(ctx, null);
+  ctx = setGlobalEffects(ctx, null, globalEffects)
   const card = getCard(ctx, cardID);
   const bonusFromGlobalEffects = globalEffects.map(ge => {
     if (ge.title[0] == "AddText" &&
@@ -590,7 +606,7 @@ export function triggerTextEvent(
             reason: ["Event", cardId, evt],
             text: text
           }
-          return TextFn.getOnEventFn(text)(ctx, effect, bridge)
+          return getOnEventTitleFn(text)(ctx, effect, bridge)
         }, ctx)
       )()
     }, ctx)
@@ -666,7 +682,7 @@ export function doEffect(
   )
   ctx = processCondition(ctx)()
   ctx = processLogicAction(ctx)()
-  clearGlobalEffects(ctx)
+  ctx = clearGlobalEffects(ctx)
   return ctx;
 }
 
@@ -772,9 +788,36 @@ export function getActionTitleFn(action: Action): ActionTitleFn {
         return ctx
       }
     }
+    case "移除卡狀態_旗標": {
+      const [_, flagName] = action.title
+      return function (ctx: GameState, effect: Effect): GameState {
+        const cardId = EffectFn.getCardID(effect)
+        let cardState = getItemState(ctx, cardId);
+        cardState = ItemStateFn.removeFlag(cardState, flagName)
+        ctx = setItemState(ctx, cardId, cardState) as GameState
+        return ctx
+      }
+    }
   }
 }
 
+export function getOnEventTitleFn(text: Text): OnEventFn {
+  if (text.onEvent == null || typeof text.onEvent == "string") {
+    return TextFn.getOnEventFn(text)
+  }
+  switch (text.onEvent[0]) {
+    case "GameEventOnTimingDoAction": {
+      const [_, timing, action] = text.onEvent;
+      return function (ctx: GameState, effect: Effect): GameState {
+        const event = EffectFn.getEvent(effect)
+        if (event.title[0] == "GameEventOnTiming" && TimingFn.eq(event.title[1], timing)) {
+          return getActionTitleFn(action)(ctx, effect, null)
+        }
+        return ctx
+      }
+    }
+  }
+}
 export function makeItemDamage(ctx: GameState, damage: number, target: StrBaSyouPair): GameState {
   const [targetItemId, targetOriginBasyou] = target
   if (isCard(ctx, targetItemId) || isChip(ctx, targetItemId)) {
@@ -791,7 +834,7 @@ export function makeItemDamage(ctx: GameState, damage: number, target: StrBaSyou
 }
 
 export function onMoveItem(ctx: GameState, to: AbsoluteBaSyou, [cardId, from]: StrBaSyouPair): GameState {
-  clearGlobalEffects(ctx)
+  ctx = clearGlobalEffects(ctx)
   if (AbsoluteBaSyouFn.getBaSyouKeyword(from) == "手札") {
     ctx = triggerTextEvent(ctx, {
       title: ["プレイされて場に出た場合"],
@@ -809,6 +852,22 @@ export function onMoveItem(ctx: GameState, to: AbsoluteBaSyou, [cardId, from]: S
       title: ["場に出た場合"],
       cardIds: [cardId]
     } as Event)
+  }
+  if ((["ジャンクヤード", "捨て山", "本国"] as BaSyouKeyword[]).includes(AbsoluteBaSyouFn.getBaSyouKeyword(to))) {
+    let card = getCard(ctx, cardId)
+    card = {
+      ...card,
+      isRoll: false,
+      isFaceDown: true,
+    }
+    ctx = setCard(ctx, cardId, card) as GameState
+  } else if ((["Gゾーン", "ハンガー", "プレイされているカード", "取り除かれたカード"] as BaSyouKeyword[]).includes(AbsoluteBaSyouFn.getBaSyouKeyword(to))) {
+    let card = getCard(ctx, cardId)
+    card = {
+      ...card,
+      isFaceDown: false,
+    }
+    ctx = setCard(ctx, cardId, card) as GameState
   }
   return ctx
 }

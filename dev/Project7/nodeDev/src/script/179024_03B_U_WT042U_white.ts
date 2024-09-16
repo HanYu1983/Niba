@@ -11,6 +11,7 @@ import type { Bridge } from "./bridge";
 import type { GlobalEffect } from "../game/define/GlobalEffect";
 import type { GameState } from "../game/gameState/GameState";
 import type { StrBaSyouPair, Tip } from "../game/define/Tip";
+import { TimingFn } from "../game/define/Timing";
 
 export const prototype: CardPrototype = {
   ...DEFAULT_CARD_PROTOTYPE,
@@ -78,17 +79,18 @@ export const prototype: CardPrototype = {
         ]
       }
     ],
-    onEvent: function _(ctx: GameState, effect: Effect, { DefineFn, GameStateFn }: Bridge): GameState {
-      const event = DefineFn.EffectFn.getEvent(effect)
-      const cardId = DefineFn.EffectFn.getCardID(effect)
-      if (event.title[0] == "GameEventOnTiming" && event.title[1][0] == 34) {
-        let cardState = GameStateFn.getItemState(ctx, cardId);
-        cardState = DefineFn.ItemStateFn.removeFlag(cardState, "add bonus")
-        ctx = GameStateFn.setItemState(ctx, cardId, cardState) as GameState
-        return ctx
-      }
-      return ctx
-    }.toString(),
+    onEvent: ["GameEventOnTimingDoAction", TimingFn.getLast(), { title: ["移除卡狀態_旗標", "add bonus"] }],
+    // onEvent: function _(ctx: GameState, effect: Effect, { DefineFn, GameStateFn }: Bridge): GameState {
+    //   const event = DefineFn.EffectFn.getEvent(effect)
+    //   const cardId = DefineFn.EffectFn.getCardID(effect)
+    //   if (event.title[0] == "GameEventOnTiming" && event.title[1][0] == 34) {
+    //     let cardState = GameStateFn.getItemState(ctx, cardId);
+    //     cardState = DefineFn.ItemStateFn.removeFlag(cardState, "add bonus")
+    //     ctx = GameStateFn.setItemState(ctx, cardId, cardState) as GameState
+    //     return ctx
+    //   }
+    //   return ctx
+    // }.toString(),
     onSituation: function _(ctx: GameState, effect: Effect, { DefineFn, GameStateFn }: Bridge): GlobalEffect[] {
       const cardId = DefineFn.EffectFn.getCardID(effect)
       const cardState = GameStateFn.getItemState(ctx, cardId)

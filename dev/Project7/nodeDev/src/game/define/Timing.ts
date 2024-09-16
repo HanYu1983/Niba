@@ -124,5 +124,11 @@ export function isCanPlayCardInPhase(phase: Phase): boolean {
 export const TimingFn = {
     isLast(ctx: Timing): boolean {
         return ctx[0] == TIMING_CHART.length - 1
+    },
+    getLast(): Timing {
+        return TIMING_CHART[TIMING_CHART.length - 1]
+    },
+    eq(l: Timing, r: Timing): boolean {
+        return l[0] == r[0];
     }
 }
