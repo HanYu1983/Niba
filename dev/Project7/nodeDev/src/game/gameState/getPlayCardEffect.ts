@@ -40,6 +40,7 @@ export function getPlayCardEffects(ctx: GameState, cardId: string): Effect[] {
     const playCardEffect: Effect = {
         reason: ["PlayCard", playerId, cardId],
         text: {
+            id: "",
             title: [],
             conditions: {
                 ...costConditions,
@@ -57,8 +58,10 @@ export function getPlayCardEffects(ctx: GameState, cardId: string): Effect[] {
                                 ctx = GameStateFn.moveItem(ctx, DefineFn.AbsoluteBaSyouFn.setBaSyouKeyword(from, "プレイされているカード"), [cardId, from]) as GameState
                                 if (prototype.category == "ユニット") {
                                     return GameStateFn.addStackEffect(ctx, {
+                                        id: "",
                                         reason: ["場に出る", DefineFn.EffectFn.getPlayerID(effect), DefineFn.EffectFn.getCardID(effect)],
                                         text: {
+                                            id: "",
                                             title: [],
                                             logicTreeActions: [
                                                 {
@@ -85,6 +88,7 @@ export function getPlayCardEffects(ctx: GameState, cardId: string): Effect[] {
                                     return GameStateFn.addStackEffect(ctx, {
                                         reason: ["場に出る", DefineFn.EffectFn.getPlayerID(effect), DefineFn.EffectFn.getCardID(effect)],
                                         text: {
+                                            id: "",
                                             title: [],
                                             logicTreeActions: [
                                                 {
@@ -116,6 +120,7 @@ export function getPlayCardEffects(ctx: GameState, cardId: string): Effect[] {
                                     return GameStateFn.addStackEffect(ctx, {
                                         reason: ["場に出る", DefineFn.EffectFn.getPlayerID(effect), DefineFn.EffectFn.getCardID(effect)],
                                         text: {
+                                            id: "",
                                             title: [],
                                             logicTreeActions: [
                                                 {

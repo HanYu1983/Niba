@@ -10,10 +10,6 @@ import { getSetGroupCards, getSetGroupRoot, SetGroupComponent } from "./SetGroup
 import { addDestroyEffect, addImmediateEffect, EffectStackComponent } from "./EffectStackComponent";
 import { log } from "../../tool/logger";
 import { Action, ActionFn, ActionTitle, ActionTitleFn, BattleBonus, Condition, ConditionFn, ConditionTitle, ConditionTitleFn, getOnSituationFn, getTextsFromTokuSyuKouKa, LogicTreeActionFn, OnEventFn, OnEventTitle, OnSituationFn, Situation, CardText, CardTextFn, TextSpeicalEffect, TextSpeicalEffectFn } from "../define/CardText";
-import { AttackSpeed } from "../define";
-import { PlayerA, PlayerB, PlayerID, PlayerIDFn } from "../define/PlayerID";
-import { AbsoluteBaSyou, BattleAreaKeyword, BaSyouKeyword, AbsoluteBaSyouFn, BaSyouKeywordFn } from "../define/BaSyou";
-import { CardPrototype, CardColor, RollCostColor } from "../define/CardPrototype";
 import { GlobalEffect } from "../define/GlobalEffect";
 import { Phase, PhaseFn } from "../define/Timing";
 import { DestroyReason, Effect, EffectFn } from "../define/Effect";
@@ -34,6 +30,7 @@ import { getGlobalEffects, setGlobalEffects, clearGlobalEffects } from "./global
 import { getCardTexts, getCardBattlePoint, getCardHasSpeicalEffect, getCardIdsCanPayRollCost } from "./card";
 import { isABattleGroup, getBattleGroup, getBattleGroupBattlePoint } from "./battleGroup";
 import { getOnEventTitleFn } from "./effect";
+import { ActivePlayerComponent } from "./ActivePlayerComponent";
 
 export type PlayerState = {
   id: string;
@@ -44,10 +41,6 @@ export type PlayerState = {
 
 export type PlayerStateComponent = {
   playerStates: { [key: string]: PlayerState };
-}
-
-export type ActivePlayerComponent = {
-  activePlayerID: string | null;
 }
 
 export type GameState = {

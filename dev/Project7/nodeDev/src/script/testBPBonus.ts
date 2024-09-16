@@ -14,6 +14,7 @@ export const prototype: CardPrototype = {
   battlePoint: [5, 2, 4],
   texts: [
     {
+      id: "",
       title: ["自動型", "恒常"],
       onSituation: function _(ctx: GameState, effect: Effect, { GameStateFn, ToolFn }: Bridge): GlobalEffect[] {
         const cardIds = GameStateFn.getItemIds(ctx)

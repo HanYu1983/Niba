@@ -7,12 +7,14 @@ import { addCards, createCardWithProtoIds, getCard } from "./CardTableComponent"
 import { Effect } from "../define/Effect";
 import { getPlayCardEffects } from "./getPlayCardEffect";
 import { getItemIdsByBasyou, getItemPrototype } from "./ItemTableComponent";
-import { loadPrototype } from "../../script";
+import { getPrototype, loadPrototype } from "../../script";
 import { always, flatten, ifElse, lift, map, pipe } from "ramda";
 import { createGameState, GameState } from "./GameState";
 import { ToolFn } from "../tool";
-import { getPhase, setNextPhase } from "./PhaseComponent";
+import { getPhase, setNextPhase, setPhase } from "./PhaseComponent";
 import { getCardHasSpeicalEffect } from "./card";
+import { Card } from "../define/Card";
+import { setActivePlayerID } from "./ActivePlayerComponent";
 
 export function getPlayEffects(ctx: GameState, playerId: PlayerID): Effect[] {
     const getPlayCardEffectsF = ifElse(
@@ -95,7 +97,7 @@ export function getPlayEffects(ctx: GameState, playerId: PlayerID): Effect[] {
                     log(
                         "getClientCommand",
                         `ctx.activePlayerID != ${playerId}`,
-                        text
+                        text.title, text.description
                     );
                     return false;
                 }
@@ -105,17 +107,17 @@ export function getPlayEffects(ctx: GameState, playerId: PlayerID): Effect[] {
                     log(
                         "getClientCommand",
                         `ctx.activePlayerID == ${playerId}`,
-                        text
+                        text.title, text.description
                     );
                     return false;
                 }
                 break;
             case "戦闘フェイズ":
-                if (ctx.phase[1][0] != "戦闘フェイズ") {
+                if (ctx.phase[0] != "戦闘フェイズ") {
                     log(
                         "getClientCommand",
-                        `ctx.timing[1][0] != "戦闘フェイズ"`,
-                        text
+                        `ctx.timing[0] != "戦闘フェイズ"`,
+                        text.title, text.description
                     );
                     return false;
                 }
@@ -124,19 +126,19 @@ export function getPlayEffects(ctx: GameState, playerId: PlayerID): Effect[] {
             case "防御ステップ":
             case "ダメージ判定ステップ":
             case "帰還ステップ":
-                if (ctx.phase[1][0] != "戦闘フェイズ") {
+                if (ctx.phase[0] != "戦闘フェイズ") {
                     log(
                         "getClientCommand",
-                        `ctx.timing[1][0] != "戦闘フェイズ"`,
-                        text
+                        `ctx.timing[0] != "戦闘フェイズ"`,
+                        text.title, text.description
                     );
                     return false;
                 }
-                if (ctx.phase[1][1] != siYouTiming[0]) {
+                if (ctx.phase[1] != siYouTiming[0]) {
                     log(
                         "getClientCommand",
-                        `ctx.timing[1][1] != ${siYouTiming[0]}`,
-                        text
+                        `ctx.timing[1] != ${siYouTiming[0]}`,
+                        text.title, text.description
                     );
                     return false;
                 }
@@ -148,11 +150,11 @@ export function getPlayEffects(ctx: GameState, playerId: PlayerID): Effect[] {
                 switch (siYouTiming[1]) {
                     case "配備フェイズ":
                     case "戦闘フェイズ":
-                        if (ctx.phase[1][0] != siYouTiming[1]) {
+                        if (ctx.phase[0] != siYouTiming[1]) {
                             log(
                                 "getClientCommand",
-                                `ctx.timing[1][0] != ${siYouTiming[1]}`,
-                                text
+                                `ctx.timing[0] != ${siYouTiming[1]}`,
+                                text.title, text.description
                             );
                             return false;
                         }
@@ -161,19 +163,19 @@ export function getPlayEffects(ctx: GameState, playerId: PlayerID): Effect[] {
                     case "防御ステップ":
                     case "ダメージ判定ステップ":
                     case "帰還ステップ":
-                        if (ctx.phase[1][0] != "戦闘フェイズ") {
+                        if (ctx.phase[0] != "戦闘フェイズ") {
                             log(
                                 "getClientCommand",
-                                `ctx.timing[1][0] != "戦闘フェイズ"`,
-                                text
+                                `ctx.timing[0] != "戦闘フェイズ"`,
+                                text.title, text.description
                             );
                             return false;
                         }
-                        if (ctx.phase[1][1] != siYouTiming[1]) {
+                        if (ctx.phase[1] != siYouTiming[1]) {
                             log(
                                 "getClientCommand",
-                                `ctx.timing[1][1] != ${siYouTiming[1]}`,
-                                text
+                                `ctx.timing[1] != ${siYouTiming[1]}`,
+                                text.title, text.description
                             );
                             return false;
                         }
@@ -188,23 +190,58 @@ export function getPlayEffects(ctx: GameState, playerId: PlayerID): Effect[] {
 }
 
 export async function testGetPlayEffects() {
-    await loadPrototype("179001_01A_CH_WT007R_white")
+    await loadPrototype("179024_03B_U_WT042U_white")
     let ctx = createGameState()
-    ctx = createCardWithProtoIds(ctx, AbsoluteBaSyouFn.of(PlayerA, "手札"), ["179001_01A_CH_WT007R_white"]) as GameState
-    ctx = createCardWithProtoIds(ctx, AbsoluteBaSyouFn.of(PlayerA, "ハンガー"), ["179001_01A_CH_WT007R_white"]) as GameState
-    ctx = createCardWithProtoIds(ctx, AbsoluteBaSyouFn.of(PlayerA, "配備エリア"), ["179001_01A_CH_WT007R_white"]) as GameState
+    const cardA: Card = {
+        id: "cardA",
+        protoID: "179024_03B_U_WT042U_white"
+    }
+    const cardB: Card = {
+        id: "cardB",
+        protoID: "179024_03B_U_WT042U_white"
+    }
+    const cardC: Card = {
+        id: "cardC",
+        protoID: "179024_03B_U_WT042U_white"
+    }
+    const cardCProto = getPrototype(cardC.protoID || "unknown")
+    ctx = addCards(ctx, AbsoluteBaSyouFn.of(PlayerA, "手札"), [cardA]) as GameState
+    ctx = addCards(ctx, AbsoluteBaSyouFn.of(PlayerA, "ハンガー"), [cardB]) as GameState
+    ctx = addCards(ctx, AbsoluteBaSyouFn.of(PlayerA, "配備エリア"), [cardC]) as GameState
     {
         const playEffects = getPlayEffects(ctx, PlayerA)
         if (playEffects.length != 0) {
             throw new Error(`playEffects.length != 0`)
         }
     }
-    ctx = setNextPhase(ctx) as GameState
+    ctx = setPhase(ctx, ["配備フェイズ", "フリータイミング"]) as GameState
     {
         const playEffects = getPlayEffects(ctx, PlayerA)
-        console.log(playEffects)
-        if (playEffects.length != 0) {
-            throw new Error(`playEffects.length != 0`)
+        if (playEffects.length != 2) {
+            throw new Error(`playEffects.length != 2`)
+        }
+        if (playEffects[0].reason[0] == "PlayCard" && playEffects[0].reason[1] == PlayerA && playEffects[0].reason[2] == cardA.id) {
+
+        } else {
+            throw new Error(`playEffects[0].reason[0] == "PlayCard" && playEffects[0].reason[1] == PlayerA && playEffects[0].reason[2] == cardA.id`)
+        }
+        if (playEffects[1].reason[0] == "PlayCard" && playEffects[1].reason[1] == PlayerA && playEffects[1].reason[2] == cardB.id) {
+
+        } else {
+            throw new Error(`playEffects[1].reason[0] == "PlayCard" && playEffects[1].reason[1] == PlayerA && playEffects[1].reason[2] == cardB.id`)
+        }
+    }
+    ctx = setPhase(ctx, ["戦闘フェイズ", "ダメージ判定ステップ", "フリータイミング"]) as GameState
+    ctx = setActivePlayerID(ctx, PlayerA) as GameState
+    {
+        const playEffects = getPlayEffects(ctx, PlayerA)
+        if (playEffects.length != 1) {
+            throw new Error(`playEffects.length != 1`)
+        }
+        if (playEffects[0].reason[0] == "PlayText" && playEffects[0].reason[1] == PlayerA && playEffects[0].reason[2] == cardC.id && playEffects[0].reason[3] == cardCProto.texts[0].id) {
+
+        } else {
+            throw new Error(`playEffects[0].reason[0] == "PlayText" && playEffects[0].reason[1] == PlayerA && playEffects[0].reason[2] == cardC.id && playEffects[0].reason[3] == cardCProto.texts[0].id`)
         }
     }
 }

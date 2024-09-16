@@ -22,6 +22,7 @@ export const prototype: CardPrototype = {
   rollCost: ["白", null, null, null],
   battlePoint: [5, 0, 4],
   texts: [{
+    id: "",
     title: ["使用型", ["自軍", "ダメージ判定ステップ"]],
     description: "（自軍ダメージ判定ステップ）〔１〕：このカードは交戦中の場合、ターン終了時まで＋１／＋１／＋１を得る。または、このカードが非交戦中の場合、敵軍ユニット１枚の上に－１／－１／－１コイン１個を乗せる。",
     conditions: {
@@ -49,6 +50,7 @@ export const prototype: CardPrototype = {
               ctx = GameStateFn.addStackEffect(ctx, {
                 reason: ["PlayText", DefineFn.EffectFn.getPlayerID(effect), cardId, effect.text.id || "unknown"],
                 text: {
+                  id: "",
                   title: [],
                   logicTreeActions: [
                     {

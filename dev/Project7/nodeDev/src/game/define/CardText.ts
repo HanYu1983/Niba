@@ -126,7 +126,7 @@ export type OnEventTitle =
     | ["GameEventOnTimingDoAction", Phase, Action]
 
 export type CardText = {
-    id?: string,
+    id: string,
     title: TextTitle
     description?: string
     conditions?: { [key: string]: Condition }

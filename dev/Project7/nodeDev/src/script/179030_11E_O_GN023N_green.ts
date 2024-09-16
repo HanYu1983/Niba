@@ -22,6 +22,7 @@ export const prototype: CardPrototype = {
   rollCost: ["緑"],
   texts: [
     {
+      id: "",
       description: "『常駐』：「特徴：装弾」を持つ自軍コマンドの効果で自軍Gをロールする場合、このカードを自軍Gとしてロールできる。",
       title: ["自動型", "常駐"],
       onSituation: function _(ctx: GameState, effect: Effect, { DefineFn, GameStateFn }: Bridge): GlobalEffect[] {
@@ -37,6 +38,7 @@ export const prototype: CardPrototype = {
       }.toString()
     },
     {
+      id: "",
       description: "『起動』：この記述の効果以外で、敵軍ユニットがダメージを受けた場合、戦闘エリアにいる敵軍ユニット１枚に１ダメージを与える。",
       title: ["自動型", "起動"],
       onEvent: function _(ctx: GameState, effect: Effect, { DefineFn, GameStateFn }: Bridge): GameState {
@@ -55,6 +57,7 @@ export const prototype: CardPrototype = {
             id: "",
             reason: ["PlayText", cardController, cardId, effect.text.id || "unknown"],
             text: {
+              id: "",
               title: [],
               description: "",
               conditions: {

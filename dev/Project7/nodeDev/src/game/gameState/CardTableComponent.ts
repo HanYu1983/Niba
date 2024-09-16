@@ -58,6 +58,12 @@ export function createCardWithProtoIds(ctx: CardTableComponent, basyou: Absolute
 
 export function addCards(ctx: CardTableComponent, basyou: AbsoluteBaSyou, addedCards: Card[]): CardTableComponent {
   ctx = addedCards.reduce((ctx, newCard) => {
+    if (newCard.id == "") {
+      newCard.id = ToolFn.getUUID("addCards")
+    }
+    if (newCard.ownerID == null) {
+      newCard.ownerID = AbsoluteBaSyouFn.getPlayerID(basyou)
+    }
     const table = TableFns.addCard(ctx.table, AbsoluteBaSyouFn.toString(basyou), newCard.id)
     return {
       ...ctx,

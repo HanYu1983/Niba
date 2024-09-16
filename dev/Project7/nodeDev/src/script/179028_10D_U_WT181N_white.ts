@@ -15,7 +15,6 @@ import { type GameState } from "../game/gameState/GameState";
 
 export const prototype: CardPrototype = {
   ...DEFAULT_CARD_PROTOTYPE,
-  id: "179028_10D_U_WT181N_white",
   title: "シェンロンガンダム［†］",
   characteristic: "シェンロン系　MS　専用「張五飛」",
   category: "ユニット",
@@ -24,12 +23,15 @@ export const prototype: CardPrototype = {
   battlePoint: [4, 0, 4],
   texts: [
     {
+      id: "",
       title: ["特殊型", ["戦闘配備"]]
     },
     {
+      id: "",
       title: ["特殊型", ["改装", "シェンロン系"]]
     },
     {
+      id: "",
       description: "『恒常』：このカードは、合計国力＋１してプレイできる。その場合、このカードは、ターン終了時まで合計国力＋１を得る。",
       title: ["自動型", "恒常"],
       onSituation: function _(ctx: GameState, effect: Effect, { DefineFn, GameStateFn }: Bridge): GlobalEffect[] {
@@ -37,6 +39,7 @@ export const prototype: CardPrototype = {
       }.toString()
     },
     {
+      id: "",
       description: "『起動』：このカードは場に出た場合、ターン終了時まで、＋X／±０／＋Xを得る。Xの値は、このカードの合計国力の値－１とする。",
       title: ["自動型", "起動"],
       onEvent: function _(ctx: GameState, effect: Effect, { DefineFn, GameStateFn }: Bridge): GameState {

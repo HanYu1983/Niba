@@ -19,6 +19,7 @@ export const prototype: CardPrototype = {
   rollCost: ["白"],
   texts: [],
   commandText: {
+    id: "",
     title: ["使用型", ["戦闘フェイズ"]],
     description: "（戦闘フェイズ）：自軍ユニット１枚は、ターン終了時まで「速攻」または「高機動」を得る。",
     conditions: {
@@ -83,11 +84,11 @@ export const prototype: CardPrototype = {
         switch (strOption) {
           case "速攻":
             return [
-              { title: ["AddText", { title: ["特殊型", ["速攻"]] }], cardIds: [targetCardId] }
+              { title: ["AddText", { id: "", title: ["特殊型", ["速攻"]] }], cardIds: [targetCardId] }
             ]
           case "高機動":
             return [
-              { title: ["AddText", { title: ["特殊型", ["高機動"]] }], cardIds: [targetCardId] }
+              { title: ["AddText", { id: "", title: ["特殊型", ["高機動"]] }], cardIds: [targetCardId] }
             ]
         }
       }
