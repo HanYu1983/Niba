@@ -13,14 +13,8 @@ export async function tests() {
         test179028_10D_U_WT181N_white,
     ].reduce((worker, testF) => {
         return worker.then(async () => {
-            console.log(
-                `================================================================`
-            );
-            console.log(`${testF.name}`);
-            console.log(
-                `================================================================`
-            );
+            console.log(`==============================${testF.name}==================================`);
             return testF()
         })
-    }, Promise.resolve())
+    }, Promise.resolve()).then(()=>console.log("DONE!"))
 }

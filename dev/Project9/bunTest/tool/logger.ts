@@ -13,6 +13,7 @@ const hideCategory: string[] = [
   "assertTargetTypeValueLength",
   "applyFlow",
   "getClientCommand",
+  "getGlobalEffects",
 ];
 let filterCategory = true;
 
