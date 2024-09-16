@@ -148,7 +148,10 @@ export function clearDestroyEffects(ctx: GameStateWithFlowMemory): GameStateWith
 
 export function addDestroyEffect(ctx: GameStateWithFlowMemory, block: Effect): GameStateWithFlowMemory {
   if (block.id == null) {
-    block.id = ToolFn.getUUID()
+    block.id = ToolFn.getUUID("addDestroyEffect")
+  }
+  if (block.text.id == "") {
+    block.text.id = ToolFn.getUUID("addDestroyEffect")
   }
   return {
     ...ctx,
@@ -167,10 +170,9 @@ export function updateDestroyEffect(ctx: GameStateWithFlowMemory): GameStateWith
   // 將所有破壞效果加入破壞用堆疊
   // 加入破壞用堆疊後，主動玩家就必須決定解決順序
   // 決定後，依順序將所有效果移到正在解決中的堆疊，並重設切入的旗標，讓玩家可以在堆疊解決中可以再次切入
-  getItemStateValues(ctx).reduce((ctx, cs) => {
+  return getItemStateValues(ctx).reduce((ctx, cs) => {
     if (cs.destroyReason) {
       const effect: Effect = {
-        id: ToolFn.getUUID("updateDestroyEffect"),
         reason: ["Destroy", cs.destroyReason.playerID, cs.id, cs.destroyReason],
         text: {
           id: "",
@@ -187,7 +189,6 @@ export function updateDestroyEffect(ctx: GameStateWithFlowMemory): GameStateWith
         playerID: getItemController(ctx, cs.id)
       }
       const effect: Effect = {
-        id: ToolFn.getUUID("updateDestroyEffect"),
         reason: ["Destroy", destroyReason.playerID, cs.id, destroyReason],
         text: {
           id: "",
@@ -199,5 +200,4 @@ export function updateDestroyEffect(ctx: GameStateWithFlowMemory): GameStateWith
     }
     return ctx
   }, ctx)
-  return ctx;
 }

@@ -1,3 +1,8 @@
+# install bun
+```bash
+npm i -g bun
+```
+
 # test
 
 To install dependencies:

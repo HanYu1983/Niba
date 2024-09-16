@@ -4,12 +4,13 @@ import { AbsoluteBaSyou, AbsoluteBaSyouFn } from "../define/BaSyou";
 import { addImmediateEffect, addStackEffect, getEffect } from "../gameState/EffectStackComponent";
 import { checkIsBattle } from "../gameState/IsBattleComponent";
 import { Flow } from "./Flow";
-import { GameStateWithFlowMemory, updateCommand } from "./GameStateWithFlowMemory";
+import { GameStateWithFlowMemory } from "./GameStateWithFlowMemory";
 import { setActiveEffectID, cancelActiveEffectID, doActiveEffect, deleteImmediateEffect, clearDestroyEffects, updateDestroyEffect } from "./effect";
 import { PhaseFn } from "../define/Timing";
 import { doPlayerAttack } from "../gameState/player";
 import { triggerEvent } from "../gameState/triggerEvent";
 import { ToolFn } from "../tool";
+import { updateCommand } from "./updateCommand";
 
 export function applyFlow(
     ctx: GameStateWithFlowMemory,
