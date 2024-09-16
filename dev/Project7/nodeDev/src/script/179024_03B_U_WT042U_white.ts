@@ -57,7 +57,7 @@ export const prototype: CardPrototype = {
                             const cardId = DefineFn.EffectFn.getCardID(effect)
                             if (GameStateFn.isBattle(ctx, cardId, null)) {
                               let cardState = GameStateFn.getItemState(ctx, cardId);
-                              cardState = GameStateFn.ItemStateFn.setFlag(cardState, "add bonus", true)
+                              cardState = DefineFn.ItemStateFn.setFlag(cardState, "add bonus", true)
                               ctx = GameStateFn.setItemState(ctx, cardId, cardState) as GameState
                               return ctx
                             }
@@ -83,7 +83,7 @@ export const prototype: CardPrototype = {
       const cardId = DefineFn.EffectFn.getCardID(effect)
       if (event.title[0] == "GameEventOnTiming" && event.title[1][0] == 34) {
         let cardState = GameStateFn.getItemState(ctx, cardId);
-        cardState = GameStateFn.ItemStateFn.removeFlag(cardState, "add bonus")
+        cardState = DefineFn.ItemStateFn.removeFlag(cardState, "add bonus")
         ctx = GameStateFn.setItemState(ctx, cardId, cardState) as GameState
         return ctx
       }

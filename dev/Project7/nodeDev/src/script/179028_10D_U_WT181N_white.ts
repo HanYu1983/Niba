@@ -45,17 +45,17 @@ export const prototype: CardPrototype = {
         let state = GameStateFn.getItemState(ctx, cardId)
         if (event.title[0] == "場に出た場合" && event.cardIds?.includes(cardId)) {
           const totalCostLength = GameStateFn.getCardRollCostLength(ctx, cardId) - 1
-          state = GameStateFn.ItemStateFn.setFlag(state, "bonus", totalCostLength)
+          state = DefineFn.ItemStateFn.setFlag(state, "bonus", totalCostLength)
         }
         if (event.title[0] == "GameEventOnTiming" && DefineFn.TimingFn.isLast(event.title[1])) {
-          state = GameStateFn.ItemStateFn.removeFlag(state, "bonus")
+          state = DefineFn.ItemStateFn.removeFlag(state, "bonus")
         }
         ctx = GameStateFn.setItemState(ctx, cardId, state) as GameState
         return ctx
       }.toString(),
       onSituation: function _(ctx: GameState, effect: Effect, { DefineFn, GameStateFn }: Bridge): GlobalEffect[] {
         const cardId = DefineFn.EffectFn.getCardID(effect)
-        const hasSpecialPlayX = GameStateFn.ItemStateFn.getMoreTotalRollCostLengthPlay(GameStateFn.getItemState(ctx, cardId))
+        const hasSpecialPlayX = DefineFn.ItemStateFn.getMoreTotalRollCostLengthPlay(GameStateFn.getItemState(ctx, cardId))
         const ret: GlobalEffect[] = []
         if (hasSpecialPlayX) {
           ret.push({ title: ["合計国力＋(１)", hasSpecialPlayX], cardIds: [cardId] })

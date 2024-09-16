@@ -88,7 +88,7 @@ export function getPlayCardEffects(ctx: GameState, cardId: string): Effect[] {
                                                             title: function _(ctx: GameState, effect: Effect, { DefineFn, GameStateFn }: Bridge): GameState {
                                                                 const cardId = DefineFn.EffectFn.getCardID(effect)
                                                                 const cs = GameStateFn.getItemState(ctx, cardId)
-                                                                const tip = GameStateFn.ItemStateFn.getTip(cs, "unitForSet")
+                                                                const tip = DefineFn.ItemStateFn.getTip(cs, "unitForSet")
                                                                 const tipError = DefineFn.TipFn.checkTipSatisfies(tip)
                                                                 if (tipError) throw tipError
                                                                 const pairs = DefineFn.TipFn.getSelection(tip) as StrBaSyouPair[]
@@ -184,7 +184,7 @@ export function getPlayCardEffects(ctx: GameState, cardId: string): Effect[] {
                 const { addedLength } = { addedLength: 0 }
                 const cardId = DefineFn.EffectFn.getCardID(effect)
                 let cs = GameStateFn.getItemState(ctx, cardId)
-                cs = GameStateFn.ItemStateFn.setMoreTotalRollCostLengthPlay(cs, addedLength)
+                cs = DefineFn.ItemStateFn.setMoreTotalRollCostLengthPlay(cs, addedLength)
                 ctx = GameStateFn.setItemState(ctx, cardId, cs) as GameState
                 return ctx
             }.toString().replace("{ addedLength: 0 }", `{addedLength: ${addedLength}}`)

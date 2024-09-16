@@ -15,6 +15,7 @@ import * as Text from "./Text"
 import * as Timing from "./Timing"
 import * as Coin from "./Coin"
 import * as Tip from "./Tip"
+import * as ItemState from "./ItemState"
 export const DefineFn = {
     ...BaSyou,
     ...BattlePoint,
@@ -28,4 +29,5 @@ export const DefineFn = {
     ...Timing,
     ...Coin,
     ...Tip,
+    ...ItemState,
 }

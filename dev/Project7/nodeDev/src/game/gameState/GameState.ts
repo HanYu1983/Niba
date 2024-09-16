@@ -3,7 +3,7 @@ import {
   CardTableComponent,
   getCardIds,
 } from "./CardTableComponent"
-import { ItemState, ItemStateComponent, ItemStateFn, getItemState, getItemStateValues, setItemState } from "./ItemStateComponent";
+import { ItemStateComponent, getItemState, getItemStateValues, setItemState } from "./ItemStateComponent";
 import { isBattle, IsBattleComponent } from "./IsBattleComponent";
 import { getSetGroupCards, getSetGroupRoot, SetGroupComponent } from "./SetGroupComponent";
 import { addDestroyEffect, addImmediateEffect, EffectStackComponent } from "./EffectStackComponent";
@@ -28,6 +28,7 @@ import { Card } from "../define/Card";
 import { ToolFn } from "../tool";
 import { TargetMissingError } from "../define/GameError";
 import { CoinFn } from "../define/Coin";
+import { ItemState, ItemStateFn } from "../define/ItemState";
 
 export type PlayerState = {
   id: string;

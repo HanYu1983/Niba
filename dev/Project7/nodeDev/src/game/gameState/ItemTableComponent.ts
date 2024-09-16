@@ -13,7 +13,6 @@ import { CardPrototype } from "../define/CardPrototype";
 import { getPrototype } from "../../script";
 import { Card, CardFn } from "../define/Card";
 import { Chip, ChipFn } from "../define/Chip";
-import { ItemStateFn, getItemState, setItemState } from "./ItemStateComponent";
 
 export type Item = Card | Coin | Chip;
 
