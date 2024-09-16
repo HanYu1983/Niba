@@ -11,7 +11,6 @@ import { GameState } from "../game/gameState/GameState";
 import { Bridge } from "./bridge";
 export const prototype: CardPrototype = {
   ...DEFAULT_CARD_PROTOTYPE,
-  id: "179019_01A_C_WT010C_white",
   title: "黄昏の魔弾",
   characteristic: "強化",
   category: "コマンド",
