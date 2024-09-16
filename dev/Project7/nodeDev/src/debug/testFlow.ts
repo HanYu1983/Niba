@@ -5,6 +5,7 @@ import { getBattleGroupBattlePoint, getBattleGroup } from "../game/gameState/bat
 import { getCardBattlePoint } from "../game/gameState/card";
 import { addCards, createCardWithProtoIds } from "../game/gameState/CardTableComponent";
 import { clearGlobalEffects } from "../game/gameState/globalEffects";
+import { setSetGroupLink } from "../game/gameState/SetGroupComponent";
 import { applyFlow } from "../game/gameStateWithFlowMemory/applyFlow";
 import { createGameStateWithFlowMemory, GameStateWithFlowMemory, initState } from "../game/gameStateWithFlowMemory/GameStateWithFlowMemory";
 import { queryFlow } from "../game/gameStateWithFlowMemory/queryFlow";
@@ -204,9 +205,9 @@ export async function testBattleBonus() {
   ctx = {
     ...ctx,
     activePlayerID: PlayerA,
-    setGroupLink: { a2: "a1" },
     phase: ["戦闘フェイズ", "ダメージ判定ステップ", "ステップ開始"],
   };
+  ctx = setSetGroupLink(ctx, "a1", "a2") as GameStateWithFlowMemory
   ctx = addCards(
     ctx,
     AbsoluteBaSyouFn.of(PlayerA, "戦闘エリア1"),

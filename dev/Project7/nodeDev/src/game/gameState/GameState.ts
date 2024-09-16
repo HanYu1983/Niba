@@ -6,7 +6,7 @@ import {
 } from "./CardTableComponent"
 import { ItemStateComponent, getItemState, getItemStateValues, setItemState } from "./ItemStateComponent";
 import { isBattle, IsBattleComponent } from "./IsBattleComponent";
-import { getSetGroupCards, getSetGroupRoot, SetGroupComponent } from "./SetGroupComponent";
+import { createSetGroupComponent, getSetGroupCards, getSetGroupRoot, SetGroupComponent } from "./SetGroupComponent";
 import { addDestroyEffect, addImmediateEffect, EffectStackComponent } from "./EffectStackComponent";
 import { log } from "../../tool/logger";
 import { Action, ActionFn, ActionTitle, ActionTitleFn, BattleBonus, Condition, ConditionFn, ConditionTitle, ConditionTitleFn, getOnSituationFn, getTextsFromTokuSyuKouKa, LogicTreeActionFn, OnEventFn, OnEventTitle, OnSituationFn, Situation, CardText, CardTextFn, TextSpeicalEffect, TextSpeicalEffectFn } from "../define/CardText";
@@ -71,11 +71,11 @@ export function createGameState(): GameState {
     immediateEffect: [],
     stackEffect: [],
     destroyEffect: [],
-    setGroupLink: {},
     isBattle: {},
     coins: {},
     coinId2cardId: {},
-    globalEffectPool: {}
+    globalEffectPool: {},
+    ...createSetGroupComponent(),
   }
 }
 

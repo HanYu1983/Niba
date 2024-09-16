@@ -13,7 +13,7 @@ export function getBattleGroup(
     baSyou: AbsoluteBaSyou
   ): string[] {
     return getItemIdsByBasyou(ctx, baSyou).filter((cardId) => {
-      return getSetGroupRoot(ctx, cardId) == null;
+      return getSetGroupRoot(ctx, cardId) == cardId;
     })
   }
   

@@ -1,33 +1,29 @@
+import { ItemGroup, ItemGroupFn } from "../../tool/ItemGroup";
+
 export type SetGroupComponent = {
-  setGroupLink: { [key: string]: string };
+  setGroup: ItemGroup
+}
+
+export function createSetGroupComponent(): SetGroupComponent {
+  return {
+    setGroup: ItemGroupFn.createItemGroup(),
+  };
 }
 
 export function getSetGroupCards(ctx: SetGroupComponent, itemId: string): string[] {
-  const root = getSetGroupRoot(ctx, itemId);
-  if (root != null) {
-    return getSetGroupCards(ctx, root);
-  }
-  return [
-    itemId,
-    ...Object.keys(ctx.setGroupLink).filter((k) => {
-      return ctx.setGroupLink[k] == itemId;
-    }),
-  ];
+  return ItemGroupFn.getItemGroup(ctx.setGroup, itemId)
 }
 
 export function getSetGroupRoot(
   ctx: SetGroupComponent,
   cardID: string
-): string | null {
-  return ctx.setGroupLink[cardID] || null;
+): string {
+  return ItemGroupFn.getItemGroupParentRoot(ctx.setGroup, cardID)
 }
 
 export function setSetGroupLink(ctx: SetGroupComponent, parentCardId: string, cardId: string): SetGroupComponent {
   return {
     ...ctx,
-    setGroupLink: {
-      ...ctx.setGroupLink,
-      [cardId]: parentCardId,
-    }
+    setGroup: ItemGroupFn.setItemGroupParent(ctx.setGroup, cardId, parentCardId)
   }
 }
