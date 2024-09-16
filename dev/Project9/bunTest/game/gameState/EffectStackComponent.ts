@@ -3,19 +3,10 @@ import { Effect } from "../define/Effect";
 import { ToolFn } from "../tool";
 
 export type EffectStackComponent = {
-  // 指令效果
-  commandEffect: Effect[];
   // 立即效果。玩家必須立即一個一個進行處理
   immediateEffect: string[];
   // 堆疊效果。每次只處理第一個代表top的block
   stackEffect: string[];
-  // 專門給破壞效果用的用的堆疊
-  // 傷害判定結束時，將所有破壞產生的廢棄效果丟到這，重設「決定解決順序」的旗標為真
-  // 如果這個堆疊一有值時並「決定解決順序」為真時，就立刻讓主動玩家決定解決順序，決定完後，將旗標設為假
-  // 旗標為假時，才能才能開放給玩家切入
-  // 這個堆疊解決完後，才回復到本來的堆疊的解決程序
-  destroyEffect: string[];
-
   effects: { [key: string]: Effect };
 }
 
@@ -76,32 +67,5 @@ export function addImmediateEffect(ctx: EffectStackComponent, block: Effect): Ef
     ...ctx,
     immediateEffect: [block.id, ...ctx.immediateEffect],
     effects: assoc(block.id, block, ctx.effects),
-  };
-}
-
-export function clearDestroyEffects(ctx: EffectStackComponent): EffectStackComponent {
-  const effects = { ...ctx.effects }
-  ctx.destroyEffect.forEach(id => delete effects[id])
-  return {
-    ...ctx,
-    destroyEffect: []
-  }
-}
-
-export function addDestroyEffect(ctx: EffectStackComponent, block: Effect): EffectStackComponent {
-  if (block.id == null) {
-    block.id = ToolFn.getUUID()
-  }
-  return {
-    ...ctx,
-    destroyEffect: [block.id, ...ctx.destroyEffect],
-    effects: assoc(block.id, block, ctx.effects),
-  };
-}
-
-export function setCommandEffects(ctx: EffectStackComponent, effects: Effect[]): EffectStackComponent {
-  return {
-    ...ctx,
-    commandEffect: effects
   };
 }

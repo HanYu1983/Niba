@@ -5,9 +5,9 @@ import { TargetMissingError } from "../define/GameError";
 import { PlayerA, PlayerB } from "../define/PlayerID";
 import { TipFn } from "../define/Tip";
 import { mapCardsWithBasyou } from "../gameState/CardTableComponent";
-import { setCommandEffects } from "../gameState/EffectStackComponent";
 import { createGameState, GameState } from "../gameState/GameState";
 import { getPlayEffects } from "../gameState/getPlayEffects";
+import { setCommandEffects } from "./effect";
 
 export type Message = {
     id: "MessageCustom";
@@ -39,6 +39,14 @@ export type HasFlowMemoryComponent = {
 }
 
 export type GameStateWithFlowMemory = {
+    // 專門給破壞效果用的用的堆疊
+    // 傷害判定結束時，將所有破壞產生的廢棄效果丟到這，重設「決定解決順序」的旗標為真
+    // 如果這個堆疊一有值時並「決定解決順序」為真時，就立刻讓主動玩家決定解決順序，決定完後，將旗標設為假
+    // 旗標為假時，才能才能開放給玩家切入
+    // 這個堆疊解決完後，才回復到本來的堆疊的解決程序
+    destroyEffect: Effect[];
+    // 指令效果
+    commandEffect: Effect[];
     stackEffectMemory: Effect[];
     activeEffectID: string | null;
 } & GameState & HasFlowMemoryComponent;
@@ -48,7 +56,9 @@ export function createGameStateWithFlowMemory(): GameStateWithFlowMemory {
         ...createGameState(),
         stackEffectMemory: [],
         activeEffectID: null,
-        flowMemory: DEFAULT_FLOW_MEMORY
+        flowMemory: DEFAULT_FLOW_MEMORY,
+        commandEffect: [],
+        destroyEffect: [],
     }
 }
 

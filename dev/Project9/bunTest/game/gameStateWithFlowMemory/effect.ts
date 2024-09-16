@@ -1,8 +1,13 @@
+import { assoc } from "ramda";
 import { log } from "../../tool/logger";
-import { EffectFn } from "../define/Effect";
+import { DestroyReason, Effect, EffectFn } from "../define/Effect";
 import { doEffect } from "../gameState/effect";
 import { getEffect, isStackEffect, removeEffect } from "../gameState/EffectStackComponent";
+import { ToolFn } from "../tool";
 import { GameStateWithFlowMemory } from "./GameStateWithFlowMemory";
+import { getItemStateValues } from "../gameState/ItemStateComponent";
+import { getItemController } from "../gameState/ItemTableComponent";
+import { getSetGroupBattlePoint } from "../gameState/setGroup";
 
 export function setActiveEffectID(
   ctx: GameStateWithFlowMemory,
@@ -131,4 +136,68 @@ export function deleteImmediateEffect(
     throw new Error("isOption must true");
   }
   return removeEffect(ctx, effectID) as GameStateWithFlowMemory
+}
+
+
+export function clearDestroyEffects(ctx: GameStateWithFlowMemory): GameStateWithFlowMemory {
+  return {
+    ...ctx,
+    destroyEffect: []
+  }
+}
+
+export function addDestroyEffect(ctx: GameStateWithFlowMemory, block: Effect): GameStateWithFlowMemory {
+  if (block.id == null) {
+    block.id = ToolFn.getUUID()
+  }
+  return {
+    ...ctx,
+    destroyEffect: [block, ...ctx.destroyEffect],
+  };
+}
+
+export function setCommandEffects(ctx: GameStateWithFlowMemory, effects: Effect[]): GameStateWithFlowMemory {
+  return {
+    ...ctx,
+    commandEffect: effects
+  };
+}
+
+export function updateDestroyEffect(ctx: GameStateWithFlowMemory): GameStateWithFlowMemory {
+  // 將所有破壞效果加入破壞用堆疊
+  // 加入破壞用堆疊後，主動玩家就必須決定解決順序
+  // 決定後，依順序將所有效果移到正在解決中的堆疊，並重設切入的旗標，讓玩家可以在堆疊解決中可以再次切入
+  getItemStateValues(ctx).reduce((ctx, cs) => {
+    if (cs.destroyReason) {
+      const effect: Effect = {
+        id: ToolFn.getUUID("updateDestroyEffect"),
+        reason: ["Destroy", cs.destroyReason.playerID, cs.id, cs.destroyReason],
+        text: {
+          id: "",
+          title: [],
+        }
+      }
+      ctx = addDestroyEffect(ctx, effect) as GameStateWithFlowMemory
+      return ctx
+    }
+    const [_, _2, hp] = getSetGroupBattlePoint(ctx, cs.id)
+    if (hp <= cs.damage) {
+      const destroyReason: DestroyReason = {
+        id: "マイナスの戦闘修正",
+        playerID: getItemController(ctx, cs.id)
+      }
+      const effect: Effect = {
+        id: ToolFn.getUUID("updateDestroyEffect"),
+        reason: ["Destroy", destroyReason.playerID, cs.id, destroyReason],
+        text: {
+          id: "",
+          title: [],
+        }
+      }
+      ctx = addDestroyEffect(ctx, effect) as GameStateWithFlowMemory
+      return ctx
+    }
+    return ctx
+  }, ctx)
+  return ctx;
 }

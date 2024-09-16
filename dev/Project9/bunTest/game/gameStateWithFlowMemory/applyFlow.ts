@@ -1,14 +1,13 @@
 import { log } from "../../tool/logger";
 import { PlayerA, PlayerB, PlayerIDFn } from "../define/PlayerID";
 import { AbsoluteBaSyou, AbsoluteBaSyouFn } from "../define/BaSyou";
-import { addImmediateEffect, addStackEffect, clearDestroyEffects, getEffect } from "../gameState/EffectStackComponent";
+import { addImmediateEffect, addStackEffect, getEffect } from "../gameState/EffectStackComponent";
 import { checkIsBattle } from "../gameState/IsBattleComponent";
 import { Flow } from "./Flow";
 import { GameStateWithFlowMemory, updateCommand } from "./GameStateWithFlowMemory";
-import { setActiveEffectID, cancelActiveEffectID, doActiveEffect, deleteImmediateEffect } from "./effect";
+import { setActiveEffectID, cancelActiveEffectID, doActiveEffect, deleteImmediateEffect, clearDestroyEffects, updateDestroyEffect } from "./effect";
 import { PhaseFn } from "../define/Timing";
 import { doPlayerAttack } from "../gameState/player";
-import { updateDestroyEffect } from "../gameState/effect";
 import { triggerEvent } from "../gameState/triggerEvent";
 import { ToolFn } from "../tool";
 
@@ -325,6 +324,7 @@ export function applyFlow(
             // 速度2
             ctx = doPlayerAttack(ctx, attackPlayerID, "戦闘エリア1", 2) as GameStateWithFlowMemory;
             ctx = doPlayerAttack(ctx, attackPlayerID, "戦闘エリア2", 2) as GameStateWithFlowMemory;
+            ctx = updateDestroyEffect(ctx)
             // set hasTriggerEvent
             ctx = {
                 ...ctx,
@@ -439,8 +439,8 @@ export function applyFlow(
             return ctx;
         }
         case "FlowMakeDestroyOrder": {
-            const willAddedDestroyEffect = ctx.destroyEffect.filter((id1) => {
-                return ctx.stackEffect.find((id) => id1 == id) == null;
+            const willAddedDestroyEffect = ctx.destroyEffect.filter((a) => {
+                return ctx.stackEffect.find((id) => a.id == id) == null;
             });
             if (flow.destroyEffect.length != willAddedDestroyEffect.length) {
                 throw new Error("長度不符合");
