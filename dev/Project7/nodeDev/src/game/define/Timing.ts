@@ -35,10 +35,6 @@ export type Phase =
 
 export type Timing = [number, Phase];
 
-export function getTimingSeq(timing: Timing): number {
-    return timing[0]
-}
-
 export type SiYouTiming =
     | [
         | "常時"
@@ -114,14 +110,17 @@ export const PhaseFn = {
                 return phase[1] == "フリータイミング";
             case "リロールフェイズ":
             case "配備フェイズ":
-                return phase[1] == "フリータイミング" || phase[1] == "フェイズ開始";
+                return phase[1] == "フリータイミング";
             case "戦闘フェイズ":
-                return phase[2] == "フリータイミング" || phase[2] == "ステップ開始";
+                return phase[2] == "フリータイミング";
         }
     }
 }
 
 export const TimingFn = {
+    getSeqId(ctx: Timing): number {
+        return ctx[0]
+    },
     isLast(ctx: Timing): boolean {
         return ctx[0] == TIMING_CHART.length - 1
     },

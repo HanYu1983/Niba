@@ -1,6 +1,6 @@
 import { AbsoluteBaSyouFn } from "../game/define/BaSyou";
 import { PlayerA, PlayerB } from "../game/define/PlayerID";
-import { getTimingSeq } from "../game/define/Timing";
+import { TimingFn } from "../game/define/Timing";
 import { addCards, createCardWithProtoIds } from "../game/gameState/CardTableComponent";
 import { getCardBattlePoint, getBattleGroupBattlePoint, getBattleGroup, GlobalCardState, clearGlobalEffects } from "../game/gameState/GameState";
 import { applyFlow } from "../game/gameStateWithFlowMemory/applyFlow";
@@ -18,14 +18,14 @@ export function testFlow1() {
     },
   };
   const firstTiming = ctx.timing;
-  if (getTimingSeq(firstTiming) != 0) {
+  if (TimingFn.getSeqId(firstTiming) != 0) {
     throw new Error("timingSeq must 0")
   }
   ctx = applyFlow(ctx, PlayerA, {
     id: "FlowNextTiming",
   });
   const afterTime = ctx.timing;
-  if (getTimingSeq(afterTime) != getTimingSeq(firstTiming) + 1) {
+  if (TimingFn.getSeqId(afterTime) != TimingFn.getSeqId(firstTiming) + 1) {
     throw new Error("必須進到下一時間");
   }
   ctx = applyFlow(ctx, PlayerA, {
