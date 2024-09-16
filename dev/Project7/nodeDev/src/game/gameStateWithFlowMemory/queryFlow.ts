@@ -1,7 +1,7 @@
 import { getEffect, getTopEffect } from "../gameState/EffectStackComponent";
 import { Flow } from "./Flow";
 import { getActiveEffectID } from "./handleEffect";
-import { getClientCommand } from "./getClientCommand";
+import { getClientCommand } from "../gameState/getClientCommand";
 import { GameStateWithFlowMemory } from "./GameStateWithFlowMemory";
 import { PlayerA, PlayerB, PlayerIDFn } from "../define/PlayerID";
 import { AbsoluteBaSyouFn, BattleAreaKeyword } from "../define/BaSyou";

@@ -30,6 +30,7 @@ import { ToolFn } from "../tool";
 import { TargetMissingError } from "../define/GameError";
 import { CoinFn } from "../define/Coin";
 import { ItemState, ItemStateFn } from "../define/ItemState";
+import { PhaseComponent } from "./PhaseComponent";
 
 export type PlayerState = {
   id: string;
@@ -56,32 +57,6 @@ export type GameEffectCustom = {
 };
 
 export type GameEffect = GameEffectCustom;
-
-export type PhaseComponent = {
-  phase: Phase;
-}
-
-export function getCurrentTiming(ctx: PhaseComponent): Phase {
-  return ctx.phase
-}
-
-export function setNextTiming(ctx: PhaseComponent): PhaseComponent {
-  return {
-    ...ctx,
-    phase: PhaseFn.getNext(ctx.phase),
-  }
-}
-
-export function setTiming(ctx: PhaseComponent, timing: Phase): PhaseComponent {
-  return {
-    ...ctx,
-    phase: timing,
-  }
-}
-
-export function getCurrentPhase(ctx: PhaseComponent): Phase {
-  return ctx.phase
-}
 
 export type PlayerStateComponent = {
   playerState: PlayerState[];

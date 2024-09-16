@@ -1,21 +1,21 @@
 import { log } from "../../tool/logger";
-import { createGameStateWithFlowMemory, GameStateWithFlowMemory } from "./GameStateWithFlowMemory";
 import { PhaseFn, SiYouTiming } from "../define/Timing";
 import { getTextsFromTokuSyuKouKa, Text } from "../define/Text";
 import { PlayerA, PlayerID } from "../define/PlayerID";
 import { AbsoluteBaSyouFn, BaSyouKeywordFn } from "../define/BaSyou";
-import { addCards, createCardWithProtoIds, getCard } from "../gameState/CardTableComponent";
+import { addCards, createCardWithProtoIds, getCard } from "./CardTableComponent";
 import { Effect } from "../define/Effect";
-import { getPlayCardEffects } from "../gameState/getPlayCardEffect";
-import { getItemIdsByBasyou, getItemPrototype } from "../gameState/ItemTableComponent";
+import { getPlayCardEffects } from "./getPlayCardEffect";
+import { getItemIdsByBasyou, getItemPrototype } from "./ItemTableComponent";
 import { loadPrototype } from "../../script";
 import { always, flatten, ifElse, lift, map, pipe } from "ramda";
-import { getCardHasSpeicalEffect, getCurrentPhase, getCurrentTiming, setNextTiming } from "../gameState/GameState";
+import { createGameState, GameState, getCardHasSpeicalEffect } from "./GameState";
 import { ToolFn } from "../tool";
+import { getPhase, setNextPhase } from "./PhaseComponent";
 
-export function getClientCommand(ctx: GameStateWithFlowMemory, playerId: PlayerID): Effect[] {
+export function getClientCommand(ctx: GameState, playerId: PlayerID): Effect[] {
     const getPlayCardEffectsF = ifElse(
-        always(PhaseFn.eq(getCurrentPhase(ctx), ["配備フェイズ", "フリータイミング"])),
+        always(PhaseFn.eq(getPhase(ctx), ["配備フェイズ", "フリータイミング"])),
         pipe(
             always([AbsoluteBaSyouFn.of(playerId, "手札"), AbsoluteBaSyouFn.of(playerId, "ハンガー")]),
             map(basyou => getItemIdsByBasyou(ctx, basyou)), flatten,
@@ -23,7 +23,7 @@ export function getClientCommand(ctx: GameStateWithFlowMemory, playerId: PlayerI
         ),
         // クイック
         ifElse(
-            always(PhaseFn.isFreeTiming(getCurrentPhase(ctx))),
+            always(PhaseFn.isFreeTiming(getPhase(ctx))),
             pipe(
                 always([AbsoluteBaSyouFn.of(playerId, "手札"), AbsoluteBaSyouFn.of(playerId, "ハンガー")]),
                 map(basyou => getItemIdsByBasyou(ctx, basyou)), flatten,
@@ -54,7 +54,7 @@ export function getClientCommand(ctx: GameStateWithFlowMemory, playerId: PlayerI
         }), flatten
     )
     const getPlayCommandF = ifElse(
-        always(PhaseFn.isFreeTiming(getCurrentPhase(ctx))),
+        always(PhaseFn.isFreeTiming(getPhase(ctx))),
         pipe(
             always([AbsoluteBaSyouFn.of(playerId, "手札"), AbsoluteBaSyouFn.of(playerId, "ハンガー")]),
             map(basyou => getItemIdsByBasyou(ctx, basyou)), flatten,
@@ -188,17 +188,17 @@ export function getClientCommand(ctx: GameStateWithFlowMemory, playerId: PlayerI
 
 export async function testGetClientCommand() {
     await loadPrototype("179001_01A_CH_WT007R_white")
-    let ctx = createGameStateWithFlowMemory()
-    ctx = createCardWithProtoIds(ctx, AbsoluteBaSyouFn.of(PlayerA, "手札"), ["179001_01A_CH_WT007R_white"]) as GameStateWithFlowMemory
-    ctx = createCardWithProtoIds(ctx, AbsoluteBaSyouFn.of(PlayerA, "ハンガー"), ["179001_01A_CH_WT007R_white"]) as GameStateWithFlowMemory
-    ctx = createCardWithProtoIds(ctx, AbsoluteBaSyouFn.of(PlayerA, "配備エリア"), ["179001_01A_CH_WT007R_white"]) as GameStateWithFlowMemory
+    let ctx = createGameState()
+    ctx = createCardWithProtoIds(ctx, AbsoluteBaSyouFn.of(PlayerA, "手札"), ["179001_01A_CH_WT007R_white"]) as GameState
+    ctx = createCardWithProtoIds(ctx, AbsoluteBaSyouFn.of(PlayerA, "ハンガー"), ["179001_01A_CH_WT007R_white"]) as GameState
+    ctx = createCardWithProtoIds(ctx, AbsoluteBaSyouFn.of(PlayerA, "配備エリア"), ["179001_01A_CH_WT007R_white"]) as GameState
     {
         const playEffects = getClientCommand(ctx, PlayerA)
         if (playEffects.length != 0) {
             throw new Error(`playEffects.length != 0`)
         }
     }
-    ctx = setNextTiming(ctx) as GameStateWithFlowMemory
+    ctx = setNextPhase(ctx) as GameState
     {
         const playEffects = getClientCommand(ctx, PlayerA)
         console.log(playEffects)

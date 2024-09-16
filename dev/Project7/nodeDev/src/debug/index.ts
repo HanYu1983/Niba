@@ -1,5 +1,5 @@
 import { testGetPlayCardEffect } from "../game/gameState/getPlayCardEffect";
-import { testGetClientCommand } from "../game/gameStateWithFlowMemory/getClientCommand";
+import { testGetClientCommand } from "../game/gameState/getClientCommand";
 import { testBattleBonus, testFlow1, testFlow2 } from "./testFlow";
 
 export async function tests() {
