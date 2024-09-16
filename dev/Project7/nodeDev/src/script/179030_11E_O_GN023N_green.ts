@@ -10,8 +10,7 @@ import { CardPrototype, DEFAULT_CARD_PROTOTYPE } from "../game/define/CardProtot
 import type { Effect } from "../game/define/Effect";
 import type { Bridge } from "./bridge";
 import type { GlobalEffect } from "../game/define/GlobalEffect";
-import { getCardRollCostLength, type GameState } from "../game/gameState/GameState";
-import { StrBaSyouPair, Tip } from "../game/define/Tip";
+import { type GameState } from "../game/gameState/GameState";
 
 export const prototype: CardPrototype = {
   ...DEFAULT_CARD_PROTOTYPE,

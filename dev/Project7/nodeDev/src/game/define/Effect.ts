@@ -1,6 +1,6 @@
-import { Event } from "./Event";
+import { GameEvent } from "./GameEvent";
 import { PlayerID } from "./PlayerID";
-import { Situation, Text } from "./Text";
+import { Situation, CardText } from "./CardText";
 
 export type DestroyReason1 = {
     id: "通常ダメージ" | "戦闘ダメージ" | "破壊する" | "マイナスの戦闘修正";
@@ -17,12 +17,12 @@ export type EffectReason =
     | ["GameRule", PlayerID | null]
     | ["Destroy", PlayerID, string, DestroyReason]
     | ["Situation", PlayerID, string, Situation | null]
-    | ["Event", string, Event];
+    | ["Event", string, GameEvent];
 
 export type Effect = {
     id?: string,
     reason: EffectReason
-    text: Text
+    text: CardText
     description?: string
     isOption?: boolean
     // TODO: delete
@@ -84,7 +84,7 @@ export const EffectFn = {
         }
     },
 
-    getEvent(ctx: Effect): Event {
+    getEvent(ctx: Effect): GameEvent {
         switch (ctx.reason[0]) {
             case "Event":
                 return ctx.reason[2]

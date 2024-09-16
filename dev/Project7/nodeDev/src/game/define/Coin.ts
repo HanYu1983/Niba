@@ -1,6 +1,6 @@
 import { ToolFn } from "../tool"
 import { PlayerID } from "./PlayerID"
-import { BattleBonus } from "./Text"
+import { BattleBonus } from "./CardText"
 
 export type CoinTitle =
     | ["keyword", string]

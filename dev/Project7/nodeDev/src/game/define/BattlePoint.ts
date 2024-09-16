@@ -1,4 +1,4 @@
-import { BattleBonus } from "./Text";
+import { BattleBonus } from "./CardText";
 
 export type BattlePoint = ["*" | number, "*" | number, "*" | number];
 

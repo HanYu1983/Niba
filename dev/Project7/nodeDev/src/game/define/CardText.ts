@@ -4,7 +4,7 @@ import { LogicTree, LogicTreeFn } from "../../tool/logicTree";
 import { BaSyouKeyword } from "./BaSyou";
 import { CardColor, CardCategory } from "./CardPrototype";
 import { Effect } from "./Effect";
-import { Event } from "./Event";
+import { GameEvent } from "./GameEvent";
 import { GlobalEffect } from "./GlobalEffect";
 import { Phase, SiYouTiming } from "./Timing";
 import { StrBaSyouPair, Tip } from "./Tip";
@@ -125,7 +125,7 @@ export type OnEventTitle =
     | string
     | ["GameEventOnTimingDoAction", Phase, Action]
 
-export type Text = {
+export type CardText = {
     id?: string,
     title: TextTitle
     description?: string
@@ -138,22 +138,22 @@ export type Text = {
 
 export type OnEventFn = ActionTitleFn
 
-export const TextFn = {
-    getCondition(ctx: Text, conditionId: string): Condition {
+export const CardTextFn = {
+    getCondition(ctx: CardText, conditionId: string): Condition {
         if (ctx.conditions?.[conditionId] == null) {
             throw new Error(`condition not found: ${conditionId}`)
         }
         return ctx.conditions[conditionId]
     },
 
-    getLogicTreeAction(ctx: Text, id: number): LogicTreeAction {
+    getLogicTreeAction(ctx: CardText, id: number): LogicTreeAction {
         if (ctx.logicTreeActions?.[id] == null) {
             throw new Error(`logic not found: ${id}`)
         }
         return ctx.logicTreeActions[id]
     },
 
-    getLogicTreeActionConditions(ctx: Text, logicTreeCommand: LogicTreeAction): { [key: string]: Condition }[] {
+    getLogicTreeActionConditions(ctx: CardText, logicTreeCommand: LogicTreeAction): { [key: string]: Condition }[] {
         // return pipe(
         //     ifElse(
         //         always(logicTreeCommand.logicTree == null),
@@ -177,7 +177,7 @@ export const TextFn = {
         })
     },
 
-    getOnEventFn(ctx: Text): OnEventFn {
+    getOnEventFn(ctx: CardText): OnEventFn {
         if (ctx.onEvent == null) {
             return function (a) {
                 return a
@@ -190,11 +190,11 @@ export const TextFn = {
     }
 }
 
-export function getTextsFromTokuSyuKouKa(value: TextSpeicalEffect): Text[] {
+export function getTextsFromTokuSyuKouKa(value: TextSpeicalEffect): CardText[] {
     return [];
 }
 
-const testTexts: Text[] = [
+const testTexts: CardText[] = [
     {
         id: "",
         title: ["TextBattleBonus", [3, 4, 2]]
@@ -240,7 +240,7 @@ const testTexts: Text[] = [
                 ]
             }
         ],
-        onEvent: function _(ctx: any, evt: Event, runtime: any) {
+        onEvent: function _(ctx: any, evt: GameEvent, runtime: any) {
             if (Array.isArray(evt.title)) {
                 if (evt.title[0] == "コインが(x)個以上になった場合") {
                     const [_, x] = evt.title;
@@ -261,7 +261,7 @@ const testTexts: Text[] = [
 
 export type OnSituationFn = (ctx: any, effect: Effect, lib: any) => GlobalEffect[];
 
-export function getOnSituationFn(ctx: Text): OnSituationFn {
+export function getOnSituationFn(ctx: CardText): OnSituationFn {
     if (ctx.onSituation == null) {
         return function (ctx) {
             return []

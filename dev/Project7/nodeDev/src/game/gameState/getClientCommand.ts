@@ -1,6 +1,6 @@
 import { log } from "../../tool/logger";
 import { PhaseFn, SiYouTiming } from "../define/Timing";
-import { getTextsFromTokuSyuKouKa, Text } from "../define/Text";
+import { getTextsFromTokuSyuKouKa, CardText } from "../define/CardText";
 import { PlayerA, PlayerID } from "../define/PlayerID";
 import { AbsoluteBaSyouFn, BaSyouKeywordFn } from "../define/BaSyou";
 import { addCards, createCardWithProtoIds, getCard } from "./CardTableComponent";
@@ -9,9 +9,10 @@ import { getPlayCardEffects } from "./getPlayCardEffect";
 import { getItemIdsByBasyou, getItemPrototype } from "./ItemTableComponent";
 import { loadPrototype } from "../../script";
 import { always, flatten, ifElse, lift, map, pipe } from "ramda";
-import { createGameState, GameState, getCardHasSpeicalEffect } from "./GameState";
+import { createGameState, GameState } from "./GameState";
 import { ToolFn } from "../tool";
 import { getPhase, setNextPhase } from "./PhaseComponent";
+import { getCardHasSpeicalEffect } from "./card";
 
 export function getClientCommand(ctx: GameState, playerId: PlayerID): Effect[] {
     const getPlayCardEffectsF = ifElse(
@@ -70,7 +71,7 @@ export function getClientCommand(ctx: GameState, playerId: PlayerID): Effect[] {
         always([] as Effect[])
     )
 
-    function inTiming(text: Text): boolean {
+    function inTiming(text: CardText): boolean {
         const siYouTiming: SiYouTiming = (() => {
             if (text.title[0] == "使用型") {
                 return text.title[1]

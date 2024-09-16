@@ -5,7 +5,7 @@ import { AbsoluteBaSyouFn } from "../define/BaSyou"
 import { Effect } from "../define/Effect"
 import { GlobalEffect } from "../define/GlobalEffect"
 import { PlayerA, PlayerB } from "../define/PlayerID"
-import { Situation, getTextsFromTokuSyuKouKa, getOnSituationFn, OnSituationFn, Text } from "../define/Text"
+import { Situation, getTextsFromTokuSyuKouKa, getOnSituationFn, OnSituationFn, CardText } from "../define/CardText"
 import { ToolFn } from "../tool"
 import { getCardIds, getCard } from "./CardTableComponent"
 import { GameState } from "./GameState"
@@ -29,7 +29,7 @@ function getSituationEffects(ctx: GameState, situation: Situation | null): Globa
           return [text]
         })
         texts = texts.filter(text => text.title[0] == "自動型" && (text.title[1] == "常駐" || text.title[1] == "起動"))
-        return [item, texts] as [Item, Text[]]
+        return [item, texts] as [Item, CardText[]]
       })
     )
     // 恒常
@@ -48,7 +48,7 @@ function getSituationEffects(ctx: GameState, situation: Situation | null): Globa
           return [text]
         })
         texts = texts.filter(text => text.title[0] == "自動型" && text.title[1] == "恒常")
-        return [item, texts] as [Item, Text[]]
+        return [item, texts] as [Item, CardText[]]
       })
     )
     // Gゾーン常駐
@@ -67,7 +67,7 @@ function getSituationEffects(ctx: GameState, situation: Situation | null): Globa
           return [text]
         })
         texts = texts.filter(text => text.isEnabledWhileG && text.title[0] == "自動型" && (text.title[1] == "常駐" || text.title[1] == "起動"))
-        return [item, texts] as [Item, Text[]]
+        return [item, texts] as [Item, CardText[]]
       })
     )
     // command
@@ -76,10 +76,10 @@ function getSituationEffects(ctx: GameState, situation: Situation | null): Globa
       map(cardId => {
         const proto = getItemPrototype(ctx, cardId)
         if (proto.commandText?.onSituation) {
-          return [getCard(ctx, cardId), [proto.commandText]] as [Item, Text[]]
+          return [getCard(ctx, cardId), [proto.commandText]] as [Item, CardText[]]
         }
       }),
-      infos => infos.filter(v => v) as [Item, Text[]][],
+      infos => infos.filter(v => v) as [Item, CardText[]][],
     )
     const allCardTexts = [...getTextGroup1(), ...getTextGroup2(), ...getTextGroup3(), ...getTextGroup4()]
   
@@ -103,7 +103,7 @@ function getSituationEffects(ctx: GameState, situation: Situation | null): Globa
     })
   
     const addedGes = ges.filter(ge => ge.title[0] == "AddText")
-      .map(ge => [ge.cardIds, ge.title[1]] as [string[], Text])
+      .map(ge => [ge.cardIds, ge.title[1]] as [string[], CardText])
       .flatMap(([itemIds, text]) => {
         return itemIds
           .map(itemId => {

@@ -1,6 +1,6 @@
 import { BattleAreaKeyword } from "./BaSyou";
 import { BattlePoint, BattlePointFn } from "./BattlePoint";
-import { Text } from "./Text";
+import { CardText } from "./CardText";
 
 // card
 export type CardCategory =
@@ -35,8 +35,8 @@ export type CardPrototype = {
   rollCost: RollCostColor[];
   battlePoint: BattlePoint;
   battleArea: BattleAreaKeyword[];
-  texts: Text[];
-  commandText?: Text;
+  texts: CardText[];
+  commandText?: CardText;
 };
 
 export const DEFAULT_CARD_PROTOTYPE: CardPrototype = {

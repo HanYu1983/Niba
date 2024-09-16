@@ -7,11 +7,11 @@ import * as BaSyou from "./BaSyou"
 import * as BattlePoint from "./BattlePoint"
 import * as CardPrototype from "./CardPrototype"
 import * as Effect from "./Effect"
-import * as Event from "./Event"
+import * as GameEvent from "./GameEvent"
 import * as GlobalEffect from "./GlobalEffect"
 import * as PlayerID from "./PlayerID"
 import * as Target from "./Tip"
-import * as Text from "./Text"
+import * as CardText from "./CardText"
 import * as Timing from "./Timing"
 import * as Coin from "./Coin"
 import * as Tip from "./Tip"
@@ -21,11 +21,11 @@ export const DefineFn = {
     ...BattlePoint,
     ...CardPrototype,
     ...Effect,
-    ...Event,
+    ...GameEvent,
     ...GlobalEffect,
     ...PlayerID,
     ...Target,
-    ...Text,
+    ...CardText,
     ...Timing,
     ...Coin,
     ...Tip,

@@ -2,12 +2,14 @@ import { log } from "../../tool/logger";
 import { PlayerA, PlayerB, PlayerIDFn } from "../define/PlayerID";
 import { AbsoluteBaSyou, AbsoluteBaSyouFn } from "../define/BaSyou";
 import { addImmediateEffect, addStackEffect, getEffect } from "../gameState/EffectStackComponent";
-import { triggerEvent, updateDestroyEffect, doPlayerAttack } from "../gameState/GameState";
+import { triggerEvent } from "../gameState/GameState";
 import { checkIsBattle } from "../gameState/IsBattleComponent";
 import { Flow } from "./Flow";
 import { GameStateWithFlowMemory, updateCommand } from "./GameStateWithFlowMemory";
 import { setActiveEffectID, cancelActiveEffectID, doActiveEffect, deleteImmediateEffect } from "./handleEffect";
 import { PhaseFn } from "../define/Timing";
+import { doPlayerAttack } from "../gameState/player";
+import { updateDestroyEffect } from "../gameState/effect";
 
 let idSeq = 0;
 export function applyFlow(

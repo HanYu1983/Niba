@@ -2,10 +2,10 @@ import { RelatedPlayerSideKeyword } from ".";
 import { CardCategory } from "./CardPrototype";
 import { DestroyReason, Effect } from "./Effect";
 import { PlayerID } from "./PlayerID";
-import { BattleBonus } from "./Text";
+import { BattleBonus } from "./CardText";
 import { Phase } from "./Timing";
 
-export type EventTitle =
+export type GameEventTitle =
     | ["GameEventOnTiming", Phase]
     | ["カット終了時", Effect[]]
     | ["場に出た場合"]
@@ -20,8 +20,8 @@ export type EventTitle =
     | ["「ゲイン」の効果で戦闘修正を得る場合", BattleBonus]
     | ["(敵軍)(ユニット)がダメージを受けた場合", PlayerID, CardCategory]
 
-export type Event = {
-    title: EventTitle;
+export type GameEvent = {
+    title: GameEventTitle;
     cardIds?: string[];
     effect?: Effect;
 }

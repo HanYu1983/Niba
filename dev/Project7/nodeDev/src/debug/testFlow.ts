@@ -1,8 +1,9 @@
 import { AbsoluteBaSyouFn } from "../game/define/BaSyou";
 import { PlayerA, PlayerB } from "../game/define/PlayerID";
 import { PhaseFn } from "../game/define/Timing";
+import { getBattleGroupBattlePoint, getBattleGroup } from "../game/gameState/battleGroup";
+import { getCardBattlePoint } from "../game/gameState/card";
 import { addCards, createCardWithProtoIds } from "../game/gameState/CardTableComponent";
-import { getCardBattlePoint, getBattleGroupBattlePoint, getBattleGroup } from "../game/gameState/GameState";
 import { clearGlobalEffects } from "../game/gameState/globalEffects";
 import { applyFlow } from "../game/gameStateWithFlowMemory/applyFlow";
 import { createGameStateWithFlowMemory, GameStateWithFlowMemory, initState } from "../game/gameStateWithFlowMemory/GameStateWithFlowMemory";

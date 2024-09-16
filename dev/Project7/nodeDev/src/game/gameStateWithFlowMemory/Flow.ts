@@ -1,5 +1,5 @@
 import { Effect } from "../define/Effect";
-import { Event } from "../define/Event";
+import { GameEvent } from "../define/GameEvent";
 
 type FlowUpdateCommand = {
     id: "FlowUpdateCommand";
@@ -7,7 +7,7 @@ type FlowUpdateCommand = {
 };
 type FlowTriggerTextEvent = {
     id: "FlowTriggerTextEvent";
-    event: Event;
+    event: GameEvent;
     description?: string;
 };
 type FlowNextTiming = {
