@@ -131,8 +131,9 @@ export type Text = {
     description?: string
     conditions?: { [key: string]: Condition }
     logicTreeActions?: LogicTreeAction[]
-    onEvent?: OnEventTitle,
+    onEvent?: OnEventTitle
     onSituation?: string
+    isEnabledWhileG?: boolean
 }
 
 export type OnEventFn = ActionTitleFn

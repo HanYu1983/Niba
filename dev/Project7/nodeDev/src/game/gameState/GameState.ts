@@ -11,7 +11,7 @@ import { addDestroyEffect, addImmediateEffect, EffectStackComponent } from "./Ef
 import { log } from "../../tool/logger";
 import { Action, ActionFn, ActionTitle, ActionTitleFn, BattleBonus, Condition, ConditionFn, ConditionTitle, ConditionTitleFn, getOnSituationFn, getTextsFromTokuSyuKouKa, LogicTreeActionFn, OnEventFn, OnEventTitle, OnSituationFn, Situation, Text, TextFn, TextSpeicalEffect, TextSpeicalEffectFn } from "../define/Text";
 import { AttackSpeed } from "../define";
-import { PlayerA, PlayerID, PlayerIDFn } from "../define/PlayerID";
+import { PlayerA, PlayerB, PlayerID, PlayerIDFn } from "../define/PlayerID";
 import { AbsoluteBaSyou, BattleAreaKeyword, BaSyouKeyword, AbsoluteBaSyouFn, BaSyouKeywordFn } from "../define/BaSyou";
 import { CardPrototype, CardColor, RollCostColor } from "../define/CardPrototype";
 import { GlobalEffect } from "../define/GlobalEffect";
@@ -105,6 +105,45 @@ export function createGameState(): GameState {
   }
 }
 
+// 觸發事件腳本
+// 在每次事件發生時都要呼叫
+// 起動型技能
+export function triggerEvent(
+  ctx: GameState,
+  evt: Event
+): GameState {
+  const bridge = createBridge()
+  // command
+  const commands = pipe(
+    always(getCardIds(ctx)),
+    map(cardId => {
+      const proto = getItemPrototype(ctx, cardId)
+      if (proto.commandText?.onEvent) {
+        return { cardId: cardId, texts: getCardTexts(ctx, cardId) }
+      }
+    }),
+    infos => infos.filter(v => v) as { cardId: string, texts: Text[] }[],
+  )()
+  return pipe(
+    always(getCardIds(ctx)),
+    map(cardId => ({ cardId: cardId, texts: getCardTexts(ctx, cardId) })),
+    concat(commands),
+    reduce((ctx, { cardId, texts }) => {
+      return pipe(
+        always(texts),
+        reduce((ctx, text) => {
+          const effect: Effect = {
+            id: ToolFn.getUUID("triggerTextEvent"),
+            reason: ["Event", cardId, evt],
+            text: text
+          }
+          return getOnEventTitleFn(text)(ctx, effect, bridge)
+        }, ctx)
+      )()
+    }, ctx)
+  )()
+}
+
 // globalEffects
 function getSituationEffects(ctx: GameState, situation: Situation | null): GlobalEffect[] {
   // 常駐
@@ -145,8 +184,27 @@ function getSituationEffects(ctx: GameState, situation: Situation | null): Globa
       return [item, texts] as [Item, Text[]]
     })
   )
-  // command
+  // Gゾーン常駐
   const getTextGroup3 = pipe(
+    always([AbsoluteBaSyouFn.of(PlayerA, "Gゾーン"), AbsoluteBaSyouFn.of(PlayerB, "Gゾーン")]),
+    map(basyou => getItemIdsByBasyou(ctx, basyou)),
+    flatten,
+    itemIds => itemIds.filter(itemId => isCard(ctx, itemId) || isChip(ctx, itemId)),
+    map(itemId => getItem(ctx, itemId)),
+    map(item => {
+      const proto = getItemPrototype(ctx, item.id)
+      let texts = proto.texts.flatMap(text => {
+        if (text.isEnabledWhileG && text.title[0] == "特殊型") {
+          return getTextsFromTokuSyuKouKa(text.title[1])
+        }
+        return [text]
+      })
+      texts = texts.filter(text => text.isEnabledWhileG && text.title[0] == "自動型" && (text.title[1] == "常駐" || text.title[1] == "起動"))
+      return [item, texts] as [Item, Text[]]
+    })
+  )
+  // command
+  const getTextGroup4 = pipe(
     always(getCardIds(ctx)),
     map(cardId => {
       const proto = getItemPrototype(ctx, cardId)
@@ -156,7 +214,7 @@ function getSituationEffects(ctx: GameState, situation: Situation | null): Globa
     }),
     infos => infos.filter(v => v) as [Item, Text[]][],
   )
-  const allCardTexts = [...getTextGroup1(), ...getTextGroup2(), ...getTextGroup3()]
+  const allCardTexts = [...getTextGroup1(), ...getTextGroup2(), ...getTextGroup3(), ...getTextGroup4()]
 
   const bridge = createBridge()
   const ges = allCardTexts.flatMap(([item, texts]) => {
@@ -596,45 +654,6 @@ export function doPlayerAttack(
   ctx = doDamage(ctx, speedPhase, guardPlayerID, attackPlayerID, guardUnits, attackUnits, guardPower)
   ctx = updateDestroyEffect(ctx);
   return ctx;
-}
-
-// 觸發事件腳本
-// 在每次事件發生時都要呼叫
-// 起動型技能
-export function triggerEvent(
-  ctx: GameState,
-  evt: Event
-): GameState {
-  const bridge = createBridge()
-  // command
-  const commands = pipe(
-    always(getCardIds(ctx)),
-    map(cardId => {
-      const proto = getItemPrototype(ctx, cardId)
-      if (proto.commandText?.onEvent) {
-        return { cardId: cardId, texts: getCardTexts(ctx, cardId) }
-      }
-    }),
-    infos => infos.filter(v => v) as { cardId: string, texts: Text[] }[],
-  )()
-  return pipe(
-    always(getCardIds(ctx)),
-    map(cardId => ({ cardId: cardId, texts: getCardTexts(ctx, cardId) })),
-    //concat(commands),
-    reduce((ctx, { cardId, texts }) => {
-      return pipe(
-        always(texts),
-        reduce((ctx, text) => {
-          const effect: Effect = {
-            id: ToolFn.getUUID("triggerTextEvent"),
-            reason: ["Event", cardId, evt],
-            text: text
-          }
-          return getOnEventTitleFn(text)(ctx, effect, bridge)
-        }, ctx)
-      )()
-    }, ctx)
-  )()
 }
 
 export function updateDestroyEffect(ctx: GameState): GameState {
