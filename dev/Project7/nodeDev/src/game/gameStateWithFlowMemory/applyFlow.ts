@@ -7,7 +7,7 @@ import { checkIsBattle } from "../gameState/IsBattleComponent";
 import { Flow } from "./Flow";
 import { GameStateWithFlowMemory, updateCommand } from "./GameStateWithFlowMemory";
 import { setActiveEffectID, cancelActiveEffectID, doActiveEffect, deleteImmediateEffect } from "./handleEffect";
-import { getNextTiming } from "../define/Timing";
+import { TimingFn } from "../define/Timing";
 
 let idSeq = 0;
 export function applyFlow(
@@ -250,7 +250,7 @@ export function applyFlow(
             }
             // 下一步
             {
-                const nextTiming = getNextTiming(ctx.timing);
+                const nextTiming = TimingFn.getNext(ctx.timing);
                 ctx = {
                     ...ctx,
                     timing: nextTiming,

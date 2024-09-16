@@ -15,7 +15,7 @@ import { PlayerA, PlayerB, PlayerID, PlayerIDFn } from "../define/PlayerID";
 import { AbsoluteBaSyou, BattleAreaKeyword, BaSyouKeyword, AbsoluteBaSyouFn, BaSyouKeywordFn } from "../define/BaSyou";
 import { CardPrototype, CardColor, RollCostColor } from "../define/CardPrototype";
 import { GlobalEffect } from "../define/GlobalEffect";
-import { Timing, TIMING_CHART, TimingFn } from "../define/Timing";
+import { Phase, Timing, TIMING_CHART, TimingFn } from "../define/Timing";
 import { DestroyReason, Effect, EffectFn } from "../define/Effect";
 import { Event, EventTitle } from "../define/Event";
 import { DEFAULT_TABLE } from "../../tool/table";
@@ -59,6 +59,28 @@ export type GameEffect = GameEffectCustom;
 
 export type TimingComponent = {
   timing: Timing;
+}
+
+export function getCurrentTiming(ctx: TimingComponent): Timing {
+  return ctx.timing
+}
+
+export function setNextTiming(ctx: TimingComponent): TimingComponent {
+  return {
+    ...ctx,
+    timing: TimingFn.getNext(ctx.timing),
+  }
+}
+
+export function setTiming(ctx: TimingComponent, timing: Timing): TimingComponent {
+  return {
+    ...ctx,
+    timing: timing,
+  }
+}
+
+export function getCurrentPhase(ctx: TimingComponent): Phase {
+  return TimingFn.getPhase(ctx.timing)
 }
 
 export type PlayerStateComponent = {

@@ -104,20 +104,20 @@ export const TIMING_CHART: Timing[] = [
     [34, ["戦闘フェイズ", "ターン終了時", "効果終了。ターン終了"]],
 ];
 
-export function getNextTiming(timing: Timing): Timing {
-    const nextId = (timing[0] + 1) % TIMING_CHART.length;
-    return TIMING_CHART[nextId];
-}
-
-export function isCanPlayCardInPhase(phase: Phase): boolean {
-    switch (phase[0]) {
-        case "ドローフェイズ":
-            return phase[1] == "フリータイミング";
-        case "リロールフェイズ":
-        case "配備フェイズ":
-            return phase[1] == "フリータイミング" || phase[1] == "フェイズ開始";
-        case "戦闘フェイズ":
-            return phase[2] == "フリータイミング" || phase[2] == "ステップ開始";
+export const PhaseFn = {
+    eq(l: Phase, r: Phase): boolean {
+        return l[0] === r[0] && l[1] === r[1] && l[2] === r[2];
+    },
+    isFreeTiming(phase: Phase): boolean {
+        switch (phase[0]) {
+            case "ドローフェイズ":
+                return phase[1] == "フリータイミング";
+            case "リロールフェイズ":
+            case "配備フェイズ":
+                return phase[1] == "フリータイミング" || phase[1] == "フェイズ開始";
+            case "戦闘フェイズ":
+                return phase[2] == "フリータイミング" || phase[2] == "ステップ開始";
+        }
     }
 }
 
@@ -130,5 +130,12 @@ export const TimingFn = {
     },
     eq(l: Timing, r: Timing): boolean {
         return l[0] == r[0];
+    },
+    getPhase(v: Timing): Phase {
+        return v[1]
+    },
+    getNext(timing: Timing): Timing {
+        const nextId = (timing[0] + 1) % TIMING_CHART.length;
+        return TIMING_CHART[nextId];
     }
 }
