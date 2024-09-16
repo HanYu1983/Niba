@@ -5,6 +5,7 @@ import { getBattleGroupBattlePoint, getBattleGroup } from "../game/gameState/bat
 import { getCardBattlePoint } from "../game/gameState/card";
 import { addCards, createCardWithProtoIds } from "../game/gameState/CardTableComponent";
 import { clearGlobalEffects } from "../game/gameState/globalEffects";
+import { setPhase } from "../game/gameState/PhaseComponent";
 import { setSetGroupLink } from "../game/gameState/SetGroupComponent";
 import { applyFlow } from "../game/gameStateWithFlowMemory/applyFlow";
 import { createGameStateWithFlowMemory, GameStateWithFlowMemory, initState } from "../game/gameStateWithFlowMemory/GameStateWithFlowMemory";
@@ -57,28 +58,39 @@ export function testFlow1() {
   }
 }
 
-export function testFlow2() {
+export async function testFlow2() {
+  await loadPrototype("empty")
   let ctx = createGameStateWithFlowMemory();
-  let table = ctx.table;
   ctx = createCardWithProtoIds(
     ctx,
     AbsoluteBaSyouFn.of(PlayerA, "本国"),
     [
-      "179016_04B_U_WT075C_white",
-      "179030_11E_U_BL208S_blue",
-      "179030_11E_U_BL215R_blue",
-      "179001_01A_CH_WT007R_white",
+      "empty",
+      "empty",
+      "empty",
+      "empty",
+    ]
+  ) as GameStateWithFlowMemory
+  ctx = createCardWithProtoIds(
+    ctx,
+    AbsoluteBaSyouFn.of(PlayerB, "本国"),
+    [
+      "empty",
     ]
   ) as GameStateWithFlowMemory
   ctx = {
     ...ctx,
-    table: table,
     activePlayerID: PlayerA,
+    flowMemory: {
+      ...ctx.flowMemory,
+      state: "playing"
+    }
   };
   console.log("一開始是重置階段");
+  ctx = setPhase(ctx, ["ドローフェイズ", "フェイズ開始"]) as GameStateWithFlowMemory
   if (
-    ctx.phase[1][0] != "リロールフェイズ" ||
-    ctx.phase[1][1] != "フェイズ開始"
+    ctx.phase[0] != "ドローフェイズ" ||
+    ctx.phase[1] != "フェイズ開始"
   ) {
     throw new Error("一開始必須是抽牌階段開始");
   }
@@ -158,9 +170,41 @@ export function testFlow2() {
     }
     console.log(`PlayerB: ${flowsB[0].description}`);
   }
+  console.log(`執行[${flows[0].id}]`)
   ctx = applyFlow(ctx, PlayerA, flows[0]);
   if (ctx.activeEffectID == null) {
     throw new Error("ctx.activeEffectID must exist");
+  }
+  {
+    let flowsB = queryFlow(ctx, PlayerB);
+    if (flowsB.length == 0) {
+      throw new Error("必須有flow");
+    }
+    if (flowsB[0].id != "FlowWaitPlayer") {
+      throw new Error("玩家B必須拿到等待");
+    }
+    console.log(`PlayerB: ${flowsB[0].description}`);
+  }
+  {
+    flows = queryFlow(ctx, PlayerA);
+    const doFlowPassPayCost = flows.find((f) => f.id == "FlowPassPayCost");
+    if (doFlowPassPayCost == null) {
+      throw new Error("必須有是doFlowPassPayCost");
+    }
+    console.log(`執行[${doFlowPassPayCost.id}]`)
+    ctx = applyFlow(ctx, PlayerA, doFlowPassPayCost);
+  }
+  {
+    let flowsB = queryFlow(ctx, PlayerB);
+    if (flowsB.length == 0) {
+      throw new Error("必須有flow");
+    }
+    const doFlowPassPayCost = flows.find((f) => f.id == "FlowPassPayCost");
+    if (doFlowPassPayCost == null) {
+      throw new Error("必須有是doFlowPassPayCost");
+    }
+    console.log(`執行[${doFlowPassPayCost.id}]`)
+    ctx = applyFlow(ctx, PlayerB, doFlowPassPayCost);
   }
   flows = queryFlow(ctx, PlayerA);
   const doEffectFlowA = flows.find((f) => f.id == "FlowDoEffect");
@@ -172,7 +216,7 @@ export function testFlow2() {
     if (flowsB.length == 0) {
       throw new Error("必須有flow");
     }
-    if (flowsB[0].id != "FlowWaitPlayer") {
+    if (flowsB[0].id != "FlowObserveEffect") {
       throw new Error("玩家B必須拿到等待");
     }
     console.log(`PlayerB: ${flowsB[0].description}`);

@@ -17,7 +17,6 @@ type FlowNextTiming = {
 };
 type FlowAddBlock = {
     id: "FlowAddBlock";
-    responsePlayerID: string;
     description?: string;
     block: Effect;
 };
@@ -38,8 +37,8 @@ type FlowCancelActiveEffectID = {
 type FlowDoEffect = {
     id: "FlowDoEffect";
     effectID: string;
-    logicID: number | null,
-    logicSubID: number | null,
+    logicID: number,
+    logicSubID: number,
     description?: string;
 };
 type FlowObserveEffect = {

@@ -7,6 +7,7 @@ export async function tests() {
     return [
         itemGroupTests,
         testFlow1,
+        testFlow2,
         testBattleBonus,
         testGetPlayEffects,
         testGetPlayCardEffect,

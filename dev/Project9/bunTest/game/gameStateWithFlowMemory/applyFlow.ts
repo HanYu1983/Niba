@@ -293,22 +293,7 @@ export function applyFlow(
             return ctx;
         }
         case "FlowAddBlock": {
-            let block = flow.block;
-            block = {
-                ...block,
-                id: ToolFn.getUUID("FlowAddBlock"),
-                reason: ["GameRule", flow.responsePlayerID],
-                description: flow.description || "",
-                //...(block.require ? { require: wrapRequireKey(block.require) } : null),
-            };
-            ctx = addImmediateEffect(ctx, block) as GameStateWithFlowMemory
-            // ctx = {
-            //   ...ctx,
-            //   gameState: {
-            //     ...ctx,
-            //     immediateEffect: [block, ...ctx.immediateEffect],
-            //   },
-            // };
+            ctx = addImmediateEffect(ctx, flow.block) as GameStateWithFlowMemory
             // set hasTriggerEvent
             ctx = {
                 ...ctx,
@@ -467,45 +452,42 @@ export function applyFlow(
             };
         }
         case "FlowHandleRerollPhaseRule": {
-            // const activePlayerID = ctx.activePlayerID;
-            // if (activePlayerID == null) {
-            //   throw new Error("activePlayer not found");
-            // }
-            // // 先更新效果
+            const activePlayerID = ctx.activePlayerID;
+            if (activePlayerID == null) {
+                throw new Error("activePlayer not found");
+            }
+            // 先更新效果
             // ctx = updateEffect(ctx);
             // const myCards = iterateCard(ctx.table)
-            //   // 我控制的
-            //   .filter((card) => {
-            //     return getCardController(ctx, card.id) == activePlayerID;
-            //   })
-            //   // 可以重置的
-            //   .filter((card) => {
-            //     // 檢查是否可以重置
-            //     // 必須在updateEffect之後呼叫才能確保卡片效果有在作用
-            //     return isCanReroll(ctx, null, card.id);
-            //   });
+            //     // 我控制的
+            //     .filter((card) => {
+            //         return getCardController(ctx, card.id) == activePlayerID;
+            //     })
+            //     // 可以重置的
+            //     .filter((card) => {
+            //         // 檢查是否可以重置
+            //         // 必須在updateEffect之後呼叫才能確保卡片效果有在作用
+            //         return isCanReroll(ctx, null, card.id);
+            //     });
             // // 重置控制者為主動玩家的卡
             // ctx = mapCard(ctx, (card) => {
-            //   const isNotMyCard = myCards.map((c) => c.id).includes(card.id) == false;
-            //   if (isNotMyCard) {
-            //     return card;
-            //   }
-            //   return {
-            //     ...card,
-            //     tap: false,
-            //   };
+            //     const isNotMyCard = myCards.map((c) => c.id).includes(card.id) == false;
+            //     if (isNotMyCard) {
+            //         return card;
+            //     }
+            //     return {
+            //         ...card,
+            //         tap: false,
+            //     };
             // });
-            // // set hasTriggerEvent
-            // ctx = {
-            //   ...ctx,
-            //   gameState: {
-            //     ...ctx,
-            //     flowMemory: {
-            //       ...ctx.flowMemory,
-            //       hasTriggerEvent: true,
-            //     },
-            //   },
-            // };
+            // set hasTriggerEvent
+            ctx = {
+                ...ctx,
+                flowMemory: {
+                    ...ctx.flowMemory,
+                    hasTriggerEvent: true,
+                },
+            };
             return ctx;
         }
     }

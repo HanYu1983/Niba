@@ -7,6 +7,7 @@ import { PlayerA, PlayerB, PlayerIDFn } from "../define/PlayerID";
 import { AbsoluteBaSyouFn, BattleAreaKeyword } from "../define/BaSyou";
 import { Effect, EffectFn } from "../define/Effect";
 import { getCommandEffectTips, getPlayerCommands, getPlayerCommandsFilterNoError, getPlayerCommandsFilterNoErrorDistinct } from "./updateCommand";
+import { ToolFn } from "../tool";
 
 export function queryFlow(ctx: GameStateWithFlowMemory, playerID: string): Flow[] {
     if (true) {
@@ -47,6 +48,7 @@ export function queryFlow(ctx: GameStateWithFlowMemory, playerID: string): Flow[
                         {
                             id: "FlowObserveEffect",
                             effectID: activeEffectID,
+                            description: `觀察正在支付的效果: ${currentActiveEffect.description}`
                         },
                     ];
                 }
@@ -54,8 +56,8 @@ export function queryFlow(ctx: GameStateWithFlowMemory, playerID: string): Flow[
                     {
                         id: "FlowDoEffect",
                         effectID: activeEffectID,
-                        logicID: null,
-                        logicSubID: null,
+                        logicID: 0,
+                        logicSubID: 0,
                     },
                 ];
             } else if (isPass || isOpponentPass) {
@@ -65,6 +67,7 @@ export function queryFlow(ctx: GameStateWithFlowMemory, playerID: string): Flow[
                             {
                                 id: "FlowObserveEffect",
                                 effectID: activeEffectID,
+                                description: `觀察正在支付的效果: ${currentActiveEffect.description}`
                             },
                         ];
                     }
@@ -74,6 +77,7 @@ export function queryFlow(ctx: GameStateWithFlowMemory, playerID: string): Flow[
                             {
                                 id: "FlowObserveEffect",
                                 effectID: activeEffectID,
+                                description: `觀察正在支付的效果: ${currentActiveEffect.description}`
                             },
                         ];
                     }
@@ -115,6 +119,7 @@ export function queryFlow(ctx: GameStateWithFlowMemory, playerID: string): Flow[
                 {
                     id: "FlowObserveEffect",
                     effectID: activeEffectID,
+                    description: `觀察正在支付的效果: ${currentActiveEffect.description}`
                 },
             ];
         }
@@ -126,8 +131,8 @@ export function queryFlow(ctx: GameStateWithFlowMemory, playerID: string): Flow[
             {
                 id: "FlowDoEffect",
                 effectID: activeEffectID,
-                logicID: null,
-                logicSubID: null
+                logicID: 0,
+                logicSubID: 0
             },
         ];
     }
@@ -476,14 +481,19 @@ export function queryFlow(ctx: GameStateWithFlowMemory, playerID: string): Flow[
                             return [
                                 {
                                     id: "FlowAddBlock",
-                                    responsePlayerID: ctx.activePlayerID,
                                     description: `${phase[0]}規定效果`,
                                     block: {
-                                        id: "",
-                                        reason: ["GameRule", null],
+                                        id: ToolFn.getUUID("FlowAddBlock"),
+                                        description: `${phase[0]}規定效果`,
+                                        reason: ["GameRule", ctx.activePlayerID],
                                         text: {
-                                            id: "",
-                                            title: []
+                                            id: ToolFn.getUUID("FlowAddBlock_text"),
+                                            title: [],
+                                            logicTreeActions: [
+                                                {
+                                                    actions: []
+                                                }
+                                            ]
                                         }
                                     },
                                 },
@@ -544,12 +554,12 @@ export function queryFlow(ctx: GameStateWithFlowMemory, playerID: string): Flow[
                                         {
                                             id: "FlowAddBlock",
                                             description: `${phase[1]}規定效果`,
-                                            responsePlayerID: playerID,
                                             block: {
-                                                id: "",
+                                                id: ToolFn.getUUID("FlowAddBlock"),
+                                                description: `${phase[1]}規定效果`,
                                                 reason: ["GameRule", playerID],
                                                 text: {
-                                                    id: "",
+                                                    id: ToolFn.getUUID("FlowAddBlock_text"),
                                                     title: [],
                                                     conditions: {
                                                         "去左方的卡": {
