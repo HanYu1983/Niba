@@ -2,9 +2,10 @@ import { AbsoluteBaSyou } from "../define/BaSyou";
 import { TextSpeicalEffect } from "../define/CardText";
 import { getCardHasSpeicalEffect } from "./card";
 import { getCard } from "./CardTableComponent";
-import { GameState, getSetGroupBattlePoint } from "./GameState";
+import { GameState } from "./GameState";
 import { getItemState } from "./ItemStateComponent";
 import { getItemIdsByBasyou, getItemBaSyou } from "./ItemTableComponent";
+import { getSetGroupBattlePoint } from "./setGroup";
 import { getSetGroupRoot, getSetGroupCards } from "./SetGroupComponent";
 
 // battleGroup

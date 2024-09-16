@@ -13,10 +13,12 @@ import { ToolFn } from "../tool"
 import { getCardIdsCanPayRollCost } from "./card"
 import { getCard, setCard } from "./CardTableComponent"
 import { addDestroyEffect } from "./EffectStackComponent"
-import { GameState, getSetGroupBattlePoint, triggerEvent } from "./GameState"
+import { GameState } from "./GameState"
 import { clearGlobalEffects } from "./globalEffects"
 import { getItemStateValues, getItemState, setItemState } from "./ItemStateComponent"
 import { getItemController, addCoinsToCard, isCard, isChip, getItemBaSyou } from "./ItemTableComponent"
+import { getSetGroupBattlePoint } from "./setGroup"
+import { triggerEvent } from "./triggerEvent"
 
 // effect
 export function updateDestroyEffect(ctx: GameState): GameState {

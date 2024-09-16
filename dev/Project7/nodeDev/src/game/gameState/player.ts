@@ -6,11 +6,13 @@ import { DestroyReason } from "../define/Effect";
 import { ItemState } from "../define/ItemState";
 import { PlayerID, PlayerIDFn } from "../define/PlayerID";
 import { isABattleGroup, getBattleGroup, getBattleGroupBattlePoint } from "./battleGroup";
-import { GameState, getSetGroupBattlePoint, triggerEvent } from "./GameState";
+import { GameState } from "./GameState";
 import { getItemState, setItemState } from "./ItemStateComponent";
 import { getItemIdsByBasyou } from "./ItemTableComponent";
 import { GameEvent } from "../define/GameEvent";
 import { updateDestroyEffect } from "./effect";
+import { getSetGroupBattlePoint } from "./setGroup";
+import { triggerEvent } from "./triggerEvent";
 
 // player
 export function isPlayerHasBattleGroup(
