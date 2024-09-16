@@ -4,7 +4,7 @@ import { AbsoluteBaSyou, AbsoluteBaSyouFn } from "../define/BaSyou"
 import { Effect } from "../define/Effect"
 import { PlayerA, PlayerID } from "../define/PlayerID"
 import { addCards, createCardWithProtoIds, getCardOwner } from "./CardTableComponent"
-import { clearGlobalEffects, createGameState, doEffect, GameState, getBattleGroupBattlePoint, getCardBattlePoint, getCardIdsCanPayRollCost, getCardRollCost, getCardRollCostLength, getEffectTips, getGlobalEffects, setGlobalEffects, triggerEvent } from "./GameState"
+import { createGameState, doEffect, GameState, getBattleGroupBattlePoint, getCardBattlePoint, getCardIdsCanPayRollCost, getCardRollCost, getCardRollCostLength, getEffectTips, triggerEvent } from "./GameState"
 import { getItemBaSyou, getItemIds, getItemIdsByBasyou, getItemOwner, getItemPrototype } from "./ItemTableComponent"
 import { loadPrototype } from "../../script"
 import { getTopEffect } from "./EffectStackComponent"
@@ -13,6 +13,7 @@ import { Condition } from "../define/Text"
 import { StrBaSyouPair } from "../define/Tip"
 import { PhaseFn } from "../define/Timing"
 import { getItemState } from "./ItemStateComponent"
+import { clearGlobalEffects, getGlobalEffects, setGlobalEffects } from "./globalEffects"
 
 export function getPlayCardEffects(ctx: GameState, cardId: string): Effect[] {
     const prototype = getItemPrototype(ctx, cardId)
