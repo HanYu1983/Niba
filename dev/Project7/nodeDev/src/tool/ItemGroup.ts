@@ -167,7 +167,6 @@ export function tests() {
         ctx = setItemGroupParent(ctx, "group1", "item1");
         throw new Error("assert-circle-ref should have thrown an exception");
     } catch (e: any) {
-        console.log(e)
         if (e.message !== "Circular reference detected") throw new Error("Incorrect exception message");
     }
 }
