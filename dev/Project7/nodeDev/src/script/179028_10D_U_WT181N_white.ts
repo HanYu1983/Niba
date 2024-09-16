@@ -47,7 +47,7 @@ export const prototype: CardPrototype = {
           const totalCostLength = GameStateFn.getCardRollCostLength(ctx, cardId) - 1
           state = DefineFn.ItemStateFn.setFlag(state, "bonus", totalCostLength)
         }
-        if (event.title[0] == "GameEventOnTiming" && DefineFn.TimingFn.isLast(event.title[1])) {
+        if (event.title[0] == "GameEventOnTiming" && DefineFn.PhaseFn.eq(event.title[1], DefineFn.PhaseFn.getLast())) {
           state = DefineFn.ItemStateFn.removeFlag(state, "bonus")
         }
         ctx = GameStateFn.setItemState(ctx, cardId, state) as GameState

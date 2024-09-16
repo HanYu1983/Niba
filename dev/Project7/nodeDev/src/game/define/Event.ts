@@ -3,10 +3,10 @@ import { CardCategory } from "./CardPrototype";
 import { DestroyReason, Effect } from "./Effect";
 import { PlayerID } from "./PlayerID";
 import { BattleBonus } from "./Text";
-import { Timing } from "./Timing";
+import { Phase } from "./Timing";
 
 export type EventTitle =
-    | ["GameEventOnTiming", Timing]
+    | ["GameEventOnTiming", Phase]
     | ["カット終了時", Effect[]]
     | ["場に出た場合"]
     | ["プレイされて場に出た場合"]

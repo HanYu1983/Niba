@@ -204,11 +204,11 @@ export function queryFlow(ctx: GameStateWithFlowMemory, playerID: string): Flow[
     }
     // 破壞效果，如果效果多於1個，則讓主動玩家選擇順序
     SelectDestroyOrder: {
-        switch (ctx.timing[1][0]) {
+        switch (ctx.phase[1][0]) {
             case "戦闘フェイズ":
-                switch (ctx.timing[1][1]) {
+                switch (ctx.phase[1][1]) {
                     case "ダメージ判定ステップ":
-                        switch (ctx.timing[1][2]) {
+                        switch (ctx.phase[1][2]) {
                             case "規定の効果":
                                 break SelectDestroyOrder;
                         }
@@ -333,14 +333,14 @@ export function queryFlow(ctx: GameStateWithFlowMemory, playerID: string): Flow[
                 return [
                     {
                         id: "FlowCancelPassPhase",
-                        description: `等待對方結束或是取消[${ctx.timing}]結束`,
+                        description: `等待對方結束或是取消[${ctx.phase}]結束`,
                     },
                 ];
             }
             return [
                 {
                     id: "FlowPassPhase",
-                    description: `宣告[${ctx.timing}]結束`,
+                    description: `宣告[${ctx.phase}]結束`,
                 },
                 // 處理指令
                 ...((): Flow[] => {
@@ -409,7 +409,7 @@ export function queryFlow(ctx: GameStateWithFlowMemory, playerID: string): Flow[
             return [{ id: "FlowNextTiming", description: "抽6張" }];
         }
     }
-    const [id, phase] = ctx.timing;
+    const phase = ctx.phase;
     // 處理自由時間，必須雙方都宣告結束才能進行到下一步
     switch (phase[0]) {
         case "ドローフェイズ":
@@ -427,7 +427,8 @@ export function queryFlow(ctx: GameStateWithFlowMemory, playerID: string): Flow[
                 case "帰還ステップ":
                 case "ダメージ判定ステップ":
                     switch (phase[2]) {
-                        case "フリータイミング": {
+                        case "フリータイミング":
+                        case "フリータイミング2": {
                             return handleFreeTiming();
                         }
                     }
@@ -458,7 +459,7 @@ export function queryFlow(ctx: GameStateWithFlowMemory, playerID: string): Flow[
                         {
                             id: "FlowTriggerTextEvent",
                             event: {
-                                title: ["GameEventOnTiming", ctx.timing]
+                                title: ["GameEventOnTiming", ctx.phase]
                             },
                         },
                     ];
@@ -516,7 +517,7 @@ export function queryFlow(ctx: GameStateWithFlowMemory, playerID: string): Flow[
                                 {
                                     id: "FlowTriggerTextEvent",
                                     event: {
-                                        title: ["GameEventOnTiming", ctx.timing]
+                                        title: ["GameEventOnTiming", ctx.phase]
                                     },
                                 },
                             ];
@@ -559,133 +560,6 @@ export function queryFlow(ctx: GameStateWithFlowMemory, playerID: string): Flow[
                                                     ]
                                                 },
                                                 isOption: true,
-
-                                                // contextID: `${phase[1]}規定效果`,
-                                                // require: {
-                                                //   id: "RequireTarget",
-                                                //   targets: {
-                                                //     去左方的卡: {
-                                                //       id: "カード",
-                                                //       value: [],
-                                                //     },
-                                                //     去右方的卡: {
-                                                //       id: "カード",
-                                                //       value: [],
-                                                //     },
-                                                //   },
-                                                //   condition: {
-                                                //     id: "ConditionAnd",
-                                                //     and: [
-                                                //       getConditionMacro({
-                                                //         id: "變量x的場所包含於y",
-                                                //         x: { id: "カード", value: "去左方的卡" },
-                                                //         y: [
-                                                //           {
-                                                //             id: "AbsoluteBaSyou",
-                                                //             value: [playerID, "配備エリア"],
-                                                //           },
-                                                //         ],
-                                                //       }),
-                                                //       getConditionMacro({
-                                                //         id: "變量x的角色包含於y",
-                                                //         x: { id: "カード", value: "去左方的卡" },
-                                                //         y: ["ユニット"],
-                                                //       }),
-                                                //       {
-                                                //         id: "ConditionCompareString",
-                                                //         value: [
-                                                //           {
-                                                //             id: "字串",
-                                                //             value: {
-                                                //               path: [
-                                                //                 { id: "カード", value: "去左方的卡" },
-                                                //                 "的「地形適性」",
-                                                //               ],
-                                                //             },
-                                                //           },
-                                                //           "hasToken",
-                                                //           { id: "字串", value: ["宇宙エリア"] },
-                                                //         ],
-                                                //       },
-                                                //       getConditionMacro({
-                                                //         id: "變量x的場所包含於y",
-                                                //         x: { id: "カード", value: "去右方的卡" },
-                                                //         y: [
-                                                //           {
-                                                //             id: "AbsoluteBaSyou",
-                                                //             value: [playerID, "配備エリア"],
-                                                //           },
-                                                //         ],
-                                                //       }),
-                                                //       getConditionMacro({
-                                                //         id: "變量x的角色包含於y",
-                                                //         x: { id: "カード", value: "去右方的卡" },
-                                                //         y: ["ユニット"],
-                                                //       }),
-                                                //       {
-                                                //         id: "ConditionCompareString",
-                                                //         value: [
-                                                //           {
-                                                //             id: "字串",
-                                                //             value: {
-                                                //               path: [
-                                                //                 { id: "カード", value: "去右方的卡" },
-                                                //                 "的「地形適性」",
-                                                //               ],
-                                                //             },
-                                                //           },
-                                                //           "hasToken",
-                                                //           { id: "字串", value: ["地球エリア"] },
-                                                //         ],
-                                                //       },
-                                                //     ],
-                                                //   },
-                                                //   action: [
-                                                //     {
-                                                //       id: "ActionSetTarget",
-                                                //       source: "去左方的卡",
-                                                //       target: "去左方的卡",
-                                                //     },
-                                                //     {
-                                                //       id: "ActionSetTarget",
-                                                //       source: "去右方的卡",
-                                                //       target: "去右方的卡",
-                                                //     },
-                                                //   ],
-                                                // },
-                                                // feedback: [
-                                                //   {
-                                                //     id: "FeedbackAction",
-                                                //     action: [
-                                                //       {
-                                                //         id: "ActionMoveCardToPosition",
-                                                //         cards: { id: "カード", value: "去左方的卡" },
-                                                //         baSyou: {
-                                                //           id: "場所",
-                                                //           value: [
-                                                //             {
-                                                //               id: "AbsoluteBaSyou",
-                                                //               value: [playerID, "戦闘エリア1"],
-                                                //             },
-                                                //           ],
-                                                //         },
-                                                //       },
-                                                //       {
-                                                //         id: "ActionMoveCardToPosition",
-                                                //         cards: { id: "カード", value: "去右方的卡" },
-                                                //         baSyou: {
-                                                //           id: "場所",
-                                                //           value: [
-                                                //             {
-                                                //               id: "AbsoluteBaSyou",
-                                                //               value: [playerID, "戦闘エリア2"],
-                                                //             },
-                                                //           ],
-                                                //         },
-                                                //       },
-                                                //     ],
-                                                //   },
-                                                // ],
                                             },
                                         },
                                     ];
@@ -736,7 +610,7 @@ export function queryFlow(ctx: GameStateWithFlowMemory, playerID: string): Flow[
                                 {
                                     id: "FlowTriggerTextEvent",
                                     event: {
-                                        title: ["GameEventOnTiming", ctx.timing]
+                                        title: ["GameEventOnTiming", ctx.phase]
                                     },
                                 },
                             ];

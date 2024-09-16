@@ -1,6 +1,6 @@
 import { AbsoluteBaSyouFn } from "../game/define/BaSyou";
 import { PlayerA, PlayerB } from "../game/define/PlayerID";
-import { TimingFn } from "../game/define/Timing";
+import { PhaseFn } from "../game/define/Timing";
 import { addCards, createCardWithProtoIds } from "../game/gameState/CardTableComponent";
 import { getCardBattlePoint, getBattleGroupBattlePoint, getBattleGroup, GlobalCardState, clearGlobalEffects } from "../game/gameState/GameState";
 import { applyFlow } from "../game/gameStateWithFlowMemory/applyFlow";
@@ -17,15 +17,15 @@ export function testFlow1() {
       state: "playing",
     },
   };
-  const firstTiming = ctx.timing;
-  if (TimingFn.getSeqId(firstTiming) != 0) {
+  const firstTiming = ctx.phase;
+  if (PhaseFn.getSeqId(firstTiming) != 0) {
     throw new Error("timingSeq must 0")
   }
   ctx = applyFlow(ctx, PlayerA, {
     id: "FlowNextTiming",
   });
-  const afterTime = ctx.timing;
-  if (TimingFn.getSeqId(afterTime) != TimingFn.getSeqId(firstTiming) + 1) {
+  const afterTime = ctx.phase;
+  if (PhaseFn.getSeqId(afterTime) != PhaseFn.getSeqId(firstTiming) + 1) {
     throw new Error("必須進到下一時間");
   }
   ctx = applyFlow(ctx, PlayerA, {
@@ -74,8 +74,8 @@ export function testFlow2() {
   };
   console.log("一開始是重置階段");
   if (
-    ctx.timing[1][0] != "リロールフェイズ" ||
-    ctx.timing[1][1] != "フェイズ開始"
+    ctx.phase[1][0] != "リロールフェイズ" ||
+    ctx.phase[1][1] != "フェイズ開始"
   ) {
     throw new Error("一開始必須是抽牌階段開始");
   }
@@ -203,7 +203,7 @@ export async function testBattleBonus() {
     ...ctx,
     activePlayerID: PlayerA,
     setGroupLink: { a2: "a1" },
-    timing: [22, ["戦闘フェイズ", "ダメージ判定ステップ", "ステップ開始"]],
+    phase: ["戦闘フェイズ", "ダメージ判定ステップ", "ステップ開始"],
   };
   ctx = addCards(
     ctx,

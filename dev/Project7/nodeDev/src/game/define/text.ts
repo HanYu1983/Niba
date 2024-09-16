@@ -6,7 +6,7 @@ import { CardColor, CardCategory } from "./CardPrototype";
 import { Effect } from "./Effect";
 import { Event } from "./Event";
 import { GlobalEffect } from "./GlobalEffect";
-import { SiYouTiming, Timing } from "./Timing";
+import { Phase, SiYouTiming } from "./Timing";
 import { StrBaSyouPair, Tip } from "./Tip";
 import { PlayerID } from "./PlayerID";
 
@@ -123,7 +123,7 @@ export const LogicTreeActionFn = {
 
 export type OnEventTitle =
     | string
-    | ["GameEventOnTimingDoAction", Timing, Action]
+    | ["GameEventOnTimingDoAction", Phase, Action]
 
 export type Text = {
     id?: string,

@@ -11,7 +11,7 @@ import { getTopEffect } from "./EffectStackComponent"
 import { BattlePointFn } from "../define/BattlePoint"
 import { Condition } from "../define/Text"
 import { StrBaSyouPair } from "../define/Tip"
-import { TimingFn } from "../define/Timing"
+import { PhaseFn } from "../define/Timing"
 import { getItemState } from "./ItemStateComponent"
 
 export function getPlayCardEffects(ctx: GameState, cardId: string): Effect[] {
@@ -251,7 +251,7 @@ async function test179028_10D_U_WT181N_white() {
         if (getItemState(ctx, cardId).flags["bonus"] == null) {
             throw new Error(`getItemState(ctx, cardId).flags["bonus"] == null`)
         }
-        ctx = triggerEvent(ctx, { title: ["GameEventOnTiming", TimingFn.getLast()] })
+        ctx = triggerEvent(ctx, { title: ["GameEventOnTiming", PhaseFn.getLast()] })
         if (getItemState(ctx, cardId).flags["bonus"] != null) {
             throw new Error(`getItemState(ctx, cardId).flags["bonus"] != null`)
         }

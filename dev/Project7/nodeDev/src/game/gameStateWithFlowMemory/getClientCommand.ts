@@ -110,7 +110,7 @@ export function getClientCommand(ctx: GameStateWithFlowMemory, playerId: PlayerI
                 }
                 break;
             case "戦闘フェイズ":
-                if (ctx.timing[1][0] != "戦闘フェイズ") {
+                if (ctx.phase[1][0] != "戦闘フェイズ") {
                     log(
                         "getClientCommand",
                         `ctx.timing[1][0] != "戦闘フェイズ"`,
@@ -123,7 +123,7 @@ export function getClientCommand(ctx: GameStateWithFlowMemory, playerId: PlayerI
             case "防御ステップ":
             case "ダメージ判定ステップ":
             case "帰還ステップ":
-                if (ctx.timing[1][0] != "戦闘フェイズ") {
+                if (ctx.phase[1][0] != "戦闘フェイズ") {
                     log(
                         "getClientCommand",
                         `ctx.timing[1][0] != "戦闘フェイズ"`,
@@ -131,7 +131,7 @@ export function getClientCommand(ctx: GameStateWithFlowMemory, playerId: PlayerI
                     );
                     return false;
                 }
-                if (ctx.timing[1][1] != siYouTiming[0]) {
+                if (ctx.phase[1][1] != siYouTiming[0]) {
                     log(
                         "getClientCommand",
                         `ctx.timing[1][1] != ${siYouTiming[0]}`,
@@ -147,7 +147,7 @@ export function getClientCommand(ctx: GameStateWithFlowMemory, playerId: PlayerI
                 switch (siYouTiming[1]) {
                     case "配備フェイズ":
                     case "戦闘フェイズ":
-                        if (ctx.timing[1][0] != siYouTiming[1]) {
+                        if (ctx.phase[1][0] != siYouTiming[1]) {
                             log(
                                 "getClientCommand",
                                 `ctx.timing[1][0] != ${siYouTiming[1]}`,
@@ -160,7 +160,7 @@ export function getClientCommand(ctx: GameStateWithFlowMemory, playerId: PlayerI
                     case "防御ステップ":
                     case "ダメージ判定ステップ":
                     case "帰還ステップ":
-                        if (ctx.timing[1][0] != "戦闘フェイズ") {
+                        if (ctx.phase[1][0] != "戦闘フェイズ") {
                             log(
                                 "getClientCommand",
                                 `ctx.timing[1][0] != "戦闘フェイズ"`,
@@ -168,7 +168,7 @@ export function getClientCommand(ctx: GameStateWithFlowMemory, playerId: PlayerI
                             );
                             return false;
                         }
-                        if (ctx.timing[1][1] != siYouTiming[1]) {
+                        if (ctx.phase[1][1] != siYouTiming[1]) {
                             log(
                                 "getClientCommand",
                                 `ctx.timing[1][1] != ${siYouTiming[1]}`,

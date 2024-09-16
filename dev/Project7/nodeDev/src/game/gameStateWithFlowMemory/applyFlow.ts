@@ -7,7 +7,7 @@ import { checkIsBattle } from "../gameState/IsBattleComponent";
 import { Flow } from "./Flow";
 import { GameStateWithFlowMemory, updateCommand } from "./GameStateWithFlowMemory";
 import { setActiveEffectID, cancelActiveEffectID, doActiveEffect, deleteImmediateEffect } from "./handleEffect";
-import { TimingFn } from "../define/Timing";
+import { PhaseFn } from "../define/Timing";
 
 let idSeq = 0;
 export function applyFlow(
@@ -208,7 +208,7 @@ export function applyFlow(
                         case "draw6AndConfirm": {
                             ctx = {
                                 ...ctx,
-                                timing: [0, ["リロールフェイズ", "フェイズ開始"]],
+                                phase: ["リロールフェイズ", "フェイズ開始"],
 
                             };
                             ctx = {
@@ -226,9 +226,9 @@ export function applyFlow(
             }
             // 傷判的規定效果一結束就收集所有破壞的卡並建立破壞而廢棄的效果
             if (
-                ctx.timing[1][0] == "戦闘フェイズ" &&
-                ctx.timing[1][1] == "ダメージ判定ステップ" &&
-                ctx.timing[1][2] == "規定の効果"
+                ctx.phase[1][0] == "戦闘フェイズ" &&
+                ctx.phase[1][1] == "ダメージ判定ステップ" &&
+                ctx.phase[1][2] == "規定の効果"
             ) {
                 // 更新所有破壞而廢棄的效果
                 // 若有產生值，在下一步時主動玩家就要拿到決定解決順序的指令
@@ -236,9 +236,9 @@ export function applyFlow(
             }
             // 回合結束時切換主動玩家
             if (
-                ctx.timing[1][0] == "戦闘フェイズ" &&
-                ctx.timing[1][1] == "ターン終了時" &&
-                ctx.timing[1][2] == "効果終了。ターン終了"
+                ctx.phase[1][0] == "戦闘フェイズ" &&
+                ctx.phase[1][1] == "ターン終了時" &&
+                ctx.phase[1][2] == "効果終了。ターン終了"
             ) {
                 if (ctx.activePlayerID == null) {
                     throw new Error("activePlayerID not found");
@@ -250,17 +250,17 @@ export function applyFlow(
             }
             // 下一步
             {
-                const nextTiming = TimingFn.getNext(ctx.timing);
+                const nextTiming = PhaseFn.getNext(ctx.phase);
                 ctx = {
                     ...ctx,
-                    timing: nextTiming,
+                    phase: nextTiming,
                 };
             }
             // p34
             // 戰鬥階段的每個步驟開始時，確認是否交戰中
             if (
-                ctx.timing[1][0] == "戦闘フェイズ" &&
-                ctx.timing[1][2] == "ステップ開始"
+                ctx.phase[1][0] == "戦闘フェイズ" &&
+                ctx.phase[1][2] == "ステップ開始"
             ) {
                 ctx = checkIsBattle(ctx) as GameStateWithFlowMemory
             }

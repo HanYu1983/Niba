@@ -15,7 +15,7 @@ import { PlayerA, PlayerB, PlayerID, PlayerIDFn } from "../define/PlayerID";
 import { AbsoluteBaSyou, BattleAreaKeyword, BaSyouKeyword, AbsoluteBaSyouFn, BaSyouKeywordFn } from "../define/BaSyou";
 import { CardPrototype, CardColor, RollCostColor } from "../define/CardPrototype";
 import { GlobalEffect } from "../define/GlobalEffect";
-import { Phase, Timing, TIMING_CHART, TimingFn } from "../define/Timing";
+import { Phase, PhaseFn } from "../define/Timing";
 import { DestroyReason, Effect, EffectFn } from "../define/Effect";
 import { Event, EventTitle } from "../define/Event";
 import { DEFAULT_TABLE } from "../../tool/table";
@@ -57,30 +57,30 @@ export type GameEffectCustom = {
 
 export type GameEffect = GameEffectCustom;
 
-export type TimingComponent = {
-  timing: Timing;
+export type PhaseComponent = {
+  phase: Phase;
 }
 
-export function getCurrentTiming(ctx: TimingComponent): Timing {
-  return ctx.timing
+export function getCurrentTiming(ctx: PhaseComponent): Phase {
+  return ctx.phase
 }
 
-export function setNextTiming(ctx: TimingComponent): TimingComponent {
+export function setNextTiming(ctx: PhaseComponent): PhaseComponent {
   return {
     ...ctx,
-    timing: TimingFn.getNext(ctx.timing),
+    phase: PhaseFn.getNext(ctx.phase),
   }
 }
 
-export function setTiming(ctx: TimingComponent, timing: Timing): TimingComponent {
+export function setTiming(ctx: PhaseComponent, timing: Phase): PhaseComponent {
   return {
     ...ctx,
-    timing: timing,
+    phase: timing,
   }
 }
 
-export function getCurrentPhase(ctx: TimingComponent): Phase {
-  return TimingFn.getPhase(ctx.timing)
+export function getCurrentPhase(ctx: PhaseComponent): Phase {
+  return ctx.phase
 }
 
 export type PlayerStateComponent = {
@@ -98,7 +98,7 @@ export type GameState = {
   & CardTableComponent
   & EffectStackComponent
   & ItemStateComponent
-  & TimingComponent
+  & PhaseComponent
   & PlayerStateComponent
   & ActivePlayerComponent
   & CoinTableComponent
@@ -112,7 +112,7 @@ export function createGameState(): GameState {
     chips: {},
     chipProtos: {},
     itemStates: {},
-    timing: TIMING_CHART[0],
+    phase: PhaseFn.getAll()[0],
     playerState: [],
     activePlayerID: null,
     commandEffect: [],
@@ -875,7 +875,7 @@ export function getOnEventTitleFn(text: Text): OnEventFn {
       const [_, timing, action] = text.onEvent;
       return function (ctx: GameState, effect: Effect): GameState {
         const event = EffectFn.getEvent(effect)
-        if (event.title[0] == "GameEventOnTiming" && TimingFn.eq(event.title[1], timing)) {
+        if (event.title[0] == "GameEventOnTiming" && PhaseFn.eq(event.title[1], timing)) {
           return getActionTitleFn(action)(ctx, effect, null)
         }
         return ctx
