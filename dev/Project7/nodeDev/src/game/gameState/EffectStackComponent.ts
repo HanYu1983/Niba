@@ -87,7 +87,6 @@ export function clearDestroyEffects(ctx: EffectStackComponent): EffectStackCompo
     ...ctx,
     destroyEffect: []
   }
-  return ctx
 }
 
 export function addDestroyEffect(ctx: EffectStackComponent, block: Effect): EffectStackComponent {

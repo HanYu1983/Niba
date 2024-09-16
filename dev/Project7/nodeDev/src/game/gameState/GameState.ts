@@ -20,7 +20,7 @@ import { DestroyReason, Effect, EffectFn } from "../define/Effect";
 import { Event, EventTitle } from "../define/Event";
 import { DEFAULT_TABLE } from "../../tool/table";
 import { BattlePoint, BattlePointFn } from "../define/BattlePoint";
-import { always, filter, flatten, flow, lift, map, pipe, reduce, repeat, sum } from "ramda";
+import { always, concat, filter, flatten, flow, lift, map, pipe, reduce, repeat, sum } from "ramda";
 import { createBridge } from "../bridge/createBridge";
 import { CoinTableComponent, getCardIdByCoinId, getCoins } from "./CoinTableComponent";
 import { addCoinsToCard, getItem, getItemBaSyou, getItemController, getItemIdsByBasyou, getItemPrototype, isCard, isChip, Item, ItemTableComponent } from "./ItemTableComponent";
@@ -145,7 +145,18 @@ function getSituationEffects(ctx: GameState, situation: Situation | null): Globa
       return [item, texts] as [Item, Text[]]
     })
   )
-  const allCardTexts = [...getTextGroup1(), ...getTextGroup2()]
+  // command
+  const getTextGroup3 = pipe(
+    always(getCardIds(ctx)),
+    map(cardId => {
+      const proto = getItemPrototype(ctx, cardId)
+      if (proto.commandText?.onSituation) {
+        return [getCard(ctx, cardId), [proto.commandText]] as [Item, Text[]]
+      }
+    }),
+    infos => infos.filter(v => v) as [Item, Text[]][],
+  )
+  const allCardTexts = [...getTextGroup1(), ...getTextGroup2(), ...getTextGroup3()]
 
   const bridge = createBridge()
   const ges = allCardTexts.flatMap(([item, texts]) => {
@@ -192,7 +203,7 @@ export function getGlobalEffects(ctx: GameState, situation: Situation | null): G
   const key = JSON.stringify(situation)
   const cached = ctx.globalEffectPool[key]
   if (cached) {
-    //log("getGlobalEffects", "useCache")
+    log("getGlobalEffects", "useCache")
     return cached
   }
   return getSituationEffects(ctx, situation)
@@ -277,6 +288,7 @@ export function getCardBattlePoint(
   ctx: GameState,
   cardID: string
 ): BattlePoint {
+  ctx = clearGlobalEffects(ctx)
   const globalEffects = getGlobalEffects(ctx, null);
   ctx = setGlobalEffects(ctx, null, globalEffects)
   const card = getCard(ctx, cardID);
@@ -505,7 +517,7 @@ function doDamage(
               title: ["破壊された場合", reason],
               cardIds: [cs.id]
             };
-            ctx = triggerTextEvent(ctx, gameEvent)
+            ctx = triggerEvent(ctx, gameEvent)
             return {
               ...cs,
               damage: hp,
@@ -521,7 +533,7 @@ function doDamage(
             title: ["戦闘ダメージを受けた場合"],
             cardIds: [cs.id],
           };
-          ctx = triggerTextEvent(ctx, gameEvent)
+          ctx = triggerEvent(ctx, gameEvent)
           return {
             ...cs,
             damage: nextDamage,
@@ -589,14 +601,26 @@ export function doPlayerAttack(
 // 觸發事件腳本
 // 在每次事件發生時都要呼叫
 // 起動型技能
-export function triggerTextEvent(
+export function triggerEvent(
   ctx: GameState,
   evt: Event
 ): GameState {
   const bridge = createBridge()
+  // command
+  const commands = pipe(
+    always(getCardIds(ctx)),
+    map(cardId => {
+      const proto = getItemPrototype(ctx, cardId)
+      if (proto.commandText?.onEvent) {
+        return { cardId: cardId, texts: getCardTexts(ctx, cardId) }
+      }
+    }),
+    infos => infos.filter(v => v) as { cardId: string, texts: Text[] }[],
+  )()
   return pipe(
     always(getCardIds(ctx)),
     map(cardId => ({ cardId: cardId, texts: getCardTexts(ctx, cardId) })),
+    //concat(commands),
     reduce((ctx, { cardId, texts }) => {
       return pipe(
         always(texts),
@@ -836,19 +860,19 @@ export function makeItemDamage(ctx: GameState, damage: number, target: StrBaSyou
 export function onMoveItem(ctx: GameState, to: AbsoluteBaSyou, [cardId, from]: StrBaSyouPair): GameState {
   ctx = clearGlobalEffects(ctx)
   if (AbsoluteBaSyouFn.getBaSyouKeyword(from) == "手札") {
-    ctx = triggerTextEvent(ctx, {
+    ctx = triggerEvent(ctx, {
       title: ["プレイされて場に出た場合"],
       cardIds: [cardId]
     } as Event)
     if (AbsoluteBaSyouFn.getBaSyouKeyword(to) == "プレイされているカード") {
-      ctx = triggerTextEvent(ctx, {
+      ctx = triggerEvent(ctx, {
         title: ["プレイした場合"],
         cardIds: [cardId]
       } as Event)
     }
   }
   if (BaSyouKeywordFn.isBa(AbsoluteBaSyouFn.getBaSyouKeyword(from)) == false && BaSyouKeywordFn.isBa(AbsoluteBaSyouFn.getBaSyouKeyword(to))) {
-    ctx = triggerTextEvent(ctx, {
+    ctx = triggerEvent(ctx, {
       title: ["場に出た場合"],
       cardIds: [cardId]
     } as Event)

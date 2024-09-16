@@ -9,11 +9,10 @@ import { addCards, createCardWithProtoIds, getCard } from "../gameState/CardTabl
 import { Effect } from "../define/Effect";
 import { getPlayCardEffects } from "../gameState/getPlayCardEffect";
 import { getItemIdsByBasyou, getItemPrototype } from "../gameState/ItemTableComponent";
+import { loadPrototype } from "../../script";
 
 export function getClientCommand(ctx: GameStateWithFlowMemory, playerId: PlayerID): Effect[] {
-    ctx = createCardWithProtoIds(ctx, AbsoluteBaSyouFn.of(playerId, "手札"), ["179001_01A_CH_WT007R_white"]) as GameStateWithFlowMemory
-    ctx = createCardWithProtoIds(ctx, AbsoluteBaSyouFn.of(playerId, "ハンガー"), ["179001_01A_CH_WT007R_white"]) as GameStateWithFlowMemory
-    ctx = createCardWithProtoIds(ctx, AbsoluteBaSyouFn.of(playerId, "配備エリア"), ["179001_01A_CH_WT007R_white"]) as GameStateWithFlowMemory
+
     const playCardEffects = of(AbsoluteBaSyouFn.of(playerId, "手札"), AbsoluteBaSyouFn.of(playerId, "ハンガー"))
         .pipe(concatMap(basyou => getItemIdsByBasyou(ctx, basyou)))
         .pipe(concatMap(cardId => {
@@ -153,7 +152,11 @@ export function getClientCommand(ctx: GameStateWithFlowMemory, playerId: PlayerI
     return ret
 }
 
-export function testGetClientCommand() {
-    const ctx = createGameStateWithFlowMemory()
+export async function testGetClientCommand() {
+    await loadPrototype("179001_01A_CH_WT007R_white")
+    let ctx = createGameStateWithFlowMemory()
+    ctx = createCardWithProtoIds(ctx, AbsoluteBaSyouFn.of(PlayerA, "手札"), ["179001_01A_CH_WT007R_white"]) as GameStateWithFlowMemory
+    ctx = createCardWithProtoIds(ctx, AbsoluteBaSyouFn.of(PlayerA, "ハンガー"), ["179001_01A_CH_WT007R_white"]) as GameStateWithFlowMemory
+    ctx = createCardWithProtoIds(ctx, AbsoluteBaSyouFn.of(PlayerA, "配備エリア"), ["179001_01A_CH_WT007R_white"]) as GameStateWithFlowMemory
     getClientCommand(ctx, PlayerA)
 }

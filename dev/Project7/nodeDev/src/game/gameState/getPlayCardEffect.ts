@@ -4,7 +4,7 @@ import { AbsoluteBaSyou, AbsoluteBaSyouFn } from "../define/BaSyou"
 import { Effect } from "../define/Effect"
 import { PlayerA, PlayerID } from "../define/PlayerID"
 import { addCards, createCardWithProtoIds, getCardOwner } from "./CardTableComponent"
-import { clearGlobalEffects, createGameState, doEffect, GameState, getBattleGroupBattlePoint, getCardBattlePoint, getCardIdsCanPayRollCost, getCardRollCost, getCardRollCostLength, getEffectTips, getGlobalEffects, setGlobalEffects, triggerTextEvent } from "./GameState"
+import { clearGlobalEffects, createGameState, doEffect, GameState, getBattleGroupBattlePoint, getCardBattlePoint, getCardIdsCanPayRollCost, getCardRollCost, getCardRollCostLength, getEffectTips, getGlobalEffects, setGlobalEffects, triggerEvent } from "./GameState"
 import { getItemBaSyou, getItemIds, getItemIdsByBasyou, getItemOwner, getItemPrototype } from "./ItemTableComponent"
 import { loadPrototype } from "../../script"
 import { getTopEffect } from "./EffectStackComponent"
@@ -251,7 +251,7 @@ async function test179028_10D_U_WT181N_white() {
         if (getItemState(ctx, cardId).flags["bonus"] == null) {
             throw new Error(`getItemState(ctx, cardId).flags["bonus"] == null`)
         }
-        ctx = triggerTextEvent(ctx, { title: ["GameEventOnTiming", TimingFn.getLast()] })
+        ctx = triggerEvent(ctx, { title: ["GameEventOnTiming", TimingFn.getLast()] })
         if (getItemState(ctx, cardId).flags["bonus"] != null) {
             throw new Error(`getItemState(ctx, cardId).flags["bonus"] != null`)
         }

@@ -2,7 +2,7 @@ import { log } from "../../tool/logger";
 import { PlayerA, PlayerB, PlayerIDFn } from "../define/PlayerID";
 import { AbsoluteBaSyou, AbsoluteBaSyouFn } from "../define/BaSyou";
 import { addImmediateEffect, addStackEffect, getEffect } from "../gameState/EffectStackComponent";
-import { triggerTextEvent, updateDestroyEffect, doPlayerAttack } from "../gameState/GameState";
+import { triggerEvent, updateDestroyEffect, doPlayerAttack } from "../gameState/GameState";
 import { checkIsBattle } from "../gameState/IsBattleComponent";
 import { Flow } from "./Flow";
 import { GameStateWithFlowMemory, updateCommand } from "./GameStateWithFlowMemory";
@@ -123,7 +123,7 @@ export function applyFlow(
                 log("applyFlow", "已經執行過triggerTextEvent");
                 return ctx;
             }
-            ctx = triggerTextEvent(ctx, flow.event) as GameStateWithFlowMemory;
+            ctx = triggerEvent(ctx, flow.event) as GameStateWithFlowMemory;
             // set hasTriggerEvent
             ctx = {
                 ...ctx,
@@ -405,7 +405,7 @@ export function applyFlow(
             return ctx;
         }
         case "FlowHandleStackEffectFinished": {
-            ctx = triggerTextEvent(ctx, {
+            ctx = triggerEvent(ctx, {
                 title: ["カット終了時", ctx.stackEffectMemory]
             }) as GameStateWithFlowMemory;
             ctx = {

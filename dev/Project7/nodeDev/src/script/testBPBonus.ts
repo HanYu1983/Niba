@@ -14,16 +14,14 @@ export const prototype: CardPrototype = {
   battlePoint: [5, 2, 4],
   texts: [
     {
-      id: "",
       title: ["自動型", "恒常"],
-      onSituation: function _(ctx: GameState, effect: Effect, { GameStateFn }: Bridge): GlobalEffect[] {
+      onSituation: function _(ctx: GameState, effect: Effect, { GameStateFn, ToolFn }: Bridge): GlobalEffect[] {
         const cardIds = GameStateFn.getItemIds(ctx)
-        //const cardId = EffectFn.getCardID(effect)
         const units = cardIds
         return [
           {
             title: ["AddText", {
-              id: "",
+              id: ToolFn.getUUID("testBPBonus"),
               title: ["TextBattleBonus", [3, 3, 3]],
             }],
             cardIds: units
