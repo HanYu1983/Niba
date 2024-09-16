@@ -4,7 +4,7 @@ import { DestroyReason, Effect, EffectFn } from "../define/Effect";
 import { doEffect } from "../gameState/effect";
 import { getEffect, isStackEffect, removeEffect } from "../gameState/EffectStackComponent";
 import { ToolFn } from "../tool";
-import { GameStateWithFlowMemory } from "./GameStateWithFlowMemory";
+import { CommandEffectTip, GameStateWithFlowMemory } from "./GameStateWithFlowMemory";
 import { getItemStateValues } from "../gameState/ItemStateComponent";
 import { getItemController } from "../gameState/ItemTableComponent";
 import { getSetGroupBattlePoint } from "../gameState/setGroup";
@@ -78,7 +78,7 @@ export function clearActiveEffectID(ctx: GameStateWithFlowMemory): GameStateWith
   }
 }
 
-export function doActiveEffect(ctx: GameStateWithFlowMemory, playerID: string, effectID: string): GameStateWithFlowMemory {
+export function doActiveEffect(ctx: GameStateWithFlowMemory, playerID: string, effectID: string, logicId: number, logicSubId: number): GameStateWithFlowMemory {
   log("doEffect", effectID);
   // 判斷這個效果是否正在支付，不然不應該執行
   if (getActiveEffectID(ctx) != effectID) {
@@ -90,9 +90,7 @@ export function doActiveEffect(ctx: GameStateWithFlowMemory, playerID: string, e
     throw new Error("effect not found")
   }
   const isStackEffect_ = isStackEffect(ctx, effectID)
-  const logicId = 0
-  const logicConditionsId = 0
-  ctx = doEffect(ctx, effect, logicId, logicConditionsId) as GameStateWithFlowMemory;
+  ctx = doEffect(ctx, effect, logicId, logicSubId) as GameStateWithFlowMemory;
   // 清除旗標，代表現在沒有正在支付的效果
   ctx = clearActiveEffectID(ctx) as GameStateWithFlowMemory;
   // 將效果移除
@@ -159,10 +157,10 @@ export function addDestroyEffect(ctx: GameStateWithFlowMemory, block: Effect): G
   };
 }
 
-export function setCommandEffects(ctx: GameStateWithFlowMemory, effects: Effect[]): GameStateWithFlowMemory {
+export function setCommandEffects(ctx: GameStateWithFlowMemory, effects: CommandEffectTip[]): GameStateWithFlowMemory {
   return {
     ...ctx,
-    commandEffect: effects
+    commandEffectTips: effects
   };
 }
 

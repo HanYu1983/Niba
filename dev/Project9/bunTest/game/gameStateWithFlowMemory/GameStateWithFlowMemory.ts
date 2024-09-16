@@ -38,6 +38,14 @@ export type HasFlowMemoryComponent = {
     flowMemory: FlowMemoryComponent
 }
 
+export type CommandEffectTip = {
+    id: string,
+    effect: Effect,
+    logicID: number,
+    logicSubID: number,
+    errors: (TargetMissingError | null)[]
+}
+
 export type GameStateWithFlowMemory = {
     // 專門給破壞效果用的用的堆疊
     // 傷害判定結束時，將所有破壞產生的廢棄效果丟到這，重設「決定解決順序」的旗標為真
@@ -46,7 +54,7 @@ export type GameStateWithFlowMemory = {
     // 這個堆疊解決完後，才回復到本來的堆疊的解決程序
     destroyEffect: Effect[];
     // 指令效果
-    commandEffect: Effect[];
+    commandEffectTips: CommandEffectTip[];
     stackEffectMemory: Effect[];
     activeEffectID: string | null;
 } & GameState & HasFlowMemoryComponent;
@@ -57,7 +65,7 @@ export function createGameStateWithFlowMemory(): GameStateWithFlowMemory {
         stackEffectMemory: [],
         activeEffectID: null,
         flowMemory: DEFAULT_FLOW_MEMORY,
-        commandEffect: [],
+        commandEffectTips: [],
         destroyEffect: [],
     }
 }

@@ -52,7 +52,13 @@ export function applyFlow(
             if (flow.effectID == null) {
                 throw new Error("effectID not found");
             }
-            ctx = doActiveEffect(ctx, playerID, flow.effectID);
+            if (flow.logicID == null) {
+                throw new Error("logicID not found");
+            }
+            if (flow.logicSubID == null) {
+                throw new Error("logicSubID not found");
+            }
+            ctx = doActiveEffect(ctx, playerID, flow.effectID, flow.logicID, flow.logicSubID);
             // 執行完效果時自動取消其中一方的結束宣告
             ctx = {
                 ...ctx,

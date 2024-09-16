@@ -6,7 +6,7 @@ import { GameStateWithFlowMemory } from "./GameStateWithFlowMemory";
 import { PlayerA, PlayerB, PlayerIDFn } from "../define/PlayerID";
 import { AbsoluteBaSyouFn, BattleAreaKeyword } from "../define/BaSyou";
 import { Effect, EffectFn } from "../define/Effect";
-import { getPlayerCommands } from "./updateCommand";
+import { getCommandEffectTips, getPlayerCommands, getPlayerCommandsFilterNoError, getPlayerCommandsFilterNoErrorDistinct } from "./updateCommand";
 
 export function queryFlow(ctx: GameStateWithFlowMemory, playerID: string): Flow[] {
     if (true) {
@@ -33,7 +33,6 @@ export function queryFlow(ctx: GameStateWithFlowMemory, playerID: string): Flow[
         if (currentActiveEffect == null) {
             throw new Error("activeEffectID not found");
         }
-
         const enablePayCost = true;
         if (enablePayCost) {
             const controller = EffectFn.getPlayerID(currentActiveEffect);
@@ -55,6 +54,8 @@ export function queryFlow(ctx: GameStateWithFlowMemory, playerID: string): Flow[
                     {
                         id: "FlowDoEffect",
                         effectID: activeEffectID,
+                        logicID: null,
+                        logicSubID: null,
                     },
                 ];
             } else if (isPass || isOpponentPass) {
@@ -125,6 +126,8 @@ export function queryFlow(ctx: GameStateWithFlowMemory, playerID: string): Flow[
             {
                 id: "FlowDoEffect",
                 effectID: activeEffectID,
+                logicID: null,
+                logicSubID: null
             },
         ];
     }
@@ -168,7 +171,7 @@ export function queryFlow(ctx: GameStateWithFlowMemory, playerID: string): Flow[
                 ? [
                     {
                         id: "FlowSetActiveEffectID",
-                        effectID: myEffect[0].id || null,
+                        effectID: myEffect[0].id || "unknown",
                         description: "選擇一個起動效果",
                         tips: myEffect,
                     } as Flow,
@@ -240,7 +243,7 @@ export function queryFlow(ctx: GameStateWithFlowMemory, playerID: string): Flow[
                 }
         }
     }
-    const myCommandList = getPlayerCommands(ctx, playerID)
+    const myCommandList = getPlayerCommandsFilterNoErrorDistinct(ctx, playerID)
     // 處理堆疊效果，從最上方開始處理
     if (ctx.stackEffect.length) {
         // 取得最上方的效果
@@ -293,8 +296,8 @@ export function queryFlow(ctx: GameStateWithFlowMemory, playerID: string): Flow[
                     return [
                         {
                             id: "FlowSetActiveEffectID",
-                            effectID: myCommandList[0].id || "",
-                            tips: myCommandList,
+                            effectID: myCommandList[0].id || "unknown",
+                            tips: myCommandList.map(i => i.effect),
                             description: "你可以切入",
                         },
                     ];
@@ -350,9 +353,9 @@ export function queryFlow(ctx: GameStateWithFlowMemory, playerID: string): Flow[
                     return [
                         {
                             id: "FlowSetActiveEffectID",
-                            effectID: myCommandList[0].id || null,
+                            effectID: myCommandList[0].id || "unknown",
                             description: "選擇一個指令",
-                            tips: myCommandList,
+                            tips: myCommandList.map(i => i.effect),
                         },
                     ];
                 })(),

@@ -1,5 +1,6 @@
 import { Effect } from "../define/Effect";
 import { GameEvent } from "../define/GameEvent";
+import { CommandEffectTip } from "./GameStateWithFlowMemory";
 
 type FlowUpdateCommand = {
     id: "FlowUpdateCommand";
@@ -37,6 +38,8 @@ type FlowCancelActiveEffectID = {
 type FlowDoEffect = {
     id: "FlowDoEffect";
     effectID: string;
+    logicID: number | null,
+    logicSubID: number | null,
     description?: string;
 };
 type FlowObserveEffect = {
