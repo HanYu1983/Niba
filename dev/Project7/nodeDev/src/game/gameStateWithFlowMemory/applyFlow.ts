@@ -1,17 +1,17 @@
 import { log } from "../../tool/logger";
 import { PlayerA, PlayerB, PlayerIDFn } from "../define/PlayerID";
 import { AbsoluteBaSyou, AbsoluteBaSyouFn } from "../define/BaSyou";
-import { addImmediateEffect, addStackEffect, getEffect } from "../gameState/EffectStackComponent";
+import { addImmediateEffect, addStackEffect, clearDestroyEffects, getEffect } from "../gameState/EffectStackComponent";
 import { checkIsBattle } from "../gameState/IsBattleComponent";
 import { Flow } from "./Flow";
 import { GameStateWithFlowMemory, updateCommand } from "./GameStateWithFlowMemory";
-import { setActiveEffectID, cancelActiveEffectID, doActiveEffect, deleteImmediateEffect } from "./handleEffect";
+import { setActiveEffectID, cancelActiveEffectID, doActiveEffect, deleteImmediateEffect } from "./effect";
 import { PhaseFn } from "../define/Timing";
 import { doPlayerAttack } from "../gameState/player";
 import { updateDestroyEffect } from "../gameState/effect";
 import { triggerEvent } from "../gameState/triggerEvent";
+import { ToolFn } from "../tool";
 
-let idSeq = 0;
 export function applyFlow(
     ctx: GameStateWithFlowMemory,
     playerID: string,
@@ -290,7 +290,7 @@ export function applyFlow(
             let block = flow.block;
             block = {
                 ...block,
-                id: `FlowAddBlock_${idSeq++}`,
+                id: ToolFn.getUUID("FlowAddBlock"),
                 reason: ["GameRule", flow.responsePlayerID],
                 description: flow.description || "",
                 //...(block.require ? { require: wrapRequireKey(block.require) } : null),
@@ -446,7 +446,7 @@ export function applyFlow(
                 throw new Error("長度不符合");
             }
             // 移除破壞效果，全部移到堆疊
-            ctx = clearDestroyEffects(ctx)
+            ctx = clearDestroyEffects(ctx) as GameStateWithFlowMemory
             for (const effect of flow.destroyEffect) {
                 ctx = addStackEffect(ctx, effect) as GameStateWithFlowMemory
             }
@@ -503,8 +503,4 @@ export function applyFlow(
         }
     }
     return ctx;
-}
-
-function clearDestroyEffects(ctx: GameStateWithFlowMemory): GameStateWithFlowMemory {
-    throw new Error("Function not implemented.");
 }

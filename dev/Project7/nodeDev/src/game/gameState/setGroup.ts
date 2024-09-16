@@ -8,9 +8,9 @@ import { getSetGroupCards } from "./SetGroupComponent";
 // setgroup
 export function getSetGroupBattlePoint(ctx: GameState, cardId: string): BattleBonus {
     return pipe(
-      always(getSetGroupCards(ctx, cardId)),
-      map(setGroupCardID => getCardBattlePoint(ctx, setGroupCardID)),
-      reduce(BattlePointFn.add, BattlePointFn.getAllStar()),
-      BattlePointFn.toBattleBonus
+        always(getSetGroupCards(ctx, cardId)),
+        map(setGroupCardID => getCardBattlePoint(ctx, setGroupCardID)),
+        reduce(BattlePointFn.add, BattlePointFn.getAllStar()),
+        BattlePointFn.toBattleBonus
     )()
-  }
+}

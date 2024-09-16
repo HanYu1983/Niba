@@ -4,7 +4,7 @@ import { ToolFn } from "../tool";
 
 export type EffectStackComponent = {
   // 指令效果
-  commandEffect: string[];
+  commandEffect: Effect[];
   // 立即效果。玩家必須立即一個一個進行處理
   immediateEffect: string[];
   // 堆疊效果。每次只處理第一個代表top的block
@@ -48,7 +48,6 @@ export function removeEffect(ctx: EffectStackComponent, id: string): EffectStack
     effects: dissoc(id, ctx.effects),
     stackEffect: ctx.stackEffect.filter(_id => _id != id),
     immediateEffect: ctx.immediateEffect.filter(_id => _id != id),
-    commandEffect: ctx.commandEffect.filter(_id => _id != id),
   }
 }
 
@@ -97,5 +96,12 @@ export function addDestroyEffect(ctx: EffectStackComponent, block: Effect): Effe
     ...ctx,
     destroyEffect: [block.id, ...ctx.destroyEffect],
     effects: assoc(block.id, block, ctx.effects),
+  };
+}
+
+export function setCommandEffects(ctx: EffectStackComponent, effects: Effect[]): EffectStackComponent {
+  return {
+    ...ctx,
+    commandEffect: effects
   };
 }

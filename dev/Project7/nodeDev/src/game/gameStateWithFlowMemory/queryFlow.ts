@@ -1,6 +1,6 @@
 import { getEffect, getTopEffect } from "../gameState/EffectStackComponent";
 import { Flow } from "./Flow";
-import { getActiveEffectID } from "./handleEffect";
+import { getActiveEffectID } from "./effect";
 import { getPlayEffects } from "../gameState/getPlayEffects";
 import { GameStateWithFlowMemory } from "./GameStateWithFlowMemory";
 import { PlayerA, PlayerB, PlayerIDFn } from "../define/PlayerID";

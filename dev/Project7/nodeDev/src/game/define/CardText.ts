@@ -76,7 +76,7 @@ export type Condition = {
 export type ConditionTitleFn = (ctx: any, effect: Effect, lib: any) => Tip[];
 
 export const ConditionFn = {
-    getTitleFn(ctx: Condition) {
+    getTitleFn(ctx: Condition): ConditionTitleFn {
         if (typeof ctx.title != "string") {
             throw new Error("condition.title must be string")
         }

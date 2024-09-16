@@ -9,16 +9,25 @@ import * as ItemTableComponent from "./ItemTableComponent"
 import * as card from "./card"
 import * as battleGroup from "./battleGroup"
 import * as effect from "./effect"
+import * as setGroup from "./SetGroupComponent"
+import * as triggerEvent from "./triggerEvent"
+import * as PhaseComponent from "./PhaseComponent"
+import * as ActivePlayerComponent from "./ActivePlayerComponent"
+
 export const GameStateFn = {
     ...GameState,
     ...CardState,
     ...EffectStackComponent,
     ...IsBattleComponent,
     ...SetGroupComponent,
-    //...CardTableComponent,
-    //...CoinTableComponent,
+    ...CardTableComponent,
+    ...CoinTableComponent,
     ...ItemTableComponent,
     ...card,
     ...battleGroup,
-    ...effect
+    ...effect,
+    ...setGroup,
+    ...triggerEvent,
+    ...PhaseComponent,
+    ...ActivePlayerComponent
 }
