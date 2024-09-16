@@ -1,12 +1,12 @@
 import { testGetPlayCardEffect } from "../game/gameState/getPlayCardEffect";
-import { testGetClientCommand } from "../game/gameState/getClientCommand";
+import { testGetPlayEffects } from "../game/gameState/getPlayEffects";
 import { testBattleBonus, testFlow1, testFlow2 } from "./testFlow";
 
 export async function tests() {
     return [
         testFlow1,
         testBattleBonus,
-        testGetClientCommand,
+        testGetPlayEffects,
         testGetPlayCardEffect
     ].reduce((worker, testF) => {
         return worker.then(async () => {

@@ -14,7 +14,7 @@ import { ToolFn } from "../tool";
 import { getPhase, setNextPhase } from "./PhaseComponent";
 import { getCardHasSpeicalEffect } from "./card";
 
-export function getClientCommand(ctx: GameState, playerId: PlayerID): Effect[] {
+export function getPlayEffects(ctx: GameState, playerId: PlayerID): Effect[] {
     const getPlayCardEffectsF = ifElse(
         always(PhaseFn.eq(getPhase(ctx), ["配備フェイズ", "フリータイミング"])),
         pipe(
@@ -187,21 +187,21 @@ export function getClientCommand(ctx: GameState, playerId: PlayerID): Effect[] {
     return [...getPlayCardEffectsF(), ...getPlayCommandF(), ...getPlayTextF()]
 }
 
-export async function testGetClientCommand() {
+export async function testGetPlayEffects() {
     await loadPrototype("179001_01A_CH_WT007R_white")
     let ctx = createGameState()
     ctx = createCardWithProtoIds(ctx, AbsoluteBaSyouFn.of(PlayerA, "手札"), ["179001_01A_CH_WT007R_white"]) as GameState
     ctx = createCardWithProtoIds(ctx, AbsoluteBaSyouFn.of(PlayerA, "ハンガー"), ["179001_01A_CH_WT007R_white"]) as GameState
     ctx = createCardWithProtoIds(ctx, AbsoluteBaSyouFn.of(PlayerA, "配備エリア"), ["179001_01A_CH_WT007R_white"]) as GameState
     {
-        const playEffects = getClientCommand(ctx, PlayerA)
+        const playEffects = getPlayEffects(ctx, PlayerA)
         if (playEffects.length != 0) {
             throw new Error(`playEffects.length != 0`)
         }
     }
     ctx = setNextPhase(ctx) as GameState
     {
-        const playEffects = getClientCommand(ctx, PlayerA)
+        const playEffects = getPlayEffects(ctx, PlayerA)
         console.log(playEffects)
         if (playEffects.length != 0) {
             throw new Error(`playEffects.length != 0`)

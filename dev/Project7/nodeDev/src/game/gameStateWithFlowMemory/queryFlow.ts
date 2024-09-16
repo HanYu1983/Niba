@@ -1,7 +1,7 @@
 import { getEffect, getTopEffect } from "../gameState/EffectStackComponent";
 import { Flow } from "./Flow";
 import { getActiveEffectID } from "./handleEffect";
-import { getClientCommand } from "../gameState/getClientCommand";
+import { getPlayEffects } from "../gameState/getPlayEffects";
 import { GameStateWithFlowMemory } from "./GameStateWithFlowMemory";
 import { PlayerA, PlayerB, PlayerIDFn } from "../define/PlayerID";
 import { AbsoluteBaSyouFn, BattleAreaKeyword } from "../define/BaSyou";
@@ -240,7 +240,7 @@ export function queryFlow(ctx: GameStateWithFlowMemory, playerID: string): Flow[
                 }
         }
     }
-    const myCommandList = getClientCommand(ctx, playerID);
+    const myCommandList = getPlayEffects(ctx, playerID);
     // 處理堆疊效果，從最上方開始處理
     if (ctx.stackEffect.length) {
         // 取得最上方的效果

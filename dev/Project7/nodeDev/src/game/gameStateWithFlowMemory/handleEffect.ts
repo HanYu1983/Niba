@@ -1,7 +1,7 @@
 import { log } from "../../tool/logger";
 import { EffectFn } from "../define/Effect";
+import { doEffect } from "../gameState/effect";
 import { getEffect, isStackEffect, removeEffect } from "../gameState/EffectStackComponent";
-import { doEffect } from "../gameState/GameState";
 import { GameStateWithFlowMemory } from "./GameStateWithFlowMemory";
 
 export function setActiveEffectID(
