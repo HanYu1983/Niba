@@ -86,7 +86,6 @@ export async function testFlow2() {
       state: "playing"
     }
   };
-  console.log("一開始是重置階段");
   ctx = setPhase(ctx, ["ドローフェイズ", "フェイズ開始"]) as GameStateWithFlowMemory
   if (
     ctx.phase[0] != "ドローフェイズ" ||
