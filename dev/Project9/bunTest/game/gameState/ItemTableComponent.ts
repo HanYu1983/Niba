@@ -13,6 +13,8 @@ import { CardPrototype } from "../define/CardPrototype";
 import { getPrototype } from "../../script";
 import { Card, CardFn } from "../define/Card";
 import { Chip, ChipFn } from "../define/Chip";
+import { GlobalEffect } from "../define/GlobalEffect";
+import { getItemState } from "./ItemStateComponent";
 
 export type Item = Card | Coin | Chip;
 
@@ -119,8 +121,8 @@ export function moveItem(ctx: ItemTableComponent, to: AbsoluteBaSyou, sb: StrBaS
     }
     return ctx
   }
-  if (isChip(ctx, itemId)) {
-    throw new Error(`chip can not move: ${itemId}`)
+  if (isCoin(ctx, itemId)) {
+    throw new Error(`coin can not move: ${itemId}`)
   }
   throw new Error(`moveItem unknown item: ${itemId}`)
 }
@@ -166,8 +168,8 @@ export function addCoinsToCard(ctx: ItemTableComponent, target: StrBaSyouPair, c
   const [targetItemId, targetOriginBasyou] = target
   if (isCard(ctx, targetItemId)) {
     const nowBasyou = getItemBaSyou(ctx, targetItemId)
-    if (AbsoluteBaSyouFn.eq(targetOriginBasyou, nowBasyou)) {
-      throw new TargetMissingError("basyou not same")
+    if (AbsoluteBaSyouFn.eq(targetOriginBasyou, nowBasyou) == false) {
+      throw new TargetMissingError(`origin basyou ${AbsoluteBaSyouFn.toString(targetOriginBasyou)}, now ${AbsoluteBaSyouFn.toString(nowBasyou)}`)
     }
     ctx = addCoins(ctx, targetItemId, coins) as ItemTableComponent
     return ctx

@@ -41,10 +41,11 @@ export type ActionTitle =
     | ["(１)ダメージを与える", number]
     | ["(－１／－１／－１)コイン(１)個を乗せる", BattleBonus, number]
     | ["移除卡狀態_旗標", string]
+    | ["AddGlobalEffects", GlobalEffect[]]
 
 export type Action = {
     title: ActionTitle,
-    var?: string
+    var?: string,
 }
 
 export type ActionTitleFn = (ctx: any, effect: Effect, lib: any) => any;
@@ -67,6 +68,7 @@ export type ConditionTitle =
     | ["(戦闘エリア)にいる(敵軍)(ユニット)(１)～(２)枚", BaSyouKeyword[], RelatedPlayerSideKeyword, CardCategory, number, number]
     | ["(交戦中)の(自軍)(ユニット)(１)枚", "交戦中" | "非交戦中" | null, RelatedPlayerSideKeyword, CardCategory, number]
     | ["_自軍_ユニット_１枚", RelatedPlayerSideKeyword, CardCategory, number]
+    | ["このセットグループの_ユニットは", CardCategory]
 
 export type Condition = {
     title: ConditionTitle,

@@ -1,7 +1,7 @@
 import { log } from "../../tool/logger";
 import { PhaseFn, SiYouTiming } from "../define/Timing";
 import { getTextsFromTokuSyuKouKa, CardText } from "../define/CardText";
-import { PlayerA, PlayerID } from "../define/PlayerID";
+import { PlayerA, PlayerB, PlayerID } from "../define/PlayerID";
 import { AbsoluteBaSyouFn, BaSyouKeywordFn } from "../define/BaSyou";
 import { addCards, createCardWithProtoIds, getCard } from "./CardTableComponent";
 import { Effect } from "../define/Effect";
@@ -17,6 +17,7 @@ import { Card } from "../define/Card";
 import { setActivePlayerID } from "./ActivePlayerComponent";
 
 export function getPlayEffects(ctx: GameState, playerId: PlayerID): Effect[] {
+    log("getPlayEffects", "start")
     const getPlayCardEffectsF = ifElse(
         always(PhaseFn.eq(getPhase(ctx), ["配備フェイズ", "フリータイミング"])),
         pipe(
@@ -49,7 +50,7 @@ export function getPlayEffects(ctx: GameState, playerId: PlayerID): Effect[] {
             const proto = getItemPrototype(ctx, card.id)
             return proto.texts.filter(inTiming).map(text => {
                 return {
-                    id: ToolFn.getUUID("getClientCommand"),
+                    id: ToolFn.getUUID("getPlayEffects"),
                     reason: ["PlayText", playerId, cardId, text.id],
                     text: text
                 } as Effect
@@ -95,7 +96,7 @@ export function getPlayEffects(ctx: GameState, playerId: PlayerID): Effect[] {
             case "自軍":
                 if (ctx.activePlayerID != playerId) {
                     log(
-                        "getClientCommand",
+                        "getPlayEffects",
                         `ctx.activePlayerID != ${playerId}`,
                         text.title, text.description
                     );
@@ -105,7 +106,7 @@ export function getPlayEffects(ctx: GameState, playerId: PlayerID): Effect[] {
             case "敵軍":
                 if (ctx.activePlayerID == playerId) {
                     log(
-                        "getClientCommand",
+                        "getPlayEffects",
                         `ctx.activePlayerID == ${playerId}`,
                         text.title, text.description
                     );
@@ -115,7 +116,7 @@ export function getPlayEffects(ctx: GameState, playerId: PlayerID): Effect[] {
             case "戦闘フェイズ":
                 if (ctx.phase[0] != "戦闘フェイズ") {
                     log(
-                        "getClientCommand",
+                        "getPlayEffects",
                         `ctx.timing[0] != "戦闘フェイズ"`,
                         text.title, text.description
                     );
@@ -128,7 +129,7 @@ export function getPlayEffects(ctx: GameState, playerId: PlayerID): Effect[] {
             case "帰還ステップ":
                 if (ctx.phase[0] != "戦闘フェイズ") {
                     log(
-                        "getClientCommand",
+                        "getPlayEffects",
                         `ctx.timing[0] != "戦闘フェイズ"`,
                         text.title, text.description
                     );
@@ -136,7 +137,7 @@ export function getPlayEffects(ctx: GameState, playerId: PlayerID): Effect[] {
                 }
                 if (ctx.phase[1] != siYouTiming[0]) {
                     log(
-                        "getClientCommand",
+                        "getPlayEffects",
                         `ctx.timing[1] != ${siYouTiming[0]}`,
                         text.title, text.description
                     );
@@ -152,7 +153,7 @@ export function getPlayEffects(ctx: GameState, playerId: PlayerID): Effect[] {
                     case "戦闘フェイズ":
                         if (ctx.phase[0] != siYouTiming[1]) {
                             log(
-                                "getClientCommand",
+                                "getPlayEffects",
                                 `ctx.timing[0] != ${siYouTiming[1]}`,
                                 text.title, text.description
                             );
@@ -165,7 +166,7 @@ export function getPlayEffects(ctx: GameState, playerId: PlayerID): Effect[] {
                     case "帰還ステップ":
                         if (ctx.phase[0] != "戦闘フェイズ") {
                             log(
-                                "getClientCommand",
+                                "getPlayEffects",
                                 `ctx.timing[0] != "戦闘フェイズ"`,
                                 text.title, text.description
                             );
@@ -173,7 +174,7 @@ export function getPlayEffects(ctx: GameState, playerId: PlayerID): Effect[] {
                         }
                         if (ctx.phase[1] != siYouTiming[1]) {
                             log(
-                                "getClientCommand",
+                                "getPlayEffects",
                                 `ctx.timing[1] != ${siYouTiming[1]}`,
                                 text.title, text.description
                             );

@@ -10,6 +10,8 @@ import { ToolFn } from "../tool"
 import { getCardIds, getCard } from "./CardTableComponent"
 import { GameState } from "./GameState"
 import { getItemIdsByBasyou, isCard, isChip, getItem, getItemPrototype, Item, getItemController } from "./ItemTableComponent"
+import { getItemStateValues } from "./ItemStateComponent"
+import { ItemStateFn } from "../define/ItemState"
 
 export function getGlobalEffects(ctx: GameState, situation: Situation | null): GlobalEffect[] {
   const key = JSON.stringify(situation)
@@ -130,25 +132,32 @@ function getSituationEffects(ctx: GameState, situation: Situation | null): Globa
     return globalEffects
   })
 
-  const addedGes = ges.filter(ge => ge.title[0] == "AddText")
+  const itemStateGes = getItemStateValues(ctx).flatMap(ItemStateFn.getGlobalEffects)
+
+  const gesLayer1 = [...ges, ...itemStateGes]
+
+  const gesLayer2 = gesLayer1.filter(ge => ge.title[0] == "AddText")
     .map(ge => [ge.cardIds, ge.title[1]] as [string[], CardText])
     .flatMap(([itemIds, text]) => {
       return itemIds
-        .map(itemId => {
+        .flatMap(itemId => {
           const cardController = getItemController(ctx, itemId)
-          const fn = getOnSituationFn(text)
-          const effect: Effect = {
-            id: ToolFn.getUUID("getSituationEffects"),
-            reason: ["Situation", cardController, itemId, situation],
-            text: text
-          }
-          return [fn, effect] as [OnSituationFn, Effect]
+          const texts = text.title[0] == "特殊型" ? getTextsFromTokuSyuKouKa(text.title[1]) : [text]
+          return texts.map(text => {
+            const fn = getOnSituationFn(text)
+            const effect: Effect = {
+              id: ToolFn.getUUID("getSituationEffects"),
+              reason: ["Situation", cardController, itemId, situation],
+              text: text
+            }
+            return { fn: fn, effect: effect }
+          })
         })
-        .flatMap(([fn, effect]) => {
+        .flatMap(({ fn, effect }) => {
           return fn(ctx, effect, bridge)
         })
     })
 
-  return [...ges, ...addedGes]
+  return [...gesLayer1, ...gesLayer2]
 }
 

@@ -14,8 +14,11 @@ import { getCard, setCard } from "./CardTableComponent"
 import { GameState } from "./GameState"
 import { clearGlobalEffects } from "./globalEffects"
 import { getItemStateValues, getItemState, setItemState } from "./ItemStateComponent"
-import { getItemController, addCoinsToCard, isCard, isChip, getItemBaSyou } from "./ItemTableComponent"
+import { getItemController, addCoinsToCard, isCard, isChip, getItemBaSyou, isCoin } from "./ItemTableComponent"
 import { triggerEvent } from "./triggerEvent"
+import { Bridge } from "../../script/bridge"
+import { GlobalEffect } from "../define/GlobalEffect"
+import { ToolFn } from "../tool"
 
 export function doEffect(
   ctx: GameState,
@@ -163,6 +166,36 @@ export function getActionTitleFn(action: Action): ActionTitleFn {
         return ctx
       }
     }
+    case "AddGlobalEffects": {
+      const [_, ges] = action.title
+      const varName = action.var
+      if (varName == null) {
+        throw new Error(`action.var not found: ${action.title[0]}`)
+      }
+      return function (ctx: GameState, effect: Effect): GameState {
+        const cardId = EffectFn.getCardID(effect)
+        let cardState = getItemState(ctx, cardId);
+        const tip = ItemStateFn.getTip(cardState, varName)
+        const tipError = TipFn.checkTipSatisfies(tip)
+        if (tipError) {
+          throw tipError
+        }
+        if (tip.title[0] != "カード") {
+          throw new Error("must カード")
+        }
+        const pairs = TipFn.getSelection(tip) as StrBaSyouPair[]
+        for (const [targetCardId, targetBaSyou] of pairs) {
+          const gesForCard = ges.map(ge => {
+            return {
+              ...ge,
+              cardIds: [targetCardId],
+            }
+          })
+          ctx = setItemGlobalEffectsUntilEndOfTurn(ctx, gesForCard, [targetCardId, targetBaSyou])
+        }
+        return ctx
+      }
+    }
   }
 }
 
@@ -184,6 +217,7 @@ export function getOnEventTitleFn(text: CardText): OnEventFn {
   }
 }
 
+
 export function makeItemDamage(ctx: GameState, damage: number, target: StrBaSyouPair): GameState {
   const [targetItemId, targetOriginBasyou] = target
   if (isCard(ctx, targetItemId) || isChip(ctx, targetItemId)) {
@@ -197,6 +231,24 @@ export function makeItemDamage(ctx: GameState, damage: number, target: StrBaSyou
     return ctx
   }
   throw new Error(`makeItemDamage unknown item: ${targetItemId}`)
+}
+
+export function setItemGlobalEffectsUntilEndOfTurn(ctx: GameState, egs: GlobalEffect[], [itemId, originBasyou]: StrBaSyouPair): GameState {
+  if (isCard(ctx, itemId) || isChip(ctx, itemId)) {
+    const nowBasyou = getItemBaSyou(ctx, itemId)
+    if (AbsoluteBaSyouFn.eq(nowBasyou, originBasyou) == false) {
+      throw new TargetMissingError(`target missing: ${itemId} from ${originBasyou}`)
+    }
+    let cs = getItemState(ctx, itemId)
+    for (const eg of egs) {
+      cs = ItemStateFn.setGlobalEffect(cs, ToolFn.getUUID("setItemGlobalEffectsUntilEndOfTurn"), true, eg)
+    }
+    ctx = setItemState(ctx, itemId, cs) as GameState
+  }
+  if (isCoin(ctx, itemId)) {
+    throw new Error(`coin can not setItemGlobalEffectsUntilEndOfTurn: ${itemId}`)
+  }
+  throw new Error(`setItemGlobalEffectsUntilEndOfTurn unknown item: ${itemId}`)
 }
 
 export function onMoveItem(ctx: GameState, to: AbsoluteBaSyou, [cardId, from]: StrBaSyouPair): GameState {

@@ -56,11 +56,14 @@ export const prototype: CardPrototype = {
                     {
                       actions: [
                         {
-                          title: function _(ctx: GameState, effect: Effect, { DefineFn, GameStateFn }: Bridge): GameState {
+                          title: function _(ctx: GameState, effect: Effect, { DefineFn, GameStateFn, ToolFn }: Bridge): GameState {
                             const cardId = DefineFn.EffectFn.getCardID(effect)
                             if (GameStateFn.isBattle(ctx, cardId, null)) {
                               let cardState = GameStateFn.getItemState(ctx, cardId);
-                              cardState = DefineFn.ItemStateFn.setFlag(cardState, "add bonus", true)
+                              cardState = DefineFn.ItemStateFn.setGlobalEffect(cardState, null, true, {
+                                title: ["AddText", { id: ToolFn.getUUID("179024_03B_U_WT042U_white") , title: ["TextBattleBonus", [1, 1, 1]] }],
+                                cardIds: [cardId]
+                              })
                               ctx = GameStateFn.setItemState(ctx, cardId, cardState) as GameState
                               return ctx
                             }
@@ -81,30 +84,5 @@ export const prototype: CardPrototype = {
         ]
       }
     ],
-    onEvent: ["GameEventOnTimingDoAction", PhaseFn.getLast(), { title: ["移除卡狀態_旗標", "add bonus"] }],
-    // onEvent: function _(ctx: GameState, effect: Effect, { DefineFn, GameStateFn }: Bridge): GameState {
-    //   const event = DefineFn.EffectFn.getEvent(effect)
-    //   const cardId = DefineFn.EffectFn.getCardID(effect)
-    //   if (event.title[0] == "GameEventOnTiming" && event.title[1][0] == 34) {
-    //     let cardState = GameStateFn.getItemState(ctx, cardId);
-    //     cardState = DefineFn.ItemStateFn.removeFlag(cardState, "add bonus")
-    //     ctx = GameStateFn.setItemState(ctx, cardId, cardState) as GameState
-    //     return ctx
-    //   }
-    //   return ctx
-    // }.toString(),
-    onSituation: function _(ctx: GameState, effect: Effect, { DefineFn, GameStateFn }: Bridge): GlobalEffect[] {
-      const cardId = DefineFn.EffectFn.getCardID(effect)
-      const cardState = GameStateFn.getItemState(ctx, cardId)
-      if (cardState.flags["add bonus"]) {
-        return [
-          {
-            title: ["＋x／＋x／＋xを得る", [1, 1, 1]],
-            cardIds: [cardId],
-          }
-        ]
-      }
-      return []
-    }.toString()
   }],
 };

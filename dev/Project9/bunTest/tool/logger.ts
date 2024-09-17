@@ -23,5 +23,5 @@ export const log = (category: string, ...msg: any[]) => {
       return;
     }
   }
-  console.log(`[${category}] [${new Date().toLocaleTimeString()}]`, ...msg);
+  console.log(`[${new Date().toLocaleTimeString()}][${category}]`, ...msg);
 };
