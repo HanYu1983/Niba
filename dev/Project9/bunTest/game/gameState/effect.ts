@@ -174,7 +174,7 @@ export function getActionTitleFn(action: Action): ActionTitleFn {
       }
       return function (ctx: GameState, effect: Effect): GameState {
         const cardId = EffectFn.getCardID(effect)
-        let cardState = getItemState(ctx, cardId);
+        const cardState = getItemState(ctx, cardId);
         const tip = ItemStateFn.getTip(cardState, varName)
         const tipError = TipFn.checkTipSatisfies(tip)
         if (tipError) {
@@ -189,7 +189,7 @@ export function getActionTitleFn(action: Action): ActionTitleFn {
             return {
               ...ge,
               cardIds: [targetCardId],
-            }
+            } as GlobalEffect
           })
           ctx = setItemGlobalEffectsUntilEndOfTurn(ctx, gesForCard, [targetCardId, targetBaSyou])
         }
@@ -244,6 +244,7 @@ export function setItemGlobalEffectsUntilEndOfTurn(ctx: GameState, egs: GlobalEf
       cs = ItemStateFn.setGlobalEffect(cs, ToolFn.getUUID("setItemGlobalEffectsUntilEndOfTurn"), true, eg)
     }
     ctx = setItemState(ctx, itemId, cs) as GameState
+    return ctx
   }
   if (isCoin(ctx, itemId)) {
     throw new Error(`coin can not setItemGlobalEffectsUntilEndOfTurn: ${itemId}`)

@@ -33,9 +33,29 @@ export const prototype: CardPrototype = {
         {
           actions: [
             {
-              title: ["AddGlobalEffects", [{ title: ["AddText", { id: "", title: ["特殊型", ["速攻"]] }], cardIds: [] }]],
-              var: "このセットグループのユニットは",
-            }
+              title: function _(ctx: GameState, effect: Effect, { DefineFn, GameStateFn }: Bridge): GameState {
+                const cardId = DefineFn.EffectFn.getCardID(effect)
+                ctx = GameStateFn.addStackEffect(ctx, {
+                  reason: ["PlayText", DefineFn.EffectFn.getPlayerID(effect), cardId, effect.text.id || "unknown"],
+                  text: {
+                    id: "",
+                    title: [],
+                    logicTreeActions: [
+                      {
+                        actions: [
+                          {
+                            title: ["AddGlobalEffects", [{ title: ["AddText", { id: "", title: ["特殊型", ["速攻"]] }], cardIds: [] }]],
+                            var: "このセットグループのユニットは",
+                          }
+                        ]
+                      }
+                    ]
+                  }
+                }) as GameState
+                return ctx
+              }.toString()
+            },
+
           ]
         }
       ]
