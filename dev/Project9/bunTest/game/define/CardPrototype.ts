@@ -22,7 +22,13 @@ export type CardColor =
   | "紫"
   | "黒"
   | "赤"
-  | "デュアル";
+  //| "デュアル"
+  ;
+export const CardColorFn = {
+  getAll(): CardColor[] {
+    return ["緑", "茶", "青", "白", "紫", "黒", "赤"];
+  }
+}
 
 export type RollCostColor = CardColor | null;
 

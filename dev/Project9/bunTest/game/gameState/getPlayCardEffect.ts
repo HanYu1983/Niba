@@ -17,6 +17,8 @@ import { clearGlobalEffects, getGlobalEffects, setGlobalEffects } from "./global
 import { getCardBattlePoint, getCardRollCostLength } from "./card"
 import { doEffect, getEffectTips } from "./effect"
 import { triggerEvent } from "./triggerEvent"
+import { CardColor, CardColorFn } from "../define/CardPrototype"
+
 
 export function getPlayCardEffects(ctx: GameState, cardId: string): Effect[] {
     const prototype = getItemPrototype(ctx, cardId)
@@ -38,6 +40,9 @@ export function getPlayCardEffects(ctx: GameState, cardId: string): Effect[] {
     const commandConditions: { [key: string]: Condition } = (prototype.category == "コマンド" && prototype.commandText) ? {
         ...prototype.commandText.conditions
     } : {}
+    const rollCostConditions = CardColorFn.getAll()
+        .map(tc => createRollCostRequire(prototype.rollCost.filter(c => c == tc).length, tc))
+        .reduce((ctx, cons) => ({ ...ctx, ...cons }))
     const playCardEffect: Effect = {
         reason: ["PlayCard", playerId, cardId],
         text: {
@@ -46,7 +51,8 @@ export function getPlayCardEffects(ctx: GameState, cardId: string): Effect[] {
             conditions: {
                 ...costConditions,
                 ...characterConditions,
-                ...commandConditions
+                ...commandConditions,
+                ...rollCostConditions
             },
             logicTreeActions: [
                 {
@@ -204,4 +210,23 @@ export function getPlayCardEffects(ctx: GameState, cardId: string): Effect[] {
         ret.push(morePlayCardEffect)
     }
     return ret
+}
+
+function createRollCostRequire(
+    costNum: number,
+    color: CardColor | null
+): { [key: string]: Condition } {
+    return {
+        "unitForSet": {
+            title: function _(ctx: GameState, effect: Effect, { DefineFn, GameStateFn }: Bridge): GameState {
+                // TODO check character can set
+                return ctx
+            }.toString(),
+            actions: [
+                {
+                    title: ["(このカード)を(リロール)する", "このカード", "リロール"]
+                }
+            ]
+        }
+    };
 }
