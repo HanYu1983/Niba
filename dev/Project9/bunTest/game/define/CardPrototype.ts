@@ -34,8 +34,11 @@ export type GSignProperty =
   | "08"
   | "UC"
   | "SEED"
+  | "W"
+  | "閃光のハサウェイ"
+  | "CCA"
 
-export type GSign = [CardColor, GSignProperty]
+export type GSign = [CardColor[], GSignProperty]
 
 export type RollCostColor = CardColor | null;
 
@@ -43,7 +46,7 @@ export type CardPrototype = {
   id?: string;
   title?: string;
   characteristic?: string;
-  color?: CardColor;
+  color?: CardColor,
   gsign?: GSign,
   category?: CardCategory;
   rollCost?: RollCostColor[];

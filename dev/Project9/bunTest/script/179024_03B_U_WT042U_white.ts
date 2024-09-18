@@ -15,7 +15,7 @@ export const prototype: CardPrototype = {
   title: "シェンロンガンダム",
   characteristic: "シェンロン系　MS　専用「張五飛」",
   category: "ユニット",
-  color: "白",
+  gsign: [["白"], "W"],
   rollCost: ["白", null, null, null],
   battlePoint: [5, 0, 4],
   texts: [{

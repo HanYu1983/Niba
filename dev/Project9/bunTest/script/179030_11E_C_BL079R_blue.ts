@@ -13,10 +13,11 @@ import type { Bridge } from "./bridge";
 import { type GameState } from "../game/gameState/GameState";
 
 export const prototype: CardPrototype = {
-  title: "閃光のハサウェイ",
+  title: "キルケーユニット",
   characteristic: "展開　装弾",
   category: "オペレーション",
   color: "青",
+  gsign: [["青"], ]
   rollCost: ["青", null],
   texts: [
     {

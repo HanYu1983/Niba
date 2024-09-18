@@ -13,7 +13,7 @@ export const prototype: CardPrototype = {
   title: "黄昏の魔弾",
   characteristic: "強化",
   category: "コマンド",
-  color: "白",
+  gsign: [["白"], "SEED"],
   rollCost: ["白"],
   texts: [],
   commandText: {

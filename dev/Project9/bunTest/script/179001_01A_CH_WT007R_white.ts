@@ -16,8 +16,7 @@ export const prototype: CardPrototype = {
   title: "キラ・ヤマト",
   characteristic: "男性　子供　CO",
   category: "キャラクター",
-  color: "白",
-  gsign: ["白", "SEED"],
+  gsign: [["白"], "SEED"],
   rollCost: ["白", null, null, null],
   battlePoint: [2, 2, 2],
   texts: [

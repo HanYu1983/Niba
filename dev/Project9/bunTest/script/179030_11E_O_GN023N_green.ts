@@ -17,6 +17,7 @@ export const prototype: CardPrototype = {
   characteristic: "破壊　装弾",
   category: "オペレーション",
   color: "緑",
+  gsign: [["緑"], "CCA"],
   rollCost: ["緑"],
   texts: [
     {

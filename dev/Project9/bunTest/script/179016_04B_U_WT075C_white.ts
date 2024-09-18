@@ -12,7 +12,7 @@ export const prototype: CardPrototype = {
   title: "アストレイ ブルーフレーム セカンドL（ローエングリンランチャー）",
   characteristic: "アストレイ系　ブルーフレーム系　MS　専用「叢雲劾」",
   category: "ユニット",
-  color: "白",
+  gsign: [["白"], "SEED"],
   rollCost: ["白", "白", null, null, null],
   battlePoint: [5, 2, 4],
   texts: [],
