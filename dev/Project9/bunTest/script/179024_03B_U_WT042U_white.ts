@@ -18,7 +18,7 @@ export const prototype: CardPrototype = {
     description: "（自軍ダメージ判定ステップ）〔１〕：このカードは交戦中の場合、ターン終了時まで＋１／＋１／＋１を得る。または、このカードが非交戦中の場合、敵軍ユニット１枚の上に－１／－１／－１コイン１個を乗せる。",
     conditions: {
       "〔１〕": {
-        title: ["〔x〕", 1]
+        title: ["RollColor", null]
       },
       "このカードが非交戦中の場合、敵軍ユニット１枚": {
         title: function _(ctx: GameState, effect: Effect, { DefineFn, GameStateFn }: Bridge): Tip[] {
@@ -27,7 +27,7 @@ export const prototype: CardPrototype = {
             return []
           }
           return GameStateFn.getConditionTitleFn({
-            title: ["(交戦中)の(自軍)(ユニット)(１)枚", null, "敵軍", "ユニット", 1]
+            title: ["_交戦中の_自軍_ユニット_１枚", null, "敵軍", "ユニット", 1]
           }, {})(ctx, effect, null)
         }.toString()
       }
@@ -59,8 +59,8 @@ export const prototype: CardPrototype = {
                               return ctx
                             }
                             return GameStateFn.getActionTitleFn({
-                              title: ["(－１／－１／－１)コイン(１)個を乗せる", [-1, -1, -1], 1],
-                              var: "このカードが非交戦中の場合、敵軍ユニット１枚"
+                              title: ["_－１／－１／－１コイン_１個を乗せる", [-1, -1, -1], 1],
+                              vars: ["このカードが非交戦中の場合、敵軍ユニット１枚"]
                             })(ctx, effect, null)
                           }.toString()
                         }

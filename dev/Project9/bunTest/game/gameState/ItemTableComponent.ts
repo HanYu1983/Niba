@@ -212,3 +212,4 @@ export function getItemPrototype(ctx: ItemTableComponent, itemId: string): CardP
   }
   throw new Error(`getItemPrototype unknown item: ${itemId}`)
 }
+

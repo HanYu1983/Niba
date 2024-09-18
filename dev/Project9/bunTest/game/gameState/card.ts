@@ -2,7 +2,7 @@ import { pipe, always, map, sum } from "ramda"
 import { AbsoluteBaSyouFn, BattleAreaKeyword } from "../define/BaSyou"
 import { BattlePoint, BattlePointFn } from "../define/BattlePoint"
 import { Card } from "../define/Card"
-import { CardColor, GSignProperty, RollCostColor } from "../define/CardPrototype"
+import { CardCategory, CardColor, GSignProperty, RollCostColor } from "../define/CardPrototype"
 import { PlayerID } from "../define/PlayerID"
 import { Situation, BattleBonus, TextSpeicalEffect, TextSpeicalEffectFn, CardText } from "../define/CardText"
 import { getCard } from "./CardTableComponent"
@@ -171,4 +171,15 @@ export function getCardBattleArea(
   }
   const prototype = getItemPrototype(ctx, card.id);
   return prototype.battleArea || [];
+}
+
+export function getCardRuntimeCategory(ctx: GameState, cardId: string): CardCategory {
+  if (AbsoluteBaSyouFn.getBaSyouKeyword(getItemBaSyou(ctx, cardId)) == "Gゾーン") {
+    return "グラフィック"
+  }
+  const category = getItemPrototype(ctx, cardId).category
+  if (category == null) {
+    throw new Error(`card category not found: ${cardId}`)
+  }
+  return category
 }

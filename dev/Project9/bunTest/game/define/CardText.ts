@@ -37,15 +37,18 @@ export const TextSpeicalEffectFn = {
 
 export type ActionTitle =
     | string
-    | ["(このカード)を(リロール)する", "このカード" | StrBaSyouPair[], "ロール" | "リロール"]
-    | ["(１)ダメージを与える", number]
-    | ["(－１／－１／－１)コイン(１)個を乗せる", BattleBonus, number]
+    | ["_ロールする", boolean]
+    | ["_１ダメージを与える", number]
+    | ["_－１／－１／－１コイン_１個を乗せる", BattleBonus, number]
     | ["移除卡狀態_旗標", string]
-    | ["AddGlobalEffects", GlobalEffect[]]
+    | ["ターン終了時まで「速攻」を得る。", GlobalEffect[]]
+    | ["cutIn", Action[]]
+    | ["カード_１枚を引く", number]
+    | ["リロール状態で置き換える"]
 
 export type Action = {
     title: ActionTitle,
-    var?: string,
+    vars?: string[],
 }
 
 export type ActionTitleFn = (ctx: any, effect: Effect, lib: any) => any;
@@ -61,14 +64,15 @@ export const ActionFn = {
 
 export type ConditionTitle =
     | string
-    | ["〔x〕", number]
-    | ["c〔x〕", CardColor, number]
+    | ["RollColor", CardColor | null]
     | ["合計国力〔x〕", number]
-    | ["本来の記述に｢特徴：(装弾)｣を持つ(自軍)(G)(１)枚", string, RelatedPlayerSideKeyword, CardCategory, number]
-    | ["(戦闘エリア)にいる(敵軍)(ユニット)(１)～(２)枚", BaSyouKeyword[], RelatedPlayerSideKeyword, CardCategory, number, number]
-    | ["(交戦中)の(自軍)(ユニット)(１)枚", "交戦中" | "非交戦中" | null, RelatedPlayerSideKeyword, CardCategory, number]
+    | ["_戦闘エリアにいる_敵軍_ユニット_１～_２枚", BaSyouKeyword[], RelatedPlayerSideKeyword, CardCategory, number, number]
+    | ["_交戦中の_自軍_ユニット_１枚", "交戦中" | "非交戦中" | null, RelatedPlayerSideKeyword, CardCategory, number]
     | ["_自軍_ユニット_１枚", RelatedPlayerSideKeyword, CardCategory, number]
     | ["このセットグループの_ユニットは", CardCategory]
+    | ["本来の記述に｢特徴：_装弾｣を持つ_自軍_G_１枚", string, RelatedPlayerSideKeyword, CardCategory, number]
+    | ["_敵軍_ユニットが_戦闘エリアにいる場合", RelatedPlayerSideKeyword, CardCategory, BaSyouKeyword[]]
+    | ["_自軍手札、または自軍ハンガーにある、_６以下の合計国力を持つ_ユニット_１枚を", RelatedPlayerSideKeyword, number, CardCategory, number]
 
 export type Condition = {
     title: ConditionTitle,
@@ -204,11 +208,6 @@ const testTexts: CardText[] = [
     {
         id: "",
         title: ["特殊型", ["サイコミュ", 3]],
-        conditions: {
-            "1": {
-                title: ["c〔x〕", "緑", 3]
-            }
-        },
     },
     {
         id: "",
@@ -219,7 +218,7 @@ const testTexts: CardText[] = [
         title: ["使用型", ["自軍", "戦闘フェイズ"]],
         conditions: {
             "1": {
-                title: ["(戦闘エリア)にいる(敵軍)(ユニット)(１)～(２)枚", ["戦闘エリア2"], "自軍", "ユニット", 1, 2]
+                title: ["_戦闘エリアにいる_敵軍_ユニット_１～_２枚", ["戦闘エリア2"], "自軍", "ユニット", 1, 2]
 
             },
             "2": {
@@ -235,7 +234,7 @@ const testTexts: CardText[] = [
                 actions: [
                     {
                         title: function _(ctx: any, runtime: any, bridge: any): any {
-                            const action: Action = { title: ["(このカード)を(リロール)する", [], "リロール"] }
+                            const action: Action = { title: ["_ロールする", true] }
                             return bridge.getFunctionByAction(action)(ctx, runtime, bridge)
                         }.toString()
                     }

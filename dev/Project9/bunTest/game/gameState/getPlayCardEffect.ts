@@ -18,7 +18,7 @@ export function getPlayCardEffects(ctx: GameState, cardId: string): Effect[] {
             title: ["合計国力〔x〕", cardRollCostLength]
         },
     } : {}
-    const characterConditions: { [key: string]: Condition } = (prototype.category == "キャラクター" || prototype.category == "オペレーション(unit)") ? {
+    const characterConditions: { [key: string]: Condition } = (prototype.category == "キャラクター" || prototype.category == "オペレーション(ユニット)") ? {
         "unitForSet": {
             title: function _(ctx: GameState, effect: Effect, { DefineFn, GameStateFn }: Bridge): GameState {
                 // TODO check character can set
@@ -80,7 +80,7 @@ export function getPlayCardEffects(ctx: GameState, cardId: string): Effect[] {
                                     }) as GameState
                                 }
 
-                                if (prototype.category == "キャラクター" || prototype.category == "オペレーション(unit)") {
+                                if (prototype.category == "キャラクター" || prototype.category == "オペレーション(ユニット)") {
                                     return GameStateFn.addStackEffect(ctx, {
                                         reason: ["場に出る", DefineFn.EffectFn.getPlayerID(effect), DefineFn.EffectFn.getCardID(effect)],
                                         text: {
@@ -213,7 +213,7 @@ function createRollCostRequire(
             }.toString(),
             actions: [
                 {
-                    title: ["(このカード)を(リロール)する", "このカード", "リロール"]
+                    title: ["_ロールする", true],
                 }
             ]
         }

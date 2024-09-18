@@ -26,29 +26,11 @@ export const prototype: CardPrototype = {
         {
           actions: [
             {
-              title: function _(ctx: GameState, effect: Effect, { DefineFn, GameStateFn }: Bridge): GameState {
-                const cardId = DefineFn.EffectFn.getCardID(effect)
-                ctx = GameStateFn.addStackEffect(ctx, {
-                  reason: ["PlayText", DefineFn.EffectFn.getPlayerID(effect), cardId, effect.text.id || "unknown"],
-                  text: {
-                    id: "",
-                    title: [],
-                    logicTreeActions: [
-                      {
-                        actions: [
-                          {
-                            title: ["AddGlobalEffects", [{ title: ["AddText", { id: "", title: ["特殊型", ["速攻"]] }], cardIds: [] }]],
-                            var: "このセットグループのユニットは",
-                          }
-                        ]
-                      }
-                    ]
-                  }
-                }) as GameState
-                return ctx
-              }.toString()
+              title: ["cutIn", [{
+                title: ["ターン終了時まで「速攻」を得る。", [{ title: ["AddText", { id: "", title: ["特殊型", ["速攻"]] }], cardIds: [] }]],
+                vars: ["このセットグループのユニットは"],
+              }]]
             },
-
           ]
         }
       ]
