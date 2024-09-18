@@ -17,9 +17,9 @@ export const prototype: CardPrototype = {
     title: ["使用型", ["自軍", "ダメージ判定ステップ"]],
     description: "（自軍ダメージ判定ステップ）〔１〕：このカードは交戦中の場合、ターン終了時まで＋１／＋１／＋１を得る。または、このカードが非交戦中の場合、敵軍ユニット１枚の上に－１／－１／－１コイン１個を乗せる。",
     conditions: {
-      "〔１〕": {
-        title: ["RollColor", null]
-      },
+      // "〔１〕": {
+      //   title: ["RollColor", null]
+      // },
       "このカードが非交戦中の場合、敵軍ユニット１枚": {
         title: function _(ctx: GameState, effect: Effect, { DefineFn, GameStateFn }: Bridge): Tip[] {
           const cardId = DefineFn.EffectFn.getCardID(effect)

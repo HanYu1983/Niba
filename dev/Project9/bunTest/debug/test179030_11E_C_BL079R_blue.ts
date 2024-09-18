@@ -7,12 +7,12 @@ import { PlayerA, PlayerB } from "../game/define/PlayerID"
 import { PhaseFn } from "../game/define/Timing"
 import { setActivePlayerID } from "../game/gameState/ActivePlayerComponent"
 import { getCardRollCostLength, getCardBattlePoint, getCardHasSpeicalEffect, getCardIdsCanPayRollCost } from "../game/gameState/card"
-import { addCards, createCardWithProtoIds } from "../game/gameState/CardTableComponent"
-import { getEffectTips, doEffect, onMoveItem, checkEffectCanPass as assertEffectCanPass } from "../game/gameState/effect"
+import { addCards, createCardWithProtoIds, getCard } from "../game/gameState/CardTableComponent"
+import { getEffectTips, doEffect, onMoveItem, assertEffectCanPass } from "../game/gameState/effect"
 import { getEffect, getTopEffect, removeEffect } from "../game/gameState/EffectStackComponent"
 import { createGameState, GameState } from "../game/gameState/GameState"
 import { getPlayEffects } from "../game/gameState/getPlayEffects"
-import { getItemBaSyou, getItemIds, getItemIdsByBasyou, moveItem } from "../game/gameState/ItemTableComponent"
+import { getItem, getItemBaSyou, getItemIds, getItemIdsByBasyou, moveItem } from "../game/gameState/ItemTableComponent"
 import { setPhase } from "../game/gameState/PhaseComponent"
 import { loadPrototype } from "../script"
 import { getItemState, setItemState } from "../game/gameState/ItemStateComponent"
@@ -63,11 +63,6 @@ export async function test179030_11E_C_BL079R_blue() {
         cs = ItemStateFn.setTip(cs,
             "自軍ユニット１枚",
             { title: ["カード", [], [[cardC.id, originBasyouC]]] }
-        )
-        // TODO 有些condition不必選擇對象
-        cs = ItemStateFn.setTip(cs,
-            "合計国力〔x〕",
-            { title: ["カード", [], getItemIdsByBasyou(ctx, AbsoluteBaSyouFn.of(PlayerA, "Gゾーン")).map(cardId => [cardId, AbsoluteBaSyouFn.of(PlayerA, "Gゾーン")] as StrBaSyouPair)] }
         )
         cs = ItemStateFn.setTip(cs,
             "敵軍ユニットが戦闘エリアにいる場合",
@@ -121,13 +116,30 @@ export async function test179030_11E_C_BL079R_blue() {
             if (effect.reason[0] != "PlayText") {
                 throw new Error(`effect.reason[0]!="PlayText`)
             }
+
+            console.log("建立效果對象")
+            const cardForRollG: Card = {
+                id: "cardForRollG",
+                protoID: "unit"
+            }
+            ctx = addCards(ctx, AbsoluteBaSyouFn.of(PlayerA, "Gゾーン"), [cardForRollG]) as GameState
+            console.log("選擇對象")
+            let cs = getItemState(ctx, cardA.id)
+            cs = ItemStateFn.setTip(cs,
+                "本来の記述に｢特徴：装弾｣を持つ自軍G１枚",
+                { title: ["カード", [], [[cardForRollG.id, AbsoluteBaSyouFn.of(PlayerA, "Gゾーン")]]] }
+            )
+            ctx = setItemState(ctx, cardA.id, cs) as GameState
+            console.log(`執行效果: ${effect.text.description}`)
             if (getItemIdsByBasyou(ctx, AbsoluteBaSyouFn.of(PlayerA, "本国")).length != 2) {
                 throw new Error(`getItemIdsByBasyou(ctx, AbsoluteBaSyouFn.of(PlayerA, "本国")).length != 2`)
             }
-            console.log(`執行效果: ${effect.text.description}`)
             ctx = doEffect(ctx, effect, 0, 0)
             if (getItemIdsByBasyou(ctx, AbsoluteBaSyouFn.of(PlayerA, "本国")).length != 1) {
                 throw new Error(`getItemIdsByBasyou(ctx, AbsoluteBaSyouFn.of(PlayerA, "本国")).length != 1`)
+            }
+            if (getCard(ctx, cardForRollG.id).isRoll != true) {
+                throw new Error(`getCard(ctx, cardForRollG.id).isRoll != true`)
             }
         } else {
             throw new Error(`ctx.immediateEffect.length`)

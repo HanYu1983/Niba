@@ -24,7 +24,7 @@ import { PlayerIDFn } from "../define/PlayerID"
 import { CommandEffectTip } from "../gameStateWithFlowMemory/GameStateWithFlowMemory"
 import { CardFn } from "../define/Card"
 
-export function checkEffectCanPass(
+export function assertEffectCanPass(
   ctx: GameState,
   effect: Effect,
   logicId: number,
@@ -50,6 +50,9 @@ export function checkEffectCanPass(
     case "PlayCard":
     case "PlayText":
       Object.keys(ltacs).forEach(key => {
+        if (ltacs[key].isNoSelection) {
+          return
+        }
         ItemStateFn.getTip(getItemState(ctx, EffectFn.getCardID(effect)), key)
       })
   }
@@ -61,6 +64,7 @@ export function doEffect(
   logicId: number,
   logicSubId: number,
 ): GameState {
+  assertEffectCanPass(ctx, effect, logicId, logicSubId)
   const ltacs = CardTextFn.getLogicTreeActionConditions(effect.text, CardTextFn.getLogicTreeAction(effect.text, logicId))[logicSubId]
   if (ltacs == null) {
     throw new Error(`ltasc not found: ${logicId}/${logicSubId}`)
@@ -217,16 +221,18 @@ export function getActionTitleFn(action: Action): ActionTitleFn {
       return function (ctx: GameState, effect: Effect): GameState {
         const cardId = EffectFn.getCardID(effect)
         const cardState = getItemState(ctx, cardId);
-        const pairs = varNames == null ? [[cardId, getItemBaSyou(ctx, cardId)] as StrBaSyouPair] : varNames.flatMap(varName => {
-          const tip = ItemStateFn.getTip(cardState, varName)
-          const tipError = TipFn.checkTipSatisfies(tip)
-          if (tipError) throw tipError
-          if (tip.title[0] == "カード") {
-            const targetPairs = TipFn.getSelection(tip) as StrBaSyouPair[]
-            return targetPairs
-          }
-          return []
-        })
+        const pairs = varNames == null ?
+          [[cardId, getItemBaSyou(ctx, cardId)] as StrBaSyouPair] :
+          varNames.flatMap(varName => {
+            const tip = ItemStateFn.getTip(cardState, varName)
+            const tipError = TipFn.checkTipSatisfies(tip)
+            if (tipError) throw tipError
+            if (tip.title[0] == "カード") {
+              const targetPairs = TipFn.getSelection(tip) as StrBaSyouPair[]
+              return targetPairs
+            }
+            return []
+          })
         switch (whatToDo) {
           case "ロール": {
             for (const pair of pairs) {
