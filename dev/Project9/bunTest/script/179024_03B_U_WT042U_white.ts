@@ -13,7 +13,6 @@ import type { StrBaSyouPair, Tip } from "../game/define/Tip";
 
 export const prototype: CardPrototype = {
   gsign: [["白"], "W"],
-  rollCost: ["白", null, null, null],
   texts: [{
     id: "",
     title: ["使用型", ["自軍", "ダメージ判定ステップ"]],

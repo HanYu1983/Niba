@@ -56,5 +56,7 @@ export type CardPrototype = {
   commandText?: CardText;
   originCardId?: string;
   description?: string;
+  isCross?: boolean,
+  rarity?: string,
 };
 

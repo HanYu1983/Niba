@@ -10,6 +10,4 @@ import { CardPrototype } from "../game/define/CardPrototype";
 
 export const prototype: CardPrototype = {
   gsign: [["白"], "SEED"],
-  rollCost: ["白", "白", null, null, null],
-  texts: [],
 };

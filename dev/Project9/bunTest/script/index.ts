@@ -1,5 +1,6 @@
+import { repeat } from "ramda";
 import { BattleAreaKeyword } from "../game/define/BaSyou";
-import { CardCategory, CardPrototype } from "../game/define/CardPrototype";
+import { CardCategory, CardPrototype, RollCostColor } from "../game/define/CardPrototype";
 
 export async function loadPrototype(imgID: string): Promise<CardPrototype> {
   if (_preloadPrototype[imgID]) {
@@ -9,17 +10,18 @@ export async function loadPrototype(imgID: string): Promise<CardPrototype> {
     id: imgID
   }
   if (imgID.split("_").length > 1) {
-    const [prodid, part2, part3, part4] = imgID.split("_")
-    const info_1 = `${part2}/${part3} ${part4}`
+    const [prodid, part2, part3, part4, part5] = imgID.split("_")
+    const info_25 = `${part2}_${part3}_${part4}_${part5}`
     const data = require(`../data/${prodid}.json`).data.find((d: any) => {
-      return d.info_1 == info_1
+      return d.info_25 == info_25
     });
     if (data) {
       console.log(`find origin data: ${data.info_2}`)
       const id = data.id
       const title = data.info_2
       const category = data.info_3
-      const totalRollCost = data.info_4
+      const totalCostLength = data.info_4
+      const colorCostLength = data.info_5
       const gsignProperty = data.info_6
       const bp1 = data.info_7
       const bp2 = data.info_8
@@ -30,6 +32,9 @@ export async function loadPrototype(imgID: string): Promise<CardPrototype> {
       const prod = data.info_16
       const rarity = data.info_17
       const color = data.info_18
+      function parseColors(color: any, colorCostLength: number, totalCostLength: number): (RollCostColor | null)[] {
+        return [...repeat(color, colorCostLength), ...repeat(null, totalCostLength - colorCostLength)]
+      }
       function parseBp(bp: string): "*" | number {
         if (bp == "*") {
           return "*"
@@ -62,14 +67,18 @@ export async function loadPrototype(imgID: string): Promise<CardPrototype> {
         title: title,
         category: categoryMapping[category],
         color: color,
+        rollCost: parseColors(color, colorCostLength, totalCostLength),
         battlePoint: [parseBp(bp1), parseBp(bp2), parseBp(bp3)],
         battleArea: parseArea(area),
-        description: description
+        description: description,
+        isCross: title.indexOf("［†］") != -1,
+        rarity: rarity,
       }
       proto = {
         ...proto,
         ...originData
       }
+      console.log(proto)
     }
   }
   {

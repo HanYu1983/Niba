@@ -14,7 +14,6 @@ import { type GameState } from "../game/gameState/GameState";
 
 export const prototype: CardPrototype = {
   gsign: [["緑"], "CCA"],
-  rollCost: ["緑"],
   texts: [
     {
       id: "",

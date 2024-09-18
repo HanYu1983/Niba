@@ -14,7 +14,6 @@ import { type GameState } from "../game/gameState/GameState";
 
 export const prototype: CardPrototype = {
   gsign: [["青"], "閃光のハサウェイ"],
-  rollCost: ["青", null],
   texts: [
     {
       id: "",

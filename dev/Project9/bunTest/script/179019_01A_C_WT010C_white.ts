@@ -11,7 +11,6 @@ import { GameState } from "../game/gameState/GameState";
 import { Bridge } from "./bridge";
 export const prototype: CardPrototype = {
   gsign: [["白"], "SEED"],
-  rollCost: ["白"],
   commandText: {
     id: "",
     title: ["使用型", ["戦闘フェイズ"]],
