@@ -1,4 +1,4 @@
-import { pipe, always, map, flatten, reduce, repeat, lift } from "ramda"
+import { pipe, always, map, flatten, reduce, repeat, lift, cond } from "ramda"
 import { createBridge } from "../bridge/createBridge"
 import { AbsoluteBaSyouFn, AbsoluteBaSyou, BaSyouKeywordFn, BaSyouKeyword } from "../define/BaSyou"
 import { CardTextFn, ConditionFn, LogicTreeActionFn, Condition, ConditionTitleFn, Action, ActionTitleFn, ActionFn, CardText, OnEventFn } from "../define/CardText"
@@ -50,7 +50,8 @@ export function doEffect(
     case "PlayCard":
     case "PlayText":
       Object.keys(ltacs).forEach(key => {
-        //ItemStateFn.getTip(getItemState(ctx, EffectFn.getCardID(effect)), key)
+        // TODO open it
+        // ItemStateFn.getTip(getItemState(ctx, EffectFn.getCardID(effect)), key)
       })
   }
   const conditionIds = Object.keys(ltacs)
