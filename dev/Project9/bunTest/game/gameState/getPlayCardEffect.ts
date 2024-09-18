@@ -3,11 +3,12 @@ import { Bridge } from "../../script/bridge"
 import { CardColorFn, CardColor } from "../define/CardPrototype"
 import { Condition } from "../define/CardText"
 import { Effect } from "../define/Effect"
-import { StrBaSyouPair } from "../define/Tip"
+import { StrBaSyouPair, Tip } from "../define/Tip"
 import { getCardRollCostLength } from "./card"
 import { GameState } from "./GameState"
 import { getGlobalEffects, setGlobalEffects } from "./globalEffects"
 import { getItemPrototype, getItemOwner } from "./ItemTableComponent"
+import { ToolFn } from "../tool"
 
 export function getPlayCardEffects(ctx: GameState, cardId: string): Effect[] {
     const prototype = getItemPrototype(ctx, cardId)
@@ -20,9 +21,9 @@ export function getPlayCardEffects(ctx: GameState, cardId: string): Effect[] {
     } : {}
     const characterConditions: { [key: string]: Condition } = (prototype.category == "キャラクター" || prototype.category == "オペレーション(ユニット)") ? {
         "unitForSet": {
-            title: function _(ctx: GameState, effect: Effect, { DefineFn, GameStateFn }: Bridge): GameState {
+            title: function _(ctx: GameState, effect: Effect, { DefineFn, GameStateFn }: Bridge): Tip[] {
                 // TODO check character can set
-                return ctx
+                return []
             }.toString()
         }
     } : {}
@@ -33,9 +34,10 @@ export function getPlayCardEffects(ctx: GameState, cardId: string): Effect[] {
         .map(tc => createRollCostRequire((prototype.rollCost || []).filter(c => c == tc).length, tc))
         .reduce((ctx, cons) => ({ ...ctx, ...cons }))
     const playCardEffect: Effect = {
+        id: ToolFn.getUUID("getPlayCardEffects"),
         reason: ["PlayCard", playerId, cardId],
         text: {
-            id: "",
+            id: ToolFn.getUUID("getPlayCardEffects_text"),
             title: [],
             conditions: {
                 ...costConditions,
@@ -82,6 +84,7 @@ export function getPlayCardEffects(ctx: GameState, cardId: string): Effect[] {
 
                                 if (prototype.category == "キャラクター" || prototype.category == "オペレーション(ユニット)") {
                                     return GameStateFn.addStackEffect(ctx, {
+                                        id: "",
                                         reason: ["場に出る", DefineFn.EffectFn.getPlayerID(effect), DefineFn.EffectFn.getCardID(effect)],
                                         text: {
                                             id: "",
@@ -112,11 +115,12 @@ export function getPlayCardEffects(ctx: GameState, cardId: string): Effect[] {
                                     }) as GameState
                                 }
 
-                                if (prototype.category == "コマンド") {
+                                if (prototype.category == "コマンド" && prototype.commandText) {
                                     return GameStateFn.addStackEffect(ctx, {
+                                        id: "",
                                         reason: ["場に出る", DefineFn.EffectFn.getPlayerID(effect), DefineFn.EffectFn.getCardID(effect)],
                                         text: {
-                                            id: "",
+                                            id: prototype.commandText.id,
                                             title: [],
                                             logicTreeActions: [
                                                 {
@@ -130,7 +134,7 @@ export function getPlayCardEffects(ctx: GameState, cardId: string): Effect[] {
                                                                 return ctx
                                                             }.toString()
                                                         },
-                                                        ...prototype.commandText?.logicTreeActions?.[0].actions || []
+                                                        ...prototype.commandText.logicTreeActions?.[0].actions || []
                                                     ]
                                                 }
                                             ]
@@ -207,13 +211,13 @@ function createRollCostRequire(
 ): { [key: string]: Condition } {
     return {
         "unitForSet": {
-            title: function _(ctx: GameState, effect: Effect, { DefineFn, GameStateFn }: Bridge): GameState {
+            title: function _(ctx: GameState, effect: Effect, { DefineFn, GameStateFn }: Bridge): Tip[] {
                 // TODO check character can set
-                return ctx
+                return []
             }.toString(),
             actions: [
                 {
-                    title: ["_ロールする", true],
+                    title: ["_ロールする", "ロール"],
                 }
             ]
         }

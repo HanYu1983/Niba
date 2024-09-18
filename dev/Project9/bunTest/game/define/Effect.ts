@@ -20,7 +20,7 @@ export type EffectReason =
     | ["Event", string, GameEvent];
 
 export type Effect = {
-    id?: string,
+    id: string,
     reason: EffectReason
     text: CardText
     description?: string

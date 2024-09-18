@@ -14,27 +14,37 @@ import { getCard, setCard } from "./CardTableComponent"
 import { GameState } from "./GameState"
 import { clearGlobalEffects } from "./globalEffects"
 import { getItemStateValues, getItemState, setItemState } from "./ItemStateComponent"
-import { getItemController, addCoinsToCard, isCard, isChip, getItemBaSyou, isCoin, getItemPrototype, getItemIdsByBasyou, moveItem } from "./ItemTableComponent"
+import { getItemController, addCoinsToCard, isCard, isChip, getItemBaSyou, isCoin, getItemPrototype, getItemIdsByBasyou, moveItem, setItemIsRoll } from "./ItemTableComponent"
 import { triggerEvent } from "./triggerEvent"
 import { Bridge } from "../../script/bridge"
 import { GlobalEffect } from "../define/GlobalEffect"
 import { ToolFn } from "../tool"
 import { addStackEffect } from "./EffectStackComponent"
 import { PlayerIDFn } from "../define/PlayerID"
+import { CommandEffectTip } from "../gameStateWithFlowMemory/GameStateWithFlowMemory"
 
 export function doEffect(
   ctx: GameState,
   effect: Effect,
   logicId: number,
-  logicConditionsId: number,
+  logicSubId: number,
 ): GameState {
-  const ltacs = CardTextFn.getLogicTreeActionConditions(effect.text, CardTextFn.getLogicTreeAction(effect.text, logicId))[logicConditionsId]
+  const ltacs = CardTextFn.getLogicTreeActionConditions(effect.text, CardTextFn.getLogicTreeAction(effect.text, logicId))[logicSubId]
   if (ltacs == null) {
-    throw new Error(`ltasc not found: ${logicId}/${logicConditionsId}`)
+    throw new Error(`ltasc not found: ${logicId}/${logicSubId}`)
+  }
+  const bridge = createBridge()
+  const errors = Object.values(ltacs)
+    .flatMap(con => getConditionTitleFn(con, {})(ctx, effect, bridge))
+    .map(tip => {
+      return TipFn.checkTipSatisfies(tip)
+    })
+    .filter(v => v)
+  if (errors.length) {
+    throw new Error(errors.map(er => er?.message).join("|"))
   }
   const conditionIds = Object.keys(ltacs)
   const conditions = conditionIds.map(id => CardTextFn.getCondition(effect.text, id))
-  const bridge = createBridge()
   const processCondition = (ctx: GameState) => pipe(
     always(conditions),
     map(condition => ConditionFn.getActionTitleFns(condition, getActionTitleFn)),
@@ -87,8 +97,9 @@ export function getConditionTitleFn(condition: Condition, options: { isPlay?: bo
     case "合計国力〔x〕": {
       const [_, x] = condition.title
       return function (ctx: GameState, effect: Effect): Tip[] {
-        const playerId = EffectFn.getPlayerID(effect)
-        const cardIdsCanPay = getCardIdsCanPayRollCost(ctx, playerId, null)
+        const cardId = EffectFn.getCardID(effect)
+        const cardController = getItemController(ctx, cardId)
+        const cardIdsCanPay = getCardIdsCanPayRollCost(ctx, cardController, null)
         return [
           {
             title: ["合計国力〔x〕", cardIdsCanPay],
@@ -100,7 +111,7 @@ export function getConditionTitleFn(condition: Condition, options: { isPlay?: bo
     case "本来の記述に｢特徴：_装弾｣を持つ_自軍_G_１枚": {
       const [_, targetChar, side, category, count] = condition.title
       return function (ctx: GameState, effect: Effect): Tip[] {
-        const cardId = EffectFn.getPlayerID(effect)
+        const cardId = EffectFn.getCardID(effect)
         const playerId = getItemController(ctx, cardId);
         if (getItemPrototype(ctx, cardId).characteristic?.includes(targetChar)) {
           const targetPlayerId = side == "自軍" ? playerId : PlayerIDFn.getOpponent(playerId)
@@ -146,7 +157,6 @@ export function getConditionTitleFn(condition: Condition, options: { isPlay?: bo
     case "RollColor":
     case "_自軍手札、または自軍ハンガーにある、_６以下の合計国力を持つ_ユニット_１枚を":
       return function (ctx: GameState, effect: Effect): Tip[] {
-
         return []
       }
   }
@@ -162,6 +172,7 @@ export function getActionTitleFn(action: Action): ActionTitleFn {
       return function (ctx: GameState, effect: Effect): GameState {
         const cardId = EffectFn.getCardID(effect)
         ctx = addStackEffect(ctx, {
+          id: "",
           reason: ["PlayText", EffectFn.getPlayerID(effect), cardId, effect.text.id || "unknown"],
           text: {
             id: "",
@@ -177,11 +188,27 @@ export function getActionTitleFn(action: Action): ActionTitleFn {
       }
     }
     case "_ロールする": {
-      const [_, isRoll] = action.title
-      const varName = action.vars
+      const [_, whatToDo] = action.title
+      const varNames = action.vars
       return function (ctx: GameState, effect: Effect): GameState {
-        if (varName == null) {
-
+        const cardId = EffectFn.getCardID(effect)
+        const cardState = getItemState(ctx, cardId);
+        const pairs = varNames == null ? [[cardId, getItemBaSyou(ctx, cardId)] as StrBaSyouPair] : varNames.flatMap(varName => {
+          const tip = ItemStateFn.getTip(cardState, varName)
+          const tipError = TipFn.checkTipSatisfies(tip)
+          if (tipError) throw tipError
+          if (tip.title[0] == "カード") {
+            const targetPairs = TipFn.getSelection(tip) as StrBaSyouPair[]
+            return targetPairs
+          }
+          return []
+        })
+        switch (whatToDo) {
+          case "ロール": {
+            for (const pair of pairs) {
+              ctx = setItemIsRoll(ctx, true, pair) as GameState
+            }
+          }
         }
         return ctx
       }
@@ -286,6 +313,7 @@ export function getActionTitleFn(action: Action): ActionTitleFn {
     }
     case "リロール状態で置き換える":
       return function (ctx: GameState, effect: Effect): GameState {
+        console.log(`執行:${action.title[0]}`)
         return ctx
       }
   }

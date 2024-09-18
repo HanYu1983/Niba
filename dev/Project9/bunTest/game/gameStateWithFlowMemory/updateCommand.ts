@@ -3,6 +3,7 @@ import { CardTextFn, ConditionFn } from "../define/CardText"
 import { Effect, EffectFn } from "../define/Effect"
 import { PlayerA, PlayerB } from "../define/PlayerID"
 import { TipFn } from "../define/Tip"
+import { getConditionTitleFn } from "../gameState/effect"
 import { getPlayEffects } from "../gameState/getPlayEffects"
 import { ToolFn } from "../tool"
 import { setCommandEffects } from "./effect"
@@ -14,7 +15,7 @@ export function getCommandEffectTips(ctx: GameStateWithFlowMemory, e: Effect): C
         const testedEffects = e.text.logicTreeActions.flatMap((lta, logicId) => {
             const allTree = CardTextFn.getLogicTreeActionConditions(e.text, lta)
             const allTest = allTree.map((t, logicSubId) => {
-                const errors = Object.values(t).flatMap(con => ConditionFn.getTitleFn(con)(ctx, e, bridge)).map(tip => TipFn.checkTipSatisfies(tip))
+                const errors = Object.values(t).flatMap(con => getConditionTitleFn(con, {})(ctx, e, bridge)).map(tip => TipFn.checkTipSatisfies(tip))
                 const ret: CommandEffectTip = {
                     id: ToolFn.getUUID("getCommandEffectTip"),
                     effect: e,

@@ -43,10 +43,10 @@ export function removeEffect(ctx: EffectStackComponent, id: string): EffectStack
 }
 
 export function addStackEffect(ctx: EffectStackComponent, block: Effect): EffectStackComponent {
-  if (block.id == null) {
+  if (block.id == "") {
     block.id = ToolFn.getUUID("addStackEffect")
   }
-  if (block.text.id == null) {
+  if (block.text.id == "") {
     block.text.id = ToolFn.getUUID("addStackEffect")
   }
   return {
@@ -57,11 +57,11 @@ export function addStackEffect(ctx: EffectStackComponent, block: Effect): Effect
 }
 
 export function addImmediateEffect(ctx: EffectStackComponent, block: Effect): EffectStackComponent {
-  if (block.id == null) {
-    block.id = ToolFn.getUUID()
+  if (block.id == "") {
+    block.id = ToolFn.getUUID("addImmediateEffect")
   }
-  if (block.text.id == null) {
-    block.text.id = ToolFn.getUUID("addStackEffect")
+  if (block.text.id == "") {
+    block.text.id = ToolFn.getUUID("addImmediateEffect")
   }
   return {
     ...ctx,

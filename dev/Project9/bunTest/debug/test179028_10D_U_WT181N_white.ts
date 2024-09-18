@@ -1,8 +1,9 @@
+import { repeat } from "ramda"
 import { AbsoluteBaSyouFn } from "../game/define/BaSyou"
 import { BattlePointFn } from "../game/define/BattlePoint"
 import { PlayerA } from "../game/define/PlayerID"
 import { PhaseFn } from "../game/define/Timing"
-import { getCardRollCostLength, getCardBattlePoint } from "../game/gameState/card"
+import { getCardRollCostLength, getCardBattlePoint, getCardIdsCanPayRollCost } from "../game/gameState/card"
 import { createCardWithProtoIds } from "../game/gameState/CardTableComponent"
 import { getEffectTips, doEffect } from "../game/gameState/effect"
 import { getTopEffect } from "../game/gameState/EffectStackComponent"
@@ -18,6 +19,10 @@ export async function test179028_10D_U_WT181N_white() {
     await loadPrototype("179028_10D_U_WT181N_white")
     let ctx = createGameState()
     ctx = createCardWithProtoIds(ctx, AbsoluteBaSyouFn.of(PlayerA, "手札"), ["179028_10D_U_WT181N_white"]) as GameState
+    ctx = createCardWithProtoIds(ctx, AbsoluteBaSyouFn.of(PlayerA, "Gゾーン"), repeat("179028_10D_U_WT181N_white", 5)) as GameState
+    if (getCardIdsCanPayRollCost(ctx, PlayerA, null).length != 5) {
+        throw new Error(`getCardIdsCanPayRollCost(ctx, PlayerA, null).length !=5`)
+    }
     const cardIds = getItemIds(ctx)
     if (cardIds.length == 0) {
         throw new Error('must has one card')

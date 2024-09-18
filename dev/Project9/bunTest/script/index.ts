@@ -16,7 +16,7 @@ export async function loadPrototype(imgID: string): Promise<CardPrototype> {
       return d.info_25 == info_25
     });
     if (data) {
-      console.log(`find origin data: ${data.info_2}`)
+      //console.log(`find origin data: ${data.info_2}`)
       const id = data.id
       const title = data.info_2
       const category = data.info_3
@@ -36,10 +36,14 @@ export async function loadPrototype(imgID: string): Promise<CardPrototype> {
         return [...repeat(color, colorCostLength), ...repeat(null, totalCostLength - colorCostLength)]
       }
       function parseBp(bp: string): "*" | number {
-        if (bp == "*") {
+        if (bp == "-") {
           return "*"
         }
-        return parseInt(bp, 10)
+        const ret = parseInt(bp, 10)
+        if(Number.isNaN(ret)){
+          throw new Error(`parseBp error: ${bp}`)
+        }
+        return ret
       }
       function parseArea(a: string): BattleAreaKeyword[] {
         if (a == "宇、地") {
@@ -80,7 +84,8 @@ export async function loadPrototype(imgID: string): Promise<CardPrototype> {
         ...proto,
         ...originData
       }
-      console.log(proto)
+      //console.log(data)
+      //console.log(proto)
     }
   }
   {
@@ -99,6 +104,9 @@ export async function loadPrototype(imgID: string): Promise<CardPrototype> {
       if (text.id == "") {
         text.id = `${proto.id}_text_${i}`
       }
+    }
+    if(proto.commandText && proto.commandText.id == ""){
+      proto.commandText.id = `${proto.id}_text_command`
     }
   }
   _preloadPrototype[imgID] = proto

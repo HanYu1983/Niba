@@ -37,7 +37,7 @@ export const TextSpeicalEffectFn = {
 
 export type ActionTitle =
     | string
-    | ["_ロールする", boolean]
+    | ["_ロールする", "ロール" | "ロール"]
     | ["_１ダメージを与える", number]
     | ["_－１／－１／－１コイン_１個を乗せる", BattleBonus, number]
     | ["移除卡狀態_旗標", string]
@@ -58,7 +58,12 @@ export const ActionFn = {
         if (typeof ctx.title != "string") {
             throw new Error("action.title must be string")
         }
-        return eval(ctx.title + ";_")
+        try {
+            return eval(ctx.title + ";_")
+        } catch (e) {
+            console.log(`原字串:[${ctx.title}]`)
+            throw e
+        }
     }
 }
 
@@ -199,66 +204,6 @@ export const CardTextFn = {
 export function getTextsFromTokuSyuKouKa(value: TextSpeicalEffect): CardText[] {
     return [];
 }
-
-const testTexts: CardText[] = [
-    {
-        id: "",
-        title: ["TextBattleBonus", [3, 4, 2]]
-    },
-    {
-        id: "",
-        title: ["特殊型", ["サイコミュ", 3]],
-    },
-    {
-        id: "",
-        title: ["特殊型", ["サイコミュ", 2]]
-    },
-    {
-        id: "",
-        title: ["使用型", ["自軍", "戦闘フェイズ"]],
-        conditions: {
-            "1": {
-                title: ["_戦闘エリアにいる_敵軍_ユニット_１～_２枚", ["戦闘エリア2"], "自軍", "ユニット", 1, 2]
-
-            },
-            "2": {
-                title: function _() { }.toString(),
-                actions: [
-                    { title: function _() { }.toString() }
-                ]
-            }
-        },
-        logicTreeActions: [
-            {
-                //logicTree: { type: "Leaf", value: "1" },
-                actions: [
-                    {
-                        title: function _(ctx: any, runtime: any, bridge: any): any {
-                            const action: Action = { title: ["_ロールする", true] }
-                            return bridge.getFunctionByAction(action)(ctx, runtime, bridge)
-                        }.toString()
-                    }
-                ]
-            }
-        ],
-        onEvent: function _(ctx: any, evt: GameEvent, runtime: any) {
-            if (Array.isArray(evt.title)) {
-                if (evt.title[0] == "コインが(x)個以上になった場合") {
-                    const [_, x] = evt.title;
-
-                }
-            }
-        }.toString(),
-        onSituation: function _(ctx: any, evt: Situation, runtime: any): GlobalEffect[] {
-            if (Array.isArray(evt.title)) {
-                if (evt.title[0] == "「特徴：装弾」を持つ自軍コマンドの効果で自軍Gをロールする場合") {
-                    const cardId = evt.cardID;
-                }
-            }
-            return [{ title: ["自軍Gとしてロール"], cardIds: [runtime.getCardID()] }]
-        }.toString(),
-    }
-]
 
 export type OnSituationFn = (ctx: any, effect: Effect, lib: any) => GlobalEffect[];
 

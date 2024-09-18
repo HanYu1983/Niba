@@ -29,13 +29,13 @@ export const TipFn = {
     checkTipSatisfies(tip: Tip): TargetMissingError | null {
         const selection = this.getSelection(tip)
         if (tip.count != null && tip.count != selection.length) {
-            return new TargetMissingError(`count not right`)
+            return new TargetMissingError(`count ${selection.length} not right: ${tip.title[0]}/${tip.count}`)
         }
         if (tip.min != null && selection.length < tip.min) {
-            return new TargetMissingError(`min not right`)
+            return new TargetMissingError(`min ${selection.length} not right: ${tip.title[0]}/${tip.min}`)
         }
         if (tip.max != null && selection.length > tip.max) {
-            return new TargetMissingError(`max not right`)
+            return new TargetMissingError(`max ${selection.length} not right: ${tip.title[0]}/${tip.max}`)
         }
         return null;
     }

@@ -15,25 +15,24 @@ import { type GameState } from "../game/gameState/GameState";
 export const prototype: CardPrototype = {
   texts: [
     {
-      id: "",
+      id: "179030_11E_C_BL079R_blue__1",
       description: "『恒常』：このカードの解決直後に、本来の記述に｢特徴：装弾｣を持つ自軍G１枚をロールできる。その場合、カード１枚を引く。",
       title: ["自動型", "恒常"],
       onEvent: function _(ctx: GameState, effect: Effect, { DefineFn, GameStateFn }: Bridge): GameState {
         const event = DefineFn.EffectFn.getEvent(effect)
         const cardId = DefineFn.EffectFn.getCardID(effect)
         const cardController = GameStateFn.getItemController(ctx, cardId)
-        const opponentPlayerId = DefineFn.PlayerIDFn.getOpponent(cardController)
         if (
           event.title[0] == "解決直後" &&
           event.effect != null &&
-          event.effect.text.id == effect.text.id
+          event.effect.text.id == "179030_11E_C_BL079R_blue__2"
         ) {
           const newEffect: Effect = {
             id: "",
-            reason: ["PlayText", cardController, cardId, effect.text.id || "unknown"],
+            reason: ["PlayText", cardController, cardId, "179030_11E_C_BL079R_blue__1"],
             isOption: true,
             text: {
-              id: "",
+              id: "179030_11E_C_BL079R_blue__1",
               title: [],
               description: "本来の記述に｢特徴：装弾｣を持つ自軍G１枚をロールできる。その場合、カード１枚を引く。",
               conditions: {
@@ -45,7 +44,7 @@ export const prototype: CardPrototype = {
                 {
                   actions: [
                     {
-                      title: ["_ロールする", true]
+                      title: ["_ロールする", "ロール"]
                     },
                     {
                       title: ["カード_１枚を引く", 1]
@@ -62,7 +61,7 @@ export const prototype: CardPrototype = {
     },
   ],
   commandText: {
-    id: "",
+    id: "179030_11E_C_BL079R_blue__2",
     title: ["使用型", ["戦闘フェイズ"]],
     description: "（戦闘フェイズ）：敵軍ユニットが戦闘エリアにいる場合、自軍手札、または自軍ハンガーにある、６以下の合計国力を持つユニット１枚を、自軍ユニット１枚と、リロール状態で置き換える。",
     conditions: {
@@ -80,7 +79,7 @@ export const prototype: CardPrototype = {
       {
         actions: [
           {
-            title: "リロール状態で置き換える。",
+            title: ["リロール状態で置き換える"],
             vars: ["自軍手札、または自軍ハンガーにある、６以下の合計国力を持つユニット１枚を", "自軍ユニット１枚"]
           }
         ]
