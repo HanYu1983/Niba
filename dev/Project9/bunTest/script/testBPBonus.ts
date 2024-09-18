@@ -1,11 +1,10 @@
-import { CardPrototype, DEFAULT_CARD_PROTOTYPE } from "../game/define/CardPrototype";
+import { CardPrototype } from "../game/define/CardPrototype";
 import { Effect } from "../game/define/Effect";
 import { GlobalEffect } from "../game/define/GlobalEffect";
 import { GameState } from "../game/gameState/GameState";
 import { Bridge } from "./bridge";
 
 export const prototype: CardPrototype = {
-  ...DEFAULT_CARD_PROTOTYPE,
   title: "アストレイ ブルーフレーム セカンドL（ローエングリンランチャー）",
   characteristic: "アストレイ系　ブルーフレーム系　MS　専用「叢雲劾」",
   category: "ユニット",

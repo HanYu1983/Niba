@@ -52,7 +52,7 @@ function getSituationEffects(ctx: GameState, situation: Situation | null): Globa
     map(itemId => getItem(ctx, itemId)),
     map(item => {
       const proto = getItemPrototype(ctx, item.id)
-      let texts = proto.texts.flatMap(text => {
+      let texts = (proto.texts || []).flatMap(text => {
         if (text.title[0] == "特殊型") {
           return getTextsFromTokuSyuKouKa(text.title[1])
         }
@@ -71,7 +71,7 @@ function getSituationEffects(ctx: GameState, situation: Situation | null): Globa
     map(itemId => getItem(ctx, itemId)),
     map(item => {
       const proto = getItemPrototype(ctx, item.id)
-      let texts = proto.texts.flatMap(text => {
+      let texts = (proto.texts || []).flatMap(text => {
         if (text.title[0] == "特殊型") {
           return getTextsFromTokuSyuKouKa(text.title[1])
         }
@@ -90,7 +90,7 @@ function getSituationEffects(ctx: GameState, situation: Situation | null): Globa
     map(itemId => getItem(ctx, itemId)),
     map(item => {
       const proto = getItemPrototype(ctx, item.id)
-      let texts = proto.texts.flatMap(text => {
+      let texts = (proto.texts || []).flatMap(text => {
         if (text.isEnabledWhileG && text.title[0] == "特殊型") {
           return getTextsFromTokuSyuKouKa(text.title[1])
         }

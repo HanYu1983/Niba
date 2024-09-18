@@ -7,14 +7,13 @@
 // 『恒常』：このカードは、合計国力＋１してプレイできる。その場合、このカードは、ターン終了時まで合計国力＋１を得る。
 //『起動』：このカードは場に出た場合、ターン終了時まで、＋X／±０／＋Xを得る。Xの値は、このカードの合計国力の値－１とする。
 
-import { CardPrototype, DEFAULT_CARD_PROTOTYPE } from "../game/define/CardPrototype";
+import { CardPrototype } from "../game/define/CardPrototype";
 import type { Effect } from "../game/define/Effect";
 import type { Bridge } from "./bridge";
 import type { GlobalEffect } from "../game/define/GlobalEffect";
 import { type GameState } from "../game/gameState/GameState";
 
 export const prototype: CardPrototype = {
-  ...DEFAULT_CARD_PROTOTYPE,
   title: "シェンロンガンダム［†］",
   characteristic: "シェンロン系　MS　専用「張五飛」",
   category: "ユニット",

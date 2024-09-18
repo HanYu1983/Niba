@@ -6,15 +6,13 @@
 // 『常駐』：「特徴：装弾」を持つ自軍コマンドの効果で自軍Gをロールする場合、このカードを自軍Gとしてロールできる。
 // 『起動』：この記述の効果以外で、敵軍ユニットがダメージを受けた場合、戦闘エリアにいる敵軍ユニット１枚に１ダメージを与える。
 
-import { CardPrototype, DEFAULT_CARD_PROTOTYPE } from "../game/define/CardPrototype";
+import { CardPrototype } from "../game/define/CardPrototype";
 import type { Effect } from "../game/define/Effect";
 import type { Bridge } from "./bridge";
 import type { GlobalEffect } from "../game/define/GlobalEffect";
 import { type GameState } from "../game/gameState/GameState";
 
 export const prototype: CardPrototype = {
-  ...DEFAULT_CARD_PROTOTYPE,
-  id: "179030_11E_O_GN023N_green",
   title: "サイコミュテスト",
   characteristic: "破壊　装弾",
   category: "オペレーション",

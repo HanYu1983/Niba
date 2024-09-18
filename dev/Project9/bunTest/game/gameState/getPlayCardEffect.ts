@@ -30,7 +30,7 @@ export function getPlayCardEffects(ctx: GameState, cardId: string): Effect[] {
         ...prototype.commandText.conditions
     } : {}
     const rollCostConditions = CardColorFn.getAll()
-        .map(tc => createRollCostRequire(prototype.rollCost.filter(c => c == tc).length, tc))
+        .map(tc => createRollCostRequire((prototype.rollCost || []).filter(c => c == tc).length, tc))
         .reduce((ctx, cons) => ({ ...ctx, ...cons }))
     const playCardEffect: Effect = {
         reason: ["PlayCard", playerId, cardId],

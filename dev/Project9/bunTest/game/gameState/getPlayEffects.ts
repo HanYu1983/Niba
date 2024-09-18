@@ -12,7 +12,7 @@ import { always, flatten, ifElse, lift, map, pipe } from "ramda";
 import { createGameState, GameState } from "./GameState";
 import { ToolFn } from "../tool";
 import { getPhase, setNextPhase, setPhase } from "./PhaseComponent";
-import { getCardHasSpeicalEffect } from "./card";
+import { getCardHasSpeicalEffect, getCardTexts } from "./card";
 import { Card } from "../define/Card";
 import { setActivePlayerID } from "./ActivePlayerComponent";
 
@@ -46,9 +46,7 @@ export function getPlayEffects(ctx: GameState, playerId: PlayerID): Effect[] {
         always(lift(AbsoluteBaSyouFn.of)([playerId], BaSyouKeywordFn.getBaAll())),
         map(basyou => getItemIdsByBasyou(ctx, basyou)), flatten,
         map(cardId => {
-            const card = getCard(ctx, cardId)
-            const proto = getItemPrototype(ctx, card.id)
-            return proto.texts.filter(inTiming).map(text => {
+            return (getCardTexts(ctx, cardId)).filter(inTiming).map(text => {
                 return {
                     id: ToolFn.getUUID("getPlayEffects"),
                     reason: ["PlayText", playerId, cardId, text.id],
@@ -239,7 +237,7 @@ export async function testGetPlayEffects() {
         if (playEffects.length != 1) {
             throw new Error(`playEffects.length != 1`)
         }
-        if (playEffects[0].reason[0] == "PlayText" && playEffects[0].reason[1] == PlayerA && playEffects[0].reason[2] == cardC.id && playEffects[0].reason[3] == cardCProto.texts[0].id) {
+        if (playEffects[0].reason[0] == "PlayText" && playEffects[0].reason[1] == PlayerA && playEffects[0].reason[2] == cardC.id && playEffects[0].reason[3] == cardCProto.texts?.[0].id) {
 
         } else {
             throw new Error(`playEffects[0].reason[0] == "PlayText" && playEffects[0].reason[1] == PlayerA && playEffects[0].reason[2] == cardC.id && playEffects[0].reason[3] == cardCProto.texts[0].id`)

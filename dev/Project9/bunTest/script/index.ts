@@ -5,14 +5,16 @@ export async function loadPrototype(imgID: string): Promise<CardPrototype> {
     if (_preloadPrototype[imgID]) {
       return _preloadPrototype[imgID]
     }
-    const proto = (await import(`./${imgID}`)).prototype;
-    if (proto.id == "") {
+    const proto = (await import(`./${imgID}`)).prototype as CardPrototype;
+    if (proto.id == null) {
       proto.id = imgID
     }
-    for (const i in proto.texts) {
-      const text = proto.texts[i]
-      if (text.id == "") {
-        text.id = `${proto.id}_text_${i}`
+    if(proto.texts){
+      for (const i in proto.texts) {
+        const text = proto.texts[i]
+        if (text.id == "") {
+          text.id = `${proto.id}_text_${i}`
+        }
       }
     }
     _preloadPrototype[imgID] = proto

@@ -30,29 +30,26 @@ export const CardColorFn = {
   }
 }
 
+export type GSignProperty =
+  | "08"
+  | "UC"
+  | "SEED"
+
+export type GSign = [CardColor, GSignProperty]
+
 export type RollCostColor = CardColor | null;
 
 export type CardPrototype = {
-  id: string;
-  title: string;
-  characteristic: string;
-  color: CardColor;
-  category: CardCategory;
-  rollCost: RollCostColor[];
-  battlePoint: BattlePoint;
-  battleArea: BattleAreaKeyword[];
-  texts: CardText[];
+  id?: string;
+  title?: string;
+  characteristic?: string;
+  color?: CardColor;
+  gsign?: GSign,
+  category?: CardCategory;
+  rollCost?: RollCostColor[];
+  battlePoint?: BattlePoint;
+  battleArea?: BattleAreaKeyword[];
+  texts?: CardText[];
   commandText?: CardText;
 };
 
-export const DEFAULT_CARD_PROTOTYPE: CardPrototype = {
-  id: "",
-  title: "名稱未定義",
-  characteristic: "",
-  color: "白",
-  category: "ユニット",
-  rollCost: [],
-  battlePoint: BattlePointFn.getAllStar(),
-  battleArea: ["地球エリア", "宇宙エリア"],
-  texts: [],
-};

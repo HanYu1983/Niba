@@ -21,27 +21,30 @@ export function getCardTexts(ctx: GameState, cardID: string): CardText[] {
       }
     }).filter(v => v) as CardText[]
     const prototype = getItemPrototype(ctx, cardID)
-    return [...prototype.texts, ...addedTexts];
+    return [...prototype.texts || [], ...addedTexts];
   }
   
-  export function getCardCharacteristic(ctx: GameState, cardID: string) {
+  export function getCardCharacteristic(ctx: GameState, cardID: string): string {
     const prototype = getItemPrototype(ctx, cardID)
-    return prototype.characteristic;
+    return prototype.characteristic || "";
   }
   
   export function getCardColor(ctx: GameState, cardID: string): CardColor {
     const prototype = getItemPrototype(ctx, cardID)
+    if(prototype.color == null){
+      throw new Error(`color not define: ${prototype.id}`)
+    }
     return prototype.color;
   }
   
   export function getCardTitle(ctx: GameState, cardID: string): string {
     const prototype = getItemPrototype(ctx, cardID)
-    return prototype.title;
+    return prototype.title || "unknown";
   }
   
   export function getCardRollCost(ctx: GameState, cardID: string): RollCostColor[] {
     const prototype = getItemPrototype(ctx, cardID)
-    return prototype.rollCost;
+    return prototype.rollCost || [];
   }
   
   export function getCardRollCostLength(ctx: GameState, cardID: string): number {
@@ -58,7 +61,7 @@ export function getCardTexts(ctx: GameState, cardID: string): CardText[] {
       }),
       sum
     )()
-    return prototype.rollCost.length + added;
+    return (prototype.rollCost || []).length + added;
   }
   
   export function getCardIdsCanPayRollCost(ctx: GameState, playerId: PlayerID, situation: Situation | null): string[] {
@@ -96,7 +99,7 @@ export function getCardTexts(ctx: GameState, cardID: string): CardText[] {
     const prototype = getItemPrototype(ctx, card.id);
     const retBonus = [...bonusFromGlobalEffects, ...bonusFormCoin].reduce(
       BattlePointFn.add,
-      prototype.battlePoint
+      prototype.battlePoint || BattlePointFn.getAllStar()
     );
     return retBonus;
   }
@@ -159,5 +162,5 @@ export function getCardTexts(ctx: GameState, cardID: string): CardText[] {
       throw new Error("card not found");
     }
     const prototype = getItemPrototype(ctx, card.id);
-    return prototype.battleArea;
+    return prototype.battleArea || [];
   }
