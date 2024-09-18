@@ -11,7 +11,7 @@ export async function loadPrototype(imgID: string): Promise<CardPrototype> {
   if (imgID.split("_").length > 1) {
     const [prodid, part2, part3, part4] = imgID.split("_")
     const info_1 = `${part2}/${part3} ${part4}`
-    const data = await require(`../data/${prodid}.json`).data.find((d: any) => {
+    const data = require(`../data/${prodid}.json`).data.find((d: any) => {
       return d.info_1 == info_1
     });
     if (data) {
