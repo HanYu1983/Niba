@@ -36,9 +36,10 @@ export const prototype: CardPrototype = {
       {
         actions: [
           {
-            title: function _(ctx: GameState, effect: Effect, { DefineFn, GameStateFn }: Bridge): GameState {
+            title: function _(ctx: GameState, effect: Effect, { DefineFn, GameStateFn, ToolFn }: Bridge): GameState {
               const cardId = DefineFn.EffectFn.getCardID(effect)
               ctx = GameStateFn.addStackEffect(ctx, {
+                id: "",
                 reason: ["PlayText", DefineFn.EffectFn.getPlayerID(effect), cardId, effect.text.id || "unknown"],
                 text: {
                   id: "",

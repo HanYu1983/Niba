@@ -12,7 +12,7 @@ const hideCategory: string[] = [
   "getAbsoluteBaSyou",
   "assertTargetTypeValueLength",
   "applyFlow",
-  "getClientCommand",
+  "getPlayEffects",
   "getGlobalEffects",
 ];
 let filterCategory = true;

@@ -22,6 +22,7 @@ import { ToolFn } from "../tool"
 import { addStackEffect } from "./EffectStackComponent"
 import { PlayerIDFn } from "../define/PlayerID"
 import { CommandEffectTip } from "../gameStateWithFlowMemory/GameStateWithFlowMemory"
+import { CardFn } from "../define/Card"
 
 export function doEffect(
   ctx: GameState,
@@ -34,6 +35,7 @@ export function doEffect(
     throw new Error(`ltasc not found: ${logicId}/${logicSubId}`)
   }
   const bridge = createBridge()
+  // 確保效果象對存在
   const errors = Object.values(ltacs)
     .flatMap(con => getConditionTitleFn(con, {})(ctx, effect, bridge))
     .map(tip => {
@@ -42,6 +44,14 @@ export function doEffect(
     .filter(v => v)
   if (errors.length) {
     throw new Error(errors.map(er => er?.message).join("|"))
+  }
+  // 確保玩家已選了效果對象
+  switch (effect.reason[0]) {
+    case "PlayCard":
+    case "PlayText":
+      Object.keys(ltacs).forEach(key => {
+        //ItemStateFn.getTip(getItemState(ctx, EffectFn.getCardID(effect)), key)
+      })
   }
   const conditionIds = Object.keys(ltacs)
   const conditions = conditionIds.map(id => CardTextFn.getCondition(effect.text, id))
@@ -56,7 +66,6 @@ export function doEffect(
     lta => LogicTreeActionFn.getActionTitleFns(lta, getActionTitleFn),
     reduce((ctx, fn) => {
       ctx = fn(ctx, effect, bridge)
-      //clearGlobalEffects(ctx)
       return ctx
     }, ctx)
   )
@@ -301,7 +310,7 @@ export function getActionTitleFn(action: Action): ActionTitleFn {
       return function (ctx: GameState, effect: Effect): GameState {
         const cardId = EffectFn.getCardID(effect)
         const cardController = getItemController(ctx, cardId)
-        const fromBasyou = AbsoluteBaSyouFn.of(cardController, "Gゾーン")
+        const fromBasyou = AbsoluteBaSyouFn.of(cardController, "本国")
         const pairs = getItemIdsByBasyou(ctx, fromBasyou).slice(0, count).map(cardId => {
           return [cardId, fromBasyou] as StrBaSyouPair
         })
@@ -312,8 +321,33 @@ export function getActionTitleFn(action: Action): ActionTitleFn {
       }
     }
     case "リロール状態で置き換える":
+      const varNames = action.vars
+      if (varNames == null) {
+        throw new Error(`action.var not found: ${action.title[0]}`)
+      }
       return function (ctx: GameState, effect: Effect): GameState {
         console.log(`執行:${action.title[0]}`)
+        const cardId = EffectFn.getCardID(effect)
+        const cardState = getItemState(ctx, cardId);
+        const tip = ItemStateFn.getTip(cardState, varNames[0])
+        if (tip.title[0] != "カード") {
+          throw new Error("must カード")
+        }
+        const [[t1, t1ba]] = TipFn.getSelection(tip) as StrBaSyouPair[]
+        const tip2 = ItemStateFn.getTip(cardState, varNames[1])
+        if (tip2.title[0] != "カード") {
+          throw new Error("must カード")
+        }
+        const [[t2, t2ba]] = TipFn.getSelection(tip2) as StrBaSyouPair[]
+        ctx = moveItem(ctx, t2ba, [t1, t1ba], onMoveItem) as GameState
+        ctx = moveItem(ctx, t1ba, [t2, t2ba], onMoveItem) as GameState
+        let t1card = getCard(ctx, t1)
+        t1card = CardFn.setIsRoll(t1card, false)
+        ctx = setCard(ctx, t1, t1card) as GameState
+        const t1State = { ...getItemState(ctx, t1) }
+        const t2State = { ...getItemState(ctx, t2) }
+        ctx = setItemState(ctx, t1, t2State) as GameState
+        ctx = setItemState(ctx, t2, t1State) as GameState
         return ctx
       }
   }
