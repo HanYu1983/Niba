@@ -102,7 +102,7 @@ export async function loadPrototype(imgID: string): Promise<CardPrototype> {
     for (const i in proto.texts) {
       const text = proto.texts[i]
       if (text.id == "") {
-        text.id = `${proto.id}_text_${i}`
+        text.id = `loadPrototype_${proto.id}_text_${i}`
       }
     }
     if(proto.commandText && proto.commandText.id == ""){

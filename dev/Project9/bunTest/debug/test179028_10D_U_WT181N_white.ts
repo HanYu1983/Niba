@@ -34,7 +34,7 @@ export async function test179028_10D_U_WT181N_white() {
     }
     const useEffect = playCardEffects[1]
     const tips = getEffectTips(ctx, useEffect, 0, 0)
-    //if (tips[0]?.title[0] == "合計国力〔x〕" && tips[0]?.min == 5) {
+    if (tips[0]?.title[0] == "合計国力〔x〕" && tips[0]?.min == 5) {
         if (getItemIdsByBasyou(ctx, AbsoluteBaSyouFn.of(PlayerA, "プレイされているカード")).length != 0) {
             throw new Error(`getItemIdsByBasyou(ctx, AbsoluteBaSyouFn.of(PlayerA, "プレイされているカード")).length != 0`)
         }
@@ -81,7 +81,7 @@ export async function test179028_10D_U_WT181N_white() {
         if (BattlePointFn.eq(getCardBattlePoint(ctx, cardId), [4, 0, 4]) == false) {
             throw new Error(`BattlePointFn.eq(bp, [4,0,4]) == false`)
         }
-    // } else {
-    //     throw new Error(`tips[0]?.title[0]=="合計国力〔x〕" && tips[0]?.min ==5`)
-    // }
+    } else {
+        throw new Error(`tips[0]?.title[0]=="合計国力〔x〕" && tips[0]?.min ==5`)
+    }
 }

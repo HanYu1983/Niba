@@ -15,7 +15,7 @@ import { type GameState } from "../game/gameState/GameState";
 export const prototype: CardPrototype = {
   texts: [
     {
-      id: "179030_11E_C_BL079R_blue__1",
+      id: "",
       description: "『恒常』：このカードの解決直後に、本来の記述に｢特徴：装弾｣を持つ自軍G１枚をロールできる。その場合、カード１枚を引く。",
       title: ["自動型", "恒常"],
       onEvent: function _(ctx: GameState, effect: Effect, { DefineFn, GameStateFn }: Bridge): GameState {
@@ -29,12 +29,13 @@ export const prototype: CardPrototype = {
         ) {
           const newEffect: Effect = {
             id: "",
-            reason: ["PlayText", cardController, cardId, "179030_11E_C_BL079R_blue__1"],
+            reason: ["PlayText", cardController, cardId, effect.text.id],
             isOption: true,
+            description: effect.text.description,
             text: {
-              id: "179030_11E_C_BL079R_blue__1",
+              id: effect.text.id,
               title: [],
-              description: "本来の記述に｢特徴：装弾｣を持つ自軍G１枚をロールできる。その場合、カード１枚を引く。",
+              description: effect.text.description,
               conditions: {
                 "本来の記述に｢特徴：装弾｣を持つ自軍G１枚": {
                   title: ["本来の記述に｢特徴：_装弾｣を持つ_自軍_G_１枚", "装弾", "自軍", "グラフィック", 1],

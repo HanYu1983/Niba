@@ -48,8 +48,9 @@ export function getPlayEffects(ctx: GameState, playerId: PlayerID): Effect[] {
         map(cardId => {
             return (getCardTexts(ctx, cardId)).filter(inTiming).map(text => {
                 return {
-                    id: ToolFn.getUUID("getPlayEffects"),
+                    id: `getPlayEffects_${playerId}_${cardId}`,
                     reason: ["PlayText", playerId, cardId, text.id],
+                    description: text.description,
                     text: text
                 } as Effect
             })

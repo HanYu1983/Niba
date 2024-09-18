@@ -195,9 +195,11 @@ export function getActionTitleFn(action: Action): ActionTitleFn {
         const cardId = EffectFn.getCardID(effect)
         ctx = addStackEffect(ctx, {
           id: "",
-          reason: ["PlayText", EffectFn.getPlayerID(effect), cardId, effect.text.id || "unknown"],
+          description: effect.text.description,
+          reason: ["PlayText", EffectFn.getPlayerID(effect), cardId, effect.text.id],
           text: {
-            id: "",
+            id: effect.text.id,
+            description: effect.text.description,
             title: [],
             logicTreeActions: [
               {
@@ -339,7 +341,6 @@ export function getActionTitleFn(action: Action): ActionTitleFn {
         throw new Error(`action.var not found: ${action.title[0]}`)
       }
       return function (ctx: GameState, effect: Effect): GameState {
-        console.log(`執行:${action.title[0]}`)
         const cardId = EffectFn.getCardID(effect)
         const cardState = getItemState(ctx, cardId);
         const tip = ItemStateFn.getTip(cardState, varNames[0])

@@ -34,11 +34,13 @@ export function getPlayCardEffects(ctx: GameState, cardId: string): Effect[] {
         .map(tc => createRollCostRequire((prototype.rollCost || []).filter(c => c == tc).length, tc))
         .reduce((ctx, cons) => ({ ...ctx, ...cons }))
     const playCardEffect: Effect = {
-        id: ToolFn.getUUID("getPlayCardEffects"),
+        id: `getPlayCardEffects_${cardId}`,
         reason: ["PlayCard", playerId, cardId],
+        description: "從手中即將出牌, 出牌後會產生場出的效果",
         text: {
-            id: ToolFn.getUUID("getPlayCardEffects_text"),
+            id: `getPlayCardEffects_text_${cardId}`,
             title: [],
+            description: "從手中即將出牌, 出牌後會產生場出的效果",
             conditions: {
                 ...costConditions,
                 ...characterConditions,
@@ -49,17 +51,19 @@ export function getPlayCardEffects(ctx: GameState, cardId: string): Effect[] {
                 {
                     actions: [
                         {
-                            title: function _(ctx: GameState, effect: Effect, { DefineFn, GameStateFn }: Bridge): GameState {
+                            title: function _(ctx: GameState, effect: Effect, { DefineFn, GameStateFn, ToolFn }: Bridge): GameState {
                                 const cardId = DefineFn.EffectFn.getCardID(effect)
                                 const prototype = GameStateFn.getItemPrototype(ctx, cardId)
                                 const from = GameStateFn.getItemBaSyou(ctx, cardId)
                                 ctx = GameStateFn.moveItem(ctx, DefineFn.AbsoluteBaSyouFn.setBaSyouKeyword(from, "プレイされているカード"), [cardId, from]) as GameState
                                 if (prototype.category == "ユニット") {
                                     return GameStateFn.addStackEffect(ctx, {
-                                        id: "",
+                                        id: ToolFn.getUUID("getPlayCardEffects"),
                                         reason: ["場に出る", DefineFn.EffectFn.getPlayerID(effect), DefineFn.EffectFn.getCardID(effect)],
+                                        description: effect.text.description,
                                         text: {
-                                            id: "",
+                                            id: effect.text.id,
+                                            description: effect.text.description,
                                             title: [],
                                             logicTreeActions: [
                                                 {
@@ -84,10 +88,12 @@ export function getPlayCardEffects(ctx: GameState, cardId: string): Effect[] {
 
                                 if (prototype.category == "キャラクター" || prototype.category == "オペレーション(ユニット)") {
                                     return GameStateFn.addStackEffect(ctx, {
-                                        id: "",
+                                        id: ToolFn.getUUID("getPlayCardEffects"),
                                         reason: ["場に出る", DefineFn.EffectFn.getPlayerID(effect), DefineFn.EffectFn.getCardID(effect)],
+                                        description: effect.text.description,
                                         text: {
-                                            id: "",
+                                            id: effect.text.id,
+                                            description: effect.text.description,
                                             title: [],
                                             logicTreeActions: [
                                                 {
@@ -117,10 +123,12 @@ export function getPlayCardEffects(ctx: GameState, cardId: string): Effect[] {
 
                                 if (prototype.category == "コマンド" && prototype.commandText) {
                                     return GameStateFn.addStackEffect(ctx, {
-                                        id: "",
+                                        id: ToolFn.getUUID("getPlayCardEffects"),
                                         reason: ["場に出る", DefineFn.EffectFn.getPlayerID(effect), DefineFn.EffectFn.getCardID(effect)],
+                                        description: effect.text.description,
                                         text: {
                                             id: prototype.commandText.id,
+                                            description: prototype.commandText.description,
                                             title: [],
                                             logicTreeActions: [
                                                 {
