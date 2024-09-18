@@ -1,9 +1,9 @@
 import { createBridge } from "../bridge/createBridge";
-import { CardTextFn, ConditionFn } from "../define/CardText";
+import { CardTextFn, Condition, ConditionFn } from "../define/CardText";
 import { Effect } from "../define/Effect";
 import { TargetMissingError } from "../define/GameError";
 import { PlayerA, PlayerB } from "../define/PlayerID";
-import { TipFn } from "../define/Tip";
+import { Tip, TipFn } from "../define/Tip";
 import { mapCardsWithBasyou } from "../gameState/CardTableComponent";
 import { createGameState, GameState } from "../gameState/GameState";
 import { getPlayEffects } from "../gameState/getPlayEffects";
@@ -43,7 +43,7 @@ export type CommandEffectTip = {
     effect: Effect,
     logicID: number,
     logicSubID: number,
-    errors: (TargetMissingError | null)[]
+    tipOrErrors: {conditionKey: string, condition: Condition, tip: Tip, error: TargetMissingError | null}[]
 }
 
 export type GameStateWithFlowMemory = {

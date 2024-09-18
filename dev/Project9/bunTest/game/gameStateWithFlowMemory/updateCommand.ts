@@ -1,36 +1,9 @@
-import { createBridge } from "../bridge/createBridge"
-import { CardTextFn, ConditionFn } from "../define/CardText"
 import { Effect, EffectFn } from "../define/Effect"
 import { PlayerA, PlayerB } from "../define/PlayerID"
-import { TipFn } from "../define/Tip"
-import { getConditionTitleFn } from "../gameState/effect"
+import { getCommandEffectTips, getConditionTitleFn } from "../gameState/effect"
 import { getPlayEffects } from "../gameState/getPlayEffects"
-import { ToolFn } from "../tool"
 import { setCommandEffects } from "./effect"
 import { CommandEffectTip, GameStateWithFlowMemory } from "./GameStateWithFlowMemory"
-
-export function getCommandEffectTips(ctx: GameStateWithFlowMemory, e: Effect): CommandEffectTip[] {
-    const bridge = createBridge()
-    if (e.text.logicTreeActions) {
-        const testedEffects = e.text.logicTreeActions.flatMap((lta, logicId) => {
-            const allTree = CardTextFn.getLogicTreeActionConditions(e.text, lta)
-            const allTest = allTree.map((t, logicSubId) => {
-                const errors = Object.values(t).flatMap(con => getConditionTitleFn(con, {})(ctx, e, bridge)).map(tip => TipFn.checkTipSatisfies(tip))
-                const ret: CommandEffectTip = {
-                    id: ToolFn.getUUID("getCommandEffectTip"),
-                    effect: e,
-                    logicID: logicId,
-                    logicSubID: logicSubId,
-                    errors: errors
-                }
-                return ret
-            })
-            return allTest
-        })
-        return testedEffects
-    }
-    return []
-}
 
 // 使用型技能
 export function updateCommand(ctx: GameStateWithFlowMemory): GameStateWithFlowMemory {
@@ -47,7 +20,7 @@ export function getPlayerCommands(ctx: GameStateWithFlowMemory, playerID: string
 }
 
 export function getPlayerCommandsFilterNoError(ctx: GameStateWithFlowMemory, playerID: string): CommandEffectTip[] {
-    return getPlayerCommands(ctx, playerID).filter(({ errors }) => errors.filter(v => v).length == 0)
+    return getPlayerCommands(ctx, playerID).filter(({ tipOrErrors }) => tipOrErrors.filter(v => v.error).length == 0)
 }
 
 export function getPlayerCommandsFilterNoErrorDistinct(ctx: GameStateWithFlowMemory, playerID: string): CommandEffectTip[] {

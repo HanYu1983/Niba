@@ -9,7 +9,7 @@ import { GameEvent } from "../define/GameEvent"
 import { ItemStateFn } from "../define/ItemState"
 import { PhaseFn } from "../define/Timing"
 import { Tip, TipFn, StrBaSyouPair } from "../define/Tip"
-import { getCardIdsCanPayRollCost, getCardRuntimeCategory } from "./card"
+import { getCardIdsCanPayRollCost, getCardRollCostLength, getItemRuntimeCategory } from "./card"
 import { getCard, setCard } from "./CardTableComponent"
 import { GameState } from "./GameState"
 import { clearGlobalEffects } from "./globalEffects"
@@ -55,6 +55,59 @@ export function assertEffectCanPass(
         }
         ItemStateFn.getTip(getItemState(ctx, EffectFn.getCardID(effect)), key)
       })
+  }
+}
+
+export function getCommandEffectTips(ctx: GameState, e: Effect): CommandEffectTip[] {
+  const bridge = createBridge()
+  if (e.text.logicTreeActions) {
+    const testedEffects = e.text.logicTreeActions.flatMap((lta, logicId) => {
+      const allTree = CardTextFn.getLogicTreeActionConditions(e.text, lta)
+      const allTest = allTree.map((conditions, logicSubId) => {
+        const tipOrErrors = Object.keys(conditions).flatMap(conditionKey => {
+          const condition = conditions[conditionKey]
+          return getConditionTitleFn(condition, {})(ctx, e, bridge).map(tip => {
+            return { conditionKey: conditionKey, condition: condition, tip: tip, error: TipFn.checkTipSatisfies(tip) }
+          })
+        })
+        const ret: CommandEffectTip = {
+          id: ToolFn.getUUID("getCommandEffectTips"),
+          effect: e,
+          logicID: logicId,
+          logicSubID: logicSubId,
+          tipOrErrors: tipOrErrors
+        }
+        return ret
+      })
+      return allTest
+    })
+    return testedEffects
+  }
+  return []
+}
+
+export function setTipSelectionForUser(ctx: GameState, e: Effect): GameState {
+  switch (e.reason[0]) {
+    case "Destroy":
+    case "場に出る":
+    case "PlayCard":
+    case "PlayText": {
+      const cardId = EffectFn.getCardID(e)
+      let cs = getItemState(ctx, cardId)
+      const cets = getCommandEffectTips(ctx, e)
+      cets.forEach(cet => {
+        cet.tipOrErrors.forEach(tipOrE => {
+          if (tipOrE.error) {
+            return
+          }
+          const conditionKey = tipOrE.conditionKey
+          const tip = tipOrE.tip
+          cs = ItemStateFn.setTip(cs, conditionKey, tip)
+        })
+      })
+      return setItemState(ctx, cardId, cs) as GameState
+    }
+    default: throw new Error(`unknown effect reason: ${e.reason[0]}`)
   }
 }
 
@@ -139,32 +192,34 @@ export function getConditionTitleFn(condition: Condition, options: { isPlay?: bo
       return function (ctx: GameState, effect: Effect): Tip[] {
         const cardId = EffectFn.getCardID(effect)
         const playerId = getItemController(ctx, cardId);
-        if (getItemPrototype(ctx, cardId).characteristic?.includes(targetChar)) {
-          const targetPlayerId = side == "自軍" ? playerId : PlayerIDFn.getOpponent(playerId)
-          const basyous: AbsoluteBaSyou[] = category == "グラフィック" ?
-            [AbsoluteBaSyouFn.of(targetPlayerId, "Gゾーン")] :
-            (lift(AbsoluteBaSyouFn.of)([targetPlayerId], BaSyouKeywordFn.getBaAll()))
-          const pairs = basyous.flatMap(basyou => getItemIdsByBasyou(ctx, basyou).map(cardId => [cardId, basyou] as StrBaSyouPair))
-          return [
-            {
-              title: ["カード", pairs, pairs.slice(0, count)],
-              count: count,
-            }
-          ]
-        }
+        const targetPlayerId = side == "自軍" ? playerId : PlayerIDFn.getOpponent(playerId)
+        const basyous: AbsoluteBaSyou[] = category == "グラフィック" ?
+          [AbsoluteBaSyouFn.of(targetPlayerId, "Gゾーン")] :
+          (lift(AbsoluteBaSyouFn.of)([targetPlayerId], BaSyouKeywordFn.getBaAll()))
+        const pairs = basyous.flatMap(basyou =>
+          getItemIdsByBasyou(ctx, basyou)
+            .filter(cardId => getItemPrototype(ctx, cardId).characteristic?.includes(targetChar))
+            .map(cardId => [cardId, basyou] as StrBaSyouPair)
+        )
+        return [
+          {
+            title: ["カード", pairs, pairs.slice(0, count)],
+            count: count,
+          }
+        ]
         return []
       }
     }
     case "_戦闘エリアにいる_敵軍_ユニット_１～_２枚": {
       const [_, basyouKws, side, category, min, max] = condition.title
       return function (ctx: GameState, effect: Effect): Tip[] {
-        const cardId = EffectFn.getPlayerID(effect)
+        const cardId = EffectFn.getCardID(effect)
         const playerId = getItemController(ctx, cardId);
         const targetPlayerId = side == "自軍" ? playerId : PlayerIDFn.getOpponent(playerId)
         const basyous: AbsoluteBaSyou[] = (lift(AbsoluteBaSyouFn.of)([targetPlayerId], basyouKws))
         const pairs = basyous.flatMap(basyou =>
           getItemIdsByBasyou(ctx, basyou)
-            .filter(cardId => getCardRuntimeCategory(ctx, cardId) == category)
+            .filter(cardId => getItemRuntimeCategory(ctx, cardId) == category)
             .map(cardId => [cardId, basyou] as StrBaSyouPair)
         )
         return [
@@ -176,12 +231,70 @@ export function getConditionTitleFn(condition: Condition, options: { isPlay?: bo
         ]
       }
     }
-    case "_敵軍_ユニットが_戦闘エリアにいる場合":
+    case "_自軍_ユニット_１枚": {
+      const [_, side, category, count] = condition.title
+      return function (ctx: GameState, effect: Effect): Tip[] {
+        const cardId = EffectFn.getCardID(effect)
+        const playerId = getItemController(ctx, cardId);
+        const targetPlayerId = side == "自軍" ? playerId : PlayerIDFn.getOpponent(playerId)
+        const basyous: AbsoluteBaSyou[] = (lift(AbsoluteBaSyouFn.of)([targetPlayerId], BaSyouKeywordFn.getBaAll()))
+        const pairs = basyous.flatMap(basyou =>
+          getItemIdsByBasyou(ctx, basyou)
+            .filter(cardId => getItemRuntimeCategory(ctx, cardId) == category)
+            .map(cardId => [cardId, basyou] as StrBaSyouPair)
+        )
+        return [
+          {
+            title: ["カード", pairs, pairs.slice(0, count)],
+            count: 1,
+          }
+        ]
+      }
+    }
+    case "_敵軍_ユニットが_戦闘エリアにいる場合": {
+      const [_, side, category, areas] = condition.title
+      return function (ctx: GameState, effect: Effect): Tip[] {
+        const cardId = EffectFn.getCardID(effect)
+        const playerId = getItemController(ctx, cardId);
+        const targetPlayerId = side == "自軍" ? playerId : PlayerIDFn.getOpponent(playerId)
+        const basyous: AbsoluteBaSyou[] = (lift(AbsoluteBaSyouFn.of)([targetPlayerId], areas))
+        const pairs = basyous.flatMap(basyou =>
+          getItemIdsByBasyou(ctx, basyou)
+            .filter(cardId => getItemRuntimeCategory(ctx, cardId) == category)
+            .map(cardId => [cardId, basyou] as StrBaSyouPair)
+        )
+        return [
+          {
+            title: ["カード", pairs, pairs],
+            min: 1,
+          }
+        ]
+      }
+    }
+    case "_自軍手札、または自軍ハンガーにある、_６以下の合計国力を持つ_ユニット_１枚を": {
+      const [_, side, totalCost, category, count] = condition.title
+      return function (ctx: GameState, effect: Effect): Tip[] {
+        const cardId = EffectFn.getCardID(effect)
+        const playerId = getItemController(ctx, cardId);
+        const targetPlayerId = side == "自軍" ? playerId : PlayerIDFn.getOpponent(playerId)
+        const basyous: AbsoluteBaSyou[] = (lift(AbsoluteBaSyouFn.of)([targetPlayerId], ["手札", "ハンガー"]))
+        const pairs = basyous.flatMap(basyou =>
+          getItemIdsByBasyou(ctx, basyou)
+            .filter(cardId => getItemRuntimeCategory(ctx, cardId) == category)
+            .filter(cardId => getCardRollCostLength(ctx, cardId) <= totalCost)
+            .map(cardId => [cardId, basyou] as StrBaSyouPair)
+        )
+        return [
+          {
+            title: ["カード", pairs, pairs.slice(0, count)],
+            min: count,
+          }
+        ]
+      }
+    }
     case "_交戦中の_自軍_ユニット_１枚":
     case "このセットグループの_ユニットは":
-    case "_自軍_ユニット_１枚":
     case "RollColor":
-    case "_自軍手札、または自軍ハンガーにある、_６以下の合計国力を持つ_ユニット_１枚を":
       return function (ctx: GameState, effect: Effect): Tip[] {
         return []
       }

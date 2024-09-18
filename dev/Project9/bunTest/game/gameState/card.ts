@@ -9,7 +9,7 @@ import { getCard } from "./CardTableComponent"
 import { getCoins, getCardIdByCoinId } from "./CoinTableComponent"
 import { GameState } from "./GameState"
 import { getGlobalEffects, setGlobalEffects, clearGlobalEffects } from "./globalEffects"
-import { getItemPrototype, getItemIdsByBasyou, getItemBaSyou } from "./ItemTableComponent"
+import { getItemPrototype, getItemIdsByBasyou, getItemBaSyou, isChip, isCard } from "./ItemTableComponent"
 import { getSetGroupCards } from "./SetGroupComponent"
 
 export function getCardTexts(ctx: GameState, cardID: string): CardText[] {
@@ -173,13 +173,19 @@ export function getCardBattleArea(
   return prototype.battleArea || [];
 }
 
-export function getCardRuntimeCategory(ctx: GameState, cardId: string): CardCategory {
-  if (AbsoluteBaSyouFn.getBaSyouKeyword(getItemBaSyou(ctx, cardId)) == "Gゾーン") {
+export function getItemRuntimeCategory(ctx: GameState, itemId: string): CardCategory {
+  if (AbsoluteBaSyouFn.getBaSyouKeyword(getItemBaSyou(ctx, itemId)) == "Gゾーン") {
     return "グラフィック"
   }
-  const category = getItemPrototype(ctx, cardId).category
-  if (category == null) {
-    throw new Error(`card category not found: ${cardId}`)
+  if (isChip(ctx, itemId)) {
+    return "ユニット"
   }
-  return category
+  if (isCard(ctx, itemId)) {
+    const category = getItemPrototype(ctx, itemId).category
+    if (category == null) {
+      throw new Error(`card category not found: ${itemId}`)
+    }
+    return category
+  }
+  throw new Error(`getCardRuntimeCategory unknown item type: ${itemId}`)
 }

@@ -8,7 +8,7 @@ import { PhaseFn } from "../game/define/Timing"
 import { setActivePlayerID } from "../game/gameState/ActivePlayerComponent"
 import { getCardRollCostLength, getCardBattlePoint, getCardHasSpeicalEffect, getCardIdsCanPayRollCost } from "../game/gameState/card"
 import { addCards, createCardWithProtoIds, getCard } from "../game/gameState/CardTableComponent"
-import { getEffectTips, doEffect, onMoveItem, assertEffectCanPass } from "../game/gameState/effect"
+import { getEffectTips, doEffect, onMoveItem, assertEffectCanPass, setTipSelectionForUser } from "../game/gameState/effect"
 import { getEffect, getTopEffect, removeEffect } from "../game/gameState/EffectStackComponent"
 import { createGameState, GameState } from "../game/gameState/GameState"
 import { getPlayEffects } from "../game/gameState/getPlayEffects"
@@ -54,28 +54,28 @@ export async function test179030_11E_C_BL079R_blue() {
         }
         const originBasyouD = AbsoluteBaSyouFn.of(PlayerB, "戦闘エリア1")
         ctx = addCards(ctx, originBasyouD, [cardD]) as GameState
-        console.log("選擇對象")
-        let cs = getItemState(ctx, cardA.id)
-        cs = ItemStateFn.setTip(cs,
-            "自軍手札、または自軍ハンガーにある、６以下の合計国力を持つユニット１枚を",
-            { title: ["カード", [], [[cardB.id, originBasyouB]]] }
-        )
-        cs = ItemStateFn.setTip(cs,
-            "自軍ユニット１枚",
-            { title: ["カード", [], [[cardC.id, originBasyouC]]] }
-        )
-        cs = ItemStateFn.setTip(cs,
-            "敵軍ユニットが戦闘エリアにいる場合",
-            { title: ["カード", [], [[cardD.id, originBasyouD]]] }
-        )
-        ctx = setItemState(ctx, cardA.id, cs) as GameState
-
-        console.log("出指令")
+        console.log("取得出牌指令")
         const playCardEffects = getPlayEffects(ctx, PlayerA)
         if (playCardEffects.length != 1) {
             throw new Error(`playCardEffects.length != 1`)
         }
-        // assertEffectCanPass(ctx, playCardEffects[0], 0, 0)
+        console.log("選擇對象")
+        // let cs = getItemState(ctx, cardA.id)
+        // cs = ItemStateFn.setTip(cs,
+        //     "自軍手札、または自軍ハンガーにある、６以下の合計国力を持つユニット１枚を",
+        //     { title: ["カード", [], [[cardB.id, originBasyouB]]] }
+        // )
+        // cs = ItemStateFn.setTip(cs,
+        //     "自軍ユニット１枚",
+        //     { title: ["カード", [], [[cardC.id, originBasyouC]]] }
+        // )
+        // cs = ItemStateFn.setTip(cs,
+        //     "敵軍ユニットが戦闘エリアにいる場合",
+        //     { title: ["カード", [], [[cardD.id, originBasyouD]]] }
+        // )
+        // ctx = setItemState(ctx, cardA.id, cs) as GameState
+        ctx = setTipSelectionForUser(ctx, playCardEffects[0])
+        console.log("出指令")
         ctx = doEffect(ctx, playCardEffects[0], 0, 0)
         {
             console.log("解決指令效果")
@@ -116,20 +116,20 @@ export async function test179030_11E_C_BL079R_blue() {
             if (effect.reason[0] != "PlayText") {
                 throw new Error(`effect.reason[0]!="PlayText`)
             }
-
             console.log("建立效果對象")
             const cardForRollG: Card = {
                 id: "cardForRollG",
-                protoID: "unit",
+                protoID: "179030_11E_C_BL079R_blue",
             }
             ctx = addCards(ctx, AbsoluteBaSyouFn.of(PlayerA, "Gゾーン"), [cardForRollG]) as GameState
             console.log("選擇對象")
-            let cs = getItemState(ctx, cardA.id)
-            cs = ItemStateFn.setTip(cs,
-                "本来の記述に｢特徴：装弾｣を持つ自軍G１枚",
-                { title: ["カード", [], [[cardForRollG.id, AbsoluteBaSyouFn.of(PlayerA, "Gゾーン")]]] }
-            )
-            ctx = setItemState(ctx, cardA.id, cs) as GameState
+            // let cs = getItemState(ctx, cardA.id)
+            // cs = ItemStateFn.setTip(cs,
+            //     "本来の記述に｢特徴：装弾｣を持つ自軍G１枚",
+            //     { title: ["カード", [], [[cardForRollG.id, AbsoluteBaSyouFn.of(PlayerA, "Gゾーン")]]] }
+            // )
+            // ctx = setItemState(ctx, cardA.id, cs) as GameState
+            ctx = setTipSelectionForUser(ctx, effect)
             console.log(`執行效果: ${effect.text.description}`)
             if (getItemIdsByBasyou(ctx, AbsoluteBaSyouFn.of(PlayerA, "本国")).length != 2) {
                 throw new Error(`getItemIdsByBasyou(ctx, AbsoluteBaSyouFn.of(PlayerA, "本国")).length != 2`)
