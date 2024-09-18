@@ -17,7 +17,7 @@ export const prototype: CardPrototype = {
   characteristic: "展開　装弾",
   category: "オペレーション",
   color: "青",
-  gsign: [["青"], ]
+  gsign: [["青"], "閃光のハサウェイ"],
   rollCost: ["青", null],
   texts: [
     {
