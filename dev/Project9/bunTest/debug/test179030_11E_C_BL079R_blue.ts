@@ -8,7 +8,7 @@ import { PhaseFn } from "../game/define/Timing"
 import { setActivePlayerID } from "../game/gameState/ActivePlayerComponent"
 import { getCardRollCostLength, getCardBattlePoint, getCardHasSpeicalEffect, getCardIdsCanPayRollCost } from "../game/gameState/card"
 import { addCards, createCardWithProtoIds } from "../game/gameState/CardTableComponent"
-import { getEffectTips, doEffect, onMoveItem } from "../game/gameState/effect"
+import { getEffectTips, doEffect, onMoveItem, checkEffectCanPass as assertEffectCanPass } from "../game/gameState/effect"
 import { getEffect, getTopEffect, removeEffect } from "../game/gameState/EffectStackComponent"
 import { createGameState, GameState } from "../game/gameState/GameState"
 import { getPlayEffects } from "../game/gameState/getPlayEffects"
@@ -16,6 +16,7 @@ import { getItemBaSyou, getItemIds, getItemIdsByBasyou, moveItem } from "../game
 import { setPhase } from "../game/gameState/PhaseComponent"
 import { loadPrototype } from "../script"
 import { getItemState, setItemState } from "../game/gameState/ItemStateComponent"
+import { StrBaSyouPair } from "../game/define/Tip"
 
 export async function test179030_11E_C_BL079R_blue() {
     await loadPrototype("179030_11E_C_BL079R_blue")
@@ -47,6 +48,12 @@ export async function test179030_11E_C_BL079R_blue() {
         }
         const originBasyouC = AbsoluteBaSyouFn.of(PlayerA, "配備エリア")
         ctx = addCards(ctx, originBasyouC, [cardC]) as GameState
+        const cardD: Card = {
+            id: "cardD",
+            protoID: "unit"
+        }
+        const originBasyouD = AbsoluteBaSyouFn.of(PlayerB, "戦闘エリア1")
+        ctx = addCards(ctx, originBasyouD, [cardD]) as GameState
         console.log("選擇對象")
         let cs = getItemState(ctx, cardA.id)
         cs = ItemStateFn.setTip(cs,
@@ -57,6 +64,15 @@ export async function test179030_11E_C_BL079R_blue() {
             "自軍ユニット１枚",
             { title: ["カード", [], [[cardC.id, originBasyouC]]] }
         )
+        // TODO 有些condition不必選擇對象
+        cs = ItemStateFn.setTip(cs,
+            "合計国力〔x〕",
+            { title: ["カード", [], getItemIdsByBasyou(ctx, AbsoluteBaSyouFn.of(PlayerA, "Gゾーン")).map(cardId => [cardId, AbsoluteBaSyouFn.of(PlayerA, "Gゾーン")] as StrBaSyouPair)] }
+        )
+        cs = ItemStateFn.setTip(cs,
+            "敵軍ユニットが戦闘エリアにいる場合",
+            { title: ["カード", [], [[cardD.id, originBasyouD]]] }
+        )
         ctx = setItemState(ctx, cardA.id, cs) as GameState
 
         console.log("出指令")
@@ -64,6 +80,7 @@ export async function test179030_11E_C_BL079R_blue() {
         if (playCardEffects.length != 1) {
             throw new Error(`playCardEffects.length != 1`)
         }
+        assertEffectCanPass(ctx, playCardEffects[0], 0, 0)
         ctx = doEffect(ctx, playCardEffects[0], 0, 0)
         {
             console.log("解決指令效果")

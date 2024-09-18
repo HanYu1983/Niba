@@ -20,12 +20,12 @@ export function getPlayCardEffects(ctx: GameState, cardId: string): Effect[] {
         },
     } : {}
     const characterConditions: { [key: string]: Condition } = (prototype.category == "キャラクター" || prototype.category == "オペレーション(ユニット)") ? {
-        "unitForSet": {
-            title: function _(ctx: GameState, effect: Effect, { DefineFn, GameStateFn }: Bridge): Tip[] {
-                // TODO check character can set
-                return []
-            }.toString()
-        }
+        // "unitForSet": {
+        //     title: function _(ctx: GameState, effect: Effect, { DefineFn, GameStateFn }: Bridge): Tip[] {
+        //         // TODO check character can set
+        //         return []
+        //     }.toString()
+        // }
     } : {}
     const commandConditions: { [key: string]: Condition } = (prototype.category == "コマンド" && prototype.commandText) ? {
         ...prototype.commandText.conditions
@@ -210,16 +210,16 @@ function createRollCostRequire(
     color: CardColor | null
 ): { [key: string]: Condition } {
     return {
-        "unitForSet": {
-            title: function _(ctx: GameState, effect: Effect, { DefineFn, GameStateFn }: Bridge): Tip[] {
-                // TODO check character can set
-                return []
-            }.toString(),
-            actions: [
-                {
-                    title: ["_ロールする", "ロール"],
-                }
-            ]
-        }
+        // "unitForSet": {
+        //     title: function _(ctx: GameState, effect: Effect, { DefineFn, GameStateFn }: Bridge): Tip[] {
+        //         // TODO check character can set
+        //         return []
+        //     }.toString(),
+        //     actions: [
+        //         {
+        //             title: ["_ロールする", "ロール"],
+        //         }
+        //     ]
+        // }
     };
 }

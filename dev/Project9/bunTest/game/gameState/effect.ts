@@ -24,12 +24,12 @@ import { PlayerIDFn } from "../define/PlayerID"
 import { CommandEffectTip } from "../gameStateWithFlowMemory/GameStateWithFlowMemory"
 import { CardFn } from "../define/Card"
 
-export function doEffect(
+export function checkEffectCanPass(
   ctx: GameState,
   effect: Effect,
   logicId: number,
   logicSubId: number,
-): GameState {
+) {
   const ltacs = CardTextFn.getLogicTreeActionConditions(effect.text, CardTextFn.getLogicTreeAction(effect.text, logicId))[logicSubId]
   if (ltacs == null) {
     throw new Error(`ltasc not found: ${logicId}/${logicSubId}`)
@@ -50,10 +50,22 @@ export function doEffect(
     case "PlayCard":
     case "PlayText":
       Object.keys(ltacs).forEach(key => {
-        // TODO open it
-        // ItemStateFn.getTip(getItemState(ctx, EffectFn.getCardID(effect)), key)
+        ItemStateFn.getTip(getItemState(ctx, EffectFn.getCardID(effect)), key)
       })
   }
+}
+
+export function doEffect(
+  ctx: GameState,
+  effect: Effect,
+  logicId: number,
+  logicSubId: number,
+): GameState {
+  const ltacs = CardTextFn.getLogicTreeActionConditions(effect.text, CardTextFn.getLogicTreeAction(effect.text, logicId))[logicSubId]
+  if (ltacs == null) {
+    throw new Error(`ltasc not found: ${logicId}/${logicSubId}`)
+  }
+  const bridge = createBridge()
   const conditionIds = Object.keys(ltacs)
   const conditions = conditionIds.map(id => CardTextFn.getCondition(effect.text, id))
   const processCondition = (ctx: GameState) => pipe(
