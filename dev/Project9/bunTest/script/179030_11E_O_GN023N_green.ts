@@ -13,7 +13,6 @@ import type { GlobalEffect } from "../game/define/GlobalEffect";
 import { type GameState } from "../game/gameState/GameState";
 
 export const prototype: CardPrototype = {
-  gsign: [["緑"], "CCA"],
   texts: [
     {
       id: "",

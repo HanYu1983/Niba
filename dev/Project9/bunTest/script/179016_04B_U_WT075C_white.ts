@@ -9,5 +9,4 @@
 import { CardPrototype } from "../game/define/CardPrototype";
 
 export const prototype: CardPrototype = {
-  gsign: [["白"], "SEED"],
 };

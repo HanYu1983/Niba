@@ -13,7 +13,6 @@ import type { Bridge } from "./bridge";
 import { type GameState } from "../game/gameState/GameState";
 
 export const prototype: CardPrototype = {
-  gsign: [["青"], "閃光のハサウェイ"],
   texts: [
     {
       id: "",

@@ -70,9 +70,11 @@ export async function loadPrototype(imgID: string): Promise<CardPrototype> {
         rollCost: parseColors(color, colorCostLength, totalCostLength),
         battlePoint: [parseBp(bp1), parseBp(bp2), parseBp(bp3)],
         battleArea: parseArea(area),
+        characteristic: characteristic,
         description: description,
         isCross: title.indexOf("［†］") != -1,
         rarity: rarity,
+        gsign: [[color], gsignProperty],
       }
       proto = {
         ...proto,

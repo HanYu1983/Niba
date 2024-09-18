@@ -14,7 +14,6 @@ import type { GlobalEffect } from "../game/define/GlobalEffect";
 import { type GameState } from "../game/gameState/GameState";
 
 export const prototype: CardPrototype = {
-  gsign: [["白"], "W"],
   texts: [
     {
       id: "",

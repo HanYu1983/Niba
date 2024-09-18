@@ -12,7 +12,6 @@ import { GameState } from "../game/gameState/GameState";
 import { Bridge } from "./bridge";
 
 export const prototype: CardPrototype = {
-  gsign: [["白"], "SEED"],
   texts: [
     {
       id: "",

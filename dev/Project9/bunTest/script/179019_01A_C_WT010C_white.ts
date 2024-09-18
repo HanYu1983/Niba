@@ -10,7 +10,6 @@ import { StrBaSyouPair, Tip } from "../game/define/Tip";
 import { GameState } from "../game/gameState/GameState";
 import { Bridge } from "./bridge";
 export const prototype: CardPrototype = {
-  gsign: [["白"], "SEED"],
   commandText: {
     id: "",
     title: ["使用型", ["戦闘フェイズ"]],
