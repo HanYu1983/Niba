@@ -10,12 +10,8 @@ import { StrBaSyouPair, Tip } from "../game/define/Tip";
 import { GameState } from "../game/gameState/GameState";
 import { Bridge } from "./bridge";
 export const prototype: CardPrototype = {
-  title: "黄昏の魔弾",
-  characteristic: "強化",
-  category: "コマンド",
   gsign: [["白"], "SEED"],
   rollCost: ["白"],
-  texts: [],
   commandText: {
     id: "",
     title: ["使用型", ["戦闘フェイズ"]],

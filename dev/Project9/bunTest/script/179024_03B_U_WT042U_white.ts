@@ -12,12 +12,8 @@ import type { GameState } from "../game/gameState/GameState";
 import type { StrBaSyouPair, Tip } from "../game/define/Tip";
 
 export const prototype: CardPrototype = {
-  title: "シェンロンガンダム",
-  characteristic: "シェンロン系　MS　専用「張五飛」",
-  category: "ユニット",
   gsign: [["白"], "W"],
   rollCost: ["白", null, null, null],
-  battlePoint: [5, 0, 4],
   texts: [{
     id: "",
     title: ["使用型", ["自軍", "ダメージ判定ステップ"]],

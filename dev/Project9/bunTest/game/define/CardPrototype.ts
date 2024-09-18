@@ -8,7 +8,7 @@ export type CardCategory =
   | "キャラクター"
   | "コマンド"
   | "オペレーション"
-  | "オペレーション(unit)"
+  | "オペレーション(ユニット)"
   | "ACE"
   | "グラフィック";
 
@@ -54,5 +54,7 @@ export type CardPrototype = {
   battleArea?: BattleAreaKeyword[];
   texts?: CardText[];
   commandText?: CardText;
+  originCardId?: string;
+  description?: string;
 };
 

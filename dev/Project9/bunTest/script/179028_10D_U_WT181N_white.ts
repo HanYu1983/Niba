@@ -14,12 +14,8 @@ import type { GlobalEffect } from "../game/define/GlobalEffect";
 import { type GameState } from "../game/gameState/GameState";
 
 export const prototype: CardPrototype = {
-  title: "シェンロンガンダム［†］",
-  characteristic: "シェンロン系　MS　専用「張五飛」",
-  category: "ユニット",
   gsign: [["白"], "W"],
   rollCost: ["白", null, null, null],
-  battlePoint: [4, 0, 4],
   texts: [
     {
       id: "",

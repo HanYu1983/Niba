@@ -13,10 +13,6 @@ import type { GlobalEffect } from "../game/define/GlobalEffect";
 import { type GameState } from "../game/gameState/GameState";
 
 export const prototype: CardPrototype = {
-  title: "サイコミュテスト",
-  characteristic: "破壊　装弾",
-  category: "オペレーション",
-  color: "緑",
   gsign: [["緑"], "CCA"],
   rollCost: ["緑"],
   texts: [

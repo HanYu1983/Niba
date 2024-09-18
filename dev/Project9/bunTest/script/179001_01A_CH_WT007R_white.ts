@@ -13,12 +13,8 @@ import { Bridge } from "./bridge";
 
 export const prototype: CardPrototype = {
   id: "",
-  title: "キラ・ヤマト",
-  characteristic: "男性　子供　CO",
-  category: "キャラクター",
   gsign: [["白"], "SEED"],
   rollCost: ["白", null, null, null],
-  battlePoint: [2, 2, 2],
   texts: [
     {
       id: "",
