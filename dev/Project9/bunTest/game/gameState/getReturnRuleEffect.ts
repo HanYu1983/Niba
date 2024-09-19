@@ -37,6 +37,7 @@ export function getReturnRuleEffect(ctx: GameState, playerId: PlayerID): Effect 
                                                 GameStateFn.onMoveItem
                                             ) as GameState
                                         } else {
+                                            // Rule book p73
                                             ctx = GameStateFn.moveItem(
                                                 ctx,
                                                 DefineFn.AbsoluteBaSyouFn.of(playerId, "ジャンクヤード"),

@@ -112,6 +112,15 @@ export function getTextsFromSpecialEffect(text: CardText): CardText[] {
                 }
             ]
         }
+        case "クロスウェポン":
+        case "ゲイン":
+        case "ステイ":
+        case "サイコミュ":
+        case "供給":
+        case "共有":
+        case "改装":
+        case "範囲兵器":
+            return []
     }
     return []
 }
