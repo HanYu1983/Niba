@@ -10,6 +10,7 @@ import { ItemStateComponent } from "./ItemStateComponent";
 import { ItemTableComponent } from "./ItemTableComponent";
 import { PhaseComponent } from "./PhaseComponent";
 import { PlayerStateComponent } from "./PlayerStateComponent";
+import { RuntimeBattleAreaComponent } from "./RuntimeBattleAreaComponent";
 import { SetGroupComponent, createSetGroupComponent } from "./SetGroupComponent";
 
 export type GameState = {
@@ -23,7 +24,8 @@ export type GameState = {
   & PlayerStateComponent
   & ActivePlayerComponent
   & CoinTableComponent
-  & ItemTableComponent;
+  & ItemTableComponent
+  & RuntimeBattleAreaComponent;
 
 export function createGameState(): GameState {
   return {

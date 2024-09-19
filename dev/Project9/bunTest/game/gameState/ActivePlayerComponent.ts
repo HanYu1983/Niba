@@ -10,3 +10,10 @@ export function setActivePlayerID(ctx: ActivePlayerComponent, playerId: PlayerID
         activePlayerID: playerId
     }
 }
+
+export function getActivePlayerID(ctx: ActivePlayerComponent): PlayerID {
+    if (ctx.activePlayerID == null) {
+        throw new Error(`activePlayerID not set yet`)
+    }
+    return ctx.activePlayerID
+}
