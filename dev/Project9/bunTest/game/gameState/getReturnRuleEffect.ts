@@ -1,8 +1,7 @@
 import { Bridge } from "../../script/bridge";
-import { AbsoluteBaSyouFn, BaSyouKeyword } from "../define/BaSyou";
+import { AbsoluteBaSyouFn, BaKeyword, BaSyouKeyword } from "../define/BaSyou";
 import { Effect } from "../define/Effect";
 import { PlayerID } from "../define/PlayerID";
-import { StrBaSyouPair } from "../define/Tip";
 import { ToolFn } from "../tool";
 import { GameState } from "./GameState";
 
@@ -20,10 +19,34 @@ export function getReturnRuleEffect(ctx: GameState, playerId: PlayerID): Effect 
                         {
                             title: function _(ctx: GameState, effect: Effect, { DefineFn, GameStateFn }: Bridge): GameState {
                                 const playerId = DefineFn.EffectFn.getPlayerID(effect)
-
-                                const nx = GameStateFn.getCardLikeItemIdsByBasyou(ctx, DefineFn.AbsoluteBaSyouFn.of(playerId, "戦闘エリア1"))
-                                
-
+                                const opponentId = DefineFn.PlayerIDFn.getOpponent(playerId)
+                                ctx = _processKw(ctx, playerId, "戦闘エリア1")
+                                ctx = _processKw(ctx, playerId, "戦闘エリア2")
+                                ctx = _processKw(ctx, opponentId, "戦闘エリア1")
+                                ctx = _processKw(ctx, opponentId, "戦闘エリア2")
+                                function _processKw(ctx: GameState, playerId: PlayerID, fromKw: BaKeyword): GameState {
+                                    const runtimeArea1 = GameStateFn.getRuntimeBattleArea(ctx, fromKw)
+                                    const unitIdsAtArea1 = GameStateFn.getCardLikeItemIdsByBasyou(ctx, DefineFn.AbsoluteBaSyouFn.of(playerId, fromKw))
+                                    for (const cardId of unitIdsAtArea1) {
+                                        if (GameStateFn.getCardBattleArea(ctx, cardId).includes(runtimeArea1)) {
+                                            ctx = GameStateFn.setItemIsRoll(ctx, true, [cardId, DefineFn.AbsoluteBaSyouFn.of(playerId, fromKw)]) as GameState
+                                            ctx = GameStateFn.moveItem(
+                                                ctx,
+                                                DefineFn.AbsoluteBaSyouFn.of(playerId, "配備エリア"),
+                                                [cardId, DefineFn.AbsoluteBaSyouFn.of(playerId, fromKw)],
+                                                GameStateFn.onMoveItem
+                                            ) as GameState
+                                        } else {
+                                            ctx = GameStateFn.moveItem(
+                                                ctx,
+                                                DefineFn.AbsoluteBaSyouFn.of(playerId, "ジャンクヤード"),
+                                                [cardId, DefineFn.AbsoluteBaSyouFn.of(playerId, fromKw)],
+                                                GameStateFn.onMoveItem
+                                            ) as GameState
+                                        }
+                                    }
+                                    return ctx
+                                }
                                 return ctx
                             }.toString()
                         }

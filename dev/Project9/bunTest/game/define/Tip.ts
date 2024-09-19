@@ -5,6 +5,7 @@ export type StrBaSyouPair = [string, AbsoluteBaSyou]
 
 export type TipTitle =
     | ["カード", StrBaSyouPair[], StrBaSyouPair[]]
+    | ["カード2", StrBaSyouPair[], StrBaSyouPair[]]
     | ["StringOptions", string[], string[]]
 
 export type Tip = {
@@ -18,6 +19,8 @@ export const TipFn = {
     getSelection(tip: Tip) {
         switch (tip.title[0]) {
             case "カード":
+                return tip.title[2]
+            case "カード2":
                 return tip.title[2]
             case "StringOptions":
                 return tip.title[2]

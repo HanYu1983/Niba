@@ -12,6 +12,7 @@ import { getAttackPhaseRuleEffect } from "../gameState/getAttackPhaseRuleEffect"
 import { getDrawPhaseRuleEffect } from "../gameState/getDrawPhaseRuleEffect";
 import { getRerollPhaseRuleEffect } from "../gameState/getRerollPhaseRuleEffect";
 import { getDamageRuleEffect } from "../gameState/getDamageRuleEffect";
+import { getReturnRuleEffect } from "../gameState/getReturnRuleEffect";
 
 export function queryFlow(ctx: GameStateWithFlowMemory, playerID: string): Flow[] {
     if (true) {
@@ -549,8 +550,9 @@ export function queryFlow(ctx: GameStateWithFlowMemory, playerID: string): Flow[
                                 case "帰還ステップ":
                                     return [
                                         {
-                                            id: "FlowHandleReturnStepRule",
-                                            description: "執行「帰還ステップ」",
+                                            id: "FlowAddBlock",
+                                            description: `${phase[1]}規定效果`,
+                                            block: getReturnRuleEffect(ctx, playerID),
                                         },
                                     ];
                                 default:
