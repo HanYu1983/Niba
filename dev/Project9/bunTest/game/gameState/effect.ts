@@ -35,54 +35,23 @@ export function assertEffectCanPass(
     throw new Error(`ltasc not found: ${logicId}/${logicSubId}`)
   }
   const bridge = createBridge()
-  // 確保效果象對存在
-  const tipErrors = Object.values(ltacs)
-    .flatMap(con => getConditionTitleFn(con, {})(ctx, effect, bridge))
-    .map(tip => {
-      return TipFn.checkTipSatisfies(tip)
-    })
-    .filter(v => v) as TargetMissingError[]
-  // action can pass
-  const actionErrors = Object.values(ltacs)
-    .flatMap(con => ConditionFn.getActionTitleFns(con, getActionTitleFn))
-    .map(fn => {
-      let error: TargetMissingError | null = null;
-      try {
-        fn(ctx, effect, bridge)
-      } catch (e) {
-        if (e instanceof TargetMissingError) {
-          error = e
-        } else {
-          throw e
-        }
-      }
-      return error
-    })
-    .filter(v => v) as TargetMissingError[]
-  // 確保玩家已選了效果對象
-  let userSelectionError: TargetMissingError | null = null;
-  try {
-    switch (effect.reason[0]) {
-      case "GameRule":
-      case "PlayCard":
-      case "PlayText":
-        Object.keys(ltacs).forEach(key => {
-          if (ltacs[key].isNoSelection) {
-            return
-          }
-          ItemStateFn.getTip(getItemState(ctx, EffectFn.getCardID(effect)), key)
+  switch (effect.reason[0]) {
+    case "GameRule":
+    case "PlayCard":
+    case "PlayText":
+      Object.keys(ltacs).forEach(key => {
+        const con = ltacs[key]
+        const tips = getConditionTitleFn(con, {})(ctx, effect, bridge)
+        // 可選對象滿足
+        tips.forEach(tip => {
+          TipFn.checkTipSatisfies(tip)
         })
-    }
-  } catch (e) {
-    if (e instanceof TargetMissingError) {
-      userSelectionError = e
-    } else {
-      throw e
-    }
-  }
-  const errors = [...tipErrors, ...actionErrors, ...(userSelectionError ? [userSelectionError] : [])]
-  if (errors.length) {
-    throw new Error(errors.map((er: any) => er.message).join("|"))
+        if (tips.length) {
+          // 玩家是否已選擇
+          ItemStateFn.getTip(getItemState(ctx, EffectFn.getCardID(effect)), key)
+        }
+        ConditionFn.getActionTitleFns(con, getActionTitleFn).forEach(fn => fn(ctx, effect, bridge))
+      })
   }
 }
 

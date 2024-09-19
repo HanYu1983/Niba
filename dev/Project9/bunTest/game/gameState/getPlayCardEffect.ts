@@ -16,7 +16,6 @@ export function getPlayCardEffects(ctx: GameState, cardId: string): Effect[] {
     const cardRollCostLength = getCardRollCostLength(ctx, cardId)
     const costConditions: { [key: string]: Condition } = (prototype.category != "グラフィック") ? {
         "合計国力〔x〕": {
-            isNoSelection: true,
             actions: [
                 {
                     title: ["合計国力〔x〕", cardRollCostLength]
@@ -190,7 +189,6 @@ export function getPlayCardEffects(ctx: GameState, cardId: string): Effect[] {
                 conditions: {
                     ...playCardEffect.text.conditions,
                     "合計国力〔x〕": {
-                        isNoSelection: true,
                         actions: [
                             {
                                 title: ["合計国力〔x〕", cardRollCostLength + addedLength]
