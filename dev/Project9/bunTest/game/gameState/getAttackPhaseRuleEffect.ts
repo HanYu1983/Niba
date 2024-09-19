@@ -13,7 +13,7 @@ import { getRuntimeBattleArea } from "./RuntimeBattleAreaComponent";
 export function getAttackPhaseRuleEffect(ctx: GameState, playerId: PlayerID): Effect {
     return {
         id: ToolFn.getUUID("getAttackPhaseRuleEffect"),
-        reason: ["GameRule", playerId],
+        reason: ["GameRule", playerId, "getAttackPhaseRuleEffect"],
         text: {
             id: ToolFn.getUUID("getAttackPhaseRuleEffect"),
             title: [],

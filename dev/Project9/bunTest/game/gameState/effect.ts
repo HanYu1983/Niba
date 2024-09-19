@@ -333,18 +333,10 @@ export function getActionTitleFn(action: Action): ActionTitleFn {
       const varNames = action.vars
       return function (ctx: GameState, effect: Effect): GameState {
         const cardId = EffectFn.getCardID(effect)
-        const cardState = getItemState(ctx, cardId);
         const pairs = varNames == null ?
           [[cardId, getItemBaSyou(ctx, cardId)] as StrBaSyouPair] :
           varNames.flatMap(varName => {
-            const tip = ItemStateFn.getTip(cardState, varName)
-            const tipError = TipFn.checkTipSatisfies(tip)
-            if (tipError) throw tipError
-            if (tip.title[0] == "カード") {
-              const targetPairs = TipFn.getSelection(tip) as StrBaSyouPair[]
-              return targetPairs
-            }
-            return []
+            return getCardTipStrBaSyouPairs(ctx, varName, cardId)
           })
         switch (whatToDo) {
           case "ロール": {
@@ -362,16 +354,10 @@ export function getActionTitleFn(action: Action): ActionTitleFn {
           throw new Error(`action.var not found: ${action.title[0]}`)
         }
         const cardId = EffectFn.getCardID(effect)
-        let cardState = getItemState(ctx, cardId);
-        const tip = ItemStateFn.getTip(cardState, action.vars[0])
-        const tipError = TipFn.checkTipSatisfies(tip)
-        if (tipError) throw tipError
-        if (tip.title[0] == "カード") {
-          const targetPairs = TipFn.getSelection(tip) as StrBaSyouPair[]
-          ctx = targetPairs.reduce((ctx, pair) => {
-            return makeItemDamage(ctx, 1, pair)
-          }, ctx)
-        }
+        const targetPairs = getCardTipStrBaSyouPairs(ctx, action.vars[0], cardId)
+        ctx = targetPairs.reduce((ctx, pair) => {
+          return makeItemDamage(ctx, 1, pair)
+        }, ctx)
         return ctx
       }
     }
@@ -383,16 +369,7 @@ export function getActionTitleFn(action: Action): ActionTitleFn {
       }
       return function (ctx: GameState, effect: Effect): GameState {
         const cardId = EffectFn.getCardID(effect)
-        const cardState = getItemState(ctx, cardId);
-        const tip = ItemStateFn.getTip(cardState, varNames[0])
-        const tipError = TipFn.checkTipSatisfies(tip)
-        if (tipError) {
-          throw tipError
-        }
-        if (tip.title[0] != "カード") {
-          throw new Error("must カード")
-        }
-        const pairs = TipFn.getSelection(tip) as StrBaSyouPair[]
+        const pairs = getCardTipStrBaSyouPairs(ctx, varNames[0], cardId)
         const [targetCardId, targetBasyou] = pairs[0]
         const coins = repeat(CoinFn.battleBonus(bonus))(x)
         ctx = addCoinsToCard(ctx, [targetCardId, targetBasyou], coins) as GameState
@@ -417,16 +394,7 @@ export function getActionTitleFn(action: Action): ActionTitleFn {
       }
       return function (ctx: GameState, effect: Effect): GameState {
         const cardId = EffectFn.getCardID(effect)
-        const cardState = getItemState(ctx, cardId);
-        const tip = ItemStateFn.getTip(cardState, varNames[0])
-        const tipError = TipFn.checkTipSatisfies(tip)
-        if (tipError) {
-          throw tipError
-        }
-        if (tip.title[0] != "カード") {
-          throw new Error("must カード")
-        }
-        const pairs = TipFn.getSelection(tip) as StrBaSyouPair[]
+        const pairs = getCardTipStrBaSyouPairs(ctx, varNames[0], cardId)
         for (const [targetCardId, targetBaSyou] of pairs) {
           const gesForCard = ges.map(ge => {
             return {
@@ -461,17 +429,8 @@ export function getActionTitleFn(action: Action): ActionTitleFn {
       }
       return function (ctx: GameState, effect: Effect): GameState {
         const cardId = EffectFn.getCardID(effect)
-        const cardState = getItemState(ctx, cardId);
-        const tip = ItemStateFn.getTip(cardState, varNames[0])
-        if (tip.title[0] != "カード") {
-          throw new Error("must カード")
-        }
-        const [[t1, t1ba]] = TipFn.getSelection(tip) as StrBaSyouPair[]
-        const tip2 = ItemStateFn.getTip(cardState, varNames[1])
-        if (tip2.title[0] != "カード") {
-          throw new Error("must カード")
-        }
-        const [[t2, t2ba]] = TipFn.getSelection(tip2) as StrBaSyouPair[]
+        const [[t1, t1ba]] = getCardTipStrBaSyouPairs(ctx, varNames[0], cardId)
+        const [[t2, t2ba]] = getCardTipStrBaSyouPairs(ctx, varNames[1], cardId)
         ctx = moveItem(ctx, t2ba, [t1, t1ba], onMoveItem) as GameState
         ctx = moveItem(ctx, t1ba, [t2, t2ba], onMoveItem) as GameState
         let t1card = getCard(ctx, t1)
@@ -576,4 +535,18 @@ export function onMoveItem(ctx: GameState, to: AbsoluteBaSyou, [cardId, from]: S
     ctx = setCard(ctx, cardId, card) as GameState
   }
   return ctx
+}
+
+export function getCardTipStrBaSyouPairs(ctx: GameState, varName: string, cardId: string): StrBaSyouPair[] {
+  const cardState = getItemState(ctx, cardId);
+  const tip = ItemStateFn.getTip(cardState, varName)
+  const tipError = TipFn.checkTipSatisfies(tip)
+  if (tipError) {
+    throw tipError
+  }
+  if (tip.title[0] != "カード") {
+    throw new Error("must カード")
+  }
+  const pairs = TipFn.getSelection(tip) as StrBaSyouPair[]
+  return pairs
 }

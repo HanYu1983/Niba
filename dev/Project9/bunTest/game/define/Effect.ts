@@ -14,7 +14,7 @@ export type EffectReason =
     | ["場に出る", PlayerID, string]
     | ["PlayCard", PlayerID, string]
     | ["PlayText", PlayerID, string, string]
-    | ["GameRule", PlayerID | null]
+    | ["GameRule", PlayerID | null, string | null]
     | ["Destroy", PlayerID, string, DestroyReason]
     | ["Situation", PlayerID, string, Situation | null]
     | ["Event", string, GameEvent];
@@ -33,7 +33,10 @@ export const EffectFn = {
     getCardID(ctx: Effect): string {
         switch (ctx.reason[0]) {
             case "GameRule":
-                throw new Error("GameRule no cardID");
+                if (ctx.reason[2] == null) {
+                    throw new Error(`this GameRule not cardId: ${ctx.id} ${ctx.description}`);
+                }
+                return ctx.reason[2]
 
             case "PlayText":
             case "PlayCard":
@@ -51,7 +54,7 @@ export const EffectFn = {
         switch (ctx.reason[0]) {
             case "GameRule":
                 if (ctx.reason[1] == null) {
-                    throw new Error("this GameRule not playerID");
+                    throw new Error(`this GameRule not playerID: ${ctx.id} ${ctx.description}`);
                 }
                 return ctx.reason[1]
 

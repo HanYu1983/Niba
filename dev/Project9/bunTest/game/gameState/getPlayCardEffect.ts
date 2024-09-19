@@ -102,11 +102,7 @@ export function getPlayCardEffects(ctx: GameState, cardId: string): Effect[] {
                                                         {
                                                             title: function _(ctx: GameState, effect: Effect, { DefineFn, GameStateFn }: Bridge): GameState {
                                                                 const cardId = DefineFn.EffectFn.getCardID(effect)
-                                                                const cs = GameStateFn.getItemState(ctx, cardId)
-                                                                const tip = DefineFn.ItemStateFn.getTip(cs, "unitForSet")
-                                                                const tipError = DefineFn.TipFn.checkTipSatisfies(tip)
-                                                                if (tipError) throw tipError
-                                                                const pairs = DefineFn.TipFn.getSelection(tip) as StrBaSyouPair[]
+                                                                const pairs = GameStateFn.getCardTipStrBaSyouPairs(ctx, "unitForSet", cardId)
                                                                 const [targetCardId, targetBasyou] = pairs[0]
                                                                 const from = GameStateFn.getItemBaSyou(ctx, cardId)
                                                                 const to = targetBasyou
