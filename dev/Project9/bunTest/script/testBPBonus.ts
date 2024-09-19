@@ -5,12 +5,6 @@ import { GameState } from "../game/gameState/GameState";
 import { Bridge } from "./bridge";
 
 export const prototype: CardPrototype = {
-  title: "アストレイ ブルーフレーム セカンドL（ローエングリンランチャー）",
-  characteristic: "アストレイ系　ブルーフレーム系　MS　専用「叢雲劾」",
-  category: "ユニット",
-  color: "白",
-  rollCost: ["白", "白", null, null, null],
-  battlePoint: [5, 2, 4],
   texts: [
     {
       id: "",
