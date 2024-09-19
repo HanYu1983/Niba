@@ -10,6 +10,7 @@ export function getAttackPhaseRuleEffect(ctx: GameState, playerId: PlayerID): Ef
     return {
         id: ToolFn.getUUID("getAttackPhaseRuleEffect"),
         reason: ["GameRule", playerId, "getAttackPhaseRuleEffect"],
+        isOption: true,
         text: {
             id: ToolFn.getUUID("getAttackPhaseRuleEffect"),
             title: [],
@@ -88,6 +89,7 @@ export function getAttackPhaseRuleEffect(ctx: GameState, playerId: PlayerID): Ef
                                 for (const pair of spacePairs) {
                                     ctx = GameStateFn.moveItem(ctx, DefineFn.AbsoluteBaSyouFn.of(playerId, "戦闘エリア2"), pair, GameStateFn.onMoveItem) as GameState
                                 }
+                                ctx = GameStateFn.setNextPhase(ctx) as GameState
                                 return ctx
                             }.toString()
                         }

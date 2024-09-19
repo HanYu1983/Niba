@@ -5,7 +5,7 @@ import { getBattleGroupBattlePoint, getBattleGroup } from "../game/gameState/bat
 import { getCardBattlePoint } from "../game/gameState/card";
 import { addCards, createCardWithProtoIds } from "../game/gameState/CardTableComponent";
 import { clearGlobalEffects } from "../game/gameState/globalEffects";
-import { setPhase } from "../game/gameState/PhaseComponent";
+import { getPhase, setPhase } from "../game/gameState/PhaseComponent";
 import { setSetGroupLink } from "../game/gameState/SetGroupComponent";
 import { applyFlow } from "../game/gameStateWithFlowMemory/applyFlow";
 import { createGameStateWithFlowMemory, GameStateWithFlowMemory, initState } from "../game/gameStateWithFlowMemory/GameStateWithFlowMemory";
@@ -93,6 +93,7 @@ export async function testFlow2() {
   ) {
     throw new Error("一開始必須是抽牌階段開始");
   }
+  console.log(getPhase(ctx))
   console.log("非伺服器玩家只能取得等待");
   console.log("伺服器玩家可以取得系統指令");
   let flows = queryFlow(ctx, PlayerA);
@@ -111,11 +112,12 @@ export async function testFlow2() {
       throw new Error("玩家B必須拿到等待");
     }
   }
-  console.log("執行指令");
+  console.log(`執行指令: ${flows[0].id}`);
   ctx = applyFlow(ctx, PlayerA, flows[0]);
   if (ctx.flowMemory.hasTriggerEvent != true) {
     throw new Error("hasTriggerEvent must true");
   }
+  console.log(getPhase(ctx))
   console.log("執行完觸發指令後，就要取得到下一階段的指令");
   flows = queryFlow(ctx, PlayerA);
   if (flows.length == 0) {
@@ -140,6 +142,7 @@ export async function testFlow2() {
   if (ctx.flowMemory.hasTriggerEvent != false) {
     throw new Error("hasTriggerEvent must false");
   }
+  console.log(getPhase(ctx))
   flows = queryFlow(ctx, PlayerA);
   if (flows[0].id != "FlowAddBlock") {
     throw new Error("必須是FlowAddBlock");
@@ -174,6 +177,7 @@ export async function testFlow2() {
   if (ctx.activeEffectID == null) {
     throw new Error("ctx.activeEffectID must exist");
   }
+  console.log(getPhase(ctx))
   {
     let flowsB = queryFlow(ctx, PlayerB);
     if (flowsB.length == 0) {
@@ -193,6 +197,7 @@ export async function testFlow2() {
     console.log(`執行[${doFlowPassPayCost.id}]`)
     ctx = applyFlow(ctx, PlayerA, doFlowPassPayCost);
   }
+  console.log(getPhase(ctx))
   {
     let flowsB = queryFlow(ctx, PlayerB);
     if (flowsB.length == 0) {
@@ -205,6 +210,7 @@ export async function testFlow2() {
     console.log(`執行[${doFlowPassPayCost.id}]`)
     ctx = applyFlow(ctx, PlayerB, doFlowPassPayCost);
   }
+  console.log(getPhase(ctx))
   flows = queryFlow(ctx, PlayerA);
   const doEffectFlowA = flows.find((f) => f.id == "FlowDoEffect");
   if (doEffectFlowA == null) {
@@ -220,6 +226,7 @@ export async function testFlow2() {
     }
     console.log(`PlayerB: ${flowsB[0].description}`);
   }
+  console.log(getPhase(ctx))
   ctx = applyFlow(ctx, PlayerA, doEffectFlowA);
   if (ctx.activeEffectID != null) {
     throw new Error("ctx.activeEffectID must null");
@@ -228,8 +235,10 @@ export async function testFlow2() {
     throw new Error("ctx.immediateEffect.length must be 0");
   }
   flows = queryFlow(ctx, PlayerA);
+  console.log(flows)
   {
     let flowsB = queryFlow(ctx, PlayerB);
+    console.log(flowsB)
     if (flowsB.length == 0) {
       throw new Error("必須有flow");
     }

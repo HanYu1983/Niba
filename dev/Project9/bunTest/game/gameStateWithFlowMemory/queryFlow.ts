@@ -6,8 +6,10 @@ import { GameStateWithFlowMemory } from "./GameStateWithFlowMemory";
 import { PlayerA, PlayerB, PlayerIDFn } from "../define/PlayerID";
 import { AbsoluteBaSyouFn, BattleAreaKeyword } from "../define/BaSyou";
 import { Effect, EffectFn } from "../define/Effect";
-import { getCommandEffectTips, getPlayerCommands, getPlayerCommandsFilterNoError, getPlayerCommandsFilterNoErrorDistinct } from "./updateCommand";
+import { getPlayerCommandsFilterNoErrorDistinct } from "./updateCommand";
 import { ToolFn } from "../tool";
+import { getAttackPhaseRuleEffect } from "../gameState/getAttackPhaseRuleEffect";
+import { getDrawPhaseRuleEffect } from "../gameState/getDrawPhaseRuleEffect";
 
 export function queryFlow(ctx: GameStateWithFlowMemory, playerID: string): Flow[] {
     if (true) {
@@ -482,20 +484,7 @@ export function queryFlow(ctx: GameStateWithFlowMemory, playerID: string): Flow[
                                 {
                                     id: "FlowAddBlock",
                                     description: `${phase[0]}規定效果`,
-                                    block: {
-                                        id: ToolFn.getUUID("FlowAddBlock"),
-                                        description: `${phase[0]}規定效果`,
-                                        reason: ["GameRule", ctx.activePlayerID],
-                                        text: {
-                                            id: ToolFn.getUUID("FlowAddBlock_text"),
-                                            title: [],
-                                            logicTreeActions: [
-                                                {
-                                                    actions: []
-                                                }
-                                            ]
-                                        }
-                                    },
+                                    block: getDrawPhaseRuleEffect(ctx, playerID),
                                 },
                             ];
                         case "リロールフェイズ":
@@ -542,38 +531,11 @@ export function queryFlow(ctx: GameStateWithFlowMemory, playerID: string): Flow[
                             switch (phase[1]) {
                                 case "攻撃ステップ":
                                 case "防御ステップ": {
-                                    const [leftArea, rightArea]: [
-                                        BattleAreaKeyword,
-                                        BattleAreaKeyword
-                                    ] = ["地球エリア", "宇宙エリア"];
-                                    const playerID =
-                                        phase[1] == "攻撃ステップ"
-                                            ? ctx.activePlayerID
-                                            : PlayerIDFn.getOpponent(ctx.activePlayerID);
                                     return [
                                         {
                                             id: "FlowAddBlock",
                                             description: `${phase[1]}規定效果`,
-                                            block: {
-                                                id: ToolFn.getUUID("FlowAddBlock"),
-                                                description: `${phase[1]}規定效果`,
-                                                reason: ["GameRule", playerID],
-                                                text: {
-                                                    id: ToolFn.getUUID("FlowAddBlock_text"),
-                                                    title: [],
-                                                    conditions: {
-                                                        "去左方的卡": {
-                                                            title: ""
-                                                        }
-                                                    },
-                                                    logicTreeActions: [
-                                                        {
-                                                            actions: []
-                                                        }
-                                                    ]
-                                                },
-                                                isOption: true,
-                                            },
+                                            block: getAttackPhaseRuleEffect(ctx, playerID),
                                         },
                                     ];
                                 }

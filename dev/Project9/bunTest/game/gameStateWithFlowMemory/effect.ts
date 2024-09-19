@@ -171,9 +171,10 @@ export function updateDestroyEffect(ctx: GameStateWithFlowMemory): GameStateWith
   return getItemStateValues(ctx).reduce((ctx, cs) => {
     if (cs.destroyReason) {
       const effect: Effect = {
+        id: ToolFn.getUUID("updateDestroyEffect"),
         reason: ["Destroy", cs.destroyReason.playerID, cs.id, cs.destroyReason],
         text: {
-          id: "",
+          id: ToolFn.getUUID("updateDestroyEffect"),
           title: [],
         }
       }
@@ -187,9 +188,10 @@ export function updateDestroyEffect(ctx: GameStateWithFlowMemory): GameStateWith
         playerID: getItemController(ctx, cs.id)
       }
       const effect: Effect = {
+        id: ToolFn.getUUID("updateDestroyEffect"),
         reason: ["Destroy", destroyReason.playerID, cs.id, destroyReason],
         text: {
-          id: "",
+          id: ToolFn.getUUID("updateDestroyEffect"),
           title: [],
         }
       }
