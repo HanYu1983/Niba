@@ -7,6 +7,7 @@ import { test179001_01A_CH_WT007R_white } from "./test179001_01A_CH_WT007R_white
 import { test179030_11E_C_BL079R_blue } from "./test179030_11E_C_BL079R_blue";
 import { testAttackRuleEffect, testAttackRuleEffect2 } from "./testAttackRuleEffect";
 import { testDrawRuleEffect } from "./testDrawRuleEffect";
+import { testReollRuleEffect } from "./testRerollRuleEffect";
 
 export async function tests() {
     return [
@@ -21,7 +22,8 @@ export async function tests() {
         test179030_11E_C_BL079R_blue,
         testAttackRuleEffect,
         testAttackRuleEffect2,
-        testDrawRuleEffect
+        testDrawRuleEffect,
+        testReollRuleEffect,
     ].reduce((worker, testF) => {
         return worker.then(async () => {
             console.log(`==============================${testF.name}==================================`);

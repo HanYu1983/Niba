@@ -189,3 +189,11 @@ export function getItemRuntimeCategory(ctx: GameState, itemId: string): CardCate
   }
   throw new Error(`getCardRuntimeCategory unknown item type: ${itemId}`)
 }
+
+export function getItemIsCanReroll(ctx: GameState, itemId: string): boolean {
+  return true
+}
+
+export function getItemIsCanRoll(ctx: GameState, itemId: string): boolean {
+  return true
+}

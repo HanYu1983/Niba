@@ -10,6 +10,7 @@ import { getPlayerCommandsFilterNoErrorDistinct } from "./updateCommand";
 import { ToolFn } from "../tool";
 import { getAttackPhaseRuleEffect } from "../gameState/getAttackPhaseRuleEffect";
 import { getDrawPhaseRuleEffect } from "../gameState/getDrawPhaseRuleEffect";
+import { getRerollPhaseRuleEffect } from "../gameState/getRerollPhaseRuleEffect";
 
 export function queryFlow(ctx: GameStateWithFlowMemory, playerID: string): Flow[] {
     if (true) {
@@ -488,14 +489,11 @@ export function queryFlow(ctx: GameStateWithFlowMemory, playerID: string): Flow[
                                 },
                             ];
                         case "リロールフェイズ":
-                            // 如果已經觸發規定の効果
-                            if (ctx.flowMemory.hasTriggerEvent) {
-                                return [{ id: "FlowNextTiming" }];
-                            }
                             return [
                                 {
-                                    id: "FlowHandleRerollPhaseRule",
-                                    description: "執行「リロールフェイズ」",
+                                    id: "FlowAddBlock",
+                                    description: `${phase[0]}規定效果`,
+                                    block: getRerollPhaseRuleEffect(ctx, playerID),
                                 },
                             ];
                     }
@@ -539,12 +537,7 @@ export function queryFlow(ctx: GameStateWithFlowMemory, playerID: string): Flow[
                                         },
                                     ];
                                 }
-
                                 case "ダメージ判定ステップ":
-                                    // 如果已經觸發規定の効果
-                                    if (ctx.flowMemory.hasTriggerEvent) {
-                                        return [{ id: "FlowNextTiming" }];
-                                    }
                                     return [
                                         {
                                             id: "FlowHandleDamageStepRule",
@@ -552,10 +545,6 @@ export function queryFlow(ctx: GameStateWithFlowMemory, playerID: string): Flow[
                                         },
                                     ];
                                 case "帰還ステップ":
-                                    // 如果已經觸發規定の効果
-                                    if (ctx.flowMemory.hasTriggerEvent) {
-                                        return [{ id: "FlowNextTiming" }];
-                                    }
                                     return [
                                         {
                                             id: "FlowHandleReturnStepRule",

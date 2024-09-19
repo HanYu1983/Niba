@@ -91,11 +91,6 @@ type FlowMakeDestroyOrder = {
     description?: string;
 };
 
-type FlowHandleRerollPhaseRule = {
-    id: "FlowHandleRerollPhaseRule";
-    description?: string;
-};
-
 export type Flow =
     | FlowAddBlock
     | FlowTriggerTextEvent
@@ -115,5 +110,4 @@ export type Flow =
     | FlowHandleReturnStepRule
     | FlowHandleStackEffectFinished
     | FlowPassPayCost
-    | FlowMakeDestroyOrder
-    | FlowHandleRerollPhaseRule;
+    | FlowMakeDestroyOrder;
