@@ -14,6 +14,7 @@ export type EffectReason =
     | ["場に出る", PlayerID, string]
     | ["PlayCard", PlayerID, string]
     | ["PlayText", PlayerID, string, string]
+    // 通常GameRule是沒有第三個cardId的, 存在的目的是為了方便套用程式碼邏輯, 讓沒有cardId的效果也能存入TipSelection到ItemState中
     | ["GameRule", PlayerID | null, string | null]
     | ["Destroy", PlayerID, string, DestroyReason]
     | ["Situation", PlayerID, string, Situation | null]

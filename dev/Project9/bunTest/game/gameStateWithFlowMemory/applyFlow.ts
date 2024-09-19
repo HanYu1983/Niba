@@ -304,29 +304,6 @@ export function applyFlow(
             };
             return ctx;
         }
-        case "FlowHandleDamageStepRule": {
-            // 傷害計算並造成傷害
-            const attackPlayerID = ctx.activePlayerID;
-            if (attackPlayerID == null) {
-                throw new Error("attackPlayerID not found");
-            }
-            // 速度1
-            ctx = doPlayerAttack(ctx, attackPlayerID, "戦闘エリア1", 1) as GameStateWithFlowMemory;
-            ctx = doPlayerAttack(ctx, attackPlayerID, "戦闘エリア2", 1) as GameStateWithFlowMemory;
-            // 速度2
-            ctx = doPlayerAttack(ctx, attackPlayerID, "戦闘エリア1", 2) as GameStateWithFlowMemory;
-            ctx = doPlayerAttack(ctx, attackPlayerID, "戦闘エリア2", 2) as GameStateWithFlowMemory;
-            ctx = updateDestroyEffect(ctx)
-            // set hasTriggerEvent
-            ctx = {
-                ...ctx,
-                flowMemory: {
-                    ...ctx.flowMemory,
-                    hasTriggerEvent: true,
-                },
-            };
-            return ctx;
-        }
         case "FlowHandleReturnStepRule": {
             // TODO: 如果地形不適應，移到廢棄庫
             // {
@@ -451,21 +428,6 @@ export function applyFlow(
                 },
             };
         }
-        // case "FlowHandleRerollPhaseRule": {
-        //     const activePlayerID = ctx.activePlayerID;
-        //     if (activePlayerID == null) {
-        //         throw new Error("activePlayer not found");
-        //     }
-        //     // set hasTriggerEvent
-        //     ctx = {
-        //         ...ctx,
-        //         flowMemory: {
-        //             ...ctx.flowMemory,
-        //             hasTriggerEvent: true,
-        //         },
-        //     };
-        //     return ctx;
-        // }
     }
     return ctx;
 }

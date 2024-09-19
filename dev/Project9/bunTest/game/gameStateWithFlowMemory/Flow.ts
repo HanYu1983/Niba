@@ -68,10 +68,6 @@ type FlowCancelPassCut = {
     id: "FlowCancelPassCut";
     description?: string;
 };
-type FlowHandleDamageStepRule = {
-    id: "FlowHandleDamageStepRule";
-    description?: string;
-};
 type FlowHandleReturnStepRule = {
     id: "FlowHandleReturnStepRule";
     description?: string;
@@ -106,7 +102,6 @@ export type Flow =
     | FlowCancelPassPhase
     | FlowPassCut
     | FlowCancelPassCut
-    | FlowHandleDamageStepRule
     | FlowHandleReturnStepRule
     | FlowHandleStackEffectFinished
     | FlowPassPayCost

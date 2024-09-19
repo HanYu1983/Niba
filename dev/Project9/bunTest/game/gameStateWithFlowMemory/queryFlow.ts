@@ -11,6 +11,7 @@ import { ToolFn } from "../tool";
 import { getAttackPhaseRuleEffect } from "../gameState/getAttackPhaseRuleEffect";
 import { getDrawPhaseRuleEffect } from "../gameState/getDrawPhaseRuleEffect";
 import { getRerollPhaseRuleEffect } from "../gameState/getRerollPhaseRuleEffect";
+import { getDamageRuleEffect } from "../gameState/getDamageRuleEffect";
 
 export function queryFlow(ctx: GameStateWithFlowMemory, playerID: string): Flow[] {
     if (true) {
@@ -540,8 +541,9 @@ export function queryFlow(ctx: GameStateWithFlowMemory, playerID: string): Flow[
                                 case "ダメージ判定ステップ":
                                     return [
                                         {
-                                            id: "FlowHandleDamageStepRule",
-                                            description: "執行「ダメージ判定ステップ」",
+                                            id: "FlowAddBlock",
+                                            description: `${phase[1]}規定效果`,
+                                            block: getDamageRuleEffect(ctx, playerID),
                                         },
                                     ];
                                 case "帰還ステップ":
