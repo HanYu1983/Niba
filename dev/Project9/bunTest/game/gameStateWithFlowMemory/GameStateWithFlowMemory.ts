@@ -43,7 +43,7 @@ export type CommandEffectTip = {
     effect: Effect,
     logicID: number,
     logicSubID: number,
-    tipOrErrors: {conditionKey: string, condition: Condition, tip: Tip, error: TargetMissingError | null}[]
+    tipOrErrors: {conditionKey: string, condition: Condition, tip: Tip | null, error: TargetMissingError | null}[]
 }
 
 export type GameStateWithFlowMemory = {

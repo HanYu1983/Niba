@@ -45,6 +45,7 @@ export type ActionTitle =
     | ["cutIn", Action[]]
     | ["カード_１枚を引く", number]
     | ["リロール状態で置き換える"]
+    | ["合計国力〔x〕", number]
 
 export type Action = {
     title: ActionTitle,
@@ -70,7 +71,6 @@ export const ActionFn = {
 export type ConditionTitle =
     | string
     | ["RollColor", CardColor | null]
-    | ["合計国力〔x〕", number]
     | ["_戦闘エリアにいる_敵軍_ユニット_１～_２枚", BaSyouKeyword[], RelatedPlayerSideKeyword, CardCategory, number, number]
     | ["_交戦中の_自軍_ユニット_１枚", "交戦中" | "非交戦中" | null, RelatedPlayerSideKeyword, CardCategory, number]
     | ["_自軍_ユニット_１枚", RelatedPlayerSideKeyword, CardCategory, number]
@@ -80,7 +80,7 @@ export type ConditionTitle =
     | ["_自軍手札、または自軍ハンガーにある、_６以下の合計国力を持つ_ユニット_１枚を", RelatedPlayerSideKeyword, number, CardCategory, number]
 
 export type Condition = {
-    title: ConditionTitle,
+    title?: ConditionTitle,
     actions?: Action[],
     isNoSelection?: boolean
 }

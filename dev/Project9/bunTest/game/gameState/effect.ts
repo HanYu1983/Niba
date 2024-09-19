@@ -36,44 +36,88 @@ export function assertEffectCanPass(
   }
   const bridge = createBridge()
   // 確保效果象對存在
-  const errors = Object.values(ltacs)
+  const tipErrors = Object.values(ltacs)
     .flatMap(con => getConditionTitleFn(con, {})(ctx, effect, bridge))
     .map(tip => {
       return TipFn.checkTipSatisfies(tip)
     })
-    .filter(v => v)
-  if (errors.length) {
-    throw new Error(errors.map(er => er?.message).join("|"))
-  }
-  // 確保玩家已選了效果對象
-  switch (effect.reason[0]) {
-    case "GameRule":
-    case "PlayCard":
-    case "PlayText":
-      Object.keys(ltacs).forEach(key => {
-        if (ltacs[key].isNoSelection) {
-          return
+    .filter(v => v) as TargetMissingError[]
+  // action can pass
+  const actionErrors = Object.values(ltacs)
+    .flatMap(con => ConditionFn.getActionTitleFns(con, getActionTitleFn))
+    .map(fn => {
+      let error: TargetMissingError | null = null;
+      try {
+        fn(ctx, effect, bridge)
+      } catch (e) {
+        if (e instanceof TargetMissingError) {
+          error = e
+        } else {
+          throw e
         }
-        ItemStateFn.getTip(getItemState(ctx, EffectFn.getCardID(effect)), key)
-      })
+      }
+      return error
+    })
+    .filter(v => v) as TargetMissingError[]
+  // 確保玩家已選了效果對象
+  let userSelectionError: TargetMissingError | null = null;
+  try {
+    switch (effect.reason[0]) {
+      case "GameRule":
+      case "PlayCard":
+      case "PlayText":
+        Object.keys(ltacs).forEach(key => {
+          if (ltacs[key].isNoSelection) {
+            return
+          }
+          ItemStateFn.getTip(getItemState(ctx, EffectFn.getCardID(effect)), key)
+        })
+    }
+  } catch (e) {
+    if (e instanceof TargetMissingError) {
+      userSelectionError = e
+    } else {
+      throw e
+    }
+  }
+  const errors = [...tipErrors, ...actionErrors, ...(userSelectionError ? [userSelectionError] : [])]
+  if (errors.length) {
+    throw new Error(errors.map((er: any) => er.message).join("|"))
   }
 }
 
-export function getCommandEffectTips(ctx: GameState, e: Effect): CommandEffectTip[] {
+export function getCommandEffectTips(ctx: GameState, effect: Effect): CommandEffectTip[] {
   const bridge = createBridge()
-  if (e.text.logicTreeActions) {
-    const testedEffects = e.text.logicTreeActions.flatMap((lta, logicId) => {
-      const allTree = CardTextFn.getLogicTreeActionConditions(e.text, lta)
+  if (effect.text.logicTreeActions) {
+    const testedEffects = effect.text.logicTreeActions.flatMap((lta, logicId) => {
+      const allTree = CardTextFn.getLogicTreeActionConditions(effect.text, lta)
       const allTest = allTree.map((conditions, logicSubId) => {
         const tipOrErrors = Object.keys(conditions).flatMap(conditionKey => {
           const condition = conditions[conditionKey]
-          return getConditionTitleFn(condition, {})(ctx, e, bridge).map(tip => {
+          const test1 = getConditionTitleFn(condition, {})(ctx, effect, bridge).map(tip => {
             return { conditionKey: conditionKey, condition: condition, tip: tip, error: TipFn.checkTipSatisfies(tip) }
           })
+          const test2 = ConditionFn.getActionTitleFns(condition, getActionTitleFn).flatMap(fn => {
+            let error: TargetMissingError | null = null;
+            try {
+              fn(ctx, effect, bridge)
+            } catch (e) {
+              if (e instanceof TargetMissingError) {
+                error = e
+              } else {
+                throw e
+              }
+            }
+            if (error == null) {
+              return []
+            }
+            return [{ conditionKey: conditionKey, condition: condition, tip: null, error: error }]
+          })
+          return [...test1, ...test2]
         })
         const ret: CommandEffectTip = {
           id: ToolFn.getUUID("getCommandEffectTips"),
-          effect: e,
+          effect: effect,
           logicID: logicId,
           logicSubID: logicSubId,
           tipOrErrors: tipOrErrors
@@ -100,6 +144,9 @@ export function setTipSelectionForUser(ctx: GameState, e: Effect): GameState {
       cets.forEach(cet => {
         cet.tipOrErrors.forEach(tipOrE => {
           if (tipOrE.error) {
+            return
+          }
+          if (tipOrE.tip == null) {
             return
           }
           const conditionKey = tipOrE.conditionKey
@@ -171,24 +218,15 @@ export function getEffectTips(
 }
 
 export function getConditionTitleFn(condition: Condition, options: { isPlay?: boolean }): ConditionTitleFn {
+  if (condition.title == null) {
+    return function (ctx: GameState, effect: Effect): Tip[] {
+      return []
+    }
+  }
   if (typeof condition.title == "string") {
     return ConditionFn.getTitleFn(condition)
   }
   switch (condition.title[0]) {
-    case "合計国力〔x〕": {
-      const [_, x] = condition.title
-      return function (ctx: GameState, effect: Effect): Tip[] {
-        const cardId = EffectFn.getCardID(effect)
-        const cardController = getItemController(ctx, cardId)
-        const cardIdsCanPay = getCardIdsCanPayRollCost(ctx, cardController, null)
-        return [
-          {
-            title: ["合計国力〔x〕", cardIdsCanPay],
-            min: x
-          }
-        ]
-      }
-    }
     case "本来の記述に｢特徴：_装弾｣を持つ_自軍_G_１枚": {
       const [_, targetChar, side, category, count] = condition.title
       return function (ctx: GameState, effect: Effect): Tip[] {
@@ -444,6 +482,18 @@ export function getActionTitleFn(action: Action): ActionTitleFn {
         ctx = setItemState(ctx, t2, t1State) as GameState
         return ctx
       }
+    case "合計国力〔x〕": {
+      const [_, x] = action.title
+      return function (ctx: GameState, effect: Effect): GameState {
+        const cardId = EffectFn.getCardID(effect)
+        const cardController = getItemController(ctx, cardId)
+        const cardIdsCanPay = getCardIdsCanPayRollCost(ctx, cardController, null)
+        if (cardIdsCanPay.length < x) {
+          throw new TargetMissingError(`合計国力〔x〕:${cardIdsCanPay.length} < ${x}`)
+        }
+        return ctx
+      }
+    }
   }
 }
 
