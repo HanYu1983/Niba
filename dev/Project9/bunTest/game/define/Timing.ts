@@ -91,6 +91,10 @@ export const PhaseFn = {
             ["戦闘フェイズ", "ターン終了時", "効果終了。ターン終了"]
         ];
     },
+    getFirst(): Phase {
+        const all = this.getAll()
+        return all[0]
+    },
     getLast(): Phase {
         const all = this.getAll()
         return all[all.length - 1]

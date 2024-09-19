@@ -1,6 +1,6 @@
 import { log } from "../../tool/logger";
 import { PhaseFn, SiYouTiming } from "../define/Timing";
-import { getTextsFromTokuSyuKouKa, CardText } from "../define/CardText";
+import { CardText } from "../define/CardText";
 import { PlayerA, PlayerB, PlayerID } from "../define/PlayerID";
 import { AbsoluteBaSyouFn, BaSyouKeywordFn } from "../define/BaSyou";
 import { addCards, createCardWithProtoIds, getCard } from "./CardTableComponent";
@@ -15,6 +15,7 @@ import { getPhase, setNextPhase, setPhase } from "./PhaseComponent";
 import { getCardHasSpeicalEffect, getCardTexts } from "./card";
 import { Card } from "../define/Card";
 import { setActivePlayerID } from "./ActivePlayerComponent";
+import { getTextsFromSpecialEffect } from "./getTextsFromSpecialEffect";
 
 export function getPlayEffects(ctx: GameState, playerId: PlayerID): Effect[] {
     log("getPlayEffects", "start")
@@ -80,7 +81,7 @@ export function getPlayEffects(ctx: GameState, playerId: PlayerID): Effect[] {
             }
             if (text.title[0] == "特殊型") {
                 const [_, toku] = text.title;
-                const t = getTextsFromTokuSyuKouKa(toku).find((v) => v.title[0] == "使用型");
+                const t = getTextsFromSpecialEffect(text).find((v) => v.title[0] == "使用型");
                 if (t == null) {
                     throw new Error("t must find");
                 }

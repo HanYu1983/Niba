@@ -4,9 +4,11 @@ import { DestroyReason, Effect } from "./Effect";
 import { PlayerID } from "./PlayerID";
 import { BattleBonus } from "./CardText";
 import { Phase } from "./Timing";
+import { AbsoluteBaSyou } from "./BaSyou";
 
 export type GameEventTitle =
     | ["GameEventOnTiming", Phase]
+    | ["GameEventOnMove", AbsoluteBaSyou, AbsoluteBaSyou]
     | ["カット終了時", Effect[]]
     | ["場に出た場合"]
     | ["プレイされて場に出た場合"]

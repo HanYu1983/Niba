@@ -32,9 +32,9 @@ export async function testReturnRuleEffect() {
         throw new Error()
     }
     if(AbsoluteBaSyouFn.eq(getItemBaSyou(ctx, earth.id), AbsoluteBaSyouFn.of(PlayerA, "配備エリア")) != true){
-        throw ""
+        throw new Error("")
     }
     if(AbsoluteBaSyouFn.eq(getItemBaSyou(ctx, earth2.id), AbsoluteBaSyouFn.of(PlayerA, "ジャンクヤード")) != true){
-        throw ""
+        throw new Error("")
     }
 }

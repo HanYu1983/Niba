@@ -468,6 +468,9 @@ export function getOnEventTitleFn(text: CardText): OnEventFn {
   if (text.onEvent == null || typeof text.onEvent == "string") {
     return CardTextFn.getOnEventFn(text)
   }
+  if (typeof text.onEvent === "function") {
+    return text.onEvent;
+  }
   switch (text.onEvent[0]) {
     case "GameEventOnTimingDoAction": {
       const [_, timing, action] = text.onEvent;
@@ -553,6 +556,10 @@ export function onMoveItem(ctx: GameState, to: AbsoluteBaSyou, [cardId, from]: S
     }
     ctx = setCard(ctx, cardId, card) as GameState
   }
+  ctx = triggerEvent(ctx, {
+    title: ["GameEventOnMove", from, to],
+    cardIds: [cardId]
+  })
   return ctx
 }
 

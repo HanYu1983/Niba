@@ -72,3 +72,28 @@ export function isABattleGroup(
       }) || false
   );
 }
+
+export function isBattleGroupHasA(
+  ctx: GameState,
+  a: TextSpeicalEffect,
+  cardID: string
+): boolean {
+  const baSyou = getItemBaSyou(ctx, cardID);
+  const battleGroup = getBattleGroup(ctx, baSyou);
+  return (
+    battleGroup
+      .map((cardID) => {
+        // 其中一張卡有就行了
+        const setGroupCards = getSetGroupCards(ctx, cardID);
+        for (const cardGroupCardID of setGroupCards) {
+          if (getCardHasSpeicalEffect(ctx, a, cardGroupCardID)) {
+            return true;
+          }
+        }
+        return false;
+      })
+      .reduce((acc, c) => {
+        return acc || c;
+      }) || false
+  );
+}

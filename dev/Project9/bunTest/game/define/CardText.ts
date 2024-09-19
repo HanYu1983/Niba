@@ -132,8 +132,11 @@ export const LogicTreeActionFn = {
     }
 }
 
+export type OnEventFn = ActionTitleFn
+
 export type OnEventTitle =
     | string
+    | OnEventFn
     | ["GameEventOnTimingDoAction", Phase, Action]
 
 export type CardText = {
@@ -146,8 +149,6 @@ export type CardText = {
     onSituation?: string
     isEnabledWhileG?: boolean
 }
-
-export type OnEventFn = ActionTitleFn
 
 export const CardTextFn = {
     getCondition(ctx: CardText, conditionId: string): Condition {
@@ -199,10 +200,6 @@ export const CardTextFn = {
         }
         return eval(ctx.onEvent + ";_")
     }
-}
-
-export function getTextsFromTokuSyuKouKa(value: TextSpeicalEffect): CardText[] {
-    return [];
 }
 
 export type OnSituationFn = (ctx: any, effect: Effect, lib: any) => GlobalEffect[];

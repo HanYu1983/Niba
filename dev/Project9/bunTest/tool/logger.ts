@@ -1,19 +1,6 @@
 const hideCategory: string[] = [
-  "updateCommand",
-  "getTip",
-  "recurRequire",
-  "getTargetType",
-  "triggerTextEvent",
-  "doConditionTarget",
-  "updateEffect",
-  "initJsonfp",
-  "doRequireTargetActionTarget",
-  "doRequireTargetAction",
-  "getAbsoluteBaSyou",
-  "assertTargetTypeValueLength",
-  "applyFlow",
+  "triggerEvent",
   "getPlayEffects",
-  "getGlobalEffects",
 ];
 let filterCategory = true;
 

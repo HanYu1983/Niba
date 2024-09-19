@@ -1,4 +1,4 @@
-import { pipe, always, map, concat, reduce } from "ramda"
+import { pipe, always, map, concat, reduce, flatten } from "ramda"
 import { createBridge } from "../bridge/createBridge"
 import { CardText } from "../define/CardText"
 import { Effect, EffectFn } from "../define/Effect"
@@ -8,10 +8,12 @@ import { getCardTexts } from "./card"
 import { getCardIds } from "./CardTableComponent"
 import { getOnEventTitleFn } from "./effect"
 import { GameState } from "./GameState"
-import { getItemIds, getItemPrototype } from "./ItemTableComponent"
+import { getCardLikeItemIds, getItemIds, getItemPrototype } from "./ItemTableComponent"
 import { ItemStateFn } from "../define/ItemState"
 import { PhaseFn } from "../define/Timing"
 import { getItemState, mapItemStateValues, setItemState } from "./ItemStateComponent"
+import { getTextsFromSpecialEffect } from "./getTextsFromSpecialEffect"
+import { log } from "../../tool/logger"
 
 // 觸發事件腳本
 // 在每次事件發生時都要呼叫
@@ -20,26 +22,29 @@ export function triggerEvent(
     ctx: GameState,
     event: GameEvent
 ): GameState {
+    log("triggerEvent", event.title, event.cardIds)
     const bridge = createBridge()
     // command
     const commands = pipe(
-        always(getCardIds(ctx)),
+        always(getCardLikeItemIds(ctx)),
         map(cardId => {
             const proto = getItemPrototype(ctx, cardId)
             if (proto.commandText?.onEvent) {
-                return { cardId: cardId, texts: getCardTexts(ctx, cardId) }
+                return { cardId: cardId, texts: [proto.commandText] }
             }
         }),
         infos => infos.filter(v => v) as { cardId: string, texts: CardText[] }[],
     )()
     ctx = pipe(
-        always(getCardIds(ctx)),
+        always(getCardLikeItemIds(ctx)),
         map(cardId => ({ cardId: cardId, texts: getCardTexts(ctx, cardId) })),
         concat(commands),
         reduce((ctx, { cardId, texts }) => {
-            return pipe(
-                always(texts),
-                reduce((ctx, text) => {
+            log("triggerEvent", "找到卡和內文", cardId, texts)
+            return texts
+                .flatMap(text => text.title[0] == "特殊型" ? getTextsFromSpecialEffect(text) : [text])
+                .reduce((ctx, text) => {
+                    log("triggerEvent", "處理單個內文", text.title, text.description)
                     const effect: Effect = {
                         id: ToolFn.getUUID("triggerTextEvent"),
                         reason: ["Event", cardId, event],
@@ -47,7 +52,6 @@ export function triggerEvent(
                     }
                     return getOnEventTitleFn(text)(ctx, effect, bridge)
                 }, ctx)
-            )()
         }, ctx)
     )()
     if (event.title[0] == "GameEventOnTiming" && PhaseFn.eq(event.title[1], PhaseFn.getLast())) {

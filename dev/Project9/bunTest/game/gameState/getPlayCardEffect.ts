@@ -78,8 +78,11 @@ export function getPlayCardEffects(ctx: GameState, cardId: string): Effect[] {
                                                                 const from = GameStateFn.getItemBaSyou(ctx, cardId)
                                                                 const to = DefineFn.AbsoluteBaSyouFn.setBaSyouKeyword(from, "配備エリア")
                                                                 ctx = GameStateFn.moveItem(ctx, to, [cardId, from], GameStateFn.onMoveItem) as GameState
-                                                                const shouldRoll = GameStateFn.getCardHasSpeicalEffect(ctx, ["戦闘配備"], cardId) == false
-                                                                ctx = GameStateFn.setItemIsRoll(ctx, shouldRoll, [cardId, to]) as GameState
+                                                                const hasHigh = GameStateFn.getCardHasSpeicalEffect(ctx, ["戦闘配備"], cardId)
+                                                                const hasPS = GameStateFn.getCardHasSpeicalEffect(ctx, ["PS装甲"], cardId)
+                                                                const isNoNeedRoll = (hasHigh || hasPS)
+                                                                const isRoll = isNoNeedRoll == false
+                                                                ctx = GameStateFn.setItemIsRoll(ctx, isRoll, [cardId, to]) as GameState
                                                                 return ctx
                                                             }.toString()
                                                         }
