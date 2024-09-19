@@ -47,6 +47,7 @@ export function assertEffectCanPass(
   }
   // 確保玩家已選了效果對象
   switch (effect.reason[0]) {
+    case "GameRule":
     case "PlayCard":
     case "PlayText":
       Object.keys(ltacs).forEach(key => {
@@ -88,6 +89,7 @@ export function getCommandEffectTips(ctx: GameState, e: Effect): CommandEffectTi
 
 export function setTipSelectionForUser(ctx: GameState, e: Effect): GameState {
   switch (e.reason[0]) {
+    case "GameRule":
     case "Destroy":
     case "場に出る":
     case "PlayCard":
@@ -550,3 +552,11 @@ export function getCardTipStrBaSyouPairs(ctx: GameState, varName: string, cardId
   const pairs = TipFn.getSelection(tip) as StrBaSyouPair[]
   return pairs
 }
+
+export function setCardTipStrBaSyouPairs(ctx: GameState, varName: string, pairs: StrBaSyouPair[], cardId: string): GameState {
+  let cs = getItemState(ctx, cardId)
+  cs = ItemStateFn.setTip(cs, varName, { title: ["カード", [], pairs] })
+  ctx = setItemState(ctx, cardId, cs) as GameState
+  return ctx
+}
+
