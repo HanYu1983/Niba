@@ -16,7 +16,7 @@ import { getPlayEffects } from "../game/gameState/getPlayEffects"
 import { getGlobalEffects, setGlobalEffects, clearGlobalEffects } from "../game/gameState/globalEffects"
 import { checkIsBattle, isBattle } from "../game/gameState/IsBattleComponent"
 import { getItemState, setItemState } from "../game/gameState/ItemStateComponent"
-import { getItemBaSyou, getItemIds, getItemIdsByBasyou, moveItem } from "../game/gameState/ItemTableComponent"
+import { getCardLikeItemIdsByBasyou, getItemBaSyou, getItemIds, getItemIdsByBasyou, moveItem } from "../game/gameState/ItemTableComponent"
 import { setPhase } from "../game/gameState/PhaseComponent"
 import { triggerEvent } from "../game/gameState/triggerEvent"
 import { loadPrototype } from "../script"
@@ -70,7 +70,7 @@ export async function test179024_03B_U_WT042U_white() {
     }
     // battle
     ctx = moveItem(ctx, AbsoluteBaSyouFn.of(PlayerB, "戦闘エリア1"), [cardB.id, getItemBaSyou(ctx, cardB.id)], onMoveItem) as GameState
-    const itemIds = getItemIdsByBasyou(ctx, AbsoluteBaSyouFn.of(PlayerB, "戦闘エリア1"))
+    const itemIds = getCardLikeItemIdsByBasyou(ctx, AbsoluteBaSyouFn.of(PlayerB, "戦闘エリア1"))
     if (itemIds.length > 0 && itemIds[0] == cardB.id) {
 
     } else {

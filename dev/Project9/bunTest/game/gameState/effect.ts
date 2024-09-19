@@ -14,7 +14,7 @@ import { getCard, setCard } from "./CardTableComponent"
 import { GameState } from "./GameState"
 import { clearGlobalEffects } from "./globalEffects"
 import { getItemStateValues, getItemState, setItemState } from "./ItemStateComponent"
-import { getItemController, addCoinsToCard, isCard, isChip, getItemBaSyou, isCoin, getItemPrototype, getItemIdsByBasyou, moveItem, setItemIsRoll } from "./ItemTableComponent"
+import { getItemController, addCoinsToCard, isCard, isChip, getItemBaSyou, isCoin, getItemPrototype, getItemIdsByBasyou, moveItem, setItemIsRoll, getCardLikeItemIdsByBasyou } from "./ItemTableComponent"
 import { triggerEvent } from "./triggerEvent"
 import { Bridge } from "../../script/bridge"
 import { GlobalEffect } from "../define/GlobalEffect"
@@ -197,7 +197,7 @@ export function getConditionTitleFn(condition: Condition, options: { isPlay?: bo
           [AbsoluteBaSyouFn.of(targetPlayerId, "Gゾーン")] :
           (lift(AbsoluteBaSyouFn.of)([targetPlayerId], BaSyouKeywordFn.getBaAll()))
         const pairs = basyous.flatMap(basyou =>
-          getItemIdsByBasyou(ctx, basyou)
+          getCardLikeItemIdsByBasyou(ctx, basyou)
             .filter(cardId => getItemPrototype(ctx, cardId).characteristic?.includes(targetChar))
             .map(cardId => [cardId, basyou] as StrBaSyouPair)
         )
@@ -218,7 +218,7 @@ export function getConditionTitleFn(condition: Condition, options: { isPlay?: bo
         const targetPlayerId = side == "自軍" ? playerId : PlayerIDFn.getOpponent(playerId)
         const basyous: AbsoluteBaSyou[] = (lift(AbsoluteBaSyouFn.of)([targetPlayerId], basyouKws))
         const pairs = basyous.flatMap(basyou =>
-          getItemIdsByBasyou(ctx, basyou)
+          getCardLikeItemIdsByBasyou(ctx, basyou)
             .filter(cardId => getItemRuntimeCategory(ctx, cardId) == category)
             .map(cardId => [cardId, basyou] as StrBaSyouPair)
         )
@@ -239,7 +239,7 @@ export function getConditionTitleFn(condition: Condition, options: { isPlay?: bo
         const targetPlayerId = side == "自軍" ? playerId : PlayerIDFn.getOpponent(playerId)
         const basyous: AbsoluteBaSyou[] = (lift(AbsoluteBaSyouFn.of)([targetPlayerId], BaSyouKeywordFn.getBaAll()))
         const pairs = basyous.flatMap(basyou =>
-          getItemIdsByBasyou(ctx, basyou)
+          getCardLikeItemIdsByBasyou(ctx, basyou)
             .filter(cardId => getItemRuntimeCategory(ctx, cardId) == category)
             .map(cardId => [cardId, basyou] as StrBaSyouPair)
         )
@@ -259,7 +259,7 @@ export function getConditionTitleFn(condition: Condition, options: { isPlay?: bo
         const targetPlayerId = side == "自軍" ? playerId : PlayerIDFn.getOpponent(playerId)
         const basyous: AbsoluteBaSyou[] = (lift(AbsoluteBaSyouFn.of)([targetPlayerId], areas))
         const pairs = basyous.flatMap(basyou =>
-          getItemIdsByBasyou(ctx, basyou)
+          getCardLikeItemIdsByBasyou(ctx, basyou)
             .filter(cardId => getItemRuntimeCategory(ctx, cardId) == category)
             .map(cardId => [cardId, basyou] as StrBaSyouPair)
         )
@@ -279,7 +279,7 @@ export function getConditionTitleFn(condition: Condition, options: { isPlay?: bo
         const targetPlayerId = side == "自軍" ? playerId : PlayerIDFn.getOpponent(playerId)
         const basyous: AbsoluteBaSyou[] = (lift(AbsoluteBaSyouFn.of)([targetPlayerId], ["手札", "ハンガー"]))
         const pairs = basyous.flatMap(basyou =>
-          getItemIdsByBasyou(ctx, basyou)
+          getCardLikeItemIdsByBasyou(ctx, basyou)
             .filter(cardId => getItemRuntimeCategory(ctx, cardId) == category)
             .filter(cardId => getCardRollCostLength(ctx, cardId) <= totalCost)
             .map(cardId => [cardId, basyou] as StrBaSyouPair)
@@ -445,7 +445,7 @@ export function getActionTitleFn(action: Action): ActionTitleFn {
         const cardId = EffectFn.getCardID(effect)
         const cardController = getItemController(ctx, cardId)
         const fromBasyou = AbsoluteBaSyouFn.of(cardController, "本国")
-        const pairs = getItemIdsByBasyou(ctx, fromBasyou).slice(0, count).map(cardId => {
+        const pairs = getCardLikeItemIdsByBasyou(ctx, fromBasyou).slice(0, count).map(cardId => {
           return [cardId, fromBasyou] as StrBaSyouPair
         })
         for (const pair of pairs) {

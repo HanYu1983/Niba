@@ -8,7 +8,7 @@
 // （戦闘フェイズ）：敵軍ユニットが戦闘エリアにいる場合、自軍手札、または自軍ハンガーにある、６以下の合計国力を持つユニット１枚を、自軍ユニット１枚と、リロール状態で置き換える。
 
 import { CardPrototype } from "../game/define/CardPrototype";
-import type { Effect } from "../game/define/Effect";
+import { EffectFn, type Effect } from "../game/define/Effect";
 import type { Bridge } from "./bridge";
 import { type GameState } from "../game/gameState/GameState";
 
@@ -25,7 +25,8 @@ export const prototype: CardPrototype = {
         if (
           event.title[0] == "解決直後" &&
           event.effect != null &&
-          event.effect.text.id == "179030_11E_C_BL079R_blue__2"
+          event.effect.text.id == "179030_11E_C_BL079R_blue__2" &&
+          DefineFn.EffectFn.getCardID(event.effect) == cardId
         ) {
           const newEffect: Effect = {
             id: "",
@@ -84,7 +85,7 @@ export const prototype: CardPrototype = {
           {
             title: ["リロール状態で置き換える"],
             vars: ["自軍手札、または自軍ハンガーにある、６以下の合計国力を持つユニット１枚を", "自軍ユニット１枚"]
-          }
+          },
         ]
       }
     ]

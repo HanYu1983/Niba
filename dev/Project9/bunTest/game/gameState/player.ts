@@ -8,7 +8,7 @@ import { PlayerID, PlayerIDFn } from "../define/PlayerID";
 import { isABattleGroup, getBattleGroup, getBattleGroupBattlePoint } from "./battleGroup";
 import { GameState } from "./GameState";
 import { getItemState, setItemState } from "./ItemStateComponent";
-import { getItemIdsByBasyou } from "./ItemTableComponent";
+import { getCardLikeItemIdsByBasyou, getItemIdsByBasyou } from "./ItemTableComponent";
 import { GameEvent } from "../define/GameEvent";
 import { getSetGroupBattlePoint } from "./setGroup";
 import { triggerEvent } from "./triggerEvent";
@@ -25,7 +25,7 @@ export function isPlayerHasBattleGroup(
         AbsoluteBaSyouFn.of(playerId, "戦闘エリア1"),
       ]
     ),
-    map(baSyou => getItemIdsByBasyou(ctx, baSyou).length),
+    map(baSyou => getCardLikeItemIdsByBasyou(ctx, baSyou).length),
     sum
   )() > 0
 }

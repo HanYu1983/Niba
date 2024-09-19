@@ -53,8 +53,25 @@ export function getItemIds(ctx: ItemTableComponent): string[] {
   ]
 }
 
-export function getItemIdsByBasyou(ctx: CardTableComponent, basyou: AbsoluteBaSyou): string[] {
+export function getCardLikeItemIds(ctx: ItemTableComponent): string[] {
+  return [
+    ...Object.keys(ctx.cards),
+    ...Object.keys(ctx.chips)
+  ]
+}
+
+export function getItemIdsByBasyou(ctx: ItemTableComponent, basyou: AbsoluteBaSyou): string[] {
   return TableFns.getCardsByPosition(ctx.table, AbsoluteBaSyouFn.toString(basyou))
+}
+
+export function getCardLikeItemIdsByBasyou(ctx: ItemTableComponent, basyou: AbsoluteBaSyou): string[] {
+  return getItemIdsByBasyou(ctx, basyou).filter(isCardLikeItemId(ctx))
+}
+
+export function isCardLikeItemId(ctx: ItemTableComponent): (itemId: string) => boolean {
+  return (itemId: string): boolean => {
+    return isCard(ctx, itemId) || isCard(ctx, itemId)
+  }
 }
 
 export function getItemController(ctx: ItemTableComponent, id: string): PlayerID {

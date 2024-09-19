@@ -11,7 +11,7 @@ import { createGameState, GameState } from "../game/gameState/GameState"
 import { getPlayCardEffects } from "../game/gameState/getPlayCardEffect"
 import { getGlobalEffects, setGlobalEffects, clearGlobalEffects } from "../game/gameState/globalEffects"
 import { getItemState } from "../game/gameState/ItemStateComponent"
-import { getItemIds, getItemIdsByBasyou } from "../game/gameState/ItemTableComponent"
+import { getCardLikeItemIdsByBasyou, getItemIds, getItemIdsByBasyou } from "../game/gameState/ItemTableComponent"
 import { triggerEvent } from "../game/gameState/triggerEvent"
 import { loadPrototype } from "../script"
 
@@ -35,12 +35,12 @@ export async function test179028_10D_U_WT181N_white() {
     const useEffect = playCardEffects[1]
     const tips = getEffectTips(ctx, useEffect, 0, 0)
     if (tips[0]?.title[0] == "合計国力〔x〕" && tips[0]?.min == 5) {
-        if (getItemIdsByBasyou(ctx, AbsoluteBaSyouFn.of(PlayerA, "プレイされているカード")).length != 0) {
-            throw new Error(`getItemIdsByBasyou(ctx, AbsoluteBaSyouFn.of(PlayerA, "プレイされているカード")).length != 0`)
+        if (getCardLikeItemIdsByBasyou(ctx, AbsoluteBaSyouFn.of(PlayerA, "プレイされているカード")).length != 0) {
+            throw new Error(`getCardLiketemIdsByBasyou(ctx, AbsoluteBaSyouFn.of(PlayerA, "プレイされているカード")).length != 0`)
         }
         ctx = doEffect(ctx, useEffect, 0, 0)
-        if (getItemIdsByBasyou(ctx, AbsoluteBaSyouFn.of(PlayerA, "プレイされているカード")).length != 1) {
-            throw new Error(`getItemIdsByBasyou(ctx, AbsoluteBaSyouFn.of(PlayerA, "プレイされているカード")).length != 1`)
+        if (getCardLikeItemIdsByBasyou(ctx, AbsoluteBaSyouFn.of(PlayerA, "プレイされているカード")).length != 1) {
+            throw new Error(`getCardLiketemIdsByBasyou(ctx, AbsoluteBaSyouFn.of(PlayerA, "プレイされているカード")).length != 1`)
         }
         const effect = getTopEffect(ctx)
         if (effect == null) {
@@ -49,15 +49,15 @@ export async function test179028_10D_U_WT181N_white() {
         if (effect.reason[0] != "場に出る") {
             throw new Error(`effect.reason[0]!="場に出る`)
         }
-        if (getItemIdsByBasyou(ctx, AbsoluteBaSyouFn.of(PlayerA, "配備エリア")).length != 0) {
-            throw new Error(`getItemIdsByBasyou(ctx, AbsoluteBaSyouFn.of(PlayerA, "配備エリア")).length != 0`)
+        if (getCardLikeItemIdsByBasyou(ctx, AbsoluteBaSyouFn.of(PlayerA, "配備エリア")).length != 0) {
+            throw new Error(`getCardLiketemIdsByBasyou(ctx, AbsoluteBaSyouFn.of(PlayerA, "配備エリア")).length != 0`)
         }
         if (getCardRollCostLength(ctx, cardId) != 4) {
             throw new Error(`getCardRollCostLength(ctx, cardId) != 4`)
         }
         ctx = doEffect(ctx, effect, 0, 0)
-        if (getItemIdsByBasyou(ctx, AbsoluteBaSyouFn.of(PlayerA, "配備エリア")).length != 1) {
-            throw new Error(`getItemIdsByBasyou(ctx, AbsoluteBaSyouFn.of(PlayerA, "配備エリア")).length != 1`)
+        if (getCardLikeItemIdsByBasyou(ctx, AbsoluteBaSyouFn.of(PlayerA, "配備エリア")).length != 1) {
+            throw new Error(`getCardLiketemIdsByBasyou(ctx, AbsoluteBaSyouFn.of(PlayerA, "配備エリア")).length != 1`)
         }
         const ges = getGlobalEffects(ctx, null)
         ctx = setGlobalEffects(ctx, null, ges)

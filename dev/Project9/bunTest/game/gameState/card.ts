@@ -9,7 +9,7 @@ import { getCard } from "./CardTableComponent"
 import { getCoins, getCardIdByCoinId } from "./CoinTableComponent"
 import { GameState } from "./GameState"
 import { getGlobalEffects, setGlobalEffects, clearGlobalEffects } from "./globalEffects"
-import { getItemPrototype, getItemIdsByBasyou, getItemBaSyou, isChip, isCard } from "./ItemTableComponent"
+import { getItemPrototype, getItemIdsByBasyou, getItemBaSyou, isChip, isCard, getCardLikeItemIdsByBasyou } from "./ItemTableComponent"
 import { getSetGroupCards } from "./SetGroupComponent"
 
 export function getCardTexts(ctx: GameState, cardID: string): CardText[] {
@@ -73,7 +73,7 @@ export function getCardRollCostLength(ctx: GameState, cardID: string): number {
 }
 
 export function getCardIdsCanPayRollCost(ctx: GameState, playerId: PlayerID, situation: Situation | null): string[] {
-  const normalG = getItemIdsByBasyou(ctx, AbsoluteBaSyouFn.of(playerId, "Gゾーン")).map(cardId => {
+  const normalG = getCardLikeItemIdsByBasyou(ctx, AbsoluteBaSyouFn.of(playerId, "Gゾーン")).map(cardId => {
     return [cardId, getCard(ctx, cardId)] as [string, Card]
   }).filter(([cardId, card]) => card.isRoll != true).map(([cardId]) => cardId)
   return normalG
