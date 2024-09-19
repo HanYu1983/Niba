@@ -46,6 +46,7 @@ export type ActionTitle =
     | ["カード_１枚を引く", number]
     | ["リロール状態で置き換える"]
     | ["合計国力〔x〕", number]
+    | ["_敵軍_ユニットが_戦闘エリアにいる場合", RelatedPlayerSideKeyword, CardCategory, BaSyouKeyword[]]
 
 export type Action = {
     title: ActionTitle,
@@ -76,7 +77,6 @@ export type ConditionTitle =
     | ["_自軍_ユニット_１枚", RelatedPlayerSideKeyword, CardCategory, number]
     | ["このセットグループの_ユニットは", CardCategory]
     | ["本来の記述に｢特徴：_装弾｣を持つ_自軍_G_１枚", string, RelatedPlayerSideKeyword, CardCategory, number]
-    | ["_敵軍_ユニットが_戦闘エリアにいる場合", RelatedPlayerSideKeyword, CardCategory, BaSyouKeyword[]]
     | ["_自軍手札、または自軍ハンガーにある、_６以下の合計国力を持つ_ユニット_１枚を", RelatedPlayerSideKeyword, number, CardCategory, number]
 
 export type Condition = {

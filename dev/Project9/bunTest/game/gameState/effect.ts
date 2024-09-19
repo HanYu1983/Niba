@@ -1,4 +1,4 @@
-import { pipe, always, map, flatten, reduce, repeat, lift, cond } from "ramda"
+import { pipe, always, map, flatten, reduce, repeat, lift, cond, pair } from "ramda"
 import { createBridge } from "../bridge/createBridge"
 import { AbsoluteBaSyouFn, AbsoluteBaSyou, BaSyouKeywordFn, BaSyouKeyword } from "../define/BaSyou"
 import { CardTextFn, ConditionFn, LogicTreeActionFn, Condition, ConditionTitleFn, Action, ActionTitleFn, ActionFn, CardText, OnEventFn } from "../define/CardText"
@@ -291,26 +291,6 @@ export function getConditionTitleFn(condition: Condition, options: { isPlay?: bo
         ]
       }
     }
-    case "_敵軍_ユニットが_戦闘エリアにいる場合": {
-      const [_, side, category, areas] = condition.title
-      return function (ctx: GameState, effect: Effect): Tip[] {
-        const cardId = EffectFn.getCardID(effect)
-        const playerId = getItemController(ctx, cardId);
-        const targetPlayerId = side == "自軍" ? playerId : PlayerIDFn.getOpponent(playerId)
-        const basyous: AbsoluteBaSyou[] = (lift(AbsoluteBaSyouFn.of)([targetPlayerId], areas))
-        const pairs = basyous.flatMap(basyou =>
-          getCardLikeItemIdsByBasyou(ctx, basyou)
-            .filter(cardId => getItemRuntimeCategory(ctx, cardId) == category)
-            .map(cardId => [cardId, basyou] as StrBaSyouPair)
-        )
-        return [
-          {
-            title: ["カード", pairs, pairs],
-            min: 1,
-          }
-        ]
-      }
-    }
     case "_自軍手札、または自軍ハンガーにある、_６以下の合計国力を持つ_ユニット_１枚を": {
       const [_, side, totalCost, category, count] = condition.title
       return function (ctx: GameState, effect: Effect): Tip[] {
@@ -490,6 +470,24 @@ export function getActionTitleFn(action: Action): ActionTitleFn {
         const cardIdsCanPay = getCardIdsCanPayRollCost(ctx, cardController, null)
         if (cardIdsCanPay.length < x) {
           throw new TargetMissingError(`合計国力〔x〕:${cardIdsCanPay.length} < ${x}`)
+        }
+        return ctx
+      }
+    }
+    case "_敵軍_ユニットが_戦闘エリアにいる場合": {
+      const [_, side, category, areas] = action.title
+      return function (ctx: GameState, effect: Effect): GameState {
+        const cardId = EffectFn.getCardID(effect)
+        const playerId = getItemController(ctx, cardId);
+        const targetPlayerId = side == "自軍" ? playerId : PlayerIDFn.getOpponent(playerId)
+        const basyous: AbsoluteBaSyou[] = (lift(AbsoluteBaSyouFn.of)([targetPlayerId], areas))
+        const pairs = basyous.flatMap(basyou =>
+          getCardLikeItemIdsByBasyou(ctx, basyou)
+            .filter(cardId => getItemRuntimeCategory(ctx, cardId) == category)
+            .map(cardId => [cardId, basyou] as StrBaSyouPair)
+        )
+        if (pairs.length == 0) {
+          throw new TargetMissingError(`${action.title[0]} ${pairs.length}`)
         }
         return ctx
       }
