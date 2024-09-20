@@ -1,6 +1,7 @@
 import { repeat } from "ramda";
 import { BattleAreaKeyword } from "../game/define/BaSyou";
 import { CardCategory, CardPrototype, RollCostColor } from "../game/define/CardPrototype";
+import { CardText } from "../game/define/CardText";
 
 export async function loadPrototype(imgID: string): Promise<CardPrototype> {
   if (_preloadPrototype[imgID]) {
@@ -28,6 +29,7 @@ export async function loadPrototype(imgID: string): Promise<CardPrototype> {
       const bp3 = data.info_9
       const area = data.info_10
       const characteristic = data.info_11
+      const textstr = data.info_12
       const description = data.info_15
       const prod = data.info_16
       const rarity = data.info_17
@@ -40,7 +42,7 @@ export async function loadPrototype(imgID: string): Promise<CardPrototype> {
           return "*"
         }
         const ret = parseInt(bp, 10)
-        if(Number.isNaN(ret)){
+        if (Number.isNaN(ret)) {
           throw new Error(`parseBp error: ${bp}`)
         }
         return ret
@@ -66,6 +68,65 @@ export async function loadPrototype(imgID: string): Promise<CardPrototype> {
         "ACE": "ACE",
         "GRAPHIC": "グラフィック",
       }
+
+      const uppercaseDigits = "０１２３４５６７８９";
+      function getGainTexts(gainStr: string): CardText[] {
+        const match = gainStr.match(/〔(.+)〕：ゲイン/);
+        if (match == null) {
+          return []
+        }
+        const [matchstr, rollcoststr, char] = match
+        const rollcost = uppercaseDigits.indexOf(rollcoststr)
+        if (rollcost == -1) {
+          throw new Error(`getGainTexts error: ${matchstr}`)
+        }
+        return [
+          {
+            id: "",
+            title: ["特殊型", ["ゲイン"]],
+            conditions: {
+
+            }
+          }
+        ]
+      }
+      function getKaiSo(gainStr: string): CardText[] {
+        console.log(gainStr)
+        const match = gainStr.match(/〔(.+)〕：改装［(.+)］/);
+        if (match == null) {
+          return []
+        }
+        const [matchstr, rollcoststr, char] = match
+        const rollcost = uppercaseDigits.indexOf(rollcoststr)
+        if (rollcost == -1) {
+          throw new Error(`getGainTexts error: ${matchstr}`)
+        }
+        return [
+          {
+            id: "",
+            title: ["特殊型", ["改装", char]],
+            conditions: {
+
+            }
+          }
+        ]
+      }
+      if (false) {
+        const texts = getGainTexts(textstr).concat(getKaiSo(textstr))
+        if (textstr.indexOf("強襲") != -1) {
+          texts.push({
+            id: "",
+            title: ["特殊型", ["強襲"]]
+          })
+        }
+        if (textstr.indexOf("戦闘配備") != -1) {
+          texts.push({
+            id: "",
+            title: ["特殊型", ["戦闘配備"]]
+          })
+        }
+      }
+
       const originData: CardPrototype = {
         originCardId: id,
         title: title,
@@ -79,13 +140,12 @@ export async function loadPrototype(imgID: string): Promise<CardPrototype> {
         isCross: title.indexOf("［†］") != -1,
         rarity: rarity,
         gsign: [[color], gsignProperty],
+        // texts: texts
       }
       proto = {
         ...proto,
-        ...originData
+        ...originData,
       }
-      //console.log(data)
-      //console.log(proto)
     }
   }
   {
@@ -105,7 +165,7 @@ export async function loadPrototype(imgID: string): Promise<CardPrototype> {
         text.id = `loadPrototype_${proto.id}_text_${i}`
       }
     }
-    if(proto.commandText && proto.commandText.id == ""){
+    if (proto.commandText && proto.commandText.id == "") {
       proto.commandText.id = `${proto.id}_text_command`
     }
   }

@@ -11,9 +11,11 @@ import { testReollRuleEffect } from "./testRerollRuleEffect";
 import { testReturnRuleEffect } from "./testReturnRuleEffect";
 import { testPS } from "./testPS";
 import { testCrossWeapon } from "./testCrossWeapon";
+import { getPrototype, loadPrototype } from "../script";
 
 export async function tests() {
     return [
+        testLoadPrototype,
         itemGroupTests,
         testFlow1,
         testFlow2,
@@ -29,11 +31,16 @@ export async function tests() {
         testReollRuleEffect,
         testReturnRuleEffect,
         testPS,
-        testCrossWeapon
+        testCrossWeapon,
     ].reduce((worker, testF) => {
         return worker.then(async () => {
             console.log(`==============================${testF.name}==================================`);
             return testF()
         })
     }, Promise.resolve()).then(()=>console.log("DONE!"))
+}
+
+async function testLoadPrototype(){
+    await loadPrototype("179028_10D_U_WT181N_white")
+    const prototype = getPrototype("179028_10D_U_WT181N_white")
 }

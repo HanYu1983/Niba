@@ -79,6 +79,7 @@ export function getTextsFromSpecialEffect(ctx: GameState, text: CardText): CardT
                     title: ["使用型", ["戦闘フェイズ"]],
                     description: "（戦闘フェイズ）：［ ］の特徴を持つ自軍ユニット１枚は、ターン終了時まで、このカードの本来のテキスト１つと同じテキストを得る。ただし同じテキストは得られない）",
                     conditions: {
+                        ...text.conditions,
                         "［ ］の特徴を持つ自軍ユニット１枚は": {
                             title: ["_本来の記述に｢特徴：_装弾｣を持つ_自軍_G_１枚", false, A, "自軍", "ユニット", 1],
                             exceptItemSelf: true,
@@ -132,6 +133,7 @@ export function getTextsFromSpecialEffect(ctx: GameState, text: CardText): CardT
                     title: ["使用型", ["戦闘フェイズ"]],
                     description: "這張卡在戰區的場合, 打開自軍本國上的1張卡和這張卡同的情況, 這張卡回合結束前+x/+x/+x, x為打開的卡的横置費用數量, 這個效果1回合只能用1次",
                     conditions: {
+                        ...text.conditions,
                         "這張卡在戰區的場合": {
                             actions: [
                                 {
@@ -182,6 +184,7 @@ export function getTextsFromSpecialEffect(ctx: GameState, text: CardText): CardT
                     title: ["使用型", ["防御ステップ"]],
                     description: "交戰中的敵軍機體1張x傷害. 這個效果只有在同區中有NT才能使用.",
                     conditions: {
+                        ...text.conditions,
                         "交戰中的敵軍機體1張": {
 
                         },
@@ -213,6 +216,7 @@ export function getTextsFromSpecialEffect(ctx: GameState, text: CardText): CardT
                     title: ["使用型", ["ダメージ判定ステップ"]],
                     description: "和這張卡交戰的防禦力x以下的敵軍機體1張破壞",
                     conditions: {
+                        ...text.conditions,
                         "這張卡交戰的防禦力x以下的敵軍機體1張": {
 
                         }
@@ -242,6 +246,7 @@ export function getTextsFromSpecialEffect(ctx: GameState, text: CardText): CardT
                     title: ["使用型", ["常時"]],
                     description: "可以從自軍本國找出特徵A的1張卡移到HANGER, 那個時候本國洗牌. 這個效果只有這張卡從手中打出的回合可以使用",
                     conditions: {
+                        ...text.conditions,
                         "自軍本國找出特徵A的1張卡": {
 
                         },
@@ -260,6 +265,7 @@ export function getTextsFromSpecialEffect(ctx: GameState, text: CardText): CardT
                     title: ["使用型", ["戦闘フェイズ"]],
                     description: "打開自軍手裡或指定HANGER中特徵A並合計國力x以下的1張卡, 和這張卡重置狀態置換, 這張卡置換後廢棄",
                     conditions: {
+                        ...text.conditions,
                         "打開自軍手裡或指定HANGER中特徵A並合計國力x以下的1張卡": {
 
                         },
