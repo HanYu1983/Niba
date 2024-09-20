@@ -83,6 +83,7 @@ export type ConditionTitle =
 export type Condition = {
     title?: ConditionTitle,
     actions?: Action[],
+    exceptItemSelf?: boolean
 }
 
 export type ConditionTitleFn = (ctx: any, effect: Effect, lib: any) => Tip[];

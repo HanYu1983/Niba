@@ -47,7 +47,15 @@ export function getPlayEffects(ctx: GameState, playerId: PlayerID): Effect[] {
         always(lift(AbsoluteBaSyouFn.of)([playerId], BaSyouKeywordFn.getBaAll())),
         map(basyou => getCardLikeItemIdsByBasyou(ctx, basyou)), flatten,
         map(cardId => {
-            return (getCardTexts(ctx, cardId)).filter(inTiming).map(text => {
+            return (getCardTexts(ctx, cardId)).flatMap(text => {
+                switch (text.title[0]) {
+                    case "特殊型":
+                        return getTextsFromSpecialEffect(ctx, text)
+                    case "TextBattleBonus":
+                        return []
+                }
+                return [text]
+            }).filter(inTiming).map(text => {
                 return {
                     id: `getPlayEffects_${playerId}_${cardId}`,
                     reason: ["PlayText", playerId, cardId, text.id],

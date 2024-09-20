@@ -10,6 +10,7 @@ import { testDrawRuleEffect } from "./testDrawRuleEffect";
 import { testReollRuleEffect } from "./testRerollRuleEffect";
 import { testReturnRuleEffect } from "./testReturnRuleEffect";
 import { testPS } from "./testPS";
+import { testCrossWeapon } from "./testCrossWeapon";
 
 export async function tests() {
     return [
@@ -28,6 +29,7 @@ export async function tests() {
         testReollRuleEffect,
         testReturnRuleEffect,
         testPS,
+        testCrossWeapon
     ].reduce((worker, testF) => {
         return worker.then(async () => {
             console.log(`==============================${testF.name}==================================`);

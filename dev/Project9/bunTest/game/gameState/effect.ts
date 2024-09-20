@@ -24,6 +24,7 @@ import { PlayerIDFn } from "../define/PlayerID"
 import { CommandEffectTip } from "../gameStateWithFlowMemory/GameStateWithFlowMemory"
 import { CardFn } from "../define/Card"
 import { getSetGroupRoot } from "./SetGroupComponent"
+import { log } from "../../tool/logger"
 
 export function assertEffectCanPass(
   ctx: GameState,
@@ -196,6 +197,7 @@ export function getConditionTitleFn(condition: Condition, options: { isPlay?: bo
   if (typeof condition.title == "string") {
     return ConditionFn.getTitleFn(condition)
   }
+  log("getConditionTitleFn", condition.title)
   switch (condition.title[0]) {
     case "このカードの_本来のテキスト１つ": {
       const [_, isOrigin, count] = condition.title
@@ -204,12 +206,13 @@ export function getConditionTitleFn(condition: Condition, options: { isPlay?: bo
         const texts = isOrigin ?
           (getItemPrototype(ctx, cardId).texts || []) :
           getCardTexts(ctx, cardId)
-        const textRefs: TipTitleTextRef[] = texts.map(text => {
+        const textRefs: TipTitleTextRef[] = texts.filter(text => (text.title[0] == "特殊型" && text.title[1][0] == "クロスウェポン") == false).map(text => {
           return {
             cardId: cardId,
             textId: text.id
           }
         })
+        log(`getConditionTitleFn`, textRefs)
         return [
           {
             title: ["テキスト", textRefs, textRefs.slice(0, count)],
@@ -220,15 +223,19 @@ export function getConditionTitleFn(condition: Condition, options: { isPlay?: bo
     }
     case "_本来の記述に｢特徴：_装弾｣を持つ_自軍_G_１枚": {
       const [_, isOrigin, targetChar, side, category, count] = condition.title
+      const exceptItemSelf = condition.exceptItemSelf
       return function (ctx: GameState, effect: Effect): Tip[] {
-        const cardId = EffectFn.getCardID(effect)
-        const playerId = getItemController(ctx, cardId);
+        const fromCardId = EffectFn.getCardID(effect)
+        const playerId = getItemController(ctx, fromCardId);
         const targetPlayerId = side == "自軍" ? playerId : PlayerIDFn.getOpponent(playerId)
         if (category == "グラフィック") {
           const basyous: AbsoluteBaSyou[] = [AbsoluteBaSyouFn.of(targetPlayerId, "Gゾーン")]
           const pairs = basyous.flatMap(basyou =>
             getCardLikeItemIdsByBasyou(ctx, basyou)
               .filter(cardId => {
+                if (exceptItemSelf && fromCardId == cardId) {
+                  return false
+                }
                 if (isOrigin) {
                   return getItemPrototype(ctx, cardId).characteristic?.includes(targetChar)
                 } else {
@@ -250,10 +257,13 @@ export function getConditionTitleFn(condition: Condition, options: { isPlay?: bo
               .filter(cardId => getSetGroupRoot(ctx, cardId))
               .filter(cardId => getItemRuntimeCategory(ctx, cardId) == category)
               .filter(cardId => {
+                if (exceptItemSelf && fromCardId == cardId) {
+                  return false
+                }
                 if (isOrigin) {
                   return getItemPrototype(ctx, cardId).characteristic?.includes(targetChar)
                 } else {
-                  return getItemCharacteristic(ctx, cardId)
+                  return getItemCharacteristic(ctx, cardId).includes(targetChar)
                 }
               })
               .map(cardId => [cardId, basyou] as StrBaSyouPair)
@@ -617,10 +627,14 @@ function getCardTipSelection<T>(ctx: GameState, varName: string, cardId: string)
   if (tipError) {
     throw tipError
   }
-  if (tip.title[0] != "カード") {
-    throw new Error("must カード")
+  switch (tip.title[0]) {
+    case "カード":
+    case "テキスト":
+    case "StringOptions":
+      return TipFn.getSelection(tip) as T
+    default:
+      throw new Error(`unknown tip title: ${tip.title[0]}`)
   }
-  return TipFn.getSelection(tip) as T
 }
 
 export const getCardTipTextRefs = getCardTipSelection<TipTitleTextRef[]>

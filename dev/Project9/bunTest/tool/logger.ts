@@ -1,6 +1,7 @@
 const hideCategory: string[] = [
   "triggerEvent",
   "getPlayEffects",
+  "getConditionTitleFn"
 ];
 let filterCategory = true;
 

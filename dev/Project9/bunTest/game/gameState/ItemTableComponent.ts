@@ -70,7 +70,7 @@ export function getCardLikeItemIdsByBasyou(ctx: ItemTableComponent, basyou: Abso
 
 export function isCardLikeItemId(ctx: ItemTableComponent): (itemId: string) => boolean {
   return (itemId: string): boolean => {
-    return isCard(ctx, itemId) || isCard(ctx, itemId)
+    return isCard(ctx, itemId) || isChip(ctx, itemId)
   }
 }
 

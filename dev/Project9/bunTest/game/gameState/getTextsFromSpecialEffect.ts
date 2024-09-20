@@ -72,15 +72,16 @@ export function getTextsFromSpecialEffect(ctx: GameState, text: CardText): CardT
             ]
         }
         case "クロスウェポン": {
-            const [_, A] = specialEffect[1]
+            const [_, A] = specialEffect
             return [
                 {
-                    id: "",
+                    id: `${text.id}_1`,
                     title: ["使用型", ["戦闘フェイズ"]],
                     description: "（戦闘フェイズ）：［ ］の特徴を持つ自軍ユニット１枚は、ターン終了時まで、このカードの本来のテキスト１つと同じテキストを得る。ただし同じテキストは得られない）",
                     conditions: {
                         "［ ］の特徴を持つ自軍ユニット１枚は": {
-                            title: ["_本来の記述に｢特徴：_装弾｣を持つ_自軍_G_１枚", false, A, "自軍", "ユニット", 1]
+                            title: ["_本来の記述に｢特徴：_装弾｣を持つ_自軍_G_１枚", false, A, "自軍", "ユニット", 1],
+                            exceptItemSelf: true,
                         },
                         "このカードの本来のテキスト１つ": {
                             title: ["このカードの_本来のテキスト１つ", true, 1]
@@ -95,7 +96,7 @@ export function getTextsFromSpecialEffect(ctx: GameState, text: CardText): CardT
                                             title: function _(ctx: GameState, effect: Effect, { GameStateFn, DefineFn }: Bridge): GameState {
                                                 const cardId = DefineFn.EffectFn.getCardID(effect)
                                                 const pairs = GameStateFn.getCardTipStrBaSyouPairs(ctx, "［ ］の特徴を持つ自軍ユニット１枚は", cardId)
-                                                const textRefs = GameStateFn.getCardTipTextRefs(ctx, "このカードの_本来のテキスト１つ", cardId)
+                                                const textRefs = GameStateFn.getCardTipTextRefs(ctx, "このカードの本来のテキスト１つ", cardId)
                                                 for (const pair of pairs) {
                                                     GameStateFn.assertTargetMissingError(ctx, pair)
                                                     const [targetCardId, targetBasyou] = pair
@@ -127,7 +128,7 @@ export function getTextsFromSpecialEffect(ctx: GameState, text: CardText): CardT
         case "ゲイン": {
             return [
                 {
-                    id: "",
+                    id: `${text.id}_1`,
                     title: ["使用型", ["戦闘フェイズ"]],
                     description: "這張卡在戰區的場合, 打開自軍本國上的1張卡和這張卡同的情況, 這張卡回合結束前+x/+x/+x, x為打開的卡的横置費用數量, 這個效果1回合只能用1次",
                     conditions: {
