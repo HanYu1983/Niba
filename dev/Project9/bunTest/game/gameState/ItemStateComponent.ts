@@ -26,3 +26,13 @@ export function mapItemStateValues(ctx: ItemStateComponent, fn: (itemState: Item
   }
   return ctx
 }
+export function mapItemState(ctx: ItemStateComponent, k: string, fn: (itemState: ItemState) => ItemState): ItemStateComponent {
+  ctx = {
+    ...ctx,
+    itemStates: {
+      ...ctx.itemStates,
+      [k]: fn(getItemState(ctx, k))
+    }
+  }
+  return ctx
+}

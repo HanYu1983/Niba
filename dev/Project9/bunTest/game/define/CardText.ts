@@ -136,7 +136,6 @@ export type OnEventFn = ActionTitleFn
 
 export type OnEventTitle =
     | string
-    | OnEventFn
     | ["GameEventOnTimingDoAction", Phase, Action]
 
 export type CardText = {
