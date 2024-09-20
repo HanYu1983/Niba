@@ -10,6 +10,7 @@ import { AbsoluteBaSyouFn } from '../define/BaSyou';
 import { loadPrototype } from '../../script';
 import { log } from '../../tool/logger';
 const url = require('url');
+const fs = require('fs').promises;
 
 type RouterDef = {
     path: string,
@@ -35,15 +36,14 @@ export async function createServer() {
     }
     function applyCommand(playerId: string, cmd: Flow) {
         ctx = applyFlow(ctx, playerId, cmd)
-        ctx.globalEffectPool = {}
-        ctx.commandEffectTips = []
     }
     async function writeGameStateToDesk() {
-        const fs = require('fs').promises;
-        await fs.writeFile('__gameState.json', JSON.stringify(ctx, null, 2));
+        const writeCtx = { ...ctx }
+        writeCtx.globalEffectPool = {}
+        writeCtx.commandEffectTips = []
+        await fs.writeFile('__gameState.json', JSON.stringify(writeCtx, null, 2));
     }
     async function loadGameStateFromDesk(): Promise<GameStateWithFlowMemory | null> {
-        const fs = require('fs').promises;
         try {
             const gameStateData = await fs.readFile('__gameState.json', 'utf8');
             return JSON.parse(gameStateData) as GameStateWithFlowMemory;
@@ -89,7 +89,6 @@ export async function createServer() {
                     }
                 }
             })
-            html += `<div>${JSON.stringify(getGameState().table, null, 2)}</div>`
             return res.end(html);
         }
     }
