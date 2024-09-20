@@ -253,7 +253,7 @@ export function queryFlow(ctx: GameStateWithFlowMemory, playerID: string): Flow[
                 }
         }
     }
-    const myCommandList = getPlayerCommandsFilterNoErrorDistinct(ctx, playerID)
+    const myCommandList = getPlayerCommandsFilterNoErrorDistinct(ctx, playerID).map(tip=>tip.effect)
     // 處理堆疊效果，從最上方開始處理
     if (ctx.stackEffect.length) {
         // 取得最上方的效果
@@ -307,7 +307,7 @@ export function queryFlow(ctx: GameStateWithFlowMemory, playerID: string): Flow[
                         {
                             id: "FlowSetActiveEffectID",
                             effectID: myCommandList[0].id,
-                            tips: myCommandList.map(i => i.effect),
+                            tips: myCommandList,
                             description: "你可以切入",
                         },
                     ];
@@ -365,7 +365,7 @@ export function queryFlow(ctx: GameStateWithFlowMemory, playerID: string): Flow[
                             id: "FlowSetActiveEffectID",
                             effectID: myCommandList[0].id,
                             description: "選擇一個指令",
-                            tips: myCommandList.map(i => i.effect),
+                            tips: myCommandList,
                         },
                     ];
                 })(),

@@ -9,13 +9,13 @@ import { CommandEffectTip, GameStateWithFlowMemory } from "./GameStateWithFlowMe
 export function updateCommand(ctx: GameStateWithFlowMemory): GameStateWithFlowMemory {
     const playerAEffects = getPlayEffects(ctx, PlayerA)
     const playerBEffects = getPlayEffects(ctx, PlayerB)
-    // const allEffects = [...playerAEffects, ...playerBEffects]
-    // const testedEffects = allEffects.flatMap(e => getCommandEffectTips(ctx, e))
-    // ctx = setCommandEffectTips(ctx, testedEffects) as GameStateWithFlowMemory
-    // ctx = setCommandEffects(ctx, testedEffects.filter((command, index, self) =>
-    //     index === self.findIndex(c => c.effect.id === command.effect.id)
-    // ).map(tip => tip.effect))
-    ctx = setCommandEffects(ctx, [...playerAEffects, ...playerBEffects])
+    const allEffects = [...playerAEffects, ...playerBEffects]
+    const testedEffects = allEffects.flatMap(e => getCommandEffectTips(ctx, e))
+    ctx = setCommandEffectTips(ctx, testedEffects) as GameStateWithFlowMemory
+    ctx = setCommandEffects(ctx, testedEffects.filter((command, index, self) =>
+        index === self.findIndex(c => c.effect.id === command.effect.id)
+    ).map(tip => tip.effect))
+    //ctx = setCommandEffects(ctx, [...playerAEffects, ...playerBEffects])
     return ctx
 }
 
