@@ -34,8 +34,13 @@ export async function loadPrototype(imgID: string): Promise<CardPrototype> {
       const prod = data.info_16
       const rarity = data.info_17
       const color = data.info_18
-      function parseColors(color: any, colorCostLength: number, totalCostLength: number): (RollCostColor | null)[] {
-        return [...repeat(color, colorCostLength), ...repeat(null, totalCostLength - colorCostLength)]
+      function parseColors(color: any, colorCostLength: string, totalCostLength: string): (RollCostColor | null)[] {
+        if(colorCostLength == "X" || totalCostLength == "X"){
+          return []
+        }
+        const n1 = parseInt(colorCostLength, 10)
+        const n2 = parseInt(totalCostLength, 10)
+        return [...repeat(color, n1), ...repeat(null, n2 - n1)]
       }
       function parseBp(bp: string): "*" | number {
         if (bp == "-") {
