@@ -1,14 +1,14 @@
 import * as http from 'http';
-import { createGameStateWithFlowMemory, GameStateWithFlowMemory } from '../gameStateWithFlowMemory/GameStateWithFlowMemory';
-import { queryFlow } from '../gameStateWithFlowMemory/queryFlow';
-import { Flow } from '../gameStateWithFlowMemory/Flow';
-import { applyFlow } from '../gameStateWithFlowMemory/applyFlow';
-import { PlayerA, PlayerB } from '../define/PlayerID';
-import { setActivePlayerID } from '../gameState/ActivePlayerComponent';
-import { createCardWithProtoIds } from '../gameState/CardTableComponent';
-import { AbsoluteBaSyouFn } from '../define/BaSyou';
-import { loadPrototype } from '../../script';
-import { log } from '../../tool/logger';
+import { createGameStateWithFlowMemory, GameStateWithFlowMemory } from '../game/gameStateWithFlowMemory/GameStateWithFlowMemory';
+import { queryFlow } from '../game/gameStateWithFlowMemory/queryFlow';
+import { Flow } from '../game/gameStateWithFlowMemory/Flow';
+import { applyFlow } from '../game/gameStateWithFlowMemory/applyFlow';
+import { PlayerA, PlayerB } from '../game/define/PlayerID';
+import { setActivePlayerID } from '../game/gameState/ActivePlayerComponent';
+import { createCardWithProtoIds } from '../game/gameState/CardTableComponent';
+import { AbsoluteBaSyouFn } from '../game/define/BaSyou';
+import { loadPrototype } from '../script';
+import { log } from '../tool/logger';
 const url = require('url');
 const fs = require('fs').promises;
 
