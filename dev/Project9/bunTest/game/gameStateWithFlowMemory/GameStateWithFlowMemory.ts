@@ -7,7 +7,7 @@ import { Tip, TipFn } from "../define/Tip";
 import { mapCardsWithBasyou } from "../gameState/CardTableComponent";
 import { createGameState, GameState } from "../gameState/GameState";
 import { getPlayEffects } from "../gameState/getPlayEffects";
-import { setCommandEffects } from "./effect";
+import { setCommandEffectTips } from "./effect";
 
 export type Message = {
     id: "MessageCustom";
@@ -55,6 +55,7 @@ export type GameStateWithFlowMemory = {
     destroyEffect: Effect[];
     // 指令效果
     commandEffectTips: CommandEffectTip[];
+    commandEffects: Effect[],
     stackEffectMemory: Effect[];
     activeEffectID: string | null;
 } & GameState & HasFlowMemoryComponent;
@@ -66,6 +67,7 @@ export function createGameStateWithFlowMemory(): GameStateWithFlowMemory {
         activeEffectID: null,
         flowMemory: DEFAULT_FLOW_MEMORY,
         commandEffectTips: [],
+        commandEffects: [],
         destroyEffect: [],
     }
 }

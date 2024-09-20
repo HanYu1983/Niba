@@ -5,7 +5,7 @@ import { addImmediateEffect, addStackEffect, getEffect } from "../gameState/Effe
 import { checkIsBattle } from "../gameState/IsBattleComponent";
 import { Flow } from "./Flow";
 import { GameStateWithFlowMemory } from "./GameStateWithFlowMemory";
-import { setActiveEffectID, cancelActiveEffectID, doActiveEffect, deleteImmediateEffect, clearDestroyEffects, updateDestroyEffect } from "./effect";
+import { setActiveEffectID, cancelActiveEffectID, doActiveEffect, deleteImmediateEffect, clearDestroyEffects, updateDestroyEffect, getEffectIncludePlayerCommand } from "./effect";
 import { PhaseFn } from "../define/Timing";
 import { doPlayerAttack } from "../gameState/player";
 import { triggerEvent } from "../gameState/triggerEvent";
@@ -13,6 +13,7 @@ import { ToolFn } from "../tool";
 import { updateCommand } from "./updateCommand";
 import { getCardLikeItemIdsByBasyou } from "../gameState/ItemTableComponent";
 import { TableFns } from "../../tool/table";
+import { setTipSelectionForUser } from "../gameState/effect";
 
 export function applyFlow(
     ctx: GameStateWithFlowMemory,
@@ -60,6 +61,7 @@ export function applyFlow(
             if (flow.logicSubID == null) {
                 throw new Error("logicSubID not found");
             }
+            ctx = setTipSelectionForUser(ctx, getEffectIncludePlayerCommand(ctx, flow.effectID)) as GameStateWithFlowMemory
             ctx = doActiveEffect(ctx, playerID, flow.effectID, flow.logicID, flow.logicSubID);
             // 執行完效果時自動取消其中一方的結束宣告
             ctx = {
@@ -332,7 +334,7 @@ export function applyFlow(
             return ctx;
         }
         case "FlowPassPayCost": {
-            const effect = getEffect(ctx, flow.effectID)
+            const effect = getEffectIncludePlayerCommand(ctx, flow.effectID)
             if (effect == null) {
                 throw new Error(`effectID not found:${flow.effectID}`);
             }

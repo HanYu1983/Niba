@@ -1,6 +1,6 @@
 import { getEffect, getTopEffect } from "../gameState/EffectStackComponent";
 import { Flow } from "./Flow";
-import { getActiveEffectID } from "./effect";
+import { getActiveEffectID, getEffectIncludePlayerCommand } from "./effect";
 import { getPlayEffects } from "../gameState/getPlayEffects";
 import { GameStateWithFlowMemory } from "./GameStateWithFlowMemory";
 import { PlayerA, PlayerB, PlayerIDFn } from "../define/PlayerID";
@@ -35,7 +35,7 @@ export function queryFlow(ctx: GameStateWithFlowMemory, playerID: string): Flow[
     // 有玩家在支付卡片
     const activeEffectID = getActiveEffectID(ctx)
     if (activeEffectID != null) {
-        const currentActiveEffect = getEffect(ctx, activeEffectID)
+        const currentActiveEffect = getEffectIncludePlayerCommand(ctx, activeEffectID)
         if (currentActiveEffect == null) {
             throw new Error("activeEffectID not found");
         }
@@ -181,7 +181,7 @@ export function queryFlow(ctx: GameStateWithFlowMemory, playerID: string): Flow[
                 ? [
                     {
                         id: "FlowSetActiveEffectID",
-                        effectID: myEffect[0].id || "unknown",
+                        effectID: myEffect[0].id,
                         description: "選擇一個起動效果",
                         tips: myEffect,
                     } as Flow,
@@ -306,7 +306,7 @@ export function queryFlow(ctx: GameStateWithFlowMemory, playerID: string): Flow[
                     return [
                         {
                             id: "FlowSetActiveEffectID",
-                            effectID: myCommandList[0].id || "unknown",
+                            effectID: myCommandList[0].id,
                             tips: myCommandList.map(i => i.effect),
                             description: "你可以切入",
                         },
@@ -363,7 +363,7 @@ export function queryFlow(ctx: GameStateWithFlowMemory, playerID: string): Flow[
                     return [
                         {
                             id: "FlowSetActiveEffectID",
-                            effectID: myCommandList[0].id || "unknown",
+                            effectID: myCommandList[0].id,
                             description: "選擇一個指令",
                             tips: myCommandList.map(i => i.effect),
                         },

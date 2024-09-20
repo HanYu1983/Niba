@@ -2,16 +2,20 @@ import { Effect, EffectFn } from "../define/Effect"
 import { PlayerA, PlayerB } from "../define/PlayerID"
 import { getCommandEffectTips, getConditionTitleFn } from "../gameState/effect"
 import { getPlayEffects } from "../gameState/getPlayEffects"
-import { setCommandEffects } from "./effect"
+import { setCommandEffects, setCommandEffectTips } from "./effect"
 import { CommandEffectTip, GameStateWithFlowMemory } from "./GameStateWithFlowMemory"
 
 // 使用型技能
 export function updateCommand(ctx: GameStateWithFlowMemory): GameStateWithFlowMemory {
     const playerAEffects = getPlayEffects(ctx, PlayerA)
     const playerBEffects = getPlayEffects(ctx, PlayerB)
-    const allEffects = [...playerAEffects, ...playerBEffects]
-    const testedEffects = allEffects.flatMap(e => getCommandEffectTips(ctx, e))
-    ctx = setCommandEffects(ctx, testedEffects) as GameStateWithFlowMemory
+    // const allEffects = [...playerAEffects, ...playerBEffects]
+    // const testedEffects = allEffects.flatMap(e => getCommandEffectTips(ctx, e))
+    // ctx = setCommandEffectTips(ctx, testedEffects) as GameStateWithFlowMemory
+    // ctx = setCommandEffects(ctx, testedEffects.filter((command, index, self) =>
+    //     index === self.findIndex(c => c.effect.id === command.effect.id)
+    // ).map(tip => tip.effect))
+    ctx = setCommandEffects(ctx, [...playerAEffects, ...playerBEffects])
     return ctx
 }
 

@@ -9,6 +9,9 @@ import { getItemStateValues } from "../gameState/ItemStateComponent";
 import { getItemController } from "../gameState/ItemTableComponent";
 import { getSetGroupBattlePoint } from "../gameState/setGroup";
 
+export function getEffectIncludePlayerCommand(ctx: GameStateWithFlowMemory, effectId: string): Effect {
+  return ctx.commandEffects.find(cmd=>cmd.id == effectId) || getEffect(ctx, effectId)
+}
 export function setActiveEffectID(
   ctx: GameStateWithFlowMemory,
   playerID: string,
@@ -17,19 +20,19 @@ export function setActiveEffectID(
   if (ctx.activeEffectID != null) {
     throw new Error("有人在執行其它指令");
   }
-  if (ctx.activeEffectID != null) {
-    const currentActiveEffect = getEffect(ctx, ctx.activeEffectID)
-    if (currentActiveEffect != null) {
-      const controller = EffectFn.getPlayerID(currentActiveEffect);
-      if (controller != playerID) {
-        throw new Error("[cancelCommand] 你不是控制者");
-      }
-      if (currentActiveEffect.requirePassed) {
-        throw new Error("[cancelCommand] 已經處理需求的不能取消");
-      }
-    }
-  }
-  const effect = getEffect(ctx, effectID)
+  // if (ctx.activeEffectID != null) {
+  //   const currentActiveEffect = getEffect(ctx, ctx.activeEffectID)
+  //   if (currentActiveEffect != null) {
+  //     const controller = EffectFn.getPlayerID(currentActiveEffect);
+  //     if (controller != playerID) {
+  //       throw new Error("[cancelCommand] 你不是控制者");
+  //     }
+  //     if (currentActiveEffect.requirePassed) {
+  //       throw new Error("[cancelCommand] 已經處理需求的不能取消");
+  //     }
+  //   }
+  // }
+  const effect = getEffectIncludePlayerCommand(ctx, effectID)
   if (effect == null) {
     throw new Error("effect not found");
   }
@@ -50,7 +53,7 @@ export function cancelActiveEffectID(
   if (ctx.activeEffectID == null) {
     throw new Error("[cancelEffectID] activeEffectID not exist");
   }
-  const effect = getEffect(ctx, ctx.activeEffectID)
+  const effect = getEffectIncludePlayerCommand(ctx, ctx.activeEffectID)
   if (effect == null) {
     return ctx;
   }
@@ -85,7 +88,7 @@ export function doActiveEffect(ctx: GameStateWithFlowMemory, playerID: string, e
     throw new Error("activeEffectID != effectID");
   }
   // 處理事件
-  const effect = getEffect(ctx, effectID)
+  const effect = getEffectIncludePlayerCommand(ctx, effectID)
   if (effect == null) {
     throw new Error("effect not found")
   }
@@ -157,10 +160,17 @@ export function addDestroyEffect(ctx: GameStateWithFlowMemory, block: Effect): G
   };
 }
 
-export function setCommandEffects(ctx: GameStateWithFlowMemory, effects: CommandEffectTip[]): GameStateWithFlowMemory {
+export function setCommandEffectTips(ctx: GameStateWithFlowMemory, effects: CommandEffectTip[]): GameStateWithFlowMemory {
   return {
     ...ctx,
     commandEffectTips: effects
+  };
+}
+
+export function setCommandEffects(ctx: GameStateWithFlowMemory, effects: Effect[]): GameStateWithFlowMemory {
+  return {
+    ...ctx,
+    commandEffects: effects
   };
 }
 
