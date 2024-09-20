@@ -54,7 +54,8 @@ export function triggerEvent(
                 }, ctx)
         }, ctx)
     )()
-    if (event.title[0] == "解決直後" && event.effect != null) {
+    // 使用了卡牌後, 同一個切入不能再使用. 以下記錄使用過的卡片, 會在切入結束後清除
+    if (event.effect != null && (event.effect.reason[0] == "PlayCard" || event.effect.reason[0] == "PlayText")) {
         const cardId = EffectFn.getCardID(event.effect)
         const textId = event.effect.text.id
         ctx = mapItemState(ctx, cardId, cs => {
