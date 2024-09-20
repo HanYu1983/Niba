@@ -11,6 +11,8 @@ import { doPlayerAttack } from "../gameState/player";
 import { triggerEvent } from "../gameState/triggerEvent";
 import { ToolFn } from "../tool";
 import { updateCommand } from "./updateCommand";
+import { getCardLikeItemIdsByBasyou } from "../gameState/ItemTableComponent";
+import { TableFns } from "../../tool/table";
 
 export function applyFlow(
     ctx: GameStateWithFlowMemory,
@@ -214,10 +216,21 @@ export function applyFlow(
                             break;
                         }
                         case "draw6AndConfirm": {
+                            {
+                                const from = AbsoluteBaSyouFn.toString(AbsoluteBaSyouFn.of(PlayerA, "本国"))
+                                const to = AbsoluteBaSyouFn.toString(AbsoluteBaSyouFn.of(PlayerA, "手札"))
+                                const cards = ctx.table.cardStack[from].slice(0, 6)
+                                ctx.table.cardStack[to] = [...cards, ...(ctx.table.cardStack[to] || [])]
+                            }
+                            {
+                                const from = AbsoluteBaSyouFn.toString(AbsoluteBaSyouFn.of(PlayerB, "本国"))
+                                const to = AbsoluteBaSyouFn.toString(AbsoluteBaSyouFn.of(PlayerB, "手札"))
+                                const cards = ctx.table.cardStack[from].slice(0, 6)
+                                ctx.table.cardStack[to] = [...cards, ...(ctx.table.cardStack[to] || [])]
+                            }
                             ctx = {
                                 ...ctx,
                                 phase: ["リロールフェイズ", "フェイズ開始"],
-
                             };
                             ctx = {
                                 ...ctx,

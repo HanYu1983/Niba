@@ -745,7 +745,7 @@ export function onMoveItem(ctx: GameState, to: AbsoluteBaSyou, [cardId, from]: S
   return ctx
 }
 
-function getCardTipSelection<T>(ctx: GameState, varName: string, cardId: string): T {
+function getCardTipSelection(ctx: GameState, varName: string, cardId: string) {
   const cardState = getItemState(ctx, cardId);
   const tip = ItemStateFn.getTip(cardState, varName)
   const tipError = TipFn.checkTipSatisfies(tip)
@@ -756,13 +756,15 @@ function getCardTipSelection<T>(ctx: GameState, varName: string, cardId: string)
     case "カード":
     case "テキスト":
     case "StringOptions":
-      return TipFn.getSelection(tip) as T
+      return TipFn.getSelection(tip)
     default:
       throw new Error(`unknown tip title: ${tip.title[0]}`)
   }
 }
 
-export const getCardTipTextRefs = getCardTipSelection<TipTitleTextRef[]>
+export function getCardTipTextRefs(ctx: GameState, varName: string, cardId: string): TipTitleTextRef[] {
+  return getCardTipSelection(ctx, varName, cardId) as TipTitleTextRef[]
+}
 
 export function setCardTipTextRefs(ctx: GameState, varName: string, pairs: TipTitleTextRef[], cardId: string): GameState {
   let cs = getItemState(ctx, cardId)
@@ -771,8 +773,9 @@ export function setCardTipTextRefs(ctx: GameState, varName: string, pairs: TipTi
   return ctx
 }
 
-
-export const getCardTipStrBaSyouPairs = getCardTipSelection<StrBaSyouPair[]>
+export function getCardTipStrBaSyouPairs(ctx: GameState, varName: string, cardId: string): StrBaSyouPair[] {
+  return getCardTipSelection(ctx, varName, cardId) as StrBaSyouPair[]
+}
 
 export function setCardTipStrBaSyouPairs(ctx: GameState, varName: string, pairs: StrBaSyouPair[], cardId: string): GameState {
   let cs = getItemState(ctx, cardId)
