@@ -116,15 +116,26 @@ export function getItemBaSyou(
   throw new Error(`getItemBaSyou unknown item: ${id}`)
 }
 
-export type OnMoveItemFn = (ctx: any, to: AbsoluteBaSyou, sb: StrBaSyouPair) => any;
-
-export function moveItem(ctx: ItemTableComponent, to: AbsoluteBaSyou, sb: StrBaSyouPair, onFn?: OnMoveItemFn): ItemTableComponent {
-  const [itemId, originBasyou] = sb
+export function assertTargetMissingError(ctx: ItemTableComponent, [itemId, originBasyou]: StrBaSyouPair) {
   if (isCard(ctx, itemId) || isChip(ctx, itemId)) {
     const nowBasyou = getItemBaSyou(ctx, itemId)
     if (AbsoluteBaSyouFn.eq(nowBasyou, originBasyou) == false) {
       throw new TargetMissingError(`target missing: ${itemId} from ${originBasyou}`)
     }
+  } else if (isCoin(ctx, itemId)) {
+    throw new Error(`coin not support`)
+  } else {
+    throw new Error(`unknown cardId type ${itemId}`)
+  }
+}
+
+export type OnMoveItemFn = (ctx: any, to: AbsoluteBaSyou, sb: StrBaSyouPair) => any;
+
+export function moveItem(ctx: ItemTableComponent, to: AbsoluteBaSyou, sb: StrBaSyouPair, onFn?: OnMoveItemFn): ItemTableComponent {
+  assertTargetMissingError(ctx, sb)
+  const [itemId, originBasyou] = sb
+  if (isCard(ctx, itemId) || isChip(ctx, itemId)) {
+    const nowBasyou = getItemBaSyou(ctx, itemId)
     const itemIds = getSetGroupCards(ctx, itemId)
     const table = itemIds.reduce((table, itemId) => {
       return TableFns.moveCard(table, AbsoluteBaSyouFn.toString(nowBasyou), AbsoluteBaSyouFn.toString(to), itemId)
@@ -188,12 +199,9 @@ export function setItemIsRoll(ctx: ItemTableComponent, isRoll: boolean, [itemId,
 }
 
 export function addCoinsToCard(ctx: ItemTableComponent, target: StrBaSyouPair, coins: Coin[]): ItemTableComponent {
+  assertTargetMissingError(ctx, target)
   const [targetItemId, targetOriginBasyou] = target
   if (isCard(ctx, targetItemId)) {
-    const nowBasyou = getItemBaSyou(ctx, targetItemId)
-    if (AbsoluteBaSyouFn.eq(targetOriginBasyou, nowBasyou) == false) {
-      throw new TargetMissingError(`origin basyou ${AbsoluteBaSyouFn.toString(targetOriginBasyou)}, now ${AbsoluteBaSyouFn.toString(nowBasyou)}`)
-    }
     ctx = addCoins(ctx, targetItemId, coins) as ItemTableComponent
     return ctx
   }

@@ -76,8 +76,9 @@ export type ConditionTitle =
     | ["_交戦中の_自軍_ユニット_１枚", "交戦中" | "非交戦中" | null, RelatedPlayerSideKeyword, CardCategory, number]
     | ["_自軍_ユニット_１枚", RelatedPlayerSideKeyword, CardCategory, number]
     | ["このセットグループの_ユニットは", CardCategory]
-    | ["本来の記述に｢特徴：_装弾｣を持つ_自軍_G_１枚", string, RelatedPlayerSideKeyword, CardCategory, number]
+    | ["_本来の記述に｢特徴：_装弾｣を持つ_自軍_G_１枚", boolean, string, RelatedPlayerSideKeyword, CardCategory, number]
     | ["_自軍手札、または自軍ハンガーにある、_６以下の合計国力を持つ_ユニット_１枚を", RelatedPlayerSideKeyword, number, CardCategory, number]
+    | ["このカードの_本来のテキスト１つ", boolean, number]
 
 export type Condition = {
     title?: ConditionTitle,

@@ -39,7 +39,7 @@ export const prototype: CardPrototype = {
               description: effect.text.description,
               conditions: {
                 "本来の記述に｢特徴：装弾｣を持つ自軍G１枚": {
-                  title: ["本来の記述に｢特徴：_装弾｣を持つ_自軍_G_１枚", "装弾", "自軍", "グラフィック", 1],
+                  title: ["_本来の記述に｢特徴：_装弾｣を持つ_自軍_G_１枚", true, "装弾", "自軍", "グラフィック", 1],
                 },
               },
               logicTreeActions: [

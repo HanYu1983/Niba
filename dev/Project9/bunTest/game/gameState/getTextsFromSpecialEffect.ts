@@ -1,9 +1,10 @@
 import { Bridge } from "../../script/bridge";
 import { TextSpeicalEffect, CardText } from "../define/CardText";
 import { Effect } from "../define/Effect";
+import { Tip } from "../define/Tip";
 import { GameState } from "./GameState";
 
-export function getTextsFromSpecialEffect(text: CardText): CardText[] {
+export function getTextsFromSpecialEffect(ctx: GameState, text: CardText): CardText[] {
     if (text.title[0] != "特殊型") {
         throw new Error(`text not 特殊型`)
     }
@@ -71,15 +72,18 @@ export function getTextsFromSpecialEffect(text: CardText): CardText[] {
             ]
         }
         case "クロスウェポン": {
-            const x = specialEffect[1]
-            // （クロスウェポンのルール＞（戦闘フェイズ）：［ ］の特徴を持つ自軍ユニット１枚は、ターン終了時まで、このカードの本来のテキスト１つと同じテキストを得る。ただし同じテキストは得られない）
+            const [_, A] = specialEffect[1]
             return [
                 {
                     id: "",
                     title: ["使用型", ["戦闘フェイズ"]],
+                    description: "（戦闘フェイズ）：［ ］の特徴を持つ自軍ユニット１枚は、ターン終了時まで、このカードの本来のテキスト１つと同じテキストを得る。ただし同じテキストは得られない）",
                     conditions: {
                         "［ ］の特徴を持つ自軍ユニット１枚は": {
-                            title: ["本来の記述に｢特徴：_装弾｣を持つ_自軍_G_１枚", x, "自軍", "ユニット", 1]
+                            title: ["_本来の記述に｢特徴：_装弾｣を持つ_自軍_G_１枚", false, A, "自軍", "ユニット", 1]
+                        },
+                        "このカードの本来のテキスト１つ": {
+                            title: ["このカードの_本来のテキスト１つ", true, 1]
                         }
                     },
                     logicTreeActions: [
@@ -88,8 +92,28 @@ export function getTextsFromSpecialEffect(text: CardText): CardText[] {
                                 {
                                     title: ["cutIn", [
                                         {
-                                            title: function _() {
-
+                                            title: function _(ctx: GameState, effect: Effect, { GameStateFn, DefineFn }: Bridge): GameState {
+                                                const cardId = DefineFn.EffectFn.getCardID(effect)
+                                                const pairs = GameStateFn.getCardTipStrBaSyouPairs(ctx, "［ ］の特徴を持つ自軍ユニット１枚は", cardId)
+                                                const textRefs = GameStateFn.getCardTipTextRefs(ctx, "このカードの_本来のテキスト１つ", cardId)
+                                                for (const pair of pairs) {
+                                                    GameStateFn.assertTargetMissingError(ctx, pair)
+                                                    const [targetCardId, targetBasyou] = pair
+                                                    ctx = GameStateFn.mapItemState(ctx, targetCardId, targetItemState => {
+                                                        for (const textRef of textRefs) {
+                                                            const alreadyHas = GameStateFn.getCardTexts(ctx, targetItemState.id).find(text => text.id == textRef.textId) != null
+                                                            if (alreadyHas) {
+                                                                continue
+                                                            }
+                                                            targetItemState = DefineFn.ItemStateFn.setGlobalEffect(targetItemState, null, true, {
+                                                                title: ["AddTextRef", textRef],
+                                                                cardIds: [targetItemState.id]
+                                                            })
+                                                        }
+                                                        return targetItemState
+                                                    }) as GameState
+                                                }
+                                                return ctx
                                             }.toString()
                                         }
                                     ]]

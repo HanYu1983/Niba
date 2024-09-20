@@ -81,7 +81,7 @@ export function getPlayEffects(ctx: GameState, playerId: PlayerID): Effect[] {
             }
             if (text.title[0] == "特殊型") {
                 const [_, toku] = text.title;
-                const t = getTextsFromSpecialEffect(text).find((v) => v.title[0] == "使用型");
+                const t = getTextsFromSpecialEffect(ctx, text).find((v) => v.title[0] == "使用型");
                 if (t == null) {
                     throw new Error("t must find");
                 }

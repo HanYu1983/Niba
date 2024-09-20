@@ -8,8 +8,8 @@ import { TargetMissingError } from "../define/GameError"
 import { GameEvent } from "../define/GameEvent"
 import { ItemStateFn } from "../define/ItemState"
 import { PhaseFn } from "../define/Timing"
-import { Tip, TipFn, StrBaSyouPair } from "../define/Tip"
-import { getCardIdsCanPayRollCost, getCardRollCostLength, getItemRuntimeCategory } from "./card"
+import { Tip, TipFn, StrBaSyouPair, TipTitleTextRef } from "../define/Tip"
+import { getItemCharacteristic, getCardIdsCanPayRollCost, getCardRollCostLength, getItemRuntimeCategory, getCardTexts } from "./card"
 import { getCard, setCard } from "./CardTableComponent"
 import { GameState } from "./GameState"
 import { clearGlobalEffects } from "./globalEffects"
@@ -23,6 +23,7 @@ import { addStackEffect } from "./EffectStackComponent"
 import { PlayerIDFn } from "../define/PlayerID"
 import { CommandEffectTip } from "../gameStateWithFlowMemory/GameStateWithFlowMemory"
 import { CardFn } from "../define/Card"
+import { getSetGroupRoot } from "./SetGroupComponent"
 
 export function assertEffectCanPass(
   ctx: GameState,
@@ -196,27 +197,76 @@ export function getConditionTitleFn(condition: Condition, options: { isPlay?: bo
     return ConditionFn.getTitleFn(condition)
   }
   switch (condition.title[0]) {
-    case "本来の記述に｢特徴：_装弾｣を持つ_自軍_G_１枚": {
-      const [_, targetChar, side, category, count] = condition.title
+    case "このカードの_本来のテキスト１つ": {
+      const [_, isOrigin, count] = condition.title
+      return function (ctx: GameState, effect: Effect): Tip[] {
+        const cardId = EffectFn.getCardID(effect)
+        const texts = isOrigin ?
+          (getItemPrototype(ctx, cardId).texts || []) :
+          getCardTexts(ctx, cardId)
+        const textRefs: TipTitleTextRef[] = texts.map(text => {
+          return {
+            cardId: cardId,
+            textId: text.id
+          }
+        })
+        return [
+          {
+            title: ["テキスト", textRefs, textRefs.slice(0, count)],
+            count: count,
+          }
+        ]
+      }
+    }
+    case "_本来の記述に｢特徴：_装弾｣を持つ_自軍_G_１枚": {
+      const [_, isOrigin, targetChar, side, category, count] = condition.title
       return function (ctx: GameState, effect: Effect): Tip[] {
         const cardId = EffectFn.getCardID(effect)
         const playerId = getItemController(ctx, cardId);
         const targetPlayerId = side == "自軍" ? playerId : PlayerIDFn.getOpponent(playerId)
-        const basyous: AbsoluteBaSyou[] = category == "グラフィック" ?
-          [AbsoluteBaSyouFn.of(targetPlayerId, "Gゾーン")] :
-          (lift(AbsoluteBaSyouFn.of)([targetPlayerId], BaSyouKeywordFn.getBaAll()))
-        const pairs = basyous.flatMap(basyou =>
-          getCardLikeItemIdsByBasyou(ctx, basyou)
-            .filter(cardId => getItemPrototype(ctx, cardId).characteristic?.includes(targetChar))
-            .map(cardId => [cardId, basyou] as StrBaSyouPair)
-        )
-        return [
-          {
-            title: ["カード", pairs, pairs.slice(0, count)],
-            count: count,
-          }
-        ]
-        return []
+        if (category == "グラフィック") {
+          const basyous: AbsoluteBaSyou[] = [AbsoluteBaSyouFn.of(targetPlayerId, "Gゾーン")]
+          const pairs = basyous.flatMap(basyou =>
+            getCardLikeItemIdsByBasyou(ctx, basyou)
+              .filter(cardId => {
+                if (isOrigin) {
+                  return getItemPrototype(ctx, cardId).characteristic?.includes(targetChar)
+                } else {
+                  return getItemCharacteristic(ctx, cardId)
+                }
+              })
+              .map(cardId => [cardId, basyou] as StrBaSyouPair)
+          )
+          return [
+            {
+              title: ["カード", pairs, pairs.slice(0, count)],
+              count: count,
+            }
+          ]
+        } else {
+          const basyous: AbsoluteBaSyou[] = (lift(AbsoluteBaSyouFn.of)([targetPlayerId], BaSyouKeywordFn.getBaAll()))
+          const pairs = basyous.flatMap(basyou =>
+            getCardLikeItemIdsByBasyou(ctx, basyou)
+              .filter(cardId => getSetGroupRoot(ctx, cardId))
+              .filter(cardId => getItemRuntimeCategory(ctx, cardId) == category)
+              .filter(cardId => {
+                if (isOrigin) {
+                  return getItemPrototype(ctx, cardId).characteristic?.includes(targetChar)
+                } else {
+                  return getItemCharacteristic(ctx, cardId)
+                }
+              })
+              .map(cardId => [cardId, basyou] as StrBaSyouPair)
+          )
+          return [
+            {
+              title: ["カード", pairs, pairs.slice(0, count)],
+              count: count,
+            }
+          ]
+        }
+
+
       }
     }
     case "_戦闘エリアにいる_敵軍_ユニット_１～_２枚": {
@@ -560,7 +610,7 @@ export function onMoveItem(ctx: GameState, to: AbsoluteBaSyou, [cardId, from]: S
   return ctx
 }
 
-export function getCardTipStrBaSyouPairs(ctx: GameState, varName: string, cardId: string): StrBaSyouPair[] {
+function getCardTipSelection<T>(ctx: GameState, varName: string, cardId: string): T {
   const cardState = getItemState(ctx, cardId);
   const tip = ItemStateFn.getTip(cardState, varName)
   const tipError = TipFn.checkTipSatisfies(tip)
@@ -570,9 +620,20 @@ export function getCardTipStrBaSyouPairs(ctx: GameState, varName: string, cardId
   if (tip.title[0] != "カード") {
     throw new Error("must カード")
   }
-  const pairs = TipFn.getSelection(tip) as StrBaSyouPair[]
-  return pairs
+  return TipFn.getSelection(tip) as T
 }
+
+export const getCardTipTextRefs = getCardTipSelection<TipTitleTextRef[]>
+
+export function setCardTipTextRefs(ctx: GameState, varName: string, pairs: TipTitleTextRef[], cardId: string): GameState {
+  let cs = getItemState(ctx, cardId)
+  cs = ItemStateFn.setTip(cs, varName, { title: ["テキスト", [], pairs] })
+  ctx = setItemState(ctx, cardId, cs) as GameState
+  return ctx
+}
+
+
+export const getCardTipStrBaSyouPairs = getCardTipSelection<StrBaSyouPair[]>
 
 export function setCardTipStrBaSyouPairs(ctx: GameState, varName: string, pairs: StrBaSyouPair[], cardId: string): GameState {
   let cs = getItemState(ctx, cardId)

@@ -11,20 +11,34 @@ import { GameState } from "./GameState"
 import { getGlobalEffects, setGlobalEffects, clearGlobalEffects } from "./globalEffects"
 import { getItemPrototype, getItemIdsByBasyou, getItemBaSyou, isChip, isCard, getCardLikeItemIdsByBasyou } from "./ItemTableComponent"
 import { getSetGroupCards } from "./SetGroupComponent"
+import { TipTitleTextRef } from "../define/Tip"
+
+export function getCardTextFromCardTextRef(ctx: GameState, textRef: TipTitleTextRef): CardText {
+  const { cardId, textId } = textRef
+  const text = getItemPrototype(ctx, cardId).texts?.find(text => text.id == textId)
+  if (text == null) {
+    throw new Error(`textRef not found: ${cardId} => ${textId}`)
+  }
+  return text
+}
 
 export function getCardTexts(ctx: GameState, cardID: string): CardText[] {
   const ges = getGlobalEffects(ctx, null)
   ctx = setGlobalEffects(ctx, null, ges)
-  const addedTexts = ges.map(e => {
+  const addedTexts = ges.flatMap(e => {
     if (e.cardIds.includes(cardID) && e.title[0] == "AddText") {
-      return e.title[1]
+      return [e.title[1]]
     }
-  }).filter(v => v) as CardText[]
+    if (e.cardIds.includes(cardID) && e.title[0] == "AddTextRef") {
+      return [getCardTextFromCardTextRef(ctx, e.title[1])]
+    }
+    return []
+  }).filter(v => v)
   const prototype = getItemPrototype(ctx, cardID)
   return [...prototype.texts || [], ...addedTexts];
 }
 
-export function getCardCharacteristic(ctx: GameState, cardID: string): string {
+export function getItemCharacteristic(ctx: GameState, cardID: string): string {
   const prototype = getItemPrototype(ctx, cardID)
   return prototype.characteristic || "";
 }
@@ -150,7 +164,7 @@ export function isCardMaster(
   unitCardID: string,
   cardID: string
 ): boolean {
-  const match = getCardCharacteristic(ctx, unitCardID).match(/専用「(.+?)」/);
+  const match = getItemCharacteristic(ctx, unitCardID).match(/専用「(.+?)」/);
   if (match == null) {
     return false;
   }

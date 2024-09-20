@@ -42,7 +42,7 @@ export function triggerEvent(
         reduce((ctx, { cardId, texts }) => {
             log("triggerEvent", "找到卡和內文", cardId, texts)
             return texts
-                .flatMap(text => text.title[0] == "特殊型" ? getTextsFromSpecialEffect(text) : [text])
+                .flatMap(text => text.title[0] == "特殊型" ? getTextsFromSpecialEffect(ctx, text) : [text])
                 .reduce((ctx, text) => {
                     log("triggerEvent", "處理單個內文", text.title, text.description)
                     const effect: Effect = {

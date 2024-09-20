@@ -3,9 +3,14 @@ import { TargetMissingError } from "./GameError";
 
 export type StrBaSyouPair = [string, AbsoluteBaSyou]
 
+export type TipTitleTextRef = {
+    cardId: string,
+    textId: string,
+}
+
 export type TipTitle =
     | ["カード", StrBaSyouPair[], StrBaSyouPair[]]
-    | ["カード2", StrBaSyouPair[], StrBaSyouPair[]]
+    | ["テキスト", TipTitleTextRef[], TipTitleTextRef[]]
     | ["StringOptions", string[], string[]]
 
 export type Tip = {
@@ -20,7 +25,7 @@ export const TipFn = {
         switch (tip.title[0]) {
             case "カード":
                 return tip.title[2]
-            case "カード2":
+            case "テキスト":
                 return tip.title[2]
             case "StringOptions":
                 return tip.title[2]

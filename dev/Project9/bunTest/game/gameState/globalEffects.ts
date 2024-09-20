@@ -55,7 +55,7 @@ function getSituationEffects(ctx: GameState, situation: Situation | null): Globa
       const proto = getItemPrototype(ctx, item.id)
       let texts = (proto.texts || []).flatMap(text => {
         if (text.title[0] == "特殊型") {
-          return getTextsFromSpecialEffect(text)
+          return getTextsFromSpecialEffect(ctx, text)
         }
         return [text]
       })
@@ -74,7 +74,7 @@ function getSituationEffects(ctx: GameState, situation: Situation | null): Globa
       const proto = getItemPrototype(ctx, item.id)
       let texts = (proto.texts || []).flatMap(text => {
         if (text.title[0] == "特殊型") {
-          return getTextsFromSpecialEffect(text)
+          return getTextsFromSpecialEffect(ctx, text)
         }
         return [text]
       })
@@ -93,7 +93,7 @@ function getSituationEffects(ctx: GameState, situation: Situation | null): Globa
       const proto = getItemPrototype(ctx, item.id)
       let texts = (proto.texts || []).flatMap(text => {
         if (text.isEnabledWhileG && text.title[0] == "特殊型") {
-          return getTextsFromSpecialEffect(text)
+          return getTextsFromSpecialEffect(ctx, text)
         }
         return [text]
       })
@@ -143,7 +143,7 @@ function getSituationEffects(ctx: GameState, situation: Situation | null): Globa
       return itemIds
         .flatMap(itemId => {
           const cardController = getItemController(ctx, itemId)
-          const texts = text.title[0] == "特殊型" ? getTextsFromSpecialEffect(text) : [text]
+          const texts = text.title[0] == "特殊型" ? getTextsFromSpecialEffect(ctx, text) : [text]
           return texts.map(text => {
             const fn = getOnSituationFn(text)
             const effect: Effect = {

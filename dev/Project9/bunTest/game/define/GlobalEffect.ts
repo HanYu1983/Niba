@@ -1,9 +1,11 @@
 import { BattleBonus, CardText } from "./CardText";
+import { TipTitleTextRef } from "./Tip";
 
 export type GlobalEffectTitle =
     | ["合計国力＋(１)してプレイできる", number]
     | ["合計国力＋(１)", number]
     | ["AddText", CardText]
+    | ["AddTextRef", TipTitleTextRef]
     | ["自軍Gとしてロール"]
     | ["＋x／＋x／＋xを得る", BattleBonus]
 
