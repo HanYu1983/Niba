@@ -18,9 +18,11 @@ export type GameEventTitle =
     | ["「改装」の効果で廃棄される場合"]
     | ["「改装」の効果で場に出た場合"]
     | ["破壊された場合", DestroyReason]
-    | ["プレイした場合" | "解決直後"]
+    | ["プレイした場合"]
     | ["「ゲイン」の効果で戦闘修正を得る場合", BattleBonus]
     | ["(敵軍)(ユニット)がダメージを受けた場合", PlayerID, CardCategory]
+    // "解決直後"為處理特殊狀況, 不是常規事件. 也可以去掉它改用別的方式實作, 但先保留
+    | ["解決直後"]
 
 export type GameEvent = {
     title: GameEventTitle;
