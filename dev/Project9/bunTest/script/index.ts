@@ -35,7 +35,7 @@ export async function loadPrototype(imgID: string): Promise<CardPrototype> {
       const rarity = data.info_17
       const color = data.info_18
       function parseColors(color: any, colorCostLength: string, totalCostLength: string): (RollCostColor | null)[] {
-        if(colorCostLength == "X" || totalCostLength == "X"){
+        if (colorCostLength == "X" || totalCostLength == "X") {
           return []
         }
         const n1 = parseInt(colorCostLength, 10)
@@ -116,20 +116,18 @@ export async function loadPrototype(imgID: string): Promise<CardPrototype> {
           }
         ]
       }
-      if (false) {
-        const texts = getGainTexts(textstr).concat(getKaiSo(textstr))
-        if (textstr.indexOf("強襲") != -1) {
-          texts.push({
-            id: "",
-            title: ["特殊型", ["強襲"]]
-          })
-        }
-        if (textstr.indexOf("戦闘配備") != -1) {
-          texts.push({
-            id: "",
-            title: ["特殊型", ["戦闘配備"]]
-          })
-        }
+      const texts = getGainTexts(textstr).concat(getKaiSo(textstr))
+      if (textstr.indexOf("強襲") != -1) {
+        texts.push({
+          id: "",
+          title: ["特殊型", ["強襲"]]
+        })
+      }
+      if (textstr.indexOf("戦闘配備") != -1) {
+        texts.push({
+          id: "",
+          title: ["特殊型", ["戦闘配備"]]
+        })
       }
 
       const originData: CardPrototype = {
@@ -145,7 +143,7 @@ export async function loadPrototype(imgID: string): Promise<CardPrototype> {
         isCross: title.indexOf("［†］") != -1,
         rarity: rarity,
         gsign: [[color], gsignProperty],
-        // texts: texts
+        texts: texts
       }
       proto = {
         ...proto,
