@@ -1,8 +1,12 @@
+import { pair } from "ramda";
 import { Bridge } from "../../script/bridge";
 import { TextSpeicalEffect, CardText } from "../define/CardText";
 import { Effect } from "../define/Effect";
 import { Tip } from "../define/Tip";
+import { getCardGSignProperty, getCardRollCostLength } from "./card";
 import { GameState } from "./GameState";
+import { addStackEffect } from "./EffectStackComponent";
+import { mapItemState } from "./ItemStateComponent";
 
 export function getTextsFromSpecialEffect(ctx: GameState, text: CardText): CardText[] {
     if (text.title[0] != "特殊型") {
@@ -131,19 +135,9 @@ export function getTextsFromSpecialEffect(ctx: GameState, text: CardText): CardT
                 {
                     id: `${text.id}_1`,
                     title: ["使用型", ["戦闘フェイズ"]],
-                    description: "這張卡在戰區的場合, 打開自軍本國上的1張卡和這張卡同的情況, 這張卡回合結束前+x/+x/+x, x為打開的卡的横置費用數量, 這個效果1回合只能用1次",
+                    description: "這張卡在戰區的場合, 打開自軍本國上的1張卡和這張卡同GsignProperty的情況, 這張卡回合結束前+x/+x/+x, x為打開的卡的横置費用數量, 這個效果1回合只能用1次",
                     conditions: {
                         ...text.conditions,
-                        "這張卡在戰區的場合": {
-                            actions: [
-                                {
-                                    title: ["這張卡在戰區的場合"]
-                                }
-                            ]
-                        },
-                        "自軍本國上的1張卡": {
-                            title: ["自軍本國上的1張卡"]
-                        },
                         "這個效果1回合只能用1次": {
                             actions: [
                                 {
@@ -156,9 +150,60 @@ export function getTextsFromSpecialEffect(ctx: GameState, text: CardText): CardT
                         {
                             actions: [
                                 {
-                                    title: function _() {
-                                        // 打開自軍本國上的1張卡
-                                        // 這張卡回合結束前+x/+x/+x, x為打開的卡的横置費用數量
+                                    title: function _(ctx: GameState, effect: Effect, { GameStateFn, DefineFn }: Bridge): GameState {
+                                        ctx = GameStateFn.addStackEffect(ctx, {
+                                            id: "",
+                                            reason: effect.reason,
+                                            description: effect.description,
+                                            text: {
+                                                id: "",
+                                                description: effect.text.description,
+                                                title: [],
+                                                conditions: {
+                                                    "這張卡在戰區的場合": {
+                                                        actions: [
+                                                            {
+                                                                title: ["這張卡在_戰區的場合", ["戦闘エリア1", "戦闘エリア2"]]
+                                                            }
+                                                        ]
+                                                    },
+                                                    "自軍本國上的1張卡": {
+                                                        title: ["_自軍_本國上的_1張卡", "自軍", "本国", 1],
+                                                        actions: [
+                                                            {
+                                                                title: ["_ロールする", "打開"],
+                                                                vars: ["自軍本國上的1張卡"]
+                                                            }
+                                                        ]
+                                                    },
+                                                },
+                                                logicTreeActions: [
+                                                    {
+                                                        actions: [
+                                                            {
+                                                                title: function _(ctx: GameState, effect: Effect, { GameStateFn, DefineFn }: Bridge): GameState {
+                                                                    const cardId = DefineFn.EffectFn.getCardID(effect)
+                                                                    const pairs = GameStateFn.getCardTipStrBaSyouPairs(ctx, "自軍本國上的1張卡", cardId)
+                                                                    if (pairs.length == 0) {
+                                                                        throw new Error()
+                                                                    }
+                                                                    const [openCardId] = pairs[0]
+                                                                    const hasSameGSighProperty = getCardGSignProperty(ctx, openCardId) == getCardGSignProperty(ctx, cardId)
+                                                                    if (hasSameGSighProperty) {
+                                                                        const bonus = getCardRollCostLength(ctx, openCardId)
+                                                                        ctx = mapItemState(ctx, cardId, is => DefineFn.ItemStateFn.setGlobalEffect(is, null, true, {
+                                                                            title: ["＋x／＋x／＋xを得る", [bonus, bonus, bonus]], cardIds: [cardId]
+                                                                        })) as GameState
+                                                                    }
+                                                                    return ctx
+                                                                }.toString()
+                                                            }
+                                                        ]
+                                                    }
+                                                ]
+                                            }
+                                        }) as GameState
+                                        return ctx
                                     }.toString()
                                 }
                             ]
@@ -170,7 +215,7 @@ export function getTextsFromSpecialEffect(ctx: GameState, text: CardText): CardT
         case "供給": {
             return [
                 {
-                    id: "",
+                    id: `${text.id}_1`,
                     title: ["使用型", ["自軍", "攻撃ステップ"]],
                     description: "這張卡以外的自軍機體1張重置"
                 }
@@ -180,7 +225,7 @@ export function getTextsFromSpecialEffect(ctx: GameState, text: CardText): CardT
             const [_, x] = specialEffect
             return [
                 {
-                    id: "",
+                    id: `${text.id}_1`,
                     title: ["使用型", ["防御ステップ"]],
                     description: "交戰中的敵軍機體1張x傷害. 這個效果只有在同區中有NT才能使用.",
                     conditions: {
@@ -212,7 +257,7 @@ export function getTextsFromSpecialEffect(ctx: GameState, text: CardText): CardT
             const [_, x] = specialEffect
             return [
                 {
-                    id: "",
+                    id: `${text.id}_1`,
                     title: ["使用型", ["ダメージ判定ステップ"]],
                     description: "和這張卡交戰的防禦力x以下的敵軍機體1張破壞",
                     conditions: {
@@ -242,7 +287,7 @@ export function getTextsFromSpecialEffect(ctx: GameState, text: CardText): CardT
             const [_, A] = specialEffect
             return [
                 {
-                    id: "",
+                    id: `${text.id}_1`,
                     title: ["使用型", ["常時"]],
                     description: "可以從自軍本國找出特徵A的1張卡移到HANGER, 那個時候本國洗牌. 這個效果只有這張卡從手中打出的回合可以使用",
                     conditions: {
@@ -261,7 +306,7 @@ export function getTextsFromSpecialEffect(ctx: GameState, text: CardText): CardT
             const [_, A] = specialEffect
             return [
                 {
-                    id: "",
+                    id: `${text.id}_1`,
                     title: ["使用型", ["戦闘フェイズ"]],
                     description: "打開自軍手裡或指定HANGER中特徵A並合計國力x以下的1張卡, 和這張卡重置狀態置換, 這張卡置換後廢棄",
                     conditions: {

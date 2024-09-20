@@ -13,8 +13,8 @@ import { getItemCharacteristic, getCardIdsCanPayRollCost, getCardRollCostLength,
 import { getCard, setCard } from "./CardTableComponent"
 import { GameState } from "./GameState"
 import { clearGlobalEffects } from "./globalEffects"
-import { getItemStateValues, getItemState, setItemState } from "./ItemStateComponent"
-import { getItemController, addCoinsToCard, isCard, isChip, getItemBaSyou, isCoin, getItemPrototype, getItemIdsByBasyou, moveItem, setItemIsRoll, getCardLikeItemIdsByBasyou } from "./ItemTableComponent"
+import { getItemStateValues, getItemState, setItemState, mapItemState } from "./ItemStateComponent"
+import { getItemController, addCoinsToCard, isCard, isChip, getItemBaSyou, isCoin, getItemPrototype, getItemIdsByBasyou, moveItem, setItemIsRoll, getCardLikeItemIdsByBasyou, assertTargetMissingError } from "./ItemTableComponent"
 import { triggerEvent } from "./triggerEvent"
 import { Bridge } from "../../script/bridge"
 import { GlobalEffect } from "../define/GlobalEffect"
@@ -341,12 +341,32 @@ export function getConditionTitleFn(condition: Condition, options: { isPlay?: bo
         ]
       }
     }
+    case "_自軍_本國上的_1張卡": {
+      const [_, side, basyouKw, count] = condition.title
+      return function (ctx: GameState, effect: Effect): Tip[] {
+        const cardId = EffectFn.getCardID(effect)
+        const playerId = getItemController(ctx, cardId);
+        const targetPlayerId = side == "自軍" ? playerId : PlayerIDFn.getOpponent(playerId)
+        const basyous: AbsoluteBaSyou[] = (lift(AbsoluteBaSyouFn.of)([targetPlayerId], [basyouKw]))
+        const pairs = basyous.flatMap(basyou =>
+          getCardLikeItemIdsByBasyou(ctx, basyou).map(cardId => [cardId, basyou] as StrBaSyouPair)
+        )
+        return [
+          {
+            title: ["カード", pairs, pairs.slice(0, count)],
+            min: count,
+          }
+        ]
+      }
+    }
+
     case "_交戦中の_自軍_ユニット_１枚":
     case "このセットグループの_ユニットは":
     case "RollColor":
       return function (ctx: GameState, effect: Effect): Tip[] {
         return []
       }
+
   }
 }
 
@@ -392,9 +412,16 @@ export function getActionTitleFn(action: Action): ActionTitleFn {
             for (const pair of pairs) {
               ctx = setItemIsRoll(ctx, true, pair) as GameState
             }
+            return ctx
+          }
+          case "打開": {
+            for (const pair of pairs) {
+              assertTargetMissingError(ctx, pair)
+              ctx = mapItemState(ctx, pair[0], is => ({ ...is, forceFaceUp: true })) as GameState
+            }
+            return ctx
           }
         }
-        return ctx
       }
     }
     case "_１ダメージを与える": {
@@ -518,6 +545,24 @@ export function getActionTitleFn(action: Action): ActionTitleFn {
         if (pairs.length == 0) {
           throw new TargetMissingError(`${action.title[0]} ${pairs.length}`)
         }
+        return ctx
+      }
+    }
+    case "這張卡在_戰區的場合": {
+      const [_, areas] = action.title
+      return function (ctx: GameState, effect: Effect): GameState {
+        const cardId = EffectFn.getCardID(effect)
+        const from = getItemBaSyou(ctx, cardId)
+        if (areas.includes(AbsoluteBaSyouFn.getBaSyouKeyword(from))) {
+
+        } else {
+          throw new TargetMissingError(`${action.title} ${cardId} not in ${JSON.stringify(areas)}`)
+        }
+        return ctx
+      }
+    }
+    case "這個效果1回合只能用1次": {
+      return function (ctx: GameState, effect: Effect): GameState {
         return ctx
       }
     }

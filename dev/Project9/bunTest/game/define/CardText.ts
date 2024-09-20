@@ -37,7 +37,7 @@ export const TextSpeicalEffectFn = {
 
 export type ActionTitle =
     | string
-    | ["_ロールする", "ロール" | "ロール"]
+    | ["_ロールする", "ロール" | "ロール" | "打開"]
     | ["_１ダメージを与える", number]
     | ["_－１／－１／－１コイン_１個を乗せる", BattleBonus, number]
     | ["移除卡狀態_旗標", string]
@@ -47,6 +47,8 @@ export type ActionTitle =
     | ["リロール状態で置き換える"]
     | ["合計国力〔x〕", number]
     | ["_敵軍_ユニットが_戦闘エリアにいる場合", RelatedPlayerSideKeyword, CardCategory, BaSyouKeyword[]]
+    | ["這張卡在_戰區的場合", BaSyouKeyword[]]
+    | ["這個效果1回合只能用1次"]
 
 export type Action = {
     title: ActionTitle,
@@ -79,6 +81,7 @@ export type ConditionTitle =
     | ["_本来の記述に｢特徴：_装弾｣を持つ_自軍_G_１枚", boolean, string, RelatedPlayerSideKeyword, CardCategory, number]
     | ["_自軍手札、または自軍ハンガーにある、_６以下の合計国力を持つ_ユニット_１枚を", RelatedPlayerSideKeyword, number, CardCategory, number]
     | ["このカードの_本来のテキスト１つ", boolean, number]
+    | ["_自軍_本國上的_1張卡", RelatedPlayerSideKeyword, BaSyouKeyword, number]
 
 export type Condition = {
     title?: ConditionTitle,

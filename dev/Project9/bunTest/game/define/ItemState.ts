@@ -11,7 +11,8 @@ export type ItemState = {
     flags: { [key: string]: any };
     tips: { [key: string]: Tip },
     globalEffects: { [key: string]: GlobalEffect },
-    varNamesRemoveOnTurnEnd: { [key: string]: any }
+    varNamesRemoveOnTurnEnd: { [key: string]: any },
+    forceFaceUp?: boolean
 };
 
 export const ItemStateFn = {
@@ -92,7 +93,8 @@ export const ItemStateFn = {
         }
         ctx = {
             ...ctx,
-            varNamesRemoveOnTurnEnd: {}
+            varNamesRemoveOnTurnEnd: {},
+            forceFaceUp: false
         }
         return ctx
     }
