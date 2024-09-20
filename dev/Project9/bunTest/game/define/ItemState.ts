@@ -12,7 +12,11 @@ export type ItemState = {
     tips: { [key: string]: Tip },
     globalEffects: { [key: string]: GlobalEffect },
     varNamesRemoveOnTurnEnd: { [key: string]: any },
-    forceFaceUp?: boolean
+    isOpenForGain?: boolean,
+    isCheat?: boolean,
+    isFirstTurn?: boolean,
+    textIdsUseThisCut?: { [key: string]: any },
+    textIdsUseThisTurn?: { [key: string]: any }
 };
 
 export const ItemStateFn = {
@@ -83,6 +87,13 @@ export const ItemStateFn = {
         }
         return ctx
     },
+    onCutEnd(ctx: ItemState): ItemState {
+        ctx = {
+            ...ctx,
+            textIdsUseThisCut: {},
+        }
+        return ctx
+    },
     onTurnEnd(ctx: ItemState): ItemState {
         for (const varName in ctx.varNamesRemoveOnTurnEnd) {
             ctx = {
@@ -94,7 +105,11 @@ export const ItemStateFn = {
         ctx = {
             ...ctx,
             varNamesRemoveOnTurnEnd: {},
-            forceFaceUp: false
+            isOpenForGain: false,
+            isCheat: false,
+            isFirstTurn: false,
+            textIdsUseThisCut: {},
+            textIdsUseThisTurn: {}
         }
         return ctx
     }

@@ -89,6 +89,9 @@ export const prototype: CardPrototype = {
             title: ["リロール状態で置き換える"],
             vars: ["自軍手札、または自軍ハンガーにある、６以下の合計国力を持つユニット１枚を", "自軍ユニット１枚"]
           },
+          {
+            title: ["triggerEvent", { title: ["解決直後"] }]
+          }
         ]
       }
     ]

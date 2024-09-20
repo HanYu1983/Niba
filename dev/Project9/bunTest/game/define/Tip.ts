@@ -17,7 +17,8 @@ export type Tip = {
     title: TipTitle,
     count?: number,
     min?: number,
-    max?: number
+    max?: number,
+    cheatCardIds?: string[],
 };
 
 export const TipFn = {

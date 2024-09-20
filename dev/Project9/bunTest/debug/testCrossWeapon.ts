@@ -11,9 +11,6 @@ import { assertEffectCanPass, doEffect, onMoveItem, setTipSelectionForUser } fro
 import { getTopEffect } from "../game/gameState/EffectStackComponent";
 import { createGameState, GameState } from "../game/gameState/GameState";
 import { getPlayEffects } from "../game/gameState/getPlayEffects";
-import { getGlobalEffects } from "../game/gameState/globalEffects";
-import { getItemState } from "../game/gameState/ItemStateComponent";
-import { getItem, getItemBaSyou, getItemPrototype, moveItem } from "../game/gameState/ItemTableComponent";
 import { setPhase } from "../game/gameState/PhaseComponent";
 import { triggerEvent } from "../game/gameState/triggerEvent";
 import { loadPrototype } from "../script";

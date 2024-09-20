@@ -37,7 +37,7 @@ export const TextSpeicalEffectFn = {
 
 export type ActionTitle =
     | string
-    | ["_ロールする", "ロール" | "ロール" | "打開"]
+    | ["_ロールする", "ロール" | "リロール" | "打開" | "リロール" | "破壞"]
     | ["_１ダメージを与える", number]
     | ["_－１／－１／－１コイン_１個を乗せる", BattleBonus, number]
     | ["移除卡狀態_旗標", string]
@@ -49,6 +49,8 @@ export type ActionTitle =
     | ["_敵軍_ユニットが_戦闘エリアにいる場合", RelatedPlayerSideKeyword, CardCategory, BaSyouKeyword[]]
     | ["這張卡在_戰區的場合", BaSyouKeyword[]]
     | ["這個效果1回合只能用1次"]
+    | ["看自己_本國全部的卡", BaSyouKeyword]
+    | ["triggerEvent", GameEvent]
 
 export type Action = {
     title: ActionTitle,
@@ -82,11 +84,13 @@ export type ConditionTitle =
     | ["_自軍手札、または自軍ハンガーにある、_６以下の合計国力を持つ_ユニット_１枚を", RelatedPlayerSideKeyword, number, CardCategory, number]
     | ["このカードの_本来のテキスト１つ", boolean, number]
     | ["_自軍_本國上的_1張卡", RelatedPlayerSideKeyword, BaSyouKeyword, number]
+    | ["_自軍_本國找出特徵_A的_1張卡", RelatedPlayerSideKeyword, BaSyouKeyword, string, number]
+    | ["這張卡交戰的防禦力_x以下的敵軍機體_1張", number, number]
 
 export type Condition = {
     title?: ConditionTitle,
     actions?: Action[],
-    exceptItemSelf?: boolean
+    exceptItemSelf?: boolean,
 }
 
 export type ConditionTitleFn = (ctx: any, effect: Effect, lib: any) => Tip[];

@@ -11,7 +11,7 @@ import { GameState } from "./GameState"
 import { getCardLikeItemIds, getItemIds, getItemPrototype } from "./ItemTableComponent"
 import { ItemStateFn } from "../define/ItemState"
 import { PhaseFn } from "../define/Timing"
-import { getItemState, mapItemStateValues, setItemState } from "./ItemStateComponent"
+import { getItemState, mapItemState, mapItemStateValues, setItemState } from "./ItemStateComponent"
 import { getTextsFromSpecialEffect } from "./getTextsFromSpecialEffect"
 import { log } from "../../tool/logger"
 
@@ -54,6 +54,24 @@ export function triggerEvent(
                 }, ctx)
         }, ctx)
     )()
+    if (event.title[0] == "解決直後" && event.effect != null) {
+        const cardId = EffectFn.getCardID(event.effect)
+        const textId = event.effect.text.id
+        ctx = mapItemState(ctx, cardId, cs => {
+            return {
+                ...cs,
+                textIdsUseThisCut: {
+                    ...cs,
+                    [textId]: true
+                }
+            }
+        }) as GameState
+    }
+    if (event.title[0] == "カット終了時") {
+        ctx = mapItemStateValues(ctx, cs => {
+            return ItemStateFn.onCutEnd(cs)
+        }) as GameState
+    }
     if (event.title[0] == "GameEventOnTiming" && PhaseFn.eq(event.title[1], PhaseFn.getLast())) {
         ctx = mapItemStateValues(ctx, cs => {
             return ItemStateFn.onTurnEnd(cs)

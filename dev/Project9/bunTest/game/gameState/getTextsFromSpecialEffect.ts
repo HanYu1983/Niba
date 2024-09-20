@@ -3,10 +3,11 @@ import { Bridge } from "../../script/bridge";
 import { TextSpeicalEffect, CardText } from "../define/CardText";
 import { Effect } from "../define/Effect";
 import { Tip } from "../define/Tip";
-import { getCardGSignProperty, getCardRollCostLength } from "./card";
+import { getCardGSignProperty, getCardRollCostLength, getItemCharacteristic } from "./card";
 import { GameState } from "./GameState";
 import { addStackEffect } from "./EffectStackComponent";
 import { mapItemState } from "./ItemStateComponent";
+import { getItemBaSyou, getItemIdsByBasyou } from "./ItemTableComponent";
 
 export function getTextsFromSpecialEffect(ctx: GameState, text: CardText): CardText[] {
     if (text.title[0] != "特殊型") {
@@ -217,7 +218,28 @@ export function getTextsFromSpecialEffect(ctx: GameState, text: CardText): CardT
                 {
                     id: `${text.id}_1`,
                     title: ["使用型", ["自軍", "攻撃ステップ"]],
-                    description: "這張卡以外的自軍機體1張重置"
+                    description: "這張卡以外的自軍機體1張重置",
+                    conditions: {
+                        ...text.conditions,
+                        "這張卡以外的自軍機體1張": {
+                            title: ["_自軍_ユニット_１枚", "自軍", "ユニット", 1],
+                            exceptItemSelf: true,
+                        }
+                    },
+                    logicTreeActions: [
+                        {
+                            actions: [
+                                {
+                                    title: ["cutIn", [
+                                        {
+                                            title: ["_ロールする", "リロール"],
+                                            vars: ["這張卡以外的自軍機體1張"]
+                                        }
+                                    ]]
+                                },
+                            ]
+                        }
+                    ]
                 }
             ]
         }
@@ -231,10 +253,22 @@ export function getTextsFromSpecialEffect(ctx: GameState, text: CardText): CardT
                     conditions: {
                         ...text.conditions,
                         "交戰中的敵軍機體1張": {
-
+                            title: ["_交戦中の_自軍_ユニット_１枚", "交戦中", "敵軍", "ユニット", 1]
                         },
                         "同區中有NT才能使用": {
-
+                            actions: [
+                                {
+                                    title: function _(ctx: GameState, effect: Effect, { GameStateFn, DefineFn }: Bridge): GameState {
+                                        const cardId = DefineFn.EffectFn.getCardID(effect)
+                                        const from = GameStateFn.getItemBaSyou(ctx, cardId)
+                                        const hasNT = GameStateFn.getCardLikeItemIdsByBasyou(ctx, from).filter(itemId => getItemCharacteristic(ctx, itemId).indexOf("NT")).length > 0
+                                        if (hasNT == false) {
+                                            throw new Error(`no NT in the same area`)
+                                        }
+                                        return ctx
+                                    }.toString()
+                                }
+                            ]
                         }
                     },
                     logicTreeActions: [
@@ -243,7 +277,8 @@ export function getTextsFromSpecialEffect(ctx: GameState, text: CardText): CardT
                                 {
                                     title: ["cutIn", [
                                         {
-                                            title: ""
+                                            title: ["_１ダメージを与える", x],
+                                            vars: ["交戰中的敵軍機體1張"]
                                         }
                                     ]]
                                 }
@@ -262,8 +297,8 @@ export function getTextsFromSpecialEffect(ctx: GameState, text: CardText): CardT
                     description: "和這張卡交戰的防禦力x以下的敵軍機體1張破壞",
                     conditions: {
                         ...text.conditions,
-                        "這張卡交戰的防禦力x以下的敵軍機體1張": {
-
+                        "這張卡交戰的防禦力_x以下的敵軍機體1張": {
+                            title: ["這張卡交戰的防禦力_x以下的敵軍機體_1張", x, 1]
                         }
                     },
                     logicTreeActions: [
@@ -272,7 +307,7 @@ export function getTextsFromSpecialEffect(ctx: GameState, text: CardText): CardT
                                 {
                                     title: ["cutIn", [
                                         {
-                                            title: ["破壞"],
+                                            title: ["_ロールする", "破壞"],
                                             vars: ["這張卡交戰的防禦力x以下的敵軍機體1張"]
                                         }
                                     ]]
@@ -289,16 +324,57 @@ export function getTextsFromSpecialEffect(ctx: GameState, text: CardText): CardT
                 {
                     id: `${text.id}_1`,
                     title: ["使用型", ["常時"]],
-                    description: "可以從自軍本國找出特徵A的1張卡移到HANGER, 那個時候本國洗牌. 這個效果只有這張卡從手中打出的回合可以使用",
+                    description: "看自己本國全部的卡,可以從中找出特徵A的1張卡移到HANGER,那個時候本國洗牌.這個效果只有這張卡從手中打出的回合可以使用",
                     conditions: {
                         ...text.conditions,
-                        "自軍本國找出特徵A的1張卡": {
-
-                        },
                         "這個效果只有這張卡從手中打出的回合可以使用": {
 
                         }
-                    }
+                    },
+                    logicTreeActions: [
+                        {
+                            actions: [
+                                {
+                                    title: function _(ctx: GameState, effect: Effect, { GameStateFn, DefineFn }: Bridge): GameState {
+                                        ctx = GameStateFn.addStackEffect(ctx, {
+                                            id: "",
+                                            reason: effect.reason,
+                                            description: effect.description,
+                                            text: {
+                                                id: "",
+                                                description: effect.text.description,
+                                                title: [],
+                                                conditions: {
+                                                    "看自己本國全部的卡,可以從中找出特徵A的1張卡移到HANGER,那個時候本國洗牌": {
+                                                        title: ["_自軍_本國找出特徵_A的_1張卡", "自軍", "本国", A, 1],
+                                                        actions: [
+                                                            {
+                                                                title: ["看自己_本國全部的卡", "本国"]
+                                                            },
+                                                        ]
+                                                    },
+                                                },
+                                                logicTreeActions: [
+                                                    {
+                                                        actions: [
+                                                            {
+                                                                title: function _(ctx: GameState, effect: Effect, { GameStateFn, DefineFn }: Bridge): GameState {
+                                                                    const cardId = DefineFn.EffectFn.getCardID(effect)
+                                                                    // TODO
+                                                                    return ctx
+                                                                }.toString()
+                                                            }
+                                                        ]
+                                                    }
+                                                ]
+                                            }
+                                        }) as GameState
+                                        return ctx
+                                    }.toString()
+                                }
+                            ]
+                        }
+                    ]
                 }
             ]
         }
@@ -312,7 +388,7 @@ export function getTextsFromSpecialEffect(ctx: GameState, text: CardText): CardT
                     conditions: {
                         ...text.conditions,
                         "打開自軍手裡或指定HANGER中特徵A並合計國力x以下的1張卡": {
-
+                            
                         },
                         "這個效果只有這張卡從手中打出的回合可以使用": {
 

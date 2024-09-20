@@ -9,7 +9,7 @@ import { GameEvent } from "../define/GameEvent"
 import { ItemStateFn } from "../define/ItemState"
 import { PhaseFn } from "../define/Timing"
 import { Tip, TipFn, StrBaSyouPair, TipTitleTextRef } from "../define/Tip"
-import { getItemCharacteristic, getCardIdsCanPayRollCost, getCardRollCostLength, getItemRuntimeCategory, getCardTexts } from "./card"
+import { getItemCharacteristic, getCardIdsCanPayRollCost, getCardRollCostLength, getItemRuntimeCategory, getCardTexts, getCardBattlePoint } from "./card"
 import { getCard, setCard } from "./CardTableComponent"
 import { GameState } from "./GameState"
 import { clearGlobalEffects } from "./globalEffects"
@@ -25,6 +25,9 @@ import { CommandEffectTip } from "../gameStateWithFlowMemory/GameStateWithFlowMe
 import { CardFn } from "../define/Card"
 import { getSetGroupRoot } from "./SetGroupComponent"
 import { log } from "../../tool/logger"
+import { BattlePointFn } from "../define/BattlePoint"
+import { getBattleGroup } from "./battleGroup"
+import { getSetGroupBattlePoint } from "./setGroup"
 
 export function assertEffectCanPass(
   ctx: GameState,
@@ -162,7 +165,6 @@ export function doEffect(
   ctx = processCondition(ctx)()
   ctx = processLogicAction(ctx)()
   ctx = clearGlobalEffects(ctx)
-  ctx = triggerEvent(ctx, { title: ["解決直後"], effect: effect })
   return ctx;
 }
 
@@ -275,8 +277,6 @@ export function getConditionTitleFn(condition: Condition, options: { isPlay?: bo
             }
           ]
         }
-
-
       }
     }
     case "_戦闘エリアにいる_敵軍_ユニット_１～_２枚": {
@@ -359,7 +359,55 @@ export function getConditionTitleFn(condition: Condition, options: { isPlay?: bo
         ]
       }
     }
+    case "這張卡交戰的防禦力_x以下的敵軍機體_1張": {
+      const [_, x, count] = condition.title
+      return function (ctx: GameState, effect: Effect): Tip[] {
+        const cardId = EffectFn.getCardID(effect)
+        if (AbsoluteBaSyouFn.getBaSyouKeyword(getItemBaSyou(ctx, cardId)) == "戦闘エリア1" || AbsoluteBaSyouFn.getBaSyouKeyword(getItemBaSyou(ctx, cardId)) == "戦闘エリア2") {
 
+        } else {
+          return []
+        }
+        const cardController = getItemController(ctx, cardId)
+        const opponentId = PlayerIDFn.getOpponent(cardController)
+        const from = AbsoluteBaSyouFn.setPlayerID(getItemBaSyou(ctx, cardId), opponentId)
+        // TODO 去掉重復
+        const targetIds = getCardLikeItemIdsByBasyou(ctx, from)
+          .map(itemId => getSetGroupRoot(ctx, itemId))
+          .filter(itemId => {
+            const [_, def, _2] = getSetGroupBattlePoint(ctx, itemId)
+            return def <= x
+          })
+        const pairs = targetIds.map(itemId => [itemId, from] as StrBaSyouPair)
+        return [
+          {
+            title: ["カード", pairs, pairs.slice(0, count)],
+            min: count,
+          }
+        ]
+      }
+    }
+    case "_自軍_本國找出特徵_A的_1張卡": {
+      const [_, side, basyouKw, char, count] = condition.title
+      return function (ctx: GameState, effect: Effect): Tip[] {
+        const cardId = EffectFn.getCardID(effect)
+        const playerId = getItemController(ctx, cardId);
+        const targetPlayerId = side == "自軍" ? playerId : PlayerIDFn.getOpponent(playerId)
+        const from = AbsoluteBaSyouFn.of(targetPlayerId, basyouKw)
+        const itemIdAtBasyou = getCardLikeItemIdsByBasyou(ctx, from)
+        const targetIds = itemIdAtBasyou.filter(itemId => {
+          return getItemCharacteristic(ctx, itemId).indexOf(char) != -1
+        })
+        const pairs = targetIds.map(targetId => [targetId, from] as StrBaSyouPair)
+        return [
+          {
+            title: ["カード", pairs, pairs.slice(0, count)],
+            min: count,
+            cheatCardIds: itemIdAtBasyou
+          }
+        ]
+      }
+    }
     case "_交戦中の_自軍_ユニット_１枚":
     case "このセットグループの_ユニットは":
     case "RollColor":
@@ -375,6 +423,13 @@ export function getActionTitleFn(action: Action): ActionTitleFn {
     return ActionFn.getTitleFn(action)
   }
   switch (action.title[0]) {
+    case "triggerEvent": {
+      const [_, event] = action.title
+      return function (ctx: GameState, effect: Effect): GameState {
+        ctx = triggerEvent(ctx, { ...event, effect: effect })
+        return ctx
+      }
+    }
     case "cutIn": {
       const [_, actions] = action.title
       return function (ctx: GameState, effect: Effect): GameState {
@@ -402,6 +457,7 @@ export function getActionTitleFn(action: Action): ActionTitleFn {
       const varNames = action.vars
       return function (ctx: GameState, effect: Effect): GameState {
         const cardId = EffectFn.getCardID(effect)
+        const cardController = getItemController(ctx, cardId)
         const pairs = varNames == null ?
           [[cardId, getItemBaSyou(ctx, cardId)] as StrBaSyouPair] :
           varNames.flatMap(varName => {
@@ -414,14 +470,38 @@ export function getActionTitleFn(action: Action): ActionTitleFn {
             }
             return ctx
           }
+          case "リロール": {
+            for (const pair of pairs) {
+              ctx = setItemIsRoll(ctx, false, pair) as GameState
+            }
+            return ctx
+          }
           case "打開": {
             for (const pair of pairs) {
               assertTargetMissingError(ctx, pair)
-              ctx = mapItemState(ctx, pair[0], is => ({ ...is, forceFaceUp: true })) as GameState
+              ctx = mapItemState(ctx, pair[0], is => ({ ...is, isOpenForGain: true })) as GameState
+            }
+            return ctx
+          }
+          case "破壞": {
+            for (const pair of pairs) {
+              assertTargetMissingError(ctx, pair)
+              ctx = mapItemState(ctx, pair[0], is => ({ ...is, destroyReason: { id: "破壊する", playerID: cardController } })) as GameState
             }
             return ctx
           }
         }
+      }
+    }
+    case "看自己_本國全部的卡": {
+      const [_, basyouKw] = action.title
+      return function (ctx: GameState, effect: Effect): GameState {
+        const cardId = EffectFn.getCardID(effect)
+        const cardController = getItemController(ctx, cardId)
+        for (const itemId of getCardLikeItemIdsByBasyou(ctx, AbsoluteBaSyouFn.of(cardController, basyouKw))) {
+          ctx = mapItemState(ctx, itemId, is => ({ ...is, isCheat: true })) as GameState
+        }
+        return ctx
       }
     }
     case "_１ダメージを与える": {
