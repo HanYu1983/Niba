@@ -22,6 +22,32 @@ export function getCardTextFromCardTextRef(ctx: GameState, textRef: TipTitleText
   return text
 }
 
+export function getCardSpecialText(ctx: GameState, cardID: string, text: CardText): CardText {
+  if (text.title[0] != "特殊型") {
+    return text
+  }
+  switch (text.title[1][0]) {
+    case "サイコミュ":
+    case "範囲兵器": {
+      const [name, value] = text.title[1]
+      const ges = getGlobalEffects(ctx, null)
+      ctx = setGlobalEffects(ctx, null, ges)
+      const bonus = ges.filter(ge => ge.cardIds.includes(cardID)).map(ge => {
+        if (ge.title[0] == "SpecialEffectBonus" && ge.title[1][0] == name) {
+          return ge.title[2]
+        }
+        return 0
+      }).reduce((a, b) => a + b)
+      return {
+        ...text,
+        title: ["特殊型", [name, value + bonus]]
+      }
+    }
+    default:
+      return text
+  }
+}
+
 export function getCardTexts(ctx: GameState, cardID: string): CardText[] {
   const ges = getGlobalEffects(ctx, null)
   ctx = setGlobalEffects(ctx, null, ges)
@@ -35,7 +61,13 @@ export function getCardTexts(ctx: GameState, cardID: string): CardText[] {
     return []
   }).filter(v => v)
   const prototype = getItemPrototype(ctx, cardID)
-  return [...prototype.texts || [], ...addedTexts];
+  const texts = [...prototype.texts || [], ...addedTexts].map(text => {
+    if (text.title[0] == "特殊型") {
+      return getCardSpecialText(ctx, cardID, text)
+    }
+    return text
+  })
+  return texts
 }
 
 export function getItemCharacteristic(ctx: GameState, cardID: string): string {

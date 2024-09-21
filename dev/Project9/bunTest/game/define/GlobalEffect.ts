@@ -1,5 +1,5 @@
 import { CardColor } from "./CardPrototype";
-import { BattleBonus, CardText } from "./CardText";
+import { BattleBonus, CardText, TextSpeicalEffect } from "./CardText";
 import { TipTitleTextRef } from "./Tip";
 
 export type GlobalEffectTitle =
@@ -10,6 +10,7 @@ export type GlobalEffectTitle =
     | ["自軍Gとしてロール"]
     | ["＋x／＋x／＋xを得る", BattleBonus]
     | ["發生國力", CardColor[]]
+    | ["SpecialEffectBonus", TextSpeicalEffect, number]
 
 export type GlobalEffect = {
     title: GlobalEffectTitle,
