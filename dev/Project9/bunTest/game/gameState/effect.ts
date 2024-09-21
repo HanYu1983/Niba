@@ -29,6 +29,42 @@ import { BattlePointFn } from "../define/BattlePoint"
 import { getBattleGroup } from "./battleGroup"
 import { getSetGroupBattlePoint } from "./setGroup"
 
+export type CondTipsErrors = {
+  conditionKey: string,
+  tips: Tip[],
+  errors: TargetMissingError[]
+}
+
+export function getEffectTips(
+  ctx: GameState,
+  effect: Effect,
+  logicId: number,
+  logicSubId: number,
+): CondTipsErrors[] {
+  const ltacs = CardTextFn.getLogicTreeActionConditions(effect.text, CardTextFn.getLogicTreeAction(effect.text, logicId))[logicSubId]
+  if (ltacs == null) {
+    throw new Error(`ltasc not found: ${logicId}/${logicSubId}`)
+  }
+  const bridge = createBridge()
+  return Object.keys(ltacs).map(key => {
+    const con = ltacs[key]
+    const tips = getConditionTitleFn(con, {})(ctx, effect, bridge)
+    const errors: TargetMissingError[] = []
+    ctx = ConditionFn.getActionTitleFns(con, getActionTitleFn).reduce((ctx, fn) => {
+      try {
+        return fn(ctx, effect, bridge)
+      } catch (e) {
+        if (e instanceof TargetMissingError) {
+          errors.push(e)
+        } else {
+          throw e
+        }
+      }
+    }, ctx)
+    return { conditionKey: key, tips: tips, errors: errors }
+  })
+}
+
 export function assertEffectCanPass(
   ctx: GameState,
   effect: Effect,
@@ -166,28 +202,6 @@ export function doEffect(
   ctx = processLogicAction(ctx)()
   ctx = clearGlobalEffects(ctx)
   return ctx;
-}
-
-export function getEffectTips(
-  ctx: GameState,
-  effect: Effect,
-  logicId: number,
-  logicConditionsId: number,
-): Tip[] {
-  const ltacs = CardTextFn.getLogicTreeActionConditions(effect.text, CardTextFn.getLogicTreeAction(effect.text, logicId))[logicConditionsId]
-  if (ltacs == null) {
-    throw new Error(`ltasc not found: ${logicId}/${logicConditionsId}`)
-  }
-  const conditionIds = Object.keys(ltacs)
-  const conditions = conditionIds.map(id => CardTextFn.getCondition(effect.text, id))
-  const bridge = createBridge()
-  const getTips = pipe(
-    always(conditions),
-    map(condition => getConditionTitleFn(condition, {})),
-    map(tipFn => tipFn(ctx, effect, bridge)),
-    flatten
-  )
-  return getTips()
 }
 
 export function getConditionTitleFn(condition: Condition, options: { isPlay?: boolean }): ConditionTitleFn {
