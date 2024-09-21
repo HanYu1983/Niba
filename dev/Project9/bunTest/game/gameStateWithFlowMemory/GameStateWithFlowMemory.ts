@@ -39,8 +39,7 @@ export type HasFlowMemoryComponent = {
 }
 
 export type TipOrErrors = {
-    conditionKey: string, 
-    condition: Condition, 
+    conditionKey: string,
     tip: Tip | null, 
     errors: TargetMissingError[]
 }

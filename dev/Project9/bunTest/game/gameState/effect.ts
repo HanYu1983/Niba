@@ -55,7 +55,7 @@ export function getEffectTips(
         }
       }
     }, ctx)
-    return { conditionKey: key, condition: con, tip: tip, errors: errors }
+    return { conditionKey: key, tip: tip, errors: errors }
   })
 }
 

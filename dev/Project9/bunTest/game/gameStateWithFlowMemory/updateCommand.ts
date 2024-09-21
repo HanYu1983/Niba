@@ -15,7 +15,6 @@ export function updateCommand(ctx: GameStateWithFlowMemory): GameStateWithFlowMe
     ctx = setCommandEffects(ctx, testedEffects.filter((command, index, self) =>
         index === self.findIndex(c => c.effect.id === command.effect.id)
     ).map(tip => tip.effect))
-    //ctx = setCommandEffects(ctx, [...playerAEffects, ...playerBEffects])
     return ctx
 }
 
@@ -24,7 +23,7 @@ export function getPlayerCommands(ctx: GameStateWithFlowMemory, playerID: string
 }
 
 export function getPlayerCommandsFilterNoError(ctx: GameStateWithFlowMemory, playerID: string): CommandEffectTip[] {
-    return getPlayerCommands(ctx, playerID).filter(({ tipOrErrors }) => tipOrErrors.filter(v => v.error).length == 0)
+    return getPlayerCommands(ctx, playerID).filter(({ tipOrErrors }) => tipOrErrors.filter(v => v.errors).length == 0)
 }
 
 export function getPlayerCommandsFilterNoErrorDistinct(ctx: GameStateWithFlowMemory, playerID: string): CommandEffectTip[] {
