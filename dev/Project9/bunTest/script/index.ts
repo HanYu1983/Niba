@@ -15,7 +15,8 @@ export async function loadPrototype(imgID: string): Promise<CardPrototype> {
     const [prodid, part2, part3, part4, part5] = imgID.split("_")
     const info_25 = `${part2}_${part3}_${part4}_${part5}`
     // https://stackoverflow.com/questions/69548822/how-to-import-js-that-imported-json-from-html
-    const data = (await import(`./data/${prodid}.json`)).default.data.find((d: any) => {
+    // 加入, {with: {type: "json"}}到編譯過後的檔案裡
+    const data = (await import(`./data/${prodid}.json`, {with: {type: "json"}})).default.data.find((d: any) => {
       return d.info_25 == info_25
     });
     if (data) {
@@ -46,8 +47,6 @@ export async function loadPrototype(imgID: string): Promise<CardPrototype> {
         "ACE": "ACE",
         "GRAPHIC": "グラフィック",
       }
-
-      
       
       const texts = getGainTexts(textstr).concat(getKaiSo(textstr))
       if (textstr.indexOf("強襲") != -1) {
@@ -85,6 +84,7 @@ export async function loadPrototype(imgID: string): Promise<CardPrototype> {
     }
   }
   {
+    // 修改成import(`./ext/${imgID}.js`)到編譯後的檔案裡
     const scriptProto = (await import(`./ext/${imgID}`).catch(() => {
       console.log(`script/${imgID}.ts not found. use default`)
       return { prototype: {} }
