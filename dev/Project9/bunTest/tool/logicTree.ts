@@ -217,7 +217,7 @@ function testEnumerateAll() {
         ['5', '6', '3', '7'],
         ['5', '6', '3', '8', '9']
     ]
-    const assertEqual = (expected, actual) => {
+    const assertEqual = (expected:any, actual:any) => {
         if (JSON.stringify(expected) !== JSON.stringify(actual)) {
             throw new Error(`Expected ${JSON.stringify(expected)} but got ${JSON.stringify(actual)}`);
         }
