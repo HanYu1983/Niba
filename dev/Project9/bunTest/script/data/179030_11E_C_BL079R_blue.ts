@@ -7,10 +7,10 @@
 // 『恒常』：このカードの解決直後に、本来の記述に｢特徴：装弾｣を持つ自軍G１枚をロールできる。その場合、カード１枚を引く。
 // （戦闘フェイズ）：敵軍ユニットが戦闘エリアにいる場合、自軍手札、または自軍ハンガーにある、６以下の合計国力を持つユニット１枚を、自軍ユニット１枚と、リロール状態で置き換える。
 
-import { CardPrototype } from "../game/define/CardPrototype";
-import { EffectFn, type Effect } from "../game/define/Effect";
-import type { Bridge } from "./bridge";
-import { type GameState } from "../game/gameState/GameState";
+import { CardPrototype } from "../../game/define/CardPrototype";
+import { EffectFn, type Effect } from "../../game/define/Effect";
+import type { Bridge } from "../bridge";
+import { type GameState } from "../../game/gameState/GameState";
 
 export const prototype: CardPrototype = {
   texts: [

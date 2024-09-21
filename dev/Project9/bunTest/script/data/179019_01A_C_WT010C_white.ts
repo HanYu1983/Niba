@@ -2,13 +2,13 @@
 // 黄昏の魔弾
 // 強化
 // （戦闘フェイズ）：自軍ユニット１枚は、ターン終了時まで「速攻」または「高機動」を得る。
-import { CardPrototype } from "../game/define/CardPrototype";
-import { Effect } from "../game/define/Effect";
-import { GlobalEffect } from "../game/define/GlobalEffect";
-import { PhaseFn } from "../game/define/Timing";
-import { StrBaSyouPair, Tip } from "../game/define/Tip";
-import { GameState } from "../game/gameState/GameState";
-import { Bridge } from "./bridge";
+import { CardPrototype } from "../../game/define/CardPrototype";
+import { Effect } from "../../game/define/Effect";
+import { GlobalEffect } from "../../game/define/GlobalEffect";
+import { PhaseFn } from "../../game/define/Timing";
+import { StrBaSyouPair, Tip } from "../../game/define/Tip";
+import { GameState } from "../../game/gameState/GameState";
+import { Bridge } from "../bridge";
 export const prototype: CardPrototype = {
   commandText: {
     id: "",

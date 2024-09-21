@@ -152,7 +152,7 @@ export async function loadPrototype(imgID: string): Promise<CardPrototype> {
     }
   }
   {
-    const scriptProto = (await import(`./${imgID}`).catch(() => {
+    const scriptProto = (await import(`./data/${imgID}`).catch(() => {
       console.log(`script/${imgID}.ts not found. use default`)
       return { prototype: {} }
     })).prototype as CardPrototype;
