@@ -21,10 +21,10 @@ export const prototype: CardPrototype = {
       //   title: ["RollColor", null]
       // },
       "このカードが非交戦中の場合、敵軍ユニット１枚": {
-        title: function _(ctx: GameState, effect: Effect, { DefineFn, GameStateFn }: Bridge): Tip[] {
+        title: function _(ctx: GameState, effect: Effect, { DefineFn, GameStateFn }: Bridge): Tip | null {
           const cardId = DefineFn.EffectFn.getCardID(effect)
           if (GameStateFn.isBattle(ctx, cardId, null)) {
-            return []
+            return null
           }
           return GameStateFn.getConditionTitleFn({
             title: ["_交戦中の_自軍_ユニット_１枚", null, "敵軍", "ユニット", 1]

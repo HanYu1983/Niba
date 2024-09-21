@@ -93,10 +93,15 @@ export type Condition = {
     exceptItemSelf?: boolean,
 }
 
-export type ConditionTitleFn = (ctx: any, effect: Effect, lib: any) => Tip[];
+export type ConditionTitleFn = (ctx: any, effect: Effect, lib: any) => Tip | null;
 
 export const ConditionFn = {
     getTitleFn(ctx: Condition): ConditionTitleFn {
+        if (ctx.title == null) {
+            return () => {
+                return null
+            }
+        }
         if (typeof ctx.title != "string") {
             throw new Error("condition.title must be string")
         }

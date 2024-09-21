@@ -16,11 +16,11 @@ export function getAttackPhaseRuleEffect(ctx: GameState, playerId: PlayerID): Ef
             title: [],
             conditions: {
                 "去地球": {
-                    title: function _(ctx: GameState, effect: Effect, { DefineFn, GameStateFn }: Bridge): Tip[] {
+                    title: function _(ctx: GameState, effect: Effect, { DefineFn, GameStateFn }: Bridge): Tip | null {
                         const currentBaKw: BaKeyword = "戦闘エリア1"
                         const runtimeBattleArea = GameStateFn.getRuntimeBattleArea(ctx, currentBaKw)
                         if (runtimeBattleArea == "宇宙エリア") {
-                            return []
+                            return null
                         }
                         const playerId = DefineFn.EffectFn.getPlayerID(effect)
                         const opponentPlayerId = DefineFn.PlayerIDFn.getOpponent(playerId)
@@ -37,19 +37,17 @@ export function getAttackPhaseRuleEffect(ctx: GameState, playerId: PlayerID): Ef
                         const pairs = unitIds.map(id => {
                             return [id, GameStateFn.getItemBaSyou(ctx, id)] as StrBaSyouPair
                         })
-                        return [
-                            {
-                                title: ["カード", pairs, pairs],
-                            }
-                        ]
+                        return {
+                            title: ["カード", pairs, pairs],
+                        }
                     }.toString()
                 },
                 "去宇宙": {
-                    title: function _(ctx: GameState, effect: Effect, { DefineFn, GameStateFn }: Bridge): Tip[] {
+                    title: function _(ctx: GameState, effect: Effect, { DefineFn, GameStateFn }: Bridge): Tip | null {
                         const currentBaKw: BaKeyword = "戦闘エリア2"
                         const runtimeBattleArea = GameStateFn.getRuntimeBattleArea(ctx, currentBaKw)
                         if (runtimeBattleArea == "地球エリア") {
-                            return []
+                            return null
                         }
                         const playerId = DefineFn.EffectFn.getPlayerID(effect)
                         const opponentPlayerId = DefineFn.PlayerIDFn.getOpponent(playerId)
@@ -66,11 +64,9 @@ export function getAttackPhaseRuleEffect(ctx: GameState, playerId: PlayerID): Ef
                         const pairs = unitIds.map(id => {
                             return [id, GameStateFn.getItemBaSyou(ctx, id)] as StrBaSyouPair
                         })
-                        return [
-                            {
-                                title: ["カード", pairs, pairs],
-                            }
-                        ]
+                        return {
+                            title: ["カード", pairs, pairs],
+                        }
                     }.toString()
                 }
             },

@@ -25,7 +25,7 @@ export function getPlayCardEffects(ctx: GameState, cardId: string): Effect[] {
     } : {}
     const characterConditions: { [key: string]: Condition } = (prototype.category == "キャラクター" || prototype.category == "オペレーション(ユニット)") ? {
         // "unitForSet": {
-        //     title: function _(ctx: GameState, effect: Effect, { DefineFn, GameStateFn }: Bridge): Tip[] {
+        //     title: function _(ctx: GameState, effect: Effect, { DefineFn, GameStateFn }: Bridge): Tip | null {
         //         // TODO check character can set
         //         return []
         //     }.toString()
@@ -226,7 +226,7 @@ function createRollCostRequire(
 ): { [key: string]: Condition } {
     return {
         // "unitForSet": {
-        //     title: function _(ctx: GameState, effect: Effect, { DefineFn, GameStateFn }: Bridge): Tip[] {
+        //     title: function _(ctx: GameState, effect: Effect, { DefineFn, GameStateFn }: Bridge): Tip | null {
         //         // TODO check character can set
         //         return []
         //     }.toString(),

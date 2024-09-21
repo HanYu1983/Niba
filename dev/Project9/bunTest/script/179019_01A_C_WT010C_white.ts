@@ -19,13 +19,11 @@ export const prototype: CardPrototype = {
         title: ["_自軍_ユニット_１枚", "自軍", "ユニット", 1]
       },
       "「速攻」または「高機動」": {
-        title: function _(ctx: GameState, effect: Effect, { DefineFn, GameStateFn }: Bridge): Tip[] {
-          return [
-            {
-              title: ["StringOptions", ["速攻", "高機動"], ["速攻"]],
-              count: 1,
-            }
-          ]
+        title: function _(ctx: GameState, effect: Effect, { DefineFn, GameStateFn }: Bridge): Tip | null {
+          return {
+            title: ["StringOptions", ["速攻", "高機動"], ["速攻"]],
+            count: 1,
+          }
         }.toString()
       }
     },

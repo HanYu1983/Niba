@@ -38,12 +38,19 @@ export type HasFlowMemoryComponent = {
     flowMemory: FlowMemoryComponent
 }
 
+export type TipOrErrors = {
+    conditionKey: string, 
+    condition: Condition, 
+    tip: Tip | null, 
+    errors: TargetMissingError[]
+}
+
 export type CommandEffectTip = {
     id: string,
     effect: Effect,
     logicID: number,
     logicSubID: number,
-    tipOrErrors: {conditionKey: string, condition: Condition, tip: Tip | null, error: TargetMissingError | null}[]
+    tipOrErrors: TipOrErrors[]
 }
 
 export type GameStateWithFlowMemory = {

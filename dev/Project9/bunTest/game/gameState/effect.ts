@@ -21,7 +21,7 @@ import { GlobalEffect } from "../define/GlobalEffect"
 import { ToolFn } from "../tool"
 import { addStackEffect } from "./EffectStackComponent"
 import { PlayerIDFn } from "../define/PlayerID"
-import { CommandEffectTip } from "../gameStateWithFlowMemory/GameStateWithFlowMemory"
+import { CommandEffectTip, TipOrErrors } from "../gameStateWithFlowMemory/GameStateWithFlowMemory"
 import { CardFn } from "../define/Card"
 import { getSetGroupRoot } from "./SetGroupComponent"
 import { log } from "../../tool/logger"
@@ -29,18 +29,12 @@ import { BattlePointFn } from "../define/BattlePoint"
 import { getBattleGroup } from "./battleGroup"
 import { getSetGroupBattlePoint } from "./setGroup"
 
-export type CondTipsErrors = {
-  conditionKey: string,
-  tips: Tip[],
-  errors: TargetMissingError[]
-}
-
 export function getEffectTips(
   ctx: GameState,
   effect: Effect,
   logicId: number,
   logicSubId: number,
-): CondTipsErrors[] {
+): TipOrErrors[] {
   const ltacs = CardTextFn.getLogicTreeActionConditions(effect.text, CardTextFn.getLogicTreeAction(effect.text, logicId))[logicSubId]
   if (ltacs == null) {
     throw new Error(`ltasc not found: ${logicId}/${logicSubId}`)
@@ -48,7 +42,7 @@ export function getEffectTips(
   const bridge = createBridge()
   return Object.keys(ltacs).map(key => {
     const con = ltacs[key]
-    const tips = getConditionTitleFn(con, {})(ctx, effect, bridge)
+    const tip = getConditionTitleFn(con, {})(ctx, effect, bridge)
     const errors: TargetMissingError[] = []
     ctx = ConditionFn.getActionTitleFns(con, getActionTitleFn).reduce((ctx, fn) => {
       try {
@@ -61,7 +55,7 @@ export function getEffectTips(
         }
       }
     }, ctx)
-    return { conditionKey: key, tips: tips, errors: errors }
+    return { conditionKey: key, condition: con, tip: tip, errors: errors }
   })
 }
 
@@ -82,57 +76,31 @@ export function assertEffectCanPass(
     case "PlayText":
       Object.keys(ltacs).forEach(key => {
         const con = ltacs[key]
-        const tips = getConditionTitleFn(con, {})(ctx, effect, bridge)
+        const tip = getConditionTitleFn(con, {})(ctx, effect, bridge)
         // 可選對象滿足
-        tips.forEach(tip => {
+        if (tip) {
           TipFn.checkTipSatisfies(tip)
-        })
-        if (tips.length) {
           // 玩家是否已選擇
           ItemStateFn.getTip(getItemState(ctx, EffectFn.getCardID(effect)), key)
         }
-        ConditionFn.getActionTitleFns(con, getActionTitleFn).forEach(fn => fn(ctx, effect, bridge))
+        ConditionFn.getActionTitleFns(con, getActionTitleFn).reduce((ctx, fn) => fn(ctx, effect, bridge), ctx)
       })
   }
 }
 
 export function getCommandEffectTips(ctx: GameState, effect: Effect): CommandEffectTip[] {
-  const bridge = createBridge()
   if (effect.text.logicTreeActions) {
     const testedEffects = effect.text.logicTreeActions.flatMap((lta, logicId) => {
       const allTree = CardTextFn.getLogicTreeActionConditions(effect.text, lta)
       const allTest = allTree.map((conditions, logicSubId) => {
-        const tipOrErrors = Object.keys(conditions).flatMap(conditionKey => {
-          const condition = conditions[conditionKey]
-          const test1 = getConditionTitleFn(condition, {})(ctx, effect, bridge).map(tip => {
-            return { conditionKey: conditionKey, condition: condition, tip: tip, error: TipFn.checkTipSatisfies(tip) }
-          })
-          const test2 = ConditionFn.getActionTitleFns(condition, getActionTitleFn).flatMap(fn => {
-            let error: TargetMissingError | null = null;
-            try {
-              fn(ctx, effect, bridge)
-            } catch (e) {
-              if (e instanceof TargetMissingError) {
-                error = e
-              } else {
-                throw e
-              }
-            }
-            if (error == null) {
-              return []
-            }
-            return [{ conditionKey: conditionKey, condition: condition, tip: null, error: error }]
-          })
-          return [...test1, ...test2]
-        })
-        const ret: CommandEffectTip = {
+        const conTipErrors = getEffectTips(ctx, effect, logicId, logicSubId)
+        return {
           id: ToolFn.getUUID("getCommandEffectTips"),
           effect: effect,
           logicID: logicId,
           logicSubID: logicSubId,
-          tipOrErrors: tipOrErrors
+          tipOrErrors: conTipErrors
         }
-        return ret
       })
       return allTest
     })
@@ -153,7 +121,7 @@ export function setTipSelectionForUser(ctx: GameState, e: Effect): GameState {
       const cets = getCommandEffectTips(ctx, e)
       cets.forEach(cet => {
         cet.tipOrErrors.forEach(tipOrE => {
-          if (tipOrE.error) {
+          if (tipOrE.errors.length) {
             return
           }
           if (tipOrE.tip == null) {
@@ -205,19 +173,14 @@ export function doEffect(
 }
 
 export function getConditionTitleFn(condition: Condition, options: { isPlay?: boolean }): ConditionTitleFn {
-  if (condition.title == null) {
-    return function (ctx: GameState, effect: Effect): Tip[] {
-      return []
-    }
-  }
-  if (typeof condition.title == "string") {
+  if (condition.title == null || typeof condition.title == "string") {
     return ConditionFn.getTitleFn(condition)
   }
   log("getConditionTitleFn", condition.title)
   switch (condition.title[0]) {
     case "このカードの_本来のテキスト１つ": {
       const [_, isOrigin, count] = condition.title
-      return function (ctx: GameState, effect: Effect): Tip[] {
+      return function (ctx: GameState, effect: Effect): Tip | null {
         const cardId = EffectFn.getCardID(effect)
         const texts = isOrigin ?
           (getItemPrototype(ctx, cardId).texts || []) :
@@ -229,18 +192,16 @@ export function getConditionTitleFn(condition: Condition, options: { isPlay?: bo
           }
         })
         log(`getConditionTitleFn`, textRefs)
-        return [
-          {
-            title: ["テキスト", textRefs, textRefs.slice(0, count)],
-            count: count,
-          }
-        ]
+        return {
+          title: ["テキスト", textRefs, textRefs.slice(0, count)],
+          count: count,
+        }
       }
     }
     case "_本来の記述に｢特徴：_装弾｣を持つ_自軍_G_１枚": {
       const [_, isOrigin, targetChar, side, category, count] = condition.title
       const exceptItemSelf = condition.exceptItemSelf
-      return function (ctx: GameState, effect: Effect): Tip[] {
+      return function (ctx: GameState, effect: Effect): Tip | null {
         const fromCardId = EffectFn.getCardID(effect)
         const playerId = getItemController(ctx, fromCardId);
         const targetPlayerId = side == "自軍" ? playerId : PlayerIDFn.getOpponent(playerId)
@@ -260,12 +221,11 @@ export function getConditionTitleFn(condition: Condition, options: { isPlay?: bo
               })
               .map(cardId => [cardId, basyou] as StrBaSyouPair)
           )
-          return [
-            {
-              title: ["カード", pairs, pairs.slice(0, count)],
-              count: count,
-            }
-          ]
+          return {
+            title: ["カード", pairs, pairs.slice(0, count)],
+            count: count,
+          }
+
         } else {
           const basyous: AbsoluteBaSyou[] = (lift(AbsoluteBaSyouFn.of)([targetPlayerId], BaSyouKeywordFn.getBaAll()))
           const pairs = basyous.flatMap(basyou =>
@@ -284,18 +244,17 @@ export function getConditionTitleFn(condition: Condition, options: { isPlay?: bo
               })
               .map(cardId => [cardId, basyou] as StrBaSyouPair)
           )
-          return [
-            {
-              title: ["カード", pairs, pairs.slice(0, count)],
-              count: count,
-            }
-          ]
+          return {
+            title: ["カード", pairs, pairs.slice(0, count)],
+            count: count,
+          }
+
         }
       }
     }
     case "_戦闘エリアにいる_敵軍_ユニット_１～_２枚": {
       const [_, basyouKws, side, category, min, max] = condition.title
-      return function (ctx: GameState, effect: Effect): Tip[] {
+      return function (ctx: GameState, effect: Effect): Tip | null {
         const cardId = EffectFn.getCardID(effect)
         const playerId = getItemController(ctx, cardId);
         const targetPlayerId = side == "自軍" ? playerId : PlayerIDFn.getOpponent(playerId)
@@ -305,18 +264,17 @@ export function getConditionTitleFn(condition: Condition, options: { isPlay?: bo
             .filter(cardId => getItemRuntimeCategory(ctx, cardId) == category)
             .map(cardId => [cardId, basyou] as StrBaSyouPair)
         )
-        return [
-          {
-            title: ["カード", pairs, pairs.slice(0, max)],
-            min: min,
-            max: max,
-          }
-        ]
+        return {
+          title: ["カード", pairs, pairs.slice(0, max)],
+          min: min,
+          max: max,
+        }
+
       }
     }
     case "_自軍_ユニット_１枚": {
       const [_, side, category, count] = condition.title
-      return function (ctx: GameState, effect: Effect): Tip[] {
+      return function (ctx: GameState, effect: Effect): Tip | null {
         const cardId = EffectFn.getCardID(effect)
         const playerId = getItemController(ctx, cardId);
         const targetPlayerId = side == "自軍" ? playerId : PlayerIDFn.getOpponent(playerId)
@@ -326,17 +284,16 @@ export function getConditionTitleFn(condition: Condition, options: { isPlay?: bo
             .filter(cardId => getItemRuntimeCategory(ctx, cardId) == category)
             .map(cardId => [cardId, basyou] as StrBaSyouPair)
         )
-        return [
-          {
-            title: ["カード", pairs, pairs.slice(0, count)],
-            count: 1,
-          }
-        ]
+        return {
+          title: ["カード", pairs, pairs.slice(0, count)],
+          count: 1,
+        }
+
       }
     }
     case "_自軍手札、または自軍ハンガーにある、_６以下の合計国力を持つ_ユニット_１枚を": {
       const [_, side, totalCost, category, count] = condition.title
-      return function (ctx: GameState, effect: Effect): Tip[] {
+      return function (ctx: GameState, effect: Effect): Tip | null {
         const cardId = EffectFn.getCardID(effect)
         const playerId = getItemController(ctx, cardId);
         const targetPlayerId = side == "自軍" ? playerId : PlayerIDFn.getOpponent(playerId)
@@ -347,17 +304,15 @@ export function getConditionTitleFn(condition: Condition, options: { isPlay?: bo
             .filter(cardId => getCardRollCostLength(ctx, cardId) <= totalCost)
             .map(cardId => [cardId, basyou] as StrBaSyouPair)
         )
-        return [
-          {
-            title: ["カード", pairs, pairs.slice(0, count)],
-            min: count,
-          }
-        ]
+        return {
+          title: ["カード", pairs, pairs.slice(0, count)],
+          min: count,
+        }
       }
     }
     case "_自軍_本國上的_1張卡": {
       const [_, side, basyouKw, count] = condition.title
-      return function (ctx: GameState, effect: Effect): Tip[] {
+      return function (ctx: GameState, effect: Effect): Tip | null {
         const cardId = EffectFn.getCardID(effect)
         const playerId = getItemController(ctx, cardId);
         const targetPlayerId = side == "自軍" ? playerId : PlayerIDFn.getOpponent(playerId)
@@ -365,22 +320,21 @@ export function getConditionTitleFn(condition: Condition, options: { isPlay?: bo
         const pairs = basyous.flatMap(basyou =>
           getCardLikeItemIdsByBasyou(ctx, basyou).map(cardId => [cardId, basyou] as StrBaSyouPair)
         )
-        return [
-          {
-            title: ["カード", pairs, pairs.slice(0, count)],
-            min: count,
-          }
-        ]
+        return {
+          title: ["カード", pairs, pairs.slice(0, count)],
+          min: count,
+        }
+
       }
     }
     case "這張卡交戰的防禦力_x以下的敵軍機體_1張": {
       const [_, x, count] = condition.title
-      return function (ctx: GameState, effect: Effect): Tip[] {
+      return function (ctx: GameState, effect: Effect): Tip | null {
         const cardId = EffectFn.getCardID(effect)
         if (AbsoluteBaSyouFn.getBaSyouKeyword(getItemBaSyou(ctx, cardId)) == "戦闘エリア1" || AbsoluteBaSyouFn.getBaSyouKeyword(getItemBaSyou(ctx, cardId)) == "戦闘エリア2") {
 
         } else {
-          return []
+          return null
         }
         const cardController = getItemController(ctx, cardId)
         const opponentId = PlayerIDFn.getOpponent(cardController)
@@ -393,17 +347,15 @@ export function getConditionTitleFn(condition: Condition, options: { isPlay?: bo
             return def <= x
           })
         const pairs = targetIds.map(itemId => [itemId, from] as StrBaSyouPair)
-        return [
-          {
-            title: ["カード", pairs, pairs.slice(0, count)],
-            min: count,
-          }
-        ]
+        return {
+          title: ["カード", pairs, pairs.slice(0, count)],
+          min: count,
+        }
       }
     }
     case "_自軍_本國找出特徵_A的_1張卡": {
       const [_, side, basyouKw, char, count] = condition.title
-      return function (ctx: GameState, effect: Effect): Tip[] {
+      return function (ctx: GameState, effect: Effect): Tip | null {
         const cardId = EffectFn.getCardID(effect)
         const playerId = getItemController(ctx, cardId);
         const targetPlayerId = side == "自軍" ? playerId : PlayerIDFn.getOpponent(playerId)
@@ -413,22 +365,19 @@ export function getConditionTitleFn(condition: Condition, options: { isPlay?: bo
           return getItemCharacteristic(ctx, itemId).indexOf(char) != -1
         })
         const pairs = targetIds.map(targetId => [targetId, from] as StrBaSyouPair)
-        return [
-          {
-            title: ["カード", pairs, pairs.slice(0, count)],
-            min: count,
-            cheatCardIds: itemIdAtBasyou
-          }
-        ]
+        return {
+          title: ["カード", pairs, pairs.slice(0, count)],
+          min: count,
+          cheatCardIds: itemIdAtBasyou
+        }
       }
     }
     case "_交戦中の_自軍_ユニット_１枚":
     case "このセットグループの_ユニットは":
     case "RollColor":
-      return function (ctx: GameState, effect: Effect): Tip[] {
-        return []
+      return function (ctx: GameState, effect: Effect): Tip | null {
+        return null
       }
-
   }
 }
 
