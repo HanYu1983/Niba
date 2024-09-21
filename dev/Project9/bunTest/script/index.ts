@@ -13,7 +13,8 @@ export async function loadPrototype(imgID: string): Promise<CardPrototype> {
   if (imgID.split("_").length > 1) {
     const [prodid, part2, part3, part4, part5] = imgID.split("_")
     const info_25 = `${part2}_${part3}_${part4}_${part5}`
-    const data = (await import(`./data/${prodid}.json`)).data.find((d: any) => {
+    // https://stackoverflow.com/questions/69548822/how-to-import-js-that-imported-json-from-html
+    const data = (await import(`./data/${prodid}.json`, { with: { type: "json" } })).default.data.find((d: any) => {
       return d.info_25 == info_25
     });
     if (data) {
