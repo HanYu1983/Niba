@@ -24,7 +24,7 @@ export async function testAttackRuleEffect() {
         protoID: "spaceUnit"
     }
     ctx = addCards(ctx, AbsoluteBaSyouFn.of(PlayerA, "配備エリア"), [spaceUnit]) as GameState
-    ctx = setTipSelectionForUser(ctx, attackEffect)
+    ctx = setTipSelectionForUser(ctx, attackEffect, 0, 0)
     ctx = doEffect(ctx, attackEffect, 0, 0)
     if (AbsoluteBaSyouFn.eq(getItemBaSyou(ctx, earthUnit.id), AbsoluteBaSyouFn.of(PlayerA, "戦闘エリア1")) != true) {
         throw new Error()
@@ -61,7 +61,7 @@ export async function testAttackRuleEffect2() {
     if (isABattleGroup(ctx, ["高機動"], unitHasHigh.id) == false) {
         throw new Error()
     }
-    ctx = setTipSelectionForUser(ctx, attackEffect)
+    ctx = setTipSelectionForUser(ctx, attackEffect, 0, 0)
     ctx = doEffect(ctx, attackEffect, 0, 0)
     if (AbsoluteBaSyouFn.eq(getItemBaSyou(ctx, earthUnit.id), AbsoluteBaSyouFn.of(PlayerA, "戦闘エリア1")) != false) {
         throw new Error()

@@ -23,7 +23,7 @@ export async function testReollRuleEffect() {
         isRoll: true
     }
     ctx = addCards(ctx, AbsoluteBaSyouFn.of(PlayerA, "Gゾーン"), [empty2]) as GameState
-    ctx = setTipSelectionForUser(ctx, attackEffect)
+    ctx = setTipSelectionForUser(ctx, attackEffect, 0, 0)
     if (getCard(ctx, empty.id).isRoll != true) {
         throw new Error()
     }

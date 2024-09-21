@@ -9,7 +9,7 @@ import { getCard } from "./CardTableComponent"
 import { getCoins, getCardIdByCoinId } from "./CoinTableComponent"
 import { GameState } from "./GameState"
 import { getGlobalEffects, setGlobalEffects, clearGlobalEffects } from "./globalEffects"
-import { getItemPrototype, getItemIdsByBasyou, getItemBaSyou, isChip, isCard, getCardLikeItemIdsByBasyou } from "./ItemTableComponent"
+import { getItemPrototype, getItemIdsByBasyou, getItemBaSyou, isChip, isCard, getCardLikeItemIdsByBasyou, getItemController } from "./ItemTableComponent"
 import { getSetGroupCards } from "./SetGroupComponent"
 import { TipTitleTextRef } from "../define/Tip"
 
@@ -87,10 +87,11 @@ export function getCardRollCostLength(ctx: GameState, cardID: string): number {
 }
 
 export function getCardIdsCanPayRollCost(ctx: GameState, playerId: PlayerID, situation: Situation | null): string[] {
-  const normalG = getCardLikeItemIdsByBasyou(ctx, AbsoluteBaSyouFn.of(playerId, "Gゾーン")).map(cardId => {
-    return [cardId, getCard(ctx, cardId)] as [string, Card]
-  }).filter(([cardId, card]) => card.isRoll != true).map(([cardId]) => cardId)
-  return normalG
+  return getGlobalEffects(ctx, situation)
+    .filter(ge => ge.title[0] == "發生國力")
+    .flatMap(ge => ge.cardIds)
+    .filter(cardId => getCard(ctx, cardId).isRoll != true)
+    .filter(cardId => getItemController(ctx, cardId) == playerId)
 }
 
 export function getCardBattlePoint(
@@ -210,4 +211,22 @@ export function getItemIsCanReroll(ctx: GameState, itemId: string): boolean {
 
 export function getItemIsCanRoll(ctx: GameState, itemId: string): boolean {
   return true
+}
+
+export function getCardIdsCanPayRollColor(ctx: GameState, situation: Situation | null, playerId: PlayerID, color: CardColor): { cardId: string, colors: CardColor[] }[] {
+  return getGlobalEffects(ctx, situation).filter(ge => {
+    if (getItemController(ctx, ge.cardIds[0]) != playerId) {
+      return false
+    }
+    if (ge.title[0] == "發生國力") {
+      const gainColors = ge.title[1]
+      switch (color) {
+        case "紫":
+          return true
+        default:
+          return gainColors.includes(color)
+      }
+    }
+    return false
+  }).map(ge => ({ cardId: ge.cardIds[0], colors: ge.title[1] as CardColor[] }))
 }

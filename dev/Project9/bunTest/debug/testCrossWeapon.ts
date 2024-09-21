@@ -50,7 +50,7 @@ export async function testCrossWeapon() {
     {
         const effect = playEffects[0]
         console.log(`do: ${effect.description}`)
-        ctx = setTipSelectionForUser(ctx, effect)
+        ctx = setTipSelectionForUser(ctx, effect, 0, 0)
         ctx = doEffect(ctx, effect, 0, 0)
     }
     {

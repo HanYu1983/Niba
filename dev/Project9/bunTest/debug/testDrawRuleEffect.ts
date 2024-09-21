@@ -15,7 +15,7 @@ export async function testDrawRuleEffect() {
     let ctx = createGameState()
     const attackEffect = getDrawPhaseRuleEffect(ctx, PlayerA)
     ctx = createCardWithProtoIds(ctx, AbsoluteBaSyouFn.of(PlayerA, "本国"), ["empty", "empty"]) as GameState
-    ctx = setTipSelectionForUser(ctx, attackEffect)
+    ctx = setTipSelectionForUser(ctx, attackEffect, 0, 0)
     if (getCardLikeItemIdsByBasyou(ctx, AbsoluteBaSyouFn.of(PlayerA, "手札")).length != 0) {
         throw new Error()
     }

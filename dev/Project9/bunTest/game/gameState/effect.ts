@@ -9,7 +9,7 @@ import { GameEvent } from "../define/GameEvent"
 import { ItemStateFn } from "../define/ItemState"
 import { PhaseFn } from "../define/Timing"
 import { Tip, TipFn, StrBaSyouPair, TipTitleTextRef } from "../define/Tip"
-import { getItemCharacteristic, getCardIdsCanPayRollCost, getCardRollCostLength, getItemRuntimeCategory, getCardTexts, getCardBattlePoint } from "./card"
+import { getItemCharacteristic, getCardIdsCanPayRollCost, getCardRollCostLength, getItemRuntimeCategory, getCardTexts, getCardBattlePoint, getCardIdsCanPayRollColor } from "./card"
 import { getCard, setCard } from "./CardTableComponent"
 import { GameState } from "./GameState"
 import { clearGlobalEffects } from "./globalEffects"
@@ -43,13 +43,18 @@ export function getEffectTips(
   return Object.keys(ltacs).map(key => {
     const con = ltacs[key]
     const tip = getConditionTitleFn(con, {})(ctx, effect, bridge)
+    if (tip) {
+      const cardId = EffectFn.getCardID(effect)
+      ctx = mapItemState(ctx, cardId, is => ItemStateFn.setTip(is, key, tip)) as GameState
+    }
     const errors: TargetMissingError[] = []
-    ctx = ConditionFn.getActionTitleFns(con, getActionTitleFn).reduce((ctx, fn) => {
+    ctx = ConditionFn.getActionTitleFns(con, getActionTitleFn).reduce((ctx, fn): GameState => {
       try {
         return fn(ctx, effect, bridge)
       } catch (e) {
         if (e instanceof TargetMissingError) {
           errors.push(e)
+          return ctx
         } else {
           throw e
         }
@@ -57,6 +62,32 @@ export function getEffectTips(
     }, ctx)
     return { conditionKey: key, tip: tip, errors: errors }
   })
+}
+
+export function setEffectTips(ctx: GameState, e: Effect, toes: TipOrErrors[]): GameState {
+  switch (e.reason[0]) {
+    case "GameRule":
+    case "Destroy":
+    case "場に出る":
+    case "PlayCard":
+    case "PlayText": {
+      const cardId = EffectFn.getCardID(e)
+      toes.forEach(toe => {
+        if (toe.errors.length) {
+          return
+        }
+        const tip = toe.tip
+        if (tip == null) {
+          return
+        }
+        const key = toe.conditionKey
+        ctx = mapItemState(ctx, cardId, is => ItemStateFn.setTip(is, key, tip)) as GameState
+      })
+      return ctx
+    }
+    default:
+      throw new Error(`unknown effect reason: ${e.reason[0]}`)
+  }
 }
 
 export function assertEffectCanPass(
@@ -109,33 +140,8 @@ export function getCommandEffectTips(ctx: GameState, effect: Effect): CommandEff
   return []
 }
 
-export function setTipSelectionForUser(ctx: GameState, e: Effect): GameState {
-  switch (e.reason[0]) {
-    case "GameRule":
-    case "Destroy":
-    case "場に出る":
-    case "PlayCard":
-    case "PlayText": {
-      const cardId = EffectFn.getCardID(e)
-      let cs = getItemState(ctx, cardId)
-      const cets = getCommandEffectTips(ctx, e)
-      cets.forEach(cet => {
-        cet.tipOrErrors.forEach(tipOrE => {
-          if (tipOrE.errors.length) {
-            return
-          }
-          if (tipOrE.tip == null) {
-            return
-          }
-          const conditionKey = tipOrE.conditionKey
-          const tip = tipOrE.tip
-          cs = ItemStateFn.setTip(cs, conditionKey, tip)
-        })
-      })
-      return setItemState(ctx, cardId, cs) as GameState
-    }
-    default: throw new Error(`unknown effect reason: ${e.reason[0]}`)
-  }
+export function setTipSelectionForUser(ctx: GameState, e: Effect, logicId: number, logicSubId: number): GameState {
+  return setEffectTips(ctx, e, getEffectTips(ctx, e, logicId, logicSubId))
 }
 
 export function doEffect(
@@ -211,6 +217,9 @@ export function getConditionTitleFn(condition: Condition, options: { isPlay?: bo
             getCardLikeItemIdsByBasyou(ctx, basyou)
               .filter(cardId => {
                 if (exceptItemSelf && fromCardId == cardId) {
+                  return false
+                }
+                if (getCard(ctx, cardId).isRoll) {
                   return false
                 }
                 if (isOrigin) {
@@ -372,9 +381,44 @@ export function getConditionTitleFn(condition: Condition, options: { isPlay?: bo
         }
       }
     }
+    case "RollColor": {
+      const [_, color] = condition.title
+      return function (ctx: GameState, effect: Effect): Tip | null {
+        const cardId = EffectFn.getCardID(effect)
+        const cardController = getItemController(ctx, cardId)
+        const cardIdColors = getCardIdsCanPayRollColor(ctx, null, cardController, color)
+        let colorIds = []
+        if (color == "紫") {
+          // 單紫優先
+          colorIds = cardIdColors.filter(gId => gId.colors.length == 1 && gId.colors[0] == color).map(gId => gId.cardId).slice(0, 1)
+          // 若無單紫
+          if (colorIds.length == 0) {
+            // 非紫需要2張
+            colorIds = cardIdColors.filter(gId => gId.colors.length == 1).map(gId => gId.cardId).slice(0, 2)
+            // 若非紫小於2張
+            if (colorIds.length < 2) {
+              // 最下策則用雙色卡支付
+              colorIds = cardIdColors.filter(gId => gId.colors.length > 1).map(gId => gId.cardId).slice(0, 2)
+            }
+          }
+        } else {
+          // 單色優先
+          colorIds = cardIdColors.filter(gId => gId.colors.length == 1 && gId.colors[0] == color).map(gId => gId.cardId).slice(0, 1)
+          if (colorIds.length == 0) {
+            // 最下策則用雙色卡支付
+            colorIds = cardIdColors.filter(gId => gId.colors.length > 1 && gId.colors.includes(color)).map(gId => gId.cardId).slice(0, 1)
+          }
+        }
+        const cardIdColorsPairs = cardIdColors.map(gId => gId.cardId).map(colorId => [colorId, getItemBaSyou(ctx, colorId)] as StrBaSyouPair)
+        const pairs = colorIds.map(colorId => [colorId, getItemBaSyou(ctx, colorId)] as StrBaSyouPair)
+        return {
+          title: ["カード", cardIdColorsPairs, pairs],
+          min: 1,
+        }
+      }
+    }
     case "_交戦中の_自軍_ユニット_１枚":
     case "このセットグループの_ユニットは":
-    case "RollColor":
       return function (ctx: GameState, effect: Effect): Tip | null {
         return null
       }

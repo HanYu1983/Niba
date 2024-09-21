@@ -224,17 +224,24 @@ function createRollCostRequire(
     costNum: number,
     color: CardColor | null
 ): { [key: string]: Condition } {
-    return {
-        // "unitForSet": {
-        //     title: function _(ctx: GameState, effect: Effect, { DefineFn, GameStateFn }: Bridge): Tip | null {
-        //         // TODO check character can set
-        //         return []
-        //     }.toString(),
-        //     actions: [
-        //         {
-        //             title: ["_ロールする", "ロール"],
-        //         }
-        //     ]
-        // }
-    };
+    if (color == null) {
+        return {}
+    }
+    let ret: { [key: string]: Condition } = {}
+    for (let i = 0; i < costNum; ++i) {
+        const key = `${i}[${color}]`
+        ret = {
+            ...ret,
+            [key]: {
+                title: ["RollColor", color],
+                actions: [
+                    {
+                        title: ["_ロールする", "ロール"],
+                        vars: [key]
+                    }
+                ]
+            }
+        };
+    }
+    return ret
 }

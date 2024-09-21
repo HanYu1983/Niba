@@ -21,13 +21,14 @@ import { StrBaSyouPair } from "../game/define/Tip"
 export async function test179030_11E_C_BL079R_blue() {
     await loadPrototype("179030_11E_C_BL079R_blue")
     await loadPrototype("unit")
+    await loadPrototype("unitBlue")
     const cardA: Card = {
         id: "cardA",
         protoID: "179030_11E_C_BL079R_blue"
     }
     let ctx = createGameState()
     ctx = addCards(ctx, AbsoluteBaSyouFn.of(PlayerA, "手札"), [cardA]) as GameState
-    ctx = createCardWithProtoIds(ctx, AbsoluteBaSyouFn.of(PlayerA, "Gゾーン"), repeat("unit", 2)) as GameState
+    ctx = createCardWithProtoIds(ctx, AbsoluteBaSyouFn.of(PlayerA, "Gゾーン"), repeat("unitBlue", 2)) as GameState
     ctx = createCardWithProtoIds(ctx, AbsoluteBaSyouFn.of(PlayerA, "本国"), repeat("unit", 2)) as GameState
     if (getCardIdsCanPayRollCost(ctx, PlayerA, null).length != 2) {
         throw new Error(`getCardIdsCanPayRollCost(ctx, PlayerA, null).length !=2`)
@@ -60,7 +61,7 @@ export async function test179030_11E_C_BL079R_blue() {
             throw new Error(`playCardEffects.length != 1`)
         }
         console.log("選擇對象")
-        ctx = setTipSelectionForUser(ctx, playCardEffects[0])
+        ctx = setTipSelectionForUser(ctx, playCardEffects[0], 0, 0)
         console.log("出指令")
         ctx = doEffect(ctx, playCardEffects[0], 0, 0)
         {
@@ -109,7 +110,7 @@ export async function test179030_11E_C_BL079R_blue() {
             }
             ctx = addCards(ctx, AbsoluteBaSyouFn.of(PlayerA, "Gゾーン"), [cardForRollG]) as GameState
             console.log("選擇對象")
-            ctx = setTipSelectionForUser(ctx, effect)
+            ctx = setTipSelectionForUser(ctx, effect, 0, 0)
             console.log(`執行效果: ${effect.text.description}`)
             if (getCardLikeItemIdsByBasyou(ctx, AbsoluteBaSyouFn.of(PlayerA, "本国")).length != 2) {
                 throw new Error(`getCardLiketemIdsByBasyou(ctx, AbsoluteBaSyouFn.of(PlayerA, "本国")).length != 2`)

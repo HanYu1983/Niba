@@ -5,7 +5,7 @@ import { PlayerA } from "../game/define/PlayerID"
 import { PhaseFn } from "../game/define/Timing"
 import { getCardRollCostLength, getCardBattlePoint, getCardIdsCanPayRollCost } from "../game/gameState/card"
 import { createCardWithProtoIds } from "../game/gameState/CardTableComponent"
-import { getEffectTips, doEffect } from "../game/gameState/effect"
+import { getEffectTips, doEffect, setTipSelectionForUser } from "../game/gameState/effect"
 import { getTopEffect } from "../game/gameState/EffectStackComponent"
 import { createGameState, GameState } from "../game/gameState/GameState"
 import { getPlayCardEffects } from "../game/gameState/getPlayCardEffect"
@@ -36,6 +36,7 @@ export async function test179028_10D_U_WT181N_white() {
     if (getCardLikeItemIdsByBasyou(ctx, AbsoluteBaSyouFn.of(PlayerA, "プレイされているカード")).length != 0) {
         throw new Error(`getCardLiketemIdsByBasyou(ctx, AbsoluteBaSyouFn.of(PlayerA, "プレイされているカード")).length != 0`)
     }
+    ctx = setTipSelectionForUser(ctx, useEffect, 0, 0)
     ctx = doEffect(ctx, useEffect, 0, 0)
     if (getCardLikeItemIdsByBasyou(ctx, AbsoluteBaSyouFn.of(PlayerA, "プレイされているカード")).length != 1) {
         throw new Error(`getCardLiketemIdsByBasyou(ctx, AbsoluteBaSyouFn.of(PlayerA, "プレイされているカード")).length != 1`)

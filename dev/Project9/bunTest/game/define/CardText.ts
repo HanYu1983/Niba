@@ -75,7 +75,7 @@ export const ActionFn = {
 
 export type ConditionTitle =
     | string
-    | ["RollColor", CardColor | null]
+    | ["RollColor", CardColor]
     | ["_戦闘エリアにいる_敵軍_ユニット_１～_２枚", BaSyouKeyword[], RelatedPlayerSideKeyword, CardCategory, number, number]
     | ["_交戦中の_自軍_ユニット_１枚", "交戦中" | "非交戦中" | null, RelatedPlayerSideKeyword, CardCategory, number]
     | ["_自軍_ユニット_１枚", RelatedPlayerSideKeyword, CardCategory, number]

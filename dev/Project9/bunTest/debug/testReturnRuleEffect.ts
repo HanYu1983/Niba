@@ -23,7 +23,7 @@ export async function testReturnRuleEffect() {
         protoID: "earthUnit"
     }
     ctx = addCards(ctx, AbsoluteBaSyouFn.of(PlayerA, "戦闘エリア2"), [earth2]) as GameState
-    ctx = setTipSelectionForUser(ctx, attackEffect)
+    ctx = setTipSelectionForUser(ctx, attackEffect, 0, 0)
     if (getCard(ctx, earth.id).isRoll) {
         throw new Error()
     }
