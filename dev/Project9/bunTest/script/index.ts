@@ -13,7 +13,7 @@ export async function loadPrototype(imgID: string): Promise<CardPrototype> {
   if (imgID.split("_").length > 1) {
     const [prodid, part2, part3, part4, part5] = imgID.split("_")
     const info_25 = `${part2}_${part3}_${part4}_${part5}`
-    const data = require(`../data/${prodid}.json`).data.find((d: any) => {
+    const data = (await import(`./data/${prodid}.json`)).data.find((d: any) => {
       return d.info_25 == info_25
     });
     if (data) {
@@ -152,7 +152,7 @@ export async function loadPrototype(imgID: string): Promise<CardPrototype> {
     }
   }
   {
-    const scriptProto = (await import(`./data/${imgID}`).catch(() => {
+    const scriptProto = (await import(`./ext/${imgID}`).catch(() => {
       console.log(`script/${imgID}.ts not found. use default`)
       return { prototype: {} }
     })).prototype as CardPrototype;
