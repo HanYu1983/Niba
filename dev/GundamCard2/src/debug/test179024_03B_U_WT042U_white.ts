@@ -6,9 +6,9 @@ import { PlayerA, PlayerB } from "../game/define/PlayerID"
 import { PhaseFn } from "../game/define/Timing"
 import { setActivePlayerID } from "../game/gameState/ActivePlayerComponent"
 import { getCardRollCostLength, getCardBattlePoint } from "../game/gameState/card"
-import { addCards, createCardWithProtoIds } from "../game/gameState/CardTableComponent"
+import { addCards, createCardWithProtoIds, getCard, mapCard } from "../game/gameState/CardTableComponent"
 import { getCardIdByCoinId, getCoins } from "../game/gameState/CoinTableComponent"
-import { getEffectTips, doEffect, onMoveItem } from "../game/gameState/effect"
+import { getEffectTips, doEffect, onMoveItem, setTipSelectionForUser } from "../game/gameState/effect"
 import { getTopEffect } from "../game/gameState/EffectStackComponent"
 import { createGameState, GameState } from "../game/gameState/GameState"
 import { getPlayCardEffects } from "../game/gameState/getPlayCardEffect"
@@ -23,6 +23,7 @@ import { loadPrototype } from "../script"
 
 export async function test179024_03B_U_WT042U_white() {
     await loadPrototype("179024_03B_U_WT042U_white")
+    await loadPrototype("unit")
     const cardA: Card = {
         id: "cardA",
         protoID: "179024_03B_U_WT042U_white"
@@ -31,8 +32,13 @@ export async function test179024_03B_U_WT042U_white() {
         id: "cardB",
         protoID: "179024_03B_U_WT042U_white"
     }
+    const unit: Card = {
+        id: "unit",
+        protoID: "unit"
+    }
     let ctx = createGameState()
     ctx = addCards(ctx, AbsoluteBaSyouFn.of(PlayerA, "戦闘エリア1"), [cardA]) as GameState
+    ctx = addCards(ctx, AbsoluteBaSyouFn.of(PlayerA, "Gゾーン"), [unit]) as GameState
     ctx = addCards(ctx, AbsoluteBaSyouFn.of(PlayerB, "配備エリア"), [cardB]) as GameState
     ctx = setActivePlayerID(ctx, PlayerA) as GameState
     ctx = setPhase(ctx, ["戦闘フェイズ", "ダメージ判定ステップ", "フリータイミング"]) as GameState
@@ -49,7 +55,11 @@ export async function test179024_03B_U_WT042U_white() {
         if (playCardEffects.length != 1) {
             throw new Error(`playCardEffects.length != 1`)
         }
+        ctx = setTipSelectionForUser(ctx, playCardEffects[0], 0, 0)
         ctx = doEffect(ctx, playCardEffects[0], 0, 0)
+        if (getCard(ctx, unit.id).isRoll != true) {
+            throw new Error()
+        }
         const effect = getTopEffect(ctx)
         if (effect == null) {
             throw new Error(`effect == null`)
@@ -79,6 +89,13 @@ export async function test179024_03B_U_WT042U_white() {
     {
         // 將同一個切入的旗標清除, 因為同樣的切入中1個技能只能使用1次
         ctx = triggerEvent(ctx, { title: ["カット終了時", []] })
+         // 重置G
+        ctx = mapCard(ctx, unit.id, card => {
+            return {
+                ...card,
+                isRoll: false,
+            }
+        }) as GameState
         ctx = checkIsBattle(ctx) as GameState
         if (isBattle(ctx, cardA.id, null) != true) {
             throw new Error(`isBattle(ctx, cardA.id, null) != true`)

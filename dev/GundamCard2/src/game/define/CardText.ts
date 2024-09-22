@@ -75,7 +75,7 @@ export const ActionFn = {
 
 export type ConditionTitle =
     | string
-    | ["RollColor", CardColor]
+    | ["RollColor", CardColor | null]
     | ["_戦闘エリアにいる_敵軍_ユニット_１～_２枚", BaSyouKeyword[], RelatedPlayerSideKeyword, CardCategory, number, number]
     | ["_交戦中の_自軍_ユニット_１枚", "交戦中" | "非交戦中" | null, RelatedPlayerSideKeyword, CardCategory, number]
     | ["_自軍_ユニット_１枚", RelatedPlayerSideKeyword, CardCategory, number]
@@ -226,3 +226,26 @@ export function getOnSituationFn(ctx: CardText): OnSituationFn {
     }
     return eval(ctx.onSituation + ";_")
 }
+
+export function createRollCostRequire(
+    costNum: number,
+    color: CardColor | null
+  ): { [key: string]: Condition } {
+    let ret: { [key: string]: Condition } = {}
+    for (let i = 0; i < costNum; ++i) {
+        const key = `${i}[${color}]`
+        ret = {
+            ...ret,
+            [key]: {
+                title: ["RollColor", color],
+                actions: [
+                    {
+                        title: ["_ロールする", "ロール"],
+                        vars: [key]
+                    }
+                ]
+            }
+        };
+    }
+    return ret
+  }

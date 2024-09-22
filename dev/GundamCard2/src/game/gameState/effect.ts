@@ -408,7 +408,9 @@ export function getConditionTitleFn(condition: Condition, options: { isPlay?: bo
         const cardController = getItemController(ctx, cardId)
         const cardIdColors = getCardIdsCanPayRollColor(ctx, null, cardController, color)
         let colorIds = []
-        if (color == "紫") {
+        if (color == null) {
+          colorIds = cardIdColors.map(gId => gId.cardId).slice(0, 1)
+        } else if (color == "紫") {
           // 單紫優先
           colorIds = cardIdColors.filter(gId => gId.colors.length == 1 && gId.colors[0] == color).map(gId => gId.cardId).slice(0, 1)
           // 若無單紫

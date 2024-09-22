@@ -1,7 +1,8 @@
 import { repeat } from "ramda";
 import { BattleAreaKeyword } from "../game/define/BaSyou";
-import { CardCategory, CardPrototype, RollCostColor } from "../game/define/CardPrototype";
-import { CardText } from "../game/define/CardText";
+import { CardCategory, CardColor, CardPrototype, RollCostColor } from "../game/define/CardPrototype";
+import { CardText, Condition, createRollCostRequire } from "../game/define/CardText";
+import { getCardRollCost } from "../game/gameState/card";
 
 
 export async function loadPrototype(imgID: string): Promise<CardPrototype> {
@@ -187,9 +188,7 @@ function getGainTexts(gainStr: string): CardText[] {
     {
       id: "",
       title: ["特殊型", ["ゲイン"]],
-      conditions: {
-
-      }
+      conditions: createRollCostRequire(rollcost, null)
     }
   ]
 }
@@ -207,9 +206,8 @@ function getKaiSo(gainStr: string): CardText[] {
     {
       id: "",
       title: ["特殊型", ["改装", char]],
-      conditions: {
-
-      }
+      conditions: createRollCostRequire(rollcost, null)
     }
   ]
 }
+

@@ -28,6 +28,10 @@ export function setCard(ctx: CardTableComponent, id: string, card: Card): CardTa
   }
 }
 
+export function mapCard(ctx: CardTableComponent, id: string, f: (card: Card) => Card): CardTableComponent {
+  return setCard(ctx, id, f(getCard(ctx, id)))
+}
+
 export function getCardIds(ctx: CardTableComponent): string[] {
   return Object.keys(ctx.cards);
 }

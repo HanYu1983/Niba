@@ -1,7 +1,7 @@
 import { pipe, always, map, sum, dissoc } from "ramda"
 import { Bridge } from "../../script/bridge"
 import { CardColorFn, CardColor } from "../define/CardPrototype"
-import { Condition } from "../define/CardText"
+import { Condition, createRollCostRequire } from "../define/CardText"
 import { Effect } from "../define/Effect"
 import { getCardHasSpeicalEffect, getCardRollCostLength } from "./card"
 import { GameState } from "./GameState"
@@ -251,28 +251,3 @@ export function getPlayCardEffects(ctx: GameState, cardId: string): Effect[] {
     return ret
 }
 
-function createRollCostRequire(
-    costNum: number,
-    color: CardColor | null
-): { [key: string]: Condition } {
-    if (color == null) {
-        return {}
-    }
-    let ret: { [key: string]: Condition } = {}
-    for (let i = 0; i < costNum; ++i) {
-        const key = `${i}[${color}]`
-        ret = {
-            ...ret,
-            [key]: {
-                title: ["RollColor", color],
-                actions: [
-                    {
-                        title: ["_ロールする", "ロール"],
-                        vars: [key]
-                    }
-                ]
-            }
-        };
-    }
-    return ret
-}
