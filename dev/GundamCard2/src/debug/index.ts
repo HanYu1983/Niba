@@ -24,6 +24,7 @@ import { applyFlow } from "../game/gameStateWithFlowMemory/applyFlow";
 import { TargetMissingError } from "../game/define/GameError";
 import { testIssue1 } from "./testIssue";
 import { testPlayG } from "./testPlayG";
+import { testPlayChar } from "./testPlayChar";
 
 export async function tests() {
     return [
@@ -47,6 +48,7 @@ export async function tests() {
         testCrossWeapon,
         testIssue1,
         testPlayG,
+        testPlayChar,
     ].reduce((worker, testF) => {
         return worker.then(async () => {
             console.log(`==============================${testF.name}==================================`);
