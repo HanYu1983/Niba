@@ -77,6 +77,8 @@ export async function test179024_03B_U_WT042U_white() {
         throw new Error(`itemIds.length > 0 && itemIds[0] == cardA.id`)
     }
     {
+        // 將同一個切入的旗標清除, 因為同樣的切入中1個技能只能使用1次
+        ctx = triggerEvent(ctx, { title: ["カット終了時", []] })
         ctx = checkIsBattle(ctx) as GameState
         if (isBattle(ctx, cardA.id, null) != true) {
             throw new Error(`isBattle(ctx, cardA.id, null) != true`)

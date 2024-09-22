@@ -43,7 +43,7 @@ export type HasFlowMemoryComponent = {
 export type TipOrErrors = {
     conditionKey: string,
     tip: Tip | null,
-    errors: any[]
+    errors: string[]
 }
 
 export type CommandEffectTip = {

@@ -16,6 +16,7 @@ import * as Timing from "./Timing"
 import * as Coin from "./Coin"
 import * as Tip from "./Tip"
 import * as ItemState from "./ItemState"
+import * as GameError from "./GameError"
 export const DefineFn = {
     ...BaSyou,
     ...BattlePoint,
@@ -30,4 +31,5 @@ export const DefineFn = {
     ...Coin,
     ...Tip,
     ...ItemState,
+    ...GameError,
 }

@@ -86,7 +86,7 @@ export function getPlayEffects(ctx: GameState, playerId: PlayerID): Effect[] {
                                     const cardId = DefineFn.EffectFn.getCardID(effect)
                                     const ps = GameStateFn.getItemState(ctx, cardId)
                                     if (ps.textIdsUseThisCut?.[effect.text.id]) {
-                                        throw new TargetMissingError(`同切上限: ${effect.text.description}`)
+                                        throw new DefineFn.TargetMissingError(`同切上限: ${effect.text.description}`)
                                     }
                                     ctx = GameStateFn.mapItemState(ctx, cardId, ps => {
                                         return {
@@ -111,7 +111,7 @@ export function getPlayEffects(ctx: GameState, playerId: PlayerID): Effect[] {
                         ...text,
                         conditions: {
                             ...text.conditions,
-                            //...playTextConditions
+                            ...playTextConditions
                         }
                     }
                 } as Effect

@@ -23,7 +23,7 @@ export function getPlayGEffects(ctx: GameState, cardId: string): Effect {
                                 const cardController = GameStateFn.getItemController(ctx, cardId)
                                 const ps = GameStateFn.getPlayerState(ctx, cardController)
                                 if (ps.playGCount > 0) {
-                                    throw new TargetMissingError(`出G上限: ${ps.playGCount}`)
+                                    throw new DefineFn.TargetMissingError(`出G上限: ${ps.playGCount}`)
                                 }
                                 ctx = GameStateFn.mapPlayerState(ctx, cardController, ps => {
                                     return {

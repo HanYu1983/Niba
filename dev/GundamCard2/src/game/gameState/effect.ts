@@ -48,13 +48,13 @@ export function getEffectTips(
       const cardId = EffectFn.getCardID(effect)
       ctx = mapItemState(ctx, cardId, is => ItemStateFn.setTip(is, key, tip)) as GameState
     }
-    const errors: TargetMissingError[] = []
+    const errors: string[] = []
     ctx = ConditionFn.getActionTitleFns(con, getActionTitleFn).reduce((ctx, fn): GameState => {
       try {
         return fn(ctx, effect, bridge)
       } catch (e) {
         if (e instanceof TargetMissingError) {
-          errors.push(e)
+          errors.push(e.message)
           return ctx
         } else {
           throw e
