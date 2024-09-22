@@ -49,7 +49,13 @@ export async function loadPrototype(imgID: string): Promise<CardPrototype> {
         "GRAPHIC": "グラフィック",
       }
 
-      const texts = getGainTexts(textstr).concat(getKaiSo(textstr))
+      const texts = getGainTexts(textstr)
+        .concat(getKaiSo(textstr))
+        .concat(getSupply(textstr))
+        .concat(getCrossWeapon(textstr))
+        .concat(getPao(textstr))
+        .concat(getHave(textstr))
+        .concat(getRange(textstr))
       if (textstr.indexOf("強襲") != -1) {
         texts.push({
           id: "",
@@ -62,7 +68,30 @@ export async function loadPrototype(imgID: string): Promise<CardPrototype> {
           title: ["特殊型", ["戦闘配備"]]
         })
       }
-
+      if (textstr.indexOf("【PS装甲】") != -1) {
+        texts.push({
+          id: "",
+          title: ["特殊型", ["PS装甲"]]
+        })
+      }
+      if (textstr.indexOf("速攻") != -1) {
+        texts.push({
+          id: "",
+          title: ["特殊型", ["速攻"]]
+        })
+      }
+      if (textstr.indexOf("クイック") != -1) {
+        texts.push({
+          id: "",
+          title: ["特殊型", ["クイック"]]
+        })
+      }
+      if (textstr.indexOf("高機動") != -1) {
+        texts.push({
+          id: "",
+          title: ["特殊型", ["高機動"]]
+        })
+      }
       const originData: CardPrototype = {
         originCardId: id,
         title: title,
@@ -132,9 +161,9 @@ function parseColors(color: any, colorCostLength: string, totalCostLength: strin
   }
   const n1 = parseInt(colorCostLength, 10)
   const colors = []
-  if(n1 == 1){
+  if (n1 == 1) {
     colors.push(color)
-  } else if(n1 > 1){
+  } else if (n1 > 1) {
     colors.push(...repeat(color, n1))
   }
   const n2 = parseInt(totalCostLength, 10)
@@ -206,6 +235,109 @@ function getKaiSo(gainStr: string): CardText[] {
     {
       id: "",
       title: ["特殊型", ["改装", char]],
+      conditions: createRollCostRequire(rollcost, null)
+    }
+  ]
+}
+
+function getCrossWeapon(gainStr: string): CardText[] {
+  const match = gainStr.match(/〔(０|１|２|３|４|５|６|７|８|９+)〕：クロスウェポン［(.+)］/);
+  if (match == null) {
+    return []
+  }
+  const [matchstr, rollcoststr, char] = match
+  const rollcost = uppercaseDigits.indexOf(rollcoststr)
+  if (rollcost == -1) {
+    throw new Error(`getGainTexts error: ${matchstr}`)
+  }
+  return [
+    {
+      id: "",
+      title: ["特殊型", ["クロスウェポン", char]],
+      conditions: createRollCostRequire(rollcost, null)
+    }
+  ]
+}
+function getRange(gainStr: string): CardText[] {
+  const match = gainStr.match(/〔(０|１|２|３|４|５|６|７|８|９+)〕：範囲兵器（(０|１|２|３|４|５|６|７|８|９+)）/);
+  if (match == null) {
+    return []
+  }
+  const [matchstr, rollcoststr, numstr] = match
+  const rollcost = uppercaseDigits.indexOf(rollcoststr)
+  if (rollcost == -1) {
+    throw new Error(`getGainTexts error: ${matchstr}`)
+  }
+  const num = uppercaseDigits.indexOf(numstr)
+  if (num == -1) {
+    throw new Error(`getGainTexts error: ${numstr}`)
+  }
+  return [
+    {
+      id: "",
+      title: ["特殊型", ["範囲兵器", num]],
+      conditions: createRollCostRequire(rollcost, null)
+    }
+  ]
+}
+
+
+function getPao(gainStr: string): CardText[] {
+  const match = gainStr.match(/〔(０|１|２|３|４|５|６|７|８|９+)〕：サイコミュ（(０|１|２|３|４|５|６|７|８|９+)）/);
+  if (match == null) {
+    return []
+  }
+  const [matchstr, rollcoststr, numstr] = match
+  const rollcost = uppercaseDigits.indexOf(rollcoststr)
+  if (rollcost == -1) {
+    throw new Error(`getGainTexts error: ${matchstr}`)
+  }
+  const num = uppercaseDigits.indexOf(numstr)
+  if (num == -1) {
+    throw new Error(`getGainTexts error: ${numstr}`)
+  }
+  return [
+    {
+      id: "",
+      title: ["特殊型", ["サイコミュ", num]],
+      conditions: createRollCostRequire(rollcost, null)
+    }
+  ]
+}
+
+function getHave(gainStr: string): CardText[] {
+  const match = gainStr.match(/〔(０|１|２|３|４|５|６|７|８|９+)〕：共有［(.+)］/);
+  if (match == null) {
+    return []
+  }
+  const [matchstr, rollcoststr, char] = match
+  const rollcost = uppercaseDigits.indexOf(rollcoststr)
+  if (rollcost == -1) {
+    throw new Error(`getGainTexts error: ${matchstr}`)
+  }
+  return [
+    {
+      id: "",
+      title: ["特殊型", ["共有", char]],
+      conditions: createRollCostRequire(rollcost, null)
+    }
+  ]
+}
+
+function getSupply(gainStr: string): CardText[] {
+  const match = gainStr.match(/〔(０|１|２|３|４|５|６|７|８|９+)〕：供給/);
+  if (match == null) {
+    return []
+  }
+  const [matchstr, rollcoststr, char] = match
+  const rollcost = uppercaseDigits.indexOf(rollcoststr)
+  if (rollcost == -1) {
+    throw new Error(`getGainTexts error: ${matchstr}`)
+  }
+  return [
+    {
+      id: "",
+      title: ["特殊型", ["供給"]],
       conditions: createRollCostRequire(rollcost, null)
     }
   ]
