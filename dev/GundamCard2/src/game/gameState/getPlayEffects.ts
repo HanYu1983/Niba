@@ -54,12 +54,8 @@ export function getPlayEffects(ctx: GameState, playerId: PlayerID): Effect[] {
             map(basyou => getCardLikeItemIdsByBasyou(ctx, basyou)), flatten,
             map(cardId => {
                 const card = getCard(ctx, cardId)
-                const proto = getItemPrototype(ctx, card.id)
-                if (proto.commandText && inTiming(proto.commandText)) {
-                    return [getPlayGEffects(ctx, card.id)]
-                }
-                return []
-            }), flatten
+                return getPlayGEffects(ctx, card.id)
+            })
         ),
         always([] as Effect[])
     )
@@ -281,8 +277,8 @@ export async function testGetPlayEffects() {
     ctx = setPhase(ctx, ["配備フェイズ", "フリータイミング"]) as GameState
     {
         const playEffects = getPlayEffects(ctx, PlayerA)
-        if (playEffects.length != 2) {
-            throw new Error(`playEffects.length != 2`)
+        if (playEffects.length != 4) {
+            throw new Error()
         }
         if (playEffects[0].reason[0] == "PlayCard" && playEffects[0].reason[1] == PlayerA && playEffects[0].reason[2] == cardA.id) {
 
