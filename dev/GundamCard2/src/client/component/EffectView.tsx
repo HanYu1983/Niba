@@ -5,20 +5,20 @@ import { RequireView } from "./RequireView";
 import { Effect, EffectFn } from "../../game/define/Effect";
 import { getEffect } from "../../game/gameState/EffectStackComponent";
 
-export const BlockPayloadView = (props: {
+export const EffectView = (props: {
   enabled: boolean;
   clientID: string;
-  blockID: string;
+  effectID: string;
 }) => {
   const appContext = useContext(AppContext);
   const block: Effect | string = useMemo(() => {
     try {
-      return getEffect(appContext.viewModel.model.gameState, props.blockID)
+      return getEffect(appContext.viewModel.model.gameState, props.effectID)
     } catch (e: any) {
       console.error(e)
       return e.message
     }
-  }, [appContext.viewModel.model, props.blockID]);
+  }, [appContext.viewModel.model.gameState, props.effectID]);
   if (typeof block == "string") {
     return <div>{block}</div>;
   }
@@ -34,11 +34,10 @@ export const BlockPayloadView = (props: {
       case "GameRule":
         return null;
     }
-  }, [appContext.viewModel.model, block]);
+  }, [block]);
 
-
-  return (
-    <div style={{ display: "flex" }}>
+  const render = useMemo(() => {
+    return <div style={{ display: "flex" }}>
       <div style={{ flex: 1 }}>{block.isOption ? "可取消" : "不可取消"}</div>
       {cardID != null ? (
         <CardView
@@ -57,10 +56,12 @@ export const BlockPayloadView = (props: {
         {props.enabled && block.text.conditions ? (
           <RequireView
             clientID={props.clientID}
-            blockPayload={block}
+            effect={block}
           ></RequireView>
         ) : null}
       </div>
     </div>
-  );
+  }, [props, cardID, block])
+
+  return render
 };

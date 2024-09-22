@@ -12,15 +12,15 @@ import { prop } from "ramda";
 
 export const RequireView = (props: {
   clientID: string;
-  blockPayload: Effect;
+  effect: Effect;
 }) => {
   const appContext = useContext(AppContext);
   const render = useMemo(() => {
-    const tipOrEs = getEffectTips(appContext.viewModel.model.gameState, props.blockPayload, 0, 0)
+    const tipOrEs = getEffectTips(appContext.viewModel.model.gameState, props.effect, 0, 0)
     return (
       <div style={{ border: "1px solid black" }}>
         {tipOrEs.map((tipOrE, i) => {
-          const responsePlayer = EffectFn.getPlayerID(props.blockPayload)
+          const responsePlayer = EffectFn.getPlayerID(props.effect)
           const isTargetOwner = responsePlayer == props.clientID;
           return (
             <div key={i} style={{ border: "1px solid black" }}>
@@ -30,8 +30,8 @@ export const RequireView = (props: {
                     OnEvent.next({
                       id: "OnClickRequireTargetConfirm",
                       clientID: props.clientID,
-                      blockPayload: props.blockPayload,
-                      require: props.blockPayload.text.conditions?.[tipOrE.conditionKey],
+                      blockPayload: props.effect,
+                      require: props.effect.text.conditions?.[tipOrE.conditionKey],
                       varID: tipOrE.conditionKey,
                     });
                   }}
@@ -43,7 +43,7 @@ export const RequireView = (props: {
                 tipOrE.tip == null ?
                   <div>tip not found</div> :
                   <TargetTypeView
-                    blockPayload={props.blockPayload}
+                    effect={props.effect}
                     target={tipOrE.tip}
                   ></TargetTypeView>
               }
@@ -53,13 +53,13 @@ export const RequireView = (props: {
       </div>
     );
   }, [
-    appContext.viewModel.model,
-    props.blockPayload,
+    appContext.viewModel.model.gameState,
+    props.effect,
     props.clientID,
   ]);
   return (
     <div style={{ border: "1px solid black" }}>
-      {props.blockPayload.id}
+      {props.effect.id}
       {render}
     </div>
   );

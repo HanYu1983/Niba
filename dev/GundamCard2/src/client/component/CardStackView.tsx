@@ -102,6 +102,6 @@ export const CardStackView = (props: {
     appContext.viewModel.cardPositionSelection,
     appContext.viewModel.model.gameState.setGroup.itemGroupParent,
   ]);
-  return <>{render}</>;
+  return render;
 };
 

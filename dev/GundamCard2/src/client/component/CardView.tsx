@@ -15,7 +15,7 @@ export const CardView = (props: {
   const appContext = useContext(AppContext);
   const card = useMemo(() => {
     return getCard(appContext.viewModel.model.gameState, props.cardID);
-  }, [props.cardID, appContext.viewModel.model.gameState.table]);
+  }, [props.cardID, appContext.viewModel.model.gameState]);
   if (card == null) {
     return <div>card({props.cardID}) not found</div>;
   }
@@ -38,7 +38,7 @@ export const CardView = (props: {
       }
     }
     return card.isFaceDown == false;
-  }, [props.clientID, card.isFaceDown, appContext.viewModel.model]);
+  }, [props.clientID, card.isFaceDown, appContext.viewModel.model.gameState]);
   const render = useMemo(() => {
     const imgSrc = isVisible
       ? getImgSrc(card.id)
@@ -64,5 +64,5 @@ export const CardView = (props: {
       </div>
     );
   }, [card, isVisible, appContext.viewModel.cardSelection, props.enabled]);
-  return <>{render}</>;
+  return render
 };

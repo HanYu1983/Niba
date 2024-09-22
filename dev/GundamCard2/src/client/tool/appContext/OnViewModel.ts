@@ -1,7 +1,10 @@
+import { AbsoluteBaSyouFn } from "../../../game/define/BaSyou";
+import { PlayerA, PlayerB } from "../../../game/define/PlayerID";
 import { Phase, PhaseFn } from "../../../game/define/Timing";
+import { createCardWithProtoIds } from "../../../game/gameState/CardTableComponent";
 import { getPhase } from "../../../game/gameState/PhaseComponent";
 import { applyFlow } from "../../../game/gameStateWithFlowMemory/applyFlow";
-import { initState } from "../../../game/gameStateWithFlowMemory/GameStateWithFlowMemory";
+import { GameStateWithFlowMemory, initState } from "../../../game/gameStateWithFlowMemory/GameStateWithFlowMemory";
 import { updateCommand } from "../../../game/gameStateWithFlowMemory/updateCommand";
 import { log } from "../../../tool/logger";
 import { createGameContext, GameContext } from "../../define/GameContext";
@@ -79,23 +82,8 @@ export const OnViewModel = OnEvent.pipe(
               "179901_CG_C_WT001P_white",
               "179901_CG_CH_WT002P_white",
             ];
-            const gDeck = [
-              "179023_06C_G_BL021C_blue",
-              "179030_11E_G_RD021N_red",
-              "179901_CG_C_WT001P_white",
-              "179901_CG_C_WT001P_white",
-              "179901_CG_C_WT001P_white",
-            ];
-            ctx = {
-              ...ctx,
-              gameState: {
-                ...ctx.gameState,
-                flowMemory: {
-                  ...ctx.gameState.flowMemory,
-                  state: "playing",
-                },
-              },
-            };
+            ctx.gameState = createCardWithProtoIds(ctx.gameState, AbsoluteBaSyouFn.of(PlayerA, "本国"), deck) as GameStateWithFlowMemory
+            ctx.gameState = createCardWithProtoIds(ctx.gameState, AbsoluteBaSyouFn.of(PlayerB, "本国"), deck) as GameStateWithFlowMemory
           }
           ctx = {
             ...ctx,
@@ -106,24 +94,17 @@ export const OnViewModel = OnEvent.pipe(
           return { ...DEFAULT_VIEW_MODEL, model: ctx };
         }
         case "OnClickFlowConfirm": {
-          const model = applyFlow(viewModel.model.gameState, evt.clientID, evt.flow);
-          const isDirty =
-            JSON.stringify(viewModel.model) != JSON.stringify(model);
-          if (isDirty == false) {
-            log(
-              "OnViewModel",
-              "OnClickFlowConfirm. but isDirty == false. return",
-              model
-            );
-            return viewModel;
-          }
+          const gameState = applyFlow(viewModel.model.gameState, evt.clientID, evt.flow);
           return {
             ...viewModel,
+            model:{
+              ...viewModel.model,
+              gameState: gameState,
+            },
             localMemory: {
               clientID: evt.clientID,
-              timing: getPhase(model),
-              lastPassPhase:
-                model.flowMemory.hasPlayerPassPhase[evt.clientID] || false,
+              timing: getPhase(gameState),
+              lastPassPhase: gameState.flowMemory.hasPlayerPassPhase[evt.clientID] || false,
             },
           };
         }

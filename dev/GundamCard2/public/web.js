@@ -23533,7 +23533,7 @@ var require_jsx_dev_runtime = __commonJS((exports, module) => {
 var ReactDom = __toESM(require_client(), 1);
 
 // src/client/component/AppView.tsx
-var import_react10 = __toESM(require_react(), 1);
+var import_react11 = __toESM(require_react(), 1);
 
 // src/game/define/PlayerID.ts
 var exports_PlayerID = {};
@@ -23553,126 +23553,6 @@ var PlayerIDFn = {
 
 // src/client/tool/appContext/index.tsx
 var import_react = __toESM(require_react(), 1);
-
-// src/game/define/Timing.ts
-var exports_Timing = {};
-__export(exports_Timing, {
-  PhaseFn: () => PhaseFn
-});
-var PhaseFn = {
-  eq(l, r) {
-    return l[0] === r[0] && l[1] === r[1] && l[2] === r[2];
-  },
-  isFreeTiming(phase) {
-    switch (phase[0]) {
-      case "\u30C9\u30ED\u30FC\u30D5\u30A7\u30A4\u30BA":
-        return phase[1] == "\u30D5\u30EA\u30FC\u30BF\u30A4\u30DF\u30F3\u30B0";
-      case "\u30EA\u30ED\u30FC\u30EB\u30D5\u30A7\u30A4\u30BA":
-      case "\u914D\u5099\u30D5\u30A7\u30A4\u30BA":
-        return phase[1] == "\u30D5\u30EA\u30FC\u30BF\u30A4\u30DF\u30F3\u30B0";
-      case "\u6226\u95D8\u30D5\u30A7\u30A4\u30BA":
-        return phase[2] == "\u30D5\u30EA\u30FC\u30BF\u30A4\u30DF\u30F3\u30B0" || phase[2] == "\u30D5\u30EA\u30FC\u30BF\u30A4\u30DF\u30F3\u30B02";
-    }
-  },
-  getAll() {
-    return [
-      ["\u30EA\u30ED\u30FC\u30EB\u30D5\u30A7\u30A4\u30BA", "\u30D5\u30A7\u30A4\u30BA\u958B\u59CB"],
-      ["\u30EA\u30ED\u30FC\u30EB\u30D5\u30A7\u30A4\u30BA", "\u898F\u5B9A\u306E\u52B9\u679C"],
-      ["\u30EA\u30ED\u30FC\u30EB\u30D5\u30A7\u30A4\u30BA", "\u30D5\u30EA\u30FC\u30BF\u30A4\u30DF\u30F3\u30B0"],
-      ["\u30EA\u30ED\u30FC\u30EB\u30D5\u30A7\u30A4\u30BA", "\u30D5\u30A7\u30A4\u30BA\u7D42\u4E86"],
-      ["\u30C9\u30ED\u30FC\u30D5\u30A7\u30A4\u30BA", "\u30D5\u30A7\u30A4\u30BA\u958B\u59CB"],
-      ["\u30C9\u30ED\u30FC\u30D5\u30A7\u30A4\u30BA", "\u898F\u5B9A\u306E\u52B9\u679C"],
-      ["\u30C9\u30ED\u30FC\u30D5\u30A7\u30A4\u30BA", "\u30D5\u30EA\u30FC\u30BF\u30A4\u30DF\u30F3\u30B0"],
-      ["\u30C9\u30ED\u30FC\u30D5\u30A7\u30A4\u30BA", "\u30D5\u30A7\u30A4\u30BA\u7D42\u4E86"],
-      ["\u914D\u5099\u30D5\u30A7\u30A4\u30BA", "\u30D5\u30A7\u30A4\u30BA\u958B\u59CB"],
-      ["\u914D\u5099\u30D5\u30A7\u30A4\u30BA", "\u30D5\u30EA\u30FC\u30BF\u30A4\u30DF\u30F3\u30B0"],
-      ["\u914D\u5099\u30D5\u30A7\u30A4\u30BA", "\u30D5\u30A7\u30A4\u30BA\u7D42\u4E86"],
-      ["\u6226\u95D8\u30D5\u30A7\u30A4\u30BA", "\u653B\u6483\u30B9\u30C6\u30C3\u30D7", "\u30B9\u30C6\u30C3\u30D7\u958B\u59CB"],
-      ["\u6226\u95D8\u30D5\u30A7\u30A4\u30BA", "\u653B\u6483\u30B9\u30C6\u30C3\u30D7", "\u30D5\u30EA\u30FC\u30BF\u30A4\u30DF\u30F3\u30B0"],
-      ["\u6226\u95D8\u30D5\u30A7\u30A4\u30BA", "\u653B\u6483\u30B9\u30C6\u30C3\u30D7", "\u898F\u5B9A\u306E\u52B9\u679C"],
-      ["\u6226\u95D8\u30D5\u30A7\u30A4\u30BA", "\u653B\u6483\u30B9\u30C6\u30C3\u30D7", "\u30D5\u30EA\u30FC\u30BF\u30A4\u30DF\u30F3\u30B02"],
-      ["\u6226\u95D8\u30D5\u30A7\u30A4\u30BA", "\u653B\u6483\u30B9\u30C6\u30C3\u30D7", "\u30B9\u30C6\u30C3\u30D7\u7D42\u4E86"],
-      ["\u6226\u95D8\u30D5\u30A7\u30A4\u30BA", "\u9632\u5FA1\u30B9\u30C6\u30C3\u30D7", "\u30B9\u30C6\u30C3\u30D7\u958B\u59CB"],
-      ["\u6226\u95D8\u30D5\u30A7\u30A4\u30BA", "\u9632\u5FA1\u30B9\u30C6\u30C3\u30D7", "\u30D5\u30EA\u30FC\u30BF\u30A4\u30DF\u30F3\u30B0"],
-      ["\u6226\u95D8\u30D5\u30A7\u30A4\u30BA", "\u9632\u5FA1\u30B9\u30C6\u30C3\u30D7", "\u898F\u5B9A\u306E\u52B9\u679C"],
-      ["\u6226\u95D8\u30D5\u30A7\u30A4\u30BA", "\u9632\u5FA1\u30B9\u30C6\u30C3\u30D7", "\u30D5\u30EA\u30FC\u30BF\u30A4\u30DF\u30F3\u30B02"],
-      ["\u6226\u95D8\u30D5\u30A7\u30A4\u30BA", "\u9632\u5FA1\u30B9\u30C6\u30C3\u30D7", "\u30B9\u30C6\u30C3\u30D7\u7D42\u4E86"],
-      ["\u6226\u95D8\u30D5\u30A7\u30A4\u30BA", "\u30C0\u30E1\u30FC\u30B8\u5224\u5B9A\u30B9\u30C6\u30C3\u30D7", "\u30B9\u30C6\u30C3\u30D7\u958B\u59CB"],
-      ["\u6226\u95D8\u30D5\u30A7\u30A4\u30BA", "\u30C0\u30E1\u30FC\u30B8\u5224\u5B9A\u30B9\u30C6\u30C3\u30D7", "\u30D5\u30EA\u30FC\u30BF\u30A4\u30DF\u30F3\u30B0"],
-      ["\u6226\u95D8\u30D5\u30A7\u30A4\u30BA", "\u30C0\u30E1\u30FC\u30B8\u5224\u5B9A\u30B9\u30C6\u30C3\u30D7", "\u898F\u5B9A\u306E\u52B9\u679C"],
-      ["\u6226\u95D8\u30D5\u30A7\u30A4\u30BA", "\u30C0\u30E1\u30FC\u30B8\u5224\u5B9A\u30B9\u30C6\u30C3\u30D7", "\u30D5\u30EA\u30FC\u30BF\u30A4\u30DF\u30F3\u30B02"],
-      ["\u6226\u95D8\u30D5\u30A7\u30A4\u30BA", "\u30C0\u30E1\u30FC\u30B8\u5224\u5B9A\u30B9\u30C6\u30C3\u30D7", "\u30B9\u30C6\u30C3\u30D7\u7D42\u4E86"],
-      ["\u6226\u95D8\u30D5\u30A7\u30A4\u30BA", "\u5E30\u9084\u30B9\u30C6\u30C3\u30D7", "\u30B9\u30C6\u30C3\u30D7\u958B\u59CB"],
-      ["\u6226\u95D8\u30D5\u30A7\u30A4\u30BA", "\u5E30\u9084\u30B9\u30C6\u30C3\u30D7", "\u30D5\u30EA\u30FC\u30BF\u30A4\u30DF\u30F3\u30B0"],
-      ["\u6226\u95D8\u30D5\u30A7\u30A4\u30BA", "\u5E30\u9084\u30B9\u30C6\u30C3\u30D7", "\u898F\u5B9A\u306E\u52B9\u679C"],
-      ["\u6226\u95D8\u30D5\u30A7\u30A4\u30BA", "\u5E30\u9084\u30B9\u30C6\u30C3\u30D7", "\u30D5\u30EA\u30FC\u30BF\u30A4\u30DF\u30F3\u30B02"],
-      ["\u6226\u95D8\u30D5\u30A7\u30A4\u30BA", "\u5E30\u9084\u30B9\u30C6\u30C3\u30D7", "\u30B9\u30C6\u30C3\u30D7\u7D42\u4E86"],
-      ["\u6226\u95D8\u30D5\u30A7\u30A4\u30BA", "\u30BF\u30FC\u30F3\u7D42\u4E86\u6642", "\u30C0\u30E1\u30FC\u30B8\u30EA\u30BB\u30C3\u30C8"],
-      ["\u6226\u95D8\u30D5\u30A7\u30A4\u30BA", "\u30BF\u30FC\u30F3\u7D42\u4E86\u6642", "\u52B9\u679C\u89E3\u6C7A"],
-      ["\u6226\u95D8\u30D5\u30A7\u30A4\u30BA", "\u30BF\u30FC\u30F3\u7D42\u4E86\u6642", "\u624B\u672D\u8ABF\u6574"],
-      ["\u6226\u95D8\u30D5\u30A7\u30A4\u30BA", "\u30BF\u30FC\u30F3\u7D42\u4E86\u6642", "\u52B9\u679C\u7D42\u4E86\u3002\u30BF\u30FC\u30F3\u7D42\u4E86"]
-    ];
-  },
-  getFirst() {
-    const all = this.getAll();
-    return all[0];
-  },
-  getLast() {
-    const all = this.getAll();
-    return all[all.length - 1];
-  },
-  getNext(timing) {
-    const all = this.getAll();
-    const idx = (this.getSeqId(timing) + 1) % all.length;
-    return all[idx];
-  },
-  getSeqId(timing) {
-    const all = this.getAll();
-    const idx = all.findIndex((t) => this.eq(t, timing));
-    return idx;
-  }
-};
-
-// src/game/gameState/PhaseComponent.ts
-var exports_PhaseComponent = {};
-__export(exports_PhaseComponent, {
-  setPhase: () => setPhase,
-  setNextPhase: () => setNextPhase,
-  getPhase: () => getPhase
-});
-function setNextPhase(ctx2) {
-  return {
-    ...ctx2,
-    phase: PhaseFn.getNext(ctx2.phase)
-  };
-}
-function setPhase(ctx2, timing) {
-  return {
-    ...ctx2,
-    phase: timing
-  };
-}
-function getPhase(ctx2) {
-  return ctx2.phase;
-}
-
-// src/tool/logger.ts
-var hideCategory = [
-  "triggerEvent",
-  "getPlayEffects",
-  "doEffect",
-  "applyFlow",
-  "handleAttackDamage"
-];
-var filterCategory = true;
-var log = (category, ...msg) => {
-  if (filterCategory) {
-    if (hideCategory.find((c) => c == category)) {
-      return;
-    }
-  }
-  console.log(`[${new Date().toLocaleTimeString()}][${category}]`, ...msg);
-};
 
 // src/game/define/BaSyou.ts
 var exports_BaSyou = {};
@@ -24882,17 +24762,146 @@ var AbsoluteBaSyouFn = {
   }
 };
 
-// src/game/gameState/EffectStackComponent.ts
-var exports_EffectStackComponent = {};
-__export(exports_EffectStackComponent, {
-  removeEffect: () => removeEffect,
-  isStackEffect: () => isStackEffect,
-  isImmediateEffect: () => isImmediateEffect,
-  getTopEffect: () => getTopEffect,
-  getEffect: () => getEffect,
-  addStackEffect: () => addStackEffect,
-  addImmediateEffect: () => addImmediateEffect
+// src/game/define/Timing.ts
+var exports_Timing = {};
+__export(exports_Timing, {
+  PhaseFn: () => PhaseFn
 });
+var PhaseFn = {
+  eq(l, r) {
+    return l[0] === r[0] && l[1] === r[1] && l[2] === r[2];
+  },
+  isFreeTiming(phase) {
+    switch (phase[0]) {
+      case "\u30C9\u30ED\u30FC\u30D5\u30A7\u30A4\u30BA":
+        return phase[1] == "\u30D5\u30EA\u30FC\u30BF\u30A4\u30DF\u30F3\u30B0";
+      case "\u30EA\u30ED\u30FC\u30EB\u30D5\u30A7\u30A4\u30BA":
+      case "\u914D\u5099\u30D5\u30A7\u30A4\u30BA":
+        return phase[1] == "\u30D5\u30EA\u30FC\u30BF\u30A4\u30DF\u30F3\u30B0";
+      case "\u6226\u95D8\u30D5\u30A7\u30A4\u30BA":
+        return phase[2] == "\u30D5\u30EA\u30FC\u30BF\u30A4\u30DF\u30F3\u30B0" || phase[2] == "\u30D5\u30EA\u30FC\u30BF\u30A4\u30DF\u30F3\u30B02";
+    }
+  },
+  getAll() {
+    return [
+      ["\u30EA\u30ED\u30FC\u30EB\u30D5\u30A7\u30A4\u30BA", "\u30D5\u30A7\u30A4\u30BA\u958B\u59CB"],
+      ["\u30EA\u30ED\u30FC\u30EB\u30D5\u30A7\u30A4\u30BA", "\u898F\u5B9A\u306E\u52B9\u679C"],
+      ["\u30EA\u30ED\u30FC\u30EB\u30D5\u30A7\u30A4\u30BA", "\u30D5\u30EA\u30FC\u30BF\u30A4\u30DF\u30F3\u30B0"],
+      ["\u30EA\u30ED\u30FC\u30EB\u30D5\u30A7\u30A4\u30BA", "\u30D5\u30A7\u30A4\u30BA\u7D42\u4E86"],
+      ["\u30C9\u30ED\u30FC\u30D5\u30A7\u30A4\u30BA", "\u30D5\u30A7\u30A4\u30BA\u958B\u59CB"],
+      ["\u30C9\u30ED\u30FC\u30D5\u30A7\u30A4\u30BA", "\u898F\u5B9A\u306E\u52B9\u679C"],
+      ["\u30C9\u30ED\u30FC\u30D5\u30A7\u30A4\u30BA", "\u30D5\u30EA\u30FC\u30BF\u30A4\u30DF\u30F3\u30B0"],
+      ["\u30C9\u30ED\u30FC\u30D5\u30A7\u30A4\u30BA", "\u30D5\u30A7\u30A4\u30BA\u7D42\u4E86"],
+      ["\u914D\u5099\u30D5\u30A7\u30A4\u30BA", "\u30D5\u30A7\u30A4\u30BA\u958B\u59CB"],
+      ["\u914D\u5099\u30D5\u30A7\u30A4\u30BA", "\u30D5\u30EA\u30FC\u30BF\u30A4\u30DF\u30F3\u30B0"],
+      ["\u914D\u5099\u30D5\u30A7\u30A4\u30BA", "\u30D5\u30A7\u30A4\u30BA\u7D42\u4E86"],
+      ["\u6226\u95D8\u30D5\u30A7\u30A4\u30BA", "\u653B\u6483\u30B9\u30C6\u30C3\u30D7", "\u30B9\u30C6\u30C3\u30D7\u958B\u59CB"],
+      ["\u6226\u95D8\u30D5\u30A7\u30A4\u30BA", "\u653B\u6483\u30B9\u30C6\u30C3\u30D7", "\u30D5\u30EA\u30FC\u30BF\u30A4\u30DF\u30F3\u30B0"],
+      ["\u6226\u95D8\u30D5\u30A7\u30A4\u30BA", "\u653B\u6483\u30B9\u30C6\u30C3\u30D7", "\u898F\u5B9A\u306E\u52B9\u679C"],
+      ["\u6226\u95D8\u30D5\u30A7\u30A4\u30BA", "\u653B\u6483\u30B9\u30C6\u30C3\u30D7", "\u30D5\u30EA\u30FC\u30BF\u30A4\u30DF\u30F3\u30B02"],
+      ["\u6226\u95D8\u30D5\u30A7\u30A4\u30BA", "\u653B\u6483\u30B9\u30C6\u30C3\u30D7", "\u30B9\u30C6\u30C3\u30D7\u7D42\u4E86"],
+      ["\u6226\u95D8\u30D5\u30A7\u30A4\u30BA", "\u9632\u5FA1\u30B9\u30C6\u30C3\u30D7", "\u30B9\u30C6\u30C3\u30D7\u958B\u59CB"],
+      ["\u6226\u95D8\u30D5\u30A7\u30A4\u30BA", "\u9632\u5FA1\u30B9\u30C6\u30C3\u30D7", "\u30D5\u30EA\u30FC\u30BF\u30A4\u30DF\u30F3\u30B0"],
+      ["\u6226\u95D8\u30D5\u30A7\u30A4\u30BA", "\u9632\u5FA1\u30B9\u30C6\u30C3\u30D7", "\u898F\u5B9A\u306E\u52B9\u679C"],
+      ["\u6226\u95D8\u30D5\u30A7\u30A4\u30BA", "\u9632\u5FA1\u30B9\u30C6\u30C3\u30D7", "\u30D5\u30EA\u30FC\u30BF\u30A4\u30DF\u30F3\u30B02"],
+      ["\u6226\u95D8\u30D5\u30A7\u30A4\u30BA", "\u9632\u5FA1\u30B9\u30C6\u30C3\u30D7", "\u30B9\u30C6\u30C3\u30D7\u7D42\u4E86"],
+      ["\u6226\u95D8\u30D5\u30A7\u30A4\u30BA", "\u30C0\u30E1\u30FC\u30B8\u5224\u5B9A\u30B9\u30C6\u30C3\u30D7", "\u30B9\u30C6\u30C3\u30D7\u958B\u59CB"],
+      ["\u6226\u95D8\u30D5\u30A7\u30A4\u30BA", "\u30C0\u30E1\u30FC\u30B8\u5224\u5B9A\u30B9\u30C6\u30C3\u30D7", "\u30D5\u30EA\u30FC\u30BF\u30A4\u30DF\u30F3\u30B0"],
+      ["\u6226\u95D8\u30D5\u30A7\u30A4\u30BA", "\u30C0\u30E1\u30FC\u30B8\u5224\u5B9A\u30B9\u30C6\u30C3\u30D7", "\u898F\u5B9A\u306E\u52B9\u679C"],
+      ["\u6226\u95D8\u30D5\u30A7\u30A4\u30BA", "\u30C0\u30E1\u30FC\u30B8\u5224\u5B9A\u30B9\u30C6\u30C3\u30D7", "\u30D5\u30EA\u30FC\u30BF\u30A4\u30DF\u30F3\u30B02"],
+      ["\u6226\u95D8\u30D5\u30A7\u30A4\u30BA", "\u30C0\u30E1\u30FC\u30B8\u5224\u5B9A\u30B9\u30C6\u30C3\u30D7", "\u30B9\u30C6\u30C3\u30D7\u7D42\u4E86"],
+      ["\u6226\u95D8\u30D5\u30A7\u30A4\u30BA", "\u5E30\u9084\u30B9\u30C6\u30C3\u30D7", "\u30B9\u30C6\u30C3\u30D7\u958B\u59CB"],
+      ["\u6226\u95D8\u30D5\u30A7\u30A4\u30BA", "\u5E30\u9084\u30B9\u30C6\u30C3\u30D7", "\u30D5\u30EA\u30FC\u30BF\u30A4\u30DF\u30F3\u30B0"],
+      ["\u6226\u95D8\u30D5\u30A7\u30A4\u30BA", "\u5E30\u9084\u30B9\u30C6\u30C3\u30D7", "\u898F\u5B9A\u306E\u52B9\u679C"],
+      ["\u6226\u95D8\u30D5\u30A7\u30A4\u30BA", "\u5E30\u9084\u30B9\u30C6\u30C3\u30D7", "\u30D5\u30EA\u30FC\u30BF\u30A4\u30DF\u30F3\u30B02"],
+      ["\u6226\u95D8\u30D5\u30A7\u30A4\u30BA", "\u5E30\u9084\u30B9\u30C6\u30C3\u30D7", "\u30B9\u30C6\u30C3\u30D7\u7D42\u4E86"],
+      ["\u6226\u95D8\u30D5\u30A7\u30A4\u30BA", "\u30BF\u30FC\u30F3\u7D42\u4E86\u6642", "\u30C0\u30E1\u30FC\u30B8\u30EA\u30BB\u30C3\u30C8"],
+      ["\u6226\u95D8\u30D5\u30A7\u30A4\u30BA", "\u30BF\u30FC\u30F3\u7D42\u4E86\u6642", "\u52B9\u679C\u89E3\u6C7A"],
+      ["\u6226\u95D8\u30D5\u30A7\u30A4\u30BA", "\u30BF\u30FC\u30F3\u7D42\u4E86\u6642", "\u624B\u672D\u8ABF\u6574"],
+      ["\u6226\u95D8\u30D5\u30A7\u30A4\u30BA", "\u30BF\u30FC\u30F3\u7D42\u4E86\u6642", "\u52B9\u679C\u7D42\u4E86\u3002\u30BF\u30FC\u30F3\u7D42\u4E86"]
+    ];
+  },
+  getFirst() {
+    const all = this.getAll();
+    return all[0];
+  },
+  getLast() {
+    const all = this.getAll();
+    return all[all.length - 1];
+  },
+  getNext(timing) {
+    const all = this.getAll();
+    const idx = (this.getSeqId(timing) + 1) % all.length;
+    return all[idx];
+  },
+  getSeqId(timing) {
+    const all = this.getAll();
+    const idx = all.findIndex((t) => this.eq(t, timing));
+    return idx;
+  }
+};
+
+// src/game/gameState/CardTableComponent.ts
+var exports_CardTableComponent = {};
+__export(exports_CardTableComponent, {
+  setCard: () => setCard,
+  mapCardsWithBasyou: () => mapCardsWithBasyou,
+  getCards: () => getCards,
+  getCardOwner: () => getCardOwner,
+  getCardIds: () => getCardIds,
+  getCard: () => getCard,
+  createCardWithProtoIds: () => createCardWithProtoIds,
+  addCards: () => addCards
+});
+
+// src/tool/table/index.ts
+function addCard(table, position, cardId) {
+  return {
+    ...table,
+    cardStack: {
+      ...table.cardStack,
+      [position]: [...table.cardStack[position] || [], cardId]
+    }
+  };
+}
+function getCardsByPosition(table, position) {
+  if (table.cardStack[position] == null) {
+    return [];
+  }
+  return table.cardStack[position];
+}
+function moveCard(table, fromPosition, toPosition, cardId) {
+  if (!table.cardStack[fromPosition] || !table.cardStack[fromPosition].includes(cardId)) {
+    throw new Error("Card not found in the specified position");
+  }
+  const updatedFromStack = table.cardStack[fromPosition].filter((id) => id !== cardId);
+  const updatedToStack = table.cardStack[toPosition] ? [...table.cardStack[toPosition], cardId] : [cardId];
+  return {
+    ...table,
+    cardStack: {
+      ...table.cardStack,
+      [fromPosition]: updatedFromStack,
+      [toPosition]: updatedToStack
+    }
+  };
+}
+function getCardPosition(table, cardId) {
+  for (const [key, value] of Object.entries(table.cardStack)) {
+    if (value.includes(cardId)) {
+      return key;
+    }
+  }
+  throw new Error("Card not found");
+}
+var DEFAULT_TABLE = {
+  cardStack: {}
+};
+var TableFns = {
+  addCard,
+  moveCard,
+  getCardPosition,
+  getCardsByPosition
+};
 
 // node_modules/uuid/dist/esm-browser/stringify.js
 function unsafeStringify(arr, offset = 0) {
@@ -24990,7 +24999,130 @@ var ToolFn = {
   }
 };
 
+// src/game/gameState/CardTableComponent.ts
+function getCard(ctx2, cardId) {
+  if (ctx2.cards[cardId] == null) {
+    throw new Error("card not found");
+  }
+  return ctx2.cards[cardId];
+}
+function setCard(ctx2, id, card) {
+  return {
+    ...ctx2,
+    cards: {
+      ...ctx2.cards,
+      [id]: card
+    }
+  };
+}
+function getCardIds(ctx2) {
+  return Object.keys(ctx2.cards);
+}
+function getCards(ctx2) {
+  return Object.values(ctx2.cards);
+}
+function mapCardsWithBasyou(ctx2, f) {
+  return toPairs_default(ctx2.table.cardStack).map(([k, cardIds]) => {
+    const basyou = AbsoluteBaSyouFn.fromString(k);
+    const cards = cardIds.map((cardId) => getCard(ctx2, cardId));
+    return [basyou, cards];
+  }).reduce((ctx3, [basyou, cards]) => {
+    return cards.map((card) => f(basyou, card)).reduce((ctx4, card) => assoc_default(card.id, card, ctx4), ctx3);
+  }, ctx2);
+}
+function createCardWithProtoIds(ctx2, basyou, cardProtoIds) {
+  ctx2 = addCards(ctx2, basyou, cardProtoIds.map((protoId, i) => {
+    return {
+      id: ToolFn.getUUID("card"),
+      protoID: protoId,
+      ownerID: AbsoluteBaSyouFn.getPlayerID(basyou)
+    };
+  }));
+  return ctx2;
+}
+function addCards(ctx2, basyou, addedCards) {
+  ctx2 = addedCards.reduce((ctx3, newCard) => {
+    if (newCard.id == "") {
+      newCard.id = ToolFn.getUUID("addCards");
+    }
+    if (newCard.ownerID == null) {
+      newCard.ownerID = AbsoluteBaSyouFn.getPlayerID(basyou);
+    }
+    const table2 = TableFns.addCard(ctx3.table, AbsoluteBaSyouFn.toString(basyou), newCard.id);
+    return {
+      ...ctx3,
+      table: table2,
+      cards: {
+        ...ctx3.cards,
+        [newCard.id]: newCard
+      }
+    };
+  }, ctx2);
+  return ctx2;
+}
+function getCardOwner(ctx2, cardID) {
+  const card = getCard(ctx2, cardID);
+  if (card == null) {
+    throw new Error("[getCardOwner] card not found");
+  }
+  if (card.ownerID == null) {
+    throw new Error("[getCardOwner] card.ownerID not found");
+  }
+  return card.ownerID;
+}
+
+// src/game/gameState/PhaseComponent.ts
+var exports_PhaseComponent = {};
+__export(exports_PhaseComponent, {
+  setPhase: () => setPhase,
+  setNextPhase: () => setNextPhase,
+  getPhase: () => getPhase
+});
+function setNextPhase(ctx2) {
+  return {
+    ...ctx2,
+    phase: PhaseFn.getNext(ctx2.phase)
+  };
+}
+function setPhase(ctx2, timing) {
+  return {
+    ...ctx2,
+    phase: timing
+  };
+}
+function getPhase(ctx2) {
+  return ctx2.phase;
+}
+
+// src/tool/logger.ts
+var hideCategory = [
+  "triggerEvent",
+  "getPlayEffects",
+  "doEffect",
+  "applyFlow",
+  "handleAttackDamage"
+];
+var filterCategory = true;
+var log = (category, ...msg) => {
+  if (filterCategory) {
+    if (hideCategory.find((c) => c == category)) {
+      return;
+    }
+  }
+  console.log(`[${new Date().toLocaleTimeString()}][${category}]`, ...msg);
+};
+
 // src/game/gameState/EffectStackComponent.ts
+var exports_EffectStackComponent = {};
+__export(exports_EffectStackComponent, {
+  removeEffect: () => removeEffect,
+  isStackEffect: () => isStackEffect,
+  isImmediateEffect: () => isImmediateEffect,
+  getTopEffect: () => getTopEffect,
+  getEffect: () => getEffect,
+  addStackEffect: () => addStackEffect,
+  addImmediateEffect: () => addImmediateEffect
+});
 function isStackEffect(ctx2, id) {
   return ctx2.stackEffect.includes(id);
 }
@@ -25057,55 +25189,6 @@ var exports_GameState = {};
 __export(exports_GameState, {
   createGameState: () => createGameState
 });
-
-// src/tool/table/index.ts
-function addCard(table, position, cardId) {
-  return {
-    ...table,
-    cardStack: {
-      ...table.cardStack,
-      [position]: [...table.cardStack[position] || [], cardId]
-    }
-  };
-}
-function getCardsByPosition(table, position) {
-  if (table.cardStack[position] == null) {
-    return [];
-  }
-  return table.cardStack[position];
-}
-function moveCard(table, fromPosition, toPosition, cardId) {
-  if (!table.cardStack[fromPosition] || !table.cardStack[fromPosition].includes(cardId)) {
-    throw new Error("Card not found in the specified position");
-  }
-  const updatedFromStack = table.cardStack[fromPosition].filter((id) => id !== cardId);
-  const updatedToStack = table.cardStack[toPosition] ? [...table.cardStack[toPosition], cardId] : [cardId];
-  return {
-    ...table,
-    cardStack: {
-      ...table.cardStack,
-      [fromPosition]: updatedFromStack,
-      [toPosition]: updatedToStack
-    }
-  };
-}
-function getCardPosition(table, cardId) {
-  for (const [key, value] of Object.entries(table.cardStack)) {
-    if (value.includes(cardId)) {
-      return key;
-    }
-  }
-  throw new Error("Card not found");
-}
-var DEFAULT_TABLE = {
-  cardStack: {}
-};
-var TableFns = {
-  addCard,
-  moveCard,
-  getCardPosition,
-  getCardsByPosition
-};
 
 // src/game/gameState/SetGroupComponent.ts
 var exports_SetGroupComponent = {};
@@ -25279,89 +25362,6 @@ __export(exports_ItemTableComponent, {
   assertTargetMissingError: () => assertTargetMissingError,
   addCoinsToCard: () => addCoinsToCard
 });
-
-// src/game/gameState/CardTableComponent.ts
-var exports_CardTableComponent = {};
-__export(exports_CardTableComponent, {
-  setCard: () => setCard,
-  mapCardsWithBasyou: () => mapCardsWithBasyou,
-  getCards: () => getCards,
-  getCardOwner: () => getCardOwner,
-  getCardIds: () => getCardIds,
-  getCard: () => getCard,
-  createCardWithProtoIds: () => createCardWithProtoIds,
-  addCards: () => addCards
-});
-function getCard(ctx2, cardId) {
-  if (ctx2.cards[cardId] == null) {
-    throw new Error("card not found");
-  }
-  return ctx2.cards[cardId];
-}
-function setCard(ctx2, id, card) {
-  return {
-    ...ctx2,
-    cards: {
-      ...ctx2.cards,
-      [id]: card
-    }
-  };
-}
-function getCardIds(ctx2) {
-  return Object.keys(ctx2.cards);
-}
-function getCards(ctx2) {
-  return Object.values(ctx2.cards);
-}
-function mapCardsWithBasyou(ctx2, f) {
-  return toPairs_default(ctx2.table.cardStack).map(([k, cardIds]) => {
-    const basyou = AbsoluteBaSyouFn.fromString(k);
-    const cards = cardIds.map((cardId) => getCard(ctx2, cardId));
-    return [basyou, cards];
-  }).reduce((ctx3, [basyou, cards]) => {
-    return cards.map((card) => f(basyou, card)).reduce((ctx4, card) => assoc_default(card.id, card, ctx4), ctx3);
-  }, ctx2);
-}
-function createCardWithProtoIds(ctx2, basyou, cardProtoIds) {
-  ctx2 = addCards(ctx2, basyou, cardProtoIds.map((protoId, i) => {
-    return {
-      id: ToolFn.getUUID("card"),
-      protoID: protoId,
-      ownerID: AbsoluteBaSyouFn.getPlayerID(basyou)
-    };
-  }));
-  return ctx2;
-}
-function addCards(ctx2, basyou, addedCards) {
-  ctx2 = addedCards.reduce((ctx3, newCard) => {
-    if (newCard.id == "") {
-      newCard.id = ToolFn.getUUID("addCards");
-    }
-    if (newCard.ownerID == null) {
-      newCard.ownerID = AbsoluteBaSyouFn.getPlayerID(basyou);
-    }
-    const table3 = TableFns.addCard(ctx3.table, AbsoluteBaSyouFn.toString(basyou), newCard.id);
-    return {
-      ...ctx3,
-      table: table3,
-      cards: {
-        ...ctx3.cards,
-        [newCard.id]: newCard
-      }
-    };
-  }, ctx2);
-  return ctx2;
-}
-function getCardOwner(ctx2, cardID) {
-  const card = getCard(ctx2, cardID);
-  if (card == null) {
-    throw new Error("[getCardOwner] card not found");
-  }
-  if (card.ownerID == null) {
-    throw new Error("[getCardOwner] card.ownerID not found");
-  }
-  return card.ownerID;
-}
 
 // src/game/gameState/CoinTableComponent.ts
 var exports_CoinTableComponent = {};
@@ -29914,23 +29914,8 @@ var OnViewModel = OnEvent.pipe(scan((viewModel, evt) => {
             "179901_CG_C_WT001P_white",
             "179901_CG_CH_WT002P_white"
           ];
-          const gDeck = [
-            "179023_06C_G_BL021C_blue",
-            "179030_11E_G_RD021N_red",
-            "179901_CG_C_WT001P_white",
-            "179901_CG_C_WT001P_white",
-            "179901_CG_C_WT001P_white"
-          ];
-          ctx2 = {
-            ...ctx2,
-            gameState: {
-              ...ctx2.gameState,
-              flowMemory: {
-                ...ctx2.gameState.flowMemory,
-                state: "playing"
-              }
-            }
-          };
+          ctx2.gameState = createCardWithProtoIds(ctx2.gameState, AbsoluteBaSyouFn.of(PlayerA, "\u672C\u56FD"), deck);
+          ctx2.gameState = createCardWithProtoIds(ctx2.gameState, AbsoluteBaSyouFn.of(PlayerB, "\u672C\u56FD"), deck);
         }
         ctx2 = {
           ...ctx2,
@@ -29941,18 +29926,17 @@ var OnViewModel = OnEvent.pipe(scan((viewModel, evt) => {
         return { ...DEFAULT_VIEW_MODEL, model: ctx2 };
       }
       case "OnClickFlowConfirm": {
-        const model = applyFlow(viewModel.model.gameState, evt.clientID, evt.flow);
-        const isDirty = JSON.stringify(viewModel.model) != JSON.stringify(model);
-        if (isDirty == false) {
-          log("OnViewModel", "OnClickFlowConfirm. but isDirty == false. return", model);
-          return viewModel;
-        }
+        const gameState2 = applyFlow(viewModel.model.gameState, evt.clientID, evt.flow);
         return {
           ...viewModel,
+          model: {
+            ...viewModel.model,
+            gameState: gameState2
+          },
           localMemory: {
             clientID: evt.clientID,
-            timing: getPhase(model),
-            lastPassPhase: model.flowMemory.hasPlayerPassPhase[evt.clientID] || false
+            timing: getPhase(gameState2),
+            lastPassPhase: gameState2.flowMemory.hasPlayerPassPhase[evt.clientID] || false
           }
         };
       }
@@ -30012,10 +29996,10 @@ var AppContextProvider = (props) => {
 };
 
 // src/client/component/ClientView.tsx
-var import_react8 = __toESM(require_react(), 1);
+var import_react9 = __toESM(require_react(), 1);
 
 // src/client/component/FlowListView.tsx
-var import_react5 = __toESM(require_react(), 1);
+var import_react6 = __toESM(require_react(), 1);
 
 // src/game/gameState/getAttackPhaseRuleEffect.ts
 function getAttackPhaseRuleEffect(ctx2, playerId) {
@@ -30767,8 +30751,8 @@ function queryFlow(ctx2, playerID) {
   }
 }
 
-// src/client/component/BlockPayloadView.tsx
-var import_react4 = __toESM(require_react(), 1);
+// src/client/component/EffectView.tsx
+var import_react5 = __toESM(require_react(), 1);
 
 // src/client/component/CardView.tsx
 var import_react2 = __toESM(require_react(), 1);
@@ -30778,7 +30762,7 @@ var CardView = (props) => {
   const appContext2 = import_react2.useContext(AppContext);
   const card8 = import_react2.useMemo(() => {
     return getCard(appContext2.viewModel.model.gameState, props.cardID);
-  }, [props.cardID, appContext2.viewModel.model.gameState.table]);
+  }, [props.cardID, appContext2.viewModel.model.gameState]);
   if (card8 == null) {
     return /* @__PURE__ */ jsx_dev_runtime2.jsxDEV("div", {
       children: [
@@ -30804,7 +30788,7 @@ var CardView = (props) => {
       }
     }
     return card8.isFaceDown == false;
-  }, [props.clientID, card8.isFaceDown, appContext2.viewModel.model]);
+  }, [props.clientID, card8.isFaceDown, appContext2.viewModel.model.gameState]);
   const render = import_react2.useMemo(() => {
     const imgSrc = isVisible ? getImgSrc(card8.id) : "https://particle-979.appspot.com/common/images/card/cardback_0.jpg";
     const isSelect = appContext2.viewModel.cardSelection.includes(card8.id);
@@ -30834,54 +30818,52 @@ var CardView = (props) => {
       ]
     }, undefined, true, undefined, this);
   }, [card8, isVisible, appContext2.viewModel.cardSelection, props.enabled]);
-  return /* @__PURE__ */ jsx_dev_runtime2.jsxDEV(jsx_dev_runtime2.Fragment, {
-    children: render
-  }, undefined, false, undefined, this);
+  return render;
 };
 
 // src/client/component/RequireView.tsx
-var import_react3 = __toESM(require_react(), 1);
+var import_react4 = __toESM(require_react(), 1);
 
 // src/client/component/TargetTypeView.tsx
+var import_react3 = __toESM(require_react(), 1);
 var jsx_dev_runtime3 = __toESM(require_jsx_dev_runtime(), 1);
 var TargetTypeView = (props) => {
-  return /* @__PURE__ */ jsx_dev_runtime3.jsxDEV(jsx_dev_runtime3.Fragment, {
-    children: (() => {
-      switch (props.target.title[0]) {
-        case "\u30AB\u30FC\u30C9": {
-          const pairs = TipFn.getSelection(props.target);
-          return pairs.map((pair2, i) => {
-            const [cardId, _] = pair2;
-            return /* @__PURE__ */ jsx_dev_runtime3.jsxDEV(CardView, {
-              enabled: false,
-              cardID: cardId
-            }, i, false, undefined, this);
-          });
-        }
-        case "\u30C6\u30AD\u30B9\u30C8":
-        case "StringOptions": {
-          const values = TipFn.getSelection(props.target);
-          return values.map((v, i) => {
-            return /* @__PURE__ */ jsx_dev_runtime3.jsxDEV("div", {
-              children: JSON.stringify(v)
-            }, i, false, undefined, this);
-          });
-        }
+  const render = import_react3.useMemo(() => {
+    switch (props.target.title[0]) {
+      case "\u30AB\u30FC\u30C9": {
+        const pairs = TipFn.getSelection(props.target);
+        return pairs.map((pair2, i) => {
+          const [cardId, _] = pair2;
+          return /* @__PURE__ */ jsx_dev_runtime3.jsxDEV(CardView, {
+            enabled: false,
+            cardID: cardId
+          }, i, false, undefined, this);
+        });
       }
-    })()
-  }, undefined, false, undefined, this);
+      case "\u30C6\u30AD\u30B9\u30C8":
+      case "StringOptions": {
+        const values = TipFn.getSelection(props.target);
+        return values.map((v, i) => {
+          return /* @__PURE__ */ jsx_dev_runtime3.jsxDEV("div", {
+            children: JSON.stringify(v)
+          }, i, false, undefined, this);
+        });
+      }
+    }
+  }, [props]);
+  return render;
 };
 
 // src/client/component/RequireView.tsx
 var jsx_dev_runtime4 = __toESM(require_jsx_dev_runtime(), 1);
 var RequireView = (props) => {
-  const appContext3 = import_react3.useContext(AppContext);
-  const render = import_react3.useMemo(() => {
-    const tipOrEs = getEffectTips(appContext3.viewModel.model.gameState, props.blockPayload, 0, 0);
+  const appContext3 = import_react4.useContext(AppContext);
+  const render = import_react4.useMemo(() => {
+    const tipOrEs = getEffectTips(appContext3.viewModel.model.gameState, props.effect, 0, 0);
     return /* @__PURE__ */ jsx_dev_runtime4.jsxDEV("div", {
       style: { border: "1px solid black" },
       children: tipOrEs.map((tipOrE, i) => {
-        const responsePlayer = EffectFn.getPlayerID(props.blockPayload);
+        const responsePlayer = EffectFn.getPlayerID(props.effect);
         const isTargetOwner = responsePlayer == props.clientID;
         return /* @__PURE__ */ jsx_dev_runtime4.jsxDEV("div", {
           style: { border: "1px solid black" },
@@ -30891,8 +30873,8 @@ var RequireView = (props) => {
                 OnEvent.next({
                   id: "OnClickRequireTargetConfirm",
                   clientID: props.clientID,
-                  blockPayload: props.blockPayload,
-                  require: props.blockPayload.text.conditions?.[tipOrE.conditionKey],
+                  blockPayload: props.effect,
+                  require: props.effect.text.conditions?.[tipOrE.conditionKey],
                   varID: tipOrE.conditionKey
                 });
               },
@@ -30904,7 +30886,7 @@ var RequireView = (props) => {
             tipOrE.tip == null ? /* @__PURE__ */ jsx_dev_runtime4.jsxDEV("div", {
               children: "tip not found"
             }, undefined, false, undefined, this) : /* @__PURE__ */ jsx_dev_runtime4.jsxDEV(TargetTypeView, {
-              blockPayload: props.blockPayload,
+              effect: props.effect,
               target: tipOrE.tip
             }, undefined, false, undefined, this)
           ]
@@ -30912,37 +30894,37 @@ var RequireView = (props) => {
       })
     }, undefined, false, undefined, this);
   }, [
-    appContext3.viewModel.model,
-    props.blockPayload,
+    appContext3.viewModel.model.gameState,
+    props.effect,
     props.clientID
   ]);
   return /* @__PURE__ */ jsx_dev_runtime4.jsxDEV("div", {
     style: { border: "1px solid black" },
     children: [
-      props.blockPayload.id,
+      props.effect.id,
       render
     ]
   }, undefined, true, undefined, this);
 };
 
-// src/client/component/BlockPayloadView.tsx
+// src/client/component/EffectView.tsx
 var jsx_dev_runtime5 = __toESM(require_jsx_dev_runtime(), 1);
-var BlockPayloadView = (props) => {
-  const appContext4 = import_react4.useContext(AppContext);
-  const block = import_react4.useMemo(() => {
+var EffectView = (props) => {
+  const appContext4 = import_react5.useContext(AppContext);
+  const block = import_react5.useMemo(() => {
     try {
-      return getEffect(appContext4.viewModel.model.gameState, props.blockID);
+      return getEffect(appContext4.viewModel.model.gameState, props.effectID);
     } catch (e) {
       console.error(e);
       return e.message;
     }
-  }, [appContext4.viewModel.model, props.blockID]);
+  }, [appContext4.viewModel.model.gameState, props.effectID]);
   if (typeof block == "string") {
     return /* @__PURE__ */ jsx_dev_runtime5.jsxDEV("div", {
       children: block
     }, undefined, false, undefined, this);
   }
-  const cardID = import_react4.useMemo(() => {
+  const cardID = import_react5.useMemo(() => {
     switch (block.reason[0]) {
       case "Destroy":
       case "Event":
@@ -30954,53 +30936,56 @@ var BlockPayloadView = (props) => {
       case "GameRule":
         return null;
     }
-  }, [appContext4.viewModel.model, block]);
-  return /* @__PURE__ */ jsx_dev_runtime5.jsxDEV("div", {
-    style: { display: "flex" },
-    children: [
-      /* @__PURE__ */ jsx_dev_runtime5.jsxDEV("div", {
-        style: { flex: 1 },
-        children: block.isOption ? "\u53EF\u53D6\u6D88" : "\u4E0D\u53EF\u53D6\u6D88"
-      }, undefined, false, undefined, this),
-      cardID != null ? /* @__PURE__ */ jsx_dev_runtime5.jsxDEV(CardView, {
-        enabled: false,
-        clientID: props.clientID,
-        cardID
-      }, undefined, false, undefined, this) : /* @__PURE__ */ jsx_dev_runtime5.jsxDEV("div", {
-        children: JSON.stringify(block.reason)
-      }, undefined, false, undefined, this),
-      /* @__PURE__ */ jsx_dev_runtime5.jsxDEV("div", {
-        style: { flex: 4 },
-        children: [
-          /* @__PURE__ */ jsx_dev_runtime5.jsxDEV("div", {
-            children: block.id
-          }, undefined, false, undefined, this),
-          /* @__PURE__ */ jsx_dev_runtime5.jsxDEV("div", {
-            children: [
-              block.description,
-              "(",
-              cardID,
-              ")"
-            ]
-          }, undefined, true, undefined, this),
-          props.enabled && block.text.conditions ? /* @__PURE__ */ jsx_dev_runtime5.jsxDEV(RequireView, {
-            clientID: props.clientID,
-            blockPayload: block
-          }, undefined, false, undefined, this) : null
-        ]
-      }, undefined, true, undefined, this)
-    ]
-  }, undefined, true, undefined, this);
+  }, [block]);
+  const render = import_react5.useMemo(() => {
+    return /* @__PURE__ */ jsx_dev_runtime5.jsxDEV("div", {
+      style: { display: "flex" },
+      children: [
+        /* @__PURE__ */ jsx_dev_runtime5.jsxDEV("div", {
+          style: { flex: 1 },
+          children: block.isOption ? "\u53EF\u53D6\u6D88" : "\u4E0D\u53EF\u53D6\u6D88"
+        }, undefined, false, undefined, this),
+        cardID != null ? /* @__PURE__ */ jsx_dev_runtime5.jsxDEV(CardView, {
+          enabled: false,
+          clientID: props.clientID,
+          cardID
+        }, undefined, false, undefined, this) : /* @__PURE__ */ jsx_dev_runtime5.jsxDEV("div", {
+          children: JSON.stringify(block.reason)
+        }, undefined, false, undefined, this),
+        /* @__PURE__ */ jsx_dev_runtime5.jsxDEV("div", {
+          style: { flex: 4 },
+          children: [
+            /* @__PURE__ */ jsx_dev_runtime5.jsxDEV("div", {
+              children: block.id
+            }, undefined, false, undefined, this),
+            /* @__PURE__ */ jsx_dev_runtime5.jsxDEV("div", {
+              children: [
+                block.description,
+                "(",
+                cardID,
+                ")"
+              ]
+            }, undefined, true, undefined, this),
+            props.enabled && block.text.conditions ? /* @__PURE__ */ jsx_dev_runtime5.jsxDEV(RequireView, {
+              clientID: props.clientID,
+              effect: block
+            }, undefined, false, undefined, this) : null
+          ]
+        }, undefined, true, undefined, this)
+      ]
+    }, undefined, true, undefined, this);
+  }, [props, cardID, block]);
+  return render;
 };
 
 // src/client/component/FlowListView.tsx
 var jsx_dev_runtime6 = __toESM(require_jsx_dev_runtime(), 1);
 var FlowListView = (props) => {
-  const appContext5 = import_react5.useContext(AppContext);
-  const flows = import_react5.useMemo(() => {
+  const appContext5 = import_react6.useContext(AppContext);
+  const flows = import_react6.useMemo(() => {
     return queryFlow(appContext5.viewModel.model.gameState, props.clientID);
-  }, [appContext5.viewModel.model, props.clientID]);
-  import_react5.useEffect(() => {
+  }, [appContext5.viewModel.model.gameState, props.clientID]);
+  import_react6.useEffect(() => {
     const payCost = flows.find((flow) => flow.id == "FlowPassPayCost");
     if (payCost == null) {
       return;
@@ -31019,8 +31004,8 @@ var FlowListView = (props) => {
         flow: payCost
       });
     }
-  }, [appContext5.viewModel.model, props.clientID, flows]);
-  const renderControlPanel = import_react5.useMemo(() => {
+  }, [appContext5.viewModel.model.gameState, props.clientID, flows]);
+  const renderControlPanel = import_react6.useMemo(() => {
     return /* @__PURE__ */ jsx_dev_runtime6.jsxDEV("div", {
       children: flows.map((flow, i) => {
         return /* @__PURE__ */ jsx_dev_runtime6.jsxDEV("div", {
@@ -31044,17 +31029,17 @@ var FlowListView = (props) => {
             (() => {
               switch (flow.id) {
                 case "FlowPassPayCost":
-                  return /* @__PURE__ */ jsx_dev_runtime6.jsxDEV(BlockPayloadView, {
+                  return /* @__PURE__ */ jsx_dev_runtime6.jsxDEV(EffectView, {
                     enabled: true,
                     clientID: props.clientID,
-                    blockID: flow.effectID
+                    effectID: flow.effectID
                   }, undefined, false, undefined, this);
                 case "FlowDoEffect":
                 case "FlowObserveEffect":
-                  return /* @__PURE__ */ jsx_dev_runtime6.jsxDEV(BlockPayloadView, {
+                  return /* @__PURE__ */ jsx_dev_runtime6.jsxDEV(EffectView, {
                     enabled: false,
                     clientID: props.clientID,
-                    blockID: flow.effectID
+                    effectID: flow.effectID
                   }, undefined, false, undefined, this);
                 case "FlowSetActiveEffectID":
                   return flow.tips.map((tip) => {
@@ -31080,10 +31065,10 @@ var FlowListView = (props) => {
                             ")"
                           ]
                         }, undefined, true, undefined, this),
-                        /* @__PURE__ */ jsx_dev_runtime6.jsxDEV(BlockPayloadView, {
+                        /* @__PURE__ */ jsx_dev_runtime6.jsxDEV(EffectView, {
                           enabled: false,
                           clientID: props.clientID,
-                          blockID: tip.id
+                          effectID: tip.id
                         }, undefined, false, undefined, this)
                       ]
                     }, tip.id, true, undefined, this);
@@ -31099,25 +31084,25 @@ var FlowListView = (props) => {
 };
 
 // src/client/component/TableView.tsx
-var import_react7 = __toESM(require_react(), 1);
+var import_react8 = __toESM(require_react(), 1);
 
 // src/client/component/CardStackView.tsx
-var import_react6 = __toESM(require_react(), 1);
+var import_react7 = __toESM(require_react(), 1);
 var jsx_dev_runtime7 = __toESM(require_jsx_dev_runtime(), 1);
 var CardStackView = (props) => {
-  const appContext6 = import_react6.useContext(AppContext);
-  const cards = import_react6.useMemo(() => {
+  const appContext6 = import_react7.useContext(AppContext);
+  const cards = import_react7.useMemo(() => {
     return appContext6.viewModel.model.gameState.table.cardStack[AbsoluteBaSyouFn.toString(props.cardPosition)] || [];
   }, [
     props.cardPosition,
     appContext6.viewModel.model.gameState.table.cardStack
   ]);
-  const cardsOnlySetGroupRoot = import_react6.useMemo(() => {
+  const cardsOnlySetGroupRoot = import_react7.useMemo(() => {
     return cards.filter((cardId) => {
       return appContext6.viewModel.model.gameState.setGroup.itemGroupParent[cardId] == null;
     });
   }, [cards, appContext6.viewModel.model.gameState.setGroup.itemGroupParent]);
-  const render = import_react6.useMemo(() => {
+  const render = import_react7.useMemo(() => {
     const _cardPositionID = AbsoluteBaSyouFn.toString(props.cardPosition);
     return /* @__PURE__ */ jsx_dev_runtime7.jsxDEV("div", {
       style: {
@@ -31163,15 +31148,13 @@ var CardStackView = (props) => {
     appContext6.viewModel.cardPositionSelection,
     appContext6.viewModel.model.gameState.setGroup.itemGroupParent
   ]);
-  return /* @__PURE__ */ jsx_dev_runtime7.jsxDEV(jsx_dev_runtime7.Fragment, {
-    children: render
-  }, undefined, false, undefined, this);
+  return render;
 };
 
 // src/client/component/TableView.tsx
 var jsx_dev_runtime8 = __toESM(require_jsx_dev_runtime(), 1);
 var TableView = (props) => {
-  const renderGame = import_react7.useMemo(() => {
+  const renderGame = import_react8.useMemo(() => {
     return /* @__PURE__ */ jsx_dev_runtime8.jsxDEV(jsx_dev_runtime8.Fragment, {
       children: [
         /* @__PURE__ */ jsx_dev_runtime8.jsxDEV(CardStackView, {
@@ -31323,50 +31306,59 @@ var TableView = (props) => {
 // src/client/component/ClientView.tsx
 var jsx_dev_runtime9 = __toESM(require_jsx_dev_runtime(), 1);
 function ClientView(props) {
-  const appContext7 = import_react8.useContext(AppContext);
-  return /* @__PURE__ */ jsx_dev_runtime9.jsxDEV("div", {
-    children: [
-      /* @__PURE__ */ jsx_dev_runtime9.jsxDEV("div", {
-        children: [
-          "version:",
-          JSON.stringify(appContext7.viewModel.model.versionID)
-        ]
-      }, undefined, true, undefined, this),
-      /* @__PURE__ */ jsx_dev_runtime9.jsxDEV("div", {
-        children: [
-          "timing:",
-          JSON.stringify(appContext7.viewModel.model.gameState.phase)
-        ]
-      }, undefined, true, undefined, this),
-      /* @__PURE__ */ jsx_dev_runtime9.jsxDEV("div", {
-        children: [
-          "localMemory:",
-          JSON.stringify(appContext7.viewModel.localMemory)
-        ]
-      }, undefined, true, undefined, this),
-      /* @__PURE__ */ jsx_dev_runtime9.jsxDEV("h1", {
-        children: props.clientID
-      }, undefined, false, undefined, this),
-      /* @__PURE__ */ jsx_dev_runtime9.jsxDEV(FlowListView, {
-        clientID: props.clientID
-      }, undefined, false, undefined, this),
-      /* @__PURE__ */ jsx_dev_runtime9.jsxDEV(TableView, {
-        clientID: props.clientID
-      }, undefined, false, undefined, this)
-    ]
-  }, undefined, true, undefined, this);
+  const appContext7 = import_react9.useContext(AppContext);
+  const render = import_react9.useMemo(() => {
+    return /* @__PURE__ */ jsx_dev_runtime9.jsxDEV("div", {
+      children: [
+        /* @__PURE__ */ jsx_dev_runtime9.jsxDEV("div", {
+          children: [
+            "version:",
+            JSON.stringify(appContext7.viewModel.model.versionID)
+          ]
+        }, undefined, true, undefined, this),
+        /* @__PURE__ */ jsx_dev_runtime9.jsxDEV("div", {
+          children: [
+            "state:",
+            JSON.stringify(appContext7.viewModel.model.gameState.flowMemory.state)
+          ]
+        }, undefined, true, undefined, this),
+        /* @__PURE__ */ jsx_dev_runtime9.jsxDEV("div", {
+          children: [
+            "timing:",
+            JSON.stringify(appContext7.viewModel.model.gameState.phase)
+          ]
+        }, undefined, true, undefined, this),
+        /* @__PURE__ */ jsx_dev_runtime9.jsxDEV("div", {
+          children: [
+            "localMemory:",
+            JSON.stringify(appContext7.viewModel.localMemory)
+          ]
+        }, undefined, true, undefined, this),
+        /* @__PURE__ */ jsx_dev_runtime9.jsxDEV("h1", {
+          children: props.clientID
+        }, undefined, false, undefined, this),
+        /* @__PURE__ */ jsx_dev_runtime9.jsxDEV(FlowListView, {
+          clientID: props.clientID
+        }, undefined, false, undefined, this),
+        /* @__PURE__ */ jsx_dev_runtime9.jsxDEV(TableView, {
+          clientID: props.clientID
+        }, undefined, false, undefined, this)
+      ]
+    }, undefined, true, undefined, this);
+  }, [appContext7.viewModel.model.gameState, props.clientID]);
+  return render;
 }
 
 // src/client/component/ControlView.tsx
-var import_react9 = __toESM(require_react(), 1);
+var import_react10 = __toESM(require_react(), 1);
 var jsx_dev_runtime10 = __toESM(require_jsx_dev_runtime(), 1);
 var ControlView = () => {
-  const onClickTest = import_react9.useCallback(() => {
+  const onClickTest = import_react10.useCallback(() => {
   }, []);
-  const onClickNewGame = import_react9.useCallback(() => {
+  const onClickNewGame = import_react10.useCallback(() => {
     OnEvent.next({ id: "OnClickNewGame" });
   }, []);
-  const renderControlPanel = import_react9.useMemo(() => {
+  const renderControlPanel = import_react10.useMemo(() => {
     return /* @__PURE__ */ jsx_dev_runtime10.jsxDEV("div", {
       children: [
         /* @__PURE__ */ jsx_dev_runtime10.jsxDEV("button", {
@@ -31386,7 +31378,7 @@ var ControlView = () => {
 // src/client/component/AppView.tsx
 var jsx_dev_runtime11 = __toESM(require_jsx_dev_runtime(), 1);
 function AppView() {
-  import_react10.useEffect(() => {
+  import_react11.useEffect(() => {
     const subscriber = OnError.subscribe((e) => {
       console.error(e);
     });

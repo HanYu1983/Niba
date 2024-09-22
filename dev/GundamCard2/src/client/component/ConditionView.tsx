@@ -6,12 +6,12 @@ import { TargetTypeView } from "./TargetTypeView";
 import { getEffectTips } from "../../game/gameState/effect";
 
 export const ConditionView = (props: {
-  blockPayload: Effect;
+  effect: Effect;
   targets: { [key: string]: Condition };
 }) => {
   const appContext = useContext(AppContext);
   const render = useMemo(() => {
-    const tips = getEffectTips(appContext.viewModel.model.gameState, props.blockPayload, 0, 0)
+    const tips = getEffectTips(appContext.viewModel.model.gameState, props.effect, 0, 0)
     return (
       <div>
         {
@@ -24,7 +24,7 @@ export const ConditionView = (props: {
             }
             return <TargetTypeView
               key={i}
-              blockPayload={props.blockPayload}
+              effect={props.effect}
               target={tipOrE.tip}
             ></TargetTypeView>
           })
@@ -32,6 +32,6 @@ export const ConditionView = (props: {
 
       </div>
     );
-  }, [props.blockPayload, props.targets]);
-  return <>{render}</>;
+  }, [props.effect, props.targets, appContext.viewModel.model.gameState]);
+  return render
 };

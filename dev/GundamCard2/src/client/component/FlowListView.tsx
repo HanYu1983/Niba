@@ -2,14 +2,14 @@ import { useContext, useMemo, useEffect } from "react";
 import { queryFlow } from "../../game/gameStateWithFlowMemory/queryFlow";
 import { AppContext } from "../tool/appContext";
 import { OnEvent } from "../tool/appContext/eventCenter";
-import { BlockPayloadView } from "./BlockPayloadView";
+import { EffectView } from "./EffectView";
 import { getEffect } from "../../game/gameState/EffectStackComponent";
 
 export const FlowListView = (props: { clientID: string }) => {
   const appContext = useContext(AppContext);
   const flows = useMemo(() => {
     return queryFlow(appContext.viewModel.model.gameState, props.clientID);
-  }, [appContext.viewModel.model, props.clientID]);
+  }, [appContext.viewModel.model.gameState, props.clientID]);
   useEffect(() => {
     const payCost = flows.find((flow) => flow.id == "FlowPassPayCost");
     if (payCost == null) {
@@ -29,7 +29,7 @@ export const FlowListView = (props: { clientID: string }) => {
         flow: payCost,
       });
     }
-  }, [appContext.viewModel.model, props.clientID, flows]);
+  }, [appContext.viewModel.model.gameState, props.clientID, flows]);
   // ============== control panel ============= //
   const renderControlPanel = useMemo(() => {
     return (
@@ -52,20 +52,20 @@ export const FlowListView = (props: { clientID: string }) => {
                 switch (flow.id) {
                   case "FlowPassPayCost":
                     return (
-                      <BlockPayloadView
+                      <EffectView
                         enabled={true}
                         clientID={props.clientID}
-                        blockID={flow.effectID}
-                      ></BlockPayloadView>
+                        effectID={flow.effectID}
+                      ></EffectView>
                     );
                   case "FlowDoEffect":
                   case "FlowObserveEffect":
                     return (
-                      <BlockPayloadView
+                      <EffectView
                         enabled={false}
                         clientID={props.clientID}
-                        blockID={flow.effectID}
-                      ></BlockPayloadView>
+                        effectID={flow.effectID}
+                      ></EffectView>
                     );
                   case "FlowSetActiveEffectID":
                     return flow.tips.map((tip) => {
@@ -85,11 +85,11 @@ export const FlowListView = (props: { clientID: string }) => {
                           >
                             {flow.description}({tip.id})
                           </button>
-                          <BlockPayloadView
+                          <EffectView
                             enabled={false}
                             clientID={props.clientID}
-                            blockID={tip.id}
-                          ></BlockPayloadView>
+                            effectID={tip.id}
+                          ></EffectView>
                         </div>
                       );
                     });
