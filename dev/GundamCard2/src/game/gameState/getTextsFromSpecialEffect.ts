@@ -447,8 +447,6 @@ export function getTextsFromSpecialEffect(ctx: GameState, text: CardText): CardT
                 }
             ]
         }
-        case "ステイ":
-            return []
     }
     return []
 }

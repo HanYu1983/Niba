@@ -1,14 +1,12 @@
-import { pipe, always, map, sum } from "ramda"
+import { pipe, always, map, sum, dissoc } from "ramda"
 import { Bridge } from "../../script/bridge"
 import { CardColorFn, CardColor } from "../define/CardPrototype"
 import { Condition } from "../define/CardText"
 import { Effect } from "../define/Effect"
-import { StrBaSyouPair, Tip } from "../define/Tip"
-import { getCardRollCostLength } from "./card"
+import { getCardHasSpeicalEffect, getCardRollCostLength } from "./card"
 import { GameState } from "./GameState"
 import { getGlobalEffects, setGlobalEffects } from "./globalEffects"
 import { getItemPrototype, getItemOwner } from "./ItemTableComponent"
-import { TargetMissingError } from "../define/GameError"
 
 export function getPlayCardEffects(ctx: GameState, cardId: string): Effect[] {
     const prototype = getItemPrototype(ctx, cardId)
@@ -80,12 +78,10 @@ export function getPlayCardEffects(ctx: GameState, cardId: string): Effect[] {
                                                                 const isNoNeedRoll = (hasHigh || hasPS)
                                                                 const isRoll = isNoNeedRoll == false
                                                                 ctx = GameStateFn.setItemIsRoll(ctx, isRoll, [cardId, to]) as GameState
+                                                                ctx = GameStateFn.triggerEvent(ctx, { title: ["プレイされて場に出た場合"], cardIds: [cardId] })
                                                                 return ctx
                                                             }.toString()
                                                         },
-                                                        {
-                                                            title: ["triggerEvent", {title:["プレイされて場に出た場合"]}]
-                                                        }
                                                     ]
                                                 }
                                             ]
@@ -114,11 +110,10 @@ export function getPlayCardEffects(ctx: GameState, cardId: string): Effect[] {
                                                                 const to = targetBasyou
                                                                 ctx = GameStateFn.moveItem(ctx, to, [cardId, from], GameStateFn.onMoveItem) as GameState
                                                                 ctx = GameStateFn.setSetGroupLink(ctx, targetCardId, cardId) as GameState
+                                                                ctx = GameStateFn.triggerEvent(ctx, { title: ["プレイされて場に出た場合"], cardIds: [cardId] })
+                                                                ctx = GameStateFn.triggerEvent(ctx, { title: ["プレイされて場にセットされた場合"], cardIds: [cardId] })
                                                                 return ctx
                                                             }.toString()
-                                                        },
-                                                        {
-                                                            title: ["triggerEvent", { title: ["プレイされて場に出た場合"] }]
                                                         }
                                                     ]
                                                 }
@@ -145,13 +140,11 @@ export function getPlayCardEffects(ctx: GameState, cardId: string): Effect[] {
                                                                 const from = GameStateFn.getItemBaSyou(ctx, cardId)
                                                                 const to = DefineFn.AbsoluteBaSyouFn.setBaSyouKeyword(from, "ジャンクヤード")
                                                                 ctx = GameStateFn.moveItem(ctx, to, [cardId, from], GameStateFn.onMoveItem) as GameState
+                                                                ctx = GameStateFn.triggerEvent(ctx, { title: ["プレイされて場に出た場合"], cardIds: [cardId] })
                                                                 return ctx
                                                             }.toString()
                                                         },
                                                         ...prototype.commandText?.logicTreeActions?.[0].actions || [],
-                                                        {
-                                                            title: ["triggerEvent", { title: ["プレイされて場に出た場合"] }]
-                                                        }
                                                     ]
                                                 },
                                                 ...prototype.commandText?.logicTreeActions?.slice(1) || []
@@ -164,14 +157,18 @@ export function getPlayCardEffects(ctx: GameState, cardId: string): Effect[] {
                                     const cardId = DefineFn.EffectFn.getCardID(effect)
                                     const from = GameStateFn.getItemBaSyou(ctx, cardId)
                                     const to = DefineFn.AbsoluteBaSyouFn.setBaSyouKeyword(from, "Gゾーン")
-                                    return GameStateFn.moveItem(ctx, to, [cardId, from], GameStateFn.onMoveItem) as GameState
+                                    ctx = GameStateFn.moveItem(ctx, to, [cardId, from], GameStateFn.onMoveItem) as GameState
+                                    ctx = GameStateFn.triggerEvent(ctx, { title: ["プレイされて場に出た場合"], cardIds: [cardId] })
+                                    return ctx
                                 }
 
                                 if (prototype.category == "オペレーション") {
                                     const cardId = DefineFn.EffectFn.getCardID(effect)
                                     const from = GameStateFn.getItemBaSyou(ctx, cardId)
                                     const to = DefineFn.AbsoluteBaSyouFn.setBaSyouKeyword(from, "配備エリア")
-                                    return GameStateFn.moveItem(ctx, to, [cardId, from], GameStateFn.onMoveItem) as GameState
+                                    ctx = GameStateFn.moveItem(ctx, to, [cardId, from], GameStateFn.onMoveItem) as GameState
+                                    ctx = GameStateFn.triggerEvent(ctx, { title: ["プレイされて場に出た場合"], cardIds: [cardId] })
+                                    return ctx
                                 }
 
                                 if (prototype.category == "ACE") {
@@ -223,6 +220,33 @@ export function getPlayCardEffects(ctx: GameState, cardId: string): Effect[] {
             }.toString().replace("{ addedLength: 0 }", `{addedLength: ${addedLength}}`)
         })
         ret.push(morePlayCardEffect)
+    }
+    if (prototype.category == "キャラクター" && getCardHasSpeicalEffect(ctx, ["ステイ"], cardId)) {
+        const morePlayCardEffect: Effect = {
+            ...playCardEffect,
+            text: {
+                ...playCardEffect.text,
+                conditions: {
+                    ...dissoc("一個自軍機體", playCardEffect.text.conditions || {})
+                },
+                logicTreeActions: [
+                    {
+                        actions: [
+                            {
+                                title: function _(ctx: GameState, effect: Effect, { DefineFn, GameStateFn, ToolFn }: Bridge): GameState {
+                                    const cardId = DefineFn.EffectFn.getCardID(effect)
+                                    const from = GameStateFn.getItemBaSyou(ctx, cardId)
+                                    const to = DefineFn.AbsoluteBaSyouFn.setBaSyouKeyword(from, "配備エリア")
+                                    ctx = GameStateFn.moveItem(ctx, to, [cardId, from], GameStateFn.onMoveItem) as GameState
+                                    ctx = GameStateFn.triggerEvent(ctx, { title: ["プレイされて場に出た場合"], cardIds: [cardId] })
+                                    return ctx
+                                }.toString()
+                            }
+                        ]
+                    }
+                ]
+            }
+        }
     }
     return ret
 }
