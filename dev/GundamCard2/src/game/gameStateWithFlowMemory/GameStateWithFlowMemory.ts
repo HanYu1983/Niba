@@ -83,8 +83,8 @@ export function createGameStateWithFlowMemory(): GameStateWithFlowMemory {
 export function initState(ctx: GameStateWithFlowMemory, deckA: string[], deckB: string[]): GameStateWithFlowMemory {
     ctx = createCardWithProtoIds(ctx, AbsoluteBaSyouFn.of(PlayerA, "本国"), deckA) as GameStateWithFlowMemory
     ctx = createCardWithProtoIds(ctx, AbsoluteBaSyouFn.of(PlayerB, "本国"), deckB) as GameStateWithFlowMemory
-    ctx = setActivePlayerID(ctx, PlayerA) as GameStateWithFlowMemory
     ctx = initCardFace(ctx);
+    ctx = setActivePlayerID(ctx, PlayerA) as GameStateWithFlowMemory
     return ctx;
 }
 

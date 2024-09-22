@@ -3,7 +3,6 @@ import { AppContext } from "../tool/appContext";
 import { CardView } from "./CardView";
 import { RequireView } from "./RequireView";
 import { Effect, EffectFn } from "../../game/define/Effect";
-import { getEffect } from "../../game/gameState/EffectStackComponent";
 import { getEffectIncludePlayerCommand } from "../../game/gameStateWithFlowMemory/effect";
 
 export const EffectView = (props: {
@@ -58,6 +57,7 @@ export const EffectView = (props: {
           <RequireView
             clientID={props.clientID}
             effect={block}
+            conditions={block.text.conditions}
           ></RequireView>
         ) : null}
       </div>

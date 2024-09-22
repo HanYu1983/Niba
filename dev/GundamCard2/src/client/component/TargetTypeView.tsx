@@ -4,6 +4,7 @@ import { StrBaSyouPair, Tip, TipFn } from "../../game/define/Tip";
 import { useMemo } from "react";
 
 export const TargetTypeView = (props: {
+  clientID: string;
   effect: Effect;
   target: Tip;
 }) => {
@@ -14,7 +15,7 @@ export const TargetTypeView = (props: {
         return pairs.map((pair, i) => {
           const [cardId, _] = pair
           return (
-            <CardView enabled={false} key={i} cardID={cardId}></CardView>
+            <CardView enabled={false} key={i} cardID={cardId} clientID={props.clientID}></CardView>
           );
         });
       }

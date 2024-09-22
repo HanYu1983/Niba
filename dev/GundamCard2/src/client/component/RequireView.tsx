@@ -6,13 +6,14 @@ import { ConditionView } from "./ConditionView";
 import { TargetTypeView } from "./TargetTypeView";
 import { Effect, EffectFn } from "../../game/define/Effect";
 import { Tip } from "../../game/define/Tip";
-import { CardText } from "../../game/define/CardText";
+import { CardText, Condition } from "../../game/define/CardText";
 import { getEffectTips } from "../../game/gameState/effect";
 import { prop } from "ramda";
 
 export const RequireView = (props: {
   clientID: string;
   effect: Effect;
+  conditions: {[key:string]:Condition}
 }) => {
   const appContext = useContext(AppContext);
   const render = useMemo(() => {
@@ -30,9 +31,9 @@ export const RequireView = (props: {
                     OnEvent.next({
                       id: "OnClickRequireTargetConfirm",
                       clientID: props.clientID,
-                      blockPayload: props.effect,
-                      require: props.effect.text.conditions?.[tipOrE.conditionKey],
-                      varID: tipOrE.conditionKey,
+                      effect: props.effect,
+                      condition: props.conditions[tipOrE.conditionKey],
+                      conditionKey: tipOrE.conditionKey,
                     });
                   }}
                 >
@@ -43,6 +44,7 @@ export const RequireView = (props: {
                 tipOrE.tip == null ?
                   <div>tip not found</div> :
                   <TargetTypeView
+                    clientID={props.clientID}
                     effect={props.effect}
                     target={tipOrE.tip}
                   ></TargetTypeView>
@@ -54,8 +56,7 @@ export const RequireView = (props: {
     );
   }, [
     appContext.viewModel.model.gameState,
-    props.effect,
-    props.clientID,
+    props,
   ]);
   return (
     <div style={{ border: "1px solid black" }}>

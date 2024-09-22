@@ -29133,8 +29133,8 @@ function createGameStateWithFlowMemory() {
 function initState(ctx2, deckA, deckB) {
   ctx2 = createCardWithProtoIds(ctx2, AbsoluteBaSyouFn.of(PlayerA, "\u672C\u56FD"), deckA);
   ctx2 = createCardWithProtoIds(ctx2, AbsoluteBaSyouFn.of(PlayerB, "\u672C\u56FD"), deckB);
-  ctx2 = setActivePlayerID(ctx2, PlayerA);
   ctx2 = initCardFace(ctx2);
+  ctx2 = setActivePlayerID(ctx2, PlayerA);
   return ctx2;
 }
 function initCardFace(ctx2) {
@@ -30916,7 +30916,7 @@ var CardView = (props) => {
       const baSyou = getItemBaSyou(appContext2.viewModel.model.gameState, card8.id);
       switch (baSyou.value[1]) {
         case "\u624B\u672D": {
-          const controller = getItemController(appContext2.viewModel.model.gameState, props.cardID);
+          const controller = getItemController(appContext2.viewModel.model.gameState, card8.id);
           if (controller == props.clientID) {
             return true;
           }
@@ -30927,7 +30927,7 @@ var CardView = (props) => {
       }
     }
     return card8.isFaceDown != true;
-  }, [props.clientID, props.cardID, card8, appContext2.viewModel.model.gameState]);
+  }, [props.clientID, card8, appContext2.viewModel.model.gameState]);
   const render = import_react2.useMemo(() => {
     const imgSrc = isVisible ? getImgSrc(card8.protoID || "unknown") : "https://particle-979.appspot.com/common/images/card/cardback_0.jpg";
     const isSelect = appContext2.viewModel.cardSelection.includes(card8.id);
@@ -30949,6 +30949,7 @@ var CardView = (props) => {
           style: { height: CARD_SIZE }
         }, undefined, false, undefined, this),
         /* @__PURE__ */ jsx_dev_runtime2.jsxDEV("div", {
+          hidden: true,
           children: card8.id
         }, undefined, false, undefined, this),
         /* @__PURE__ */ jsx_dev_runtime2.jsxDEV("div", {
@@ -30975,7 +30976,8 @@ var TargetTypeView = (props) => {
           const [cardId, _] = pair2;
           return /* @__PURE__ */ jsx_dev_runtime3.jsxDEV(CardView, {
             enabled: false,
-            cardID: cardId
+            cardID: cardId,
+            clientID: props.clientID
           }, i, false, undefined, this);
         });
       }
@@ -31012,9 +31014,9 @@ var RequireView = (props) => {
                 OnEvent.next({
                   id: "OnClickRequireTargetConfirm",
                   clientID: props.clientID,
-                  blockPayload: props.effect,
-                  require: props.effect.text.conditions?.[tipOrE.conditionKey],
-                  varID: tipOrE.conditionKey
+                  effect: props.effect,
+                  condition: props.conditions[tipOrE.conditionKey],
+                  conditionKey: tipOrE.conditionKey
                 });
               },
               children: [
@@ -31025,6 +31027,7 @@ var RequireView = (props) => {
             tipOrE.tip == null ? /* @__PURE__ */ jsx_dev_runtime4.jsxDEV("div", {
               children: "tip not found"
             }, undefined, false, undefined, this) : /* @__PURE__ */ jsx_dev_runtime4.jsxDEV(TargetTypeView, {
+              clientID: props.clientID,
               effect: props.effect,
               target: tipOrE.tip
             }, undefined, false, undefined, this)
@@ -31034,8 +31037,7 @@ var RequireView = (props) => {
     }, undefined, false, undefined, this);
   }, [
     appContext3.viewModel.model.gameState,
-    props.effect,
-    props.clientID
+    props
   ]);
   return /* @__PURE__ */ jsx_dev_runtime4.jsxDEV("div", {
     style: { border: "1px solid black" },
@@ -31107,7 +31109,8 @@ var EffectView = (props) => {
             }, undefined, true, undefined, this),
             props.enabled && block.text.conditions ? /* @__PURE__ */ jsx_dev_runtime5.jsxDEV(RequireView, {
               clientID: props.clientID,
-              effect: block
+              effect: block,
+              conditions: block.text.conditions
             }, undefined, false, undefined, this) : null
           ]
         }, undefined, true, undefined, this)

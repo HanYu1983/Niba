@@ -3,6 +3,7 @@ import { Card } from "../../../game/define/Card";
 import { Effect } from "../../../game/define/Effect";
 import { Flow } from "../../../game/gameStateWithFlowMemory/Flow";
 import { GameContext } from "../../define/GameContext";
+import { Condition } from "../../../game/define/CardText";
 
 export type OnClickCardEvent = {
   id: "OnClickCardEvent";
@@ -31,9 +32,9 @@ export type OnClickFlowConfirm = {
 export type OnClickRequireTargetConfirm = {
   id: "OnClickRequireTargetConfirm";
   clientID: string;
-  blockPayload: Effect;
-  require: any;
-  varID: string;
+  effect: Effect;
+  condition: Condition;
+  conditionKey: string;
 };
 
 export type Event =

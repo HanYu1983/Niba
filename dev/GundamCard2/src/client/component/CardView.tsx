@@ -21,7 +21,7 @@ export const CardView = (props: {
       const baSyou = getItemBaSyou(appContext.viewModel.model.gameState, card.id);
       switch (baSyou.value[1]) {
         case "手札": {
-          const controller = getItemController(appContext.viewModel.model.gameState, props.cardID);
+          const controller = getItemController(appContext.viewModel.model.gameState, card.id);
           if (controller == props.clientID) {
             return true;
           }
@@ -32,7 +32,7 @@ export const CardView = (props: {
       }
     }
     return card.isFaceDown != true
-  }, [props.clientID, props.cardID, card, appContext.viewModel.model.gameState]);
+  }, [props.clientID, card, appContext.viewModel.model.gameState]);
   const render = useMemo(() => {
     const imgSrc = isVisible
       ? getImgSrc(card.protoID || "unknown")
@@ -53,7 +53,7 @@ export const CardView = (props: {
         }}
       >
         <img src={imgSrc} style={{ height: CARD_SIZE }}></img>
-        <div>{card.id}</div>
+        <div hidden>{card.id}</div>
         <div>{card.isFaceDown ? "O" : "X"}</div>
       </div>
     );
