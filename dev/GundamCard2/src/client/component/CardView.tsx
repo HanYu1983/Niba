@@ -8,7 +8,7 @@ import { getItemBaSyou, getItemController } from "../../game/gameState/ItemTable
 const CARD_SIZE = 100;
 
 export const CardView = (props: {
-  clientID?: string;
+  clientID: string;
   cardID: string;
   enabled: boolean;
 }) => {
@@ -16,18 +16,12 @@ export const CardView = (props: {
   const card = useMemo(() => {
     return getCard(appContext.viewModel.model.gameState, props.cardID);
   }, [props.cardID, appContext.viewModel.model.gameState]);
-  if (card == null) {
-    return <div>card({props.cardID}) not found</div>;
-  }
   const isVisible = useMemo(() => {
     if (card.isFaceDown) {
       const baSyou = getItemBaSyou(appContext.viewModel.model.gameState, card.id);
       switch (baSyou.value[1]) {
         case "手札": {
-          const controller = getItemController(
-            appContext.viewModel.model.gameState,
-            props.cardID
-          );
+          const controller = getItemController(appContext.viewModel.model.gameState, props.cardID);
           if (controller == props.clientID) {
             return true;
           }
@@ -37,11 +31,11 @@ export const CardView = (props: {
           break;
       }
     }
-    return card.isFaceDown == false;
-  }, [props.clientID, card.isFaceDown, appContext.viewModel.model.gameState]);
+    return card.isFaceDown != true
+  }, [props.clientID, props.cardID, card, appContext.viewModel.model.gameState]);
   const render = useMemo(() => {
     const imgSrc = isVisible
-      ? getImgSrc(card.id)
+      ? getImgSrc(card.protoID || "unknown")
       : "https://particle-979.appspot.com/common/images/card/cardback_0.jpg";
     const isSelect = appContext.viewModel.cardSelection.includes(card.id);
     return (

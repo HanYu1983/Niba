@@ -25467,7 +25467,7 @@ async function loadPrototype(imgID) {
   if (imgID.split("_").length > 1) {
     const [prodid, part2, part3, part4, part5] = imgID.split("_");
     const info_25 = `${part2}_${part3}_${part4}_${part5}`;
-    const data = (await import(`./data/${prodid}.json`, {with: {type: "json"}})).default.data.find((d) => {
+    const data = (await import(`./data/${prodid}.json`)).default.data.find((d) => {
       return d.info_25 == info_25;
     });
     if (data) {
@@ -25531,7 +25531,7 @@ async function loadPrototype(imgID) {
     }
   }
   {
-    const scriptProto = (await import(`./ext/${imgID}.js`).catch(() => {
+    const scriptProto = (await import(`./ext/${imgID}`).catch(() => {
       console.log(`script/${imgID}.ts not found. use default`);
       return { prototype: {} };
     })).prototype;
@@ -28793,7 +28793,7 @@ function getPlayerCommands(ctx2, playerID) {
   return ctx2.commandEffectTips.filter((e) => EffectFn.getPlayerID(e.effect) == playerID);
 }
 function getPlayerCommandsFilterNoError(ctx2, playerID) {
-  return getPlayerCommands(ctx2, playerID).filter(({ tipOrErrors }) => tipOrErrors.filter((v) => v.errors).length == 0);
+  return getPlayerCommands(ctx2, playerID).filter((cet) => cet.tipOrErrors.every((toes) => toes.errors.length == 0));
 }
 function getPlayerCommandsFilterNoErrorDistinct(ctx2, playerID) {
   return getPlayerCommandsFilterNoError(ctx2, playerID).filter((command, index, self) => index === self.findIndex((c) => c.effect.id === command.effect.id));
@@ -28987,12 +28987,14 @@ function applyFlow(ctx2, playerID, flow) {
                 const from = AbsoluteBaSyouFn.toString(AbsoluteBaSyouFn.of(PlayerA, "\u672C\u56FD"));
                 const to = AbsoluteBaSyouFn.toString(AbsoluteBaSyouFn.of(PlayerA, "\u624B\u672D"));
                 const cards = ctx2.table.cardStack[from].slice(0, 6);
+                ctx2.table.cardStack[from] = ctx2.table.cardStack[from].slice(6);
                 ctx2.table.cardStack[to] = [...cards, ...ctx2.table.cardStack[to] || []];
               }
               {
                 const from = AbsoluteBaSyouFn.toString(AbsoluteBaSyouFn.of(PlayerB, "\u672C\u56FD"));
                 const to = AbsoluteBaSyouFn.toString(AbsoluteBaSyouFn.of(PlayerB, "\u624B\u672D"));
                 const cards = ctx2.table.cardStack[from].slice(0, 6);
+                ctx2.table.cardStack[from] = ctx2.table.cardStack[from].slice(6);
                 ctx2.table.cardStack[to] = [...cards, ...ctx2.table.cardStack[to] || []];
               }
               ctx2 = {
@@ -30053,45 +30055,7 @@ var DEFAULT_VIEW_MODEL = {
     lastPassPhase: false
   }
 };
-var TMP_DECK = [
-  "179001_01A_CH_WT007R_white",
-  "179003_01A_U_BK008U_black",
-  "179004_01A_CH_WT009R_white",
-  "179004_01A_CH_WT010C_white",
-  "179007_02A_O_BK005C_black",
-  "179007_02A_U_WT027U_white",
-  "179008_02A_U_WT034U_white",
-  "179014_03B_CH_WT027R_white",
-  "179015_04B_U_WT067C_white",
-  "179016_04B_U_RD083C_red",
-  "179016_04B_U_WT074C_white",
-  "179016_04B_U_WT075C_white",
-  "179019_01A_C_WT010C_white",
-  "179022_06C_CH_WT057R_white",
-  "179022_06C_U_WT113R_white",
-  "179023_06C_CH_WT067C_white",
-  "179023_06C_G_BL021C_blue",
-  "179024_03B_U_WT057U_white",
-  "179025_07D_C_WT060U_white",
-  "179025_07D_CH_WT075C_white",
-  "179025_07D_O_GN019C_green",
-  "179025_07D_U_RD156R_red",
-  "179025_07D_U_RD158C_red",
-  "179028_10D_C_BL070N_blue",
-  "179029_05C_O_BK014C_black",
-  "179029_B3C_CH_WT102R_white",
-  "179029_B3C_CH_WT103N_white",
-  "179030_11E_C_BL076S_blue",
-  "179030_11E_G_RD021N_red",
-  "179030_11E_O_BK012N_black",
-  "179030_11E_O_GN023N_green",
-  "179030_11E_U_BL208S_blue",
-  "179030_11E_U_BL210N_blue",
-  "179030_11E_U_BL215R_blue",
-  "179901_00_U_RD010P_red",
-  "179901_CG_C_WT001P_white",
-  "179901_CG_CH_WT002P_white"
-];
+var TMP_DECK = ["179015_04B_O_BK010C_black", "179015_04B_O_BK010C_black", "179015_04B_U_BK058R_black", "179015_04B_U_BK058R_black", "179015_04B_U_BK059C_black", "179015_04B_U_BK059C_black", "179015_04B_U_BK061C_black", "179015_04B_U_BK061C_black", "179016_04B_U_BK066C_black", "179016_04B_U_BK066C_black", "179019_02A_C_BK015S_black", "179019_02A_C_BK015S_black", "179020_05C_U_BK100U_black", "179020_05C_U_BK100U_black", "179023_06C_C_BK048R_black", "179023_06C_C_BK048R_black", "179023_06C_C_BK049U_black", "179023_06C_C_BK049U_black", "179024_04B_C_BK027U_black", "179024_04B_C_BK027U_black", "179024_04B_U_BK060C_black", "179024_04B_U_BK060C_black", "179024_04B_U_BK067C_black", "179024_04B_U_BK067C_black", "179024_B2B_C_BK054C_black", "179024_B2B_C_BK054C_black", "179024_B2B_U_BK128S_black_02", "179024_B2B_U_BK128S_black_02", "179024_B2B_U_BK129R_black", "179024_B2B_U_BK129R_black", "179027_09D_C_BK063R_black", "179027_09D_C_BK063R_black", "179027_09D_O_BK010N_black", "179027_09D_O_BK010N_black", "179027_09D_U_BK163S_black", "179027_09D_U_BK163S_black", "179027_09D_U_BK163S_black", "179029_06C_C_BK045U_black", "179029_06C_C_BK045U_black", "179029_B3C_C_BK071N_black", "179029_B3C_C_BK071N_black", "179029_B3C_U_BK184N_black", "179029_B3C_U_BK184N_black", "179029_B3C_U_BK184N_black", "179029_B3C_U_BK185N_black", "179029_B3C_U_BK185N_black", "179030_11E_U_BK194S_2_black", "179030_11E_U_BK194S_2_black", "179030_11E_U_BK194S_2_black", "179901_B2B_C_BK005P_black"];
 var OnViewModel = OnEvent.pipe(scan((viewModel, evt) => {
   log("OnViewModel", "evt", evt);
   try {
@@ -30786,6 +30750,7 @@ function queryFlow(ctx2, playerID) {
           return handleFreeTiming();
         }
       }
+      break;
     case "\u6226\u95D8\u30D5\u30A7\u30A4\u30BA":
       switch (phase[1]) {
         case "\u653B\u6483\u30B9\u30C6\u30C3\u30D7":
@@ -30946,15 +30911,6 @@ var CardView = (props) => {
   const card8 = import_react2.useMemo(() => {
     return getCard(appContext2.viewModel.model.gameState, props.cardID);
   }, [props.cardID, appContext2.viewModel.model.gameState]);
-  if (card8 == null) {
-    return /* @__PURE__ */ jsx_dev_runtime2.jsxDEV("div", {
-      children: [
-        "card(",
-        props.cardID,
-        ") not found"
-      ]
-    }, undefined, true, undefined, this);
-  }
   const isVisible = import_react2.useMemo(() => {
     if (card8.isFaceDown) {
       const baSyou = getItemBaSyou(appContext2.viewModel.model.gameState, card8.id);
@@ -30970,10 +30926,10 @@ var CardView = (props) => {
           break;
       }
     }
-    return card8.isFaceDown == false;
-  }, [props.clientID, card8.isFaceDown, appContext2.viewModel.model.gameState]);
+    return card8.isFaceDown != true;
+  }, [props.clientID, props.cardID, card8, appContext2.viewModel.model.gameState]);
   const render = import_react2.useMemo(() => {
-    const imgSrc = isVisible ? getImgSrc(card8.id) : "https://particle-979.appspot.com/common/images/card/cardback_0.jpg";
+    const imgSrc = isVisible ? getImgSrc(card8.protoID || "unknown") : "https://particle-979.appspot.com/common/images/card/cardback_0.jpg";
     const isSelect = appContext2.viewModel.cardSelection.includes(card8.id);
     return /* @__PURE__ */ jsx_dev_runtime2.jsxDEV("div", {
       style: {
@@ -31096,7 +31052,7 @@ var EffectView = (props) => {
   const appContext4 = import_react5.useContext(AppContext);
   const block = import_react5.useMemo(() => {
     try {
-      return getEffect(appContext4.viewModel.model.gameState, props.effectID);
+      return getEffectIncludePlayerCommand(appContext4.viewModel.model.gameState, props.effectID);
     } catch (e) {
       console.error(e);
       return e.message;
@@ -31176,11 +31132,11 @@ var FlowListView = (props) => {
     if (payCost.id != "FlowPassPayCost") {
       throw new Error("must be FlowPassPayCost");
     }
-    const effect9 = getEffect(appContext5.viewModel.model.gameState, payCost.effectID);
-    if (effect9 == null) {
+    const effect11 = getEffectIncludePlayerCommand(appContext5.viewModel.model.gameState, payCost.effectID);
+    if (effect11 == null) {
       throw new Error("must find effect");
     }
-    if (effect9.text.conditions == null) {
+    if (effect11.text.conditions == null) {
       OnEvent.next({
         id: "OnClickFlowConfirm",
         clientID: props.clientID,
@@ -31238,7 +31194,7 @@ var FlowListView = (props) => {
                             OnEvent.next({
                               id: "OnClickFlowConfirm",
                               clientID: props.clientID,
-                              flow: { ...flow, effectID: tip.id || "" }
+                              flow: { ...flow, effectID: tip.id }
                             });
                           },
                           children: [
@@ -31495,14 +31451,14 @@ function ClientView(props) {
       children: [
         /* @__PURE__ */ jsx_dev_runtime9.jsxDEV("div", {
           children: [
-            "version:",
-            JSON.stringify(appContext7.viewModel.model.versionID)
+            "localMemory:",
+            JSON.stringify(appContext7.viewModel.localMemory)
           ]
         }, undefined, true, undefined, this),
         /* @__PURE__ */ jsx_dev_runtime9.jsxDEV("div", {
           children: [
-            "state:",
-            JSON.stringify(appContext7.viewModel.model.gameState.flowMemory.state)
+            "version:",
+            JSON.stringify(appContext7.viewModel.model.versionID)
           ]
         }, undefined, true, undefined, this),
         /* @__PURE__ */ jsx_dev_runtime9.jsxDEV("div", {
@@ -31513,8 +31469,8 @@ function ClientView(props) {
         }, undefined, true, undefined, this),
         /* @__PURE__ */ jsx_dev_runtime9.jsxDEV("div", {
           children: [
-            "localMemory:",
-            JSON.stringify(appContext7.viewModel.localMemory)
+            "flowMemory:",
+            JSON.stringify(appContext7.viewModel.model.gameState.flowMemory)
           ]
         }, undefined, true, undefined, this),
         /* @__PURE__ */ jsx_dev_runtime9.jsxDEV("h1", {

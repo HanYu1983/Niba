@@ -4,6 +4,7 @@ import { AppContext } from "../tool/appContext";
 import { OnEvent } from "../tool/appContext/eventCenter";
 import { EffectView } from "./EffectView";
 import { getEffect } from "../../game/gameState/EffectStackComponent";
+import { getEffectIncludePlayerCommand } from "../../game/gameStateWithFlowMemory/effect";
 
 export const FlowListView = (props: { clientID: string }) => {
   const appContext = useContext(AppContext);
@@ -18,7 +19,7 @@ export const FlowListView = (props: { clientID: string }) => {
     if (payCost.id != "FlowPassPayCost") {
       throw new Error("must be FlowPassPayCost");
     }
-    const effect = getEffect(appContext.viewModel.model.gameState, payCost.effectID)
+    const effect = getEffectIncludePlayerCommand(appContext.viewModel.model.gameState, payCost.effectID)
     if (effect == null) {
       throw new Error("must find effect");
     }
@@ -79,7 +80,7 @@ export const FlowListView = (props: { clientID: string }) => {
                               OnEvent.next({
                                 id: "OnClickFlowConfirm",
                                 clientID: props.clientID,
-                                flow: { ...flow, effectID: tip.id || "" },
+                                flow: { ...flow, effectID: tip.id },
                               });
                             }}
                           >

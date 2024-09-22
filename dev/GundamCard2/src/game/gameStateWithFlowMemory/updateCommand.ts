@@ -23,7 +23,7 @@ export function getPlayerCommands(ctx: GameStateWithFlowMemory, playerID: string
 }
 
 export function getPlayerCommandsFilterNoError(ctx: GameStateWithFlowMemory, playerID: string): CommandEffectTip[] {
-    return getPlayerCommands(ctx, playerID).filter(({ tipOrErrors }) => tipOrErrors.filter(v => v.errors).length == 0)
+    return getPlayerCommands(ctx, playerID).filter(cet=>cet.tipOrErrors.every(toes=>toes.errors.length == 0))
 }
 
 export function getPlayerCommandsFilterNoErrorDistinct(ctx: GameStateWithFlowMemory, playerID: string): CommandEffectTip[] {

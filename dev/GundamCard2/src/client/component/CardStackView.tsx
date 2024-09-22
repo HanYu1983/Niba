@@ -32,11 +32,7 @@ export const CardStackView = (props: {
           //height: CARD_SIZE,
           display: "flex",
           border: "2px solid black",
-          ...(appContext.viewModel.cardPositionSelection.includes(
-            _cardPositionID
-          )
-            ? { border: "2px solid red" }
-            : null),
+          ...(appContext.viewModel.cardPositionSelection.includes(_cardPositionID) ? { border: "2px solid red" } : null),
         }}
       >
         <div>
@@ -54,9 +50,7 @@ export const CardStackView = (props: {
         {cardsOnlySetGroupRoot.map((rootCardId) => {
           const cardsInSetGroup = [
             rootCardId,
-            ...Object.keys(
-              appContext.viewModel.model.gameState.setGroup.itemGroupParent
-            ).filter((setCardID) => {
+            ...Object.keys(appContext.viewModel.model.gameState.setGroup.itemGroupParent).filter((setCardID) => {
               return appContext.viewModel.model.gameState.setGroup.itemGroupParent[setCardID] == rootCardId
             }),
           ];

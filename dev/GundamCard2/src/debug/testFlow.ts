@@ -300,7 +300,7 @@ export async function testBattleBonus() {
       },
     ]
   ) as GameStateWithFlowMemory
-  ctx = initState(ctx);
+  ctx = initState(ctx, [], []);
   {
     const [x, y, z] = getCardBattlePoint(ctx, "a1");
     if (x != 5) {

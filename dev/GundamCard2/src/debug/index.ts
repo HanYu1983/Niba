@@ -14,9 +14,7 @@ import { testCrossWeapon } from "./testCrossWeapon";
 import { getPrototype, loadPrototype } from "../script";
 import { PlayerA, PlayerB, PlayerIDFn } from "../game/define/PlayerID";
 import { getActivePlayerID, setActivePlayerID } from "../game/gameState/ActivePlayerComponent";
-import { createGameState, GameState } from "../game/gameState/GameState";
 import { getPhase, setPhase } from "../game/gameState/PhaseComponent";
-import { getPlayCardEffects } from "../game/gameState/getPlayCardEffect";
 import { AbsoluteBaSyouFn } from "../game/define/BaSyou";
 import { createCardWithProtoIds } from "../game/gameState/CardTableComponent";
 import { getGlobalEffects } from "../game/gameState/globalEffects";
@@ -24,6 +22,7 @@ import { createGameStateWithFlowMemory, GameStateWithFlowMemory } from "../game/
 import { queryFlow } from "../game/gameStateWithFlowMemory/queryFlow";
 import { applyFlow } from "../game/gameStateWithFlowMemory/applyFlow";
 import { TargetMissingError } from "../game/define/GameError";
+import { testIssue1 } from "./testIssue";
 
 export async function tests() {
     return [
@@ -45,6 +44,7 @@ export async function tests() {
         testReturnRuleEffect,
         testPS,
         testCrossWeapon,
+        testIssue1
     ].reduce((worker, testF) => {
         return worker.then(async () => {
             console.log(`==============================${testF.name}==================================`);

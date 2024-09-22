@@ -4,6 +4,7 @@ import { CardView } from "./CardView";
 import { RequireView } from "./RequireView";
 import { Effect, EffectFn } from "../../game/define/Effect";
 import { getEffect } from "../../game/gameState/EffectStackComponent";
+import { getEffectIncludePlayerCommand } from "../../game/gameStateWithFlowMemory/effect";
 
 export const EffectView = (props: {
   enabled: boolean;
@@ -13,7 +14,7 @@ export const EffectView = (props: {
   const appContext = useContext(AppContext);
   const block: Effect | string = useMemo(() => {
     try {
-      return getEffect(appContext.viewModel.model.gameState, props.effectID)
+      return getEffectIncludePlayerCommand(appContext.viewModel.model.gameState, props.effectID)
     } catch (e: any) {
       console.error(e)
       return e.message

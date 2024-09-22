@@ -222,12 +222,14 @@ export function applyFlow(
                                 const from = AbsoluteBaSyouFn.toString(AbsoluteBaSyouFn.of(PlayerA, "本国"))
                                 const to = AbsoluteBaSyouFn.toString(AbsoluteBaSyouFn.of(PlayerA, "手札"))
                                 const cards = ctx.table.cardStack[from].slice(0, 6)
+                                ctx.table.cardStack[from] = ctx.table.cardStack[from].slice(6)
                                 ctx.table.cardStack[to] = [...cards, ...(ctx.table.cardStack[to] || [])]
                             }
                             {
                                 const from = AbsoluteBaSyouFn.toString(AbsoluteBaSyouFn.of(PlayerB, "本国"))
                                 const to = AbsoluteBaSyouFn.toString(AbsoluteBaSyouFn.of(PlayerB, "手札"))
                                 const cards = ctx.table.cardStack[from].slice(0, 6)
+                                ctx.table.cardStack[from] = ctx.table.cardStack[from].slice(6)
                                 ctx.table.cardStack[to] = [...cards, ...(ctx.table.cardStack[to] || [])]
                             }
                             ctx = {

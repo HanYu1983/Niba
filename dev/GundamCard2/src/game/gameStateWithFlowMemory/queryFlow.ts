@@ -1,13 +1,11 @@
 import { getEffect, getTopEffect } from "../gameState/EffectStackComponent";
 import { Flow } from "./Flow";
 import { getActiveEffectID, getEffectIncludePlayerCommand } from "./effect";
-import { getPlayEffects } from "../gameState/getPlayEffects";
 import { GameStateWithFlowMemory } from "./GameStateWithFlowMemory";
 import { PlayerA, PlayerB, PlayerIDFn } from "../define/PlayerID";
-import { AbsoluteBaSyouFn, BattleAreaKeyword } from "../define/BaSyou";
+import { AbsoluteBaSyouFn } from "../define/BaSyou";
 import { Effect, EffectFn } from "../define/Effect";
 import { getPlayerCommandsFilterNoErrorDistinct } from "./updateCommand";
-import { ToolFn } from "../tool";
 import { getAttackPhaseRuleEffect } from "../gameState/getAttackPhaseRuleEffect";
 import { getDrawPhaseRuleEffect } from "../gameState/getDrawPhaseRuleEffect";
 import { getRerollPhaseRuleEffect } from "../gameState/getRerollPhaseRuleEffect";
@@ -253,7 +251,7 @@ export function queryFlow(ctx: GameStateWithFlowMemory, playerID: string): Flow[
                 }
         }
     }
-    const myCommandList = getPlayerCommandsFilterNoErrorDistinct(ctx, playerID).map(tip=>tip.effect)
+    const myCommandList = getPlayerCommandsFilterNoErrorDistinct(ctx, playerID).map(tip => tip.effect)
     // 處理堆疊效果，從最上方開始處理
     if (ctx.stackEffect.length) {
         // 取得最上方的效果
@@ -433,6 +431,7 @@ export function queryFlow(ctx: GameStateWithFlowMemory, playerID: string): Flow[
                     return handleFreeTiming();
                 }
             }
+            break;
         case "戦闘フェイズ":
             switch (phase[1]) {
                 case "攻撃ステップ":
