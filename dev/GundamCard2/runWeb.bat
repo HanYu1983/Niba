@@ -1,1 +1,1 @@
-npx http-server -c-1 -p 8080 lib
+npx http-server -c-1 -p 8080 public

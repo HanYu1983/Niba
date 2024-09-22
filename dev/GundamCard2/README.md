@@ -7,6 +7,7 @@ bun create typescript
 ```bash
 # 先build index.js到public
 bun build src\index.ts --outdir public
+bun build src\web.tsx --outdir public
 
 # copy script/data到public/data
 xcopy /E /I /Y src\script\data public\data

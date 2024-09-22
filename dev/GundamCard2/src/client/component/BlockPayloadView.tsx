@@ -1,0 +1,66 @@
+import { useContext, useMemo } from "react";
+import { AppContext } from "../tool/appContext";
+import { CardView } from "./CardView";
+import { RequireView } from "./RequireView";
+import { Effect, EffectFn } from "../../game/define/Effect";
+import { getEffect } from "../../game/gameState/EffectStackComponent";
+
+export const BlockPayloadView = (props: {
+  enabled: boolean;
+  clientID: string;
+  blockID: string;
+}) => {
+  const appContext = useContext(AppContext);
+  const block: Effect | string = useMemo(() => {
+    try {
+      return getEffect(appContext.viewModel.model.gameState, props.blockID)
+    } catch (e: any) {
+      console.error(e)
+      return e.message
+    }
+  }, [appContext.viewModel.model, props.blockID]);
+  if (typeof block == "string") {
+    return <div>{block}</div>;
+  }
+  const cardID: string | null = useMemo(() => {
+    switch (block.reason[0]) {
+      case "Destroy":
+      case "Event":
+      case "PlayCard":
+      case "PlayText":
+      case "Situation":
+      case "場に出る":
+        return EffectFn.getCardID(block)
+      case "GameRule":
+        return null;
+    }
+  }, [appContext.viewModel.model, block]);
+
+
+  return (
+    <div style={{ display: "flex" }}>
+      <div style={{ flex: 1 }}>{block.isOption ? "可取消" : "不可取消"}</div>
+      {cardID != null ? (
+        <CardView
+          enabled={false}
+          clientID={props.clientID}
+          cardID={cardID}
+        ></CardView>
+      ) : (
+        <div>{JSON.stringify(block.reason)}</div>
+      )}
+      <div style={{ flex: 4 }}>
+        <div>{block.id}</div>
+        <div>
+          {block.description}({cardID})
+        </div>
+        {props.enabled && block.text.conditions ? (
+          <RequireView
+            clientID={props.clientID}
+            blockPayload={block}
+          ></RequireView>
+        ) : null}
+      </div>
+    </div>
+  );
+};
