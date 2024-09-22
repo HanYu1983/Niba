@@ -1,0 +1,115 @@
+import { AbsoluteBaSyouFn } from "../game/define/BaSyou"
+import { BattlePointFn } from "../game/define/BattlePoint"
+import { Card } from "../game/define/Card"
+import { ItemStateFn } from "../game/define/ItemState"
+import { PlayerA, PlayerB } from "../game/define/PlayerID"
+import { PhaseFn } from "../game/define/Timing"
+import { setActivePlayerID } from "../game/gameState/ActivePlayerComponent"
+import { getCardRollCostLength, getCardBattlePoint } from "../game/gameState/card"
+import { addCards, createCardWithProtoIds } from "../game/gameState/CardTableComponent"
+import { getCardIdByCoinId, getCoins } from "../game/gameState/CoinTableComponent"
+import { getEffectTips, doEffect, onMoveItem } from "../game/gameState/effect"
+import { getTopEffect } from "../game/gameState/EffectStackComponent"
+import { createGameState, GameState } from "../game/gameState/GameState"
+import { getPlayCardEffects } from "../game/gameState/getPlayCardEffect"
+import { getPlayEffects } from "../game/gameState/getPlayEffects"
+import { getGlobalEffects, setGlobalEffects, clearGlobalEffects } from "../game/gameState/globalEffects"
+import { checkIsBattle, isBattle } from "../game/gameState/IsBattleComponent"
+import { getItemState, setItemState } from "../game/gameState/ItemStateComponent"
+import { getCardLikeItemIdsByBasyou, getItemBaSyou, getItemIds, getItemIdsByBasyou, moveItem } from "../game/gameState/ItemTableComponent"
+import { setPhase } from "../game/gameState/PhaseComponent"
+import { triggerEvent } from "../game/gameState/triggerEvent"
+import { loadPrototype } from "../script"
+
+export async function test179024_03B_U_WT042U_white() {
+    await loadPrototype("179024_03B_U_WT042U_white")
+    const cardA: Card = {
+        id: "cardA",
+        protoID: "179024_03B_U_WT042U_white"
+    }
+    const cardB: Card = {
+        id: "cardB",
+        protoID: "179024_03B_U_WT042U_white"
+    }
+    let ctx = createGameState()
+    ctx = addCards(ctx, AbsoluteBaSyouFn.of(PlayerA, "戦闘エリア1"), [cardA]) as GameState
+    ctx = addCards(ctx, AbsoluteBaSyouFn.of(PlayerB, "配備エリア"), [cardB]) as GameState
+    ctx = setActivePlayerID(ctx, PlayerA) as GameState
+    ctx = setPhase(ctx, ["戦闘フェイズ", "ダメージ判定ステップ", "フリータイミング"]) as GameState
+    {
+        ctx = checkIsBattle(ctx) as GameState
+        if (isBattle(ctx, cardA.id, null) != false) {
+            throw new Error(`isBattle(ctx, cardA.id, null) != false`)
+        }
+        let cs = getItemState(ctx, cardA.id)
+        cs = ItemStateFn.setTip(cs, "このカードが非交戦中の場合、敵軍ユニット１枚", { title: ["カード", [], [[cardB.id, getItemBaSyou(ctx, cardB.id)]]] })
+        ctx = setItemState(ctx, cardA.id, cs) as GameState
+
+        const playCardEffects = getPlayEffects(ctx, PlayerA)
+        if (playCardEffects.length != 1) {
+            throw new Error(`playCardEffects.length != 1`)
+        }
+        ctx = doEffect(ctx, playCardEffects[0], 0, 0)
+        const effect = getTopEffect(ctx)
+        if (effect == null) {
+            throw new Error(`effect == null`)
+        }
+        if (effect.reason[0] != "PlayText") {
+            throw new Error(`effect.reason[0]!="PlayText`)
+        }
+        ctx = doEffect(ctx, effect, 0, 0)
+        const coins = getCoins(ctx)
+        if (coins.length == 1 && getCardIdByCoinId(ctx, coins[0].id) == cardB.id) {
+
+        } else {
+            throw new Error(`coins.length == 1 && getCardIdByCoinId(ctx, coins[0].id) == cardB.id`)
+        }
+        if (BattlePointFn.eq(getCardBattlePoint(ctx, cardB.id), [4, 0, 3]) == false) {
+            throw new Error(`BattlePointFn.eq(getCardBattlePoint(ctx, cardB.id), [4,0,3]) == false`)
+        }
+    }
+    // battle
+    ctx = moveItem(ctx, AbsoluteBaSyouFn.of(PlayerB, "戦闘エリア1"), [cardB.id, getItemBaSyou(ctx, cardB.id)], onMoveItem) as GameState
+    const itemIds = getCardLikeItemIdsByBasyou(ctx, AbsoluteBaSyouFn.of(PlayerB, "戦闘エリア1"))
+    if (itemIds.length > 0 && itemIds[0] == cardB.id) {
+
+    } else {
+        throw new Error(`itemIds.length > 0 && itemIds[0] == cardA.id`)
+    }
+    {
+        ctx = checkIsBattle(ctx) as GameState
+        if (isBattle(ctx, cardA.id, null) != true) {
+            throw new Error(`isBattle(ctx, cardA.id, null) != true`)
+        }
+        const playCardEffects = getPlayEffects(ctx, PlayerA)
+        if (playCardEffects.length != 1) {
+            throw new Error(`playCardEffects.length != 1`)
+        }
+        ctx = doEffect(ctx, playCardEffects[0], 0, 0)
+        const effect = getTopEffect(ctx)
+        if (effect == null) {
+            throw new Error(`effect == null`)
+        }
+        if (effect.reason[0] != "PlayText") {
+            throw new Error(`effect.reason[0]!="PlayText`)
+        }
+        ctx = doEffect(ctx, effect, 0, 0)
+        let ges = getGlobalEffects(ctx, null)
+        if (ges.length == 1 && ges[0].cardIds.includes(cardA.id)) {
+
+        } else {
+            throw new Error(`ges.length == 1 && ges[0].cardIds.includes(cardA.id)`)
+        }
+        if (BattlePointFn.eq(getCardBattlePoint(ctx, cardA.id), [6, 1, 5]) == false) {
+            throw new Error(`BattlePointFn.eq(getCardBattlePoint(ctx, cardA.id), [6,1,5]) == false`)
+        }
+        ctx = triggerEvent(ctx, { title: ["GameEventOnTiming", PhaseFn.getLast()] })
+        ges = getGlobalEffects(ctx, null)
+        if (ges.length != 0) {
+            throw new Error(`ges.length != 0`)
+        }
+        if (BattlePointFn.eq(getCardBattlePoint(ctx, cardA.id), [5, 0, 4]) == false) {
+            throw new Error(`BattlePointFn.eq(getCardBattlePoint(ctx, cardA.id), [5,0,4]) == false`)
+        }
+    }
+}
