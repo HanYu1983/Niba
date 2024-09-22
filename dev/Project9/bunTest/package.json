@@ -2,9 +2,6 @@
   "name": "test",
   "module": "index.ts",
   "type": "module",
-  "scripts": {
-    "build": "bun build index.ts --outdir build"
-  },
   "devDependencies": {
     "bun-types": "latest"
   },

@@ -27,7 +27,7 @@ import { TargetMissingError } from "../game/define/GameError";
 
 export async function tests() {
     return [
-        //testLoadPrototype,
+        testLoadPrototype,
         itemGroupTests,
         testFlow1,
         testFlow2,
