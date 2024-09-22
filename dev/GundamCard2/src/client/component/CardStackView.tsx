@@ -11,7 +11,7 @@ export const CardStackView = (props: {
   const cards = useMemo(() => {
     return (
       appContext.viewModel.model.gameState.table.cardStack[
-        AbsoluteBaSyouFn.toString(props.cardPosition)
+      AbsoluteBaSyouFn.toString(props.cardPosition)
       ] || []
     );
   }, [
@@ -57,10 +57,7 @@ export const CardStackView = (props: {
             ...Object.keys(
               appContext.viewModel.model.gameState.setGroup.itemGroupParent
             ).filter((setCardID) => {
-              return (
-                appContext.viewModel.model.gameState.setGroup.itemGroupParent[setCardID] ==
-                rootCardId
-              );
+              return appContext.viewModel.model.gameState.setGroup.itemGroupParent[setCardID] == rootCardId
             }),
           ];
           return (

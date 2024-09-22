@@ -25457,6 +25457,103 @@ class TargetMissingError extends Error {
 }
 
 // src/script/index.ts
+async function loadPrototype(imgID) {
+  if (_preloadPrototype[imgID]) {
+    return _preloadPrototype[imgID];
+  }
+  let proto = {
+    id: imgID
+  };
+  if (imgID.split("_").length > 1) {
+    const [prodid, part2, part3, part4, part5] = imgID.split("_");
+    const info_25 = `${part2}_${part3}_${part4}_${part5}`;
+    const data = (await import(`./data/${prodid}.json`, {with: {type: "json"}})).default.data.find((d) => {
+      return d.info_25 == info_25;
+    });
+    if (data) {
+      const id = data.id;
+      const title = data.info_2;
+      const category = data.info_3;
+      const totalCostLength = data.info_4;
+      const colorCostLength = data.info_5;
+      const gsignProperty = data.info_6;
+      const bp1 = data.info_7;
+      const bp2 = data.info_8;
+      const bp3 = data.info_9;
+      const area = data.info_10;
+      const characteristic = data.info_11;
+      const textstr = data.info_12;
+      const description = data.info_15;
+      const prod = data.info_16;
+      const rarity = data.info_17;
+      const color = data.info_18;
+      const categoryMapping = {
+        UNIT: "\u30E6\u30CB\u30C3\u30C8",
+        CHARACTER: "\u30AD\u30E3\u30E9\u30AF\u30BF\u30FC",
+        COMMAND: "\u30B3\u30DE\u30F3\u30C9",
+        OPERATION: "\u30AA\u30DA\u30EC\u30FC\u30B7\u30E7\u30F3",
+        "OPERATION(UNIT)": "\u30AA\u30DA\u30EC\u30FC\u30B7\u30E7\u30F3(\u30E6\u30CB\u30C3\u30C8)",
+        ACE: "ACE",
+        GRAPHIC: "\u30B0\u30E9\u30D5\u30A3\u30C3\u30AF"
+      };
+      const texts = getGainTexts(textstr).concat(getKaiSo(textstr));
+      if (textstr.indexOf("\u5F37\u8972") != -1) {
+        texts.push({
+          id: "",
+          title: ["\u7279\u6B8A\u578B", ["\u5F37\u8972"]]
+        });
+      }
+      if (textstr.indexOf("\u6226\u95D8\u914D\u5099") != -1) {
+        texts.push({
+          id: "",
+          title: ["\u7279\u6B8A\u578B", ["\u6226\u95D8\u914D\u5099"]]
+        });
+      }
+      const originData = {
+        originCardId: id,
+        title,
+        category: categoryMapping[category],
+        color,
+        rollCost: parseColors(color, colorCostLength, totalCostLength),
+        battlePoint: [parseBp(bp1), parseBp(bp2), parseBp(bp3)],
+        battleArea: parseArea(area),
+        characteristic,
+        description,
+        isCross: title.indexOf("\uFF3B\u2020\uFF3D") != -1,
+        rarity,
+        gsign: [[color], gsignProperty],
+        texts
+      };
+      proto = {
+        ...proto,
+        ...originData
+      };
+    }
+  }
+  {
+    const scriptProto = (await import(`./ext/${imgID}.js`).catch(() => {
+      console.log(`script/${imgID}.ts not found. use default`);
+      return { prototype: {} };
+    })).prototype;
+    proto = {
+      ...proto,
+      ...scriptProto
+    };
+  }
+  if (proto.texts) {
+    for (const i in proto.texts) {
+      const text = proto.texts[i];
+      if (text.id == "") {
+        text.id = `loadPrototype_${proto.id}_text_${i}`;
+      }
+    }
+    if (proto.commandText && proto.commandText.id == "") {
+      proto.commandText.id = `${proto.id}_text_command`;
+    }
+  }
+  _preloadPrototype[imgID] = proto;
+  return proto;
+}
 function getPrototype(imgId) {
   if (_preloadPrototype[imgId] == null) {
     throw new Error(`imgId not found: ${imgId}`);
@@ -25466,7 +25563,92 @@ function getPrototype(imgId) {
 function getImgSrc(imgID) {
   return `https://storage.googleapis.com/particle-resources/cardPackage/gundamWarN/${imgID}.jpg`;
 }
+function parseColors(color, colorCostLength, totalCostLength) {
+  if (colorCostLength == "X" || totalCostLength == "X") {
+    return [];
+  }
+  if (colorCostLength == "-" || totalCostLength == "-") {
+    return [];
+  }
+  const n1 = parseInt(colorCostLength, 10);
+  const colors = [];
+  if (n1 == 1) {
+    colors.push(color);
+  } else if (n1 > 1) {
+    colors.push(...repeat_default(color, n1));
+  }
+  const n2 = parseInt(totalCostLength, 10);
+  if (n2 - n1 == 0) {
+    return colors;
+  }
+  if (n2 - n1 == 1) {
+    return [...colors, null];
+  }
+  if (n2 > n1) {
+    return [...colors, ...repeat_default(null, n2 - n1)];
+  }
+  throw new Error(`unknown ${color} ${colorCostLength} ${totalCostLength}`);
+}
+function parseBp(bp) {
+  if (bp == "-") {
+    return "*";
+  }
+  const ret = parseInt(bp, 10);
+  if (Number.isNaN(ret)) {
+    throw new Error(`parseBp error: ${bp}`);
+  }
+  return ret;
+}
+function parseArea(a) {
+  if (a == "\u5B87\u3001\u5730") {
+    return ["\u5730\u7403\u30A8\u30EA\u30A2", "\u5B87\u5B99\u30A8\u30EA\u30A2"];
+  }
+  if (a == "\u5B87") {
+    return ["\u5B87\u5B99\u30A8\u30EA\u30A2"];
+  }
+  if (a == "\u5730") {
+    return ["\u5730\u7403\u30A8\u30EA\u30A2"];
+  }
+  return [];
+}
+function getGainTexts(gainStr) {
+  const match = gainStr.match(/〔(０|１|２|３|４|５|６|７|８|９+)〕：ゲイン/);
+  if (match == null) {
+    return [];
+  }
+  const [matchstr, rollcoststr, char] = match;
+  const rollcost = uppercaseDigits.indexOf(rollcoststr);
+  if (rollcost == -1) {
+    throw new Error(`getGainTexts error: ${matchstr}`);
+  }
+  return [
+    {
+      id: "",
+      title: ["\u7279\u6B8A\u578B", ["\u30B2\u30A4\u30F3"]],
+      conditions: {}
+    }
+  ];
+}
+function getKaiSo(gainStr) {
+  const match = gainStr.match(/〔(０|１|２|３|４|５|６|７|８|９+)〕：改装［(.+)］/);
+  if (match == null) {
+    return [];
+  }
+  const [matchstr, rollcoststr, char] = match;
+  const rollcost = uppercaseDigits.indexOf(rollcoststr);
+  if (rollcost == -1) {
+    throw new Error(`getGainTexts error: ${matchstr}`);
+  }
+  return [
+    {
+      id: "",
+      title: ["\u7279\u6B8A\u578B", ["\u6539\u88C5", char]],
+      conditions: {}
+    }
+  ];
+}
 var _preloadPrototype = {};
+var uppercaseDigits = "\uFF10\uFF11\uFF12\uFF13\uFF14\uFF15\uFF16\uFF17\uFF18\uFF19";
 
 // src/game/define/Card.ts
 var CardFn = {
@@ -28946,7 +29128,10 @@ function createGameStateWithFlowMemory() {
     destroyEffect: []
   };
 }
-function initState(ctx2) {
+function initState(ctx2, deckA, deckB) {
+  ctx2 = createCardWithProtoIds(ctx2, AbsoluteBaSyouFn.of(PlayerA, "\u672C\u56FD"), deckA);
+  ctx2 = createCardWithProtoIds(ctx2, AbsoluteBaSyouFn.of(PlayerB, "\u672C\u56FD"), deckB);
+  ctx2 = setActivePlayerID(ctx2, PlayerA);
   ctx2 = initCardFace(ctx2);
   return ctx2;
 }
@@ -29868,60 +30053,58 @@ var DEFAULT_VIEW_MODEL = {
     lastPassPhase: false
   }
 };
+var TMP_DECK = [
+  "179001_01A_CH_WT007R_white",
+  "179003_01A_U_BK008U_black",
+  "179004_01A_CH_WT009R_white",
+  "179004_01A_CH_WT010C_white",
+  "179007_02A_O_BK005C_black",
+  "179007_02A_U_WT027U_white",
+  "179008_02A_U_WT034U_white",
+  "179014_03B_CH_WT027R_white",
+  "179015_04B_U_WT067C_white",
+  "179016_04B_U_RD083C_red",
+  "179016_04B_U_WT074C_white",
+  "179016_04B_U_WT075C_white",
+  "179019_01A_C_WT010C_white",
+  "179022_06C_CH_WT057R_white",
+  "179022_06C_U_WT113R_white",
+  "179023_06C_CH_WT067C_white",
+  "179023_06C_G_BL021C_blue",
+  "179024_03B_U_WT057U_white",
+  "179025_07D_C_WT060U_white",
+  "179025_07D_CH_WT075C_white",
+  "179025_07D_O_GN019C_green",
+  "179025_07D_U_RD156R_red",
+  "179025_07D_U_RD158C_red",
+  "179028_10D_C_BL070N_blue",
+  "179029_05C_O_BK014C_black",
+  "179029_B3C_CH_WT102R_white",
+  "179029_B3C_CH_WT103N_white",
+  "179030_11E_C_BL076S_blue",
+  "179030_11E_G_RD021N_red",
+  "179030_11E_O_BK012N_black",
+  "179030_11E_O_GN023N_green",
+  "179030_11E_U_BL208S_blue",
+  "179030_11E_U_BL210N_blue",
+  "179030_11E_U_BL215R_blue",
+  "179901_00_U_RD010P_red",
+  "179901_CG_C_WT001P_white",
+  "179901_CG_CH_WT002P_white"
+];
 var OnViewModel = OnEvent.pipe(scan((viewModel, evt) => {
   log("OnViewModel", "evt", evt);
   try {
     switch (evt.id) {
       case "OnClickNewGame": {
         let ctx2 = createGameContext();
-        if (true) {
-          const deck = [
-            "179001_01A_CH_WT007R_white",
-            "179003_01A_U_BK008U_black",
-            "179004_01A_CH_WT009R_white",
-            "179004_01A_CH_WT010C_white",
-            "179007_02A_O_BK005C_black",
-            "179007_02A_U_WT027U_white",
-            "179008_02A_U_WT034U_white",
-            "179014_03B_CH_WT027R_white",
-            "179015_04B_U_WT067C_white",
-            "179016_04B_U_RD083C_red",
-            "179016_04B_U_WT074C_white",
-            "179016_04B_U_WT075C_white",
-            "179019_01A_C_WT010C_white",
-            "179022_06C_CH_WT057R_white",
-            "179022_06C_U_WT113R_white",
-            "179023_06C_CH_WT067C_white",
-            "179023_06C_G_BL021C_blue",
-            "179024_03B_U_WT057U_white",
-            "179025_07D_C_WT060U_white",
-            "179025_07D_CH_WT075C_white",
-            "179025_07D_O_GN019C_green",
-            "179025_07D_U_RD156R_red",
-            "179025_07D_U_RD158C_red",
-            "179028_10D_C_BL070N_blue",
-            "179029_05C_O_BK014C_black",
-            "179029_B3C_CH_WT102R_white",
-            "179029_B3C_CH_WT103N_white",
-            "179030_11E_C_BL076S_blue",
-            "179030_11E_G_RD021N_red",
-            "179030_11E_O_BK012N_black",
-            "179030_11E_O_GN023N_green",
-            "179030_11E_U_BL208S_blue",
-            "179030_11E_U_BL210N_blue",
-            "179030_11E_U_BL215R_blue",
-            "179901_00_U_RD010P_red",
-            "179901_CG_C_WT001P_white",
-            "179901_CG_CH_WT002P_white"
-          ];
-          ctx2.gameState = createCardWithProtoIds(ctx2.gameState, AbsoluteBaSyouFn.of(PlayerA, "\u672C\u56FD"), deck);
-          ctx2.gameState = createCardWithProtoIds(ctx2.gameState, AbsoluteBaSyouFn.of(PlayerB, "\u672C\u56FD"), deck);
-        }
         ctx2 = {
           ...ctx2,
           versionID: viewModel.model.versionID
         };
-        ctx2.gameState = initState(ctx2.gameState);
+        Promise.all(TMP_DECK.map(loadPrototype));
+        ctx2.gameState = initState(ctx2.gameState, TMP_DECK, TMP_DECK);
+        ctx2.gameState = createCardWithProtoIds(ctx2.gameState, AbsoluteBaSyouFn.of(PlayerA, "G\u30BE\u30FC\u30F3"), TMP_DECK.slice(0, 6));
         ctx2.gameState = updateCommand(ctx2.gameState);
         return { ...DEFAULT_VIEW_MODEL, model: ctx2 };
       }
@@ -31345,7 +31528,7 @@ function ClientView(props) {
         }, undefined, false, undefined, this)
       ]
     }, undefined, true, undefined, this);
-  }, [appContext7.viewModel.model.gameState, props.clientID]);
+  }, [appContext7.viewModel.model, appContext7.viewModel.localMemory, appContext7.viewModel.model.gameState, props.clientID]);
   return render;
 }
 

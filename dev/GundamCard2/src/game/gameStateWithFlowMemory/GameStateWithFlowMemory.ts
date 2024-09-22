@@ -1,10 +1,12 @@
 import { createBridge } from "../bridge/createBridge";
+import { AbsoluteBaSyouFn } from "../define/BaSyou";
 import { CardTextFn, Condition, ConditionFn } from "../define/CardText";
 import { Effect } from "../define/Effect";
 import { TargetMissingError } from "../define/GameError";
 import { PlayerA, PlayerB } from "../define/PlayerID";
 import { Tip, TipFn } from "../define/Tip";
-import { mapCardsWithBasyou } from "../gameState/CardTableComponent";
+import { setActivePlayerID } from "../gameState/ActivePlayerComponent";
+import { createCardWithProtoIds, mapCardsWithBasyou } from "../gameState/CardTableComponent";
 import { createGameState, GameState } from "../gameState/GameState";
 import { getPlayEffects } from "../gameState/getPlayEffects";
 import { setCommandEffectTips } from "./effect";
@@ -40,7 +42,7 @@ export type HasFlowMemoryComponent = {
 
 export type TipOrErrors = {
     conditionKey: string,
-    tip: Tip | null, 
+    tip: Tip | null,
     errors: TargetMissingError[]
 }
 
@@ -78,7 +80,10 @@ export function createGameStateWithFlowMemory(): GameStateWithFlowMemory {
     }
 }
 
-export function initState(ctx: GameStateWithFlowMemory): GameStateWithFlowMemory {
+export function initState(ctx: GameStateWithFlowMemory, deckA: string[], deckB: string[]): GameStateWithFlowMemory {
+    ctx = createCardWithProtoIds(ctx, AbsoluteBaSyouFn.of(PlayerA, "本国"), deckA) as GameStateWithFlowMemory
+    ctx = createCardWithProtoIds(ctx, AbsoluteBaSyouFn.of(PlayerB, "本国"), deckB) as GameStateWithFlowMemory
+    ctx = setActivePlayerID(ctx, PlayerA) as GameStateWithFlowMemory
     ctx = initCardFace(ctx);
     return ctx;
 }

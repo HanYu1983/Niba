@@ -15,6 +15,6 @@ export function ClientView(props: { clientID: string }) {
       <FlowListView clientID={props.clientID}></FlowListView>
       <TableView clientID={props.clientID}></TableView>
     </div>
-  }, [appContext.viewModel.model.gameState, props.clientID])
+  }, [appContext.viewModel.model, appContext.viewModel.localMemory, appContext.viewModel.model.gameState, props.clientID])
   return render
 }

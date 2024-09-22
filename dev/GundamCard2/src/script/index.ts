@@ -16,7 +16,7 @@ export async function loadPrototype(imgID: string): Promise<CardPrototype> {
     const info_25 = `${part2}_${part3}_${part4}_${part5}`
     // https://stackoverflow.com/questions/69548822/how-to-import-js-that-imported-json-from-html
     // 加入, {with: {type: "json"}}到編譯過後的檔案裡
-    const data = (await import(`./data/${prodid}.json`, {with: {type: "json"}})).default.data.find((d: any) => {
+    const data = (await import(`./data/${prodid}.json`, { with: { type: "json" } })).default.data.find((d: any) => {
       return d.info_25 == info_25
     });
     if (data) {
@@ -37,7 +37,7 @@ export async function loadPrototype(imgID: string): Promise<CardPrototype> {
       const prod = data.info_16
       const rarity = data.info_17
       const color = data.info_18
-      
+
       const categoryMapping: { [key: string]: CardCategory } = {
         "UNIT": "ユニット",
         "CHARACTER": "キャラクター",
@@ -47,7 +47,7 @@ export async function loadPrototype(imgID: string): Promise<CardPrototype> {
         "ACE": "ACE",
         "GRAPHIC": "グラフィック",
       }
-      
+
       const texts = getGainTexts(textstr).concat(getKaiSo(textstr))
       if (textstr.indexOf("強襲") != -1) {
         texts.push({
@@ -126,9 +126,27 @@ function parseColors(color: any, colorCostLength: string, totalCostLength: strin
   if (colorCostLength == "X" || totalCostLength == "X") {
     return []
   }
+  if (colorCostLength == "-" || totalCostLength == "-") {
+    return []
+  }
   const n1 = parseInt(colorCostLength, 10)
+  const colors = []
+  if(n1 == 1){
+    colors.push(color)
+  } else if(n1 > 1){
+    colors.push(...repeat(color, n1))
+  }
   const n2 = parseInt(totalCostLength, 10)
-  return [...repeat(color, n1), ...repeat(null, n2 - n1)]
+  if (n2 - n1 == 0) {
+    return colors
+  }
+  if (n2 - n1 == 1) {
+    return [...colors, null]
+  }
+  if (n2 > n1) {
+    return [...colors, ...repeat(null, n2 - n1)]
+  }
+  throw new Error(`unknown ${color} ${colorCostLength} ${totalCostLength}`)
 }
 function parseBp(bp: string): "*" | number {
   if (bp == "-") {
@@ -156,7 +174,7 @@ function parseArea(a: string): BattleAreaKeyword[] {
 const uppercaseDigits = "０１２３４５６７８９";
 
 function getGainTexts(gainStr: string): CardText[] {
-  const match = gainStr.match(/〔(.+)〕：ゲイン/);
+  const match = gainStr.match(/〔(０|１|２|３|４|５|６|７|８|９+)〕：ゲイン/);
   if (match == null) {
     return []
   }
@@ -176,8 +194,7 @@ function getGainTexts(gainStr: string): CardText[] {
   ]
 }
 function getKaiSo(gainStr: string): CardText[] {
-  console.log(gainStr)
-  const match = gainStr.match(/〔(.+)〕：改装［(.+)］/);
+  const match = gainStr.match(/〔(０|１|２|３|４|５|６|７|８|９+)〕：改装［(.+)］/);
   if (match == null) {
     return []
   }
