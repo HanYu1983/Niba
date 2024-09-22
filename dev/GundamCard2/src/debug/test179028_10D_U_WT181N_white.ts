@@ -14,12 +14,14 @@ import { getItemState } from "../game/gameState/ItemStateComponent"
 import { getCardLikeItemIdsByBasyou, getItemIds, getItemIdsByBasyou } from "../game/gameState/ItemTableComponent"
 import { triggerEvent } from "../game/gameState/triggerEvent"
 import { loadPrototype } from "../script"
+import { setActivePlayerID } from "../game/gameState/ActivePlayerComponent"
 
 export async function test179028_10D_U_WT181N_white() {
     await loadPrototype("179028_10D_U_WT181N_white")
     let ctx = createGameState()
     ctx = createCardWithProtoIds(ctx, AbsoluteBaSyouFn.of(PlayerA, "手札"), ["179028_10D_U_WT181N_white"]) as GameState
     ctx = createCardWithProtoIds(ctx, AbsoluteBaSyouFn.of(PlayerA, "Gゾーン"), repeat("179028_10D_U_WT181N_white", 5)) as GameState
+    ctx = setActivePlayerID(ctx, PlayerA) as GameState
     if (getCardIdsCanPayRollCost(ctx, PlayerA, null).length != 5) {
         throw new Error(`getCardIdsCanPayRollCost(ctx, PlayerA, null).length !=5`)
     }

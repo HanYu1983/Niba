@@ -28,6 +28,7 @@ import { log } from "../../tool/logger"
 import { BattlePointFn } from "../define/BattlePoint"
 import { getBattleGroup } from "./battleGroup"
 import { getSetGroupBattlePoint } from "./setGroup"
+import { isBattle } from "./IsBattleComponent"
 
 export function getEffectTips(
   ctx: GameState,
@@ -417,7 +418,26 @@ export function getConditionTitleFn(condition: Condition, options: { isPlay?: bo
         }
       }
     }
-    case "_交戦中の_自軍_ユニット_１枚":
+    case "_交戦中の_自軍_ユニット_１枚": {
+      const [_, battleStr, side, category, count] = condition.title
+      return function (ctx: GameState, effect: Effect): Tip | null {
+        const cardId = EffectFn.getCardID(effect)
+        const playerId = getItemController(ctx, cardId);
+        const targetPlayerId = side == "自軍" ? playerId : PlayerIDFn.getOpponent(playerId)
+        const basyous: AbsoluteBaSyou[] = (lift(AbsoluteBaSyouFn.of)([targetPlayerId], BaSyouKeywordFn.getBaAll()))
+        const pairs = basyous.flatMap(basyou =>
+          getCardLikeItemIdsByBasyou(ctx, basyou)
+            .filter(cardId => getItemRuntimeCategory(ctx, cardId) == category)
+            .filter(cardId => isBattle(ctx, cardId, null) == (battleStr == "交戦中"))
+            .map(cardId => [cardId, basyou] as StrBaSyouPair)
+        )
+        return {
+          title: ["カード", pairs, pairs.slice(0, count)],
+          count: 1,
+        }
+
+      }
+    }
     case "このセットグループの_ユニットは":
       return function (ctx: GameState, effect: Effect): Tip | null {
         return null

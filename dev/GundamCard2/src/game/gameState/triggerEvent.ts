@@ -8,12 +8,16 @@ import { getCardTexts } from "./card"
 import { getCardIds } from "./CardTableComponent"
 import { getOnEventTitleFn } from "./effect"
 import { GameState } from "./GameState"
-import { getCardLikeItemIds, getItemIds, getItemPrototype } from "./ItemTableComponent"
+import { getCardLikeItemIds, getItemIds, getItemIdsByBasyou, getItemPrototype } from "./ItemTableComponent"
 import { ItemStateFn } from "../define/ItemState"
 import { PhaseFn } from "../define/Timing"
 import { getItemState, mapItemState, mapItemStateValues, setItemState } from "./ItemStateComponent"
 import { getTextsFromSpecialEffect } from "./getTextsFromSpecialEffect"
 import { log } from "../../tool/logger"
+import { mapPlayerState } from "./PlayerStateComponent"
+import { PlayerStateFn } from "../define/PlayerState"
+import { getActivePlayerID } from "./ActivePlayerComponent"
+import { AbsoluteBaSyouFn, BaSyouKeywordFn } from "../define/BaSyou"
 
 // 觸發事件腳本
 // 在每次事件發生時都要呼叫
@@ -32,6 +36,7 @@ export function triggerEvent(
             if (proto.commandText?.onEvent) {
                 return { cardId: cardId, texts: [proto.commandText] }
             }
+            return null
         }),
         infos => infos.filter(v => v) as { cardId: string, texts: CardText[] }[],
     )()
@@ -55,27 +60,40 @@ export function triggerEvent(
         }, ctx)
     )()
     // 使用了卡牌後, 同一個切入不能再使用. 以下記錄使用過的卡片, 會在切入結束後清除
-    if (event.effect != null && (event.effect.reason[0] == "PlayCard" || event.effect.reason[0] == "PlayText")) {
-        const cardId = EffectFn.getCardID(event.effect)
-        const textId = event.effect.text.id
-        ctx = mapItemState(ctx, cardId, cs => {
-            return {
-                ...cs,
-                textIdsUseThisCut: {
-                    ...cs,
-                    [textId]: true
-                }
-            }
-        }) as GameState
-    }
+    // if (event.effect != null && (event.effect.reason[0] == "PlayCard" || event.effect.reason[0] == "PlayText")) {
+    //     const cardId = EffectFn.getCardID(event.effect)
+    //     const textId = event.effect.text.id
+    //     ctx = mapItemState(ctx, cardId, cs => {
+    //         return {
+    //             ...cs,
+    //             textIdsUseThisCut: {
+    //                 ...cs,
+    //                 [textId]: true
+    //             }
+    //         }
+    //     }) as GameState
+    // }
     if (event.title[0] == "カット終了時") {
         ctx = mapItemStateValues(ctx, cs => {
             return ItemStateFn.onCutEnd(cs)
         }) as GameState
+
     }
     if (event.title[0] == "GameEventOnTiming" && PhaseFn.eq(event.title[1], PhaseFn.getLast())) {
+        const activePlayerId = getActivePlayerID(ctx)
+        // BaSyouKeywordFn.getAll()
+        //     .map(kw => AbsoluteBaSyouFn.of(activePlayerId, kw))
+        //     .flatMap(basyou => getItemIdsByBasyou(ctx, basyou))
+        //     .reduce((ctx, itemId) => {
+        //         return mapItemState(ctx, itemId, cs => {
+        //             return ItemStateFn.onTurnEnd(cs)
+        //         }) as GameState
+        //     }, ctx);
         ctx = mapItemStateValues(ctx, cs => {
             return ItemStateFn.onTurnEnd(cs)
+        }) as GameState
+        ctx = mapPlayerState(ctx, activePlayerId, ps => {
+            return PlayerStateFn.onTurnEnd(ps)
         }) as GameState
     }
     return ctx

@@ -15,7 +15,7 @@ export type EffectReason =
     | ["PlayCard", PlayerID, string]
     | ["PlayText", PlayerID, string, string]
     // 通常GameRule是沒有第三個cardId的, 存在的目的是為了方便套用程式碼邏輯, 讓沒有cardId的效果也能存入TipSelection到ItemState中
-    | ["GameRule", PlayerID | null, string | null]
+    | ["GameRule", PlayerID | null]
     | ["Destroy", PlayerID, string, DestroyReason]
     | ["Situation", PlayerID, string, Situation | null]
     | ["Event", string, GameEvent];
@@ -34,10 +34,7 @@ export const EffectFn = {
     getCardID(ctx: Effect): string {
         switch (ctx.reason[0]) {
             case "GameRule":
-                if (ctx.reason[2] == null) {
-                    throw new Error(`this GameRule not cardId: ${ctx.id} ${ctx.description}`);
-                }
-                return ctx.reason[2]
+                return "SystemFakeCardID"
 
             case "PlayText":
             case "PlayCard":

@@ -7,12 +7,18 @@ export type PlayerState = {
 };
 
 export const PlayerStateFn = {
-    identity():PlayerState{
+    identity(): PlayerState {
         return {
             id: '',
             turn: 0,
             playGCount: 0,
             confirmPhase: false,
+        }
+    },
+    onTurnEnd(ps: PlayerState): PlayerState {
+        return {
+            ...ps,
+            playGCount: 0
         }
     }
 }

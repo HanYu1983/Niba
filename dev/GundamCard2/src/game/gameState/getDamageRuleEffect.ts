@@ -9,7 +9,7 @@ import { GameState } from "./GameState";
 export function getDamageRuleEffect(ctx: GameState, playerId: PlayerID): Effect {
     return {
         id: ToolFn.getUUID("getDamageRuleEffect"),
-        reason: ["GameRule", playerId, "getDamageRuleEffect"],
+        reason: ["GameRule", playerId],
         text: {
             id: ToolFn.getUUID("getDamageRuleEffect"),
             title: [],

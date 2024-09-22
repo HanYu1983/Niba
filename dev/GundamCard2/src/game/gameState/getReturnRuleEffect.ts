@@ -8,7 +8,7 @@ import { GameState } from "./GameState";
 export function getReturnRuleEffect(ctx: GameState, playerId: PlayerID): Effect {
     return {
         id: ToolFn.getUUID("getReturnRuleEffect"),
-        reason: ["GameRule", playerId, "getReturnRuleEffect"],
+        reason: ["GameRule", playerId],
         text: {
             id: ToolFn.getUUID("getReturnRuleEffect"),
             title: [],

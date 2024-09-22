@@ -1,6 +1,6 @@
 import { log } from "../../tool/logger";
 import { PhaseFn, SiYouTiming } from "../define/Timing";
-import { CardText } from "../define/CardText";
+import { CardText, Condition } from "../define/CardText";
 import { PlayerA, PlayerB, PlayerID } from "../define/PlayerID";
 import { AbsoluteBaSyouFn, BaSyouKeywordFn } from "../define/BaSyou";
 import { addCards, createCardWithProtoIds, getCard } from "./CardTableComponent";
@@ -16,6 +16,9 @@ import { getCardHasSpeicalEffect, getCardTexts } from "./card";
 import { Card } from "../define/Card";
 import { setActivePlayerID } from "./ActivePlayerComponent";
 import { getTextsFromSpecialEffect } from "./getTextsFromSpecialEffect";
+import { getPlayGEffects } from "./getPlayGEffect";
+import { Bridge } from "../../script/bridge";
+import { TargetMissingError } from "../define/GameError";
 
 export function getPlayEffects(ctx: GameState, playerId: PlayerID): Effect[] {
     log("getPlayEffects", "start")
@@ -43,6 +46,24 @@ export function getPlayEffects(ctx: GameState, playerId: PlayerID): Effect[] {
             always([] as Effect[])
         )
     )
+
+    const getPlayGF = ifElse(
+        always(PhaseFn.eq(getPhase(ctx), ["配備フェイズ", "フリータイミング"])),
+        pipe(
+            always([AbsoluteBaSyouFn.of(playerId, "手札"), AbsoluteBaSyouFn.of(playerId, "ハンガー")]),
+            map(basyou => getCardLikeItemIdsByBasyou(ctx, basyou)), flatten,
+            map(cardId => {
+                const card = getCard(ctx, cardId)
+                const proto = getItemPrototype(ctx, card.id)
+                if (proto.commandText && inTiming(proto.commandText)) {
+                    return [getPlayGEffects(ctx, card.id)]
+                }
+                return []
+            }), flatten
+        ),
+        always([] as Effect[])
+    )
+
     const getPlayTextF = pipe(
         always(lift(AbsoluteBaSyouFn.of)([playerId], BaSyouKeywordFn.getBaAll())),
         map(basyou => getCardLikeItemIdsByBasyou(ctx, basyou)), flatten,
@@ -56,11 +77,43 @@ export function getPlayEffects(ctx: GameState, playerId: PlayerID): Effect[] {
                 }
                 return [text]
             }).filter(inTiming).map(text => {
+                const playTextConditions: { [key: string]: Condition } = {
+                    "同切上限": {
+                        actions: [
+                            {
+                                title: function _(ctx: GameState, effect: Effect, { DefineFn, GameStateFn, ToolFn }: Bridge): GameState {
+                                    // 使用了卡牌後, 同一個切入不能再使用. 以下記錄使用過的卡片, 會在切入結束後清除
+                                    const cardId = DefineFn.EffectFn.getCardID(effect)
+                                    const ps = GameStateFn.getItemState(ctx, cardId)
+                                    if (ps.textIdsUseThisCut?.[effect.text.id]) {
+                                        throw new TargetMissingError(`同切上限: ${effect.text.description}`)
+                                    }
+                                    ctx = GameStateFn.mapItemState(ctx, cardId, ps => {
+                                        return {
+                                            ...ps,
+                                            textIdsUseThisCut: {
+                                                ...ps.textIdsUseThisCut,
+                                                [effect.text.id]: true
+                                            }
+                                        }
+                                    }) as GameState
+                                    return ctx
+                                }.toString()
+                            }
+                        ]
+                    }
+                }
                 return {
                     id: `getPlayEffects_${playerId}_${cardId}`,
                     reason: ["PlayText", playerId, cardId, text.id],
                     description: text.description,
-                    text: text
+                    text: {
+                        ...text,
+                        conditions: {
+                            ...text.conditions,
+                            //...playTextConditions
+                        }
+                    }
                 } as Effect
             })
         }), flatten
@@ -81,6 +134,8 @@ export function getPlayEffects(ctx: GameState, playerId: PlayerID): Effect[] {
         ),
         always([] as Effect[])
     )
+
+
 
     function inTiming(text: CardText): boolean {
         const siYouTiming: SiYouTiming = (() => {
@@ -195,7 +250,7 @@ export function getPlayEffects(ctx: GameState, playerId: PlayerID): Effect[] {
         return true;
     }
 
-    return [...getPlayCardEffectsF(), ...getPlayCommandF(), ...getPlayTextF()]
+    return [...getPlayCardEffectsF(), ...getPlayGF(), ...getPlayCommandF(), ...getPlayTextF()]
 }
 
 export async function testGetPlayEffects() {

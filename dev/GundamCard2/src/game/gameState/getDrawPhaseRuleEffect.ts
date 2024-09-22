@@ -8,7 +8,7 @@ import { setNextPhase } from "./PhaseComponent";
 export function getDrawPhaseRuleEffect(ctx: GameState, playerId: PlayerID): Effect {
     return {
         id: ToolFn.getUUID("getDrawPhaseRuleEffect"),
-        reason: ["GameRule", playerId, "getDrawPhaseRuleEffect"],
+        reason: ["GameRule", playerId],
         text: {
             id: ToolFn.getUUID("getDrawPhaseRuleEffect"),
             title: [],

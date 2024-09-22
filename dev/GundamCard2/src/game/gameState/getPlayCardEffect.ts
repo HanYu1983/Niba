@@ -8,7 +8,7 @@ import { getCardRollCostLength } from "./card"
 import { GameState } from "./GameState"
 import { getGlobalEffects, setGlobalEffects } from "./globalEffects"
 import { getItemPrototype, getItemOwner } from "./ItemTableComponent"
-import { ToolFn } from "../tool"
+import { TargetMissingError } from "../define/GameError"
 
 export function getPlayCardEffects(ctx: GameState, cardId: string): Effect[] {
     const prototype = getItemPrototype(ctx, cardId)
@@ -24,12 +24,9 @@ export function getPlayCardEffects(ctx: GameState, cardId: string): Effect[] {
         },
     } : {}
     const characterConditions: { [key: string]: Condition } = (prototype.category == "キャラクター" || prototype.category == "オペレーション(ユニット)") ? {
-        // "unitForSet": {
-        //     title: function _(ctx: GameState, effect: Effect, { DefineFn, GameStateFn }: Bridge): Tip | null {
-        //         // TODO check character can set
-        //         return []
-        //     }.toString()
-        // }
+        "一個自軍機體": {
+            title: ["_自軍_ユニット_１枚", "自軍", "ユニット", 1],
+        }
     } : {}
     const commandConditions: { [key: string]: Condition } = (prototype.category == "コマンド" && prototype.commandText) ? {
         ...prototype.commandText.conditions
@@ -37,6 +34,34 @@ export function getPlayCardEffects(ctx: GameState, cardId: string): Effect[] {
     const rollCostConditions = CardColorFn.getAll()
         .map(tc => createRollCostRequire((prototype.rollCost || []).filter(c => c == tc).length, tc))
         .reduce((ctx, cons) => ({ ...ctx, ...cons }))
+
+
+    const playTextConditions: { [key: string]: Condition } = {
+        "同切上限": {
+            actions: [
+                {
+                    title: function _(ctx: GameState, effect: Effect, { DefineFn, GameStateFn, ToolFn }: Bridge): GameState {
+                        // 使用了卡牌後, 同一個切入不能再使用. 以下記錄使用過的卡片, 會在切入結束後清除
+                        const cardId = DefineFn.EffectFn.getCardID(effect)
+                        const ps = GameStateFn.getItemState(ctx, cardId)
+                        if (ps.textIdsUseThisCut?.[effect.text.id]) {
+                            throw new TargetMissingError(`同切上限: ${effect.text.description}`)
+                        }
+                        ctx = GameStateFn.mapItemState(ctx, cardId, ps => {
+                            return {
+                                ...ps,
+                                textIdsUseThisCut: {
+                                    ...ps.textIdsUseThisCut,
+                                    [effect.text.id]: true
+                                }
+                            }
+                        }) as GameState
+                        return ctx
+                    }.toString()
+                }
+            ]
+        }
+    }
     const playCardEffect: Effect = {
         id: `getPlayCardEffects_${cardId}`,
         reason: ["PlayCard", playerId, cardId],
@@ -49,7 +74,7 @@ export function getPlayCardEffects(ctx: GameState, cardId: string): Effect[] {
                 ...costConditions,
                 ...characterConditions,
                 ...commandConditions,
-                ...rollCostConditions
+                ...rollCostConditions,
             },
             logicTreeActions: [
                 {
@@ -108,7 +133,7 @@ export function getPlayCardEffects(ctx: GameState, cardId: string): Effect[] {
                                                         {
                                                             title: function _(ctx: GameState, effect: Effect, { DefineFn, GameStateFn }: Bridge): GameState {
                                                                 const cardId = DefineFn.EffectFn.getCardID(effect)
-                                                                const pairs = GameStateFn.getCardTipStrBaSyouPairs(ctx, "unitForSet", cardId)
+                                                                const pairs = GameStateFn.getCardTipStrBaSyouPairs(ctx, "一個自軍機體", cardId)
                                                                 const [targetCardId, targetBasyou] = pairs[0]
                                                                 const from = GameStateFn.getItemBaSyou(ctx, cardId)
                                                                 const to = targetBasyou
@@ -124,14 +149,14 @@ export function getPlayCardEffects(ctx: GameState, cardId: string): Effect[] {
                                     }) as GameState
                                 }
 
-                                if (prototype.category == "コマンド" && prototype.commandText) {
+                                if (prototype.category == "コマンド") {
                                     return GameStateFn.addStackEffect(ctx, {
                                         id: ToolFn.getUUID("getPlayCardEffects"),
                                         reason: ["場に出る", DefineFn.EffectFn.getPlayerID(effect), DefineFn.EffectFn.getCardID(effect)],
                                         description: effect.text.description,
                                         text: {
-                                            id: prototype.commandText.id,
-                                            description: prototype.commandText.description,
+                                            id: prototype.commandText?.id || ToolFn.getUUID("getPlayCardEffects"),
+                                            description: prototype.commandText?.description || "unknown",
                                             title: [],
                                             logicTreeActions: [
                                                 {
@@ -145,9 +170,10 @@ export function getPlayCardEffects(ctx: GameState, cardId: string): Effect[] {
                                                                 return ctx
                                                             }.toString()
                                                         },
-                                                        ...prototype.commandText.logicTreeActions?.[0].actions || []
+                                                        ...prototype.commandText?.logicTreeActions?.[0].actions || []
                                                     ]
-                                                }
+                                                },
+                                                ...prototype.commandText?.logicTreeActions?.slice(1) || []
                                             ]
                                         }
                                     }) as GameState
