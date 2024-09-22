@@ -82,6 +82,7 @@ export type ConditionTitle =
     | ["このセットグループの_ユニットは", CardCategory]
     | ["_本来の記述に｢特徴：_装弾｣を持つ_自軍_G_１枚", boolean, string, RelatedPlayerSideKeyword, CardCategory, number]
     | ["_自軍手札、または自軍ハンガーにある、_６以下の合計国力を持つ_ユニット_１枚を", RelatedPlayerSideKeyword, number, CardCategory, number]
+    | ["打開自軍手裡或指定HANGER中特徵_A並合計國力_x以下的_1張卡", string, number, number]
     | ["このカードの_本来のテキスト１つ", boolean, number]
     | ["_自軍_本國上的_1張卡", RelatedPlayerSideKeyword, BaSyouKeyword, number]
     | ["_自軍_本國找出特徵_A的_1張卡", RelatedPlayerSideKeyword, BaSyouKeyword, string, number]

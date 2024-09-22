@@ -17,6 +17,7 @@ import * as Coin from "./Coin"
 import * as Tip from "./Tip"
 import * as ItemState from "./ItemState"
 import * as GameError from "./GameError"
+import * as Card from "./Card"
 export const DefineFn = {
     ...BaSyou,
     ...BattlePoint,
@@ -32,4 +33,5 @@ export const DefineFn = {
     ...Tip,
     ...ItemState,
     ...GameError,
+    ...Card,
 }

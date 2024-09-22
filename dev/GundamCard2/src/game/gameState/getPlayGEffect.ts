@@ -47,6 +47,9 @@ export function getPlayGEffects(ctx: GameState, cardId: string): Effect {
                                 ctx = GameStateFn.moveItem(ctx, DefineFn.AbsoluteBaSyouFn.setBaSyouKeyword(from, "Gゾーン"), [cardId, from]) as GameState
                                 return ctx
                             }.toString()
+                        },
+                        {
+                            title: ["triggerEvent", {title:["プレイされて場に出た場合"]}]
                         }
                     ]
                 }

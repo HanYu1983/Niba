@@ -45,10 +45,23 @@ function getCardPosition(table: Table, cardId: string): string {
     throw new Error("Card not found")
 }
 
+function shuffleCards(ctx: Table, position: string): Table {
+    const cards = ctx.cardStack[position];
+    if (!cards) return ctx;
+    const shuffledCards = [...cards].sort(() => Math.random() - 0.5);
+    return {
+        ...ctx,
+        cardStack: {
+            ...ctx.cardStack,
+            [position]: shuffledCards,
+        },
+    };
+}
+
 export const DEFAULT_TABLE: Table = {
     cardStack: {}
 }
 
 export const TableFns = {
-    addCard, moveCard, getCardPosition, getCardsByPosition
+    addCard, moveCard, getCardPosition, getCardsByPosition, shuffleCards
 }

@@ -320,6 +320,25 @@ export function getConditionTitleFn(condition: Condition, options: { isPlay?: bo
         }
       }
     }
+    case "打開自軍手裡或指定HANGER中特徵_A並合計國力_x以下的_1張卡":
+      {
+        const [_, char, x, count] = condition.title
+        return function (ctx: GameState, effect: Effect): Tip | null {
+          const cardId = EffectFn.getCardID(effect)
+          const playerId = getItemController(ctx, cardId);
+          const basyous: AbsoluteBaSyou[] = (lift(AbsoluteBaSyouFn.of)([playerId], ["手札", "ハンガー"]))
+          const pairs = basyous.flatMap(basyou =>
+            getCardLikeItemIdsByBasyou(ctx, basyou)
+              .filter(cardId => getItemCharacteristic(ctx, cardId).includes(char))
+              .filter(cardId => getCardRollCostLength(ctx, cardId) <= x)
+              .map(cardId => [cardId, basyou] as StrBaSyouPair)
+          )
+          return {
+            title: ["カード", pairs, pairs.slice(0, count)],
+            min: count,
+          }
+        }
+      }
     case "_自軍_本國上的_1張卡": {
       const [_, side, basyouKw, count] = condition.title
       return function (ctx: GameState, effect: Effect): Tip | null {
@@ -732,10 +751,6 @@ export function setItemGlobalEffectsUntilEndOfTurn(ctx: GameState, egs: GlobalEf
 export function onMoveItem(ctx: GameState, to: AbsoluteBaSyou, [cardId, from]: StrBaSyouPair): GameState {
   ctx = clearGlobalEffects(ctx)
   if (AbsoluteBaSyouFn.getBaSyouKeyword(from) == "手札") {
-    ctx = triggerEvent(ctx, {
-      title: ["プレイされて場に出た場合"],
-      cardIds: [cardId]
-    } as GameEvent)
     if (AbsoluteBaSyouFn.getBaSyouKeyword(to) == "プレイされているカード") {
       ctx = triggerEvent(ctx, {
         title: ["プレイした場合"],
@@ -743,7 +758,15 @@ export function onMoveItem(ctx: GameState, to: AbsoluteBaSyou, [cardId, from]: S
       } as GameEvent)
     }
   }
+  // 從非場所到場所=出場
   if (BaSyouKeywordFn.isBa(AbsoluteBaSyouFn.getBaSyouKeyword(from)) == false && BaSyouKeywordFn.isBa(AbsoluteBaSyouFn.getBaSyouKeyword(to))) {
+    // 剛出場的回合
+    ctx = mapItemState(ctx, cardId, is => {
+      return {
+        ...is,
+        isFirstTurn: true
+      }
+    }) as GameState
     ctx = triggerEvent(ctx, {
       title: ["場に出た場合"],
       cardIds: [cardId]

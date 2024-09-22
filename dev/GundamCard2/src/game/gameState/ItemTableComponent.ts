@@ -16,6 +16,7 @@ import { Chip, ChipFn } from "../define/Chip";
 import { GlobalEffect } from "../define/GlobalEffect";
 import { getItemState } from "./ItemStateComponent";
 import { log } from "../../tool/logger";
+import { GameState } from "./GameState";
 
 export type Item = Card | Coin | Chip;
 
@@ -245,3 +246,9 @@ export function getItemPrototype(ctx: ItemTableComponent, itemId: string): CardP
   throw new Error(`getItemPrototype unknown item: ${itemId}`)
 }
 
+export function shuffleItems(ctx: GameState, basyou: AbsoluteBaSyou): GameState {
+  return {
+    ...ctx,
+    table: TableFns.shuffleCards(ctx.table, AbsoluteBaSyouFn.toString(basyou))
+  }
+}

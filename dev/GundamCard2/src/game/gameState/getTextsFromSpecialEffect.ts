@@ -6,8 +6,10 @@ import { Tip } from "../define/Tip";
 import { getCardGSignProperty, getCardRollCostLength, getItemCharacteristic } from "./card";
 import { GameState } from "./GameState";
 import { addStackEffect } from "./EffectStackComponent";
-import { mapItemState } from "./ItemStateComponent";
-import { getItemBaSyou, getItemIdsByBasyou } from "./ItemTableComponent";
+import { getItemState, mapItemState } from "./ItemStateComponent";
+import { getItemBaSyou, getItemController, getItemIdsByBasyou } from "./ItemTableComponent";
+import { TargetMissingError } from "../define/GameError";
+import { AbsoluteBaSyouFn } from "../define/BaSyou";
 
 export function getTextsFromSpecialEffect(ctx: GameState, text: CardText): CardText[] {
     if (text.title[0] != "特殊型") {
@@ -157,7 +159,7 @@ export function getTextsFromSpecialEffect(ctx: GameState, text: CardText): CardT
                                             reason: effect.reason,
                                             description: effect.description,
                                             text: {
-                                                id: "",
+                                                id: effect.text.id,
                                                 description: effect.text.description,
                                                 title: [],
                                                 conditions: {
@@ -328,7 +330,17 @@ export function getTextsFromSpecialEffect(ctx: GameState, text: CardText): CardT
                     conditions: {
                         ...text.conditions,
                         "這個效果只有這張卡從手中打出的回合可以使用": {
-
+                            actions: [
+                                {
+                                    title: function _(ctx: GameState, effect: Effect, { GameStateFn, DefineFn }: Bridge): GameState {
+                                        const cardId = DefineFn.EffectFn.getCardID(effect)
+                                        if (GameStateFn.getItemState(ctx, cardId).isFirstTurn != true) {
+                                            throw new DefineFn.TargetMissingError(`這個效果只有這張卡從手中打出的回合可以使用:${effect.text.description}`)
+                                        }
+                                        return ctx
+                                    }.toString()
+                                }
+                            ]
                         }
                     },
                     logicTreeActions: [
@@ -341,7 +353,7 @@ export function getTextsFromSpecialEffect(ctx: GameState, text: CardText): CardT
                                             reason: effect.reason,
                                             description: effect.description,
                                             text: {
-                                                id: "",
+                                                id: effect.text.id,
                                                 description: effect.text.description,
                                                 title: [],
                                                 conditions: {
@@ -360,7 +372,14 @@ export function getTextsFromSpecialEffect(ctx: GameState, text: CardText): CardT
                                                             {
                                                                 title: function _(ctx: GameState, effect: Effect, { GameStateFn, DefineFn }: Bridge): GameState {
                                                                     const cardId = DefineFn.EffectFn.getCardID(effect)
-                                                                    // TODO
+                                                                    const cardController = getItemController(ctx, cardId)
+                                                                    const pairs = GameStateFn.getCardTipStrBaSyouPairs(ctx, "看自己本國全部的卡,可以從中找出特徵A的1張卡移到HANGER,那個時候本國洗牌", cardId)
+                                                                    if (pairs.length) {
+                                                                        for (const pair of pairs) {
+                                                                            ctx = GameStateFn.moveItem(ctx, DefineFn.AbsoluteBaSyouFn.of(cardController, "ハンガー"), pair, GameStateFn.onMoveItem) as GameState
+                                                                        }
+                                                                        ctx = GameStateFn.shuffleItems(ctx, DefineFn.AbsoluteBaSyouFn.of(cardController, "本国"))
+                                                                    }
                                                                     return ctx
                                                                 }.toString()
                                                             }
@@ -384,14 +403,45 @@ export function getTextsFromSpecialEffect(ctx: GameState, text: CardText): CardT
                 {
                     id: `${text.id}_1`,
                     title: ["使用型", ["戦闘フェイズ"]],
-                    description: "打開自軍手裡或指定HANGER中特徵A並合計國力x以下的1張卡, 和這張卡重置狀態置換, 這張卡置換後廢棄",
+                    description: "打開自軍手裡或指定HANGER中特徵A並合計國力x以下的1張卡, 和這張卡重置狀態置換, 這張卡置換後廢棄. x為自軍G的張數",
                     conditions: {
                         ...text.conditions,
                         "打開自軍手裡或指定HANGER中特徵A並合計國力x以下的1張卡": {
-                            
-                        },
-                        "這個效果只有這張卡從手中打出的回合可以使用": {
-
+                            title: function _(ctx: GameState, effect: Effect, bridge: Bridge): Tip | null {
+                                const { A } = { A: "" }
+                                const { GameStateFn, DefineFn } = bridge
+                                const cardId = DefineFn.EffectFn.getCardID(effect)
+                                const cardController = GameStateFn.getItemController(ctx, cardId)
+                                const gCount = GameStateFn.getItemIdsByBasyou(ctx, DefineFn.AbsoluteBaSyouFn.of(cardController, "Gゾーン")).length
+                                return GameStateFn.getConditionTitleFn({
+                                    title: ["打開自軍手裡或指定HANGER中特徵_A並合計國力_x以下的_1張卡", A, gCount, 1]
+                                }, {})(ctx, effect, bridge)
+                            }.toString().replace(`{ A: "" }`, JSON.stringify({ A: A })),
+                            actions: [
+                                {
+                                    title: function _(ctx: GameState, effect: Effect, { GameStateFn, DefineFn }: Bridge): GameState {
+                                        const cardId = DefineFn.EffectFn.getCardID(effect)
+                                        const basyou = GameStateFn.getItemBaSyou(ctx, cardId)
+                                        const pairs = GameStateFn.getCardTipStrBaSyouPairs(ctx, "打開自軍手裡或指定HANGER中特徵A並合計國力x以下的1張卡", cardId)
+                                        for (const pair of pairs) {
+                                            const [targetCardId, targetBasyou] = pair
+                                            if (AbsoluteBaSyouFn.getBaSyouKeyword(targetBasyou) == "手札") {
+                                                ctx = mapItemState(ctx, targetCardId, is => ({ ...is, isOpenForGain: true })) as GameState
+                                            }
+                                            ctx = GameStateFn.moveItem(ctx, basyou, [targetCardId, targetBasyou], GameStateFn.onMoveItem) as GameState
+                                            ctx = GameStateFn.moveItem(ctx, DefineFn.AbsoluteBaSyouFn.setBaSyouKeyword(basyou, "ジャンクヤード"), [cardId, basyou], GameStateFn.onMoveItem) as GameState
+                                            
+                                            let targetCard = GameStateFn.getCard(ctx, targetCardId)
+                                            targetCard = DefineFn.CardFn.setIsRoll(targetCard, false)
+                                            ctx = GameStateFn.setCard(ctx, targetCard.id, targetCard) as GameState
+                                            GameStateFn.mapItemState(ctx, targetCardId, ()=> getItemState(ctx, cardId))
+                                            // only first
+                                            return ctx
+                                        }
+                                        throw new Error()
+                                    }.toString()
+                                }
+                            ]
                         }
                     }
                 }

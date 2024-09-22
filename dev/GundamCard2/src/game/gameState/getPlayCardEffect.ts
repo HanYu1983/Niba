@@ -82,6 +82,9 @@ export function getPlayCardEffects(ctx: GameState, cardId: string): Effect[] {
                                                                 ctx = GameStateFn.setItemIsRoll(ctx, isRoll, [cardId, to]) as GameState
                                                                 return ctx
                                                             }.toString()
+                                                        },
+                                                        {
+                                                            title: ["triggerEvent", {title:["プレイされて場に出た場合"]}]
                                                         }
                                                     ]
                                                 }
@@ -113,6 +116,9 @@ export function getPlayCardEffects(ctx: GameState, cardId: string): Effect[] {
                                                                 ctx = GameStateFn.setSetGroupLink(ctx, targetCardId, cardId) as GameState
                                                                 return ctx
                                                             }.toString()
+                                                        },
+                                                        {
+                                                            title: ["triggerEvent", { title: ["プレイされて場に出た場合"] }]
                                                         }
                                                     ]
                                                 }
@@ -142,7 +148,10 @@ export function getPlayCardEffects(ctx: GameState, cardId: string): Effect[] {
                                                                 return ctx
                                                             }.toString()
                                                         },
-                                                        ...prototype.commandText?.logicTreeActions?.[0].actions || []
+                                                        ...prototype.commandText?.logicTreeActions?.[0].actions || [],
+                                                        {
+                                                            title: ["triggerEvent", { title: ["プレイされて場に出た場合"] }]
+                                                        }
                                                     ]
                                                 },
                                                 ...prototype.commandText?.logicTreeActions?.slice(1) || []
