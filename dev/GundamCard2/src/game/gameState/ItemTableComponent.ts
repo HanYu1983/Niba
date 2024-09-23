@@ -17,6 +17,7 @@ import { GlobalEffect } from "../define/GlobalEffect";
 import { getItemState } from "./ItemStateComponent";
 import { log } from "../../tool/logger";
 import { GameState } from "./GameState";
+import { getGlobalEffects } from "./globalEffects";
 
 export type Item = Card | Coin | Chip;
 
@@ -142,6 +143,9 @@ export function moveItem(ctx: ItemTableComponent, to: AbsoluteBaSyou, sb: StrBaS
   assertTargetMissingError(ctx, sb)
   const [itemId, originBasyou] = sb
   if (isCard(ctx, itemId) || isChip(ctx, itemId)) {
+    // if(getGlobalEffects(ctx, null).find(ge=>ge.title[0]=="場、または手札から、自軍ジャンクヤードにカードが移る場合、ジャンクヤードに移る代わりにゲームから取り除かれる")){
+
+    // }
     const nowBasyou = getItemBaSyou(ctx, itemId)
     const itemIds = getSetGroupCards(ctx, itemId)
     const table = itemIds.reduce((table, itemId) => {

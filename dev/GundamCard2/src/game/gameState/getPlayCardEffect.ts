@@ -61,7 +61,7 @@ export function getPlayCardEffects(ctx: GameState, cardId: string): Effect[] {
         description: "從手中即將出牌, 出牌後會產生場出的效果",
         text: {
             id: `getPlayCardEffects_text_${cardId}`,
-            title: [],
+            title: ["使用型", ["配備フェイズ"]],
             description: "從手中即將出牌, 出牌後會產生場出的效果",
             conditions: {
                 ...costConditions,

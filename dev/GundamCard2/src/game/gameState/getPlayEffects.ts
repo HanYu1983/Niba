@@ -46,6 +46,8 @@ export function getPlayEffects(ctx: GameState, playerId: PlayerID): Effect[] {
             always([] as Effect[])
         )
     )
+    // TODO
+    // 自軍手札にあるかのようにプレイできる
 
     const getPlayGF = ifElse(
         always(PhaseFn.eq(getPhase(ctx), ["配備フェイズ", "フリータイミング"])),

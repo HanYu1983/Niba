@@ -13,6 +13,7 @@ import * as player from "./player"
 import * as setGroup from "./setGroup"
 import * as triggerEvent from "./triggerEvent"
 import * as PhaseComponent from "./PhaseComponent"
+import * as globalEffects from "./globalEffects"
 import * as ActivePlayerComponent from "./ActivePlayerComponent"
 import * as PlayerStateComponent from "./PlayerStateComponent"
 import * as RuntimeBattleAreaComponent from "./RuntimeBattleAreaComponent"
@@ -34,6 +35,7 @@ export const GameStateFn = {
     ...setGroup,
     ...triggerEvent,
     ...PhaseComponent,
+    ...globalEffects,
     ...ActivePlayerComponent,
     ...PlayerStateComponent,
     ...RuntimeBattleAreaComponent,
