@@ -595,6 +595,12 @@ export function getActionTitleFn(action: Action): ActionTitleFn {
             }
             return ctx
           }
+          case "廃棄": {
+            for (const pair of pairs) {
+              ctx = moveItem(ctx, AbsoluteBaSyouFn.of(cardController, "ジャンクヤード"), pair, onMoveItem) as GameState
+            }
+            return ctx
+          }
         }
       }
     }
