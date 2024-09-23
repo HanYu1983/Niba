@@ -25,6 +25,7 @@ import { TargetMissingError } from "../game/define/GameError";
 import { testIssue1 } from "./testIssue";
 import { testPlayG } from "./testPlayG";
 import { testPlayChar } from "./testPlayChar";
+import { test179015_04B_U_BK061C_black } from "./test179015_04B_U_BK061C_black";
 
 export async function tests() {
     return [
@@ -35,10 +36,6 @@ export async function tests() {
         testFlow2,
         testBattleBonus,
         testGetPlayEffects,
-        test179028_10D_U_WT181N_white,
-        test179024_03B_U_WT042U_white,
-        test179001_01A_CH_WT007R_white,
-        test179030_11E_C_BL079R_blue,
         testAttackRuleEffect,
         testAttackRuleEffect2,
         testDrawRuleEffect,
@@ -49,6 +46,11 @@ export async function tests() {
         testIssue1,
         testPlayG,
         testPlayChar,
+        test179028_10D_U_WT181N_white,
+        test179024_03B_U_WT042U_white,
+        test179001_01A_CH_WT007R_white,
+        test179030_11E_C_BL079R_blue,
+        test179015_04B_U_BK061C_black,
     ].reduce((worker, testF) => {
         return worker.then(async () => {
             console.log(`==============================${testF.name}==================================`);

@@ -1,9 +1,10 @@
+import { CommandEffectTip, CommandEffecTipFn } from "../define/CommandEffectTip"
 import { Effect, EffectFn } from "../define/Effect"
 import { PlayerA, PlayerB } from "../define/PlayerID"
 import { getCommandEffectTips, getConditionTitleFn } from "../gameState/effect"
 import { getPlayEffects } from "../gameState/getPlayEffects"
 import { setCommandEffects, setCommandEffectTips } from "./effect"
-import { CommandEffectTip, GameStateWithFlowMemory } from "./GameStateWithFlowMemory"
+import { GameStateWithFlowMemory } from "./GameStateWithFlowMemory"
 
 // 使用型技能
 export function updateCommand(ctx: GameStateWithFlowMemory): GameStateWithFlowMemory {
@@ -19,15 +20,13 @@ export function updateCommand(ctx: GameStateWithFlowMemory): GameStateWithFlowMe
 }
 
 export function getPlayerCommands(ctx: GameStateWithFlowMemory, playerID: string): CommandEffectTip[] {
-    return ctx.commandEffectTips.filter(e => EffectFn.getPlayerID(e.effect) == playerID)
+    return ctx.commandEffectTips.filter(CommandEffecTipFn.filterPlayerId(playerID))
 }
 
 export function getPlayerCommandsFilterNoError(ctx: GameStateWithFlowMemory, playerID: string): CommandEffectTip[] {
-    return getPlayerCommands(ctx, playerID).filter(cet=>cet.tipOrErrors.every(toes=>toes.errors.length == 0))
+    return getPlayerCommands(ctx, playerID).filter(CommandEffecTipFn.filterNoError)
 }
 
 export function getPlayerCommandsFilterNoErrorDistinct(ctx: GameStateWithFlowMemory, playerID: string): CommandEffectTip[] {
-    return getPlayerCommandsFilterNoError(ctx, playerID).filter((command, index, self) =>
-        index === self.findIndex(c => c.effect.id === command.effect.id)
-    )
+    return getPlayerCommandsFilterNoError(ctx, playerID).filter(CommandEffecTipFn.filterEffectDistinct)
 }

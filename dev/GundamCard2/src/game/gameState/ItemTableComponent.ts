@@ -127,7 +127,7 @@ export function assertTargetMissingError(ctx: ItemTableComponent, [itemId, origi
   if (isCard(ctx, itemId) || isChip(ctx, itemId)) {
     const nowBasyou = getItemBaSyou(ctx, itemId)
     if (AbsoluteBaSyouFn.eq(nowBasyou, originBasyou) == false) {
-      throw new TargetMissingError(`target missing: ${itemId} from ${originBasyou}`)
+      throw new TargetMissingError(`assertTargetMissingError: ${itemId} from ${AbsoluteBaSyouFn.toString(originBasyou)} now ${AbsoluteBaSyouFn.toString(nowBasyou)}`)
     }
   } else if (isCoin(ctx, itemId)) {
     throw new Error(`coin not support`)

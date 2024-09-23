@@ -21,7 +21,6 @@ import { GlobalEffect } from "../define/GlobalEffect"
 import { ToolFn } from "../tool"
 import { addStackEffect } from "./EffectStackComponent"
 import { PlayerIDFn } from "../define/PlayerID"
-import { CommandEffectTip, TipOrErrors } from "../gameStateWithFlowMemory/GameStateWithFlowMemory"
 import { CardFn } from "../define/Card"
 import { getSetGroupRoot } from "./SetGroupComponent"
 import { log } from "../../tool/logger"
@@ -29,6 +28,7 @@ import { BattlePointFn } from "../define/BattlePoint"
 import { getBattleGroup } from "./battleGroup"
 import { getSetGroupBattlePoint } from "./setGroup"
 import { isBattle } from "./IsBattleComponent"
+import { TipOrErrors, CommandEffectTip } from "../define/CommandEffectTip"
 
 export function getEffectTips(
   ctx: GameState,
@@ -67,6 +67,7 @@ export function getEffectTips(
 
 export function setEffectTips(ctx: GameState, e: Effect, toes: TipOrErrors[]): GameState {
   switch (e.reason[0]) {
+    case "Event":
     case "GameRule":
     case "Destroy":
     case "場に出る":

@@ -1,7 +1,8 @@
 import { createBridge } from "../bridge/createBridge";
 import { AbsoluteBaSyouFn } from "../define/BaSyou";
 import { CardTextFn, Condition, ConditionFn } from "../define/CardText";
-import { Effect } from "../define/Effect";
+import { CommandEffectTip } from "../define/CommandEffectTip";
+import { Effect, EffectFn } from "../define/Effect";
 import { TargetMissingError } from "../define/GameError";
 import { PlayerA, PlayerB } from "../define/PlayerID";
 import { Tip, TipFn } from "../define/Tip";
@@ -38,20 +39,6 @@ export const DEFAULT_FLOW_MEMORY: FlowMemoryComponent = {
 
 export type HasFlowMemoryComponent = {
     flowMemory: FlowMemoryComponent
-}
-
-export type TipOrErrors = {
-    conditionKey: string,
-    tip: Tip | null,
-    errors: string[]
-}
-
-export type CommandEffectTip = {
-    id: string,
-    effect: Effect,
-    logicID: number,
-    logicSubID: number,
-    tipOrErrors: TipOrErrors[]
 }
 
 export type GameStateWithFlowMemory = {
