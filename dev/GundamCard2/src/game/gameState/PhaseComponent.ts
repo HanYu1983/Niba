@@ -1,21 +1,22 @@
 import { Phase, PhaseFn } from "../define/Timing";
+import { EventCenterFn } from "./EventCenter";
 
 export type PhaseComponent = {
     phase: Phase;
 }
 
 export function setNextPhase(ctx: PhaseComponent): PhaseComponent {
-    return {
-        ...ctx,
-        phase: PhaseFn.getNext(ctx.phase),
-    }
+    return setPhase(ctx, PhaseFn.getNext(ctx.phase))
 }
 
 export function setPhase(ctx: PhaseComponent, timing: Phase): PhaseComponent {
-    return {
+    const old = ctx.phase
+    ctx = {
         ...ctx,
         phase: timing,
     }
+    ctx = EventCenterFn.onSetPhase(ctx, old, ctx.phase)
+    return ctx
 }
 
 export function getPhase(ctx: PhaseComponent): Phase {

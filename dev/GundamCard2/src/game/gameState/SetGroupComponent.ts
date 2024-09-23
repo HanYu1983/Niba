@@ -1,4 +1,5 @@
 import { ItemGroup, ItemGroupFn } from "../../tool/ItemGroup";
+import { EventCenterFn } from "./EventCenter";
 
 export type SetGroupComponent = {
   setGroup: ItemGroup
@@ -21,9 +22,11 @@ export function getSetGroupRoot(
   return ItemGroupFn.getItemGroupParentRoot(ctx.setGroup, cardID)
 }
 
-export function setSetGroupLink(ctx: SetGroupComponent, parentCardId: string, cardId: string): SetGroupComponent {
-  return {
+export function setSetGroupParent(ctx: SetGroupComponent, parentCardId: string, cardId: string): SetGroupComponent {
+  ctx = {
     ...ctx,
     setGroup: ItemGroupFn.setItemGroupParent(ctx.setGroup, cardId, parentCardId)
   }
+  ctx = EventCenterFn.onSetSetGroupParent(ctx, parentCardId, cardId)
+  return ctx
 }

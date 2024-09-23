@@ -8,6 +8,7 @@ import { EffectStackComponent } from "./EffectStackComponent";
 import { IsBattleComponent } from "./IsBattleComponent";
 import { ItemStateComponent } from "./ItemStateComponent";
 import { ItemTableComponent } from "./ItemTableComponent";
+import { MessageComponent } from "./MessageComponent";
 import { PhaseComponent } from "./PhaseComponent";
 import { PlayerStateComponent } from "./PlayerStateComponent";
 import { RuntimeBattleAreaComponent } from "./RuntimeBattleAreaComponent";
@@ -25,7 +26,8 @@ export type GameState = {
   & ActivePlayerComponent
   & CoinTableComponent
   & ItemTableComponent
-  & RuntimeBattleAreaComponent;
+  & RuntimeBattleAreaComponent
+  & MessageComponent;
 
 export function createGameState(): GameState {
   return {
@@ -44,6 +46,7 @@ export function createGameState(): GameState {
     coins: {},
     coinId2cardId: {},
     globalEffectPool: {},
+    messages: [],
     ...createSetGroupComponent(),
   }
 }

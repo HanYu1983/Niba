@@ -4,6 +4,7 @@ import { AbsoluteBaSyou, AbsoluteBaSyouFn } from "../define/BaSyou";
 import { CardPrototype } from "../define/CardPrototype";
 import { PlayerID } from "../define/PlayerID";
 import { Chip } from "../define/Chip";
+import { EventCenterFn } from "./EventCenter";
 
 export type ChipTableComponent = {
   table: Table
@@ -57,6 +58,7 @@ export function getChipPrototype(ctx: ChipTableComponent, k: string): CardProtot
 }
 
 export function addChips(ctx: ChipTableComponent, basyou: AbsoluteBaSyou, addedChips: Chip[]): ChipTableComponent {
+  const old = ctx.table
   ctx = addedChips.reduce((ctx, newChip) => {
     return {
       ...ctx,
@@ -67,6 +69,7 @@ export function addChips(ctx: ChipTableComponent, basyou: AbsoluteBaSyou, addedC
       }
     }
   }, ctx)
+  ctx = EventCenterFn.onTableChange(ctx, old, ctx.table)
   return ctx
 }
 

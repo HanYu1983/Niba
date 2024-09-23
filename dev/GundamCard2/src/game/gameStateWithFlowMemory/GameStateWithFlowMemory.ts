@@ -12,11 +12,6 @@ import { createGameState, GameState } from "../gameState/GameState";
 import { getPlayEffects } from "../gameState/getPlayEffects";
 import { setCommandEffectTips } from "./effect";
 
-export type Message = {
-    id: "MessageCustom";
-    value: string;
-};
-
 export type FlowMemoryComponent = {
     state: "prepareDeck" | "whoFirst" | "draw6AndConfirm" | "playing";
     hasTriggerEvent: boolean;
@@ -24,7 +19,6 @@ export type FlowMemoryComponent = {
     hasPlayerPassCut: { [key: string]: boolean };
     hasPlayerPassPayCost: { [key: string]: boolean };
     shouldTriggerStackEffectFinishedEvent: boolean;
-    msgs: Message[];
 }
 
 export const DEFAULT_FLOW_MEMORY: FlowMemoryComponent = {
@@ -34,7 +28,6 @@ export const DEFAULT_FLOW_MEMORY: FlowMemoryComponent = {
     hasPlayerPassCut: {},
     hasPlayerPassPayCost: {},
     shouldTriggerStackEffectFinishedEvent: false,
-    msgs: [],
 }
 
 export type HasFlowMemoryComponent = {

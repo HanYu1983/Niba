@@ -5,6 +5,7 @@ import { PlayerID } from "../define/PlayerID";
 import { Card } from "../define/Card";
 import { ToolFn } from "../tool";
 import { log } from "../../tool/logger";
+import { EventCenterFn } from "./EventCenter";
 
 export type CardTableComponent = {
   table: Table
@@ -62,6 +63,7 @@ export function createCardWithProtoIds(ctx: CardTableComponent, basyou: Absolute
 }
 
 export function addCards(ctx: CardTableComponent, basyou: AbsoluteBaSyou, addedCards: Card[]): CardTableComponent {
+  const old = ctx.table
   ctx = addedCards.reduce((ctx, newCard) => {
     if (newCard.id == "") {
       newCard.id = ToolFn.getUUID("addCards")
@@ -79,6 +81,7 @@ export function addCards(ctx: CardTableComponent, basyou: AbsoluteBaSyou, addedC
       }
     }
   }, ctx)
+  ctx = EventCenterFn.onTableChange(ctx, old, ctx.table)
   return ctx
 }
 

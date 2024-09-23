@@ -1,6 +1,5 @@
 import { Effect } from "../define/Effect";
 import { GameEvent } from "../define/GameEvent";
-import { CommandEffectTip } from "./GameStateWithFlowMemory";
 
 type FlowUpdateCommand = {
     id: "FlowUpdateCommand";

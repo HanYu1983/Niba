@@ -132,7 +132,7 @@ export function getPlayCardEffects(ctx: GameState, cardId: string): Effect[] {
                                                                 const from = GameStateFn.getItemBaSyou(ctx, cardId)
                                                                 const to = targetBasyou
                                                                 ctx = GameStateFn.moveItem(ctx, to, [cardId, from], GameStateFn.onMoveItem) as GameState
-                                                                ctx = GameStateFn.setSetGroupLink(ctx, targetCardId, cardId) as GameState
+                                                                ctx = GameStateFn.setSetGroupParent(ctx, targetCardId, cardId) as GameState
                                                                 ctx = GameStateFn.triggerEvent(ctx, { title: ["プレイされて場に出た場合"], cardIds: [cardId] })
                                                                 ctx = GameStateFn.triggerEvent(ctx, { title: ["プレイされて場にセットされた場合"], cardIds: [cardId] })
                                                                 return ctx

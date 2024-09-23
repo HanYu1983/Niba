@@ -18,6 +18,7 @@ import { getItemState } from "./ItemStateComponent";
 import { log } from "../../tool/logger";
 import { GameState } from "./GameState";
 import { getGlobalEffects } from "./globalEffects";
+import { EventCenterFn } from "./EventCenter";
 
 export type Item = Card | Coin | Chip;
 
@@ -146,6 +147,7 @@ export function moveItem(ctx: ItemTableComponent, to: AbsoluteBaSyou, sb: StrBaS
     // if(getGlobalEffects(ctx, null).find(ge=>ge.title[0]=="場、または手札から、自軍ジャンクヤードにカードが移る場合、ジャンクヤードに移る代わりにゲームから取り除かれる")){
 
     // }
+    const oldTable = ctx.table
     const nowBasyou = getItemBaSyou(ctx, itemId)
     const itemIds = getSetGroupCards(ctx, itemId)
     const table = itemIds.reduce((table, itemId) => {
@@ -158,6 +160,7 @@ export function moveItem(ctx: ItemTableComponent, to: AbsoluteBaSyou, sb: StrBaS
     if (onFn) {
       ctx = onFn(ctx, to, sb)
     }
+    ctx = EventCenterFn.onTableChange(ctx, oldTable, ctx.table)
     return ctx
   }
   if (isCoin(ctx, itemId)) {
@@ -256,8 +259,11 @@ export function getItemPrototype(ctx: ItemTableComponent, itemId: string): CardP
 }
 
 export function shuffleItems(ctx: GameState, basyou: AbsoluteBaSyou): GameState {
-  return {
+  const oldTable = ctx.table
+  ctx = {
     ...ctx,
     table: TableFns.shuffleCards(ctx.table, AbsoluteBaSyouFn.toString(basyou))
   }
+  ctx = EventCenterFn.onTableChange(ctx, oldTable, ctx.table)
+  return ctx
 }
