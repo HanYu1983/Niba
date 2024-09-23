@@ -194,6 +194,15 @@ export function getTextsFromSpecialEffect(ctx: GameState, text: CardText): CardT
                                                                     const hasSameGSighProperty = getCardGSignProperty(ctx, openCardId) == getCardGSignProperty(ctx, cardId)
                                                                     if (hasSameGSighProperty) {
                                                                         const bonus = getCardRollCostLength(ctx, openCardId)
+                                                                        // 以下參照p69切入的適用
+                                                                        // 這張卡會把紅利改成速攻
+                                                                        // 179029_05C_CH_BN040U_brown
+                                                                        // U
+                                                                        // G
+                                                                        // ドモン・カッシュ［∞］
+                                                                        // 男性　大人　GF
+                                                                        // （戦闘フェイズ）〔１〕：ゲイン
+                                                                        // 『起動』：このカードは、「ゲイン」の効果で戦闘修正を得る場合、その戦闘修正を得る代わりに、ターン終了時まで、「速攻」を得る事ができる。
                                                                         ctx = mapItemState(ctx, cardId, is => DefineFn.ItemStateFn.setGlobalEffect(is, null, true, {
                                                                             title: ["＋x／＋x／＋xを得る", [bonus, bonus, bonus]], cardIds: [cardId]
                                                                         })) as GameState
@@ -430,11 +439,13 @@ export function getTextsFromSpecialEffect(ctx: GameState, text: CardText): CardT
                                             }
                                             ctx = GameStateFn.moveItem(ctx, basyou, [targetCardId, targetBasyou], GameStateFn.onMoveItem) as GameState
                                             ctx = GameStateFn.moveItem(ctx, DefineFn.AbsoluteBaSyouFn.setBaSyouKeyword(basyou, "ジャンクヤード"), [cardId, basyou], GameStateFn.onMoveItem) as GameState
-                                            
+
                                             let targetCard = GameStateFn.getCard(ctx, targetCardId)
                                             targetCard = DefineFn.CardFn.setIsRoll(targetCard, false)
                                             ctx = GameStateFn.setCard(ctx, targetCard.id, targetCard) as GameState
-                                            GameStateFn.mapItemState(ctx, targetCardId, ()=> getItemState(ctx, cardId))
+                                            // TODO
+                                            // 置換是指ID的置換, 而不是狀態的置換(p77)
+                                            GameStateFn.mapItemState(ctx, targetCardId, () => getItemState(ctx, cardId))
                                             // only first
                                             return ctx
                                         }

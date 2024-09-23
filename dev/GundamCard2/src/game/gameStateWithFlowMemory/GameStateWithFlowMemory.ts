@@ -35,6 +35,7 @@ export type HasFlowMemoryComponent = {
 }
 
 export type GameStateWithFlowMemory = {
+    // p71最後部隊的處理有寫到以下的內容(也可參考p50)
     // 專門給破壞效果用的用的堆疊
     // 傷害判定結束時，將所有破壞產生的廢棄效果丟到這，重設「決定解決順序」的旗標為真
     // 如果這個堆疊一有值時並「決定解決順序」為真時，就立刻讓主動玩家決定解決順序，決定完後，將旗標設為假

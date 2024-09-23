@@ -16,6 +16,7 @@ export type EffectReason =
     | ["PlayText", PlayerID, string, string]
     // 通常GameRule是沒有第三個cardId的, 存在的目的是為了方便套用程式碼邏輯, 讓沒有cardId的效果也能存入TipSelection到ItemState中
     | ["GameRule", PlayerID | null]
+    // 只要破壞狀態沒有被取消的話就會產生廢棄的效果, 這個移動效果不能被防止(p40, p72)
     | ["Destroy", PlayerID, string, DestroyReason]
     | ["Situation", PlayerID, string, Situation | null]
     | ["Event", string, GameEvent];

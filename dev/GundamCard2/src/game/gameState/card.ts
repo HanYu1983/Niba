@@ -67,6 +67,16 @@ export function getCardTexts(ctx: GameState, cardID: string): CardText[] {
     }
     return text
   })
+
+  // 取得增減費用的效果, 寫在condition裡很像就可以了
+  // 179003_01A_U_BN007R_brown
+  // R
+  // G
+  // シャイニングガンダム（スーパーモード）
+  // シャイニング系　MF　専用「ドモン・カッシュ」
+  // （ダメージ判定ステップ）〔茶３毎〕：このカードの部隊が戦闘ダメージを与えている場合、敵軍ユニット１枚の上に、±０／±０／－１コイン２個を乗せる。
+  // この効果のコストは、このカードに「特徴：GF」を持つキャラがセットされている場合、〔茶２毎〕に変更される。
+
   return texts
 }
 
@@ -111,9 +121,9 @@ export function getCardRollCostLength(ctx: GameState, cardID: string): number {
     sum
   )()
   let totalCost = 0
-  if(prototype.totalCost == null){
-    
-  } else if (prototype.totalCost == "X"){
+  if (prototype.totalCost == null) {
+
+  } else if (prototype.totalCost == "X") {
     totalCost = getCardIdsCanPayRollCost(ctx, getItemController(ctx, cardID), null).length
   } else {
     totalCost = prototype.totalCost
@@ -255,7 +265,7 @@ export function getCardIdsCanPayRollColor(ctx: GameState, situation: Situation |
     }
     if (ge.title[0] == "發生國力") {
       const gainColors = ge.title[1]
-      if(color == null){
+      if (color == null) {
         return true
       }
       switch (color) {
