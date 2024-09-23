@@ -6,7 +6,6 @@
 // 『起動』：このカードが場に出た場合、配備エリアにいる、X以下の防御力を持つ敵軍ユニット１枚を破壊する。
 // （注：プレイ時に通常のコストを支払った時のみ適用可能）
 
-import { AbsoluteBaSyouFn } from "../../game/define/BaSyou";
 import { CardPrototype } from "../../game/define/CardPrototype";
 import { Effect } from "../../game/define/Effect";
 import { StrBaSyouPair, Tip } from "../../game/define/Tip";
@@ -37,7 +36,7 @@ export const prototype: CardPrototype = {
                     const cardId = DefineFn.EffectFn.getCardID(effect)
                     const cardProto = GameStateFn.getItemPrototype(ctx, cardId)
                     const playerId = GameStateFn.getItemController(ctx, cardId)
-                    const from = AbsoluteBaSyouFn.of(DefineFn.PlayerIDFn.getOpponent(playerId), "配備エリア")
+                    const from = DefineFn.AbsoluteBaSyouFn.of(DefineFn.PlayerIDFn.getOpponent(playerId), "配備エリア")
                     const payColorKey = GameStateFn.createConditionKeyOfPayColorX(cardProto)
                     const x = GameStateFn.getCardTipStrBaSyouPairs(ctx, payColorKey, cardId).length
                     const targetIds = GameStateFn.getItemIdsByBasyou(ctx, from)

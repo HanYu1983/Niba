@@ -22,6 +22,16 @@ export type Tip = {
 };
 
 export const TipFn = {
+    getWant(tip: Tip) {
+        switch (tip.title[0]) {
+            case "カード":
+                return tip.title[1]
+            case "テキスト":
+                return tip.title[1]
+            case "StringOptions":
+                return tip.title[1]
+        }
+    },
     getSelection(tip: Tip) {
         switch (tip.title[0]) {
             case "カード":
@@ -30,6 +40,25 @@ export const TipFn = {
                 return tip.title[2]
             case "StringOptions":
                 return tip.title[2]
+        }
+    },
+    passWantToSelection(tip: Tip): Tip {
+        switch (tip.title[0]) {
+            case "カード":
+                return {
+                    ...tip,
+                    title: [tip.title[0], tip.title[1], tip.title[1]]
+                }
+            case "テキスト":
+                return {
+                    ...tip,
+                    title: [tip.title[0], tip.title[1], tip.title[1]]
+                }
+            case "StringOptions":
+                return {
+                    ...tip,
+                    title: [tip.title[0], tip.title[1], tip.title[1]]
+                }
         }
     },
     checkTipSatisfies(tip: Tip): TargetMissingError | null {

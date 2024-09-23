@@ -43,12 +43,26 @@ export function getEffectTips(
   const bridge = createBridge()
   return Object.keys(ltacs).map(key => {
     const con = ltacs[key]
+    log("getEffectTips", key, con.title)
     const tip = getConditionTitleFn(con, {})(ctx, effect, bridge)
-    if (tip) {
-      const cardId = EffectFn.getCardID(effect)
-      ctx = mapItemState(ctx, cardId, is => ItemStateFn.setTip(is, key, tip)) as GameState
-    }
     const errors: string[] = []
+    if (tip) {
+      try {
+        log("getEffectTips", "tip", tip)
+        const error = TipFn.checkTipSatisfies(tip)
+        if(error){
+          throw error
+        }
+        const cardId = EffectFn.getCardID(effect)
+        ctx = mapItemState(ctx, cardId, is => ItemStateFn.setTip(is, key, tip)) as GameState
+      } catch (e) {
+        if (e instanceof TargetMissingError) {
+          errors.push(e.message)
+        } else {
+          throw e
+        }
+      }
+    }
     ctx = ConditionFn.getActionTitleFns(con, getActionTitleFn).reduce((ctx, fn): GameState => {
       try {
         return fn(ctx, effect, bridge)

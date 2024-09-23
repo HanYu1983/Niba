@@ -1,6 +1,6 @@
 import { repeat } from "ramda";
 import { BattleAreaKeyword } from "../game/define/BaSyou";
-import { CardCategory, CardColor, CardPrototype, RollCostColor } from "../game/define/CardPrototype";
+import { CardCategory, CardColor, CardColorFn, CardPrototype, RollCostColor } from "../game/define/CardPrototype";
 import { CardText, Condition, createRollCostRequire } from "../game/define/CardText";
 
 export async function loadPrototype(imgID: string): Promise<CardPrototype> {
@@ -184,6 +184,9 @@ function parseColors(color: any, colorCostLength: string): "X" | (RollCostColor 
         ret.push(...repeat(str, num))
       }
     }
+  }
+  if (CardColorFn.getAll().includes(color)) {
+    return [color]
   }
   throw new Error(`parseColors ${color} ${colorCostLength}`)
 }

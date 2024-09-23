@@ -3,6 +3,7 @@ import { DestroyReason } from "./Effect";
 import { Tip } from "./Tip";
 import { GlobalEffect } from "./GlobalEffect";
 import { ToolFn } from "../tool";
+import { TargetMissingError } from "./GameError";
 
 export type ItemState = {
     id: string;
@@ -45,7 +46,7 @@ export const ItemStateFn = {
     },
     getTip(ctx: ItemState, k: string): Tip {
         if (ctx.tips[k] == null) {
-            throw new Error(`cardId: ${ctx.id} target not set yet: ${k}`)
+            throw new TargetMissingError(`cardId: ${ctx.id} target not set yet: ${k}`)
         }
         return ctx.tips[k]
     },
