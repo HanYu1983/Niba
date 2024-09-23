@@ -42,6 +42,7 @@ export type GSign = [CardColor[], GSignProperty]
 
 export type RollCostColor = CardColor | null;
 export type CardPrototypeRollCost = "X" | RollCostColor[];
+export type CardPrototypeTotalCost = "X" | number
 
 export type CardPrototype = {
   id?: string;
@@ -50,7 +51,7 @@ export type CardPrototype = {
   color?: CardColor,
   gsign?: GSign,
   category?: CardCategory;
-  totalCost?: number;
+  totalCost?: CardPrototypeTotalCost;
   rollCost?: CardPrototypeRollCost;
   battlePoint?: BattlePoint;
   battleArea?: BattleAreaKeyword[];

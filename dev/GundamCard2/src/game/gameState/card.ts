@@ -110,7 +110,15 @@ export function getCardRollCostLength(ctx: GameState, cardID: string): number {
     }),
     sum
   )()
-  return (prototype.totalCost || 0) + added;
+  let totalCost = 0
+  if(prototype.totalCost == null){
+    
+  } else if (prototype.totalCost == "X"){
+    totalCost = getCardIdsCanPayRollCost(ctx, getItemController(ctx, cardID), null).length
+  } else {
+    totalCost = prototype.totalCost
+  }
+  return totalCost + added;
 }
 
 export function getCardIdsCanPayRollCost(ctx: GameState, playerId: PlayerID, situation: Situation | null): string[] {

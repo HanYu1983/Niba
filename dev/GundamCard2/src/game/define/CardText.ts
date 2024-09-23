@@ -37,7 +37,7 @@ export const TextSpeicalEffectFn = {
 
 export type ActionTitle =
     | string
-    | ["_ロールする", "ロール" | "リロール" | "打開" | "リロール" | "破壞"]
+    | ["_ロールする", "ロール" | "リロール" | "打開" | "リロール" | "破壞" | "廃棄"]
     | ["_１ダメージを与える", number]
     | ["_－１／－１／－１コイン_１個を乗せる", BattleBonus, number]
     | ["移除卡狀態_旗標", string]
@@ -97,6 +97,7 @@ export type Condition = {
     title?: ConditionTitle,
     actions?: Action[],
     exceptItemSelf?: boolean,
+    responsePlayerId?: PlayerID,
 }
 
 export type ConditionTitleFn = (ctx: any, effect: Effect, lib: any) => Tip | null;
@@ -235,7 +236,7 @@ export function getOnSituationFn(ctx: CardText): OnSituationFn {
 export function createRollCostRequire(
     costNum: number,
     color: CardColor | null
-  ): { [key: string]: Condition } {
+): { [key: string]: Condition } {
     let ret: { [key: string]: Condition } = {}
     for (let i = 0; i < costNum; ++i) {
         const key = `${i}[${color}]`
@@ -253,4 +254,4 @@ export function createRollCostRequire(
         };
     }
     return ret
-  }
+}

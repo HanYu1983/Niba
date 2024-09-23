@@ -90,13 +90,12 @@ export async function loadPrototype(imgID: string): Promise<CardPrototype> {
           title: ["特殊型", ["高機動"]]
         })
       }
-      const totalCostLength = parseInt(totalCostLengthStr, 10)
       const originData: CardPrototype = {
         originCardId: id,
         title: title,
         category: categoryMapping[category],
         color: color,
-        totalCost: totalCostLength,
+        totalCost: totalCostLengthStr == "X" ? "X" : parseInt(totalCostLengthStr, 10),
         rollCost: parseColors(color, colorCost),
         battlePoint: [parseBp(bp1), parseBp(bp2), parseBp(bp3)],
         battleArea: parseArea(area),
