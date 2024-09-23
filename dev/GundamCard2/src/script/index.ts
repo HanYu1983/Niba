@@ -2,8 +2,6 @@ import { repeat } from "ramda";
 import { BattleAreaKeyword } from "../game/define/BaSyou";
 import { CardCategory, CardColor, CardPrototype, RollCostColor } from "../game/define/CardPrototype";
 import { CardText, Condition, createRollCostRequire } from "../game/define/CardText";
-import { getCardRollCost } from "../game/gameState/card";
-
 
 export async function loadPrototype(imgID: string): Promise<CardPrototype> {
   if (_preloadPrototype[imgID]) {
@@ -25,8 +23,8 @@ export async function loadPrototype(imgID: string): Promise<CardPrototype> {
       const id = data.id
       const title = data.info_2
       const category = data.info_3
-      const totalCostLength = data.info_4
-      const colorCostLength = data.info_5
+      const totalCostLengthStr = data.info_4
+      const colorCost = data.info_5
       const gsignProperty = data.info_6
       const bp1 = data.info_7
       const bp2 = data.info_8
@@ -92,12 +90,14 @@ export async function loadPrototype(imgID: string): Promise<CardPrototype> {
           title: ["特殊型", ["高機動"]]
         })
       }
+      const totalCostLength = parseInt(totalCostLengthStr, 10)
       const originData: CardPrototype = {
         originCardId: id,
         title: title,
         category: categoryMapping[category],
         color: color,
-        rollCost: parseColors(color, colorCostLength, totalCostLength),
+        totalCost: totalCostLength,
+        rollCost: parseColors(color, colorCost),
         battlePoint: [parseBp(bp1), parseBp(bp2), parseBp(bp3)],
         battleArea: parseArea(area),
         characteristic: characteristic,
@@ -152,31 +152,40 @@ export function getImgSrc(imgID: string) {
   return `https://storage.googleapis.com/particle-resources/cardPackage/gundamWarN/${imgID}.jpg`;
 }
 
-function parseColors(color: any, colorCostLength: string, totalCostLength: string): (RollCostColor | null)[] {
-  if (colorCostLength == "X" || totalCostLength == "X") {
+function parseColors(color: any, colorCostLength: string): "X" | (RollCostColor | null)[] {
+  if (colorCostLength == "X") {
+    return "X"
+  }
+  if (colorCostLength == "-") {
     return []
   }
-  if (colorCostLength == "-" || totalCostLength == "-") {
-    return []
+  const onlyNum = parseInt(colorCostLength, 10)
+  if (isNaN(onlyNum) == false) {
+    return repeat(color, onlyNum)
   }
-  const n1 = parseInt(colorCostLength, 10)
-  const colors = []
-  if (n1 == 1) {
-    colors.push(color)
-  } else if (n1 > 1) {
-    colors.push(...repeat(color, n1))
+  // "赤1青1" => ["赤", "青"]
+  const parsedColors = colorCostLength.split(/(\d+)/).filter(Boolean).map((part, index) => {
+    if (index % 2 === 0) {
+      return part;
+    } else {
+      return parseInt(part, 10);
+    }
+  })
+  if (parsedColors.length % 2 == 0) {
+    const pairs: [string, number][] = []
+    for (let i = 0; i < parsedColors.length; i += 2) {
+      pairs.push([parsedColors[i], parsedColors[i + 1]] as [string, number])
+    }
+    const ret = []
+    for (const [str, num] of pairs) {
+      if (num == 1) {
+        ret.push(str)
+      } else if (num > 1) {
+        ret.push(...repeat(str, num))
+      }
+    }
   }
-  const n2 = parseInt(totalCostLength, 10)
-  if (n2 - n1 == 0) {
-    return colors
-  }
-  if (n2 - n1 == 1) {
-    return [...colors, null]
-  }
-  if (n2 > n1) {
-    return [...colors, ...repeat(null, n2 - n1)]
-  }
-  throw new Error(`unknown ${color} ${colorCostLength} ${totalCostLength}`)
+  throw new Error(`parseColors ${color} ${colorCostLength}`)
 }
 function parseBp(bp: string): "*" | number {
   if (bp == "-") {

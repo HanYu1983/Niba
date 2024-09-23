@@ -1,12 +1,37 @@
 import { pipe, always, map, sum, dissoc } from "ramda"
 import { Bridge } from "../../script/bridge"
-import { CardColorFn, CardColor } from "../define/CardPrototype"
+import { CardColorFn, CardColor, CardPrototypeRollCost, CardPrototype } from "../define/CardPrototype"
 import { Condition, createRollCostRequire } from "../define/CardText"
 import { Effect } from "../define/Effect"
 import { getCardHasSpeicalEffect, getCardRollCostLength } from "./card"
 import { GameState } from "./GameState"
 import { getGlobalEffects, setGlobalEffects } from "./globalEffects"
 import { getItemPrototype, getItemOwner } from "./ItemTableComponent"
+import { log } from "../../tool/logger"
+
+export function createConditionKeyOfPayColorX(proto: CardPrototype): string {
+    if (proto.color == null) {
+        throw new Error()
+    }
+    return `${proto.color}X`
+}
+
+export function createRollCostConditions(ctx: GameState, proto: CardPrototype, rollCost: CardPrototypeRollCost): { [key: string]: Condition } {
+    if (rollCost == "X") {
+        if (proto.color == null) {
+            throw new Error()
+        }
+        return {
+            [createConditionKeyOfPayColorX(proto)]: {
+                title: ["RollColor", proto.color]
+            }
+        }
+    }
+    const rollCostConditions = CardColorFn.getAll()
+        .map(tc => createRollCostRequire(rollCost.filter(c => c == tc).length, tc))
+        .reduce((ctx, cons) => ({ ...ctx, ...cons }))
+    return rollCostConditions
+}
 
 export function getPlayCardEffects(ctx: GameState, cardId: string): Effect[] {
     const prototype = getItemPrototype(ctx, cardId)
@@ -29,9 +54,7 @@ export function getPlayCardEffects(ctx: GameState, cardId: string): Effect[] {
     const commandConditions: { [key: string]: Condition } = (prototype.category == "コマンド" && prototype.commandText) ? {
         ...prototype.commandText.conditions
     } : {}
-    const rollCostConditions = CardColorFn.getAll()
-        .map(tc => createRollCostRequire((prototype.rollCost || []).filter(c => c == tc).length, tc))
-        .reduce((ctx, cons) => ({ ...ctx, ...cons }))
+    const rollCostConditions = createRollCostConditions(ctx, prototype, prototype.rollCost || [])
     const playCardEffect: Effect = {
         id: `getPlayCardEffects_${cardId}`,
         reason: ["PlayCard", playerId, cardId],

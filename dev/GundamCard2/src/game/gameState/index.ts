@@ -10,12 +10,13 @@ import * as card from "./card"
 import * as battleGroup from "./battleGroup"
 import * as effect from "./effect"
 import * as player from "./player"
-import * as setGroup from "./SetGroupComponent"
+import * as setGroup from "./setGroup"
 import * as triggerEvent from "./triggerEvent"
 import * as PhaseComponent from "./PhaseComponent"
 import * as ActivePlayerComponent from "./ActivePlayerComponent"
 import * as PlayerStateComponent from "./PlayerStateComponent"
 import * as RuntimeBattleAreaComponent from "./RuntimeBattleAreaComponent"
+import * as getPlayCardEffect from "./getPlayCardEffect"
 
 export const GameStateFn = {
     ...GameState,
@@ -35,5 +36,6 @@ export const GameStateFn = {
     ...PhaseComponent,
     ...ActivePlayerComponent,
     ...PlayerStateComponent,
-    ...RuntimeBattleAreaComponent
+    ...RuntimeBattleAreaComponent,
+    ...getPlayCardEffect
 }

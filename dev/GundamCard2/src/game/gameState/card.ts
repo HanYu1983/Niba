@@ -96,11 +96,6 @@ export function getCardTitle(ctx: GameState, cardID: string): string {
   return prototype.title || "unknown";
 }
 
-export function getCardRollCost(ctx: GameState, cardID: string): RollCostColor[] {
-  const prototype = getItemPrototype(ctx, cardID)
-  return prototype.rollCost || [];
-}
-
 export function getCardRollCostLength(ctx: GameState, cardID: string): number {
   const prototype = getItemPrototype(ctx, cardID)
   const gEffects = getGlobalEffects(ctx, null)
@@ -115,7 +110,7 @@ export function getCardRollCostLength(ctx: GameState, cardID: string): number {
     }),
     sum
   )()
-  return (prototype.rollCost || []).length + added;
+  return (prototype.totalCost || 0) + added;
 }
 
 export function getCardIdsCanPayRollCost(ctx: GameState, playerId: PlayerID, situation: Situation | null): string[] {

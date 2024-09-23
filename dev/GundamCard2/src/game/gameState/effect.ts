@@ -756,7 +756,7 @@ export function getActionTitleFn(action: Action): ActionTitleFn {
         const cardController = getItemController(ctx, cardId)
         const cardIdsCanPay = getCardIdsCanPayRollCost(ctx, cardController, null)
         if (cardIdsCanPay.length < x) {
-          throw new TargetMissingError(`合計国力〔x〕:${cardIdsCanPay.length} < ${x}`)
+          throw new TargetMissingError(`合計国力〔x〕:${cardIdsCanPay.length} < ${x}. ${effect.text.description}`)
         }
         return ctx
       }
