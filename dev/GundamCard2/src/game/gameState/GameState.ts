@@ -15,6 +15,7 @@ import { RuntimeBattleAreaComponent } from "./RuntimeBattleAreaComponent";
 import { SetGroupComponent, createSetGroupComponent } from "./SetGroupComponent";
 
 export type GameState = {
+  isGameState: true,
   globalEffectPool: { [key: string]: GlobalEffect[] }
 } & SetGroupComponent
   & IsBattleComponent
@@ -31,6 +32,7 @@ export type GameState = {
 
 export function createGameState(): GameState {
   return {
+    isGameState: true,
     cards: {},
     effects: {},
     table: DEFAULT_TABLE,

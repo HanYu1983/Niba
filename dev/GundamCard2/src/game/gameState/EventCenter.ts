@@ -4,35 +4,40 @@ import { PlayerState } from "../define/PlayerState"
 import { Phase } from "../define/Timing"
 import { GameState } from "./GameState"
 
-type EventCenter = GameState
+function getGameStateAndAssert(ctx: any): GameState {
+    if (ctx.isGameState != true) {
+        throw new Error(`must is gameState`)
+    }
+    return ctx as GameState
+}
 
 export const EventCenterFn = {
     onItemStateChange(_ctx: any, old: ItemState, curr: ItemState): any {
-        let ctx = _ctx as EventCenter
+        let ctx = getGameStateAndAssert(_ctx)
         return ctx
     },
     onPlayerStateChange(_ctx: any, old: PlayerState, curr: PlayerState): any {
-        let ctx = _ctx as EventCenter
+        let ctx = getGameStateAndAssert(_ctx)
         return ctx
     },
     onSetSetGroupParent(_ctx: any, parentId: string, itemId: string): any {
-        let ctx = _ctx as EventCenter
+        let ctx = getGameStateAndAssert(_ctx)
         return ctx
     },
     onSetPhase(_ctx: any, old: Phase, curr: Phase): any {
-        let ctx = _ctx as EventCenter
+        let ctx = getGameStateAndAssert(_ctx)
         return ctx
     },
     onItemAdd(_ctx: any, itemId: string): any {
-        let ctx = _ctx as EventCenter
+        let ctx = getGameStateAndAssert(_ctx)
         return ctx
     },
     onItemMove(_ctx: any, from: string, to: string, itemId: string): any {
-        let ctx = _ctx as EventCenter
+        let ctx = getGameStateAndAssert(_ctx)
         return ctx
     },
     onItemDelete(_ctx: any, itemId: string): any {
-        let ctx = _ctx as EventCenter
+        let ctx = getGameStateAndAssert(_ctx)
         return ctx
     },
     onTableChange(_ctx: any, old: Table, curr: Table): any {
