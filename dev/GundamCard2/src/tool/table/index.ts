@@ -36,13 +36,13 @@ function moveCard(table: Table, fromPosition: string, toPosition: string, cardId
     }
 }
 
-function getCardPosition(table: Table, cardId: string): string {
+function getCardPosition(table: Table, cardId: string): string | null {
     for (const [key, value] of Object.entries(table.cardStack)) {
         if (value.includes(cardId)) {
             return key;
         }
     }
-    throw new Error("Card not found")
+    return null
 }
 
 function shuffleCards(ctx: Table, position: string): Table {
