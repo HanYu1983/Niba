@@ -583,6 +583,47 @@ export function getActionTitleFn(action: Action): ActionTitleFn {
         }
       }
     }
+    case "_２ダメージを与える": {
+      const [_, damage] = action.title
+      const varNames = action.vars
+      return function (ctx: GameState, effect: Effect): GameState {
+        const cardId = EffectFn.getCardID(effect)
+        const pairs = varNames == null ?
+          [[cardId, getItemBaSyou(ctx, cardId)] as StrBaSyouPair] :
+          varNames.flatMap(varName => {
+            return getCardTipStrBaSyouPairs(ctx, varName, cardId)
+          })
+
+        for (const pair of pairs) {
+          assertTargetMissingError(ctx, pair)
+          const [targetId, _] = pair
+          ctx = mapItemState(ctx, targetId, is => {
+            return {
+              ...is,
+              damage: is.damage + damage
+            }
+          }) as GameState
+        }
+        return ctx
+      }
+    }
+    case "_敵軍本国に_１ダメージ": {
+      const [_, side, damage] = action.title
+      return function (ctx: GameState, effect: Effect): GameState {
+        const cardId = EffectFn.getCardID(effect)
+        const cardController = getItemController(ctx, cardId)
+        const playerId = side == "自軍" ? cardController : PlayerIDFn.getOpponent(cardController)
+        const from = AbsoluteBaSyouFn.of(playerId, "本国")
+        const pairs = getItemIdsByBasyou(ctx, from).map(itemId => {
+          return [itemId, from] as StrBaSyouPair
+        }).slice(0, damage)
+        const to = AbsoluteBaSyouFn.of(playerId, "捨て山")
+        for (const pair of pairs) {
+          ctx = moveItem(ctx, to, pair, onMoveItem) as GameState
+        }
+        return ctx
+      }
+    }
     case "_の_ハンガーに移す": {
       const [_, side, basyouKw] = action.title
       const varNames = action.vars

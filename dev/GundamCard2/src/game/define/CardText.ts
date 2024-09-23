@@ -52,6 +52,8 @@ export type ActionTitle =
     | ["看自己_本國全部的卡", BaSyouKeyword]
     | ["triggerEvent", GameEvent]
     | ["_の_ハンガーに移す", RelatedPlayerSideKeyword, BaSyouKeyword]
+    | ["_２ダメージを与える", number]
+    | ["_敵軍本国に_１ダメージ", RelatedPlayerSideKeyword, number]
 
 export type Action = {
     title: ActionTitle,
