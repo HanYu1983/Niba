@@ -51,6 +51,7 @@ export type ActionTitle =
     | ["這個效果1回合只能用1次"]
     | ["看自己_本國全部的卡", BaSyouKeyword]
     | ["triggerEvent", GameEvent]
+    | ["_の_ハンガーに移す", RelatedPlayerSideKeyword, BaSyouKeyword]
 
 export type Action = {
     title: ActionTitle,
@@ -87,6 +88,8 @@ export type ConditionTitle =
     | ["_自軍_本國上的_1張卡", RelatedPlayerSideKeyword, BaSyouKeyword, number]
     | ["_自軍_本國找出特徵_A的_1張卡", RelatedPlayerSideKeyword, BaSyouKeyword, string, number]
     | ["這張卡交戰的防禦力_x以下的敵軍機體_1張", number, number]
+    | ["_配備エリアにいる、「特徴：_T3部隊」を持つ_自軍_ユニット_１枚", BaSyouKeyword, string, RelatedPlayerSideKeyword, CardCategory, number]
+    | ["_自軍_本国の上のカード_１～_４枚を見て、その中にある、「特徴：_ヘイズル系」を持つ_ユニット_１枚", RelatedPlayerSideKeyword, BaSyouKeyword, number, number, string, CardCategory, number]
 
 export type Condition = {
     title?: ConditionTitle,

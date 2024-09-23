@@ -1,6 +1,6 @@
-import { assoc, pair } from "ramda";
+import { assoc, lift, pair } from "ramda";
 import { DEFAULT_TABLE, Table, TableFns } from "../../tool/table";
-import { AbsoluteBaSyou, AbsoluteBaSyouFn, BaSyou } from "../define/BaSyou";
+import { AbsoluteBaSyou, AbsoluteBaSyouFn, BaSyou, BaSyouKeywordFn } from "../define/BaSyou";
 import { PlayerID, PlayerIDFn } from "../define/PlayerID";
 import { CardTableComponent, getCard, getCardIds, getCardOwner, setCard } from "./CardTableComponent";
 import { addCoins, CoinTableComponent, getCardIdByCoinId, getCoin, getCoinIds, getCoinOwner } from "./CoinTableComponent";
@@ -64,6 +64,11 @@ export function getCardLikeItemIds(ctx: ItemTableComponent): string[] {
 
 export function getItemIdsByBasyou(ctx: ItemTableComponent, basyou: AbsoluteBaSyou): string[] {
   return TableFns.getCardsByPosition(ctx.table, AbsoluteBaSyouFn.toString(basyou))
+}
+
+export function getItemIdsByPlayerId(ctx: ItemTableComponent, isBa: boolean, playerId: PlayerID): string[] {
+  const basyous = isBa ? lift(AbsoluteBaSyouFn.of)([playerId], BaSyouKeywordFn.getBaAll()) : lift(AbsoluteBaSyouFn.of)([playerId], BaSyouKeywordFn.getScriptAll())
+  return basyous.flatMap(basyou => getItemIdsByBasyou(ctx, basyou))
 }
 
 export function getCardLikeItemIdsByBasyou(ctx: ItemTableComponent, basyou: AbsoluteBaSyou): string[] {

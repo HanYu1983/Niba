@@ -109,6 +109,7 @@ function getSituationEffects(ctx: GameState, situation: Situation | null): Globa
       if (proto.commandText?.onSituation) {
         return [getCard(ctx, cardId), [proto.commandText]] as [Item, CardText[]]
       }
+      return null
     }),
     infos => infos.filter(v => v) as [Item, CardText[]][],
   )

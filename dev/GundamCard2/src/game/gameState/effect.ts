@@ -185,6 +185,28 @@ export function getConditionTitleFn(condition: Condition, options: { isPlay?: bo
   }
   log("getConditionTitleFn", condition.title)
   switch (condition.title[0]) {
+    case "_自軍_本国の上のカード_１～_４枚を見て、その中にある、「特徴：_ヘイズル系」を持つ_ユニット_１枚": {
+      const [_, side, basyouKw, min, max, char, category, count] = condition.title
+      return function (ctx: GameState, effect: Effect): Tip | null {
+        const cardId = EffectFn.getCardID(effect)
+        const playerId = getItemController(ctx, cardId);
+        const targetPlayerId = side == "自軍" ? playerId : PlayerIDFn.getOpponent(playerId)
+        const basyous: AbsoluteBaSyou[] = (lift(AbsoluteBaSyouFn.of)([targetPlayerId], [basyouKw]))
+        const pairs = basyous.flatMap(basyou =>
+          getCardLikeItemIdsByBasyou(ctx, basyou)
+            .filter(cardId => getItemCharacteristic(ctx, cardId).includes(char))
+            .filter(cardId => getItemRuntimeCategory(ctx, cardId) == category)
+            .map(cardId => [cardId, basyou] as StrBaSyouPair)
+        ).slice(0, max)
+        if (pairs.length < min) {
+          throw new TargetMissingError(`length is ${pairs.length}, min is ${min}: ${effect.text.description}`)
+        }
+        return {
+          title: ["カード", pairs, pairs.slice(0, count)],
+          count: count,
+        }
+      }
+    }
     case "このカードの_本来のテキスト１つ": {
       const [_, isOrigin, count] = condition.title
       return function (ctx: GameState, effect: Effect): Tip | null {
@@ -459,6 +481,26 @@ export function getConditionTitleFn(condition: Condition, options: { isPlay?: bo
 
       }
     }
+    case "_配備エリアにいる、「特徴：_T3部隊」を持つ_自軍_ユニット_１枚": {
+      const [_, basyouKw, char, side, category, count] = condition.title
+      return function (ctx: GameState, effect: Effect): Tip | null {
+        const cardId = EffectFn.getCardID(effect)
+        const cardController = getItemController(ctx, cardId);
+        const targetPlayerId = side == "自軍" ? cardController : PlayerIDFn.getOpponent(cardController)
+        const from = AbsoluteBaSyouFn.of(targetPlayerId, basyouKw)
+        const itemIdsAtBasyou = getCardLikeItemIdsByBasyou(ctx, from)
+        const targetIds = itemIdsAtBasyou.filter(itemId => {
+          return getItemCharacteristic(ctx, itemId).indexOf(char) != -1
+        }).filter(itemId => {
+          return getItemRuntimeCategory(ctx, itemId) == category
+        })
+        const pairs = targetIds.map(targetId => [targetId, from] as StrBaSyouPair)
+        return {
+          title: ["カード", pairs, pairs.slice(0, count)],
+          min: count
+        }
+      }
+    }
     case "このセットグループの_ユニットは":
       return function (ctx: GameState, effect: Effect): Tip | null {
         return null
@@ -539,6 +581,25 @@ export function getActionTitleFn(action: Action): ActionTitleFn {
             return ctx
           }
         }
+      }
+    }
+    case "_の_ハンガーに移す": {
+      const [_, side, basyouKw] = action.title
+      const varNames = action.vars
+      return function (ctx: GameState, effect: Effect): GameState {
+        const cardId = EffectFn.getCardID(effect)
+        const cardController = getItemController(ctx, cardId)
+        const pairs = varNames == null ?
+          [[cardId, getItemBaSyou(ctx, cardId)] as StrBaSyouPair] :
+          varNames.flatMap(varName => {
+            return getCardTipStrBaSyouPairs(ctx, varName, cardId)
+          })
+        const playerId = side == "自軍" ? cardController : PlayerIDFn.getOpponent(cardController)
+        const to = AbsoluteBaSyouFn.of(playerId, basyouKw)
+        for (const pair of pairs) {
+          ctx = moveItem(ctx, to, pair, onMoveItem) as GameState
+        }
+        return ctx
       }
     }
     case "看自己_本國全部的卡": {
