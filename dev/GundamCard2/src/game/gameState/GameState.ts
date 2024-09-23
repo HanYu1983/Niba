@@ -49,6 +49,7 @@ export function createGameState(): GameState {
     coinId2cardId: {},
     globalEffectPool: {},
     messages: [],
+    messagesCurrentEffect: null,
     ...createSetGroupComponent(),
   }
 }

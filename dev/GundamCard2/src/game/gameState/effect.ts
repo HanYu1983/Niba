@@ -29,6 +29,7 @@ import { getBattleGroup } from "./battleGroup"
 import { getSetGroupBattlePoint } from "./setGroup"
 import { isBattle } from "./IsBattleComponent"
 import { TipOrErrors, CommandEffectTip } from "../define/CommandEffectTip"
+import { EventCenterFn } from "./EventCenter"
 
 export function getEffectTips(
   ctx: GameState,
@@ -50,7 +51,7 @@ export function getEffectTips(
       try {
         log("getEffectTips", "tip", tip)
         const error = TipFn.checkTipSatisfies(tip)
-        if(error){
+        if (error) {
           throw error
         }
         const cardId = EffectFn.getCardID(effect)
@@ -166,6 +167,7 @@ export function doEffect(
   logicId: number,
   logicSubId: number,
 ): GameState {
+  ctx = EventCenterFn.onEffectStart(ctx, effect)
   assertEffectCanPass(ctx, effect, logicId, logicSubId)
   const ltacs = CardTextFn.getLogicTreeActionConditions(effect.text, CardTextFn.getLogicTreeAction(effect.text, logicId))[logicSubId]
   if (ltacs == null) {
@@ -191,6 +193,7 @@ export function doEffect(
   ctx = processCondition(ctx)()
   ctx = processLogicAction(ctx)()
   ctx = clearGlobalEffects(ctx)
+  ctx = EventCenterFn.onEffectEnd(ctx, effect)
   return ctx;
 }
 

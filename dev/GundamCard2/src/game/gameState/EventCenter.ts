@@ -1,8 +1,10 @@
 import { Table, TableFns } from "../../tool/table"
+import { Effect } from "../define/Effect"
 import { ItemState } from "../define/ItemState"
 import { PlayerState } from "../define/PlayerState"
 import { Phase } from "../define/Timing"
 import { GameState } from "./GameState"
+import { getMessageCurrentEffect, setMessageCurrentEffect } from "./MessageComponent"
 
 function getGameStateAndAssert(ctx: any): GameState {
     if (ctx.isGameState != true) {
@@ -12,8 +14,19 @@ function getGameStateAndAssert(ctx: any): GameState {
 }
 
 export const EventCenterFn = {
+    onEffectStart(_ctx: any, effect: Effect): any {
+        let ctx = getGameStateAndAssert(_ctx)
+        ctx = setMessageCurrentEffect(ctx, effect) as GameState
+        return ctx
+    },
+    onEffectEnd(_ctx: any, effect: Effect): any {
+        let ctx = getGameStateAndAssert(_ctx)
+        ctx = setMessageCurrentEffect(ctx, null) as GameState
+        return ctx
+    },
     onItemStateChange(_ctx: any, old: ItemState, curr: ItemState): any {
         let ctx = getGameStateAndAssert(_ctx)
+        let effect = getMessageCurrentEffect(ctx)
         return ctx
     },
     onPlayerStateChange(_ctx: any, old: PlayerState, curr: PlayerState): any {
