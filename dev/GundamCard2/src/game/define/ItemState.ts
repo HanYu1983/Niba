@@ -32,11 +32,18 @@ export const ItemStateFn = {
             varNamesRemoveOnTurnEnd: {}
         }
     },
-    setFlag(ctx: ItemState, k: string, v: any): ItemState {
-        return {
+    setFlag(ctx: ItemState, k: string, v: any, options?: { isRemoveOnTurnEnd?: boolean }): ItemState {
+        ctx = {
             ...ctx,
             flags: assoc(k, v, ctx.flags)
         }
+        if (options?.isRemoveOnTurnEnd) {
+            ctx = {
+                ...ctx,
+                varNamesRemoveOnTurnEnd: assoc(k, true, ctx.varNamesRemoveOnTurnEnd)
+            }
+        }
+        return ctx
     },
     removeFlag(ctx: ItemState, k: string): ItemState {
         return {

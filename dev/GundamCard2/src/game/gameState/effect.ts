@@ -14,7 +14,7 @@ import { getCard, mapCard, setCard } from "./CardTableComponent"
 import { GameState } from "./GameState"
 import { clearGlobalEffects } from "./globalEffects"
 import { getItemStateValues, getItemState, setItemState, mapItemState } from "./ItemStateComponent"
-import { getItemController, addCoinsToCard, isCard, isChip, getItemBaSyou, isCoin, getItemPrototype, setItemIsRoll, getItemIdsByBasyou, assertTargetMissingError } from "./ItemTableComponent"
+import { getItemController, addCoinsToCard, isCard, isChip, getItemBaSyou, isCoin, getItemPrototype, setItemIsRoll, getItemIdsByBasyou, assertTargetMissingError, getItemIdsByPlayerId } from "./ItemTableComponent"
 import { triggerEvent } from "./triggerEvent"
 import { Bridge } from "../../script/bridge"
 import { GlobalEffect } from "../define/GlobalEffect"
@@ -205,6 +205,23 @@ export function getConditionTitleFn(condition: Condition, options: { isPlay?: bo
   }
   log("getConditionTitleFn", condition.title)
   switch (condition.title[0]) {
+    case "_自軍_ジャンクヤードにある、_黒のGサインを持つ全てのカードは": {
+      const [_, side, basyouKw, color] = condition.title
+      return function (ctx: GameState, effect: Effect): Tip | null {
+        const cardId = EffectFn.getCardID(effect)
+        const cardController = getItemController(ctx, cardId);
+        const playerId = side == "自軍" ? cardController : PlayerIDFn.getOpponent(cardController)
+        const basyous: AbsoluteBaSyou[] = (lift(AbsoluteBaSyouFn.of)([playerId], [basyouKw]))
+        const pairs = basyous.flatMap(basyou =>
+          getItemIdsByBasyou(ctx, basyou)
+            .filter(cardId => getItemPrototype(ctx, cardId).gsign?.[0].includes(color))
+            .map(cardId => [cardId, basyou] as StrBaSyouPair)
+        )
+        return {
+          title: ["カード", pairs, pairs],
+        }
+      }
+    }
     case "_自軍_本国の上のカード_１～_４枚を見て、その中にある、「特徴：_ヘイズル系」を持つ_ユニット_１枚": {
       const [_, side, basyouKw, min, max, char, category, count] = condition.title
       return function (ctx: GameState, effect: Effect): Tip | null {
@@ -816,6 +833,21 @@ export function getActionTitleFn(action: Action): ActionTitleFn {
 
         } else {
           throw new TargetMissingError(`${action.title} ${cardId} not in ${JSON.stringify(areas)}`)
+        }
+        return ctx
+      }
+    }
+    case "_黒のGサインを持つ_自軍_Gが_５枚以上ある場合": {
+      const [_, color, side, category, count] = action.title
+      return function (ctx: GameState, effect: Effect): GameState {
+        const cardId = EffectFn.getCardID(effect)
+        const cardController = getItemController(ctx, cardId)
+        const playerId = side == "自軍" ? cardController : PlayerIDFn.getOpponent(cardController)
+        const gsignCount = getItemIdsByPlayerId(ctx, true, playerId)
+          .filter(itemId => getItemPrototype(ctx, itemId).gsign?.[0].includes(color))
+          .filter(itemId => getItemRuntimeCategory(ctx, itemId) == category).length
+        if (gsignCount < count) {
+          throw new TargetMissingError(`you have ${gsignCount}. must ${count}: ${action.title[0]}`)
         }
         return ctx
       }
