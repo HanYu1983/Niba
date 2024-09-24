@@ -35,7 +35,7 @@ export const EffectFn = {
     getCardID(ctx: Effect): string {
         switch (ctx.reason[0]) {
             case "GameRule":
-                return "SystemFakeCardID"
+                return `SystemFakeCardID_${ctx.text.id}`
 
             case "PlayText":
             case "PlayCard":
