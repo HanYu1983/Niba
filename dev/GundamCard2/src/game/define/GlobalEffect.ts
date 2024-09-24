@@ -12,6 +12,7 @@ export type GlobalEffectTitle =
     | ["發生國力", CardColor[]]
     | ["SpecialEffectBonus", TextSpeicalEffect, number]
     | ["場、または手札から、自軍ジャンクヤードにカードが移る場合、ジャンクヤードに移る代わりにゲームから取り除かれる"]
+    | ["自軍手札にあるかのようにプレイできる"]
 
 export type GlobalEffect = {
     title: GlobalEffectTitle,

@@ -31,6 +31,7 @@ import { createGameState, GameState } from "../game/gameState/GameState";
 import { getItemState, mapItemState } from "../game/gameState/ItemStateComponent";
 import { swap } from "ramda";
 import { swapItem } from "../game/gameState/swapItem";
+import { getItemBaSyou } from "../game/gameState/ItemTableComponent";
 
 export async function tests() {
     return [
@@ -84,10 +85,13 @@ async function testSwapItem() {
         protoID: "unitBlack"
     }
     ctx = addCards(ctx, AbsoluteBaSyouFn.of(PlayerA, "戦闘エリア1"), [unit]) as GameState
-    ctx = addCards(ctx, AbsoluteBaSyouFn.of(PlayerB, "戦闘エリア1"), [unit2]) as GameState
+    ctx = addCards(ctx, AbsoluteBaSyouFn.of(PlayerA, "戦闘エリア2"), [unit2]) as GameState
     ctx = mapItemState(ctx, unit.id, is => ({ ...is, damage: 2 })) as GameState
     ctx = mapCard(ctx, unit.id, is => ({ ...is, isRoll: true })) as GameState
     if (getItemState(ctx, unit.id).damage != 2) {
+        throw new Error()
+    }
+    if (getItemState(ctx, unit2.id).damage != 0) {
         throw new Error()
     }
     ctx = swapItem(ctx, unit.id, unit2.id)
@@ -104,6 +108,13 @@ async function testSwapItem() {
         throw new Error()
     }
     if (getCard(ctx, unit2.id).protoID != "unit") {
+        throw new Error()
+    }
+    // unit.id還在是戦闘エリア1, 但是imgID對換了, 看起來就像是置換
+    if(AbsoluteBaSyouFn.getBaSyouKeyword(getItemBaSyou(ctx, unit.id)) != "戦闘エリア1"){
+        throw new Error()
+    }
+    if(AbsoluteBaSyouFn.getBaSyouKeyword(getItemBaSyou(ctx, unit2.id)) != "戦闘エリア2"){
         throw new Error()
     }
 }

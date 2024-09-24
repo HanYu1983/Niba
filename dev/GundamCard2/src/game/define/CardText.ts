@@ -54,6 +54,7 @@ export type ActionTitle =
     | ["_の_ハンガーに移す", RelatedPlayerSideKeyword, BaSyouKeyword]
     | ["_２ダメージを与える", number]
     | ["_敵軍本国に_１ダメージ", RelatedPlayerSideKeyword, number]
+    | ["_黒のGサインを持つ_自軍_Gが_５枚以上ある場合", CardColor, RelatedPlayerSideKeyword, CardCategory, number]
 
 export type Action = {
     title: ActionTitle,
@@ -92,6 +93,7 @@ export type ConditionTitle =
     | ["這張卡交戰的防禦力_x以下的敵軍機體_1張", number, number]
     | ["_配備エリアにいる、「特徴：_T3部隊」を持つ_自軍_ユニット_１枚", BaSyouKeyword, string, RelatedPlayerSideKeyword, CardCategory, number]
     | ["_自軍_本国の上のカード_１～_４枚を見て、その中にある、「特徴：_ヘイズル系」を持つ_ユニット_１枚", RelatedPlayerSideKeyword, BaSyouKeyword, number, number, string, CardCategory, number]
+    | ["_自軍_ジャンクヤードにある、_黒のGサインを持つ全てのカードは", RelatedPlayerSideKeyword, BaSyouKeyword, CardColor]
 
 export type Condition = {
     title?: ConditionTitle,
