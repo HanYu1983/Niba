@@ -4,7 +4,7 @@ import { getCardHasSpeicalEffect } from "./card";
 import { getCard } from "./CardTableComponent";
 import { GameState } from "./GameState";
 import { getItemState } from "./ItemStateComponent";
-import { getItemIdsByBasyou, getItemBaSyou, getCardLikeItemIdsByBasyou } from "./ItemTableComponent";
+import { getItemIdsByBasyou, getItemBaSyou, getItemIdsByBasyou } from "./ItemTableComponent";
 import { getSetGroupBattlePoint } from "./setGroup";
 import { getSetGroupRoot, getSetGroupChildren } from "./SetGroupComponent";
 
@@ -13,7 +13,7 @@ export function getBattleGroup(
   ctx: GameState,
   baSyou: AbsoluteBaSyou
 ): string[] {
-  return getCardLikeItemIdsByBasyou(ctx, baSyou).filter((cardId) => {
+  return getItemIdsByBasyou(ctx, baSyou).filter((cardId) => {
     return getSetGroupRoot(ctx, cardId) == cardId;
   })
 }

@@ -39,7 +39,7 @@ export const prototype: CardPrototype = {
                     const from = DefineFn.AbsoluteBaSyouFn.of(DefineFn.PlayerIDFn.getOpponent(playerId), "配備エリア")
                     const payColorKey = GameStateFn.createConditionKeyOfPayColorX(cardProto)
                     const x = GameStateFn.getCardTipStrBaSyouPairs(ctx, payColorKey, cardId).length
-                    const targetIds = GameStateFn.getCardLikeItemIdsByBasyou(ctx, from)
+                    const targetIds = GameStateFn.getItemIdsByBasyou(ctx, from)
                       .filter(itemId => GameStateFn.getItemRuntimeCategory(ctx, itemId) == "ユニット")
                       .filter(itemId => GameStateFn.getSetGroupBattlePoint(ctx, itemId)[2] < x)
                     const pairs = targetIds.map(tid => {

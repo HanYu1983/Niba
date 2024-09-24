@@ -22,7 +22,7 @@ export function getRerollPhaseRuleEffect(ctx: GameState, playerId: PlayerID): Ef
                                 const playerId = DefineFn.EffectFn.getPlayerID(effect)
                                 const pairs = (["配備エリア", "Gゾーン"] as BaSyouKeyword[]).flatMap(kw => {
                                     const basyou = DefineFn.AbsoluteBaSyouFn.of(playerId, kw)
-                                    return GameStateFn.getCardLikeItemIdsByBasyou(ctx, basyou)
+                                    return GameStateFn.getItemIdsByBasyou(ctx, basyou)
                                         .filter(cardId => GameStateFn.getItemIsCanReroll(ctx, cardId))
                                         .map(cardId => {
                                             return [cardId, basyou] as StrBaSyouPair

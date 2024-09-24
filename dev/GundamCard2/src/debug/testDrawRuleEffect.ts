@@ -7,7 +7,7 @@ import { doEffect, setCardTipStrBaSyouPairs, setTipSelectionForUser } from "../g
 import { createGameState, GameState } from "../game/gameState/GameState";
 import { getAttackPhaseRuleEffect } from "../game/gameState/getAttackPhaseRuleEffect";
 import { getDrawPhaseRuleEffect } from "../game/gameState/getDrawPhaseRuleEffect";
-import { getCardLikeItemIdsByBasyou, getItem, getItemBaSyou } from "../game/gameState/ItemTableComponent";
+import { getItemIdsByBasyou, getItem, getItemBaSyou } from "../game/gameState/ItemTableComponent";
 import { loadPrototype } from "../script";
 
 export async function testDrawRuleEffect() {
@@ -16,17 +16,17 @@ export async function testDrawRuleEffect() {
     const attackEffect = getDrawPhaseRuleEffect(ctx, PlayerA)
     ctx = createCardWithProtoIds(ctx, AbsoluteBaSyouFn.of(PlayerA, "本国"), ["empty", "empty"]) as GameState
     ctx = setTipSelectionForUser(ctx, attackEffect, 0, 0)
-    if (getCardLikeItemIdsByBasyou(ctx, AbsoluteBaSyouFn.of(PlayerA, "手札")).length != 0) {
+    if (getItemIdsByBasyou(ctx, AbsoluteBaSyouFn.of(PlayerA, "手札")).length != 0) {
         throw new Error()
     }
-    if (getCardLikeItemIdsByBasyou(ctx, AbsoluteBaSyouFn.of(PlayerA, "本国")).length != 2) {
+    if (getItemIdsByBasyou(ctx, AbsoluteBaSyouFn.of(PlayerA, "本国")).length != 2) {
         throw new Error()
     }
     ctx = doEffect(ctx, attackEffect, 0, 0)
-    if (getCardLikeItemIdsByBasyou(ctx, AbsoluteBaSyouFn.of(PlayerA, "手札")).length != 1) {
+    if (getItemIdsByBasyou(ctx, AbsoluteBaSyouFn.of(PlayerA, "手札")).length != 1) {
         throw new Error()
     }
-    if (getCardLikeItemIdsByBasyou(ctx, AbsoluteBaSyouFn.of(PlayerA, "本国")).length != 1) {
+    if (getItemIdsByBasyou(ctx, AbsoluteBaSyouFn.of(PlayerA, "本国")).length != 1) {
         throw new Error()
     }
 }

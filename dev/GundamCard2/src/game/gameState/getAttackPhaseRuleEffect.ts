@@ -24,7 +24,7 @@ export function getAttackPhaseRuleEffect(ctx: GameState, playerId: PlayerID): Ef
                         }
                         const playerId = DefineFn.EffectFn.getPlayerID(effect)
                         const opponentPlayerId = DefineFn.PlayerIDFn.getOpponent(playerId)
-                        const cardIds = GameStateFn.getCardLikeItemIdsByBasyou(ctx, DefineFn.AbsoluteBaSyouFn.of(playerId, "配備エリア"))
+                        const cardIds = GameStateFn.getItemIdsByBasyou(ctx, DefineFn.AbsoluteBaSyouFn.of(playerId, "配備エリア"))
                         let unitIds = cardIds
                             .filter(cardId => GameStateFn.getSetGroupRoot(ctx, cardId))
                             .filter(cardId => GameStateFn.getCardBattleArea(ctx, cardId).includes(runtimeBattleArea))
@@ -48,7 +48,7 @@ export function getAttackPhaseRuleEffect(ctx: GameState, playerId: PlayerID): Ef
                                 const fackCardId = DefineFn.EffectFn.getCardID(effect)
                                 const earthPairs = GameStateFn.getCardTipStrBaSyouPairs(ctx, "去地球", fackCardId)
                                 for (const pair of earthPairs) {
-                                    ctx = GameStateFn.moveCardLikeItem(ctx, DefineFn.AbsoluteBaSyouFn.of(playerId, "戦闘エリア1"), pair, GameStateFn.onMoveItem) as GameState
+                                    ctx = GameStateFn.moveCardLikeItem(ctx, DefineFn.AbsoluteBaSyouFn.of(playerId, "戦闘エリア1"), pair) as GameState
                                 }
                                 return ctx
                             }.toString()
@@ -64,7 +64,7 @@ export function getAttackPhaseRuleEffect(ctx: GameState, playerId: PlayerID): Ef
                         }
                         const playerId = DefineFn.EffectFn.getPlayerID(effect)
                         const opponentPlayerId = DefineFn.PlayerIDFn.getOpponent(playerId)
-                        const cardIds = GameStateFn.getCardLikeItemIdsByBasyou(ctx, DefineFn.AbsoluteBaSyouFn.of(playerId, "配備エリア"))
+                        const cardIds = GameStateFn.getItemIdsByBasyou(ctx, DefineFn.AbsoluteBaSyouFn.of(playerId, "配備エリア"))
                         let unitIds = cardIds
                             .filter(cardId => GameStateFn.getSetGroupRoot(ctx, cardId))
                             .filter(cardId => GameStateFn.getCardBattleArea(ctx, cardId).includes(runtimeBattleArea))
@@ -88,7 +88,7 @@ export function getAttackPhaseRuleEffect(ctx: GameState, playerId: PlayerID): Ef
                                 const fackCardId = DefineFn.EffectFn.getCardID(effect)
                                 const spacePairs = GameStateFn.getCardTipStrBaSyouPairs(ctx, "去宇宙", fackCardId)
                                 for (const pair of spacePairs) {
-                                    ctx = GameStateFn.moveCardLikeItem(ctx, DefineFn.AbsoluteBaSyouFn.of(playerId, "戦闘エリア2"), pair, GameStateFn.onMoveItem) as GameState
+                                    ctx = GameStateFn.moveCardLikeItem(ctx, DefineFn.AbsoluteBaSyouFn.of(playerId, "戦闘エリア2"), pair) as GameState
                                 }
                                 ctx = GameStateFn.setNextPhase(ctx) as GameState
                                 return ctx

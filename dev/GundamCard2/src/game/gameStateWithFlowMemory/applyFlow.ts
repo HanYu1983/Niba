@@ -11,7 +11,7 @@ import { doPlayerAttack } from "../gameState/player";
 import { triggerEvent } from "../gameState/triggerEvent";
 import { ToolFn } from "../tool";
 import { updateCommand } from "./updateCommand";
-import { getCardLikeItemIdsByBasyou } from "../gameState/ItemTableComponent";
+import { getItemIdsByBasyou } from "../gameState/ItemTableComponent";
 import { TableFns } from "../../tool/table";
 import { setTipSelectionForUser } from "../gameState/effect";
 

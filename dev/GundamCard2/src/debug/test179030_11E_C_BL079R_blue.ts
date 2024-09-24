@@ -12,7 +12,7 @@ import { getEffectTips, doEffect, onMoveItem, assertEffectCanPass, setTipSelecti
 import { getEffect, getTopEffect, removeEffect } from "../game/gameState/EffectStackComponent"
 import { createGameState, GameState } from "../game/gameState/GameState"
 import { getPlayEffects } from "../game/gameState/getPlayEffects"
-import { getCardLikeItemIdsByBasyou, getItem, getItemBaSyou } from "../game/gameState/ItemTableComponent"
+import { getItemIdsByBasyou, getItem, getItemBaSyou } from "../game/gameState/ItemTableComponent"
 import { setPhase } from "../game/gameState/PhaseComponent"
 import { loadPrototype } from "../script"
 import { getItemState, setItemState } from "../game/gameState/ItemStateComponent"
@@ -77,10 +77,10 @@ export async function test179030_11E_C_BL079R_blue() {
             ctx = doEffect(ctx, effect, 0, 0)
             ctx = removeEffect(ctx, effect.id) as GameState
             console.log("指令卡會移到墓地")
-            if (getCardLikeItemIdsByBasyou(ctx, AbsoluteBaSyouFn.of(PlayerA, "ジャンクヤード")).length != 1) {
+            if (getItemIdsByBasyou(ctx, AbsoluteBaSyouFn.of(PlayerA, "ジャンクヤード")).length != 1) {
                 throw new Error(`getCardLiketemIdsByBasyou(ctx, AbsoluteBaSyouFn.of(PlayerA, "ジャンクヤード")).length != 1`)
             }
-            if (getCardLikeItemIdsByBasyou(ctx, AbsoluteBaSyouFn.of(PlayerA, "手札")).length != 0) {
+            if (getItemIdsByBasyou(ctx, AbsoluteBaSyouFn.of(PlayerA, "手札")).length != 0) {
                 throw new Error(`getCardLiketemIdsByBasyou(ctx, AbsoluteBaSyouFn.of(PlayerA, "手札")).length != 0`)
             }
             console.log("cardB和cardC交換位置")
@@ -112,14 +112,14 @@ export async function test179030_11E_C_BL079R_blue() {
             console.log("選擇對象")
             ctx = setTipSelectionForUser(ctx, effect, 0, 0)
             console.log(`執行效果: ${effect.text.description}`)
-            if (getCardLikeItemIdsByBasyou(ctx, AbsoluteBaSyouFn.of(PlayerA, "本国")).length != 2) {
+            if (getItemIdsByBasyou(ctx, AbsoluteBaSyouFn.of(PlayerA, "本国")).length != 2) {
                 throw new Error(`getCardLiketemIdsByBasyou(ctx, AbsoluteBaSyouFn.of(PlayerA, "本国")).length != 2`)
             }
             if (getCard(ctx, cardForRollG.id).isRoll) {
                 throw new Error(`getCard(ctx, cardForRollG.id).isRoll`)
             }
             ctx = doEffect(ctx, effect, 0, 0)
-            if (getCardLikeItemIdsByBasyou(ctx, AbsoluteBaSyouFn.of(PlayerA, "本国")).length != 1) {
+            if (getItemIdsByBasyou(ctx, AbsoluteBaSyouFn.of(PlayerA, "本国")).length != 1) {
                 throw new Error(`getCardLiketemIdsByBasyou(ctx, AbsoluteBaSyouFn.of(PlayerA, "本国")).length != 1`)
             }
             if (getCard(ctx, cardForRollG.id).isRoll != true) {

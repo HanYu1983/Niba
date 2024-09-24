@@ -67,10 +67,10 @@ export function getCardLikeItemIds(ctx: ItemTableComponent): string[] {
 
 export function getItemIdsByPlayerId(ctx: ItemTableComponent, isBa: boolean, playerId: PlayerID): string[] {
   const basyous = isBa ? lift(AbsoluteBaSyouFn.of)([playerId], BaSyouKeywordFn.getBaAll()) : lift(AbsoluteBaSyouFn.of)([playerId], BaSyouKeywordFn.getScriptAll())
-  return basyous.flatMap(basyou => getCardLikeItemIdsByBasyou(ctx, basyou))
+  return basyous.flatMap(basyou => getItemIdsByBasyou(ctx, basyou))
 }
 
-export function getCardLikeItemIdsByBasyou(ctx: ItemTableComponent, basyou: AbsoluteBaSyou): string[] {
+export function getItemIdsByBasyou(ctx: ItemTableComponent, basyou: AbsoluteBaSyou): string[] {
   return TableFns.getCardsByPosition(ctx.table, AbsoluteBaSyouFn.toString(basyou))
 }
 

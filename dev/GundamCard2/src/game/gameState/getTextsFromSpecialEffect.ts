@@ -69,7 +69,7 @@ export function getTextsFromSpecialEffect(ctx: GameState, text: CardText): CardT
                             const cardController = GameStateFn.getItemController(ctx, cardId)
                             const cs = GameStateFn.getItemState(ctx, cardId)
                             if (cs.flags["return"]) {
-                                ctx = GameStateFn.moveCardLikeItem(ctx, DefineFn.AbsoluteBaSyouFn.of(cardController, "手札"), [cardId, GameStateFn.getItemBaSyou(ctx, cardId)], GameStateFn.onMoveItem) as GameState
+                                ctx = GameStateFn.moveCardLikeItem(ctx, DefineFn.AbsoluteBaSyouFn.of(cardController, "手札"), [cardId, GameStateFn.getItemBaSyou(ctx, cardId)]) as GameState
                                 ctx = GameStateFn.mapItemState(ctx, cardId, is => DefineFn.ItemStateFn.removeFlag(is, "return")) as GameState
                             }
                         }
@@ -272,7 +272,7 @@ export function getTextsFromSpecialEffect(ctx: GameState, text: CardText): CardT
                                     title: function _(ctx: GameState, effect: Effect, { GameStateFn, DefineFn }: Bridge): GameState {
                                         const cardId = DefineFn.EffectFn.getCardID(effect)
                                         const from = GameStateFn.getItemBaSyou(ctx, cardId)
-                                        const hasNT = GameStateFn.getCardLikeItemIdsByBasyou(ctx, from).filter(itemId => getItemCharacteristic(ctx, itemId).indexOf("NT")).length > 0
+                                        const hasNT = GameStateFn.getItemIdsByBasyou(ctx, from).filter(itemId => getItemCharacteristic(ctx, itemId).indexOf("NT")).length > 0
                                         if (hasNT == false) {
                                             throw new Error(`no NT in the same area`)
                                         }
@@ -385,7 +385,7 @@ export function getTextsFromSpecialEffect(ctx: GameState, text: CardText): CardT
                                                                     const pairs = GameStateFn.getCardTipStrBaSyouPairs(ctx, "看自己本國全部的卡,可以從中找出特徵A的1張卡移到HANGER,那個時候本國洗牌", cardId)
                                                                     if (pairs.length) {
                                                                         for (const pair of pairs) {
-                                                                            ctx = GameStateFn.moveCardLikeItem(ctx, DefineFn.AbsoluteBaSyouFn.of(cardController, "ハンガー"), pair, GameStateFn.onMoveItem) as GameState
+                                                                            ctx = GameStateFn.moveCardLikeItem(ctx, DefineFn.AbsoluteBaSyouFn.of(cardController, "ハンガー"), pair) as GameState
                                                                         }
                                                                         ctx = GameStateFn.shuffleItems(ctx, DefineFn.AbsoluteBaSyouFn.of(cardController, "本国"))
                                                                     }
@@ -421,7 +421,7 @@ export function getTextsFromSpecialEffect(ctx: GameState, text: CardText): CardT
                                 const { GameStateFn, DefineFn } = bridge
                                 const cardId = DefineFn.EffectFn.getCardID(effect)
                                 const cardController = GameStateFn.getItemController(ctx, cardId)
-                                const gCount = GameStateFn.getCardLikeItemIdsByBasyou(ctx, DefineFn.AbsoluteBaSyouFn.of(cardController, "Gゾーン")).length
+                                const gCount = GameStateFn.getItemIdsByBasyou(ctx, DefineFn.AbsoluteBaSyouFn.of(cardController, "Gゾーン")).length
                                 return GameStateFn.getConditionTitleFn({
                                     title: ["打開自軍手裡或指定HANGER中特徵_A並合計國力_x以下的_1張卡", A, gCount, 1]
                                 }, {})(ctx, effect, bridge)
@@ -442,8 +442,7 @@ export function getTextsFromSpecialEffect(ctx: GameState, text: CardText): CardT
                                         ctx = GameStateFn.mapCard(ctx, cardId, card => ({ ...card, isRoll: false })) as GameState
                                         ctx = GameStateFn.moveCardLikeItem(ctx,
                                             DefineFn.AbsoluteBaSyouFn.setBaSyouKeyword(basyou, "ジャンクヤード"),
-                                            targetPair,
-                                            GameStateFn.onMoveItem
+                                            targetPair
                                         ) as GameState
                                         return ctx
                                     }.toString()

@@ -26,23 +26,21 @@ export function getReturnRuleEffect(ctx: GameState, playerId: PlayerID): Effect 
                                 ctx = _processKw(ctx, opponentId, "戦闘エリア2")
                                 function _processKw(ctx: GameState, playerId: PlayerID, fromKw: BaKeyword): GameState {
                                     const runtimeArea1 = GameStateFn.getRuntimeBattleArea(ctx, fromKw)
-                                    const unitIdsAtArea1 = GameStateFn.getCardLikeItemIdsByBasyou(ctx, DefineFn.AbsoluteBaSyouFn.of(playerId, fromKw))
+                                    const unitIdsAtArea1 = GameStateFn.getItemIdsByBasyou(ctx, DefineFn.AbsoluteBaSyouFn.of(playerId, fromKw))
                                     for (const cardId of unitIdsAtArea1) {
                                         if (GameStateFn.getCardBattleArea(ctx, cardId).includes(runtimeArea1)) {
                                             ctx = GameStateFn.setItemIsRoll(ctx, true, [cardId, DefineFn.AbsoluteBaSyouFn.of(playerId, fromKw)]) as GameState
                                             ctx = GameStateFn.moveCardLikeItem(
                                                 ctx,
                                                 DefineFn.AbsoluteBaSyouFn.of(playerId, "配備エリア"),
-                                                [cardId, DefineFn.AbsoluteBaSyouFn.of(playerId, fromKw)],
-                                                GameStateFn.onMoveItem
+                                                [cardId, DefineFn.AbsoluteBaSyouFn.of(playerId, fromKw)]
                                             ) as GameState
                                         } else {
                                             // Rule book p73
                                             ctx = GameStateFn.moveCardLikeItem(
                                                 ctx,
                                                 DefineFn.AbsoluteBaSyouFn.of(playerId, "ジャンクヤード"),
-                                                [cardId, DefineFn.AbsoluteBaSyouFn.of(playerId, fromKw)],
-                                                GameStateFn.onMoveItem
+                                                [cardId, DefineFn.AbsoluteBaSyouFn.of(playerId, fromKw)]
                                             ) as GameState
                                         }
                                     }

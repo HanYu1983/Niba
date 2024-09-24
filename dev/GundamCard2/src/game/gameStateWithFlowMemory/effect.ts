@@ -4,10 +4,11 @@ import { DestroyReason, Effect, EffectFn } from "../define/Effect";
 import { doEffect } from "../gameState/effect";
 import { getEffect, isStackEffect, removeEffect } from "../gameState/EffectStackComponent";
 import { ToolFn } from "../tool";
-import { CommandEffectTip, GameStateWithFlowMemory } from "./GameStateWithFlowMemory";
+import { GameStateWithFlowMemory } from "./GameStateWithFlowMemory";
 import { getItemStateValues } from "../gameState/ItemStateComponent";
 import { getItemController } from "../gameState/ItemTableComponent";
 import { getSetGroupBattlePoint } from "../gameState/setGroup";
+import { CommandEffectTip } from "../define/CommandEffectTip";
 
 export function getEffectIncludePlayerCommand(ctx: GameStateWithFlowMemory, effectId: string): Effect {
   return ctx.commandEffects.find(cmd=>cmd.id == effectId) || getEffect(ctx, effectId)

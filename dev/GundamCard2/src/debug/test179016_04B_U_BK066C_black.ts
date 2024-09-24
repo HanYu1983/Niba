@@ -18,7 +18,7 @@ import { getPlayEffects } from "../game/gameState/getPlayEffects"
 import { getGlobalEffects, setGlobalEffects, clearGlobalEffects } from "../game/gameState/globalEffects"
 import { checkIsBattle, isBattle } from "../game/gameState/IsBattleComponent"
 import { getItemState, mapItemState, setItemState } from "../game/gameState/ItemStateComponent"
-import { getCardLikeItemIdsByBasyou, getItemPrototype } from "../game/gameState/ItemTableComponent"
+import { getItemIdsByBasyou, getItemPrototype } from "../game/gameState/ItemTableComponent"
 import { setPhase } from "../game/gameState/PhaseComponent"
 import { triggerEvent } from "../game/gameState/triggerEvent"
 import { loadPrototype } from "../script"
@@ -40,7 +40,7 @@ export async function test179016_04B_U_BK066C_black() {
     ctx = addCards(ctx, AbsoluteBaSyouFn.of(PlayerB, "配備エリア"), [unit]) as GameState
     ctx = setActivePlayerID(ctx, PlayerA) as GameState
     ctx = setPhase(ctx, ["配備フェイズ", "フリータイミング"]) as GameState
-    const myGLength = getCardLikeItemIdsByBasyou(ctx, AbsoluteBaSyouFn.of(PlayerA, "Gゾーン")).length
+    const myGLength = getItemIdsByBasyou(ctx, AbsoluteBaSyouFn.of(PlayerA, "Gゾーン")).length
     {
         const effects = getPlayCardEffects(ctx, cardA.id)
         if (effects.length == 0) {

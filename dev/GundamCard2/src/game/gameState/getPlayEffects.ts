@@ -6,7 +6,7 @@ import { AbsoluteBaSyouFn, BaSyouKeywordFn } from "../define/BaSyou";
 import { addCards, createCardWithProtoIds, getCard } from "./CardTableComponent";
 import { Effect } from "../define/Effect";
 import { getPlayCardEffects } from "./getPlayCardEffect";
-import { getCardLikeItemIdsByBasyou, getItemIdsByBasyou, getItemPrototype } from "./ItemTableComponent";
+import { getItemIdsByBasyou, getItemIdsByBasyou, getItemPrototype } from "./ItemTableComponent";
 import { getPrototype, loadPrototype } from "../../script";
 import { always, flatten, ifElse, lift, map, pipe } from "ramda";
 import { createGameState, GameState } from "./GameState";
@@ -26,7 +26,7 @@ export function getPlayEffects(ctx: GameState, playerId: PlayerID): Effect[] {
         always(PhaseFn.eq(getPhase(ctx), ["配備フェイズ", "フリータイミング"])),
         pipe(
             always([AbsoluteBaSyouFn.of(playerId, "手札"), AbsoluteBaSyouFn.of(playerId, "ハンガー")]),
-            map(basyou => getCardLikeItemIdsByBasyou(ctx, basyou)), flatten,
+            map(basyou => getItemIdsByBasyou(ctx, basyou)), flatten,
             map(cardId => getPlayCardEffects(ctx, cardId)), flatten
         ),
         // クイック
@@ -34,7 +34,7 @@ export function getPlayEffects(ctx: GameState, playerId: PlayerID): Effect[] {
             always(PhaseFn.isFreeTiming(getPhase(ctx))),
             pipe(
                 always([AbsoluteBaSyouFn.of(playerId, "手札"), AbsoluteBaSyouFn.of(playerId, "ハンガー")]),
-                map(basyou => getCardLikeItemIdsByBasyou(ctx, basyou)), flatten,
+                map(basyou => getItemIdsByBasyou(ctx, basyou)), flatten,
                 map(cardId => {
                     if (getCardHasSpeicalEffect(ctx, ["クイック"], cardId)) {
                         return getPlayCardEffects(ctx, cardId)
@@ -53,7 +53,7 @@ export function getPlayEffects(ctx: GameState, playerId: PlayerID): Effect[] {
         always(PhaseFn.eq(getPhase(ctx), ["配備フェイズ", "フリータイミング"])),
         pipe(
             always([AbsoluteBaSyouFn.of(playerId, "手札"), AbsoluteBaSyouFn.of(playerId, "ハンガー")]),
-            map(basyou => getCardLikeItemIdsByBasyou(ctx, basyou)), flatten,
+            map(basyou => getItemIdsByBasyou(ctx, basyou)), flatten,
             map(cardId => {
                 const card = getCard(ctx, cardId)
                 return getPlayGEffects(ctx, card.id)
@@ -64,7 +64,7 @@ export function getPlayEffects(ctx: GameState, playerId: PlayerID): Effect[] {
 
     const getPlayTextF = pipe(
         always(lift(AbsoluteBaSyouFn.of)([playerId], BaSyouKeywordFn.getBaAll())),
-        map(basyou => getCardLikeItemIdsByBasyou(ctx, basyou)), flatten,
+        map(basyou => getItemIdsByBasyou(ctx, basyou)), flatten,
         map(cardId => {
             return (getCardTexts(ctx, cardId)).flatMap(text => {
                 switch (text.title[0]) {
@@ -120,7 +120,7 @@ export function getPlayEffects(ctx: GameState, playerId: PlayerID): Effect[] {
         always(PhaseFn.isFreeTiming(getPhase(ctx))),
         pipe(
             always([AbsoluteBaSyouFn.of(playerId, "手札"), AbsoluteBaSyouFn.of(playerId, "ハンガー")]),
-            map(basyou => getCardLikeItemIdsByBasyou(ctx, basyou)), flatten,
+            map(basyou => getItemIdsByBasyou(ctx, basyou)), flatten,
             map(cardId => {
                 const card = getCard(ctx, cardId)
                 const proto = getItemPrototype(ctx, card.id)

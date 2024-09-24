@@ -9,7 +9,7 @@ import { Situation, getOnSituationFn, OnSituationFn, CardText } from "../define/
 import { ToolFn } from "../tool"
 import { getCardIds, getCard } from "./CardTableComponent"
 import { GameState } from "./GameState"
-import { getItemIdsByBasyou, isCard, isChip, getItem, getItemPrototype, Item, getItemController, getCardLikeItemIdsByBasyou } from "./ItemTableComponent"
+import { getItemIdsByBasyou, isCard, isChip, getItem, getItemPrototype, Item, getItemController } from "./ItemTableComponent"
 import { getItemState, getItemStateValues } from "./ItemStateComponent"
 import { ItemStateFn } from "../define/ItemState"
 import { getTextsFromSpecialEffect } from "./getTextsFromSpecialEffect"
@@ -47,7 +47,7 @@ function getSituationEffects(ctx: GameState, situation: Situation | null): Globa
   // 常駐
   const getTextGroup1 = pipe(
     always(AbsoluteBaSyouFn.getBaAll()),
-    map(basyou => getCardLikeItemIdsByBasyou(ctx, basyou)),
+    map(basyou => getItemIdsByBasyou(ctx, basyou)),
     flatten,
     itemIds => itemIds.filter(itemId => isCard(ctx, itemId) || isChip(ctx, itemId)),
     map(itemId => getItem(ctx, itemId)),
@@ -66,7 +66,7 @@ function getSituationEffects(ctx: GameState, situation: Situation | null): Globa
   // 恒常
   const getTextGroup2 = pipe(
     always(AbsoluteBaSyouFn.getScriptAll()),
-    map(basyou => getCardLikeItemIdsByBasyou(ctx, basyou)),
+    map(basyou => getItemIdsByBasyou(ctx, basyou)),
     flatten,
     itemIds => itemIds.filter(itemId => isCard(ctx, itemId) || isChip(ctx, itemId)),
     map(itemId => getItem(ctx, itemId)),
@@ -85,7 +85,7 @@ function getSituationEffects(ctx: GameState, situation: Situation | null): Globa
   // Gゾーン常駐
   const getTextGroup3 = pipe(
     always([AbsoluteBaSyouFn.of(PlayerA, "Gゾーン"), AbsoluteBaSyouFn.of(PlayerB, "Gゾーン")]),
-    map(basyou => getCardLikeItemIdsByBasyou(ctx, basyou)),
+    map(basyou => getItemIdsByBasyou(ctx, basyou)),
     flatten,
     itemIds => itemIds.filter(itemId => isCard(ctx, itemId) || isChip(ctx, itemId)),
     map(itemId => getItem(ctx, itemId)),
@@ -161,7 +161,7 @@ function getSituationEffects(ctx: GameState, situation: Situation | null): Globa
     })
 
   const gGes = [AbsoluteBaSyouFn.of(PlayerA, "Gゾーン"), AbsoluteBaSyouFn.of(PlayerB, "Gゾーン")]
-    .flatMap(basyou => getCardLikeItemIdsByBasyou(ctx, basyou))
+    .flatMap(basyou => getItemIdsByBasyou(ctx, basyou))
     .filter(itemId => getCard(ctx, itemId).isRoll != true)
     .map(itemId => {
       const colors = getItemPrototype(ctx, itemId).gsign?.[0] || []
